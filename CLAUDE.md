@@ -19,18 +19,20 @@ Azure Kinect 카메라 → SmolVLA(450M) 모델 → RoArm M3 (6-DOF) 실시간 �
 | Component | Details |
 |-----------|---------|
 | OS | Ubuntu 22.04 (Linux) |
-| GPU | Lenovo Laptop (32GB VRAM) |
-| Python | 3.11 + venv |
+| GPU | RTX 4090 Laptop (15.6 GB VRAM), Driver 580, CUDA 12.6 |
+| Python | 3.11.14 (conda env `roarm`) |
+| PyTorch | 2.7.1+cu126 |
+| LeRobot | 0.4.4 (source install at `lerobot/`, .gitignored) |
 | Robot | RoArm-M3-Pro via `/dev/ttyUSB0` (follower) |
 | Leader | RoArm-M3-Pro via `/dev/ttyUSB1` (leader, L-F 모드 시) |
-| Camera | Azure Kinect DK (pyk4a) |
+| Camera | Azure Kinect DK (pyk4a — libk4a 설치 필요) |
 | Framework | LeRobot + SmolVLA (HuggingFace) |
 
 ## Key Commands
 
 ```bash
-# venv 활성화
-source .venv/bin/activate
+# conda 환경 활성화
+conda activate roarm
 
 # 데이터 수집 (토크 OFF 수동 모드)
 python collect_data_manual.py
@@ -302,19 +304,24 @@ lerobot-train \
 
 ## Current Status (2026-02-10)
 
-### Completed (Windows → Linux 이관 완료)
-- Git repo 정리: 62개 파일, orphan branch, 바이너리 히스토리 제거
-- COM 포트 → /dev/ttyUSB0, /dev/ttyUSB1
-- Windows 패치 제거 (Path→POSIX, Symlink→Text, encoding)
-- Agent team hooks: .ps1 → .sh 변환
-- GitHub push 완료 (SSH)
+### Completed
+- Git repo 정리: 49개 파일 (Isaac Sim/RL 제거), GitHub push 완료 (SSH)
+- Windows → Linux 완전 이관: COM 포트, 패치, 경로 모두 정리
+- Agent team hooks: .ps1 → .sh, fail-closed 보안 강화
+- **환경 구축 완료**: conda `roarm` env (Python 3.11 + PyTorch 2.7.1+cu126 + LeRobot 0.4.4 + SmolVLA + roarm_sdk)
+- LeRobot 0.4.4 구조 변경 확인 (lerobot_backup/ 파일은 구버전 API)
+
+### Pending
+- **Azure Kinect SDK**: sudo로 libk4a 설치 + pip install pyk4a 필요
+- **LeRobot 로봇 통합 포팅**: lerobot_backup/ → LeRobot 0.4.4 구조 (필요시)
 
 ### Next Steps
-1. **환경 구축**: .venv + dependencies + LeRobot + Azure Kinect SDK
-2. **카메라 고정**: 삼각대/클램프로 고정, 위치 문서화
-3. **데이터 수집**: 100+ 에피소드 (elbow < -30° 50개, approach 30개, 다양한 시작 20개)
-4. **학습**: `lerobot-train` CLI, smolvla_base, 50K+ steps
-5. **배포**: dataset_mean 시작, n_action_steps=1, closed-loop
+1. **Azure Kinect SDK 설치** (sudo 필요: libk4a1.4-dev + pyk4a)
+2. **USB 하드웨어 연결 테스트** (로봇 + Kinect)
+3. **카메라 고정**: 삼각대/클램프로 고정, 위치 문서화
+4. **데이터 수집**: 100+ 에피소드 (elbow < -30° 50개, approach 30개, 다양한 시작 20개)
+5. **학습**: `lerobot-train` CLI, smolvla_base, 50K+ steps
+6. **배포**: dataset_mean 시작, n_action_steps=1, closed-loop
 
 ## Reference
 
