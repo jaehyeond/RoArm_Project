@@ -1,9 +1,6 @@
 """
 Test LeRobot RoArm M3 connection
 """
-import sys
-sys.path.insert(0, r"E:\RoArm_Project\lerobot")
-
 from lerobot.common.robot_devices.robots.configs import RoarmRobotConfig
 from lerobot.common.robot_devices.cameras.configs import OpenCVCameraConfig
 

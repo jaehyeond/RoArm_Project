@@ -210,4 +210,4 @@ if __name__ == "__main__":
     except ImportError as e:
         print(f"[ERROR] Missing dependency: {e}")
         print("\nInstall matplotlib and seaborn:")
-        print("  E:\\RoArm_Project\\.venv\\Scripts\\pip.exe install matplotlib seaborn")
+        print("  pip install matplotlib seaborn")

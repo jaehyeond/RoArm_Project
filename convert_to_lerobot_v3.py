@@ -10,11 +10,6 @@ import os
 import shutil
 from pathlib import Path
 
-# ffmpeg PATH 설정 (Windows winget 설치 경로)
-FFMPEG_PATH = r"C:\Users\SOGANG\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-8.0.1-full_build\bin"
-if os.path.exists(FFMPEG_PATH) and FFMPEG_PATH not in os.environ.get("PATH", ""):
-    os.environ["PATH"] = FFMPEG_PATH + os.pathsep + os.environ.get("PATH", "")
-
 import cv2
 import numpy as np
 import torch
