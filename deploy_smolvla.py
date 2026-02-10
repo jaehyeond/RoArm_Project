@@ -66,7 +66,7 @@ JOINT_LIMITS = [
     (-10,  100),   # 5: Gripper
 ]
 
-CHECKPOINT_PATH = "E:/RoArm_Project/outputs/smolvla_official/checkpoints/020000/pretrained_model"
+CHECKPOINT_PATH = "outputs/smolvla_official/checkpoints/020000/pretrained_model"
 
 # 데이터셋 평균 위치 (51 에피소드 기준)
 # 학습 데이터가 이 근처에서 수집되었으므로 여기서 시작해야 in-distribution
@@ -386,7 +386,7 @@ def main():
     csv_logger = None
     if args.log_csv:
         if args.log_csv == 'auto':
-            log_dir = Path("E:/RoArm_Project/logs")
+            log_dir = Path("logs")
             log_dir.mkdir(exist_ok=True)
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             csv_path = log_dir / f"deploy_{timestamp}.csv"

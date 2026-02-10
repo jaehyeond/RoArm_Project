@@ -16,7 +16,7 @@ def analyze_distribution():
     """Analyze action distribution and identify gaps."""
 
     # Load dataset
-    parquet_path = Path("E:/RoArm_Project/lerobot_dataset_v3/data/chunk-000/file-000.parquet")
+    parquet_path = Path("lerobot_dataset_v3/data/chunk-000/file-000.parquet")
     print(f"Loading dataset from {parquet_path}")
     df = pd.read_parquet(parquet_path)
 
@@ -70,7 +70,7 @@ def analyze_distribution():
         ax.grid(True, alpha=0.3)
 
     plt.tight_layout()
-    output_path = Path("E:/RoArm_Project/data_distribution_histograms.png")
+    output_path = Path("data_distribution_histograms.png")
     plt.savefig(output_path, dpi=150, bbox_inches='tight')
     print(f"\n[OK] Histograms saved to {output_path}")
     plt.close()
@@ -144,7 +144,7 @@ def analyze_distribution():
     ax.grid(True, alpha=0.3)
 
     plt.tight_layout()
-    output_path = Path("E:/RoArm_Project/data_elbow_distribution.png")
+    output_path = Path("data_elbow_distribution.png")
     plt.savefig(output_path, dpi=150, bbox_inches='tight')
     print(f"[OK] Elbow plot saved to {output_path}")
     plt.close()

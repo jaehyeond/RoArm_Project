@@ -34,7 +34,7 @@ def train_50k(output_suffix: str = "50k"):
     Args:
         output_suffix: Suffix for output directory (e.g., "50k", "100k")
     """
-    checkpoint_20k = Path("E:/RoArm_Project/outputs/smolvla_official/checkpoints/020000/pretrained_model/train_config.json")
+    checkpoint_20k = Path("outputs/smolvla_official/checkpoints/020000/pretrained_model/train_config.json")
 
     if not checkpoint_20k.exists():
         raise FileNotFoundError(

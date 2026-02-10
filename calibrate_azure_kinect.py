@@ -336,7 +336,7 @@ def interactive_calibration():
 
         elif key == ord('c') or key == ord('C'):
             if calibrator.calculate_transform():
-                calibrator.save_calibration("E:/RoArm_Project/calibration.npz")
+                calibrator.save_calibration("calibration.npz")
 
         elif key == ord('q') or key == ord('Q') or key == 27:  # ESC
             collecting = False
@@ -347,7 +347,7 @@ def interactive_calibration():
     print("\n캘리브레이션 종료")
 
 
-def load_calibration(filepath="E:/RoArm_Project/calibration.npz"):
+def load_calibration(filepath="calibration.npz"):
     """저장된 캘리브레이션 로드"""
     data = np.load(filepath)
     R = data['R']

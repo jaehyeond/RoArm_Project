@@ -19,7 +19,7 @@ def visualize_episodes():
     """Create comprehensive episode quality visualizations."""
 
     # Load episode quality results
-    csv_path = Path("E:/RoArm_Project/data_episode_quality_results.csv")
+    csv_path = Path("data_episode_quality_results.csv")
     df = pd.read_csv(csv_path)
 
     print(f"Loaded {len(df)} episodes from {csv_path}")
@@ -138,7 +138,7 @@ def visualize_episodes():
     ax4.grid(True, alpha=0.3)
 
     plt.tight_layout()
-    output_path = Path("E:/RoArm_Project/data_episode_quality_visualization.png")
+    output_path = Path("data_episode_quality_visualization.png")
     plt.savefig(output_path, dpi=150, bbox_inches='tight')
     print(f"\n[OK] Visualization saved to {output_path}")
     plt.close()
@@ -194,7 +194,7 @@ Worst Episodes (never forward):
 
     ax.axis('off')
     plt.tight_layout()
-    output_path = Path("E:/RoArm_Project/data_summary_text.png")
+    output_path = Path("data_summary_text.png")
     plt.savefig(output_path, dpi=150, bbox_inches='tight')
     print(f"[OK] Summary text saved to {output_path}")
     plt.close()

@@ -14,7 +14,7 @@ def analyze_episodes():
     """Analyze per-episode quality metrics."""
 
     # Load dataset
-    parquet_path = Path("E:/RoArm_Project/lerobot_dataset_v3/data/chunk-000/file-000.parquet")
+    parquet_path = Path("lerobot_dataset_v3/data/chunk-000/file-000.parquet")
     print(f"Loading dataset from {parquet_path}")
     df = pd.read_parquet(parquet_path)
 
@@ -140,7 +140,7 @@ def analyze_episodes():
     print(worst_episodes.to_string(index=False))
 
     # Save to CSV
-    output_path = Path("E:/RoArm_Project/data_episode_quality_results.csv")
+    output_path = Path("data_episode_quality_results.csv")
     results_df.to_csv(output_path, index=False)
     print(f"\n[OK] Results saved to {output_path}")
 

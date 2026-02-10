@@ -249,13 +249,13 @@ def main():
     parser.add_argument(
         "--output-dir",
         type=str,
-        default="E:/RoArm_Project/outputs/smolvla_official",
+        default="outputs/smolvla_official",
         help="Base output directory containing checkpoints",
     )
     parser.add_argument(
         "--dataset-root",
         type=str,
-        default="E:/RoArm_Project/lerobot_dataset_v3",
+        default="lerobot_dataset_v3",
         help="Dataset root directory",
     )
     parser.add_argument(

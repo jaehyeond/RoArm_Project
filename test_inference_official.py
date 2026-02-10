@@ -35,13 +35,13 @@ def main():
     print("\nLoading dataset...")
     dataset = LeRobotDataset(
         repo_id="roarm_m3_pick",
-        root=Path("E:/RoArm_Project/lerobot_dataset_v3"),
+        root=Path("lerobot_dataset_v3"),
     )
     print(f"  Total frames: {len(dataset)}")
     print(f"  Episodes: {dataset.num_episodes}")
 
     # Load trained model
-    checkpoint_path = "E:/RoArm_Project/outputs/smolvla_official/checkpoints/020000/pretrained_model"
+    checkpoint_path = "outputs/smolvla_official/checkpoints/020000/pretrained_model"
     print(f"\nLoading model from: {checkpoint_path}")
 
     policy = SmolVLAPolicy.from_pretrained(checkpoint_path)

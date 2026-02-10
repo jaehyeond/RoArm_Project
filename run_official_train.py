@@ -16,7 +16,7 @@ sys.stdout.reconfigure(line_buffering=True)
 sys.stderr.reconfigure(line_buffering=True)
 
 # Resume or fresh start
-checkpoint_config = Path("E:/RoArm_Project/outputs/smolvla_official/checkpoints/005000/pretrained_model/train_config.json")
+checkpoint_config = Path("outputs/smolvla_official/checkpoints/005000/pretrained_model/train_config.json")
 
 if checkpoint_config.exists():
     # Resume from step 5000 checkpoint
@@ -32,10 +32,10 @@ else:
     sys.argv = [
         "lerobot-train",
         "--policy.type=smolvla",
-        "--policy.pretrained_path=E:/RoArm_Project/models/smolvla_base",
+        "--policy.pretrained_path=lerobot/smolvla_base",
         "--policy.push_to_hub=false",
         "--dataset.repo_id=roarm_m3_pick",
-        "--dataset.root=E:/RoArm_Project/lerobot_dataset_v3",
+        "--dataset.root=lerobot_dataset_v3",
         "--batch_size=8",
         "--steps=20000",
         "--eval_freq=-1",
