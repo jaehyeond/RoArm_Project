@@ -1,0 +1,93 @@
+# =============================================================================
+# RoArm M3 SmolVLA Project - .gitignore
+# =============================================================================
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+
+# ---- Virtual Environment ----
+.venv/
+venv/
+env/
+
+# ---- Large Files / Models / Checkpoints ----
+models/
+outputs/
+logs/
+
+# ---- Datasets (too large for git, recollect per environment) ----
+lerobot_dataset/
+lerobot_dataset_v3/
+lerobot_dataset_v4/
+collected_data/
+
+# ---- LeRobot (clone separately) ----
+lerobot/
+
+# ---- Binary / Data files (never track) ----
+*.npz
+*.parquet
+*.mp4
+*.avi
+*.mkv
+*.pdf
+
+# ---- Isaac Sim / USD (not used in VLA pipeline) ----
+*.usd
+*.usda
+*.usdc
+.asset_hash
+
+# ---- IDE ----
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ---- OS ----
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---- Temp / Debug / Logs ----
+_*.py
+!__init__.py
+dddd.py
+*.tmp
+*.bak
+*.log
+_diag_output.txt
+convert_log.txt
+
+# ---- Visualization outputs ----
+*.png
+*.jpg
+*.jpeg
+!claudedocs/*.png
+
+# ---- CSV logs ----
+*.csv
+!claudedocs/*.csv
+
+# ---- Windows-specific (not needed on Linux) ----
+*.bat
+*.ps1
+.claude/settings.local.json
+
+# ---- Docs folder (PDFs, local docs) ----
+docs/
+
+# ---- Sensitive ----
+.env
+*.key
+*.pem
+
+# ---- MCP local config ----
+.mcp.json

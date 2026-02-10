@@ -1,0 +1,78 @@
+# RoArm M3 SmolVLA Pipeline - Core Dependencies
+# Python 3.10+ required (tested on Python 3.11)
+# CUDA 12.4+ required for GPU acceleration
+
+# ============================================================================
+# Core ML / Deep Learning
+# ============================================================================
+torch>=2.1.0                # PyTorch with CUDA support
+transformers>=4.35.0        # HuggingFace Transformers (SmolVLM)
+safetensors>=0.4.0          # Fast tensor serialization (checkpoint loading)
+accelerate>=0.25.0          # HuggingFace training acceleration
+
+# LeRobot (VLA framework)
+# Install from source: pip install git+https://github.com/huggingface/lerobot.git
+# Or local editable install: pip install -e lerobot/
+lerobot                     # Vision-Language-Action framework
+
+# ============================================================================
+# Computer Vision
+# ============================================================================
+opencv-python>=4.8.0        # OpenCV for image processing and display
+pyk4a>=1.5.0                # Azure Kinect SDK Python wrapper (camera)
+
+# ============================================================================
+# Robot Hardware / Serial Communication
+# ============================================================================
+pyserial>=3.5               # Serial communication (RoArm M3 via USB)
+# roarm_sdk - Install from local wheel or git
+# pip install roarm_sdk (or from local package)
+
+# ============================================================================
+# Data Processing
+# ============================================================================
+numpy>=1.24.0               # Numerical operations
+pandas>=2.0.0               # Dataset analysis (parquet files)
+pyarrow>=14.0.0             # Parquet file I/O (LeRobot datasets)
+
+# ============================================================================
+# Utilities
+# ============================================================================
+pynput>=1.7.6               # Keyboard input (teleoperation)
+tqdm>=4.65.0                # Progress bars (training)
+rich>=13.0.0                # Terminal formatting (LeRobot CLI)
+
+# ============================================================================
+# Optional: Jupyter/Analysis
+# ============================================================================
+# jupyter>=1.0.0            # Notebook environment
+# matplotlib>=3.7.0         # Plotting for analysis
+# seaborn>=0.12.0           # Statistical visualization
+
+# ============================================================================
+# NOTES
+# ============================================================================
+# Windows-specific packages (not needed on Linux):
+#   - None of the core packages are Windows-only
+#   - pyserial works on both Windows (COM ports) and Linux (ttyUSB)
+#   - pyk4a requires Azure Kinect SDK native installation on both platforms
+#
+# Installation order (recommended):
+#   1. pip install torch --index-url https://download.pytorch.org/whl/cu124
+#   2. pip install -r requirements_core.txt
+#   3. pip install git+https://github.com/huggingface/lerobot.git
+#   4. Install roarm_sdk (local or from vendor)
+#   5. Install Azure Kinect SDK (system-level)
+#
+# Azure Kinect DK Setup:
+#   - Windows: Download SDK from Microsoft
+#   - Linux: sudo apt install libk4a1.4-dev
+#
+# CUDA Version:
+#   - Check: python -c "import torch; print(torch.version.cuda)"
+#   - Expected: 12.4 or compatible
+#
+# Python Version:
+#   - Minimum: 3.10
+#   - Tested: 3.11.x
+#   - Check: python --version

@@ -1,0 +1,16 @@
+robot:
+  type: roarm_m3
+  leader_arms:
+    main: /dev/ttyUSB1
+  follower_arms:
+    main: /dev/ttyUSB0
+  cameras:
+    front:
+      type: opencv
+      camera_index: 0
+      fps: 30
+      width: 640
+      height: 480
+
+control:
+  type: teleoperate

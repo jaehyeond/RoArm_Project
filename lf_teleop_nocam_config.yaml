@@ -1,0 +1,10 @@
+robot:
+  type: roarm_m3
+  leader_arms:
+    main: /dev/ttyUSB1   # 그리퍼 클램프 있는 팔 (손으로 움직임)
+  follower_arms:
+    main: /dev/ttyUSB0   # 그리퍼 클램프 없는 팔 (미러링)
+  cameras: {}
+
+control:
+  type: teleoperate
