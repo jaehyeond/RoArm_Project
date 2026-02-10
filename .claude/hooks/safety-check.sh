@@ -8,8 +8,14 @@ if [ -z "$INPUT" ]; then
     exit 0
 fi
 
+# Fail-closed: if python3 is not available, block everything
+if ! command -v python3 &>/dev/null; then
+    echo "BLOCKED: python3 not found. Cannot parse hook input safely." >&2
+    exit 2
+fi
+
 COMMAND=$(echo "$INPUT" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('tool_input',{}).get('command',''))" 2>/dev/null)
-if [ -z "$COMMAND" ]; then
+if [ $? -ne 0 ] || [ -z "$COMMAND" ]; then
     exit 0
 fi
 
