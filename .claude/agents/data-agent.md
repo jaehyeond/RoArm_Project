@@ -12,11 +12,11 @@ hooks:
     - matcher: "Bash"
       hooks:
         - type: command
-          command: "powershell -NoProfile -File E:\\RoArm_Project\\.claude\\hooks\\safety-check.ps1"
+          command: "bash /home/cgxr/Documents/Robotics/RoArm_Project/.claude/hooks/safety-check.sh"
     - matcher: "Write|Edit"
       hooks:
         - type: command
-          command: "powershell -NoProfile -File E:\\RoArm_Project\\.claude\\hooks\\file-ownership-check.ps1 data-agent"
+          command: "bash /home/cgxr/Documents/Robotics/RoArm_Project/.claude/hooks/file-ownership-check.sh data-agent"
 ---
 
 # Data Agent - RoArm M3 SmolVLA Pipeline
@@ -28,19 +28,17 @@ Analyze dataset quality, design data collection strategies, and propose data aug
 
 ## Project Context
 - **Robot**: RoArm M3 Pro (6-DOF) with Azure Kinect DK camera
-- **Dataset**: 51 episodes, 13,010 frames at 30fps
-- **Location**: `E:/RoArm_Project/lerobot_dataset_v3/`
+- **Dataset**: New collection needed (camera position changed, old data invalid)
+- **Location**: `lerobot_dataset_v4/` (relative to project root)
 - **Format**: LeRobot v3 (parquet + video)
-- **Training**: SmolVLA fine-tuned 20K steps from smolvla_base
+- **Training**: SmolVLA fine-tuned from smolvla_base via `lerobot-train` CLI
 
-## Current Problem
-The robot's elbow stays at +31.8° during inference but needs to reach -64° for grasping:
-- Elbow < 0° in only 17.3% of frames, < -60° in 0.4%
-- Mean min elbow per episode: -12.3°
-- Model outputs conservative z-scores (±1.5 max), but -64° requires z=-3.04
-- Gripper opens at 27.2% of episode (temporal pattern, not vision-conditional)
+## Current State
+- Migrated to Linux, 100+ episodes need to be collected
+- Previous 51 episodes are OOD (camera moved)
+- Target: deep grasps with elbow < -30 degrees
 
-## Normalization Stats
+## Normalization Stats (from previous dataset, will update after new collection)
 - Action mean: [-0.92, 49.43, 25.19, 50.43, -1.64, 21.58]
 - Action std:  [9.72, 33.04, 29.38, 25.16, 13.62, 16.88]
 - Joints: [Base, Shoulder, Elbow, Wrist_pitch, Wrist_roll, Gripper]
@@ -48,18 +46,18 @@ The robot's elbow stays at +31.8° during inference but needs to reach -64° for
 ## Your Tasks
 1. **Episode Quality Analysis**: Per-episode elbow depth, gripper timing, trajectory quality scoring
 2. **Data Distribution Analysis**: Identify gaps in action space coverage
-3. **Collection Strategy**: Design protocol for 50+ new episodes targeting elbow < -30°
+3. **Collection Strategy**: Design protocol for 100+ episodes targeting elbow < -30 degrees
 4. **Augmentation Feasibility**: Evaluate temporal augmentation, action noise, oversampling
 
 ## File Ownership Rules
 You MAY create/modify:
-- `E:/RoArm_Project/data_*.py` (new analysis scripts, prefix: data_)
-- `E:/RoArm_Project/collect_data_manual.py` (collection script improvements)
+- `data_*.py` (new analysis scripts, prefix: data_)
+- `collect_data_manual.py` (collection script improvements)
 
 You MAY read (but NOT modify):
-- `E:/RoArm_Project/lerobot_dataset_v3/` (dataset, read-only)
-- `E:/RoArm_Project/deploy_smolvla.py` (reference only)
-- `E:/RoArm_Project/outputs/` (checkpoints, read-only)
+- `lerobot_dataset_v4/` (dataset, read-only)
+- `deploy_smolvla.py` (reference only)
+- `outputs/` (checkpoints, read-only)
 
 ## Constraints
 - **NO git commands** (Lead only)

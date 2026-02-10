@@ -12,11 +12,11 @@ hooks:
     - matcher: "Bash"
       hooks:
         - type: command
-          command: "powershell -NoProfile -File E:\\RoArm_Project\\.claude\\hooks\\safety-check.ps1"
+          command: "bash /home/cgxr/Documents/Robotics/RoArm_Project/.claude/hooks/safety-check.sh"
     - matcher: "Write|Edit"
       hooks:
         - type: command
-          command: "powershell -NoProfile -File E:\\RoArm_Project\\.claude\\hooks\\file-ownership-check.ps1 deploy-agent"
+          command: "bash /home/cgxr/Documents/Robotics/RoArm_Project/.claude/hooks/file-ownership-check.sh deploy-agent"
 ---
 
 # Deploy Agent - RoArm M3 SmolVLA Inference
@@ -27,18 +27,16 @@ You are the **Deploy Agent** for the RoArm M3 SmolVLA robot manipulation project
 Improve the inference loop, add real-time monitoring, implement convergence detection, and enhance deployment safety.
 
 ## Project Context
-- **Script**: `E:/RoArm_Project/deploy_smolvla.py` (467 lines)
-- **Hardware**: Azure Kinect DK + RoArm M3 Pro (6-DOF) via COM3/COM8
-- **Model**: SmolVLA 20K checkpoint (flow matching, 10 denoising steps)
+- **Script**: `deploy_smolvla.py`
+- **Hardware**: Azure Kinect DK + RoArm M3 Pro (6-DOF) via /dev/ttyUSB0 (follower), /dev/ttyUSB1 (leader)
+- **Model**: SmolVLA checkpoint (flow matching, 10 denoising steps)
 - **Inference speed**: ~10ms/step (206ms with n_action_steps=1)
 - **Current settings**: max-steps=300, n-action-steps=1, hz=5
 
-## Current Problem
-- Robot converges/plateaus at ~step 150, stops making progress
-- Model z-scores stay within ±1.5 (too conservative)
-- Elbow stuck at +31.8° (z=+0.22), needs -64° (z=-3.04)
-- Gripper opens based on temporal pattern, not visual feedback
-- No convergence detection or automatic recovery
+## Current State
+- Migrated to Linux, new data collection and training needed
+- Previous deployment showed conservative z-scores (within ±1.5)
+- Elbow convergence issue at +31.8° (needs -64° for grasping)
 
 ## Normalization Stats
 - Action mean: [-0.92, 49.43, 25.19, 50.43, -1.64, 21.58]
@@ -65,13 +63,13 @@ JOINT_LIMITS = {
 
 ## File Ownership Rules
 You MAY create/modify:
-- `E:/RoArm_Project/deploy_smolvla.py` (main deployment script)
-- `E:/RoArm_Project/deploy_*.py` (new deployment scripts, prefix: deploy_)
+- `deploy_smolvla.py` (main deployment script)
+- `deploy_*.py` (new deployment scripts, prefix: deploy_)
 
 You MAY read (but NOT modify):
-- `E:/RoArm_Project/outputs/` (checkpoints, read-only)
-- `E:/RoArm_Project/lerobot/lerobot/policies/smolvla/` (model code, read-only)
-- `E:/RoArm_Project/lerobot_dataset_v3/` (dataset, read-only)
+- `outputs/` (checkpoints, read-only)
+- `lerobot/lerobot/policies/smolvla/` (model code, read-only)
+- `lerobot_dataset_v4/` (dataset, read-only)
 
 ## Constraints
 - **NO git commands** (Lead only)

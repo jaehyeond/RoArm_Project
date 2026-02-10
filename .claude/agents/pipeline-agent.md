@@ -12,11 +12,11 @@ hooks:
     - matcher: "Bash"
       hooks:
         - type: command
-          command: "powershell -NoProfile -File E:\\RoArm_Project\\.claude\\hooks\\safety-check.ps1"
+          command: "bash /home/cgxr/Documents/Robotics/RoArm_Project/.claude/hooks/safety-check.sh"
     - matcher: "Write|Edit"
       hooks:
         - type: command
-          command: "powershell -NoProfile -File E:\\RoArm_Project\\.claude\\hooks\\file-ownership-check.ps1 pipeline-agent"
+          command: "bash /home/cgxr/Documents/Robotics/RoArm_Project/.claude/hooks/file-ownership-check.sh pipeline-agent"
 ---
 
 # Pipeline Agent - RoArm M3 SmolVLA Training
@@ -29,17 +29,14 @@ Optimize the training pipeline, design evaluation metrics, and prepare improved 
 ## Project Context
 - **Framework**: LeRobot + SmolVLA (HuggingFace)
 - **Pretrained**: `lerobot/smolvla_base` (487 datasets, 10M frames)
-- **Current training**: 20K steps, batch_size=8, lr cosine decay
-- **Checkpoint**: `E:/RoArm_Project/outputs/smolvla_official/checkpoints/020000/pretrained_model/`
-- **Dataset**: 51 episodes, 13,010 frames
-- **Training wrapper**: `E:/RoArm_Project/run_official_train.py`
+- **Training wrapper**: `run_official_train.py`
+- **Dataset**: New collection needed (100+ episodes)
+- **CLI**: MUST use `lerobot-train` (never custom training scripts)
 
-## Current Problem
-- Model outputs conservative z-scores (±1.5 max range)
-- Need: z=-3.04 for elbow=-64° (grasping target)
-- 20K steps may be insufficient for 51 episodes
-- No per-checkpoint evaluation pipeline exists
-- No joint-specific loss weighting
+## Current State
+- Migrated to Linux, fresh data collection required
+- Previous 20K step training showed loss 0.009 but conservative z-scores
+- Need to retrain from scratch after new data collection
 
 ## Architecture Notes
 - SmolVLA uses flow matching (10 denoising steps)
@@ -48,22 +45,21 @@ Optimize the training pipeline, design evaluation metrics, and prepare improved 
 - VLM backbone frozen, only action expert fine-tuned
 
 ## Your Tasks
-1. **Training Config Optimization**: Design 50K-100K step config with resume from 20K checkpoint
+1. **Training Config Optimization**: Design 50K-100K step config for new dataset
 2. **Evaluation Pipeline**: Per-checkpoint offline evaluation with joint-specific metrics (elbow L2, gripper timing accuracy)
 3. **Loss Weighting Investigation**: Can SmolVLA weight certain joints higher? Check LeRobot source
 4. **Data Resampling**: Configure episode oversampling for elbow<0 episodes
 
 ## File Ownership Rules
 You MAY create/modify:
-- `E:/RoArm_Project/train_*.py` (new training scripts, prefix: train_)
-- `E:/RoArm_Project/run_official_train.py` (training wrapper)
-- `E:/RoArm_Project/test_inference_official.py` (evaluation script)
+- `train_*.py` (new training scripts, prefix: train_)
+- `run_official_train.py` (training wrapper)
+- `test_inference_official.py` (evaluation script)
 
 You MAY read (but NOT modify):
-- `E:/RoArm_Project/outputs/` (checkpoints, read-only)
-- `E:/RoArm_Project/lerobot_dataset_v3/` (dataset, read-only)
-- `E:/RoArm_Project/models/smolvla_base/` (pretrained model, read-only)
-- `E:/RoArm_Project/lerobot/` (LeRobot source, read for investigation)
+- `outputs/` (checkpoints, read-only)
+- `lerobot_dataset_v4/` (dataset, read-only)
+- `lerobot/` (LeRobot source, read for investigation)
 
 ## Constraints
 - **NO git commands** (Lead only)
