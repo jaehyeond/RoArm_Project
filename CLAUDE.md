@@ -25,7 +25,7 @@ Azure Kinect 카메라 → SmolVLA(450M) 모델 → RoArm M3 (6-DOF) 실시간 �
 | LeRobot | 0.4.4 (source install at `lerobot/`, .gitignored) |
 | Robot | RoArm-M3-Pro via `/dev/ttyUSB0` (follower) |
 | Leader | RoArm-M3-Pro via `/dev/ttyUSB1` (leader, L-F 모드 시) |
-| Camera | Azure Kinect DK (pyk4a — libk4a 설치 필요) |
+| Camera | Azure Kinect DK (pyk4a 1.5.0 + libk4a 1.4.2) |
 | Framework | LeRobot + SmolVLA (HuggingFace) |
 
 ## Key Commands
@@ -305,23 +305,23 @@ lerobot-train \
 ## Current Status (2026-02-10)
 
 ### Completed
-- Git repo 정리: 49개 파일 (Isaac Sim/RL 제거), GitHub push 완료 (SSH)
+- Git repo 정리: Isaac Sim/RL 제거, GitHub push 완료 (SSH)
 - Windows → Linux 완전 이관: COM 포트, 패치, 경로 모두 정리
-- Agent team hooks: .ps1 → .sh, fail-closed 보안 강화
+- Agent team hooks: .ps1 → .sh, fail-closed 보안 강화, Linux 검증 완료
 - **환경 구축 완료**: conda `roarm` env (Python 3.11 + PyTorch 2.7.1+cu126 + LeRobot 0.4.4 + SmolVLA + roarm_sdk)
+- **Azure Kinect SDK 설치 완료**: libk4a 1.4.2 + pyk4a 1.5.0 + udev rules
 - LeRobot 0.4.4 구조 변경 확인 (lerobot_backup/ 파일은 구버전 API)
+- 잔여 Windows 경로/stale import 정리 완료
 
 ### Pending
-- **Azure Kinect SDK**: sudo로 libk4a 설치 + pip install pyk4a 필요
 - **LeRobot 로봇 통합 포팅**: lerobot_backup/ → LeRobot 0.4.4 구조 (필요시)
 
 ### Next Steps
-1. **Azure Kinect SDK 설치** (sudo 필요: libk4a1.4-dev + pyk4a)
-2. **USB 하드웨어 연결 테스트** (로봇 + Kinect)
-3. **카메라 고정**: 삼각대/클램프로 고정, 위치 문서화
-4. **데이터 수집**: 100+ 에피소드 (elbow < -30° 50개, approach 30개, 다양한 시작 20개)
-5. **학습**: `lerobot-train` CLI, smolvla_base, 50K+ steps
-6. **배포**: dataset_mean 시작, n_action_steps=1, closed-loop
+1. **USB 하드웨어 연결 테스트** (로봇 + Kinect)
+2. **카메라 고정**: 삼각대/클램프로 고정, 위치 문서화
+3. **데이터 수집**: 100+ 에피소드 (elbow < -30° 50개, approach 30개, 다양한 시작 20개)
+4. **학습**: `lerobot-train` CLI, smolvla_base, 50K+ steps
+5. **배포**: dataset_mean 시작, n_action_steps=1, closed-loop
 
 ## Reference
 

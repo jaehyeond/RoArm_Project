@@ -3,10 +3,10 @@ Episode Quality Visualization (requires matplotlib)
 Run this after installing matplotlib to generate visual reports.
 
 Installation:
-    E:\RoArm_Project\.venv\Scripts\pip.exe install matplotlib seaborn
+    pip install matplotlib seaborn
 
 Usage:
-    E:\RoArm_Project\.venv\Scripts\python.exe data_visualize_episodes.py
+    python data_visualize_episodes.py
 """
 
 import pandas as pd

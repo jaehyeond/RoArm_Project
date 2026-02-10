@@ -11,12 +11,11 @@ Usage:
 
 Before running:
     - Connect both RoArm M3 arms via USB
-    - Check COM ports in Device Manager (Silicon Labs CP210x)
+    - Check ports: ls /dev/ttyUSB*
     - Update LEADER_PORT and FOLLOWER_PORT below
 """
 import sys
 import time
-sys.path.insert(0, r"E:\RoArm_Project\lerobot")
 
 # Suppress SDK noise
 import logging
