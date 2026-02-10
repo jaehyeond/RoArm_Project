@@ -289,6 +289,44 @@ All new features are **optional**. Default behavior unchanged:
 - Z-score display non-intrusive
 - Default checkpoint unchanged
 
+## Critical Deployment Fixes (2026-02-06 ~ 02-07)
+
+이 섹션은 새 기능이 아닌, **배포 시 발견된 치명적 문제와 수정 사항**을 기록합니다.
+
+### Fix 1: 시작 위치 (`--start-pos dataset_mean`)
+
+**문제**: `[0,0,0,0,0,0]`으로 시작하면 학습 데이터 분포 밖(OOD) → 소심한 동작(까닥까닥)만 반복.
+**원인**: SmolVLA는 학습 데이터 분포 내에서만 유의미한 z-score를 출력.
+**해결**: 데이터셋 통계의 `action.mean` 값 `[-1,49,25,50,-2,22]`을 시작 위치로 사용.
+**효과**: Shoulder 변화 2.6배, Elbow 변화 **17배** 개선.
+
+```bash
+# 수정 전 (OOD 시작)
+python deploy_smolvla.py --max-steps 50
+
+# 수정 후 (in-distribution 시작)
+python deploy_smolvla.py --start-pos dataset_mean --max-steps 300
+```
+
+### Fix 2: n_action_steps (50→1)
+
+**문제**: SmolVLA 기본값 `n_action_steps=50` → 50스텝마다 1회만 추론, 나머지 49스텝은 새 관측 없이 실행.
+**원인**: SmolVLA의 action chunk size=50이 그대로 배포에 적용. 학습 시에는 문제없지만, 배포 시에는 closed-loop이 깨짐.
+**해결**: `deploy_smolvla.py` 내부에서 `n_action_steps=1`로 설정.
+**효과**: 매 스텝 실제 카메라/관절 상태 반영 → true closed-loop 동작.
+
+**⚠️ 이것이 가장 중요한 수정**: 이 값이 50이면 사실상 open-loop으로 동작하여, 추론 결과가 현실과 괴리됨.
+
+### Fix 3: max-steps (100→300)
+
+**문제**: `max-steps=100`은 평균 에피소드(255 프레임)의 39%만 커버 → 동작이 중간에 끊김.
+**해결**: `max-steps=300`으로 변경 → 에피소드 100%+ 커버.
+
+```bash
+# 최종 권장 명령어
+python deploy_smolvla.py --start-pos dataset_mean --max-steps 300
+```
+
 ## Next Steps
 
 1. **Test action scaling**: Start with 1.2x, gradually increase to 2.0x
