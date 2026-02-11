@@ -16,14 +16,14 @@ sys.stdout.reconfigure(line_buffering=True)
 sys.stderr.reconfigure(line_buffering=True)
 
 # Resume or fresh start
-checkpoint_config = Path("outputs/smolvla_official/checkpoints/005000/pretrained_model/train_config.json")
+# last 체크포인트가 있으면 거기서 재개, 없으면 fresh start
+last_ckpt_file = Path("outputs/smolvla_official/checkpoints/last/pretrained_model/train_config.json")
 
-if checkpoint_config.exists():
-    # Resume from step 5000 checkpoint
-    print(f"Resuming from checkpoint: {checkpoint_config.parent}")
+if last_ckpt_file.exists():
+    print(f"Resuming from checkpoint: {last_ckpt_file.parent}")
     sys.argv = [
         "lerobot-train",
-        f"--config_path={checkpoint_config}",
+        f"--config_path={last_ckpt_file}",
         "--resume=true",
     ]
 else:
@@ -37,12 +37,12 @@ else:
         "--dataset.repo_id=roarm_m3_pick",
         "--dataset.root=lerobot_dataset_v3",
         "--batch_size=8",
-        "--steps=20000",
+        "--steps=50000",
         "--eval_freq=-1",
         "--save_freq=5000",
         "--log_freq=100",
         "--output_dir=outputs/smolvla_official",
-        "--num_workers=0",
+        "--num_workers=4",
         "--policy.device=cuda",
     ]
 
