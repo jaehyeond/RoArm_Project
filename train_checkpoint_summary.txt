@@ -1,0 +1,216 @@
+================================================================================
+CHECKPOINT EVALUATION SUMMARY (5K-50K)
+================================================================================
+Date: 2026-02-11
+Dataset: 50 episodes, 10,803 frames
+Test samples: 30 random frames
+
+HYPOTHESIS: "50K overfitted (37 epochs), 25K (18 epochs) will work better"
+RESULT: ❌ REJECTED — All checkpoints 15K-50K show IDENTICAL diversity
+
+================================================================================
+OVERALL L2 ERROR (Lower = Better)
+================================================================================
+Checkpoint │  Mean L2  │   Std   │   Min   │   Max   │ Rank
+───────────┼───────────┼─────────┼─────────┼─────────┼──────
+   5K      │   9.53°   │  4.46°  │  3.46°  │ 25.69°  │  5 (worst)
+  15K      │   3.95°   │  2.15°  │  1.53°  │ 13.27°  │  4
+  25K      │   3.47°   │  2.12°  │  0.70°  │ 10.06°  │  2
+★ 35K      │ ✅ 3.22°  │  1.99°  │  0.77°  │ 11.11°  │ ✅ 1 (BEST)
+  50K      │   3.54°   │  2.22°  │  0.87°  │ 11.70°  │  3
+
+KEY INSIGHT: 35K is 8% better than 50K (3.22° vs 3.54°)
+             25K is NOT better than 50K (3.47° vs 3.54°, only 2% diff)
+
+================================================================================
+CRITICAL JOINTS L2 ERROR
+================================================================================
+ELBOW (Joint 2) — Depth control
+─────────────────────────────────
+Checkpoint │  Mean L2  │   Std   │   Max   │ Rank
+───────────┼───────────┼─────────┼─────────┼──────
+   5K      │   3.54°   │  2.61°  │ 14.38°  │  5
+  15K      │   1.39°   │  1.44°  │  7.64°  │  4
+★ 25K      │ ✅ 0.87°  │  1.07°  │  5.86°  │ ✅ 1 (BEST)
+  35K      │   1.12°   │  1.25°  │  6.51°  │  2
+  50K      │   0.97°   │  1.31°  │  6.83°  │  3
+
+GRIPPER (Joint 5) — Grasp timing
+─────────────────────────────────
+Checkpoint │  Mean L2  │   Std   │   Max   │ Rank
+───────────┼───────────┼─────────┼─────────┼──────
+   5K      │   1.68°   │  2.44°  │ 13.26°  │  5
+  15K      │   1.09°   │  1.35°  │  4.76°  │  2
+  25K      │   1.21°   │  1.74°  │  6.63°  │  4
+★ 35K      │ ✅ 0.84°  │  0.97°  │  3.56°  │ ✅ 1 (BEST)
+  50K      │   1.03°   │  1.67°  │  8.65°  │  3
+
+KEY INSIGHT: 35K wins gripper (0.84° vs 1.03° for 50K, 18% better)
+             25K wins elbow (0.87° vs 1.12° for 35K, 22% better)
+             BUT: Offline L2 ≠ Online success (deployment failed for 50K)
+
+================================================================================
+Z-SCORE RANGE (Wider = More Diverse)
+================================================================================
+Checkpoint │ Overall Range │ Elbow Range       │ Gripper Range     │ Rank
+───────────┼───────────────┼───────────────────┼───────────────────┼──────
+   5K      │     5.70      │ [-2.05,  2.61]    │ [-0.61,  1.58]    │  5
+  15K      │     6.24      │ [-2.08,  2.76]    │ [-0.59,  1.58]    │  4
+★ 25K      │  ✅ 6.37      │ [-2.13,  2.81]    │ [-0.58,  1.88]    │ ✅ 1
+  35K      │     6.29      │ [-2.13,  2.76]    │ [-0.58,  1.84]    │  3
+  50K      │     6.29      │ [-2.13,  2.78]    │ [-0.58,  1.88]    │  3
+
+KEY INSIGHT: 25K has widest range (6.37), but only 1.3% better than 50K (6.29)
+             All 15K-50K show nearly IDENTICAL z-score behavior (< 2% variation)
+
+================================================================================
+PREDICTION DIVERSITY (Std across 30 samples) — ⚠️ CRITICAL METRIC
+================================================================================
+Joint      │ Dataset Std │  5K   │  15K  │  25K  │  35K  │  50K  │ Best
+───────────┼─────────────┼───────┼───────┼───────┼───────┼───────┼──────
+Base       │   21.75°    │ 24.64 │ 23.82 │ 24.52 │ 24.25 │ 24.36 │ ✅ ALL exceed
+Shoulder   │   26.08°    │ 23.66 │ 22.84 │ 23.05 │ 23.02 │ 23.02 │ 🟡 Slightly below
+Elbow      │   29.03°    │ 31.87 │ 31.90 │ 32.58 │ 32.36 │ 32.44 │ ✅ ALL exceed
+Wrist_P    │   26.00°    │ 30.69 │ 30.88 │ 31.57 │ 31.45 │ 31.48 │ ✅ ALL exceed
+Wrist_R    │   22.14°    │ 17.17 │ 16.15 │ 16.63 │ 16.64 │ 16.55 │ ⚠️ 25% LOSS
+Gripper    │   13.65°    │  8.55 │  8.00 │  8.66 │  8.04 │  8.91 │ ⚠️ 35-41% LOSS
+───────────┼─────────────┼───────┼───────┼───────┼───────┼───────┼──────
+MEAN       │   23.11°    │ 22.76 │ 22.26 │ 22.83 │ 22.62 │ 22.79 │ 25K (22.83°)
+
+DIVERSITY RATIO (Prediction / Dataset)
+───────────────────────────────────────
+Joint      │  5K   │  15K  │  25K  │  35K  │  50K  │ Verdict
+───────────┼───────┼───────┼───────┼───────┼───────┼────────────────────
+Base       │ 113%  │ 109%  │ 113%  │ 111%  │ 112%  │ ✅ EXCEEDS (good)
+Shoulder   │  91%  │  88%  │  88%  │  88%  │  88%  │ 🟡 Slightly low
+Elbow      │ 110%  │ 110%  │ 112%  │ 111%  │ 112%  │ ✅ EXCEEDS (good)
+Wrist_P    │ 118%  │ 119%  │ 121%  │ 121%  │ 121%  │ ✅ EXCEEDS (good)
+Wrist_R    │  77%  │  73%  │  75%  │  75%  │  75%  │ ⚠️ CONSERVATIVE (23-27% loss)
+Gripper    │  63%  │  59%  │  63%  │  59%  │  65%  │ ⚠️ CONSERVATIVE (35-41% loss)
+
+KEY INSIGHT: ALL checkpoints lose 23-41% diversity on Wrist_R/Gripper
+             This is NOT overfitting — it's DATA INSUFFICIENCY
+             50 episodes, DEEP 18%, gripper bias toward closed
+
+================================================================================
+OVERFITTING ANALYSIS (25K vs 50K)
+================================================================================
+Metric              │   25K   │   50K   │  Diff  │ % Diff │ Significant?
+────────────────────┼─────────┼─────────┼────────┼────────┼──────────────
+Mean Diversity      │ 22.83°  │ 22.79°  │ +0.04° │  +0.2% │ ❌ NO
+Z-score Range       │  6.37   │  6.29   │ +0.08  │  +1.3% │ ❌ NO
+Overall L2          │  3.47°  │  3.54°  │ -0.07° │  -2.0% │ 🟡 Minor
+Gripper Diversity   │  8.66°  │  8.91°  │ -0.25° │  -2.8% │ ❌ NO (50K better!)
+Wrist_R Diversity   │ 16.63°  │ 16.55°  │ +0.08° │  +0.5% │ ❌ NO
+
+DIVERSITY TREND (5K → 50K)
+──────────────────────────
+  5K: 22.76° (98.5% of dataset)
+ 15K: 22.26° (96.3%)  ← Slight drop
+★25K: 22.83° (98.8%)  ← PEAK (not a trend!)
+ 35K: 22.62° (97.9%)  ← Slight drop
+ 50K: 22.79° (98.6%)  ← RECOVERS
+
+CONCLUSION: NO MONOTONIC DECLINE — overfitting hypothesis REJECTED
+            25K and 50K are STATISTICALLY IDENTICAL (< 3% variation)
+
+================================================================================
+DEPLOYMENT FAILURE ROOT CAUSE
+================================================================================
+HYPOTHESIS 1: "50K is overfitted, use 25K instead"
+VERDICT: ❌ REJECTED
+
+Evidence AGAINST:
+  1. Diversity metrics: 25K=22.83°, 50K=22.79° (0.2% diff)
+  2. Z-score range: 25K=6.37, 50K=6.29 (1.3% diff)
+  3. Gripper diversity: 50K > 25K (8.91° > 8.66°)
+  4. No overfitting pattern: 35K (lowest L2) has similar diversity
+
+HYPOTHESIS 2: "Data insufficiency + distribution bias"
+VERDICT: ✅ CONFIRMED
+
+Evidence FOR:
+  1. DEEP grasp episodes: 9/50 (18%) — insufficient for "reach down and grasp"
+  2. Gripper diversity loss: ALL checkpoints lose 35-41% (data bias toward closed)
+  3. Wrist_R diversity loss: ALL checkpoints lose 23-27% (insufficient rotation samples)
+  4. Closed-loop drift: dataset_mean start (OOD) + conservative policy → error accumulation
+  5. Offline test PASS: GT state start masks conservative policy problem
+
+DEPLOYMENT SYMPTOMS (50K, 2 runs):
+  • Run 1: Wrist_R runaway (-3° → -92°), gripper stuck (2-4°)
+  • Run 2: Unidirectional drift (elbow +21°, shoulder +12°), gripper closed (10→2.5°)
+
+WHY 25K WILL FAIL TOO:
+  • Same 50 episodes, same DEEP 18%, same gripper bias
+  • Identical diversity (0.2% diff from 50K)
+  • Conservative on same joints (Wrist_R 75%, Gripper 63%)
+
+================================================================================
+RECOMMENDATIONS
+================================================================================
+✅ IMMEDIATE (1 hour): Test 35K checkpoint
+   Rationale: Lowest L2 (3.22°), best gripper (0.84°)
+   Expected: Similar failure (confirms data hypothesis)
+   Command:
+     python deploy_smolvla.py \
+       --checkpoint outputs/smolvla_official/checkpoints/035000/pretrained_model \
+       --start-pos dataset_mean \
+       --max-steps 50 \
+       --abort-elbow -70 --abort-gripper 50
+
+🔴 HIGH PRIORITY: Data collection (100+ episodes)
+   Strategy:
+     • 50 DEEP episodes (elbow < -30°) — currently only 9 (18%)
+     • 30 gripper diversity (rapid open/close) — fix bias toward closed
+     • 20 Wrist_R rotation (> 30° range) — fix 25% diversity loss
+   Validation split: 10 episodes (10%) held out
+
+📊 AFTER DATA: Retrain 100K steps
+   Config:
+     • 100K steps (16 epochs @ 12K frames) vs current 50K (37 epochs)
+     • eval_freq=5000 (checkpoint every 5K)
+     • validation split (detect overfitting)
+   Monitor:
+     • Per-joint diversity ≥ 90% of dataset std
+     • Z-score range > 6.5
+     • Training vs validation loss divergence
+
+🚀 DEPLOYMENT: Cautious rollout
+   1. Dry-run (torque off, log predictions)
+   2. Limited trials (10 runs, human supervision)
+   3. Full deployment (monitor z-scores, abort on 4σ)
+
+================================================================================
+CHECKPOINT SELECTION MATRIX
+================================================================================
+Criterion            │  5K  │ 15K  │ 25K  │ 35K  │ 50K  │ Winner
+─────────────────────┼──────┼──────┼──────┼──────┼──────┼────────
+Overall L2 (lower)   │  ❌  │  🟡  │  ✅  │ ✅✅ │  ✅  │ 35K (3.22°)
+Elbow L2 (lower)     │  ❌  │  🟡  │ ✅✅ │  ✅  │  ✅  │ 25K (0.87°)
+Gripper L2 (lower)   │  ❌  │  ✅  │  🟡  │ ✅✅ │  ✅  │ 35K (0.84°)
+Z-score Range (wide) │  ❌  │  🟡  │ ✅✅ │  ✅  │  ✅  │ 25K (6.37)
+Mean Diversity (high)│  🟡  │  🟡  │ ✅✅ │  🟡  │  ✅  │ 25K (22.83°)
+Gripper Div (high)   │  🟡  │  ❌  │  🟡  │  ❌  │ ✅✅ │ 50K (65%)
+Wrist_R Div (high)   │ ✅✅ │  ❌  │  🟡  │  🟡  │  🟡  │ 5K (77%)
+─────────────────────┼──────┼──────┼──────┼──────┼──────┼────────
+OVERALL VERDICT      │  ❌  │  🟡  │  ✅  │ ✅✅ │  ✅  │ 35K (balanced)
+
+Legend: ✅✅ = Best  ✅ = Good  🟡 = Acceptable  ❌ = Poor
+
+FINAL RECOMMENDATION:
+  • Deploy: 35K (lowest L2, best gripper, no overfitting)
+  • Expect: FAIL (data insufficiency affects ALL checkpoints)
+  • Solution: Collect 100+ episodes → Retrain → Deploy
+
+================================================================================
+KEY TAKEAWAYS
+================================================================================
+1. ❌ 50K is NOT overfitted — diversity identical to 25K (0.2% diff)
+2. ❌ 25K is NOT better — only 2% L2 improvement, worse gripper diversity
+3. ✅ 35K is optimal — best overall L2 (3.22°), best gripper (0.84°)
+4. ⚠️ ALL checkpoints conservative — Wrist_R 75%, Gripper 59-65%
+5. 🔴 Data insufficiency is root cause — 50 episodes, DEEP 18%
+6. 📊 Offline metrics ≠ Online success — L2 error masks OOD drift
+7. 🚀 Next step: Test 35K (1h) → Collect data (1-2d) → Retrain (2-3h)
+
+================================================================================

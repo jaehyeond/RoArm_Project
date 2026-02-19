@@ -66,11 +66,12 @@ JOINT_LIMITS = [
     (-10,  100),   # 5: Gripper
 ]
 
-CHECKPOINT_PATH = "outputs/smolvla_official/checkpoints/020000/pretrained_model"
+CHECKPOINT_PATH = "outputs/smolvla_official/checkpoints/last/pretrained_model"
 
-# 데이터셋 평균 위치 (51 에피소드 기준)
+# 데이터셋 평균 위치 (50 에피소드, 10803 프레임 기준)
+# action.mean: [2.71, 40.31, 13.04, 62.75, -2.65, 9.61]
 # 학습 데이터가 이 근처에서 수집되었으므로 여기서 시작해야 in-distribution
-DATASET_MEAN_POS = [-1, 49, 25, 50, -2, 22]
+DATASET_MEAN_POS = [3, 40, 13, 63, -3, 10]
 
 # 관절 이름 (로깅/출력용)
 JOINT_NAMES = ["base", "shoulder", "elbow", "wrist_pitch", "wrist_roll", "gripper"]
@@ -498,7 +499,7 @@ def main():
                 print("\n  [Open-Loop] 첫 관측으로 action chunk 생성...")
 
                 capture = k4a.get_capture()
-                frame_bgr = capture.color[:, :, :3]
+                frame_bgr = np.ascontiguousarray(capture.color[:, :, :3])
 
                 current_angles = get_robot_angles(arm)
                 if current_angles is None:
@@ -619,7 +620,7 @@ def main():
                     if capture.color is None:
                         print(f"  [{step:3d}] 카메라 프레임 없음, 건너뜀")
                         continue
-                    frame_bgr = capture.color[:, :, :3]  # BGRA → BGR
+                    frame_bgr = np.ascontiguousarray(capture.color[:, :, :3])  # BGRA → BGR
 
                     # 로봇 상태 읽기
                     current_angles = get_robot_angles(arm)

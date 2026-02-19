@@ -25,7 +25,7 @@ from lerobot.datasets.lerobot_dataset import LeRobotDataset
 
 def main():
     print("=" * 60)
-    print("SmolVLA Inference Test (Official Training - 20K steps)")
+    print("SmolVLA Inference Test (Official Training - 50K steps)")
     print("=" * 60)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -41,7 +41,7 @@ def main():
     print(f"  Episodes: {dataset.num_episodes}")
 
     # Load trained model
-    checkpoint_path = "outputs/smolvla_official/checkpoints/020000/pretrained_model"
+    checkpoint_path = "outputs/smolvla_official/checkpoints/last/pretrained_model"
     print(f"\nLoading model from: {checkpoint_path}")
 
     policy = SmolVLAPolicy.from_pretrained(checkpoint_path)

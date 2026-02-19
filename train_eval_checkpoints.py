@@ -74,7 +74,10 @@ def evaluate_checkpoint(
     test_indices: List[int],
     device: torch.device,
 ) -> Dict:
-    """Evaluate policy on test samples and return metrics."""
+    """Evaluate policy on test samples and return metrics.
+
+    Returns metrics including per-joint diversity (std) to detect conservative policy.
+    """
 
     # Get tokenizer
     processor = policy.model.vlm_with_expert.processor
@@ -219,8 +222,8 @@ def print_comparison_table(checkpoint_metrics: Dict[str, Dict]):
         overall_range = f"[{m['raw_z_min'].min():.2f}, {m['raw_z_max'].max():.2f}]"
         print(f"{ckpt:<15} {elbow_range:<20} {gripper_range:<20} {overall_range:<20}")
 
-    # Diversity check (std of predictions)
-    print("\n🌈 Prediction Diversity (Std across samples):")
+    # Diversity check (std of predictions) - CRITICAL METRIC
+    print("\n🌈 Prediction Diversity (Std across samples) - CRITICAL:")
     print(f"{'Checkpoint':<15}", end="")
     for name in JOINT_NAMES:
         print(f" {name:<10}", end="")
@@ -234,6 +237,12 @@ def print_comparison_table(checkpoint_metrics: Dict[str, Dict]):
             print(f" {m['prediction_std'][i]:>9.2f}", end="")
         print()
 
+    # Dataset comparison (show expected diversity)
+    print("\n📦 Dataset Reference (Expected Diversity):")
+    print("  Base: 21.75°, Shoulder: 26.08°, Elbow: 29.03°")
+    print("  Wrist_P: 26.00°, Wrist_R: 22.14°, Gripper: 13.65°")
+    print("\n⚠️  WARNING: If prediction std < 50% of dataset std → Conservative Policy!")
+
     print("\n" + "=" * 120)
 
 
@@ -243,8 +252,8 @@ def main():
         "--checkpoints",
         nargs="+",
         type=int,
-        default=[5000, 10000, 15000, 20000],
-        help="Checkpoint steps to evaluate (default: 5K, 10K, 15K, 20K)",
+        default=[15000, 25000, 35000, 45000, 50000],
+        help="Checkpoint steps to evaluate (default: 15K, 25K, 35K, 45K, 50K)",
     )
     parser.add_argument(
         "--output-dir",
@@ -293,7 +302,11 @@ def main():
     checkpoint_metrics = {}
 
     for step in args.checkpoints:
-        ckpt_path = Path(args.output_dir) / "checkpoints" / f"{step:06d}" / "pretrained_model"
+        # Handle 'last' checkpoint for 50K
+        if step == 50000:
+            ckpt_path = Path(args.output_dir) / "checkpoints" / "last" / "pretrained_model"
+        else:
+            ckpt_path = Path(args.output_dir) / "checkpoints" / f"{step:06d}" / "pretrained_model"
 
         if not ckpt_path.exists():
             print(f"\n⚠️ Checkpoint {step} not found at {ckpt_path}, skipping...")
@@ -335,7 +348,7 @@ def main():
         serializable_metrics = {}
         for ckpt, metrics in checkpoint_metrics.items():
             serializable_metrics[ckpt] = {
-                k: v.tolist() if isinstance(v, np.ndarray) else v
+                k: v.tolist() if isinstance(v, np.ndarray) else float(v) if isinstance(v, (np.floating, np.integer)) else v
                 for k, v in metrics.items()
             }
 

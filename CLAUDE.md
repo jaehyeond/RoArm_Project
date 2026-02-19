@@ -302,7 +302,19 @@ lerobot-train \
   --output_dir=outputs/smolvla_official
 ```
 
-## Current Status (2026-02-10)
+### 배포 실패 (2026-02-11, Linux 환경)
+| Attempt | Data | Steps | Result |
+|---------|------|-------|--------|
+| 1 | 50ep (68% SHALLOW) | 50K | 그리퍼 미작동, Wrist_R -92° 폭주 |
+| 2 | 동일 | 50K | 한 방향 드리프트, 파지 동작 없음 |
+
+### 배포 실패 Root Causes
+1. **데이터 부족**: 50 에피소드, DEEP 9개뿐 → 모델이 "내려가서 잡기" 안 배움
+2. **Gripper 편향**: 대부분 프레임 gripper closed → open 동작 미학습
+3. **Closed-loop drift**: 작은 오차 누적 → OOD → 한 방향 드리프트
+4. **오프라인 ≠ 온라인**: 오프라인 L2=2.53° 양호해도 실제 배포 실패 가능
+
+## Current Status (2026-02-11)
 
 ### Completed
 - Git repo 정리: Isaac Sim/RL 제거, GitHub push 완료 (SSH)
@@ -310,18 +322,24 @@ lerobot-train \
 - Agent team hooks: .ps1 → .sh, fail-closed 보안 강화, Linux 검증 완료
 - **환경 구축 완료**: conda `roarm` env (Python 3.11 + PyTorch 2.7.1+cu126 + LeRobot 0.4.4 + SmolVLA + roarm_sdk)
 - **Azure Kinect SDK 설치 완료**: libk4a 1.4.2 + pyk4a 1.5.0 + udev rules
-- LeRobot 0.4.4 구조 변경 확인 (lerobot_backup/ 파일은 구버전 API)
-- 잔여 Windows 경로/stale import 정리 완료
+- **데이터 수집 (v1)**: 50 에피소드, 10,803 프레임 (DEEP 18%, APPROACH 14%, SHALLOW 68%)
+- **학습 완료 (v1)**: 50K steps, loss 0.007, smolvla_base pretrained
+- **오프라인 테스트 통과**: Overall Std 21.55°, Mean L2 2.53°, 50K checkpoint 최적
+- **배포 2회 실패 (2026-02-11)**: 그리퍼 미작동, 한 방향 드리프트, 파지 실패
 
-### Pending
-- **LeRobot 로봇 통합 포팅**: lerobot_backup/ → LeRobot 0.4.4 구조 (필요시)
+### Deployment Failure Analysis (2026-02-11)
+
+| 문제 | 증상 | 원인 |
+|------|------|------|
+| 그리퍼 미작동 | 한번도 열리지 않음 (2-4°) | 학습 데이터에 gripper open 프레임 부족 |
+| 단방향 드리프트 | 모든 관절이 한 방향으로만 천천히 이동 | Closed-loop 오차 누적 → OOD |
+| Wrist_R 폭주 (Run 1) | -3° → -92° | 4σ OOD drift |
+| Elbow 상승 | 13° → 36° (위로만) | DEEP 에피소드 부족 (9/50) |
 
 ### Next Steps
-1. **USB 하드웨어 연결 테스트** (로봇 + Kinect)
-2. **카메라 고정**: 삼각대/클램프로 고정, 위치 문서화
-3. **데이터 수집**: 100+ 에피소드 (elbow < -30° 50개, approach 30개, 다양한 시작 20개)
-4. **학습**: `lerobot-train` CLI, smolvla_base, 50K+ steps
-5. **배포**: dataset_mean 시작, n_action_steps=1, closed-loop
+1. **데이터 추가 수집**: 100+ 에피소드 (DEEP 50개+, gripper open/close 다양성)
+2. **재학습**: 새 데이터셋으로 50K+ steps
+3. **재배포 테스트**: dataset_mean 시작, closed-loop
 
 ## Reference
 
