@@ -66,12 +66,12 @@ JOINT_LIMITS = [
     (-10,  100),   # 5: Gripper
 ]
 
-CHECKPOINT_PATH = "outputs/smolvla_official/checkpoints/last/pretrained_model"
+CHECKPOINT_PATH = "outputs/smolvla_v2_cleaned/checkpoints/last/pretrained_model"
 
-# 데이터셋 평균 위치 (50 에피소드, 10803 프레임 기준)
-# action.mean: [2.71, 40.31, 13.04, 62.75, -2.65, 9.61]
+# 데이터셋 평균 위치 (v2: 43 에피소드, 9747 프레임 기준)
+# action.mean: [2.94, 41.22, 12.64, 61.44, -2.46, 10.04]
 # 학습 데이터가 이 근처에서 수집되었으므로 여기서 시작해야 in-distribution
-DATASET_MEAN_POS = [3, 40, 13, 63, -3, 10]
+DATASET_MEAN_POS = [3, 41, 13, 61, -2, 10]
 
 # 관절 이름 (로깅/출력용)
 JOINT_NAMES = ["base", "shoulder", "elbow", "wrist_pitch", "wrist_roll", "gripper"]
@@ -139,7 +139,9 @@ def load_model(checkpoint_path, device):
 
 
 def tokenize_task(tokenizer, task_text, device):
-    """태스크 텍스트를 토큰화"""
+    """태스크 텍스트를 토큰화 (공식 SmolVLANewLineProcessor와 동일하게 \n 추가)"""
+    if not task_text.endswith("\n"):
+        task_text = f"{task_text}\n"
     tokenized = tokenizer(
         [task_text],
         max_length=48,
@@ -347,8 +349,8 @@ def main():
                         help="시작 위치: zero=[0]*6, dataset_mean=학습데이터 평균, current=현재위치 유지")
     parser.add_argument("--open-loop", action="store_true",
                         help="Open-loop: 첫 chunk(50 actions)를 순서대로 실행 (매 스텝 새 관측 안함)")
-    parser.add_argument("--n-action-steps", type=int, default=1,
-                        help="chunk에서 사용할 action 수 (1=매 스텝 새 추론, 50=기존 chunk 전체 사용)")
+    parser.add_argument("--n-action-steps", type=int, default=50,
+                        help="chunk에서 사용할 action 수 (1=매 스텝 새 추론, 50=공식 기본값, chunk 전체 사용)")
     parser.add_argument("--device", default="cuda", help="cuda 또는 cpu")
 
     # NEW: Action scaling

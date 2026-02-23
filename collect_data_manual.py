@@ -60,25 +60,38 @@ class DatasetStats:
                 with open(metadata_path, 'r') as f:
                     metadata = json.load(f)
 
-                    # Z-height 우선 사용 (새 에피소드), 없으면 elbow로 폴백 (구 에피소드)
+                    # 분류 우선순위: shoulder_at_grip_close > min_z > max_shoulder
+                    sh_at_close = metadata.get('shoulder_at_grip_close', None)
                     min_z = metadata.get('min_z', None)
-                    if min_z is not None:
-                        # Z-based classification: DEEP (< 100mm), APPROACH (100-200mm), SHALLOW (> 200mm)
-                        if min_z < 100:
+                    max_sh = metadata.get('max_shoulder', None)
+
+                    if sh_at_close is not None:
+                        # 가장 정확: 그리퍼 닫기 시점의 shoulder
+                        if sh_at_close > 60:
                             self.deep_count += 1
-                        elif min_z < 200:
+                        elif sh_at_close > 40:
+                            self.approach_count += 1
+                        else:
+                            self.shallow_count += 1
+                    elif min_z is not None and min_z < 9999:
+                        # Z-height 기반 (calibrated: Z=30mm=table, Z=80mm=grasp, Z=160mm=approach)
+                        if min_z < 80:
+                            self.deep_count += 1
+                        elif min_z < 160:
+                            self.approach_count += 1
+                        else:
+                            self.shallow_count += 1
+                    elif max_sh is not None:
+                        # Shoulder 최대값 폴백
+                        if max_sh > 60:
+                            self.deep_count += 1
+                        elif max_sh > 40:
                             self.approach_count += 1
                         else:
                             self.shallow_count += 1
                     else:
-                        # Fallback to elbow-based classification (backward compat)
-                        min_elbow = metadata.get('min_elbow', 999)
-                        if min_elbow < -30:
-                            self.deep_count += 1
-                        elif min_elbow < -10:
-                            self.approach_count += 1
-                        else:
-                            self.shallow_count += 1
+                        # 구 에피소드: 데이터 없으면 APPROACH로 추정
+                        self.approach_count += 1
 
                     self.total_count += 1
             except:
@@ -164,6 +177,15 @@ class ManualDataCollector:
         self.max_z = -9999
         self.current_pose = None  # 캐시 for display
 
+        # Shoulder + Gripper 타이밍 추적 (에피소드별)
+        self.max_shoulder = -999
+        self.shoulder_at_grip_close = None  # 그리퍼 닫히는 시점의 shoulder
+        self.z_at_grip_close = None         # 그리퍼 닫히는 시점의 Z
+        self.grip_was_open = False          # 에피소드 중 그리퍼가 충분히 열렸는지
+        self.grip_open_frame = None         # 그리퍼 처음 열린 프레임
+        self.grip_close_frame = None        # 그리퍼 닫힌 프레임
+        self.prev_gripper = None            # 이전 프레임 그리퍼 값
+
     def get_camera_frame(self):
         """Azure Kinect에서 RGB + Depth 프레임 가져오기"""
         capture = self.k4a.get_capture()
@@ -219,23 +241,68 @@ class ManualDataCollector:
         })
 
     def validate_episode(self):
-        """에피소드 품질 검증"""
+        """에피소드 품질 검증 (shoulder + Z + gripper timing)
+
+        Z Calibration (confirmed by user, 2026-02-23):
+          Z=30mm  = arm fully extended to table surface (DEEP limit)
+          Z=80mm  = typical gripper-close height on object (~30mm tall box)
+          Z=160mm = approach height (arm moving toward object)
+          Z=230mm+ = home/neutral height (arm at rest)
+
+        Episode pattern: orange → yellow → green (grasp moment) → yellow → orange
+        Only the GRASPING MOMENT needs to be in the green zone.
+        """
         issues = []
+        warnings = []
 
-        # Z-height 체크 (DEEP grasp 기준: < 100mm)
-        if self.min_z > 200:
-            issues.append(f"얕은 그리핑 (min_z={self.min_z:.0f}mm > 200mm)")
+        num_frames = len(self.current_episode)
 
-        # Gripper 체크
-        gripper_range = self.max_gripper - self.min_gripper
-        if gripper_range < 15:
-            issues.append(f"그리퍼 개폐 부족 (range={gripper_range:.1f}° < 15°)")
+        # 1. 그리퍼가 충분히 열렸는가? (40° 이상)
+        if not self.grip_was_open:
+            issues.append(f"그리퍼 미개방 (max={self.max_gripper:.0f}° < 40°)")
+        else:
+            # 2. 그리퍼 열림 크기 체크 (열린 경우에만 range 평가)
+            gripper_range = self.max_gripper - self.min_gripper
+            if gripper_range < 15:
+                issues.append(f"그리퍼 개폐 부족 (range={gripper_range:.1f}° < 15°)")
+            elif self.max_gripper < 50:
+                warnings.append(f"그리퍼 열림 부족 (max={self.max_gripper:.0f}°, 60°+ 권장)")
 
-        # 프레임 수 체크
-        if len(self.current_episode) < 50:
-            issues.append(f"프레임 수 부족 ({len(self.current_episode)} < 50)")
+        # 3. 그리퍼 닫기 타이밍 — 핵심 체크!
+        if self.shoulder_at_grip_close is not None:
+            # Shoulder 기준: 닫힐 때 shoulder > 50° = 팔이 충분히 내려간 상태
+            if self.shoulder_at_grip_close < 40:
+                issues.append(
+                    f"그리퍼 닫기 시 팔 높음! (shoulder={self.shoulder_at_grip_close:.0f}°, 50°+ 필요)")
+            elif self.shoulder_at_grip_close < 50:
+                warnings.append(
+                    f"그리퍼 닫기 시 팔 약간 높음 (shoulder={self.shoulder_at_grip_close:.0f}°)")
 
-        return issues
+            # Z 기준: 닫힐 때 Z < 130mm = 물체 근처에서 잡기
+            # 근거: Z=30mm=테이블, Z=80mm=일반 물체 위, Z=130mm=안전 상한
+            # 에피소드 전체가 green일 필요 없음 — 잡기 순간만 green 필요!
+            if self.z_at_grip_close is not None and self.z_at_grip_close > 130:
+                issues.append(
+                    f"그리퍼 닫기 시 높이 높음! (Z={self.z_at_grip_close:.0f}mm, 130mm 이하 필요)")
+        else:
+            # shoulder_at_grip_close가 None인 경우:
+            # - 열렸는데 닫기를 감지 못함 (열린 채 종료, 또는 임계값 미달)
+            # - 아예 안 열린 경우는 check 1에서 이미 처리됨
+            if self.grip_was_open:
+                warnings.append("그리퍼가 열렸지만 닫기 감지 안됨 (열린 상태로 끝남?)")
+
+        # 4. 프레임 수 체크
+        if num_frames < 50:
+            issues.append(f"프레임 수 부족 ({num_frames} < 50)")
+        elif num_frames > 300:
+            warnings.append(f"에피소드 너무 김 ({num_frames}프레임 = {num_frames/30:.1f}초, 5-6초 권장)")
+
+        # 5. Z-height 체크 (DEEP grasp 기준)
+        # min_z는 에피소드 전체에서 가장 낮은 값 — 160mm 이하면 충분히 내려간 것
+        if self.min_z > 160:
+            warnings.append(f"얕은 그리핑 (min_z={self.min_z:.0f}mm, 160mm 이하 권장)")
+
+        return issues, warnings
 
     def save_episode(self):
         """현재 에피소드를 디스크에 저장"""
@@ -244,23 +311,38 @@ class ManualDataCollector:
             return
 
         # 품질 검증
-        issues = self.validate_episode()
-        if issues:
+        issues, warnings = self.validate_episode()
+        if issues or warnings:
             print(f"\n{'='*50}")
-            print("⚠ 에피소드 품질 경고:")
-            for i, issue in enumerate(issues, 1):
-                print(f"  {i}. {issue}")
+            if issues:
+                print("FAIL - 에피소드 품질 문제:")
+                for i, issue in enumerate(issues, 1):
+                    print(f"  [{i}] {issue}")
+            if warnings:
+                print("WARN - 개선 권장:")
+                for i, warn in enumerate(warnings, 1):
+                    print(f"  ({i}) {warn}")
+
+            # 그리퍼 타이밍 정보 출력
+            if self.shoulder_at_grip_close is not None:
+                z_part = f", Z={self.z_at_grip_close:.0f}mm" if self.z_at_grip_close is not None else ""
+                print(f"\n  그리퍼 닫기 시점: shoulder={self.shoulder_at_grip_close:.0f}°{z_part}")
+                if self.grip_open_frame is not None and self.grip_close_frame is not None:
+                    open_pct = self.grip_open_frame / max(1, len(self.current_episode)) * 100
+                    close_pct = self.grip_close_frame / max(1, len(self.current_episode)) * 100
+                    print(f"  그리퍼 열림: {open_pct:.0f}% 지점, 닫힘: {close_pct:.0f}% 지점")
             print(f"{'='*50}")
 
-            # 사용자 선택
-            choice = input("저장하시겠습니까? (y=저장, n=취소, r=재녹화): ").strip().lower()
-            if choice == 'n':
-                print("에피소드 저장 취소됨")
-                return
-            elif choice == 'r':
-                print("에피소드 취소 후 재녹화하세요 (Backspace)")
-                return
-            # y 또는 기타: 강제 저장 진행
+            if issues:
+                # issues가 있으면 기본적으로 재녹화 권유
+                choice = input("저장하시겠습니까? (y=강제저장, n=취소, r=재녹화): ").strip().lower()
+                if choice == 'n':
+                    print("에피소드 저장 취소됨")
+                    return
+                elif choice != 'y':
+                    print("에피소드 취소 후 재녹화하세요 (Backspace)")
+                    return
+            # warnings만 있으면 자동 저장 진행
 
         episode_dir = os.path.join(self.save_dir, f"episode_{self.episode_count:04d}")
         os.makedirs(episode_dir, exist_ok=True)
@@ -276,12 +358,17 @@ class ManualDataCollector:
             "min_elbow": round(self.min_elbow, 2),
             "max_elbow": round(self.max_elbow, 2),
             "elbow_range": round(self.max_elbow - self.min_elbow, 2),
+            "max_shoulder": round(self.max_shoulder, 2),
+            "shoulder_at_grip_close": round(self.shoulder_at_grip_close, 2) if self.shoulder_at_grip_close is not None else None,
+            "z_at_grip_close": round(self.z_at_grip_close, 2) if self.z_at_grip_close is not None else None,
             "min_z": round(self.min_z, 2),
             "max_z": round(self.max_z, 2),
             "z_range": round(z_range, 2),
             "gripper_min": round(self.min_gripper, 2),
             "gripper_max": round(self.max_gripper, 2),
             "gripper_range": round(gripper_range, 2),
+            "grip_open_frame": self.grip_open_frame,
+            "grip_close_frame": self.grip_close_frame,
             "frames": []
         }
 
@@ -301,34 +388,41 @@ class ManualDataCollector:
         with open(os.path.join(episode_dir, "metadata.json"), "w") as f:
             json.dump(metadata, f, indent=2)
 
-        # Z-height 품질 판정
-        if self.min_z < 100:
+        # Z-height 품질 판정 (min_z = 에피소드에서 가장 낮은 값)
+        # Calibrated: Z=30mm=table, Z=80mm=object grasp, Z=160mm=approach, Z=230mm+=home
+        if self.min_z < 80:
             quality = "DEEP GRASP"
-            quality_color = "🟢"
-        elif self.min_z < 200:
+            quality_color = "DEEP"
+        elif self.min_z < 160:
             quality = "APPROACH"
-            quality_color = "🟡"
+            quality_color = "APPROACH"
         else:
             quality = "SHALLOW"
-            quality_color = "🟠"
+            quality_color = "SHALLOW"
 
         print(f"\n{'='*50}")
         print(f"에피소드 {self.episode_count} 저장 완료!")
-        print(f"  프레임 수: {len(self.current_episode)}")
-        print(f"  Min Z-Height: {self.min_z:.0f}mm → [{quality}] {quality_color}")
-        print(f"  Min Elbow: {self.min_elbow:.1f}° (legacy)")
-        print(f"  Gripper Range: {gripper_range:.1f}° (min={self.min_gripper:.1f}, max={self.max_gripper:.1f})")
-        if self.min_z > 200:
-            print(f"  ⚠ WARNING: 얕은 그리핑! Deep Grasp(< 100mm) 에피소드 더 필요")
-        if gripper_range < 15:
-            print(f"  ⚠ WARNING: 그리퍼 개폐 부족! 완전히 열고 닫으세요")
-        print(f"  저장 위치: {episode_dir}")
+        print(f"  프레임: {len(self.current_episode)} ({len(self.current_episode)/30:.1f}초)")
+        print(f"  Min Z: {self.min_z:.0f}mm → [{quality}] {quality_color}")
+        print(f"  Max Shoulder: {self.max_shoulder:.0f}°")
+        print(f"  Gripper: {self.min_gripper:.0f}° ~ {self.max_gripper:.0f}° (range={gripper_range:.0f}°)")
+        if self.shoulder_at_grip_close is not None:
+            z_str = f", Z={self.z_at_grip_close:.0f}mm" if self.z_at_grip_close else ""
+            timing_ok = "OK" if self.shoulder_at_grip_close >= 50 else "LOW"
+            print(f"  Grasp: shoulder={self.shoulder_at_grip_close:.0f}°{z_str} [{timing_ok}]")
+        else:
+            print(f"  Grasp: 닫기 감지 안됨")
+        print(f"  저장: {episode_dir}")
         print(f"{'='*50}\n")
 
         # 통계 업데이트
         self.stats.analyze_existing_episodes()
 
         self.episode_count += 1
+        self._reset_episode_tracking()
+
+    def _reset_episode_tracking(self):
+        """에피소드 추적 변수 전체 초기화"""
         self.current_episode = []
         self.is_recording = False
         self.min_elbow = 999
@@ -337,19 +431,19 @@ class ManualDataCollector:
         self.max_gripper = -999
         self.min_z = 9999
         self.max_z = -9999
+        self.max_shoulder = -999
+        self.shoulder_at_grip_close = None
+        self.z_at_grip_close = None
+        self.grip_was_open = False
+        self.grip_open_frame = None
+        self.grip_close_frame = None
+        self.prev_gripper = None
 
     def cancel_episode(self):
         """현재 에피소드 취소"""
         if len(self.current_episode) > 0:
             print(f"\n에피소드 취소됨 ({len(self.current_episode)} 프레임 삭제)")
-            self.current_episode = []
-            self.is_recording = False
-            self.min_elbow = 999
-            self.max_elbow = -999
-            self.min_gripper = 999
-            self.max_gripper = -999
-            self.min_z = 9999
-            self.max_z = -9999
+            self._reset_episode_tracking()
         else:
             print("취소할 에피소드가 없습니다.")
 
@@ -439,35 +533,56 @@ class ManualDataCollector:
                 pose = self.get_robot_pose()
                 self.current_pose = pose  # 캐시 for display
 
-                # 녹화 중이면 프레임 저장 (30 FPS)
+                # 관절 + Z 추적 (save_frame 호출 전에 수행해야 frame_idx가 정확함)
+                shoulder = angles[1]
+                elbow = angles[2]
+                gripper = angles[5]
+                z_height = pose[2] if pose else 9999  # Z in mm
+
+                # 녹화 중이면 프레임 저장 (30 FPS) + 통계/타이밍 추적
                 if self.is_recording:
+                    # frame_idx를 save_frame 전에 기록 (append 전 길이 = 현재 프레임 인덱스)
+                    frame_idx = len(self.current_episode)
+
                     if current_time - self.last_record_time >= 1.0 / self.record_fps:
                         self.save_frame(rgb, depth, angles, pose)
                         self.last_record_time = current_time
 
-                # Elbow + Gripper + Z 추적
-                elbow = angles[2]
-                gripper = angles[5]
-                z_height = pose[2] if pose else 9999  # Z in mm
-                if self.is_recording:
                     self.min_elbow = min(self.min_elbow, elbow)
                     self.max_elbow = max(self.max_elbow, elbow)
                     self.min_gripper = min(self.min_gripper, gripper)
                     self.max_gripper = max(self.max_gripper, gripper)
+                    self.max_shoulder = max(self.max_shoulder, shoulder)
                     if pose:
                         self.min_z = min(self.min_z, z_height)
                         self.max_z = max(self.max_z, z_height)
 
+                    # 그리퍼 열림/닫힘 감지
+                    if gripper > 40 and not self.grip_was_open:
+                        self.grip_was_open = True
+                        self.grip_open_frame = frame_idx
+                    if (self.prev_gripper is not None and
+                            self.grip_was_open and
+                            self.prev_gripper > 30 and gripper < 15 and
+                            self.shoulder_at_grip_close is None):
+                        # 그리퍼가 열렸다가 닫히는 순간 (첫 번째만 기록)
+                        self.shoulder_at_grip_close = shoulder
+                        self.z_at_grip_close = z_height if pose else None  # None when pose_get() failed
+                        self.grip_close_frame = frame_idx
+                    self.prev_gripper = gripper
+
                 # Z-height 존 판정 + 컬러
-                if z_height < 100:
+                # Calibrated: Z=30mm=table touch, Z=80mm=object grasp, Z=160mm=approach, Z=230mm+=home
+                # NOTE: entire episode does NOT need to be green — only the grasp-close moment needs green
+                if z_height < 80:
                     z_zone = "DEEP"
-                    z_color = (0, 255, 0)      # 초록 (좋음)
-                elif z_height < 200:
+                    z_color = (0, 255, 0)      # 초록 (잡기 위치, 물체 높이)
+                elif z_height < 160:
                     z_zone = "APPROACH"
-                    z_color = (0, 255, 255)    # 노랑
+                    z_color = (0, 255, 255)    # 노랑 (접근 중)
                 else:
                     z_zone = "SHALLOW"
-                    z_color = (0, 100, 255)    # 주황
+                    z_color = (0, 100, 255)    # 주황 (홈 위치)
 
                 # 화면에 정보 표시
                 display = rgb.copy()
@@ -485,25 +600,57 @@ class ManualDataCollector:
                            (10, y), cv2.FONT_HERSHEY_SIMPLEX, 0.6, status_color, 2)
                 y += 35
 
-                # Z-Height 크게 표시 (현재값 + 존)
-                cv2.putText(display, f"Height: {z_height:.0f}mm", (10, y),
+                # Z-Height + Shoulder 크게 표시
+                cv2.putText(display, f"Z: {z_height:.0f}mm", (10, y),
                            cv2.FONT_HERSHEY_SIMPLEX, 1.0, z_color, 3)
-                cv2.putText(display, f"[{z_zone}]", (280, y),
+                cv2.putText(display, f"[{z_zone}]", (220, y),
                            cv2.FONT_HERSHEY_SIMPLEX, 0.8, z_color, 2)
-                y += 40
+                # Shoulder 표시 (그리핑 깊이의 실제 지표)
+                sh_color = (0, 255, 0) if shoulder > 60 else (0, 255, 255) if shoulder > 40 else (0, 100, 255)
+                cv2.putText(display, f"Sh: {shoulder:.0f}deg", (380, y),
+                           cv2.FONT_HERSHEY_SIMPLEX, 0.9, sh_color, 2)
+                y += 35
+
+                # 그리퍼 상태 크게 표시
+                grip_color = (0, 255, 0) if gripper > 40 else (0, 200, 255) if gripper > 15 else (100, 100, 255)
+                grip_label = "OPEN" if gripper > 40 else "PARTIAL" if gripper > 15 else "CLOSED"
+                cv2.putText(display, f"Grip: {gripper:.0f}deg [{grip_label}]", (10, y),
+                           cv2.FONT_HERSHEY_SIMPLEX, 0.7, grip_color, 2)
+                y += 30
 
                 # 위치 정보 (작게): X, Y 좌표
                 if pose:
-                    cv2.putText(display, f"X:{pose[0]:.0f}mm  Y:{pose[1]:.0f}mm  Elbow:{elbow:+.1f}deg",
-                               (10, y), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (180, 180, 180), 1)
+                    cv2.putText(display, f"X:{pose[0]:.0f}  Y:{pose[1]:.0f}  Elbow:{elbow:+.0f}",
+                               (10, y), cv2.FONT_HERSHEY_SIMPLEX, 0.45, (180, 180, 180), 1)
+                    y += 22
+
+                # 녹화 중이면 에피소드 통계 + 타이밍 표시
+                if self.is_recording:
+                    ep_secs = len(self.current_episode) / 30.0
+                    dur_color = (0, 255, 0) if ep_secs < 8 else (0, 255, 255) if ep_secs < 10 else (0, 0, 255)
+                    cv2.putText(display, f"Time: {ep_secs:.1f}s | Frames: {len(self.current_episode)}",
+                               (10, y), cv2.FONT_HERSHEY_SIMPLEX, 0.55, dur_color, 2)
                     y += 25
 
-                # 녹화 중이면 에피소드 통계 표시
-                if self.is_recording and self.min_z < 9999:
-                    gripper_range = self.max_gripper - self.min_gripper
-                    cv2.putText(display, f"Min Z: {self.min_z:.0f}mm | Gripper: {gripper_range:.1f}deg",
-                               (10, y), cv2.FONT_HERSHEY_SIMPLEX, 0.6, z_color, 2)
-                    y += 30
+                    if self.min_z < 9999:
+                        gripper_range_now = self.max_gripper - self.min_gripper
+                        cv2.putText(display, f"MinZ:{self.min_z:.0f}mm MaxSh:{self.max_shoulder:.0f}deg GripR:{gripper_range_now:.0f}deg",
+                                   (10, y), cv2.FONT_HERSHEY_SIMPLEX, 0.5, z_color, 1)
+                        y += 22
+
+                    # 그리퍼 타이밍 피드백
+                    if self.grip_was_open and self.shoulder_at_grip_close is None:
+                        # 그리퍼 열린 상태 — 좋음!
+                        cv2.putText(display, "Gripper OPEN - move down then close!", (10, y),
+                                   cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 255, 0), 2)
+                        y += 22
+                    elif self.shoulder_at_grip_close is not None:
+                        timing_ok = self.shoulder_at_grip_close >= 50
+                        t_color = (0, 255, 0) if timing_ok else (0, 0, 255)
+                        t_label = "GOOD" if timing_ok else "TOO HIGH"
+                        cv2.putText(display, f"Grasp @Sh={self.shoulder_at_grip_close:.0f}deg [{t_label}] - now lift!",
+                                   (10, y), cv2.FONT_HERSHEY_SIMPLEX, 0.55, t_color, 2)
+                        y += 22
 
                 # 데이터셋 진행률 (왼쪽 하단)
                 progress_lines = self.stats.get_progress_str()

@@ -45,3 +45,41 @@
 - Need validation set BEFORE claiming success
 - Per-joint analysis critical (overall metrics hide joint-specific failures)
 - Flow matching's 10 denoising steps may lag on rapid transitions (gripper)
+
+## Data Collection Protocol (2026-02-23)
+
+### Perfect Episode Structure (7 phases, ~145 frames at 30fps)
+1. Start (15f): Closed gripper, arm at init, Z=250-350mm
+2. Approach (30f): Gripper OPENS (0°→70°), arm moves toward object
+3. Pre-grasp (15f): Gripper FULLY OPEN (60-80°), hovering above, Z=150-200mm
+4. Descent (15f): Gripper STILL OPEN, arm lowers to Z=80-120mm (DEEP zone)
+5. Grasp (10f): Gripper CLOSES decisively (70°→5°), ALL OTHER JOINTS STATIC
+6. Lift (30f): Gripper STAYS CLOSED, arm rises to Z=300mm+
+7. Return (30f): Return to init, gripper opens at end
+
+### 5 Position Layout (from base center)
+- P1 center: 250mm, 0° (Blue tape, 30 eps)
+- P2 left: 250mm, -30° (Yellow tape, 20 eps)
+- P3 far: 300mm, 0° (Red tape, 20 eps) — DEEP focus
+- P4 right: 250mm, +30° (Green tape, 20 eps)
+- P5 near: 200mm, 0° (White tape, 10 eps)
+
+### Gripper Timing (root cause of v1 58% early, 40% late)
+- Rule: Open gripper AT START OF APPROACH (not when descending)
+- Rule: Close gripper ONLY when Z is stable at 80-120mm
+- Rule: Close decisively in 10 frames (0.3s), not slowly
+- Rule: Never close while still descending (Z decreasing)
+
+### Target Distribution (100 episodes)
+- DEEP (Z < 100mm): 50+ episodes (50%+) — most critical
+- Gripper range > 40°: 100% of episodes
+- P3 far: 20 episodes (fixes v1 DEEP gap of only 9/50)
+
+### Official SmolVLA Reference
+- 50 eps, 5 positions × 10 reps = enough for SO101
+- Our target: 100 eps (5 positions × 20 reps) for better generalization
+- Full pick-lift-return cycle required (not just pick-and-stop)
+- Task text must end with \n (SmolVLANewLineProcessor requirement)
+
+### Protocol File
+- `/home/cgxr/Documents/Robotics/RoArm_Project/train_data_collection_protocol.md`
