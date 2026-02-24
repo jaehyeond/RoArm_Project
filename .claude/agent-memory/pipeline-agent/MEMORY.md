@@ -83,3 +83,35 @@
 
 ### Protocol File
 - `/home/cgxr/Documents/Robotics/RoArm_Project/train_data_collection_protocol.md`
+
+## VRAM Test Results (2026-02-24)
+
+### RTX 4090 Laptop (16.72 GB actual, not 15.6 GB)
+| Batch | Peak VRAM | Util% | Headroom |
+|-------|-----------|-------|---------|
+| 8     | 2.03 GB   | 12.1% | 14.69 GB |
+| 16    | 3.15 GB   | 18.9% | 13.56 GB |
+| 32    | 5.38 GB   | 32.2% | 11.33 GB |
+| 64    | 9.85 GB   | 58.9% | 6.87 GB |
+
+- **batch_size=64 FITS (9.85 GB / 16.72 GB = 58.9%)** — use official config!
+- Base VRAM (model load): 0.91 GB
+- Per-sample activation: ~140 MB/sample
+- Model: 450M total, 99.9M trainable (Action Expert only), 350.2M frozen (VLM)
+
+### gradient_accumulation in lerobot
+- lerobot-train does NOT support --gradient_accumulation_steps
+- Searched entire lerobot/src/lerobot/: zero matches for 'gradient_accumulation'
+- TrainPipelineConfig has no such field
+- Workaround: use batch_size=64 directly (it fits!)
+
+### Dummy Batch Shape (for test scripts)
+- Image: (B, 3, 480, 640) float32 [0,1] — model resizes to 512x512 internally
+- OBS_STATE: (B, 1, 32) float32
+- ACTION: (B, 50, 32) float32
+- OBS_LANGUAGE_TOKENS: (B, 48) int64
+- OBS_LANGUAGE_ATTENTION_MASK: (B, 48) **BOOL** (not int64!)
+  - make_att_2d_masks requires bool — int64 raises RuntimeError
+
+### Test Script
+- `/home/cgxr/Documents/Robotics/RoArm_Project/train_batch_size_test.py`

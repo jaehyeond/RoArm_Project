@@ -291,11 +291,13 @@ class ManualDataCollector:
             if self.grip_was_open:
                 warnings.append("그리퍼가 열렸지만 닫기 감지 안됨 (열린 상태로 끝남?)")
 
-        # 4. 프레임 수 체크
-        if num_frames < 50:
-            issues.append(f"프레임 수 부족 ({num_frames} < 50)")
-        elif num_frames > 300:
-            warnings.append(f"에피소드 너무 김 ({num_frames}프레임 = {num_frames/30:.1f}초, 5-6초 권장)")
+        # 4. 프레임 수 체크 (SmolVLA 공식: 평균 393프레임/13초, 최소 150프레임/5초)
+        if num_frames < 90:
+            issues.append(f"프레임 수 부족 ({num_frames} < 90, 최소 3초)")
+        elif num_frames < 150:
+            warnings.append(f"에피소드 짧음 ({num_frames}프레임 = {num_frames/30:.1f}초, 10초+ 권장)")
+        elif num_frames > 600:
+            warnings.append(f"에피소드 너무 김 ({num_frames}프레임 = {num_frames/30:.1f}초, 15초 이하 권장)")
 
         # 5. Z-height 체크 (DEEP grasp 기준)
         # min_z는 에피소드 전체에서 가장 낮은 값 — 160mm 이하면 충분히 내려간 것

@@ -36,7 +36,7 @@ else:
         "--policy.push_to_hub=false",
         "--dataset.repo_id=roarm_m3_pick",
         "--dataset.root=lerobot_dataset_v4",
-        "--batch_size=8",
+        "--batch_size=64",  # Verified: fits in 16.72 GB VRAM (9.85 GB peak = 58.9%)
         "--steps=50000",
         "--eval_freq=10000",
         "--save_freq=5000",
