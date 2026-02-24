@@ -5,7 +5,7 @@
 - Task: "Pick up the sponge" (black sponge on white table)
 - Total: 51 episodes, 7841 frames, mean 153.7 frames/ep (5.1s), FPS=30
 - ALL 51 episodes: DEEP grasp (min_z < 80mm, actually all negative Z)
-- Training readiness: 6/10 (PARTIALLY READY)
+- Training readiness: 7.5/10 (PARTIALLY READY) -- updated 2026-02-24 with full analysis
 
 ## Position Diversity (51 episodes, 2026-02-24)
 - Base angle: mean=2.2 deg, std=15.7 deg, range=[-30.6, 38.2]
@@ -57,7 +57,8 @@
 - NEW min_z: mean=-92.2mm (deeper than OLD -84.7mm)
 
 ## Key Scripts
-- `data_comprehensive_50ep_analysis.py` - Full 51-episode analysis (2026-02-24)
+- `data_full_analysis_v4.py` - DEFINITIVE full analysis script (all 11 sections, v1 comparison, quality flags)
+- `data_comprehensive_50ep_analysis.py` - Full 51-episode analysis (2026-02-24, superseded by v4)
 - `data_grip_close_investigation.py` - Gripper trajectory pattern analysis
 - `data_gripper_trajectory_detail.py` - Detailed per-episode gripper+Z trajectory
 - `data_z_vs_elbow_analysis.py` - FK Z vs elbow analysis (2026-02-23)
