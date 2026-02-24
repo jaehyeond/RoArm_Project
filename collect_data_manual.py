@@ -561,11 +561,10 @@ class ManualDataCollector:
                     if gripper > 40 and not self.grip_was_open:
                         self.grip_was_open = True
                         self.grip_open_frame = frame_idx
-                    if (self.prev_gripper is not None and
-                            self.grip_was_open and
-                            self.prev_gripper > 30 and gripper < 15 and
+                    if (self.grip_was_open and
+                            gripper < self.max_gripper * 0.5 and
                             self.shoulder_at_grip_close is None):
-                        # 그리퍼가 열렸다가 닫히는 순간 (첫 번째만 기록)
+                        # 그리퍼가 열렸다가 닫히는 순간 (최대 개방의 50% 이하로 감소)
                         self.shoulder_at_grip_close = shoulder
                         self.z_at_grip_close = z_height if pose else None  # None when pose_get() failed
                         self.grip_close_frame = frame_idx
