@@ -12,7 +12,7 @@ Azure Kinect DK + RoArm M3 Pro 실시간 추론
     python deploy_smolvla.py --port /dev/ttyUSB0
 
     # 태스크 변경
-    python deploy_smolvla.py --task "Pick up the red cup"
+    python deploy_smolvla.py --task "Pick up the sponge"
 
     # 최대 스텝 수 변경
     python deploy_smolvla.py --max-steps 200
@@ -338,7 +338,7 @@ def draw_overlay(frame, step, max_steps, z_scores, convergence, elapsed_time, ta
 def main():
     parser = argparse.ArgumentParser(description="SmolVLA 실제 로봇 배포")
     parser.add_argument("--port", default="/dev/ttyUSB0", help="로봇 시리얼 포트")
-    parser.add_argument("--task", default="Pick up the white box", help="태스크 설명")
+    parser.add_argument("--task", default="Pick up the sponge", help="태스크 설명")
     parser.add_argument("--max-steps", type=int, default=300, help="최대 추론 스텝 (에피소드 평균 255프레임)")
     parser.add_argument("--speed", type=int, default=500, help="로봇 모터 속도 (0-1000)")
     parser.add_argument("--acc", type=int, default=200, help="로봇 모터 가속도 (0-500)")

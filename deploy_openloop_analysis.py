@@ -338,7 +338,7 @@ def main():
                         default="lerobot_dataset_v3",
                         help="Path to LeRobot dataset")
     parser.add_argument("--task", type=str,
-                        default="Pick up the white box",
+                        default="Pick up the sponge",
                         help="Task description")
     parser.add_argument("--chunk-size", type=int, default=50,
                         help="Number of action steps to generate")

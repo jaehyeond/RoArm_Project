@@ -78,7 +78,7 @@ def main():
     tokenizer = processor.tokenizer
 
     # Pre-tokenize task
-    task_text = "Pick up the white box"
+    task_text = "Pick up the sponge"
     tokenized = tokenizer(
         [task_text],
         max_length=48,

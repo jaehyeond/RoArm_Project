@@ -2,7 +2,7 @@
 수집된 데이터를 LeRobot v3.0 포맷으로 변환 (새 LeRobot 0.4.3 호환)
 
 사용법:
-    python convert_to_lerobot_v3.py --task "Pick up the white box"
+    python convert_to_lerobot_v3.py --task "Pick up the sponge"
 """
 
 import json
@@ -24,7 +24,7 @@ def convert_collected_data(
     output_dir: str = "lerobot_dataset_v3",
     repo_id: str = "roarm_m3_pick",
     fps: int = 30,
-    task_description: str = "Pick up the white box",
+    task_description: str = "Pick up the sponge",
 ):
     """
     수집된 데이터를 LeRobot v3.0 포맷으로 변환
@@ -207,7 +207,7 @@ if __name__ == "__main__":
     parser.add_argument("--output", default="lerobot_dataset_v3", help="출력 디렉토리")
     parser.add_argument("--repo-id", default="roarm_m3_pick", help="데이터셋 repo ID (local/ 없이)")
     parser.add_argument("--fps", type=int, default=30, help="프레임 레이트")
-    parser.add_argument("--task", default="Pick up the white box", help="태스크 설명")
+    parser.add_argument("--task", default="Pick up the sponge", help="태스크 설명")
     parser.add_argument("--verify-only", action="store_true", help="검증만 실행")
 
     args = parser.parse_args()

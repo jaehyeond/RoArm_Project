@@ -317,7 +317,7 @@ def main():
         print()
         print("NEXT STEPS:")
         print("  1. Convert to LeRobot v3 format:")
-        print("     python convert_to_lerobot_v3.py --input collected_data --task 'Pick up the white box'")
+        print("     python convert_to_lerobot_v3.py --input collected_data --task 'Pick up the sponge'")
         print()
         print("  2. Train with official CLI:")
         print("     python run_official_train.py")
