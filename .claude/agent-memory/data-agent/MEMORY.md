@@ -56,8 +56,147 @@
 - NEW episodes are shorter, more diverse in position, wider gripper opening
 - NEW min_z: mean=-92.2mm (deeper than OLD -84.7mm)
 
+## V3 Deployment Failure Analysis (2026-02-25)
+- Deploy log: `logs/deploy_20260225_154420.csv` (300 steps, 25K checkpoint)
+- Script: `data_v3_deployment_failure_analysis.py` (full root cause analysis)
+- Convergence: first detected at step 72, fully locked in by step ~100
+- Converged position: [2.5, 30, 70, 14, -1.7, 25] deg
+
+### V3 Deployment Root Causes
+1. FIXED-POINT LOOP: model predicts mean → robot goes to mean → model sees mean → repeat
+2. GRIPPER STUCK AT MEAN (26.5 deg): bimodal dataset (closed OR open), mean=transition zone
+   - Deployment gripper range: 23.1 to 26.6 deg (3.5 deg = 3.6% of offline 95 deg range!)
+   - Offline evaluation showed 94 deg range -- completely misleading for sequential deployment
+3. WRIST_PITCH COLLAPSE: converged to 14 deg vs mean 40.7 / median 54.9 deg
+   - Offline pred mean=23 deg is BELOW training data q10=-3 → wrist folds in deployment
+   - Wrist at 10 deg = gripper points sideways, not down
+4. SHOULDER NEVER DESCENDS: locked at 30 deg (dataset mean), needs <10 deg for deep grasp
+5. ELBOW DRIFTS UP: converged at 70 deg vs mean 58.9 / median 51.2 (wrong direction!)
+
+### Key Insight: Why Offline Evaluation Lies
+- Offline pred_std looks good (~25 deg per joint), but tests CROSS-SAMPLE (random timesteps)
+- Deployment is SEQUENTIAL: robot state becomes correlated with predictions
+- Mean regression causes state to converge → all subsequent states look similar → predict mean
+- Solution: temporal evaluation (simulate sequential inference chain), not random sampling
+
+### V3 Dataset (lerobot_dataset_v3) Stats
+- 74 episodes, 13145 frames
+- action.mean: [-0.47, 30.18, 58.88, 40.72, -2.33, 26.48]
+- action.std:  [25.81, 18.81, 24.83, 30.07, 20.22, 24.15]
+- Wrist_pitch q50=54.9 vs mean=40.7 → heavily bimodal
+- Gripper q50=24.1 vs q90=68.5 → bimodal (mostly closed + opens briefly)
+
+### Collection Requirements for Next Dataset
+- Each episode MUST show complete temporal grasp cycle (7 phases):
+  Phase 1 (start): gripper closed, arm at home
+  Phase 2 (approach): arm moves toward sponge, gripper OPENS (>40 deg)
+  Phase 3 (hover): gripper open, above sponge (shoulder <30 deg)
+  Phase 4 (descend): gripper open, shoulder descending to <10 deg
+  Phase 5 (grasp): gripper CLOSES (~5-10 deg = gripped)
+  Phase 6 (lift): shoulder rises with sponge, gripper closed
+  Phase 7 (return): return to start with sponge
+- Min 40% of frames: gripper > 40 deg (currently 25.1%)
+- Min 30% of frames: gripper < 15 deg (currently 31.6%, OK)
+- Shoulder must reach < 10 deg in each episode
+
+## V3 Base Joint Distribution Analysis (2026-02-25)
+- Script: `data_base_joint_analysis.py` - lerobot_dataset_v3 base joint distribution deep dive
+- Dataset: 74 episodes, 13145 frames, lerobot_dataset_v3/data/chunk-000/file-000.parquet
+
+### Key Finding: MASSIVE Base=0 Spike
+- 10.7% of ALL frames sit exactly at base=0 deg (1405/13145 frames)
+- 37.2% of frames in z=[0.0, +0.2] (base 0 to +6 deg)
+- This spike is NOT one episode -- it's spread across 73/74 episodes (all start from home)
+- 100% of episodes START at base near 0 (range -1.05 to +0.62, mean=0.22, std=0.28)
+- Home position creates a massive mode at base~0 in every episode's first few frames
+
+### Why Model Outputs Base=51 (NOT mean regression)
+- Base=51 deg = z-score of +1.99 (2-sigma outlier) -- only 5.4% of frames above 51
+- This is NOT a data cluster -- there is NO attractor at 51 deg
+- Probable cause: model learned a right-side sponge trajectory
+  - 19/74 episodes (25.7%) have sponge placed RIGHT_FAR (max_base > 30 deg)
+  - Episode 51 (max_base=64.2), ep 52 (66.1), ep 56 (66.4) -- these reach 51+ on approach
+  - Base sweeps from 0 -> 50+ in these episodes; model replays this approach
+  - 44/74 episodes (59.5%) have sponge in CENTER (max_base <10 deg)
+  - 11/74 (14.9%) have sponge in RIGHT (max_base 10-30)
+- This suggests model sees initial state (base~0) and activates "right-side approach" behavior
+
+### Right/Left Asymmetry
+- 60.6% of all frames have base > 0 (vs 37.1% below 0) -- 23.5% asymmetry
+- Old episodes (0-39): base_mean=-0.17, centered
+- New episodes (40-73): base_mean=-0.78, also centered BUT contain right-heavy episodes
+- RIGHT_FAR episodes (40-57): ep_mean 22-41 deg, create the 50-66 deg cluster
+
+### V3 Dataset Sponge Position Coverage
+- CENTER (max_base 0-10): 44 eps (59.5%)
+- RIGHT (max_base 10-30): 11 eps (14.9%)
+- FAR_RIGHT (max_base >30): 19 eps (25.7%)
+- FAR_LEFT (min_base < -30): 16 eps -- these have LEFT placements
+- LEFT (-30 to -10): 0 episodes (no pure left zone episodes by max_base metric)
+
+## V3 CENTER Episode Analysis (2026-02-25)
+- Script: `data_center_episodes_analysis.py`, `data_center_grasp_detail.py`
+- Dataset: lerobot_dataset_v3, 74 episodes total
+
+### CENTER Episode Count
+- CENTER (max|base| < 10 deg): 18 / 74 episodes (24%)
+- Episode IDs: [0,1,2,3,4,17,18,19,21,25,26,27,28,29,30,50,65,73]
+
+### CENTER Grasp Trajectory (consistent across all 18 eps)
+- ALL 18 episodes: GRIP_OPEN -> DESCEND order (gripper opens ~35% into ep, descend ~50%)
+- Phase 2 (approach at ~35%): Shoulder ~39 deg, Elbow ~48 deg, Gripper opens to ~68 deg
+- Phase 3 (deepest at ~50%): Shoulder ~56 deg, Elbow ~46 deg (range 11-81), Gripper still open ~64 deg
+- Phase 4 (lift at ~57%): Gripper settles to ~28 deg (sponge gripped), shoulder stays ~56 deg
+- Phase 5 (return): Elbow returns to ~90 deg (home), shoulder drops
+
+### Elbow at Grasp Point (CENTER episodes)
+- At shoulder_peak (deepest): mean=46.0, std=22.9, range=[11.2, 80.9]
+- TWO TRAJECTORY TYPES exist within CENTER:
+  1. DEEP arm (eps 17,18,19,21,65): shoulder_max=64-67, elbow_at_deep=11-21 deg (high shoulder + very low elbow)
+  2. MODERATE arm (eps 0-4,26-30): shoulder_max=43-53, elbow_at_deep=51-81 deg (less shoulder, less elbow drop)
+- Elbow NEVER goes negative in CENTER episodes (min = 11.2 deg)
+
+### Important Clarification
+- "Elbow < -30 deg" target from project notes = NOT applicable to v3 dataset
+- V3 uses different joint convention OR the collection data never reached negative elbow
+- In v3: deep grasp = high shoulder (60+ deg) + low elbow (10-20 deg), NOT negative elbow
+- The 18 CENTER episodes are all DEEP by shoulder criterion (shoulder_min all < 5 deg = arm returns to home)
+
+## V3 Temporal Phase Analysis (2026-02-25)
+- Script: `data_temporal_phase_analysis.py`
+- Dataset: 74 episodes, all start from init (gripper~1.7, shoulder~2.5, elbow~90)
+
+### Phase Timing (mean across all 74 episodes)
+- Phase A (init):          frame 0      (0.00s, 0%)
+- Phase B (approach):      frame ~5-10  (~0.2s, ~5%)
+- Phase C (gripper >40°):  frame 58.6   (1.95s, 33.2%)  std=22.2, range=[29,128]
+- Phase D (gripped ~24°):  frame 98.7   (3.29s, 56.1%)  std=33.9, range=[58,186]
+- Phase F (end):           frame 177.6  (5.92s, 100%)
+
+### Open Phase Duration (Phase C to Phase D)
+- Mean: 40.1 frames (1.34s), range=[18, 69 frames] = [0.60s, 2.30s]
+
+### 50-Step Chunk Coverage Problem
+- 50 steps = frames 0-49 = 1.67s = only 28% of mean episode
+- 56.8% of episodes: Phase C (gripper open) starts AFTER frame 50
+- Phase C never occurs before frame 29 (earliest episode)
+- Re-plan cycles for full grasp: ~3.5 cycles (cycle 1=approach, cycle 2=open+grip, cycle 3=lift+return)
+
+### Why Bimodal Gripper Causes Mean Regression
+- At frame 50-70 (re-plan boundary), ~43% of episodes have gripper >40 (open) and ~57% have it <10 (closed)
+- Model sees same arm position but different gripper states across training batch
+- Regression to mean = 26 deg = stuck in transition zone
+- Solution: longer episodes OR temporal-aware training (context chunks)
+
+### Key Structural Pattern (all 74 episodes)
+- Arm descends DURING gripper opening (simultaneous, not sequential)
+- Shoulder reaches max ~5-10 frames AFTER gripper peak
+- Return to init: elbow rises back to 90 (home) during Phase E/F
+- 100% of episodes end at shoulder ~10-25 deg (not fully at init 2.5 deg)
+
 ## Key Scripts
 - `data_full_analysis_v4.py` - DEFINITIVE full analysis script (all 11 sections, v1 comparison, quality flags)
+- `data_v3_deployment_failure_analysis.py` - V3 deployment failure root cause analysis (2026-02-25)
 - `data_comprehensive_50ep_analysis.py` - Full 51-episode analysis (2026-02-24, superseded by v4)
 - `data_grip_close_investigation.py` - Gripper trajectory pattern analysis
 - `data_gripper_trajectory_detail.py` - Detailed per-episode gripper+Z trajectory

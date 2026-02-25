@@ -1,5 +1,51 @@
 # Pipeline Agent Memory
 
+## V3 Training Analysis (2026-02-25)
+
+### v3 Dataset: 74 episodes, 13,145 frames, batch_size=64, 50K steps (243 epochs)
+### Key result: ALL checkpoints HEALTHY — no mean action problem, gripper FIXED
+
+### Checkpoint Scores (222 stratified samples across all 74 episodes)
+| Checkpoint | L2 (deg) | Diversity Ratio | Gripper Range | Status |
+|------------|----------|-----------------|---------------|--------|
+| 5K         | 4.531    | 0.976           | 94.4°         | HEALTHY |
+| 10K        | 4.081    | 0.965           | 93.2°         | HEALTHY |
+| 15K        | 3.458    | 0.973           | 94.1°         | HEALTHY |
+| 20K        | 3.350    | 0.982           | 94.1°         | HEALTHY |
+| **25K**    | **2.810**| **0.986**       | **95.6°**     | **BEST** |
+| 30K        | 3.016    | 0.983           | 96.0°         | HEALTHY |
+| 35K        | 2.891    | 0.987           | 96.6°         | HEALTHY |
+| 40K        | 2.991    | 0.984           | 95.2°         | HEALTHY |
+| 45K        | 2.893    | 0.985           | 96.3°         | HEALTHY |
+| 50K        | 2.985    | 0.985           | 95.5°         | HEALTHY |
+
+### Deploy Recommendation: 25K checkpoint
+- Path: `outputs/smolvla_v3_sponge/checkpoints/025000/pretrained_model`
+- L2=2.810° (best), diversity ratio=0.986 (excellent)
+- Gripper range: 95.6° (min=1.85°, max=97.48°) — FULLY FIXED vs v1!
+- No overfitting detected across any checkpoint
+
+### V3 vs V1 Comparison (Gripper Critical Issue)
+- v1 Gripper std: 3.34° (15% of dataset, FAIL → deployment failure)
+- v3 Gripper std: 24.89° (103% of dataset, EXCELLENT)
+- Z-score range: all joints >3.5 (vs v1 Wrist_R <1.5 — now 5.7!)
+- Root cause fixed: more gripper-diverse episodes in v3 dataset
+
+### V3 Key Observations
+- Diversity ratio >0.96 across ALL checkpoints (vs v1 Wrist_R 0.15)
+- Loss 0.003-0.004 at 50K (vs v1 0.007) — better generalization with bs=64
+- No overfitting signal: diversity stays flat 5K→50K
+- Inference: 90-91ms per step (unchanged from v1)
+- L2 plateau: 25K=2.81°, 35K=2.89°, 45K=2.89° — diminishing returns after 25K
+
+### LeRobotDataset API Note
+- `dataset.episode_data_index` does NOT exist in lerobot 0.4.4
+- Use `np.where(np.array(dataset.hf_dataset['episode_index']) == ep_idx)` instead
+
+### Files Created
+- `train_eval_v3_checkpoints.py`: Full 10-checkpoint evaluation script
+- `train_v3_checkpoint_eval_results.json`: JSON results
+
 ## 50K Training Analysis (2026-02-11)
 
 ### Model Escaped Mean Action Problem ✅

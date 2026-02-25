@@ -1,7 +1,7 @@
 """
 SmolVLA 실제 로봇 배포 스크립트
 
-공식 lerobot-train CLI로 학습된 20K steps 체크포인트 사용
+공식 lerobot-train CLI로 학습된 50K steps 체크포인트 사용 (v3: 74 에피소드, "Pick up the sponge")
 Azure Kinect DK + RoArm M3 Pro 실시간 추론
 
 사용법:
@@ -30,7 +30,17 @@ Azure Kinect DK + RoArm M3 Pro 실시간 추론
     python deploy_smolvla.py --log-csv logs/deployment.csv
 
     # Custom checkpoint
-    python deploy_smolvla.py --checkpoint outputs/smolvla_official/checkpoints/010000/pretrained_model
+    python deploy_smolvla.py --checkpoint outputs/smolvla_v3_sponge/checkpoints/010000/pretrained_model
+
+    # EMA smoothing (reduce jitter from per-step re-inference)
+    python deploy_smolvla.py --n-action-steps 5 --ema-alpha 0.4
+
+    # Smoothing reference:
+    #   alpha=1.0  → no smoothing (raw model output each step)
+    #   alpha=0.4  → moderate smoothing (recommended with n_action_steps=1)
+    #   alpha=0.2  → heavy smoothing (very stable but slow to respond)
+    # Note: with n_action_steps >= 5, within-chunk motion is already smooth;
+    #       EMA still helps at chunk boundaries (re-inference jitter).
 """
 
 import os
@@ -66,12 +76,16 @@ JOINT_LIMITS = [
     (-10,  100),   # 5: Gripper
 ]
 
-CHECKPOINT_PATH = "outputs/smolvla_v2_cleaned/checkpoints/last/pretrained_model"
+CHECKPOINT_PATH = "outputs/smolvla_v3_sponge/checkpoints/025000/pretrained_model"
 
-# 데이터셋 평균 위치 (v2: 43 에피소드, 9747 프레임 기준)
-# action.mean: [2.94, 41.22, 12.64, 61.44, -2.46, 10.04]
+# 데이터셋 평균 위치 (v3: 74 에피소드, 13145 프레임 기준)
+# action.mean: [-0.47, 30.18, 58.88, 40.72, -2.33, 26.48]
 # 학습 데이터가 이 근처에서 수집되었으므로 여기서 시작해야 in-distribution
-DATASET_MEAN_POS = [3, 41, 13, 61, -2, 10]
+DATASET_MEAN_POS = [0, 30, 59, 41, -2, 26]
+
+# move_init() 위치 (roarm_sdk: [0, 0, π/2, 0, 0, 0] radians → degrees)
+# 팔 위로 세운 자세, 그리퍼 완전 닫힘 — 데이터 수집 시 시작 위치
+INIT_POS = [0, 0, 90, 0, 0, 0]
 
 # 관절 이름 (로깅/출력용)
 JOINT_NAMES = ["base", "shoulder", "elbow", "wrist_pitch", "wrist_roll", "gripper"]
@@ -345,17 +359,25 @@ def main():
     parser.add_argument("--hz", type=float, default=10.0, help="제어 루프 주파수")
     parser.add_argument("--dry-run", action="store_true", help="로봇에 명령 전송 안함")
     parser.add_argument("--start-pos", default="dataset_mean",
-                        choices=["zero", "dataset_mean", "current"],
-                        help="시작 위치: zero=[0]*6, dataset_mean=학습데이터 평균, current=현재위치 유지")
+                        choices=["zero", "dataset_mean", "current", "init"],
+                        help="시작 위치: init=move_init(그리퍼 닫고 팔 위로), dataset_mean=학습데이터 평균, zero=[0]*6, current=현재위치 유지")
     parser.add_argument("--open-loop", action="store_true",
-                        help="Open-loop: 첫 chunk(50 actions)를 순서대로 실행 (매 스텝 새 관측 안함)")
-    parser.add_argument("--n-action-steps", type=int, default=50,
-                        help="chunk에서 사용할 action 수 (1=매 스텝 새 추론, 50=공식 기본값, chunk 전체 사용)")
+                        help="Open-loop: chunk(50 actions)를 순서대로 실행 (chunk 내에서는 새 관측 안함)")
+    parser.add_argument("--n-chunks", type=int, default=4,
+                        help="Open-loop 모드에서 실행할 chunk 수 (1=50steps, 4=200steps=전체 에피소드 커버)")
+    parser.add_argument("--n-action-steps", type=int, default=5,
+                        help="chunk에서 사용할 action 수 (1=매 스텝 새 추론, 5=권장(재추론+부드러움 균형), 50=공식 기본값)")
     parser.add_argument("--device", default="cuda", help="cuda 또는 cpu")
 
     # NEW: Action scaling
     parser.add_argument("--action-scale", type=float, default=1.0,
                         help="z-score 증폭 배율 (1.0=기본, >1.0=더 큰 동작, <1.0=더 작은 동작)")
+
+    # NEW: EMA smoothing
+    parser.add_argument("--ema-alpha", type=float, default=1.0,
+                        help="EMA 스무딩 계수 (1.0=스무딩 없음, 0.4=권장, 0.2=강한 스무딩). "
+                             "공식: smoothed = alpha*new + (1-alpha)*prev. "
+                             "n-action-steps=1일 때 매 스텝 새 노이즈로 인한 떨림 억제에 효과적.")
 
     # NEW: Convergence detection
     parser.add_argument("--convergence-threshold", type=float, default=0.5,
@@ -456,6 +478,8 @@ def main():
         start_angles = [0, 0, 0, 0, 0, 0]
     elif args.start_pos == "dataset_mean":
         start_angles = DATASET_MEAN_POS
+    elif args.start_pos == "init":
+        start_angles = INIT_POS
     else:  # "current"
         start_angles = None
 
@@ -474,9 +498,10 @@ def main():
     print(f"  Control Hz: {args.hz}")
     print(f"  Dry-run: {args.dry_run}")
     print(f"  Start pos: {args.start_pos} → {start_angles}")
-    print(f"  Open-loop: {args.open_loop}")
+    print(f"  Open-loop: {args.open_loop}" + (f" ({args.n_chunks} chunks × 50 = {args.n_chunks*50} steps)" if args.open_loop else ""))
     print(f"  n_action_steps: {args.n_action_steps} ({'매 스텝 새 추론' if args.n_action_steps == 1 else f'{args.n_action_steps}스텝마다 추론'})")
     print(f"  Action scale: {args.action_scale}x")
+    print(f"  EMA alpha: {args.ema_alpha} ({'no smoothing' if args.ema_alpha == 1.0 else f'smoothing ON (alpha={args.ema_alpha})'})")
     print(f"  Convergence: threshold={args.convergence_threshold}°, window={args.convergence_window}, action={args.convergence_action}")
     if csv_logger:
         print(f"  CSV logging: {csv_logger.filepath}")
@@ -493,123 +518,138 @@ def main():
     prev_angles = start_angles if start_angles is not None else get_robot_angles(arm)
     convergence_detected = False
 
+    # EMA state: None means "no prior smoothed value yet" → first step uses raw action
+    ema_smoothed = None
+
     try:
         with torch.inference_mode():
             if args.open_loop:
-                # ===== Open-Loop 모드 =====
-                # 첫 관측으로 전체 action chunk(50 steps)를 생성 후 순서대로 실행
-                print("\n  [Open-Loop] 첫 관측으로 action chunk 생성...")
+                # ===== Open-Loop 모드 (Multi-Chunk) =====
+                # 각 chunk(50 steps) 시작 시 새 관측 → chunk 내에서는 관측 없이 실행
+                # 기본 4 chunks = 200 steps → 전체 에피소드 커버 (학습 에피소드 평균 178 프레임)
+                n_chunks = args.n_chunks
+                total_open_steps = n_chunks * 50
+                print(f"\n  [Open-Loop] {n_chunks} chunks × 50 steps = {total_open_steps} steps 예정")
 
-                capture = k4a.get_capture()
-                frame_bgr = np.ascontiguousarray(capture.color[:, :, :3])
+                prev_angles = start_angles if start_angles is not None else get_robot_angles(arm)
+                global_step = 0
+                abort = False
 
-                current_angles = get_robot_angles(arm)
-                if current_angles is None:
-                    print("  상태 읽기 실패!")
-                    raise KeyboardInterrupt
-
-                t0 = time.time()
-                obs = build_observation(frame_bgr, current_angles, lang, stats, device)
-
-                # predict_action_chunk로 전체 chunk 가져오기
-                batch = policy._prepare_batch(obs)
-                raw_chunk = policy._get_action_chunk(batch, noise=None)
-                # raw_chunk shape: (1, chunk_size, action_dim)
-                # NEW: Apply action scaling
-                chunk = unnormalize_action(raw_chunk, stats, action_scale=args.action_scale)
-                t1 = time.time()
-
-                chunk_np = chunk.cpu().numpy().squeeze()  # (50, 6) or (50, 32)
-                n_steps = min(args.max_steps, chunk_np.shape[0])
-                print(f"  [Open-Loop] Chunk 생성 완료: {chunk_np.shape}, {(t1-t0)*1000:.0f}ms")
-                print(f"  [Open-Loop] {n_steps} steps 실행 예정\n")
-
-                # 전체 chunk 미리보기
-                print("  --- Action Chunk Preview (first 6 joints) ---")
-                for i in range(n_steps):
-                    a = chunk_np[i, :6]
-                    print(f"    [{i+1:3d}] [{a[0]:7.1f},{a[1]:7.1f},{a[2]:7.1f},"
-                          f"{a[3]:7.1f},{a[4]:7.1f},{a[5]:7.1f}]")
-                print()
-
-                # 순서대로 실행
-                prev_angles = current_angles
-                for i in range(n_steps):
-                    loop_start = time.time()
-                    step = i + 1
-
-                    action_clamped = clamp_joints(chunk_np[i, :6].tolist())
-
-                    # NEW: Compute z-scores for display
-                    action_tensor = torch.tensor(action_clamped, dtype=torch.float32, device=device)
-                    z_scores = compute_z_scores(action_tensor, stats)
-
-                    # NEW: Convergence detection (open-loop에서도 감지)
-                    deltas, max_delta = conv_detector.update(action_clamped, prev_angles)
-                    is_converged = conv_detector.is_converged()
-
-                    if is_converged and not convergence_detected:
-                        convergence_detected = True
-                        print(f"\n  ⚠️  [CONVERGENCE DETECTED at step {step}]")
-                        if args.convergence_action == "stop":
-                            print("      Stopping execution")
-                            break
-
-                    if not args.dry_run:
-                        arm.joints_angle_ctrl(
-                            angles=action_clamped,
-                            speed=args.speed,
-                            acc=args.acc,
-                        )
-
-                    # NEW: CSV logging
-                    if csv_logger:
-                        csv_logger.log_step(
-                            step=step,
-                            angles=action_clamped,
-                            z_scores=z_scores.cpu().numpy(),
-                            deltas=deltas,
-                            max_delta=max_delta,
-                            convergence=is_converged,
-                            inference_ms=0  # open-loop에선 per-step inference 없음
-                        )
-
-                    convergence_marker = " [CONV]" if is_converged else ""
-                    print(
-                        f"  [{step:3d}/{n_steps}] "
-                        f"Act:[{action_clamped[0]:6.1f},{action_clamped[1]:6.1f},"
-                        f"{action_clamped[2]:6.1f},{action_clamped[3]:6.1f},"
-                        f"{action_clamped[4]:6.1f},{action_clamped[5]:6.1f}] "
-                        f"d={max_delta:5.1f}"
-                        f"{convergence_marker}"
-                    )
-                    prev_angles = action_clamped
-
-                    # NEW: Enhanced OpenCV display
-                    capture = k4a.get_capture()
-                    if capture.color is not None:
-                        display = cv2.resize(capture.color[:, :, :3], (640, 360))
-                        elapsed_time = time.time() - start_time
-                        draw_overlay(
-                            frame=display,
-                            step=step,
-                            max_steps=n_steps,
-                            z_scores=z_scores,
-                            convergence=is_converged,
-                            elapsed_time=elapsed_time,
-                            task=f"[OPEN-LOOP] {args.task}",
-                            inference_ms=None
-                        )
-                        cv2.imshow("SmolVLA Deploy", display)
-
-                    key = cv2.waitKey(1) & 0xFF
-                    if key == 27:
-                        print("\n  [ESC 종료]")
+                for chunk_idx in range(n_chunks):
+                    if abort:
                         break
 
-                    elapsed = time.time() - loop_start
-                    if elapsed < loop_interval:
-                        time.sleep(loop_interval - elapsed)
+                    # 각 chunk 시작 시 새 관측 촬영
+                    print(f"\n  === Chunk {chunk_idx+1}/{n_chunks} ===")
+                    capture = k4a.get_capture()
+                    frame_bgr = np.ascontiguousarray(capture.color[:, :, :3])
+
+                    current_angles = get_robot_angles(arm)
+                    if current_angles is None:
+                        print("  상태 읽기 실패!")
+                        raise KeyboardInterrupt
+
+                    t0 = time.time()
+                    obs = build_observation(frame_bgr, current_angles, lang, stats, device)
+
+                    batch = policy._prepare_batch(obs)
+                    raw_chunk = policy._get_action_chunk(batch, noise=None)
+                    chunk = unnormalize_action(raw_chunk, stats, action_scale=args.action_scale)
+                    t1 = time.time()
+
+                    chunk_np = chunk.cpu().numpy().squeeze()  # (50, 6+)
+                    n_steps = chunk_np.shape[0]
+                    inference_ms = (t1 - t0) * 1000
+                    inference_times.append(inference_ms)
+                    print(f"  Chunk 생성: {chunk_np.shape}, {inference_ms:.0f}ms")
+
+                    # Chunk 미리보기 (처음과 마지막 5개만)
+                    print(f"  --- Chunk {chunk_idx+1} Preview ---")
+                    for i in [0, 1, 2, 3, 4, n_steps-3, n_steps-2, n_steps-1]:
+                        if i < n_steps:
+                            a = chunk_np[i, :6]
+                            marker = "..." if i == n_steps-3 and n_steps > 8 else ""
+                            if i == 5 and n_steps > 8:
+                                print(f"    ... (steps 6-{n_steps-2} omitted)")
+                            print(f"    [{global_step+i+1:3d}] [{a[0]:7.1f},{a[1]:7.1f},{a[2]:7.1f},"
+                                  f"{a[3]:7.1f},{a[4]:7.1f},{a[5]:7.1f}]")
+
+                    # Chunk 실행
+                    for i in range(n_steps):
+                        loop_start = time.time()
+                        global_step += 1
+                        step = global_step
+
+                        action_clamped = clamp_joints(chunk_np[i, :6].tolist())
+
+                        action_tensor = torch.tensor(action_clamped, dtype=torch.float32, device=device)
+                        z_scores = compute_z_scores(action_tensor, stats)
+
+                        deltas, max_delta = conv_detector.update(action_clamped, prev_angles)
+                        is_converged = conv_detector.is_converged()
+
+                        if is_converged and not convergence_detected:
+                            convergence_detected = True
+                            print(f"\n  [CONVERGENCE at step {step}]")
+                            if args.convergence_action == "stop":
+                                print("      Stopping execution")
+                                abort = True
+                                break
+
+                        if not args.dry_run:
+                            arm.joints_angle_ctrl(
+                                angles=action_clamped,
+                                speed=args.speed,
+                                acc=args.acc,
+                            )
+
+                        if csv_logger:
+                            csv_logger.log_step(
+                                step=step,
+                                angles=action_clamped,
+                                z_scores=z_scores.cpu().numpy(),
+                                deltas=deltas,
+                                max_delta=max_delta,
+                                convergence=is_converged,
+                                inference_ms=inference_ms if i == 0 else 0
+                            )
+
+                        convergence_marker = " [CONV]" if is_converged else ""
+                        print(
+                            f"  [{step:3d}/{total_open_steps}] "
+                            f"Act:[{action_clamped[0]:6.1f},{action_clamped[1]:6.1f},"
+                            f"{action_clamped[2]:6.1f},{action_clamped[3]:6.1f},"
+                            f"{action_clamped[4]:6.1f},{action_clamped[5]:6.1f}] "
+                            f"d={max_delta:5.1f}"
+                            f"{convergence_marker}"
+                        )
+                        prev_angles = action_clamped
+
+                        capture = k4a.get_capture()
+                        if capture.color is not None:
+                            display = cv2.resize(capture.color[:, :, :3], (640, 360))
+                            elapsed_time = time.time() - start_time
+                            draw_overlay(
+                                frame=display,
+                                step=step,
+                                max_steps=total_open_steps,
+                                z_scores=z_scores,
+                                convergence=is_converged,
+                                elapsed_time=elapsed_time,
+                                task=f"[OPEN-LOOP {chunk_idx+1}/{n_chunks}] {args.task}",
+                                inference_ms=inference_ms if i == 0 else None
+                            )
+                            cv2.imshow("SmolVLA Deploy", display)
+
+                        key = cv2.waitKey(1) & 0xFF
+                        if key == 27:
+                            print("\n  [ESC 종료]")
+                            abort = True
+                            break
+
+                        elapsed = time.time() - loop_start
+                        if elapsed < loop_interval:
+                            time.sleep(loop_interval - elapsed)
 
             else:
                 # ===== Closed-Loop 모드 (NEW: enhanced with all features) =====
@@ -641,8 +681,23 @@ def main():
                     inference_ms = (t1 - t0) * 1000
                     inference_times.append(inference_ms)
 
-                    # 액션 추출 + 안전 클램핑
+                    # 액션 추출
                     action_np = action.cpu().numpy().squeeze()[:6]
+
+                    # NEW: EMA smoothing (reduces per-step jitter from different noise seeds)
+                    # Applied BEFORE clamping so the smoothed value is still physically meaningful.
+                    # On the very first step ema_smoothed is None → initialize from raw action.
+                    # With n_action_steps > 1 the within-chunk motion is already smooth;
+                    # EMA only activates at chunk boundaries when a new inference occurs.
+                    alpha = args.ema_alpha
+                    if alpha < 1.0:
+                        if ema_smoothed is None:
+                            ema_smoothed = action_np.copy()
+                        else:
+                            ema_smoothed = alpha * action_np + (1.0 - alpha) * ema_smoothed
+                        action_np = ema_smoothed
+
+                    # 안전 클램핑
                     action_clamped = clamp_joints(action_np.tolist())
 
                     # NEW: Compute z-scores for display

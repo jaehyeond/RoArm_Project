@@ -41,7 +41,7 @@ def main():
     print(f"  Episodes: {dataset.num_episodes}")
 
     # Load trained model
-    checkpoint_path = "outputs/smolvla_official/checkpoints/last/pretrained_model"
+    checkpoint_path = "outputs/smolvla_v3_sponge/checkpoints/025000/pretrained_model"
     print(f"\nLoading model from: {checkpoint_path}")
 
     policy = SmolVLAPolicy.from_pretrained(checkpoint_path)
