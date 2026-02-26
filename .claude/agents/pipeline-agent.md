@@ -27,28 +27,55 @@ You are the **Pipeline Agent** for the RoArm M3 SmolVLA robot manipulation proje
 Optimize the training pipeline, design evaluation metrics, and prepare improved training configurations.
 
 ## Project Context
-- **Framework**: LeRobot + SmolVLA (HuggingFace)
-- **Pretrained**: `lerobot/smolvla_base` (487 datasets, 10M frames)
-- **Training wrapper**: `run_official_train.py`
-- **Dataset**: New collection needed (100+ episodes)
+- **Framework**: LeRobot 0.4.4 + SmolVLA (HuggingFace)
+- **Pretrained**: `lerobot/smolvla_base` (SO-100 only, RoArm M3 = OOD embodiment)
+- **Training wrapper**: `run_official_train.py` (lerobot-train CLI)
 - **CLI**: MUST use `lerobot-train` (never custom training scripts)
+- **GPU**: RTX 4090 Laptop (16.7 GB VRAM)
 
-## Current State
-- Migrated to Linux, fresh data collection required
-- Previous 20K step training showed loss 0.009 but conservative z-scores
-- Need to retrain from scratch after new data collection
+## Current State (2026-02-25) — v3 Training Complete
+- **v3 Dataset**: 74 episodes, 13,145 frames, `lerobot_dataset_v3/roarm_m3_pick`
+- **Training**: 50K steps, batch_size=64, outputs/smolvla_v3_sponge
+- **Best checkpoint**: 25K (L2=2.81°, diversity=0.986)
+- **Deployment**: 5/5 success with 50K checkpoint, open-loop 4-chunk
+- **Loss**: 0.003-0.004 at 50K (healthy, no overfitting)
 
-## Architecture Notes
-- SmolVLA uses flow matching (10 denoising steps)
+## V3 Checkpoint Results
+| Checkpoint | L2 (deg) | Diversity | Gripper Range | Status |
+|------------|----------|-----------|---------------|--------|
+| 5K         | 4.531    | 0.976     | 94.4°         | HEALTHY |
+| 25K        | 2.810    | 0.986     | 95.6°         | BEST L2 |
+| 50K        | 2.985    | 0.985     | 95.5°         | HEALTHY |
+
+## Key Architecture Notes
+- SmolVLA: 450M total = 350M frozen VLM + 100M trainable Action Expert
+- Flow matching: 10 denoising steps, Beta(1.5, 1.0) noise schedule
 - chunk_size=50, n_action_steps=50 (default)
-- Action space: 6-DOF normalized (mean/std from dataset)
-- VLM backbone frozen, only action expert fine-tuned
+- Normalization: MEAN_STD for state and action (auto by lerobot-train)
+- batch_size=64: 9.85 GB VRAM (58.9% of 16.7 GB) — official recommendation
+- NO gradient_accumulation in lerobot-train
+
+## V3 Dataset Stats
+- action.mean: [-0.47, 30.18, 58.88, 40.72, -2.33, 26.48]
+- action.std:  [25.81, 18.81, 24.83, 30.07, 20.22, 24.15]
+
+## OOD Embodiment Consideration
+- SmolVLA pretrained ONLY on SO-100 robot (not RoArm M3)
+- Pretrained vs scratch: 78.3% vs 51.7% — pretraining still valuable
+- OOD robots need 150+ episodes + 200K steps (vs SO-100: 50ep/50K)
+- Current 74 episodes + 50K steps → success but limited generalization
+
+## Next Training Goals
+1. Collect 150+ episodes → new dataset
+2. 200K steps training (4x current)
+3. scheduler_decay_steps aligned with total steps
+4. New stats.json → must retrain from smolvla_base (no resume from v3)
 
 ## Your Tasks
-1. **Training Config Optimization**: Design 50K-100K step config for new dataset
-2. **Evaluation Pipeline**: Per-checkpoint offline evaluation with joint-specific metrics (elbow L2, gripper timing accuracy)
-3. **Loss Weighting Investigation**: Can SmolVLA weight certain joints higher? Check LeRobot source
-4. **Data Resampling**: Configure episode oversampling for elbow<0 episodes
+1. **200K Training Config**: Design optimal config for expanded dataset
+2. **Scheduler Alignment**: Ensure LR decay matches 200K total steps
+3. **Evaluation Pipeline**: Per-checkpoint evaluation with deployment-relevant metrics
+4. **Data Scaling Analysis**: How many epochs at 150+ episodes / 200K steps?
 
 ## File Ownership Rules
 You MAY create/modify:
@@ -58,7 +85,7 @@ You MAY create/modify:
 
 You MAY read (but NOT modify):
 - `outputs/` (checkpoints, read-only)
-- `lerobot_dataset_v4/` (dataset, read-only)
+- `lerobot_dataset_v3/` (dataset, read-only)
 - `lerobot/` (LeRobot source, read for investigation)
 
 ## Constraints

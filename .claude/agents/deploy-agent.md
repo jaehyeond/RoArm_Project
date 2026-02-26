@@ -28,38 +28,57 @@ Improve the inference loop, add real-time monitoring, implement convergence dete
 
 ## Project Context
 - **Script**: `deploy_smolvla.py`
-- **Hardware**: Azure Kinect DK + RoArm M3 Pro (6-DOF) via /dev/ttyUSB0 (follower), /dev/ttyUSB1 (leader)
+- **Hardware**: Azure Kinect DK + RoArm M3 Pro (6-DOF) via /dev/ttyUSB0
 - **Model**: SmolVLA checkpoint (flow matching, 10 denoising steps)
-- **Inference speed**: ~10ms/step (206ms with n_action_steps=1)
-- **Current settings**: max-steps=300, n-action-steps=1, hz=5
+- **Inference speed**: ~90ms per call (11 Hz), ~10ms for cached chunk steps
 
-## Current State
-- Migrated to Linux, new data collection and training needed
-- Previous deployment showed conservative z-scores (within ±1.5)
-- Elbow convergence issue at +31.8° (needs -64° for grasping)
+## Current State (2026-02-25) — DEPLOYMENT SUCCESS
+- **5/5 success rate** with: `--open-loop --n-chunks 4 --start-pos init --checkpoint 050000`
+- Multi-chunk open-loop: 4 chunks × 50 steps = 200 steps, re-observe at chunk boundaries
+- FK z at grasp: 147-156mm, gripper closes to 24-28° (sponge contact)
+- Sponge position: Base ~45° direction (reproducible)
 
-## Normalization Stats
-- Action mean: [-0.92, 49.43, 25.19, 50.43, -1.64, 21.58]
-- Action std:  [9.72, 33.04, 29.38, 25.16, 13.62, 16.88]
+## Current Deploy Settings
+- Mode: open-loop (4 chunks)
+- Start position: init ([0, 0, 90, 0, 0, 0])
+- hz: 10 (10 Hz control loop)
+- n_action_steps: 5 (default for closed-loop), 50 for open-loop chunks
+- EMA: off by default (alpha=1.0), recommended 0.4 for closed-loop n=1
+
+## V3 Normalization Stats
+- action.mean: [-0.47, 30.18, 58.88, 40.72, -2.33, 26.48]
+- action.std:  [25.81, 18.81, 24.83, 30.07, 20.22, 24.15]
+- DATASET_MEAN_POS: [0, 30, 59, 41, -2, 26]
+- INIT_POS: [0, 0, 90, 0, 0, 0]
 
 ## JOINT_LIMITS (NEVER REMOVE)
 ```python
-JOINT_LIMITS = {
-    'base': (-190, 190),
-    'shoulder': (-110, 110),
-    'elbow': (-70, 190),
-    'wrist_pitch': (-110, 110),
-    'wrist_roll': (-190, 190),
-    'gripper': (-10, 100),
-}
+JOINT_LIMITS = [
+    (-190, 190),   # base
+    (-110, 110),   # shoulder
+    (-70, 190),    # elbow
+    (-110, 110),   # wrist_pitch
+    (-190, 190),   # wrist_roll
+    (-10, 100),    # gripper
+]
 ```
 
-## Your Tasks
-1. **Action Scaling**: Add configurable scaling factor for model z-scores to break plateau
-2. **Convergence Detection**: Detect when joint deltas < threshold for N consecutive steps
-3. **CSV Logging**: Save per-step data (timestamp, joints, z-scores, actions) for analysis
-4. **Real-time Monitoring**: Enhanced OpenCV overlay with z-score bars and convergence indicators
-5. **Multi-checkpoint Mode**: `--checkpoint` argument for easy A/B testing
+## deploy_smolvla.py Features (Already Implemented)
+- Multi-chunk open-loop (`--open-loop --n-chunks N`)
+- Closed-loop with configurable n_action_steps
+- Action scaling (`--action-scale`)
+- EMA smoothing (`--ema-alpha`)
+- Convergence detection (`--convergence-threshold/window/action`)
+- CSV logging (`--log-csv`)
+- Multi-checkpoint (`--checkpoint`)
+- OpenCV overlay (z-scores, convergence, elapsed time)
+- Start position options (zero/dataset_mean/init/current)
+
+## Key Insights
+- Gripper 24° = sponge gripped (NOT failure — sponge width prevents full close)
+- Closed-loop n=1: per-step flow matching noise disrupts gripper close signal
+- Open-loop 4-chunk: commit to trajectory within chunk, smooth grasp execution
+- 50-step chunk = 1.67s at 30fps; episode avg 178 frames → 4 chunks for coverage
 
 ## File Ownership Rules
 You MAY create/modify:
@@ -69,7 +88,8 @@ You MAY create/modify:
 You MAY read (but NOT modify):
 - `outputs/` (checkpoints, read-only)
 - `lerobot/lerobot/policies/smolvla/` (model code, read-only)
-- `lerobot_dataset_v4/` (dataset, read-only)
+- `lerobot_dataset_v3/` (dataset, read-only)
+- `logs/` (deployment CSV logs, read for analysis)
 
 ## Constraints
 - **NO git commands** (Lead only)

@@ -130,6 +130,42 @@
 ### Protocol File
 - `/home/cgxr/Documents/Robotics/RoArm_Project/train_data_collection_protocol.md`
 
+## 200K Scheduler Config (2026-02-25)
+
+### SmolVLA Scheduler: CosineDecayWithWarmupScheduler
+- Source: `lerobot/src/lerobot/optim/schedulers.py` (CosineDecayWithWarmupSchedulerConfig)
+- Config fields (in configuration_smolvla.py):
+  - `scheduler_warmup_steps` = 1,000 (default)
+  - `scheduler_decay_steps` = 30,000 (default)
+  - `scheduler_decay_lr`    = 2.5e-6 (default, peak의 2.5%)
+- CLI: `--policy.scheduler_warmup_steps=N --policy.scheduler_decay_steps=N --policy.scheduler_decay_lr=F`
+
+### Auto-scale behavior (schedulers.py line 99-111)
+- If `num_training_steps < num_decay_steps`:
+  - scale_factor = num_training_steps / num_decay_steps
+  - actual_warmup = int(warmup * scale_factor)  ← warmup 줄어듦!
+  - actual_decay  = num_training_steps
+- RISK: decay_steps >> steps → warmup 거의 0 → 초기 LR 불안정
+- RULE: decay_steps = steps로 맞출 것 (auto-scale 없이 의도한 schedule 실행)
+
+### V3 50K Training: Scheduler was mismatched
+- Steps=50,000 but decay_steps=30,000 (default)
+- Result: LR decayed to 2.5e-6 by step 30K, then FLAT for 30K→50K
+- Impact: last 40% of training at minimum LR (fine for v3, but suboptimal)
+
+### V4 200K Config
+- steps=200,000, batch_size=64
+- scheduler_warmup_steps=2,000 (1% of total)
+- scheduler_decay_steps=200,000 (= steps, smooth decay entire run)
+- scheduler_decay_lr=2.5e-6 (unchanged)
+- save_freq=10,000 (20 checkpoints)
+- eval_freq=20,000 (10 eval points)
+
+### Epoch estimate for 150 episodes
+- 150 eps × 178 frames = 26,700 frames
+- steps/epoch = 26,700 / 64 = 417
+- 200K / 417 = ~480 epochs
+
 ## VRAM Test Results (2026-02-24)
 
 ### RTX 4090 Laptop (16.72 GB actual, not 15.6 GB)
