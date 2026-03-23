@@ -262,9 +262,9 @@ Strategies:
 └── LeaderFollowerTeleopStrategy (leader_arms 설정 시)
 ```
 
-## Agent Team
+## Agent Team (12 agents)
 
-3개 전문 agent가 협업:
+### Engineering Workers (3개 — 코드 실행)
 
 | Agent | Role | File Ownership |
 |-------|------|----------------|
@@ -272,9 +272,42 @@ Strategies:
 | **pipeline-agent** | 학습 설정, 체크포인트 평가 | `train_*.py`, `run_official_train.py` |
 | **deploy-agent** | 추론 루프, 배포 개선 | `deploy_*.py` |
 
-Safety hooks:
+### Research Agents (9개 — 분석, 실험, 논문)
+
+| Team | Agent | Role | File Ownership |
+|------|-------|------|----------------|
+| **A. Robotics** | A1 robotics-manipulation | 궤적 분석, 관절 검증 | `trajectory_*.py` |
+| | A2 robotics-sim2real | 시뮬레이션 연결 | `sim_*.py` |
+| | A3 robotics-hardware | 하드웨어 테스트/캘리브 | `hw_*.py`, `calibrate_*.py` |
+| **B. Physical AI** | B1 pai-vla-model | 모델 아키텍처 분석 | `model_*.py` |
+| | B2 pai-data-efficiency | 증강, 자기개선 루프 | `augment_*.py`, `self_improve_*.py` |
+| | B3 pai-deployment | 안전 모니터링, OOD 감지 | `monitor_*.py`, `safety_*.py` |
+| **C. Research** | C1 research-experiment | 실험 매트릭스, 평가 | `experiment_*.py`, `eval_*.py` |
+| | C2 research-analysis | 통계, 시각화 | `analysis_*.py`, `figure_*.py` |
+| | C3 research-writing | 논문 LaTeX | `paper/*` |
+
+### 소환 규칙 (상황별 2-3개)
+
+| 상황 | 소환 에이전트 |
+|------|-------------|
+| 데이터 수집 | data-agent + A3(Hardware) + B2(Data Efficiency) |
+| 학습 설정 | pipeline-agent + B1(VLA Model) + C1(Experiment) |
+| 배포 테스트 | deploy-agent + A1(Manipulation) + B3(Deployment) |
+| 논문 작성 | C3(Writing) + C2(Analysis) + B1(VLA Model) |
+| Sim-to-Real | A2(Sim2Real) + B1(VLA Model) |
+
+### 교차 검증 프로세스
+```
+1. Worker가 코드/결과 생성
+2. Research agent가 critical questions로 검증
+3. 문제 발견 → worker에게 수정 권장
+4. 실험 필요 → C1이 설계, worker가 실행
+```
+
+Safety hooks (전 에이전트 공통):
 - `safety-check.sh`: git, 로봇 직접 제어, rm -rf, lerobot-train 차단
-- `file-ownership-check.sh`: agent별 파일 소유권 강제
+- `file-ownership-check.sh`: agent별 파일 소유권 강제 (12개 전부 등록)
+- 상세 페르소나: `claudedocs/AGENT_PERSONAS.md`
 
 ## Training Lessons (실패에서 배운 것)
 
@@ -340,6 +373,52 @@ lerobot-train \
 1. **데이터 추가 수집**: 100+ 에피소드 (DEEP 50개+, gripper open/close 다양성)
 2. **재학습**: 새 데이터셋으로 50K+ steps
 3. **재배포 테스트**: dataset_mean 시작, closed-loop
+
+## Research Verification Rules (연구 검증 — 2026-03-10 실수에서 배운 것)
+
+> **배경**: 2026-03-10에 "연구 갭" 5가지를 제시했으나 4/5가 거짓이었음.
+> 원인: 충분한 검색 없이 "없다"고 단정. 논문 제목의 단어를 잘못 해석.
+
+### 절대 규칙
+
+| Rule | Why | 위반 사례 |
+|------|-----|----------|
+| **"없다/최초"는 반드시 10개+ 검색어로 검증** | 한두 번 검색으로 "없다"고 단정하면 거짓 positive | "RGBD-VLA 없음" → 실제 8개+ 존재 |
+| **논문 제목의 단어를 문맥 없이 해석 금지** | "Depth"가 depth 카메라인지 network depth인지 확인 필수 | RD-VLA의 "Depth" = 네트워크 깊이 |
+| **"갭 발견" 시 반증 검색 먼저** | 갭을 주장하기 전에 그 갭을 채운 논문을 적극 검색 | "adaptive chunking 없음" → MoH 존재 |
+| **arXiv ID 있으면 반드시 확인** | 논문 실존 여부 + 내용 일치 검증 | pi0.6 → 실제 π\*₀.₆ (5B, RECAP) |
+| **"X가 유일/최초" 주장 전에 경쟁자 최소 5개 검색** | 주장의 강도에 비례하는 검증 필요 | "SmolVLA가 유일한 로컬 학습 VLA" 등 |
+| **분야별 최신 서베이/메타분석 먼저 확인** | 개별 검색보다 서베이가 전체 그림 제공 | ICLR 2026 VLA 메타분석 활용 |
+
+### 검증 프로세스 (연구 갭 주장 시)
+
+```
+1. "X가 없다" 주장하려면:
+   ├── 최소 3가지 다른 검색어로 검색
+   ├── 최소 2개 소스 (arXiv, Google Scholar, Semantic Scholar)
+   ├── 2024-2026 논문 중심으로 확인
+   └── 반증 논문 1개라도 발견 시 → 주장 철회
+
+2. "세계 최초" 주장하려면:
+   ├── 위 1번 + 관련 학회 proceedings 확인
+   ├── 유사 논문의 Related Work 섹션 확인
+   └── 확신도를 명시: HIGH/MEDIUM/LOW
+
+3. 검증 실패 시:
+   ├── 즉시 정정 (정정 경위 + 올바른 정보)
+   ├── ResearchPlan.md에 ⚠️ 정정 마크 추가
+   └── 이전 주장을 삭제하지 말고 정정 기록 유지
+```
+
+### 근본 원인 분석 (2026-03-10 실수)
+
+| 실수 유형 | 원인 | 방지책 |
+|-----------|------|--------|
+| 확증 편향 | "갭을 찾고 싶다" → 갭이 아닌 증거 무시 | 반증 검색을 먼저 수행 |
+| 검색 부족 | 1-2개 키워드만 검색 | 최소 3개 검색어 × 2개 소스 |
+| 용어 오해 | "Depth" = depth camera라고 가정 | 논문 abstract/method 반드시 확인 |
+| 시간 지연 | 2025 중반 기준 지식으로 2026 주장 | 최신 arXiv (최근 6개월) 필수 확인 |
+| 과대 주장 | "zero papers" 같은 절대적 표현 | "우리 검색 범위 내에서" 등 한정어 사용 |
 
 ## Reference
 

@@ -25,6 +25,7 @@ def convert_collected_data(
     repo_id: str = "roarm_m3_pick",
     fps: int = 30,
     task_description: str = "Pick up the sponge",
+    multi_object: bool = False,
 ):
     """
     수집된 데이터를 LeRobot v3.0 포맷으로 변환
@@ -109,7 +110,13 @@ def convert_collected_data(
             print(f"빈 에피소드, 건너뜀: {ep_path}")
             continue
 
-        print(f"\n에피소드 {ep_idx}: {num_frames} 프레임")
+        # Multi-object: 에피소드 메타데이터에서 물체명 읽기
+        if multi_object and "object" in meta:
+            ep_task = f"Pick up the {meta['object']}\n"
+        else:
+            ep_task = task_description if task_description.endswith("\n") else task_description + "\n"
+
+        print(f"\n에피소드 {ep_idx}: {num_frames} 프레임 (task: {ep_task.strip()})")
 
         # 각 프레임 처리
         for i, frame_data in enumerate(tqdm(frames, desc=f"  프레임", leave=False)):
@@ -142,7 +149,7 @@ def convert_collected_data(
                 "observation.images.top": img,
                 "observation.state": torch.from_numpy(state),
                 "action": torch.from_numpy(action),
-                "task": task_description,  # 각 프레임에 task 포함
+                "task": ep_task,  # 에피소드별 task (multi-object 지원)
             }
 
             dataset.add_frame(frame)
@@ -150,7 +157,7 @@ def convert_collected_data(
 
         # 에피소드 저장
         dataset.save_episode()
-        print(f"  에피소드 {ep_idx} 저장 완료 (task: {task_description})")
+        print(f"  에피소드 {ep_idx} 저장 완료 (task: {ep_task.strip()})")
 
     # 데이터셋 정리 (finalize 호출 필수 - parquet 메타데이터 flush)
     dataset.finalize()
@@ -203,11 +210,14 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description="수집된 데이터를 LeRobot v3.0 포맷으로 변환")
-    parser.add_argument("--input", default="collected_data", help="입력 디렉토리")
+    parser.add_argument("--input", default="collected_data",
+                        help="입력 디렉토리 (multi-object: 콤마 구분, e.g. collected_data_sponge,collected_data_cup)")
     parser.add_argument("--output", default="lerobot_dataset_v3", help="출력 디렉토리")
     parser.add_argument("--repo-id", default="roarm_m3_pick", help="데이터셋 repo ID (local/ 없이)")
     parser.add_argument("--fps", type=int, default=30, help="프레임 레이트")
-    parser.add_argument("--task", default="Pick up the sponge", help="태스크 설명")
+    parser.add_argument("--task", default="Pick up the sponge\n", help="태스크 설명 (single-object용)")
+    parser.add_argument("--multi-object", action="store_true",
+                        help="에피소드 metadata.json에서 물체명 자동 읽기 (task text 자동 생성)")
     parser.add_argument("--verify-only", action="store_true", help="검증만 실행")
 
     args = parser.parse_args()
@@ -215,15 +225,40 @@ if __name__ == "__main__":
     if args.verify_only:
         verify_dataset(args.output, args.repo_id)
     else:
-        # 변환 실행
+        # Multi-object: 콤마로 구분된 여러 입력 디렉토리 → 임시 병합
+        input_dirs = [d.strip() for d in args.input.split(",")]
+
+        if len(input_dirs) > 1:
+            # 여러 디렉토리의 에피소드를 하나의 임시 디렉토리로 심링크
+            import tempfile
+            merged_dir = tempfile.mkdtemp(prefix="merged_episodes_")
+            ep_counter = 0
+            for d in input_dirs:
+                d_path = Path(d)
+                if not d_path.exists():
+                    print(f"경고: {d} 존재하지 않음, 건너뜀")
+                    continue
+                for ep in sorted(d_path.glob("episode_*")):
+                    dst = Path(merged_dir) / f"episode_{ep_counter:04d}"
+                    os.symlink(ep.resolve(), dst)
+                    ep_counter += 1
+            print(f"Multi-object: {ep_counter}개 에피소드 병합 ({', '.join(input_dirs)})")
+            input_dir = merged_dir
+        else:
+            input_dir = input_dirs[0]
+
         dataset = convert_collected_data(
-            input_dir=args.input,
+            input_dir=input_dir,
             output_dir=args.output,
             repo_id=args.repo_id,
             fps=args.fps,
             task_description=args.task,
+            multi_object=args.multi_object,
         )
 
+        # 임시 병합 디렉토리 정리
+        if len(input_dirs) > 1:
+            shutil.rmtree(merged_dir)
+
         if dataset:
-            # 변환 후 검증
             verify_dataset(args.output, args.repo_id)

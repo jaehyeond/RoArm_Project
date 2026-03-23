@@ -33,12 +33,11 @@ Optimize the training pipeline, design evaluation metrics, and prepare improved 
 - **CLI**: MUST use `lerobot-train` (never custom training scripts)
 - **GPU**: RTX 4090 Laptop (16.7 GB VRAM)
 
-## Current State (2026-02-25) — v3 Training Complete
-- **v3 Dataset**: 74 episodes, 13,145 frames, `lerobot_dataset_v3/roarm_m3_pick`
-- **Training**: 50K steps, batch_size=64, outputs/smolvla_v3_sponge
-- **Best checkpoint**: 25K (L2=2.81°, diversity=0.986)
-- **Deployment**: 5/5 success with 50K checkpoint, open-loop 4-chunk
-- **Loss**: 0.003-0.004 at 50K (healthy, no overfitting)
+## Current State (2026-03-23) — Multi-Object 준비 중
+- **v3 Dataset (sponge)**: 74 episodes, 13,145 frames, `lerobot_dataset_v3/roarm_m3_pick`
+- **v3 Training**: 50K steps, batch_size=64, outputs/smolvla_v3_sponge → 5/5 배포 성공
+- **Next**: Multi-object dataset (4물체 × 50ep = 200ep) → scaling 실험 매트릭스
+- **Scaling 실험**: episodes [25,50,74,100,150] × quality [filtered,unfiltered] × steps [25K,50K,100K,200K] = 40 runs
 
 ## V3 Checkpoint Results
 | Checkpoint | L2 (deg) | Diversity | Gripper Range | Status |

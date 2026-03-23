@@ -129,8 +129,9 @@ class DatasetStats:
 
 
 class ManualDataCollector:
-    def __init__(self, robot_port="/dev/ttyUSB0", save_dir="collected_data"):
+    def __init__(self, robot_port="/dev/ttyUSB0", save_dir="collected_data", object_name="sponge"):
         self.save_dir = save_dir
+        self.object_name = object_name
         os.makedirs(save_dir, exist_ok=True)
 
         # 데이터셋 통계 초기화
@@ -354,6 +355,7 @@ class ManualDataCollector:
         z_range = self.max_z - self.min_z
         metadata = {
             "episode_id": self.episode_count,
+            "object": self.object_name,
             "num_frames": len(self.current_episode),
             "timestamp": datetime.datetime.now().isoformat(),
             "fps": self.record_fps,
@@ -591,9 +593,9 @@ class ManualDataCollector:
                 rec_status = "RECORDING" if self.is_recording else "STANDBY"
                 status_color = (0, 0, 255) if self.is_recording else (0, 255, 0)
 
-                # 상단: 에피소드 번호 + 프레임 수
+                # 상단: 물체명 + 에피소드 번호 + 프레임 수
                 y = 30
-                cv2.putText(display, f"Episode {self.episode_count} | Frames {len(self.current_episode)}",
+                cv2.putText(display, f"[{self.object_name.upper()}] Ep {self.episode_count} | Frames {len(self.current_episode)}",
                            (10, y), cv2.FONT_HERSHEY_SIMPLEX, 0.7, status_color, 2)
                 y += 30
 
@@ -723,8 +725,21 @@ class ManualDataCollector:
 
 
 if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description="RoArm M3 수동 데이터 수집")
+    parser.add_argument("--object", default="sponge",
+                        help="수집할 물체 이름 (sponge/cup/box/tool)")
+    parser.add_argument("--port", default="/dev/ttyUSB0", help="로봇 시리얼 포트")
+    parser.add_argument("--save-dir", default=None,
+                        help="저장 디렉토리 (기본: collected_data_{object})")
+    args = parser.parse_args()
+
+    save_dir = args.save_dir or f"collected_data_{args.object}"
+
     collector = ManualDataCollector(
-        robot_port="/dev/ttyUSB0",
-        save_dir="collected_data"
+        robot_port=args.port,
+        save_dir=save_dir,
+        object_name=args.object,
     )
     collector.run()

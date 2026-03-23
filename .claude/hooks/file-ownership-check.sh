@@ -28,6 +28,7 @@ FILE_NAME=$(basename "$FILE_PATH")
 ALLOWED=false
 
 case "$AGENT_NAME" in
+    # === Engineering Workers ===
     "data-agent")
         # data_*.py files and collect_data_manual.py
         if [[ "$FILE_NAME" =~ ^data_ ]] || [[ "$FILE_NAME" == "collect_data_manual.py" ]]; then
@@ -43,6 +44,63 @@ case "$AGENT_NAME" in
     "deploy-agent")
         # deploy_*.py files
         if [[ "$FILE_NAME" =~ ^deploy_ ]]; then
+            ALLOWED=true
+        fi
+        ;;
+    # === Team A: Robotics ===
+    "robotics-manipulation")
+        # trajectory_*.py files
+        if [[ "$FILE_NAME" =~ ^trajectory_ ]]; then
+            ALLOWED=true
+        fi
+        ;;
+    "robotics-sim2real")
+        # sim_*.py files
+        if [[ "$FILE_NAME" =~ ^sim_ ]]; then
+            ALLOWED=true
+        fi
+        ;;
+    "robotics-hardware")
+        # hw_*.py and calibrate_*.py files
+        if [[ "$FILE_NAME" =~ ^hw_ ]] || [[ "$FILE_NAME" =~ ^calibrate_ ]]; then
+            ALLOWED=true
+        fi
+        ;;
+    # === Team B: Physical AI ===
+    "pai-vla-model")
+        # model_*.py files
+        if [[ "$FILE_NAME" =~ ^model_ ]]; then
+            ALLOWED=true
+        fi
+        ;;
+    "pai-data-efficiency")
+        # augment_*.py and self_improve_*.py files
+        if [[ "$FILE_NAME" =~ ^augment_ ]] || [[ "$FILE_NAME" =~ ^self_improve_ ]]; then
+            ALLOWED=true
+        fi
+        ;;
+    "pai-deployment")
+        # monitor_*.py and safety_*.py files
+        if [[ "$FILE_NAME" =~ ^monitor_ ]] || [[ "$FILE_NAME" =~ ^safety_ ]]; then
+            ALLOWED=true
+        fi
+        ;;
+    # === Team C: Research Methods ===
+    "research-experiment")
+        # experiment_*.py and eval_*.py files
+        if [[ "$FILE_NAME" =~ ^experiment_ ]] || [[ "$FILE_NAME" =~ ^eval_ ]]; then
+            ALLOWED=true
+        fi
+        ;;
+    "research-analysis")
+        # analysis_*.py and figure_*.py files
+        if [[ "$FILE_NAME" =~ ^analysis_ ]] || [[ "$FILE_NAME" =~ ^figure_ ]]; then
+            ALLOWED=true
+        fi
+        ;;
+    "research-writing")
+        # paper/ directory files
+        if [[ "$FILE_PATH" =~ /paper/ ]]; then
             ALLOWED=true
         fi
         ;;

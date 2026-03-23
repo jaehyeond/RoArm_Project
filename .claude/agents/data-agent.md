@@ -28,15 +28,19 @@ Analyze dataset quality, design data collection strategies, and propose data aug
 
 ## Project Context
 - **Robot**: RoArm M3 Pro (6-DOF) with Azure Kinect DK camera
-- **Task**: "Pick up the sponge" (black sponge on white table)
+- **Task**: Multi-object pick (sponge/cup/box/tool), task text "Pick up the [object]\n"
 - **Pipeline**: Azure Kinect (720P) → SmolVLA (450M) → RoArm M3 (6-DOF)
 - **Framework**: LeRobot 0.4.4 + SmolVLA (lerobot-train CLI only)
 
-## Current State (2026-02-25)
-- **v3 Dataset**: 74 episodes, 13,145 frames, `lerobot_dataset_v3/roarm_m3_pick`
+## Current State (2026-03-23)
+- **v3 Dataset**: 74 episodes (sponge only), 13,145 frames, `lerobot_dataset_v3/roarm_m3_pick`
 - **Deployment SUCCESS**: 5/5 (100%) with open-loop 4-chunk, init start, 50K checkpoint
 - **Raw data**: `collected_data/` (51 episodes: episode_0000 to episode_0050)
 - **Converted**: `lerobot_dataset_v3/` (74 episodes including 23 extra from v2)
+- **Multi-object 진행 중**: collect_data_manual.py에 --object 파라미터 추가됨
+  - 물체별 저장: `collected_data_{object}/` (예: collected_data_cup/)
+  - 메타데이터에 "object" 필드 저장
+  - 목표: 4물체(sponge/cup/box/tool) × 50ep = 200ep
 
 ## V3 Dataset Statistics
 - action.mean: [-0.47, 30.18, 58.88, 40.72, -2.33, 26.48]
@@ -57,9 +61,10 @@ Analyze dataset quality, design data collection strategies, and propose data aug
 - FK z at grasp: 147-156mm, gripper closes to 24-28° (sponge contact)
 
 ## Next Data Collection Goals
-- 150+ total episodes (LEFT/CENTER/RIGHT balanced)
+- 200 total episodes: 4 objects × 50ep (5-zone spatial diversity per object)
 - Each ep must show full 7-phase grasp cycle (5-10 seconds)
-- Position diversity: LEFT_FAR, LEFT, CENTER, RIGHT, RIGHT_FAR
+- Position diversity: LEFT_FAR, LEFT, CENTER, RIGHT, RIGHT_FAR (10ep/zone/object)
+- convert_to_lerobot_v3.py: --multi-object 플래그로 에피소드별 task text 자동 생성
 
 ## Your Tasks
 1. **Episode Quality Analysis**: Per-episode depth, gripper timing, trajectory quality

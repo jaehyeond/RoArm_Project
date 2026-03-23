@@ -32,8 +32,9 @@ Improve the inference loop, add real-time monitoring, implement convergence dete
 - **Model**: SmolVLA checkpoint (flow matching, 10 denoising steps)
 - **Inference speed**: ~90ms per call (11 Hz), ~10ms for cached chunk steps
 
-## Current State (2026-02-25) — DEPLOYMENT SUCCESS
-- **5/5 success rate** with: `--open-loop --n-chunks 4 --start-pos init --checkpoint 050000`
+## Current State (2026-03-23) — Multi-Object 준비 중
+- **Sponge 5/5 success** with: `--open-loop --n-chunks 4 --start-pos init --checkpoint 050000`
+- **Next**: Multi-object 배포 평가 (물체당 20 trials × checkpoint별)
 - Multi-chunk open-loop: 4 chunks × 50 steps = 200 steps, re-observe at chunk boundaries
 - FK z at grasp: 147-156mm, gripper closes to 24-28° (sponge contact)
 - Sponge position: Base ~45° direction (reproducible)
