@@ -2,6 +2,10 @@
 RoArm M3 + Azure Kinect 수동 데이터 수집 스크립트
 토크 OFF 상태에서 손으로 로봇을 직접 움직여서 데이터 수집
 
+듀얼 카메라 지원:
+  --second-camera zed_wrist      ZED Mini wrist 카메라 (pyzed, RGB only)
+  --second-camera kinect_external Azure Kinect 2대째 외부 시점 (pyk4a)
+
 사용법:
 1. 스크립트 실행하면 로봇 토크가 꺼짐 (손으로 자유롭게 이동 가능)
 2. 손으로 로봇을 움직여서 물체 집기 동작 수행
@@ -94,7 +98,7 @@ class DatasetStats:
                         self.approach_count += 1
 
                     self.total_count += 1
-            except:
+            except Exception:
                 pass
 
     def get_recommendation(self):
@@ -129,9 +133,11 @@ class DatasetStats:
 
 
 class ManualDataCollector:
-    def __init__(self, robot_port="/dev/ttyUSB0", save_dir="collected_data", object_name="sponge"):
+    def __init__(self, robot_port="/dev/ttyUSB0", save_dir="collected_data", object_name="sponge",
+                 second_camera="none"):
         self.save_dir = save_dir
         self.object_name = object_name
+        self.second_cam_type = second_camera  # none / zed_wrist / kinect_external
         os.makedirs(save_dir, exist_ok=True)
 
         # 데이터셋 통계 초기화
@@ -143,7 +149,7 @@ class ManualDataCollector:
         time.sleep(0.5)
         print("로봇 연결됨!")
 
-        # Azure Kinect 초기화
+        # Azure Kinect 초기화 (primary)
         print("Azure Kinect 초기화 중...")
         self.k4a = PyK4A(Config(
             color_resolution=pyk4a.ColorResolution.RES_720P,
@@ -153,6 +159,14 @@ class ManualDataCollector:
         self.k4a.start()
         time.sleep(1)
         print("Azure Kinect 시작됨!")
+
+        # 두 번째 카메라 초기화 (optional)
+        self.zed = None
+        self.k4a2 = None
+        if second_camera == "zed_wrist":
+            self._init_zed_mini()
+        elif second_camera == "kinect_external":
+            self._init_kinect_second()
 
         # 데이터 수집 상태
         self.current_episode = []
@@ -187,12 +201,72 @@ class ManualDataCollector:
         self.grip_close_frame = None        # 그리퍼 닫힌 프레임
         self.prev_gripper = None            # 이전 프레임 그리퍼 값
 
+    def _init_zed_mini(self):
+        """ZED Mini wrist 카메라 초기화 (RGB only, depth는 grasping 거리에서 무효)"""
+        print("ZED Mini 초기화 중...")
+        import pyzed.sl as sl
+        self._sl = sl  # 모듈 참조 보관
+        self.zed = sl.Camera()
+        init_params = sl.InitParameters()
+        init_params.camera_resolution = sl.RESOLUTION.HD720
+        init_params.camera_fps = 30
+        init_params.depth_mode = sl.DEPTH_MODE.NONE
+        status = self.zed.open(init_params)
+        if status != sl.ERROR_CODE.SUCCESS:
+            print(f"ZED Mini open 실패: {status}")
+            print("듀얼 카메라 없이 단일 카메라로 계속합니다.")
+            self.zed = None
+            self.second_cam_type = "none"
+            return
+        self.zed_image = sl.Mat()  # 재사용 버퍼
+        time.sleep(0.5)
+        print("ZED Mini 시작됨!")
+
+    def _init_kinect_second(self):
+        """Azure Kinect 2대째 초기화 (외부 시점)"""
+        print("Azure Kinect 2대째 초기화 중...")
+        self.k4a2 = PyK4A(Config(
+            color_resolution=pyk4a.ColorResolution.RES_720P,
+            depth_mode=pyk4a.DepthMode.NFOV_UNBINNED,
+            synchronized_images_only=True,
+        ), device_id=1)
+        try:
+            self.k4a2.start()
+            time.sleep(1)
+            print("Azure Kinect 2대째 시작됨!")
+        except Exception as e:
+            print(f"Azure Kinect 2대째 open 실패: {e}")
+            print("듀얼 카메라 없이 단일 카메라로 계속합니다.")
+            self.k4a2 = None
+            self.second_cam_type = "none"
+
     def get_camera_frame(self):
-        """Azure Kinect에서 RGB + Depth 프레임 가져오기"""
+        """카메라 프레임 가져오기 (primary + optional second)
+
+        동기화: SW polling — 동일 루프 내 순차 캡처.
+        30fps에서 양쪽 합산 ~15ms, <30ms tolerance (DROID/pi0/Octo 표준).
+        """
+        # Primary: Azure Kinect
         capture = self.k4a.get_capture()
         rgb = np.ascontiguousarray(capture.color[:, :, :3])  # BGRA -> BGR
         depth = capture.transformed_depth  # RGB에 정렬된 깊이
-        return rgb, depth
+
+        # Second camera (순차 캡처)
+        second_rgb = None
+        if self.second_cam_type == "zed_wrist" and self.zed is not None:
+            sl = self._sl
+            if self.zed.grab() == sl.ERROR_CODE.SUCCESS:
+                self.zed.retrieve_image(self.zed_image, sl.VIEW.LEFT)
+                # ZED returns BGRA
+                second_rgb = np.ascontiguousarray(self.zed_image.get_data()[:, :, :3])
+        elif self.second_cam_type == "kinect_external" and self.k4a2 is not None:
+            try:
+                capture2 = self.k4a2.get_capture()
+                second_rgb = np.ascontiguousarray(capture2.color[:, :, :3])
+            except Exception:
+                pass  # 프레임 드롭 허용, None 유지
+
+        return rgb, depth, second_rgb
 
     def get_robot_angles(self):
         """로봇 관절 각도 읽기 (재시도 로직 포함)"""
@@ -201,7 +275,7 @@ class ManualDataCollector:
                 angles = self.robot.joints_angle_get()
                 if angles is not None and len(angles) >= 6:
                     return list(angles)
-            except:
+            except Exception:
                 time.sleep(0.05)
         return [0, 0, 0, 0, 0, 0]  # 실패시 기본값
 
@@ -212,7 +286,7 @@ class ManualDataCollector:
                 pose = self.robot.pose_get()
                 if pose is not None and len(pose) >= 3:
                     return pose  # [x, y, z, tilt_deg, roll_deg, gripper_deg]
-            except:
+            except Exception:
                 time.sleep(0.05)
         return None
 
@@ -226,7 +300,7 @@ class ManualDataCollector:
         if not on:
             print("→ 이제 손으로 로봇을 자유롭게 움직일 수 있습니다.")
 
-    def save_frame(self, rgb, depth, angles, pose):
+    def save_frame(self, rgb, depth, angles, pose, second_rgb=None):
         """현재 프레임을 에피소드에 추가"""
         frame_data = {
             "timestamp": time.time(),
@@ -235,11 +309,14 @@ class ManualDataCollector:
             "frame_idx": len(self.current_episode)
         }
 
-        self.current_episode.append({
+        entry = {
             "data": frame_data,
             "rgb": rgb.copy(),
             "depth": depth.copy()
-        })
+        }
+        if second_rgb is not None:
+            entry["second_rgb"] = second_rgb.copy()
+        self.current_episode.append(entry)
 
     def validate_episode(self):
         """에피소드 품질 검증 (shoulder + Z + gripper timing)
@@ -356,6 +433,7 @@ class ManualDataCollector:
         metadata = {
             "episode_id": self.episode_count,
             "object": self.object_name,
+            "second_camera": self.second_cam_type,
             "num_frames": len(self.current_episode),
             "timestamp": datetime.datetime.now().isoformat(),
             "fps": self.record_fps,
@@ -387,6 +465,11 @@ class ManualDataCollector:
             frame_info = frame["data"].copy()
             frame_info["rgb_path"] = f"rgb_{i:04d}.jpg"
             frame_info["depth_path"] = f"depth_{i:04d}.npy"
+
+            if "second_rgb" in frame:
+                second_path = os.path.join(episode_dir, f"second_{i:04d}.jpg")
+                cv2.imwrite(second_path, frame["second_rgb"])
+                frame_info["second_path"] = f"second_{i:04d}.jpg"
             metadata["frames"].append(frame_info)
 
         with open(os.path.join(episode_dir, "metadata.json"), "w") as f:
@@ -479,7 +562,7 @@ class ManualDataCollector:
         # 문자 키 처리
         try:
             k = key.char.lower() if hasattr(key, 'char') and key.char else None
-        except:
+        except Exception:
             k = None
 
         if k == 't':  # 토크 토글
@@ -524,6 +607,9 @@ class ManualDataCollector:
         # OpenCV 창 생성
         cv2.namedWindow("Camera View", cv2.WINDOW_NORMAL)
         cv2.resizeWindow("Camera View", 960, 540)
+        if self.second_cam_type != "none":
+            cv2.namedWindow("Second Camera", cv2.WINDOW_NORMAL)
+            cv2.resizeWindow("Second Camera", 480, 270)
 
         print("\n준비 완료! Space를 눌러 녹화를 시작하세요.\n")
 
@@ -532,7 +618,7 @@ class ManualDataCollector:
                 current_time = time.time()
 
                 # 카메라 프레임 가져오기
-                rgb, depth = self.get_camera_frame()
+                rgb, depth, second_rgb = self.get_camera_frame()
                 angles = self.get_robot_angles()
                 pose = self.get_robot_pose()
                 self.current_pose = pose  # 캐시 for display
@@ -545,34 +631,33 @@ class ManualDataCollector:
 
                 # 녹화 중이면 프레임 저장 (30 FPS) + 통계/타이밍 추적
                 if self.is_recording:
-                    # frame_idx를 save_frame 전에 기록 (append 전 길이 = 현재 프레임 인덱스)
-                    frame_idx = len(self.current_episode)
-
                     if current_time - self.last_record_time >= 1.0 / self.record_fps:
-                        self.save_frame(rgb, depth, angles, pose)
+                        # frame_idx는 저장되는 프레임에서만 기록 (FPS 제한 블록 안)
+                        frame_idx = len(self.current_episode)
+                        self.save_frame(rgb, depth, angles, pose, second_rgb)
                         self.last_record_time = current_time
 
-                    self.min_elbow = min(self.min_elbow, elbow)
-                    self.max_elbow = max(self.max_elbow, elbow)
-                    self.min_gripper = min(self.min_gripper, gripper)
-                    self.max_gripper = max(self.max_gripper, gripper)
-                    self.max_shoulder = max(self.max_shoulder, shoulder)
-                    if pose:
-                        self.min_z = min(self.min_z, z_height)
-                        self.max_z = max(self.max_z, z_height)
+                        # 통계 추적 (저장된 프레임에서만)
+                        self.min_elbow = min(self.min_elbow, elbow)
+                        self.max_elbow = max(self.max_elbow, elbow)
+                        self.min_gripper = min(self.min_gripper, gripper)
+                        self.max_gripper = max(self.max_gripper, gripper)
+                        self.max_shoulder = max(self.max_shoulder, shoulder)
+                        if pose:
+                            self.min_z = min(self.min_z, z_height)
+                            self.max_z = max(self.max_z, z_height)
 
-                    # 그리퍼 열림/닫힘 감지
-                    if gripper > 40 and not self.grip_was_open:
-                        self.grip_was_open = True
-                        self.grip_open_frame = frame_idx
-                    if (self.grip_was_open and
-                            gripper < self.max_gripper * 0.5 and
-                            self.shoulder_at_grip_close is None):
-                        # 그리퍼가 열렸다가 닫히는 순간 (최대 개방의 50% 이하로 감소)
-                        self.shoulder_at_grip_close = shoulder
-                        self.z_at_grip_close = z_height if pose else None  # None when pose_get() failed
-                        self.grip_close_frame = frame_idx
-                    self.prev_gripper = gripper
+                        # 그리퍼 열림/닫힘 감지 (저장된 프레임 인덱스 사용)
+                        if gripper > 40 and not self.grip_was_open:
+                            self.grip_was_open = True
+                            self.grip_open_frame = frame_idx
+                        if (self.grip_was_open and
+                                gripper < self.max_gripper * 0.5 and
+                                self.shoulder_at_grip_close is None):
+                            self.shoulder_at_grip_close = shoulder
+                            self.z_at_grip_close = z_height if pose else None
+                            self.grip_close_frame = frame_idx
+                        self.prev_gripper = gripper
 
                 # Z-height 존 판정 + 컬러
                 # Calibrated: Z=30mm=table touch, Z=80mm=object grasp, Z=160mm=approach, Z=230mm+=home
@@ -692,6 +777,16 @@ class ManualDataCollector:
 
                 cv2.imshow("Camera View", display)
 
+                # 두 번째 카메라 표시
+                if self.second_cam_type != "none" and second_rgb is not None:
+                    second_display = cv2.resize(second_rgb, (480, 270))
+                    cam_label = "Wrist (ZED)" if self.second_cam_type == "zed_wrist" else "External (Kinect2)"
+                    cv2.putText(second_display, cam_label, (10, 20),
+                               cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+                    if self.is_recording:
+                        cv2.circle(second_display, (second_display.shape[1] - 20, 20), 8, (0, 0, 255), -1)
+                    cv2.imshow("Second Camera", second_display)
+
                 # OpenCV 키 처리
                 key = cv2.waitKey(1) & 0xFF
                 if key == 27:  # ESC
@@ -718,6 +813,10 @@ class ManualDataCollector:
             self.set_torque(True)
 
             self.k4a.stop()
+            if self.zed is not None:
+                self.zed.close()
+            if self.k4a2 is not None:
+                self.k4a2.stop()
             self.robot.disconnect()
             print("\n정리 완료!")
             print(f"총 {self.episode_count} 에피소드 수집됨")
@@ -733,6 +832,9 @@ if __name__ == "__main__":
     parser.add_argument("--port", default="/dev/ttyUSB0", help="로봇 시리얼 포트")
     parser.add_argument("--save-dir", default=None,
                         help="저장 디렉토리 (기본: collected_data_{object})")
+    parser.add_argument("--second-camera", default="none",
+                        choices=["none", "zed_wrist", "kinect_external"],
+                        help="두 번째 카메라 (none/zed_wrist/kinect_external)")
     args = parser.parse_args()
 
     save_dir = args.save_dir or f"collected_data_{args.object}"
@@ -741,5 +843,6 @@ if __name__ == "__main__":
         robot_port=args.port,
         save_dir=save_dir,
         object_name=args.object,
+        second_camera=args.second_camera,
     )
     collector.run()

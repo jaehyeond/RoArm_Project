@@ -61,3 +61,32 @@ Gemini Robotics analysis (2026-03-24):
 **Innovation test verdict:**
 - "AR visual augmentation timing" = FAILS (incremental)
 - "AR spatial guidance for operator behavior" = PASSES ("huh, that's clever" response expected from reviewers)
+
+---
+
+## 3DGS+VLA Feasibility Analysis (2026-03-24)
+
+**Verdict: NO-GO (standalone main paper). CONDITIONAL (as AR+Oracle ablation).**
+**Confidence: HIGH**
+
+Key finding: 65-day budget cannot support both AR+Oracle (main, ~45 days) and 3DGS standalone (~40 days realistic).
+
+**Go/No-Go Gate: SigLIP cosine distance measurement**
+- < 0.30: GO (3DGS augmentation viable)
+- 0.30–0.50: CAUTION (pilot required)
+- > 0.50: NO-GO (same failure mode as Isaac rasterizer at 0.65)
+- Reference: SplatSim (multi-view) = 0.15, Isaac rasterizer = 0.65
+
+**3 scenarios evaluated:**
+1. Standalone CoRL paper → REJECTED (time insufficient)
+2. AR+Oracle Section 4.4 ablation → CONDITIONAL (gate pass + AR+Oracle done by 4/20)
+3. Negative result appendix → RECOMMENDED if gate fails (cost: 1 day)
+
+**Structural risks that cannot be mitigated:**
+- Single Azure Kinect = sparse views → 3DGS quality uncertain
+- Dynamic scene (robot arm + objects) requires foreground/background separation pipeline (1-2 weeks extra)
+- GeoPredict (arXiv:2512.16811) already did 3DGS+VLA with multi-view setup
+
+**Immediate action: SigLIP gate test this week (2026-03-28 deadline, cost: 1 day)**
+- File: experiment_3dgs_vla_feasibility.py
+- Run: python experiment_3dgs_vla_feasibility.py --mode gate_check --cosine_dist X

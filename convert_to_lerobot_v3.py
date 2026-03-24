@@ -26,6 +26,8 @@ def convert_collected_data(
     fps: int = 30,
     task_description: str = "Pick up the sponge",
     multi_object: bool = False,
+    second_cam_key: str = "auto",
+    force: bool = False,
 ):
     """
     수집된 데이터를 LeRobot v3.0 포맷으로 변환
@@ -48,11 +50,40 @@ def convert_collected_data(
 
     print(f"발견된 에피소드: {len(episodes)}개")
 
+    # 듀얼 카메라 자동 감지 (첫 에피소드의 metadata 확인)
+    has_second_cam = False
+    second_cam_obs_key = None
+    first_meta_path = episodes[0] / "metadata.json"
+    if first_meta_path.exists():
+        with open(first_meta_path) as f:
+            first_meta = json.load(f)
+        second_cam_type = first_meta.get("second_camera", "none")
+        if second_cam_type != "none":
+            has_second_frame = any("second_path" in fr for fr in first_meta.get("frames", []))
+            if has_second_frame:
+                has_second_cam = True
+                # observation key: CLI 오버라이드 또는 카메라 타입에서 자동 결정
+                if second_cam_key == "auto":
+                    if second_cam_type == "zed_wrist":
+                        second_cam_obs_key = "observation.images.wrist"
+                    else:
+                        second_cam_obs_key = "observation.images.side"
+                else:
+                    second_cam_obs_key = f"observation.images.{second_cam_key}"
+                print(f"듀얼 카메라 감지됨: {second_cam_type} → {second_cam_obs_key}")
+
     # 출력 디렉토리 정리 (이미 존재하면 삭제)
     full_output_path = output_path / repo_id
     if full_output_path.exists():
-        print(f"기존 데이터셋 삭제: {full_output_path}")
-        shutil.rmtree(full_output_path)
+        if force:
+            print(f"기존 데이터셋 삭제: {full_output_path}")
+            shutil.rmtree(full_output_path)
+        else:
+            confirm = input(f"기존 데이터셋 삭제? {full_output_path} (y/n): ").strip().lower()
+            if confirm != 'y':
+                print("변환 취소됨")
+                return None
+            shutil.rmtree(full_output_path)
 
     # Features 정의 (새 LeRobot 포맷)
     features = {
@@ -76,6 +107,13 @@ def convert_collected_data(
             }
         }
     }
+
+    if has_second_cam and second_cam_obs_key:
+        features[second_cam_obs_key] = {
+            "dtype": "video",
+            "shape": (720, 1280, 3),
+            "names": ["height", "width", "channel"]
+        }
 
     print(f"데이터셋 생성 중: {repo_id}")
     print(f"출력 경로: {full_output_path}")
@@ -152,6 +190,17 @@ def convert_collected_data(
                 "task": ep_task,  # 에피소드별 task (multi-object 지원)
             }
 
+            # 두 번째 카메라 이미지 (있으면)
+            if has_second_cam and second_cam_obs_key and "second_path" in frame_data:
+                second_img_path = ep_path / frame_data["second_path"]
+                if second_img_path.exists():
+                    second_img = cv2.imread(str(second_img_path))
+                    if second_img is not None:
+                        second_img = cv2.cvtColor(second_img, cv2.COLOR_BGR2RGB)
+                        if second_img.shape[:2] != (720, 1280):
+                            second_img = cv2.resize(second_img, (1280, 720))
+                        frame[second_cam_obs_key] = second_img
+
             dataset.add_frame(frame)
             total_frames += 1
 
@@ -218,6 +267,10 @@ if __name__ == "__main__":
     parser.add_argument("--task", default="Pick up the sponge\n", help="태스크 설명 (single-object용)")
     parser.add_argument("--multi-object", action="store_true",
                         help="에피소드 metadata.json에서 물체명 자동 읽기 (task text 자동 생성)")
+    parser.add_argument("--second-cam-key", default="auto",
+                        help="두 번째 카메라 observation key (auto/wrist/side/external)")
+    parser.add_argument("--force", action="store_true",
+                        help="기존 데이터셋 삭제 시 확인 없이 진행")
     parser.add_argument("--verify-only", action="store_true", help="검증만 실행")
 
     args = parser.parse_args()
@@ -254,6 +307,8 @@ if __name__ == "__main__":
             fps=args.fps,
             task_description=args.task,
             multi_object=args.multi_object,
+            second_cam_key=args.second_cam_key,
+            force=args.force,
         )
 
         # 임시 병합 디렉토리 정리
