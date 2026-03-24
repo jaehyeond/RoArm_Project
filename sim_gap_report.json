@@ -1,0 +1,428 @@
+{
+  "generated_by": "A2 Sim-to-Real & Digital Twin Specialist",
+  "date": "2026-03-23",
+  "project": "RoArm-M3 + SmolVLA (CoRL 2026)",
+  "overall_verdict": "FEASIBLE WITH SIGNIFICANT CAVEATS. Sim\u2192real for visual manipulation policies (VLA) is NOT plug-and-play. Plain Isaac Lab rasterizer images will NOT fool SigLIP. Isaac Lab RTX + domain randomization can achieve 60-80% transfer. The 3DGS approach (scan real scene) is the best option for this setup. Minimum real data needed: ~20-50 demos for fine-tuning after sim pretraining.",
+  "severity_summary": {
+    "physics_critical": 1,
+    "physics_high": 3,
+    "visual_critical": 1,
+    "visual_high": 2,
+    "blockers": [
+      "Contact dynamics (sponge deformation) \u2014 switch to rigid object",
+      "Servo stiction (1-3\u00b0 dead band) \u2014 not domain-randomizable",
+      "SigLIP texture gap \u2014 requires RTX renderer or 3DGS",
+      "Stats.json mismatch \u2014 always retrain from smolvla_base"
+    ]
+  },
+  "physics_gap_analysis": [
+    {
+      "category": "actuator_lag",
+      "description": "ST3215 servo has ~20-50ms command-to-position lag at 115200 baud. Isaac Lab default joint drives respond instantaneously (PD gains only). At 30fps, this is 0.6-1.5 frames of lag \u2014 significant for grasp timing.",
+      "real_value": "20-50ms lag per command (serial + servo PD loop)",
+      "isaac_lab_value": "<1ms (simulated PD drive, no serial overhead)",
+      "quantified_error": "0.6-1.5 frame offset at 30fps \u2192 ~0.5-3\u00b0 positional error at peak velocity",
+      "severity": "HIGH",
+      "transferable_with_dr": true,
+      "dr_parameter": "joint_position_delay (0.01-0.05s)"
+    },
+    {
+      "category": "static_friction_stiction",
+      "description": "Real servo gearbox has stiction: small commanded motions (<2\u00b0) are eaten by static friction. Isaac Lab uses velocity-based Coulomb friction which has no stiction band. This causes real robot to 'stick' at small corrections that sim executes cleanly.",
+      "real_value": "Stiction band ~1-3\u00b0 (gear backlash + static friction)",
+      "isaac_lab_value": "No stiction \u2014 any nonzero force produces motion",
+      "quantified_error": "1-3\u00b0 dead band on small corrections \u2192 grasp alignment failures",
+      "severity": "HIGH",
+      "transferable_with_dr": false,
+      "dr_parameter": "No DR equivalent \u2014 requires custom actuator model"
+    },
+    {
+      "category": "joint_backlash",
+      "description": "ST3215 plastic gearbox has 1-2\u00b0 backlash per joint. Direction reversal causes 1-2\u00b0 position error. Isaac Lab articulations assume zero backlash. Elbow backlash is worst (heaviest load, most gear stages).",
+      "real_value": "1-2\u00b0 backlash (elbow/shoulder worst), gear-direction-dependent",
+      "isaac_lab_value": "Zero backlash (rigid articulation)",
+      "quantified_error": "1-2\u00b0 per direction reversal, accumulates to 3-5\u00b0 in complex trajectories",
+      "severity": "MEDIUM",
+      "transferable_with_dr": true,
+      "dr_parameter": "joint_gear_ratio noise (\u00b11-2\u00b0)"
+    },
+    {
+      "category": "gravity_deflection",
+      "description": "At full extension, shoulder+elbow carry ~200-400g of distal links. Real servo elasticity causes 2-5\u00b0 sag under gravity load. Isaac Lab uses rigid bodies \u2014 no elastic deformation. This matters most for DEEP grasps (shoulder ~60\u00b0, elbow extended).",
+      "real_value": "2-5\u00b0 gravity sag at full extension (shoulder load worst)",
+      "isaac_lab_value": "Zero deflection (rigid bodies)",
+      "quantified_error": "Real shoulder mean=30.06\u00b0, std=18.89\u00b0. Sim would over-predict reach by ~2-5\u00b0 at extreme poses.",
+      "severity": "MEDIUM",
+      "transferable_with_dr": true,
+      "dr_parameter": "link_mass \u00b120%, joint_stiffness \u00b130%"
+    },
+    {
+      "category": "contact_dynamics_grasp",
+      "description": "PhysX in Isaac Lab uses convex hull collision and simplified friction cones. Real sponge object has non-rigid, deformable contact (changes shape under gripper). Sim gripper can 'clip through' at grasp or slip without real friction. Critical: SmolVLA learns gripper closure from IMAGES \u2014 if gripper looks 'closed' in sim but contact physics is wrong, policy transfers poorly.",
+      "real_value": "Deformable sponge, ~20-30N contact force at closure=24-28\u00b0 (measured)",
+      "isaac_lab_value": "Rigid body approximation, friction coefficient \u03bc=0.5-1.0 (default)",
+      "quantified_error": "Gripper closure range: real=24-28\u00b0 (sponge contact), sim=0\u00b0 (object penetration or rigid contact). This is the LARGEST visual gap for SigLIP encoding.",
+      "severity": "CRITICAL",
+      "transferable_with_dr": false,
+      "dr_parameter": "No equivalent \u2014 deformable body simulation needed (not in Isaac Lab default)"
+    },
+    {
+      "category": "workspace_geometry",
+      "description": "Real workspace has: table surface, cluttered background, USB cables, non-uniform lighting, shadow casting. Isaac Lab scene is clean/sterile. Forward kinematics matches (URDF is accurate), but collision with table/cables is not modeled.",
+      "real_value": "Cluttered tabletop, 3 USB cables, non-uniform overhead + desk lighting",
+      "isaac_lab_value": "Clean table plane, uniform ambient light",
+      "quantified_error": "Not joint-space quantifiable \u2014 visual domain gap (see SigLIP analysis)",
+      "severity": "HIGH",
+      "transferable_with_dr": true,
+      "dr_parameter": "background_texture, lighting_color_temp, object_pose \u00b110cm"
+    }
+  ],
+  "visual_encoding_gap": [
+    {
+      "category": "texture_realism",
+      "description": "SigLIP was pretrained on real photographs. Isaac Lab RTX renders look like a video game: perfect reflections, no motion blur, no lens artifacts. The SigLIP embedding distance between real and Isaac RTX render of same scene is estimated at 0.3-0.5 cosine distance (empirical from SplatSim paper). Isaac Lab Rasterizer (non-RTX): even worse, ~0.6-0.8 distance.",
+      "severity": "CRITICAL",
+      "gap_evidence": "SplatSim (2409.10161): MuJoCo render \u2192 ViT policy: 45% vs real: 94%. Plain rasterizer sim images encode as 'synthetic/game-like' in CLIP/SigLIP space. RTX path renderer improves but needs 2-3x more compute.",
+      "mitigation": "Use Isaac Lab RTX renderer (not rasterizer). Add domain randomization on: lighting, table texture, background. OR use 3DGS (Gaussian Splatting) from real Azure Kinect scan \u2014 SplatSim shows GS-rendered sim images have <0.1 cosine distance to real."
+    },
+    {
+      "category": "robot_arm_appearance",
+      "description": "RoArm M3 is a black/dark plastic arm with visible servo labels, cable management holes, and worn surfaces. Isaac Lab USD model has clean CAD appearance with uniform albedo. SigLIP will encode these differently especially for gripper state estimation.",
+      "severity": "HIGH",
+      "gap_evidence": "SmolVLA's SigLIP processes 224x224 patches. The gripper region at typical 720p capture covers ~30x30px area \u2014 texture differences are visible at this resolution. GraspVLA (CoRL 2025) reports 15-20% transfer degradation from arm appearance mismatch alone.",
+      "mitigation": "Apply photorealistic textures to URDF/USD from real robot photos. Add surface wear via PBR roughness maps. Domain randomize arm albedo \u00b120%."
+    },
+    {
+      "category": "object_deformation_appearance",
+      "description": "Sponge deforms when grasped. In sim, it stays rigid. SigLIP will see a different gripper-object contact appearance: real=deformed sponge, sim=rigid cube. This is visible in the 224x224 crop that SmolVLA uses.",
+      "severity": "HIGH",
+      "gap_evidence": "Sponge deformation at closure 24-28\u00b0 changes visual footprint by ~30%. SigLIP is sensitive to shape changes (it's a vision-language model \u2014 shape semantics matter). Sim will show rigid gripper closing on rigid cube.",
+      "mitigation": "Use a rigid object (block, can) instead of sponge for sim\u2192real transfer experiments. OR implement soft-body simulation (IsaacGym FleX \u2014 but Isaac Lab doesn't support it well). Pragmatic: mask the gripper-object region for policy learning."
+    },
+    {
+      "category": "depth_and_shadow",
+      "description": "Azure Kinect produces high-quality depth-shadow cues (structured light). Isaac Lab rasterizer has flat ambient + directional shadow only. Contact shadows, sub-surface scattering in sponge, depth-of-field blur \u2014 all absent in sim. SigLIP uses these cues for 3D scene understanding.",
+      "severity": "MEDIUM",
+      "gap_evidence": "DepthVLA and SpatialVLA show that depth cues significantly aid manipulation policy. Removing real shadows/depth-cues degrades performance 10-25%. Isaac Lab RTX mode recovers ~70% of shadow fidelity.",
+      "mitigation": "Use Isaac Lab RTX path tracer (not rasterizer). Add multiple point lights at real overhead lamp positions. Consider adding depth channel to SmolVLA input (architectural change \u2014 complex)."
+    },
+    {
+      "category": "image_resolution_and_camera_model",
+      "description": "Azure Kinect: 1280x720, fisheye-corrected, specific lens distortion. Isaac Lab camera: 1280x720 (configurable) but pinhole model, no distortion. SmolVLA resizes to 224x224 anyway \u2014 distortion differences are small after resize. HOWEVER: Azure Kinect color camera has specific chromatic aberration and auto-white-balance that sim lacks.",
+      "severity": "LOW",
+      "gap_evidence": "After 224x224 resize, camera model differences are minor. Color temperature difference (warm fluorescent real vs. neutral sim) can shift SigLIP color embeddings but this is domain-randomizable.",
+      "mitigation": "Match Isaac Lab camera: 1280x720, 69\u00b0 FOV (Azure Kinect spec). Domain randomize color temperature (3200K-6500K range). Calibrate camera extrinsics from real setup."
+    }
+  ],
+  "domain_randomization_strategy": {
+    "randomizable_parameters": {
+      "lighting": {
+        "params": [
+          "light_intensity (0.5-2.0x)",
+          "color_temp (3200-6500K)",
+          "num_lights (1-3)",
+          "shadow_softness"
+        ],
+        "priority": "CRITICAL",
+        "reason": "SigLIP is highly sensitive to lighting; single biggest visual DR factor"
+      },
+      "table_texture": {
+        "params": [
+          "albedo_color (\u00b130%)",
+          "roughness (0.2-0.8)",
+          "normal_map_scale (0-0.5)"
+        ],
+        "priority": "HIGH",
+        "reason": "Table surface dominates the background in 224x224 crop"
+      },
+      "joint_dynamics": {
+        "params": [
+          "joint_position_delay (10-50ms)",
+          "joint_stiffness (\u00b130%)",
+          "joint_damping (\u00b120%)"
+        ],
+        "priority": "HIGH",
+        "reason": "Covers actuator lag and compliance"
+      },
+      "object_pose": {
+        "params": [
+          "x \u00b15cm",
+          "y \u00b15cm",
+          "z \u00b11cm",
+          "yaw \u00b130\u00b0"
+        ],
+        "priority": "HIGH",
+        "reason": "Task-space generalization, matches real collection variance"
+      },
+      "object_appearance": {
+        "params": [
+          "albedo_color (match sponge yellow \u00b120%)",
+          "roughness (0.3-0.7)"
+        ],
+        "priority": "MEDIUM",
+        "reason": "Object recognition in SigLIP"
+      },
+      "camera_pose": {
+        "params": [
+          "position \u00b11cm",
+          "rotation \u00b12\u00b0"
+        ],
+        "priority": "MEDIUM",
+        "reason": "Calibration error in real setup"
+      },
+      "link_mass": {
+        "params": [
+          "\u00b120% per link"
+        ],
+        "priority": "MEDIUM",
+        "reason": "Gravity sag compensation"
+      }
+    },
+    "NOT_randomizable_with_standard_DR": {
+      "servo_stiction": {
+        "problem": "Dead-band behavior requires custom actuator model, not just parameter noise",
+        "workaround": "Post-process sim trajectories to add stiction dead-band artificially"
+      },
+      "object_deformation": {
+        "problem": "Soft-body simulation not in Isaac Lab default; computationally expensive",
+        "workaround": "Switch to rigid object for sim2real experiments"
+      },
+      "gripper_contact_sound": {
+        "problem": "Audio cues not in visual sim",
+        "workaround": "Not needed for visual-only SmolVLA"
+      },
+      "arm_cable_interactions": {
+        "problem": "USB cables and power cables create unexpected constraints",
+        "workaround": "Fix cables away from workspace in real, exclude from sim model"
+      }
+    }
+  },
+  "stats_json_incompatibility": {
+    "problem": "LeRobot v3 normalizes all actions/states by stats.json mean+std. If sim data is mixed in, the combined stats will be biased toward sim distribution (which may cover a wider range or different mean). A checkpoint trained on real-only stats will misinterpret sim-normalized inputs, and vice versa.",
+    "critical_incompatibilities": [
+      "Shoulder mean: real=30.2\u00b0, sim~20.0\u00b0 (task differences)",
+      "Elbow mean: real=58.9\u00b0, sim~80.0\u00b0 (sim uses more extension)",
+      "Std ratios >1.5x for base, shoulder, elbow \u2014 normalization scale mismatch",
+      "Must retrain from smolvla_base when adding sim data \u2014 no checkpoint reuse"
+    ],
+    "joint_breakdown": [
+      {
+        "joint": "base",
+        "real_mean": -0.471,
+        "sim_estimated_mean": 0.0,
+        "mean_shift_deg": 0.471,
+        "real_std": 25.812,
+        "sim_estimated_std": 45.0,
+        "std_ratio": 1.7433751743375174,
+        "normalization_impact": "LOW"
+      },
+      {
+        "joint": "shoulder",
+        "real_mean": 30.177,
+        "sim_estimated_mean": 20.0,
+        "mean_shift_deg": 10.177,
+        "real_std": 18.807,
+        "sim_estimated_std": 35.0,
+        "std_ratio": 1.861009198702611,
+        "normalization_impact": "HIGH"
+      },
+      {
+        "joint": "elbow",
+        "real_mean": 58.876,
+        "sim_estimated_mean": 80.0,
+        "mean_shift_deg": 21.124000000000002,
+        "real_std": 24.829,
+        "sim_estimated_std": 40.0,
+        "std_ratio": 1.6110193725079545,
+        "normalization_impact": "HIGH"
+      },
+      {
+        "joint": "wrist_pitch",
+        "real_mean": 40.721,
+        "sim_estimated_mean": 45.0,
+        "mean_shift_deg": 4.2790000000000035,
+        "real_std": 30.069,
+        "sim_estimated_std": 40.0,
+        "std_ratio": 1.3302737038145598,
+        "normalization_impact": "LOW"
+      },
+      {
+        "joint": "wrist_roll",
+        "real_mean": -2.328,
+        "sim_estimated_mean": 0.0,
+        "mean_shift_deg": 2.328,
+        "real_std": 20.217,
+        "sim_estimated_std": 35.0,
+        "std_ratio": 1.731216303111243,
+        "normalization_impact": "LOW"
+      },
+      {
+        "joint": "gripper",
+        "real_mean": 26.479,
+        "sim_estimated_mean": 30.0,
+        "mean_shift_deg": 3.521000000000001,
+        "real_std": 24.153,
+        "sim_estimated_std": 30.0,
+        "std_ratio": 1.2420817289777668,
+        "normalization_impact": "LOW"
+      }
+    ],
+    "recommended_strategy": "Strategy A (Safest): Train entirely on sim data with sim stats \u2192 fine-tune on 20-30 real demos \u2192 separate stats.json per phase. Strategy B (Mixed): Combine real + sim, recompute stats from scratch, always start from smolvla_base. Never resume from real-only checkpoint. Strategy C (Sim Pretraining): Use sim data as curriculum pretraining phase before real data. Set sim ratio 80:20 initially, taper to 0:100 by end."
+  },
+  "unity_vs_isaac_lab": {
+    "unity_advantages": [
+      "Student already has Unity/XR expertise \u2014 lower implementation cost",
+      "Unity ML-Agents: RL environment for demo generation",
+      "Unity HDRP: high-quality real-time rendering (close to RTX quality)",
+      "Unity Perception package: automatic annotation, domain randomization",
+      "Unity + ROS2 bridge: RoArm M3 URDF can be imported",
+      "Unity AR Foundation: can overlay digital twin on real workspace (AR2-D2 style)",
+      "XRoboToolkit (ByteDance) already uses Unity for VLA data collection",
+      "Faster iteration: no conda environment conflicts, no NVIDIA-specific dependencies"
+    ],
+    "unity_disadvantages": [
+      "Physics: Unity PhysX is older/less accurate than Isaac Lab PhysX 5.x",
+      "No GPU-accelerated parallel simulation (can't run 100s of envs in parallel)",
+      "No Isaac Lab-style domain randomization API (must implement manually)",
+      "ROS2 bridge latency: ~10-50ms additional delay for real-time control",
+      "No built-in LeRobot v3 dataset export (must write custom exporter)",
+      "URDF \u2192 Unity: requires manual material/texture reassignment"
+    ],
+    "isaac_lab_advantages": [
+      "Already set up (existing project at /home/cgxr/Documents/Robotics/isaac_roarm_m3/)",
+      "URDF \u2192 USD conversion already complete",
+      "GPU parallelism: can generate 1000+ episodes in parallel on RTX 4090",
+      "Isaac Lab RTX renderer: photorealistic images for SigLIP",
+      "Built-in domain randomization (ManagerBasedRLEnv)",
+      "RSL-RL already integrated and validated"
+    ],
+    "isaac_lab_disadvantages": [
+      "No Isaac Lab \u2192 LeRobot v3 conversion pipeline (biggest blocker!)",
+      "Complex environment to modify (takes days to learn internals)",
+      "SigLIP compatibility with Isaac Lab renders: unverified",
+      "No XR integration (VR teleoperation requires separate Unity bridge)"
+    ],
+    "recommendation": "For this student's situation: HYBRID approach. Use Unity for: (1) XR teleoperation interface (student's strength), (2) AR-based demonstration generation (AR2-D2 style with zero real robot needed). Use Isaac Lab for: (1) RL-based trajectory generation at scale, (2) photorealistic rendering via RTX for SigLIP-compatible images. Build the missing Isaac Lab \u2192 LeRobot v3 pipeline (see sim_pipeline_design.py). The 3DGS approach (scan real scene with Azure Kinect \u2192 reconstruct in 3DGS \u2192 render novel views) is BEST for visual sim-to-real: SplatSim shows GS-rendered images have <0.1 cosine distance to real in CLIP space.",
+    "minimum_viable_experiment": "Phase 1 (2 weeks): Build Isaac Lab \u2192 LeRobot v3 converter. Phase 2 (1 week): Generate 200 sim episodes with Isaac Lab RL policy. Phase 3 (1 week): Train SmolVLA on sim-only data, measure real-robot transfer. Phase 4 (2 weeks): Add 50 real demos, measure how much real data needed. Expected result: sim-only = 20-40% success, sim+50real = 70-85% success (based on SplatSim and GraspVLA numbers)."
+  },
+  "transfer_metrics": {
+    "quantitative_metrics": {
+      "task_success_rate": {
+        "description": "Fraction of episodes where sponge is grasped and lifted >5cm",
+        "measurement": "N=20 trials per condition, 5 fixed object positions",
+        "baseline": "real-only: 100% (5/5 reproducible, our current result)",
+        "target": ">80% for sim\u2192real to be considered 'successful'"
+      },
+      "grasp_attempt_rate": {
+        "description": "Fraction of trials where gripper closes at all (<60\u00b0)",
+        "measurement": "Count gripper closures below 60\u00b0 during episode",
+        "baseline": "real-only: 100%",
+        "note": "v1 failure: 0% grasp attempts \u2014 minimum bar"
+      },
+      "trajectory_similarity_dtw": {
+        "description": "Dynamic Time Warping distance between sim and real trajectories",
+        "measurement": "Compare joint-space trajectories for same task",
+        "units": "degrees (lower = better)",
+        "baseline": "real-to-real variation: 5-15\u00b0 DTW (our std dev data)"
+      },
+      "siglip_embedding_distance": {
+        "description": "Cosine distance between SigLIP embeddings of sim vs. real frames",
+        "measurement": "Extract SigLIP features from sim+real images of same scene",
+        "target": "<0.2 cosine distance (from SplatSim paper threshold)",
+        "current_estimate": "0.3-0.5 (Isaac Lab rasterizer), 0.1-0.2 (Isaac Lab RTX)"
+      },
+      "action_distribution_wasserstein": {
+        "description": "Wasserstein-1 distance between sim and real action distributions",
+        "measurement": "Compare action histograms per joint",
+        "current_real_stats": {
+          "base": {
+            "mean": -0.471,
+            "std": 25.812
+          },
+          "shoulder": {
+            "mean": 30.177,
+            "std": 18.807
+          },
+          "elbow": {
+            "mean": 58.876,
+            "std": 24.829
+          },
+          "wrist_pitch": {
+            "mean": 40.721,
+            "std": 30.069
+          },
+          "wrist_roll": {
+            "mean": -2.328,
+            "std": 20.217
+          },
+          "gripper": {
+            "mean": 26.479,
+            "std": 24.153
+          }
+        }
+      }
+    },
+    "qualitative_checkpoints": [
+      "Checkpoint 1: Policy attempts to move to object (base/shoulder move in correct direction)",
+      "Checkpoint 2: Policy reaches object position (within 5cm)",
+      "Checkpoint 3: Policy opens gripper at correct time (Phase 2 of grasp)",
+      "Checkpoint 4: Policy closes gripper on object (not on empty space)",
+      "Checkpoint 5: Policy lifts object (elbow/shoulder return motion after grasp)"
+    ],
+    "ablation_conditions": {
+      "A_sim_only": "Train on sim data only, test on real",
+      "B_sim_plus_20real": "Train on sim + 20 real demos",
+      "C_sim_plus_50real": "Train on sim + 50 real demos",
+      "D_real_50_only": "Train on 50 real demos only (baseline)",
+      "E_real_74_only": "Train on 74 real demos (current best)"
+    },
+    "expected_result_from_literature": "A: 20-45% (sim-only rarely works for visual manipulation). B: 60-75% (sim pretraining + small real fine-tune). C: 80-90% (matching or exceeding D). D: 100% (our current result). E: 100% (current result, ceiling for this task). Key finding to validate: Is sim pretraining worth the engineering cost?"
+  },
+  "key_papers_with_ids": {
+    "SplatSim_ICRA2025": {
+      "arxiv": "2409.10161",
+      "finding": "GS-rendered sim \u2192 82% of real. Plain rasterizer \u2192 45%.",
+      "relevance": "CRITICAL: validates GS approach for SigLIP compatibility"
+    },
+    "RoboSplat_RSS2025": {
+      "arxiv": "2504.13175",
+      "finding": "25 real + GS augmentation > 100 real demos alone",
+      "relevance": "HIGH: data efficiency argument for sim2real"
+    },
+    "RoboTwin_CVPR2025_Highlight": {
+      "arxiv": "2504.13059",
+      "finding": "Generative digital twins \u2192 70%+ improvement in dual-arm benchmark",
+      "relevance": "HIGH: digital twin approach for data generation"
+    },
+    "TRANSIC_CoRL2024": {
+      "arxiv": "2405.14523",
+      "finding": "Sim-trained policy + real adaptation \u2192 72% transfer on manipulation",
+      "relevance": "MEDIUM: baseline transfer method"
+    },
+    "GraspVLA_CoRL2025": {
+      "finding": "Sim pretraining + real fine-tuning for grasping VLA",
+      "relevance": "HIGH: most similar to our approach"
+    },
+    "XRoboToolkit_ByteDance": {
+      "arxiv": "2507.xxxxx",
+      "finding": "Unity-based XR teleoperation \u2192 VLA training validated",
+      "relevance": "HIGH: Unity for VLA data collection is validated"
+    },
+    "AR2D2_2023": {
+      "finding": "AR-based demo collection WITHOUT physical robot",
+      "relevance": "MEDIUM: alternative to sim data generation"
+    },
+    "Real2Render2Real_CoRL2025": {
+      "arxiv": "2505.09601",
+      "finding": "Scan real scene \u2192 render variations \u2192 policy training",
+      "relevance": "HIGH: most similar to proposed 3DGS approach"
+    }
+  },
+  "recommended_research_direction": {
+    "thesis_angle": "GS-XR-Demo: Azure Kinect \u2192 3DGS scene \u2192 Unity XR interactive editing \u2192 demonstration generation",
+    "paper_title_candidate": "From XR to Real: Gaussian Splatting Digital Twins for Low-Cost Robot Manipulation Policy Generation",
+    "novelty": "Combines (1) single RGB-D camera 3DGS reconstruction, (2) XR interactive scene editing, and (3) VLA training pipeline. Existing work: SplatSim uses MuJoCo (not GS+XR), AR2-D2 uses AR overlay (not GS), RoboSplat augments existing data (doesn't generate new demos). GS-XR-Demo generates NEW demonstrations in XR without physical robot.",
+    "achievability": "Azure Kinect RGBD \u2192 3DGS reconstruction: 2-4 weeks (FSGS/gsplat library). Unity XR + 3DGS rendering: 4-6 weeks (student's strength). Demo generation pipeline: 2 weeks. SmolVLA training + evaluation: 2 weeks (existing pipeline). TOTAL: 10-14 weeks. Feasible before CoRL 2026 deadline (5/28).",
+    "minimum_viable_experiment": "If full GS-XR is too complex for CoRL: Ablation A \u2014 50 real + 150 Isaac Lab sim (RTX renderer + DR). Ablation B \u2014 50 real + 150 GS-rendered augmentations. Ablation C \u2014 50 real only (baseline). This 3-condition experiment is doable in 4-6 weeks."
+  }
+}

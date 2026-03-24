@@ -207,6 +207,23 @@ rgb = capture.color[:, :, :3]  # BGRA → BGR
 
 **카메라 위치 변경 = 모든 데이터 무효 = 재수집 필수!**
 
+## Session Workflow (세션 운영 규칙)
+
+| Rule | Why |
+|------|-----|
+| **HANDOFF.md 자동 생성/발동 금지** | /handoff 스킬은 이 프로젝트 워크플로우가 아님 |
+| **context 차면 MEMORY.md 업데이트** | 날짜별로 세션 결과 기록 (간결하게) |
+| **다음 세션용 continuation prompt 제공** | 유저가 새 대화에 붙여넣을 구체적 프롬프트 출력 |
+| **중요 결과는 claudedocs/ 파일로 저장** | 파일 기반 상태 보존 |
+
+```
+세션 종료 프로세스:
+1. 중요 결과 → claudedocs/에 파일 저장
+2. MEMORY.md → 날짜별 세션 결과 인덱스 업데이트
+3. continuation prompt → 유저에게 텍스트로 출력
+4. HANDOFF.md → 절대 건드리지 않음
+```
+
 ## Critical Rules (절대 지켜야 할 것)
 
 ### 학습
