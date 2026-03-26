@@ -37,14 +37,74 @@ import logging
 logging.getLogger('BaseController').setLevel(logging.CRITICAL)
 
 
+# 책상 표면 z 하한 (2026-03-26 실측: 책상 z ≈ -95 ~ -121mm)
+Z_DESK_SURFACE = -120   # 책상 표면 FK z (mm)
+Z_FLOOR_DEPLOY = -90    # 배포 시 안전 하한 (스펀지 상면)
+Z_FLOOR_WARNING = -110  # 수집 시 경고 (책상 접근)
+
+
+def classify_zone(base_angle, fk_dist, fk_z):
+    """FK 기반 5-zone 분류 (2026-03-26 실측 기반)
+
+    실측 FK 범위:
+      dist: 220~470mm,  base: -75~+69°,  z: -121~+500mm
+      책상 표면 z ≈ -120mm
+
+    Args:
+        base_angle: base joint angle (degrees)
+        fk_dist: XY 평면 거리 sqrt(x^2+y^2) (mm)
+        fk_z: end-effector Z height (mm)
+
+    Returns:
+        zone name: NEAR, MID_LEFT, MID_RIGHT, FAR_CENTER, OVERHEAD, UNKNOWN
+    """
+    if fk_z is not None and fk_z > 0:
+        return "OVERHEAD"
+    if fk_dist is None:
+        return "UNKNOWN"
+    # 1차 분류: base angle로 좌/우
+    if base_angle < -30:
+        return "MID_LEFT"
+    if base_angle > 30:
+        return "MID_RIGHT"
+    # 2차 분류: dist로 가까이/멀리 (base ±30° 이내)
+    if fk_dist < 320:
+        return "NEAR"
+    if fk_dist > 380:
+        return "FAR_CENTER"
+    # 경계 영역 (320~380mm, base ±30°)
+    if base_angle < -15:
+        return "MID_LEFT"
+    elif base_angle > 15:
+        return "MID_RIGHT"
+    else:
+        return "FAR_CENTER"
+
+
+ZONE_TARGETS = {
+    "NEAR": 30, "MID_LEFT": 25, "MID_RIGHT": 25,
+    "FAR_CENTER": 35, "OVERHEAD": 15,
+}
+ZONE_COLORS = {
+    "NEAR": (255, 200, 0),      # cyan-ish
+    "MID_LEFT": (255, 100, 100), # blue-ish
+    "MID_RIGHT": (100, 100, 255), # red-ish
+    "FAR_CENTER": (0, 255, 0),   # green
+    "OVERHEAD": (0, 200, 255),   # yellow-orange
+    "UNKNOWN": (128, 128, 128),
+}
+
+
 class DatasetStats:
-    """기존 데이터셋 통계 분석 클래스"""
+    """기존 데이터셋 통계 분석 클래스 (zone + depth 기반)"""
     def __init__(self, save_dir):
         self.save_dir = save_dir
         self.deep_count = 0
         self.approach_count = 0
         self.shallow_count = 0
         self.total_count = 0
+        # Zone 카운터
+        self.zone_counts = {z: 0 for z in ZONE_TARGETS}
         self.analyze_existing_episodes()
 
     def analyze_existing_episodes(self):
@@ -98,37 +158,36 @@ class DatasetStats:
                         self.approach_count += 1
 
                     self.total_count += 1
+
+                    # Zone 카운팅 (metadata에 zone 필드가 있으면 사용)
+                    zone = metadata.get("zone", None)
+                    if zone and zone in self.zone_counts:
+                        self.zone_counts[zone] += 1
             except Exception:
                 pass
 
     def get_recommendation(self):
-        """다음 추천 수집 타입 반환"""
-        # 목표: DEEP 50%, APPROACH 30%, SHALLOW 20%
-        deep_ratio = self.deep_count / max(1, self.total_count)
-        approach_ratio = self.approach_count / max(1, self.total_count)
-        shallow_ratio = self.shallow_count / max(1, self.total_count)
-
-        if deep_ratio < 0.50:
-            return "DEEP GRASP", (0, 255, 0)
-        elif approach_ratio < 0.30:
-            return "APPROACH", (0, 255, 255)
-        elif shallow_ratio < 0.20:
-            return "SHALLOW", (0, 100, 255)
-        else:
-            return "DEEP GRASP", (0, 255, 0)  # 기본값
+        """다음 추천 수집 zone 반환 (가장 부족한 zone)"""
+        # Zone 기반 추천 (quota 대비 가장 부족한 zone)
+        min_ratio = 999
+        rec_zone = "NEAR"
+        for zone, target in ZONE_TARGETS.items():
+            ratio = self.zone_counts.get(zone, 0) / max(1, target)
+            if ratio < min_ratio:
+                min_ratio = ratio
+                rec_zone = zone
+        return f"{rec_zone} ({self.zone_counts.get(rec_zone, 0)}/{ZONE_TARGETS[rec_zone]})", ZONE_COLORS.get(rec_zone, (255, 255, 255))
 
     def get_progress_str(self):
-        """진행률 문자열 생성 (목표: 120 에피소드)"""
-        target_total = 120
-        target_deep = int(target_total * 0.5)
-        target_approach = int(target_total * 0.3)
-        target_shallow = int(target_total * 0.2)
-
+        """진행률 문자열 생성 (5-zone 기반, 목표: 150 에피소드)"""
+        target_total = sum(ZONE_TARGETS.values())
         lines = []
-        lines.append(f"DEEP: {self.deep_count}/{target_deep} ({self.deep_count/max(1,target_deep)*100:.0f}%)")
-        lines.append(f"APPROACH: {self.approach_count}/{target_approach} ({self.approach_count/max(1,target_approach)*100:.0f}%)")
-        lines.append(f"SHALLOW: {self.shallow_count}/{target_shallow} ({self.shallow_count/max(1,target_shallow)*100:.0f}%)")
-        lines.append(f"Total: {self.total_count}/{target_total} ({self.total_count/max(1,target_total)*100:.0f}%)")
+        for zone, target in ZONE_TARGETS.items():
+            count = self.zone_counts.get(zone, 0)
+            pct = count / max(1, target) * 100
+            bar = "█" * min(int(pct / 10), 10)
+            lines.append(f"{zone:12s}: {count:2d}/{target} {bar}")
+        lines.append(f"{'TOTAL':12s}: {self.total_count}/{target_total}")
         return lines
 
 
@@ -202,7 +261,7 @@ class ManualDataCollector:
         self.prev_gripper = None            # 이전 프레임 그리퍼 값
 
     def _init_zed_mini(self):
-        """ZED Mini wrist 카메라 초기화 (RGB only, depth는 grasping 거리에서 무효)"""
+        """ZED Mini wrist 카메라 초기화 (RGB only, depth 비활성, MCU 재시도)"""
         print("ZED Mini 초기화 중...")
         import pyzed.sl as sl
         self._sl = sl  # 모듈 참조 보관
@@ -211,16 +270,34 @@ class ManualDataCollector:
         init_params.camera_resolution = sl.RESOLUTION.HD720
         init_params.camera_fps = 30
         init_params.depth_mode = sl.DEPTH_MODE.NONE
-        status = self.zed.open(init_params)
+        init_params.sensors_required = False  # MCU 에러 방지
+
+        # MCU 간헐 에러 대응: 최대 3회 재시도
+        status = None
+        for attempt in range(3):
+            status = self.zed.open(init_params)
+            if status == sl.ERROR_CODE.SUCCESS:
+                break
+            print(f"ZED Mini open 시도 {attempt + 1}/3: {status}")
+            self.zed.close()
+            time.sleep(2)
+
         if status != sl.ERROR_CODE.SUCCESS:
             print(f"ZED Mini open 실패: {status}")
             print("듀얼 카메라 없이 단일 카메라로 계속합니다.")
             self.zed = None
             self.second_cam_type = "none"
             return
+
+        # 수동 노출 설정 (검은 arm이 auto-exposure를 교란하므로)
+        self.zed.set_camera_settings(sl.VIDEO_SETTINGS.EXPOSURE, 50)
+        self.zed.set_camera_settings(sl.VIDEO_SETTINGS.GAIN, 50)
+
         self.zed_image = sl.Mat()  # 재사용 버퍼
-        time.sleep(0.5)
-        print("ZED Mini 시작됨!")
+        # 노출 안정화 대기
+        for _ in range(15):
+            self.zed.grab()
+        print("ZED Mini 시작됨! (depth=NONE, 수동 노출=50)")
 
     def _init_kinect_second(self):
         """Azure Kinect 2대째 초기화 (외부 시점)"""
@@ -427,12 +504,29 @@ class ManualDataCollector:
         episode_dir = os.path.join(self.save_dir, f"episode_{self.episode_count:04d}")
         os.makedirs(episode_dir, exist_ok=True)
 
+        # Zone 판정 (그리퍼 닫기 시점 또는 min_z 시점의 위치 기반)
+        ep_zone = "UNKNOWN"
+        if self.current_episode:
+            # 그리퍼 닫기 시점 프레임의 base angle + FK distance로 판정
+            grasp_frame_idx = self.grip_close_frame if self.grip_close_frame is not None else len(self.current_episode) // 2
+            grasp_frame_idx = min(grasp_frame_idx, len(self.current_episode) - 1)
+            gf = self.current_episode[grasp_frame_idx]
+            gf_base = gf["data"].get("angles", [0])[0] if "angles" in gf["data"] else 0
+            gf_pose = gf["data"].get("pose", None)
+            gf_dist = None
+            gf_z = None
+            if gf_pose and len(gf_pose) >= 3:
+                gf_dist = (gf_pose[0]**2 + gf_pose[1]**2)**0.5
+                gf_z = gf_pose[2]
+            ep_zone = classify_zone(gf_base, gf_dist, gf_z)
+
         # 메타데이터 저장
         gripper_range = self.max_gripper - self.min_gripper
         z_range = self.max_z - self.min_z
         metadata = {
             "episode_id": self.episode_count,
             "object": self.object_name,
+            "zone": ep_zone,
             "second_camera": self.second_cam_type,
             "num_frames": len(self.current_episode),
             "timestamp": datetime.datetime.now().isoformat(),
@@ -488,9 +582,9 @@ class ManualDataCollector:
             quality_color = "SHALLOW"
 
         print(f"\n{'='*50}")
-        print(f"에피소드 {self.episode_count} 저장 완료!")
+        print(f"에피소드 {self.episode_count} 저장 완료! [Zone: {ep_zone}]")
         print(f"  프레임: {len(self.current_episode)} ({len(self.current_episode)/30:.1f}초)")
-        print(f"  Min Z: {self.min_z:.0f}mm → [{quality}] {quality_color}")
+        print(f"  Zone: {ep_zone} | Min Z: {self.min_z:.0f}mm → [{quality}]")
         print(f"  Max Shoulder: {self.max_shoulder:.0f}°")
         print(f"  Gripper: {self.min_gripper:.0f}° ~ {self.max_gripper:.0f}° (range={gripper_range:.0f}°)")
         if self.shoulder_at_grip_close is not None:
@@ -662,15 +756,23 @@ class ManualDataCollector:
                 # Z-height 존 판정 + 컬러
                 # Calibrated: Z=30mm=table touch, Z=80mm=object grasp, Z=160mm=approach, Z=230mm+=home
                 # NOTE: entire episode does NOT need to be green — only the grasp-close moment needs green
-                if z_height < 80:
+                # Z 깊이 판별 (2026-03-26 실측 기반)
+                # 책상 z≈-120, 스펀지 상면≈-90, 접근≈-40, 높이≈+50
+                if z_height < -80:
                     z_zone = "DEEP"
-                    z_color = (0, 255, 0)      # 초록 (잡기 위치, 물체 높이)
-                elif z_height < 160:
+                    z_color = (0, 255, 0)      # 초록 (잡기 위치, 책상 근처)
+                elif z_height < -20:
                     z_zone = "APPROACH"
                     z_color = (0, 255, 255)    # 노랑 (접근 중)
                 else:
                     z_zone = "SHALLOW"
-                    z_color = (0, 100, 255)    # 주황 (홈 위치)
+                    z_color = (0, 100, 255)    # 주황 (홈/높은 위치)
+
+                # Spatial zone 판정 (5-zone)
+                base_angle = angles[0]
+                fk_dist = (pose[0]**2 + pose[1]**2)**0.5 if pose else None
+                spatial_zone = classify_zone(base_angle, fk_dist, z_height if z_height < 9999 else None)
+                spatial_color = ZONE_COLORS.get(spatial_zone, (128, 128, 128))
 
                 # 화면에 정보 표시
                 display = rgb.copy()
@@ -687,6 +789,13 @@ class ManualDataCollector:
                 cv2.putText(display, f"Torque {torque_status} | {rec_status}",
                            (10, y), cv2.FONT_HERSHEY_SIMPLEX, 0.6, status_color, 2)
                 y += 35
+
+                # Spatial Zone 크게 표시 (우상단)
+                cv2.putText(display, f"ZONE: {spatial_zone}", (display.shape[1] - 280, 35),
+                           cv2.FONT_HERSHEY_SIMPLEX, 0.9, spatial_color, 2)
+                if fk_dist is not None:
+                    cv2.putText(display, f"Dist:{fk_dist:.0f}mm Base:{base_angle:+.0f}", (display.shape[1] - 280, 60),
+                               cv2.FONT_HERSHEY_SIMPLEX, 0.45, spatial_color, 1)
 
                 # Z-Height + Shoulder 크게 표시
                 cv2.putText(display, f"Z: {z_height:.0f}mm", (10, y),
@@ -705,6 +814,22 @@ class ManualDataCollector:
                 cv2.putText(display, f"Grip: {gripper:.0f}deg [{grip_label}]", (10, y),
                            cv2.FONT_HERSHEY_SIMPLEX, 0.7, grip_color, 2)
                 y += 30
+
+                # Wrist Pitch 표시 (top-down 접근 가이드)
+                wp = angles[3]
+                if z_zone == "DEEP" and abs(wp) < 20:
+                    wp_color = (0, 0, 255)  # 빨강: 책상 근처인데 wrist 안 꺾임
+                    wp_warn = " !FLAT"
+                else:
+                    wp_color = (180, 180, 180)
+                    wp_warn = ""
+                cv2.putText(display, f"WristP:{wp:+.0f}{wp_warn}", (380, y),
+                           cv2.FONT_HERSHEY_SIMPLEX, 0.55, wp_color, 2)
+
+                # Z 경고 (책상 접근)
+                if z_height < Z_FLOOR_WARNING:
+                    cv2.putText(display, "!! DESK CLOSE !!", (display.shape[1]//2 - 100, display.shape[0] - 30),
+                               cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
 
                 # 위치 정보 (작게): X, Y 좌표
                 if pose:

@@ -4,8 +4,8 @@
 smolvla_base 사전학습 모델 사용 (Action Expert + VLM 모두 사전학습됨)
 공식 파이프라인이 정규화, LR 스케줄러, gradient clipping 등 자동 처리
 
-=== V4 Config: 200K steps (OOD 로봇 풀스케일 학습) ===
-- Dataset: 150+ episodes (lerobot_dataset_v4), ~26,700 frames
+=== V5 Config: 200K steps (5-zone multi-position grasping) ===
+- Dataset: 150 episodes (lerobot_dataset_v5), ~26,700 frames
 - batch_size=64 (공식 권장, RTX 4090 Laptop에서 9.85GB/16.7GB = 59%)
 - steps=200,000 (OOD 로봇은 150K-200K 필요, 공식 상한)
 - scheduler_decay_steps=200,000 (전체 학습 구간에 걸쳐 cosine decay)
@@ -53,10 +53,10 @@ os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
 sys.stdout.reconfigure(line_buffering=True)
 sys.stderr.reconfigure(line_buffering=True)
 
-# === V4 Dataset (150+ episodes, sponge pick task) ===
-DATASET_ROOT = "lerobot_dataset_v4"
+# === V5 Dataset (150 episodes, 5-zone multi-position sponge pick) ===
+DATASET_ROOT = "lerobot_dataset_v5"
 DATASET_REPO = "roarm_m3_pick"
-OUTPUT_DIR = "outputs/smolvla_v4_sponge"
+OUTPUT_DIR = "outputs/smolvla_v5_multipos"
 
 # === Training hyperparameters ===
 STEPS = 200_000
@@ -80,7 +80,7 @@ if last_ckpt_file.exists():
     ]
 else:
     # Fresh start from smolvla_base pretrained
-    print("Starting fresh training (SmolVLA v4 sponge, 200K steps)...")
+    print("Starting fresh training (SmolVLA v5 5-zone multipos, 200K steps)...")
     print(f"  Dataset: {DATASET_ROOT}/{DATASET_REPO}")
     print(f"  Output: {OUTPUT_DIR}")
     print(f"  batch_size={BATCH_SIZE}, steps={STEPS:,}")

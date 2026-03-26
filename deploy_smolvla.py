@@ -53,6 +53,7 @@ sys.stderr.reconfigure(line_buffering=True)
 import argparse
 import time
 import cv2
+import math
 import numpy as np
 import torch
 import logging
@@ -76,6 +77,12 @@ JOINT_LIMITS = [
     (-10,  100),   # 5: Gripper
 ]
 
+# Workspace 안전 제한 (2026-03-26 실측)
+# FK z: 실측 책상 z ≈ -95~-121mm
+# FK dist: 책상 크기 제한 (너무 멀면 책상 밖 → 추락)
+Z_FLOOR_DEPLOY = -90   # mm — 이 아래는 긴급 정지 (스펀지 상면)
+DIST_MAX_DEPLOY = 420  # mm — 이 이상은 책상 밖 위험 (실측 안전 범위)
+
 CHECKPOINT_PATH = "outputs/smolvla_v3_sponge/checkpoints/025000/pretrained_model"
 
 # 데이터셋 평균 위치 (v3: 74 에피소드, 13145 프레임 기준)
@@ -96,6 +103,16 @@ def clamp_joints(angles):
     return [max(lo, min(hi, a)) for a, (lo, hi) in zip(angles, JOINT_LIMITS)]
 
 
+# Per-joint speed limits: distal joints (wrist_pitch, wrist_roll, gripper) = 300 max
+# Prevents Wrist_R runaway observed in v1 deployment
+JOINT_SPEED_CAPS = [500, 500, 500, 300, 300, 300]
+
+
+def get_safe_speed(base_speed):
+    """per-joint speed cap 적용. 가장 제한적인 값 반환 (SDK가 per-joint speed 미지원)"""
+    return min(base_speed, min(JOINT_SPEED_CAPS))
+
+
 def get_robot_angles(arm, max_retries=5):
     """로봇 관절 각도 읽기 (재시도 로직)"""
     for attempt in range(max_retries):
@@ -106,6 +123,18 @@ def get_robot_angles(arm, max_retries=5):
         except (KeyError, TypeError, AttributeError):
             if attempt < max_retries - 1:
                 time.sleep(0.05)
+    return None
+
+
+def get_robot_fk_z(arm, max_retries=3):
+    """FK z값 읽기 (책상 충돌 감지용)"""
+    for _ in range(max_retries):
+        try:
+            pose = arm.pose_get()
+            if pose and len(pose) >= 3:
+                return pose[2]
+        except Exception:
+            time.sleep(0.05)
     return None
 
 
@@ -259,7 +288,8 @@ class CSVLogger:
             "base", "shoulder", "elbow", "wrist_pitch", "wrist_roll", "gripper",
             "z_base", "z_shoulder", "z_elbow", "z_wrist_pitch", "z_wrist_roll", "z_gripper",
             "delta_base", "delta_shoulder", "delta_elbow", "delta_wrist_pitch", "delta_wrist_roll", "delta_gripper",
-            "max_delta", "convergence_detected", "inference_ms"
+            "max_delta", "convergence_detected", "inference_ms",
+            "zone", "fk_x", "fk_y", "fk_z",
         ]
 
     def open(self):
@@ -269,7 +299,8 @@ class CSVLogger:
         self.writer.writeheader()
         self.file.flush()
 
-    def log_step(self, step, angles, z_scores, deltas, max_delta, convergence, inference_ms):
+    def log_step(self, step, angles, z_scores, deltas, max_delta, convergence, inference_ms,
+                 zone="", fk_x=0, fk_y=0, fk_z=0):
         """한 스텝 로깅"""
         if self.writer is None:
             return
@@ -284,6 +315,10 @@ class CSVLogger:
             "max_delta": max_delta,
             "convergence_detected": convergence,
             "inference_ms": inference_ms,
+            "zone": zone,
+            "fk_x": fk_x,
+            "fk_y": fk_y,
+            "fk_z": fk_z,
         }
         self.writer.writerow(row)
         self.file.flush()
@@ -599,7 +634,7 @@ def main():
                         if not args.dry_run:
                             arm.joints_angle_ctrl(
                                 angles=action_clamped,
-                                speed=args.speed,
+                                speed=get_safe_speed(args.speed),
                                 acc=args.acc,
                             )
 
@@ -721,11 +756,30 @@ def main():
                             action_clamped = add_convergence_noise(action_clamped)
                             convergence_detected = False  # reset flag
 
+                    # Workspace 안전 체크 (책상 충돌 + 범위 이탈 방지)
+                    fk_z = get_robot_fk_z(arm)
+                    if fk_z is not None and fk_z < Z_FLOOR_DEPLOY:
+                        print(f"\n  !!! Z_FLOOR BREACH: FK z={fk_z:.1f}mm < {Z_FLOOR_DEPLOY}mm")
+                        print(f"      긴급 정지! 로봇이 책상 아래로 내려가려 함.")
+                        break
+                    # FK dist 체크 (책상 밖 이탈 방지)
+                    fk_pose = None
+                    try:
+                        fk_pose = arm.pose_get()
+                    except Exception:
+                        pass
+                    if fk_pose and len(fk_pose) >= 2:
+                        fk_dist_now = math.sqrt(fk_pose[0]**2 + fk_pose[1]**2)
+                        if fk_dist_now > DIST_MAX_DEPLOY:
+                            print(f"\n  !!! DIST BREACH: {fk_dist_now:.0f}mm > {DIST_MAX_DEPLOY}mm")
+                            print(f"      긴급 정지! 팔이 책상 밖으로 나가려 함.")
+                            break
+
                     # 로봇에 전송
                     if not args.dry_run:
                         arm.joints_angle_ctrl(
                             angles=action_clamped,
-                            speed=args.speed,
+                            speed=get_safe_speed(args.speed),
                             acc=args.acc,
                         )
 

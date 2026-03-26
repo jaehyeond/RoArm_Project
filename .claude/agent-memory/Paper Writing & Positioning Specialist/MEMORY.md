@@ -15,5 +15,12 @@
 ## Rejected Ideas (with rationale)
 - [project_projector_idea_analysis.md](project_projector_idea_analysis.md): Unity+Projector+SAM3 system — CoRL 2026 부적합 판정 (2026-03-24). 문제 없는 기술, SAR 성숙 분야, SigLIP OOD 재발, Unity 불필요, 타임라인 불가.
 
+## Framing Decisions
+- [project_framing_evaluation_20260325.md](project_framing_evaluation_20260325.md): 4-framing brutal evaluation (2026-03-25). A=STRONG, B=KILL, C=CONDITIONAL, D=KILL as standalone. Recommended unified framing + 3 gate experiments.
+- [project_paper_synthesis_20260325.md](project_paper_synthesis_20260325.md): ★ FINAL SYNTHESIS (2026-03-25) — title, abstract template, 3 contributions, SOAR positioning, 4 reviewer criticisms + defenses, 3 gate experiments, thesis chapter mapping.
+
+## Landscape Surveys
+- [project_sim2real_landscape_20260326.md](project_sim2real_landscape_20260326.md): Sim-to-real manipulation trend (2026-03-26) — DR status, Isaac feasibility, VLA+sim papers, reviewer expectations, related work positioning text
+
 ## Feedback
 - [feedback_writing.md](feedback_writing.md): Writing preferences and constraints from user
