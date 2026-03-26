@@ -1,5 +1,13 @@
 # Data Agent Memory - RoArm M3 SmolVLA
 
+## collect_data_manual.py FAIL Flow Analysis (2026-03-26)
+- File: `project_collect_fail_flow_analysis.md`
+- Root cause: pynput background thread + conda no-PTY = fully buffered stdout (4096B)
+  → print() FAIL reasons don't appear in terminal until buffer flushes
+- Fix: flush=True on all print() in save_episode() + sys.stdout.flush() + OSD reason display
+- All 5 FAIL conditions documented (F1-F5), all 6 WARNING conditions (W1-W6)
+- Most likely cause for Grip:2°, Sh:45°, F:127, Z:-110mm = F1 (gripper never opened >40°)
+
 ## Dataset State - Sponge Collection (2026-02-24, LATEST)
 - Location: `collected_data/` (51 episodes: episode_0000 to episode_0050)
 - Task: "Pick up the sponge" (black sponge on white table)

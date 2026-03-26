@@ -27,6 +27,7 @@ def convert_collected_data(
     task_description: str = "Pick up the sponge",
     multi_object: bool = False,
     second_cam_key: str = "auto",
+    skip_second_camera: bool = False,
     force: bool = False,
 ):
     """
@@ -53,37 +54,42 @@ def convert_collected_data(
     # 듀얼 카메라 자동 감지 (첫 에피소드의 metadata 확인)
     has_second_cam = False
     second_cam_obs_key = None
-    first_meta_path = episodes[0] / "metadata.json"
-    if first_meta_path.exists():
-        with open(first_meta_path) as f:
-            first_meta = json.load(f)
-        second_cam_type = first_meta.get("second_camera", "none")
-        if second_cam_type != "none":
-            has_second_frame = any("second_path" in fr for fr in first_meta.get("frames", []))
-            if has_second_frame:
-                has_second_cam = True
-                # observation key: CLI 오버라이드 또는 카메라 타입에서 자동 결정
-                if second_cam_key == "auto":
-                    if second_cam_type == "zed_wrist":
-                        second_cam_obs_key = "observation.images.wrist"
+    if skip_second_camera:
+        print("두 번째 카메라 건너뜀 (--skip-second-camera)")
+    else:
+        first_meta_path = episodes[0] / "metadata.json"
+        if first_meta_path.exists():
+            with open(first_meta_path) as f:
+                first_meta = json.load(f)
+            second_cam_type = first_meta.get("second_camera", "none")
+            if second_cam_type != "none":
+                has_second_frame = any("second_path" in fr for fr in first_meta.get("frames", []))
+                if has_second_frame:
+                    has_second_cam = True
+                    # observation key: CLI 오버라이드 또는 카메라 타입에서 자동 결정
+                    if second_cam_key == "auto":
+                        if second_cam_type == "zed_wrist":
+                            second_cam_obs_key = "observation.images.wrist"
+                        else:
+                            second_cam_obs_key = "observation.images.side"
                     else:
-                        second_cam_obs_key = "observation.images.side"
+                        second_cam_obs_key = f"observation.images.{second_cam_key}"
+                    print(f"듀얼 카메라 감지됨: {second_cam_type} → {second_cam_obs_key}")
                 else:
-                    second_cam_obs_key = f"observation.images.{second_cam_key}"
-                print(f"듀얼 카메라 감지됨: {second_cam_type} → {second_cam_obs_key}")
+                    print(f"메타데이터에 {second_cam_type} 기록 있으나 프레임에 이미지 없음 → 단일 카메라")
 
     # 출력 디렉토리 정리 (이미 존재하면 삭제)
-    full_output_path = output_path / repo_id
-    if full_output_path.exists():
+    # LeRobotDataset.create(root=output_path)는 output_path를 직접 root로 사용 (repo_id 서브디렉토리 없음)
+    if output_path.exists():
         if force:
-            print(f"기존 데이터셋 삭제: {full_output_path}")
-            shutil.rmtree(full_output_path)
+            print(f"기존 데이터셋 삭제: {output_path}")
+            shutil.rmtree(output_path)
         else:
-            confirm = input(f"기존 데이터셋 삭제? {full_output_path} (y/n): ").strip().lower()
+            confirm = input(f"기존 데이터셋 삭제? {output_path} (y/n): ").strip().lower()
             if confirm != 'y':
                 print("변환 취소됨")
                 return None
-            shutil.rmtree(full_output_path)
+            shutil.rmtree(output_path)
 
     # Features 정의 (새 LeRobot 포맷)
     features = {
@@ -116,7 +122,7 @@ def convert_collected_data(
         }
 
     print(f"데이터셋 생성 중: {repo_id}")
-    print(f"출력 경로: {full_output_path}")
+    print(f"출력 경로: {output_path}")
 
     # LeRobotDataset 생성 (새 API)
     dataset = LeRobotDataset.create(
@@ -169,8 +175,10 @@ def convert_collected_data(
                 print(f"이미지 로드 실패: {rgb_path}")
                 continue
 
-            # BGR -> RGB 변환
+            # BGR -> RGB 변환 + 해상도 검증
             img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            if img.shape[:2] != (720, 1280):
+                img = cv2.resize(img, (1280, 720))
 
             # State (현재 관절 위치)
             state = np.array(frame_data["angles"], dtype=np.float32)
@@ -217,7 +225,7 @@ def convert_collected_data(
     print(f"  총 에피소드: {len(episodes)}")
     print(f"  총 프레임: {total_frames}")
     print(f"  Task: {task_description}")
-    print(f"  출력 경로: {full_output_path}")
+    print(f"  출력 경로: {output_path}")
     print(f"{'='*50}")
 
     return dataset
@@ -269,6 +277,8 @@ if __name__ == "__main__":
                         help="에피소드 metadata.json에서 물체명 자동 읽기 (task text 자동 생성)")
     parser.add_argument("--second-cam-key", default="auto",
                         help="두 번째 카메라 observation key (auto/wrist/side/external)")
+    parser.add_argument("--skip-second-camera", action="store_true",
+                        help="두 번째 카메라 데이터 제외 (top only 변환)")
     parser.add_argument("--force", action="store_true",
                         help="기존 데이터셋 삭제 시 확인 없이 진행")
     parser.add_argument("--verify-only", action="store_true", help="검증만 실행")
@@ -308,6 +318,7 @@ if __name__ == "__main__":
             task_description=args.task,
             multi_object=args.multi_object,
             second_cam_key=args.second_cam_key,
+            skip_second_camera=args.skip_second_camera,
             force=args.force,
         )
 

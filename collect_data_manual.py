@@ -22,6 +22,7 @@ RoArm M3 + Azure Kinect 수동 데이터 수집 스크립트
 """
 
 import os
+import sys
 import json
 import time
 import datetime
@@ -31,10 +32,30 @@ import pyk4a
 from pyk4a import Config, PyK4A
 from pynput import keyboard
 from roarm_sdk.roarm import roarm
+from roarm_sdk.common import handle_m3_feedback, JsonCmd
 import logging
 
 # SDK 로그 억제
 logging.getLogger('BaseController').setLevel(logging.CRITICAL)
+
+# SDK print(data) 스팸 억제 — _process_received 몽키패치
+_orig_process = roarm._process_received
+def _silent_process(self, data, genre):
+    if not data:
+        return None
+    res = []
+    valid_data = []
+    if genre == JsonCmd.FEEDBACK_GET:
+        valid_data.append(data['x'])
+        valid_data.append(data['y'])
+        valid_data.append(data['z'])
+        if self.type == "roarm_m3":
+            valid_data = handle_m3_feedback(valid_data, data)
+    else:
+        valid_data = data
+    res.append(valid_data)
+    return res
+roarm._process_received = _silent_process
 
 
 # 책상 표면 z 하한 (2026-03-26 실측: 책상 z ≈ -95 ~ -121mm)
@@ -109,6 +130,13 @@ class DatasetStats:
 
     def analyze_existing_episodes(self):
         """기존 에피소드 분석 (metadata.json 기반)"""
+        # 카운트 리셋 후 재스캔 (누적 합산 버그 방지)
+        self.deep_count = 0
+        self.approach_count = 0
+        self.shallow_count = 0
+        self.total_count = 0
+        self.zone_counts = {z: 0 for z in ZONE_TARGETS}
+
         if not os.path.exists(self.save_dir):
             return
 
@@ -185,7 +213,7 @@ class DatasetStats:
         for zone, target in ZONE_TARGETS.items():
             count = self.zone_counts.get(zone, 0)
             pct = count / max(1, target) * 100
-            bar = "█" * min(int(pct / 10), 10)
+            bar = "#" * min(int(pct / 10), 10)
             lines.append(f"{zone:12s}: {count:2d}/{target} {bar}")
         lines.append(f"{'TOTAL':12s}: {self.total_count}/{target_total}")
         return lines
@@ -232,6 +260,8 @@ class ManualDataCollector:
         self.episode_count = len([d for d in os.listdir(save_dir) if d.startswith("episode_")])
         self.is_recording = False
         self.torque_on = True
+        self.pending_confirmation = False  # FAIL 에피소드 강제저장 대기
+        self.pending_fail_reasons = []    # FAIL 이유 목록 (OSD 표시용)
 
         # 실행 상태
         self.running = True
@@ -412,92 +442,83 @@ class ManualDataCollector:
 
         num_frames = len(self.current_episode)
 
-        # 1. 그리퍼가 충분히 열렸는가? (40° 이상)
+        # 1. Gripper must open 40°+ (English for OSD — OpenCV can't render Korean)
         if not self.grip_was_open:
-            issues.append(f"그리퍼 미개방 (max={self.max_gripper:.0f}° < 40°)")
+            issues.append(f"Gripper never opened (max={self.max_gripper:.0f} < 40)")
         else:
-            # 2. 그리퍼 열림 크기 체크 (열린 경우에만 range 평가)
+            # 2. Gripper range check
             gripper_range = self.max_gripper - self.min_gripper
             if gripper_range < 15:
-                issues.append(f"그리퍼 개폐 부족 (range={gripper_range:.1f}° < 15°)")
+                issues.append(f"Grip range too small ({gripper_range:.0f} < 15)")
             elif self.max_gripper < 50:
-                warnings.append(f"그리퍼 열림 부족 (max={self.max_gripper:.0f}°, 60°+ 권장)")
+                warnings.append(f"Grip open low (max={self.max_gripper:.0f}, 60+ recommended)")
 
-        # 3. 그리퍼 닫기 타이밍 — 핵심 체크!
+        # 3. Gripper close timing — key check!
         if self.shoulder_at_grip_close is not None:
-            # Shoulder 기준: 닫힐 때 shoulder > 50° = 팔이 충분히 내려간 상태
             if self.shoulder_at_grip_close < 40:
                 issues.append(
-                    f"그리퍼 닫기 시 팔 높음! (shoulder={self.shoulder_at_grip_close:.0f}°, 50°+ 필요)")
+                    f"Arm too high at grasp (Sh={self.shoulder_at_grip_close:.0f} < 40)")
             elif self.shoulder_at_grip_close < 50:
                 warnings.append(
-                    f"그리퍼 닫기 시 팔 약간 높음 (shoulder={self.shoulder_at_grip_close:.0f}°)")
+                    f"Arm slightly high at grasp (Sh={self.shoulder_at_grip_close:.0f})")
 
-            # Z 기준: 닫힐 때 Z < 130mm = 물체 근처에서 잡기
-            # 근거: Z=30mm=테이블, Z=80mm=일반 물체 위, Z=130mm=안전 상한
-            # 에피소드 전체가 green일 필요 없음 — 잡기 순간만 green 필요!
             if self.z_at_grip_close is not None and self.z_at_grip_close > 130:
                 issues.append(
-                    f"그리퍼 닫기 시 높이 높음! (Z={self.z_at_grip_close:.0f}mm, 130mm 이하 필요)")
+                    f"Z too high at grasp (Z={self.z_at_grip_close:.0f}mm > 130)")
         else:
-            # shoulder_at_grip_close가 None인 경우:
-            # - 열렸는데 닫기를 감지 못함 (열린 채 종료, 또는 임계값 미달)
-            # - 아예 안 열린 경우는 check 1에서 이미 처리됨
             if self.grip_was_open:
-                warnings.append("그리퍼가 열렸지만 닫기 감지 안됨 (열린 상태로 끝남?)")
+                warnings.append("Grip opened but close not detected")
 
-        # 4. 프레임 수 체크 (SmolVLA 공식: 평균 393프레임/13초, 최소 150프레임/5초)
+        # 4. Frame count check (min 3sec@30fps = 90 frames)
         if num_frames < 90:
-            issues.append(f"프레임 수 부족 ({num_frames} < 90, 최소 3초)")
-        elif num_frames < 150:
-            warnings.append(f"에피소드 짧음 ({num_frames}프레임 = {num_frames/30:.1f}초, 10초+ 권장)")
+            issues.append(f"Too short ({num_frames} frames < 90, min 3sec)")
+        elif num_frames < 120:
+            warnings.append(f"Short episode ({num_frames}fr = {num_frames/30:.1f}s, 4s+ recommended)")
         elif num_frames > 600:
-            warnings.append(f"에피소드 너무 김 ({num_frames}프레임 = {num_frames/30:.1f}초, 15초 이하 권장)")
+            warnings.append(f"Too long ({num_frames}fr = {num_frames/30:.1f}s, 15s max)")
 
-        # 5. Z-height 체크 (DEEP grasp 기준)
-        # min_z는 에피소드 전체에서 가장 낮은 값 — 160mm 이하면 충분히 내려간 것
+        # 5. Z-height check (DEEP grasp)
         if self.min_z > 160:
-            warnings.append(f"얕은 그리핑 (min_z={self.min_z:.0f}mm, 160mm 이하 권장)")
+            warnings.append(f"Shallow grasp (min_z={self.min_z:.0f}mm, need <160)")
 
         return issues, warnings
 
-    def save_episode(self):
-        """현재 에피소드를 디스크에 저장"""
+    def save_episode(self, force=False):
+        """현재 에피소드를 디스크에 저장 (force=True: 품질 검증 건너뜀)"""
         if len(self.current_episode) == 0:
             print("저장할 프레임이 없습니다!")
             return
 
-        # 품질 검증
-        issues, warnings = self.validate_episode()
-        if issues or warnings:
-            print(f"\n{'='*50}")
-            if issues:
-                print("FAIL - 에피소드 품질 문제:")
-                for i, issue in enumerate(issues, 1):
-                    print(f"  [{i}] {issue}")
-            if warnings:
-                print("WARN - 개선 권장:")
-                for i, warn in enumerate(warnings, 1):
-                    print(f"  ({i}) {warn}")
+        # 품질 검증 (force=True면 건너뜀)
+        if not force:
+            issues, warnings = self.validate_episode()
+            if issues or warnings:
+                print(f"\n{'='*50}", flush=True)
+                if issues:
+                    print("FAIL - 에피소드 품질 문제:", flush=True)
+                    for i, issue in enumerate(issues, 1):
+                        print(f"  [{i}] {issue}", flush=True)
+                if warnings:
+                    print("WARN - 개선 권장:", flush=True)
+                    for i, warn in enumerate(warnings, 1):
+                        print(f"  ({i}) {warn}", flush=True)
 
-            # 그리퍼 타이밍 정보 출력
-            if self.shoulder_at_grip_close is not None:
-                z_part = f", Z={self.z_at_grip_close:.0f}mm" if self.z_at_grip_close is not None else ""
-                print(f"\n  그리퍼 닫기 시점: shoulder={self.shoulder_at_grip_close:.0f}°{z_part}")
-                if self.grip_open_frame is not None and self.grip_close_frame is not None:
-                    open_pct = self.grip_open_frame / max(1, len(self.current_episode)) * 100
-                    close_pct = self.grip_close_frame / max(1, len(self.current_episode)) * 100
-                    print(f"  그리퍼 열림: {open_pct:.0f}% 지점, 닫힘: {close_pct:.0f}% 지점")
-            print(f"{'='*50}")
+                # 그리퍼 타이밍 정보 출력
+                if self.shoulder_at_grip_close is not None:
+                    z_part = f", Z={self.z_at_grip_close:.0f}mm" if self.z_at_grip_close is not None else ""
+                    print(f"\n  그리퍼 닫기 시점: shoulder={self.shoulder_at_grip_close:.0f}°{z_part}", flush=True)
+                    if self.grip_open_frame is not None and self.grip_close_frame is not None:
+                        open_pct = self.grip_open_frame / max(1, len(self.current_episode)) * 100
+                        close_pct = self.grip_close_frame / max(1, len(self.current_episode)) * 100
+                        print(f"  그리퍼 열림: {open_pct:.0f}% 지점, 닫힘: {close_pct:.0f}% 지점", flush=True)
+                print(f"{'='*50}", flush=True)
 
-            if issues:
-                # issues가 있으면 기본적으로 재녹화 권유
-                choice = input("저장하시겠습니까? (y=강제저장, n=취소, r=재녹화): ").strip().lower()
-                if choice == 'n':
-                    print("에피소드 저장 취소됨")
-                    return
-                elif choice != 'y':
-                    print("에피소드 취소 후 재녹화하세요 (Backspace)")
+                if issues:
+                    # FAIL: 키보드로 확인 (input() 대신 — conda run 호환)
+                    print("Enter=강제저장, Backspace=취소", flush=True)
+                    sys.stdout.flush()  # pynput 스레드에서 호출 — 버퍼 명시적 플러시
+                    self.pending_confirmation = True
+                    self.pending_fail_reasons = issues  # OSD에 이유 표시
                     return
             # warnings만 있으면 자동 저장 진행
 
@@ -581,20 +602,20 @@ class ManualDataCollector:
             quality = "SHALLOW"
             quality_color = "SHALLOW"
 
-        print(f"\n{'='*50}")
-        print(f"에피소드 {self.episode_count} 저장 완료! [Zone: {ep_zone}]")
-        print(f"  프레임: {len(self.current_episode)} ({len(self.current_episode)/30:.1f}초)")
-        print(f"  Zone: {ep_zone} | Min Z: {self.min_z:.0f}mm → [{quality}]")
-        print(f"  Max Shoulder: {self.max_shoulder:.0f}°")
-        print(f"  Gripper: {self.min_gripper:.0f}° ~ {self.max_gripper:.0f}° (range={gripper_range:.0f}°)")
+        print(f"\n{'='*50}", flush=True)
+        print(f"에피소드 {self.episode_count} 저장 완료! [Zone: {ep_zone}]", flush=True)
+        print(f"  프레임: {len(self.current_episode)} ({len(self.current_episode)/30:.1f}초)", flush=True)
+        print(f"  Zone: {ep_zone} | Min Z: {self.min_z:.0f}mm → [{quality}]", flush=True)
+        print(f"  Max Shoulder: {self.max_shoulder:.0f}°", flush=True)
+        print(f"  Gripper: {self.min_gripper:.0f}° ~ {self.max_gripper:.0f}° (range={gripper_range:.0f}°)", flush=True)
         if self.shoulder_at_grip_close is not None:
             z_str = f", Z={self.z_at_grip_close:.0f}mm" if self.z_at_grip_close else ""
             timing_ok = "OK" if self.shoulder_at_grip_close >= 50 else "LOW"
-            print(f"  Grasp: shoulder={self.shoulder_at_grip_close:.0f}°{z_str} [{timing_ok}]")
+            print(f"  Grasp: shoulder={self.shoulder_at_grip_close:.0f}°{z_str} [{timing_ok}]", flush=True)
         else:
-            print(f"  Grasp: 닫기 감지 안됨")
-        print(f"  저장: {episode_dir}")
-        print(f"{'='*50}\n")
+            print(f"  Grasp: 닫기 감지 안됨", flush=True)
+        print(f"  저장: {episode_dir}", flush=True)
+        print(f"{'='*50}\n", flush=True)
 
         # 통계 업데이트
         self.stats.analyze_existing_episodes()
@@ -606,6 +627,8 @@ class ManualDataCollector:
         """에피소드 추적 변수 전체 초기화"""
         self.current_episode = []
         self.is_recording = False
+        self.pending_confirmation = False
+        self.pending_fail_reasons = []
         self.min_elbow = 999
         self.max_elbow = -999
         self.min_gripper = 999
@@ -634,6 +657,18 @@ class ManualDataCollector:
         if key == keyboard.Key.esc:
             self.running = False
             return False
+
+        # Pending confirmation 처리 (FAIL 에피소드)
+        if self.pending_confirmation:
+            if key == keyboard.Key.enter:
+                print("강제 저장...", flush=True)
+                self.pending_confirmation = False
+                self.save_episode(force=True)
+            elif key == keyboard.Key.backspace:
+                self.pending_confirmation = False
+                self.cancel_episode()
+            # pending 상태에서 다른 키는 무시
+            return
 
         # Space로 녹화 시작/중지 토글
         if key == keyboard.Key.space:
@@ -881,6 +916,17 @@ class ManualDataCollector:
                 cv2.putText(display, f"Next: {recommendation}", (10, y_progress + 10),
                            cv2.FONT_HERSHEY_SIMPLEX, 0.6, rec_color, 2)
 
+                # Pending confirmation 표시 (FAIL 에피소드)
+                if self.pending_confirmation:
+                    mid_y = display.shape[0] // 2
+                    cv2.putText(display, "FAIL! Enter=Force Save | Bksp=Cancel",
+                               (display.shape[1] // 2 - 250, mid_y),
+                               cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
+                    for r_idx, reason in enumerate(self.pending_fail_reasons):
+                        cv2.putText(display, f"  [{r_idx+1}] {reason}",
+                                   (display.shape[1] // 2 - 250, mid_y + 30 + r_idx * 25),
+                                   cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 100, 255), 2)
+
                 # 나머지 관절 (작게, 상단)
                 joint_names = ["Base", "Shldr", "Elbow", "Wrist", "Roll", "Grip"]
                 joint_str = " | ".join(f"{n}:{a:+.0f}" for n, a in zip(joint_names, angles))
@@ -926,12 +972,10 @@ class ManualDataCollector:
             listener.stop()
             cv2.destroyAllWindows()
 
-            # 녹화 중이면 저장 여부 확인
+            # 녹화 중이면 자동 저장 (input() 대신 — conda run 호환)
             if len(self.current_episode) > 0:
-                print(f"\n저장되지 않은 {len(self.current_episode)} 프레임이 있습니다.")
-                save = input("저장하시겠습니까? (y/n): ").strip().lower()
-                if save == 'y':
-                    self.save_episode()
+                print(f"\n저장되지 않은 {len(self.current_episode)} 프레임 자동 저장...")
+                self.save_episode(force=True)
 
             # 토크 켜고 종료
             print("\n토크를 켜고 종료합니다...")

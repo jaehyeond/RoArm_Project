@@ -78,9 +78,9 @@ JOINT_LIMITS = [
 ]
 
 # Workspace 안전 제한 (2026-03-26 실측)
-# FK z: 실측 책상 z ≈ -95~-121mm
-# FK dist: 책상 크기 제한 (너무 멀면 책상 밖 → 추락)
-Z_FLOOR_DEPLOY = -90   # mm — 이 아래는 긴급 정지 (스펀지 상면)
+# FK z: 실측 책상 z ≈ -95~-121mm, 스펀지 상면 ≈ -90mm
+# 잡기 시 그리퍼는 z ≈ -100~-115mm까지 내려감 → 안전 하한은 책상 표면 아래로
+Z_FLOOR_DEPLOY = -130  # mm — 책상(-120) + 10mm 여유. 이 아래 = 책상 관통
 DIST_MAX_DEPLOY = 420  # mm — 이 이상은 책상 밖 위험 (실측 안전 범위)
 
 CHECKPOINT_PATH = "outputs/smolvla_v3_sponge/checkpoints/025000/pretrained_model"

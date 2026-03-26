@@ -20,3 +20,7 @@
 | `project_progressive_capability.md` | project | Multi-position/object/sequential task building: episode counts, language format, curriculum order, evaluation metrics (2026-03-25) |
 | `project_sim2real_vla_survey.md` | project | VLA sim-to-real 문헌 전수조사: sim 이미지 불가 결론 검증, 0편 성공 사례 확인, 3DGS/in-painting 대안 (2026-03-26) |
 | `project_vla_vs_rl_analysis.md` | project | VLA vs RL vs Hybrid 비교: 6가지 질문 정량 답변, RoArm-M3 최적 경로 = VLA+reward-weighted BC (2026-03-26) |
+| `project_demo_requirements_analysis.md` | project | 5개 VLA 모델별 novel robot 파인튜닝 데모 수, VL 사전학습 실제 효과(+26%), 왜 여전히 100+ demos 필요한지 분석 (2026-03-26) |
+| `project_camera_setup_survey.md` | project | VLA 9편 카메라 설정 전수조사: 고정이 표준, 뷰 invariance VLA = 없음, 텔레옵별 손가림 처리, DROID ablation 수치 (2026-03-26) |
+| `project_sim2real_rl_detailed.md` | project | RL sim-to-real 심층 분석: 성공 케이스(IndustReal 83-99% Franka), 실패 케이스, RoArm M3 8차원 하드웨어 갭, 추정 성공률 <20% (2026-03-26) |
+| `project_demo_collection_standards.md` | project | VLA demo 수집 표준: 에피소드 구조 6단계, 최소 프레임 150(5sec), 그리퍼 타이밍, shoulder vs Z check 비교, ALOHA/SmolVLA/BridgeV2 기준 (2026-03-26) |
