@@ -1,23 +1,25 @@
 """
-RoArm M3 + Azure Kinect 수동 데이터 수집 스크립트
-토크 OFF 상태에서 손으로 로봇을 직접 움직여서 데이터 수집
+RoArm M3 + Azure Kinect 데이터 수집 스크립트
+
+모드:
+  1) 단일팔 토크OFF (기본): 손으로 로봇을 직접 움직여서 데이터 수집
+  2) Leader-Follower: Leader 팔을 손으로 움직이면 Follower가 미러링, 카메라는 Follower 촬영
 
 듀얼 카메라 지원:
   --second-camera zed_wrist      ZED Mini wrist 카메라 (pyzed, RGB only)
   --second-camera kinect_external Azure Kinect 2대째 외부 시점 (pyk4a)
 
-사용법:
-1. 스크립트 실행하면 로봇 토크가 꺼짐 (손으로 자유롭게 이동 가능)
-2. 손으로 로봇을 움직여서 물체 집기 동작 수행
-3. Space 누르면 녹화 시작/중지
-4. Enter 누르면 에피소드 저장
+Leader-Follower 모드:
+  --leader-port /dev/ttyUSB0     Leader 팔 포트 (유저가 손으로 조작)
+  --follower-port /dev/ttyUSB1   Follower 팔 포트 (미러링, 카메라가 촬영)
+  Leader = action (유저 의도), Follower = state (실제 로봇 위치)
 
 조작법:
   Space: 녹화 시작/중지 (토글)
   Enter: 에피소드 저장
   Backspace: 현재 에피소드 취소
-  T: 토크 ON/OFF 토글
-  I: 초기 위치로 이동 (토크 ON 필요)
+  T: 토크 ON/OFF 토글 (단일팔) / Leader 토크 토글 (L-F)
+  I: 초기 위치로 이동
   ESC: 종료
 """
 
@@ -58,60 +60,56 @@ def _silent_process(self, data, genre):
 roarm._process_received = _silent_process
 
 
+# RoArm M3 관절 제한 (L-F 미러링 clamp용)
+JOINT_LIMITS = [(-190, 190), (-110, 110), (-70, 190), (-110, 110), (-190, 190), (-10, 100)]
+
 # 책상 표면 z 하한 (2026-03-26 실측: 책상 z ≈ -95 ~ -121mm)
 Z_DESK_SURFACE = -120   # 책상 표면 FK z (mm)
 Z_FLOOR_DEPLOY = -90    # 배포 시 안전 하한 (스펀지 상면)
 Z_FLOOR_WARNING = -110  # 수집 시 경고 (책상 접근)
 
 
-def classify_zone(base_angle, fk_dist, fk_z):
-    """FK 기반 5-zone 분류 (2026-03-26 실측 기반)
+def classify_zone(base_angle, fk_dist=None, fk_z=None):
+    """Base 각도 중심 5-zone 분류 (2026-03-31 재설계)
 
-    실측 FK 범위:
-      dist: 220~470mm,  base: -75~+69°,  z: -121~+500mm
-      책상 표면 z ≈ -120mm
+    v5 visual grounding 실패 원인: 이전 zone 시스템이 거리+높이 기반이라
+    5개 zone 중 3개(NEAR/FAR_CENTER/OVERHEAD)가 base≈10°로 수렴.
+    80.1%의 데이터가 |base|<30°에 집중 → 모델이 base 각도 다양성 학습 불가.
+
+    재설계: base 각도가 유일한 분류 축. 거리/높이는 zone 내 자연 변동으로 처리.
+    이렇게 해야 "스펀지가 어디에 있든 vision으로 찾아서 잡기" 학습 가능.
 
     Args:
         base_angle: base joint angle (degrees)
-        fk_dist: XY 평면 거리 sqrt(x^2+y^2) (mm)
-        fk_z: end-effector Z height (mm)
+        fk_dist: (unused, backward compat)
+        fk_z: (unused, backward compat)
 
     Returns:
-        zone name: NEAR, MID_LEFT, MID_RIGHT, FAR_CENTER, OVERHEAD, UNKNOWN
+        zone name: FAR_LEFT, LEFT, CENTER, RIGHT, FAR_RIGHT
     """
-    if fk_z is not None and fk_z > 0:
-        return "OVERHEAD"
-    if fk_dist is None:
-        return "UNKNOWN"
-    # 1차 분류: base angle로 좌/우
-    if base_angle < -30:
-        return "MID_LEFT"
-    if base_angle > 30:
-        return "MID_RIGHT"
-    # 2차 분류: dist로 가까이/멀리 (base ±30° 이내)
-    if fk_dist < 320:
-        return "NEAR"
-    if fk_dist > 380:
-        return "FAR_CENTER"
-    # 경계 영역 (320~380mm, base ±30°)
-    if base_angle < -15:
-        return "MID_LEFT"
-    elif base_angle > 15:
-        return "MID_RIGHT"
+    if base_angle < -40:
+        return "FAR_LEFT"
+    elif base_angle < -10:
+        return "LEFT"
+    elif base_angle <= 10:
+        return "CENTER"
+    elif base_angle <= 40:
+        return "RIGHT"
     else:
-        return "FAR_CENTER"
+        return "FAR_RIGHT"
 
 
-ZONE_TARGETS = {
-    "NEAR": 30, "MID_LEFT": 25, "MID_RIGHT": 25,
-    "FAR_CENTER": 35, "OVERHEAD": 15,
-}
+# Zone 이름 목록 (OSD 참고 표시용 — quota 강제 없음)
+# 바닐라 SmolVLA 공식 레시피: zone 시스템 없음, 88% center로도 성공
+# quota는 v5 실패의 잘못된 진단에서 나온 과잉 대응이었음 → 제거 (2026-04-01)
+ZONE_NAMES = ["FAR_LEFT", "LEFT", "CENTER", "RIGHT", "FAR_RIGHT"]
+
 ZONE_COLORS = {
-    "NEAR": (255, 200, 0),      # cyan-ish
-    "MID_LEFT": (255, 100, 100), # blue-ish
-    "MID_RIGHT": (100, 100, 255), # red-ish
-    "FAR_CENTER": (0, 255, 0),   # green
-    "OVERHEAD": (0, 200, 255),   # yellow-orange
+    "FAR_LEFT": (255, 50, 50),    # 진한 파랑 (BGR)
+    "LEFT": (255, 150, 100),      # 밝은 파랑
+    "CENTER": (0, 255, 0),        # 초록
+    "RIGHT": (100, 150, 255),     # 밝은 빨강
+    "FAR_RIGHT": (50, 50, 255),   # 진한 빨강
     "UNKNOWN": (128, 128, 128),
 }
 
@@ -124,8 +122,8 @@ class DatasetStats:
         self.approach_count = 0
         self.shallow_count = 0
         self.total_count = 0
-        # Zone 카운터
-        self.zone_counts = {z: 0 for z in ZONE_TARGETS}
+        # Zone 카운터 (참고 표시용, quota 강제 없음)
+        self.zone_counts = {z: 0 for z in ZONE_NAMES}
         self.analyze_existing_episodes()
 
     def analyze_existing_episodes(self):
@@ -135,7 +133,7 @@ class DatasetStats:
         self.approach_count = 0
         self.shallow_count = 0
         self.total_count = 0
-        self.zone_counts = {z: 0 for z in ZONE_TARGETS}
+        self.zone_counts = {z: 0 for z in ZONE_NAMES}
 
         if not os.path.exists(self.save_dir):
             return
@@ -194,47 +192,46 @@ class DatasetStats:
             except Exception:
                 pass
 
-    def get_recommendation(self):
-        """다음 추천 수집 zone 반환 (가장 부족한 zone)"""
-        # Zone 기반 추천 (quota 대비 가장 부족한 zone)
-        min_ratio = 999
-        rec_zone = "NEAR"
-        for zone, target in ZONE_TARGETS.items():
-            ratio = self.zone_counts.get(zone, 0) / max(1, target)
-            if ratio < min_ratio:
-                min_ratio = ratio
-                rec_zone = zone
-        return f"{rec_zone} ({self.zone_counts.get(rec_zone, 0)}/{ZONE_TARGETS[rec_zone]})", ZONE_COLORS.get(rec_zone, (255, 255, 255))
-
-    def get_progress_str(self):
-        """진행률 문자열 생성 (5-zone 기반, 목표: 150 에피소드)"""
-        target_total = sum(ZONE_TARGETS.values())
-        lines = []
-        for zone, target in ZONE_TARGETS.items():
+    def get_zone_summary(self):
+        """Zone 분포 요약 문자열 (참고 표시용, quota 없음)"""
+        parts = []
+        for zone in ZONE_NAMES:
             count = self.zone_counts.get(zone, 0)
-            pct = count / max(1, target) * 100
-            bar = "#" * min(int(pct / 10), 10)
-            lines.append(f"{zone:12s}: {count:2d}/{target} {bar}")
-        lines.append(f"{'TOTAL':12s}: {self.total_count}/{target_total}")
-        return lines
+            if count > 0:
+                parts.append(f"{zone}:{count}")
+        return " | ".join(parts) if parts else "No episodes yet"
 
 
 class ManualDataCollector:
     def __init__(self, robot_port="/dev/ttyUSB0", save_dir="collected_data", object_name="sponge",
-                 second_camera="none"):
+                 second_camera="none", leader_port=None, follower_port=None):
         self.save_dir = save_dir
         self.object_name = object_name
         self.second_cam_type = second_camera  # none / zed_wrist / kinect_external
         os.makedirs(save_dir, exist_ok=True)
 
+        # L-F 모드 판별
+        self.lf_mode = leader_port is not None and follower_port is not None
+
         # 데이터셋 통계 초기화
         self.stats = DatasetStats(save_dir)
 
-        # 로봇 연결
-        print(f"로봇 연결 중... ({robot_port})")
-        self.robot = roarm(roarm_type="roarm_m3", port=robot_port, baudrate=115200)
-        time.sleep(0.5)
-        print("로봇 연결됨!")
+        if self.lf_mode:
+            # Leader-Follower 모드: 두 팔 연결
+            print(f"[L-F MODE] Leader 연결 중... ({leader_port})")
+            self.leader = roarm(roarm_type="roarm_m3", port=leader_port, baudrate=115200)
+            time.sleep(0.5)
+            print(f"[L-F MODE] Follower 연결 중... ({follower_port})")
+            self.robot = roarm(roarm_type="roarm_m3", port=follower_port, baudrate=115200)
+            time.sleep(0.5)
+            print("Leader + Follower 연결됨!")
+        else:
+            # 단일팔 모드 (기존)
+            self.leader = None
+            print(f"로봇 연결 중... ({robot_port})")
+            self.robot = roarm(roarm_type="roarm_m3", port=robot_port, baudrate=115200)
+            time.sleep(0.5)
+            print("로봇 연결됨!")
 
         # Azure Kinect 초기화 (primary)
         print("Azure Kinect 초기화 중...")
@@ -375,16 +372,26 @@ class ManualDataCollector:
 
         return rgb, depth, second_rgb
 
-    def get_robot_angles(self):
-        """로봇 관절 각도 읽기 (재시도 로직 포함)"""
+    def _safe_angle_read(self, arm):
+        """팔에서 관절 각도 읽기 (재시도 로직 포함)"""
         for _ in range(5):
             try:
-                angles = self.robot.joints_angle_get()
+                angles = arm.joints_angle_get()
                 if angles is not None and len(angles) >= 6:
                     return list(angles)
             except Exception:
                 time.sleep(0.05)
-        return [0, 0, 0, 0, 0, 0]  # 실패시 기본값
+        return None  # 실패시 None (호출부에서 처리)
+
+    def get_robot_angles(self):
+        """Follower(또는 단일팔) 관절 각도 = observation state"""
+        return self._safe_angle_read(self.robot)
+
+    def get_leader_angles(self):
+        """Leader 관절 각도 = action (L-F 모드 전용)"""
+        if self.leader is None:
+            return None
+        return self._safe_angle_read(self.leader)
 
     def get_robot_pose(self):
         """로봇 엔드이펙터 위치 읽기 (FK, 재시도 로직 포함)"""
@@ -398,23 +405,43 @@ class ManualDataCollector:
         return None
 
     def set_torque(self, on: bool):
-        """토크 ON/OFF 설정"""
-        self.robot.torque_set(cmd=1 if on else 0)
+        """토크 ON/OFF 설정
+
+        L-F 모드: Leader 토크만 토글. Follower는 항상 ON (미러링 수행).
+        단일팔 모드: 팔 토크 토글.
+        """
+        if self.lf_mode:
+            self.leader.torque_set(cmd=1 if on else 0)
+            # Follower는 항상 토크 ON
+            self.robot.torque_set(cmd=1)
+        else:
+            self.robot.torque_set(cmd=1 if on else 0)
         self.torque_on = on
         time.sleep(0.3)
         status = "ON" if on else "OFF"
-        print(f"\n토크 {status}!")
+        if self.lf_mode:
+            print(f"\nLeader 토크 {status}! (Follower는 항상 ON)")
+        else:
+            print(f"\n토크 {status}!")
         if not on:
-            print("→ 이제 손으로 로봇을 자유롭게 움직일 수 있습니다.")
+            print("→ 이제 손으로 팔을 자유롭게 움직일 수 있습니다.")
 
-    def save_frame(self, rgb, depth, angles, pose, second_rgb=None):
-        """현재 프레임을 에피소드에 추가"""
+    def save_frame(self, rgb, depth, angles, pose, second_rgb=None, leader_angles=None):
+        """현재 프레임을 에피소드에 추가
+
+        Args:
+            angles: Follower(또는 단일팔) 각도 = observation state
+            leader_angles: Leader 각도 = action (L-F 모드, 공식 LeRobot 방식)
+        """
         frame_data = {
             "timestamp": time.time(),
             "angles": angles.copy(),
             "pose": pose[:3] if pose else None,  # [x_mm, y_mm, z_mm]
             "frame_idx": len(self.current_episode)
         }
+        # L-F 모드: Leader 각도를 action으로 별도 저장
+        if leader_angles is not None:
+            frame_data["leader_angles"] = leader_angles.copy()
 
         entry = {
             "data": frame_data,
@@ -426,56 +453,51 @@ class ManualDataCollector:
         self.current_episode.append(entry)
 
     def validate_episode(self):
-        """에피소드 품질 검증 (shoulder + Z + gripper timing)
+        """에피소드 품질 검증 (공식 lerobot-record 기준: 최소한의 검증만)
+
+        공식 lerobot-record: 에피소드 검증 = 제로. re-record 옵션만 존재.
+        우리 추가 검증: HOME 시작(C0a)과 Z 안전(C5)만 HARD BLOCK.
+        나머지는 WARNING으로 운영자 판단에 위임.
 
         Z Calibration (confirmed by user, 2026-02-23):
-          Z=30mm  = arm fully extended to table surface (DEEP limit)
-          Z=80mm  = typical gripper-close height on object (~30mm tall box)
-          Z=160mm = approach height (arm moving toward object)
-          Z=230mm+ = home/neutral height (arm at rest)
-
-        Episode pattern: orange → yellow → green (grasp moment) → yellow → orange
-        Only the GRASPING MOMENT needs to be in the green zone.
+          Z=30mm  = table surface, Z=80mm  = object grasp
+          Z=160mm = approach, Z=230mm+ = home
         """
         issues = []
         warnings = []
 
         num_frames = len(self.current_episode)
 
-        # 1. Gripper must open 40°+ (English for OSD — OpenCV can't render Korean)
-        if not self.grip_was_open:
-            issues.append(f"Gripper never opened (max={self.max_gripper:.0f} < 40)")
-        else:
-            # 2. Gripper range check
-            gripper_range = self.max_gripper - self.min_gripper
-            if gripper_range < 15:
-                issues.append(f"Grip range too small ({gripper_range:.0f} < 15)")
-            elif self.max_gripper < 50:
-                warnings.append(f"Grip open low (max={self.max_gripper:.0f}, 60+ recommended)")
+        # C0a. HOME 시작 검증 — HARD BLOCK (v5 실패 근본 원인, 유일하게 정당한 FAIL)
+        if num_frames >= 10:
+            start_state = [self.current_episode[0]["data"]["angles"][i] for i in range(6)]
+            home = [0, 0, 90, 0, 0, 0]
+            home_dist = sum((s - h) ** 2 for s, h in zip(start_state, home)) ** 0.5
 
-        # 3. Gripper close timing — key check!
-        if self.shoulder_at_grip_close is not None:
-            if self.shoulder_at_grip_close < 40:
+            if home_dist > 30:
                 issues.append(
-                    f"Arm too high at grasp (Sh={self.shoulder_at_grip_close:.0f} < 40)")
-            elif self.shoulder_at_grip_close < 50:
-                warnings.append(
-                    f"Arm slightly high at grasp (Sh={self.shoulder_at_grip_close:.0f})")
+                    f"NOT started from HOME! dist={home_dist:.0f}deg "
+                    f"(start=[{start_state[0]:+.0f},{start_state[1]:+.0f},{start_state[2]:+.0f},"
+                    f"{start_state[3]:+.0f},{start_state[4]:+.0f},{start_state[5]:+.0f}]). "
+                    f"Press I to go HOME, THEN start recording!")
 
-            if self.z_at_grip_close is not None and self.z_at_grip_close > 130:
-                issues.append(
-                    f"Z too high at grasp (Z={self.z_at_grip_close:.0f}mm > 130)")
-        else:
-            if self.grip_was_open:
-                warnings.append("Grip opened but close not detected")
+        # C1. Gripper must open (WARNING only — 30° threshold, relaxed from 40°)
+        if not self.grip_was_open and self.max_gripper < 30:
+            warnings.append(f"Gripper barely opened (max={self.max_gripper:.0f}deg)")
 
-        # 4. Frame count check (min 3sec@30fps = 90 frames)
+        # C3. Grasp depth (WARNING only — shoulder < 30° means arm didn't reach down)
+        if self.shoulder_at_grip_close is not None and self.shoulder_at_grip_close < 30:
+            warnings.append(f"Arm may be too high at grasp (Sh={self.shoulder_at_grip_close:.0f}deg)")
+
+        # C5. Z safety — HARD BLOCK (physical safety)
+        if self.z_at_grip_close is not None and self.z_at_grip_close > 130:
+            issues.append(f"Z too high at grasp (Z={self.z_at_grip_close:.0f}mm > 130)")
+
+        # C4. Frame count (WARNING at <90, no FAIL — operator decides)
         if num_frames < 90:
-            issues.append(f"Too short ({num_frames} frames < 90, min 3sec)")
-        elif num_frames < 120:
-            warnings.append(f"Short episode ({num_frames}fr = {num_frames/30:.1f}s, 4s+ recommended)")
+            warnings.append(f"Short episode ({num_frames}fr = {num_frames/30:.1f}s)")
         elif num_frames > 600:
-            warnings.append(f"Too long ({num_frames}fr = {num_frames/30:.1f}s, 15s max)")
+            warnings.append(f"Long episode ({num_frames}fr = {num_frames/30:.1f}s)")
 
         # 5. Z-height check (DEEP grasp)
         if self.min_z > 160:
@@ -525,21 +547,14 @@ class ManualDataCollector:
         episode_dir = os.path.join(self.save_dir, f"episode_{self.episode_count:04d}")
         os.makedirs(episode_dir, exist_ok=True)
 
-        # Zone 판정 (그리퍼 닫기 시점 또는 min_z 시점의 위치 기반)
+        # Zone 판정 (그리퍼 닫기 시점의 base angle 기반 — 2026-03-31 재설계)
         ep_zone = "UNKNOWN"
         if self.current_episode:
-            # 그리퍼 닫기 시점 프레임의 base angle + FK distance로 판정
             grasp_frame_idx = self.grip_close_frame if self.grip_close_frame is not None else len(self.current_episode) // 2
             grasp_frame_idx = min(grasp_frame_idx, len(self.current_episode) - 1)
             gf = self.current_episode[grasp_frame_idx]
             gf_base = gf["data"].get("angles", [0])[0] if "angles" in gf["data"] else 0
-            gf_pose = gf["data"].get("pose", None)
-            gf_dist = None
-            gf_z = None
-            if gf_pose and len(gf_pose) >= 3:
-                gf_dist = (gf_pose[0]**2 + gf_pose[1]**2)**0.5
-                gf_z = gf_pose[2]
-            ep_zone = classify_zone(gf_base, gf_dist, gf_z)
+            ep_zone = classify_zone(gf_base)
 
         # 메타데이터 저장
         gripper_range = self.max_gripper - self.min_gripper
@@ -672,10 +687,29 @@ class ManualDataCollector:
 
         # Space로 녹화 시작/중지 토글
         if key == keyboard.Key.space:
-            self.is_recording = not self.is_recording
-            if self.is_recording:
-                print("\n[REC] 녹화 시작! 물체를 집어보세요...")
+            if not self.is_recording:
+                # 녹화 시작 전 HOME 위치 확인 — HARD BLOCK
+                # v5 실패 원인: 타겟 근처에서 시작 → approach phase 없음 → echo → 배포 실패
+                cur_angles = self.get_robot_angles()
+                if cur_angles and len(self.current_episode) == 0:
+                    home = [0, 0, 90, 0, 0, 0]
+                    home_dist = sum((a - h) ** 2 for a, h in zip(cur_angles, home)) ** 0.5
+                    if home_dist > 30:
+                        print(f"\n[BLOCKED] HOME에서 시작하세요! (현재 dist={home_dist:.0f}°)")
+                        print(f"  현재: [{cur_angles[0]:+.0f},{cur_angles[1]:+.0f},{cur_angles[2]:+.0f},"
+                              f"{cur_angles[3]:+.0f},{cur_angles[4]:+.0f},{cur_angles[5]:+.0f}]")
+                        print(f"  HOME:  [  0,  0, 90,  0,  0,  0]")
+                        print(f"  I키를 눌러 HOME으로 이동한 뒤 다시 Space")
+                        print(f"  (v5 136ep 실패 방지: HOME→스펀지 approach가 visual grounding 핵심)")
+                        return  # 녹화 시작 차단
+                    else:
+                        print(f"\n[REC] 녹화 시작! (HOME 확인 OK, dist={home_dist:.0f}°)")
+                else:
+                    # 이어서 녹화 (이미 프레임 있음) 또는 각도 읽기 실패
+                    print(f"\n[REC] 녹화 재개 ({len(self.current_episode)} 프레임 기존)")
+                self.is_recording = True
             else:
+                self.is_recording = False
                 print(f"\n[STOP] 녹화 중지 ({len(self.current_episode)} 프레임)")
 
         # Enter로 에피소드 저장
@@ -698,36 +732,86 @@ class ManualDataCollector:
             self.set_torque(not self.torque_on)
 
         if k == 'i':  # 초기 위치로 이동
-            if not self.torque_on:
-                print("\n초기 위치 이동을 위해 토크를 켭니다...")
-                self.set_torque(True)
-            print("초기 위치로 이동 중...")
-            self.robot.move_init()
-            time.sleep(2)
-            print("초기 위치 도착!")
+            HOME = [0, 0, 90, 0, 0, 0]
+            if self.lf_mode:
+                print("\n[L-F] 양쪽 팔을 HOME으로 이동 중...")
+                self.leader.torque_set(cmd=1)
+                self.robot.torque_set(cmd=1)
+                self.torque_on = True
+                time.sleep(0.3)
+                self.robot.joints_angle_ctrl(angles=HOME, speed=500, acc=200)
+                self.leader.joints_angle_ctrl(angles=HOME, speed=500, acc=200)
+                time.sleep(1)
+                self.robot.joints_angle_ctrl(angles=HOME, speed=500, acc=200)
+                self.leader.joints_angle_ctrl(angles=HOME, speed=500, acc=200)
+                time.sleep(3)
+                print("HOME 도착! T키로 Leader 토크 OFF하세요.")
+            else:
+                if not self.torque_on:
+                    print("\n초기 위치 이동을 위해 토크를 켭니다...")
+                    self.set_torque(True)
+                print("초기 위치로 이동 중...")
+                self.robot.move_init()
+                time.sleep(2)
+                print("초기 위치 도착!")
 
     def run(self):
         """메인 루프"""
+        mode_str = "Leader-Follower" if self.lf_mode else "토크 OFF 단일팔"
         print("\n" + "="*60)
-        print("RoArm M3 수동 데이터 수집 (토크 OFF 모드)")
+        print(f"RoArm M3 데이터 수집 ({mode_str})")
         print("="*60)
+        if self.lf_mode:
+            print("\n[L-F] 워크플로우:")
+            print("  1. 양쪽 팔이 HOME으로 이동")
+            print("  2. Leader 토크 OFF (손으로 자유 조작)")
+            print("  3. Space → 녹화 시작 (HOME에서!)")
+            print("  4. Leader를 움직여서 Follower가 스펀지 잡기")
+            print("  5. Enter → 에피소드 저장")
+            print("  ※ 카메라는 Follower만 촬영. Leader+손은 화각 밖!")
+        else:
+            print("\n[중요] Visual Grounding 학습을 위한 수집 워크플로우:")
+            print("  1. I키 → 홈 위치로 이동")
+            print("  2. 스펀지를 원하는 위치에 배치")
+            print("  3. T키 → 토크 OFF")
+            print("  4. Space → 녹화 시작 (홈 위치에서!)")
+            print("  5. 손으로 로봇을 스펀지 방향으로 이동 → 잡기 → 들기")
+            print("  6. Enter → 에피소드 저장")
+            print("  ※ 반드시 홈 위치에서 녹화 시작! 이미 타겟 근처면 경고 표시")
         print("\n조작법:")
         print("  Space: 녹화 시작/중지 (토글)")
         print("  Enter: 에피소드 저장")
         print("  Backspace: 에피소드 취소")
-        print("  T: 토크 ON/OFF 토글")
+        print(f"  T: {'Leader' if self.lf_mode else ''} 토크 ON/OFF 토글")
         print("  I: 초기 위치로 이동")
         print("  ESC: 종료")
         print("="*60)
 
-        # 초기 위치로 이동
-        print("\n초기 위치로 이동 중...")
-        self.robot.move_init()
-        time.sleep(2)
+        HOME = [0, 0, 90, 0, 0, 0]
 
-        # 토크 OFF로 시작
-        print("\n토크를 끕니다...")
-        self.set_torque(False)
+        if self.lf_mode:
+            # L-F: 양쪽 HOME → Leader 토크 OFF
+            print("\n양쪽 팔을 HOME으로 이동 중...")
+            self.robot.torque_set(cmd=1)
+            self.leader.torque_set(cmd=1)
+            time.sleep(0.5)
+            self.robot.joints_angle_ctrl(angles=HOME, speed=500, acc=200)
+            self.leader.joints_angle_ctrl(angles=HOME, speed=500, acc=200)
+            time.sleep(1)
+            # 첫 명령 드랍 대비 재전송
+            self.robot.joints_angle_ctrl(angles=HOME, speed=500, acc=200)
+            self.leader.joints_angle_ctrl(angles=HOME, speed=500, acc=200)
+            time.sleep(3)
+            print("*** Leader 팔을 손으로 잡으세요! 토크를 끕니다. ***")
+            time.sleep(1)
+            self.set_torque(False)
+        else:
+            # 단일팔: 초기 위치 → 토크 OFF
+            print("\n초기 위치로 이동 중...")
+            self.robot.move_init()
+            time.sleep(2)
+            print("\n토크를 끕니다...")
+            self.set_torque(False)
 
         # 키보드 리스너 시작
         listener = keyboard.Listener(on_press=self.on_key_press)
@@ -748,9 +832,21 @@ class ManualDataCollector:
 
                 # 카메라 프레임 가져오기
                 rgb, depth, second_rgb = self.get_camera_frame()
-                angles = self.get_robot_angles()
+                angles = self.get_robot_angles()  # Follower(또는 단일팔) = state
+                if angles is None:
+                    continue  # Follower 읽기 실패 — 프레임 스킵
                 pose = self.get_robot_pose()
                 self.current_pose = pose  # 캐시 for display
+
+                # L-F 모드: Leader 각도 읽기 + Follower 미러링
+                leader_angles = None
+                if self.lf_mode:
+                    leader_angles = self.get_leader_angles()
+                    if leader_angles is None:
+                        continue  # Leader 읽기 실패 — 프레임 스킵 (B3 fix: [0]*6 대신 스킵)
+                    clamped = [max(lo, min(hi, a))
+                               for a, (lo, hi) in zip(leader_angles, JOINT_LIMITS)]
+                    self.robot.joints_angle_ctrl(angles=clamped, speed=0, acc=0)
 
                 # 관절 + Z 추적 (save_frame 호출 전에 수행해야 frame_idx가 정확함)
                 shoulder = angles[1]
@@ -763,7 +859,7 @@ class ManualDataCollector:
                     if current_time - self.last_record_time >= 1.0 / self.record_fps:
                         # frame_idx는 저장되는 프레임에서만 기록 (FPS 제한 블록 안)
                         frame_idx = len(self.current_episode)
-                        self.save_frame(rgb, depth, angles, pose, second_rgb)
+                        self.save_frame(rgb, depth, angles, pose, second_rgb, leader_angles)
                         self.last_record_time = current_time
 
                         # 통계 추적 (저장된 프레임에서만)
@@ -804,7 +900,8 @@ class ManualDataCollector:
                     z_color = (0, 100, 255)    # 주황 (홈/높은 위치)
 
                 # Spatial zone 판정 (5-zone)
-                base_angle = angles[0]
+                # L-F 모드: Leader base가 유저 의도(=물체 위치)를 더 정확히 반영
+                base_angle = leader_angles[0] if leader_angles is not None else angles[0]
                 fk_dist = (pose[0]**2 + pose[1]**2)**0.5 if pose else None
                 spatial_zone = classify_zone(base_angle, fk_dist, z_height if z_height < 9999 else None)
                 spatial_color = ZONE_COLORS.get(spatial_zone, (128, 128, 128))
@@ -821,16 +918,35 @@ class ManualDataCollector:
                            (10, y), cv2.FONT_HERSHEY_SIMPLEX, 0.7, status_color, 2)
                 y += 30
 
-                cv2.putText(display, f"Torque {torque_status} | {rec_status}",
+                mode_label = "[L-F]" if self.lf_mode else ""
+                cv2.putText(display, f"{mode_label} Torque {torque_status} | {rec_status}",
                            (10, y), cv2.FONT_HERSHEY_SIMPLEX, 0.6, status_color, 2)
+
+                # HOME 거리 표시 — 녹화 전 항상 확인 (STANDBY에서 더 강조)
+                home_ref = [0, 0, 90, 0, 0, 0]
+                home_d = sum((a - h) ** 2 for a, h in zip(angles, home_ref)) ** 0.5
+                if not self.is_recording:
+                    if home_d <= 30:
+                        home_label = f"HOME OK (dist={home_d:.0f})"
+                        home_color = (0, 255, 0)
+                    else:
+                        home_label = f"NOT HOME! (dist={home_d:.0f}) Press I"
+                        home_color = (0, 0, 255)
+                    cv2.putText(display, home_label,
+                               (300, y), cv2.FONT_HERSHEY_SIMPLEX, 0.6, home_color, 2)
                 y += 35
 
-                # Spatial Zone 크게 표시 (우상단)
-                cv2.putText(display, f"ZONE: {spatial_zone}", (display.shape[1] - 280, 35),
+                # Spatial Zone 표시 (우상단) — 참고용, quota 없음
+                cv2.putText(display, f"ZONE: {spatial_zone}", (display.shape[1] - 300, 35),
                            cv2.FONT_HERSHEY_SIMPLEX, 0.9, spatial_color, 2)
-                if fk_dist is not None:
-                    cv2.putText(display, f"Dist:{fk_dist:.0f}mm Base:{base_angle:+.0f}", (display.shape[1] - 280, 60),
-                               cv2.FONT_HERSHEY_SIMPLEX, 0.45, spatial_color, 1)
+                zone_count_now = self.stats.zone_counts.get(spatial_zone, 0)
+                cv2.putText(display, f"Base:{base_angle:+.0f} | count:{zone_count_now}",
+                           (display.shape[1] - 300, 60),
+                           cv2.FONT_HERSHEY_SIMPLEX, 0.45, spatial_color, 1)
+                # 전체 zone 분포 (참고)
+                cv2.putText(display, f"Total: {self.stats.total_count}ep",
+                           (display.shape[1] - 300, 80),
+                           cv2.FONT_HERSHEY_SIMPLEX, 0.4, (180, 180, 180), 1)
 
                 # Z-Height + Shoulder 크게 표시
                 cv2.putText(display, f"Z: {z_height:.0f}mm", (10, y),
@@ -900,21 +1016,13 @@ class ManualDataCollector:
                                    (10, y), cv2.FONT_HERSHEY_SIMPLEX, 0.55, t_color, 2)
                         y += 22
 
-                # 데이터셋 진행률 (왼쪽 하단)
-                progress_lines = self.stats.get_progress_str()
-                y_progress = display.shape[0] - 140
-                cv2.putText(display, "=== Dataset Progress ===", (10, y_progress),
-                           cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
-                y_progress += 20
-                for line in progress_lines:
-                    cv2.putText(display, line, (10, y_progress),
-                               cv2.FONT_HERSHEY_SIMPLEX, 0.45, (200, 200, 200), 1)
-                    y_progress += 20
-
-                # 추천 수집 타입 (강조)
-                recommendation, rec_color = self.stats.get_recommendation()
-                cv2.putText(display, f"Next: {recommendation}", (10, y_progress + 10),
-                           cv2.FONT_HERSHEY_SIMPLEX, 0.6, rec_color, 2)
+                # 데이터셋 zone 분포 (왼쪽 하단, 참고용)
+                y_progress = display.shape[0] - 60
+                zone_summary = self.stats.get_zone_summary()
+                cv2.putText(display, f"Zones: {zone_summary}", (10, y_progress),
+                           cv2.FONT_HERSHEY_SIMPLEX, 0.4, (180, 180, 180), 1)
+                cv2.putText(display, f"Total: {self.stats.total_count} episodes", (10, y_progress + 20),
+                           cv2.FONT_HERSHEY_SIMPLEX, 0.45, (200, 200, 200), 1)
 
                 # Pending confirmation 표시 (FAIL 에피소드)
                 if self.pending_confirmation:
@@ -987,6 +1095,10 @@ class ManualDataCollector:
             if self.k4a2 is not None:
                 self.k4a2.stop()
             self.robot.disconnect()
+            if self.leader is not None:
+                self.leader.torque_set(cmd=1)
+                time.sleep(0.3)
+                self.leader.disconnect()
             print("\n정리 완료!")
             print(f"총 {self.episode_count} 에피소드 수집됨")
             print(f"저장 위치: {os.path.abspath(self.save_dir)}")
@@ -995,15 +1107,20 @@ class ManualDataCollector:
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(description="RoArm M3 수동 데이터 수집")
+    parser = argparse.ArgumentParser(description="RoArm M3 데이터 수집")
     parser.add_argument("--object", default="sponge",
                         help="수집할 물체 이름 (sponge/cup/box/tool)")
-    parser.add_argument("--port", default="/dev/ttyUSB0", help="로봇 시리얼 포트")
+    parser.add_argument("--port", default="/dev/ttyUSB0", help="로봇 시리얼 포트 (단일팔 모드)")
     parser.add_argument("--save-dir", default=None,
                         help="저장 디렉토리 (기본: collected_data_{object})")
     parser.add_argument("--second-camera", default="none",
                         choices=["none", "zed_wrist", "kinect_external"],
                         help="두 번째 카메라 (none/zed_wrist/kinect_external)")
+    # Leader-Follower 모드
+    parser.add_argument("--leader-port", default=None,
+                        help="Leader 팔 포트 (L-F 모드 활성화, 예: /dev/ttyUSB0)")
+    parser.add_argument("--follower-port", default=None,
+                        help="Follower 팔 포트 (L-F 모드, 예: /dev/ttyUSB1)")
     args = parser.parse_args()
 
     save_dir = args.save_dir or f"collected_data_{args.object}"
@@ -1013,5 +1130,7 @@ if __name__ == "__main__":
         save_dir=save_dir,
         object_name=args.object,
         second_camera=args.second_camera,
+        leader_port=args.leader_port,
+        follower_port=args.follower_port,
     )
     collector.run()

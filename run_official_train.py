@@ -4,43 +4,30 @@
 smolvla_base 사전학습 모델 사용 (Action Expert + VLM 모두 사전학습됨)
 공식 파이프라인이 정규화, LR 스케줄러, gradient clipping 등 자동 처리
 
-=== V5 Config: 200K steps (5-zone multi-position grasping) ===
-- Dataset: 150 episodes (lerobot_dataset_v5), ~26,700 frames
-- batch_size=64 (공식 권장, RTX 4090 Laptop에서 9.85GB/16.7GB = 59%)
-- steps=200,000 (OOD 로봇은 150K-200K 필요, 공식 상한)
-- scheduler_decay_steps=200,000 (전체 학습 구간에 걸쳐 cosine decay)
-- scheduler_warmup_steps=2,000 (전체의 1%, OOD 초반 불안정 방지)
-- save_freq=10,000 (200K/10K = 20 체크포인트, 평가용)
-- eval_freq=20,000 (중간 점검 10회)
+=== V6 Config: 20K steps (공식 바닐라 레시피 정확 재현) ===
+- Dataset: 50 episodes (lerobot_dataset_v6), 5 zones × 10 reps
+- batch_size=64 (공식 권장)
+- steps=20,000 (공식 기본값 — SO100 pickplace 50ep 기준)
+- scheduler: SmolVLA config defaults (warmup=1000, decay=30000)
+- save_freq=5,000 (4 체크포인트)
 
-=== Epoch 계산 (150 eps, 178 frames/ep, bs=64) ===
-  frames      = 150 * 178 = 26,700
-  steps/epoch = 26,700 / 64 ≈ 417
-  epochs      = 200,000 / 417 ≈ 480 (적절: 과적합 방지에 충분한 다양성)
+=== 과거 실패 기록 (절대 반복 금지) ===
+  v1: bs=8 비표준 → 실패
+  v3: 50K/74ep → false positive (1곳만 테스트, 궤적 암기, M2=1.73°)
+  v5: 200K/136ep → 실패 (HOME 미시작 → echo → 제자리)
+  → 200K는 공식 20K의 10배 과다. 에피소드 길이(3.3초)도 공식(13초)의 1/4
 
-=== Scheduler 설명 ===
-  CosineDecayWithWarmupScheduler:
-  - peak_lr=1e-4 (step 0 → warmup → step 2,000)
-  - cosine decay: step 2,000 → 200,000
-  - decay_lr=2.5e-6 (최저 LR, peak의 2.5%)
-  - num_decay_steps=200,000 (전체 steps와 일치 → smooth decay)
-  Note: num_training_steps < num_decay_steps이면 auto-scale됨
-        → decay_steps를 steps와 정확히 맞추는 게 가장 안전
+=== Epoch 계산 (50 eps, ~200 frames/ep, bs=64) ===
+  frames      = 50 * 200 = 10,000
+  steps/epoch = 10,000 / 64 ≈ 156
+  epochs      = 20,000 / 156 ≈ 128
 
-=== Auto-scale 동작 (schedulers.py line 99-111) ===
-  if num_training_steps < num_decay_steps:
-      scale_factor = num_training_steps / num_decay_steps
-      actual_warmup = int(warmup * scale_factor)
-      actual_decay  = num_training_steps
-  → decay_steps > steps이면 warmup이 줄어들어 LR 불안정 가능성!
-  → decay_steps = steps로 설정하면 auto-scale 없이 의도한 schedule 실행
-
-=== CLI 인자 전달 방식 ===
-  scheduler 관련 설정은 policy 필드를 통해 전달:
-  --policy.scheduler_warmup_steps=N
-  --policy.scheduler_decay_steps=N
-  --policy.scheduler_decay_lr=F
-  (use_policy_training_preset=True가 기본값이므로 policy config에서 scheduler 생성)
+=== Scheduler (공식 SmolVLA config defaults) ===
+  warmup_steps = 1,000 (SmolVLAConfig default)
+  decay_steps  = 30,000 (SmolVLAConfig default)
+  decay_lr     = 2.5e-6 (SmolVLAConfig default)
+  Note: decay_steps(30K) > steps(20K) → auto-scale 발생
+        → 공식이 이렇게 설계함. 이 동작이 정상.
 """
 
 import os
@@ -53,19 +40,19 @@ os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
 sys.stdout.reconfigure(line_buffering=True)
 sys.stderr.reconfigure(line_buffering=True)
 
-# === V5 Dataset (150 episodes, 5-zone multi-position sponge pick) ===
-DATASET_ROOT = "lerobot_dataset_v5"
+# === V6 Dataset (50 episodes, 5-zone × 10 reps, HOME start, 공식 레시피 재현) ===
+DATASET_ROOT = "lerobot_dataset_v6"
 DATASET_REPO = "roarm_m3_pick"
-OUTPUT_DIR = "outputs/smolvla_v5_multipos"
+OUTPUT_DIR = "outputs/smolvla_v6"
 
-# === Training hyperparameters ===
-STEPS = 200_000
+# === Training hyperparameters (공식 SmolVLA defaults) ===
+STEPS = 20_000                    # 공식 기본값 (50ep 기준). Phase 2에서 50K으로 증가 가능
 BATCH_SIZE = 64
-SCHEDULER_WARMUP_STEPS = 2_000    # 1% of total steps (OOD 초반 불안정 방지)
-SCHEDULER_DECAY_STEPS = 200_000   # = STEPS (전체 구간 cosine decay, auto-scale 방지)
-SCHEDULER_DECAY_LR = 2.5e-6      # peak_lr의 2.5% (official SmolVLA 기본값 유지)
-SAVE_FREQ = 10_000                # 20 checkpoints total (200K / 10K)
-EVAL_FREQ = 20_000                # 10 eval points (200K / 20K)
+SCHEDULER_WARMUP_STEPS = 1_000    # SmolVLAConfig default
+SCHEDULER_DECAY_STEPS = 30_000    # SmolVLAConfig default (> STEPS → auto-scale 정상 동작)
+SCHEDULER_DECAY_LR = 2.5e-6      # SmolVLAConfig default
+SAVE_FREQ = 5_000                 # 4 checkpoints (5K, 10K, 15K, 20K)
+EVAL_FREQ = 10_000                # 2 eval points
 LOG_FREQ = 100
 
 # Resume or fresh start
@@ -80,15 +67,16 @@ if last_ckpt_file.exists():
     ]
 else:
     # Fresh start from smolvla_base pretrained
-    print("Starting fresh training (SmolVLA v5 5-zone multipos, 200K steps)...")
+    print("Starting fresh training (SmolVLA v6, 공식 레시피 재현, 20K steps)...")
     print(f"  Dataset: {DATASET_ROOT}/{DATASET_REPO}")
     print(f"  Output: {OUTPUT_DIR}")
     print(f"  batch_size={BATCH_SIZE}, steps={STEPS:,}")
     print(f"  Scheduler: warmup={SCHEDULER_WARMUP_STEPS}, decay={SCHEDULER_DECAY_STEPS}, decay_lr={SCHEDULER_DECAY_LR}")
     print(f"  Checkpoints: every {SAVE_FREQ:,} steps ({STEPS // SAVE_FREQ} total)")
     print()
-    print("  Estimated: ~150ep * 178fr / 64bs = 417 steps/epoch → ~480 epochs")
+    print("  Estimated: ~50ep * 200fr / 64bs = 156 steps/epoch → ~128 epochs")
     print("  VRAM: batch_size=64 → ~9.85 GB (59% of 16.72 GB)")
+    print("  NOTE: 공식 SmolVLA 레시피 정확 재현. v5(200K)는 10x 과다였음.")
     sys.argv = [
         "lerobot-train",
         "--policy.type=smolvla",

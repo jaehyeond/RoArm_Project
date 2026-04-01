@@ -1,5 +1,49 @@
 # Data Agent Memory - RoArm M3 SmolVLA
 
+## L-F Pipeline Critical Review (2026-04-01) ← LATEST
+- Full report: `data_lf_pipeline_review.md`
+- B3 HIGH: `_safe_angle_read` returns `[0,0,0,0,0,0]` on failure → silent corrupt action in dataset + Follower home-snap
+- B2 MEDIUM: raw leader_angles saved as action, but clamped values sent to Follower (mismatch for out-of-limit poses)
+- B1 LOW: zone classification uses Follower base angle, should use Leader base angle
+- Timing correct: Follower read → Leader read → mirror command → save_frame = standard IL (s_t, a_t) convention
+- convert: action=leader_angles[t], state=follower_angles[t], same timestep, no offset — CORRECT
+
+## Official Pipeline Analysis (2026-03-31)
+- File: `project_official_pipeline_analysis.md`, script: `data_official_pipeline_analysis.py`
+- lerobot-record has ZERO validation — operator manually re-records bad episodes
+- Reference dataset: 50ep, 393fr/ep (13.1s), 20K steps, batch=64
+- Our v5: 99fr/ep (3.3s), 200K steps — wrong on both counts
+- C0a (HOME start) and C5 (Z check) = JUSTIFIED. C0b, C2, C3 = OVERCONSTRAINED/REDUNDANT
+- Recommended: remove C0b, C2; relax C1→30deg; C3→WARNING; C4 FAIL→90fr
+
+## V5 Deployment Failure Root Cause (2026-03-31)
+- File: `project_v5_proprioceptive_echo.md`, script: `data_v5_deployment_failure_analysis.py`
+- r(state.base, action.base)=0.9996 (V5) vs 0.9992 (V3) — nearly identical echo strength
+- ROOT CAUSE: V5 episodes start at approach pose (shoulder=44.1°, 0% near home) → no home→approach trajectory
+- V3 success: 100% episodes start at home (shoulder=2.8°) → large motion from init forces model commitment
+- V5 with --start-pos dataset_mean = FIXED-POINT TRAP: arm already at approach, predicts "stay still"
+- V3 with --start-pos init = forces shoulder to rise 41°, breaking fixed-point loop
+- Gripper q10: V5=16.2° (mid-grip) vs V3=1.7° (firmly closed) — V5 gripper distribution missing low-closed state
+- Fix: collect episodes starting from HOME position (shoulder<5°, base=0) so model learns full approach sequence
+
+## V5 Zone System Design Flaw (2026-03-31)
+- File: `project_v5_zone_bias_analysis.md`
+- 3/5 zones (NEAR, FAR_CENTER, OVERHEAD) all map to |base|<30° — effectively same angular region
+- Quota system is advisory only: no blocking, no FAIL, no hard enforcement
+- Frame dist: 55.2% in -5° to +15°, mean=+9.93°, 80% within [-3°, +23°] (26° window)
+- Fix: replace with 5 base-angle zones (FAR_LEFT/LEFT/CENTER/RIGHT/FAR_RIGHT × 27 eps each)
+- User followed system correctly — this was a design failure, not a user error
+
+## V5 Dataset Analysis (2026-03-26)
+- File: `project_v5_dataset_analysis.md`
+- 136 eps, 13,470 frames, 5 zones, 3.3s/ep, 100% phase completion, 0 flagged
+- CRITICAL: episodes start at approach pose (sh~44°), NOT home — deployment constraint
+- CRITICAL: gripper <15% only 7.5%, but <20% = 57.8% (correct sponge-grasp threshold)
+- dataset_mean = [9.93, 44.10, 40.94, 67.18, 0.20, 28.08]
+- Elbow bimodality: dead zone 42-60°, mean=40.9° is IN the dead zone
+- OVERHEAD zone: 15 eps (marginal), z>0 by design (elevated grasp)
+- Zone: FAR_CENTER=39, NEAR=30, MID_RIGHT=27, MID_LEFT=25, OVERHEAD=15
+
 ## collect_data_manual.py FAIL Flow Analysis (2026-03-26)
 - File: `project_collect_fail_flow_analysis.md`
 - Root cause: pynput background thread + conda no-PTY = fully buffered stdout (4096B)

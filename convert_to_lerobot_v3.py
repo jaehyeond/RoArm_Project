@@ -180,12 +180,15 @@ def convert_collected_data(
             if img.shape[:2] != (720, 1280):
                 img = cv2.resize(img, (1280, 720))
 
-            # State (현재 관절 위치)
+            # State (현재 관절 위치 = Follower 또는 단일팔)
             state = np.array(frame_data["angles"], dtype=np.float32)
 
-            # Action (다음 프레임의 관절 위치)
-            # 마지막 프레임은 현재 state 유지
-            if i < num_frames - 1:
+            # Action: L-F 모드면 leader_angles (같은 타임스텝의 Leader 각도)
+            #         단일팔 모드면 다음 프레임의 angles (기존 방식)
+            if "leader_angles" in frame_data:
+                # L-F 모드: 공식 LeRobot 방식 — action = Leader 각도 (유저 의도)
+                action = np.array(frame_data["leader_angles"], dtype=np.float32)
+            elif i < num_frames - 1:
                 action = np.array(frames[i + 1]["angles"], dtype=np.float32)
             else:
                 action = state.copy()

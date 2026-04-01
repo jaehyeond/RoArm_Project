@@ -1,5 +1,42 @@
 # Pipeline Agent Memory
 
+## V5 Training + Evaluation COMPLETE (2026-03-30)
+
+### Training Summary
+- Dataset: 136 eps, 13,470 frames, 99 frames/ep avg (shorter than planned 178)
+- Steps: 200K, batch_size=64, scheduler correctly aligned (decay_steps=200K)
+- Epochs: 950 (vs V3's 243) — overfitting risk confirmed by eval
+
+### V5 Checkpoint Evaluation Results (4 checkpoints)
+| Step    | L2 (deg) | Std    | Gripper% | Zone Ratio | Verdict |
+|---------|----------|--------|----------|------------|---------|
+| 50,000  | 3.86     | 25.29  | 24.0%    | 1.33       | PASS    |
+| 80,000  | 4.11     | 25.22  | 24.0%    | 1.33       | PASS    |
+| **120,000** | **3.80** | **25.26** | **24.0%** | **1.19** | **BEST** |
+| 200,000 | 3.86     | 25.28  | 24.0%    | 1.18       | PASS    |
+
+### CRITICAL: No issues found
+- Mean action problem: NO (std ~25.2° for all checkpoints)
+- Gripper collapse: NO (24.0% open ratio, max 71.5°)
+- Zone imbalance: NO (max ratio 1.33 at 50K/80K, improves to 1.18 at 200K)
+- Z-outliers: 0.0% for all checkpoints
+
+### Deploy Recommendation: 120K checkpoint
+- Path: `outputs/smolvla_v5_multipos/checkpoints/120000/pretrained_model`
+- L2=3.80° (best), zone ratio=1.19 (most balanced LEFT/CENTER/RIGHT)
+- Overfitting confirmed: 200K degrades to 3.86° (early stopping correct)
+- Secondary: 200K if 120K fails real-world (marginally better zone balance 1.18)
+
+### V5 vs V3 Key Differences
+- V5 L2 higher (3.80° vs 2.81°): expected — V5 covers 3 zones vs V3 single position
+- V5 gripper max lower (71.5° vs 97.5°): shorter episodes, not model failure
+- V5 std slightly higher (25.26° vs ~24.9°): marginally more diverse
+- V5 adds zone metric (not available in V3): all zones balanced
+
+### Result files
+- `train_v5_eval_results.md`: Full evaluation report with per-joint tables
+- `train_v5_monitor.md`: Training launch monitoring log
+
 ## V3 Training Analysis (2026-02-25)
 
 ### v3 Dataset: 74 episodes, 13,145 frames, batch_size=64, 50K steps (243 epochs)

@@ -11,5 +11,8 @@
 - [project_creative_domain_ideas.md](project_creative_domain_ideas.md) — 11 cross-domain ideas (manufacturing/healthcare/education/food/metaverse) with projector+XR angle. CoRL recommendation: Idea 9 (projected texture augmentation) + Idea 1 combined.
 - [project_ace_feasibility.md](project_ace_feasibility.md) — Autonomous Competence Expansion quantitative feasibility: VLM memory budget, throughput, power analysis, Reward-Weighted BC soundness (2026-03-25)
 
+## Failures & Lessons
+- [project_v5_visual_grounding_failure.md](project_v5_visual_grounding_failure.md) — V5 136ep/200K: base always ≈10°, zone design was angular monoculture, eval metrics blind to grounding
+
 ## Feedback
 - [feedback_experiment_design.md](feedback_experiment_design.md) — Design preferences and constraints for this project

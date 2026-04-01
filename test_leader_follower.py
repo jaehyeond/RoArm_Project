@@ -49,8 +49,8 @@ from roarm_sdk.roarm import roarm
 # ============================================
 # CONFIGURE THESE PORTS
 # ============================================
-LEADER_PORT = "/dev/ttyUSB1"    # Leader arm - 그리퍼 클램프 있는 팔 (손으로 움직임)
-FOLLOWER_PORT = "/dev/ttyUSB0"  # Follower arm - 그리퍼 클램프 없는 팔 (미러링)
+LEADER_PORT = "/dev/ttyUSB0"    # Leader arm - 그리퍼 클램프 있는 팔 #1 (손으로 움직임)
+FOLLOWER_PORT = "/dev/ttyUSB1"  # Follower arm - 새 팔 #3 (미러링)
 # ============================================
 
 # Joint limits for RoArm M3 (degrees)

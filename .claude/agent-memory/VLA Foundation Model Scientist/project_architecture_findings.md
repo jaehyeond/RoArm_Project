@@ -105,3 +105,34 @@ Interesting thesis direction — NOT CoRL material (requires retraining from scr
 - Do NOT modify LeRobot source code
 - Do NOT change noise schedule without retraining from smolvla_base
 - Do NOT remove VLM freezing (training VLM requires 10x more compute)
+
+## Deep Source Analysis Findings (2026-03-31)
+
+### Exact State Injection (confirmed from modeling_smolvla.py lines 571-697)
+- state → pad(6→32) → state_proj Linear(32→960, TRAINED) → 1 token in prefix
+- att_mask=1 for state: image/language CANNOT attend to state token
+- Action Expert cross-attends to ALL prefix KV — state gets 1 slot vs 64 image slots
+- state_proj is the ONLY fully trained projection in the prefix pathway
+
+### Proprioceptive Echo — Architectural Root Cause Confirmed
+The frozen visual pathway (SigLIP + connector = 100% frozen) vs trained state_proj creates
+a gradient imbalance. If state → action is a near-valid predictor (center-biased data),
+state_proj optimizes for echo. Visual gradients cannot compensate — they are zero.
+This is architecturally expected behavior under bad data conditions. Not a bug.
+
+SO100 avoids echo because HOME start makes state at t=0 uninformative.
+v5 had no HOME start → state encoded zone → echo was the Bayes-optimal strategy.
+
+### Fixes Without Source Modification
+1. Delta actions in convert script + deploy script: breaks echo shortcut [BEST]
+2. State dropout (30% episodes → dataset_mean) in convert script [GOOD]
+3. Balanced zones + HOME start: necessary but insufficient alone
+
+### Official Recipe Key Numbers (confirmed from smolvla.mdx)
+- 50 ep (5pos × 10rep), batch=64, steps=20K → works on SO100
+- scheduler: warmup=1K, decay=30K > steps=20K → INTENTIONAL, LR ends at ~50% peak
+- v5 200K steps = 952 epochs = echo amplification, not improvement
+- v6 must match: ~200fr/ep, 5zone × 10rep, HOME start, 20K steps
+
+### Full analysis script
+`/home/cgxr/Documents/Robotics/RoArm_Project/model_smolvla_architecture_critique.py`

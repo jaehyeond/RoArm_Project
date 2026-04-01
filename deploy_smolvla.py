@@ -83,16 +83,16 @@ JOINT_LIMITS = [
 Z_FLOOR_DEPLOY = -130  # mm — 책상(-120) + 10mm 여유. 이 아래 = 책상 관통
 DIST_MAX_DEPLOY = 420  # mm — 이 이상은 책상 밖 위험 (실측 안전 범위)
 
-CHECKPOINT_PATH = "outputs/smolvla_v3_sponge/checkpoints/025000/pretrained_model"
+CHECKPOINT_PATH = "outputs/smolvla_v6/checkpoints/020000/pretrained_model"
 
-# 데이터셋 평균 위치 (v3: 74 에피소드, 13145 프레임 기준)
-# action.mean: [-0.47, 30.18, 58.88, 40.72, -2.33, 26.48]
-# 학습 데이터가 이 근처에서 수집되었으므로 여기서 시작해야 in-distribution
-DATASET_MEAN_POS = [0, 30, 59, 41, -2, 26]
-
-# move_init() 위치 (roarm_sdk: [0, 0, π/2, 0, 0, 0] radians → degrees)
-# 팔 위로 세운 자세, 그리퍼 완전 닫힘 — 데이터 수집 시 시작 위치
+# HOME position (v6 데이터 수집 시작 위치 = 배포 시작 위치)
+# v6는 100% 에피소드가 HOME에서 시작 → 배포도 HOME에서 시작해야 in-distribution
+# v3 성공: init 시작. v5 실패: dataset_mean 시작 (에피소드 시작 위치 아님)
 INIT_POS = [0, 0, 90, 0, 0, 0]
+
+# DATASET_MEAN_POS: 학습 후 stats.json에서 업데이트 (v6 수집 전이므로 placeholder)
+# 주의: dataset_mean은 궤적 중간값이지 시작 위치가 아님. 배포 시작에 사용 금지!
+DATASET_MEAN_POS = [0, 0, 90, 0, 0, 0]  # v6 학습 후 실제 값으로 교체
 
 # 관절 이름 (로깅/출력용)
 JOINT_NAMES = ["base", "shoulder", "elbow", "wrist_pitch", "wrist_roll", "gripper"]
@@ -393,13 +393,15 @@ def main():
     parser.add_argument("--acc", type=int, default=200, help="로봇 모터 가속도 (0-500)")
     parser.add_argument("--hz", type=float, default=10.0, help="제어 루프 주파수")
     parser.add_argument("--dry-run", action="store_true", help="로봇에 명령 전송 안함")
-    parser.add_argument("--start-pos", default="dataset_mean",
+    parser.add_argument("--start-pos", default="init",
                         choices=["zero", "dataset_mean", "current", "init"],
-                        help="시작 위치: init=move_init(그리퍼 닫고 팔 위로), dataset_mean=학습데이터 평균, zero=[0]*6, current=현재위치 유지")
+                        help="시작 위치: init=HOME [0,0,90,0,0,0] (v6 기본값 — 수집 시작 위치와 일치), "
+                             "dataset_mean=학습데이터 전체 평균 (비권장: mid-trajectory), "
+                             "zero=[0]*6, current=현재위치 유지")
     parser.add_argument("--open-loop", action="store_true",
                         help="Open-loop: chunk(50 actions)를 순서대로 실행 (chunk 내에서는 새 관측 안함)")
     parser.add_argument("--n-chunks", type=int, default=4,
-                        help="Open-loop 모드에서 실행할 chunk 수 (1=50steps, 4=200steps=전체 에피소드 커버)")
+                        help="Open-loop 모드에서 실행할 chunk 수 (4=200steps, v6 에피소드 ~200프레임 커버)")
     parser.add_argument("--n-action-steps", type=int, default=5,
                         help="chunk에서 사용할 action 수 (1=매 스텝 새 추론, 5=권장(재추론+부드러움 균형), 50=공식 기본값)")
     parser.add_argument("--device", default="cuda", help="cuda 또는 cpu")
@@ -512,16 +514,37 @@ def main():
     if args.start_pos == "zero":
         start_angles = [0, 0, 0, 0, 0, 0]
     elif args.start_pos == "dataset_mean":
+        print("  WARNING: dataset_mean is mid-trajectory average. 배포 시작에 부적합.")
+        print("           --start-pos init 사용 권장 (v6 에피소드 시작 = HOME)")
         start_angles = DATASET_MEAN_POS
     elif args.start_pos == "init":
+        # v6: 모든 에피소드가 HOME [0,0,90,0,0,0]에서 시작 → in-distribution
         start_angles = INIT_POS
     else:  # "current"
         start_angles = None
 
     if start_angles is not None:
         print(f"\n로봇 초기 위치로 이동: {start_angles}")
-        arm.joints_angle_ctrl(angles=start_angles, speed=args.speed, acc=args.acc)
-        time.sleep(3)
+        arm.joints_angle_ctrl(angles=start_angles, speed=300, acc=100)
+        # 이동 완료 대기: 목표 도달까지 polling (최대 10초)
+        for wait_i in range(20):
+            time.sleep(0.5)
+            cur = get_robot_angles(arm)
+            if cur is not None:
+                diffs = [abs(cur[j] - start_angles[j]) for j in range(6)]
+                max_diff = max(diffs)
+                if max_diff < 5.0:
+                    print(f"  도달 완료! (max diff={max_diff:.1f}°, {(wait_i+1)*0.5:.1f}초)")
+                    break
+                if wait_i % 4 == 3:
+                    print(f"  이동 중... max_diff={max_diff:.1f}° ({(wait_i+1)*0.5:.1f}초)")
+        else:
+            cur = get_robot_angles(arm)
+            if cur is not None:
+                diffs = [abs(cur[j] - start_angles[j]) for j in range(6)]
+                print(f"  WARNING: 10초 후 max_diff={max(diffs):.1f}° (목표 미도달)")
+                print(f"  현재: {[f'{c:.1f}' for c in cur]}")
+                print(f"  목표: {start_angles}")
     else:
         print("\n현재 위치에서 시작")
 

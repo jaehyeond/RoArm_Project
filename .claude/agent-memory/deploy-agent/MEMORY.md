@@ -10,13 +10,19 @@
 - LF configs: `lf_teleop_config.yaml`, `lf_teleop_nocam_config.yaml`, `lf_teleop_camera_config.yaml`
 
 ## Project Deploy State
-- Current checkpoint default: `outputs/smolvla_v3_sponge/checkpoints/last/pretrained_model` (→ 050000)
-- DATASET_MEAN_POS (v3): [0, 30, 59, 41, -2, 26]  (action.mean: [-0.47, 30.18, 58.88, 40.72, -2.33, 26.48])
-- v3 normalization: action.mean=[-0.47, 30.18, 58.88, 40.72, -2.33, 26.48], action.std=[25.81, 18.81, 24.83, 30.07, 20.22, 24.15]
-- v3 dataset: 74 episodes, 13145 frames, task="Pick up the sponge", lerobot_dataset_v3
-- deploy_smolvla.py already has: action scaling, convergence detection, CSV logging, multi-checkpoint, open/closed-loop modes, EMA smoothing
-- JOINT_LIMITS in deploy_smolvla.py uses list-of-tuples format (NOT dict format from CLAUDE.md — both are correct)
-- n_action_steps default changed to 5 (was 50); EMA smoothing default=1.0 (off); recommended --ema-alpha 0.4 with --n-action-steps 1
+- [project_v5_deploy_state.md](project_v5_deploy_state.md) — V5 audit, start-pos deep analysis, HOME_POS_V5, echo rate, deploy commands
+- **V5 CORRECT START-POS**: HOME_POS_V5=[0,44,36,81,0,2] (from actual episode start data). Neither INIT_POS nor dataset_mean work for v5.
+- **Why dataset_mean fails**: gripper=28° (mid-open), wrist_pitch=67° (mid-trajectory) → echo → no motion
+- **Why INIT_POS fails for v5**: L2=4.17 OOD, model moves init→HOME only, then echo at HOME
+- **Why INIT_POS worked for v3**: v3_mean elbow=59° ≈ actual grasp elbow → INIT created approach gradient
+- **Echo rate**: 93% of v5 episodes have a[0]≈state[0] within 1° — severe proprioceptive echo
+- **V5 commands**: --n-chunks 2, --start-pos home (once HOME_POS_V5 added to script), always --checkpoint explicit
+- DATASET_MEAN_POS (line 91): currently [10,44,41,67,0,28] — correct for v5, but WRONG for start-pos (mid-trajectory)
+- v3 normalization: action.mean=[-0.47,30.18,58.88,40.72,-2.33,26.48], action.std=[25.81,18.81,24.83,30.07,20.22,24.15]
+- v5 normalization: action.mean=[9.95,43.94,41.31,66.57,0.21,28.25], action.std=[30.74,16.13,32.53,29.13,26.36,20.24]
+- v5 state: state.mean=[9.93,44.10,40.94,67.18,0.20,28.08], state.std=[30.96,16.05,32.33,28.55,26.60,20.39]
+- JOINT_LIMITS: list-of-tuples format, base=(-180,180) NOT (-190,190) — verify against CLAUDE.md if needed
+- n_action_steps default=5; EMA default=1.0 (off)
 
 ## EMA Smoothing Pattern (added 2026-02-25)
 - `ema_smoothed = alpha * new_action + (1-alpha) * ema_smoothed` applied AFTER unnormalize, BEFORE clamp

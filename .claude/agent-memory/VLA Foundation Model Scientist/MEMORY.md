@@ -24,3 +24,8 @@
 | `project_camera_setup_survey.md` | project | VLA 9편 카메라 설정 전수조사: 고정이 표준, 뷰 invariance VLA = 없음, 텔레옵별 손가림 처리, DROID ablation 수치 (2026-03-26) |
 | `project_sim2real_rl_detailed.md` | project | RL sim-to-real 심층 분석: 성공 케이스(IndustReal 83-99% Franka), 실패 케이스, RoArm M3 8차원 하드웨어 갭, 추정 성공률 <20% (2026-03-26) |
 | `project_demo_collection_standards.md` | project | VLA demo 수집 표준: 에피소드 구조 6단계, 최소 프레임 150(5sec), 그리퍼 타이밍, shoulder vs Z check 비교, ALOHA/SmolVLA/BridgeV2 기준 (2026-03-26) |
+| `project_v5_dataset_analysis.md` | project | v5 실측 stats (136ep, 13470 frames, 3.3s avg), 6가지 리스크 질문 답변, zone 불균형(FAR_CENTER=39), scheduler decay 버그 (2026-03-26) |
+| `project_v5_training_config_analysis.md` | project | V5 200K 학습 config vs published papers 6문항 비교: scheduler fix 확인, 952 epochs MEDIUM risk, checkpoint 선택 프로토콜 (2026-03-26) |
+| `project_openvla_pipeline.md` | project | OpenVLA 7B + OFT 파이프라인 상세 분석: RLDS 필수, GPU 요구사항, LeRobot v3 변환 경로, 커스텀 로봇 사례 (2026-03-27) |
+| `project_visual_grounding_failure.md` | project | V5 base≈10° 실패 근본원인 3개: 데이터 불균형(LEFT 2ep), L2 맹점(base 19.5% 기여), zone ratio 지표 부적합 (2026-03-31) |
+| `project_proprioceptive_echo.md` | project | VGST r=1.000 메커니즘, 문헌 근거(causal confusion NeurIPS 2019), 5가지 수정안 우선순위 — delta action이 핵심 (2026-03-31) |
