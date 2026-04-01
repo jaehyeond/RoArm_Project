@@ -1,13 +1,21 @@
 ---
-name: Cloud GPU Strategy for Multi-VLA Comparison (2026-03-24)
-description: VAST.ai/GCP cloud GPU enables pi0 and OpenVLA-OFT training. Strategy, costs, gating tests, and what does NOT change.
+name: Cloud GPU Strategy — RunPod (2026-04-01 updated)
+description: RunPod A100 40GB for SmolVLA v6 training. Pipeline: local convert → scp → RunPod train → scp download. Scripts ready (setup_runpod.sh, train_runpod.sh).
 type: project
 ---
 
 ## Context
-User now has cloud GPU access (VAST.ai, GCP) — no VRAM limit.
-Previously limited to SmolVLA (450M) on RTX 4090 (15.6GB).
-Date confirmed: 2026-03-24.
+User chose **RunPod** (A100 40GB) for external GPU training. 2026-04-01 결정.
+Previously: VAST.ai/GCP 검토 (2026-03-24). 실제 사용은 RunPod이 최종.
+SmolVLA(450M)은 로컬 RTX 4090에서도 가능하지만, 속도+GPU해방 목적으로 RunPod 선택.
+
+## RunPod SmolVLA v6 파이프라인 (2026-04-01 구축)
+- 로컬 변환: `convert_to_lerobot_v3.py` → `lerobot_dataset_v6/` (75MB)
+- 업로드: `scp -P {PORT} -r lerobot_dataset_v6/ root@{POD_IP}:/workspace/`
+- RunPod 셋업: `bash setup_runpod.sh` (pip install + 데이터확인 + 10step 테스트)
+- 본 학습: `bash train_runpod.sh` (20K steps, bs=64, A100 ~1-2hr, ~$3-4)
+- 다운로드: `scp -P {PORT} -r root@{POD_IP}:/workspace/outputs/smolvla_v6/checkpoints/020000/ outputs/smolvla_v6/checkpoints/020000/`
+- 로컬 평가+배포: `eval_visual_grounding.py` + `deploy_smolvla.py`
 
 **Why this matters:** Paper claim changes from "SmolVLA works on OOD robot"
 to "method works across VLA architectures." Stronger generalizability.
