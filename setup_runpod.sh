@@ -37,8 +37,12 @@ print('  OK')
 # 2. LeRobot + SmolVLA 설치
 echo ""
 echo "[2/5] LeRobot + SmolVLA 설치 (~5분)..."
-pip install "lerobot[smolvla]" --quiet 2>&1 | tail -3
-echo "  LeRobot version: $(pip show lerobot 2>/dev/null | grep Version | awk '{print $2}')"
+pip install "lerobot[smolvla]==0.4.4" --quiet
+LEROBOT_VER=$(pip show lerobot 2>/dev/null | grep Version | awk '{print $2}')
+echo "  LeRobot version: $LEROBOT_VER"
+if [ "$LEROBOT_VER" != "0.4.4" ]; then
+    echo "  WARNING: Expected 0.4.4, got $LEROBOT_VER. 데이터 포맷 호환 깨질 수 있음!"
+fi
 
 # 3. 데이터셋 확인
 echo ""
@@ -99,8 +103,7 @@ lerobot-train \
   --policy.device=cuda \
   --policy.scheduler_warmup_steps=1000 \
   --policy.scheduler_decay_steps=30000 \
-  --policy.scheduler_decay_lr=2.5e-6 \
-  2>&1 | tail -20
+  --policy.scheduler_decay_lr=2.5e-6
 
 echo ""
 echo "============================================"

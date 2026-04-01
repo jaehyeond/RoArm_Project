@@ -1,6 +1,8 @@
 #!/bin/bash
 # SmolVLA v6 본 학습 — RunPod A100 40GB
-# tmux 안에서 실행 권장: tmux new -s train && bash train_runpod.sh
+# tmux 안에서 실행 권장:
+#   tmux new -s train
+#   bash train_runpod.sh
 #
 # 바닐라 SmolVLA 레시피 (공식 SO100 pickplace 50ep 기준):
 #   - batch_size=64, steps=20K, smolvla_base pretrained
