@@ -4,7 +4,7 @@
 #
 # 전제조건:
 #   - lerobot_dataset_v6/ 가 /workspace/에 업로드되어 있어야 함
-#   - GPU pod (A100 40GB 권장)
+#   - GPU pod (RTX 4090 $0.34/hr 권장. L4/A100도 OK — VRAM 24GB+면 충분)
 #
 # 사용법:
 #   1. 로컬에서 데이터셋 전송: scp -P {PORT} -r lerobot_dataset_v6/ root@{POD_IP}:/workspace/

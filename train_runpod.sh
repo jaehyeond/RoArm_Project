@@ -1,5 +1,5 @@
 #!/bin/bash
-# SmolVLA v6 본 학습 — RunPod A100 40GB
+# SmolVLA v6 본 학습 — RunPod GPU (RTX 4090/L4/A100 등)
 # tmux 안에서 실행 권장:
 #   tmux new -s train
 #   bash train_runpod.sh
@@ -9,8 +9,8 @@
 #   - scheduler: warmup=1000, decay=30000, decay_lr=2.5e-6
 #   - save: 5K마다 (5K, 10K, 15K, 20K)
 #
-# 예상 소요: A100 40GB에서 ~1-2시간
-# 예상 비용: ~$3-4
+# 예상 소요: RTX 4090에서 ~2-3시간, A100에서 ~1-2시간
+# 예상 비용: RTX 4090 ~$1 ($0.34/hr), A100 80GB ~$3 ($1.19/hr)
 
 set -e
 
