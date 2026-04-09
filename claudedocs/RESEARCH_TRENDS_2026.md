@@ -119,10 +119,21 @@
 
 | 접점 | 출발 논문 | v6 연결 | 비용 | HARD RULE 위반 여부 |
 |---|---|---|---|---|
+| **EAAS — Event-Augmented Action Space** ⭐ (2026-04-09 추가) | GenCHiP action space insight + 유저 v6 3점 ablation | C1 Event Detector (state-derivative, no ML) + C2 Dataset Re-parameterization (원본 불변, `lerobot-train` CLI 그대로) + C3 Online Wrapper (Stage 1 패치 일반화). Cross-VLA (SmolVLA + Octo/π₀) + Cross-task 축. 상세: **[EAAS_PROPOSAL.md](EAAS_PROPOSAL.md)** | 중 (Wk 2-6) | 없음 — HARD RULE #1~#10 전부 정합 검증 완료 |
 | **Action primitive wrapping** | GenCHiP | action[5]를 compliant primitive(`close_until_contact`)로 교체 → flow matching tail 문제 해소 | 중 (custom head + 재학습) | #2 위반 가능성 → `lerobot-train` 내 재학습으로 제한 필수 |
 | **LLM failure-recovery loop** | BrainBody body→brain feedback | 배포 로그(gripper max<threshold) → LLM이 "retry with firmer grasp" 코드 재생성 | 저 (lerobot 학습 건드리지 않음, deploy 레이어만) | 없음 |
 | **Primitive library + SmolVLA trigger** | Code as Policies + SayCan | 저수준 primitive library(`home`, `reach`, `grasp`, `release`) 를 노출, VLA는 trigger 예측, primitive가 contact-rich 실행 | 중 | 없음 (lerobot 학습 외부) |
 | **Agenticness/ethics 축 논문 포지셔닝** | Frontiers 2025 survey | 유저 CoRL 논문의 "consumer-scale constraint" 스토리를 agenticness axes로 정량화 | 저 (문서 작업만) | 없음 |
+
+**추가로 검증된 prior art (2026-04-09 EAAS 반증 검색 중 확인)** — EAAS가 이들과 겹치지 않음을 `EAAS_PROPOSAL.md` §3에서 상세 방어:
+- arXiv **2602.06512** — *Beyond the Majority: Long-tail Imitation Learning for Robotic Manipulation* (Zhu et al., **ICRA 2026**) — task-budget inter-task long-tail (EAAS = action-value intra-task, 층위 다름)
+- arXiv **2505.22159** — *ForceVLA: Force-aware MoE for Contact-rich Manipulation* (Yu et al., **NeurIPS 2025**) — force sensor 전제 (EAAS = sensor 부재 조건)
+- arXiv **2602.23648** — *FAVLA: Force-Adaptive Fast-Slow VLA* — force sensor 전제
+- arXiv **2507.17294** — *VLA-Touch: Dual-Level Tactile Feedback* (NUS) — tactile sensor 전제
+- arXiv **2601.01948** — *Learning Diffusion Policy from Primitive Skills* — global instruction용 primitive, contact event tail 아님
+- arXiv **2512.11921** — *Towards Accessible Physical AI: LoRA-Based Fine-Tuning of VLA* — parameter efficiency 축 (EAAS = 데이터 표현 축), 병행 인용
+- arXiv **2602.22818** — *LeRobot: An Open-Source Library* — 인프라 인용
+- Non-peer-reviewed: Correll Lab Medium 2025-12-15 *"When Fine-Tuning Hurts: Failure Modes on a Low-Cost Robot"* — 커뮤니티 동일 문제 인식 증거
 
 ### 1.7 알려진 limits / 리뷰어 반박 포인트
 
