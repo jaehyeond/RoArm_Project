@@ -286,6 +286,7 @@ class CSVLogger:
         self.fieldnames = [
             "step", "timestamp",
             "base", "shoulder", "elbow", "wrist_pitch", "wrist_roll", "gripper",
+            "state_base", "state_shoulder", "state_elbow", "state_wrist_pitch", "state_wrist_roll", "state_gripper",
             "z_base", "z_shoulder", "z_elbow", "z_wrist_pitch", "z_wrist_roll", "z_gripper",
             "delta_base", "delta_shoulder", "delta_elbow", "delta_wrist_pitch", "delta_wrist_roll", "delta_gripper",
             "max_delta", "convergence_detected", "inference_ms",
@@ -300,15 +301,19 @@ class CSVLogger:
         self.file.flush()
 
     def log_step(self, step, angles, z_scores, deltas, max_delta, convergence, inference_ms,
-                 zone="", fk_x=0, fk_y=0, fk_z=0):
-        """한 스텝 로깅"""
+                 zone="", fk_x=0, fk_y=0, fk_z=0, state=None):
+        """한 스텝 로깅. state=현재 팔로워 실제 관절(선택)."""
         if self.writer is None:
             return
+
+        if state is None:
+            state = [float("nan")] * 6
 
         row = {
             "step": step,
             "timestamp": datetime.now().isoformat(),
             **{f"{name}": angles[i] for i, name in enumerate(JOINT_NAMES)},
+            **{f"state_{name}": state[i] for i, name in enumerate(JOINT_NAMES)},
             **{f"z_{name}": z_scores[i].item() if hasattr(z_scores[i], 'item') else z_scores[i]
                for i, name in enumerate(JOINT_NAMES)},
             **{f"delta_{name}": deltas[i] for i, name in enumerate(JOINT_NAMES)},
@@ -662,6 +667,7 @@ def main():
                             )
 
                         if csv_logger:
+                            follower_state = get_robot_angles(arm, max_retries=2) if not args.dry_run else None
                             csv_logger.log_step(
                                 step=step,
                                 angles=action_clamped,
@@ -669,7 +675,8 @@ def main():
                                 deltas=deltas,
                                 max_delta=max_delta,
                                 convergence=is_converged,
-                                inference_ms=inference_ms if i == 0 else 0
+                                inference_ms=inference_ms if i == 0 else 0,
+                                state=follower_state,
                             )
 
                         convergence_marker = " [CONV]" if is_converged else ""

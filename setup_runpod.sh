@@ -26,7 +26,7 @@ if not torch.cuda.is_available():
     print('ERROR: CUDA not available!')
     exit(1)
 name = torch.cuda.get_device_name(0)
-vram = torch.cuda.get_device_properties(0).total_mem / 1e9
+vram = torch.cuda.get_device_properties(0).total_memory / 1e9
 print(f'  GPU: {name}')
 print(f'  VRAM: {vram:.1f} GB')
 if vram < 20:
@@ -94,6 +94,7 @@ lerobot-train \
   --policy.push_to_hub=false \
   --dataset.repo_id=roarm_m3_pick \
   --dataset.root=/workspace/lerobot_dataset_v6 \
+  --dataset.video_backend=pyav \
   --batch_size=64 \
   --steps=10 \
   --log_freq=1 \

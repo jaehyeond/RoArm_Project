@@ -30,6 +30,7 @@ lerobot-train \
   --policy.push_to_hub=false \
   --dataset.repo_id=roarm_m3_pick \
   --dataset.root=/workspace/lerobot_dataset_v6 \
+  --dataset.video_backend=pyav \
   --batch_size=64 \
   --steps=20000 \
   --eval_freq=10000 \
