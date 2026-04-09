@@ -665,6 +665,15 @@ def main():
                                 speed=get_safe_speed(args.speed),
                                 acc=args.acc,
                             )
+                            # [PLAN3-GRIPPER-UNLOCK 2026-04-09] gripper만 속도 unlock 격리 실험
+                            # 학습 수집=speed=0(무제한). 배포 cap 300=26°/s → close phase timeout.
+                            # 두 번째 호출이 joints_angle_ctrl의 gripper 명령을 덮어씀.
+                            # main 관절은 그대로 26°/s, gripper만 88°/s.
+                            arm.gripper_angle_ctrl(
+                                angle=action_clamped[5],
+                                speed=1000,
+                                acc=0,
+                            )
 
                         if csv_logger:
                             follower_state = get_robot_angles(arm, max_retries=2) if not args.dry_run else None
@@ -811,6 +820,12 @@ def main():
                             angles=action_clamped,
                             speed=get_safe_speed(args.speed),
                             acc=args.acc,
+                        )
+                        # [PLAN3-GRIPPER-UNLOCK 2026-04-09] gripper만 속도 unlock (설명: open-loop 경로 참조)
+                        arm.gripper_angle_ctrl(
+                            angle=action_clamped[5],
+                            speed=1000,
+                            acc=0,
                         )
 
                     # NEW: CSV logging
