@@ -54,7 +54,8 @@ def joint_transform(origin_xyz, origin_rpy, joint_angle_rad):
     origin_xyz, origin_rpy: from URDF <origin>
     joint_angle_rad: the revolute joint variable
     """
-    Tf = Trans(*origin_xyz) @ Rx(origin_rpy[0]) @ Ry(origin_rpy[1]) @ Rz(origin_rpy[2])
+    # URDF RPY = fixed-axis XYZ: R = Rz(yaw) @ Ry(pitch) @ Rx(roll)
+    Tf = Trans(*origin_xyz) @ Rz(origin_rpy[2]) @ Ry(origin_rpy[1]) @ Rx(origin_rpy[0])
     Tj = Rz(joint_angle_rad)
     return Tf @ Tj
 
@@ -101,7 +102,7 @@ def fk_roarm_m3(angles_deg):
 
 
 # Home position FK Z (calibration reference)
-HOME_FK_Z_MM = -106.2  # fk_roarm_m3([0, 0, 90, 0, 0, 0])[2]
+HOME_FK_Z_MM = 343.7  # fk_roarm_m3([0, 0, 90, 0, 0, 0])[2]  (RPY order fixed 2026-04-24)
 
 
 def fk_z_relative(angles_deg):
