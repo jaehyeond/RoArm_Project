@@ -203,7 +203,7 @@ class DatasetStats:
 
 
 class ManualDataCollector:
-    def __init__(self, robot_port="/dev/ttyUSB0", save_dir="collected_data", object_name="sponge",
+    def __init__(self, robot_port="/dev/ttyUSB1", save_dir="collected_data", object_name="sponge",
                  second_camera="none", leader_port=None, follower_port=None):
         self.save_dir = save_dir
         self.object_name = object_name
@@ -1110,7 +1110,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="RoArm M3 데이터 수집")
     parser.add_argument("--object", default="sponge",
                         help="수집할 물체 이름 (sponge/cup/box/tool)")
-    parser.add_argument("--port", default="/dev/ttyUSB0", help="로봇 시리얼 포트 (단일팔 모드)")
+    parser.add_argument("--port", default="/dev/ttyUSB1", help="로봇 시리얼 포트 (단일팔 모드)")
     parser.add_argument("--save-dir", default=None,
                         help="저장 디렉토리 (기본: collected_data_{object})")
     parser.add_argument("--second-camera", default="none",

@@ -20,7 +20,7 @@ from roarm_sdk.roarm import roarm as RoArm
 
 
 class AzureKinectCalibrator:
-    def __init__(self, robot_port="/dev/ttyUSB0"):
+    def __init__(self, robot_port="/dev/ttyUSB1"):
         # Azure Kinect 초기화
         self.k4a = PyK4A(Config(
             color_resolution=pyk4a.ColorResolution.RES_720P,
@@ -288,7 +288,7 @@ def interactive_calibration():
 
     input("준비되면 Enter를 누르세요...")
 
-    calibrator = AzureKinectCalibrator(robot_port="/dev/ttyUSB0")
+    calibrator = AzureKinectCalibrator(robot_port="/dev/ttyUSB1")
     calibrator.start_camera()
 
     print("\n카메라 미리보기 시작...")

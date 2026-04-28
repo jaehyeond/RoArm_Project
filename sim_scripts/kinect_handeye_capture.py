@@ -29,10 +29,28 @@ import pyk4a
 from pyk4a import Config, PyK4A
 
 # ── SDK setup (suppress print spam + background decode errors) ──
+# WARNING: do NOT replace `_process_received` with `lambda *a, **k: None` —
+# it parses data['x'/'y'/'z'] + handle_m3_feedback(); a no-op makes
+# joints_angle_get() return None → subscript errors downstream.
 logging.getLogger("roarm_sdk").setLevel(logging.CRITICAL)
-from roarm_sdk import common as _sdk_common  # noqa: E402
+from roarm_sdk.common import DataProcessor, JsonCmd, handle_m3_feedback  # noqa: E402
 
-_sdk_common.DataProcessor._process_received = lambda self, data, genre=None: None
+
+def _silent_process(self, data, genre):
+    if not data:
+        return None
+    res, valid_data = [], []
+    if genre == JsonCmd.FEEDBACK_GET:
+        valid_data = [data['x'], data['y'], data['z']]
+        if self.type == "roarm_m3":
+            valid_data = handle_m3_feedback(valid_data, data)
+    else:
+        valid_data = data
+    res.append(valid_data)
+    return res
+
+
+DataProcessor._process_received = _silent_process
 from roarm_sdk.roarm import roarm  # noqa: E402
 
 # ── Constants ──

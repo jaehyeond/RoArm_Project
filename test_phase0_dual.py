@@ -29,6 +29,7 @@ def _silent_process(self, data, genre):
     return res
 roarm._process_received = _silent_process
 
+# LEGACY pre-L-F (2026-04-01): USB0=Leader (gripper clamp). Edit to /dev/ttyUSB1 for Follower.
 arm = roarm(roarm_type='roarm_m3', port='/dev/ttyUSB0', baudrate=115200)
 time.sleep(0.5)
 print("[1/3] Robot connected")

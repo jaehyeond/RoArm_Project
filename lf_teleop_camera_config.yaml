@@ -1,9 +1,9 @@
 robot:
   type: roarm_m3
   leader_arms:
-    main: /dev/ttyUSB1
+    main: /dev/ttyUSB0   # 팔 #1 (그리퍼 클램프, 손으로 조작)
   follower_arms:
-    main: /dev/ttyUSB0
+    main: /dev/ttyUSB1   # 팔 #3 (미러링, 카메라 촬영 대상)
   cameras:
     front:
       type: opencv

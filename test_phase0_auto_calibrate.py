@@ -27,6 +27,7 @@ def _silent(self, data, genre):
     return res
 roarm._process_received = _silent
 
+# LEGACY pre-L-F (2026-04-01): USB0=Leader (gripper clamp). Edit to /dev/ttyUSB1 for Follower.
 arm = roarm(roarm_type='roarm_m3', port='/dev/ttyUSB0', baudrate=115200)
 time.sleep(1)
 arm.torque_set(cmd=1)

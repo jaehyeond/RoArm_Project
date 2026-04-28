@@ -4,8 +4,8 @@ Test LeRobot RoArm M3 connection
 from lerobot.common.robot_devices.robots.configs import RoarmRobotConfig
 from lerobot.common.robot_devices.cameras.configs import OpenCVCameraConfig
 
-# Linux: /dev/ttyUSB0 (check with: ls /dev/ttyUSB*)
-ROBOT_PORT = "/dev/ttyUSB0"  # RoArm M3 via Silicon Labs CP210x
+# Linux: Follower=/dev/ttyUSB1 (Leader=/dev/ttyUSB0). check with: ls /dev/ttyUSB*
+ROBOT_PORT = "/dev/ttyUSB1"  # Follower (팔 #3, deploy target) via Silicon Labs CP210x
 CAMERA_INDEX = 0     # IMX335 camera
 
 def test_config():

@@ -1,9 +1,9 @@
 robot:
   type: roarm_m3
   leader_arms:
-    main: /dev/ttyUSB1   # 그리퍼 클램프 있는 팔 (손으로 움직임)
+    main: /dev/ttyUSB0   # 팔 #1 (그리퍼 클램프, 손으로 조작) — 4/26 정정
   follower_arms:
-    main: /dev/ttyUSB0   # 그리퍼 클램프 없는 팔 (미러링)
+    main: /dev/ttyUSB1   # 팔 #3 (미러링, 카메라 촬영 대상) — 4/26 정정
   cameras: {}
 
 control:

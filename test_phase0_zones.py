@@ -61,6 +61,7 @@ TEST_POSITIONS = {
     "OVERHEAD":   [0, 20, 40, 40, 0, 50],       # 높은 위치
 }
 
+# LEGACY pre-L-F (2026-04-01): USB0=Leader (gripper clamp). Edit to /dev/ttyUSB1 for Follower.
 arm = roarm(roarm_type='roarm_m3', port='/dev/ttyUSB0', baudrate=115200)
 time.sleep(0.5)
 

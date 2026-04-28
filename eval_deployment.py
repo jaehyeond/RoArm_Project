@@ -85,7 +85,7 @@ def get_eval_name(checkpoint_path: str) -> str:
 
 def run_trial(checkpoint_path: str, trial_num: int, eval_name: str,
               task: str = "Pick up the sponge",
-              port: str = "/dev/ttyUSB0",
+              port: str = "/dev/ttyUSB1",
               extra_args: list = None) -> Path:
     """
     단일 배포 trial 실행.
@@ -188,7 +188,7 @@ def run_trial(checkpoint_path: str, trial_num: int, eval_name: str,
 
 def run_evaluation(checkpoint_path: str, trials: int = 5,
                    task: str = "Pick up the sponge",
-                   port: str = "/dev/ttyUSB0",
+                   port: str = "/dev/ttyUSB1",
                    extra_args: list = None):
     """N회 반복 배포 평가."""
     eval_name = get_eval_name(checkpoint_path)
@@ -215,7 +215,7 @@ def run_evaluation(checkpoint_path: str, trials: int = 5,
 
 def run_matrix_evaluation(steps: list[int], trials: int = 5,
                           task: str = "Pick up the sponge",
-                          port: str = "/dev/ttyUSB0"):
+                          port: str = "/dev/ttyUSB1"):
     """experiment_matrix의 모든 서브셋 × 체크포인트 평가."""
     if not EXPERIMENT_DIR.exists():
         print(f"실험 디렉토리 없음: {EXPERIMENT_DIR}")
@@ -363,7 +363,7 @@ def main():
     p_run.add_argument("--checkpoint", required=True, help="체크포인트 경로")
     p_run.add_argument("--trials", type=int, default=5, help="반복 횟수")
     p_run.add_argument("--task", default="Pick up the sponge", help="태스크")
-    p_run.add_argument("--port", default="/dev/ttyUSB0", help="로봇 포트")
+    p_run.add_argument("--port", default="/dev/ttyUSB1", help="로봇 포트")
 
     # run-matrix
     p_matrix = subparsers.add_parser("run-matrix", help="experiment_matrix 전체 평가")
@@ -371,7 +371,7 @@ def main():
                           help="평가할 체크포인트 스텝 (콤마 구분)")
     p_matrix.add_argument("--trials", type=int, default=5, help="반복 횟수")
     p_matrix.add_argument("--task", default="Pick up the sponge", help="태스크")
-    p_matrix.add_argument("--port", default="/dev/ttyUSB0", help="로봇 포트")
+    p_matrix.add_argument("--port", default="/dev/ttyUSB1", help="로봇 포트")
 
     # judge
     p_judge = subparsers.add_parser("judge", help="사람 판정 추가")

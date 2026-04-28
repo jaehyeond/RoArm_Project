@@ -35,7 +35,7 @@ logging.getLogger('BaseController').setLevel(logging.CRITICAL)
 
 
 class DataCollector:
-    def __init__(self, robot_port="/dev/ttyUSB0", save_dir="collected_data"):
+    def __init__(self, robot_port="/dev/ttyUSB1", save_dir="collected_data"):
         self.save_dir = save_dir
         os.makedirs(save_dir, exist_ok=True)
 
@@ -402,7 +402,7 @@ class DataCollector:
 
 if __name__ == "__main__":
     collector = DataCollector(
-        robot_port="/dev/ttyUSB0",
+        robot_port="/dev/ttyUSB1",
         save_dir="collected_data"
     )
     collector.run()

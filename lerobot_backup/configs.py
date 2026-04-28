@@ -509,7 +509,7 @@ class RoarmRobotConfig(RobotConfig):
     # Follower arms configuration: Linux serial port
     follower_arms: dict[str, str] = field(
         default_factory=lambda: {
-            "main": "/dev/ttyUSB0",  # RoArm M3 via Silicon Labs CP210x
+            "main": "/dev/ttyUSB1",  # Follower (팔 #3) via Silicon Labs CP210x — 4/26 정정 (USB0=Leader)
         }
     )
 

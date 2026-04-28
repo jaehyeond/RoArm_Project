@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Send reset commands to robot via serial."""
+"""Send reset commands to robot via serial.
+
+Usage:
+    python reset_robot.py /dev/ttyUSB0   # Leader (팔 #1)
+    python reset_robot.py /dev/ttyUSB1   # Follower (팔 #3)
+"""
 
 import serial
 import time

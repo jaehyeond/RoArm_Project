@@ -23,8 +23,8 @@ Azure Kinect 카메라 → SmolVLA(450M) 모델 → RoArm M3 (6-DOF) 실시간 �
 | Python | 3.11.14 (conda env `roarm`) |
 | PyTorch | 2.7.1+cu126 |
 | LeRobot | 0.4.4 (source install at `lerobot/`, .gitignored) |
-| Robot | RoArm-M3-Pro via `/dev/ttyUSB0` (follower) |
-| Leader | RoArm-M3-Pro via `/dev/ttyUSB1` (leader, L-F 모드 시) |
+| Follower | RoArm-M3-Pro via `/dev/ttyUSB1` (배포/추론 대상, 카메라가 촬영, 팔 #3) |
+| Leader | RoArm-M3-Pro via `/dev/ttyUSB0` (L-F 수집 시 손으로 조작, 그리퍼 클램프, 팔 #1) |
 | Camera | Azure Kinect DK (pyk4a 1.5.0 + libk4a 1.4.2) |
 | Framework | LeRobot + SmolVLA (HuggingFace) |
 
@@ -53,13 +53,14 @@ python deploy_smolvla.py --start-pos dataset_mean --max-steps 300
 python data_episode_quality.py
 python data_distribution_simple.py
 
-# 로봇 복구 (모터 버스 문제)
-python scan_servos.py /dev/ttyUSB0
+# 로봇 복구 (모터 버스 문제) — 포트는 복구 대상에 맞게: Leader=/dev/ttyUSB0, Follower=/dev/ttyUSB1
+python scan_servos.py /dev/ttyUSB0   # 예시: Leader. Follower 복구 시 /dev/ttyUSB1
 python reset_robot.py
 
-# 하드웨어 테스트
+# 하드웨어 테스트 (Leader=USB0, Follower=USB1 — 양쪽 다 확인 권장)
 python -c "from pyk4a import PyK4A; k4a = PyK4A(); k4a.start(); print('Kinect OK'); k4a.stop()"
-python -c "from roarm_sdk.roarm import roarm; arm = roarm('roarm_m3', '/dev/ttyUSB0', 115200); print('Robot OK'); arm.disconnect()"
+python -c "from roarm_sdk.roarm import roarm; arm = roarm('roarm_m3', '/dev/ttyUSB0', 115200); print('Leader OK (USB0)'); arm.disconnect()"
+python -c "from roarm_sdk.roarm import roarm; arm = roarm('roarm_m3', '/dev/ttyUSB1', 115200); print('Follower OK (USB1)'); arm.disconnect()"
 python -c "import torch; print(f'CUDA: {torch.cuda.is_available()}, GPU: {torch.cuda.get_device_name(0)}')"
 ```
 
@@ -125,7 +126,7 @@ deploy_smolvla.py          [5] 실제 로봇 배포 (dataset_mean 시작, closed
 ```python
 from roarm_sdk.roarm import roarm
 
-arm = roarm(roarm_type="roarm_m3", port="/dev/ttyUSB0", baudrate=115200)
+arm = roarm(roarm_type="roarm_m3", port="/dev/ttyUSB1", baudrate=115200)  # Follower 예시. Leader는 /dev/ttyUSB0
 
 angles = arm.joints_angle_get()           # → list[6] (degrees)
 arm.joints_angle_ctrl(angles=[0]*6, speed=500, acc=200)
@@ -135,9 +136,33 @@ arm.disconnect()
 ```
 
 ### SDK Bugs & Workarounds
-- **print(data) 스팸**: `sdk_common.DataProcessor._process_received` 몽키패치로 억제
+- **print(data) 스팸**: `roarm_sdk.common.DataProcessor._process_received` 몽키패치로 억제 (모듈명 주의: `sdk_common` 아님)
 - **BaseController 로거**: CRITICAL 레벨로 설정 (백그라운드 스레드 디코드 에러)
 - **safe_joints_angle_get()**: 5회 재시도 (간헐적 None/KeyError 대응)
+
+#### 올바른 `_silent_process` 패턴
+
+⚠️ **`lambda *a, **k: None` 사용 절대 금지**: `_process_received`는 단순 print만 하는 게 아니라 `data['x'/'y'/'z']` 추출 + `handle_m3_feedback()` 호출 등 **데이터 파싱 핵심 로직**을 담당. `lambda: None`으로 치환하면 `joints_angle_get()` 등 모든 read API가 `None` 반환 → `subscript` 에러. 반드시 아래 패턴 사용 (출처: `collect_data_manual.py:44-60`):
+
+```python
+import logging
+logging.getLogger().setLevel(logging.CRITICAL)
+from roarm_sdk.common import DataProcessor, JsonCmd, handle_m3_feedback
+
+def _silent_process(self, data, genre):
+    if not data:
+        return None
+    res, valid_data = [], []
+    if genre == JsonCmd.FEEDBACK_GET:
+        valid_data = [data['x'], data['y'], data['z']]
+        if self.type == "roarm_m3":
+            valid_data = handle_m3_feedback(valid_data, data)
+    else:
+        valid_data = data
+    res.append(valid_data)
+    return res
+DataProcessor._process_received = _silent_process
+```
 
 ### USB Configuration
 
@@ -146,11 +171,13 @@ Laptop ──USB──→ [USB Hub]
                     │
         ┌───────────┴───────────┐
         ↓           ↓           ↓
-  Azure Kinect  Follower     Leader
+  Azure Kinect    Leader     Follower
      (DK)     (/dev/ttyUSB0) (/dev/ttyUSB1)
 ```
 
 ## Motor Recovery (모터 응답 없음)
+
+> 포트는 복구 대상에 맞게: **Leader=/dev/ttyUSB0, Follower=/dev/ttyUSB1**. 아래 예시는 단일 로봇 시나리오라 USB0을 사용 — 실제 사용 시 대상 포트로 교체.
 
 ### 증상
 - 전원 ON해도 팔이 초기 위치로 안 감

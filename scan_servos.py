@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Scan for connected servos."""
+"""Scan for connected servos.
+
+Usage:
+    python scan_servos.py /dev/ttyUSB0   # Leader (팔 #1, 그리퍼 클램프)
+    python scan_servos.py /dev/ttyUSB1   # Follower (팔 #3, 카메라 촬영 대상)
+"""
 
 import serial
 import time
