@@ -24,10 +24,22 @@ logs/
 
 # ---- Datasets (too large for git, recollect per environment) ----
 lerobot_dataset/
-lerobot_dataset_v3/
-lerobot_dataset_v4/
+lerobot_dataset_v*/
+lerobot_dataset_stacking_*/
 collected_data/
 collected_data_*/
+
+# ---- Sim artifacts (regenerable from sim_scripts/) ----
+sim_demos_v*/
+sim_renders_v*/
+sim_v*/
+
+# ---- Debug / inference compare artifacts (machine-specific symlinks + logs) ----
+.inference_compare_patched/
+compare_inference.stdout
+compare_inference.stderr
+compare_weights.stdout
+compare_weights.stderr
 
 # ---- LeRobot (clone separately) ----
 lerobot/
@@ -83,6 +95,7 @@ convert_log.txt
 *.bat
 *.ps1
 .claude/settings.local.json
+.claude/scheduled_tasks.lock
 
 # ---- Docs folder (PDFs, local docs) ----
 docs/

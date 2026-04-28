@@ -232,7 +232,10 @@ capture = k4a.get_capture()
 rgb = capture.color[:, :, :3]  # BGRA → BGR
 ```
 
-**카메라 위치 변경 = 모든 데이터 무효 = 재수집 필수!**
+**카메라 nuance** (HARD RULE #6 반영, 2026-04-28):
+- **수집 단일 세션 내**: 카메라 절대 고정 (삼각대/클램프) — 위치 변경 시 그 데이터셋 무효
+- **데이터셋 설계**: 다양한 viewpoint 사용 가능 (대형 VLA는 다양 각도 OK, 카메라 절대 고정은 과적합 원인)
+- **Sim env (4/24)**: Kinect 빨간 마커 calibration RMSE 10.13mm — sim 내 동일 viewpoint 1:1 매핑
 
 ## Session Workflow (세션 운영 규칙)
 
@@ -274,17 +277,20 @@ rgb = capture.color[:, :, :3]  # BGRA → BGR
 
 | Rule | Why |
 |------|-----|
-| **카메라 고정 (삼각대/클램프)** | 위치 변경 시 전체 데이터 무효 |
-| **Azure Kinect만 사용** | VLA 데이터는 반드시 pyk4a |
-| **100+ 에피소드 목표** | 51개는 부족했음 (elbow 깊이 다양성 부족) |
+| **수집 세션 내 카메라 고정 (삼각대/클램프)** | 단일 세션 위치 변경 = 그 데이터 무효. 데이터셋 설계 시 다양 viewpoint는 OK |
+| **Azure Kinect 메인 사용** | 본 프로젝트 v6 = pyk4a single Kinect (IMX335/ZED Mini 보유 미장착) |
+| **v6 50ep + sim demos co-training** | 4/24 결정. 단순 "100+ ep 수집"보다 sim demos (Mimic 500+) co-training이 stacking에 효과적 |
 
 ## LeRobot Integration
 
 ### 데이터 수집 방식
-**팔 1개 + 토크 OFF 수동 모드**:
-- `collect_data_manual.py` → Azure Kinect (pyk4a)
-- 토크 OFF → 손으로 로봇 직접 움직임
-- Leader-Follower: 구현됨, 듀얼 팔 보유 시 사용 가능
+**현재 (4/01부터): Leader-Follower (L-F) 텔레옵**:
+- Leader (USB0, 팔 #1, 그리퍼 클램프) → 손으로 조작
+- Follower (USB1, 팔 #3, 카메라 촬영 대상) → 동기 추종
+- `collect_data_manual.py` (L-F 모드) → Azure Kinect (pyk4a)
+- v6 50ep는 모두 L-F로 수집 (4/01 전환 후)
+
+**Legacy (참고만)**: 팔 1개 + 토크 OFF 수동 모드 (v1~v5에서 사용, v6부터 L-F)
 
 ### LeRobot 백업 파일
 `lerobot_backup/` 폴더에 RoArm M3 통합 코드 백업:
@@ -391,32 +397,38 @@ lerobot-train \
 3. **Closed-loop drift**: 작은 오차 누적 → OOD → 한 방향 드리프트
 4. **오프라인 ≠ 온라인**: 오프라인 L2=2.53° 양호해도 실제 배포 실패 가능
 
-## Current Status (2026-02-11)
+## Current Status (2026-04-28)
 
 ### Completed
-- Git repo 정리: Isaac Sim/RL 제거, GitHub push 완료 (SSH)
-- Windows → Linux 완전 이관: COM 포트, 패치, 경로 모두 정리
-- Agent team hooks: .ps1 → .sh, fail-closed 보안 강화, Linux 검증 완료
-- **환경 구축 완료**: conda `roarm` env (Python 3.11 + PyTorch 2.7.1+cu126 + LeRobot 0.4.4 + SmolVLA + roarm_sdk)
-- **Azure Kinect SDK 설치 완료**: libk4a 1.4.2 + pyk4a 1.5.0 + udev rules
-- **데이터 수집 (v1)**: 50 에피소드, 10,803 프레임 (DEEP 18%, APPROACH 14%, SHALLOW 68%)
-- **학습 완료 (v1)**: 50K steps, loss 0.007, smolvla_base pretrained
-- **오프라인 테스트 통과**: Overall Std 21.55°, Mean L2 2.53°, 50K checkpoint 최적
-- **배포 2회 실패 (2026-02-11)**: 그리퍼 미작동, 한 방향 드리프트, 파지 실패
+- **v6 데이터 수집 완료 (4/01)**: 50 ep, 6942 frames, L-F 텔레옵, single Azure Kinect (`lerobot_dataset_v6/`)
+- **v6 학습 완료 (4/05)**: 50K steps, smolvla_base pretrained, batch=8 (4090 5.2h)
+- **v6 배포 SUCCESS (4/9)**: Plan 3 = JOINT_SPEED_CAPS gripper-only unlock (`speed=1000`). 유저 물리 검증: **다양한 위치/방향 sponge 전부 파지 성공**. git commit `2e840e4`
+- **Kinect↔RoArm calibration 완료 (4/15)**: 빨간 스티커 마커, RMSE 10.13mm. git commit `a217cd3`
+- **현실 측정 완료 (4/24)**: Hand-eye solve, table plane (z=-12.12mm RMSE 1.24mm), sponge poses 50ep. git commit `1f0d52e`
+- **Sim env 구축 완료 (4/24)**: Isaac Sim (`isaaclab` env) + URDF + Kinect calib pose + table USD. SigLIP 0.7222 (48/50 GO ≥0.70). Joint replay RMSE 0.43°. `sim_v1/` (87MB lerobot v3)
+- **Stacking scene 시각 검증 (4/28)**: [sim_renders_v2/stacking_initial.png](sim_renders_v2/stacking_initial.png) — A/B/Temp Layout 정확
+- **B200 학습 reproducibility 검증 (4/28)**: 4090 동등 (loss bit-exact, weight diff frozen 378/500 bit-exact, max\|diff\|=0.0319 saturate). 1.4h vs 5.2h (3.7×). git commit `18abcef`
+- **Stacking task pivot (4/24)**: 교수님 target = N=2 sponge stacking (3-step pick-place). Layout A(+280,0)/B(+280,+130)/Temp(+280,-110)
+- **Sim2real gap 정량화**: SigLIP 0.7222, sim 70% brighter than real (dome light), LEFT zone weakest
 
-### Deployment Failure Analysis (2026-02-11)
+### v6 Stacking Feasibility Analysis (4/28)
+- Pick z 분포 ✅ in-distribution (elbow > 90: 22.3%, elbow < 50: 33.5%)
+- Place 동작 ❌ v6에 없음 (sim demos 필수)
+- Tower context image ❌ OOD (single sponge만 학습)
+- v6 trajectory ~50% 재사용 가능, place + tower visual은 sim에서 새로 학습
 
-| 문제 | 증상 | 원인 |
-|------|------|------|
-| 그리퍼 미작동 | 한번도 열리지 않음 (2-4°) | 학습 데이터에 gripper open 프레임 부족 |
-| 단방향 드리프트 | 모든 관절이 한 방향으로만 천천히 이동 | Closed-loop 오차 누적 → OOD |
-| Wrist_R 폭주 (Run 1) | -3° → -92° | 4σ OOD drift |
-| Elbow 상승 | 13° → 36° (위로만) | DEEP 에피소드 부족 (9/50) |
+### Active Blockers / Pending Decisions
+1. Stacking 3-step vs 4-step 순서
+2. Curriculum 도입 (Phase A 단독 pick → B 1-stack → C 2-stack)?
+3. Safety limit hard-code (`z_world > +148+3mm`)?
+4. Sim demo 생성 방식 (Procedural IK vs Leader teleop in sim vs Isaac Lab Mimic)
+5. B200 SERVER 5K/10K/15K cleanup (1개월 대여)
+6. 단톡방 발송 (Vulkan ICD 정책 미답)
 
-### Next Steps
-1. **데이터 추가 수집**: 100+ 에피소드 (DEEP 50개+, gripper open/close 다양성)
-2. **재학습**: 새 데이터셋으로 50K+ steps
-3. **재배포 테스트**: dataset_mean 시작, closed-loop
+### Next Steps (Phase ST-A → ST-B → ST-C, 2-3주)
+1. **ST-A (1-2일)**: stacking_scene.py 2-sponge 패치 (현재 1 sponge spawn) + procedural pick-place script 설계
+2. **ST-B (1-1.5주)**: Sim에서 50-100 stacking demos 생성 → `sim_to_lerobot.py` 변환 → Co-training (v6 real + sim) → **B200 finetune 1.5h**
+3. **ST-C (3-7일)**: Real deploy A→Temp → A→B → Temp→B 3-step, dataset_mean 시작
 
 ## Research Verification Rules (연구 검증 — 2026-03-10 실수에서 배운 것)
 
@@ -466,9 +478,34 @@ lerobot-train \
 
 ## Reference
 
+### External
 - LeRobot: https://github.com/huggingface/lerobot
 - SmolVLA: https://huggingface.co/docs/lerobot/en/smolvla
 - RoArm M3 PR: https://github.com/huggingface/lerobot/pull/820
-- VLA 기술 총정리: `2026_Physical_AI.md`
-- 프로젝트 감사: `claudedocs/PROJECT_AUDIT.md`
-- 연구 아이디어: `claudedocs/RESEARCH_IDEAS.md`
+
+### Memory (Topic Files) — `~/.claude/projects/.../memory/`
+- `tech_b200_server_setup.md` — B200 NHN/Sogang env 셋업 + S0-S16 + reproducibility 검증 (4/28)
+- `tech_lerobot_camera_keys.md` — single Kinect vs SmolVLA 3-camera default 매핑 fix (4/28)
+- `tech_leader_follower_setup.md` — L-F 포트매핑 (USB0=Leader, USB1=Follower), 물리배치
+- `tech_critical_lessons.md` — 실패 교훈 33+개
+- `tech_gripper_grasp_anchors.md` — Gripper jaw stroke 측정 + Option A/B/C grasp 시퀀스 (4/27)
+- `tech_servo_observer_effect.md` — Read 빈도가 servo motion 속도 결정 (4/27)
+- `experiment_log_v6_deployment.md` — v6 4/9 Plan 3 SUCCESS 분석
+- `project_hardware_inventory.md` — 스펀지/로봇/카메라/3D프린터/VR 인벤토리
+- `project_corl2026_direction.md` — CoRL+석사논문 전략 (3-VLA 비교, Phase-Selective)
+
+### Sim env (4/24, 4/28)
+- [sim_scripts/stacking_scene.py](sim_scripts/stacking_scene.py) — Stacking 씬 spawn (Layout A/B/Temp)
+- [sim_scripts/replay_v6_sim.py](sim_scripts/replay_v6_sim.py) — V6 trajectory sim replay (50ep ✓)
+- [sim_scripts/sim_to_lerobot.py](sim_scripts/sim_to_lerobot.py) — Sim → LeRobot v3 변환기
+- [sim_scripts/kinect_calib.yaml](sim_scripts/kinect_calib.yaml) — Kinect intrinsic + extrinsic
+- [sim_scripts/table_plane.json](sim_scripts/table_plane.json) — Table plane fit (-12.12mm)
+- [sim_scripts/sponge_poses.json](sim_scripts/sponge_poses.json) — 50 ep 별 sponge 위치
+- [sim_v1/](sim_v1/) — Sim replay LeRobot v3 dataset (87MB)
+- [sim_renders_v2/](sim_renders_v2/) — 50ep frame PNGs + tracking RMSE
+
+### Calibration (4/15, 4/24)
+- [claudedocs/marker_real_photo.png](claudedocs/marker_real_photo.png) — 실제 빨간 마커 사진
+- [claudedocs/marker_urdf_truth.png](claudedocs/marker_urdf_truth.png) — URDF 정답 비교
+- [claudedocs/stepDE_siglip50_sim_v1_20260424.md](claudedocs/stepDE_siglip50_sim_v1_20260424.md) — SigLIP 0.7222 GO 분석
+- [claudedocs/session_20260424_stacking_design_pivot.md](claudedocs/session_20260424_stacking_design_pivot.md) — N=2 stacking design

@@ -40,6 +40,8 @@ JOINT_NAMES = [
 # ---------------------------------------------------------------
 SPONGE_SIZE_M = (0.022, 0.047, 0.125)  # x, y, z (upright = z vertical)
 SPONGE_COLOR = (0.95, 0.45, 0.60)
+SPONGE_COLOR_TOP = (0.85, 0.30, 0.45)  # 4/28 debug: slightly darker pink to visually distinguish stacked top from bot
+STACK_GAP_M = 0.002  # 2mm gap between stacked sponge faces (avoid z-fighting + realistic contact)
 
 # ---------------------------------------------------------------
 # Layout (URDF world frame, meters). From 4/24 stacking pivot.
@@ -107,11 +109,11 @@ def main():
 
     # Sponge stacking heights (URDF world Z).
     h = SPONGE_SIZE_M[2]  # 0.125 m
-    z_bot_center = table_z + h / 2.0          # bottom sponge center
-    z_top_center = table_z + h * 1.5          # top sponge center (stacked)
-    z_floor_center = table_z + h / 2.0        # single sponge sitting on table
+    z_bot_center = table_z + h / 2.0                          # bottom sponge center
+    z_top_center = z_bot_center + h + STACK_GAP_M             # top center = bot top face + gap + top half (4/28: explicit gap)
+    z_floor_center = table_z + h / 2.0                        # single sponge sitting on table
     print(f"  Stack heights (URDF Z, mm):  bot_center={z_bot_center*1000:.1f}  "
-          f"top_center={z_top_center*1000:.1f}")
+          f"top_center={z_top_center*1000:.1f}  gap={STACK_GAP_M*1000:.1f}mm")
 
     # Compute predicted clearances (Layout safety check).
     print("\n--- Layout clearance analysis ---")
@@ -216,9 +218,9 @@ def main():
     print("\nSpawning sponges:")
     A_xy = LAYOUT["A"]
     spawn_sponge("/World/SpongeA_Bot", A_xy, z_bot_center, SPONGE_COLOR, "MatA_Bot")
-    print(f"  A_Bot at ({A_xy[0]:.3f}, {A_xy[1]:.3f}, {z_bot_center:.3f})")
-    spawn_sponge("/World/SpongeA_Top", A_xy, z_top_center, SPONGE_COLOR, "MatA_Top")
-    print(f"  A_Top at ({A_xy[0]:.3f}, {A_xy[1]:.3f}, {z_top_center:.3f})")
+    print(f"  A_Bot at ({A_xy[0]:.3f}, {A_xy[1]:.3f}, {z_bot_center:.3f}) color={SPONGE_COLOR}")
+    spawn_sponge("/World/SpongeA_Top", A_xy, z_top_center, SPONGE_COLOR_TOP, "MatA_Top")
+    print(f"  A_Top at ({A_xy[0]:.3f}, {A_xy[1]:.3f}, {z_top_center:.3f}) color={SPONGE_COLOR_TOP}")
 
     # Markers for B, Temp (low-opacity ghost cubes at floor height).
     if not args.no_markers:
@@ -229,7 +231,8 @@ def main():
         print(f"  Marker Temp at ({LAYOUT['Temp'][0]:.3f}, {LAYOUT['Temp'][1]:.3f}, "
               f"{z_floor_center:.3f}) [intermediate buffer]")
 
-    for _ in range(5):
+    # 4/28: 5 → 30 updates to ensure both sponge prims commit before render
+    for _ in range(30):
         app.update()
 
     # ------------------------------------------------------------
