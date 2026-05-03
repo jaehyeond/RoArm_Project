@@ -88,7 +88,9 @@ CHECKPOINT_PATH = "outputs/smolvla_v6/checkpoints/020000/pretrained_model"
 # HOME position (v6 데이터 수집 시작 위치 = 배포 시작 위치)
 # v6는 100% 에피소드가 HOME에서 시작 → 배포도 HOME에서 시작해야 in-distribution
 # v3 성공: init 시작. v5 실패: dataset_mean 시작 (에피소드 시작 위치 아님)
-INIT_POS = [0, 0, 90, 0, 0, 0]
+# 2026-05-03: gripper 0→5 변경 — stacking_v2 task=1 ep[0] state[0]=[0,0,90,0,0,5.0] 정확 매치.
+#   v6 pick task 별도 deploy 시 0 또는 1.5로 되돌릴 것.
+INIT_POS = [0, 0, 90, 0, 0, 5]
 
 # DATASET_MEAN_POS: 학습 후 stats.json에서 업데이트 (v6 수집 전이므로 placeholder)
 # 주의: dataset_mean은 궤적 중간값이지 시작 위치가 아님. 배포 시작에 사용 금지!
@@ -438,6 +440,10 @@ def main():
     parser.add_argument("--checkpoint", type=str, default=CHECKPOINT_PATH,
                         help="SmolVLA 체크포인트 경로")
 
+    # NEW (2026-05-03): Kinect frame dump for offline analysis
+    parser.add_argument("--save-frames-dir", type=str, default=None,
+                        help="closed-loop 매 step Kinect BGR frame을 PNG로 저장할 디렉토리 (None=저장 안 함)")
+
     args = parser.parse_args()
 
     if args.device == "cuda" and not torch.cuda.is_available():
@@ -464,6 +470,13 @@ def main():
         csv_logger = CSVLogger(csv_path)
         csv_logger.open()
         print(f"CSV 로그: {csv_path}")
+
+    # NEW (2026-05-03): Frame dump directory
+    frames_dir = None
+    if args.save_frames_dir:
+        frames_dir = Path(args.save_frames_dir)
+        frames_dir.mkdir(parents=True, exist_ok=True)
+        print(f"Frame 저장: {frames_dir}/step_NNNN.png")
 
     # Convergence detector 초기화
     conv_detector = ConvergenceDetector(
@@ -737,6 +750,10 @@ def main():
                         print(f"  [{step:3d}] 카메라 프레임 없음, 건너뜀")
                         continue
                     frame_bgr = np.ascontiguousarray(capture.color[:, :, :3])  # BGRA → BGR
+
+                    # NEW (2026-05-03): Save raw Kinect frame for offline analysis
+                    if frames_dir is not None:
+                        cv2.imwrite(str(frames_dir / f"step_{step:04d}.png"), frame_bgr)
 
                     # 로봇 상태 읽기
                     current_angles = get_robot_angles(arm)
