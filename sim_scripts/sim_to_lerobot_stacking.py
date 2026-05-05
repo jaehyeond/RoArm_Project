@@ -1,9 +1,9 @@
 """Convert stacking sim demos → LeRobot v3 dataset.
 
-V2 (4/30 late-evening): N=4 well-pattern (#) lying flat stacking.
-  Inputs:  sim_demos_v2/demo_{seed:04d}_trajectory.csv  (50 × 146 × 6 deg)
-           sim_renders_v4/episode_{seed:03d}/frame_{f:04d}.png  (50 × 146 PNGs)
-  Output:  lerobot_dataset_stacking_v2/  (LeRobot v3, fps=30, 7300 frames, 50 eps, 1 task)
+V3 (5/03 evening pivot): N=4 # tower edge-stand stacking (47mm tall sponges).
+  Inputs:  sim_demos_v3/demo_{seed:04d}_trajectory.csv  (50 × 146 × 6 deg)
+           sim_renders_v5/episode_{seed:03d}/frame_{f:04d}.png  (50 × 146 PNGs)
+  Output:  lerobot_dataset_stacking_v3/  (LeRobot v3, fps=30, 7300 frames, 50 eps, 1 task)
 
 Task instruction (single, all eps):
   "Stack four pink sponges into a # pattern"
@@ -13,7 +13,7 @@ State/action convention:
   No L-F gap (procedural sim demo, not teleop). SmolVLA learns chunk prediction
   from action[t : t+horizon] context regardless.
 
-Run (after render_stacking_demos_v2.py --all completes):
+Run (after render_stacking_demos_v3.py --all completes):
   conda run -n roarm python sim_scripts/sim_to_lerobot_stacking.py
 """
 from __future__ import annotations
@@ -27,10 +27,10 @@ from pathlib import Path
 import numpy as np
 
 REPO = Path(__file__).resolve().parents[1]
-DEMOS_DIR = REPO / "sim_demos_v2"
-RENDERS_DIR = REPO / "sim_renders_v4"
-OUT_DIR = REPO / "lerobot_dataset_stacking_v2"
-REPO_ID = "roarm_m3_stacking_sim_v2"
+DEMOS_DIR = REPO / "sim_demos_v3"
+RENDERS_DIR = REPO / "sim_renders_v5"
+OUT_DIR = REPO / "lerobot_dataset_stacking_v3"
+REPO_ID = "roarm_m3_stacking_sim_v3"
 TASK_INSTRUCTION = "Stack four pink sponges into a # pattern"
 
 JOINT_NAMES = ["base", "shoulder", "elbow", "wrist_pitch", "wrist_roll", "gripper"]

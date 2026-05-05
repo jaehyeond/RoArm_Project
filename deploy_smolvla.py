@@ -847,6 +847,9 @@ def main():
 
                     # NEW: CSV logging
                     if csv_logger:
+                        fk_x_log = fk_pose[0] if fk_pose and len(fk_pose) >= 2 else 0
+                        fk_y_log = fk_pose[1] if fk_pose and len(fk_pose) >= 2 else 0
+                        fk_z_log = fk_z if fk_z is not None else 0
                         csv_logger.log_step(
                             step=step,
                             angles=action_clamped,
@@ -854,7 +857,11 @@ def main():
                             deltas=deltas,
                             max_delta=max_delta,
                             convergence=is_converged,
-                            inference_ms=inference_ms
+                            inference_ms=inference_ms,
+                            state=current_angles,
+                            fk_x=fk_x_log,
+                            fk_y=fk_y_log,
+                            fk_z=fk_z_log,
                         )
 
                     # 상태 출력 (enhanced)

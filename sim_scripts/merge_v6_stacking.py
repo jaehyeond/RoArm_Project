@@ -1,21 +1,21 @@
-"""Merge v6 (real pick) + stacking_v2 (sim # stacking) into combined LeRobot v3 dataset.
+"""Merge v6 (real pick) + stacking_v3 (sim # tower edge-stand stacking) into combined LeRobot v3 dataset.
 
-V2 (4/30 late-evening): N=4 well-pattern (#) lying flat stacking.
+V3 (5/03 evening pivot): N=4 # tower edge-stand stacking (47mm tall sponges).
 
 Uses native lerobot.datasets.aggregate.aggregate_datasets() — mp4 stream-copy concat
 (no re-encoding, no double lossy), parallel-variance stats aggregation,
 name-based task_index remap.
 
-Output: lerobot_dataset_v6_stacking_v2/
+Output: lerobot_dataset_v6_stacking_v3/
   - 100 episodes (v6 ep 0-49 → out 0-49, stacking ep 0-49 → out 50-99)
-  - 14242 frames (v6 6942 + stacking_v2 7300 = 50 × 146)
+  - 14242 frames (v6 6942 + stacking_v3 7300 = 50 × 146)
   - 2 tasks:
       0 = "Pick up the sponge\\n"                              (v6)
-      1 = "Stack four pink sponges into a # pattern"          (stacking_v2)
+      1 = "Stack four pink sponges into a # pattern"          (stacking_v3)
   - data: chunk-000/file-000.parquet (concat)
   - videos: chunk-000/file-000.mp4 (AV1 stream copy)
 
-Run (after stacking_v2 build completes):
+Run (after stacking_v3 build completes):
   conda run -n roarm python sim_scripts/merge_v6_stacking.py
 """
 from __future__ import annotations
@@ -28,9 +28,9 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 V6_ROOT = REPO / "lerobot_dataset_v6"
-STACKING_ROOT = REPO / "lerobot_dataset_stacking_v2"
-OUT_ROOT = REPO / "lerobot_dataset_v6_stacking_v2"
-AGGR_REPO_ID = "roarm_m3_v6_stacking_v2"
+STACKING_ROOT = REPO / "lerobot_dataset_stacking_v3"
+OUT_ROOT = REPO / "lerobot_dataset_v6_stacking_v3"
+AGGR_REPO_ID = "roarm_m3_v6_stacking_v3"
 
 
 def log(msg):
@@ -54,11 +54,11 @@ def main():
     t0 = time.time()
     log("=== aggregate_datasets ===")
     log(f"  src[0] = {V6_ROOT}    (v6 real pick, 50 ep, 6942 frames)")
-    log(f"  src[1] = {STACKING_ROOT}  (sim # stacking_v2, 50 ep, 7300 frames)")
+    log(f"  src[1] = {STACKING_ROOT}  (sim # stacking_v3, 50 ep, 7300 frames)")
     log(f"  dst    = {OUT_ROOT}  (repo_id={AGGR_REPO_ID})")
 
     aggregate_datasets(
-        repo_ids=["local/v6_pick", "local/stacking_sim_v2"],
+        repo_ids=["local/v6_pick", "local/stacking_sim_v3"],
         aggr_repo_id=AGGR_REPO_ID,
         roots=[V6_ROOT, STACKING_ROOT],
         aggr_root=OUT_ROOT,
