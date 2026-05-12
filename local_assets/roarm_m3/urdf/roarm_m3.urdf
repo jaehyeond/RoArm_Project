@@ -1,0 +1,241 @@
+<?xml version="1.0" ?>
+<robot name="roarm_m3">
+
+<!-- Materials -->
+<material name="silver">
+  <color rgba="0.700 0.700 0.700 1.000"/>
+</material>
+
+<!-- World (fixed base) -->
+<link name="world"/>
+
+<!-- Base Link -->
+<link name="base_link">
+  <inertial>
+    <origin xyz="-0.0068 0 -0.03" rpy="0 0 0"/>
+    <mass value="0.2562183"/>
+    <inertia ixx="0.00029211" ixy="0" ixz="0" iyy="0.00035719" iyz="0" izz="0.000349421"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<!-- Link 1 (Base rotation) -->
+<link name="link1">
+  <inertial>
+    <origin xyz="0 0 0.037" rpy="0 0 0"/>
+    <mass value="0.0729177"/>
+    <inertia ixx="4.68465E-05" ixy="0" ixz="0" iyy="3.32107E-05" iyz="0" izz="5.01023E-05"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="meshes/link1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="meshes/link1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<!-- Link 2 (Upper arm) -->
+<link name="link2">
+  <inertial>
+    <origin xyz="0.119 0.012247 -0.0001" rpy="0 0 0"/>
+    <mass value="0.0703216"/>
+    <inertia ixx="5.46501E-05" ixy="0" ixz="0" iyy="0.000423091" iyz="0" izz="0.000404557"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="meshes/link2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="meshes/link2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<!-- Link 3 (Forearm) -->
+<link name="link3">
+  <inertial>
+    <origin xyz="-0.0015 -0.0765 0.00505" rpy="0 0 0"/>
+    <mass value="0.021608"/>
+    <inertia ixx="6.37699E-05" ixy="0" ixz="0" iyy="3.67026E-06" iyz="0" izz="6.28965E-05"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="meshes/link3.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="meshes/link3.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<!-- Link 4 (Wrist pitch) -->
+<link name="link4">
+  <inertial>
+    <origin xyz="-0.0015 -0.022 -0.00075" rpy="0 0 0"/>
+    <mass value="0.0099933"/>
+    <inertia ixx="4.53979E-06" ixy="0" ixz="0" iyy="3.78103E-06" iyz="0" izz="5.60238E-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="meshes/link4.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="meshes/link4.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<!-- Link 5 (Wrist roll) -->
+<link name="link5">
+  <inertial>
+    <origin xyz="-0.0078 0 0.0595" rpy="0 0 0"/>
+    <mass value="0.0153928"/>
+    <inertia ixx="2.02869E-05" ixy="0" ixz="0" iyy="2.14427E-05" iyz="0" izz="4.39495E-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="meshes/link5.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="meshes/link5.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<!-- Gripper Link -->
+<link name="gripper_link">
+  <inertial>
+    <origin xyz="0.027 0.0027 -0.018935" rpy="0 0 0"/>
+    <mass value="0.0028708"/>
+    <inertia ixx="5.23216E-07" ixy="0" ixz="0" iyy="1.82071E-06" iyz="0" izz="1.60231E-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="meshes/gripper_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="meshes/gripper_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<!-- Hand TCP (Tool Center Point) -->
+<link name="hand_tcp"/>
+
+<!-- ========== JOINTS ========== -->
+
+<!-- Fixed: world to base -->
+<joint name="world_to_base_link" type="fixed">
+  <origin xyz="0.0 0.0 0.0701" rpy="0 0 0"/>
+  <parent link="world"/>
+  <child link="base_link"/>
+  <axis xyz="0.0 0.0 1.0"/>
+</joint>
+
+<!-- Joint 0: Base rotation -->
+<joint name="base_link_to_link1" type="revolute">
+  <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="link1"/>
+  <axis xyz="0.0 0.0 1.0"/>
+  <limit lower="-3.1416" upper="3.1416" effort="1.9" velocity="3.14"/>
+</joint>
+
+<!-- Joint 1: Shoulder -->
+<joint name="link1_to_link2" type="revolute">
+  <origin xyz="0.0 0.0 0.051959" rpy="-1.5708 -1.5708 0"/>
+  <parent link="link1"/>
+  <child link="link2"/>
+  <axis xyz="0.0 0.0 1.0"/>
+  <limit lower="-1.5708" upper="1.5708" effort="1.9" velocity="3.14"/>
+</joint>
+
+<!-- Joint 2: Elbow -->
+<joint name="link2_to_link3" type="revolute">
+  <origin xyz="0.236815 0.030002 0" rpy="0 0 1.5708"/>
+  <parent link="link2"/>
+  <child link="link3"/>
+  <axis xyz="0.0 0.0 1.0"/>
+  <limit lower="-1.0" upper="2.95" effort="1.9" velocity="3.14"/>
+</joint>
+
+<!-- Joint 3: Wrist pitch (limits extended to ±110° per CLAUDE.md HW spec; v6 action up to 108.7°) -->
+<joint name="link3_to_link4" type="revolute">
+  <origin xyz="0.0 -0.144586 0" rpy="0 0 0"/>
+  <parent link="link3"/>
+  <child link="link4"/>
+  <axis xyz="0.0 0.0 1.0"/>
+  <limit lower="-1.92" upper="1.92" effort="1.9" velocity="3.14"/>
+</joint>
+
+<!-- Joint 4: Wrist roll -->
+<joint name="link4_to_link5" type="revolute">
+  <origin xyz="0.015147 -0.053653 0" rpy="1.5708 1.5708 0"/>
+  <parent link="link4"/>
+  <child link="link5"/>
+  <axis xyz="0.0 0.0 1.0"/>
+  <limit lower="-3.1416" upper="3.1416" effort="1.9" velocity="3.14"/>
+</joint>
+
+<!-- Joint 5: Gripper -->
+<joint name="link5_to_gripper_link" type="revolute">
+  <origin xyz="0.0 0.018821 0.052035" rpy="-1.5708 -1.5708 0"/>
+  <parent link="link5"/>
+  <child link="gripper_link"/>
+  <axis xyz="0.0 0.0 1.0"/>
+  <limit lower="0" upper="1.571" effort="2.5" velocity="3.14"/>
+</joint>
+
+<!-- Fixed: wrist to hand TCP -->
+<joint name="link5_to_hand_tcp" type="fixed">
+  <origin xyz="0 0 0.115428" rpy="1.5708 -1.5708 0"/>
+  <parent link="link5"/>
+  <child link="hand_tcp"/>
+  <axis xyz="0 0 0"/>
+</joint>
+
+</robot>

@@ -30,6 +30,43 @@ def main():
     parser.add_argument("--entropy_coef", type=float, default=None,
                         help="Override PPO entropy_coef (default 0.005). "
                              "Lower (0.001) suppresses log_std positive gradient -> std stops diverging.")
+    parser.add_argument("--reset_actor_bias_idx", type=int, default=None,
+                        help="Zero out actor's LAST-layer bias at this output dimension after resume. "
+                             "Phase 1.B-α P6 v5 (5/11): counters PPO entropy collapse on a single "
+                             "action dim (e.g. gripper joint idx 5: actor.6.bias[5]=+0.84 at P6v4 "
+                             "iter 999 → P(close)=74%/step → release never explored). Reset to 0 "
+                             "restores 50/50 prior over open/close so PPO can re-learn signed dir.")
+    parser.add_argument("--episode_length_s", type=float, default=None,
+                        help="Override env episode_length_s (Phase 1.B-α P6 v8 α, 5/14: 2.0 = 200 step "
+                             "at 100Hz; default 4.0 = 400 step). Shorter episodes reduce stage 3 hover "
+                             "incentive (cumulative reward 1976 → 988) and give stage 4 transition "
+                             "relatively higher gain. ManiSkill StackCube uses 50 step convention.")
+    # P6v14 (5/12) Curriculum CLI overrides (Option B: bootstrap stage-4 release signal).
+    # Phase 0 example: --curriculum_spawn_min_r 0.08 --curriculum_spawn_max_r 0.15 \
+    #                  --curriculum_xy_thresh 0.05 --curriculum_z_thresh 0.04 \
+    #                  --curriculum_disable_nearzone_cap
+    parser.add_argument("--curriculum_spawn_min_r", type=float, default=None,
+                        help="Sponge spawn annulus min radius (m) around target_xy. "
+                             "Phase 0 = 0.08 (avoid spawn-at-target trivial jackpot).")
+    parser.add_argument("--curriculum_spawn_max_r", type=float, default=None,
+                        help="Sponge spawn annulus max radius (m). 0 = legacy R1-R4. "
+                             "Phase 0 = 0.15 / Phase 1 = 0.22 / Phase 2 = 0.30 (~full WS).")
+    parser.add_argument("--curriculum_xy_thresh", type=float, default=None,
+                        help="on_target_xy_thresh override (m). 0 = production (0.030). "
+                             "Phase 0 = 0.05 (random π release-signal feasibility).")
+    parser.add_argument("--curriculum_z_thresh", type=float, default=None,
+                        help="on_target_z_thresh override (m). 0 = production (0.025). "
+                             "Phase 0 = 0.04.")
+    parser.add_argument("--curriculum_disable_nearzone_cap", action="store_true",
+                        help="Disable stage 2 d<0.1 cap (P6v12 anti-hover fix). Required "
+                             "for Phase 0 short-transport (curriculum spawn often d<0.1).")
+    parser.add_argument("--curriculum_pregrasp", action="store_true",
+                        help="P6v14a Phase 0a: pre-grasp init (Option α). Robot starts at IK "
+                             "pose with TCP +5cm above target, gripper closed (q=0.8>0.4 thresh), "
+                             "sponge attached + _grasped/_was_grasped latched True. Agent's only "
+                             "task: open gripper → sponge falls 5cm → stage 4 fires. Bootstrap "
+                             "signal guaranteed (release path 1525 vs hover 400, +281% margin "
+                             "with near-zone cap KEPT).")
     args = parser.parse_args()
 
     from isaaclab.app import AppLauncher
@@ -59,6 +96,28 @@ def main():
     env_cfg.scene.num_envs = args.num_envs
     env_cfg.reward_phase = args.reward_phase
     env_cfg.seed = args.seed
+    if args.episode_length_s is not None:
+        print(f"[train] episode_length_s override: {env_cfg.episode_length_s} -> {args.episode_length_s}")
+        env_cfg.episode_length_s = args.episode_length_s
+    # P6v14 Curriculum CLI overrides
+    if args.curriculum_spawn_min_r is not None:
+        print(f"[train] curriculum_spawn_min_r: {env_cfg.curriculum_spawn_min_r} -> {args.curriculum_spawn_min_r}")
+        env_cfg.curriculum_spawn_min_r = args.curriculum_spawn_min_r
+    if args.curriculum_spawn_max_r is not None:
+        print(f"[train] curriculum_spawn_max_r: {env_cfg.curriculum_spawn_max_r} -> {args.curriculum_spawn_max_r}")
+        env_cfg.curriculum_spawn_max_r = args.curriculum_spawn_max_r
+    if args.curriculum_xy_thresh is not None:
+        print(f"[train] curriculum_xy_thresh: {env_cfg.curriculum_xy_thresh} -> {args.curriculum_xy_thresh}")
+        env_cfg.curriculum_xy_thresh = args.curriculum_xy_thresh
+    if args.curriculum_z_thresh is not None:
+        print(f"[train] curriculum_z_thresh: {env_cfg.curriculum_z_thresh} -> {args.curriculum_z_thresh}")
+        env_cfg.curriculum_z_thresh = args.curriculum_z_thresh
+    if args.curriculum_disable_nearzone_cap:
+        print(f"[train] curriculum_disable_nearzone_cap: True")
+        env_cfg.curriculum_disable_nearzone_cap = True
+    if args.curriculum_pregrasp:
+        print(f"[train] curriculum_pregrasp: True  (pregrasp_joints_rad={env_cfg.pregrasp_joints_rad})")
+        env_cfg.curriculum_pregrasp = True
 
     # ppo cfg
     ppo_cfg = RoArmPickPPORunnerCfg()
@@ -107,6 +166,28 @@ def main():
             sd["std"] = torch.full_like(sd["std"], args.reset_std)
             print(f"[train] reset_std: ckpt std {old_std.tolist()} -> {sd['std'].tolist()}")
 
+        # Reset actor's LAST-layer bias at one output dim (Phase 1.B-α P6 v5 entropy-collapse fix)
+        if args.reset_actor_bias_idx is not None:
+            actor_bias_keys = sorted(
+                [k for k in sd.keys() if k.startswith("actor.") and k.endswith(".bias")]
+            )
+            if not actor_bias_keys:
+                raise RuntimeError("--reset_actor_bias_idx: no actor.*.bias found in state_dict")
+            last_bias_key = actor_bias_keys[-1]  # e.g. actor.6.bias for [256,128,64,6] MLP
+            bias_vec = sd[last_bias_key]
+            idx = args.reset_actor_bias_idx
+            if not (0 <= idx < bias_vec.shape[0]):
+                raise RuntimeError(
+                    f"--reset_actor_bias_idx={idx} out of range for {last_bias_key} "
+                    f"shape={tuple(bias_vec.shape)}"
+                )
+            old_val = bias_vec[idx].item()
+            sd[last_bias_key][idx] = 0.0
+            print(
+                f"[train] reset_actor_bias: {last_bias_key}[{idx}]: "
+                f"{old_val:+.4f} -> 0.0 (other dims kept: {bias_vec.tolist()})"
+            )
+
         if hasattr(runner.alg, "policy"):
             target = runner.alg.policy
         elif hasattr(runner.alg, "actor_critic"):
@@ -122,6 +203,16 @@ def main():
         # Verify std was reset post-load
         if args.reset_std is not None and hasattr(target, "std"):
             print(f"[train] post-load policy.std = {target.std.data.tolist()}")
+
+        # Verify actor bias was reset post-load
+        if args.reset_actor_bias_idx is not None:
+            # Find the matching nn.Linear in the loaded policy and check its bias.
+            last_linear = None
+            for m in target.actor.modules() if hasattr(target, "actor") else target.modules():
+                if isinstance(m, torch.nn.Linear):
+                    last_linear = m
+            if last_linear is not None and last_linear.bias is not None:
+                print(f"[train] post-load actor last-bias = {last_linear.bias.data.tolist()}")
 
     runner.learn(num_learning_iterations=args.max_iterations, init_at_random_ep_len=True)
 

@@ -85,7 +85,7 @@ USD_PATH = os.environ.get(
 @configclass
 class RoArmStackEnvCfg(DirectRLEnvCfg):
     decimation = 2
-    episode_length_s = 4.0
+    episode_length_s = 2.0   # P6v8 α (5/14): 4.0→2.0 (400→200 step). ManiSkill 50 + DrS 3-5× 절충. Reduces stage 3 hover dominance.
     action_space = 6
     observation_space = 28   # was 22 in Phase 1.A
     state_space = 0
@@ -202,6 +202,33 @@ class RoArmStackEnvCfg(DirectRLEnvCfg):
     # Reward curriculum phase (4=stabilize, 5=navigate, 6=place)
     reward_phase: int = 4
 
+    # P6v14 (5/12) Curriculum (Option B) — bootstrap stage-4 release signal.
+    # P6v13 diag: stage 4 joint AND prob ≈ 0 → jackpot fire 0 / 800M steps → release never
+    # learned. 7 reward-shape iterations (v6→v13) created 5 farming local opts but failed
+    # to produce one release event. Curriculum tackles exploration, not shape.
+    # Three traps addressed by Phase 0 simultaneously (see roarm_stack_env design notes):
+    #   (1) spawn-at-target: min_r > xy_thresh avoids iter-0 trivial jackpot
+    #   (2) near-zone cap conflict: short-transport curriculum needs cap disabled
+    #   (3) tight thresholds: random π release prob ≈ 0 → relaxed Phase 0 xy/z
+    # Phase 0 defaults below. Phase 1/2 via CLI override on resume.
+    curriculum_spawn_min_r: float = 0.0     # 0 = legacy R1-R4 region sampling.
+    curriculum_spawn_max_r: float = 0.0     # >0 = annulus around target_xy.
+    curriculum_xy_thresh: float = 0.0       # 0 = use on_target_xy_thresh (production).
+    curriculum_z_thresh: float = 0.0        # 0 = use on_target_z_thresh.
+    curriculum_disable_nearzone_cap: bool = False  # True = remove stage 2 d<0.1 cap.
+
+    # P6v14a (5/12) Phase 0a — pre-grasp init (Option α).
+    # Episode start: TCP positioned via IK above target (+5cm), gripper closed (q>0.4),
+    # sponge spawned at that position, _grasped/_was_grasped latched True. Agent's only
+    # task: open gripper → sponge falls 5cm → stage 4 success_now fires (xy<0.05 AND
+    # z<0.04 AND gripper_open AND stable). Bootstrap signal guaranteed without exploration.
+    # Numerical: with near-zone cap KEPT (d<0.1, stage 2 = 2.0), hover at start gives
+    # 2×200=400 reward vs release 5 + 8×190 = 1525. Release dominates +281%.
+    # Joint values from roarm_kinematics.ik_dls on (0.280, -0.0435, +0.0614), err=0.30mm.
+    # Gripper q=0.8 rad override (IK gave 0.524=30°; 0.8 ensures > grasp_thresh 0.4).
+    curriculum_pregrasp: bool = False
+    pregrasp_joints_rad: tuple = (-0.1541, +0.4109, +2.0177, +0.2213, 0.0, 0.8)
+
     # P4 reward weights (mirrors Phase 1.A P3)
     reach_reward_scale: float = 1.0
     action_penalty_scale: float = 0.005
@@ -216,7 +243,26 @@ class RoArmStackEnvCfg(DirectRLEnvCfg):
     # Phase 1.B-α P6 v2 (2026-05-08): 25mm → 100mm (chicken-and-egg fix).
     # P6 v1 plateau d=91mm > 25mm thresh → place_cond never fired (place_success_rate=0.0000).
     # 100mm = curriculum start; squeeze to 50→25mm in subsequent runs after place learned.
-    place_dist_thresh: float = 0.100       # 100mm (was 25mm)
+    place_dist_thresh: float = 0.100       # 100mm (was 25mm). Stage 3 (near_target) zone.
+    # P6 v8 (5/14, Fix A): split stage 3 (100mm) from stage 4 success (50mm).
+    # P6 v9 (5/15): Fix A jackpot disabled — root cause was deeper:
+    # ManiSkill StackCube stage 3 = is_cubeA_on_cubeB (xy_flag AND z_flag, separated)
+    # but we used 3D-Euclidean d<100mm → sponge hover at z=+88mm (z_offset=77mm)
+    # still fires stage 3 if xy<63mm → hover trap baked in. P6v8 jackpot fire 0/1000
+    # because success_now (50mm Euclidean & gripper_open & stable) has near-zero
+    # joint-probability at hover policy.
+    # Fix (γ ManiSkill-strict): separate xy/z thresholds (matches ManiSkill 30mm xy
+    # + 5mm z, adapted to our 47mm edge-stand sponge with z_tol 25mm to capture
+    # TCP-release (z=+33mm) → free-fall → anchor (z=+11mm) transient).
+    success_dist_thresh: float = 0.050     # 50mm. UNUSED in P6v9 (kept for backward log).
+    # P6v11 (5/12): β jackpot 5.0 re-enabled with C (β+δ+γ) combo. P6v10 strict gate 통과
+    # 0.91% × gripper_open 0.061 × stable 0.137 = joint AND ≈ 0 → jackpot 단독 fire 0 산수.
+    # δ bias reset (--reset_actor_bias_idx 5) 결합으로 gripper_open exploration 강제 →
+    # jackpot fire 활성화 → release path EV +5 one-time = stage 4 EV margin 확보.
+    # 5.0 = P6v8 20.0보다 보수 (당시 zone 진입 0.88%라 fire 안 됨, P6v10 zone 46%로 fire 가능).
+    success_jackpot: float = 5.0           # P6v11: 0 → 5.0 (β re-enable, combined with δ bias reset).
+    on_target_xy_thresh: float = 0.030     # 30mm. ManiSkill xy_flag analog (P6v9, 5/15).
+    on_target_z_thresh: float = 0.025      # 25mm. P6v9 z_flag analog. Captures TCP-release transient.
     place_bonus_scale: float = 5.0         # per-step bonus while sponge near target & grounded & stable
     # P6 v3 (5/08 late, A2 #1): separate gripper-open-when-near bonus.
     # Removed gripper_open from _place_condition (was chicken-and-egg with close-fit grasp policy).
@@ -281,6 +327,12 @@ class RoArmStackEnv(DirectRLEnv):
 
         # State trackers
         self._grasped = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
+        # P6 v5 (5/11): permanent latch — True once first grasp fires, never resets within episode.
+        # Used to gate nav_reward and lower_reward so release (gripper_open) does not lose
+        # reward signal (chicken-and-egg #3 root cause: _grasped flips to False on release,
+        # nav+lower instantly cut → release becomes negative advantage → policy never releases).
+        # _grasped retains its physics-attach role (kinematic pin, released on gripper_open).
+        self._was_grasped = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
         self._lift_counter = torch.zeros(self.num_envs, dtype=torch.long, device=self.device)
         self._lift_success_flag = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
         self._lift_bonus_paid = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
@@ -288,6 +340,10 @@ class RoArmStackEnv(DirectRLEnv):
         self._place_counter = torch.zeros(self.num_envs, dtype=torch.long, device=self.device)
         self._place_success_flag = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
         self._place_bonus_paid = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
+        # P6v12 (5/12): rising-edge latch for stage 3 transient +10 bonus (η fix). Fires once
+        # per env per episode on first is_on_target=True; resets in _reset_idx. Drives release
+        # path by giving open the 1-step PPO advantage over stage 2 near-zone hold (cap 2.0).
+        self._stage3_fired = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
 
         # Cached intermediate values
         self._sponge_pos_w = torch.zeros((self.num_envs, 3), device=self.device)
@@ -362,6 +418,12 @@ class RoArmStackEnv(DirectRLEnv):
 
     # =================================================================
     def _get_rewards(self) -> torch.Tensor:
+        # P6 v6 (5/12): if reward_phase == 6, use ManiSkill StackCube REPLACE tower
+        # (root-cause fix for hold-path globally optimal misspecification — 5/12 doc).
+        # P4/P5 keep legacy ADD-with-gating logic (proven Phase 1.A reach + nav warmup).
+        if self.cfg.reward_phase == 6:
+            return self._p6v6_replace_tower()
+
         # post_place_gate = 1 before place_success, 0 after.
         # Stops reach_reward / lift_reward / nav_reward from firing AFTER place_success
         # (would otherwise lure policy to re-grasp the placed sponge).
@@ -400,10 +462,14 @@ class RoArmStackEnv(DirectRLEnv):
         rewards = rewards + should_pay_lift.float() * self.cfg.lift_success_bonus
         self._lift_bonus_paid = self._lift_bonus_paid | should_pay_lift
 
-        # === P5: nav reward (only when grasped, gated post-place) ===
+        # === P5: nav reward (gated by _was_grasped, NOT _grasped) ===
+        # P6 v5 (5/11): _grasped → _was_grasped. Reason: when policy opens gripper to release,
+        # _grasped flips to False, nav_reward instantly cuts → release becomes negative advantage.
+        # _was_grasped is permanent latch → nav reward continues after release, so policy can
+        # learn to lower & release without losing nav signal. _grasped retains physics-attach role.
         if self.cfg.reward_phase >= 5:
             nav_reward = -d_sponge_target * self.cfg.nav_reward_scale
-            rewards = rewards + nav_reward * self._grasped.float() * post_place_gate
+            rewards = rewards + nav_reward * self._was_grasped.float() * post_place_gate
 
         # === P6: place ===
         if self.cfg.reward_phase >= 6:
@@ -417,26 +483,232 @@ class RoArmStackEnv(DirectRLEnv):
             rewards = rewards + (gripper_open & sponge_near).float() * self.cfg.gripper_open_bonus_scale
 
             # P6 v4 (5/09): lower_when_near — descent incentive once sponge is near target.
-            # P6v3 final: sponge hovered at z≈+0.10m above table, place_cond (grounded
-            # z<table+30mm) never fired. This penalty (gated by sponge_near AND grasped)
-            # makes lowering strictly profitable while approaching the goal.
+            # P6 v5 (5/11): _grasped → _was_grasped. Same rationale as nav_reward (above):
+            # release must not cut the lowering signal. Otherwise policy learns to hover
+            # (P6v4: sponge_height=0.13m, place_success=0). lower_reward stays on through release.
             sponge_height_above = self._sponge_pos_w[:, 2] - TABLE_Z
             lower_reward = -sponge_height_above * self.cfg.lower_reward_scale
-            rewards = rewards + lower_reward * sponge_near.float() * self._grasped.float()
+            rewards = rewards + lower_reward * sponge_near.float() * self._was_grasped.float()
 
             should_pay_place = self._place_success_flag & ~self._place_bonus_paid
             rewards = rewards + should_pay_place.float() * self.cfg.place_success_bonus
             self._place_bonus_paid = self._place_bonus_paid | should_pay_place
 
         # === Logging ===
-        self.extras["log"] = {
+        # P6 v5 (5/11): added gripper_open_rate / sponge_grounded_rate / was_grasped_rate /
+        # place_cond_fire_rate. Diagnoses where policy gets stuck:
+        #   - gripper_open_rate ≈ 0 → actor bias still saturated (B.2 reset failed)
+        #   - sponge_grounded_rate ≈ 0 → policy never descends (lower_reward insufficient)
+        #   - was_grasped_rate < grasped_frac → grasp never fires (regression)
+        #   - place_cond_fire_rate ≈ 0 → place_cond too strict OR upstream block
+        gripper_q_log = self._robot.data.joint_pos[:, self.gripper_joint_idx]
+        gripper_open_log = gripper_q_log < self.cfg.grasp_gripper_thresh
+        sponge_grounded_log = self._sponge_pos_w[:, 2] < (TABLE_Z + 0.030)
+
+        log_dict = {
             "reach_reward": reach_reward.mean().detach(),
             "tcp_sponge_dist_m": d_tcp_sponge.mean().detach(),
             "sponge_target_dist_m": d_sponge_target.mean().detach(),
             "sponge_height_m": (self._sponge_pos_w[:, 2] - TABLE_Z).mean().detach(),
             "grasped_frac": self._grasped.float().mean().detach(),
+            "was_grasped_rate": self._was_grasped.float().mean().detach(),
+            "gripper_open_rate": gripper_open_log.float().mean().detach(),
+            "sponge_grounded_rate": sponge_grounded_log.float().mean().detach(),
             "lift_success_rate": self._lift_success_flag.float().mean().detach(),
             "place_success_rate": self._place_success_flag.float().mean().detach(),
+            "action_penalty": action_penalty.mean().detach(),
+        }
+        if self.cfg.reward_phase >= 6:
+            log_dict["place_cond_fire_rate"] = place_cond.float().mean().detach()
+        self.extras["log"] = log_dict
+
+        return rewards
+
+    # =================================================================
+    def _p6v6_replace_tower(self) -> torch.Tensor:
+        """ManiSkill StackCube REPLACE tower (P6 v6, 5/12).
+
+        Why: P6 v1-v5 used ADD-of-all-stages, which made hold-path globally optimal
+        (lift+grasp +7/step × 400 step = +2800 ≫ place_bonus +5). PPO learned to
+        hover forever. Confirmed via P6v5 iter 0 (gripper_open 54%) -> iter 50 (3%):
+        50 iter to re-saturate hold-path despite bias reset.
+
+        Fix: ManiSkill (https://github.com/haosulab/ManiSkill/blob/main/mani_skill/
+        envs/tasks/tabletop/stack_cube.py) verified PPO baseline uses stage REPLACE:
+            stage 1 reach 0-2 (default)
+            stage 2 (is_grasped):       4 + (1-tanh(5*d_sponge_target))    -> 4-5
+            stage 3 (sponge near target): 6 + 0.5*ungrasp + 0.5*static     -> 6-7
+            stage 4 (success):            8                                  -> 8
+        Max reward = 8/step capped. Hold-path mathematically cannot be globally
+        optimal. SOTA recipe (Toru Lin/Yuke Zhu CoRL 2025 arXiv 2502.20396 also
+        endorses 1-tanh kernel + stage-replace for sim-to-real RL).
+
+        Adaptations to our task:
+        - is_grasped = self._grasped (physics-attach state; release sets False).
+          Release directly drops to stage 1 (transient ~100ms while sponge falls)
+          but immediately jumps to stage 3 if sponge near target — same as ManiSkill.
+        - sponge_near_target excludes stability (release transient ~100ms otherwise
+          falls back to stage 2). Stability only modulates stage 3 reward via
+          static_signal so transient still receives ~6.0 base.
+        - place_dist_thresh kept at 100mm (curriculum start; squeeze later).
+        - success requires (near_target AND gripper_open AND stable) — once latched
+          via _place_success_flag, reward stays at 8 indefinitely.
+        - No post_place_gate, lift_success_bonus, gripper_open_bonus, lower_reward,
+          nav_reward, lift_reward, grasp_bonus. All replaced by tower structure.
+        - action_penalty kept (small, throughout).
+        """
+        # ============ Conditions ============
+        d_tcp_sponge = torch.norm(self._sponge_pos_w - self._tcp_pos_w, p=2, dim=-1)
+        d_sponge_target = torch.norm(self._target_world - self._sponge_pos_w, p=2, dim=-1)
+
+        is_grasped = self._grasped  # physics-attach state (closed gripper + sponge close)
+        is_near_target = d_sponge_target < self.cfg.place_dist_thresh  # loose 3D Euclidean (log only in P6v9)
+
+        # P6v9 (5/15): ManiSkill-strict stage 3 condition. Reference:
+        # ManiSkill stack_cube.py L107-115: is_cubeA_on_cubeB = xy_flag AND z_flag.
+        # We split sponge_target distance into xy and z components and gate them
+        # separately. This blocks the hover trap (P6v6/v7/v8 sponge hover at z=+88mm
+        # had z_offset=77mm yet xy_offset<63mm → 3D Euclidean d<100mm still fired stage 3).
+        sponge_target_xy = self._target_world[:, :2] - self._sponge_pos_w[:, :2]
+        sponge_target_z = self._target_world[:, 2] - self._sponge_pos_w[:, 2]
+        xy_offset = torch.norm(sponge_target_xy, p=2, dim=-1)
+        z_offset = torch.abs(sponge_target_z)
+        # P6v14 (5/12) Curriculum: override thresholds if set (>0). Phase 0 relaxes
+        # xy/z to make stage-4 success_now reachable from near-random policy.
+        xy_thresh = self.cfg.curriculum_xy_thresh if self.cfg.curriculum_xy_thresh > 0.0 \
+            else self.cfg.on_target_xy_thresh
+        z_thresh = self.cfg.curriculum_z_thresh if self.cfg.curriculum_z_thresh > 0.0 \
+            else self.cfg.on_target_z_thresh
+        is_on_target = (xy_offset < xy_thresh) & (z_offset < z_thresh)
+
+        gripper_q = self._robot.data.joint_pos[:, self.gripper_joint_idx]
+        gripper_open = gripper_q < self.cfg.grasp_gripper_thresh
+        gripper_low = self.robot_dof_lower_limits[self.gripper_joint_idx]
+        gripper_high = self.robot_dof_upper_limits[self.gripper_joint_idx]
+        # P6 v7 (5/12 ε fix): RoArm sim convention is q LOW = OPEN, q HIGH = CLOSED
+        # (verified via L689 _grasp_condition: grasp = q >= grasp_gripper_thresh).
+        # ManiSkill panda convention is opposite (q HIGH = OPEN). Direct copy of their
+        # (q - low) / (high - low) formula was inverted on RoArm → ungrasp_signal saturated
+        # at 1.0 when gripper CLOSED → stage 3 incentivized CLOSE (P6v6 root cause).
+        # Fix: invert to (high - q) / (high - low) so signal=1 when fully OPEN.
+        ungrasp_signal = torch.clamp(
+            (gripper_high - gripper_q) / (gripper_high - gripper_low + 1e-6), 0.0, 1.0
+        )  # 0~1, 1 = fully open (q at low end)
+        # P6v9 (5/15) ManiSkill force-set: when not grasping, signal stays at max (1.0).
+        # Reference: ManiSkill stack_cube.py L150 `ungrasp_reward[~is_cubeA_grasped] = 1.0`.
+        # Why: once release occurs, stage 3 ungrasp contribution must be max regardless of
+        # gripper joint state — agent shouldn't lose stage 3 reward during release transient
+        # (gripper joint moving from closed→open over ~10 steps) or after release (gripper
+        # state irrelevant once cube placed). Our P6v6-v8 omitted this force-set: ungrasp_signal
+        # depended purely on joint q → release transient stage 3 reward 6.5 vs ManiSkill 6.75 (+0.25).
+        # Cumulative: +0.25/step × ~130 steps × 0.65 fire = +21 reward for release path.
+        # Combined with stage 3 def fix (xy/z separated → no hover stage 3 fire), this gives
+        # release path the EV margin to outcompete hover.
+        ungrasp_signal = torch.where(~is_grasped, torch.ones_like(ungrasp_signal), ungrasp_signal)
+
+        sponge_lin_vel = self._sponge.data.root_lin_vel_w
+        sponge_vel_mag = torch.norm(sponge_lin_vel, p=2, dim=-1)
+        # P6v13 (5/12): V3 fix — relax vel threshold 0.05→0.10 to allow stage 4 fire during
+        # release transient. P6v12 release sequence (open jaw 10 steps) → sponge bounce-down
+        # vel peak ~0.07 m/s in sim → sponge_stable=False during exact release window → stage 4
+        # success_now=False → jackpot fire 0. 0.10 m/s captures bounce-down within ~150ms.
+        sponge_stable = sponge_vel_mag < 0.10
+        static_signal = 1.0 - torch.tanh(10.0 * sponge_vel_mag)  # 0~1, 1 = static
+
+        # ============ REPLACE tower ============
+        # Stage 1: reach (default; sponge not yet grasped)
+        reach_r = 2.0 * (1.0 - torch.tanh(5.0 * d_tcp_sponge))   # 0~2
+        rewards = reach_r
+
+        # Stage 2: grasped -> stage 1 reach REPLACED by 4 + 3*place_progress (P6v10 γ transport shaping, 5/12)
+        # P6v9 diagnosis: hover policy reward farms stage 2 at d=120mm (4.48/step) ≈ transport
+        # d=30mm (4.85/step), margin only +9%. PPO chose safe hover. γ fix: triple place_progress
+        # weight so hover d=120mm → 5.39/step vs transport d=30mm → 6.55/step (margin +23%, 3× P6v9
+        # transport gradient). Stage 2 max 7 (was 5), still below stage 4 cap 8.
+        place_progress = 1.0 - torch.tanh(5.0 * d_sponge_target)  # 0~1
+        stage2_r = 4.0 + 3.0 * place_progress  # P6v10: 4~7 (was 4~5)
+        # P6v12 (5/12): η fix — near-zone cap to 2.0. P6v11 diag: stage 2 near-zone hold reward
+        # 7.0/step >> stage 3 transient 6.5/step → PPO 1-step margin close+0.5 over open → close
+        # hold re-saturates within 1 iter (50× faster than P5 phase, 2nd BIAS RE-SAT confirmed).
+        # Cap stops at d<100mm only → γ transport shaping (sponge_far d>100mm) retained.
+        # Path A close hold near-zone 199·0.856·2.0 ≈ 340 vs Path B (transport+release) ≈ 1769.
+        # P6v14 (5/12) Curriculum: skip cap when Phase 0 enabled. Short-transport
+        # bootstrap requires unblocked gradient through d<0.1 zone toward stage 3.
+        # Cap re-enabled in Phase 1/2 (production) after release path learned.
+        if not self.cfg.curriculum_disable_nearzone_cap:
+            stage2_r = torch.where(d_sponge_target < 0.1, torch.full_like(stage2_r, 2.0), stage2_r)
+        rewards = torch.where(is_grasped, stage2_r, rewards)
+
+        # Stage 3: sponge on target (xy AND z, ManiSkill-strict, P6v9 5/15)
+        # -> stage 2 REPLACED by 6 + ungrasp + static
+        # P6v13 (5/12): V2 (Plan B) — η-v2 fix gating + close-hover cap.
+        # P6v12 η-v1 diag: transient fired regardless of gripper state → 93% close path
+        # claimed the +10 bonus (gradient mass 15.81 vs open 1.19) → release 학습 0,
+        # on_target=40.6% but stage4=0.02% FLAT. Cause: transient gate had no gripper_open
+        # condition. V2 fix:
+        #   (1) transient AND-gate gripper_open → first-fire reward only when releasing
+        #   (2) stage3_r_close cap = 3.0 → close-hover sustained 3.0/step << open 6.0+/step
+        #   (3) gripper-conditional reward via torch.where(gripper_open, open_r, close_r)
+        # 1-step PPO margin: close-hover 3.0 vs open-transition (first fire 16.5 / sustained 6.5+)
+        # → +13.5 first / +3.5 sustained (P6v12 was +0.5 marginal). _stage3_fired latches only
+        # on (is_on_target & gripper_open) so close-hover entry doesn't burn the bonus latch.
+        just_on_target = is_on_target & gripper_open & ~self._stage3_fired
+        self._stage3_fired = self._stage3_fired | (is_on_target & gripper_open)
+        stage3_r_open = 6.0 + 0.5 * ungrasp_signal + 0.5 * static_signal + 10.0 * just_on_target.float()
+        stage3_r_close = torch.full_like(stage3_r_open, 3.0)
+        stage3_r = torch.where(gripper_open, stage3_r_open, stage3_r_close)
+        rewards = torch.where(is_on_target, stage3_r, rewards)
+
+        # Stage 4: success = on_target AND gripper_open AND stable (latched permanently)
+        # P6v9 (5/15): success_zone (50mm Euclidean) → is_on_target (xy 30mm AND z 25mm).
+        # Mirrors ManiSkill StackCube success_now = is_cubeA_on_cubeB & is_static & ~is_grasped.
+        is_success_zone = d_sponge_target < self.cfg.success_dist_thresh  # kept for log only
+        success_now = is_on_target & gripper_open & sponge_stable
+        # Rising edge BEFORE updating flag so jackpot fires exactly once per env per episode.
+        just_succeeded = success_now & ~self._place_success_flag
+        self._place_success_flag = self._place_success_flag | success_now
+        rewards = torch.where(self._place_success_flag, torch.full_like(rewards, 8.0), rewards)
+        # P6v8 Jackpot: one-time +success_jackpot on first stage 4 entry, counters release cliff.
+        rewards = rewards + self.cfg.success_jackpot * just_succeeded.float()
+
+        # Action penalty (small, throughout)
+        action_penalty = -torch.sum(self.actions ** 2, dim=-1) * self.cfg.action_penalty_scale
+        rewards = rewards + action_penalty
+
+        # ============ Logging ============
+        # Stage fractions: where is policy spending time?
+        # NOTE: stage4 supersedes stage3 supersedes stage2 supersedes stage1 (priority).
+        # We log mutually-exclusive stage residence by precedence.
+        in_stage4 = self._place_success_flag
+        in_stage3 = is_on_target & ~in_stage4   # P6v9 (5/15): strict xy AND z (was is_near_target loose)
+        in_stage2 = is_grasped & ~in_stage3 & ~in_stage4
+        in_stage1 = ~in_stage2 & ~in_stage3 & ~in_stage4
+
+        sponge_grounded_log = self._sponge_pos_w[:, 2] < (TABLE_Z + 0.030)
+
+        self.extras["log"] = {
+            "reach_reward_p6v6": reach_r.mean().detach(),
+            "tcp_sponge_dist_m": d_tcp_sponge.mean().detach(),
+            "sponge_target_dist_m": d_sponge_target.mean().detach(),
+            "sponge_height_m": (self._sponge_pos_w[:, 2] - TABLE_Z).mean().detach(),
+            "grasped_frac": self._grasped.float().mean().detach(),
+            "was_grasped_rate": self._was_grasped.float().mean().detach(),
+            "gripper_open_rate": gripper_open.float().mean().detach(),
+            "sponge_grounded_rate": sponge_grounded_log.float().mean().detach(),
+            "sponge_stable_rate": sponge_stable.float().mean().detach(),
+            "near_target_rate": is_near_target.float().mean().detach(),         # loose 100mm 3D (P6v9 log only)
+            "is_success_zone_rate": is_success_zone.float().mean().detach(),    # 50mm 3D (P6v9 log only)
+            "is_on_target_rate": is_on_target.float().mean().detach(),          # P6v9 strict xy AND z (stage 3/4 gate)
+            "xy_offset_mean": xy_offset.mean().detach(),                        # P6v9 horizontal transport gap
+            "z_offset_mean": z_offset.mean().detach(),                          # P6v9 vertical drop gap (hover diagnostic)
+            "jackpot_fire_rate": just_succeeded.float().mean().detach(),
+            "stage1_reach_frac": in_stage1.float().mean().detach(),
+            "stage2_grasp_frac": in_stage2.float().mean().detach(),
+            "stage3_neartgt_frac": in_stage3.float().mean().detach(),
+            "stage4_success_frac": in_stage4.float().mean().detach(),
+            "place_success_rate": self._place_success_flag.float().mean().detach(),
+            "ungrasp_signal_mean": ungrasp_signal.mean().detach(),
+            "static_signal_mean": static_signal.mean().detach(),
             "action_penalty": action_penalty.mean().detach(),
         }
 
@@ -474,33 +746,71 @@ class RoArmStackEnv(DirectRLEnv):
             env_ids = self._robot._ALL_INDICES
         n = len(env_ids)
 
-        # Robot HOME with jitter
-        joint_pos = self._home_q[env_ids] + sample_uniform(
-            -0.02, 0.02, (n, self._robot.num_joints), self.device
-        )
+        # Robot init: HOME (default) or pre-grasp pose (P6v14a Phase 0a, TCP above target).
+        if self.cfg.curriculum_pregrasp:
+            pre_q = torch.tensor(self.cfg.pregrasp_joints_rad, device=self.device,
+                                 dtype=torch.float32).unsqueeze(0).repeat(n, 1)
+            jitter = sample_uniform(-0.02, 0.02, (n, self._robot.num_joints), self.device)
+            jitter[:, self.gripper_joint_idx] = 0.0  # NO jitter on gripper (must stay > 0.4 thresh)
+            joint_pos = pre_q + jitter
+        else:
+            joint_pos = self._home_q[env_ids] + sample_uniform(
+                -0.02, 0.02, (n, self._robot.num_joints), self.device
+            )
         joint_pos = torch.clamp(joint_pos, self.robot_dof_lower_limits, self.robot_dof_upper_limits)
         joint_vel = torch.zeros_like(joint_pos)
         self._robot.write_joint_state_to_sim(joint_pos, joint_vel, env_ids=env_ids)
         self._robot.set_joint_position_target(joint_pos, env_ids=env_ids)
         self.robot_dof_targets[env_ids] = joint_pos
 
-        # Sponge spawn (uniform on R1-R4)
-        region_idx = torch.randint(0, 4, (n,), device=self.device)
-        regions = self._regions[region_idx]
-        ux = torch.rand(n, device=self.device)
-        uy = torch.rand(n, device=self.device)
-        sx = regions[:, 0] + ux * (regions[:, 1] - regions[:, 0])
-        sy = regions[:, 2] + uy * (regions[:, 3] - regions[:, 2])
-        sz = torch.full((n,), SPONGE_CENTER_Z, device=self.device)
+        # Sponge spawn
+        # P6v14a (5/12) Phase 0a pre-grasp: spawn at target + 5cm above. _grasped=True
+        # below will cause attach in step-1 to teleport sponge to TCP (which IK places
+        # at target +5cm above). Initial pose matches TCP within IK error ~0.3mm.
+        # P6v14 (5/12) Curriculum: if curriculum_spawn_max_r > 0, sample annulus around
+        # target_xy with min_r/max_r. Else legacy uniform on R1-R4.
+        # min_r > on_target_xy_thresh required to prevent iter-0 trivial jackpot (sponge
+        # spawned within target zone + HOME gripper open + zero vel → success_now=True).
+        if self.cfg.curriculum_pregrasp:
+            tgt = torch.tensor(self.cfg.target_pos, device=self.device, dtype=torch.float32)
+            sx = torch.full((n,), tgt[0].item(), device=self.device)
+            sy = torch.full((n,), tgt[1].item(), device=self.device)
+            # z = target_z + 0.05 (5cm above target = matches IK-pre-computed TCP pose)
+        elif self.cfg.curriculum_spawn_max_r > 0.0:
+            tgt_xy = torch.tensor(self.cfg.target_pos[:2], device=self.device)
+            min_r = self.cfg.curriculum_spawn_min_r
+            max_r = self.cfg.curriculum_spawn_max_r
+            # Uniform in annulus: r = sqrt(u * (max² − min²) + min²), θ uniform [0, 2π)
+            u = torch.rand(n, device=self.device)
+            r = torch.sqrt(u * (max_r * max_r - min_r * min_r) + min_r * min_r)
+            theta = sample_uniform(-math.pi, math.pi, (n,), self.device)
+            sx = tgt_xy[0] + r * torch.cos(theta)
+            sy = tgt_xy[1] + r * torch.sin(theta)
+        else:
+            region_idx = torch.randint(0, 4, (n,), device=self.device)
+            regions = self._regions[region_idx]
+            ux = torch.rand(n, device=self.device)
+            uy = torch.rand(n, device=self.device)
+            sx = regions[:, 0] + ux * (regions[:, 1] - regions[:, 0])
+            sy = regions[:, 2] + uy * (regions[:, 3] - regions[:, 2])
+        if self.cfg.curriculum_pregrasp:
+            sz = torch.full((n,), self.cfg.target_pos[2] + 0.050, device=self.device)
+        else:
+            sz = torch.full((n,), SPONGE_CENTER_Z, device=self.device)
 
         env_origins = self.scene.env_origins[env_ids]
         sponge_pos = env_origins + torch.stack([sx, sy, sz], dim=-1)
 
-        yaw = sample_uniform(-math.pi, math.pi, (n,), self.device)
-        cy = torch.cos(yaw / 2)
-        sy_q = torch.sin(yaw / 2)
-        zeros = torch.zeros_like(yaw)
-        sponge_quat = torch.stack([cy, zeros, zeros, sy_q], dim=-1)
+        if self.cfg.curriculum_pregrasp:
+            # Identity quaternion — no yaw rand. Clean release-only experiment.
+            sponge_quat = torch.zeros((n, 4), device=self.device)
+            sponge_quat[:, 0] = 1.0  # w=1 (identity)
+        else:
+            yaw = sample_uniform(-math.pi, math.pi, (n,), self.device)
+            cy = torch.cos(yaw / 2)
+            sy_q = torch.sin(yaw / 2)
+            zeros = torch.zeros_like(yaw)
+            sponge_quat = torch.stack([cy, zeros, zeros, sy_q], dim=-1)
 
         sponge_state = torch.zeros((n, 13), device=self.device)
         sponge_state[:, 0:3] = sponge_pos
@@ -509,13 +819,22 @@ class RoArmStackEnv(DirectRLEnv):
         self._sponge.write_root_velocity_to_sim(sponge_state[:, 7:13], env_ids=env_ids)
 
         # State resets
-        self._grasped[env_ids] = False
+        # P6v14a Phase 0a: latch grasp True at start (pre-grasp init).
+        # _update_grasp_attach in next step's _apply_action will pin sponge to TCP
+        # (which IK pose places at target +5cm). Agent's task: open gripper → release.
+        if self.cfg.curriculum_pregrasp:
+            self._grasped[env_ids] = True
+            self._was_grasped[env_ids] = True
+        else:
+            self._grasped[env_ids] = False
+            self._was_grasped[env_ids] = False  # P6 v5 (5/11): permanent latch resets only at episode boundary
         self._lift_counter[env_ids] = 0
         self._lift_success_flag[env_ids] = False
         self._lift_bonus_paid[env_ids] = False
         self._place_counter[env_ids] = 0
         self._place_success_flag[env_ids] = False
         self._place_bonus_paid[env_ids] = False
+        self._stage3_fired[env_ids] = False  # P6v12 (5/12): η fix — rising-edge stage 3 transient bonus latch
 
         self._compute_intermediate_values(env_ids)
 
@@ -536,6 +855,9 @@ class RoArmStackEnv(DirectRLEnv):
         cond = self._grasp_condition()
         gripper_open = self._robot.data.joint_pos[:, self.gripper_joint_idx] < self.cfg.grasp_gripper_thresh
         self._grasped = (self._grasped & ~gripper_open) | (cond & ~gripper_open)
+        # P6 v5 (5/11): permanent grasp latch — True after first grasp, persists through release.
+        # Decouples reward gating (nav, lower) from physics attach (_grasped).
+        self._was_grasped = self._was_grasped | cond
 
     def _grasp_condition(self) -> torch.Tensor:
         d = torch.norm(self._sponge_pos_w - self._tcp_pos_w, p=2, dim=-1)

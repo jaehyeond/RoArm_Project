@@ -1,92 +1,61 @@
 ---
 name: project_corl2026_status
-description: CoRL 2026 research direction, contributions, and competitive risks as of March 2026
+description: CoRL 2026 research direction — pivoted to Pure RL stacking task (May 2026). No deadline pressure.
 type: project
 ---
 
-Current framing (C3 agent, 2026-03-23): "Data-efficiency frontier for OOD VLA adaptation."
-Four claimed contributions:
-1. Scaling laws (episodes x quality x steps) for OOD VLA fine-tuning on SmolVLA 450M
-2. Collection-time data quality methodology (FK-depth, gripper phase, static frame detection)
-3. Multi-object transfer characterization on consumer hardware
-4. Self-improving loop (no simulator, no fleet, data-quality-driven)
+## Current Direction (2026-05-13, major pivot from BC/VLA framing)
 
-Key risks already identified:
-- "Accessible Physical AI" (arXiv:2512.11921) — closest competitor on consumer VLA hardware
-- Data Scaling Laws (ICLR 2025) — scaling laws angle already partially covered
-- 7+ self-improving VLA papers exist (SOAR, SimpleVLA-RL, RISE, etc.)
-- Must NOT claim "first consumer hardware VLA" — already done
+**Research task**: 4-sponge # tower stacking via Pure PPO RL in Isaac Lab (state-only, 28-dim obs).
+**Goal**: sim RL mastery of sequential manipulation → characterize what Pure RL, BC, and BC+RL hybrid each achieve.
+**3-way comparison (HARD RULE #21)**: Pure VLA (BC) / Pure RL (PPO from scratch) / Real-to-sim hybrid (BC warmstart + RL).
 
-Defensible niche: OOD *embodiment* (RoArm-M3 was never in SmolVLA pretraining), collection-time quality metrics, no-simulation self-improvement on single consumer GPU.
+## Current RL State (Phase 1.B-alpha, P6v14a)
 
-Gemini Robotics analysis (2026-03-24):
-- Gemini Robotics API: NOT publicly available. Research-only, requires Google DeepMind collaboration.
-- Standard Gemini 2.5 Pro API: usable TODAY for image-based quality judgment ($0.0013/call).
-- "Gemini as Oracle" ablation APPROVED: add to Contribution 2 as Section 4.3 VLM filtering comparison.
-  - Conditions: no_filter / rule_filter / Qwen2.5-VL-3B (local) / Gemini 2.5 Pro (cloud)
-  - N=30 trials per condition, same 200-episode source pool, equalized filter acceptance rate
-  - Additional time cost: ~2-3 days. Fits within existing D-56 to D-44 window.
-- All other Gemini directions rejected (guidance/annotation/distillation) — see experiment_gemini_oracle_design.py.
-- Critical confound: filter acceptance rate must be equalized; human quality labels required as ground truth.
+- Env: 1 sponge → L1.spot1 single fixed target
+- Phase 0a DONE: stage4_success 0.778, gripper_open 0.578, jackpot 0.0044 (first ever)
+- 7 reward farming patterns across P6v6-v14 → key lesson: exploration infeasibility (P(success|random pi)≈0) is root cause, not reward shape
+- Phase 0a fix = structural init state (pregrasp), NOT reward shaping
+- Next: Phase 0b (remove pregrasp, annulus close spawn, full grasp-transport-release chain)
 
-**Why:** CoRL 2026 deadline May 28, 2026. C3 agent landscape analysis shows crowded space but identifiable gap around practitioner-oriented OOD adaptation methodology.
-**How to apply:** Every experiment must be designed to fill specifically the OOD embodiment + data quality gap, not generic "consumer VLA" framing. Gemini usage is ONLY as an ablation baseline within Contribution 2 — not a standalone direction.
+## Phase Ladder (0b → 5, deadline-free)
 
----
+```
+0b: full chain, annulus r=0.08-0.15m, thresh 0.05/0.04 (~7min)
+0c: annulus r=0.08-0.22m (~3.5min)
+1:  R1-R4 WS + yaw ±30°, thresh 0.04/0.03 (~7min)
+2:  production thresh 0.030/0.025, 3x robustness (~10min)
+3:  goal-conditioned L1 both spots (~7min)
+4:  L2 + wrist_roll 90° + static base sponge (~10-14min)
+5:  full 4-sponge # tower, hierarchical RL (~20-40min)
+```
 
-## AR Augmentation Comparison Analysis (2026-03-24)
+Total estimated B200 wall: ~65-90min phases 0b-5
 
-**Decision: sim-to-real is NOT a primary condition in the comparison experiment.**
-- Drop sim-to-real from primary experiment; include only as 2-paragraph negative result in appendix using A2 agent's SigLIP cosine distance evidence (Isaac rasterizer: 0.6-0.8, transfer-blocking).
-- The comparison is fundamentally about "which data strategy works within 1-person/65-day budget," not "which is globally optimal."
+## Key Geometry (HARD RULES #19/#20)
 
-**Key finding: "AR visual augmentation at collection time" is NOT the right framing.**
-- "AR augmentation during collection vs. post-hoc (GenAug)" = incremental, "augmentation with extra steps."
-- Defensible framing: "AR guidance enforces spatial/task diversity as a structural property of collection, not post-processing."
-- Post-hoc augmentation cannot retroactively add physical diversity. AR guidance changes operator behavior → changes demonstration quality.
+- Sponge: edge-stand 47mm tall × 22mm wide × 125mm long
+- L1: Y c2c = 87mm, spot1 Y = -0.0435m, spot2 Y = +0.0435m
+- L2: X c2c = 67mm, ON TOP (z +47mm), wrist_roll 90°
+- Table z = -0.012117, sponge_center_z = +0.011383
 
-**Recommended 4-condition structure:**
-- A: 50ep baseline, no guidance, no augmentation
-- B: Same 50ep as A + offline GenAug-style augmentation (shares data with A, eliminates collection confound)
-- C: 50ep with AR target-circle spatial guidance, no offline augmentation
-- D (optional): Same as C + AR visual overlay active at collection time
+## Farming Pattern History (7 patterns, P6v6-v14)
 
-**Minimum N for statistical validity: N=50 trials per condition (5 positions x 10 trials).**
-- N=20 is insufficient: 80% vs 90% CI overlap even at N=20. N=50 gives 80% power for 15 percentage point difference.
+1. P6v6/7/8: stage3 close-hover at z=88mm
+2. P6v9/10: same with z-gating
+3. P6v11: stage2 near-zone hold
+4. P6v12: stage3 transient farm
+5. P6v13: stage2 outside-zone avoidance hover at d=167mm
+6. P6v14: stage2 boundary hover at xy_thresh=0.053m
+7. (P6v14a broke the pattern via structural init fix)
 
-**Revolutionary scenario (worth designing toward):**
-- Interactive AR for task-conditioned demonstrations: AR overlays different colors/textures on same physical object → same human, same physical trajectory, different task labels. Post-hoc augmentation structurally cannot do this. This is the only scenario where real-time AR is strictly superior to post-hoc.
-- Requires multi-task evaluation; may be out of scope for 65-day timeline but worth flagging for thesis Chapter 4.
+**Why:** Each reward fix created a new local opt. PPO never observed stage4 success in 1B+ steps across all 7 attempts until Phase 0a.
 
-**Innovation test verdict:**
-- "AR visual augmentation timing" = FAILS (incremental)
-- "AR spatial guidance for operator behavior" = PASSES ("huh, that's clever" response expected from reviewers)
+## Statistical Notes
 
----
+- Sim: N=4096 envs per iter, no power concern for phase gates
+- Real robot: N=20 for go/no-go, N=50 for paper claims
+- Multi-seed: run 3 seeds for Phase 2 production only (ablation verification)
 
-## 3DGS+VLA Feasibility Analysis (2026-03-24)
-
-**Verdict: NO-GO (standalone main paper). CONDITIONAL (as AR+Oracle ablation).**
-**Confidence: HIGH**
-
-Key finding: 65-day budget cannot support both AR+Oracle (main, ~45 days) and 3DGS standalone (~40 days realistic).
-
-**Go/No-Go Gate: SigLIP cosine distance measurement**
-- < 0.30: GO (3DGS augmentation viable)
-- 0.30–0.50: CAUTION (pilot required)
-- > 0.50: NO-GO (same failure mode as Isaac rasterizer at 0.65)
-- Reference: SplatSim (multi-view) = 0.15, Isaac rasterizer = 0.65
-
-**3 scenarios evaluated:**
-1. Standalone CoRL paper → REJECTED (time insufficient)
-2. AR+Oracle Section 4.4 ablation → CONDITIONAL (gate pass + AR+Oracle done by 4/20)
-3. Negative result appendix → RECOMMENDED if gate fails (cost: 1 day)
-
-**Structural risks that cannot be mitigated:**
-- Single Azure Kinect = sparse views → 3DGS quality uncertain
-- Dynamic scene (robot arm + objects) requires foreground/background separation pipeline (1-2 weeks extra)
-- GeoPredict (arXiv:2512.16811) already did 3DGS+VLA with multi-view setup
-
-**Immediate action: SigLIP gate test this week (2026-03-28 deadline, cost: 1 day)**
-- File: experiment_3dgs_vla_feasibility.py
-- Run: python experiment_3dgs_vla_feasibility.py --mode gate_check --cosine_dist X
+**Why:** Deadline removed. No time pressure on sample size decisions.
+**How to apply:** Every new phase launch requires: (1) pre-launch reward math at ALL threshold boundaries (margin > 20%), (2) rolling window diagnostic at iter 100/200/500, (3) hold-out spawn eval every 500 iter.
