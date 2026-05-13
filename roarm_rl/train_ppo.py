@@ -67,6 +67,32 @@ def main():
                              "task: open gripper → sponge falls 5cm → stage 4 fires. Bootstrap "
                              "signal guaranteed (release path 1525 vs hover 400, +281% margin "
                              "with near-zone cap KEPT).")
+    parser.add_argument("--curriculum_pregrasp_hover", action="store_true",
+                        help="P6v14c Phase 0a': pre-grasp HOVER. Robot at IK pose (TCP +5cm "
+                             "above target) but gripper OPEN (q=0.0). Sponge spawned on table "
+                             "near target via curriculum_spawn_max_r annulus (recommend 0.05-0.07). "
+                             "_grasped=False, _was_grasped=False. Agent task: descend (5cm) → "
+                             "close gripper → grasp → release at target. Bridges P6v14a release-"
+                             "only ↔ P6v14b cold-start full chain. Pair with --curriculum_post_grasp_cap.")
+    parser.add_argument("--curriculum_post_grasp_cap", action="store_true",
+                        help="P6v14c Phase 0a': force stage 2 r = post_grasp_cap_value (default 3.0) "
+                             "ALWAYS when is_grasped (any d). Overrides nearzone_cap. Kills P6v14b's "
+                             "8th 'grasp + move away' farming (where agent moved sponge to d>0.1 to "
+                             "earn 5/step). cap=3.0 > stage 1 max (2.0) → PPO grasp gradient preserved.")
+    parser.add_argument("--curriculum_post_grasp_cap_value", type=float, default=None,
+                        help="Override curriculum_post_grasp_cap value (default 3.0). Must >2.0.")
+    # P6v16 Path B (5/14) — Residual Policy Learning (Silver 2018) for catastrophic
+    # forgetting fix. BC base (frozen) + trainable residual MLP; PPO trains residual only.
+    parser.add_argument("--residual_mode", action="store_true",
+                        help="Enable Residual Policy Learning. Requires --residual_bc_ckpt. "
+                             "actor = ResidualMLPWrapper(bc_actor_frozen, residual_mlp, alpha). "
+                             "BC params requires_grad=False -> zero forgetting by construction.")
+    parser.add_argument("--residual_bc_ckpt", type=str, default=None,
+                        help="Path to BC actor checkpoint (.pt). Loaded as frozen base in residual mode.")
+    parser.add_argument("--residual_alpha", type=float, default=0.3,
+                        help="Residual scale (default 0.3). final = bc(x) + alpha*residual(x).")
+    parser.add_argument("--residual_hidden", type=str, default="64,32",
+                        help="Residual MLP hidden dims (comma-separated). Default '64,32'.")
     args = parser.parse_args()
 
     from isaaclab.app import AppLauncher
@@ -118,6 +144,18 @@ def main():
     if args.curriculum_pregrasp:
         print(f"[train] curriculum_pregrasp: True  (pregrasp_joints_rad={env_cfg.pregrasp_joints_rad})")
         env_cfg.curriculum_pregrasp = True
+    if args.curriculum_pregrasp_hover:
+        print(f"[train] curriculum_pregrasp_hover: True  (TCP at pregrasp pose, gripper OVERRIDE to OPEN q=0.0)")
+        env_cfg.curriculum_pregrasp_hover = True
+    if args.curriculum_post_grasp_cap:
+        cap_val = args.curriculum_post_grasp_cap_value if args.curriculum_post_grasp_cap_value is not None else env_cfg.curriculum_post_grasp_cap_value
+        print(f"[train] curriculum_post_grasp_cap: True (cap value = {cap_val})")
+        env_cfg.curriculum_post_grasp_cap = True
+        if args.curriculum_post_grasp_cap_value is not None:
+            env_cfg.curriculum_post_grasp_cap_value = args.curriculum_post_grasp_cap_value
+    # Mutual exclusion guard: pregrasp and pregrasp_hover are mutually exclusive (different env init).
+    if args.curriculum_pregrasp and args.curriculum_pregrasp_hover:
+        raise ValueError("--curriculum_pregrasp and --curriculum_pregrasp_hover are mutually exclusive")
 
     # ppo cfg
     ppo_cfg = RoArmPickPPORunnerCfg()
@@ -154,6 +192,34 @@ def main():
 
     # runner
     runner = OnPolicyRunner(env, ppo_cfg.to_dict(), log_dir=log_dir, device=env.unwrapped.device)
+
+    # Residual mode setup (Path B P6v16, 5/14): replace actor with frozen-BC + residual.
+    # Must happen BEFORE --resume logic (resume + residual_mode are mutually exclusive).
+    if args.residual_mode:
+        if args.residual_bc_ckpt is None:
+            raise ValueError("--residual_mode requires --residual_bc_ckpt")
+        if args.resume is not None:
+            raise ValueError("--residual_mode and --resume are mutually exclusive (BC is the base)")
+        from roarm_rl.policies.residual_actor import install_residual_actor
+        bc_state = torch.load(args.residual_bc_ckpt, map_location="cpu", weights_only=False)
+        bc_sd = bc_state["model_state_dict"] if isinstance(bc_state, dict) and "model_state_dict" in bc_state else bc_state
+        target_pre = runner.alg.policy if hasattr(runner.alg, "policy") else runner.alg.actor_critic
+        residual_hidden = tuple(int(x) for x in args.residual_hidden.split(","))
+        install_residual_actor(target_pre, bc_sd,
+                               alpha=args.residual_alpha,
+                               residual_hidden=residual_hidden)
+        # Rebuild optimizer to include only trainable params (residual + critic + std).
+        # rsl_rl's algorithm holds optimizer; rebuild with .parameters() (BC has requires_grad=False
+        # so torch optim auto-skips, but we re-create cleanly).
+        import torch.optim as optim
+        trainable = [p for p in target_pre.parameters() if p.requires_grad]
+        bc_count = sum(1 for p in target_pre.parameters() if not p.requires_grad)
+        print(f"[residual] trainable_params={sum(p.numel() for p in trainable)} bc_frozen_modules={bc_count}")
+        # Reuse existing optimizer config from rsl_rl algo
+        old_opt = runner.alg.optimizer
+        old_lr = old_opt.param_groups[0]["lr"]
+        runner.alg.optimizer = optim.Adam(trainable, lr=old_lr)
+        print(f"[residual] optimizer rebuilt: Adam lr={old_lr} over {len(trainable)} trainable tensors")
 
     if args.resume:
         print(f"[train] resume from (model only, fresh optimizer): {args.resume}")

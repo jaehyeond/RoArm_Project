@@ -229,6 +229,40 @@ class RoArmStackEnvCfg(DirectRLEnvCfg):
     curriculum_pregrasp: bool = False
     pregrasp_joints_rad: tuple = (-0.1541, +0.4109, +2.0177, +0.2213, 0.0, 0.8)
 
+    # P6v14c (5/13 evening) Phase 0a' — pre-grasp HOVER init.
+    # Bridge between P6v14a (sponge in hand at target → release only) and P6v14b
+    # (cold-start full chain → catastrophic forgetting). P6v14b iter 999 stage4=0.0 /
+    # gripper_open 0.578→0.066 within 5 iters (8th farming = stage 2 grasp-hold).
+    # Phase 0a' design:
+    #   - TCP at P6v14a IK pose (5cm above target, gripper OPEN q=0.0)
+    #   - Sponge on table near target via annulus 5-7cm (>on_target_xy_thresh 0.05 to
+    #     avoid iter-0 trivial jackpot, inside d<0.1 cap zone for post_grasp_cap design)
+    #   - _grasped/_was_grasped=False (sponge NOT in hand at start)
+    #   - Agent task: descend → close gripper → grasp → release at target
+    # P6v14a's release-aware policy resumed; descent+grasp = new ~5-step skill.
+    curriculum_pregrasp_hover: bool = False
+
+    # P6v14c (5/13 evening) — post-grasp unconditional stage 2 cap.
+    # Default stage 2 r = 4 + 3*place_progress capped to 2.0 ONLY when d_sponge_target<0.1.
+    # P6v14b proved this cap insufficient: agent grasps + moves sponge to d=0.131 (outside
+    # cap), earns stage 2 = 5.28/step × 178 = 940 reward without ever releasing (8th farm).
+    # post_grasp_cap=True: stage 2 = post_grasp_cap_value ALWAYS when is_grasped (any d).
+    # Kills "grasp + move away" farm.
+    #
+    # CAP VALUE = 3.0 (NOT 2.0). Critical: stage 1 reach_r max = 2.0 (at d_tcp_sponge=0).
+    # If cap=2.0, stage 1 max == stage 2 cap → no PPO gradient toward grasp transition.
+    # cap=3.0 gives +1.0 reward jump on grasp = positive gradient stage1→stage2.
+    #
+    # Margin (cap=3.0): Path A'' (grasp+hold) = 22 + 178×3 = 556 vs Path B (release) =
+    # 22 + 42 + 16.5 + 168×8 + jackpot 150 = 1574 → +183% margin SAFE (C1 protocol pass).
+    #
+    # Trade-off: no stage 2 gradient toward target. Relies on stage 3 transient (16.5
+    # first-fire at d_xy<thresh & gripper open) for release signal. Works when sponge
+    # spawn already near target (d=0.05-0.07 → minimal drag needed).
+    # Disable after Phase 0a' converges (Phase 0b transitions back to d<0.1 cap).
+    curriculum_post_grasp_cap: bool = False
+    curriculum_post_grasp_cap_value: float = 3.0  # Stage 2 r when post_grasp_cap=True. Must > stage 1 max (2.0).
+
     # P4 reward weights (mirrors Phase 1.A P3)
     reach_reward_scale: float = 1.0
     action_penalty_scale: float = 0.005
@@ -615,6 +649,16 @@ class RoArmStackEnv(DirectRLEnv):
         sponge_stable = sponge_vel_mag < 0.10
         static_signal = 1.0 - torch.tanh(10.0 * sponge_vel_mag)  # 0~1, 1 = static
 
+        # P6v14b (5/13 evening): Bug #2 fix — upright check.
+        # Without this, tipped sponge (90°) center z drops to table → z_offset shrinks below
+        # thresh → stage 3/4 fire on tipping, would create 8th reward farming pattern.
+        # sponge z-axis (body frame) projected onto world z: 1 - 2(qx²+qy²) for wxyz quat.
+        # Upright = 1.0, fully tipped (90°) = ~0.0. Threshold 0.90 → ~25.8° tipping cutoff.
+        qw, qx, qy, qz = (self._sponge_quat_w[:, 0], self._sponge_quat_w[:, 1],
+                          self._sponge_quat_w[:, 2], self._sponge_quat_w[:, 3])
+        sz_world_z = 1.0 - 2.0 * (qx * qx + qy * qy)
+        upright = sz_world_z > 0.90
+
         # ============ REPLACE tower ============
         # Stage 1: reach (default; sponge not yet grasped)
         reach_r = 2.0 * (1.0 - torch.tanh(5.0 * d_tcp_sponge))   # 0~2
@@ -635,7 +679,14 @@ class RoArmStackEnv(DirectRLEnv):
         # P6v14 (5/12) Curriculum: skip cap when Phase 0 enabled. Short-transport
         # bootstrap requires unblocked gradient through d<0.1 zone toward stage 3.
         # Cap re-enabled in Phase 1/2 (production) after release path learned.
-        if not self.cfg.curriculum_disable_nearzone_cap:
+        # P6v14c (5/13 evening) Phase 0a': post_grasp_cap=True → stage 2 = cap_value unconditionally.
+        # Overrides nearzone_cap (stricter). Kills P6v14b's "grasp + move away" 8th farming.
+        # cap_value default 3.0 (> stage 1 max 2.0 for PPO grasp gradient; cap=2.0 would tie).
+        # Trade-off: no stage 2 gradient toward target. Relies on stage 3 transient 16.5
+        # first-fire at d<thresh for release signal. Works when sponge spawned near target.
+        if self.cfg.curriculum_post_grasp_cap:
+            stage2_r = torch.full_like(stage2_r, self.cfg.curriculum_post_grasp_cap_value)
+        elif not self.cfg.curriculum_disable_nearzone_cap:
             stage2_r = torch.where(d_sponge_target < 0.1, torch.full_like(stage2_r, 2.0), stage2_r)
         rewards = torch.where(is_grasped, stage2_r, rewards)
 
@@ -652,18 +703,23 @@ class RoArmStackEnv(DirectRLEnv):
         # 1-step PPO margin: close-hover 3.0 vs open-transition (first fire 16.5 / sustained 6.5+)
         # → +13.5 first / +3.5 sustained (P6v12 was +0.5 marginal). _stage3_fired latches only
         # on (is_on_target & gripper_open) so close-hover entry doesn't burn the bonus latch.
-        just_on_target = is_on_target & gripper_open & ~self._stage3_fired
-        self._stage3_fired = self._stage3_fired | (is_on_target & gripper_open)
+        # P6v14b (5/13 evening): Bug #2 fix — gate stage 3 by upright as well.
+        # Tipped sponge with z_offset < thresh would farm stage 3 transient bonus +10
+        # without ever placing the sponge correctly.
+        on_target_upright = is_on_target & upright
+        just_on_target = on_target_upright & gripper_open & ~self._stage3_fired
+        self._stage3_fired = self._stage3_fired | (on_target_upright & gripper_open)
         stage3_r_open = 6.0 + 0.5 * ungrasp_signal + 0.5 * static_signal + 10.0 * just_on_target.float()
         stage3_r_close = torch.full_like(stage3_r_open, 3.0)
         stage3_r = torch.where(gripper_open, stage3_r_open, stage3_r_close)
-        rewards = torch.where(is_on_target, stage3_r, rewards)
+        rewards = torch.where(on_target_upright, stage3_r, rewards)
 
-        # Stage 4: success = on_target AND gripper_open AND stable (latched permanently)
+        # Stage 4: success = on_target AND gripper_open AND stable AND upright (latched permanently)
         # P6v9 (5/15): success_zone (50mm Euclidean) → is_on_target (xy 30mm AND z 25mm).
+        # P6v14b (5/13 evening): + upright (Bug #2 fix — block 8th farming via tipping).
         # Mirrors ManiSkill StackCube success_now = is_cubeA_on_cubeB & is_static & ~is_grasped.
         is_success_zone = d_sponge_target < self.cfg.success_dist_thresh  # kept for log only
-        success_now = is_on_target & gripper_open & sponge_stable
+        success_now = on_target_upright & gripper_open & sponge_stable
         # Rising edge BEFORE updating flag so jackpot fires exactly once per env per episode.
         just_succeeded = success_now & ~self._place_success_flag
         self._place_success_flag = self._place_success_flag | success_now
@@ -680,7 +736,8 @@ class RoArmStackEnv(DirectRLEnv):
         # NOTE: stage4 supersedes stage3 supersedes stage2 supersedes stage1 (priority).
         # We log mutually-exclusive stage residence by precedence.
         in_stage4 = self._place_success_flag
-        in_stage3 = is_on_target & ~in_stage4   # P6v9 (5/15): strict xy AND z (was is_near_target loose)
+        # P6v14b (5/13 evening): stage 3 residence requires upright (Bug #2 fix consistency)
+        in_stage3 = on_target_upright & ~in_stage4
         in_stage2 = is_grasped & ~in_stage3 & ~in_stage4
         in_stage1 = ~in_stage2 & ~in_stage3 & ~in_stage4
 
@@ -699,6 +756,8 @@ class RoArmStackEnv(DirectRLEnv):
             "near_target_rate": is_near_target.float().mean().detach(),         # loose 100mm 3D (P6v9 log only)
             "is_success_zone_rate": is_success_zone.float().mean().detach(),    # 50mm 3D (P6v9 log only)
             "is_on_target_rate": is_on_target.float().mean().detach(),          # P6v9 strict xy AND z (stage 3/4 gate)
+            "upright_rate": upright.float().mean().detach(),                    # P6v14b (5/13e) Bug #2 — anti-tipping diagnostic
+            "sponge_z_axis_world_z_mean": sz_world_z.mean().detach(),           # P6v14b raw upright signal (1=upright, 0=tipped)
             "xy_offset_mean": xy_offset.mean().detach(),                        # P6v9 horizontal transport gap
             "z_offset_mean": z_offset.mean().detach(),                          # P6v9 vertical drop gap (hover diagnostic)
             "jackpot_fire_rate": just_succeeded.float().mean().detach(),
@@ -746,13 +805,18 @@ class RoArmStackEnv(DirectRLEnv):
             env_ids = self._robot._ALL_INDICES
         n = len(env_ids)
 
-        # Robot init: HOME (default) or pre-grasp pose (P6v14a Phase 0a, TCP above target).
-        if self.cfg.curriculum_pregrasp:
+        # Robot init: HOME (default) / pre-grasp closed (P6v14a Phase 0a) / pre-grasp hover (P6v14c Phase 0a').
+        if self.cfg.curriculum_pregrasp or self.cfg.curriculum_pregrasp_hover:
             pre_q = torch.tensor(self.cfg.pregrasp_joints_rad, device=self.device,
                                  dtype=torch.float32).unsqueeze(0).repeat(n, 1)
             jitter = sample_uniform(-0.02, 0.02, (n, self._robot.num_joints), self.device)
-            jitter[:, self.gripper_joint_idx] = 0.0  # NO jitter on gripper (must stay > 0.4 thresh)
+            jitter[:, self.gripper_joint_idx] = 0.0  # NO jitter on gripper (Phase 0a: must stay > 0.4; Phase 0a': must stay < 0.4)
             joint_pos = pre_q + jitter
+            if self.cfg.curriculum_pregrasp_hover:
+                # P6v14c Phase 0a': override gripper to OPEN (q=0.0). cfg.pregrasp_joints_rad
+                # last element is 0.8 (closed for Phase 0a); we override to 0.0 (open) so
+                # agent's task is descend → close → grasp → release (not "open to release only").
+                joint_pos[:, self.gripper_joint_idx] = 0.0
         else:
             joint_pos = self._home_q[env_ids] + sample_uniform(
                 -0.02, 0.02, (n, self._robot.num_joints), self.device
@@ -801,8 +865,8 @@ class RoArmStackEnv(DirectRLEnv):
         env_origins = self.scene.env_origins[env_ids]
         sponge_pos = env_origins + torch.stack([sx, sy, sz], dim=-1)
 
-        if self.cfg.curriculum_pregrasp:
-            # Identity quaternion — no yaw rand. Clean release-only experiment.
+        if self.cfg.curriculum_pregrasp or self.cfg.curriculum_pregrasp_hover:
+            # Identity quaternion — no yaw rand. Phase 0a/0a' clean experiment.
             sponge_quat = torch.zeros((n, 4), device=self.device)
             sponge_quat[:, 0] = 1.0  # w=1 (identity)
         else:
