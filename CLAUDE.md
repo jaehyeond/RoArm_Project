@@ -2,6 +2,33 @@
 
 This file provides guidance to Claude Code when working with code in this repository.
 
+## Current-State Protocol
+
+This repo uses rolling state docs so Claude Code, Cursor Codex, and CLI Codex can
+resume without relying on memory alone.
+
+Before answering current project-state questions or making edits:
+
+1. Read `START_HERE.md`.
+2. Read `claudedocs/DECISIONS.md`.
+3. Read `claudedocs/EXPERIMENT_LEDGER.md`.
+4. Read only the `claudedocs/session_*.md` files referenced by `START_HERE.md`
+   unless more evidence is needed.
+5. Run `git status --short`.
+6. Verify any metric from the referenced log/data file before citing it.
+
+Important current-state rules:
+
+- `START_HERE.md` is the current dashboard and is overwritten as work progresses.
+- `claudedocs/DECISIONS.md` is append-only durable lessons / do-not-repeat rules.
+- `claudedocs/EXPERIMENT_LEDGER.md` is append-only major experiment history.
+- `claudedocs/session_*.md` files are detailed append-only session logs.
+- `HANDOFF.md` and `TASKS.md` are historical and stale unless `START_HERE.md`
+  explicitly points to them.
+- If chat context is approaching 95%, stop new implementation work and update
+  `START_HERE.md`, `claudedocs/EXPERIMENT_LEDGER.md`, a new session log, and
+  `claudedocs/DECISIONS.md` if a durable lesson changed.
+
 ## Project Overview
 
 RoArm-M3-Pro + SmolVLA (Vision-Language-Action) 파이프라인.
