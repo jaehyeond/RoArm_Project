@@ -125,6 +125,59 @@ Risk: q=-10° might be physically infeasible (joint hit hard stop), or jaw width
 
 **Recommendation**: (δ.2) first (cheap test). If fails → (δ.3). (γ) last resort.
 
+## (delta.2) Result — gripper -10° BLOCKED by URDF clamp (2026-05-14 PM)
+
+**Edit**: `roarm_rl/chain_skills.py` L69 `GRIPPER_OPEN_DEG = 0.0` → `-10.0`.
+md5: `2773d0ddef624f3a80f1fa3df992ad49` → `6d7c06623b12c9ad005174c3851164c5`.
+Synced to B200 + `launch_chain_topdown.sh` EXPECTED_CHAIN_MD5 updated.
+
+### B200 chain run (sponge_xy = (0.25, -0.04))
+
+| Skill | Result | Note |
+|-------|--------|------|
+| 0 (HOME→high) | 21 step, max_err 1.38°, tcp_err 8.2mm | force-set OK |
+| 1a (high→hover) | 14 step, max_err 1.71° | OK |
+| **1b (hover→grasp)** | **200 step (max), max_err 10.00°, tcp_err_pre_close 18.88mm** | gripper q stuck `-0.0°` |
+| 1c (close) | 80 step, max_err 4.76°, gripper_q 45.84°, d_sponge_tcp 33.2mm, **grasped=False** | sponge not in jaw |
+| 2 (transport) | 6 step (sponge already gone) | downstream fail |
+| 3 (P6v14a) | SUCCESS step 1 (false positive — d_xy 16.6, d_z 12.1), release at s=15, terminate s=30 | OOD sponge displacement |
+| 4 (retreat) | 150 step, final_d_xy=49.7mm, **CHAIN_FINAL_SUCCESS=NO** | — |
+
+### Critical evidence — URDF gripper clamp confirmed
+
+- Trace at Skill 1b s=120, s=160 (frozen state): `q_deg=[-9.1,+22.0,+121.7,+13.8,+0.0,-0.0]` — gripper actual `-0.0°`, **target -10° unreached**.
+- `max_err_deg = 10.00` = exactly `|target_-10 - actual_0|`, dominated by gripper joint.
+- URDF inspection: `assets/roarm_m3/urdf/roarm_m3.urdf` defines `<joint name="link5_to_gripper_link" ...><limit lower="0" upper="1.571" effort="2.5" velocity="3.14"/></joint>`. Lower=0 hard-coded.
+- Env (`roarm_stack_env.py` ~L408-412): `torch.clamp(targets, robot_dof_lower_limits, robot_dof_upper_limits)` enforces URDF lower=0 every step.
+- → `GRIPPER_OPEN_DEG = -10.0` action target is clamped to 0.0 every physics step. Test of "wider jaw" hypothesis is impossible without URDF mod.
+
+### Comparison (δ.1 vs δ.2) — bit-identical physics
+
+| Metric | (δ.1) target=0° | (δ.2) target=-10° |
+|---|---|---|
+| gripper actual | 0° | 0° (clamped) |
+| tcp_after1 z | +51.9mm | +51.9mm |
+| tcp_err_pre_close | 18.88mm | 18.88mm |
+| Skill 1b descent steady-state | stuck at +51.9mm | stuck at +51.9mm |
+
+→ Descent stall is **gripper-state independent**. Jaw-width hypothesis untestable but the 19mm vertical gap is NOT explained by jaw geometry alone (since gripper actual was identical in both runs).
+
+### Decisions captured
+
+- **D006** (DECISIONS.md): URDF gripper lower=0 clamps open targets. Do not modify URDF; P6v14a retrain risk. Future scripted skills: gripper_open_target = 0.0, not negative.
+- **D007** (DECISIONS.md): Already known force-set pattern formalized; force-set required for all deterministic scripted skills.
+
+### Next options (Skill 1b stall fix, gripper-independent)
+
+| Option | Description | ETA | Confidence |
+|--------|-------------|-----|------------|
+| **(δ.4) NEW** | Skill 1b multi-stage z: +63 → +50 → +40 → +33mm | ~2 hr | MEDIUM (PD-friendly) |
+| (δ.3) FULL | Multi-stage target ramping (`current + delta` instead of one-shot q_grasp) | ~half day | HIGH |
+| (γ) PPO Skill 1 | Train descend+grasp as PPO primitive | 1-2 weeks | paper-quality |
+| (β) Sim physics | effort_limit↑, friction tuning | 1-2 days | LOW (geometry-blind) |
+
+**Recommendation**: (δ.4) NEW first (cheap, same PD-negotiation mechanism as (δ.3)). FAIL → (δ.3) FULL.
+
 ## HARD RULE compliance
 
 - **#4** External citation: none added this session.
@@ -157,6 +210,18 @@ Risk: q=-10° might be physically infeasible (joint hit hard stop), or jaw width
 
 ## Next session immediate
 
-User decision required: (δ.2) wider gripper, (δ.3) multi-stage descent, (γ) PPO Skill 1, or (β) sim physics.
+(δ.2) test was BLOCKED by URDF clamp (see "(delta.2) Result" section). New decision required.
 
-If (δ.2): Edit GRIPPER_OPEN_DEG in chain_skills.py = -10. Re-sync + re-run launch_chain_topdown.sh.
+Active recommendation: **(δ.4) NEW — Skill 1b multi-stage z-target (+63 → +50 → +40 → +33mm)**, ~2hr, MEDIUM confidence.
+
+Fallback: (δ.3) full multi-stage target ramping if (δ.4) fails.
+
+Code change for (δ.4):
+- `roarm_rl/chain_skills.py` Part 2 `run_chain_isaac()` Skill 1b: split single force-set into ≥3 intermediate z waypoints between TCP +63mm and +33mm.
+- Revert `GRIPPER_OPEN_DEG` from `-10.0` back to `0.0` (D006: negative target = noise, no effect).
+- Update `EXPECTED_CHAIN_MD5` in `launch_chain_topdown.sh` after edit.
+
+Test plan:
+- B200 chain run with same sponge_xy=(0.25, -0.04) for apples-to-apples vs (δ), (δ.2).
+- PASS criteria: Skill 1b tcp_err_pre_close < 5mm AND grasped=True AND CHAIN_FINAL_SUCCESS=YES.
+- FAIL → pivot to (δ.3) full ramping or geometry investigation (Skill 1b s=120/160 frozen-state suggests pure PD stall, not collision).

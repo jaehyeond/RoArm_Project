@@ -7,6 +7,19 @@ This file provides guidance to Claude Code when working with code in this reposi
 This repo uses rolling state docs so Claude Code, Cursor Codex, and CLI Codex can
 resume without relying on memory alone.
 
+### File roles (do not confuse)
+
+| File | Role | Mutation |
+|---|---|---|
+| `START_HERE.md` | Rolling current-state dashboard. New sessions boot from here. | Overwrite each major update. |
+| `claudedocs/DECISIONS.md` | Durable lessons / do-not-repeat rules with evidence. | Append-only (`D001`, `D002`, ...). Mark superseded; never delete. |
+| `claudedocs/EXPERIMENT_LEDGER.md` | Append-only table of major experiments + verdicts. | Append-only. |
+| `claudedocs/session_YYYYMMDD_*.md` | Detailed session logs with metrics, code paths, evidence. | Append-only new file per session. |
+| `HANDOFF.md`, `TASKS.md` | Historical (stale). | Do not trust unless `START_HERE.md` explicitly points to them. |
+| `~/.claude/projects/.../memory/MEMORY.md` | Per-user auto-memory across all conversations (HARD RULES, recent sessions index). | Prepend recent sessions; HARD RULES never deleted. Complementary, NOT a replacement for `START_HERE.md`. |
+
+### Session boot procedure
+
 Before answering current project-state questions or making edits:
 
 1. Read `START_HERE.md`.
@@ -17,7 +30,73 @@ Before answering current project-state questions or making edits:
 5. Run `git status --short`.
 6. Verify any metric from the referenced log/data file before citing it.
 
-Important current-state rules:
+### Session boot prompt (paste this verbatim at new-session start)
+
+```
+Read CLAUDE.md first, then follow the Current-State Protocol exactly.
+
+Step-by-step:
+1. Read START_HERE.md.
+2. Read claudedocs/DECISIONS.md.
+3. Read claudedocs/EXPERIMENT_LEDGER.md.
+4. Read only the claudedocs/session_*.md files referenced by START_HERE.md
+   unless missing evidence requires more.
+5. Run `git status --short`.
+6. Brief me on:
+   - Current verified state (with file:line citations)
+   - Active pivot vs reserve pivots
+   - Open risks / do-not-repeat rules from DECISIONS.md
+   - Next concrete action
+
+Rules:
+- Be critical, analytical, and skeptical. Cross-verify before claiming.
+- Do not rely on memory-only claims. Cite the referenced file/line.
+- Verify metrics from logs/data files; flag any mismatch.
+- Do not treat HANDOFF.md or TASKS.md as current state.
+- If context approaches 95%, stop new work and run the end-of-session update.
+- We are continuing the RoArm Isaac Lab hierarchical chain skills work
+  (or whatever START_HERE.md says is the active pivot — do not assume).
+```
+
+### End-of-session update prompt (paste before closing session)
+
+```
+Before ending this session, update the project state system.
+
+Step-by-step:
+1. Update START_HERE.md (overwrite) with:
+   - Current truth (latest session_*.md link)
+   - Current status (key metrics, latest run results)
+   - Current direction (active pivot + next concrete step)
+   - Must-read first list
+   - Do-not-trust-as-current list
+2. Append to claudedocs/EXPERIMENT_LEDGER.md any major run/result row
+   (Date | Run | Goal | Key Result | Verdict | Source).
+3. Append to claudedocs/DECISIONS.md ONLY if a durable lesson, failure rule,
+   or do-not-repeat rule changed. Use Dxxx numbered sections with Evidence /
+   Implication / Source.
+4. Write a new claudedocs/session_YYYYMMDD_short_title.md (append-only) with
+   detailed metrics, code paths, evidence, decisions, next steps.
+5. Do not overwrite previous session logs.
+6. Keep START_HERE.md short (~120 lines). Put history in the ledger and
+   detail in the session doc.
+7. Cross-verify: re-read all 4 files (START_HERE, DECISIONS, EXPERIMENT_LEDGER,
+   new session doc). Check numbers match across files.
+```
+
+### Context 95% emergency protocol
+
+If active chat context approaches 95%:
+
+1. Stop new implementation work immediately.
+2. Run the end-of-session update prompt above (state files only — no new code).
+3. Output a concise continuation prompt for the next session (≤80 lines, lists
+   active pivot, next concrete step, files to read, current md5s).
+4. Do NOT use `/half-clone` or `/handoff` skills (project rule, see auto-memory
+   HARD RULE #11).
+5. User starts a new session and pastes the boot prompt above.
+
+### Project rules for state files
 
 - `START_HERE.md` is the current dashboard and is overwritten as work progresses.
 - `claudedocs/DECISIONS.md` is append-only durable lessons / do-not-repeat rules.
@@ -25,9 +104,10 @@ Important current-state rules:
 - `claudedocs/session_*.md` files are detailed append-only session logs.
 - `HANDOFF.md` and `TASKS.md` are historical and stale unless `START_HERE.md`
   explicitly points to them.
-- If chat context is approaching 95%, stop new implementation work and update
-  `START_HERE.md`, `claudedocs/EXPERIMENT_LEDGER.md`, a new session log, and
-  `claudedocs/DECISIONS.md` if a durable lesson changed.
+- Auto-memory `MEMORY.md` is per-user across conversations; it is complementary
+  to (not a replacement for) the project-state docs above. Update both when a
+  session closes: project-state for repo continuity, MEMORY.md for user-level
+  habits/preferences and HARD RULES.
 
 ## Project Overview
 
@@ -266,19 +346,27 @@ rgb = capture.color[:, :, :3]  # BGRA → BGR
 
 ## Session Workflow (세션 운영 규칙)
 
+> Authoritative end-of-session procedure lives in `## Current-State Protocol`
+> above. This section retains the original project-specific rules and clarifies
+> the relationship between project-state docs and auto-memory.
+
 | Rule | Why |
 |------|-----|
-| **HANDOFF.md 자동 생성/발동 금지** | /handoff 스킬은 이 프로젝트 워크플로우가 아님 |
-| **context 차면 MEMORY.md 업데이트** | 날짜별로 세션 결과 기록 (간결하게) |
-| **다음 세션용 continuation prompt 제공** | 유저가 새 대화에 붙여넣을 구체적 프롬프트 출력 |
-| **중요 결과는 claudedocs/ 파일로 저장** | 파일 기반 상태 보존 |
+| **HANDOFF.md / `/handoff` 자동 생성/발동 금지** | /handoff 스킬은 이 프로젝트 워크플로우가 아님. `START_HERE.md` overwrite + new `session_*.md`로 대체. |
+| **/half-clone 절대 사용/제안 금지** | 유저 반복 지시 (auto-memory HARD RULE #11). Context 95% → end-of-session update + new session boot, NOT /half-clone. |
+| **context 차면 project-state + MEMORY.md 둘 다 업데이트** | Project-state (`START_HERE.md`, `EXPERIMENT_LEDGER.md`, new `session_*.md`, `DECISIONS.md` if durable) = repo continuity. Auto-memory (`MEMORY.md`) = user-level habits, HARD RULES, recent session index. 둘은 보완 관계. |
+| **다음 세션용 continuation prompt 제공** | Project-state file-based boot이 1차. Continuation prompt는 유저가 즉시 새 세션 시작 시 보조 진입점. `CLAUDE.md ## Current-State Protocol`의 "Session boot prompt" 텍스트 사용. |
+| **중요 결과는 claudedocs/ 파일로 저장** | 파일 기반 상태 보존. Detail은 `session_*.md`, summary table은 `EXPERIMENT_LEDGER.md`, durable lesson은 `DECISIONS.md`. |
 
 ```
-세션 종료 프로세스:
-1. 중요 결과 → claudedocs/에 파일 저장
-2. MEMORY.md → 날짜별 세션 결과 인덱스 업데이트
-3. continuation prompt → 유저에게 텍스트로 출력
-4. HANDOFF.md → 절대 건드리지 않음
+세션 종료 프로세스 (Current-State Protocol "End-of-session update prompt"의 단축형):
+1. START_HERE.md → 현재 truth + active pivot + next step으로 overwrite
+2. EXPERIMENT_LEDGER.md → 주요 run/result row append
+3. DECISIONS.md → durable lesson만 append (Dxxx 번호)
+4. claudedocs/session_YYYYMMDD_*.md → detailed append-only 새 파일
+5. ~/.claude/.../memory/MEMORY.md → recent sessions index prepend (auto-memory HARD RULE #8)
+6. (option) continuation prompt → 유저에게 텍스트 출력 (95% emergency 또는 명시 요청 시)
+7. HANDOFF.md → 절대 건드리지 않음
 ```
 
 ## Critical Rules (절대 지켜야 할 것)
