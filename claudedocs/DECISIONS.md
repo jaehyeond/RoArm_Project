@@ -178,3 +178,47 @@ Source:
 - `claudedocs/session_20260513_chain_skills_hierarchical_pivot.md` (7-iter trace, force-set fix at iter #7)
 - `roarm_rl/chain_skills.py` (`_force_set_p6v14a_entry`, `_run_single_basin`, `run_chain_isaac` force-set pattern)
 - `roarm_rl/roarm_stack_env.py` L408-412 (`_pre_physics_step` clamp logic)
+
+## D008 — Skill 1b descent stall is contact equilibrium at TCP z ≈ +51.8mm, target-invariant; sub-stage splitting and step-ramping cannot bypass it
+
+Evidence:
+
+- 5/13 baseline + (δ.1) + (δ.2) + (δ.4) all report `tcp_after1 z = +51.8~+51.9mm`,
+  bit-identical across 4 sessions, across approach geometry (top-down vs direct
+  descent), across gripper target (0° vs URDF-clamped from -10°), across
+  sub-stage splitting (one-shot q_grasp vs 4-waypoint hover→+50→+40→+33mm).
+- (δ.4) 1b1 target +50mm: TCP reached +51.79mm, arm_err 0.32°, xyz_err 1.98mm.
+  1b2 target +40mm: TCP +51.72mm, arm_err 2.96°, xyz_err 11.74mm. 1b3 target +33mm:
+  TCP +51.80mm, arm_err 4.90°, xyz_err 18.81mm. TCP z INVARIANT across all 3
+  sub-stages despite target depth varying 17mm.
+- arm_err scaled with target depth (0.32° → 2.96° → 4.90°) → PD torque ↑, yet
+  TCP z fixed → contact reaction force ↑ at same rate → equilibrium maintained.
+- xy precision 0.6-0.8mm (xyz_err minus z_err); sponge xy unmoved across sub-stages
+  (+266, -34.5)mm; pure z-axis contact equilibrium, not lateral collision or
+  step-size limitation.
+- 200 step max per sub-stage with TIGHT tol=0.005 rad (0.29°) — physics had ample
+  settling time; stall is true equilibrium, not transient.
+
+Implication:
+
+- DO NOT attempt sub-stage splitting variations (5-stage, 6-stage, etc.) — same
+  +51.8mm equilibrium predicted regardless of stage count.
+- (δ.3) full ramping (`target = current + Δ`) ALSO REJECTED a priori — PD step
+  increments would converge to the same contact equilibrium because the limiter
+  is reaction force, not target overshoot.
+- Root cause is in `(finger_geometry × gripper_jaw_width × sponge_collision_mesh
+  × effort_limit)` space, NOT in trajectory parameterization. Fix must come from
+  contact / geometry investigation, not from waypoint smoothing.
+- Next-step priority: `(δ.5)` deep-dive — cheap diagnostics first (5-D sponge z
+  measure, 5-E finger_tip FK at +51.8mm, 5-F gripper jaw separation at q=0°,
+  ~1.5h total), then branch:
+  - finger tip presses sponge TOP → redefine TCP_GRASP_Z or finger collision.
+  - finger presses SIDE + jaw width < 22mm → URDF gripper limit change → P6v14a
+    retrain risk (1-2 weeks) → (γ) PPO Skill 1 primitive likely the cheaper path.
+  - effort_limit (2.5 Nm) bottleneck → URDF effort ↑ (mild retrain risk).
+
+Source:
+
+- `claudedocs/session_20260514_alpha_prime_delta_topdown.md` (`(δ.4) Result` section, errata APPENDIX)
+- B200 logs `/tmp/chain_topdown_v3.out` (Skill 1b multi-stage descent trace)
+- `claudedocs/EXPERIMENT_LEDGER.md` (2026-05-14 (δ.4) row)

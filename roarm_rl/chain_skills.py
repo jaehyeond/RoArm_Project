@@ -66,7 +66,7 @@ HOME_RAD = np.array([0.0, 0.0, math.pi / 2, 0.0, 0.0, 0.0])
 # P6v14a training entry gripper q = 0.8 rad = 45.84 deg (HARD-coded in pregrasp_joints_rad).
 # Chain MUST match P6v14a init: close to 45.84 deg so (1) _grasped triggers in sim, (2) actor
 # obs distribution matches training (gripper q ~0.8 rad).
-GRIPPER_OPEN_DEG = -10.0     # max-open per JOINT_LIMITS_DEG ["gripper"]: (-10,+100). 5/14 (δ.2): 0→-10 to widen jaw past 22mm sponge width (Skill 1b stall hypothesis).
+GRIPPER_OPEN_DEG = 0.0       # 5/14 (δ.4): revert -10→0. URDF link5_to_gripper_link lower=0 clamps any negative target to 0 actual (D006). Negative target also inflates max_joint_err by gripper joint, blocking Skill 0/1a/1b break-out (run_skill_closed_loop max_err = max(abs(err)) over all 6 joints). Keep 0.0; future scripted skills MUST NOT use negative gripper open target.
 GRIPPER_CLOSE_DEG = 45.84    # match P6v14a training entry (0.8 rad).
 
 # Action scale in env (rad/step). roarm_stack_env.py L199.
@@ -107,9 +107,21 @@ class TrajectoryPlanner:
             (self.sponge_xyz[0], self.sponge_xyz[1], TCP_GRASP_Z + hover_offset_z),
             self.q_high_deg,
         )
-        self.q_grasp_deg = self._ik_with_gripper(
-            (self.sponge_xyz[0], self.sponge_xyz[1], TCP_GRASP_Z),
+        # 5/14 (δ.4) Skill 1b multi-stage descent: hover(+63) → +50 → +40 → +33.
+        # Each intermediate IK warm-started from previous to preserve wrist_p posture.
+        # Purpose = DIAGNOSTIC, not tuning: locate exact z where descent stalls
+        # (gripper-state independent per D006 — δ.1 and δ.2 both stuck at +51.9mm).
+        self.q_1b1_deg = self._ik_with_gripper(
+            (self.sponge_xyz[0], self.sponge_xyz[1], TCP_GRASP_Z + 0.017),  # +50mm
             self.q_hover_deg,
+        )
+        self.q_1b2_deg = self._ik_with_gripper(
+            (self.sponge_xyz[0], self.sponge_xyz[1], TCP_GRASP_Z + 0.007),  # +40mm
+            self.q_1b1_deg,
+        )
+        self.q_grasp_deg = self._ik_with_gripper(
+            (self.sponge_xyz[0], self.sponge_xyz[1], TCP_GRASP_Z),          # +33mm
+            self.q_1b2_deg,
         )
         self.q_transport_deg = self._ik_with_gripper(
             (self.place_xyz[0], self.place_xyz[1], TCP_GRASP_Z + transport_offset_z),
@@ -136,17 +148,19 @@ class TrajectoryPlanner:
         for name, q in [
             ("high",            self.q_high_deg),
             ("hover",           self.q_hover_deg),
+            ("1b1_z50",         self.q_1b1_deg),
+            ("1b2_z40",         self.q_1b2_deg),
             ("grasp",           self.q_grasp_deg),
             ("transport_hover", self.q_transport_deg),
         ]:
             tcp = fk_tcp(q)
             print(f"  Waypoint {name:20s}: q_deg={[f'{x:+6.1f}' for x in q[:5]]}  "
                   f"TCP=({tcp[0]*1000:+6.1f},{tcp[1]*1000:+6.1f},{tcp[2]*1000:+6.1f})mm")
-            if name in ("high", "hover", "grasp"):
+            if name in ("high", "hover", "1b1_z50", "1b2_z40", "grasp"):
                 wrist_p_vals.append(q[3])
         wp_range = max(wrist_p_vals) - min(wrist_p_vals)
         wp_ok = wp_range < 5.0
-        print(f"  wrist_p range across high/hover/grasp: {wp_range:.2f}deg  ({'OK' if wp_ok else 'WARN: >5deg, descent may tilt'})")
+        print(f"  wrist_p range across high/hover/1b1/1b2/grasp: {wp_range:.2f}deg  ({'OK' if wp_ok else 'WARN: >5deg, descent may tilt'})")
 
     def deg_to_rad(self, q_deg):
         return np.radians(q_deg)
@@ -175,7 +189,26 @@ class TrajectoryPlanner:
         return t
 
     def target_q_skill1b_to_grasp(self):
-        """hover -> grasp (TCP from +63 to +33mm). gripper OPEN. TIGHT tol required."""
+        """hover -> grasp (TCP from +63 to +33mm). gripper OPEN. TIGHT tol required.
+        LEGACY single-shot; 5/14 (δ.4) chain uses 1b1/1b2/1b3 multi-stage."""
+        t = self.deg_to_rad(self.q_grasp_deg.copy())
+        t[5] = math.radians(GRIPPER_OPEN_DEG)
+        return t
+
+    def target_q_skill1b1_z50(self):
+        """δ.4 stage 1: hover(+63) -> +50mm. gripper OPEN. Diagnostic stop."""
+        t = self.deg_to_rad(self.q_1b1_deg.copy())
+        t[5] = math.radians(GRIPPER_OPEN_DEG)
+        return t
+
+    def target_q_skill1b2_z40(self):
+        """δ.4 stage 2: +50 -> +40mm. gripper OPEN. Diagnostic stop."""
+        t = self.deg_to_rad(self.q_1b2_deg.copy())
+        t[5] = math.radians(GRIPPER_OPEN_DEG)
+        return t
+
+    def target_q_skill1b3_z33(self):
+        """δ.4 stage 3: +40 -> +33mm (q_grasp). gripper OPEN. Final descent stop."""
         t = self.deg_to_rad(self.q_grasp_deg.copy())
         t[5] = math.radians(GRIPPER_OPEN_DEG)
         return t
@@ -384,7 +417,8 @@ def run_chain_isaac(sponge_xy: tuple, episode_idx: int, model_path: str,
         total_step += 1
         return obs_t, dones
 
-    def run_skill_closed_loop(name, target_q_rad, max_steps, tol_rad=0.03, log_every=0):
+    def run_skill_closed_loop(name, target_q_rad, max_steps, tol_rad=0.03, log_every=0,
+                              exclude_gripper: bool = False):
         """Scripted skill execution — bypasses PPO action interface.
 
         Mechanism: set robot_dof_targets directly to IK waypoint (force-set every step,
@@ -396,62 +430,118 @@ def run_chain_isaac(sponge_xy: tuple, episode_idx: int, model_path: str,
         (saturated ±1 action accumulates robot_dof_targets to joint limit, then
         robot follows that limit instead of IK target — verified run #6 elbow 128°
         overshoot for 200 step). Direct target-set is clean alternative.
+
+        5/14 (δ.4) exclude_gripper: D006 found that any gripper target/actual mismatch
+        (e.g. GRIPPER_OPEN_DEG=-10 clamped by URDF lower=0 → actual=0 → err=10°) pollutes
+        max_joint_err and blocks tol break-out (Skill 0/1a forced to max_steps in δ.2).
+        With exclude_gripper=True, tol/break uses max over joint 0-4 only; gripper q is
+        still logged separately. Use True for any scripted skill whose objective is arm
+        pose (Skill 0/1a/1b{1,2,3}/2/4). Use False for Skill 1c (gripper close is the
+        objective itself).
+
+        Returns dict: {steps, max_arm_err_rad, max_full_err_rad, gripper_q_rad,
+                       gripper_err_rad, final_q_rad}.
         """
         target_t = torch.tensor(target_q_rad, device=device, dtype=torch.float32).unsqueeze(0).repeat(num_envs, 1)
         null_action = np.zeros(6, dtype=np.float32)
         skill_steps = 0
-        last_err = None
+        last_arm_err = 0.0
+        last_full_err = 0.0
+        last_gripper_err = 0.0
+        target_arr = np.asarray(target_q_rad)
         for s in range(max_steps):
-            err = np.asarray(target_q_rad) - current_q_np
-            last_err = float(np.max(np.abs(err)))
+            err = target_arr - current_q_np
+            arm_err = float(np.max(np.abs(err[:5])))   # joint 0-4 (base, shoulder, elbow, wrist_p, wrist_r)
+            full_err = float(np.max(np.abs(err)))      # joint 0-5 (incl. gripper)
+            gripper_err = float(err[5])
+            last_arm_err = arm_err
+            last_full_err = full_err
+            last_gripper_err = gripper_err
+            break_err = arm_err if exclude_gripper else full_err
             if log_every and (s % log_every == 0):
-                print(f"    [{name} s={s:3d}] max_err_deg={math.degrees(last_err):+.2f} "
+                print(f"    [{name} s={s:3d}] max_arm_err_deg={math.degrees(arm_err):+.2f} "
+                      f"gripper_q_deg={math.degrees(current_q_np[5]):+.2f} "
                       f"q_deg=[{','.join(f'{math.degrees(x):+.1f}' for x in current_q_np)}]", flush=True)
-            if last_err < tol_rad:
+            if break_err < tol_rad:
                 break
             # Force-set targets BEFORE env.step. env._pre_physics_step will compute
             # targets += action_scale * null_action = targets (unchanged).
             base_env.robot_dof_targets[:] = target_t
             step_action(null_action)
             skill_steps += 1
-        return skill_steps, last_err
+        return {
+            "steps": skill_steps,
+            "max_arm_err_rad": last_arm_err,
+            "max_full_err_rad": last_full_err,
+            "gripper_q_rad": float(current_q_np[5]),
+            "gripper_err_rad": last_gripper_err,
+            "final_q_rad": current_q_np.copy(),
+        }
+
+    # 5/14 (δ.4) diagnostic helper — log per-substage actual vs target TCP + sponge.
+    def _diag_log(label, target_z_m, result):
+        tcp_local = base_env._tcp_pos_w[0].detach().cpu().numpy() - base_env.scene.env_origins[0].detach().cpu().numpy()
+        sponge_local = base_env._sponge_pos_w[0].detach().cpu().numpy() - base_env.scene.env_origins[0].detach().cpu().numpy()
+        tcp_target = np.array([sponge_xy[0], sponge_xy[1], target_z_m])
+        tcp_err_mm = float(np.linalg.norm(tcp_target - tcp_local) * 1000.0)
+        print(f"  [{label}] steps={result['steps']} "
+              f"arm_err={math.degrees(result['max_arm_err_rad']):.2f}deg "
+              f"gripper_q={math.degrees(result['gripper_q_rad']):+.2f}deg "
+              f"TCP_actual_z={tcp_local[2]*1000:+.2f}mm "
+              f"TCP_target_z={target_z_m*1000:+.1f}mm "
+              f"TCP_xyz_err={tcp_err_mm:.2f}mm  "
+              f"TCP=({tcp_local[0]*1000:+.1f},{tcp_local[1]*1000:+.1f},{tcp_local[2]*1000:+.1f})mm  "
+              f"sponge=({sponge_local[0]*1000:+.1f},{sponge_local[1]*1000:+.1f},{sponge_local[2]*1000:+.1f})mm",
+              flush=True)
+        return tcp_local, sponge_local, tcp_err_mm
 
     # === Skill 0: HOME -> q_high (TCP +150mm world, top-down approach 5/14) ===
     print(f"\n[chain] Skill 0: HOME -> q_high (TCP +150mm above grasp, top-down approach)", flush=True)
-    steps0, err0 = run_skill_closed_loop("skill0", planner.target_q_skill0_high(),
-                                          max_steps=200, log_every=40)
-    metrics["skill_steps"][0] = steps0
+    r0 = run_skill_closed_loop("skill0", planner.target_q_skill0_high(),
+                                max_steps=200, log_every=40, exclude_gripper=True)
+    metrics["skill_steps"][0] = r0["steps"]
+    _diag_log("skill0_done", TCP_GRASP_Z + HIGH_OFFSET_Z, r0)
     tcp_now = base_env._tcp_pos_w[0].detach().cpu().numpy() - base_env.scene.env_origins[0].detach().cpu().numpy()
     target_high = (sponge_xy[0], sponge_xy[1], TCP_GRASP_Z + HIGH_OFFSET_Z)
     metrics["skill_tcp_err_mm"][0] = float(np.linalg.norm(np.array(target_high) - tcp_now) * 1000.0)
-    print(f"  done. steps={steps0} max_joint_err={math.degrees(err0):.2f}deg tcp_err={metrics['skill_tcp_err_mm'][0]:.1f}mm", flush=True)
 
     # === Skill 1a: q_high -> q_hover (TCP from +150 to +63mm, gripper open) ===
     # Descent stage 1: bulk of vertical motion. Normal tol.
     print(f"\n[chain] Skill 1a: q_high -> q_hover (descent stage 1, TCP +150 -> +63mm)", flush=True)
-    steps1a, err1a = run_skill_closed_loop("skill1a_to_hover", planner.target_q_skill1a_to_hover(),
-                                            max_steps=150, tol_rad=0.03, log_every=40)
-    print(f"  done. steps={steps1a} max_joint_err={math.degrees(err1a):.2f}deg", flush=True)
+    r1a = run_skill_closed_loop("skill1a_to_hover", planner.target_q_skill1a_to_hover(),
+                                 max_steps=150, tol_rad=0.03, log_every=40, exclude_gripper=True)
+    _diag_log("skill1a_done", TCP_GRASP_Z + HOVER_OFFSET_Z, r1a)
 
-    # === Skill 1b: q_hover -> q_grasp (TCP from +63 to +33mm, gripper open). TIGHT tol. ===
-    # Descent stage 2: final approach. TIGHT tol (0.005 rad = 0.29deg) for xy precision.
-    # Rationale: 5/13 Skill 1 fail = tcp_err 10mm xy at grasp_z → side collision with
-    # 22mm-wide sponge. Joint err 4.14° propagated via FK to ~10mm. tol=0.005 rad
-    # should give <2mm TCP precision.
-    print(f"\n[chain] Skill 1b: q_hover -> q_grasp (final descent, TIGHT tol)", flush=True)
-    steps1b, err1b = run_skill_closed_loop("skill1b_to_grasp", planner.target_q_skill1b_to_grasp(),
-                                            max_steps=200, tol_rad=0.005, log_every=40)
+    # === Skill 1b multi-stage descent (δ.4 diagnostic): hover(+63) → +50 → +40 → +33 ===
+    # Purpose: locate exact z where PD stalls. δ.1 and δ.2 both stalled at +51.9mm
+    # (gripper-state independent per D006). 4-waypoint split lets us see whether the
+    # stall starts already at +50mm (sponge-contact reaction at hover) or only at +33mm
+    # (final penetration). Each substage uses TIGHT tol (0.005 rad) with exclude_gripper.
+    print(f"\n[chain] Skill 1b multi-stage descent (δ.4): hover(+63) -> +50 -> +40 -> +33mm", flush=True)
+    r1b1 = run_skill_closed_loop("skill1b1_to_z50", planner.target_q_skill1b1_z50(),
+                                  max_steps=200, tol_rad=0.005, log_every=40, exclude_gripper=True)
+    _diag_log("skill1b1_done_target+50mm", TCP_GRASP_Z + 0.017, r1b1)
+    r1b2 = run_skill_closed_loop("skill1b2_to_z40", planner.target_q_skill1b2_z40(),
+                                  max_steps=200, tol_rad=0.005, log_every=40, exclude_gripper=True)
+    _diag_log("skill1b2_done_target+40mm", TCP_GRASP_Z + 0.007, r1b2)
+    r1b3 = run_skill_closed_loop("skill1b3_to_z33", planner.target_q_skill1b3_z33(),
+                                  max_steps=200, tol_rad=0.005, log_every=40, exclude_gripper=True)
+    _diag_log("skill1b3_done_target+33mm", TCP_GRASP_Z, r1b3)
+
     tcp_now = base_env._tcp_pos_w[0].detach().cpu().numpy() - base_env.scene.env_origins[0].detach().cpu().numpy()
     target_grasp = (sponge_xy[0], sponge_xy[1], TCP_GRASP_Z)
     tcp_err_pre_close_mm = float(np.linalg.norm(np.array(target_grasp) - tcp_now) * 1000.0)
-    print(f"  done. steps={steps1b} max_joint_err={math.degrees(err1b):.2f}deg "
-          f"tcp_err_pre_close={tcp_err_pre_close_mm:.2f}mm", flush=True)
+    steps1b = r1b1["steps"] + r1b2["steps"] + r1b3["steps"]
+    print(f"  [skill1b summary] total_steps={steps1b} "
+          f"per_stage=({r1b1['steps']},{r1b2['steps']},{r1b3['steps']}) "
+          f"final_tcp_err_pre_close={tcp_err_pre_close_mm:.2f}mm  "
+          f"stall_signature={'TRUE' if r1b3['steps']==200 else 'FALSE_at_b3'}", flush=True)
 
     # === Skill 1c: close gripper at grasp pose ===
     print(f"\n[chain] Skill 1c: close gripper (q -> {GRIPPER_CLOSE_DEG}deg)", flush=True)
-    steps1c, err1c = run_skill_closed_loop("skill1c_close", planner.target_q_skill1c_close(),
-                                            max_steps=80, tol_rad=0.03)
-    metrics["skill_steps"][1] = steps1a + steps1b + steps1c
+    r1c = run_skill_closed_loop("skill1c_close", planner.target_q_skill1c_close(),
+                                 max_steps=80, tol_rad=0.03, exclude_gripper=False)
+    metrics["skill_steps"][1] = r1a["steps"] + steps1b + r1c["steps"]
     tcp_now = base_env._tcp_pos_w[0].detach().cpu().numpy() - base_env.scene.env_origins[0].detach().cpu().numpy()
     metrics["skill_tcp_err_mm"][1] = float(np.linalg.norm(np.array(target_grasp) - tcp_now) * 1000.0)
     metrics["grasped_at_skill1_end"] = bool(base_env._grasped[0].item())
@@ -459,7 +549,7 @@ def run_chain_isaac(sponge_xy: tuple, episode_idx: int, model_path: str,
     d_sponge_tcp = float(torch.norm(base_env._sponge_pos_w[0] - base_env._tcp_pos_w[0]).item())
     sponge_pos_after1 = base_env._sponge_pos_w[0].detach().cpu().numpy() - base_env.scene.env_origins[0].detach().cpu().numpy()
     tcp_pos_after1 = base_env._tcp_pos_w[0].detach().cpu().numpy() - base_env.scene.env_origins[0].detach().cpu().numpy()
-    print(f"  close steps={steps1c} max_joint_err={math.degrees(err1c):.2f}deg "
+    print(f"  close steps={r1c['steps']} max_arm_err={math.degrees(r1c['max_arm_err_rad']):.2f}deg "
           f"tcp_err={metrics['skill_tcp_err_mm'][1]:.1f}mm "
           f"gripper_q={math.degrees(gripper_q_now):.2f}deg "
           f"d_sponge_tcp={d_sponge_tcp*1000:.1f}mm "
@@ -469,14 +559,14 @@ def run_chain_isaac(sponge_xy: tuple, episode_idx: int, model_path: str,
 
     # === Skill 2: grasp -> place hover ===
     print(f"\n[chain] Skill 2: grasp -> place hover (closed-loop)", flush=True)
-    steps2, err2 = run_skill_closed_loop("skill2", planner.target_q_skill2(), max_steps=120)
-    metrics["skill_steps"][2] = steps2
+    r2 = run_skill_closed_loop("skill2", planner.target_q_skill2(), max_steps=120, exclude_gripper=True)
+    metrics["skill_steps"][2] = r2["steps"]
     tcp_now = base_env._tcp_pos_w[0].detach().cpu().numpy() - base_env.scene.env_origins[0].detach().cpu().numpy()
     target_transport = (place_xyz[0], place_xyz[1], TCP_GRASP_Z + planner.transport_offset_z)
     metrics["skill_tcp_err_mm"][2] = float(np.linalg.norm(np.array(target_transport) - tcp_now) * 1000.0)
     grasped_skill2_end = bool(base_env._grasped[0].item())
     sponge_z_now = float(base_env._sponge_pos_w[0, 2].item() - base_env.scene.env_origins[0, 2].item())
-    print(f"  done. steps={steps2} max_joint_err={math.degrees(err2):.2f}deg "
+    print(f"  done. steps={r2['steps']} max_arm_err={math.degrees(r2['max_arm_err_rad']):.2f}deg "
           f"tcp_err={metrics['skill_tcp_err_mm'][2]:.1f}mm "
           f"grasped={grasped_skill2_end} sponge_z={sponge_z_now*1000:.1f}mm", flush=True)
 
@@ -540,15 +630,15 @@ def run_chain_isaac(sponge_xy: tuple, episode_idx: int, model_path: str,
     )
     retreat_target = planner.deg_to_rad(place_high_q_deg)
     retreat_target[5] = math.radians(GRIPPER_OPEN_DEG)
-    steps4, err4 = run_skill_closed_loop("skill4_retreat", retreat_target,
-                                          max_steps=150, tol_rad=0.03)
-    metrics.setdefault("skill_steps", {})[4] = steps4
+    r4 = run_skill_closed_loop("skill4_retreat", retreat_target,
+                                max_steps=150, tol_rad=0.03, exclude_gripper=True)
+    metrics.setdefault("skill_steps", {})[4] = r4["steps"]
     sponge_pos_final = base_env._sponge_pos_w[0] - base_env.scene.env_origins[0]
     metrics["final_d_xy_after_retreat"] = float(torch.norm(sponge_pos_final[:2] - target_world[:2]).item())
     metrics["final_d_z_after_retreat"] = float(torch.abs(sponge_pos_final[2] - target_world[2]).item())
     chain_success_after_retreat = (metrics["final_d_xy_after_retreat"] < 0.030
                                     and metrics["final_d_z_after_retreat"] < 0.025)
-    print(f"  done. steps={steps4} max_joint_err={math.degrees(err4):.2f}deg "
+    print(f"  done. steps={r4['steps']} max_arm_err={math.degrees(r4['max_arm_err_rad']):.2f}deg "
           f"final_d_xy={metrics['final_d_xy_after_retreat']*1000:.1f}mm "
           f"final_d_z={metrics['final_d_z_after_retreat']*1000:.1f}mm "
           f"CHAIN_FINAL_SUCCESS={'YES' if chain_success_after_retreat else 'NO'}", flush=True)

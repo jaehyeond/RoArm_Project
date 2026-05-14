@@ -14,7 +14,7 @@ source /NHNHOME/WORKSPACE/0526040060_A/JHPark/roarm_b200/env.sh
 [[ "$(whoami)" != "sogang_jhki" ]] && { echo FAIL_user; exit 1; }
 [[ "$(hostname)" != "JHPark-container" ]] && { echo FAIL_host; exit 1; }
 
-EXPECTED_CHAIN_MD5="6d7c06623b12c9ad005174c3851164c5"
+EXPECTED_CHAIN_MD5="be689ea9a812f2d8d1470246559d207f"
 ACTUAL_CHAIN_MD5=$(md5sum "$ROARM_B200_ROOT/code/roarm_rl/chain_skills.py" | awk '{print $1}')
 [[ "$ACTUAL_CHAIN_MD5" != "$EXPECTED_CHAIN_MD5" ]] && { echo "FAIL chain md5: $ACTUAL_CHAIN_MD5 != $EXPECTED_CHAIN_MD5"; exit 1; }
 echo "GUARD-OK chain_md5=$ACTUAL_CHAIN_MD5"

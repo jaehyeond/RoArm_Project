@@ -225,3 +225,125 @@ Test plan:
 - B200 chain run with same sponge_xy=(0.25, -0.04) for apples-to-apples vs (δ), (δ.2).
 - PASS criteria: Skill 1b tcp_err_pre_close < 5mm AND grasped=True AND CHAIN_FINAL_SUCCESS=YES.
 - FAIL → pivot to (δ.3) full ramping or geometry investigation (Skill 1b s=120/160 frozen-state suggests pure PD stall, not collision).
+
+---
+
+## APPENDIX — (δ.2) doc errata (correction 2026-05-14 PM, append-only)
+
+Lines 138-139 of the (δ.2) result table report:
+- "0 (HOME→high) | 21 step, max_err 1.38°, tcp_err 8.2mm | force-set OK"
+- "1a (high→hover) | 14 step, max_err 1.71° | OK"
+
+**Both rows are INCORRECT** — those numbers are from (δ.1) and were copied into the
+(δ.2) table by mistake. The user's direct B200 read of `/tmp/chain_topdown_v2.out`
+on 2026-05-14 PM confirmed actual (δ.2) Skill 0/1a both hit `max_steps` (200 / 150)
+with `max_full_err_deg ≈ 10.00` dominated by the unattainable gripper target
+(`GRIPPER_OPEN_DEG = -10°` clamped to actual `0°` by URDF; `run_skill_closed_loop`
+break condition `np.max(np.abs(err))` includes gripper joint per
+`roarm_rl/chain_skills.py` L405-406).
+
+Therefore (δ.2) NOT cosmetic-only: the negative gripper target inflated
+`max_full_err_deg` and forced all scripted skills to `max_steps`. Physics result
+identical to (δ.1) but runtime/convergence diagnostics polluted. D006 implication
+strengthened: future scripted skills MUST use `GRIPPER_OPEN_DEG = 0.0` AND
+`run_skill_closed_loop(..., exclude_gripper=True)`.
+
+Corrected rows for (δ.2) table:
+- 0 (HOME→high)  | **200 step (max)**, max_full_err ≈ 10° (gripper-inflated)
+- 1a (high→hover) | **150 step (max)**, max_full_err ≈ 10° (gripper-inflated)
+- 1b/1c/2/3/4 rows in original table remain accurate.
+
+Do not edit lines 138-139 in place (append-only project rule); this errata block
+is the authoritative correction.
+
+---
+
+## (δ.4) Result — Skill 1b multi-stage z descent diagnostic (2026-05-14 PM)
+
+### Edits applied
+
+1. `chain_skills.py` L69 `GRIPPER_OPEN_DEG`: `-10.0 → 0.0` (D006 + max_err noise prevention).
+2. Planner cached intermediate IK waypoints: `q_1b1_deg` (TCP +50mm), `q_1b2_deg` (TCP +40mm), warm-started from `q_hover`/`q_1b1` respectively. `q_grasp_deg` warm-started from `q_1b2_deg`.
+3. `run_skill_closed_loop(..., exclude_gripper=False)`: option added. When True, `break_err = max(abs(err[:5]))` (joint 0-4 only); gripper q always logged separately. Returns dict `{steps, max_arm_err_rad, max_full_err_rad, gripper_q_rad, gripper_err_rad, final_q_rad}`.
+4. Skill 0/1a/1b{1,2,3}/2/4 callers updated to `exclude_gripper=True`. Skill 1c kept `exclude_gripper=False` (gripper close IS the objective).
+5. Per-substage diagnostic helper `_diag_log()`: actual TCP z, target z, arm_err, gripper_q, sponge xyz.
+6. md5: `chain_skills.py = be689ea9a812f2d8d1470246559d207f` (998 LOC, was 696 LOC).
+7. `launch_chain_topdown.sh` EXPECTED_CHAIN_MD5 updated, md5 `c81398f58865ec1c73d99e8d7b2d90ee`.
+8. B200 sync verified (md5 match both files).
+
+### B200 chain run (sponge_xy=(0.25, -0.04), `/tmp/chain_topdown_v3.{out,err}`)
+
+| Skill / sub-stage | target z | steps | arm_err | gripper_q | **TCP_actual z** | xyz_err | comment |
+|---|---|---|---|---|---|---|---|
+| 0 (HOME→high)        | +150mm | **21**  | 1.38° | 0° | +155.79mm | 8.19mm | early break OK ✓ |
+| 1a (high→hover)      | +63mm  | **14**  | 1.71° | 0° | +70.75mm  | 7.80mm | early break OK ✓ |
+| **1b1 (hover→+50)**  | +50mm  | 200 max | 0.32° | 0° | **+51.79mm** | 1.98mm | nearly at target (1.8mm short) |
+| **1b2 (+50→+40)**    | +40mm  | 200 max | 2.96° | 0° | **+51.72mm** | 11.74mm | **stall — identical depth to 1b1** |
+| **1b3 (+40→+33)**    | +33mm  | 200 max | 4.90° | 0° | **+51.80mm** | 18.81mm | **stall — same depth, deeper target ignored** |
+| 1c (close gripper)   | 45.84° | 80      | 4.89° | 45.84° | +51.8mm | — | `grasped=False`, d_sponge_tcp=33.4mm |
+| 2 (transport)        | +63mm  | 6       | 1.70° | 45.84° | — | 10.7mm | downstream of grasp fail |
+| 3 (P6v14a)           | —      | 33      | — | release@s=18 | — | — | early-terminate ok; CHAIN_SETTLED=NO |
+| 4 (retreat)          | +150mm | 44      | 1.45° | 0° | — | — | CHAIN_FINAL_SUCCESS=NO, final_d_xy=100.7mm |
+
+Skill 1b summary: total_steps=600, per_stage=(200,200,200), final_tcp_err_pre_close=18.81mm, `stall_signature=TRUE`.
+
+### Critical diagnostic finding — stall location precisely identified
+
+- **Physical barrier = TCP z ≈ +51.8mm**, INVARIANT under target depth (+50/+40/+33mm).
+- Sub-stage 1b1 (+50mm target) reached +51.79mm (1.8mm short → arm_err 0.32° barely above tol 0.005 rad = 0.29°).
+- Sub-stage 1b2/1b3 with deeper targets (+40/+33mm) saw arm_err GROW (0.32° → 2.96° → 4.90°), yet TCP z stayed at +51.8mm. PD torque ↑ with deeper target, but contact reaction force scales identically → equilibrium at same z.
+- xy precision = 0.6-0.8mm (xyz_err minus z_err). top-down geometry succeeded; only z is blocked.
+- Sponge xy invariant across 1b1/1b2/1b3 (+266, -34.5)mm — robot does not push sponge further; pure z-contact equilibrium.
+- 5/13 baseline (+51.8mm) + (δ.1) (+51.9mm) + (δ.2) (+51.9mm) + (δ.4) (+51.8mm) all bit-identical → **invariant across sub-stage splitting / gripper target / approach geometry / 4 sessions**.
+
+### Pre-experiment user prediction validated
+
+User (HARD RULE #18): "지금 냄새는 'step size가 커서 실패'보다는 '마지막 접촉 장벽이 실제로 있음' 쪽이 더 강해. 실패하면 stage 개수 튜닝 계속하지 말고, 바로 geometry/contact deep-dive 또는 δ.3 full ramping으로 가야 해."
+
+**Validated**: (δ.3) full ramping is ALSO predicted useless by the +51.8mm-invariant result. PD step-increment ramping would converge to the same contact equilibrium because the limiter is reaction force, not target overshoot.
+
+### D006/D007 + exclude_gripper effect — verified
+
+- (δ.2) ran Skill 0 → 200 step max, Skill 1a → 150 step max (gripper-inflated err).
+- (δ.4) runs Skill 0 → 21 step early-break, Skill 1a → 14 step early-break.
+- `exclude_gripper=True` confirmed restoring proper convergence on arm-only objective.
+- wrist_p range across high/hover/1b1/1b2/grasp = **4.57°** (OK < 5°).
+
+### Next-step options for (δ.5) deep-dive
+
+stage tuning rejected by user pre-commitment. Cheap diagnostics first (~1.5h total):
+
+| Candidate | Investigation | Cost | Info value |
+|---|---|---|---|
+| **5-D** | sponge spawn z + top z measured from sim `root_pos_w` (vs assumed +11.4 / +34.9mm) | 30min | HIGH — baseline for all others |
+| **5-E** | finger_tip world FK at TCP z=+51.8mm (sim direct read), vs sponge top z | 1h | HIGH — primary collision evidence |
+| **5-F** | gripper jaw separation (URDF FK) at `q_gripper=0`, compared to sponge 22mm width | 30min | HIGH-cheap |
+| 5-A | sponge collision mesh + contact force sensor in sim (Isaac Sim contact viewer) | 1-2h | MEDIUM (after 5-D/E/F) |
+| 5-B | effort_limit=2.5 Nm vs sponge reaction force; URDF mod evaluation | 2-3h | MEDIUM (gated on geometry result) |
+| 5-C | sponge mass/friction/restitution sweep | 1-2h | MEDIUM (P6v14a-invariant params) |
+
+Then based on outcome:
+- finger_tip presses sponge TOP → redefine TCP_GRASP_Z OR change finger collision OR redesign grasp pose.
+- finger_tip presses sponge SIDE + jaw width < 22mm → URDF gripper open limit change → P6v14a retrain risk → (γ) PPO Skill 1 primitive likely the cheaper path.
+- effort_limit bottleneck → URDF effort increase (mild retrain risk).
+
+Reserve: (γ) PPO Skill 1 descend+grasp primitive (1-2 weeks, paper-quality).
+
+### Inventory delta (Local + B200 md5 verified)
+
+- `roarm_rl/chain_skills.py` md5 `be689ea9a812f2d8d1470246559d207f` (998 LOC; was 696 LOC / `6d7c06623b12c9ad005174c3851164c5`)
+- `launch_chain_topdown.sh` md5 `c81398f58865ec1c73d99e8d7b2d90ee` (was `a5208ac9c0530bc40c3bfff85c8118be`)
+- B200 sync verified for both files; EXPECTED_CHAIN_MD5 in launcher matches chain_skills.py md5.
+- B200 logs: `/tmp/chain_topdown_v3.out` (full chain stdout) + `/tmp/chain_topdown_v3.err` (Isaac Sim warnings only, no failure).
+
+### HARD RULE compliance (delta.4)
+
+- #4: no external citations introduced.
+- #8: MEMORY archive pending — must move oldest of 5 entries to `MEMORY_archive_YYYYMMDD.md` when prepending the new 5/14 PM entry.
+- #11: `/half-clone` declined when stop-hook fired at 85% context (this session's end-of-session update protocol used instead).
+- #14: fail-fast guard + no `2>&1` + no pipe-to-source — all B200 ssh commands compliant.
+- #15: cu128 sm_100 alive (B200 isaacsim_5_1 env).
+- #17: state-only RL 28-dim narrow inline maintained (Skill 3 obs unchanged).
+- #18: user-explicit "(a)=4-stage OK / (b)=exclude_gripper 같이 추가 / (c)=append-only 정정" all followed; user pre-commit "stage 튜닝 금지 후 geometry/contact deep-dive로" honored.
+- #19: edge-stand 47mm sponge geometry unchanged.
+- #26: B200 physics-only state-only RL (until 5/19) — maintained.

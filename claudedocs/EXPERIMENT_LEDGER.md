@@ -16,19 +16,31 @@ from the linked session/data files before making claims.
 | 2026-05-14 (α') | P6v14a basin-of-attraction sweep | 6-point grid (dx 0-45mm, dz 0-20mm) on P6v14a release primitive | release_step=13 consistent 5/6 runs (memorization-free), (15,0) outlier=197 brittle, all final_d_xy 147-227mm post-release sponge knock-away | Partial PASS; release primitive portable 30-45mm xy / +20mm z, needs early-terminate at release+buffer | `claudedocs/session_20260514_alpha_prime_delta_topdown.md` |
 | 2026-05-14 (δ) | Top-down chain v1 (GRIPPER_OPEN_DEG=0) | Re-architected Skill 0/1a/1b/1c/2/3/4 with q_high TCP +150mm clearance | Lateral knock 7× improved (Y -44→-6mm), BUT vertical descent stall tcp_after1 z=+51.9mm (target +33mm, bit-identical to 5/13), grasped=False, CHAIN_FINAL_SUCCESS=NO | Fail; geometry redesign insufficient | `claudedocs/session_20260514_alpha_prime_delta_topdown.md` |
 | 2026-05-14 (δ.2) | GRIPPER_OPEN_DEG 0→-10° widen-jaw test | Test hypothesis that finger-tip width<22mm sponge width caused Skill 1b stall | URDF gripper limit `lower="0"` → env `soft_joint_pos_limits` clamps target -10° to actual 0° (verified L408-412 `_pre_physics_step` torch.clamp); tcp_after1 z=+51.9mm = δ.1 bit-identical | TEST INVALID (untestable in current sim); URDF mod = P6v14a retrain risk = NO-GO | `claudedocs/session_20260514_alpha_prime_delta_topdown.md` |
+| 2026-05-14 (δ.4) | Skill 1b multi-stage z diagnostic (hover→+50→+40→+33mm) + exclude_gripper option + GRIPPER_OPEN_DEG=0 revert | Locate exact z where descent stalls; gripper-state independent (D006) | All 3 sub-stages stall at **TCP z ≈ +51.8mm INVARIANT under target depth**; arm_err grew (0.32°→2.96°→4.90°) but z fixed; xy precision 0.6-0.8mm; sponge xy unmoved across sub-stages → pure z contact equilibrium, NOT step-size issue. Skill 0/1a early-break restored (21/14 steps) via `exclude_gripper=True`. CHAIN_FINAL_SUCCESS=NO | Diagnostic SUCCESS / performance FAIL; sub-stage splitting REJECTED; (δ.3) full ramping ALSO predicted useless; pivot to (δ.5) contact/geometry deep-dive (5-D/5-E/5-F) | `claudedocs/session_20260514_alpha_prime_delta_topdown.md` (APPENDIX + δ.4 sections); B200 `/tmp/chain_topdown_v3.{out,err}` |
 
 ## Current Next Experiment Candidate
 
-**Active pivot (2026-05-14)**: Hierarchical chain skills with P6v14a as learned release sub-skill.
+**Active pivot (2026-05-14 PM, post-δ.4)**: Hierarchical chain skills with P6v14a as learned release sub-skill.
 (D003 contamination avoided — P6v14a used directly as primitive, NOT as BC training source.)
 
-Decision pending — Skill 1b descent stall fix options (gripper-state independent per (δ.2) result):
+(δ.4) result CONFIRMED stall is contact equilibrium at TCP z ≈ +51.8mm, INVARIANT under target depth (D008). Sub-stage splitting REJECTED; (δ.3) full ramping ALSO predicted useless by same evidence.
 
-1. **(δ.4) NEW** — Skill 1b multi-stage z-target (+63 → +50 → +40 → +33mm); 2hr; MEDIUM confidence.
-2. **(δ.3) FULL** — Multi-stage descent ramping (`target = current + delta_step` instead of one-shot q_grasp); half day; HIGH confidence.
-3. **(γ)** PPO Skill 1 descend-grasp primitive; 1-2 weeks; paper-quality.
-4. **(β)** Sim physics tuning (effort_limit ↑ from 2.5 N·m, sponge friction); 1-2 days; LOW confidence (real hardware unaffected).
+Decision pending — Skill 1b descent stall fix, (δ.5) contact/geometry deep-dive options (cheap diagnostics first):
 
-Reserve alternative (from prior Codex pivot recommendation, still valid as alternative path):
+1. **5-D** — Sponge spawn z + top z direct sim read (vs assumed +11.4 / +34.9mm); 30min; HIGH-cheap.
+2. **5-E** — Finger_tip world FK at TCP z=+51.8mm vs sponge top z (collision evidence); 1h; HIGH.
+3. **5-F** — Gripper jaw separation at q_gripper=0° (URDF FK) vs sponge 22mm width; 30min; HIGH-cheap.
+4. **5-A** — Sponge contact mesh + Isaac Sim contact viewer; 1-2h; MEDIUM (gated on 5-D/E/F).
+5. **5-B** — effort_limit (2.5 Nm) vs reaction force evaluation; 2-3h; MEDIUM.
+6. **5-C** — sponge mass/friction/restitution sweep; 1-2h; MEDIUM.
 
-- Procedural release-only demos → train release BC → CLEAN eval.
+Recommended order: 5-D + 5-E + 5-F (parallel, ~1.5h total) → branch on outcome.
+
+Outcome branches:
+- finger_tip presses sponge TOP → redefine TCP_GRASP_Z or finger collision mesh.
+- finger presses SIDE + jaw < 22mm → URDF gripper limit change requires P6v14a retrain (~1-2 weeks) → (γ) PPO Skill 1 primitive likely cheaper path.
+- effort_limit bottleneck → URDF effort↑ (mild retrain risk).
+
+Reserve / fallback:
+- **(γ)** PPO Skill 1 descend+grasp primitive; 1-2 weeks; paper-quality.
+- Procedural release-only demos → train release BC → CLEAN eval (Codex prior pivot, still valid).
