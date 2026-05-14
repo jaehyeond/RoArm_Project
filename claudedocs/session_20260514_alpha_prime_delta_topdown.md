@@ -347,3 +347,67 @@ Reserve: (γ) PPO Skill 1 descend+grasp primitive (1-2 weeks, paper-quality).
 - #18: user-explicit "(a)=4-stage OK / (b)=exclude_gripper 같이 추가 / (c)=append-only 정정" all followed; user pre-commit "stage 튜닝 금지 후 geometry/contact deep-dive로" honored.
 - #19: edge-stand 47mm sponge geometry unchanged.
 - #26: B200 physics-only state-only RL (until 5/19) — maintained.
+
+---
+
+## (δ.5) Result — 5-D/5-E/5-F contact geometry diagnostic (2026-05-14 PM)
+
+### Edits / run
+
+- Added diagnostic logging to `roarm_rl/chain_skills.py`:
+  - 5-D: sponge raw/cache root z, top z, TCP-vs-top gap, `_grasped/_was_grasped`.
+  - 5-E: `gripper_link` collision mesh world bbox at Skill 1b stall.
+  - 5-F proxy: `gripper_link.stl` local bbox. Note: URDF/USD has single
+    `gripper_link` collision mesh, not separate left/right finger links, so true
+    inner jaw gap is not directly represented by body names.
+- Local checks passed: `python -m py_compile roarm_rl/chain_skills.py`,
+  `python roarm_rl/chain_skills.py --dry-run`.
+- md5: `chain_skills.py = 03169d005c4d39fa10583047e8957961`;
+  `launch_chain_topdown.sh = 2d52c0efd2ca1d5bab78f3e029185a47`.
+- B200 run: `/tmp/chain_topdown_v4.{out,err}`.
+
+### Key evidence
+
+| Diagnostic | Result |
+|---|---|
+| 5-D initial write | raw sponge root `(+250.0,-40.0,+11.4)mm`, expected center OK |
+| 5-D after Skill 0/1a settling | sponge root `(+266.0,-34.5,+23.5)mm`; sponge top `+47.0mm` |
+| Skill 1b1 target +50 | TCP `+51.79mm`; TCP minus sponge top `+4.79mm` |
+| Skill 1b2 target +40 | TCP `+51.72mm`; TCP minus sponge top `+4.73mm` |
+| Skill 1b3 target +33 | TCP `+51.80mm`; TCP minus sponge top `+4.81mm` |
+| 5-E gripper mesh | `gripper_link` mesh min-z `+47.4mm`, max-z `+127.9~128.0mm` |
+| 5-E top gap | mesh min-z minus sponge top `+0.4mm` at all 1b stages |
+| 5-E xy overlap | AABB overlap about `60.0mm × 22.0mm` (directly over sponge width) |
+| latch check | `_grasped=False`, `_was_grasped=False` through Skill 1b |
+
+### Conclusion
+
+The D008 `+51.8mm` equilibrium is now localized: the gripper_link collision
+envelope bottoms out at the settled sponge top (`+47.4mm` vs `+47.0mm`) while the
+TCP remains about `+4.8mm` above that top. The robot is not failing because of
+waypoint step size, action interface, or grasp latch. It is a top-contact
+geometry/collision bottleneck before grasp.
+
+This matches the intended high-level strategy (top-down approach avoids side
+knocking), but the current TCP/gripper geometry places the collision mesh on the
+sponge top before the TCP reaches the planned `+33mm` grasp pose.
+
+### Next recommendation
+
+Do not generate four-sponge well/hash stacking demos yet. First fix the top-down
+pick primitive:
+
+1. G1 quick geometry patch: raise/redefine `TCP_GRASP_Z`, shift TCP relative to
+   sponge center, or alter wrist/gripper approach so the collision mesh clears
+   the sponge top while still closing around the 22mm width.
+2. Re-run B200 chain with same diagnostics; PASS only if Skill 1b reaches grasp
+   pose, `grasped=True`, and no side knock/top stall.
+3. Then resume four-sponge workspace planning: white table, black robot, gray
+   background, four pink edge-stand sponges arranged in the well/hash layout;
+   pick each sponge from above and place/stack sequentially.
+
+### Inventory delta
+
+- `roarm_rl/chain_skills.py` md5 `03169d005c4d39fa10583047e8957961`.
+- `launch_chain_topdown.sh` md5 `2d52c0efd2ca1d5bab78f3e029185a47`.
+- B200 logs: `/tmp/chain_topdown_v4.out`, `/tmp/chain_topdown_v4.err`.

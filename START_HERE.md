@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-05-14 PM KST (post-δ.4 end-of-session update)
+Last updated: 2026-05-14 PM KST (post-δ.5 contact diagnostic)
 
 This is the rolling project dashboard. It is overwritten as the project moves.
 Do not use it as the full experiment history. Durable lessons live in
@@ -16,8 +16,11 @@ Latest verified state:
     `(delta.2) gripper -10° BLOCKED by URDF clamp`.
   - APPENDIX (5/14 PM): `(δ.2) doc errata` correcting L138-139 Skill 0/1a step counts
     (actual 200/150 step max, not 21/14) — append-only.
-  - New section (5/14 PM): `(δ.4) Result` — Skill 1b multi-stage diagnostic.
+  - Section (5/14 PM): `(δ.4) Result` — Skill 1b multi-stage diagnostic.
     Stall localized to TCP z ≈ +51.8mm INVARIANT under target depth (D008).
+  - New section (5/14 PM): `(δ.5) Result` — contact geometry diagnostic.
+    Settled sponge top ≈ +47.0mm; gripper_link mesh min-z ≈ +47.4mm at stall
+    (D009). Root cause now top-contact/collision geometry.
 
 Active pivot: **Hierarchical chain skills with P6v14a as learned release sub-skill**.
 (D003 contamination avoided — P6v14a is used as a primitive, NOT as BC training source.)
@@ -38,9 +41,9 @@ RoArm + Isaac Lab sponge stacking research. B200 = headless state-only learning/
 - Counter-path inflation: `7.3x`
 - Decision: Path D FAIL under `<10% CLEAN` gate. Don't repeat BC-on-RL-rollout (D003).
 
-### Hierarchical chain (current pivot — descent stall LOCALIZED, next deep-dive)
+### Hierarchical chain (current pivot — top-contact localized, geometry fix next)
 
-`roarm_rl/chain_skills.py` (998 LOC) = scripted Skill 0/1/2/4 (IK + force-set per
+`roarm_rl/chain_skills.py` = scripted Skill 0/1/2/4 (IK + force-set per
 D007) + LEARNED Skill 3 (P6v14a/model_499.pt release primitive).
 
 Run-by-run summary:
@@ -72,52 +75,58 @@ Run-by-run summary:
     sub-stages → pure z contact equilibrium.
   - Conclusion (D008): contact equilibrium at +51.8mm; sub-stage splitting and
     step-ramping CANNOT bypass it. Fix is in geometry/contact space.
+- 5/14 (delta.5): 5-D/5-E/5-F contact geometry diagnostic.
+  - Initial write: sponge root z +11.4mm OK, but after Skill 0/1a settling root
+    z is +23.5mm → actual sponge top +47.0mm.
+  - At Skill 1b stall, TCP stays +51.72~+51.80mm while gripper_link mesh min-z
+    is +47.4mm, only +0.4mm above sponge top. XY AABB overlap ≈ 60mm × 22mm.
+  - `_grasped=False`, `_was_grasped=False` through Skill 1b, so not latch artifact.
+  - Conclusion (D009): current top-down pose is conceptually right, but collision
+    mesh contacts the sponge top before TCP can reach +33mm grasp. Fix geometry
+    before four-sponge stacking demo generation.
 
 ## Current Direction
 
-(δ.5) contact/geometry deep-dive (cheap diagnostics first, ~1.5h):
+(δ.6) top-down pick geometry fix before four-sponge well/hash stacking:
 
-1. **5-D — Sponge spawn / top z measure (30min)**: sim `_sponge.data.root_pos_w`
-   actual vs assumed `SPONGE_CENTER_Z=+11.4mm`. Compute sponge top z. Baseline
-   for all other diagnostics.
-2. **5-E — Finger tip world FK at TCP z=+51.8mm (1h)**: read sim finger tip body
-   pose vs TCP frame; compute finger_tip z and compare with sponge top z. Primary
-   collision evidence.
-3. **5-F — Gripper jaw separation at `q_gripper=0°` (30min)**: URDF FK or sim body
-   distance; compare with sponge 22mm width. If jaw < 22mm → finger presses sponge
-   side at descent.
+1. **G1 — Quick geometry patch (recommended)**: raise/redefine `TCP_GRASP_Z`,
+   shift TCP relative to sponge center, or rotate wrist/gripper so gripper_link
+   collision mesh clears the settled sponge top while closing around the 22mm width.
+2. Re-run B200 chain with the existing 5-D/5-E diagnostics. PASS only if Skill 1b
+   reaches grasp pose without top stall, `grasped=True`, and `CHAIN_FINAL_SUCCESS=YES`.
+3. Only after pick primitive succeeds: resume four-sponge well/hash workspace
+   planning/rendering (white table, black robot, gray background, pink edge-stand
+   sponges) and sequential pick/place/stack demo generation.
 
 Then branch on outcome:
-- finger_tip presses sponge TOP → redefine TCP_GRASP_Z, change finger collision,
-  or redesign grasp pose.
-- finger presses SIDE + jaw < 22mm → URDF gripper limit change = P6v14a retrain
-  risk (1-2 weeks) → (γ) PPO Skill 1 primitive likely cheaper path.
-- effort_limit (2.5 Nm) bottleneck → URDF effort↑ (mild retrain risk).
+- geometry patch succeeds → proceed to four-sponge source layout and stacking demos.
+- geometry patch cannot avoid top contact → inspect/modify gripper collision mesh
+  or train (γ) PPO Skill 1 primitive.
 
 Reserve: (γ) PPO Skill 1 descend+grasp primitive (1-2 weeks, paper-quality).
 Procedural release-only demos → release BC (Codex prior).
 
 ## Must Read First
 
-1. `claudedocs/DECISIONS.md` D006, D007, **D008 (new 5/14 PM)**
-2. `claudedocs/EXPERIMENT_LEDGER.md` — 2026-05-14 (α'), (δ), (δ.2), (δ.4) rows
-3. `claudedocs/session_20260514_alpha_prime_delta_topdown.md` — full (δ.4) section
-   + APPENDIX errata for (δ.2) L138-139
+1. `claudedocs/DECISIONS.md` D006, D007, D008, **D009 (new 5/14 PM)**
+2. `claudedocs/EXPERIMENT_LEDGER.md` — 2026-05-14 (α'), (δ), (δ.2), (δ.4), (δ.5) rows
+3. `claudedocs/session_20260514_alpha_prime_delta_topdown.md` — full (δ.4)/(δ.5)
+   sections + APPENDIX errata for (δ.2) L138-139
 4. `claudedocs/session_20260513_chain_skills_hierarchical_pivot.md` (architecture
    origin, force-set discovery, sponge collision)
-5. `roarm_rl/chain_skills.py` (current code — multi-stage Skill 1b + exclude_gripper)
+5. `roarm_rl/chain_skills.py` (current code — multi-stage Skill 1b + 5-D/5-E diagnostics)
 6. `roarm_rl/roarm_stack_env.py` L408-412 (`_pre_physics_step` clamp — D006/D007 anchor)
 7. `assets/roarm_m3/urdf/roarm_m3.urdf` (`link5_to_gripper_link` joint — D006 + 5-F target)
 
 ## Source Files To Verify Before Coding
 
-- `roarm_rl/chain_skills.py` — md5 `be689ea9a812f2d8d1470246559d207f` (998 LOC) (Lenovo + B200)
-- `launch_chain_topdown.sh` — md5 `c81398f58865ec1c73d99e8d7b2d90ee` (Lenovo + B200)
+- `roarm_rl/chain_skills.py` — md5 `03169d005c4d39fa10583047e8957961` (Lenovo + B200)
+- `launch_chain_topdown.sh` — md5 `2d52c0efd2ca1d5bab78f3e029185a47` (Lenovo + B200)
 - `launch_basin_sweep.sh` — md5 `a361aa673f82a663be8cd39ff4d0dee6` (Lenovo + B200, unchanged)
 - `roarm_rl/roarm_stack_env.py` (env physics — `_pre_physics_step` L408-412)
 - `assets/roarm_m3/urdf/roarm_m3.urdf` (gripper + finger joint limits — D006 + 5-F)
 - `logs/roarm_rl/p6v14a_pregrasp_resumeP6v14/model_499.pt` (Skill 3 source on B200)
-- B200 `/tmp/chain_topdown_v3.{out,err}` ((δ.4) full chain log)
+- B200 `/tmp/chain_topdown_v4.{out,err}` ((δ.5) contact geometry diagnostic)
 
 ## Do Not Trust As Current State
 
@@ -130,6 +139,8 @@ Procedural release-only demos → release BC (Codex prior).
   per APPENDIX errata.
 - "(δ.3) full ramping" as a viable next experiment — D008 predicts same failure.
 - "more sub-stages (5/6/N)" as a viable next experiment — D008 same prediction.
+- Four-sponge stacking demos before top-down pick succeeds — D009 says pick
+  primitive currently stalls on gripper-link top contact.
 
 ## Active Reserve Decision (HARD RULE #26 territory)
 

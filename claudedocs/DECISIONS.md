@@ -222,3 +222,37 @@ Source:
 - `claudedocs/session_20260514_alpha_prime_delta_topdown.md` (`(δ.4) Result` section, errata APPENDIX)
 - B200 logs `/tmp/chain_topdown_v3.out` (Skill 1b multi-stage descent trace)
 - `claudedocs/EXPERIMENT_LEDGER.md` (2026-05-14 (δ.4) row)
+
+## D009 — Skill 1b stall is gripper-link top-contact against settled sponge top; fix grasp geometry before stacking demos
+
+Evidence:
+
+- (δ.5) B200 diagnostic run `/tmp/chain_topdown_v4.out` added 5-D/5-E/5-F
+  logging to `chain_skills.py`.
+- 5-D: spawn write initially sets sponge root z to `+11.4mm` as expected, but after
+  Skill 0/1a settling the sponge root is `+23.5mm`; with 47mm edge-stand height,
+  actual sponge top is `+47.0mm`.
+- 5-E: at all Skill 1b sub-stage equilibria, TCP remains `+51.72~+51.80mm`,
+  while gripper_link collision mesh world bbox min-z is `+47.4mm`; this is only
+  `+0.4mm` above the measured sponge top. XY AABB overlap is large
+  (`~60.0mm × 22.0mm`), so the gripper collision envelope sits directly over
+  the sponge top/width.
+- `grasped=False` and `_was_grasped=False` through Skill 1b; this is not a
+  grasp latch artifact. It is collision/contact geometry before grasp.
+
+Implication:
+
+- The immediate bottleneck is not target depth, step-size, or action interface.
+  The current top-down TCP/gripper pose drives the gripper_link collision mesh
+  onto the sponge top before the TCP can reach `+33mm`.
+- Next fixes should test grasp geometry changes first: redefine `TCP_GRASP_Z`,
+  shift TCP relative to sponge center, change wrist/gripper approach pose, or
+  modify gripper collision mesh. Do not resume staged descent/ramping variants.
+- For the four-sponge well/hash stacking task, do not generate large demos until
+  the top-down pick primitive can clear the settled sponge top and close on the
+  sponge without top-contact stall.
+
+Source:
+
+- `claudedocs/session_20260514_alpha_prime_delta_topdown.md` (`(δ.5) Result` section)
+- B200 logs `/tmp/chain_topdown_v4.out`

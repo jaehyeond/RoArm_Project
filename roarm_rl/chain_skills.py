@@ -30,6 +30,8 @@ from __future__ import annotations
 
 import argparse
 import math
+import os
+import struct
 import sys
 from pathlib import Path
 from typing import Optional
@@ -47,6 +49,8 @@ from roarm_kinematics import fk_tcp, ik_dls, clip_joints, JOINT_LIMITS_DEG  # no
 # =====================================================================
 TABLE_Z = -0.012117
 SPONGE_HEIGHT_EDGE = 0.047
+SPONGE_LEN_LONG = 0.125
+SPONGE_WIDTH = 0.022
 SPONGE_CENTER_Z = TABLE_Z + SPONGE_HEIGHT_EDGE / 2.0
 TCP_GRASP_Z = +0.033
 HOVER_OFFSET_Z = 0.030      # 30mm above grasp z (legacy intermediate waypoint)
@@ -71,6 +75,53 @@ GRIPPER_CLOSE_DEG = 45.84    # match P6v14a training entry (0.8 rad).
 
 # Action scale in env (rad/step). roarm_stack_env.py L199.
 ACTION_SCALE_RAD = 0.1
+
+
+def _quat_rotate_np(q_wxyz: np.ndarray, points: np.ndarray) -> np.ndarray:
+    """Rotate Nx3 points by a wxyz quaternion."""
+    q = np.asarray(q_wxyz, dtype=np.float64)
+    pts = np.asarray(points, dtype=np.float64)
+    w, x, y, z = q
+    qvec = np.array([x, y, z], dtype=np.float64)
+    uv = np.cross(qvec, pts)
+    uuv = np.cross(qvec, uv)
+    return pts + 2.0 * (w * uv + uuv)
+
+
+def _candidate_gripper_mesh_paths() -> list[Path]:
+    paths: list[Path] = []
+    root = os.environ.get("ROARM_B200_ROOT")
+    if root:
+        paths.append(Path(root) / "assets/roarm_m3/urdf/meshes/gripper_link.stl")
+    paths.extend([
+        REPO / "local_assets/roarm_m3/urdf/meshes/gripper_link.stl",
+        REPO / "assets/roarm_m3/urdf/meshes/gripper_link.stl",
+    ])
+    return paths
+
+
+def _load_binary_stl_vertices_m(path: Path) -> np.ndarray:
+    data = path.read_bytes()
+    if len(data) < 84:
+        raise ValueError(f"STL too small: {path}")
+    n_tri = struct.unpack("<I", data[80:84])[0]
+    expected = 84 + 50 * n_tri
+    if expected > len(data):
+        raise ValueError(f"STL size mismatch: {path} expected {expected}, got {len(data)}")
+    verts = []
+    off = 84
+    for _ in range(n_tri):
+        vals = struct.unpack("<12fH", data[off:off + 50])
+        verts.extend((vals[3:6], vals[6:9], vals[9:12]))
+        off += 50
+    return np.asarray(verts, dtype=np.float64) * 0.001
+
+
+def _load_gripper_mesh_vertices_m() -> tuple[Optional[np.ndarray], Optional[Path]]:
+    for path in _candidate_gripper_mesh_paths():
+        if path.exists():
+            return _load_binary_stl_vertices_m(path), path
+    return None, None
 
 
 # =====================================================================
@@ -401,10 +452,68 @@ def run_chain_isaac(sponge_xy: tuple, episode_idx: int, model_path: str,
                "grasped_at_skill1_end": None}
 
     current_q_np = base_env._robot.data.joint_pos[0].detach().cpu().numpy().astype(np.float64)
+    gripper_mesh_vertices_m, gripper_mesh_path = _load_gripper_mesh_vertices_m()
+    if gripper_mesh_vertices_m is not None:
+        mesh_min = gripper_mesh_vertices_m.min(axis=0) * 1000.0
+        mesh_max = gripper_mesh_vertices_m.max(axis=0) * 1000.0
+        print(f"[diag 5-F/proxy] gripper_link mesh={gripper_mesh_path}", flush=True)
+        print(f"[diag 5-F/proxy] gripper_link local_bbox_mm "
+              f"min=({mesh_min[0]:+.1f},{mesh_min[1]:+.1f},{mesh_min[2]:+.1f}) "
+              f"max=({mesh_max[0]:+.1f},{mesh_max[1]:+.1f},{mesh_max[2]:+.1f}) "
+              f"span=({mesh_max[0]-mesh_min[0]:.1f},{mesh_max[1]-mesh_min[1]:.1f},{mesh_max[2]-mesh_min[2]:.1f}) "
+              f"NOTE: single gripper_link collision mesh; true inner jaw gap is not directly represented.",
+              flush=True)
+    else:
+        print("[diag 5-F/proxy] WARN gripper_link mesh not found; skip mesh bbox diagnostics", flush=True)
+
+    def _sponge_diag(label: str):
+        env_origin = base_env.scene.env_origins[0].detach().cpu().numpy()
+        raw_local = base_env._sponge.data.root_pos_w[0].detach().cpu().numpy() - env_origin
+        cache_local = base_env._sponge_pos_w[0].detach().cpu().numpy() - env_origin
+        top_z = raw_local[2] + SPONGE_HEIGHT_EDGE / 2.0
+        bottom_z = raw_local[2] - SPONGE_HEIGHT_EDGE / 2.0
+        tcp_local = base_env._tcp_pos_w[0].detach().cpu().numpy() - env_origin
+        d_tcp_sponge = float(np.linalg.norm(tcp_local - raw_local))
+        print(f"[diag 5-D/{label}] raw_root=({raw_local[0]*1000:+.1f},{raw_local[1]*1000:+.1f},{raw_local[2]*1000:+.1f})mm "
+              f"cache_root=({cache_local[0]*1000:+.1f},{cache_local[1]*1000:+.1f},{cache_local[2]*1000:+.1f})mm "
+              f"assumed_center_z={SPONGE_CENTER_Z*1000:+.1f}mm "
+              f"bottom_z={bottom_z*1000:+.1f}mm top_z={top_z*1000:+.1f}mm "
+              f"tcp_z={tcp_local[2]*1000:+.1f}mm tcp_minus_top={(tcp_local[2]-top_z)*1000:+.1f}mm "
+              f"d_tcp_sponge={d_tcp_sponge*1000:.1f}mm "
+              f"grasped={bool(base_env._grasped[0].item())} was_grasped={bool(base_env._was_grasped[0].item())}",
+              flush=True)
+        return raw_local, top_z
+
+    def _gripper_mesh_diag(label: str, sponge_local: np.ndarray, sponge_top_z: float):
+        if gripper_mesh_vertices_m is None:
+            return
+        env_origin = base_env.scene.env_origins[0].detach().cpu().numpy()
+        grip_pos = base_env._robot.data.body_pos_w[0, base_env.gripper_link_idx].detach().cpu().numpy()
+        grip_quat = base_env._robot.data.body_quat_w[0, base_env.gripper_link_idx].detach().cpu().numpy()
+        verts_world_local = _quat_rotate_np(grip_quat, gripper_mesh_vertices_m) + grip_pos - env_origin
+        bb_min = verts_world_local.min(axis=0)
+        bb_max = verts_world_local.max(axis=0)
+        sponge_half = np.array([SPONGE_LEN_LONG / 2.0, SPONGE_WIDTH / 2.0, SPONGE_HEIGHT_EDGE / 2.0])
+        sponge_min = sponge_local - sponge_half
+        sponge_max = sponge_local + sponge_half
+        overlap_x = max(0.0, min(bb_max[0], sponge_max[0]) - max(bb_min[0], sponge_min[0]))
+        overlap_y = max(0.0, min(bb_max[1], sponge_max[1]) - max(bb_min[1], sponge_min[1]))
+        top_penetration = sponge_top_z - bb_min[2]
+        print(f"[diag 5-E/{label}] gripper_link_origin=({(grip_pos[0]-env_origin[0])*1000:+.1f},"
+              f"{(grip_pos[1]-env_origin[1])*1000:+.1f},{(grip_pos[2]-env_origin[2])*1000:+.1f})mm "
+              f"mesh_world_bbox_min=({bb_min[0]*1000:+.1f},{bb_min[1]*1000:+.1f},{bb_min[2]*1000:+.1f})mm "
+              f"max=({bb_max[0]*1000:+.1f},{bb_max[1]*1000:+.1f},{bb_max[2]*1000:+.1f})mm "
+              f"mesh_min_z_minus_sponge_top={(bb_min[2]-sponge_top_z)*1000:+.1f}mm "
+              f"top_penetration_if_positive={top_penetration*1000:+.1f}mm "
+              f"xy_aabb_overlap=({overlap_x*1000:.1f},{overlap_y*1000:.1f})mm "
+              f"world_y_span={(bb_max[1]-bb_min[1])*1000:.1f}mm vs sponge_width={SPONGE_WIDTH*1000:.1f}mm",
+              flush=True)
+
     print(f"[chain] init current_q_deg = {[f'{math.degrees(x):+.2f}' for x in current_q_np]}", flush=True)
     sponge_pos_init = base_env._sponge.data.root_pos_w[0].detach().cpu().numpy() - base_env.scene.env_origins[0].detach().cpu().numpy()
     print(f"[chain] init sponge_pos_local = ({sponge_pos_init[0]*1000:+.1f}, {sponge_pos_init[1]*1000:+.1f}, {sponge_pos_init[2]*1000:+.1f})mm "
           f"(expected ({sponge_xy[0]*1000:+.1f}, {sponge_xy[1]*1000:+.1f}, {SPONGE_CENTER_Z*1000:+.1f})mm)", flush=True)
+    _sponge_diag("after_write_before_step")
     total_step = 0
 
     def step_action(action_np):
@@ -482,6 +591,7 @@ def run_chain_isaac(sponge_xy: tuple, episode_idx: int, model_path: str,
     def _diag_log(label, target_z_m, result):
         tcp_local = base_env._tcp_pos_w[0].detach().cpu().numpy() - base_env.scene.env_origins[0].detach().cpu().numpy()
         sponge_local = base_env._sponge_pos_w[0].detach().cpu().numpy() - base_env.scene.env_origins[0].detach().cpu().numpy()
+        sponge_top_z = sponge_local[2] + SPONGE_HEIGHT_EDGE / 2.0
         tcp_target = np.array([sponge_xy[0], sponge_xy[1], target_z_m])
         tcp_err_mm = float(np.linalg.norm(tcp_target - tcp_local) * 1000.0)
         print(f"  [{label}] steps={result['steps']} "
@@ -489,10 +599,15 @@ def run_chain_isaac(sponge_xy: tuple, episode_idx: int, model_path: str,
               f"gripper_q={math.degrees(result['gripper_q_rad']):+.2f}deg "
               f"TCP_actual_z={tcp_local[2]*1000:+.2f}mm "
               f"TCP_target_z={target_z_m*1000:+.1f}mm "
+              f"TCP_minus_sponge_top={(tcp_local[2]-sponge_top_z)*1000:+.2f}mm "
               f"TCP_xyz_err={tcp_err_mm:.2f}mm  "
               f"TCP=({tcp_local[0]*1000:+.1f},{tcp_local[1]*1000:+.1f},{tcp_local[2]*1000:+.1f})mm  "
-              f"sponge=({sponge_local[0]*1000:+.1f},{sponge_local[1]*1000:+.1f},{sponge_local[2]*1000:+.1f})mm",
+              f"sponge=({sponge_local[0]*1000:+.1f},{sponge_local[1]*1000:+.1f},{sponge_local[2]*1000:+.1f})mm "
+              f"sponge_top={sponge_top_z*1000:+.1f}mm "
+              f"grasped={bool(base_env._grasped[0].item())} was_grasped={bool(base_env._was_grasped[0].item())}",
               flush=True)
+        if label.startswith("skill1b"):
+            _gripper_mesh_diag(label, sponge_local, sponge_top_z)
         return tcp_local, sponge_local, tcp_err_mm
 
     # === Skill 0: HOME -> q_high (TCP +150mm world, top-down approach 5/14) ===
