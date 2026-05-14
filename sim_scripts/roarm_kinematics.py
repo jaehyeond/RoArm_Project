@@ -8,8 +8,8 @@ from __future__ import annotations
 from pathlib import Path
 import json
 import numpy as np
-import pandas as pd
 from numpy import cos, sin, pi
+# pandas is lazy-imported inside V6WarmStart (not needed for FK/IK)
 
 
 # ---------------------------------------------------------------
@@ -146,6 +146,7 @@ def ik_dls(
 # ---------------------------------------------------------------
 class V6WarmStart:
     def __init__(self, parquet_path="lerobot_dataset_v6/data/chunk-000/file-000.parquet"):
+        import pandas as pd
         df = pd.read_parquet(parquet_path)
         self.states = np.stack(df["observation.state"].values).astype(np.float64)  # (N, 6)
         self.tcps = np.array([fk_tcp(s) for s in self.states])  # (N, 3)

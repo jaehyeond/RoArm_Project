@@ -1,0 +1,57 @@
+=== RoArm B200 (Lenovo) env loaded ===
+  ROOT     : /NHNHOME/WORKSPACE/0526040060_A/JHPark/roarm_b200
+  GPU      : 0 (UUID GPU-c553ca20-377c-49dd-c...)
+  HF_HOME  : /NHNHOME/WORKSPACE/0526040060_A/JHPark/roarm_b200/.cache/huggingface
+  Active   : /NHNHOME/WORKSPACE/0526040060_A/JHPark/roarm_b200/envs/roarm_b200
+Loading user config located at: '/NHNHOME/WORKSPACE/0526040060_A/JHPark/roarm_b200/envs/isaacsim_5_1/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/user.config.json'
+[Info] [carb] Logging to file: /NHNHOME/WORKSPACE/0526040060_A/JHPark/roarm_b200/envs/isaacsim_5_1/lib/python3.11/site-packages/isaacsim/kit/logs/Kit/Isaac-Sim/5.1/kit_20260513_224728.log
+2026-05-13T13:47:31Z [2,288ms] [Warning] [omni.usd_config.extension] Enable omni.materialx.libs extension to use MaterialX
+2026-05-13T13:47:35Z [6,652ms] [Warning] [omni.platforminfo.plugin] failed to open the default display.  Can't verify X Server version.
+2026-05-13T13:47:38Z [9,646ms] [Warning] [carb] Acquiring non optional plugin interface which is not listed as dependency: [omni::physx::IPhysxBenchmarks v1.0] (plugin: <default plugin>), by client: omni.physics.physx.plugin. Add it to CARB_PLUGIN_IMPL_DEPS() macro of a client.
+2026-05-13T13:47:38Z [9,893ms] [Warning] [omni.isaac.dynamic_control] omni.isaac.dynamic_control is deprecated as of Isaac Sim 4.5. No action is needed from end-users.
+2026-05-13T13:48:16Z [47,644ms] [Warning] [carb.cudainterop.plugin] CUDA_VISIBLE_DEVICES environment variable is set.
+2026-05-13T13:48:16Z [47,644ms] [Warning] [carb.cudainterop.plugin] Note CUDA device enumeration and Omniverse device enumeration are different.
+2026-05-13T13:48:16Z [47,644ms] [Warning] [carb.cudainterop.plugin] Setting CUDA_VISIBLE_DEVICES can lead to undesired behavior or crashes.
+2026-05-13T13:48:17Z [49,109ms] [Warning] [gpu.foundation.plugin] Skipping NVIDIA GPU due CUDA being in bad state: NVIDIA B200
+2026-05-13T13:48:17Z [49,109ms] [Warning] [gpu.foundation.plugin] Please restart your system if CUDA is known to work in your system.
+2026-05-13T13:48:17Z [49,109ms] [Warning] [gpu.foundation.plugin] Skipping NVIDIA GPU due CUDA being in bad state: NVIDIA B200
+2026-05-13T13:48:17Z [49,109ms] [Warning] [gpu.foundation.plugin] Please restart your system if CUDA is known to work in your system.
+
+|---------------------------------------------------------------------------------------------|
+| Driver Version: 580.95.05     | Graphics API: Vulkan
+|=============================================================================================|
+| GPU | Name                             | Active | LDA | GPU Memory | Vendor-ID | LUID       |
+|     |                                  |        |     |            | Device-ID | UUID       |
+|     |                                  |        |     |            | Bus-ID    |            |
+|---------------------------------------------------------------------------------------------|
+| 0   | NVIDIA B200                      | Yes: 0 |     | 183359  MB | 10de      | 0          |
+|     |                                  |        |     |            | 2901      | c553ca20.. |
+|     |                                  |        |     |            | 64        |            |
+|---------------------------------------------------------------------------------------------|
+| 1   | NVIDIA B200                      |        |     | 183359  MB | 10de      | 0          |
+|     |                                  |        |     |            | 2901      | 9bb0514d.. |
+|     |                                  |        |     |            | 94        |            |
+|=============================================================================================|
+| OS: 22.04.5 LTS (Jammy Jellyfish) ubuntu, Version: 22.04.5, Kernel: 6.8.0-100-generic
+| Processor: AMD EPYC 9365 36-Core Processor
+| Cores: 72 | Logical Cores: 72
+|---------------------------------------------------------------------------------------------|
+| Total Memory (MB): 2317624 | Free Memory: 2171960
+| Total Page/Swap (MB): 0 | Free Page/Swap: 0
+|---------------------------------------------------------------------------------------------|
+2026-05-13T13:48:19Z [50,299ms] [Warning] [carb.cudainterop.plugin] Unable to get NVML device from physical device.
+2026-05-13T13:48:19Z [50,334ms] [Warning] [carb.cudainterop.plugin] Unable to get NVML device from physical device.
+
+[chain] Isaac Sim chain run, episodes=1, sponge_xy=[0.25, -0.04]
+[INFO][AppLauncher]: Using device: cuda:0
+[INFO][AppLauncher]: Loading experience file: /NHNHOME/WORKSPACE/0526040060_A/JHPark/roarm_b200/code/IsaacLab/apps/isaaclab.python.headless.kit
+
+[36m==============================================================================================================================================[0m
+[36m[1m[INFO][IsaacLab]: Logging to file: /NHNHOME/WORKSPACE/0526040060_A/JHPark/roarm_b200/.cache/tmp/isaaclab/logs/isaaclab_2026-05-13_22-48-26.log[0m
+[36m==============================================================================================================================================[0m
+
+[33m22:48:28 [simulation_context.py] WARNING: The `enable_external_forces_every_iteration` parameter in the PhysxCfg is set to False. If you are experiencing noisy velocities, consider enabling this flag. You may need to slightly increase the number of velocity iterations (setting it to 1 or 2 rather than 0), together with this flag, to improve the accuracy of velocity updates.[0m
+2026-05-13T13:48:19Z [50,369ms] [Warning] [carb.cudainterop.plugin] Unable to get NVML device from physical device.
+2026-05-13T13:48:26Z [58,166ms] [Warning] [isaaclab.envs.direct_rl_env] Seed not set for the environment. The environment creation may not be deterministic.
+2026-05-13T13:48:36Z [68,164ms] [Warning] [omni.physx.plugin] USD stage detach not called, holding a loose ptr to a stage!
+2026-05-13T13:48:37Z [68,707ms] [Warning] [carb] Recursive unloadAllPlugins() detected!

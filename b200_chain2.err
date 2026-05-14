@@ -1,0 +1,29 @@
+Warning: Permanently added '[59.150.32.1]:47110' (ED25519) to the list of known hosts.
+2026-05-13T13:48:16Z [47,684ms] [Error] [carb.cudainterop.plugin] Could not initialize NVML: return code 18 (NVML_ERROR_LIB_RM_VERSION_MISMATCH: RM detects a driver/library version mismatch.)
+2026-05-13T13:48:16Z [47,718ms] [Error] [carb.cudainterop.plugin] Could not initialize NVML: return code 18 (NVML_ERROR_LIB_RM_VERSION_MISMATCH: RM detects a driver/library version mismatch.)
+cat: '/sys/devices/system/cpu/cpu*/cpufreq/scaling_governor': No such file or directory
+2026-05-13T13:48:19Z [50,299ms] [Error] [carb.cudainterop.plugin] Could not initialize NVML: return code 18 (NVML_ERROR_LIB_RM_VERSION_MISMATCH: RM detects a driver/library version mismatch.)
+2026-05-13T13:48:19Z [50,334ms] [Error] [carb.cudainterop.plugin] Could not initialize NVML: return code 18 (NVML_ERROR_LIB_RM_VERSION_MISMATCH: RM detects a driver/library version mismatch.)
+2026-05-13T13:48:19Z [50,369ms] [Error] [carb.cudainterop.plugin] Could not initialize NVML: return code 18 (NVML_ERROR_LIB_RM_VERSION_MISMATCH: RM detects a driver/library version mismatch.)
+/NHNHOME/WORKSPACE/0526040060_A/JHPark/roarm_b200/envs/isaacsim_5_1/lib/python3.11/site-packages/torch/cuda/__init__.py:843: UserWarning: Can't initialize NVML
+  warnings.warn("Can't initialize NVML")
+2026-05-13T13:48:31Z [62,654ms] [Error] [isaacsim.core.cloner.impl.cloner] Failed to clone in Fabric
+/NHNHOME/WORKSPACE/0526040060_A/JHPark/roarm_b200/envs/isaacsim_5_1/lib/python3.11/site-packages/rsl_rl/utils/utils.py:245: UserWarning: The observation configuration dictionary 'obs_groups' must contain the 'policy' key. As an observation group with the name 'policy' was found, this is assumed to be the observation set. Consider adding the 'policy' key to the 'obs_groups' dictionary for clarity. This behavior will be removed in a future version.
+  warnings.warn(
+/NHNHOME/WORKSPACE/0526040060_A/JHPark/roarm_b200/envs/isaacsim_5_1/lib/python3.11/site-packages/rsl_rl/utils/utils.py:291: UserWarning: The observation configuration dictionary 'obs_groups' must contain the 'critic' key. As the configuration for 'critic' is missing, the observations from the 'policy' set are used. Consider adding the 'critic' key to the 'obs_groups' dictionary for clarity. This behavior will be removed in a future version.
+  warnings.warn(
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/NHNHOME/WORKSPACE/0526040060_A/JHPark/roarm_b200/code/roarm_rl/chain_skills.py", line 415, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/NHNHOME/WORKSPACE/0526040060_A/JHPark/roarm_b200/code/roarm_rl/chain_skills.py", line 407, in main
+    m = run_chain_isaac(args.sponge_xy, ep, args.model_path)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/NHNHOME/WORKSPACE/0526040060_A/JHPark/roarm_b200/code/roarm_rl/chain_skills.py", line 311, in run_chain_isaac
+    step_action(action_np)
+  File "/NHNHOME/WORKSPACE/0526040060_A/JHPark/roarm_b200/code/roarm_rl/chain_skills.py", line 303, in step_action
+    obs_t, rew, term, trunc, info = env.step(action)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: not enough values to unpack (expected 5, got 4)

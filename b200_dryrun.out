@@ -1,0 +1,28 @@
+=== RoArm B200 (Lenovo) env loaded ===
+  ROOT     : /NHNHOME/WORKSPACE/0526040060_A/JHPark/roarm_b200
+  GPU      : 0 (UUID GPU-c553ca20-377c-49dd-c...)
+  HF_HOME  : /NHNHOME/WORKSPACE/0526040060_A/JHPark/roarm_b200/.cache/huggingface
+  Active   : /NHNHOME/WORKSPACE/0526040060_A/JHPark/roarm_b200/envs/roarm_b200
+================================================================================
+Dry-run: TrajectoryPlanner only (no Isaac Sim)
+================================================================================
+  Waypoint hover               : q_deg=['  -9.1', ' +19.3', '+121.1', ' +15.9', '  +0.0']  TCP=(+249.7, -39.9, +63.4)mm
+  Waypoint grasp               : q_deg=['  -9.1', ' +26.9', '+120.1', ' +14.3', '  +0.0']  TCP=(+249.5, -39.9, +33.6)mm
+  Waypoint transport_hover     : q_deg=['  -8.8', ' +23.1', '+116.0', ' +12.3', '  +0.0']  TCP=(+279.4, -43.4, +63.3)mm
+
+Sponge:        (+250.0, -40.0, +11.4)mm
+Place target:  (+280.0, -43.5, +11.4)mm
+
+Skill 0 (HOME->hover):        6 steps
+Skill 1 (hover->grasp+close):  10 steps
+Skill 2 (grasp->place hover):   1 steps
+Total scripted (0+1+2):        17 steps
+Budget remaining for skill3:  183 steps (P6v14a max=200)
+Final scripted q residual:    0.000 deg (OK)
+Final TCP:                   (+279.4,-43.4,+63.3)mm
+Target TCP:                  (+280.0,-43.5,+63.0)mm
+Residual TCP error:          0.64mm
+
+================================================================================
+Result: PASS
+================================================================================
