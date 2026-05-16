@@ -13,11 +13,12 @@ Target (HARD RULE #20, L1.spot1, decision recorded 2026-05-08):
   -> target sponge center = (+0.280, -0.0435, +0.011383) world == base coord
   HOME = [0, 0, pi/2, 0, 0, 0]
 
-Reward curriculum (cfg.reward_phase in {4, 5, 6}):
+    Reward curriculum (cfg.reward_phase in {4, 5, 6, 7}):
   P4 stabilize : reach + lift + grasp + lift_success_bonus
                  (Phase 1.A P3 reproduced; target ignored — for warm-start anneal)
   P5 navigate  : P4 + nav_reward (only when grasped, weighted by -|sponge - target|)
-  P6 place     : P5 + place_bonus + place_success_bonus (single-shot)
+	  P6 place     : P5 + place_bonus + place_success_bonus (single-shot)
+	  P7 transport/release : G2-A attached transport + release-only tower
 
 Termination: NEVER on success (HARD RULE / Phase 1.A lesson — collapse cause).
              Episode ends only on truncation (max_episode_length).
@@ -59,6 +60,26 @@ SPONGE_CENTER_Z = TABLE_Z + SPONGE_HEIGHT_EDGE / 2.0  # +0.011383
 
 # L1.spot1 target (sponge center coord, world)
 TARGET_L1_SPOT1 = (0.280, -0.0435, SPONGE_CENTER_Z)
+TARGET_L1_SPOT2 = (0.280, +0.0435, SPONGE_CENTER_Z)
+
+# G2-A v11 seed0 four-source attached handoff distribution.
+# These are post-Skill-1c latch poses from the same top-down pick planner that
+# fixed the gripper_link top-contact failure.  The policy starts already
+# attached, so B200 time is spent on the current failing surface: transport and
+# release, not re-learning Skill 1b/1c.
+G2A_SEED0_ATTACHED_Q_RAD = (
+    (-0.6916619, 0.4990615, 1.9663698, 0.1758003, math.pi / 2.0, 0.4537856),
+    (+0.8242815, 0.3933379, 2.1345673, 0.2568303, math.pi / 2.0, 0.4537856),
+    (-0.3026116, 0.8245730, 1.4823227, -0.0719685, math.pi / 2.0, 0.4537856),
+    (+0.3845700, 0.9971872, 1.2305230, -0.1880081, math.pi / 2.0, 0.4537856),
+)
+G2A_SEED0_ATTACHED_TCP = (
+    (+0.229508, -0.190064, +0.047238),
+    (+0.167471, +0.181029, +0.047368),
+    (+0.405889, -0.126718, +0.047577),
+    (+0.439077, +0.177704, +0.047155),
+)
+G2A_SEED0_TARGETS = (TARGET_L1_SPOT1, TARGET_L1_SPOT2, TARGET_L1_SPOT1, TARGET_L1_SPOT2)
 
 HOME_RAD = (0.0, 0.0, math.pi / 2, 0.0, 0.0, 0.0)
 
@@ -263,6 +284,24 @@ class RoArmStackEnvCfg(DirectRLEnvCfg):
     curriculum_post_grasp_cap: bool = False
     curriculum_post_grasp_cap_value: float = 3.0  # Stage 2 r when post_grasp_cap=True. Must > stage 1 max (2.0).
 
+    # P6v17 (5/15) — G2-A attached transport/release curriculum.
+    # Starts from the stable post-pick handoff distribution instead of HOME:
+    # wrist_r +90 deg, gripper latch ~26 deg, _grasped/_was_grasped=True, sponge at
+    # TCP, target sampled from the v11 four-source layout.  This tests whether PPO
+    # can learn a stable source-to-target attached transport and physical release
+    # under the current _update_grasp_attach model. It is explicitly not a Skill
+    # 1b/1c tuning path and not a release-only curriculum.
+    curriculum_attached_transport_release: bool = False
+    curriculum_attached_start_jitter_rad: float = 0.01
+
+    # Attach pose-write semantics.
+    # Defaults preserve the original behavior exactly: sponge xyz is pinned to
+    # TCP, current sponge quaternion is preserved, and root velocity is zeroed.
+    # P7 diagnostics showed quaternion preservation amplifies attached tipping,
+    # so non-default modes are gated mechanics experiments, not baseline changes.
+    attach_quat_mode: str = "preserve"      # preserve | identity
+    attach_velocity_mode: str = "zero"      # zero | keep
+
     # P4 reward weights (mirrors Phase 1.A P3)
     reach_reward_scale: float = 1.0
     action_penalty_scale: float = 0.005
@@ -333,6 +372,16 @@ class RoArmStackEnv(DirectRLEnv):
         super().__init__(cfg, render_mode, **kwargs)
 
         self.dt = self.cfg.sim.dt * self.cfg.decimation
+        if self.cfg.attach_quat_mode not in ("preserve", "identity"):
+            raise ValueError(
+                f"attach_quat_mode must be 'preserve' or 'identity' "
+                f"(got {self.cfg.attach_quat_mode!r})"
+            )
+        if self.cfg.attach_velocity_mode not in ("zero", "keep"):
+            raise ValueError(
+                f"attach_velocity_mode must be 'zero' or 'keep' "
+                f"(got {self.cfg.attach_velocity_mode!r})"
+            )
 
         self.robot_dof_lower_limits = self._robot.data.soft_joint_pos_limits[0, :, 0].to(self.device)
         self.robot_dof_upper_limits = self._robot.data.soft_joint_pos_limits[0, :, 1].to(self.device)
@@ -455,6 +504,8 @@ class RoArmStackEnv(DirectRLEnv):
         # P6 v6 (5/12): if reward_phase == 6, use ManiSkill StackCube REPLACE tower
         # (root-cause fix for hold-path globally optimal misspecification — 5/12 doc).
         # P4/P5 keep legacy ADD-with-gating logic (proven Phase 1.A reach + nav warmup).
+        if self.cfg.reward_phase == 7:
+            return self._p7_transport_release_tower()
         if self.cfg.reward_phase == 6:
             return self._p6v6_replace_tower()
 
@@ -774,6 +825,89 @@ class RoArmStackEnv(DirectRLEnv):
         return rewards
 
     # =================================================================
+    def _p7_transport_release_tower(self) -> torch.Tensor:
+        """Transport/release-only reward for G2-A attached starts.
+
+        This avoids the P6 failure mode where attached policies farm grasp-hold
+        reward while lifting the sponge away from the target.  The only useful
+        attached behavior here is to move the sponge/TCP to a release entry above
+        the sampled target, then open and settle.
+        """
+        target_xy = self._target_world[:, :2]
+        sponge_xy = self._sponge_pos_w[:, :2]
+        xy_offset = torch.norm(target_xy - sponge_xy, p=2, dim=-1)
+        settled_z_offset = torch.abs(self._target_world[:, 2] - self._sponge_pos_w[:, 2])
+        release_entry_z = self._target_world[:, 2] + 0.029
+        release_z_offset = torch.abs(release_entry_z - self._sponge_pos_w[:, 2])
+
+        gripper_q = self._robot.data.joint_pos[:, self.gripper_joint_idx]
+        gripper_open = gripper_q < self.cfg.grasp_gripper_thresh
+        is_grasped = self._grasped
+        was_grasped = self._was_grasped
+
+        sponge_lin_vel = self._sponge.data.root_lin_vel_w
+        sponge_vel_mag = torch.norm(sponge_lin_vel, p=2, dim=-1)
+        sponge_stable = sponge_vel_mag < 0.10
+        static_signal = 1.0 - torch.tanh(10.0 * sponge_vel_mag)
+
+        qw, qx, qy, qz = (self._sponge_quat_w[:, 0], self._sponge_quat_w[:, 1],
+                          self._sponge_quat_w[:, 2], self._sponge_quat_w[:, 3])
+        sz_world_z = 1.0 - 2.0 * (qx * qx + qy * qy)
+        upright = sz_world_z > 0.90
+
+        xy_score = 1.0 - torch.tanh(8.0 * xy_offset)
+        release_z_score = 1.0 - torch.tanh(35.0 * release_z_offset)
+        settled_z_score = 1.0 - torch.tanh(45.0 * settled_z_offset)
+
+        near_release = (xy_offset < 0.040) & (release_z_offset < 0.020)
+        on_target = (xy_offset < self.cfg.on_target_xy_thresh) & (settled_z_offset < self.cfg.on_target_z_thresh) & upright
+
+        episode_progress = self.episode_length_buf.float() / max(float(self.max_episode_length), 1.0)
+
+        # Attached transport: reward progress to the release entry, not survival.
+        # Far-from-target closed holding must be low/negative, otherwise PPO farms
+        # _grasped=True episodes without ever creating release attempts.
+        transport_r = -3.0 + 5.0 * xy_score + 2.0 * release_z_score - 2.0 * episode_progress
+        high_penalty = torch.relu(self._sponge_pos_w[:, 2] - (self._target_world[:, 2] + 0.080)) * 10.0
+        transport_r = transport_r - high_penalty
+        # Once at release entry, closed-hold must not dominate opening.
+        transport_r = torch.where(near_release & ~gripper_open, torch.zeros_like(transport_r), transport_r)
+
+        # Released/settling: keep reward alive only if object is actually near the target.
+        released_r = -3.0 + 6.0 * xy_score + 2.0 * settled_z_score + 1.0 * static_signal
+        released_r = torch.where(xy_offset < 0.080, released_r, torch.full_like(released_r, -3.0))
+
+        success_now = on_target & gripper_open & sponge_stable & was_grasped
+        just_succeeded = success_now & ~self._place_success_flag
+        self._place_success_flag = self._place_success_flag | success_now
+
+        rewards = torch.where(is_grasped, transport_r, released_r)
+        rewards = torch.where(self._place_success_flag, torch.full_like(rewards, 10.0), rewards)
+        rewards = rewards + 10.0 * just_succeeded.float()
+
+        action_penalty = -torch.sum(self.actions ** 2, dim=-1) * self.cfg.action_penalty_scale
+        rewards = rewards + action_penalty
+
+        self.extras["log"] = {
+            "p7_xy_offset_mean": xy_offset.mean().detach(),
+            "p7_release_z_offset_mean": release_z_offset.mean().detach(),
+            "p7_settled_z_offset_mean": settled_z_offset.mean().detach(),
+            "p7_grasped_frac": is_grasped.float().mean().detach(),
+            "p7_was_grasped_rate": was_grasped.float().mean().detach(),
+            "p7_gripper_open_rate": gripper_open.float().mean().detach(),
+            "p7_near_release_rate": near_release.float().mean().detach(),
+            "p7_on_target_rate": on_target.float().mean().detach(),
+            "p7_sponge_stable_rate": sponge_stable.float().mean().detach(),
+            "p7_upright_rate": upright.float().mean().detach(),
+            "p7_place_success_rate": self._place_success_flag.float().mean().detach(),
+            "p7_jackpot_fire_rate": just_succeeded.float().mean().detach(),
+            "p7_sponge_height_m": (self._sponge_pos_w[:, 2] - TABLE_Z).mean().detach(),
+            "action_penalty": action_penalty.mean().detach(),
+        }
+
+        return rewards
+
+    # =================================================================
     def _get_dones(self) -> tuple[torch.Tensor, torch.Tensor]:
         # --- lift latch (sponge held aloft >= N steps) ---
         is_aloft = (self._sponge_pos_w[:, 2] - TABLE_Z) > self.cfg.lift_success_height
@@ -784,14 +918,18 @@ class RoArmStackEnv(DirectRLEnv):
         self._lift_success_flag = self._lift_success_flag | new_lift
 
         # --- place latch (sponge near target + gripper open + stable >= N steps) ---
-        d_sponge_target = torch.norm(self._target_world - self._sponge_pos_w, p=2, dim=-1)
-        place_cond = self._place_condition(d_sponge_target)
+        # P7 has its own stricter xy/z/upright/open success latch in the reward tower.
+        # Do not let the legacy P6 3D-distance place condition contaminate P7 metrics
+        # or rewards.
+        if self.cfg.reward_phase != 7:
+            d_sponge_target = torch.norm(self._target_world - self._sponge_pos_w, p=2, dim=-1)
+            place_cond = self._place_condition(d_sponge_target)
 
-        self._place_counter = torch.where(
-            place_cond, self._place_counter + 1, torch.zeros_like(self._place_counter)
-        )
-        new_place = (self._place_counter >= self.cfg.place_success_steps) & (~self._place_success_flag)
-        self._place_success_flag = self._place_success_flag | new_place
+            self._place_counter = torch.where(
+                place_cond, self._place_counter + 1, torch.zeros_like(self._place_counter)
+            )
+            new_place = (self._place_counter >= self.cfg.place_success_steps) & (~self._place_success_flag)
+            self._place_success_flag = self._place_success_flag | new_place
 
         # NEVER terminate on success (HARD RULE / Phase 1.A lesson)
         terminated = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
@@ -805,8 +943,18 @@ class RoArmStackEnv(DirectRLEnv):
             env_ids = self._robot._ALL_INDICES
         n = len(env_ids)
 
+        attached_idx = None
+        if self.cfg.curriculum_attached_transport_release:
+            attached_idx = torch.randint(0, 4, (n,), device=self.device)
+            q_table = torch.tensor(G2A_SEED0_ATTACHED_Q_RAD, device=self.device, dtype=torch.float32)
+            joint_pos = q_table[attached_idx].clone()
+            jitter_amp = self.cfg.curriculum_attached_start_jitter_rad
+            if jitter_amp > 0.0:
+                jitter = sample_uniform(-jitter_amp, jitter_amp, (n, self._robot.num_joints), self.device)
+                jitter[:, self.gripper_joint_idx] = 0.0
+                joint_pos = joint_pos + jitter
         # Robot init: HOME (default) / pre-grasp closed (P6v14a Phase 0a) / pre-grasp hover (P6v14c Phase 0a').
-        if self.cfg.curriculum_pregrasp or self.cfg.curriculum_pregrasp_hover:
+        elif self.cfg.curriculum_pregrasp or self.cfg.curriculum_pregrasp_hover:
             pre_q = torch.tensor(self.cfg.pregrasp_joints_rad, device=self.device,
                                  dtype=torch.float32).unsqueeze(0).repeat(n, 1)
             jitter = sample_uniform(-0.02, 0.02, (n, self._robot.num_joints), self.device)
@@ -835,7 +983,15 @@ class RoArmStackEnv(DirectRLEnv):
         # target_xy with min_r/max_r. Else legacy uniform on R1-R4.
         # min_r > on_target_xy_thresh required to prevent iter-0 trivial jackpot (sponge
         # spawned within target zone + HOME gripper open + zero vel → success_now=True).
-        if self.cfg.curriculum_pregrasp:
+        if self.cfg.curriculum_attached_transport_release:
+            tcp_table = torch.tensor(G2A_SEED0_ATTACHED_TCP, device=self.device, dtype=torch.float32)
+            target_table = torch.tensor(G2A_SEED0_TARGETS, device=self.device, dtype=torch.float32)
+            tcp_local = tcp_table[attached_idx]
+            target_local = target_table[attached_idx]
+            self._target_world[env_ids] = self.scene.env_origins[env_ids] + target_local
+            sx = tcp_local[:, 0]
+            sy = tcp_local[:, 1]
+        elif self.cfg.curriculum_pregrasp:
             tgt = torch.tensor(self.cfg.target_pos, device=self.device, dtype=torch.float32)
             sx = torch.full((n,), tgt[0].item(), device=self.device)
             sy = torch.full((n,), tgt[1].item(), device=self.device)
@@ -857,7 +1013,9 @@ class RoArmStackEnv(DirectRLEnv):
             uy = torch.rand(n, device=self.device)
             sx = regions[:, 0] + ux * (regions[:, 1] - regions[:, 0])
             sy = regions[:, 2] + uy * (regions[:, 3] - regions[:, 2])
-        if self.cfg.curriculum_pregrasp:
+        if self.cfg.curriculum_attached_transport_release:
+            sz = tcp_local[:, 2]
+        elif self.cfg.curriculum_pregrasp:
             sz = torch.full((n,), self.cfg.target_pos[2] + 0.050, device=self.device)
         else:
             sz = torch.full((n,), SPONGE_CENTER_Z, device=self.device)
@@ -865,7 +1023,10 @@ class RoArmStackEnv(DirectRLEnv):
         env_origins = self.scene.env_origins[env_ids]
         sponge_pos = env_origins + torch.stack([sx, sy, sz], dim=-1)
 
-        if self.cfg.curriculum_pregrasp or self.cfg.curriculum_pregrasp_hover:
+        if self.cfg.curriculum_attached_transport_release:
+            sponge_quat = torch.zeros((n, 4), device=self.device)
+            sponge_quat[:, 0] = 1.0
+        elif self.cfg.curriculum_pregrasp or self.cfg.curriculum_pregrasp_hover:
             # Identity quaternion — no yaw rand. Phase 0a/0a' clean experiment.
             sponge_quat = torch.zeros((n, 4), device=self.device)
             sponge_quat[:, 0] = 1.0  # w=1 (identity)
@@ -886,7 +1047,10 @@ class RoArmStackEnv(DirectRLEnv):
         # P6v14a Phase 0a: latch grasp True at start (pre-grasp init).
         # _update_grasp_attach in next step's _apply_action will pin sponge to TCP
         # (which IK pose places at target +5cm). Agent's task: open gripper → release.
-        if self.cfg.curriculum_pregrasp:
+        if self.cfg.curriculum_attached_transport_release:
+            self._grasped[env_ids] = True
+            self._was_grasped[env_ids] = True
+        elif self.cfg.curriculum_pregrasp:
             self._grasped[env_ids] = True
             self._was_grasped[env_ids] = True
         else:
@@ -958,10 +1122,16 @@ class RoArmStackEnv(DirectRLEnv):
 
         pose7 = torch.zeros((len(env_ids), 7), device=self.device)
         pose7[:, 0:3] = tcp_pos
-        pose7[:, 3:7] = self._sponge.data.root_quat_w[env_ids]
+        if self.cfg.attach_quat_mode == "preserve":
+            pose7[:, 3:7] = self._sponge.data.root_quat_w[env_ids]
+        elif self.cfg.attach_quat_mode == "identity":
+            pose7[:, 3] = 1.0
+        else:
+            raise RuntimeError(f"Unexpected attach_quat_mode={self.cfg.attach_quat_mode!r}")
         self._sponge.write_root_pose_to_sim(pose7, env_ids=env_ids)
-        zeros = torch.zeros((len(env_ids), 6), device=self.device)
-        self._sponge.write_root_velocity_to_sim(zeros, env_ids=env_ids)
+        if self.cfg.attach_velocity_mode == "zero":
+            zeros = torch.zeros((len(env_ids), 6), device=self.device)
+            self._sponge.write_root_velocity_to_sim(zeros, env_ids=env_ids)
 
 
 # =====================================================================

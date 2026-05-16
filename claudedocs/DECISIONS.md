@@ -256,3 +256,468 @@ Source:
 
 - `claudedocs/session_20260514_alpha_prime_delta_topdown.md` (`(δ.5) Result` section)
 - B200 logs `/tmp/chain_topdown_v4.out`
+
+## D010 — Collision proxy proves top-contact was real; after latch, close must terminate immediately
+
+Evidence:
+
+- G2-A replaced only `gripper_link` collision with a tiny `4mm × 4mm × 4mm`
+  proxy (`gripper_link_collision_g2a.stl`) while preserving visual mesh and
+  regenerated B200 USD.
+- `/tmp/chain_topdown_g2a_v2.out`: 5-F confirmed the proxy bbox, Skill 1b reached
+  the +47mm target in `(14,8,8)` steps with `stall_signature=FALSE`, and 5-E
+  showed `mesh_min_z_minus_sponge_top=+56.5mm` at final 1b instead of the D009
+  `+0.4mm/-0.2mm` top-contact regime. This validates the collision-envelope
+  diagnosis.
+- In the same run, close was stable and close-end `d_sponge_tcp=23.6mm` was inside
+  the env's 25mm grasp distance, but `gripper_q=21.98°` was below the 0.4rad
+  (`22.9°`) threshold, so `grasped=False`.
+- `/tmp/chain_topdown_g2a_v3.out`: increasing latch target to 26° produced
+  `grasped=True`, but the close loop continued after latch; the sponge attach
+  path then destabilized the arm (`tcp_after1=(-99.1,+12.7,+636.0)mm`,
+  `tcp_err=694.6mm`) and the chain still failed.
+
+Implication:
+
+- G2-A confirms top-contact was not a trajectory artifact: simplifying the
+  collision envelope removes the Skill 1b z stall.
+- Do not keep closing/holding at the grasp pose after `_grasped=True`. Skill 1c
+  must terminate immediately when the latch fires, then hand off to Skill 2
+  lift/transport. Continuing the close loop after latch can inject a physics
+  explosion via kinematic sponge attach and table/object contacts.
+- Next concrete patch: in Skill 1c, use a custom loop or callback break condition:
+  target gripper just above threshold, step until `_grasped=True`, then break
+  immediately and begin Skill 2. Keep the G2-A collision proxy for this test.
+
+Sources:
+
+- B200 `/tmp/chain_topdown_g2a_v2.out`
+- B200 `/tmp/chain_topdown_g2a_v3.out`
+- `local_assets/roarm_m3/urdf/meshes/gripper_link_collision_g2a.stl`
+
+## D011 — Skill 1c latch early-stop is necessary but not sufficient; Skill 2 attached transport now owns the failure
+
+Evidence:
+
+- G2-A v4 patched Skill 1c to force-set `q_grasp`, command `GRIPPER_LATCH_DEG=26.0`,
+  and break immediately after the first env step where `base_env._grasped[0]`
+  becomes True.
+- `/tmp/chain_topdown_g2a_v4.out`: Skill 1b remained clean with proxy collision:
+  `(14,8,8)` steps, `stall_signature=FALSE_at_b3`, and final
+  `mesh_min_z_minus_sponge_top=+56.5mm`.
+- Skill 1c early-stop worked: latch detected after 15 steps; close ended with
+  `gripper_q=23.02°`, `d_sponge_tcp=23.6mm`, `grasped=True`, and
+  `tcp_after1=(+265.2,-34.4,+47.1)mm` (no repeat of the v3 `z=+636mm`
+  Skill-1c explosion).
+- The next failure moved to Skill 2: immediate attached transport ran to 120 max
+  steps with `max_arm_err=66.99°`, `tcp_err=481.7mm`, `grasped=True`, and
+  sponge z `378.9mm`; final `CHAIN_FINAL_SUCCESS=NO`.
+- Env mechanics explain why this is the correct surface to inspect next:
+  `_apply_action()` calls `_update_grasp_attach()` whenever `_grasped.any()`
+  (`roarm_rl/roarm_stack_env.py` L413-420), and `_update_grasp_attach()` writes
+  the sponge pose to current TCP with zero velocity (L950-964).
+
+Implication:
+
+- Do not declare the pick primitive fixed just because Skill 1c can latch without
+  exploding. The failure boundary has moved downstream to attached Skill 2
+  transport/lift semantics.
+- Next experiments should instrument Skill 2 and `_update_grasp_attach` timing /
+  attached-object dynamics. Keep G2-A proxy for this branch, but do not proceed
+  to four-sponge stacking demos until Skill 2 can lift/transport without the
+  attached-object explosion.
+
+Sources:
+
+- B200 `/tmp/chain_topdown_g2a_v4.out`
+- `roarm_rl/chain_skills.py` Skill 1c latch early-stop patch
+- `roarm_rl/roarm_stack_env.py` L413-420, L950-964
+
+## D012 — Stable attached transport conflicts with P6v14a release-entry distribution
+
+Evidence:
+
+- G2-A v5 added dense Skill 2 diagnostics. `/tmp/chain_topdown_g2a_v5_skill2diag.out`
+  showed the original Skill 2 target starts with a `+90°` arm error entirely from
+  wrist_r `+90° -> 0°`; TCP/sponge then drift upward together under `_grasped=True`.
+- G2-A v6 held wrist_r at `+90°`. Skill 2 no longer exploded and stopped after
+  one arm step with `tcp_err=7.9mm`, but the handoff was not a P6v14a entry:
+  `gripper_q=24.82°`, `sponge_z=40.1mm`, wrist_r `+90°`.
+- G2-A v7/v8 tried to wait for gripper/full-error convergence while attached.
+  Both reintroduced runaway: v7 reached `max_arm_err=261.79°`, v8 reached
+  `max_arm_err=272.81°`. This happened even with wrist_r held at `+90°`, so
+  attached dwell/post-latch close itself is unsafe.
+- G2-A v9 used the stable pattern: wrist_r held `+90°`, gripper target held at
+  latch `26°`, arm-only break. Skill 2 stayed short/stable (`steps=1`,
+  `tcp_err=8.0mm`, no z explosion), but P6v14a Skill 3 failed:
+  post-Skill3 `d_xy=508.1mm d_z=365.0mm`; final `CHAIN_FINAL_SUCCESS=NO`
+  with `final_d_xy=704.8mm`.
+
+Implication:
+
+- Do not rotate wrist_r from `+90°` to `0°` while the sponge is attached.
+- Do not continue closing or dwell for convergence after latch while attached.
+- The stable post-pick handoff state is outside P6v14a's learned release-entry
+  distribution. Continuing to force P6v14a Skill 3 after this altered handoff is
+  not a valid path to success without either a new release primitive trained for
+  the stable entry or a different scripted/physics release bridge.
+
+Sources:
+
+- B200 `/tmp/chain_topdown_g2a_v5_skill2diag.out`
+- B200 `/tmp/chain_topdown_g2a_v6_holdwrist.out`
+- B200 `/tmp/chain_topdown_g2a_v7_holdwrist_fullerr.out`
+- B200 `/tmp/chain_topdown_g2a_v8_holdwrist_latchgrip.out`
+- B200 `/tmp/chain_topdown_g2a_v9_holdwrist_latchgrip_armbreak.out`
+
+## D013 — Minimal scripted release bridge succeeds from stable G2-A handoff, but remains a diagnostic bridge
+
+Evidence:
+
+- G2-A v10 replaced P6v14a Skill 3 with a minimal scripted release bridge from
+  the v9 stable handoff distribution: wrist_r held `+90°`, gripper held near
+  latch, sponge below TCP after one stable attached transport step.
+- `/tmp/chain_topdown_g2a_v10_scripted_release_bridge.out` verified the upstream
+  pass gates remained intact: Skill 1b no top-contact stall, Skill 1c latch at
+  step 15, and Skill 2 short/stable (`steps=1`, `tcp_err=8.0mm`,
+  `sponge_z=40.1mm`).
+- The bridge opened the gripper below `grasp_gripper_thresh`; `_grasped` cleared
+  at `release_step=1`. The sponge then settled with minimal robot motion:
+  post-release `d_xy=22.3mm`, `d_z=12.1mm`, `CHAIN_SETTLED=YES`.
+- Retreat did not disturb the placed sponge: final `d_xy=22.3mm`, `d_z=12.1mm`,
+  `CHAIN_FINAL_SUCCESS=YES`.
+
+Implication:
+
+- The stable G2-A handoff is physically release-compatible if release is kept
+  minimal: open gripper, let `_grasped` clear, and avoid wrist rotation,
+  post-latch close, or attached dwell.
+- This is enough to proceed to a careful top-down pick/release primitive
+  diagnostic and then four-sponge planning, but it should not be overclaimed as a
+  learned release solution. For paper-quality autonomy, a learned release
+  primitive trained from the stable G2-A handoff distribution remains the cleaner
+  path.
+- Do not add random scripted release variants if v10 fails in a broader layout.
+  Either keep the minimal bridge semantics or train a distribution-correct
+  release primitive.
+
+Sources:
+
+- B200 `/tmp/chain_topdown_g2a_v10_scripted_release_bridge.out`
+- `roarm_rl/chain_skills.py` Skill 3 scripted release bridge
+
+## D014 — v10 release bridge does not solve four-source layout; long attached transport reintroduces Skill 2 runaway before release
+
+Evidence:
+
+- G2-A v11 added a seed0 four-source layout diagnostic for the existing
+  single-sponge env. Because the current env has no L1 support bodies, L2 stack
+  targets were intentionally skipped; S1 was tested as a floor placement from
+  source `(+0.2137,-0.1957)` to L1.sp1.
+- `/tmp/chain_topdown_g2a_v11_layout_source_sweep.out` line 137 confirmed Skill
+  1c still latched cleanly at step 15; line 138 had `gripper_q=23.02deg`,
+  `d_sponge_tcp=21.2mm`, `grasped=True`.
+- The failure occurred before release: Skill 2 long attached transport ran to
+  max steps with `max_arm_err=253.21deg`, `tcp_err=486.5mm`, `sponge_z=66.7mm`
+  (line 263). The bridge then released a sponge already about half a meter from
+  target, yielding post-release `d_xy=555.0mm`, `CHAIN_SETTLED=NO` (line 280)
+  and final `CHAIN_FINAL_SUCCESS=NO` (line 283).
+
+Implication:
+
+- v10 proves a stable short handoff can physically release, but it does not solve
+  source-to-target transport from the four-source layout.
+- Do not spend time adding scripted release variants for this failure. Release is
+  downstream; the current failing surface is long attached transport under
+  `_update_grasp_attach`.
+- Four-sponge progression needs a transport-compatible strategy: either a learned
+  primitive trained from realistic source-to-target attached states, a proper
+  physics gripper/constraint model, or a redesigned staged primitive that avoids
+  unsafe long attached dwell. The existing minimal release bridge remains useful
+  only after a stable handoff near the target.
+
+Sources:
+
+- B200 `/tmp/chain_topdown_g2a_v11_layout_source_sweep.out`
+- `roarm_rl/chain_skills.py` `--layout_source_sweep`
+
+## D015 — Quick SurfaceGripper retrofit is not a drop-in fix for four-source transport
+
+Evidence:
+
+- Isaac Lab's installed `SurfaceGripper` is CPU-only. The local source states:
+  "SurfaceGripper is only supported on CPU for now" and instructs `--device cpu`
+  (`IsaacLab/source/isaaclab/isaaclab/assets/surface_gripper/surface_gripper.py`
+  lines 48-50 and 260-265). The official tutorial repeats this CPU-only
+  constraint.
+- Added `sim_scripts/surface_gripper_transport_probe.py`, a separate CPU-only
+  diagnostic that does not use `_update_grasp_attach` and dynamically creates an
+  Isaac Sim `SurfaceGripper` prim before sim reset.
+- Probe v2 attached the gripper under `Robot/link5/SurfaceGripper` with TCP
+  offset. B200 `/tmp/roarm_surface_gripper_transport_probe_v2.out` line 143
+  showed `close_detect_step=-1`; line 152 showed the robot reached the transport
+  TCP (`tcp_err=7.9mm`) but the sponge stayed at the source with
+  `d_xy_pre_release=166.1mm`; line 164 ended `SURFACE_PROBE_SUCCESS=NO`.
+- Probe v3 moved the gripper under `Robot/gripper_link/SurfaceGripper`, zero
+  local offset, and increased `grip_distance=0.200`. B200
+  `/tmp/roarm_surface_gripper_transport_probe_v3_gripperlink.out` line 144 again
+  showed `close_detect_step=-1`; line 153 again showed `tcp_err=7.9mm` while the
+  sponge remained at the source (`d_xy_pre_release=166.1mm`); line 165 ended
+  `SURFACE_PROBE_SUCCESS=NO`.
+
+Implication:
+
+- SurfaceGripper is a plausible physics-gripper direction, but not as a quick
+  dynamic prim retrofit on the current RoArm USD. It needs proper asset authoring
+  of gripper pose/axis/API semantics before it can replace `_update_grasp_attach`.
+- Do not interpret v2/v3 as proof that a physical constraint cannot transport the
+  sponge. The probes did not reach a closed/attached state.
+- Do not keep trying arbitrary SurfaceGripper parent/offset variants. The next
+  useful branches are either:
+  - properly author and validate a gripper asset/constraint in USD, with a unit
+    test that reaches `state=Closed` on the sponge before chain integration; or
+  - train a learned transport/release primitive from realistic G2-A four-source
+    attached distributions.
+
+Sources:
+
+- `sim_scripts/surface_gripper_transport_probe.py`
+- B200 `/tmp/roarm_surface_gripper_transport_probe_v2.{out,err}`
+- B200 `/tmp/roarm_surface_gripper_transport_probe_v3_gripperlink.{out,err}`
+
+## D016 — P7 learned attached transport improves XY but does not solve release/upright placement
+
+Evidence:
+
+- Added `curriculum_attached_transport_release` and `reward_phase=7` so B200 PPO
+  starts from realistic G2-A seed0 attached handoff states instead of re-learning
+  Skill 1b/1c.
+- B200 reset probe `/tmp/p7v1_attached_reset_probe_v2.out` verified the intended
+  distribution: `grasped_frac=1.000` (line 65), `was_grasped_frac=1.000` (line
+  66), `d_sponge_tcp_mean_mm=0.00` (line 67), initial mean `d_xy=175.80mm`
+  (line 68).
+- P7v1 diagnostic showed the initial reward still allowed closed/high hold:
+  `/tmp/p7v1_diag20.out` line 584 had `p7_xy_offset_mean=0.2391`, line 589
+  `p7_gripper_open_rate=0.0631`, and line 596 `p7_sponge_height_m=0.1437`.
+- P7v3 fixed reward/latch contamination and improved transport. In the full B200
+  run `/tmp/p7v3_transport_release.out`, iteration 496 had
+  `p7_xy_offset_mean=0.0512` (line 14984), `p7_release_z_offset_mean=0.0328`
+  (line 14985), and `p7_settled_z_offset_mean=0.0138` (line 14986).
+- However the same run did not solve the primitive: line 14991
+  `p7_on_target_rate=0.0005`, line 14993 `p7_upright_rate=0.0576`, and line
+  14994 `p7_place_success_rate=0.0007`.
+
+Implication:
+
+- B200 PPO is useful here: it reduced mean XY from about `176mm` to about `51mm`.
+  But this is only partial transport improvement, not a valid pick-place
+  primitive.
+- Do not claim learned transport/release is solved.
+- Do not run more blind reward variants without first inspecting P7 rollout
+  failure modes, especially object orientation/upright loss after release.
+- The SurfaceGripper/constraint path remains separate and still requires an
+  authored unit test that reaches `Closed` before chain integration.
+
+Sources:
+
+- `roarm_rl/roarm_stack_env.py` P7 curriculum/reward
+- `launch_p6v17_transport_release.sh`
+- B200 `/tmp/p7v1_attached_reset_probe_v2.{out,err}`
+- B200 `/tmp/p7v1_diag20.{out,err}`
+- B200 `/tmp/p7v3_diag20.{out,err}`
+- B200 `/tmp/p7v3_transport_release.{out,err}`
+
+## D017 — P7 model_499 fails mainly by object orientation collapse during attached transport/release
+
+Evidence:
+
+- Added `sim_scripts/p7_rollout_failure_diag.py`, a state-only B200 rollout
+  diagnostic for
+  `$ROARM_B200_ROOT/logs/roarm_rl/roarm_stack_p7v3_g2a_attached_transport_release/model_499.pt`.
+  It records reset, pre-release, release, post-settle, and final sponge/TCP/
+  target states, including quaternion-derived
+  `sz_world_z = 1 - 2(qx^2 + qy^2)`.
+- B200 `/tmp/p7v3_rollout_failure_diag.out` line 42 verified the intended
+  checkpoint path; line 43 ran `num_envs=256 episodes=2`; line 93 captured
+  `completed_episodes=512`.
+- Line 95 classified all 512 episodes as
+  `C_tips_during_attached_transport`.
+- The reset distribution was upright and realistic: line 97 had
+  `d_xy=0.1732`, `release_z_offset=0.0069`, `settled_z_offset=0.0359`,
+  `sz_world_z=1.0000`.
+- By pre-release, line 98 showed the upright signal had already collapsed:
+  `d_xy=0.0783`, `release_z_offset=0.0770`, `settled_z_offset=0.1060`,
+  `sz_world_z=0.2667`.
+- At release, line 99 showed the object was still far from a clean release
+  state: `d_xy=0.0739`, `release_z_offset=0.0788`,
+  `settled_z_offset=0.1078`, `sz_world_z=0.2851`.
+- Final z error was deceptively small only because the sponge was lying flat:
+  line 101 had `settled_z_offset=0.0006` but `sz_world_z=0.0156`.
+
+Implication:
+
+- P7v3's mean XY improvement is not a solved primitive and not merely a
+  reporting artifact. The policy/attach dynamics produce orientation collapse
+  before or at release.
+- Do not start another blind scalar reward variant from `model_499.pt` before
+  inspecting the attached transport action/path/quaternion dynamics.
+- A useful learned-branch fix must preserve or explicitly control object
+  orientation through attached transport and release. A useful physics branch
+  still requires a proper authored gripper/constraint unit test before replacing
+  `_update_grasp_attach`.
+
+Sources:
+
+- `sim_scripts/p7_rollout_failure_diag.py`
+- `claudedocs/session_20260515_p7_rollout_failure_diag.md`
+- B200 `/tmp/p7v3_rollout_failure_diag.{out,err}`
+
+## D018 — P7 upright collapse starts while still kinematically attached, before gripper open/release
+
+Evidence:
+
+- Added `sim_scripts/p7_action_tcp_quat_trace.py`, a state-only step trace for
+  P7 `model_499.pt` that logs policy action, gripper action/joint/open flag,
+  TCP path/delta/velocity, sponge quaternion, `sz_world_z`, `_grasped`,
+  `_was_grasped`, sponge-TCP distance, and rigid-object velocity norms.
+- Direct source inspection confirmed `_update_grasp_attach` in
+  `roarm_rl/roarm_stack_env.py` lines 1096-1110 writes the sponge position to
+  TCP, preserves the current sponge quaternion at line 1107, and zeroes root
+  velocity at line 1110.
+- B200 `/tmp/p7v3_action_tcp_quat_trace.out` line 99 showed reset starts were
+  upright and attached: `d_xy=0.1722`, `sz=1.0000`,
+  `d_sponge_tcp=0.00000`, `grasped=1.000`.
+- Lines 100-103 showed three of four sampled envs already below upright
+  threshold at step 1 while `open=0` and `grasped=1`, with large quaternion
+  deltas and high angular velocity.
+- Aggregate lines 245-253 showed the same for all 256 envs:
+  `first_tip_while_grasped=256/256`, `tip_before_or_at_open=256/256`,
+  `tip_while_grasped_before_or_at_release=256/256`.
+- Aggregate lines 254-260 showed timing: mean first open/release step `20.21`,
+  but mean first tip while grasped step `1.72`.
+- Line 253 showed no large one-step TCP jump above `0.030m`; line 264 showed
+  `max_tcp_delta_max=0.0246` but saturated actions
+  (`max_abs_action_mean=1.0000`).
+- Line 263 showed final z/XY remain misleading: final `d_xy=0.0238` and
+  `settled_z_abs=0.0201`, but `sz=0.0759`.
+
+Implication:
+
+- The P7 failure is not primarily the gripper-open transition. Upright collapse
+  begins during attached motion while `_grasped=True`.
+- Because `_update_grasp_attach` preserves the current sponge quaternion, once
+  physics/contact tips the object during an attached step, later attached steps
+  keep carrying that tipped orientation.
+- Do not change the P7 reward scalar first. The next useful learned/attach
+  branch is an attach quaternion reset/constraint diagnostic to test whether
+  transport becomes mechanically meaningful when attached orientation is
+  controlled. The physics branch remains a properly authored gripper/constraint
+  unit test, not another arbitrary SurfaceGripper parent/offset variant.
+
+Sources:
+
+- `sim_scripts/p7_action_tcp_quat_trace.py`
+- `claudedocs/session_20260515_p7_action_tcp_quat_trace.md`
+- B200 `/tmp/p7v3_action_tcp_quat_trace.{out,err}`
+
+## D019 — Attach quaternion constraint suppresses immediate P7 tipping but does not solve transport/release
+
+Evidence:
+
+- Added `sim_scripts/p7_attach_quat_constraint_probe.py`, a runtime-only
+  monkey-patch diagnostic for `_update_grasp_attach`. It does not edit reward,
+  `roarm_stack_env.py`, `chain_skills.py`, scripted release, or assets.
+- Baseline from `/tmp/p7v3_action_tcp_quat_trace.out`: lines 245-253 had
+  `first_tip_while_grasped=256/256` and `tip_before_or_at_open=256/256`; lines
+  261-264 had release `sz=0.2983`, final `sz=0.0759`, and final
+  `d_xy=0.0238`.
+- `preserve+keep` tested whether velocity zeroing alone caused the collapse.
+  B200 `/tmp/p7v3_attach_quat_preserve_keep.out` lines 141-149 still had
+  `first_tip_while_grasped=256/256` and `tip_before_or_at_open=256/256`; lines
+  151-160 had mean first tip while grasped `1.67`, release `sz=0.1561`, final
+  `sz=0.0101`.
+- `identity+zero` tested a hard upright quaternion with the old velocity
+  zeroing behavior. B200 `/tmp/p7v3_attach_quat_identity_zero.out` lines
+  141-149 improved but did not eliminate attached tipping
+  (`first_tip_while_grasped=189/256`, `tip_before_or_at_open=128/256`); lines
+  151-160 had release `sz=0.9664` and final `sz=0.9113`, but final
+  `d_xy=0.2487`.
+- `identity+keep` best suppressed pre-release attached tipping. B200
+  `/tmp/p7v3_attach_quat_identity_keep.out` lines 141-149 had
+  `first_tip_while_grasped=77/256` and `tip_before_or_at_open=11/256`; lines
+  151-160 had release `sz=0.9921`, but final `sz=0.6434` and final
+  `d_xy=0.2604`.
+
+Implication:
+
+- Preserving the current sponge quaternion during kinematic attach is a major
+  failure amplifier. Once the sponge tips, the old attach model keeps carrying
+  the tipped pose.
+- Velocity zeroing alone is not the primary cause; removing it while preserving
+  quaternion still fails like baseline.
+- A simple upright quaternion constraint is not a solved primitive. It improves
+  upright release but exposes poor transport/placement with the old P7 policy.
+  The old policy was trained under broken attach semantics and should not be
+  judged as solved under the altered semantics.
+- Next valid branches are:
+  - implement a controlled env-level attach orientation semantic change and
+    retrain/evaluate under that semantic; or
+  - build a properly authored physics gripper/constraint unit test before chain
+    integration.
+- Do not claim attach reset solved P7, and do not jump to reward scalar tuning
+  before choosing the mechanics branch.
+
+Sources:
+
+- `sim_scripts/p7_attach_quat_constraint_probe.py`
+- `claudedocs/session_20260515_p7_attach_quat_constraint_probe.md`
+- B200 `/tmp/p7v3_attach_quat_identity_zero.{out,err}`
+- B200 `/tmp/p7v3_attach_quat_preserve_keep.{out,err}`
+- B200 `/tmp/p7v3_attach_quat_identity_keep.{out,err}`
+
+## D020 — Env-level identity+keep attach semantics are active, but do not solve P7 without a release/transport redesign
+
+Evidence:
+
+- Implemented gated env config, defaulting to original behavior:
+  `attach_quat_mode="preserve"` and `attach_velocity_mode="zero"`.
+- B200 `/tmp/p7_attach_semantics_identity_keep.out` line 64 confirmed
+  `attach_quat_mode=identity attach_velocity_mode=keep`; line 66 showed a
+  deliberately tipped attached sponge was reset upright (`sz_mean=1.0000`) while
+  velocity was kept (`vel_norm_mean=3.0020`).
+- B200 `/tmp/p7_attach_semantics_preserve_zero.out` line 64 confirmed the default
+  `preserve+zero` path; line 66 preserved the 60deg tipped orientation
+  (`sz_mean=0.5000`) and zeroed velocity (`vel_norm_mean=0.0000`).
+- Fresh P7v4 identity+keep diagnostic training did not solve or even trend
+  cleanly. `/tmp/p7v4_attach_identity_keep_diag20.out` lines 44-45 confirmed the
+  enabled semantics. Line 105 had initial `p7_xy_offset_mean=0.1904`, but line
+  586 worsened to `0.3620`; line 596 still had
+  `p7_place_success_rate=0.0000`.
+- Evaluating `model_19.pt` under the same env-level semantics confirmed a
+  no-release failure: `/tmp/p7v4_attach_identity_keep_model19_trace.out` line 44
+  had `identity keep`, line 94 confirmed `_update_grasp_attach` used that mode,
+  lines 338-340 had `first_open=0/256` and `release_or_open=0/256`, and line 355
+  ended at `final d_xy=0.1488`, `sz=0.9036`.
+
+Implication:
+
+- The controlled env-level mechanics switch is valid and should be kept as a
+  diagnostic/training knob.
+- `identity+keep` improves upright mechanics relative to the immediate-collapse
+  old baseline, but it is not a P7 solution. Under a short fresh PPO diagnostic,
+  it produced closed/no-release behavior and poor transport.
+- Do not claim attach reset solved P7. Next work must either redesign the P7
+  controller/reward/curriculum under the new mechanics to force release and
+  target transport, or move to the authored physics gripper/constraint unit-test
+  branch.
+
+Sources:
+
+- `roarm_rl/roarm_stack_env.py` attach semantics config and `_update_grasp_attach`
+- `sim_scripts/p7_attach_semantics_env_probe.py`
+- `sim_scripts/p7_action_tcp_quat_trace.py`
+- `claudedocs/session_20260517_p7_attach_semantics_env_experiment.md`
+- B200 `/tmp/p7_attach_semantics_identity_keep.{out,err}`
+- B200 `/tmp/p7_attach_semantics_preserve_zero.{out,err}`
+- B200 `/tmp/p7v4_attach_identity_keep_diag20.{out,err}`
+- B200 `/tmp/p7v4_attach_identity_keep_model19_trace.{out,err}`

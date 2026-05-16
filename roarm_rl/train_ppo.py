@@ -17,7 +17,7 @@ def main():
     parser.add_argument("--task", type=str, default="pick", choices=["pick", "stack"])
     parser.add_argument("--num_envs", type=int, default=4096)
     parser.add_argument("--max_iterations", type=int, default=500)
-    parser.add_argument("--reward_phase", type=int, default=1, choices=[1, 2, 3, 4, 5, 6])
+    parser.add_argument("--reward_phase", type=int, default=1, choices=[1, 2, 3, 4, 5, 6, 7])
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--experiment_name", type=str, default=None)
     parser.add_argument("--logdir", type=str, default=None)
@@ -81,6 +81,20 @@ def main():
                              "earn 5/step). cap=3.0 > stage 1 max (2.0) → PPO grasp gradient preserved.")
     parser.add_argument("--curriculum_post_grasp_cap_value", type=float, default=None,
                         help="Override curriculum_post_grasp_cap value (default 3.0). Must >2.0.")
+    parser.add_argument("--curriculum_attached_transport_release", action="store_true",
+                        help="P6v17: start episodes from stable G2-A post-pick attached states "
+                             "(seed0 four-source layout, wrist_r +90deg, gripper latch ~26deg, "
+                             "_grasped=True). Trains the current failing surface: source-to-target "
+                             "attached transport plus release, not Skill 1b/1c and not release-only.")
+    parser.add_argument("--curriculum_attached_start_jitter_rad", type=float, default=None,
+                        help="Joint jitter for --curriculum_attached_transport_release starts. "
+                             "Default from env cfg is 0.01 rad; set 0 for exact v11 handoff table.")
+    parser.add_argument("--attach_quat_mode", choices=["preserve", "identity"], default=None,
+                        help="Attached pose-write quaternion semantics. Default env behavior is "
+                             "preserve; identity is a gated mechanics-first P7 experiment.")
+    parser.add_argument("--attach_velocity_mode", choices=["zero", "keep"], default=None,
+                        help="Attached pose-write velocity semantics. Default env behavior is zero; "
+                             "keep is a gated diagnostic/training option.")
     # P6v16 Path B (5/14) — Residual Policy Learning (Silver 2018) for catastrophic
     # forgetting fix. BC base (frozen) + trainable residual MLP; PPO trains residual only.
     parser.add_argument("--residual_mode", action="store_true",
@@ -116,8 +130,8 @@ def main():
         from roarm_rl.roarm_stack_env import RoArmStackEnvCfg
         env_cfg = RoArmStackEnvCfg()
         env_id = "RoArm-Stack-Direct-v0"
-        assert args.reward_phase in (4, 5, 6), \
-            f"task=stack supports reward_phase 4/5/6 (got {args.reward_phase})"
+        assert args.reward_phase in (4, 5, 6, 7), \
+            f"task=stack supports reward_phase 4/5/6/7 (got {args.reward_phase})"
 
     env_cfg.scene.num_envs = args.num_envs
     env_cfg.reward_phase = args.reward_phase
@@ -153,9 +167,25 @@ def main():
         env_cfg.curriculum_post_grasp_cap = True
         if args.curriculum_post_grasp_cap_value is not None:
             env_cfg.curriculum_post_grasp_cap_value = args.curriculum_post_grasp_cap_value
+    if args.curriculum_attached_transport_release:
+        print("[train] curriculum_attached_transport_release: True "
+              "(G2-A seed0 post-pick attached transport/release)")
+        env_cfg.curriculum_attached_transport_release = True
+    if args.curriculum_attached_start_jitter_rad is not None:
+        print("[train] curriculum_attached_start_jitter_rad: "
+              f"{env_cfg.curriculum_attached_start_jitter_rad} -> {args.curriculum_attached_start_jitter_rad}")
+        env_cfg.curriculum_attached_start_jitter_rad = args.curriculum_attached_start_jitter_rad
+    if args.attach_quat_mode is not None:
+        print(f"[train] attach_quat_mode: {env_cfg.attach_quat_mode} -> {args.attach_quat_mode}")
+        env_cfg.attach_quat_mode = args.attach_quat_mode
+    if args.attach_velocity_mode is not None:
+        print(f"[train] attach_velocity_mode: {env_cfg.attach_velocity_mode} -> {args.attach_velocity_mode}")
+        env_cfg.attach_velocity_mode = args.attach_velocity_mode
     # Mutual exclusion guard: pregrasp and pregrasp_hover are mutually exclusive (different env init).
     if args.curriculum_pregrasp and args.curriculum_pregrasp_hover:
         raise ValueError("--curriculum_pregrasp and --curriculum_pregrasp_hover are mutually exclusive")
+    if args.curriculum_attached_transport_release and (args.curriculum_pregrasp or args.curriculum_pregrasp_hover):
+        raise ValueError("--curriculum_attached_transport_release is mutually exclusive with pregrasp curricula")
 
     # ppo cfg
     ppo_cfg = RoArmPickPPORunnerCfg()

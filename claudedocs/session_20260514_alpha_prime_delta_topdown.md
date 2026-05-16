@@ -411,3 +411,222 @@ pick primitive:
 - `roarm_rl/chain_skills.py` md5 `03169d005c4d39fa10583047e8957961`.
 - `launch_chain_topdown.sh` md5 `2d52c0efd2ca1d5bab78f3e029185a47`.
 - B200 logs: `/tmp/chain_topdown_v4.out`, `/tmp/chain_topdown_v4.err`.
+
+---
+
+## (G1/G2-A) Result — collision proxy narrows pick failure to post-latch close handling (2026-05-14 PM)
+
+### G1/G1b geometry patch
+
+Edits:
+
+- Split pick vs release TCP z:
+  - `TCP_PICK_GRASP_Z = +47~48mm` during pick.
+  - `TCP_RELEASE_ENTRY_Z = +63mm` to preserve P6v14a Skill 3 entry distribution.
+- Shift pick target to the observed settled sponge center: `PICK_XY_SETTLE_OFFSET=(+16,+5.5)mm`.
+- Force pick wrist roll `PICK_WRIST_R_DEG=+90°`.
+- Close initially tested at `23.5°`, later `26.0°`.
+
+Results:
+
+- `/tmp/chain_topdown_g1.out`: +48mm pick target cleared Skill 1b top stall
+  (`stall_signature=FALSE_at_b3`, final tcp err 1.34mm), but close pushed TCP to
+  `(+280.7,-36.4,+56.7)mm`, `d_sponge_tcp=36.3mm`, `grasped=False`.
+- `/tmp/chain_topdown_g1b.out`: +47mm pick target reintroduced top contact
+  (`mesh_min_z_minus_sponge_top=-0.2mm`, `top_penetration_if_positive=+0.2mm`);
+  close ended `d_sponge_tcp=39.1mm`, `grasped=False`.
+
+Verdict: G1 geometry-only corridor is too narrow. +48mm clears collision but
+does not grasp; +47mm gets close to latch but top-contact returns.
+
+### G2-A collision-only proxy
+
+Asset/code changes:
+
+- Added `local_assets/roarm_m3/urdf/meshes/gripper_link_collision_g2a.stl`
+  (ASCII STL, 4mm cube).
+- Changed `local_assets/roarm_m3/urdf/roarm_m3.urdf` gripper_link `<collision>`
+  mesh to `meshes/gripper_link_collision_g2a.stl`; visual still uses
+  `meshes/gripper_link.stl`.
+- Synced B200 URDF + mesh and regenerated USD via:
+  `python scripts/tools/convert_urdf.py $ROARM_B200_ROOT/assets/roarm_m3/urdf/roarm_m3.urdf $ROARM_B200_ROOT/assets/roarm_m3/usd/roarm_m3.usd --fix-base --merge-joints --joint-target-type position --headless`
+- B200 USD md5 after conversion:
+  - `roarm_m3.usd = 4497024d25abab11de5c50e144124553`
+  - `configuration/roarm_m3_physics.usd = 5a4eb57ade18d2a4fd0676b43ac9dd12`
+  - `.asset_hash = b57d9fe1ac60f5a4f0562f4437783666`
+- Updated 5-E mesh diagnostic to prefer `gripper_link_collision_g2a.stl` and
+  support ASCII STL.
+
+G2-A v2 (`/tmp/chain_topdown_g2a_v2.out`, chain md5 `d5c425...`):
+
+- 5-F confirmed collision proxy:
+  `local_bbox_mm min=(-2,-2,-2) max=(+2,+2,+2) span=(4,4,4)`.
+- Skill 1b no longer stalls:
+  - 1b1/1b2/1b3 steps `(14,8,8)`.
+  - final `stall_signature=FALSE_at_b3`.
+  - at +47mm target, collision bbox `mesh_min_z_minus_sponge_top=+56.5mm`,
+    `xy_aabb_overlap=(5.7,0.0)mm`.
+- Close stable but just below latch:
+  `close steps=17`, `tcp_err=0.8mm`, `d_sponge_tcp=23.6mm`, `gripper_q=21.98°`,
+  `grasped=False`.
+
+G2-A v3 (`/tmp/chain_topdown_g2a_v3.out`, chain md5 `f746d3...`):
+
+- Raised `GRIPPER_LATCH_DEG` to `26.0` and close tol to `0.01`.
+- Skill 1b again no stall: `(14,8,8)`, `stall_signature=FALSE_at_b3`.
+- Close did achieve latch:
+  `gripper_q=26.00°`, `d_sponge_tcp=16.3mm`, `grasped=True`.
+- But close loop continued after latch and destabilized via attach/contact:
+  `tcp_after1=(-99.1,+12.7,+636.0)mm`, `tcp_err=694.6mm`,
+  downstream `CHAIN_FINAL_SUCCESS=NO`.
+
+### Critical conclusion
+
+G2-A confirms D009: the original top-down failure was a gripper collision-envelope
+problem. Once the collision mesh is simplified, Skill 1b reaches the +47mm pick
+pose without top stall.
+
+The remaining failure is no longer top-contact. It is Skill 1c control semantics:
+after `_grasped=True`, continuing to hold/close at the grasp pose lets the
+kinematic sponge attach interact badly with physics and blows the arm state up.
+
+### Next concrete action
+
+Patch Skill 1c to terminate immediately on `_grasped=True`:
+
+1. Keep G2-A collision proxy and regenerated USD.
+2. Use `GRIPPER_LATCH_DEG=26.0`.
+3. Replace `run_skill_closed_loop(... skill1c ...)` with a custom close loop or
+   add a callback break condition:
+   - force-set arm target at `q_grasp`;
+   - gripper target `26.0°`;
+   - after each env step, if `base_env._grasped[0] == True`, break immediately;
+   - do not wait for full `tol_rad`/80-step close convergence after latch.
+4. Then run Skill 2 lift/transport immediately.
+5. PASS gate unchanged: Skill 1b reaches, no top stall, `grasped=True`,
+   no attach explosion, `CHAIN_FINAL_SUCCESS=YES`.
+
+Current B200 important files:
+
+- code `roarm_rl/chain_skills.py` md5 `f746d3df738982f76a4d47b39552644d`
+- launcher `$ROARM_B200_ROOT/launch_chain_topdown.sh` md5 `ea14b00798d087e6f26ed49f60898842`
+- B200 URDF md5 `cb5ce1232fd3a4f5e8ee6c456577a215`
+- G2-A collision mesh md5 `02115511bbea2abb82814c6329ec9cea`
+- B200 logs:
+  - `/tmp/chain_topdown_g1.out`, `/tmp/chain_topdown_g1b.out`
+  - `/tmp/convert_urdf_g2a.out`, `/tmp/convert_urdf_g2a.err`
+  - `/tmp/chain_topdown_g2a_v2.out`, `/tmp/chain_topdown_g2a_v2.err`
+  - `/tmp/chain_topdown_g2a_v3.out`, `/tmp/chain_topdown_g2a_v3.err`
+
+---
+
+## (G2-A v4) Result — Skill 1c latch early-stop moves failure to Skill 2 attached transport (2026-05-14 PM)
+
+### Patch
+
+- Local+B200 `roarm_rl/chain_skills.py` md5:
+  `08536251b05765928b8a34f9c8dcd490`.
+- Local+B200 `launch_chain_topdown.sh` md5:
+  `d5a786575ffbd20374ec9da86a9811d8`.
+- G2-A assets unchanged:
+  - B200 `roarm_m3.usd = 4497024d25abab11de5c50e144124553`
+  - B200 `configuration/roarm_m3_physics.usd = 5a4eb57ade18d2a4fd0676b43ac9dd12`
+  - B200 `.asset_hash = b57d9fe1ac60f5a4f0562f4437783666`
+- Replaced Skill 1c `run_skill_closed_loop(...)` with `run_skill1c_until_grasped(...)`:
+  force-set `q_grasp`, set gripper target to `26.0°`, step null action, and break
+  immediately after `_grasped=True`.
+
+### B200 run
+
+- Run: `/tmp/chain_topdown_g2a_v4.out`, `/tmp/chain_topdown_g2a_v4.err`
+- Launcher had no exec bit after rsync; first `./launch_chain_topdown.sh` returned
+  126. Actual run used `bash ./launch_chain_topdown.sh` and exited 0.
+- Log md5:
+  - `/tmp/chain_topdown_g2a_v4.out = 9c261549f1e77768da3fbfe88f8480a0`
+  - `/tmp/chain_topdown_g2a_v4.err = 70dbb365d4eb924450211048bc973974`
+
+### Result
+
+- Guard verified: `GUARD-OK chain_md5=08536251b05765928b8a34f9c8dcd490`.
+- 5-F proxy still verified: local bbox span `(4.0,4.0,4.0)mm`.
+- Skill 1b still clears top contact:
+  - steps `(14,8,8)`
+  - `stall_signature=FALSE_at_b3`
+  - final 1b TCP `(+265.2,-34.4,+48.1)mm`
+  - `mesh_min_z_minus_sponge_top=+56.5mm`
+- Skill 1c latch early-stop worked:
+  - latch detected after step 15
+  - close ended `gripper_q=23.02°`, `d_sponge_tcp=23.6mm`, `grasped=True`
+  - `tcp_after1=(+265.2,-34.4,+47.1)mm`, so the v3 Skill-1c `z=+636mm`
+    explosion did not recur.
+- Skill 2 then failed:
+  - `steps=120`
+  - `max_arm_err=66.99°`
+  - `tcp_err=481.7mm`
+  - `grasped=True`
+  - `sponge_z=378.9mm`
+- Final:
+  - Skill 3 settled `d_xy=170.5mm`, `d_z=364.5mm`, `CHAIN_SETTLED=NO`
+  - Skill 4 final `d_xy=366.6mm`, `d_z=0.4mm`, `CHAIN_FINAL_SUCCESS=NO`
+
+### Conclusion
+
+D010 was necessary but insufficient. The immediate close-after-latch explosion is
+fixed, but attached transport is still unstable. The failure surface moved to Skill
+2 / `_update_grasp_attach` dynamics: env `_apply_action()` pins the sponge whenever
+`_grasped.any()`, and `_update_grasp_attach()` writes the sponge pose to TCP with
+zero velocity.
+
+Next concrete action: instrument Skill 2 with per-step TCP/sponge/q diagnostics
+and inspect `_update_grasp_attach` timing/attached-object contacts. Do not proceed
+to four-sponge stacking demos.
+
+---
+
+## (G2-A v5-v9) Result — Skill 2 instability decomposed; stable transport breaks P6v14a release entry (2026-05-14 PM)
+
+### Code / logs
+
+- Current local+B200 `roarm_rl/chain_skills.py` md5:
+  `f9a935cbcd7102f7bc65560f231924de`.
+- Current local+B200 `launch_chain_topdown.sh` md5:
+  `6013cafdd140d3d3dbdbebe1efc9f67e`.
+- Logs:
+  - `/tmp/chain_topdown_g2a_v5_skill2diag.out`
+  - `/tmp/chain_topdown_g2a_v6_holdwrist.out`
+  - `/tmp/chain_topdown_g2a_v7_holdwrist_fullerr.out`
+  - `/tmp/chain_topdown_g2a_v8_holdwrist_latchgrip.out`
+  - `/tmp/chain_topdown_g2a_v9_holdwrist_latchgrip_armbreak.out`
+
+### Findings
+
+1. v5 Skill 2 diagnostic identified the original attached-transport failure:
+   Skill 2 target imposed wrist_r `+90° -> 0°`, causing `arm_err=+90.00°` at
+   Skill 2 start. TCP/sponge then drifted upward together while `_grasped=True`.
+2. v6 held wrist_r at `+90°`. Skill 2 explosion disappeared and ended after one
+   arm step: `tcp_err=7.9mm`, `sponge_z=40.1mm`. But gripper/sponge/wrist were
+   not P6v14a release-entry distribution (`gripper_q=24.82°`, wrist_r `+90°`).
+3. v7 held wrist_r but waited for full error / gripper close to 45.84°; attached
+   dwell reintroduced runaway: `max_arm_err=261.79°`, `tcp_err=450.5mm`.
+4. v8 held wrist_r and gripper target at latch 26°, but still waited for full
+   convergence; attached dwell again runaway: `max_arm_err=272.81°`,
+   `tcp_err=408.5mm`.
+5. v9 held wrist_r `+90°`, gripper latch `26°`, and used arm-only break. Skill 2
+   stayed stable/short (`steps=1`, `tcp_err=8.0mm`, `sponge_z=40.1mm`), but
+   P6v14a Skill 3 failed hard: post-Skill3 `d_xy=508.1mm d_z=365.0mm`; final
+   `CHAIN_FINAL_SUCCESS=NO`, `final_d_xy=704.8mm`.
+
+### Conclusion
+
+The pick/latch path is now understood better:
+
+- G2-A proxy fixes the pre-grasp top-contact.
+- Skill 1c must stop immediately on latch.
+- Skill 2 must avoid wrist_r rotation, post-latch extra close, and attached dwell.
+- But the stable post-pick state is not compatible with P6v14a's release primitive
+  entry distribution.
+
+Next concrete action is no longer another Skill 1b/1c/2 tuning variant. Choose a
+release bridge: train a release primitive from the stable handoff distribution
+(wrist_r `+90°`, gripper ~`23-26°`, sponge below TCP after short attached move), or
+replace Skill 3 with a scripted/physics release bridge for this top-down pick path.
