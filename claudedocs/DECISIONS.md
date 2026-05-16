@@ -721,3 +721,40 @@ Sources:
 - B200 `/tmp/p7_attach_semantics_preserve_zero.{out,err}`
 - B200 `/tmp/p7v4_attach_identity_keep_diag20.{out,err}`
 - B200 `/tmp/p7v4_attach_identity_keep_model19_trace.{out,err}`
+
+## D021 — P7 release guidance breaks no-release but exposes early/tipped release; do not threshold-tune blindly
+
+Evidence:
+
+- Added gated `p7_release_guidance` diagnostics with default off, leaving P7v3/P7v4
+  reward unchanged when disabled.
+- P7v5 with identity+keep and release-guidance xy `0.12` enabled open/release:
+  `/tmp/p7v5_identity_keep_release_guidance_model19_trace.out` lines 239-241
+  had `first_open=256/256`, `release_or_open=256/256`; lines 242-245 showed
+  pre-open attached tip nearly suppressed (`first_tip_while_grasped=1/256`).
+  But line 255 released far from target (`d_xy=0.1522`) and line 256 ended flat
+  (`final d_xy=0.1260`, `sz=0.4126`).
+- P7v6 tightened the release-guidance xy threshold to `0.08`. B200
+  `/tmp/p7v6_identity_keep_release_guidance_xy08_model19_trace.out` line 354
+  improved release XY to `0.0849`, but lines 341-344 showed attached tip before
+  open returned (`118/256`), and line 355 still ended flat
+  (`final d_xy=0.1055`, `sz=0.2840`).
+
+Implication:
+
+- P7v4's no-release failure was real and a local open signal can break it.
+- However, open-signal threshold tuning alone trades one failure for another:
+  early/far release at xy `0.12`, and delayed/tipped release at xy `0.08`.
+- Do not continue blind P7 scalar/threshold tuning. The next useful learned branch
+  needs a structured low-motion release/settle curriculum under identity+keep, or
+  the project should move to Branch B authored physics gripper/constraint unit
+  testing.
+
+Sources:
+
+- `roarm_rl/roarm_stack_env.py` gated `p7_release_guidance`
+- `claudedocs/session_20260517_p7_release_guidance_diagnostics.md`
+- B200 `/tmp/p7v5_identity_keep_release_guidance_diag20.{out,err}`
+- B200 `/tmp/p7v5_identity_keep_release_guidance_model19_trace.{out,err}`
+- B200 `/tmp/p7v6_identity_keep_release_guidance_xy08_diag20.{out,err}`
+- B200 `/tmp/p7v6_identity_keep_release_guidance_xy08_model19_trace.{out,err}`

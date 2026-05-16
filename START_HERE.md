@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-05-17 KST (post-P7 env-level attach semantics experiment)
+Last updated: 2026-05-17 KST (post-P7 release-guidance diagnostics)
 
 This is the rolling project dashboard. It is overwritten as the project moves.
 Do not use it as the full experiment history. Durable lessons live in
@@ -10,6 +10,26 @@ Do not use it as the full experiment history. Durable lessons live in
 ## Current Truth
 
 Latest verified state:
+
+- `claudedocs/session_20260517_p7_release_guidance_diagnostics.md`
+  - Added gated `p7_release_guidance` diagnostics. Defaults are off, so P7v3/P7v4
+    reward remains unchanged unless explicitly enabled.
+  - Code md5 after this session:
+    `roarm_rl/roarm_stack_env.py=580e137a2318586a7a848664a1f2d7c1`,
+    `roarm_rl/train_ppo.py=ffecfb0b0df89c69159dabe3dd5046e7`.
+  - P7v5 identity+keep + release guidance xy `0.12`:
+    `/tmp/p7v5_identity_keep_release_guidance_model19_trace.out` lines 239-241
+    show open/release `256/256`; lines 242-245 show pre-open attached tip nearly
+    gone (`1/256`). But line 255 releases far (`d_xy=0.1522`), and line 256
+    final is flat (`d_xy=0.1260`, `sz=0.4126`).
+  - P7v6 identity+keep + release guidance xy `0.08`:
+    `/tmp/p7v6_identity_keep_release_guidance_xy08_model19_trace.out` line 354
+    improves release XY to `0.0849`, but lines 341-344 show attached tip before
+    open returns (`118/256`); line 355 final remains flat (`d_xy=0.1055`,
+    `sz=0.2840`).
+  - Verdict: release guidance breaks no-release but does not solve P7. Threshold
+    tuning trades no-release for early/tipped release. Do not continue blind
+    scalar/threshold tuning.
 
 - `claudedocs/session_20260517_p7_attach_semantics_env_experiment.md`
   - Chose Branch A over B for the next mechanics-first step: controlled
@@ -162,10 +182,9 @@ stable near-target handoff; it does not solve source-to-target attached transpor
 The quick SurfaceGripper retrofit is not a drop-in replacement: it failed to
 close/attach on the current RoArm USD.
 
-Paper-quality pivot: either redesign learned attached transport/release under
-the now-gated attach semantics so the policy actually transports and opens, or
-properly author and unit-test a physics gripper/constraint asset before replacing
-the kinematic pose-write attach.
+Paper-quality pivot: either build a structured low-motion release/settle
+curriculum under identity+keep, or properly author and unit-test a physics
+gripper/constraint asset before replacing the kinematic pose-write attach.
 
 ## Current Status
 
@@ -346,6 +365,9 @@ Latest B200 P7 attach quaternion constraint probe:
 - D020: Env-level identity+keep attach semantics are active and useful, but a
   fresh short P7 diagnostic still failed by no-release/poor transport. Do not
   claim attach semantics solved P7.
+- D021: Gated release guidance breaks P7 no-release, but xy-threshold tuning
+  trades failures: xy `0.12` releases too far, xy `0.08` reintroduces attached
+  tip, and both end flat. Do not continue blind scalar/threshold tuning.
 
 ## Current Direction
 
@@ -356,9 +378,9 @@ Next concrete action:
 3. Do not add random scripted release variants for v11. The failing surface is
    long attached transport, not gripper-open release.
 4. Next valid branches:
-   - redesign P7 controller/reward/curriculum under env-level `identity+keep`
-     semantics so it actually transports and opens, then run a longer fresh
-     train/eval only if short diagnostics improve;
+   - design a structured low-motion P7 release/settle curriculum under
+     env-level `identity+keep` semantics; it must explicitly avoid early/far
+     release and post-release tip before any longer train/eval;
    - properly author a physics gripper/constraint asset, prove it reaches
      `Closed` on the sponge in a unit test, then re-test transport;
    - only after mechanics are meaningful, revisit an orientation-aware learned
@@ -371,32 +393,34 @@ scene should demo generation resume.
 
 ## Must Read First
 
-1. `claudedocs/DECISIONS.md` D006-D020
+1. `claudedocs/DECISIONS.md` D006-D021
 2. `claudedocs/EXPERIMENT_LEDGER.md` rows:
    2026-05-14 `(δ.4)`, `(δ.5)`, `G1/G2-A`, `G2-A v4`, `G2-A v5-v9`,
    and 2026-05-15 `G2-A v10`, `G2-A v11`, `SurfaceGripper probe v2/v3`,
    `P7 G2-A attached transport/release`, `P7 model_499 rollout failure diag`,
 	   `P7 action/TCP/quat trace`, `P7 attach quat constraint probe`,
-	   and 2026-05-17 `P7 env attach semantics A`
-3. `claudedocs/session_20260517_p7_attach_semantics_env_experiment.md`
-4. `claudedocs/session_20260515_p7_attach_quat_constraint_probe.md`
-5. `claudedocs/session_20260515_p7_action_tcp_quat_trace.md`
-6. `claudedocs/session_20260515_p7_rollout_failure_diag.md`
-7. `claudedocs/session_20260515_g2a_scripted_release_bridge.md`
-8. `claudedocs/session_20260515_g2a_layout_source_sweep.md`
-9. `claudedocs/session_20260515_p7_attached_transport_learning.md`
-10. `claudedocs/session_20260514_alpha_prime_delta_topdown.md` APPENDIX,
+	   2026-05-17 `P7 env attach semantics A`, and
+	   2026-05-17 `P7 release guidance`
+3. `claudedocs/session_20260517_p7_release_guidance_diagnostics.md`
+4. `claudedocs/session_20260517_p7_attach_semantics_env_experiment.md`
+5. `claudedocs/session_20260515_p7_attach_quat_constraint_probe.md`
+6. `claudedocs/session_20260515_p7_action_tcp_quat_trace.md`
+7. `claudedocs/session_20260515_p7_rollout_failure_diag.md`
+8. `claudedocs/session_20260515_g2a_scripted_release_bridge.md`
+9. `claudedocs/session_20260515_g2a_layout_source_sweep.md`
+10. `claudedocs/session_20260515_p7_attached_transport_learning.md`
+11. `claudedocs/session_20260514_alpha_prime_delta_topdown.md` APPENDIX,
    `(δ.4)`, `(δ.5)`, `(G1/G2-A)`, `(G2-A v4)`, `(G2-A v5-v9)`
-11. `roarm_rl/chain_skills.py`
-12. `roarm_rl/roarm_stack_env.py` `_pre_physics_step`, `_apply_action`,
+12. `roarm_rl/chain_skills.py`
+13. `roarm_rl/roarm_stack_env.py` `_pre_physics_step`, `_apply_action`,
    `_grasp_condition`, `_update_grasp_attach`
 
 ## Source Files To Verify Before Coding
 
 - `roarm_rl/chain_skills.py` — md5 `c6e610216197994c6b7d2b6625d87560`
 - `launch_chain_topdown.sh` — md5 `b34ef3853ac993a1e2adbaddb420adab`
-- `roarm_rl/roarm_stack_env.py` — md5 `47dad11d9f99b007d2ff22ff0fbdbad7`
-- `roarm_rl/train_ppo.py` — md5 `a056cb61819deea963e1368b196bf0d4`
+- `roarm_rl/roarm_stack_env.py` — md5 `580e137a2318586a7a848664a1f2d7c1`
+- `roarm_rl/train_ppo.py` — md5 `ffecfb0b0df89c69159dabe3dd5046e7`
 - `launch_p6v17_transport_release.sh` — md5
   `2acd462042d0997610fca25ff7a41e21`
 - `sim_scripts/attached_transport_reset_probe.py` — md5
@@ -437,7 +461,11 @@ scene should demo generation resume.
 	  `/tmp/p7_attach_semantics_identity_keep.{out,err}`,
 	  `/tmp/p7_attach_semantics_preserve_zero.{out,err}`,
 	  `/tmp/p7v4_attach_identity_keep_diag20.{out,err}`,
-	  `/tmp/p7v4_attach_identity_keep_model19_trace.{out,err}`
+	  `/tmp/p7v4_attach_identity_keep_model19_trace.{out,err}`,
+	  `/tmp/p7v5_identity_keep_release_guidance_diag20.{out,err}`,
+	  `/tmp/p7v5_identity_keep_release_guidance_model19_trace.{out,err}`,
+	  `/tmp/p7v6_identity_keep_release_guidance_xy08_diag20.{out,err}`,
+	  `/tmp/p7v6_identity_keep_release_guidance_xy08_model19_trace.{out,err}`
 
 ## Do Not Trust As Current State
 
@@ -449,6 +477,7 @@ scene should demo generation resume.
 - Treating quick dynamic SurfaceGripper creation as solved physics attach
 - Treating P7 attached-learning as solved transport/release
 - Treating env-level attach identity/keep as solved P7
+- Treating P7 release guidance or xy-threshold tuning as solved P7
 - Treating P7 final z/XY improvement as success when `sz_world_z` shows the
   sponge is lying flat
 - Four-sponge demo generation before solving long attached transport and release

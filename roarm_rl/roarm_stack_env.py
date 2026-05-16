@@ -302,6 +302,17 @@ class RoArmStackEnvCfg(DirectRLEnvCfg):
     attach_quat_mode: str = "preserve"      # preserve | identity
     attach_velocity_mode: str = "zero"      # zero | keep
 
+    # P7 release-guidance diagnostic. Default off: P7v3/P7v4 reward is unchanged.
+    # When enabled, this tests whether identity+keep still fails because the
+    # policy receives too little local signal to open near a plausible release
+    # corridor.
+    p7_release_guidance: bool = False
+    p7_release_guidance_xy_thresh: float = 0.120
+    p7_release_guidance_z_thresh: float = 0.040
+    p7_release_open_bonus_scale: float = 4.0
+    p7_release_closed_penalty_scale: float = 4.0
+    p7_transport_xy_penalty_scale: float = 4.0
+
     # P4 reward weights (mirrors Phase 1.A P3)
     reach_reward_scale: float = 1.0
     action_penalty_scale: float = 0.005
@@ -861,6 +872,11 @@ class RoArmStackEnv(DirectRLEnv):
 
         near_release = (xy_offset < 0.040) & (release_z_offset < 0.020)
         on_target = (xy_offset < self.cfg.on_target_xy_thresh) & (settled_z_offset < self.cfg.on_target_z_thresh) & upright
+        release_guidance_zone = (
+            (xy_offset < self.cfg.p7_release_guidance_xy_thresh)
+            & (release_z_offset < self.cfg.p7_release_guidance_z_thresh)
+            & upright
+        )
 
         episode_progress = self.episode_length_buf.float() / max(float(self.max_episode_length), 1.0)
 
@@ -872,6 +888,13 @@ class RoArmStackEnv(DirectRLEnv):
         transport_r = transport_r - high_penalty
         # Once at release entry, closed-hold must not dominate opening.
         transport_r = torch.where(near_release & ~gripper_open, torch.zeros_like(transport_r), transport_r)
+        if self.cfg.p7_release_guidance:
+            open_score = 1.0 - torch.tanh(4.0 * torch.clamp(gripper_q, min=0.0))
+            closed_amount = torch.relu(gripper_q - self.cfg.grasp_gripper_thresh)
+            guide = release_guidance_zone.float()
+            transport_r = transport_r - self.cfg.p7_transport_xy_penalty_scale * xy_offset
+            transport_r = transport_r + self.cfg.p7_release_open_bonus_scale * guide * open_score
+            transport_r = transport_r - self.cfg.p7_release_closed_penalty_scale * guide * (1.0 + closed_amount)
 
         # Released/settling: keep reward alive only if object is actually near the target.
         released_r = -3.0 + 6.0 * xy_score + 2.0 * settled_z_score + 1.0 * static_signal
@@ -896,6 +919,7 @@ class RoArmStackEnv(DirectRLEnv):
             "p7_was_grasped_rate": was_grasped.float().mean().detach(),
             "p7_gripper_open_rate": gripper_open.float().mean().detach(),
             "p7_near_release_rate": near_release.float().mean().detach(),
+            "p7_release_guidance_zone_rate": release_guidance_zone.float().mean().detach(),
             "p7_on_target_rate": on_target.float().mean().detach(),
             "p7_sponge_stable_rate": sponge_stable.float().mean().detach(),
             "p7_upright_rate": upright.float().mean().detach(),

@@ -95,6 +95,12 @@ def main():
     parser.add_argument("--attach_velocity_mode", choices=["zero", "keep"], default=None,
                         help="Attached pose-write velocity semantics. Default env behavior is zero; "
                              "keep is a gated diagnostic/training option.")
+    parser.add_argument("--p7_release_guidance", action="store_true",
+                        help="Enable gated P7 release-guidance reward diagnostics. Default off.")
+    parser.add_argument("--p7_release_guidance_xy_thresh", type=float, default=None,
+                        help="Override P7 release-guidance XY corridor in meters.")
+    parser.add_argument("--p7_release_guidance_z_thresh", type=float, default=None,
+                        help="Override P7 release-guidance release-z corridor in meters.")
     # P6v16 Path B (5/14) — Residual Policy Learning (Silver 2018) for catastrophic
     # forgetting fix. BC base (frozen) + trainable residual MLP; PPO trains residual only.
     parser.add_argument("--residual_mode", action="store_true",
@@ -181,6 +187,17 @@ def main():
     if args.attach_velocity_mode is not None:
         print(f"[train] attach_velocity_mode: {env_cfg.attach_velocity_mode} -> {args.attach_velocity_mode}")
         env_cfg.attach_velocity_mode = args.attach_velocity_mode
+    if args.p7_release_guidance:
+        print("[train] p7_release_guidance: True")
+        env_cfg.p7_release_guidance = True
+    if args.p7_release_guidance_xy_thresh is not None:
+        print("[train] p7_release_guidance_xy_thresh: "
+              f"{env_cfg.p7_release_guidance_xy_thresh} -> {args.p7_release_guidance_xy_thresh}")
+        env_cfg.p7_release_guidance_xy_thresh = args.p7_release_guidance_xy_thresh
+    if args.p7_release_guidance_z_thresh is not None:
+        print("[train] p7_release_guidance_z_thresh: "
+              f"{env_cfg.p7_release_guidance_z_thresh} -> {args.p7_release_guidance_z_thresh}")
+        env_cfg.p7_release_guidance_z_thresh = args.p7_release_guidance_z_thresh
     # Mutual exclusion guard: pregrasp and pregrasp_hover are mutually exclusive (different env init).
     if args.curriculum_pregrasp and args.curriculum_pregrasp_hover:
         raise ValueError("--curriculum_pregrasp and --curriculum_pregrasp_hover are mutually exclusive")
