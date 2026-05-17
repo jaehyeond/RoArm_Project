@@ -1194,3 +1194,106 @@ Sources:
 - `sim_scripts/p7_branch_b_fixed_constraint_dynamic_anchor_chain_contract_probe.py`
 - `claudedocs/session_20260517_p7_branch_b_dynamic_anchor_chain_contract.md`
 - B200 `/tmp/p7_branch_b_fixed_constraint_dynamic_anchor_chain_contract_smoke.{out,err}`
+
+## D031 — RoArm planner kinematics can satisfy the command contract only with explicit TCP resampling; raw waypoint gaps are too coarse
+
+Evidence:
+
+- Added `sim_scripts/p7_branch_b_roarm_chain_contract_dryrun_probe.py`, a
+  local/numpy-only chain-side diagnostic. It imports the existing
+  `TrajectoryPlanner` and FK/IK code, but does not run Isaac, insert constraint
+  prims, use SurfaceGripper, run P7 training, or edit env/train/chain defaults.
+- Local `/tmp/p7_branch_b_roarm_chain_contract_dryrun_probe.out` and B200
+  `/tmp/p7_branch_b_roarm_chain_contract_dryrun_probe_b200.out` matched:
+  - line 2 confirmed `chain_side_only=YES`, `isaac_chain_integration=NO`,
+    `constraint_prim_insertion=NO`, `surface_gripper=NO`, `p7_training=NO`,
+    `env_default_edits=NO`, and `chain_defaults_edits=NO`;
+  - lines 12-17 showed all six planner waypoints under the `0.003m` FK TCP
+    error gate, with max waypoint FK error `0.000551m`;
+  - lines 19-23 showed the raw planner waypoint gaps fail the conservative
+    `0.010m` command-step gate: `0.073074m`, `0.018075m`, and `0.022913m`
+    are over the gate;
+  - lines 24-29 showed a resampled contract stream with `CLOSE`, three `MOVE`
+    commands, `HOLD`, and `RELEASE`; all three MOVE commands had
+    `ik_converged=YES`;
+  - line 30 reported `contract_move_steps=3`,
+    `max_contract_tcp_step_m=0.007648`,
+    `max_contract_fk_error_m=0.000649`, and
+    `final_transport_target_error_m=0.000231`;
+  - lines 31-32 reported contract-stream gates YES and
+    `ROARM_CHAIN_CONTRACT_DRYRUN_SUCCESS=YES`, while `raw_planner_gap_ok=NO`.
+
+Implication:
+
+- The current RoArm planner/kinematics are not the immediate blocker for a
+  contract-compatible TCP stream if an explicit chain-side command/timing layer
+  resamples attached transport into small TCP steps.
+- The existing raw planner targets must not be treated as directly compatible
+  with the D030 command contract under a `0.010m` step gate.
+- This remains pre-integration evidence only. It does not validate articulation
+  dynamics, controller latency, TCP estimation in Isaac, contact, or
+  attach/release timing. Do not integrate fixed/dynamic constraints into the
+  RoArm chain without explicit user approval and a new falsifiable gate.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_roarm_chain_contract_dryrun_probe.py`
+- `claudedocs/session_20260517_p7_branch_b_roarm_chain_contract_dryrun.md`
+- Local `/tmp/p7_branch_b_roarm_chain_contract_dryrun_probe.{out,err}`
+- B200 `/tmp/p7_branch_b_roarm_chain_contract_dryrun_probe_b200.{out,err}`
+
+## D032 — Chain-side TCP resampling needs safety margin; exact 10mm spacing can still violate a 10mm realized-step gate
+
+Evidence:
+
+- Added `sim_scripts/p7_branch_b_roarm_chain_timing_resample_probe.py`, a
+  local/numpy-only dry-run that validates HOME→grasp pre-close TCP resampling,
+  attached grasp→transport resampling, true final stream FK error, command
+  ordering, and release-after-target timing. It does not run Isaac, insert
+  constraint prims, use SurfaceGripper, run P7 training, or edit env/train/chain
+  defaults.
+- Local and B200 outputs were sha256-identical for both the no-margin failure
+  and the conservative-resampling pass.
+- No-margin run (`--resample_fraction 1.0`) failed under the unchanged `0.010m`
+  realized-step gate:
+  - line 3 showed `max_tcp_step_m=0.010000` and `resample_fraction=1.000`;
+  - line 31 showed a pre-close `PRE_MOVE` with `tcp_step_m=0.010351` and
+    `ok=NO`;
+  - line 69 reported `max_preclose_tcp_step_m=0.010351`;
+  - lines 70-71 reported `preclose_stream_ok=NO`, `command_order_ok=NO`, and
+    `ROARM_CHAIN_TIMING_RESAMPLE_SUCCESS=NO`.
+- Conservative run (`--resample_fraction 0.9`, default) passed:
+  - line 3 showed `max_tcp_step_m=0.010000` with `resample_fraction=0.900`;
+  - lines 11-16 still showed raw planner gaps fail, with
+    `raw_max_gap_m=0.211271` later reported on line 73;
+  - line 65 accepted `CLOSE` only after target reached;
+  - lines 67-69 showed attached `MOVE` commands with IK convergence YES and
+    max attached TCP step `0.007691`;
+  - lines 71-72 accepted `HOLD` and `RELEASE` after target reached;
+  - line 73 reported `preclose_cmds=38`, `attached_cmds=3`,
+    `max_preclose_tcp_step_m=0.009525`,
+    `max_attached_tcp_step_m=0.007691`,
+    `max_preclose_fk_error_m=0.000997`,
+    `max_attached_fk_error_m=0.000655`,
+    `transport_final_error_m=0.000655`, and zero IK failures;
+  - lines 74-75 reported all gates YES and
+    `ROARM_CHAIN_TIMING_RESAMPLE_SUCCESS=YES`.
+
+Implication:
+
+- Future chain-side command/timing logic must not emit raw planner waypoints
+  directly, and should not target exactly the maximum allowed TCP step. It needs
+  conservative sub-step spacing to absorb realized FK/IK error while preserving
+  the external `0.010m` gate.
+- This is still only pre-integration chain-side evidence. It does not validate
+  articulation dynamics, controller latency, contact, attach/release timing in
+  Isaac, or dynamic-anchor/fixed-constraint insertion in the RoArm chain.
+- Do not present this as P7 success or chain-readiness. Constraint integration
+  still requires explicit user approval and a new falsifiable gate.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_roarm_chain_timing_resample_probe.py`
+- `claudedocs/session_20260517_p7_branch_b_roarm_chain_timing_resample.md`
+- Local `/tmp/p7_branch_b_roarm_chain_timing_resample_probe*.{out,err}`
+- B200 `/tmp/p7_branch_b_roarm_chain_timing_resample_probe*_b200.{out,err}`
