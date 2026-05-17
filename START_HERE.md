@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-05-18 KST (Track A Branch B post-close latch-boundary probe; no constraint integration)
+Last updated: 2026-05-18 KST (Track A Branch B post-close handoff-model probe; no constraint integration)
 
 This is the rolling current-state dashboard. Do not treat it as full history.
 Durable lessons live in `claudedocs/DECISIONS.md`; experiment history lives in
@@ -21,37 +21,36 @@ Do **not** use `HANDOFF.md` or `TASKS.md` as current state.
 
 Latest session:
 
-- `claudedocs/session_20260518_p7_branch_b_post_close_latch_boundary.md`
+- `claudedocs/session_20260518_p7_branch_b_handoff_model_probe.md`
 
 What changed:
 
-- Added `sim_scripts/p7_branch_b_roarm_chain_post_close_latch_boundary_probe.py`
-  md5 `58b628682a536535d3d9a6790c51974d`.
+- Added `sim_scripts/p7_branch_b_roarm_chain_handoff_model_probe.py`
+  md5 `938a94b3b856dcc5a48527991a87c1e9`.
 - The probe reuses the conservative stream and gated scheduling, executes only
-  `PRE_MOVE* -> CLOSE`, then holds the same grasp pose for a short stationary
-  post-close window. It diagnoses the immediate env `_grasped` kinematic latch
-  boundary: pose jump, TCP/sponge separation, velocity, quaternion/upright
-  change, and stationary-hold instability. It does not insert constraint prims,
+  `PRE_MOVE* -> CLOSE`, then holds the same grasp pose. It compares diagnostic-
+  local handoff models around CLOSE: current TCP-center pose-write, marker-only,
+  delayed pose-write after 3 stationary env steps, one-shot align, and continuous
+  TCP-offset-preserving pose-write. It does not insert constraint prims,
   integrate fixed/dynamic constraints, attach SurfaceGripper, execute attached
   transport, run release, run P7 training, or edit env/train/chain defaults.
 
 B200 evidence:
 
 - Logs: B200
-  `/tmp/p7_branch_b_roarm_chain_post_close_latch_boundary_probe_b200.{out,err}`.
-- B200 stdout line 41 confirms scope: post-close latch-boundary only, no
+  `/tmp/p7_branch_b_roarm_chain_handoff_model_probe_{posewrite_tcp,marker_only,delayed_posewrite,oneshot_align,offset_preserve_posewrite}_v2_b200.{out,err}`.
+- B200 stdout line 41 confirms scope: post-close handoff-model only, no
   constraint prim insertion, no fixed/dynamic integration, no SurfaceGripper, no
   attached transport, no release marker, no P7 training, no default edits, and
-  `attach_physics_validated=NO`, `release_physics_validated=NO`.
+  `attach_physics_validated=NO`, `release_physics_validated=NO`,
+  `claim_attach_success=NO`.
 - Line 43 confirms the source stream shape and truncation:
   source `events_total=44`, executed events `39`, `pre_move_cmds=38`,
   `move_cmds_executed=0`, `raw_max_gap_m=0.211271`, `raw_gap_ok=NO`.
 - Line 71 confirms HOME FK and settled sponge baseline:
   `home_fk_error_m=0.001894`, settled sponge
-  `(+0.266020, -0.034486, +0.023500)`, `settled_upright_z=1.000000`,
-  `attach_quat_mode=preserve`, `attach_velocity_mode=zero`.
-- Lines 72-80 show sampled PRE_MOVE events all reached under gated execution,
-  with zero measurable sponge XY drift and no latch before close.
+  `(+0.266020, -0.034486, +0.023500)`, and
+  `settled_upright_z=1.000000`.
 - Line 81 reports CLOSE reached in 15 steps:
   `gripper_q_deg=+23.02`, `d_tcp_sponge_m=0.023599`,
   `sponge_xy_drift_m=0.000005`, `min_upright_z=1.000000`,
@@ -59,31 +58,30 @@ B200 evidence:
 - Line 82 shows the latch step itself was quiet:
   `pose_jump_m=0.000000`, `d_tcp_sponge_jump_m=0.000000`,
   `quat_angle_deg=0.000`, `latch_global_step=275`, threshold step `275`.
-- Line 83 kills the stationary post-close hold on the first step:
+- Current TCP-center pose-write baseline still fails on first hold step
+  (`posewrite_tcp` line 83):
   `target_error_m=0.015684`, `tcp_step_m=0.016131`,
   `pose_drift_m=0.017552`, `xy_drift_m=0.006564`,
   `sponge_speed_mps=1.696947`, `sponge_ang_speed_rps=17.195574`,
   `quat_angle_deg=21.267`, `early_kill=YES`.
-- Lines 84-86 aggregate the failure:
-  `hold_early_kill=YES`, `target_error_ok=NO`, `sim_step_ok=NO`,
-  `post_latch_hold_ok=NO`, and `ROARM_POST_CLOSE_LATCH_BOUNDARY_SUCCESS=NO`.
-- Attribution matrix with the final script:
-  - B200 default `preserve+zero`, `/tmp/..._default_b200.out` lines 83-86:
-    first hold step fails (`target_error_m=0.015684`,
-    `tcp_step_m=0.016131`, `post_latch_hold_ok=NO`).
-  - B200 `preserve+keep`, `/tmp/..._keep_b200.out` lines 83-86:
-    first hold step still fails (`target_error_m=0.013359`,
-    `tcp_step_m=0.013831`, `post_latch_hold_ok=NO`).
-  - B200 `identity+zero`, `/tmp/..._identity_zero_b200.out` lines 83-86:
-    first hold step still fails (`target_error_m=0.015831`,
-    `tcp_step_m=0.016265`, `post_latch_hold_ok=NO`).
-  - B200 `identity+keep`, `/tmp/..._identity_keep_b200.out` lines 83-86:
-    first hold step still fails (`target_error_m=0.012996`,
-    `tcp_step_m=0.013450`, `post_latch_hold_ok=NO`).
-  - B200 marker-only/no pose-write control, `/tmp/..._no_posewrite_b200.out`
-    lines 83-91: 20 hold steps pass with `hold_max_target_error_m=0.000817`,
-    `max_sim_tcp_step_m=0.001947`, `post_latch_hold_ok=YES`,
-    `ROARM_POST_CLOSE_LATCH_BOUNDARY_SUCCESS=YES`.
+- Marker-only still passes 20 hold steps (`marker_only` lines 83-91) with
+  `hold_max_target_error_m=0.000817`, `max_sim_tcp_step_m=0.001947`,
+  `hold_max_pose_drift_m=0.000000`, and success `YES`; this remains a negative
+  control, not attach evidence.
+- Delayed TCP-center pose-write passes the first 3 stationary env steps but fails
+  when pose-write starts (`delayed_posewrite` line 86):
+  `target_error_m=0.015686`, `tcp_step_m=0.016133`,
+  `pose_drift_m=0.017553`, `quat_angle_deg=21.266`; lines 87-89 report
+  `post_latch_hold_ok=NO`.
+- One-shot TCP-center align still fails first hold step (`oneshot_align` line
+  83): `target_error_m=0.005097`, `pose_drift_m=0.005682`,
+  `sponge_speed_mps=0.823018`, `quat_angle_deg=7.080`; lines 84-86 report
+  `post_latch_hold_ok=NO`.
+- Continuous TCP-offset-preserving pose-write passes the stationary hold
+  (`offset_preserve_posewrite` lines 83-91): `hold_max_target_error_m=0.000817`,
+  `max_sim_tcp_step_m=0.001947`, `hold_max_pose_drift_m=0.000000`,
+  `hold_max_offset_error_m=0.000001`, `hold_max_speed_mps=0.000869`,
+  `posewrite_calls=40`, `post_latch_hold_ok=YES`, success `YES`.
 
 Interpretation:
 
@@ -107,9 +105,14 @@ Interpretation:
   proximate trigger. Velocity mode and quaternion mode did not rescue the
   failure; disabling only pose-write while keeping the latch marker allowed the
   stationary hold to pass. This is marker-only evidence, not attach physics.
+- The handoff-model matrix narrows the trigger further: snapping the sponge
+  center to TCP is the bad local handoff geometry. Waiting before the same snap
+  only delays failure, and one-shot center align still fails. Preserving the
+  latch-time TCP-to-sponge offset avoids the stationary post-close hold failure.
 - This is **not P7 success** and **not constraint integration**. It does not
-  validate object attachment, release physics, attached transport, or constraint
-  insertion inside the chain.
+  validate object attachment physics, release physics, attached transport, or
+  constraint insertion inside the chain. Offset-preserving stationary PASS is
+  only a local kinematic handoff diagnostic.
 - Any actual RoArm chain integration still needs explicit user approval and a
   new falsifiable gate.
 
@@ -161,6 +164,8 @@ Interpretation:
 - Do not integrate fixed/dynamic constraints into the RoArm chain yet.
 - Do not proceed from CLOSE into attached transport using the current env
   `_grasped` kinematic attach boundary as a valid handoff surface.
+- Do not treat marker-only or offset-preserving stationary hold pass as attach
+  physics, release physics, attached transport, or constraint validation.
 - Do not change B200 system NVIDIA symlinks; use per-run
   `LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libnvidia-ml.so.580.95.05` and
   `VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json`.
@@ -170,20 +175,21 @@ Interpretation:
 Active pivot: Track A P7/Branch B, isolated/pre-integration mechanics and chain-side timing.
 
 Next concrete action: do not integrate constraints yet and do not proceed to
-attached transport. If continuing, analyze or redesign the env kinematic latch
-boundary in another isolated diagnostic, still with no SurfaceGripper, no RoArm
-chain constraint insertion, and no release/transport physics claims unless
-explicitly approved.
+transport/release claims. If continuing, test only the local CLOSE handoff model
+around the offset-preserving candidate in another isolated diagnostic, still no
+SurfaceGripper, no RoArm chain constraint insertion, and no attached-transport
+or release physics claims unless explicitly approved.
 
 ## Must Read First
 
 1. `CLAUDE.md`
 2. `START_HERE.md`
-3. `claudedocs/DECISIONS.md` D024-D035
+3. `claudedocs/DECISIONS.md` D024-D036
 4. `claudedocs/EXPERIMENT_LEDGER.md` latest Branch B rows
 5. `claudedocs/session_20260517_p7_branch_b_dynamic_anchor_chain_contract.md`
 6. `claudedocs/session_20260517_p7_branch_b_roarm_chain_command_stream.md`
 7. `claudedocs/session_20260517_p7_branch_b_roarm_chain_dynamics_timing.md`
 8. `claudedocs/session_20260518_p7_branch_b_passive_contact_close_timing.md`
 9. `claudedocs/session_20260518_p7_branch_b_post_close_latch_boundary.md`
-10. The B200/local logs cited above, with line numbers
+10. `claudedocs/session_20260518_p7_branch_b_handoff_model_probe.md`
+11. The B200/local logs cited above, with line numbers

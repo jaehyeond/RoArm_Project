@@ -1453,3 +1453,84 @@ Sources:
 - `sim_scripts/p7_branch_b_roarm_chain_post_close_latch_boundary_probe.py`
 - `claudedocs/session_20260518_p7_branch_b_post_close_latch_boundary.md`
 - B200 `/tmp/p7_branch_b_roarm_chain_post_close_latch_boundary_probe_{default,keep,identity_zero,identity_keep,no_posewrite}_b200.{out,err}`
+
+## D036 — CLOSE handoff failure is center-snap geometry; offset-preserving pose-write is only a local stationary candidate
+
+Evidence:
+
+- Added `sim_scripts/p7_branch_b_roarm_chain_handoff_model_probe.py`, a
+  diagnostic-local CLOSE handoff matrix. It executes only `PRE_MOVE* -> CLOSE`
+  and stationary post-close hold. It does not insert constraint prims, integrate
+  fixed/dynamic constraints, attach SurfaceGripper, execute attached transport,
+  run release, run P7 training, or edit env/train/chain defaults.
+- B200 v2 logs
+  `/tmp/p7_branch_b_roarm_chain_handoff_model_probe_{posewrite_tcp,marker_only,delayed_posewrite,oneshot_align,offset_preserve_posewrite}_v2_b200.out`
+  line 41 confirm the strict scope and explicitly keep
+  `attach_physics_validated=NO`, `release_physics_validated=NO`, and
+  `claim_attach_success=NO`.
+- Line 43 in each v2 stdout confirms the same conservative source stream was
+  truncated before MOVE: `source_events_total=44`, `executed_events=39`,
+  `pre_move_cmds=38`, `move_cmds_executed=0`, `raw_max_gap_m=0.211271`,
+  `raw_gap_ok=NO`.
+- Line 82 in the baseline and offset-preserve v2 logs again showed the latch
+  marker step itself was quiet: `pose_jump_m=0.000000`,
+  `d_tcp_sponge_jump_m=0.000000`, `quat_angle_deg=0.000`, and latch/threshold
+  global step `275`.
+- Current TCP-center pose-write baseline
+  `/tmp/p7_branch_b_roarm_chain_handoff_model_probe_posewrite_tcp_v2_b200.out`
+  line 83 reproduced D034: `target_error_m=0.015684`,
+  `tcp_step_m=0.016131`, `pose_drift_m=0.017552`,
+  `sponge_speed_mps=1.696947`, `quat_angle_deg=21.267`,
+  `early_kill=YES`; lines 84-86 reported `post_latch_hold_ok=NO` and success
+  `NO`.
+- Marker-only
+  `/tmp/p7_branch_b_roarm_chain_handoff_model_probe_marker_only_v2_b200.out`
+  lines 83-88 passed sampled hold steps; line 89 reported
+  `hold_max_target_error_m=0.000817`, `max_sim_tcp_step_m=0.001947`,
+  `hold_max_pose_drift_m=0.000000`; lines 90-91 reported
+  `post_latch_hold_ok=YES` and success `YES`.
+- Delayed TCP-center pose-write
+  `/tmp/p7_branch_b_roarm_chain_handoff_model_probe_delayed_posewrite_v2_b200.out`
+  lines 83-85 passed the first 3 stationary env steps with no pose-write
+  failure. Line 86 failed as soon as the center-snap pose-write began:
+  `target_error_m=0.015686`, `tcp_step_m=0.016133`,
+  `pose_drift_m=0.017553`, `quat_angle_deg=21.266`, `early_kill=YES`.
+  Lines 87-89 reported `post_latch_hold_ok=NO` and success `NO`.
+- One-shot TCP-center align
+  `/tmp/p7_branch_b_roarm_chain_handoff_model_probe_oneshot_align_v2_b200.out`
+  line 83 still failed the first hold step, though less violently:
+  `target_error_m=0.005097`, `pose_drift_m=0.005682`,
+  `sponge_speed_mps=0.823018`, `sponge_ang_speed_rps=16.806622`,
+  `quat_angle_deg=7.080`; lines 84-86 reported `post_latch_hold_ok=NO`.
+- Continuous TCP-offset-preserving pose-write
+  `/tmp/p7_branch_b_roarm_chain_handoff_model_probe_offset_preserve_posewrite_v2_b200.out`
+  lines 83-88 passed sampled hold steps; line 89 reported
+  `hold_max_target_error_m=0.000817`, `max_sim_tcp_step_m=0.001947`,
+  `hold_max_pose_drift_m=0.000000`, `hold_max_offset_error_m=0.000001`,
+  `hold_max_speed_mps=0.000869`, `posewrite_calls=40`, and
+  `offset_initialized=YES`; lines 90-91 reported `post_latch_hold_ok=YES` and
+  success `YES`.
+- All v2 stderr files had only the known cpufreq/NVML/Fabric warnings on lines
+  1-4 and no Python traceback.
+
+Implication:
+
+- The local post-CLOSE failure is not merely "any pose-write" and not merely
+  quaternion or velocity mode. The killed operation is specifically snapping the
+  sponge center to the TCP after latch.
+- Waiting before the same TCP-center snap only delays the same failure, and a
+  one-shot center snap is still too disruptive for the stationary hold gate.
+- Preserving the latch-time TCP-to-sponge offset is the first local kinematic
+  handoff model that survives the stationary post-close hold while still using
+  continuous pose-write. This is a candidate for further isolated handoff
+  diagnostics only.
+- Do not claim object attachment physics, attached transport, release physics,
+  SurfaceGripper success, or constraint integration from the marker-only or
+  offset-preserving stationary PASS. No MOVE/transport or RELEASE was executed,
+  and no constraint prim was inserted.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_roarm_chain_handoff_model_probe.py`
+- `claudedocs/session_20260518_p7_branch_b_handoff_model_probe.md`
+- B200 `/tmp/p7_branch_b_roarm_chain_handoff_model_probe_{posewrite_tcp,marker_only,delayed_posewrite,oneshot_align,offset_preserve_posewrite}_v2_b200.{out,err}`
