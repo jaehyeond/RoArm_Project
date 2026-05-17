@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-05-17 KST (Track A Branch B axis/object probe added; B200 runtime blocked)
+Last updated: 2026-05-17 KST (Track A Branch B fixed-constraint unit PASS)
 
 This is the rolling project dashboard. It is overwritten as the project moves.
 Do not use it as the full experiment history. Durable lessons live in
@@ -45,6 +45,43 @@ so.
 
 Latest verified state:
 
+- `claudedocs/session_20260517_p7_branch_b_fixed_constraint_unit.md`
+  - B200 Isaac runtime was recovered without changing system symlinks by running
+    Isaac with:
+    `LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libnvidia-ml.so.580.95.05` and
+    `VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json`.
+    Evidence: plain `nvidia-smi` failed because userspace NVML `580.159` did not
+    match kernel module `580.95.05`, while the preloaded path reported driver
+    `580.95.05`.
+  - Controlled SurfaceGripper axis/object diagnostic completed after the runtime
+    fix. `/tmp/p7_branch_b_surface_gripper_axis_object_smoke.out` lines 78-79
+    verified the canonical rig/object comparison. Canonical cuboid failed the
+    Closed gate: lines 111-113 `closed_detect_step=-1`, `closed_frac=0.0000`,
+    `max_drift=0.11145`, `success=NO`. RoArm sponge also failed: lines 145-147
+    `closed_detect_step=-1`, `closed_frac=0.0000`, `max_drift=0.34692`,
+    `success=NO`. Lines 148-149: `COMMON_SURFACE_GRIPPER_FAIL`,
+    `SURFACE_AXIS_OBJECT_SUCCESS=NO`.
+  - Added `sim_scripts/p7_branch_b_fixed_constraint_unit_probe.py`, an explicit
+    fixed-joint unit probe with close/release API. It does not touch env/train/
+    chain/launch defaults and does not chain-integrate anything.
+  - First fixed-joint attempt proved attached hold but not release:
+    `/tmp/p7_branch_b_fixed_constraint_unit_smoke_v2.out` lines 49-66 had
+    `joint_exists=True`, `rel=0`, `drift=0`, `speed=0`; lines 67-87 showed
+    deleting the joint prim alone did not wake/detach the body (`release_ok=NO`).
+  - Final fixed-joint unit PASS:
+    `/tmp/p7_branch_b_fixed_constraint_unit_smoke_v3.out` lines 49-66 show stable
+    attached hold before any transport (`rel=0`, `drift=0`, `speed=0` for
+    120 steps); lines 67-84 show release after joint removal + wake velocity
+    (`z=0.350000 -> 0.023501`, `rel=0.326500`); lines 85-87 report
+    `hold_ok=YES`, `release_ok=YES`, `FIXED_UNIT_SUCCESS=YES`.
+  - Code md5:
+    `sim_scripts/p7_branch_b_surface_gripper_axis_object_probe.py=9f2d877115d9d06465dcc7dfb33a5113`,
+    `sim_scripts/p7_branch_b_fixed_constraint_unit_probe.py=ff004e3bd4cdf92a6a9b648c3e42986f`.
+  - Verdict: SurfaceGripper is still not chain-ready and should not be integrated.
+    Branch B should now continue from the fixed-constraint unit, with the next
+    step being a controlled pre-transport micro-move/hold/release unit before any
+    RoArm chain integration.
+
 - `claudedocs/session_20260517_p7_branch_b_surface_gripper_axis_object_probe.md`
   - Added `sim_scripts/p7_branch_b_surface_gripper_axis_object_probe.py`, a
     controlled canonical-rig SurfaceGripper diagnostic comparing the Isaac Lab
@@ -55,20 +92,16 @@ Latest verified state:
   - Code md5:
     `sim_scripts/p7_branch_b_surface_gripper_axis_object_probe.py=9f2d877115d9d06465dcc7dfb33a5113`.
   - Local `py_compile` passed, and B200 synced md5 matched.
-  - B200 smoke did **not** reach the diagnostic: `/tmp/p7_branch_b_surface_gripper_axis_object_smoke.out`
-    lines 1-8 show Isaac startup only; stderr lines 1-2 show
-    `NVML_ERROR_LIB_RM_VERSION_MISMATCH`, lines 3-7 show crash reporter, line 42
-    shows the attempted command, lines 64-66 show `nvidia-smi` driver/library
-    mismatch, and lines 81-90 show GLX/NVIDIA backtrace plus segfault.
-  - Re-running the previous known unit probe also exited 139 before script logic:
-    `/tmp/p7_branch_b_surface_gripper_unit_recheck_tmp.out` lines 1-9 are startup
-    only; stderr lines 64-66 and 81-90 show the same driver/library mismatch and
-    GLX/NVIDIA segfault. This is a current B200 Isaac runtime blocker, not a
-    SurfaceGripper axis/object result.
-  - Verdict: probe code is staged, but no diagnostic verdict exists. Next action:
-    re-run this exact controlled axis/object probe once B200 Isaac runtime is
-    healthy, or switch to fixed/D6 constraint unit only if SurfaceGripper remains
-    operationally blocked.
+  - Earlier first attempts were blocked by B200 Isaac runtime NVML/GLX mismatch.
+    This is now superseded by the fixed-constraint session above: the runtime was
+    recovered with per-run `LD_PRELOAD` + `VK_ICD_FILENAMES`, the same diagnostic
+    completed, and both canonical cuboid and RoArm sponge failed the
+    SurfaceGripper Closed gate.
+  - Current B200 evidence is `/tmp/p7_branch_b_surface_gripper_axis_object_smoke.out`:
+    lines 78-79 verify the canonical rig/object comparison; lines 111-113 show
+    canonical cuboid failure; lines 145-147 show RoArm sponge failure; lines
+    148-149 report `COMMON_SURFACE_GRIPPER_FAIL` and
+    `SURFACE_AXIS_OBJECT_SUCCESS=NO`.
 
 - `claudedocs/session_20260517_p7_branch_b_surface_gripper_unit_probe.md`
   - Added `sim_scripts/p7_branch_b_surface_gripper_unit_probe.py`, a CPU-only
@@ -500,7 +533,7 @@ scene should demo generation resume.
 
 ## Must Read First
 
-1. `claudedocs/DECISIONS.md` D006-D023
+1. `claudedocs/DECISIONS.md` D006-D025
 2. `claudedocs/EXPERIMENT_LEDGER.md` rows:
    2026-05-14 `(δ.4)`, `(δ.5)`, `G1/G2-A`, `G2-A v4`, `G2-A v5-v9`,
    and 2026-05-15 `G2-A v10`, `G2-A v11`, `SurfaceGripper probe v2/v3`,
@@ -508,22 +541,26 @@ scene should demo generation resume.
 	   `P7 action/TCP/quat trace`, `P7 attach quat constraint probe`,
 	   2026-05-17 `P7 env attach semantics A`,
 	   2026-05-17 `P7 release guidance`,
-	   2026-05-17 `P7 structured release smoke`, and
-	   2026-05-17 `P7 Branch B SurfaceGripper unit`
-3. `claudedocs/session_20260517_p7_branch_b_surface_gripper_unit_probe.md`
-4. `claudedocs/session_20260517_p7_structured_release_curriculum_smoke.md`
-5. `claudedocs/session_20260517_p7_release_guidance_diagnostics.md`
-6. `claudedocs/session_20260517_p7_attach_semantics_env_experiment.md`
-7. `claudedocs/session_20260515_p7_attach_quat_constraint_probe.md`
-8. `claudedocs/session_20260515_p7_action_tcp_quat_trace.md`
-9. `claudedocs/session_20260515_p7_rollout_failure_diag.md`
-10. `claudedocs/session_20260515_g2a_scripted_release_bridge.md`
-11. `claudedocs/session_20260515_g2a_layout_source_sweep.md`
-12. `claudedocs/session_20260515_p7_attached_transport_learning.md`
-13. `claudedocs/session_20260514_alpha_prime_delta_topdown.md` APPENDIX,
+	   2026-05-17 `P7 structured release smoke`,
+	   2026-05-17 `P7 Branch B SurfaceGripper unit`,
+	   2026-05-17 `P7 Branch B SurfaceGripper axis/object`, and
+	   2026-05-17 `P7 Branch B fixed constraint unit`
+3. `claudedocs/session_20260517_p7_branch_b_fixed_constraint_unit.md`
+4. `claudedocs/session_20260517_p7_branch_b_surface_gripper_axis_object_probe.md`
+5. `claudedocs/session_20260517_p7_branch_b_surface_gripper_unit_probe.md`
+6. `claudedocs/session_20260517_p7_structured_release_curriculum_smoke.md`
+7. `claudedocs/session_20260517_p7_release_guidance_diagnostics.md`
+8. `claudedocs/session_20260517_p7_attach_semantics_env_experiment.md`
+9. `claudedocs/session_20260515_p7_attach_quat_constraint_probe.md`
+10. `claudedocs/session_20260515_p7_action_tcp_quat_trace.md`
+11. `claudedocs/session_20260515_p7_rollout_failure_diag.md`
+12. `claudedocs/session_20260515_g2a_scripted_release_bridge.md`
+13. `claudedocs/session_20260515_g2a_layout_source_sweep.md`
+14. `claudedocs/session_20260515_p7_attached_transport_learning.md`
+15. `claudedocs/session_20260514_alpha_prime_delta_topdown.md` APPENDIX,
    `(δ.4)`, `(δ.5)`, `(G1/G2-A)`, `(G2-A v4)`, `(G2-A v5-v9)`
-14. `roarm_rl/chain_skills.py`
-15. `roarm_rl/roarm_stack_env.py` `_pre_physics_step`, `_apply_action`,
+16. `roarm_rl/chain_skills.py`
+17. `roarm_rl/roarm_stack_env.py` `_pre_physics_step`, `_apply_action`,
    `_grasp_condition`, `_update_grasp_attach`
 
 ## Source Files To Verify Before Coding
@@ -550,6 +587,10 @@ scene should demo generation resume.
   `41e6b48bfaa46b82f2add262903a2a5e`
 - `sim_scripts/p7_branch_b_surface_gripper_unit_probe.py` — md5
   `1d093ebbd39d2c64252545574e74ad34`
+- `sim_scripts/p7_branch_b_surface_gripper_axis_object_probe.py` — md5
+  `9f2d877115d9d06465dcc7dfb33a5113`
+- `sim_scripts/p7_branch_b_fixed_constraint_unit_probe.py` — md5
+  `ff004e3bd4cdf92a6a9b648c3e42986f`
 - `local_assets/roarm_m3/urdf/roarm_m3.urdf` — md5
   `cb5ce1232fd3a4f5e8ee6c456577a215`
 - `local_assets/roarm_m3/urdf/meshes/gripper_link_collision_g2a.stl` — md5
@@ -581,8 +622,10 @@ scene should demo generation resume.
 	  `/tmp/p7v5_identity_keep_release_guidance_model19_trace.{out,err}`,
 		  `/tmp/p7v6_identity_keep_release_guidance_xy08_diag20.{out,err}`,
 		  `/tmp/p7v6_identity_keep_release_guidance_xy08_model19_trace.{out,err}`,
-		  `/tmp/p7v7_structured_release_smoke.{out,err}`,
-		  `/tmp/p7_branch_b_surface_gripper_unit_smoke.{out,err}`
+			  `/tmp/p7v7_structured_release_smoke.{out,err}`,
+			  `/tmp/p7_branch_b_surface_gripper_unit_smoke.{out,err}`,
+			  `/tmp/p7_branch_b_surface_gripper_axis_object_smoke.{out,err}`,
+			  `/tmp/p7_branch_b_fixed_constraint_unit_smoke_v3.{out,err}`
 
 ## Do Not Trust As Current State
 
@@ -594,6 +637,10 @@ scene should demo generation resume.
 - Treating quick dynamic SurfaceGripper creation as solved physics attach
 - Treating canonical SurfaceGripper+sponge unit probe as solved; latest B200 smoke
   failed `Closed` with `closed_detect_step=-1`
+- Treating the controlled SurfaceGripper axis/object diagnostic as solved; both
+  canonical cuboid and RoArm sponge failed the Closed gate.
+- Chain-integrating the fixed constraint before the next micro-move/hold/release
+  unit test; current pass is pre-transport only.
 - Treating P7 attached-learning as solved transport/release
 - Treating env-level attach identity/keep as solved P7
 - Treating P7 release guidance or xy-threshold tuning as solved P7

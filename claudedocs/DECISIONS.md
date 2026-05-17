@@ -847,3 +847,96 @@ Sources:
 - `sim_scripts/p7_branch_b_surface_gripper_unit_probe.py`
 - `claudedocs/session_20260517_p7_branch_b_surface_gripper_unit_probe.md`
 - B200 `/tmp/p7_branch_b_surface_gripper_unit_smoke.{out,err}`
+
+## D024 — B200 Isaac 5.1 runtime requires per-run matching NVIDIA userspace overrides; do not change system symlinks
+
+Evidence:
+
+- Plain B200 `nvidia-smi` failed before Isaac probe logic with an NVML
+  driver/library mismatch: userspace NVML reported `580.159`, while
+  `/proc/driver/nvidia/version` reported kernel module `580.95.05`.
+- The matching library was already present at
+  `/usr/lib/x86_64-linux-gnu/libnvidia-ml.so.580.95.05`, but
+  `/usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1` pointed to
+  `libnvidia-ml.so.580.159.03`.
+- Vulkan had the same mismatch shape: `/etc/vulkan/icd.d/nvidia_icd.json`
+  pointed through `libGLX_nvidia.so.0` (`580.159.03`), while
+  `/usr/share/vulkan/icd.d/nvidia_icd.json` directly pointed to
+  `/usr/lib/x86_64-linux-gnu/libGLX_nvidia.so.580.95.05`.
+- The non-destructive runtime fix was:
+  `LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libnvidia-ml.so.580.95.05` and
+  `VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json`.
+- B200 `/tmp/p7_branch_b_surface_gripper_axis_object_smoke.out` lines 55-63
+  then reported `Driver Version: 580.95.05`, Vulkan, and NVIDIA B200 devices,
+  and the script reached the authored probe header at lines 40-41.
+- B200 `/tmp/p7_branch_b_fixed_constraint_unit_smoke_v3.out` lines 40-49
+  reached the fixed-constraint probe and created the joint rather than crashing
+  in Isaac startup.
+
+Implication:
+
+- Do not edit system NVIDIA symlinks as part of this project.
+- For B200 Isaac 5.1 probes in this environment, use the per-run NVML preload
+  and Vulkan ICD override above until the cluster image is repaired.
+- Treat logs from runs without these overrides as suspect if they crash during
+  startup or GLX/Vulkan initialization.
+
+Sources:
+
+- `claudedocs/session_20260517_p7_branch_b_fixed_constraint_unit.md`
+- B200 `/tmp/p7_branch_b_surface_gripper_axis_object_smoke.{out,err}`
+- B200 `/tmp/p7_branch_b_fixed_constraint_unit_smoke_v3.{out,err}`
+
+## D025 — Controlled SurfaceGripper axis/object fails commonly; explicit fixed-constraint close/hold/release passes only as a pre-transport unit
+
+Evidence:
+
+- Added `sim_scripts/p7_branch_b_surface_gripper_axis_object_probe.py`, a
+  controlled canonical-rig diagnostic comparing Isaac Lab's canonical cuboid and
+  the project RoArm sponge in the same authored SurfaceGripper setup. It does
+  not attach SurfaceGripper to the RoArm chain and does not alter P7 reward,
+  release guidance, scripted release, env defaults, or launch defaults.
+- B200 `/tmp/p7_branch_b_surface_gripper_axis_object_smoke.out` lines 78-79
+  verified the canonical rig and the two object cases.
+- Lines 80-113 showed the canonical cuboid never reached `Closed`: line 111
+  reported `closed_detect_step=-1`, `closed_frac=0.0000`,
+  `gripped_positive_frac=1.0000`, `max_drift=0.11145`; line 113 reported
+  `success=NO`.
+- Lines 114-147 showed the RoArm sponge also never reached `Closed`: line 145
+  reported `closed_detect_step=-1`, `closed_frac=0.0000`,
+  `gripped_positive_frac=1.0000`, `max_drift=0.34692`; line 147 reported
+  `success=NO`.
+- Lines 148-149 ended with `diagnosis=COMMON_SURFACE_GRIPPER_FAIL` and
+  `SURFACE_AXIS_OBJECT_SUCCESS=NO`.
+- Added `sim_scripts/p7_branch_b_fixed_constraint_unit_probe.py`, an explicit
+  fixed-joint close/release API unit with a kinematic anchor and RoArm sponge.
+  It is CPU-only, has no transport, and is not chain-integrated.
+- B200 `/tmp/p7_branch_b_fixed_constraint_unit_smoke_v2.out` lines 49-66 proved
+  stable hold (`rel=0`, `drift=0`, `speed_norm=0`), but lines 67-87 showed
+  deleting the joint prim alone did not wake release (`release_ok=NO`).
+- B200 `/tmp/p7_branch_b_fixed_constraint_unit_smoke_v3.out` line 49 created the
+  joint; lines 50-66 proved 120-step stable attached hold before any transport;
+  line 67 removed the joint; lines 68-84 showed release/fall after a wake
+  velocity; lines 85-87 reported `hold_ok=YES`, `release_ok=YES`,
+  `FIXED_UNIT_SUCCESS=YES`.
+
+Implication:
+
+- SurfaceGripper failure is not just RoArm sponge geometry/material/scale; the
+  canonical cuboid fails too in the controlled rig. Do not chain-integrate
+  SurfaceGripper.
+- `gripped_count` remains invalid as attach evidence without `state=Closed` plus
+  low drift/hold stability.
+- The fixed-constraint unit is a pre-transport mechanics PASS, not a P7 success
+  and not a chain success. The next valid Branch B step is a controlled
+  fixed-constraint micro-move/hold/release unit before any RoArm chain
+  integration.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_surface_gripper_axis_object_probe.py`
+- `sim_scripts/p7_branch_b_fixed_constraint_unit_probe.py`
+- `claudedocs/session_20260517_p7_branch_b_fixed_constraint_unit.md`
+- B200 `/tmp/p7_branch_b_surface_gripper_axis_object_smoke.{out,err}`
+- B200 `/tmp/p7_branch_b_fixed_constraint_unit_smoke_v2.{out,err}`
+- B200 `/tmp/p7_branch_b_fixed_constraint_unit_smoke_v3.{out,err}`
