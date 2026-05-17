@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-05-17 KST (Track A Branch B mock-TCP interface PASS; still isolated/pre-chain)
+Last updated: 2026-05-17 KST (Track A Branch B mock chain-command contract PASS; still isolated/pre-chain)
 
 This is the rolling current-state dashboard. Do not treat it as full history.
 Durable lessons live in `claudedocs/DECISIONS.md`; experiment history lives in
@@ -21,57 +21,58 @@ Do **not** use `HANDOFF.md` or `TASKS.md` as current state.
 
 Latest session:
 
-- `claudedocs/session_20260517_p7_branch_b_dynamic_anchor_interface_probe.md`
+- `claudedocs/session_20260517_p7_branch_b_dynamic_anchor_chain_contract.md`
 
 What changed:
 
-- Added `sim_scripts/p7_branch_b_fixed_constraint_dynamic_anchor_interface_probe.py`
-  md5 `eb81372d78828730e63879a996911bbd`.
+- Added `sim_scripts/p7_branch_b_fixed_constraint_dynamic_anchor_chain_contract_probe.py`
+  md5 `6af24284baef540f190b762e5da164a5`.
 - The probe is CPU-only and pre-chain. It wraps the target-tracked dynamic anchor
-  in a mock TCP command interface: `anchor_target = tcp_target + tcp_to_anchor_offset`.
-- It tests multi-waypoint target tracking and nonzero TCP-to-anchor offset mapping.
-- It does not use RoArm chain integration, SurfaceGripper, P7 training, reward
-  tuning, release guidance, scripted release variants, or launch-default changes.
+  in a mock chain-command contract with explicit `CLOSE`, `MOVE`, `HOLD`, and
+  `RELEASE` state transitions.
+- Negative contract checks reject move-before-close, release-before-close,
+  double-close, early-release, and move-after-release.
+- It does not use RoArm chain integration, IK, SurfaceGripper, P7 training,
+  reward tuning, release guidance, scripted release variants, or launch-default
+  changes.
 
-B200 default-offset smoke:
-
-- Logs: `/tmp/p7_branch_b_fixed_constraint_dynamic_anchor_interface_smoke.{out,err}`.
-- Lines 40-41: CPU/no chain/no transport/no SurfaceGripper/no P7 training.
-- Line 48: close at `rel=0.000000`, `waypoints=3`.
-- Lines 58, 75, 93: waypoint transforms have `transform_error=0.000000`.
-- Lines 67, 85, 102: waypoint target-stop errors are `0.001411`, `0.001464`,
-  and `0.001394`.
-- Line 128: aggregate `max_move_rel=0.000000`, `max_hold_rel=0.000000`,
-  `max_final_anchor_target_error=0.001468`,
-  `max_final_sponge_target_error=0.001468`,
-  `target_error_threshold=0.003000`, `release_drop=0.338178`.
-- Lines 129-130: all gates YES and `DYNAMIC_ANCHOR_INTERFACE_SUCCESS=YES`.
-
-B200 nonzero-offset cross-check:
+B200 mock chain-command contract smoke:
 
 - Logs:
-  `/tmp/p7_branch_b_fixed_constraint_dynamic_anchor_interface_offset_smoke.{out,err}`.
-- Line 48: nonzero `tcp_to_anchor_offset=([0.015, 0.0, -0.010])`.
-- Lines 58, 75, 93: transformed mock TCP targets still map to anchor targets with
-  `transform_error=0.000000`.
-- Lines 67, 85, 102: waypoint target-stop errors again `0.001411`, `0.001464`,
+  `/tmp/p7_branch_b_fixed_constraint_dynamic_anchor_chain_contract_smoke.{out,err}`.
+- Lines 40-41: CPU/no chain/no transport/no SurfaceGripper/no P7 training.
+- Line 42: all negative contract checks YES.
+- Line 49: `CLOSE` accepted, `rel=0.000000`, nonzero
+  `tcp_to_anchor_offset=([0.015, 0.0, -0.010])`, `waypoints=3`.
+- Lines 59, 76, 94: `MOVE` commands accepted with `transform_error=0.000000`.
+- Lines 68, 86, 103: waypoint target stops at errors `0.001411`, `0.001464`,
   and `0.001394`.
-- Line 128: aggregate again reports `max_move_rel=0.000000`,
-  `max_hold_rel=0.000000`, max target errors `0.001468`, and
-  `release_drop=0.338178`.
-- Lines 129-130: all gates YES and `DYNAMIC_ANCHOR_INTERFACE_SUCCESS=YES`.
+- Line 111: `RELEASE` accepted only after target-reached state; joint removed.
+- Line 129: aggregate `contract_negative_ok=YES`, `max_attached_rel=0.000000`,
+  `max_final_anchor_target_error=0.001468`,
+  `max_final_sponge_target_error=0.001468`, `release_drop=0.338178`.
+- Lines 130-131: all gates YES and
+  `DYNAMIC_ANCHOR_CHAIN_CONTRACT_SUCCESS=YES`.
 
 Interpretation:
 
-- Isolated dynamic-anchor target tracking now has a thin mock-TCP command surface.
+- The dynamic-anchor path now has an isolated mock chain-facing command contract.
+- This clarifies the remaining real problem: **not** whether the isolated
+  constraint can attach/move/release, but whether the actual RoArm chain can
+  produce reliable TCP/IK/timing signals that satisfy this contract.
 - This is **not P7 success** and **not chain-ready**. It does not validate RoArm
-  kinematics, IK, articulation dynamics, controller latency, or real chain contact.
-- Any RoArm chain integration still needs explicit user approval and a new
-  falsifiable gate.
+  kinematics, IK convergence, articulation dynamics, controller latency, TCP
+  estimation, real contact, or attach/release timing inside the chain.
+- Any actual RoArm chain integration still needs explicit user approval and a
+  new falsifiable gate.
 
 ## Previous Track A Evidence To Preserve
 
-- Dynamic-anchor target-tracking unit passed before this interface wrapper:
+- Mock-TCP interface wrapper passed before the command-contract probe:
+  `claudedocs/session_20260517_p7_branch_b_dynamic_anchor_interface_probe.md`;
+  B200 interface logs line 128 reported max target error `0.001468` and
+  `release_drop=0.338178`.
+- Dynamic-anchor target-tracking unit passed:
   `claudedocs/session_20260517_p7_branch_b_dynamic_anchor_target_tracking.md`.
   B200 target logs line 83/102 and halfcmd line 81/100 show final target errors
   about `0.00143m`, `max_move_rel=0`, `max_post_move_rel=0`, and release success.
@@ -112,16 +113,16 @@ Interpretation:
 
 Active pivot: Track A P7/Branch B, isolated constraint mechanics.
 
-Next concrete action: decide whether to stop here for review or design one more
-pre-chain falsification probe that includes a **mock chain-command contract**
-without any RoArm articulation. Do not attach the constraint to the real RoArm
-chain unless the user explicitly approves that transition.
+Next concrete action: stop adding isolated wrappers unless they answer a new
+failure question. The remaining blocker is actual RoArm-chain ability to satisfy
+the command contract. Chain integration should be a separate explicit transition
+with a narrow first gate, not an implicit continuation.
 
 ## Must Read First
 
 1. `CLAUDE.md`
 2. `START_HERE.md`
-3. `claudedocs/DECISIONS.md` D024-D029
+3. `claudedocs/DECISIONS.md` D024-D030
 4. `claudedocs/EXPERIMENT_LEDGER.md` latest Branch B rows
-5. `claudedocs/session_20260517_p7_branch_b_dynamic_anchor_interface_probe.md`
+5. `claudedocs/session_20260517_p7_branch_b_dynamic_anchor_chain_contract.md`
 6. The B200 logs cited above, with line numbers

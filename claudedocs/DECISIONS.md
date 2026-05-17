@@ -1147,3 +1147,50 @@ Sources:
 - `claudedocs/session_20260517_p7_branch_b_dynamic_anchor_interface_probe.md`
 - B200 `/tmp/p7_branch_b_fixed_constraint_dynamic_anchor_interface_smoke.{out,err}`
 - B200 `/tmp/p7_branch_b_fixed_constraint_dynamic_anchor_interface_offset_smoke.{out,err}`
+
+## D030 — Mock chain-command contract passes pre-chain; remaining blocker is real chain signal generation
+
+Evidence:
+
+- Added `sim_scripts/p7_branch_b_fixed_constraint_dynamic_anchor_chain_contract_probe.py`,
+  a pre-chain CPU unit that wraps the D029 mock-TCP interface in a stricter
+  command/state contract. It does not use the RoArm chain, IK, SurfaceGripper, P7
+  training, reward tuning, release guidance, scripted release variants, or launch
+  default changes.
+- The contract allows `CLOSE` only before attach/release, `MOVE`/`HOLD` only
+  while attached, and `RELEASE` only after target-reached state.
+- B200 `/tmp/p7_branch_b_fixed_constraint_dynamic_anchor_chain_contract_smoke.out`:
+  - lines 40-41 confirmed CPU/no chain/no transport/no SurfaceGripper/no P7
+    training;
+  - line 42 showed negative checks all passed:
+    move-before-close, release-before-close, double-close, early-release, and
+    move-after-release were all rejected;
+  - line 49 accepted `CLOSE` with `rel=0.000000`, joint exists, nonzero
+    `tcp_to_anchor_offset=([0.015, 0.0, -0.010])`, and `waypoints=3`;
+  - lines 59, 76, and 94 accepted the three `MOVE` commands with
+    `transform_error=0.000000`;
+  - lines 68, 86, and 103 reported target-stop errors `0.001411`,
+    `0.001464`, and `0.001394`;
+  - line 111 accepted `RELEASE` after target-reached state and removed the joint;
+  - line 129 reported `contract_negative_ok=YES`, `max_attached_rel=0.000000`,
+    `max_final_anchor_target_error=0.001468`,
+    `max_final_sponge_target_error=0.001468`, and `release_drop=0.338178`;
+  - lines 130-131 reported all gates YES and
+    `DYNAMIC_ANCHOR_CHAIN_CONTRACT_SUCCESS=YES`.
+
+Implication:
+
+- The isolated Branch B constraint path now has a tested minimal command contract.
+- The remaining problem is no longer isolated constraint coupling, target
+  tracking, TCP-offset mapping, or command ordering. The remaining problem is
+  whether the **actual RoArm chain** can generate reliable TCP/IK/timing signals
+  that satisfy this contract under articulation dynamics and contact.
+- This is not P7 success and not chain-readiness. Do not integrate into the RoArm
+  chain implicitly; any chain transition needs explicit approval and a new narrow
+  falsifiable gate.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_fixed_constraint_dynamic_anchor_chain_contract_probe.py`
+- `claudedocs/session_20260517_p7_branch_b_dynamic_anchor_chain_contract.md`
+- B200 `/tmp/p7_branch_b_fixed_constraint_dynamic_anchor_chain_contract_smoke.{out,err}`
