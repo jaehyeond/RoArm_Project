@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-05-17 KST (post-P7 release-guidance diagnostics)
+Last updated: 2026-05-17 KST (Track A Branch B axis/object probe added; B200 runtime blocked)
 
 This is the rolling project dashboard. It is overwritten as the project moves.
 Do not use it as the full experiment history. Durable lessons live in
@@ -9,7 +9,111 @@ Do not use it as the full experiment history. Durable lessons live in
 
 ## Current Truth
 
+The project is now two-track. Track A is the existing sim/lab stacking work
+(教授 연구) and continues from the P7/Branch B physics-gripper direction below.
+Track B is a brand-new CoRL 2026 paper sprint pivoted today. Do not let Track B
+overwrite or pause the verified Track A P7 state unless the user explicitly says
+so.
+
+### Track B — CoRL 2026 paper (NEW 2026-05-17 PM)
+
+- `claudedocs/session_20260517_corl2026_paper_track_pivot.md`
+  - **CoRL 2026 full paper deadline = 2026-05-28 AoE (≈ 5-29 11:59 UTC). 11 days.**
+    Abstract ≈ 5-25 AoE. **USER MUST verify on corl.org directly** (JS-rendered
+    table not captured by automated fetch).
+  - 5 parallel general-purpose agents executed an exhaustive CoRL 2025 survey
+    (263 papers verified, PMLR v305). HARD RULE #4 enforced (≥10 queries × ≥2
+    sources per gap claim).
+  - 8 gaps identified, 7 HIGH + 1 MEDIUM confidence. Most relevant to our
+    assets: G1 (kinematic-attach diagnostic, HIGH), G3 (attached transport
+    orientation, HIGH), G4 (<$1k arms 0/221, HIGH), G6 (# cross-pattern
+    stacking, HIGH).
+  - Recommended novel pipeline = candidate ② **Failure-Driven Bidirectional
+    Real-to-Sim Loop**. Hits G1+G3+G6+G7. Differentiates from
+    X-Sim/R2R2R/Human2Sim2Robot single-pass approaches by using sim attach
+    failure as real-collection active signal in a 2-iteration closed loop.
+  - 11-day step-by-step timeline drafted: D-9 (5/19) git branch `paper_v1`
+    + B200 fork + md5 freeze, D-7~D-6 (5/21-22) real stacking 50ep collect
+    (HARD RULE #1/#13/#19/#24), D-5~D-4 calibration iter-1, D-2 (5/26)
+    real deploy, D-1 (5/27) paper write, D-day (5/28) submit.
+  - Pending user decisions Q1-Q6 (topic confirm, collection schedule, branch
+    fork, deadline verify, OpenReview 42-paper residual scan, Track A/Track B
+    scheduling). Current user direction: **two-track; continue P7/Branch B work
+    in this line while CoRL paper work proceeds separately.**
+
+### Track A — sim/lab stacking (existing, current latest)
+
 Latest verified state:
+
+- `claudedocs/session_20260517_p7_branch_b_surface_gripper_axis_object_probe.md`
+  - Added `sim_scripts/p7_branch_b_surface_gripper_axis_object_probe.py`, a
+    controlled canonical-rig SurfaceGripper diagnostic comparing the Isaac Lab
+    canonical cuboid against the project RoArm sponge at the same authored pose.
+  - It does not touch `roarm_stack_env.py`, `train_ppo.py`, `chain_skills.py`,
+    launch defaults, P7 scalar/threshold guidance, scripted release variants, or
+    RoArm SurfaceGripper parent/offsets.
+  - Code md5:
+    `sim_scripts/p7_branch_b_surface_gripper_axis_object_probe.py=9f2d877115d9d06465dcc7dfb33a5113`.
+  - Local `py_compile` passed, and B200 synced md5 matched.
+  - B200 smoke did **not** reach the diagnostic: `/tmp/p7_branch_b_surface_gripper_axis_object_smoke.out`
+    lines 1-8 show Isaac startup only; stderr lines 1-2 show
+    `NVML_ERROR_LIB_RM_VERSION_MISMATCH`, lines 3-7 show crash reporter, line 42
+    shows the attempted command, lines 64-66 show `nvidia-smi` driver/library
+    mismatch, and lines 81-90 show GLX/NVIDIA backtrace plus segfault.
+  - Re-running the previous known unit probe also exited 139 before script logic:
+    `/tmp/p7_branch_b_surface_gripper_unit_recheck_tmp.out` lines 1-9 are startup
+    only; stderr lines 64-66 and 81-90 show the same driver/library mismatch and
+    GLX/NVIDIA segfault. This is a current B200 Isaac runtime blocker, not a
+    SurfaceGripper axis/object result.
+  - Verdict: probe code is staged, but no diagnostic verdict exists. Next action:
+    re-run this exact controlled axis/object probe once B200 Isaac runtime is
+    healthy, or switch to fixed/D6 constraint unit only if SurfaceGripper remains
+    operationally blocked.
+
+- `claudedocs/session_20260517_p7_branch_b_surface_gripper_unit_probe.md`
+  - Added `sim_scripts/p7_branch_b_surface_gripper_unit_probe.py`, a CPU-only
+    Branch B unit probe. It does not touch `roarm_stack_env.py`, `train_ppo.py`,
+    `chain_skills.py`, launch defaults, P7 scalar/threshold guidance, or scripted
+    release variants.
+  - Concrete first hypothesis: use Isaac Lab's canonical
+    `Tests/SurfaceGripper/test_gripper.usd` SurfaceGripper rig and place the
+    project RoArm sponge at the canonical object pose `(0,0,0.5)` before any
+    RoArm parent/offset integration.
+  - Code md5 after this session:
+    `sim_scripts/p7_branch_b_surface_gripper_unit_probe.py=1d093ebbd39d2c64252545574e74ad34`.
+  - B200 `/tmp/p7_branch_b_surface_gripper_unit_smoke.out`:
+    line 89 verified the authored asset and sponge prim; line 90 reset the
+    sponge at `z=0.4986` with gripper state open; lines 91-103 show close never
+    reached `Closed` (`state` stayed `0.0` or `-1.0`); line 121 reports
+    `closed_detect_step=-1`, `closed_frac=0.0000`, `max_drift=0.37595`; line
+    123 ends `SURFACE_UNIT_SUCCESS=NO`.
+  - Verdict: Branch B unit-test harness exists, but this canonical
+    SurfaceGripper+sponge hypothesis FAILS the pre-transport Closed/attached gate.
+    Do not chain-integrate SurfaceGripper and do not resume random RoArm
+    parent/offset search. Next Branch B step should either inspect canonical
+    gripper axis/object-size semantics with a single controlled diagnostic or
+    switch to an explicitly authored fixed/D6 constraint unit.
+
+- `claudedocs/session_20260517_p7_structured_release_curriculum_smoke.md`
+  - Added default-off structured P7 release curriculum and policy-free smoke:
+    near-target attached reset, identity+keep attach, gripper-only opening, then
+    settle. Defaults remain off; old P7/chain behavior is unchanged unless
+    explicitly enabled.
+  - Code md5 after this session:
+    `roarm_rl/roarm_stack_env.py=e2748144034d5a09d6c7a0f6c0da6906`,
+    `roarm_rl/train_ppo.py=795ee48b1bfdd83e8c9735efd01f6920`,
+    `sim_scripts/p7_structured_release_curriculum_probe.py=41e6b48bfaa46b82f2add262903a2a5e`.
+  - B200 `/tmp/p7v7_structured_release_smoke.out` proved the mechanism was active:
+    line 68 `identity+keep structured_release=True`; line 69 reset `d_xy=0.0000`,
+    `rel_z_abs=0.0000`, `sz=1.0000`, attached/closed.
+  - The same smoke killed this A configuration before long training: lines 74-78
+    show all envs opened/released (`64/64`) with no attached tip before release
+    (`0/64`) and close/upright release (`sz=0.9720`, `d_xy=0.0089`), but line 79
+    final settled flat (`sz=0.2484`, `success_rate=0.2344`); lines 80-81:
+    `MECHANISM_ACTIVE=YES`, `EARLY_KILL=YES`.
+  - Verdict: mechanism PASS / Branch A smoke FAIL. Do not launch long PPO on this
+    structured A configuration. Prefer Branch B authored physics gripper/constraint
+    unit test next.
 
 - `claudedocs/session_20260517_p7_release_guidance_diagnostics.md`
   - Added gated `p7_release_guidance` diagnostics. Defaults are off, so P7v3/P7v4
@@ -175,16 +279,19 @@ Latest verified state:
     `p7_xy_offset_mean=51.2mm`, but `p7_on_target_rate=0.0005`,
     `p7_place_success_rate=0.0007`, `upright_rate=0.0576`.
 
-Active pivot: **Hierarchical chain skills with G2-A collision proxy, but the
-current learned transport/release failure is object orientation collapse during
-attached transport/release**. The v10 minimal release bridge is valid only after a
-stable near-target handoff; it does not solve source-to-target attached transport.
-The quick SurfaceGripper retrofit is not a drop-in replacement: it failed to
-close/attach on the current RoArm USD.
+Active pivot: **Hierarchical chain skills with G2-A collision proxy, but P7
+learned/kinematic attached transport-release is still unsolved**. The v10 minimal
+release bridge is valid only after a stable near-target handoff; it does not solve
+source-to-target attached transport. The structured A smoke now shows that even a
+perfect near-target identity+keep, arm-still release can settle flat, so do not
+long-train that A configuration. The first Branch B canonical SurfaceGripper
+unit test also failed to reach `Closed` on the sponge, so do not chain-integrate
+SurfaceGripper until a smaller controlled unit proves stable Closed/attached.
 
-Paper-quality pivot: either build a structured low-motion release/settle
-curriculum under identity+keep, or properly author and unit-test a physics
-gripper/constraint asset before replacing the kinematic pose-write attach.
+Paper-quality pivot: **Branch B remains preferred, but the first canonical
+SurfaceGripper+sponge unit hypothesis failed the Closed gate.** Do not chain
+integrate SurfaceGripper yet. A future learned release branch must first pass a
+policy-free upright-settle smoke.
 
 ## Current Status
 
@@ -368,6 +475,9 @@ Latest B200 P7 attach quaternion constraint probe:
 - D021: Gated release guidance breaks P7 no-release, but xy-threshold tuning
   trades failures: xy `0.12` releases too far, xy `0.08` reintroduces attached
   tip, and both end flat. Do not continue blind scalar/threshold tuning.
+- D022: Structured near-target P7 release smoke is active but fails post-release
+  upright settle. Do not long-train this A configuration; prefer Branch B authored
+  physics gripper/constraint unit test.
 
 ## Current Direction
 
@@ -377,14 +487,11 @@ Next concrete action:
 2. Keep v10 release bridge semantics as a short-handoff diagnostic only.
 3. Do not add random scripted release variants for v11. The failing surface is
    long attached transport, not gripper-open release.
-4. Next valid branches:
-   - design a structured low-motion P7 release/settle curriculum under
-     env-level `identity+keep` semantics; it must explicitly avoid early/far
-     release and post-release tip before any longer train/eval;
-   - properly author a physics gripper/constraint asset, prove it reaches
-     `Closed` on the sponge in a unit test, then re-test transport;
-   - only after mechanics are meaningful, revisit an orientation-aware learned
-     reward branch.
+4. Next valid branch:
+   - properly author a physics gripper/constraint asset, prove it reaches stable
+     `Closed` on the sponge in a unit test, then re-test transport.
+   - Keep learned P7 release/curriculum work on hold unless a policy-free
+     upright-settle smoke passes first.
 5. Do not keep trying arbitrary SurfaceGripper parent/offset variants without an
    authored asset/axis/API hypothesis.
 
@@ -393,34 +500,38 @@ scene should demo generation resume.
 
 ## Must Read First
 
-1. `claudedocs/DECISIONS.md` D006-D021
+1. `claudedocs/DECISIONS.md` D006-D023
 2. `claudedocs/EXPERIMENT_LEDGER.md` rows:
    2026-05-14 `(δ.4)`, `(δ.5)`, `G1/G2-A`, `G2-A v4`, `G2-A v5-v9`,
    and 2026-05-15 `G2-A v10`, `G2-A v11`, `SurfaceGripper probe v2/v3`,
    `P7 G2-A attached transport/release`, `P7 model_499 rollout failure diag`,
 	   `P7 action/TCP/quat trace`, `P7 attach quat constraint probe`,
-	   2026-05-17 `P7 env attach semantics A`, and
-	   2026-05-17 `P7 release guidance`
-3. `claudedocs/session_20260517_p7_release_guidance_diagnostics.md`
-4. `claudedocs/session_20260517_p7_attach_semantics_env_experiment.md`
-5. `claudedocs/session_20260515_p7_attach_quat_constraint_probe.md`
-6. `claudedocs/session_20260515_p7_action_tcp_quat_trace.md`
-7. `claudedocs/session_20260515_p7_rollout_failure_diag.md`
-8. `claudedocs/session_20260515_g2a_scripted_release_bridge.md`
-9. `claudedocs/session_20260515_g2a_layout_source_sweep.md`
-10. `claudedocs/session_20260515_p7_attached_transport_learning.md`
-11. `claudedocs/session_20260514_alpha_prime_delta_topdown.md` APPENDIX,
+	   2026-05-17 `P7 env attach semantics A`,
+	   2026-05-17 `P7 release guidance`,
+	   2026-05-17 `P7 structured release smoke`, and
+	   2026-05-17 `P7 Branch B SurfaceGripper unit`
+3. `claudedocs/session_20260517_p7_branch_b_surface_gripper_unit_probe.md`
+4. `claudedocs/session_20260517_p7_structured_release_curriculum_smoke.md`
+5. `claudedocs/session_20260517_p7_release_guidance_diagnostics.md`
+6. `claudedocs/session_20260517_p7_attach_semantics_env_experiment.md`
+7. `claudedocs/session_20260515_p7_attach_quat_constraint_probe.md`
+8. `claudedocs/session_20260515_p7_action_tcp_quat_trace.md`
+9. `claudedocs/session_20260515_p7_rollout_failure_diag.md`
+10. `claudedocs/session_20260515_g2a_scripted_release_bridge.md`
+11. `claudedocs/session_20260515_g2a_layout_source_sweep.md`
+12. `claudedocs/session_20260515_p7_attached_transport_learning.md`
+13. `claudedocs/session_20260514_alpha_prime_delta_topdown.md` APPENDIX,
    `(δ.4)`, `(δ.5)`, `(G1/G2-A)`, `(G2-A v4)`, `(G2-A v5-v9)`
-12. `roarm_rl/chain_skills.py`
-13. `roarm_rl/roarm_stack_env.py` `_pre_physics_step`, `_apply_action`,
+14. `roarm_rl/chain_skills.py`
+15. `roarm_rl/roarm_stack_env.py` `_pre_physics_step`, `_apply_action`,
    `_grasp_condition`, `_update_grasp_attach`
 
 ## Source Files To Verify Before Coding
 
 - `roarm_rl/chain_skills.py` — md5 `c6e610216197994c6b7d2b6625d87560`
 - `launch_chain_topdown.sh` — md5 `b34ef3853ac993a1e2adbaddb420adab`
-- `roarm_rl/roarm_stack_env.py` — md5 `580e137a2318586a7a848664a1f2d7c1`
-- `roarm_rl/train_ppo.py` — md5 `ffecfb0b0df89c69159dabe3dd5046e7`
+- `roarm_rl/roarm_stack_env.py` — md5 `e2748144034d5a09d6c7a0f6c0da6906`
+- `roarm_rl/train_ppo.py` — md5 `795ee48b1bfdd83e8c9735efd01f6920`
 - `launch_p6v17_transport_release.sh` — md5
   `2acd462042d0997610fca25ff7a41e21`
 - `sim_scripts/attached_transport_reset_probe.py` — md5
@@ -435,6 +546,10 @@ scene should demo generation resume.
   `a2e16f7683856ead1a9a9eef1da8ea69`
 - `sim_scripts/p7_attach_semantics_env_probe.py` — md5
   `4997a3ec058773004441b74419da114f`
+- `sim_scripts/p7_structured_release_curriculum_probe.py` — md5
+  `41e6b48bfaa46b82f2add262903a2a5e`
+- `sim_scripts/p7_branch_b_surface_gripper_unit_probe.py` — md5
+  `1d093ebbd39d2c64252545574e74ad34`
 - `local_assets/roarm_m3/urdf/roarm_m3.urdf` — md5
   `cb5ce1232fd3a4f5e8ee6c456577a215`
 - `local_assets/roarm_m3/urdf/meshes/gripper_link_collision_g2a.stl` — md5
@@ -464,8 +579,10 @@ scene should demo generation resume.
 	  `/tmp/p7v4_attach_identity_keep_model19_trace.{out,err}`,
 	  `/tmp/p7v5_identity_keep_release_guidance_diag20.{out,err}`,
 	  `/tmp/p7v5_identity_keep_release_guidance_model19_trace.{out,err}`,
-	  `/tmp/p7v6_identity_keep_release_guidance_xy08_diag20.{out,err}`,
-	  `/tmp/p7v6_identity_keep_release_guidance_xy08_model19_trace.{out,err}`
+		  `/tmp/p7v6_identity_keep_release_guidance_xy08_diag20.{out,err}`,
+		  `/tmp/p7v6_identity_keep_release_guidance_xy08_model19_trace.{out,err}`,
+		  `/tmp/p7v7_structured_release_smoke.{out,err}`,
+		  `/tmp/p7_branch_b_surface_gripper_unit_smoke.{out,err}`
 
 ## Do Not Trust As Current State
 
@@ -475,9 +592,13 @@ scene should demo generation resume.
 - More Skill 1b z-stage tuning, δ.3 ramping, or N-stage descent variants
 - Treating P6v14a Skill 3 as compatible with stable G2-A handoff
 - Treating quick dynamic SurfaceGripper creation as solved physics attach
+- Treating canonical SurfaceGripper+sponge unit probe as solved; latest B200 smoke
+  failed `Closed` with `closed_detect_step=-1`
 - Treating P7 attached-learning as solved transport/release
 - Treating env-level attach identity/keep as solved P7
 - Treating P7 release guidance or xy-threshold tuning as solved P7
+- Long-training the structured A curriculum after `/tmp/p7v7_structured_release_smoke`
+  produced `EARLY_KILL=YES`
 - Treating P7 final z/XY improvement as success when `sz_world_z` shows the
   sponge is lying flat
 - Four-sponge demo generation before solving long attached transport and release

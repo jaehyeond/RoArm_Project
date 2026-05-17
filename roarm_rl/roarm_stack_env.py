@@ -313,6 +313,22 @@ class RoArmStackEnvCfg(DirectRLEnvCfg):
     p7_release_closed_penalty_scale: float = 4.0
     p7_transport_xy_penalty_scale: float = 4.0
 
+    # P7 structured release curriculum (default off).
+    # This is not another release-guidance threshold tweak.  It narrows the task
+    # to a falsifiable mechanics question: from a near-target upright attached
+    # release entry under identity+keep, can low-motion gripper opening settle
+    # upright on target?
+    p7_structured_release_curriculum: bool = False
+    p7_structured_release_joints_rad: tuple = (
+        -0.1541093, +0.4957103, +2.0049270, +0.2048219, 0.0, 0.7993608
+    )
+    p7_structured_release_xy_jitter: float = 0.015
+    p7_structured_release_z_jitter: float = 0.004
+    p7_structured_release_xy_gate: float = 0.040
+    p7_structured_release_z_gate: float = 0.020
+    p7_structured_release_vel_gate: float = 0.12
+    p7_structured_release_action_gate: float = 0.35
+
     # P4 reward weights (mirrors Phase 1.A P3)
     reach_reward_scale: float = 1.0
     action_penalty_scale: float = 0.005
@@ -393,6 +409,8 @@ class RoArmStackEnv(DirectRLEnv):
                 f"attach_velocity_mode must be 'zero' or 'keep' "
                 f"(got {self.cfg.attach_velocity_mode!r})"
             )
+        if self.cfg.p7_structured_release_curriculum and not self.cfg.curriculum_attached_transport_release:
+            raise ValueError("p7_structured_release_curriculum requires curriculum_attached_transport_release")
 
         self.robot_dof_lower_limits = self._robot.data.soft_joint_pos_limits[0, :, 0].to(self.device)
         self.robot_dof_upper_limits = self._robot.data.soft_joint_pos_limits[0, :, 1].to(self.device)
@@ -877,6 +895,12 @@ class RoArmStackEnv(DirectRLEnv):
             & (release_z_offset < self.cfg.p7_release_guidance_z_thresh)
             & upright
         )
+        structured_gate = (
+            (xy_offset < self.cfg.p7_structured_release_xy_gate)
+            & (release_z_offset < self.cfg.p7_structured_release_z_gate)
+            & (sponge_vel_mag < self.cfg.p7_structured_release_vel_gate)
+            & upright
+        )
 
         episode_progress = self.episode_length_buf.float() / max(float(self.max_episode_length), 1.0)
 
@@ -895,10 +919,42 @@ class RoArmStackEnv(DirectRLEnv):
             transport_r = transport_r - self.cfg.p7_transport_xy_penalty_scale * xy_offset
             transport_r = transport_r + self.cfg.p7_release_open_bonus_scale * guide * open_score
             transport_r = transport_r - self.cfg.p7_release_closed_penalty_scale * guide * (1.0 + closed_amount)
+        if self.cfg.p7_structured_release_curriculum:
+            action_mag = torch.norm(self.actions[:, :5], p=2, dim=-1)
+            gripper_action = self.actions[:, self.gripper_joint_idx]
+            open_score = 1.0 - torch.tanh(4.0 * torch.clamp(gripper_q, min=0.0))
+            closed_amount = torch.relu(gripper_q - self.cfg.grasp_gripper_thresh)
+            low_action = action_mag < self.cfg.p7_structured_release_action_gate
+            early_open = gripper_open & ~structured_gate
+
+            transport_r = (
+                -2.0
+                + 6.0 * xy_score
+                + 3.0 * release_z_score
+                + 2.0 * upright.float()
+                + 1.0 * static_signal
+                - 2.0 * torch.tanh(action_mag)
+            )
+            transport_r = transport_r - 8.0 * early_open.float()
+            transport_r = transport_r + 4.0 * structured_gate.float() * open_score
+            transport_r = transport_r - 4.0 * structured_gate.float() * (1.0 + closed_amount)
+            transport_r = transport_r + 1.0 * structured_gate.float() * (gripper_action < -0.2).float()
+            transport_r = transport_r + 1.0 * (structured_gate & low_action).float()
 
         # Released/settling: keep reward alive only if object is actually near the target.
         released_r = -3.0 + 6.0 * xy_score + 2.0 * settled_z_score + 1.0 * static_signal
         released_r = torch.where(xy_offset < 0.080, released_r, torch.full_like(released_r, -3.0))
+        if self.cfg.p7_structured_release_curriculum:
+            released_r = (
+                -4.0
+                + 8.0 * xy_score
+                + 4.0 * settled_z_score
+                + 4.0 * upright.float()
+                + 2.0 * static_signal
+            )
+            released_r = torch.where(
+                xy_offset < 0.060, released_r, torch.full_like(released_r, -4.0)
+            )
 
         success_now = on_target & gripper_open & sponge_stable & was_grasped
         just_succeeded = success_now & ~self._place_success_flag
@@ -920,6 +976,7 @@ class RoArmStackEnv(DirectRLEnv):
             "p7_gripper_open_rate": gripper_open.float().mean().detach(),
             "p7_near_release_rate": near_release.float().mean().detach(),
             "p7_release_guidance_zone_rate": release_guidance_zone.float().mean().detach(),
+            "p7_structured_gate_rate": structured_gate.float().mean().detach(),
             "p7_on_target_rate": on_target.float().mean().detach(),
             "p7_sponge_stable_rate": sponge_stable.float().mean().detach(),
             "p7_upright_rate": upright.float().mean().detach(),
@@ -969,14 +1026,22 @@ class RoArmStackEnv(DirectRLEnv):
 
         attached_idx = None
         if self.cfg.curriculum_attached_transport_release:
-            attached_idx = torch.randint(0, 4, (n,), device=self.device)
-            q_table = torch.tensor(G2A_SEED0_ATTACHED_Q_RAD, device=self.device, dtype=torch.float32)
-            joint_pos = q_table[attached_idx].clone()
-            jitter_amp = self.cfg.curriculum_attached_start_jitter_rad
-            if jitter_amp > 0.0:
-                jitter = sample_uniform(-jitter_amp, jitter_amp, (n, self._robot.num_joints), self.device)
-                jitter[:, self.gripper_joint_idx] = 0.0
-                joint_pos = joint_pos + jitter
+            if self.cfg.p7_structured_release_curriculum:
+                attached_idx = None
+                joint_pos = torch.tensor(
+                    self.cfg.p7_structured_release_joints_rad,
+                    device=self.device,
+                    dtype=torch.float32,
+                ).unsqueeze(0).repeat(n, 1)
+            else:
+                attached_idx = torch.randint(0, 4, (n,), device=self.device)
+                q_table = torch.tensor(G2A_SEED0_ATTACHED_Q_RAD, device=self.device, dtype=torch.float32)
+                joint_pos = q_table[attached_idx].clone()
+                jitter_amp = self.cfg.curriculum_attached_start_jitter_rad
+                if jitter_amp > 0.0:
+                    jitter = sample_uniform(-jitter_amp, jitter_amp, (n, self._robot.num_joints), self.device)
+                    jitter[:, self.gripper_joint_idx] = 0.0
+                    joint_pos = joint_pos + jitter
         # Robot init: HOME (default) / pre-grasp closed (P6v14a Phase 0a) / pre-grasp hover (P6v14c Phase 0a').
         elif self.cfg.curriculum_pregrasp or self.cfg.curriculum_pregrasp_hover:
             pre_q = torch.tensor(self.cfg.pregrasp_joints_rad, device=self.device,
@@ -1008,10 +1073,23 @@ class RoArmStackEnv(DirectRLEnv):
         # min_r > on_target_xy_thresh required to prevent iter-0 trivial jackpot (sponge
         # spawned within target zone + HOME gripper open + zero vel → success_now=True).
         if self.cfg.curriculum_attached_transport_release:
-            tcp_table = torch.tensor(G2A_SEED0_ATTACHED_TCP, device=self.device, dtype=torch.float32)
-            target_table = torch.tensor(G2A_SEED0_TARGETS, device=self.device, dtype=torch.float32)
-            tcp_local = tcp_table[attached_idx]
-            target_local = target_table[attached_idx]
+            if self.cfg.p7_structured_release_curriculum:
+                target_local = torch.tensor(self.cfg.target_pos, device=self.device, dtype=torch.float32).repeat(n, 1)
+                xy_jitter = self.cfg.p7_structured_release_xy_jitter
+                z_jitter = self.cfg.p7_structured_release_z_jitter
+                if xy_jitter > 0.0:
+                    target_local[:, :2] = target_local[:, :2] + sample_uniform(
+                        -xy_jitter, xy_jitter, (n, 2), self.device
+                    )
+                release_z = target_local[:, 2] + 0.029
+                if z_jitter > 0.0:
+                    release_z = release_z + sample_uniform(-z_jitter, z_jitter, (n,), self.device)
+                tcp_local = torch.stack([target_local[:, 0], target_local[:, 1], release_z], dim=-1)
+            else:
+                tcp_table = torch.tensor(G2A_SEED0_ATTACHED_TCP, device=self.device, dtype=torch.float32)
+                target_table = torch.tensor(G2A_SEED0_TARGETS, device=self.device, dtype=torch.float32)
+                tcp_local = tcp_table[attached_idx]
+                target_local = target_table[attached_idx]
             self._target_world[env_ids] = self.scene.env_origins[env_ids] + target_local
             sx = tcp_local[:, 0]
             sy = tcp_local[:, 1]

@@ -758,3 +758,92 @@ Sources:
 - B200 `/tmp/p7v5_identity_keep_release_guidance_model19_trace.{out,err}`
 - B200 `/tmp/p7v6_identity_keep_release_guidance_xy08_diag20.{out,err}`
 - B200 `/tmp/p7v6_identity_keep_release_guidance_xy08_model19_trace.{out,err}`
+
+## D022 — Structured near-target P7 release smoke is active but fails post-release upright settle; do not long-train this A configuration
+
+Evidence:
+
+- Added default-off `p7_structured_release_curriculum` as a falsifiable A-branch
+  test, not as another scalar/xy-threshold tuning run. Defaults remain unchanged:
+  old attach behavior is still `attach_quat_mode="preserve"` and
+  `attach_velocity_mode="zero"`, and the structured curriculum is disabled unless
+  explicitly enabled.
+- B200 `/tmp/p7v7_structured_release_smoke.out` line 68 confirmed the new
+  mechanism was active: `attach_quat_mode=identity attach_velocity_mode=keep
+  structured_release=True`.
+- Line 69 confirmed a perfect near-target reset:
+  `d_xy=0.0000`, `rel_z_abs=0.0000`, `sz=1.0000`,
+  `grasped=1.000`, `open=0.000`.
+- Lines 74-76 showed the hand-authored low-motion gripper-open smoke broke
+  no-release without attached tipping:
+  `first_open=64/64`, `release_or_open=64/64`,
+  `tip_while_grasped_before_release=0/64`.
+- Line 78 showed the release itself was close and upright:
+  `release sz=0.9720`, `d_xy=0.0089`.
+- Line 79 showed the actual failure after settle:
+  `final d_xy=0.0411`, `settled_z_abs=0.0041`, but `sz=0.2484` and
+  `success_rate=0.2344`.
+- Lines 80-81 summarized the branch test: `MECHANISM_ACTIVE=YES` and
+  `EARLY_KILL=YES`.
+
+Implication:
+
+- The structured A-branch gate is real, but the tested A configuration should not
+  be long-trained. If a perfect near-target, arm-still, identity+keep release
+  already settles flat, PPO is being asked to learn around a contact/settle
+  mechanics failure rather than a policy problem.
+- Do not continue P7 release-guidance scalar/threshold tuning, and do not simply
+  extend this structured curriculum into a long run.
+- The stronger next branch is now Branch B: properly author and validate a
+  physics gripper/constraint unit test that reaches stable `Closed` before chain
+  integration. Any future learned release work must first pass a comparable
+  policy-free upright-settle smoke.
+
+Sources:
+
+- `roarm_rl/roarm_stack_env.py` default-off `p7_structured_release_curriculum`
+- `sim_scripts/p7_structured_release_curriculum_probe.py`
+- `claudedocs/session_20260517_p7_structured_release_curriculum_smoke.md`
+- B200 `/tmp/p7v7_structured_release_smoke.{out,err}`
+
+## D023 — Canonical SurfaceGripper+sponge unit test fails the Closed gate; do not use gripped-object count alone
+
+Evidence:
+
+- Added `sim_scripts/p7_branch_b_surface_gripper_unit_probe.py`, a CPU-only
+  Branch B unit probe that uses Isaac Lab's canonical
+  `Tests/SurfaceGripper/test_gripper.usd` rig and the project RoArm sponge. It
+  does not edit `roarm_stack_env.py`, `train_ppo.py`, `chain_skills.py`, reward
+  scalars, scripted release variants, or RoArm SurfaceGripper parent/offsets.
+- B200 `/tmp/p7_branch_b_surface_gripper_unit_smoke.out` line 89 verified the
+  canonical SurfaceGripper asset and sponge prim.
+- Line 90 showed the reset state: sponge at `z=0.4986`, SurfaceGripper state
+  open (`state=-1.0`).
+- Lines 91-103 showed the close phase never reached `Closed`; state remained
+  `0.0` or `-1.0`.
+- Line 121 reported `closed_detect_step=-1`, `closed_frac=0.0000`,
+  `gripped_positive_frac=1.0000`, and `max_drift=0.37595`.
+- Line 122 showed the final state was still not closed (`state=+0.0`) and the
+  sponge had drifted/fallen to `z=0.1235`.
+- Line 123 ended `SURFACE_UNIT_SUCCESS=NO`. Final stderr lines 1-13 were
+  NVML/cpufreq warnings only, with no Python traceback.
+
+Implication:
+
+- The first concrete Branch B SurfaceGripper+sponge hypothesis is killed before
+  transport or chain integration.
+- Do not chain-integrate SurfaceGripper while the unit probe cannot reach stable
+  `Closed` on the sponge.
+- Do not return to arbitrary RoArm parent/offset SurfaceGripper search. The next
+  valid SurfaceGripper diagnostic must be a single controlled axis/object-size
+  test against the canonical rig, or the branch should switch to an explicitly
+  authored fixed/D6 constraint unit.
+- `get_gripped_objects` / positive gripped-object count is not sufficient
+  evidence of attach in this setup; the gate must use `state=Closed` plus low
+  drift/hold stability.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_surface_gripper_unit_probe.py`
+- `claudedocs/session_20260517_p7_branch_b_surface_gripper_unit_probe.md`
+- B200 `/tmp/p7_branch_b_surface_gripper_unit_smoke.{out,err}`

@@ -101,6 +101,14 @@ def main():
                         help="Override P7 release-guidance XY corridor in meters.")
     parser.add_argument("--p7_release_guidance_z_thresh", type=float, default=None,
                         help="Override P7 release-guidance release-z corridor in meters.")
+    parser.add_argument("--p7_structured_release_curriculum", action="store_true",
+                        help="Enable default-off P7 structured near-target release/settle curriculum. "
+                             "Requires --curriculum_attached_transport_release and should be paired "
+                             "with identity+keep attach semantics for the mechanics experiment.")
+    parser.add_argument("--p7_structured_release_xy_jitter", type=float, default=None,
+                        help="Override structured release target XY jitter in meters.")
+    parser.add_argument("--p7_structured_release_z_jitter", type=float, default=None,
+                        help="Override structured release entry Z jitter in meters.")
     # P6v16 Path B (5/14) — Residual Policy Learning (Silver 2018) for catastrophic
     # forgetting fix. BC base (frozen) + trainable residual MLP; PPO trains residual only.
     parser.add_argument("--residual_mode", action="store_true",
@@ -198,11 +206,24 @@ def main():
         print("[train] p7_release_guidance_z_thresh: "
               f"{env_cfg.p7_release_guidance_z_thresh} -> {args.p7_release_guidance_z_thresh}")
         env_cfg.p7_release_guidance_z_thresh = args.p7_release_guidance_z_thresh
+    if args.p7_structured_release_curriculum:
+        print("[train] p7_structured_release_curriculum: True")
+        env_cfg.p7_structured_release_curriculum = True
+    if args.p7_structured_release_xy_jitter is not None:
+        print("[train] p7_structured_release_xy_jitter: "
+              f"{env_cfg.p7_structured_release_xy_jitter} -> {args.p7_structured_release_xy_jitter}")
+        env_cfg.p7_structured_release_xy_jitter = args.p7_structured_release_xy_jitter
+    if args.p7_structured_release_z_jitter is not None:
+        print("[train] p7_structured_release_z_jitter: "
+              f"{env_cfg.p7_structured_release_z_jitter} -> {args.p7_structured_release_z_jitter}")
+        env_cfg.p7_structured_release_z_jitter = args.p7_structured_release_z_jitter
     # Mutual exclusion guard: pregrasp and pregrasp_hover are mutually exclusive (different env init).
     if args.curriculum_pregrasp and args.curriculum_pregrasp_hover:
         raise ValueError("--curriculum_pregrasp and --curriculum_pregrasp_hover are mutually exclusive")
     if args.curriculum_attached_transport_release and (args.curriculum_pregrasp or args.curriculum_pregrasp_hover):
         raise ValueError("--curriculum_attached_transport_release is mutually exclusive with pregrasp curricula")
+    if args.p7_structured_release_curriculum and not args.curriculum_attached_transport_release:
+        raise ValueError("--p7_structured_release_curriculum requires --curriculum_attached_transport_release")
 
     # ppo cfg
     ppo_cfg = RoArmPickPPORunnerCfg()
