@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-05-17 KST (Track A Branch B RoArm chain-side command-stream dry-run; no integration)
+Last updated: 2026-05-18 KST (Track A Branch B passive-contact/close-timing probe; no constraint integration)
 
 This is the rolling current-state dashboard. Do not treat it as full history.
 Durable lessons live in `claudedocs/DECISIONS.md`; experiment history lives in
@@ -21,50 +21,65 @@ Do **not** use `HANDOFF.md` or `TASKS.md` as current state.
 
 Latest session:
 
-- `claudedocs/session_20260517_p7_branch_b_roarm_chain_command_stream.md`
+- `claudedocs/session_20260518_p7_branch_b_passive_contact_close_timing.md`
 
 What changed:
 
-- Added `sim_scripts/p7_branch_b_roarm_chain_command_stream_probe.py`
-  md5 `d9a07b43bed44f6061144234d7f6ec36`.
-- The probe is local/numpy-only and chain-side only. It converts existing
-  `TrajectoryPlanner` waypoints into explicit
-  `PRE_MOVE* -> CLOSE -> MOVE* -> HOLD -> RELEASE` events and validates the
-  event stream. It does not run Isaac, insert constraint prims, use
-  SurfaceGripper, change env/train/chain defaults, or integrate constraints.
+- Added `sim_scripts/p7_branch_b_roarm_chain_passive_contact_close_timing_probe.py`
+  md5 `6cb899ca124ff588fcc011d2805fa605`.
+- The probe reuses the conservative `PRE_MOVE* -> CLOSE -> MOVE* -> HOLD ->
+  RELEASE` stream but executes only `PRE_MOVE* -> CLOSE` on the real Isaac/RoArm
+  articulation with the sponge at nominal pick. It measures passive sponge drift,
+  close timing, env `_grasped` marker timing, realized TCP steps, target error,
+  and sponge uprightness. It does not insert constraint prims, integrate
+  fixed/dynamic constraints, attach SurfaceGripper, execute attached transport,
+  run release, run P7 training, or edit env/train/chain defaults.
 
-B200/local dry-run evidence:
+B200 evidence:
 
-- Logs: local `/tmp/p7_branch_b_roarm_chain_command_stream_probe.{out,err}`;
-  B200 `/tmp/p7_branch_b_roarm_chain_command_stream_probe_b200.{out,err}`.
-- Line 2: `command_stream_only=YES`, `chain_side_only=YES`,
-  `isaac_chain_integration=NO`, `constraint_prim_insertion=NO`,
-  `surface_gripper=NO`, `p7_training=NO`, and no env/chain default edits.
-- Line 3: `resample_fraction=0.900`; line 4 schema:
-  `PRE_MOVE* CLOSE MOVE* HOLD RELEASE`.
-- Lines 19-24: raw planner gaps still fail the `0.010m` step gate; max raw gap
-  is `0.211271m` from HOME to high.
-- No-margin cross-check failed:
-  `/tmp/p7_branch_b_roarm_chain_command_stream_probe_nomargin_fail*.out`
-  line 39 showed one `PRE_MOVE` step at `0.010351m`; lines 77-79 failed.
-- With `resample_fraction=0.900`, line 73 accepts `CLOSE`, lines 79-80 accept
-  `HOLD` and `RELEASE` only after target reached.
-- Line 81 reports `events_total=44`, `pre_move_cmds=38`, `move_cmds=3`,
-  max steps `0.009525/0.007691m`, max FK errors `0.000997/0.000655m`,
-  final error `0.000655m`, and zero IK failures.
-- Lines 82-83: all stream/order/release gates YES and
-  `ROARM_CHAIN_COMMAND_STREAM_SUCCESS=YES`.
+- Logs: B200
+  `/tmp/p7_branch_b_roarm_chain_passive_contact_close_timing_probe_b200.{out,err}`.
+- B200 stdout line 41 confirms scope: passive-contact/close timing only, no
+  constraint prim insertion, no fixed/dynamic integration, no SurfaceGripper,
+  no attached transport, no release marker, no P7 training, no default edits,
+  and env kinematic latch is marker-only.
+- Line 43 confirms the source stream shape and truncation:
+  source `events_total=44`, executed events `39`, `pre_move_cmds=38`,
+  `move_cmds_executed=0`, `raw_max_gap_m=0.211271`, `raw_gap_ok=NO`.
+- Line 71 confirms HOME FK and settled sponge baseline:
+  `home_fk_error_m=0.001894`, settled sponge
+  `(+0.266020, -0.034486, +0.023500)`, `settled_upright_z=1.000000`.
+- Lines 72-80 show sampled PRE_MOVE events all reached under gated execution,
+  with zero measurable sponge XY drift and no latch before close.
+- Line 81 reports CLOSE reached in 15 steps:
+  `gripper_q_deg=+23.02`, `d_tcp_sponge_m=0.023599`,
+  `sponge_xy_drift_m=0.000005`, `min_upright_z=1.000000`,
+  `latch_seen=YES`, `latch_step=15`.
+- Line 82 aggregate: executed events `39`, `total_sim_steps=275`,
+  `max_final_target_error_m=0.002399`, `max_sim_tcp_step_m=0.001947`,
+  `max_preclose_sponge_xy_drift_m=0.000000`,
+  `max_close_sponge_xy_drift_m=0.000005`, `latch_event_index=39`,
+  `gripper_threshold_global_step=275`, `preclose_latch_seen=NO`,
+  `kinematic_env_latch_is_marker_only=YES`.
+- Lines 83-84 report scoped gates YES and explicitly
+  `attach_physics_validated=NO`, `release_physics_validated=NO`.
 
 Interpretation:
 
-- Current planner kinematics can provide a contract-compatible dry-run TCP
-  event stream only with explicit conservative resampling.
+- Current planner kinematics can provide a contract-compatible TCP event stream
+  only with explicit conservative resampling.
 - The existing raw planner waypoints/targets are too coarse, and exact 10mm
   resampling can still fail due to FK/IK realized-step error; use a safety
   margin before any approved integration design.
+- The real Isaac/RoArm articulation can execute the conservative stream under
+  a realized-TCP gated scheduler; a one-sim-step-per-command assumption remains
+  false from the previous dynamics probe.
+- Nominal passive approach/close timing did not show pre-close sponge push or
+  pre-close env latch in this one-sponge diagnostic. CLOSE produced only an env
+  kinematic latch marker at the gripper threshold step.
 - This is **not P7 success** and **not constraint integration**. It does not
-  validate articulation dynamics, controller latency,
-  TCP estimation in sim, contact, or attach/release timing inside the chain.
+  validate object attachment, release physics, attached transport, or constraint
+  insertion inside the chain.
 - Any actual RoArm chain integration still needs explicit user approval and a
   new falsifiable gate.
 
@@ -90,6 +105,10 @@ Interpretation:
   `claudedocs/session_20260517_p7_branch_b_dynamic_anchor_constraint.md`.
 - Previous RoArm chain-side contract dry-run remains useful evidence:
   `claudedocs/session_20260517_p7_branch_b_roarm_chain_contract_dryrun.md`.
+- Previous command-stream dry-run remains core evidence:
+  `claudedocs/session_20260517_p7_branch_b_roarm_chain_command_stream.md`.
+- Previous RoArm articulation timing remains core evidence:
+  `claudedocs/session_20260517_p7_branch_b_roarm_chain_dynamics_timing.md`.
 
 ## Track B Status
 
@@ -113,19 +132,21 @@ Interpretation:
 
 ## Current Direction
 
-Active pivot: Track A P7/Branch B, isolated constraint mechanics.
+Active pivot: Track A P7/Branch B, isolated/pre-integration mechanics and chain-side timing.
 
 Next concrete action: do not integrate constraints yet. If continuing, design the
-next falsifiable pre-integration check for real Isaac/RoArm chain dynamics,
-controller latency, TCP-estimation timing, and attach/release timing, still
-without constraint prim insertion unless explicitly approved.
+next falsifiable pre-integration check after close: still no SurfaceGripper, no
+RoArm chain constraint insertion, and no attached transport unless explicitly
+approved.
 
 ## Must Read First
 
 1. `CLAUDE.md`
 2. `START_HERE.md`
-3. `claudedocs/DECISIONS.md` D024-D032
+3. `claudedocs/DECISIONS.md` D024-D033
 4. `claudedocs/EXPERIMENT_LEDGER.md` latest Branch B rows
 5. `claudedocs/session_20260517_p7_branch_b_dynamic_anchor_chain_contract.md`
 6. `claudedocs/session_20260517_p7_branch_b_roarm_chain_command_stream.md`
-7. The B200/local logs cited above, with line numbers
+7. `claudedocs/session_20260517_p7_branch_b_roarm_chain_dynamics_timing.md`
+8. `claudedocs/session_20260518_p7_branch_b_passive_contact_close_timing.md`
+9. The B200/local logs cited above, with line numbers

@@ -1297,3 +1297,51 @@ Sources:
 - `claudedocs/session_20260517_p7_branch_b_roarm_chain_timing_resample.md`
 - Local `/tmp/p7_branch_b_roarm_chain_timing_resample_probe*.{out,err}`
 - B200 `/tmp/p7_branch_b_roarm_chain_timing_resample_probe*_b200.{out,err}`
+
+## D033 — Real RoArm articulation timing requires realized-TCP gating; one-step command assumptions are unsafe
+
+Evidence:
+
+- Added `sim_scripts/p7_branch_b_roarm_chain_dynamics_timing_probe.py`, an
+  Isaac/RoArm articulation-only diagnostic around the conservative command
+  stream. It keeps the env sponge far away, so `CLOSE` and `RELEASE` are
+  marker/gripper timing checks only. It does not insert constraint prims,
+  integrate fixed/dynamic constraints, attach SurfaceGripper, run P7 training,
+  or edit env/train/chain defaults.
+- B200 `/tmp/p7_branch_b_roarm_chain_dynamics_timing_probe_b200.out`:
+  - line 40 confirmed articulation-only/no-constraint/no-SurfaceGripper/no-P7
+    scope and `release_marker_only=YES`;
+  - line 42 reused the conservative stream:
+    `events_total=44`, `pre_move_cmds=38`, `move_cmds=3`,
+    `raw_max_gap_m=0.211271`, `raw_gap_ok=NO`;
+  - line 70 reported sim HOME TCP vs analytic FK error `0.000870m`, below the
+    `0.003m` gate;
+  - lines 71-85 showed sampled events reached under gated execution, including
+    `CLOSE` in 16 sim steps, MOVE marker events in 9/10/10 steps, `HOLD` in 2,
+    and `RELEASE` marker in 3;
+  - line 86 reported aggregate `total_sim_steps=311`, `max_event_steps=16`,
+    `event_timeouts=0`, `max_first_step_target_error_m=0.009291`,
+    `one_step_target_ok=NO`, `max_final_target_error_m=0.002705`,
+    `max_sim_tcp_step_m=0.001947`, `max_cache_fresh_delta_m=0.000000`,
+    `grasped_seen=NO`, and `release_gripper_open_ok=YES`;
+  - lines 87-88 reported controller/target/sim-step/cache/no-attach/release
+    marker gates YES and `ROARM_CHAIN_DYNAMICS_TIMING_SUCCESS=YES`, while
+    `one_step_target_ok=NO`.
+
+Implication:
+
+- The conservative command stream is not sufficient as a blind one-command-per-
+  sim-step schedule. A future chain-side executor must wait on realized TCP (or
+  an equivalent measured state gate) before advancing `PRE_MOVE`, `CLOSE`,
+  `MOVE`, `HOLD`, or `RELEASE`.
+- In this no-contact/no-attach diagnostic, the real articulation/controller can
+  follow the stream within the `0.003m` target gate and the realized per-sim-step
+  TCP motion stayed below `0.010m`.
+- This still does not validate contact, object attachment, release physics, or
+  constraint insertion. It is not P7 success and not constraint integration.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_roarm_chain_dynamics_timing_probe.py`
+- `claudedocs/session_20260517_p7_branch_b_roarm_chain_dynamics_timing.md`
+- B200 `/tmp/p7_branch_b_roarm_chain_dynamics_timing_probe_b200.{out,err}`
