@@ -1042,3 +1042,108 @@ Sources:
 - `claudedocs/session_20260517_p7_branch_b_dynamic_anchor_constraint.md`
 - B200 `/tmp/p7_branch_b_fixed_constraint_dynamic_anchor_smoke.{out,err}`
 - B200 `/tmp/p7_branch_b_fixed_constraint_dynamic_anchor_halfcmd_smoke.{out,err}`
+
+## D028 — Closed-loop dynamic-anchor velocity target tracking passes in isolation, but remains pre-chain
+
+Evidence:
+
+- Added `sim_scripts/p7_branch_b_fixed_constraint_dynamic_anchor_target_probe.py`,
+  a pre-chain CPU unit that keeps the D027 dynamic, gravity-disabled anchor and
+  USD fixed joint, but replaces open-loop velocity duration with a measured
+  closed-loop target servo:
+  `velocity = clamp(target_kp * (target_pos - anchor_pos), max_cmd_speed)`.
+  It does not use the RoArm chain, SurfaceGripper, P7 training, reward tuning,
+  release guidance, scripted release variants, or launch default changes.
+- Full-command B200 run
+  `/tmp/p7_branch_b_fixed_constraint_dynamic_anchor_target_smoke.out`:
+  - lines 40-41 confirmed CPU/no chain/no transport/no SurfaceGripper/no P7
+    training;
+  - line 48 requested target delta `([0.020, 0.0, 0.010])`;
+  - line 49 closed at `rel=0.000000`;
+  - lines 59-68 showed closed-loop motion with anchor and sponge positions
+    identical and `rel=0.000000`;
+  - line 83 reported post-hold `final_anchor_target_error=0.001426` and
+    `final_sponge_target_error=0.001426`;
+  - line 102 reported `max_move_rel=0.000000`,
+    `max_post_move_rel=0.000000`, `target_error_threshold=0.003000`,
+    `release_drop=0.335825`;
+  - lines 103-104 reported all gates YES and
+    `FIXED_DYNAMIC_ANCHOR_TARGET_SUCCESS=YES`.
+- Half-command B200 cross-check
+  `/tmp/p7_branch_b_fixed_constraint_dynamic_anchor_target_halfcmd_smoke.out`:
+  - line 48 requested target delta `([0.010, 0.0, 0.005])`;
+  - line 81 reported post-hold `final_anchor_target_error=0.001429` and
+    `final_sponge_target_error=0.001429`;
+  - line 100 reported `max_move_rel=0.000000`,
+    `max_post_move_rel=0.000000`, `target_error_threshold=0.003000`,
+    `release_drop=0.330823`;
+  - lines 101-102 reported all gates YES and
+    `FIXED_DYNAMIC_ANCHOR_TARGET_SUCCESS=YES`.
+
+Implication:
+
+- D027's target-calibration caveat is resolved only for this closed-loop isolated
+  dynamic-anchor unit. The open-loop dynamic-anchor probe remains overshooting
+  evidence and should not be cited as calibrated target tracking.
+- This is not P7 success and not RoArm chain integration evidence.
+- Before chain integration, the next Branch B work must still be pre-chain:
+  define and test the smallest controller/interface mapping from target-tracked
+  anchor motion toward a future TCP/anchor command surface.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_fixed_constraint_dynamic_anchor_target_probe.py`
+- `claudedocs/session_20260517_p7_branch_b_dynamic_anchor_target_tracking.md`
+- B200 `/tmp/p7_branch_b_fixed_constraint_dynamic_anchor_target_smoke.{out,err}`
+- B200 `/tmp/p7_branch_b_fixed_constraint_dynamic_anchor_target_halfcmd_smoke.{out,err}`
+
+## D029 — Mock-TCP interface wrapper passes pre-chain, but real RoArm integration risks remain untested
+
+Evidence:
+
+- Added `sim_scripts/p7_branch_b_fixed_constraint_dynamic_anchor_interface_probe.py`,
+  a pre-chain CPU unit that wraps the D028 target-tracked dynamic-anchor mechanism
+  in a mock TCP command surface. The interface mapping is
+  `anchor_target = tcp_target + tcp_to_anchor_offset`. It does not use the RoArm
+  chain, IK, SurfaceGripper, P7 training, reward tuning, release guidance,
+  scripted release variants, or launch default changes.
+- Default-offset B200 run
+  `/tmp/p7_branch_b_fixed_constraint_dynamic_anchor_interface_smoke.out`:
+  - lines 40-41 confirmed CPU/no chain/no transport/no SurfaceGripper/no P7
+    training;
+  - line 48 closed at `rel=0.000000` with three waypoints;
+  - lines 58, 75, and 93 reported `transform_error=0.000000`;
+  - lines 67, 85, and 102 reported waypoint target-stop errors `0.001411`,
+    `0.001464`, and `0.001394`;
+  - line 128 reported `max_move_rel=0.000000`, `max_hold_rel=0.000000`,
+    `max_final_anchor_target_error=0.001468`,
+    `max_final_sponge_target_error=0.001468`, `release_drop=0.338178`;
+  - lines 129-130 reported all gates YES and
+    `DYNAMIC_ANCHOR_INTERFACE_SUCCESS=YES`.
+- Nonzero-offset B200 cross-check
+  `/tmp/p7_branch_b_fixed_constraint_dynamic_anchor_interface_offset_smoke.out`:
+  - line 48 activated `tcp_to_anchor_offset=([0.015, 0.0, -0.010])`;
+  - lines 58, 75, and 93 showed mock TCP targets distinct from anchor targets
+    while `transform_error=0.000000`;
+  - line 128 repeated `max_move_rel=0.000000`, `max_hold_rel=0.000000`,
+    max final target errors `0.001468`, and `release_drop=0.338178`;
+  - lines 129-130 again reported all gates YES and
+    `DYNAMIC_ANCHOR_INTERFACE_SUCCESS=YES`.
+
+Implication:
+
+- A thin mock-TCP command wrapper around the target-tracked dynamic anchor is
+  viable in isolation.
+- This still does not validate RoArm chain integration. IK, articulation dynamics,
+  controller latency, TCP estimation, contact, and attach/release timing remain
+  untested.
+- Do not present this as P7 success or chain-readiness. Any movement from mock TCP
+  to actual RoArm chain integration needs an explicit transition decision and a
+  new falsifiable gate.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_fixed_constraint_dynamic_anchor_interface_probe.py`
+- `claudedocs/session_20260517_p7_branch_b_dynamic_anchor_interface_probe.md`
+- B200 `/tmp/p7_branch_b_fixed_constraint_dynamic_anchor_interface_smoke.{out,err}`
+- B200 `/tmp/p7_branch_b_fixed_constraint_dynamic_anchor_interface_offset_smoke.{out,err}`
