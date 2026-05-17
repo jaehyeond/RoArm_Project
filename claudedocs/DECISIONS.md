@@ -940,3 +940,105 @@ Sources:
 - B200 `/tmp/p7_branch_b_surface_gripper_axis_object_smoke.{out,err}`
 - B200 `/tmp/p7_branch_b_fixed_constraint_unit_smoke_v2.{out,err}`
 - B200 `/tmp/p7_branch_b_fixed_constraint_unit_smoke_v3.{out,err}`
+
+## D026 — Static fixed-joint hold is not attach-transport evidence; micro-move kills the current fixed-constraint API
+
+Evidence:
+
+- Added `sim_scripts/p7_branch_b_fixed_constraint_micro_move_probe.py`, a
+  pre-chain CPU unit that reuses the explicit fixed-joint close/release idea but
+  adds a tiny scripted anchor motion before release. It does not use the RoArm
+  chain, SurfaceGripper, P7 training, reward tuning, release guidance, or launch
+  default changes.
+- B200 `/tmp/p7_branch_b_fixed_constraint_micro_move_smoke.out` lines 40-41
+  confirmed the probe scope: CPU, no chain, no transport, no SurfaceGripper, no
+  P7 training.
+- Line 48 confirmed the intended micro-move:
+  `move_delta=([0.020, 0.0, 0.010])`.
+- Line 49 confirmed the joint was created and closed at `rel=0.000000`.
+- Lines 50-58 confirmed the initial static hold still looked perfect:
+  `rel=0.000000`, `drift=0.000000`, `speed_norm=0.000000`.
+- Lines 59-71 showed the failure during motion: the anchor moved to
+  `[0.020, 0.0, 0.360]`, but the sponge stayed at `[0.0, 0.0, 0.350]`;
+  `rel` grew to `0.022361`, and `speed_norm` stayed `0.000000`.
+- Lines 72-84 showed post-move hold remained separated at `rel=0.022361`.
+- Lines 85-102 showed release still worked after joint removal plus wake
+  velocity, so the run reached the intended release phase.
+- Line 103 reported `max_move_rel=0.022361`,
+  `max_post_move_rel=0.022361`, and `release_drop=0.326499`.
+- Lines 104-105 reported the gate failure:
+  `close_ok=YES`, `initial_hold_ok=YES`, `move_ok=NO`,
+  `post_move_ok=NO`, `release_ok=YES`, `FIXED_MICRO_MOVE_SUCCESS=NO`.
+
+Implication:
+
+- The previous static fixed-constraint unit PASS was only a zero-motion
+  close/release smoke. It must not be cited as evidence that the authored
+  constraint can transport an attached sponge.
+- Do not chain-integrate the current fixed-joint API.
+- The next valid Branch B step, if continuing constraints, must redesign and
+  retest actuation semantics in isolation: the attached object must move with the
+  driven body under a falsifiable micro-move gate before any RoArm chain work.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_fixed_constraint_micro_move_probe.py`
+- `claudedocs/session_20260517_p7_branch_b_fixed_constraint_micro_move.md`
+- B200 `/tmp/p7_branch_b_fixed_constraint_micro_move_smoke.{out,err}`
+
+## D027 — Dynamic velocity-driven anchor rescues fixed-joint motion, but target tracking is not calibrated yet
+
+Evidence:
+
+- Added `sim_scripts/p7_branch_b_fixed_constraint_dynamic_anchor_probe.py`, a
+  pre-chain CPU unit that uses a dynamic, gravity-disabled anchor with mass
+  `100.0`, driven by `write_root_velocity_to_sim`. It does not use the RoArm
+  chain, SurfaceGripper, P7 training, reward tuning, release guidance, or launch
+  default changes.
+- Full-command B200 run
+  `/tmp/p7_branch_b_fixed_constraint_dynamic_anchor_smoke.out`:
+  - lines 40-41 confirmed CPU/no chain/no transport/no SurfaceGripper/no P7
+    training;
+  - line 48 requested `move_delta=([0.020, 0.0, 0.010])`,
+    `move_velocity=([0.050, 0.0, 0.025])`;
+  - line 49 closed at `rel=0.000000`;
+  - lines 59-71 showed anchor and sponge positions identical through motion with
+    `rel=0.000000`;
+  - lines 72-84 showed post-move hold remained coupled;
+  - lines 85-102 showed release/fall still worked;
+  - line 103 reported `max_move_rel=0.000000`,
+    `max_post_move_rel=0.000000`, `move_norm=0.022361`,
+    `anchor_moved=0.044707`, `sponge_moved=0.044707`,
+    `release_drop=0.346430`;
+  - lines 104-105 reported all gates YES and
+    `FIXED_DYNAMIC_ANCHOR_SUCCESS=YES`.
+- Half-command cross-check
+  `/tmp/p7_branch_b_fixed_constraint_dynamic_anchor_halfcmd_smoke.out`:
+  - line 48 requested `move_delta=([0.010, 0.0, 0.005])`;
+  - lines 59-71 again showed anchor and sponge positions identical with
+    `rel=0.000000`;
+  - line 103 reported `max_move_rel=0.000000`,
+    `max_post_move_rel=0.000000`, `move_norm=0.011180`,
+    `anchor_moved=0.022349`, `sponge_moved=0.022349`,
+    `release_drop=0.336436`;
+  - lines 104-105 again reported all gates YES and
+    `FIXED_DYNAMIC_ANCHOR_SUCCESS=YES`.
+
+Implication:
+
+- D026's kinematic pose-write failure does not kill fixed-joint semantics in
+  general. It kills that actuation method.
+- Dynamic, gravity-disabled, velocity-driven anchor actuation is the current
+  surviving Branch B constraint mechanism: it can move the attached sponge with
+  `rel=0` and release afterward in an isolated unit test.
+- It is not chain-ready. The actual displacement is about 2x the command in both
+  B200 runs, so target tracking/calibration is unresolved.
+- Before any RoArm chain integration, run an isolated target-tracking unit using
+  this dynamic-anchor mechanism with an explicit final displacement error gate.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_fixed_constraint_dynamic_anchor_probe.py`
+- `claudedocs/session_20260517_p7_branch_b_dynamic_anchor_constraint.md`
+- B200 `/tmp/p7_branch_b_fixed_constraint_dynamic_anchor_smoke.{out,err}`
+- B200 `/tmp/p7_branch_b_fixed_constraint_dynamic_anchor_halfcmd_smoke.{out,err}`

@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-05-17 KST (Track A Branch B fixed-constraint unit PASS)
+Last updated: 2026-05-17 KST (Track A Branch B dynamic-anchor constraint PASS, target calibration pending)
 
 This is the rolling project dashboard. It is overwritten as the project moves.
 Do not use it as the full experiment history. Durable lessons live in
@@ -45,6 +45,65 @@ so.
 
 Latest verified state:
 
+- `claudedocs/session_20260517_p7_branch_b_dynamic_anchor_constraint.md`
+  - Added `sim_scripts/p7_branch_b_fixed_constraint_dynamic_anchor_probe.py`, a
+    CPU-only pre-chain unit probe using a dynamic, gravity-disabled anchor
+    (`anchor_mass=100.0`) driven by root velocity. It does not use RoArm chain
+    integration, SurfaceGripper, P7 training, reward tuning, release guidance, or
+    scripted release variants.
+  - Full-command B200 smoke
+    `/tmp/p7_branch_b_fixed_constraint_dynamic_anchor_smoke.out`: lines 40-41
+    confirm CPU/no chain/no transport/no SurfaceGripper/no P7 training; line 48
+    requests `move_delta=([0.020,0,0.010])`; line 49 closes at `rel=0`; lines
+    59-71 show anchor and sponge positions identical through motion with
+    `rel=0`; lines 72-84 keep post-move `rel=0`; lines 85-102 release/fall;
+    line 103 reports `max_move_rel=0.000000`, `max_post_move_rel=0.000000`,
+    `anchor_moved=0.044707`, `sponge_moved=0.044707`,
+    `release_drop=0.346430`; lines 104-105 all gates YES and
+    `FIXED_DYNAMIC_ANCHOR_SUCCESS=YES`.
+  - Half-command cross-check
+    `/tmp/p7_branch_b_fixed_constraint_dynamic_anchor_halfcmd_smoke.out`: line 48
+    requests `move_delta=([0.010,0,0.005])`; lines 59-71 again show matched
+    anchor/sponge motion with `rel=0`; line 103 reports
+    `max_move_rel=0.000000`, `max_post_move_rel=0.000000`,
+    `anchor_moved=0.022349`, `sponge_moved=0.022349`,
+    `release_drop=0.336436`; lines 104-105 all gates YES and
+    `FIXED_DYNAMIC_ANCHOR_SUCCESS=YES`.
+  - Critical caveat: this is isolated actuation PASS, not chain-ready. Actual
+    displacement is about 2x the requested command in both runs, so target
+    tracking/calibration is unresolved. Next Branch B step must be another
+    isolated target-tracking unit with final displacement error gate before any
+    RoArm chain integration.
+  - Code md5:
+    `sim_scripts/p7_branch_b_fixed_constraint_dynamic_anchor_probe.py=082f20f84eac10b76b3d678845321243`.
+
+- `claudedocs/session_20260517_p7_branch_b_fixed_constraint_micro_move.md`
+  - Added `sim_scripts/p7_branch_b_fixed_constraint_micro_move_probe.py`, a
+    CPU-only pre-chain unit probe. It does not use RoArm chain integration,
+    SurfaceGripper, P7 training, reward tuning, release guidance, or scripted
+    release variants.
+  - B200 runtime used the known per-run fix:
+    `LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libnvidia-ml.so.580.95.05` and
+    `VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json`.
+  - B200 `/tmp/p7_branch_b_fixed_constraint_micro_move_smoke.out` lines 40-41
+    confirm CPU/no chain/no transport/no SurfaceGripper/no P7 training. Line 48
+    confirms the intended micro-move `dx=0.020`, `dz=0.010`. Line 49 creates the
+    joint at `rel=0.000000`; lines 50-58 confirm static initial hold remains
+    perfect.
+  - The micro-move kills the current fixed-joint API: lines 59-71 show the
+    anchor moving while the sponge stays at the original pose; line 71 reaches
+    `rel=0.022361`. Lines 72-84 show post-move hold remains separated. Line 103
+    reports `max_move_rel=0.022361`, `max_post_move_rel=0.022361`; lines 104-105
+    report `move_ok=NO`, `post_move_ok=NO`,
+    `FIXED_MICRO_MOVE_SUCCESS=NO`.
+  - Release still works after joint removal + wake velocity: lines 85-102 show
+    fall/settle, and line 103 reports `release_drop=0.326499`.
+  - Verdict updated by dynamic-anchor session above: kinematic pose-write is
+    killed, but fixed-joint semantics survive under dynamic velocity-driven
+    anchor actuation. Still no chain integration until target tracking passes.
+  - Code md5:
+    `sim_scripts/p7_branch_b_fixed_constraint_micro_move_probe.py=fd0d11908cac2fff82b0ec1da3934606`.
+
 - `claudedocs/session_20260517_p7_branch_b_fixed_constraint_unit.md`
   - B200 Isaac runtime was recovered without changing system symlinks by running
     Isaac with:
@@ -77,10 +136,9 @@ Latest verified state:
   - Code md5:
     `sim_scripts/p7_branch_b_surface_gripper_axis_object_probe.py=9f2d877115d9d06465dcc7dfb33a5113`,
     `sim_scripts/p7_branch_b_fixed_constraint_unit_probe.py=ff004e3bd4cdf92a6a9b648c3e42986f`.
-  - Verdict: SurfaceGripper is still not chain-ready and should not be integrated.
-    Branch B should now continue from the fixed-constraint unit, with the next
-    step being a controlled pre-transport micro-move/hold/release unit before any
-    RoArm chain integration.
+  - Verdict updated by the micro-move session above: SurfaceGripper is still not
+    chain-ready, and the zero-motion fixed-unit PASS is not attach-transport
+    evidence.
 
 - `claudedocs/session_20260517_p7_branch_b_surface_gripper_axis_object_probe.md`
   - Added `sim_scripts/p7_branch_b_surface_gripper_axis_object_probe.py`, a
