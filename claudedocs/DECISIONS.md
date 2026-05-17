@@ -1345,3 +1345,111 @@ Sources:
 - `sim_scripts/p7_branch_b_roarm_chain_dynamics_timing_probe.py`
 - `claudedocs/session_20260517_p7_branch_b_roarm_chain_dynamics_timing.md`
 - B200 `/tmp/p7_branch_b_roarm_chain_dynamics_timing_probe_b200.{out,err}`
+
+## D034 — Current env `_grasped` kinematic latch is not a stable post-close handoff surface
+
+Evidence:
+
+- Added `sim_scripts/p7_branch_b_roarm_chain_post_close_latch_boundary_probe.py`,
+  a narrow Isaac/RoArm diagnostic that executes only `PRE_MOVE* -> CLOSE`, then
+  holds the same grasp pose briefly. It does not insert constraint prims,
+  integrate fixed/dynamic constraints, attach SurfaceGripper, execute attached
+  transport, run release, run P7 training, or edit env/train/chain defaults.
+- `roarm_rl/roarm_stack_env.py` lines 1184-1195 show `_grasped` is latched from
+  a distance+gripper threshold condition. Lines 1216-1236 show the current
+  `_update_grasp_attach` writes the sponge root pose to the TCP and, by default,
+  zeroes velocity. This is an env kinematic pose-write boundary, not authored
+  constraint physics.
+- B200 `/tmp/p7_branch_b_roarm_chain_post_close_latch_boundary_probe_b200.out`:
+  - line 41 confirmed post-close latch-boundary scope only, with no constraint
+    insertion, no fixed/dynamic integration, no SurfaceGripper, no attached
+    transport, no release marker, and explicitly
+    `attach_physics_validated=NO`, `release_physics_validated=NO`;
+  - line 43 confirmed the conservative source stream was truncated before MOVE:
+    `source_events_total=44`, `executed_events=39`, `move_cmds_executed=0`,
+    `raw_max_gap_m=0.211271`, `raw_gap_ok=NO`;
+  - line 81 confirmed CLOSE still reached cleanly in 15 steps with
+    `gripper_q_deg=+23.02`, `d_tcp_sponge_m=0.023599`,
+    `sponge_xy_drift_m=0.000005`, `min_upright_z=1.000000`, and latch seen;
+  - line 82 showed the latch step itself was quiet:
+    `pose_jump_m=0.000000`, `d_tcp_sponge_jump_m=0.000000`,
+    `quat_angle_deg=0.000`, latch step and gripper-threshold step both `275`;
+  - line 83 killed the first stationary post-latch hold step:
+    `target_error_m=0.015684`, `tcp_step_m=0.016131`,
+    `pose_drift_m=0.017552`, `xy_drift_m=0.006564`,
+    `sponge_speed_mps=1.696947`, `sponge_ang_speed_rps=17.195574`,
+    `quat_angle_deg=21.267`, `early_kill=YES`;
+  - lines 84-86 reported `hold_early_kill=YES`, `target_error_ok=NO`,
+    `sim_step_ok=NO`, `post_latch_hold_ok=NO`, and
+    `ROARM_POST_CLOSE_LATCH_BOUNDARY_SUCCESS=NO`.
+
+Implication:
+
+- The previous passive-contact close result remains useful only up to the latch
+  marker. The first post-latch stationary hold shows the current kinematic attach
+  boundary is unstable under the RoArm articulation/contact setup.
+- Do not proceed from CLOSE into attached transport using the current env
+  `_grasped` kinematic attach boundary as a valid handoff surface.
+- This is not P7 success, not constraint integration, and not attach/release
+  physics validation. Future work must either analyze/redesign this env boundary
+  in isolation or, with explicit user approval, test an authored constraint path
+  under a separate falsifiable gate.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_roarm_chain_post_close_latch_boundary_probe.py`
+- `claudedocs/session_20260518_p7_branch_b_post_close_latch_boundary.md`
+- B200 `/tmp/p7_branch_b_roarm_chain_post_close_latch_boundary_probe_b200.{out,err}`
+
+## D035 — Post-latch failure is driven by env pose-write attach, not by quaternion or velocity mode alone
+
+Evidence:
+
+- Extended `sim_scripts/p7_branch_b_roarm_chain_post_close_latch_boundary_probe.py`
+  to run an attribution matrix without editing env/train/chain defaults:
+  `attach_quat_mode`, `attach_velocity_mode`, and a marker-only
+  `--disable_attach_posewrite` control that no-ops `_update_grasp_attach` inside
+  the diagnostic only.
+- All runs kept the same strict scope: no constraint prim insertion, no
+  fixed/dynamic constraint integration, no SurfaceGripper, no attached
+  transport, no release marker, no P7 training, and no default edits.
+- B200 pose-write enabled variants all failed on the first stationary
+  post-latch hold step:
+  - default `preserve+zero`, `/tmp/p7_branch_b_roarm_chain_post_close_latch_boundary_probe_default_b200.out`
+    lines 83-86: `target_error_m=0.015684`, `tcp_step_m=0.016131`,
+    `post_latch_hold_ok=NO`;
+  - `preserve+keep`, `/tmp/p7_branch_b_roarm_chain_post_close_latch_boundary_probe_keep_b200.out`
+    lines 83-86: `target_error_m=0.013359`, `tcp_step_m=0.013831`,
+    `post_latch_hold_ok=NO`;
+  - `identity+zero`, `/tmp/p7_branch_b_roarm_chain_post_close_latch_boundary_probe_identity_zero_b200.out`
+    lines 83-86: `target_error_m=0.015831`, `tcp_step_m=0.016265`,
+    `post_latch_hold_ok=NO`;
+  - `identity+keep`, `/tmp/p7_branch_b_roarm_chain_post_close_latch_boundary_probe_identity_keep_b200.out`
+    lines 83-86: `target_error_m=0.012996`, `tcp_step_m=0.013450`,
+    `post_latch_hold_ok=NO`.
+- The marker-only/no-posewrite control passed the same stationary hold:
+  `/tmp/p7_branch_b_roarm_chain_post_close_latch_boundary_probe_no_posewrite_b200.out`
+  lines 83-88 show steps 1-20 with negligible drift and no early kill; line 89
+  reports `post_latch_hold_steps_done=20`, `hold_max_target_error_m=0.000817`,
+  `max_sim_tcp_step_m=0.001947`, `hold_max_pose_drift_m=0.000000`,
+  `hold_max_speed_mps=0.000604`; lines 90-91 report `post_latch_hold_ok=YES`
+  and `ROARM_POST_CLOSE_LATCH_BOUNDARY_SUCCESS=YES`.
+
+Implication:
+
+- The proximate trigger for the D034 post-latch failure is the env kinematic
+  `_update_grasp_attach` pose-write to TCP, not merely velocity zeroing or
+  quaternion preservation.
+- Do not try to rescue current RoArm chain handoff by only toggling
+  `attach_quat_mode` or `attach_velocity_mode`; those variants remain killed.
+- The no-posewrite pass is only a marker-only negative control. It does not
+  validate attach physics, release physics, attached transport, SurfaceGripper,
+  or constraint insertion.
+- The next valid work is to redesign/test a local handoff model in isolation, or
+  wait for explicit user approval before testing authored constraint insertion.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_roarm_chain_post_close_latch_boundary_probe.py`
+- `claudedocs/session_20260518_p7_branch_b_post_close_latch_boundary.md`
+- B200 `/tmp/p7_branch_b_roarm_chain_post_close_latch_boundary_probe_{default,keep,identity_zero,identity_keep,no_posewrite}_b200.{out,err}`
