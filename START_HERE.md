@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-05-18 KST (Track A Branch B post-close handoff-model probe; no constraint integration)
+Last updated: 2026-05-18 KST (Track A Branch B post-close handoff micro-motion probe; no constraint integration)
 
 This is the rolling current-state dashboard. Do not treat it as full history.
 Durable lessons live in `claudedocs/DECISIONS.md`; experiment history lives in
@@ -21,67 +21,48 @@ Do **not** use `HANDOFF.md` or `TASKS.md` as current state.
 
 Latest session:
 
-- `claudedocs/session_20260518_p7_branch_b_handoff_model_probe.md`
+- `claudedocs/session_20260518_p7_branch_b_handoff_micro_motion_probe.md`
 
 What changed:
 
-- Added `sim_scripts/p7_branch_b_roarm_chain_handoff_model_probe.py`
-  md5 `938a94b3b856dcc5a48527991a87c1e9`.
+- Added `sim_scripts/p7_branch_b_roarm_chain_handoff_micro_motion_probe.py`
+  md5 `a7ed4387e0ab1ce5b95de08f59c2eb52`.
 - The probe reuses the conservative stream and gated scheduling, executes only
-  `PRE_MOVE* -> CLOSE`, then holds the same grasp pose. It compares diagnostic-
-  local handoff models around CLOSE: current TCP-center pose-write, marker-only,
-  delayed pose-write after 3 stationary env steps, one-shot align, and continuous
-  TCP-offset-preserving pose-write. It does not insert constraint prims,
-  integrate fixed/dynamic constraints, attach SurfaceGripper, execute attached
-  transport, run release, run P7 training, or edit env/train/chain defaults.
+  `PRE_MOVE* -> CLOSE`, holds the grasp pose briefly, then attempts tiny TCP
+  perturbations around the grasp pose. It compares current TCP-center
+  pose-write, marker-only, and TCP-offset-preserving pose-write. It does not
+  insert constraint prims, integrate fixed/dynamic constraints, attach
+  SurfaceGripper, go to the transport target, run release, run P7 training, or
+  edit env/train/chain defaults.
 
 B200 evidence:
 
 - Logs: B200
-  `/tmp/p7_branch_b_roarm_chain_handoff_model_probe_{posewrite_tcp,marker_only,delayed_posewrite,oneshot_align,offset_preserve_posewrite}_v2_b200.{out,err}`.
-- B200 stdout line 41 confirms scope: post-close handoff-model only, no
-  constraint prim insertion, no fixed/dynamic integration, no SurfaceGripper, no
-  attached transport, no release marker, no P7 training, no default edits, and
-  `attach_physics_validated=NO`, `release_physics_validated=NO`,
-  `claim_attach_success=NO`.
-- Line 43 confirms the source stream shape and truncation:
+  `/tmp/p7_branch_b_roarm_chain_handoff_micro_motion_probe_{posewrite_tcp,marker_only,offset_preserve_posewrite}_b200.{out,err}` and
+  `/tmp/p7_branch_b_roarm_chain_handoff_micro_motion_probe_offset_preserve_posewrite_d8mm_b200.{out,err}`.
+- Line 41 in each stdout confirms scope: no constraint prim insertion, no
+  fixed/dynamic integration, no SurfaceGripper, no attached transport, no
+  release marker, no P7 training, no default edits, `transport_target=NO`,
+  `micro_motion_not_transport=YES`, and `claim_attach_success=NO`.
+- Line 43 confirms source stream truncation before MOVE:
   source `events_total=44`, executed events `39`, `pre_move_cmds=38`,
   `move_cmds_executed=0`, `raw_max_gap_m=0.211271`, `raw_gap_ok=NO`.
-- Line 71 confirms HOME FK and settled sponge baseline:
-  `home_fk_error_m=0.001894`, settled sponge
-  `(+0.266020, -0.034486, +0.023500)`, and
-  `settled_upright_z=1.000000`.
-- Line 81 reports CLOSE reached in 15 steps:
-  `gripper_q_deg=+23.02`, `d_tcp_sponge_m=0.023599`,
-  `sponge_xy_drift_m=0.000005`, `min_upright_z=1.000000`,
-  `latch_seen=YES`, `latch_step=15`.
-- Line 82 shows the latch step itself was quiet:
-  `pose_jump_m=0.000000`, `d_tcp_sponge_jump_m=0.000000`,
-  `quat_angle_deg=0.000`, `latch_global_step=275`, threshold step `275`.
-- Current TCP-center pose-write baseline still fails on first hold step
-  (`posewrite_tcp` line 83):
-  `target_error_m=0.015684`, `tcp_step_m=0.016131`,
-  `pose_drift_m=0.017552`, `xy_drift_m=0.006564`,
-  `sponge_speed_mps=1.696947`, `sponge_ang_speed_rps=17.195574`,
-  `quat_angle_deg=21.267`, `early_kill=YES`.
-- Marker-only still passes 20 hold steps (`marker_only` lines 83-91) with
-  `hold_max_target_error_m=0.000817`, `max_sim_tcp_step_m=0.001947`,
-  `hold_max_pose_drift_m=0.000000`, and success `YES`; this remains a negative
-  control, not attach evidence.
-- Delayed TCP-center pose-write passes the first 3 stationary env steps but fails
-  when pose-write starts (`delayed_posewrite` line 86):
-  `target_error_m=0.015686`, `tcp_step_m=0.016133`,
-  `pose_drift_m=0.017553`, `quat_angle_deg=21.266`; lines 87-89 report
-  `post_latch_hold_ok=NO`.
-- One-shot TCP-center align still fails first hold step (`oneshot_align` line
-  83): `target_error_m=0.005097`, `pose_drift_m=0.005682`,
-  `sponge_speed_mps=0.823018`, `quat_angle_deg=7.080`; lines 84-86 report
-  `post_latch_hold_ok=NO`.
-- Continuous TCP-offset-preserving pose-write passes the stationary hold
-  (`offset_preserve_posewrite` lines 83-91): `hold_max_target_error_m=0.000817`,
-  `max_sim_tcp_step_m=0.001947`, `hold_max_pose_drift_m=0.000000`,
-  `hold_max_offset_error_m=0.000001`, `hold_max_speed_mps=0.000869`,
-  `posewrite_calls=40`, `post_latch_hold_ok=YES`, success `YES`.
+- Current TCP-center pose-write baseline still fails before micro-motion:
+  `posewrite_tcp` line 83 reports `target_error_m=0.015684`,
+  `tcp_step_m=0.016131`, `pose_drift_m=0.017552`,
+  `sponge_speed_mps=1.696947`, `quat_angle_deg=21.267`; lines 85-87 report
+  `post_latch_hold_ok=NO`, `micro_motion_ok=NO`, success `NO`.
+- Marker-only passes the short stationary hold but does not reach the first 4mm
+  micro target: lines 88-91 keep `target_error_m` around `0.004764-0.004765`,
+  and lines 92-94 report `micro_events_done=1`, `micro_events_planned=4`,
+  `micro_motion_ok=NO`, success `NO`. This remains a negative control, not
+  attach evidence.
+- Offset-preserving pose-write also passes the short stationary hold but does
+  not reach the first 4mm micro target: lines 88-94 report
+  `micro_max_target_error_m=0.004764`, `micro_motion_ok=NO`, success `NO`.
+- An 8mm offset-preserve cross-check still does not reach the first micro target:
+  d8mm lines 88-94 report `micro_max_target_error_m=0.008699`,
+  `micro_motion_ok=NO`, success `NO`.
 
 Interpretation:
 
@@ -109,10 +90,16 @@ Interpretation:
   center to TCP is the bad local handoff geometry. Waiting before the same snap
   only delays failure, and one-shot center align still fails. Preserving the
   latch-time TCP-to-sponge offset avoids the stationary post-close hold failure.
+- The micro-motion probe did not validate moving offset-preserve behavior:
+  marker-only and offset-preserve both survived short stationary hold, but 4mm
+  and 8mm post-close `plus_x` perturbation targets were not reached. Treat this
+  as a post-latch micro-command execution blocker, not as attach physics
+  evidence and not as a successful moving handoff.
 - This is **not P7 success** and **not constraint integration**. It does not
   validate object attachment physics, release physics, attached transport, or
   constraint insertion inside the chain. Offset-preserving stationary PASS is
-  only a local kinematic handoff diagnostic.
+  only a local kinematic handoff diagnostic, and offset-preserving micro-motion
+  is still unvalidated.
 - Any actual RoArm chain integration still needs explicit user approval and a
   new falsifiable gate.
 
@@ -145,6 +132,8 @@ Interpretation:
 - Previous passive close timing remains useful but is superseded by the
   post-close boundary failure:
   `claudedocs/session_20260518_p7_branch_b_passive_contact_close_timing.md`.
+- Previous stationary handoff-model matrix remains the source for D036:
+  `claudedocs/session_20260518_p7_branch_b_handoff_model_probe.md`.
 
 ## Track B Status
 
@@ -166,6 +155,8 @@ Interpretation:
   `_grasped` kinematic attach boundary as a valid handoff surface.
 - Do not treat marker-only or offset-preserving stationary hold pass as attach
   physics, release physics, attached transport, or constraint validation.
+- Do not treat the failed post-close micro-motion probe as evidence that
+  offset-preserving attached MOVE is valid; the micro target was not reached.
 - Do not change B200 system NVIDIA symlinks; use per-run
   `LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libnvidia-ml.so.580.95.05` and
   `VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json`.
@@ -175,10 +166,11 @@ Interpretation:
 Active pivot: Track A P7/Branch B, isolated/pre-integration mechanics and chain-side timing.
 
 Next concrete action: do not integrate constraints yet and do not proceed to
-transport/release claims. If continuing, test only the local CLOSE handoff model
-around the offset-preserving candidate in another isolated diagnostic, still no
-SurfaceGripper, no RoArm chain constraint insertion, and no attached-transport
-or release physics claims unless explicitly approved.
+transport/release claims. If continuing, instrument or redesign the post-latch
+micro-command executor so a tiny bounded TCP perturbation is actually realized,
+then re-test marker-only vs offset-preserve locally. Still no SurfaceGripper, no
+RoArm chain constraint insertion, and no attached-transport or release physics
+claims unless explicitly approved.
 
 ## Must Read First
 
@@ -192,4 +184,5 @@ or release physics claims unless explicitly approved.
 8. `claudedocs/session_20260518_p7_branch_b_passive_contact_close_timing.md`
 9. `claudedocs/session_20260518_p7_branch_b_post_close_latch_boundary.md`
 10. `claudedocs/session_20260518_p7_branch_b_handoff_model_probe.md`
-11. The B200/local logs cited above, with line numbers
+11. `claudedocs/session_20260518_p7_branch_b_handoff_micro_motion_probe.md`
+12. The B200/local logs cited above, with line numbers
