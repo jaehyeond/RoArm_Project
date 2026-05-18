@@ -94,3 +94,32 @@ as no-contact control.
 - If work continues, use the audit as a read-only/log-level checklist when
   describing future pre-close evidence: always label observed selector clean/fail
   separately from conservative admissible accept/reject.
+
+## Follow-Up: Diagnostic Interpretation Checklist
+
+Use this checklist for future pre-close evidence reviews before proposing any
+new diagnostic matrix or chain integration:
+
+- Stay pre-integration: no training, no constraint integration, no
+  SurfaceGripper attach, no CLOSE->MOVE transport, no transport target, no
+  release, no scripted release variant, and no diagnostic gate tuning.
+- Cite file lines and direct B200 `/tmp` log lines before making a state claim.
+- Report `observed_selector_clean_fail` separately from
+  `conservative_admissible_accept_reject`; do not collapse them into one pass/
+  fail label.
+- For every side-edge below-top case, report side margin, side top depth,
+  selector line 52 decision/reason, final line 1055 AABB class, exact
+  convergence, top clamp, mechanical validity, and clean realization.
+- For clean-but-rejected cases, explicitly label them as intentionally rejected
+  by the conservative non-deployed rule, not as selector failures.
+- For exact-fail cases, distinguish exact-convergence failure from
+  inside-footprint clamp failure. The -4/-6mm depth cases are outside-AABB and
+  mechanically valid but fail the unchanged 0.003000m exact gate.
+- Keep controls separate: top-tangent/above controls may be conservative
+  accepts; nominal below-top inside-footprint and far-sponge no-contact controls
+  remain conservative rejects.
+- Require stderr/process hygiene in the same review: all requested B200 files
+  exist, no matching P7/Isaac/training process is running, selector stderr has no
+  traceback/exception, and the admissible wrapper stderr is empty.
+- If this checklist finds no file/log contradiction, do not propose a new
+  diagnostic matrix.
