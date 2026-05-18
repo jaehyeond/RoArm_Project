@@ -123,3 +123,32 @@ new diagnostic matrix or chain integration:
   traceback/exception, and the admissible wrapper stderr is empty.
 - If this checklist finds no file/log contradiction, do not propose a new
   diagnostic matrix.
+
+## Follow-Up: Next Research Sequence
+
+Proceed in this order, staying pre-integration:
+
+1. Evidence hygiene first: re-read the current dashboard, D047-D049, ledger rows
+   65-69, this audit, and direct B200 `/tmp` log lines before any new claim.
+2. Static interpretation review: compare the checklist against the selector and
+   wrapper source, without running Isaac. The selector prints its rule at
+   `sim_scripts/p7_branch_b_roarm_chain_preclose_candidate_selector_probe.py`
+   lines 365-368, emits planned selector decisions at lines 374-381, separates
+   exact/top-clamp/mechanical-valid/clean realization at lines 752-766, and
+   reports aggregate clean/reject/control flags at lines 913-939. The wrapper
+   applies conservative reasons at
+   `sim_scripts/p7_branch_b_roarm_chain_preclose_admissible_region_probe.py`
+   lines 232-267, prints selector versus admissible decisions at lines 281-294,
+   and keeps the rule explicitly non-deployed at lines 321-325.
+3. Research question for the next review: "Is there any verified file/log case
+   where observed selector clean/fail and conservative admissible accept/reject
+   are being conflated?" If yes, document the exact line contradiction first. If
+   no, stop at documentation.
+4. Only a verified contradiction can justify a new diagnostic matrix. Examples:
+   missing required B200 log files, traceback/exception in stderr, selector line
+   52 accepting a below-top inside-footprint candidate without a later clean
+   rejection, line 1055 disagreeing with the documented AABB/exact/top-clamp/
+   mechanical-valid interpretation, or wrapper lines 4-12 disagreeing with the
+   underlying selector logs.
+5. Even if a contradiction appears, propose only the narrowest matrix needed to
+   isolate it, and do not run it until the scope is reviewed.
