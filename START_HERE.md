@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-05-18 KST (Track A Branch B pre-close geometry sweep; no constraint integration)
+Last updated: 2026-05-18 KST (Track A Branch B pre-close candidate selector; no constraint integration)
 
 This is the rolling current-state dashboard. Do not treat it as full history.
 Durable lessons live in `claudedocs/DECISIONS.md`; experiment history lives in
@@ -24,6 +24,40 @@ Latest session:
 - `claudedocs/session_20260518_p7_branch_b_preclose_clearance_strategy.md`
 
 What changed:
+
+- Added `sim_scripts/p7_branch_b_roarm_chain_preclose_candidate_selector_probe.py`
+  md5 `aa24ef00acbb9d8cd0aeee061b08f85f`. This converts D043/D044 into a
+  diagnostic-only selector/check layer; it does not integrate constraints,
+  SurfaceGripper, transport, release, training, tuning, or env/train/chain
+  defaults.
+- Latest B200 logs:
+  `/tmp/p7_branch_b_roarm_chain_preclose_candidate_selector_b200.out` and
+  `/tmp/p7_branch_b_roarm_chain_preclose_candidate_selector_b200.err`.
+- Selector stdout lines 41-46 confirm strict pre-integration scope, unchanged
+  exact gate `0.003000m`, reduction gate reference-only, no MOVE commands, and
+  the explicit rule: accept final above/tangent or side-edge outside-AABB;
+  reject below-top inside-footprint; treat far-sponge below-top as no-contact
+  control only.
+- Lines 47-52 show candidate decisions before interpretation: nominal below-top
+  baseline and upward-then-below are rejected as below-top inside-footprint;
+  far-sponge below-top is rejected as a contact candidate; top-tangent +0.5mm,
+  above-top +1.0mm, and side-edge +2mm outside-AABB are accepted.
+- Baseline line 179 preserves the failure/top clamp:
+  `final_target_tcp_error_m=0.023923`, `exact_converged=NO`,
+  `top_clamped=YES`, `mechanically_valid_target=NO`.
+- Far-sponge control line 279 exact-converges (`0.000854m`) but remains
+  `mechanically_valid_target=NO` in the selector because it is no-contact.
+- Accepted candidates exact-converged cleanly: top-tangent line 473
+  (`0.000920m`), above-top line 667 (`0.000921m`), and side-edge line 1055
+  (`0.000915m`), with no top clamp.
+- Invalid upward-then-below line 861 still fails/top-clamps
+  (`0.023470m`, `top_clamped=YES`) and line 862 keeps the strategy rejected.
+- Aggregate lines 1057-1059 report accepted contact candidates clean, rejected
+  controls rejected, `below_inside_segments_clean=[]`, `attach_calls=0`,
+  no NaN/done, no attach/release physics claim, and diagnostic success.
+  stderr lines 1-4 are only known cpufreq/NVML/Fabric warnings.
+
+Previous geometry sweep:
 
 - Added `sim_scripts/p7_branch_b_roarm_chain_preclose_geometry_sweep_probe.py`
   md5 `95b4a8a317a9fb176c7ed258229925e5`, after the earlier

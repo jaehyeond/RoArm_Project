@@ -277,3 +277,125 @@ Next step:
   side-edge; below-top inside-footprint remains invalid.
 - Do not proceed to CLOSE->MOVE transport, release, SurfaceGripper, or constraint
   integration without explicit approval.
+
+## Follow-Up: Pre-Close Candidate Selector
+
+Scope guard remained unchanged:
+
+- Track A P7/Branch B only.
+- Did not train.
+- Did not integrate constraints into the RoArm chain.
+- Did not insert constraint prims.
+- Did not attach SurfaceGripper.
+- Did not execute CLOSE->MOVE transport, transport target, release, or scripted
+  release variants.
+- Did not tune P7 scalar/threshold/release guidance.
+- Did not tune diagnostic gates.
+- Did not edit env/train/chain defaults.
+
+Boot/cross-checks for this follow-up:
+
+- Re-read `CLAUDE.md`, `START_HERE.md`, D042-D044 in
+  `claudedocs/DECISIONS.md`, latest Branch B rows 60-61 in
+  `claudedocs/EXPERIMENT_LEDGER.md`, and this session file.
+- Rechecked latest authoritative B200 geometry sweep log directly on B200:
+  `/tmp/p7_branch_b_roarm_chain_preclose_geometry_sweep_v2_b200.out` lines
+  41-44, 172, 272, 466/660/854/1048, 1242/1436/1630, 1824/2018/2212/2406,
+  and 2408-2409. Local `/tmp` did not have those B200 logs.
+- Required pre-coding md5s matched exactly:
+  - `sim_scripts/p7_branch_b_roarm_chain_preclose_geometry_sweep_probe.py`
+    `95b4a8a317a9fb176c7ed258229925e5`
+  - `sim_scripts/p7_branch_b_roarm_chain_preclose_clearance_strategy_probe.py`
+    `5be8cfb8c1a58f6de43f431db0befff4`
+  - `sim_scripts/p7_branch_b_roarm_chain_grasp_pose_deadzone_probe.py`
+    `e0e84e481c3be8be7777a85ef2465c57`
+  - `sim_scripts/p7_branch_b_roarm_chain_approach_target_delivery_probe.py`
+    `ebe8eddafd4c6f35c28e5b79a82511b3`
+  - `sim_scripts/p7_branch_b_roarm_chain_post_latch_target_delivery_probe.py`
+    `aad6398a9d47fef5c80efbd212e619d8`
+  - `roarm_rl/roarm_stack_env.py` `e2748144034d5a09d6c7a0f6c0da6906`
+  - `roarm_rl/chain_skills.py` `c6e610216197994c6b7d2b6625d87560`
+  - `roarm_rl/train_ppo.py` `795ee48b1bfdd83e8c9735efd01f6920`
+
+Code added:
+
+- Added `sim_scripts/p7_branch_b_roarm_chain_preclose_candidate_selector_probe.py`
+  md5 `aa24ef00acbb9d8cd0aeee061b08f85f`.
+- The script is a diagnostic-only selection/check layer. It prints the selection
+  decision before result interpretation:
+  - reject final below-top targets inside the nominal sponge footprint;
+  - reject far-sponge below-top as no-contact control, not contact candidate;
+  - accept final above/tangent candidates;
+  - accept side-edge outside-AABB candidates.
+- It still executes rejected baseline/control cases for comparison, but rejected
+  cases cannot become clean contact candidates.
+
+Local/B200 checks:
+
+- Local `python -m py_compile` passed.
+- Local `--help` passed.
+- B200 `python -m py_compile` passed.
+- Local and B200 md5 matched:
+  `aa24ef00acbb9d8cd0aeee061b08f85f`.
+
+B200 logs:
+
+- `/tmp/p7_branch_b_roarm_chain_preclose_candidate_selector_b200.out`
+- `/tmp/p7_branch_b_roarm_chain_preclose_candidate_selector_b200.err`
+
+Evidence:
+
+- stdout line 41 confirms strict pre-integration scope and no attach/release
+  physics claim.
+- line 42 confirms unchanged exact gate `target_error_gate_m=0.003000`,
+  reduction gate reference-only, top margin `0.000500m`, above margin
+  `0.001000m`, side margin `0.002000m`, and side top margin `0.000500m`.
+- line 43 confirms no MOVE commands were executed.
+- line 44 shows all candidate IK targets converged before simulation.
+- line 46 prints the selector rule explicitly: accept final above/tangent or
+  side-edge outside-AABB; reject below-top inside-footprint; far-sponge below-top
+  is no-contact control only.
+- lines 47-52 print decisions before interpretation:
+  - nominal below-top baseline rejected as below-top inside-footprint;
+  - far-sponge below-top rejected as no-contact control;
+  - top-tangent +0.5mm accepted;
+  - above-top +1.0mm accepted;
+  - upward-then-below invalid control rejected;
+  - side-edge +2mm outside-AABB accepted.
+- line 179 preserves the nominal below-top clamp baseline:
+  `final_target_tcp_error_m=0.023923`, `exact_converged=NO`,
+  `top_clamped=YES`, `mechanically_valid_target=NO`.
+- line 279 preserves the far-sponge no-contact control:
+  `final_target_tcp_error_m=0.000854`, `exact_converged=YES`, but
+  `mechanically_valid_target=NO`.
+- Accepted contact candidates exact-converged cleanly:
+  - line 473: top-tangent +0.5mm final error `0.000920`, no clamp.
+  - line 667: above-top +1.0mm final error `0.000921`, no clamp.
+  - line 1055: side-edge +2mm outside-AABB final error `0.000915`, no clamp.
+- Invalid upward-then-below control still reclamps: line 861 reports
+  `final_target_tcp_error_m=0.023470`, `top_clamped=YES`,
+  `mechanically_valid_target=NO`; line 862 keeps the strategy rejected.
+- Aggregate lines 1057-1059 report accepted contact candidates clean, rejected
+  controls rejected, `below_inside_segments_clean=[]`, `attach_calls=0`,
+  `nan_seen=NO`, `episode_done=NO`, and no attach/release physics claim.
+- stderr lines 1-4 contain only the known cpufreq/NVML/Fabric warnings and no
+  Python traceback.
+
+Interpretation:
+
+- This enforces D043/D044 as a diagnostic selection rule. It does not relax the
+  ban: below-top inside-footprint targets remain invalid even after an upward
+  clearance segment.
+- Far-sponge exact convergence remains useful attribution evidence only; it is
+  deliberately excluded from contact candidates.
+- Accepted top-tangent/above/side-edge candidates remain pre-close diagnostic
+  candidates only. This is not P7 success, not chain-ready, not attach physics,
+  not transport/release validation, not SurfaceGripper validation, and not
+  constraint integration.
+
+Next step:
+
+- Stay pre-integration.
+- If continuing, use this selector only as a diagnostic gate around future
+  pre-close candidate probes. Do not wire it into the RoArm chain or proceed to
+  CLOSE->MOVE transport/release without explicit approval.
