@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-05-18 KST (Track A Branch B pre-close candidate selector; no constraint integration)
+Last updated: 2026-05-18 KST (Track A Branch B pre-close selector guard; no constraint integration)
 
 This is the rolling current-state dashboard. Do not treat it as full history.
 Durable lessons live in `claudedocs/DECISIONS.md`; experiment history lives in
@@ -24,6 +24,51 @@ Latest session:
 - `claudedocs/session_20260518_p7_branch_b_preclose_clearance_strategy.md`
 
 What changed:
+
+- Ran the unchanged selector md5 `aa24ef00acbb9d8cd0aeee061b08f85f` with
+  `--side_top_margin_m -0.0015` as an outside-AABB side-edge below-top guard.
+  No code changed for this diagnostic. B200 logs:
+  `/tmp/p7_branch_b_roarm_chain_preclose_selector_side_below_guard_b200.out`
+  and `.err`.
+- Side-below guard stdout lines 41-46 confirm strict pre-integration scope,
+  unchanged exact gate `0.003000m`, reduction gate reference-only, no MOVE
+  commands, all IK targets converged, and the unchanged selector rule.
+- Line 52 accepts `candidate_side_edge_margin_2mm_top_margin_neg1p5mm` only
+  because it is outside AABB, despite `final_target_top_class=below`.
+- Line 1055 shows that shallow outside-AABB below-top side-edge exact-converges:
+  `final_target_tcp_error_m=0.001074`, `exact_converged=YES`, `top_clamped=NO`,
+  `mechanically_valid_target=YES`, and clean `YES`.
+- Lines 1057-1059 keep the nominal below-top inside-footprint baseline clamped,
+  report `below_segments_clean` only for the outside-AABB side-edge segment,
+  keep `below_inside_segments_clean=[]`, `attach_calls=0`, no NaN/done, and no
+  attach/release physics claim.
+- This refines the diagnostic rule without relaxing the ban: below-top inside
+  footprint remains invalid; shallow below-top side-edge remains diagnostic-only
+  and must stay outside AABB.
+
+- Added `sim_scripts/p7_branch_b_roarm_chain_preclose_selector_guard_probe.py`
+  md5 `e50f7dfcb5651507b0c200af1299f171`. This is a diagnostic-only wrapper
+  around the existing selector that drives an adversarial near-top invalid final
+  target (`top_margin_m=-0.001500`) to prove below-top/inside-footprint targets
+  are rejected even if the unchanged 3mm exact gate can pass.
+- Latest guard B200 logs:
+  `/tmp/p7_branch_b_roarm_chain_preclose_selector_guard_b200.out` and
+  `/tmp/p7_branch_b_roarm_chain_preclose_selector_guard_b200.err`.
+- Guard stdout lines 2-4 confirm strict pre-integration scope and the intended
+  guard case. Lines 43-49 show the underlying selector run, unchanged exact gate
+  `0.003000m`, reduction gate reference-only, no MOVE commands, and the same
+  selector rule.
+- Guard line 52 rejects `candidate_top_tangent_margin_neg1p5mm` before
+  interpretation as `below_top_inside_footprint_invalid`.
+- Guard line 476 is the important trap: the invalid near-top below/inside target
+  has `final_target_tcp_error_m=0.001268` and `exact_converged=YES`, but it is
+  still `top_clamped=YES`, `mechanically_valid_target=NO`, and
+  `clean_realized_without_reduction_artifact=NO`.
+- Guard lines 477 and 1060 keep that exact-converged invalid candidate rejected;
+  lines 1060-1062 report accepted clean candidates are only above-top and
+  side-edge, `below_inside_segments_clean=[]`, `attach_calls=0`, no NaN/done, no
+  attach/release physics claim, and diagnostic success.
+- Guard stderr lines 1-4 are only known cpufreq/NVML/Fabric warnings.
 
 - Added `sim_scripts/p7_branch_b_roarm_chain_preclose_candidate_selector_probe.py`
   md5 `aa24ef00acbb9d8cd0aeee061b08f85f`. This converts D043/D044 into a

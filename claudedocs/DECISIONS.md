@@ -2110,3 +2110,103 @@ Sources:
 - `sim_scripts/p7_branch_b_roarm_chain_preclose_geometry_sweep_probe.py`
 - `claudedocs/session_20260518_p7_branch_b_preclose_clearance_strategy.md`
 - B200 `/tmp/p7_branch_b_roarm_chain_preclose_geometry_sweep_v2_b200.{out,err}`
+
+## D045 — Exact 3mm pre-close convergence is not enough; mechanical validity must gate below-top inside-footprint candidates
+
+Evidence:
+
+- Added `sim_scripts/p7_branch_b_roarm_chain_preclose_selector_guard_probe.py`
+  md5 `e50f7dfcb5651507b0c200af1299f171`. This is a diagnostic-only wrapper
+  around the unchanged selector md5 `aa24ef00acbb9d8cd0aeee061b08f85f`; it does
+  not train, tune gates, edit env/train/chain defaults, integrate constraints,
+  attach SurfaceGripper, execute transport, or execute release.
+- B200
+  `/tmp/p7_branch_b_roarm_chain_preclose_selector_guard_b200.out`:
+  - lines 2-4 confirm the guard wrapper scope and the adversarial case:
+    `invalid_top_margin_m=-0.001500`, expected selector behavior `REJECT`, and
+    interpretation `below_top_inside_invalid_even_if_exact_gate_passes`;
+  - lines 43-45 confirm strict pre-integration scope, unchanged exact gate
+    `target_error_gate_m=0.003000`, reduction gate reference-only, and
+    `top_margin_m=-0.001500`;
+  - line 46 confirms no MOVE commands were executed;
+  - line 52 rejects `candidate_top_tangent_margin_neg1p5mm` before
+    interpretation with reason `below_top_inside_footprint_invalid`;
+  - line 476 shows the trap: the final target is below top and inside the AABB,
+    yet `final_target_tcp_error_m=0.001268` and `exact_converged=YES`; it remains
+    `top_clamped=YES`, `mechanically_valid_target=NO`, and
+    `clean_realized_without_reduction_artifact=NO`;
+  - line 477 keeps the strategy rejected;
+  - lines 1060-1062 keep accepted clean candidates limited to above-top and
+    side-edge, with `below_inside_segments_clean=[]`, `attach_calls=0`, no
+    NaN/done, and no attach/release physics claim.
+- stderr lines 1-4 contain only the known cpufreq/NVML/Fabric warnings and no
+  Python traceback.
+
+Implication:
+
+- D043/D044 are tightened: exact target convergence under the unchanged 3mm gate
+  is not sufficient for pre-close interpretation. A near-top below/inside target
+  can satisfy the exact numeric gate while the TCP is effectively clamped at the
+  sponge top.
+- Candidate selection must apply mechanical validity first: below-top targets
+  inside/near the nominal sponge footprint remain invalid, even if exact
+  convergence and reduction-style metrics pass.
+- Continue to use the selector only as a diagnostic gate. This is still not P7
+  success, attach physics, transport/release validation, SurfaceGripper
+  validation, or constraint integration.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_roarm_chain_preclose_selector_guard_probe.py`
+- `sim_scripts/p7_branch_b_roarm_chain_preclose_candidate_selector_probe.py`
+- `claudedocs/session_20260518_p7_branch_b_preclose_clearance_strategy.md`
+- B200 `/tmp/p7_branch_b_roarm_chain_preclose_selector_guard_b200.{out,err}`
+
+## D046 — The below-top ban is footprint-specific; shallow below-top side-edge can be clean only when outside AABB
+
+Evidence:
+
+- Reused the unchanged selector
+  `sim_scripts/p7_branch_b_roarm_chain_preclose_candidate_selector_probe.py`
+  md5 `aa24ef00acbb9d8cd0aeee061b08f85f` with
+  `--side_top_margin_m -0.0015`. No code, gate, env/train/chain default,
+  constraint, SurfaceGripper, transport, release, or training change was made.
+- B200
+  `/tmp/p7_branch_b_roarm_chain_preclose_selector_side_below_guard_b200.out`:
+  - line 41 confirms strict pre-integration scope and no attach/release physics
+    claim;
+  - line 42 confirms unchanged exact gate `target_error_gate_m=0.003000`,
+    reduction gate reference-only, and `side_top_margin_m=-0.001500`;
+  - line 43 confirms no MOVE commands were executed;
+  - line 44 shows all IK targets converged;
+  - line 52 accepts `candidate_side_edge_margin_2mm_top_margin_neg1p5mm` with
+    reason `side_edge_target_outside_aabb`, while the final target is below top
+    by `-0.001162m` and outside AABB;
+  - line 1055 shows that side-edge below-top final segment exact-converged cleanly:
+    `final_target_tcp_error_m=0.001074`, `exact_converged=YES`,
+    `top_clamped=NO`, `mechanically_valid_target=YES`, and
+    `clean_realized_without_reduction_artifact=YES`;
+  - lines 1057-1059 still keep the nominal below-top inside-footprint baseline
+    clamped, list the clean below segment only under the outside-AABB side-edge
+    case, keep `below_inside_segments_clean=[]`, and report `attach_calls=0`, no
+    NaN/done, and no attach/release physics claim.
+- stderr lines 1-4 contain only the known cpufreq/NVML/Fabric warnings and no
+  Python traceback.
+
+Implication:
+
+- D045 is not weakened: below-top targets inside/near the nominal footprint
+  remain invalid even if exact convergence passes.
+- The current selector's outside-AABB exception has diagnostic support for a
+  shallow below-top side-edge target. The key distinction is footprint class:
+  below-top inside-footprint can exact-converge by top clamp; below-top
+  outside-AABB side-edge did not top-clamp in this run.
+- This remains a pre-close diagnostic candidate only. It is not a chain-ready
+  strategy, not attach physics, not transport/release validation, not
+  SurfaceGripper validation, and not constraint integration.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_roarm_chain_preclose_candidate_selector_probe.py`
+- `claudedocs/session_20260518_p7_branch_b_preclose_clearance_strategy.md`
+- B200 `/tmp/p7_branch_b_roarm_chain_preclose_selector_side_below_guard_b200.{out,err}`
