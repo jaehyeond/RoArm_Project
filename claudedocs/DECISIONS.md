@@ -2051,3 +2051,62 @@ Sources:
 - `sim_scripts/p7_branch_b_roarm_chain_preclose_clearance_strategy_probe.py`
 - `claudedocs/session_20260518_p7_branch_b_preclose_clearance_strategy.md`
 - B200 `/tmp/p7_branch_b_roarm_chain_preclose_clearance_strategy_b200.{out,err}`
+
+## D044 — For pre-close, final above/tangent geometry dominates tested clearance height; below-top inside-footprint remains banned
+
+Evidence:
+
+- Added `sim_scripts/p7_branch_b_roarm_chain_preclose_geometry_sweep_probe.py`
+  md5 `95b4a8a317a9fb176c7ed258229925e5`. This is diagnostic-only and
+  pre-integration: no constraint prim insertion, no fixed/dynamic integration,
+  no SurfaceGripper, no attached transport, no transport target, no release or
+  scripted release variant, no P7 training/tuning, no diagnostic gate tuning,
+  and no env/train/chain default edits.
+- B200 v2
+  `/tmp/p7_branch_b_roarm_chain_preclose_geometry_sweep_v2_b200.out`:
+  - line 41 confirms strict pre-integration scope and no attach/release physics
+    claim;
+  - line 42 records the unchanged exact gate (`target_error_gate_m=0.003000`),
+    reference-only reduction gate, final top margins
+    `[0.000200, 0.000500, 0.001000, 0.002000]`, clearance heights
+    `[0.012000, 0.024000, 0.036000]`, and side margins
+    `[0.002000, 0.006000, 0.012000, 0.018000]`;
+  - line 43 confirms no MOVE commands were executed;
+  - line 44 shows all IK targets converged before simulation;
+  - line 172 preserves the nominal below-top inside-footprint baseline failure:
+    `final_target_tcp_error_m=0.023923`, `exact_converged=NO`,
+    `top_clamped=YES`, and clean realization `NO`;
+  - line 272 preserves the far-sponge no-contact control:
+    `final_target_tcp_error_m=0.000854`, target outside AABB, exact convergence
+    `YES`, and top clamp `NO`;
+  - lines 466/660/854/1048 show final top margins +0.2/+0.5/+1.0/+2.0mm all
+    exact-converge cleanly with no top clamp;
+  - lines 1242/1436/1630 show upward clearance heights 12/24/36mm all
+    exact-converge cleanly when the final target remains at +0.5mm top margin;
+  - lines 1824/2018/2212/2406 show side-edge final targets at +2/+6/+12/+18mm
+    outside the sponge AABB all exact-converge cleanly;
+  - lines 2408-2409 separate the far-sponge control from contact candidates:
+    `below_inside_segments_clean=[]`,
+    `below_top_inside_targets_realize_cleanly=NO`,
+    `contact_candidate_strategies=[...]`, `far_control_is_no_contact_control=YES`,
+    `attach_calls=0`, no NaN/done, and no attach/release physics claim.
+- stderr lines 1-4 contain only the known cpufreq/NVML/Fabric warnings and no
+  Python traceback.
+
+Implication:
+
+- D043 is refined, not relaxed: final pre-close targets inside/near the nominal
+  footprint must stay above/tangent to the oriented sponge top. Below-top
+  inside-footprint targets remain mechanically invalid even if a reduction-style
+  metric would look improved.
+- Within the tested range, upward clearance height is secondary once the final
+  target is above/tangent: 12/24/36mm clearance heights all realized cleanly.
+- Side-edge tangent remains a diagnostic candidate even at a small +2mm outside
+  width margin, but this is still not object attachment, transport, release,
+  SurfaceGripper validation, or constraint integration.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_roarm_chain_preclose_geometry_sweep_probe.py`
+- `claudedocs/session_20260518_p7_branch_b_preclose_clearance_strategy.md`
+- B200 `/tmp/p7_branch_b_roarm_chain_preclose_geometry_sweep_v2_b200.{out,err}`
