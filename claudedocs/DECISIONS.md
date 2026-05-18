@@ -1534,3 +1534,71 @@ Sources:
 - `sim_scripts/p7_branch_b_roarm_chain_handoff_model_probe.py`
 - `claudedocs/session_20260518_p7_branch_b_handoff_model_probe.md`
 - B200 `/tmp/p7_branch_b_roarm_chain_handoff_model_probe_{posewrite_tcp,marker_only,delayed_posewrite,oneshot_align,offset_preserve_posewrite}_v2_b200.{out,err}`
+
+## D037 — Post-CLOSE target buffers are delivered, but the 5deg grasp-pose nudge is not realized even before CLOSE
+
+Evidence:
+
+- Added `sim_scripts/p7_branch_b_roarm_chain_post_latch_target_delivery_probe.py`,
+  a diagnostic-local target-delivery probe. It wraps
+  `_robot.set_joint_position_target()`, snapshots Articulation target fields, and
+  compares the same 5deg shoulder nudge before CLOSE, after CLOSE/latch through
+  `env.step(null_action)`, and after CLOSE/latch through direct
+  `set_joint_position_target()+sim.step`. It does not insert constraint prims,
+  integrate fixed/dynamic constraints, attach SurfaceGripper, execute attached
+  transport, go to the transport target, run release, run P7 training, or edit
+  env/train/chain defaults.
+- B200 v3
+  `/tmp/p7_branch_b_roarm_chain_post_latch_target_delivery_v3_b200.out`:
+  - line 41 confirms the strict diagnostic scope and explicitly reports
+    `attach_physics_validated=NO`, `release_physics_validated=NO`, and
+    `claim_attach_success=NO`;
+  - line 43 confirms the run remains pre-transport:
+    `move_cmds_executed=0`, `raw_max_gap_m=0.211271`, `raw_gap_ok=NO`;
+  - line 44 proves the watched target is a nonzero 5deg shoulder nudge with
+    `expected_tcp_delta_m=0.024271`, and the before-CLOSE comparison uses
+    `target_q_open_deg` with gripper open;
+  - lines 83-85 show the before-CLOSE target reaches
+    `_robot.set_joint_position_target()` and Articulation target fields including
+    `joint_pos_target` with best diff `0.00000004rad`;
+  - line 94 reports the before-CLOSE open-gripper nudge still is not realized:
+    `final_joint_error_max_deg=5.046748`, `final_target_tcp_error_m=0.023923`,
+    `tcp_target_reduced=NO`, `joint_error_reduced=NO`,
+    `target_realized=NO`, and `grasped=NO`;
+  - lines 110-112 show the post-latch env-step target is also delivered into
+    `_robot.set_joint_position_target()` and Articulation target fields with best
+    diff `0.00000004rad`;
+  - line 121 reports post-latch env-step still fails to realize the nudge:
+    `final_joint_error_max_deg=5.044317`, `final_target_tcp_error_m=0.023842`,
+    `target_realized=NO`;
+  - line 134 reports direct set+sim-step after latch also does not rescue:
+    `set_target_seen=YES`, `best_data_target_attr_diff_rad=0.00000004`,
+    `max_realized_tcp_delta_m=0.000098`,
+    `final_joint_error_max_deg=5.046912`, and `target_realized=NO`;
+  - line 135 aggregates `before_target_realized=NO`,
+    `after_env_target_realized=NO`, `after_direct_target_realized=NO`,
+    `before_vs_after_split=NO`, `direct_rescues=NO`, and
+    `general_grasp_pose_target_delivery_blocker=YES`.
+- B200 stderr lines 1-4 contain only the known cpufreq/NVML/Fabric warnings and
+  no Python traceback.
+
+Implication:
+
+- Do not describe the current blocker as specifically offset-preserve moving
+  failure. Offset-preserve moving behavior is still untested because the robot
+  did not realize the commanded nudge.
+- Do not describe the current blocker as only post-CLOSE/latch-specific. The
+  same 5deg shoulder nudge at the grasp pose with gripper open and `_grasped=NO`
+  also fails to realize, despite target delivery into Articulation buffers.
+- The next valid diagnostic should move earlier in the approach/HOME/high
+  sequence with the same target-delivery instrumentation to isolate whether this
+  is a local grasp-pose/drive/limit issue, a controller-state issue, or a broader
+  command-realization issue.
+- This is not P7 success, not attach physics, not release physics, not attached
+  transport, and not constraint integration.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_roarm_chain_post_latch_target_delivery_probe.py`
+- `claudedocs/session_20260518_p7_branch_b_post_latch_target_delivery.md`
+- B200 `/tmp/p7_branch_b_roarm_chain_post_latch_target_delivery_v3_b200.{out,err}`
