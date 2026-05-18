@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-05-18 KST (Track A Branch B target-delivery probe; no constraint integration)
+Last updated: 2026-05-18 KST (Track A Branch B approach-stage target-delivery probe; no constraint integration)
 
 This is the rolling current-state dashboard. Do not treat it as full history.
 Durable lessons live in `claudedocs/DECISIONS.md`; experiment history lives in
@@ -21,45 +21,59 @@ Do **not** use `HANDOFF.md` or `TASKS.md` as current state.
 
 Latest session:
 
-- `claudedocs/session_20260518_p7_branch_b_post_latch_target_delivery.md`
+- `claudedocs/session_20260518_p7_branch_b_approach_target_delivery.md`
 
 What changed:
 
-- Added `sim_scripts/p7_branch_b_roarm_chain_post_latch_target_delivery_probe.py`
-  md5 `aad6398a9d47fef5c80efbd212e619d8`.
-- This target-delivery probe is still diagnostic-local only: no constraint prim
-  insertion, no fixed/dynamic integration, no SurfaceGripper, no attached
-  transport, no transport target, no release, no P7 training, and no
+- Added `sim_scripts/p7_branch_b_roarm_chain_approach_target_delivery_probe.py`
+  md5 `ebe8eddafd4c6f35c28e5b79a82511b3`.
+- This approach-stage target-delivery probe is diagnostic-local only: no
+  constraint prim insertion, no fixed/dynamic integration, no SurfaceGripper, no
+  attached transport, no transport target, no release, no P7 training, and no
   env/train/chain default edits.
-- B200 v3 target-delivery log:
-  `/tmp/p7_branch_b_roarm_chain_post_latch_target_delivery_v3_b200.out`.
-- Line 44 proves the watched 5deg shoulder nudge is nonzero:
-  `expected_tcp_delta_m=0.024271`, and the before-CLOSE comparison keeps the
-  gripper open via `target_q_open_deg`.
-- Before CLOSE, at the grasp pose with gripper open and `_grasped=NO`, the
-  watched target reaches `_robot.set_joint_position_target()` and Articulation
-  target fields: lines 83-85 report `joint_pos_target` best diff
-  `0.00000004rad`. But line 94 reports `final_joint_error_max_deg=5.046748`,
-  `final_target_tcp_error_m=0.023923`, `tcp_target_reduced=NO`,
-  `joint_error_reduced=NO`, and `target_realized=NO`.
-- After CLOSE/latch through normal `env.step(null_action)`, lines 110-112 again
-  show target delivery into `set_joint_position_target()` and Articulation target
-  fields with best diff `0.00000004rad`, but line 121 reports
-  `final_joint_error_max_deg=5.044317`, `final_target_tcp_error_m=0.023842`,
+- B200 v2 log:
+  `/tmp/p7_branch_b_roarm_chain_approach_target_delivery_v2_b200.out`.
+- Lines 41-43 confirm strict scope and that execution remains pre-transport:
+  `move_cmds_executed=0`, `raw_max_gap_m=0.211271`, `raw_gap_ok=NO`.
+- Line 72 records the controller context:
+  `action_scale=0.100000`, `null_action_max_abs=0.000000`, and soft limits.
+- The same +5deg shoulder nudge reaches `_robot.set_joint_position_target()` and
+  Articulation target fields at every tested stage (`set_target_seen=YES`,
+  `best_data_target_attr_diff_rad` `0.00000004-0.00000009rad`).
+- HOME/early/high/hover realize the nudge under `env.step(null_action)`:
+  line 87 HOME `target_realized=YES`, final nudge error `0.109396deg`;
+  line 115 early PRE_MOVE `target_realized=YES`, final nudge error `0.106804deg`;
+  line 143 high `target_realized=YES`, final nudge error `0.084780deg`;
+  line 171 hover `target_realized=YES`, final nudge error `0.105476deg`.
+- The grasp-before-CLOSE/open-gripper stage still fails despite target delivery:
+  line 187 proves the target is nonzero and within soft/analytic limits
+  (`expected_tcp_delta_m=0.024271`, limits OK); line 199 reports env-step
+  `set_target_seen=YES`, `best_data_target_attr_diff_rad=0.00000004`,
+  `final_target_tcp_error_m=0.023947`, `final_nudge_joint_error_deg=5.042476`,
+  `tcp_target_reduced=NO`, `nudge_joint_error_reduced=NO`,
+  `target_realized=NO`, `grasped=NO`.
+- Direct set+sim-step at the same grasp-before-CLOSE stage does not rescue:
+  line 211 reports `set_target_seen=YES`, `max_realized_tcp_delta_m=0.000108`,
+  `final_target_tcp_error_m=0.023927`, `final_nudge_joint_error_deg=5.044027`,
   and `target_realized=NO`.
-- Direct `_robot.set_joint_position_target()` plus sim step after latch also does
-  not rescue: line 134 reports `set_target_seen=YES`,
-  `best_data_target_attr_diff_rad=0.00000004`, but
-  `max_realized_tcp_delta_m=0.000098`, `final_joint_error_max_deg=5.046912`,
-  and `target_realized=NO`.
-- Line 135 aggregates `before_target_realized=NO`,
-  `after_env_target_realized=NO`, `after_direct_target_realized=NO`,
-  `before_vs_after_split=NO`, `direct_rescues=NO`, and
-  `general_grasp_pose_target_delivery_blocker=YES`.
-- Therefore the current blocker is broader than a post-latch-only executor issue:
-  target delivery into Articulation buffers works, but the grasp-pose 5deg
-  shoulder nudge is not realized even before CLOSE. This is still not
-  offset-preserve moving evidence and not attach physics.
+- Line 213 aggregates `env_realized_stages=['settled_home', 'early_pre_move',
+  'high', 'hover']`, `env_failed_stages=['grasp_before_close_open']`,
+  `direct_rescue_stages=[]`, `home_high_realize_grasp_fails=YES`, and
+  `latch_seen=NO`; line 214 reports `broader_command_realization_blocker=NO` and
+  `local_grasp_pose_only_blocker=YES`.
+- Therefore D037 is refined: the current blocker is not broad articulation target
+  delivery/realization and not post-latch-only. It is a local grasp-pose command
+  realization failure before CLOSE, with gripper open and `_grasped=NO`.
+  Offset-preserve moving behavior remains untested.
+- Previous target-delivery probe added
+  `sim_scripts/p7_branch_b_roarm_chain_post_latch_target_delivery_probe.py`
+  md5 `aad6398a9d47fef5c80efbd212e619d8`.
+- Its B200 v3 log
+  `/tmp/p7_branch_b_roarm_chain_post_latch_target_delivery_v3_b200.out` proved
+  the same grasp-pose 5deg target was delivered before CLOSE (lines 83-85), after
+  CLOSE/latch (lines 110-112), and by direct set (line 134), but was not realized
+  in any of those grasp-pose comparisons. The new approach-stage probe refines
+  that D037 result to a grasp-pose-local realization blocker.
 - Previous executor probe added
   `sim_scripts/p7_branch_b_roarm_chain_post_latch_micro_executor_probe.py`
   md5 `c74d92816df12953c26fed577656840e`.
@@ -219,6 +233,9 @@ Interpretation:
   offset-preserving attached MOVE is valid; the micro target was not reached.
 - Do not treat the failed 5deg target-delivery probe as offset-preserve failure;
   the same grasp-pose nudge fails before CLOSE with `_grasped=NO`.
+- Do not describe the current command-realization blocker as broad articulation
+  targeting failure: HOME/early/high/hover realize the same +5deg shoulder nudge;
+  the surviving failure is local to the grasp-before-CLOSE/open-gripper pose.
 - Do not change B200 system NVIDIA symlinks; use per-run
   `LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libnvidia-ml.so.580.95.05` and
   `VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json`.
@@ -228,19 +245,19 @@ Interpretation:
 Active pivot: Track A P7/Branch B, isolated/pre-integration mechanics and chain-side timing.
 
 Next concrete action: do not integrate constraints yet and do not proceed to
-transport/release claims. If continuing, move the same target-delivery
-instrumentation earlier in the approach/HOME/high sequence to isolate whether the
-5deg shoulder nudge failure is a local grasp-pose drive/limit issue, controller
-state issue, or broader command-realization issue. Only after realized TCP micro
-movement works, re-test marker-only vs offset-preserve locally. Still no
-SurfaceGripper, no RoArm chain constraint insertion, and no attached-transport or
-release physics claims unless explicitly approved.
+transport/release claims. If continuing, inspect why the same +5deg shoulder
+nudge realizes at HOME/early/high/hover but fails at the grasp-before-CLOSE pose
+with gripper open and `_grasped=NO`; likely candidates are local grasp-pose
+drive/limit/contact/controller configuration around that pose. Only after grasp
+pose command realization works, re-test marker-only vs offset-preserve locally.
+Still no SurfaceGripper, no RoArm chain constraint insertion, and no
+attached-transport or release physics claims unless explicitly approved.
 
 ## Must Read First
 
 1. `CLAUDE.md`
 2. `START_HERE.md`
-3. `claudedocs/DECISIONS.md` D024-D037
+3. `claudedocs/DECISIONS.md` D024-D038
 4. `claudedocs/EXPERIMENT_LEDGER.md` latest Branch B rows
 5. `claudedocs/session_20260517_p7_branch_b_dynamic_anchor_chain_contract.md`
 6. `claudedocs/session_20260517_p7_branch_b_roarm_chain_command_stream.md`
@@ -251,4 +268,5 @@ release physics claims unless explicitly approved.
 11. `claudedocs/session_20260518_p7_branch_b_handoff_micro_motion_probe.md`
 12. `claudedocs/session_20260518_p7_branch_b_post_latch_micro_executor.md`
 13. `claudedocs/session_20260518_p7_branch_b_post_latch_target_delivery.md`
-14. The B200/local logs cited above, with line numbers
+14. `claudedocs/session_20260518_p7_branch_b_approach_target_delivery.md`
+15. The B200/local logs cited above, with line numbers

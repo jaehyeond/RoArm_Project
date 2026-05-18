@@ -1602,3 +1602,81 @@ Sources:
 - `sim_scripts/p7_branch_b_roarm_chain_post_latch_target_delivery_probe.py`
 - `claudedocs/session_20260518_p7_branch_b_post_latch_target_delivery.md`
 - B200 `/tmp/p7_branch_b_roarm_chain_post_latch_target_delivery_v3_b200.{out,err}`
+
+## D038 — The 5deg shoulder-nudge blocker is local to the grasp-before-CLOSE pose, not broad articulation target realization
+
+Evidence:
+
+- Added `sim_scripts/p7_branch_b_roarm_chain_approach_target_delivery_probe.py`,
+  a diagnostic-local approach-stage target-delivery probe. It compares the same
+  +5deg shoulder nudge at settled HOME, early PRE_MOVE, high, hover, and
+  grasp-before-CLOSE/open-gripper stages. It does not insert constraint prims,
+  integrate fixed/dynamic constraints, attach SurfaceGripper, execute attached
+  transport, go to the transport target, run release, run P7 training, or edit
+  env/train/chain defaults.
+- B200 v2
+  `/tmp/p7_branch_b_roarm_chain_approach_target_delivery_v2_b200.out`:
+  - line 41 confirms the strict diagnostic scope and explicitly reports
+    `attach_physics_validated=NO`, `release_physics_validated=NO`, and
+    `claim_attach_success=NO`;
+  - line 43 confirms the run remains pre-transport:
+    `move_cmds_executed=0`, `raw_max_gap_m=0.211271`, `raw_gap_ok=NO`;
+  - line 72 reports `action_scale=0.100000`, `null_action_max_abs=0.000000`,
+    and the articulation soft limits;
+  - line 75 proves the HOME nudge is nonzero and within limits
+    (`expected_tcp_delta_m=0.035677`, limits OK), and line 87 reports
+    `set_target_seen=YES`, `best_data_target_attr_diff_rad=0.00000004`,
+    `final_nudge_joint_error_deg=0.109396`, and `target_realized=YES`;
+  - line 103 proves the early PRE_MOVE nudge is nonzero and within limits
+    (`expected_tcp_delta_m=0.035105`, limits OK), and line 115 reports
+    `target_realized=YES` with final nudge error `0.106804deg`;
+  - line 131 proves the high-pose nudge is nonzero and within limits
+    (`expected_tcp_delta_m=0.023524`, limits OK), and line 143 reports
+    `target_realized=YES` with final nudge error `0.084780deg`;
+  - line 159 proves the hover-pose nudge is nonzero and within limits
+    (`expected_tcp_delta_m=0.023692`, limits OK), and line 171 reports
+    `target_realized=YES` with final nudge error `0.105476deg`;
+  - line 187 proves the grasp-before-CLOSE/open-gripper nudge is nonzero and
+    within soft/analytic limits (`expected_tcp_delta_m=0.024271`, limits OK);
+  - line 199 reports the grasp-before-CLOSE env-step failure despite target
+    delivery: `set_target_seen=YES`,
+    `best_data_target_attr_diff_rad=0.00000004`,
+    `final_target_tcp_error_m=0.023947`,
+    `final_nudge_joint_error_deg=5.042476`,
+    `tcp_target_reduced=NO`, `nudge_joint_error_reduced=NO`,
+    `target_realized=NO`, and `grasped=NO`;
+  - line 211 reports direct set+sim-step at the same grasp-before-CLOSE pose
+    also fails: `set_target_seen=YES`, `max_realized_tcp_delta_m=0.000108`,
+    `final_target_tcp_error_m=0.023927`,
+    `final_nudge_joint_error_deg=5.044027`, and `target_realized=NO`;
+  - lines 213-214 aggregate the split:
+    `env_realized_stages=['settled_home', 'early_pre_move', 'high', 'hover']`,
+    `env_failed_stages=['grasp_before_close_open']`,
+    `direct_rescue_stages=[]`, `home_high_realize_grasp_fails=YES`,
+    `broader_command_realization_blocker=NO`,
+    `local_grasp_pose_only_blocker=YES`, and `latch_seen=NO`.
+- B200 stderr lines 1-4 contain only the known cpufreq/NVML/Fabric warnings and
+  no Python traceback.
+
+Implication:
+
+- D037 is refined: target delivery and realization work earlier in the approach
+  sequence. Do not call the current blocker a broad articulation
+  target-realization failure.
+- Do not call the current blocker post-latch-only. The failure persists before
+  CLOSE at the grasp pose with gripper open and `_grasped=NO`.
+- Direct set+sim-step does not rescue the grasp-before-CLOSE pose, so env-step
+  overwrite/null-action remains unlikely for this local failure.
+- The next valid diagnostic should inspect local grasp-pose causes: drive/limit
+  behavior, contact/proximity effects, controller state around the low grasp pose,
+  or whether a slightly different pre-grasp/grasp staging pose avoids the local
+  command-realization dead zone. This still must remain pre-integration unless
+  the user explicitly approves constraint insertion.
+- This is not P7 success, not attach physics, not release physics, not attached
+  transport, and not constraint integration.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_roarm_chain_approach_target_delivery_probe.py`
+- `claudedocs/session_20260518_p7_branch_b_approach_target_delivery.md`
+- B200 `/tmp/p7_branch_b_roarm_chain_approach_target_delivery_v2_b200.{out,err}`
