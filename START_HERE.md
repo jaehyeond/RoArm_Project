@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-05-18 KST (Track A Branch B diagnostic admissible-region wrapper; no constraint integration)
+Last updated: 2026-05-18 KST (Track A Branch B pre-close coverage audit; no constraint integration)
 
 This is the rolling current-state dashboard. Do not treat it as full history.
 Durable lessons live in `claudedocs/DECISIONS.md`; experiment history lives in
@@ -21,9 +21,26 @@ Do **not** use `HANDOFF.md` or `TASKS.md` as current state.
 
 Latest session:
 
-- `claudedocs/session_20260518_p7_branch_b_preclose_clearance_strategy.md`
+- `claudedocs/session_20260518_p7_branch_b_preclose_coverage_audit.md`
 
 What changed:
+
+- Added a read-only/log-only coverage audit over the existing B200 selector logs.
+  No new Isaac run was launched, no code/gate/default/constraint/SurfaceGripper/
+  transport/release/training change was made, and the audit is not chain
+  integration. Source:
+  `claudedocs/session_20260518_p7_branch_b_preclose_coverage_audit.md`.
+- Direct B200 checks confirmed all requested stdout/stderr files exist, no
+  matching `isaaclab.sh/train_ppo/torchrun/rl_games/python .*p7_` process was
+  running, selector stderr files had no traceback/exception, and admissible
+  wrapper stderr was empty.
+- Audit conclusion: the conservative admissible wrapper does not conflict with
+  D047-D049. It is a conservative subset/explanation of evidence, not an attempt
+  to accept every observed clean side-edge case. Observed-clean 0.1-1.0mm side
+  margins are intentionally rejected by the conservative 2mm rule; 2/4/6mm at
+  -1.5mm and 2mm side margin through -3mm depth are accepted; -4/-6mm are
+  rejected for exact-convergence failure, not inside-footprint clamp. No coverage
+  gap was exposed, so no new diagnostic matrix is justified yet.
 
 - Added `sim_scripts/p7_branch_b_roarm_chain_preclose_admissible_region_probe.py`
   md5 `89ad48b6ebdec076d6f58e330a9131f9`. This is a diagnostic-only wrapper over
