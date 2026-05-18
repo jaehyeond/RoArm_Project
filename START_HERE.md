@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-05-18 KST (Track A Branch B pose/top-controlled boundary follow-up; no constraint integration)
+Last updated: 2026-05-18 KST (Track A Branch B grasp-pose stall trace; no constraint integration)
 
 This is the rolling current-state dashboard. Do not treat it as full history.
 Durable lessons live in `claudedocs/DECISIONS.md`; experiment history lives in
@@ -27,7 +27,7 @@ What changed:
 
 - Added and extended `sim_scripts/p7_branch_b_roarm_chain_grasp_pose_deadzone_probe.py`.
   Initial md5 `7d7c3405e6be240500b7251df91f26e3`; latest diagnostic
-  instrumentation md5 `bee46b8203e9dfdd5d86b69301551af0`.
+  instrumentation md5 `e0e84e481c3be8be7777a85ef2465c57`.
 - This diagnostic is local/pre-integration only: no constraint prim insertion, no
   fixed/dynamic integration, no SurfaceGripper, no attached transport, no
   transport target, no release, no P7 training/tuning, and no default edits.
@@ -106,7 +106,28 @@ What changed:
 - Do not overread this as a robust grasp solution. The passing controlled cases
   still have about `0.011m` final TCP error; this is a thin diagnostic
   reduction-gate boundary, not exact command convergence.
-- Therefore D038/D039/D040 are refined by D041: the current blocker is still local
+- Follow-up stall trace and nudge-direction diagnostics sharpen D041 into D042.
+  The probe now prints per-step joint/target/top trace fields and nudge sweeps;
+  latest md5 is `e0e84e481c3be8be7777a85ef2465c57`.
+- B200 stall trace
+  `/tmp/p7_branch_b_roarm_chain_grasp_pose_stall_trace_zmicro_b200.out` line 42
+  confirms unchanged gates, `trace_every_step=YES`, and controlled pose reassert.
+  Lines 421/552/683 show +12.8125 fail and +12.84375/+13.0 pass all finish with
+  TCP clamped at the sponge oriented top (`final_tcp_minus_sponge_oriented_top_m`
+  about `-0.000043/-0.000036/-0.000018`) while target TCP remains about
+  `10.5-10.7mm` below top. The pass/fail split is shoulder-error reduction, not
+  below-top TCP convergence. Lines 860-862 aggregate the unchanged split and no
+  attach/release claim.
+- B200 nudge-direction run
+  `/tmp/p7_branch_b_roarm_chain_grasp_pose_nudge_direction_b200.out` lines 42-43
+  tests controlled `[-5,+2.5,+5]deg` shoulder nudges with no z-offset variants.
+  Nominal `-5deg` realizes because the target is above top (line 87), while
+  nominal `+2.5deg` and `+5deg` below-top targets fail and clamp near top (lines
+  114 and 141). Far-sponge +2.5/+5deg still realize (lines 195 and 222).
+- Therefore D042: the current blocker is local sponge-top contact equilibrium
+  around nominal pre-close geometry. Reduction-gate passes are not useful
+  below-top command realization.
+- Therefore D038/D039/D040/D041 are refined by D042: the current blocker is local
   contact/clearance/posture around nominal sponge/grasp geometry, not broad target
   delivery, not post-latch-only, and not pure low-pose drive failure. Offset-
   preserve moving behavior remains untested.
@@ -334,6 +355,9 @@ Interpretation:
 - Do not call the +12.84375/+12.875mm reduction-gate pass a solved grasp pose:
   final TCP error remains about 11mm and no attach/transport/release physics was
   exercised.
+- Do not treat the +12.84375/+13.0mm reduction-gate pass as useful below-top
+  command convergence: the TCP remains clamped at the sponge top while the target
+  is still about 10-11mm below top.
 - Do not change B200 system NVIDIA symlinks; use per-run
   `LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libnvidia-ml.so.580.95.05` and
   `VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json`.
@@ -343,19 +367,17 @@ Interpretation:
 Active pivot: Track A P7/Branch B, isolated/pre-integration mechanics and chain-side timing.
 
 Next concrete action: do not integrate constraints yet and do not proceed to
-transport/release claims. The pose/top-controlled boundary is now known to be
-between +12.8125mm and +12.84375mm under the current reduction gate, but this is
-not robust target convergence. If continuing, inspect why the TCP stalls near the
-sponge top with about 11mm residual error, or design a mechanically valid
-pre-close clearance/grasp strategy in a diagnostic-only script. Still no
-SurfaceGripper, no RoArm chain constraint insertion, and no attached-transport or
-release physics claims unless explicitly approved.
+transport/release claims. The latest trace shows the TCP is clamping at the sponge
+top while below-top targets remain about 10-11mm away, so the next useful work is
+a diagnostic-only mechanically valid pre-close clearance/grasp-posture strategy.
+Still no SurfaceGripper, no RoArm chain constraint insertion, and no attached-
+transport or release physics claims unless explicitly approved.
 
 ## Must Read First
 
 1. `CLAUDE.md`
 2. `START_HERE.md`
-3. `claudedocs/DECISIONS.md` D024-D041
+3. `claudedocs/DECISIONS.md` D024-D042
 4. `claudedocs/EXPERIMENT_LEDGER.md` latest Branch B rows
 5. `claudedocs/session_20260517_p7_branch_b_dynamic_anchor_chain_contract.md`
 6. `claudedocs/session_20260517_p7_branch_b_roarm_chain_command_stream.md`

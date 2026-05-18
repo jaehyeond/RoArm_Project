@@ -1921,3 +1921,74 @@ Sources:
 - B200 `/tmp/p7_branch_b_roarm_chain_grasp_pose_deadzone_pose_log_zboundary_b200.{out,err}`
 - B200 `/tmp/p7_branch_b_roarm_chain_grasp_pose_deadzone_pose_reassert_zboundary_b200.{out,err}`
 - B200 `/tmp/p7_branch_b_roarm_chain_grasp_pose_deadzone_pose_reassert_zmicro2_b200.{out,err}`
+
+## D042 — The grasp-pose dead zone is a sponge-top contact clamp; reduction-gate passes are not useful below-top command realization
+
+Evidence:
+
+- Extended `sim_scripts/p7_branch_b_roarm_chain_grasp_pose_deadzone_probe.py`
+  with diagnostic-only per-step tracing, per-joint error/velocity fields,
+  Articulation `joint_pos_target` snapshots, final TCP-vs-oriented-top metrics,
+  and optional shoulder-nudge magnitude sweep. Latest md5:
+  `e0e84e481c3be8be7777a85ef2465c57`. This remains pre-integration only: no
+  constraints, no SurfaceGripper, no transport target, no release, no P7
+  training/tuning, and no env/train/chain default edits.
+- B200 stall trace
+  `/tmp/p7_branch_b_roarm_chain_grasp_pose_stall_trace_zmicro_b200.out`:
+  - line 42 confirms the run used the unchanged `target_error_gate_m=0.003000`,
+    `joint_nudge_degs=[5.0]`, `trace_every_step=YES`, and sponge pose reassert at
+    `z=0.0235`;
+  - line 421 shows +12.8125mm fails, but not from target-buffer loss:
+    `set_target_seen=YES`, `best_data_target_attr_diff_rad=0.00000008`, final TCP
+    is clamped at the top (`final_tcp=...+0.047017`,
+    `final_tcp_minus_sponge_oriented_top_m=-0.000043`) while the target remains
+    below top (`final_target_tcp_minus_sponge_oriented_top_m=-0.010667`);
+  - line 552 shows +12.84375mm passes only the reduction gate with essentially the
+    same clamp: `final_target_tcp_error_m=0.011184`,
+    `final_shoulder_error_deg=2.244741`,
+    `final_tcp_minus_sponge_oriented_top_m=-0.000036`, and target still below top
+    by `-0.010620m`;
+  - line 683 shows +13.0mm also passes with the same pattern:
+    `final_target_tcp_error_m=0.011042`,
+    `final_tcp_minus_sponge_oriented_top_m=-0.000018`, target below top by
+    `-0.010475m`;
+  - lines 860-862 aggregate the unchanged split: +12.8125mm fails while
+    +12.84375mm and +13.0mm pass the current gate; no attach/release physics is
+    claimed.
+- B200 nudge-direction run
+  `/tmp/p7_branch_b_roarm_chain_grasp_pose_nudge_direction_b200.out`:
+  - lines 42-43 confirm a controlled pose-reassert run with no z-offset variants
+    and shoulder nudges `[-5.0, 2.5, 5.0]`;
+  - line 87 shows a nominal-sponge `-5deg` shoulder nudge realizes because the
+    target is above the sponge top (`start_target_tcp_minus_sponge_oriented_top_m=0.023941`,
+    `final_target_tcp_error_m=0.000986`);
+  - line 114 shows a smaller `+2.5deg` downward nudge still fails when its target is
+    below top (`start_target_tcp_minus_sponge_oriented_top_m=-0.011317`) and final
+    TCP remains near top (`final_tcp_minus_sponge_oriented_top_m=-0.000135`);
+  - line 141 repeats the `+5deg` downward failure with target below top by
+    `-0.022771m`;
+  - lines 195 and 222 show the same +2.5/+5deg targets realize with the sponge far,
+    preserving the contact/proximity attribution.
+- Both new stderr files contain only the known cpufreq/NVML/Fabric warnings on
+  lines 1-4 and no Python traceback.
+
+Implication:
+
+- D041 is refined: the +12.84375/+13.0mm pass is not useful command realization.
+  It is a shoulder-error reduction gate crossing while the TCP remains clamped at
+  the sponge top and the target TCP is still about 10-11mm below the oriented top.
+- The immediate blocker should be treated as local sponge-top contact equilibrium
+  around the nominal pre-close posture. Upward/above-top commands realize; below-top
+  downward commands stall near the top even when target buffers are correct.
+- Do not tune the diagnostic gate or describe these passes as a grasp solution.
+  The next valid work remains diagnostic-only: design/test a mechanically valid
+  pre-close clearance/grasp posture before any RoArm chain constraint integration.
+- Still not P7 success, attach physics, transport/release validation,
+  SurfaceGripper validation, or constraint integration.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_roarm_chain_grasp_pose_deadzone_probe.py`
+- `claudedocs/session_20260518_p7_branch_b_grasp_pose_deadzone.md`
+- B200 `/tmp/p7_branch_b_roarm_chain_grasp_pose_stall_trace_zmicro_b200.{out,err}`
+- B200 `/tmp/p7_branch_b_roarm_chain_grasp_pose_nudge_direction_b200.{out,err}`

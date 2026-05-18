@@ -123,14 +123,19 @@ def main() -> int:
     ap.add_argument("--restore_steps", type=int, default=40)
     ap.add_argument("--joint_nudge_index", type=int, default=1)
     ap.add_argument("--joint_nudge_deg", type=float, default=5.0)
+    ap.add_argument("--joint_nudge_degs", nargs="*", type=float, default=None)
     ap.add_argument("--episode_length_s", type=float, default=10.0)
     ap.add_argument("--log_every_event", type=int, default=16)
+    ap.add_argument("--trace_every_step", action="store_true")
     ap.add_argument("--reassert_sponge_before_delivery", action="store_true")
     ap.add_argument("--reassert_sponge_z_m", type=float, default=None)
     args = ap.parse_args()
 
     if args.joint_nudge_index != 1:
         raise ValueError("this diagnostic is intentionally scoped to shoulder joint index 1")
+    joint_nudge_degs = args.joint_nudge_degs if args.joint_nudge_degs is not None else [args.joint_nudge_deg]
+    if len(joint_nudge_degs) < 1:
+        raise ValueError("at least one joint nudge magnitude is required")
 
     stream_args = argparse.Namespace(
         sponge_xy=args.sponge_xy,
@@ -255,8 +260,9 @@ def main() -> int:
         f"[roarm_chain_grasp_deadzone] gates target_error_gate_m={args.target_error_gate_m:.6f} "
         f"max_tcp_step_m={args.max_tcp_step_m:.6f} home_fk_gate_m={args.home_fk_gate_m:.6f} "
         f"delivery_steps={args.delivery_steps} direct_steps={args.direct_steps} "
-        f"joint_nudge_index={args.joint_nudge_index} joint_nudge_deg={args.joint_nudge_deg:.3f} "
+        f"joint_nudge_index={args.joint_nudge_index} joint_nudge_degs={joint_nudge_degs} "
         f"partial_gripper_deg={args.partial_gripper_deg:.3f} resample_fraction={args.resample_fraction:.3f} "
+        f"trace_every_step={_yes(args.trace_every_step)} "
         f"reassert_sponge_before_delivery={_yes(args.reassert_sponge_before_delivery)} "
         f"reassert_sponge_z_m={args.reassert_sponge_z_m}",
         flush=True,
@@ -403,6 +409,15 @@ def main() -> int:
             flush=True,
         )
         return ",".join(names), best
+
+    def data_joint_pos_target_rad() -> np.ndarray | None:
+        value = getattr(base_env._robot.data, "joint_pos_target", None)
+        if value is None or not hasattr(value, "shape"):
+            return None
+        arr = _as_np(value)
+        if arr.size < 6:
+            return None
+        return arr.reshape(-1, arr.shape[-1])[0, :6].astype(np.float64)
 
     def sponge_pose_metrics(pos: np.ndarray, quat: np.ndarray) -> dict[str, float]:
         rot = _quat_wxyz_to_rot(quat)
@@ -583,11 +598,13 @@ def main() -> int:
         max_step_tcp_delta = 0.0
         max_sponge_drift = 0.0
         max_sponge_speed = 0.0
+        max_joint_vel_abs_deg_s = 0.0
         min_joint_error_max_deg = float("inf")
         final_target_tcp_error = float("inf")
         final_joint_error_max_deg = float("inf")
         final_shoulder_error_deg = float("inf")
         prev_tcp = start_tcp
+        prev_q = start_q
         best_attr_diff = float("inf")
         for step_idx in range(1, steps + 1):
             if mode == "env_step":
@@ -606,12 +623,18 @@ def main() -> int:
             after_q = current_q_rad()
             after_sponge = sponge_local()
             after_sponge_quat = sponge_quat_wxyz()
+            physics_dt = float(base_env.sim.get_physics_dt())
             step_tcp_delta = _norm(after_tcp - prev_tcp)
+            joint_vel_deg_s = np.degrees((after_q - prev_q) / max(physics_dt, 1.0e-9))
+            max_joint_vel_abs_deg_s = max(max_joint_vel_abs_deg_s, float(np.max(np.abs(joint_vel_deg_s))))
             realized_tcp_delta = _norm(after_tcp - start_tcp)
             target_tcp_error = _norm(after_tcp - expected_tcp)
             joint_error_deg = np.degrees(target_rad_np - after_q)
             joint_error_max_deg = float(np.max(np.abs(joint_error_deg)))
             shoulder_error_deg = float(abs(joint_error_deg[1]))
+            elbow_error_deg = float(joint_error_deg[2])
+            wrist_p_error_deg = float(joint_error_deg[3])
+            wrist_r_error_deg = float(joint_error_deg[4])
             sponge_drift = _norm(after_sponge - start_sponge)
             max_realized_tcp_delta = max(max_realized_tcp_delta, realized_tcp_delta)
             max_step_tcp_delta = max(max_step_tcp_delta, step_tcp_delta)
@@ -621,19 +644,31 @@ def main() -> int:
             final_target_tcp_error = target_tcp_error
             final_joint_error_max_deg = joint_error_max_deg
             final_shoulder_error_deg = shoulder_error_deg
-            if step_idx in (1, 2, 3, steps):
+            if args.trace_every_step or step_idx in (1, 2, 3, steps):
                 _attrs, diff = data_target_snapshot(f"{label}_step{step_idx:03d}", target_rad_np)
                 best_attr_diff = min(best_attr_diff, diff)
                 gripper_q_deg = float(np.degrees(base_env._robot.data.joint_pos[0, base_env.gripper_joint_idx].detach().cpu().item()))
                 prox = proximity_metrics(after_tcp, expected_tcp, after_sponge, after_sponge_quat)
+                data_target_rad = data_joint_pos_target_rad()
+                data_target_diff_rad = float("nan")
+                data_target_deg_text = "NA"
+                if data_target_rad is not None:
+                    data_target_diff_rad = float(np.max(np.abs(data_target_rad - target_rad_np)))
+                    data_target_deg_text = _fmt_deg(np.degrees(data_target_rad))
                 print(
                     f"[roarm_chain_grasp_deadzone] delivery_step label={label} mode={mode} "
                     f"step={step_idx:03d} set_calls={watch['calls']} set_max_diff_rad={watch['max_diff']:.8f} "
                     f"robot_dof_target_diff_rad={float(np.max(np.abs(targets_rad() - target_rad_np))):.8f} "
-                    f"current_q_deg={_fmt_deg(np.degrees(after_q))} joint_error_max_deg={joint_error_max_deg:.6f} "
-                    f"shoulder_error_deg={shoulder_error_deg:.6f} "
+                    f"robot_dof_targets_deg={_fmt_deg(np.degrees(targets_rad()))} "
+                    f"data_joint_pos_target_diff_rad={'nan' if not math.isfinite(data_target_diff_rad) else f'{data_target_diff_rad:.8f}'} "
+                    f"data_joint_pos_target_deg={data_target_deg_text} "
+                    f"current_q_deg={_fmt_deg(np.degrees(after_q))} joint_error_deg={_fmt_deg(joint_error_deg)} "
+                    f"joint_vel_deg_s={_fmt_deg(joint_vel_deg_s)} joint_error_max_deg={joint_error_max_deg:.6f} "
+                    f"shoulder_error_deg={shoulder_error_deg:.6f} elbow_error_deg={elbow_error_deg:+.6f} "
+                    f"wrist_p_error_deg={wrist_p_error_deg:+.6f} wrist_r_error_deg={wrist_r_error_deg:+.6f} "
                     f"shoulder_error_reduction_deg={start_shoulder_error_deg - shoulder_error_deg:+.6f} "
                     f"fresh_tcp={_fmt_xyz(after_tcp)} expected_tcp={_fmt_xyz(expected_tcp)} "
+                    f"tcp_z_m={after_tcp[2]:+.6f} expected_tcp_z_m={expected_tcp[2]:+.6f} "
                     f"target_tcp_error_m={target_tcp_error:.6f} "
                     f"target_tcp_error_reduction_m={expected_motion_from_start - target_tcp_error:+.6f} "
                     f"realized_tcp_delta_m={realized_tcp_delta:.6f} step_tcp_delta_m={step_tcp_delta:.6f} "
@@ -658,15 +693,22 @@ def main() -> int:
             if not np.isfinite(after_tcp).all() or not math.isfinite(target_tcp_error):
                 nan_seen = True
             prev_tcp = after_tcp
+            prev_q = after_q
         watch["active"] = False
         joint_error_reduced = final_joint_error_max_deg < max(1.0, 0.5 * start_joint_error_max_deg)
         shoulder_error_reduced = final_shoulder_error_deg < max(1.0, 0.5 * start_shoulder_error_deg)
         tcp_target_reduced = final_target_tcp_error < max(args.target_error_gate_m, 0.75 * expected_motion_from_start)
         target_realized = shoulder_error_reduced and tcp_target_reduced
+        final_tcp = fresh_tcp_local()
+        final_q = current_q_rad()
+        final_sponge = sponge_local()
+        final_sponge_quat = sponge_quat_wxyz()
+        final_prox = proximity_metrics(final_tcp, expected_tcp, final_sponge, final_sponge_quat)
         print(
             f"[roarm_chain_grasp_deadzone] delivery_result label={label} mode={mode} "
             f"steps={steps} start_q_deg={_fmt_deg(np.degrees(start_q))} "
             f"target_q_deg={_fmt_deg(np.degrees(target_rad_np))} "
+            f"final_q_deg={_fmt_deg(np.degrees(final_q))} "
             f"expected_motion_from_start_m={expected_motion_from_start:.6f} "
             f"start_joint_error_max_deg={start_joint_error_max_deg:.6f} "
             f"start_shoulder_error_deg={start_shoulder_error_deg:.6f} "
@@ -675,6 +717,7 @@ def main() -> int:
             f"robot_dof_target_diff_rad={float(np.max(np.abs(targets_rad() - target_rad_np))):.8f} "
             f"best_data_target_attr_diff_rad={'nan' if not math.isfinite(best_attr_diff) else f'{best_attr_diff:.8f}'} "
             f"max_realized_tcp_delta_m={max_realized_tcp_delta:.6f} max_step_tcp_delta_m={max_step_tcp_delta:.6f} "
+            f"max_joint_vel_abs_deg_s={max_joint_vel_abs_deg_s:.6f} "
             f"final_target_tcp_error_m={final_target_tcp_error:.6f} min_joint_error_max_deg={min_joint_error_max_deg:.6f} "
             f"final_joint_error_max_deg={final_joint_error_max_deg:.6f} "
             f"final_shoulder_error_deg={final_shoulder_error_deg:.6f} "
@@ -691,6 +734,11 @@ def main() -> int:
             f"start_target_tcp_minus_sponge_oriented_top_m={start_prox['target_tcp_minus_sponge_oriented_top_m']:.6f} "
             f"start_target_tcp_minus_sponge_upright_top_m={start_prox['target_tcp_minus_sponge_upright_top_m']:.6f} "
             f"start_target_xy_inside_sponge_aabb={_yes(bool(start_prox['target_xy_inside_sponge_aabb']))} "
+            f"final_tcp={_fmt_xyz(final_tcp)} final_sponge_xyz={_fmt_xyz(final_sponge)} "
+            f"final_tcp_minus_sponge_oriented_top_m={final_prox['tcp_minus_sponge_oriented_top_m']:.6f} "
+            f"final_target_tcp_minus_sponge_oriented_top_m={final_prox['target_tcp_minus_sponge_oriented_top_m']:.6f} "
+            f"final_tcp_xy_inside_sponge_aabb={_yes(bool(final_prox['tcp_xy_inside_sponge_aabb']))} "
+            f"final_target_xy_inside_sponge_aabb={_yes(bool(final_prox['target_xy_inside_sponge_aabb']))} "
             f"max_sponge_drift_m={max_sponge_drift:.6f} max_sponge_speed_mps={max_sponge_speed:.6f} "
             f"grasped={_yes(bool(base_env._grasped[0].detach().cpu().item()))}",
             flush=True,
@@ -711,38 +759,42 @@ def main() -> int:
     print_controller_config()
     condition_results: list[tuple[str, dict, dict, bool]] = []
     for cond in conditions:
-        target_q_deg = cond.q_deg.copy()
-        target_q_deg[args.joint_nudge_index] += args.joint_nudge_deg
-        target_q_deg[4] = PICK_WRIST_R_DEG
-        target_q_deg[5] = cond.gripper_deg
-        lo, hi = soft_limits_rad()
-        soft_ok, soft_lower_margin, soft_upper_margin = _soft_limit_ok(target_q_deg, lo, hi)
-        base_tcp_cond = fk_tcp(cond.q_deg)
-        target_tcp_cond = fk_tcp(target_q_deg)
-        print(
-            f"[roarm_chain_grasp_deadzone] condition_plan condition={cond.name} note={cond.note!r} "
-            f"z_offset_m={cond.z_offset_m:.6f} ik_converged={_yes(cond.ik_converged)} ik_err_mm={cond.ik_err_mm:.3f} "
-            f"sponge_xy=({cond.sponge_xy[0]:+.6f},{cond.sponge_xy[1]:+.6f}) "
-            f"base_q_deg={_fmt_deg(cond.q_deg)} target_q_deg={_fmt_deg(target_q_deg)} "
-            f"delta_q_deg={_fmt_deg(target_q_deg - cond.q_deg)} "
-            f"base_tcp={_fmt_xyz(base_tcp_cond)} target_tcp={_fmt_xyz(target_tcp_cond)} "
-            f"expected_tcp_delta_m={_norm(target_tcp_cond - base_tcp_cond):.6f} "
-            f"soft_lower_margin_min_rad={soft_lower_margin:.6f} soft_upper_margin_min_rad={soft_upper_margin:.6f} "
-            f"soft_limits_ok={_yes(soft_ok)} analytic_joint_limits_ok={_yes(_analytic_limits_ok(target_q_deg))}",
-            flush=True,
-        )
-        prepared, prep_error = reset_and_prepare(cond)
-        target_rad_np = np.radians(target_q_deg)
-        target_rad = torch.tensor(target_rad_np, device=device, dtype=torch.float32).unsqueeze(0)
-        if args.reassert_sponge_before_delivery:
-            reassert_sponge_pose(cond, f"{cond.name}_before_env")
-        env_result = run_delivery(f"{cond.name}_joint_nudge_env", "env_step", target_rad, target_rad_np, args.delivery_steps)
-        # Compare direct set from the same local pose, not from the env-step aftermath.
-        run_to_q(f"{cond.name}_restore_before_direct", cond.q_deg, args.restore_steps, quiet=False)
-        if args.reassert_sponge_before_delivery:
-            reassert_sponge_pose(cond, f"{cond.name}_before_direct")
-        direct_result = run_delivery(f"{cond.name}_joint_nudge_direct", "direct", target_rad, target_rad_np, args.direct_steps)
-        condition_results.append((cond.name, env_result, direct_result, prepared and prep_error <= args.target_error_gate_m))
+        for nudge_deg in joint_nudge_degs:
+            nudge_tag = _offset_tag_mm(nudge_deg).replace("mm", "deg")
+            result_name = cond.name if len(joint_nudge_degs) == 1 else f"{cond.name}_nudge_{nudge_tag}"
+            target_q_deg = cond.q_deg.copy()
+            target_q_deg[args.joint_nudge_index] += nudge_deg
+            target_q_deg[4] = PICK_WRIST_R_DEG
+            target_q_deg[5] = cond.gripper_deg
+            lo, hi = soft_limits_rad()
+            soft_ok, soft_lower_margin, soft_upper_margin = _soft_limit_ok(target_q_deg, lo, hi)
+            base_tcp_cond = fk_tcp(cond.q_deg)
+            target_tcp_cond = fk_tcp(target_q_deg)
+            print(
+                f"[roarm_chain_grasp_deadzone] condition_plan condition={result_name} base_condition={cond.name} note={cond.note!r} "
+                f"z_offset_m={cond.z_offset_m:.6f} ik_converged={_yes(cond.ik_converged)} ik_err_mm={cond.ik_err_mm:.3f} "
+                f"sponge_xy=({cond.sponge_xy[0]:+.6f},{cond.sponge_xy[1]:+.6f}) "
+                f"joint_nudge_deg={nudge_deg:+.6f} "
+                f"base_q_deg={_fmt_deg(cond.q_deg)} target_q_deg={_fmt_deg(target_q_deg)} "
+                f"delta_q_deg={_fmt_deg(target_q_deg - cond.q_deg)} "
+                f"base_tcp={_fmt_xyz(base_tcp_cond)} target_tcp={_fmt_xyz(target_tcp_cond)} "
+                f"expected_tcp_delta_m={_norm(target_tcp_cond - base_tcp_cond):.6f} "
+                f"soft_lower_margin_min_rad={soft_lower_margin:.6f} soft_upper_margin_min_rad={soft_upper_margin:.6f} "
+                f"soft_limits_ok={_yes(soft_ok)} analytic_joint_limits_ok={_yes(_analytic_limits_ok(target_q_deg))}",
+                flush=True,
+            )
+            prepared, prep_error = reset_and_prepare(cond)
+            target_rad_np = np.radians(target_q_deg)
+            target_rad = torch.tensor(target_rad_np, device=device, dtype=torch.float32).unsqueeze(0)
+            if args.reassert_sponge_before_delivery:
+                reassert_sponge_pose(cond, f"{result_name}_before_env")
+            env_result = run_delivery(f"{result_name}_joint_nudge_env", "env_step", target_rad, target_rad_np, args.delivery_steps)
+            # Compare direct set from the same local pose, not from the env-step aftermath.
+            run_to_q(f"{result_name}_restore_before_direct", cond.q_deg, args.restore_steps, quiet=False)
+            if args.reassert_sponge_before_delivery:
+                reassert_sponge_pose(cond, f"{result_name}_before_direct")
+            direct_result = run_delivery(f"{result_name}_joint_nudge_direct", "direct", target_rad, target_rad_np, args.direct_steps)
+            condition_results.append((result_name, env_result, direct_result, prepared and prep_error <= args.target_error_gate_m))
 
     env_realized = [name for name, env_result, _direct, _prepared in condition_results if env_result["target_realized"]]
     env_failed = [name for name, env_result, _direct, _prepared in condition_results if not env_result["target_realized"]]
@@ -754,8 +806,8 @@ def main() -> int:
     ]
     all_set_seen = all(env_result["set_seen"] and direct_result["set_seen"] for _name, env_result, direct_result, _prepared in condition_results)
     prepared_all = all(prepared for _name, _env_result, _direct_result, prepared in condition_results)
-    nominal_failed = "nominal_sponge_open" in env_failed
-    far_realized = "far_sponge_open" in env_realized
+    nominal_failed = any(name.startswith("nominal_sponge_open") for name in env_failed)
+    far_realized = any(name.startswith("far_sponge_open") for name in env_realized)
     higher_realized = [name for name in env_realized if "_z_plus_" in name]
     xy_realized = [name for name in env_realized if name.startswith("sponge_x_") or name.startswith("sponge_y_")]
     success = all_set_seen and not nan_seen and not episode_done
@@ -777,7 +829,7 @@ def main() -> int:
         f"horizontal_sponge_shift_realizes_nominal_fails={_yes(nominal_failed and len(xy_realized) > 0)} "
         f"all_grasp_local_variants_fail={_yes(nominal_failed and len(env_realized) == 0)} "
         f"env_step_direct_split_seen={_yes(len(direct_rescue) > 0)} "
-        f"direct_set_also_fails_nominal={_yes('nominal_sponge_open' not in direct_realized)} "
+        f"direct_set_also_fails_nominal={_yes(not any(name.startswith('nominal_sponge_open') for name in direct_realized))} "
         f"attach_physics_validated=NO release_physics_validated=NO claim_attach_success=NO "
         f"nan_seen={_yes(nan_seen)} episode_done={_yes(episode_done)}",
         flush=True,

@@ -350,3 +350,129 @@ Interpretation:
 - Do not tune the gate to make this look better. The useful lesson is that the
   nominal contact/clearance posture is marginal and not a validated commandable
   grasp pose.
+
+## Follow-up Stall Trace / Contact-Equilibrium Diagnostic
+
+### Code extension
+
+- Extended `sim_scripts/p7_branch_b_roarm_chain_grasp_pose_deadzone_probe.py`
+  md5 `e0e84e481c3be8be7777a85ef2465c57`.
+- Added diagnostic-only fields: `--trace_every_step`, `--joint_nudge_degs`,
+  per-step `robot_dof_targets`, Articulation `joint_pos_target`, per-joint error,
+  joint velocity, TCP z, sponge top/oriented-top deltas, and final
+  TCP-vs-oriented-top fields in `delivery_result`.
+- Did not change the diagnostic gate, P7 reward/scalars, env defaults, chain
+  defaults, attach semantics, SurfaceGripper, constraint integration, transport,
+  or release behavior.
+
+Verification:
+
+- Local `python -m py_compile sim_scripts/p7_branch_b_roarm_chain_grasp_pose_deadzone_probe.py` passed.
+- Local and B200 md5 matched after the final patch:
+  `e0e84e481c3be8be7777a85ef2465c57`.
+- B200 `py_compile` passed.
+
+### Controlled +12.8125/+12.84375/+13.0 trace
+
+Logs:
+
+- `/tmp/p7_branch_b_roarm_chain_grasp_pose_stall_trace_zmicro_b200.out`
+- `/tmp/p7_branch_b_roarm_chain_grasp_pose_stall_trace_zmicro_b200.err`
+
+Evidence:
+
+- Line 42 confirms unchanged gates and scope for this trace:
+  `target_error_gate_m=0.003000`, `joint_nudge_degs=[5.0]`,
+  `trace_every_step=YES`, `reassert_sponge_before_delivery=YES`, and
+  `reassert_sponge_z_m=0.0235`.
+- Lines 338, 469, and 600 reassert the sponge to identity/upright top
+  `0.047000m` before the +12.8125, +12.84375, and +13.0mm env deliveries.
+- +12.8125mm:
+  - line 342 starts with target buffers correct:
+    `robot_dof_targets_deg` and `data_joint_pos_target_deg` match the watched
+    target, shoulder velocity is active, and TCP moves downward toward the top.
+  - line 346 reaches `tcp_z_m=+0.047688`, just above top.
+  - line 420 ends with `tcp_z_m=+0.047017`, `step_tcp_delta_m=0.000000`,
+    `joint_vel_deg_s` near zero, shoulder error `2.266477deg`, and
+    `tcp_minus_sponge_oriented_top_m=-0.000043` while target remains below top by
+    about `-0.010667m`.
+  - line 421 reports final env failure:
+    `final_target_tcp_error_m=0.011191`, `final_shoulder_error_deg=2.266477`,
+    `target_realized=NO`, `final_tcp_minus_sponge_oriented_top_m=-0.000043`,
+    and `final_target_tcp_minus_sponge_oriented_top_m=-0.010667`.
+  - line 466 shows direct set also fails with the same clamp pattern.
+- +12.84375mm:
+  - line 467 records the condition and target, still below top.
+  - lines 473-481 show the same fast downward motion toward top and then near-top
+    clamp.
+  - line 551 ends at `tcp_z_m=+0.047008`,
+    `tcp_minus_sponge_oriented_top_m=-0.000036`, target below top by
+    `-0.010620m`, and shoulder error `2.244741deg`.
+  - line 552 reports env `target_realized=YES`, but only because
+    `shoulder_error_reduced=YES`; final TCP error is still `0.011184m`.
+  - line 597 shows direct set also passes the same reduction gate with
+    `final_target_tcp_error_m=0.011148` and final TCP clamped near top.
+- +13.0mm:
+  - line 600 reasserts the same controlled sponge pose.
+  - lines 604-612 show the same approach to the top.
+  - line 682 ends at `tcp_z_m=+0.047029`,
+    `tcp_minus_sponge_oriented_top_m=-0.000018`, target below top by
+    `-0.010475m`, and shoulder error `2.220062deg`.
+  - line 683 reports env `target_realized=YES`, again with
+    `final_target_tcp_error_m=0.011042`.
+  - line 728 shows direct set also passes the reduction gate with
+    `final_target_tcp_error_m=0.011004`.
+- Lines 860-862 aggregate the same split:
+  +12.8125 fails; +12.84375 and +13.0 pass; no attach/release physics claim.
+- stderr lines 1-4 contain only known cpufreq/NVML/Fabric warnings and no Python
+  traceback.
+
+Interpretation:
+
+- The TCP is not converging to the requested below-top targets. It is stalling at
+  the sponge oriented top, with the target still about 10.5-10.7mm below top.
+- The +12.84375/+13.0 "pass" is a reduction-gate artifact: the shoulder error
+  falls just below the 50% reduction threshold, but final TCP error stays about
+  11mm and the final TCP is still top-clamped.
+
+### Nudge magnitude/direction check
+
+Logs:
+
+- `/tmp/p7_branch_b_roarm_chain_grasp_pose_nudge_direction_b200.out`
+- `/tmp/p7_branch_b_roarm_chain_grasp_pose_nudge_direction_b200.err`
+
+Evidence:
+
+- Lines 42-43 confirm controlled pose reassert, no z-offset variants, and
+  shoulder nudges `[-5.0, 2.5, 5.0]`.
+- Nominal sponge:
+  - line 87: `-5deg` shoulder nudge realizes with
+    `final_target_tcp_error_m=0.000986`; its target is above top
+    (`start_target_tcp_minus_sponge_oriented_top_m=0.023941`).
+  - line 114: `+2.5deg` nudge fails with target below top
+    (`start_target_tcp_minus_sponge_oriented_top_m=-0.011317`), final TCP remains
+    near top (`final_tcp_minus_sponge_oriented_top_m=-0.000135`), and
+    `target_realized=NO`.
+  - line 141: `+5deg` nudge repeats the below-top stall with target below top by
+    `-0.022771m`.
+- Far sponge:
+  - lines 195 and 222 show +2.5/+5deg realize when the sponge is far, preserving
+    the contact/proximity interpretation rather than broad drive failure.
+- Partial close:
+  - line 249 shows the `-5deg` upward/above-top target realizes even with the
+    partial-close condition.
+  - lines 276 and 303 show +2.5/+5deg downward below-top targets still fail.
+- stderr lines 1-4 contain only known cpufreq/NVML/Fabric warnings and no Python
+  traceback.
+
+Interpretation:
+
+- This kills the idea that the latest pass boundary is useful below-top command
+  convergence. The decisive split is whether the requested TCP target asks the
+  local posture to drive through the sponge top.
+- Current blocker is local contact equilibrium at the sponge top around nominal
+  pre-close geometry. A future strategy should be designed as a mechanically valid
+  clearance/grasp-posture diagnostic before any chain integration.
+- Still no training, no constraints, no SurfaceGripper, no transport target, no
+  release, and no attach physics validation.
