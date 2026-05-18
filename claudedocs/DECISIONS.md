@@ -1992,3 +1992,62 @@ Sources:
 - `claudedocs/session_20260518_p7_branch_b_grasp_pose_deadzone.md`
 - B200 `/tmp/p7_branch_b_roarm_chain_grasp_pose_stall_trace_zmicro_b200.{out,err}`
 - B200 `/tmp/p7_branch_b_roarm_chain_grasp_pose_nudge_direction_b200.{out,err}`
+
+## D043 — A valid pre-close strategy must avoid below-top targets inside the nominal sponge footprint
+
+Evidence:
+
+- Added `sim_scripts/p7_branch_b_roarm_chain_preclose_clearance_strategy_probe.py`
+  md5 `5be8cfb8c1a58f6de43f431db0befff4`. This is diagnostic-only and
+  pre-integration: no constraint prim insertion, no fixed/dynamic integration,
+  no SurfaceGripper, no attached transport, no transport target, no release or
+  scripted release variant, no P7 training/tuning, no diagnostic gate tuning,
+  and no env/train/chain default edits.
+- B200
+  `/tmp/p7_branch_b_roarm_chain_preclose_clearance_strategy_b200.out`:
+  - line 41 confirms the strict scope and no attach/release physics claim;
+  - line 42 records `target_error_gate_m=0.003000` and
+    `reduction_gate_reference_only=YES`;
+  - line 43 confirms no MOVE commands were executed;
+  - line 172 shows the nominal below-top baseline fails exact convergence and
+    top-clamps: target is inside the sponge AABB, target is `-0.022821m` below
+    oriented top, final TCP is near the top
+    (`final_tcp_minus_sponge_oriented_top_m=0.000099`),
+    `final_target_tcp_error_m=0.023923`, `exact_converged=NO`,
+    `top_clamped=YES`, and clean realization `NO`;
+  - line 272 shows the same below-top q target realizes when the sponge is far:
+    `final_target_tcp_error_m=0.000854`, target outside AABB,
+    `exact_converged=YES`, and `top_clamped=NO`;
+  - lines 372/466 show upward-first then above-top exact-converges;
+  - line 660 shows upward-first then top-tangent exact-converges with
+    `final_target_tcp_error_m=0.000495` and `top_clamped=NO`;
+  - line 854 shows upward-first followed by a final below-top target still
+    reclamps: `final_target_tcp_error_m=0.011778`,
+    `reduction_gate_would_pass=YES`, `exact_converged=NO`,
+    `top_clamped=YES`, and clean realization `NO`;
+  - line 1048 shows side-edge tangent outside the AABB exact-converges with
+    `final_target_tcp_error_m=0.000910`;
+  - lines 1050-1052 aggregate the clean candidates, clamped segments,
+    `below_top_nominal_invalid=YES`, `attach_calls=0`, no NaN/done, and no
+    attach/release physics claim.
+- stderr lines 1-4 contain only the known cpufreq/NVML/Fabric warnings and no
+  Python traceback.
+
+Implication:
+
+- D042 is not just a measurement artifact; it is now a pre-close strategy rule.
+  Do not command a final pre-close TCP target below the sponge top inside/near
+  the nominal footprint.
+- Upward-first clearance is useful only when the final commanded target remains
+  above or tangent to the top. Upward-first followed by a below-top target still
+  reclamps and can misleadingly pass reduction-style metrics.
+- The next valid pre-integration candidates are above/top-tangent pre-close and
+  side/edge tangent approach. They are diagnostic candidates only, not attach
+  physics, not transport/release, not SurfaceGripper, and not constraint
+  integration.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_roarm_chain_preclose_clearance_strategy_probe.py`
+- `claudedocs/session_20260518_p7_branch_b_preclose_clearance_strategy.md`
+- B200 `/tmp/p7_branch_b_roarm_chain_preclose_clearance_strategy_b200.{out,err}`

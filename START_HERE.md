@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-05-18 KST (Track A Branch B grasp-pose stall trace; no constraint integration)
+Last updated: 2026-05-18 KST (Track A Branch B pre-close clearance diagnostic; no constraint integration)
 
 This is the rolling current-state dashboard. Do not treat it as full history.
 Durable lessons live in `claudedocs/DECISIONS.md`; experiment history lives in
@@ -21,9 +21,52 @@ Do **not** use `HANDOFF.md` or `TASKS.md` as current state.
 
 Latest session:
 
-- `claudedocs/session_20260518_p7_branch_b_grasp_pose_deadzone.md`
+- `claudedocs/session_20260518_p7_branch_b_preclose_clearance_strategy.md`
 
 What changed:
+
+- Added `sim_scripts/p7_branch_b_roarm_chain_preclose_clearance_strategy_probe.py`
+  md5 `5be8cfb8c1a58f6de43f431db0befff4`.
+- This diagnostic is still pre-integration only: no constraint prim insertion,
+  no fixed/dynamic integration, no SurfaceGripper, no attached transport, no
+  transport target, no release, no scripted release variant, no P7 training/
+  tuning, no diagnostic gate tuning, and no env/train/chain default edits.
+- B200 log:
+  `/tmp/p7_branch_b_roarm_chain_preclose_clearance_strategy_b200.out`.
+  stderr:
+  `/tmp/p7_branch_b_roarm_chain_preclose_clearance_strategy_b200.err`.
+- Lines 41-45 confirm strict scope, unchanged 3mm exact target gate, no MOVE/
+  transport/release, pose/top proxies, and side-edge IK targets.
+- The current nominal below-top baseline still fails exactly as D042 predicts:
+  line 172 has target below the oriented top by `-0.022821m`, target inside the
+  sponge AABB, final TCP near the top (`+0.000099m` above oriented top),
+  `final_target_tcp_error_m=0.023923`, `exact_converged=NO`,
+  `top_clamped=YES`, and `clean_realized_without_reduction_artifact=NO`.
+- The same below-top q target realizes with the sponge far: line 272 reports
+  `final_target_tcp_error_m=0.000854`, target outside AABB, `exact_converged=YES`,
+  and `top_clamped=NO`. This preserves contact/proximity as the cause; it is not
+  evidence that below-top commands are valid inside the nominal footprint.
+- Mechanically safer pre-close candidates realized cleanly:
+  upward-first then above-top lines 372/466 both exact-converge; upward-first then
+  top-tangent line 660 exact-converges with `target_top_class=tangent` and
+  `final_target_tcp_error_m=0.000495`; side-edge tangent line 1048 exact-converges
+  outside the AABB with `final_target_tcp_error_m=0.000910`.
+- Upward-first alone does not rescue an unsafe final below-top target: line 854
+  reclamps near top with `final_target_tcp_error_m=0.011778`,
+  `reduction_gate_would_pass=YES`, but `exact_converged=NO`, `top_clamped=YES`,
+  and `clean_realized_without_reduction_artifact=NO`.
+- Aggregate lines 1050-1052 report clean strategy candidates
+  `upward_first_then_above_top`, `upward_first_then_top_tangent`, and
+  `side_edge_tangent_approach`, plus far-sponge control; `attach_calls=0`,
+  `below_top_nominal_invalid=YES`, no NaN/done, and no attach/release claim.
+- stderr lines 1-4 contain only the known cpufreq/NVML/Fabric warnings and no
+  Python traceback.
+- Therefore D043: a valid pre-close strategy must avoid commanding the TCP
+  below the sponge top inside/near the nominal footprint. Upward clearance helps
+  only when the final target remains above/tangent; it is not a license to drive
+  through the sponge top.
+
+Previous detailed dead-zone session:
 
 - Added and extended `sim_scripts/p7_branch_b_roarm_chain_grasp_pose_deadzone_probe.py`.
   Initial md5 `7d7c3405e6be240500b7251df91f26e3`; latest diagnostic
