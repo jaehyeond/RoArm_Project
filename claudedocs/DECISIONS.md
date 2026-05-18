@@ -1680,3 +1680,244 @@ Sources:
 - `sim_scripts/p7_branch_b_roarm_chain_approach_target_delivery_probe.py`
 - `claudedocs/session_20260518_p7_branch_b_approach_target_delivery.md`
 - B200 `/tmp/p7_branch_b_roarm_chain_approach_target_delivery_v2_b200.{out,err}`
+
+## D039 — The grasp-pose shoulder-nudge dead zone is contact/proximity-shaped, not a pure low-pose drive failure
+
+Evidence:
+
+- Added `sim_scripts/p7_branch_b_roarm_chain_grasp_pose_deadzone_probe.py`, a
+  diagnostic-local pre-integration matrix. It compares the same +5deg shoulder
+  nudge around the grasp pose with nominal sponge, sponge far/no-contact, higher
+  local z offsets, and sub-threshold partial gripper close. It does not insert
+  constraint prims, integrate fixed/dynamic constraints, attach SurfaceGripper,
+  execute attached transport, go to the transport target, run release, run P7
+  training, tune P7, or edit env/train/chain defaults.
+- B200 default log
+  `/tmp/p7_branch_b_roarm_chain_grasp_pose_deadzone_b200.out`:
+  - line 41 confirms the strict scope and explicitly reports
+    `attach_physics_validated=NO`, `release_physics_validated=NO`, and
+    `claim_attach_success=NO`;
+  - line 43 confirms the run remains pre-transport:
+    `move_cmds_executed=0`, `raw_max_gap_m=0.211271`, `raw_gap_ok=NO`;
+  - line 72 reports `action_scale=0.100000`, `null_action_max_abs=0.000000`,
+    soft limits, and arm/gripper drive fields;
+  - line 85 reports nominal sponge/open-gripper failure despite target delivery:
+    `set_target_seen=YES`, `best_data_target_attr_diff_rad=0.00000004`,
+    `max_realized_tcp_delta_m=0.001144`,
+    `final_target_tcp_error_m=0.023952`,
+    `final_shoulder_error_deg=5.035108`, `target_realized=NO`, and `_grasped=NO`;
+  - the same line shows the target is a proximity/contact-risk target:
+    `start_target_tcp_minus_sponge_top_m=-0.022771` and
+    `start_target_xy_inside_sponge_aabb=YES`;
+  - line 97 reports direct set+sim-step also fails for nominal sponge/open
+    gripper, so env-step overwrite is not the cause;
+  - line 110 reports the same robot q and target realizes when the sponge is far:
+    `max_realized_tcp_delta_m=0.025811`,
+    `final_target_tcp_error_m=0.000850`,
+    `final_shoulder_error_deg=0.114004`, `target_realized=YES`,
+    `start_d_tcp_sponge_m=0.676404`, and
+    `start_target_xy_inside_sponge_aabb=NO`;
+  - line 122 reports direct set also realizes with sponge far;
+  - lines 135, 160, and 185 show +3mm, +6mm, and +12mm nominal-sponge variants
+    still fail or remain insufficient by the diagnostic target-realized gate;
+  - lines 210 and 222 show sub-threshold partial close at the nominal pose does
+    not rescue;
+  - lines 223-224 aggregate `env_realized_conditions=['far_sponge_open']`,
+    nominal and +3/+6/+12mm/partial-close failures,
+    `sponge_far_realizes_nominal_fails=YES`,
+    `direct_set_also_fails_nominal=YES`, and no attach/release physics claim.
+- B200 high-z cross-check
+  `/tmp/p7_branch_b_roarm_chain_grasp_pose_deadzone_zhi_b200.out`:
+  - lines 85/97 repeat nominal failure and lines 110/122 repeat far-sponge
+    realization;
+  - lines 135/147 show +18mm nominal-sponge env/direct realization even though
+    target TCP is still slightly below sponge top
+    (`start_target_tcp_minus_sponge_top_m=-0.005662`);
+  - lines 160/172 show +24mm env/direct realization with target just above
+    sponge top (`start_target_tcp_minus_sponge_top_m=0.000859`);
+  - lines 185/197 show +30mm env/direct realization with target clearly above
+    sponge top (`start_target_tcp_minus_sponge_top_m=0.006679`);
+  - lines 210/222 repeat partial-close failure;
+  - lines 223-224 aggregate that far sponge and +18/+24/+30mm realize, nominal and
+    partial close fail, `higher_z_realizes_nominal_fails=YES`, and no direct-rescue
+    split appears.
+- Both B200 stderr files have only the known cpufreq/NVML/Fabric warnings on
+  lines 1-4 and no Python traceback.
+
+Implication:
+
+- D038 is refined again: the blocker is local to nominal sponge/grasp geometry
+  and is contact/proximity-shaped. The same robot q and target realize when the
+  sponge is moved far away, so this is not a broad articulation target-realization
+  failure and not a pure low-pose drive/controller limit.
+- Direct set+sim-step mirrors env-step in the decisive comparisons, so
+  env-step/null-action overwrite is not the cause of the nominal failure.
+- Do not treat the far-sponge or higher-z realization as attach, transport,
+  release, SurfaceGripper, or constraint evidence. No attach physics, transport
+  target, release, or constraint insertion was executed.
+- Next valid work should remain pre-integration and isolate the contact/proximity
+  boundary between +12mm fail/insufficient and +18mm pass, or sweep horizontal
+  proximity, before any approved chain integration.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_roarm_chain_grasp_pose_deadzone_probe.py`
+- `claudedocs/session_20260518_p7_branch_b_grasp_pose_deadzone.md`
+- B200 `/tmp/p7_branch_b_roarm_chain_grasp_pose_deadzone_b200.{out,err}`
+- B200 `/tmp/p7_branch_b_roarm_chain_grasp_pose_deadzone_zhi_b200.{out,err}`
+
+## D040 — The grasp-pose boundary is near +13mm under the current gate; horizontal offset evidence is posture-confounded
+
+Evidence:
+
+- Extended `sim_scripts/p7_branch_b_roarm_chain_grasp_pose_deadzone_probe.py`
+  to support decimal z-offset labels, diagnostic-local horizontal sponge offsets,
+  and explicit start sponge xyz/top/dx/dy metrics. Latest md5:
+  `fa3c1445ac692cef85ab6a32cc8d6838`. This remains pre-integration only: no
+  constraints, no SurfaceGripper, no transport target, no release, no P7
+  training/tuning, and no env/train/chain default edits.
+- B200 fine z log
+  `/tmp/p7_branch_b_roarm_chain_grasp_pose_deadzone_zfine_b200.out`:
+  - lines 85/97 repeat nominal sponge/open failure;
+  - lines 135/147 show +13mm env/direct pass the diagnostic realization gate;
+  - lines 160/172, 185/197, 210/222, and 235/247 show +14/+15/+16/+17mm also
+    pass the same gate;
+  - lines 273-274 aggregate far sponge and +13 through +17mm realization, with
+    nominal and partial-close failures and no direct-rescue split.
+- B200 micro z log
+  `/tmp/p7_branch_b_roarm_chain_grasp_pose_deadzone_zmicro_b200.out`:
+  - line 43 records z offsets `[12.0, 12.25, 12.5, 12.75, 13.0]`;
+  - lines 136/148, 161/173, 186/198, and 211/223 show +12.0/+12.25/+12.5/+12.75mm
+    env/direct failures;
+  - lines 236/248 show +13.0mm env/direct pass the current reduction gate;
+  - lines 274-275 aggregate that only far sponge and +13mm realize among the
+    micro-z conditions.
+- The +13mm pass is not exact target convergence. In the micro-z log, line 236
+  still has `final_target_tcp_error_m=0.011054` and
+  `final_shoulder_error_deg=2.224901`; it passes because the diagnostic gate is
+  based on meaningful error reduction, not final 3mm convergence.
+- B200 wide xy log
+  `/tmp/p7_branch_b_roarm_chain_grasp_pose_deadzone_xy_b200.out`:
+  - line 43 records x offsets `[-35,-30,-25,-20,+20,+25,+30,+35]` mm and y
+    offsets `[-25,-20,-15,+15,+20,+25]` mm;
+  - line 499 reports realization for far sponge, y -25mm, and y +15mm.
+- B200 targeted y-check log
+  `/tmp/p7_branch_b_roarm_chain_grasp_pose_deadzone_ycheck_b200.out`:
+  - line 43 retests y offsets `[-25,-20,+15,+20]` with start sponge xyz/top/dx/dy
+    metrics;
+  - line 136 contradicts the earlier y -25mm pass: y -25mm fails with
+    `target_realized=NO`, `final_target_tcp_error_m=0.014990`,
+    `final_shoulder_error_deg=3.120213`, `start_target_xy_inside_sponge_aabb=NO`,
+    and `start_sponge_top_z_m=0.047000`;
+  - line 186 repeats y +15mm realization but reveals the confound:
+    `start_sponge_xyz=([+0.265269, -0.031637, +0.011000])`,
+    `start_sponge_top_z_m=0.034500`, and
+    `start_target_tcp_minus_sponge_top_m=-0.010271`, versus nominal top
+    `0.047000` on lines 86/98;
+  - line 211 shows y +20mm fails with the usual top height
+    `start_sponge_top_z_m=0.047000` and
+    `start_target_tcp_minus_sponge_top_m=-0.022771`;
+  - lines 249-250 aggregate only far sponge and y +15mm as realized.
+- All follow-up stderr files contain only the known cpufreq/NVML/Fabric warnings
+  on lines 1-4 and no Python traceback.
+
+Implication:
+
+- The z boundary is tighter than D039 stated: under the current reduction-based
+  diagnostic gate and nominal settled sponge posture, the transition is between
+  +12.75mm and +13.0mm.
+- Do not treat +13mm as a robust solved grasp target. It is a marginal
+  command-realization improvement with centimeter-scale final TCP error.
+- Do not treat horizontal offset as an independently validated fix. The only
+  reproducible y-offset pass is confounded by lower settled sponge top/posture,
+  and the earlier y -25mm pass did not reproduce.
+- The strongest current hypothesis remains local contact/clearance/posture
+  interaction around the nominal grasp geometry. Before any chain integration,
+  a valid next diagnostic should explicitly control or log sponge pose/orientation
+  while testing z/clearance. This is still not P7 success, attach physics,
+  transport/release validation, SurfaceGripper validation, or constraint
+  integration.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_roarm_chain_grasp_pose_deadzone_probe.py`
+- `claudedocs/session_20260518_p7_branch_b_grasp_pose_deadzone.md`
+- B200 `/tmp/p7_branch_b_roarm_chain_grasp_pose_deadzone_zfine_b200.{out,err}`
+- B200 `/tmp/p7_branch_b_roarm_chain_grasp_pose_deadzone_zmicro_b200.{out,err}`
+- B200 `/tmp/p7_branch_b_roarm_chain_grasp_pose_deadzone_xy_b200.{out,err}`
+- B200 `/tmp/p7_branch_b_roarm_chain_grasp_pose_deadzone_ycheck_b200.{out,err}`
+
+## D041 — Pose/top control preserves the +12.8mm boundary, but the pass remains a thin reduction-gate artifact
+
+Evidence:
+
+- Extended `sim_scripts/p7_branch_b_roarm_chain_grasp_pose_deadzone_probe.py` to
+  log sponge root quaternion, `up_z`, tilt, upright top, oriented top, and to
+  optionally reassert sponge pose before delivery. Latest md5:
+  `bee46b8203e9dfdd5d86b69301551af0`. This remains pre-integration only: no
+  constraints, no SurfaceGripper, no transport target, no release, no P7
+  training/tuning, and no env/train/chain default edits.
+- B200 uncontrolled pose/top log
+  `/tmp/p7_branch_b_roarm_chain_grasp_pose_deadzone_pose_log_zboundary_b200.out`:
+  - line 43 tests +12.75/+12.875/+13.0mm;
+  - lines 86/98 show nominal sponge is effectively upright with
+    `start_sponge_oriented_top_z_m=0.047000`;
+  - lines 136/148 show +12.75mm env/direct fail with
+    `start_target_tcp_minus_sponge_oriented_top_m=-0.010666`;
+  - lines 173 and 186/198 show +12.875mm and +13.0mm env/direct pass the
+    reduction gate;
+  - lines 224-225 aggregate +12.875/+13.0mm realized and +12.75mm failed.
+- B200 controlled pose/top log
+  `/tmp/p7_branch_b_roarm_chain_grasp_pose_deadzone_pose_reassert_zboundary_b200.out`:
+  - line 42 confirms `reassert_sponge_before_delivery=YES` and
+    `reassert_sponge_z_m=0.0235`;
+  - reassert lines 76, 130, 157, and 184 show the requested/actual sponge pose is
+    `(+0.250000,-0.040000,+0.023500)` with identity quaternion and
+    upright/oriented top `0.047000m` before delivery;
+  - lines 141/154 show +12.75mm env/direct still fail;
+  - lines 168/181 show +12.875mm env/direct pass;
+  - lines 195/208 show +13.0mm env/direct pass;
+  - lines 236-237 aggregate the same split and no direct-rescue condition.
+- B200 controlled micro2 log
+  `/tmp/p7_branch_b_roarm_chain_grasp_pose_deadzone_pose_reassert_zmicro2_b200.out`:
+  - line 42 again confirms controlled pose reassert at `z=0.0235`;
+  - lines 130/157/184 show identity/upright top `0.047000m` before each tested
+    z condition;
+  - lines 141/154 show +12.8125mm env/direct fail:
+    env `final_target_tcp_error_m=0.011191`,
+    `final_shoulder_error_deg=2.266477`, `target_realized=NO`; direct
+    `final_target_tcp_error_m=0.011147`,
+    `final_shoulder_error_deg=2.290611`, `target_realized=NO`;
+  - lines 168/181 show +12.84375mm env/direct pass:
+    env `final_target_tcp_error_m=0.011184`,
+    `final_shoulder_error_deg=2.244741`, `target_realized=YES`; direct
+    `final_target_tcp_error_m=0.011148`,
+    `final_shoulder_error_deg=2.262267`, `target_realized=YES`;
+  - lines 195/208 show +12.875mm env/direct pass;
+  - lines 236-237 aggregate +12.84375/+12.875mm realized and +12.8125mm failed.
+- All three stderr files contain only the known cpufreq/NVML/Fabric warnings on
+  lines 1-4 and no Python traceback.
+
+Implication:
+
+- The +12.75 to +13.0mm split is not explained by sponge tilt or top-height
+  drift. It survives identity-quaternion/top-controlled reassertion.
+- Under the current diagnostic gate, the controlled transition is between
+  +12.8125mm and +12.84375mm.
+- This does not mean the grasp pose is solved. Passing cases still retain about
+  11mm final TCP error, and the pass/fail flip is a thin reduction-gate boundary
+  driven by shoulder-error reduction, not exact target convergence.
+- Do not tune the diagnostic gate or P7 thresholds to make this look like a
+  success. The actionable lesson is that the nominal contact/clearance posture is
+  marginal and needs a mechanically valid grasp/clearance strategy before any
+  RoArm chain constraint integration.
+- Still not P7 success, attach physics, transport/release validation,
+  SurfaceGripper validation, or constraint integration.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_roarm_chain_grasp_pose_deadzone_probe.py`
+- `claudedocs/session_20260518_p7_branch_b_grasp_pose_deadzone.md`
+- B200 `/tmp/p7_branch_b_roarm_chain_grasp_pose_deadzone_pose_log_zboundary_b200.{out,err}`
+- B200 `/tmp/p7_branch_b_roarm_chain_grasp_pose_deadzone_pose_reassert_zboundary_b200.{out,err}`
+- B200 `/tmp/p7_branch_b_roarm_chain_grasp_pose_deadzone_pose_reassert_zmicro2_b200.{out,err}`

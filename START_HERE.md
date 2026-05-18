@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-05-18 KST (Track A Branch B approach-stage target-delivery probe; no constraint integration)
+Last updated: 2026-05-18 KST (Track A Branch B pose/top-controlled boundary follow-up; no constraint integration)
 
 This is the rolling current-state dashboard. Do not treat it as full history.
 Durable lessons live in `claudedocs/DECISIONS.md`; experiment history lives in
@@ -21,10 +21,98 @@ Do **not** use `HANDOFF.md` or `TASKS.md` as current state.
 
 Latest session:
 
-- `claudedocs/session_20260518_p7_branch_b_approach_target_delivery.md`
+- `claudedocs/session_20260518_p7_branch_b_grasp_pose_deadzone.md`
 
 What changed:
 
+- Added and extended `sim_scripts/p7_branch_b_roarm_chain_grasp_pose_deadzone_probe.py`.
+  Initial md5 `7d7c3405e6be240500b7251df91f26e3`; latest diagnostic
+  instrumentation md5 `bee46b8203e9dfdd5d86b69301551af0`.
+- This diagnostic is local/pre-integration only: no constraint prim insertion, no
+  fixed/dynamic integration, no SurfaceGripper, no attached transport, no
+  transport target, no release, no P7 training/tuning, and no default edits.
+- B200 logs:
+  `/tmp/p7_branch_b_roarm_chain_grasp_pose_deadzone_b200.out` and
+  `/tmp/p7_branch_b_roarm_chain_grasp_pose_deadzone_zhi_b200.out`.
+- Follow-up B200 logs:
+  `/tmp/p7_branch_b_roarm_chain_grasp_pose_deadzone_zfine_b200.out`,
+  `/tmp/p7_branch_b_roarm_chain_grasp_pose_deadzone_zmicro_b200.out`,
+  `/tmp/p7_branch_b_roarm_chain_grasp_pose_deadzone_xy_b200.out`, and
+  `/tmp/p7_branch_b_roarm_chain_grasp_pose_deadzone_ycheck_b200.out`.
+- Pose/top-controlled B200 logs:
+  `/tmp/p7_branch_b_roarm_chain_grasp_pose_deadzone_pose_log_zboundary_b200.out`,
+  `/tmp/p7_branch_b_roarm_chain_grasp_pose_deadzone_pose_reassert_zboundary_b200.out`,
+  and
+  `/tmp/p7_branch_b_roarm_chain_grasp_pose_deadzone_pose_reassert_zmicro2_b200.out`.
+- Lines 41-44 of the default log confirm strict scope, pre-transport execution,
+  and that contact sensors are unavailable so proximity/AABB/top-height proxies
+  are used.
+- Line 72 records controller context:
+  `action_scale=0.100000`, `null_action_max_abs=0.000000`, soft limits, and arm/
+  gripper drive fields.
+- Nominal sponge/open gripper still fails despite target delivery:
+  default line 85 reports `set_target_seen=YES`,
+  `best_data_target_attr_diff_rad=0.00000004`,
+  `max_realized_tcp_delta_m=0.001144`,
+  `final_target_tcp_error_m=0.023952`,
+  `final_shoulder_error_deg=5.035108`, `target_realized=NO`, `_grasped=NO`, and
+  target TCP inside the sponge AABB about `22.771mm` below sponge top. Default
+  line 97 shows direct set+sim-step also fails.
+- Same robot q/target with sponge far realizes:
+  default line 110 reports env-step `target_realized=YES`,
+  `final_target_tcp_error_m=0.000850`, `final_shoulder_error_deg=0.114004`;
+  line 122 reports direct set also realizes.
+- Higher z offsets refine the boundary: default +3/+6/+12mm nominal-sponge
+  variants fail or remain insufficient (lines 135, 160, 185), but the high-z
+  cross-check realizes +18/+24/+30mm (lines 135/147, 160/172, 185/197). +24/+30mm
+  place the target at/above the sponge top; +18mm is still slightly below top but
+  realizes.
+- Sub-threshold partial close at nominal pose does not rescue (default and high-z
+  lines 210/222).
+- High-z lines 223-224 aggregate the refined split:
+  `env_realized_conditions=['far_sponge_open',
+  'nominal_sponge_z_plus_18mm_open', 'nominal_sponge_z_plus_24mm_open',
+  'nominal_sponge_z_plus_30mm_open']`,
+  `env_failed_conditions=['nominal_sponge_open',
+  'nominal_sponge_partial_close']`,
+  `sponge_far_realizes_nominal_fails=YES`,
+  `higher_z_realizes_nominal_fails=YES`, and `direct_set_also_fails_nominal=YES`.
+- Fine/micro z follow-up tightens the boundary. zfine lines 135/147 show +13mm
+  env/direct pass the reduction-based realization gate. zmicro line 43 tested
+  +12.0/+12.25/+12.5/+12.75/+13.0mm; lines 136/148, 161/173, 186/198, and
+  211/223 show +12.0 through +12.75mm fail, while lines 236/248 show +13.0mm
+  env/direct pass. Aggregate lines 274-275 show only far sponge and +13mm realize
+  among the micro-z conditions.
+- Do not overread that +13mm pass: zmicro line 236 still has
+  `final_target_tcp_error_m=0.011054`; the current gate is meaningful error
+  reduction, not exact 3mm target convergence.
+- Horizontal offset follow-up is posture-confounded. Wide xy line 499 reported
+  y -25mm and y +15mm realization, but targeted y-check line 136 did not
+  reproduce y -25mm. y-check line 186 repeats y +15mm realization only with a
+  lower settled sponge top (`start_sponge_top_z_m=0.034500`), while y +20mm line
+  211 fails with the usual top (`0.047000`). Do not infer AABB-outside success.
+- Pose/top-controlled follow-up refines the boundary again. The probe now logs
+  sponge quaternion/upright top/oriented top and can reassert sponge pose before
+  delivery. Controlled reassert run line 42 confirms
+  `reassert_sponge_before_delivery=YES`, `reassert_sponge_z_m=0.0235`; reassert
+  lines 76/130/157/184 show identity quat and top `0.047000m`. In that controlled
+  state, lines 141/154 show +12.75mm still fails, lines 168/181 show +12.875mm
+  passes, and lines 195/208 show +13.0mm passes.
+- Controlled micro2 narrows the current reduction-gate transition:
+  `/tmp/p7_branch_b_roarm_chain_grasp_pose_deadzone_pose_reassert_zmicro2_b200.out`
+  line 42 confirms the same pose reassert; lines 141/154 show +12.8125mm
+  env/direct fail; lines 168/181 show +12.84375mm env/direct pass; lines 195/208
+  show +12.875mm pass. Aggregate lines 236-237 match that split.
+- Do not overread this as a robust grasp solution. The passing controlled cases
+  still have about `0.011m` final TCP error; this is a thin diagnostic
+  reduction-gate boundary, not exact command convergence.
+- Therefore D038/D039/D040 are refined by D041: the current blocker is still local
+  contact/clearance/posture around nominal sponge/grasp geometry, not broad target
+  delivery, not post-latch-only, and not pure low-pose drive failure. Offset-
+  preserve moving behavior remains untested.
+- Previous approach-stage target-delivery probe added
+  `sim_scripts/p7_branch_b_roarm_chain_approach_target_delivery_probe.py`
+  md5 `ebe8eddafd4c6f35c28e5b79a82511b3`.
 - Added `sim_scripts/p7_branch_b_roarm_chain_approach_target_delivery_probe.py`
   md5 `ebe8eddafd4c6f35c28e5b79a82511b3`.
 - This approach-stage target-delivery probe is diagnostic-local only: no
@@ -236,6 +324,16 @@ Interpretation:
 - Do not describe the current command-realization blocker as broad articulation
   targeting failure: HOME/early/high/hover realize the same +5deg shoulder nudge;
   the surviving failure is local to the grasp-before-CLOSE/open-gripper pose.
+- Do not describe the current grasp-pose blocker as pure low-pose drive failure:
+  the same q/target realizes with the sponge far, and +18/+24/+30mm local z
+  variants realize. Treat it as contact/proximity-shaped around nominal sponge/
+  grasp geometry until narrower evidence says otherwise.
+- Do not describe horizontal offset as a clean fix: the reproducible y +15mm pass
+  is confounded by a lower settled sponge top/posture, and y -25mm did not
+  reproduce.
+- Do not call the +12.84375/+12.875mm reduction-gate pass a solved grasp pose:
+  final TCP error remains about 11mm and no attach/transport/release physics was
+  exercised.
 - Do not change B200 system NVIDIA symlinks; use per-run
   `LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libnvidia-ml.so.580.95.05` and
   `VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json`.
@@ -245,19 +343,19 @@ Interpretation:
 Active pivot: Track A P7/Branch B, isolated/pre-integration mechanics and chain-side timing.
 
 Next concrete action: do not integrate constraints yet and do not proceed to
-transport/release claims. If continuing, inspect why the same +5deg shoulder
-nudge realizes at HOME/early/high/hover but fails at the grasp-before-CLOSE pose
-with gripper open and `_grasped=NO`; likely candidates are local grasp-pose
-drive/limit/contact/controller configuration around that pose. Only after grasp
-pose command realization works, re-test marker-only vs offset-preserve locally.
-Still no SurfaceGripper, no RoArm chain constraint insertion, and no
-attached-transport or release physics claims unless explicitly approved.
+transport/release claims. The pose/top-controlled boundary is now known to be
+between +12.8125mm and +12.84375mm under the current reduction gate, but this is
+not robust target convergence. If continuing, inspect why the TCP stalls near the
+sponge top with about 11mm residual error, or design a mechanically valid
+pre-close clearance/grasp strategy in a diagnostic-only script. Still no
+SurfaceGripper, no RoArm chain constraint insertion, and no attached-transport or
+release physics claims unless explicitly approved.
 
 ## Must Read First
 
 1. `CLAUDE.md`
 2. `START_HERE.md`
-3. `claudedocs/DECISIONS.md` D024-D038
+3. `claudedocs/DECISIONS.md` D024-D041
 4. `claudedocs/EXPERIMENT_LEDGER.md` latest Branch B rows
 5. `claudedocs/session_20260517_p7_branch_b_dynamic_anchor_chain_contract.md`
 6. `claudedocs/session_20260517_p7_branch_b_roarm_chain_command_stream.md`
@@ -269,4 +367,5 @@ attached-transport or release physics claims unless explicitly approved.
 12. `claudedocs/session_20260518_p7_branch_b_post_latch_micro_executor.md`
 13. `claudedocs/session_20260518_p7_branch_b_post_latch_target_delivery.md`
 14. `claudedocs/session_20260518_p7_branch_b_approach_target_delivery.md`
-15. The B200/local logs cited above, with line numbers
+15. `claudedocs/session_20260518_p7_branch_b_grasp_pose_deadzone.md`
+16. The B200/local logs cited above, with line numbers
