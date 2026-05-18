@@ -2210,3 +2210,183 @@ Sources:
 - `sim_scripts/p7_branch_b_roarm_chain_preclose_candidate_selector_probe.py`
 - `claudedocs/session_20260518_p7_branch_b_preclose_clearance_strategy.md`
 - B200 `/tmp/p7_branch_b_roarm_chain_preclose_selector_side_below_guard_b200.{out,err}`
+
+## D047 — Side-edge below-top needs positive outside-AABB margin; the AABB boundary is not robust
+
+Evidence:
+
+- Reused the unchanged selector
+  `sim_scripts/p7_branch_b_roarm_chain_preclose_candidate_selector_probe.py`
+  md5 `aa24ef00acbb9d8cd0aeee061b08f85f` with
+  `--side_top_margin_m -0.0015` and side margins
+  `0.0/0.5/1.0/2.0/4.0/6.0mm`. No code, gate, env/train/chain default,
+  constraint, SurfaceGripper, transport, release, or training change was made.
+- B200 logs:
+  `/tmp/p7_branch_b_roarm_chain_preclose_side_margin_robustness_{0p0,0p5,1p0,2p0,4p0,6p0}_b200.{out,err}`.
+- All runs kept the unchanged exact gate and scope on stdout line 42:
+  `target_error_gate_m=0.003000`, reduction gate reference-only,
+  `side_top_margin_m=-0.001500`.
+- All runs kept the nominal below-top inside-footprint clamp baseline on line 179
+  (`final_target_tcp_error_m=0.023923`, `exact_converged=NO`,
+  `top_clamped=YES`, `mechanically_valid_target=NO`) and the far-sponge
+  no-contact control on line 279 (`0.000854`, exact-converged but
+  `mechanically_valid_target=NO`).
+- Top/tangent and above controls remained clean in every run: line 473
+  (`0.000920`, exact-converged, no top clamp) and line 667 (`0.000921`, same).
+- The zero-margin side-edge case is the boundary trap:
+  - line 52 accepted `candidate_side_edge_margin_0mm_top_margin_neg1p5mm`
+    because the planned final target was just outside the nominal AABB
+    (`target_dy_sponge_m=0.011033`, `final_target_xy_inside_sponge_aabb=NO`);
+  - line 1055 exact-converged numerically (`0.001251`) with no top clamp, but
+    the final target was inside the realized AABB
+    (`final_target_xy_inside_sponge_aabb=YES`), so
+    `mechanically_valid_target=NO` and clean realization `NO`;
+  - lines 1058-1059 therefore report accepted contact candidates clean `NO` and
+    diagnostic success `NO`.
+- Positive margins were clean:
+  - 0.5mm line 1055: `0.001203`, exact `YES`, no top clamp, mechanically valid
+    `YES`, clean `YES`;
+  - 1.0mm line 1055: `0.001156`, exact `YES`, no top clamp, mechanically valid
+    `YES`, clean `YES`;
+  - 2.0mm line 1055: `0.001074`, exact `YES`, no top clamp, mechanically valid
+    `YES`, clean `YES`;
+  - 4.0mm line 1055: `0.000899`, exact `YES`, no top clamp, mechanically valid
+    `YES`, clean `YES`;
+  - 6.0mm line 1055: `0.000529`, exact `YES`, no top clamp, mechanically valid
+    `YES`, clean `YES`.
+- Lines 1057-1058 in the positive-margin runs keep
+  `below_inside_segments_clean=[]`, `attach_calls=0`, no NaN/done, and no
+  attach/release physics claim. stderr lines 1-4 in all six runs are only the
+  known cpufreq/NVML/Fabric warnings.
+
+Implication:
+
+- D046 is refined: shallow below-top side-edge is a diagnostic candidate only
+  with positive outside-AABB clearance. A nominal zero-margin boundary should be
+  treated as invalid/not robust because tiny realized sponge pose differences can
+  move the target back inside the footprint.
+- Candidate interpretation must check realized/final AABB class, not just the
+  planned selector class. Below-top inside-footprint remains banned even when the
+  exact 3mm gate passes and top clamp is not triggered.
+- This is still pre-integration diagnostic evidence only: not P7 success, not
+  chain-ready, not attach physics, not transport/release validation, not
+  SurfaceGripper validation, and not constraint integration.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_roarm_chain_preclose_candidate_selector_probe.py`
+- `claudedocs/session_20260518_p7_branch_b_preclose_clearance_strategy.md`
+- B200 `/tmp/p7_branch_b_roarm_chain_preclose_side_margin_robustness_{0p0,0p5,1p0,2p0,4p0,6p0}_b200.{out,err}`
+
+## D048 — The tested side-edge boundary is between 0.0mm and 0.1mm, but 0.1mm is not a deployment margin
+
+Evidence:
+
+- Reused the unchanged selector
+  `sim_scripts/p7_branch_b_roarm_chain_preclose_candidate_selector_probe.py`
+  md5 `aa24ef00acbb9d8cd0aeee061b08f85f` with
+  `--side_top_margin_m -0.0015` and fine side margins
+  `0.1/0.2/0.3/0.4/0.5mm`. No code, gate, env/train/chain default,
+  constraint, SurfaceGripper, transport, release, or training change was made.
+- B200 logs:
+  `/tmp/p7_branch_b_roarm_chain_preclose_side_margin_boundary_fine_{0p1,0p2,0p3,0p4,0p5}_b200.{out,err}`.
+- All five runs kept the unchanged exact gate and scope on stdout line 42 and
+  the unchanged selector rule on line 46.
+- All five runs preserved controls:
+  - line 179 kept the nominal below-top inside-footprint baseline clamped
+    (`0.023923m`, `exact_converged=NO`, `top_clamped=YES`,
+    `mechanically_valid_target=NO`);
+  - line 279 kept the far-sponge below-top no-contact control exact-converged
+    (`0.000854m`) but mechanically invalid as a contact candidate;
+  - lines 473 and 667 kept the top-tangent and above-top controls clean
+    (`0.000920/0.000921m`, exact `YES`, no top clamp).
+- Fine side margins all stayed outside AABB in the realized/final segment and
+  cleanly exact-converged on line 1055:
+  - 0.1mm: planned `target_dy_sponge_m=0.011133` on line 52; line 1055
+    `final_target_tcp_error_m=0.001241`, exact `YES`, no top clamp,
+    mechanically valid `YES`, clean `YES`, final target outside AABB;
+  - 0.2mm: `0.011232`; line 1055 `0.001232`, mechanically valid/clean `YES`;
+  - 0.3mm: `0.011332`; line 1055 `0.001222`, mechanically valid/clean `YES`;
+  - 0.4mm: `0.011432`; line 1055 `0.001213`, mechanically valid/clean `YES`;
+  - 0.5mm: `0.011532`; line 1055 `0.001203`, mechanically valid/clean `YES`.
+- Lines 1057-1059 in all five fine runs keep
+  `below_inside_segments_clean=[]`, `attach_calls=0`, accepted candidates clean
+  `YES`, no NaN/done, and diagnostic success `YES`. stderr lines 1-4 in all
+  five runs are only the known cpufreq/NVML/Fabric warnings.
+
+Implication:
+
+- D047 is refined: in this deterministic B200 diagnostic, the observed
+  realized/final AABB boundary lies between 0.0mm and 0.1mm side margin for
+  `side_top_margin_m=-0.0015`.
+- Do not treat 0.1mm as a robust deployment or chain margin. It is only the
+  minimum tested positive pass in this local diagnostic. Future diagnostic-local
+  selection should still prefer a nonzero safety margin and must check
+  realized/final AABB class before interpreting below-top side-edge candidates.
+- This remains pre-integration diagnostic evidence only: not P7 success, not
+  chain-ready, not attach physics, not transport/release validation, not
+  SurfaceGripper validation, and not constraint integration.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_roarm_chain_preclose_candidate_selector_probe.py`
+- `claudedocs/session_20260518_p7_branch_b_preclose_clearance_strategy.md`
+- B200 `/tmp/p7_branch_b_roarm_chain_preclose_side_margin_boundary_fine_{0p1,0p2,0p3,0p4,0p5}_b200.{out,err}`
+
+## D049 — At 2mm outside-AABB, side-edge below-top depth is exact-clean through about -3mm and loses exact convergence by -4mm
+
+Evidence:
+
+- Reused the unchanged selector
+  `sim_scripts/p7_branch_b_roarm_chain_preclose_candidate_selector_probe.py`
+  md5 `aa24ef00acbb9d8cd0aeee061b08f85f` with fixed
+  `--side_margin_m 0.0020` and side top margins
+  `-0.5/-1.0/-1.5/-2.0/-3.0/-4.0/-6.0mm`. No code, gate, env/train/chain
+  default, constraint, SurfaceGripper, transport, release, or training change
+  was made.
+- B200 logs:
+  `/tmp/p7_branch_b_roarm_chain_preclose_side_top_depth_sweep_{neg0p5,neg1p0,neg1p5,neg2p0,neg3p0,neg4p0,neg6p0}_b200.{out,err}`.
+- All seven runs kept the unchanged exact gate/scope and selector rule. The
+  side candidate stayed outside AABB in all final segments, and
+  `below_inside_segments_clean=[]`, `attach_calls=0`, no NaN/done, and no
+  attach/release physics claim were preserved.
+- The side-edge final segment on line 1055 remained clean through -3mm:
+  - -0.5mm: final error `0.000548`, exact `YES`, no top clamp, mechanically
+    valid `YES`, clean `YES`, final target class `tangent`;
+  - -1.0mm: `0.000702`, exact `YES`, no top clamp, mechanically valid `YES`,
+    clean `YES`, final target class `tangent`;
+  - -1.5mm: `0.001074`, exact `YES`, no top clamp, mechanically valid `YES`,
+    clean `YES`, final target class `below`;
+  - -2.0mm: `0.001504`, exact `YES`, no top clamp, mechanically valid `YES`,
+    clean `YES`;
+  - -3.0mm: `0.002409`, exact `YES`, no top clamp, mechanically valid `YES`,
+    clean `YES`.
+- The deeper side-edge targets were still outside AABB and not top-clamped, but
+  they lost the unchanged 3mm exact gate:
+  - -4.0mm line 1055: final error `0.003346`, exact `NO`, top clamp `NO`,
+    mechanically valid `YES`, clean `NO`; lines 1058-1059 report accepted
+    contact candidates clean `NO` and diagnostic success `NO`;
+  - -6.0mm line 1055: final error `0.005177`, exact `NO`, top clamp `NO`,
+    mechanically valid `YES`, clean `NO`; lines 1058-1059 likewise report
+    diagnostic success `NO`.
+- stderr lines 1-4 in all seven runs are only the known cpufreq/NVML/Fabric
+  warnings; no Python traceback was found.
+
+Implication:
+
+- The side-edge outside-AABB exception has a depth limit under the unchanged
+  3mm exact gate. At 2mm outside-AABB, this deterministic B200 diagnostic is
+  clean through about -3mm below top and loses exact convergence by -4mm.
+- The -4/-6mm failures should not be interpreted as inside-footprint clamp
+  failures: they are outside AABB and not top-clamped, but residual target error
+  exceeds the exact gate. Mechanical validity alone is not enough; exact
+  convergence still gates diagnostic cleanliness.
+- This remains pre-integration diagnostic evidence only: not P7 success, not
+  chain-ready, not attach physics, not transport/release validation, not
+  SurfaceGripper validation, and not constraint integration.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_roarm_chain_preclose_candidate_selector_probe.py`
+- `claudedocs/session_20260518_p7_branch_b_preclose_clearance_strategy.md`
+- B200 `/tmp/p7_branch_b_roarm_chain_preclose_side_top_depth_sweep_{neg0p5,neg1p0,neg1p5,neg2p0,neg3p0,neg4p0,neg6p0}_b200.{out,err}`

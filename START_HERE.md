@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-05-18 KST (Track A Branch B pre-close selector guard; no constraint integration)
+Last updated: 2026-05-18 KST (Track A Branch B diagnostic admissible-region wrapper; no constraint integration)
 
 This is the rolling current-state dashboard. Do not treat it as full history.
 Durable lessons live in `claudedocs/DECISIONS.md`; experiment history lives in
@@ -24,6 +24,108 @@ Latest session:
 - `claudedocs/session_20260518_p7_branch_b_preclose_clearance_strategy.md`
 
 What changed:
+
+- Added `sim_scripts/p7_branch_b_roarm_chain_preclose_admissible_region_probe.py`
+  md5 `89ad48b6ebdec076d6f58e330a9131f9`. This is a diagnostic-only wrapper over
+  existing selector logs; it does not execute training, constraints,
+  SurfaceGripper, transport, release, env/train/chain default edits, or gate
+  tuning. B200 logs:
+  `/tmp/p7_branch_b_roarm_chain_preclose_admissible_region_b200.{out,err}`.
+- The wrapper applies a conservative non-deployed rule:
+  `min_side_margin_m=0.002000`, max below-top side depth `-0.003000`,
+  final/realized outside-AABB required for below-top side-edge, zero-margin
+  side-edge rejected, below-top inside-footprint rejected, exact convergence
+  still under unchanged `0.003000m` gate, and far-sponge below-top kept as a
+  no-contact control.
+- B200 stdout lines 1-3 confirm strict diagnostic scope and the rule. Lines 4-11
+  classify the compact matrix exactly as expected: 0mm boundary rejected despite
+  selector acceptance; 0.1mm observed pass rejected as below the conservative
+  2mm margin; 2mm/-3mm side-edge accepted; 2mm/-4mm rejected for depth/exact
+  failure; top-tangent and above-top controls accepted; nominal below-top
+  inside-footprint and far-sponge controls rejected. Line 12 reports
+  `expected_matches=8/8`, `attach_calls_all_zero=YES`,
+  `below_inside_segments_clean_all_empty=YES`, and diagnostic success `YES`.
+- B200 wrapper stderr was empty. B200 process check after the run showed no
+  matching `isaaclab.sh/train_ppo/torchrun/rl_games/python .*p7_` process.
+- This is not a deployed policy and not chain integration. It only shows the
+  proposed diagnostic filters explain the accumulated pass/fail evidence without
+  changing selector gates.
+
+- Reused the unchanged selector md5 `aa24ef00acbb9d8cd0aeee061b08f85f` with
+  fixed `--side_margin_m 0.0020` and side top margins
+  `-0.5/-1.0/-1.5/-2.0/-3.0/-4.0/-6.0mm`. No code, gate, env/train/chain
+  default, constraint, SurfaceGripper, transport, release, or training change
+  was made. B200 logs:
+  `/tmp/p7_branch_b_roarm_chain_preclose_side_top_depth_sweep_{neg0p5,neg1p0,neg1p5,neg2p0,neg3p0,neg4p0,neg6p0}_b200.{out,err}`.
+- All seven runs kept the side target outside AABB on line 52 and in the final
+  segment. Line 1055 stayed exact-clean through -3mm: final errors
+  `0.000548/0.000702/0.001074/0.001504/0.002409m`, exact `YES`, no top clamp,
+  mechanically valid `YES`, clean `YES`.
+- At -4/-6mm, line 1055 still reports outside-AABB, `top_clamped=NO`, and
+  mechanically valid `YES`, but exact convergence fails (`0.003346/0.005177m`,
+  exact `NO`, clean `NO`); lines 1058-1059 mark diagnostic `NO`.
+- Therefore D049: at 2mm outside-AABB, side-edge below-top depth is diagnostic
+  exact-clean through about -3mm under the unchanged 3mm gate, and loses exact
+  convergence by -4mm. This is not an inside-footprint clamp failure; it is an
+  exact-convergence/residual-error limit.
+- All seven stderr files line 1-4 are only known cpufreq/NVML/Fabric warnings;
+  no traceback/exception was found.
+
+- Reused the unchanged selector md5 `aa24ef00acbb9d8cd0aeee061b08f85f` with
+  `--side_top_margin_m -0.0015` and fine side margins
+  `0.1/0.2/0.3/0.4/0.5mm`. No code, gate, env/train/chain default,
+  constraint, SurfaceGripper, transport, release, or training change was made.
+  B200 logs:
+  `/tmp/p7_branch_b_roarm_chain_preclose_side_margin_boundary_fine_{0p1,0p2,0p3,0p4,0p5}_b200.{out,err}`.
+- All five stdout files line 42 confirm unchanged exact gate `0.003000m`,
+  reduction gate reference-only, and `side_top_margin_m=-0.001500`; line 46
+  repeats the unchanged selector rule.
+- All five runs preserve controls: line 179 keeps the nominal below-top
+  inside-footprint baseline clamped (`0.023923m`, `top_clamped=YES`,
+  mechanically valid `NO`), line 279 keeps the far-sponge below-top no-contact
+  control exact-converged but non-candidate (`0.000854m`), and lines 473/667
+  keep top-tangent/above controls clean.
+- Fine positive margins were clean: line 1055 for 0.1/0.2/0.3/0.4/0.5mm reports
+  final errors `0.001241/0.001232/0.001222/0.001213/0.001203m`, exact
+  convergence `YES`, no top clamp, mechanically valid `YES`, clean `YES`, and
+  final target outside AABB. Lines 1057-1059 keep
+  `below_inside_segments_clean=[]`, `attach_calls=0`, no NaN/done, and
+  diagnostic success `YES`.
+- Therefore D048: the observed deterministic B200 boundary is between 0.0mm and
+  0.1mm for `side_top_margin_m=-0.0015`, but 0.1mm is only the minimum tested
+  positive pass, not a deployment/chain margin.
+- stderr lines 1-4 in all five runs are only known cpufreq/NVML/Fabric warnings;
+  no Python traceback or diagnostic `NO` was found.
+
+- Reused the unchanged selector md5 `aa24ef00acbb9d8cd0aeee061b08f85f` with
+  `--side_top_margin_m -0.0015` and side margins
+  `0.0/0.5/1.0/2.0/4.0/6.0mm`. No code, gate, env/train/chain default,
+  constraint, SurfaceGripper, transport, release, or training change was made.
+  B200 logs:
+  `/tmp/p7_branch_b_roarm_chain_preclose_side_margin_robustness_{0p0,0p5,1p0,2p0,4p0,6p0}_b200.{out,err}`.
+- All six stdout files line 42 confirm unchanged exact gate `0.003000m`,
+  reduction gate reference-only, and `side_top_margin_m=-0.001500`; line 46
+  repeats the unchanged selector rule.
+- All six runs preserve controls: line 179 keeps the nominal below-top
+  inside-footprint baseline clamped (`0.023923m`, `top_clamped=YES`,
+  mechanically valid `NO`), line 279 keeps the far-sponge below-top
+  no-contact control exact-converged but non-candidate (`0.000854m`), and lines
+  473/667 keep top-tangent/above controls clean.
+- The 0.0mm boundary is the trap. Line 52 accepted the planned side target as
+  outside AABB (`target_dy_sponge_m=0.011033`), but line 1055 reports the final
+  target inside realized AABB with exact convergence `YES`, `top_clamped=NO`,
+  mechanically valid `NO`, and clean `NO`; lines 1058-1059 mark accepted
+  candidates clean `NO` and diagnostic `NO`.
+- Positive margins were clean: line 1055 for 0.5/1/2/4/6mm reports final errors
+  `0.001203/0.001156/0.001074/0.000899/0.000529m`, exact convergence `YES`,
+  no top clamp, mechanically valid `YES`, clean `YES`, and final target outside
+  AABB. Lines 1057-1058 keep `below_inside_segments_clean=[]`, `attach_calls=0`,
+  no NaN/done, and no attach/release physics claim.
+- Therefore D047: shallow below-top side-edge needs positive outside-AABB margin
+  and realized/final AABB validation. Zero-margin boundary is not robust and must
+  not be treated as a valid contact candidate.
+- stderr lines 1-4 in all six runs are only known cpufreq/NVML/Fabric warnings;
+  no Python traceback was found.
 
 - Ran the unchanged selector md5 `aa24ef00acbb9d8cd0aeee061b08f85f` with
   `--side_top_margin_m -0.0015` as an outside-AABB side-edge below-top guard.
@@ -488,18 +590,18 @@ Interpretation:
 
 Active pivot: Track A P7/Branch B, isolated/pre-integration mechanics and chain-side timing.
 
-Next concrete action: do not integrate constraints yet and do not proceed to
-transport/release claims. The latest trace shows the TCP is clamping at the sponge
-top while below-top targets remain about 10-11mm away, so the next useful work is
-a diagnostic-only mechanically valid pre-close clearance/grasp-posture strategy.
-Still no SurfaceGripper, no RoArm chain constraint insertion, and no attached-
-transport or release physics claims unless explicitly approved.
+Next concrete action: stay pre-integration. The conservative diagnostic wrapper
+now explains the latest side-edge pass/fail matrix, so the next useful work is
+either a tighter read-only/log-only audit of the admissible-region rule or an
+explicitly approved new pre-close diagnostic. Still no SurfaceGripper, no RoArm
+chain constraint insertion, no attached transport, and no release physics claims
+unless explicitly approved.
 
 ## Must Read First
 
 1. `CLAUDE.md`
 2. `START_HERE.md`
-3. `claudedocs/DECISIONS.md` D024-D042
+3. `claudedocs/DECISIONS.md` D042-D049
 4. `claudedocs/EXPERIMENT_LEDGER.md` latest Branch B rows
 5. `claudedocs/session_20260517_p7_branch_b_dynamic_anchor_chain_contract.md`
 6. `claudedocs/session_20260517_p7_branch_b_roarm_chain_command_stream.md`

@@ -607,3 +607,607 @@ Next step:
   new outside-AABB below-top finding: compare smaller/larger outside-AABB margins
   while preserving the nominal below-top inside-footprint clamp baseline and
   logging whether any below target slips inside AABB.
+
+## Follow-Up: Side-Edge Margin Robustness
+
+Scope guard remained unchanged:
+
+- Track A P7/Branch B only.
+- Did not train.
+- Did not integrate constraints into the RoArm chain.
+- Did not insert constraint prims.
+- Did not attach SurfaceGripper.
+- Did not execute CLOSE->MOVE transport, transport target, release, or scripted
+  release variants.
+- Did not tune P7 scalar/threshold/release guidance.
+- Did not tune diagnostic gates.
+- Did not edit env/train/chain defaults.
+- Did not add code for this diagnostic; reused the unchanged selector with
+  command-line parameters.
+
+Pre-run checks:
+
+- Re-read `CLAUDE.md`, `START_HERE.md`, D042-D046 in
+  `claudedocs/DECISIONS.md`, latest Branch B rows 60-64 in
+  `claudedocs/EXPERIMENT_LEDGER.md`, and this session file.
+- Rechecked latest authoritative guard/selector B200 logs directly:
+  - `/tmp/p7_branch_b_roarm_chain_preclose_selector_guard_b200.out` lines 2-4,
+    43-49, 52, 476-477, and 1060-1062; stderr lines 1-4.
+  - `/tmp/p7_branch_b_roarm_chain_preclose_selector_side_below_guard_b200.out`
+    lines 41-46, 52, and 1055-1059; stderr lines 1-4.
+  - `/tmp/p7_branch_b_roarm_chain_preclose_candidate_selector_b200.out` lines
+    41-52, 179, 279, 473, 667, and 1055-1059; stderr lines 1-4.
+- Required local md5s matched:
+  - `sim_scripts/p7_branch_b_roarm_chain_preclose_selector_guard_probe.py`
+    `e50f7dfcb5651507b0c200af1299f171`
+  - `sim_scripts/p7_branch_b_roarm_chain_preclose_candidate_selector_probe.py`
+    `aa24ef00acbb9d8cd0aeee061b08f85f`
+  - `sim_scripts/p7_branch_b_roarm_chain_preclose_geometry_sweep_probe.py`
+    `95b4a8a317a9fb176c7ed258229925e5`
+  - `sim_scripts/p7_branch_b_roarm_chain_preclose_clearance_strategy_probe.py`
+    `5be8cfb8c1a58f6de43f431db0befff4`
+  - `sim_scripts/p7_branch_b_roarm_chain_grasp_pose_deadzone_probe.py`
+    `e0e84e481c3be8be7777a85ef2465c57`
+  - `sim_scripts/p7_branch_b_roarm_chain_approach_target_delivery_probe.py`
+    `ebe8eddafd4c6f35c28e5b79a82511b3`
+  - `sim_scripts/p7_branch_b_roarm_chain_post_latch_target_delivery_probe.py`
+    `aad6398a9d47fef5c80efbd212e619d8`
+  - `roarm_rl/roarm_stack_env.py` `e2748144034d5a09d6c7a0f6c0da6906`
+  - `roarm_rl/chain_skills.py` `c6e610216197994c6b7d2b6625d87560`
+  - `roarm_rl/train_ppo.py` `795ee48b1bfdd83e8c9735efd01f6920`
+- `git status --short` before this diagnostic had no output in this checkout,
+  which differs from the previously expected dirty state.
+- B200 process check before execution showed no matching
+  `isaaclab.sh/train_ppo/torchrun/rl_games/python .*p7_` process.
+- B200 md5s before execution matched:
+  - selector `aa24ef00acbb9d8cd0aeee061b08f85f`
+  - `roarm_rl/roarm_stack_env.py` `e2748144034d5a09d6c7a0f6c0da6906`
+  - `roarm_rl/chain_skills.py` `c6e610216197994c6b7d2b6625d87560`
+  - `roarm_rl/train_ppo.py` `795ee48b1bfdd83e8c9735efd01f6920`
+
+Run:
+
+- Reused
+  `sim_scripts/p7_branch_b_roarm_chain_preclose_candidate_selector_probe.py`
+  md5 `aa24ef00acbb9d8cd0aeee061b08f85f`.
+- Fixed `--side_top_margin_m -0.0015`.
+- Swept `--side_margin_m`: `0.0000`, `0.0005`, `0.0010`, `0.0020`,
+  `0.0040`, `0.0060`.
+- B200 logs:
+  - `/tmp/p7_branch_b_roarm_chain_preclose_side_margin_robustness_0p0_b200.out`
+  - `/tmp/p7_branch_b_roarm_chain_preclose_side_margin_robustness_0p5_b200.out`
+  - `/tmp/p7_branch_b_roarm_chain_preclose_side_margin_robustness_1p0_b200.out`
+  - `/tmp/p7_branch_b_roarm_chain_preclose_side_margin_robustness_2p0_b200.out`
+  - `/tmp/p7_branch_b_roarm_chain_preclose_side_margin_robustness_4p0_b200.out`
+  - `/tmp/p7_branch_b_roarm_chain_preclose_side_margin_robustness_6p0_b200.out`
+  - matching `.err` files.
+- All six B200 runs exited 0.
+
+Common controls:
+
+- In all six stdout files, line 42 confirms unchanged exact gate
+  `target_error_gate_m=0.003000`, reduction gate reference-only, and
+  `side_top_margin_m=-0.001500`; line 46 repeats the unchanged selector rule.
+- In all six stdout files, line 179 preserves the nominal below-top
+  inside-footprint clamp baseline: `final_target_tcp_error_m=0.023923`,
+  `exact_converged=NO`, `top_clamped=YES`, `mechanically_valid_target=NO`,
+  `clean_realized_without_reduction_artifact=NO`,
+  `final_target_xy_inside_sponge_aabb=YES`.
+- In all six stdout files, line 279 preserves the far-sponge no-contact control:
+  `final_target_tcp_error_m=0.000854`, `exact_converged=YES`, `top_clamped=NO`,
+  but `mechanically_valid_target=NO`, clean `NO`, and target outside AABB.
+- Top/above controls remain clean in all six runs:
+  - line 473: top-tangent +0.5mm, `final_target_tcp_error_m=0.000920`,
+    exact `YES`, no top clamp, mechanically valid `YES`, clean `YES`.
+  - line 667: above +1.0mm, `final_target_tcp_error_m=0.000921`, exact `YES`,
+    no top clamp, mechanically valid `YES`, clean `YES`.
+
+Side-margin results:
+
+- 0.0mm:
+  - line 52: selector accepted
+    `candidate_side_edge_margin_0mm_top_margin_neg1p5mm` from planned geometry:
+    `reason=side_edge_target_outside_aabb`, `final_target_top_class=below`,
+    `final_target_xy_inside_sponge_aabb=NO`,
+    `target_dy_sponge_m=0.011033`.
+  - line 1055: final segment exact-converged (`0.001251`) and did not
+    top-clamp, but realized/final target AABB class flipped to inside:
+    `final_target_xy_inside_sponge_aabb=YES`,
+    `mechanically_valid_target=NO`,
+    `clean_realized_without_reduction_artifact=NO`.
+  - lines 1058-1059 report `accepted_contact_candidates_clean=NO` and
+    `ROARM_PRECLOSE_CANDIDATE_SELECTOR_DIAGNOSTIC_SUCCESS=NO`.
+- 0.5mm:
+  - line 52: accepted outside AABB with `target_dy_sponge_m=0.011532`.
+  - line 1055: `final_target_tcp_error_m=0.001203`, exact `YES`,
+    `top_clamped=NO`, `mechanically_valid_target=YES`, clean `YES`,
+    final target outside AABB.
+  - lines 1057-1059 keep `below_inside_segments_clean=[]`, `attach_calls=0`,
+    no NaN/done, and diagnostic completion `YES`.
+- 1.0mm:
+  - line 52: accepted outside AABB with `target_dy_sponge_m=0.012031`.
+  - line 1055: `0.001156`, exact `YES`, no top clamp, mechanically valid `YES`,
+    clean `YES`, final target outside AABB.
+- 2.0mm:
+  - line 52: accepted outside AABB with `target_dy_sponge_m=0.013030`.
+  - line 1055: `0.001074`, exact `YES`, no top clamp, mechanically valid `YES`,
+    clean `YES`, final target outside AABB. This reproduces the D046 reference
+    point.
+- 4.0mm:
+  - line 52: accepted outside AABB with `target_dy_sponge_m=0.015028`.
+  - line 1055: `0.000899`, exact `YES`, no top clamp, mechanically valid `YES`,
+    clean `YES`, final target outside AABB.
+- 6.0mm:
+  - line 52: accepted outside AABB with `target_dy_sponge_m=0.017025`.
+  - line 1055: `0.000529`, exact `YES`, no top clamp, mechanically valid `YES`,
+    clean `YES`, final target outside AABB.
+
+stderr / process / md5:
+
+- stderr lines 1-4 in all six runs contain only the known cpufreq/NVML/Fabric
+  warnings and no Python traceback.
+- Post-run grep found no traceback/exception; the only diagnostic `NO` was the
+  intended 0.0mm boundary failure.
+- B200 post-run process check showed no matching
+  `isaaclab.sh/train_ppo/torchrun/rl_games/python .*p7_` process.
+- B200 post-run md5s remained unchanged:
+  - selector `aa24ef00acbb9d8cd0aeee061b08f85f`
+  - `roarm_rl/roarm_stack_env.py` `e2748144034d5a09d6c7a0f6c0da6906`
+  - `roarm_rl/chain_skills.py` `c6e610216197994c6b7d2b6625d87560`
+  - `roarm_rl/train_ppo.py` `795ee48b1bfdd83e8c9735efd01f6920`
+
+Interpretation:
+
+- D046 is refined, not relaxed. Shallow below-top side-edge is clean only when it
+  has positive outside-AABB margin and remains outside in the realized/final
+  metrics.
+- The zero-margin boundary is not robust: the planned selector line can call it
+  outside AABB, but small realized sponge pose differences can make the final
+  target inside AABB. That must be treated as invalid even when exact convergence
+  passes and top clamp is not detected.
+- Positive margins 0.5-6.0mm were clean in this diagnostic, with the exact error
+  improving as the side margin increased. This is still diagnostic-only evidence,
+  not chain integration or attach/transport/release validation.
+
+Next step:
+
+- Stay pre-integration.
+- Treat side-edge below-top candidates as requiring a positive outside-AABB
+  margin and realized/final outside-AABB validation.
+- Do not proceed to CLOSE->MOVE transport, release, SurfaceGripper, or constraint
+  integration without explicit approval.
+
+## Follow-Up: Side-Edge Boundary Fine Sweep
+
+Research direction:
+
+- D047 exposed the important weakness: planned selector geometry can say
+  outside-AABB while realized/final metrics fall back inside at the AABB
+  boundary.
+- The next pre-integration question was therefore narrow: is the observed
+  boundary really between 0.0mm and 0.5mm, and how small a positive margin still
+  stays outside in realized/final metrics under the same deterministic B200
+  diagnostic?
+- This is a diagnostic boundary check only. It is not a chain policy, not
+  attach/transport/release validation, and not permission to integrate
+  constraints.
+
+Scope guard remained unchanged:
+
+- Track A P7/Branch B only.
+- Did not train.
+- Did not integrate constraints into the RoArm chain.
+- Did not insert constraint prims.
+- Did not attach SurfaceGripper.
+- Did not execute CLOSE->MOVE transport, transport target, release, or scripted
+  release variants.
+- Did not tune P7 scalar/threshold/release guidance.
+- Did not tune diagnostic gates.
+- Did not edit env/train/chain defaults.
+- Did not add code for this diagnostic; reused the unchanged selector with
+  command-line parameters.
+
+Pre-run checks:
+
+- Re-read `START_HERE.md`, `claudedocs/DECISIONS.md` D047, latest Branch B
+  ledger rows 63-65, and this session file.
+- `git status --short` before this follow-up showed only current state-doc
+  modifications:
+  `START_HERE.md`, `claudedocs/DECISIONS.md`,
+  `claudedocs/EXPERIMENT_LEDGER.md`, and this session file.
+- B200 process check before execution showed no matching
+  `isaaclab.sh/train_ppo/torchrun/rl_games/python .*p7_` process.
+- Local `python -m py_compile
+  sim_scripts/p7_branch_b_roarm_chain_preclose_candidate_selector_probe.py`
+  passed.
+- B200 md5s before execution matched:
+  - selector `aa24ef00acbb9d8cd0aeee061b08f85f`
+  - `roarm_rl/roarm_stack_env.py` `e2748144034d5a09d6c7a0f6c0da6906`
+  - `roarm_rl/chain_skills.py` `c6e610216197994c6b7d2b6625d87560`
+  - `roarm_rl/train_ppo.py` `795ee48b1bfdd83e8c9735efd01f6920`
+
+Run:
+
+- Reused
+  `sim_scripts/p7_branch_b_roarm_chain_preclose_candidate_selector_probe.py`
+  md5 `aa24ef00acbb9d8cd0aeee061b08f85f`.
+- Fixed `--side_top_margin_m -0.0015`.
+- Swept fine positive `--side_margin_m`: `0.0001`, `0.0002`, `0.0003`,
+  `0.0004`, `0.0005`.
+- B200 logs:
+  - `/tmp/p7_branch_b_roarm_chain_preclose_side_margin_boundary_fine_0p1_b200.out`
+  - `/tmp/p7_branch_b_roarm_chain_preclose_side_margin_boundary_fine_0p2_b200.out`
+  - `/tmp/p7_branch_b_roarm_chain_preclose_side_margin_boundary_fine_0p3_b200.out`
+  - `/tmp/p7_branch_b_roarm_chain_preclose_side_margin_boundary_fine_0p4_b200.out`
+  - `/tmp/p7_branch_b_roarm_chain_preclose_side_margin_boundary_fine_0p5_b200.out`
+  - matching `.err` files.
+- All five B200 runs exited 0.
+
+Common controls:
+
+- In all five stdout files, line 42 confirms unchanged exact gate
+  `target_error_gate_m=0.003000`, reduction gate reference-only, and
+  `side_top_margin_m=-0.001500`; line 46 repeats the unchanged selector rule.
+- In all five stdout files, line 179 preserves the nominal below-top
+  inside-footprint clamp baseline: `final_target_tcp_error_m=0.023923`,
+  `exact_converged=NO`, `top_clamped=YES`, `mechanically_valid_target=NO`,
+  `clean_realized_without_reduction_artifact=NO`,
+  `final_target_xy_inside_sponge_aabb=YES`.
+- In all five stdout files, line 279 preserves the far-sponge no-contact control:
+  `final_target_tcp_error_m=0.000854`, `exact_converged=YES`, `top_clamped=NO`,
+  but `mechanically_valid_target=NO`, clean `NO`, and target outside AABB.
+- Top/above controls remain clean in all five runs:
+  - line 473: top-tangent +0.5mm, `final_target_tcp_error_m=0.000920`,
+    exact `YES`, no top clamp, mechanically valid `YES`, clean `YES`.
+  - line 667: above +1.0mm, `final_target_tcp_error_m=0.000921`, exact `YES`,
+    no top clamp, mechanically valid `YES`, clean `YES`.
+
+Fine side-margin results:
+
+- 0.1mm:
+  - line 52: accepted outside AABB with `target_dy_sponge_m=0.011133`.
+  - line 1055: `final_target_tcp_error_m=0.001241`, exact `YES`,
+    `top_clamped=NO`, `mechanically_valid_target=YES`, clean `YES`,
+    final target outside AABB.
+- 0.2mm:
+  - line 52: accepted outside AABB with `target_dy_sponge_m=0.011232`.
+  - line 1055: `0.001232`, exact `YES`, no top clamp, mechanically valid `YES`,
+    clean `YES`, final target outside AABB.
+- 0.3mm:
+  - line 52: accepted outside AABB with `target_dy_sponge_m=0.011332`.
+  - line 1055: `0.001222`, exact `YES`, no top clamp, mechanically valid `YES`,
+    clean `YES`, final target outside AABB.
+- 0.4mm:
+  - line 52: accepted outside AABB with `target_dy_sponge_m=0.011432`.
+  - line 1055: `0.001213`, exact `YES`, no top clamp, mechanically valid `YES`,
+    clean `YES`, final target outside AABB.
+- 0.5mm:
+  - line 52: accepted outside AABB with `target_dy_sponge_m=0.011532`.
+  - line 1055: `0.001203`, exact `YES`, no top clamp, mechanically valid `YES`,
+    clean `YES`, final target outside AABB.
+- Lines 1057-1059 in all five runs keep
+  `below_inside_segments_clean=[]`, `attach_calls=0`,
+  `accepted_contact_candidates_clean=YES`, `nan_seen=NO`, `episode_done=NO`,
+  and diagnostic success `YES`.
+
+stderr / process / md5:
+
+- stderr lines 1-4 in all five runs contain only the known cpufreq/NVML/Fabric
+  warnings and no Python traceback.
+- Post-run grep found no traceback/exception and no diagnostic `NO`.
+- B200 post-run process check showed no matching
+  `isaaclab.sh/train_ppo/torchrun/rl_games/python .*p7_` process.
+- B200 post-run md5s remained unchanged:
+  - selector `aa24ef00acbb9d8cd0aeee061b08f85f`
+  - `roarm_rl/roarm_stack_env.py` `e2748144034d5a09d6c7a0f6c0da6906`
+  - `roarm_rl/chain_skills.py` `c6e610216197994c6b7d2b6625d87560`
+  - `roarm_rl/train_ppo.py` `795ee48b1bfdd83e8c9735efd01f6920`
+
+Interpretation:
+
+- D047 is narrowed: in this deterministic B200 diagnostic, the realized/final
+  AABB boundary lies between 0.0mm and 0.1mm for
+  `side_top_margin_m=-0.0015`.
+- Do not overread 0.1mm. It is the smallest tested positive pass here, not a
+  robust chain margin. Any diagnostic-local selector must still require
+  positive outside-AABB margin and final realized/final outside-AABB validation.
+- This remains diagnostic-only evidence, not P7 success, not chain-ready, not
+  attach physics, not transport/release validation, not SurfaceGripper
+  validation, and not constraint integration.
+
+Next step:
+
+- Stay pre-integration.
+- A sensible next diagnostic is to hold a conservative positive side margin
+  (for example 1-2mm, not 0.1mm) and vary shallow below-top depth
+  (`side_top_margin_m`) to find where outside-AABB side-edge begins to top-clamp
+  or lose exact convergence.
+- Do not proceed to CLOSE->MOVE transport, release, SurfaceGripper, or constraint
+  integration without explicit approval.
+
+## Follow-Up: Side-Top Depth Sweep at 2mm Outside-AABB
+
+Research direction:
+
+- After D048, the XY side margin was no longer the immediate unknown. The next
+  pre-integration question was depth: if the side target stays 2mm outside the
+  AABB, how far below the top can it go before it top-clamps or loses exact
+  convergence?
+- This remains a selector diagnostic only. It is not a chain policy, not
+  attach/transport/release validation, and not constraint integration.
+
+Scope guard remained unchanged:
+
+- Track A P7/Branch B only.
+- Did not train.
+- Did not integrate constraints into the RoArm chain.
+- Did not insert constraint prims.
+- Did not attach SurfaceGripper.
+- Did not execute CLOSE->MOVE transport, transport target, release, or scripted
+  release variants.
+- Did not tune P7 scalar/threshold/release guidance.
+- Did not tune diagnostic gates.
+- Did not edit env/train/chain defaults.
+- Did not add code for this diagnostic; reused the unchanged selector with
+  command-line parameters.
+
+Pre-run checks:
+
+- B200 process check before execution showed no matching
+  `isaaclab.sh/train_ppo/torchrun/rl_games/python .*p7_` process.
+- B200 md5s before execution matched:
+  - selector `aa24ef00acbb9d8cd0aeee061b08f85f`
+  - `roarm_rl/roarm_stack_env.py` `e2748144034d5a09d6c7a0f6c0da6906`
+  - `roarm_rl/chain_skills.py` `c6e610216197994c6b7d2b6625d87560`
+  - `roarm_rl/train_ppo.py` `795ee48b1bfdd83e8c9735efd01f6920`
+
+Run:
+
+- Reused
+  `sim_scripts/p7_branch_b_roarm_chain_preclose_candidate_selector_probe.py`
+  md5 `aa24ef00acbb9d8cd0aeee061b08f85f`.
+- Fixed `--side_margin_m 0.0020`.
+- Swept `--side_top_margin_m`: `-0.0005`, `-0.0010`, `-0.0015`,
+  `-0.0020`, `-0.0030`, `-0.0040`, `-0.0060`.
+- B200 logs:
+  - `/tmp/p7_branch_b_roarm_chain_preclose_side_top_depth_sweep_neg0p5_b200.out`
+  - `/tmp/p7_branch_b_roarm_chain_preclose_side_top_depth_sweep_neg1p0_b200.out`
+  - `/tmp/p7_branch_b_roarm_chain_preclose_side_top_depth_sweep_neg1p5_b200.out`
+  - `/tmp/p7_branch_b_roarm_chain_preclose_side_top_depth_sweep_neg2p0_b200.out`
+  - `/tmp/p7_branch_b_roarm_chain_preclose_side_top_depth_sweep_neg3p0_b200.out`
+  - `/tmp/p7_branch_b_roarm_chain_preclose_side_top_depth_sweep_neg4p0_b200.out`
+  - `/tmp/p7_branch_b_roarm_chain_preclose_side_top_depth_sweep_neg6p0_b200.out`
+  - matching `.err` files.
+- All seven B200 runs exited 0.
+
+Depth results:
+
+- In all seven stdout files, line 52 accepts the side candidate and reports final
+  target outside AABB (`final_target_xy_inside_sponge_aabb=NO`) with
+  `target_dy_sponge_m` about `0.01303m`.
+- Clean through -3mm:
+  - -0.5mm: line 1055 `final_target_tcp_error_m=0.000548`, exact `YES`,
+    `top_clamped=NO`, `mechanically_valid_target=YES`, clean `YES`,
+    top class `tangent`.
+  - -1.0mm: line 1055 `0.000702`, exact `YES`, no top clamp, mechanically
+    valid/clean `YES`, top class `tangent`.
+  - -1.5mm: line 1055 `0.001074`, exact `YES`, no top clamp, mechanically
+    valid/clean `YES`, top class `below`.
+  - -2.0mm: line 1055 `0.001504`, exact `YES`, no top clamp, mechanically
+    valid/clean `YES`.
+  - -3.0mm: line 1055 `0.002409`, exact `YES`, no top clamp, mechanically
+    valid/clean `YES`.
+- Loses exact convergence by -4mm:
+  - -4.0mm: line 1055 `final_target_tcp_error_m=0.003346`,
+    `exact_converged=NO`, `top_clamped=NO`,
+    `mechanically_valid_target=YES`, clean `NO`; lines 1058-1059 report accepted
+    candidates clean `NO` and diagnostic success `NO`.
+  - -6.0mm: line 1055 `0.005177`, exact `NO`, top clamp `NO`,
+    mechanically valid `YES`, clean `NO`; lines 1058-1059 again report
+    diagnostic success `NO`.
+- In all seven runs, `below_inside_segments_clean=[]`, `attach_calls=0`,
+  `nan_seen=NO`, `episode_done=NO`, and no attach/release physics claim remain
+  true.
+
+stderr / process / md5:
+
+- stderr lines 1-4 in all seven runs contain only the known cpufreq/NVML/Fabric
+  warnings and no Python traceback.
+- Post-run grep found no traceback/exception. The only diagnostic `NO` cases
+  were the intended -4mm and -6mm depth failures.
+- B200 post-run process check showed no matching
+  `isaaclab.sh/train_ppo/torchrun/rl_games/python .*p7_` process.
+- B200 post-run md5s remained unchanged:
+  - selector `aa24ef00acbb9d8cd0aeee061b08f85f`
+  - `roarm_rl/roarm_stack_env.py` `e2748144034d5a09d6c7a0f6c0da6906`
+  - `roarm_rl/chain_skills.py` `c6e610216197994c6b7d2b6625d87560`
+  - `roarm_rl/train_ppo.py` `795ee48b1bfdd83e8c9735efd01f6920`
+
+Interpretation:
+
+- At 2mm outside-AABB, side-edge below-top exact-clean depth is about -3mm under
+  the unchanged 3mm gate. By -4mm, the target remains outside AABB and not
+  top-clamped, but residual error exceeds the exact gate.
+- This means side-edge below-top has two independent diagnostic filters:
+  realized/final outside-AABB class and exact convergence. Mechanical validity
+  alone is not sufficient.
+- This remains diagnostic-only evidence, not P7 success, not chain-ready, not
+  attach physics, not transport/release validation, not SurfaceGripper
+  validation, and not constraint integration.
+
+Next step:
+
+- Stay pre-integration.
+- If continuing, use the diagnostic evidence to define a conservative
+  diagnostic-only admissible region, for example side margin >= about 1-2mm and
+  side-top depth shallower than about -3mm, but do not wire it into the RoArm
+  chain without explicit approval.
+- Do not proceed to CLOSE->MOVE transport, release, SurfaceGripper, or constraint
+  integration without explicit approval.
+
+## Follow-Up: Diagnostic Admissible-Region Wrapper
+
+Research direction:
+
+- D047-D049 define exclusions but do not by themselves prove that one explicit
+  diagnostic rule classifies the accumulated pass/fail cases consistently.
+- The next step stayed log-level/local-wrapper only: convert those exclusions
+  into a conservative diagnostic-only admissible-region check and compare it
+  against the already verified selector logs.
+- This is not a deployed policy and not chain integration.
+
+Scope guard remained unchanged:
+
+- Track A P7/Branch B only.
+- Did not train.
+- Did not integrate constraints into the RoArm chain.
+- Did not insert constraint prims.
+- Did not attach SurfaceGripper.
+- Did not execute CLOSE->MOVE transport, transport target, release, or scripted
+  release variants.
+- Did not tune P7 scalar/threshold/release guidance.
+- Did not tune diagnostic gates.
+- Did not edit env/train/chain defaults.
+- Used the selector only as a diagnostic gate; the wrapper parses existing
+  selector logs by default.
+
+Boot / pre-coding checks:
+
+- Re-read `CLAUDE.md` Current-State Protocol first, then `START_HERE.md`,
+  `claudedocs/DECISIONS.md` D047-D049, latest Branch B ledger rows 65-67, and
+  this session file.
+- `git status --short` before coding showed only expected state-doc dirty files:
+  `START_HERE.md`, `claudedocs/DECISIONS.md`,
+  `claudedocs/EXPERIMENT_LEDGER.md`, and this session file.
+- Required local md5s matched before coding:
+  - `sim_scripts/p7_branch_b_roarm_chain_preclose_selector_guard_probe.py`
+    `e50f7dfcb5651507b0c200af1299f171`
+  - `sim_scripts/p7_branch_b_roarm_chain_preclose_candidate_selector_probe.py`
+    `aa24ef00acbb9d8cd0aeee061b08f85f`
+  - `sim_scripts/p7_branch_b_roarm_chain_preclose_geometry_sweep_probe.py`
+    `95b4a8a317a9fb176c7ed258229925e5`
+  - `sim_scripts/p7_branch_b_roarm_chain_preclose_clearance_strategy_probe.py`
+    `5be8cfb8c1a58f6de43f431db0befff4`
+  - `sim_scripts/p7_branch_b_roarm_chain_grasp_pose_deadzone_probe.py`
+    `e0e84e481c3be8be7777a85ef2465c57`
+  - `sim_scripts/p7_branch_b_roarm_chain_approach_target_delivery_probe.py`
+    `ebe8eddafd4c6f35c28e5b79a82511b3`
+  - `sim_scripts/p7_branch_b_roarm_chain_post_latch_target_delivery_probe.py`
+    `aad6398a9d47fef5c80efbd212e619d8`
+  - `roarm_rl/roarm_stack_env.py` `e2748144034d5a09d6c7a0f6c0da6906`
+  - `roarm_rl/chain_skills.py` `c6e610216197994c6b7d2b6625d87560`
+  - `roarm_rl/train_ppo.py` `795ee48b1bfdd83e8c9735efd01f6920`
+- B200 process check before wrapper work showed no matching
+  `isaaclab.sh/train_ppo/torchrun/rl_games/python .*p7_` process.
+
+Direct B200 evidence rechecked before coding:
+
+- 0.0mm side boundary:
+  `/tmp/p7_branch_b_roarm_chain_preclose_side_margin_robustness_0p0_b200.out`
+  line 52 accepts the planned side target as outside AABB, but line 1055 reports
+  final `final_target_xy_inside_sponge_aabb=YES`,
+  `mechanically_valid_target=NO`, and clean `NO`; lines 1058-1059 report accepted
+  candidates clean `NO` and diagnostic `NO`.
+- 0.1mm fine boundary:
+  `/tmp/p7_branch_b_roarm_chain_preclose_side_margin_boundary_fine_0p1_b200.out`
+  line 1055 reports final outside-AABB, exact `YES`, top clamp `NO`,
+  mechanically valid `YES`, and clean `YES`; lines 1057-1059 keep
+  `below_inside_segments_clean=[]`, `attach_calls=0`, and diagnostic `YES`.
+- -4mm depth:
+  `/tmp/p7_branch_b_roarm_chain_preclose_side_top_depth_sweep_neg4p0_b200.out`
+  line 1055 reports final outside-AABB and mechanically valid `YES`, but
+  `final_target_tcp_error_m=0.003346`, exact `NO`, and clean `NO`; lines
+  1058-1059 report diagnostic `NO`.
+- Additional B200 checks reconfirmed 0.5/1/2/4/6mm side-margin positive cases
+  and -0.5/-1/-1.5/-2/-3/-6mm depth cases against line 52, line 1055, and
+  lines 1057-1059. The direct SSH process query after checks still showed no
+  matching P7/Isaac/training process.
+
+Code added:
+
+- Added `sim_scripts/p7_branch_b_roarm_chain_preclose_admissible_region_probe.py`
+  md5 `89ad48b6ebdec076d6f58e330a9131f9`.
+- The wrapper is diagnostic-only and defaults to parsing existing selector logs
+  in `/tmp`. It can optionally execute the unchanged selector variants, but this
+  session used log parsing only.
+- Conservative tested rule:
+  - reject any below-top inside-footprint final target;
+  - reject zero-margin side-edge boundary;
+  - reject side-edge below-top with side margin below `0.002000m`;
+  - reject side-edge below-top deeper than `-0.003000m`;
+  - require final/realized outside-AABB for below-top side-edge;
+  - require exact convergence under the unchanged `0.003000m` gate;
+  - keep reduction gate reference-only;
+  - keep far-sponge below-top separated as no-contact control.
+
+Local / B200 checks:
+
+- Local `python -m py_compile` passed.
+- Local `--help` passed.
+- Local `/tmp` run correctly reported missing B200 logs instead of a traceback.
+- B200 `python -m py_compile` passed.
+- Local and B200 md5 matched:
+  `89ad48b6ebdec076d6f58e330a9131f9`.
+
+B200 wrapper logs:
+
+- `/tmp/p7_branch_b_roarm_chain_preclose_admissible_region_b200.out`
+- `/tmp/p7_branch_b_roarm_chain_preclose_admissible_region_b200.err`
+
+Evidence:
+
+- stdout lines 1-2 confirm strict diagnostic scope: no training, no diagnostic
+  gate tuning, no env/train/chain default edits, no constraints, no
+  SurfaceGripper, no attached transport, no transport target, no release marker,
+  no scripted release variant, and no attach/release physics claim.
+- line 3 records the conservative rule:
+  `min_side_margin_m=0.002000`, max below depth `-0.003000`, unchanged exact gate
+  reference `0.003000m`, below-top inside-footprint reject, zero-margin reject,
+  final outside-AABB requirement for below-top side-edge, and far-sponge
+  no-contact separation.
+- line 4 rejects the 0.0mm boundary even though the selector accepted it:
+  planned AABB outside, final AABB inside, exact `YES`, mechanically valid `NO`,
+  clean `NO`.
+- line 5 rejects the 0.1mm observed pass as below the conservative 2mm margin
+  even though it is final outside-AABB, exact `YES`, mechanically valid `YES`,
+  and clean `YES`. This preserves D048: 0.1mm is not a chain/deployment margin.
+- line 6 accepts the conservative 2mm/-3mm side-edge case: final outside-AABB,
+  exact `YES`, mechanically valid `YES`, clean `YES`.
+- line 7 rejects the 2mm/-4mm side-edge case: final outside-AABB and mechanically
+  valid `YES`, but depth is beyond the conservative bound, exact convergence is
+  `NO`, and clean `NO`.
+- lines 8-9 accept the top-tangent and above-top controls.
+- line 10 rejects the nominal below-top inside-footprint baseline: planned/final
+  inside-AABB, exact `NO`, top-clamped `YES`, mechanically valid `NO`, clean
+  `NO`.
+- line 11 rejects the far-sponge below-top no-contact control despite exact
+  convergence.
+- line 12 reports `cases_tested=8`, `expected_matches=8/8`,
+  `attach_calls_all_zero=YES`, `below_inside_segments_clean_all_empty=YES`, no
+  attach/release/transport validation, and diagnostic success `YES`.
+- B200 wrapper stderr was empty.
+- B200 process check after execution showed no matching
+  `isaaclab.sh/train_ppo/torchrun/rl_games/python .*p7_` process.
+
+Interpretation:
+
+- The conservative diagnostic admissible-region rule explains the accumulated
+  selector pass/fail evidence without tuning gates or changing selector logic.
+- The rule deliberately rejects the 0.1mm observed clean case because the point
+  is conservative diagnostic classification, not maximizing accepted candidates.
+- Mechanical validity alone is still insufficient: -4mm remains mechanically
+  outside-AABB but fails exact convergence.
+- Exact convergence alone is still insufficient: 0.0mm boundary and below-top
+  inside-footprint cases can be numerically misleading and must be rejected by
+  realized/final AABB and mechanical validity.
+- This is not P7 success, not chain-ready, not attach physics, not
+  transport/release validation, not SurfaceGripper validation, and not constraint
+  integration.
+
+Next step:
+
+- Stay pre-integration.
+- Do not wire this rule into the RoArm chain without explicit approval.
+- If continuing, use this wrapper only as a read-only/log-level audit layer or
+  run a new explicitly scoped diagnostic matrix; do not proceed to CLOSE->MOVE
+  transport, release, SurfaceGripper, or constraint integration.
