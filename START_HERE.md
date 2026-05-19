@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-05-18 KST (Track A Branch B pre-close coverage audit; no constraint integration)
+Last updated: 2026-05-19 KST (Track A Branch B next gate step plan; no Isaac run)
 
 This is the rolling current-state dashboard. Do not treat it as full history.
 Durable lessons live in `claudedocs/DECISIONS.md`; experiment history lives in
@@ -21,9 +21,119 @@ Do **not** use `HANDOFF.md` or `TASKS.md` as current state.
 
 Latest session:
 
-- `claudedocs/session_20260518_p7_branch_b_preclose_coverage_audit.md`
+- `claudedocs/session_20260519_p7_branch_b_next_gate_step_plan.md`
+
+Previous decision session:
+
+- `claudedocs/session_20260519_p7_branch_b_d052_static_decision.md`
+
+Previous signal-run session:
+
+- `claudedocs/session_20260519_p7_branch_b_close_near_local_signal.md`
 
 What changed:
+
+- Added a step-by-step next gate plan. No Isaac run, no new runnable script, no
+  constraint integration, no SurfaceGripper, no transport, no release, no training,
+  no scalar/gate tuning, and no env/train/chain default edit was made.
+- Next gate is explicitly local-only: top-tangent authored attach/constraint
+  handoff smoke before MOVE transport and before release. It must test handoff
+  creation, stationary hold, 4mm `micro_plus_x`, and return. Side-edge is excluded
+  as the 4mm carrier; release remains a later gate.
+- Current concrete action, if implementation continues, is explicit approval to
+  write the new diagnostic script only. Isaac execution still needs separate
+  explicit run approval.
+
+- Added a static/no-run D052 decision review. No Isaac run, training, constraint
+  integration, SurfaceGripper, transport target, release, scripted release variant,
+  scalar/gate tuning, or pre-close matrix was executed.
+- Decision: top-tangent D050/D051 are accepted only as future Branch B handoff
+  prerequisites for a 4mm CLOSE-near local signal. Conservative side-edge remains
+  admissible as pre-close pose/hold geometry evidence, but is excluded as a 4mm
+  local signal carrier because D052 failed `micro_plus_x`.
+- Narrowest later runnable candidate, only with explicit approval, is top-tangent
+  local attach/constraint handoff smoke before MOVE transport and before release.
+  No side-edge, transport, release, SurfaceGripper, curriculum training, scalar
+  tuning, diagnostic gate tuning, or new pre-close matrix is justified now.
+
+- Added and B200-ran
+  `sim_scripts/p7_branch_b_roarm_chain_close_near_local_signal_probe.py`
+  md5 `2b63df20972ad1e923f24e05c2810957` after static review fixes. The fixes
+  were limited to the new script: `--reassert_sponge_z_m` now drives the actual
+  sponge root z, and `post_close_marker` now gates success before local signal
+  execution. Remote md5 matched, remote `py_compile` and `--help` passed.
+- B200 default run:
+  `/tmp/p7_branch_b_roarm_chain_close_near_local_signal_default_b200.{out,err}`.
+  This run is virtual-carrier/signal-only: no constraint prim insertion, no
+  fixed/dynamic constraint integration, no SurfaceGripper, no attached
+  transport, no transport target, no release, no training, no env/train/chain
+  default edits, and no attach success claim.
+- B200 stdout lines 40-43 confirm scope, gates, top-tangent default geometry,
+  `signal_stage=just_before_close`, `micro_delta_m=0.004000`, no MOVE commands,
+  and raw planner gap still `0.211271`/`raw_gap_ok=NO`.
+- Lines 279/285/291/297/300 show local clearance, top-tangent signal pose,
+  stationary hold, `micro_plus_x`, and `micro_return_x` all reached. Line 301
+  reports `prep_events_done=38/38`, `max_final_target_error_m=0.002505`,
+  `max_tcp_step_m=0.003353`, `max_tcp_anchor_offset_error_m=0.00000000`,
+  `max_sponge_drift_m=0.000000`, `max_sponge_speed_mps=0.000540`,
+  `min_upright_z=1.000000`, `attach_calls=0`, `posewrite_calls=0`,
+  `transport_target=NO`, and `release_marker=NO`.
+- Line 302 reports all intended gates YES:
+  `prep_ok`, `stationary_hold_ok`, `micro_motion_realized_ok`,
+  `relative_tcp_anchor_transform_ok`, `upright_preservation_ok`,
+  `no_hidden_kinematic_posewrite_artifact`, `no_attach_release_transport_overclaim`,
+  `target_error_ok`, and `sim_step_ok`; line 303 reports
+  `ROARM_CLOSE_NEAR_LOCAL_SIGNAL_SUCCESS=YES`.
+- Interpretation: the real RoArm can generate a safe 4mm-class CLOSE-near local
+  TCP signal under top-tangent admissible geometry in this diagnostic. This does
+  **not** validate attach physics, release physics, attached transport,
+  SurfaceGripper, or constraint insertion. The carrier is virtual; Branch B
+  remains pre-integration.
+- Approved follow-up B200 run:
+  `/tmp/p7_branch_b_roarm_chain_close_near_local_signal_post_close_marker_b200.{out,err}`.
+  This used the same script/md5 and same virtual-carrier/signal-only envelope
+  with `--signal_stage post_close_marker`, still top-tangent and still no
+  constraints, SurfaceGripper, transport target, release, training, tuning, or
+  default edits.
+- Post-close-marker stdout lines 41-43 confirm the same strict scope, no MOVE
+  execution, raw gap still `0.211271`/`raw_gap_ok=NO`, and
+  `signal_stage=post_close_marker`. Lines 274-276 show the close-marker-only
+  step reached with final target error `0.001131`, `attach_calls=0`,
+  `posewrite_calls=0`, and `claim_attach_success=NO`.
+- Lines 282/288/294/299/302 show clearance, signal pose, stationary hold,
+  `micro_plus_x`, and `micro_return_x` all reached after the close marker. Line
+  303 reports `prep_events_done=38/38`, `max_final_target_error_m=0.002576`,
+  `max_tcp_step_m=0.003432`, `max_tcp_anchor_offset_error_m=0.00000000`,
+  `max_sponge_drift_m=0.000000`, `max_sponge_speed_mps=0.000341`,
+  `attach_calls=0`, `posewrite_calls=0`, `transport_target=NO`, and
+  `release_marker=NO`. Lines 304-305 report all intended gates YES and
+  `ROARM_CLOSE_NEAR_LOCAL_SIGNAL_SUCCESS=YES`.
+- Interpretation update: D050 now covers top-tangent 4mm local signal both
+  just-before-CLOSE and after a close-marker-only/no-posewrite step. This still
+  does **not** validate `_grasped` attach physics, constraint insertion,
+  SurfaceGripper, attached transport, transport target, or release.
+- Approved side-edge single-point B200 run:
+  `/tmp/p7_branch_b_roarm_chain_close_near_local_signal_side_edge_b200.{out,err}`.
+  This changed only `--geometry side_edge` in the same virtual-carrier/signal-only
+  envelope. B200 stdout lines 41-43 confirm strict scope, `geometry=side_edge`,
+  `signal_stage=just_before_close`, `micro_delta_m=0.004000`, no MOVE commands,
+  and raw planner gap still `0.211271`/`raw_gap_ok=NO`.
+- Lines 44-46 show IK convergence for clearance, side-edge signal pose,
+  `micro_plus_x`, and `micro_return_x`. Lines 279/285/291 show safe clearance,
+  conservative side-edge signal pose, and stationary hold reached. Line 296 shows
+  the first 4mm `micro_plus_x` target did **not** reach after 60 steps:
+  final target error `0.005342m`, `reached=NO`, `early_kill=YES`.
+- Line 297 reports `prep_events_done=38/38`, `max_final_target_error_m=0.005342`,
+  `max_tcp_step_m=0.003899`, `max_tcp_anchor_offset_error_m=0.00000000`,
+  `max_sponge_drift_m=0.000040`, `max_sponge_speed_mps=0.013705`,
+  `attach_calls=0`, `posewrite_calls=0`, `transport_target=NO`, and
+  `release_marker=NO`. Lines 298-299 report `micro_motion_realized_ok=NO`,
+  `target_error_ok=NO`, and `ROARM_CLOSE_NEAR_LOCAL_SIGNAL_SUCCESS=NO`.
+- Interpretation update: D050/D051 top-tangent local signal should **not** be
+  generalized to conservative side-edge 4mm local micro-motion. The side-edge
+  single-point check preserves the no-overclaim envelope and does not validate
+  attach physics, constraint insertion, SurfaceGripper, attached transport,
+  transport target, or release. It also does not justify a new pre-close matrix.
 
 - Added a read-only/log-only coverage audit over the existing B200 selector logs.
   No new Isaac run was launched, no code/gate/default/constraint/SurfaceGripper/
@@ -579,8 +689,9 @@ Interpretation:
   `_grasped` kinematic attach boundary as a valid handoff surface.
 - Do not treat marker-only or offset-preserving stationary hold pass as attach
   physics, release physics, attached transport, or constraint validation.
-- Do not treat the failed post-close micro-motion probe as evidence that
-  offset-preserving attached MOVE is valid; the micro target was not reached.
+- Do not treat failed post-close or side-edge close-near micro-motion probes as
+  evidence that offset-preserving attached MOVE or side-edge local signal is
+  valid; the relevant micro targets were not reached.
 - Do not treat the failed 5deg target-delivery probe as offset-preserve failure;
   the same grasp-pose nudge fails before CLOSE with `_grasped=NO`.
 - Do not describe the current command-realization blocker as broad articulation
@@ -607,18 +718,20 @@ Interpretation:
 
 Active pivot: Track A P7/Branch B, isolated/pre-integration mechanics and chain-side timing.
 
-Next concrete action: stay pre-integration. The conservative diagnostic wrapper
-now explains the latest side-edge pass/fail matrix, so the next useful work is
-either a tighter read-only/log-only audit of the admissible-region rule or an
-explicitly approved new pre-close diagnostic. Still no SurfaceGripper, no RoArm
-chain constraint insertion, no attached transport, and no release physics claims
-unless explicitly approved.
+Next concrete action: stay pre-integration. Top-tangent close-near local signal
+passed in the default just-before-CLOSE run and in the approved
+post-close-marker-only/no-posewrite follow-up, but the approved conservative
+side-edge single-point signal check failed at the 4mm `micro_plus_x` target. The
+next useful step is evidence review/static interpretation, not a new matrix by
+default. Do not proceed to post-close-marker+side-edge, transport/release,
+constraint integration, SurfaceGripper, attached transport, or release physics
+claims without a separate explicit approval.
 
 ## Must Read First
 
 1. `CLAUDE.md`
 2. `START_HERE.md`
-3. `claudedocs/DECISIONS.md` D042-D049
+3. `claudedocs/DECISIONS.md` D042-D051
 4. `claudedocs/EXPERIMENT_LEDGER.md` latest Branch B rows
 5. `claudedocs/session_20260517_p7_branch_b_dynamic_anchor_chain_contract.md`
 6. `claudedocs/session_20260517_p7_branch_b_roarm_chain_command_stream.md`
@@ -631,4 +744,5 @@ unless explicitly approved.
 13. `claudedocs/session_20260518_p7_branch_b_post_latch_target_delivery.md`
 14. `claudedocs/session_20260518_p7_branch_b_approach_target_delivery.md`
 15. `claudedocs/session_20260518_p7_branch_b_grasp_pose_deadzone.md`
-16. The B200/local logs cited above, with line numbers
+16. `claudedocs/session_20260519_p7_branch_b_close_near_local_signal.md`
+17. The B200/local logs cited above, with line numbers

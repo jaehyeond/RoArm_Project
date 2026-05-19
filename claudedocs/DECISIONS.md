@@ -2390,3 +2390,199 @@ Sources:
 - `sim_scripts/p7_branch_b_roarm_chain_preclose_candidate_selector_probe.py`
 - `claudedocs/session_20260518_p7_branch_b_preclose_clearance_strategy.md`
 - B200 `/tmp/p7_branch_b_roarm_chain_preclose_side_top_depth_sweep_{neg0p5,neg1p0,neg1p5,neg2p0,neg3p0,neg4p0,neg6p0}_b200.{out,err}`
+
+## D050 — Real RoArm can produce a CLOSE-near top-tangent 4mm local signal, but only as virtual-carrier evidence
+
+Evidence:
+
+- Added and B200-ran
+  `sim_scripts/p7_branch_b_roarm_chain_close_near_local_signal_probe.py`
+  md5 `2b63df20972ad1e923f24e05c2810957` after static review fixes. The fixes
+  were limited to this new diagnostic: `--reassert_sponge_z_m` now sets the
+  actual sponge root z, and `post_close_marker` now gates success before local
+  signal execution.
+- The probe is virtual-carrier/signal-only. B200
+  `/tmp/p7_branch_b_roarm_chain_close_near_local_signal_default_b200.out`:
+  - line 41 confirms no constraint prim insertion, no fixed/dynamic constraint
+    integration, no SurfaceGripper, no attached transport, no transport target,
+    no release marker, no scripted release variant, no P7 training/tuning, no
+    diagnostic gate tuning, no env/train/chain default edits, and no attach
+    success claim;
+  - line 42 confirms the default top-tangent geometry, `signal_stage=just_before_close`,
+    `micro_delta_m=0.004000`, unchanged `0.003000m` target gate, and `0.010000m`
+    max TCP step gate;
+  - line 43 confirms `move_cmds_executed=0`, raw planner gap still
+    `0.211271`, and `raw_gap_ok=NO`;
+  - lines 44-46 show IK convergence for the clearance, final top-tangent signal
+    pose, `micro_plus_x`, and `micro_return_x` targets.
+- B200 local execution:
+  - line 279 reached safe clearance with final target error `0.002505m`;
+  - line 285 reached the top-tangent signal pose with final target error
+    `0.002050m`;
+  - line 291 passed a 5-step stationary hold with final target error
+    `0.000922m`;
+  - line 297 reached the 4mm `micro_plus_x` target in 5 steps with final target
+    error `0.002267m`;
+  - line 300 reached `micro_return_x` in 2 steps with final target error
+    `0.001351m`.
+- Line 301 reports `prep_events_done=38/38`, `max_final_target_error_m=0.002505`,
+  `max_tcp_step_m=0.003353`, `max_tcp_anchor_offset_error_m=0.00000000`,
+  `max_sponge_drift_m=0.000000`, `max_sponge_speed_mps=0.000540`,
+  `max_quat_angle_deg=0.000`, `min_upright_z=1.000000`, `attach_calls=0`,
+  `posewrite_calls=0`, `virtual_carrier_only=YES`, `transport_target=NO`, and
+  `release_marker=NO`.
+- Lines 302-303 report all intended gates YES and
+  `ROARM_CLOSE_NEAR_LOCAL_SIGNAL_SUCCESS=YES`.
+- B200 stderr lines 1-4 contain the known cpufreq/NVML/Fabric messages and the
+  stdout/stderr scan found no Python traceback or exception. A post-run process
+  check found no matching P7/Isaac/training process.
+
+Implication:
+
+- D038/D043-D049 are refined: the real RoArm can produce a small CLOSE-near local
+  TCP signal when the final geometry is admissible top-tangent, so the current
+  blocker is narrower than "no local signal near CLOSE".
+- This does not validate dynamic-anchor constraint integration. The carrier is
+  virtual; no USD joint/constraint was inserted, no object was attached by
+  physics, no attached transport target was visited, and no release occurred.
+- Do not convert this into a P7 success claim, attach claim, transport claim,
+  release claim, SurfaceGripper claim, or chain-ready constraint claim.
+- Any follow-up must remain signal-only unless explicitly approved. Reasonable
+  follow-ups are limited checks such as the same script's `post_close_marker`
+  mode or conservative side-edge geometry; they are not a license to go to
+  transport/release or integrate constraints.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_roarm_chain_close_near_local_signal_probe.py`
+- `claudedocs/session_20260519_p7_branch_b_close_near_local_signal.md`
+- B200 `/tmp/p7_branch_b_roarm_chain_close_near_local_signal_default_b200.{out,err}`
+
+## D051 — Top-tangent CLOSE-near local signal also survives a close-marker-only step, but still is not attach evidence
+
+Evidence:
+
+- Reused
+  `sim_scripts/p7_branch_b_roarm_chain_close_near_local_signal_probe.py`
+  md5 `2b63df20972ad1e923f24e05c2810957` with
+  `--signal_stage post_close_marker`. This was an approved follow-up in the same
+  virtual-carrier/signal-only envelope: no constraint prim insertion, no
+  fixed/dynamic constraint integration, no SurfaceGripper, no attached transport,
+  no transport target, no release marker, no P7 training/tuning, no diagnostic
+  gate tuning, and no env/train/chain default edits.
+- B200
+  `/tmp/p7_branch_b_roarm_chain_close_near_local_signal_post_close_marker_b200.out`:
+  - line 41 confirms the strict no-overclaim scope and
+    `claim_attach_success=NO`;
+  - line 42 confirms `geometry=top_tangent`,
+    `signal_stage=post_close_marker`, `micro_delta_m=0.004000`, unchanged
+    `0.003000m` target gate, and `0.010000m` max TCP step gate;
+  - line 43 confirms `move_cmds_executed=0`, raw planner gap still
+    `0.211271`, and `raw_gap_ok=NO`;
+  - lines 274-276 show the close-marker-only/no-posewrite step reached with
+    final target error `0.001131`, `attach_calls=0`, `posewrite_calls=0`, and
+    `claim_attach_success=NO`;
+  - lines 282, 288, 294, 299, and 302 show safe clearance, top-tangent signal
+    pose, stationary hold, `micro_plus_x`, and `micro_return_x` all reached;
+  - line 303 reports `prep_events_done=38/38`,
+    `max_final_target_error_m=0.002576`, `max_tcp_step_m=0.003432`,
+    `max_tcp_anchor_offset_error_m=0.00000000`,
+    `max_sponge_drift_m=0.000000`, `max_sponge_speed_mps=0.000341`,
+    `max_quat_angle_deg=0.000`, `min_upright_z=1.000000`,
+    `attach_calls=0`, `posewrite_calls=0`, `virtual_carrier_only=YES`,
+    `transport_target=NO`, and `release_marker=NO`;
+  - lines 304-305 report all intended gates YES and
+    `ROARM_CLOSE_NEAR_LOCAL_SIGNAL_SUCCESS=YES`.
+- B200 stderr lines 1-4 contain only the known cpufreq/NVML/Fabric messages
+  seen in other Isaac diagnostics. A post-run process check found no matching
+  P7/Isaac/training process.
+
+Implication:
+
+- D050 is strengthened but not broadened into attach/transport evidence: the
+  top-tangent 4mm local TCP signal exists both just before CLOSE and after a
+  close-marker-only/no-posewrite step.
+- The result still does not validate `_grasped` attach physics. The close marker
+  did not use env pose-write attach, did not insert a USD fixed/dynamic
+  constraint, did not attach SurfaceGripper, did not visit a transport target,
+  and did not execute release.
+- Do not treat this as P7 success, dynamic-anchor chain integration, object
+  attachment, SurfaceGripper validation, attached transport, transport target, or
+  release validation.
+- The remaining unvalidated boundary before any constraint integration is still
+  the actual attach/constraint handoff surface under a new explicit approval and
+  falsifiable gate. This D051 result only says the real RoArm can supply the
+  local top-tangent signal that such a future handoff design would need.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_roarm_chain_close_near_local_signal_probe.py`
+- `claudedocs/session_20260519_p7_branch_b_close_near_local_signal.md`
+- B200 `/tmp/p7_branch_b_roarm_chain_close_near_local_signal_post_close_marker_b200.{out,err}`
+
+## D052 — Conservative side-edge can hold the CLOSE-near pose, but does not realize the 4mm local signal
+
+Evidence:
+
+- Reused
+  `sim_scripts/p7_branch_b_roarm_chain_close_near_local_signal_probe.py`
+  md5 `2b63df20972ad1e923f24e05c2810957` with only `--geometry side_edge`.
+  This was an approved follow-up in the same virtual-carrier/signal-only
+  envelope: no constraint prim insertion, no fixed/dynamic constraint
+  integration, no SurfaceGripper, no attached transport, no transport target, no
+  release marker, no P7 training/tuning, no diagnostic gate tuning, and no
+  env/train/chain default edits.
+- The source guard keeps this side-edge diagnostic conservative:
+  `side_margin_m >= 0.0020` and `side_top_margin_m >= -0.0030`.
+- B200
+  `/tmp/p7_branch_b_roarm_chain_close_near_local_signal_side_edge_b200.out`:
+  - lines 41-43 confirm strict no-overclaim scope, `geometry=side_edge`,
+    `signal_stage=just_before_close`, `micro_delta_m=0.004000`,
+    `move_cmds_executed=0`, raw planner gap `0.211271`, and `raw_gap_ok=NO`;
+  - lines 44-46 show IK convergence for clearance, side-edge signal pose,
+    `micro_plus_x`, and `micro_return_x`;
+  - line 279 shows side-edge clearance reached with final target error
+    `0.002567m`;
+  - line 285 shows the conservative side-edge signal pose reached with final
+    target error `0.002879m`, target below top by about `-0.003005m`, and
+    outside the sponge AABB;
+  - line 291 shows the 5-step stationary hold reached with final target error
+    `0.002875m`;
+  - lines 292-295 show the 4mm `micro_plus_x` target remained around
+    `0.005342-0.005379m` error through 60 steps;
+  - line 296 reports `micro_plus_x` `reached=NO`, steps `60`,
+    `final_target_error_m=0.005342`, `set_target_seen=YES`, and
+    `early_kill=YES`;
+  - line 297 reports `prep_events_done=38/38`,
+    `max_final_target_error_m=0.005342`, `max_tcp_step_m=0.003899`,
+    `max_tcp_anchor_offset_error_m=0.00000000`,
+    `max_sponge_drift_m=0.000040`, `max_sponge_speed_mps=0.013705`,
+    `attach_calls=0`, `posewrite_calls=0`, `virtual_carrier_only=YES`,
+    `transport_target=NO`, and `release_marker=NO`;
+  - lines 298-299 report `micro_motion_realized_ok=NO`, `target_error_ok=NO`,
+    and `ROARM_CLOSE_NEAR_LOCAL_SIGNAL_SUCCESS=NO`.
+- B200 stderr lines 1-4 contain only the known cpufreq/NVML/Fabric messages.
+  A stdout/stderr scan found no Python traceback or exception, and a post-run
+  process check found no matching P7/Isaac/training process.
+
+Implication:
+
+- D050/D051 are geometry-specific positive evidence for top-tangent local
+  signal. They must not be generalized to conservative side-edge 4mm local
+  micro-motion.
+- Conservative side-edge geometry remains admissible as pre-close geometry
+  evidence through about -3mm depth, but that does not imply a realized 4mm local
+  CLOSE-near signal.
+- This result does not validate `_grasped` attach physics, constraint insertion,
+  SurfaceGripper, attached transport, transport target, or release.
+- Do not proceed to post-close-marker+side-edge, constraint integration,
+  transport, SurfaceGripper, or release without a separate explicit approval and
+  a new narrow falsifiable gate.
+- No new pre-close matrix is justified by this result. It is a single-point
+  side-edge signal failure inside the already-conservative diagnostic envelope.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_roarm_chain_close_near_local_signal_probe.py`
+- `claudedocs/session_20260519_p7_branch_b_close_near_local_signal.md`
+- B200 `/tmp/p7_branch_b_roarm_chain_close_near_local_signal_side_edge_b200.{out,err}`
