@@ -2631,3 +2631,161 @@ Sources:
 - Local logs:
   `/tmp/p7_branch_b_cube2cm_close_equilibrium_static_analysis_v3_v4_sweep_local.out`
   and `/tmp/p7_branch_b_cube2cm_opposing_jaw_v4_urdf_prep_local.out`
+
+## D054 — Treat URDF-to-USD conversion, static contact, and runtime grasp physics as separate gates
+
+Evidence:
+
+- The earlier 2026-05-20 rolling docs were stale: `START_HERE.md`,
+  `claudedocs/EXPERIMENT_LEDGER.md` row 73, and
+  `claudedocs/session_20260520_p7_branch_b_normalized_cube_grasp_feedback.md`
+  still described v4 as not converted / physics-unvalidated.
+- Later B200 logs prove v4 conversion did run:
+  `/tmp/p7_branch_b_cube2cm_opposing_jaw_v4_convert_b200.out:82` reports
+  `cube2cm_counter_jaw_v4_link` merged into `gripper_link`, and
+  `/tmp/p7_branch_b_cube2cm_opposing_jaw_v4_collision_usd/roarm_m3.usd`
+  has md5 `4497024d25abab11de5c50e144124553`.
+- v4 still failed physics/telemetry:
+  `/tmp/p7_branch_b_cube2cm_opposing_jaw_v4_close26_hold_lift_b200.out:390-391`
+  reports `reached=NO` and `verdict=LATCH_FAIL`; runtime telemetry
+  `/tmp/p7_branch_b_cube2cm_runtime_jaw_telemetry_v4_b200.out:422-423`
+  reports `moving_contact=YES`, `counter_contact=NO`, `one_sided_push=YES`,
+  and `success_claim=NO`.
+- v5 repeated the pattern: prep/conversion succeeded
+  (`/tmp/p7_branch_b_cube2cm_opposing_jaw_v5_urdf_prep_b200.out:25,28`;
+  `/tmp/p7_branch_b_cube2cm_opposing_jaw_v5_convert_b200.out:82,84,86`),
+  but runtime telemetry failed with one-sided push
+  (`/tmp/p7_branch_b_cube2cm_runtime_jaw_telemetry_v5_b200.out:422-423`).
+- v6 static prep and conversion succeeded
+  (`/tmp/p7_branch_b_cube2cm_opposing_jaw_v6_urdf_prep_b200.out:23-26`;
+  `/tmp/p7_branch_b_cube2cm_opposing_jaw_v6_convert_b200.out:82`), but valid
+  LD_PRELOAD runtime telemetry failed:
+  `/tmp/p7_branch_b_cube2cm_runtime_jaw_telemetry_v6_ldpreload_b200.out:417-418`
+  reports `target_error_m=0.024584`, `counter_contact=NO`,
+  `one_sided_push=YES`, `reached=NO`, and `success_claim=NO`.
+- v7 static/prep succeeded
+  (`/tmp/p7_branch_b_cube2cm_opposing_jaw_v7_urdf_prep_b200.out:23-28`),
+  but conversion is blocked by B200 NVIDIA/NVML/GLX driver-library mismatch:
+  `/tmp/p7_branch_b_cube2cm_opposing_jaw_v7_convert_b200.err:1-7,64-66,87-90`
+  and
+  `/tmp/p7_branch_b_cube2cm_opposing_jaw_v7_convert_ldpreload_b200.err:1-7,64-66,87-90`.
+
+Implication:
+
+- Do not claim grasp physics success from URDF-to-USD conversion, USD md5s, or
+  static AABB contact alone.
+- Report each candidate in three separate states: static/prep, conversion/USD,
+  and runtime physics. A candidate can pass one gate and fail the next.
+- Current v4/v5/v6 evidence points to a simulation contact-proxy failure mode:
+  the rigid cube is pushed by the moving jaw before counter contact closes.
+  Correct framing is that the current Isaac rigid-cube/jaw collision/contact
+  proxy is not reproducing real foam grasp; do not say the real robot cannot
+  grasp the cube.
+- The initial v7 conversion attempts were blocked by the B200 driver/library
+  mismatch until the D024 conversion-only retry recovered USD export. v7 remains
+  physics-unvalidated; stop before runtime telemetry unless separately approved.
+
+Sources:
+
+- `claudedocs/session_20260520_p7_branch_b_cube_contact_state_repair.md`
+- `START_HERE.md`
+- `claudedocs/EXPERIMENT_LEDGER.md`
+- B200 logs under `/tmp/p7_branch_b_cube2cm_*_b200.{out,err}` cited above.
+
+## D055 — Use the D024 B200 override path for v7 conversion-only recovery; conversion still is not physics validation
+
+Evidence:
+
+- B200 still has the known userspace mismatch: `libnvidia-ml.so.1` points to
+  `libnvidia-ml.so.580.159.03`, while `libnvidia-ml.so.580.95.05` is also
+  present; plain `nvidia-smi` reports driver/library mismatch.
+- The first v7 conversion and the wrong-library LD_PRELOAD retry both crashed:
+  `/tmp/p7_branch_b_cube2cm_opposing_jaw_v7_convert_b200.err:1-7,64-66,87-90`
+  and
+  `/tmp/p7_branch_b_cube2cm_opposing_jaw_v7_convert_ldpreload_b200.err:1-7,64-66,87-90`.
+- The D024 conversion-only retry used
+  `LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libnvidia-ml.so.580.95.05` and
+  `VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json`. It exited 0.
+- B200 `/tmp/p7_branch_b_cube2cm_opposing_jaw_v7_convert_d024_b200.out:84-89`
+  reports `cube2cm_fixed_counter_jaw_v7_link` merged into `link5`, `hand_tcp`
+  merged into `link5`, and `base_link` merged into `world`.
+- B200 `/tmp/p7_branch_b_cube2cm_opposing_jaw_v7_convert_d024_b200.err:1-6`
+  contains cpufreq and `NVML_ERROR_UNINITIALIZED` messages only; grep found no
+  traceback, exception, fatal, segfault, or driver/library mismatch.
+- v7 D024 USD md5s:
+  - `roarm_m3.usd` `4497024d25abab11de5c50e144124553`
+  - `config.yaml` `f2777880ff2c90182484d82b7f49e5a6`
+  - `configuration/roarm_m3_base.usd` `d7aae34ddca6a4d4f1ce092bda28d1a2`
+  - `configuration/roarm_m3_physics.usd` `75f7b1e6da1f5f14019a53f091ec2076`
+  - `configuration/roarm_m3_robot.usd` `5452694ecb266c48d9d333e98fda4e78`
+  - `configuration/roarm_m3_sensor.usd` `656c6832b091e467c0af6f292c403e11`
+- Post-run process check found no matching Isaac/conversion/training process.
+
+Implication:
+
+- v7 is now static/prep-valid and USD-converted under D024, but still
+  physics-unvalidated.
+- Do not rerun v7 conversion with the plain B200 environment or the wrong
+  `580.159.03` preload path.
+- Do not interpret v7 conversion as grasp success. Runtime jaw telemetry or
+  hold-lift remains a separate gate requiring separate explicit approval.
+
+Sources:
+
+- `claudedocs/session_20260520_p7_branch_b_cube_contact_state_repair.md`
+- B200 `/tmp/p7_branch_b_cube2cm_opposing_jaw_v7_convert_d024_b200.{out,err}`
+- B200 `/tmp/p7_branch_b_cube2cm_opposing_jaw_v7_collision_usd_d024/`
+
+## D056 — v7 link5 fixed-counter runtime telemetry still fails; do not escalate to hold-lift
+
+Evidence:
+
+- After user approval, `sim_scripts/p7_branch_b_cube2cm_runtime_jaw_telemetry_probe.py`
+  was patched to support v7 diagnostic telemetry. The patch uses the D024 v7 USD
+  path, tracks the fixed counter jaw with `counter_parent=link5`, uses the actual
+  runtime link5 transform, and logs strict contact separately from the 1mm slop
+  contact used by the static v7 audit. The patched script md5 is
+  `0b4d3f579d3bb56f994983a876198d65`; local and B200 `py_compile` passed, and
+  remote md5 matched.
+- B200 `/tmp/p7_branch_b_cube2cm_runtime_jaw_telemetry_v7_d024_b200.out:38`
+  confirms strict scope: diagnostic-only, `variant=v7`, D024 USD path, no
+  training, no constraint insertion, no SurfaceGripper, no transport/release, no
+  gate tuning, close_26-only, and `claim_p7_success=NO`.
+- B200 line 39 selected the 3cm cube and reported IK OK
+  (`ik_err_mm=(0.477,0.316)`, `max_fk_error_m=0.000518`).
+- B200 line 68 confirmed the intended authored geometry:
+  `counter_parent=link5`, `design_moving_center_ref=([+0.000000,+0.014250,+0.002000])`,
+  `design_counter_center_ref=([+0.000000,-0.019600,+0.002000])`, and
+  `counter_contact_slop_m=0.001000`.
+- B200 final close line 419 reports `target_error_m=0.023422`,
+  `moving_contact=YES`, `counter_contact=NO`, `moving_slop_contact=YES`,
+  `counter_slop_contact=NO`, `one_sided_push=YES`, and `reached=NO`.
+- B200 aggregate line 420 reports `approach_ok=YES`, `descend_ok=YES`,
+  `close_reached=NO`, `grasped_seen=NO`, `attach_calls=0`,
+  `posewrite_calls=0`, `telemetry_only=YES`, and `success_claim=NO`.
+- B200 stderr lines 1-4 contain cpufreq/NVML-uninitialized/Fabric messages; grep
+  found no traceback, exception, fatal, segfault, or driver/library mismatch.
+  Post-run process check was empty. Log md5s:
+  stdout `3939f08ea684c34f76669293b96610ba`, stderr
+  `a0cb0d2eb0dca684599e693fcd1e7af7`.
+
+Implication:
+
+- v7 is not a physics success. It is static/prep-valid and USD-converted, but
+  close_26 runtime telemetry still fails.
+- The v7 fixed-counter hypothesis did not resolve the current rigid-cube
+  one-sided-push failure. Even the diagnostic 1mm slop contact did not reach the
+  counter side at final close.
+- Do not run hold-lift from this state; close-time contact/dynamics did not pass.
+- Correct framing remains: the current Isaac rigid-cube/jaw collision/contact
+  proxy is not reproducing real foam grasp. This does not mean the real robot
+  cannot grasp the cube.
+- Next technical work should be analytical/modeling: decide whether more rigid
+  proxy probing is still informative or whether the project should explicitly
+  model foam/contact compliance before any dataset generation.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_cube2cm_runtime_jaw_telemetry_probe.py`
+- `claudedocs/session_20260520_p7_branch_b_cube_contact_state_repair.md`
+- B200 `/tmp/p7_branch_b_cube2cm_runtime_jaw_telemetry_v7_d024_b200.{out,err}`

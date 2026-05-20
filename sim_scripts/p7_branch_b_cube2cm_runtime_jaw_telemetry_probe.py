@@ -29,6 +29,7 @@ from p7_branch_b_cube2cm_gripper_static_geometry_probe import (  # noqa: E402
     _box_vertices,
     _fmt_xyz,
     _gripper_transform,
+    _link5_transform,
     _transform_points,
 )
 from p7_branch_b_cube2cm_local_grasp_close_sweep_probe import (  # noqa: E402
@@ -53,13 +54,16 @@ from p7_branch_b_prepare_roarm_cube2cm_opposing_jaw_urdf import _translation  # 
 
 V4_USD_PATH = "/tmp/p7_branch_b_cube2cm_opposing_jaw_v4_collision_usd/roarm_m3.usd"
 V5_USD_PATH = "/tmp/p7_branch_b_cube2cm_opposing_jaw_v5_collision_usd/roarm_m3.usd"
+V6_USD_PATH = "/tmp/p7_branch_b_cube2cm_opposing_jaw_v6_collision_usd/roarm_m3.usd"
+V7_USD_PATH = "/tmp/p7_branch_b_cube2cm_opposing_jaw_v7_collision_usd_d024/roarm_m3.usd"
 
 
 @dataclass(frozen=True)
 class JawGeometry:
     moving_vertices_local: np.ndarray
     counter_vertices_local: np.ndarray
-    counter_origin_gripper_m: np.ndarray
+    counter_origin_parent_m: np.ndarray
+    counter_parent: str
     moving_size_m: np.ndarray
     counter_size_m: np.ndarray
     design_moving_center_ref: np.ndarray
@@ -86,19 +90,28 @@ def _to_object_frame(points_world: np.ndarray, object_pos: np.ndarray, object_qu
     return (points_world - object_pos) @ rot
 
 
-def _contact_stats(points_world: np.ndarray, object_pos: np.ndarray, object_quat: np.ndarray, object_size: np.ndarray) -> dict[str, object]:
+def _contact_stats(
+    points_world: np.ndarray,
+    object_pos: np.ndarray,
+    object_quat: np.ndarray,
+    object_size: np.ndarray,
+    slop_m: float = 0.0,
+) -> dict[str, object]:
     points_obj = _to_object_frame(points_world, object_pos, object_quat)
     cube_min = -0.5 * object_size
     cube_max = 0.5 * object_size
     mn, mx = _aabb(points_obj)
     overlap = _aabb_overlap(mn, mx, cube_min, cube_max)
+    slop_overlap = _aabb_overlap(mn, mx, cube_min - slop_m, cube_max + slop_m)
     gap = _axis_gap(mn, mx, cube_min, cube_max)
     center = 0.5 * (mn + mx)
     return {
         "center_obj": center,
         "overlap_obj": overlap,
+        "slop_overlap_obj": slop_overlap,
         "gap_obj": gap,
         "contact": bool(np.all(overlap > 0.0)),
+        "slop_contact": bool(np.all(slop_overlap > 0.0)),
     }
 
 
@@ -124,6 +137,8 @@ def _jaw_geometry(args: argparse.Namespace, plan) -> JawGeometry:
     q_design = plan.q_descend_deg.copy()
     q_design[5] = float(args.design_close_deg)
     inv_gripper = np.linalg.inv(_gripper_transform(q_design))
+    inv_link5 = np.linalg.inv(_link5_transform(q_design))
+    counter_parent = "gripper_link"
 
     if args.variant == "v5":
         moving_obj, counter_obj = _candidate_centers_v5(args)
@@ -139,6 +154,64 @@ def _jaw_geometry(args: argparse.Namespace, plan) -> JawGeometry:
         counter_world = plan.center + rot @ counter_obj
         design_moving_ref = moving_obj
         design_counter_ref = counter_obj
+    elif args.variant == "v6":
+        cube_half_y = object_size[1] * 0.5
+        moving_obj = np.array(
+            [0.0, cube_half_y - float(args.moving_close_overlap_m), 0.0020],
+            dtype=np.float64,
+        )
+        base_counter_y = -cube_half_y - float(args.counter_open_clearance_m) - 0.0015 * 0.5
+        counter_obj = np.array(
+            [
+                float(args.counter_x_shift_mm) / 1000.0,
+                base_counter_y + float(args.counter_y_shift_mm) / 1000.0,
+                0.0020,
+            ],
+            dtype=np.float64,
+        )
+        rot = np.array(
+            [
+                [math.cos(math.radians(plan.yaw_deg)), -math.sin(math.radians(plan.yaw_deg)), 0.0],
+                [math.sin(math.radians(plan.yaw_deg)), math.cos(math.radians(plan.yaw_deg)), 0.0],
+                [0.0, 0.0, 1.0],
+            ],
+            dtype=np.float64,
+        )
+        moving_world = plan.center + rot @ moving_obj
+        counter_world = plan.center + rot @ counter_obj
+        design_moving_ref = moving_obj
+        design_counter_ref = counter_obj
+    elif args.variant == "v7":
+        cube_half_y = object_size[1] * 0.5
+        moving_obj = np.array(
+            [
+                0.0,
+                cube_half_y + moving_size[1] * 0.5 - float(args.moving_close_overlap_m),
+                float(args.jaw_center_z_m),
+            ],
+            dtype=np.float64,
+        )
+        counter_obj = np.array(
+            [
+                float(args.fixed_counter_x_offset_m),
+                -cube_half_y - counter_size[1] * 0.5 - float(args.fixed_counter_clearance_m),
+                float(args.jaw_center_z_m),
+            ],
+            dtype=np.float64,
+        )
+        rot = np.array(
+            [
+                [math.cos(math.radians(plan.yaw_deg)), -math.sin(math.radians(plan.yaw_deg)), 0.0],
+                [math.sin(math.radians(plan.yaw_deg)), math.cos(math.radians(plan.yaw_deg)), 0.0],
+                [0.0, 0.0, 1.0],
+            ],
+            dtype=np.float64,
+        )
+        moving_world = plan.center + rot @ moving_obj
+        counter_world = plan.center + rot @ counter_obj
+        design_moving_ref = moving_obj
+        design_counter_ref = counter_obj
+        counter_parent = "link5"
     else:
         moving_world = np.array(
             [
@@ -160,12 +233,16 @@ def _jaw_geometry(args: argparse.Namespace, plan) -> JawGeometry:
         design_counter_ref = counter_world - plan.center
 
     moving_local_center = (inv_gripper @ np.array([*moving_world, 1.0], dtype=np.float64))[:3]
-    counter_origin_gripper = (inv_gripper @ np.array([*counter_world, 1.0], dtype=np.float64))[:3]
+    if counter_parent == "link5":
+        counter_origin_parent = (inv_link5 @ np.array([*counter_world, 1.0], dtype=np.float64))[:3]
+    else:
+        counter_origin_parent = (inv_gripper @ np.array([*counter_world, 1.0], dtype=np.float64))[:3]
 
     return JawGeometry(
         moving_vertices_local=_box_vertices(moving_local_center, moving_size, 0.0),
         counter_vertices_local=_box_vertices(np.zeros(3, dtype=np.float64), counter_size, 0.0),
-        counter_origin_gripper_m=counter_origin_gripper,
+        counter_origin_parent_m=counter_origin_parent,
+        counter_parent=counter_parent,
         moving_size_m=moving_size,
         counter_size_m=counter_size,
         design_moving_center_ref=design_moving_ref,
@@ -178,13 +255,42 @@ def _apply_variant_defaults(args: argparse.Namespace) -> None:
         args.yaw_deg = 50.0 if args.variant == "v5" else 0.0
     if args.normalized_grasp is None and args.variant == "v5":
         args.normalized_grasp = [0.150, -0.150, 0.500]
+    if args.normalized_grasp is None and args.variant == "v6":
+        args.normalized_grasp = [0.000, 0.000, 0.500]
+    if args.normalized_grasp is None and args.variant == "v7":
+        args.normalized_grasp = [0.000, 0.000, 0.500]
+    if args.variant == "v6":
+        if np.allclose(args.object_size_m, [0.020, 0.020, 0.020], atol=1.0e-12):
+            args.object_size_m = [0.030, 0.030, 0.030]
+        if np.allclose(args.counter_jaw_size_m, [0.004, 0.0015, 0.008], atol=1.0e-12):
+            args.counter_jaw_size_m = [0.004, 0.0050, 0.008]
+        if abs(float(args.jaw_center_z_m) - 0.012) <= 1.0e-12:
+            args.jaw_center_z_m = 0.017
+    if args.variant == "v7":
+        if np.allclose(args.object_size_m, [0.020, 0.020, 0.020], atol=1.0e-12):
+            args.object_size_m = [0.030, 0.030, 0.030]
+        if np.allclose(args.counter_jaw_size_m, [0.004, 0.0015, 0.008], atol=1.0e-12):
+            args.counter_jaw_size_m = [0.004, 0.0050, 0.008]
+        if abs(float(args.moving_close_overlap_m) - (-0.0015)) <= 1.0e-12:
+            args.moving_close_overlap_m = 0.0015
+        if abs(float(args.jaw_center_z_m) - 0.012) <= 1.0e-12:
+            args.jaw_center_z_m = 0.002
+        if abs(float(args.counter_contact_slop_m)) <= 1.0e-12:
+            args.counter_contact_slop_m = 0.0010
     if args.robot_usd_path is None:
-        args.robot_usd_path = V5_USD_PATH if args.variant == "v5" else V4_USD_PATH
+        if args.variant == "v5":
+            args.robot_usd_path = V5_USD_PATH
+        elif args.variant == "v6":
+            args.robot_usd_path = V6_USD_PATH
+        elif args.variant == "v7":
+            args.robot_usd_path = V7_USD_PATH
+        else:
+            args.robot_usd_path = V4_USD_PATH
 
 
 def _parse_args() -> argparse.Namespace:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--variant", choices=["v4", "v5"], default="v5")
+    ap.add_argument("--variant", choices=["v4", "v5", "v6", "v7"], default="v5")
     ap.add_argument("--robot_usd_path", default=None)
     ap.add_argument("--object_size_m", nargs=3, type=float, default=[0.020, 0.020, 0.020])
     ap.add_argument("--object_mass_kg", type=float, default=0.02)
@@ -223,6 +329,11 @@ def _parse_args() -> argparse.Namespace:
     ap.add_argument("--jaw_center_z_m", type=float, default=0.012)
     ap.add_argument("--jaw_center_obj_m", nargs=3, type=float, default=[0.0, 0.0, 0.0])
     ap.add_argument("--design_penetration_m", type=float, default=0.0015)
+    ap.add_argument("--counter_x_shift_mm", type=float, default=1.0)
+    ap.add_argument("--counter_y_shift_mm", type=float, default=5.0)
+    ap.add_argument("--fixed_counter_clearance_m", type=float, default=0.0021)
+    ap.add_argument("--fixed_counter_x_offset_m", type=float, default=0.0)
+    ap.add_argument("--counter_contact_slop_m", type=float, default=0.0)
     args = ap.parse_args()
     _apply_variant_defaults(args)
 
@@ -269,7 +380,8 @@ def main() -> int:
     )
     print(
         f"[cube2cm_runtime_jaw_telemetry] selected pose={plan.label} center={_fmt_xyz(plan.center)} "
-        f"yaw_deg={plan.yaw_deg:.1f} normalized=([{plan.normalized_grasp[0]:+.3f},{plan.normalized_grasp[1]:+.3f},{plan.normalized_grasp[2]:+.3f}]) "
+        f"object_size_m={_fmt_xyz(object_size)} yaw_deg={plan.yaw_deg:.1f} "
+        f"normalized=([{plan.normalized_grasp[0]:+.3f},{plan.normalized_grasp[1]:+.3f},{plan.normalized_grasp[2]:+.3f}]) "
         f"approach_tcp={_fmt_xyz(plan.approach_tcp)} descend_tcp={_fmt_xyz(plan.descend_tcp)} "
         f"close_deg={args.close_deg[0]:.2f} ik_ok={_yes(plan.approach_ik_ok and plan.descend_ik_ok)} "
         f"ik_err_mm=({plan.approach_ik_err_mm:.3f},{plan.descend_ik_err_mm:.3f}) "
@@ -365,6 +477,11 @@ def main() -> int:
         quat = base_env._robot.data.body_quat_w[0, base_env.gripper_link_idx].detach().cpu().numpy()
         return _homogeneous(_quat_wxyz_to_rot(quat.astype(np.float64)), pos.astype(np.float64))
 
+    def link5_transform_local() -> np.ndarray:
+        pos = (base_env._robot.data.body_pos_w[0, base_env.link5_idx] - base_env.scene.env_origins[0]).detach().cpu().numpy()
+        quat = base_env._robot.data.body_quat_w[0, base_env.link5_idx].detach().cpu().numpy()
+        return _homogeneous(_quat_wxyz_to_rot(quat.astype(np.float64)), pos.astype(np.float64))
+
     def write_object_pose() -> None:
         yaw_q = _yaw_quat_wxyz(plan.yaw_deg)
         pose = torch.tensor(
@@ -410,7 +527,8 @@ def main() -> int:
         f"moving_size_m={_fmt_xyz(jaw.moving_size_m)} counter_size_m={_fmt_xyz(jaw.counter_size_m)} "
         f"design_moving_center_ref={_fmt_xyz(jaw.design_moving_center_ref)} "
         f"design_counter_center_ref={_fmt_xyz(jaw.design_counter_center_ref)} "
-        f"counter_origin_gripper_m={_fmt_xyz(jaw.counter_origin_gripper_m)}",
+        f"counter_parent={jaw.counter_parent} counter_origin_parent_m={_fmt_xyz(jaw.counter_origin_parent_m)} "
+        f"counter_contact_slop_m={float(args.counter_contact_slop_m):.6f}",
         flush=True,
     )
     posewrite_watch["active"] = True
@@ -447,12 +565,18 @@ def main() -> int:
             speed = _norm(vel[:3])
 
             gripper_tf = gripper_link_transform_local()
+            counter_parent_tf = link5_transform_local() if jaw.counter_parent == "link5" else gripper_tf
             moving_world = _transform_points(gripper_tf, jaw.moving_vertices_local)
-            counter_world = _transform_points(gripper_tf @ _translation(jaw.counter_origin_gripper_m), jaw.counter_vertices_local)
-            moving = _contact_stats(moving_world, obj, quat, object_size)
-            counter = _contact_stats(counter_world, obj, quat, object_size)
+            counter_world = _transform_points(
+                counter_parent_tf @ _translation(jaw.counter_origin_parent_m),
+                jaw.counter_vertices_local,
+            )
+            moving = _contact_stats(moving_world, obj, quat, object_size, slop_m=float(args.counter_contact_slop_m))
+            counter = _contact_stats(counter_world, obj, quat, object_size, slop_m=float(args.counter_contact_slop_m))
             moving_overlap = np.asarray(moving["overlap_obj"], dtype=np.float64)
             counter_overlap = np.asarray(counter["overlap_obj"], dtype=np.float64)
+            moving_slop_overlap = np.asarray(moving["slop_overlap_obj"], dtype=np.float64)
+            counter_slop_overlap = np.asarray(counter["slop_overlap_obj"], dtype=np.float64)
             moving_gap = np.asarray(moving["gap_obj"], dtype=np.float64)
             counter_gap = np.asarray(counter["gap_obj"], dtype=np.float64)
             moving_center = np.asarray(moving["center_obj"], dtype=np.float64)
@@ -491,8 +615,12 @@ def main() -> int:
                     f"object_speed_mps={speed:.6f} moving_center_obj={_fmt_xyz(moving_center)} "
                     f"counter_center_obj={_fmt_xyz(counter_center)} moving_overlap_obj_m={_fmt_xyz(moving_overlap)} "
                     f"counter_overlap_obj_m={_fmt_xyz(counter_overlap)} moving_gap_obj_m={_fmt_xyz(moving_gap)} "
-                    f"counter_gap_obj_m={_fmt_xyz(counter_gap)} moving_contact={_yes(bool(moving['contact']))} "
-                    f"counter_contact={_yes(bool(counter['contact']))} one_sided_push={_yes(one_sided_push)} "
+                    f"counter_gap_obj_m={_fmt_xyz(counter_gap)} moving_slop_overlap_obj_m={_fmt_xyz(moving_slop_overlap)} "
+                    f"counter_slop_overlap_obj_m={_fmt_xyz(counter_slop_overlap)} "
+                    f"moving_contact={_yes(bool(moving['contact']))} counter_contact={_yes(bool(counter['contact']))} "
+                    f"moving_slop_contact={_yes(bool(moving['slop_contact']))} "
+                    f"counter_slop_contact={_yes(bool(counter['slop_contact']))} "
+                    f"one_sided_push={_yes(one_sided_push)} "
                     f"_grasped_marker={_yes(bool(base_env._grasped[0].detach().cpu().item()))} "
                     f"attach_calls_total={attach_stats['attach_calls']} posewrite_calls_total={attach_stats['posewrite_calls']} "
                     f"set_target_seen={_yes(watch['calls'] > 0 and watch['max_diff'] <= 1.0e-5)} "
