@@ -32,10 +32,13 @@ from p7_branch_b_cube2cm_gripper_static_geometry_probe import (  # noqa: E402
     _transform_points,
 )
 from p7_branch_b_cube2cm_local_grasp_close_sweep_probe import (  # noqa: E402
+    GRIPPER_OPEN_DEG,
     _build_plan_from_center,
     _norm,
+    _solve_q,
 )
 from p7_branch_b_prepare_roarm_cube2cm_opposing_jaw_urdf import _translation  # noqa: E402
+from p7_branch_b_prepare_roarm_cube2cm_opposing_jaw_v2_urdf import _open_descent_waypoints  # noqa: E402
 
 
 @dataclass(frozen=True)
@@ -189,6 +192,406 @@ def _sample(label: str, q_deg: np.ndarray, object_center: np.ndarray, object_siz
     return {"moving": moving, "counter": counter, "one_sided": one_sided}
 
 
+def _runtime_center_for_size(endpoint: RuntimeEndpoint, object_size: np.ndarray) -> np.ndarray:
+    runtime_center = endpoint.object_center_m.copy()
+    if abs(float(object_size[2]) - 0.020) > 1.0e-9:
+        # Counterfactual size-only check: keep the logged xy endpoint but put
+        # the bottom at z=0 for the larger real foam cube.
+        runtime_center[2] = float(object_size[2]) * 0.5
+    return runtime_center
+
+
+def _counter_alignment_sample(
+    q_deg: np.ndarray,
+    runtime_center: np.ndarray,
+    object_size: np.ndarray,
+    variant: VariantSpec,
+    moving_local: np.ndarray,
+    counter_local: np.ndarray,
+    counter_origin: np.ndarray,
+    patch_m: float,
+) -> dict[str, object]:
+    moving_world = _transform_points(_gripper_transform(q_deg), moving_local)
+    counter_world = _transform_points(_gripper_transform(q_deg) @ _translation(counter_origin), counter_local)
+    moving = _contact(moving_world, runtime_center, object_size, variant.yaw_deg, patch_m)
+    counter = _contact(counter_world, runtime_center, object_size, variant.yaw_deg, patch_m)
+    one_sided = bool(moving["contact"]) and not bool(counter["contact"])
+    return {"moving": moving, "counter": counter, "one_sided": one_sided}
+
+
+def _counter_candidate_geometry(
+    center: np.ndarray,
+    q_design: np.ndarray,
+    variant: VariantSpec,
+    moving_local: np.ndarray,
+    counter_obj_base: np.ndarray,
+    counter_size: np.ndarray,
+    counter_x_shift_mm: float,
+    counter_y_shift_mm: float,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    counter_obj = counter_obj_base + np.array(
+        [float(counter_x_shift_mm) / 1000.0, float(counter_y_shift_mm) / 1000.0, 0.0],
+        dtype=np.float64,
+    )
+    counter_world = center + _rot_z(variant.yaw_deg) @ counter_obj
+    counter_origin = (np.linalg.inv(_gripper_transform(q_design)) @ np.array([*counter_world, 1.0], dtype=np.float64))[:3]
+    counter_local = _box_vertices(np.zeros(3, dtype=np.float64), counter_size, 0.0)
+    return moving_local, counter_local, counter_origin
+
+
+def _open_clearance_check(
+    args: argparse.Namespace,
+    center: np.ndarray,
+    plan,
+    object_size: np.ndarray,
+    variant: VariantSpec,
+    moving_local: np.ndarray,
+    counter_local: np.ndarray,
+    counter_origin: np.ndarray,
+) -> dict[str, object]:
+    q_seed = plan.q_approach_deg.copy()
+    min_separating_gap = float("inf")
+    contact_count = 0
+    clearance_bad = 0
+    waypoints = _open_descent_waypoints(args, plan.approach_tcp, plan.descend_tcp)
+    for idx, waypoint in enumerate(waypoints, start=1):
+        q_open, ik_ok, ik_err_mm = _solve_q(waypoint, q_seed, GRIPPER_OPEN_DEG, args)
+        q_seed = q_open
+        if not ik_ok:
+            clearance_bad += 1
+            print(
+                "[cube2cm_v6_static_runtime_audit] v6_candidate_open_waypoint "
+                f"index={idx:03d}/{len(waypoints):03d} ik_ok=NO ik_err_mm={ik_err_mm:.3f}",
+                flush=True,
+            )
+            continue
+        moving_world = _transform_points(_gripper_transform(q_open), moving_local)
+        counter_world = _transform_points(_gripper_transform(q_open) @ _translation(counter_origin), counter_local)
+        for mesh_name, vertices_world in (("moving", moving_world), ("counter", counter_world)):
+            stats = _contact(vertices_world, center, object_size, variant.yaw_deg, 0.0)
+            gap = np.asarray(stats["gap"], dtype=np.float64)
+            positive = gap[gap > 0.0]
+            sep_gap = 0.0 if positive.size == 0 else float(positive.min())
+            min_separating_gap = min(min_separating_gap, sep_gap)
+            contact = bool(stats["contact"])
+            if contact:
+                contact_count += 1
+            elif sep_gap < float(args.candidate_open_clearance_gate_m):
+                clearance_bad += 1
+            if args.candidate_print_open_waypoints:
+                print(
+                    "[cube2cm_v6_static_runtime_audit] v6_candidate_open_waypoint "
+                    f"index={idx:03d}/{len(waypoints):03d} mesh={mesh_name} "
+                    f"ik_ok=YES ik_err_mm={ik_err_mm:.3f} contact={_yes(contact)} "
+                    f"separating_axis_gap_m={sep_gap:.6f} center_obj={_fmt_xyz(np.asarray(stats['center']))} "
+                    f"gap_obj_m={_fmt_xyz(gap)}",
+                    flush=True,
+                )
+    open_clear = contact_count == 0 and clearance_bad == 0
+    return {
+        "waypoints": len(waypoints),
+        "contact_count": contact_count,
+        "clearance_bad": clearance_bad,
+        "min_separating_gap": min_separating_gap,
+        "open_clear": open_clear,
+    }
+
+
+def _run_v6_candidate_check(args: argparse.Namespace) -> bool:
+    object_size = np.asarray(args.candidate_object_size_m, dtype=np.float64)
+    if object_size.shape != (3,) or not np.allclose(object_size, [0.030, 0.030, 0.030], atol=1.0e-12):
+        raise ValueError("v6 candidate check is intentionally gated to object_size_m=(0.030,0.030,0.030)")
+    variant = next(v for v in VARIANTS if v.name == args.candidate_variant)
+    if not variant.v4_like:
+        raise ValueError("v6 candidate check is intentionally gated to v4_like first")
+
+    center, plan, q_design, moving_obj, counter_obj_base, moving_local, _counter_local, _counter_origin = _build_jaws(
+        object_size, variant, args
+    )
+    counter_size = np.asarray(args.counter_jaw_size_m, dtype=np.float64).copy()
+    counter_size[1] = float(args.candidate_counter_thickness_y_mm) / 1000.0
+    moving_local, counter_local, counter_origin = _counter_candidate_geometry(
+        center,
+        q_design,
+        variant,
+        moving_local,
+        counter_obj_base,
+        counter_size,
+        float(args.candidate_counter_x_shift_mm),
+        float(args.candidate_counter_y_shift_mm),
+    )
+
+    print(
+        "[cube2cm_v6_static_runtime_audit] v6_candidate_check_begin "
+        "local_static_only=YES isaac_run=NO training=NO dataset_generation=NO "
+        f"variant={variant.name} object_size_m={_fmt_xyz(object_size)} "
+        f"counter_x_shift_mm={float(args.candidate_counter_x_shift_mm):+.3f} "
+        f"counter_y_shift_mm={float(args.candidate_counter_y_shift_mm):+.3f} "
+        f"counter_thickness_y_mm={float(args.candidate_counter_thickness_y_mm):.3f} "
+        f"max_plausible_patch_margin_m={float(args.max_plausible_patch_margin_m):.4f} "
+        f"moving_design_center_obj={_fmt_xyz(moving_obj)} "
+        f"counter_design_center_obj_base={_fmt_xyz(counter_obj_base)}",
+        flush=True,
+    )
+
+    authored = _counter_alignment_sample(q_design, center, object_size, variant, moving_local, counter_local, counter_origin, 0.0)
+    authored_both = bool(authored["moving"]["contact"]) and bool(authored["counter"]["contact"]) and not bool(authored["one_sided"])
+    print(
+        "[cube2cm_v6_static_runtime_audit] v6_candidate_authored_static "
+        f"moving_contact={_yes(bool(authored['moving']['contact']))} "
+        f"counter_contact={_yes(bool(authored['counter']['contact']))} "
+        f"one_sided_push={_yes(bool(authored['one_sided']))} "
+        f"moving_overlap_obj_m={_fmt_xyz(np.asarray(authored['moving']['overlap']))} "
+        f"counter_overlap_obj_m={_fmt_xyz(np.asarray(authored['counter']['overlap']))}",
+        flush=True,
+    )
+
+    open_check = _open_clearance_check(args, center, plan, object_size, variant, moving_local, counter_local, counter_origin)
+    print(
+        "[cube2cm_v6_static_runtime_audit] v6_candidate_open_descent "
+        f"waypoints={int(open_check['waypoints'])} contact_count={int(open_check['contact_count'])} "
+        f"clearance_bad={int(open_check['clearance_bad'])} "
+        f"min_separating_gap_m={float(open_check['min_separating_gap']):.6f} "
+        f"open_descent_clearance={_yes(bool(open_check['open_clear']))}",
+        flush=True,
+    )
+
+    endpoint = RUNTIME_ENDPOINTS[variant.name]
+    runtime_center = _runtime_center_for_size(endpoint, object_size)
+    runtime_hits: list[tuple[float, dict[str, object]]] = []
+    runtime_at_candidate_patch: dict[str, object] | None = None
+    for patch_m in args.alignment_patch_margins_m:
+        sample = _counter_alignment_sample(
+            endpoint.q_deg,
+            runtime_center,
+            object_size,
+            variant,
+            moving_local,
+            counter_local,
+            counter_origin,
+            float(patch_m),
+        )
+        ok = bool(sample["moving"]["contact"]) and bool(sample["counter"]["contact"]) and not bool(sample["one_sided"])
+        if abs(float(patch_m) - float(args.candidate_patch_margin_m)) <= 1.0e-12:
+            runtime_at_candidate_patch = sample
+        if ok:
+            runtime_hits.append((float(patch_m), sample))
+        print(
+            "[cube2cm_v6_static_runtime_audit] v6_candidate_runtime_line422 "
+            f"patch_margin_m={float(patch_m):.4f} moving_contact={_yes(bool(sample['moving']['contact']))} "
+            f"counter_contact={_yes(bool(sample['counter']['contact']))} "
+            f"one_sided_push={_yes(bool(sample['one_sided']))} "
+            f"counter_center_obj={_fmt_xyz(np.asarray(sample['counter']['center']))} "
+            f"counter_gap_obj_m={_fmt_xyz(np.asarray(sample['counter']['gap']))}",
+            flush=True,
+        )
+
+    if runtime_at_candidate_patch is None:
+        raise ValueError("candidate_patch_margin_m must be included in alignment_patch_margins_m")
+    min_runtime_patch = None if not runtime_hits else min(patch for patch, _sample in runtime_hits)
+    runtime_plausible = min_runtime_patch is not None and min_runtime_patch <= float(args.max_plausible_patch_margin_m)
+    candidate_patch_ok = (
+        bool(runtime_at_candidate_patch["moving"]["contact"])
+        and bool(runtime_at_candidate_patch["counter"]["contact"])
+        and not bool(runtime_at_candidate_patch["one_sided"])
+        and float(args.candidate_patch_margin_m) <= float(args.max_plausible_patch_margin_m)
+    )
+    success = authored_both and bool(open_check["open_clear"]) and runtime_plausible and candidate_patch_ok
+    print(
+        "[cube2cm_v6_static_runtime_audit] v6_candidate_summary "
+        f"authored_static_both_contact={_yes(authored_both)} "
+        f"open_descent_clearance={_yes(bool(open_check['open_clear']))} "
+        f"runtime_endpoint={endpoint.source_log} "
+        f"runtime_min_patch_margin_m={'NONE' if min_runtime_patch is None else f'{min_runtime_patch:.4f}'} "
+        f"runtime_contact_within_plausible_patch_margin={_yes(runtime_plausible)} "
+        f"candidate_patch_margin_m={float(args.candidate_patch_margin_m):.4f} "
+        f"candidate_patch_condition_ok={_yes(candidate_patch_ok)} "
+        f"target_condition='moving_contact=YES counter_contact=YES one_sided_push=NO' "
+        f"success_claim=NO isaac_physics_validated=NO v6_candidate_static_better={_yes(success)}",
+        flush=True,
+    )
+    print("[cube2cm_v6_static_runtime_audit] v6_candidate_check_end", flush=True)
+    return success
+
+
+def _run_counter_alignment_sweep(args: argparse.Namespace) -> None:
+    object_size = np.asarray(args.alignment_object_size_m, dtype=np.float64)
+    if object_size.shape != (3,) or not np.allclose(object_size, [0.030, 0.030, 0.030], atol=1.0e-12):
+        raise ValueError("counter alignment sweep is intentionally gated to object_size_m=(0.030,0.030,0.030)")
+    variant = next(v for v in VARIANTS if v.name == args.alignment_variant)
+    if not variant.v4_like:
+        raise ValueError("counter alignment sweep is intentionally gated to v4_like first")
+
+    center, plan, q_design, moving_obj, counter_obj_base, moving_local, _counter_local, _counter_origin = _build_jaws(
+        object_size, variant, args
+    )
+    endpoint = RUNTIME_ENDPOINTS[variant.name]
+    runtime_center = _runtime_center_for_size(endpoint, object_size)
+    q_runtime = endpoint.q_deg
+    base_counter_size = np.asarray(args.counter_jaw_size_m, dtype=np.float64)
+
+    baseline_counter_local = _box_vertices(np.zeros(3, dtype=np.float64), base_counter_size, 0.0)
+    baseline_counter_world = center + _rot_z(variant.yaw_deg) @ counter_obj_base
+    baseline_counter_origin = (
+        np.linalg.inv(_gripper_transform(q_design)) @ np.array([*baseline_counter_world, 1.0], dtype=np.float64)
+    )[:3]
+    baseline = _counter_alignment_sample(
+        q_runtime,
+        runtime_center,
+        object_size,
+        variant,
+        moving_local,
+        baseline_counter_local,
+        baseline_counter_origin,
+        0.0,
+    )
+
+    print(
+        "[cube2cm_v6_static_runtime_audit] counter_alignment_sweep_begin "
+        "local_static_only=YES isaac_run=NO training=NO dataset_generation=NO "
+        "variant=v4_like object_size_m=([+0.030000, +0.030000, +0.030000]) "
+        f"runtime_endpoint={endpoint.source_log} "
+        f"runtime_center_for_3cm={_fmt_xyz(runtime_center)} "
+        f"base_moving_design_center_obj={_fmt_xyz(moving_obj)} "
+        f"base_counter_design_center_obj={_fmt_xyz(counter_obj_base)}",
+        flush=True,
+    )
+    print(
+        "[cube2cm_v6_static_runtime_audit] counter_alignment_baseline "
+        f"patch_margin_m=0.0000 moving_contact={_yes(bool(baseline['moving']['contact']))} "
+        f"counter_contact={_yes(bool(baseline['counter']['contact']))} "
+        f"one_sided_push={_yes(bool(baseline['one_sided']))} "
+        f"moving_center_obj={_fmt_xyz(np.asarray(baseline['moving']['center']))} "
+        f"counter_center_obj={_fmt_xyz(np.asarray(baseline['counter']['center']))} "
+        f"counter_gap_obj_m={_fmt_xyz(np.asarray(baseline['counter']['gap']))}",
+        flush=True,
+    )
+
+    best: dict[str, object] | None = None
+    plausible_best: dict[str, object] | None = None
+    total = 0
+    success_count = 0
+    rot = _rot_z(variant.yaw_deg)
+    inv_design = np.linalg.inv(_gripper_transform(q_design))
+
+    for thickness_mm in args.alignment_counter_thickness_y_mm:
+        counter_size = base_counter_size.copy()
+        counter_size[1] = float(thickness_mm) / 1000.0
+        counter_local = _box_vertices(np.zeros(3, dtype=np.float64), counter_size, 0.0)
+        for patch_m in args.alignment_patch_margins_m:
+            first_for_combo: dict[str, object] | None = None
+            for shift_mm in args.alignment_counter_y_shift_mm:
+                total += 1
+                shift_m = float(shift_mm) / 1000.0
+                counter_obj = counter_obj_base + np.array([0.0, shift_m, 0.0], dtype=np.float64)
+                counter_world = center + rot @ counter_obj
+                counter_origin = (inv_design @ np.array([*counter_world, 1.0], dtype=np.float64))[:3]
+                sample = _counter_alignment_sample(
+                    q_runtime,
+                    runtime_center,
+                    object_size,
+                    variant,
+                    moving_local,
+                    counter_local,
+                    counter_origin,
+                    float(patch_m),
+                )
+                ok = bool(sample["moving"]["contact"]) and bool(sample["counter"]["contact"]) and not bool(sample["one_sided"])
+                if args.alignment_print_all or (ok and first_for_combo is None):
+                    print(
+                        "[cube2cm_v6_static_runtime_audit] counter_alignment_candidate "
+                        f"shift_y_mm={float(shift_mm):+.3f} counter_thickness_y_mm={float(thickness_mm):.3f} "
+                        f"patch_margin_m={float(patch_m):.4f} moving_contact={_yes(bool(sample['moving']['contact']))} "
+                        f"counter_contact={_yes(bool(sample['counter']['contact']))} "
+                        f"one_sided_push={_yes(bool(sample['one_sided']))} "
+                        f"counter_center_obj={_fmt_xyz(np.asarray(sample['counter']['center']))} "
+                        f"counter_overlap_obj_m={_fmt_xyz(np.asarray(sample['counter']['overlap']))} "
+                        f"counter_gap_obj_m={_fmt_xyz(np.asarray(sample['counter']['gap']))}",
+                        flush=True,
+                    )
+                if not ok:
+                    continue
+                success_count += 1
+                row = {
+                    "shift_mm": float(shift_mm),
+                    "thickness_mm": float(thickness_mm),
+                    "patch_m": float(patch_m),
+                    "sample": sample,
+                }
+                if first_for_combo is None:
+                    first_for_combo = row
+                if best is None or (
+                    row["shift_mm"],
+                    row["patch_m"],
+                    row["thickness_mm"],
+                ) < (
+                    float(best["shift_mm"]),
+                    float(best["patch_m"]),
+                    float(best["thickness_mm"]),
+                ):
+                    best = row
+                if float(patch_m) <= float(args.max_plausible_patch_margin_m) and (
+                    plausible_best is None
+                    or (
+                        row["shift_mm"],
+                        row["patch_m"],
+                        row["thickness_mm"],
+                    )
+                    < (
+                        float(plausible_best["shift_mm"]),
+                        float(plausible_best["patch_m"]),
+                        float(plausible_best["thickness_mm"]),
+                    )
+                ):
+                    plausible_best = row
+            if first_for_combo is None:
+                print(
+                    "[cube2cm_v6_static_runtime_audit] counter_alignment_combo_no_hit "
+                    f"counter_thickness_y_mm={float(thickness_mm):.3f} patch_margin_m={float(patch_m):.4f}",
+                    flush=True,
+                )
+
+    if best is None:
+        print(
+            "[cube2cm_v6_static_runtime_audit] counter_alignment_summary "
+            f"tested={total} success=0 minimal_shift_found=NO depends_on_unrealistic_patch_margin=UNKNOWN "
+            "target_condition='moving_contact=YES counter_contact=YES one_sided_push=NO'",
+            flush=True,
+        )
+    else:
+        sample = best["sample"]
+        best_patch_plausible = float(best["patch_m"]) <= float(args.max_plausible_patch_margin_m)
+        print(
+            "[cube2cm_v6_static_runtime_audit] counter_alignment_summary "
+            f"tested={total} success={success_count} minimal_shift_found=YES "
+            f"minimal_counter_y_shift_mm={float(best['shift_mm']):.3f} "
+            f"counter_thickness_y_mm={float(best['thickness_mm']):.3f} "
+            f"patch_margin_m={float(best['patch_m']):.4f} "
+            f"minimal_shift_within_plausible_patch_margin={_yes(best_patch_plausible)} "
+            f"minimal_shift_depends_on_unrealistic_patch_margin={_yes(not best_patch_plausible)} "
+            f"plausible_counter_y_shift_found={_yes(plausible_best is not None)} "
+            f"moving_contact={_yes(bool(sample['moving']['contact']))} "
+            f"counter_contact={_yes(bool(sample['counter']['contact']))} "
+            f"one_sided_push={_yes(bool(sample['one_sided']))} "
+            "overfit_to_grasped_marker=NO success_claim=NO "
+            "later_runtime_target='close_reached=YES posewrite_calls=0 hold_lift_follow=YES'",
+            flush=True,
+        )
+        if plausible_best is not None and plausible_best is not best:
+            p_sample = plausible_best["sample"]
+            print(
+                "[cube2cm_v6_static_runtime_audit] counter_alignment_plausible_best "
+                f"minimal_counter_y_shift_mm={float(plausible_best['shift_mm']):.3f} "
+                f"counter_thickness_y_mm={float(plausible_best['thickness_mm']):.3f} "
+                f"patch_margin_m={float(plausible_best['patch_m']):.4f} "
+                f"moving_contact={_yes(bool(p_sample['moving']['contact']))} "
+                f"counter_contact={_yes(bool(p_sample['counter']['contact']))} "
+                f"one_sided_push={_yes(bool(p_sample['one_sided']))}",
+                flush=True,
+            )
+    print("[cube2cm_v6_static_runtime_audit] counter_alignment_sweep_end", flush=True)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--object_sizes_m", nargs="+", type=float, default=[0.020, 0.030])
@@ -210,6 +613,39 @@ def main() -> int:
     ap.add_argument("--v4_jaw_center_z_offset_m", type=float, default=0.0020)
     ap.add_argument("--v5_jaw_center_obj_m", nargs=3, type=float, default=[0.0, 0.0, 0.0])
     ap.add_argument("--v5_design_penetration_m", type=float, default=0.0015)
+    ap.add_argument("--run_counter_alignment_sweep", action="store_true")
+    ap.add_argument("--alignment_variant", choices=["v4_like"], default="v4_like")
+    ap.add_argument("--alignment_object_size_m", nargs=3, type=float, default=[0.030, 0.030, 0.030])
+    ap.add_argument(
+        "--alignment_counter_y_shift_mm",
+        nargs="+",
+        type=float,
+        default=[round(0.5 * i, 3) for i in range(0, 29)],
+        help="Positive values move the counter proxy toward object-frame +Y at the runtime endpoint.",
+    )
+    ap.add_argument(
+        "--alignment_counter_thickness_y_mm",
+        nargs="+",
+        type=float,
+        default=[1.5, 2.0, 3.0, 4.0, 5.0],
+    )
+    ap.add_argument(
+        "--alignment_patch_margins_m",
+        nargs="+",
+        type=float,
+        default=[0.0, 0.001, 0.002, 0.003, 0.005],
+    )
+    ap.add_argument("--max_plausible_patch_margin_m", type=float, default=0.003)
+    ap.add_argument("--alignment_print_all", action="store_true")
+    ap.add_argument("--run_v6_candidate_check", action="store_true")
+    ap.add_argument("--candidate_variant", choices=["v4_like"], default="v4_like")
+    ap.add_argument("--candidate_object_size_m", nargs=3, type=float, default=[0.030, 0.030, 0.030])
+    ap.add_argument("--candidate_counter_x_shift_mm", type=float, default=1.0)
+    ap.add_argument("--candidate_counter_y_shift_mm", type=float, default=5.0)
+    ap.add_argument("--candidate_counter_thickness_y_mm", type=float, default=5.0)
+    ap.add_argument("--candidate_patch_margin_m", type=float, default=0.003)
+    ap.add_argument("--candidate_open_clearance_gate_m", type=float, default=0.0005)
+    ap.add_argument("--candidate_print_open_waypoints", action="store_true")
     args = ap.parse_args()
 
     if len(args.object_sizes_m) % 1 != 0:
@@ -247,12 +683,14 @@ def main() -> int:
             endpoint = RUNTIME_ENDPOINTS[variant.name]
             for patch_m in args.patch_margins_m:
                 _sample("authored_static_design", q_design, center, object_size, variant, moving_local, counter_local, counter_origin, patch_m)
-                runtime_center = endpoint.object_center_m.copy()
-                if abs(edge - 0.020) > 1.0e-9:
-                    # Counterfactual size-only check: keep the logged xy endpoint but put
-                    # the bottom at z=0 for the larger real foam cube.
-                    runtime_center[2] = edge * 0.5
+                runtime_center = _runtime_center_for_size(endpoint, object_size)
                 _sample(endpoint.label, endpoint.q_deg, runtime_center, object_size, variant, moving_local, counter_local, counter_origin, patch_m)
+
+    if args.run_counter_alignment_sweep:
+        _run_counter_alignment_sweep(args)
+    candidate_success = True
+    if args.run_v6_candidate_check:
+        candidate_success = _run_v6_candidate_check(args)
 
     print(
         "[cube2cm_v6_static_runtime_audit] interpretation "
@@ -263,7 +701,7 @@ def main() -> int:
         flush=True,
     )
     print("[cube2cm_v6_static_runtime_audit] CUBE2CM_V6_STATIC_RUNTIME_CONTACT_AUDIT_DONE=YES", flush=True)
-    return 0
+    return 0 if candidate_success else 2
 
 
 if __name__ == "__main__":
