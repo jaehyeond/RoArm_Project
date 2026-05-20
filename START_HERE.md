@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-05-19 KST (Track A Branch B next gate step plan; no Isaac run)
+Last updated: 2026-05-20 KST (Track A Branch B normalized 2cm cube grasp feedback; no Isaac run)
 
 This is the rolling current-state dashboard. Do not treat it as full history.
 Durable lessons live in `claudedocs/DECISIONS.md`; experiment history lives in
@@ -10,8 +10,9 @@ Durable lessons live in `claudedocs/DECISIONS.md`; experiment history lives in
 
 The project is two-track:
 
-- **Track A**: existing sim/lab stacking work. Current active line is P7/Branch B
-  authored constraint mechanics, isolated/pre-chain units only.
+- **Track A**: existing sim/lab stacking work. Current active line is P7/Branch B.
+  Latest pivot is normalized `2cm x 2cm x 2cm` cube grasp: object-frame fixed-jaw
+  offset, z/yaw variation, and later B200-scale sim demo generation.
 - **Track B**: CoRL 2026 paper sprint. Keep separate unless the user explicitly
   asks to switch tracks.
 
@@ -20,6 +21,10 @@ Do **not** use `HANDOFF.md` or `TASKS.md` as current state.
 ## Track A Latest
 
 Latest session:
+
+- `claudedocs/session_20260520_p7_branch_b_normalized_cube_grasp_feedback.md`
+
+Previous gate-plan session:
 
 - `claudedocs/session_20260519_p7_branch_b_next_gate_step_plan.md`
 
@@ -32,6 +37,35 @@ Previous signal-run session:
 - `claudedocs/session_20260519_p7_branch_b_close_near_local_signal.md`
 
 What changed:
+
+- Corrected and recorded the professor's current feedback. The important feedback
+  is not the old render/presentation fix; it is to normalize the grasp around a
+  real `2cm x 2cm x 2cm` cube sponge and build a canonical object-frame grasp
+  primitive. The primitive must account for the effectively fixed jaw, open before
+  descent, descend to an offset target rather than blindly to cube center, close,
+  hold, lift, and eventually scale over `x/y/z/yaw` for sim demonstration
+  generation.
+- Added/updated static-only local scripts:
+  `sim_scripts/p7_branch_b_cube2cm_close_equilibrium_static_analysis.py`
+  md5 `3f6897dec7af2595508c4adddea3e8c9` and
+  `sim_scripts/p7_branch_b_prepare_roarm_cube2cm_opposing_jaw_v4_urdf.py`
+  md5 `bb951300cdc38f87ca0f21e3e04cf0bd`. No Isaac run, no training, no
+  constraints/default integration, no SurfaceGripper, no transport, and no release
+  were executed.
+- Local static evidence: v3 was imbalanced at close_26
+  (`moving_y=0.004011m`, `counter_y=0.000261m`), while the v4 static candidate
+  balances close_26 at `0.002011m / 0.002011m` with open-descent clearance YES.
+  Caveat: v4 loses moving contact at close_30, so it is a latch-stop26 candidate,
+  not a close_30-general solution.
+- USD/B200 status: v3 USD on B200 is verified (`roarm_m3.usd`
+  md5 `4497024d25abab11de5c50e144124553` plus payload md5s in the session doc).
+  v4 USD conversion has **not** been run. B200 was used only to read existing
+  v2/v3 logs and verify existing v3 USD md5s; no new B200 run/conversion was
+  launched.
+- Next useful action is an object-frame static geometry audit: compute fixed-jaw
+  and moving-jaw frames relative to the `2cm^3` cube and compare that principled
+  offset model to the current v4 AABB-balanced candidate. Ask explicit approval
+  before any B200 conversion or Isaac physics run.
 
 - Added a step-by-step next gate plan. No Isaac run, no new runnable script, no
   constraint integration, no SurfaceGripper, no transport, no release, no training,
@@ -716,22 +750,21 @@ Interpretation:
 
 ## Current Direction
 
-Active pivot: Track A P7/Branch B, isolated/pre-integration mechanics and chain-side timing.
+Active pivot: Track A P7/Branch B normalized 2cm cube grasp primitive.
 
-Next concrete action: stay pre-integration. Top-tangent close-near local signal
-passed in the default just-before-CLOSE run and in the approved
-post-close-marker-only/no-posewrite follow-up, but the approved conservative
-side-edge single-point signal check failed at the 4mm `micro_plus_x` target. The
-next useful step is evidence review/static interpretation, not a new matrix by
-default. Do not proceed to post-close-marker+side-edge, transport/release,
-constraint integration, SurfaceGripper, attached transport, or release physics
-claims without a separate explicit approval.
+Next concrete action: stay pre-integration and static-first. Build/verify an
+object-frame grasp model for the `2cm x 2cm x 2cm` cube: fixed-jaw offset,
+moving-jaw open/close sweep, z-height layers, and yaw variation. Compare the
+principled object-frame model to the current v4 AABB-balanced latch-stop26
+candidate before any B200 conversion. Do not proceed to B200 conversion, Isaac
+physics, transport/release, constraint integration, SurfaceGripper, attached
+transport, or release physics claims without separate explicit approval.
 
 ## Must Read First
 
 1. `CLAUDE.md`
 2. `START_HERE.md`
-3. `claudedocs/DECISIONS.md` D042-D051
+3. `claudedocs/DECISIONS.md` D042-D053
 4. `claudedocs/EXPERIMENT_LEDGER.md` latest Branch B rows
 5. `claudedocs/session_20260517_p7_branch_b_dynamic_anchor_chain_contract.md`
 6. `claudedocs/session_20260517_p7_branch_b_roarm_chain_command_stream.md`
@@ -745,4 +778,5 @@ claims without a separate explicit approval.
 14. `claudedocs/session_20260518_p7_branch_b_approach_target_delivery.md`
 15. `claudedocs/session_20260518_p7_branch_b_grasp_pose_deadzone.md`
 16. `claudedocs/session_20260519_p7_branch_b_close_near_local_signal.md`
-17. The B200/local logs cited above, with line numbers
+17. `claudedocs/session_20260520_p7_branch_b_normalized_cube_grasp_feedback.md`
+18. The B200/local logs cited above, with line numbers

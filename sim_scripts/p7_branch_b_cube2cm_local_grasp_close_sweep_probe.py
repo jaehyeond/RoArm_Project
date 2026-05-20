@@ -298,6 +298,14 @@ def main() -> int:
     ap.add_argument("--close_steps_per_angle", type=int, default=45)
     ap.add_argument("--hold_steps", type=int, default=30)
     ap.add_argument("--lift_steps", type=int, default=80)
+    ap.add_argument(
+        "--continue_close_after_grasped_until_angles_done",
+        action="store_true",
+        help=(
+            "Diagnostic-only: keep logging later close_deg values after _grasped_marker "
+            "appears. Early-kill still stops immediately, and hold/lift gates are unchanged."
+        ),
+    )
     ap.add_argument("--episode_length_s", type=float, default=10.0)
     ap.add_argument("--ik_tol_mm", type=float, default=0.75)
     ap.add_argument("--ik_max_iter", type=int, default=240)
@@ -348,7 +356,8 @@ def main() -> int:
         f"object_speed_gate_mps={args.object_speed_gate_mps:.6f} lift_speed_gate_mps={args.lift_speed_gate_mps:.6f} "
         f"gripper_error_gate_deg={args.gripper_error_gate_deg:.3f} "
         f"tilt_gate_deg={args.tilt_gate_deg:.2f} min_upright_z_gate={args.min_upright_z_gate:.3f} "
-        f"min_lift_follow_m={args.min_lift_follow_m:.6f} close_sweep_deg={','.join(f'{x:.2f}' for x in args.close_deg)}",
+        f"min_lift_follow_m={args.min_lift_follow_m:.6f} close_sweep_deg={','.join(f'{x:.2f}' for x in args.close_deg)} "
+        f"continue_close_after_grasped_until_angles_done={_yes(args.continue_close_after_grasped_until_angles_done)}",
         flush=True,
     )
     print(
@@ -692,7 +701,9 @@ def main() -> int:
                 flush=True,
             )
             latch_result = result
-            if result.early_kill or result.grasped_seen:
+            if result.early_kill:
+                break
+            if result.grasped_seen and not args.continue_close_after_grasped_until_angles_done:
                 break
     if latch_result and latch_result.reached and latch_result.grasped_seen and not latch_result.early_kill:
         q_hold = q_close.copy()

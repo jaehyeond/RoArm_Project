@@ -2586,3 +2586,48 @@ Sources:
 - `sim_scripts/p7_branch_b_roarm_chain_close_near_local_signal_probe.py`
 - `claudedocs/session_20260519_p7_branch_b_close_near_local_signal.md`
 - B200 `/tmp/p7_branch_b_roarm_chain_close_near_local_signal_side_edge_b200.{out,err}`
+
+## D053 — Normalize the grasp problem around a 2cm cube object-frame primitive before scaling demonstrations
+
+Evidence:
+
+- The user corrected the current professor feedback on 2026-05-20: the important
+  direction is to normalize the task around the physically cut
+  `2cm x 2cm x 2cm` sponge cube, not to keep chasing the old long-sponge grasp
+  geometry.
+- The professor's suggested structure is object-frame and gripper-geometry aware:
+  account for the effectively fixed jaw, do not drive the TCP blindly into the
+  cube center, open before descent, descend to a lateral/contact-height offset,
+  close, hold, and lift.
+- The same normalized primitive should later vary `x/y` translation, `z` layer
+  height, and yaw/rotation so B200 can generate large sim demonstration corpora
+  for VLA imitation/co-training instead of relying on months of real-only data.
+- Current local static evidence supports the need for a more principled
+  object-frame model. v3's gripper-mounted counter was statically plausible but
+  imbalanced at close_26 (`moving_y=0.004011m`, `counter_y=0.000261m`) and B200
+  close/latch still failed. v4 only balances AABB overlap at close_26
+  (`0.002011m / 0.002011m`) and loses moving contact at close_30; it is a
+  diagnostic latch-stop26 candidate, not a solved grasp primitive.
+
+Implication:
+
+- Do not treat v2, v3, or v4 opposing-jaw geometry as solved grasp.
+- Do not treat `_grasped_marker=YES` as success; require reached, stable hold,
+  lift follow, low drift/speed/tilt, and `posewrite_calls=0`.
+- Before B200 conversion or physics runs, perform a static object-frame geometry
+  audit: fixed-jaw frame, moving-jaw frame, gripper opening/closing angle sweep,
+  cube contact height, and z/yaw variation plan.
+- If a physics test is later approved, keep it close/lift-only and diagnostic:
+  no training, no SurfaceGripper, no constraints/default integration, no
+  transport target, and no release.
+- Only after a canonical cube grasp primitive passes falsifiable physics gates
+  should the project scale to B200 procedural sim demonstration generation.
+
+Sources:
+
+- `claudedocs/session_20260520_p7_branch_b_normalized_cube_grasp_feedback.md`
+- `sim_scripts/p7_branch_b_cube2cm_close_equilibrium_static_analysis.py`
+- `sim_scripts/p7_branch_b_prepare_roarm_cube2cm_opposing_jaw_v4_urdf.py`
+- Local logs:
+  `/tmp/p7_branch_b_cube2cm_close_equilibrium_static_analysis_v3_v4_sweep_local.out`
+  and `/tmp/p7_branch_b_cube2cm_opposing_jaw_v4_urdf_prep_local.out`
