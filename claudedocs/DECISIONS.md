@@ -2789,3 +2789,680 @@ Sources:
 - `sim_scripts/p7_branch_b_cube2cm_runtime_jaw_telemetry_probe.py`
 - `claudedocs/session_20260520_p7_branch_b_cube_contact_state_repair.md`
 - B200 `/tmp/p7_branch_b_cube2cm_runtime_jaw_telemetry_v7_d024_b200.{out,err}`
+
+## D057 — Stop spending primary effort on rigid offset variants; next cube branch must model compliance explicitly
+
+Evidence:
+
+- v7 static prep was already a tolerance/slop candidate, not a strict rigid
+  two-sided pinch. B200
+  `/tmp/p7_branch_b_cube2cm_opposing_jaw_v7_urdf_prep_b200.out:23-28` reports
+  moving jaw strict contact YES, fixed counter strict contact NO, and fixed
+  counter 1mm slop contact YES.
+- The approved v7 runtime telemetry briefly entered the intended neighborhood:
+  close step 2 had moving strict contact and counter 1mm slop contact, but
+  strict counter contact remained NO. At close step 3, object speed rose to about
+  `0.061935m/s` and `one_sided_push=YES`. By close step 4, counter slop contact
+  was also NO.
+- Final v7 close step 45
+  `/tmp/p7_branch_b_cube2cm_runtime_jaw_telemetry_v7_d024_b200.out:419` reports
+  `target_error_m=0.023422`, moving contact YES, counter contact NO, counter
+  slop contact NO, one-sided push YES, and reached NO.
+- Aggregate line 420 reports approach/descent success but close failure, with
+  `attach_calls=0`, `posewrite_calls=0`, telemetry-only YES, and success claim
+  NO.
+- Local static v7 analysis found slop-based candidates but no strict two-sided
+  rigid contact candidates: 9/168 close-both-slop hits and 0/168 close-both-strict
+  hits.
+- Rerunning
+  `sim_scripts/p7_branch_b_cube2cm_v6_static_runtime_contact_audit.py` locally
+  reproduced the prior v4/v5 pattern: authored static designs can show two-sided
+  contact, but logged runtime endpoints remain moving-only even with simple
+  contact-patch margins up to 5mm.
+- Existing project analyses independently identify the same sim-real gap:
+  `sim_gap_analysis.py:190-210` marks deformable sponge contact vs rigid Isaac
+  approximation as a critical contact-dynamics gap; `data_v5_crossvalidation_v2.py`
+  treats 18-20deg as realistic sponge-held gripper state due to compliance.
+
+Implication:
+
+- The current blocker is close-time contact/dynamics, not TCP-only IK.
+- Another small rigid offset can still pass static/prep while failing the same
+  runtime one-sided-push mode. It should not be the default next branch unless it
+  explicitly tests a new, falsifiable mechanism.
+- The next primary branch should explicitly model foam/contact compliance:
+  bounded contact-patch/slop abstraction, softer/contact-parameter diagnostic, or
+  a true deformable/foam proxy if Isaac Lab support is practical.
+- Keep gates separate: static/prep, USD conversion, runtime close contact,
+  hold/lift, then only later dataset/training. Do not run hold-lift or dataset
+  generation until close-time contact/dynamics passes.
+
+Sources:
+
+- `claudedocs/session_20260521_p7_branch_b_compliance_direction_analysis.md`
+- `sim_scripts/p7_branch_b_cube2cm_runtime_jaw_telemetry_probe.py`
+- `sim_scripts/p7_branch_b_cube2cm_v7_object_frame_static_analysis.py`
+- `sim_scripts/p7_branch_b_prepare_roarm_cube2cm_opposing_jaw_v7_urdf.py`
+- B200 `/tmp/p7_branch_b_cube2cm_runtime_jaw_telemetry_v7_d024_b200.out`
+
+## D058 — Compliance contact labels alone are not enough; future close_26 must change dynamics
+
+Evidence:
+
+- Added static-only analysis script
+  `sim_scripts/p7_branch_b_cube2cm_compliance_proxy_static_analysis.py`
+  md5 `bd1f26da1d371e27b559528a6210a941`. It does not launch Isaac, train,
+  generate datasets, edit defaults, insert constraints, attach SurfaceGripper,
+  transport, release, tune gates, or claim success.
+- The script encodes the rechecked v7 close_26 B200 telemetry samples:
+  step 2 `/tmp/p7_branch_b_cube2cm_runtime_jaw_telemetry_v7_d024_b200.out:376`,
+  step 3 `:377`, step 4 `:378`, step 5 `:379`, and final step 45 `:419`.
+- Local run result:
+  `required_budget_close_steps_2_to_4_m=0.001813`,
+  `required_budget_close_steps_2_to_5_m=0.002911`, and
+  `required_budget_final_step_45_m=0.014319`.
+- Under the existing runtime push gate
+  (`push_speed_gate_mps=0.005`, `push_drift_gate_m=0.00020`), step 3 and step 4
+  still fail dynamically even if a 2mm contact/compression envelope relabels
+  counter support through step 4. Step 3 speed is the previously verified
+  `0.061935m/s`.
+- A 15mm envelope would be required to relabel final step 45 counter support,
+  which is outside the declared 5mm plausible diagnostic budget and would be
+  contact-label overclaim rather than a foam grasp mechanism.
+
+Implication:
+
+- The next compliance branch must not only expand slop/contact labels. It must
+  reduce the early asymmetric impulse/speed and keep the object inside the
+  counter-support basin through at least close step 4.
+- Future close_26-only runtime pass criteria should require both:
+  two-sided support under the declared compliance model and no push-gate
+  violation at close steps 2-4.
+- Do not proceed to hold-lift, dataset generation, training, constraints,
+  SurfaceGripper, transport/release, or gate tuning from a label-only pass.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_cube2cm_compliance_proxy_static_analysis.py`
+- B200 `/tmp/p7_branch_b_cube2cm_runtime_jaw_telemetry_v7_d024_b200.out:376-379,419`
+
+## D059 — Mass-only inertia is not the next compliance proxy; use soft-contact dynamics first
+
+Evidence:
+
+- Added static-only design calculator
+  `sim_scripts/p7_branch_b_cube2cm_compliance_dynamics_static_design.py`
+  md5 `d43c93d2810dd56468e5d8b885013146`. It imports the verified v7 close_26
+  samples from the static compliance audit and does not launch Isaac, run
+  telemetry, train, generate datasets, edit defaults, insert constraints, attach
+  SurfaceGripper, transport, release, tune gates, or claim success.
+- Local `py_compile` passed.
+- Local run reported:
+  - step 3 speed `0.061935m/s`, allowed residual ratio `0.080730`;
+  - step 4 speed `0.043783m/s`, allowed residual ratio `0.114200`;
+  - step 5 speed `0.054294m/s`, allowed residual ratio `0.092091`;
+  - required speed suppression across steps 3-5 `0.919270` (`91.9%`).
+- Mass-only constant-impulse estimate rejected:
+  with current diagnostic object mass `0.020kg`, holding steps 3-5 below the
+  `0.005m/s` push-speed gate would require worst-case mass `0.247740kg`, above
+  the declared `0.050kg` plausible diagnostic cap.
+- With a 2mm support budget, step 4 counter support is possible
+  (`step4_counter_gap_m=0.001813`), but step 5 and final support are not
+  (`0.002911m` and `0.014319m`), and step 4 target error is already slightly
+  outside the 3mm gate (`0.003151m`).
+
+Implication:
+
+- Do not spend the next runtime approval on mass-only object changes or
+  contact-label-only expansion.
+- The minimal future runtime mechanism, if separately approved, should be a
+  soft-contact/material diagnostic that attempts to absorb the early asymmetric
+  impulse while keeping counter support through step 4.
+- Future pass criteria must include: step-3 speed below the existing push gate,
+  no one-sided push through steps 2-4, counter support at step 4, close reached,
+  `attach_calls=0`, `posewrite_calls=0`, and `success_claim=NO`.
+- If soft-contact/material tuning cannot meet those telemetry changes, reserve
+  the more artificial virtual-compression-plus-damping proxy; do not jump to
+  hold-lift, constraints, SurfaceGripper, transport/release, dataset generation,
+  or training.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_cube2cm_compliance_dynamics_static_design.py`
+- `sim_scripts/p7_branch_b_cube2cm_compliance_proxy_static_analysis.py`
+- B200 `/tmp/p7_branch_b_cube2cm_runtime_jaw_telemetry_v7_d024_b200.out:377-379,419`
+
+## D060 — Soft-contact material diagnostic may be prepared only as default-off, falsifiable close_26 candidate
+
+Evidence:
+
+- Patched `sim_scripts/p7_branch_b_cube2cm_runtime_jaw_telemetry_probe.py`
+  md5 `7a261b72386ee549cb0ce162916597f7` to add a single default-off
+  `--soft_contact_material_diagnostic` runtime candidate switch. The flag is not
+  used unless a future runtime is separately approved.
+- Baseline behavior is preserved when the flag is absent: object material and
+  rigid-body constants remain the prior values (`static_friction=1.5`,
+  `dynamic_friction=1.2`, `restitution=0.0`, solver iterations `8/1`,
+  max depenetration velocity `5.0`).
+- The soft-contact candidate changes only diagnostic object contact/material
+  response: higher friction, more solver iterations, lower max velocities, and
+  lower max depenetration velocity. It does not add constraints, SurfaceGripper,
+  transport/release, attach posewrite, env default edits, chain default edits,
+  dataset generation, training, or success claims.
+- Added `sim_scripts/p7_branch_b_cube2cm_soft_contact_runtime_criteria_audit.py`
+  md5 `a28c2fa8d8d58c617720f96417707677`, a local posthoc stdout-log audit. It
+  does not launch Isaac.
+- The audit now rejects wrong-mode logs by requiring metadata:
+  `soft_contact_material_diagnostic=YES`,
+  `object_physics mode=soft_contact_material_diagnostic`, and
+  `runtime_candidate_requires_separate_approval=YES`.
+- `python -m py_compile` passed for both scripts.
+- Running the audit on `--use_v7_reference` intentionally returns FAIL, using
+  the previously verified B200 log lines:
+  close step 3 `/tmp/p7_branch_b_cube2cm_runtime_jaw_telemetry_v7_d024_b200.out:377`,
+  close step 4 `:378`, aggregate `:420`. The rejected criteria are:
+  baseline/wrong-mode metadata, `close_reached=NO`, step-3 speed
+  `0.061935m/s > 0.005m/s`, one-sided push at steps 3-4, and step-4 target error
+  `0.003151m > 0.003m`.
+- Running the audit on `--use_synthetic_pass_reference` returns PASS. This
+  proves the criteria implementation is not hardwired to reject all inputs; it
+  accepts a close_26 sample only when the fixed telemetry requirements are met.
+
+Implication:
+
+- The next separately approved runtime, if any, must be killable by telemetry
+  rather than judged by qualitative contact labels.
+- Required future pass criteria are fixed before the run: `approach_ok=YES`,
+  `descend_ok=YES`, `close_reached=YES`, step-3 speed <= `0.005m/s`, no
+  one-sided push through steps 2-4, step-4 counter gap <= `0.002m`, step-4 target
+  error <= `0.003m`, `attach_calls=0`, `posewrite_calls=0`, and
+  `success_claim=NO`.
+- Do not treat the default-off code path as runtime approval. Do not proceed to
+  hold-lift, dataset generation, training, constraints, SurfaceGripper,
+  transport/release, or diagnostic gate tuning unless separately approved.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_cube2cm_runtime_jaw_telemetry_probe.py`
+- `sim_scripts/p7_branch_b_cube2cm_soft_contact_runtime_criteria_audit.py`
+- B200 `/tmp/p7_branch_b_cube2cm_runtime_jaw_telemetry_v7_d024_b200.out:377-378,420`
+
+## D061 — Record v7 as a dynamics failure pattern, not a generic grasp failure
+
+Evidence:
+
+- Added `claudedocs/p7_branch_b_cube2cm_failure_mode_register.md` as the
+  reusable failure-mode register for Track A P7/Branch B cube grasp work.
+- The register cites the verified v7 B200 failure chain:
+  - line 38: strict diagnostic-only scope;
+  - line 39: 3cm cube, `ik_ok=YES`, `max_fk_error_m=0.000518`;
+  - line 68: intended link5 counter geometry with 1mm slop;
+  - line 376: close step 2 has moving contact and counter slop support, but
+    strict counter contact is still `NO`;
+  - line 377: close step 3 starts the dynamic failure with
+    `object_speed_mps=0.061935` and `one_sided_push=YES`;
+  - line 378: close step 4 loses counter slop support and has
+    `target_error_m=0.003151`;
+  - line 419: final step remains moving-only with counter y-gap `0.014319m`;
+  - line 420: aggregate `close_reached=NO`, `attach_calls=0`,
+    `posewrite_calls=0`, `telemetry_only=YES`, `success_claim=NO`.
+- The register explicitly separates narrow successes from physics success:
+  v7 asset/prep/conversion is usable as a diagnostic platform; static compliance
+  and synthetic audit checks are useful constraints; none are a real grasp pass.
+
+Implication:
+
+- The current failure should be recorded as a close-time contact/dynamics
+  failure of the Isaac rigid-cube/jaw proxy, not as evidence that the real robot
+  cannot grasp the foam cube.
+- Future work should not repeat conversion-overclaim, rigid-offset-only probing,
+  slop-label-only passes, mass-only inertia, or one-sided validators.
+- A future success must show the specific telemetry transition: step-3 speed
+  below `0.005m/s`, no one-sided push through steps 2-4, step-4 counter gap <=
+  `0.002m`, step-4 target error <= `0.003m`, close reached, zero attach/posewrite,
+  and no success claim.
+
+Sources:
+
+- `claudedocs/p7_branch_b_cube2cm_failure_mode_register.md`
+- B200 `/tmp/p7_branch_b_cube2cm_runtime_jaw_telemetry_v7_d024_b200.out:38-39,68,376-379,419-420`
+
+## D062 — Soft-contact candidate is statically ready for separate runtime approval, not pre-approved to run
+
+Evidence:
+
+- Added `sim_scripts/p7_branch_b_cube2cm_soft_contact_runtime_readiness.py`
+  md5 `1d022dbbcd57481d1fbf6763663c5041`.
+- The readiness script is local/static only. It explicitly prints
+  `isaac_run=NO`, `runtime_probe_executed=NO`, `training=NO`,
+  `dataset_generation=NO`, `constraints=NO`, `surface_gripper=NO`,
+  `transport_release=NO`, `gate_tuning=NO`, and `success_claim=NO`.
+- Local `py_compile` passed.
+- Local run reported `READY_FOR_SEPARATE_RUNTIME_APPROVAL=YES` after verifying:
+  - runtime probe soft-contact wiring exists and remains default-off;
+  - the posthoc criteria audit has metadata guards;
+  - the audit rejects the encoded v7 reference with return code 1;
+  - the audit accepts the synthetic pass reference with return code 0;
+  - the future candidate command includes `--variant v7`, `--close_deg 26.0`,
+    and `--soft_contact_material_diagnostic`.
+- The future command emitted by readiness is a proposal only and requires
+  separate runtime approval. After B200 environment repair, the correct command
+  uses the `isaacsim_5_1` micromamba env, not system Python or
+  `./IsaacLab/isaaclab.sh -p`.
+- The first posthoc analysis after any future approved run must be:
+  `python sim_scripts/p7_branch_b_cube2cm_soft_contact_runtime_criteria_audit.py --log /tmp/p7_branch_b_cube2cm_soft_contact_material_v7_close26_b200.out`.
+
+Implication:
+
+- The next executable runtime candidate is now precisely specified, but it is not
+  approved by this static readiness pass.
+- If approved later, success requires both correct metadata and fixed telemetry:
+  step-3 speed <= `0.005m/s`, no one-sided push through close steps 2-4, step-4
+  counter gap <= `0.002m`, step-4 target error <= `0.003m`, close reached, zero
+  attach/posewrite, telemetry only, and no success claim.
+- If the future approved run fails those criteria, record the failure before
+  trying another mechanism; the next fallback should be explicit virtual
+  compression plus damping, not rigid offsets, slop labels, mass-only inertia,
+  hold-lift, dataset/training, constraints, SurfaceGripper, transport/release, or
+  gate tuning.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_cube2cm_soft_contact_runtime_readiness.py`
+- `sim_scripts/p7_branch_b_cube2cm_soft_contact_runtime_criteria_audit.py`
+- `sim_scripts/p7_branch_b_cube2cm_runtime_jaw_telemetry_probe.py`
+
+## D063 — Approved soft-contact/material close_26 runtime failed; pivot to explicit compression plus damping
+
+Evidence:
+
+- User approved the next close_26-only soft-contact/material runtime.
+- Two execution-command failures occurred before the valid run and are preserved:
+  - direct system Python failed with `ModuleNotFoundError: No module named
+    'isaaclab'` in
+    `/tmp/p7_branch_b_cube2cm_soft_contact_material_v7_close26_python_direct_fail_b200.err`
+    md5 `4261bcab144070602917ac4e1ab228e1`;
+  - `./IsaacLab/isaaclab.sh -p` failed because
+    `IsaacLab/_isaac_sim/python.sh` was missing in
+    `/tmp/p7_branch_b_cube2cm_soft_contact_material_v7_close26_isaaclab_launcher_fail_b200.err`
+    md5 `88e033670a9853c9b4c045a1e6d048d1`.
+- The valid B200 run used
+  `OMNI_KIT_ACCEPT_EULA=YES`, D024 NVML/Vulkan overrides, and the
+  `/NHNHOME/WORKSPACE/0526040060_A/JHPark/roarm_b200/envs/isaacsim_5_1`
+  micromamba env.
+- Valid stdout:
+  `/tmp/p7_branch_b_cube2cm_soft_contact_material_v7_close26_b200.out`,
+  423 lines, md5 `c3c81c1e6d481f23fdbb35411987ea8a`.
+- Valid stderr:
+  `/tmp/p7_branch_b_cube2cm_soft_contact_material_v7_close26_b200.err`,
+  4 lines, md5 `c0d91f52cb47b553b3d7746ac08995f8`; grep found no traceback,
+  exception, fatal, segfault, driver mismatch, missing Isaac module, or missing
+  Python executable. Stderr is limited to cpufreq/NVML/Fabric messages.
+- Valid stdout line 37 confirms strict scope and
+  `soft_contact_material_diagnostic=YES`.
+- Line 39 confirms `mode=soft_contact_material_diagnostic`,
+  `runtime_candidate_requires_separate_approval=YES`, friction `2.5/2.0`,
+  solver iterations `16/4`, max linear velocity `2.0`, max angular velocity
+  `5.0`, and max depenetration velocity `0.25`.
+- Line 377 fails the decisive speed criterion:
+  `object_speed_mps=0.049059` vs required `<=0.005`, with
+  `one_sided_push=YES`.
+- Line 378 still has `one_sided_push=YES`, counter y-gap `0.001989m`, and
+  `target_error_m=0.003492` vs required `<=0.003`.
+- Line 420 reports `future_close26_posthoc_pass=NO`.
+- Line 421 reports aggregate failure:
+  `approach_ok=YES`, `descend_ok=YES`, `close_reached=NO`, `attach_calls=0`,
+  `posewrite_calls=0`, `telemetry_only=YES`, `success_claim=NO`.
+- Updated posthoc audit md5 is `a28c2fa8d8d58c617720f96417707677`; it correctly
+  rejects the valid soft-contact runtime log while confirming the metadata
+  criteria pass.
+
+Implication:
+
+- The minimal material-only explanation is falsified for this proxy. It improved
+  the step-3 speed from rigid-v7 `0.061935m/s` to `0.049059m/s`, about 20.8%
+  suppression, but the required criterion needs `<=0.005m/s`, about 91.9%
+  suppression from the original baseline.
+- The candidate kept step-4 counter support barely inside the 2mm budget, but it
+  did not prevent one-sided push and did not keep target error within the 3mm
+  criterion.
+- Do not spend more runtime on material-only friction/solver/depenetration
+  changes unless a new falsifiable mechanism is added.
+- Next branch should be static-first explicit virtual compression plus damping:
+  bounded support/compression budget plus a mechanism that directly suppresses
+  asymmetric close impulse before step 3.
+- Hold-lift, dataset generation, training, constraints, SurfaceGripper,
+  transport/release, and gate tuning remain blocked.
+
+Sources:
+
+- B200 `/tmp/p7_branch_b_cube2cm_soft_contact_material_v7_close26_b200.out:37-39,67-68,376-379,419-421`
+- B200 `/tmp/p7_branch_b_cube2cm_soft_contact_material_v7_close26_b200.err:1-4`
+- `sim_scripts/p7_branch_b_cube2cm_soft_contact_runtime_criteria_audit.py`
+- `claudedocs/p7_branch_b_cube2cm_failure_mode_register.md`
+
+## D064 — Next mechanism must be explicit compression plus damping, with step-3 damping active
+
+Evidence:
+
+- Added static-only design script
+  `sim_scripts/p7_branch_b_cube2cm_virtual_compression_damping_static_design.py`
+  md5 `aab11fb5ecaec645e49f4a9e34d9c185`.
+- The script encodes the verified rigid-v7 and approved soft-contact B200
+  close_26 telemetry samples and does not launch Isaac, run runtime, train,
+  generate datasets, insert constraints, attach SurfaceGripper, transport/release,
+  tune gates, or claim success.
+- Local `py_compile` passed.
+- Local run reported:
+  - step 3 material-only suppression vs rigid v7: `0.207895` (20.8%);
+  - step 3 still requires extra suppression from soft-contact result:
+    `0.898082` (89.8%);
+  - step 4 extra suppression required: `0.867381` (86.7%);
+  - step 5 extra suppression required: `0.903574` (90.4%);
+  - worst required extra suppression from the soft-contact result: `90.4%`;
+  - step 4 counter gap remains barely supportable (`0.001989m <= 0.002m`), but
+    step 4 target error fails (`0.003492m > 0.003m`);
+  - step 5 is already outside the 2mm support budget (`0.003205m`).
+
+Implication:
+
+- More material-only friction/solver/depenetration changes are not the right next
+  mechanism unless they introduce an explicit falsifiable damping/compression
+  behavior.
+- The next static/code design should model bounded compression plus damping:
+  damping must be active by close step 3, support must remain bounded through
+  step 4, and the posthoc runtime falsifier remains step-3 speed above gate,
+  one-sided push at steps 2-4, or step-4 target error above gate.
+- Do not proceed to hold-lift, dataset/training, constraints, SurfaceGripper,
+  transport/release, or gate tuning.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_cube2cm_virtual_compression_damping_static_design.py`
+- B200 `/tmp/p7_branch_b_cube2cm_runtime_jaw_telemetry_v7_d024_b200.out:377-379`
+- B200 `/tmp/p7_branch_b_cube2cm_soft_contact_material_v7_close26_b200.out:377-379`
+
+## D065 — Virtual compression plus damping is now the default-off next candidate; runtime remains separately unapproved
+
+Evidence:
+
+- Re-verified the approved soft-contact/material B200 runtime against the actual
+  log. Stdout `/tmp/p7_branch_b_cube2cm_soft_contact_material_v7_close26_b200.out`
+  has md5 `c3c81c1e6d481f23fdbb35411987ea8a`; stderr md5 is
+  `c0d91f52cb47b553b3d7746ac08995f8`.
+- Soft-contact stdout line 37 confirms strict diagnostic scope and
+  `soft_contact_material_diagnostic=YES`; line 39 confirms
+  `mode=soft_contact_material_diagnostic` and
+  `runtime_candidate_requires_separate_approval=YES`.
+- Soft-contact line 377 still fails step-3 speed:
+  `object_speed_mps=0.049059` and `one_sided_push=YES`; line 378 has step-4
+  `target_error_m=0.003492`, counter y-gap `0.001989m`, and
+  `one_sided_push=YES`; line 420 reports `future_close26_posthoc_pass=NO`;
+  line 421 reports `close_reached=NO`, `attach_calls=0`, `posewrite_calls=0`,
+  `telemetry_only=YES`, and `success_claim=NO`.
+- Local static script
+  `sim_scripts/p7_branch_b_cube2cm_virtual_compression_damping_static_design.py`
+  md5 `c45fb69a4cef556deaa87cb5247b4c73` now prints the proposed proxy:
+  compression budget `0.002m`, max plausible compression `0.003m`, damping start
+  close step `3`, residual velocity ratio `0.08`, and no attach/posewrite,
+  constraints, SurfaceGripper, transport/release, env default edits, gate tuning,
+  or success claim.
+- The same local run projects damped speeds from the soft-contact result:
+  step 3 `0.003925m/s`, step 4 `0.003016m/s`, and step 5 `0.004148m/s`, all
+  below the `0.005m/s` speed gate; however step 4 target error remains a required
+  runtime falsifier and step 5 is outside the 2mm support budget.
+- `sim_scripts/p7_branch_b_cube2cm_runtime_jaw_telemetry_probe.py` md5
+  `9e5292f176d9b90df30cfd23bdb36028` now has default-off
+  `--virtual_compression_damping_diagnostic`, mutually exclusive with
+  `--soft_contact_material_diagnostic`. The runtime candidate logs
+  `virtual_compression_damping_diagnostic`, metadata mode
+  `virtual_compression_damping_diagnostic`, bounded support eligibility,
+  velocity-damping writes, and still keeps attach/posewrite counters separate.
+- `sim_scripts/p7_branch_b_cube2cm_soft_contact_runtime_criteria_audit.py` md5
+  `fba03491e25bdd637c73dc90ca6a0836` now accepts
+  `--expected_mechanism virtual_compression_damping_diagnostic`, rejects wrong
+  metadata, rejects the encoded v7 reference, and accepts a synthetic pass.
+- `sim_scripts/p7_branch_b_cube2cm_soft_contact_runtime_readiness.py` md5
+  `dcec12b0b0063fb34115e3467d435a51` is still local/static only and printed
+  `READY_FOR_SEPARATE_RUNTIME_APPROVAL=YES` for the future command shape using
+  `--virtual_compression_damping_diagnostic`. This is readiness, not runtime
+  approval or physics success.
+- Local `py_compile` passed for the runtime probe, audit, readiness, and static
+  design scripts. No Isaac runtime, training, dataset generation, constraint,
+  SurfaceGripper, transport/release, hold-lift, gate tuning, or success claim was
+  run in this static/code pass.
+
+Implication:
+
+- The next mechanism is no longer material-only soft-contact. It is explicit
+  virtual compression plus damping, and it remains a separately approved
+  close_26-only runtime candidate.
+- Any future runtime must be killed by wrong metadata, step-3 speed above
+  `0.005m/s`, one-sided push in close steps 2-4, step-4 counter gap above
+  `0.002m`, step-4 target error above `0.003m`, `close_reached=NO`,
+  nonzero attach/posewrite, or `success_claim=YES`.
+- Passing the static readiness script is not evidence of grasp success. It only
+  means the future diagnostic command and posthoc falsifier are now specified.
+
+Sources:
+
+- B200 `/tmp/p7_branch_b_cube2cm_soft_contact_material_v7_close26_b200.out:37-39,377-378,420-421`
+- B200 `/tmp/p7_branch_b_cube2cm_soft_contact_material_v7_close26_b200.err:1-4`
+- `sim_scripts/p7_branch_b_cube2cm_virtual_compression_damping_static_design.py`
+- `sim_scripts/p7_branch_b_cube2cm_runtime_jaw_telemetry_probe.py`
+- `sim_scripts/p7_branch_b_cube2cm_soft_contact_runtime_criteria_audit.py`
+- `sim_scripts/p7_branch_b_cube2cm_soft_contact_runtime_readiness.py`
+
+## D066 — Virtual compression+damping audit must require actual damping activation, not only metadata
+
+Evidence:
+
+- Code review found a falsifiability gap after D065: runtime probe logs
+  `virtual_damping_active`, per-step `virtual_velocity_damping_writes_total`,
+  and aggregate `virtual_velocity_damping_writes`, but the posthoc audit only
+  required virtual metadata plus outcome gates. That could let a future log with
+  correct virtual metadata but zero damping writes pass if other numbers happened
+  to look good.
+- Updated
+  `sim_scripts/p7_branch_b_cube2cm_soft_contact_runtime_criteria_audit.py` md5
+  `065110aa514e49c62747fe4ab6ceecf4` to parse `virtual_support`,
+  `virtual_damping_active`, `virtual_velocity_damping_writes_total`, and
+  aggregate `virtual_velocity_damping_writes`.
+- For `--expected_mechanism virtual_compression_damping_diagnostic`, the audit
+  now requires positive aggregate damping writes, `virtual_support_step3=YES`,
+  `virtual_damping_active_step3=YES`, and at least one damping write by close
+  step 3. It still requires the D065 gates: correct metadata, close reached,
+  no early kill, attach/posewrite zero, telemetry-only, no success claim,
+  step-3 speed <= `0.005m/s`, no one-sided push in steps 2-4, step-4 counter
+  gap <= `0.002m`, and step-4 target error <= `0.003m`.
+- Added an embedded synthetic negative control:
+  `--use_synthetic_virtual_no_damping_reference`. It has correct virtual
+  metadata and passing numeric contact gates, but zero damping writes and
+  `virtual_damping_active=NO`; the audit rejects it.
+- Updated
+  `sim_scripts/p7_branch_b_cube2cm_soft_contact_runtime_readiness.py` md5
+  `04934025ecf5a4793002c2d9fed20b36` so local readiness requires the new audit
+  checks and verifies the no-damping synthetic rejection.
+- Local verification passed:
+  `python -m py_compile` for runtime probe, audit, readiness, and static design;
+  `python sim_scripts/p7_branch_b_cube2cm_virtual_compression_damping_static_design.py`;
+  v7 reference audit with expected virtual mechanism returned FAIL;
+  synthetic no-damping virtual reference returned FAIL;
+  synthetic virtual pass returned PASS;
+  readiness returned `READY_FOR_SEPARATE_RUNTIME_APPROVAL=YES`;
+  `git diff --check` passed.
+- No Isaac runtime, training, dataset generation, hold-lift, constraints,
+  SurfaceGripper, transport/release, gate tuning, or success claim was run.
+
+Implication:
+
+- A future virtual compression+damping runtime cannot pass merely by naming the
+  mechanism. It must show the damping mechanism was active by close step 3 and
+  wrote velocity damping at least once, while still satisfying the outcome
+  falsifiers.
+- Readiness remains only a command-shape/posthoc-contract check. It is not
+  runtime approval and not physics success.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_cube2cm_soft_contact_runtime_criteria_audit.py`
+- `sim_scripts/p7_branch_b_cube2cm_soft_contact_runtime_readiness.py`
+- `sim_scripts/p7_branch_b_cube2cm_runtime_jaw_telemetry_probe.py`
+
+## D067 — Approved virtual compression+damping runtime partially fixed speed/one-sided push but still failed close_26
+
+Evidence:
+
+- User approved one close_26-only B200 runtime for Track A P7/Branch B
+  `--virtual_compression_damping_diagnostic`. No training, cube sim dataset
+  generation, hold-lift, constraints/default integration, SurfaceGripper,
+  transport/release, gate tuning, or success claim was run.
+- B200 stdout
+  `/tmp/p7_branch_b_cube2cm_virtual_compression_damping_v7_close26_b200.out`
+  has md5 `7097b2c2eb70ba77d363dcfade601952`; stderr md5 is
+  `35dc65de1f7982e1a7b1115784cff075`.
+- Stdout line 37 confirms strict diagnostic scope, close_26 only,
+  `soft_contact_material_diagnostic=NO`,
+  `virtual_compression_damping_diagnostic=YES`, no constraints,
+  SurfaceGripper, transport/release, training, gate tuning, hidden posewrite, or
+  success claim.
+- Lines 39-40 confirm `mode=virtual_compression_damping_diagnostic`,
+  `runtime_candidate_requires_separate_approval=YES`, compression budget
+  `0.002m`, max plausible compression `0.003m`, residual velocity ratio `0.08`,
+  damping start close step `3`, `damping_writes_pose=NO`, and
+  `damping_writes_velocity=YES`.
+- Step 3, line 378, is the key partial improvement: pre-damping speed was
+  `0.061935m/s`, logged speed after damping was `0.004955m/s`, support was YES,
+  `virtual_damping_active=YES`, `virtual_velocity_damping_writes_total=1`, and
+  `one_sided_push=NO`. This passes the step-3 speed gate and proves the virtual
+  damping path actually activated.
+- Step 4, line 379, remains a fail despite support and damping: speed
+  `0.003203m/s` and counter y-gap `0.001794m` are within criteria, but
+  `target_error_m=0.003130 > 0.003`.
+- Step 5, line 380, shows why this is not a stable close-time mechanism:
+  counter y-gap grows to `0.002738m`, `virtual_support=NO`,
+  `virtual_damping_active=NO`, speed rebounds to `0.050912m/s`, and
+  `one_sided_push=YES`.
+- Final lines 421-422 report `future_close26_posthoc_pass=NO`,
+  `close_reached=NO`, `virtual_velocity_damping_writes=2`, attach/posewrite
+  zero, telemetry-only, and `success_claim=NO`.
+- B200 posthoc audit returned FAIL. Passing checks included metadata, positive
+  damping writes, step-3 speed below gate, step-3 support/damping activation, no
+  one-sided push in steps 2-4, and step-4 counter support. Failing checks were
+  `close_reached` and `target_step4_within_gate` (`0.003130 > 0.003`).
+- Stderr lines 1-4 contained the known cpufreq/NVML/Fabric messages only; grep
+  for traceback, exception, fatal, segfault, driver mismatch, missing module, and
+  missing python returned no matches.
+
+Implication:
+
+- The virtual compression+damping mechanism is not a pass, but it is informative:
+  explicit damping fixed the step-3 speed problem and removed one-sided push for
+  the required steps 2-4.
+- The remaining blocker is no longer simply "damping absent"; it is target-error
+  control plus support/damping horizon. The mechanism drops out of support at
+  step 5 and the close never reaches.
+- Do not tune the 3mm target-error gate to rescue this. Do not jump to hold-lift,
+  transport/release, constraints, SurfaceGripper, or training. The next work
+  should be static/code-first failure attribution for target error and support
+  retention before any further runtime approval.
+
+Sources:
+
+- B200 `/tmp/p7_branch_b_cube2cm_virtual_compression_damping_v7_close26_b200.out:37-40,68-69,378-382,421-422`
+- B200 `/tmp/p7_branch_b_cube2cm_virtual_compression_damping_v7_close26_b200.err:1-4`
+- `sim_scripts/p7_branch_b_cube2cm_soft_contact_runtime_criteria_audit.py`
+
+## D068 — Next static requirement is target-error control plus support/damping horizon, not stronger speed damping alone
+
+Evidence:
+
+- Added
+  `sim_scripts/p7_branch_b_cube2cm_virtual_runtime_failure_static_analysis.py`
+  md5 `0cccd8d9f3e5aaf7dc27fc3eb034967c`. It encodes the approved virtual
+  runtime B200 lines 378-380 and 420, and is local/static only: no Isaac runtime,
+  training, dataset generation, hold-lift, constraints, SurfaceGripper,
+  transport/release, gate tuning, or success claim.
+- The static analysis reports step-3 damping suppression `0.919997` with final
+  step-3 speed `0.004955m/s`, support YES, damping active YES, and one-sided push
+  NO.
+- It reports step-4 damping suppression `0.919989` and speed `0.003203m/s`, but
+  target error remains `0.003130m`, which exceeds the fixed 3mm gate by
+  `0.000130m` (`0.130mm`).
+- It reports step-5 support excess `0.000738m` (`0.738mm`) beyond the 2mm support
+  budget. Step 5 is still within the declared 3mm max plausible compression by
+  only `0.000262m`, but the current runtime turns damping off at that point, so
+  speed rebounds to `0.050912m/s` and one-sided push returns.
+- Final line 420 remains far outside any plausible support proxy:
+  final counter y-gap `0.013828m`, which is `0.010828m` beyond the 3mm max
+  plausible compression, with final target error `0.022778m`.
+
+Implication:
+
+- The next mechanism should not be "increase damping" in isolation. Speed damping
+  already passed the early speed gate when active.
+- The next static/code-first design must explain both target-error control below
+  3mm and support/damping retention beyond step 4. It must still keep attach and
+  posewrite zero and cannot rely on gate tuning.
+- Any future runtime before that failure attribution would likely retest the same
+  partial mechanism and is not justified.
+
+Sources:
+
+- `sim_scripts/p7_branch_b_cube2cm_virtual_runtime_failure_static_analysis.py`
+- B200 `/tmp/p7_branch_b_cube2cm_virtual_compression_damping_v7_close26_b200.out:378-380,420`
+
+## D069 — B200 endgame requires Track A preservation before Track B heavy training; next Track A mechanism is target-guarded micro-close plus support horizon
+
+Evidence:
+
+- User stated the Track B schedule for the remaining B200 window:
+  backup pipeline test; B200 `openvla-oft` environment setup with
+  `flash-attn==2.5.5` and HARD RULE #15 nightly cu128 recovery; 1K smoke with
+  `action_dim=6` and `image=top`; OpenVLA-OFT 30K-50K finetune selected from
+  smoke time/step; offline eval and final backup; and pi0 RunPod handoff after
+  B200 release around 2026-05-22 23:59.
+- Track B remains separate from Track A P7/Branch B. Track B training results
+  must not overwrite Track A runtime/contact verdicts.
+- Local backup state includes untracked `b200_backup_20260521/`. During
+  inspection it had `env.sh` and a growing rsync-style temporary file
+  `._speedtest_model.safetensors.MIJ5aq`; final check later showed only
+  `env.sh` remaining. Do not treat the transient temp file as a completed backup
+  artifact.
+- Added
+  `claudedocs/b200_endgame_track_a_preservation_track_b_plan_20260521.md` to
+  record the Track B phases, Track A `/tmp` logs to preserve, backup guardrails,
+  and the separation rule.
+- Added
+  `sim_scripts/p7_branch_b_cube2cm_target_support_horizon_static_design.py`
+  md5 `dca5322e654f3b0d415822f0972d383e`; `py_compile` passed and local static
+  run completed.
+- The static design rejects stronger damping alone:
+  step 4 still exceeds the fixed target gate by `0.130mm`, and step 5 target
+  excess is `1.843mm`.
+- It rejects support-label-only:
+  final counter y-gap is `0.013828m`, which is `0.010828m` beyond the 3mm max
+  plausible compression.
+- It selects the next mechanism shape as default-off target-guarded micro-close
+  plus support-horizon damping, with unchanged fixed audit gates:
+  3mm target gate, 2mm step-4 support budget, no attach/posewrite, no
+  constraints, no SurfaceGripper, no transport/release, no env default edits, no
+  gate tuning, and no success claim.
+
+Implication:
+
+- Before Track B consumes B200 with long OpenVLA-OFT runs, preserve Track A logs,
+  docs, code, and USD artifacts with md5 manifests.
+- Do not rerun the same Track A virtual compression+damping parameters.
+- The next Track A code work, if approved, should implement a default-off
+  target-guarded micro-close/support-horizon diagnostic. It must be falsifiable
+  by step-4 target error, step-5 support/horizon loss, close_reached=NO, or
+  attach/posewrite nonzero.
+- `MEMORY.md` remains an index/hard-rule source; project truth stays in
+  `START_HERE.md`, `DECISIONS.md`, ledger, session docs, and B200 logs.
+
+Sources:
+
+- `claudedocs/b200_endgame_track_a_preservation_track_b_plan_20260521.md`
+- `sim_scripts/p7_branch_b_cube2cm_target_support_horizon_static_design.py`
+- B200 `/tmp/p7_branch_b_cube2cm_virtual_compression_damping_v7_close26_b200.out:378-380,420`

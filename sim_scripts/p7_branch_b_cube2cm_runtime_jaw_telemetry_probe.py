@@ -57,6 +57,33 @@ V5_USD_PATH = "/tmp/p7_branch_b_cube2cm_opposing_jaw_v5_collision_usd/roarm_m3.u
 V6_USD_PATH = "/tmp/p7_branch_b_cube2cm_opposing_jaw_v6_collision_usd/roarm_m3.usd"
 V7_USD_PATH = "/tmp/p7_branch_b_cube2cm_opposing_jaw_v7_collision_usd_d024/roarm_m3.usd"
 
+BASE_OBJECT_STATIC_FRICTION = 1.5
+BASE_OBJECT_DYNAMIC_FRICTION = 1.2
+BASE_OBJECT_RESTITUTION = 0.0
+BASE_SOLVER_POSITION_ITERATIONS = 8
+BASE_SOLVER_VELOCITY_ITERATIONS = 1
+BASE_MAX_ANGULAR_VELOCITY = 10.0
+BASE_MAX_LINEAR_VELOCITY = 10.0
+BASE_MAX_DEPENETRATION_VELOCITY = 5.0
+
+SOFT_CONTACT_STATIC_FRICTION = 2.5
+SOFT_CONTACT_DYNAMIC_FRICTION = 2.0
+SOFT_CONTACT_RESTITUTION = 0.0
+SOFT_CONTACT_SOLVER_POSITION_ITERATIONS = 16
+SOFT_CONTACT_SOLVER_VELOCITY_ITERATIONS = 4
+SOFT_CONTACT_MAX_ANGULAR_VELOCITY = 5.0
+SOFT_CONTACT_MAX_LINEAR_VELOCITY = 2.0
+SOFT_CONTACT_MAX_DEPENETRATION_VELOCITY = 0.25
+
+VIRTUAL_COMPRESSION_BUDGET_M = 0.002
+VIRTUAL_MAX_PLAUSIBLE_COMPRESSION_M = 0.003
+VIRTUAL_VELOCITY_DAMPING_RESIDUAL_RATIO = 0.08
+VIRTUAL_DAMPING_START_CLOSE_STEP = 3
+
+FUTURE_CLOSE26_PUSH_SPEED_GATE_MPS = 0.005
+FUTURE_CLOSE26_TARGET_ERROR_GATE_M = 0.003
+FUTURE_CLOSE26_COUNTER_SUPPORT_BUDGET_M = 0.002
+
 
 @dataclass(frozen=True)
 class JawGeometry:
@@ -70,12 +97,60 @@ class JawGeometry:
     design_counter_center_ref: np.ndarray
 
 
+@dataclass(frozen=True)
+class ObjectPhysicsParams:
+    solver_position_iteration_count: int
+    solver_velocity_iteration_count: int
+    max_angular_velocity: float
+    max_linear_velocity: float
+    max_depenetration_velocity: float
+    static_friction: float
+    dynamic_friction: float
+    restitution: float
+
+
 def _axis_gap(mesh_min: np.ndarray, mesh_max: np.ndarray, cube_min: np.ndarray, cube_max: np.ndarray) -> np.ndarray:
     return np.maximum(np.maximum(cube_min - mesh_max, mesh_min - cube_max), 0.0)
 
 
 def _fmt_deg(values: np.ndarray) -> str:
     return "[" + ",".join(f"{v:+.3f}" for v in values) + "]"
+
+
+def _object_physics_params(args: argparse.Namespace) -> ObjectPhysicsParams:
+    if args.soft_contact_material_diagnostic:
+        return ObjectPhysicsParams(
+            solver_position_iteration_count=SOFT_CONTACT_SOLVER_POSITION_ITERATIONS,
+            solver_velocity_iteration_count=SOFT_CONTACT_SOLVER_VELOCITY_ITERATIONS,
+            max_angular_velocity=SOFT_CONTACT_MAX_ANGULAR_VELOCITY,
+            max_linear_velocity=SOFT_CONTACT_MAX_LINEAR_VELOCITY,
+            max_depenetration_velocity=SOFT_CONTACT_MAX_DEPENETRATION_VELOCITY,
+            static_friction=SOFT_CONTACT_STATIC_FRICTION,
+            dynamic_friction=SOFT_CONTACT_DYNAMIC_FRICTION,
+            restitution=SOFT_CONTACT_RESTITUTION,
+        )
+    return ObjectPhysicsParams(
+        solver_position_iteration_count=BASE_SOLVER_POSITION_ITERATIONS,
+        solver_velocity_iteration_count=BASE_SOLVER_VELOCITY_ITERATIONS,
+        max_angular_velocity=BASE_MAX_ANGULAR_VELOCITY,
+        max_linear_velocity=BASE_MAX_LINEAR_VELOCITY,
+        max_depenetration_velocity=BASE_MAX_DEPENETRATION_VELOCITY,
+        static_friction=BASE_OBJECT_STATIC_FRICTION,
+        dynamic_friction=BASE_OBJECT_DYNAMIC_FRICTION,
+        restitution=BASE_OBJECT_RESTITUTION,
+    )
+
+
+def _runtime_candidate_mode(args: argparse.Namespace) -> str:
+    if args.virtual_compression_damping_diagnostic:
+        return "virtual_compression_damping_diagnostic"
+    if args.soft_contact_material_diagnostic:
+        return "soft_contact_material_diagnostic"
+    return "baseline"
+
+
+def _runtime_candidate_requires_separate_approval(args: argparse.Namespace) -> bool:
+    return bool(args.soft_contact_material_diagnostic or args.virtual_compression_damping_diagnostic)
 
 
 def _homogeneous(rot: np.ndarray, pos: np.ndarray) -> np.ndarray:
@@ -334,6 +409,28 @@ def _parse_args() -> argparse.Namespace:
     ap.add_argument("--fixed_counter_clearance_m", type=float, default=0.0021)
     ap.add_argument("--fixed_counter_x_offset_m", type=float, default=0.0)
     ap.add_argument("--counter_contact_slop_m", type=float, default=0.0)
+    ap.add_argument(
+        "--soft_contact_material_diagnostic",
+        action="store_true",
+        help="Default-off close-contact diagnostic candidate; requires separate runtime approval.",
+    )
+    ap.add_argument(
+        "--virtual_compression_damping_diagnostic",
+        action="store_true",
+        help="Default-off virtual compression+damping diagnostic candidate; requires separate runtime approval.",
+    )
+    ap.add_argument("--virtual_compression_budget_m", type=float, default=VIRTUAL_COMPRESSION_BUDGET_M)
+    ap.add_argument(
+        "--virtual_max_plausible_compression_m",
+        type=float,
+        default=VIRTUAL_MAX_PLAUSIBLE_COMPRESSION_M,
+    )
+    ap.add_argument(
+        "--virtual_velocity_damping_residual_ratio",
+        type=float,
+        default=VIRTUAL_VELOCITY_DAMPING_RESIDUAL_RATIO,
+    )
+    ap.add_argument("--virtual_damping_start_close_step", type=int, default=VIRTUAL_DAMPING_START_CLOSE_STEP)
     args = ap.parse_args()
     _apply_variant_defaults(args)
 
@@ -348,6 +445,16 @@ def _parse_args() -> argparse.Namespace:
         raise ValueError("approach_clearance_m must be above grasp_surface_margin_m")
     if args.command_resample_fraction <= 0.0 or args.command_resample_fraction > 1.0:
         raise ValueError("command_resample_fraction must be in (0, 1]")
+    if args.soft_contact_material_diagnostic and args.virtual_compression_damping_diagnostic:
+        raise ValueError("choose only one runtime candidate diagnostic flag")
+    if args.virtual_compression_budget_m < 0.0:
+        raise ValueError("virtual_compression_budget_m must be non-negative")
+    if args.virtual_max_plausible_compression_m < args.virtual_compression_budget_m:
+        raise ValueError("virtual_max_plausible_compression_m must be >= virtual_compression_budget_m")
+    if not 0.0 <= args.virtual_velocity_damping_residual_ratio <= 1.0:
+        raise ValueError("virtual_velocity_damping_residual_ratio must be in [0, 1]")
+    if args.virtual_damping_start_close_step < 1:
+        raise ValueError("virtual_damping_start_close_step must be >= 1")
     return args
 
 
@@ -355,6 +462,9 @@ def main() -> int:
     args = _parse_args()
     os.environ["ROARM_M3_USD_PATH"] = str(args.robot_usd_path)
     object_size = np.asarray(args.object_size_m, dtype=np.float64)
+    object_physics = _object_physics_params(args)
+    candidate_mode = _runtime_candidate_mode(args)
+    runtime_candidate_requires_approval = _runtime_candidate_requires_separate_approval(args)
     plan = _build_plan(args)
 
     from isaaclab.app import AppLauncher
@@ -375,6 +485,8 @@ def main() -> int:
         "env_default_edits=NO chain_defaults_edits=NO p7_training=NO constraint_prim_insertion=NO "
         "surface_gripper=NO attached_transport=NO transport_target=NO release_marker=NO "
         "scripted_release_variant=NO gate_tuning=NO close_26_only=YES "
+        f"soft_contact_material_diagnostic={'YES' if args.soft_contact_material_diagnostic else 'NO'} "
+        f"virtual_compression_damping_diagnostic={'YES' if args.virtual_compression_damping_diagnostic else 'NO'} "
         "hidden_kinematic_posewrite_allowed=NO claim_p7_success=NO",
         flush=True,
     )
@@ -386,6 +498,29 @@ def main() -> int:
         f"close_deg={args.close_deg[0]:.2f} ik_ok={_yes(plan.approach_ik_ok and plan.descend_ik_ok)} "
         f"ik_err_mm=({plan.approach_ik_err_mm:.3f},{plan.descend_ik_err_mm:.3f}) "
         f"max_fk_error_m={plan.max_fk_error_m:.6f}",
+        flush=True,
+    )
+    print(
+        "[cube2cm_runtime_jaw_telemetry] object_physics "
+        f"mode={candidate_mode} "
+        f"runtime_candidate_requires_separate_approval={'YES' if runtime_candidate_requires_approval else 'NO'} "
+        f"mass_kg={args.object_mass_kg:.6f} static_friction={object_physics.static_friction:.6f} "
+        f"dynamic_friction={object_physics.dynamic_friction:.6f} restitution={object_physics.restitution:.6f} "
+        f"solver_position_iterations={object_physics.solver_position_iteration_count} "
+        f"solver_velocity_iterations={object_physics.solver_velocity_iteration_count} "
+        f"max_linear_velocity={object_physics.max_linear_velocity:.6f} "
+        f"max_angular_velocity={object_physics.max_angular_velocity:.6f} "
+        f"max_depenetration_velocity={object_physics.max_depenetration_velocity:.6f}",
+        flush=True,
+    )
+    print(
+        "[cube2cm_runtime_jaw_telemetry] virtual_compression_damping "
+        f"enabled={'YES' if args.virtual_compression_damping_diagnostic else 'NO'} "
+        f"compression_budget_m={args.virtual_compression_budget_m:.6f} "
+        f"max_plausible_compression_m={args.virtual_max_plausible_compression_m:.6f} "
+        f"velocity_damping_residual_ratio={args.virtual_velocity_damping_residual_ratio:.6f} "
+        f"damping_start_close_step={args.virtual_damping_start_close_step} "
+        "damping_writes_pose=NO damping_writes_velocity=YES constraints=NO surface_gripper=NO",
         flush=True,
     )
 
@@ -403,16 +538,20 @@ def main() -> int:
     cfg.sponge.spawn = sim_utils.CuboidCfg(
         size=tuple(float(x) for x in object_size),
         rigid_props=sim_utils.RigidBodyPropertiesCfg(
-            solver_position_iteration_count=8,
-            solver_velocity_iteration_count=1,
-            max_angular_velocity=10.0,
-            max_linear_velocity=10.0,
-            max_depenetration_velocity=5.0,
+            solver_position_iteration_count=object_physics.solver_position_iteration_count,
+            solver_velocity_iteration_count=object_physics.solver_velocity_iteration_count,
+            max_angular_velocity=object_physics.max_angular_velocity,
+            max_linear_velocity=object_physics.max_linear_velocity,
+            max_depenetration_velocity=object_physics.max_depenetration_velocity,
             disable_gravity=False,
         ),
         mass_props=sim_utils.MassPropertiesCfg(mass=args.object_mass_kg),
         collision_props=sim_utils.CollisionPropertiesCfg(),
-        physics_material=sim_utils.RigidBodyMaterialCfg(static_friction=1.5, dynamic_friction=1.2, restitution=0.0),
+        physics_material=sim_utils.RigidBodyMaterialCfg(
+            static_friction=object_physics.static_friction,
+            dynamic_friction=object_physics.dynamic_friction,
+            restitution=object_physics.restitution,
+        ),
         visual_material=sim_utils.PreviewSurfaceCfg(diffuse_color=(0.30, 0.70, 1.00), metallic=0.0),
     )
     cfg.sponge.init_state.pos = tuple(float(x) for x in plan.center)
@@ -424,10 +563,12 @@ def main() -> int:
     null_action = torch.zeros((1, 6), device=device, dtype=torch.float32)
 
     attach_stats = {"attach_calls": 0, "posewrite_calls": 0}
+    virtual_stats = {"velocity_damping_writes": 0}
     original_set_joint_position_target = base_env._robot.set_joint_position_target
     original_write_root_pose_to_sim = base_env._sponge.write_root_pose_to_sim
     watch = {"active": False, "target": None, "calls": 0, "max_diff": 0.0}
     posewrite_watch = {"active": False}
+    close_observations: list[dict[str, object]] = []
 
     def marker_only_attach() -> None:
         attach_stats["attach_calls"] += 1
@@ -581,6 +722,24 @@ def main() -> int:
             counter_gap = np.asarray(counter["gap_obj"], dtype=np.float64)
             moving_center = np.asarray(moving["center_obj"], dtype=np.float64)
             counter_center = np.asarray(counter["center_obj"], dtype=np.float64)
+            virtual_compression_gap_max = float(max(np.max(moving_gap), np.max(counter_gap)))
+            virtual_support = virtual_compression_gap_max <= float(args.virtual_compression_budget_m)
+            virtual_damping_active = bool(
+                args.virtual_compression_damping_diagnostic
+                and phase == "close"
+                and step_idx >= int(args.virtual_damping_start_close_step)
+                and virtual_support
+            )
+            virtual_speed_pre_damping = speed
+            if virtual_damping_active:
+                damped_vel = base_env._sponge.data.root_vel_w[:1].clone()
+                damped_vel[:, :3] *= float(args.virtual_velocity_damping_residual_ratio)
+                damped_vel[:, 3:] *= float(args.virtual_velocity_damping_residual_ratio)
+                base_env._sponge.write_root_velocity_to_sim(damped_vel)
+                base_env.scene.write_data_to_sim()
+                virtual_stats["velocity_damping_writes"] += 1
+                vel = object_vel6()
+                speed = _norm(vel[:3])
             contact_count = int(bool(moving["contact"])) + int(bool(counter["contact"]))
             one_sided_contact = contact_count == 1
             push_started = drift > args.push_drift_gate_m or speed > args.push_speed_gate_mps
@@ -599,6 +758,22 @@ def main() -> int:
             reached = target_error <= args.target_error_gate_m
             if phase == "close":
                 reached = reached and gripper_err <= math.radians(args.gripper_error_gate_deg)
+                close_observations.append(
+                    {
+                        "step": step_idx,
+                        "target_error_m": target_error,
+                        "object_speed_mps": speed,
+                        "counter_gap_max_m": float(np.max(counter_gap)),
+                        "counter_contact": bool(counter["contact"]),
+                        "counter_slop_contact": bool(counter["slop_contact"]),
+                        "one_sided_push": one_sided_push,
+                        "virtual_support": virtual_support,
+                        "virtual_damping_active": virtual_damping_active,
+                        "virtual_compression_gap_max_m": virtual_compression_gap_max,
+                        "reached": reached,
+                        "early_kill": early_kill,
+                    }
+                )
             settle_count = settle_count + 1 if reached else 0
 
             should_log = (
@@ -621,6 +796,11 @@ def main() -> int:
                     f"moving_slop_contact={_yes(bool(moving['slop_contact']))} "
                     f"counter_slop_contact={_yes(bool(counter['slop_contact']))} "
                     f"one_sided_push={_yes(one_sided_push)} "
+                    f"virtual_support={_yes(virtual_support)} "
+                    f"virtual_compression_gap_max_m={virtual_compression_gap_max:.6f} "
+                    f"virtual_damping_active={_yes(virtual_damping_active)} "
+                    f"virtual_speed_pre_damping_mps={virtual_speed_pre_damping:.6f} "
+                    f"virtual_velocity_damping_writes_total={virtual_stats['velocity_damping_writes']} "
                     f"_grasped_marker={_yes(bool(base_env._grasped[0].detach().cpu().item()))} "
                     f"attach_calls_total={attach_stats['attach_calls']} posewrite_calls_total={attach_stats['posewrite_calls']} "
                     f"set_target_seen={_yes(watch['calls'] > 0 and watch['max_diff'] <= 1.0e-5)} "
@@ -683,12 +863,63 @@ def main() -> int:
             "close",
         )
 
+    close_by_step = {int(obs["step"]): obs for obs in close_observations}
+    step3 = close_by_step.get(3)
+    step4 = close_by_step.get(4)
+    steps_2_to_4 = [close_by_step.get(step) for step in (2, 3, 4)]
+    steps_2_to_4_present = all(obs is not None for obs in steps_2_to_4)
+    step3_speed_below_future_gate = bool(
+        step3 is not None and float(step3["object_speed_mps"]) <= FUTURE_CLOSE26_PUSH_SPEED_GATE_MPS
+    )
+    one_sided_push_steps_2_to_4 = bool(
+        any(bool(obs["one_sided_push"]) for obs in steps_2_to_4 if obs is not None)
+    )
+    counter_support_step4 = bool(
+        step4 is not None and float(step4["counter_gap_max_m"]) <= FUTURE_CLOSE26_COUNTER_SUPPORT_BUDGET_M
+    )
+    target_step4_ok = bool(
+        step4 is not None and float(step4["target_error_m"]) <= FUTURE_CLOSE26_TARGET_ERROR_GATE_M
+    )
+    future_close26_posthoc_pass = (
+        approach_ok
+        and descend_ok
+        and close_reached
+        and not close_early_kill
+        and steps_2_to_4_present
+        and step3_speed_below_future_gate
+        and not one_sided_push_steps_2_to_4
+        and counter_support_step4
+        and target_step4_ok
+        and attach_stats["attach_calls"] == 0
+        and attach_stats["posewrite_calls"] == 0
+    )
+    print(
+        "[cube2cm_runtime_jaw_telemetry] future_close26_posthoc_criteria "
+        "runtime_gate=NO posthoc_summary_only=YES "
+        f"push_speed_gate_mps={FUTURE_CLOSE26_PUSH_SPEED_GATE_MPS:.6f} "
+        f"target_error_gate_m={FUTURE_CLOSE26_TARGET_ERROR_GATE_M:.6f} "
+        f"counter_support_budget_m={FUTURE_CLOSE26_COUNTER_SUPPORT_BUDGET_M:.6f} "
+        f"steps_2_to_4_present={_yes(steps_2_to_4_present)} "
+        f"step3_speed_mps={(float(step3['object_speed_mps']) if step3 is not None else float('nan')):.6f} "
+        f"step3_speed_below_gate={_yes(step3_speed_below_future_gate)} "
+        f"one_sided_push_steps_2_to_4={_yes(one_sided_push_steps_2_to_4)} "
+        f"step4_counter_gap_max_m={(float(step4['counter_gap_max_m']) if step4 is not None else float('nan')):.6f} "
+        f"counter_support_step4={_yes(counter_support_step4)} "
+        f"step4_target_error_m={(float(step4['target_error_m']) if step4 is not None else float('nan')):.6f} "
+        f"target_step4_ok={_yes(target_step4_ok)} "
+        f"virtual_compression_damping_diagnostic={_yes(args.virtual_compression_damping_diagnostic)} "
+        f"virtual_velocity_damping_writes={virtual_stats['velocity_damping_writes']} "
+        f"future_close26_posthoc_pass={_yes(future_close26_posthoc_pass)}",
+        flush=True,
+    )
+
     print(
         f"[cube2cm_runtime_jaw_telemetry] aggregate variant={args.variant} approach_ok={_yes(approach_ok)} "
         f"descend_ok={_yes(descend_ok)} close_reached={_yes(close_reached)} close_early_kill={_yes(close_early_kill)} "
         f"grasped_seen={_yes(bool(base_env._grasped[0].detach().cpu().item()))} "
         f"attach_calls={attach_stats['attach_calls']} posewrite_calls={attach_stats['posewrite_calls']} "
         f"episode_done={_yes(episode_done)} nan_seen={_yes(nan_seen)} "
+        f"virtual_velocity_damping_writes={virtual_stats['velocity_damping_writes']} "
         "telemetry_only=YES success_claim=NO",
         flush=True,
     )
