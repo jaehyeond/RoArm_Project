@@ -1,0 +1,38 @@
+Loading user config located at: '/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/user.config.json'
+[Info] [carb] Logging to file: /home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/kit/logs/Kit/Isaac-Sim/5.1/kit_20260526_014316.log
+2026-05-25T16:43:17Z [153ms] [Warning] [omni.usd_config.extension] Enable omni.materialx.libs extension to use MaterialX
+2026-05-25T16:43:17Z [531ms] [Warning] [omni.platforminfo.plugin] failed to open the default display.  Can't verify X Server version.
+2026-05-25T16:43:17Z [736ms] [Warning] [carb] Acquiring non optional plugin interface which is not listed as dependency: [omni::physx::IPhysxBenchmarks v1.0] (plugin: <default plugin>), by client: omni.physics.physx.plugin. Add it to CARB_PLUGIN_IMPL_DEPS() macro of a client.
+2026-05-25T16:43:17Z [865ms] [Warning] [omni.isaac.dynamic_control] omni.isaac.dynamic_control is deprecated as of Isaac Sim 4.5. No action is needed from end-users.
+2026-05-25T16:43:19Z [2,809ms] [Warning] [matplotlib] /home/cgxr/.config/matplotlib is not a writable directory
+2026-05-25T16:43:19Z [2,809ms] [Warning] [matplotlib] Matplotlib created a temporary cache directory at /tmp/matplotlib-_pbz33rt because there was an issue with the default path (/home/cgxr/.config/matplotlib); it is highly recommended to set the MPLCONFIGDIR environment variable to a writable directory, in particular to speed up the import of Matplotlib and to better support multiprocessing.
+
+|---------------------------------------------------------------------------------------------|
+| Driver Version: 0             | Graphics API: Vulkan
+|=============================================================================================|
+| GPU | Name                             | Active | LDA | GPU Memory | Vendor-ID | LUID       |
+|     |                                  |        |     |            | Device-ID | UUID       |
+|     |                                  |        |     |            | Bus-ID    |            |
+|=============================================================================================|
+| OS: 22.04.5 LTS (Jammy Jellyfish) ubuntu, Version: 22.04.5, Kernel: 6.8.0-111-generic
+| Processor: Intel(R) Core(TM) i9-14900HX
+| Bare Metal Cores: 24 | Bare Metal Logical Cores: 48
+| Available Cores:  32 
+|---------------------------------------------------------------------------------------------|
+| Total Memory (MB): 64020 | Free Memory: 28547
+| Total Page/Swap (MB): 0 | Free Page/Swap: 0
+|---------------------------------------------------------------------------------------------|
+2026-05-25T16:43:21Z [4,960ms] [Warning] [omni.physx.foundation.plugin] PhysXFoundation: Couldn't get driver version, failed to getDeviceInfo
+2026-05-25T16:43:21Z [4,960ms] [Warning] [omni.physx.foundation.plugin] PhysXFoundation: Unable to get IGpuFoundation, GpuDevices or Graphics!
+2026-05-25T16:43:21Z [4,963ms] [Warning] [omni.kvdb.plugin] Disabling key-value database because another kit process is locking it
+[INFO][AppLauncher]: Using device: cuda:0
+[INFO][AppLauncher]: Loading experience file: /home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaaclab/apps/isaaclab.python.headless.kit
+[cube2cm_runtime_jaw_telemetry] runtime jaw telemetry probe
+[cube2cm_runtime_jaw_telemetry] diagnostic_only=YES isaac_run=YES variant=v7 robot_usd_path=b200_backup_20260522_final/tmp_p7/p7_branch_b_cube2cm_opposing_jaw_v7_collision_usd_d024/roarm_m3.usd env_default_edits=NO chain_defaults_edits=NO p7_training=NO constraint_prim_insertion=NO surface_gripper=NO attached_transport=NO transport_target=NO release_marker=NO scripted_release_variant=NO gate_tuning=NO close_26_only=YES soft_contact_material_diagnostic=NO virtual_compression_damping_diagnostic=NO target_guarded_micro_close_support_horizon_diagnostic=NO target_guarded_micro_close_v2_convergence_diagnostic=NO target_guarded_micro_close_v3_progress_diagnostic=NO target_guarded_micro_close_v4_recovery_diagnostic=NO target_guarded_micro_close_v5_preemptive_recovery_diagnostic=NO target_guarded_micro_close_v6_projected_guard_diagnostic=NO target_guarded_micro_close_v7_active_recovery_diagnostic=YES hidden_kinematic_posewrite_allowed=NO claim_p7_success=NO
+[cube2cm_runtime_jaw_telemetry] selected pose=seed0_S1 center=([+0.213696, -0.195719, +0.002883]) object_size_m=([+0.030000, +0.030000, +0.030000]) yaw_deg=0.0 normalized=([+0.000,+0.000,+0.500]) approach_tcp=([+0.213696, -0.195719, +0.057883]) descend_tcp=([+0.213696, -0.195719, +0.018383]) close_deg=26.00 ik_ok=YES ik_err_mm=(0.477,0.316) max_fk_error_m=0.000518
+[cube2cm_runtime_jaw_telemetry] object_physics mode=target_guarded_micro_close_v7_active_recovery_diagnostic runtime_candidate_requires_separate_approval=YES mass_kg=0.020000 static_friction=1.500000 dynamic_friction=1.200000 restitution=0.000000 solver_position_iterations=8 solver_velocity_iterations=1 max_linear_velocity=10.000000 max_angular_velocity=10.000000 max_depenetration_velocity=5.000000
+[cube2cm_runtime_jaw_telemetry] virtual_compression_damping enabled=NO compression_budget_m=0.002000 max_plausible_compression_m=0.003000 velocity_damping_residual_ratio=0.080000 damping_start_close_step=3 damping_writes_pose=NO damping_writes_velocity=YES constraints=NO surface_gripper=NO
+[cube2cm_runtime_jaw_telemetry] target_guarded_micro_close_support_horizon enabled=NO target_error_design_limit_m=0.002700 micro_close_step_deg=2.000000 v2_convergence_enabled=NO v3_progress_enabled=NO v4_recovery_enabled=NO v5_preemptive_recovery_enabled=NO v6_projected_guard_enabled=NO v7_active_recovery_enabled=YES command_error_gate_deg=0.750000 advance_counter_support_margin_m=0.001500 target_error_growth_tolerance_m=0.000250 v3_min_actual_progress_deg=0.250000 v3_max_command_backlog_deg=5.000000 v4_recovery_target_error_m=0.002400 v5_preempt_target_margin_m=0.000200 v5_preempt_support_margin_m=0.000100 v5_recovery_tcp_gain=0.650000 v5_recovery_max_tcp_step_m=0.001500 v7_active_recovery_sweep_step_m=0.000500 v7_active_recovery_max_tcp_step_m=0.001500 v7_active_recovery_min_gap_improvement_m=0.000020 zero_backlog_hold=NO advance_requires_command_convergence=YES advance_requires_support_margin=YES advance_requires_nonworsening_target_error=YES v3_zero_backlog_hold=NO v3_backlog_preserve=YES v3_support_margin_warning_only=YES v3_hard_support_uses_fixed_budget=YES v3_rollback_on_safety_degradation=YES v4_zero_backlog_hold=NO v4_recovery_holds_preserve_backlog=YES v4_advance_requires_target_nonworsening=YES v4_rollback_on_safety_degradation=NO v4_hard_safety_violation_fails_candidate=YES v5_zero_backlog_hold=NO v5_recovery_holds_preserve_backlog=YES v5_preemptive_recovery_before_fixed_gate=YES v5_recovery_writes_robot_joint_targets_only=YES v5_object_posewrite=NO v5_rollback_on_safety_degradation=NO v6_projected_advance_guard=YES v6_uses_fixed_target_support_gates=YES v6_object_posewrite=NO v6_rollback_on_safety_degradation=NO v7_active_recovery_after_projected_block=YES v7_finite_difference_tcp_sweep=YES v7_recovery_uses_current_object_pose=YES v7_object_posewrite=NO v7_recovery_writes_robot_joint_targets_only=YES support_horizon_uses_max_plausible_compression=YES close_command_writes=YES posewrite=NO constraints=NO surface_gripper=NO
+2026-05-25T16:43:22Z [5,137ms] [Warning] [isaaclab.envs.direct_rl_env] Seed not set for the environment. The environment creation may not be deterministic.
+2026-05-25T16:43:22Z [5,150ms] [Warning] [omni.physx.plugin] USD stage detach not called, holding a loose ptr to a stage!
+2026-05-25T16:43:22Z [5,209ms] [Warning] [carb] Recursive unloadAllPlugins() detected!

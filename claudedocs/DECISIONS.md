@@ -3466,3 +3466,1123 @@ Sources:
 - `claudedocs/b200_endgame_track_a_preservation_track_b_plan_20260521.md`
 - `sim_scripts/p7_branch_b_cube2cm_target_support_horizon_static_design.py`
 - B200 `/tmp/p7_branch_b_cube2cm_virtual_compression_damping_v7_close26_b200.out:378-380,420`
+
+## D070 — Target-guarded v2 convergence fixed backlog blowout but starved close progression
+
+Evidence:
+
+- User approved one close_26-only B200 runtime for Track A P7/Branch B
+  `--target_guarded_micro_close_v2_convergence_diagnostic`. No training,
+  dataset generation, hold-lift, constraints/default integration,
+  SurfaceGripper, transport/release, gate tuning, or success claim was run.
+- Local v2 code md5s synced to B200 before runtime:
+  runtime probe `5446716a908d0869c0c308d22af0eb75`, criteria audit
+  `baf1cbec4f8a837458e3695a158a129c`, readiness
+  `ca34226d94db9ff09231a84fee8ab1bf`, and static attribution
+  `7114699126c3f24f5ba4523ba0439e7f`.
+- B200 stdout
+  `/tmp/p7_branch_b_cube2cm_target_guarded_micro_close_v2_convergence_v7_close26_b200.out`
+  has md5 `52fa5cf2cc0cc5dbdc2f55f0d099611f`; stderr md5 is
+  `9061693c9914e735b53a19417cdebb9c`.
+- Stdout line 37 confirms strict diagnostic scope, close_26 only,
+  `target_guarded_micro_close_v2_convergence_diagnostic=YES`, no training,
+  constraints, SurfaceGripper, transport/release, gate tuning, hidden posewrite,
+  or success claim.
+- Stdout line 39 confirms
+  `mode=target_guarded_micro_close_v2_convergence_diagnostic` and
+  `runtime_candidate_requires_separate_approval=YES`.
+- Stdout line 41 confirms the v2 contract: zero-backlog hold, close command
+  writes only, posewrite/constraints/SurfaceGripper NO, and advance requires
+  command convergence, support margin, and non-worsening target error.
+- Step 3, stdout line 379, shows the intended convergence behavior:
+  `object_speed_mps=0.000128`, `target_guarded_command_backlog_deg=0.000`,
+  command converged YES, support margin YES, target non-worsening YES,
+  support horizon YES, damping active YES, and one-sided push NO.
+- The posthoc audit returned FAIL. Audit stdout
+  `/tmp/p7_branch_b_cube2cm_target_guarded_micro_close_v2_convergence_audit_b200.out`
+  has md5 `563a9194dfc1cbe611aa38b9bee45dd3`; audit stderr md5 is empty
+  `d41d8cd98f00b204e9800998ecf8427e`.
+- Audit line 14 fails `close_reached`; audit line 24 also fails
+  `virtual_support_step3` because stdout line 379 has `virtual_support=NO` and
+  `virtual_compression_gap_max_m=0.002262`.
+- Runtime summary line 422 reports `future_close26_posthoc_pass=NO`,
+  `virtual_velocity_damping_writes=43`, `target_guarded_close_advances=17`,
+  `target_guarded_close_holds=28`, and `target_guarded_zero_backlog_holds=28`.
+- Aggregate line 423 reports `approach_ok=YES`, `descend_ok=YES`,
+  `close_reached=NO`, `attach_calls=0`, `posewrite_calls=0`,
+  `telemetry_only=YES`, and `success_claim=NO`.
+- Final close line 421 shows the main failure shape: target error remains within
+  the fixed gate at `0.001921m`, object speed is low at `0.000527m/s`,
+  one-sided push is NO, support horizon is YES, but gripper actual is only
+  `6.087deg` with command `6.089deg`, leaving `19.913deg` to the 26deg target.
+- The first support-margin block appears at stdout line 410, step 34:
+  `target_guarded_support_margin_ok=NO`, counter y-gap `0.001583m` just above
+  the v2 advance margin `0.0015m`, while the broader fixed support budget is
+  still `0.002m` and max plausible horizon remains `0.003m`.
+
+Implication:
+
+- v2 is a useful negative result: zero-backlog holds prevented the v1 backlog
+  blowout and avoided one-sided push, but the mechanism over-constrained close
+  progression and starved the gripper before reaching close_26.
+- Do not treat "stable, no one-sided push" as a pass. `close_reached=NO` remains
+  a hard fail, and the audit also exposed an early `virtual_support_step3` gap.
+- Do not rerun the same v2 parameters, do not loosen fixed audit gates, and do
+  not jump to hold-lift, dataset generation, training, constraints, or
+  SurfaceGripper.
+- The next Track A work should be static/code-first: preserve v2's stability
+  while adding a bounded progress mechanism or true compliant counter behavior
+  that can reach close_26 under the unchanged audit.
+
+Sources:
+
+- B200 `/tmp/p7_branch_b_cube2cm_target_guarded_micro_close_v2_convergence_v7_close26_b200.out:37,39,41,379-381,410,421-423`
+- B200 `/tmp/p7_branch_b_cube2cm_target_guarded_micro_close_v2_convergence_v7_close26_b200.err:1-4`
+- B200 `/tmp/p7_branch_b_cube2cm_target_guarded_micro_close_v2_convergence_audit_b200.out:1-41`
+- `claudedocs/session_20260522_track_a_v2_convergence_runtime_fail.md`
+
+## D071 — OpenVLA-OFT 7B on stock transformers ≥4.50 requires `_supports_sdpa` class-attr patch
+
+Evidence:
+
+- HF Hub `openvla/openvla-7b/modeling_prismatic.py` (and openvla-oft's local
+  fork `prismatic/extern/hf/modeling_prismatic.py`) define
+  `PrismaticPreTrainedModel._supports_sdpa` as `@property` that reads
+  `self.language_model._supports_sdpa`. This was written for transformers 4.40.
+- transformers ≥4.50 (we tested 4.57.6) calls `self._sdpa_can_dispatch(...)`
+  inside `PreTrainedModel.__init__` (`modeling_utils.py:2076`), which happens
+  **before** the openvla subclass assigns `self.language_model = ...`.
+- Verified on 2026-05-22 B200 smoke: error `AttributeError:
+  'OpenVLAForActionPrediction' object has no attribute '_supports_sdpa'`.
+
+Implication:
+
+- For openvla-oft on any modern transformers, replace the @property with a
+  class-level `_supports_sdpa: bool = True` attribute. Llama2-7B supports sdpa,
+  so the static True is correct.
+- The patch must be applied **both** to the HF Hub snapshot file
+  (`.cache/huggingface/hub/models--openvla--openvla-7b/snapshots/<sha>/modeling_prismatic.py`)
+  and to the active `transformers_modules/_<sha>/modeling_prismatic.py` cache.
+  `update_auto_map()` re-copies from the hub snapshot into transformers_modules
+  on every `from_pretrained`, so patching only one breaks on next run.
+
+Sources:
+
+- `claudedocs/session_20260522_openvla_oft_7b_30k_lora_complete.md`
+- B200 `/tmp/openvla_oft_v6_smoke.out` initial fail trace
+- patched file `models--openvla--openvla-7b/snapshots/<sha>/modeling_prismatic.py:207`
+
+## D072 — OpenVLA-OFT requires the fork modeling files over HF Hub originals
+
+Evidence:
+
+- HF Hub `openvla/openvla-7b/modeling_prismatic.py` is the original OpenVLA-1
+  modeling code: no `set_num_images_in_input`, `get_num_images_in_input`,
+  `get_num_patches`, `FiLMedPrismaticVisionBackbone` integration, or
+  action-chunking hooks.
+- openvla-oft's fork at `prismatic/extern/hf/modeling_prismatic.py` adds these
+  OFT-specific methods.
+- Original `finetune.py:846` calls
+  `vla.vision_backbone.set_num_images_in_input(cfg.num_images_in_input)`
+  immediately after `from_pretrained(..., trust_remote_code=True)`. With the
+  hub modeling, this raises `AttributeError`.
+
+Implication:
+
+- After the first model download, **copy the fork's `modeling_prismatic.py`,
+  `configuration_prismatic.py`, and `processing_prismatic.py` over the HF Hub
+  snapshot files**, keeping `*.hub_orig.bak` backups.
+- `update_auto_map()` will re-propagate them to `transformers_modules` cache
+  automatically on next `from_pretrained` call.
+- Combine with D071 — patch `_supports_sdpa` after the fork-file overwrite,
+  not before (the fork file has the same @property defect).
+
+Sources:
+
+- `claudedocs/session_20260522_openvla_oft_7b_30k_lora_complete.md`
+- `code/openvla-oft/prismatic/extern/hf/modeling_prismatic.py` (has
+  `def set_num_images_in_input` at line 177); HF Hub snapshot original does not.
+
+## D073 — `merge_lora_during_training=True` hangs with PEFT 0.18 on openvla-oft; default to False
+
+Evidence:
+
+- 2026-05-22 B200 smoke (PEFT 0.18.0): set `merge_lora_during_training=True`
+  (openvla-oft default). After the step-5 save, the merge step
+  (`PeftModel.from_pretrained` → `merge_and_unload` → `save_pretrained` of a
+  ~14 GB merged 7B base) hung at 99% CPU with `0% GPU` utilization and no new
+  files written for 22+ minutes; only the LoRA adapter and action head from
+  the pre-merge save were on disk.
+- Killed and re-ran with `--merge_lora_during_training False`: full 30K steps
+  + 12 checkpoint saves completed in 2h 23min on B200 with no hang.
+
+Implication:
+
+- For openvla-oft training on PEFT ≥0.18, always set
+  `--merge_lora_during_training False`. Merge offline after training using a
+  dedicated script (`vla-scripts/merge_lora_weights_and_save.py`).
+- Per-checkpoint merged save also adds ~14 GB NFS write each save_freq, which
+  is expensive even when not hanging.
+
+Sources:
+
+- `claudedocs/session_20260522_openvla_oft_7b_30k_lora_complete.md`
+- B200 `/tmp/openvla_oft_v6_smoke.out` smoke #4 hang vs smoke #5 success
+- `outputs/openvla_oft_v6_b200/...--*_chkpt/` size (679 MB; lora_adapter +
+  action_head only) under `merge_lora_during_training=False`.
+
+## D074 — LeRobot v3 → openvla-oft path: thin `LeRobotV3RLDSCompatDataset` instead of RLDS conversion
+
+Evidence:
+
+- openvla-oft `finetune.py` imports `RLDSDataset` (TFDS-backed IterableDataset)
+  and `RLDSBatchTransform`. Default data path expects RLDS TFRecord trees built
+  via moojink's `rlds_dataset_builder` repo.
+- v6 LeRobot is parquet + AV1 video; converting to RLDS would require a
+  custom builder + TFDS rebuild step (estimated 3-6 h debug).
+- A map-style Dataset that yields the exact RLDS batch dict schema —
+  `{"dataset_name", "action": (chunk, dim), "observation": {"image_primary":
+  (1, H, W, 3) uint8, "proprio"?: (dim,)}, "task": {"language_instruction":
+  bytes}}` — can be passed through the existing `RLDSBatchTransform` callable
+  without changing anything else in the original pipeline.
+- 2026-05-22 implementation: `openvla_oft_roarm/lerobot_rlds_compat.py`
+  (~160 lines). 6942 frames index loads in < 1 s; per-sample fetch ~0.7 s
+  (AV1 decode dominated). With `num_workers=4 persistent_workers=True
+  pin_memory=True drop_last=True`, throughput reached 3.84 it/s @ batch=8 on
+  B200 and data was never the bottleneck.
+
+Implication:
+
+- For openvla-oft on any LeRobot v3 dataset: skip RLDS conversion entirely.
+- Apply BOUNDS_Q99 normalization using `stats.json` q01/q99 directly:
+  `clip(2*(x - q01)/(q99 - q01 + 1e-8) - 1, -1, 1)`. Matches openvla-oft's
+  `prismatic/vla/datasets/rlds/utils/data_utils.py:67-81`.
+- Use LeRobot 0.4.x API: `ds.meta.episodes["dataset_from_index"]` /
+  `["dataset_to_index"]` instead of `ds.episode_data_index` (deprecated).
+- Wrap the original `for batch_idx, batch in enumerate(dataloader)` with an
+  infinite generator so finite-dataset epoch boundaries don't terminate
+  `max_steps`. ROARM_M3 constants path requires `roarm` in `sys.argv` for
+  `prismatic/vla/constants.py:detect_robot_platform()`; ensure `--dataset_name`
+  contains `roarm`.
+
+Sources:
+
+- `openvla_oft_roarm/lerobot_rlds_compat.py`
+- `openvla_oft_roarm/train_roarm_v6.py`
+- `claudedocs/session_20260522_openvla_oft_7b_30k_lora_complete.md`
+- openvla-oft `prismatic/vla/datasets/datasets.py:36-91` (RLDSBatchTransform
+  input schema)
+
+## D075 — Track A target-guarded v2 fails primarily by zero-backlog pulse starvation
+
+Evidence:
+
+- Track A B200 target-guarded v2 close_26 stdout:
+  `/tmp/p7_branch_b_cube2cm_target_guarded_micro_close_v2_convergence_v7_close26_b200.out`,
+  md5 `52fa5cf2cc0cc5dbdc2f55f0d099611f`.
+- Runtime line 41 confirms the v2 mechanism: 2deg micro close, 0.75deg command
+  convergence gate, 0.0015m advance support margin, non-worsening target-error
+  gate, and zero-backlog holds.
+- Runtime lines 377-379 show the core pulse pattern: line 377 advances, line 378
+  has actual gripper `0.361deg` against command `2.000deg` with backlog
+  `1.639deg`, and line 379 has the command reset to actual with backlog
+  `0.000deg`.
+- Runtime line 409 is the last advance (`target_guarded_close_advances_total=17`).
+  Runtime line 421 ends at gripper actual `6.087deg`, command `6.089deg`,
+  target error `0.001921m`, support horizon YES, virtual support YES, but support
+  margin NO.
+- Runtime lines 422-423 report posthoc FAIL, 17 advances, 28 holds,
+  28 zero-backlog holds, close_reached NO, attach/posewrite zero, telemetry-only,
+  and no success claim.
+- Static script
+  `sim_scripts/p7_branch_b_cube2cm_target_guarded_v2_progress_static_analysis.py`
+  md5 `7269b126b9aa1b6ce2da75e67f78702c` verifies the B200 md5 and computes:
+  average actual motion after each advance `0.360deg`, average next-step backlog
+  before zeroing `1.641deg`, and discarded fraction `0.820` of each 2deg micro
+  command.
+- The same static run projects that even the maximum alternating advance count
+  in 45 close steps (`23`) would reach only `8.279deg`, leaving `17.721deg` to
+  the 26deg target.
+- First support-margin block appears at runtime line 410: counter gap
+  `0.001583m`, only `0.000083m` above the v2 margin `0.0015m`, while still
+  inside the fixed support budget `0.002m`, horizon `0.003m`, target gate
+  `0.003m`, and one-sided push is NO.
+
+Implication:
+
+- Do not treat v2 as grasp success or close_26 success.
+- Do not rerun the same v2 parameters.
+- Do not "fix" this by relaxing fixed close_26 audit gates.
+- The 0.0015m support margin is too strict as an advance blocker, but support
+  margin relaxation alone is insufficient: the current pulse/reset schedule is
+  already mathematically unable to reach 26deg in 45 steps.
+- The next Track A mechanism must provide structural actual-progress behavior:
+  do not discard the micro-close command backlog after one physics step; instead
+  advance or settle until bounded actual gripper progress occurs, and rollback
+  only on real safety degradation while preserving fixed close_26 audit gates.
+
+Sources:
+
+- `claudedocs/session_20260522_track_a_v2_progress_starvation_static_analysis.md`
+- `sim_scripts/p7_branch_b_cube2cm_target_guarded_v2_progress_static_analysis.py`
+- B200 stdout
+  `/tmp/p7_branch_b_cube2cm_target_guarded_micro_close_v2_convergence_v7_close26_b200.out:37,39,41,377-379,402,409-411,421-423`
+
+## D076 — Track A v3 must preserve backlog and prove actual progress before runtime
+
+Evidence:
+
+- D075 established that v2 failed primarily by zero-backlog pulse starvation:
+  B200 lines 377-379 show a 2deg command becoming only `0.361deg` actual motion
+  before `1.639deg` backlog was discarded; line 421 ended at only `6.087deg`.
+- Support margin `0.0015m` was strict but secondary: B200 line 410 had counter
+  gap `0.001583m`, only `0.000083m` above that margin, while still inside the
+  fixed `0.002m` support budget and `0.003m` support horizon.
+- Added default-off runtime candidate
+  `--target_guarded_micro_close_v3_progress_diagnostic` in
+  `sim_scripts/p7_branch_b_cube2cm_runtime_jaw_telemetry_probe.py`
+  md5 `9cdfd04876078110186435bb15ba34ab`.
+- v3 keeps the 0.0015m margin as warning telemetry, but hard support for advance
+  uses the fixed close_26 support budget (`0.002m`) plus the existing support
+  horizon (`0.003m`).
+- v3 no longer zeroes backlog during normal holds. It logs backlog-preserved
+  holds, actual progress, projected backlog, safety state, and safety rollbacks.
+  Command rollback to actual is reserved for safety degradation.
+- Updated audit
+  `sim_scripts/p7_branch_b_cube2cm_soft_contact_runtime_criteria_audit.py`
+  md5 `8b75c9d7d678419d0d1c96bf61115aed` with expected mechanism
+  `target_guarded_micro_close_v3_progress_diagnostic`.
+- v3 audit keeps fixed close_26 gates unchanged and additionally requires
+  positive backlog-preserved holds, zero zero-backlog holds, zero safety
+  rollbacks, and step3 actual progress >= `0.25deg`.
+- Updated readiness
+  `sim_scripts/p7_branch_b_cube2cm_soft_contact_runtime_readiness.py`
+  md5 `b853e0f2198d1d005ac72bc1e83dafcd`.
+- Local/static verification passed: `py_compile`, v3 synthetic pass PASS, v3
+  no-damping FAIL, v3 zero-backlog FAIL, old v2 B200 stdout audited as v3 FAIL,
+  old v2 synthetic PASS, old target-guarded v1 synthetic PASS, readiness
+  `READY_FOR_SEPARATE_RUNTIME_APPROVAL=YES`, and `git diff --check`.
+
+Implication:
+
+- v3 is not a success claim. It is the next close_26-only runtime candidate,
+  requiring separate approval.
+- Do not rerun v2 or tune the 0.0015m support margin as the next action.
+- Do not relax fixed close_26 audit gates.
+- If approved, the next Track A runtime is exactly one close_26-only v3 run,
+  followed immediately by the posthoc audit with expected mechanism
+  `target_guarded_micro_close_v3_progress_diagnostic`.
+- Hold-lift, dataset generation, training, transport/release, constraints, and
+  SurfaceGripper remain blocked until close_26 audit PASS.
+
+Sources:
+
+- `claudedocs/session_20260522_track_a_v3_progress_candidate_static_readiness.md`
+- `sim_scripts/p7_branch_b_cube2cm_runtime_jaw_telemetry_probe.py`
+- `sim_scripts/p7_branch_b_cube2cm_soft_contact_runtime_criteria_audit.py`
+- `sim_scripts/p7_branch_b_cube2cm_soft_contact_runtime_readiness.py`
+- B200 stdout
+  `/tmp/p7_branch_b_cube2cm_target_guarded_micro_close_v2_convergence_v7_close26_b200.out:377-379,410,421-423`
+
+## D077 — Track A v3 fixed zero-backlog starvation but failed on target-pose safety rollback
+
+Evidence:
+
+- A first B200 command using
+  `--target_guarded_micro_close_v3_progress_diagnostic` failed before Isaac
+  because the remote code did not yet include the v3 flag. Preserved preflight
+  stderr md5: `acbbdfe97f41fe0a2130816a4c281d63`; preflight stdout was empty
+  md5 `d41d8cd98f00b204e9800998ecf8427e`.
+- After rsync to B200, runtime/audit/readiness md5s were
+  `9cdfd04876078110186435bb15ba34ab`,
+  `22db78e81d25804cc6ed26ccbe608579`, and
+  `b853e0f2198d1d005ac72bc1e83dafcd`.
+- After the v3 runtime FAIL, readiness was updated and synced to md5
+  `5675db108ac15de6f333caf2d2e9ce9d` so it blocks v3 reruns with
+  `READY_FOR_SEPARATE_RUNTIME_APPROVAL=NO`.
+- The actual close_26-only v3 runtime exited 0 but failed audit. Runtime stdout
+  md5: `5f2d1a626edcdccce8086fafd321c9af`; stderr md5:
+  `13671d0ae55c7faee9ae90a4e8c242c6`. Final audit stdout md5:
+  `ca60c09b03a156c85197e34ec7b28bb5`; audit stderr empty md5:
+  `d41d8cd98f00b204e9800998ecf8427e`.
+- Runtime line 37 confirms diagnostic-only, close_26-only, no training,
+  constraints, SurfaceGripper, transport/release, gate tuning, posewrite, or
+  success claim. Line 39 confirms mode
+  `target_guarded_micro_close_v3_progress_diagnostic` with separate approval.
+  Line 41 confirms v3 zero-backlog hold NO, backlog preserve YES, fixed hard
+  support budget/horizon, and rollback only on safety degradation.
+- v3 fixed the v2 zero-backlog failure mode: runtime line 422 reports
+  `target_guarded_zero_backlog_holds=0` and
+  `target_guarded_backlog_preserved_holds=5`; audit lines 23-24 and 42-43 pass
+  those checks.
+- v3 did not pass close_26: audit line 15 is `close_reached pass=NO`, line 25 is
+  `target_guarded_v3_safety_rollbacks_zero pass=NO value=34`, and line 46 is
+  `SOFT_CONTACT_RUNTIME_CRITERIA_PASS=NO`.
+- First safety rollback is runtime line 387 step 11: gripper `6.890deg`,
+  command `10.000deg`, backlog `3.111deg`, target error `0.002769m` exceeding
+  the v3 design limit `0.0027m`; speed is `0.001647m/s`, support budget YES,
+  support horizon YES, one-sided push NO.
+- Last advance is line 391 step 15: gripper `6.878deg`, target error
+  `0.002698m`, safety rollback count already 4.
+- Peak target/support excursion is line 392 step 16: gripper `7.235deg`, target
+  error `0.003070m` exceeding the fixed `0.003m` target gate, and counter gap
+  `0.002074m` exceeding the fixed `0.002m` support budget.
+- Final line 421 remains far from close_26: gripper `7.144deg`, command
+  `7.147deg`, remaining close `18.856deg`, target error `0.002872m`, safety
+  rollback YES. Aggregate line 423 reports `close_reached=NO`, attach/posewrite
+  zero, telemetry-only YES, success_claim NO, 6 advances, 39 holds, 34 safety
+  rollbacks.
+- Added static attribution script
+  `sim_scripts/p7_branch_b_cube2cm_target_guarded_v3_progress_runtime_static_analysis.py`
+  md5 `b3c446c1872127b19b49af929ded95ce`. It verifies the runtime/audit md5s and
+  reports primary attribution `target_pose_error_safety_rollback_after_progress`.
+
+Implication:
+
+- v3 is not grasp success and not close_26 success.
+- Do not rerun v2 or v3 as the next experiment.
+- Do not respond by relaxing fixed target/support gates: line 392 already
+  exceeds both the fixed target gate and fixed support budget.
+- Do not reintroduce zero-backlog holds; v3 fixed that specific failure mode.
+- Next work must be local/static/code-first: design a contact-compatible close or
+  target-error recovery mechanism that preserves fixed close_26 gates and proves
+  no safety rollback before any hold-lift, dataset generation, or training.
+
+Sources:
+
+- `claudedocs/session_20260522_track_a_v3_progress_runtime_fail.md`
+- `sim_scripts/p7_branch_b_cube2cm_target_guarded_v3_progress_runtime_static_analysis.py`
+- `sim_scripts/p7_branch_b_cube2cm_soft_contact_runtime_criteria_audit.py`
+- B200 stdout
+  `/tmp/p7_branch_b_cube2cm_target_guarded_micro_close_v3_progress_v7_close26_b200.out:37,39,41,377-392,421-423`
+- B200 audit stdout
+  `/tmp/p7_branch_b_cube2cm_target_guarded_micro_close_v3_progress_audit_b200.out:1-46`
+
+## D078 — OpenVLA-OFT inference requires patching ALL transformers_modules cache locations, not just hub snapshot
+
+Evidence:
+
+- 2026-05-22 12:00 KST offline-eval dry-run 1 crashed with
+  `AttributeError("'OpenVLAForActionPrediction' object has no attribute '_supports_sdpa'")`
+  on stock transformers 4.57.6, despite D071's hub-snapshot patch being
+  verified at
+  `$HF_HOME/hub/models--openvla--openvla-7b/snapshots/47a0ec7fc4ec123775a391911046cf33cf9ed83f/modeling_prismatic.py:311`
+  (`_supports_sdpa: bool = True`, md5 `8c2223ab`).
+- Investigation found a second `modules/transformers_modules/openvla/openvla_hyphen_7b/47a0ec7fc4ec123775a391911046cf33cf9ed83f/modeling_prismatic.py`
+  (md5 `0e1ea109`, line 208 `@property def _supports_sdpa`) — stock prismatic,
+  NOT the openvla-oft fork. Transformers ≥4.57 uses the canonical
+  `<owner>/<repo_with_hyphens>/<commit>/` path, so the patched copy at
+  `_<sha>/` was never read at inference.
+- The training run worked because training was invoked via a different code
+  path that happened to hit the `_<sha>/` cache first, or executed early enough
+  that the canonical cache hadn't been written. Inference triggers the
+  canonical path consistently.
+
+Implication:
+
+- D071's "patch hub snapshot AND transformers_modules cache" must be done at
+  all four locations:
+  - `hub/.../snapshots/<commit>/`
+  - `transformers/.../snapshots/<commit>/` (legacy `TRANSFORMERS_CACHE`)
+  - `modules/transformers_modules/_<commit>/`
+  - `modules/transformers_modules/<owner>/<repo_with_hyphens>/<commit>/`
+- After overwriting, invalidate `__pycache__/*.pyc` files in each location;
+  Python will recompile from the patched .py on next import.
+- Preserve `.preserve_orig.bak` of each overwritten file so the patch is
+  reversible.
+- Add `local_files_only=True` and pin `revision=<commit_sha>` in
+  `from_pretrained` calls to block transformers from re-fetching fresh fork
+  files mid-load (dry-run 1 had also re-downloaded
+  `processing_prismatic.py` from hub, overwriting our patched fork copy).
+
+Sources:
+
+- `claudedocs/session_20260522_openvla_oft_offline_eval_v6_in_progress.md`
+- B200 `/tmp/openvla_oft_v6_eval_dryrun.{out,err}`,
+  `/tmp/openvla_oft_v6_eval_dryrun2.err`
+- `openvla_oft_roarm/eval_offline_v6.py:62-99` (apply_sdpa_class_attr_patch
+  fallback)
+- `openvla_oft_roarm/eval_offline_v6.py:148-175` (load_vla_with_lora pinned
+  revision + local_files_only)
+
+## D079 — openvla-oft `action_head--*_checkpoint.pt` is saved DDP-wrapped; strip `module.` prefix when loading for inference
+
+Evidence:
+
+- 2026-05-22 12:03 KST offline-eval dry-run 2 crashed loading ckpt 2500
+  action_head: `RuntimeError: Missing key(s) "model.layer_norm1.weight" ...
+  Unexpected key(s) "module.model.layer_norm1.weight" ...`.
+- All 12 v6 checkpoints (2500..30000) saved via the project's
+  `train_roarm_v6.py` show the same `module.` prefix; the training wrapper
+  saves the DDP/accelerate-wrapped state_dict directly without unwrapping
+  even though training used `nproc_per_node=1` (no actual DDP).
+- L1RegressionActionHead expects keys like `model.layer_norm1.weight` (no
+  `module.` prefix).
+
+Implication:
+
+- Any inference / eval / deploy script that loads our v6 OFT action_head must
+  strip a leading `module.` prefix from every key before
+  `load_state_dict`. Pattern:
+  `state = {(k[len("module."):] if k.startswith("module.") else k): v for k, v in state.items()}`
+- This rule also applies to any new openvla-oft finetuning runs we do that
+  reuse `train_roarm_v6.py` style saving.
+- Do not patch the training save side to fix this; doing so would break the
+  reproducibility of the already-saved 12 v6 checkpoints. Strip on load
+  instead.
+
+Sources:
+
+- `claudedocs/session_20260522_openvla_oft_offline_eval_v6_in_progress.md`
+- B200 `/tmp/openvla_oft_v6_eval_dryrun2.out` (RuntimeError)
+- `openvla_oft_roarm/eval_offline_v6.py:248-257` (load_vla_with_lora
+  action_head DDP-prefix strip)
+
+## D080 — `norm_stats` must be assigned to `vla.base_model.model`, not the PeftModel wrapper, for openvla-oft `predict_action` to see the correct unnorm key
+
+Evidence:
+
+- 2026-05-22 12:05 KST offline-eval dry-run 3 crashed inside
+  `predict_action`'s `_check_unnorm_key`:
+  `AssertionError("The unnorm_key you chose is not in the set of available
+  dataset statistics, please choose from: dict_keys([...25 OpenVLA pretraining
+  datasets...])")`.
+- The eval script had set `vla.norm_stats = norm_stats` (PeftModel
+  attribute). Python's attribute setter writes to the PeftModel instance dict,
+  but `predict_action` is a bound method on the underlying prismatic model
+  (`vla.base_model.model`), and reads `self.norm_stats` where `self` is the
+  prismatic model — which still held the OpenVLA pretraining defaults
+  (austin_buds, bc_z, bridge_orig, etc.).
+- Setting on `vla.base_model.model.norm_stats` directly resolved the error
+  and inference proceeded normally.
+
+Implication:
+
+- For PEFT-wrapped openvla-oft inference, **always** set norm_stats on
+  `vla.base_model.model` (the actual `OpenVLAForActionPrediction` instance).
+  Setting it on the PeftModel or LoraModel layer is silently ignored by
+  `predict_action`.
+- Same caveat applies to any future override of attributes accessed inside
+  prismatic methods (e.g., `pad_token_id`, `num_images_in_input`): walk down
+  to the underlying model.
+
+Sources:
+
+- `claudedocs/session_20260522_openvla_oft_offline_eval_v6_in_progress.md`
+- B200 `/tmp/openvla_oft_v6_eval_dryrun3.out` (AssertionError)
+- `openvla_oft_roarm/eval_offline_v6.py:175-191` (load_vla_with_lora
+  norm_stats wiring)
+- `prismatic/extern/hf/modeling_prismatic.py:1068-1080`
+  (`_check_unnorm_key` reads `self.norm_stats`)
+
+## D081 — Track A v4 must recover target error before further close advance, not rollback or relax fixed gates
+
+Evidence:
+
+- v3 B200 stdout
+  `/tmp/p7_branch_b_cube2cm_target_guarded_micro_close_v3_progress_v7_close26_b200.out`
+  reverified md5 `5f2d1a626edcdccce8086fafd321c9af`; final audit stdout
+  reverified md5 `ca60c09b03a156c85197e34ec7b28bb5`.
+- v3 fixed the v2 zero-backlog failure mode but failed close_26: stdout line
+  422 reports `target_guarded_zero_backlog_holds=0`,
+  `target_guarded_backlog_preserved_holds=5`, and
+  `target_guarded_safety_rollbacks=34`; aggregate line 423 reports
+  `close_reached=NO`, attach/posewrite zero, telemetry-only YES, and
+  success_claim NO. Audit lines 15/25/46 fail `close_reached`, safety
+  rollbacks zero, and final PASS.
+- Static v4 design script
+  `sim_scripts/p7_branch_b_cube2cm_target_guarded_v4_recovery_static_design.py`
+  md5 `265391a9a421bb7535925a77ef3e5b37` verifies those md5s and identifies
+  the first structural intervention at stdout line 385 step 9: v3 advanced
+  while `target_guarded_target_nonworsening=NO`; target error grew by
+  `0.000546m`, above the existing `0.000250m` growth tolerance.
+- The same static check reclassifies stdout line 387 step 11
+  (`target_error_m=0.002769`, fixed target gate `0.003m`, counter gap
+  `0.001909m`, fixed support budget `0.002m`) as recoverable: v4 should
+  preserve backlog and recovery-hold, not rollback the command to actual.
+- Stdout line 392 step 16 already exceeds both fixed gates
+  (`target_error_m=0.003070 > 0.003`, counter gap `0.002074m > 0.002`), so
+  v4 must treat that as a hard audit fail if reached; it must not relax target
+  or support gates to pass.
+- Added default-off runtime candidate
+  `--target_guarded_micro_close_v4_recovery_diagnostic` in runtime probe md5
+  `2326b68cf5fc7098182b574b4f7a1eb1`, audit md5
+  `7f3b368460d26acb3da549ace3e4b25f`, and readiness md5
+  `db3a8a48ba17cea7570d8e9c45d028e7`. Readiness is local/static only and
+  prints `READY_FOR_SEPARATE_RUNTIME_APPROVAL=YES`; no Isaac runtime was run.
+
+Implication:
+
+- Do not rerun v2 or v3 as the next experiment.
+- Do not reintroduce zero-backlog holds; v2 already proved that starves close
+  progress.
+- Do not use target/support gate relaxation to rescue v3/v4. Fixed gate breach
+  remains failure evidence, not a pass condition.
+- The next Track A runtime, if separately approved, is exactly one close_26-only
+  v4 recovery run followed immediately by v4 posthoc audit. Hold-lift,
+  dataset generation, training, transport/release, constraints, and
+  SurfaceGripper remain blocked until close_26 audit PASS.
+
+Sources:
+
+- `claudedocs/session_20260522_track_a_v4_recovery_static_readiness.md`
+- `sim_scripts/p7_branch_b_cube2cm_target_guarded_v4_recovery_static_design.py`
+- B200
+  `/tmp/p7_branch_b_cube2cm_target_guarded_micro_close_v3_progress_v7_close26_b200.out:385,387,392,421-423`
+- B200
+  `/tmp/p7_branch_b_cube2cm_target_guarded_micro_close_v3_progress_audit_b200.out:1-46`
+
+## D082 — Track A v4 fixed rollback starvation but failed by target/support hard-freeze
+
+Evidence:
+
+- User separately approved exactly one close_26-only B200 runtime with
+  `--target_guarded_micro_close_v4_recovery_diagnostic`, followed immediately by
+  the v4 posthoc audit. No dataset generation, training, hold-lift,
+  transport/release, constraints, SurfaceGripper, gate tuning, or success claim
+  was run.
+- B200 stdout
+  `/tmp/p7_branch_b_cube2cm_target_guarded_micro_close_v4_recovery_v7_close26_b200.out`
+  has md5 `fe6a733727a6eeb288c6c6464c178af1`; stderr md5 is
+  `4dc0d3c542e38524807f8fe75a82f841`.
+- B200 audit stdout
+  `/tmp/p7_branch_b_cube2cm_target_guarded_micro_close_v4_recovery_audit_b200.out`
+  has md5 `47f4ec7b78298fde0a46ac57105a6e6c`; audit stderr is empty md5
+  `d41d8cd98f00b204e9800998ecf8427e`.
+- Runtime line 37 confirms strict diagnostic-only, close_26-only, v4 flag YES,
+  no forbidden mechanisms, no posewrite, and no success claim. Line 39 confirms
+  `mode=target_guarded_micro_close_v4_recovery_diagnostic` with separate
+  approval. Line 41 confirms v4 recovery target error `0.002400m`, zero-backlog
+  hold NO, recovery holds preserve backlog YES, rollback on safety degradation
+  NO, and hard safety violation fails candidate YES.
+- v4 corrected the v3 line-385 scheduler mistake: stdout line 385 step 9 is a
+  recovery hold, not an advance, while target non-worsening is NO.
+- v4 also eliminated v3 safety rollback: stdout line 422 reports
+  `target_guarded_safety_rollbacks=0`, and audit line 26 passes safety rollbacks
+  zero.
+- The runtime still failed close_26. Runtime line 391 step 15 is the first hard
+  safety freeze: `target_error_m=0.003035 > 0.003` and counter gap
+  `0.002050m > 0.002`, while speed `0.001148m/s`, one-sided push NO, and support
+  horizon YES were not the blockers.
+- Final line 421 remains far from close_26: gripper `7.977deg`, command
+  `8.000deg`, remaining close `18.023deg`, target error `0.003826m`, counter gap
+  `0.002496m`, hard freeze YES.
+- Runtime lines 422-423 report posthoc FAIL, 4 advances, 41 holds, zero
+  zero-backlog holds, 41 backlog-preserved holds, zero safety rollbacks, 10 v4
+  recovery holds, 31 hard safety freezes, `close_reached=NO`, attach/posewrite
+  zero, telemetry-only YES, and success_claim NO.
+- Audit line 16 fails `close_reached`, line 28 fails hard safety freezes zero,
+  lines 50-52 fail hard freeze / fixed target / fixed support criteria, and line
+  54 reports `SOFT_CONTACT_RUNTIME_CRITERIA_PASS=NO`.
+- Added static attribution script
+  `sim_scripts/p7_branch_b_cube2cm_target_guarded_v4_recovery_runtime_static_analysis.py`
+  md5 `e381cbbe65ff899c479e3aad3c399d4a`. It verifies the runtime/audit md5s and
+  reports primary attribution
+  `target_support_hard_gate_freeze_after_recovery_hold`.
+
+Implication:
+
+- v4 is not grasp success and not close_26 success.
+- Do not rerun v4 as the next experiment; it already falsified recovery-hold-only
+  scheduling under the fixed target/support gates.
+- Do not relax fixed target/support gates. The first v4 hard freeze and the final
+  plateau exceed both fixed gates while speed and one-sided push are acceptable.
+- Keep the useful parts: zero-backlog holds must remain zero, safety rollbacks
+  must remain zero, and attach/posewrite must remain zero.
+- Next Track A work must be local/static/code-first: a structural target/support
+  recovery or contact-compatible close mechanism that can recover target error
+  and counter support before hard freeze, still under the unchanged close_26
+  audit. Hold-lift, dataset generation, training, transport/release,
+  constraints, and SurfaceGripper remain blocked until close_26 audit PASS.
+
+Sources:
+
+- `claudedocs/session_20260522_track_a_v4_recovery_runtime_fail.md`
+- `sim_scripts/p7_branch_b_cube2cm_target_guarded_v4_recovery_runtime_static_analysis.py`
+- B200
+  `/tmp/p7_branch_b_cube2cm_target_guarded_micro_close_v4_recovery_v7_close26_b200.out:37,39,41,385,390-392,421-423`
+- B200
+  `/tmp/p7_branch_b_cube2cm_target_guarded_micro_close_v4_recovery_audit_b200.out:1-54`
+
+## D083 — The RL→expert→rollout→demo plan is valid only after a no-attach contact Stage 0 gate
+
+Evidence:
+
+- The user restated the intended pipeline: B200 Isaac Lab RL learns from random
+  action + reward; the trained policy becomes the expert; expert rollouts record
+  state/action/observation; rollouts are converted to LeRobot/RLDS demos.
+- Added
+  `sim_scripts/p7_branch_b_contact_rl_stage0_preflight_static_analysis.py`
+  md5 `73fa3e8dc18fcc4a0e5a4cf702985eee`. It verifies v4 stdout md5
+  `fe6a733727a6eeb288c6c6464c178af1` and audit md5
+  `47f4ec7b78298fde0a46ac57105a6e6c`.
+- The preflight reports direct B200 PPO now `NO`: latest no-attach v4 still has
+  `close_reached=NO`, 31 hard freezes, final gripper `7.977deg`, and remaining
+  close `18.023deg`; existing `roarm_rl/train_ppo.py` targets
+  `RoArm-Pick-Direct-v0` / `RoArm-Stack-Direct-v0`, while both default envs use
+  kinematic attach / `write_root_pose_to_sim`.
+- Added
+  `sim_scripts/p7_branch_b_cube2cm_contact_rl_v5_static_design.py`
+  md5 `ab1b5c0b1b0655ebef4dc9c42d3e8de1`. It identifies v4 line 390 as the last
+  safe pre-freeze step: target error `0.002891m`, target margin `0.000109m`,
+  counter gap `0.001969m`, support margin `0.000031m`; v4 line 391 is already a
+  fixed-gate breach.
+
+Implication:
+
+- The four-stage RL-to-expert-to-demo plan is not rejected; it is the correct
+  high-level pipeline after Stage 0.
+- Do not use existing attach-based Pick/Stack PPO envs as Track A no-attach
+  contact expert evidence.
+- Stage 0 must first create a no-attach contact RL env or v5 contact-close gate:
+  robot joint target writes only, object attach/posewrite zero, fixed
+  target/support gates unchanged, zero zero-backlog holds, zero safety rollbacks,
+  and preemptive target/support recovery before a line-391-style hard freeze.
+- Random-action sanity, PPO training, expert rollout, and demo dataset generation
+  all still require separate approval after Stage 0 readiness.
+
+Sources:
+
+- `claudedocs/session_20260522_track_a_contact_rl_stage0_preflight.md`
+- `sim_scripts/p7_branch_b_contact_rl_stage0_preflight_static_analysis.py`
+- `sim_scripts/p7_branch_b_cube2cm_contact_rl_v5_static_design.py`
+- B200
+  `/tmp/p7_branch_b_cube2cm_target_guarded_micro_close_v4_recovery_v7_close26_b200.out:37,390-391,421-423`
+  and audit `/tmp/p7_branch_b_cube2cm_target_guarded_micro_close_v4_recovery_audit_b200.out:1-54`
+
+## D084 — v5 recovery writes alone are insufficient; next advance must be projected against fixed target/support margins
+
+Evidence:
+
+- The approved B200 v5 close_26 runtime stdout
+  `/tmp/p7_branch_b_cube2cm_target_guarded_micro_close_v5_preemptive_recovery_v7_close26_b200.out`
+  has md5 `f93ddaa75920a560777f8f9c8fae26f0`; audit stdout
+  `/tmp/p7_branch_b_cube2cm_target_guarded_micro_close_v5_preemptive_recovery_audit_b200.out`
+  has md5 `7709c2bc37424bc7c3874e978b34d104`.
+- Runtime line 393 had 8 v5 recovery writes and 0 IK failures, but support
+  margin was already only `0.000335m`. Runtime line 394 then advanced toward
+  the next close command with support margin `0.000243m`; runtime line 395
+  immediately breached both fixed gates (`target_error_m=0.003008 > 0.003`,
+  counter gap `0.002146m > 0.002`) and started hard freezes.
+- Audit line 17 fails `close_reached`; line 30 fails hard-freezes-zero with
+  value 32; lines 52-54 fail hard freeze / fixed target / fixed support; line
+  59 reports `SOFT_CONTACT_RUNTIME_CRITERIA_PASS=NO`.
+- A static recomputation over B200 v5 lines 390-395 using the new v6 projection
+  formula marks lines 390-392 advance-safe, but lines 393-394 unsafe because
+  projected support margin is negative (`-0.000062m` and `-0.000003m`).
+- Added default-off v6 projected-guard code and synced it to B200. Local/B200
+  md5s match: runtime `e4d72390150a6660ce624d9ba1b4425d`, audit
+  `d30c4583c2efd20a9449885e58a5dd80`, readiness
+  `821f523cf99bec4eedfb11016d977aa1`. B200 readiness reports
+  `READY_FOR_SEPARATE_RUNTIME_APPROVAL=YES` for the v6 command on GPU0.
+
+Implication:
+
+- v5 is not grasp success and not close_26 success. It preserves useful
+  constraints (attach/posewrite zero, zero zero-backlog holds, zero safety
+  rollbacks, IK recovery writes), but it does not prevent a line-394-style
+  unsafe advance.
+- The next Track A runtime candidate is v6 projected guard, not PPO/training
+  and not dataset generation. v6 is still only static/B200 readiness until
+  separately approved and run once with immediate audit.
+- Do not relax fixed target/support gates, tune gates, add constraints,
+  SurfaceGripper, hold-lift, transport/release, dataset generation, or training
+  as Track A evidence before close_26 audit PASS.
+
+Sources:
+
+- `claudedocs/session_20260522_track_a_v5_runtime_fail_v6_projected_guard_readiness.md`
+- B200
+  `/tmp/p7_branch_b_cube2cm_target_guarded_micro_close_v5_preemptive_recovery_v7_close26_b200.out:43,45,393-395,427-428`
+- B200
+  `/tmp/p7_branch_b_cube2cm_target_guarded_micro_close_v5_preemptive_recovery_audit_b200.out:17,28-30,52-57,59`
+- `sim_scripts/p7_branch_b_cube2cm_runtime_jaw_telemetry_probe.py`
+- `sim_scripts/p7_branch_b_cube2cm_soft_contact_runtime_criteria_audit.py`
+- `sim_scripts/p7_branch_b_cube2cm_soft_contact_runtime_readiness.py`
+
+## D085 - v6 projection blocks unsafe advance, but projection alone is insufficient after recovery stalls
+
+Evidence:
+
+- The approved B200 v6 close_26 runtime stdout
+  `/tmp/p7_branch_b_cube2cm_target_guarded_micro_close_v6_projected_guard_v7_close26_b200.out`
+  has md5 `9a4f8825a88ee3c9d93d83e5b9a28b41`; audit stdout
+  `/tmp/p7_branch_b_cube2cm_target_guarded_micro_close_v6_projected_guard_audit_b200.out`
+  has md5 `480a3355864937763eb665e086aadbb0`.
+- Runtime lines 43 and 45 confirm strict v6 metadata:
+  close_26-only, v6 flag YES, no training, constraints, SurfaceGripper,
+  transport/release, gate tuning, posewrite, or success claim.
+- Runtime lines 393-397 show v6 did the intended thing that v5 lacked: once
+  projected support/target margins went unsafe, it blocked further advance and
+  kept recovery active with IK OK.
+- Runtime line 398 is the first hard freeze and first fixed-support failure:
+  support gap `0.002075m > 0.002m` while target error `0.002914m` was still
+  within the fixed `0.003m` target gate.
+- Runtime line 399 then breached both fixed gates: target error `0.003052m`
+  and support gap `0.002146m`.
+- Runtime lines 427-428 report 4 advances, 41 holds, zero zero-backlog holds,
+  zero safety rollbacks, 12 recovery writes, 0 IK failures, 29 hard freezes,
+  `close_reached=NO`, attach/posewrite zero, telemetry-only YES, and
+  success_claim NO.
+- Audit line 18 fails `close_reached`; line 31 fails hard-freezes-zero with
+  value 29; lines 51-53 fail hard freeze / fixed target / fixed support; line
+  58 reports `SOFT_CONTACT_RUNTIME_CRITERIA_PASS=NO`.
+
+Implication:
+
+- v6 is not grasp success and not close_26 success. Runtime exit 0 is irrelevant
+  unless the posthoc audit reports `SOFT_CONTACT_RUNTIME_CRITERIA_PASS=YES`.
+- The projected guard fixed the v5 line-394 unsafe-advance class, but the
+  recovery action after projection blocked advance was too weak/passive to
+  restore target/support margins before fixed-gate failure.
+- Do not rerun v6 unchanged. Do not relax fixed target/support gates, tune gates,
+  add constraints, SurfaceGripper, hold-lift, transport/release, dataset
+  generation, PPO/training, or rollout as Track A evidence before close_26 audit
+  PASS.
+- The next Track A work should be local/static/code-first active target/support
+  recovery after a projected block, while preserving no attach/posewrite, zero
+  zero-backlog holds, zero safety rollbacks, and fixed gates.
+
+Sources:
+
+- `claudedocs/session_20260522_track_a_v6_projected_guard_runtime_fail.md`
+- B200
+  `/tmp/p7_branch_b_cube2cm_target_guarded_micro_close_v6_projected_guard_v7_close26_b200.out:43,45,393-399,427-428`
+- B200
+  `/tmp/p7_branch_b_cube2cm_target_guarded_micro_close_v6_projected_guard_audit_b200.out:18,27-31,51-58`
+
+
+## D086 - OpenVLA-OFT 7B local inference deps + inline L1 action head bypass dlimp chain
+
+Evidence:
+
+- 2026-05-22 Track B P4 attempted to load OpenVLA-OFT ckpt 7500 on Lenovo 4090 stack
+  (Ubuntu 22.04, roarm conda env, torch 2.7.1+cu126, transformers 4.57.6, lerobot 0.4.4).
+- `prismatic` editable install from `/home/cgxr/Documents/Robotics/openvla-oft/`
+  fails to import without `peft`, `rich`, `timm 0.9.16`, and **`dlimp`** (a private
+  GitHub package, not on PyPI, used only by RLDS data loading path).
+- Import chain that pulls `dlimp` into inference: `prismatic.models.action_heads`
+  → triggers `prismatic.models.__init__` → `from .load import ...` → load.py
+  imports `prismatic.models.vlas` → `vlas/__init__` → `from .openvla import OpenVLA`
+  → openvla.py imports `prismatic.vla.action_tokenizer` → triggers
+  `prismatic.vla.__init__` → `from .materialize import get_vla_dataset_and_collator`
+  → materialize.py imports `prismatic.vla.datasets` → `datasets.py` line 23
+  imports `prismatic.vla.datasets.rlds` → rlds/dataset.py line 13: `import dlimp as dl`
+  → `ModuleNotFoundError`.
+- `prismatic.vla.constants` and `prismatic.extern.hf.modeling_prismatic` import
+  independently without going through this chain (verified empirically).
+- `L1RegressionActionHead` definition in `prismatic.models.action_heads.py:84-107`
+  is a simple `MLPResNet`-based MLP with `num_blocks=2, input_dim=hidden_dim*ACTION_DIM,
+  output_dim=action_dim`, no diffusion/RLDS/dlimp dependency. The B200-trained
+  checkpoint `action_head--7500_checkpoint.pt` has 16 tensors (all `module.`-prefixed
+  from DDP) matching this exact shape (`input_dim=4096, hidden_dim=4096, action_dim=6`).
+- Inline copy of `_MLPResNetBlock`, `_MLPResNet`, `L1RegressionActionHead` in
+  `deploy_openvla_oft.py:78-138` loads the trained ckpt with `strict=True`,
+  zero missing / zero unexpected keys, 134,328,326 params, identical forward shape
+  `(1, NUM_ACTIONS_CHUNK*ACTION_DIM=48, 4096) → (1, 8, 6)`.
+
+Implication:
+
+- For any OpenVLA-OFT inference-only deployment that doesn't need RLDS data
+  loading, install only: `peft==0.18.0`, `rich`, `timm==0.9.16` (HARD RULE #15
+  pin), plus editable prismatic — do NOT install `dlimp` and do NOT import
+  through `prismatic.models.action_heads`.
+- Instead inline-copy the relevant action head class. The `prismatic.vla.constants`
+  + `prismatic.extern.hf.modeling_prismatic.OpenVLAForActionPrediction` imports
+  remain safe (they bypass the `vla.__init__` materialize chain via direct module
+  path).
+- This pattern is what `openvla_oft_roarm/eval_offline_v6.py` should also follow if
+  it were rewritten to support a smaller inference env (currently it relies on B200
+  full prismatic install).
+- This pattern is required for any future local inference scripts (e.g., closed-
+  loop deploy, ablation runs, head-to-head SmolVLA comparison).
+
+Sources:
+
+- `deploy_openvla_oft.py:78-138` (inline classes)
+- `deploy_openvla_oft.py:166-179` (apply_sdpa_class_attr_patch)
+- `deploy_openvla_oft.py:228-292` (load_openvla_oft norm_stats inject + action head load)
+- `claudedocs/session_20260522_track_b_p4_deploy_prep_offline_hw_sanity.md` Sanity 1
+- `/home/cgxr/Documents/Robotics/openvla-oft/prismatic/models/action_heads.py:84-107`
+- `/home/cgxr/Documents/Robotics/openvla-oft/prismatic/vla/__init__.py:1`
+- `/home/cgxr/Documents/Robotics/openvla-oft/prismatic/vla/datasets/rlds/dataset.py:13`
+- HARD RULE #15 (timm 0.9.16 pin; nightly cu128 is for B200, NOT Lenovo 4090 sm_89)
+
+
+## D087 - B200 lease retirement means future research must be local/RunPod from verified backups
+
+Evidence:
+
+- The B200 lease ends on 2026-05-22 at 23:59 KST. After that point, new work
+  must not depend on SSH access to `JHPark/roarm_b200` or B200 `/tmp`.
+- Track A backup was reverified from local and B200 sources before retirement:
+  `/tmp/p7_branch_b_*` has 494 files on both sides, path+size hash
+  `c308d1a682560cf51136cdd1a018c50ce2e7b488f1a0d4620e31abf7de80cfd4`,
+  and file-content aggregate hash
+  `cca0586b77c36ee79532d0640f9a35b2f1056654ab2758f256ea2bc1f149a4ae`.
+- Track A B200 `sim_scripts` snapshot was also reverified: 53 non-pycache files,
+  path+size hash `98563bbc3d27426351abd13272a88537009372b2c709b46d2a5021560c5ea23a`,
+  file-content aggregate hash
+  `fefe4c873c1e45ec4cb95226a2c1a0d53860e4eca926c93d3da1b9887c9ca83f`.
+- Track B outputs were verified locally across three locations:
+  `b200_backup_20260522_final/outputs`, `b200_backup_20260521`, and
+  `openvla_oft_b200_pulls`. OpenVLA full has zero missing remote files locally
+  (`comm -23 remote local = 0`); local has only three extras (`_pull.log` and two
+  eval JSON files).
+- B200 env specs and wandb cache were also preserved:
+  `env_specs` manifest hash
+  `5e357fb4ebd4efc1a9b2918af30ecbec39128c8a54d93029557dd1f1fdb01151`;
+  `wandb_cache` 35 files / 5.7M, manifest hash
+  `d68c65cb1f08ed76a02634952e62b1d4c24b3300f39ec3c7dee13649db8ce871`.
+
+Implication:
+
+- Do not plan future work around entering B200, rerunning B200 Isaac, or pulling
+  additional B200 files. Treat B200 as retired/unavailable after 2026-05-22 23:59
+  KST.
+- Do not copy, request, or depend on `.ssh` private material as "research data".
+  Research continuity comes from backed-up artifacts, not login secrets.
+- Future compute should be local 4090 and/or RunPod. Start each RunPod/local
+  continuation by rebuilding/verifying env from backups, then run a small smoke
+  test before full training/eval.
+- The local output layout is split: complete OpenVLA full checkpoints are in
+  `openvla_oft_b200_pulls`, while some older SmolVLA outputs live under
+  `b200_backup_20260521`. Do not assume every complete Track B artifact is under
+  `b200_backup_20260522_final/outputs`.
+
+Sources:
+
+- `claudedocs/session_20260522_b200_retirement_track_a_b_backup_verified.md`
+- `b200_backup_20260522_final/README_BACKUP.md`
+
+
+## D088 - B200 disconnect is now confirmed; do not attempt recovery-by-SSH in future sessions
+
+Evidence:
+
+- On 2026-05-23 KST, after the 2026-05-22 23:59 KST lease expiry, the user
+  reported that B200 now shows `disconnect`.
+- D087 already verified the required Track A/B research artifacts locally before
+  retirement:
+  - Track A `/tmp/p7_branch_b_*`: 494 files, path+size hash
+    `c308d1a682560cf51136cdd1a018c50ce2e7b488f1a0d4620e31abf7de80cfd4`,
+    content aggregate
+    `cca0586b77c36ee79532d0640f9a35b2f1056654ab2758f256ea2bc1f149a4ae`.
+  - Track A B200 `sim_scripts`: 53 files, path+size hash
+    `98563bbc3d27426351abd13272a88537009372b2c709b46d2a5021560c5ea23a`,
+    content aggregate
+    `fefe4c873c1e45ec4cb95226a2c1a0d53860e4eca926c93d3da1b9887c9ca83f`.
+  - Track B outputs: preserved across `b200_backup_20260522_final/outputs`,
+    `b200_backup_20260521`, and `openvla_oft_b200_pulls`.
+
+Implication:
+
+- Future sessions must not try to "just check B200", "pull one more file", or
+  recover by SSH unless the user explicitly provides a new, valid compute
+  allocation. Treat B200 as unavailable.
+- The correct next step is local/RunPod continuation from verified backups.
+- If a path depends on a B200-only file that is not in the backups, treat that
+  path as blocked and redesign from local evidence rather than attempting B200
+  access.
+
+Sources:
+
+- User report in chat on 2026-05-23 KST: B200 ended and shows disconnect.
+- `START_HERE.md` B200 Retired / Backup Truth section.
+- `claudedocs/session_20260522_b200_retirement_track_a_b_backup_verified.md`
+
+
+## D089 - Track A large datasets and learning must be gated by no-attach Stage 0
+
+Evidence:
+
+- v6 projected guard is still FAIL, not grasp success. Local backup runtime stdout
+  md5 is `9a4f8825a88ee3c9d93d83e5b9a28b41`; audit stdout md5 is
+  `480a3355864937763eb665e086aadbb0`.
+- v6 runtime lines 393-397 show projected unsafe advance was blocked and recovery
+  writes continued with IK OK, but runtime line 398 is the first support-gate hard
+  freeze (`counter gap 0.002075m > 0.002m`) and line 399 breaches both fixed
+  target/support gates.
+- v6 audit line 18 fails close_reached, line 31 fails hard-freezes-zero with value
+  29, lines 51-53 fail hard freeze / fixed target / fixed support, and line 58
+  reports `SOFT_CONTACT_RUNTIME_CRITERIA_PASS=NO`.
+- The professor/user pipeline - RL learns, trained policy becomes expert, expert
+  rollouts become demos, demos become LeRobot/RLDS-style datasets - is valid in
+  principle, but Stage 0 preflight showed existing `RoArm-Pick-Direct-v0` and
+  `RoArm-Stack-Direct-v0` are attach/posewrite envs and cannot produce Track A
+  no-attach expert evidence.
+- Added
+  `sim_scripts/p7_branch_b_cube2cm_target_guarded_v7_active_recovery_static_design.py`
+  md5 `14a462526945f3c5bca1c5e8c3e13525`. It reverified local v6 md5s and showed
+  that pre-freeze recovery rows increased target error by `0.000626m` and support
+  gap by `0.000319m`; v6 had recovery writes, but not active target/support
+  recovery.
+
+Implication:
+
+- Do not start PPO/training, rollout collection, dataset generation, or large-scale
+  learning from current Track A evidence.
+- The required order is:
+  1. local/static active target/support recovery design after v6 projected block;
+  2. default-off runtime candidate plus audit/readiness support;
+  3. close_26-only runtime plus immediate posthoc audit, only after explicit
+     approval;
+  4. hold-lift gate after close_26 PASS;
+  5. no-attach RL env / random sanity / small PPO smoke;
+  6. expert rollout to a small pilot dataset;
+  7. replay/audit PASS;
+  8. large dataset scaling;
+  9. BC/VLA/IL learning.
+- A dataset is not "proper" just because it is large. For Track A it must be
+  generated from a no-attach, no-posewrite contact primitive that has passed
+  close_26, hold-lift, and pilot replay gates.
+
+Sources:
+
+- `claudedocs/session_20260526_track_a_stage0_to_dataset_step_plan.md`
+- `sim_scripts/p7_branch_b_cube2cm_target_guarded_v7_active_recovery_static_design.py`
+- `claudedocs/session_20260522_track_a_v6_projected_guard_runtime_fail.md`
+- `claudedocs/session_20260522_track_a_contact_rl_stage0_preflight.md`
+- B200 local backup
+  `b200_backup_20260522_final/tmp_p7/p7_branch_b_cube2cm_target_guarded_micro_close_v6_projected_guard_v7_close26_b200.out:43,45,393-399,427-428`
+- B200 local backup
+  `b200_backup_20260522_final/tmp_p7/p7_branch_b_cube2cm_target_guarded_micro_close_v6_projected_guard_audit_b200.out:18,27-31,51-58`
+
+
+## D090 - Claude and Codex MCP configurations are separate; verify loaded RunPod tools before using them
+
+Evidence:
+
+- The user reported that Claude could use RunPod MCP while this Codex session
+  could not. Local verification showed this was a configuration/loading
+  mismatch, not proof that Codex cannot use MCP.
+- Claude config `/home/cgxr/.claude.json` has an MCP server named `runpod` with
+  command `npx`, args `["-y", "@runpod/mcp-server@latest"]`, and env key
+  `RUNPOD_API_KEY`. The key value was not printed.
+- Before the update, Codex config `/home/cgxr/.codex/config.toml` did not have
+  RunPod; it listed other MCP servers such as context7, filesystem,
+  sequential-thinking, memory, fetch, github, and arxiv.
+- Codex config was updated with `[mcp_servers.runpod]`, using the same RunPod MCP
+  package and a copied `RUNPOD_API_KEY` value from Claude config without printing
+  the secret. A backup was created at
+  `/home/cgxr/.codex/config.toml.bak_runpod_20260526` md5
+  `1ef4acf6f1c92a64b9bbd79a2e35b7e7`.
+- Redacted post-edit verification showed `/home/cgxr/.codex/config.toml:71`
+  contains `[mcp_servers.runpod]`, line 73 contains
+  `@runpod/mcp-server@latest`, and line 74 contains `RUNPOD_API_KEY`.
+- Same-session `tool_search` after the config edit still did not expose
+  `mcp__runpod__...`, so the current session likely needs restart/new-session
+  tool loading before RunPod MCP becomes callable.
+
+Implication:
+
+- Do not say "Codex cannot use RunPod MCP" unless current Codex docs/tools prove
+  it; the verified issue here was missing Codex MCP registration in this session.
+- Do not assume RunPod MCP is usable merely because `/home/cgxr/.codex/config.toml`
+  has a RunPod block. Each new session must verify that `mcp__runpod__...` tools
+  are actually loaded before trying RunPod actions.
+- If RunPod MCP is not loaded after config registration, restart/new-session/tool
+  reload is the next operational step, not B200 SSH and not stale pod reuse.
+- Do not use the old RunPod pod `az53n8t8alp8pz` from 2026-05-06 unless the user
+  explicitly confirms it is current and active.
+- Continue to obey D087-D088: B200 is unavailable; no `ssh JHPark`, no B200 pull,
+  and no `.ssh` copying.
+
+Sources:
+
+- `claudedocs/session_20260526_runpod_mcp_codex_registration_and_next_prompt.md`
+- `/home/cgxr/.codex/config.toml:71-75`
+- `/home/cgxr/.claude.json` RunPod MCP server keys, redacted verification only
+
+
+## D091 - Local CUDA can be healthy while Codex default sandbox hides GPU device nodes
+
+Evidence:
+
+- The local CUDA block was first caused by an NVIDIA driver/userspace mismatch:
+  loaded kernel module `580.126.09` vs userspace/NVML `580.159.03`, after the
+  2026-05-21 06:04 KST apt upgrade and before reboot.
+- After the user rebooted the local PC on 2026-05-26, the host NVIDIA stack
+  matched at `580.159.03`: `/proc/driver/nvidia/version`,
+  `/sys/module/nvidia/version`, and `libnvidia-ml.so.1`.
+- In the default Codex sandbox, `nvidia-smi` still failed and `/dev/nvidiactl`,
+  `/dev/nvidia0`, and `/dev/nvidia-uvm` were not visible.
+- The same `nvidia-smi` run with `sandbox_permissions=require_escalated` succeeded
+  and reported Driver `580.159.03`, CUDA `13.0`, and RTX 4090 Laptop GPU.
+- `conda run -n isaaclab` run with `sandbox_permissions=require_escalated`
+  reported `torch_cuda_available True`, `device_count 1`, and IsaacLab/roarm_rl
+  imports OK.
+- v7 static readiness after reboot still reports
+  `READY_FOR_SEPARATE_RUNTIME_APPROVAL=YES`.
+
+Implication:
+
+- Do not confuse a Codex default sandbox GPU-device visibility failure with a
+  local host CUDA failure.
+- GPU/IsaacLab commands that require `/dev/nvidia*` should be run with
+  `sandbox_permissions=require_escalated` in Codex, while still obeying all Track
+  A runtime gates.
+- The next Track A v7 close_26 runtime can be run locally, but it is still a
+  physics gate, not a success claim. It must be followed immediately by the v7
+  posthoc audit.
+- If the audit fails, analyze the first failing runtime/audit lines before any
+  rerun. If it passes, do not start dataset/training; next gate is hold-lift.
+
+Sources:
+
+- `claudedocs/session_20260526_track_a_cuda_reboot_codex_sandbox_ready.md`
+- `claudedocs/session_20260526_track_a_v7_local_runtime_cuda_blocked.md`
+- `sim_scripts/p7_branch_b_cube2cm_soft_contact_runtime_readiness.py`
+
+
+## D092 - v7 active recovery telemetry is real, but the mechanism still fails close_26
+
+Evidence:
+
+- After local reboot/CUDA recovery, one escalated local close_26-only v7 active
+  recovery runtime was run and immediately audited. Runtime stdout md5
+  `621d00b9d157b4e70178c28f94ca4c7f`; audit stdout md5
+  `406b96557d94418f16273e517ec4d69b`.
+- Runtime line 6 confirms the mechanism
+  `target_guarded_micro_close_v7_active_recovery_diagnostic` with separate
+  approval marker YES.
+- Runtime line 8 confirms the v7 contract: finite-difference TCP sweep, current
+  object pose, object posewrite NO, robot joint target writes only, constraints
+  NO, and SurfaceGripper NO.
+- Runtime lines 389-391 show v7 active recovery did trigger: 3 active recovery
+  writes, 0 IK failures, and counter-gap deltas `-0.000684m`, `-0.000703m`, and
+  `-0.000716m`.
+- Runtime line 392 is the first hard freeze and first fixed-support failure:
+  target error `0.002962m` was still inside the fixed 3mm gate, but counter gap
+  was `0.002048m > 0.002m`. Runtime line 393 then breached both fixed gates:
+  target error `0.003059m` and counter gap `0.002104m`.
+- Runtime line 424 aggregate reports close_reached NO, 4 advances, 41 holds, 31
+  hard freezes, 3 v7 active recovery writes, 0 v7 IK failures, attach/posewrite
+  zero, telemetry-only YES, and success_claim NO.
+- Audit line 19 fails close_reached; line 32 fails hard-freezes-zero with value
+  31; lines 54-56 fail hard freeze / fixed target / fixed support; line 66
+  reports `SOFT_CONTACT_RUNTIME_CRITERIA_PASS=NO`.
+- Audit lines 60-64 pass the v7-specific checks: active recovery present,
+  trigger seen, IK OK, counter-gap reduction, and valid selected margins.
+
+Implication:
+
+- v7 is not grasp success and not close_26 success. It is a real physics/audit
+  failure, not an infrastructure block.
+- The v7 telemetry/audit path is validated enough to be diagnostic, but the
+  mechanism is insufficient: selected active recovery candidates can look valid
+  at the candidate level while the subsequent observed close rows still lose
+  support/target margin.
+- Do not rerun v7 unchanged. Do not proceed to hold-lift, PPO/training, rollout,
+  dataset generation, constraints, SurfaceGripper, transport/release, or gate
+  tuning from this result.
+- The next Track A work should be static failure analysis/redesign before any
+  new runtime approval. The redesign must preserve fixed target/support gates,
+  no attach/posewrite, zero zero-backlog holds, zero safety rollbacks, and
+  robot-joint-target-only writes.
+
+Sources:
+
+- `claudedocs/session_20260526_track_a_v7_active_recovery_runtime_fail.md`
+- `claudedocs/runtime_logs/20260526_track_a_v7_active_recovery_close26_local_post_reboot/runtime.out:6,8,389-393,423-424`
+- `claudedocs/runtime_logs/20260526_track_a_v7_active_recovery_close26_local_post_reboot/audit.out:19,32,54-56,60-66`

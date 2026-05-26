@@ -13,7 +13,7 @@ import argparse
 import math
 import os
 import sys
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 import numpy as np
@@ -79,6 +79,21 @@ VIRTUAL_COMPRESSION_BUDGET_M = 0.002
 VIRTUAL_MAX_PLAUSIBLE_COMPRESSION_M = 0.003
 VIRTUAL_VELOCITY_DAMPING_RESIDUAL_RATIO = 0.08
 VIRTUAL_DAMPING_START_CLOSE_STEP = 3
+TARGET_GUARDED_MICRO_CLOSE_DESIGN_LIMIT_M = 0.0027
+TARGET_GUARDED_MICRO_CLOSE_STEP_DEG = 2.0
+TARGET_GUARDED_COMMAND_ERROR_GATE_DEG = 0.75
+TARGET_GUARDED_ADVANCE_COUNTER_SUPPORT_MARGIN_M = 0.0015
+TARGET_GUARDED_TARGET_ERROR_GROWTH_TOLERANCE_M = 0.00025
+TARGET_GUARDED_V3_MIN_ACTUAL_PROGRESS_DEG = 0.25
+TARGET_GUARDED_V3_MAX_COMMAND_BACKLOG_DEG = 5.0
+TARGET_GUARDED_V4_RECOVERY_TARGET_ERROR_M = 0.0024
+TARGET_GUARDED_V5_PREEMPT_TARGET_MARGIN_M = 0.00020
+TARGET_GUARDED_V5_PREEMPT_SUPPORT_MARGIN_M = 0.00010
+TARGET_GUARDED_V5_RECOVERY_TCP_GAIN = 0.65
+TARGET_GUARDED_V5_RECOVERY_MAX_TCP_STEP_M = 0.0015
+TARGET_GUARDED_V7_ACTIVE_RECOVERY_SWEEP_STEP_M = 0.0005
+TARGET_GUARDED_V7_ACTIVE_RECOVERY_MAX_TCP_STEP_M = 0.0015
+TARGET_GUARDED_V7_ACTIVE_RECOVERY_MIN_GAP_IMPROVEMENT_M = 0.00002
 
 FUTURE_CLOSE26_PUSH_SPEED_GATE_MPS = 0.005
 FUTURE_CLOSE26_TARGET_ERROR_GATE_M = 0.003
@@ -107,6 +122,20 @@ class ObjectPhysicsParams:
     static_friction: float
     dynamic_friction: float
     restitution: float
+
+
+@dataclass(frozen=True)
+class V7ActiveRecoveryDecision:
+    selected: bool
+    tcp: np.ndarray
+    q_deg: np.ndarray | None
+    candidate_count: int
+    score: float
+    target_margin_m: float
+    support_margin_m: float
+    counter_gap_delta_m: float
+    step_m: float
+    ik_ok: bool
 
 
 def _axis_gap(mesh_min: np.ndarray, mesh_max: np.ndarray, cube_min: np.ndarray, cube_max: np.ndarray) -> np.ndarray:
@@ -142,6 +171,20 @@ def _object_physics_params(args: argparse.Namespace) -> ObjectPhysicsParams:
 
 
 def _runtime_candidate_mode(args: argparse.Namespace) -> str:
+    if args.target_guarded_micro_close_v7_active_recovery_diagnostic:
+        return "target_guarded_micro_close_v7_active_recovery_diagnostic"
+    if args.target_guarded_micro_close_v6_projected_guard_diagnostic:
+        return "target_guarded_micro_close_v6_projected_guard_diagnostic"
+    if args.target_guarded_micro_close_v5_preemptive_recovery_diagnostic:
+        return "target_guarded_micro_close_v5_preemptive_recovery_diagnostic"
+    if args.target_guarded_micro_close_v4_recovery_diagnostic:
+        return "target_guarded_micro_close_v4_recovery_diagnostic"
+    if args.target_guarded_micro_close_v3_progress_diagnostic:
+        return "target_guarded_micro_close_v3_progress_diagnostic"
+    if args.target_guarded_micro_close_v2_convergence_diagnostic:
+        return "target_guarded_micro_close_v2_convergence_diagnostic"
+    if args.target_guarded_micro_close_support_horizon_diagnostic:
+        return "target_guarded_micro_close_support_horizon_diagnostic"
     if args.virtual_compression_damping_diagnostic:
         return "virtual_compression_damping_diagnostic"
     if args.soft_contact_material_diagnostic:
@@ -150,7 +193,17 @@ def _runtime_candidate_mode(args: argparse.Namespace) -> str:
 
 
 def _runtime_candidate_requires_separate_approval(args: argparse.Namespace) -> bool:
-    return bool(args.soft_contact_material_diagnostic or args.virtual_compression_damping_diagnostic)
+    return bool(
+        args.soft_contact_material_diagnostic
+        or args.virtual_compression_damping_diagnostic
+        or args.target_guarded_micro_close_support_horizon_diagnostic
+        or args.target_guarded_micro_close_v2_convergence_diagnostic
+        or args.target_guarded_micro_close_v3_progress_diagnostic
+        or args.target_guarded_micro_close_v4_recovery_diagnostic
+        or args.target_guarded_micro_close_v5_preemptive_recovery_diagnostic
+        or args.target_guarded_micro_close_v6_projected_guard_diagnostic
+        or args.target_guarded_micro_close_v7_active_recovery_diagnostic
+    )
 
 
 def _homogeneous(rot: np.ndarray, pos: np.ndarray) -> np.ndarray:
@@ -188,6 +241,119 @@ def _contact_stats(
         "contact": bool(np.all(overlap > 0.0)),
         "slop_contact": bool(np.all(slop_overlap > 0.0)),
     }
+
+
+def _unique_offsets(offsets: list[np.ndarray]) -> list[np.ndarray]:
+    out: list[np.ndarray] = []
+    seen: set[tuple[int, int, int]] = set()
+    for offset in offsets:
+        key = tuple(int(round(float(v) * 1.0e6)) for v in offset)
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(offset)
+    return out
+
+
+def _v7_active_recovery_decision(
+    *,
+    current_tcp: np.ndarray,
+    target_tcp: np.ndarray,
+    current_counter_gap_max_m: float,
+    gripper_tf: np.ndarray,
+    counter_parent_tf: np.ndarray,
+    jaw: JawGeometry,
+    object_pos: np.ndarray,
+    object_quat: np.ndarray,
+    object_size: np.ndarray,
+    q_actual_deg: np.ndarray,
+    commanded_gripper_deg: float,
+    args: argparse.Namespace,
+) -> V7ActiveRecoveryDecision:
+    sweep_step = float(args.target_guarded_v7_active_recovery_sweep_step_m)
+    max_step = float(args.target_guarded_v7_active_recovery_max_tcp_step_m)
+    min_gap_improvement = float(args.target_guarded_v7_active_recovery_min_gap_improvement_m)
+    axes = np.eye(3, dtype=np.float64)
+    offsets: list[np.ndarray] = []
+    for length in (sweep_step, 2.0 * sweep_step, max_step):
+        if length <= 0.0 or length > max_step + 1.0e-12:
+            continue
+        for axis in axes:
+            offsets.append(axis * length)
+            offsets.append(-axis * length)
+    target_vec = np.asarray(target_tcp, dtype=np.float64) - np.asarray(current_tcp, dtype=np.float64)
+    target_norm = _norm(target_vec)
+    if target_norm > 1.0e-9:
+        unit = target_vec / target_norm
+        for length in (min(target_norm, sweep_step), min(target_norm, max_step)):
+            if length > 0.0:
+                offsets.append(unit * length)
+                offsets.append(-unit * length)
+    offsets = _unique_offsets(offsets)
+
+    best: V7ActiveRecoveryDecision | None = None
+    candidate_count = 0
+    for offset in offsets:
+        step_m = _norm(offset)
+        if step_m <= 0.0 or step_m > max_step + 1.0e-12:
+            continue
+        candidate_count += 1
+        candidate_tcp = np.asarray(current_tcp, dtype=np.float64) + offset
+        world_delta = _translation(offset)
+        candidate_gripper_tf = world_delta @ gripper_tf
+        candidate_counter_parent_tf = world_delta @ counter_parent_tf
+        candidate_counter_world = _transform_points(
+            candidate_counter_parent_tf @ _translation(jaw.counter_origin_parent_m),
+            jaw.counter_vertices_local,
+        )
+        counter = _contact_stats(
+            candidate_counter_world,
+            object_pos,
+            object_quat,
+            object_size,
+            slop_m=float(args.counter_contact_slop_m),
+        )
+        counter_gap_max = float(np.max(np.asarray(counter["gap_obj"], dtype=np.float64)))
+        target_error = _norm(candidate_tcp - target_tcp)
+        target_margin = FUTURE_CLOSE26_TARGET_ERROR_GATE_M - target_error
+        support_margin = FUTURE_CLOSE26_COUNTER_SUPPORT_BUDGET_M - counter_gap_max
+        counter_gap_delta = counter_gap_max - current_counter_gap_max_m
+        if target_margin < 0.0 or support_margin < 0.0:
+            continue
+        if counter_gap_delta > -min_gap_improvement:
+            continue
+        score = min(target_margin, support_margin) - 0.10 * step_m - 0.25 * max(0.0, counter_gap_delta)
+        q_deg, ik_ok, ik_err_mm = _solve_q(candidate_tcp, q_actual_deg, commanded_gripper_deg, args)
+        ik_pass = bool(ik_ok and ik_err_mm <= float(args.ik_tol_mm))
+        decision = V7ActiveRecoveryDecision(
+            selected=ik_pass,
+            tcp=candidate_tcp,
+            q_deg=np.asarray(q_deg, dtype=np.float64) if ik_pass else None,
+            candidate_count=candidate_count,
+            score=score,
+            target_margin_m=target_margin,
+            support_margin_m=support_margin,
+            counter_gap_delta_m=counter_gap_delta,
+            step_m=step_m,
+            ik_ok=ik_pass,
+        )
+        if best is None or decision.score > best.score:
+            best = decision
+
+    if best is None:
+        return V7ActiveRecoveryDecision(
+            selected=False,
+            tcp=np.asarray(current_tcp, dtype=np.float64),
+            q_deg=None,
+            candidate_count=candidate_count,
+            score=float("-inf"),
+            target_margin_m=FUTURE_CLOSE26_TARGET_ERROR_GATE_M - _norm(current_tcp - target_tcp),
+            support_margin_m=FUTURE_CLOSE26_COUNTER_SUPPORT_BUDGET_M - current_counter_gap_max_m,
+            counter_gap_delta_m=0.0,
+            step_m=0.0,
+            ik_ok=False,
+        )
+    return replace(best, candidate_count=candidate_count)
 
 
 def _candidate_centers_v5(args: argparse.Namespace) -> tuple[np.ndarray, np.ndarray]:
@@ -419,6 +585,50 @@ def _parse_args() -> argparse.Namespace:
         action="store_true",
         help="Default-off virtual compression+damping diagnostic candidate; requires separate runtime approval.",
     )
+    ap.add_argument(
+        "--target_guarded_micro_close_support_horizon_diagnostic",
+        action="store_true",
+        help="Default-off target-guarded micro-close plus support-horizon damping candidate; requires separate runtime approval.",
+    )
+    ap.add_argument(
+        "--target_guarded_micro_close_v2_convergence_diagnostic",
+        action="store_true",
+        help="Default-off target-guarded v2 candidate with zero-backlog holds and convergence-gated advances.",
+    )
+    ap.add_argument(
+        "--target_guarded_micro_close_v3_progress_diagnostic",
+        action="store_true",
+        help="Default-off target-guarded v3 candidate with backlog-preserving progress ratchet.",
+    )
+    ap.add_argument(
+        "--target_guarded_micro_close_v4_recovery_diagnostic",
+        action="store_true",
+        help="Default-off target-guarded v4 candidate with target-error recovery holds and no rollback.",
+    )
+    ap.add_argument(
+        "--target_guarded_micro_close_v5_preemptive_recovery_diagnostic",
+        action="store_true",
+        help=(
+            "Default-off target-guarded v5 candidate with preemptive TCP target "
+            "recovery before fixed target/support hard-gate breach."
+        ),
+    )
+    ap.add_argument(
+        "--target_guarded_micro_close_v6_projected_guard_diagnostic",
+        action="store_true",
+        help=(
+            "Default-off target-guarded v6 candidate with projected target/support "
+            "margin guard before issuing the next micro-close advance."
+        ),
+    )
+    ap.add_argument(
+        "--target_guarded_micro_close_v7_active_recovery_diagnostic",
+        action="store_true",
+        help=(
+            "Default-off target-guarded v7 candidate with finite-difference TCP "
+            "active recovery after a projected target/support block."
+        ),
+    )
     ap.add_argument("--virtual_compression_budget_m", type=float, default=VIRTUAL_COMPRESSION_BUDGET_M)
     ap.add_argument(
         "--virtual_max_plausible_compression_m",
@@ -431,6 +641,81 @@ def _parse_args() -> argparse.Namespace:
         default=VIRTUAL_VELOCITY_DAMPING_RESIDUAL_RATIO,
     )
     ap.add_argument("--virtual_damping_start_close_step", type=int, default=VIRTUAL_DAMPING_START_CLOSE_STEP)
+    ap.add_argument(
+        "--target_guarded_micro_close_target_error_limit_m",
+        type=float,
+        default=TARGET_GUARDED_MICRO_CLOSE_DESIGN_LIMIT_M,
+    )
+    ap.add_argument(
+        "--target_guarded_micro_close_step_deg",
+        type=float,
+        default=TARGET_GUARDED_MICRO_CLOSE_STEP_DEG,
+    )
+    ap.add_argument(
+        "--target_guarded_command_error_gate_deg",
+        type=float,
+        default=TARGET_GUARDED_COMMAND_ERROR_GATE_DEG,
+    )
+    ap.add_argument(
+        "--target_guarded_advance_counter_support_margin_m",
+        type=float,
+        default=TARGET_GUARDED_ADVANCE_COUNTER_SUPPORT_MARGIN_M,
+    )
+    ap.add_argument(
+        "--target_guarded_target_error_growth_tolerance_m",
+        type=float,
+        default=TARGET_GUARDED_TARGET_ERROR_GROWTH_TOLERANCE_M,
+    )
+    ap.add_argument(
+        "--target_guarded_v3_min_actual_progress_deg",
+        type=float,
+        default=TARGET_GUARDED_V3_MIN_ACTUAL_PROGRESS_DEG,
+    )
+    ap.add_argument(
+        "--target_guarded_v3_max_command_backlog_deg",
+        type=float,
+        default=TARGET_GUARDED_V3_MAX_COMMAND_BACKLOG_DEG,
+    )
+    ap.add_argument(
+        "--target_guarded_v4_recovery_target_error_m",
+        type=float,
+        default=TARGET_GUARDED_V4_RECOVERY_TARGET_ERROR_M,
+    )
+    ap.add_argument(
+        "--target_guarded_v5_preempt_target_margin_m",
+        type=float,
+        default=TARGET_GUARDED_V5_PREEMPT_TARGET_MARGIN_M,
+    )
+    ap.add_argument(
+        "--target_guarded_v5_preempt_support_margin_m",
+        type=float,
+        default=TARGET_GUARDED_V5_PREEMPT_SUPPORT_MARGIN_M,
+    )
+    ap.add_argument(
+        "--target_guarded_v5_recovery_tcp_gain",
+        type=float,
+        default=TARGET_GUARDED_V5_RECOVERY_TCP_GAIN,
+    )
+    ap.add_argument(
+        "--target_guarded_v5_recovery_max_tcp_step_m",
+        type=float,
+        default=TARGET_GUARDED_V5_RECOVERY_MAX_TCP_STEP_M,
+    )
+    ap.add_argument(
+        "--target_guarded_v7_active_recovery_sweep_step_m",
+        type=float,
+        default=TARGET_GUARDED_V7_ACTIVE_RECOVERY_SWEEP_STEP_M,
+    )
+    ap.add_argument(
+        "--target_guarded_v7_active_recovery_max_tcp_step_m",
+        type=float,
+        default=TARGET_GUARDED_V7_ACTIVE_RECOVERY_MAX_TCP_STEP_M,
+    )
+    ap.add_argument(
+        "--target_guarded_v7_active_recovery_min_gap_improvement_m",
+        type=float,
+        default=TARGET_GUARDED_V7_ACTIVE_RECOVERY_MIN_GAP_IMPROVEMENT_M,
+    )
     args = ap.parse_args()
     _apply_variant_defaults(args)
 
@@ -445,7 +730,18 @@ def _parse_args() -> argparse.Namespace:
         raise ValueError("approach_clearance_m must be above grasp_surface_margin_m")
     if args.command_resample_fraction <= 0.0 or args.command_resample_fraction > 1.0:
         raise ValueError("command_resample_fraction must be in (0, 1]")
-    if args.soft_contact_material_diagnostic and args.virtual_compression_damping_diagnostic:
+    enabled_candidate_flags = [
+        args.soft_contact_material_diagnostic,
+        args.virtual_compression_damping_diagnostic,
+        args.target_guarded_micro_close_support_horizon_diagnostic,
+        args.target_guarded_micro_close_v2_convergence_diagnostic,
+        args.target_guarded_micro_close_v3_progress_diagnostic,
+        args.target_guarded_micro_close_v4_recovery_diagnostic,
+        args.target_guarded_micro_close_v5_preemptive_recovery_diagnostic,
+        args.target_guarded_micro_close_v6_projected_guard_diagnostic,
+        args.target_guarded_micro_close_v7_active_recovery_diagnostic,
+    ]
+    if sum(bool(flag) for flag in enabled_candidate_flags) > 1:
         raise ValueError("choose only one runtime candidate diagnostic flag")
     if args.virtual_compression_budget_m < 0.0:
         raise ValueError("virtual_compression_budget_m must be non-negative")
@@ -455,6 +751,36 @@ def _parse_args() -> argparse.Namespace:
         raise ValueError("virtual_velocity_damping_residual_ratio must be in [0, 1]")
     if args.virtual_damping_start_close_step < 1:
         raise ValueError("virtual_damping_start_close_step must be >= 1")
+    if not 0.0 < args.target_guarded_micro_close_target_error_limit_m <= args.target_error_gate_m:
+        raise ValueError("target_guarded_micro_close_target_error_limit_m must be in (0, target_error_gate_m]")
+    if args.target_guarded_micro_close_step_deg <= 0.0:
+        raise ValueError("target_guarded_micro_close_step_deg must be positive")
+    if args.target_guarded_command_error_gate_deg < 0.0:
+        raise ValueError("target_guarded_command_error_gate_deg must be non-negative")
+    if args.target_guarded_advance_counter_support_margin_m < 0.0:
+        raise ValueError("target_guarded_advance_counter_support_margin_m must be non-negative")
+    if args.target_guarded_target_error_growth_tolerance_m < 0.0:
+        raise ValueError("target_guarded_target_error_growth_tolerance_m must be non-negative")
+    if args.target_guarded_v3_min_actual_progress_deg <= 0.0:
+        raise ValueError("target_guarded_v3_min_actual_progress_deg must be positive")
+    if args.target_guarded_v3_max_command_backlog_deg < args.target_guarded_micro_close_step_deg:
+        raise ValueError("target_guarded_v3_max_command_backlog_deg must be >= target_guarded_micro_close_step_deg")
+    if not 0.0 < args.target_guarded_v4_recovery_target_error_m < args.target_error_gate_m:
+        raise ValueError("target_guarded_v4_recovery_target_error_m must be in (0, target_error_gate_m)")
+    if args.target_guarded_v5_preempt_target_margin_m < 0.0:
+        raise ValueError("target_guarded_v5_preempt_target_margin_m must be non-negative")
+    if args.target_guarded_v5_preempt_support_margin_m < 0.0:
+        raise ValueError("target_guarded_v5_preempt_support_margin_m must be non-negative")
+    if not 0.0 < args.target_guarded_v5_recovery_tcp_gain <= 1.0:
+        raise ValueError("target_guarded_v5_recovery_tcp_gain must be in (0, 1]")
+    if args.target_guarded_v5_recovery_max_tcp_step_m <= 0.0:
+        raise ValueError("target_guarded_v5_recovery_max_tcp_step_m must be positive")
+    if args.target_guarded_v7_active_recovery_sweep_step_m <= 0.0:
+        raise ValueError("target_guarded_v7_active_recovery_sweep_step_m must be positive")
+    if args.target_guarded_v7_active_recovery_max_tcp_step_m < args.target_guarded_v7_active_recovery_sweep_step_m:
+        raise ValueError("target_guarded_v7_active_recovery_max_tcp_step_m must be >= sweep step")
+    if args.target_guarded_v7_active_recovery_min_gap_improvement_m < 0.0:
+        raise ValueError("target_guarded_v7_active_recovery_min_gap_improvement_m must be non-negative")
     return args
 
 
@@ -487,6 +813,20 @@ def main() -> int:
         "scripted_release_variant=NO gate_tuning=NO close_26_only=YES "
         f"soft_contact_material_diagnostic={'YES' if args.soft_contact_material_diagnostic else 'NO'} "
         f"virtual_compression_damping_diagnostic={'YES' if args.virtual_compression_damping_diagnostic else 'NO'} "
+        f"target_guarded_micro_close_support_horizon_diagnostic="
+        f"{'YES' if args.target_guarded_micro_close_support_horizon_diagnostic else 'NO'} "
+        f"target_guarded_micro_close_v2_convergence_diagnostic="
+        f"{'YES' if args.target_guarded_micro_close_v2_convergence_diagnostic else 'NO'} "
+        f"target_guarded_micro_close_v3_progress_diagnostic="
+        f"{'YES' if args.target_guarded_micro_close_v3_progress_diagnostic else 'NO'} "
+        f"target_guarded_micro_close_v4_recovery_diagnostic="
+        f"{'YES' if args.target_guarded_micro_close_v4_recovery_diagnostic else 'NO'} "
+        f"target_guarded_micro_close_v5_preemptive_recovery_diagnostic="
+        f"{'YES' if args.target_guarded_micro_close_v5_preemptive_recovery_diagnostic else 'NO'} "
+        f"target_guarded_micro_close_v6_projected_guard_diagnostic="
+        f"{'YES' if args.target_guarded_micro_close_v6_projected_guard_diagnostic else 'NO'} "
+        f"target_guarded_micro_close_v7_active_recovery_diagnostic="
+        f"{'YES' if args.target_guarded_micro_close_v7_active_recovery_diagnostic else 'NO'} "
         "hidden_kinematic_posewrite_allowed=NO claim_p7_success=NO",
         flush=True,
     )
@@ -521,6 +861,54 @@ def main() -> int:
         f"velocity_damping_residual_ratio={args.virtual_velocity_damping_residual_ratio:.6f} "
         f"damping_start_close_step={args.virtual_damping_start_close_step} "
         "damping_writes_pose=NO damping_writes_velocity=YES constraints=NO surface_gripper=NO",
+        flush=True,
+    )
+    print(
+        "[cube2cm_runtime_jaw_telemetry] target_guarded_micro_close_support_horizon "
+        f"enabled={'YES' if args.target_guarded_micro_close_support_horizon_diagnostic else 'NO'} "
+        f"target_error_design_limit_m={args.target_guarded_micro_close_target_error_limit_m:.6f} "
+        f"micro_close_step_deg={args.target_guarded_micro_close_step_deg:.6f} "
+        f"v2_convergence_enabled={'YES' if args.target_guarded_micro_close_v2_convergence_diagnostic else 'NO'} "
+        f"v3_progress_enabled={'YES' if args.target_guarded_micro_close_v3_progress_diagnostic else 'NO'} "
+        f"v4_recovery_enabled={'YES' if args.target_guarded_micro_close_v4_recovery_diagnostic else 'NO'} "
+        f"v5_preemptive_recovery_enabled="
+        f"{'YES' if args.target_guarded_micro_close_v5_preemptive_recovery_diagnostic else 'NO'} "
+        f"v6_projected_guard_enabled="
+        f"{'YES' if args.target_guarded_micro_close_v6_projected_guard_diagnostic else 'NO'} "
+        f"v7_active_recovery_enabled="
+        f"{'YES' if args.target_guarded_micro_close_v7_active_recovery_diagnostic else 'NO'} "
+        f"command_error_gate_deg={args.target_guarded_command_error_gate_deg:.6f} "
+        f"advance_counter_support_margin_m={args.target_guarded_advance_counter_support_margin_m:.6f} "
+        f"target_error_growth_tolerance_m={args.target_guarded_target_error_growth_tolerance_m:.6f} "
+        f"v3_min_actual_progress_deg={args.target_guarded_v3_min_actual_progress_deg:.6f} "
+        f"v3_max_command_backlog_deg={args.target_guarded_v3_max_command_backlog_deg:.6f} "
+        f"v4_recovery_target_error_m={args.target_guarded_v4_recovery_target_error_m:.6f} "
+        f"v5_preempt_target_margin_m={args.target_guarded_v5_preempt_target_margin_m:.6f} "
+        f"v5_preempt_support_margin_m={args.target_guarded_v5_preempt_support_margin_m:.6f} "
+        f"v5_recovery_tcp_gain={args.target_guarded_v5_recovery_tcp_gain:.6f} "
+        f"v5_recovery_max_tcp_step_m={args.target_guarded_v5_recovery_max_tcp_step_m:.6f} "
+        f"v7_active_recovery_sweep_step_m={args.target_guarded_v7_active_recovery_sweep_step_m:.6f} "
+        f"v7_active_recovery_max_tcp_step_m={args.target_guarded_v7_active_recovery_max_tcp_step_m:.6f} "
+        f"v7_active_recovery_min_gap_improvement_m="
+        f"{args.target_guarded_v7_active_recovery_min_gap_improvement_m:.6f} "
+        f"zero_backlog_hold={'YES' if args.target_guarded_micro_close_v2_convergence_diagnostic else 'NO'} "
+        "advance_requires_command_convergence=YES "
+        "advance_requires_support_margin=YES advance_requires_nonworsening_target_error=YES "
+        "v3_zero_backlog_hold=NO v3_backlog_preserve=YES v3_support_margin_warning_only=YES "
+        "v3_hard_support_uses_fixed_budget=YES v3_rollback_on_safety_degradation=YES "
+        "v4_zero_backlog_hold=NO v4_recovery_holds_preserve_backlog=YES "
+        "v4_advance_requires_target_nonworsening=YES v4_rollback_on_safety_degradation=NO "
+        "v4_hard_safety_violation_fails_candidate=YES "
+        "v5_zero_backlog_hold=NO v5_recovery_holds_preserve_backlog=YES "
+        "v5_preemptive_recovery_before_fixed_gate=YES v5_recovery_writes_robot_joint_targets_only=YES "
+        "v5_object_posewrite=NO v5_rollback_on_safety_degradation=NO "
+        "v6_projected_advance_guard=YES v6_uses_fixed_target_support_gates=YES "
+        "v6_object_posewrite=NO v6_rollback_on_safety_degradation=NO "
+        "v7_active_recovery_after_projected_block=YES "
+        "v7_finite_difference_tcp_sweep=YES v7_recovery_uses_current_object_pose=YES "
+        "v7_object_posewrite=NO v7_recovery_writes_robot_joint_targets_only=YES "
+        "support_horizon_uses_max_plausible_compression=YES "
+        "close_command_writes=YES posewrite=NO constraints=NO surface_gripper=NO",
         flush=True,
     )
 
@@ -564,6 +952,20 @@ def main() -> int:
 
     attach_stats = {"attach_calls": 0, "posewrite_calls": 0}
     virtual_stats = {"velocity_damping_writes": 0}
+    target_guard_stats = {
+        "close_advances": 0,
+        "close_holds": 0,
+        "zero_backlog_holds": 0,
+        "backlog_preserved_holds": 0,
+        "safety_rollbacks": 0,
+        "actual_progress_events": 0,
+        "v4_recovery_holds": 0,
+        "v4_hard_safety_freezes": 0,
+        "v5_preemptive_recovery_writes": 0,
+        "v5_recovery_ik_failures": 0,
+        "v7_active_recovery_writes": 0,
+        "v7_recovery_ik_failures": 0,
+    }
     original_set_joint_position_target = base_env._robot.set_joint_position_target
     original_write_root_pose_to_sim = base_env._sponge.write_root_pose_to_sim
     watch = {"active": False, "target": None, "calls": 0, "max_diff": 0.0}
@@ -676,18 +1078,77 @@ def main() -> int:
 
     def run_to_q(label: str, q_deg: np.ndarray, target_tcp: np.ndarray, max_steps: int, phase: str) -> tuple[bool, bool]:
         nonlocal episode_done, nan_seen
-        target_rad_np = np.radians(q_deg)
-        target_rad = torch.tensor(target_rad_np, device=device, dtype=torch.float32).unsqueeze(0)
+        final_target_rad_np = np.radians(q_deg)
+        command_target_rad_np = final_target_rad_np.copy()
+        target_guarded_v2_active = bool(
+            args.target_guarded_micro_close_v2_convergence_diagnostic and phase == "close"
+        )
+        target_guarded_v3_active = bool(
+            args.target_guarded_micro_close_v3_progress_diagnostic and phase == "close"
+        )
+        target_guarded_v4_active = bool(
+            args.target_guarded_micro_close_v4_recovery_diagnostic and phase == "close"
+        )
+        target_guarded_v5_active = bool(
+            (
+                args.target_guarded_micro_close_v5_preemptive_recovery_diagnostic
+                or args.target_guarded_micro_close_v6_projected_guard_diagnostic
+                or args.target_guarded_micro_close_v7_active_recovery_diagnostic
+            )
+            and phase == "close"
+        )
+        target_guarded_v6_active = bool(
+            (
+                args.target_guarded_micro_close_v6_projected_guard_diagnostic
+                or args.target_guarded_micro_close_v7_active_recovery_diagnostic
+            )
+            and phase == "close"
+        )
+        target_guarded_v7_active = bool(
+            args.target_guarded_micro_close_v7_active_recovery_diagnostic and phase == "close"
+        )
+        target_guarded_close_active = bool(
+            (
+                args.target_guarded_micro_close_support_horizon_diagnostic
+                or args.target_guarded_micro_close_v2_convergence_diagnostic
+                or args.target_guarded_micro_close_v3_progress_diagnostic
+                or args.target_guarded_micro_close_v4_recovery_diagnostic
+                or args.target_guarded_micro_close_v5_preemptive_recovery_diagnostic
+                or args.target_guarded_micro_close_v6_projected_guard_diagnostic
+                or args.target_guarded_micro_close_v7_active_recovery_diagnostic
+            )
+            and phase == "close"
+        )
+        commanded_gripper_rad = float(final_target_rad_np[5])
+        if target_guarded_close_active:
+            current_q = base_env._robot.data.joint_pos[0].detach().cpu().numpy().astype(np.float64)
+            commanded_gripper_rad = float(current_q[base_env.gripper_joint_idx])
+            command_target_rad_np[5] = commanded_gripper_rad
         start_object = object_local()
         prev_tcp = fresh_tcp_local()
+        prev_target_error = float("inf")
+        prev_counter_gap_max = 0.0
         settle_count = 0
         reached = False
         early_kill = False
+        v3_progress_reference_rad = commanded_gripper_rad
+        v3_pending_progress = False
+        v5_recovery_arm_target_rad_np: np.ndarray | None = None
         watch["active"] = True
-        watch["target"] = target_rad_np
+        watch["target"] = command_target_rad_np.copy()
         watch["calls"] = 0
         watch["max_diff"] = 0.0
         for step_idx in range(1, max_steps + 1):
+            if target_guarded_close_active:
+                command_target_rad_np = final_target_rad_np.copy()
+                if target_guarded_v5_active and v5_recovery_arm_target_rad_np is not None:
+                    command_target_rad_np[:-1] = v5_recovery_arm_target_rad_np[:-1]
+                command_target_rad_np[5] = commanded_gripper_rad
+                watch["target"] = command_target_rad_np.copy()
+            else:
+                command_target_rad_np = final_target_rad_np
+                watch["target"] = final_target_rad_np
+            target_rad = torch.tensor(command_target_rad_np, device=device, dtype=torch.float32).unsqueeze(0)
             base_env.robot_dof_targets[:] = target_rad
             done = step_once()
             episode_done |= done
@@ -698,7 +1159,8 @@ def main() -> int:
             q_actual_rad = base_env._robot.data.joint_pos[0].detach().cpu().numpy().astype(np.float64)
             q_actual_deg = np.degrees(q_actual_rad)
             gripper_q = float(q_actual_rad[base_env.gripper_joint_idx])
-            gripper_err = abs(gripper_q - float(target_rad_np[5]))
+            gripper_err = abs(gripper_q - float(final_target_rad_np[5]))
+            gripper_command_err = abs(gripper_q - float(command_target_rad_np[5]))
             target_error = _norm(tcp - target_tcp)
             tcp_step = _norm(tcp - prev_tcp)
             drift_vec = obj - start_object
@@ -724,11 +1186,35 @@ def main() -> int:
             counter_center = np.asarray(counter["center_obj"], dtype=np.float64)
             virtual_compression_gap_max = float(max(np.max(moving_gap), np.max(counter_gap)))
             virtual_support = virtual_compression_gap_max <= float(args.virtual_compression_budget_m)
+            support_horizon_active = virtual_compression_gap_max <= float(args.virtual_max_plausible_compression_m)
             virtual_damping_active = bool(
-                args.virtual_compression_damping_diagnostic
+                (
+                    args.virtual_compression_damping_diagnostic
+                    or args.target_guarded_micro_close_support_horizon_diagnostic
+                    or args.target_guarded_micro_close_v2_convergence_diagnostic
+                    or args.target_guarded_micro_close_v3_progress_diagnostic
+                    or args.target_guarded_micro_close_v4_recovery_diagnostic
+                    or args.target_guarded_micro_close_v5_preemptive_recovery_diagnostic
+                    or args.target_guarded_micro_close_v6_projected_guard_diagnostic
+                    or args.target_guarded_micro_close_v7_active_recovery_diagnostic
+                )
                 and phase == "close"
                 and step_idx >= int(args.virtual_damping_start_close_step)
-                and virtual_support
+                and (
+                    virtual_support
+                    or (
+                        (
+                            args.target_guarded_micro_close_support_horizon_diagnostic
+                            or args.target_guarded_micro_close_v2_convergence_diagnostic
+                            or args.target_guarded_micro_close_v3_progress_diagnostic
+                            or args.target_guarded_micro_close_v4_recovery_diagnostic
+                            or args.target_guarded_micro_close_v5_preemptive_recovery_diagnostic
+                            or args.target_guarded_micro_close_v6_projected_guard_diagnostic
+                            or args.target_guarded_micro_close_v7_active_recovery_diagnostic
+                        )
+                        and support_horizon_active
+                    )
+                )
             )
             virtual_speed_pre_damping = speed
             if virtual_damping_active:
@@ -744,6 +1230,294 @@ def main() -> int:
             one_sided_contact = contact_count == 1
             push_started = drift > args.push_drift_gate_m or speed > args.push_speed_gate_mps
             one_sided_push = push_started and one_sided_contact
+            target_guarded_close_advance = False
+            target_guarded_close_hold = False
+            target_guarded_zero_backlog_hold = False
+            target_guarded_backlog_preserved_hold = False
+            target_guarded_v3_safety_rollback = False
+            target_guarded_v4_recovery_hold = False
+            target_guarded_v4_hard_safety_freeze = False
+            target_guarded_v5_preemptive_recovery_needed = False
+            target_guarded_v5_preemptive_recovery = False
+            target_guarded_v5_recovery_ik_ok = bool(target_guarded_v5_active)
+            target_guarded_v5_target_margin_m = FUTURE_CLOSE26_TARGET_ERROR_GATE_M - target_error
+            target_guarded_v5_support_margin_m = FUTURE_CLOSE26_COUNTER_SUPPORT_BUDGET_M - float(np.max(counter_gap))
+            target_guarded_v5_recovery_tcp = np.asarray(target_tcp, dtype=np.float64)
+            target_guarded_v5_recovery_step_m = 0.0
+            target_guarded_v7_active_recovery_needed = False
+            target_guarded_v7_active_recovery = False
+            target_guarded_v7_recovery_ik_ok = bool(target_guarded_v7_active)
+            target_guarded_v7_candidate_count = 0
+            target_guarded_v7_selected_score = float("-inf")
+            target_guarded_v7_best_target_margin_m = target_guarded_v5_target_margin_m
+            target_guarded_v7_best_support_margin_m = target_guarded_v5_support_margin_m
+            target_guarded_v7_counter_gap_delta_m = 0.0
+            target_guarded_v7_recovery_tcp = np.asarray(target_tcp, dtype=np.float64)
+            target_guarded_v7_recovery_step_m = 0.0
+            target_guarded_v6_projected_target_margin_m = target_guarded_v5_target_margin_m
+            target_guarded_v6_projected_support_margin_m = target_guarded_v5_support_margin_m
+            target_guarded_v6_projected_advance_ok = True
+            target_guarded_command_backlog_deg = math.degrees(gripper_command_err)
+            target_guarded_command_converged = (
+                target_guarded_command_backlog_deg <= float(args.target_guarded_command_error_gate_deg)
+            )
+            target_guarded_support_margin_ok = (
+                float(np.max(counter_gap)) <= float(args.target_guarded_advance_counter_support_margin_m)
+            )
+            target_guarded_support_budget_ok = (
+                float(np.max(counter_gap)) <= FUTURE_CLOSE26_COUNTER_SUPPORT_BUDGET_M
+            )
+            target_guarded_target_nonworsening = (
+                target_error <= prev_target_error + float(args.target_guarded_target_error_growth_tolerance_m)
+            )
+            target_guarded_v3_safety_ok = False
+            target_guarded_v3_actual_progress_deg = 0.0
+            target_guarded_v3_actual_progress_ok = False
+            target_guarded_v3_progress_gate_ok = True
+            target_guarded_v3_backlog_room_ok = True
+            target_guarded_v3_projected_backlog_after_advance_deg = target_guarded_command_backlog_deg
+            target_guarded_v4_hard_safety_ok = False
+            target_guarded_v4_recovery_ready = True
+            target_guarded_v4_target_error_recovered = (
+                target_error <= float(args.target_guarded_v4_recovery_target_error_m)
+            )
+            target_guarded_close_command_deg = math.degrees(commanded_gripper_rad)
+            if target_guarded_close_active:
+                final_gripper_rad = float(final_target_rad_np[5])
+                remaining = final_gripper_rad - commanded_gripper_rad
+                if abs(remaining) > 1.0e-9:
+                    if target_guarded_v3_active or target_guarded_v4_active or target_guarded_v5_active:
+                        step_rad = math.radians(float(args.target_guarded_micro_close_step_deg))
+                        delta = math.copysign(min(abs(remaining), step_rad), remaining)
+                        close_direction = math.copysign(1.0, final_gripper_rad - gripper_q)
+                        progress_rad = close_direction * (gripper_q - v3_progress_reference_rad)
+                        target_guarded_v3_actual_progress_deg = max(0.0, math.degrees(progress_rad))
+                        target_guarded_v3_actual_progress_ok = (
+                            target_guarded_v3_actual_progress_deg
+                            >= float(args.target_guarded_v3_min_actual_progress_deg)
+                        )
+                        target_guarded_v3_progress_gate_ok = (
+                            (not v3_pending_progress)
+                            or target_guarded_v3_actual_progress_ok
+                            or target_guarded_command_converged
+                        )
+                        target_guarded_v3_projected_backlog_after_advance_deg = (
+                            target_guarded_command_backlog_deg + abs(math.degrees(delta))
+                        )
+                        target_guarded_v3_backlog_room_ok = (
+                            target_guarded_v3_projected_backlog_after_advance_deg
+                            <= float(args.target_guarded_v3_max_command_backlog_deg)
+                        )
+                        target_guarded_v3_safety_ok = (
+                            target_error <= float(args.target_guarded_micro_close_target_error_limit_m)
+                            and speed <= FUTURE_CLOSE26_PUSH_SPEED_GATE_MPS
+                            and not one_sided_push
+                            and target_guarded_support_budget_ok
+                            and support_horizon_active
+                        )
+                        target_guarded_v4_hard_safety_ok = (
+                            target_error <= FUTURE_CLOSE26_TARGET_ERROR_GATE_M
+                            and speed <= FUTURE_CLOSE26_PUSH_SPEED_GATE_MPS
+                            and not one_sided_push
+                            and target_guarded_support_budget_ok
+                            and support_horizon_active
+                        )
+                        if target_guarded_v4_active or target_guarded_v5_active:
+                            target_margin_degradation_m = 0.0
+                            if math.isfinite(prev_target_error):
+                                target_margin_degradation_m = max(0.0, target_error - prev_target_error)
+                            support_margin_degradation_m = max(
+                                0.0,
+                                float(np.max(counter_gap)) - prev_counter_gap_max,
+                            )
+                            backlog_scale_den = max(
+                                target_guarded_command_backlog_deg,
+                                float(args.target_guarded_command_error_gate_deg),
+                                1.0e-6,
+                            )
+                            projected_backlog_scale = max(
+                                1.0,
+                                target_guarded_v3_projected_backlog_after_advance_deg / backlog_scale_den,
+                            )
+                            target_guarded_v6_projected_target_margin_m = (
+                                target_guarded_v5_target_margin_m
+                                - target_margin_degradation_m * projected_backlog_scale
+                            )
+                            target_guarded_v6_projected_support_margin_m = (
+                                target_guarded_v5_support_margin_m
+                                - support_margin_degradation_m * projected_backlog_scale
+                            )
+                            target_guarded_v6_projected_advance_ok = bool(
+                                (not target_guarded_v6_active)
+                                or (
+                                    target_guarded_v6_projected_target_margin_m >= 0.0
+                                    and target_guarded_v6_projected_support_margin_m >= 0.0
+                                )
+                            )
+                            target_guarded_v5_preemptive_recovery_needed = bool(
+                                target_guarded_v5_active
+                                and target_guarded_v4_hard_safety_ok
+                                and (
+                                    target_guarded_v5_target_margin_m
+                                    <= float(args.target_guarded_v5_preempt_target_margin_m)
+                                    or target_guarded_v5_support_margin_m
+                                    <= float(args.target_guarded_v5_preempt_support_margin_m)
+                                    or (
+                                        target_guarded_v6_active
+                                        and not target_guarded_v6_projected_advance_ok
+                                    )
+                                )
+                            )
+                            target_guarded_v4_recovery_ready = (
+                                target_guarded_v4_hard_safety_ok
+                                and target_guarded_v4_target_error_recovered
+                                and target_guarded_target_nonworsening
+                                and not target_guarded_v5_preemptive_recovery_needed
+                                and target_guarded_v6_projected_advance_ok
+                            )
+                            target_guarded_advance_allowed = (
+                                target_guarded_v4_recovery_ready
+                                and target_guarded_v3_progress_gate_ok
+                                and target_guarded_v3_backlog_room_ok
+                            )
+                        else:
+                            target_guarded_advance_allowed = (
+                                target_guarded_v3_safety_ok
+                                and target_guarded_v3_progress_gate_ok
+                                and target_guarded_v3_backlog_room_ok
+                            )
+                        if target_guarded_advance_allowed:
+                            if target_guarded_v5_active:
+                                v5_recovery_arm_target_rad_np = None
+                            commanded_gripper_rad += delta
+                            v3_progress_reference_rad = gripper_q
+                            v3_pending_progress = True
+                            target_guard_stats["close_advances"] += 1
+                            target_guard_stats["actual_progress_events"] += int(
+                                target_guarded_v3_actual_progress_ok
+                            )
+                            target_guarded_close_advance = True
+                        else:
+                            target_guard_stats["close_holds"] += 1
+                            target_guarded_close_hold = True
+                            if target_guarded_v4_active or target_guarded_v5_active:
+                                target_guard_stats["backlog_preserved_holds"] += 1
+                                target_guarded_backlog_preserved_hold = True
+                                if target_guarded_v4_hard_safety_ok:
+                                    target_guard_stats["v4_recovery_holds"] += 1
+                                    target_guarded_v4_recovery_hold = True
+                                    if target_guarded_v5_active:
+                                        target_guarded_v7_active_recovery_needed = bool(
+                                            target_guarded_v7_active
+                                            and target_guarded_v5_preemptive_recovery_needed
+                                        )
+                                        if (
+                                            target_guarded_v7_active
+                                            and target_guarded_v7_active_recovery_needed
+                                        ):
+                                            decision = _v7_active_recovery_decision(
+                                                current_tcp=np.asarray(tcp, dtype=np.float64),
+                                                target_tcp=np.asarray(target_tcp, dtype=np.float64),
+                                                current_counter_gap_max_m=float(np.max(counter_gap)),
+                                                gripper_tf=gripper_tf,
+                                                counter_parent_tf=counter_parent_tf,
+                                                jaw=jaw,
+                                                object_pos=obj,
+                                                object_quat=quat,
+                                                object_size=object_size,
+                                                q_actual_deg=q_actual_deg,
+                                                commanded_gripper_deg=math.degrees(commanded_gripper_rad),
+                                                args=args,
+                                            )
+                                            target_guarded_v7_candidate_count = decision.candidate_count
+                                            target_guarded_v7_selected_score = decision.score
+                                            target_guarded_v7_best_target_margin_m = decision.target_margin_m
+                                            target_guarded_v7_best_support_margin_m = decision.support_margin_m
+                                            target_guarded_v7_counter_gap_delta_m = decision.counter_gap_delta_m
+                                            target_guarded_v7_recovery_tcp = decision.tcp
+                                            target_guarded_v7_recovery_step_m = decision.step_m
+                                            target_guarded_v7_recovery_ik_ok = decision.ik_ok
+                                            target_guarded_v5_recovery_ik_ok = decision.ik_ok
+                                            target_guarded_v5_recovery_tcp = decision.tcp
+                                            target_guarded_v5_recovery_step_m = decision.step_m
+                                            if decision.selected and decision.q_deg is not None:
+                                                v5_recovery_arm_target_rad_np = np.radians(decision.q_deg)
+                                                v5_recovery_arm_target_rad_np[5] = commanded_gripper_rad
+                                                target_guarded_v5_preemptive_recovery = True
+                                                target_guarded_v7_active_recovery = True
+                                                target_guard_stats["v5_preemptive_recovery_writes"] += 1
+                                                target_guard_stats["v7_active_recovery_writes"] += 1
+                                            else:
+                                                target_guard_stats["v5_recovery_ik_failures"] += 1
+                                                target_guard_stats["v7_recovery_ik_failures"] += 1
+                                        elif not target_guarded_v7_active:
+                                            recovery_vec = (
+                                                np.asarray(target_tcp, dtype=np.float64)
+                                                - np.asarray(tcp, dtype=np.float64)
+                                            ) * float(args.target_guarded_v5_recovery_tcp_gain)
+                                            recovery_norm = _norm(recovery_vec)
+                                            max_recovery = float(args.target_guarded_v5_recovery_max_tcp_step_m)
+                                            if recovery_norm > max_recovery:
+                                                recovery_vec *= max_recovery / recovery_norm
+                                                recovery_norm = max_recovery
+                                            target_guarded_v5_recovery_step_m = recovery_norm
+                                            target_guarded_v5_recovery_tcp = (
+                                                np.asarray(target_tcp, dtype=np.float64) + recovery_vec
+                                            )
+                                            recovery_q_deg, recovery_ik_ok, recovery_ik_err_mm = _solve_q(
+                                                target_guarded_v5_recovery_tcp,
+                                                q_actual_deg,
+                                                math.degrees(commanded_gripper_rad),
+                                                args,
+                                            )
+                                            target_guarded_v5_recovery_ik_ok = bool(
+                                                recovery_ik_ok and recovery_ik_err_mm <= float(args.ik_tol_mm)
+                                            )
+                                            if target_guarded_v5_recovery_ik_ok:
+                                                v5_recovery_arm_target_rad_np = np.radians(recovery_q_deg)
+                                                v5_recovery_arm_target_rad_np[5] = commanded_gripper_rad
+                                                target_guarded_v5_preemptive_recovery = True
+                                                target_guard_stats["v5_preemptive_recovery_writes"] += 1
+                                            else:
+                                                target_guard_stats["v5_recovery_ik_failures"] += 1
+                                else:
+                                    target_guard_stats["v4_hard_safety_freezes"] += 1
+                                    target_guarded_v4_hard_safety_freeze = True
+                                    if target_guarded_v5_active:
+                                        v5_recovery_arm_target_rad_np = None
+                            elif not target_guarded_v3_safety_ok:
+                                commanded_gripper_rad = gripper_q
+                                v3_progress_reference_rad = gripper_q
+                                v3_pending_progress = False
+                                target_guard_stats["safety_rollbacks"] += 1
+                                target_guarded_v3_safety_rollback = True
+                            else:
+                                target_guard_stats["backlog_preserved_holds"] += 1
+                                target_guarded_backlog_preserved_hold = True
+                    else:
+                        target_guarded_advance_allowed = (
+                            target_error <= float(args.target_guarded_micro_close_target_error_limit_m)
+                        )
+                        if target_guarded_v2_active:
+                            target_guarded_advance_allowed = (
+                                target_guarded_advance_allowed
+                                and target_guarded_command_converged
+                                and target_guarded_support_margin_ok
+                                and target_guarded_target_nonworsening
+                            )
+                        if target_guarded_advance_allowed:
+                            step_rad = math.radians(float(args.target_guarded_micro_close_step_deg))
+                            delta = math.copysign(min(abs(remaining), step_rad), remaining)
+                            commanded_gripper_rad += delta
+                            target_guard_stats["close_advances"] += 1
+                            target_guarded_close_advance = True
+                        else:
+                            if target_guarded_v2_active:
+                                commanded_gripper_rad = gripper_q
+                                target_guard_stats["zero_backlog_holds"] += 1
+                                target_guarded_zero_backlog_hold = True
+                            target_guard_stats["close_holds"] += 1
+                            target_guarded_close_hold = True
 
             early_kill = (
                 tcp_step > args.max_tcp_step_m
@@ -768,8 +1542,81 @@ def main() -> int:
                         "counter_slop_contact": bool(counter["slop_contact"]),
                         "one_sided_push": one_sided_push,
                         "virtual_support": virtual_support,
+                        "support_horizon_active": support_horizon_active,
                         "virtual_damping_active": virtual_damping_active,
                         "virtual_compression_gap_max_m": virtual_compression_gap_max,
+                        "target_guarded_close_advance": target_guarded_close_advance,
+                        "target_guarded_close_hold": target_guarded_close_hold,
+                        "target_guarded_zero_backlog_hold": target_guarded_zero_backlog_hold,
+                        "target_guarded_backlog_preserved_hold": target_guarded_backlog_preserved_hold,
+                        "target_guarded_v3_safety_rollback": target_guarded_v3_safety_rollback,
+                        "target_guarded_v4_recovery_hold": target_guarded_v4_recovery_hold,
+                        "target_guarded_v4_hard_safety_freeze": target_guarded_v4_hard_safety_freeze,
+                        "target_guarded_v5_preemptive_recovery_needed": (
+                            target_guarded_v5_preemptive_recovery_needed
+                        ),
+                        "target_guarded_v5_preemptive_recovery": target_guarded_v5_preemptive_recovery,
+                        "target_guarded_v5_recovery_ik_ok": target_guarded_v5_recovery_ik_ok,
+                        "target_guarded_v5_target_margin_m": target_guarded_v5_target_margin_m,
+                        "target_guarded_v5_support_margin_m": target_guarded_v5_support_margin_m,
+                        "target_guarded_v5_recovery_step_m": target_guarded_v5_recovery_step_m,
+                        "target_guarded_v7_active_recovery_needed": (
+                            target_guarded_v7_active_recovery_needed
+                        ),
+                        "target_guarded_v7_active_recovery": target_guarded_v7_active_recovery,
+                        "target_guarded_v7_recovery_ik_ok": target_guarded_v7_recovery_ik_ok,
+                        "target_guarded_v7_candidate_count": target_guarded_v7_candidate_count,
+                        "target_guarded_v7_selected_score": target_guarded_v7_selected_score,
+                        "target_guarded_v7_best_target_margin_m": target_guarded_v7_best_target_margin_m,
+                        "target_guarded_v7_best_support_margin_m": target_guarded_v7_best_support_margin_m,
+                        "target_guarded_v7_counter_gap_delta_m": target_guarded_v7_counter_gap_delta_m,
+                        "target_guarded_v7_recovery_step_m": target_guarded_v7_recovery_step_m,
+                        "target_guarded_v6_projected_target_margin_m": (
+                            target_guarded_v6_projected_target_margin_m
+                        ),
+                        "target_guarded_v6_projected_support_margin_m": (
+                            target_guarded_v6_projected_support_margin_m
+                        ),
+                        "target_guarded_v6_projected_advance_ok": target_guarded_v6_projected_advance_ok,
+                        "target_guarded_command_backlog_deg": target_guarded_command_backlog_deg,
+                        "target_guarded_command_converged": target_guarded_command_converged,
+                        "target_guarded_support_margin_ok": target_guarded_support_margin_ok,
+                        "target_guarded_support_budget_ok": target_guarded_support_budget_ok,
+                        "target_guarded_target_nonworsening": target_guarded_target_nonworsening,
+                        "target_guarded_v3_safety_ok": target_guarded_v3_safety_ok,
+                        "target_guarded_v3_actual_progress_deg": target_guarded_v3_actual_progress_deg,
+                        "target_guarded_v3_actual_progress_ok": target_guarded_v3_actual_progress_ok,
+                        "target_guarded_v3_progress_gate_ok": target_guarded_v3_progress_gate_ok,
+                        "target_guarded_v3_backlog_room_ok": target_guarded_v3_backlog_room_ok,
+                        "target_guarded_v4_hard_safety_ok": target_guarded_v4_hard_safety_ok,
+                        "target_guarded_v4_recovery_ready": target_guarded_v4_recovery_ready,
+                        "target_guarded_v4_target_error_recovered": target_guarded_v4_target_error_recovered,
+                        "target_guarded_v3_projected_backlog_after_advance_deg": (
+                            target_guarded_v3_projected_backlog_after_advance_deg
+                        ),
+                        "target_guarded_close_advances_total": target_guard_stats["close_advances"],
+                        "target_guarded_close_holds_total": target_guard_stats["close_holds"],
+                        "target_guarded_zero_backlog_holds_total": target_guard_stats["zero_backlog_holds"],
+                        "target_guarded_backlog_preserved_holds_total": target_guard_stats[
+                            "backlog_preserved_holds"
+                        ],
+                        "target_guarded_safety_rollbacks_total": target_guard_stats["safety_rollbacks"],
+                        "target_guarded_v4_recovery_holds_total": target_guard_stats["v4_recovery_holds"],
+                        "target_guarded_v4_hard_safety_freezes_total": target_guard_stats[
+                            "v4_hard_safety_freezes"
+                        ],
+                        "target_guarded_v5_preemptive_recovery_writes_total": target_guard_stats[
+                            "v5_preemptive_recovery_writes"
+                        ],
+                        "target_guarded_v5_recovery_ik_failures_total": target_guard_stats[
+                            "v5_recovery_ik_failures"
+                        ],
+                        "target_guarded_v7_active_recovery_writes_total": target_guard_stats[
+                            "v7_active_recovery_writes"
+                        ],
+                        "target_guarded_v7_recovery_ik_failures_total": target_guard_stats[
+                            "v7_recovery_ik_failures"
+                        ],
                         "reached": reached,
                         "early_kill": early_kill,
                     }
@@ -786,6 +1633,8 @@ def main() -> int:
                     f"target_tcp={_fmt_xyz(target_tcp)} tcp={_fmt_xyz(tcp)} target_error_m={target_error:.6f} "
                     f"tcp_step_m={tcp_step:.6f} q_deg={_fmt_deg(q_actual_deg)} "
                     f"gripper_q_deg={math.degrees(gripper_q):.3f} gripper_err_deg={math.degrees(gripper_err):.3f} "
+                    f"gripper_command_deg={math.degrees(command_target_rad_np[5]):.3f} "
+                    f"gripper_command_err_deg={math.degrees(gripper_command_err):.3f} "
                     f"object_pos={_fmt_xyz(obj)} object_drift_vec_m={_fmt_xyz(drift_vec)} object_drift_m={drift:.6f} "
                     f"object_speed_mps={speed:.6f} moving_center_obj={_fmt_xyz(moving_center)} "
                     f"counter_center_obj={_fmt_xyz(counter_center)} moving_overlap_obj_m={_fmt_xyz(moving_overlap)} "
@@ -797,10 +1646,79 @@ def main() -> int:
                     f"counter_slop_contact={_yes(bool(counter['slop_contact']))} "
                     f"one_sided_push={_yes(one_sided_push)} "
                     f"virtual_support={_yes(virtual_support)} "
+                    f"support_horizon_active={_yes(support_horizon_active)} "
                     f"virtual_compression_gap_max_m={virtual_compression_gap_max:.6f} "
                     f"virtual_damping_active={_yes(virtual_damping_active)} "
                     f"virtual_speed_pre_damping_mps={virtual_speed_pre_damping:.6f} "
                     f"virtual_velocity_damping_writes_total={virtual_stats['velocity_damping_writes']} "
+                    f"target_guarded_close_advance={_yes(target_guarded_close_advance)} "
+                    f"target_guarded_close_hold={_yes(target_guarded_close_hold)} "
+                    f"target_guarded_zero_backlog_hold={_yes(target_guarded_zero_backlog_hold)} "
+                    f"target_guarded_backlog_preserved_hold={_yes(target_guarded_backlog_preserved_hold)} "
+                    f"target_guarded_v3_safety_rollback={_yes(target_guarded_v3_safety_rollback)} "
+                    f"target_guarded_v4_recovery_hold={_yes(target_guarded_v4_recovery_hold)} "
+                    f"target_guarded_v4_hard_safety_freeze={_yes(target_guarded_v4_hard_safety_freeze)} "
+                    f"target_guarded_v5_preemptive_recovery_needed="
+                    f"{_yes(target_guarded_v5_preemptive_recovery_needed)} "
+                    f"target_guarded_v5_preemptive_recovery={_yes(target_guarded_v5_preemptive_recovery)} "
+                    f"target_guarded_v5_recovery_ik_ok={_yes(target_guarded_v5_recovery_ik_ok)} "
+                    f"target_guarded_v5_target_margin_m={target_guarded_v5_target_margin_m:.6f} "
+                    f"target_guarded_v5_support_margin_m={target_guarded_v5_support_margin_m:.6f} "
+                    f"target_guarded_v5_recovery_tcp={_fmt_xyz(target_guarded_v5_recovery_tcp)} "
+                    f"target_guarded_v5_recovery_step_m={target_guarded_v5_recovery_step_m:.6f} "
+                    f"target_guarded_v7_active_recovery_needed="
+                    f"{_yes(target_guarded_v7_active_recovery_needed)} "
+                    f"target_guarded_v7_active_recovery={_yes(target_guarded_v7_active_recovery)} "
+                    f"target_guarded_v7_recovery_ik_ok={_yes(target_guarded_v7_recovery_ik_ok)} "
+                    f"target_guarded_v7_candidate_count={target_guarded_v7_candidate_count} "
+                    f"target_guarded_v7_selected_score={target_guarded_v7_selected_score:.9f} "
+                    f"target_guarded_v7_best_target_margin_m="
+                    f"{target_guarded_v7_best_target_margin_m:.6f} "
+                    f"target_guarded_v7_best_support_margin_m="
+                    f"{target_guarded_v7_best_support_margin_m:.6f} "
+                    f"target_guarded_v7_counter_gap_delta_m="
+                    f"{target_guarded_v7_counter_gap_delta_m:.6f} "
+                    f"target_guarded_v7_recovery_tcp={_fmt_xyz(target_guarded_v7_recovery_tcp)} "
+                    f"target_guarded_v7_recovery_step_m={target_guarded_v7_recovery_step_m:.6f} "
+                    f"target_guarded_v6_projected_target_margin_m="
+                    f"{target_guarded_v6_projected_target_margin_m:.6f} "
+                    f"target_guarded_v6_projected_support_margin_m="
+                    f"{target_guarded_v6_projected_support_margin_m:.6f} "
+                    f"target_guarded_v6_projected_advance_ok={_yes(target_guarded_v6_projected_advance_ok)} "
+                    f"target_guarded_command_backlog_deg={target_guarded_command_backlog_deg:.3f} "
+                    f"target_guarded_command_converged={_yes(target_guarded_command_converged)} "
+                    f"target_guarded_support_margin_ok={_yes(target_guarded_support_margin_ok)} "
+                    f"target_guarded_support_budget_ok={_yes(target_guarded_support_budget_ok)} "
+                    f"target_guarded_target_nonworsening={_yes(target_guarded_target_nonworsening)} "
+                    f"target_guarded_v3_safety_ok={_yes(target_guarded_v3_safety_ok)} "
+                    f"target_guarded_v3_actual_progress_deg={target_guarded_v3_actual_progress_deg:.3f} "
+                    f"target_guarded_v3_actual_progress_ok={_yes(target_guarded_v3_actual_progress_ok)} "
+                    f"target_guarded_v3_progress_gate_ok={_yes(target_guarded_v3_progress_gate_ok)} "
+                    f"target_guarded_v3_backlog_room_ok={_yes(target_guarded_v3_backlog_room_ok)} "
+                    f"target_guarded_v4_hard_safety_ok={_yes(target_guarded_v4_hard_safety_ok)} "
+                    f"target_guarded_v4_recovery_ready={_yes(target_guarded_v4_recovery_ready)} "
+                    f"target_guarded_v4_target_error_recovered="
+                    f"{_yes(target_guarded_v4_target_error_recovered)} "
+                    f"target_guarded_v3_projected_backlog_after_advance_deg="
+                    f"{target_guarded_v3_projected_backlog_after_advance_deg:.3f} "
+                    f"target_guarded_close_command_deg={target_guarded_close_command_deg:.3f} "
+                    f"target_guarded_close_advances_total={target_guard_stats['close_advances']} "
+                    f"target_guarded_close_holds_total={target_guard_stats['close_holds']} "
+                    f"target_guarded_zero_backlog_holds_total={target_guard_stats['zero_backlog_holds']} "
+                    f"target_guarded_backlog_preserved_holds_total="
+                    f"{target_guard_stats['backlog_preserved_holds']} "
+                    f"target_guarded_safety_rollbacks_total={target_guard_stats['safety_rollbacks']} "
+                    f"target_guarded_v4_recovery_holds_total={target_guard_stats['v4_recovery_holds']} "
+                    f"target_guarded_v4_hard_safety_freezes_total="
+                    f"{target_guard_stats['v4_hard_safety_freezes']} "
+                    f"target_guarded_v5_preemptive_recovery_writes_total="
+                    f"{target_guard_stats['v5_preemptive_recovery_writes']} "
+                    f"target_guarded_v5_recovery_ik_failures_total="
+                    f"{target_guard_stats['v5_recovery_ik_failures']} "
+                    f"target_guarded_v7_active_recovery_writes_total="
+                    f"{target_guard_stats['v7_active_recovery_writes']} "
+                    f"target_guarded_v7_recovery_ik_failures_total="
+                    f"{target_guard_stats['v7_recovery_ik_failures']} "
                     f"_grasped_marker={_yes(bool(base_env._grasped[0].detach().cpu().item()))} "
                     f"attach_calls_total={attach_stats['attach_calls']} posewrite_calls_total={attach_stats['posewrite_calls']} "
                     f"set_target_seen={_yes(watch['calls'] > 0 and watch['max_diff'] <= 1.0e-5)} "
@@ -808,6 +1726,8 @@ def main() -> int:
                     flush=True,
                 )
             prev_tcp = tcp
+            prev_target_error = target_error
+            prev_counter_gap_max = float(np.max(counter_gap))
             if early_kill or settle_count >= args.settle_steps:
                 break
         watch["active"] = False
@@ -866,6 +1786,7 @@ def main() -> int:
     close_by_step = {int(obs["step"]): obs for obs in close_observations}
     step3 = close_by_step.get(3)
     step4 = close_by_step.get(4)
+    step5 = close_by_step.get(5)
     steps_2_to_4 = [close_by_step.get(step) for step in (2, 3, 4)]
     steps_2_to_4_present = all(obs is not None for obs in steps_2_to_4)
     step3_speed_below_future_gate = bool(
@@ -880,6 +1801,86 @@ def main() -> int:
     target_step4_ok = bool(
         step4 is not None and float(step4["target_error_m"]) <= FUTURE_CLOSE26_TARGET_ERROR_GATE_M
     )
+    support_horizon_step5 = bool(
+        step5 is not None and float(step5["counter_gap_max_m"]) <= float(args.virtual_max_plausible_compression_m)
+    )
+    target_guarded_micro_close_ok = True
+    if (
+        args.target_guarded_micro_close_support_horizon_diagnostic
+        or args.target_guarded_micro_close_v2_convergence_diagnostic
+        or args.target_guarded_micro_close_v3_progress_diagnostic
+        or args.target_guarded_micro_close_v4_recovery_diagnostic
+        or args.target_guarded_micro_close_v5_preemptive_recovery_diagnostic
+        or args.target_guarded_micro_close_v6_projected_guard_diagnostic
+        or args.target_guarded_micro_close_v7_active_recovery_diagnostic
+    ):
+        target_guarded_micro_close_ok = bool(
+            target_guard_stats["close_advances"] > 0
+            and step5 is not None
+            and support_horizon_step5
+        )
+        if args.target_guarded_micro_close_v2_convergence_diagnostic:
+            v2_backlog_ok = all(
+                float(obs.get("target_guarded_command_backlog_deg", float("inf")))
+                <= float(args.target_guarded_command_error_gate_deg)
+                for obs in steps_2_to_4
+                if obs is not None
+            )
+            target_guarded_micro_close_ok = bool(
+                target_guarded_micro_close_ok
+                and v2_backlog_ok
+                and all(
+                    bool(obs.get("target_guarded_support_margin_ok", False))
+                    for obs in steps_2_to_4
+                    if obs is not None
+                )
+            )
+        if args.target_guarded_micro_close_v3_progress_diagnostic:
+            v3_no_safety_rollbacks = target_guard_stats["safety_rollbacks"] == 0
+            v3_progress_reported = any(
+                float(obs.get("target_guarded_v3_actual_progress_deg", 0.0))
+                >= float(args.target_guarded_v3_min_actual_progress_deg)
+                for obs in close_observations
+            )
+            target_guarded_micro_close_ok = bool(
+                target_guarded_micro_close_ok
+                and v3_no_safety_rollbacks
+                and v3_progress_reported
+            )
+        if args.target_guarded_micro_close_v4_recovery_diagnostic:
+            v4_no_safety_rollbacks = target_guard_stats["safety_rollbacks"] == 0
+            v4_no_hard_safety_freezes = target_guard_stats["v4_hard_safety_freezes"] == 0
+            v4_recovery_reported = target_guard_stats["v4_recovery_holds"] > 0
+            target_guarded_micro_close_ok = bool(
+                target_guarded_micro_close_ok
+                and v4_no_safety_rollbacks
+                and v4_no_hard_safety_freezes
+                and v4_recovery_reported
+            )
+        if (
+            args.target_guarded_micro_close_v5_preemptive_recovery_diagnostic
+            or args.target_guarded_micro_close_v6_projected_guard_diagnostic
+            or args.target_guarded_micro_close_v7_active_recovery_diagnostic
+        ):
+            v5_no_safety_rollbacks = target_guard_stats["safety_rollbacks"] == 0
+            v5_no_hard_safety_freezes = target_guard_stats["v4_hard_safety_freezes"] == 0
+            v5_preemptive_recovery_reported = target_guard_stats["v5_preemptive_recovery_writes"] > 0
+            v5_recovery_ik_ok = target_guard_stats["v5_recovery_ik_failures"] == 0
+            target_guarded_micro_close_ok = bool(
+                target_guarded_micro_close_ok
+                and v5_no_safety_rollbacks
+                and v5_no_hard_safety_freezes
+                and v5_preemptive_recovery_reported
+                and v5_recovery_ik_ok
+            )
+        if args.target_guarded_micro_close_v7_active_recovery_diagnostic:
+            v7_active_recovery_reported = target_guard_stats["v7_active_recovery_writes"] > 0
+            v7_recovery_ik_ok = target_guard_stats["v7_recovery_ik_failures"] == 0
+            target_guarded_micro_close_ok = bool(
+                target_guarded_micro_close_ok
+                and v7_active_recovery_reported
+                and v7_recovery_ik_ok
+            )
     future_close26_posthoc_pass = (
         approach_ok
         and descend_ok
@@ -890,6 +1891,7 @@ def main() -> int:
         and not one_sided_push_steps_2_to_4
         and counter_support_step4
         and target_step4_ok
+        and target_guarded_micro_close_ok
         and attach_stats["attach_calls"] == 0
         and attach_stats["posewrite_calls"] == 0
     )
@@ -908,7 +1910,34 @@ def main() -> int:
         f"step4_target_error_m={(float(step4['target_error_m']) if step4 is not None else float('nan')):.6f} "
         f"target_step4_ok={_yes(target_step4_ok)} "
         f"virtual_compression_damping_diagnostic={_yes(args.virtual_compression_damping_diagnostic)} "
+        f"target_guarded_micro_close_support_horizon_diagnostic="
+        f"{_yes(args.target_guarded_micro_close_support_horizon_diagnostic)} "
+        f"target_guarded_micro_close_v2_convergence_diagnostic="
+        f"{_yes(args.target_guarded_micro_close_v2_convergence_diagnostic)} "
+        f"target_guarded_micro_close_v3_progress_diagnostic="
+        f"{_yes(args.target_guarded_micro_close_v3_progress_diagnostic)} "
+        f"target_guarded_micro_close_v4_recovery_diagnostic="
+        f"{_yes(args.target_guarded_micro_close_v4_recovery_diagnostic)} "
+        f"target_guarded_micro_close_v5_preemptive_recovery_diagnostic="
+        f"{_yes(args.target_guarded_micro_close_v5_preemptive_recovery_diagnostic)} "
+        f"target_guarded_micro_close_v6_projected_guard_diagnostic="
+        f"{_yes(args.target_guarded_micro_close_v6_projected_guard_diagnostic)} "
+        f"target_guarded_micro_close_v7_active_recovery_diagnostic="
+        f"{_yes(args.target_guarded_micro_close_v7_active_recovery_diagnostic)} "
+        f"step5_counter_gap_max_m={(float(step5['counter_gap_max_m']) if step5 is not None else float('nan')):.6f} "
+        f"support_horizon_step5={_yes(support_horizon_step5)} "
         f"virtual_velocity_damping_writes={virtual_stats['velocity_damping_writes']} "
+        f"target_guarded_close_advances={target_guard_stats['close_advances']} "
+        f"target_guarded_close_holds={target_guard_stats['close_holds']} "
+        f"target_guarded_zero_backlog_holds={target_guard_stats['zero_backlog_holds']} "
+        f"target_guarded_backlog_preserved_holds={target_guard_stats['backlog_preserved_holds']} "
+        f"target_guarded_safety_rollbacks={target_guard_stats['safety_rollbacks']} "
+        f"target_guarded_v4_recovery_holds={target_guard_stats['v4_recovery_holds']} "
+        f"target_guarded_v4_hard_safety_freezes={target_guard_stats['v4_hard_safety_freezes']} "
+        f"target_guarded_v5_preemptive_recovery_writes={target_guard_stats['v5_preemptive_recovery_writes']} "
+        f"target_guarded_v5_recovery_ik_failures={target_guard_stats['v5_recovery_ik_failures']} "
+        f"target_guarded_v7_active_recovery_writes={target_guard_stats['v7_active_recovery_writes']} "
+        f"target_guarded_v7_recovery_ik_failures={target_guard_stats['v7_recovery_ik_failures']} "
         f"future_close26_posthoc_pass={_yes(future_close26_posthoc_pass)}",
         flush=True,
     )
@@ -920,6 +1949,17 @@ def main() -> int:
         f"attach_calls={attach_stats['attach_calls']} posewrite_calls={attach_stats['posewrite_calls']} "
         f"episode_done={_yes(episode_done)} nan_seen={_yes(nan_seen)} "
         f"virtual_velocity_damping_writes={virtual_stats['velocity_damping_writes']} "
+        f"target_guarded_close_advances={target_guard_stats['close_advances']} "
+        f"target_guarded_close_holds={target_guard_stats['close_holds']} "
+        f"target_guarded_zero_backlog_holds={target_guard_stats['zero_backlog_holds']} "
+        f"target_guarded_backlog_preserved_holds={target_guard_stats['backlog_preserved_holds']} "
+        f"target_guarded_safety_rollbacks={target_guard_stats['safety_rollbacks']} "
+        f"target_guarded_v4_recovery_holds={target_guard_stats['v4_recovery_holds']} "
+        f"target_guarded_v4_hard_safety_freezes={target_guard_stats['v4_hard_safety_freezes']} "
+        f"target_guarded_v5_preemptive_recovery_writes={target_guard_stats['v5_preemptive_recovery_writes']} "
+        f"target_guarded_v5_recovery_ik_failures={target_guard_stats['v5_recovery_ik_failures']} "
+        f"target_guarded_v7_active_recovery_writes={target_guard_stats['v7_active_recovery_writes']} "
+        f"target_guarded_v7_recovery_ik_failures={target_guard_stats['v7_recovery_ik_failures']} "
         "telemetry_only=YES success_claim=NO",
         flush=True,
     )
