@@ -4586,3 +4586,220 @@ Sources:
 - `claudedocs/session_20260526_track_a_v7_active_recovery_runtime_fail.md`
 - `claudedocs/runtime_logs/20260526_track_a_v7_active_recovery_close26_local_post_reboot/runtime.out:6,8,389-393,423-424`
 - `claudedocs/runtime_logs/20260526_track_a_v7_active_recovery_close26_local_post_reboot/audit.out:19,32,54-56,60-66`
+
+
+## D093 - v7 failed because candidate recovery did not become observed recovery
+
+Evidence:
+
+- Added static analyzer
+  `sim_scripts/p7_branch_b_cube2cm_v7_failure_analyzer.py` md5
+  `e13605f058cd1908ff3d863e8239fbc4`; `py_compile` PASS.
+- Analyzer output
+  `claudedocs/runtime_logs/20260526_track_a_v7_active_recovery_close26_local_post_reboot/v7_failure_static_analysis.out`
+  md5 `0fbf57f32473fa253ee1082b888bdcb1`, final line 23
+  `ANALYZER_RESULT=PASS`.
+- Analyzer line 2 parsed 45 close rows from runtime lines 378-422. Analyzer
+  line 3 found 3 v7 active rows.
+- Analyzer line 5 identifies first v7 active recovery at runtime line 389 /
+  step 12, with target margin `+0.000599m` and support margin `+0.000312m`.
+- Analyzer line 4 identifies first low-margin row at runtime line 391 / step 14,
+  with target margin `+0.000173m` and support margin only `+0.000037m`.
+- Analyzer lines 7 and 9 identify runtime line 392 / step 15 as both first
+  support breach and first hard freeze: target `0.002962m` is still inside the
+  fixed 3mm gate, but counter gap `0.002048m > 0.002m`.
+- Analyzer line 8 identifies runtime line 393 / step 16 as first fixed target
+  breach: target `0.003059m`, counter gap `0.002104m`.
+- Analyzer lines 11-13 compare selected v7 candidates against observed next
+  rows. All 3 active followups predicted `-0.001500m` target-error improvement
+  plus negative counter-gap deltas, but the observed next rows worsened target
+  error and counter gap. TCP follow ratios were negative: `-0.164`, `-0.117`,
+  and `-0.089`.
+- Analyzer lines 15-20 classify the domains: audit contract mismatch NO,
+  trigger timing late YES, candidate prediction mismatch YES, weak TCP follow
+  YES, contact geometry suspect YES, and hard-safety lockout after active YES.
+
+Implication:
+
+- v7 should not be rerun unchanged. The failure is now narrowed: selected
+  candidate-level margins and counter-gap deltas do not imply observed runtime
+  recovery.
+- The next valid Track A work is static v8 design only. It must account for
+  earlier trigger timing, multi-step observed dynamics, actual TCP follow, and
+  counter-contact geometry while preserving fixed target/support gates, no
+  attach/posewrite, zero zero-backlog holds, zero safety rollbacks, and
+  robot-joint-target-only writes.
+- Do not proceed to hold-lift, PPO/training, rollout, dataset generation,
+  constraints, SurfaceGripper, transport/release, or gate tuning from v7 or this
+  static analysis.
+
+Sources:
+
+- `claudedocs/session_20260526_track_a_v7_failure_static_analysis.md`
+- `sim_scripts/p7_branch_b_cube2cm_v7_failure_analyzer.py`
+- `claudedocs/runtime_logs/20260526_track_a_v7_active_recovery_close26_local_post_reboot/v7_failure_static_analysis.out:1-23`
+
+
+## D094 - v8 must be observed-response driven, not candidate-margin driven
+
+Evidence:
+
+- Added static design script
+  `sim_scripts/p7_branch_b_cube2cm_target_guarded_v8_observed_recovery_static_design.py`
+  md5 `56a382377b7fb0f0c6391bf59163af0d`; `py_compile` PASS.
+- Saved output
+  `claudedocs/runtime_logs/20260526_track_a_v7_active_recovery_close26_local_post_reboot/v8_observed_recovery_static_design.out`
+  md5 `c14e80ec5fc69c6e6e17925d61f81d0b`.
+- Output lines 1-2 verify the preserved post-reboot v7 runtime md5
+  `621d00b9d157b4e70178c28f94ca4c7f` and v7 static analysis md5
+  `0fbf57f32473fa253ee1082b888bdcb1`.
+- Output line 3 finds the first projected reserve trigger at runtime line 386 /
+  close step 9, before v7 first active recovery.
+- Output line 4 shows v7 first active recovery at runtime line 389 / step 12.
+- Output lines 5-7 show the first support breach/hard freeze at runtime line 392
+  / step 15, and cross-check that the projected reserve trigger is 3 steps before
+  v7 first active and 6 steps before first support breach.
+- Output lines 8-11 reject unchanged v7 by observed response: every active
+  followup worsened target and support gap, with TCP follow ratios `-0.164`,
+  `-0.117`, and `-0.089`.
+- Output lines 12-20 confirm the static v8 checks: earlier projected reserve
+  trigger, reserve horizon before support breach, unchanged-v7 rejection by
+  observed response/TCP follow, counter-contact geometry requirement, fixed gates
+  preserved, and forbidden mechanisms forbidden.
+- Output lines 21-26 define the v8 design contract; line 27 reports
+  `RUNTIME_READY=NO`; line 28 reports `STATIC_V8_DESIGN_DONE=YES`.
+
+Implication:
+
+- v8 must trigger from projected reserve depletion before the v7 late-active
+  window, and it must evaluate multi-step observed response after selected
+  recovery actions.
+- Candidate-level selected margins, negative counter-gap deltas, and IK success
+  are necessary diagnostics but not success evidence.
+- The next valid Track A step is default-off v8 runtime-candidate implementation
+  plus matching audit/readiness static checks, not a runtime, not hold-lift, and
+  not dataset/training.
+- Any v8 runtime candidate must preserve fixed target/support gates, no
+  attach/posewrite, no constraints, no SurfaceGripper, no fixed-gate tuning, zero
+  zero-backlog holds, zero safety rollbacks, and robot-joint-target-only writes.
+
+Sources:
+
+- `claudedocs/session_20260526_track_a_v8_observed_recovery_static_design.md`
+- `sim_scripts/p7_branch_b_cube2cm_target_guarded_v8_observed_recovery_static_design.py`
+- `claudedocs/runtime_logs/20260526_track_a_v7_active_recovery_close26_local_post_reboot/v8_observed_recovery_static_design.out:1-28`
+
+
+## D095 - v8 is static-ready for separate runtime approval, not physics-validated
+
+Evidence:
+
+- Implemented default-off v8 runtime candidate and matching posthoc audit/readiness
+  support. Runtime probe md5 `7e6dfc35bbfeacb5d1689f2f175e5120`; audit md5
+  `8dbf621c983ec03f46e5d52843781fda`; readiness md5
+  `a31ced20b754a4a42058349525d1a435`.
+- The future v8 command uses the preserved local backup USD
+  `b200_backup_20260522_final/tmp_p7/p7_branch_b_cube2cm_opposing_jaw_v7_collision_usd_d024/roarm_m3.usd`
+  md5 `4497024d25abab11de5c50e144124553`, not volatile `/tmp`.
+- Readiness output
+  `claudedocs/runtime_logs/20260526_track_a_v7_active_recovery_close26_local_post_reboot/v8_runtime_candidate_readiness.out`
+  md5 `6a2a62808451175b65e5d522b695b8b6`. Lines 1-2 confirm local/static only,
+  no Isaac runtime, no training/dataset, no constraints, no SurfaceGripper, no
+  attach/object posewrite, no transport/release, and no gate tuning.
+- Readiness lines 3-4 confirm runtime wiring and audit metadata guard.
+- Readiness lines 5-13 confirm negative controls reject archived v6-as-v8, v7
+  reference, no damping, v3 zero-backlog, v4 hard-freeze, v7 no-active-recovery,
+  v8 worsening response, v8 no TCP follow, and v8 no counter contact.
+- Readiness line 14 accepts synthetic v8 PASS, line 16 prints the future local
+  backup USD command, and line 19 reports
+  `READY_FOR_SEPARATE_RUNTIME_APPROVAL=YES`.
+- Additional v8 audit of the preserved post-reboot v7 runtime
+  `v8_rejects_post_reboot_v7_audit.out` md5
+  `cb082918d92a0f95b585ade432c34730` rejects unchanged v7 as expected: lines
+  5/14/15 fail v8 metadata; lines 20/30 fail close/hard-freeze success; lines
+  53/55/57/58 fail v8 reserve-trigger, observed-response, TCP-follow, and
+  counter-contact modeling checks; line 60 reports PASS=NO.
+
+Implication:
+
+- v8 is ready only for a separately approved close_26 runtime attempt. It is not
+  close_26 success, not hold-lift readiness, and not dataset/training readiness.
+- If the v8 runtime is approved, run exactly one close_26-only local runtime with
+  escalated Codex GPU/Isaac execution, capture stdout/stderr under
+  `claudedocs/runtime_logs/`, and immediately audit with expected mechanism
+  `target_guarded_micro_close_v8_observed_recovery_diagnostic`.
+- If v8 audit fails, stop and analyze the first failing runtime/audit lines before
+  any rerun. If it passes, the next gate is hold-lift, not dataset/training.
+
+Sources:
+
+- `claudedocs/session_20260526_track_a_v8_runtime_candidate_static_readiness.md`
+- `sim_scripts/p7_branch_b_cube2cm_runtime_jaw_telemetry_probe.py`
+- `sim_scripts/p7_branch_b_cube2cm_soft_contact_runtime_criteria_audit.py`
+- `sim_scripts/p7_branch_b_cube2cm_soft_contact_runtime_readiness.py`
+- `claudedocs/runtime_logs/20260526_track_a_v7_active_recovery_close26_local_post_reboot/v8_runtime_candidate_readiness.out:1-19`
+- `claudedocs/runtime_logs/20260526_track_a_v7_active_recovery_close26_local_post_reboot/v8_rejects_post_reboot_v7_audit.out:1-60`
+
+
+## D096 - first v8 runtime failed before recovery; virtual damping inheritance is mandatory
+
+Evidence:
+
+- User approved exactly one local close_26-only v8 observed-recovery runtime after
+  local CUDA was healthy. It ran under escalated Codex GPU/Isaac execution and was
+  immediately audited. Runtime stdout
+  `claudedocs/runtime_logs/20260526_track_a_v8_observed_recovery_close26_local_approved/runtime.out`
+  md5 `74095570c2d6a60abdf522c2413735db`; audit stdout
+  `claudedocs/runtime_logs/20260526_track_a_v8_observed_recovery_close26_local_approved/audit.out`
+  md5 `7cd38eddb1dc9c925b01948cbc5cb416`.
+- Runtime lines 4/6/8 confirm the intended v8 metadata, close_26-only scope, no
+  attach/object posewrite, no constraints, no SurfaceGripper, and
+  robot-joint-target-only recovery writes.
+- Audit line 20 fails `close_reached`; line 26 fails positive virtual damping
+  writes with value `0`; lines 35-36 show step3 virtual damping inactive and no
+  write seen; lines 45-49/53 show no v5/v7 recovery present/triggered and no v8
+  projected-reserve trigger; line 60 reports
+  `SOFT_CONTACT_RUNTIME_CRITERIA_PASS=NO`.
+- Runtime lines 423-424 confirm the aggregate failure: `close_reached=NO`,
+  `virtual_velocity_damping_writes=0`, 4 close advances, 41 holds, 39 hard safety
+  freezes, attach/posewrite zero, telemetry-only YES, and success claim NO.
+- Static failure analysis
+  `claudedocs/runtime_logs/20260526_track_a_v8_observed_recovery_close26_local_approved/v8_runtime_failure_static_analysis.out`
+  md5 `7e81773b91d39658a3ec5c6eaf878f0c` reports first hard freeze at runtime
+  line 384 / close step 7 with virtual damping inactive and no v8 trigger; first
+  target/support margin breach at runtime line 392 / close step 15; and
+  `seen_trigger=NO seen_needed=NO seen_recovery=NO`.
+- Code inspection found the wiring split: post-fix runtime lines 1174-1184 include
+  v8 in `target_guarded_close_active`, and lines 1255-1265 now include v8 in
+  `virtual_damping_active`. Lines 1426-1434 show the v8 reserve trigger is still
+  gated by hard safety OK, so missing damping can block the recovery window before
+  the trigger is ever seen.
+- Post-fail static fix md5s: runtime probe
+  `acae0ca2e85a522dd4ac8fb583cb8fb8`, audit unchanged
+  `8dbf621c983ec03f46e5d52843781fda`, readiness
+  `dc2bdaa8d882f12b5cc901a677caccc0`. Post-fix readiness output
+  `claudedocs/runtime_logs/20260526_track_a_v8_observed_recovery_close26_local_approved/readiness_after_v8_damping_fix.out`
+  md5 `b652520a81792bf12373ff742cdba6b5`: line 5 confirms the new
+  `runtime_probe_v8_inherits_virtual_damping_active` check, and line 20 reports
+  `READY_FOR_SEPARATE_RUNTIME_APPROVAL=YES`.
+
+Implication:
+
+- The first v8 runtime is a useful negative physics result, not success. Runtime
+  exit 0 and v8 metadata are insufficient.
+- Pre-fix v8 must not be rerun unchanged. Any post-fail v8 runtime must use the
+  fixed code where v8 inherits virtual damping and must be separately approved.
+- The next valid Track A action is exactly one post-fix close_26-only v8 runtime
+  plus immediate v8 audit, or further static review. Do not start hold-lift,
+  dataset generation, PPO/training, rollout, constraints, SurfaceGripper, gate
+  tuning, or transport/release from this result.
+
+Sources:
+
+- `claudedocs/session_20260526_track_a_v8_runtime_fail_and_damping_wiring_fix.md`
+- `claudedocs/runtime_logs/20260526_track_a_v8_observed_recovery_close26_local_approved/runtime.out:4,6,8,423-424`
+- `claudedocs/runtime_logs/20260526_track_a_v8_observed_recovery_close26_local_approved/audit.out:20,26,35-36,45-49,53,60`
+- `claudedocs/runtime_logs/20260526_track_a_v8_observed_recovery_close26_local_approved/v8_runtime_failure_static_analysis.out:1-12`
+- `claudedocs/runtime_logs/20260526_track_a_v8_observed_recovery_close26_local_approved/readiness_after_v8_damping_fix.out:1-20`
+- `sim_scripts/p7_branch_b_cube2cm_runtime_jaw_telemetry_probe.py`
+- `sim_scripts/p7_branch_b_cube2cm_soft_contact_runtime_readiness.py`

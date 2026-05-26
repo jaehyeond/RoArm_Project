@@ -1,0 +1,23 @@
+ANALYZER_LOG=claudedocs/runtime_logs/20260526_track_a_v7_active_recovery_close26_local_post_reboot/runtime.out
+CLOSE_ROWS=45 first_line=378 last_line=422
+V7_ACTIVE_ROWS=3
+FIRST_LOW_MARGIN line=391 step=014 target=0.002827 target_margin=+0.000173 counter_gap=0.001963 support_margin=+0.000037 hard_ok=YES hard_freeze=NO v7_needed=YES v7_active=YES counter_contact=NO virtual_support=YES
+FIRST_V7_ACTIVE line=389 step=012 target=0.002401 target_margin=+0.000599 counter_gap=0.001688 support_margin=+0.000312 hard_ok=YES hard_freeze=NO v7_needed=YES v7_active=YES counter_contact=NO virtual_support=YES
+LAST_V7_ACTIVE line=391 step=014 target=0.002827 target_margin=+0.000173 counter_gap=0.001963 support_margin=+0.000037 hard_ok=YES hard_freeze=NO v7_needed=YES v7_active=YES counter_contact=NO virtual_support=YES
+FIRST_SUPPORT_BREACH line=392 step=015 target=0.002962 target_margin=+0.000038 counter_gap=0.002048 support_margin=-0.000048 hard_ok=NO hard_freeze=YES v7_needed=NO v7_active=NO counter_contact=NO virtual_support=NO
+FIRST_TARGET_BREACH line=393 step=016 target=0.003059 target_margin=-0.000059 counter_gap=0.002104 support_margin=-0.000104 hard_ok=NO hard_freeze=YES v7_needed=NO v7_active=NO counter_contact=NO virtual_support=NO
+FIRST_HARD_FREEZE line=392 step=015 target=0.002962 target_margin=+0.000038 counter_gap=0.002048 support_margin=-0.000048 hard_ok=NO hard_freeze=YES v7_needed=NO v7_active=NO counter_contact=NO virtual_support=NO
+ACTIVE_ROW_FOLLOWUP:
+  line=389->line=390 step=012->013 pred_target=0.000901 pred_target_delta=-0.001500m obs_target_delta=+0.000249m pred_gap_delta=-0.000684m pred_gap_by_delta=0.001004 pred_gap_by_margin=0.001004 obs_gap_delta=+0.000159m cmd_norm=0.001500 actual_tcp_step=0.000268 follow_ratio=-0.164 dist_next_to_recovery=0.001750
+  line=390->line=391 step=013->014 pred_target=0.001150 pred_target_delta=-0.001500m obs_target_delta=+0.000177m pred_gap_delta=-0.000703m pred_gap_by_delta=0.001144 pred_gap_by_margin=0.001144 obs_gap_delta=+0.000116m cmd_norm=0.001499 actual_tcp_step=0.000202 follow_ratio=-0.117 dist_next_to_recovery=0.001678
+  line=391->line=392 step=014->015 pred_target=0.001327 pred_target_delta=-0.001500m obs_target_delta=+0.000135m pred_gap_delta=-0.000716m pred_gap_by_delta=0.001247 pred_gap_by_margin=0.001247 obs_gap_delta=+0.000085m cmd_norm=0.001500 actual_tcp_step=0.000155 follow_ratio=-0.089 dist_next_to_recovery=0.001636
+DOMAIN_CLASSIFICATION:
+  audit_contract_mismatch=NO reason=v7_active_checks_pass_but_fixed_gates_fail
+  trigger_timing_late=YES active_to_support_breach_steps=3
+  candidate_prediction_mismatch=YES worsening_followups=3/3
+  weak_tcp_follow=YES weak_follow_rows=3/3 threshold_ratio=0.50
+  contact_geometry_suspect=YES moving_contact_active=YES counter_contact_active=NO object_drift_max=0.000029
+  hard_safety_lockout_after_active=YES first_hard_step=15 last_active_step=14
+NEXT_VALID_ACTION=STATIC_V8_DESIGN_ONLY
+DO_NOT_RUN=unchanged_v7,hold_lift,dataset,ppo,training,attach,posewrite,gate_tuning
+ANALYZER_RESULT=PASS

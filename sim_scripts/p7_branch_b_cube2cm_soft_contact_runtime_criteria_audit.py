@@ -37,6 +37,7 @@ TARGET_GUARDED_V4_MECHANISM = "target_guarded_micro_close_v4_recovery_diagnostic
 TARGET_GUARDED_V5_MECHANISM = "target_guarded_micro_close_v5_preemptive_recovery_diagnostic"
 TARGET_GUARDED_V6_MECHANISM = "target_guarded_micro_close_v6_projected_guard_diagnostic"
 TARGET_GUARDED_V7_MECHANISM = "target_guarded_micro_close_v7_active_recovery_diagnostic"
+TARGET_GUARDED_V8_MECHANISM = "target_guarded_micro_close_v8_observed_recovery_diagnostic"
 TARGET_GUARDED_MECHANISMS = (
     TARGET_GUARDED_MECHANISM,
     TARGET_GUARDED_V2_MECHANISM,
@@ -45,6 +46,7 @@ TARGET_GUARDED_MECHANISMS = (
     TARGET_GUARDED_V5_MECHANISM,
     TARGET_GUARDED_V6_MECHANISM,
     TARGET_GUARDED_V7_MECHANISM,
+    TARGET_GUARDED_V8_MECHANISM,
 )
 VIRTUAL_DAMPING_MECHANISMS = (
     "virtual_compression_damping_diagnostic",
@@ -55,6 +57,7 @@ VIRTUAL_DAMPING_MECHANISMS = (
     TARGET_GUARDED_V5_MECHANISM,
     TARGET_GUARDED_V6_MECHANISM,
     TARGET_GUARDED_V7_MECHANISM,
+    TARGET_GUARDED_V8_MECHANISM,
 )
 
 
@@ -62,6 +65,7 @@ VIRTUAL_DAMPING_MECHANISMS = (
 class CloseObservation:
     source: str
     step: int
+    tcp: tuple[float, float, float] | None
     target_error_m: float
     object_speed_mps: float
     counter_gap_max_m: float
@@ -118,9 +122,13 @@ class CloseObservation:
     target_guarded_v7_best_target_margin_m: float | None = None
     target_guarded_v7_best_support_margin_m: float | None = None
     target_guarded_v7_counter_gap_delta_m: float | None = None
+    target_guarded_v7_candidate_counter_contact: bool | None = None
+    target_guarded_v7_candidate_counter_slop_contact: bool | None = None
+    target_guarded_v7_recovery_tcp: tuple[float, float, float] | None = None
     target_guarded_v7_recovery_step_m: float | None = None
     target_guarded_v7_active_recovery_writes_total: int | None = None
     target_guarded_v7_recovery_ik_failures_total: int | None = None
+    target_guarded_v8_projected_reserve_trigger: bool | None = None
 
 
 @dataclass(frozen=True)
@@ -162,6 +170,7 @@ class RuntimeMetadata:
     target_guarded_micro_close_v5_preemptive_recovery_diagnostic: bool | None = None
     target_guarded_micro_close_v6_projected_guard_diagnostic: bool | None = None
     target_guarded_micro_close_v7_active_recovery_diagnostic: bool | None = None
+    target_guarded_micro_close_v8_observed_recovery_diagnostic: bool | None = None
 
 
 def _yes(value: bool) -> str:
@@ -218,6 +227,7 @@ def _parse_log(path: Path) -> tuple[dict[int, CloseObservation], AggregateObserv
     target_guarded_micro_close_v5_preemptive_recovery_diagnostic: bool | None = None
     target_guarded_micro_close_v6_projected_guard_diagnostic: bool | None = None
     target_guarded_micro_close_v7_active_recovery_diagnostic: bool | None = None
+    target_guarded_micro_close_v8_observed_recovery_diagnostic: bool | None = None
     object_physics_mode: str | None = None
     runtime_candidate_requires_separate_approval: bool | None = None
     metadata_source = str(path)
@@ -267,6 +277,11 @@ def _parse_log(path: Path) -> tuple[dict[int, CloseObservation], AggregateObserv
                     fields["target_guarded_micro_close_v7_active_recovery_diagnostic"]
                 )
                 metadata_source = f"{path}:{line_no}"
+            if "target_guarded_micro_close_v8_observed_recovery_diagnostic" in fields:
+                target_guarded_micro_close_v8_observed_recovery_diagnostic = _parse_bool(
+                    fields["target_guarded_micro_close_v8_observed_recovery_diagnostic"]
+                )
+                metadata_source = f"{path}:{line_no}"
         elif "[cube2cm_runtime_jaw_telemetry] object_physics " in line:
             fields = _fields(line)
             object_physics_mode = fields.get("mode")
@@ -282,6 +297,7 @@ def _parse_log(path: Path) -> tuple[dict[int, CloseObservation], AggregateObserv
             close[step] = CloseObservation(
                 source=f"{path}:{line_no}",
                 step=step,
+                tcp=_parse_xyz(_line_value(line, "tcp")),
                 target_error_m=float(_line_value(line, "target_error_m")),
                 object_speed_mps=float(_line_value(line, "object_speed_mps")),
                 counter_gap_max_m=max(counter_gap),
@@ -524,9 +540,29 @@ def _parse_log(path: Path) -> tuple[dict[int, CloseObservation], AggregateObserv
                     if "target_guarded_v7_counter_gap_delta_m" in fields
                     else None
                 ),
+                target_guarded_v7_candidate_counter_contact=(
+                    _parse_bool(fields["target_guarded_v7_candidate_counter_contact"])
+                    if "target_guarded_v7_candidate_counter_contact" in fields
+                    else None
+                ),
+                target_guarded_v7_candidate_counter_slop_contact=(
+                    _parse_bool(fields["target_guarded_v7_candidate_counter_slop_contact"])
+                    if "target_guarded_v7_candidate_counter_slop_contact" in fields
+                    else None
+                ),
+                target_guarded_v7_recovery_tcp=(
+                    _parse_xyz(_line_value(line, "target_guarded_v7_recovery_tcp"))
+                    if "target_guarded_v7_recovery_tcp" in fields
+                    else None
+                ),
                 target_guarded_v7_recovery_step_m=(
                     float(fields["target_guarded_v7_recovery_step_m"])
                     if "target_guarded_v7_recovery_step_m" in fields
+                    else None
+                ),
+                target_guarded_v8_projected_reserve_trigger=(
+                    _parse_bool(fields["target_guarded_v8_projected_reserve_trigger"])
+                    if "target_guarded_v8_projected_reserve_trigger" in fields
                     else None
                 ),
                 target_guarded_v7_active_recovery_writes_total=(
@@ -640,6 +676,9 @@ def _parse_log(path: Path) -> tuple[dict[int, CloseObservation], AggregateObserv
         target_guarded_micro_close_v7_active_recovery_diagnostic=(
             target_guarded_micro_close_v7_active_recovery_diagnostic
         ),
+        target_guarded_micro_close_v8_observed_recovery_diagnostic=(
+            target_guarded_micro_close_v8_observed_recovery_diagnostic
+        ),
     )
     return close, aggregate, metadata
 
@@ -649,6 +688,7 @@ def _reference_v7() -> tuple[dict[int, CloseObservation], AggregateObservation, 
         sample.step: CloseObservation(
             source=sample.source,
             step=sample.step,
+            tcp=None,
             target_error_m=sample.target_error_m,
             object_speed_mps=sample.object_speed_mps,
             counter_gap_max_m=max(sample.counter_gap_m),
@@ -702,13 +742,16 @@ def _reference_synthetic_pass(expected_mechanism: str) -> tuple[dict[int, CloseO
     is_target_guarded_v5 = expected_mechanism == TARGET_GUARDED_V5_MECHANISM
     is_target_guarded_v6 = expected_mechanism == TARGET_GUARDED_V6_MECHANISM
     is_target_guarded_v7 = expected_mechanism == TARGET_GUARDED_V7_MECHANISM
-    is_v5_or_later = is_target_guarded_v5 or is_target_guarded_v6 or is_target_guarded_v7
+    is_target_guarded_v8 = expected_mechanism == TARGET_GUARDED_V8_MECHANISM
+    is_v7_or_v8 = is_target_guarded_v7 or is_target_guarded_v8
+    is_v5_or_later = is_target_guarded_v5 or is_target_guarded_v6 or is_v7_or_v8
     is_progress_preserving = is_target_guarded_v3 or is_target_guarded_v4 or is_v5_or_later
     is_v4_or_later = is_target_guarded_v4 or is_v5_or_later
     close = {
         2: CloseObservation(
             source="synthetic_pass:close_step_002",
             step=2,
+            tcp=(0.0000, 0.0000, 0.0000) if is_v7_or_v8 else None,
             target_error_m=0.001200,
             object_speed_mps=0.001000,
             counter_gap_max_m=0.000400,
@@ -757,21 +800,26 @@ def _reference_synthetic_pass(expected_mechanism: str) -> tuple[dict[int, CloseO
             target_guarded_v5_recovery_step_m=0.0 if is_v5_or_later else None,
             target_guarded_v5_preemptive_recovery_writes_total=0 if is_v5_or_later else None,
             target_guarded_v5_recovery_ik_failures_total=0 if is_v5_or_later else None,
-            target_guarded_v7_active_recovery_needed=False if is_target_guarded_v7 else None,
-            target_guarded_v7_active_recovery=False if is_target_guarded_v7 else None,
-            target_guarded_v7_recovery_ik_ok=True if is_target_guarded_v7 else None,
-            target_guarded_v7_candidate_count=0 if is_target_guarded_v7 else None,
-            target_guarded_v7_selected_score=0.0 if is_target_guarded_v7 else None,
-            target_guarded_v7_best_target_margin_m=0.001800 if is_target_guarded_v7 else None,
-            target_guarded_v7_best_support_margin_m=0.001600 if is_target_guarded_v7 else None,
-            target_guarded_v7_counter_gap_delta_m=0.0 if is_target_guarded_v7 else None,
-            target_guarded_v7_recovery_step_m=0.0 if is_target_guarded_v7 else None,
-            target_guarded_v7_active_recovery_writes_total=0 if is_target_guarded_v7 else None,
-            target_guarded_v7_recovery_ik_failures_total=0 if is_target_guarded_v7 else None,
+            target_guarded_v7_active_recovery_needed=False if is_v7_or_v8 else None,
+            target_guarded_v7_active_recovery=False if is_v7_or_v8 else None,
+            target_guarded_v7_recovery_ik_ok=True if is_v7_or_v8 else None,
+            target_guarded_v7_candidate_count=0 if is_v7_or_v8 else None,
+            target_guarded_v7_selected_score=0.0 if is_v7_or_v8 else None,
+            target_guarded_v7_best_target_margin_m=0.001800 if is_v7_or_v8 else None,
+            target_guarded_v7_best_support_margin_m=0.001600 if is_v7_or_v8 else None,
+            target_guarded_v7_counter_gap_delta_m=0.0 if is_v7_or_v8 else None,
+            target_guarded_v7_candidate_counter_contact=False if is_v7_or_v8 else None,
+            target_guarded_v7_candidate_counter_slop_contact=False if is_v7_or_v8 else None,
+            target_guarded_v7_recovery_tcp=(0.0000, 0.0000, 0.0000) if is_v7_or_v8 else None,
+            target_guarded_v7_recovery_step_m=0.0 if is_v7_or_v8 else None,
+            target_guarded_v7_active_recovery_writes_total=0 if is_v7_or_v8 else None,
+            target_guarded_v7_recovery_ik_failures_total=0 if is_v7_or_v8 else None,
+            target_guarded_v8_projected_reserve_trigger=False if is_target_guarded_v8 else None,
         ),
         3: CloseObservation(
             source="synthetic_pass:close_step_003",
             step=3,
+            tcp=(0.0000, 0.0000, 0.0000) if is_v7_or_v8 else None,
             target_error_m=0.001600,
             object_speed_mps=0.004900,
             counter_gap_max_m=0.001200,
@@ -820,24 +868,29 @@ def _reference_synthetic_pass(expected_mechanism: str) -> tuple[dict[int, CloseO
             target_guarded_v5_recovery_step_m=0.0010 if is_v5_or_later else None,
             target_guarded_v5_preemptive_recovery_writes_total=1 if is_v5_or_later else None,
             target_guarded_v5_recovery_ik_failures_total=0 if is_v5_or_later else None,
-            target_guarded_v7_active_recovery_needed=True if is_target_guarded_v7 else None,
-            target_guarded_v7_active_recovery=True if is_target_guarded_v7 else None,
-            target_guarded_v7_recovery_ik_ok=True if is_target_guarded_v7 else None,
-            target_guarded_v7_candidate_count=18 if is_target_guarded_v7 else None,
-            target_guarded_v7_selected_score=0.000700 if is_target_guarded_v7 else None,
-            target_guarded_v7_best_target_margin_m=0.001400 if is_target_guarded_v7 else None,
-            target_guarded_v7_best_support_margin_m=0.000800 if is_target_guarded_v7 else None,
-            target_guarded_v7_counter_gap_delta_m=-0.000120 if is_target_guarded_v7 else None,
-            target_guarded_v7_recovery_step_m=0.0010 if is_target_guarded_v7 else None,
-            target_guarded_v7_active_recovery_writes_total=1 if is_target_guarded_v7 else None,
-            target_guarded_v7_recovery_ik_failures_total=0 if is_target_guarded_v7 else None,
+            target_guarded_v7_active_recovery_needed=True if is_v7_or_v8 else None,
+            target_guarded_v7_active_recovery=True if is_v7_or_v8 else None,
+            target_guarded_v7_recovery_ik_ok=True if is_v7_or_v8 else None,
+            target_guarded_v7_candidate_count=18 if is_v7_or_v8 else None,
+            target_guarded_v7_selected_score=0.000700 if is_v7_or_v8 else None,
+            target_guarded_v7_best_target_margin_m=0.001400 if is_v7_or_v8 else None,
+            target_guarded_v7_best_support_margin_m=0.000800 if is_v7_or_v8 else None,
+            target_guarded_v7_counter_gap_delta_m=-0.000120 if is_v7_or_v8 else None,
+            target_guarded_v7_candidate_counter_contact=False if is_v7_or_v8 else None,
+            target_guarded_v7_candidate_counter_slop_contact=True if is_v7_or_v8 else None,
+            target_guarded_v7_recovery_tcp=(0.0010, 0.0000, 0.0000) if is_v7_or_v8 else None,
+            target_guarded_v7_recovery_step_m=0.0010 if is_v7_or_v8 else None,
+            target_guarded_v7_active_recovery_writes_total=1 if is_v7_or_v8 else None,
+            target_guarded_v7_recovery_ik_failures_total=0 if is_v7_or_v8 else None,
+            target_guarded_v8_projected_reserve_trigger=True if is_target_guarded_v8 else None,
         ),
         4: CloseObservation(
             source="synthetic_pass:close_step_004",
             step=4,
-            target_error_m=0.002900,
+            tcp=(0.0005, 0.0000, 0.0000) if is_v7_or_v8 else None,
+            target_error_m=0.001500 if is_target_guarded_v8 else 0.002900,
             object_speed_mps=0.004000,
-            counter_gap_max_m=0.001900,
+            counter_gap_max_m=0.001100 if is_target_guarded_v8 else 0.001900,
             counter_contact=False,
             counter_slop_contact=True,
             one_sided_push=False,
@@ -883,24 +936,31 @@ def _reference_synthetic_pass(expected_mechanism: str) -> tuple[dict[int, CloseO
             target_guarded_v5_recovery_step_m=0.0012 if is_v5_or_later else None,
             target_guarded_v5_preemptive_recovery_writes_total=2 if is_v5_or_later else None,
             target_guarded_v5_recovery_ik_failures_total=0 if is_v5_or_later else None,
-            target_guarded_v7_active_recovery_needed=True if is_target_guarded_v7 else None,
-            target_guarded_v7_active_recovery=True if is_target_guarded_v7 else None,
-            target_guarded_v7_recovery_ik_ok=True if is_target_guarded_v7 else None,
-            target_guarded_v7_candidate_count=18 if is_target_guarded_v7 else None,
-            target_guarded_v7_selected_score=0.000080 if is_target_guarded_v7 else None,
-            target_guarded_v7_best_target_margin_m=0.000100 if is_target_guarded_v7 else None,
-            target_guarded_v7_best_support_margin_m=0.000100 if is_target_guarded_v7 else None,
-            target_guarded_v7_counter_gap_delta_m=-0.000090 if is_target_guarded_v7 else None,
-            target_guarded_v7_recovery_step_m=0.0012 if is_target_guarded_v7 else None,
-            target_guarded_v7_active_recovery_writes_total=2 if is_target_guarded_v7 else None,
-            target_guarded_v7_recovery_ik_failures_total=0 if is_target_guarded_v7 else None,
+            target_guarded_v7_active_recovery_needed=True if is_v7_or_v8 else None,
+            target_guarded_v7_active_recovery=True if is_v7_or_v8 else None,
+            target_guarded_v7_recovery_ik_ok=True if is_v7_or_v8 else None,
+            target_guarded_v7_candidate_count=18 if is_v7_or_v8 else None,
+            target_guarded_v7_selected_score=0.000080 if is_v7_or_v8 else None,
+            target_guarded_v7_best_target_margin_m=0.000100 if is_v7_or_v8 else None,
+            target_guarded_v7_best_support_margin_m=0.000100 if is_v7_or_v8 else None,
+            target_guarded_v7_counter_gap_delta_m=-0.000090 if is_v7_or_v8 else None,
+            target_guarded_v7_candidate_counter_contact=False if is_v7_or_v8 else None,
+            target_guarded_v7_candidate_counter_slop_contact=True if is_v7_or_v8 else None,
+            target_guarded_v7_recovery_tcp=(0.0012, 0.0000, 0.0000) if is_v7_or_v8 else None,
+            target_guarded_v7_recovery_step_m=0.0012 if is_v7_or_v8 else None,
+            target_guarded_v7_active_recovery_writes_total=2 if is_v7_or_v8 else None,
+            target_guarded_v7_recovery_ik_failures_total=0 if is_v7_or_v8 else None,
+            target_guarded_v8_projected_reserve_trigger=True if is_target_guarded_v8 else None,
         ),
         5: CloseObservation(
             source="synthetic_pass:close_step_005",
             step=5,
-            target_error_m=0.002700,
+            tcp=(0.0008, 0.0000, 0.0000) if is_v7_or_v8 else None,
+            target_error_m=0.001400 if is_target_guarded_v8 else 0.002700,
             object_speed_mps=0.004200,
-            counter_gap_max_m=0.001800 if is_progress_preserving else 0.002700,
+            counter_gap_max_m=(
+                0.001000 if is_target_guarded_v8 else (0.001800 if is_progress_preserving else 0.002700)
+            ),
             counter_contact=False,
             counter_slop_contact=False,
             one_sided_push=False,
@@ -946,17 +1006,21 @@ def _reference_synthetic_pass(expected_mechanism: str) -> tuple[dict[int, CloseO
             target_guarded_v5_recovery_step_m=0.0 if is_v5_or_later else None,
             target_guarded_v5_preemptive_recovery_writes_total=2 if is_v5_or_later else None,
             target_guarded_v5_recovery_ik_failures_total=0 if is_v5_or_later else None,
-            target_guarded_v7_active_recovery_needed=False if is_target_guarded_v7 else None,
-            target_guarded_v7_active_recovery=False if is_target_guarded_v7 else None,
-            target_guarded_v7_recovery_ik_ok=True if is_target_guarded_v7 else None,
-            target_guarded_v7_candidate_count=0 if is_target_guarded_v7 else None,
-            target_guarded_v7_selected_score=0.0 if is_target_guarded_v7 else None,
-            target_guarded_v7_best_target_margin_m=0.000300 if is_target_guarded_v7 else None,
-            target_guarded_v7_best_support_margin_m=0.000200 if is_target_guarded_v7 else None,
-            target_guarded_v7_counter_gap_delta_m=0.0 if is_target_guarded_v7 else None,
-            target_guarded_v7_recovery_step_m=0.0 if is_target_guarded_v7 else None,
-            target_guarded_v7_active_recovery_writes_total=2 if is_target_guarded_v7 else None,
-            target_guarded_v7_recovery_ik_failures_total=0 if is_target_guarded_v7 else None,
+            target_guarded_v7_active_recovery_needed=False if is_v7_or_v8 else None,
+            target_guarded_v7_active_recovery=False if is_v7_or_v8 else None,
+            target_guarded_v7_recovery_ik_ok=True if is_v7_or_v8 else None,
+            target_guarded_v7_candidate_count=0 if is_v7_or_v8 else None,
+            target_guarded_v7_selected_score=0.0 if is_v7_or_v8 else None,
+            target_guarded_v7_best_target_margin_m=0.000300 if is_v7_or_v8 else None,
+            target_guarded_v7_best_support_margin_m=0.000200 if is_v7_or_v8 else None,
+            target_guarded_v7_counter_gap_delta_m=0.0 if is_v7_or_v8 else None,
+            target_guarded_v7_candidate_counter_contact=False if is_v7_or_v8 else None,
+            target_guarded_v7_candidate_counter_slop_contact=False if is_v7_or_v8 else None,
+            target_guarded_v7_recovery_tcp=(0.0008, 0.0000, 0.0000) if is_v7_or_v8 else None,
+            target_guarded_v7_recovery_step_m=0.0 if is_v7_or_v8 else None,
+            target_guarded_v7_active_recovery_writes_total=2 if is_v7_or_v8 else None,
+            target_guarded_v7_recovery_ik_failures_total=0 if is_v7_or_v8 else None,
+            target_guarded_v8_projected_reserve_trigger=False if is_target_guarded_v8 else None,
         ),
     }
     aggregate = AggregateObservation(
@@ -979,8 +1043,8 @@ def _reference_synthetic_pass(expected_mechanism: str) -> tuple[dict[int, CloseO
         target_guarded_v4_hard_safety_freezes=0 if is_v4_or_later else None,
         target_guarded_v5_preemptive_recovery_writes=2 if is_v5_or_later else None,
         target_guarded_v5_recovery_ik_failures=0 if is_v5_or_later else None,
-        target_guarded_v7_active_recovery_writes=2 if is_target_guarded_v7 else None,
-        target_guarded_v7_recovery_ik_failures=0 if is_target_guarded_v7 else None,
+        target_guarded_v7_active_recovery_writes=2 if is_v7_or_v8 else None,
+        target_guarded_v7_recovery_ik_failures=0 if is_v7_or_v8 else None,
     )
     metadata = RuntimeMetadata(
         source="synthetic_pass:metadata",
@@ -995,6 +1059,7 @@ def _reference_synthetic_pass(expected_mechanism: str) -> tuple[dict[int, CloseO
         target_guarded_micro_close_v5_preemptive_recovery_diagnostic=is_target_guarded_v5,
         target_guarded_micro_close_v6_projected_guard_diagnostic=is_target_guarded_v6,
         target_guarded_micro_close_v7_active_recovery_diagnostic=is_target_guarded_v7,
+        target_guarded_micro_close_v8_observed_recovery_diagnostic=is_target_guarded_v8,
     )
     return close, aggregate, metadata
 
@@ -1134,6 +1199,54 @@ def _reference_synthetic_v7_no_active_recovery() -> tuple[
         target_guarded_v7_active_recovery_writes=0,
     )
     return close, aggregate, metadata
+
+
+def _reference_synthetic_v8_worsening_response() -> tuple[
+    dict[int, CloseObservation], AggregateObservation, RuntimeMetadata
+]:
+    close, aggregate, metadata = _reference_synthetic_pass(TARGET_GUARDED_V8_MECHANISM)
+    close = dict(close)
+    close[4] = replace(
+        close[4],
+        source="synthetic_v8_worsening_response:close_step_004",
+        target_error_m=0.002200,
+        counter_gap_max_m=0.001700,
+        tcp=(0.0005, 0.0000, 0.0000),
+    )
+    return close, replace(aggregate, source="synthetic_v8_worsening_response:aggregate"), metadata
+
+
+def _reference_synthetic_v8_no_tcp_follow() -> tuple[
+    dict[int, CloseObservation], AggregateObservation, RuntimeMetadata
+]:
+    close, aggregate, metadata = _reference_synthetic_pass(TARGET_GUARDED_V8_MECHANISM)
+    close = dict(close)
+    close[4] = replace(
+        close[4],
+        source="synthetic_v8_no_tcp_follow:close_step_004",
+        tcp=(-0.0002, 0.0000, 0.0000),
+    )
+    return close, replace(aggregate, source="synthetic_v8_no_tcp_follow:aggregate"), metadata
+
+
+def _reference_synthetic_v8_no_counter_contact() -> tuple[
+    dict[int, CloseObservation], AggregateObservation, RuntimeMetadata
+]:
+    close, aggregate, metadata = _reference_synthetic_pass(TARGET_GUARDED_V8_MECHANISM)
+    close = dict(close)
+    close[3] = replace(
+        close[3],
+        source="synthetic_v8_no_counter_contact:close_step_003",
+        target_guarded_v7_candidate_counter_contact=False,
+        target_guarded_v7_candidate_counter_slop_contact=False,
+    )
+    close[4] = replace(
+        close[4],
+        source="synthetic_v8_no_counter_contact:close_step_004",
+        target_guarded_v7_candidate_counter_contact=False,
+        target_guarded_v7_candidate_counter_slop_contact=False,
+    )
+    return close, replace(aggregate, source="synthetic_v8_no_counter_contact:aggregate"), metadata
 
 
 def _criterion(name: str, ok: bool, detail: str) -> tuple[str, bool, str]:
@@ -1381,6 +1494,7 @@ def _audit(
             TARGET_GUARDED_V5_MECHANISM,
             TARGET_GUARDED_V6_MECHANISM,
             TARGET_GUARDED_V7_MECHANISM,
+            TARGET_GUARDED_V8_MECHANISM,
         ):
             if expected_mechanism == TARGET_GUARDED_V5_MECHANISM:
                 checks.append(
@@ -1398,12 +1512,20 @@ def _audit(
                         f"value={metadata.target_guarded_micro_close_v6_projected_guard_diagnostic} source={metadata.source}",
                     )
                 )
-            else:
+            elif expected_mechanism == TARGET_GUARDED_V7_MECHANISM:
                 checks.append(
                     _criterion(
                         "target_guarded_micro_close_v7_active_recovery_diagnostic_enabled",
                         metadata.target_guarded_micro_close_v7_active_recovery_diagnostic is True,
                         f"value={metadata.target_guarded_micro_close_v7_active_recovery_diagnostic} source={metadata.source}",
+                    )
+                )
+            else:
+                checks.append(
+                    _criterion(
+                        "target_guarded_micro_close_v8_observed_recovery_diagnostic_enabled",
+                        metadata.target_guarded_micro_close_v8_observed_recovery_diagnostic is True,
+                        f"value={metadata.target_guarded_micro_close_v8_observed_recovery_diagnostic} source={metadata.source}",
                     )
                 )
             checks.append(
@@ -1473,6 +1595,14 @@ def _audit(
                     "target_guarded_micro_close_v7_active_recovery_diagnostic_disabled",
                     metadata.target_guarded_micro_close_v7_active_recovery_diagnostic is not True,
                     f"value={metadata.target_guarded_micro_close_v7_active_recovery_diagnostic} source={metadata.source}",
+                )
+            )
+        if expected_mechanism != TARGET_GUARDED_V8_MECHANISM:
+            checks.append(
+                _criterion(
+                    "target_guarded_micro_close_v8_observed_recovery_diagnostic_disabled",
+                    metadata.target_guarded_micro_close_v8_observed_recovery_diagnostic is not True,
+                    f"value={metadata.target_guarded_micro_close_v8_observed_recovery_diagnostic} source={metadata.source}",
                 )
             )
         checks.append(
@@ -1579,6 +1709,7 @@ def _audit(
             TARGET_GUARDED_V5_MECHANISM,
             TARGET_GUARDED_V6_MECHANISM,
             TARGET_GUARDED_V7_MECHANISM,
+            TARGET_GUARDED_V8_MECHANISM,
         ):
             checks.append(
                 _criterion(
@@ -1602,7 +1733,7 @@ def _audit(
                     f"value={aggregate.target_guarded_v4_hard_safety_freezes} source={aggregate.source}",
                 )
             )
-        if expected_mechanism == TARGET_GUARDED_V7_MECHANISM:
+        if expected_mechanism in (TARGET_GUARDED_V7_MECHANISM, TARGET_GUARDED_V8_MECHANISM):
             checks.append(
                 _criterion(
                     "target_guarded_v7_active_recovery_writes_positive",
@@ -1917,6 +2048,7 @@ def _audit(
         TARGET_GUARDED_V5_MECHANISM,
         TARGET_GUARDED_V6_MECHANISM,
         TARGET_GUARDED_V7_MECHANISM,
+        TARGET_GUARDED_V8_MECHANISM,
     ):
         preempt_sources = [
             obs.source for obs in close.values() if obs.target_guarded_v5_preemptive_recovery is True
@@ -1948,7 +2080,7 @@ def _audit(
                 f"sources={ik_failure_sources}",
             )
         )
-    if expected_mechanism == TARGET_GUARDED_V7_MECHANISM:
+    if expected_mechanism in (TARGET_GUARDED_V7_MECHANISM, TARGET_GUARDED_V8_MECHANISM):
         active_sources = [
             obs.source for obs in close.values() if obs.target_guarded_v7_active_recovery is True
         ]
@@ -2014,6 +2146,87 @@ def _audit(
             )
         )
 
+    if expected_mechanism == TARGET_GUARDED_V8_MECHANISM:
+        reserve_trigger_sources = [
+            obs.source for obs in close.values() if obs.target_guarded_v8_projected_reserve_trigger is True
+        ]
+        missing_next_sources: list[str] = []
+        worsening_sources: list[str] = []
+        missing_tcp_sources: list[str] = []
+        nonpositive_follow_sources: list[str] = []
+        missing_counter_geometry_sources: list[str] = []
+        for step in sorted(close):
+            obs = close[step]
+            if obs.target_guarded_v7_active_recovery is not True:
+                continue
+            next_obs = close.get(step + 1)
+            if next_obs is None:
+                missing_next_sources.append(obs.source)
+                continue
+            if (
+                next_obs.target_error_m > obs.target_error_m + 1.0e-12
+                and next_obs.counter_gap_max_m > obs.counter_gap_max_m + 1.0e-12
+            ):
+                worsening_sources.append(f"{obs.source}->{next_obs.source}")
+            if not (obs.target_guarded_v7_candidate_counter_contact or obs.target_guarded_v7_candidate_counter_slop_contact):
+                missing_counter_geometry_sources.append(obs.source)
+            if obs.tcp is None or next_obs.tcp is None or obs.target_guarded_v7_recovery_tcp is None:
+                missing_tcp_sources.append(obs.source)
+                continue
+            desired = [obs.target_guarded_v7_recovery_tcp[i] - obs.tcp[i] for i in range(3)]
+            observed = [next_obs.tcp[i] - obs.tcp[i] for i in range(3)]
+            denom = sum(v * v for v in desired)
+            if denom <= 1.0e-18:
+                missing_tcp_sources.append(obs.source)
+                continue
+            follow_ratio = sum(observed[i] * desired[i] for i in range(3)) / denom
+            if (not math.isfinite(follow_ratio)) or follow_ratio <= 0.0:
+                nonpositive_follow_sources.append(
+                    f"{obs.source}->{next_obs.source}:follow_ratio={follow_ratio:.3f}"
+                )
+        checks.append(
+            _criterion(
+                "target_guarded_v8_projected_reserve_trigger_seen",
+                bool(reserve_trigger_sources),
+                f"sources={reserve_trigger_sources}",
+            )
+        )
+        checks.append(
+            _criterion(
+                "target_guarded_v8_active_recovery_next_row_present",
+                not missing_next_sources,
+                f"sources={missing_next_sources}",
+            )
+        )
+        checks.append(
+            _criterion(
+                "target_guarded_v8_observed_response_not_worsening_both",
+                not worsening_sources,
+                f"sources={worsening_sources}",
+            )
+        )
+        checks.append(
+            _criterion(
+                "target_guarded_v8_active_recovery_tcp_vectors_present",
+                not missing_tcp_sources,
+                f"sources={missing_tcp_sources}",
+            )
+        )
+        checks.append(
+            _criterion(
+                "target_guarded_v8_active_recovery_tcp_follow_positive",
+                not nonpositive_follow_sources,
+                f"sources={nonpositive_follow_sources}",
+            )
+        )
+        checks.append(
+            _criterion(
+                "target_guarded_v8_candidate_counter_contact_modeled",
+                not missing_counter_geometry_sources,
+                f"sources={missing_counter_geometry_sources}",
+            )
+        )
+
     finite_ok = all(
         math.isfinite(obs.target_error_m) and math.isfinite(obs.object_speed_mps) and math.isfinite(obs.counter_gap_max_m)
         for obs in close.values()
@@ -2032,6 +2245,9 @@ def main() -> int:
     source_group.add_argument("--use_synthetic_v3_zero_backlog_reference", action="store_true")
     source_group.add_argument("--use_synthetic_v4_hard_freeze_reference", action="store_true")
     source_group.add_argument("--use_synthetic_v7_no_active_recovery_reference", action="store_true")
+    source_group.add_argument("--use_synthetic_v8_worsening_response_reference", action="store_true")
+    source_group.add_argument("--use_synthetic_v8_no_tcp_follow_reference", action="store_true")
+    source_group.add_argument("--use_synthetic_v8_no_counter_contact_reference", action="store_true")
     ap.add_argument(
         "--expected_mechanism",
         choices=[
@@ -2044,6 +2260,7 @@ def main() -> int:
             TARGET_GUARDED_V5_MECHANISM,
             TARGET_GUARDED_V6_MECHANISM,
             TARGET_GUARDED_V7_MECHANISM,
+            TARGET_GUARDED_V8_MECHANISM,
         ],
         default="soft_contact_material_diagnostic",
     )
@@ -2067,6 +2284,15 @@ def main() -> int:
     elif args.use_synthetic_v7_no_active_recovery_reference:
         close, aggregate, metadata = _reference_synthetic_v7_no_active_recovery()
         source = "synthetic_v7_no_active_recovery_reference"
+    elif args.use_synthetic_v8_worsening_response_reference:
+        close, aggregate, metadata = _reference_synthetic_v8_worsening_response()
+        source = "synthetic_v8_worsening_response_reference"
+    elif args.use_synthetic_v8_no_tcp_follow_reference:
+        close, aggregate, metadata = _reference_synthetic_v8_no_tcp_follow()
+        source = "synthetic_v8_no_tcp_follow_reference"
+    elif args.use_synthetic_v8_no_counter_contact_reference:
+        close, aggregate, metadata = _reference_synthetic_v8_no_counter_contact()
+        source = "synthetic_v8_no_counter_contact_reference"
     else:
         if not args.log.exists():
             raise FileNotFoundError(args.log)

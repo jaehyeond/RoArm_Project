@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-"""Static readiness check for the target-guarded v7 close_26 runtime.
+"""Static readiness check for the target-guarded v8 close_26 runtime.
 
 This script does not launch Isaac and does not execute the runtime probe. It
-checks that the default-off target-guarded micro-close v7 active recovery
+checks that the default-off target-guarded micro-close v8 observed recovery
 candidate and the posthoc criteria audit are wired tightly enough that a future
 approved local/RunPod run can either pass all fixed criteria or fail in a way
 that is immediately diagnosable.
 
-The archived v6 runtime failed posthoc, so the future command printed here uses
-a new v7 mechanism. It is still only a command shape for separate runtime
+The post-reboot v7 runtime failed posthoc, so the future command printed here
+uses a new v8 mechanism. It is still only a command shape for separate runtime
 approval.
 """
 from __future__ import annotations
@@ -24,8 +24,14 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[1]
 RUNTIME_PROBE = REPO / "sim_scripts" / "p7_branch_b_cube2cm_runtime_jaw_telemetry_probe.py"
 CRITERIA_AUDIT = REPO / "sim_scripts" / "p7_branch_b_cube2cm_soft_contact_runtime_criteria_audit.py"
-V7_D024_USD = "/tmp/p7_branch_b_cube2cm_opposing_jaw_v7_collision_usd_d024/roarm_m3.usd"
-EXPECTED_MECHANISM = "target_guarded_micro_close_v7_active_recovery_diagnostic"
+V7_D024_USD = str(
+    REPO
+    / "b200_backup_20260522_final"
+    / "tmp_p7"
+    / "p7_branch_b_cube2cm_opposing_jaw_v7_collision_usd_d024"
+    / "roarm_m3.usd"
+)
+EXPECTED_MECHANISM = "target_guarded_micro_close_v8_observed_recovery_diagnostic"
 OLD_V6_RUNTIME_LOG = (
     REPO
     / "b200_backup_20260522_final"
@@ -55,6 +61,18 @@ def _contains_all(name: str, text: str, needles: tuple[str, ...]) -> Check:
     return Check(name=name, passed=not missing, detail=f"missing={missing}")
 
 
+def _contains_in_block(name: str, text: str, start: str, end: str, needles: tuple[str, ...]) -> Check:
+    start_idx = text.find(start)
+    if start_idx < 0:
+        return Check(name=name, passed=False, detail=f"missing_start={start!r}")
+    end_idx = text.find(end, start_idx)
+    if end_idx < 0:
+        return Check(name=name, passed=False, detail=f"missing_end={end!r}")
+    block = text[start_idx:end_idx]
+    missing = [needle for needle in needles if needle not in block]
+    return Check(name=name, passed=not missing, detail=f"missing={missing}")
+
+
 def _run_expected(label: str, args: list[str], expected_code: int) -> Check:
     proc = subprocess.run(args, cwd=REPO, text=True, capture_output=True, check=False)
     summary = ""
@@ -74,7 +92,7 @@ def _candidate_command() -> list[str]:
         "python",
         "sim_scripts/p7_branch_b_cube2cm_runtime_jaw_telemetry_probe.py",
         "--variant",
-        "v7",
+        "v8",
         "--robot_usd_path",
         V7_D024_USD,
         "--object_size_m",
@@ -85,7 +103,7 @@ def _candidate_command() -> list[str]:
         "26.0",
         "--log_every_close_step",
         "1",
-        "--target_guarded_micro_close_v7_active_recovery_diagnostic",
+        "--target_guarded_micro_close_v8_observed_recovery_diagnostic",
     ]
 
 
@@ -104,7 +122,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--future_stdout_log",
-        default="/tmp/p7_branch_b_cube2cm_target_guarded_micro_close_v7_active_recovery_v7_close26.out",
+            default="/tmp/p7_branch_b_cube2cm_target_guarded_micro_close_v8_observed_recovery_v8_close26.out",
     )
     args = ap.parse_args()
 
@@ -123,6 +141,7 @@ def main() -> int:
                 "--target_guarded_micro_close_v5_preemptive_recovery_diagnostic",
                 "--target_guarded_micro_close_v6_projected_guard_diagnostic",
                 "--target_guarded_micro_close_v7_active_recovery_diagnostic",
+                "--target_guarded_micro_close_v8_observed_recovery_diagnostic",
                 "target_guarded_micro_close_support_horizon_diagnostic=",
                 "target_guarded_micro_close_v2_convergence_diagnostic=",
                 "target_guarded_micro_close_v3_progress_diagnostic=",
@@ -130,6 +149,7 @@ def main() -> int:
                 "target_guarded_micro_close_v5_preemptive_recovery_diagnostic=",
                 "target_guarded_micro_close_v6_projected_guard_diagnostic=",
                 "target_guarded_micro_close_v7_active_recovery_diagnostic=",
+                "target_guarded_micro_close_v8_observed_recovery_diagnostic=",
                 "target_guarded_micro_close_support_horizon",
                 "target_guarded_close_advance",
                 "target_guarded_close_advances_total",
@@ -161,11 +181,19 @@ def main() -> int:
                 "v7_recovery_uses_current_object_pose=YES",
                 "v7_object_posewrite=NO",
                 "v7_recovery_writes_robot_joint_targets_only=YES",
+                "v8_projected_reserve_trigger=YES",
+                "v8_observed_response_audit=POSTHOC_ONLY",
+                "v8_candidate_counter_contact_required=YES",
+                "v8_object_posewrite=NO",
+                "v8_recovery_writes_robot_joint_targets_only=YES",
                 "target_guarded_v7_active_recovery_needed",
                 "target_guarded_v7_active_recovery",
                 "target_guarded_v7_recovery_ik_ok",
                 "target_guarded_v7_candidate_count",
                 "target_guarded_v7_counter_gap_delta_m",
+                "target_guarded_v7_candidate_counter_contact",
+                "target_guarded_v7_candidate_counter_slop_contact",
+                "target_guarded_v8_projected_reserve_trigger",
                 "target_guarded_v7_active_recovery_writes_total",
                 "target_guarded_v7_recovery_ik_failures_total",
                 "support_horizon_active",
@@ -198,6 +226,7 @@ def main() -> int:
                 "target_guarded_micro_close_v5_preemptive_recovery_diagnostic_enabled",
                 "target_guarded_micro_close_v6_projected_guard_diagnostic_enabled",
                 "target_guarded_micro_close_v7_active_recovery_diagnostic_enabled",
+                "target_guarded_micro_close_v8_observed_recovery_diagnostic_enabled",
                 "target_guarded_close_advances_positive",
                 "target_guarded_command_backlog_step3_within_gate",
                 "target_guarded_v2_zero_backlog_on_every_hold",
@@ -217,17 +246,36 @@ def main() -> int:
                 "target_guarded_v7_active_recovery_trigger_seen",
                 "target_guarded_v7_active_recovery_reduces_counter_gap",
                 "target_guarded_v7_active_recovery_selected_margins_valid",
+                "target_guarded_v8_projected_reserve_trigger_seen",
+                "target_guarded_v8_observed_response_not_worsening_both",
+                "target_guarded_v8_active_recovery_tcp_follow_positive",
+                "target_guarded_v8_candidate_counter_contact_modeled",
                 "target_guarded_v4_all_close_target_within_fixed_gate",
                 "support_horizon_step5",
                 "--use_synthetic_virtual_no_damping_reference",
                 "--use_synthetic_v3_zero_backlog_reference",
                 "--use_synthetic_v4_hard_freeze_reference",
                 "--use_synthetic_v7_no_active_recovery_reference",
+                "--use_synthetic_v8_worsening_response_reference",
+                "--use_synthetic_v8_no_tcp_follow_reference",
+                "--use_synthetic_v8_no_counter_contact_reference",
                 "SOFT_CONTACT_RUNTIME_CRITERIA_PASS=",
             ),
         ),
+        _contains_in_block(
+            "runtime_probe_v8_inherits_virtual_damping_active",
+            runtime_source,
+            "virtual_damping_active = bool(",
+            "target_guarded_v5_preemptive_recovery_needed = False",
+            (
+                "args.target_guarded_micro_close_v7_active_recovery_diagnostic",
+                "args.target_guarded_micro_close_v8_observed_recovery_diagnostic",
+                "step_idx >= int(args.virtual_damping_start_close_step)",
+                "write_root_velocity_to_sim",
+            ),
+        ),
         _run_expected(
-            "criteria_audit_rejects_archived_v6_runtime_as_v7",
+            "criteria_audit_rejects_archived_v6_runtime_as_v8",
             [
                 sys.executable,
                 str(CRITERIA_AUDIT),
@@ -255,7 +303,7 @@ def main() -> int:
             1,
         ),
         _run_expected(
-            "criteria_audit_rejects_v3_zero_backlog_reference_as_v7",
+            "criteria_audit_rejects_v3_zero_backlog_reference_as_v8",
             [
                 sys.executable,
                 str(CRITERIA_AUDIT),
@@ -288,6 +336,39 @@ def main() -> int:
             1,
         ),
         _run_expected(
+            "criteria_audit_rejects_v8_worsening_response_reference",
+            [
+                sys.executable,
+                str(CRITERIA_AUDIT),
+                "--use_synthetic_v8_worsening_response_reference",
+                "--expected_mechanism",
+                EXPECTED_MECHANISM,
+            ],
+            1,
+        ),
+        _run_expected(
+            "criteria_audit_rejects_v8_no_tcp_follow_reference",
+            [
+                sys.executable,
+                str(CRITERIA_AUDIT),
+                "--use_synthetic_v8_no_tcp_follow_reference",
+                "--expected_mechanism",
+                EXPECTED_MECHANISM,
+            ],
+            1,
+        ),
+        _run_expected(
+            "criteria_audit_rejects_v8_no_counter_contact_reference",
+            [
+                sys.executable,
+                str(CRITERIA_AUDIT),
+                "--use_synthetic_v8_no_counter_contact_reference",
+                "--expected_mechanism",
+                EXPECTED_MECHANISM,
+            ],
+            1,
+        ),
+        _run_expected(
             "criteria_audit_accepts_synthetic_pass_reference",
             [
                 sys.executable,
@@ -306,10 +387,10 @@ def main() -> int:
         item in command
         for item in (
             "--variant",
-            "v7",
+            "v8",
             "--close_deg",
             "26.0",
-            "--target_guarded_micro_close_v7_active_recovery_diagnostic",
+            "--target_guarded_micro_close_v8_observed_recovery_diagnostic",
         )
     )
     checks.append(
@@ -317,7 +398,7 @@ def main() -> int:
             name="future_candidate_command_has_required_flags",
             passed=command_has_required_flags,
             detail=(
-                "requires variant=v7, close_deg=26.0, and target-guarded v7 active recovery flag; "
+                "requires variant=v8, close_deg=26.0, and target-guarded v8 observed recovery flag; "
                 f"archived v6 runtime stdout_md5={OLD_V6_RUNTIME_MD5}"
             ),
         )
@@ -346,7 +427,7 @@ def main() -> int:
     )
     print(
         "[cube2cm_soft_contact_runtime_readiness] "
-        "future_runtime_command_status=V7_REQUIRES_SEPARATE_RUNTIME_APPROVAL",
+        "future_runtime_command_status=V8_REQUIRES_SEPARATE_RUNTIME_APPROVAL",
         flush=True,
     )
     print(

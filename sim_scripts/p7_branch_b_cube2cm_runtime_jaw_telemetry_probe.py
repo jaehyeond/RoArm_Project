@@ -94,6 +94,8 @@ TARGET_GUARDED_V5_RECOVERY_MAX_TCP_STEP_M = 0.0015
 TARGET_GUARDED_V7_ACTIVE_RECOVERY_SWEEP_STEP_M = 0.0005
 TARGET_GUARDED_V7_ACTIVE_RECOVERY_MAX_TCP_STEP_M = 0.0015
 TARGET_GUARDED_V7_ACTIVE_RECOVERY_MIN_GAP_IMPROVEMENT_M = 0.00002
+TARGET_GUARDED_V8_PROJECTED_TARGET_RESERVE_M = 0.00080
+TARGET_GUARDED_V8_PROJECTED_SUPPORT_RESERVE_M = 0.00040
 
 FUTURE_CLOSE26_PUSH_SPEED_GATE_MPS = 0.005
 FUTURE_CLOSE26_TARGET_ERROR_GATE_M = 0.003
@@ -134,6 +136,8 @@ class V7ActiveRecoveryDecision:
     target_margin_m: float
     support_margin_m: float
     counter_gap_delta_m: float
+    counter_contact: bool
+    counter_slop_contact: bool
     step_m: float
     ik_ok: bool
 
@@ -171,6 +175,8 @@ def _object_physics_params(args: argparse.Namespace) -> ObjectPhysicsParams:
 
 
 def _runtime_candidate_mode(args: argparse.Namespace) -> str:
+    if args.target_guarded_micro_close_v8_observed_recovery_diagnostic:
+        return "target_guarded_micro_close_v8_observed_recovery_diagnostic"
     if args.target_guarded_micro_close_v7_active_recovery_diagnostic:
         return "target_guarded_micro_close_v7_active_recovery_diagnostic"
     if args.target_guarded_micro_close_v6_projected_guard_diagnostic:
@@ -203,6 +209,7 @@ def _runtime_candidate_requires_separate_approval(args: argparse.Namespace) -> b
         or args.target_guarded_micro_close_v5_preemptive_recovery_diagnostic
         or args.target_guarded_micro_close_v6_projected_guard_diagnostic
         or args.target_guarded_micro_close_v7_active_recovery_diagnostic
+        or args.target_guarded_micro_close_v8_observed_recovery_diagnostic
     )
 
 
@@ -314,6 +321,8 @@ def _v7_active_recovery_decision(
             slop_m=float(args.counter_contact_slop_m),
         )
         counter_gap_max = float(np.max(np.asarray(counter["gap_obj"], dtype=np.float64)))
+        counter_contact = bool(counter["contact"])
+        counter_slop_contact = bool(counter["slop_contact"])
         target_error = _norm(candidate_tcp - target_tcp)
         target_margin = FUTURE_CLOSE26_TARGET_ERROR_GATE_M - target_error
         support_margin = FUTURE_CLOSE26_COUNTER_SUPPORT_BUDGET_M - counter_gap_max
@@ -322,7 +331,17 @@ def _v7_active_recovery_decision(
             continue
         if counter_gap_delta > -min_gap_improvement:
             continue
-        score = min(target_margin, support_margin) - 0.10 * step_m - 0.25 * max(0.0, counter_gap_delta)
+        if args.target_guarded_micro_close_v8_observed_recovery_diagnostic and not (
+            counter_contact or counter_slop_contact
+        ):
+            continue
+        score = (
+            min(target_margin, support_margin)
+            - 0.10 * step_m
+            - 0.25 * max(0.0, counter_gap_delta)
+            + (0.00025 if counter_contact else 0.0)
+            + (0.00010 if counter_slop_contact else 0.0)
+        )
         q_deg, ik_ok, ik_err_mm = _solve_q(candidate_tcp, q_actual_deg, commanded_gripper_deg, args)
         ik_pass = bool(ik_ok and ik_err_mm <= float(args.ik_tol_mm))
         decision = V7ActiveRecoveryDecision(
@@ -334,6 +353,8 @@ def _v7_active_recovery_decision(
             target_margin_m=target_margin,
             support_margin_m=support_margin,
             counter_gap_delta_m=counter_gap_delta,
+            counter_contact=counter_contact,
+            counter_slop_contact=counter_slop_contact,
             step_m=step_m,
             ik_ok=ik_pass,
         )
@@ -350,6 +371,8 @@ def _v7_active_recovery_decision(
             target_margin_m=FUTURE_CLOSE26_TARGET_ERROR_GATE_M - _norm(current_tcp - target_tcp),
             support_margin_m=FUTURE_CLOSE26_COUNTER_SUPPORT_BUDGET_M - current_counter_gap_max_m,
             counter_gap_delta_m=0.0,
+            counter_contact=False,
+            counter_slop_contact=False,
             step_m=0.0,
             ik_ok=False,
         )
@@ -422,7 +445,7 @@ def _jaw_geometry(args: argparse.Namespace, plan) -> JawGeometry:
         counter_world = plan.center + rot @ counter_obj
         design_moving_ref = moving_obj
         design_counter_ref = counter_obj
-    elif args.variant == "v7":
+    elif args.variant in ("v7", "v8"):
         cube_half_y = object_size[1] * 0.5
         moving_obj = np.array(
             [
@@ -498,7 +521,7 @@ def _apply_variant_defaults(args: argparse.Namespace) -> None:
         args.normalized_grasp = [0.150, -0.150, 0.500]
     if args.normalized_grasp is None and args.variant == "v6":
         args.normalized_grasp = [0.000, 0.000, 0.500]
-    if args.normalized_grasp is None and args.variant == "v7":
+    if args.normalized_grasp is None and args.variant in ("v7", "v8"):
         args.normalized_grasp = [0.000, 0.000, 0.500]
     if args.variant == "v6":
         if np.allclose(args.object_size_m, [0.020, 0.020, 0.020], atol=1.0e-12):
@@ -507,7 +530,7 @@ def _apply_variant_defaults(args: argparse.Namespace) -> None:
             args.counter_jaw_size_m = [0.004, 0.0050, 0.008]
         if abs(float(args.jaw_center_z_m) - 0.012) <= 1.0e-12:
             args.jaw_center_z_m = 0.017
-    if args.variant == "v7":
+    if args.variant in ("v7", "v8"):
         if np.allclose(args.object_size_m, [0.020, 0.020, 0.020], atol=1.0e-12):
             args.object_size_m = [0.030, 0.030, 0.030]
         if np.allclose(args.counter_jaw_size_m, [0.004, 0.0015, 0.008], atol=1.0e-12):
@@ -523,7 +546,7 @@ def _apply_variant_defaults(args: argparse.Namespace) -> None:
             args.robot_usd_path = V5_USD_PATH
         elif args.variant == "v6":
             args.robot_usd_path = V6_USD_PATH
-        elif args.variant == "v7":
+        elif args.variant in ("v7", "v8"):
             args.robot_usd_path = V7_USD_PATH
         else:
             args.robot_usd_path = V4_USD_PATH
@@ -531,7 +554,7 @@ def _apply_variant_defaults(args: argparse.Namespace) -> None:
 
 def _parse_args() -> argparse.Namespace:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--variant", choices=["v4", "v5", "v6", "v7"], default="v5")
+    ap.add_argument("--variant", choices=["v4", "v5", "v6", "v7", "v8"], default="v5")
     ap.add_argument("--robot_usd_path", default=None)
     ap.add_argument("--object_size_m", nargs=3, type=float, default=[0.020, 0.020, 0.020])
     ap.add_argument("--object_mass_kg", type=float, default=0.02)
@@ -629,6 +652,14 @@ def _parse_args() -> argparse.Namespace:
             "active recovery after a projected target/support block."
         ),
     )
+    ap.add_argument(
+        "--target_guarded_micro_close_v8_observed_recovery_diagnostic",
+        action="store_true",
+        help=(
+            "Default-off target-guarded v8 candidate with earlier projected-reserve "
+            "triggering and posthoc observed-response audit requirements."
+        ),
+    )
     ap.add_argument("--virtual_compression_budget_m", type=float, default=VIRTUAL_COMPRESSION_BUDGET_M)
     ap.add_argument(
         "--virtual_max_plausible_compression_m",
@@ -716,6 +747,16 @@ def _parse_args() -> argparse.Namespace:
         type=float,
         default=TARGET_GUARDED_V7_ACTIVE_RECOVERY_MIN_GAP_IMPROVEMENT_M,
     )
+    ap.add_argument(
+        "--target_guarded_v8_projected_target_reserve_m",
+        type=float,
+        default=TARGET_GUARDED_V8_PROJECTED_TARGET_RESERVE_M,
+    )
+    ap.add_argument(
+        "--target_guarded_v8_projected_support_reserve_m",
+        type=float,
+        default=TARGET_GUARDED_V8_PROJECTED_SUPPORT_RESERVE_M,
+    )
     args = ap.parse_args()
     _apply_variant_defaults(args)
 
@@ -740,6 +781,7 @@ def _parse_args() -> argparse.Namespace:
         args.target_guarded_micro_close_v5_preemptive_recovery_diagnostic,
         args.target_guarded_micro_close_v6_projected_guard_diagnostic,
         args.target_guarded_micro_close_v7_active_recovery_diagnostic,
+        args.target_guarded_micro_close_v8_observed_recovery_diagnostic,
     ]
     if sum(bool(flag) for flag in enabled_candidate_flags) > 1:
         raise ValueError("choose only one runtime candidate diagnostic flag")
@@ -781,6 +823,10 @@ def _parse_args() -> argparse.Namespace:
         raise ValueError("target_guarded_v7_active_recovery_max_tcp_step_m must be >= sweep step")
     if args.target_guarded_v7_active_recovery_min_gap_improvement_m < 0.0:
         raise ValueError("target_guarded_v7_active_recovery_min_gap_improvement_m must be non-negative")
+    if args.target_guarded_v8_projected_target_reserve_m < 0.0:
+        raise ValueError("target_guarded_v8_projected_target_reserve_m must be non-negative")
+    if args.target_guarded_v8_projected_support_reserve_m < 0.0:
+        raise ValueError("target_guarded_v8_projected_support_reserve_m must be non-negative")
     return args
 
 
@@ -827,6 +873,8 @@ def main() -> int:
         f"{'YES' if args.target_guarded_micro_close_v6_projected_guard_diagnostic else 'NO'} "
         f"target_guarded_micro_close_v7_active_recovery_diagnostic="
         f"{'YES' if args.target_guarded_micro_close_v7_active_recovery_diagnostic else 'NO'} "
+        f"target_guarded_micro_close_v8_observed_recovery_diagnostic="
+        f"{'YES' if args.target_guarded_micro_close_v8_observed_recovery_diagnostic else 'NO'} "
         "hidden_kinematic_posewrite_allowed=NO claim_p7_success=NO",
         flush=True,
     )
@@ -877,6 +925,8 @@ def main() -> int:
         f"{'YES' if args.target_guarded_micro_close_v6_projected_guard_diagnostic else 'NO'} "
         f"v7_active_recovery_enabled="
         f"{'YES' if args.target_guarded_micro_close_v7_active_recovery_diagnostic else 'NO'} "
+        f"v8_observed_recovery_enabled="
+        f"{'YES' if args.target_guarded_micro_close_v8_observed_recovery_diagnostic else 'NO'} "
         f"command_error_gate_deg={args.target_guarded_command_error_gate_deg:.6f} "
         f"advance_counter_support_margin_m={args.target_guarded_advance_counter_support_margin_m:.6f} "
         f"target_error_growth_tolerance_m={args.target_guarded_target_error_growth_tolerance_m:.6f} "
@@ -891,6 +941,8 @@ def main() -> int:
         f"v7_active_recovery_max_tcp_step_m={args.target_guarded_v7_active_recovery_max_tcp_step_m:.6f} "
         f"v7_active_recovery_min_gap_improvement_m="
         f"{args.target_guarded_v7_active_recovery_min_gap_improvement_m:.6f} "
+        f"v8_projected_target_reserve_m={args.target_guarded_v8_projected_target_reserve_m:.6f} "
+        f"v8_projected_support_reserve_m={args.target_guarded_v8_projected_support_reserve_m:.6f} "
         f"zero_backlog_hold={'YES' if args.target_guarded_micro_close_v2_convergence_diagnostic else 'NO'} "
         "advance_requires_command_convergence=YES "
         "advance_requires_support_margin=YES advance_requires_nonworsening_target_error=YES "
@@ -907,6 +959,9 @@ def main() -> int:
         "v7_active_recovery_after_projected_block=YES "
         "v7_finite_difference_tcp_sweep=YES v7_recovery_uses_current_object_pose=YES "
         "v7_object_posewrite=NO v7_recovery_writes_robot_joint_targets_only=YES "
+        "v8_projected_reserve_trigger=YES v8_observed_response_audit=POSTHOC_ONLY "
+        "v8_candidate_counter_contact_required=YES "
+        "v8_object_posewrite=NO v8_recovery_writes_robot_joint_targets_only=YES "
         "support_horizon_uses_max_plausible_compression=YES "
         "close_command_writes=YES posewrite=NO constraints=NO surface_gripper=NO",
         flush=True,
@@ -1094,6 +1149,7 @@ def main() -> int:
                 args.target_guarded_micro_close_v5_preemptive_recovery_diagnostic
                 or args.target_guarded_micro_close_v6_projected_guard_diagnostic
                 or args.target_guarded_micro_close_v7_active_recovery_diagnostic
+                or args.target_guarded_micro_close_v8_observed_recovery_diagnostic
             )
             and phase == "close"
         )
@@ -1101,11 +1157,19 @@ def main() -> int:
             (
                 args.target_guarded_micro_close_v6_projected_guard_diagnostic
                 or args.target_guarded_micro_close_v7_active_recovery_diagnostic
+                or args.target_guarded_micro_close_v8_observed_recovery_diagnostic
             )
             and phase == "close"
         )
         target_guarded_v7_active = bool(
-            args.target_guarded_micro_close_v7_active_recovery_diagnostic and phase == "close"
+            (
+                args.target_guarded_micro_close_v7_active_recovery_diagnostic
+                or args.target_guarded_micro_close_v8_observed_recovery_diagnostic
+            )
+            and phase == "close"
+        )
+        target_guarded_v8_active = bool(
+            args.target_guarded_micro_close_v8_observed_recovery_diagnostic and phase == "close"
         )
         target_guarded_close_active = bool(
             (
@@ -1116,6 +1180,7 @@ def main() -> int:
                 or args.target_guarded_micro_close_v5_preemptive_recovery_diagnostic
                 or args.target_guarded_micro_close_v6_projected_guard_diagnostic
                 or args.target_guarded_micro_close_v7_active_recovery_diagnostic
+                or args.target_guarded_micro_close_v8_observed_recovery_diagnostic
             )
             and phase == "close"
         )
@@ -1197,6 +1262,7 @@ def main() -> int:
                     or args.target_guarded_micro_close_v5_preemptive_recovery_diagnostic
                     or args.target_guarded_micro_close_v6_projected_guard_diagnostic
                     or args.target_guarded_micro_close_v7_active_recovery_diagnostic
+                    or args.target_guarded_micro_close_v8_observed_recovery_diagnostic
                 )
                 and phase == "close"
                 and step_idx >= int(args.virtual_damping_start_close_step)
@@ -1252,8 +1318,11 @@ def main() -> int:
             target_guarded_v7_best_target_margin_m = target_guarded_v5_target_margin_m
             target_guarded_v7_best_support_margin_m = target_guarded_v5_support_margin_m
             target_guarded_v7_counter_gap_delta_m = 0.0
+            target_guarded_v7_candidate_counter_contact = False
+            target_guarded_v7_candidate_counter_slop_contact = False
             target_guarded_v7_recovery_tcp = np.asarray(target_tcp, dtype=np.float64)
             target_guarded_v7_recovery_step_m = 0.0
+            target_guarded_v8_projected_reserve_trigger = False
             target_guarded_v6_projected_target_margin_m = target_guarded_v5_target_margin_m
             target_guarded_v6_projected_support_margin_m = target_guarded_v5_support_margin_m
             target_guarded_v6_projected_advance_ok = True
@@ -1354,6 +1423,16 @@ def main() -> int:
                                     and target_guarded_v6_projected_support_margin_m >= 0.0
                                 )
                             )
+                            target_guarded_v8_projected_reserve_trigger = bool(
+                                target_guarded_v8_active
+                                and target_guarded_v4_hard_safety_ok
+                                and (
+                                    target_guarded_v6_projected_target_margin_m
+                                    <= float(args.target_guarded_v8_projected_target_reserve_m)
+                                    or target_guarded_v6_projected_support_margin_m
+                                    <= float(args.target_guarded_v8_projected_support_reserve_m)
+                                )
+                            )
                             target_guarded_v5_preemptive_recovery_needed = bool(
                                 target_guarded_v5_active
                                 and target_guarded_v4_hard_safety_ok
@@ -1366,6 +1445,7 @@ def main() -> int:
                                         target_guarded_v6_active
                                         and not target_guarded_v6_projected_advance_ok
                                     )
+                                    or target_guarded_v8_projected_reserve_trigger
                                 )
                             )
                             target_guarded_v4_recovery_ready = (
@@ -1434,6 +1514,8 @@ def main() -> int:
                                             target_guarded_v7_best_target_margin_m = decision.target_margin_m
                                             target_guarded_v7_best_support_margin_m = decision.support_margin_m
                                             target_guarded_v7_counter_gap_delta_m = decision.counter_gap_delta_m
+                                            target_guarded_v7_candidate_counter_contact = decision.counter_contact
+                                            target_guarded_v7_candidate_counter_slop_contact = decision.counter_slop_contact
                                             target_guarded_v7_recovery_tcp = decision.tcp
                                             target_guarded_v7_recovery_step_m = decision.step_m
                                             target_guarded_v7_recovery_ik_ok = decision.ik_ok
@@ -1570,7 +1652,14 @@ def main() -> int:
                         "target_guarded_v7_best_target_margin_m": target_guarded_v7_best_target_margin_m,
                         "target_guarded_v7_best_support_margin_m": target_guarded_v7_best_support_margin_m,
                         "target_guarded_v7_counter_gap_delta_m": target_guarded_v7_counter_gap_delta_m,
+                        "target_guarded_v7_candidate_counter_contact": (
+                            target_guarded_v7_candidate_counter_contact
+                        ),
+                        "target_guarded_v7_candidate_counter_slop_contact": (
+                            target_guarded_v7_candidate_counter_slop_contact
+                        ),
                         "target_guarded_v7_recovery_step_m": target_guarded_v7_recovery_step_m,
+                        "target_guarded_v8_projected_reserve_trigger": target_guarded_v8_projected_reserve_trigger,
                         "target_guarded_v6_projected_target_margin_m": (
                             target_guarded_v6_projected_target_margin_m
                         ),
@@ -1678,8 +1767,14 @@ def main() -> int:
                     f"{target_guarded_v7_best_support_margin_m:.6f} "
                     f"target_guarded_v7_counter_gap_delta_m="
                     f"{target_guarded_v7_counter_gap_delta_m:.6f} "
+                    f"target_guarded_v7_candidate_counter_contact="
+                    f"{_yes(target_guarded_v7_candidate_counter_contact)} "
+                    f"target_guarded_v7_candidate_counter_slop_contact="
+                    f"{_yes(target_guarded_v7_candidate_counter_slop_contact)} "
                     f"target_guarded_v7_recovery_tcp={_fmt_xyz(target_guarded_v7_recovery_tcp)} "
                     f"target_guarded_v7_recovery_step_m={target_guarded_v7_recovery_step_m:.6f} "
+                    f"target_guarded_v8_projected_reserve_trigger="
+                    f"{_yes(target_guarded_v8_projected_reserve_trigger)} "
                     f"target_guarded_v6_projected_target_margin_m="
                     f"{target_guarded_v6_projected_target_margin_m:.6f} "
                     f"target_guarded_v6_projected_support_margin_m="
@@ -1861,6 +1956,7 @@ def main() -> int:
             args.target_guarded_micro_close_v5_preemptive_recovery_diagnostic
             or args.target_guarded_micro_close_v6_projected_guard_diagnostic
             or args.target_guarded_micro_close_v7_active_recovery_diagnostic
+            or args.target_guarded_micro_close_v8_observed_recovery_diagnostic
         ):
             v5_no_safety_rollbacks = target_guard_stats["safety_rollbacks"] == 0
             v5_no_hard_safety_freezes = target_guard_stats["v4_hard_safety_freezes"] == 0
@@ -1873,7 +1969,10 @@ def main() -> int:
                 and v5_preemptive_recovery_reported
                 and v5_recovery_ik_ok
             )
-        if args.target_guarded_micro_close_v7_active_recovery_diagnostic:
+        if (
+            args.target_guarded_micro_close_v7_active_recovery_diagnostic
+            or args.target_guarded_micro_close_v8_observed_recovery_diagnostic
+        ):
             v7_active_recovery_reported = target_guard_stats["v7_active_recovery_writes"] > 0
             v7_recovery_ik_ok = target_guard_stats["v7_recovery_ik_failures"] == 0
             target_guarded_micro_close_ok = bool(
@@ -1924,6 +2023,8 @@ def main() -> int:
         f"{_yes(args.target_guarded_micro_close_v6_projected_guard_diagnostic)} "
         f"target_guarded_micro_close_v7_active_recovery_diagnostic="
         f"{_yes(args.target_guarded_micro_close_v7_active_recovery_diagnostic)} "
+        f"target_guarded_micro_close_v8_observed_recovery_diagnostic="
+        f"{_yes(args.target_guarded_micro_close_v8_observed_recovery_diagnostic)} "
         f"step5_counter_gap_max_m={(float(step5['counter_gap_max_m']) if step5 is not None else float('nan')):.6f} "
         f"support_horizon_step5={_yes(support_horizon_step5)} "
         f"virtual_velocity_damping_writes={virtual_stats['velocity_damping_writes']} "

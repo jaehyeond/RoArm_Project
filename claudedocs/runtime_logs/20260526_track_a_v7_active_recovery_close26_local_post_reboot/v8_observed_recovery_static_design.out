@@ -1,0 +1,28 @@
+RUNTIME_MD5=621d00b9d157b4e70178c28f94ca4c7f expected=621d00b9d157b4e70178c28f94ca4c7f ok=YES
+ANALYSIS_MD5=0fbf57f32473fa253ee1082b888bdcb1 expected=0fbf57f32473fa253ee1082b888bdcb1 ok=YES
+FIRST_PROJECTED_RESERVE_TRIGGER line=386 step=009 target_margin=+0.001750 support_margin=+0.000990 projected_target_margin=+0.000784 projected_support_margin=+0.000373 v7_active=NO hard_freeze=NO moving_contact=YES counter_contact=NO counter_slop_contact=NO virtual_support=YES
+FIRST_V7_ACTIVE line=389 step=012 target_margin=+0.000599 support_margin=+0.000312 projected_target_margin=-0.000135 projected_support_margin=-0.000113 v7_active=YES hard_freeze=NO moving_contact=YES counter_contact=NO counter_slop_contact=NO virtual_support=YES
+FIRST_SUPPORT_BREACH line=392 step=015 target_margin=+0.000038 support_margin=-0.000048 projected_target_margin=-0.000434 projected_support_margin=-0.000347 v7_active=NO hard_freeze=YES moving_contact=YES counter_contact=NO counter_slop_contact=NO virtual_support=NO
+FIRST_HARD_FREEZE line=392 step=015 target_margin=+0.000038 support_margin=-0.000048 projected_target_margin=-0.000434 projected_support_margin=-0.000347 v7_active=NO hard_freeze=YES moving_contact=YES counter_contact=NO counter_slop_contact=NO virtual_support=NO
+EARLY_TRIGGER_CROSSCHECK reserve_before_v7_steps=3 reserve_before_support_breach_steps=6 min_before_v7=2 min_before_support=5
+OBSERVED_RESPONSE_REJECTS_UNCHANGED_V7:
+  line=389->line=390 step=012->013 target_delta=+0.000249 gap_delta=+0.000159 follow_ratio=-0.164 response_ok=NO follow_ok=NO
+  line=390->line=391 step=013->014 target_delta=+0.000177 gap_delta=+0.000116 follow_ratio=-0.117 response_ok=NO follow_ok=NO
+  line=391->line=392 step=014->015 target_delta=+0.000135 gap_delta=+0.000085 follow_ratio=-0.089 response_ok=NO follow_ok=NO
+V8_STATIC_CHECKS:
+  inputs_md5_verified=YES
+  earlier_projected_reserve_trigger=YES
+  reserve_horizon_before_support_breach=YES
+  unchanged_v7_rejected_by_observed_response=YES
+  unchanged_v7_rejected_by_tcp_follow=YES
+  counter_contact_geometry_must_be_modeled=YES
+  fixed_gates_preserved=YES
+  forbidden_mechanisms_forbidden=YES
+V8_DESIGN_CONTRACT:
+  trigger=projected_target_margin<=0.000800 OR projected_support_margin<=0.000400 while hard_safety_ok
+  recovery=observed_response_tracked multi_step; do not treat selected candidate margin as success
+  audit=new v8 checks must reject active rows whose next row worsens both target/support or whose TCP follow ratio <= 0
+  geometry=score/telemetry must include counter_contact or counter_slop_contact restoration, not only max counter-gap reduction
+  forbidden=no attach, no object posewrite, no constraints, no SurfaceGripper, no fixed-gate tuning, no zero-backlog holds, no safety rollbacks
+RUNTIME_READY=NO
+STATIC_V8_DESIGN_DONE=YES
