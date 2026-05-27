@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-05-26 KST (B200 disconnected; Track A v6/v7 close_26 FAIL; first approved v8 close_26 runtime also FAIL; post-fail v8 virtual-damping wiring fix is static-ready only; no post-fix v8 runtime has run; dataset/training still blocked)
+Last updated: 2026-05-27 KST (B200 disconnected; Track A v6/v7 close_26 FAIL; first approved v8 close_26 runtime also FAIL; post-fail v8 virtual-damping wiring fix is static-ready only; no post-fix v8 runtime has run; professor cube3cm push/tap 20,480-trial scripted rollout complete; separate no-attach cube-push PPO reward/curriculum tested through 1k frozen eval but impact remains too high for 10k/100k scaling; professor branch IsaacLab built-in Differential IK cube-push 1024 eval complete; Track A dataset/training still blocked)
 
 This is the rolling current-state dashboard. It is not full history. Durable
 rules live in `claudedocs/DECISIONS.md`; experiment history lives in
@@ -39,6 +39,71 @@ Do **not** use `HANDOFF.md` or `TASKS.md` as current state.
 
 **Track A active line**: P7/Branch B normalized 3cm cube grasp primitive.
 
+- **Urgent professor push/tap branch (2026-05-26)** is separate from Track A
+  grasp. Added `sim_scripts/cube3cm_push_rollout_probe.py` md5
+  `8d329b79106e7ca2c03fa91b7ac87170` and ran local IsaacLab 3cm cube push/tap
+  scripted rollouts at 16, 1024, 5120, and 20480 trials. The 20480 run lives in
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/`.
+  Runtime stdout md5 `2aad344f08f95c880e43bc0d7f655998`; summary md5
+  `5c9278450b5531afb7b0ca2a1fed46ee`; per-env CSV md5
+  `4c2864301bea8e2ae798a8f77adf23ab`; audit md5
+  `3e0096ba54e7cc0ec0e55b1b26a50b8e`. Runtime line 20 confirms no grasp,
+  no attach/object posewrite, no training, no dataset; line 21 confirms 6D
+  normalized joint-delta action semantics. Line 42 reports
+  `total_trials=20480`, `ik_ok_rate=1.0000`, `disp_xy_mean_m=0.031809`,
+  `disp_xy_p95_m=0.089702`, `moved_5mm_rate=0.8774`,
+  `push_positive_1mm_rate=0.9086`, zero action saturation, zero grasp/attach/
+  posewrite. Audit lines 5-21 show important caveats: low-motion rate
+  `0.073340`, direction asymmetry, and high-speed/outlier impacts up to
+  `0.521036748m` displacement and `4.549609073m/s`.
+- **Professor cube-push learned-policy follow-up (2026-05-26)**: added a separate
+  no-attach cube-push RL env/entry/eval path, not Track A grasp. Current
+  `roarm_rl/roarm_cube_push_env.py` md5 `34254ac2fc3ede7a7844bd434fc9781d`;
+  `train_cube_push_ppo.py` md5 `6dd733710ae3ec1e69cf8ad9e944948b`;
+  `eval_cube_push_policy.py` md5 `bec3214d391862e4196d221775f4477d`.
+  Static audit line 37 PASS and eval override check line 22 PASS. V4
+  action-smoothed/velocity-limited policy improved frozen 1k impact from the
+  speed-guard baseline but still had impact `0.245576787`
+  (`ppo_smooth_limit_model49_eval1024_audit.out:3-17`). V5 scripted-teacher
+  warm-start improved training logs, but teacher-off frozen 1k eval regressed to
+  impact `0.257686676` and clean success `0.095168375`
+  (`ppo_teacher_warmstart_model49_eval1024_audit.out:3-17`). V6 policy-only
+  contact-speed curriculum reduced frozen 1k impact to `0.153782895`, but clean
+  success was only `0.110197368`, so verdict remains
+  `CONTACT_SPEED_MODEL49_EVAL_IMPROVED_BUT_NO_10K`
+  (`ppo_contact_speed_model49_eval1024_audit.out:3-18`). Teacher-on diagnostic
+  was also weak/unsafe: impact `0.162448980`, clean success `0.067755102`,
+  verdict `TEACHER_ON_DIAGNOSTIC_UNSAFE_OR_WEAK_NOT_LEARNED_NO_10K`
+  (`ppo_contact_speed_teacher_on_eval1024_audit.out:3-18`). Therefore do **not**
+  run learned-policy 10k/100k scaling yet. The professor's "known endpoint
+  means use IK near the cube first" request should now be pursued more
+  literally with an **IsaacLab built-in DifferentialIKController** cube-push
+  probe: provide end-effector/TCP targets near the cube, let IsaacLab compute
+  joint targets from the live Jacobian, then audit physics push/tap results.
+  The existing RoArm `ik_dls` path is valid IK evidence but is not the same as
+  IsaacLab built-in Differential IK. Do this before any new learned-policy
+  10k/100k scaling or Track A runtime.
+- **Professor cube-push IsaacLab Differential IK follow-up (2026-05-27)**:
+  added `sim_scripts/cube3cm_push_diffik_probe.py` md5
+  `cbb2176a80ed2a2c55552d0d98bc9ab9`,
+  `cube3cm_push_diffik_audit.py` md5
+  `5ed85775e31f805f4d43885a1de80246`, and
+  `cube3cm_push_diffik_posthoc.py` md5
+  `6bfc8ea3eac942d0af4c8fc852738f0e`. The short 16-env smoke was a useful
+  negative: mechanism PASS but low-motion `1.000000000` and final TCP error
+  `0.161282191m` (`diffik_probe_smoke16_seed777_audit.out:1-6`). With longer
+  reach/horizon, 16-env reached controlled `0.937500000`, low-motion
+  `0.062500000`, impact `0` (`diffik_probe_reach16_seed778_audit.out:1-6`).
+  Frozen 1024 eval then ran headless with IsaacLab built-in
+  `DifferentialIKController`, no RoArm-local IK control loop, no grasp, no
+  attach/object posewrite, no training, and no dataset. Audit lines 1-6 report
+  mechanism PASS, controlled `0.892578125`, impact `0.023437500`,
+  low-motion `0.136718750`, `disp_xy_mean_m=0.034856980`, max speed
+  `1.931515932m/s`, and final TCP error mean `0.028779610m`.
+  Posthoc line 7 identifies weak direction `(1, 0)` with controlled
+  `0.633333333`; line 8 identifies worst initial-position grid `(1, 1)` by
+  low+impact. This is an IsaacLab scripted Differential IK physics result, not
+  PPO/VLA learning and not Track A grasp success.
 - Track A goal: first make the sim/Isaac Lab contact primitive reliable, then
   move toward broad sim/lab dataset collection and learning.
 - Dataset generation and training are blocked until close_26 proxy audit PASS,
@@ -372,12 +437,17 @@ Interpretation:
 ## Current Direction
 
 1. Do not rerun v2, v3, v4, v5, v6, or v7 unchanged.
-2. Do not run dataset generation, PPO/training, rollout, hold-lift,
+2. For the professor's immediate branch, brief the 20,480-trial push/tap rollout
+   as scripted physics statistics and robot-action logging. Separate no-attach
+   cube-push PPO now exists and has run through IK/clean/speed-guard 50-iter
+   variants plus frozen 1k evals, but learned-policy impact is still about
+   28-29%; do not scale to 10k/100k yet.
+3. Do not run Track A dataset generation, PPO/training, rollout, hold-lift,
    transport/release, constraints, SurfaceGripper, or gate tuning from this
    result.
-3. v7 active recovery is implemented and diagnostic telemetry works, but the
+4. v7 active recovery is implemented and diagnostic telemetry works, but the
    post-reboot close_26 audit FAILED. It is not grasp success.
-4. The first approved v8 runtime FAILED before recovery could trigger. Do not
+5. The first approved v8 runtime FAILED before recovery could trigger. Do not
    rerun that pre-fix v8 state. A post-fail static fix now makes v8 inherit
    virtual damping and reports `READY_FOR_SEPARATE_RUNTIME_APPROVAL=YES`, but
    this is not physics validation. The next valid Track A action is exactly one
@@ -385,12 +455,12 @@ Interpretation:
    immediately by v8 audit. In Codex, any future GPU/Isaac command still needs
    `sandbox_permissions=require_escalated` because the default sandbox hides
    `/dev/nvidia*` even though host CUDA is healthy.
-5. Runtime PASS is not enough for data; next gate is hold-lift.
-6. Dataset/training remain blocked until close_26 PASS + hold-lift PASS + small
+6. Runtime PASS is not enough for Track A data; next gate is hold-lift.
+7. Track A dataset/training remain blocked until close_26 PASS + hold-lift PASS + small
    pilot dataset/replay PASS. Then proceed: no-attach RL env → random sanity →
    PPO smoke → expert rollout → pilot dataset → replay/audit → large dataset →
    BC/VLA/IL training.
-7. Do not plan future work around B200 SSH. Use local backups plus local/RunPod
+8. Do not plan future work around B200 SSH. Use local backups plus local/RunPod
    GPUs. Any remote compute should start by rebuilding/verifying env and smoke
    tests from backed-up artifacts.
 
@@ -398,7 +468,7 @@ Interpretation:
 
 1. `CLAUDE.md`
 2. `START_HERE.md`
-3. `claudedocs/DECISIONS.md` D083-D096
+3. `claudedocs/DECISIONS.md` D083-D098
 4. `claudedocs/EXPERIMENT_LEDGER.md` latest rows
 5. `claudedocs/session_20260522_track_a_v6_projected_guard_runtime_fail.md`
 6. `claudedocs/session_20260522_track_a_contact_rl_stage0_preflight.md`
@@ -420,6 +490,12 @@ Interpretation:
 22. `sim_scripts/p7_branch_b_cube2cm_target_guarded_v8_observed_recovery_static_design.py`
 23. `claudedocs/session_20260526_track_a_v8_runtime_candidate_static_readiness.md`
 24. `claudedocs/session_20260526_track_a_v8_runtime_fail_and_damping_wiring_fix.md`
+25. `claudedocs/session_20260526_cube3cm_push_rollout_probe_professor_request.md`
+26. `sim_scripts/cube3cm_push_rollout_probe.py`
+27. `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/runtime.out`
+28. `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/rollout_stats_audit.out`
+29. `claudedocs/session_20260526_cube3cm_push_rl_reward_curriculum.md`
+30. `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_speed_guard_model49_eval1024_audit.out`
 
 ## Do Not Trust As Current
 
@@ -437,6 +513,10 @@ Interpretation:
 - Any claim that the first approved v8 runtime passed close_26
 - Any claim that pre-fix v8 should be rerun unchanged, or that v8 readiness before
   the damping-inheritance check proved virtual damping was active
+- Any claim that the professor cube3cm push/tap rollout is Track A grasp success,
+  PPO/VLA training output, or dataset readiness
+- Any claim that the professor cube-push PPO learned policy is ready for 10k/100k
+  scaling before frozen 1k eval impact falls below the current 28-29% band
 - Any Track B/OpenVLA training status as evidence for Track A contact success
 - Any claim that existing default Pick/Stack PPO envs produce Track A-valid
   no-attach contact experts
@@ -478,7 +558,7 @@ git status --short --untracked-files=all
 Must read:
 1. CLAUDE.md
 2. START_HERE.md
-3. claudedocs/DECISIONS.md D083-D096
+3. claudedocs/DECISIONS.md D083-D098
 4. claudedocs/EXPERIMENT_LEDGER.md latest rows
 5. claudedocs/session_20260522_track_a_v6_projected_guard_runtime_fail.md
 6. claudedocs/session_20260522_track_a_contact_rl_stage0_preflight.md
@@ -498,6 +578,12 @@ Must read:
 20. sim_scripts/p7_branch_b_cube2cm_target_guarded_v8_observed_recovery_static_design.py
 21. claudedocs/session_20260526_track_a_v8_runtime_candidate_static_readiness.md
 22. claudedocs/session_20260526_track_a_v8_runtime_fail_and_damping_wiring_fix.md
+23. claudedocs/session_20260526_cube3cm_push_rollout_probe_professor_request.md
+24. sim_scripts/cube3cm_push_rollout_probe.py
+25. claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/runtime.out
+26. claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/rollout_stats_audit.out
+27. claudedocs/session_20260526_cube3cm_push_rl_reward_curriculum.md
+28. claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_speed_guard_model49_eval1024_audit.out
 
 Current Track A state:
 - v6 close_26 audit FAIL, not grasp success.
@@ -575,9 +661,43 @@ Current RunPod/Codex state:
   b200_backup_20260522_final/tmp_p7/p7_branch_b_cube2cm_opposing_jaw_v7_collision_usd_d024/roarm_m3.usd
   md5 4497024d25abab11de5c50e144124553.
 
+Current professor cube push/tap branch:
+- Separate from Track A close_26 grasp. New script:
+  sim_scripts/cube3cm_push_rollout_probe.py
+  md5 8d329b79106e7ca2c03fa91b7ac87170.
+- 20480-trial local IsaacLab run:
+  claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/runtime.out
+  md5 2aad344f08f95c880e43bc0d7f655998
+  claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/summary.json
+  md5 5c9278450b5531afb7b0ca2a1fed46ee
+  claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/per_env.csv
+  md5 4c2864301bea8e2ae798a8f77adf23ab
+  claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/rollout_stats_audit.out
+  md5 3e0096ba54e7cc0ec0e55b1b26a50b8e.
+- Reverify runtime.out lines 20-42 and rollout_stats_audit.out lines 1-21 before citing.
+- Scripted rollout interpretation: PASS for the professor's immediate push/tap
+  statistics question, not training and not Track A grasp success.
+- Learned-policy follow-up:
+  roarm_rl/roarm_cube_push_env.py md5 b44996c396c099847e5196949ed86742;
+  train_cube_push_ppo.py md5 cb8c3303ca10bae2299c4e6f561c240d;
+  eval_cube_push_policy.py md5 f91c5107503d4e2f4f41cab7f70cb51a.
+  Speed-guard frozen 1k eval:
+  claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_speed_guard_model49_eval1024_audit.out
+  md5 694d6c9a81eca14a7554f66f6b6f462c, lines 3-6/17:
+  controlled 0.619682540, clean_success_marker 0.323809524, impact 0.286984127,
+  verdict SPEED_MODEL49_EVAL_NO_IMPACT_IMPROVEMENT_NO_10K.
+  Interpretation: no-attach PPO and IK pre-contact work, but learned-policy
+  impact is still too high; do not run 10k/100k scaling yet.
+
 Next concrete step:
-1. Do not rerun v7 unchanged and do not start hold-lift/dataset/training.
-2. If and only if the user explicitly approves another v8 runtime, first verify host GPU and IsaacLab CUDA from Codex with sandbox_permissions=require_escalated, then run exactly one local close_26-only post-fix v8 runtime using the preserved local backup USD path.
-3. Immediately audit that runtime with expected_mechanism target_guarded_micro_close_v8_observed_recovery_diagnostic. If audit fails, stop and analyze exact first failing runtime/audit lines before any rerun.
-4. Dataset/training remains blocked until close_26 PASS + hold-lift PASS + small pilot dataset/replay PASS.
+1. For professor branch: brief scripted rollout PASS and learned-policy
+   diagnostic FAIL honestly. Next research action is velocity-limited/action-
+   smoothed/contact-speed curriculum or IK/scripted teacher warm-start, then
+   another 50-100 iter PPO plus frozen 1k audit.
+2. Do not run learned-policy 10k/100k scaling until frozen 1k eval impact drops
+   below about 5% while controlled/clean-success remains meaningful.
+3. Do not rerun v7 unchanged and do not start Track A hold-lift/dataset/training.
+4. If and only if the user explicitly approves another v8 runtime, first verify host GPU and IsaacLab CUDA from Codex with sandbox_permissions=require_escalated, then run exactly one local close_26-only post-fix v8 runtime using the preserved local backup USD path.
+5. Immediately audit that runtime with expected_mechanism target_guarded_micro_close_v8_observed_recovery_diagnostic. If audit fails, stop and analyze exact first failing runtime/audit lines before any rerun.
+6. Track A dataset/training remains blocked until close_26 PASS + hold-lift PASS + small pilot dataset/replay PASS.
 ```

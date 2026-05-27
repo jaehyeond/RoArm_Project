@@ -1,0 +1,24 @@
+SMOOTH_LIMIT_INPUT exit_code=0 stdout=/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_smooth_limit_50iter_stdout.out stdout_md5=f4df70159f00cd30edcf7d678d94bf92 stderr=/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_smooth_limit_50iter_stderr.err stderr_md5=c5dffe360e6626bb31b0fde3164d963d
+SMOOTH_LIMIT_ARTIFACTS log_dir=/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_smooth_limit_logs/cube_push_smooth_limit_50iter_20260526 event_file=/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_smooth_limit_logs/cube_push_smooth_limit_50iter_20260526/events.out.tfevents.1779799630.cgxr-Legion-Pro-7-16IRX9H.196122.0 event_md5=8f36214f5c2cbd17f0a681cca5a45b63 model_0_exists=YES model_49_exists=YES model_49_md5=b643a490b250a2841d88a3e2f9ead876
+ITERATION_COVERAGE event_train_mean_reward_count=50
+EVENT_SCALAR tag=Episode/cube_push_disp_along_m n=50 first_step=0 first=0.004295157 last_step=49 last=0.009792258 min=0.003536557 max=0.011785026
+EVENT_SCALAR tag=Episode/cube_push_disp_xy_m n=50 first_step=0 first=0.012377104 last_step=49 last=0.024767965 min=0.012377104 max=0.025960078
+EVENT_SCALAR tag=Episode/cube_push_target_xy_dist_m n=50 first_step=0 first=0.041714128 last_step=49 last=0.040921152 min=0.039816942 max=0.043651804
+EVENT_SCALAR tag=Episode/cube_push_speed_mps n=50 first_step=0 first=0.185471028 last_step=49 last=0.069404393 min=0.060614996 max=0.185471028
+EVENT_SCALAR tag=Episode/cube_push_speed_over_0p5_rate n=50 first_step=0 first=0.116048180 last_step=49 last=0.019124350 min=0.010660808 max=0.116048180
+EVENT_SCALAR tag=Episode/cube_push_controlled_rate n=50 first_step=0 first=0.288248718 last_step=49 last=0.664550781 min=0.288248718 max=0.703369141
+EVENT_SCALAR tag=Episode/cube_push_impact_rate n=50 first_step=0 first=0.004313151 last_step=49 last=0.002360026 min=0.001464844 max=0.004557292
+EVENT_SCALAR tag=Episode/cube_push_low_motion_rate n=50 first_step=0 first=0.551106811 last_step=49 last=0.131591797 min=0.111083984 max=0.551106811
+EVENT_SCALAR tag=Episode/cube_push_far_target_rate n=50 first_step=0 first=0.000325521 last_step=49 last=0.000569661 min=0.000000000 max=0.000732422
+EVENT_SCALAR tag=Episode/cube_push_terminal_impact_rate n=50 first_step=0 first=0.004557292 last_step=49 last=0.002441406 min=0.001546224 max=0.004557292
+EVENT_SCALAR tag=Episode/cube_push_success_rate n=50 first_step=0 first=0.005940755 last_step=49 last=0.002115885 min=0.000651042 max=0.005940755
+EVENT_SCALAR tag=Episode/cube_push_grasped_marker_rate n=50 first_step=0 first=0.000000000 last_step=49 last=0.000000000 min=0.000000000 max=0.000000000
+EVENT_SCALAR tag=Episode/cube_push_ik_endpoint_reset_rate n=50 first_step=0 first=1.000000000 last_step=49 last=1.000000000 min=1.000000000 max=1.000000000
+EVENT_SCALAR tag=Episode/cube_push_ik_reset_err_mm n=50 first_step=0 first=0.735415637 last_step=49 last=0.724252701 min=0.724252701 max=0.776292503
+EVENT_SCALAR tag=Episode/cube_push_joint_delta_abs_mean n=50 first_step=0 first=0.001845345 last_step=49 last=0.003813811 min=0.001845345 max=0.003892756
+EVENT_SCALAR tag=Episode/cube_push_contact_slowdown_mean n=50 first_step=0 first=0.348010272 last_step=49 last=0.611267149 min=0.348010272 max=0.624536157
+EVENT_SCALAR tag=Train/mean_reward n=50 first_step=0 first=-0.291226834 last_step=49 last=290.254699707 min=-0.291226834 max=320.660766602
+EVENT_SCALAR tag=Train/mean_episode_length n=50 first_step=0 first=13.060000420 last_step=49 last=83.360000610 min=13.060000420 max=90.069999695
+PREV_SPEED_GUARD_COMPARISON prev_verdict=SPEED_GUARD_SIGNAL_PRESENT_NEEDS_MODEL49_EVAL prev_speed_last=0.111070380 new_speed_last=0.069404393 prev_speed_over_0p5_last=0.060546875 new_speed_over_0p5_last=0.019124350 prev_disp_xy_last=0.024909440 new_disp_xy_last=0.024767965 prev_target_dist_last=0.041767806 new_target_dist_last=0.040921152 prev_impact_last=0.003255208 new_impact_last=0.002360026
+CRITICAL_INTERPRETATION ik_endpoint_reset_active=YES action_scale_0p04=YES action_smoothing_velocity_limit=YES training_loop_ran=YES learned_policy_success=NO evaluation_rollout=NO dataset_generation=NO track_a_grasp_success=NO
+RESULT ppo_smooth_limit_audit=SMOOTH_LIMIT_TRAIN_SIGNAL_PRESENT_NEEDS_MODEL49_EVAL

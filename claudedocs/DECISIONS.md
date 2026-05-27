@@ -4803,3 +4803,266 @@ Sources:
 - `claudedocs/runtime_logs/20260526_track_a_v8_observed_recovery_close26_local_approved/readiness_after_v8_damping_fix.out:1-20`
 - `sim_scripts/p7_branch_b_cube2cm_runtime_jaw_telemetry_probe.py`
 - `sim_scripts/p7_branch_b_cube2cm_soft_contact_runtime_readiness.py`
+
+
+## D097 - cube push/tap rollout probe is separate from Track A grasp and from training
+
+Evidence:
+
+- Added `sim_scripts/cube3cm_push_rollout_probe.py` md5
+  `8d329b79106e7ca2c03fa91b7ac87170` for the professor's endpoint-known 3cm
+  cube push/tap question.
+- The 20,480-trial local IsaacLab run is preserved under
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/`.
+  Runtime stdout md5 `2aad344f08f95c880e43bc0d7f655998`, stderr md5
+  `30b990c1766da0c11a257fc0bec68526`, summary md5
+  `5c9278450b5531afb7b0ca2a1fed46ee`, per-env CSV md5
+  `4c2864301bea8e2ae798a8f77adf23ab`, audit md5
+  `3e0096ba54e7cc0ec0e55b1b26a50b8e`.
+- Runtime stdout line 20 explicitly marks the run as local Isaac, 3cm cube,
+  `grasp=NO`, `attach_posewrite=NO`, `rollout_object_posewrite=NO`,
+  `training=NO`, and `dataset_generation=NO`.
+- Runtime stdout line 21 defines the robot action semantics as normalized 6D
+  joint-delta actions:
+  `robot_dof_targets += action_scale(0.100) * action`, clip `[-1,1]`, gripper
+  target open 0 rad.
+- Runtime stdout line 42 reports `total_trials=20480`, `ik_ok_rate=1.0000`,
+  `disp_xy_mean_m=0.031809`, `disp_xy_p95_m=0.089702`,
+  `moved_5mm_rate=0.8774`, `push_positive_1mm_rate=0.9086`,
+  `action_abs_mean=0.086382`, zero action saturation, zero grasp marker,
+  zero attach calls, and zero rollout posewrite calls.
+- `rollout_stats_audit.out` lines 1-4 cross-check row count, rates, mechanism
+  separation, and action-scale conversion. Lines 5-11 show outlier risk:
+  displacement max `0.521036748m`, cube speed max `4.549609073m/s`, and tip
+  angle max `179.981780282deg`.
+
+Implication:
+
+- This run answers the professor's immediate "go near the 3cm cube and hit/push
+  it many times" question as scripted physics rollout statistics.
+- It must not be cited as Track A close_26 grasp success, hold-lift readiness,
+  dataset readiness, PPO success, or VLA success.
+- If a learned result is required, the next step is a separate no-attach
+  cube-push RL task/env with explicit rewards and outlier filtering, not reuse of
+  existing attach-based Pick/Stack PPO evidence.
+
+Sources:
+
+- `claudedocs/session_20260526_cube3cm_push_rollout_probe_professor_request.md`
+- `sim_scripts/cube3cm_push_rollout_probe.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/runtime.out:20-42`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/summary.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/per_env.csv`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/rollout_stats_audit.out:1-21`
+
+
+## D098 - cube-push PPO must pass frozen 1k clean-impact audit before 10k/100k scaling
+
+Evidence:
+
+- A separate no-attach cube-push RL env was added for the professor branch, not for
+  Track A grasp success. Current `roarm_rl/roarm_cube_push_env.py` md5
+  `b44996c396c099847e5196949ed86742` keeps a 3cm/20g cube, forces no attach,
+  and defines IK endpoint reset plus speed-guard reward terms.
+- The IK curriculum 50-iteration run completed with exit code 0 and model_49,
+  but `ppo_ik_curriculum_50iter_audit.out` lines 4-8 show direction/impact
+  regression: final push-aligned displacement `-0.105634235m`, XY displacement
+  `0.604205787m`, target distance `0.610159278m`, and impact rate
+  `0.351481140`. Line 18 verdict:
+  `IK_CURRICULUM_RAN_IMPACT_HEAVY_REGRESSED_DIRECTION_NO_SUCCESS_CLAIM`.
+- The clean-reward 50-iteration run improved training-log safety:
+  `ppo_clean_reward_50iter_audit.out` line 18 shows prior/new XY displacement
+  `0.604205787 -> 0.025637908`, target distance `0.610159278 -> 0.040735956`,
+  and impact `0.351481140 -> 0.003580729`. But its frozen 1k eval still had
+  high impact: `ppo_clean_reward_model49_eval1024_audit.out` lines 3-6 report
+  controlled `0.631610942`, impact `0.283282675`, clean success marker
+  `0.326443769`, and speed p95 `8.694638634m/s`. Line 18 verdict:
+  `CLEAN_MODEL49_EVAL_SAFER_BUT_IMPACT_TOO_HIGH_NO_10K`.
+- The speed-guard v3 changed action scale to `0.05` and added speed penalty/gate.
+  `ppo_speed_guard_50iter_stdout.out` line 5 prints action scale `0.050`; line 7
+  prints speed penalty and success speed max. Training-log audit line 22 says
+  `SPEED_GUARD_SIGNAL_PRESENT_NEEDS_MODEL49_EVAL`.
+- The speed-guard frozen 1k eval did not improve impact. Summary lines 2-20 and
+  `ppo_speed_guard_model49_eval1024_audit.out` lines 3-6 show action scale
+  `0.05`, controlled `0.619682540`, impact `0.286984127`, clean success marker
+  `0.323809524`, and p95 speed `5.578794289m/s`; line 17 verdict:
+  `SPEED_MODEL49_EVAL_NO_IMPACT_IMPROVEMENT_NO_10K`.
+
+Implication:
+
+- Do not scale cube-push learned-policy evaluation to 10k/100k trials just because
+  the training loop ran or TensorBoard reward increased.
+- The minimum scaling gate for this professor branch is: frozen-policy 1k eval
+  exit 0, no attach/posewrite, grasp marker 0, impact rate below about 5%,
+  controlled push above about 60%, and clean success marker above about 30%.
+- Current best learned-policy result is informative but not a success claim:
+  IK pre-contact works, no-attach PPO runs, clean reward reduces far-fling in
+  training logs, but frozen eval still has too many high-speed impact cases.
+- Next valid research step is not 10k/100k. It is a better speed/contact
+  curriculum or action smoothing/velocity-limited controller, then another
+  50-100 iteration run and frozen 1k audit.
+
+Sources:
+
+- `claudedocs/session_20260526_cube3cm_push_rl_reward_curriculum.md`
+- `roarm_rl/roarm_cube_push_env.py:42-113,299-391`
+- `roarm_rl/train_cube_push_ppo.py`
+- `roarm_rl/eval_cube_push_policy.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_ik_curriculum_50iter_audit.out:1-18`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_ik_curriculum_model49_eval1024_audit.out:1-18`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_clean_reward_50iter_audit.out:1-21`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_clean_reward_model49_eval1024_audit.out:1-18`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_speed_guard_50iter_audit.out:1-22`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_speed_guard_model49_eval1024_audit.out:1-17`
+
+## D099 - contact-speed PPO improved impact but still failed the 1k scale gate
+
+Evidence:
+
+- V4 action smoothing/velocity limit improved frozen-eval impact versus the
+  speed-guard run but still left impact `0.245576787`; audit verdict remained
+  `SMOOTH_MODEL49_EVAL_IMPROVED_BUT_NO_10K`.
+- V5 scripted-teacher warm-start improved training logs, but teacher-off frozen
+  eval did not transfer: impact `0.257686676`, clean success `0.095168375`, and
+  verdict `TEACHER_MODEL49_EVAL_TEACHER_OFF_NO_TRANSFER_NO_10K`.
+- V6 policy-only contact-speed curriculum used action scale `0.025`, joint delta
+  cap `0.004`, contact scale `0.15`, fast-cube scale `0.05`, lead cap `0.030`,
+  precontact clearance `0.020`, and speed threshold `0.200`. Training audit
+  showed speed/impact improvement (`impact=0.000813802`, speed-over-0.5
+  `0.011067709`) but high low-motion `0.377115905`.
+- V6 frozen 1k eval improved impact to `0.153782895`, but failed the 5% gate and
+  clean success stayed only `0.110197368`; verdict
+  `CONTACT_SPEED_MODEL49_EVAL_IMPROVED_BUT_NO_10K`.
+- A teacher-on scripted diagnostic was not a rescue: impact `0.162448980`, clean
+  success `0.067755102`, low motion `0.341224490`, verdict
+  `TEACHER_ON_DIAGNOSTIC_UNSAFE_OR_WEAK_NOT_LEARNED_NO_10K`.
+
+Implication:
+
+- Do not scale the professor cube-push learned-policy branch to 10k/100k yet.
+  The right next step is not bigger evaluation volume; it is redesigning the
+  teacher trajectory/contact-speed curriculum or adding a true imitation/resume
+  fine-tuning path, followed by another 50-100 iteration PPO and frozen 1k audit.
+- Teacher blending inside the action loop is not enough evidence of policy
+  learning. Teacher-on diagnostics must be labeled scripted, not learned.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_smooth_limit_model49_eval1024_audit.out:3-17`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_teacher_warmstart_model49_eval1024_audit.out:3-17`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_contact_speed_50iter_audit.out:3-27`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_contact_speed_model49_eval1024_audit.out:3-18`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_contact_speed_teacher_on_eval1024_audit.out:3-18`
+
+## D100 - professor cube-push IK branch must distinguish RoArm local IK from IsaacLab built-in Differential IK
+
+Evidence:
+
+- The professor's 2026-05-26 instruction is best interpreted as: if the cube
+  endpoint/end-effector target is known, place the robot TCP near the cube using
+  IK, then push/tap in IsaacLab and inspect the resulting actions and physics.
+  This is not an FK-first instruction.
+- The current cube-push env does use IK, but it imports RoArm-local
+  `ik_dls`/`fk_tcp` from `sim_scripts.roarm_kinematics` and computes joint poses
+  before writing them into IsaacLab (`roarm_rl/roarm_cube_push_env.py:22`,
+  `:151-179`, `:181-210`, `:308-331`). FK appears only inside IK and reach
+  verification; the user-facing command target remains an endpoint/TCP target.
+- IsaacLab itself has a built-in `DifferentialIKController` and
+  `DifferentialIKControllerCfg` supporting `command_type` `"position"`/`"pose"`
+  and `ik_method="dls"` (`isaaclab/controllers/differential_ik_cfg.py:21-35`).
+  The controller computes desired joint positions from current end-effector pose,
+  Jacobian, and joint position (`isaaclab/controllers/differential_ik.py:148-174`);
+  the task-space action path applies the resulting joint target to the articulation
+  (`isaaclab/envs/mdp/actions/task_space_actions.py:200-211`).
+- Therefore the next professor-branch experiment should not be described as
+  merely "do more PPO" or "scale 10k/100k." It should first add a small
+  IsaacLab built-in Differential IK cube-push probe that sends TCP targets near
+  the cube, lets IsaacLab's live Jacobian IK compute joint targets, and audits
+  no-attach physics push/tap outcomes.
+
+Implication:
+
+- Current RoArm-local IK rollout/PPO results remain useful evidence, but do not
+  overclaim them as IsaacLab built-in Differential IK.
+- The next valid action for the professor branch is a scoped
+  DifferentialIKController-based probe with smoke runtime, CSV/summary/audit,
+  and optional GUI demo. It remains separate from Track A grasp and must not be
+  used as Track A close_26, hold-lift, dataset, or VLA/PPO success evidence.
+
+Sources:
+
+- `roarm_rl/roarm_cube_push_env.py:22,151-179,181-210,308-331`
+- `sim_scripts/roarm_kinematics.py:99-141`
+- `/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaaclab/source/isaaclab/isaaclab/controllers/differential_ik_cfg.py:21-35`
+- `/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaaclab/source/isaaclab/isaaclab/controllers/differential_ik.py:148-174`
+- `/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaaclab/source/isaaclab/isaaclab/envs/mdp/actions/task_space_actions.py:200-211`
+
+## D101 - IsaacLab built-in Differential IK can push the 3cm cube, but the current path still has direction/position failure pockets
+
+Date: 2026-05-27 KST
+
+Decision:
+
+- For the professor's 2026-05-26 cube push/tap branch, keep the next evidence
+  track as an IsaacLab built-in `DifferentialIKController` scripted physics
+  probe. Do not call it learned policy, dataset readiness, or Track A grasp
+  success.
+- The first short 16-env smoke was a useful negative: the mechanism ran, but
+  approach time / joint-step budget was too small, producing low-motion only.
+- A longer reach/horizon setting made the same IsaacLab Differential IK path
+  produce real cube motion, and the frozen 1024 headless eval is now the current
+  professor-branch evidence point.
+- Do not jump from this to learned-policy 10k/100k. The next valid work is to
+  reduce the weak `(1, 0)` direction, low-motion pockets, and speed/impact
+  outliers, then rerun 1024 and only then consider 10k scripted-stat scaling or
+  a proper imitation/RL version.
+
+Evidence:
+
+- Added `sim_scripts/cube3cm_push_diffik_probe.py` md5
+  `cbb2176a80ed2a2c55552d0d98bc9ab9`, audit md5
+  `5ed85775e31f805f4d43885a1de80246`, and posthoc md5
+  `6bfc8ea3eac942d0af4c8fc852738f0e`.
+- The probe prints the mechanism contract at runtime: `controller=IsaacLab_DifferentialIKController`,
+  `ik_method=dls`, `command_type=position`, `local_roarm_ik_dls_control_loop=NO`,
+  `training=NO`, `dataset_generation=NO`, `grasp=NO`,
+  `attach_posewrite=NO`, and `rollout_object_posewrite=NO`
+  (`diffik_probe_eval1024_seed779_stdout.out:20-21`).
+- Short smoke audit: row count matched and mechanism PASS, but
+  `low_motion_rate=1.000000000`, `disp_xy_mean_m=0.000007746`, and
+  `final_tcp_target_err_mean_m=0.161282191`
+  (`diffik_probe_smoke16_seed777_audit.out:1-6`).
+- Reach smoke audit: mechanism PASS, controlled `0.937500000`, impact `0`,
+  low-motion `0.062500000`, `disp_xy_mean_m=0.048690485`, and final TCP error
+  `0.020573265` (`diffik_probe_reach16_seed778_audit.out:1-6`).
+- Frozen 1024 audit: mechanism PASS, CSV rows `1024`, controlled
+  `0.892578125`, impact `0.023437500`, low-motion `0.136718750`,
+  success marker `0.520507812`, `disp_along_push_mean_m=0.033575789`,
+  `disp_xy_mean_m=0.034856980`, max speed `1.931515932m/s`, final TCP error
+  `0.028779610`, and `diffik_clip_rate_mean=0.658035710`
+  (`diffik_probe_eval1024_seed779_audit.out:1-6`).
+- Posthoc split: overall line 2 matches the 1024 audit; direction `(1, 0)` is
+  the weak bucket with controlled `0.633333333`, impact `0.088888889`, and
+  low-motion `0.274074074`; worst initial grid is `(1, 1)` by low+impact
+  (`diffik_probe_eval1024_seed779_posthoc.out:1-17`).
+
+Implication:
+
+- The professor's "if endpoint is known, use IK to go near the cube and push"
+  direction is now tested more literally in IsaacLab with built-in Differential
+  IK and live Jacobians.
+- The result is scientifically useful, but not clean enough to scale blindly:
+  direction-dependent weakness and residual impact/low-motion must be addressed
+  before claiming a robust scripted teacher or before starting learned-policy
+  scale-up.
+
+Sources:
+
+- `sim_scripts/cube3cm_push_diffik_probe.py`
+- `sim_scripts/cube3cm_push_diffik_audit.py`
+- `sim_scripts/cube3cm_push_diffik_posthoc.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_eval1024_seed779_stdout.out:20-21,400`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_smoke16_seed777_audit.out:1-6`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_reach16_seed778_audit.out:1-6`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_eval1024_seed779_audit.out:1-6`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_eval1024_seed779_posthoc.out:1-17`

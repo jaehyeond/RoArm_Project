@@ -1,0 +1,25 @@
+POLICY_SWEEP_COMPARE seed=777 variants=4 valid_mechanism=YES can_scale_10k=NO
+POLICY_RESULT label=policy_off_contact_speed trials=1024 unique_env_records=1024 teacher_blend=0.000000000 teacher_goal_push_m=0.055000000 controlled=0.561523 impact=0.118164 low_motion=0.179688 clean_success=0.087891 disp_along_mean_m=0.007340752 target_dist_mean_m=0.037051000
+POLICY_RESULT label=teacher_goal055 trials=1024 unique_env_records=1024 teacher_blend=1.000000000 teacher_goal_push_m=0.055000000 controlled=0.509766 impact=0.115234 low_motion=0.384766 clean_success=0.041016 disp_along_mean_m=0.003260626 target_dist_mean_m=0.040916653
+POLICY_RESULT label=teacher_goal030 trials=1024 unique_env_records=1024 teacher_blend=1.000000000 teacher_goal_push_m=0.030000000 controlled=0.529297 impact=0.112305 low_motion=0.362305 clean_success=0.039062 disp_along_mean_m=0.003630898 target_dist_mean_m=0.040579628
+POLICY_RESULT label=teacher_goal040 trials=1024 unique_env_records=1024 teacher_blend=1.000000000 teacher_goal_push_m=0.040000000 controlled=0.515625 impact=0.115234 low_motion=0.368164 clean_success=0.045898 disp_along_mean_m=0.003444444 target_dist_mean_m=0.040762417
+RANK_BY_CLEAN_THEN_IMPACT policy_off_contact_speed teacher_goal040 teacher_goal055 teacher_goal030
+RANK_BY_IMPACT_THEN_CLEAN teacher_goal030 teacher_goal040 teacher_goal055 policy_off_contact_speed
+BY_DIR label=policy_off_contact_speed dir=(-1,0) n=261 controlled=0.260536 impact=0.295019 low_motion=0.157088 clean_success=0.049808 disp_along_mean_m=-0.004874900
+BY_DIR label=policy_off_contact_speed dir=(0,-1) n=230 controlled=0.252174 impact=0.000000 low_motion=0.613043 clean_success=0.021739 disp_along_mean_m=0.003260390
+BY_DIR label=policy_off_contact_speed dir=(0,1) n=257 controlled=0.848249 impact=0.070039 low_motion=0.003891 clean_success=0.007782 disp_along_mean_m=0.014397042
+BY_DIR label=policy_off_contact_speed dir=(1,0) n=276 controlled=0.836957 impact=0.094203 low_motion=0.003623 clean_success=0.253623 disp_along_mean_m=0.015722280
+BY_DIR label=teacher_goal055 dir=(-1,0) n=261 controlled=0.521073 impact=0.279693 low_motion=0.026820 clean_success=0.068966 disp_along_mean_m=0.000391360
+BY_DIR label=teacher_goal055 dir=(0,-1) n=230 controlled=0.321739 impact=0.000000 low_motion=0.643478 clean_success=0.021739 disp_along_mean_m=0.003206408
+BY_DIR label=teacher_goal055 dir=(0,1) n=257 controlled=0.603113 impact=0.066148 low_motion=0.342412 clean_success=0.046693 disp_along_mean_m=0.008674832
+BY_DIR label=teacher_goal055 dir=(1,0) n=276 controlled=0.568841 impact=0.101449 low_motion=0.547101 clean_success=0.025362 disp_along_mean_m=0.000977647
+BY_DIR label=teacher_goal030 dir=(-1,0) n=261 controlled=0.528736 impact=0.272031 low_motion=0.015326 clean_success=0.072797 disp_along_mean_m=0.000188605
+BY_DIR label=teacher_goal030 dir=(0,-1) n=230 controlled=0.360870 impact=0.000000 low_motion=0.647826 clean_success=0.021739 disp_along_mean_m=0.003494276
+BY_DIR label=teacher_goal030 dir=(0,1) n=257 controlled=0.653696 impact=0.066148 low_motion=0.260700 clean_success=0.035019 disp_along_mean_m=0.010144896
+BY_DIR label=teacher_goal030 dir=(1,0) n=276 controlled=0.554348 impact=0.097826 low_motion=0.547101 clean_success=0.025362 disp_along_mean_m=0.000934392
+BY_DIR label=teacher_goal040 dir=(-1,0) n=261 controlled=0.517241 impact=0.279693 low_motion=0.015326 clean_success=0.072797 disp_along_mean_m=0.000031879
+BY_DIR label=teacher_goal040 dir=(0,-1) n=230 controlled=0.339130 impact=0.000000 low_motion=0.643478 clean_success=0.021739 disp_along_mean_m=0.003407892
+BY_DIR label=teacher_goal040 dir=(0,1) n=257 controlled=0.630350 impact=0.066148 low_motion=0.295720 clean_success=0.062257 disp_along_mean_m=0.009620813
+BY_DIR label=teacher_goal040 dir=(1,0) n=276 controlled=0.554348 impact=0.101449 low_motion=0.539855 clean_success=0.025362 disp_along_mean_m=0.000950821
+INTERPRETATION best_clean_policy_is_still_policy_off=YES teacher_goal_sweep_reduces_impact_slightly_but_increases_low_motion_and_lowers_clean_success=YES scale_10k_or_100k=NO
+RESULT policy_sweep_seed777_compare=PASS local_posthoc_only=YES new_isaac_runtime=NO

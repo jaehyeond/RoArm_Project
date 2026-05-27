@@ -1,0 +1,225 @@
+#!/usr/bin/env python3
+"""Posthoc audit for the v4 smooth/velocity-limited model_49 cube-push eval."""
+from __future__ import annotations
+
+import csv
+import hashlib
+import json
+import math
+import re
+from pathlib import Path
+
+
+REPO = Path(__file__).resolve().parents[1]
+RUN_DIR = REPO / "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480"
+EVAL_SUMMARY = RUN_DIR / "ppo_smooth_limit_model49_eval1024_summary.json"
+EVAL_CSV = RUN_DIR / "ppo_smooth_limit_model49_eval1024.csv"
+EVAL_EXIT = RUN_DIR / "ppo_smooth_limit_model49_eval1024_exit_code.txt"
+EVAL_STDOUT = RUN_DIR / "ppo_smooth_limit_model49_eval1024_stdout.out"
+EVAL_STDERR = RUN_DIR / "ppo_smooth_limit_model49_eval1024_stderr.err"
+TRAIN_AUDIT_SUMMARY = RUN_DIR / "ppo_smooth_limit_50iter_audit_summary.json"
+PREV_EVAL_AUDIT_SUMMARY = RUN_DIR / "ppo_speed_guard_model49_eval1024_audit_summary.json"
+OUT = RUN_DIR / "ppo_smooth_limit_model49_eval1024_audit.out"
+SUMMARY_OUT = RUN_DIR / "ppo_smooth_limit_model49_eval1024_audit_summary.json"
+
+
+def _md5(path: Path) -> str:
+    h = hashlib.md5()
+    with path.open("rb") as f:
+        for chunk in iter(lambda: f.read(1024 * 1024), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def _exit_code(path: Path) -> int | None:
+    m = re.search(r"exit_code:(-?\d+)", path.read_text().strip())
+    return int(m.group(1)) if m else None
+
+
+def _rows(path: Path) -> list[dict[str, float]]:
+    rows: list[dict[str, float]] = []
+    with path.open(newline="") as f:
+        for raw in csv.DictReader(f):
+            rows.append({k: float(v) for k, v in raw.items()})
+    return rows
+
+
+def _quantile(values: list[float], q: float) -> float:
+    if not values:
+        return 0.0
+    xs = sorted(values)
+    idx = (len(xs) - 1) * q
+    lo = int(math.floor(idx))
+    hi = int(math.ceil(idx))
+    if lo == hi:
+        return xs[lo]
+    return xs[lo] * (hi - idx) + xs[hi] * (idx - lo)
+
+
+def _rate(rows: list[dict[str, float]], predicate) -> float:
+    return sum(1 for row in rows if predicate(row)) / len(rows) if rows else 0.0
+
+
+def _line(path: Path, nr: int) -> str:
+    for idx, text in enumerate(path.read_text(errors="replace").splitlines(), start=1):
+        if idx == nr:
+            return text
+    return ""
+
+
+def _top_rows(rows: list[dict[str, float]], key: str, n: int = 5) -> list[tuple[int, dict[str, float]]]:
+    indexed = list(enumerate(rows, start=2))
+    indexed.sort(key=lambda item: item[1][key], reverse=True)
+    return indexed[:n]
+
+
+def main() -> int:
+    summary = json.loads(EVAL_SUMMARY.read_text())
+    train_summary = json.loads(TRAIN_AUDIT_SUMMARY.read_text())
+    prev_eval = json.loads(PREV_EVAL_AUDIT_SUMMARY.read_text())
+    rows = _rows(EVAL_CSV)
+    code = _exit_code(EVAL_EXIT)
+
+    disp_xy = [r["disp_xy_m"] for r in rows]
+    target_dist = [r["target_xy_dist_m"] for r in rows]
+    speed = [r["final_speed_mps"] for r in rows]
+    tip = [r["tip_angle_deg"] for r in rows]
+
+    final_controlled_3cm_rate = _rate(rows, lambda r: r["controlled_push"] == 1.0 and r["disp_along_push_m"] >= 0.030)
+    clean_success_marker_rate = _rate(
+        rows,
+        lambda r: (
+            r["success_marker"] == 1.0
+            and r["controlled_push"] == 1.0
+            and r["impact_outlier"] == 0.0
+            and r["target_xy_dist_m"] <= 0.050
+        ),
+    )
+    impact_low_motion_rate = _rate(rows, lambda r: r["impact_outlier"] == 1.0 and r["disp_xy_m"] < 0.005)
+    impact_not_large_disp_rate = _rate(rows, lambda r: r["impact_outlier"] == 1.0 and r["disp_xy_m"] < 0.060)
+    far_target_rate = _rate(rows, lambda r: r["target_xy_dist_m"] > 0.100)
+
+    run_ok = code == 0 and len(rows) == int(summary["trials"]) and summary["grasped_marker_rate"] == 0.0
+    impact_improved = summary["impact_outlier_rate"] < prev_eval["summary"]["impact_outlier_rate"] - 0.03
+    enough_to_scale_10k = (
+        run_ok
+        and summary["impact_outlier_rate"] < 0.05
+        and clean_success_marker_rate > 0.30
+        and summary["controlled_push_rate"] > 0.60
+    )
+    verdict = "SMOOTH_MODEL49_EVAL_BLOCKED"
+    if enough_to_scale_10k:
+        verdict = "SMOOTH_MODEL49_EVAL_CAN_RUN_10K_AUDIT"
+    elif run_ok and impact_improved:
+        verdict = "SMOOTH_MODEL49_EVAL_IMPROVED_BUT_NO_10K"
+    elif run_ok:
+        verdict = "SMOOTH_MODEL49_EVAL_NO_10K"
+
+    audit_summary = {
+        "exit_code": code,
+        "rows": len(rows),
+        "summary": summary,
+        "train_verdict": train_summary["verdict"],
+        "previous_eval_verdict": prev_eval["verdict"],
+        "impact_improved": impact_improved,
+        "final_controlled_3cm_rate": final_controlled_3cm_rate,
+        "clean_success_marker_rate": clean_success_marker_rate,
+        "impact_low_motion_rate": impact_low_motion_rate,
+        "impact_not_large_disp_rate": impact_not_large_disp_rate,
+        "far_target_rate": far_target_rate,
+        "disp_xy_p95_m": _quantile(disp_xy, 0.95),
+        "disp_xy_max_m": max(disp_xy) if disp_xy else 0.0,
+        "target_xy_dist_p95_m": _quantile(target_dist, 0.95),
+        "target_xy_dist_max_m": max(target_dist) if target_dist else 0.0,
+        "speed_p95_mps": _quantile(speed, 0.95),
+        "speed_max_mps": max(speed) if speed else 0.0,
+        "tip_p95_deg": _quantile(tip, 0.95),
+        "tip_max_deg": max(tip) if tip else 0.0,
+        "verdict": verdict,
+    }
+
+    lines = [
+        (
+            f"SMOOTH_MODEL49_EVAL_INPUT exit_code={code} summary={EVAL_SUMMARY} "
+            f"summary_md5={_md5(EVAL_SUMMARY)} csv={EVAL_CSV} csv_md5={_md5(EVAL_CSV)} "
+            f"csv_rows={len(rows)}"
+        ),
+        (
+            f"SMOOTH_MODEL49_EVAL_LOGS stdout={EVAL_STDOUT} stdout_md5={_md5(EVAL_STDOUT)} "
+            f"stderr={EVAL_STDERR} stderr_md5={_md5(EVAL_STDERR)}"
+        ),
+        (
+            f"SUMMARY_REF line=2 action_scale={summary['action_scale']:.9f} "
+            f"line=3 action_smoothing_alpha={summary['action_smoothing_alpha']:.9f} "
+            f"line=6 controlled_push_rate={summary['controlled_push_rate']:.9f} "
+            f"line=8 disp_along_push_mean_m={summary['disp_along_push_mean_m']:.9f} "
+            f"line=9 disp_xy_mean_m={summary['disp_xy_mean_m']:.9f} "
+            f"line=15 impact_outlier_rate={summary['impact_outlier_rate']:.9f} "
+            f"line=17 low_motion_rate={summary['low_motion_rate']:.9f} "
+            f"line=23 success_marker_rate={summary['success_marker_rate']:.9f} "
+            f"line=24 target_xy_dist_mean_m={summary['target_xy_dist_mean_m']:.9f} "
+            f"line=26 trials={summary['trials']}"
+        ),
+        (
+            f"CSV_DISTRIBUTION disp_xy_p95_m={audit_summary['disp_xy_p95_m']:.9f} "
+            f"disp_xy_max_m={audit_summary['disp_xy_max_m']:.9f} "
+            f"target_xy_dist_p95_m={audit_summary['target_xy_dist_p95_m']:.9f} "
+            f"target_xy_dist_max_m={audit_summary['target_xy_dist_max_m']:.9f} "
+            f"speed_p95_mps={audit_summary['speed_p95_mps']:.9f} "
+            f"speed_max_mps={audit_summary['speed_max_mps']:.9f} "
+            f"tip_p95_deg={audit_summary['tip_p95_deg']:.9f} "
+            f"tip_max_deg={audit_summary['tip_max_deg']:.9f}"
+        ),
+        (
+            f"CLEAN_SUCCESS_CHECK final_controlled_3cm_rate={final_controlled_3cm_rate:.9f} "
+            f"clean_success_marker_rate={clean_success_marker_rate:.9f} "
+            f"impact_low_motion_rate={impact_low_motion_rate:.9f} "
+            f"impact_not_large_disp_rate={impact_not_large_disp_rate:.9f} "
+            f"far_target_rate={far_target_rate:.9f}"
+        ),
+        (
+            f"PREV_SPEED_EVAL_COMPARISON prev_verdict={prev_eval['verdict']} "
+            f"prev_impact_rate={prev_eval['summary']['impact_outlier_rate']:.9f} "
+            f"new_impact_rate={summary['impact_outlier_rate']:.9f} "
+            f"prev_clean_success_marker_rate={prev_eval['clean_success_marker_rate']:.9f} "
+            f"new_clean_success_marker_rate={clean_success_marker_rate:.9f}"
+        ),
+        (
+            f"MECHANISM_CHECK training={summary['training']} dataset_generation={summary['dataset_generation']} "
+            f"grasp_attach={summary['grasp_attach']} rollout_object_posewrite={summary['rollout_object_posewrite']} "
+            f"grasped_marker_rate={summary['grasped_marker_rate']:.9f}"
+        ),
+        (
+            "CRITICAL_INTERPRETATION "
+            "policy_rollout_ran=YES ik_endpoint_reset_eval=YES action_smoothing_velocity_limit_eval=YES "
+            "impact_improved_but_still_too_high_for_10k_or_100k=YES learned_clean_push_success=NO "
+            "dataset_generation=NO track_a_grasp_success=NO"
+        ),
+    ]
+    for rank, (csv_line, row) in enumerate(_top_rows(rows, "final_speed_mps"), start=1):
+        lines.append(
+            f"TOP_SPEED_OUTLIER rank={rank} csv_line={csv_line} "
+            f"speed_mps={row['final_speed_mps']:.9f} disp_xy_m={row['disp_xy_m']:.9f} "
+            f"disp_along_push_m={row['disp_along_push_m']:.9f} target_xy_dist_m={row['target_xy_dist_m']:.9f} "
+            f"tip_deg={row['tip_angle_deg']:.9f} controlled={int(row['controlled_push'])} "
+            f"impact={int(row['impact_outlier'])} low_motion={int(row['low_motion'])} "
+            f"success_marker={int(row['success_marker'])}"
+        )
+    lines.extend(
+        [
+            f"CSV_SAMPLE line=1 text=\"{_line(EVAL_CSV, 1)}\"",
+            f"CSV_SAMPLE line=2 text=\"{_line(EVAL_CSV, 2)}\"",
+            f"CSV_SAMPLE line={len(rows) + 1} text=\"{_line(EVAL_CSV, len(rows) + 1)}\"",
+            f"RESULT smooth_model49_eval1024_audit={verdict}",
+        ]
+    )
+
+    OUT.write_text("\n".join(lines) + "\n")
+    SUMMARY_OUT.write_text(json.dumps(audit_summary, indent=2, sort_keys=True) + "\n")
+    print(f"wrote {OUT}")
+    print(f"wrote {SUMMARY_OUT}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

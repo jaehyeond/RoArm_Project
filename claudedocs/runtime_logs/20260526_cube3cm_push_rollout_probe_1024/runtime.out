@@ -1,0 +1,77 @@
+[INFO][AppLauncher]: Using device: cuda:0
+[INFO][AppLauncher]: Loading experience file: /home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaaclab/apps/isaaclab.python.headless.kit
+Setting seed: 11
+[INFO]: Base environment:
+	Environment device    : cuda:0
+	Environment seed      : 11
+	Physics step-size     : 0.005
+	Rendering step-size   : 0.01
+	Environment step-size : 0.01
+[INFO]: Time taken for scene creation : 1.680580 seconds
+[INFO]: Scene manager:  <class InteractiveScene>
+	Number of environments: 1024
+	Environment spacing   : 2.0
+	Source prim name      : /World/envs/env_0
+	Global prim paths     : []
+	Replicate physics     : True
+[INFO]: Starting the simulation. This may take a few seconds. Please wait...
+[INFO]: Time taken for simulation start : 0.519904 seconds
+[INFO]: Completed setting up the environment...
+[cube3cm_push_rollout_probe] isaac_run=YES num_envs=1024 episodes=1 total_trials=1024 robot_usd_path=/home/cgxr/Documents/Robotics/RoArm_Project/b200_backup_20260522_final/tmp_p7/p7_branch_b_cube2cm_opposing_jaw_v7_collision_usd_d024/roarm_m3.usd cube_size_m=(0.03, 0.03, 0.03) grasp=NO attach_posewrite=NO rollout_object_posewrite=NO training=NO dataset_generation=NO
+[cube3cm_push_rollout_probe] action_semantics=normalized_joint_delta target_update='robot_dof_targets += action_scale(0.100) * action' action_dim=6 action_clip=[-1,1] gripper_action_target=open_0rad
+[cube3cm_push_rollout_probe] episode=0 ik_ok_rate=1.0000 disp_xy_mean_m=0.031509 disp_xy_p95_m=0.090220 moved_1mm_rate=0.9268 moved_5mm_rate=0.8799 moved_10mm_rate=0.8438 push_positive_1mm_rate=0.9033 max_speed_mean_mps=0.674583 action_abs_mean=0.086139 action_sat_frac_mean=0.000000 grasped_marker_rate=0.0000 attach_calls=0 posewrite_calls_during_rollout=0
+[cube3cm_push_rollout_probe] SUMMARY total_trials=1024 ik_ok_rate=1.0000 disp_xy_mean_m=0.031509 disp_xy_p95_m=0.090220 moved_1mm_rate=0.9268 moved_5mm_rate=0.8799 push_positive_1mm_rate=0.9033 action_abs_mean=0.086139 action_saturation_frac_mean=0.000000 grasped_marker_rate=0.0000 attach_calls=0 posewrite_calls_during_rollout=0
+[cube3cm_push_rollout_probe] wrote summary=claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_1024/summary.json
+[cube3cm_push_rollout_probe] wrote per_env=claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_1024/per_env.csv
+[cube3cm_push_rollout_probe] sample episode=0 env_id=0 ik_ok=1 cube_xy=(0.2249,0.0153) push_dir=(1.0,0.0) disp_xy_m=0.016972 disp_push_m=0.016970 action_abs_mean=0.096609 sat_frac=0.000000
+[cube3cm_push_rollout_probe] sample episode=0 env_id=1 ik_ok=1 cube_xy=(0.2824,-0.0293) push_dir=(-1.0,0.0) disp_xy_m=0.018189 disp_push_m=0.017883 action_abs_mean=0.075386 sat_frac=0.000000
+[cube3cm_push_rollout_probe] sample episode=0 env_id=2 ik_ok=1 cube_xy=(0.2982,0.1154) push_dir=(-1.0,0.0) disp_xy_m=0.039582 disp_push_m=0.038218 action_abs_mean=0.085729 sat_frac=0.000000
+[cube3cm_push_rollout_probe] sample episode=0 env_id=3 ik_ok=1 cube_xy=(0.2094,-0.0819) push_dir=(0.0,-1.0) disp_xy_m=0.013675 disp_push_m=0.012749 action_abs_mean=0.086983 sat_frac=0.000000
+[cube3cm_push_rollout_probe] sample episode=0 env_id=4 ik_ok=1 cube_xy=(0.2279,-0.1136) push_dir=(1.0,0.0) disp_xy_m=0.029122 disp_push_m=0.029003 action_abs_mean=0.119178 sat_frac=0.000000
+Loading user config located at: '/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/user.config.json'
+[Info] [carb] Logging to file: /home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/kit/logs/Kit/Isaac-Sim/5.1/kit_20260526_182409.log
+2026-05-26T09:24:09Z [58ms] [Warning] [omni.usd_config.extension] Enable omni.materialx.libs extension to use MaterialX
+2026-05-26T09:24:09Z [328ms] [Warning] [carb] Acquiring non optional plugin interface which is not listed as dependency: [omni::physx::IPhysxBenchmarks v1.0] (plugin: <default plugin>), by client: omni.physics.physx.plugin. Add it to CARB_PLUGIN_IMPL_DEPS() macro of a client.
+2026-05-26T09:24:09Z [479ms] [Warning] [omni.isaac.dynamic_control] omni.isaac.dynamic_control is deprecated as of Isaac Sim 4.5. No action is needed from end-users.
+2026-05-26T09:24:12Z [2,828ms] [Warning] [gpu.foundation.plugin] Skipping unsupported non-NVIDIA GPU: Intel(R) Graphics (RPL-S)
+2026-05-26T09:24:12Z [2,828ms] [Warning] [gpu.foundation.plugin] Skipping unsupported non-NVIDIA GPU: Intel(R) Graphics (RPL-S)
+
+|---------------------------------------------------------------------------------------------|
+| Driver Version: 580.159.03    | Graphics API: Vulkan
+|=============================================================================================|
+| GPU | Name                             | Active | LDA | GPU Memory | Vendor-ID | LUID       |
+|     |                                  |        |     |            | Device-ID | UUID       |
+|     |                                  |        |     |            | Bus-ID    |            |
+|---------------------------------------------------------------------------------------------|
+| 0   | NVIDIA GeForce RTX 4090 Laptop.. | Yes: 0 |     | 16376   MB | 10de      | 0          |
+|     |                                  |        |     |            | 2757      | 05b1a3f8.. |
+|     |                                  |        |     |            | 1         |            |
+|---------------------------------------------------------------------------------------------|
+| 1   | Intel(R) Graphics (RPL-S)        |        |     | 48015   MB | 8086      | 0          |
+|     |                                  |        |     |            | a788      | 868088a7.. |
+|     |                                  |        |     |            | 0         |            |
+|=============================================================================================|
+| OS: 22.04.5 LTS (Jammy Jellyfish) ubuntu, Version: 22.04.5, Kernel: 6.8.0-111-generic
+| XServer Vendor: The X.Org Foundation, XServer Version: 12101004 (1.21.1.4)
+| Processor: Intel(R) Core(TM) i9-14900HX
+| Bare Metal Cores: 24 | Bare Metal Logical Cores: 48
+| Available Cores:  32 
+|---------------------------------------------------------------------------------------------|
+| Total Memory (MB): 64020 | Free Memory: 33833
+| Total Page/Swap (MB): 0 | Free Page/Swap: 0
+|---------------------------------------------------------------------------------------------|
+2026-05-26T09:24:12Z [3,056ms] [Warning] [gpu.foundation.plugin] CPU performance profile is set to powersave. This profile sets the CPU to the lowest frequency reducing performance.
+2026-05-26T09:24:12Z [3,065ms] [Warning] [gpu.foundation.plugin] IOMMU is enabled.
+2026-05-26T09:24:12Z [3,065ms] [Warning] [gpu.foundation.plugin] Detected IOMMU is enabled. Running CUDA peer-to-peer bandwidth and latency validation.
+Unidirectional P2P=Enabled Bandwidth (P2P Writes) Matrix (GB/s)
+   D\D     0 
+     0 391.50 
+P2P=Enabled Latency (P2P Writes) Matrix (us)
+   GPU     0 
+     0   2.00 
+
+   CPU     0 
+     0   1.43 
+2026-05-26T09:24:13Z [4,677ms] [Warning] [omni.fabric.plugin] Warning: input prim:attr `/World/envs/env_0:omni:rtx:skip` has no valid data.
+
+2026-05-26T09:24:38Z [29,113ms] [Warning] [omni.usd] Unexpected reference count of 2 for UsdStage 'anon:0x3fe06560:World0.usd' while being closed in UsdContext (this may indicate it is still resident in memory).

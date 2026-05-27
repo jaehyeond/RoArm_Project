@@ -1,0 +1,22 @@
+SPEED_GUARD_INPUT exit_code=0 stdout=/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_speed_guard_50iter_stdout.out stdout_md5=522a97555397a8427501178ce1007f81 stderr=/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_speed_guard_50iter_stderr.err stderr_md5=c5dffe360e6626bb31b0fde3164d963d
+SPEED_GUARD_ARTIFACTS log_dir=/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_speed_guard_logs/cube_push_speed_guard_50iter_20260526 event_file=/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_speed_guard_logs/cube_push_speed_guard_50iter_20260526/events.out.tfevents.1779798658.cgxr-Legion-Pro-7-16IRX9H.188385.0 event_md5=546341ab8986d7e001f3b45a18823fc7 model_0_exists=YES model_49_exists=YES model_49_md5=e9c580b8366d66b0d9dcd8d38295d8d3
+ITERATION_COVERAGE event_train_mean_reward_count=50
+EVENT_SCALAR tag=Episode/cube_push_disp_along_m n=50 first_step=0 first=-0.000390522 last_step=49 last=0.008162681 min=-0.000390522 max=0.009399701
+EVENT_SCALAR tag=Episode/cube_push_disp_xy_m n=50 first_step=0 first=0.012939081 last_step=49 last=0.024909440 min=0.012939081 max=0.030752536
+EVENT_SCALAR tag=Episode/cube_push_target_xy_dist_m n=50 first_step=0 first=0.043570697 last_step=49 last=0.041767806 min=0.039218187 max=0.049423479
+EVENT_SCALAR tag=Episode/cube_push_speed_mps n=50 first_step=0 first=0.244532630 last_step=49 last=0.111070380 min=0.086766854 max=0.244532630
+EVENT_SCALAR tag=Episode/cube_push_speed_over_0p5_rate n=50 first_step=0 first=0.143717453 last_step=49 last=0.060546875 min=0.041910809 max=0.143717453
+EVENT_SCALAR tag=Episode/cube_push_controlled_rate n=50 first_step=0 first=0.309977233 last_step=49 last=0.627685547 min=0.309977233 max=0.666666687
+EVENT_SCALAR tag=Episode/cube_push_impact_rate n=50 first_step=0 first=0.008382162 last_step=49 last=0.003255208 min=0.003173828 max=0.008382162
+EVENT_SCALAR tag=Episode/cube_push_low_motion_rate n=50 first_step=0 first=0.432617188 last_step=49 last=0.124755859 min=0.097086594 max=0.432617188
+EVENT_SCALAR tag=Episode/cube_push_far_target_rate n=50 first_step=0 first=0.000732422 last_step=49 last=0.001139323 min=0.000244141 max=0.001302083
+EVENT_SCALAR tag=Episode/cube_push_terminal_impact_rate n=50 first_step=0 first=0.008951823 last_step=49 last=0.003824870 min=0.003417969 max=0.008951823
+EVENT_SCALAR tag=Episode/cube_push_success_rate n=50 first_step=0 first=0.002766927 last_step=49 last=0.004882812 min=0.002522787 max=0.005126953
+EVENT_SCALAR tag=Episode/cube_push_grasped_marker_rate n=50 first_step=0 first=0.000000000 last_step=49 last=0.000000000 min=0.000000000 max=0.000000000
+EVENT_SCALAR tag=Episode/cube_push_ik_endpoint_reset_rate n=50 first_step=0 first=1.000000000 last_step=49 last=1.000000000 min=1.000000000 max=1.000000000
+EVENT_SCALAR tag=Episode/cube_push_ik_reset_err_mm n=50 first_step=0 first=0.757149398 last_step=49 last=0.779789925 min=0.734177828 max=0.798628271
+EVENT_SCALAR tag=Train/mean_reward n=50 first_step=0 first=12.408946037 last_step=49 last=201.743057251 min=12.408946037 max=263.144805908
+EVENT_SCALAR tag=Train/mean_episode_length n=50 first_step=0 first=14.489999771 last_step=49 last=59.369998932 min=14.489999771 max=75.620002747
+PREV_CLEAN_COMPARISON prev_verdict=CLEAN_REWARD_RAN_SAFER_BUT_WEAK_NEEDS_MODEL49_EVAL prev_speed_last=0.100120679 new_speed_last=0.111070380 prev_disp_xy_last=0.025637908 new_disp_xy_last=0.024909440 prev_target_dist_last=0.040735956 new_target_dist_last=0.041767806 prev_impact_last=0.003580729 new_impact_last=0.003255208
+CRITICAL_INTERPRETATION ik_endpoint_reset_active=YES action_scale_0p05=YES training_loop_ran=YES learned_policy_success=NO evaluation_rollout=NO dataset_generation=NO track_a_grasp_success=NO
+RESULT ppo_speed_guard_audit=SPEED_GUARD_SIGNAL_PRESENT_NEEDS_MODEL49_EVAL

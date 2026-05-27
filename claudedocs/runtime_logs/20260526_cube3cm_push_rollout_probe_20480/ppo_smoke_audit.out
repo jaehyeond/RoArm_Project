@@ -1,0 +1,21 @@
+PPO_SMOKE_INPUT stdout=/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_smoke_stdout.out stdout_md5=869d65261c14064bc750fb29ed9ce78e stderr=/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_smoke_stderr.err stderr_md5=c5dffe360e6626bb31b0fde3164d963d exit_code=0
+PPO_SMOKE_ARTIFACTS log_dir=/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_smoke_logs/cube_push_no_attach_smoke_20260526 event_file=/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_smoke_logs/cube_push_no_attach_smoke_20260526/events.out.tfevents.1779795466.cgxr-Legion-Pro-7-16IRX9H.164504.0 event_md5=c82c0c60f68e8118702cc1f6a8147e65 model_0_exists=YES model_9_exists=YES model_9_md5=5b28853194a6e63fa28668ae0867d83a
+STDOUT_REF needle="scope=no_attach_cube_push" line=3 text="[cube-push-train] scope=no_attach_cube_push env_id=RoArm-CubePush-Direct-v0 training=YES dataset_generation=NO grasp_attach=NO rollout_object_posewrite=NO"
+STDOUT_REF needle="action_semantics=normalized_joint_delta" line=4 text="[cube-push-train] action_semantics=normalized_joint_delta target_update='robot_dof_targets += action_scale(0.100) * action' action_dim=6 action_clip=[-1,1]"
+STDOUT_REF needle="Environment device" line=11 text="Environment device    : cuda:0"
+STDOUT_REF needle="Actor MLP" line=31 text="Actor MLP: MLP("
+STDOUT_REF needle="Learning iteration 0/10" line=50 text="[1m Learning iteration 0/10 [0m"
+STDOUT_REF needle="Learning iteration 4/10" line=163 text="[1m Learning iteration 4/10 [0m"
+ITERATION_COVERAGE stdout_visible=[0, 1, 2, 3, 4] event_train_mean_reward_count=10
+EVENT_SCALAR tag=Episode/cube_push_disp_along_m n=10 first_step=0 first=0.000119139 last_step=9 last=0.001160406
+EVENT_SCALAR tag=Episode/cube_push_disp_xy_m n=10 first_step=0 first=0.002433960 last_step=9 last=0.017824011
+EVENT_SCALAR tag=Episode/cube_push_target_xy_dist_m n=10 first_step=0 first=0.040238738 last_step=9 last=0.042449400
+EVENT_SCALAR tag=Episode/cube_push_controlled_rate n=10 first_step=0 first=0.055013023 last_step=9 last=0.344401062
+EVENT_SCALAR tag=Episode/cube_push_impact_rate n=10 first_step=0 first=0.000000000 last_step=9 last=0.003906250
+EVENT_SCALAR tag=Episode/cube_push_low_motion_rate n=10 first_step=0 first=0.905110717 last_step=9 last=0.367187500
+EVENT_SCALAR tag=Episode/cube_push_success_rate n=10 first_step=0 first=0.005533854 last_step=9 last=0.018066406
+EVENT_SCALAR tag=Episode/cube_push_grasped_marker_rate n=10 first_step=0 first=0.000000000 last_step=9 last=0.000000000
+EVENT_SCALAR tag=Train/mean_reward n=10 first_step=0 first=18.705423355 last_step=9 last=280.170013428
+EVENT_SCALAR tag=Train/mean_episode_length n=10 first_step=0 first=12.145454407 last_step=9 last=119.000000000
+CRITICAL_INTERPRETATION training_loop_ran=YES learned_policy_success=NO evaluation_rollout=NO dataset_generation=NO track_a_grasp_success=NO
+RESULT ppo_smoke_audit=SMOKE_SIGNAL_PRESENT_BUT_WEAK_NO_SUCCESS_CLAIM

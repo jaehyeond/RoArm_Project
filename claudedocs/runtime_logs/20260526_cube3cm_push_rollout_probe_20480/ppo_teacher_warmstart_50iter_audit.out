@@ -1,0 +1,26 @@
+TEACHER_WARMSTART_INPUT exit_code=0 stdout=/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_teacher_warmstart_50iter_stdout.out stdout_md5=85b167880d86f0f1de12e75136efbd90 stderr=/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_teacher_warmstart_50iter_stderr.err stderr_md5=c5dffe360e6626bb31b0fde3164d963d
+TEACHER_WARMSTART_ARTIFACTS log_dir=/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_teacher_warmstart_logs/cube_push_teacher_warmstart_50iter_20260526 event_file=/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_teacher_warmstart_logs/cube_push_teacher_warmstart_50iter_20260526/events.out.tfevents.1779810667.cgxr-Legion-Pro-7-16IRX9H.260544.0 event_md5=41be068226dd14fad32ad68269a5da79 model_0_exists=YES model_49_exists=YES model_49_md5=7f4f65d3d22991cd6075c756c9d58a45
+ITERATION_COVERAGE event_train_mean_reward_count=50
+EVENT_SCALAR tag=Episode/cube_push_disp_along_m n=50 first_step=0 first=0.004821675 last_step=49 last=0.009878451 min=0.004821675 max=0.012800844
+EVENT_SCALAR tag=Episode/cube_push_disp_xy_m n=50 first_step=0 first=0.012312338 last_step=49 last=0.018401159 min=0.012312338 max=0.021547502
+EVENT_SCALAR tag=Episode/cube_push_target_xy_dist_m n=50 first_step=0 first=0.041299742 last_step=49 last=0.037371304 min=0.037371304 max=0.041299742
+EVENT_SCALAR tag=Episode/cube_push_speed_mps n=50 first_step=0 first=0.199086279 last_step=49 last=0.141521186 min=0.118269250 max=0.199086279
+EVENT_SCALAR tag=Episode/cube_push_speed_over_0p5_rate n=50 first_step=0 first=0.116210938 last_step=49 last=0.023763021 min=0.014322917 max=0.116210938
+EVENT_SCALAR tag=Episode/cube_push_controlled_rate n=50 first_step=0 first=0.346516937 last_step=49 last=0.722493529 min=0.346516937 max=0.727132201
+EVENT_SCALAR tag=Episode/cube_push_impact_rate n=50 first_step=0 first=0.003906250 last_step=49 last=0.001790365 min=0.000732422 max=0.003906250
+EVENT_SCALAR tag=Episode/cube_push_low_motion_rate n=50 first_step=0 first=0.559326172 last_step=49 last=0.187744141 min=0.187744141 max=0.559326172
+EVENT_SCALAR tag=Episode/cube_push_far_target_rate n=50 first_step=0 first=0.000406901 last_step=49 last=0.000000000 min=0.000000000 max=0.000569661
+EVENT_SCALAR tag=Episode/cube_push_terminal_impact_rate n=50 first_step=0 first=0.004231771 last_step=49 last=0.001790365 min=0.000813802 max=0.004231771
+EVENT_SCALAR tag=Episode/cube_push_success_rate n=50 first_step=0 first=0.005615234 last_step=49 last=0.003417969 min=0.001139323 max=0.005615234
+EVENT_SCALAR tag=Episode/cube_push_grasped_marker_rate n=50 first_step=0 first=0.000000000 last_step=49 last=0.000000000 min=0.000000000 max=0.000000000
+EVENT_SCALAR tag=Episode/cube_push_ik_endpoint_reset_rate n=50 first_step=0 first=1.000000000 last_step=49 last=1.000000000 min=1.000000000 max=1.000000000
+EVENT_SCALAR tag=Episode/cube_push_ik_reset_err_mm n=50 first_step=0 first=0.732985198 last_step=49 last=0.770726442 min=0.724162221 max=0.781345606
+EVENT_SCALAR tag=Episode/cube_push_joint_delta_abs_mean n=50 first_step=0 first=0.001749150 last_step=49 last=0.002152606 min=0.001749150 max=0.002152820
+EVENT_SCALAR tag=Episode/cube_push_contact_slowdown_mean n=50 first_step=0 first=0.346781433 last_step=49 last=0.411470532 min=0.346781433 max=0.424031585
+EVENT_SCALAR tag=Episode/cube_push_teacher_blend_mean n=50 first_step=0 first=0.426904291 last_step=49 last=0.397395849 min=0.376603216 max=0.449235052
+EVENT_SCALAR tag=Episode/cube_push_teacher_goal_ok_rate n=50 first_step=0 first=1.000000000 last_step=49 last=1.000000000 min=1.000000000 max=1.000000000
+EVENT_SCALAR tag=Train/mean_reward n=50 first_step=0 first=-0.636536300 last_step=49 last=271.446899414 min=-0.636536300 max=321.787963867
+EVENT_SCALAR tag=Train/mean_episode_length n=50 first_step=0 first=13.510000229 last_step=49 last=79.269996643 min=13.510000229 max=92.110000610
+PREV_SMOOTH_COMPARISON prev_verdict=SMOOTH_LIMIT_TRAIN_SIGNAL_PRESENT_NEEDS_MODEL49_EVAL prev_controlled_last=0.664550781 new_controlled_last=0.722493529 prev_impact_last=0.002360026 new_impact_last=0.001790365 prev_low_motion_last=0.131591797 new_low_motion_last=0.187744141 prev_success_last=0.002115885 new_success_last=0.003417969
+CRITICAL_INTERPRETATION teacher_assisted_training=YES teacher_off_eval_required=YES training_loop_ran=YES learned_policy_success=NO evaluation_rollout=NO dataset_generation=NO track_a_grasp_success=NO
+RESULT ppo_teacher_warmstart_audit=TEACHER_WARMSTART_TRAIN_SIGNAL_PRESENT_NEEDS_TEACHER_OFF_EVAL

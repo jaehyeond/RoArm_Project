@@ -1,0 +1,21 @@
+AUDIT_INPUT rows=20480 summary_total_trials=20480 source=per_env.csv+summary.json
+SUMMARY_MATCH ik_ok_rate=1.000000 disp_xy_mean_m=0.031809252 disp_xy_p95_m=0.089701957 moved_1mm_rate=0.926660 moved_5mm_rate=0.877441 moved_10mm_rate=0.839795 push_positive_1mm_rate=0.908594 push_negative_1mm_rate=0.004395
+MECHANISM_CHECK grasp=False training=False dataset_generation=False attach_posewrite=False rollout_object_posewrite=False attach_calls=0 posewrite_calls_during_rollout=0 grasped_marker_rate=0.000000
+ACTION_CHECK action_abs_mean=0.086382226 action_saturation_frac_mean=0.000000000 mean_target_delta_rad=0.008638223 mean_target_delta_deg=0.494934 action_scale_rad=0.100
+DIST key=disp_xy_m mean=0.031809252 p50=0.023971773 p90=0.064817219 p95=0.089700271 p99=0.133549188 max=0.521036748
+DIST key=disp_along_push_m mean=0.030884499 p50=0.023519516 p90=0.063476562 p95=0.088460922 p99=0.131301880 max=0.500144958
+DIST key=max_cube_speed_mps mean=0.667976825 p50=0.606317453 p90=1.099938910 p95=1.302103193 p99=1.733444051 max=4.549609073
+DIST key=min_tcp_cube_dist_m mean=0.022531569 p50=0.019757776 p90=0.035647761 p95=0.037502932 p99=0.040177722 max=0.047782429
+DIST key=tip_angle_deg mean=62.509628068 p50=58.688558128 p90=127.870753211 p95=141.181661216 p99=150.399799770 max=179.981780282
+DIST key=q_err_max_deg mean=5.532987912 p50=4.711407714 p90=11.501817862 p95=14.960728537 p99=17.843693329 max=30.048652272
+DIST key=action_abs_mean mean=0.086382226 p50=0.085569216 p90=0.105084175 p95=0.110262712 p99=0.119365463 max=0.124855000
+BY_DIR dir=(-1, 0) n=5087 mean_disp_xy_m=0.022943945 moved_5mm_rate=0.988795 push_positive_1mm_rate=0.983094
+BY_DIR dir=(0, -1) n=5061 mean_disp_xy_m=0.019549494 moved_5mm_rate=0.842324 push_positive_1mm_rate=0.905947
+BY_DIR dir=(0, 1) n=5116 mean_disp_xy_m=0.049216516 moved_5mm_rate=0.732799 push_positive_1mm_rate=0.794957
+BY_DIR dir=(1, 0) n=5216 mean_disp_xy_m=0.035277214 moved_5mm_rate=0.944785 push_positive_1mm_rate=0.949962
+LOW_MOTION count=1502 rate=0.073340
+OUTLIER line=7865 ep=7 env=695 dir=(-1,0) disp_xy_m=0.521036748 disp_push_m=0.283946991 speed_mps=4.549609073 tip_deg=33.532632 min_tcp_cube_dist_m=0.025797738
+OUTLIER line=6999 ep=6 env=853 dir=(0,1) disp_xy_m=0.503155234 disp_push_m=0.500144958 speed_mps=3.792765159 tip_deg=56.006830 min_tcp_cube_dist_m=0.025699256
+OUTLIER line=13141 ep=12 env=851 dir=(-1,0) disp_xy_m=0.465007623 disp_push_m=0.045145035 speed_mps=4.086038028 tip_deg=29.667221 min_tcp_cube_dist_m=0.026101248
+OUTLIER line=19238 ep=18 env=804 dir=(-1,0) disp_xy_m=0.372985863 disp_push_m=0.109077454 speed_mps=2.391108084 tip_deg=46.707432 min_tcp_cube_dist_m=0.025558688
+OUTLIER line=18648 ep=18 env=214 dir=(-1,0) disp_xy_m=0.301415593 disp_push_m=-0.260900497 speed_mps=3.317813962 tip_deg=63.162289 min_tcp_cube_dist_m=0.022765783

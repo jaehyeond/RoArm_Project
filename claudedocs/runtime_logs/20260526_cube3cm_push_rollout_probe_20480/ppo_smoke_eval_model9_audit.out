@@ -1,0 +1,10 @@
+EVAL_INPUT exit_code=0 summary=/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_smoke_eval_model9_summary.json summary_md5=b72b4e6b0ed4ef6b4d8c2360d6ed1d7d csv=/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_smoke_eval_model9.csv csv_md5=0443b2e83fc0ddf4809426d97731f695 csv_rows=512
+EVAL_LOGS stdout=/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_smoke_eval_model9_stdout.out stdout_md5=084aaf713c163453e9681bd78a42cc6e stderr=/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_smoke_eval_model9_stderr.err stderr_md5=c5dffe360e6626bb31b0fde3164d963d
+SUMMARY_REF line=3 controlled_push_rate=0.275390625 line=5 disp_along_push_mean_m=0.000917372 line=6 disp_xy_mean_m=0.014052831 line=10 low_motion_rate=0.501953125 line=15 success_marker_rate=0.039062500 line=18 trials=512
+MECHANISM_CHECK training=False dataset_generation=False grasp_attach=False rollout_object_posewrite=False grasped_marker_rate=0.000000000
+TRAIN_VS_EVAL train_controlled_last=0.344401062 eval_controlled=0.275390625 train_low_motion_last=0.367187500 eval_low_motion=0.501953125 train_success_last=0.018066406 eval_success=0.039062500
+CRITICAL_INTERPRETATION policy_rollout_ran=YES learned_success=NO controlled_rate_not_enough=YES low_motion_still_high=YES dataset_generation=NO track_a_grasp_success=NO
+CSV_SAMPLE line=1 text="trial,env_id,disp_along_push_m,disp_xy_m,target_xy_dist_m,final_speed_mps,tip_angle_deg,controlled_push,impact_outlier,low_motion,success_marker,grasped_marker"
+CSV_SAMPLE line=2 text="0,0,-5.7220458984375e-06,8.092194548225962e-06,0.04000568389892578,0.000335744145559147,0.03956468030810356,0,0,1,0,0"
+CSV_SAMPLE line=513 text="511,255,0.01875019073486328,0.023291083052754402,0.025346748530864716,0.0004315208352636546,1.5954068899154663,1,0,0,0,0"
+RESULT eval_model9_audit=EVAL_RAN_WEAK_POLICY_NO_SUCCESS_CLAIM

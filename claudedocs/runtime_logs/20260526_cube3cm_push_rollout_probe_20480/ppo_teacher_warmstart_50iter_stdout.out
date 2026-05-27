@@ -1,0 +1,1874 @@
+[INFO][AppLauncher]: Using device: cuda:0
+[INFO][AppLauncher]: Loading experience file: /home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaaclab/apps/isaaclab.python.headless.kit
+[cube-push-train] ik_endpoint_reset: True
+[cube-push-train] scripted_teacher_blend: 0.0 -> 0.7
+[cube-push-train] scope=no_attach_cube_push env_id=RoArm-CubePush-Direct-v0 training=YES dataset_generation=NO grasp_attach=NO rollout_object_posewrite=NO
+[cube-push-train] action_semantics=normalized_joint_delta target_update='robot_dof_targets += action_scale(0.040) * action' action_dim=6 action_clip=[-1,1] gripper_open_hold=YES
+[cube-push-train] env: num_envs=512 max_iterations=50
+[cube-push-train] curriculum ik_endpoint_reset=True push_progress_reward_scale=60.0 push_displacement_reward_scale=18.0 low_motion_penalty_scale=6.0 controlled_bonus_scale=1.0 impact_penalty_scale=12.0 target_distance_penalty_scale=30.0 speed_penalty_scale=3.0 success_target_tol_m=0.05 success_speed_max_mps=0.5 action_smoothing_alpha=0.25 max_joint_delta_per_step_rad=0.01 contact_joint_delta_scale=0.35 joint_target_lead_limit_rad=0.06 ik_precontact_clearance_m=0.01 scripted_teacher_blend=0.7 scripted_teacher_horizon_frac=0.55
+[cube-push-train] robot_usd_path=b200_backup_20260522_final/tmp_p7/p7_branch_b_cube2cm_opposing_jaw_v7_collision_usd_d024/roarm_m3.usd
+[cube-push-train] ppo: steps_per_env=24
+[cube-push-train] log_dir: /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_teacher_warmstart_logs/cube_push_teacher_warmstart_50iter_20260526
+Setting seed: 0
+[INFO]: Base environment:
+	Environment device    : cuda:0
+	Environment seed      : 0
+	Physics step-size     : 0.005
+	Rendering step-size   : 0.01
+	Environment step-size : 0.01
+[INFO]: Time taken for scene creation : 1.616938 seconds
+[INFO]: Scene manager:  <class InteractiveScene>
+	Number of environments: 512
+	Environment spacing   : 2.0
+	Source prim name      : /World/envs/env_0
+	Global prim paths     : []
+	Replicate physics     : True
+[INFO]: Starting the simulation. This may take a few seconds. Please wait...
+[INFO]: Time taken for simulation start : 0.437372 seconds
+[INFO]: Completed setting up the environment...
+--------------------------------------------------------------------------------
+Resolved observation sets: 
+	 policy :  ['policy']
+	 critic :  ['policy']
+--------------------------------------------------------------------------------
+Actor MLP: MLP(
+  (0): Linear(in_features=28, out_features=256, bias=True)
+  (1): ELU(alpha=1.0)
+  (2): Linear(in_features=256, out_features=128, bias=True)
+  (3): ELU(alpha=1.0)
+  (4): Linear(in_features=128, out_features=64, bias=True)
+  (5): ELU(alpha=1.0)
+  (6): Linear(in_features=64, out_features=6, bias=True)
+)
+Critic MLP: MLP(
+  (0): Linear(in_features=28, out_features=256, bias=True)
+  (1): ELU(alpha=1.0)
+  (2): Linear(in_features=256, out_features=128, bias=True)
+  (3): ELU(alpha=1.0)
+  (4): Linear(in_features=128, out_features=64, bias=True)
+  (5): ELU(alpha=1.0)
+  (6): Linear(in_features=64, out_features=1, bias=True)
+)
+################################################################################
+                       [1m Learning iteration 0/50 [0m                        
+
+                       Computation: 2673 steps/s (collection: 4.464s, learning 0.132s)
+             Mean action noise std: 0.80
+          Mean value_function loss: 649.8249
+               Mean surrogate loss: -0.0045
+                 Mean entropy loss: 7.1735
+                       Mean reward: -0.64
+               Mean episode length: 13.51
+Mean episode cube_push_disp_along_m: 0.0048
+  Mean episode cube_push_disp_xy_m: 0.0123
+Mean episode cube_push_target_xy_dist_m: 0.0413
+Mean episode cube_push_tcp_cube_dist_m: 0.0332
+  Mean episode cube_push_speed_mps: 0.1991
+Mean episode cube_push_speed_over_0p5_rate: 0.1162
+Mean episode cube_push_tip_angle_deg: 8.8581
+Mean episode cube_push_controlled_rate: 0.3465
+Mean episode cube_push_impact_rate: 0.0039
+Mean episode cube_push_low_motion_rate: 0.5593
+Mean episode cube_push_far_target_rate: 0.0004
+Mean episode cube_push_terminal_impact_rate: 0.0042
+Mean episode cube_push_success_rate: 0.0056
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7330
+Mean episode cube_push_joint_delta_abs_mean: 0.0017
+Mean episode cube_push_contact_slowdown_mean: 0.3468
+Mean episode cube_push_teacher_blend_mean: 0.4269
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0083
+--------------------------------------------------------------------------------
+                   Total timesteps: 12288
+                    Iteration time: 4.60s
+                      Time elapsed: 00:00:04
+                               ETA: 00:03:49
+
+Could not find git repository in /home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/rsl_rl/__init__.py. Skipping.
+################################################################################
+                       [1m Learning iteration 1/50 [0m                        
+
+                       Computation: 4789 steps/s (collection: 2.522s, learning 0.043s)
+             Mean action noise std: 0.80
+          Mean value_function loss: 1094.5836
+               Mean surrogate loss: -0.0029
+                 Mean entropy loss: 7.1664
+                       Mean reward: 20.59
+               Mean episode length: 28.24
+Mean episode cube_push_disp_along_m: 0.0060
+  Mean episode cube_push_disp_xy_m: 0.0146
+Mean episode cube_push_target_xy_dist_m: 0.0406
+Mean episode cube_push_tcp_cube_dist_m: 0.0287
+  Mean episode cube_push_speed_mps: 0.1183
+Mean episode cube_push_speed_over_0p5_rate: 0.0149
+Mean episode cube_push_tip_angle_deg: 14.5775
+Mean episode cube_push_controlled_rate: 0.5663
+Mean episode cube_push_impact_rate: 0.0017
+Mean episode cube_push_low_motion_rate: 0.3951
+Mean episode cube_push_far_target_rate: 0.0006
+Mean episode cube_push_terminal_impact_rate: 0.0020
+Mean episode cube_push_success_rate: 0.0011
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7354
+Mean episode cube_push_joint_delta_abs_mean: 0.0018
+Mean episode cube_push_contact_slowdown_mean: 0.3770
+Mean episode cube_push_teacher_blend_mean: 0.4335
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0076
+--------------------------------------------------------------------------------
+                   Total timesteps: 24576
+                    Iteration time: 2.57s
+                      Time elapsed: 00:00:07
+                               ETA: 00:02:55
+
+################################################################################
+                       [1m Learning iteration 2/50 [0m                        
+
+                       Computation: 3884 steps/s (collection: 3.120s, learning 0.043s)
+             Mean action noise std: 0.80
+          Mean value_function loss: 1439.8404
+               Mean surrogate loss: 0.0041
+                 Mean entropy loss: 7.1589
+                       Mean reward: 78.21
+               Mean episode length: 45.40
+Mean episode cube_push_disp_along_m: 0.0087
+  Mean episode cube_push_disp_xy_m: 0.0178
+Mean episode cube_push_target_xy_dist_m: 0.0393
+Mean episode cube_push_tcp_cube_dist_m: 0.0293
+  Mean episode cube_push_speed_mps: 0.1451
+Mean episode cube_push_speed_over_0p5_rate: 0.0223
+Mean episode cube_push_tip_angle_deg: 21.4688
+Mean episode cube_push_controlled_rate: 0.6629
+Mean episode cube_push_impact_rate: 0.0021
+Mean episode cube_push_low_motion_rate: 0.2537
+Mean episode cube_push_far_target_rate: 0.0004
+Mean episode cube_push_terminal_impact_rate: 0.0024
+Mean episode cube_push_success_rate: 0.0022
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7345
+Mean episode cube_push_joint_delta_abs_mean: 0.0019
+Mean episode cube_push_contact_slowdown_mean: 0.3850
+Mean episode cube_push_teacher_blend_mean: 0.4335
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0075
+--------------------------------------------------------------------------------
+                   Total timesteps: 36864
+                    Iteration time: 3.16s
+                      Time elapsed: 00:00:10
+                               ETA: 00:02:45
+
+################################################################################
+                       [1m Learning iteration 3/50 [0m                        
+
+                       Computation: 3391 steps/s (collection: 3.582s, learning 0.041s)
+             Mean action noise std: 0.80
+          Mean value_function loss: 1406.2214
+               Mean surrogate loss: -0.0012
+                 Mean entropy loss: 7.1590
+                       Mean reward: 157.18
+               Mean episode length: 64.62
+Mean episode cube_push_disp_along_m: 0.0091
+  Mean episode cube_push_disp_xy_m: 0.0186
+Mean episode cube_push_target_xy_dist_m: 0.0393
+Mean episode cube_push_tcp_cube_dist_m: 0.0316
+  Mean episode cube_push_speed_mps: 0.1426
+Mean episode cube_push_speed_over_0p5_rate: 0.0234
+Mean episode cube_push_tip_angle_deg: 23.1386
+Mean episode cube_push_controlled_rate: 0.6579
+Mean episode cube_push_impact_rate: 0.0021
+Mean episode cube_push_low_motion_rate: 0.2487
+Mean episode cube_push_far_target_rate: 0.0000
+Mean episode cube_push_terminal_impact_rate: 0.0021
+Mean episode cube_push_success_rate: 0.0037
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7434
+Mean episode cube_push_joint_delta_abs_mean: 0.0020
+Mean episode cube_push_contact_slowdown_mean: 0.3994
+Mean episode cube_push_teacher_blend_mean: 0.3766
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0080
+--------------------------------------------------------------------------------
+                   Total timesteps: 49152
+                    Iteration time: 3.62s
+                      Time elapsed: 00:00:13
+                               ETA: 00:02:43
+
+################################################################################
+                       [1m Learning iteration 4/50 [0m                        
+
+                       Computation: 4521 steps/s (collection: 2.677s, learning 0.041s)
+             Mean action noise std: 0.80
+          Mean value_function loss: 1302.7792
+               Mean surrogate loss: 0.0007
+                 Mean entropy loss: 7.1586
+                       Mean reward: 232.11
+               Mean episode length: 85.70
+Mean episode cube_push_disp_along_m: 0.0083
+  Mean episode cube_push_disp_xy_m: 0.0184
+Mean episode cube_push_target_xy_dist_m: 0.0402
+Mean episode cube_push_tcp_cube_dist_m: 0.0318
+  Mean episode cube_push_speed_mps: 0.1248
+Mean episode cube_push_speed_over_0p5_rate: 0.0143
+Mean episode cube_push_tip_angle_deg: 23.1245
+Mean episode cube_push_controlled_rate: 0.6406
+Mean episode cube_push_impact_rate: 0.0012
+Mean episode cube_push_low_motion_rate: 0.2692
+Mean episode cube_push_far_target_rate: 0.0002
+Mean episode cube_push_terminal_impact_rate: 0.0012
+Mean episode cube_push_success_rate: 0.0022
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7518
+Mean episode cube_push_joint_delta_abs_mean: 0.0020
+Mean episode cube_push_contact_slowdown_mean: 0.4096
+Mean episode cube_push_teacher_blend_mean: 0.3902
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0078
+--------------------------------------------------------------------------------
+                   Total timesteps: 61440
+                    Iteration time: 2.72s
+                      Time elapsed: 00:00:16
+                               ETA: 00:02:33
+
+################################################################################
+                       [1m Learning iteration 5/50 [0m                        
+
+                       Computation: 2817 steps/s (collection: 4.321s, learning 0.041s)
+             Mean action noise std: 0.80
+          Mean value_function loss: 1233.8787
+               Mean surrogate loss: 0.0049
+                 Mean entropy loss: 7.1608
+                       Mean reward: 165.09
+               Mean episode length: 76.57
+Mean episode cube_push_disp_along_m: 0.0080
+  Mean episode cube_push_disp_xy_m: 0.0180
+Mean episode cube_push_target_xy_dist_m: 0.0398
+Mean episode cube_push_tcp_cube_dist_m: 0.0322
+  Mean episode cube_push_speed_mps: 0.1478
+Mean episode cube_push_speed_over_0p5_rate: 0.0313
+Mean episode cube_push_tip_angle_deg: 22.5479
+Mean episode cube_push_controlled_rate: 0.6164
+Mean episode cube_push_impact_rate: 0.0028
+Mean episode cube_push_low_motion_rate: 0.2890
+Mean episode cube_push_far_target_rate: 0.0003
+Mean episode cube_push_terminal_impact_rate: 0.0029
+Mean episode cube_push_success_rate: 0.0036
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7556
+Mean episode cube_push_joint_delta_abs_mean: 0.0019
+Mean episode cube_push_contact_slowdown_mean: 0.4030
+Mean episode cube_push_teacher_blend_mean: 0.4492
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0071
+--------------------------------------------------------------------------------
+                   Total timesteps: 73728
+                    Iteration time: 4.36s
+                      Time elapsed: 00:00:21
+                               ETA: 00:02:37
+
+################################################################################
+                       [1m Learning iteration 6/50 [0m                        
+
+                       Computation: 4507 steps/s (collection: 2.668s, learning 0.058s)
+             Mean action noise std: 0.80
+          Mean value_function loss: 1368.5966
+               Mean surrogate loss: -0.0007
+                 Mean entropy loss: 7.1621
+                       Mean reward: 228.56
+               Mean episode length: 80.85
+Mean episode cube_push_disp_along_m: 0.0087
+  Mean episode cube_push_disp_xy_m: 0.0180
+Mean episode cube_push_target_xy_dist_m: 0.0393
+Mean episode cube_push_tcp_cube_dist_m: 0.0314
+  Mean episode cube_push_speed_mps: 0.1370
+Mean episode cube_push_speed_over_0p5_rate: 0.0229
+Mean episode cube_push_tip_angle_deg: 22.1698
+Mean episode cube_push_controlled_rate: 0.6322
+Mean episode cube_push_impact_rate: 0.0012
+Mean episode cube_push_low_motion_rate: 0.2923
+Mean episode cube_push_far_target_rate: 0.0000
+Mean episode cube_push_terminal_impact_rate: 0.0012
+Mean episode cube_push_success_rate: 0.0035
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7506
+Mean episode cube_push_joint_delta_abs_mean: 0.0020
+Mean episode cube_push_contact_slowdown_mean: 0.4055
+Mean episode cube_push_teacher_blend_mean: 0.4468
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0073
+--------------------------------------------------------------------------------
+                   Total timesteps: 86016
+                    Iteration time: 2.73s
+                      Time elapsed: 00:00:23
+                               ETA: 00:02:29
+
+################################################################################
+                       [1m Learning iteration 7/50 [0m                        
+
+                       Computation: 3926 steps/s (collection: 3.072s, learning 0.057s)
+             Mean action noise std: 0.80
+          Mean value_function loss: 1427.8052
+               Mean surrogate loss: 0.0012
+                 Mean entropy loss: 7.1586
+                       Mean reward: 254.46
+               Mean episode length: 77.91
+Mean episode cube_push_disp_along_m: 0.0100
+  Mean episode cube_push_disp_xy_m: 0.0189
+Mean episode cube_push_target_xy_dist_m: 0.0390
+Mean episode cube_push_tcp_cube_dist_m: 0.0320
+  Mean episode cube_push_speed_mps: 0.1465
+Mean episode cube_push_speed_over_0p5_rate: 0.0264
+Mean episode cube_push_tip_angle_deg: 22.9625
+Mean episode cube_push_controlled_rate: 0.6707
+Mean episode cube_push_impact_rate: 0.0021
+Mean episode cube_push_low_motion_rate: 0.2672
+Mean episode cube_push_far_target_rate: 0.0000
+Mean episode cube_push_terminal_impact_rate: 0.0021
+Mean episode cube_push_success_rate: 0.0028
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7457
+Mean episode cube_push_joint_delta_abs_mean: 0.0020
+Mean episode cube_push_contact_slowdown_mean: 0.4064
+Mean episode cube_push_teacher_blend_mean: 0.4280
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0076
+--------------------------------------------------------------------------------
+                   Total timesteps: 98304
+                    Iteration time: 3.13s
+                      Time elapsed: 00:00:26
+                               ETA: 00:02:24
+
+################################################################################
+                       [1m Learning iteration 8/50 [0m                        
+
+                       Computation: 3538 steps/s (collection: 3.427s, learning 0.046s)
+             Mean action noise std: 0.80
+          Mean value_function loss: 1415.5076
+               Mean surrogate loss: 0.0014
+                 Mean entropy loss: 7.1567
+                       Mean reward: 206.20
+               Mean episode length: 85.67
+Mean episode cube_push_disp_along_m: 0.0098
+  Mean episode cube_push_disp_xy_m: 0.0196
+Mean episode cube_push_target_xy_dist_m: 0.0395
+Mean episode cube_push_tcp_cube_dist_m: 0.0326
+  Mean episode cube_push_speed_mps: 0.1520
+Mean episode cube_push_speed_over_0p5_rate: 0.0310
+Mean episode cube_push_tip_angle_deg: 23.9280
+Mean episode cube_push_controlled_rate: 0.6702
+Mean episode cube_push_impact_rate: 0.0019
+Mean episode cube_push_low_motion_rate: 0.2536
+Mean episode cube_push_far_target_rate: 0.0003
+Mean episode cube_push_terminal_impact_rate: 0.0020
+Mean episode cube_push_success_rate: 0.0036
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7437
+Mean episode cube_push_joint_delta_abs_mean: 0.0020
+Mean episode cube_push_contact_slowdown_mean: 0.4086
+Mean episode cube_push_teacher_blend_mean: 0.3890
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0078
+--------------------------------------------------------------------------------
+                   Total timesteps: 110592
+                    Iteration time: 3.47s
+                      Time elapsed: 00:00:30
+                               ETA: 00:02:21
+
+################################################################################
+                       [1m Learning iteration 9/50 [0m                        
+
+                       Computation: 4375 steps/s (collection: 2.764s, learning 0.045s)
+             Mean action noise std: 0.80
+          Mean value_function loss: 1498.9879
+               Mean surrogate loss: 0.0018
+                 Mean entropy loss: 7.1609
+                       Mean reward: 237.80
+               Mean episode length: 82.37
+Mean episode cube_push_disp_along_m: 0.0102
+  Mean episode cube_push_disp_xy_m: 0.0201
+Mean episode cube_push_target_xy_dist_m: 0.0396
+Mean episode cube_push_tcp_cube_dist_m: 0.0323
+  Mean episode cube_push_speed_mps: 0.1415
+Mean episode cube_push_speed_over_0p5_rate: 0.0242
+Mean episode cube_push_tip_angle_deg: 23.7711
+Mean episode cube_push_controlled_rate: 0.6714
+Mean episode cube_push_impact_rate: 0.0016
+Mean episode cube_push_low_motion_rate: 0.2341
+Mean episode cube_push_far_target_rate: 0.0002
+Mean episode cube_push_terminal_impact_rate: 0.0018
+Mean episode cube_push_success_rate: 0.0028
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7350
+Mean episode cube_push_joint_delta_abs_mean: 0.0020
+Mean episode cube_push_contact_slowdown_mean: 0.4120
+Mean episode cube_push_teacher_blend_mean: 0.3943
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0078
+--------------------------------------------------------------------------------
+                   Total timesteps: 122880
+                    Iteration time: 2.81s
+                      Time elapsed: 00:00:33
+                               ETA: 00:02:15
+
+################################################################################
+                       [1m Learning iteration 10/50 [0m                       
+
+                       Computation: 3269 steps/s (collection: 3.712s, learning 0.046s)
+             Mean action noise std: 0.80
+          Mean value_function loss: 1322.0248
+               Mean surrogate loss: 0.0046
+                 Mean entropy loss: 7.1589
+                       Mean reward: 262.90
+               Mean episode length: 83.97
+Mean episode cube_push_disp_along_m: 0.0093
+  Mean episode cube_push_disp_xy_m: 0.0198
+Mean episode cube_push_target_xy_dist_m: 0.0402
+Mean episode cube_push_tcp_cube_dist_m: 0.0321
+  Mean episode cube_push_speed_mps: 0.1397
+Mean episode cube_push_speed_over_0p5_rate: 0.0262
+Mean episode cube_push_tip_angle_deg: 22.5496
+Mean episode cube_push_controlled_rate: 0.6266
+Mean episode cube_push_impact_rate: 0.0020
+Mean episode cube_push_low_motion_rate: 0.2603
+Mean episode cube_push_far_target_rate: 0.0002
+Mean episode cube_push_terminal_impact_rate: 0.0020
+Mean episode cube_push_success_rate: 0.0037
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7242
+Mean episode cube_push_joint_delta_abs_mean: 0.0020
+Mean episode cube_push_contact_slowdown_mean: 0.4156
+Mean episode cube_push_teacher_blend_mean: 0.4354
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0072
+--------------------------------------------------------------------------------
+                   Total timesteps: 135168
+                    Iteration time: 3.76s
+                      Time elapsed: 00:00:36
+                               ETA: 00:02:14
+
+################################################################################
+                       [1m Learning iteration 11/50 [0m                       
+
+                       Computation: 4672 steps/s (collection: 2.582s, learning 0.047s)
+             Mean action noise std: 0.80
+          Mean value_function loss: 1280.9869
+               Mean surrogate loss: -0.0013
+                 Mean entropy loss: 7.1572
+                       Mean reward: 245.26
+               Mean episode length: 80.75
+Mean episode cube_push_disp_along_m: 0.0084
+  Mean episode cube_push_disp_xy_m: 0.0189
+Mean episode cube_push_target_xy_dist_m: 0.0407
+Mean episode cube_push_tcp_cube_dist_m: 0.0312
+  Mean episode cube_push_speed_mps: 0.1348
+Mean episode cube_push_speed_over_0p5_rate: 0.0223
+Mean episode cube_push_tip_angle_deg: 20.9459
+Mean episode cube_push_controlled_rate: 0.6140
+Mean episode cube_push_impact_rate: 0.0018
+Mean episode cube_push_low_motion_rate: 0.2865
+Mean episode cube_push_far_target_rate: 0.0001
+Mean episode cube_push_terminal_impact_rate: 0.0018
+Mean episode cube_push_success_rate: 0.0024
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7300
+Mean episode cube_push_joint_delta_abs_mean: 0.0020
+Mean episode cube_push_contact_slowdown_mean: 0.4051
+Mean episode cube_push_teacher_blend_mean: 0.4398
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0073
+--------------------------------------------------------------------------------
+                   Total timesteps: 147456
+                    Iteration time: 2.63s
+                      Time elapsed: 00:00:39
+                               ETA: 00:02:08
+
+################################################################################
+                       [1m Learning iteration 12/50 [0m                       
+
+                       Computation: 4440 steps/s (collection: 2.723s, learning 0.044s)
+             Mean action noise std: 0.80
+          Mean value_function loss: 1401.3494
+               Mean surrogate loss: -0.0040
+                 Mean entropy loss: 7.1492
+                       Mean reward: 185.07
+               Mean episode length: 86.39
+Mean episode cube_push_disp_along_m: 0.0083
+  Mean episode cube_push_disp_xy_m: 0.0185
+Mean episode cube_push_target_xy_dist_m: 0.0395
+Mean episode cube_push_tcp_cube_dist_m: 0.0312
+  Mean episode cube_push_speed_mps: 0.1409
+Mean episode cube_push_speed_over_0p5_rate: 0.0241
+Mean episode cube_push_tip_angle_deg: 23.1695
+Mean episode cube_push_controlled_rate: 0.6676
+Mean episode cube_push_impact_rate: 0.0012
+Mean episode cube_push_low_motion_rate: 0.2591
+Mean episode cube_push_far_target_rate: 0.0001
+Mean episode cube_push_terminal_impact_rate: 0.0012
+Mean episode cube_push_success_rate: 0.0024
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7428
+Mean episode cube_push_joint_delta_abs_mean: 0.0020
+Mean episode cube_push_contact_slowdown_mean: 0.4047
+Mean episode cube_push_teacher_blend_mean: 0.4215
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0076
+--------------------------------------------------------------------------------
+                   Total timesteps: 159744
+                    Iteration time: 2.77s
+                      Time elapsed: 00:00:42
+                               ETA: 00:02:03
+
+################################################################################
+                       [1m Learning iteration 13/50 [0m                       
+
+                       Computation: 4007 steps/s (collection: 3.020s, learning 0.046s)
+             Mean action noise std: 0.80
+          Mean value_function loss: 1403.8480
+               Mean surrogate loss: -0.0041
+                 Mean entropy loss: 7.1467
+                       Mean reward: 269.09
+               Mean episode length: 85.24
+Mean episode cube_push_disp_along_m: 0.0089
+  Mean episode cube_push_disp_xy_m: 0.0189
+Mean episode cube_push_target_xy_dist_m: 0.0394
+Mean episode cube_push_tcp_cube_dist_m: 0.0320
+  Mean episode cube_push_speed_mps: 0.1407
+Mean episode cube_push_speed_over_0p5_rate: 0.0256
+Mean episode cube_push_tip_angle_deg: 24.0075
+Mean episode cube_push_controlled_rate: 0.6650
+Mean episode cube_push_impact_rate: 0.0013
+Mean episode cube_push_low_motion_rate: 0.2430
+Mean episode cube_push_far_target_rate: 0.0002
+Mean episode cube_push_terminal_impact_rate: 0.0015
+Mean episode cube_push_success_rate: 0.0032
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7523
+Mean episode cube_push_joint_delta_abs_mean: 0.0020
+Mean episode cube_push_contact_slowdown_mean: 0.4100
+Mean episode cube_push_teacher_blend_mean: 0.3802
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0080
+--------------------------------------------------------------------------------
+                   Total timesteps: 172032
+                    Iteration time: 3.07s
+                      Time elapsed: 00:00:45
+                               ETA: 00:01:59
+
+################################################################################
+                       [1m Learning iteration 14/50 [0m                       
+
+                       Computation: 3913 steps/s (collection: 3.093s, learning 0.047s)
+             Mean action noise std: 0.80
+          Mean value_function loss: 1367.3298
+               Mean surrogate loss: -0.0029
+                 Mean entropy loss: 7.1438
+                       Mean reward: 208.54
+               Mean episode length: 80.03
+Mean episode cube_push_disp_along_m: 0.0088
+  Mean episode cube_push_disp_xy_m: 0.0186
+Mean episode cube_push_target_xy_dist_m: 0.0394
+Mean episode cube_push_tcp_cube_dist_m: 0.0320
+  Mean episode cube_push_speed_mps: 0.1376
+Mean episode cube_push_speed_over_0p5_rate: 0.0228
+Mean episode cube_push_tip_angle_deg: 24.0861
+Mean episode cube_push_controlled_rate: 0.6597
+Mean episode cube_push_impact_rate: 0.0024
+Mean episode cube_push_low_motion_rate: 0.2467
+Mean episode cube_push_far_target_rate: 0.0005
+Mean episode cube_push_terminal_impact_rate: 0.0024
+Mean episode cube_push_success_rate: 0.0029
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7580
+Mean episode cube_push_joint_delta_abs_mean: 0.0020
+Mean episode cube_push_contact_slowdown_mean: 0.4108
+Mean episode cube_push_teacher_blend_mean: 0.3878
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0079
+--------------------------------------------------------------------------------
+                   Total timesteps: 184320
+                    Iteration time: 3.14s
+                      Time elapsed: 00:00:48
+                               ETA: 00:01:56
+
+################################################################################
+                       [1m Learning iteration 15/50 [0m                       
+
+                       Computation: 3333 steps/s (collection: 3.645s, learning 0.041s)
+             Mean action noise std: 0.80
+          Mean value_function loss: 1373.5207
+               Mean surrogate loss: -0.0033
+                 Mean entropy loss: 7.1707
+                       Mean reward: 236.35
+               Mean episode length: 92.11
+Mean episode cube_push_disp_along_m: 0.0092
+  Mean episode cube_push_disp_xy_m: 0.0183
+Mean episode cube_push_target_xy_dist_m: 0.0391
+Mean episode cube_push_tcp_cube_dist_m: 0.0317
+  Mean episode cube_push_speed_mps: 0.1395
+Mean episode cube_push_speed_over_0p5_rate: 0.0249
+Mean episode cube_push_tip_angle_deg: 23.2330
+Mean episode cube_push_controlled_rate: 0.6589
+Mean episode cube_push_impact_rate: 0.0018
+Mean episode cube_push_low_motion_rate: 0.2469
+Mean episode cube_push_far_target_rate: 0.0002
+Mean episode cube_push_terminal_impact_rate: 0.0019
+Mean episode cube_push_success_rate: 0.0022
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7705
+Mean episode cube_push_joint_delta_abs_mean: 0.0020
+Mean episode cube_push_contact_slowdown_mean: 0.4097
+Mean episode cube_push_teacher_blend_mean: 0.4374
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0072
+--------------------------------------------------------------------------------
+                   Total timesteps: 196608
+                    Iteration time: 3.69s
+                      Time elapsed: 00:00:52
+                               ETA: 00:01:54
+
+################################################################################
+                       [1m Learning iteration 16/50 [0m                       
+
+                       Computation: 4868 steps/s (collection: 2.484s, learning 0.040s)
+             Mean action noise std: 0.80
+          Mean value_function loss: 1429.6981
+               Mean surrogate loss: -0.0030
+                 Mean entropy loss: 7.2027
+                       Mean reward: 295.37
+               Mean episode length: 88.19
+Mean episode cube_push_disp_along_m: 0.0103
+  Mean episode cube_push_disp_xy_m: 0.0197
+Mean episode cube_push_target_xy_dist_m: 0.0392
+Mean episode cube_push_tcp_cube_dist_m: 0.0318
+  Mean episode cube_push_speed_mps: 0.1366
+Mean episode cube_push_speed_over_0p5_rate: 0.0251
+Mean episode cube_push_tip_angle_deg: 23.3521
+Mean episode cube_push_controlled_rate: 0.6817
+Mean episode cube_push_impact_rate: 0.0007
+Mean episode cube_push_low_motion_rate: 0.2299
+Mean episode cube_push_far_target_rate: 0.0002
+Mean episode cube_push_terminal_impact_rate: 0.0008
+Mean episode cube_push_success_rate: 0.0028
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7715
+Mean episode cube_push_joint_delta_abs_mean: 0.0020
+Mean episode cube_push_contact_slowdown_mean: 0.4159
+Mean episode cube_push_teacher_blend_mean: 0.4484
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0072
+--------------------------------------------------------------------------------
+                   Total timesteps: 208896
+                    Iteration time: 2.52s
+                      Time elapsed: 00:00:54
+                               ETA: 00:01:49
+
+################################################################################
+                       [1m Learning iteration 17/50 [0m                       
+
+                       Computation: 3941 steps/s (collection: 3.073s, learning 0.045s)
+             Mean action noise std: 0.80
+          Mean value_function loss: 1411.8324
+               Mean surrogate loss: -0.0040
+                 Mean entropy loss: 7.2084
+                       Mean reward: 248.15
+               Mean episode length: 83.53
+Mean episode cube_push_disp_along_m: 0.0111
+  Mean episode cube_push_disp_xy_m: 0.0203
+Mean episode cube_push_target_xy_dist_m: 0.0393
+Mean episode cube_push_tcp_cube_dist_m: 0.0324
+  Mean episode cube_push_speed_mps: 0.1380
+Mean episode cube_push_speed_over_0p5_rate: 0.0221
+Mean episode cube_push_tip_angle_deg: 23.2621
+Mean episode cube_push_controlled_rate: 0.6978
+Mean episode cube_push_impact_rate: 0.0012
+Mean episode cube_push_low_motion_rate: 0.2129
+Mean episode cube_push_far_target_rate: 0.0003
+Mean episode cube_push_terminal_impact_rate: 0.0014
+Mean episode cube_push_success_rate: 0.0037
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7753
+Mean episode cube_push_joint_delta_abs_mean: 0.0021
+Mean episode cube_push_contact_slowdown_mean: 0.4240
+Mean episode cube_push_teacher_blend_mean: 0.4237
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0077
+--------------------------------------------------------------------------------
+                   Total timesteps: 221184
+                    Iteration time: 3.12s
+                      Time elapsed: 00:00:57
+                               ETA: 00:01:46
+
+################################################################################
+                       [1m Learning iteration 18/50 [0m                       
+
+                       Computation: 3793 steps/s (collection: 3.196s, learning 0.044s)
+             Mean action noise std: 0.81
+          Mean value_function loss: 1431.8140
+               Mean surrogate loss: -0.0032
+                 Mean entropy loss: 7.2166
+                       Mean reward: 274.28
+               Mean episode length: 88.53
+Mean episode cube_push_disp_along_m: 0.0115
+  Mean episode cube_push_disp_xy_m: 0.0203
+Mean episode cube_push_target_xy_dist_m: 0.0391
+Mean episode cube_push_tcp_cube_dist_m: 0.0320
+  Mean episode cube_push_speed_mps: 0.1356
+Mean episode cube_push_speed_over_0p5_rate: 0.0233
+Mean episode cube_push_tip_angle_deg: 23.1822
+Mean episode cube_push_controlled_rate: 0.6803
+Mean episode cube_push_impact_rate: 0.0014
+Mean episode cube_push_low_motion_rate: 0.2151
+Mean episode cube_push_far_target_rate: 0.0000
+Mean episode cube_push_terminal_impact_rate: 0.0014
+Mean episode cube_push_success_rate: 0.0037
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7749
+Mean episode cube_push_joint_delta_abs_mean: 0.0021
+Mean episode cube_push_contact_slowdown_mean: 0.4147
+Mean episode cube_push_teacher_blend_mean: 0.3919
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0080
+--------------------------------------------------------------------------------
+                   Total timesteps: 233472
+                    Iteration time: 3.24s
+                      Time elapsed: 00:01:01
+                               ETA: 00:01:42
+
+################################################################################
+                       [1m Learning iteration 19/50 [0m                       
+
+                       Computation: 3796 steps/s (collection: 3.191s, learning 0.045s)
+             Mean action noise std: 0.81
+          Mean value_function loss: 1396.1190
+               Mean surrogate loss: -0.0040
+                 Mean entropy loss: 7.2582
+                       Mean reward: 259.85
+               Mean episode length: 86.00
+Mean episode cube_push_disp_along_m: 0.0118
+  Mean episode cube_push_disp_xy_m: 0.0205
+Mean episode cube_push_target_xy_dist_m: 0.0393
+Mean episode cube_push_tcp_cube_dist_m: 0.0315
+  Mean episode cube_push_speed_mps: 0.1334
+Mean episode cube_push_speed_over_0p5_rate: 0.0229
+Mean episode cube_push_tip_angle_deg: 22.7388
+Mean episode cube_push_controlled_rate: 0.6728
+Mean episode cube_push_impact_rate: 0.0017
+Mean episode cube_push_low_motion_rate: 0.2387
+Mean episode cube_push_far_target_rate: 0.0002
+Mean episode cube_push_terminal_impact_rate: 0.0018
+Mean episode cube_push_success_rate: 0.0033
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7737
+Mean episode cube_push_joint_delta_abs_mean: 0.0021
+Mean episode cube_push_contact_slowdown_mean: 0.4154
+Mean episode cube_push_teacher_blend_mean: 0.4031
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0079
+--------------------------------------------------------------------------------
+                   Total timesteps: 245760
+                    Iteration time: 3.24s
+                      Time elapsed: 00:01:04
+                               ETA: 00:01:39
+
+################################################################################
+                       [1m Learning iteration 20/50 [0m                       
+
+                       Computation: 3436 steps/s (collection: 3.535s, learning 0.041s)
+             Mean action noise std: 0.81
+          Mean value_function loss: 1338.7098
+               Mean surrogate loss: -0.0039
+                 Mean entropy loss: 7.2426
+                       Mean reward: 261.70
+               Mean episode length: 87.72
+Mean episode cube_push_disp_along_m: 0.0110
+  Mean episode cube_push_disp_xy_m: 0.0204
+Mean episode cube_push_target_xy_dist_m: 0.0398
+Mean episode cube_push_tcp_cube_dist_m: 0.0319
+  Mean episode cube_push_speed_mps: 0.1439
+Mean episode cube_push_speed_over_0p5_rate: 0.0282
+Mean episode cube_push_tip_angle_deg: 23.7603
+Mean episode cube_push_controlled_rate: 0.6651
+Mean episode cube_push_impact_rate: 0.0021
+Mean episode cube_push_low_motion_rate: 0.2372
+Mean episode cube_push_far_target_rate: 0.0003
+Mean episode cube_push_terminal_impact_rate: 0.0023
+Mean episode cube_push_success_rate: 0.0030
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7728
+Mean episode cube_push_joint_delta_abs_mean: 0.0020
+Mean episode cube_push_contact_slowdown_mean: 0.4064
+Mean episode cube_push_teacher_blend_mean: 0.4351
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0075
+--------------------------------------------------------------------------------
+                   Total timesteps: 258048
+                    Iteration time: 3.58s
+                      Time elapsed: 00:01:07
+                               ETA: 00:01:37
+
+################################################################################
+                       [1m Learning iteration 21/50 [0m                       
+
+                       Computation: 4547 steps/s (collection: 2.652s, learning 0.050s)
+             Mean action noise std: 0.81
+          Mean value_function loss: 1473.9767
+               Mean surrogate loss: -0.0014
+                 Mean entropy loss: 7.2357
+                       Mean reward: 276.59
+               Mean episode length: 84.40
+Mean episode cube_push_disp_along_m: 0.0108
+  Mean episode cube_push_disp_xy_m: 0.0198
+Mean episode cube_push_target_xy_dist_m: 0.0391
+Mean episode cube_push_tcp_cube_dist_m: 0.0324
+  Mean episode cube_push_speed_mps: 0.1344
+Mean episode cube_push_speed_over_0p5_rate: 0.0238
+Mean episode cube_push_tip_angle_deg: 24.5940
+Mean episode cube_push_controlled_rate: 0.6777
+Mean episode cube_push_impact_rate: 0.0016
+Mean episode cube_push_low_motion_rate: 0.2215
+Mean episode cube_push_far_target_rate: 0.0002
+Mean episode cube_push_terminal_impact_rate: 0.0016
+Mean episode cube_push_success_rate: 0.0024
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7795
+Mean episode cube_push_joint_delta_abs_mean: 0.0021
+Mean episode cube_push_contact_slowdown_mean: 0.4123
+Mean episode cube_push_teacher_blend_mean: 0.4305
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0076
+--------------------------------------------------------------------------------
+                   Total timesteps: 270336
+                    Iteration time: 2.70s
+                      Time elapsed: 00:01:10
+                               ETA: 00:01:33
+
+################################################################################
+                       [1m Learning iteration 22/50 [0m                       
+
+                       Computation: 3602 steps/s (collection: 3.367s, learning 0.044s)
+             Mean action noise std: 0.81
+          Mean value_function loss: 1341.9668
+               Mean surrogate loss: -0.0025
+                 Mean entropy loss: 7.2435
+                       Mean reward: 252.14
+               Mean episode length: 80.29
+Mean episode cube_push_disp_along_m: 0.0096
+  Mean episode cube_push_disp_xy_m: 0.0192
+Mean episode cube_push_target_xy_dist_m: 0.0392
+Mean episode cube_push_tcp_cube_dist_m: 0.0329
+  Mean episode cube_push_speed_mps: 0.1387
+Mean episode cube_push_speed_over_0p5_rate: 0.0269
+Mean episode cube_push_tip_angle_deg: 23.9795
+Mean episode cube_push_controlled_rate: 0.6538
+Mean episode cube_push_impact_rate: 0.0019
+Mean episode cube_push_low_motion_rate: 0.2319
+Mean episode cube_push_far_target_rate: 0.0002
+Mean episode cube_push_terminal_impact_rate: 0.0020
+Mean episode cube_push_success_rate: 0.0041
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7780
+Mean episode cube_push_joint_delta_abs_mean: 0.0021
+Mean episode cube_push_contact_slowdown_mean: 0.4139
+Mean episode cube_push_teacher_blend_mean: 0.4139
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0078
+--------------------------------------------------------------------------------
+                   Total timesteps: 282624
+                    Iteration time: 3.41s
+                      Time elapsed: 00:01:14
+                               ETA: 00:01:30
+
+################################################################################
+                       [1m Learning iteration 23/50 [0m                       
+
+                       Computation: 3693 steps/s (collection: 3.273s, learning 0.054s)
+             Mean action noise std: 0.81
+          Mean value_function loss: 1304.7212
+               Mean surrogate loss: -0.0015
+                 Mean entropy loss: 7.2608
+                       Mean reward: 241.62
+               Mean episode length: 89.94
+Mean episode cube_push_disp_along_m: 0.0087
+  Mean episode cube_push_disp_xy_m: 0.0181
+Mean episode cube_push_target_xy_dist_m: 0.0392
+Mean episode cube_push_tcp_cube_dist_m: 0.0332
+  Mean episode cube_push_speed_mps: 0.1294
+Mean episode cube_push_speed_over_0p5_rate: 0.0196
+Mean episode cube_push_tip_angle_deg: 22.5099
+Mean episode cube_push_controlled_rate: 0.6381
+Mean episode cube_push_impact_rate: 0.0017
+Mean episode cube_push_low_motion_rate: 0.2603
+Mean episode cube_push_far_target_rate: 0.0002
+Mean episode cube_push_terminal_impact_rate: 0.0018
+Mean episode cube_push_success_rate: 0.0030
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7701
+Mean episode cube_push_joint_delta_abs_mean: 0.0021
+Mean episode cube_push_contact_slowdown_mean: 0.4163
+Mean episode cube_push_teacher_blend_mean: 0.4061
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0078
+--------------------------------------------------------------------------------
+                   Total timesteps: 294912
+                    Iteration time: 3.33s
+                      Time elapsed: 00:01:17
+                               ETA: 00:01:27
+
+################################################################################
+                       [1m Learning iteration 24/50 [0m                       
+
+                       Computation: 4302 steps/s (collection: 2.812s, learning 0.044s)
+             Mean action noise std: 0.81
+          Mean value_function loss: 1330.6828
+               Mean surrogate loss: -0.0009
+                 Mean entropy loss: 7.2612
+                       Mean reward: 210.95
+               Mean episode length: 80.96
+Mean episode cube_push_disp_along_m: 0.0086
+  Mean episode cube_push_disp_xy_m: 0.0180
+Mean episode cube_push_target_xy_dist_m: 0.0391
+Mean episode cube_push_tcp_cube_dist_m: 0.0334
+  Mean episode cube_push_speed_mps: 0.1416
+Mean episode cube_push_speed_over_0p5_rate: 0.0246
+Mean episode cube_push_tip_angle_deg: 23.6501
+Mean episode cube_push_controlled_rate: 0.6580
+Mean episode cube_push_impact_rate: 0.0016
+Mean episode cube_push_low_motion_rate: 0.2568
+Mean episode cube_push_far_target_rate: 0.0002
+Mean episode cube_push_terminal_impact_rate: 0.0017
+Mean episode cube_push_success_rate: 0.0028
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7610
+Mean episode cube_push_joint_delta_abs_mean: 0.0021
+Mean episode cube_push_contact_slowdown_mean: 0.4157
+Mean episode cube_push_teacher_blend_mean: 0.4177
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0078
+--------------------------------------------------------------------------------
+                   Total timesteps: 307200
+                    Iteration time: 2.86s
+                      Time elapsed: 00:01:20
+                               ETA: 00:01:23
+
+################################################################################
+                       [1m Learning iteration 25/50 [0m                       
+
+                       Computation: 3436 steps/s (collection: 3.529s, learning 0.047s)
+             Mean action noise std: 0.81
+          Mean value_function loss: 1371.3879
+               Mean surrogate loss: -0.0026
+                 Mean entropy loss: 7.2608
+                       Mean reward: 253.40
+               Mean episode length: 79.96
+Mean episode cube_push_disp_along_m: 0.0100
+  Mean episode cube_push_disp_xy_m: 0.0191
+Mean episode cube_push_target_xy_dist_m: 0.0386
+Mean episode cube_push_tcp_cube_dist_m: 0.0340
+  Mean episode cube_push_speed_mps: 0.1459
+Mean episode cube_push_speed_over_0p5_rate: 0.0310
+Mean episode cube_push_tip_angle_deg: 24.5543
+Mean episode cube_push_controlled_rate: 0.6895
+Mean episode cube_push_impact_rate: 0.0018
+Mean episode cube_push_low_motion_rate: 0.2301
+Mean episode cube_push_far_target_rate: 0.0003
+Mean episode cube_push_terminal_impact_rate: 0.0020
+Mean episode cube_push_success_rate: 0.0037
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7640
+Mean episode cube_push_joint_delta_abs_mean: 0.0020
+Mean episode cube_push_contact_slowdown_mean: 0.4057
+Mean episode cube_push_teacher_blend_mean: 0.4241
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0077
+--------------------------------------------------------------------------------
+                   Total timesteps: 319488
+                    Iteration time: 3.58s
+                      Time elapsed: 00:01:23
+                               ETA: 00:01:20
+
+################################################################################
+                       [1m Learning iteration 26/50 [0m                       
+
+                       Computation: 4259 steps/s (collection: 2.838s, learning 0.047s)
+             Mean action noise std: 0.82
+          Mean value_function loss: 1376.2046
+               Mean surrogate loss: -0.0009
+                 Mean entropy loss: 7.2815
+                       Mean reward: 232.60
+               Mean episode length: 79.25
+Mean episode cube_push_disp_along_m: 0.0100
+  Mean episode cube_push_disp_xy_m: 0.0190
+Mean episode cube_push_target_xy_dist_m: 0.0388
+Mean episode cube_push_tcp_cube_dist_m: 0.0326
+  Mean episode cube_push_speed_mps: 0.1345
+Mean episode cube_push_speed_over_0p5_rate: 0.0238
+Mean episode cube_push_tip_angle_deg: 24.2209
+Mean episode cube_push_controlled_rate: 0.6638
+Mean episode cube_push_impact_rate: 0.0016
+Mean episode cube_push_low_motion_rate: 0.2642
+Mean episode cube_push_far_target_rate: 0.0004
+Mean episode cube_push_terminal_impact_rate: 0.0016
+Mean episode cube_push_success_rate: 0.0034
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7537
+Mean episode cube_push_joint_delta_abs_mean: 0.0020
+Mean episode cube_push_contact_slowdown_mean: 0.4120
+Mean episode cube_push_teacher_blend_mean: 0.4197
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0077
+--------------------------------------------------------------------------------
+                   Total timesteps: 331776
+                    Iteration time: 2.88s
+                      Time elapsed: 00:01:26
+                               ETA: 00:01:17
+
+################################################################################
+                       [1m Learning iteration 27/50 [0m                       
+
+                       Computation: 3804 steps/s (collection: 3.188s, learning 0.041s)
+             Mean action noise std: 0.81
+          Mean value_function loss: 1314.8974
+               Mean surrogate loss: 0.0016
+                 Mean entropy loss: 7.2840
+                       Mean reward: 287.52
+               Mean episode length: 83.05
+Mean episode cube_push_disp_along_m: 0.0098
+  Mean episode cube_push_disp_xy_m: 0.0185
+Mean episode cube_push_target_xy_dist_m: 0.0389
+Mean episode cube_push_tcp_cube_dist_m: 0.0314
+  Mean episode cube_push_speed_mps: 0.1393
+Mean episode cube_push_speed_over_0p5_rate: 0.0219
+Mean episode cube_push_tip_angle_deg: 24.4433
+Mean episode cube_push_controlled_rate: 0.6764
+Mean episode cube_push_impact_rate: 0.0016
+Mean episode cube_push_low_motion_rate: 0.2721
+Mean episode cube_push_far_target_rate: 0.0002
+Mean episode cube_push_terminal_impact_rate: 0.0017
+Mean episode cube_push_success_rate: 0.0034
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7584
+Mean episode cube_push_joint_delta_abs_mean: 0.0020
+Mean episode cube_push_contact_slowdown_mean: 0.4078
+Mean episode cube_push_teacher_blend_mean: 0.4180
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0077
+--------------------------------------------------------------------------------
+                   Total timesteps: 344064
+                    Iteration time: 3.23s
+                      Time elapsed: 00:01:29
+                               ETA: 00:01:13
+
+################################################################################
+                       [1m Learning iteration 28/50 [0m                       
+
+                       Computation: 3852 steps/s (collection: 3.144s, learning 0.046s)
+             Mean action noise std: 0.81
+          Mean value_function loss: 1295.6195
+               Mean surrogate loss: 0.0004
+                 Mean entropy loss: 7.2810
+                       Mean reward: 264.36
+               Mean episode length: 85.39
+Mean episode cube_push_disp_along_m: 0.0099
+  Mean episode cube_push_disp_xy_m: 0.0190
+Mean episode cube_push_target_xy_dist_m: 0.0395
+Mean episode cube_push_tcp_cube_dist_m: 0.0320
+  Mean episode cube_push_speed_mps: 0.1461
+Mean episode cube_push_speed_over_0p5_rate: 0.0239
+Mean episode cube_push_tip_angle_deg: 22.5441
+Mean episode cube_push_controlled_rate: 0.6995
+Mean episode cube_push_impact_rate: 0.0011
+Mean episode cube_push_low_motion_rate: 0.2480
+Mean episode cube_push_far_target_rate: 0.0002
+Mean episode cube_push_terminal_impact_rate: 0.0011
+Mean episode cube_push_success_rate: 0.0028
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7683
+Mean episode cube_push_joint_delta_abs_mean: 0.0020
+Mean episode cube_push_contact_slowdown_mean: 0.4164
+Mean episode cube_push_teacher_blend_mean: 0.4204
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0076
+--------------------------------------------------------------------------------
+                   Total timesteps: 356352
+                    Iteration time: 3.19s
+                      Time elapsed: 00:01:33
+                               ETA: 00:01:10
+
+################################################################################
+                       [1m Learning iteration 29/50 [0m                       
+
+                       Computation: 3953 steps/s (collection: 3.058s, learning 0.050s)
+             Mean action noise std: 0.82
+          Mean value_function loss: 1366.8731
+               Mean surrogate loss: -0.0013
+                 Mean entropy loss: 7.2819
+                       Mean reward: 211.91
+               Mean episode length: 82.47
+Mean episode cube_push_disp_along_m: 0.0108
+  Mean episode cube_push_disp_xy_m: 0.0197
+Mean episode cube_push_target_xy_dist_m: 0.0394
+Mean episode cube_push_tcp_cube_dist_m: 0.0323
+  Mean episode cube_push_speed_mps: 0.1507
+Mean episode cube_push_speed_over_0p5_rate: 0.0236
+Mean episode cube_push_tip_angle_deg: 22.2328
+Mean episode cube_push_controlled_rate: 0.7024
+Mean episode cube_push_impact_rate: 0.0026
+Mean episode cube_push_low_motion_rate: 0.2402
+Mean episode cube_push_far_target_rate: 0.0002
+Mean episode cube_push_terminal_impact_rate: 0.0026
+Mean episode cube_push_success_rate: 0.0020
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7559
+Mean episode cube_push_joint_delta_abs_mean: 0.0021
+Mean episode cube_push_contact_slowdown_mean: 0.4202
+Mean episode cube_push_teacher_blend_mean: 0.4173
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0078
+--------------------------------------------------------------------------------
+                   Total timesteps: 368640
+                    Iteration time: 3.11s
+                      Time elapsed: 00:01:36
+                               ETA: 00:01:07
+
+################################################################################
+                       [1m Learning iteration 30/50 [0m                       
+
+                       Computation: 3597 steps/s (collection: 3.364s, learning 0.052s)
+             Mean action noise std: 0.82
+          Mean value_function loss: 1340.6902
+               Mean surrogate loss: -0.0034
+                 Mean entropy loss: 7.2943
+                       Mean reward: 229.75
+               Mean episode length: 89.32
+Mean episode cube_push_disp_along_m: 0.0111
+  Mean episode cube_push_disp_xy_m: 0.0195
+Mean episode cube_push_target_xy_dist_m: 0.0388
+Mean episode cube_push_tcp_cube_dist_m: 0.0315
+  Mean episode cube_push_speed_mps: 0.1420
+Mean episode cube_push_speed_over_0p5_rate: 0.0239
+Mean episode cube_push_tip_angle_deg: 22.9491
+Mean episode cube_push_controlled_rate: 0.7194
+Mean episode cube_push_impact_rate: 0.0015
+Mean episode cube_push_low_motion_rate: 0.2414
+Mean episode cube_push_far_target_rate: 0.0003
+Mean episode cube_push_terminal_impact_rate: 0.0015
+Mean episode cube_push_success_rate: 0.0033
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7546
+Mean episode cube_push_joint_delta_abs_mean: 0.0020
+Mean episode cube_push_contact_slowdown_mean: 0.4114
+Mean episode cube_push_teacher_blend_mean: 0.3979
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0081
+--------------------------------------------------------------------------------
+                   Total timesteps: 380928
+                    Iteration time: 3.42s
+                      Time elapsed: 00:01:39
+                               ETA: 00:01:04
+
+################################################################################
+                       [1m Learning iteration 31/50 [0m                       
+
+                       Computation: 3588 steps/s (collection: 3.375s, learning 0.050s)
+             Mean action noise std: 0.82
+          Mean value_function loss: 1349.9878
+               Mean surrogate loss: -0.0031
+                 Mean entropy loss: 7.3026
+                       Mean reward: 279.16
+               Mean episode length: 89.15
+Mean episode cube_push_disp_along_m: 0.0116
+  Mean episode cube_push_disp_xy_m: 0.0199
+Mean episode cube_push_target_xy_dist_m: 0.0387
+Mean episode cube_push_tcp_cube_dist_m: 0.0313
+  Mean episode cube_push_speed_mps: 0.1448
+Mean episode cube_push_speed_over_0p5_rate: 0.0257
+Mean episode cube_push_tip_angle_deg: 22.5197
+Mean episode cube_push_controlled_rate: 0.7179
+Mean episode cube_push_impact_rate: 0.0014
+Mean episode cube_push_low_motion_rate: 0.2261
+Mean episode cube_push_far_target_rate: 0.0002
+Mean episode cube_push_terminal_impact_rate: 0.0015
+Mean episode cube_push_success_rate: 0.0030
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7483
+Mean episode cube_push_joint_delta_abs_mean: 0.0020
+Mean episode cube_push_contact_slowdown_mean: 0.4022
+Mean episode cube_push_teacher_blend_mean: 0.4038
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0080
+--------------------------------------------------------------------------------
+                   Total timesteps: 393216
+                    Iteration time: 3.42s
+                      Time elapsed: 00:01:43
+                               ETA: 00:01:01
+
+################################################################################
+                       [1m Learning iteration 32/50 [0m                       
+
+                       Computation: 3976 steps/s (collection: 3.045s, learning 0.045s)
+             Mean action noise std: 0.81
+          Mean value_function loss: 1314.2775
+               Mean surrogate loss: -0.0040
+                 Mean entropy loss: 7.2970
+                       Mean reward: 286.14
+               Mean episode length: 84.93
+Mean episode cube_push_disp_along_m: 0.0124
+  Mean episode cube_push_disp_xy_m: 0.0206
+Mean episode cube_push_target_xy_dist_m: 0.0391
+Mean episode cube_push_tcp_cube_dist_m: 0.0326
+  Mean episode cube_push_speed_mps: 0.1374
+Mean episode cube_push_speed_over_0p5_rate: 0.0244
+Mean episode cube_push_tip_angle_deg: 22.6036
+Mean episode cube_push_controlled_rate: 0.7109
+Mean episode cube_push_impact_rate: 0.0016
+Mean episode cube_push_low_motion_rate: 0.2381
+Mean episode cube_push_far_target_rate: 0.0002
+Mean episode cube_push_terminal_impact_rate: 0.0017
+Mean episode cube_push_success_rate: 0.0030
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7416
+Mean episode cube_push_joint_delta_abs_mean: 0.0020
+Mean episode cube_push_contact_slowdown_mean: 0.4066
+Mean episode cube_push_teacher_blend_mean: 0.4277
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0078
+--------------------------------------------------------------------------------
+                   Total timesteps: 405504
+                    Iteration time: 3.09s
+                      Time elapsed: 00:01:46
+                               ETA: 00:00:57
+
+################################################################################
+                       [1m Learning iteration 33/50 [0m                       
+
+                       Computation: 3901 steps/s (collection: 3.104s, learning 0.046s)
+             Mean action noise std: 0.81
+          Mean value_function loss: 1379.8636
+               Mean surrogate loss: -0.0042
+                 Mean entropy loss: 7.2804
+                       Mean reward: 261.88
+               Mean episode length: 86.99
+Mean episode cube_push_disp_along_m: 0.0127
+  Mean episode cube_push_disp_xy_m: 0.0203
+Mean episode cube_push_target_xy_dist_m: 0.0382
+Mean episode cube_push_tcp_cube_dist_m: 0.0323
+  Mean episode cube_push_speed_mps: 0.1356
+Mean episode cube_push_speed_over_0p5_rate: 0.0232
+Mean episode cube_push_tip_angle_deg: 22.9416
+Mean episode cube_push_controlled_rate: 0.7271
+Mean episode cube_push_impact_rate: 0.0011
+Mean episode cube_push_low_motion_rate: 0.2485
+Mean episode cube_push_far_target_rate: 0.0002
+Mean episode cube_push_terminal_impact_rate: 0.0011
+Mean episode cube_push_success_rate: 0.0032
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7405
+Mean episode cube_push_joint_delta_abs_mean: 0.0020
+Mean episode cube_push_contact_slowdown_mean: 0.4116
+Mean episode cube_push_teacher_blend_mean: 0.4260
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0078
+--------------------------------------------------------------------------------
+                   Total timesteps: 417792
+                    Iteration time: 3.15s
+                      Time elapsed: 00:01:49
+                               ETA: 00:00:54
+
+################################################################################
+                       [1m Learning iteration 34/50 [0m                       
+
+                       Computation: 4425 steps/s (collection: 2.733s, learning 0.044s)
+             Mean action noise std: 0.82
+          Mean value_function loss: 1354.3528
+               Mean surrogate loss: -0.0049
+                 Mean entropy loss: 7.2906
+                       Mean reward: 259.51
+               Mean episode length: 81.72
+Mean episode cube_push_disp_along_m: 0.0117
+  Mean episode cube_push_disp_xy_m: 0.0202
+Mean episode cube_push_target_xy_dist_m: 0.0386
+Mean episode cube_push_tcp_cube_dist_m: 0.0327
+  Mean episode cube_push_speed_mps: 0.1343
+Mean episode cube_push_speed_over_0p5_rate: 0.0243
+Mean episode cube_push_tip_angle_deg: 22.8205
+Mean episode cube_push_controlled_rate: 0.6986
+Mean episode cube_push_impact_rate: 0.0008
+Mean episode cube_push_low_motion_rate: 0.2398
+Mean episode cube_push_far_target_rate: 0.0000
+Mean episode cube_push_terminal_impact_rate: 0.0008
+Mean episode cube_push_success_rate: 0.0035
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7379
+Mean episode cube_push_joint_delta_abs_mean: 0.0021
+Mean episode cube_push_contact_slowdown_mean: 0.4133
+Mean episode cube_push_teacher_blend_mean: 0.4127
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0079
+--------------------------------------------------------------------------------
+                   Total timesteps: 430080
+                    Iteration time: 2.78s
+                      Time elapsed: 00:01:52
+                               ETA: 00:00:51
+
+################################################################################
+                       [1m Learning iteration 35/50 [0m                       
+
+                       Computation: 3776 steps/s (collection: 3.207s, learning 0.047s)
+             Mean action noise std: 0.82
+          Mean value_function loss: 1276.4484
+               Mean surrogate loss: -0.0045
+                 Mean entropy loss: 7.2936
+                       Mean reward: 265.24
+               Mean episode length: 86.19
+Mean episode cube_push_disp_along_m: 0.0116
+  Mean episode cube_push_disp_xy_m: 0.0207
+Mean episode cube_push_target_xy_dist_m: 0.0392
+Mean episode cube_push_tcp_cube_dist_m: 0.0339
+  Mean episode cube_push_speed_mps: 0.1395
+Mean episode cube_push_speed_over_0p5_rate: 0.0264
+Mean episode cube_push_tip_angle_deg: 22.2484
+Mean episode cube_push_controlled_rate: 0.6934
+Mean episode cube_push_impact_rate: 0.0012
+Mean episode cube_push_low_motion_rate: 0.2424
+Mean episode cube_push_far_target_rate: 0.0001
+Mean episode cube_push_terminal_impact_rate: 0.0013
+Mean episode cube_push_success_rate: 0.0032
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7402
+Mean episode cube_push_joint_delta_abs_mean: 0.0021
+Mean episode cube_push_contact_slowdown_mean: 0.4177
+Mean episode cube_push_teacher_blend_mean: 0.3989
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0080
+--------------------------------------------------------------------------------
+                   Total timesteps: 442368
+                    Iteration time: 3.25s
+                      Time elapsed: 00:01:55
+                               ETA: 00:00:48
+
+################################################################################
+                       [1m Learning iteration 36/50 [0m                       
+
+                       Computation: 3528 steps/s (collection: 3.437s, learning 0.046s)
+             Mean action noise std: 0.82
+          Mean value_function loss: 1349.2714
+               Mean surrogate loss: -0.0040
+                 Mean entropy loss: 7.3015
+                       Mean reward: 227.71
+               Mean episode length: 78.19
+Mean episode cube_push_disp_along_m: 0.0112
+  Mean episode cube_push_disp_xy_m: 0.0205
+Mean episode cube_push_target_xy_dist_m: 0.0394
+Mean episode cube_push_tcp_cube_dist_m: 0.0340
+  Mean episode cube_push_speed_mps: 0.1466
+Mean episode cube_push_speed_over_0p5_rate: 0.0280
+Mean episode cube_push_tip_angle_deg: 21.9850
+Mean episode cube_push_controlled_rate: 0.7002
+Mean episode cube_push_impact_rate: 0.0025
+Mean episode cube_push_low_motion_rate: 0.2315
+Mean episode cube_push_far_target_rate: 0.0003
+Mean episode cube_push_terminal_impact_rate: 0.0025
+Mean episode cube_push_success_rate: 0.0032
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7546
+Mean episode cube_push_joint_delta_abs_mean: 0.0021
+Mean episode cube_push_contact_slowdown_mean: 0.4222
+Mean episode cube_push_teacher_blend_mean: 0.4117
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0078
+--------------------------------------------------------------------------------
+                   Total timesteps: 454656
+                    Iteration time: 3.48s
+                      Time elapsed: 00:01:58
+                               ETA: 00:00:44
+
+################################################################################
+                       [1m Learning iteration 37/50 [0m                       
+
+                       Computation: 3760 steps/s (collection: 3.227s, learning 0.040s)
+             Mean action noise std: 0.82
+          Mean value_function loss: 1406.9819
+               Mean surrogate loss: -0.0052
+                 Mean entropy loss: 7.3027
+                       Mean reward: 211.98
+               Mean episode length: 75.85
+Mean episode cube_push_disp_along_m: 0.0117
+  Mean episode cube_push_disp_xy_m: 0.0207
+Mean episode cube_push_target_xy_dist_m: 0.0386
+Mean episode cube_push_tcp_cube_dist_m: 0.0341
+  Mean episode cube_push_speed_mps: 0.1436
+Mean episode cube_push_speed_over_0p5_rate: 0.0307
+Mean episode cube_push_tip_angle_deg: 23.2745
+Mean episode cube_push_controlled_rate: 0.7129
+Mean episode cube_push_impact_rate: 0.0020
+Mean episode cube_push_low_motion_rate: 0.2109
+Mean episode cube_push_far_target_rate: 0.0002
+Mean episode cube_push_terminal_impact_rate: 0.0020
+Mean episode cube_push_success_rate: 0.0039
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7589
+Mean episode cube_push_joint_delta_abs_mean: 0.0021
+Mean episode cube_push_contact_slowdown_mean: 0.4225
+Mean episode cube_push_teacher_blend_mean: 0.4283
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0076
+--------------------------------------------------------------------------------
+                   Total timesteps: 466944
+                    Iteration time: 3.27s
+                      Time elapsed: 00:02:02
+                               ETA: 00:00:41
+
+################################################################################
+                       [1m Learning iteration 38/50 [0m                       
+
+                       Computation: 3395 steps/s (collection: 3.576s, learning 0.043s)
+             Mean action noise std: 0.82
+          Mean value_function loss: 1449.2252
+               Mean surrogate loss: -0.0037
+                 Mean entropy loss: 7.2969
+                       Mean reward: 272.61
+               Mean episode length: 86.88
+Mean episode cube_push_disp_along_m: 0.0121
+  Mean episode cube_push_disp_xy_m: 0.0210
+Mean episode cube_push_target_xy_dist_m: 0.0383
+Mean episode cube_push_tcp_cube_dist_m: 0.0337
+  Mean episode cube_push_speed_mps: 0.1446
+Mean episode cube_push_speed_over_0p5_rate: 0.0286
+Mean episode cube_push_tip_angle_deg: 25.0446
+Mean episode cube_push_controlled_rate: 0.7253
+Mean episode cube_push_impact_rate: 0.0017
+Mean episode cube_push_low_motion_rate: 0.2113
+Mean episode cube_push_far_target_rate: 0.0004
+Mean episode cube_push_terminal_impact_rate: 0.0017
+Mean episode cube_push_success_rate: 0.0038
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7494
+Mean episode cube_push_joint_delta_abs_mean: 0.0021
+Mean episode cube_push_contact_slowdown_mean: 0.4220
+Mean episode cube_push_teacher_blend_mean: 0.4201
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0078
+--------------------------------------------------------------------------------
+                   Total timesteps: 479232
+                    Iteration time: 3.62s
+                      Time elapsed: 00:02:05
+                               ETA: 00:00:38
+
+################################################################################
+                       [1m Learning iteration 39/50 [0m                       
+
+                       Computation: 3866 steps/s (collection: 3.129s, learning 0.049s)
+             Mean action noise std: 0.82
+          Mean value_function loss: 1426.3940
+               Mean surrogate loss: -0.0042
+                 Mean entropy loss: 7.2960
+                       Mean reward: 273.94
+               Mean episode length: 82.46
+Mean episode cube_push_disp_along_m: 0.0128
+  Mean episode cube_push_disp_xy_m: 0.0215
+Mean episode cube_push_target_xy_dist_m: 0.0386
+Mean episode cube_push_tcp_cube_dist_m: 0.0340
+  Mean episode cube_push_speed_mps: 0.1442
+Mean episode cube_push_speed_over_0p5_rate: 0.0315
+Mean episode cube_push_tip_angle_deg: 23.9413
+Mean episode cube_push_controlled_rate: 0.7168
+Mean episode cube_push_impact_rate: 0.0016
+Mean episode cube_push_low_motion_rate: 0.2170
+Mean episode cube_push_far_target_rate: 0.0003
+Mean episode cube_push_terminal_impact_rate: 0.0017
+Mean episode cube_push_success_rate: 0.0036
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7582
+Mean episode cube_push_joint_delta_abs_mean: 0.0021
+Mean episode cube_push_contact_slowdown_mean: 0.4163
+Mean episode cube_push_teacher_blend_mean: 0.4259
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0077
+--------------------------------------------------------------------------------
+                   Total timesteps: 491520
+                    Iteration time: 3.18s
+                      Time elapsed: 00:02:08
+                               ETA: 00:00:35
+
+################################################################################
+                       [1m Learning iteration 40/50 [0m                       
+
+                       Computation: 3736 steps/s (collection: 3.234s, learning 0.055s)
+             Mean action noise std: 0.82
+          Mean value_function loss: 1384.7901
+               Mean surrogate loss: -0.0041
+                 Mean entropy loss: 7.2921
+                       Mean reward: 274.73
+               Mean episode length: 85.92
+Mean episode cube_push_disp_along_m: 0.0121
+  Mean episode cube_push_disp_xy_m: 0.0206
+Mean episode cube_push_target_xy_dist_m: 0.0385
+Mean episode cube_push_tcp_cube_dist_m: 0.0331
+  Mean episode cube_push_speed_mps: 0.1388
+Mean episode cube_push_speed_over_0p5_rate: 0.0244
+Mean episode cube_push_tip_angle_deg: 23.1417
+Mean episode cube_push_controlled_rate: 0.7241
+Mean episode cube_push_impact_rate: 0.0017
+Mean episode cube_push_low_motion_rate: 0.2362
+Mean episode cube_push_far_target_rate: 0.0002
+Mean episode cube_push_terminal_impact_rate: 0.0017
+Mean episode cube_push_success_rate: 0.0037
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7589
+Mean episode cube_push_joint_delta_abs_mean: 0.0021
+Mean episode cube_push_contact_slowdown_mean: 0.4234
+Mean episode cube_push_teacher_blend_mean: 0.4300
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0077
+--------------------------------------------------------------------------------
+                   Total timesteps: 503808
+                    Iteration time: 3.29s
+                      Time elapsed: 00:02:12
+                               ETA: 00:00:32
+
+################################################################################
+                       [1m Learning iteration 41/50 [0m                       
+
+                       Computation: 3862 steps/s (collection: 3.132s, learning 0.049s)
+             Mean action noise std: 0.81
+          Mean value_function loss: 1420.3629
+               Mean surrogate loss: -0.0049
+                 Mean entropy loss: 7.2829
+                       Mean reward: 287.98
+               Mean episode length: 88.48
+Mean episode cube_push_disp_along_m: 0.0120
+  Mean episode cube_push_disp_xy_m: 0.0204
+Mean episode cube_push_target_xy_dist_m: 0.0386
+Mean episode cube_push_tcp_cube_dist_m: 0.0328
+  Mean episode cube_push_speed_mps: 0.1407
+Mean episode cube_push_speed_over_0p5_rate: 0.0264
+Mean episode cube_push_tip_angle_deg: 22.6085
+Mean episode cube_push_controlled_rate: 0.7129
+Mean episode cube_push_impact_rate: 0.0010
+Mean episode cube_push_low_motion_rate: 0.2323
+Mean episode cube_push_far_target_rate: 0.0001
+Mean episode cube_push_terminal_impact_rate: 0.0011
+Mean episode cube_push_success_rate: 0.0033
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7589
+Mean episode cube_push_joint_delta_abs_mean: 0.0021
+Mean episode cube_push_contact_slowdown_mean: 0.4146
+Mean episode cube_push_teacher_blend_mean: 0.4270
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0078
+--------------------------------------------------------------------------------
+                   Total timesteps: 516096
+                    Iteration time: 3.18s
+                      Time elapsed: 00:02:15
+                               ETA: 00:00:28
+
+################################################################################
+                       [1m Learning iteration 42/50 [0m                       
+
+                       Computation: 4111 steps/s (collection: 2.943s, learning 0.045s)
+             Mean action noise std: 0.81
+          Mean value_function loss: 1399.7549
+               Mean surrogate loss: -0.0043
+                 Mean entropy loss: 7.2760
+                       Mean reward: 262.93
+               Mean episode length: 86.04
+Mean episode cube_push_disp_along_m: 0.0119
+  Mean episode cube_push_disp_xy_m: 0.0205
+Mean episode cube_push_target_xy_dist_m: 0.0387
+Mean episode cube_push_tcp_cube_dist_m: 0.0328
+  Mean episode cube_push_speed_mps: 0.1335
+Mean episode cube_push_speed_over_0p5_rate: 0.0250
+Mean episode cube_push_tip_angle_deg: 22.9278
+Mean episode cube_push_controlled_rate: 0.7019
+Mean episode cube_push_impact_rate: 0.0011
+Mean episode cube_push_low_motion_rate: 0.2281
+Mean episode cube_push_far_target_rate: 0.0000
+Mean episode cube_push_terminal_impact_rate: 0.0011
+Mean episode cube_push_success_rate: 0.0035
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7565
+Mean episode cube_push_joint_delta_abs_mean: 0.0021
+Mean episode cube_push_contact_slowdown_mean: 0.4104
+Mean episode cube_push_teacher_blend_mean: 0.4250
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0077
+--------------------------------------------------------------------------------
+                   Total timesteps: 528384
+                    Iteration time: 2.99s
+                      Time elapsed: 00:02:18
+                               ETA: 00:00:25
+
+################################################################################
+                       [1m Learning iteration 43/50 [0m                       
+
+                       Computation: 3862 steps/s (collection: 3.136s, learning 0.045s)
+             Mean action noise std: 0.81
+          Mean value_function loss: 1414.8872
+               Mean surrogate loss: -0.0051
+                 Mean entropy loss: 7.2653
+                       Mean reward: 299.65
+               Mean episode length: 92.09
+Mean episode cube_push_disp_along_m: 0.0126
+  Mean episode cube_push_disp_xy_m: 0.0210
+Mean episode cube_push_target_xy_dist_m: 0.0389
+Mean episode cube_push_tcp_cube_dist_m: 0.0329
+  Mean episode cube_push_speed_mps: 0.1361
+Mean episode cube_push_speed_over_0p5_rate: 0.0244
+Mean episode cube_push_tip_angle_deg: 23.0724
+Mean episode cube_push_controlled_rate: 0.7037
+Mean episode cube_push_impact_rate: 0.0010
+Mean episode cube_push_low_motion_rate: 0.2122
+Mean episode cube_push_far_target_rate: 0.0001
+Mean episode cube_push_terminal_impact_rate: 0.0010
+Mean episode cube_push_success_rate: 0.0033
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7725
+Mean episode cube_push_joint_delta_abs_mean: 0.0021
+Mean episode cube_push_contact_slowdown_mean: 0.4197
+Mean episode cube_push_teacher_blend_mean: 0.4167
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0078
+--------------------------------------------------------------------------------
+                   Total timesteps: 540672
+                    Iteration time: 3.18s
+                      Time elapsed: 00:02:21
+                               ETA: 00:00:22
+
+################################################################################
+                       [1m Learning iteration 44/50 [0m                       
+
+                       Computation: 4067 steps/s (collection: 2.972s, learning 0.049s)
+             Mean action noise std: 0.81
+          Mean value_function loss: 1440.7169
+               Mean surrogate loss: -0.0058
+                 Mean entropy loss: 7.2645
+                       Mean reward: 281.02
+               Mean episode length: 87.11
+Mean episode cube_push_disp_along_m: 0.0116
+  Mean episode cube_push_disp_xy_m: 0.0200
+Mean episode cube_push_target_xy_dist_m: 0.0388
+Mean episode cube_push_tcp_cube_dist_m: 0.0324
+  Mean episode cube_push_speed_mps: 0.1333
+Mean episode cube_push_speed_over_0p5_rate: 0.0221
+Mean episode cube_push_tip_angle_deg: 23.2055
+Mean episode cube_push_controlled_rate: 0.6944
+Mean episode cube_push_impact_rate: 0.0012
+Mean episode cube_push_low_motion_rate: 0.2046
+Mean episode cube_push_far_target_rate: 0.0001
+Mean episode cube_push_terminal_impact_rate: 0.0012
+Mean episode cube_push_success_rate: 0.0029
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7725
+Mean episode cube_push_joint_delta_abs_mean: 0.0021
+Mean episode cube_push_contact_slowdown_mean: 0.4185
+Mean episode cube_push_teacher_blend_mean: 0.4067
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0079
+--------------------------------------------------------------------------------
+                   Total timesteps: 552960
+                    Iteration time: 3.02s
+                      Time elapsed: 00:02:24
+                               ETA: 00:00:19
+
+################################################################################
+                       [1m Learning iteration 45/50 [0m                       
+
+                       Computation: 3771 steps/s (collection: 3.205s, learning 0.053s)
+             Mean action noise std: 0.81
+          Mean value_function loss: 1434.7744
+               Mean surrogate loss: -0.0048
+                 Mean entropy loss: 7.2695
+                       Mean reward: 256.68
+               Mean episode length: 79.84
+Mean episode cube_push_disp_along_m: 0.0124
+  Mean episode cube_push_disp_xy_m: 0.0206
+Mean episode cube_push_target_xy_dist_m: 0.0384
+Mean episode cube_push_tcp_cube_dist_m: 0.0335
+  Mean episode cube_push_speed_mps: 0.1325
+Mean episode cube_push_speed_over_0p5_rate: 0.0249
+Mean episode cube_push_tip_angle_deg: 24.0468
+Mean episode cube_push_controlled_rate: 0.7073
+Mean episode cube_push_impact_rate: 0.0014
+Mean episode cube_push_low_motion_rate: 0.1966
+Mean episode cube_push_far_target_rate: 0.0002
+Mean episode cube_push_terminal_impact_rate: 0.0015
+Mean episode cube_push_success_rate: 0.0037
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7696
+Mean episode cube_push_joint_delta_abs_mean: 0.0021
+Mean episode cube_push_contact_slowdown_mean: 0.4214
+Mean episode cube_push_teacher_blend_mean: 0.4075
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0078
+--------------------------------------------------------------------------------
+                   Total timesteps: 565248
+                    Iteration time: 3.26s
+                      Time elapsed: 00:02:27
+                               ETA: 00:00:16
+
+################################################################################
+                       [1m Learning iteration 46/50 [0m                       
+
+                       Computation: 3360 steps/s (collection: 3.603s, learning 0.053s)
+             Mean action noise std: 0.81
+          Mean value_function loss: 1380.1577
+               Mean surrogate loss: -0.0046
+                 Mean entropy loss: 7.2777
+                       Mean reward: 283.45
+               Mean episode length: 90.08
+Mean episode cube_push_disp_along_m: 0.0114
+  Mean episode cube_push_disp_xy_m: 0.0194
+Mean episode cube_push_target_xy_dist_m: 0.0380
+Mean episode cube_push_tcp_cube_dist_m: 0.0327
+  Mean episode cube_push_speed_mps: 0.1303
+Mean episode cube_push_speed_over_0p5_rate: 0.0199
+Mean episode cube_push_tip_angle_deg: 24.0525
+Mean episode cube_push_controlled_rate: 0.7045
+Mean episode cube_push_impact_rate: 0.0018
+Mean episode cube_push_low_motion_rate: 0.2055
+Mean episode cube_push_far_target_rate: 0.0002
+Mean episode cube_push_terminal_impact_rate: 0.0018
+Mean episode cube_push_success_rate: 0.0032
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7666
+Mean episode cube_push_joint_delta_abs_mean: 0.0022
+Mean episode cube_push_contact_slowdown_mean: 0.4190
+Mean episode cube_push_teacher_blend_mean: 0.4182
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0078
+--------------------------------------------------------------------------------
+                   Total timesteps: 577536
+                    Iteration time: 3.66s
+                      Time elapsed: 00:02:31
+                               ETA: 00:00:12
+
+################################################################################
+                       [1m Learning iteration 47/50 [0m                       
+
+                       Computation: 4151 steps/s (collection: 2.915s, learning 0.045s)
+             Mean action noise std: 0.81
+          Mean value_function loss: 1432.1452
+               Mean surrogate loss: -0.0034
+                 Mean entropy loss: 7.2765
+                       Mean reward: 291.58
+               Mean episode length: 84.03
+Mean episode cube_push_disp_along_m: 0.0102
+  Mean episode cube_push_disp_xy_m: 0.0184
+Mean episode cube_push_target_xy_dist_m: 0.0378
+Mean episode cube_push_tcp_cube_dist_m: 0.0318
+  Mean episode cube_push_speed_mps: 0.1293
+Mean episode cube_push_speed_over_0p5_rate: 0.0159
+Mean episode cube_push_tip_angle_deg: 23.1684
+Mean episode cube_push_controlled_rate: 0.7078
+Mean episode cube_push_impact_rate: 0.0011
+Mean episode cube_push_low_motion_rate: 0.2269
+Mean episode cube_push_far_target_rate: 0.0003
+Mean episode cube_push_terminal_impact_rate: 0.0012
+Mean episode cube_push_success_rate: 0.0030
+Mean episode cube_push_grasped_marker_rate: 0.0000
+Mean episode cube_push_ik_endpoint_reset_rate: 1.0000
+Mean episode cube_push_ik_reset_err_mm: 0.7813
+Mean episode cube_push_joint_delta_abs_mean: 0.0021
+Mean episode cube_push_contact_slowdown_mean: 0.4114
+Mean episode cube_push_teacher_blend_mean: 0.4282
+Mean episode cube_push_teacher_goal_ok_rate: 1.0000
+       Mean episode action_penalty: -0.0077
+--------------------------------------------------------------------------------
+                   Total timesteps: 589824
+                    Iteration time: 2.96s
+                      Time elapsed: 00:02:34
+                               ETA: 00:00:09
+Loading user config located at: '/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/user.config.json'
+[Info] [carb] Logging to file: /home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/kit/logs/Kit/Isaac-Sim/5.1/kit_20260527_005052.log
+2026-05-26T15:50:52Z [54ms] [Warning] [omni.usd_config.extension] Enable omni.materialx.libs extension to use MaterialX
+2026-05-26T15:50:53Z [323ms] [Warning] [carb] Acquiring non optional plugin interface which is not listed as dependency: [omni::physx::IPhysxBenchmarks v1.0] (plugin: <default plugin>), by client: omni.physics.physx.plugin. Add it to CARB_PLUGIN_IMPL_DEPS() macro of a client.
+2026-05-26T15:50:53Z [477ms] [Warning] [omni.isaac.dynamic_control] omni.isaac.dynamic_control is deprecated as of Isaac Sim 4.5. No action is needed from end-users.
+2026-05-26T15:50:55Z [2,795ms] [Warning] [gpu.foundation.plugin] Skipping unsupported non-NVIDIA GPU: Intel(R) Graphics (RPL-S)
+2026-05-26T15:50:55Z [2,795ms] [Warning] [gpu.foundation.plugin] Skipping unsupported non-NVIDIA GPU: Intel(R) Graphics (RPL-S)
+
+|---------------------------------------------------------------------------------------------|
+| Driver Version: 580.159.03    | Graphics API: Vulkan
+|=============================================================================================|
+| GPU | Name                             | Active | LDA | GPU Memory | Vendor-ID | LUID       |
+|     |                                  |        |     |            | Device-ID | UUID       |
+|     |                                  |        |     |            | Bus-ID    |            |
+|---------------------------------------------------------------------------------------------|
+| 0   | NVIDIA GeForce RTX 4090 Laptop.. | Yes: 0 |     | 16376   MB | 10de      | 0          |
+|     |                                  |        |     |            | 2757      | 05b1a3f8.. |
+|     |                                  |        |     |            | 1         |            |
+|---------------------------------------------------------------------------------------------|
+| 1   | Intel(R) Graphics (RPL-S)        |        |     | 48015   MB | 8086      | 0          |
+|     |                                  |        |     |            | a788      | 868088a7.. |
+|     |                                  |        |     |            | 0         |            |
+|=============================================================================================|
+| OS: 22.04.5 LTS (Jammy Jellyfish) ubuntu, Version: 22.04.5, Kernel: 6.8.0-111-generic
+| XServer Vendor: The X.Org Foundation, XServer Version: 12101004 (1.21.1.4)
+| Processor: Intel(R) Core(TM) i9-14900HX
+| Bare Metal Cores: 24 | Bare Metal Logical Cores: 48
+| Available Cores:  32 
+|---------------------------------------------------------------------------------------------|
+| Total Memory (MB): 64020 | Free Memory: 33552
+| Total Page/Swap (MB): 0 | Free Page/Swap: 0
+|---------------------------------------------------------------------------------------------|
+2026-05-26T15:50:55Z [3,013ms] [Warning] [gpu.foundation.plugin] CPU performance profile is set to powersave. This profile sets the CPU to the lowest frequency reducing performance.
+2026-05-26T15:50:55Z [3,023ms] [Warning] [gpu.foundation.plugin] IOMMU is enabled.
+2026-05-26T15:50:55Z [3,023ms] [Warning] [gpu.foundation.plugin] Detected IOMMU is enabled. Running CUDA peer-to-peer bandwidth and latency validation.
+Unidirectional P2P=Enabled Bandwidth (P2P Writes) Matrix (GB/s)
+   D\D     0 
+     0 393.38 
+P2P=Enabled Latency (P2P Writes) Matrix (us)
+   GPU     0 
+     0   1.99 
+
+   CPU     0 
+     0   1.28 
+2026-05-26T15:50:57Z [5,031ms] [Warning] [omni.fabric.plugin] Warning: input prim:attr `/World/envs/env_0:omni:rtx:skip` has no valid data.
+
+2026-05-26T15:53:48Z [176,081ms] [Warning] [omni.usd] Unexpected reference count of 2 for UsdStage 'anon:0x3c992910:World0.usd' while being closed in UsdContext (this may indicate it is still resident in memory).

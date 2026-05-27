@@ -1,0 +1,18 @@
+IK_CURRICULUM_INPUT exit_code=0 stdout=/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_ik_curriculum_50iter_stdout.out stdout_md5=8e037ab42350636c4115af44f9edb610 stderr=/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_ik_curriculum_50iter_stderr.err stderr_md5=c5dffe360e6626bb31b0fde3164d963d
+IK_CURRICULUM_ARTIFACTS log_dir=/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_ik_curriculum_logs/cube_push_ik_curriculum_50iter_20260526 event_file=/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_ik_curriculum_logs/cube_push_ik_curriculum_50iter_20260526/events.out.tfevents.1779796804.cgxr-Legion-Pro-7-16IRX9H.174257.0 event_md5=dd16282458f6e9b57cbe8d1d43b59adb model_0_exists=YES model_49_exists=YES model_49_md5=ff51f5ef4de7c38170dae825a3280b33
+ITERATION_COVERAGE event_train_mean_reward_count=50
+EVENT_SCALAR tag=Episode/cube_push_disp_along_m n=50 first_step=0 first=-0.000252744 last_step=49 last=-0.105634235 min=-0.130895793 max=0.063798100
+EVENT_SCALAR tag=Episode/cube_push_disp_xy_m n=50 first_step=0 first=0.035701226 last_step=49 last=0.604205787 min=0.035701226 max=0.673441350
+EVENT_SCALAR tag=Episode/cube_push_target_xy_dist_m n=50 first_step=0 first=0.059318837 last_step=49 last=0.610159278 min=0.059318837 max=0.680437267
+EVENT_SCALAR tag=Episode/cube_push_controlled_rate n=50 first_step=0 first=0.365315765 last_step=49 last=0.382486999 min=0.341552734 max=0.434895843
+EVENT_SCALAR tag=Episode/cube_push_impact_rate n=50 first_step=0 first=0.051595055 last_step=49 last=0.351481140 min=0.051595055 max=0.357096374
+EVENT_SCALAR tag=Episode/cube_push_low_motion_rate n=50 first_step=0 first=0.306070983 last_step=49 last=0.069091797 min=0.061686199 max=0.306070983
+EVENT_SCALAR tag=Episode/cube_push_success_rate n=50 first_step=0 first=0.091878258 last_step=49 last=0.232584640 min=0.091878258 max=0.267578125
+EVENT_SCALAR tag=Episode/cube_push_grasped_marker_rate n=50 first_step=0 first=0.000000000 last_step=49 last=0.000000000 min=0.000000000 max=0.000000000
+EVENT_SCALAR tag=Episode/cube_push_ik_endpoint_reset_rate n=50 first_step=0 first=1.000000000 last_step=49 last=1.000000000 min=1.000000000 max=1.000000000
+EVENT_SCALAR tag=Episode/cube_push_ik_reset_err_mm n=50 first_step=0 first=0.750014544 last_step=49 last=0.781403720 min=0.738177001 max=0.786358356
+EVENT_SCALAR tag=Train/mean_reward n=50 first_step=0 first=17.791936874 last_step=49 last=90.848922729 min=4.180740356 max=196.807937622
+EVENT_SCALAR tag=Train/mean_episode_length n=50 first_step=0 first=12.579999924 last_step=49 last=119.000000000 min=12.579999924 max=119.000000000
+CRITICAL_INTERPRETATION ik_endpoint_reset_active=YES training_loop_ran=YES learned_policy_success=NO evaluation_rollout=NO dataset_generation=NO track_a_grasp_success=NO
+FAILURE_MODE run_completed=YES signal_present=YES impact_heavy_or_regressed=YES interpretation='IK pre-contact worked, but the learned behavior shifted toward large/negative-direction displacement and impact instead of stable aligned push'
+RESULT ppo_ik_curriculum_audit=IK_CURRICULUM_RAN_IMPACT_HEAVY_REGRESSED_DIRECTION_NO_SUCCESS_CLAIM
