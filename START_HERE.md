@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-05-27 KST (B200 disconnected; Track A v6/v7 close_26 FAIL; first approved v8 close_26 runtime also FAIL; post-fail v8 virtual-damping wiring fix is static-ready only; no post-fix v8 runtime has run; professor cube3cm push/tap 20,480-trial scripted rollout complete; separate no-attach cube-push PPO reward/curriculum tested through 1k frozen eval but impact remains too high for 10k/100k scaling; professor branch IsaacLab built-in Differential IK cube-push v1/v2 1024 evals complete; v2 reduced low-motion but worsened impact/tip and is not teacher-ready; Track A dataset/training still blocked)
+Last updated: 2026-05-27 KST (B200 disconnected; Track A v6/v7 close_26 FAIL; first approved v8 close_26 runtime also FAIL; post-fail v8 virtual-damping wiring fix is static-ready only; no post-fix v8 runtime has run; professor cube3cm push/tap 20,480-trial scripted rollout complete; separate no-attach cube-push PPO reward/curriculum tested through 1k frozen eval but impact remains too high for learned 10k/100k scaling; professor branch IsaacLab built-in Differential IK cube-push v3 10,240-trial scripted robustness audit complete; still not learned/Track A/dataset readiness)
 
 This is the rolling current-state dashboard. It is not full history. Durable
 rules live in `claudedocs/DECISIONS.md`; experiment history lives in
@@ -122,6 +122,37 @@ Do **not** use `HANDOFF.md` or `TASKS.md` as current state.
   low-motion `0.304687500 -> 0.023437500`, but gained nonzero impact
   `0 -> 0.031250000`. Verdict: useful scripted Differential IK physics
   evidence, not learned policy, not Track A grasp, not dataset/teacher-ready.
+- **Professor cube-push Differential IK trajectory v3 (2026-05-27)**: current
+  `sim_scripts/cube3cm_push_diffik_probe.py` md5
+  `dc6ca5a222f0bd9437d5f83bf5449729` adds default-preserving
+  `--trajectory_variant v3` for `(1,0)`: lower contact height, shorter
+  push-through, longer/slower pos-x horizon, and lower pos-x joint-step cap.
+  Smoke16 seed780 audit lines 1-6 PASS but had `v3_posx_env_count=0`, so it was
+  mechanism-only. Reach16 seed779 included 6 `(1,0)` envs and audit lines 1-6
+  PASS with controlled `1.000000000`, impact `0`, low-motion `0.062500000`.
+  Frozen 1024 seed779 audit lines 1-6 PASS with controlled `0.969726562`,
+  impact `0.004882812`, low-motion `0.035156250`, success marker
+  `0.604492188`, final TCP error `0.023551417`, and zero posewrite. Posthoc
+  line 6 reports `(1,0)` controlled `0.929629630`, impact `0.014814815`,
+  low-motion `0.088888889`. Compare lines 2-3 show v3 improves over v2 on
+  overall impact `0.038085938 -> 0.004882812` and `(1,0)` impact
+  `0.144444444 -> 0.014814815`; line 9 shows remaining `(1,0)` impacts are
+  still tip-angle outliers only. Critical caveat: `(1,0)` success marker dropped
+  to `0.314814815` and clip is `1.000000000`, so v3 is a strong scripted
+  physics/statistics candidate but not automatically a dataset teacher.
+- **Professor cube-push Differential IK v3 10,240-trial audit (2026-05-27)**:
+  ran local IsaacLab `num_envs=1024`, `episodes=10`, seed779, total 10,240
+  scripted DiffIK trials. Stdout lines 20-21 confirm built-in
+  `DifferentialIKController`, no RoArm-local IK loop, no training/dataset/grasp/
+  posewrite, `trajectory_variant=v3`. Audit lines 1-6 PASS with
+  `csv_rows=10240`, controlled `0.943164062`, impact `0.007519531`,
+  low-motion `0.042480469`, success marker `0.594824219`, final TCP error
+  `0.023529604`, and zero posewrite. Posthoc line 6: `(1,0)` n=2566,
+  controlled `0.874512860`, impact `0.012860483`, low-motion `0.122759158`,
+  success marker `0.296570538`. Compare-to-1024 lines 2-3: overall impact stays
+  below 1%, `(1,0)` impact stays below 2%, but `(1,0)` low-motion worsens and
+  success remains weak. Verdict: professor-style 10k scripted push/tap robustness
+  evidence PASS; still not learned policy, not Track A grasp, not dataset-ready.
 - Track A goal: first make the sim/Isaac Lab contact primitive reliable, then
   move toward broad sim/lab dataset collection and learning.
 - Dataset generation and training are blocked until close_26 proxy audit PASS,
@@ -707,26 +738,23 @@ Current professor cube push/tap branch:
   Interpretation: no-attach PPO and IK pre-contact work, but learned-policy
   impact is still too high; do not run 10k/100k scaling yet.
 - Differential IK follow-up:
-  sim_scripts/cube3cm_push_diffik_probe.py now includes an optional v2 trajectory
-  path. Reverify
-  claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v2_eval1024_seed779_audit.out
+  sim_scripts/cube3cm_push_diffik_probe.py now includes optional v2 and v3
+  trajectory paths. Reverify
+  claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_eval10240_seed779_audit.out
   lines 1-6,
-  diffik_probe_v2_eval1024_seed779_posthoc.out lines 1-17, and
-  diffik_probe_v2_eval1024_seed779_compare_to_v1.out lines 1-8 before citing.
-  Interpretation: v2 is a mixed scripted Differential IK physics result. It
-  reduces low-motion and improves final TCP error, including grid `(1,1)`, but it
-  increases impact/tip risk, especially in `(1,0)`. Do not treat it as teacher
-  readiness or learned success.
+  diffik_probe_v3_eval10240_seed779_posthoc.out lines 1-17, and
+  diffik_probe_v3_eval10240_seed779_compare_to_1024.out lines 1-25 before
+  citing. Interpretation: v3 now has a 10,240-trial scripted Differential IK
+  robustness audit with overall impact below 1% and `(1,0)` impact below 2%, but
+  it remains a scripted physics result and has a `(1,0)` low-motion/success
+  caveat. Do not call it learned policy, Track A grasp, or dataset readiness.
 
 Next concrete step:
-1. For professor branch: do not run 10k/100k scaling yet. Next research action is
-   Differential IK trajectory v3 focused on reducing `(1,0)` tip/impact while
-   keeping v2's low-motion improvement: likely lower/less edge-prone contact
-   height, shorter or staged push-through for high-tip pockets, and a small
-   lateral-offset sign sweep before another 16 -> 16 -> 1024 audit.
-2. Do not run learned-policy 10k/100k scaling until frozen 1k eval impact drops
-   below about 5% while controlled/clean-success remains meaningful; v2 scripted
-   DiffIK impact is also not clean enough to become a teacher.
+1. For professor branch: prepare/report the 10,240-trial v3 scripted DiffIK
+   push/tap result as physics statistics only. Do not describe it as learning or
+   dataset readiness.
+2. If the next objective is teacher/dataset generation, run a small v3.1 sweep to
+   recover `(1,0)` low-motion/success while preserving v3's low impact.
 3. Do not rerun v7 unchanged and do not start Track A hold-lift/dataset/training.
 4. If and only if the user explicitly approves another v8 runtime, first verify host GPU and IsaacLab CUDA from Codex with sandbox_permissions=require_escalated, then run exactly one local close_26-only post-fix v8 runtime using the preserved local backup USD path.
 5. Immediately audit that runtime with expected_mechanism target_guarded_micro_close_v8_observed_recovery_diagnostic. If audit fails, stop and analyze exact first failing runtime/audit lines before any rerun.

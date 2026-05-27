@@ -5132,3 +5132,132 @@ Sources:
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v2_eval1024_seed779_audit.out:1-6`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v2_eval1024_seed779_posthoc.out:1-17`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v2_eval1024_seed779_compare_to_v1.out:1-8`
+
+## D103 - Differential IK trajectory v3 fixes most v2 tip impact but is still scripted evidence
+
+Date: 2026-05-27 KST
+
+Decision:
+
+- For the professor's cube3cm push/tap branch, trajectory v3 is now the preferred
+  scripted IsaacLab Differential IK candidate for scale robustness testing.
+- v3 should not be described as learned-policy success, Track A grasp success, or
+  dataset readiness. It is still a scripted Differential IK physics result.
+- A 10,240-env scripted v3 robustness audit is now scientifically defensible if
+  the goal is the professor's "10,000 test"; using v3 as a teacher still needs a
+  separate decision because `(1,0)` success/displacement remains weaker than the
+  overall metrics suggest.
+
+Evidence:
+
+- Static/posthoc v2 analysis found that all 39 `(1,0)` v2 impact rows were caused
+  by tip-angle exceeding the audit p99 threshold, not by final speed or total XY
+  displacement. This justified v3's lower contact height, shorter push-through,
+  longer/slower pos-x trajectory, and smaller pos-x joint-step cap.
+- Current `sim_scripts/cube3cm_push_diffik_probe.py` md5 is
+  `f4c8dfe7d9117d733ec38a0ac68e4019`; it adds default-preserving
+  `--trajectory_variant v3`.
+- v3 smoke16 seed780 exited 0 and audit lines 1-6 PASS: controlled `1.000000000`,
+  impact `0`, low-motion `0`, but summary lines 37/49 show
+  `v3_posx_env_count=0`, so this was mechanism-only.
+- v3 reach16 seed779 exited 0, included 6 `(1,0)` envs, and audit lines 1-6 PASS:
+  controlled `1.000000000`, impact `0`, low-motion `0.062500000`.
+- v3 frozen 1024 seed779 exited 0 and audit lines 1-6 PASS: rows `1024`,
+  controlled `0.969726562`, impact `0.004882812`, low-motion `0.035156250`,
+  success marker `0.604492188`, final TCP error `0.023551417`, zero rollout
+  posewrite, no training/dataset/grasp/attach.
+- v3 posthoc line 6 shows weak direction `(1,0)` is still the weakest, but now
+  controlled `0.929629630`, impact `0.014814815`, low-motion `0.088888889`.
+- Same-seed v1/v2/v3 comparison lines 2-3 show overall impact
+  `0.023437500 -> 0.038085938 -> 0.004882812` and `(1,0)` impact
+  `0.088888889 -> 0.144444444 -> 0.014814815`; tip p95 in `(1,0)` improved
+  `153.082306 -> 161.068298 -> 140.676743`.
+- Critical caveat: comparison line 3 also shows `(1,0)` success marker
+  `0.533333333 -> 0.440740741 -> 0.314814815`, final TCP error
+  `0.043867240 -> 0.033135812 -> 0.039558476`, and clip
+  `0.900232803 -> 0.977681103 -> 1.000000000`.
+
+Implication:
+
+- v3 is a better answer to "can IsaacLab Differential IK go near the cube and
+  push/tap it physically?" than v1/v2 because it reduces the direction-specific
+  tip-impact pocket below the earlier 5% gate.
+- The next professor-branch scale test can be 10,240 env trials with v3, provided
+  the result is framed as scripted physics robustness, not PPO/VLA learning.
+- If the objective changes from push/tap evidence to teacher/dataset generation,
+  run a small v3.1 sweep to recover `(1,0)` displacement/success while preserving
+  v3's low impact.
+
+Sources:
+
+- `sim_scripts/cube3cm_push_diffik_probe.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_smoke16_seed780_audit.out:1-6`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_smoke16_seed780_summary.json:37,49`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_reach16_seed779_audit.out:1-6`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_reach16_seed779_posthoc.out:1-17`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_eval1024_seed779_stdout.out:20-21`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_eval1024_seed779_audit.out:1-6`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_eval1024_seed779_posthoc.out:1-17`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_eval1024_seed779_compare_to_v1_v2.out:1-10`
+
+## D104 - v3 10,240-trial DiffIK audit passes professor push/tap scale, not teacher readiness
+
+Date: 2026-05-27 KST
+
+Decision:
+
+- The professor-branch "10,000 test" is complete for scripted IsaacLab
+  Differential IK physics evidence: use the v3 10,240-trial audit as the current
+  scale result.
+- Do not run more scale-up just to increase the trial count until a new question
+  is defined. The 10,240 result already answers the immediate robustness-statistics
+  question better than the prior 1024-only evidence.
+- Do not treat the 10,240 result as learned-policy success, Track A grasp success,
+  or dataset/teacher readiness. The `(1,0)` low-motion/success caveat remains.
+
+Evidence:
+
+- `sim_scripts/cube3cm_push_diffik_probe.py` md5
+  `dc6ca5a222f0bd9437d5f83bf5449729` keeps v3 trajectory behavior and fixes
+  multi-episode accounting so posewrite calls are accumulated across episodes and
+  `v3_posx_trial_count` is reported.
+- The v3 10,240 run used `num_envs=1024`, `episodes=10`, seed `779`, and stdout
+  lines 20-21 confirm IsaacLab built-in `DifferentialIKController`, no RoArm-local
+  IK loop, no training, no dataset generation, no grasp/attach/object posewrite,
+  `trajectory_variant=v3`, and total trials `10240`.
+- Audit lines 1-6 PASS: `csv_rows=10240`, row count match, mechanism OK, zero
+  posewrite during rollout, controlled `0.943164062`, impact `0.007519531`,
+  low-motion `0.042480469`, success marker `0.594824219`, final TCP target error
+  `0.023529604`, learned policy `NO`, Track A grasp success `NO`, dataset ready
+  `NO`.
+- Posthoc line 6 shows `(1,0)` remains the weakest direction: n=2566, controlled
+  `0.874512860`, impact `0.012860483`, low-motion `0.122759158`, success marker
+  `0.296570538`.
+- Compare-to-1024 lines 2-3 show scaling degradation but still good impact:
+  overall impact `0.004882812 -> 0.007519531`, `(1,0)` impact
+  `0.014814815 -> 0.012860483`, while `(1,0)` low-motion worsens
+  `0.088888889 -> 0.122759158`.
+- Compare lines 10-14 show impact causes remain mostly tip-angle outliers: overall
+  77 impact rows, 65 tip-only, 9 displacement-only, 3 tip+displacement; no impact
+  row was caused by final speed alone.
+- Compare lines 15-24 show per-episode impact stays below about 1.2% across all 10
+  episodes.
+
+Implication:
+
+- For a professor-facing push/tap result, the honest statement is: "10,240
+  scripted IsaacLab Differential IK trials ran; the controller physically pushed
+  the cube with overall controlled 94.3%, impact 0.75%, low-motion 4.25%, and no
+  training/dataset/grasp/posewrite."
+- For teacher/dataset use, v3 still needs a v3.1 sweep focused on `(1,0)`
+  low-motion/success recovery while preserving impact below the current 1-2%
+  range.
+
+Sources:
+
+- `sim_scripts/cube3cm_push_diffik_probe.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_eval10240_seed779_stdout.out:20-21`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_eval10240_seed779_audit.out:1-6`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_eval10240_seed779_posthoc.out:1-17`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_eval10240_seed779_summary.json:18-53`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_eval10240_seed779_compare_to_1024.out:1-25`

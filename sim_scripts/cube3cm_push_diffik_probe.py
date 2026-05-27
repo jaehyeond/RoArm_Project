@@ -41,7 +41,7 @@ def main() -> int:
     parser.add_argument("--settle_steps", type=int, default=8)
     parser.add_argument("--max_diffik_joint_step_rad", type=float, default=0.012)
     parser.add_argument("--dls_lambda", type=float, default=0.010)
-    parser.add_argument("--trajectory_variant", choices=("v1", "v2"), default="v1")
+    parser.add_argument("--trajectory_variant", choices=("v1", "v2", "v3"), default="v1")
     parser.add_argument("--v2_posx_precontact_clearance_m", type=float, default=0.012)
     parser.add_argument("--v2_posx_push_through_m", type=float, default=0.024)
     parser.add_argument("--v2_posx_tcp_top_margin_m", type=float, default=-0.004)
@@ -50,6 +50,14 @@ def main() -> int:
     parser.add_argument("--v2_posx_push_steps", type=int, default=150)
     parser.add_argument("--v2_posx_post_steps", type=int, default=50)
     parser.add_argument("--v2_posx_max_diffik_joint_step_rad", type=float, default=0.028)
+    parser.add_argument("--v3_posx_precontact_clearance_m", type=float, default=0.014)
+    parser.add_argument("--v3_posx_push_through_m", type=float, default=0.020)
+    parser.add_argument("--v3_posx_tcp_top_margin_m", type=float, default=-0.011)
+    parser.add_argument("--v3_posx_lateral_offset_m", type=float, default=0.0)
+    parser.add_argument("--v3_posx_approach_steps", type=int, default=300)
+    parser.add_argument("--v3_posx_push_steps", type=int, default=220)
+    parser.add_argument("--v3_posx_post_steps", type=int, default=60)
+    parser.add_argument("--v3_posx_max_diffik_joint_step_rad", type=float, default=0.020)
     parser.add_argument("--gui", action="store_true")
     parser.add_argument("--viewer_step_sleep_s", type=float, default=0.0)
     parser.add_argument("--post_run_sleep_s", type=float, default=0.0)
@@ -88,7 +96,13 @@ def main() -> int:
     env_cfg.action_scale = 0.0
     base_total_steps = int(args.approach_steps + args.push_steps + args.post_steps)
     v2_posx_total_steps = int(args.v2_posx_approach_steps + args.v2_posx_push_steps + args.v2_posx_post_steps)
-    total_steps = max(base_total_steps, v2_posx_total_steps) if args.trajectory_variant == "v2" else base_total_steps
+    v3_posx_total_steps = int(args.v3_posx_approach_steps + args.v3_posx_push_steps + args.v3_posx_post_steps)
+    variant_posx_total_steps = base_total_steps
+    if args.trajectory_variant == "v2":
+        variant_posx_total_steps = v2_posx_total_steps
+    elif args.trajectory_variant == "v3":
+        variant_posx_total_steps = v3_posx_total_steps
+    total_steps = max(base_total_steps, variant_posx_total_steps)
     step_dt = float(env_cfg.sim.dt) * float(env_cfg.decimation)
     min_episode_s = (int(args.settle_steps) + total_steps + 20) * step_dt
     env_cfg.episode_length_s = max(float(env_cfg.episode_length_s), min_episode_s)
@@ -163,8 +177,10 @@ def main() -> int:
         f"trajectory_variant={args.trajectory_variant} "
         f"base_steps={args.approach_steps}/{args.push_steps}/{args.post_steps} "
         f"v2_posx_steps={args.v2_posx_approach_steps}/{args.v2_posx_push_steps}/{args.v2_posx_post_steps} "
+        f"v3_posx_steps={args.v3_posx_approach_steps}/{args.v3_posx_push_steps}/{args.v3_posx_post_steps} "
         f"max_diffik_joint_step_rad={args.max_diffik_joint_step_rad:.6f} "
         f"v2_posx_max_diffik_joint_step_rad={args.v2_posx_max_diffik_joint_step_rad:.6f} "
+        f"v3_posx_max_diffik_joint_step_rad={args.v3_posx_max_diffik_joint_step_rad:.6f} "
         f"dls_lambda={args.dls_lambda:.6f} env_auto_reset_disabled=YES "
         f"env_joint_delta_action_loop_bypassed=YES episode_length_s={env_cfg.episode_length_s:.3f}",
         flush=True,
@@ -172,7 +188,8 @@ def main() -> int:
 
     records: list[dict[str, float | int | str]] = []
     t0 = time.time()
-    v2_posx_env_count = 0
+    posx_variant_env_count = 0
+    posx_variant_trial_count = 0
 
     def build_trajectory_tensors() -> dict[str, torch.Tensor]:
         cube = inner._cube_start_w
@@ -195,6 +212,15 @@ def main() -> int:
             push_through[posx] = float(args.v2_posx_push_through_m)
             tcp_top_margin[posx] = float(args.v2_posx_tcp_top_margin_m)
             lateral_offset[posx] = float(args.v2_posx_lateral_offset_m)
+        elif args.trajectory_variant == "v3":
+            approach_steps[posx] = int(args.v3_posx_approach_steps)
+            push_steps[posx] = int(args.v3_posx_push_steps)
+            post_steps[posx] = int(args.v3_posx_post_steps)
+            max_joint_step[posx] = float(args.v3_posx_max_diffik_joint_step_rad)
+            precontact[posx] = float(args.v3_posx_precontact_clearance_m)
+            push_through[posx] = float(args.v3_posx_push_through_m)
+            tcp_top_margin[posx] = float(args.v3_posx_tcp_top_margin_m)
+            lateral_offset[posx] = float(args.v3_posx_lateral_offset_m)
         return {
             "posx": posx,
             "approach_steps": approach_steps,
@@ -255,7 +281,6 @@ def main() -> int:
         for episode in range(int(args.episodes)):
             env.reset()
             diffik.reset()
-            counters["posewrite_calls_during_rollout"] = 0
             posewrite_watch["active"] = False
             inner._grasped[:] = False
             inner._was_grasped[:] = False
@@ -273,7 +298,8 @@ def main() -> int:
             max_joint_delta_abs = torch.zeros((n,), device=device)
             clipped_steps = torch.zeros((n,), device=device)
             traj = build_trajectory_tensors()
-            v2_posx_env_count = int(traj["posx"].sum().detach().cpu().item())
+            posx_variant_env_count = int(traj["posx"].sum().detach().cpu().item())
+            posx_variant_trial_count += posx_variant_env_count
             posewrite_watch["active"] = True
 
             for step in range(total_steps):
@@ -337,7 +363,16 @@ def main() -> int:
                         "success_marker": int(bool(inner._push_success_flag[idx].detach().cpu().item())),
                         "grasped_marker": int(bool(inner._grasped[idx].detach().cpu().item())),
                         "trajectory_variant": args.trajectory_variant,
-                        "v2_posx_applied": int(bool(traj["posx"][idx].detach().cpu().item())),
+                        "posx_variant_applied": int(
+                            bool(traj["posx"][idx].detach().cpu().item())
+                            and args.trajectory_variant in {"v2", "v3"}
+                        ),
+                        "v2_posx_applied": int(
+                            bool(traj["posx"][idx].detach().cpu().item()) and args.trajectory_variant == "v2"
+                        ),
+                        "v3_posx_applied": int(
+                            bool(traj["posx"][idx].detach().cpu().item()) and args.trajectory_variant == "v3"
+                        ),
                         "precontact_clearance_m": float(traj["precontact"][idx].detach().cpu().item()),
                         "push_through_m": float(traj["push_through"][idx].detach().cpu().item()),
                         "tcp_top_margin_m": float(traj["tcp_top_margin"][idx].detach().cpu().item()),
@@ -386,7 +421,14 @@ def main() -> int:
         "trajectory_variant": args.trajectory_variant,
         "base_total_steps_per_trial": base_total_steps,
         "v2_posx_total_steps_per_trial": v2_posx_total_steps,
-        "v2_posx_env_count": v2_posx_env_count,
+        "v3_posx_total_steps_per_trial": v3_posx_total_steps,
+        "posx_variant_total_steps_per_trial": variant_posx_total_steps,
+        "posx_variant_env_count": posx_variant_env_count,
+        "posx_variant_trial_count": posx_variant_trial_count,
+        "v2_posx_env_count": posx_variant_env_count if args.trajectory_variant == "v2" else 0,
+        "v3_posx_env_count": posx_variant_env_count if args.trajectory_variant == "v3" else 0,
+        "v2_posx_trial_count": posx_variant_trial_count if args.trajectory_variant == "v2" else 0,
+        "v3_posx_trial_count": posx_variant_trial_count if args.trajectory_variant == "v3" else 0,
         "episode_length_s": float(env_cfg.episode_length_s),
         "num_envs": n,
         "episodes": int(args.episodes),
