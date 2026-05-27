@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-05-27 KST (B200 disconnected; Track A v6/v7 close_26 FAIL; first approved v8 close_26 runtime also FAIL; post-fail v8 virtual-damping wiring fix is static-ready only; no post-fix v8 runtime has run; professor cube3cm push/tap 20,480-trial scripted rollout complete; separate no-attach cube-push PPO reward/curriculum tested through 1k frozen eval but impact remains too high for learned 10k/100k scaling; professor branch IsaacLab built-in Differential IK cube-push v3 10,240-trial scripted robustness audit complete; still not learned/Track A/dataset readiness)
+Last updated: 2026-05-27 KST (B200 disconnected; Track A v6/v7 close_26 FAIL; first approved v8 close_26 runtime also FAIL; post-fail v8 virtual-damping wiring fix is static-ready only; no post-fix v8 runtime has run; professor cube3cm push/tap 20,480-trial scripted rollout complete; separate no-attach cube-push PPO reward/curriculum tested through 1k frozen eval but impact remains too high for learned 10k/100k scaling; professor branch IsaacLab built-in Differential IK cube-push v3 10,240-trial scripted robustness audit and professor-facing replay video complete; still not learned/Track A/dataset readiness)
 
 This is the rolling current-state dashboard. It is not full history. Durable
 rules live in `claudedocs/DECISIONS.md`; experiment history lives in
@@ -153,6 +153,28 @@ Do **not** use `HANDOFF.md` or `TASKS.md` as current state.
   below 1%, `(1,0)` impact stays below 2%, but `(1,0)` low-motion worsens and
   success remains weak. Verdict: professor-style 10k scripted push/tap robustness
   evidence PASS; still not learned policy, not Track A grasp, not dataset-ready.
+- **Professor cube-push Differential IK v3 visualization replay (2026-05-27)**:
+  generated a professor-facing MP4 from a captured v3 trace; this is a replay
+  artifact for visualization, not a new training run, dataset generation, or
+  fresh physics recomputation. Current `cube3cm_push_diffik_probe.py` md5 is
+  `1e39836eb02a22c12e084a4279e6b4e7`; replay renderer
+  `sim_scripts/cube3cm_push_diffik_render_trace.py` md5 is
+  `2adb116ae2c441420873a8384d3a7b17`. Selected single-env case is
+  `diffik_probe_v3_reach16_seed779.csv` line 5: env_id `3`, direction `(1,0)`,
+  start `(x,y)=(0.353590250,-0.073313951)m`, displacement
+  `0.036002159m`, controlled `1`, impact `0`, low-motion `0`, success marker
+  `1`. Trace summary lines 46-49 show trace CSV, env_id `3`, 145 trace frames,
+  and `training=false`. Render stdout line 447 confirms `frames=145`, MP4 path,
+  `training=NO`, `dataset_generation=NO`, `physics_recomputed=NO`. Render
+  summary lines 19-27 confirm `30fps`, `1280x720`, 145 written frames, output
+  path, `physics_recomputed=false`, `training=false`. A corrected four-direction
+  parallel replay now uses env_id `[0,3,4,7]` for directions `(0,-1)`, `(1,0)`,
+  `(0,1)`, `(-1,0)` respectively; render stdout line 447 confirms
+  `frames=145 env_count=4`, and render summary lines 12-19/91-112 confirm white
+  background, black actual RoArm URDF STL mesh, gray table, pink cube, `30fps`,
+  145 frames, 2x2 layout, `physics_recomputed=false`, and `training=false`.
+  Earlier black FK-proxy render artifacts were rejected/superseded because they
+  were not actual RoArm geometry.
 - Track A goal: first make the sim/Isaac Lab contact primitive reliable, then
   move toward broad sim/lab dataset collection and learning.
 - Dataset generation and training are blocked until close_26 proxy audit PASS,
@@ -751,8 +773,8 @@ Current professor cube push/tap branch:
 
 Next concrete step:
 1. For professor branch: prepare/report the 10,240-trial v3 scripted DiffIK
-   push/tap result as physics statistics only. Do not describe it as learning or
-   dataset readiness.
+   push/tap result plus the v3 replay MP4 as physics/statistics and visualization
+   only. Do not describe either as learning or dataset readiness.
 2. If the next objective is teacher/dataset generation, run a small v3.1 sweep to
    recover `(1,0)` low-motion/success while preserving v3's low impact.
 3. Do not rerun v7 unchanged and do not start Track A hold-lift/dataset/training.

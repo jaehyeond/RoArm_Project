@@ -5261,3 +5261,74 @@ Sources:
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_eval10240_seed779_posthoc.out:1-17`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_eval10240_seed779_summary.json:18-53`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_eval10240_seed779_compare_to_1024.out:1-25`
+
+## D105 - Professor v3 video is a replay visualization, not new learning/dataset evidence
+
+Date: 2026-05-27
+
+Decision:
+
+- Use the generated v3 MP4s as professor-facing visualization of scripted
+  IsaacLab Differential IK push/tap samples. Prefer the four-direction parallel
+  replay for presentation because it shows all four push directions at once.
+- Do not count the MP4 as a dataset, training result, learned-policy evidence, or
+  additional physics trial. It is a replay of a captured trace.
+- When presenting the video, explicitly say it shows direction `(1,0)` in the
+  local frame for env3, i.e. push along positive X from the selected cube start
+  position. In the four-direction video, env0 is `(0,-1)`, env3 is `(1,0)`,
+  env4 is `(0,1)`, and env7 is `(-1,0)`.
+
+Evidence:
+
+- Selected source row is `diffik_probe_v3_reach16_seed779.csv:5`: env_id `3`,
+  direction `(1,0)`, cube start `(0.353590250,-0.073313951)m`, displacement
+  `0.036002159m`, controlled `1`, impact `0`, low-motion `0`, success marker
+  `1`.
+- Trace generation stdout lines 20-21 confirm local IsaacLab built-in
+  `DifferentialIKController`, no RoArm-local IK loop, no training, no dataset
+  generation, no grasp/attach/object posewrite, and `trajectory_variant=v3`.
+- Trace summary lines 46-49 confirm trace CSV path, `trace_env_id=3`,
+  `trace_frame_count=145`, and `training=false`.
+- Render stdout line 447 confirms `frames=145`, MP4 path, trace path,
+  `training=NO`, `dataset_generation=NO`, and `physics_recomputed=NO`.
+- Render summary lines 19-27 confirm `30fps`, 145 written frames, `1280x720`,
+  output MP4 path, `physics_recomputed=false`, trace CSV, and `training=false`.
+- MP4 probe lines 1-8 confirm `opened=True`, `frame_count=145`, `width=1280`,
+  `height=720`, `fps=30.0`, first frame decode OK, and file size `722185`
+  bytes.
+- Four-direction render stdout line 447 confirms `frames=145`, `env_count=4`,
+  env IDs `[0, 3, 4, 7]`, `training=NO`, `dataset_generation=NO`, and
+  `physics_recomputed=NO`.
+- Four-direction real-RoArm render summary lines 12-19/91-112 confirm white
+  background, black actual RoArm URDF STL mesh, gray table, pink cube, 2x2
+  layout, 145 frames, `robot_visual_mode=black_roarm_urdf_stl_mesh_from_trace_joints`,
+  mesh source `local_assets/roarm_m3/urdf/meshes`,
+  `physics_recomputed=false`, and `training=false`.
+- Four-direction MP4 probe lines 1-8 confirm `opened=True`, `frame_count=145`,
+  `width=1280`, `height=720`, `fps=30.0`, first frame decode OK, and file size
+  `1234819` bytes.
+- Earlier black FK-proxy render artifacts were rejected/superseded because they
+  were not actual RoArm geometry.
+
+Implication:
+
+- The video is appropriate for explaining what the v3 scripted controller is
+  physically doing near the cube.
+- It must be paired with the 10,240-trial audit for statistics; by itself it is
+  an illustrative sample, not a robustness claim.
+
+Sources:
+
+- `claudedocs/session_20260527_cube3cm_diffik_v3_visualization.md`
+- `sim_scripts/cube3cm_push_diffik_probe.py`
+- `sim_scripts/cube3cm_push_diffik_render_trace.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_reach16_seed779.csv:5`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_trace_posx_env3_seed779_stdout.out:20-21`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_trace_posx_env3_seed779_summary.json:46-49`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_render_posx_env3_seed779_stdout.out:447`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_render_posx_env3_seed779_summary.json:19-27`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_render_posx_env3_seed779_mp4_probe.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_render_fourdir_realroarm_env0_3_4_7_seed779_stdout.out:447`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_render_fourdir_realroarm_env0_3_4_7_seed779_summary.json:12-19`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_render_fourdir_realroarm_env0_3_4_7_seed779_summary.json:91-112`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_render_fourdir_realroarm_env0_3_4_7_seed779_mp4_probe.out:1-8`

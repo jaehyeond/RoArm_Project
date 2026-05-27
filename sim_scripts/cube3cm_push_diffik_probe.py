@@ -59,6 +59,21 @@ def main() -> int:
     parser.add_argument("--v3_posx_post_steps", type=int, default=60)
     parser.add_argument("--v3_posx_max_diffik_joint_step_rad", type=float, default=0.020)
     parser.add_argument("--gui", action="store_true")
+    parser.add_argument("--enable_cameras", action="store_true")
+    parser.add_argument("--record_video", action="store_true")
+    parser.add_argument("--video_env_id", type=int, default=0)
+    parser.add_argument("--video_dir", type=str, default=str(LOG_DIR / "diffik_probe_video"))
+    parser.add_argument("--video_name", type=str, default="diffik_probe.mp4")
+    parser.add_argument("--video_width", type=int, default=1280)
+    parser.add_argument("--video_height", type=int, default=720)
+    parser.add_argument("--video_fps", type=int, default=30)
+    parser.add_argument("--video_stride", type=int, default=4)
+    parser.add_argument("--video_eye_offset_m", type=float, nargs=3, default=(0.28, -0.42, 0.30))
+    parser.add_argument("--video_target_push_m", type=float, default=0.025)
+    parser.add_argument("--trace_env_id", type=int, default=-1)
+    parser.add_argument("--trace_env_ids", type=int, nargs="*", default=None)
+    parser.add_argument("--trace_stride", type=int, default=4)
+    parser.add_argument("--trace_csv", type=str, default="")
     parser.add_argument("--viewer_step_sleep_s", type=float, default=0.0)
     parser.add_argument("--post_run_sleep_s", type=float, default=0.0)
     parser.add_argument("--out_csv", type=str, default=str(LOG_DIR / "diffik_probe_smoke_per_env.csv"))
@@ -67,10 +82,11 @@ def main() -> int:
 
     from isaaclab.app import AppLauncher
 
-    app_launcher = AppLauncher(headless=not args.gui)
+    app_launcher = AppLauncher(headless=not args.gui, enable_cameras=bool(args.enable_cameras or args.record_video))
     sim_app = app_launcher.app
 
     import gymnasium as gym
+    import numpy as np
     import torch
 
     import roarm_rl  # noqa: F401 - registers envs
@@ -86,6 +102,70 @@ def main() -> int:
         CUBE_SIZE_M,
         RoArmCubePushEnvCfg,
     )
+
+    video_writer = None
+    video_annot = None
+    video_camera_xf = None
+    video_frame_count = 0
+    video_frame_dir = None
+    video_path = None
+    if args.record_video:
+        if not (0 <= int(args.video_env_id) < int(args.num_envs)):
+            raise ValueError(f"--video_env_id must be in [0, {int(args.num_envs) - 1}]")
+        import omni.replicator.core as rep
+        import omni.usd
+        from PIL import Image, ImageDraw
+        from pxr import Gf, UsdGeom
+
+        stage = omni.usd.get_context().get_stage()
+        cam_prim = UsdGeom.Camera.Define(stage, "/World/DiffIKVideoCam")
+        cam_prim.CreateFocalLengthAttr(18.0)
+        cam_prim.CreateHorizontalApertureAttr(22.0)
+        cam_prim.CreateVerticalApertureAttr(22.0 * float(args.video_height) / float(args.video_width))
+        cam_prim.CreateClippingRangeAttr(Gf.Vec2f(0.03, 5.0))
+        video_camera_xf = UsdGeom.Xformable(cam_prim.GetPrim())
+        video_camera_xf.ClearXformOpOrder()
+        video_camera_xf.AddTransformOp()
+        render_product = rep.create.render_product("/World/DiffIKVideoCam", (int(args.video_width), int(args.video_height)))
+        video_annot = rep.AnnotatorRegistry.get_annotator("rgb")
+        video_annot.attach([render_product])
+        video_dir = Path(args.video_dir)
+        video_dir.mkdir(parents=True, exist_ok=True)
+        video_path = video_dir / args.video_name
+        video_frame_dir = video_dir / "frames"
+        video_frame_dir.mkdir(parents=True, exist_ok=True)
+
+        def set_video_camera(eye_xyz: np.ndarray, target_xyz: np.ndarray) -> None:
+            forward = target_xyz - eye_xyz
+            forward = forward / np.linalg.norm(forward)
+            up_guess = np.array([0.0, 0.0, 1.0], dtype=np.float64)
+            right = np.cross(forward, up_guess)
+            right = right / np.linalg.norm(right)
+            up = np.cross(right, forward)
+            mat = np.eye(4, dtype=np.float64)
+            mat[:3, 0] = right
+            mat[:3, 1] = up
+            mat[:3, 2] = -forward
+            mat[:3, 3] = eye_xyz
+            video_camera_xf.GetOrderedXformOps()[0].Set(Gf.Matrix4d(*mat.T.flatten().tolist()))
+
+        def draw_video_overlay(rgb: np.ndarray, text: str) -> np.ndarray:
+            img = Image.fromarray(rgb[:, :, :3].astype(np.uint8))
+            draw = ImageDraw.Draw(img)
+            draw.rectangle((12, 10, 780, 88), fill=(0, 0, 0))
+            draw.text((24, 20), text, fill=(255, 255, 255))
+            return np.asarray(img)
+
+        def capture_video_frame(text: str) -> None:
+            nonlocal video_frame_count
+            rep.orchestrator.step()
+            sim_app.update()
+            rgb = video_annot.get_data()
+            if rgb is None or getattr(rgb, "ndim", 0) != 3:
+                raise RuntimeError(f"video rgb annotator returned {type(rgb)}")
+            frame_path = video_frame_dir / f"frame_{video_frame_count:04d}.png"
+            Image.fromarray(draw_video_overlay(rgb, text)).save(frame_path)
+            video_frame_count += 1
 
     env_cfg = RoArmCubePushEnvCfg()
     env_cfg.scene.num_envs = int(args.num_envs)
@@ -187,6 +267,13 @@ def main() -> int:
     )
 
     records: list[dict[str, float | int | str]] = []
+    trace_records: list[dict[str, float | int]] = []
+    trace_env_ids: list[int] = []
+    if args.trace_env_ids:
+        trace_env_ids.extend(int(idx) for idx in args.trace_env_ids)
+    elif int(args.trace_env_id) >= 0:
+        trace_env_ids.append(int(args.trace_env_id))
+    trace_env_ids = sorted({idx for idx in trace_env_ids if 0 <= idx < n})
     t0 = time.time()
     posx_variant_env_count = 0
     posx_variant_trial_count = 0
@@ -300,6 +387,28 @@ def main() -> int:
             traj = build_trajectory_tensors()
             posx_variant_env_count = int(traj["posx"].sum().detach().cpu().item())
             posx_variant_trial_count += posx_variant_env_count
+            if args.record_video and episode == 0:
+                vid_idx = int(args.video_env_id)
+                target_xyz = cube_start_w[vid_idx].detach().cpu().numpy().astype(np.float64)
+                push_xyz = np.array(
+                    [
+                        float(push_dir[vid_idx, 0].detach().cpu().item()),
+                        float(push_dir[vid_idx, 1].detach().cpu().item()),
+                        0.0,
+                    ],
+                    dtype=np.float64,
+                )
+                target_xyz = target_xyz + push_xyz * float(args.video_target_push_m)
+                target_xyz[2] += 0.035
+                eye_xyz = target_xyz + np.array(args.video_eye_offset_m, dtype=np.float64)
+                set_video_camera(eye_xyz, target_xyz)
+                for _ in range(5):
+                    sim_app.update()
+                capture_video_frame(
+                    "v3 scripted IsaacLab Differential IK | "
+                    f"episode={episode} env={vid_idx} push=({push_xyz[0]:+.0f},{push_xyz[1]:+.0f}) | "
+                    "training=NO dataset=NO"
+                )
             posewrite_watch["active"] = True
 
             for step in range(total_steps):
@@ -332,6 +441,48 @@ def main() -> int:
                     torch.norm(inner._tcp_pos_w - inner._sponge_pos_w, p=2, dim=-1),
                 )
                 max_cube_speed = torch.maximum(max_cube_speed, torch.norm(inner._sponge.data.root_lin_vel_w, p=2, dim=-1))
+                if trace_env_ids and episode == 0 and step % max(1, int(args.trace_stride)) == 0:
+                    trace_frame = step // max(1, int(args.trace_stride))
+                    for trace_idx in trace_env_ids:
+                        trace_row: dict[str, float | int] = {
+                            "frame": int(trace_frame),
+                            "step": int(step),
+                            "env_id": trace_idx,
+                            "push_dx": float(push_dir[trace_idx, 0].detach().cpu().item()),
+                            "push_dy": float(push_dir[trace_idx, 1].detach().cpu().item()),
+                            "env_origin_x_m": float(inner.scene.env_origins[trace_idx, 0].detach().cpu().item()),
+                            "env_origin_y_m": float(inner.scene.env_origins[trace_idx, 1].detach().cpu().item()),
+                            "env_origin_z_m": float(inner.scene.env_origins[trace_idx, 2].detach().cpu().item()),
+                            "cube_x_m": float(inner._sponge_pos_w[trace_idx, 0].detach().cpu().item()),
+                            "cube_y_m": float(inner._sponge_pos_w[trace_idx, 1].detach().cpu().item()),
+                            "cube_z_m": float(inner._sponge_pos_w[trace_idx, 2].detach().cpu().item()),
+                            "cube_qw": float(inner._sponge_quat_w[trace_idx, 0].detach().cpu().item()),
+                            "cube_qx": float(inner._sponge_quat_w[trace_idx, 1].detach().cpu().item()),
+                            "cube_qy": float(inner._sponge_quat_w[trace_idx, 2].detach().cpu().item()),
+                            "cube_qz": float(inner._sponge_quat_w[trace_idx, 3].detach().cpu().item()),
+                            "tcp_x_m": float(inner._tcp_pos_w[trace_idx, 0].detach().cpu().item()),
+                            "tcp_y_m": float(inner._tcp_pos_w[trace_idx, 1].detach().cpu().item()),
+                            "tcp_z_m": float(inner._tcp_pos_w[trace_idx, 2].detach().cpu().item()),
+                            "target_x_m": float(tcp_target_w[trace_idx, 0].detach().cpu().item()),
+                            "target_y_m": float(tcp_target_w[trace_idx, 1].detach().cpu().item()),
+                            "target_z_m": float(tcp_target_w[trace_idx, 2].detach().cpu().item()),
+                        }
+                        for local_idx, joint_idx in enumerate(arm_joint_ids):
+                            trace_row[f"arm_joint_{local_idx}_rad"] = float(
+                                inner._robot.data.joint_pos[trace_idx, joint_idx].detach().cpu().item()
+                            )
+                        trace_row["gripper_joint_rad"] = float(
+                            inner._robot.data.joint_pos[trace_idx, inner.gripper_joint_idx].detach().cpu().item()
+                        )
+                        trace_records.append(trace_row)
+                if args.record_video and episode == 0 and step % max(1, int(args.video_stride)) == 0:
+                    vid_idx = int(args.video_env_id)
+                    capture_video_frame(
+                        "v3 scripted IsaacLab Differential IK | "
+                        f"step={step:03d}/{total_steps} env={vid_idx} "
+                        f"push=({push_dir[vid_idx, 0].item():+.0f},{push_dir[vid_idx, 1].item():+.0f}) | "
+                        "training=NO dataset=NO"
+                    )
                 if float(args.viewer_step_sleep_s) > 0.0:
                     time.sleep(float(args.viewer_step_sleep_s))
 
@@ -400,6 +551,15 @@ def main() -> int:
         writer.writeheader()
         writer.writerows(records)
 
+    trace_csv = Path(args.trace_csv) if args.trace_csv else None
+    if trace_csv is not None:
+        trace_csv.parent.mkdir(parents=True, exist_ok=True)
+        trace_fieldnames = list(trace_records[0].keys()) if trace_records else []
+        with trace_csv.open("w", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=trace_fieldnames)
+            writer.writeheader()
+            writer.writerows(trace_records)
+
     def mean(key: str) -> float:
         return sum(float(r[key]) for r in records) / len(records) if records else 0.0
 
@@ -450,6 +610,15 @@ def main() -> int:
         "min_tcp_target_err_mean_m": mean("min_tcp_target_err_m"),
         "final_tcp_target_err_mean_m": mean("final_tcp_target_err_m"),
         "diffik_clip_rate_mean": mean("diffik_clip_rate"),
+        "record_video": bool(args.record_video),
+        "video_env_id": int(args.video_env_id) if args.record_video else None,
+        "video_path": str(video_path) if video_path is not None else None,
+        "video_frame_dir": str(video_frame_dir) if video_frame_dir is not None else None,
+        "video_frame_count": int(video_frame_count),
+        "trace_env_id": int(args.trace_env_id),
+        "trace_env_ids": trace_env_ids,
+        "trace_csv": str(trace_csv) if trace_csv is not None else None,
+        "trace_frame_count": int(len(trace_records)),
         "audit_thresholds": {
             "speed_p95_mps": AUDIT_SPEED_P95_MPS,
             "speed_p99_mps": AUDIT_SPEED_P99_MPS,
@@ -472,6 +641,13 @@ def main() -> int:
         f"grasped_marker_rate={summary['grasped_marker_rate']:.6f}",
         flush=True,
     )
+    if args.record_video:
+        print(
+            "[cube3cm_push_diffik_probe] "
+            f"video_path={video_path} video_frame_dir={video_frame_dir} video_frame_count={video_frame_count} "
+            f"video_env_id={args.video_env_id}",
+            flush=True,
+        )
 
     env.close()
     sim_app.close()
