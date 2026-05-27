@@ -41,6 +41,15 @@ def main() -> int:
     parser.add_argument("--settle_steps", type=int, default=8)
     parser.add_argument("--max_diffik_joint_step_rad", type=float, default=0.012)
     parser.add_argument("--dls_lambda", type=float, default=0.010)
+    parser.add_argument("--trajectory_variant", choices=("v1", "v2"), default="v1")
+    parser.add_argument("--v2_posx_precontact_clearance_m", type=float, default=0.012)
+    parser.add_argument("--v2_posx_push_through_m", type=float, default=0.024)
+    parser.add_argument("--v2_posx_tcp_top_margin_m", type=float, default=-0.004)
+    parser.add_argument("--v2_posx_lateral_offset_m", type=float, default=0.0)
+    parser.add_argument("--v2_posx_approach_steps", type=int, default=260)
+    parser.add_argument("--v2_posx_push_steps", type=int, default=150)
+    parser.add_argument("--v2_posx_post_steps", type=int, default=50)
+    parser.add_argument("--v2_posx_max_diffik_joint_step_rad", type=float, default=0.028)
     parser.add_argument("--gui", action="store_true")
     parser.add_argument("--viewer_step_sleep_s", type=float, default=0.0)
     parser.add_argument("--post_run_sleep_s", type=float, default=0.0)
@@ -77,7 +86,9 @@ def main() -> int:
     env_cfg.ik_endpoint_reset = False
     env_cfg.scripted_teacher_blend = 0.0
     env_cfg.action_scale = 0.0
-    total_steps = int(args.approach_steps + args.push_steps + args.post_steps)
+    base_total_steps = int(args.approach_steps + args.push_steps + args.post_steps)
+    v2_posx_total_steps = int(args.v2_posx_approach_steps + args.v2_posx_push_steps + args.v2_posx_post_steps)
+    total_steps = max(base_total_steps, v2_posx_total_steps) if args.trajectory_variant == "v2" else base_total_steps
     step_dt = float(env_cfg.sim.dt) * float(env_cfg.decimation)
     min_episode_s = (int(args.settle_steps) + total_steps + 20) * step_dt
     env_cfg.episode_length_s = max(float(env_cfg.episode_length_s), min_episode_s)
@@ -149,7 +160,11 @@ def main() -> int:
         "[cube3cm_push_diffik_probe] "
         f"robot_usd_path={args.robot_usd_path} arm_joint_names={arm_joint_names} "
         f"ee_body=link5 body_idx={link5_body_idx} jacobi_body_idx={jacobi_body_idx} "
+        f"trajectory_variant={args.trajectory_variant} "
+        f"base_steps={args.approach_steps}/{args.push_steps}/{args.post_steps} "
+        f"v2_posx_steps={args.v2_posx_approach_steps}/{args.v2_posx_push_steps}/{args.v2_posx_post_steps} "
         f"max_diffik_joint_step_rad={args.max_diffik_joint_step_rad:.6f} "
+        f"v2_posx_max_diffik_joint_step_rad={args.v2_posx_max_diffik_joint_step_rad:.6f} "
         f"dls_lambda={args.dls_lambda:.6f} env_auto_reset_disabled=YES "
         f"env_joint_delta_action_loop_bypassed=YES episode_length_s={env_cfg.episode_length_s:.3f}",
         flush=True,
@@ -157,15 +172,62 @@ def main() -> int:
 
     records: list[dict[str, float | int | str]] = []
     t0 = time.time()
+    v2_posx_env_count = 0
 
-    def compute_tcp_targets(alpha: torch.Tensor) -> torch.Tensor:
+    def build_trajectory_tensors() -> dict[str, torch.Tensor]:
         cube = inner._cube_start_w
         push_dir = inner._push_dir_xy
+        posx = (push_dir[:, 0] > 0.5) & (torch.abs(push_dir[:, 1]) < 0.5)
+        approach_steps = torch.full((n,), int(args.approach_steps), dtype=torch.long, device=device)
+        push_steps = torch.full((n,), int(args.push_steps), dtype=torch.long, device=device)
+        post_steps = torch.full((n,), int(args.post_steps), dtype=torch.long, device=device)
+        max_joint_step = torch.full((n,), float(args.max_diffik_joint_step_rad), dtype=torch.float32, device=device)
+        precontact = torch.full((n,), float(args.precontact_clearance_m), dtype=torch.float32, device=device)
+        push_through = torch.full((n,), float(args.push_through_m), dtype=torch.float32, device=device)
+        tcp_top_margin = torch.full((n,), float(args.tcp_top_margin_m), dtype=torch.float32, device=device)
+        lateral_offset = torch.zeros((n,), dtype=torch.float32, device=device)
+        if args.trajectory_variant == "v2":
+            approach_steps[posx] = int(args.v2_posx_approach_steps)
+            push_steps[posx] = int(args.v2_posx_push_steps)
+            post_steps[posx] = int(args.v2_posx_post_steps)
+            max_joint_step[posx] = float(args.v2_posx_max_diffik_joint_step_rad)
+            precontact[posx] = float(args.v2_posx_precontact_clearance_m)
+            push_through[posx] = float(args.v2_posx_push_through_m)
+            tcp_top_margin[posx] = float(args.v2_posx_tcp_top_margin_m)
+            lateral_offset[posx] = float(args.v2_posx_lateral_offset_m)
+        return {
+            "posx": posx,
+            "approach_steps": approach_steps,
+            "push_steps": push_steps,
+            "post_steps": post_steps,
+            "max_joint_step": max_joint_step,
+            "precontact": precontact,
+            "push_through": push_through,
+            "tcp_top_margin": tcp_top_margin,
+            "lateral_offset": lateral_offset,
+        }
+
+    def compute_alpha(step: int, traj: dict[str, torch.Tensor]) -> torch.Tensor:
+        step_v = torch.full((n,), int(step), dtype=torch.float32, device=device)
+        approach_steps = traj["approach_steps"].to(dtype=torch.float32)
+        push_steps = torch.clamp(traj["push_steps"].to(dtype=torch.float32), min=1.0)
+        push_start = approach_steps
+        push_end = approach_steps + push_steps
+        raw_alpha = (step_v - push_start + 1.0) / push_steps
+        alpha = torch.where(step_v < push_start, torch.zeros_like(raw_alpha), raw_alpha)
+        alpha = torch.where(step_v >= push_end, torch.ones_like(alpha), alpha)
+        return torch.clamp(alpha, min=0.0, max=1.0)
+
+    def compute_tcp_targets(alpha: torch.Tensor, traj: dict[str, torch.Tensor]) -> torch.Tensor:
+        cube = inner._cube_start_w
+        push_dir = inner._push_dir_xy
+        lateral_dir = torch.stack((-push_dir[:, 1], push_dir[:, 0]), dim=-1)
         pre = cube.clone()
         through = cube.clone()
-        z = cube[:, 2] + half + float(args.tcp_top_margin_m)
-        pre[:, 0:2] = cube[:, 0:2] - push_dir * (half + float(args.precontact_clearance_m))
-        through[:, 0:2] = cube[:, 0:2] + push_dir * (half + float(args.push_through_m))
+        z = cube[:, 2] + half + traj["tcp_top_margin"]
+        lateral = lateral_dir * traj["lateral_offset"].unsqueeze(-1)
+        pre[:, 0:2] = cube[:, 0:2] - push_dir * (half + traj["precontact"]).unsqueeze(-1) + lateral
+        through[:, 0:2] = cube[:, 0:2] + push_dir * (half + traj["push_through"]).unsqueeze(-1) + lateral
         pre[:, 2] = z
         through[:, 2] = z
         return pre + alpha.unsqueeze(-1) * (through - pre)
@@ -210,25 +272,21 @@ def main() -> int:
             max_cube_speed = torch.zeros((n,), device=device)
             max_joint_delta_abs = torch.zeros((n,), device=device)
             clipped_steps = torch.zeros((n,), device=device)
+            traj = build_trajectory_tensors()
+            v2_posx_env_count = int(traj["posx"].sum().detach().cpu().item())
             posewrite_watch["active"] = True
 
             for step in range(total_steps):
-                if step < int(args.approach_steps):
-                    alpha = torch.zeros((n,), device=device)
-                elif int(args.push_steps) > 0 and step < int(args.approach_steps + args.push_steps):
-                    raw = (step - int(args.approach_steps) + 1) / float(args.push_steps)
-                    alpha = torch.full((n,), min(1.0, max(0.0, raw)), device=device)
-                else:
-                    alpha = torch.ones((n,), device=device)
+                alpha = compute_alpha(step, traj)
 
                 inner._compute_intermediate_values()
-                tcp_target_w = compute_tcp_targets(alpha)
+                tcp_target_w = compute_tcp_targets(alpha, traj)
                 joint_pos_des, _link5_target_b, _link5_pos_b = compute_diffik_joint_target(tcp_target_w)
                 joint_pos_arm = inner._robot.data.joint_pos[:, arm_joint_ids]
                 raw_delta = joint_pos_des - joint_pos_arm
-                max_step = float(args.max_diffik_joint_step_rad)
-                clipped_delta = torch.clamp(raw_delta, -max_step, max_step)
-                clipped_steps += (torch.max(torch.abs(raw_delta), dim=-1).values > max_step).float()
+                max_step = traj["max_joint_step"].unsqueeze(-1)
+                clipped_delta = torch.maximum(torch.minimum(raw_delta, max_step), -max_step)
+                clipped_steps += (torch.max(torch.abs(raw_delta), dim=-1).values > traj["max_joint_step"]).float()
                 max_joint_delta_abs = torch.maximum(max_joint_delta_abs, torch.max(torch.abs(clipped_delta), dim=-1).values)
 
                 target_full = inner.robot_dof_targets.clone()
@@ -278,6 +336,16 @@ def main() -> int:
                         "low_motion": int(bool(terms["low_motion"][idx].detach().cpu().item())),
                         "success_marker": int(bool(inner._push_success_flag[idx].detach().cpu().item())),
                         "grasped_marker": int(bool(inner._grasped[idx].detach().cpu().item())),
+                        "trajectory_variant": args.trajectory_variant,
+                        "v2_posx_applied": int(bool(traj["posx"][idx].detach().cpu().item())),
+                        "precontact_clearance_m": float(traj["precontact"][idx].detach().cpu().item()),
+                        "push_through_m": float(traj["push_through"][idx].detach().cpu().item()),
+                        "tcp_top_margin_m": float(traj["tcp_top_margin"][idx].detach().cpu().item()),
+                        "lateral_offset_m": float(traj["lateral_offset"][idx].detach().cpu().item()),
+                        "phase_approach_steps": int(traj["approach_steps"][idx].detach().cpu().item()),
+                        "phase_push_steps": int(traj["push_steps"][idx].detach().cpu().item()),
+                        "phase_post_steps": int(traj["post_steps"][idx].detach().cpu().item()),
+                        "max_diffik_joint_step_rad_cfg": float(traj["max_joint_step"][idx].detach().cpu().item()),
                         "min_tcp_cube_dist_m": float(min_tcp_cube_dist[idx].detach().cpu().item()),
                         "min_tcp_target_err_m": float(min_tcp_target_err[idx].detach().cpu().item()),
                         "final_tcp_target_err_m": float(final_tcp_target_err[idx].detach().cpu().item()),
@@ -315,6 +383,10 @@ def main() -> int:
         "posewrite_calls_during_rollout": counters["posewrite_calls_during_rollout"],
         "env_auto_reset_disabled": True,
         "env_joint_delta_action_loop_bypassed": True,
+        "trajectory_variant": args.trajectory_variant,
+        "base_total_steps_per_trial": base_total_steps,
+        "v2_posx_total_steps_per_trial": v2_posx_total_steps,
+        "v2_posx_env_count": v2_posx_env_count,
         "episode_length_s": float(env_cfg.episode_length_s),
         "num_envs": n,
         "episodes": int(args.episodes),

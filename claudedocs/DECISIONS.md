@@ -5066,3 +5066,69 @@ Sources:
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_reach16_seed778_audit.out:1-6`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_eval1024_seed779_audit.out:1-6`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_eval1024_seed779_posthoc.out:1-17`
+
+## D102 - Differential IK trajectory v2 reduces low-motion but worsens impact/tip risk
+
+Date: 2026-05-27 KST
+
+Decision:
+
+- For the professor's cube3cm push/tap branch, keep the scripted IsaacLab
+  Differential IK path, but do not promote trajectory v2 to a teacher or scale-up
+  source.
+- v2 is a mixed result: it fixes much of the low-motion pocket, including the
+  `(1,1)` initial grid, but it increases tip/impact risk, especially in the weak
+  `(1,0)` direction.
+- The next valid step is trajectory v3 impact/tip control, not 10k/100k scripted
+  scaling and not PPO/VLA learning.
+
+Evidence:
+
+- `sim_scripts/cube3cm_push_diffik_probe.py` now has a default-preserving
+  `--trajectory_variant v2` path for `(1,0)`: closer precontact, lower TCP target
+  height, shorter push-through, longer approach/push horizon, and smaller
+  per-step DiffIK joint cap.
+- v2 smoke16 seed780 exited 0 and audit lines 1-6 PASS, but summary
+  `v2_posx_env_count=0`, so it was only a mechanism smoke and not evidence about
+  the weak direction.
+- v2 reach16 seed779 exited 0, included 6 `(1,0)` envs, and audit lines 1-6 PASS:
+  controlled `1.000000000`, impact `0`, low-motion `0.062500000`.
+- v2 frozen 1024 seed779 exited 0 and audit lines 1-6 PASS: controlled
+  `0.932617188`, impact `0.038085938`, low-motion `0.051757812`, success marker
+  `0.580078125`, final TCP error `0.024324538`, and clip rate `0.666682201`.
+- Same-seed v1/v2 comparison lines 1-3 show rows `1024/1024`; overall controlled
+  improved `0.892578125 -> 0.932617188`, low-motion improved
+  `0.136718750 -> 0.051757812`, and final TCP error improved
+  `0.028779610 -> 0.024324538`, but impact worsened
+  `0.023437500 -> 0.038085938`.
+- In direction `(1,0)`, controlled improved `0.633333333 -> 0.785185185` and
+  low-motion improved `0.274074074 -> 0.085185185`, but impact worsened
+  `0.088888889 -> 0.144444444`, success marker dropped
+  `0.533333333 -> 0.440740741`, and tip p95/max increased.
+- Grid `(1,1)` improved strongly on low-motion
+  `0.304687500 -> 0.023437500` and controlled
+  `0.796875000 -> 0.914062500`, but impact became nonzero
+  `0 -> 0.031250000`.
+
+Implication:
+
+- v2 is useful physics evidence because it shows the pocket is trajectory
+  sensitive, not a hard impossibility.
+- It is still not robust enough to use as a scripted teacher. v3 should reduce
+  `(1,0)` tip/impact while preserving v2's reach improvement, likely by testing
+  lower/less edge-prone contact height, shorter or staged push-through in
+  high-tip pockets, and a small lateral-offset sign sweep.
+- This remains scripted Differential IK physics evidence only: not learned policy,
+  not Track A grasp success, and not dataset readiness.
+
+Sources:
+
+- `sim_scripts/cube3cm_push_diffik_probe.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v2_smoke16_seed780_audit.out:1-6`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v2_smoke16_seed780_summary.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v2_reach16_seed779_audit.out:1-6`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v2_reach16_seed779_posthoc.out:1-17`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v2_eval1024_seed779_stdout.out:20-21`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v2_eval1024_seed779_audit.out:1-6`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v2_eval1024_seed779_posthoc.out:1-17`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v2_eval1024_seed779_compare_to_v1.out:1-8`
