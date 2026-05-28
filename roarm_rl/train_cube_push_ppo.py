@@ -34,6 +34,15 @@ def main() -> int:
     parser.add_argument("--scripted_teacher_blend", type=float, default=None)
     parser.add_argument("--scripted_teacher_horizon_frac", type=float, default=None)
     parser.add_argument("--scripted_teacher_goal_push_m", type=float, default=None)
+    parser.add_argument("--bc_teacher_checkpoint_path", type=str, default=None)
+    parser.add_argument("--bc_teacher_blend", type=float, default=None)
+    parser.add_argument("--bc_teacher_imitation_reward_scale", type=float, default=None)
+    parser.add_argument("--bc_teacher_policy_delta_clip_rad", type=float, default=None)
+    parser.add_argument("--bc_teacher_policy_delta_scale", type=float, default=None)
+    parser.add_argument("--bc_teacher_posx_policy_delta_scale", type=float, default=None)
+    parser.add_argument("--bc_teacher_lowx_policy_delta_scale", type=float, default=None)
+    parser.add_argument("--bc_teacher_highx_policy_delta_scale", type=float, default=None)
+    parser.add_argument("--bc_teacher_delta_smoothing_alpha", type=float, default=None)
     parser.add_argument("--ik_endpoint_reset", action="store_true")
     parser.add_argument("--cube_success_disp_m", type=float, default=None)
     parser.add_argument("--cube_success_speed_max_mps", type=float, default=None)
@@ -51,6 +60,8 @@ def main() -> int:
     parser.add_argument("--speed_penalty_start_mps", type=float, default=None)
     parser.add_argument("--impact_terminal_penalty", type=float, default=None)
     parser.add_argument("--success_bonus", type=float, default=None)
+    parser.add_argument("--num_steps_per_env", type=int, default=None)
+    parser.add_argument("--save_interval", type=int, default=None)
     args = parser.parse_args()
 
     from isaaclab.app import AppLauncher
@@ -133,6 +144,57 @@ def main() -> int:
             f"{env_cfg.scripted_teacher_goal_push_m} -> {args.scripted_teacher_goal_push_m}"
         )
         env_cfg.scripted_teacher_goal_push_m = args.scripted_teacher_goal_push_m
+    if args.bc_teacher_checkpoint_path is not None:
+        print(
+            "[cube-push-train] bc_teacher_checkpoint_path: "
+            f"{env_cfg.bc_teacher_checkpoint_path} -> {args.bc_teacher_checkpoint_path}"
+        )
+        env_cfg.bc_teacher_checkpoint_path = args.bc_teacher_checkpoint_path
+    if args.bc_teacher_blend is not None:
+        print(f"[cube-push-train] bc_teacher_blend: {env_cfg.bc_teacher_blend} -> {args.bc_teacher_blend}")
+        env_cfg.bc_teacher_blend = args.bc_teacher_blend
+    if args.bc_teacher_imitation_reward_scale is not None:
+        print(
+            "[cube-push-train] bc_teacher_imitation_reward_scale: "
+            f"{env_cfg.bc_teacher_imitation_reward_scale} -> {args.bc_teacher_imitation_reward_scale}"
+        )
+        env_cfg.bc_teacher_imitation_reward_scale = args.bc_teacher_imitation_reward_scale
+    if args.bc_teacher_policy_delta_clip_rad is not None:
+        print(
+            "[cube-push-train] bc_teacher_policy_delta_clip_rad: "
+            f"{env_cfg.bc_teacher_policy_delta_clip_rad} -> {args.bc_teacher_policy_delta_clip_rad}"
+        )
+        env_cfg.bc_teacher_policy_delta_clip_rad = args.bc_teacher_policy_delta_clip_rad
+    if args.bc_teacher_policy_delta_scale is not None:
+        print(
+            "[cube-push-train] bc_teacher_policy_delta_scale: "
+            f"{env_cfg.bc_teacher_policy_delta_scale} -> {args.bc_teacher_policy_delta_scale}"
+        )
+        env_cfg.bc_teacher_policy_delta_scale = args.bc_teacher_policy_delta_scale
+    if args.bc_teacher_posx_policy_delta_scale is not None:
+        print(
+            "[cube-push-train] bc_teacher_posx_policy_delta_scale: "
+            f"{env_cfg.bc_teacher_posx_policy_delta_scale} -> {args.bc_teacher_posx_policy_delta_scale}"
+        )
+        env_cfg.bc_teacher_posx_policy_delta_scale = args.bc_teacher_posx_policy_delta_scale
+    if args.bc_teacher_lowx_policy_delta_scale is not None:
+        print(
+            "[cube-push-train] bc_teacher_lowx_policy_delta_scale: "
+            f"{env_cfg.bc_teacher_lowx_policy_delta_scale} -> {args.bc_teacher_lowx_policy_delta_scale}"
+        )
+        env_cfg.bc_teacher_lowx_policy_delta_scale = args.bc_teacher_lowx_policy_delta_scale
+    if args.bc_teacher_highx_policy_delta_scale is not None:
+        print(
+            "[cube-push-train] bc_teacher_highx_policy_delta_scale: "
+            f"{env_cfg.bc_teacher_highx_policy_delta_scale} -> {args.bc_teacher_highx_policy_delta_scale}"
+        )
+        env_cfg.bc_teacher_highx_policy_delta_scale = args.bc_teacher_highx_policy_delta_scale
+    if args.bc_teacher_delta_smoothing_alpha is not None:
+        print(
+            "[cube-push-train] bc_teacher_delta_smoothing_alpha: "
+            f"{env_cfg.bc_teacher_delta_smoothing_alpha} -> {args.bc_teacher_delta_smoothing_alpha}"
+        )
+        env_cfg.bc_teacher_delta_smoothing_alpha = args.bc_teacher_delta_smoothing_alpha
     if args.cube_success_disp_m is not None:
         print(f"[cube-push-train] cube_success_disp_m: {env_cfg.cube_success_disp_m} -> {args.cube_success_disp_m}")
         env_cfg.cube_success_disp_m = args.cube_success_disp_m
@@ -218,6 +280,12 @@ def main() -> int:
     ppo_cfg = RoArmPickPPORunnerCfg()
     ppo_cfg.max_iterations = args.max_iterations
     ppo_cfg.seed = args.seed
+    if args.num_steps_per_env is not None:
+        print(f"[cube-push-train] ppo_num_steps_per_env: {ppo_cfg.num_steps_per_env} -> {args.num_steps_per_env}")
+        ppo_cfg.num_steps_per_env = args.num_steps_per_env
+    if args.save_interval is not None:
+        print(f"[cube-push-train] ppo_save_interval: {ppo_cfg.save_interval} -> {args.save_interval}")
+        ppo_cfg.save_interval = args.save_interval
     ppo_cfg.experiment_name = args.experiment_name or (
         "roarm_cube_push_no_attach_" + datetime.now().strftime("%Y%m%d_%H%M%S")
     )
@@ -257,11 +325,18 @@ def main() -> int:
         f"action_smoothing_alpha={env_cfg.action_smoothing_alpha} "
         f"max_joint_delta_per_step_rad={env_cfg.max_joint_delta_per_step_rad} "
         f"contact_joint_delta_scale={env_cfg.contact_joint_delta_scale} "
-        f"joint_target_lead_limit_rad={env_cfg.joint_target_lead_limit_rad} "
-        f"ik_precontact_clearance_m={env_cfg.ik_precontact_clearance_m} "
-        f"scripted_teacher_blend={env_cfg.scripted_teacher_blend} "
-        f"scripted_teacher_horizon_frac={env_cfg.scripted_teacher_horizon_frac}"
-    )
+            f"joint_target_lead_limit_rad={env_cfg.joint_target_lead_limit_rad} "
+            f"ik_precontact_clearance_m={env_cfg.ik_precontact_clearance_m} "
+            f"scripted_teacher_blend={env_cfg.scripted_teacher_blend} "
+            f"scripted_teacher_horizon_frac={env_cfg.scripted_teacher_horizon_frac} "
+            f"bc_teacher_blend={env_cfg.bc_teacher_blend} "
+            f"bc_teacher_imitation_reward_scale={env_cfg.bc_teacher_imitation_reward_scale} "
+            f"bc_teacher_policy_delta_scale={env_cfg.bc_teacher_policy_delta_scale} "
+            f"bc_teacher_lowx_policy_delta_scale={env_cfg.bc_teacher_lowx_policy_delta_scale} "
+            f"bc_teacher_highx_policy_delta_scale={env_cfg.bc_teacher_highx_policy_delta_scale} "
+            f"bc_teacher_delta_smoothing_alpha={env_cfg.bc_teacher_delta_smoothing_alpha}"
+        )
+    print(f"[cube-push-train] bc_teacher_checkpoint_path={env_cfg.bc_teacher_checkpoint_path or 'NONE'}")
     print(f"[cube-push-train] robot_usd_path={env_cfg.robot.spawn.usd_path}")
     print(f"[cube-push-train] ppo: steps_per_env={ppo_cfg.num_steps_per_env}")
     print(f"[cube-push-train] log_dir: {log_dir}")

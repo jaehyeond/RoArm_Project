@@ -12,6 +12,13 @@ def f(row: dict[str, str], key: str) -> float:
     return float(row[key])
 
 
+def opt_f(row: dict[str, str], key: str) -> float | None:
+    value = row.get(key, "")
+    if value == "":
+        return None
+    return float(value)
+
+
 def b(row: dict[str, str], key: str) -> int:
     return int(float(row[key]))
 
@@ -32,6 +39,8 @@ def metrics(rows: list[dict[str, str]]) -> dict[str, float]:
             "disp_along_mean": 0.0,
             "tcp_err_mean": 0.0,
         }
+    tcp_values = [v for r in rows if (v := opt_f(r, "final_tcp_target_err_m")) is not None]
+    tcp_err_mean = sum(tcp_values) / len(tcp_values) if tcp_values else float("nan")
     return {
         "n": n,
         "controlled": sum(b(r, "controlled_push") for r in rows) / n,
@@ -39,7 +48,7 @@ def metrics(rows: list[dict[str, str]]) -> dict[str, float]:
         "low_motion": sum(b(r, "low_motion") for r in rows) / n,
         "success": sum(b(r, "success_marker") for r in rows) / n,
         "disp_along_mean": sum(f(r, "disp_along_push_m") for r in rows) / n,
-        "tcp_err_mean": sum(f(r, "final_tcp_target_err_m") for r in rows) / n,
+        "tcp_err_mean": tcp_err_mean,
     }
 
 
@@ -72,7 +81,6 @@ def main() -> int:
         "low_motion",
         "success_marker",
         "disp_along_push_m",
-        "final_tcp_target_err_m",
     }
     missing = sorted(required - set(rows[0]))
     if missing:
@@ -124,7 +132,8 @@ def main() -> int:
     print(
         f"bucket_audit line{line} verdict="
         f"{'PASS_POSX_BUCKET_SCREEN' if pass_bucket else 'FAIL_POSX_BUCKET_SCREEN'} "
-        "learned_policy=NO track_a_grasp_success=NO"
+        f"learned_policy={'YES' if summary.get('learned_policy') is True else 'NO'} "
+        "track_a_grasp_success=NO"
     )
     return 0 if pass_bucket else 2
 

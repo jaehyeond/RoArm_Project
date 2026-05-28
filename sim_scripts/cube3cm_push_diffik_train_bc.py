@@ -19,6 +19,14 @@ def make_model(torch, in_dim: int, out_dim: int, hidden_dim: int, hidden_layers:
     return torch.nn.Sequential(*layers)
 
 
+def row_bucket(row: dict[str, str]) -> str:
+    return row.get("posx_x_bucket", "not_posx")
+
+
+def row_is_posx(row: dict[str, str]) -> bool:
+    return int(round(float(row.get("push_dx", 0.0)))) == 1 and int(round(float(row.get("push_dy", 0.0)))) == 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--dataset_csv", type=Path, required=True)
@@ -32,6 +40,19 @@ def main() -> int:
     ap.add_argument("--lr", type=float, default=1.0e-3)
     ap.add_argument("--weight_decay", type=float, default=1.0e-4)
     ap.add_argument("--seed", type=int, default=779)
+    ap.add_argument("--loss_mode", choices=("mse", "safety_l2"), default="mse")
+    ap.add_argument("--posx_sample_weight", type=float, default=1.0)
+    ap.add_argument("--lowx_sample_weight", type=float, default=1.0)
+    ap.add_argument("--highx_sample_weight", type=float, default=1.0)
+    ap.add_argument("--action_l2_weight", type=float, default=0.0)
+    ap.add_argument("--posx_action_l2_weight", type=float, default=0.0)
+    ap.add_argument("--lowx_action_l2_weight", type=float, default=0.0)
+    ap.add_argument("--highx_action_l2_weight", type=float, default=0.0)
+    ap.add_argument("--action_excess_limit_rad", type=float, default=0.0)
+    ap.add_argument("--action_excess_weight", type=float, default=0.0)
+    ap.add_argument("--posx_action_excess_weight", type=float, default=0.0)
+    ap.add_argument("--lowx_action_excess_weight", type=float, default=0.0)
+    ap.add_argument("--highx_action_excess_weight", type=float, default=0.0)
     args = ap.parse_args()
 
     import torch
@@ -65,6 +86,50 @@ def main() -> int:
     x_test = tensorize(by_split["test"], feature_columns)
     y_test = tensorize(by_split["test"], target_columns)
 
+    def sample_weights(items: list[dict[str, str]]) -> "torch.Tensor":
+        weights = []
+        for row in items:
+            weight = 1.0
+            if row_is_posx(row):
+                weight *= float(args.posx_sample_weight)
+                bucket = row_bucket(row)
+                if bucket == "low_x":
+                    weight *= float(args.lowx_sample_weight)
+                elif bucket == "high_x":
+                    weight *= float(args.highx_sample_weight)
+            weights.append(weight)
+        return torch.tensor(weights, dtype=torch.float32)
+
+    def safety_weights(items: list[dict[str, str]], base: float, posx: float, lowx: float, highx: float) -> "torch.Tensor":
+        weights = []
+        for row in items:
+            weight = float(base)
+            if row_is_posx(row):
+                weight += float(posx)
+                bucket = row_bucket(row)
+                if bucket == "low_x":
+                    weight += float(lowx)
+                elif bucket == "high_x":
+                    weight += float(highx)
+            weights.append(weight)
+        return torch.tensor(weights, dtype=torch.float32)
+
+    train_sample_w = sample_weights(by_split["train"])
+    l2_train_w = safety_weights(
+        by_split["train"],
+        float(args.action_l2_weight),
+        float(args.posx_action_l2_weight),
+        float(args.lowx_action_l2_weight),
+        float(args.highx_action_l2_weight),
+    )
+    excess_train_w = safety_weights(
+        by_split["train"],
+        float(args.action_excess_weight),
+        float(args.posx_action_excess_weight),
+        float(args.lowx_action_excess_weight),
+        float(args.highx_action_excess_weight),
+    )
+
     x_mean = x_train.mean(dim=0, keepdim=True)
     x_std = x_train.std(dim=0, keepdim=True).clamp_min(1.0e-6)
     y_mean = y_train.mean(dim=0, keepdim=True)
@@ -79,6 +144,24 @@ def main() -> int:
     model = make_model(torch, len(feature_columns), len(target_columns), int(args.hidden_dim), int(args.hidden_layers))
     opt = torch.optim.AdamW(model.parameters(), lr=float(args.lr), weight_decay=float(args.weight_decay))
     loss_fn = torch.nn.MSELoss()
+
+    def supervised_loss(pred_n: "torch.Tensor", target_n: "torch.Tensor", sample_w: "torch.Tensor") -> "torch.Tensor":
+        per_row = torch.mean((pred_n - target_n) ** 2, dim=1)
+        return torch.sum(per_row * sample_w) / torch.clamp(torch.sum(sample_w), min=1.0e-6)
+
+    def safety_loss(pred_n: "torch.Tensor", l2_w: "torch.Tensor", excess_w: "torch.Tensor") -> "torch.Tensor":
+        if args.loss_mode != "safety_l2":
+            return pred_n.new_tensor(0.0)
+        pred_rad = pred_n * y_std + y_mean
+        out = pred_n.new_tensor(0.0)
+        if float(torch.max(l2_w).item()) > 0.0:
+            per_row_l2 = torch.mean(pred_rad**2, dim=1)
+            out = out + torch.mean(per_row_l2 * l2_w)
+        if float(args.action_excess_limit_rad) > 0.0 and float(torch.max(excess_w).item()) > 0.0:
+            excess = torch.relu(torch.abs(pred_rad) - float(args.action_excess_limit_rad))
+            per_row_excess = torch.mean(excess**2, dim=1)
+            out = out + torch.mean(per_row_excess * excess_w)
+        return out
 
     with torch.no_grad():
         baseline_val = loss_fn(torch.zeros_like(y_val_n), y_val_n).item()
@@ -95,7 +178,9 @@ def main() -> int:
         for start in range(0, n_train, batch_size):
             idx = order[start : start + batch_size]
             pred = model(x_train_n[idx])
-            loss = loss_fn(pred, y_train_n[idx])
+            bc_loss = supervised_loss(pred, y_train_n[idx], train_sample_w[idx])
+            reg_loss = safety_loss(pred, l2_train_w[idx], excess_train_w[idx])
+            loss = bc_loss + reg_loss
             opt.zero_grad()
             loss.backward()
             opt.step()
@@ -131,6 +216,21 @@ def main() -> int:
         and test_mae_mean_rad < 0.01
     )
     verdict = "PASS_BC_TRAINED_CHECKPOINT" if pass_bc else "FAIL_BC_TRAINED_CHECKPOINT"
+    safety_config = {
+        "loss_mode": args.loss_mode,
+        "posx_sample_weight": float(args.posx_sample_weight),
+        "lowx_sample_weight": float(args.lowx_sample_weight),
+        "highx_sample_weight": float(args.highx_sample_weight),
+        "action_l2_weight": float(args.action_l2_weight),
+        "posx_action_l2_weight": float(args.posx_action_l2_weight),
+        "lowx_action_l2_weight": float(args.lowx_action_l2_weight),
+        "highx_action_l2_weight": float(args.highx_action_l2_weight),
+        "action_excess_limit_rad": float(args.action_excess_limit_rad),
+        "action_excess_weight": float(args.action_excess_weight),
+        "posx_action_excess_weight": float(args.posx_action_excess_weight),
+        "lowx_action_excess_weight": float(args.lowx_action_excess_weight),
+        "highx_action_excess_weight": float(args.highx_action_excess_weight),
+    }
     checkpoint = {
         "model_state_dict": model.state_dict(),
         "feature_columns": feature_columns,
@@ -144,6 +244,7 @@ def main() -> int:
         "dataset_csv": str(args.dataset_csv),
         "manifest_json": str(args.manifest_json),
         "verdict": verdict,
+        "safety_config": safety_config,
     }
     args.out_model.parent.mkdir(parents=True, exist_ok=True)
     torch.save(checkpoint, args.out_model)
@@ -162,6 +263,7 @@ def main() -> int:
         "epochs": int(args.epochs),
         "hidden_dim": int(args.hidden_dim),
         "hidden_layers": int(args.hidden_layers),
+        **safety_config,
         "first_train_mse_norm": float(first_train),
         "final_train_mse_norm": float(train_mse),
         "baseline_val_mse_norm": float(baseline_val),
@@ -197,6 +299,14 @@ def main() -> int:
         "diffik_bc_train line4 "
         f"model_path={args.out_model} verdict={verdict} learned_policy_checkpoint={'YES' if pass_bc else 'NO'} "
         "rollout_validated=NO"
+    )
+    print(
+        "diffik_bc_train line5 "
+        f"loss_mode={args.loss_mode} posx_sample_weight={float(args.posx_sample_weight):.6f} "
+        f"lowx_sample_weight={float(args.lowx_sample_weight):.6f} highx_sample_weight={float(args.highx_sample_weight):.6f} "
+        f"action_l2_weight={float(args.action_l2_weight):.6f} posx_action_l2_weight={float(args.posx_action_l2_weight):.6f} "
+        f"lowx_action_l2_weight={float(args.lowx_action_l2_weight):.6f} highx_action_l2_weight={float(args.highx_action_l2_weight):.6f} "
+        f"action_excess_limit_rad={float(args.action_excess_limit_rad):.6f}"
     )
     return 0 if pass_bc else 2
 

@@ -1,0 +1,5 @@
+diffik_bc_train line1 rows=26100 train_rows=17980 val_rows=4060 test_rows=4060 epochs=240
+diffik_bc_train line2 first_train_mse_norm=0.963694644 final_train_mse_norm=0.004168557 baseline_val_mse_norm=1.040071607 final_val_mse_norm=0.024972165
+diffik_bc_train line3 baseline_test_mse_norm=1.002809405 final_test_mse_norm=0.018879525 test_mae_mean_rad=0.001225158 test_max_abs_err_rad=0.019854907
+diffik_bc_train line4 model_path=claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_state_action_dataset_v3_bucket_1024_seed779/bc_mlp_joint_delta_v3_safety_l2.pt verdict=PASS_BC_TRAINED_CHECKPOINT learned_policy_checkpoint=YES rollout_validated=NO
+diffik_bc_train line5 loss_mode=safety_l2 posx_sample_weight=1.150000 lowx_sample_weight=1.200000 highx_sample_weight=1.100000 action_l2_weight=0.000000 posx_action_l2_weight=60.000000 lowx_action_l2_weight=100.000000 highx_action_l2_weight=100.000000 action_excess_limit_rad=0.020000

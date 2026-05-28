@@ -24,6 +24,7 @@ def main() -> int:
     parser.add_argument("--num_rollouts", type=int, default=2)
     parser.add_argument("--seed", type=int, default=123)
     parser.add_argument("--robot_usd_path", type=str, default=str(DEFAULT_LOCAL_USD))
+    parser.add_argument("--episode_length_s", type=float, default=None)
     parser.add_argument("--ik_endpoint_reset", action="store_true")
     parser.add_argument("--action_scale", type=float, default=None)
     parser.add_argument("--action_smoothing_alpha", type=float, default=None)
@@ -36,6 +37,15 @@ def main() -> int:
     parser.add_argument("--scripted_teacher_blend", type=float, default=None)
     parser.add_argument("--scripted_teacher_horizon_frac", type=float, default=None)
     parser.add_argument("--scripted_teacher_goal_push_m", type=float, default=None)
+    parser.add_argument("--bc_teacher_checkpoint_path", type=str, default=None)
+    parser.add_argument("--bc_teacher_blend", type=float, default=None)
+    parser.add_argument("--bc_teacher_imitation_reward_scale", type=float, default=None)
+    parser.add_argument("--bc_teacher_policy_delta_clip_rad", type=float, default=None)
+    parser.add_argument("--bc_teacher_policy_delta_scale", type=float, default=None)
+    parser.add_argument("--bc_teacher_posx_policy_delta_scale", type=float, default=None)
+    parser.add_argument("--bc_teacher_lowx_policy_delta_scale", type=float, default=None)
+    parser.add_argument("--bc_teacher_highx_policy_delta_scale", type=float, default=None)
+    parser.add_argument("--bc_teacher_delta_smoothing_alpha", type=float, default=None)
     parser.add_argument("--record_first_episode_only", action="store_true")
     parser.add_argument("--gui", action="store_true", help="Launch Isaac Sim with a visible local GUI window.")
     parser.add_argument("--livestream", type=int, default=0, choices=(0, 1, 2), help="Enable Isaac Sim WebRTC livestream.")
@@ -69,6 +79,8 @@ def main() -> int:
     env_cfg.seed = args.seed
     env_cfg.robot.spawn.usd_path = args.robot_usd_path
     env_cfg.ik_endpoint_reset = args.ik_endpoint_reset
+    if args.episode_length_s is not None:
+        env_cfg.episode_length_s = args.episode_length_s
     if args.action_scale is not None:
         env_cfg.action_scale = args.action_scale
     if args.action_smoothing_alpha is not None:
@@ -91,6 +103,24 @@ def main() -> int:
         env_cfg.scripted_teacher_horizon_frac = args.scripted_teacher_horizon_frac
     if args.scripted_teacher_goal_push_m is not None:
         env_cfg.scripted_teacher_goal_push_m = args.scripted_teacher_goal_push_m
+    if args.bc_teacher_checkpoint_path is not None:
+        env_cfg.bc_teacher_checkpoint_path = args.bc_teacher_checkpoint_path
+    if args.bc_teacher_blend is not None:
+        env_cfg.bc_teacher_blend = args.bc_teacher_blend
+    if args.bc_teacher_imitation_reward_scale is not None:
+        env_cfg.bc_teacher_imitation_reward_scale = args.bc_teacher_imitation_reward_scale
+    if args.bc_teacher_policy_delta_clip_rad is not None:
+        env_cfg.bc_teacher_policy_delta_clip_rad = args.bc_teacher_policy_delta_clip_rad
+    if args.bc_teacher_policy_delta_scale is not None:
+        env_cfg.bc_teacher_policy_delta_scale = args.bc_teacher_policy_delta_scale
+    if args.bc_teacher_posx_policy_delta_scale is not None:
+        env_cfg.bc_teacher_posx_policy_delta_scale = args.bc_teacher_posx_policy_delta_scale
+    if args.bc_teacher_lowx_policy_delta_scale is not None:
+        env_cfg.bc_teacher_lowx_policy_delta_scale = args.bc_teacher_lowx_policy_delta_scale
+    if args.bc_teacher_highx_policy_delta_scale is not None:
+        env_cfg.bc_teacher_highx_policy_delta_scale = args.bc_teacher_highx_policy_delta_scale
+    if args.bc_teacher_delta_smoothing_alpha is not None:
+        env_cfg.bc_teacher_delta_smoothing_alpha = args.bc_teacher_delta_smoothing_alpha
 
     ppo_cfg = RoArmPickPPORunnerCfg()
     ppo_cfg.seed = args.seed
@@ -118,8 +148,15 @@ def main() -> int:
         f"ik_precontact_clearance_m={env_cfg.ik_precontact_clearance_m} "
         f"speed_penalty_start_mps={env_cfg.speed_penalty_start_mps} "
         f"scripted_teacher_blend={env_cfg.scripted_teacher_blend} "
-        f"scripted_teacher_horizon_frac={env_cfg.scripted_teacher_horizon_frac}"
+        f"scripted_teacher_horizon_frac={env_cfg.scripted_teacher_horizon_frac} "
+        f"bc_teacher_blend={env_cfg.bc_teacher_blend} "
+        f"bc_teacher_imitation_reward_scale={env_cfg.bc_teacher_imitation_reward_scale} "
+        f"bc_teacher_policy_delta_scale={env_cfg.bc_teacher_policy_delta_scale} "
+        f"bc_teacher_lowx_policy_delta_scale={env_cfg.bc_teacher_lowx_policy_delta_scale} "
+        f"bc_teacher_highx_policy_delta_scale={env_cfg.bc_teacher_highx_policy_delta_scale} "
+        f"bc_teacher_delta_smoothing_alpha={env_cfg.bc_teacher_delta_smoothing_alpha}"
     )
+    print(f"[cube-push-eval] bc_teacher_checkpoint_path={env_cfg.bc_teacher_checkpoint_path or 'NONE'}")
     print(f"[cube-push-eval] robot_usd_path={env_cfg.robot.spawn.usd_path}")
 
     env = gym.make("RoArm-CubePush-Direct-v0", cfg=env_cfg)
@@ -143,18 +180,29 @@ def main() -> int:
             for idx in ids.detach().cpu().tolist():
                 if args.record_first_episode_only and idx in recorded_env_ids:
                     continue
+                cube_x0 = float((inner._cube_start_w[idx, 0] - inner.scene.env_origins[idx, 0]).detach().cpu().item())
+                push_dx = float(inner._push_dir_xy[idx, 0].detach().cpu().item())
+                push_dy = float(inner._push_dir_xy[idx, 1].detach().cpu().item())
+                if int(round(push_dx)) == 1 and int(round(push_dy)) == 0:
+                    if cube_x0 < 0.257:
+                        posx_bucket = "low_x"
+                    elif cube_x0 < 0.308:
+                        posx_bucket = "mid_x"
+                    else:
+                        posx_bucket = "high_x"
+                else:
+                    posx_bucket = "not_posx"
                 records.append(
                     {
                         "trial": len(records),
                         "env_id": int(idx),
-                        "cube_x0_m": float(
-                            (inner._cube_start_w[idx, 0] - inner.scene.env_origins[idx, 0]).detach().cpu().item()
-                        ),
+                        "cube_x0_m": cube_x0,
                         "cube_y0_m": float(
                             (inner._cube_start_w[idx, 1] - inner.scene.env_origins[idx, 1]).detach().cpu().item()
                         ),
-                        "push_dx": float(inner._push_dir_xy[idx, 0].detach().cpu().item()),
-                        "push_dy": float(inner._push_dir_xy[idx, 1].detach().cpu().item()),
+                        "push_dx": push_dx,
+                        "push_dy": push_dy,
+                        "posx_x_bucket": posx_bucket,
                         "disp_along_push_m": float(terms["disp_along"][idx].detach().cpu().item()),
                         "disp_xy_m": float(terms["disp_xy"][idx].detach().cpu().item()),
                         "target_xy_dist_m": float(terms["target_xy_dist"][idx].detach().cpu().item()),
@@ -200,6 +248,7 @@ def main() -> int:
         "cube_y0_m",
         "push_dx",
         "push_dy",
+        "posx_x_bucket",
         "disp_along_push_m",
         "disp_xy_m",
         "target_xy_dist_m",
@@ -223,6 +272,10 @@ def main() -> int:
         return sum(float(r[key]) for r in records) / len(records) if records else 0.0
 
     summary = {
+        "controller": "rsl_rl_PPO_policy",
+        "learned_policy": True,
+        "diffik_controller_used": False,
+        "supervised_bc_checkpoint": False,
         "checkpoint": args.checkpoint,
         "num_envs": args.num_envs,
         "num_rollouts": args.num_rollouts,
@@ -235,6 +288,7 @@ def main() -> int:
         "viewer_step_sleep_s": args.viewer_step_sleep_s,
         "post_run_sleep_s": args.post_run_sleep_s,
         "ik_endpoint_reset": args.ik_endpoint_reset,
+        "episode_length_s": env_cfg.episode_length_s,
         "action_scale": env_cfg.action_scale,
         "action_smoothing_alpha": env_cfg.action_smoothing_alpha,
         "max_joint_delta_per_step_rad": env_cfg.max_joint_delta_per_step_rad,
@@ -245,6 +299,14 @@ def main() -> int:
         "scripted_teacher_blend": env_cfg.scripted_teacher_blend,
         "scripted_teacher_horizon_frac": env_cfg.scripted_teacher_horizon_frac,
         "scripted_teacher_goal_push_m": env_cfg.scripted_teacher_goal_push_m,
+        "bc_teacher_checkpoint_path": env_cfg.bc_teacher_checkpoint_path,
+        "bc_teacher_blend": env_cfg.bc_teacher_blend,
+        "bc_teacher_imitation_reward_scale": env_cfg.bc_teacher_imitation_reward_scale,
+        "bc_teacher_policy_delta_scale": env_cfg.bc_teacher_policy_delta_scale,
+        "bc_teacher_posx_policy_delta_scale": env_cfg.bc_teacher_posx_policy_delta_scale,
+        "bc_teacher_lowx_policy_delta_scale": env_cfg.bc_teacher_lowx_policy_delta_scale,
+        "bc_teacher_highx_policy_delta_scale": env_cfg.bc_teacher_highx_policy_delta_scale,
+        "bc_teacher_delta_smoothing_alpha": env_cfg.bc_teacher_delta_smoothing_alpha,
         "speed_penalty_start_mps": env_cfg.speed_penalty_start_mps,
         "training": False,
         "dataset_generation": False,

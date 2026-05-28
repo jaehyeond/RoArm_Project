@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-05-28 KST (B200 disconnected; Track A v6/v7 close_26 FAIL; first approved v8 close_26 runtime also FAIL; post-fail v8 virtual-damping wiring fix is static-ready only; no post-fix v8 runtime has run; professor cube3cm push/tap scripted rollout, DiffIK v3 10,240-trial audit, and real-RoArm replay video complete; professor cube3cm teacher-filtered state-action dataset v2 and BC joint-delta learned rollout PASS at 1024 envs; v3.2 teacher sweep did not find a robust low-x fix; bucket-balanced dataset v3 + BC v2 improves learned rollout success but fails per-bucket impact gate; still not Track A grasp, PPO/RL/VLA, image dataset, or 10k/100k learned-policy robustness)
+Last updated: 2026-05-28 KST (B200 disconnected; Track A v6/v7 close_26 FAIL; first approved v8 close_26 runtime also FAIL; post-fail v8 virtual-damping wiring fix is static-ready only; no post-fix v8 runtime has run; professor cube3cm push/tap scripted rollout, DiffIK v3 10,240-trial audit, and real-RoArm replay video complete; professor cube3cm teacher-filtered state-action dataset v2 and BC joint-delta learned rollout PASS at 1024 envs; v3.2 teacher sweep did not find a robust low-x fix; bucket-balanced dataset v3 + BC v2 improved learned rollout success but failed per-bucket impact gate; safety-aware BC v3 + bucket action scaling passed two 1024 frozen per-bucket audits on seeds 883/884 with lower impact but low_x low-motion caveat; small safety-aware PPO warm-start smoke ran on local GPU but teacher-off model_11 failed frozen 1024 performance, so PPO/RL scale-up remains blocked; still not Track A grasp, PPO/RL/VLA success, image dataset, or 10k/100k learned-policy robustness)
 
 This is the rolling current-state dashboard. It is not full history. Durable
 rules live in `claudedocs/DECISIONS.md`; experiment history lives in
@@ -213,6 +213,46 @@ Do **not** use `HANDOFF.md` or `TASKS.md` as current state.
   `0.061855670`. Clip `0.035` improved overall success to `0.689453125` but still
   failed low_x impact. Verdict: learned BC quality improved, but per-bucket safety
   gate blocks PPO/RL scale-up.
+- **Professor cube-push safety-aware BC v3 gate (2026-05-28)**: extended
+  `cube3cm_push_diffik_train_bc.py` with optional safety-weighted BC loss and
+  `cube3cm_push_bc_policy_rollout.py` with auditable per-bucket action scaling /
+  smoothing; fixed bucket-audit learned-policy reporting. Current md5s:
+  train `cbe7c2e8d44fe7a92cb2ba69f29b518a`, rollout
+  `aa0b5ef06db903058724a71f61225f0b`, bucket audit
+  `c69ff72a4a31228868169016ab2f2d08`. Safety BC train lines 1-5 PASS with test
+  MSE `0.018879525`, mean MAE `0.001225158rad`; checkpoint md5
+  `03b159809ddca64aad6d6449b7f44876`. 1024 frozen learned rollout seed883
+  lines 1-6 PASS overall: controlled `0.953125000`, impact `0.004882812`,
+  low-motion `0.030273438`, success `0.662109375`; bucket lines 7-10 PASS with
+  low_x impact `0.041095890`, high_x impact `0`. Cross-seed seed884 lines 1-6
+  PASS overall: controlled `0.943359375`, impact `0.010742188`, low-motion
+  `0.024414062`, success `0.662109375`; bucket lines 7-10 PASS with low_x impact
+  `0.035714286`, high_x impact `0`. Critical caveat: low_x low-motion is still
+  high (`0.315068493` seed883, `0.261904762` seed884), so this unblocks only the
+  next small safety-aware learned-policy gate, not 10k/100k robustness or PPO
+  scale-up without explicit approval.
+- **Professor cube-push safety-aware PPO warm-start smoke (2026-05-28)**: after
+  explicit approval, added default-off BC teacher/imitation warm-start support to
+  `roarm_rl/roarm_cube_push_env.py` md5 `9806c1fcfb4666355f825418da5b7d75`,
+  `train_cube_push_ppo.py` md5 `5466a9c9d40a7f09d397fbffa7cdb878`,
+  `eval_cube_push_policy.py` md5 `fa68ee654c969aff7938867894acf125`, optional
+  PPO bucket audit support md5 `62f74ce38c9a44f0f0790e00559f634a`, and new
+  `cube3cm_push_ppo_rollout_audit.py` md5 `b92260c8f0986c1b6bfe233fcf417d01`.
+  System Python failed with missing `gymnasium`; rerun in `conda run -n isaaclab`
+  used `cuda:0`. Smoke12 training seed885 completed 73,728 timesteps and wrote
+  `model_11.pt` md5 `c9f945a4d1eacd817d4733e7d9b7e48e`; training stdout lines
+  47-78 confirm BC teacher blend `0.35`, imitation reward `0.30`, no attach/no
+  dataset, and `cuda:0`. Teacher-off frozen 1024 eval seed886 is a mechanism PASS
+  but performance FAIL: audit lines 1-5 show controlled `0.470703125`, impact
+  `0.087890625`, low-motion `0.344726562`, success `0.078125000`; bucket lines
+  1-10 fail with `(-1,0)` impact `0.230483271` and `(1,0)` success
+  `0.070833333`. Teacher-on short/safety-limited diagnostic is also weak
+  (success `0.050781250`, impact `0.097656250`). Direct-like teacher-on diagnostic
+  with 6s horizon/home reset/relaxed action loop partially recovers controlled
+  `0.792968750`, impact `0.054687500`, success `0.417968750` and passes the loose
+  posx bucket screen, proving the checkpoint is not dead but the PPO action-loop
+  warm-start bridge/curriculum is mismatched. Do not call PPO `model_11.pt` a
+  successful learned policy; do not run PPO 10k/100k scale-up from it.
 - Track A goal: first make the sim/Isaac Lab contact primitive reliable, then
   move toward broad sim/lab dataset collection and learning.
 - Dataset generation and training are blocked until close_26 proxy audit PASS,

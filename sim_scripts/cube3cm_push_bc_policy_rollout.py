@@ -62,6 +62,12 @@ def main() -> int:
     parser.add_argument("--v31_lowx_push_steps", type=int, default=220)
     parser.add_argument("--v31_lowx_post_steps", type=int, default=60)
     parser.add_argument("--policy_delta_clip_rad", type=float, default=0.040)
+    parser.add_argument("--x_bucket_edges", type=float, nargs=2, default=(0.257, 0.308))
+    parser.add_argument("--policy_delta_scale", type=float, default=1.0)
+    parser.add_argument("--posx_policy_delta_scale", type=float, default=1.0)
+    parser.add_argument("--lowx_policy_delta_scale", type=float, default=1.0)
+    parser.add_argument("--highx_policy_delta_scale", type=float, default=1.0)
+    parser.add_argument("--policy_delta_smoothing_alpha", type=float, default=1.0)
     parser.add_argument("--max_rollout_steps", type=int, default=0)
     parser.add_argument("--progress_log", type=Path, default=None)
     parser.add_argument("--skip_sim_close", action="store_true")
@@ -202,6 +208,10 @@ def main() -> int:
         push_dir = inner._push_dir_xy
         posx = (push_dir[:, 0] > 0.5) & (torch.abs(push_dir[:, 1]) < 0.5)
         cube_x_local = cube[:, 0] - inner.scene.env_origins[:, 0]
+        edge0, edge1 = float(args.x_bucket_edges[0]), float(args.x_bucket_edges[1])
+        posx_low_bucket = posx & (cube_x_local < edge0)
+        posx_mid_bucket = posx & (cube_x_local >= edge0) & (cube_x_local < edge1)
+        posx_high_bucket = posx & (cube_x_local >= edge1)
         lowx = posx & (cube_x_local <= float(args.v31_lowx_threshold_m))
         approach_steps = torch.full((n,), int(args.approach_steps), dtype=torch.long, device=device)
         push_steps = torch.full((n,), int(args.push_steps), dtype=torch.long, device=device)
@@ -226,6 +236,9 @@ def main() -> int:
         lateral_offset[lowx] = float(args.v31_lowx_lateral_offset_m)
         return {
             "posx": posx,
+            "posx_low_bucket": posx_low_bucket,
+            "posx_mid_bucket": posx_mid_bucket,
+            "posx_high_bucket": posx_high_bucket,
             "lowx": lowx,
             "approach_steps": approach_steps,
             "push_steps": push_steps,
@@ -322,6 +335,7 @@ def main() -> int:
             max_cube_speed = torch.zeros((n,), device=device)
             max_joint_delta_abs = torch.zeros((n,), device=device)
             traj = build_trajectory_tensors()
+            prev_policy_delta = torch.zeros((n, len(target_columns)), device=device, dtype=torch.float32)
             posx_trial_count += int(traj["posx"].sum().detach().cpu().item())
             lowx_trial_count += int(traj["lowx"].sum().detach().cpu().item())
             posewrite_watch["active"] = True
@@ -343,6 +357,27 @@ def main() -> int:
                         -float(args.policy_delta_clip_rad),
                         float(args.policy_delta_clip_rad),
                     )
+                    delta_scale = torch.full((n,), float(args.policy_delta_scale), dtype=torch.float32, device=device)
+                    delta_scale = torch.where(
+                        traj["posx"],
+                        delta_scale * float(args.posx_policy_delta_scale),
+                        delta_scale,
+                    )
+                    delta_scale = torch.where(
+                        traj["posx_low_bucket"],
+                        delta_scale * float(args.lowx_policy_delta_scale),
+                        delta_scale,
+                    )
+                    delta_scale = torch.where(
+                        traj["posx_high_bucket"],
+                        delta_scale * float(args.highx_policy_delta_scale),
+                        delta_scale,
+                    )
+                    clipped_delta = clipped_delta * delta_scale.unsqueeze(-1)
+                    smooth_alpha = max(0.0, min(1.0, float(args.policy_delta_smoothing_alpha)))
+                    if smooth_alpha < 1.0:
+                        clipped_delta = smooth_alpha * clipped_delta + (1.0 - smooth_alpha) * prev_policy_delta
+                    prev_policy_delta = clipped_delta.detach()
                 joint_pos_arm = inner._robot.data.joint_pos[:, arm_joint_ids]
                 max_joint_delta_abs = torch.maximum(
                     max_joint_delta_abs, torch.max(torch.abs(clipped_delta), dim=-1).values
@@ -396,6 +431,15 @@ def main() -> int:
                         "trajectory_variant": args.trajectory_variant,
                         "v31_posx_applied": int(bool(traj["posx"][idx].detach().cpu().item())),
                         "v31_lowx_applied": int(bool(traj["lowx"][idx].detach().cpu().item())),
+                        "posx_x_bucket": (
+                            "low_x"
+                            if bool(traj["posx_low_bucket"][idx].detach().cpu().item())
+                            else "mid_x"
+                            if bool(traj["posx_mid_bucket"][idx].detach().cpu().item())
+                            else "high_x"
+                            if bool(traj["posx_high_bucket"][idx].detach().cpu().item())
+                            else "not_posx"
+                        ),
                         "min_tcp_cube_dist_m": float(min_tcp_cube_dist[idx].detach().cpu().item()),
                         "min_tcp_target_err_m": float(min_tcp_target_err[idx].detach().cpu().item()),
                         "final_tcp_target_err_m": float(final_tcp_target_err[idx].detach().cpu().item()),
@@ -443,6 +487,13 @@ def main() -> int:
         "executed_steps_per_trial": min(total_steps, int(args.max_rollout_steps)) if int(args.max_rollout_steps) > 0 else total_steps,
         "rollout_truncated": int(args.max_rollout_steps) > 0 and int(args.max_rollout_steps) < total_steps,
         "policy_delta_clip_rad": float(args.policy_delta_clip_rad),
+        "x_bucket_edges": [float(args.x_bucket_edges[0]), float(args.x_bucket_edges[1])],
+        "policy_delta_scale": float(args.policy_delta_scale),
+        "posx_policy_delta_scale": float(args.posx_policy_delta_scale),
+        "lowx_policy_delta_scale": float(args.lowx_policy_delta_scale),
+        "highx_policy_delta_scale": float(args.highx_policy_delta_scale),
+        "policy_delta_smoothing_alpha": float(args.policy_delta_smoothing_alpha),
+        "model_safety_config": checkpoint.get("safety_config", {}),
         "v31_posx_trial_count": posx_trial_count,
         "v31_lowx_trial_count": lowx_trial_count,
         "controlled_push_rate": rate("controlled_push"),
@@ -475,7 +526,12 @@ def main() -> int:
         f"impact_outlier_rate={summary['impact_outlier_rate']:.6f} low_motion_rate={summary['low_motion_rate']:.6f} "
         f"success_marker_rate={summary['success_marker_rate']:.6f} "
         f"posewrite_calls_during_rollout={summary['posewrite_calls_during_rollout']} "
-        f"learned_policy=YES diffik_controller_used=NO",
+        f"learned_policy=YES diffik_controller_used=NO "
+        f"policy_delta_scale={float(args.policy_delta_scale):.6f} "
+        f"posx_policy_delta_scale={float(args.posx_policy_delta_scale):.6f} "
+        f"lowx_policy_delta_scale={float(args.lowx_policy_delta_scale):.6f} "
+        f"highx_policy_delta_scale={float(args.highx_policy_delta_scale):.6f} "
+        f"policy_delta_smoothing_alpha={float(args.policy_delta_smoothing_alpha):.6f}",
         flush=True,
     )
     progress("line9 artifacts_written")

@@ -5460,3 +5460,126 @@ Sources:
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/bc_mlp_joint_delta_v2_bucket_rollout1024_seed883_audit.out:1-6`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/bc_mlp_joint_delta_v2_bucket_rollout1024_seed883_bucket.out:1-10`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/bc_mlp_joint_delta_v2_bucket_clip035_rollout1024_seed883_audit.out:1-6`
+
+## D108 - Safety gate can pass while low-x motion quality remains weak
+
+Date: 2026-05-28
+
+Decision:
+
+- For the professor cube3cm branch, safety-aware BC and per-bucket action scaling can
+  be used as a small learned-policy gate after bucket-balanced BC, but only with
+  explicit per-bucket audit.
+- Passing low_x/high_x impact gates is necessary, not sufficient. Keep low_x
+  low-motion/success as a visible caveat and do not promote a two-seed 1024 result
+  into 10k/100k learned-policy robustness.
+- PPO/RL fine-tuning is still a separate explicit-approval step. This result
+  supports the next small warm-start experiment; it is not permission to run large
+  PPO/RL or to mix with Track A grasp.
+
+Evidence:
+
+- Safety-aware BC train lines 1-5 passed with rows `26100`, test MSE
+  `0.018879525`, mean MAE `0.001225158rad`, and checkpoint md5
+  `03b159809ddca64aad6d6449b7f44876`.
+- Frozen learned rollout seed883 passed the overall learned-policy audit with
+  controlled `0.953125000`, impact `0.004882812`, low-motion `0.030273438`, and
+  success `0.662109375`.
+- Seed883 bucket audit passed: `(1,0)` low_x impact `0.041095890`, high_x impact
+  `0`, but low_x low-motion was `0.315068493`.
+- Cross-seed seed884 also passed the overall learned-policy audit with controlled
+  `0.943359375`, impact `0.010742188`, low-motion `0.024414062`, and success
+  `0.662109375`.
+- Seed884 bucket audit passed: `(1,0)` low_x impact `0.035714286`, high_x impact
+  `0`, but low_x low-motion was `0.261904762`.
+- Compared with BC v2 seed883, impact improved but low_x motion quality regressed:
+  BC v2 low_x impact/low-motion/success was `0.068493151` / `0.082191781` /
+  `0.410958904`, while safety BC v3 seed883 low_x was `0.041095890` /
+  `0.315068493` / `0.315068493`.
+
+Implication:
+
+- The next valid work is either to recover low_x motion/success while preserving
+  low impact, or to run an explicitly approved small safety-aware RL warm-start
+  pilot from this checkpoint and repeat the same 1024 per-bucket audit.
+- Do not run 10k/100k learned-policy robustness, PPO scale-up, dataset generation,
+  or Track A runtime from this result without explicit approval and a written gate.
+
+Sources:
+
+- `claudedocs/session_20260528_cube3cm_safety_bc_gate.md`
+- `sim_scripts/cube3cm_push_diffik_train_bc.py`
+- `sim_scripts/cube3cm_push_bc_policy_rollout.py`
+- `sim_scripts/cube3cm_push_diffik_bucket_audit.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_state_action_dataset_v3_bucket_1024_seed779_bc_v3_safety_l2_train.out:1-5`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/bc_mlp_joint_delta_v3_safety_l2_scale_rollout1024_seed883_audit.out:1-6`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/bc_mlp_joint_delta_v3_safety_l2_scale_rollout1024_seed883_bucket.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/bc_mlp_joint_delta_v3_safety_l2_scale_rollout1024_seed884_audit.out:1-6`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/bc_mlp_joint_delta_v3_safety_l2_scale_rollout1024_seed884_bucket.out:1-10`
+
+## D109 - PPO warm-start smoke is connected, but teacher-off performance failed
+
+Date: 2026-05-28
+
+Decision:
+
+- For the professor cube3cm branch, the safety-aware BC checkpoint cannot be treated as
+  an rsl_rl PPO checkpoint. The bridge must go through environment-level BC teacher
+  action/imitation reward or a separate residual-learning design.
+- The approved small PPO warm-start smoke proves the local IsaacLab/GPU PPO path is
+  connected, but it does not produce a successful learned policy.
+- Teacher-off frozen audit is the only valid learned PPO performance check. The
+  teacher-off 1024 rollout failed performance and per-bucket gates, so do not scale
+  PPO/RL from `model_11.pt`.
+- The direct-like teacher-on diagnostic partially recovers performance, which means the
+  BC checkpoint is not dead. The current blocker is the mismatch between direct BC
+  joint-target replay and the PPO env normalized action-loop/safety curriculum.
+
+Evidence:
+
+- Direct system Python failed before Isaac with `ModuleNotFoundError: No module named
+  'gymnasium'`; valid local runtime used `conda run -n isaaclab`.
+- PPO smoke12 seed885 ran on `cuda:0`, used BC teacher blend `0.35`, imitation reward
+  `0.30`, completed 73,728 timesteps, and wrote `model_11.pt` md5
+  `c9f945a4d1eacd817d4733e7d9b7e48e`.
+- Training logs show the BC teacher was active: iteration 0 logged
+  `cube_push_bc_teacher_blend_mean=0.3500`,
+  `cube_push_bc_teacher_imitation_mse=0.5454`, and
+  `bc_teacher_imitation_penalty=-0.1636`.
+- Teacher-off 1024 eval seed886 was mechanism-clean but performance-failed:
+  controlled `0.470703125`, impact `0.087890625`, low-motion `0.344726562`,
+  success `0.078125000`.
+- Teacher-off bucket audit failed: `(-1,0)` impact `0.230483271`, `(1,0)` success
+  `0.070833333`, low_x success `0.197530864`, mid_x/high_x success
+  `0` / `0.014492754`.
+- Teacher-on short/safety-limited diagnostic was also weak: success `0.050781250`,
+  impact `0.097656250`.
+- Direct-like teacher-on diagnostic with 6s horizon, home reset, and relaxed action loop
+  improved to controlled `0.792968750`, impact `0.054687500`, low-motion
+  `0.175781250`, success `0.417968750`; `(1,0)` success was `0.516666667`.
+
+Implication:
+
+- Do not call `model_11.pt` a successful learned cube-push policy.
+- Do not run 10k/100k learned-policy robustness, PPO scale-up, dataset generation, or
+  Track A runtime from this PPO smoke.
+- Next valid work is to redesign the BC teacher bridge/horizon/safety curriculum, then
+  rerun teacher-off frozen 1024 overall and per-bucket audits before any larger RL.
+
+Sources:
+
+- `claudedocs/session_20260528_cube3cm_safety_rl_warmstart.md`
+- `roarm_rl/roarm_cube_push_env.py`
+- `roarm_rl/train_cube_push_ppo.py`
+- `roarm_rl/eval_cube_push_policy.py`
+- `sim_scripts/cube3cm_push_ppo_rollout_audit.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_warmstart_smoke12_seed885_stdout.out:47-78`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_warmstart_smoke12_seed885_stdout.out:121-155`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_warmstart_smoke12_seed885_stdout.out:573-614`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_warmstart_smoke12_seed886_eval1024_stdout.out:48-100`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_warmstart_smoke12_seed886_eval1024_audit.out:1-5`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_warmstart_smoke12_seed886_eval1024_bucket.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_warmstart_teacheron_seed887_eval512_audit.out:1-5`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_warmstart_teacheron_seed887_eval512_bucket.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_warmstart_teacheron_directlike_seed888_eval256_audit.out:1-5`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_warmstart_teacheron_directlike_seed888_eval256_bucket.out:1-10`
