@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-05-27 KST (B200 disconnected; Track A v6/v7 close_26 FAIL; first approved v8 close_26 runtime also FAIL; post-fail v8 virtual-damping wiring fix is static-ready only; no post-fix v8 runtime has run; professor cube3cm push/tap 20,480-trial scripted rollout complete; separate no-attach cube-push PPO reward/curriculum tested through 1k frozen eval but impact remains too high for learned 10k/100k scaling; professor branch IsaacLab built-in Differential IK cube-push v3 10,240-trial scripted robustness audit and professor-facing replay video complete; still not learned/Track A/dataset readiness)
+Last updated: 2026-05-28 KST (B200 disconnected; Track A v6/v7 close_26 FAIL; first approved v8 close_26 runtime also FAIL; post-fail v8 virtual-damping wiring fix is static-ready only; no post-fix v8 runtime has run; professor cube3cm push/tap scripted rollout, DiffIK v3 10,240-trial audit, and real-RoArm replay video complete; professor cube3cm teacher-filtered state-action dataset v2 and BC joint-delta learned rollout PASS at 1024 envs; v3.2 teacher sweep did not find a robust low-x fix; bucket-balanced dataset v3 + BC v2 improves learned rollout success but fails per-bucket impact gate; still not Track A grasp, PPO/RL/VLA, image dataset, or 10k/100k learned-policy robustness)
 
 This is the rolling current-state dashboard. It is not full history. Durable
 rules live in `claudedocs/DECISIONS.md`; experiment history lives in
@@ -175,6 +175,44 @@ Do **not** use `HANDOFF.md` or `TASKS.md` as current state.
   145 frames, 2x2 layout, `physics_recomputed=false`, and `training=false`.
   Earlier black FK-proxy render artifacts were rejected/superseded because they
   were not actual RoArm geometry.
+- **Professor cube-push DiffIK dataset v2 + BC learned rollout (2026-05-28)**:
+  added all-env trace capture and auditable dataset/BC tooling. Current md5s:
+  `cube3cm_push_diffik_probe.py` `2342f31701e91af57d0f311db4eeec87`,
+  dataset builder `a0d18ef1b34415c96d036ba42952e37e`, dataset audit
+  `f677ea14809a0a2091bc13c5254d4fae`, BC train
+  `df03abb00188cfd9b644b0ef410a0e14`, BC rollout
+  `a56e9a96feaad196fef6e1081c0116ec`, rollout audit
+  `121721561bcde8df141f56207dcab14d`. Source v3.1 1024 trace seed779 audit
+  lines 1-6: controlled `0.964843750`, impact `0.004882812`, low-motion
+  `0.034179688`, success `0.611328125`; posthoc line 6 still marks `(1,0)`
+  weak. Dataset build lines 1-6 selected 320 final-success teacher trajectories
+  into 46,400 rows, balanced 80 per direction, split `224/48/48`, candidate YES.
+  Dataset audit lines 1-7 PASS full state-action dataset with schema/finite/split/
+  direction/mechanism OK and final controlled/success `1.0`, impact/low `0.0`.
+  BC train lines 1-4 PASS checkpoint with test MSE `0.007494668` and mean test
+  MAE `0.000745819rad`. Learned BC rollout 1024 seed883 audit lines 1-6 PASS
+	  without DiffIK: controlled `0.945312500`, impact `0.012695312`, low-motion
+	  `0.026367188`, success `0.648437500`, posewrite 0. Caveat remains: `(1,0)`
+	  line 5 success `0.453488372`, impact `0.038759690`. This is professor-branch
+	  teacher-filtered state-action BC, not Track A grasp, not PPO/RL/VLA, not image
+	  dataset, and not 10k/100k learned-policy robustness.
+- **Professor cube-push v3.2 teacher sweep + bucket-balanced BC v2 (2026-05-28)**:
+  added `cube3cm_push_diffik_bucket_audit.py` and extended the dataset builder/audit
+  for `direction_posx_bucket` selection. v3.2 teacher parameter sweeps were useful
+  negatives: t270/p036 raised `(1,0)` success but also raised `(1,0)` impact, while
+  t270/p030 and t257/p034 were not robust across seed790/seed791. Dataset v3 was
+  built without new physics from the v3.1 all-env trace: build lines 1-6 selected
+  180 final-success teacher trajectories, 26,100 rows, 45 per direction, and
+  `(1,0)` low/mid/high-x `15/15/15`. Dataset audit lines 1-8 PASS, including
+  `balance_mode=direction_posx_bucket`, bucket OK, split bucket OK. BC v2_bucket
+  train lines 1-4 PASS with test MSE `0.022629632`, mean test MAE
+  `0.001227073rad`. 1024 learned rollout seed883 with default clip PASS overall:
+  controlled `0.961914062`, impact `0.015625000`, low-motion `0.016601562`,
+  success `0.679687500`; `(1,0)` success improved to `0.527131783`, but bucket
+  audit fails because low_x impact is `0.068493151` and high_x impact is
+  `0.061855670`. Clip `0.035` improved overall success to `0.689453125` but still
+  failed low_x impact. Verdict: learned BC quality improved, but per-bucket safety
+  gate blocks PPO/RL scale-up.
 - Track A goal: first make the sim/Isaac Lab contact primitive reliable, then
   move toward broad sim/lab dataset collection and learning.
 - Dataset generation and training are blocked until close_26 proxy audit PASS,
@@ -629,7 +667,7 @@ git status --short --untracked-files=all
 Must read:
 1. CLAUDE.md
 2. START_HERE.md
-3. claudedocs/DECISIONS.md D083-D098
+3. claudedocs/DECISIONS.md D083-D106
 4. claudedocs/EXPERIMENT_LEDGER.md latest rows
 5. claudedocs/session_20260522_track_a_v6_projected_guard_runtime_fail.md
 6. claudedocs/session_20260522_track_a_contact_rl_stage0_preflight.md
@@ -655,6 +693,12 @@ Must read:
 26. claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/rollout_stats_audit.out
 27. claudedocs/session_20260526_cube3cm_push_rl_reward_curriculum.md
 28. claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_speed_guard_model49_eval1024_audit.out
+29. claudedocs/session_20260527_cube3cm_diffik_v3_10k_audit.md
+30. claudedocs/session_20260527_cube3cm_diffik_v3_visualization.md
+31. claudedocs/session_20260528_cube3cm_diffik_dataset_bc_policy.md
+32. claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_state_action_dataset_v2_1024_seed779_audit.out
+33. claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_state_action_dataset_v2_1024_seed779_bc_train.out
+34. claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/bc_mlp_joint_delta_v1_rollout1024_seed883_audit.out
 
 Current Track A state:
 - v6 close_26 audit FAIL, not grasp success.
@@ -760,8 +804,8 @@ Current professor cube push/tap branch:
   Interpretation: no-attach PPO and IK pre-contact work, but learned-policy
   impact is still too high; do not run 10k/100k scaling yet.
 - Differential IK follow-up:
-  sim_scripts/cube3cm_push_diffik_probe.py now includes optional v2 and v3
-  trajectory paths. Reverify
+  sim_scripts/cube3cm_push_diffik_probe.py now includes optional v2, v3, and
+  v3_1 trajectory paths plus all-env trace capture. Reverify
   claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_eval10240_seed779_audit.out
   lines 1-6,
   diffik_probe_v3_eval10240_seed779_posthoc.out lines 1-17, and
@@ -770,13 +814,23 @@ Current professor cube push/tap branch:
   robustness audit with overall impact below 1% and `(1,0)` impact below 2%, but
   it remains a scripted physics result and has a `(1,0)` low-motion/success
   caveat. Do not call it learned policy, Track A grasp, or dataset readiness.
+- Dataset/BC follow-up:
+  claudedocs/session_20260528_cube3cm_diffik_dataset_bc_policy.md is the latest
+  professor-branch dataset/learning record. Reverify
+  diffik_state_action_dataset_v2_1024_seed779_audit.out lines 1-7,
+  diffik_state_action_dataset_v2_1024_seed779_bc_train.out lines 1-4, and
+  bc_mlp_joint_delta_v1_rollout1024_seed883_audit.out lines 1-6 before citing.
+  Interpretation: teacher-filtered state-action dataset v2 and learned BC
+  joint-delta policy rollout PASS at 1024 envs, but this is not Track A grasp,
+  PPO/RL/VLA, image dataset, or 10k/100k learned-policy robustness. `(1,0)`
+  remains the weak direction.
 
 Next concrete step:
-1. For professor branch: prepare/report the 10,240-trial v3 scripted DiffIK
-   push/tap result plus the v3 replay MP4 as physics/statistics and visualization
-   only. Do not describe either as learning or dataset readiness.
-2. If the next objective is teacher/dataset generation, run a small v3.1 sweep to
-   recover `(1,0)` low-motion/success while preserving v3's low impact.
+1. For professor branch: report the current truth as scripted DiffIK v3 10,240
+   physics audit + real-RoArm replay video + teacher-filtered state-action dataset
+   v2 + BC joint-delta learned rollout PASS at 1024 envs.
+2. If improving professor-branch quality, target `(1,0)` via v3.2 teacher/BC data
+   rather than broad scaling; do not jump to 10k/100k learned-policy claims.
 3. Do not rerun v7 unchanged and do not start Track A hold-lift/dataset/training.
 4. If and only if the user explicitly approves another v8 runtime, first verify host GPU and IsaacLab CUDA from Codex with sandbox_permissions=require_escalated, then run exactly one local close_26-only post-fix v8 runtime using the preserved local backup USD path.
 5. Immediately audit that runtime with expected_mechanism target_guarded_micro_close_v8_observed_recovery_diagnostic. If audit fails, stop and analyze exact first failing runtime/audit lines before any rerun.

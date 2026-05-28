@@ -5332,3 +5332,131 @@ Sources:
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_render_fourdir_realroarm_env0_3_4_7_seed779_summary.json:12-19`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_render_fourdir_realroarm_env0_3_4_7_seed779_summary.json:91-112`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_render_fourdir_realroarm_env0_3_4_7_seed779_mp4_probe.out:1-8`
+
+## D106 - Professor cube3cm BC evidence requires dataset audit plus learned rollout audit
+
+Date: 2026-05-28
+
+Decision:
+
+- A raw DiffIK trace or per-trial CSV is not enough to call something a training
+  dataset. For professor cube3cm push/tap BC, require a separate dataset artifact
+  with observations, actions, labels, metadata, split isolation, direction
+  coverage, final teacher-quality filtering, manifest, and audit.
+- A supervised BC MSE reduction is not enough to call the result a physics policy
+  success. Require an IsaacLab rollout where the learned checkpoint controls
+  joint deltas without the DiffIK controller, followed by a learned-rollout audit.
+- For the local IsaacLab BC rollout script, write CSV/summary artifacts before
+  optional simulator close. In this session explicit `sim_app.close()` hung after
+  rollout completion; use the fixed artifact-first path and `--skip_sim_close`
+  for this local evaluation route.
+- Keep this professor cube3cm push/tap dataset/BC line separate from Track A
+  grasp/dataset/training and from PPO/VLA learning claims.
+
+Evidence:
+
+- Dataset build log lines 1-6 report source trace rows `148480`, selected rows
+  `46400`, balanced 80 trajectories per direction, train/val/test env split
+  `224/48/48`, and `full_dataset_candidate=YES`.
+- Dataset audit lines 1-7 report rows `46400`, env count `320`, frames/env
+  `145`, schema/finite OK, split leakage OK, direction coverage OK, final rates
+  controlled `1.0`, impact `0.0`, low-motion `0.0`, success `1.0`, mechanism OK,
+  size OK, and `PASS_FULL_STATE_ACTION_DATASET_V2 full_dataset_ready=YES`.
+- BC train log lines 1-4 report train/val/test rows `32480/6960/6960`, final
+  test MSE `0.007494668`, mean test MAE `0.000745819rad`, and
+  `PASS_BC_TRAINED_CHECKPOINT`.
+- Progress logs showed the 4-env 20-step diagnostic reached `rollout_done` and
+  wrote artifacts immediately after the artifact-first fix.
+- Learned rollout audit lines 1-6 for 1024 envs, seed883 report
+  `controller=BC_MLP_joint_delta_policy`, `learned_policy=True`,
+  `diffik_controller_used=False`, mechanism OK, posewrite calls 0, controlled
+  `0.945312500`, impact `0.012695312`, low-motion `0.026367188`, success
+  `0.648437500`, and `PASS_LEARNED_BC_POLICY_ROLLOUT`.
+- The same learned rollout audit line 5 preserves the caveat that `(1,0)`
+  remains weakest: controlled `0.879844961`, impact `0.038759690`, low-motion
+  `0.038759690`, success `0.453488372`.
+
+Implication:
+
+- It is now acceptable to call the new artifact a teacher-filtered state-action
+  dataset v2 for the professor cube3cm push/tap branch.
+- It is now acceptable to call the checkpoint a learned BC joint-delta policy
+  with 1024-env IsaacLab rollout PASS for this branch.
+- It is still not Track A grasp success, not PPO/RL, not VLA, not image-dataset
+  readiness, and not 10k/100k learned-policy robustness.
+
+Sources:
+
+- `claudedocs/session_20260528_cube3cm_diffik_dataset_bc_policy.md`
+- `sim_scripts/cube3cm_push_diffik_build_dataset.py`
+- `sim_scripts/cube3cm_push_diffik_dataset_v2_audit.py`
+- `sim_scripts/cube3cm_push_diffik_train_bc.py`
+- `sim_scripts/cube3cm_push_bc_policy_rollout.py`
+- `sim_scripts/cube3cm_push_bc_rollout_audit.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_state_action_dataset_v2_1024_seed779_build.out:1-6`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_state_action_dataset_v2_1024_seed779_audit.out:1-7`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_state_action_dataset_v2_1024_seed779_bc_train.out:1-4`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/bc_mlp_joint_delta_v1_rollout4_seed882_step20_retry_progress.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/bc_mlp_joint_delta_v1_rollout1024_seed883_audit.out:1-6`
+
+## D107 - Bucket-balanced BC improvement is not enough if per-bucket impact fails
+
+Date: 2026-05-28
+
+Decision:
+
+- For the professor cube3cm branch, do not let improved overall learned BC success
+  override per-direction/per-bucket safety failures.
+- v3.2 teacher parameter sweeps must be cross-checked by seed and bucket, not only
+  by overall `(1,0)` success. In this session, several low-x parameter candidates
+  improved one seed or one metric while failing impact or another seed.
+- A bucket-balanced dataset is useful and auditable, but it can make the learned
+  policy more forceful in hard buckets. Treat bucket-balanced BC as a gate, not a
+  permission to start PPO/RL scale-up.
+
+Evidence:
+
+- The first t270/p036 candidate was initially run with wrong base settings; stdout
+  exposed `base_steps=55/35/30` and `max_diffik_joint_step_rad=0.012`, causing a
+  false failure. Corrected reruns used `base_steps=220/90/40` and
+  `max_diffik_joint_step_rad=0.035`, showing why stdout line checks are mandatory.
+- Corrected t270/p036 raised `(1,0)` success on seed790 but also raised `(1,0)`
+  impact to `0.154929577`, so it was rejected.
+- Conservative t270/p030 and t257/p034 improved seed790 low-x success but did not
+  robustly hold on seed791; no scripted v3.2 teacher candidate was accepted.
+- Dataset v3 build lines 1-6 report 26,100 rows, 180 trajectories, 45 per
+  direction, and `(1,0)` low/mid/high-x bucket counts `15/15/15`.
+- Dataset v3 audit lines 1-8 pass schema, finite values, split leakage,
+  direction coverage, teacher filtering, mechanism, size, and bucket/split-bucket
+  checks.
+- BC v2_bucket rollout 1024 seed883 improves overall success to `0.679687500`
+  and `(1,0)` success to `0.527131783`, but bucket audit lines 7-9 fail the
+  safety screen: low_x impact `0.068493151` and high_x impact `0.061855670`.
+- Reducing rollout `policy_delta_clip_rad` to `0.035` improved overall success to
+  `0.689453125`, but low_x impact stayed `0.068493151`; clip `0.030` made overall
+  impact worse.
+
+Implication:
+
+- PPO/RL should remain blocked for this branch until a small learned rollout passes
+  both overall metrics and per-direction/per-bucket impact gates.
+- The next valid work is teacher/action-distribution redesign or safety-aware
+  BC/RL warm-start objective, followed by another small 1024 frozen audit. Do not
+  run 10k/100k learned-policy scaling from the current bucket-balanced BC v2.
+
+Sources:
+
+- `claudedocs/session_20260528_cube3cm_v32_bucket_bc_gate.md`
+- `sim_scripts/cube3cm_push_diffik_bucket_audit.py`
+- `sim_scripts/cube3cm_push_diffik_build_dataset.py`
+- `sim_scripts/cube3cm_push_diffik_dataset_v2_audit.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v31_baseline_eval512_seed790_audit.out:1-6`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v32cand_t270_p036_eval512_seed790_fixed_bucket.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v32cand_t257_p034_eval512_seed790_bucket.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v32cand_t257_p034_eval512_seed791_bucket.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_state_action_dataset_v3_bucket_1024_seed779_build.out:1-6`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_state_action_dataset_v3_bucket_1024_seed779_audit.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_state_action_dataset_v3_bucket_1024_seed779_bc_train.out:1-4`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/bc_mlp_joint_delta_v2_bucket_rollout1024_seed883_audit.out:1-6`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/bc_mlp_joint_delta_v2_bucket_rollout1024_seed883_bucket.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/bc_mlp_joint_delta_v2_bucket_clip035_rollout1024_seed883_audit.out:1-6`

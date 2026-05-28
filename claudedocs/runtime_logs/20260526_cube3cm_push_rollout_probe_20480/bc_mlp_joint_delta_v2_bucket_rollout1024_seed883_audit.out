@@ -1,0 +1,6 @@
+bc_rollout_audit line1 csv_rows=1024 summary_trials=1024 row_count_match=True controller=BC_MLP_joint_delta_policy learned_policy=True diffik_controller_used=False
+bc_rollout_audit line2 mechanism_ok=True training=False posewrite_calls=0 grasp_ok=True
+bc_rollout_audit line3 controlled_push_rate=0.961914062 impact_outlier_rate=0.015625000 low_motion_rate=0.016601562 success_marker_rate=0.679687500 performance_ok=True
+bc_rollout_audit line4 disp_along_push_mean_m=0.038008983 disp_xy_mean_m=0.039649910 final_tcp_target_err_mean_m=0.021758244
+bc_rollout_audit line5 direction_stats={'(-1, 0)': {'n': 261, 'controlled': 0.9540229885057471, 'impact': 0.019157088122605363, 'low_motion': 0.0, 'success': 0.9501915708812261}, '(0, -1)': {'n': 272, 'controlled': 1.0, 'impact': 0.0, 'low_motion': 0.029411764705882353, 'success': 0.45955882352941174}, '(0, 1)': {'n': 233, 'controlled': 1.0, 'impact': 0.0, 'low_motion': 0.008583690987124463, 'success': 0.8025751072961373}, '(1, 0)': {'n': 258, 'controlled': 0.8953488372093024, 'impact': 0.04263565891472868, 'low_motion': 0.027131782945736434, 'success': 0.5271317829457365}}
+bc_rollout_audit line6 verdict=PASS_LEARNED_BC_POLICY_ROLLOUT learned_policy_rollout=YES track_a_grasp_success=NO

@@ -3,7 +3,8 @@
 This is a professor-branch diagnostic, separate from Track A grasp. It sends
 end-effector targets near a 3cm cube, uses IsaacLab's DifferentialIKController
 and live PhysX Jacobians to compute joint targets, and lets physics decide the
-cube motion. It is not training, not dataset generation, and not a success claim.
+cube motion. It is not training and not a learned-policy success claim; optional
+trace capture is only raw material for a separate dataset builder/audit.
 """
 from __future__ import annotations
 
@@ -41,7 +42,7 @@ def main() -> int:
     parser.add_argument("--settle_steps", type=int, default=8)
     parser.add_argument("--max_diffik_joint_step_rad", type=float, default=0.012)
     parser.add_argument("--dls_lambda", type=float, default=0.010)
-    parser.add_argument("--trajectory_variant", choices=("v1", "v2", "v3"), default="v1")
+    parser.add_argument("--trajectory_variant", choices=("v1", "v2", "v3", "v3_1"), default="v1")
     parser.add_argument("--v2_posx_precontact_clearance_m", type=float, default=0.012)
     parser.add_argument("--v2_posx_push_through_m", type=float, default=0.024)
     parser.add_argument("--v2_posx_tcp_top_margin_m", type=float, default=-0.004)
@@ -58,6 +59,23 @@ def main() -> int:
     parser.add_argument("--v3_posx_push_steps", type=int, default=220)
     parser.add_argument("--v3_posx_post_steps", type=int, default=60)
     parser.add_argument("--v3_posx_max_diffik_joint_step_rad", type=float, default=0.020)
+    parser.add_argument("--v31_posx_precontact_clearance_m", type=float, default=0.014)
+    parser.add_argument("--v31_posx_push_through_m", type=float, default=0.020)
+    parser.add_argument("--v31_posx_tcp_top_margin_m", type=float, default=-0.011)
+    parser.add_argument("--v31_posx_lateral_offset_m", type=float, default=0.0)
+    parser.add_argument("--v31_posx_approach_steps", type=int, default=300)
+    parser.add_argument("--v31_posx_push_steps", type=int, default=220)
+    parser.add_argument("--v31_posx_post_steps", type=int, default=60)
+    parser.add_argument("--v31_posx_max_diffik_joint_step_rad", type=float, default=0.020)
+    parser.add_argument("--v31_lowx_threshold_m", type=float, default=0.240)
+    parser.add_argument("--v31_lowx_precontact_clearance_m", type=float, default=0.020)
+    parser.add_argument("--v31_lowx_push_through_m", type=float, default=0.030)
+    parser.add_argument("--v31_lowx_tcp_top_margin_m", type=float, default=0.003)
+    parser.add_argument("--v31_lowx_lateral_offset_m", type=float, default=0.0)
+    parser.add_argument("--v31_lowx_approach_steps", type=int, default=300)
+    parser.add_argument("--v31_lowx_push_steps", type=int, default=220)
+    parser.add_argument("--v31_lowx_post_steps", type=int, default=60)
+    parser.add_argument("--v31_lowx_max_diffik_joint_step_rad", type=float, default=0.020)
     parser.add_argument("--gui", action="store_true")
     parser.add_argument("--enable_cameras", action="store_true")
     parser.add_argument("--record_video", action="store_true")
@@ -72,6 +90,7 @@ def main() -> int:
     parser.add_argument("--video_target_push_m", type=float, default=0.025)
     parser.add_argument("--trace_env_id", type=int, default=-1)
     parser.add_argument("--trace_env_ids", type=int, nargs="*", default=None)
+    parser.add_argument("--trace_all_envs", action="store_true")
     parser.add_argument("--trace_stride", type=int, default=4)
     parser.add_argument("--trace_csv", type=str, default="")
     parser.add_argument("--viewer_step_sleep_s", type=float, default=0.0)
@@ -177,11 +196,15 @@ def main() -> int:
     base_total_steps = int(args.approach_steps + args.push_steps + args.post_steps)
     v2_posx_total_steps = int(args.v2_posx_approach_steps + args.v2_posx_push_steps + args.v2_posx_post_steps)
     v3_posx_total_steps = int(args.v3_posx_approach_steps + args.v3_posx_push_steps + args.v3_posx_post_steps)
+    v31_posx_total_steps = int(args.v31_posx_approach_steps + args.v31_posx_push_steps + args.v31_posx_post_steps)
+    v31_lowx_total_steps = int(args.v31_lowx_approach_steps + args.v31_lowx_push_steps + args.v31_lowx_post_steps)
     variant_posx_total_steps = base_total_steps
     if args.trajectory_variant == "v2":
         variant_posx_total_steps = v2_posx_total_steps
     elif args.trajectory_variant == "v3":
         variant_posx_total_steps = v3_posx_total_steps
+    elif args.trajectory_variant == "v3_1":
+        variant_posx_total_steps = max(v31_posx_total_steps, v31_lowx_total_steps)
     total_steps = max(base_total_steps, variant_posx_total_steps)
     step_dt = float(env_cfg.sim.dt) * float(env_cfg.decimation)
     min_episode_s = (int(args.settle_steps) + total_steps + 20) * step_dt
@@ -258,9 +281,13 @@ def main() -> int:
         f"base_steps={args.approach_steps}/{args.push_steps}/{args.post_steps} "
         f"v2_posx_steps={args.v2_posx_approach_steps}/{args.v2_posx_push_steps}/{args.v2_posx_post_steps} "
         f"v3_posx_steps={args.v3_posx_approach_steps}/{args.v3_posx_push_steps}/{args.v3_posx_post_steps} "
+        f"v31_posx_steps={args.v31_posx_approach_steps}/{args.v31_posx_push_steps}/{args.v31_posx_post_steps} "
+        f"v31_lowx_steps={args.v31_lowx_approach_steps}/{args.v31_lowx_push_steps}/{args.v31_lowx_post_steps} "
         f"max_diffik_joint_step_rad={args.max_diffik_joint_step_rad:.6f} "
         f"v2_posx_max_diffik_joint_step_rad={args.v2_posx_max_diffik_joint_step_rad:.6f} "
         f"v3_posx_max_diffik_joint_step_rad={args.v3_posx_max_diffik_joint_step_rad:.6f} "
+        f"v31_posx_max_diffik_joint_step_rad={args.v31_posx_max_diffik_joint_step_rad:.6f} "
+        f"v31_lowx_max_diffik_joint_step_rad={args.v31_lowx_max_diffik_joint_step_rad:.6f} "
         f"dls_lambda={args.dls_lambda:.6f} env_auto_reset_disabled=YES "
         f"env_joint_delta_action_loop_bypassed=YES episode_length_s={env_cfg.episode_length_s:.3f}",
         flush=True,
@@ -269,7 +296,9 @@ def main() -> int:
     records: list[dict[str, float | int | str]] = []
     trace_records: list[dict[str, float | int]] = []
     trace_env_ids: list[int] = []
-    if args.trace_env_ids:
+    if bool(args.trace_all_envs):
+        trace_env_ids.extend(range(n))
+    elif args.trace_env_ids:
         trace_env_ids.extend(int(idx) for idx in args.trace_env_ids)
     elif int(args.trace_env_id) >= 0:
         trace_env_ids.append(int(args.trace_env_id))
@@ -282,6 +311,8 @@ def main() -> int:
         cube = inner._cube_start_w
         push_dir = inner._push_dir_xy
         posx = (push_dir[:, 0] > 0.5) & (torch.abs(push_dir[:, 1]) < 0.5)
+        cube_x_local = cube[:, 0] - inner.scene.env_origins[:, 0]
+        v31_lowx = posx & (cube_x_local <= float(args.v31_lowx_threshold_m))
         approach_steps = torch.full((n,), int(args.approach_steps), dtype=torch.long, device=device)
         push_steps = torch.full((n,), int(args.push_steps), dtype=torch.long, device=device)
         post_steps = torch.full((n,), int(args.post_steps), dtype=torch.long, device=device)
@@ -308,8 +339,26 @@ def main() -> int:
             push_through[posx] = float(args.v3_posx_push_through_m)
             tcp_top_margin[posx] = float(args.v3_posx_tcp_top_margin_m)
             lateral_offset[posx] = float(args.v3_posx_lateral_offset_m)
+        elif args.trajectory_variant == "v3_1":
+            approach_steps[posx] = int(args.v31_posx_approach_steps)
+            push_steps[posx] = int(args.v31_posx_push_steps)
+            post_steps[posx] = int(args.v31_posx_post_steps)
+            max_joint_step[posx] = float(args.v31_posx_max_diffik_joint_step_rad)
+            precontact[posx] = float(args.v31_posx_precontact_clearance_m)
+            push_through[posx] = float(args.v31_posx_push_through_m)
+            tcp_top_margin[posx] = float(args.v31_posx_tcp_top_margin_m)
+            lateral_offset[posx] = float(args.v31_posx_lateral_offset_m)
+            approach_steps[v31_lowx] = int(args.v31_lowx_approach_steps)
+            push_steps[v31_lowx] = int(args.v31_lowx_push_steps)
+            post_steps[v31_lowx] = int(args.v31_lowx_post_steps)
+            max_joint_step[v31_lowx] = float(args.v31_lowx_max_diffik_joint_step_rad)
+            precontact[v31_lowx] = float(args.v31_lowx_precontact_clearance_m)
+            push_through[v31_lowx] = float(args.v31_lowx_push_through_m)
+            tcp_top_margin[v31_lowx] = float(args.v31_lowx_tcp_top_margin_m)
+            lateral_offset[v31_lowx] = float(args.v31_lowx_lateral_offset_m)
         return {
             "posx": posx,
+            "v31_lowx": v31_lowx,
             "approach_steps": approach_steps,
             "push_steps": push_steps,
             "post_steps": post_steps,
@@ -442,12 +491,14 @@ def main() -> int:
                 )
                 max_cube_speed = torch.maximum(max_cube_speed, torch.norm(inner._sponge.data.root_lin_vel_w, p=2, dim=-1))
                 if trace_env_ids and episode == 0 and step % max(1, int(args.trace_stride)) == 0:
+                    trace_terms = inner._push_terms()
                     trace_frame = step // max(1, int(args.trace_stride))
                     for trace_idx in trace_env_ids:
-                        trace_row: dict[str, float | int] = {
+                        trace_row: dict[str, float | int | str] = {
                             "frame": int(trace_frame),
                             "step": int(step),
                             "env_id": trace_idx,
+                            "trajectory_variant": args.trajectory_variant,
                             "push_dx": float(push_dir[trace_idx, 0].detach().cpu().item()),
                             "push_dy": float(push_dir[trace_idx, 1].detach().cpu().item()),
                             "env_origin_x_m": float(inner.scene.env_origins[trace_idx, 0].detach().cpu().item()),
@@ -466,13 +517,38 @@ def main() -> int:
                             "target_x_m": float(tcp_target_w[trace_idx, 0].detach().cpu().item()),
                             "target_y_m": float(tcp_target_w[trace_idx, 1].detach().cpu().item()),
                             "target_z_m": float(tcp_target_w[trace_idx, 2].detach().cpu().item()),
+                            "phase_alpha": float(alpha[trace_idx].detach().cpu().item()),
+                            "disp_along_push_m": float(trace_terms["disp_along"][trace_idx].detach().cpu().item()),
+                            "disp_xy_m": float(trace_terms["disp_xy"][trace_idx].detach().cpu().item()),
+                            "lateral_abs_m": float(trace_terms["lateral_abs"][trace_idx].detach().cpu().item()),
+                            "target_xy_dist_m": float(trace_terms["target_xy_dist"][trace_idx].detach().cpu().item()),
+                            "tcp_cube_dist_m": float(trace_terms["tcp_cube_dist"][trace_idx].detach().cpu().item()),
+                            "cube_speed_mps": float(trace_terms["speed"][trace_idx].detach().cpu().item()),
+                            "tip_angle_deg": float(trace_terms["tip_angle_deg"][trace_idx].detach().cpu().item()),
+                            "controlled_push": int(bool(trace_terms["controlled"][trace_idx].detach().cpu().item())),
+                            "impact_outlier": int(bool(trace_terms["impact"][trace_idx].detach().cpu().item())),
+                            "low_motion": int(bool(trace_terms["low_motion"][trace_idx].detach().cpu().item())),
+                            "success_marker": int(bool(inner._push_success_flag[trace_idx].detach().cpu().item())),
+                            "v31_lowx_applied": int(
+                                bool(traj["v31_lowx"][trace_idx].detach().cpu().item())
+                                and args.trajectory_variant == "v3_1"
+                            ),
                         }
                         for local_idx, joint_idx in enumerate(arm_joint_ids):
                             trace_row[f"arm_joint_{local_idx}_rad"] = float(
                                 inner._robot.data.joint_pos[trace_idx, joint_idx].detach().cpu().item()
                             )
+                            trace_row[f"joint_target_{local_idx}_rad"] = float(
+                                target_full[trace_idx, joint_idx].detach().cpu().item()
+                            )
+                            trace_row[f"joint_delta_{local_idx}_rad"] = float(
+                                clipped_delta[trace_idx, local_idx].detach().cpu().item()
+                            )
                         trace_row["gripper_joint_rad"] = float(
                             inner._robot.data.joint_pos[trace_idx, inner.gripper_joint_idx].detach().cpu().item()
+                        )
+                        trace_row["gripper_target_rad"] = float(
+                            target_full[trace_idx, inner.gripper_joint_idx].detach().cpu().item()
                         )
                         trace_records.append(trace_row)
                 if args.record_video and episode == 0 and step % max(1, int(args.video_stride)) == 0:
@@ -516,13 +592,19 @@ def main() -> int:
                         "trajectory_variant": args.trajectory_variant,
                         "posx_variant_applied": int(
                             bool(traj["posx"][idx].detach().cpu().item())
-                            and args.trajectory_variant in {"v2", "v3"}
+                            and args.trajectory_variant in {"v2", "v3", "v3_1"}
                         ),
                         "v2_posx_applied": int(
                             bool(traj["posx"][idx].detach().cpu().item()) and args.trajectory_variant == "v2"
                         ),
                         "v3_posx_applied": int(
                             bool(traj["posx"][idx].detach().cpu().item()) and args.trajectory_variant == "v3"
+                        ),
+                        "v31_posx_applied": int(
+                            bool(traj["posx"][idx].detach().cpu().item()) and args.trajectory_variant == "v3_1"
+                        ),
+                        "v31_lowx_applied": int(
+                            bool(traj["v31_lowx"][idx].detach().cpu().item()) and args.trajectory_variant == "v3_1"
                         ),
                         "precontact_clearance_m": float(traj["precontact"][idx].detach().cpu().item()),
                         "push_through_m": float(traj["push_through"][idx].detach().cpu().item()),
@@ -582,13 +664,19 @@ def main() -> int:
         "base_total_steps_per_trial": base_total_steps,
         "v2_posx_total_steps_per_trial": v2_posx_total_steps,
         "v3_posx_total_steps_per_trial": v3_posx_total_steps,
+        "v31_posx_total_steps_per_trial": v31_posx_total_steps,
+        "v31_lowx_total_steps_per_trial": v31_lowx_total_steps,
         "posx_variant_total_steps_per_trial": variant_posx_total_steps,
         "posx_variant_env_count": posx_variant_env_count,
         "posx_variant_trial_count": posx_variant_trial_count,
         "v2_posx_env_count": posx_variant_env_count if args.trajectory_variant == "v2" else 0,
         "v3_posx_env_count": posx_variant_env_count if args.trajectory_variant == "v3" else 0,
+        "v31_posx_env_count": posx_variant_env_count if args.trajectory_variant == "v3_1" else 0,
         "v2_posx_trial_count": posx_variant_trial_count if args.trajectory_variant == "v2" else 0,
         "v3_posx_trial_count": posx_variant_trial_count if args.trajectory_variant == "v3" else 0,
+        "v31_posx_trial_count": posx_variant_trial_count if args.trajectory_variant == "v3_1" else 0,
+        "v31_lowx_threshold_m": float(args.v31_lowx_threshold_m),
+        "v31_lowx_trial_count": sum(int(r.get("v31_lowx_applied", 0)) for r in records),
         "episode_length_s": float(env_cfg.episode_length_s),
         "num_envs": n,
         "episodes": int(args.episodes),

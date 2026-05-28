@@ -1,0 +1,34 @@
+line1 source=v3_10k_scripted rows=10240 path=claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_eval10240_seed779.csv
+line2 source=v3_10k_scripted direction=(-1, 0) n=2558 controlled=0.933932760 impact=0.011727912 low_motion=0.000000000 success=0.913604378 disp_along_mean=0.037428519 target_xy_dist_mean=0.014692832 final_tcp_err_mean=0.008697568
+line3 source=v3_10k_scripted direction=(0, -1) n=2533 controlled=0.985392815 impact=0.001579155 low_motion=0.025661271 success=0.454796684 disp_along_mean=0.026461515 target_xy_dist_mean=0.021484088 final_tcp_err_mean=0.025472580
+line4 source=v3_10k_scripted direction=(0, 1) n=2583 controlled=0.979094077 impact=0.003871467 low_motion=0.021293070 success=0.712737127 disp_along_mean=0.055011792 target_xy_dist_mean=0.032755406 final_tcp_err_mean=0.019589478
+line5 source=v3_10k_scripted direction=(1, 0) n=2566 controlled=0.874512860 impact=0.012860483 low_motion=0.122759158 success=0.296570538 disp_along_mean=0.022056379 target_xy_dist_mean=0.021672591 final_tcp_err_mean=0.040363638
+line6 source=v3_10k_scripted posx_fail n=1805 disp_lt_3cm=0.992797784 target_gt_5cm=0.039335180 speed_gt_0p5=0.001108033 impact=0.011080332 low_motion=0.174515235
+line7 source=v3_10k_scripted posx_bucket=low_x q1=0.257114410 q2=0.307281494 n=856 controlled=0.834112150 impact=0.000000000 low_motion=0.341121495 success=0.058411215 disp_along_mean=0.012483957 final_tcp_err_mean=0.048184495
+line8 source=v3_10k_scripted posx_bucket=mid_x q1=0.257114410 q2=0.307281494 n=855 controlled=0.947368421 impact=0.007017544 low_motion=0.025730994 success=0.249122807 disp_along_mean=0.023300997 final_tcp_err_mean=0.036967633
+line9 source=v3_10k_scripted posx_bucket=high_x q1=0.257114410 q2=0.307281494 n=855 controlled=0.842105263 impact=0.031578947 low_motion=0.001169591 success=0.582456140 disp_along_mean=0.030395379 final_tcp_err_mean=0.035929638
+line10 source=v31_1024_raw_teacher rows=1024 path=claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v31_datasetv2_1024_seed779.csv
+line11 source=v31_1024_raw_teacher direction=(-1, 0) n=248 controlled=0.959677419 impact=0.000000000 low_motion=0.000000000 success=0.951612903 disp_along_mean=0.038919136 target_xy_dist_mean=0.011676066 final_tcp_err_mean=0.008890209
+line12 source=v31_1024_raw_teacher direction=(0, -1) n=228 controlled=1.000000000 impact=0.000000000 low_motion=0.035087719 success=0.407894737 disp_along_mean=0.025470762 target_xy_dist_mean=0.021333867 final_tcp_err_mean=0.027189563
+line13 source=v31_1024_raw_teacher direction=(0, 1) n=278 controlled=0.992805755 impact=0.003597122 low_motion=0.014388489 success=0.737410072 disp_along_mean=0.058700059 target_xy_dist_mean=0.033347611 final_tcp_err_mean=0.018099027
+line14 source=v31_1024_raw_teacher direction=(1, 0) n=270 controlled=0.911111111 impact=0.014814815 low_motion=0.085185185 success=0.340740741 disp_along_mean=0.023853980 target_xy_dist_mean=0.018586773 final_tcp_err_mean=0.040069400
+line15 source=v31_1024_raw_teacher posx_fail n=178 disp_lt_3cm=1.000000000 target_gt_5cm=0.000000000 speed_gt_0p5=0.000000000 impact=0.000000000 low_motion=0.129213483
+line16 source=v31_1024_raw_teacher posx_bucket=low_x q1=0.256887436 q2=0.307251930 n=91 controlled=0.868131868 impact=0.000000000 low_motion=0.241758242 success=0.164835165 disp_along_mean=0.015650722 final_tcp_err_mean=0.046620688
+line17 source=v31_1024_raw_teacher posx_bucket=mid_x q1=0.256887436 q2=0.307251930 n=90 controlled=0.966666667 impact=0.011111111 low_motion=0.011111111 success=0.277777778 disp_along_mean=0.024669490 final_tcp_err_mean=0.037177317
+line18 source=v31_1024_raw_teacher posx_bucket=high_x q1=0.256887436 q2=0.307251930 n=89 controlled=0.898876404 impact=0.033707865 low_motion=0.000000000 success=0.584269663 disp_along_mean=0.031416908 final_tcp_err_mean=0.036295470
+line19 source=v31_1024_raw_teacher posx_success_x n=92 x_mean=0.307264984 x_min=0.208770752 x_p50=0.315278053 x_max=0.359550476
+line20 source=v31_1024_raw_teacher posx_fail_x n=178 x_mean=0.271638234 x_min=0.206592560 x_p50=0.265935898 x_max=0.359912872
+line21 source=bc_1024_rollout rows=1024 path=claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/bc_mlp_joint_delta_v1_rollout1024_seed883.csv
+line22 source=bc_1024_rollout direction=(-1, 0) n=261 controlled=0.957854406 impact=0.003831418 low_motion=0.000000000 success=0.961685824 disp_along_mean=0.039301896 target_xy_dist_mean=0.011996072 final_tcp_err_mean=0.008398748
+line23 source=bc_1024_rollout direction=(0, -1) n=272 controlled=1.000000000 impact=0.000000000 low_motion=0.022058824 success=0.488970588 disp_along_mean=0.027753508 target_xy_dist_mean=0.019356299 final_tcp_err_mean=0.025225757
+line24 source=bc_1024_rollout direction=(0, 1) n=233 controlled=0.939914163 impact=0.008583691 low_motion=0.047210300 success=0.699570815 disp_along_mean=0.051010265 target_xy_dist_mean=0.029122272 final_tcp_err_mean=0.025209837
+line25 source=bc_1024_rollout direction=(1, 0) n=258 controlled=0.879844961 impact=0.038759690 low_motion=0.038759690 success=0.453488372 disp_along_mean=0.027494827 target_xy_dist_mean=0.015462162 final_tcp_err_mean=0.036801372
+line26 source=bc_1024_rollout posx_fail n=141 disp_lt_3cm=1.000000000 target_gt_5cm=0.000000000 speed_gt_0p5=0.000000000 impact=0.000000000 low_motion=0.070921986
+line27 source=bc_1024_rollout posx_bucket=low_x q1=0.264051437 q2=0.312413216 n=87 controlled=0.931034483 impact=0.034482759 low_motion=0.103448276 success=0.264367816 disp_along_mean=0.021063331 final_tcp_err_mean=0.039131013
+line28 source=bc_1024_rollout posx_bucket=mid_x q1=0.264051437 q2=0.312413216 n=86 controlled=0.953488372 impact=0.011627907 low_motion=0.011627907 success=0.406976744 disp_along_mean=0.028214107 final_tcp_err_mean=0.035341021
+line29 source=bc_1024_rollout posx_bucket=high_x q1=0.264051437 q2=0.312413216 n=85 controlled=0.752941176 impact=0.070588235 low_motion=0.000000000 success=0.694117647 disp_along_mean=0.033349912 final_tcp_err_mean=0.035894449
+line30 source=bc_1024_rollout posx_success_x n=117 x_mean=0.304880281 x_min=0.206763744 x_p50=0.313079834 x_max=0.356777191 disp_along_mean=0.037095242 final_tcp_err_mean=0.035159417
+line31 source=bc_1024_rollout posx_fail_x n=141 x_mean=0.276204504 x_min=0.207782745 x_p50=0.277044296 x_max=0.359135628 disp_along_mean=0.019528526 final_tcp_err_mean=0.038163846
+line32 source=bc_1024_rollout posx_low_x n=10 x_mean=0.246571922 x_min=0.215839386 x_p50=0.255804062 x_max=0.283845901 disp_along_mean=0.002365685 final_tcp_err_mean=0.051582739
+line33 source=bc_1024_rollout posx_impact_x n=10 x_mean=0.303765678 x_min=0.224550247 x_p50=0.329608917 x_max=0.355463028 disp_along_mean=0.040098095 final_tcp_err_mean=0.042295497
+line34 source=dataset_v2_selected posx_frame0 n=80 x_mean=0.305242639 x_min=0.208776474 x_p50=0.315174103 x_max=0.359556198
