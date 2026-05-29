@@ -112,6 +112,7 @@ class RoArmCubePushEnvCfg(RoArmStackEnvCfg):
     fast_cube_joint_delta_scale: float = 0.20
     joint_target_lead_limit_rad: float = 0.060
     joint_delta_reference: str = "target"
+    policy_obs_target_mode: str = "push_target"
     scripted_teacher_blend: float = 0.0
     scripted_teacher_horizon_frac: float = 0.55
     scripted_teacher_goal_push_m: float = 0.055
@@ -173,6 +174,44 @@ class RoArmCubePushEnv(RoArmStackEnv):
     def __init__(self, cfg: RoArmCubePushEnvCfg, render_mode: str | None = None, **kwargs):
         super().__init__(cfg, render_mode, **kwargs)
         self._ensure_push_buffers()
+
+    def _get_observations(self) -> dict:
+        self._compute_intermediate_values()
+
+        dof_pos_scaled = (
+            2.0 * (self._robot.data.joint_pos - self.robot_dof_lower_limits)
+            / (self.robot_dof_upper_limits - self.robot_dof_lower_limits)
+            - 1.0
+        )
+
+        env_origins = self.scene.env_origins
+        sponge_pos_local = self._sponge_pos_w - env_origins
+        tcp_pos_local = self._tcp_pos_w - env_origins
+        target_world = self._target_world
+        mode = str(getattr(self.cfg, "policy_obs_target_mode", "push_target"))
+        if mode == "bc_teacher_tcp_target":
+            traj = self._bc_teacher_traj()
+            alpha = self._bc_teacher_phase_alpha(traj)
+            target_world = self._bc_teacher_tcp_target(alpha, traj)
+        elif mode != "push_target":
+            raise ValueError(f"unsupported policy_obs_target_mode={mode!r}")
+        target_pos_local = target_world - env_origins
+        tcp_to_sponge = sponge_pos_local - tcp_pos_local
+        sponge_to_target = target_pos_local - sponge_pos_local
+
+        obs = torch.cat(
+            (
+                dof_pos_scaled,
+                self._robot.data.joint_vel * self.cfg.dof_velocity_scale,
+                sponge_pos_local,
+                self._sponge_quat_w,
+                tcp_to_sponge,
+                target_pos_local,
+                sponge_to_target,
+            ),
+            dim=-1,
+        )
+        return {"policy": torch.clamp(obs, -5.0, 5.0)}
 
     def _ensure_push_buffers(self) -> None:
         if hasattr(self, "_cube_start_w"):

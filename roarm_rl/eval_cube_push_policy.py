@@ -33,6 +33,7 @@ def main() -> int:
     parser.add_argument("--fast_cube_joint_delta_scale", type=float, default=None)
     parser.add_argument("--joint_target_lead_limit_rad", type=float, default=None)
     parser.add_argument("--joint_delta_reference", choices=("target", "joint_pos"), default=None)
+    parser.add_argument("--policy_obs_target_mode", choices=("push_target", "bc_teacher_tcp_target"), default=None)
     parser.add_argument("--ik_precontact_clearance_m", type=float, default=None)
     parser.add_argument("--speed_penalty_start_mps", type=float, default=None)
     parser.add_argument("--scripted_teacher_blend", type=float, default=None)
@@ -97,6 +98,8 @@ def main() -> int:
         env_cfg.joint_target_lead_limit_rad = args.joint_target_lead_limit_rad
     if args.joint_delta_reference is not None:
         env_cfg.joint_delta_reference = args.joint_delta_reference
+    if args.policy_obs_target_mode is not None:
+        env_cfg.policy_obs_target_mode = args.policy_obs_target_mode
     if args.ik_precontact_clearance_m is not None:
         env_cfg.ik_precontact_clearance_m = args.ik_precontact_clearance_m
     if args.speed_penalty_start_mps is not None:
@@ -156,6 +159,7 @@ def main() -> int:
         f"fast_cube_joint_delta_scale={env_cfg.fast_cube_joint_delta_scale} "
         f"joint_target_lead_limit_rad={env_cfg.joint_target_lead_limit_rad} "
         f"joint_delta_reference={env_cfg.joint_delta_reference} "
+        f"policy_obs_target_mode={env_cfg.policy_obs_target_mode} "
         f"ik_precontact_clearance_m={env_cfg.ik_precontact_clearance_m} "
         f"speed_penalty_start_mps={env_cfg.speed_penalty_start_mps} "
         f"scripted_teacher_blend={env_cfg.scripted_teacher_blend} "
@@ -308,6 +312,7 @@ def main() -> int:
         "fast_cube_joint_delta_scale": env_cfg.fast_cube_joint_delta_scale,
         "joint_target_lead_limit_rad": env_cfg.joint_target_lead_limit_rad,
         "joint_delta_reference": env_cfg.joint_delta_reference,
+        "policy_obs_target_mode": env_cfg.policy_obs_target_mode,
         "ik_precontact_clearance_m": env_cfg.ik_precontact_clearance_m,
         "scripted_teacher_blend": env_cfg.scripted_teacher_blend,
         "scripted_teacher_horizon_frac": env_cfg.scripted_teacher_horizon_frac,

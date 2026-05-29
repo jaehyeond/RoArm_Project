@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-05-28 KST (B200 disconnected; Track A v6/v7 close_26 FAIL; first approved v8 close_26 runtime also FAIL; post-fail v8 virtual-damping wiring fix is static-ready only; no post-fix v8 runtime has run; professor cube3cm push/tap scripted rollout, DiffIK v3 10,240-trial audit, and real-RoArm replay video complete; professor cube3cm teacher-filtered state-action dataset v2 and BC joint-delta learned rollout PASS at 1024 envs; v3.2 teacher sweep did not find a robust low-x fix; bucket-balanced dataset v3 + BC v2 improved learned rollout success but failed per-bucket impact gate; safety-aware BC v3 + bucket action scaling passed two 1024 frozen per-bucket audits on seeds 883/884 with lower impact but low_x low-motion caveat; small safety-aware PPO warm-start smoke ran on local GPU but teacher-off model_11 failed frozen 1024 performance, so PPO/RL scale-up remains blocked; still not Track A grasp, PPO/RL/VLA success, image dataset, or 10k/100k learned-policy robustness)
+Last updated: 2026-05-29 KST (B200 disconnected; Track A v6/v7 close_26 FAIL; first approved v8 close_26 runtime also FAIL; post-fail v8 virtual-damping wiring fix is static-ready only; no post-fix v8 runtime has run; professor cube3cm push/tap scripted rollout, DiffIK v3 10,240-trial audit, and real-RoArm replay video complete; professor cube3cm teacher-filtered state-action dataset v2 and BC joint-delta learned rollout PASS at 1024 envs; v3.2 teacher sweep did not find a robust low-x fix; bucket-balanced dataset v3 + BC v2 improved learned rollout success but failed per-bucket impact gate; safety-aware BC v3 + bucket action scaling passed two 1024 frozen per-bucket audits on seeds 883/884 with lower impact but low_x low-motion caveat; small safety-aware PPO warm-start smoke connected local GPU PPO but teacher-off model_11 failed frozen 1024; 2026-05-29 bridge redesign made teacher-on 128 recover under direct-step/joint-pos action loop, but model_11 and smoke8 model_7 stayed teacher-off zero-motion at 128; direct rsl_rl actor distillation initially failed teacher-off 128, but waypoint-observation + on-policy actor distillation with low_x label scale 1.3 passed teacher-off 128 seed906 and three teacher-off 1024 first-episode overall/per-bucket gates on seeds 907/908/909; no 10k/100k learned robustness, dataset generation, Track A runtime, or PPO/RL/VLA final-success claim has been run/approved from it yet)
 
 This is the rolling current-state dashboard. It is not full history. Durable
 rules live in `claudedocs/DECISIONS.md`; experiment history lives in
@@ -238,8 +238,9 @@ Do **not** use `HANDOFF.md` or `TASKS.md` as current state.
   `eval_cube_push_policy.py` md5 `fa68ee654c969aff7938867894acf125`, optional
   PPO bucket audit support md5 `62f74ce38c9a44f0f0790e00559f634a`, and new
   `cube3cm_push_ppo_rollout_audit.py` md5 `b92260c8f0986c1b6bfe233fcf417d01`.
-  System Python failed with missing `gymnasium`; rerun in `conda run -n isaaclab`
-  used `cuda:0`. Smoke12 training seed885 completed 73,728 timesteps and wrote
+  Prior docs say system Python failed with missing `gymnasium`, but current local
+  stderr citation is a mismatch; verified valid runtime was `conda run -n isaaclab`
+  on `cuda:0`. Smoke12 training seed885 completed 73,728 timesteps and wrote
   `model_11.pt` md5 `c9f945a4d1eacd817d4733e7d9b7e48e`; training stdout lines
   47-78 confirm BC teacher blend `0.35`, imitation reward `0.30`, no attach/no
   dataset, and `cuda:0`. Teacher-off frozen 1024 eval seed886 is a mechanism PASS
@@ -250,9 +251,70 @@ Do **not** use `HANDOFF.md` or `TASKS.md` as current state.
   (success `0.050781250`, impact `0.097656250`). Direct-like teacher-on diagnostic
   with 6s horizon/home reset/relaxed action loop partially recovers controlled
   `0.792968750`, impact `0.054687500`, success `0.417968750` and passes the loose
-  posx bucket screen, proving the checkpoint is not dead but the PPO action-loop
-  warm-start bridge/curriculum is mismatched. Do not call PPO `model_11.pt` a
-  successful learned policy; do not run PPO 10k/100k scale-up from it.
+	  posx bucket screen, proving the checkpoint is not dead but the PPO action-loop
+	  warm-start bridge/curriculum is mismatched. Do not call PPO `model_11.pt` a
+	  successful learned policy; do not run PPO 10k/100k scale-up from it.
+- **Professor cube-push BC teacher bridge redesign diagnostics (2026-05-29)**:
+  added default-preserving bridge controls: `joint_delta_reference` and
+  `bc_teacher_phase_timing`. Current md5s: env
+  `a0483108ef0fc8ab2f27a58b6edd8c13`, train
+  `7032616ded5617b546149227f4c0d110`, eval
+  `b10fad43cfd3b0ca543390ad6011135f`. Static checks passed. Teacher-on
+  direct-step/joint-pos 128-env seed889 recovered overall but failed low_x bucket:
+  controlled `0.984375000`, impact `0.007812500`, success `0.601562500`, low_x
+  success `0.133333333`. Low_x scale `1.0` seed890 passed the small teacher-on
+  bridge screen: controlled `0.992187500`, impact `0.007812500`, low-motion
+  `0.007812500`, success `0.765625000`, and bucket PASS with low_x success
+  `0.538461538`. But this is teacher-on only. Existing `model_11.pt` under the
+  new action loop is teacher-off zero-motion at 128 (controlled `0`, low-motion
+  `1`, success `0`). A tiny 128-env smoke8 PPO distillation run wrote `model_7.pt`
+  md5 `5ed5ac34dc624ac8c660d9176378b357`, but imitation MSE stayed around
+  `0.56-0.59` and teacher-off 128 still failed with controlled `0`, low-motion
+  `1`, success `0`. Verdict: bridge mismatch is partly fixed, but PPO actor
+  learning is still not solved. Do **not** run teacher-off 1024, PPO scale-up,
+  10k/100k, dataset generation, or Track A runtime from these PPO checkpoints.
+  Next valid step is a true supervised actor/normalized-action distillation or
+  stronger actor initialization before PPO.
+- **Professor cube-push rsl_rl actor distillation gate (2026-05-29)**: added
+  `roarm_rl/distill_cube_push_actor.py`, which collects the BC teacher's
+  normalized joint-delta actions through the same direct-step/joint-pos loop and
+  writes a normal rsl_rl checkpoint. Distillation seed894 used 128 envs x 600
+  steps = 76,800 samples from `model_7.pt`; checkpoint
+  `model_actor_distill.pt` md5 `57811cfb054ca7ac39b134d1d97cd543`.
+  Supervised fit improved val MSE `0.169735238 -> 0.000794161`, but the only
+  allowed teacher-off 128 audit seed895 still failed: controlled `0.101562500`,
+  impact `0`, low-motion `0.929687500`, success `0.031250000`; bucket audit
+  failed with low_x/mid_x success `0` and high_x success `0.076923077`. Verdict:
+  actor no longer outputs pure zero, but closed-loop push is still effectively
+  low-motion. Do **not** run teacher-off 1024, PPO scale-up, 10k/100k learned
+  robustness, dataset generation, or Track A runtime from this checkpoint.
+  Next valid step is a closed-loop/action-target analysis of why low-MSE one-step
+  normalized action imitation collapses to low-motion, or a stronger rollout-
+  aware actor initialization; then repeat only teacher-off 128.
+- **Professor cube-push waypoint actor 128 gate (2026-05-29)**: trace showed
+  the first actor-distilled checkpoint failed because actor-visited states diverged
+  from the teacher and because the actor observation did not expose the teacher's
+  phase/moving TCP waypoint. Added default-off `policy_obs_target_mode` with
+  `bc_teacher_tcp_target`, plus trace/analysis tools. `model_actor_waypoint.pt`
+  improved teacher-off 128 seed901 to controlled `0.679687500`, impact `0`,
+  low-motion `0.242187500`, success `0.273437500`, but bucket failed low_x.
+  Waypoint + on-policy DAgger1 improved seed904 to controlled `0.968750000`,
+  impact `0`, success `0.617187500`, but bucket still failed low_x success
+  `0.117647059`. The low_x-scale `1.3` on-policy checkpoint
+  `model_actor_waypoint_lowx130.pt` md5 `606d19fff713e7468d395af4a027d08a`
+  passed the first teacher-off 128 first-episode gate seed906: audit controlled
+  `0.937500000`, impact `0`, low-motion `0.093750000`, success `0.546875000`;
+  bucket audit PASS with `(1,0)` low_x success `0.571428571`, mid_x success
+  `0`, high_x success `0.428571429`, and zero impact. After explicit approval,
+  the same checkpoint passed three teacher-off 1024 first-episode overall/
+  per-bucket gates with no teacher action blend: seed907 controlled
+  `0.924804688`, impact `0`, low-motion `0.109375000`, success `0.511718750`;
+  seed908 controlled `0.925781250`, impact `0`, low-motion `0.114257812`,
+  success `0.523437500`; seed909 controlled `0.920898438`, impact `0`,
+  low-motion `0.125976562`, success `0.506835938`. This is now a 3x1024
+  teacher-off learned-policy gate PASS using waypoint observations, but still
+  not 10k/100k robustness, not dataset readiness, and not Track A/PPO/VLA
+  final success.
 - Track A goal: first make the sim/Isaac Lab contact primitive reliable, then
   move toward broad sim/lab dataset collection and learning.
 - Dataset generation and training are blocked until close_26 proxy audit PASS,
@@ -617,7 +679,7 @@ Interpretation:
 
 1. `CLAUDE.md`
 2. `START_HERE.md`
-3. `claudedocs/DECISIONS.md` D083-D098
+3. `claudedocs/DECISIONS.md` D083-D111
 4. `claudedocs/EXPERIMENT_LEDGER.md` latest rows
 5. `claudedocs/session_20260522_track_a_v6_projected_guard_runtime_fail.md`
 6. `claudedocs/session_20260522_track_a_contact_rl_stage0_preflight.md`
@@ -639,12 +701,16 @@ Interpretation:
 22. `sim_scripts/p7_branch_b_cube2cm_target_guarded_v8_observed_recovery_static_design.py`
 23. `claudedocs/session_20260526_track_a_v8_runtime_candidate_static_readiness.md`
 24. `claudedocs/session_20260526_track_a_v8_runtime_fail_and_damping_wiring_fix.md`
-25. `claudedocs/session_20260526_cube3cm_push_rollout_probe_professor_request.md`
-26. `sim_scripts/cube3cm_push_rollout_probe.py`
-27. `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/runtime.out`
-28. `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/rollout_stats_audit.out`
-29. `claudedocs/session_20260526_cube3cm_push_rl_reward_curriculum.md`
-30. `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_speed_guard_model49_eval1024_audit.out`
+25. `claudedocs/session_20260529_cube3cm_waypoint_actor_gate.md`
+26. `claudedocs/session_20260529_cube3cm_actor_distillation_gate.md`
+27. `claudedocs/session_20260529_cube3cm_bc_teacher_bridge_redesign.md`
+28. `claudedocs/session_20260528_cube3cm_safety_rl_warmstart.md`
+29. `claudedocs/session_20260526_cube3cm_push_rollout_probe_professor_request.md`
+30. `sim_scripts/cube3cm_push_rollout_probe.py`
+31. `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/runtime.out`
+32. `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/rollout_stats_audit.out`
+33. `claudedocs/session_20260526_cube3cm_push_rl_reward_curriculum.md`
+34. `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_speed_guard_model49_eval1024_audit.out`
 
 ## Do Not Trust As Current
 
@@ -664,8 +730,13 @@ Interpretation:
   the damping-inheritance check proved virtual damping was active
 - Any claim that the professor cube3cm push/tap rollout is Track A grasp success,
   PPO/VLA training output, or dataset readiness
-- Any claim that the professor cube-push PPO learned policy is ready for 10k/100k
-  scaling before frozen 1k eval impact falls below the current 28-29% band
+- Any claim that the professor cube-push PPO checkpoint is a successful learned
+  policy before teacher-off 128 and then 1024 overall/per-bucket audits pass
+- Any claim that `model_actor_distill.pt` is a successful learned policy; its
+  teacher-off 128 audit failed low-motion/per-bucket gates
+- Any claim that `model_actor_waypoint_lowx130.pt` is 1024/10k robust, PPO/RL/VLA
+  success, dataset-ready, or Track A evidence; it has only passed one teacher-off
+  128 first-episode overall/per-bucket gate
 - Any Track B/OpenVLA training status as evidence for Track A contact success
 - Any claim that existing default Pick/Stack PPO envs produce Track A-valid
   no-attach contact experts

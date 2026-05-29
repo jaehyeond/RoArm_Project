@@ -5583,3 +5583,222 @@ Sources:
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_warmstart_teacheron_seed887_eval512_bucket.out:1-10`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_warmstart_teacheron_directlike_seed888_eval256_audit.out:1-5`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_warmstart_teacheron_directlike_seed888_eval256_bucket.out:1-10`
+
+## D110 - Matching the BC bridge action loop restores teacher-on, but PPO actor still fails teacher-off
+
+Date: 2026-05-29
+
+Decision:
+
+- For the professor cube3cm branch, the BC teacher bridge should use the direct
+  BC rollout's timing/action semantics when diagnosing teacher fidelity:
+  direct step timing, home reset/no IK endpoint reset, joint-position-referenced
+  joint deltas, relaxed smoothing/slowdown, and explicit low_x scaling.
+- A teacher-on bridge PASS is not a learned PPO policy. It only proves the bridge
+  can execute the BC teacher through the PPO env action path.
+- PPO reward-side imitation alone did not initialize the actor in the small
+  smoke8 diagnostic; teacher-off remained zero-motion.
+
+Evidence:
+
+- Added default-preserving bridge controls in `roarm_rl/roarm_cube_push_env.py`
+  md5 `a0483108ef0fc8ab2f27a58b6edd8c13`, `train_cube_push_ppo.py` md5
+  `7032616ded5617b546149227f4c0d110`, and `eval_cube_push_policy.py` md5
+  `b10fad43cfd3b0ca543390ad6011135f`.
+- Teacher-on direct-step/joint-pos bridge with lowx scale `1.0` passed the small
+  128-env screen: controlled `0.992187500`, impact `0.007812500`, low-motion
+  `0.007812500`, success `0.765625000`; bucket PASS with low_x success
+  `0.538461538`.
+- Existing `model_11.pt` under the redesigned action loop failed teacher-off 128:
+  controlled `0`, low-motion `1`, success `0`.
+- New 128-env PPO distillation smoke8 wrote `model_7.pt` md5
+  `5ed5ac34dc624ac8c660d9176378b357`, but imitation MSE stayed around
+  `0.56-0.59`.
+- That smoke8 `model_7.pt` also failed teacher-off 128: controlled `0`,
+  low-motion `1`, success `0`.
+
+Implication:
+
+- Do not run teacher-off 1024, PPO scale-up, 10k/100k learned robustness, dataset
+  generation, or Track A runtime from `model_11.pt` or the smoke8 `model_7.pt`.
+- Next valid work is true supervised actor/normalized-action distillation or a
+  stronger actor initialization path, then a small teacher-off 128 audit before
+  any 1024 audit.
+
+Sources:
+
+- `claudedocs/session_20260529_cube3cm_bc_teacher_bridge_redesign.md`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_warmstart_bridge_directstep_jointpos_lowx100_seed890_eval128_summary.json:1-58`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_warmstart_bridge_directstep_jointpos_lowx100_seed890_eval128_audit.out:1-5`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_warmstart_bridge_directstep_jointpos_lowx100_seed890_eval128_bucket.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_warmstart_newloop_teacheroff_model11_seed891_eval128_audit.out:1-5`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_warmstart_newloop_teacheroff_model11_seed891_eval128_bucket.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_newloop_distill_smoke8_seed892_stdout.out:3-30`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_newloop_distill_smoke8_seed892_stdout.out:102`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_newloop_distill_smoke8_seed892_stdout.out:144`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_newloop_distill_smoke8_seed892_stdout.out:349`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_newloop_distill_smoke8_seed892_model7_teacheroff_eval128_seed893_audit.out:1-5`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_newloop_distill_smoke8_seed892_model7_teacheroff_eval128_seed893_bucket.out:1-10`
+
+## D111 - One-step actor distillation lowers imitation error, but closed-loop teacher-off 128 still fails
+
+Date: 2026-05-29
+
+Decision:
+
+- For the professor cube3cm branch, directly fitting the rsl_rl actor mean to the
+  BC teacher's normalized joint-delta actions is necessary evidence, but it is
+  not sufficient to claim a successful learned policy.
+- The actor-distilled checkpoint moved teacher-off behavior away from pure
+  zero-motion, but the closed-loop 128 gate still failed overall and per-bucket
+  performance.
+- A low one-step action MSE under teacher-collected states must not be treated as
+  a rollout success claim; closed-loop state-distribution and target-update
+  effects remain the blocker.
+
+Evidence:
+
+- Added `roarm_rl/distill_cube_push_actor.py` for supervised rsl_rl actor
+  distillation. It collects teacher actions from the direct-step/joint-pos BC
+  bridge and writes a normal rsl_rl checkpoint with actor observation
+  normalization.
+- Distillation seed894 used 128 envs x 600 steps = 76,800 samples from
+  `model_7.pt`; `model_actor_distill.pt` md5
+  `57811cfb054ca7ac39b134d1d97cd543`.
+- Distillation metrics improved sharply: initial val MSE `0.169735238` to final
+  val MSE `0.000794161`; teacher action abs mean `0.280680388`, actor action abs
+  mean `0.281257778`.
+- The only allowed teacher-off rollout gate, 128 envs seed895, was mechanism-clean
+  but performance-failed: controlled `0.101562500`, impact `0`, low-motion
+  `0.929687500`, success `0.031250000`.
+- Per-bucket audit failed: low_x success `0`, mid_x success `0`, high_x success
+  `0.076923077`; overall low-motion remained `0.929687500`.
+
+Implication:
+
+- Do not run teacher-off 1024, PPO scale-up, 10k/100k learned robustness, dataset
+  generation, or Track A runtime from `model_actor_distill.pt`.
+- Next valid work is a closed-loop/action-target analysis of why low-MSE one-step
+  normalized-action imitation collapses to low-motion, or a stronger
+  rollout-aware actor initialization, then another teacher-off 128 audit only.
+
+Sources:
+
+- `claudedocs/session_20260529_cube3cm_actor_distillation_gate.md`
+- `roarm_rl/distill_cube_push_actor.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_distill_seed894/actor_distill_stdout.out:47-72`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_distill_seed894/actor_distill_metrics.json:19-24`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_distill_seed894/model_actor_distill_teacheroff_eval128_seed895_stdout.out`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_distill_seed894/model_actor_distill_teacheroff_eval128_seed895_audit.out:1-5`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_distill_seed894/model_actor_distill_teacheroff_eval128_seed895_bucket.out:1-10`
+
+## D112 - Waypoint observation plus on-policy actor distillation can pass the first teacher-off 128 gate
+
+Date: 2026-05-29
+
+Decision:
+
+- For the professor cube3cm branch, the plain 28D observation with final push
+  target fields was insufficient for stable rsl_rl actor imitation of the
+  time/waypoint-conditioned BC teacher.
+- A default-off waypoint-observation mode, `policy_obs_target_mode =
+  bc_teacher_tcp_target`, is valid as a diagnostic/learned-policy bridge only
+  when disclosed: it exposes the teacher's moving TCP waypoint in the existing
+  target observation slots, while still using teacher-off actor actions.
+- `model_actor_waypoint_lowx130.pt` passed the first teacher-off 128
+  first-episode overall/per-bucket gate, but must not be called 1024-robust,
+  10k/100k robust, Track A success, or PPO/RL/VLA final success.
+
+Evidence:
+
+- Trace of `model_actor_distill.pt` showed target application was not the main
+  blocker: actor abs `0.181961636` vs teacher abs `0.514814639`, while
+  effective-vs-actor MSE was only `0.001083134`; rollout remained low-motion
+  with success `0.031250000`.
+- The actor observation exposes final target fields in
+  `roarm_rl/roarm_stack_env.py:517-529`, while the BC teacher uses
+  `phase_alpha` and moving target features in
+  `roarm_rl/roarm_cube_push_env.py:390-411`.
+- Waypoint-only distillation improved seed901 teacher-off 128 to controlled
+  `0.679687500`, impact `0`, low-motion `0.242187500`, success `0.273437500`,
+  but failed low_x bucket.
+- Waypoint on-policy DAgger1 improved seed904 to controlled `0.968750000`,
+  impact `0`, low-motion `0.070312500`, success `0.617187500`, but low_x
+  success `0.117647059` was below the bucket threshold.
+- Low_x scale `1.3` on-policy distillation seed905 wrote
+  `model_actor_waypoint_lowx130.pt` md5
+  `606d19fff713e7468d395af4a027d08a`.
+- Teacher-off 128 first-episode seed906 passed mechanism and bucket gates:
+  controlled `0.937500000`, impact `0`, low-motion `0.093750000`, success
+  `0.546875000`; bucket PASS with low_x success `0.571428571`, mid_x success
+  `0`, high_x success `0.428571429`, and zero impact in all three posx buckets.
+
+Implication:
+
+- Next valid gate is an explicitly approved teacher-off 1024 first-episode audit
+  of `model_actor_waypoint_lowx130.pt` using
+  `policy_obs_target_mode=bc_teacher_tcp_target` and no teacher action blend.
+- Until that 1024 audit passes, do not run PPO scale-up, 10k/100k learned
+  robustness, dataset generation, or Track A runtime from this checkpoint.
+
+Sources:
+
+- `claudedocs/session_20260529_cube3cm_waypoint_actor_gate.md`
+- `roarm_rl/roarm_cube_push_env.py`
+- `roarm_rl/distill_cube_push_actor.py`
+- `roarm_rl/eval_cube_push_policy.py`
+- `roarm_rl/trace_cube_push_actor.py`
+- `roarm_rl/analyze_cube_push_trace.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_trace_seed896/actor_trace_analysis.out:1-4`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_trace_waypoint_seed902/actor_trace_analysis.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_dagger_seed903/model_actor_waypoint_dagger1_teacheroff_eval128_seed904_firstonly_audit.out:1-5`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_dagger_seed903/model_actor_waypoint_dagger1_teacheroff_eval128_seed904_firstonly_bucket.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_lowx130_seed905/actor_waypoint_lowx130_metrics.json:1-45`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_lowx130_seed905/model_actor_waypoint_lowx130_teacheroff_eval128_seed906_firstonly_audit.out:1-5`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_lowx130_seed905/model_actor_waypoint_lowx130_teacheroff_eval128_seed906_firstonly_bucket.out:1-10`
+
+## D113 - Waypoint actor passed three teacher-off 1024 first-episode gates
+
+Date: 2026-05-29
+
+Decision:
+
+- After explicit user approval, `model_actor_waypoint_lowx130.pt` is now a
+  teacher-off learned-policy artifact with three 1024-env first-episode
+  overall/per-bucket PASS results on seeds 907, 908, and 909.
+- This justifies calling it a 3x1024 teacher-off robust learned-policy gate PASS
+  for the professor cube3cm waypoint-observation branch.
+- It must still not be called 10k/100k robust, dataset-ready, Track A evidence,
+  or PPO/RL/VLA final success.
+
+Evidence:
+
+- Seed907 audit PASS: controlled `0.924804688`, impact `0`, low-motion
+  `0.109375000`, success `0.511718750`; bucket PASS with low_x success
+  `0.415730337`, mid_x success `0.303797468`, high_x success `0.215909091`.
+- Seed908 audit PASS: controlled `0.925781250`, impact `0`, low-motion
+  `0.114257812`, success `0.523437500`; bucket PASS with low_x success
+  `0.412371134`, mid_x success `0.173333333`, high_x success `0.212765957`.
+- Seed909 audit PASS: controlled `0.920898438`, impact `0`, low-motion
+  `0.125976562`, success `0.506835938`; bucket PASS with low_x success
+  `0.395348837`, mid_x success `0.182926829`, high_x success `0.151515152`.
+- All three 1024 summaries used `bc_teacher_blend=0.0`, no BC teacher checkpoint
+  during evaluation, `policy_obs_target_mode=bc_teacher_tcp_target`, and
+  first-episode-only recording.
+
+Implication:
+
+- The next stricter claim requires explicit approval for a larger robustness
+  audit such as 10k; do not run 10k/100k, PPO scale-up, dataset generation, or
+  Track A runtime from this checkpoint without that approval.
+
+Sources:
+
+- `claudedocs/session_20260529_cube3cm_waypoint_actor_gate.md`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_lowx130_seed905/model_actor_waypoint_lowx130_teacheroff_eval1024_seed907_firstonly_summary.json:1-60`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_lowx130_seed905/model_actor_waypoint_lowx130_teacheroff_eval1024_seed907_firstonly_audit.out:1-5`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_lowx130_seed905/model_actor_waypoint_lowx130_teacheroff_eval1024_seed907_firstonly_bucket.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_lowx130_seed905/model_actor_waypoint_lowx130_teacheroff_eval1024_seed908_firstonly_audit.out:1-5`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_lowx130_seed905/model_actor_waypoint_lowx130_teacheroff_eval1024_seed908_firstonly_bucket.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_lowx130_seed905/model_actor_waypoint_lowx130_teacheroff_eval1024_seed909_firstonly_audit.out:1-5`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_lowx130_seed905/model_actor_waypoint_lowx130_teacheroff_eval1024_seed909_firstonly_bucket.out:1-10`
