@@ -111,6 +111,7 @@ class RoArmCubePushEnvCfg(RoArmStackEnvCfg):
     contact_joint_delta_scale: float = 0.35
     fast_cube_joint_delta_scale: float = 0.20
     joint_target_lead_limit_rad: float = 0.060
+    joint_delta_reference: str = "target"
     scripted_teacher_blend: float = 0.0
     scripted_teacher_horizon_frac: float = 0.55
     scripted_teacher_goal_push_m: float = 0.055
@@ -144,6 +145,7 @@ class RoArmCubePushEnvCfg(RoArmStackEnvCfg):
     bc_teacher_lowx_approach_steps: int = 300
     bc_teacher_lowx_push_steps: int = 220
     bc_teacher_lowx_post_steps: int = 60
+    bc_teacher_phase_timing: str = "episode_scaled"
 
     push_progress_reward_scale: float = 60.0
     push_displacement_reward_scale: float = 18.0
@@ -348,8 +350,14 @@ class RoArmCubePushEnv(RoArmStackEnv):
 
     def _bc_teacher_phase_alpha(self, traj: dict[str, torch.Tensor]) -> torch.Tensor:
         total = torch.clamp(traj["approach_steps"] + traj["push_steps"] + traj["post_steps"], min=1.0)
-        denom = max(float(self.max_episode_length - 1), 1.0)
-        step_v = self.episode_length_buf.float() / denom * total
+        timing = str(getattr(self.cfg, "bc_teacher_phase_timing", "episode_scaled"))
+        if timing == "episode_scaled":
+            denom = max(float(self.max_episode_length - 1), 1.0)
+            step_v = self.episode_length_buf.float() / denom * total
+        elif timing == "direct_steps":
+            step_v = self.episode_length_buf.float()
+        else:
+            raise ValueError(f"unsupported bc_teacher_phase_timing={timing!r}")
         push = torch.clamp(traj["push_steps"], min=1.0)
         raw_alpha = (step_v - traj["approach_steps"] + 1.0) / push
         alpha = torch.where(step_v < traj["approach_steps"], torch.zeros_like(raw_alpha), raw_alpha)
@@ -506,8 +514,15 @@ class RoArmCubePushEnv(RoArmStackEnv):
         delta = delta * slowdown.unsqueeze(-1)
         delta[:, self.gripper_joint_idx] = 0.0
 
-        targets = self.robot_dof_targets + delta
         joint_pos = self._robot.data.joint_pos
+        reference = str(getattr(self.cfg, "joint_delta_reference", "target"))
+        if reference == "target":
+            target_base = self.robot_dof_targets
+        elif reference == "joint_pos":
+            target_base = joint_pos
+        else:
+            raise ValueError(f"unsupported joint_delta_reference={reference!r}")
+        targets = target_base + delta
         lead = float(self.cfg.joint_target_lead_limit_rad)
         targets = torch.maximum(torch.minimum(targets, joint_pos + lead), joint_pos - lead)
         targets = torch.clamp(targets, self.robot_dof_lower_limits, self.robot_dof_upper_limits)

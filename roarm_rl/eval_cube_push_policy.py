@@ -32,6 +32,7 @@ def main() -> int:
     parser.add_argument("--contact_joint_delta_scale", type=float, default=None)
     parser.add_argument("--fast_cube_joint_delta_scale", type=float, default=None)
     parser.add_argument("--joint_target_lead_limit_rad", type=float, default=None)
+    parser.add_argument("--joint_delta_reference", choices=("target", "joint_pos"), default=None)
     parser.add_argument("--ik_precontact_clearance_m", type=float, default=None)
     parser.add_argument("--speed_penalty_start_mps", type=float, default=None)
     parser.add_argument("--scripted_teacher_blend", type=float, default=None)
@@ -46,6 +47,7 @@ def main() -> int:
     parser.add_argument("--bc_teacher_lowx_policy_delta_scale", type=float, default=None)
     parser.add_argument("--bc_teacher_highx_policy_delta_scale", type=float, default=None)
     parser.add_argument("--bc_teacher_delta_smoothing_alpha", type=float, default=None)
+    parser.add_argument("--bc_teacher_phase_timing", choices=("episode_scaled", "direct_steps"), default=None)
     parser.add_argument("--record_first_episode_only", action="store_true")
     parser.add_argument("--gui", action="store_true", help="Launch Isaac Sim with a visible local GUI window.")
     parser.add_argument("--livestream", type=int, default=0, choices=(0, 1, 2), help="Enable Isaac Sim WebRTC livestream.")
@@ -93,6 +95,8 @@ def main() -> int:
         env_cfg.fast_cube_joint_delta_scale = args.fast_cube_joint_delta_scale
     if args.joint_target_lead_limit_rad is not None:
         env_cfg.joint_target_lead_limit_rad = args.joint_target_lead_limit_rad
+    if args.joint_delta_reference is not None:
+        env_cfg.joint_delta_reference = args.joint_delta_reference
     if args.ik_precontact_clearance_m is not None:
         env_cfg.ik_precontact_clearance_m = args.ik_precontact_clearance_m
     if args.speed_penalty_start_mps is not None:
@@ -121,6 +125,8 @@ def main() -> int:
         env_cfg.bc_teacher_highx_policy_delta_scale = args.bc_teacher_highx_policy_delta_scale
     if args.bc_teacher_delta_smoothing_alpha is not None:
         env_cfg.bc_teacher_delta_smoothing_alpha = args.bc_teacher_delta_smoothing_alpha
+    if args.bc_teacher_phase_timing is not None:
+        env_cfg.bc_teacher_phase_timing = args.bc_teacher_phase_timing
 
     ppo_cfg = RoArmPickPPORunnerCfg()
     ppo_cfg.seed = args.seed
@@ -130,10 +136,14 @@ def main() -> int:
         "env_id=RoArm-CubePush-Direct-v0 training=NO dataset_generation=NO "
         "grasp_attach=NO rollout_object_posewrite=NO"
     )
+    target_update = (
+        f"robot_dof_targets += action_scale({env_cfg.action_scale:.3f}) * action"
+        if env_cfg.joint_delta_reference == "target"
+        else f"robot_dof_targets = joint_pos + action_scale({env_cfg.action_scale:.3f}) * action"
+    )
     print(
         "[cube-push-eval] action_semantics=policy_output_normalized_joint_delta "
-        f"target_update='robot_dof_targets += action_scale({env_cfg.action_scale:.3f}) * action' "
-        "action_dim=6 action_clip=[-1,1] gripper_open_hold=YES"
+        f"target_update='{target_update}' action_dim=6 action_clip=[-1,1] gripper_open_hold=YES"
     )
     print(f"[cube-push-eval] checkpoint={args.checkpoint}")
     print(f"[cube-push-eval] num_envs={args.num_envs} num_rollouts={args.num_rollouts} seed={args.seed}")
@@ -145,6 +155,7 @@ def main() -> int:
         f"contact_joint_delta_scale={env_cfg.contact_joint_delta_scale} "
         f"fast_cube_joint_delta_scale={env_cfg.fast_cube_joint_delta_scale} "
         f"joint_target_lead_limit_rad={env_cfg.joint_target_lead_limit_rad} "
+        f"joint_delta_reference={env_cfg.joint_delta_reference} "
         f"ik_precontact_clearance_m={env_cfg.ik_precontact_clearance_m} "
         f"speed_penalty_start_mps={env_cfg.speed_penalty_start_mps} "
         f"scripted_teacher_blend={env_cfg.scripted_teacher_blend} "
@@ -154,7 +165,8 @@ def main() -> int:
         f"bc_teacher_policy_delta_scale={env_cfg.bc_teacher_policy_delta_scale} "
         f"bc_teacher_lowx_policy_delta_scale={env_cfg.bc_teacher_lowx_policy_delta_scale} "
         f"bc_teacher_highx_policy_delta_scale={env_cfg.bc_teacher_highx_policy_delta_scale} "
-        f"bc_teacher_delta_smoothing_alpha={env_cfg.bc_teacher_delta_smoothing_alpha}"
+        f"bc_teacher_delta_smoothing_alpha={env_cfg.bc_teacher_delta_smoothing_alpha} "
+        f"bc_teacher_phase_timing={env_cfg.bc_teacher_phase_timing}"
     )
     print(f"[cube-push-eval] bc_teacher_checkpoint_path={env_cfg.bc_teacher_checkpoint_path or 'NONE'}")
     print(f"[cube-push-eval] robot_usd_path={env_cfg.robot.spawn.usd_path}")
@@ -295,6 +307,7 @@ def main() -> int:
         "contact_joint_delta_scale": env_cfg.contact_joint_delta_scale,
         "fast_cube_joint_delta_scale": env_cfg.fast_cube_joint_delta_scale,
         "joint_target_lead_limit_rad": env_cfg.joint_target_lead_limit_rad,
+        "joint_delta_reference": env_cfg.joint_delta_reference,
         "ik_precontact_clearance_m": env_cfg.ik_precontact_clearance_m,
         "scripted_teacher_blend": env_cfg.scripted_teacher_blend,
         "scripted_teacher_horizon_frac": env_cfg.scripted_teacher_horizon_frac,
@@ -307,6 +320,7 @@ def main() -> int:
         "bc_teacher_lowx_policy_delta_scale": env_cfg.bc_teacher_lowx_policy_delta_scale,
         "bc_teacher_highx_policy_delta_scale": env_cfg.bc_teacher_highx_policy_delta_scale,
         "bc_teacher_delta_smoothing_alpha": env_cfg.bc_teacher_delta_smoothing_alpha,
+        "bc_teacher_phase_timing": env_cfg.bc_teacher_phase_timing,
         "speed_penalty_start_mps": env_cfg.speed_penalty_start_mps,
         "training": False,
         "dataset_generation": False,
