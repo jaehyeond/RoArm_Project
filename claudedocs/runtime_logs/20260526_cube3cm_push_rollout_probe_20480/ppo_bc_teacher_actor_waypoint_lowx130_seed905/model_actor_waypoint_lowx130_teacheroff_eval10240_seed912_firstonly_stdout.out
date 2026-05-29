@@ -1,0 +1,64 @@
+[INFO][AppLauncher]: Input keyword argument `livestream=0` has overridden the environment variable `LIVESTREAM=0`.
+[INFO][AppLauncher]: Using device: cuda:0
+[INFO][AppLauncher]: Loading experience file: /home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaaclab/apps/isaaclab.python.headless.kit
+[cube-push-eval] scope=no_attach_cube_push_eval env_id=RoArm-CubePush-Direct-v0 training=NO dataset_generation=NO grasp_attach=NO rollout_object_posewrite=NO
+[cube-push-eval] action_semantics=policy_output_normalized_joint_delta target_update='robot_dof_targets = joint_pos + action_scale(0.040) * action' action_dim=6 action_clip=[-1,1] gripper_open_hold=YES
+[cube-push-eval] checkpoint=claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_lowx130_seed905/model_actor_waypoint_lowx130.pt
+[cube-push-eval] num_envs=10240 num_rollouts=1 seed=912
+[cube-push-eval] curriculum ik_endpoint_reset=False action_smoothing_alpha=1.0 max_joint_delta_per_step_rad=0.04 contact_joint_delta_scale=1.0 fast_cube_joint_delta_scale=1.0 joint_target_lead_limit_rad=0.06 joint_delta_reference=joint_pos policy_obs_target_mode=bc_teacher_tcp_target ik_precontact_clearance_m=0.01 speed_penalty_start_mps=0.5 scripted_teacher_blend=0.0 scripted_teacher_horizon_frac=0.55 bc_teacher_blend=0.0 bc_teacher_imitation_reward_scale=0.0 bc_teacher_policy_delta_scale=1.0 bc_teacher_lowx_policy_delta_scale=0.85 bc_teacher_highx_policy_delta_scale=0.8 bc_teacher_delta_smoothing_alpha=0.85 bc_teacher_phase_timing=direct_steps
+[cube-push-eval] bc_teacher_checkpoint_path=NONE
+[cube-push-eval] robot_usd_path=/home/cgxr/Documents/Robotics/RoArm_Project/b200_backup_20260522_final/tmp_p7/p7_branch_b_cube2cm_opposing_jaw_v7_collision_usd_d024/roarm_m3.usd
+Setting seed: 912
+[INFO]: Base environment:
+	Environment device    : cuda:0
+	Environment seed      : 912
+	Physics step-size     : 0.005
+	Rendering step-size   : 0.01
+	Environment step-size : 0.01
+[INFO]: Time taken for scene creation : 46.940234 seconds
+Loading user config located at: '/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/user.config.json'
+[Info] [carb] Logging to file: /home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/kit/logs/Kit/Isaac-Sim/5.1/kit_20260529_190746.log
+2026-05-29T10:07:46Z [67ms] [Warning] [omni.usd_config.extension] Enable omni.materialx.libs extension to use MaterialX
+2026-05-29T10:07:47Z [458ms] [Warning] [carb] Acquiring non optional plugin interface which is not listed as dependency: [omni::physx::IPhysxBenchmarks v1.0] (plugin: <default plugin>), by client: omni.physics.physx.plugin. Add it to CARB_PLUGIN_IMPL_DEPS() macro of a client.
+2026-05-29T10:07:47Z [614ms] [Warning] [omni.isaac.dynamic_control] omni.isaac.dynamic_control is deprecated as of Isaac Sim 4.5. No action is needed from end-users.
+2026-05-29T10:07:50Z [3,185ms] [Warning] [gpu.foundation.plugin] Skipping unsupported non-NVIDIA GPU: Intel(R) Graphics (RPL-S)
+2026-05-29T10:07:50Z [3,185ms] [Warning] [gpu.foundation.plugin] Skipping unsupported non-NVIDIA GPU: Intel(R) Graphics (RPL-S)
+
+|---------------------------------------------------------------------------------------------|
+| Driver Version: 580.159.03    | Graphics API: Vulkan
+|=============================================================================================|
+| GPU | Name                             | Active | LDA | GPU Memory | Vendor-ID | LUID       |
+|     |                                  |        |     |            | Device-ID | UUID       |
+|     |                                  |        |     |            | Bus-ID    |            |
+|---------------------------------------------------------------------------------------------|
+| 0   | NVIDIA GeForce RTX 4090 Laptop.. | Yes: 0 |     | 16376   MB | 10de      | 0          |
+|     |                                  |        |     |            | 2757      | 05b1a3f8.. |
+|     |                                  |        |     |            | 1         |            |
+|---------------------------------------------------------------------------------------------|
+| 1   | Intel(R) Graphics (RPL-S)        |        |     | 48015   MB | 8086      | 0          |
+|     |                                  |        |     |            | a788      | 868088a7.. |
+|     |                                  |        |     |            | 0         |            |
+|=============================================================================================|
+| OS: 22.04.5 LTS (Jammy Jellyfish) ubuntu, Version: 22.04.5, Kernel: 6.8.0-111-generic
+| XServer Vendor: The X.Org Foundation, XServer Version: 12101004 (1.21.1.4)
+| Processor: Intel(R) Core(TM) i9-14900HX
+| Bare Metal Cores: 24 | Bare Metal Logical Cores: 48
+| Available Cores:  32 
+|---------------------------------------------------------------------------------------------|
+| Total Memory (MB): 64020 | Free Memory: 38242
+| Total Page/Swap (MB): 0 | Free Page/Swap: 0
+|---------------------------------------------------------------------------------------------|
+2026-05-29T10:07:50Z [3,399ms] [Warning] [gpu.foundation.plugin] CPU performance profile is set to powersave. This profile sets the CPU to the lowest frequency reducing performance.
+2026-05-29T10:07:50Z [3,409ms] [Warning] [gpu.foundation.plugin] IOMMU is enabled.
+2026-05-29T10:07:50Z [3,409ms] [Warning] [gpu.foundation.plugin] Detected IOMMU is enabled. Running CUDA peer-to-peer bandwidth and latency validation.
+Unidirectional P2P=Enabled Bandwidth (P2P Writes) Matrix (GB/s)
+   D\D     0 
+     0 389.36 
+P2P=Enabled Latency (P2P Writes) Matrix (us)
+   GPU     0 
+     0   1.99 
+
+   CPU     0 
+     0   2.50 
+2026-05-29T10:08:37Z [50,827ms] [Warning] [omni.physx.plugin] USD stage detach not called, holding a loose ptr to a stage!
+2026-05-29T10:08:37Z [51,137ms] [Warning] [carb] Recursive unloadAllPlugins() detected!
