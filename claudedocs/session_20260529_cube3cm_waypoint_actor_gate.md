@@ -188,3 +188,68 @@
   - bucket `model_actor_waypoint_lowx130_teacheroff_eval1024_seed909_firstonly_bucket.out:1-10`
     PASS_POSX_BUCKET_SCREEN; low_x success `0.395348837`, mid_x success
     `0.182926829`, high_x success `0.151515152`, all posx impact `0`.
+
+## Follow-Up Candidate Screen
+
+- Three-seed 1024 aggregate for the canonical gain `0.040` showed the remaining
+  weakness is still displacement-limited posx success:
+  - aggregate `model_actor_waypoint_lowx130_teacheroff_eval1024_3seed_aggregate.out:1-14`
+    reports overall success `0.513997396`, posx success `0.280423280`, low_x
+    success `0.408088235`, mid_x success `0.220338983`, high_x success
+    `0.197580645`.
+  - failure-mode audit
+    `model_actor_waypoint_lowx130_teacheroff_eval1024_3seed_failure_modes.out:1-13`
+    shows low_x/mid_x/high_x fail cases all have
+    `disp_lt_0p030=1.000000000`, while target-distance and speed failures are
+    `0`.
+- High-x label-scale candidate:
+  - `model_actor_waypoint_highx100.pt` md5
+    `12c98baec7deb17a96dd38fdb22b9a42`.
+  - metrics `ppo_bc_teacher_actor_waypoint_highx100_seed910/actor_waypoint_highx100_metrics.json:10-15`
+    confirm high_x scale `1.0` and actor collection from
+    `model_actor_waypoint_lowx130.pt`.
+  - metrics `.../actor_waypoint_highx100_metrics.json:22-27` show MSE improved
+    `0.048445213586091995 -> 0.0002650115347933024`.
+  - teacher-off 128 seed911 overall mechanism PASS, but bucket FAIL:
+    `model_actor_waypoint_highx100_teacheroff_eval128_seed911_firstonly_audit.out:1-5`
+    and `model_actor_waypoint_highx100_teacheroff_eval128_seed911_firstonly_bucket.out:1-10`.
+    It failed low_x success `0.166666667` and high_x success `0`.
+  - Decision: reject this actor candidate; do not run 1024 from it.
+- Same-seed sanity comparison:
+  - canonical gain `0.040` on seed911 also failed the 128 bucket gate:
+    `model_actor_waypoint_lowx130_teacheroff_eval128_seed911_firstonly_bucket.out:1-10`.
+  - gain `0.045` on the same checkpoint passed seed911 128:
+    `model_actor_waypoint_lowx130_gain045_teacheroff_eval128_seed911_firstonly_audit.out:1-5`
+    and `model_actor_waypoint_lowx130_gain045_teacheroff_eval128_seed911_firstonly_bucket.out:1-10`.
+  - gain `0.050` also passed seed911 128:
+    `model_actor_waypoint_lowx130_gain050_teacheroff_eval128_seed911_firstonly_audit.out:1-5`
+    and `model_actor_waypoint_lowx130_gain050_teacheroff_eval128_seed911_firstonly_bucket.out:1-10`,
+    but had lower overall success and higher low-motion than gain `0.045`.
+- Gain `0.045` 1024 repeat:
+  - seed907 audit/bucket PASS:
+    `model_actor_waypoint_lowx130_gain045_teacheroff_eval1024_seed907_firstonly_audit.out:1-5`,
+    `model_actor_waypoint_lowx130_gain045_teacheroff_eval1024_seed907_firstonly_bucket.out:1-10`.
+  - seed908 audit/bucket PASS:
+    `model_actor_waypoint_lowx130_gain045_teacheroff_eval1024_seed908_firstonly_audit.out:1-5`,
+    `model_actor_waypoint_lowx130_gain045_teacheroff_eval1024_seed908_firstonly_bucket.out:1-10`.
+  - seed909 audit/bucket PASS:
+    `model_actor_waypoint_lowx130_gain045_teacheroff_eval1024_seed909_firstonly_audit.out:1-5`,
+    `model_actor_waypoint_lowx130_gain045_teacheroff_eval1024_seed909_firstonly_bucket.out:1-10`.
+  - direct 3-seed comparison
+    `model_actor_waypoint_lowx130_gain045_vs_gain040_3seed_compare.out:1-12`
+    shows gain `0.045` improves overall success only
+    `0.513997396 -> 0.519205729`, improves mid_x success
+    `0.220338983 -> 0.300847458`, leaves high_x success unchanged at
+    `0.197580645`, and keeps impact `0`.
+  - Decision: gain `0.045` is a valid deployment-gain candidate with 3x1024
+    PASS, but not a clear enough upgrade to replace canonical gain `0.040`.
+- Gain `0.050` pilot:
+  - seed907 1024 pilot PASS:
+    `model_actor_waypoint_lowx130_gain050_teacheroff_eval1024_seed907_firstonly_audit.out:1-5`,
+    `model_actor_waypoint_lowx130_gain050_teacheroff_eval1024_seed907_firstonly_bucket.out:1-10`.
+  - It is mixed rather than clearly better, so seeds 908/909 were not run.
+  - Candidate summary
+    `model_actor_waypoint_lowx130_candidate_summary.out:1-10` records the final
+    screen verdict: reject highx100, keep gain045 as non-canonical candidate,
+    stop gain050 after mixed pilot, canonical checkpoint/setup remains
+    `model_actor_waypoint_lowx130.pt` with gain `0.040`.

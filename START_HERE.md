@@ -314,7 +314,11 @@ Do **not** use `HANDOFF.md` or `TASKS.md` as current state.
   low-motion `0.125976562`, success `0.506835938`. This is now a 3x1024
   teacher-off learned-policy gate PASS using waypoint observations, but still
   not 10k/100k robustness, not dataset readiness, and not Track A/PPO/VLA
-  final success.
+  final success. Follow-up candidate screen showed high_x actor scale `1.0`
+  fails 128 bucket, gain `0.045` is a 3x1024 PASS non-canonical deployment
+  candidate with only modest/mixed improvement, and gain `0.050` is mixed
+  after a seed907 pilot; canonical remains `model_actor_waypoint_lowx130.pt`
+  with gain `0.040`.
 - Track A goal: first make the sim/Isaac Lab contact primitive reliable, then
   move toward broad sim/lab dataset collection and learning.
 - Dataset generation and training are blocked until close_26 proxy audit PASS,

@@ -1,0 +1,14 @@
+aggregate line1 source=seed907,seed908,seed909 checkpoint=model_actor_waypoint_lowx130.pt teacher_off=YES first_episode_only=YES total_rows=3072
+aggregate line2 overall n=3072 controlled=0.923828125 impact=0.000000000 low_motion=0.116536458 success=0.513997396 disp_along_mean_m=0.022861406
+aggregate line3 seed=907 n=1024 controlled=0.924804688 impact=0.000000000 low_motion=0.109375000 success=0.511718750 disp_along_mean_m=0.022984335
+aggregate line3 seed=908 n=1024 controlled=0.925781250 impact=0.000000000 low_motion=0.114257812 success=0.523437500 disp_along_mean_m=0.023150742
+aggregate line3 seed=909 n=1024 controlled=0.920898438 impact=0.000000000 low_motion=0.125976562 success=0.506835938 disp_along_mean_m=0.022449142
+aggregate line4 direction=(-1, 0) n=758 controlled=0.931398417 impact=0.000000000 low_motion=0.098944591 success=0.418205805 disp_along_mean_m=0.019716111
+aggregate line5 direction=(0, -1) n=785 controlled=0.814012739 impact=0.000000000 low_motion=0.268789809 success=0.536305732 disp_along_mean_m=0.019642563
+aggregate line6 direction=(0, 1) n=773 controlled=1.000000000 impact=0.000000000 low_motion=0.000000000 success=0.813712807 disp_along_mean_m=0.029752588
+aggregate line7 direction=(1, 0) n=756 controlled=0.952380952 impact=0.000000000 low_motion=0.095238095 success=0.280423280 disp_along_mean_m=0.022311198
+aggregate line8 direction=(1,0) bucket=low_x n=272 controlled=0.867647059 impact=0.000000000 low_motion=0.257352941 success=0.408088235 disp_along_mean_m=0.018210773
+aggregate line9 direction=(1,0) bucket=mid_x n=236 controlled=1.000000000 impact=0.000000000 low_motion=0.008474576 success=0.220338983 disp_along_mean_m=0.024170688
+aggregate line10 direction=(1,0) bucket=high_x n=248 controlled=1.000000000 impact=0.000000000 low_motion=0.000000000 success=0.197580645 disp_along_mean_m=0.025038923
+aggregate line11 weakest_posx_bucket_by_success=high_x success=0.197580645 low_motion=0.000000000 controlled=1.000000000
+aggregate line12 next_gate_recommendation=do_not_run_10k_until_explicit_approval; first_analyze_or_improve_mid_high_posx_success

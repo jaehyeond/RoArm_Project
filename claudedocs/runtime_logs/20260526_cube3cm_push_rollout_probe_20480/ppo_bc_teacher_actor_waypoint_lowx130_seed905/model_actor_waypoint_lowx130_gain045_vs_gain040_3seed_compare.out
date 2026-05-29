@@ -1,0 +1,12 @@
+compare line1 source_seeds=907,908,909 checkpoint=model_actor_waypoint_lowx130.pt rows_each=3072
+compare line2 group=overall gain040 n=3072 controlled=0.923828125 impact=0.000000000 low_motion=0.116536458 success=0.513997396 disp=0.022861406
+compare line3 group=overall gain045 n=3072 controlled=0.932942708 impact=0.000000000 low_motion=0.106770833 success=0.519205729 disp=0.023068219 delta_success=0.005208333 delta_disp=0.000206813 delta_low_motion=-0.009765625
+compare line4 group=dir_posx gain040 n=756 controlled=0.952380952 impact=0.000000000 low_motion=0.095238095 success=0.280423280 disp=0.022311198
+compare line5 group=dir_posx gain045 n=756 controlled=0.957671958 impact=0.000000000 low_motion=0.095238095 success=0.305555556 disp=0.022573172 delta_success=0.025132275 delta_disp=0.000261974 delta_low_motion=0.000000000
+compare line6 group=low_x gain040 n=272 controlled=0.867647059 impact=0.000000000 low_motion=0.257352941 success=0.408088235 disp=0.018210773
+compare line7 group=low_x gain045 n=272 controlled=0.882352941 impact=0.000000000 low_motion=0.257352941 success=0.408088235 disp=0.018429063 delta_success=0.000000000 delta_disp=0.000218291 delta_low_motion=0.000000000
+compare line8 group=mid_x gain040 n=236 controlled=1.000000000 impact=0.000000000 low_motion=0.008474576 success=0.220338983 disp=0.024170688
+compare line9 group=mid_x gain045 n=236 controlled=1.000000000 impact=0.000000000 low_motion=0.008474576 success=0.300847458 disp=0.024653096 delta_success=0.080508475 delta_disp=0.000482407 delta_low_motion=0.000000000
+compare line10 group=high_x gain040 n=248 controlled=1.000000000 impact=0.000000000 low_motion=0.000000000 success=0.197580645 disp=0.025038923
+compare line11 group=high_x gain045 n=248 controlled=1.000000000 impact=0.000000000 low_motion=0.000000000 success=0.197580645 disp=0.025139040 delta_success=0.000000000 delta_disp=0.000100117 delta_low_motion=0.000000000
+compare line12 verdict=gain045_passes_3x1024_but_not_clear_upgrade; improves_mid_x_and_overall_slightly; high_x_not_improved

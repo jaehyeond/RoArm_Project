@@ -5802,3 +5802,59 @@ Sources:
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_lowx130_seed905/model_actor_waypoint_lowx130_teacheroff_eval1024_seed908_firstonly_bucket.out:1-10`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_lowx130_seed905/model_actor_waypoint_lowx130_teacheroff_eval1024_seed909_firstonly_audit.out:1-5`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_lowx130_seed905/model_actor_waypoint_lowx130_teacheroff_eval1024_seed909_firstonly_bucket.out:1-10`
+
+## D114 - High-x actor retune rejected; gain 0.045 is a non-canonical candidate
+
+Date: 2026-05-29
+
+Decision:
+
+- Do not replace `model_actor_waypoint_lowx130.pt` with the high_x scale `1.0`
+  actor candidate. It passed one-step distillation metrics but failed the
+  teacher-off 128 posx bucket gate.
+- The same checkpoint with deployment gain `action_scale=0.045`,
+  `max_joint_delta_per_step_rad=0.045`, and
+  `joint_target_lead_limit_rad=0.0675` passed seed911 128 and seeds 907/908/909
+  1024 overall/per-bucket gates.
+- However, gain `0.045` is not a clear canonical replacement: it improves
+  mid_x and overall success slightly, leaves high_x unchanged, and is a control
+  gain change rather than a new learned actor.
+- Keep canonical status on `model_actor_waypoint_lowx130.pt` with the previously
+  verified gain `0.040`, and treat gain `0.045` as a valid non-canonical
+  deployment candidate.
+
+Evidence:
+
+- Three-seed canonical aggregate showed remaining posx failures are displacement
+  limited: all low_x/mid_x/high_x fail cases have `disp_lt_0p030=1.000000000`
+  and no target-distance/speed failure.
+- High_x scale `1.0` actor wrote checkpoint md5
+  `12c98baec7deb17a96dd38fdb22b9a42`, with validation MSE
+  `0.048445213586091995 -> 0.0002650115347933024`, but teacher-off 128 seed911
+  bucket failed: low_x success `0.166666667`, high_x success `0`.
+- Gain `0.045` passed teacher-off 128 seed911 and 1024 seeds 907/908/909
+  overall/per-bucket. Across 3072 1024 trials, it changed overall success
+  `0.513997396 -> 0.519205729`, posx success
+  `0.280423280 -> 0.305555556`, mid_x success
+  `0.220338983 -> 0.300847458`, and high_x success
+  `0.197580645 -> 0.197580645`.
+- Gain `0.050` passed seed911 128 and a seed907 1024 pilot, but was mixed and
+  not continued.
+
+Implication:
+
+- Do not run 10k/100k, dataset generation, PPO scale-up, or Track A runtime
+  from any of these candidates without explicit approval.
+- Next useful work is either a stricter approved robustness audit of the
+  canonical setup, or a targeted actor/observation redesign specifically for
+  displacement-limited high_x without degrading low_x.
+
+Sources:
+
+- `claudedocs/session_20260529_cube3cm_waypoint_actor_gate.md`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_lowx130_seed905/model_actor_waypoint_lowx130_teacheroff_eval1024_3seed_aggregate.out:1-14`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_lowx130_seed905/model_actor_waypoint_lowx130_teacheroff_eval1024_3seed_failure_modes.out:1-13`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_highx100_seed910/actor_waypoint_highx100_metrics.json:1-45`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_highx100_seed910/model_actor_waypoint_highx100_teacheroff_eval128_seed911_firstonly_bucket.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_lowx130_seed905/model_actor_waypoint_lowx130_gain045_vs_gain040_3seed_compare.out:1-12`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_lowx130_seed905/model_actor_waypoint_lowx130_candidate_summary.out:1-10`
