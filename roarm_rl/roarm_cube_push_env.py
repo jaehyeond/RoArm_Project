@@ -91,6 +91,11 @@ class RoArmCubePushEnvCfg(RoArmStackEnvCfg):
     cube_x_max: float = 0.360
     cube_y_min: float = -0.125
     cube_y_max: float = 0.125
+    cube_size_x_m: float = CUBE_SIZE_M
+    cube_size_y_m: float = CUBE_SIZE_M
+    cube_size_z_m: float = CUBE_SIZE_M
+    fixed_push_dir_x: float = math.nan
+    fixed_push_dir_y: float = math.nan
     cube_push_target_disp_m: float = 0.040
     cube_success_disp_m: float = 0.030
     cube_success_target_tol_m: float = 0.050
@@ -146,6 +151,8 @@ class RoArmCubePushEnvCfg(RoArmStackEnvCfg):
     bc_teacher_lowx_approach_steps: int = 300
     bc_teacher_lowx_push_steps: int = 220
     bc_teacher_lowx_post_steps: int = 60
+    bc_teacher_midx_push_through_m: float = -1.0
+    bc_teacher_highx_push_through_m: float = -1.0
     bc_teacher_phase_timing: str = "episode_scaled"
 
     push_progress_reward_scale: float = 60.0
@@ -290,11 +297,16 @@ class RoArmCubePushEnv(RoArmStackEnv):
         q_out = np.tile(home_deg, (cube_np.shape[0], 1))
         ok = np.zeros(cube_np.shape[0], dtype=bool)
         err_mm_out = np.full(cube_np.shape[0], np.inf, dtype=np.float64)
-        half_xy = 0.5 * CUBE_SIZE_M
+        half_xy = np.asarray(
+            [float(self.cfg.cube_size_x_m) * 0.5, float(self.cfg.cube_size_y_m) * 0.5],
+            dtype=np.float64,
+        )
+        half_z = float(self.cfg.cube_size_z_m) * 0.5
         for idx in range(cube_np.shape[0]):
             tcp_target = cube_np[idx].copy()
-            tcp_target[:2] -= dir_np[idx] * (half_xy + float(self.cfg.ik_precontact_clearance_m))
-            tcp_target[2] = cube_np[idx, 2] + half_xy + float(self.cfg.ik_tcp_top_margin_m)
+            half_along = float(np.sum(np.abs(dir_np[idx, :2]) * half_xy))
+            tcp_target[:2] -= dir_np[idx] * (half_along + float(self.cfg.ik_precontact_clearance_m))
+            tcp_target[2] = cube_np[idx, 2] + half_z + float(self.cfg.ik_tcp_top_margin_m)
             q_deg, converged, err_mm, _iters = ik_dls(
                 tcp_target,
                 home_deg,
@@ -324,11 +336,16 @@ class RoArmCubePushEnv(RoArmStackEnv):
         seed_deg = np.degrees(seed_rad.detach().cpu().numpy().astype(np.float64))
         q_out = seed_deg.copy()
         ok = np.zeros(cube_np.shape[0], dtype=bool)
-        half_xy = 0.5 * CUBE_SIZE_M
+        half_xy = np.asarray(
+            [float(self.cfg.cube_size_x_m) * 0.5, float(self.cfg.cube_size_y_m) * 0.5],
+            dtype=np.float64,
+        )
+        half_z = float(self.cfg.cube_size_z_m) * 0.5
         for idx in range(cube_np.shape[0]):
             tcp_target = cube_np[idx].copy()
-            tcp_target[:2] += dir_np[idx] * (half_xy + float(self.cfg.scripted_teacher_goal_push_m))
-            tcp_target[2] = cube_np[idx, 2] + half_xy + float(self.cfg.ik_tcp_top_margin_m)
+            half_along = float(np.sum(np.abs(dir_np[idx, :2]) * half_xy))
+            tcp_target[:2] += dir_np[idx] * (half_along + float(self.cfg.scripted_teacher_goal_push_m))
+            tcp_target[2] = cube_np[idx, 2] + half_z + float(self.cfg.ik_tcp_top_margin_m)
             q_deg, converged, _err_mm, _iters = ik_dls(
                 tcp_target,
                 seed_deg[idx],
@@ -353,6 +370,7 @@ class RoArmCubePushEnv(RoArmStackEnv):
         edge0 = float(self.cfg.bc_teacher_x_bucket_edge0_m)
         edge1 = float(self.cfg.bc_teacher_x_bucket_edge1_m)
         posx_low_bucket = posx & (cube_x_local < edge0)
+        posx_mid_bucket = posx & (cube_x_local >= edge0) & (cube_x_local < edge1)
         posx_high_bucket = posx & (cube_x_local >= edge1)
         lowx = posx & (cube_x_local <= float(self.cfg.bc_teacher_lowx_threshold_m))
         n = self.num_envs
@@ -374,9 +392,14 @@ class RoArmCubePushEnv(RoArmStackEnv):
         precontact[lowx] = float(self.cfg.bc_teacher_lowx_precontact_clearance_m)
         push_through[lowx] = float(self.cfg.bc_teacher_lowx_push_through_m)
         tcp_top_margin[lowx] = float(self.cfg.bc_teacher_lowx_tcp_top_margin_m)
+        if float(self.cfg.bc_teacher_midx_push_through_m) >= 0.0:
+            push_through[posx_mid_bucket] = float(self.cfg.bc_teacher_midx_push_through_m)
+        if float(self.cfg.bc_teacher_highx_push_through_m) >= 0.0:
+            push_through[posx_high_bucket] = float(self.cfg.bc_teacher_highx_push_through_m)
         return {
             "posx": posx,
             "posx_low_bucket": posx_low_bucket,
+            "posx_mid_bucket": posx_mid_bucket,
             "posx_high_bucket": posx_high_bucket,
             "lowx": lowx,
             "approach_steps": approach_steps,
@@ -404,14 +427,20 @@ class RoArmCubePushEnv(RoArmStackEnv):
         return torch.clamp(alpha, min=0.0, max=1.0)
 
     def _bc_teacher_tcp_target(self, alpha: torch.Tensor, traj: dict[str, torch.Tensor]) -> torch.Tensor:
-        half = 0.5 * float(CUBE_SIZE_M)
+        half_xy = torch.tensor(
+            (float(self.cfg.cube_size_x_m) * 0.5, float(self.cfg.cube_size_y_m) * 0.5),
+            device=self.device,
+            dtype=torch.float32,
+        )
+        half_z = float(self.cfg.cube_size_z_m) * 0.5
         cube = self._cube_start_w
         push_dir = self._push_dir_xy
+        half_along = torch.sum(torch.abs(push_dir) * half_xy.unsqueeze(0), dim=-1)
         pre = cube.clone()
         through = cube.clone()
-        z = cube[:, 2] + half + traj["tcp_top_margin"]
-        pre[:, 0:2] = cube[:, 0:2] - push_dir * (half + traj["precontact"]).unsqueeze(-1)
-        through[:, 0:2] = cube[:, 0:2] + push_dir * (half + traj["push_through"]).unsqueeze(-1)
+        z = cube[:, 2] + half_z + traj["tcp_top_margin"]
+        pre[:, 0:2] = cube[:, 0:2] - push_dir * (half_along + traj["precontact"]).unsqueeze(-1)
+        through[:, 0:2] = cube[:, 0:2] + push_dir * (half_along + traj["push_through"]).unsqueeze(-1)
         pre[:, 2] = z
         through[:, 2] = z
         return pre + alpha.unsqueeze(-1) * (through - pre)
@@ -596,15 +625,27 @@ class RoArmCubePushEnv(RoArmStackEnv):
 
         sx = sample_uniform(self.cfg.cube_x_min, self.cfg.cube_x_max, (n,), self.device)
         sy = sample_uniform(self.cfg.cube_y_min, self.cfg.cube_y_max, (n,), self.device)
-        sz = torch.full((n,), CUBE_CENTER_Z, device=self.device)
+        cube_center_z = TABLE_Z + 0.5 * float(self.cfg.cube_size_z_m)
+        sz = torch.full((n,), cube_center_z, device=self.device)
 
         dirs = torch.tensor(
             ((1.0, 0.0), (-1.0, 0.0), (0.0, 1.0), (0.0, -1.0)),
             device=self.device,
             dtype=torch.float32,
         )
-        dir_idx = torch.randint(0, 4, (n,), device=self.device)
-        push_dir = dirs[dir_idx]
+        if math.isfinite(float(self.cfg.fixed_push_dir_x)) and math.isfinite(float(self.cfg.fixed_push_dir_y)):
+            fixed_dir = torch.tensor(
+                [float(self.cfg.fixed_push_dir_x), float(self.cfg.fixed_push_dir_y)],
+                device=self.device,
+                dtype=torch.float32,
+            )
+            fixed_norm = torch.linalg.norm(fixed_dir)
+            if float(fixed_norm.detach().cpu().item()) <= 1.0e-6:
+                raise ValueError("fixed push direction must be nonzero")
+            push_dir = fixed_dir.unsqueeze(0).repeat(n, 1) / fixed_norm
+        else:
+            dir_idx = torch.randint(0, 4, (n,), device=self.device)
+            push_dir = dirs[dir_idx]
 
         cube_local = torch.stack([sx, sy, sz], dim=-1)
         if self.cfg.ik_endpoint_reset:

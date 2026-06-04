@@ -1,0 +1,30 @@
+trace_analysis line1 source_summary=claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_lowx130_seed905/diagnostic_trace_seed911/actor_trace_summary.json traced_envs=128 step_rows=3016 teacher_off=YES teacher_sidecar=COMPARE_ONLY
+trace_analysis line2 action_error mean_action_mse=0.031466590 mean_arm_mse=0.037759909 mean_action_mae=0.110665651 mean_action_cos=0.867153628
+trace_analysis line3 scale actor_abs=0.282554212 teacher_abs=0.340359867 effective_abs=0.282545817 effective_vs_actor_mse=0.000000000 joint_move_abs=0.001371683
+trace_analysis line4 rollout controlled=0.921875000 impact=0.000000000 low_motion=0.085937500 success=0.562500000 disp_along_mean_m=0.023903901 contact_reached=1.000000000
+trace_analysis phase approach_or_alpha0 samples=30480 mean_action_mse=0.025259870 mean_arm_mse=0.030311843
+trace_analysis phase push_alpha01 samples=14451 mean_action_mse=0.033889230 mean_arm_mse=0.040667075
+trace_analysis phase post_alpha1 samples=14754 mean_action_mse=0.052431875 mean_arm_mse=0.062918250
+trace_analysis group low_x n=12 controlled=0.833333333 low_motion=0.333333333 success=0.166666667 action_mse=0.033018774 actor_abs=0.317642309 teacher_abs=0.344114194 disp_along_m=0.014287824
+trace_analysis group mid_x n=11 controlled=1.000000000 low_motion=0.000000000 success=0.090909091 action_mse=0.032909510 actor_abs=0.248146027 teacher_abs=0.268805748 disp_along_m=0.023804545
+trace_analysis group high_x n=6 controlled=1.000000000 low_motion=0.000000000 success=0.833333333 action_mse=0.024491948 actor_abs=0.194109738 teacher_abs=0.216485821 disp_along_m=0.029833396
+trace_analysis group not_posx n=99 controlled=0.919191919 low_motion=0.070707071 success=0.646464646 action_mse=0.031540828 actor_abs=0.287484512 teacher_abs=0.355362773 disp_along_m=0.024721162
+trace_analysis group dir_-1_0 n=41 controlled=0.902439024 low_motion=0.073170732 success=0.536585366 action_mse=0.046298650 actor_abs=0.285313331 teacher_abs=0.372608234 disp_along_m=0.021194182
+trace_analysis group dir_0_-1 n=19 controlled=0.789473684 low_motion=0.210526316 success=0.631578947 action_mse=0.029253215 actor_abs=0.261447158 teacher_abs=0.334738400 disp_along_m=0.022142842
+trace_analysis group dir_0_1 n=39 controlled=1.000000000 low_motion=0.000000000 success=0.769230769 action_mse=0.017140672 actor_abs=0.302451900 teacher_abs=0.347280701 disp_along_m=0.029685117
+trace_analysis group dir_1_0 n=29 controlled=0.931034483 low_motion=0.137931034 success=0.275862069 action_mse=0.031213158 actor_abs=0.265723187 teacher_abs=0.289143051 disp_along_m=0.021113940
+trace_analysis stepbin 0_99 rows=640 action_mse=0.049280074 arm_mse=0.059136087 actor_abs=0.473371419 teacher_abs=0.493770143 cos=0.946627584 eff_vs_actor=0.000000002 disp_along=-0.000001227
+trace_analysis stepbin 100_219 rows=768 action_mse=0.024244153 arm_mse=0.029092984 actor_abs=0.172532172 teacher_abs=0.209514844 cos=0.779977409 eff_vs_actor=0.000000000 disp_along=-0.002053980
+trace_analysis stepbin 220_349 rows=790 action_mse=0.030421159 arm_mse=0.036505391 actor_abs=0.263100225 teacher_abs=0.315273489 cos=0.849137284 eff_vs_actor=0.000000000 disp_along=0.004126660
+trace_analysis stepbin 350_599 rows=818 action_mse=0.052261876 arm_mse=0.062714251 actor_abs=0.290683543 teacher_abs=0.390825147 cos=0.860636390 eff_vs_actor=0.000000000 disp_along=0.012607819
+trace_analysis contact contact_yes n=128 controlled=0.921875000 low_motion=0.085937500 success=0.562500000 disp_along=0.023903901 action_mse=0.031466590
+trace_analysis contact contact_no n=0 controlled=0.000000000 low_motion=0.000000000 success=0.000000000 disp_along=0.000000000 action_mse=0.000000000
+trace_analysis joint_abs_mean actor_a=0.269511,0.512565,0.446980,0.428911,0.094828,0.000037
+trace_analysis joint_abs_mean teacher_a=0.358462,0.516232,0.583455,0.525058,0.097061,0.000000
+trace_analysis joint_abs_mean effective_a=0.269511,0.512565,0.446980,0.428911,0.094828,0.000000
+trace_analysis joint0 signed actor=-0.003251236 teacher=-0.025161519 effective=-0.003251234 mse=0.040050038
+trace_analysis joint1 signed actor=0.449326118 teacher=0.372846433 effective=0.449326109 mse=0.101571256
+trace_analysis joint2 signed actor=0.242204489 teacher=0.231413691 effective=0.242204448 mse=0.055069430
+trace_analysis joint3 signed actor=0.120354910 teacher=0.126483064 effective=0.120354913 mse=0.034640998
+trace_analysis joint4 signed actor=-0.074324597 teacher=-0.067029100 effective=-0.074324596 mse=0.001310885
+trace_analysis joint5 signed actor=0.000005244 teacher=0.000000000 effective=0.000000000 mse=0.000000003

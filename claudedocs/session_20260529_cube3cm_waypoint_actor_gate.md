@@ -253,3 +253,43 @@
     screen verdict: reject highx100, keep gain045 as non-canonical candidate,
     stop gain050 after mixed pilot, canonical checkpoint/setup remains
     `model_actor_waypoint_lowx130.pt` with gain `0.040`.
+
+## Sharded 10k Gate
+
+- After explicit approval, attempted a single-stage 10240-env teacher-off
+  first-episode audit with canonical gain `0.040`.
+  - It failed before policy rollout during IsaacLab environment creation, not
+    during learned-policy execution.
+  - stderr `model_actor_waypoint_lowx130_teacheroff_eval10240_seed912_firstonly_stderr.out:1-26`
+    shows `Stage.GetPrimAtPath(Stage, NoneType)` from ground-plane setup.
+  - The summary/CSV for the single-stage run were not produced.
+- Fallback audit used ten independent 1024-env first-episode shards, seeds
+  912-921, still teacher-off and still canonical gain `0.040`.
+  - driver `model_actor_waypoint_lowx130_teacheroff_10kshards_seed912_921_driver.out:1-20`
+    shows all ten shards started and completed.
+  - every shard CSV has 1025 lines, i.e. header + 1024 rows.
+  - combined CSV
+    `model_actor_waypoint_lowx130_teacheroff_eval10240_sharded_seed912_921_firstonly.csv`
+    has 10241 lines, i.e. header + 10240 rows.
+  - summary `model_actor_waypoint_lowx130_teacheroff_eval10240_sharded_seed912_921_firstonly_summary.json:1-77`
+    records `sharded_10k=true`, seeds 912-921, `bc_teacher_blend=0.0`,
+    `policy_obs_target_mode=bc_teacher_tcp_target`, `training=false`,
+    `dataset_generation=false`, and `trials=10240`.
+- Aggregate sharded 10k result:
+  - audit `model_actor_waypoint_lowx130_teacheroff_eval10240_sharded_seed912_921_firstonly_audit.out:1-5`
+    PASS mechanism with controlled `0.927148437`, impact `0.000097656`,
+    low-motion `0.106054687`, success `0.524902344`.
+  - bucket `model_actor_waypoint_lowx130_teacheroff_eval10240_sharded_seed912_921_firstonly_bucket.out:1-10`
+    PASS_POSX_BUCKET_SCREEN: low_x success `0.406947891`, mid_x success
+    `0.183497537`, high_x success `0.213625866`, all posx impact `0`.
+  - every individual shard bucket audit PASSed; see
+    `model_actor_waypoint_lowx130_teacheroff_eval1024_seed*_10kshard_firstonly_bucket.out:10`.
+- Caveat:
+  - The sharded 10k gate is strong teacher-off learned-policy robustness evidence,
+    but not a single-stage 10240-env result.
+  - The current bucket audit does not require mid_x success above a threshold;
+    mid_x remains weak at `0.183497537`.
+  - Failure-mode audit
+    `model_actor_waypoint_lowx130_teacheroff_eval10240_sharded_seed912_921_failure_modes.out:1-13`
+    confirms posx failures remain displacement-limited: failed low_x/mid_x/high_x
+    cases all have `disp_lt_0p030=1.000000000`.

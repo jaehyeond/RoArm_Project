@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-05-29 KST (B200 disconnected; Track A v6/v7 close_26 FAIL; first approved v8 close_26 runtime also FAIL; post-fail v8 virtual-damping wiring fix is static-ready only; no post-fix v8 runtime has run; professor cube3cm push/tap scripted rollout, DiffIK v3 10,240-trial audit, and real-RoArm replay video complete; professor cube3cm teacher-filtered state-action dataset v2 and BC joint-delta learned rollout PASS at 1024 envs; v3.2 teacher sweep did not find a robust low-x fix; bucket-balanced dataset v3 + BC v2 improved learned rollout success but failed per-bucket impact gate; safety-aware BC v3 + bucket action scaling passed two 1024 frozen per-bucket audits on seeds 883/884 with lower impact but low_x low-motion caveat; small safety-aware PPO warm-start smoke connected local GPU PPO but teacher-off model_11 failed frozen 1024; 2026-05-29 bridge redesign made teacher-on 128 recover under direct-step/joint-pos action loop, but model_11 and smoke8 model_7 stayed teacher-off zero-motion at 128; direct rsl_rl actor distillation initially failed teacher-off 128, but waypoint-observation + on-policy actor distillation with low_x label scale 1.3 passed teacher-off 128 seed906 and three teacher-off 1024 first-episode overall/per-bucket gates on seeds 907/908/909; no 10k/100k learned robustness, dataset generation, Track A runtime, or PPO/RL/VLA final-success claim has been run/approved from it yet)
+Last updated: 2026-06-04 KST (B200 disconnected; Track A v6/v7 close_26 FAIL; first approved v8 close_26 runtime also FAIL; post-fail v8 virtual-damping wiring fix is static-ready only; no post-fix v8 runtime has run; professor cube3cm push/tap scripted rollout, DiffIK v3 10,240-trial audit, and real-RoArm replay video complete; professor cube3cm teacher-filtered state-action dataset v2 and BC joint-delta learned rollout PASS at 1024 envs; v3.2 teacher sweep did not find a robust low-x fix; bucket-balanced dataset v3 + BC v2 improved learned rollout success but failed per-bucket impact gate; safety-aware BC v3 + bucket action scaling passed two 1024 frozen per-bucket audits on seeds 883/884 with lower impact but low_x low-motion caveat; small safety-aware PPO warm-start smoke connected local GPU PPO but teacher-off model_11 failed frozen 1024; 2026-05-29 bridge redesign made teacher-on 128 recover under direct-step/joint-pos action loop, but model_11 and smoke8 model_7 stayed teacher-off zero-motion at 128; direct rsl_rl actor distillation initially failed teacher-off 128, but waypoint-observation + on-policy actor distillation with low_x label scale 1.3 passed teacher-off 128 seed906, three teacher-off 1024 first-episode gates on seeds 907/908/909, and an approved sharded 10,240-row teacher-off first-episode robustness gate on seeds 912-921; 2026-06-02 review reframed professor push/tap evaluation away from only the strict 3cm success marker toward 1/5/10/20/30mm displacement tiers, disp/object_size, controlled, and no-impact reporting; weighted mid/high actor candidate was rejected at 128 and target-extension probe improved mid/high only locally; 2026-06-04 local-only audit update now emits the hierarchical sharded-10k bucket table with cube size, mass, density, no-impact, disp/object_size, and displacement-only 1/5/10/20/30mm columns; 2026-06-04 DiffIK probe prep parameterized the professor branch for explicit 10cm/0.72kg object diagnostics and 1cm gate reporting; the approved local GPU tiny 128 10cm/0.72kg v1 DiffIK gate failed with `disp_ge_gate_rate=0.0`, `low_motion_rate=1.0`, and mean final TCP target error `0.151348973m`; post-fail code review found reset z still used the 3cm `CUBE_CENTER_Z`, then a static default-preserving patch added object-size-aware reset fields, fixed position/direction options, side-center TCP height mode, and reset-height logging; no post-patch GPU runtime has run; no dataset generation, Track A runtime, PPO scale-up, VLA final-success, or larger candidate audit is approved from those probes)
 
 This is the rolling current-state dashboard. It is not full history. Durable
 rules live in `claudedocs/DECISIONS.md`; experiment history lives in
@@ -318,7 +318,69 @@ Do **not** use `HANDOFF.md` or `TASKS.md` as current state.
   fails 128 bucket, gain `0.045` is a 3x1024 PASS non-canonical deployment
   candidate with only modest/mixed improvement, and gain `0.050` is mixed
   after a seed907 pilot; canonical remains `model_actor_waypoint_lowx130.pt`
-  with gain `0.040`.
+  with gain `0.040`. After explicit approval, a single-stage 10240-env audit
+  failed during IsaacLab env creation before policy rollout, so it is not a
+  policy failure. The fallback 10x1024 sharded first-episode teacher-off audit
+  on seeds 912-921 produced 10,240 rows and PASSed mechanism and posx bucket
+  gates: controlled `0.927148437`, impact `0.000097656`, low-motion
+	  `0.106054687`, success `0.524902344`; low_x success `0.406947891`, mid_x
+	  success `0.183497537`, high_x success `0.213625866`. This supports a
+	  sharded 10k teacher-off robust learned-policy gate PASS, but still not
+	  dataset readiness, not Track A evidence, and not PPO/RL/VLA final success.
+- **Professor cube-push metric reframe and target-extension probe (2026-06-02)**:
+  code/log review shows the old `success_marker` is a strict task marker, not the
+  only professor-relevant push/tap metric. In code, the cube is fixed at
+  `CUBE_SIZE_M=0.030` and mass `0.020kg`; env success requires controlled push,
+  no impact, `disp_along >= 0.030m`, target-distance tolerance, and speed cap.
+  The sharded 10k threshold analysis shows the canonical actor is much stronger
+  at stable smaller pushes than the 3cm marker alone suggests: for direction
+  `(1,0)`, `disp_ge_5mm=0.906199678`, `disp_ge_10mm=0.842592593`,
+  `disp_ge_20mm=0.770531401`, but `disp_ge_30mm=0.266505636`. Posx buckets show
+  mid/high are near-perfect at 10mm and strong at 20mm, then fall sharply at
+  30mm. Therefore report professor push/tap evidence as `1/5/10/20/30mm`,
+  `disp/object_size`, controlled, no-impact, and low-motion, not as 3cm success
+  alone. Added default-preserving code knobs for weighted actor distillation and
+  mid/high BC teacher push-through overrides. The weighted mid/high actor
+  candidate passed one-step fit but failed the 128 posx bucket screen
+  (`low_x=0.083333333`, `mid_x=0.090909091`, `high_x=0.833333333`) and is
+  rejected. The target-extension probe on the canonical checkpoint improved
+  same-seed mid_x/high_x (`mid_x=0.272727273`, `high_x=1.000000000`) but still
+  failed due low_x (`0.166666667`), so do not scale it. Before changing cube
+  size, define whether `10*10*10` means mm or cm and whether mass is measured,
+  density-preserving, or deliberately fixed as a diagnostic. A 2026-06-04
+  local-only update to `sim_scripts/cube3cm_push_diffik_bucket_audit.py` now emits
+  the hierarchical report directly. The generated sharded-10k report logs
+  `cube_size_m=0.030000`, `cube_mass_kg=0.020000`, density `740.741kg/m^3`,
+  no-impact, `disp/object_size`, and displacement-only 1/5/10/20/30mm columns
+  in
+  `model_actor_waypoint_lowx130_teacheroff_eval10240_sharded_seed912_921_hierarchical_bucket.out`.
+  Overall `disp/object_size_mean=0.775020338`; forward `(1,0)` reports
+  `disp/object_size_mean=0.743007598`, 5mm `0.906199678`, 10mm `0.842592593`,
+  20mm `0.770531401`, and 30mm `0.266505636`.
+- **Professor cube10cm DiffIK gate prep (2026-06-04)**: the next professor
+  request is interpreted as a separate 10cm/0.72kg object push/tap diagnostic,
+  not as Track A and not as a requirement to push a full 10cm object length.
+  Updated `sim_scripts/cube3cm_push_diffik_probe.py` to keep default 3cm behavior
+  while accepting `--cube_size_m`, `--cube_mass_kg`, `--cube_push_target_disp_m`,
+  `--cube_success_disp_m`, and `--gate_disp_m`. The probe now logs cube size,
+  mass, density, object-size reference, target/success/gate displacement, uses
+  the configured object size for TCP precontact/through geometry, and reports
+  `disp/object_size` plus 1/5/10/20/30mm rates. Local-only checks passed:
+  `py_compile`, `--help`, and `git diff --check`. After explicit approval, the
+  first local GPU 128-env gate ran with 10cm cube, `0.720kg`,
+  `cube_push_target_disp_m=0.010`, `cube_success_disp_m=0.010`, and
+  `gate_disp_m=0.010`. It FAILED: summary lines 11-25 report controlled
+  `0.1875`, `disp_along_push_mean_m=-0.0001524518520454876`, and
+  `disp_ge_gate_rate=0.0`; lines 41-52 report final TCP target error mean
+	  `0.15134897292591631m`, low-motion `1.0`, and min TCP-cube distance mean
+	  `0.13646007765782997m`. Do not scale this v1 10cm/0.72kg diagnostic; next work
+	  is small geometry/control diagnosis and another tiny gate only after approval.
+  Post-fail code review found that env reset still used 3cm `CUBE_CENTER_Z`.
+  Static patch now makes reset z object-size-aware, adds fixed x/y and fixed push
+  direction options, adds `tcp_height_mode=side_center`, and logs
+  `table_z_m`/`cube_center_z_m`/`cube_z0_m`. Static checks passed
+  (`py_compile`, `--help`, `git diff --check`), but no post-patch GPU runtime has
+  run. Next valid runtime is a fixed easy geometry gate, not randomized 128/1024.
 - Track A goal: first make the sim/Isaac Lab contact primitive reliable, then
   move toward broad sim/lab dataset collection and learning.
 - Dataset generation and training are blocked until close_26 proxy audit PASS,
@@ -652,17 +714,31 @@ Interpretation:
 ## Current Direction
 
 1. Do not rerun v2, v3, v4, v5, v6, or v7 unchanged.
-2. For the professor's immediate branch, brief the 20,480-trial push/tap rollout
-   as scripted physics statistics and robot-action logging. Separate no-attach
-   cube-push PPO now exists and has run through IK/clean/speed-guard 50-iter
-   variants plus frozen 1k evals, but learned-policy impact is still about
-   28-29%; do not scale to 10k/100k yet.
-3. Do not run Track A dataset generation, PPO/training, rollout, hold-lift,
+2. For the professor's immediate cube3cm push/tap branch, keep it separate from
+   Track A grasp/dataset/training. The canonical waypoint actor
+   `model_actor_waypoint_lowx130.pt` at gain `0.040` has a sharded 10k
+   teacher-off first-episode robustness gate PASS, but it is not dataset-ready,
+   not Track A evidence, and not PPO/RL/VLA final success.
+3. The professor-branch metric cleanup is implemented in the bucket audit/report:
+   use the hierarchical sharded-10k output to report `1/5/10/20/30mm`,
+   `disp/object_size`, controlled, no-impact, and low-motion. Treat the old 3cm
+   `success_marker` as a strict task marker, not the sole objective.
+4. Future professor-branch code edits must start with a short code review of
+   reset, target generation, action/clipping, logging, and metrics before patching.
+5. The next professor-branch object diagnostic is now defined as a 10cm cube-like
+   object with `cube_mass_kg=0.720` and a primary 1cm gate, not a 10cm push
+   requirement. The first approved local GPU 128-env v1 DiffIK gate FAILED
+   (`disp_ge_gate_rate=0.0`, `low_motion_rate=1.0`, mean final TCP target error
+   `0.151348973m`). Post-fail code review found/fixed the 3cm reset-z mismatch
+   statically, but no post-patch GPU runtime has run. Do not scale it. The next
+   valid runtime is a fixed-position/fixed-direction side-center geometry gate
+   only after explicit approval with `sandbox_permissions=require_escalated`.
+6. Do not run Track A dataset generation, PPO/training, rollout, hold-lift,
    transport/release, constraints, SurfaceGripper, or gate tuning from this
    result.
-4. v7 active recovery is implemented and diagnostic telemetry works, but the
+7. v7 active recovery is implemented and diagnostic telemetry works, but the
    post-reboot close_26 audit FAILED. It is not grasp success.
-5. The first approved v8 runtime FAILED before recovery could trigger. Do not
+8. The first approved v8 runtime FAILED before recovery could trigger. Do not
    rerun that pre-fix v8 state. A post-fail static fix now makes v8 inherit
    virtual damping and reports `READY_FOR_SEPARATE_RUNTIME_APPROVAL=YES`, but
    this is not physics validation. The next valid Track A action is exactly one
@@ -670,12 +746,12 @@ Interpretation:
    immediately by v8 audit. In Codex, any future GPU/Isaac command still needs
    `sandbox_permissions=require_escalated` because the default sandbox hides
    `/dev/nvidia*` even though host CUDA is healthy.
-6. Runtime PASS is not enough for Track A data; next gate is hold-lift.
-7. Track A dataset/training remain blocked until close_26 PASS + hold-lift PASS + small
+9. Runtime PASS is not enough for Track A data; next gate is hold-lift.
+10. Track A dataset/training remain blocked until close_26 PASS + hold-lift PASS + small
    pilot dataset/replay PASS. Then proceed: no-attach RL env → random sanity →
    PPO smoke → expert rollout → pilot dataset → replay/audit → large dataset →
    BC/VLA/IL training.
-8. Do not plan future work around B200 SSH. Use local backups plus local/RunPod
+11. Do not plan future work around B200 SSH. Use local backups plus local/RunPod
    GPUs. Any remote compute should start by rebuilding/verifying env and smoke
    tests from backed-up artifacts.
 
@@ -683,7 +759,7 @@ Interpretation:
 
 1. `CLAUDE.md`
 2. `START_HERE.md`
-3. `claudedocs/DECISIONS.md` D083-D111
+3. `claudedocs/DECISIONS.md` D083-D119
 4. `claudedocs/EXPERIMENT_LEDGER.md` latest rows
 5. `claudedocs/session_20260522_track_a_v6_projected_guard_runtime_fail.md`
 6. `claudedocs/session_20260522_track_a_contact_rl_stage0_preflight.md`
@@ -705,16 +781,19 @@ Interpretation:
 22. `sim_scripts/p7_branch_b_cube2cm_target_guarded_v8_observed_recovery_static_design.py`
 23. `claudedocs/session_20260526_track_a_v8_runtime_candidate_static_readiness.md`
 24. `claudedocs/session_20260526_track_a_v8_runtime_fail_and_damping_wiring_fix.md`
-25. `claudedocs/session_20260529_cube3cm_waypoint_actor_gate.md`
-26. `claudedocs/session_20260529_cube3cm_actor_distillation_gate.md`
-27. `claudedocs/session_20260529_cube3cm_bc_teacher_bridge_redesign.md`
-28. `claudedocs/session_20260528_cube3cm_safety_rl_warmstart.md`
-29. `claudedocs/session_20260526_cube3cm_push_rollout_probe_professor_request.md`
-30. `sim_scripts/cube3cm_push_rollout_probe.py`
-31. `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/runtime.out`
-32. `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/rollout_stats_audit.out`
-33. `claudedocs/session_20260526_cube3cm_push_rl_reward_curriculum.md`
-34. `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_speed_guard_model49_eval1024_audit.out`
+25. `claudedocs/session_20260604_cube10cm_diffik_teacher_gate_prep.md`
+26. `claudedocs/session_20260604_cube3cm_hierarchical_bucket_audit.md`
+27. `claudedocs/session_20260602_cube3cm_push_metric_reframe_targetext.md`
+28. `claudedocs/session_20260529_cube3cm_waypoint_actor_gate.md`
+29. `claudedocs/session_20260529_cube3cm_actor_distillation_gate.md`
+30. `claudedocs/session_20260529_cube3cm_bc_teacher_bridge_redesign.md`
+31. `claudedocs/session_20260528_cube3cm_safety_rl_warmstart.md`
+32. `claudedocs/session_20260526_cube3cm_push_rollout_probe_professor_request.md`
+32. `sim_scripts/cube3cm_push_rollout_probe.py`
+33. `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/runtime.out`
+34. `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/rollout_stats_audit.out`
+35. `claudedocs/session_20260526_cube3cm_push_rl_reward_curriculum.md`
+36. `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_speed_guard_model49_eval1024_audit.out`
 
 ## Do Not Trust As Current
 
@@ -738,9 +817,15 @@ Interpretation:
   policy before teacher-off 128 and then 1024 overall/per-bucket audits pass
 - Any claim that `model_actor_distill.pt` is a successful learned policy; its
   teacher-off 128 audit failed low-motion/per-bucket gates
-- Any claim that `model_actor_waypoint_lowx130.pt` is 1024/10k robust, PPO/RL/VLA
-  success, dataset-ready, or Track A evidence; it has only passed one teacher-off
-  128 first-episode overall/per-bucket gate
+- Any claim that `model_actor_waypoint_lowx130.pt` is PPO/RL/VLA final success,
+  dataset-ready, or Track A evidence; it has a sharded 10k teacher-off learned
+  policy gate PASS for the separate professor cube3cm branch, but not those
+  broader claims
+- Any claim that the old 3cm `success_marker` is the professor push/tap objective
+  by itself. Report hierarchical displacement thresholds and `disp/object_size`
+  together with controlled/no-impact.
+- Any claim that the weighted mid/high actor candidate or the target-extension
+  probe is ready for 1024/10k scale-up; both failed the 128 posx bucket screen
 - Any Track B/OpenVLA training status as evidence for Track A contact success
 - Any claim that existing default Pick/Stack PPO envs produce Track A-valid
   no-attach contact experts

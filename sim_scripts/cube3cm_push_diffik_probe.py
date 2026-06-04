@@ -1,7 +1,7 @@
-"""IsaacLab built-in Differential IK probe for 3cm cube push/tap.
+"""IsaacLab built-in Differential IK probe for cube push/tap diagnostics.
 
 This is a professor-branch diagnostic, separate from Track A grasp. It sends
-end-effector targets near a 3cm cube, uses IsaacLab's DifferentialIKController
+end-effector targets near a configurable cube, uses IsaacLab's DifferentialIKController
 and live PhysX Jacobians to compute joint targets, and lets physics decide the
 cube motion. It is not training and not a learned-policy success claim; optional
 trace capture is only raw material for a separate dataset builder/audit.
@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import math
 import sys
 import time
 from pathlib import Path
@@ -25,6 +26,7 @@ DEFAULT_LOCAL_USD = (
     "p7_branch_b_cube2cm_opposing_jaw_v7_collision_usd_d024/roarm_m3.usd"
 )
 LOG_DIR = REPO / "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480"
+DISP_THRESHOLDS_M = (0.001, 0.005, 0.010, 0.020, 0.030)
 
 
 def main() -> int:
@@ -33,6 +35,16 @@ def main() -> int:
     parser.add_argument("--episodes", type=int, default=1)
     parser.add_argument("--seed", type=int, default=777)
     parser.add_argument("--robot_usd_path", type=str, default=str(DEFAULT_LOCAL_USD))
+    parser.add_argument("--cube_size_m", type=float, nargs=3, default=(0.030, 0.030, 0.030))
+    parser.add_argument("--cube_mass_kg", type=float, default=0.020)
+    parser.add_argument("--cube_push_target_disp_m", type=float, default=None)
+    parser.add_argument("--cube_success_disp_m", type=float, default=None)
+    parser.add_argument("--gate_disp_m", type=float, default=0.010)
+    parser.add_argument("--fixed_cube_x_m", type=float, default=None)
+    parser.add_argument("--fixed_cube_y_m", type=float, default=None)
+    parser.add_argument("--fixed_push_dir", type=float, nargs=2, default=None)
+    parser.add_argument("--tcp_height_mode", choices=("top_margin", "side_center"), default="top_margin")
+    parser.add_argument("--tcp_center_height_offset_m", type=float, default=0.0)
     parser.add_argument("--precontact_clearance_m", type=float, default=0.020)
     parser.add_argument("--tcp_top_margin_m", type=float, default=0.003)
     parser.add_argument("--push_through_m", type=float, default=0.030)
@@ -118,9 +130,9 @@ def main() -> int:
         AUDIT_SPEED_P99_MPS,
         AUDIT_TIP_P95_DEG,
         AUDIT_TIP_P99_DEG,
-        CUBE_SIZE_M,
         RoArmCubePushEnvCfg,
     )
+    from roarm_rl.roarm_stack_env import TABLE_Z
 
     video_writer = None
     video_annot = None
@@ -187,9 +199,42 @@ def main() -> int:
             video_frame_count += 1
 
     env_cfg = RoArmCubePushEnvCfg()
+    cube_size = tuple(float(x) for x in args.cube_size_m)
+    cube_mass_kg = float(args.cube_mass_kg)
+    if any(x <= 0.0 for x in cube_size):
+        raise ValueError(f"--cube_size_m values must be positive, got {cube_size}")
+    if cube_mass_kg <= 0.0:
+        raise ValueError(f"--cube_mass_kg must be positive, got {cube_mass_kg}")
+    cube_volume_m3 = cube_size[0] * cube_size[1] * cube_size[2]
+    cube_density_kg_m3 = cube_mass_kg / cube_volume_m3
+    object_size_ref_m = max(cube_size)
+    cube_center_z_m = float(TABLE_Z) + cube_size[2] / 2.0
+    if args.fixed_push_dir is not None:
+        fixed_norm = math.hypot(float(args.fixed_push_dir[0]), float(args.fixed_push_dir[1]))
+        if fixed_norm <= 1.0e-6:
+            raise ValueError("--fixed_push_dir must be nonzero")
     env_cfg.scene.num_envs = int(args.num_envs)
     env_cfg.seed = int(args.seed)
     env_cfg.robot.spawn.usd_path = str(args.robot_usd_path)
+    env_cfg.cube_size_x_m = cube_size[0]
+    env_cfg.cube_size_y_m = cube_size[1]
+    env_cfg.cube_size_z_m = cube_size[2]
+    env_cfg.sponge.spawn.size = cube_size
+    env_cfg.sponge.spawn.mass_props.mass = cube_mass_kg
+    env_cfg.sponge.init_state.pos = (0.30, 0.00, cube_center_z_m)
+    if args.fixed_cube_x_m is not None:
+        env_cfg.cube_x_min = float(args.fixed_cube_x_m)
+        env_cfg.cube_x_max = float(args.fixed_cube_x_m)
+    if args.fixed_cube_y_m is not None:
+        env_cfg.cube_y_min = float(args.fixed_cube_y_m)
+        env_cfg.cube_y_max = float(args.fixed_cube_y_m)
+    if args.fixed_push_dir is not None:
+        env_cfg.fixed_push_dir_x = float(args.fixed_push_dir[0])
+        env_cfg.fixed_push_dir_y = float(args.fixed_push_dir[1])
+    if args.cube_push_target_disp_m is not None:
+        env_cfg.cube_push_target_disp_m = float(args.cube_push_target_disp_m)
+    if args.cube_success_disp_m is not None:
+        env_cfg.cube_success_disp_m = float(args.cube_success_disp_m)
     env_cfg.ik_endpoint_reset = False
     env_cfg.scripted_teacher_blend = 0.0
     env_cfg.action_scale = 0.0
@@ -263,11 +308,20 @@ def main() -> int:
 
     zero_action = torch.zeros((n, inner.cfg.action_space), device=device, dtype=torch.float32)
     tcp_local = inner._tcp_local.unsqueeze(0).repeat(n, 1)
-    half = 0.5 * float(CUBE_SIZE_M)
+    half_xy = torch.tensor((cube_size[0] / 2.0, cube_size[1] / 2.0), device=device, dtype=torch.float32)
+    cube_top_half_z = float(cube_size[2] / 2.0)
 
     print(
         "[cube3cm_push_diffik_probe] "
         f"isaac_run=YES num_envs={n} episodes={args.episodes} total_trials={n * args.episodes} "
+        f"cube_size_m=({cube_size[0]:.6f},{cube_size[1]:.6f},{cube_size[2]:.6f}) "
+        f"cube_mass_kg={cube_mass_kg:.6f} density_kg_m3={cube_density_kg_m3:.3f} "
+        f"object_size_ref_m={object_size_ref_m:.6f} table_z_m={float(TABLE_Z):.6f} "
+        f"cube_center_z_m={cube_center_z_m:.6f} "
+        f"cube_push_target_disp_m={float(env_cfg.cube_push_target_disp_m):.6f} "
+        f"cube_success_disp_m={float(env_cfg.cube_success_disp_m):.6f} gate_disp_m={float(args.gate_disp_m):.6f} "
+        f"fixed_cube_x_m={args.fixed_cube_x_m} fixed_cube_y_m={args.fixed_cube_y_m} "
+        f"fixed_push_dir={args.fixed_push_dir} tcp_height_mode={args.tcp_height_mode} "
         "controller=IsaacLab_DifferentialIKController ik_method=dls command_type=position "
         "local_roarm_ik_dls_control_loop=NO training=NO dataset_generation=NO "
         "grasp=NO attach_posewrite=NO rollout_object_posewrite=NO",
@@ -384,12 +438,18 @@ def main() -> int:
         cube = inner._cube_start_w
         push_dir = inner._push_dir_xy
         lateral_dir = torch.stack((-push_dir[:, 1], push_dir[:, 0]), dim=-1)
+        half_along = torch.sum(torch.abs(push_dir) * half_xy.unsqueeze(0), dim=-1)
         pre = cube.clone()
         through = cube.clone()
-        z = cube[:, 2] + half + traj["tcp_top_margin"]
+        if args.tcp_height_mode == "top_margin":
+            z = cube[:, 2] + cube_top_half_z + traj["tcp_top_margin"]
+        elif args.tcp_height_mode == "side_center":
+            z = cube[:, 2] + float(args.tcp_center_height_offset_m)
+        else:
+            raise ValueError(f"unsupported tcp_height_mode={args.tcp_height_mode!r}")
         lateral = lateral_dir * traj["lateral_offset"].unsqueeze(-1)
-        pre[:, 0:2] = cube[:, 0:2] - push_dir * (half + traj["precontact"]).unsqueeze(-1) + lateral
-        through[:, 0:2] = cube[:, 0:2] + push_dir * (half + traj["push_through"]).unsqueeze(-1) + lateral
+        pre[:, 0:2] = cube[:, 0:2] - push_dir * (half_along + traj["precontact"]).unsqueeze(-1) + lateral
+        through[:, 0:2] = cube[:, 0:2] + push_dir * (half_along + traj["push_through"]).unsqueeze(-1) + lateral
         pre[:, 2] = z
         through[:, 2] = z
         return pre + alpha.unsqueeze(-1) * (through - pre)
@@ -501,6 +561,13 @@ def main() -> int:
                             "trajectory_variant": args.trajectory_variant,
                             "push_dx": float(push_dir[trace_idx, 0].detach().cpu().item()),
                             "push_dy": float(push_dir[trace_idx, 1].detach().cpu().item()),
+                            "cube_size_x_m": cube_size[0],
+                            "cube_size_y_m": cube_size[1],
+                            "cube_size_z_m": cube_size[2],
+                            "cube_mass_kg": cube_mass_kg,
+                            "object_size_ref_m": object_size_ref_m,
+                            "tcp_height_mode": args.tcp_height_mode,
+                            "tcp_center_height_offset_m": float(args.tcp_center_height_offset_m),
                             "env_origin_x_m": float(inner.scene.env_origins[trace_idx, 0].detach().cpu().item()),
                             "env_origin_y_m": float(inner.scene.env_origins[trace_idx, 1].detach().cpu().item()),
                             "env_origin_z_m": float(inner.scene.env_origins[trace_idx, 2].detach().cpu().item()),
@@ -575,9 +642,20 @@ def main() -> int:
                         "env_id": idx,
                         "cube_x0_m": float((cube_start_w[idx, 0] - inner.scene.env_origins[idx, 0]).detach().cpu().item()),
                         "cube_y0_m": float((cube_start_w[idx, 1] - inner.scene.env_origins[idx, 1]).detach().cpu().item()),
+                        "cube_z0_m": float((cube_start_w[idx, 2] - inner.scene.env_origins[idx, 2]).detach().cpu().item()),
                         "push_dx": float(push_dir[idx, 0].detach().cpu().item()),
                         "push_dy": float(push_dir[idx, 1].detach().cpu().item()),
+                        "cube_size_x_m": cube_size[0],
+                        "cube_size_y_m": cube_size[1],
+                        "cube_size_z_m": cube_size[2],
+                        "cube_mass_kg": cube_mass_kg,
+                        "object_size_ref_m": object_size_ref_m,
+                        "tcp_height_mode": args.tcp_height_mode,
+                        "tcp_center_height_offset_m": float(args.tcp_center_height_offset_m),
                         "disp_along_push_m": float(terms["disp_along"][idx].detach().cpu().item()),
+                        "disp_over_object_size": float(
+                            terms["disp_along"][idx].detach().cpu().item() / object_size_ref_m
+                        ),
                         "disp_xy_m": float(terms["disp_xy"][idx].detach().cpu().item()),
                         "lateral_abs_m": float(torch.norm(lateral_vec[idx], p=2).detach().cpu().item()),
                         "target_xy_dist_m": float(terms["target_xy_dist"][idx].detach().cpu().item()),
@@ -648,6 +726,13 @@ def main() -> int:
     def rate(key: str) -> float:
         return sum(int(r[key]) for r in records) / len(records) if records else 0.0
 
+    def threshold_rate(threshold_m: float) -> float:
+        return (
+            sum(float(r["disp_along_push_m"]) >= float(threshold_m) for r in records) / len(records)
+            if records
+            else 0.0
+        )
+
     summary = {
         "controller": "IsaacLab_DifferentialIKController",
         "ik_method": "dls",
@@ -660,6 +745,17 @@ def main() -> int:
         "posewrite_calls_during_rollout": counters["posewrite_calls_during_rollout"],
         "env_auto_reset_disabled": True,
         "env_joint_delta_action_loop_bypassed": True,
+        "cube_size_m": list(cube_size),
+        "cube_mass_kg": cube_mass_kg,
+        "cube_density_kg_m3": cube_density_kg_m3,
+        "object_size_ref_m": object_size_ref_m,
+        "table_z_m": float(TABLE_Z),
+        "cube_center_z_m": cube_center_z_m,
+        "fixed_cube_x_m": None if args.fixed_cube_x_m is None else float(args.fixed_cube_x_m),
+        "fixed_cube_y_m": None if args.fixed_cube_y_m is None else float(args.fixed_cube_y_m),
+        "fixed_push_dir": None if args.fixed_push_dir is None else [float(x) for x in args.fixed_push_dir],
+        "tcp_height_mode": args.tcp_height_mode,
+        "tcp_center_height_offset_m": float(args.tcp_center_height_offset_m),
         "trajectory_variant": args.trajectory_variant,
         "base_total_steps_per_trial": base_total_steps,
         "v2_posx_total_steps_per_trial": v2_posx_total_steps,
@@ -684,6 +780,9 @@ def main() -> int:
         "total_steps_per_trial": total_steps,
         "precontact_clearance_m": float(args.precontact_clearance_m),
         "push_through_m": float(args.push_through_m),
+        "cube_push_target_disp_m": float(env_cfg.cube_push_target_disp_m),
+        "cube_success_disp_m": float(env_cfg.cube_success_disp_m),
+        "gate_disp_m": float(args.gate_disp_m),
         "max_diffik_joint_step_rad": float(args.max_diffik_joint_step_rad),
         "dls_lambda": float(args.dls_lambda),
         "controlled_push_rate": rate("controlled_push"),
@@ -692,7 +791,12 @@ def main() -> int:
         "success_marker_rate": rate("success_marker"),
         "grasped_marker_rate": rate("grasped_marker"),
         "disp_along_push_mean_m": mean("disp_along_push_m"),
+        "disp_over_object_size_mean": mean("disp_over_object_size"),
         "disp_xy_mean_m": mean("disp_xy_m"),
+        "disp_ge_gate_rate": threshold_rate(float(args.gate_disp_m)),
+        "disp_threshold_rates": {
+            f"{int(threshold_m * 1000)}mm": threshold_rate(threshold_m) for threshold_m in DISP_THRESHOLDS_M
+        },
         "max_cube_speed_mean_mps": mean("max_cube_speed_mps"),
         "min_tcp_cube_dist_mean_m": mean("min_tcp_cube_dist_m"),
         "min_tcp_target_err_mean_m": mean("min_tcp_target_err_m"),
@@ -725,6 +829,8 @@ def main() -> int:
         "[cube3cm_push_diffik_probe] "
         f"summary trials={summary['trials']} controlled_push_rate={summary['controlled_push_rate']:.6f} "
         f"impact_outlier_rate={summary['impact_outlier_rate']:.6f} low_motion_rate={summary['low_motion_rate']:.6f} "
+        f"disp_along_push_mean_m={summary['disp_along_push_mean_m']:.6f} "
+        f"disp_ge_gate_rate={summary['disp_ge_gate_rate']:.6f} "
         f"disp_xy_mean_m={summary['disp_xy_mean_m']:.6f} posewrite_calls_during_rollout={summary['posewrite_calls_during_rollout']} "
         f"grasped_marker_rate={summary['grasped_marker_rate']:.6f}",
         flush=True,

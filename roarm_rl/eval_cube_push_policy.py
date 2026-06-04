@@ -47,6 +47,8 @@ def main() -> int:
     parser.add_argument("--bc_teacher_posx_policy_delta_scale", type=float, default=None)
     parser.add_argument("--bc_teacher_lowx_policy_delta_scale", type=float, default=None)
     parser.add_argument("--bc_teacher_highx_policy_delta_scale", type=float, default=None)
+    parser.add_argument("--bc_teacher_midx_push_through_m", type=float, default=None)
+    parser.add_argument("--bc_teacher_highx_push_through_m", type=float, default=None)
     parser.add_argument("--bc_teacher_delta_smoothing_alpha", type=float, default=None)
     parser.add_argument("--bc_teacher_phase_timing", choices=("episode_scaled", "direct_steps"), default=None)
     parser.add_argument("--record_first_episode_only", action="store_true")
@@ -126,6 +128,10 @@ def main() -> int:
         env_cfg.bc_teacher_lowx_policy_delta_scale = args.bc_teacher_lowx_policy_delta_scale
     if args.bc_teacher_highx_policy_delta_scale is not None:
         env_cfg.bc_teacher_highx_policy_delta_scale = args.bc_teacher_highx_policy_delta_scale
+    if args.bc_teacher_midx_push_through_m is not None:
+        env_cfg.bc_teacher_midx_push_through_m = args.bc_teacher_midx_push_through_m
+    if args.bc_teacher_highx_push_through_m is not None:
+        env_cfg.bc_teacher_highx_push_through_m = args.bc_teacher_highx_push_through_m
     if args.bc_teacher_delta_smoothing_alpha is not None:
         env_cfg.bc_teacher_delta_smoothing_alpha = args.bc_teacher_delta_smoothing_alpha
     if args.bc_teacher_phase_timing is not None:
@@ -169,6 +175,8 @@ def main() -> int:
         f"bc_teacher_policy_delta_scale={env_cfg.bc_teacher_policy_delta_scale} "
         f"bc_teacher_lowx_policy_delta_scale={env_cfg.bc_teacher_lowx_policy_delta_scale} "
         f"bc_teacher_highx_policy_delta_scale={env_cfg.bc_teacher_highx_policy_delta_scale} "
+        f"bc_teacher_midx_push_through_m={env_cfg.bc_teacher_midx_push_through_m} "
+        f"bc_teacher_highx_push_through_m={env_cfg.bc_teacher_highx_push_through_m} "
         f"bc_teacher_delta_smoothing_alpha={env_cfg.bc_teacher_delta_smoothing_alpha} "
         f"bc_teacher_phase_timing={env_cfg.bc_teacher_phase_timing}"
     )
@@ -324,6 +332,8 @@ def main() -> int:
         "bc_teacher_posx_policy_delta_scale": env_cfg.bc_teacher_posx_policy_delta_scale,
         "bc_teacher_lowx_policy_delta_scale": env_cfg.bc_teacher_lowx_policy_delta_scale,
         "bc_teacher_highx_policy_delta_scale": env_cfg.bc_teacher_highx_policy_delta_scale,
+        "bc_teacher_midx_push_through_m": env_cfg.bc_teacher_midx_push_through_m,
+        "bc_teacher_highx_push_through_m": env_cfg.bc_teacher_highx_push_through_m,
         "bc_teacher_delta_smoothing_alpha": env_cfg.bc_teacher_delta_smoothing_alpha,
         "bc_teacher_phase_timing": env_cfg.bc_teacher_phase_timing,
         "speed_penalty_start_mps": env_cfg.speed_penalty_start_mps,

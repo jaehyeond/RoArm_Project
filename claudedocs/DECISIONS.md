@@ -5858,3 +5858,243 @@ Sources:
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_highx100_seed910/model_actor_waypoint_highx100_teacheroff_eval128_seed911_firstonly_bucket.out:1-10`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_lowx130_seed905/model_actor_waypoint_lowx130_gain045_vs_gain040_3seed_compare.out:1-12`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_lowx130_seed905/model_actor_waypoint_lowx130_candidate_summary.out:1-10`
+
+## D115 - Canonical waypoint actor passed sharded 10k teacher-off gate
+
+Date: 2026-05-29
+
+Decision:
+
+- After explicit approval, the canonical setup
+  `model_actor_waypoint_lowx130.pt` md5
+  `606d19fff713e7468d395af4a027d08a` with gain `0.040` passed a sharded
+  10,240-trial teacher-off first-episode learned-policy robustness gate.
+- The single-stage 10240-env attempt failed during IsaacLab environment creation,
+  before policy rollout; treat that as a runtime/stage creation failure, not as
+  a learned-policy failure.
+- It is now valid to call the canonical setup a sharded 10k teacher-off robust
+  learned-policy gate PASS for the professor cube3cm waypoint-observation branch.
+- It is still not dataset-ready evidence, not Track A evidence, not PPO/RL/VLA
+  final success, and not proof that mid_x/high_x success is solved.
+
+Evidence:
+
+- The single-stage 10240-env run failed with `Stage.GetPrimAtPath(Stage,
+  NoneType)` during ground-plane setup and produced no rollout CSV/summary.
+- Ten independent 1024-env first-episode shards, seeds 912-921, completed and
+  combined into 10240 rows.
+- Aggregate mechanism audit PASS: controlled `0.927148437`, impact
+  `0.000097656`, low-motion `0.106054687`, success `0.524902344`.
+- Aggregate bucket audit PASS: low_x success `0.406947891`, mid_x success
+  `0.183497537`, high_x success `0.213625866`, all posx impact `0`.
+- All ten individual shard bucket audits PASSed.
+- Failure-mode audit confirmed posx failures remain displacement-limited:
+  failed low_x/mid_x/high_x cases all have `disp_lt_0p030=1.000000000`.
+
+Implication:
+
+- Canonical waypoint actor evidence has advanced from 3x1024 to sharded 10k
+  teacher-off robustness.
+- Next work should not be dataset generation or Track A by implication. The next
+  useful branch-specific improvement is a targeted redesign for displacement-
+  limited mid_x/high_x success, with explicit small gates before any larger
+  audit.
+
+Sources:
+
+- `claudedocs/session_20260529_cube3cm_waypoint_actor_gate.md`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_lowx130_seed905/model_actor_waypoint_lowx130_teacheroff_eval10240_seed912_firstonly_stderr.out:1-26`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_lowx130_seed905/model_actor_waypoint_lowx130_teacheroff_10kshards_seed912_921_driver.out:1-20`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_lowx130_seed905/model_actor_waypoint_lowx130_teacheroff_eval10240_sharded_seed912_921_firstonly_summary.json:1-77`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_lowx130_seed905/model_actor_waypoint_lowx130_teacheroff_eval10240_sharded_seed912_921_firstonly_audit.out:1-5`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_lowx130_seed905/model_actor_waypoint_lowx130_teacheroff_eval10240_sharded_seed912_921_firstonly_bucket.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_lowx130_seed905/model_actor_waypoint_lowx130_teacheroff_eval10240_sharded_seed912_921_failure_modes.out:1-13`
+
+## D116 - Professor cube push/tap reporting must not collapse to only the 3cm success marker
+
+Date: 2026-06-02
+
+Decision:
+
+- For the professor cube3cm push/tap branch, do not treat the old 3cm
+  `success_marker` as the sole objective.
+- Keep `success_marker` as a strict task marker, but report a hierarchical push
+  table: `1/5/10/20/30mm`, `disp/object_size`, controlled, no-impact,
+  low-motion, and direction/posx buckets.
+- Use `disp_along_push_m / cube_size_m` when comparing different object sizes.
+
+Evidence:
+
+- Code fixes the current cube at `CUBE_SIZE_M=0.030` and mass `0.020kg`.
+- Env success requires controlled, no impact, `disp_along >= 0.030m`,
+  target-distance tolerance, and speed cap. This is stricter than "object moved."
+- Sharded 10k threshold analysis shows the canonical actor is strong at smaller
+  stable pushes even where the 30mm marker is weak. For direction `(1,0)`,
+  5mm/10mm/20mm rates are `0.906199678` / `0.842592593` / `0.770531401`, but
+  30mm is only `0.266505636`.
+- Posx mid/high buckets are near-perfect at 10mm and strong at 20mm, but fall
+  sharply at 30mm.
+
+Implication:
+
+- Do not summarize this branch as "forward push cannot work" merely because the
+  30mm marker is weak.
+- Do not claim all directions are equally solved. At 30mm, `+y` is strong,
+  `-y` is moderate, `-x` is moderate/weak, and `+x` is weak.
+- Before changing cube size, explicitly log `cube_size_m`, `cube_mass_kg`,
+  `density_kg_m3`, and `disp/object_size`.
+
+Sources:
+
+- `claudedocs/session_20260602_cube3cm_push_metric_reframe_targetext.md`
+- `roarm_rl/roarm_cube_push_env.py:31`
+- `roarm_rl/roarm_cube_push_env.py:60-77`
+- `roarm_rl/roarm_cube_push_env.py:94-100`
+- `roarm_rl/roarm_cube_push_env.py:691-714`
+- `roarm_rl/roarm_cube_push_env.py:781-787`
+- `roarm_rl/eval_cube_push_policy.py:219-240`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_lowx130_seed905/model_actor_waypoint_lowx130_teacheroff_eval10240_sharded_seed912_921_threshold_analysis.out:1-9`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_lowx130_seed905/model_actor_waypoint_lowx130_teacheroff_eval10240_sharded_seed912_921_failure_modes.out:1-13`
+
+## D117 - Weighted mid/high actor and target-extension probes are small diagnostics, not scale-up candidates
+
+Date: 2026-06-02
+
+Decision:
+
+- Reject the weighted mid/high actor candidate
+  `model_actor_waypoint_midhighw200_post150.pt` despite good one-step fit.
+- Treat the canonical target-extension probe
+  `bc_teacher_midx_push_through_m=0.030`,
+  `bc_teacher_highx_push_through_m=0.035` as a local diagnostic only.
+- Do not run 1024/10k, dataset generation, PPO scale-up, or Track A runtime from
+  either probe without a new small-gate design and explicit approval.
+
+Evidence:
+
+- Weighted candidate final validation MSE was small (`0.00023266756033990532`)
+  and weighted validation MSE was small (`0.00021922370069660246`), but
+  teacher-off 128 bucket screen failed: low_x success `0.083333333`, mid_x
+  `0.090909091`, high_x `0.833333333`.
+- Target-extension probe improved same-seed mid/high locally: mid_x
+  `0.272727273`, high_x `1.000000000`, but still failed the 128 bucket screen
+  because low_x success was `0.166666667`.
+- Diagnostic trace showed contact reached and actor actions were applied, so the
+  current issue is mainly displacement/gate design and distribution-specific
+  action magnitude, not a dead action path.
+
+Implication:
+
+- Next work should first define the hierarchical push table and low_x handling,
+  then run only a tiny 128 teacher-off gate.
+- Do not jump from one 128 target-extension improvement to larger audits.
+
+Sources:
+
+- `claudedocs/session_20260602_cube3cm_push_metric_reframe_targetext.md`
+- `roarm_rl/distill_cube_push_actor.py`
+- `roarm_rl/roarm_cube_push_env.py`
+- `roarm_rl/eval_cube_push_policy.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_midhighw200_post150_seed923/actor_waypoint_midhighw200_post150_metrics.json:22-47`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_midhighw200_post150_seed923/model_actor_waypoint_midhighw200_post150_teacheroff_eval128_seed911_firstonly_audit.out:1-5`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_midhighw200_post150_seed923/model_actor_waypoint_midhighw200_post150_teacheroff_eval128_seed911_firstonly_bucket.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_lowx130_seed905/model_actor_waypoint_lowx130_targetext_m030_h035_teacheroff_eval128_seed911_firstonly_summary.json:1-45`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_lowx130_seed905/model_actor_waypoint_lowx130_targetext_m030_h035_teacheroff_eval128_seed911_firstonly_audit.out:1-5`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_lowx130_seed905/model_actor_waypoint_lowx130_targetext_m030_h035_teacheroff_eval128_seed911_firstonly_bucket.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_bc_teacher_actor_waypoint_lowx130_seed905/diagnostic_trace_seed911/actor_trace_analysis.out:1-28`
+
+## D118 - Professor 10cm object diagnostic uses a 1cm primary push gate, not full object-length displacement
+
+Date: 2026-06-04
+
+Decision:
+
+- Interpret the professor's current `10*10*10` request as a separate
+  10cm/0.72kg cube-like object push/tap diagnostic for the professor branch.
+- Do not require moving the 10cm object by 10cm. The primary first gate is about
+  1cm displacement: `cube_push_target_disp_m=0.010`,
+  `cube_success_disp_m=0.010`, and `gate_disp_m=0.010`.
+- Use the IsaacLab built-in `DifferentialIKController` probe path for the first
+  teacher diagnostic; do not restart TCP/IK design from scratch unless the gate
+  shows a concrete geometry/control failure.
+- Do not run the tiny 128 DiffIK gate, any 1024/10k scale-up, dataset generation,
+  PPO/RL scale-up, VLA training, or Track A runtime without explicit approval.
+
+Evidence:
+
+- The current 3cm evidence already shows that smaller displacement tiers are more
+  informative than the strict 30mm marker for professor push/tap reporting.
+- For a 10cm cube-like object, 0.72kg is close to density-preserving relative to
+  the existing 3cm/20g object (`0.020 / 0.030^3 = 740.7kg/m^3`; 10cm at the same
+  density is about 0.741kg), so it is a coherent weighted-object diagnostic.
+- `sim_scripts/cube3cm_push_diffik_probe.py` now accepts explicit size/mass/gate
+  args and logs density, `disp/object_size`, and threshold displacement rates.
+- Local static verification passed: `py_compile`, `--help`, and
+  `git diff --check`.
+- After explicit approval, the first local GPU tiny 128 gate for 10cm/0.72kg
+  seed930 failed the 1cm gate: summary lines 11-25 report controlled `0.1875`,
+  `disp_along_push_mean_m=-0.0001524518520454876`, and
+  `disp_ge_gate_rate=0.0`; lines 41-52 report final TCP target error mean
+  `0.15134897292591631m`, low-motion `1.0`, and min TCP-cube distance mean
+  `0.13646007765782997m`.
+
+Implication:
+
+- Do not scale the failed v1 10cm/0.72kg DiffIK diagnostic.
+- The next valid work is small geometry/control diagnosis for the 10cm object
+  contact path and DiffIK clipping, followed by another tiny gate only after
+  explicit user approval.
+- A future tiny 128 pass would only justify the next small design step. It would
+  not be dataset readiness and would not approve 1024/10k data collection or RL
+  scale-up.
+
+Sources:
+
+- `claudedocs/session_20260604_cube10cm_diffik_teacher_gate_prep.md`
+- `sim_scripts/cube3cm_push_diffik_probe.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_gate128_seed930_summary.json:11-52`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_gate128_seed930.csv`
+- `claudedocs/session_20260602_cube3cm_push_metric_reframe_targetext.md`
+- `claudedocs/session_20260604_cube3cm_hierarchical_bucket_audit.md`
+
+## D119 - Code changes before professor-branch reruns require pre-edit code review and deterministic geometry gates
+
+Date: 2026-06-04
+
+Decision:
+
+- Before editing or generating code for the professor push/tap branch, perform a
+  short code review of the relevant reset, target-generation, action/clipping,
+  logging, and metric paths.
+- For the 10cm/0.72kg diagnostic, do not return directly to randomized 128/1024
+  gates. First use an object-size-aware reset, fixed easy cube position, fixed
+  push direction, and side-face-center TCP height.
+- Keep all new diagnostic knobs default-preserving for the existing 3cm branch.
+- Do not run another GPU/IsaacLab gate, dataset generation, PPO/RL scale-up, VLA
+  training, or Track A runtime without explicit approval.
+
+Evidence:
+
+- The first 10cm tiny gate failed with `disp_ge_gate_rate=0.0`, but code review
+  showed a more basic issue: reset z still used the 3cm-derived `CUBE_CENTER_Z`
+  constant while the probe only changed spawn/init-state size. A 10cm cube needs
+  center z `TABLE_Z + 0.050`, not the old `TABLE_Z + 0.015`.
+- The failed gate also mixed random x/y, random direction, top-margin target
+  height, short v1 horizon, and DiffIK clipping. That makes it too broad for
+  isolating whether a single easy front-face push works.
+- Static patch added object-size-aware reset fields, fixed position/direction
+  options, `side_center` TCP height mode, and reset-height logging. Static checks
+  passed: `py_compile`, `--help`, and `git diff --check`.
+
+Implication:
+
+- The next valid approved runtime is a small fixed-position/fixed-direction
+  geometry gate, preferably 16 envs or less, not 128/1024 randomized robustness.
+- A pass on the fixed case only unlocks gradual reintroduction of randomization;
+  it does not unlock dataset generation or RL scale-up.
+
+Sources:
+
+- `claudedocs/session_20260604_cube10cm_diffik_teacher_gate_prep.md`
+- `roarm_rl/roarm_cube_push_env.py`
+- `sim_scripts/cube3cm_push_diffik_probe.py`

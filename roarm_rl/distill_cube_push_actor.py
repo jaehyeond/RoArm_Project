@@ -99,6 +99,11 @@ def main() -> int:
     parser.add_argument("--batch_size", type=int, default=4096)
     parser.add_argument("--lr", type=float, default=1.0e-3)
     parser.add_argument("--weight_decay", type=float, default=1.0e-5)
+    parser.add_argument("--loss_posx_low_weight", type=float, default=1.0)
+    parser.add_argument("--loss_posx_mid_weight", type=float, default=1.0)
+    parser.add_argument("--loss_posx_high_weight", type=float, default=1.0)
+    parser.add_argument("--loss_push_phase_weight", type=float, default=1.0)
+    parser.add_argument("--loss_post_phase_weight", type=float, default=1.0)
     parser.add_argument("--val_frac", type=float, default=0.10)
     args = parser.parse_args()
 
@@ -184,6 +189,7 @@ def main() -> int:
 
     obs_batches = []
     action_batches = []
+    weight_batches = []
     step_action_abs_batches = []
     with torch.inference_mode():
         for _ in range(int(args.collect_steps)):
@@ -192,13 +198,32 @@ def main() -> int:
             step_actions = teacher_actions
             if collection_policy is not None:
                 step_actions = collection_policy(obs).detach().clamp(-1.0, 1.0)
+            traj = inner._bc_teacher_traj()
+            alpha = inner._bc_teacher_phase_alpha(traj).detach()
+            cube_x_local = inner._cube_start_w[:, 0] - inner.scene.env_origins[:, 0]
+            edge0 = float(inner.cfg.bc_teacher_x_bucket_edge0_m)
+            edge1 = float(inner.cfg.bc_teacher_x_bucket_edge1_m)
+            posx = traj["posx"].detach()
+            posx_low = posx & (cube_x_local < edge0)
+            posx_mid = posx & (cube_x_local >= edge0) & (cube_x_local < edge1)
+            posx_high = posx & (cube_x_local >= edge1)
+            weights = torch.ones((inner.num_envs,), device=device, dtype=torch.float32)
+            weights = torch.where(posx_low, weights * float(args.loss_posx_low_weight), weights)
+            weights = torch.where(posx_mid, weights * float(args.loss_posx_mid_weight), weights)
+            weights = torch.where(posx_high, weights * float(args.loss_posx_high_weight), weights)
+            push_phase = (alpha > 1.0e-6) & (alpha < 1.0 - 1.0e-6)
+            post_phase = alpha >= 1.0 - 1.0e-6
+            weights = torch.where(push_phase, weights * float(args.loss_push_phase_weight), weights)
+            weights = torch.where(post_phase, weights * float(args.loss_post_phase_weight), weights)
             obs_batches.append(policy_obs.cpu())
             action_batches.append(teacher_actions.cpu())
+            weight_batches.append(weights.cpu())
             step_action_abs_batches.append(torch.mean(torch.abs(step_actions), dim=-1).cpu())
             obs, _, _, _ = env.step(step_actions)
 
     obs_all = torch.cat(obs_batches, dim=0).to(device=device, dtype=torch.float32)
     actions_all = torch.cat(action_batches, dim=0).to(device=device, dtype=torch.float32)
+    weights_all = torch.cat(weight_batches, dim=0).to(device=device, dtype=torch.float32).clamp_min(1.0e-6)
     sample_count = int(obs_all.shape[0])
     obs_dim = int(obs_all.shape[1])
     action_dim = int(actions_all.shape[1])
@@ -221,9 +246,19 @@ def main() -> int:
     _load_actor_from_checkpoint(actor, state_dict)
     opt = torch.optim.AdamW(actor.parameters(), lr=float(args.lr), weight_decay=float(args.weight_decay))
 
+    def weighted_mse(pred: torch.Tensor, target: torch.Tensor, weights: torch.Tensor) -> torch.Tensor:
+        per_sample = torch.mean((pred - target) ** 2, dim=-1)
+        return torch.sum(per_sample * weights) / torch.sum(weights)
+
     with torch.no_grad():
         initial_train_mse = torch.mean((actor(obs_norm[train_idx]) - actions_all[train_idx]) ** 2).item()
         initial_val_mse = torch.mean((actor(obs_norm[val_idx]) - actions_all[val_idx]) ** 2).item()
+        initial_train_weighted_mse = weighted_mse(
+            actor(obs_norm[train_idx]), actions_all[train_idx], weights_all[train_idx]
+        ).item()
+        initial_val_weighted_mse = weighted_mse(
+            actor(obs_norm[val_idx]), actions_all[val_idx], weights_all[val_idx]
+        ).item()
 
     batch_size = max(1, int(args.batch_size))
     train_count = int(train_idx.numel())
@@ -232,7 +267,7 @@ def main() -> int:
         for start in range(0, train_count, batch_size):
             idx = shuffled[start : start + batch_size]
             pred = actor(obs_norm[idx])
-            loss = torch.mean((pred - actions_all[idx]) ** 2)
+            loss = weighted_mse(pred, actions_all[idx], weights_all[idx])
             opt.zero_grad(set_to_none=True)
             loss.backward()
             opt.step()
@@ -243,11 +278,15 @@ def main() -> int:
         val_pred = actor(obs_norm[val_idx])
         final_train_mse = torch.mean((train_pred - actions_all[train_idx]) ** 2).item()
         final_val_mse = torch.mean((val_pred - actions_all[val_idx]) ** 2).item()
+        final_train_weighted_mse = weighted_mse(train_pred, actions_all[train_idx], weights_all[train_idx]).item()
+        final_val_weighted_mse = weighted_mse(val_pred, actions_all[val_idx], weights_all[val_idx]).item()
         final_val_mae = torch.mean(torch.abs(val_pred - actions_all[val_idx])).item()
         final_val_max_abs = torch.max(torch.abs(val_pred - actions_all[val_idx])).item()
         teacher_abs_mean = torch.mean(torch.abs(actions_all)).item()
         pred_abs_mean = torch.mean(torch.abs(actor(obs_norm))).item()
         collection_step_action_abs_mean = torch.cat(step_action_abs_batches).mean().item()
+        sample_weight_mean = torch.mean(weights_all).item()
+        sample_weight_max = torch.max(weights_all).item()
 
     _store_actor_to_checkpoint(actor, state_dict)
     state_dict["actor_obs_normalizer._mean"] = obs_mean.detach().cpu()
@@ -292,13 +331,19 @@ def main() -> int:
         "weight_decay": float(args.weight_decay),
         "initial_train_mse": float(initial_train_mse),
         "initial_val_mse": float(initial_val_mse),
+        "initial_train_weighted_mse": float(initial_train_weighted_mse),
+        "initial_val_weighted_mse": float(initial_val_weighted_mse),
         "final_train_mse": float(final_train_mse),
         "final_val_mse": float(final_val_mse),
+        "final_train_weighted_mse": float(final_train_weighted_mse),
+        "final_val_weighted_mse": float(final_val_weighted_mse),
         "final_val_mae": float(final_val_mae),
         "final_val_max_abs": float(final_val_max_abs),
         "teacher_action_abs_mean": float(teacher_abs_mean),
         "collection_step_action_abs_mean": float(collection_step_action_abs_mean),
         "actor_action_abs_mean": float(pred_abs_mean),
+        "sample_weight_mean": float(sample_weight_mean),
+        "sample_weight_max": float(sample_weight_max),
         "obs_dim": obs_dim,
         "action_dim": action_dim,
         "episode_length_s": float(env_cfg.episode_length_s),
@@ -314,6 +359,11 @@ def main() -> int:
         "bc_teacher_highx_policy_delta_scale": float(env_cfg.bc_teacher_highx_policy_delta_scale),
         "bc_teacher_delta_smoothing_alpha": float(env_cfg.bc_teacher_delta_smoothing_alpha),
         "bc_teacher_phase_timing": str(env_cfg.bc_teacher_phase_timing),
+        "loss_posx_low_weight": float(args.loss_posx_low_weight),
+        "loss_posx_mid_weight": float(args.loss_posx_mid_weight),
+        "loss_posx_high_weight": float(args.loss_posx_high_weight),
+        "loss_push_phase_weight": float(args.loss_push_phase_weight),
+        "loss_post_phase_weight": float(args.loss_post_phase_weight),
         "training": True,
         "dataset_generation": False,
         "track_a_runtime": False,
@@ -333,10 +383,26 @@ def main() -> int:
         f"final_train_mse={final_train_mse:.9f} final_val_mse={final_val_mse:.9f}"
     )
     print(
+        "actor_distill line2b "
+        f"initial_train_weighted_mse={initial_train_weighted_mse:.9f} "
+        f"initial_val_weighted_mse={initial_val_weighted_mse:.9f} "
+        f"final_train_weighted_mse={final_train_weighted_mse:.9f} "
+        f"final_val_weighted_mse={final_val_weighted_mse:.9f}"
+    )
+    print(
         "actor_distill line3 "
         f"final_val_mae={final_val_mae:.9f} final_val_max_abs={final_val_max_abs:.9f} "
         f"teacher_action_abs_mean={teacher_abs_mean:.9f} collection_step_action_abs_mean={collection_step_action_abs_mean:.9f} "
         f"actor_action_abs_mean={pred_abs_mean:.9f}"
+    )
+    print(
+        "actor_distill line3b "
+        f"sample_weight_mean={sample_weight_mean:.9f} sample_weight_max={sample_weight_max:.9f} "
+        f"loss_posx_low_weight={float(args.loss_posx_low_weight):.3f} "
+        f"loss_posx_mid_weight={float(args.loss_posx_mid_weight):.3f} "
+        f"loss_posx_high_weight={float(args.loss_posx_high_weight):.3f} "
+        f"loss_push_phase_weight={float(args.loss_push_phase_weight):.3f} "
+        f"loss_post_phase_weight={float(args.loss_post_phase_weight):.3f}"
     )
     print(
         "actor_distill line4 "
