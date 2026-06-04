@@ -1,6 +1,16 @@
 # START_HERE.md
 
-Last updated: 2026-06-04 KST (B200 disconnected; Track A v6/v7 close_26 FAIL; first approved v8 close_26 runtime also FAIL; post-fail v8 virtual-damping wiring fix is static-ready only; no post-fix v8 runtime has run; professor cube3cm push/tap scripted rollout, DiffIK v3 10,240-trial audit, and real-RoArm replay video complete; professor cube3cm teacher-filtered state-action dataset v2 and BC joint-delta learned rollout PASS at 1024 envs; v3.2 teacher sweep did not find a robust low-x fix; bucket-balanced dataset v3 + BC v2 improved learned rollout success but failed per-bucket impact gate; safety-aware BC v3 + bucket action scaling passed two 1024 frozen per-bucket audits on seeds 883/884 with lower impact but low_x low-motion caveat; small safety-aware PPO warm-start smoke connected local GPU PPO but teacher-off model_11 failed frozen 1024; 2026-05-29 bridge redesign made teacher-on 128 recover under direct-step/joint-pos action loop, but model_11 and smoke8 model_7 stayed teacher-off zero-motion at 128; direct rsl_rl actor distillation initially failed teacher-off 128, but waypoint-observation + on-policy actor distillation with low_x label scale 1.3 passed teacher-off 128 seed906, three teacher-off 1024 first-episode gates on seeds 907/908/909, and an approved sharded 10,240-row teacher-off first-episode robustness gate on seeds 912-921; 2026-06-02 review reframed professor push/tap evaluation away from only the strict 3cm success marker toward 1/5/10/20/30mm displacement tiers, disp/object_size, controlled, and no-impact reporting; weighted mid/high actor candidate was rejected at 128 and target-extension probe improved mid/high only locally; 2026-06-04 local-only audit update now emits the hierarchical sharded-10k bucket table with cube size, mass, density, no-impact, disp/object_size, and displacement-only 1/5/10/20/30mm columns; 2026-06-04 DiffIK probe prep parameterized the professor branch for explicit 10cm/0.72kg object diagnostics and 1cm gate reporting; the approved local GPU tiny 128 10cm/0.72kg v1 DiffIK gate failed with `disp_ge_gate_rate=0.0`, `low_motion_rate=1.0`, and mean final TCP target error `0.151348973m`; post-fail code review found reset z still used the 3cm `CUBE_CENTER_Z`, then a static default-preserving patch added object-size-aware reset fields, fixed position/direction options, side-center TCP height mode, and reset-height logging; no post-patch GPU runtime has run; no dataset generation, Track A runtime, PPO scale-up, VLA final-success, or larger candidate audit is approved from those probes)
+Last updated: 2026-06-04 KST (B200 disconnected; Track A remains blocked and separate. Active branch is the professor 10cm/0.72kg cube push/tap DiffIK diagnosis. Earlier final-displacement gates failed, and settled-start fixed16 still showed DiffIK clipping/lag, but local DLS feasibility means do not conclude the object is too heavy. The clarified objective is reaction/tap first and final displacement secondary. Fixed 4-env measured-stop freeze seed940 is a reaction-event PASS under the clarified criterion: measured contact `1.0`, max transient displacement mean `0.010990217m`, transient 1cm rate `1.0`, no overshoot, final displacement gate `0.0`, with DiffIK link5/clipping/actuator issues still unresolved. No dataset generation, PPO/RL scale-up, VLA, Track A runtime, 1024/10k, or larger candidate audit is approved from this.)
+
+Latest correction: for the professor 10cm/0.72kg push/tap branch, final 1cm
+displacement is no longer the primary objective if the real task only needs a
+tap/reaction. Treat measured contact, transient displacement, cube lift/z delta,
+and cube speed as the primary reaction-event evidence; keep final displacement as
+a secondary relocation metric. The fixed 4-env measured-stop freeze run seed940
+reacted in all envs (`measured_contact_seen_rate=1.0`,
+`max_disp_along_push_mean_m=0.010990217`, `max_disp_ge_gate_rate=1.0`, no
+overshoot) even though final `disp_ge_gate_rate=0.0`. This is a reaction-event
+diagnostic PASS, not yet dataset/RL/teacher-quality readiness.
 
 This is the rolling current-state dashboard. It is not full history. Durable
 rules live in `claudedocs/DECISIONS.md`; experiment history lives in
@@ -360,27 +370,21 @@ Do **not** use `HANDOFF.md` or `TASKS.md` as current state.
 - **Professor cube10cm DiffIK gate prep (2026-06-04)**: the next professor
   request is interpreted as a separate 10cm/0.72kg object push/tap diagnostic,
   not as Track A and not as a requirement to push a full 10cm object length.
-  Updated `sim_scripts/cube3cm_push_diffik_probe.py` to keep default 3cm behavior
-  while accepting `--cube_size_m`, `--cube_mass_kg`, `--cube_push_target_disp_m`,
-  `--cube_success_disp_m`, and `--gate_disp_m`. The probe now logs cube size,
-  mass, density, object-size reference, target/success/gate displacement, uses
-  the configured object size for TCP precontact/through geometry, and reports
-  `disp/object_size` plus 1/5/10/20/30mm rates. Local-only checks passed:
-  `py_compile`, `--help`, and `git diff --check`. After explicit approval, the
-  first local GPU 128-env gate ran with 10cm cube, `0.720kg`,
-  `cube_push_target_disp_m=0.010`, `cube_success_disp_m=0.010`, and
-  `gate_disp_m=0.010`. It FAILED: summary lines 11-25 report controlled
-  `0.1875`, `disp_along_push_mean_m=-0.0001524518520454876`, and
-  `disp_ge_gate_rate=0.0`; lines 41-52 report final TCP target error mean
-	  `0.15134897292591631m`, low-motion `1.0`, and min TCP-cube distance mean
-	  `0.13646007765782997m`. Do not scale this v1 10cm/0.72kg diagnostic; next work
-	  is small geometry/control diagnosis and another tiny gate only after approval.
-  Post-fail code review found that env reset still used 3cm `CUBE_CENTER_Z`.
-  Static patch now makes reset z object-size-aware, adds fixed x/y and fixed push
-  direction options, adds `tcp_height_mode=side_center`, and logs
-  `table_z_m`/`cube_center_z_m`/`cube_z0_m`. Static checks passed
-  (`py_compile`, `--help`, `git diff --check`), but no post-patch GPU runtime has
-  run. Next valid runtime is a fixed easy geometry gate, not randomized 128/1024.
+  The 1cm gate is now explicit. The 128 v1 gate, fixed16 side-center gate, and
+  settled-start fixed16 rerun all failed with `diffik_clip_rate_mean=1.0` and
+  low/no motion. The settled-start patch fixed the reset-buffer z mismatch but
+  not the rollout.
+  A follow-up 4-env trace diagnostic added per-step link5/TCP targets, raw and
+  clipped deltas, robot targets, and actuator follow errors. cap `0.120` and
+  drive-boost controls prove the 10cm/0.72kg object can move, but they overshoot
+  by 5-9cm and are not teacher-ready. Code review also found the old through
+  target was far-face/cross-object (`cube + half + push_through`), so
+  `--through_target_mode near_face` was added. Near-face default/long-approach
+  runs still failed to contact (`disp_ge_gate_rate=0.0`, final TCP error about
+  `0.061m`, min TCP-cube about `0.083m`), while near-face drive boost passed the
+  gate but moved about `0.050m`. Next valid work is one tiny controlled near-face
+  contact controller with actuator/step scheduling and displacement/contact stop;
+  not randomization, 128/1024/10k, dataset generation, PPO/RL, VLA, or Track A.
 - Track A goal: first make the sim/Isaac Lab contact primitive reliable, then
   move toward broad sim/lab dataset collection and learning.
 - Dataset generation and training are blocked until close_26 proxy audit PASS,
@@ -725,14 +729,18 @@ Interpretation:
    `success_marker` as a strict task marker, not the sole objective.
 4. Future professor-branch code edits must start with a short code review of
    reset, target generation, action/clipping, logging, and metrics before patching.
-5. The next professor-branch object diagnostic is now defined as a 10cm cube-like
-   object with `cube_mass_kg=0.720` and a primary 1cm gate, not a 10cm push
-   requirement. The first approved local GPU 128-env v1 DiffIK gate FAILED
-   (`disp_ge_gate_rate=0.0`, `low_motion_rate=1.0`, mean final TCP target error
-   `0.151348973m`). Post-fail code review found/fixed the 3cm reset-z mismatch
-   statically, but no post-patch GPU runtime has run. Do not scale it. The next
-   valid runtime is a fixed-position/fixed-direction side-center geometry gate
-   only after explicit approval with `sandbox_permissions=require_escalated`.
+5. The professor-branch 10cm/0.72kg push/tap objective is now reaction-first,
+   not final-displacement-first. The old 128 v1, fixed16 side-center, and
+   settled-start fixed16 gates still failed as final 1cm displacement gates.
+   Later 4-env diagnostics narrowed the controller issue: far-face/cross-object
+   TCP targets are too aggressive; near-face geometry reduces TCP error; default
+   actuator/step control fails to contact; drive boost can move the object. The
+   measured-stop freeze seed940 run is a fixed-geometry reaction-event PASS under
+   the clarified push/tap criterion: measured contact `1.0`, transient max
+   displacement mean `0.010990217m`, transient 1cm rate `1.0`, no overshoot, but
+   final displacement gate `0.0` and DiffIK clipping/lag remain. Next step is a
+   reaction-event audit/gate definition and only then a tiny randomized reaction
+   screen, not dataset generation or RL scale-up yet.
 6. Do not run Track A dataset generation, PPO/training, rollout, hold-lift,
    transport/release, constraints, SurfaceGripper, or gate tuning from this
    result.
@@ -759,7 +767,7 @@ Interpretation:
 
 1. `CLAUDE.md`
 2. `START_HERE.md`
-3. `claudedocs/DECISIONS.md` D083-D119
+3. `claudedocs/DECISIONS.md` D083-D123
 4. `claudedocs/EXPERIMENT_LEDGER.md` latest rows
 5. `claudedocs/session_20260522_track_a_v6_projected_guard_runtime_fail.md`
 6. `claudedocs/session_20260522_track_a_contact_rl_stage0_preflight.md`
@@ -824,6 +832,12 @@ Interpretation:
 - Any claim that the old 3cm `success_marker` is the professor push/tap objective
   by itself. Report hierarchical displacement thresholds and `disp/object_size`
   together with controlled/no-impact.
+- Any claim that final 1cm displacement is still the only professor 10cm/0.72kg
+  push/tap success criterion. Under the clarified objective, reaction/contact,
+  transient displacement, z lift, and speed matter first; final displacement is
+  secondary unless the task is relocation.
+- Any claim that one lucky success from massive IsaacLab randomization is a
+  learned policy, teacher-data readiness, or sim-to-real evidence by itself.
 - Any claim that the weighted mid/high actor candidate or the target-extension
   probe is ready for 1024/10k scale-up; both failed the 128 posx bucket screen
 - Any Track B/OpenVLA training status as evidence for Track A contact success

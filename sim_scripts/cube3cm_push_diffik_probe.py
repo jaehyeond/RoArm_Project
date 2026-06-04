@@ -48,12 +48,29 @@ def main() -> int:
     parser.add_argument("--precontact_clearance_m", type=float, default=0.020)
     parser.add_argument("--tcp_top_margin_m", type=float, default=0.003)
     parser.add_argument("--push_through_m", type=float, default=0.030)
+    parser.add_argument("--through_target_mode", choices=("far_face", "near_face"), default="far_face")
+    parser.add_argument("--contact_controller_mode", choices=("open_loop", "measured_stop"), default="open_loop")
+    parser.add_argument("--contact_stop_target_mode", choices=("retract", "freeze"), default="retract")
+    parser.add_argument("--contact_detect_disp_m", type=float, default=0.001)
+    parser.add_argument("--contact_stop_disp_m", type=float, default=None)
+    parser.add_argument("--contact_overshoot_disp_m", type=float, default=0.020)
+    parser.add_argument("--contact_near_tcp_cube_dist_m", type=float, default=0.085)
+    parser.add_argument("--contact_near_joint_step_scale", type=float, default=0.50)
+    parser.add_argument("--contact_stop_joint_step_scale", type=float, default=0.25)
+    parser.add_argument("--contact_retract_clearance_m", type=float, default=0.020)
+    parser.add_argument("--reaction_disp_m", type=float, default=0.001)
+    parser.add_argument("--reaction_z_delta_m", type=float, default=0.002)
+    parser.add_argument("--reaction_speed_mps", type=float, default=0.020)
     parser.add_argument("--approach_steps", type=int, default=55)
     parser.add_argument("--push_steps", type=int, default=35)
     parser.add_argument("--post_steps", type=int, default=30)
     parser.add_argument("--settle_steps", type=int, default=8)
     parser.add_argument("--max_diffik_joint_step_rad", type=float, default=0.012)
     parser.add_argument("--dls_lambda", type=float, default=0.010)
+    parser.add_argument("--arm_stiffness_override", type=float, default=None)
+    parser.add_argument("--arm_damping_override", type=float, default=None)
+    parser.add_argument("--arm_effort_limit_sim_override", type=float, default=None)
+    parser.add_argument("--arm_velocity_limit_sim_override", type=float, default=None)
     parser.add_argument("--trajectory_variant", choices=("v1", "v2", "v3", "v3_1"), default="v1")
     parser.add_argument("--v2_posx_precontact_clearance_m", type=float, default=0.012)
     parser.add_argument("--v2_posx_push_through_m", type=float, default=0.024)
@@ -105,6 +122,7 @@ def main() -> int:
     parser.add_argument("--trace_all_envs", action="store_true")
     parser.add_argument("--trace_stride", type=int, default=4)
     parser.add_argument("--trace_csv", type=str, default="")
+    parser.add_argument("--trace_diffik_diagnostics", action="store_true")
     parser.add_argument("--viewer_step_sleep_s", type=float, default=0.0)
     parser.add_argument("--post_run_sleep_s", type=float, default=0.0)
     parser.add_argument("--out_csv", type=str, default=str(LOG_DIR / "diffik_probe_smoke_per_env.csv"))
@@ -209,6 +227,31 @@ def main() -> int:
     cube_density_kg_m3 = cube_mass_kg / cube_volume_m3
     object_size_ref_m = max(cube_size)
     cube_center_z_m = float(TABLE_Z) + cube_size[2] / 2.0
+    contact_stop_disp_m = (
+        float(args.gate_disp_m) if args.contact_stop_disp_m is None else float(args.contact_stop_disp_m)
+    )
+    if float(args.contact_detect_disp_m) < 0.0:
+        raise ValueError("--contact_detect_disp_m must be non-negative")
+    if contact_stop_disp_m <= 0.0:
+        raise ValueError("--contact_stop_disp_m must be positive")
+    if float(args.contact_overshoot_disp_m) <= 0.0:
+        raise ValueError("--contact_overshoot_disp_m must be positive")
+    if float(args.contact_near_tcp_cube_dist_m) <= 0.0:
+        raise ValueError("--contact_near_tcp_cube_dist_m must be positive")
+    if not (0.0 < float(args.contact_near_joint_step_scale) <= 1.0):
+        raise ValueError("--contact_near_joint_step_scale must be in (0, 1]")
+    if not (0.0 < float(args.contact_stop_joint_step_scale) <= 1.0):
+        raise ValueError("--contact_stop_joint_step_scale must be in (0, 1]")
+    if float(args.contact_retract_clearance_m) < 0.0:
+        raise ValueError("--contact_retract_clearance_m must be non-negative")
+    if float(args.reaction_disp_m) < 0.0:
+        raise ValueError("--reaction_disp_m must be non-negative")
+    if float(args.reaction_z_delta_m) < 0.0:
+        raise ValueError("--reaction_z_delta_m must be non-negative")
+    if float(args.reaction_speed_mps) < 0.0:
+        raise ValueError("--reaction_speed_mps must be non-negative")
+    if args.contact_controller_mode == "measured_stop" and args.through_target_mode != "near_face":
+        raise ValueError("--contact_controller_mode measured_stop requires --through_target_mode near_face")
     if args.fixed_push_dir is not None:
         fixed_norm = math.hypot(float(args.fixed_push_dir[0]), float(args.fixed_push_dir[1]))
         if fixed_norm <= 1.0e-6:
@@ -235,6 +278,15 @@ def main() -> int:
         env_cfg.cube_push_target_disp_m = float(args.cube_push_target_disp_m)
     if args.cube_success_disp_m is not None:
         env_cfg.cube_success_disp_m = float(args.cube_success_disp_m)
+    arm_actuator = env_cfg.robot.actuators["arm"]
+    if args.arm_stiffness_override is not None:
+        arm_actuator.stiffness = float(args.arm_stiffness_override)
+    if args.arm_damping_override is not None:
+        arm_actuator.damping = float(args.arm_damping_override)
+    if args.arm_effort_limit_sim_override is not None:
+        arm_actuator.effort_limit_sim = float(args.arm_effort_limit_sim_override)
+    if args.arm_velocity_limit_sim_override is not None:
+        arm_actuator.velocity_limit_sim = float(args.arm_velocity_limit_sim_override)
     env_cfg.ik_endpoint_reset = False
     env_cfg.scripted_teacher_blend = 0.0
     env_cfg.action_scale = 0.0
@@ -322,6 +374,10 @@ def main() -> int:
         f"cube_success_disp_m={float(env_cfg.cube_success_disp_m):.6f} gate_disp_m={float(args.gate_disp_m):.6f} "
         f"fixed_cube_x_m={args.fixed_cube_x_m} fixed_cube_y_m={args.fixed_cube_y_m} "
         f"fixed_push_dir={args.fixed_push_dir} tcp_height_mode={args.tcp_height_mode} "
+        f"through_target_mode={args.through_target_mode} "
+        f"contact_controller_mode={args.contact_controller_mode} "
+        f"contact_stop_target_mode={args.contact_stop_target_mode} "
+        f"contact_stop_disp_m={contact_stop_disp_m:.6f} "
         "controller=IsaacLab_DifferentialIKController ik_method=dls command_type=position "
         "local_roarm_ik_dls_control_loop=NO training=NO dataset_generation=NO "
         "grasp=NO attach_posewrite=NO rollout_object_posewrite=NO",
@@ -342,7 +398,11 @@ def main() -> int:
         f"v3_posx_max_diffik_joint_step_rad={args.v3_posx_max_diffik_joint_step_rad:.6f} "
         f"v31_posx_max_diffik_joint_step_rad={args.v31_posx_max_diffik_joint_step_rad:.6f} "
         f"v31_lowx_max_diffik_joint_step_rad={args.v31_lowx_max_diffik_joint_step_rad:.6f} "
-        f"dls_lambda={args.dls_lambda:.6f} env_auto_reset_disabled=YES "
+        f"dls_lambda={args.dls_lambda:.6f} "
+        f"arm_actuator_stiffness={arm_actuator.stiffness} arm_actuator_damping={arm_actuator.damping} "
+        f"arm_actuator_effort_limit_sim={arm_actuator.effort_limit_sim} "
+        f"arm_actuator_velocity_limit_sim={arm_actuator.velocity_limit_sim} "
+        f"env_auto_reset_disabled=YES "
         f"env_joint_delta_action_loop_bypassed=YES episode_length_s={env_cfg.episode_length_s:.3f}",
         flush=True,
     )
@@ -449,16 +509,39 @@ def main() -> int:
             raise ValueError(f"unsupported tcp_height_mode={args.tcp_height_mode!r}")
         lateral = lateral_dir * traj["lateral_offset"].unsqueeze(-1)
         pre[:, 0:2] = cube[:, 0:2] - push_dir * (half_along + traj["precontact"]).unsqueeze(-1) + lateral
-        through[:, 0:2] = cube[:, 0:2] + push_dir * (half_along + traj["push_through"]).unsqueeze(-1) + lateral
+        if args.through_target_mode == "far_face":
+            through[:, 0:2] = cube[:, 0:2] + push_dir * (half_along + traj["push_through"]).unsqueeze(-1) + lateral
+        elif args.through_target_mode == "near_face":
+            through[:, 0:2] = cube[:, 0:2] - push_dir * (half_along - traj["push_through"]).unsqueeze(-1) + lateral
+        else:
+            raise ValueError(f"unsupported through_target_mode={args.through_target_mode!r}")
         pre[:, 2] = z
         through[:, 2] = z
         return pre + alpha.unsqueeze(-1) * (through - pre)
 
-    def compute_diffik_joint_target(tcp_target_w: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+    def compute_retract_tcp_targets(traj: dict[str, torch.Tensor]) -> torch.Tensor:
+        cube = inner._cube_start_w
+        push_dir = inner._push_dir_xy
+        lateral_dir = torch.stack((-push_dir[:, 1], push_dir[:, 0]), dim=-1)
+        half_along = torch.sum(torch.abs(push_dir) * half_xy.unsqueeze(0), dim=-1)
+        if args.tcp_height_mode == "top_margin":
+            z = cube[:, 2] + cube_top_half_z + traj["tcp_top_margin"]
+        elif args.tcp_height_mode == "side_center":
+            z = cube[:, 2] + float(args.tcp_center_height_offset_m)
+        else:
+            raise ValueError(f"unsupported tcp_height_mode={args.tcp_height_mode!r}")
+        lateral = lateral_dir * traj["lateral_offset"].unsqueeze(-1)
+        target = cube.clone()
+        clearance = torch.full_like(half_along, float(args.contact_retract_clearance_m))
+        target[:, 0:2] = cube[:, 0:2] - push_dir * (half_along + clearance).unsqueeze(-1) + lateral
+        target[:, 2] = z
+        return target
+
+    def compute_diffik_joint_target(tcp_target_w: torch.Tensor) -> tuple[torch.Tensor, dict[str, torch.Tensor]]:
         root_pos_w = inner._robot.data.root_pos_w
         root_quat_w = inner._robot.data.root_quat_w
-        link5_pos_w = inner._robot.data.body_pos_w[:, link5_body_idx]
-        link5_quat_w = inner._robot.data.body_quat_w[:, link5_body_idx]
+        link5_pos_w = inner._robot.data.body_pos_w[:, link5_body_idx].clone()
+        link5_quat_w = inner._robot.data.body_quat_w[:, link5_body_idx].clone()
         link5_pos_b, link5_quat_b = subtract_frame_transforms(root_pos_w, root_quat_w, link5_pos_w, link5_quat_w)
         tcp_offset_w = quat_rotate(link5_quat_w, tcp_local)
         link5_target_w = tcp_target_w - tcp_offset_w
@@ -471,7 +554,14 @@ def main() -> int:
         joint_pos = inner._robot.data.joint_pos[:, arm_joint_ids]
         diffik.set_command(link5_target_b, ee_pos=link5_pos_b, ee_quat=link5_quat_b)
         joint_pos_des = diffik.compute(link5_pos_b, link5_quat_b, jacobian, joint_pos)
-        return joint_pos_des, link5_target_b, link5_pos_b
+        return joint_pos_des, {
+            "link5_pos_w": link5_pos_w,
+            "link5_quat_w": link5_quat_w,
+            "link5_target_w": link5_target_w,
+            "link5_pos_b": link5_pos_b,
+            "link5_target_b": link5_target_b,
+            "tcp_offset_w": tcp_offset_w,
+        }
 
     try:
         for episode in range(int(args.episodes)):
@@ -485,15 +575,34 @@ def main() -> int:
                 env.step(zero_action)
 
             inner._compute_intermediate_values()
-            cube_start_w = inner._cube_start_w.clone()
             push_dir = inner._push_dir_xy.clone()
+            # Use the settled PhysX pose as the diagnostic start. The reset buffer can
+            # differ from the actual cuboid center after plane contact resolution.
+            cube_start_w = inner._sponge_pos_w.clone()
+            inner._cube_start_w[:] = cube_start_w
+            inner._target_world[:, 0:2] = cube_start_w[:, 0:2] + push_dir * float(env_cfg.cube_push_target_disp_m)
+            inner._target_world[:, 2] = cube_start_w[:, 2]
             min_tcp_cube_dist = torch.full((n,), float("inf"), device=device)
             min_tcp_target_err = torch.full((n,), float("inf"), device=device)
             final_tcp_target_err = torch.zeros((n,), device=device)
             max_cube_speed = torch.zeros((n,), device=device)
+            max_disp_along = torch.full((n,), -float("inf"), device=device)
+            max_cube_z_delta = torch.zeros((n,), device=device)
+            max_tip_angle_deg = torch.zeros((n,), device=device)
             max_joint_delta_abs = torch.zeros((n,), device=device)
             clipped_steps = torch.zeros((n,), device=device)
             traj = build_trajectory_tensors()
+            stop_tcp_target_w = torch.zeros((n, 3), dtype=torch.float32, device=device)
+            near_tcp_cube_seen = torch.zeros((n,), dtype=torch.bool, device=device)
+            measured_contact_seen = torch.zeros((n,), dtype=torch.bool, device=device)
+            contact_stop_seen = torch.zeros((n,), dtype=torch.bool, device=device)
+            contact_overshoot_seen = torch.zeros((n,), dtype=torch.bool, device=device)
+            near_tcp_cube_steps = torch.zeros((n,), device=device)
+            measured_contact_steps = torch.zeros((n,), device=device)
+            contact_stop_steps = torch.zeros((n,), device=device)
+            first_near_tcp_cube_step = torch.full((n,), -1, dtype=torch.int32, device=device)
+            first_contact_step = torch.full((n,), -1, dtype=torch.int32, device=device)
+            first_stop_step = torch.full((n,), -1, dtype=torch.int32, device=device)
             posx_variant_env_count = int(traj["posx"].sum().detach().cpu().item())
             posx_variant_trial_count += posx_variant_env_count
             if args.record_video and episode == 0:
@@ -524,14 +633,63 @@ def main() -> int:
                 alpha = compute_alpha(step, traj)
 
                 inner._compute_intermediate_values()
+                pre_step_terms = inner._push_terms()
+                step_i = torch.full((n,), int(step), dtype=torch.int32, device=device)
+                near_tcp_cube_now = pre_step_terms["tcp_cube_dist"] <= float(args.contact_near_tcp_cube_dist_m)
+                measured_contact_now = pre_step_terms["disp_along"] >= float(args.contact_detect_disp_m)
+                stop_now = pre_step_terms["disp_along"] >= contact_stop_disp_m
+                overshoot_now = pre_step_terms["disp_along"] >= float(args.contact_overshoot_disp_m)
+
+                new_near = near_tcp_cube_now & ~near_tcp_cube_seen
+                new_contact = measured_contact_now & ~measured_contact_seen
+                new_stop = (stop_now | overshoot_now) & ~contact_stop_seen
+                first_near_tcp_cube_step = torch.where(new_near, step_i, first_near_tcp_cube_step)
+                first_contact_step = torch.where(new_contact, step_i, first_contact_step)
+                first_stop_step = torch.where(new_stop, step_i, first_stop_step)
+                near_tcp_cube_seen |= near_tcp_cube_now
+                measured_contact_seen |= measured_contact_now
+                contact_stop_seen |= stop_now | overshoot_now
+                contact_overshoot_seen |= overshoot_now
+                near_tcp_cube_steps += near_tcp_cube_now.float()
+                measured_contact_steps += measured_contact_now.float()
+                contact_stop_steps += contact_stop_seen.float()
+
                 tcp_target_w = compute_tcp_targets(alpha, traj)
-                joint_pos_des, _link5_target_b, _link5_pos_b = compute_diffik_joint_target(tcp_target_w)
-                joint_pos_arm = inner._robot.data.joint_pos[:, arm_joint_ids]
+                step_scale = torch.ones((n,), dtype=torch.float32, device=device)
+                if args.contact_controller_mode == "measured_stop":
+                    if args.contact_stop_target_mode == "freeze":
+                        stop_tcp_target_w = torch.where(new_stop.unsqueeze(-1), tcp_target_w, stop_tcp_target_w)
+                        tcp_target_w = torch.where(contact_stop_seen.unsqueeze(-1), stop_tcp_target_w, tcp_target_w)
+                    elif args.contact_stop_target_mode == "retract":
+                        retract_target_w = compute_retract_tcp_targets(traj)
+                        tcp_target_w = torch.where(contact_stop_seen.unsqueeze(-1), retract_target_w, tcp_target_w)
+                    else:
+                        raise ValueError(f"unsupported contact_stop_target_mode={args.contact_stop_target_mode!r}")
+                    step_scale = torch.where(
+                        near_tcp_cube_now | measured_contact_seen,
+                        torch.full_like(step_scale, float(args.contact_near_joint_step_scale)),
+                        step_scale,
+                    )
+                    step_scale = torch.where(
+                        contact_stop_seen,
+                        torch.full_like(step_scale, float(args.contact_stop_joint_step_scale)),
+                        step_scale,
+                    )
+                tcp_pos_before_w = inner._tcp_pos_w.clone()
+                joint_target_before = inner.robot_dof_targets[:, arm_joint_ids].clone()
+                joint_pos_arm = inner._robot.data.joint_pos[:, arm_joint_ids].clone()
+                joint_pos_des, diffik_terms = compute_diffik_joint_target(tcp_target_w)
                 raw_delta = joint_pos_des - joint_pos_arm
-                max_step = traj["max_joint_step"].unsqueeze(-1)
+                max_step = traj["max_joint_step"].unsqueeze(-1) * step_scale.unsqueeze(-1)
+                clip_mask = torch.abs(raw_delta) > max_step
+                clip_joint_count = clip_mask.sum(dim=-1)
                 clipped_delta = torch.maximum(torch.minimum(raw_delta, max_step), -max_step)
-                clipped_steps += (torch.max(torch.abs(raw_delta), dim=-1).values > traj["max_joint_step"]).float()
+                clipped_steps += (clip_joint_count > 0).float()
                 max_joint_delta_abs = torch.maximum(max_joint_delta_abs, torch.max(torch.abs(clipped_delta), dim=-1).values)
+                raw_delta_abs = torch.abs(raw_delta)
+                clip_max_joint_idx = torch.argmax(raw_delta_abs, dim=-1)
+                tcp_err_before = torch.norm(tcp_pos_before_w - tcp_target_w, p=2, dim=-1)
+                link5_err_before = torch.norm(diffik_terms["link5_pos_w"] - diffik_terms["link5_target_w"], p=2, dim=-1)
 
                 target_full = inner.robot_dof_targets.clone()
                 target_full[:, arm_joint_ids] = joint_pos_arm + clipped_delta
@@ -542,7 +700,15 @@ def main() -> int:
 
                 env.step(zero_action)
                 inner._compute_intermediate_values()
+                post_step_terms = inner._push_terms()
+                max_disp_along = torch.maximum(max_disp_along, post_step_terms["disp_along"])
+                max_cube_z_delta = torch.maximum(max_cube_z_delta, inner._sponge_pos_w[:, 2] - cube_start_w[:, 2])
+                max_tip_angle_deg = torch.maximum(max_tip_angle_deg, post_step_terms["tip_angle_deg"])
+                link5_pos_after_w = inner._robot.data.body_pos_w[:, link5_body_idx].clone()
+                joint_pos_after = inner._robot.data.joint_pos[:, arm_joint_ids].clone()
+                robot_dof_targets_after = inner.robot_dof_targets[:, arm_joint_ids].clone()
                 tcp_err = torch.norm(inner._tcp_pos_w - tcp_target_w, p=2, dim=-1)
+                link5_err_after = torch.norm(link5_pos_after_w - diffik_terms["link5_target_w"], p=2, dim=-1)
                 final_tcp_target_err = tcp_err
                 min_tcp_target_err = torch.minimum(min_tcp_target_err, tcp_err)
                 min_tcp_cube_dist = torch.minimum(
@@ -551,7 +717,7 @@ def main() -> int:
                 )
                 max_cube_speed = torch.maximum(max_cube_speed, torch.norm(inner._sponge.data.root_lin_vel_w, p=2, dim=-1))
                 if trace_env_ids and episode == 0 and step % max(1, int(args.trace_stride)) == 0:
-                    trace_terms = inner._push_terms()
+                    trace_terms = post_step_terms
                     trace_frame = step // max(1, int(args.trace_stride))
                     for trace_idx in trace_env_ids:
                         trace_row: dict[str, float | int | str] = {
@@ -585,6 +751,25 @@ def main() -> int:
                             "target_y_m": float(tcp_target_w[trace_idx, 1].detach().cpu().item()),
                             "target_z_m": float(tcp_target_w[trace_idx, 2].detach().cpu().item()),
                             "phase_alpha": float(alpha[trace_idx].detach().cpu().item()),
+                            "through_target_mode": args.through_target_mode,
+                            "contact_controller_mode": args.contact_controller_mode,
+                            "near_tcp_cube_now": int(bool(near_tcp_cube_now[trace_idx].detach().cpu().item())),
+                            "near_tcp_cube_seen": int(bool(near_tcp_cube_seen[trace_idx].detach().cpu().item())),
+                            "measured_contact_now": int(bool(measured_contact_now[trace_idx].detach().cpu().item())),
+                            "measured_contact_seen": int(
+                                bool(measured_contact_seen[trace_idx].detach().cpu().item())
+                            ),
+                            "contact_stop_seen": int(bool(contact_stop_seen[trace_idx].detach().cpu().item())),
+                            "contact_overshoot_seen": int(
+                                bool(contact_overshoot_seen[trace_idx].detach().cpu().item())
+                            ),
+                            "first_near_tcp_cube_step": int(
+                                first_near_tcp_cube_step[trace_idx].detach().cpu().item()
+                            ),
+                            "first_contact_step": int(first_contact_step[trace_idx].detach().cpu().item()),
+                            "first_stop_step": int(first_stop_step[trace_idx].detach().cpu().item()),
+                            "joint_step_scale": float(step_scale[trace_idx].detach().cpu().item()),
+                            "contact_stop_disp_m": float(contact_stop_disp_m),
                             "disp_along_push_m": float(trace_terms["disp_along"][trace_idx].detach().cpu().item()),
                             "disp_xy_m": float(trace_terms["disp_xy"][trace_idx].detach().cpu().item()),
                             "lateral_abs_m": float(trace_terms["lateral_abs"][trace_idx].detach().cpu().item()),
@@ -601,6 +786,41 @@ def main() -> int:
                                 and args.trajectory_variant == "v3_1"
                             ),
                         }
+                        if args.trace_diffik_diagnostics:
+                            clip_count = int(clip_joint_count[trace_idx].detach().cpu().item())
+                            max_local_idx = int(clip_max_joint_idx[trace_idx].detach().cpu().item())
+                            trace_row.update(
+                                {
+                                    "link5_body_idx": int(link5_body_idx),
+                                    "jacobi_body_idx": int(jacobi_body_idx),
+                                    "jacobi_joint_count": int(len(jacobi_joint_ids)),
+                                    "clip_joint_count": clip_count,
+                                    "clip_any": int(clip_count > 0),
+                                    "clip_single_joint": int(clip_count == 1),
+                                    "clip_all_joints": int(clip_count == len(arm_joint_ids)),
+                                    "clip_max_joint_local_idx": max_local_idx,
+                                    "clip_max_joint_name": arm_joint_names[max_local_idx],
+                                    "tcp_target_err_before_m": float(tcp_err_before[trace_idx].detach().cpu().item()),
+                                    "tcp_target_err_after_m": float(tcp_err[trace_idx].detach().cpu().item()),
+                                    "link5_target_err_before_m": float(link5_err_before[trace_idx].detach().cpu().item()),
+                                    "link5_target_err_after_m": float(link5_err_after[trace_idx].detach().cpu().item()),
+                                    "link5_x_before_m": float(diffik_terms["link5_pos_w"][trace_idx, 0].detach().cpu().item()),
+                                    "link5_y_before_m": float(diffik_terms["link5_pos_w"][trace_idx, 1].detach().cpu().item()),
+                                    "link5_z_before_m": float(diffik_terms["link5_pos_w"][trace_idx, 2].detach().cpu().item()),
+                                    "link5_target_x_m": float(diffik_terms["link5_target_w"][trace_idx, 0].detach().cpu().item()),
+                                    "link5_target_y_m": float(diffik_terms["link5_target_w"][trace_idx, 1].detach().cpu().item()),
+                                    "link5_target_z_m": float(diffik_terms["link5_target_w"][trace_idx, 2].detach().cpu().item()),
+                                    "link5_x_after_m": float(link5_pos_after_w[trace_idx, 0].detach().cpu().item()),
+                                    "link5_y_after_m": float(link5_pos_after_w[trace_idx, 1].detach().cpu().item()),
+                                    "link5_z_after_m": float(link5_pos_after_w[trace_idx, 2].detach().cpu().item()),
+                                    "tcp_x_before_m": float(tcp_pos_before_w[trace_idx, 0].detach().cpu().item()),
+                                    "tcp_y_before_m": float(tcp_pos_before_w[trace_idx, 1].detach().cpu().item()),
+                                    "tcp_z_before_m": float(tcp_pos_before_w[trace_idx, 2].detach().cpu().item()),
+                                    "tcp_x_after_m": float(inner._tcp_pos_w[trace_idx, 0].detach().cpu().item()),
+                                    "tcp_y_after_m": float(inner._tcp_pos_w[trace_idx, 1].detach().cpu().item()),
+                                    "tcp_z_after_m": float(inner._tcp_pos_w[trace_idx, 2].detach().cpu().item()),
+                                }
+                            )
                         for local_idx, joint_idx in enumerate(arm_joint_ids):
                             trace_row[f"arm_joint_{local_idx}_rad"] = float(
                                 inner._robot.data.joint_pos[trace_idx, joint_idx].detach().cpu().item()
@@ -611,6 +831,40 @@ def main() -> int:
                             trace_row[f"joint_delta_{local_idx}_rad"] = float(
                                 clipped_delta[trace_idx, local_idx].detach().cpu().item()
                             )
+                            if args.trace_diffik_diagnostics:
+                                trace_row[f"joint_pos_before_{local_idx}_rad"] = float(
+                                    joint_pos_arm[trace_idx, local_idx].detach().cpu().item()
+                                )
+                                trace_row[f"joint_pos_des_{local_idx}_rad"] = float(
+                                    joint_pos_des[trace_idx, local_idx].detach().cpu().item()
+                                )
+                                trace_row[f"raw_delta_{local_idx}_rad"] = float(
+                                    raw_delta[trace_idx, local_idx].detach().cpu().item()
+                                )
+                                trace_row[f"clipped_delta_{local_idx}_rad"] = float(
+                                    clipped_delta[trace_idx, local_idx].detach().cpu().item()
+                                )
+                                trace_row[f"clip_mask_{local_idx}"] = int(
+                                    clip_mask[trace_idx, local_idx].detach().cpu().item()
+                                )
+                                trace_row[f"robot_dof_target_before_{local_idx}_rad"] = float(
+                                    joint_target_before[trace_idx, local_idx].detach().cpu().item()
+                                )
+                                trace_row[f"robot_dof_target_cmd_{local_idx}_rad"] = float(
+                                    target_full[trace_idx, joint_idx].detach().cpu().item()
+                                )
+                                trace_row[f"robot_dof_target_after_step_{local_idx}_rad"] = float(
+                                    robot_dof_targets_after[trace_idx, local_idx].detach().cpu().item()
+                                )
+                                trace_row[f"joint_pos_after_{local_idx}_rad"] = float(
+                                    joint_pos_after[trace_idx, local_idx].detach().cpu().item()
+                                )
+                                trace_row[f"joint_follow_err_{local_idx}_rad"] = float(
+                                    (robot_dof_targets_after[trace_idx, local_idx] - joint_pos_after[trace_idx, local_idx])
+                                    .detach()
+                                    .cpu()
+                                    .item()
+                                )
                         trace_row["gripper_joint_rad"] = float(
                             inner._robot.data.joint_pos[trace_idx, inner.gripper_joint_idx].detach().cpu().item()
                         )
@@ -635,6 +889,11 @@ def main() -> int:
             disp_xy_vec = inner._sponge_pos_w[:, 0:2] - cube_start_w[:, 0:2]
             lateral_vec = disp_xy_vec - terms["disp_along"].unsqueeze(-1) * push_dir
             for idx in range(n):
+                reaction_event = (
+                    (max_disp_along[idx] >= float(args.reaction_disp_m))
+                    | (max_cube_z_delta[idx] >= float(args.reaction_z_delta_m))
+                    | (max_cube_speed[idx] >= float(args.reaction_speed_mps))
+                )
                 records.append(
                     {
                         "trial": len(records),
@@ -652,7 +911,29 @@ def main() -> int:
                         "object_size_ref_m": object_size_ref_m,
                         "tcp_height_mode": args.tcp_height_mode,
                         "tcp_center_height_offset_m": float(args.tcp_center_height_offset_m),
+                        "through_target_mode": args.through_target_mode,
+                        "contact_controller_mode": args.contact_controller_mode,
+                        "near_tcp_cube_seen": int(bool(near_tcp_cube_seen[idx].detach().cpu().item())),
+                        "measured_contact_seen": int(bool(measured_contact_seen[idx].detach().cpu().item())),
+                        "contact_stop_seen": int(bool(contact_stop_seen[idx].detach().cpu().item())),
+                        "contact_overshoot_seen": int(bool(contact_overshoot_seen[idx].detach().cpu().item())),
+                        "first_near_tcp_cube_step": int(first_near_tcp_cube_step[idx].detach().cpu().item()),
+                        "first_contact_step": int(first_contact_step[idx].detach().cpu().item()),
+                        "first_stop_step": int(first_stop_step[idx].detach().cpu().item()),
+                        "near_tcp_cube_step_rate": float(
+                            (near_tcp_cube_steps[idx] / float(total_steps)).detach().cpu().item()
+                        ),
+                        "measured_contact_step_rate": float(
+                            (measured_contact_steps[idx] / float(total_steps)).detach().cpu().item()
+                        ),
+                        "contact_stop_step_rate": float(
+                            (contact_stop_steps[idx] / float(total_steps)).detach().cpu().item()
+                        ),
                         "disp_along_push_m": float(terms["disp_along"][idx].detach().cpu().item()),
+                        "max_disp_along_push_m": float(max_disp_along[idx].detach().cpu().item()),
+                        "max_cube_z_delta_m": float(max_cube_z_delta[idx].detach().cpu().item()),
+                        "max_tip_angle_deg": float(max_tip_angle_deg[idx].detach().cpu().item()),
+                        "reaction_event": int(bool(reaction_event.detach().cpu().item())),
                         "disp_over_object_size": float(
                             terms["disp_along"][idx].detach().cpu().item() / object_size_ref_m
                         ),
@@ -733,6 +1014,30 @@ def main() -> int:
             else 0.0
         )
 
+    def max_threshold_rate(threshold_m: float) -> float:
+        return (
+            sum(float(r["max_disp_along_push_m"]) >= float(threshold_m) for r in records) / len(records)
+            if records
+            else 0.0
+        )
+
+    def disp_band_rate(low_m: float, high_m: float, *, require_controlled: bool = False) -> float:
+        if not records:
+            return 0.0
+        good = 0
+        for row in records:
+            disp = float(row["disp_along_push_m"])
+            in_band = float(low_m) <= disp <= float(high_m)
+            if require_controlled:
+                in_band = in_band and int(row["controlled_push"]) == 1 and int(row["impact_outlier"]) == 0
+            good += int(in_band)
+        return good / len(records)
+
+    def max_disp_band_rate(low_m: float, high_m: float) -> float:
+        if not records:
+            return 0.0
+        return sum(float(low_m) <= float(r["max_disp_along_push_m"]) <= float(high_m) for r in records) / len(records)
+
     summary = {
         "controller": "IsaacLab_DifferentialIKController",
         "ik_method": "dls",
@@ -751,11 +1056,25 @@ def main() -> int:
         "object_size_ref_m": object_size_ref_m,
         "table_z_m": float(TABLE_Z),
         "cube_center_z_m": cube_center_z_m,
+        "cube_start_z_mean_m": mean("cube_z0_m"),
         "fixed_cube_x_m": None if args.fixed_cube_x_m is None else float(args.fixed_cube_x_m),
         "fixed_cube_y_m": None if args.fixed_cube_y_m is None else float(args.fixed_cube_y_m),
         "fixed_push_dir": None if args.fixed_push_dir is None else [float(x) for x in args.fixed_push_dir],
         "tcp_height_mode": args.tcp_height_mode,
         "tcp_center_height_offset_m": float(args.tcp_center_height_offset_m),
+        "through_target_mode": args.through_target_mode,
+        "contact_controller_mode": args.contact_controller_mode,
+        "contact_stop_target_mode": args.contact_stop_target_mode,
+        "contact_detect_disp_m": float(args.contact_detect_disp_m),
+        "contact_stop_disp_m": float(contact_stop_disp_m),
+        "contact_overshoot_disp_m": float(args.contact_overshoot_disp_m),
+        "contact_near_tcp_cube_dist_m": float(args.contact_near_tcp_cube_dist_m),
+        "contact_near_joint_step_scale": float(args.contact_near_joint_step_scale),
+        "contact_stop_joint_step_scale": float(args.contact_stop_joint_step_scale),
+        "contact_retract_clearance_m": float(args.contact_retract_clearance_m),
+        "reaction_disp_m": float(args.reaction_disp_m),
+        "reaction_z_delta_m": float(args.reaction_z_delta_m),
+        "reaction_speed_mps": float(args.reaction_speed_mps),
         "trajectory_variant": args.trajectory_variant,
         "base_total_steps_per_trial": base_total_steps,
         "v2_posx_total_steps_per_trial": v2_posx_total_steps,
@@ -785,6 +1104,24 @@ def main() -> int:
         "gate_disp_m": float(args.gate_disp_m),
         "max_diffik_joint_step_rad": float(args.max_diffik_joint_step_rad),
         "dls_lambda": float(args.dls_lambda),
+        "arm_actuator_stiffness": arm_actuator.stiffness,
+        "arm_actuator_damping": arm_actuator.damping,
+        "arm_actuator_effort_limit_sim": arm_actuator.effort_limit_sim,
+        "arm_actuator_velocity_limit_sim": arm_actuator.velocity_limit_sim,
+        "arm_actuator_overrides": {
+            "stiffness": None if args.arm_stiffness_override is None else float(args.arm_stiffness_override),
+            "damping": None if args.arm_damping_override is None else float(args.arm_damping_override),
+            "effort_limit_sim": (
+                None
+                if args.arm_effort_limit_sim_override is None
+                else float(args.arm_effort_limit_sim_override)
+            ),
+            "velocity_limit_sim": (
+                None
+                if args.arm_velocity_limit_sim_override is None
+                else float(args.arm_velocity_limit_sim_override)
+            ),
+        },
         "controlled_push_rate": rate("controlled_push"),
         "impact_outlier_rate": rate("impact_outlier"),
         "low_motion_rate": rate("low_motion"),
@@ -794,9 +1131,30 @@ def main() -> int:
         "disp_over_object_size_mean": mean("disp_over_object_size"),
         "disp_xy_mean_m": mean("disp_xy_m"),
         "disp_ge_gate_rate": threshold_rate(float(args.gate_disp_m)),
+        "disp_5_20mm_rate": disp_band_rate(0.005, 0.020),
+        "disp_8_15mm_rate": disp_band_rate(0.008, 0.015),
+        "controlled_disp_8_15mm_rate": disp_band_rate(0.008, 0.015, require_controlled=True),
+        "max_disp_along_push_mean_m": mean("max_disp_along_push_m"),
+        "max_disp_ge_gate_rate": max_threshold_rate(float(args.gate_disp_m)),
+        "max_disp_8_15mm_rate": max_disp_band_rate(0.008, 0.015),
+        "disp_ge_contact_overshoot_rate": threshold_rate(float(args.contact_overshoot_disp_m)),
+        "max_disp_ge_contact_overshoot_rate": max_threshold_rate(float(args.contact_overshoot_disp_m)),
         "disp_threshold_rates": {
             f"{int(threshold_m * 1000)}mm": threshold_rate(threshold_m) for threshold_m in DISP_THRESHOLDS_M
         },
+        "reaction_event_rate": rate("reaction_event"),
+        "max_cube_z_delta_mean_m": mean("max_cube_z_delta_m"),
+        "max_tip_angle_mean_deg": mean("max_tip_angle_deg"),
+        "near_tcp_cube_seen_rate": rate("near_tcp_cube_seen"),
+        "measured_contact_seen_rate": rate("measured_contact_seen"),
+        "contact_stop_seen_rate": rate("contact_stop_seen"),
+        "contact_overshoot_seen_rate": rate("contact_overshoot_seen"),
+        "first_near_tcp_cube_step_mean": mean("first_near_tcp_cube_step"),
+        "first_contact_step_mean": mean("first_contact_step"),
+        "first_stop_step_mean": mean("first_stop_step"),
+        "near_tcp_cube_step_rate_mean": mean("near_tcp_cube_step_rate"),
+        "measured_contact_step_rate_mean": mean("measured_contact_step_rate"),
+        "contact_stop_step_rate_mean": mean("contact_stop_step_rate"),
         "max_cube_speed_mean_mps": mean("max_cube_speed_mps"),
         "min_tcp_cube_dist_mean_m": mean("min_tcp_cube_dist_m"),
         "min_tcp_target_err_mean_m": mean("min_tcp_target_err_m"),
@@ -809,8 +1167,12 @@ def main() -> int:
         "video_frame_count": int(video_frame_count),
         "trace_env_id": int(args.trace_env_id),
         "trace_env_ids": trace_env_ids,
+        "trace_diffik_diagnostics": bool(args.trace_diffik_diagnostics),
         "trace_csv": str(trace_csv) if trace_csv is not None else None,
         "trace_frame_count": int(len(trace_records)),
+        "link5_body_idx": int(link5_body_idx),
+        "jacobi_body_idx": int(jacobi_body_idx),
+        "jacobi_joint_ids": [int(idx) for idx in jacobi_joint_ids],
         "audit_thresholds": {
             "speed_p95_mps": AUDIT_SPEED_P95_MPS,
             "speed_p99_mps": AUDIT_SPEED_P99_MPS,
@@ -831,6 +1193,14 @@ def main() -> int:
         f"impact_outlier_rate={summary['impact_outlier_rate']:.6f} low_motion_rate={summary['low_motion_rate']:.6f} "
         f"disp_along_push_mean_m={summary['disp_along_push_mean_m']:.6f} "
         f"disp_ge_gate_rate={summary['disp_ge_gate_rate']:.6f} "
+        f"disp_8_15mm_rate={summary['disp_8_15mm_rate']:.6f} "
+        f"max_disp_along_push_mean_m={summary['max_disp_along_push_mean_m']:.6f} "
+        f"max_disp_ge_gate_rate={summary['max_disp_ge_gate_rate']:.6f} "
+        f"reaction_event_rate={summary['reaction_event_rate']:.6f} "
+        f"overshoot_ge_{int(float(args.contact_overshoot_disp_m) * 1000)}mm_rate="
+        f"{summary['disp_ge_contact_overshoot_rate']:.6f} "
+        f"measured_contact_seen_rate={summary['measured_contact_seen_rate']:.6f} "
+        f"contact_stop_seen_rate={summary['contact_stop_seen_rate']:.6f} "
         f"disp_xy_mean_m={summary['disp_xy_mean_m']:.6f} posewrite_calls_during_rollout={summary['posewrite_calls_during_rollout']} "
         f"grasped_marker_rate={summary['grasped_marker_rate']:.6f}",
         flush=True,

@@ -6098,3 +6098,289 @@ Sources:
 - `claudedocs/session_20260604_cube10cm_diffik_teacher_gate_prep.md`
 - `roarm_rl/roarm_cube_push_env.py`
 - `sim_scripts/cube3cm_push_diffik_probe.py`
+
+## D120 - 10cm DiffIK probes must target the settled PhysX object pose, not only the reset buffer
+
+Date: 2026-06-04
+
+Decision:
+
+- For 10cm/0.72kg professor-branch DiffIK diagnostics, do not generate TCP
+  targets only from the reset-time `_cube_start_w` buffer.
+- After reset and settle, use the actual settled `inner._sponge_pos_w` as the
+  diagnostic start pose for TCP target generation and displacement metrics.
+- Keep the next runtime as the same fixed-position/fixed-direction 16-env gate,
+  only after explicit GPU escalation approval. Do not jump to randomized 128,
+  1024/10k data, dataset generation, PPO/RL scale-up, VLA training, or Track A.
+
+Evidence:
+
+- The approved fixed 16 side-center gate used 10cm/0.72kg, fixed cube
+  `(x=0.300,y=0.000)`, fixed push direction `(1,0)`, and a 1cm gate, but failed:
+  controlled `0.0`, `disp_ge_gate_rate=0.0`, 1/5/10/20/30mm all `0.0`,
+  `diffik_clip_rate_mean=1.0`, final TCP target error mean
+  `0.1307708825916052m`, and min TCP-cube distance mean
+  `0.07594270585104823m`.
+- The summary/CSV reset-buffer start z was `0.03788299858570099`, while trace
+  lines 2-5 showed the actual settled cube center z was about `0.049999m`.
+- The same trace line 2 showed target z was still `0.03788299858570099`, proving
+  the side-center TCP target used the reset buffer, not the settled PhysX object
+  center.
+- Trace lines 278-281 showed the TCP stayed around x `3.249m` while the final
+  target x was `3.359999895095825`, so reach/clipping remains unsolved even after
+  randomization was removed.
+- Static patch updated `sim_scripts/cube3cm_push_diffik_probe.py` to copy
+  `inner._sponge_pos_w` into `cube_start_w` / `_cube_start_w` after settle and to
+  log `cube_start_z_mean_m`; `py_compile`, `--help`, and `git diff --check`
+  passed.
+
+Implication:
+
+- The fixed 16 failure is still a valid failure, but not yet a clean mass/friction
+  conclusion. It exposed a target-generation/settled-pose issue plus persistent
+  DiffIK clipping.
+- The next approved runtime should repeat the fixed 16 gate with the settled-start
+  patch. A pass only unlocks gradual diagnosis, not scale-up; a fail should lead
+  to trace/video reachability and joint-limit analysis.
+
+Sources:
+
+- `claudedocs/session_20260604_cube10cm_diffik_teacher_gate_prep.md`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed16_sidecenter_seed931_summary.json:11-76`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed16_sidecenter_seed931.csv:1-4`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed16_sidecenter_seed931_trace.csv:1-6`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed16_sidecenter_seed931_trace.csv:277-281`
+- `sim_scripts/cube3cm_push_diffik_probe.py`
+- `roarm_rl/roarm_stack_env.py:133-136`
+
+## D121 - Settled-start fixed 16 still fails; next work is DiffIK body/Jacobian and actuator-path diagnosis, not data scale-up
+
+Date: 2026-06-04
+
+Decision:
+
+- The settled-start patch fixed the immediate target-z mismatch, but did not make
+  the 10cm/0.72kg fixed side-center push work.
+- Do not interpret the current failure as "the object is too heavy" or "1cm is too
+  much." The object still barely moves because the TCP does not reach the target
+  path.
+- The next professor-branch step is code review of IsaacLab DiffIK body/Jacobian
+  mapping, TCP offset usage, position-only target convergence, joint-step
+  clipping, and actuator target tracking. The next runtime should be a tiny
+  trace/video diagnostic only after approval, not a 128/1024 gate.
+
+Evidence:
+
+- The approved settled-start fixed 16 rerun logged actual settled start
+  `cube_start_z_mean_m=0.04999994789250195`, while the requested reset-derived
+  `cube_center_z_m` remained `0.037883`; trace lines 2-5 showed target z now
+  matches settled cube z around `0.050m`.
+- Despite the corrected start pose, the run failed: controlled `0.0`,
+  `disp_ge_gate_rate=0.0`, 1/5/10/20/30mm rates all `0.0`,
+  `diffik_clip_rate_mean=1.0`, final TCP target error mean
+  `0.12522956123575568m`, and min TCP-cube distance mean
+  `0.07620850298553705m`.
+- Trace lines 278-281 showed final target x `3.3600244522094727`, but TCP x
+  stayed around `3.2484-3.2491` and TCP z around `0.1068-0.1075m`; the object
+  moved only about 0.008-0.012mm along push in traced envs.
+- A local non-GPU DLS check with `sim_scripts/roarm_kinematics.py` solved the
+  same nominal side-center precontact/through TCP targets from HOME within
+  1.5mm, so the project kinematic model does not say those points are impossible.
+
+Implication:
+
+- Do not generate 10,240 DiffIK data from this path; it would be failure data.
+- Do not start PPO/RL or VLA scale-up from this teacher path.
+- The next useful diagnostic is to make the IsaacLab DiffIK trace explain why the
+  controller/actuator path diverges from the local kinematic feasibility result.
+
+Sources:
+
+- `claudedocs/session_20260604_cube10cm_diffik_teacher_gate_prep.md`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed16_sidecenter_settledstart_seed931_summary.json:13-77`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed16_sidecenter_settledstart_seed931_trace.csv:1-6`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed16_sidecenter_settledstart_seed931_trace.csv:277-281`
+- `sim_scripts/cube3cm_push_diffik_probe.py`
+- `sim_scripts/roarm_kinematics.py`
+
+## D122 - 10cm DiffIK failure is target-geometry plus actuator/step-control, not object impossibility
+
+Date: 2026-06-04
+
+Decision:
+
+- Keep the 10cm/0.72kg professor branch separate from Track A. Do not run
+  128/1024/10k, dataset generation, PPO/RL, VLA, or Track A from these results.
+- The current evidence does not support "0.72kg is too heavy" or "1cm is too
+  much." It supports a narrower diagnosis: the original TCP through target was
+  a far-face/cross-object target for a 10cm cube, while the default actuator and
+  0.035rad step path cannot even reach the safer near-face contact target.
+- `--through_target_mode near_face` and actuator override flags are diagnostic
+  switches only. A drive-boost pass is not teacher-ready because it overshoots
+  the 1cm objective.
+
+Evidence:
+
+- Code review: `sim_scripts/cube3cm_push_diffik_probe.py` now exposes
+  `--through_target_mode` and arm actuator overrides at lines 51 and 58-61,
+  applies actuator overrides before `gym.make` at lines 244-251, and computes
+  far-face vs near-face through targets at lines 471-475. The run summaries log
+  through mode and actuator values at lines 880 and 910-927.
+- The default arm actuator remains weak for this diagnostic: `roarm_rl/roarm_stack_env.py`
+  lines 173-180 configure arm stiffness `80.0`, damping `4.0`, effort limit
+  `2.5`, and velocity limit `3.14`.
+- Baseline 4-env fixed side-center trace with default actuator, far-face target,
+  and cap `0.035` still failed: summary lines 11 and 25-28 show controlled
+  `0.0`, clip `1.0`, `disp_ge_gate_rate=0.0`; lines 43 and 65-68 show final
+  TCP target error mean `0.125396907m`, low-motion `1.0`, and min TCP-cube
+  distance `0.076345483m`. Diagnostic lines 97-100 classify
+  `LINK5_BODY_TARGET_NOT_REACHED`, `JOINT_STEP_CLIPPING_DOMINANT`, and
+  `ACTUATOR_TARGET_TRACKING_LAG`.
+- Long approach alone did not fix the default path. With cap `0.035` and
+  `approach_steps=700`, summary lines 19, 21, 25-28, 43, and 65-68 still show
+  controlled `0.0`, gate `0.0`, clip `1.0`, final TCP error `0.124230925m`,
+  low-motion `1.0`, and min TCP-cube distance `0.075801797m`.
+- Cap/drive positive controls prove the object can move, but not in a usable
+  teacher way. cap `0.120` with default actuator moved mean `0.089894325m`
+  and passed the 1cm gate on 4/4 envs, but summary lines 25-28 and 43 show
+  clip `1.0`, `disp/object_size=0.898943245`, and final TCP error
+  `0.094675537m`. Drive boost with the original far-face target moved mean
+  `0.067951232m` on 3/4 envs; summary lines 2-11 record the boosted actuator,
+  and lines 21, 35-38, 53, and 75-77 show controlled `0.75`, clip `1.0`,
+  gate `0.75`, final TCP error `0.101294972m`, and low-motion `0.25`.
+- Near-face target geometry reduces target error but does not solve default
+  actuator/step tracking. Default near-face summary lines 21, 35-37, 53, 75-79,
+  and 95 show controlled `0.0`, clip `1.0`, gate `0.0`, final TCP error
+  `0.061259050m`, low-motion `1.0`, min TCP-cube distance `0.082745695m`, and
+  `through_target_mode=near_face`. Near-face long-approach summary lines 19,
+  21, 35-37, 53, 75-79, and 95 still show gate `0.0`, final TCP error
+  `0.061997696m`, and min TCP-cube distance `0.083884733m`.
+- Near-face plus drive boost passed 1cm but overshot. Summary lines 2-11 record
+  the boosted actuator; lines 21, 36-38, 53, 75-79, 91, and 95 show controlled
+  `1.0`, mean displacement `0.050082028m`, gate `1.0`, final TCP error
+  `0.124849608m`, low-motion `0.0`, min TCP-cube distance `0.073166957m`, and
+  `through_target_mode=near_face`. Per-env rows 2-5 all moved about 5cm, not
+  about 1cm.
+
+Implication:
+
+- The next code work should design a controlled near-face contact controller:
+  approach/contact phases, smaller/contact-aware push target increments,
+  actuator/step schedule, and stopping on actual displacement/contact. It should
+  remain a tiny fixed-geometry diagnostic until it can push near 1cm without
+  large TCP error or 5-9cm overshoot.
+- Do not report any drive-boost run as teacher-ready data or as Track A progress.
+
+Sources:
+
+- `sim_scripts/cube3cm_push_diffik_probe.py:51,58-61,244-251,471-475,880,910-927`
+- `roarm_rl/roarm_stack_env.py:173-180`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_trace4_sidecenter_seed932_summary.json:11-95`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_trace4_sidecenter_seed932_trace_diagnostic_summary.json:97-185`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_trace4_sidecenter_cap120_seed932_summary.json:11-95`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_trace4_sidecenter_cap120_seed932_trace_diagnostic_summary.json:97-185`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_trace4_sidecenter_longapproach_seed933_summary.json:19-95`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_trace4_sidecenter_longapproach_seed933_trace_diagnostic_summary.json:97-185`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_trace4_sidecenter_driveboost_seed934_summary.json:2-125`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_trace4_sidecenter_nearface_seed935_summary.json:2-126`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_trace4_sidecenter_nearface_longapproach_seed936_summary.json:2-126`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_trace4_sidecenter_nearface_driveboost_seed937_summary.json:2-126`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_trace4_sidecenter_nearface_driveboost_seed937.csv:1-5`
+
+## D123 - Professor 10cm push/tap primary metric is reaction event, not final displacement
+
+Date: 2026-06-04
+
+Decision:
+
+- Supersede the D118 "primary 1cm push gate" only for the clarified professor
+  push/tap objective. If the task is tap/reaction, final 1cm displacement is a
+  secondary relocation metric, not the primary success criterion.
+- Primary evidence for this branch should be reaction event: measured contact,
+  transient displacement, cube z/lift response, or cube speed. It is acceptable
+  for the cube to react, lift slightly, and settle back near the start if the
+  professor objective is "push/tap happened" rather than "relocate by 1cm."
+- Keep this separate from Track A, dataset generation, PPO/RL scale-up, and VLA.
+  A fixed-geometry reaction pass only justifies a tiny randomized reaction screen
+  after the reaction gate is defined.
+- Massive IsaacLab randomization is acceptable as candidate discovery, but one
+  lucky success is not a policy, not teacher-data readiness, and not sim-to-real
+  evidence. It must be followed by held-out seeds, perturbation/domain
+  randomization, and trace/video audits.
+
+Evidence:
+
+- The probe now exposes reaction thresholds at
+  `sim_scripts/cube3cm_push_diffik_probe.py:61-63`, validates them at
+  `:247-252`, stores transient state at `:589-605`, computes `reaction_event` at
+  `:891-897`, records max/reaction row fields at `:932-936`, and summarizes max
+  transient displacement and reaction-event metrics at `:1137-1147`.
+- seed938 showed the near slowdown was too conservative: summary lines 21-31
+  show measured-stop mode but no contact/stop; lines 50-52 show only
+  `1.30385160446167e-05m` final displacement and final gate `0.0`; lines 68-71
+  show final TCP error `0.06104395352303982m`, first contact `-1`, and first
+  stop `-1`.
+- seed939 removed near slowdown and reached contact/stop: summary lines 21-31
+  show `contact_stop_seen_rate=1.0`; lines 50-52 show final displacement only
+  `0.0014313608407974243m` and final gate `0.0`; lines 68-71 show first contact
+  mean `261.5` and first stop mean `279.75`; lines 94-100 show object speed and
+  measured contact evidence.
+- seed940 measured-stop freeze is the key clarified-metric result. Summary lines
+  21-32 show measured-stop freeze with stop seen `1.0`; lines 51-53 show final
+  displacement `0.0014494359493255615m` and final gate `0.0`; lines 95-100 show
+  max cube speed `0.14879385754466057m/s`, max 8-15mm rate `1.0`, max transient
+  displacement mean `0.010990217328071594m`, no contact overshoot, and transient
+  1cm rate `1.0`; lines 101-106 show measured contact and near-contact rates
+  `1.0`; line 118 keeps the old success marker `1.0`.
+- seed940 per-env CSV lines 2-5 show all four fixed envs had measured contact,
+  contact stop, no overshoot, final displacement about `1.38-1.56mm`, max
+  transient displacement about `10.81-11.26mm`, and max speed about
+  `0.138-0.164m/s`.
+- The trace analyzer still reports controller-quality blockers for seed940:
+  diagnostic summary lines 2-29 show clipping in some joints, lines 97-100 list
+  `LINK5_BODY_TARGET_NOT_REACHED`, `JOINT_STEP_CLIPPING_DOMINANT`, and
+  `ACTUATOR_TARGET_TRACKING_LAG`. So this is reaction evidence, not a polished
+  teacher.
+- NVIDIA's Isaac Lab documentation frames the workflow around many parallel
+  environments and GPU-accelerated robot learning, and the Isaac Gym paper
+  reports 2-3 orders of magnitude speedups from a GPU-native simulation/training
+  path. That supports scale as a search/training tool.
+- Domain randomization and ADR papers support simulation scale only when the
+  randomized distribution is designed to bridge the reality gap; they do not
+  justify treating a single selected lucky rollout as robust real-world evidence.
+- If the per-trial true reaction probability is `p`, the chance of at least one
+  hit in `N=1,000,000` trials is `1-(1-p)^N`. That is about 63% for `p=1e-6`,
+  about 9.5% for `p=1e-7`, and about 1% for `p=1e-8`. A single hit in 1M is
+  therefore weak evidence of a very narrow success manifold unless it repeats on
+  held-out seeds and perturbations.
+
+Implication:
+
+- Stop calling the professor 10cm branch failed solely because final 1cm
+  displacement is not maintained. Under the clarified push/tap criterion, seed940
+  is a fixed-geometry reaction-event pass.
+- Do not jump directly to RL. First make the reaction gate explicit, rerun only a
+  tiny randomized reaction screen if approved, and separate "reaction happened"
+  from "usable teacher/policy/dataset."
+- If the professor asks specifically for sustained relocation, re-enable final
+  displacement as the primary gate; otherwise it is a secondary diagnostic.
+
+Sources:
+
+- `sim_scripts/cube3cm_push_diffik_probe.py:61-63,247-252,589-605,891-897,932-936,1137-1147`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_measuredstop_driveboost_seed938_summary.json:21-118`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_measuredstop_driveboost_noslow_seed939_summary.json:21-118`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_measuredstop_freeze_driveboost_seed940_summary.json:21-118`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_measuredstop_freeze_driveboost_seed940.csv:1-5`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_measuredstop_freeze_driveboost_seed940_trace_diagnostic_summary.json:2-100`
+- NVIDIA Isaac Lab docs, "How Isaac Lab Accelerates Reinforcement Learning":
+  https://docs.nvidia.com/learning/physical-ai/getting-started-with-isaac-lab/latest/train-your-first-robot-with-isaac-lab/02-how-isaac-lab-accelerates-reinforcement-learning.html
+- NVIDIA Isaac Lab developer page: https://developer.nvidia.com/isaac/lab
+- Makoviychuk et al., "Isaac Gym: High Performance GPU-Based Physics Simulation
+  For Robot Learning": https://arxiv.org/abs/2108.10470
+- Tobin et al., "Domain Randomization for Transferring Deep Neural Networks from
+  Simulation to the Real World": https://arxiv.org/abs/1703.06907
+- OpenAI et al., "Solving Rubik's Cube with a Robot Hand":
+  https://arxiv.org/abs/1910.07113
+- Mania et al., "Simple random search provides a competitive approach to
+  reinforcement learning": https://arxiv.org/abs/1803.07055
