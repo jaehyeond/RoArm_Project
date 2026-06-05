@@ -7230,3 +7230,379 @@ Sources:
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xneg16_goodxy_latneg020_height050_seed949_trace_diagnostic_summary.json:1-12,97-100,168-184`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_next_research_step_xneg_height050_seed949_audit.json:1-24`
 - `sim_scripts/cube3cm_push_diffik_build_dataset.py:185-203,384-430`
+
+## D139 - Direction-specific height makes x- contact robust, but x+ still blocks data scale-up
+
+Date: 2026-06-05
+
+Decision:
+
+- Keep direction-specific side-center height overrides in the shared DiffIK probe
+  because x- needs the raised side-center target while y+ does not.
+- Treat seed950/seed951 as evidence that the branch has a broader tap/reaction
+  contact geometry than the original seed946 y+ pocket, but not as 1024/10240
+  trace or dataset readiness.
+- Do not start dataset generation, PPO/RL, VLA, Track A, 1024/10k scale-up, or
+  broad random search from seed950/seed951.
+
+Evidence:
+
+- Code now exposes `--xneg_tcp_center_height_offset_m`,
+  `--xpos_tcp_center_height_offset_m`, `--yneg_tcp_center_height_offset_m`, and
+  `--ypos_tcp_center_height_offset_m`; both push and retract side-center targets
+  use the per-env `traj["tcp_center_height_offset"]`.
+- seed950 random-direction heldout used goodxy/lateral plus only
+  `--xneg_tcp_center_height_offset_m=0.050`. Direction split line 1 shows x-
+  reaction/contact/controlled `1.0/1.0/1.0`, clip `0.457949`, and final TCP
+  error `0.013043m`. Lines 2-4 show y-/y+/x+ all contact, but x+ controlled
+  remains `0.0` with clip `1.0` and final TCP error `0.058328m`.
+- seed950 reaction audit lines 2-27 shows reaction/contact `1.0/1.0`, no
+  posewrite, overshoot `0.0`, reaction gate PASS, but teacher false due clip
+  `0.830608975` and final TCP error `0.037568951m`.
+- seed950 next-step audit lines 2-24 keeps the branch on
+  `NARROW_ACTUATOR_IK_TRACKING_CLEANUP_INSIDE_WORKING_TAP_GEOMETRY` and blocks
+  dataset/PPO/VLA/TrackA/1024_10k.
+- seed951 fixed x+ with global height050 reaction audit lines 2-27 shows
+  reaction/contact `1.0/1.0`, no posewrite, overshoot `0.0`, reaction gate PASS,
+  but final displacement only `0.000011876m`, final gate `0.0`, clip `1.0`, and
+  teacher false.
+- seed951 trace diagnostic lines 1-6/97-100/167-184 show clip_any `1.0`, the
+  dominant clipped joint `link1_to_link2`, actuator target tracking lag, and
+  worst raw delta on joint 2.
+- seed951 next-step audit lines 2-24 keeps the next direction at
+  `NARROW_ACTUATOR_IK_TRACKING_CLEANUP_INSIDE_WORKING_TAP_GEOMETRY`.
+
+Implication:
+
+- The old x- no-contact failure was not a reason to abandon the geometry, but the
+  x+ result proves the current state is still tap/reaction diagnosis, not teacher
+  data. The next narrow work is actuator/IK tracking cleanup inside the now-working
+  contact geometry.
+
+Sources:
+
+- `sim_scripts/cube3cm_push_diffik_probe.py:48-52,447-458,526-552,1089-1105`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_goodxy_dir16_latneg020_xnegheight050_seed950_direction_contact.out:1-4`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_goodxy_dir16_latneg020_xnegheight050_seed950_reaction_gate_audit.json:1-43`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_next_research_step_goodxy_dir16_xnegheight050_seed950_audit.json:1-25`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_seed951_reaction_gate_audit.json:1-43`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_seed951_trace_diagnostic_summary.json:1-30,97-100,167-184`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_next_research_step_xpos_height050_seed951_audit.json:1-25`
+
+## D140 - X+ slow schedule improves some tracking numbers but does not clear clipping
+
+Date: 2026-06-05
+
+Decision:
+
+- Treat seed952 as a negative narrow actuator/IK cleanup screen: slowing the x+
+  schedule from `220/90/80` to `320/180/80` is not sufficient to make x+ teacher
+  or dataset ready.
+- Continue to block dataset generation, PPO/RL, VLA, Track A, 1024/10k scale-up,
+  and broad random search.
+
+Evidence:
+
+- seed952 fixed x+ used the same goodxy/lateral/height050 tap geometry as seed951
+  and changed only the base schedule to `320/180/80`.
+- Summary JSON lines 20-34/47-61/77-85/102-137 show no dataset generation,
+  no posewrite, contact stop `1.0`, final TCP error `0.008242317m`, fixed x+,
+  low-motion `1.0`, max displacement `0.001094822m`, final displacement
+  `0.000012942m`, measured contact `1.0`, reaction `1.0`, and total steps `580`.
+- Reaction audit lines 2-27 shows reaction/contact `1.0/1.0`, no posewrite,
+  overshoot `0.0`, reaction gate PASS, final gate `0.0`, clip `1.0`, and
+  teacher false.
+- Trace diagnostic lines 1-29/97-100/167-184 shows clip_any `1.0`, joint1 clip
+  rate `0.986637931`, actuator tracking lag, worst clipped joint 1, and worst raw
+  delta joint 2. It lowers some means versus seed951, but not the blocker.
+- Next-step audit lines 2-24 keeps the next direction at
+  `NARROW_ACTUATOR_IK_TRACKING_CLEANUP_INSIDE_WORKING_TAP_GEOMETRY`.
+
+Implication:
+
+- The branch can produce clean tap/reaction contact for x+ without posewrite or
+  overshoot, but the teacher/data blocker is still the persistent DiffIK clipping
+  and actuator lag. The next step should target that mechanism directly, not
+  scale data.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_slow320x180_seed952_summary.json:1-35,47-85,102-137`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_slow320x180_seed952_reaction_gate_audit.json:1-43`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_slow320x180_seed952_trace_diagnostic_summary.json:1-35,97-100,167-184`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_next_research_step_xpos_height050_slow320x180_seed952_audit.json:1-25`
+
+## D141 - X+ dls030 keeps tap contact but does not clear actuator/IK clipping
+
+Date: 2026-06-05
+
+Decision:
+
+- Treat seed953 as a negative DLS-only screen: changing fixed x+ height050 from
+  `dls_lambda=0.010` to `0.030` does not make the controller teacher/data ready.
+- Do not continue to 1024 trace, 10240 trace, dataset generation, PPO/RL, VLA,
+  Track A, or broad random search from seed953.
+
+Evidence:
+
+- Pre-runtime guards passed: tap objective contract PASS, latest next-step audit
+  stayed on `NARROW_ACTUATOR_IK_TRACKING_CLEANUP_INSIDE_WORKING_TAP_GEOMETRY`,
+  `py_compile` PASS, and `git diff --check` PASS.
+- seed953 used the same fixed x+ goodxy/lateral/height050 setup as seed951 with
+  wrapper tap defaults and changed only `dls_lambda` to `0.030`.
+- Summary JSON lines 20-34/47-85/102-137 show no dataset generation, no
+  posewrite, `dls_lambda=0.03`, final TCP error `0.008274879m`, contact stop
+  `1.0`, measured contact `1.0`, reaction `1.0`, low-motion `1.0`, final
+  displacement `0.000015721m`, max displacement `0.001356367m`, and total steps
+  `390`.
+- Reaction audit lines 2-27 shows reaction/contact `1.0/1.0`, no posewrite,
+  overshoot `0.0`, reaction gate PASS, final gate `0.0`, clip `1.0`, and
+  teacher false.
+- Trace diagnostic lines 1-29/97-100/167-184 still show clip_any `1.0`,
+  dominant clipped joint `link1_to_link2`, joint1 clip rate `0.979591837`,
+  actuator target tracking lag, worst clipped/follow joint 1, and worst raw delta
+  joint 2.
+- Compared with seed951, DLS `0.030` slightly reduces joint2 raw delta mean
+  (`0.124008227 -> 0.118306149`) and joint3 clip rate (`0.384566 -> 0.286352`),
+  but joint1 clipping/follow lag remains essentially unchanged and still blocks
+  teacher quality.
+- Next-step audit lines 2-24 keeps the branch at
+  `NARROW_ACTUATOR_IK_TRACKING_CLEANUP_INSIDE_WORKING_TAP_GEOMETRY` and explicitly
+  blocks dataset/PPO/VLA/TrackA/1024_10k.
+
+Implication:
+
+- x+ tap/reaction geometry is not the blocker anymore. The remaining blocker is
+  the command/actuator tracking mechanism around joint1 clipping and follow lag.
+  The next tiny screen should target actuator/joint-command tracking directly,
+  not scale data or keep sweeping DLS alone.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_dls030_seed953_summary.json:20-35,47-85,102-137`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_dls030_seed953_reaction_gate_audit.json:1-43`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_dls030_seed953_trace_diagnostic_summary.json:1-35,97-100,167-184`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_next_research_step_xpos_height050_dls030_seed953_audit.json:1-25`
+
+## D142 - X+ cap050 partially relieves command cap but exposes actuator follow lag
+
+Date: 2026-06-05
+
+Decision:
+
+- Treat seed954 as a useful mechanism-separation screen, not a teacher/data
+  milestone.
+- Increasing fixed x+ height050 `max_diffik_joint_step_rad` from `0.035` to
+  `0.050` partially reduces clipping and improves tap-scale displacement, but it
+  worsens joint1 actuator follow lag and remains not teacher/data ready.
+- Do not start 1024 trace, 10240 trace, dataset generation, PPO/RL, VLA, Track A,
+  or broad random search from seed954.
+
+Evidence:
+
+- Pre-runtime guards passed: tap objective contract PASS, seed953 next-step audit
+  kept `NARROW_ACTUATOR_IK_TRACKING_CLEANUP_INSIDE_WORKING_TAP_GEOMETRY`,
+  `py_compile` PASS, and `git diff --check` PASS.
+- seed954 used the same fixed x+ goodxy/lateral/height050 setup as seed951 with
+  wrapper tap defaults, `dls_lambda=0.010`, default `220/90/80` schedule, and
+  changed only `max_diffik_joint_step_rad` to `0.050`.
+- Summary JSON lines 20-35/47-85/102-137 show no dataset generation, no
+  posewrite, contact stop `1.0`, `max_diffik_joint_step_rad=0.05`, clip
+  `0.870833352`, final TCP error `0.008357591m`, final displacement
+  `0.000469293m`, final 1mm rate `0.1875`, max displacement `0.001729187m`,
+  measured contact `1.0`, reaction `1.0`, low-motion `1.0`, and no overshoot.
+- Reaction audit lines 2-27 shows reaction/contact `1.0/1.0`, no posewrite,
+  overshoot `0.0`, reaction gate PASS, but teacher false because clip remains
+  `0.870833352`.
+- Trace diagnostic lines 1-29/97-100/167-184 show clip_any `0.871173469`, joint1
+  clip rate `0.851403061`, actuator target tracking lag, worst clipped joint 1,
+  worst follow joint 1, and worst joint1 follow mean `0.032731688rad`.
+- Compared with seed951, cap050 reduces clip_any (`1.0 -> 0.871173469`) and
+  improves final/max displacement (`0.000011876m -> 0.000469293m`,
+  `0.001361322m -> 0.001729187m`), but it worsens joint1 follow mean
+  (`0.023108797rad -> 0.032731688rad`). This separates command-cap relief from
+  actuator-follow failure.
+- Next-step audit lines 2-24 keeps the branch at
+  `NARROW_ACTUATOR_IK_TRACKING_CLEANUP_INSIDE_WORKING_TAP_GEOMETRY` and blocks
+  dataset/PPO/VLA/TrackA/1024_10k.
+
+Implication:
+
+- The current direction is correct: fixed x+ height050 is a working tap/contact
+  geometry, and the blocker is now actuator/joint-command tracking. The next
+  tiny work should not scale data and should not blindly increase cap further;
+  it should target actuator follow or a cap/follow compromise inside this same
+  geometry.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_cap050_seed954_summary.json:20-35,47-85,102-137`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_cap050_seed954_reaction_gate_audit.json:1-43`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_cap050_seed954_trace_diagnostic_summary.json:1-35,97-100,167-184`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_next_research_step_xpos_height050_cap050_seed954_audit.json:1-25`
+
+## D143 - X+ cap/follow screens show partial pre-stop actuator improvement but no data readiness
+
+Date: 2026-06-05
+
+Decision:
+
+- Treat seeds 955-957 as narrow actuator/IK tracking diagnostics inside the
+  working fixed x+ height050 tap geometry, not as teacher/data milestones.
+- `cap0425` is rejected as a cap/follow compromise: it restores neither useful
+  final 1mm tap retention nor aggregate clip improvement.
+- `cap050 + stiffness600` and `cap050 + stiffness600 + effort35` improve
+  pre-stop clipping relative to seed954, but still fail teacher quality and do
+  not justify 1024/10240 trace, dataset generation, PPO/RL, VLA, Track A, or
+  broad search.
+- The trace diagnostic now reports `phase_splits` so aggregate clip can be
+  interpreted separately for pre-stop motion and post-stop freeze. This does not
+  relax the existing next-step gate; it records the failure mode more precisely.
+
+Evidence:
+
+- seed955 changed only `max_diffik_joint_step_rad` from seed951's `0.035` to
+  `0.0425`. Summary lines 47-85/102-137 show no dataset generation, no
+  posewrite, contact/reaction `1.0/1.0`, clip `1.0`, final displacement
+  `0.000017896m`, max displacement `0.001481038m`, and no overshoot. Reaction
+  audit lines 2-27 shows reaction gate PASS but teacher false. Trace diagnostic
+  lines 1-29/97-100/167-184 shows clip_any `1.0`, joint1 clip rate
+  `0.981505102`, actuator follow lag, and worst follow mean `0.028573724rad`.
+- seed956 changed seed954 by only raising stiffness from `400` to `600`.
+  Summary lines 1-12/47-85/102-137 show stiffness `600`, effort limit still
+  `25`, no dataset generation, contact/reaction `1.0/1.0`, clip
+  `0.766826950`, final displacement `0.000137772m`, max displacement
+  `0.001283877m`, and no posewrite/overshoot. Reaction audit lines 2-27 keeps
+  reaction gate PASS but teacher false. Trace diagnostic lines 1-29/118-154 and
+  211-222 show aggregate clip_any `0.767857143`, pre-stop clip `0.570247934`,
+  post-stop clip `1.0`, worst follow joint1 mean `0.028109025rad`, and worst
+  follow p95 `0.050651364rad`.
+- seed957 changed seed956 by only raising effort limit from `25` to `35`.
+  Summary lines 1-12/47-85/102-137 show stiffness `600`, effort `35`, no
+  dataset generation, contact/reaction `1.0/1.0`, clip `0.749519262`, final
+  displacement `0.000026647m`, max displacement `0.001272388m`, and no
+  posewrite/overshoot. Reaction audit lines 2-27 keeps reaction gate PASS but
+  teacher false. Trace diagnostic lines 1-29/118-154 and 211-222 show aggregate
+  clip_any `0.749362245`, pre-stop clip `0.534360190`, post-stop clip `1.0`,
+  worst follow joint1 mean `0.027911684rad`, and worst follow p95
+  `0.050640494rad`.
+- `sim_scripts/cube3cm_push_diffik_trace_diagnostic_audit.py` lines 100-119 and
+  197-204 add the phase-split computation; lines 301-310 print the split. The
+  old likely-mode and next-step logic remains conservative.
+- seed957 next-step audit lines 2-24 still says
+  `NARROW_ACTUATOR_IK_TRACKING_CLEANUP_INSIDE_WORKING_TAP_GEOMETRY`, with
+  dataset/PPO/VLA/TrackA/1024_10k blocked.
+
+Implication:
+
+- The blocker is now sharply characterized: fixed x+ height050 is a valid
+  reaction/contact pocket, cap050 is better than cap035/cap0425, stiffness/effort
+  help pre-stop clip only partially, and post-stop freeze frames inflate aggregate
+  clip. The next work should be phase-aware teacher-readiness/truncation analysis
+  plus one further tiny actuator screen only if explicitly approved; it should
+  not scale to 1024/10240/data yet.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_cap0425_seed955_summary.json:47-85,102-137`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_cap0425_seed955_reaction_gate_audit.json:1-43`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_cap0425_seed955_trace_diagnostic_summary.json:1-35,118-154,211-222`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_cap050_stiff600_seed956_summary.json:1-12,47-85,102-137`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_cap050_stiff600_seed956_reaction_gate_audit.json:1-43`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_cap050_stiff600_seed956_trace_diagnostic_summary.json:1-35,118-154,211-222`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_cap050_stiff600_effort35_seed957_summary.json:1-12,47-85,102-137`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_cap050_stiff600_effort35_seed957_reaction_gate_audit.json:1-43`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_cap050_stiff600_effort35_seed957_trace_diagnostic_summary.json:1-35,118-154,211-222`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_next_research_step_xpos_height050_cap050_stiff600_effort35_seed957_audit.json:1-25`
+- `sim_scripts/cube3cm_push_diffik_trace_diagnostic_audit.py:100,197,301`
+
+## D144 - Phase-window audit rejects freeze-only explanation for seed957 teacher false
+
+Date: 2026-06-06
+
+Decision:
+
+- Add a local phase-window audit to distinguish official aggregate teacher
+  quality from the pre-stop motion window.
+- Do not reinterpret seed957 as teacher/data ready. Post-stop freeze does inflate
+  aggregate clip, but pre-stop actuator/IK clipping still exceeds the teacher
+  threshold.
+- The next step is not 1024/data/RL. It is either one more tiny actuator/IK
+  cleanup screen after approval or a stricter decision to accept only
+  reaction-contact traces with an explicit phase-window dataset contract.
+
+Evidence:
+
+- `sim_scripts/cube10cm_phase_teacher_window_audit.py` lines 1-6 define it as a
+  local posthoc tool that does not run IsaacLab, train, generate data, or change
+  the official next-step gate.
+- Lines 58-78 load the official teacher thresholds and compute full/pre-stop/
+  post-stop clip plus a diagnostic pre-stop readiness.
+- Lines 80-91 classify whether teacher false is caused by reaction failure,
+  pre-stop clip, TCP error, post-stop freeze clip, or an unclassified case.
+- seed957 phase-window audit lines 2-28 reports reaction gate PASS, official
+  teacher false, full clip `0.749519262`, pre-stop clip `0.534360190`, post-stop
+  clip `1.0`, teacher max clip `0.5`, final TCP error `0.007418527m`, and
+  conclusion `PRE_STOP_ACTUATOR_IK_CLIP_STILL_BLOCKS`.
+- The same audit reports pre-stop follow p95/cap ratio `1.015816`, meaning the
+  worst pre-stop follow p95 is still at or above the commanded joint-step cap.
+
+Implication:
+
+- The "aggregate clip includes freeze" critique is valid but insufficient. The
+  official gate is conservative, yet the pre-stop window is still not clean
+  enough to justify dataset scale-up. This should shorten the research path:
+  stop asking whether final 1cm is the blocker, and stop scaling; the remaining
+  question is whether to clear the last pre-stop clip margin or explicitly define
+  a phase-window teacher/data contract.
+
+Sources:
+
+- `sim_scripts/cube10cm_phase_teacher_window_audit.py:1-6,58-91,93-114`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_phase_teacher_window_xpos_height050_cap050_stiff600_effort35_seed957_audit.json:1-29`
+
+## D145 - Default reaction audit removes implicit 1cm relocation diagnostic
+
+Date: 2026-06-06
+
+Decision:
+
+- Remove the implicit default 1cm relocation diagnostic from the 10cm reaction
+  audit path.
+- The default reaction audit now uses `tap_gate_disp_m=0.001` and reports
+  `final_relocation_pass=None` unless `--final_relocation_disp_m` is explicitly
+  provided.
+- This change does not relax reaction/contact/no-posewrite/no-overshoot gates and
+  does not make seed957 teacher/data ready. It only removes the confusing default
+  1cm relocation output.
+
+Evidence:
+
+- `sim_scripts/cube10cm_reaction_event_gate_audit.py` lines 73-84 now define
+  `reaction_disp_m=0.001`, `tap_gate_disp_m=0.001`, and optional
+  `final_relocation_disp_m=None`.
+- Lines 141-148 compute the tap gate by max displacement and compute final
+  relocation only when explicitly requested.
+- Lines 181-213 write `final_relocation_pass`, `final_relocation_gate_rate`,
+  and `tap_gate_rate` separately.
+- seed957 tap-only reaction audit prints reaction/contact/no-posewrite/no-overshoot
+  PASS, `tap_gate_rate=1.0`, and `final_relocation_gate_rate=None`.
+- Explicit `--final_relocation_disp_m 0.010` still works as a separate secondary
+  diagnostic and prints `final_relocation_gate_rate=0.0`.
+- seed957 tap-only next-step audit reports `final_relocation_pass_secondary=None`
+  and still blocks data because `diffik_clip_rate=0.749519 > 0.5` and actuator
+  lag remains.
+
+Implication:
+
+- The active branch is now code-aligned with the professor objective: tap/reaction
+  first, no default 1cm relocation criterion. The remaining decision is not about
+  1cm; it is whether to require clean DiffIK teacher traces or define a
+  phase-window reaction dataset contract for tap events.
+
+Sources:
+
+- `sim_scripts/cube10cm_reaction_event_gate_audit.py:73-84,141-148,181-213,236-238`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_cap050_stiff600_effort35_seed957_reaction_gate_taponly_audit.json:1-43`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_next_research_step_xpos_height050_cap050_stiff600_effort35_seed957_taponly_audit.json:1-25`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_cap050_stiff600_effort35_seed957_explicit_1cm_relocation_audit.json:1-43`

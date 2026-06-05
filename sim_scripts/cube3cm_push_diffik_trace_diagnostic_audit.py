@@ -97,6 +97,28 @@ def _worst_joint(stats: list[dict[str, float | int]], metric: str) -> dict[str, 
     return max(stats, key=lambda item: float(item.get(metric, 0.0)))
 
 
+def _phase_summary(rows: list[dict[str, str]]) -> dict[str, Any]:
+    if not rows:
+        return {
+            "rows": 0,
+            "clip_any_rate": 0.0,
+            "clip_joint_count_mean": 0.0,
+            "joint_step_scale_mean": 0.0,
+            "worst_follow_joint": {"joint": -1, "mean": 0.0, "p95": 0.0, "max": 0.0},
+            "worst_raw_delta_joint": {"joint": -1, "mean": 0.0, "p95": 0.0, "max": 0.0},
+        }
+    follow_stats = _joint_stats(rows, "joint_follow_err", "rad")
+    raw_stats = _joint_stats(rows, "raw_delta", "rad")
+    return {
+        "rows": len(rows),
+        "clip_any_rate": _rate(rows, "clip_any"),
+        "clip_joint_count_mean": _mean([_float(row, "clip_joint_count") for row in rows]),
+        "joint_step_scale_mean": _mean([_float(row, "joint_step_scale") for row in rows]),
+        "worst_follow_joint": _worst_joint(follow_stats, "mean"),
+        "worst_raw_delta_joint": _worst_joint(raw_stats, "mean"),
+    }
+
+
 def _load_rows(path: Path) -> list[dict[str, str]]:
     with path.open(newline="") as fp:
         return list(csv.DictReader(fp))
@@ -174,6 +196,12 @@ def main() -> int:
 
     link5_body_idx_values = sorted({int(_float(row, "link5_body_idx")) for row in rows})
     jacobi_body_idx_values = sorted({int(_float(row, "jacobi_body_idx")) for row in rows})
+    pre_stop_rows = [row for row in rows if int(_float(row, "contact_stop_seen")) == 0]
+    post_stop_rows = [row for row in rows if int(_float(row, "contact_stop_seen")) == 1]
+    phase_splits = {
+        "pre_stop": _phase_summary(pre_stop_rows),
+        "post_stop": _phase_summary(post_stop_rows),
+    }
 
     likely_modes: list[str] = []
     if link5_after["mean"] < 0.03 and tcp_after["mean"] > 0.05:
@@ -216,6 +244,7 @@ def main() -> int:
         "worst_follow_joint": worst_follow,
         "worst_raw_delta_joint": worst_raw,
         "worst_clipped_delta_joint": worst_clipped,
+        "phase_splits": phase_splits,
         "likely_modes": likely_modes,
     }
 
@@ -265,7 +294,20 @@ def main() -> int:
     if args.out_json is not None:
         args.out_json.parent.mkdir(parents=True, exist_ok=True)
         args.out_json.write_text(json.dumps(audit_summary, indent=2, sort_keys=True) + "\n")
-        print(f"diffik_trace_diag line8 out_json={args.out_json}")
+        pre_stop = phase_splits["pre_stop"]
+        post_stop = phase_splits["post_stop"]
+        pre_follow = pre_stop["worst_follow_joint"]
+        post_follow = post_stop["worst_follow_joint"]
+        print(
+            "diffik_trace_diag line8 phase_split "
+            f"pre_stop_rows={pre_stop['rows']} pre_stop_clip_any={float(pre_stop['clip_any_rate']):.9f} "
+            f"pre_stop_worst_follow_joint={int(pre_follow['joint'])} "
+            f"pre_stop_worst_follow_mean_rad={float(pre_follow['mean']):.9f} "
+            f"post_stop_rows={post_stop['rows']} post_stop_clip_any={float(post_stop['clip_any_rate']):.9f} "
+            f"post_stop_worst_follow_joint={int(post_follow['joint'])} "
+            f"post_stop_worst_follow_mean_rad={float(post_follow['mean']):.9f}"
+        )
+        print(f"diffik_trace_diag line9 out_json={args.out_json}")
 
     return 0 if row_count_match and mechanism_ok and bool(summary.get("trace_diffik_diagnostics")) else 2
 

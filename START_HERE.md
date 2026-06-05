@@ -1129,10 +1129,56 @@ Current professor cube10cm push/tap branch:
   still tap-scale only: final displacement `0.001272157m`, max displacement
   `0.001294456m`, low-motion `1.0`, final relocation secondary false. This is a
   reach/height clue, not 1024/data readiness.
+- Direction-specific height support is now in the shared DiffIK probe:
+  `--xneg_tcp_center_height_offset_m`, `--xpos_tcp_center_height_offset_m`,
+  `--yneg_tcp_center_height_offset_m`, and `--ypos_tcp_center_height_offset_m`.
+  Both push and retract side-center targets use the per-env height.
+- Latest random-direction heldout seed950:
+  goodxy/lateral plus only `xneg_tcp_center_height_offset_m=0.050` produced
+  reaction/contact `1.0/1.0`, no posewrite, no overshoot, and all directions had
+  contact evidence. x- was fixed (`controlled=1.0`, clip `0.457949`), but x+
+  remained controlled `0.0`, clip `1.0`, final TCP error `0.058328m`; teacher
+  quality remained false and data/1024 stayed blocked.
+- Latest fixed x+ height050 screens:
+  seed951 passed tap/reaction contact (`1.0/1.0`, no posewrite, no overshoot) but
+  final displacement was only `0.000011876m`, clip `1.0`, and teacher false.
+  seed952 slowed the x+ schedule to `320/180/80`; it improved some tracking means
+  and final TCP error to `0.008242317m`, but clip remained `1.0`, joint1 clip rate
+  `0.986637931`, low-motion `1.0`, and teacher false.
+  seed953 changed only `dls_lambda` from `0.010` to `0.030`; tap/reaction stayed
+  PASS, final TCP error stayed low at `0.008274879m`, but clip remained `1.0`,
+  joint1 clip rate `0.979591837`, low-motion `1.0`, and teacher false.
+  seed954 changed only `max_diffik_joint_step_rad` from `0.035` to `0.050`;
+  tap/reaction stayed PASS and final 1mm rate improved to `0.1875`, clip dropped
+  to `0.870833352`, but joint1 actuator follow mean worsened to `0.032731688rad`,
+  low-motion stayed `1.0`, and teacher false.
+  seed955 tried midpoint cap `0.0425`; tap/reaction stayed PASS, but clip stayed
+  `1.0` and final 1mm rate was `0.0`, so this is not the compromise.
+  seed956 kept cap `0.050` and changed only stiffness `400 -> 600`; tap/reaction
+  stayed PASS, aggregate clip improved to `0.766826950`, and phase-split pre-stop
+  clip improved to `0.570247934`, but teacher false, final 1mm rate `0.0625`,
+  and post-stop freeze clip remained `1.0`.
+  seed957 kept cap `0.050`/stiffness `600` and changed only effort limit
+  `25 -> 35`; tap/reaction stayed PASS, aggregate clip improved only slightly to
+  `0.749519262`, pre-stop clip to `0.534360190`, final 1mm rate `0.0`, and
+  teacher false.
+- Trace diagnostic now includes `phase_splits`:
+  `sim_scripts/cube3cm_push_diffik_trace_diagnostic_audit.py` separates
+  pre-stop motion from post-stop freeze. This is diagnostic only; it does not
+  relax the conservative next-step/data gates.
+- Phase-window audit on seed957 rejects a freeze-only explanation:
+  `full_clip_rate=0.749519262`, `pre_stop_clip_rate=0.534360190`,
+  `post_stop_clip_rate=1.0`, teacher clip max `0.5`, and conclusion
+  `PRE_STOP_ACTUATOR_IK_CLIP_STILL_BLOCKS`. The official gate is conservative,
+  but pre-stop tracking is still slightly above threshold.
+- Reaction audit no longer computes implicit default 1cm relocation. The default
+  is tap-only: `tap_gate_disp_m=0.001`, `final_relocation_pass=None`. A 1cm
+  relocation diagnostic now requires explicit `--final_relocation_disp_m 0.010`.
 - Latest next-step audit says:
-  `RUN_TINY_HELDOUT_ROBUSTNESS_CHECK_BEFORE_DATASET_OR_RL`
-  for seed949, but do not start 1024/data: low-motion remains `1.0` and balanced
-  directions are not established.
+  `NARROW_ACTUATOR_IK_TRACKING_CLEANUP_INSIDE_WORKING_TAP_GEOMETRY`
+  for seed957. Do not start 1024/data: low-motion, pre-stop clipping near but
+  above threshold, aggregate post-stop freeze clipping, and actuator follow remain
+  unresolved.
 
 Next concrete step:
 1. Do not start dataset generation, PPO/RL, VLA, Track A, 1024/10k scale-up, or
@@ -1141,14 +1187,15 @@ Next concrete step:
    `python sim_scripts/cube10cm_tap_objective_contract_audit.py`
    and
    `python sim_scripts/cube10cm_next_research_step_audit.py`
-3. Do not repeat stiffness-only escalation as a success claim. The stiff600 screen
-   preserved tap contact but reduced useful displacement and left clipping at `1.0`.
-4. Do not run 1024/10240 trace/data from seed946/seed947/seed948/seed949. First
-   prove direction-specific height/contact geometry in tiny heldout screens and
-   remove low-motion/balance blockers.
+3. Do not repeat cap0425 or stiffness/effort changes as success claims. The best
+   fixed x+ actuator screen so far is seed957, and it is still teacher false.
+4. Do not run 1024/10240 trace/data from seed946/seed947/seed948/seed949/seed950/
+   seed951/seed952/seed953/seed954/seed955/seed956/seed957. Direction-specific
+   contact is improving, but low-motion, DiffIK clipping, post-stop freeze
+   clipping, and actuator follow lag still block teacher/data quality.
 5. Any next GPU experiment still requires explicit approval and must be one tiny
    local IsaacLab screen inside the working tap geometry, changing only one
-   geometry/contact parameter. It must use
+   actuator/IK tracking parameter. It must use
    `sandbox_permissions=require_escalated` and must not be reported as RL/data.
 6. Judge the result by reaction/contact/no-posewrite/no-overshoot first; report
    final 1cm only as secondary relocation evidence.

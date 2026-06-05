@@ -541,3 +541,311 @@ Interpretation:
   a 1024/10240/data milestone.
 - The next valid local step is a tiny heldout robustness check for height/contact
   geometry, ideally before any dataset construction logic is touched.
+
+## Directional height heldout and x+ tracking screens, seeds 950-952
+
+Code update:
+
+- Added direction-specific side-center height overrides in
+  `sim_scripts/cube3cm_push_diffik_probe.py`: `--xneg_tcp_center_height_offset_m`,
+  `--xpos_tcp_center_height_offset_m`, `--yneg_tcp_center_height_offset_m`, and
+  `--ypos_tcp_center_height_offset_m`.
+- Verified that both push and retract side-center targets now use per-env
+  `traj["tcp_center_height_offset"]` instead of a stale global height. Relevant
+  source lines: `sim_scripts/cube3cm_push_diffik_probe.py:48-52,447-458,526-552`.
+- Static/local guards after the code fix passed:
+  `py_compile`, `cube10cm_tap_objective_contract_audit.py`,
+  `cube10cm_next_research_step_audit.py` on seed951, and `git diff --check`.
+
+seed950 heldout:
+
+```bash
+OMNI_KIT_ACCEPT_EULA=YES conda run -n isaaclab --no-capture-output python -u sim_scripts/cube10cm_push_diffik_probe.py \
+  --num_envs 16 \
+  --episodes 1 \
+  --seed 950 \
+  --fixed_cube_x_m 0.295 \
+  --fixed_cube_y_m -0.044 \
+  --base_lateral_offset_m -0.020 \
+  --xneg_tcp_center_height_offset_m 0.050 \
+  --trace_diffik_diagnostics \
+  --trace_all_envs \
+  --trace_stride 4
+```
+
+Result:
+
+- Direction contact lines 1-4 show every direction now has contact evidence
+  `1.0`, and x- specifically has reaction/contact/controlled `1.0/1.0/1.0`,
+  clip `0.457949`, final TCP error `0.013043m`.
+- The same direction split still shows x+ controlled `0.0`, clip `1.0`, and
+  final TCP error `0.058328m`.
+- Reaction audit lines 2-27: reaction/contact `1.0/1.0`, no posewrite,
+  overshoot `0.0`, reaction gate PASS, but teacher false because clip
+  `0.830608975` and final TCP error `0.037568951m`.
+- Next-step audit lines 2-24: still
+  `NARROW_ACTUATOR_IK_TRACKING_CLEANUP_INSIDE_WORKING_TAP_GEOMETRY`; dataset,
+  PPO/RL, VLA, Track A, and 1024/10k remain blocked.
+
+seed951 fixed x+ height050:
+
+- Reaction audit lines 2-27: x+ height050 gives reaction/contact `1.0/1.0`, no
+  posewrite, no overshoot, and reaction gate PASS.
+- It is still not teacher/data ready: final displacement is only
+  `0.000011876m`, final gate `0.0`, DiffIK clip `1.0`, and teacher false.
+- Trace diagnostic lines 1-6/97-100/167-184: clip_any `1.0`, mode joint
+  `link1_to_link2`, actuator target tracking lag, worst clipped joint 1, and
+  worst raw delta joint 2.
+
+seed952 fixed x+ slow schedule:
+
+```bash
+OMNI_KIT_ACCEPT_EULA=YES conda run -n isaaclab --no-capture-output python -u sim_scripts/cube10cm_push_diffik_probe.py \
+  --num_envs 16 \
+  --episodes 1 \
+  --seed 952 \
+  --fixed_cube_x_m 0.295 \
+  --fixed_cube_y_m -0.044 \
+  --fixed_push_dir 1 0 \
+  --base_lateral_offset_m -0.020 \
+  --tcp_center_height_offset_m 0.050 \
+  --approach_steps 320 \
+  --push_steps 180 \
+  --post_steps 80 \
+  --trace_diffik_diagnostics \
+  --trace_all_envs \
+  --trace_stride 4
+```
+
+Result:
+
+- Summary lines 20-34/47-61/77-85/102-137: no dataset generation, no posewrite,
+  contact stop `1.0`, final TCP error `0.008242317m`, low-motion `1.0`, max
+  displacement `0.001094822m`, final displacement `0.000012942m`, contact `1.0`,
+  reaction `1.0`, total steps `580`.
+- Reaction audit lines 2-27: reaction/contact `1.0/1.0`, no posewrite,
+  overshoot `0.0`, reaction gate PASS, final gate `0.0`, clip `1.0`, teacher
+  false.
+- Trace diagnostic lines 1-29/97-100/167-184: clip_any still `1.0`, joint1 clip
+  rate `0.986637931`, actuator tracking lag, worst clipped joint 1, worst raw
+  delta joint 2. The schedule improves some tracking means but does not clear
+  the blocker.
+
+Interpretation:
+
+- x- is no longer a pure no-contact pocket after height050; the old blocker was
+  reach/side-center height.
+- x+ has clean tap/reaction contact at height050, but it is still low-motion and
+  clipped. The branch is not ready for 1024/10240 trace, dataset generation, PPO,
+  RL, VLA, or Track A.
+- The next valid work is still narrow actuator/IK tracking cleanup inside working
+  tap geometry. Judge reaction/contact/no-posewrite/no-overshoot first; final 1cm
+  remains secondary only.
+
+## X+ DLS regularization screen, seed953
+
+Pre-runtime guards:
+
+- `git status --short --untracked-files=all --branch` showed the existing dirty
+  docs/probe/log state; nothing was reverted.
+- `python sim_scripts/cube10cm_tap_objective_contract_audit.py` PASSed:
+  professor 10cm tap/reaction, final 1cm default `NO`, tap defaults `0.001m`.
+- `python sim_scripts/cube10cm_next_research_step_audit.py` on seed952 kept
+  `NARROW_ACTUATOR_IK_TRACKING_CLEANUP_INSIDE_WORKING_TAP_GEOMETRY`.
+- `py_compile` and `git diff --check` PASSed.
+
+Runtime:
+
+```bash
+OMNI_KIT_ACCEPT_EULA=YES conda run -n isaaclab --no-capture-output python -u sim_scripts/cube10cm_push_diffik_probe.py \
+  --num_envs 16 \
+  --episodes 1 \
+  --seed 953 \
+  --fixed_cube_x_m 0.295 \
+  --fixed_cube_y_m -0.044 \
+  --fixed_push_dir 1 0 \
+  --base_lateral_offset_m -0.020 \
+  --tcp_center_height_offset_m 0.050 \
+  --dls_lambda 0.030 \
+  --trace_diffik_diagnostics \
+  --trace_all_envs \
+  --trace_stride 4 \
+  --out_csv claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_dls030_seed953.csv \
+  --summary_json claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_dls030_seed953_summary.json \
+  --trace_csv claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_dls030_seed953_trace.csv
+```
+
+Posthoc:
+
+```bash
+python sim_scripts/cube3cm_push_diffik_trace_diagnostic_audit.py \
+  --trace_csv claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_dls030_seed953_trace.csv \
+  --summary_json claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_dls030_seed953_summary.json \
+  --out_json claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_dls030_seed953_trace_diagnostic_summary.json
+
+python sim_scripts/cube10cm_reaction_event_gate_audit.py \
+  --summary_json claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_dls030_seed953_summary.json \
+  --trace_diag_json claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_dls030_seed953_trace_diagnostic_summary.json \
+  --out_json claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_dls030_seed953_reaction_gate_audit.json
+
+python sim_scripts/cube10cm_next_research_step_audit.py \
+  --reaction_audit_json claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_dls030_seed953_reaction_gate_audit.json \
+  --trace_diag_json claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_dls030_seed953_trace_diagnostic_summary.json \
+  --out_json claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_next_research_step_xpos_height050_dls030_seed953_audit.json
+```
+
+Results:
+
+- Summary lines 20-35/47-85/102-137: no dataset generation, no posewrite,
+  `dls_lambda=0.03`, final TCP error `0.008274879m`, contact stop `1.0`,
+  measured contact `1.0`, reaction `1.0`, low-motion `1.0`, final displacement
+  `0.000015721m`, max displacement `0.001356367m`, total steps `390`.
+- Reaction audit lines 2-27: reaction/contact `1.0/1.0`, no posewrite,
+  overshoot `0.0`, reaction gate PASS, final gate `0.0`, clip `1.0`, teacher
+  false.
+- Trace diagnostic lines 1-29/97-100/167-184: clip_any `1.0`, dominant clipped
+  joint `link1_to_link2`, joint1 clip rate `0.979591837`, actuator target tracking
+  lag, worst clipped/follow joint 1, worst raw delta joint 2.
+- Next-step audit lines 2-24: still
+  `NARROW_ACTUATOR_IK_TRACKING_CLEANUP_INSIDE_WORKING_TAP_GEOMETRY`, with
+  dataset/PPO/VLA/TrackA/1024_10k blocked.
+
+Interpretation:
+
+- DLS `0.030` preserves clean tap/reaction contact but does not clear the
+  teacher/data blocker. It is not a scale-up milestone.
+- Compared with seed951, some joint2/joint3 tracking numbers improve slightly,
+  but joint1 clipping and actuator follow lag remain. The next tiny screen should
+  target actuator/joint-command tracking directly rather than continue DLS-only
+  sweeps or start data generation.
+
+## X+ joint command cap screen, seed954
+
+Pre-runtime guards:
+
+- `git status --short --untracked-files=all --branch` showed the existing dirty
+  docs/probe/log state; nothing was reverted.
+- `python sim_scripts/cube10cm_tap_objective_contract_audit.py` PASSed.
+- `python sim_scripts/cube10cm_next_research_step_audit.py` on seed953 stayed at
+  `NARROW_ACTUATOR_IK_TRACKING_CLEANUP_INSIDE_WORKING_TAP_GEOMETRY`.
+- `py_compile` and `git diff --check` PASSed.
+
+Runtime:
+
+```bash
+OMNI_KIT_ACCEPT_EULA=YES conda run -n isaaclab --no-capture-output python -u sim_scripts/cube10cm_push_diffik_probe.py \
+  --num_envs 16 \
+  --episodes 1 \
+  --seed 954 \
+  --fixed_cube_x_m 0.295 \
+  --fixed_cube_y_m -0.044 \
+  --fixed_push_dir 1 0 \
+  --base_lateral_offset_m -0.020 \
+  --tcp_center_height_offset_m 0.050 \
+  --max_diffik_joint_step_rad 0.050 \
+  --trace_diffik_diagnostics \
+  --trace_all_envs \
+  --trace_stride 4 \
+  --out_csv claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_cap050_seed954.csv \
+  --summary_json claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_cap050_seed954_summary.json \
+  --trace_csv claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_cap050_seed954_trace.csv
+```
+
+Results:
+
+- Header confirmed this was seed951 geometry with only cap changed:
+  `max_diffik_joint_step_rad=0.050000`, `dls_lambda=0.010000`,
+  `base_steps=220/90/80`, no dataset/training/posewrite.
+- Summary lines 20-35/47-85/102-137: no dataset generation, no posewrite,
+  contact stop `1.0`, clip `0.870833352`, final TCP error `0.008357591m`,
+  final displacement `0.000469293m`, final 1mm rate `0.1875`, max displacement
+  `0.001729187m`, contact `1.0`, reaction `1.0`, low-motion `1.0`, no overshoot.
+- Reaction audit lines 2-27: reaction/contact `1.0/1.0`, no posewrite,
+  overshoot `0.0`, reaction gate PASS, teacher false.
+- Trace diagnostic lines 1-29/97-100/167-184: clip_any `0.871173469`, joint1
+  clip rate `0.851403061`, actuator target tracking lag, worst clipped/follow
+  joint 1, worst joint1 follow mean `0.032731688rad`.
+- Next-step audit lines 2-24: still
+  `NARROW_ACTUATOR_IK_TRACKING_CLEANUP_INSIDE_WORKING_TAP_GEOMETRY`; dataset,
+  PPO/RL, VLA, Track A, and 1024/10k blocked.
+
+Interpretation:
+
+- The direction is correct: the blocker is no longer x+ contact geometry. cap050
+  reduced clipping (`1.0 -> 0.871`) and recovered some final tap-scale motion, so
+  the command cap was part of the bottleneck.
+- It is not solved: joint1 actuator follow mean worsened relative to seed951
+  (`0.023108797rad -> 0.032731688rad`), low-motion remains `1.0`, and teacher
+  quality remains false. Do not scale data from this.
+- Next tiny work should target actuator follow or a cap/follow compromise inside
+  the same fixed x+ height050 geometry, not broad search or 1024/data.
+
+## X+ cap/follow compromise screens, seeds955-957
+
+Additional guard and diagnostic change:
+
+- Before each new runtime, `cube10cm_tap_objective_contract_audit.py` and
+  `cube10cm_next_research_step_audit.py` were rerun and kept the branch on
+  tap/reaction, not final 1cm relocation or data scale-up.
+- `py_compile` and `git diff --check` passed before the runtime changes.
+- `sim_scripts/cube3cm_push_diffik_trace_diagnostic_audit.py` now records
+  `phase_splits` by `contact_stop_seen` so pre-stop motion and post-stop freeze
+  are not interpreted as one undifferentiated clip number. This is diagnostic
+  only; next-step/data gates remain conservative.
+
+seed955, cap0425 midpoint:
+
+- Runtime held fixed x+ goodxy/lateral/height050, wrapper tap defaults, default
+  schedule/DLS, and changed only `max_diffik_joint_step_rad=0.0425`.
+- Summary lines 47-85/102-137: no dataset generation, no posewrite, contact
+  `1.0`, reaction `1.0`, clip `1.0`, final displacement `0.000017896m`, max
+  displacement `0.001481038m`, no overshoot.
+- Reaction audit lines 2-27: reaction/contact/no-posewrite/no-overshoot PASS, but
+  teacher false.
+- Trace diagnostic lines 1-29/118-154/211-222: aggregate clip `1.0`, pre-stop
+  clip `1.0`, post-stop clip `1.0`, actuator follow lag remains.
+- Interpretation: `0.0425` is not the cap/follow compromise.
+
+seed956, cap050 stiffness600:
+
+- Runtime held seed954 geometry/cap and changed only `arm_stiffness_override=600`.
+- Summary lines 1-12/47-85/102-137: stiffness `600`, effort `25`, no dataset
+  generation, contact/reaction `1.0/1.0`, aggregate clip `0.766826950`, final
+  displacement `0.000137772m`, final 1mm rate `0.0625`, max displacement
+  `0.001283877m`, no posewrite/overshoot.
+- Reaction audit lines 2-27: reaction/contact/no-posewrite/no-overshoot PASS, but
+  teacher false.
+- Trace diagnostic lines 1-29/118-154/211-222: aggregate clip `0.767857143`,
+  pre-stop clip `0.570247934`, post-stop clip `1.0`, worst follow joint1 mean
+  `0.028109025rad`, p95 `0.050651364rad`.
+- Interpretation: stiffness helps pre-stop tracking, but not enough for teacher
+  quality and it reduces useful displacement versus seed954.
+
+seed957, cap050 stiffness600 effort35:
+
+- Runtime held seed956 and changed only `arm_effort_limit_sim_override=35`.
+- Summary lines 1-12/47-85/102-137: stiffness `600`, effort `35`, no dataset
+  generation, contact/reaction `1.0/1.0`, aggregate clip `0.749519262`, final
+  displacement `0.000026647m`, final 1mm rate `0.0`, max displacement
+  `0.001272388m`, no posewrite/overshoot.
+- Reaction audit lines 2-27: reaction/contact/no-posewrite/no-overshoot PASS, but
+  teacher false.
+- Trace diagnostic lines 1-29/118-154/211-222: aggregate clip `0.749362245`,
+  pre-stop clip `0.534360190`, post-stop clip `1.0`, worst follow joint1 mean
+  `0.027911684rad`, p95 `0.050640494rad`.
+- Next-step audit lines 2-24: still
+  `NARROW_ACTUATOR_IK_TRACKING_CLEANUP_INSIDE_WORKING_TAP_GEOMETRY`; dataset,
+  PPO/RL, VLA, Track A, and 1024/10k remain blocked.
+
+Interpretation:
+
+- Fixed x+ height050 is a valid reaction/contact pocket, not a data milestone.
+- `cap050` is better than `cap035/cap0425`; stiffness/effort help pre-stop clip
+  only partially. The remaining teacher blocker is not final 1cm relocation. It
+  is actuator/IK trace quality: pre-stop clip still slightly above threshold,
+  follow p95 still at the cap, and post-stop freeze frames keep aggregate clip
+  high.
+- Next work should be phase-aware teacher-readiness/truncation analysis plus, if
+  explicitly approved, at most one tiny local actuator/IK screen. Do not run
+  dataset generation, PPO/RL, VLA, Track A, 1024 trace, or 10240/data build from
+  these seeds.

@@ -73,7 +73,8 @@ def main() -> int:
     parser.add_argument("--reaction_disp_m", type=float, default=0.001)
     parser.add_argument("--reaction_z_delta_m", type=float, default=0.002)
     parser.add_argument("--reaction_speed_mps", type=float, default=0.020)
-    parser.add_argument("--transient_gate_disp_m", type=float, default=0.010)
+    parser.add_argument("--tap_gate_disp_m", type=float, default=0.001)
+    parser.add_argument("--final_relocation_disp_m", type=float, default=None)
     parser.add_argument("--overshoot_disp_m", type=float, default=0.020)
     parser.add_argument("--min_reaction_event_rate", type=float, default=1.0)
     parser.add_argument("--min_contact_evidence_rate", type=float, default=1.0)
@@ -89,8 +90,10 @@ def main() -> int:
         raise ValueError("--reaction_z_delta_m must be non-negative")
     if args.reaction_speed_mps < 0.0:
         raise ValueError("--reaction_speed_mps must be non-negative")
-    if args.transient_gate_disp_m < 0.0:
-        raise ValueError("--transient_gate_disp_m must be non-negative")
+    if args.tap_gate_disp_m < 0.0:
+        raise ValueError("--tap_gate_disp_m must be non-negative")
+    if args.final_relocation_disp_m is not None and args.final_relocation_disp_m <= 0.0:
+        raise ValueError("--final_relocation_disp_m must be positive when provided")
     if args.overshoot_disp_m <= 0.0:
         raise ValueError("--overshoot_disp_m must be positive")
     if not (0.0 <= args.min_reaction_event_rate <= 1.0):
@@ -135,7 +138,14 @@ def main() -> int:
         _row_flag(row, "contact_overshoot_seen") or max_disp[idx] >= args.overshoot_disp_m
         for idx, row in enumerate(rows)
     ]
-    transient_gate = [value >= args.transient_gate_disp_m for value in max_disp]
+    tap_gate = [value >= args.tap_gate_disp_m for value in max_disp]
+    final_relocation_gate_rate = None
+    final_relocation_pass = None
+    if args.final_relocation_disp_m is not None:
+        final_relocation_gate_rate = _mean(
+            [1.0 if value >= args.final_relocation_disp_m else 0.0 for value in final_disp]
+        )
+        final_relocation_pass = final_relocation_gate_rate >= args.min_reaction_event_rate
 
     no_posewrite = (
         int(summary.get("posewrite_calls_during_rollout", -1)) <= args.max_posewrite_calls
@@ -149,8 +159,7 @@ def main() -> int:
     computed_reaction_event_rate = _rate(computed_reaction)
     contact_evidence_rate = _rate(contact_evidence)
     overshoot_rate = _rate(overshoot)
-    transient_gate_rate = _rate(transient_gate)
-    final_gate_rate = _mean([1.0 if value >= args.transient_gate_disp_m else 0.0 for value in final_disp])
+    tap_gate_rate = _rate(tap_gate)
 
     reaction_gate_pass = (
         controller_ok
@@ -159,7 +168,6 @@ def main() -> int:
         and contact_evidence_rate >= args.min_contact_evidence_rate
         and overshoot_rate <= args.max_overshoot_rate
     )
-    final_relocation_pass = final_gate_rate >= args.min_reaction_event_rate
     teacher_quality_ready = (
         reaction_gate_pass
         and _float(summary.get("final_tcp_target_err_mean_m")) <= args.teacher_max_final_tcp_err_m
@@ -179,13 +187,13 @@ def main() -> int:
         "no_posewrite": no_posewrite,
         "reaction_gate_pass": reaction_gate_pass,
         "final_relocation_pass": final_relocation_pass,
+        "final_relocation_gate_rate": final_relocation_gate_rate,
         "teacher_quality_ready": teacher_quality_ready,
         "reaction_event_rate": reaction_event_rate,
         "computed_reaction_event_rate": computed_reaction_event_rate,
         "contact_evidence_rate": contact_evidence_rate,
         "overshoot_rate": overshoot_rate,
-        "transient_gate_rate": transient_gate_rate,
-        "final_gate_rate": final_gate_rate,
+        "tap_gate_rate": tap_gate_rate,
         "final_disp_mean_m": _mean(final_disp),
         "max_disp_mean_m": _mean(max_disp),
         "max_z_delta_mean_m": _mean(max_z_delta),
@@ -201,7 +209,8 @@ def main() -> int:
             "reaction_disp_m": args.reaction_disp_m,
             "reaction_z_delta_m": args.reaction_z_delta_m,
             "reaction_speed_mps": args.reaction_speed_mps,
-            "transient_gate_disp_m": args.transient_gate_disp_m,
+            "tap_gate_disp_m": args.tap_gate_disp_m,
+            "final_relocation_disp_m": args.final_relocation_disp_m,
             "overshoot_disp_m": args.overshoot_disp_m,
             "min_reaction_event_rate": args.min_reaction_event_rate,
             "min_contact_evidence_rate": args.min_contact_evidence_rate,
@@ -225,7 +234,8 @@ def main() -> int:
     )
     print(
         "reaction_gate line2 "
-        f"transient_gate_rate={transient_gate_rate:.9f} final_gate_rate={final_gate_rate:.9f} "
+        f"tap_gate_rate={tap_gate_rate:.9f} "
+        f"final_relocation_gate_rate={final_relocation_gate_rate} "
         f"max_disp_mean_m={_mean(max_disp):.9f} final_disp_mean_m={_mean(final_disp):.9f} "
         f"max_speed_mean_mps={_mean(max_speed):.9f}"
     )

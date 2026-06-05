@@ -46,6 +46,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--fixed_push_dir", type=float, nargs=2, default=None)
     parser.add_argument("--tcp_height_mode", choices=("top_margin", "side_center"), default="top_margin")
     parser.add_argument("--tcp_center_height_offset_m", type=float, default=0.0)
+    parser.add_argument("--xneg_tcp_center_height_offset_m", type=float, default=None)
+    parser.add_argument("--xpos_tcp_center_height_offset_m", type=float, default=None)
+    parser.add_argument("--yneg_tcp_center_height_offset_m", type=float, default=None)
+    parser.add_argument("--ypos_tcp_center_height_offset_m", type=float, default=None)
     parser.add_argument("--precontact_clearance_m", type=float, default=0.020)
     parser.add_argument("--tcp_top_margin_m", type=float, default=0.003)
     parser.add_argument("--push_through_m", type=float, default=0.030)
@@ -428,6 +432,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         cube = inner._cube_start_w
         push_dir = inner._push_dir_xy
         posx = (push_dir[:, 0] > 0.5) & (torch.abs(push_dir[:, 1]) < 0.5)
+        xneg = (push_dir[:, 0] < -0.5) & (torch.abs(push_dir[:, 1]) < 0.5)
+        yneg = (push_dir[:, 1] < -0.5) & (torch.abs(push_dir[:, 0]) < 0.5)
+        ypos = (push_dir[:, 1] > 0.5) & (torch.abs(push_dir[:, 0]) < 0.5)
         cube_x_local = cube[:, 0] - inner.scene.env_origins[:, 0]
         v31_lowx = posx & (cube_x_local <= float(args.v31_lowx_threshold_m))
         approach_steps = torch.full((n,), int(args.approach_steps), dtype=torch.long, device=device)
@@ -437,7 +444,18 @@ def main(argv: Sequence[str] | None = None) -> int:
         precontact = torch.full((n,), float(args.precontact_clearance_m), dtype=torch.float32, device=device)
         push_through = torch.full((n,), float(args.push_through_m), dtype=torch.float32, device=device)
         tcp_top_margin = torch.full((n,), float(args.tcp_top_margin_m), dtype=torch.float32, device=device)
+        tcp_center_height_offset = torch.full(
+            (n,), float(args.tcp_center_height_offset_m), dtype=torch.float32, device=device
+        )
         lateral_offset = torch.full((n,), float(args.base_lateral_offset_m), dtype=torch.float32, device=device)
+        if args.xneg_tcp_center_height_offset_m is not None:
+            tcp_center_height_offset[xneg] = float(args.xneg_tcp_center_height_offset_m)
+        if args.xpos_tcp_center_height_offset_m is not None:
+            tcp_center_height_offset[posx] = float(args.xpos_tcp_center_height_offset_m)
+        if args.yneg_tcp_center_height_offset_m is not None:
+            tcp_center_height_offset[yneg] = float(args.yneg_tcp_center_height_offset_m)
+        if args.ypos_tcp_center_height_offset_m is not None:
+            tcp_center_height_offset[ypos] = float(args.ypos_tcp_center_height_offset_m)
         if args.trajectory_variant == "v2":
             approach_steps[posx] = int(args.v2_posx_approach_steps)
             push_steps[posx] = int(args.v2_posx_push_steps)
@@ -483,6 +501,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             "precontact": precontact,
             "push_through": push_through,
             "tcp_top_margin": tcp_top_margin,
+            "tcp_center_height_offset": tcp_center_height_offset,
             "lateral_offset": lateral_offset,
         }
 
@@ -507,7 +526,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         if args.tcp_height_mode == "top_margin":
             z = cube[:, 2] + cube_top_half_z + traj["tcp_top_margin"]
         elif args.tcp_height_mode == "side_center":
-            z = cube[:, 2] + float(args.tcp_center_height_offset_m)
+            z = cube[:, 2] + traj["tcp_center_height_offset"]
         else:
             raise ValueError(f"unsupported tcp_height_mode={args.tcp_height_mode!r}")
         lateral = lateral_dir * traj["lateral_offset"].unsqueeze(-1)
@@ -530,7 +549,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         if args.tcp_height_mode == "top_margin":
             z = cube[:, 2] + cube_top_half_z + traj["tcp_top_margin"]
         elif args.tcp_height_mode == "side_center":
-            z = cube[:, 2] + float(args.tcp_center_height_offset_m)
+            z = cube[:, 2] + traj["tcp_center_height_offset"]
         else:
             raise ValueError(f"unsupported tcp_height_mode={args.tcp_height_mode!r}")
         lateral = lateral_dir * traj["lateral_offset"].unsqueeze(-1)
@@ -736,7 +755,9 @@ def main(argv: Sequence[str] | None = None) -> int:
                             "cube_mass_kg": cube_mass_kg,
                             "object_size_ref_m": object_size_ref_m,
                             "tcp_height_mode": args.tcp_height_mode,
-                            "tcp_center_height_offset_m": float(args.tcp_center_height_offset_m),
+                            "tcp_center_height_offset_m": float(
+                                traj["tcp_center_height_offset"][trace_idx].detach().cpu().item()
+                            ),
                             "env_origin_x_m": float(inner.scene.env_origins[trace_idx, 0].detach().cpu().item()),
                             "env_origin_y_m": float(inner.scene.env_origins[trace_idx, 1].detach().cpu().item()),
                             "env_origin_z_m": float(inner.scene.env_origins[trace_idx, 2].detach().cpu().item()),
@@ -913,7 +934,9 @@ def main(argv: Sequence[str] | None = None) -> int:
                         "cube_mass_kg": cube_mass_kg,
                         "object_size_ref_m": object_size_ref_m,
                         "tcp_height_mode": args.tcp_height_mode,
-                        "tcp_center_height_offset_m": float(args.tcp_center_height_offset_m),
+                        "tcp_center_height_offset_m": float(
+                            traj["tcp_center_height_offset"][idx].detach().cpu().item()
+                        ),
                         "through_target_mode": args.through_target_mode,
                         "contact_controller_mode": args.contact_controller_mode,
                         "near_tcp_cube_seen": int(bool(near_tcp_cube_seen[idx].detach().cpu().item())),
@@ -1065,6 +1088,21 @@ def main(argv: Sequence[str] | None = None) -> int:
         "fixed_push_dir": None if args.fixed_push_dir is None else [float(x) for x in args.fixed_push_dir],
         "tcp_height_mode": args.tcp_height_mode,
         "tcp_center_height_offset_m": float(args.tcp_center_height_offset_m),
+        "directional_tcp_center_height_offsets_m": {
+            "xneg": None
+            if args.xneg_tcp_center_height_offset_m is None
+            else float(args.xneg_tcp_center_height_offset_m),
+            "xpos": None
+            if args.xpos_tcp_center_height_offset_m is None
+            else float(args.xpos_tcp_center_height_offset_m),
+            "yneg": None
+            if args.yneg_tcp_center_height_offset_m is None
+            else float(args.yneg_tcp_center_height_offset_m),
+            "ypos": None
+            if args.ypos_tcp_center_height_offset_m is None
+            else float(args.ypos_tcp_center_height_offset_m),
+        },
+        "applied_tcp_center_height_offset_mean_m": mean("tcp_center_height_offset_m"),
         "through_target_mode": args.through_target_mode,
         "contact_controller_mode": args.contact_controller_mode,
         "contact_stop_target_mode": args.contact_stop_target_mode,
