@@ -1,16 +1,43 @@
 # START_HERE.md
 
-Last updated: 2026-06-04 KST (B200 disconnected; Track A remains blocked and separate. Active branch is the professor 10cm/0.72kg cube push/tap DiffIK diagnosis. Earlier final-displacement gates failed, and settled-start fixed16 still showed DiffIK clipping/lag, but local DLS feasibility means do not conclude the object is too heavy. The clarified objective is reaction/tap first and final displacement secondary. Fixed 4-env measured-stop freeze seed940 is a reaction-event PASS under the clarified criterion: measured contact `1.0`, max transient displacement mean `0.010990217m`, transient 1cm rate `1.0`, no overshoot, final displacement gate `0.0`, with DiffIK link5/clipping/actuator issues still unresolved. No dataset generation, PPO/RL scale-up, VLA, Track A runtime, 1024/10k, or larger candidate audit is approved from this.)
+Last updated: 2026-06-05 KST (B200 disconnected; Track A remains blocked and separate. Active branch is the professor 10cm/0.72kg cube push/tap DiffIK diagnosis. Earlier final-displacement gates failed, and settled-start fixed16 still showed DiffIK clipping/lag, but local DLS feasibility means do not conclude the object is too heavy. The clarified objective is reaction/tap first and final displacement secondary. A local non-GPU reaction gate audit requires reaction evidence plus contact evidence, no posewrite, and no overshoot; it separates reaction PASS from teacher/RL readiness. seed938 is the negative control FAIL (`contact_evidence_rate=0.0`), seed939/seed940 PASS reaction gate but remain `teacher_quality_ready=false`, seed941 randomized 16-env FAILed on contact evidence `0.625`, cap-only seed942 worsened contact evidence to `0.5`, and fixed-y+ seed943 confirmed the y+ bucket is weak (`contact_evidence_rate=0.375`). A local y+ geometry/reach audit shows contact rows average max displacement `0.010986278m`, no-contact rows only `0.000069159m`, and workspace bins are asymmetric (`cube_y0_m<=0` contact `0.625`, `cube_y0_m>0` contact `0.125`, `cube_x0_m<0.25` contact `0.111111`, `cube_x0_m>=0.25` contact `0.714286`). A follow-up y+ trace path/actuator audit shows the target itself moves about `0.020000m` in world y and keeps start-cube side-center z, but final TCP error is mostly vertical (`0.844` contact / `0.859` no-contact z-error fraction) and clip_any remains `1.0` in both traced groups. The approved seed944 fixed-y+ height050 screen is a height-only FAIL: final TCP error improved to `0.022889409m`, but contact evidence fell to `0.0`, reaction was only `0.6875`, and clip remained `0.949198734`; do not use +5cm target height as a data/RL fix. The approved seed945 fixed-y+ good-workspace screen (`x=0.295,y=-0.044`) PASSed reaction/contact (`1.0/1.0`) with no overshoot/posewrite, proving workspace is a real contact discriminator, but `teacher_quality_ready=false` because final TCP error is `0.065514732m` and clip is `1.0`. Added default-preserving `--base_lateral_offset_m`; seed946 good-workspace lateral `-0.020m` PASSed reaction/contact and final 1cm relocation (`final_gate_rate=1.0`, `max_disp_mean_m=0.011251196m`, no overshoot/posewrite), but still `teacher_quality_ready=false` due final TCP error `0.062820967m` and DiffIK clip `1.0`. No dataset generation, PPO/RL scale-up, VLA, Track A runtime, 1024/10k, or larger candidate audit is approved from this.)
 
 Latest correction: for the professor 10cm/0.72kg push/tap branch, final 1cm
 displacement is no longer the primary objective if the real task only needs a
 tap/reaction. Treat measured contact, transient displacement, cube lift/z delta,
 and cube speed as the primary reaction-event evidence; keep final displacement as
-a secondary relocation metric. The fixed 4-env measured-stop freeze run seed940
-reacted in all envs (`measured_contact_seen_rate=1.0`,
-`max_disp_along_push_mean_m=0.010990217`, `max_disp_ge_gate_rate=1.0`, no
-overshoot) even though final `disp_ge_gate_rate=0.0`. This is a reaction-event
-diagnostic PASS, not yet dataset/RL/teacher-quality readiness.
+a secondary relocation metric. The reaction audit script confirms seed938 FAILs
+because contact evidence is `0.0`, while seed939 and seed940 PASS reaction gate.
+seed940 has `max_disp_mean_m=0.010990217`, transient gate `1.0`, final gate
+`0.0`, no overshoot, and `teacher_quality_ready=false`. The approved seed941
+randomized 16-env screen did not pass the reaction gate: reaction evidence was
+`1.0`, but contact evidence was only `0.625`; no-posewrite and no-overshoot were
+OK, and teacher quality still failed due TCP error/clipping. The approved cap050
+seed942 diagnostic also failed: contact evidence dropped to `0.5`, transient gate
+to `0.1875`, final gate to `0.0`, and teacher quality stayed false. The fixed-y+
+seed943 diagnostic confirmed y+ is a weak direction bucket: reaction `0.9375`,
+contact evidence `0.375`, no overshoot, and teacher quality false. The local
+posthoc y+ geometry/reach audit now shows this is not merely reaction-rate
+noise: contact rows average max displacement `0.010986278m`, no-contact rows
+only `0.000069159m`, and the workspace is asymmetric (`cube_y0_m<=0` contact
+`0.625` versus `cube_y0_m>0` contact `0.125`; `cube_x0_m<0.25` contact
+`0.111111` versus `cube_x0_m>=0.25` contact `0.714286`). Traced envs still hold
+large final vertical TCP-target error (`0.043-0.070m`) at side-center targets,
+so next work remains y+ target path/reach/lateral-height/actuator tracking, not
+RL/data scale-up. A follow-up trace-path/actuator audit shows target world-y
+motion is about `0.020000m` and final target z stays at the start-cube
+side-center height, while final TCP error is mostly z error and both contact and
+no-contact traced groups keep `clip_any=1.0`. The seed944 height050 y+ screen
+then rejected the height-only shortcut: contact evidence `0.0`, reaction
+`0.6875`, final TCP error `0.022889409m`, clip `0.949198734`, no posewrite, and
+no overshoot. The seed945 good-workspace y+ screen (`fixed_cube_x_m=0.295`,
+`fixed_cube_y_m=-0.044`) restored reaction/contact to `1.0/1.0` with no
+overshoot/posewrite, but teacher quality remains false because final TCP error
+is `0.065514732m` and DiffIK clip is `1.0`. The default-preserving
+`--base_lateral_offset_m` patch let seed946 test the lateral error directly; at
+`-0.020m`, good-workspace y+ reached reaction/contact `1.0/1.0`, final 1cm gate
+`1.0`, max displacement `0.011251196m`, no overshoot/posewrite, but teacher
+quality still false from final TCP error `0.062820967m` and clip `1.0`.
 
 This is the rolling current-state dashboard. It is not full history. Durable
 rules live in `claudedocs/DECISIONS.md`; experiment history lives in
@@ -738,9 +765,32 @@ Interpretation:
    measured-stop freeze seed940 run is a fixed-geometry reaction-event PASS under
    the clarified push/tap criterion: measured contact `1.0`, transient max
    displacement mean `0.010990217m`, transient 1cm rate `1.0`, no overshoot, but
-   final displacement gate `0.0` and DiffIK clipping/lag remain. Next step is a
-   reaction-event audit/gate definition and only then a tiny randomized reaction
-   screen, not dataset generation or RL scale-up yet.
+   final displacement gate `0.0` and DiffIK clipping/lag remain. The local
+   reaction audit is implemented. The approved seed941 randomized 16-env screen
+   FAILed because contact evidence was only `0.625` despite reaction evidence
+   `1.0`; no-posewrite and overshoot checks were OK, and teacher quality stayed
+   false. Local direction buckets showed `x+` and `y-` contacted in seed941,
+   while `y+` and `x-` were weak; cap-only seed942 worsened contact evidence to
+   `0.5` and did not remove clipping/lag. The fixed-y+ seed943 screen confirmed
+   y+ is weak: reaction `0.9375`, contact evidence `0.375`, no overshoot, final
+   TCP error about `0.0706m`, and clip `1.0`. The local y+ geometry/reach audit
+   shows contact/no-contact is also workspace-position dependent and vertically
+   under-reached at the traced side-center target. The y+ trace-path audit shows
+   target world-y advance is `0.019999981m`, final target z is essentially start
+   cube z, final z error dominates TCP error, and clip_any is `1.0` for both
+   contact and no-contact traced groups. The approved height050 y+ discriminator
+   seed944 improved final TCP error to `0.022889409m` but killed contact evidence
+   (`0.0`) and failed reaction (`0.6875`), so target-height-only is not the
+   recovery path. The approved seed945 good-workspace screen fixed cube
+   `x=0.295,y=-0.044` and PASSed the reaction gate (`reaction=1.0`,
+   `contact=1.0`, no overshoot/posewrite), but teacher quality still failed
+   (`final_tcp_err=0.065514732m`, clip `1.0`). The seed946 lateral `-0.020m`
+   screen in that good workspace is the strongest 10cm y+ teacher-candidate
+   evidence so far: reaction/contact `1.0/1.0`, final and transient 1cm gates
+   `1.0`, no overshoot/posewrite, but teacher quality still false
+   (`final_tcp_err=0.062820967m`, clip `1.0`). Next work is actuator/IK tracking
+   cleanup or a tiny robustness check around this exact candidate, not cap-only
+   escalation, dataset generation, or RL scale-up yet.
 6. Do not run Track A dataset generation, PPO/training, rollout, hold-lift,
    transport/release, constraints, SurfaceGripper, or gate tuning from this
    result.
@@ -767,7 +817,7 @@ Interpretation:
 
 1. `CLAUDE.md`
 2. `START_HERE.md`
-3. `claudedocs/DECISIONS.md` D083-D123
+3. `claudedocs/DECISIONS.md` D083-D124
 4. `claudedocs/EXPERIMENT_LEDGER.md` latest rows
 5. `claudedocs/session_20260522_track_a_v6_projected_guard_runtime_fail.md`
 6. `claudedocs/session_20260522_track_a_contact_rl_stage0_preflight.md`
@@ -838,6 +888,31 @@ Interpretation:
   secondary unless the task is relocation.
 - Any claim that one lucky success from massive IsaacLab randomization is a
   learned policy, teacher-data readiness, or sim-to-real evidence by itself.
+- Any claim that speed-only motion without contact evidence is a push/tap PASS.
+  The reaction gate requires contact evidence too.
+- Any claim that seed941 randomized 16-env screen passed the reaction gate. It
+  failed on contact evidence (`0.625 < 1.0`) and remains teacher-quality false.
+- Any claim that simply increasing DiffIK joint-step cap solves the randomized
+  10cm reaction gate. seed942 cap050 failed worse on contact evidence (`0.5`).
+- Any claim that y+ randomized failures are noise only. Fixed-y+ seed943 also
+  failed contact evidence (`0.375`) with no overshoot and high clip/error.
+- Any claim that y+ can be fixed by relabeling speed/z reaction as success. The
+  local geometry audit shows no-contact rows had only `0.000069159m` mean max
+  push displacement despite reaction-like speed/z signals, and traced envs kept
+  large vertical TCP-target error at the side-center target.
+- Any claim that y+ failure is caused by a missing y target advance. The local
+  trace-path audit shows target world-y moves about `0.020000m`; the unresolved
+  issue is vertical reach/actuator clipping and workspace-conditioned contact.
+- Any claim that +5cm target height fixes fixed-y+ 10cm contact. seed944
+  height050 reduced final TCP error but produced contact evidence `0.0`,
+  reaction `0.6875`, and reaction gate FAIL.
+- Any claim that seed945 good-workspace reaction PASS means 10cm teacher/data/RL
+  readiness. It passes contact/reaction, but teacher quality is still false due
+  final TCP error `0.065514732m` and DiffIK clip `1.0`.
+- Any claim that seed946 lateral `-0.020m` makes 10cm data/RL ready. It is the
+  best y+ candidate so far and passes final 1cm reaction/relocation gates, but
+  teacher quality remains false because final TCP error is `0.062820967m` and
+  DiffIK clip is `1.0`.
 - Any claim that the weighted mid/high actor candidate or the target-extension
   probe is ready for 1024/10k scale-up; both failed the 128 posx bucket screen
 - Any Track B/OpenVLA training status as evidence for Track A contact success

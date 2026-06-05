@@ -48,6 +48,7 @@ def main() -> int:
     parser.add_argument("--precontact_clearance_m", type=float, default=0.020)
     parser.add_argument("--tcp_top_margin_m", type=float, default=0.003)
     parser.add_argument("--push_through_m", type=float, default=0.030)
+    parser.add_argument("--base_lateral_offset_m", type=float, default=0.0)
     parser.add_argument("--through_target_mode", choices=("far_face", "near_face"), default="far_face")
     parser.add_argument("--contact_controller_mode", choices=("open_loop", "measured_stop"), default="open_loop")
     parser.add_argument("--contact_stop_target_mode", choices=("retract", "freeze"), default="retract")
@@ -374,6 +375,7 @@ def main() -> int:
         f"cube_success_disp_m={float(env_cfg.cube_success_disp_m):.6f} gate_disp_m={float(args.gate_disp_m):.6f} "
         f"fixed_cube_x_m={args.fixed_cube_x_m} fixed_cube_y_m={args.fixed_cube_y_m} "
         f"fixed_push_dir={args.fixed_push_dir} tcp_height_mode={args.tcp_height_mode} "
+        f"base_lateral_offset_m={args.base_lateral_offset_m:.6f} "
         f"through_target_mode={args.through_target_mode} "
         f"contact_controller_mode={args.contact_controller_mode} "
         f"contact_stop_target_mode={args.contact_stop_target_mode} "
@@ -434,7 +436,7 @@ def main() -> int:
         precontact = torch.full((n,), float(args.precontact_clearance_m), dtype=torch.float32, device=device)
         push_through = torch.full((n,), float(args.push_through_m), dtype=torch.float32, device=device)
         tcp_top_margin = torch.full((n,), float(args.tcp_top_margin_m), dtype=torch.float32, device=device)
-        lateral_offset = torch.zeros((n,), dtype=torch.float32, device=device)
+        lateral_offset = torch.full((n,), float(args.base_lateral_offset_m), dtype=torch.float32, device=device)
         if args.trajectory_variant == "v2":
             approach_steps[posx] = int(args.v2_posx_approach_steps)
             push_steps[posx] = int(args.v2_posx_push_steps)
@@ -1099,6 +1101,7 @@ def main() -> int:
         "total_steps_per_trial": total_steps,
         "precontact_clearance_m": float(args.precontact_clearance_m),
         "push_through_m": float(args.push_through_m),
+        "base_lateral_offset_m": float(args.base_lateral_offset_m),
         "cube_push_target_disp_m": float(env_cfg.cube_push_target_disp_m),
         "cube_success_disp_m": float(env_cfg.cube_success_disp_m),
         "gate_disp_m": float(args.gate_disp_m),

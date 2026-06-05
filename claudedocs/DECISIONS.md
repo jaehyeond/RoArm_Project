@@ -6384,3 +6384,482 @@ Sources:
   https://arxiv.org/abs/1910.07113
 - Mania et al., "Simple random search provides a competitive approach to
   reinforcement learning": https://arxiv.org/abs/1803.07055
+
+## D124 - Reaction gate requires contact evidence and stays separate from teacher quality
+
+Date: 2026-06-04
+
+Decision:
+
+- For the professor 10cm/0.72kg cube push/tap branch, do not count speed-only
+  object jitter as a reaction/tap PASS. A reaction gate must require reaction
+  evidence plus contact evidence, no posewrite, and no overshoot.
+- Keep three labels separate:
+  `reaction_gate_pass`, `final_relocation_pass`, and `teacher_quality_ready`.
+  A reaction pass is enough to say "tap/push reaction exists" but not enough to
+  generate data or start PPO/RL.
+- `teacher_quality_ready` remains false while final TCP error and DiffIK clipping
+  are high, even if reaction gate passes.
+
+Evidence:
+
+- Added `sim_scripts/cube10cm_reaction_event_gate_audit.py`, a non-GPU posthoc
+  reader. Lines 1-5 state it reads existing logs only and does not run IsaacLab,
+  train, generate data, or touch the robot.
+- Lines 73-83 expose reaction/contact/overshoot/teacher-quality thresholds.
+  Lines 118-138 compute reaction, contact evidence, overshoot, and transient
+  gate from each row. Lines 140-167 enforce no-posewrite/controller checks and
+  split `reaction_gate_pass`, `final_relocation_pass`, and
+  `teacher_quality_ready`. Lines 173-212 write JSON evidence; lines 220-238 print
+  the three audit lines.
+- seed938 is the negative control: audit JSON lines 2-3 show computed reaction
+  `0.5` but contact evidence `0.0`; lines 19-20 show reaction rate `0.5` and
+  `reaction_gate_pass=false`; lines 24 and 28 show final TCP error
+  `0.06104395352303982m` and teacher not ready.
+- seed939 passes reaction but not teacher quality: audit JSON lines 2-3 show
+  reaction/contact `1.0`; lines 19-20 show `reaction_gate_pass=true`; lines 22,
+  24, and 28 show DiffIK clip `1.0`, final TCP error `0.06364072300493717m`, and
+  teacher not ready; line 42 shows transient 1cm gate `0.0`.
+- seed940 is the stronger reaction pass: audit JSON lines 2-3 show
+  reaction/contact `1.0`; lines 14-20 show max displacement
+  `0.010990217328071594m`, speed `0.14879385754466057m/s`, no overshoot, and
+  reaction pass; lines 21-28 show stop/contact `1.0`, final displacement gate
+  `0.0`, final TCP error `0.059237909503281116m`, DiffIK clip `1.0`, and teacher
+  not ready; line 42 shows transient 1cm gate `1.0`.
+
+Implication:
+
+- The next valid GPU/IsaacLab action, only after explicit approval, is a tiny
+  randomized reaction screen using this audit. It should be judged as
+  reaction-screen evidence only.
+- Do not start dataset generation, PPO/RL scale-up, VLA, Track A, 1024/10k, or
+  a million-rollout sweep from seed939/940.
+- If a future run has high speed but no contact evidence, treat it like seed938:
+  not a push/tap PASS without manual trace/video confirmation.
+
+Sources:
+
+- `sim_scripts/cube10cm_reaction_event_gate_audit.py:1-5,73-83,118-138,140-167,173-212,220-238`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_measuredstop_driveboost_seed938_reaction_gate_audit.json:1-44`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_measuredstop_driveboost_noslow_seed939_reaction_gate_audit.json:1-44`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_measuredstop_freeze_driveboost_seed940_reaction_gate_audit.json:1-44`
+
+## D125 - Do not chase the 10cm randomized reaction gate by cap-only escalation
+
+Date: 2026-06-05
+
+Decision:
+
+- For the professor 10cm/0.72kg randomized reaction screen, do not treat
+  increasing `--max_diffik_joint_step_rad` alone as the next fix. The cap050
+  diagnostic reduced DiffIK clip rate a little, but contact evidence got worse
+  and teacher quality stayed false.
+- The current failure looks direction/geometry dependent. Analyze or test
+  direction-conditioned contact/reachability before another cap or drive boost
+  sweep.
+- Keep this separate from Track A, dataset generation, PPO/RL, VLA, 1024/10k,
+  and large random search.
+
+Evidence:
+
+- seed941 randomized 16-env reaction screen failed D124: audit JSON lines 2-3
+  show reaction `1.0` but contact evidence `0.625`; lines 17-20 show no
+  posewrite, no overshoot, and `reaction_gate_pass=false`; lines 21-28 show
+  contact stop `0.4375`, DiffIK clip `0.9706730805337429`, final TCP error
+  `0.063001801721839m`, measured contact `0.625`, and teacher not ready.
+- seed941 direction buckets showed `x+` contact `1.0`, `y-` contact `1.0`,
+  `y+` contact `0.375`, and `x-` contact `0.0` from the local CSV rows.
+- seed942 changed only the main DiffIK cap from `0.035` to `0.050` under the
+  same randomized 16-env reaction setup. Summary JSON lines 48, 69, 92-100 show
+  clip `0.9432692341506481`, final TCP error `0.05797268496826291m`, max
+  displacement mean `0.004881829023361206m`, max gate `0.1875`, and measured
+  contact `0.5`.
+- seed942 reaction audit JSON lines 2-3 and 17-20 show reaction `1.0`, contact
+  evidence `0.5`, no posewrite, no overshoot, and `reaction_gate_pass=false`;
+  lines 21-28 show contact stop `0.1875`, final TCP error `0.05797268496826291m`,
+  clip `0.9432692341506481`, measured contact `0.5`, and
+  `teacher_quality_ready=false`.
+- seed942 trace diagnostic lines 97-100 still report
+  `LINK5_BODY_TARGET_NOT_REACHED`, `JOINT_STEP_CLIPPING_DOMINANT`, and
+  `ACTUATOR_TARGET_TRACKING_LAG`; lines 168-184 show the worst clipped/raw
+  deltas remain joint 2.
+
+Implication:
+
+- cap050 is a failed diagnostic, not a recovery path.
+- The next valid work is direction/geometry-specific contact diagnosis or a
+  clearly scoped tiny screen after explicit approval, not another cap-only
+  escalation and not RL/data/Track A.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_rand16_reaction_seed941_reaction_gate_audit.json:1-44`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_rand16_reaction_seed941.csv:1-17`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_rand16_reaction_cap050_seed942_summary.json:48,69,92-100`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_rand16_reaction_cap050_seed942_reaction_gate_audit.json:1-44`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_rand16_reaction_cap050_seed942_trace_diagnostic_summary.json:97-100,168-184`
+
+## D126 - The 10cm randomized reaction failure must be bucketed by push direction
+
+Date: 2026-06-05
+
+Decision:
+
+- Do not treat the 10cm/0.72kg randomized reaction failure as a homogeneous
+  randomization failure. Bucket by push direction before changing controller or
+  claiming readiness.
+- The `y+` direction is now a confirmed weak bucket under the current near-face
+  measured-stop freeze controller. It should be diagnosed as reach/geometry and
+  actuator tracking, not solved by final-displacement metric changes.
+- Keep this branch separate from Track A, dataset generation, PPO/RL, VLA, and
+  large-scale randomized search.
+
+Evidence:
+
+- seed941 local direction breakdown showed `x+` contact `1.0`, `y-` contact
+  `1.0`, `y+` contact `0.375`, and `x-` contact `0.0`.
+- seed943 fixed `--fixed_push_dir 0 1` used the original cap `0.035`, same
+  16-env 10cm/0.72kg near-face measured-stop freeze screen, and no Track A/data/RL.
+- seed943 summary JSON lines 75-78 confirm fixed push direction `[0.0, 1.0]`.
+  Lines 48, 69, 95-103, 112, 119, 123, and 142 show clip `1.0`, final TCP error
+  `0.07060193479992449m`, max speed `0.10947006440255791m/s`, max z delta
+  `0.011328218039125204m`, max displacement `0.004163078963756561m`, max gate
+  `0.3125`, measured contact `0.375`, no posewrite, reaction `0.9375`, rollout
+  posewrite false, and 16 trials.
+- seed943 reaction audit JSON lines 2-3 and 17-20 show reaction `0.9375`, contact
+  evidence `0.375`, no posewrite, no overshoot, and `reaction_gate_pass=false`.
+  Lines 21-28 show contact stop `0.3125`, clip `1.0`, final TCP error
+  `0.07060193479992449m`, measured contact `0.375`, and
+  `teacher_quality_ready=false`.
+- seed943 trace diagnostic lines 97-100 still report
+  `LINK5_BODY_TARGET_NOT_REACHED`, `JOINT_STEP_CLIPPING_DOMINANT`, and
+  `ACTUATOR_TARGET_TRACKING_LAG`; line 118 shows mechanism instrumentation was OK.
+
+Implication:
+
+- The next useful work is y+ reach/geometry diagnosis: target path, lateral/height
+  offsets, workspace pose, and actuator tracking. It is not a cap-only problem and
+  not an invitation to RL/data scale-up.
+- Any future tiny GPU screen should be direction-bucketed and explicitly scoped.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_rand16_reaction_seed941.csv:1-17`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_reaction_seed943_summary.json:48,69,75-78,95-103,112,119,123,142`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_reaction_seed943_reaction_gate_audit.json:1-44`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_reaction_seed943_trace_diagnostic_summary.json:97-100,118`
+
+## D127 - Y+ next work is geometry/reach before data or RL
+
+Date: 2026-06-05
+
+Decision:
+
+- For the professor 10cm/0.72kg y+ bucket, do not interpret reaction-like
+  speed/z/tip motion as enough to proceed to dataset generation or RL. The
+  no-contact rows have almost no displacement along the commanded push.
+- Treat the next work as local y+ target-path and reach diagnosis: side-center
+  height, lateral offset, workspace x/y pose, and actuator target tracking. This
+  should happen before another candidate controller sweep, dataset generation,
+  PPO/RL, VLA, Track A, 1024/10k, or broad randomized search.
+- Any future GPU test should be tiny, direction-bucketed, and explicitly scoped
+  to a single geometry/control hypothesis.
+
+Evidence:
+
+- Added `sim_scripts/cube10cm_yplus_geometry_reach_audit.py`, a local posthoc
+  reader only. Lines 1-4 state it does not run IsaacLab, train, generate a
+  dataset, touch the robot, or reconnect a remote machine. Lines 141-180 build
+  the contact/no-contact, workspace-bin, trace-env, and interpretation summary.
+  Lines 185-218 write JSON and print a four-line console summary.
+- The seed943 y+ geometry audit JSON lines 2-23 show the contact group has 6
+  rows and mean max displacement `0.010986278454462687m`. Lines 31-56 show the
+  no-contact group has 10 rows, mean max displacement only
+  `0.00006915926933288574m`, and higher final TCP error
+  `0.07492788583040237m`.
+- Audit JSON lines 58-122 show workspace asymmetry: `cube_y0_m<=0` contact
+  `0.625`, `cube_y0_m>0` contact `0.125`, `cube_x0_m<0.25` contact
+  `0.1111111111111111`, and `cube_x0_m>=0.25` contact
+  `0.7142857142857143`.
+- Audit JSON lines 126-139 show traced contact and no-contact groups both retain
+  large final TCP-target vertical error; no-contact is worse
+  (`0.06137282773852348m` mean abs z error), while final TCP-cube distance is
+  still about `0.083m`.
+- Audit JSON lines 141-240 show env0/env3 no-contact traced cases and env1/env2
+  contact traced cases. Env0 final line 310 and env3 final line 313 keep
+  side-center final z errors `0.052595339715480804m` and
+  `0.07015031576156616m`; env1/env2 also keep high z errors but reach measured
+  contact/stop in better workspace poses.
+- This is consistent with D126 and the trace diagnostic modes:
+  `LINK5_BODY_TARGET_NOT_REACHED`, `JOINT_STEP_CLIPPING_DOMINANT`, and
+  `ACTUATOR_TARGET_TRACKING_LAG`, not with a solved teacher/data path.
+
+Implication:
+
+- The immediate research target is why y+ side-center near-face targets do not
+  reliably create measured contact: compare target path, actual TCP height,
+  lateral/xy offset, and actuator follow error across contact vs no-contact
+  rows. Do this locally first.
+- Do not start 10cm 10240 data generation or RL from the current y+ evidence.
+
+Sources:
+
+- `sim_scripts/cube10cm_yplus_geometry_reach_audit.py:1-4,141-180,185-218`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_reaction_seed943_yplus_geometry_reach_audit.json:1-245`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_reaction_seed943_trace_diagnostic_summary.json:97-100,118`
+
+## D128 - Y+ target path exists; height/reach and clipping dominate next hypothesis
+
+Date: 2026-06-05
+
+Decision:
+
+- Do not treat the fixed-y+ failure as a missing y-target-advance bug. The traced
+  target path advances in world y by about `0.020000m` and keeps the side-center
+  target z at the start-cube height.
+- The unresolved y+ problem is that the actual TCP remains several centimeters
+  above the side-center target, while joint clipping and actuator follow lag are
+  still present in both contact and no-contact traced groups.
+- The next GPU experiment, if explicitly approved, should be a tiny
+  direction-bucketed geometry/control hypothesis such as target height,
+  lateral/xy workspace pose, or actuator tracking. Do not go to 10cm 10240,
+  dataset generation, PPO/RL, VLA, Track A, or broad random search.
+
+Evidence:
+
+- Added `sim_scripts/cube10cm_yplus_trace_path_actuator_audit.py`, a local
+  CSV/trace reader only. Lines 1-4 state it does not run IsaacLab, use GPU,
+  train, generate data, touch the robot, or reconnect a remote machine.
+- The probe target path code uses the object half-size and lateral offset: lines
+  497-520 compute pre/through targets, with side-center z from cube z and
+  near-face target `cube - push_dir * (half_along - push_through)`.
+- The trace-path audit script lines 110-168 build per-env target/TCP/joint
+  summaries, lines 172-202 split contact vs no-contact traced envs, and lines
+  223-263 write the path/actuator summary and interpretation.
+- Audit JSON lines 2-54 show traced contact envs `[1, 2]` and no-contact envs
+  `[0, 3]`. Both groups have target world-y delta
+  `0.019999980926513672m`, final target z near start-cube z, and `clip_any=1.0`.
+  Contact final z error is `0.051741816103458405m`; no-contact final z error is
+  worse at `0.06137282773852348m`.
+- Audit JSON lines 10-16 and 36-42 show final TCP error is mostly vertical:
+  z-error fraction is `0.8440865598225584` for contact traced envs and
+  `0.858887503603252` for no-contact traced envs.
+- Audit JSON lines 112-142 and 834-865 show the no-contact traced env0/env3
+  final z errors `0.052595339715480804m` and `0.07015031576156616m`. Lines
+  287-296 and 1010-1018 show worst follow/raw delta remains joint 2 in both
+  no-contact traced envs.
+- Audit JSON lines 1022-1038 summarize the interpretation: short lateral-neutral
+  target path, side-center z near start-cube height, final TCP several
+  centimeters above target, and clipping/follow lag in both groups.
+
+Implication:
+
+- The next local/GPU design question should be: can y+ measured contact be made
+  reliable by changing target height, lateral offset, workspace bucket, or
+  actuator tracking while preserving no-posewrite and no-overshoot?
+- Do not spend compute on RL/data scale-up until the y+ teacher can consistently
+  create contact evidence with acceptable TCP error/clipping.
+
+Sources:
+
+- `sim_scripts/cube10cm_yplus_trace_path_actuator_audit.py:1-4,110-168,172-202,223-263`
+- `sim_scripts/cube3cm_push_diffik_probe.py:497-520`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_reaction_seed943_yplus_trace_path_actuator_audit.json:1-1043`
+
+## D129 - Height-only y+ correction is not a teacher/data fix
+
+Date: 2026-06-05
+
+Decision:
+
+- Do not treat a positive target-height offset by itself as the recovery path for
+  the professor 10cm/0.72kg fixed-y+ push/tap teacher.
+- The seed944 height050 run lowered final TCP-target error, but it eliminated
+  measured contact and failed the reaction gate. Low final TCP error without
+  contact evidence is not teacher/data readiness.
+- The next useful axis is a tiny lateral/workspace/actuator-tracking hypothesis,
+  only after explicit approval. Do not start 10cm 10240 data generation, PPO/RL,
+  VLA, Track A, or broad random search from seed944.
+
+Evidence:
+
+- seed944 used fixed `--fixed_push_dir 0 1`, 10cm/0.72kg, near-face
+  measured-stop freeze, original cap `0.035`, and the diagnostic
+  `--tcp_center_height_offset_m 0.050`.
+- seed944 summary JSON lines 21-35 show the measured-stop controller and
+  IsaacLab DiffIK controller; lines 47-49 show no dataset generation and
+  DiffIK clip `0.9491987340152264`; lines 69-72 show final TCP error
+  `0.022889409447088838m` but no contact/stop step; lines 95-103 show max speed
+  `0.06781863939249888m/s`, max z delta `0.004550501937046647m`, max
+  displacement only `0.000058706849813461304m`, and measured contact `0.0`;
+  lines 112, 119, 123, and 142 show no posewrite, reaction `0.6875`, rollout
+  posewrite false, and 16 trials.
+- seed944 reaction audit JSON lines 2-3 and 17-27 show reaction `0.6875`,
+  contact evidence `0.0`, no posewrite, no overshoot, reaction gate false,
+  final TCP error `0.022889409447088838m`, clip `0.9491987340152264`, measured
+  contact `0.0`, and `teacher_quality_ready=false`; line 41 shows transient
+  1cm gate `0.0`.
+- seed944 trace diagnostic JSON lines 97-100 still report
+  `JOINT_STEP_CLIPPING_DOMINANT` and `ACTUATOR_TARGET_TRACKING_LAG`; lines
+  167-184 show worst clipped/follow/raw joints are still active.
+- seed944 y+ trace-path audit JSON lines 20-35 show all traced envs are
+  no-contact, final target z is about `0.050000098533928394m` above start cube z,
+  final TCP-cube distance remains about `0.08266180194914341m`, and final error
+  is still mostly z fraction `0.8597798536432198`; lines 1027-1035 show target
+  world-y still advances about `0.02000001072883606m`.
+
+Implication:
+
+- The +5cm diagnostic rejected the "raise target height and proceed" shortcut.
+  It may help the controller track a target, but it does not create cube contact.
+- The next small experiment, if approved, should avoid another height-only move
+  and instead isolate fixed workspace x/y, small lateral offset, or actuator
+  tracking while keeping reaction/contact/no-overshoot gates.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_height050_seed944_summary.json:21-35,47-49,69-72,95-103,112,119,123,142`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_height050_seed944_reaction_gate_audit.json:1-42`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_height050_seed944_trace_diagnostic_summary.json:97-100,167-184`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_height050_seed944_yplus_trace_path_actuator_audit.json:20-35,1027-1035`
+
+## D130 - Good y+ workspace restores reaction/contact but not teacher quality
+
+Date: 2026-06-05
+
+Decision:
+
+- Treat fixed y+ workspace as a real contact discriminator, not just seed943
+  random noise. A good bucket near `cube_x=0.295m`, `cube_y=-0.044m` restores
+  measured contact and reaction under the current near-face measured-stop freeze
+  controller.
+- Do not mistake this for 10cm teacher/data/RL readiness. The run still has high
+  final TCP error and DiffIK clipping, and final 1cm relocation remains false.
+- The next useful work is either to map/generalize the workspace window or to fix
+  actuator tracking in this now-contacting bucket. Do not start 10cm 10240 data
+  generation, PPO/RL, VLA, Track A, or broad random search from seed945.
+
+Evidence:
+
+- seed945 fixed `--fixed_push_dir 0 1`, `--fixed_cube_x_m 0.295`,
+  `--fixed_cube_y_m -0.044`, 10cm/0.72kg, near-face measured-stop freeze,
+  original cap `0.035`, and height offset `0.000`.
+- The probe code already supports this controlled workspace test: parser lines
+  43-45 define fixed cube x/y and fixed push dir; lines 268-276 apply them to the
+  env config; lines 497-520 compute the near-face side-center target from cube
+  pose and object half-size; lines 657-686 apply measured-stop, step scales, and
+  DiffIK clipping.
+- seed945 summary JSON lines 47-53 show no dataset generation, clip `1.0`, final
+  displacement `0.009423360228538513m`, and final 1cm gate `0.0`; lines 69-77
+  show final TCP error `0.0655147316865623m`, fixed cube x/y, and fixed y+; lines
+  95-103 show max speed `0.13854316715151072m/s`, max z delta
+  `0.015773175051435828m`, max displacement `0.009829461574554443m`,
+  transient gate `0.1875`, and measured contact `1.0`; lines 112, 119, 123, and
+  142 show no posewrite, reaction `1.0`, rollout posewrite false, and 16 trials.
+- seed945 reaction audit JSON lines 2-3 and 17-28 show reaction `1.0`, contact
+  evidence `1.0`, no posewrite, no overshoot, reaction gate true, final TCP error
+  `0.0655147316865623m`, clip `1.0`, measured contact `1.0`, and
+  `teacher_quality_ready=false`; line 42 shows transient 1cm gate only `0.1875`.
+- seed945 y+ geometry audit JSON lines 2-33 show all 16 rows are in the contact
+  group, with mean cube position `x=0.2950093150138855`,
+  `y=-0.044006768614053726`, mean max displacement
+  `0.009829461574554443m`, and final TCP error `0.0655147316865623m`; lines
+  57-80 show `cube_y0_m<=0` contact `1.0`; lines 123-136 show traced contact
+  `n=4` and no-contact `n=0`.
+- seed945 trace-path audit JSON lines 2-34 show traced contact envs `[0,1,2,3]`,
+  target world-y delta `0.02000001072883606m`, final z-error fraction
+  `0.8575224903003924`, and `clip_any=1.0`; lines 1027-1035 show the target path
+  still advances in world y and keeps side-center z.
+- seed945 trace diagnostic JSON lines 97-100 still report
+  `LINK5_BODY_TARGET_NOT_REACHED`, `JOINT_STEP_CLIPPING_DOMINANT`, and
+  `ACTUATOR_TARGET_TRACKING_LAG`; lines 168-184 show worst clipped/follow/raw
+  deltas remain active.
+
+Implication:
+
+- The 10cm y+ failure is now narrowed: workspace placement can recover
+  contact/reaction, but the teacher still needs tracking/relocation cleanup
+  before any 10240/data/RL step.
+- A sensible next tiny test is either a minimal workspace boundary check around
+  this good x/y point, or an actuator-tracking change inside this good bucket.
+
+Sources:
+
+- `sim_scripts/cube3cm_push_diffik_probe.py:43-45,268-276,497-520,657-686`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_seed945_summary.json:47-53,69-77,95-103,112,119,123,142`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_seed945_reaction_gate_audit.json:1-43`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_seed945_yplus_geometry_reach_audit.json:1-136`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_seed945_yplus_trace_path_actuator_audit.json:1-34,1027-1035`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_seed945_trace_diagnostic_summary.json:97-100,168-184`
+
+## D131 - Lateral -2cm in the good y+ workspace reaches 1cm but still is not data-ready
+
+Date: 2026-06-05
+
+Decision:
+
+- Add and preserve the default-zero `--base_lateral_offset_m` knob so the base
+  10cm y+ path can test lateral alignment directly, not only posx variants.
+- In the good y+ workspace (`cube_x=0.295m`, `cube_y=-0.044m`), a lateral offset
+  of `-0.020m` is the strongest local 10cm y+ candidate so far: it passes
+  reaction, contact, final 1cm gate, transient 1cm gate, no-posewrite, and
+  no-overshoot.
+- Do not call seed946 teacher/data/RL ready. Final TCP error and DiffIK clipping
+  remain high, and trace diagnostics still report target not reached, clipping,
+  and actuator lag.
+
+Evidence:
+
+- Code added a default-preserving `--base_lateral_offset_m` parser argument at
+  line 51, prints it at line 378, applies it to the base trajectory lateral
+  tensor at line 439, and records it in summary JSON at line 1104.
+- Direction reasoning from seed945 trace showed final TCP was consistently offset
+  to +x relative to the target. For y+ pushes, `lateral_dir=(-1,0)`, so a
+  negative lateral offset moves the target in +x. seed946 therefore tested
+  `--base_lateral_offset_m -0.020`.
+- seed946 summary JSON lines 48-55 show no dataset generation, clip `1.0`,
+  final displacement `0.011250250041484833m`, final gate `1.0`, and normalized
+  displacement `0.11250250041484833`; lines 70-80 show final TCP error
+  `0.06282096705399454m`, fixed good workspace x/y, and fixed y+; lines 96-105
+  show max speed `0.13885411759838462m/s`, max z delta
+  `0.016476489370688796m`, max displacement `0.011251196265220642m`, max gate
+  `1.0`, and measured contact `1.0`; lines 113, 120, 124, and 143 show no
+  posewrite, reaction `1.0`, rollout posewrite false, and 16 trials.
+- seed946 reaction audit JSON lines 2-8 and 17-28 show reaction `1.0`, contact
+  evidence `1.0`, final relocation pass true, no posewrite, no overshoot,
+  reaction gate true, final TCP error `0.06282096705399454m`, clip `1.0`,
+  measured contact `1.0`, and `teacher_quality_ready=false`; line 42 shows
+  transient gate `1.0`.
+- seed946 y+ geometry audit JSON lines 2-33 show all 16 rows in the contact
+  group, max displacement `0.011251196265220642m`, final TCP error
+  `0.06282096705399454m`, and no no-contact rows; lines 123-128 show traced
+  contact `n=4`, final xy error `0.021463414385781712m`, and final z error
+  `0.05878029018640518m`.
+- seed946 trace-path audit JSON lines 2-34 show all traced envs `[0,1,2,3]`
+  contact, target world-y delta `0.01827782392501831m`, final z-error fraction
+  `0.9393462154426221`, and clip_any `1.0`; lines 1027-1035 show final target x
+  moved to about `+0.01934826374053955m` relative to the cube.
+- seed946 trace diagnostic JSON lines 97-100 still show
+  `LINK5_BODY_TARGET_NOT_REACHED`, `JOINT_STEP_CLIPPING_DOMINANT`, and
+  `ACTUATOR_TARGET_TRACKING_LAG`; lines 168-184 show joint 2 remains the worst
+  clipped/follow/raw-delta joint.
+
+Implication:
+
+- The y+ issue is no longer "cannot push a 10cm cube" in the good workspace. It
+  can create controlled reaction and 1cm displacement with lateral alignment.
+- The remaining blocker for dataset/RL is teacher quality and robustness:
+  clipping, link target tracking, and whether the lateral/workspace candidate
+  survives beyond this one fixed 16-env screen.
+- The next valid tiny step is either an actuator/IK tracking cleanup inside this
+  seed946 candidate or a minimal robustness check of the same candidate; it is
+  not 10cm 10240, dataset generation, PPO/RL, VLA, Track A, or broad search.
+
+Sources:
+
+- `sim_scripts/cube3cm_push_diffik_probe.py:51,378,439,1104`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_seed946_summary.json:48-55,70-80,96-105,113,120,124,143`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_seed946_reaction_gate_audit.json:1-43`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_seed946_yplus_geometry_reach_audit.json:1-33,123-128`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_seed946_yplus_trace_path_actuator_audit.json:1-34,1027-1035`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_seed946_trace_diagnostic_summary.json:97-100,168-184`
