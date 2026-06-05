@@ -6863,3 +6863,370 @@ Sources:
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_seed946_yplus_geometry_reach_audit.json:1-33,123-128`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_seed946_yplus_trace_path_actuator_audit.json:1-34,1027-1035`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_seed946_trace_diagnostic_summary.json:97-100,168-184`
+
+## D132 - Use a 10cm wrapper entrypoint, not the legacy 3cm filename, for new professor 10cm DiffIK commands
+
+Date: 2026-06-05
+
+Decision:
+
+- Keep `sim_scripts/cube3cm_push_diffik_probe.py` as the shared DiffIK probe
+  engine because it owns the existing 3cm history and many dependent tools.
+- Add `sim_scripts/cube10cm_push_diffik_probe.py` as the standard professor
+  10cm/0.72kg command entrypoint. It injects 10cm object and measured-stop
+  reaction defaults into the shared engine unless the caller explicitly overrides
+  a flag.
+- This is a code-organization fix only. It does not approve GPU runtime,
+  10240/data generation, PPO/RL scale-up, VLA, Track A, or broad random search.
+
+Evidence:
+
+- The shared engine is already object-parameterized: parser lines 39-40 expose
+  `--cube_size_m` and `--cube_mass_kg`; lines 263-268 apply cube size, mass, and
+  center z to the env config; lines 499-520 compute near/far face TCP targets
+  from cube center, half-size, push direction, and lateral offset.
+- The shared engine now accepts `main(argv)` and parses that argv at lines 33 and
+  132, allowing a wrapper to reuse the same implementation without mutating
+  global `sys.argv`.
+- The new wrapper lines 1-7 explain the legacy filename issue; lines 24-50 define
+  the professor 10cm defaults; lines 54-65 add defaults only when an option is not
+  supplied by the caller; lines 68-70 delegate to the shared engine.
+- Static checks passed: `python -m py_compile sim_scripts/cube3cm_push_diffik_probe.py sim_scripts/cube10cm_push_diffik_probe.py sim_scripts/cube10cm_reaction_event_gate_audit.py sim_scripts/cube3cm_push_diffik_trace_diagnostic_audit.py`
+  and `git diff --check`.
+- A local import/helper check confirmed default injection adds cube size
+  `0.100 0.100 0.100` and preserves a caller override for `--cube_mass_kg`
+  without duplicating that flag.
+
+Implication:
+
+- Future 10cm branch commands should use `sim_scripts/cube10cm_push_diffik_probe.py`
+  for clarity, while audit scripts and old artifacts may still reference the
+  historical `cube3cm_push_diffik_probe.py` engine.
+- The next research blocker remains teacher quality and robustness: seed946
+  passes object-level reaction/contact/final 1cm relocation but still has final
+  TCP error about `0.062821m` and DiffIK clip rate `1.0`.
+
+Sources:
+
+- `sim_scripts/cube3cm_push_diffik_probe.py:33,39-40,132,263-268,499-520`
+- `sim_scripts/cube10cm_push_diffik_probe.py:1-7,24-50,54-70`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_seed946_summary.json:48-55,70-80,96-105`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_seed946_reaction_gate_audit.json:1-43`
+
+## D133 - The 10cm wrapper must default to tap/reaction, not fixed 1cm relocation
+
+Date: 2026-06-05
+
+Decision:
+
+- Correct the new `sim_scripts/cube10cm_push_diffik_probe.py` wrapper so its
+  default displacement target/success/gate/contact-stop values are reaction/tap
+  scale (`0.001m`), not final 1cm relocation scale (`0.010m`).
+- Keep 1cm metrics available as secondary diagnostics or explicit user-supplied
+  relocation targets, but do not encode them as the default professor 10cm branch
+  objective.
+
+Evidence:
+
+- `START_HERE.md` lines 5-8 say final 1cm displacement is no longer primary if
+  the real task only needs tap/reaction; measured contact, transient displacement,
+  z/lift response, and cube speed are primary reaction-event evidence.
+- D123 lines 6296-6302 supersede the primary 1cm push gate for the clarified
+  professor objective and explicitly allow the cube to react and settle near the
+  start if the task is "push/tap happened."
+- D124 lines 6394-6402 separates `reaction_gate_pass`, `final_relocation_pass`,
+  and `teacher_quality_ready`; lines 155-167 in the audit script enforce reaction
+  without requiring final relocation.
+- The initial wrapper lines 27-29 and 35 had encoded `0.010m` target/success/gate
+  and contact-stop defaults. That was misleading for the clarified objective.
+- The corrected wrapper lines 27-29 and 35 now use `0.001m` defaults. This keeps a
+  numeric tap threshold while avoiding a fixed 1cm relocation objective.
+
+Implication:
+
+- Future 10cm DiffIK commands using the wrapper are tap/reaction screens by
+  default. A 1cm relocation run must be explicit and should be reported as
+  relocation-specific, not as the default professor tap objective.
+
+Sources:
+
+- `START_HERE.md:5-8,889-892`
+- `claudedocs/DECISIONS.md:6296-6302,6394-6402`
+- `sim_scripts/cube10cm_reaction_event_gate_audit.py:155-167`
+- `sim_scripts/cube10cm_push_diffik_probe.py:24-50`
+
+## D134 - Next 10cm work is actuator/IK tracking cleanup inside tap geometry, not RL/data
+
+Date: 2026-06-05
+
+Decision:
+
+- Add local guard/audit scripts so future sessions cannot silently drift from the
+  professor 10cm tap/reaction objective back into final 1cm relocation or broad
+  RL/data scale-up.
+- The next research direction after seed946 is narrow actuator/IK tracking cleanup
+  inside the working tap geometry, not dataset generation, PPO/RL, VLA, Track A,
+  1024/10k scale-up, or broad random search.
+
+Evidence:
+
+- `sim_scripts/cube10cm_tap_objective_contract_audit.py` lines 1-8 state it is a
+  local contract audit with no IsaacLab app, GPU runtime, training, data
+  generation, robot control, or log mutation. Lines 27-36 define the 10cm
+  tap-objective defaults (`0.001m`) and 10cm/0.72kg object defaults. Lines 68-81
+  reject accidental `0.010m` defaults while preserving explicit 1cm overrides.
+  Lines 83-96 write JSON evidence.
+- Contract audit JSON lines 2-20 show contract
+  `professor_cube10cm_tap_reaction`, cube size `0.1m`, mass `0.72kg`, explicit
+  1cm override allowed, failures `[]`, final 1cm relocation default `false`,
+  tap defaults `0.001m`, and verdict PASS.
+- `sim_scripts/cube10cm_next_research_step_audit.py` lines 1-9 state it reads
+  existing reaction/trace diagnostics only and prevents drift into 1cm relocation,
+  dataset generation, PPO/RL scale-up, or broad searches. Lines 49-91 classify
+  the next direction from controller/contact/overshoot/reaction/teacher-quality
+  evidence. Lines 104-121 write JSON evidence.
+- Next-step audit JSON lines 2-16 show branch
+  `professor_cube10cm_tap_reaction`, primary objective `tap_reaction_not_final_1cm`,
+  contact evidence `1.0`, clip `1.0`, do-not-start list, secondary final
+  relocation pass, final TCP error `0.06282096705399454m`, next direction
+  `NARROW_ACTUATOR_IK_TRACKING_CLEANUP_INSIDE_WORKING_TAP_GEOMETRY`, overshoot
+  `0.0`, and reaction gate pass.
+- Next-step audit JSON lines 19-24 explain the reasons: DiffIK clip `1.0 >
+  0.5`, final TCP error `0.062821 > 0.030`, trace reports actuator lag, and
+  `teacher_quality_ready=false`.
+
+Implication:
+
+- A future 10cm GPU command must first pass the tap-objective contract audit. If
+  approved, it should be exactly one tiny local IsaacLab screen that changes only
+  actuator/IK tracking inside seed946-like tap geometry.
+- If reaction/contact/no-posewrite/no-overshoot pass but teacher quality remains
+  false, do not start data/RL. Continue diagnosing clipping, target tracking, or
+  robustness.
+
+Sources:
+
+- `sim_scripts/cube10cm_tap_objective_contract_audit.py:1-8,27-36,68-96`
+- `sim_scripts/cube10cm_next_research_step_audit.py:1-9,49-91,104-121`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_objective_contract_audit.json:1-21`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_next_research_step_seed946_audit.json:1-26`
+
+## D135 - Stiffness-only cleanup can preserve tap while weakening useful push
+
+Date: 2026-06-05
+
+Decision:
+
+- Do not treat a lower final TCP-target error as progress by itself on the
+  professor 10cm tap/reaction branch.
+- The approved stiff600 screen changed only `arm_stiffness_override` from `400`
+  to `600` inside the seed946 working tap geometry. It preserved tap/reaction
+  gate evidence, but it reduced useful displacement and did not fix DiffIK
+  clipping or teacher quality.
+- seed946 remains the stronger object-level candidate because it has the same
+  reaction/contact/no-posewrite/no-overshoot pass and larger useful displacement.
+
+Evidence:
+
+- Pre-runtime guards were rerun and PASSed: the contract audit still reported
+  `professor_cube10cm_tap_reaction`, wrapper tap defaults `0.001m`, final 1cm
+  relocation default false, and explicit 1cm override allowed; the next-step
+  audit still blocked dataset/RL/VLA/TrackA/1024_10k.
+- The stiff600 summary JSON lines 1-10 show the only actuator change was
+  stiffness `600` while damping stayed `20`, effort `25`, and velocity `12`.
+- Stiff600 summary JSON lines 48-55 show no dataset generation, DiffIK clip
+  `1.0`, final displacement `0.0038454830646514893m`, tap gate `1.0`, and
+  no overshoot. Lines 70-80 show final TCP error improved to
+  `0.04606295237317681m` under fixed seed946 geometry and tap gate `0.001m`.
+  Lines 96-105 show max displacement only `0.004667486995458603m`, max gate
+  `1.0`, and measured contact `1.0`. Lines 113, 120, 124, and 143 show no
+  posewrite, reaction `1.0`, rollout posewrite false, and 16 trials.
+- Stiff600 reaction audit JSON lines 2-8 and 17-27 show reaction/contact
+  `1.0/1.0`, final relocation secondary false, no posewrite, overshoot `0.0`,
+  reaction gate PASS, DiffIK clip `1.0`, final TCP error `0.046062952m`, and
+  `teacher_quality_ready=false`.
+- Stiff600 trace diagnostic JSON lines 97-100 still report
+  `LINK5_BODY_TARGET_NOT_REACHED` and `JOINT_STEP_CLIPPING_DOMINANT`; lines
+  168-184 show joint 2 remains the worst clipped/follow/raw-delta joint.
+- The next-step audit JSON lines 12-23 keeps the branch at
+  `NARROW_ACTUATOR_IK_TRACKING_CLEANUP_INSIDE_WORKING_TAP_GEOMETRY` with
+  `teacher_quality_ready=false`.
+
+Implication:
+
+- The stiff600 result is a tap/reaction PASS, not a teacher/data/RL readiness
+  pass and not a seed946 replacement.
+- Future one-knob actuator/IK tests must preserve the primary ordering:
+  reaction/contact/no-posewrite/no-overshoot first, useful tap displacement next,
+  and final 1cm only as secondary relocation evidence when explicitly requested.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_stiff600_seed946_summary.json:1-10,48-55,70-80,96-105,113,120,124,143`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_stiff600_seed946_reaction_gate_audit.json:1-43`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_stiff600_seed946_trace_diagnostic_summary.json:97-100,168-184`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_next_research_step_stiff600_seed946_audit.json:1-25`
+
+## D136 - Seed946 goodxy is not direction-general; do not scale it to 1024/10240 data
+
+Date: 2026-06-05
+
+Decision:
+
+- Do not treat seed946 as a direction-general 10cm teacher. It is currently a
+  y+-specific/contact-geometry pocket.
+- The next question before any 1024/10240 trace or dataset build is
+  direction-specific contact geometry/lateral diagnosis, not actuator-only
+  cleanup, broad random search, PPO/RL, VLA, Track A, or scale-up.
+
+Evidence:
+
+- The seed947 screen kept seed946's good workspace (`fixed_cube_x_m=0.295`,
+  `fixed_cube_y_m=-0.044`) and lateral offset `-0.020m`, but released
+  `fixed_push_dir` under the corrected tap/reaction wrapper defaults.
+- Seed947 summary JSON lines 48-55 show no dataset generation, DiffIK clip
+  `1.0`, final displacement only `0.00020624324679374695m`, tap gate `0.25`,
+  no overshoot, and displacement over object size `0.002062432`. Lines 70-77
+  show final TCP error `0.052680495427921414m`, fixed goodxy, and
+  `fixed_push_dir=null`. Lines 92-105 show low-motion `0.875`, max displacement
+  only `0.0015010684728622437m`, max tap gate `0.5625`, and measured contact
+  `0.5625`. Lines 110-122 show no posewrite, reaction `1.0`, and rollout
+  object posewrite false.
+- Seed947 reaction audit JSON lines 2-8 and 17-28 show reaction `1.0`, contact
+  evidence `0.5625`, no posewrite, overshoot `0.0`, reaction gate FAIL,
+  DiffIK clip `1.0`, final TCP error `0.052680495m`, and
+  `teacher_quality_ready=false`.
+- Direction contact audit lines 1-4 show the asymmetry directly: y+ is the only
+  controlled direction (`n=4`, contact `1.0`, controlled `1.0`, low-motion
+  `0.75`); x- has no contact (`n=7`, contact `0.0`, controlled `0.0`, success
+  `0.0`); x+ and y- have contact `1.0` but controlled `0.0` and low-motion
+  `1.0`.
+- Bucket audit lines 1-10 match the same conclusion: overall controlled `0.25`,
+  low-motion `0.875`, final TCP error `0.052680495m`, y+ best but weak, x-
+  negative/no-contact, and posx bucket verdict FAIL.
+- Trace diagnostic JSON lines 97-100 still report
+  `LINK5_BODY_TARGET_NOT_REACHED`, `JOINT_STEP_CLIPPING_DOMINANT`, and
+  `ACTUATOR_TARGET_TRACKING_LAG`; lines 168-184 keep joint 2 as the worst
+  clipped/follow/raw-delta joint.
+- Next-step audit JSON lines 12-23 classifies seed947 as
+  `FIX_CONTACT_GEOMETRY_OR_WORKSPACE_BUCKET_FIRST` because reaction exists but
+  contact evidence is incomplete.
+
+Implication:
+
+- seed946/seed947 do not justify 1024 trace, 10240 trace, dataset generation, or
+  learned-policy work.
+- The next valid tiny test should isolate direction-specific contact geometry
+  instead of mixing it with workspace expansion. A reasonable sequence is fixed
+  goodxy plus one direction at a time, with lateral/contact target chosen for
+  that direction, judged by reaction/contact/no-posewrite/no-overshoot first.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_goodxy_dir16_latneg020_seed947_summary.json:48-77,92-105,110-122`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_goodxy_dir16_latneg020_seed947_reaction_gate_audit.json:1-43`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_goodxy_dir16_latneg020_seed947_direction_contact.out:1-4`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_goodxy_dir16_latneg020_seed947_bucket.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_goodxy_dir16_latneg020_seed947_trace_diagnostic_summary.json:97-100,168-184`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_next_research_step_goodxy_dir16_seed947_audit.json:1-24`
+
+## D137 - Deeper x- near-face target does not fix the 10cm contact pocket
+
+Date: 2026-06-05
+
+Decision:
+
+- Do not treat x- failure as solved by increasing near-face penetration target
+  alone.
+- Keep 1024 trace, 10240 trace, dataset generation, learned policy work, Track A,
+  PPO/RL, VLA, and broad random search blocked.
+
+Evidence:
+
+- After explicit approval, ran one local 16-env screen at seed946/seed947 goodxy
+  (`fixed_cube_x_m=0.295`, `fixed_cube_y_m=-0.044`) with
+  `fixed_push_dir=[-1,0]`, `base_lateral_offset_m=-0.020`, wrapper tap defaults
+  (`gate_disp_m=0.001`), and only `push_through_m=0.020`.
+- Summary JSON lines 48-55 show no dataset generation, DiffIK clip `1.0`,
+  final displacement `-0.00016099214553833008m`, tap gate `0.0`, and no
+  overshoot. Lines 70-80 show final TCP error `0.06216392223723233m`,
+  fixed x- direction, and tap gate `0.001`. Lines 95-105 show low-motion `1.0`,
+  max displacement only `0.000009052455425262451m`, max tap gate `0.0`, and
+  measured contact `0.0`. Lines 113-124 show no posewrite, `push_through_m=0.02`,
+  reaction `1.0`, and rollout posewrite false.
+- Reaction audit JSON lines 2-28 show reaction `1.0`, contact evidence `0.0`,
+  final gate `0.0`, no posewrite, overshoot `0.0`, reaction gate FAIL, DiffIK
+  clip `1.0`, final TCP error `0.062163922m`, and `teacher_quality_ready=false`.
+- Trace diagnostic JSON lines 97-100/168-184 still report
+  `LINK5_BODY_TARGET_NOT_REACHED`, `JOINT_STEP_CLIPPING_DOMINANT`,
+  `ACTUATOR_TARGET_TRACKING_LAG`, and worst joint 2.
+- Next-step audit JSON lines 12-23 keeps the next direction at
+  `FIX_CONTACT_GEOMETRY_OR_WORKSPACE_BUCKET_FIRST` because reaction exists but
+  contact evidence is incomplete.
+
+Implication:
+
+- The x- no-contact failure is not just "target is not deep enough." The deeper
+  target leaves the arm missing the target with clipping/tracking lag and produces
+  no measured contact. The next tiny hypothesis should separate x- reach/IK target
+  feasibility from lateral/face geometry instead of scaling data.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xneg16_goodxy_latneg020_through020_seed948_summary.json:48-80,95-105,113-124`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xneg16_goodxy_latneg020_through020_seed948_reaction_gate_audit.json:1-43`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xneg16_goodxy_latneg020_through020_seed948_trace_diagnostic_summary.json:97-100,168-184`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_next_research_step_xneg_through020_seed948_audit.json:1-24`
+
+## D138 - X- height050 restores tap contact but is not dataset scale-up readiness
+
+Date: 2026-06-05
+
+Decision:
+
+- Treat seed949 as evidence that x- failure is largely a low side-center
+  reach/IK-target feasibility problem, not a simple push-through-depth or lateral
+  problem.
+- Do not start 1024 trace, 10240 trace, dataset generation, learned policy work,
+  Track A, PPO/RL, VLA, or broad random search from seed949.
+
+Evidence:
+
+- After explicit approval, ran one local 16-env screen at seed946/seed947 goodxy
+  (`fixed_cube_x_m=0.295`, `fixed_cube_y_m=-0.044`) with
+  `fixed_push_dir=[-1,0]`, `base_lateral_offset_m=-0.020`, wrapper tap defaults,
+  and only `tcp_center_height_offset_m=0.050`.
+- Summary JSON lines 48-55 show no dataset generation, DiffIK clip
+  `0.4605769254267216`, final displacement `0.001272156834602356m`, and tap gate
+  `1.0`. Lines 70-80 show final TCP error `0.01297600264661014m`, fixed x-, and
+  `gate_disp_m=0.001`. Lines 95-105 show low-motion `1.0`, max displacement
+  `0.001294456422328949m`, max tap gate `1.0`, and measured contact `1.0`.
+  Lines 113-124 show no posewrite, `push_through_m=0.01`, reaction `1.0`, and
+  rollout posewrite false; line 127 shows `tcp_center_height_offset_m=0.05`.
+- Reaction audit JSON lines 2-26 show reaction/contact `1.0/1.0`, no posewrite,
+  overshoot `0.0`, reaction gate PASS, final TCP error `0.012976003m`, clip
+  `0.460576925`, and `teacher_quality_ready=true`.
+- Trace diagnostic JSON lines 1-7 and 97-100 show clip_any `0.463010204`, no
+  single dominant failure mode, and target tracking much cleaner than seed948.
+  Lines 168-184 still keep joint 2 as the worst raw/follow joint, but at lower
+  mean error than seed948.
+- Next-step audit JSON lines 12-23 classifies seed949 as
+  `RUN_TINY_HELDOUT_ROBUSTNESS_CHECK_BEFORE_DATASET_OR_RL`, while line 5-10 still
+  blocks dataset/PPO/VLA/TrackA/1024_10k scale-up.
+- The existing dataset builder would reject low-motion final rows: it requires
+  `controlled_push=1`, `impact=0`, `low_motion=0`, and `success=1` before an env
+  becomes eligible, then requires balanced per-direction selection.
+
+Implication:
+
+- seed949 is a strong x- reach/height clue and a tap/reaction PASS, but not a
+  3cm-style dataset milestone. The next valid step is a tiny heldout robustness
+  check of direction-specific height/contact geometry, not large-scale data.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xneg16_goodxy_latneg020_height050_seed949_summary.json:48-80,95-105,113-127`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xneg16_goodxy_latneg020_height050_seed949_reaction_gate_audit.json:1-43`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xneg16_goodxy_latneg020_height050_seed949_trace_diagnostic_summary.json:1-12,97-100,168-184`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_next_research_step_xneg_height050_seed949_audit.json:1-24`
+- `sim_scripts/cube3cm_push_diffik_build_dataset.py:185-203,384-430`

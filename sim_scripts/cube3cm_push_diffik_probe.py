@@ -14,6 +14,7 @@ import json
 import math
 import sys
 import time
+from collections.abc import Sequence
 from pathlib import Path
 
 
@@ -29,7 +30,7 @@ LOG_DIR = REPO / "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20
 DISP_THRESHOLDS_M = (0.001, 0.005, 0.010, 0.020, 0.030)
 
 
-def main() -> int:
+def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--num_envs", type=int, default=16)
     parser.add_argument("--episodes", type=int, default=1)
@@ -128,7 +129,7 @@ def main() -> int:
     parser.add_argument("--post_run_sleep_s", type=float, default=0.0)
     parser.add_argument("--out_csv", type=str, default=str(LOG_DIR / "diffik_probe_smoke_per_env.csv"))
     parser.add_argument("--summary_json", type=str, default=str(LOG_DIR / "diffik_probe_smoke_summary.json"))
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     from isaaclab.app import AppLauncher
 

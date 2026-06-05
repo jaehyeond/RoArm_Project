@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-06-05 KST (B200 disconnected; Track A remains blocked and separate. Active branch is the professor 10cm/0.72kg cube push/tap DiffIK diagnosis. Earlier final-displacement gates failed, and settled-start fixed16 still showed DiffIK clipping/lag, but local DLS feasibility means do not conclude the object is too heavy. The clarified objective is reaction/tap first and final displacement secondary. A local non-GPU reaction gate audit requires reaction evidence plus contact evidence, no posewrite, and no overshoot; it separates reaction PASS from teacher/RL readiness. seed938 is the negative control FAIL (`contact_evidence_rate=0.0`), seed939/seed940 PASS reaction gate but remain `teacher_quality_ready=false`, seed941 randomized 16-env FAILed on contact evidence `0.625`, cap-only seed942 worsened contact evidence to `0.5`, and fixed-y+ seed943 confirmed the y+ bucket is weak (`contact_evidence_rate=0.375`). A local y+ geometry/reach audit shows contact rows average max displacement `0.010986278m`, no-contact rows only `0.000069159m`, and workspace bins are asymmetric (`cube_y0_m<=0` contact `0.625`, `cube_y0_m>0` contact `0.125`, `cube_x0_m<0.25` contact `0.111111`, `cube_x0_m>=0.25` contact `0.714286`). A follow-up y+ trace path/actuator audit shows the target itself moves about `0.020000m` in world y and keeps start-cube side-center z, but final TCP error is mostly vertical (`0.844` contact / `0.859` no-contact z-error fraction) and clip_any remains `1.0` in both traced groups. The approved seed944 fixed-y+ height050 screen is a height-only FAIL: final TCP error improved to `0.022889409m`, but contact evidence fell to `0.0`, reaction was only `0.6875`, and clip remained `0.949198734`; do not use +5cm target height as a data/RL fix. The approved seed945 fixed-y+ good-workspace screen (`x=0.295,y=-0.044`) PASSed reaction/contact (`1.0/1.0`) with no overshoot/posewrite, proving workspace is a real contact discriminator, but `teacher_quality_ready=false` because final TCP error is `0.065514732m` and clip is `1.0`. Added default-preserving `--base_lateral_offset_m`; seed946 good-workspace lateral `-0.020m` PASSed reaction/contact and final 1cm relocation (`final_gate_rate=1.0`, `max_disp_mean_m=0.011251196m`, no overshoot/posewrite), but still `teacher_quality_ready=false` due final TCP error `0.062820967m` and DiffIK clip `1.0`. No dataset generation, PPO/RL scale-up, VLA, Track A runtime, 1024/10k, or larger candidate audit is approved from this.)
+Last updated: 2026-06-05 KST (B200 disconnected; Track A remains blocked and separate. Active branch is the professor 10cm/0.72kg cube push/tap DiffIK diagnosis. Earlier final-displacement gates failed, and settled-start fixed16 still showed DiffIK clipping/lag, but local DLS feasibility means do not conclude the object is too heavy. The clarified objective is reaction/tap first and final displacement secondary. A local non-GPU reaction gate audit requires reaction evidence plus contact evidence, no posewrite, and no overshoot; it separates reaction PASS from teacher/RL readiness. seed938 is the negative control FAIL (`contact_evidence_rate=0.0`), seed939/seed940 PASS reaction gate but remain `teacher_quality_ready=false`, seed941 randomized 16-env FAILed on contact evidence `0.625`, cap-only seed942 worsened contact evidence to `0.5`, and fixed-y+ seed943 confirmed the y+ bucket is weak (`contact_evidence_rate=0.375`). A local y+ geometry/reach audit shows contact rows average max displacement `0.010986278m`, no-contact rows only `0.000069159m`, and workspace bins are asymmetric (`cube_y0_m<=0` contact `0.625`, `cube_y0_m>0` contact `0.125`, `cube_x0_m<0.25` contact `0.111111`, `cube_x0_m>=0.25` contact `0.714286`). A follow-up y+ trace path/actuator audit shows the target itself moves about `0.020000m` in world y and keeps start-cube side-center z, but final TCP error is mostly vertical (`0.844` contact / `0.859` no-contact z-error fraction) and clip_any remains `1.0` in both traced groups. The approved seed944 fixed-y+ height050 screen is a height-only FAIL: final TCP error improved to `0.022889409m`, but contact evidence fell to `0.0`, reaction was only `0.6875`, and clip remained `0.949198734`; do not use +5cm target height as a data/RL fix. The approved seed945 fixed-y+ good-workspace screen (`x=0.295,y=-0.044`) PASSed reaction/contact (`1.0/1.0`) with no overshoot/posewrite, proving workspace is a real contact discriminator, but `teacher_quality_ready=false` because final TCP error is `0.065514732m` and clip is `1.0`. Added default-preserving `--base_lateral_offset_m`; seed946 good-workspace lateral `-0.020m` PASSed reaction/contact and final 1cm relocation (`final_gate_rate=1.0`, `max_disp_mean_m=0.011251196m`, no overshoot/posewrite), but still `teacher_quality_ready=false` due final TCP error `0.062820967m` and DiffIK clip `1.0`. Added `sim_scripts/cube10cm_push_diffik_probe.py` as the standard 10cm entrypoint; it injects 10cm/0.72kg professor defaults into the shared legacy 3cm-named DiffIK engine while preserving explicit user overrides. Static checks passed; no new GPU runtime, dataset generation, PPO/RL scale-up, VLA, Track A runtime, 1024/10k, or larger candidate audit is approved from this.)
 
 Latest correction: for the professor 10cm/0.72kg push/tap branch, final 1cm
 displacement is no longer the primary objective if the real task only needs a
@@ -38,6 +38,25 @@ is `0.065514732m` and DiffIK clip is `1.0`. The default-preserving
 `-0.020m`, good-workspace y+ reached reaction/contact `1.0/1.0`, final 1cm gate
 `1.0`, max displacement `0.011251196m`, no overshoot/posewrite, but teacher
 quality still false from final TCP error `0.062820967m` and clip `1.0`.
+To remove the confusing legacy filename issue, future professor 10cm DiffIK
+commands should prefer `sim_scripts/cube10cm_push_diffik_probe.py`. That wrapper
+does not duplicate physics logic; it injects 10cm/0.72kg tap/reaction defaults
+into the shared DiffIK probe and lets explicit command-line overrides win. Its
+default displacement/stop/gate values are `0.001m`, not a fixed final 1cm
+relocation objective. After explicit approval, one tiny local stiff600 screen
+changed only `--arm_stiffness_override 600` inside the seed946 geometry. It kept
+tap/reaction PASS (`reaction/contact=1.0/1.0`, no posewrite, no overshoot), but
+it is not an improvement over seed946: final relocation secondary is false, max
+displacement fell to `0.004667487m`, final displacement to `0.003845483m`, clip
+stayed `1.0`, and teacher quality stayed false despite TCP error improving to
+`0.046062952m`. Do not treat lower TCP error alone as progress. A follow-up
+approved direction-generalization screen seed947 kept seed946 goodxy
+(`x=0.295,y=-0.044`) and lateral `-0.020m` but released `fixed_push_dir`; it
+FAILed reaction gate because contact evidence was only `0.5625`, with no
+posewrite and no overshoot. Direction split shows y+ is the only controlled
+direction (`controlled=1.0`, but low-motion `0.75`), x- had contact `0/7`, and
+x+/y- had contact but controlled `0`. This is strong evidence seed946 is a
+y+-specific/contact-geometry pocket, not a direction-general teacher.
 
 This is the rolling current-state dashboard. It is not full history. Durable
 rules live in `claudedocs/DECISIONS.md`; experiment history lives in
@@ -886,6 +905,9 @@ Interpretation:
   push/tap success criterion. Under the clarified objective, reaction/contact,
   transient displacement, z lift, and speed matter first; final displacement is
   secondary unless the task is relocation.
+- Any future 10cm wrapper/default command that encodes final 1cm relocation as the
+  primary objective. The wrapper defaults are tap/reaction `0.001m`; 1cm remains a
+  secondary relocation/transient diagnostic only when explicitly used.
 - Any claim that one lucky success from massive IsaacLab randomization is a
   learned policy, teacher-data readiness, or sim-to-real evidence by itself.
 - Any claim that speed-only motion without contact evidence is a push/tap PASS.
@@ -913,6 +935,9 @@ Interpretation:
   best y+ candidate so far and passes final 1cm reaction/relocation gates, but
   teacher quality remains false because final TCP error is `0.062820967m` and
   DiffIK clip is `1.0`.
+- Any claim that the professor 10cm branch must directly call the legacy
+  `cube3cm_push_diffik_probe.py` filename. Prefer the new 10cm wrapper entrypoint
+  for future 10cm commands, while keeping the shared engine and old logs intact.
 - Any claim that the weighted mid/high actor candidate or the target-extension
   probe is ready for 1024/10k scale-up; both failed the 128 posx bucket screen
 - Any Track B/OpenVLA training status as evidence for Track A contact success
@@ -1065,63 +1090,66 @@ Current RunPod/Codex state:
   b200_backup_20260522_final/tmp_p7/p7_branch_b_cube2cm_opposing_jaw_v7_collision_usd_d024/roarm_m3.usd
   md5 4497024d25abab11de5c50e144124553.
 
-Current professor cube push/tap branch:
-- Separate from Track A close_26 grasp. New script:
-  sim_scripts/cube3cm_push_rollout_probe.py
-  md5 8d329b79106e7ca2c03fa91b7ac87170.
-- 20480-trial local IsaacLab run:
-  claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/runtime.out
-  md5 2aad344f08f95c880e43bc0d7f655998
-  claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/summary.json
-  md5 5c9278450b5531afb7b0ca2a1fed46ee
-  claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/per_env.csv
-  md5 4c2864301bea8e2ae798a8f77adf23ab
-  claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/rollout_stats_audit.out
-  md5 3e0096ba54e7cc0ec0e55b1b26a50b8e.
-- Reverify runtime.out lines 20-42 and rollout_stats_audit.out lines 1-21 before citing.
-- Scripted rollout interpretation: PASS for the professor's immediate push/tap
-  statistics question, not training and not Track A grasp success.
-- Learned-policy follow-up:
-  roarm_rl/roarm_cube_push_env.py md5 b44996c396c099847e5196949ed86742;
-  train_cube_push_ppo.py md5 cb8c3303ca10bae2299c4e6f561c240d;
-  eval_cube_push_policy.py md5 f91c5107503d4e2f4f41cab7f70cb51a.
-  Speed-guard frozen 1k eval:
-  claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_speed_guard_model49_eval1024_audit.out
-  md5 694d6c9a81eca14a7554f66f6b6f462c, lines 3-6/17:
-  controlled 0.619682540, clean_success_marker 0.323809524, impact 0.286984127,
-  verdict SPEED_MODEL49_EVAL_NO_IMPACT_IMPROVEMENT_NO_10K.
-  Interpretation: no-attach PPO and IK pre-contact work, but learned-policy
-  impact is still too high; do not run 10k/100k scaling yet.
-- Differential IK follow-up:
-  sim_scripts/cube3cm_push_diffik_probe.py now includes optional v2, v3, and
-  v3_1 trajectory paths plus all-env trace capture. Reverify
-  claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_eval10240_seed779_audit.out
-  lines 1-6,
-  diffik_probe_v3_eval10240_seed779_posthoc.out lines 1-17, and
-  diffik_probe_v3_eval10240_seed779_compare_to_1024.out lines 1-25 before
-  citing. Interpretation: v3 now has a 10,240-trial scripted Differential IK
-  robustness audit with overall impact below 1% and `(1,0)` impact below 2%, but
-  it remains a scripted physics result and has a `(1,0)` low-motion/success
-  caveat. Do not call it learned policy, Track A grasp, or dataset readiness.
-- Dataset/BC follow-up:
-  claudedocs/session_20260528_cube3cm_diffik_dataset_bc_policy.md is the latest
-  professor-branch dataset/learning record. Reverify
-  diffik_state_action_dataset_v2_1024_seed779_audit.out lines 1-7,
-  diffik_state_action_dataset_v2_1024_seed779_bc_train.out lines 1-4, and
-  bc_mlp_joint_delta_v1_rollout1024_seed883_audit.out lines 1-6 before citing.
-  Interpretation: teacher-filtered state-action dataset v2 and learned BC
-  joint-delta policy rollout PASS at 1024 envs, but this is not Track A grasp,
-  PPO/RL/VLA, image dataset, or 10k/100k learned-policy robustness. `(1,0)`
-  remains the weak direction.
+Current professor cube10cm push/tap branch:
+- Separate from Track A close_26 grasp and separate from the older 3cm dataset/BC
+  line. The active objective is tap/reaction first, not final 1cm relocation.
+- Future 10cm DiffIK commands should use:
+  `sim_scripts/cube10cm_push_diffik_probe.py`
+  while keeping `sim_scripts/cube3cm_push_diffik_probe.py` as the shared legacy
+  engine for old tools/logs.
+- Guard before any new 10cm runtime:
+  `python sim_scripts/cube10cm_tap_objective_contract_audit.py`
+  The latest guard JSON says contract `professor_cube10cm_tap_reaction`,
+  final 1cm relocation default `false`, tap defaults `0.001m`, explicit 1cm
+  override allowed, and verdict PASS.
+- Latest object-level candidate remains seed946:
+  reaction/contact `1.0/1.0`, no posewrite, no overshoot, final relocation
+  secondary pass, but `teacher_quality_ready=false`.
+- Latest actuator-tracking screen stiff600:
+  reaction/contact `1.0/1.0`, no posewrite, no overshoot, but only tap-scale
+  displacement (`max_disp_mean_m=0.004667487`) and `final_relocation_pass=false`;
+  `teacher_quality_ready=false`, clip `1.0`, final TCP error `0.046062952m`.
+  This does not supersede seed946 as the strongest object-level candidate.
+- Latest direction-generalization screen seed947:
+  same goodxy/lateral recipe as seed946 but random directions. It FAILed reaction
+  gate: contact evidence `0.5625`, reaction `1.0`, no posewrite, no overshoot.
+  Direction split: y+ controlled `1.0` but low-motion `0.75`; x- contact `0.0`;
+  x+/y- contact `1.0` but controlled `0.0`. This blocks 1024/10240/data.
+- Latest x- contact-geometry screen seed948:
+  fixed goodxy/lateral with `fixed_push_dir=[-1,0]` and only
+  `push_through_m=0.020`. It FAILed harder: contact evidence `0.0`, reaction
+  `1.0`, no posewrite, no overshoot, max displacement `0.000009052m`, final
+  displacement `-0.000160992m`, clip `1.0`, final TCP error `0.062163922m`.
+  This falsifies the simple "deeper near-face target fixes x-" hypothesis.
+- Latest x- reach/IK feasibility screen seed949:
+  fixed goodxy/lateral and fixed x-, but with `tcp_center_height_offset_m=0.050`.
+  It restored tap contact/reaction: reaction/contact `1.0/1.0`, no posewrite,
+  no overshoot, contact stop `1.0`, final TCP error `0.012976003m`, clip
+  `0.460576925`, and next-step audit `teacher_quality_ready=true`. However it is
+  still tap-scale only: final displacement `0.001272157m`, max displacement
+  `0.001294456m`, low-motion `1.0`, final relocation secondary false. This is a
+  reach/height clue, not 1024/data readiness.
+- Latest next-step audit says:
+  `RUN_TINY_HELDOUT_ROBUSTNESS_CHECK_BEFORE_DATASET_OR_RL`
+  for seed949, but do not start 1024/data: low-motion remains `1.0` and balanced
+  directions are not established.
 
 Next concrete step:
-1. For professor branch: report the current truth as scripted DiffIK v3 10,240
-   physics audit + real-RoArm replay video + teacher-filtered state-action dataset
-   v2 + BC joint-delta learned rollout PASS at 1024 envs.
-2. If improving professor-branch quality, target `(1,0)` via v3.2 teacher/BC data
-   rather than broad scaling; do not jump to 10k/100k learned-policy claims.
-3. Do not rerun v7 unchanged and do not start Track A hold-lift/dataset/training.
-4. If and only if the user explicitly approves another v8 runtime, first verify host GPU and IsaacLab CUDA from Codex with sandbox_permissions=require_escalated, then run exactly one local close_26-only post-fix v8 runtime using the preserved local backup USD path.
-5. Immediately audit that runtime with expected_mechanism target_guarded_micro_close_v8_observed_recovery_diagnostic. If audit fails, stop and analyze exact first failing runtime/audit lines before any rerun.
-6. Track A dataset/training remains blocked until close_26 PASS + hold-lift PASS + small pilot dataset/replay PASS.
+1. Do not start dataset generation, PPO/RL, VLA, Track A, 1024/10k scale-up, or
+   broad random search from seed946.
+2. Before any new 10cm GPU runtime, run and cite:
+   `python sim_scripts/cube10cm_tap_objective_contract_audit.py`
+   and
+   `python sim_scripts/cube10cm_next_research_step_audit.py`
+3. Do not repeat stiffness-only escalation as a success claim. The stiff600 screen
+   preserved tap contact but reduced useful displacement and left clipping at `1.0`.
+4. Do not run 1024/10240 trace/data from seed946/seed947/seed948/seed949. First
+   prove direction-specific height/contact geometry in tiny heldout screens and
+   remove low-motion/balance blockers.
+5. Any next GPU experiment still requires explicit approval and must be one tiny
+   local IsaacLab screen inside the working tap geometry, changing only one
+   geometry/contact parameter. It must use
+   `sandbox_permissions=require_escalated` and must not be reported as RL/data.
+6. Judge the result by reaction/contact/no-posewrite/no-overshoot first; report
+   final 1cm only as secondary relocation evidence.
 ```

@@ -1,0 +1,242 @@
+{
+  "contact_group": {
+    "line_numbers": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+    ],
+    "means": {
+      "cube_x0_m": 0.2950093150138855,
+      "cube_y0_m": -0.044006768614053726,
+      "final_tcp_target_err_m": 0.04606295237317681,
+      "lateral_abs_m": 0.0003145076334476471,
+      "max_cube_speed_mps": 0.17605577688664198,
+      "max_cube_z_delta_m": 0.01562532945536077,
+      "max_disp_along_push_m": 0.004667486995458603,
+      "max_tip_angle_deg": 22.92016565799713,
+      "min_tcp_cube_dist_m": 0.0844633704982698,
+      "min_tcp_target_err_m": 0.04606295237317681
+    },
+    "n": 16
+  },
+  "interpretation": [
+    "Fixed y+ is not a pure reaction-rate failure; reaction is present but contact evidence is sparse.",
+    "Contact is workspace-position dependent in this sample: cube_y0_m<=0 and cube_x0_m>=0.25 bins contact more often.",
+    "The traced envs keep large vertical TCP-target error at the final target, so side-center contact height is not reliably reached.",
+    "Next work should diagnose y+ target path, lateral/height offsets, reach, and actuator tracking before RL/data scale-up."
+  ],
+  "no_contact_group": {
+    "line_numbers": [],
+    "means": {
+      "cube_x0_m": 0.0,
+      "cube_y0_m": 0.0,
+      "final_tcp_target_err_m": 0.0,
+      "lateral_abs_m": 0.0,
+      "max_cube_speed_mps": 0.0,
+      "max_cube_z_delta_m": 0.0,
+      "max_disp_along_push_m": 0.0,
+      "max_tip_angle_deg": 0.0,
+      "min_tcp_cube_dist_m": 0.0,
+      "min_tcp_target_err_m": 0.0
+    },
+    "n": 0
+  },
+  "position_bins": [
+    {
+      "contact_evidence_rate": 1.0,
+      "line_numbers": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ],
+      "n": 16,
+      "name": "cube_y0_m<=0",
+      "reaction_event_rate": 1.0
+    },
+    {
+      "contact_evidence_rate": 0.0,
+      "line_numbers": [],
+      "n": 0,
+      "name": "cube_y0_m>0",
+      "reaction_event_rate": 0.0
+    },
+    {
+      "contact_evidence_rate": 0.0,
+      "line_numbers": [],
+      "n": 0,
+      "name": "cube_x0_m<0.25",
+      "reaction_event_rate": 0.0
+    },
+    {
+      "contact_evidence_rate": 1.0,
+      "line_numbers": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ],
+      "n": 16,
+      "name": "cube_x0_m>=0.25",
+      "reaction_event_rate": 1.0
+    }
+  ],
+  "scope": "local_posthoc_yplus_geometry_reach_audit_no_gpu_no_training_no_dataset",
+  "summary_csv": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_stiff600_seed946.csv",
+  "trace_contact_split": {
+    "contact": {
+      "final_abs_z_error_mean_m": 0.044503532350063324,
+      "final_tcp_cube_dist_mean_m": 0.08425483107566833,
+      "final_xy_error_mean_m": 0.00918401572126157,
+      "n": 4
+    },
+    "no_contact": {
+      "final_abs_z_error_mean_m": 0.0,
+      "final_tcp_cube_dist_mean_m": 0.0,
+      "final_xy_error_mean_m": 0.0,
+      "n": 0
+    }
+  },
+  "trace_csv": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_stiff600_seed946_trace.csv",
+  "trace_env_stats": [
+    {
+      "env_id": 0,
+      "final_joint_step_scale": 0.20000000298023224,
+      "final_line": 390,
+      "final_step": 388,
+      "final_tcp_cube_dist_m": 0.08389398455619812,
+      "final_tcp_minus_target_xyz_m": {
+        "x_m": 0.00809931755065918,
+        "y_m": -0.003465414047241211,
+        "z_m": 0.04396435618400574
+      },
+      "final_tcp_target_err_after_m": 0.04483829811215401,
+      "min_tcp_cube_dist_m": 0.08389398455619812,
+      "min_tcp_cube_line": 390,
+      "min_tcp_cube_measured_seen": true,
+      "min_tcp_cube_near_seen": true,
+      "min_tcp_cube_step": 388,
+      "min_tcp_err_line": 390,
+      "min_tcp_err_step": 388,
+      "min_tcp_err_z_delta_m": 0.04396435618400574,
+      "min_tcp_target_err_after_m": 0.04483829811215401,
+      "summary_contact_stop_seen": true,
+      "summary_line": 2,
+      "summary_measured_contact_seen": true
+    },
+    {
+      "env_id": 1,
+      "final_joint_step_scale": 0.20000000298023224,
+      "final_line": 391,
+      "final_step": 388,
+      "final_tcp_cube_dist_m": 0.08537852764129639,
+      "final_tcp_minus_target_xyz_m": {
+        "x_m": 0.010977983474731445,
+        "y_m": -0.004515409469604492,
+        "z_m": 0.0441812165081501
+      },
+      "final_tcp_target_err_after_m": 0.045748062431812286,
+      "min_tcp_cube_dist_m": 0.08533880859613419,
+      "min_tcp_cube_line": 271,
+      "min_tcp_cube_measured_seen": true,
+      "min_tcp_cube_near_seen": false,
+      "min_tcp_cube_step": 268,
+      "min_tcp_err_line": 391,
+      "min_tcp_err_step": 388,
+      "min_tcp_err_z_delta_m": 0.0441812165081501,
+      "min_tcp_target_err_after_m": 0.045748062431812286,
+      "summary_contact_stop_seen": true,
+      "summary_line": 3,
+      "summary_measured_contact_seen": true
+    },
+    {
+      "env_id": 2,
+      "final_joint_step_scale": 0.20000000298023224,
+      "final_line": 392,
+      "final_step": 388,
+      "final_tcp_cube_dist_m": 0.08411668986082077,
+      "final_tcp_minus_target_xyz_m": {
+        "x_m": 0.007919073104858398,
+        "y_m": -0.0034865736961364746,
+        "z_m": 0.04489867016673088
+      },
+      "final_tcp_target_err_after_m": 0.045724812895059586,
+      "min_tcp_cube_dist_m": 0.08411668986082077,
+      "min_tcp_cube_line": 392,
+      "min_tcp_cube_measured_seen": true,
+      "min_tcp_cube_near_seen": true,
+      "min_tcp_cube_step": 388,
+      "min_tcp_err_line": 392,
+      "min_tcp_err_step": 388,
+      "min_tcp_err_z_delta_m": 0.04489867016673088,
+      "min_tcp_target_err_after_m": 0.045724812895059586,
+      "summary_contact_stop_seen": true,
+      "summary_line": 4,
+      "summary_measured_contact_seen": true
+    },
+    {
+      "env_id": 3,
+      "final_joint_step_scale": 0.20000000298023224,
+      "final_line": 393,
+      "final_step": 388,
+      "final_tcp_cube_dist_m": 0.08363012224435806,
+      "final_tcp_minus_target_xyz_m": {
+        "x_m": 0.0067462921142578125,
+        "y_m": -0.003049612045288086,
+        "z_m": 0.04496988654136658
+      },
+      "final_tcp_target_err_after_m": 0.04557524994015694,
+      "min_tcp_cube_dist_m": 0.08363012224435806,
+      "min_tcp_cube_line": 393,
+      "min_tcp_cube_measured_seen": true,
+      "min_tcp_cube_near_seen": true,
+      "min_tcp_cube_step": 388,
+      "min_tcp_err_line": 393,
+      "min_tcp_err_step": 388,
+      "min_tcp_err_z_delta_m": 0.04496988654136658,
+      "min_tcp_target_err_after_m": 0.04557524994015694,
+      "summary_contact_stop_seen": true,
+      "summary_line": 5,
+      "summary_measured_contact_seen": true
+    }
+  ],
+  "trace_rows": 392,
+  "trials": 16
+}
