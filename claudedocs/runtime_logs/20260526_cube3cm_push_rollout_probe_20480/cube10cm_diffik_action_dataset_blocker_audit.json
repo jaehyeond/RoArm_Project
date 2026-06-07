@@ -1,0 +1,133 @@
+{
+  "artifact_type": "cube10cm_diffik_action_dataset_blocker_audit_v1",
+  "blockers": [
+    "DiffIK action teacher quality is blocked by clean_teacher/Tier-C/follow/clip/final-TCP gates",
+    "legacy dataset builder still filters final controlled/success/low-motion markers",
+    "next-step audit explicitly blocks dataset_generation",
+    "existing RL env is 3cm relocation-oriented, not validated 10cm tap/reaction",
+    "next-step audit explicitly blocks PPO_RL",
+    "RoArm-M3-Pro deployment lacks a validated learned policy and safety/replay gate"
+  ],
+  "branch": "professor_cube10cm_tap_reaction",
+  "code_conflicts": {
+    "legacy_dataset_builder_evidence_lines": {
+      "controlled_push_filter": 190,
+      "low_motion_filter": 196,
+      "success_marker_filter": 199,
+      "teacher_filter_summary": 429
+    },
+    "legacy_dataset_builder_final_success_conflict": true,
+    "rl_env_3cm_relocation_conflict": true,
+    "rl_env_evidence_lines": {
+      "cube_size_3cm": 31,
+      "doc_3cm_task": 1,
+      "mass_20g": 72,
+      "success_disp_3cm": 100,
+      "success_reward_final_disp": 817
+    }
+  },
+  "event_evidence": {
+    "contact_evidence_rate": 1.0,
+    "manifest_event_count": 16,
+    "manifest_ge_1mm": 16,
+    "manifest_ge_2mm": 13,
+    "manifest_ge_3mm": 7,
+    "no_posewrite": true,
+    "overshoot_rate": 0.0,
+    "reaction_event_rate": 1.0,
+    "reaction_gate_pass": true
+  },
+  "local_blocker_audit_only": true,
+  "no_gpu_isaaclab_dataset_training_robot_ssh": true,
+  "out_summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_diffik_action_dataset_blocker_audit_summary.out",
+  "quality_evidence": {
+    "accepted_window_clip_any_rate_mean": 1.0,
+    "accepted_window_follow_p95_to_cap_p95": 1.1605058397565569,
+    "clean_diffik_teacher_window_ready": false,
+    "likely_trace_modes": [
+      "LINK5_BODY_TARGET_NOT_REACHED",
+      "JOINT_STEP_CLIPPING_DOMINANT",
+      "ACTUATOR_TARGET_TRACKING_LAG"
+    ],
+    "quality_tier_counts": {
+      "B_REACTION_VALID_FOLLOW_OK_CLIP_HIGH": 2,
+      "C_REACTION_VALID_FOLLOW_LAG": 14
+    },
+    "summary_diffik_clip_rate_mean": 1.0,
+    "summary_final_tcp_target_err_mean_m": 0.05181199568323791,
+    "trace_clip_any_rate": 1.0,
+    "worst_follow_joint": {
+      "joint": 1,
+      "max": 0.0359216034412384,
+      "mean": 0.02323330953457079,
+      "p95": 0.03483417630195618
+    },
+    "worst_raw_delta_joint": {
+      "joint": 1,
+      "max": 0.335939884185791,
+      "mean": 0.1583151012482074,
+      "p95": 0.2866251468658447
+    }
+  },
+  "resolution_order": [
+    {
+      "name": "keep_1_to_2mm_tap_event_objective",
+      "status": "PASS",
+      "step": 1,
+      "why": "reaction/contact/no-posewrite/no-overshoot pass; final retention is not primary"
+    },
+    {
+      "name": "event_label_manifest",
+      "status": "READY_LOCAL_ONLY",
+      "step": 2,
+      "why": "existing manifest has reaction-window labels and quality metadata only"
+    },
+    {
+      "name": "ten_cm_tap_specific_dataset_builder_preflight",
+      "status": "NEXT_LOCAL_WORK",
+      "step": 3,
+      "why": "needed before any large IsaacLab dataset; it must not use final-success filters"
+    },
+    {
+      "name": "diffik_action_teacher_dataset",
+      "status": "BLOCKED",
+      "step": 4,
+      "why": "needs clean/tier/follow/clip gate to pass or an explicit noisy-teacher policy decision"
+    },
+    {
+      "name": "ten_cm_tap_rl_env_random_sanity",
+      "status": "BLOCKED",
+      "step": 5,
+      "why": "existing env hard-codes 3cm/20g relocation assumptions and success reward"
+    },
+    {
+      "name": "isaaclab_rl_training",
+      "status": "BLOCKED",
+      "step": 6,
+      "why": "requires dataset/objective/env sanity gates first"
+    },
+    {
+      "name": "roarm_m3_pro_deployment",
+      "status": "BLOCKED",
+      "step": 7,
+      "why": "requires validated policy plus hardware safety/replay gate"
+    }
+  ],
+  "source_files": {
+    "event_manifest_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_event_label_dataset_manifest.json",
+    "legacy_dataset_builder": "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/cube3cm_push_diffik_build_dataset.py",
+    "next_step_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_next_research_step_seed962_pre020_audit.json",
+    "reaction_gate_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_xnegheight050_pre020_seed962_reaction_gate_audit.json",
+    "reaction_window_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_reaction_window_seed962_audit.json",
+    "readiness_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_dataset_rl_robot_readiness_audit.json",
+    "rl_env_py": "/home/cgxr/Documents/Robotics/RoArm_Project/roarm_rl/roarm_cube_push_env.py",
+    "trace_diag_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_xnegheight050_pre020_seed962_trace_diagnostic_summary.json"
+  },
+  "statuses": {
+    "differential_ik_action_teacher_dataset": "BLOCKED",
+    "event_label_dataset": "READY_LOCAL_ONLY",
+    "isaaclab_rl": "BLOCKED",
+    "large_isaaclab_dataset": "BLOCKED",
+    "roarm_m3_pro": "BLOCKED"
+  }
+}

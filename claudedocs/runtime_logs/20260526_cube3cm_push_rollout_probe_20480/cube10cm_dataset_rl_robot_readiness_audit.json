@@ -1,0 +1,93 @@
+{
+  "artifact_type": "cube10cm_dataset_rl_robot_readiness_audit_v1",
+  "blockers": [
+    "teacher/action quality is not ready: clean_diffik_teacher_window_ready=false or Tier C/follow/clip remain",
+    "existing next-step audit still blocks dataset_generation/PPO_RL/VLA/scaleup",
+    "legacy cube3cm dataset builder filters final_controlled/final_success, which conflicts with tap/reaction objective",
+    "existing RoArmCubePushEnv is a 3cm task; 10cm/0.72kg tap RL env/random sanity is not validated",
+    "no learned/safe 10cm tap policy is validated for RoArm-M3-Pro deployment"
+  ],
+  "branch": "professor_cube10cm_tap_reaction",
+  "evidence": {
+    "accepted_window_clip_any_rate_mean": 1.0,
+    "accepted_window_follow_p95_to_cap_p95": 1.1605058397565569,
+    "clean_diffik_teacher_window_ready": false,
+    "next_step_direction": "NARROW_ACTUATOR_IK_TRACKING_CLEANUP_INSIDE_WORKING_TAP_GEOMETRY",
+    "next_step_reasons": [
+      "diffik_clip_rate=1.000000 > teacher_max=0.500000",
+      "final_tcp_err_m=0.051812 > teacher_max=0.030000",
+      "trace reports actuator target tracking lag"
+    ],
+    "quality_tier_counts": {
+      "B_REACTION_VALID_FOLLOW_OK_CLIP_HIGH": 2,
+      "C_REACTION_VALID_FOLLOW_LAG": 14
+    },
+    "seed962_contact_rate": 1.0,
+    "seed962_max_ge_1mm_rate": 1.0,
+    "seed962_max_ge_2mm_rate": 0.8125,
+    "seed962_max_ge_3mm_rate": 0.5,
+    "seed962_no_posewrite": true,
+    "seed962_overshoot_rate": 0.0,
+    "seed962_reaction_rate": 1.0
+  },
+  "gates": {
+    "action_teacher_dataset_ready": false,
+    "event_label_dataset_ready": true,
+    "isaaclab_rl_ready": false,
+    "large_isaaclab_dataset_ready": false,
+    "one_to_two_mm_tap_objective_ready": true,
+    "roarm_m3_pro_deploy_ready": false
+  },
+  "local_readiness_only": true,
+  "next_sequence": [
+    {
+      "action": "freeze_objective_as_1_to_2mm_tap_reaction_if_accepted",
+      "reason": "seed962 passes contact/reaction/no-overshoot/max1mm and majority max2mm",
+      "status": "PASS",
+      "step": 1
+    },
+    {
+      "action": "create_only_event_label_schema_or_manifest_from_existing_reaction_windows",
+      "reason": "labels may include contact/reaction/window/tier/transient strength; not an action teacher dataset",
+      "status": "ALLOWED_LOCAL_ONLY",
+      "step": 2
+    },
+    {
+      "action": "do_not_generate_action_teacher_dataset_yet",
+      "reason": "quality tier is 2B+14C, clip mean 1.0, follow p95/cap p95 > 1.0",
+      "status": "BLOCKED",
+      "step": 3
+    },
+    {
+      "action": "do_not_start_isaaclab_rl_yet",
+      "reason": "10cm RL env/random sanity and teacher/action quality are not validated",
+      "status": "BLOCKED",
+      "step": 4
+    },
+    {
+      "action": "do_not_deploy_to_roarm_m3_pro_yet",
+      "reason": "no validated learned policy, no hardware safety gate, no real-robot replay check",
+      "status": "BLOCKED",
+      "step": 5
+    },
+    {
+      "action": "next_local_work",
+      "reason": "write a reaction-window event-label dataset schema/readiness manifest, not a training dataset",
+      "status": "READY",
+      "step": 6
+    }
+  ],
+  "no_gpu_isaaclab_dataset_training_robot_ssh": true,
+  "objective": {
+    "assumed_tap_strength": "1_to_2mm_transient",
+    "final_1cm_or_final_retention_primary": false,
+    "primary": "reaction_contact_no_posewrite_no_overshoot"
+  },
+  "out_summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_dataset_rl_robot_readiness_audit_summary.out",
+  "requested_pipeline": [
+    "tap/reaction dataset",
+    "IsaacLab dataset generation",
+    "IsaacLab RL",
+    "RoArm-M3-Pro deployment"
+  ]
+}

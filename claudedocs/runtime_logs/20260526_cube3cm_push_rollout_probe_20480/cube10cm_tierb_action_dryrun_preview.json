@@ -1,0 +1,43 @@
+{
+  "action_abs_stats_rad": {
+    "max": 0.007000000216066837,
+    "mean": 0.005356158048027393,
+    "p95": 0.007000000216066837
+  },
+  "artifact_type": "cube10cm_tierb_action_dryrun_preview_v1",
+  "branch": "professor_cube10cm_tap_reaction",
+  "counts": {
+    "clip_any_rows": 66,
+    "events": 16,
+    "expected_sparse_trace_rows_per_env_min": 4,
+    "forbidden_fields_present": [],
+    "rows": 66,
+    "rows_per_env_max": 5,
+    "rows_per_env_min": 4
+  },
+  "input_revalidation": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_teacher_quality_revalidation_audit.json",
+  "input_trace_csv": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_xnegheight050_pre020_seed962_trace.csv",
+  "local_dryrun_preview_only": true,
+  "no_gpu_isaaclab_large_dataset_training_robot_ssh": true,
+  "not_lerobot_or_rlds_dataset": true,
+  "not_training_data": true,
+  "out_rows_jsonl": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tierb_action_dryrun_preview_rows.jsonl",
+  "out_summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tierb_action_dryrun_preview_summary.out",
+  "selected_policy": {
+    "clip_high": true,
+    "policy": "contact_to_p16",
+    "quality_tier": "B_REACTION_VALID_FOLLOW_OK_CLIP_HIGH",
+    "relative_window": [
+      0,
+      16
+    ],
+    "strict_clean_teacher": false
+  },
+  "statuses": {
+    "actual_action_teacher_dataset": "NOT_BUILT",
+    "isaaclab_rl": "BLOCKED",
+    "large_isaaclab_dataset": "BLOCKED",
+    "roarm_m3_pro": "BLOCKED",
+    "tierb_action_dryrun_preview": "READY_LOCAL_ONLY"
+  }
+}

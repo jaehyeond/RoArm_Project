@@ -1,0 +1,6 @@
+line1 artifact=cube10cm_teacher_quality_revalidation_audit_v1 local_revalidation_only=YES gpu_runtime=NO dataset_generation=NO training=NO robot_control=NO
+line2 official_window policy=official_reaction_window_m24_p48 accepted=16/16 tiers={'B_REACTION_VALID_FOLLOW_OK_CLIP_HIGH': 2, 'C_REACTION_VALID_FOLLOW_LAG': 14} clip_mean=1.000000000 follow_p95_to_cap=1.140652384
+line3 best_trimmed_window policy=contact_to_p16 rel=[0, 16] accepted=16/16 tiers={'B_REACTION_VALID_FOLLOW_OK_CLIP_HIGH': 16} clip_mean=1.000000000 follow_p95_to_cap=0.251552037
+line4 improvement revalidation_improves_teacher_quality=True strict_clean_count=0 follow_ok_count=16 enough_clean_for_action_dataset=False
+line5 verdict quality_blocker_is_window_definition_only=False quality_blocker_likely_control_tracking=True
+line6 next_default do_not_build_action_dataset_improve_or_retest_controller_quality no_gpu_without_explicit_single_candidate_approval

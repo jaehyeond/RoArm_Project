@@ -1,0 +1,47 @@
+{
+  "artifact_type": "cube10cm_diffik_teacher_quality_policy_gate_v1",
+  "branch": "professor_cube10cm_tap_reaction",
+  "evidence": {
+    "accepted_window_clip_any_rate_mean": 1.0,
+    "accepted_window_follow_p95_to_cap_p95": 1.1605058397565569,
+    "accepted_windows": 16,
+    "clean_diffik_teacher_window_ready": false,
+    "event_preview_contact": 16,
+    "event_preview_overshoot": 0,
+    "event_preview_reaction": 16,
+    "event_preview_rows": 16,
+    "summary_final_tcp_target_err_mean_m": 0.05181199568323791,
+    "tier_a": 0,
+    "tier_b": 2,
+    "tier_c": 14
+  },
+  "input_blocker_audit": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_diffik_action_dataset_blocker_audit.json",
+  "input_builder_preflight": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_reaction_dataset_builder_preflight.json",
+  "input_reaction_window": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_reaction_window_seed962_audit.json",
+  "local_policy_gate_only": true,
+  "next_gate": {
+    "before_rl": "validate_10cm_tap_rl_env_random_sanity",
+    "before_robot": "validated_policy_plus_hardware_safety_replay",
+    "if_exception_requested_later": "record_policy_exception_then_build_tiny_audited_action_dataset_dry_run_only",
+    "if_no_exception": "improve_or_retest_teacher_quality_before_action_dataset"
+  },
+  "no_gpu_isaaclab_dataset_training_robot_ssh": true,
+  "out_summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_diffik_teacher_quality_policy_gate_summary.out",
+  "policy_interpretation": {
+    "clean_diffik_teacher_is_quality_metadata_not_tap_filter": true,
+    "default_noisy_action_teacher_allowed": false,
+    "event_labels_are_not_action_targets": true,
+    "explicit_noisy_action_teacher_exception_requested": false,
+    "quality_policy_resolved_for_training": false
+  },
+  "statuses": {
+    "default_action_teacher_dataset_policy": "BLOCKED_DEFAULT_POLICY",
+    "event_label_dataset_path": "READY_LOCAL_ONLY",
+    "isaaclab_rl": "BLOCKED",
+    "large_isaaclab_dataset": "BLOCKED",
+    "roarm_m3_pro": "BLOCKED",
+    "strict_clean_diffik_action_teacher_path": "BLOCKED",
+    "tier_b_c_noisy_action_teacher_path": "REQUIRES_EXPLICIT_POLICY_EXCEPTION",
+    "tier_b_only_action_teacher_path": "BLOCKED_INSUFFICIENT_ROWS"
+  }
+}

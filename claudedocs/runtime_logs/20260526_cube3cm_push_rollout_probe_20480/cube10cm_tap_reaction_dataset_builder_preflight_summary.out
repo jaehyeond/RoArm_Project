@@ -1,0 +1,7 @@
+line1 artifact=cube10cm_tap_reaction_dataset_builder_preflight_v1 local_preflight_only=YES gpu_runtime=NO dataset_generation=NO training=NO robot_control=NO
+line2 input_manifest manifest_ready=True events=16 preview_rows=16 contact=16 reaction=16 overshoot=0
+line3 transient_labels ge_1mm=16 ge_2mm=13 ge_3mm=7 tiers={'B_REACTION_VALID_FOLLOW_OK_CLIP_HIGH': 2, 'C_REACTION_VALID_FOLLOW_LAG': 14}
+line4 forbidden_gate_check pass=True forbidden_present=[] uses_final_success_filter=NO uses_final_1cm_or_retention=NO
+line5 preflight_status tap_reaction_event_label_builder=READY_LOCAL_ONLY legacy_final_success_filter_bypassed=True
+line6 remaining_blocks diffik_action_teacher_dataset=REMAINS_BLOCKED large_isaaclab_dataset=BLOCKED isaaclab_rl=BLOCKED roarm_m3_pro=BLOCKED
+line7 next_unblock diffik_teacher_quality_policy_gate_before_action_dataset then_10cm_tap_rl_env_random_sanity_before_training

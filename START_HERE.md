@@ -12,6 +12,22 @@ Last updated: 2026-06-07 KST (B200 disconnected; Track A remains blocked and sep
 
 2026-06-07 local y+ precontact candidate audit: added `sim_scripts/cube10cm_yplus_precontact_candidate_audit.py`, a local/config-only pre-runtime audit for the narrow next y+ screen. It keeps the professor tap/reaction objective, changes no trace data, and proposes exactly one tiny candidate: fixed y+ seed958-like geometry with only `precontact_clearance_m 0.010 -> 0.020`. Existing evidence remains y+ `51` windows, pre-anchor displacement ratio `13.694612400`, tip ratio `13.202625486`, anchor `40.235294` steps before push start, raw delta ratio `0.622168298`, follow ratio `1.187431643`. Nominal target geometry changes from pre-target along `-0.060000m` to `-0.070000m`; through target remains `-0.040000m`; push path increases `0.020000m -> 0.030000m`. Verdict: `supports_precontact_first=True`, `candidate_is_tiny_one_variable_change=True`; height/lateral first are rejected for now. GPU was NOT run; next seed would be seed962 only after explicit approval.
 
+2026-06-07 local y+ pre020 runtime result: after explicit approval and passing guards, ran exactly one local IsaacLab 16-env fixed y+ seed962 screen changing only `precontact_clearance_m 0.010 -> 0.020`. Reaction/contact/no-posewrite/no-overshoot PASSed (`reaction_gate_pass=true`, reaction/contact `1.0/1.0`, overshoot `0.0`, posewrite `0`), but this is not data/1024 readiness: `teacher_quality_ready=false`, `diffik_clip_rate_mean=1.0`, final TCP error `0.051811996m`, `controlled_push_rate=0.5625`, and low-motion `1.0`. Reaction-window audit accepted 16/16 windows with 2 Tier B + 14 Tier C, zero rejected, follow p95/cap p95 `1.160505840`. Compared to seed958/960/961, pre020 delayed contact/anchor and reduced y+ pre24 reaction (`pre24_disp_mean=0.005104796m`, `pre24_tip_mean=5.079945deg`, anchor after push start by `27.1875` steps) but also weakened reaction strength (`max_disp_along_push_mean=0.002923813m`, `max_tip_angle_mean=9.205450deg`). Updated seed962-inclusive matrix: 144 windows, 128 accepted, 55 Tier B, 73 Tier C, 16 Rejected, zero Tier A; y+ is 67/67 accepted but only 2 Tier B + 65 Tier C. Verdict: `precontact=0.020` partially reduces early/pre-anchor y+ accumulation but mostly moves the failure toward weaker late contact while preserving DiffIK/follow quality blockers. Next research step is local-only timing/contact-strength separation around y+ geometry; do not run another GPU/precontact sweep, 1024/10240/data, RL/VLA, Track A, or B200.
+
+2026-06-07 local y+ pre020 failure-shift audit: added `sim_scripts/cube10cm_yplus_pre020_failure_shift_audit.py`, a no-GPU/no-data audit comparing seed958/960/961/962 with the same per-window timing/pre24 metrics. Result: seed962 pre020 is a real early-reaction reduction (`pre24_disp_vs_prev_mean=0.415034926`, `pre24_tip_vs_prev_mean=0.381066167`, anchor after push start), but it also weakens reaction strength (`max_disp_vs_prev_mean=0.661469914`, `max_tip_vs_prev_mean=0.376103186`, controlled push `0.5625`) and quality remains blocked. Verdict: `pre020_reduces_preanchor_reaction=True`, `pre020_weakens_reaction_strength=True`, `quality_still_blocked=True`. Next research action remains local-only: design a path/timing/contact-strength candidate before any further tiny GPU; do not continue blind precontact/lateral/height/actuator/DLS/cap sweeps.
+
+2026-06-07 local y+ contact-strength correction: `sim_scripts/cube10cm_yplus_contact_strength_candidate_audit.py` now treats final 1mm retention as a secondary diagnostic only, not a task objective and not a next-GPU trigger. The audit still records seed962 max 1mm gate `1.0`, final 1mm gate `0.5625`, retention `0.462406074` versus prior y+ mean `0.737681608`, but the corrected verdict is `final_retention_primary_objective=False` and `selected_next_candidate=NONE_FROM_FINAL_RETENTION_ALONE`. If stronger 2-3mm transient push is explicitly requested later, `contact_stop_disp_m 0.001 -> 0.002` can be treated as an optional diagnostic candidate, not as a fix for final-position retention. Current judging order remains reaction/contact/no-posewrite/no-overshoot first, optional max 1/2/3mm transient strength second, quality tier third, final 1cm secondary only if explicitly requested. GPU was NOT run.
+
+2026-06-07 local y+ transient tap-strength audit: added `sim_scripts/cube10cm_yplus_transient_tap_strength_audit.py`, a no-GPU/no-data audit that intentionally excludes final position as a success gate. Result: seed962 pre020 PASSes the primary 1mm tap event (`contact=1.0`, `reaction=1.0`, `overshoot=0.0`, max 1mm `1.0`) and has majority 2mm transient strength (`0.8125`), but 3mm is not reliable (`0.5`). Compared with seed958/960/961, seed962 is deliberately less aggressive: max displacement ratio `0.661469914`, tip ratio `0.376103186`, z ratio `0.492015176`. Next order: if 1-2mm tap is enough, stop y+ contact-geometry tuning and keep quality-tier metadata separate; if 3mm is explicitly required, define that transient target first and then propose exactly one local candidate. Do not use final 1cm/final retention.
+
+2026-06-07 dataset/RL/robot readiness gate: added `sim_scripts/cube10cm_dataset_rl_robot_readiness_audit.py`, then created only the allowed local event-label manifest with `sim_scripts/cube10cm_event_label_dataset_manifest.py`. Readiness result: primary event and 1-2mm objective are ready (`contact=1.0`, `reaction=1.0`, `overshoot=0.0`, max1mm `1.0`, max2mm `0.8125`), but action-teacher dataset is NOT ready (`clean_teacher=false`, 2 Tier B + 14 Tier C, clip mean `1.0`, follow p95/cap `1.160505840`). Pipeline gates: `event_label_dataset_ready=True`, but `large_isaaclab_dataset_ready=False`, `isaaclab_rl_ready=False`, `roarm_m3_pro_deploy_ready=False`. Generated manifest is schema/label-only, not train data: 16 events, 16 contact, 16 reaction, 0 overshoot, window-level transient counts 16/13/7 for 1/2/3mm, and it explicitly excludes final 1cm/final retention. Do not run dataset generation/RL/robot deploy from this state.
+
+2026-06-08 local DiffIK action-dataset blocker audit: added `sim_scripts/cube10cm_diffik_action_dataset_blocker_audit.py` to answer whether the IsaacLab built-in DifferentialIK action-teacher dataset can start. Verdict: event-label dataset remains `READY_LOCAL_ONLY` with 16 events and 1/2/3mm counts 16/13/7, but `differential_ik_action_teacher_dataset=BLOCKED`, `large_isaaclab_dataset=BLOCKED`, `isaaclab_rl=BLOCKED`, and `roarm_m3_pro=BLOCKED`. Evidence: clean teacher false, 2B+14C, clip mean `1.0`, follow p95/cap `1.160505840`, final TCP error `0.051811996m`, trace modes `LINK5_BODY_TARGET_NOT_REACHED`, `JOINT_STEP_CLIPPING_DOMINANT`, `ACTUATOR_TARGET_TRACKING_LAG`; old dataset builder still has final controlled/low-motion/success filters, and existing RL env is 3cm/20g relocation-oriented. Next unblock order: keep 1-2mm tap objective, use event-label manifest only, write a 10cm tap-specific dataset-builder preflight without final-success filters, resolve/explicitly gate DiffIK teacher quality, validate 10cm tap RL env random sanity, then train, then robot safety/replay. No GPU/data/training/robot/B200/SSH was run.
+
+2026-06-08 local unblock step: added `sim_scripts/cube10cm_tap_reaction_dataset_builder_preflight.py` and `sim_scripts/cube10cm_diffik_teacher_quality_policy_gate.py`. The preflight unblocks the old-builder conflict locally: it builds a 16-row event-label preview from the manifest, keeps contact/reaction/overshoot/transient/tier fields, and passes the forbidden gate check (`forbidden_present=[]`, `uses_final_success_filter=NO`, `uses_final_1cm_or_retention=NO`). This is still not an action dataset. Teacher quality policy remains blocked by default: strict clean action teacher is BLOCKED (`clean_teacher=false`, Tier A/B/C = 0/2/14, clip mean `1.0`, follow p95/cap `1.160505840`, final TCP error `0.051811996m`), Tier-B-only action teacher is `BLOCKED_INSUFFICIENT_ROWS` (2/16), and Tier-B/C noisy action teacher requires an explicit policy exception. Therefore large IsaacLab dataset/RL/RoArm remain blocked unless teacher quality is improved/retested or an explicit noisy-teacher exception is recorded first. No GPU/data/training/robot/B200/SSH was run.
+
+2026-06-08 teacher-quality revalidation: added `sim_scripts/cube10cm_teacher_quality_revalidation_audit.py` and `sim_scripts/cube10cm_tierb_action_dryrun_preview.py`. Local revalidation swept anchor-relative action-row slices on existing seed962 trace. The official `[-24,+48]` reaction window is 16/16 accepted but 2B+14C with clip mean `1.0` and follow p95/cap `1.140652384`; the best trimmed action-row policy is `contact_to_p16` `[0,+16]`, 16/16 accepted and 16B+0C with follow p95/cap `0.251552037`, but still clip mean `1.0` and zero Tier A. So the Tier-C follow-lag blocker is partly a row-window definition issue, but clean teacher remains blocked by command clipping/control tracking. Built only a tiny local Tier-B action dry-run preview: 16 events, 66 sparse trace rows, no forbidden final/success fields, action abs p95/max `0.007rad`, all rows clip-any. Actual action-teacher dataset is NOT built; large dataset/RL/RoArm remain blocked. No GPU/data/training/robot/B200/SSH was run.
+
 Latest correction: for the professor 10cm/0.72kg push/tap branch, final 1cm
 displacement is no longer the primary objective if the real task only needs a
 tap/reaction. Treat measured contact, transient displacement, cube lift/z delta,
@@ -1239,18 +1255,71 @@ Next concrete step:
    reaction before/around the measured-contact anchor inside the approach phase:
    pre-anchor displacement is `13.694612400x` baseline and tip is
    `13.202625486x` baseline.
-12. Latest local precontact candidate audit fixes the next one-variable GPU
-   candidate, if explicitly approved: fixed y+ seed958-like geometry, only
-   `precontact_clearance_m 0.010 -> 0.020`, next seed962. This is a hypothesis
-   test for approach/pre-anchor reaction accumulation, not a data-scale step.
-13. Do not run 1024/10240 trace/data from seed946/seed947/seed948/seed949/seed950/
-   seed951/seed952/seed953/seed954/seed955/seed956/seed957/seed958/seed959/seed960/seed961. Direction-specific
+12. Latest local precontact candidate audit fixed the one-variable GPU candidate:
+   fixed y+ seed958-like geometry, only `precontact_clearance_m 0.010 -> 0.020`,
+   seed962. It was a hypothesis test for approach/pre-anchor reaction
+   accumulation, not a data-scale step.
+13. seed962 pre020 runtime PASSed reaction/contact/no-posewrite/no-overshoot but
+   did not solve quality or data readiness: reaction-window 16/16 accepted, 2
+   Tier B + 14 Tier C, follow p95/cap p95 `1.160505840`, clip mean `1.0`,
+   teacher quality false, controlled push only `0.5625`.
+14. The pre020 intervention reduced y+ pre24 reaction and moved anchor after push
+   start, but also weakened reaction strength; treat it as failure-mode movement,
+   not a clean fix.
+15. Latest local failure-shift audit confirms the same: seed962 pre24
+   displacement/tip fell to `0.415034926x`/`0.381066167x` of the seed958/960/961
+   mean, but max displacement/tip also fell to `0.661469914x`/`0.376103186x`;
+   quality remains blocked.
+16. Corrected contact-strength interpretation: seed962 final 1mm retention drop is
+   not a primary failure because the active objective is tap/reaction/contact. The
+   local audit now records `final_retention_primary_objective=False` and
+   `selected_next_candidate=NONE_FROM_FINAL_RETENTION_ALONE`; use max transient
+   1/2/3mm only if contact-strength is explicitly requested.
+17. Latest transient tap-strength audit excludes final position as a success gate:
+   seed962 primary 1mm tap event PASSes (`contact=1.0`, `reaction=1.0`,
+   `overshoot=0.0`, max 1mm `1.0`), 2mm transient is majority `0.8125`, and 3mm
+   transient is not reliable `0.5`.
+18. Next order is now explicit: if 1-2mm tap is enough, stop y+ contact-geometry
+   tuning and keep quality-tier metadata separate; if 3mm is required, define that
+   transient target first, then propose exactly one local candidate. Do not use
+   final 1cm/final retention.
+19. Dataset/RL/robot readiness audit says event-label manifest is allowed, but
+   action-teacher dataset, large IsaacLab dataset, IsaacLab RL, and RoArm-M3-Pro
+   deploy are blocked: `clean_teacher=false`, 2B+14C, clip mean `1.0`,
+   follow p95/cap `1.160505840`, existing RL env is still 3cm-oriented, and the
+   old dataset builder uses final-success filters.
+20. Created only a local event-label manifest: 16 reaction-window events, contact
+   16, reaction 16, overshoot 0, window-level transient counts 16/13/7 for
+   1/2/3mm. This is not action data, not LeRobot/RLDS, not training data.
+21. Latest DiffIK action-dataset blocker audit confirms the exact pipeline state:
+   event-label manifest is `READY_LOCAL_ONLY`, but DifferentialIK action-teacher
+   dataset, large IsaacLab dataset, IsaacLab RL, and RoArm-M3-Pro deploy are still
+   blocked. Code-level conflicts are also confirmed: the old dataset builder uses
+   final controlled/low-motion/success filters, and the existing RL env is a
+   3cm/20g relocation task.
+22. Latest 10cm tap/reaction dataset-builder preflight locally bypasses the old
+   final-success builder conflict: 16 preview rows, contact 16, reaction 16,
+   overshoot 0, transient 1/2/3mm counts 16/13/7, forbidden final/success fields
+   absent. This is still not an action-teacher dataset or training data.
+23. Latest DiffIK teacher-quality policy gate keeps action dataset blocked by
+   default: strict clean teacher fails, Tier-B-only has only 2 rows, and Tier-B/C
+   noisy action teacher requires an explicit policy exception before any dry-run.
+24. Latest teacher-quality revalidation improves the seed962 action-row policy:
+   trimming to contact anchor `[0,+16]` gives 16/16 Tier B and removes Tier C
+   follow lag, but clip remains `1.0` and Tier A remains zero. This supports a
+   tiny Tier-B dry-run preview only, not a clean action dataset.
+25. Latest Tier-B action dry-run preview has 16 events and 66 sparse trace rows,
+   no forbidden final/success fields, and action abs p95/max `0.007rad`; it marks
+   actual action-teacher dataset `NOT_BUILT` and keeps large dataset/RL/RoArm
+   blocked.
+26. Do not run 1024/10240 trace/data from seed946/seed947/seed948/seed949/seed950/
+   seed951/seed952/seed953/seed954/seed955/seed956/seed957/seed958/seed959/seed960/seed961/seed962. Direction-specific
    contact is improving, but low-motion, DiffIK clipping, post-stop freeze
    clipping, and actuator follow lag still block teacher/data quality.
-14. Any next GPU experiment still requires explicit approval and must be one tiny
-   local IsaacLab screen inside the working tap geometry. The current proposed
-   command changes only `precontact_clearance_m`; it must use
-   `sandbox_permissions=require_escalated` and must not be reported as RL/data.
-15. Judge the result by reaction/contact/no-posewrite/no-overshoot first; report
+27. Any next GPU experiment still requires explicit approval and must be one tiny
+   local IsaacLab screen inside the working tap geometry. First do local-only
+   timing/contact-strength separation for y+; do not continue a blind precontact,
+   lateral, height, actuator, DLS, or cap sweep.
+28. Judge the result by reaction/contact/no-posewrite/no-overshoot first; report
    final 1cm only as secondary relocation evidence.
 ```

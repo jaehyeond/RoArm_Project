@@ -1,0 +1,197 @@
+{
+  "artifact_type": "cube10cm_yplus_transient_tap_strength_audit_v1",
+  "branch": "professor_cube10cm_tap_reaction",
+  "comparisons": {
+    "seed962_1mm_rate_vs_previous_mean": 1.0,
+    "seed962_2mm_rate_vs_previous_mean": 0.8125,
+    "seed962_3mm_rate_vs_previous_mean": 0.5106382978723405,
+    "seed962_max_disp_vs_previous_mean": 0.6614699144144207,
+    "seed962_tip_vs_previous_mean": 0.37610318649127816,
+    "seed962_z_vs_previous_mean": 0.4920151756419153
+  },
+  "local_posthoc_only": true,
+  "no_gpu_isaaclab_training_dataset_ssh": true,
+  "objective_contract": {
+    "final_position_success_gate": false,
+    "primary": "reaction_contact_no_posewrite_no_overshoot",
+    "transient_thresholds_m": [
+      0.001,
+      0.002,
+      0.003,
+      0.005,
+      0.01
+    ]
+  },
+  "out_summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_yplus_transient_tap_strength_audit_summary.out",
+  "previous_seed_group": {
+    "labels": [
+      "seed958_pre010",
+      "seed960_cap050",
+      "seed961_stiff600"
+    ],
+    "max_cube_z_delta_mean_m": 0.016207395819947124,
+    "max_disp_along_push_mean_m": 0.004420174906651179,
+    "max_ge_1mm_rate_mean": 1.0,
+    "max_ge_2mm_rate_mean": 1.0,
+    "max_ge_3mm_rate_mean": 0.9791666666666666,
+    "max_tip_angle_mean_deg": 24.47586218516032
+  },
+  "run_summaries": [
+    {
+      "accepted_window_follow_p95_to_cap_p95": 1.151057652064732,
+      "arm_actuator_stiffness": 400.0,
+      "clean_diffik_teacher_window_ready": false,
+      "contact_evidence_rate": 1.0,
+      "csv": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_xnegheight050_seed958.csv",
+      "final_position_used_as_success_gate": false,
+      "label": "seed958_pre010",
+      "max_cube_speed_mean_mps": 0.1307315221056342,
+      "max_cube_z_delta_mean_m": 0.016543288016691804,
+      "max_diffik_joint_step_rad": 0.035,
+      "max_disp_along_push_mean_m": 0.004254132509231567,
+      "max_tip_angle_mean_deg": 25.262077927589417,
+      "overshoot_rate": 0.0,
+      "precontact_clearance_m": 0.01,
+      "push_through_m": 0.01,
+      "quality_tier_counts": {
+        "C_REACTION_VALID_FOLLOW_LAG": 16
+      },
+      "reaction_event_rate": 1.0,
+      "reaction_window_audit_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_reaction_window_seed958_audit.json",
+      "reaction_window_contract_pass": true,
+      "summary_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_xnegheight050_seed958_summary.json",
+      "transient_strength_rates": {
+        "max_ge_10mm_rate": 0.0,
+        "max_ge_1mm_rate": 1.0,
+        "max_ge_2mm_rate": 1.0,
+        "max_ge_3mm_rate": 1.0,
+        "max_ge_5mm_rate": 0.0
+      },
+      "trials": 16
+    },
+    {
+      "accepted_window_follow_p95_to_cap_p95": 1.1417460441589355,
+      "arm_actuator_stiffness": 400.0,
+      "clean_diffik_teacher_window_ready": false,
+      "contact_evidence_rate": 1.0,
+      "csv": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_xnegheight050_cap050_seed960.csv",
+      "final_position_used_as_success_gate": false,
+      "label": "seed960_cap050",
+      "max_cube_speed_mean_mps": 0.1691946042701602,
+      "max_cube_z_delta_mean_m": 0.016627578297629952,
+      "max_diffik_joint_step_rad": 0.05,
+      "max_disp_along_push_mean_m": 0.004593882709741592,
+      "max_tip_angle_mean_deg": 25.4697448015213,
+      "overshoot_rate": 0.0,
+      "precontact_clearance_m": 0.01,
+      "push_through_m": 0.01,
+      "quality_tier_counts": {
+        "C_REACTION_VALID_FOLLOW_LAG": 16
+      },
+      "reaction_event_rate": 1.0,
+      "reaction_window_audit_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_reaction_window_seed960_audit.json",
+      "reaction_window_contract_pass": true,
+      "summary_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_xnegheight050_cap050_seed960_summary.json",
+      "transient_strength_rates": {
+        "max_ge_10mm_rate": 0.0,
+        "max_ge_1mm_rate": 1.0,
+        "max_ge_2mm_rate": 1.0,
+        "max_ge_3mm_rate": 0.9375,
+        "max_ge_5mm_rate": 0.125
+      },
+      "trials": 16
+    },
+    {
+      "accepted_window_follow_p95_to_cap_p95": 1.200965472630092,
+      "arm_actuator_stiffness": 600.0,
+      "clean_diffik_teacher_window_ready": false,
+      "contact_evidence_rate": 1.0,
+      "csv": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_xnegheight050_stiff600_seed961.csv",
+      "final_position_used_as_success_gate": false,
+      "label": "seed961_stiff600",
+      "max_cube_speed_mean_mps": 0.17483208514750004,
+      "max_cube_z_delta_mean_m": 0.015451321145519614,
+      "max_diffik_joint_step_rad": 0.035,
+      "max_disp_along_push_mean_m": 0.004412509500980377,
+      "max_tip_angle_mean_deg": 22.69576382637024,
+      "overshoot_rate": 0.0,
+      "precontact_clearance_m": 0.01,
+      "push_through_m": 0.01,
+      "quality_tier_counts": {
+        "C_REACTION_VALID_FOLLOW_LAG": 16
+      },
+      "reaction_event_rate": 1.0,
+      "reaction_window_audit_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_reaction_window_seed961_audit.json",
+      "reaction_window_contract_pass": true,
+      "summary_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_xnegheight050_stiff600_seed961_summary.json",
+      "transient_strength_rates": {
+        "max_ge_10mm_rate": 0.0,
+        "max_ge_1mm_rate": 1.0,
+        "max_ge_2mm_rate": 1.0,
+        "max_ge_3mm_rate": 1.0,
+        "max_ge_5mm_rate": 0.1875
+      },
+      "trials": 16
+    },
+    {
+      "accepted_window_follow_p95_to_cap_p95": 1.1605058397565569,
+      "arm_actuator_stiffness": 400.0,
+      "clean_diffik_teacher_window_ready": false,
+      "contact_evidence_rate": 1.0,
+      "csv": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_xnegheight050_pre020_seed962.csv",
+      "final_position_used_as_success_gate": false,
+      "label": "seed962_pre020",
+      "max_cube_speed_mean_mps": 0.12744655134156346,
+      "max_cube_z_delta_mean_m": 0.007974284701049328,
+      "max_diffik_joint_step_rad": 0.035,
+      "max_disp_along_push_mean_m": 0.0029238127171993256,
+      "max_tip_angle_mean_deg": 9.205449759960175,
+      "overshoot_rate": 0.0,
+      "precontact_clearance_m": 0.02,
+      "push_through_m": 0.01,
+      "quality_tier_counts": {
+        "B_REACTION_VALID_FOLLOW_OK_CLIP_HIGH": 2,
+        "C_REACTION_VALID_FOLLOW_LAG": 14
+      },
+      "reaction_event_rate": 1.0,
+      "reaction_window_audit_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_reaction_window_seed962_audit.json",
+      "reaction_window_contract_pass": true,
+      "summary_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_xnegheight050_pre020_seed962_summary.json",
+      "transient_strength_rates": {
+        "max_ge_10mm_rate": 0.0,
+        "max_ge_1mm_rate": 1.0,
+        "max_ge_2mm_rate": 0.8125,
+        "max_ge_3mm_rate": 0.5,
+        "max_ge_5mm_rate": 0.0
+      },
+      "trials": 16
+    }
+  ],
+  "verdict": {
+    "do_not_start": [
+      "GPU_runtime_without_explicit_approval",
+      "final_1cm_relocation_chasing",
+      "blind_precontact_sweep",
+      "lateral_height_actuator_dls_cap_mixing",
+      "1024_10240_scaleup",
+      "dataset_generation",
+      "PPO_RL",
+      "VLA",
+      "TrackA",
+      "B200_SSH"
+    ],
+    "final_position_used_as_success_gate": false,
+    "next_step_order": [
+      "do_not_use_final_1cm_or_final_1mm_retention_as_primary_gate",
+      "report_seed962_as_primary_1mm_tap_event_pass_if_minimal_tap_is_enough",
+      "ask_or_define_explicit_transient_strength_target_before_any_stronger_tap_runtime",
+      "if_target_is_3mm_then_design_one_optional_local_candidate_without_mixing_knobs",
+      "if_target_is_1_to_2mm_then_stop_yplus_contact_geometry_tuning_and focus_quality_tier_metadata"
+    ],
+    "quality_still_blocks_data_readiness": true,
+    "seed962_less_aggressive_than_pre020_predecessors": true,
+    "seed962_primary_tap_event_pass": true,
+    "seed962_three_mm_transient_not_reliable": true,
+    "seed962_two_mm_transient_majority": true
+  }
+}

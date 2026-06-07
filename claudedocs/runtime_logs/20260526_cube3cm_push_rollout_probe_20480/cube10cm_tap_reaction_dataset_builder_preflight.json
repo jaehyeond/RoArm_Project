@@ -1,0 +1,109 @@
+{
+  "artifact_type": "cube10cm_tap_reaction_dataset_builder_preflight_v1",
+  "branch": "professor_cube10cm_tap_reaction",
+  "contract": {
+    "allowed_rows": "reaction_window_event_labels_with_quality_metadata",
+    "forbidden_primary_gate_fields": [
+      "final_1cm_relocation",
+      "final_1mm_retention",
+      "post_push_final_position",
+      "success_marker",
+      "controlled_push",
+      "low_motion",
+      "final_disp_m",
+      "final_relocation",
+      "target_xy_dist",
+      "cube_success_disp_m"
+    ],
+    "not_action_teacher_dataset": true,
+    "not_training_data": true,
+    "primary_objective": "reaction_contact_no_posewrite_no_overshoot",
+    "required_event_fields": [
+      "event_id",
+      "source_seed",
+      "env_id",
+      "reaction_window_anchor_step",
+      "reaction_window_start_step",
+      "reaction_window_end_step",
+      "contact_evidence",
+      "reaction_signal",
+      "overshoot",
+      "max_transient_disp_m",
+      "max_transient_ge_1mm",
+      "max_transient_ge_2mm",
+      "max_transient_ge_3mm",
+      "quality_tier",
+      "joint_follow_p95_to_cap",
+      "clip_any_rate"
+    ]
+  },
+  "counts": {
+    "contact": 16,
+    "input_events": 16,
+    "max_transient_ge_1mm": 16,
+    "max_transient_ge_2mm": 13,
+    "max_transient_ge_3mm": 7,
+    "overshoot": 0,
+    "preview_rows": 16,
+    "quality_tier_counts": {
+      "B_REACTION_VALID_FOLLOW_OK_CLIP_HIGH": 2,
+      "C_REACTION_VALID_FOLLOW_LAG": 14
+    },
+    "reaction": 16
+  },
+  "input_blocker_audit": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_diffik_action_dataset_blocker_audit.json",
+  "input_manifest": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_event_label_dataset_manifest.json",
+  "local_preflight_only": true,
+  "next_gate": {
+    "action_teacher_dataset": "BLOCKED_BY_DIFFIK_TEACHER_QUALITY_POLICY",
+    "quality_blockers_from_previous_audit": {
+      "accepted_window_clip_any_rate_mean": 1.0,
+      "accepted_window_follow_p95_to_cap_p95": 1.1605058397565569,
+      "clean_diffik_teacher_window_ready": false,
+      "likely_trace_modes": [
+        "LINK5_BODY_TARGET_NOT_REACHED",
+        "JOINT_STEP_CLIPPING_DOMINANT",
+        "ACTUATOR_TARGET_TRACKING_LAG"
+      ],
+      "quality_tier_counts": {
+        "B_REACTION_VALID_FOLLOW_OK_CLIP_HIGH": 2,
+        "C_REACTION_VALID_FOLLOW_LAG": 14
+      },
+      "summary_diffik_clip_rate_mean": 1.0,
+      "summary_final_tcp_target_err_mean_m": 0.05181199568323791,
+      "trace_clip_any_rate": 1.0,
+      "worst_follow_joint": {
+        "joint": 1,
+        "max": 0.0359216034412384,
+        "mean": 0.02323330953457079,
+        "p95": 0.03483417630195618
+      },
+      "worst_raw_delta_joint": {
+        "joint": 1,
+        "max": 0.335939884185791,
+        "mean": 0.1583151012482074,
+        "p95": 0.2866251468658447
+      }
+    },
+    "rl_env": "BLOCKED_UNTIL_10CM_TAP_ENV_RANDOM_SANITY",
+    "robot": "BLOCKED_UNTIL_VALIDATED_POLICY_AND_SAFETY_REPLAY"
+  },
+  "no_gpu_isaaclab_dataset_training_robot_ssh": true,
+  "out_preview_jsonl": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_reaction_dataset_builder_preflight_preview.jsonl",
+  "out_summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_reaction_dataset_builder_preflight_summary.out",
+  "statuses": {
+    "differential_ik_action_teacher_dataset": "REMAINS_BLOCKED",
+    "isaaclab_rl": "BLOCKED",
+    "large_isaaclab_dataset": "BLOCKED",
+    "legacy_final_success_filter_bypassed_by_new_preflight": true,
+    "roarm_m3_pro": "BLOCKED",
+    "tap_reaction_event_label_builder_preflight": "READY_LOCAL_ONLY"
+  },
+  "validation": {
+    "all_preview_rows_reaction_contact_no_overshoot_1mm": true,
+    "forbidden_primary_gate_fields_present_in_preview": [],
+    "manifest_ready": true,
+    "missing_required_fields_by_event": {},
+    "preview_excludes_final_relocation_and_retention": true
+  }
+}
