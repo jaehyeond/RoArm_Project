@@ -7606,3 +7606,617 @@ Sources:
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_cap050_stiff600_effort35_seed957_reaction_gate_taponly_audit.json:1-43`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_next_research_step_xpos_height050_cap050_stiff600_effort35_seed957_taponly_audit.json:1-25`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xpos16_goodxy_latneg020_height050_cap050_stiff600_effort35_seed957_explicit_1cm_relocation_audit.json:1-43`
+
+## D146 - Reaction-window contract translates the professor tap objective into data units
+
+Date: 2026-06-06
+
+Decision:
+
+- Use a reaction-window contract before any 1024/10240/data build on the professor
+  10cm/0.72kg cube branch.
+- A reaction window is a short trace segment anchored on contact (`first_contact_step`
+  first, then fallback contact markers). It is not a final relocation metric and
+  not a whole-rollout teacher-quality claim.
+- The contract accepts a window only when it has contact evidence, at least one
+  reaction signal, no posewrite/training/attach, and no overshoot. Reaction signals
+  are max displacement, z delta, speed, or contact-gated tip angle. Clip/follow
+  quality is recorded as metadata and a separate clean-DiffIK teacher diagnostic,
+  not a default rejection for reaction-window data.
+- Do not let tilt alone create a success label. The tip signal is valid only when
+  contact evidence exists.
+
+Evidence:
+
+- Added `sim_scripts/cube10cm_reaction_window_contract_audit.py`, a local posthoc
+  script. Lines 1-5 state that it reads existing trace/summary logs only and does
+  not run IsaacLab, train, generate new rollouts, or create a final training
+  dataset.
+- Lines 197-243 anchor each env on contact, cut a `pre_contact_steps`/`post_contact_steps`
+  window, and compute max displacement, z delta, speed, contact evidence, tip, clip,
+  and follow metadata.
+- Lines 245-281 reject windows for missing controller/no-posewrite/contact/reaction
+  or overshoot and record the per-window reaction sub-signals.
+- Lines 377-441 separate `reaction_window_contract_pass` from
+  `clean_diffik_teacher_window_ready` and explicitly mark final 1cm relocation as
+  not required.
+- Existing-log cross-checks passed the intended asymmetry: seed957, seed949, and
+  seed950 all accepted 16/16 windows; seed948 accepted 0/16 windows because no
+  contact anchor existed.
+- seed957 audit lines 2-13 show `accepted_window_count=16`, row count `294`,
+  `reaction_window_contract_pass=true`, and `clean_diffik_teacher_window_ready=false`.
+  Lines 43-66 show env0 anchored at step 203 with contact evidence, displacement
+  reaction, speed reaction, contact-gated tip reaction, no overshoot, and max
+  displacement `0.001289606m`.
+- seed950 audit lines 2-13 show `accepted_window_count=16`, row count `292`,
+  `reaction_window_contract_pass=true`, and `clean_diffik_teacher_window_ready=false`.
+- seed948 audit lines 2-13 show `accepted_window_count=0`, row count `0`, and
+  `reaction_window_contract_pass=false`; lines 43-51 show rejection reason
+  `missing_contact_anchor`.
+- The tap-objective guard wording was also tightened: the JSON now reports
+  `explicit_final_relocation_override_available` instead of foregrounding a 1cm
+  override as the default objective.
+
+Implication:
+
+- The next correct local step is to use the reaction-window contract/audit to
+  decide which existing contact/reaction traces would be retained and with what
+  metadata. This is the bridge from "tap/reaction happened" to usable dataset
+  labels.
+- This does not authorize broad scale-up, PPO/RL, VLA, Track A, or 1024/10240
+  generation. Scaling remains blocked until the accepted reaction-window contract
+  is applied to balanced directions/workspaces and the team explicitly chooses
+  reaction-window traces over clean-DiffIK teacher traces.
+
+Sources:
+
+- `sim_scripts/cube10cm_reaction_window_contract_audit.py:1-5,197-281,377-441,455-505`
+- `sim_scripts/cube10cm_tap_objective_contract_audit.py:83-107`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_reaction_window_seed957_audit.json:1-66`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_reaction_window_seed949_audit.json:1-80`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_reaction_window_seed950_audit.json:1-80`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_reaction_window_seed948_audit.json:1-80`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_objective_contract_audit.json:1-21`
+
+## D147 - Clean DiffIK teacher is a quality tier, not the absolute tap/reaction filter
+
+Date: 2026-06-06
+
+Decision:
+
+- For the professor 10cm/0.72kg tap/reaction branch, use reaction-window validity
+  as the primary task label and clean DiffIK teacher quality as a tier.
+- Do not throw away all valid contact/reaction windows only because DiffIK clip or
+  actuator follow is imperfect. Instead, preserve those metrics in metadata and
+  assign a quality tier.
+- Tier A means a valid reaction window that also passes clean DiffIK teacher
+  thresholds. Tier B means reaction-valid with follow under the threshold but
+  clip above threshold. Tier C means reaction-valid with actuator follow lag
+  above threshold. Rejected means not a valid reaction window.
+- This does not permit broad scale-up. It starts the research path by measuring
+  tier distribution across existing and future explicitly approved tiny traces.
+
+Evidence:
+
+- `sim_scripts/cube10cm_reaction_window_contract_audit.py` lines 182-198 define
+  `_quality_tier`: `A_CLEAN_DIFFIK_TEACHER`,
+  `B_REACTION_VALID_FOLLOW_OK_CLIP_HIGH`, `C_REACTION_VALID_FOLLOW_LAG`, and
+  `REJECTED`.
+- Lines 278-295 assign the tier per window after contact/reaction/no-posewrite/
+  no-overshoot acceptance is computed.
+- Lines 400-447 aggregate `quality_tier_counts` separately from
+  `reaction_window_contract_pass` and `clean_diffik_teacher_window_ready`.
+- Lines 475-480 write the tier definitions into the audit JSON contract.
+- seed957 existing trace: 16/16 windows are valid reaction windows, but all 16 are
+  Tier B; clean teacher remains false. The audit reports clip mean `0.673245614`
+  and follow p95/cap p95 `0.776854157`.
+- seed949 existing trace: 16/16 windows are valid reaction windows, all 16 Tier B.
+- seed950 existing trace: 16/16 windows are valid reaction windows, but the quality
+  split is 10 Tier B and 6 Tier C; follow p95/cap p95 is `1.142495019`.
+- seed948 negative control: 0/16 valid windows, all 16 `REJECTED` because contact
+  anchor is missing.
+
+Implication:
+
+- The current research branch can proceed with a phase/window dataset contract
+  without pretending every reaction-valid sample is a clean teacher. This keeps
+  the professor objective alive and preserves reuse for later grasp/lift phases,
+  where task labels and controller quality must also be separated.
+- Next local work should report tier distributions per direction/workspace before
+  any 1024/10240/data build. Tier A can be used as clean BC teacher data; Tier B/C
+  are reaction evidence with metadata, suitable for analysis, ablation, or later
+  filtered dataset variants.
+
+Sources:
+
+- `sim_scripts/cube10cm_reaction_window_contract_audit.py:182-198,278-295,400-447,475-480`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_reaction_window_seed957_audit.json:1-13,452-456`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_reaction_window_seed949_audit.json:1-13,452-456`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_reaction_window_seed950_audit.json:1-13,452-457`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_reaction_window_seed948_audit.json:1-13,212-219`
+
+## D148 - Direction/workspace tier matrices must separate geometry/config from direction
+
+Date: 2026-06-06
+
+Decision:
+
+- Before any 1024/10240/data build on the professor 10cm/0.72kg cube tap branch,
+  report reaction-window quality tiers by direction/workspace and by audit/config.
+- Do not interpret a direction-only aggregate as a direction failure when it mixes
+  different contact geometry or actuator/IK settings.
+- Keep the primary ordering: reaction-window validity first, quality tier second,
+  final 1cm relocation absent from the contract.
+
+Evidence:
+
+- Added `sim_scripts/cube10cm_reaction_window_tier_matrix.py`, a local posthoc
+  report tool. Lines 1-5 state that it reads existing reaction-window audit JSONs
+  and trace CSVs only and does not run IsaacLab, train, generate new rollouts, or
+  create a final training dataset.
+- Lines 94-120 reconstruct env-level direction and workspace from trace CSV
+  `push_dx/push_dy`, cube pose, and env origin.
+- Lines 124-166 join per-window quality tiers back to the direction/workspace
+  metadata and add `audit_direction` / `audit_direction_workspace` keys so
+  direction is not conflated with config.
+- Lines 208-221 encode conservative readiness reasons: local posthoc only, no
+  Tier A, low acceptance, or insufficient per-direction windows.
+- Lines 284-313 write the JSON/CSV matrix with `ready_for_1024_or_data=false`.
+- Existing matrix output shows 4 audits / 64 candidate windows / 48 accepted
+  windows / `acceptance_rate=0.75`, with 42 Tier B, 6 Tier C, 16 Rejected, and
+  no Tier A.
+- The x- aggregate is deliberately not a pure x- verdict: CSV lines 6-7 show
+  seed948 x- is 0/16 Rejected while seed949 x- is 16/16 Tier B; lines 8-12 show
+  seed950 contributes x+/x-/y+/y- under a different mixed-direction config.
+- JSON lines 231-239 keep scale-up readiness false because there are no Tier A
+  windows, x- aggregate is config-mixed and below 1.0 acceptance, and y+/y- have
+  only 3/4 windows.
+
+Implication:
+
+- The next valid research question is not "scale to 1024 now"; it is whether the
+  reaction-window contract can produce balanced direction/workspace coverage with
+  acceptable Tier A/B/C distribution under explicitly controlled geometry/config.
+- y+ and y- are not proven robust yet. They are accepted in the current matrix,
+  but the sample count is too small and mostly Tier C.
+- x- is not globally dead. The failed seed948 x- geometry is rejected, while
+  height050 x- evidence from seed949 and seed950 is valid Tier B.
+
+Sources:
+
+- `sim_scripts/cube10cm_reaction_window_tier_matrix.py:1-5,94-120,124-166,208-221,284-313`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_reaction_window_tier_matrix_existing_seeds.csv:1-28`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_reaction_window_tier_matrix_existing_seeds.json:37-48,69-134,231-265`
+
+## D149 - Fixed y+ direction coverage passes reaction windows but remains Tier C
+
+Date: 2026-06-06
+
+Decision:
+
+- The y+ direction is no longer only a 3-window lucky-contact observation after
+  seed958. Under seed950-like goodxy/lateral geometry, fixed y+ accepted 16/16
+  reaction windows.
+- Do not convert this into a 1024/10240/data claim. seed958 is reaction-valid but
+  not clean-teacher/data-ready: every accepted y+ window is Tier C from actuator
+  follow lag, and DiffIK clipping remains high.
+- The next coverage gap is y- sample count, while the next quality gap is
+  actuator/follow cleanup. Either path still requires a separate explicit tiny
+  runtime approval.
+
+Evidence:
+
+- After explicit approval, ran exactly one tiny local IsaacLab screen:
+  seed958 fixed y+, `num_envs=16`, goodxy `x=0.295,y=-0.044`, lateral `-0.020`,
+  wrapper tap defaults, baseline cap/stiffness/effort, trace all envs.
+- Runtime summary lines 20-37 show measured-stop contact settings, no training,
+  controller OK, and controlled push `1.0`.
+- Runtime summary lines 102-132 show low-motion `1.0`, max speed mean
+  `0.130731522`, max z delta mean `0.016543288`, max displacement mean
+  `0.004254133`, contact `1.0`, reaction `1.0`, no posewrite, and tap success
+  marker `1.0`.
+- Reaction gate audit lines 2-29 show reaction/contact/no-posewrite/no-overshoot
+  PASS, tap gate `1.0`, final relocation not used, and teacher false from
+  DiffIK clip `1.0` plus final TCP error `0.047422359m`.
+- Trace diagnostic lines 1-7 and 118-155 show clip_any `1.0`, joint-step clipping,
+  actuator target tracking lag, and pre-stop worst follow p95 `0.041796684rad`.
+- Reaction-window audit lines 1-11 and 451-457 show accepted windows `16/16`,
+  clean teacher false, quality tier counts `C_REACTION_VALID_FOLLOW_LAG:16`, and
+  no rejected windows.
+- Updated tier matrix CSV lines 14 and 17 show seed958 y+ 16/16 Tier C and total
+  y+ 19/19 Tier C. Matrix readiness remains false in JSON lines 497-503.
+
+Implication:
+
+- y+ contact/reaction coverage is real enough to stop treating it as a one-point
+  lucky contact in this goodxy/lateral pocket.
+- y+ is still not clean-teacher data. For future data building, y+ windows are
+  reaction-valid metadata/Tier C evidence unless an actuator/follow cleanup moves
+  them to Tier B or Tier A.
+- Do not run 1024/10240/data from seed958. The next concrete coverage screen, if
+  approved, should be fixed y- under the same seed950-like geometry; the next
+  quality screen, if approved, should change one actuator/follow parameter.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_xnegheight050_seed958_summary.json:20-37,102-132`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_xnegheight050_seed958_reaction_gate_audit.json:1-44`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_xnegheight050_seed958_trace_diagnostic_summary.json:1-7,118-155,210-223`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_reaction_window_seed958_audit.json:1-24,451-457`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_reaction_window_tier_matrix_existing_seeds.csv:1-31`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_reaction_window_tier_matrix_existing_seeds.json:497-503`
+
+## D150 - Fixed y- coverage closes the immediate y- sample gap but not data readiness
+
+Date: 2026-06-07
+
+Decision:
+
+- The fixed y- direction is no longer under-sampled after seed959. Under the same
+  seed950-like goodxy/lateral geometry used for seed958, fixed y- accepted 16/16
+  reaction windows.
+- Do not turn this into a 1024/10240/data claim. seed959 is reaction-valid but not
+  clean-teacher/data-ready: DiffIK clipping remains `1.0`, final TCP error remains
+  above the conservative teacher threshold, and trace diagnostics still report
+  actuator target tracking lag.
+- Compared with y+, y- is a better quality distribution in this pocket: seed959
+  split into 11 Tier B + 5 Tier C, while seed958 y+ was 16 Tier C. The next
+  immediate gap is no longer y- coverage; it is actuator/follow cleanup or a
+  config-separated x- cleanup.
+
+Evidence:
+
+- After explicit approval, ran exactly one tiny local IsaacLab screen:
+  seed959 fixed y-, `num_envs=16`, goodxy `x=0.295,y=-0.044`, lateral `-0.020`,
+  wrapper tap defaults, baseline cap/stiffness/effort, trace all envs.
+- Reaction gate audit lines 2-29 show reaction/contact/no-posewrite/no-overshoot
+  PASS, tap gate `1.0`, final relocation unused, max displacement mean
+  `0.001532856m`, final displacement mean `0.001279060m`, and teacher false from
+  DiffIK clip `1.0` plus final TCP error `0.037017073m`.
+- Trace diagnostic lines 1-7, 119-155, and 212-223 show clip_any `1.0`,
+  pre-stop clip_any `1.0`, worst pre-stop follow joint 1 p95 `0.035429358rad`,
+  and worst raw delta joint 2 p95 `0.843303561rad`.
+- Reaction-window audit lines 1-12 and 451-457 show accepted windows `16/16`,
+  clean teacher false, quality tier counts 11 Tier B + 5 Tier C, and no rejected
+  windows.
+- Updated tier matrix CSV lines 7, 16, 20, and 21 show seed959 16/16 accepted,
+  y- total 20/20 accepted with 12 Tier B + 8 Tier C, and overall 96 candidate
+  windows with 80 accepted.
+
+Implication:
+
+- y- coverage should stop being the next question unless a new workspace/config is
+  introduced. The current y- result is enough to keep y- in the reaction-window
+  candidate set.
+- The blocker for scale-up is now quality and balance: no Tier A exists, y+ is
+  still all Tier C, and x- aggregate remains config-mixed because seed948 is a
+  rejected old geometry while seed949/950 x- are valid Tier B.
+- Do not run 1024/10240/data from seed959. The next tiny quality screen, if
+  approved, should be fixed y+ seed958-like geometry changing only
+  `max_diffik_joint_step_rad 0.035 -> 0.050`; if the immediate question is
+  direction balance instead, separate x- by matched geometry/config.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yneg16_goodxy_latneg020_xnegheight050_seed959_reaction_gate_audit.json:1-34`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yneg16_goodxy_latneg020_xnegheight050_seed959_trace_diagnostic_summary.json:1-12,119-155,212-223`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_reaction_window_seed959_audit.json:1-12,451-457`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_next_research_step_yneg_seed959_audit.json:1-25`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_reaction_window_tier_matrix_existing_seeds.csv:1-24`
+
+## D151 - Fixed y+ cap050 keeps reaction valid but does not move y+ out of Tier C
+
+Date: 2026-06-07
+
+Decision:
+
+- The y+ quality issue is not solved by increasing only `max_diffik_joint_step_rad`
+  from `0.035` to `0.050`. seed960 preserved the professor reaction objective, but
+  all 16 reaction windows remained Tier C.
+- Do not keep pushing cap as the next default fix. cap050 only nudged the y+
+  window follow ratio from seed958's `1.151057652` to seed960's `1.141746044`,
+  while absolute pre-stop follow became worse. The bottleneck is actuator/follow
+  quality under y+ geometry, not missing contact/reaction.
+- The matrix readiness reason for x- was also tightened: x- aggregate failure is
+  now reported as config-mixed rather than a direction-only x- failure.
+
+Evidence:
+
+- After explicit approval, ran exactly one tiny local IsaacLab screen:
+  seed960 fixed y+, `num_envs=16`, same goodxy/lateral geometry as seed958,
+  wrapper tap defaults, and only `max_diffik_joint_step_rad=0.050`.
+- Summary JSON lines 47-85 and 102-112 show dataset generation false, DiffIK clip
+  `1.0`, fixed y+ direction, final TCP error `0.045421781m`, low-motion `1.0`,
+  max displacement mean `0.004593883m`, max z delta mean `0.016627578m`, measured
+  contact `1.0`, and `max_diffik_joint_step_rad=0.05`.
+- Reaction gate audit lines 1-29 show reaction/contact/no-posewrite/no-overshoot
+  PASS, tap gate `1.0`, final relocation unused, and teacher false.
+- Trace diagnostic lines 1-7, 138-153, and 212-222 show clip_any `1.0`,
+  pre-stop clip_any `1.0`, pre-stop worst follow joint 2 p95 `0.059611082rad`,
+  and actuator target tracking lag.
+- Reaction-window audit lines 1-7 and 451-456 show accepted windows `16/16`,
+  clean teacher false, follow p95/cap p95 `1.141746044`, and quality tiers
+  `C_REACTION_VALID_FOLLOW_LAG:16`.
+- Updated tier matrix CSV lines 8, 18, and 21 show seed960 y+ 16/16 accepted all
+  Tier C and y+ total 35/35 accepted all Tier C.
+- Updated matrix output now reports
+  `direction_x-_config_mixed_acceptance_rate=0.567568_inspect_audit_direction`,
+  reflecting that seed948 old x- geometry is rejected while seed949/950 x- are
+  valid Tier B.
+
+Implication:
+
+- y+ is robust for reaction-window labeling in this pocket, but not clean teacher
+  data. For now y+ should remain Tier C metadata unless a different actuator/follow
+  intervention fixes it.
+- The next work should not be 1024/10240/data, bigger cap, RL, VLA, or Track A.
+  The next decision is whether to spend the next approved tiny runtime on y+
+  actuator follow itself, or on config-separated x- balance.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_xnegheight050_cap050_seed960_summary.json:47-85,102-112`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_xnegheight050_cap050_seed960_reaction_gate_audit.json:1-34`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_xnegheight050_cap050_seed960_trace_diagnostic_summary.json:1-12,138-153,212-222`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_reaction_window_seed958_audit.json:1-8,451-455`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_reaction_window_seed960_audit.json:1-7,451-456`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_reaction_window_tier_matrix_existing_seeds.csv:1-26`
+- `sim_scripts/cube10cm_reaction_window_tier_matrix.py:208-231`
+
+## D152 - Fixed y+ stiffness600 also keeps reaction valid but does not fix Tier C
+
+Date: 2026-06-07
+
+Decision:
+
+- The y+ quality issue is not solved by increasing only actuator stiffness from
+  `400` to `600`. seed961 preserved the professor reaction objective, but all 16
+  reaction windows remained Tier C.
+- Do not continue blind actuator-knob sweeps. cap-only seed960 and stiffness-only
+  seed961 both kept y+ contact/reaction valid but failed to move y+ out of Tier C.
+- The next step should be a local per-window y+ failure diagnosis against the
+  existing x-/x+/y- Tier B windows, to decide whether y+ is actually dominated by
+  target/IK demand geometry rather than actuator strength.
+
+Terminology:
+
+- `y+` means the fixed push/tap direction `[0, 1]` in the simulation/world frame.
+- `actuator follow` means how closely the simulated joint actuators follow the
+  joint targets produced by DiffIK. It is not a follower robot; it is motor
+  target-tracking quality.
+- `reaction gate PASS` means the object contact/reaction objective passed:
+  contact evidence, reaction evidence, no posewrite, and no overshoot. It does
+  not mean clean teacher/data readiness.
+- `Tier C` means a valid reaction window whose follow p95/cap ratio exceeds the
+  quality threshold.
+
+Evidence:
+
+- After explicit approval, ran exactly one tiny local IsaacLab screen:
+  seed961 fixed y+, `num_envs=16`, same goodxy/lateral geometry as seed958/960,
+  wrapper tap defaults, and only `arm_stiffness_override=600`.
+- Summary JSON lines 1-12, 47-85, and 102-112 show stiffness `600`, dataset
+  generation false, DiffIK clip `1.0`, fixed y+ direction, final TCP error
+  `0.046149086m`, low-motion `1.0`, max displacement mean `0.004412510m`, max z
+  delta mean `0.015451321m`, measured contact `1.0`, and cap still `0.035`.
+- Reaction gate audit lines 1-29 show reaction/contact/no-posewrite/no-overshoot
+  PASS, tap gate `1.0`, final relocation unused, and teacher false.
+- Trace diagnostic lines 1-7, 138-153, and 212-222 show clip_any `1.0`,
+  pre-stop clip_any `1.0`, pre-stop worst follow joint 2 p95 `0.044479728rad`,
+  and actuator target tracking lag.
+- Reaction-window audit lines 1-7 and 451-456 show accepted windows `16/16`,
+  clean teacher false, follow p95/cap p95 `1.200965473`, and quality tiers
+  `C_REACTION_VALID_FOLLOW_LAG:16`.
+- Updated tier matrix CSV lines 9, 20, and 23 show seed961 y+ 16/16 accepted all
+  Tier C and y+ total 51/51 accepted all Tier C.
+
+Implication:
+
+- y+ is now very strong reaction-window evidence in this pocket, but it is still
+  not Tier B or Tier A data. The limiting issue is quality, not contact coverage.
+- The next move should be local diagnosis before another GPU run: compare y+ C
+  windows to x-/x+/y- B windows by raw IK delta, clipped delta, follow ratio,
+  contact timing, and target/TCP error.
+- Do not run 1024/10240/data, PPO/RL, VLA, Track A, bigger cap, or another blind
+  actuator parameter sweep from seed961.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_xnegheight050_stiff600_seed961_summary.json:1-12,47-85,102-112`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_xnegheight050_stiff600_seed961_reaction_gate_audit.json:1-34`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_xnegheight050_stiff600_seed961_trace_diagnostic_summary.json:1-12,138-153,212-222`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_reaction_window_seed961_audit.json:1-7,451-456`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_reaction_window_tier_matrix_existing_seeds.csv:1-29`
+
+## D153 - y+ Tier C is not a simple larger raw IK demand failure
+
+Date: 2026-06-07
+
+Decision:
+
+- The y+ Tier C blocker should not be explained as "the y+ target simply asks for
+  larger raw IK deltas." The local per-window comparison shows y+ has worse
+  follow/cap quality while its raw IK delta p95 is lower than the non-y+ Tier B
+  baseline.
+- The better current hypothesis is y+ direction/contact geometry coupling: y+
+  contacts much earlier in the motion phase, moves the cube much more, and then
+  actuator follow exceeds the Tier B quality threshold.
+- Do not return to bigger cap, stiffness, or blind actuator knobs from this
+  evidence. The next step should be local contact-timing/target-geometry
+  diagnosis before any GPU runtime.
+
+Terminology:
+
+- `raw IK delta` means the unclipped joint step requested by the Differential IK
+  solve for a trace row.
+- `follow/cap` means p95 actuator joint-follow error divided by that run's
+  `max_diffik_joint_step_rad`; values above `1.0` become Tier C in the current
+  reaction-window quality contract.
+- `anchor step` means the reaction-window contact anchor step, usually the first
+  contact step selected by the reaction-window audit.
+
+Evidence:
+
+- Added `sim_scripts/cube10cm_yplus_tierc_failure_diagnostic.py`, a local
+  posthoc-only audit over existing seed949/950/957/958/959/960/961
+  reaction-window traces. It does not run IsaacLab, GPU, training, data
+  generation, SSH, or Track A work.
+- Summary line 1 confirms the artifact is local/posthoc only with GPU runtime
+  and dataset generation both `NO`.
+- Summary line 2 shows target y+ Tier C windows `n=51`, follow p95/cap p95
+  `1.223191874`, raw delta p95 `0.174502504`, TCP error p95 `0.063764448m`,
+  max XY displacement mean `0.012257356m`, anchor step mean `179.764706`, and
+  phase alpha at anchor mean `0.001307190`.
+- Summary line 3 shows the Tier B non-y+ baseline windows `n=53`, follow p95/cap
+  p95 `1.030052730`, raw delta p95 `0.280128609`, TCP error p95
+  `0.059400027m`, max XY displacement mean `0.001198941m`, anchor step mean
+  `260.641509`, and phase alpha at anchor mean `0.072746330`.
+- Summary line 4 gives the direct ratios: y+ raw delta ratio `0.622168298`,
+  follow ratio `1.187431643`, TCP error ratio `1.072293444`, displacement ratio
+  `10.223485837`, anchor step delta `-80.876804`, and phase alpha delta
+  `-0.071439141`.
+- Summary line 5 is an important counterexample: x+ Tier B has higher raw delta
+  p95 `0.285478155` than y+ but follow p95/cap p95 `0.996711138`, so raw delta
+  size alone does not explain Tier C.
+- Summary line 8 records the verdict:
+  `supports_simple_raw_ik_demand=False` and
+  `supports_yplus_geometry_follow_coupling=True`.
+
+Implication:
+
+- y+ is not weak contact and not merely blocked by actuator strength. It is a
+  robust reaction pocket whose contact timing/target geometry creates a much
+  stronger object reaction and follow-lag quality issue.
+- The next valid local question is why y+ contacts at near-zero phase alpha and
+  moves the cube about 10x more than the Tier B baseline while follow lag exceeds
+  Tier B.
+- Continue blocking 1024/10240/data, PPO/RL, VLA, Track A, bigger cap,
+  stiffness, and blind actuator sweeps.
+
+Sources:
+
+- `sim_scripts/cube10cm_yplus_tierc_failure_diagnostic.py:1-8,113-180,291-359`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_yplus_tierc_failure_diagnostic_existing_seeds_summary.out:1-9`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_yplus_tierc_failure_diagnostic_existing_seeds.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_yplus_tierc_failure_diagnostic_existing_seeds.csv`
+
+## D154 - y+ accumulates large pre-anchor reaction inside the approach phase
+
+Date: 2026-06-07
+
+Decision:
+
+- y+ should now be treated as an approach-phase contact/geometry problem, not an
+  actuator-strength problem and not a simple measured-contact-anchor artifact.
+- The measured-contact lead is not unique to y+, but y+ accumulates much larger
+  object displacement and tip in the 24 steps before the measured-contact anchor.
+- The nominal initial along/lateral target offsets are not the differentiator:
+  y+ and the non-y+ Tier B baseline both start around `-0.060m` along and
+  `-0.020m` lateral. The issue is how that y+ approach geometry interacts with
+  side-center height, direction, reachable TCP/link geometry, and timing.
+
+Evidence:
+
+- Added `sim_scripts/cube10cm_yplus_early_contact_geometry_audit.py`, a local
+  posthoc-only audit over existing seed949/950/957/958/959/960/961 traces. It
+  does not run GPU, IsaacLab, training, data generation, SSH, or Track A.
+- The script computes per-window first push phase, first near, first object
+  reaction, first measured contact, pre-anchor object motion, initial target
+  along/lateral/z geometry, and anchor TCP geometry.
+- Summary line 1 confirms local/posthoc only: `gpu_runtime=NO` and
+  `dataset_generation=NO`.
+- Summary line 2 shows y+ Tier C windows `n=51`, first reaction step mean
+  `46.039216`, first measured contact step mean `181.176471`, measured contact
+  lead `135.137255` steps, anchor `40.235294` steps before push start, and first
+  reaction phase alpha `0.0`.
+- Summary line 3 shows the non-y+ Tier B baseline `n=53`, first reaction step
+  mean `110.792453`, first measured contact step mean `249.150943`, measured
+  contact lead `144.679245` steps, anchor `40.641509` steps after push start, and
+  first reaction phase alpha `0.037735850`.
+- Summary line 4 is the main differentiator: in the 24 steps before anchor, y+
+  max XY displacement mean is `0.012257356m` versus baseline `0.000895049m`
+  (`13.694612400x`), and y+ tip mean is `13.261459369deg` versus baseline
+  `1.004456226deg` (`13.202625486x`).
+- Summary line 5 shows initial target geometry: y+ target along/lateral are
+  `-0.059999944m/-0.019999995m`, baseline target along/lateral are
+  `-0.059999983m/-0.019999983m`, while y+ target z is near cube side-center
+  (`-0.000000022m` relative to cube z) and the mixed non-y+ baseline averages
+  `0.034905637m`.
+- Summary line 7 prevents an overclaim: y- also has low pre-anchor displacement
+  (`0.000900645m`), so low side-center height alone is not sufficient.
+- Summary line 8 records the verdict:
+  `supports_yplus_preanchor_reaction_accumulation=True`,
+  `supports_unique_measured_contact_lead=False`, and
+  `supports_yplus_approach_phase_geometry_hypothesis=True`.
+
+Implication:
+
+- The next useful work is a y+ config audit/proposed tiny screen around
+  precontact/lateral/height/timing. Do not resume bigger cap, stiffness, or blind
+  actuator sweeps.
+- Do not start 1024/10240/data, PPO/RL, VLA, or Track A from the current y+
+  traces; they would overproduce Tier C windows with known approach-phase
+  geometry contamination.
+- This is a normal robotics research validation loop: after a task-level
+  reaction pass, isolate failure modes by event phase, geometry, and quality tier
+  before scaling data. It should remain bounded by explicit go/no-go gates.
+
+Sources:
+
+- `sim_scripts/cube10cm_yplus_early_contact_geometry_audit.py:1-9,145-230,374-400`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_yplus_early_contact_geometry_audit_existing_seeds_summary.out:1-9`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_yplus_early_contact_geometry_audit_existing_seeds.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_yplus_early_contact_geometry_audit_existing_seeds.csv`
+
+## D155 - The next y+ tiny screen should isolate precontact clearance first
+
+Date: 2026-06-07
+
+Decision:
+
+- Before any next GPU runtime, the narrowest y+ candidate is a single-variable
+  precontact screen: fixed y+ seed958-like goodxy/lateral geometry, changing only
+  `precontact_clearance_m` from `0.010` to `0.020`.
+- This candidate is a hypothesis test for y+ approach/pre-anchor reaction
+  accumulation. It is not a data scale-up, not a 1cm relocation objective, not a
+  height/lateral sweep, and not another actuator knob.
+- If approved, report the result by reaction/contact/no-posewrite/no-overshoot
+  first, then quality tier metadata. Final 1cm relocation remains secondary only
+  when explicitly requested.
+
+Evidence:
+
+- `sim_scripts/cube10cm_yplus_precontact_candidate_audit.py` is local/config-only
+  and explicitly performs no IsaacLab/GPU runtime, training, dataset generation,
+  SSH, or trace mutation.
+- The candidate audit summary line 2 carries forward the verified y+ diagnosis:
+  y+ has `51` reaction windows, pre-anchor displacement ratio `13.694612400`, tip
+  ratio `13.202625486`, anchor `40.235294` steps before push start, raw delta
+  ratio `0.622168298`, and follow ratio `1.187431643`.
+- Summary line 3 shows the one-variable change: `precontact_clearance_m`
+  `0.010000 -> 0.020000`, moving the nominal pre-target along offset from
+  `-0.060000m` to `-0.070000m`.
+- Summary line 4 shows the invariant/risk: near-face through target remains
+  `-0.040000m`, while the push-phase target path increases from `0.020000m` to
+  `0.030000m`. This is why the run is a bounded hypothesis test, not a guaranteed
+  fix.
+- Summary line 5 records the decision:
+  `supports_precontact_first=True`, `candidate_is_tiny_one_variable_change=True`,
+  with height-first and lateral-first rejected for now.
+- Summary line 6 records `runtime_status=NOT_RUN` and requires explicit GPU
+  approval. Summary lines 7-8 keep the reporting order and block data/RL/VLA/Track
+  A scale-up.
+
+Implication:
+
+- Do not mix this next screen with lateral, height, stiffness, cap, DLS, broad
+  direction coverage, 1024/10240, dataset generation, PPO/RL, VLA, or Track A.
+- A failure is still useful: if precontact `0.020` loses contact, then y+ needs a
+  different geometry variable; if it preserves reaction but stays Tier C, the
+  issue is not simply early approach contact.
+
+Sources:
+
+- `sim_scripts/cube10cm_yplus_precontact_candidate_audit.py:1-8,58-66,69-88,152-225`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_yplus_precontact_candidate_audit_existing_seeds_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_yplus_precontact_candidate_audit_existing_seeds.json`

@@ -1,0 +1,237 @@
+{
+  "accepted_window_clip_any_rate_mean": 0.0,
+  "accepted_window_clip_any_rate_p95": 0.0,
+  "accepted_window_count": 0,
+  "accepted_window_follow_p95_to_cap_mean": 0.0,
+  "accepted_window_follow_p95_to_cap_p95": 0.0,
+  "accepted_window_row_count": 0,
+  "artifact_type": "cube10cm_reaction_window_contract_audit_v2",
+  "branch": "professor_cube10cm_tap_reaction",
+  "candidate_window_count": 16,
+  "clean_diffik_teacher_window_ready": false,
+  "contract": {
+    "final_1cm_relocation_required": false,
+    "post_contact_steps": 48,
+    "pre_contact_steps": 24,
+    "quality_metadata_not_default_reject": [
+      "clip_any_rate",
+      "joint_follow_p95_to_cap"
+    ],
+    "quality_tiers": {
+      "A_CLEAN_DIFFIK_TEACHER": "accepted and clip/follow pass clean teacher thresholds",
+      "B_REACTION_VALID_FOLLOW_OK_CLIP_HIGH": "accepted with follow under threshold but clip above threshold",
+      "C_REACTION_VALID_FOLLOW_LAG": "accepted with follow p95/cap above threshold",
+      "REJECTED": "not a valid reaction window"
+    },
+    "reaction_signal_any_of": [
+      "max_disp_m >= reaction_disp_m",
+      "max_z_delta_m >= reaction_z_delta_m",
+      "max_speed_mps >= reaction_speed_mps",
+      "contact_evidence AND max_tip_angle_deg >= reaction_tip_angle_deg"
+    ],
+    "requires": [
+      "IsaacLab_DifferentialIKController",
+      "no_posewrite_training_dataset_generation_or_attach",
+      "contact_evidence",
+      "reaction_signal",
+      "no_overshoot"
+    ],
+    "window_anchor_priority": [
+      "first_contact_step",
+      "first_stop_step",
+      "measured_contact_now",
+      "contact_seen_row"
+    ]
+  },
+  "controller_ok": true,
+  "no_posewrite": true,
+  "out_window_csv": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_reaction_window_seed948_windows.csv",
+  "per_window": [
+    {
+      "accepted": false,
+      "anchor_source": "missing_contact_anchor",
+      "anchor_step": null,
+      "env_id": 0,
+      "quality_tier": "REJECTED",
+      "reject_reasons": [
+        "missing_contact_anchor"
+      ]
+    },
+    {
+      "accepted": false,
+      "anchor_source": "missing_contact_anchor",
+      "anchor_step": null,
+      "env_id": 1,
+      "quality_tier": "REJECTED",
+      "reject_reasons": [
+        "missing_contact_anchor"
+      ]
+    },
+    {
+      "accepted": false,
+      "anchor_source": "missing_contact_anchor",
+      "anchor_step": null,
+      "env_id": 2,
+      "quality_tier": "REJECTED",
+      "reject_reasons": [
+        "missing_contact_anchor"
+      ]
+    },
+    {
+      "accepted": false,
+      "anchor_source": "missing_contact_anchor",
+      "anchor_step": null,
+      "env_id": 3,
+      "quality_tier": "REJECTED",
+      "reject_reasons": [
+        "missing_contact_anchor"
+      ]
+    },
+    {
+      "accepted": false,
+      "anchor_source": "missing_contact_anchor",
+      "anchor_step": null,
+      "env_id": 4,
+      "quality_tier": "REJECTED",
+      "reject_reasons": [
+        "missing_contact_anchor"
+      ]
+    },
+    {
+      "accepted": false,
+      "anchor_source": "missing_contact_anchor",
+      "anchor_step": null,
+      "env_id": 5,
+      "quality_tier": "REJECTED",
+      "reject_reasons": [
+        "missing_contact_anchor"
+      ]
+    },
+    {
+      "accepted": false,
+      "anchor_source": "missing_contact_anchor",
+      "anchor_step": null,
+      "env_id": 6,
+      "quality_tier": "REJECTED",
+      "reject_reasons": [
+        "missing_contact_anchor"
+      ]
+    },
+    {
+      "accepted": false,
+      "anchor_source": "missing_contact_anchor",
+      "anchor_step": null,
+      "env_id": 7,
+      "quality_tier": "REJECTED",
+      "reject_reasons": [
+        "missing_contact_anchor"
+      ]
+    },
+    {
+      "accepted": false,
+      "anchor_source": "missing_contact_anchor",
+      "anchor_step": null,
+      "env_id": 8,
+      "quality_tier": "REJECTED",
+      "reject_reasons": [
+        "missing_contact_anchor"
+      ]
+    },
+    {
+      "accepted": false,
+      "anchor_source": "missing_contact_anchor",
+      "anchor_step": null,
+      "env_id": 9,
+      "quality_tier": "REJECTED",
+      "reject_reasons": [
+        "missing_contact_anchor"
+      ]
+    },
+    {
+      "accepted": false,
+      "anchor_source": "missing_contact_anchor",
+      "anchor_step": null,
+      "env_id": 10,
+      "quality_tier": "REJECTED",
+      "reject_reasons": [
+        "missing_contact_anchor"
+      ]
+    },
+    {
+      "accepted": false,
+      "anchor_source": "missing_contact_anchor",
+      "anchor_step": null,
+      "env_id": 11,
+      "quality_tier": "REJECTED",
+      "reject_reasons": [
+        "missing_contact_anchor"
+      ]
+    },
+    {
+      "accepted": false,
+      "anchor_source": "missing_contact_anchor",
+      "anchor_step": null,
+      "env_id": 12,
+      "quality_tier": "REJECTED",
+      "reject_reasons": [
+        "missing_contact_anchor"
+      ]
+    },
+    {
+      "accepted": false,
+      "anchor_source": "missing_contact_anchor",
+      "anchor_step": null,
+      "env_id": 13,
+      "quality_tier": "REJECTED",
+      "reject_reasons": [
+        "missing_contact_anchor"
+      ]
+    },
+    {
+      "accepted": false,
+      "anchor_source": "missing_contact_anchor",
+      "anchor_step": null,
+      "env_id": 14,
+      "quality_tier": "REJECTED",
+      "reject_reasons": [
+        "missing_contact_anchor"
+      ]
+    },
+    {
+      "accepted": false,
+      "anchor_source": "missing_contact_anchor",
+      "anchor_step": null,
+      "env_id": 15,
+      "quality_tier": "REJECTED",
+      "reject_reasons": [
+        "missing_contact_anchor"
+      ]
+    }
+  ],
+  "primary_objective": "contact_reaction_not_final_1cm",
+  "quality_tier_counts": {
+    "REJECTED": 16
+  },
+  "reaction_window_contract_pass": false,
+  "rejected_window_count": 16,
+  "rejected_window_reasons": {
+    "missing_contact_anchor": 16
+  },
+  "source_env_count": 16,
+  "source_trace_rows": 1568,
+  "summary_json": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xneg16_goodxy_latneg020_through020_seed948_summary.json",
+  "summary_json_md5": "9b70d85172d247ac61773c8729832a61",
+  "thresholds": {
+    "min_window_acceptance_rate": 1.0,
+    "overshoot_disp_m": 0.02,
+    "reaction_disp_m": 0.001,
+    "reaction_speed_mps": 0.02,
+    "reaction_tip_angle_deg": 1.0,
+    "reaction_z_delta_m": 0.002,
+    "teacher_max_follow_p95_to_cap": 1.0,
+    "teacher_max_window_clip_rate": 0.5
+  },
+  "trace_csv": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_xneg16_goodxy_latneg020_through020_seed948_trace.csv",
+  "trace_csv_md5": "6f31229d4780ec160973007235f70d89",
+  "window_acceptance_rate": 0.0
+}

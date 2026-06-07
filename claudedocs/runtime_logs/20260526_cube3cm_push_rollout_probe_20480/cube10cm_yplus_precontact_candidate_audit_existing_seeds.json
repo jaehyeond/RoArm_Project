@@ -1,0 +1,98 @@
+{
+  "artifact_type": "cube10cm_yplus_precontact_candidate_audit_v1",
+  "baseline_geometry": {
+    "near_face_through_target_along_m": -0.04,
+    "pre_target_along_m": -0.060000000000000005,
+    "precontact_clearance_m": 0.01,
+    "push_phase_target_path_length_m": 0.020000000000000004
+  },
+  "branch": "professor_cube10cm_tap_reaction",
+  "candidate_change": {
+    "baseline_precontact_m": 0.01,
+    "candidate_precontact_m": 0.02,
+    "changed_variable": "precontact_clearance_m",
+    "delta_precontact_m": 0.01,
+    "delta_push_phase_target_path_length_m": 0.010000000000000002,
+    "unchanged_fixed_cube_xy_m": [
+      0.295,
+      -0.044
+    ],
+    "unchanged_fixed_push_dir": [
+      0.0,
+      1.0
+    ],
+    "unchanged_lateral_offset_m": -0.02,
+    "unchanged_push_through_m": 0.01,
+    "unchanged_tcp_center_height_offset_m": 0.0
+  },
+  "candidate_geometry": {
+    "near_face_through_target_along_m": -0.04,
+    "pre_target_along_m": -0.07,
+    "precontact_clearance_m": 0.02,
+    "push_phase_target_path_length_m": 0.030000000000000006
+  },
+  "evidence": {
+    "baseline_anchor_minus_push_start_steps": 40.64150943396226,
+    "baseline_pre24_disp_mean_m": 0.0008950494850309179,
+    "follow_ratio": 1.187431642653967,
+    "pre24_disp_ratio": 13.694612400352696,
+    "pre24_tip_ratio": 13.202625486410469,
+    "raw_delta_ratio": 0.6221682981276109,
+    "yplus_anchor_minus_push_start_steps": -40.23529411764706,
+    "yplus_pre24_disp_mean_m": 0.012257355776633703,
+    "yplus_windows": 51
+  },
+  "local_posthoc_config_only": true,
+  "no_gpu_isaaclab_training_dataset_ssh": true,
+  "objective_contract": {
+    "final_1cm_relocation": "secondary_not_used_for_this_candidate",
+    "primary": "reaction_contact_no_posewrite_no_overshoot",
+    "tap_threshold_m": 0.001
+  },
+  "out_summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_yplus_precontact_candidate_audit_existing_seeds_summary.out",
+  "proposed_tiny_gpu_command_not_run": [
+    "OMNI_KIT_ACCEPT_EULA=YES conda run -n isaaclab --no-capture-output python -u sim_scripts/cube10cm_push_diffik_probe.py \\",
+    "  --num_envs 16 \\",
+    "  --episodes 1 \\",
+    "  --seed 962 \\",
+    "  --fixed_cube_x_m 0.295 \\",
+    "  --fixed_cube_y_m -0.044 \\",
+    "  --fixed_push_dir 0 1 \\",
+    "  --base_lateral_offset_m -0.020 \\",
+    "  --xneg_tcp_center_height_offset_m 0.050 \\",
+    "  --precontact_clearance_m 0.020 \\",
+    "  --trace_diffik_diagnostics \\",
+    "  --trace_all_envs \\",
+    "  --trace_stride 4 \\",
+    "  --out_csv claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_xnegheight050_pre020_seed962.csv \\",
+    "  --summary_json claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_xnegheight050_pre020_seed962_summary.json \\",
+    "  --trace_csv claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_xnegheight050_pre020_seed962_trace.csv"
+  ],
+  "screening_decision": {
+    "candidate_is_tiny_one_variable_change": true,
+    "do_not_start": [
+      "1024_10240_scaleup",
+      "dataset_generation",
+      "PPO_RL",
+      "VLA",
+      "TrackA"
+    ],
+    "go_no_go_order": [
+      "reaction_evidence",
+      "contact_evidence",
+      "no_posewrite",
+      "no_overshoot",
+      "quality_tier_A_B_C_metadata",
+      "final_1cm_secondary_only_if_explicitly_requested"
+    ],
+    "known_risk": "push phase target path length increases from baseline by delta_precontact_m; the runtime may reduce early contact but still stay Tier C or lose contact",
+    "reject_height_first_reason": "seed944 height050 improved TCP error but killed contact; y- low side-center still has low pre-anchor motion",
+    "reject_lateral_first_reason": "lateral changes side asymmetry; precontact directly targets approach-phase early contact first",
+    "supports_precontact_first": true
+  },
+  "source_files": {
+    "baseline_summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_xnegheight050_seed958_summary.json",
+    "early_geometry_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_yplus_early_contact_geometry_audit_existing_seeds.json",
+    "tierc_diagnostic_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_yplus_tierc_failure_diagnostic_existing_seeds.json"
+  }
+}

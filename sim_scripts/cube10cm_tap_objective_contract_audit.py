@@ -87,7 +87,7 @@ def main() -> int:
         "cube_size_m": [float(x) for x in size],
         "cube_mass_kg": _float_value(args, "--cube_mass_kg"),
         "tap_defaults": {option: _float_value(args, option) for option in TAP_DISP_DEFAULTS},
-        "explicit_1cm_override_allowed": True,
+        "explicit_final_relocation_override_available": True,
         "explicit_gate_disp_override_m": override_value,
         "failures": failures,
         "verdict": "PASS" if not failures else "FAIL",
@@ -103,7 +103,7 @@ def main() -> int:
     for option in TAP_DISP_DEFAULTS:
         print(f"[cube10cm_tap_objective_contract_audit] {option}={_float_value(args, option):.6f}")
     print(
-        "[cube10cm_tap_objective_contract_audit] explicit_1cm_override_allowed=YES "
+        "[cube10cm_tap_objective_contract_audit] explicit_final_relocation_override_available=YES "
         f"gate_disp_override={override_value:.6f}"
     )
 

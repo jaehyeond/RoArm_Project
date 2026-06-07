@@ -1,6 +1,16 @@
 # START_HERE.md
 
-Last updated: 2026-06-05 KST (B200 disconnected; Track A remains blocked and separate. Active branch is the professor 10cm/0.72kg cube push/tap DiffIK diagnosis. Earlier final-displacement gates failed, and settled-start fixed16 still showed DiffIK clipping/lag, but local DLS feasibility means do not conclude the object is too heavy. The clarified objective is reaction/tap first and final displacement secondary. A local non-GPU reaction gate audit requires reaction evidence plus contact evidence, no posewrite, and no overshoot; it separates reaction PASS from teacher/RL readiness. seed938 is the negative control FAIL (`contact_evidence_rate=0.0`), seed939/seed940 PASS reaction gate but remain `teacher_quality_ready=false`, seed941 randomized 16-env FAILed on contact evidence `0.625`, cap-only seed942 worsened contact evidence to `0.5`, and fixed-y+ seed943 confirmed the y+ bucket is weak (`contact_evidence_rate=0.375`). A local y+ geometry/reach audit shows contact rows average max displacement `0.010986278m`, no-contact rows only `0.000069159m`, and workspace bins are asymmetric (`cube_y0_m<=0` contact `0.625`, `cube_y0_m>0` contact `0.125`, `cube_x0_m<0.25` contact `0.111111`, `cube_x0_m>=0.25` contact `0.714286`). A follow-up y+ trace path/actuator audit shows the target itself moves about `0.020000m` in world y and keeps start-cube side-center z, but final TCP error is mostly vertical (`0.844` contact / `0.859` no-contact z-error fraction) and clip_any remains `1.0` in both traced groups. The approved seed944 fixed-y+ height050 screen is a height-only FAIL: final TCP error improved to `0.022889409m`, but contact evidence fell to `0.0`, reaction was only `0.6875`, and clip remained `0.949198734`; do not use +5cm target height as a data/RL fix. The approved seed945 fixed-y+ good-workspace screen (`x=0.295,y=-0.044`) PASSed reaction/contact (`1.0/1.0`) with no overshoot/posewrite, proving workspace is a real contact discriminator, but `teacher_quality_ready=false` because final TCP error is `0.065514732m` and clip is `1.0`. Added default-preserving `--base_lateral_offset_m`; seed946 good-workspace lateral `-0.020m` PASSed reaction/contact and final 1cm relocation (`final_gate_rate=1.0`, `max_disp_mean_m=0.011251196m`, no overshoot/posewrite), but still `teacher_quality_ready=false` due final TCP error `0.062820967m` and DiffIK clip `1.0`. Added `sim_scripts/cube10cm_push_diffik_probe.py` as the standard 10cm entrypoint; it injects 10cm/0.72kg professor defaults into the shared legacy 3cm-named DiffIK engine while preserving explicit user overrides. Static checks passed; no new GPU runtime, dataset generation, PPO/RL scale-up, VLA, Track A runtime, 1024/10k, or larger candidate audit is approved from this.)
+Last updated: 2026-06-07 KST (B200 disconnected; Track A remains blocked and separate. Active branch is the professor 10cm/0.72kg cube push/tap DiffIK diagnosis. Earlier final-displacement gates failed, and settled-start fixed16 still showed DiffIK clipping/lag, but local DLS feasibility means do not conclude the object is too heavy. The clarified objective is reaction/tap first and final displacement secondary. A local non-GPU reaction gate audit requires reaction evidence plus contact evidence, no posewrite, and no overshoot; it separates reaction PASS from teacher/RL readiness. seed938 is the negative control FAIL (`contact_evidence_rate=0.0`), seed939/seed940 PASS reaction gate but remain `teacher_quality_ready=false`, seed941 randomized 16-env FAILed on contact evidence `0.625`, cap-only seed942 worsened contact evidence to `0.5`, and fixed-y+ seed943 confirmed the y+ bucket is weak (`contact_evidence_rate=0.375`). A local y+ geometry/reach audit shows contact rows average max displacement `0.010986278m`, no-contact rows only `0.000069159m`, and workspace bins are asymmetric (`cube_y0_m<=0` contact `0.625`, `cube_y0_m>0` contact `0.125`, `cube_x0_m<0.25` contact `0.111111`, `cube_x0_m>=0.25` contact `0.714286`). A follow-up y+ trace path/actuator audit shows the target itself moves about `0.020000m` in world y and keeps start-cube side-center z, but final TCP error is mostly vertical (`0.844` contact / `0.859` no-contact z-error fraction) and clip_any remains `1.0` in both traced groups. The approved seed944 fixed-y+ height050 screen is a height-only FAIL: final TCP error improved to `0.022889409m`, but contact evidence fell to `0.0`, reaction was only `0.6875`, and clip remained `0.949198734`; do not use +5cm target height as a data/RL fix. The approved seed945 fixed-y+ good-workspace screen (`x=0.295,y=-0.044`) PASSed reaction/contact (`1.0/1.0`) with no overshoot/posewrite, proving workspace is a real contact discriminator, but `teacher_quality_ready=false` because final TCP error is `0.065514732m` and clip is `1.0`. Added default-preserving `--base_lateral_offset_m`; seed946 good-workspace lateral `-0.020m` PASSed reaction/contact and final 1cm relocation (`final_gate_rate=1.0`, `max_disp_mean_m=0.011251196m`, no overshoot/posewrite), but still `teacher_quality_ready=false` due final TCP error `0.062820967m` and DiffIK clip `1.0`. Added `sim_scripts/cube10cm_push_diffik_probe.py` as the standard 10cm entrypoint; it injects 10cm/0.72kg professor defaults into the shared legacy 3cm-named DiffIK engine while preserving explicit user overrides. Static checks passed; no new GPU runtime, dataset generation, PPO/RL scale-up, VLA, Track A runtime, 1024/10k, or larger candidate audit is approved from this.)
+
+2026-06-06 local update: `sim_scripts/cube10cm_reaction_window_contract_audit.py` defines contact-anchored reaction windows as the next data-unit label contract. seed957/949/950 existing traces pass 16/16 windows; seed948 negative control fails 0/16 due missing contact anchor. Quality-tier v2 is now active: seed957 and seed949 are all Tier B, seed950 is 10 Tier B + 6 Tier C, seed948 is 16 Rejected. Clean DiffIK teacher is a quality tier, not the absolute tap/reaction filter. This is local/posthoc only and does not authorize 1024/10240/data/RL/VLA/Track A.
+
+2026-06-07 tier-matrix update: `sim_scripts/cube10cm_reaction_window_tier_matrix.py` now joins reaction-window audits back to trace CSV direction/workspace metadata. Existing seed948/949/950/957 matrix initially had 64 candidate windows, 48 accepted (`acceptance_rate=0.75`), 42 Tier B, 6 Tier C, 16 Rejected, and zero Tier A. After explicit approval, ran one tiny local IsaacLab y+ coverage screen seed958: reaction/contact/no-posewrite/no-overshoot PASS, reaction-window 16/16, all Tier C (`follow_p95_to_cap_p95=1.151057652`, clip mean `1.0`). Then ran one tiny local y- coverage screen seed959: reaction-window 16/16, 11 Tier B + 5 Tier C (`follow_p95_to_cap_p95=1.006378446`, clip mean `1.0`). Then ran y+ cap050 seed960, changing only `max_diffik_joint_step_rad 0.035 -> 0.050`: reaction/contact/no-posewrite/no-overshoot PASS and reaction-window 16/16, but still all Tier C (`follow_p95_to_cap_p95=1.141746044`, clip mean `1.0`). Then ran y+ stiffness600 seed961, changing only `arm_stiffness_override 400 -> 600`: reaction/contact/no-posewrite/no-overshoot PASS and reaction-window 16/16, but still all Tier C (`follow_p95_to_cap_p95=1.200965473`, clip mean `1.0`). Updated matrix now has 128 candidate windows, 112 accepted (`acceptance_rate=0.875`), 53 Tier B, 59 Tier C, 16 Rejected, zero Tier A. y+ is now 51/51 accepted but all Tier C, so cap-only and stiffness-only cleanup did not fix y+ follow-lag quality. y- is no longer under-sampled (`20/20` accepted, 12 Tier B + 8 Tier C). x- remains config-mixed: seed948 old x- geometry is 16/16 Rejected while seed949 height050 x- is 16/16 Tier B and seed950 x- is 5/5 Tier B. Matrix readiness remains `ready_for_1024_or_data=false`; the matrix labels this as `direction_x-_config_mixed_acceptance_rate=0.567568_inspect_audit_direction` instead of implying direction-only x- failure. Do not start 1024/10240/data.
+
+2026-06-07 local y+ failure diagnosis: added `sim_scripts/cube10cm_yplus_tierc_failure_diagnostic.py`, a local/posthoc-only per-window comparison across existing seed949/950/957/958/959/960/961 reaction-window traces. Result: y+ Tier C windows (`n=51`) have follow p95/cap p95 `1.223191874` versus Tier B non-y+ baseline `1.030052730`, but raw IK delta p95 is lower (`0.174502504` vs `0.280128609`, ratio `0.622168298`), so the simple "bigger raw IK demand" hypothesis is not supported. y+ contact/reaction is strong and early: mean max XY displacement is `0.012257356m`, `10.223485837x` Tier B non-y+ baseline, and anchor/contact step is about `80.876804` steps earlier with phase alpha near zero. Verdict: support `yplus_geometry_follow_coupling`, not `simple_raw_ik_demand`; next local question is why y+ contacts so early and moves the cube ~10x more while follow lag exceeds Tier B. No GPU/data/1024/RL/VLA/Track A.
+
+2026-06-07 local y+ early-contact geometry audit: added `sim_scripts/cube10cm_yplus_early_contact_geometry_audit.py`, another local/posthoc-only audit over existing reaction-window traces. It confirms the stronger interpretation: y+ does not merely have a unique measured-contact lead; instead, it accumulates large object reaction inside the approach/pre-anchor window. y+ Tier C windows have first reaction step mean `46.039216`, measured contact step mean `181.176471`, and anchor about `40.235294` steps before push phase starts; non-y+ Tier B baseline has contact after push start (`anchor_minus_push_start_mean=40.641509`). In the 24 steps before the contact anchor, y+ mean max XY displacement is `0.012257356m` versus baseline `0.000895049m` (`13.694612400x`), and tip is `13.261459369deg` versus `1.004456226deg` (`13.202625486x`). Initial target along/lateral are the same nominal `-0.060/-0.020m`, but y+ target z is at cube side-center (`~0m` above cube z) while the mixed non-y+ baseline averages `0.034905637m`; y- shares low side-center yet stays low pre-anchor, so low height alone is not sufficient. Verdict: support `yplus_preanchor_reaction_accumulation` and `yplus_approach_phase_geometry_hypothesis`; next local step is not GPU but a config audit/proposed tiny screen around y+ precontact/lateral/height/timing.
+
+2026-06-07 local y+ precontact candidate audit: added `sim_scripts/cube10cm_yplus_precontact_candidate_audit.py`, a local/config-only pre-runtime audit for the narrow next y+ screen. It keeps the professor tap/reaction objective, changes no trace data, and proposes exactly one tiny candidate: fixed y+ seed958-like geometry with only `precontact_clearance_m 0.010 -> 0.020`. Existing evidence remains y+ `51` windows, pre-anchor displacement ratio `13.694612400`, tip ratio `13.202625486`, anchor `40.235294` steps before push start, raw delta ratio `0.622168298`, follow ratio `1.187431643`. Nominal target geometry changes from pre-target along `-0.060000m` to `-0.070000m`; through target remains `-0.040000m`; push path increases `0.020000m -> 0.030000m`. Verdict: `supports_precontact_first=True`, `candidate_is_tiny_one_variable_change=True`; height/lateral first are rejected for now. GPU was NOT run; next seed would be seed962 only after explicit approval.
 
 Latest correction: for the professor 10cm/0.72kg push/tap branch, final 1cm
 displacement is no longer the primary objective if the real task only needs a
@@ -858,16 +868,17 @@ Interpretation:
 22. `sim_scripts/p7_branch_b_cube2cm_target_guarded_v8_observed_recovery_static_design.py`
 23. `claudedocs/session_20260526_track_a_v8_runtime_candidate_static_readiness.md`
 24. `claudedocs/session_20260526_track_a_v8_runtime_fail_and_damping_wiring_fix.md`
-25. `claudedocs/session_20260604_cube10cm_diffik_teacher_gate_prep.md`
-26. `claudedocs/session_20260604_cube3cm_hierarchical_bucket_audit.md`
-27. `claudedocs/session_20260602_cube3cm_push_metric_reframe_targetext.md`
-28. `claudedocs/session_20260529_cube3cm_waypoint_actor_gate.md`
-29. `claudedocs/session_20260529_cube3cm_actor_distillation_gate.md`
-30. `claudedocs/session_20260529_cube3cm_bc_teacher_bridge_redesign.md`
-31. `claudedocs/session_20260528_cube3cm_safety_rl_warmstart.md`
-32. `claudedocs/session_20260526_cube3cm_push_rollout_probe_professor_request.md`
-32. `sim_scripts/cube3cm_push_rollout_probe.py`
-33. `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/runtime.out`
+25. `claudedocs/session_20260606_cube10cm_reaction_window_contract.md`
+26. `claudedocs/session_20260604_cube10cm_diffik_teacher_gate_prep.md`
+27. `claudedocs/session_20260604_cube3cm_hierarchical_bucket_audit.md`
+28. `claudedocs/session_20260602_cube3cm_push_metric_reframe_targetext.md`
+29. `claudedocs/session_20260529_cube3cm_waypoint_actor_gate.md`
+30. `claudedocs/session_20260529_cube3cm_actor_distillation_gate.md`
+31. `claudedocs/session_20260529_cube3cm_bc_teacher_bridge_redesign.md`
+32. `claudedocs/session_20260528_cube3cm_safety_rl_warmstart.md`
+33. `claudedocs/session_20260526_cube3cm_push_rollout_probe_professor_request.md`
+34. `sim_scripts/cube3cm_push_rollout_probe.py`
+35. `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/runtime.out`
 34. `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/rollout_stats_audit.out`
 35. `claudedocs/session_20260526_cube3cm_push_rl_reward_curriculum.md`
 36. `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_speed_guard_model49_eval1024_audit.out`
@@ -1174,11 +1185,23 @@ Current professor cube10cm push/tap branch:
 - Reaction audit no longer computes implicit default 1cm relocation. The default
   is tap-only: `tap_gate_disp_m=0.001`, `final_relocation_pass=None`. A 1cm
   relocation diagnostic now requires explicit `--final_relocation_disp_m 0.010`.
-- Latest next-step audit says:
+- Reaction-window contract audit/builder is now the local bridge from professor
+  tap/reaction objective to data-unit labels. It anchors short windows on contact
+  and requires contact evidence + reaction signal + no posewrite/training/attach
+  + no overshoot; final 1cm relocation is not required. Existing-log cross-checks:
+  seed957/seed949/seed950 accepted 16/16 windows, while seed948 accepted 0/16
+  because no contact anchor existed. Clip/follow remain metadata and a separate
+  clean-DiffIK teacher diagnostic, not the default reaction-window reject reason.
+- Quality-tier v2 is the active interpretation: Tier A is clean DiffIK teacher,
+  Tier B is reaction-valid with follow OK but clip high, Tier C is reaction-valid
+  with actuator follow lag, and Rejected is not a valid reaction window. Current
+  existing-log tiers: seed957 all B, seed949 all B, seed950 10 B + 6 C, seed948
+  all Rejected.
+- Latest next-step audit now says:
   `NARROW_ACTUATOR_IK_TRACKING_CLEANUP_INSIDE_WORKING_TAP_GEOMETRY`
-  for seed957. Do not start 1024/data: low-motion, pre-stop clipping near but
-  above threshold, aggregate post-stop freeze clipping, and actuator follow remain
-  unresolved.
+  for seed959. Do not start 1024/data: y- reaction/contact is valid, but DiffIK
+  clip is still `1.0`, final TCP error is `0.037017073m`, and actuator follow lag
+  remains in the trace diagnostic.
 
 Next concrete step:
 1. Do not start dataset generation, PPO/RL, VLA, Track A, 1024/10k scale-up, or
@@ -1189,14 +1212,45 @@ Next concrete step:
    `python sim_scripts/cube10cm_next_research_step_audit.py`
 3. Do not repeat cap0425 or stiffness/effort changes as success claims. The best
    fixed x+ actuator screen so far is seed957, and it is still teacher false.
-4. Do not run 1024/10240 trace/data from seed946/seed947/seed948/seed949/seed950/
-   seed951/seed952/seed953/seed954/seed955/seed956/seed957. Direction-specific
+4. Use `sim_scripts/cube10cm_reaction_window_contract_audit.py` on existing traces
+   to decide which contact/reaction windows would be retained, with clip/follow
+   metadata preserved.
+5. First tier-distribution matrix is now available:
+   `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_reaction_window_tier_matrix_existing_seeds.json`
+   and `.csv`. Interpret x- with the audit/config split, not direction-only
+   aggregation: seed948 x- is rejected, seed949/seed950 x- are valid Tier B.
+6. Latest approved tiny y+ coverage screen seed958 added 16/16 accepted reaction
+   windows, all Tier C. This answers y+ lucky-contact concern negatively but
+   confirms follow-lag quality risk for y+.
+7. Latest approved tiny y- screen seed959 added 16/16 accepted reaction windows,
+   split 11 Tier B + 5 Tier C. y- coverage is no longer the immediate gap.
+8. Latest approved tiny y+ quality screen seed960 changed only
+   `max_diffik_joint_step_rad 0.035 -> 0.050`. It kept reaction/contact valid but
+   stayed 16/16 Tier C, so cap-only y+ cleanup is not enough.
+9. Latest approved tiny y+ stiffness screen seed961 changed only
+   `arm_stiffness_override 400 -> 600`. It kept reaction/contact valid but stayed
+   16/16 Tier C, so stiffness-only y+ cleanup is not enough.
+10. Latest local per-window diagnosis found y+ Tier C is not a simple larger raw
+   IK delta problem: y+ raw delta p95 is lower than the non-y+ Tier B baseline
+   (`0.174502504` vs `0.280128609`), but follow/cap is higher (`1.223191874`
+   vs `1.030052730`), contact anchors about `80.876804` steps earlier, and max
+   XY displacement is `10.223485837x` the baseline.
+11. Latest early-contact geometry audit confirms y+ accumulates large object
+   reaction before/around the measured-contact anchor inside the approach phase:
+   pre-anchor displacement is `13.694612400x` baseline and tip is
+   `13.202625486x` baseline.
+12. Latest local precontact candidate audit fixes the next one-variable GPU
+   candidate, if explicitly approved: fixed y+ seed958-like geometry, only
+   `precontact_clearance_m 0.010 -> 0.020`, next seed962. This is a hypothesis
+   test for approach/pre-anchor reaction accumulation, not a data-scale step.
+13. Do not run 1024/10240 trace/data from seed946/seed947/seed948/seed949/seed950/
+   seed951/seed952/seed953/seed954/seed955/seed956/seed957/seed958/seed959/seed960/seed961. Direction-specific
    contact is improving, but low-motion, DiffIK clipping, post-stop freeze
    clipping, and actuator follow lag still block teacher/data quality.
-5. Any next GPU experiment still requires explicit approval and must be one tiny
-   local IsaacLab screen inside the working tap geometry, changing only one
-   actuator/IK tracking parameter. It must use
+14. Any next GPU experiment still requires explicit approval and must be one tiny
+   local IsaacLab screen inside the working tap geometry. The current proposed
+   command changes only `precontact_clearance_m`; it must use
    `sandbox_permissions=require_escalated` and must not be reported as RL/data.
-6. Judge the result by reaction/contact/no-posewrite/no-overshoot first; report
+15. Judge the result by reaction/contact/no-posewrite/no-overshoot first; report
    final 1cm only as secondary relocation evidence.
 ```
