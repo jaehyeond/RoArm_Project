@@ -1,0 +1,8 @@
+line1 artifact=cube10cm_visual_sanity_trace_storyboard_v1 local_trace_visual_only=YES gpu_runtime=NO dataset_generation=NO training=NO robot_control=NO ssh=NO
+line2 source trace_rows=1568 envs=16 seed=962 fixed_cube=(0.295,-0.044) push_dir=[0.0, 1.0] precontact=0.02
+line3 reaction_gate pass=True reaction=1.0 contact=1.0 no_posewrite=True overshoot=0.0 teacher_quality_ready=False
+line4 teacher_context best_policy=contact_to_p16 rel=[0, 16] tiers={'B_REACTION_VALID_FOLLOW_OK_CLIP_HIGH': 16} clip_mean=1.0 follow_p95_to_cap=0.2515520368303571
+line5 focus_env env=0 first_any_reaction_step=56 first_along_1mm_step=240 first_speed_step=56 first_z_delta_step=64 first_contact_step=240 first_stop_step=240 max_disp=0.003882408 final_disp=0.003585339 max_z_delta=0.008707229 tip_deg=10.498982430 clip=1.000000000
+line6 visual_sanity all_yplus=True contact_all=True reaction_all=True no_overshoot_all=True max1mm_all=True clip_saturated_all=True actual_render_video=NOT_RUN
+line7 outputs html=/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_visual_sanity_trace_storyboard.html json=/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_visual_sanity_trace_storyboard.json
+line8 verdict trace_storyboard_ready=YES next=one_tiny_local_record_video_run_only_after_explicit_approval

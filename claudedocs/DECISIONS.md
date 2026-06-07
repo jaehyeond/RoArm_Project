@@ -8726,3 +8726,244 @@ Sources:
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tierb_action_dryrun_preview_summary.out:1-5`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tierb_action_dryrun_preview.json`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tierb_action_dryrun_preview_rows.jsonl`
+
+## D165 - Visual replay can confirm contact geometry but does not unblock clean teacher
+
+Date: 2026-06-08
+
+Decision:
+
+- For the professor 10cm/0.72kg branch, visual/sim sanity is required before
+  treating numeric gates as sufficient.
+- A replay render from existing trace is acceptable visual evidence only if it
+  preserves the real object scale, uses local RoArm visual meshes, and records
+  that physics is not recomputed.
+- Visual contact evidence is not the same as clean tap/action-teacher readiness.
+  If the replay shows contact but the contact frame still has large TCP-target
+  error and DiffIK clipping, the correct verdict is still dataset/RL/RoArm
+  blocked.
+- Do not use the failed live `--record_video` path as evidence unless it produces
+  frames and summary artifacts.
+
+Evidence:
+
+- Added `sim_scripts/cube10cm_visual_sanity_trace_storyboard.py`, a local trace
+  storyboard generator. Summary line 1 records local trace visual only, no GPU
+  runtime, no dataset generation, no training, no robot control, and no SSH.
+- Storyboard summary lines 2-6 show seed962 envs are all y+, contact/reaction are
+  present, max 1mm motion is present, and clip is saturated, but actual rendered
+  video was not yet run.
+- The first live `--record_video` attempt was stopped after no files appeared;
+  the visual sanity audit summary line 3 records `FAILED_NO_FRAMES_OR_SUMMARY`,
+  `file_count=0`, and no summary/CSV/trace artifacts.
+- Updated `sim_scripts/cube3cm_push_diffik_render_trace.py` so trace replay can
+  tolerate string trace columns and uses `cube_size_*_m` from the trace instead
+  of the old hardcoded 3cm cube scale.
+- Replay render summary lines 20-26 record env0 cube size `[0.1, 0.1, 0.1]`;
+  lines 46-60 record `98` frames, `1280x720`, and `physics_recomputed=false`;
+  lines 61-74 record local RoArm STL mesh visual mode, `training=false`, and
+  `width=1280`.
+- MP4 probe lines 1-8 confirm `opened=True`, `frame_count=98`, `width=1280`,
+  `height=720`, `fps=30.0`, `first_frame_ok=True`, and nonzero size.
+- Visual sanity audit summary line 4 records replay render PASS with 10cm cube,
+  MP4 opened, 98 frames, `physics_recomputed=False`, `training=False`, and
+  `dataset_generation=False`.
+- Visual sanity audit summary line 5 records the contact frame blocker:
+  frame `60`, step `240`, `tcp_z=0.100452900`, `target_z=0.049999580`,
+  `tcp_minus_target_z=0.050453320`, `tcp_target_err_before=0.050612349`,
+  `tcp_target_err_after=0.050918311`, and `clip_any=1`.
+- Visual sanity audit summary lines 6-7 record
+  `visual_contact_replay_pass=True`, `clean_tap_visual_verified=False`, and
+  dataset/RL/RoArm/action-teacher still unblocked `NO`.
+
+Implication:
+
+- The video is useful professor-facing contact geometry evidence, but it is also
+  evidence that the current seed962/contact_to_p16 teacher is not clean.
+- Next work must fix or retest teacher contact geometry/control tracking before
+  building an action-teacher dataset, running IsaacLab RL, or deploying to
+  RoArm-M3-Pro.
+- Keep final 1cm/final retention secondary; the observed blocker is vertical
+  target/TCP mismatch and clipping at contact, not final relocation.
+
+Sources:
+
+- `sim_scripts/cube10cm_visual_sanity_trace_storyboard.py:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_visual_sanity_trace_storyboard_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_visual_sanity_trace_storyboard.html`
+- `sim_scripts/cube3cm_push_diffik_render_trace.py:50-61,247-254,394-407`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_render_replay_env0_seed962_summary.json:20-74`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_render_replay_env0_seed962_mp4_probe.out:1-8`
+- `sim_scripts/cube10cm_visual_sim_sanity_audit.py:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_visual_sim_sanity_audit_summary.out:1-7`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_visual_sim_sanity_audit.json:1-64`
+
+## D166 - seed962 contact is upper/top contact under clipping, not a clean side-center tap
+
+Date: 2026-06-08
+
+Decision:
+
+- For the professor 10cm/0.72kg y+ branch, do not interpret seed962 visual
+  contact as a clean side-center tap.
+- The 5cm contact-frame z mismatch is not explained by a missing TCP-local-offset
+  compensation. The link5/TCP offset math is internally consistent; the commanded
+  side-center target is simply not being tracked at first contact.
+- Do not "fix" this by only lifting target z to match the observed TCP height.
+  Prior y+ height050 evidence reduced TCP target error but killed contact.
+- The next unblocker is local teacher contact-geometry/control-tracking design:
+  decide whether the teacher should target a side-center TCP, an upper-edge/contact
+  proxy, or a different tool/orientation path before any action-teacher dataset,
+  IsaacLab RL, or RoArm-M3-Pro work.
+
+Evidence:
+
+- The probe target code uses `side_center` target z as `cube[:, 2] +
+  tcp_center_height_offset`, and seed962 summary records `tcp_height_mode` as
+  `side_center`, `tcp_center_height_offset_m=0.0`, fixed y+, and applied offset
+  mean `0.0`.
+- The environment defines `TCP_LOCAL_OFFSET_M=(0,0,0.115428)` and computes TCP as
+  `link5_pos + quat_rotate(link5_quat, _tcp_local)`.
+- The DiffIK probe compensates this offset by computing `link5_target_w =
+  tcp_target_w - tcp_offset_w`, so the target/link5 offset is visible in the trace.
+- Added `sim_scripts/cube10cm_contact_frame_geometry_mismatch_audit.py`, a local
+  trace reader only. Summary line 1 records no GPU runtime, no dataset generation,
+  no training, no robot control, and no SSH.
+- Mismatch audit summary line 2 shows all `16` envs have first-contact rows from
+  the existing seed962 trace.
+- Summary line 3 records `tcp_height_mode=side_center`, offset `0.0`, directional
+  xneg-only offset `{xneg: 0.05, ypos: None}`, applied offset mean `0.0`, and
+  DiffIK clip mean `1.0`.
+- Summary line 4 records first-contact vertical mismatch:
+  `tcp_minus_target_z_mean=0.052857013`, matching
+  `link5_minus_target_z_mean=0.052857012`; z accounts for
+  `0.983196354` of TCP-target error.
+- Summary line 5 records the actual contact geometry: TCP is near live cube top,
+  not side-center (`tcp_above_live_cube_center_z_mean=0.048793540`,
+  `tcp_below_live_cube_top_z_mean=0.001206460`,
+  `tcp_near_top_10mm_rate=1.0`, `tcp_near_center_10mm_rate=0.0`).
+- Summary line 6 records TCP/link5 offset consistency true with max error
+  `0.000000007`, ruling out a simple missing-offset bug.
+- Summary line 7 records first-contact clip rate `1.0`, with max clip mode
+  `link1_to_link2` at rate `1.0`.
+- Summary line 8 records
+  `mismatch_class=SIDE_CENTER_TARGET_NOT_TRACKED_TCP_CONTACTS_NEAR_TOP_UNDER_CLIPPING`.
+- The raw seed962 trace line 962 independently shows env0 first contact at frame
+  `60`, step `240`, `target_z=0.049999580`, `tcp_z_before=0.100140154`,
+  `link5_target_z=0.150399491`, `link5_z_before=0.200540066`, and `clip_any=1`.
+- Prior height050 seed944 summary lines 69-70, 99-103, and 126-127 show raising
+  target z improved final TCP error to `0.022889409` but had no measured contact
+  and no gate displacement; the reaction audit lines 2-3 and 18-27 show contact
+  evidence `0.0`, reaction gate false, and teacher quality false.
+
+Implication:
+
+- Visual contact can be kept as event evidence, but not as clean action-teacher
+  evidence.
+- Dataset/RL/RoArm remain blocked until the teacher target frame/contact proxy or
+  control tracking path is redesigned and revalidated.
+- Final 1cm/final retention remains secondary; this blocker is contact geometry
+  and clipping at first contact.
+
+Sources:
+
+- `sim_scripts/cube3cm_push_diffik_probe.py:519-542,562-585,700-733`
+- `roarm_rl/roarm_stack_env.py:86-87,422-433,1172-1179`
+- `sim_scripts/cube10cm_contact_frame_geometry_mismatch_audit.py:1-7,86-194,251-262`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_contact_frame_geometry_mismatch_audit_summary.out:1-9`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_contact_frame_geometry_mismatch_audit.json:1-89`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_xnegheight050_pre020_seed962_trace.csv:962`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_height050_seed944_summary.json:69-70,99-103,126-127`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_height050_seed944_reaction_gate_audit.json:1-43`
+
+## D167 - Upper-edge proxy improves tracking but is not the teacher criterion
+
+Date: 2026-06-08
+
+Decision:
+
+- Do not ask the user to choose among contact-frame definitions. Evaluate them
+  against the same evidence and make a recommendation.
+- The three tested criteria have different roles:
+  - `true_side_center_tcp`: semantically correct for side push/tap, but current
+    seed962 tracking fails.
+  - `upper_edge_contact_proxy`: best explains the current visual contact and can
+    improve TCP tracking, but it teaches upper/top contact and weakens the tap.
+  - `tool_oriented_side_contact_proxy`: selected teacher criterion. It preserves
+    side-contact semantics, but requires a local tool/contact-proxy or orientation
+    preflight because the current DiffIK probe is position-only.
+- The approved top-margin runtime is a negative control, not a dataset/RL/RoArm
+  unlock. It shows that target tracking can improve by moving to the upper/top
+  proxy, but that is not enough to define a teacher for the professor branch.
+
+Evidence:
+
+- Added `sim_scripts/cube10cm_teacher_contact_frame_design_audit.py`, a local
+  design audit over existing seed962 evidence. Summary line 1 records no GPU,
+  dataset generation, training, robot control, or SSH.
+- Design audit summary line 4 shows `true_side_center_tcp` has score
+  `0.467792681`, `side_center_z_reached_10mm_rate=0.0`, z error mean
+  `0.052857013`, and is semantically correct but tracking-failed.
+- Design audit summary line 5 shows `upper_edge_contact_proxy` has score
+  `0.662870807`, upper z/total reach rates `1.0/1.0`, upper z error mean
+  `0.001206460`, but prior seed944 height050 contact rate `0.0`; verdict says it
+  best explains current visual contact but teaches top contact.
+- Design audit summary line 6 shows `tool_oriented_side_contact_proxy` score
+  `0.654000000`, current DiffIK command type `position`, and that position-only
+  cannot validate the orientation path from seed962 trace.
+- Design audit summary line 7 selects `tool_oriented_side_contact_proxy`, because
+  upper-edge fits accidental contact while true side-center is untracked.
+- After guards and explicit approval, ran exactly one local IsaacLab 16-env
+  top-margin negative control on seed962 geometry, changing only
+  `--tcp_height_mode top_margin`. The runtime printed `training=NO`,
+  `dataset_generation=NO`, `grasp=NO`, `attach_posewrite=NO`, and
+  `rollout_object_posewrite=NO`.
+- Top-margin summary lines 20-36 and 49-61 show clip mean improved to
+  `0.495833354`, final TCP error to `0.011275044`, but controlled push is `0.0`,
+  final displacement is only `0.000045329`, and displacement over object size is
+  `0.000453293`.
+- Reaction gate audit lines 1-3 show reaction/contact/no-posewrite/no-overshoot
+  PASS and summary teacher quality `READY`, but max displacement is only
+  `0.001112372`.
+- Reaction-window audit lines 1-6 and 451-455 show 16/16 accepted windows and
+  16 Tier B, but clean DiffIK window still false because clip remains high.
+- Top-margin contact-frame summary lines 3-7 show target tracking improved but
+  the contact is still upper/top proxy:
+  `tcp_above_live_cube_center_z_mean=0.057616640`,
+  `tcp_below_live_cube_top_z_mean=-0.007616640`, and
+  `tcp_near_top_10mm_rate=1.0`.
+- Added `sim_scripts/cube10cm_teacher_contact_frame_runtime_comparison_audit.py`.
+  Summary line 2 records side-center baseline: reaction gate true, teacher quality
+  false, clip `1.0`, final TCP err `0.051811996`, max displacement `0.002923813`,
+  final displacement `0.001581848`, controlled push `0.5625`, tiers 2B+14C.
+- Runtime comparison summary line 3 records top-margin: reaction gate true,
+  teacher quality true, clip `0.495833354`, final TCP err `0.011275044`, max
+  displacement `0.001112372`, final displacement `0.000045329`, controlled push
+  `0.0`, tiers 16B, but clean window false.
+- Runtime comparison summary line 4 shows the tradeoff ratios:
+  clip `0.495833354x`, final TCP err `0.217614551x`, max displacement
+  `0.380452440x`, final displacement `0.028655940x`, tip `0.157045606x`.
+- Runtime comparison summary lines 5-7 conclude top-margin tracks target better
+  but contacts upper/top proxy, weakens tap strength, is not selected as teacher,
+  and does not unblock dataset/RL/RoArm.
+
+Implication:
+
+- The next default work is not dataset generation, RL, RoArm deployment, or
+  another top-margin/height sweep.
+- The next valid work is local tool/contact-proxy + orientation-path preflight:
+  define which physical tool point should hit the cube side and how the
+  position/orientation controller should make that contact without encoding top
+  contact as the teacher.
+
+Sources:
+
+- `sim_scripts/cube10cm_teacher_contact_frame_design_audit.py:1-10,174-253,255-302`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_teacher_contact_frame_design_audit_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_teacher_contact_frame_design_audit.json:1-130`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_xnegheight050_pre020_topmargin_seed962_summary.json:20-61,77-111,124-136`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_xnegheight050_pre020_topmargin_seed962_reaction_gate_audit.json:1-43`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_reaction_window_seed962_topmargin_audit.json:1-6,451-455`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_contact_frame_geometry_mismatch_topmargin_seed962_summary.out:1-9`
+- `sim_scripts/cube10cm_teacher_contact_frame_runtime_comparison_audit.py:1-6,65-150,153-190`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_teacher_contact_frame_runtime_comparison_audit_summary.out:1-7`

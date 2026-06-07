@@ -1,0 +1,130 @@
+{
+  "artifact_type": "cube10cm_teacher_contact_frame_design_audit_v1",
+  "branch": "professor_cube10cm_tap_reaction",
+  "candidate_scores": {
+    "tool_oriented_side_contact_proxy": {
+      "definition": "teacher target is a real tool/contact proxy and orientation path that achieves side contact",
+      "evidence": {
+        "current_clean_tap_visual_verified": false,
+        "current_controller": "IsaacLab_DifferentialIKController",
+        "current_diffik_command_type": "position",
+        "current_visual_contact_pass": true,
+        "position_only_diffik_cannot_validate_new_orientation_path_from_seed962_trace": true,
+        "why_needed": "current hand TCP side-center target contacts near cube top under clipping"
+      },
+      "existing_evidence_fit": 0.55,
+      "implementation_readiness": 0.2,
+      "runtime_role": "preferred_next_design_path; requires one explicit tiny runtime after local preflight",
+      "safety_margin": 0.85,
+      "score": 0.654,
+      "semantic_alignment": 0.95,
+      "tracking_feasibility_from_seed962": 0.45,
+      "verdict": "BEST_TEACHER_CRITERION_BUT_REQUIRES_LOCAL_PROBE_DESIGN_BEFORE_RUNTIME"
+    },
+    "true_side_center_tcp": {
+      "definition": "teacher TCP target is cube side-center at contact height",
+      "evidence": {
+        "clip_any_rate_at_first_contact": 1.0,
+        "side_center_z_err_m": {
+          "max": 0.05706047639250755,
+          "mean": 0.052857012720778584,
+          "median": 0.05298219621181488,
+          "min": 0.04972280189394951
+        },
+        "side_center_z_reached_10mm_rate": 0.0,
+        "tcp_target_xy_err_m": {
+          "max": 0.012181835813223787,
+          "mean": 0.009740644211485636,
+          "median": 0.010597878783721149,
+          "min": 0.006653274892435103
+        }
+      },
+      "existing_evidence_fit": 0.0,
+      "implementation_readiness": 0.3,
+      "runtime_role": "not_ready_as_action_teacher_until_tracking_or_tool_frame_changes",
+      "safety_margin": 0.8,
+      "score": 0.4677926810153506,
+      "semantic_alignment": 1.0,
+      "tracking_feasibility_from_seed962": 0.038963405076753,
+      "verdict": "SEMANTICALLY_CORRECT_BUT_CURRENT_TRACE_FAILS_TRACKING"
+    },
+    "upper_edge_contact_proxy": {
+      "definition": "teacher accepts/targets the upper edge or live cube top contact proxy",
+      "evidence": {
+        "seed944_height050_contact_evidence_rate": 0.0,
+        "seed944_height050_final_tcp_err_m": 0.022889409447088838,
+        "seed944_height050_reaction_gate_pass": false,
+        "tcp_above_live_cube_center_m": {
+          "max": 0.04954839125275612,
+          "mean": 0.048793540336191654,
+          "median": 0.0490547027438879,
+          "min": 0.04698961228132248
+        },
+        "tcp_below_live_cube_top_signed_m": {
+          "max": 0.0030103877186775235,
+          "mean": 0.0012064596638083486,
+          "median": 0.0009452972561121015,
+          "min": 0.000451608747243884
+        },
+        "upper_proxy_total_err_m": {
+          "max": 0.012198086440232028,
+          "mean": 0.009859910059477742,
+          "median": 0.010668801780875451,
+          "min": 0.007213456018229168
+        },
+        "upper_proxy_total_reached_15mm_rate": 1.0,
+        "upper_proxy_z_err_m": {
+          "max": 0.0030103877186775235,
+          "mean": 0.0012064596638083486,
+          "median": 0.0009452972561121015,
+          "min": 0.000451608747243884
+        },
+        "upper_proxy_z_reached_10mm_rate": 1.0
+      },
+      "existing_evidence_fit": 1.0,
+      "implementation_readiness": 0.65,
+      "runtime_role": "allowed_only_as_one_tiny_negative_or_diagnostic_retest_not_as_final_teacher",
+      "safety_margin": 0.35,
+      "score": 0.662870806723833,
+      "semantic_alignment": 0.45,
+      "tracking_feasibility_from_seed962": 0.8793540336191652,
+      "verdict": "BEST_EXPLAINS_CURRENT_VISUAL_CONTACT_BUT_TEACHES_TOP_CONTACT_AND_HEIGHT_ONLY_NEGATIVE_CONTROL_FAILED"
+    }
+  },
+  "current_blocker": {
+    "clean_tap_visual_verified": false,
+    "clip_rate_at_first_contact": 1.0,
+    "mismatch_class": "SIDE_CENTER_TARGET_NOT_TRACKED_TCP_CONTACTS_NEAR_TOP_UNDER_CLIPPING",
+    "side_center_z_reached_10mm_rate": 0.0,
+    "upper_proxy_z_reached_10mm_rate": 1.0,
+    "visual_contact_replay_pass": true
+  },
+  "local_audit_only": true,
+  "no_gpu_runtime_dataset_training_robot_ssh": true,
+  "one_tiny_runtime_candidate_after_local_preflight": "upper_edge_contact_proxy_negative_control_before_any_dataset",
+  "pipeline": {
+    "action_teacher_dataset_unblocked": false,
+    "isaaclab_rl_unblocked": false,
+    "large_dataset_unblocked": false,
+    "roarm_m3_pro_unblocked": false
+  },
+  "ranking_by_numeric_score": [
+    "upper_edge_contact_proxy",
+    "tool_oriented_side_contact_proxy",
+    "true_side_center_tcp"
+  ],
+  "selected_teacher_criterion": "tool_oriented_side_contact_proxy",
+  "selection_reason": "Upper-edge proxy best fits the accidental current contact, but it would teach top contact. True side-center is semantically right but currently untracked. The teacher standard should therefore be a tool/contact proxy or orientation path that preserves side-contact semantics.",
+  "source": {
+    "first_contact_envs": 16,
+    "first_contact_source_line_max": 1028,
+    "first_contact_source_line_min": 962,
+    "mismatch_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_contact_frame_geometry_mismatch_audit.json",
+    "seed944_reaction_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_height050_seed944_reaction_gate_audit.json",
+    "seed944_summary_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_height050_seed944_summary.json",
+    "summary_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_xnegheight050_pre020_seed962_summary.json",
+    "trace_csv": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_xnegheight050_pre020_seed962_trace.csv",
+    "trace_rows": 1568,
+    "visual_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_visual_sim_sanity_audit.json"
+  }
+}

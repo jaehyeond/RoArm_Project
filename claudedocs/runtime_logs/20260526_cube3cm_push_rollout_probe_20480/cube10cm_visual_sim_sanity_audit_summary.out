@@ -1,0 +1,7 @@
+line1 artifact=cube10cm_visual_sim_sanity_audit_v1 local_audit_only=YES gpu_runtime=NO dataset_generation=NO training=NO robot_control=NO ssh=NO
+line2 trace_storyboard ready=YES rows=98 all_yplus=True contact_all=True reaction_all=True actual_render_video_run=False
+line3 record_video_attempt status=FAILED_NO_FRAMES_OR_SUMMARY file_count=0 summary_exists=False csv_exists=False trace_exists=False
+line4 replay_render status=PASS frames=98 mp4_opened=True mp4_frames=98.0 first_frame_ok=True cube_size_env0=[0.1, 0.1, 0.1] physics_recomputed=False training=False dataset_generation=False
+line5 contact_frame env=0 frame=60 step=240 tcp_z=0.100452900 target_z=0.049999580 tcp_minus_target_z=0.050453320 tcp_target_err_before=0.050612349 tcp_target_err_after=0.050918311 disp_along_push=0.001234770 cube_speed=0.016902385 tip_deg=2.371614218 clip_any=1 clip_joint=link1_to_link2
+line6 verdict visual_contact_replay_pass=True clean_tap_visual_verified=False reason=10cm_replay_visible_but_contact_frame_has_large_vertical_target_error_and_clip
+line7 pipeline dataset_rl_roarm_unblocked=NO action_teacher_dataset_unblocked=NO next=fix_or_retest_teacher_contact_geometry_before_dataset_rl_robot

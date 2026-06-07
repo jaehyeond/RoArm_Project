@@ -51,7 +51,13 @@ def load_trace(path: str) -> list[dict[str, float]]:
     rows: list[dict[str, float]] = []
     with open(path, newline="") as f:
         for row in csv.DictReader(f):
-            rows.append({key: float(value) for key, value in row.items()})
+            parsed: dict[str, float] = {}
+            for key, value in row.items():
+                try:
+                    parsed[key] = float(value)
+                except (TypeError, ValueError):
+                    parsed[key] = 0.0
+            rows.append(parsed)
     if not rows:
         raise RuntimeError(f"empty trace: {path}")
     return rows
@@ -238,12 +244,16 @@ def main() -> int:
             xf.ClearXformOpOrder()
             robot_link_ops[env_id][link_name] = xf.AddTransformOp()
 
-        cube = UsdGeom.Cube.Define(stage, f"/World/Cube3cm_{env_id}")
+        cube = UsdGeom.Cube.Define(stage, f"/World/Cube_{env_id}")
         cube_xf = UsdGeom.Xformable(cube.GetPrim())
         cube_xf.ClearXformOpOrder()
         cube_translate = cube_xf.AddTranslateOp()
         cube_orient = cube_xf.AddOrientOp()
-        cube_xf.AddScaleOp().Set(Gf.Vec3f(0.015, 0.015, 0.015))
+        first = first_by_env[env_id]
+        cube_x = float(first.get("cube_size_x_m", 0.03))
+        cube_y = float(first.get("cube_size_y_m", cube_x))
+        cube_z = float(first.get("cube_size_z_m", cube_x))
+        cube_xf.AddScaleOp().Set(Gf.Vec3f(cube_x * 0.5, cube_y * 0.5, cube_z * 0.5))
         UsdShade.MaterialBindingAPI(cube.GetPrim()).Bind(cube_mat)
         cube_ops[env_id] = (cube_translate, cube_orient)
 
@@ -396,6 +406,14 @@ def main() -> int:
         "robot_mesh_triangle_count": mesh_triangle_count,
         "directions": {
             str(env_id): [first_by_env[env_id]["push_dx"], first_by_env[env_id]["push_dy"]]
+            for env_id in env_ids
+        },
+        "cube_size_m": {
+            str(env_id): [
+                first_by_env[env_id].get("cube_size_x_m", 0.03),
+                first_by_env[env_id].get("cube_size_y_m", first_by_env[env_id].get("cube_size_x_m", 0.03)),
+                first_by_env[env_id].get("cube_size_z_m", first_by_env[env_id].get("cube_size_x_m", 0.03)),
+            ]
             for env_id in env_ids
         },
         "colors": {

@@ -1,0 +1,77 @@
+{
+  "artifact_type": "cube10cm_teacher_contact_frame_runtime_comparison_audit_v1",
+  "branch": "professor_cube10cm_tap_reaction",
+  "dataset_generation": false,
+  "local_posthoc_audit_only": true,
+  "new_gpu_runtime_in_this_audit": false,
+  "ratios": {
+    "top_vs_side_clip_rate": 0.49583335407078266,
+    "top_vs_side_final_disp": 0.028655940314254492,
+    "top_vs_side_final_tcp_err": 0.21761455099432134,
+    "top_vs_side_max_disp": 0.3804524402596658,
+    "top_vs_side_tip": 0.1570456064429026
+  },
+  "robot_control": false,
+  "side_center_baseline": {
+    "contact_evidence_rate": 1.0,
+    "controlled_push_rate": 0.5625,
+    "diffik_clip_rate_mean": 1.0,
+    "final_disp_along_push_mean_m": 0.0015818476676940918,
+    "final_tcp_target_err_mean_m": 0.05181199568323791,
+    "first_contact_step_mean": 247.1875,
+    "label": "side_center_baseline_seed962_pre020",
+    "low_motion_rate": 1.0,
+    "max_disp_along_push_mean_m": 0.0029238127171993256,
+    "max_tip_angle_mean_deg": 9.205449759960175,
+    "mismatch_summary_line4": "line4 first_contact_vertical tcp_minus_target_z_mean=0.052857013 link5_minus_target_z_mean=0.052857012 z_err_fraction_mean=0.983196354 tcp_target_xy_err_mean=0.009740644",
+    "mismatch_summary_line5": "line5 contact_surface tcp_above_live_cube_center_z_mean=0.048793540 tcp_below_live_cube_top_z_mean=0.001206460 target_minus_live_cube_center_z_mean=-0.004063472 tcp_near_top_10mm_rate=1.000000000 tcp_near_center_10mm_rate=0.000000000",
+    "overshoot_rate": 0.0,
+    "reaction_event_rate": 1.0,
+    "reaction_gate_pass": true,
+    "reaction_window_clean_ready": false,
+    "reaction_window_clip_any_rate_mean": 1.0,
+    "reaction_window_follow_p95_to_cap_p95": 1.1605058397565569,
+    "reaction_window_tiers": {
+      "B_REACTION_VALID_FOLLOW_OK_CLIP_HIGH": 2,
+      "C_REACTION_VALID_FOLLOW_LAG": 14
+    },
+    "tcp_height_mode": "side_center",
+    "teacher_quality_ready": false
+  },
+  "ssh": false,
+  "top_margin_negative_control": {
+    "contact_evidence_rate": 1.0,
+    "controlled_push_rate": 0.0,
+    "diffik_clip_rate_mean": 0.49583335407078266,
+    "final_disp_along_push_mean_m": 4.532933235168457e-05,
+    "final_tcp_target_err_mean_m": 0.011275044176727533,
+    "first_contact_step_mean": 264.625,
+    "label": "top_margin_negative_control_seed962",
+    "low_motion_rate": 1.0,
+    "max_disp_along_push_mean_m": 0.0011123716831207275,
+    "max_tip_angle_mean_deg": 1.445675440132618,
+    "mismatch_summary_line4": "line4 first_contact_vertical tcp_minus_target_z_mean=0.005681654 link5_minus_target_z_mean=0.005681655 z_err_fraction_mean=0.499052970 tcp_target_xy_err_mean=0.009846141",
+    "mismatch_summary_line5": "line5 contact_surface tcp_above_live_cube_center_z_mean=0.057616640 tcp_below_live_cube_top_z_mean=-0.007616640 target_minus_live_cube_center_z_mean=0.051934986 tcp_near_top_10mm_rate=1.000000000 tcp_near_center_10mm_rate=0.000000000",
+    "next_direction": "RUN_TINY_HELDOUT_ROBUSTNESS_CHECK_BEFORE_DATASET_OR_RL",
+    "overshoot_rate": 0.0,
+    "reaction_event_rate": 1.0,
+    "reaction_gate_pass": true,
+    "reaction_window_clean_ready": false,
+    "reaction_window_clip_any_rate_mean": 0.6699561403508771,
+    "reaction_window_follow_p95_to_cap_p95": 0.6141211305345807,
+    "reaction_window_tiers": {
+      "B_REACTION_VALID_FOLLOW_OK_CLIP_HIGH": 16
+    },
+    "tcp_height_mode": "top_margin",
+    "teacher_quality_ready": true
+  },
+  "training": false,
+  "verdict": {
+    "dataset_rl_roarm_unblocked": false,
+    "reason": "top-margin proves target tracking can improve by moving to upper/top contact, but it weakens the tap and encodes the wrong contact semantics",
+    "selected_teacher_criterion": "tool_oriented_side_contact_proxy",
+    "upper_edge_proxy_selected_as_teacher": false,
+    "upper_edge_proxy_tap_strength_weakened": true,
+    "upper_edge_proxy_tracking_improved": true
+  }
+}

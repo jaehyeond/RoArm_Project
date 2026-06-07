@@ -1,0 +1,64 @@
+{
+  "artifact_type": "cube10cm_visual_sim_sanity_audit_v1",
+  "branch": "professor_cube10cm_tap_reaction",
+  "clean_tap_visual_verified": false,
+  "contact_frame_metrics": {
+    "clip_any": 1,
+    "clip_max_joint_name": "link1_to_link2",
+    "contact_frame": 60,
+    "contact_step": 240,
+    "cube_speed_mps": 0.016902385279536247,
+    "disp_along_push_m": 0.0012347698211669922,
+    "env_id": 0,
+    "target_z_m": 0.049999579787254333,
+    "tcp_minus_target_z_m": 0.050453320145606995,
+    "tcp_target_err_after_m": 0.05091831088066101,
+    "tcp_target_err_before_m": 0.050612349063158035,
+    "tcp_z_m": 0.10045289993286133,
+    "tip_angle_deg": 2.3716142177581787
+  },
+  "dataset_rl_roarm_unblocked": false,
+  "local_audit_only": true,
+  "no_gpu_runtime_dataset_training_robot_ssh": true,
+  "record_video_attempt": {
+    "attempted": true,
+    "csv_exists": false,
+    "file_count": 0,
+    "status": "FAILED_NO_FRAMES_OR_SUMMARY",
+    "summary_exists": false,
+    "trace_exists": false
+  },
+  "replay_render": {
+    "cube_size_env0_m": [
+      0.1,
+      0.1,
+      0.1
+    ],
+    "cube_size_ok_10cm": true,
+    "dataset_generation": false,
+    "first_frame_ok": true,
+    "frames_written": 98,
+    "mp4_frame_count": 98.0,
+    "mp4_opened": true,
+    "physics_recomputed": false,
+    "size_bytes": 556359.0,
+    "status": "PASS",
+    "training": false
+  },
+  "storyboard": {
+    "actual_render_video_run": false,
+    "sanity_checks": {
+      "all_yplus": true,
+      "clip_saturated_all_envs": true,
+      "contact_seen_all_envs": true,
+      "max_1mm_motion_all_envs": true,
+      "needs_actual_render_video": true,
+      "no_overshoot_all_envs": true,
+      "reaction_event_all_envs": true
+    },
+    "trace_storyboard_ready": true
+  },
+  "trace_rows": 98,
+  "verdict": "VISUAL_CONTACT_REPLAY_PASS_BUT_CLEAN_TAP_NOT_VERIFIED",
+  "visual_contact_evidence": true
+}

@@ -1,0 +1,9 @@
+line1 artifact=cube10cm_contact_frame_geometry_mismatch_audit_v1 local_audit_only=YES gpu_runtime=NO dataset_generation=NO training=NO robot_control=NO ssh=NO
+line2 source trace_rows=1568 envs=16 first_contact_envs=16 contact_source_lines=962-1028
+line3 runtime_contract tcp_height_mode=side_center tcp_center_height_offset=0.0 directional_offsets={'xneg': 0.05, 'xpos': None, 'yneg': None, 'ypos': None} applied_offset_mean=0.0 diffik_clip_rate_mean=1.0
+line4 first_contact_vertical tcp_minus_target_z_mean=0.052857013 link5_minus_target_z_mean=0.052857012 z_err_fraction_mean=0.983196354 tcp_target_xy_err_mean=0.009740644
+line5 contact_surface tcp_above_live_cube_center_z_mean=0.048793540 tcp_below_live_cube_top_z_mean=0.001206460 target_minus_live_cube_center_z_mean=-0.004063472 tcp_near_top_10mm_rate=1.000000000 tcp_near_center_10mm_rate=0.000000000
+line6 tcp_link5_offset_check consistent=True offset_consistency_abs_max=0.000000007 interpretation=tcp_local_offset_is_accounted_for; mismatch is link5/TCP target tracking
+line7 clipping clip_any_rate_at_first_contact=1.000000000 clip_mode=link1_to_link2 clip_mode_rate=1.000000000
+line8 verdict visual_contact_replay_pass=True clean_tap_visual_verified=False side_center_target_reached=False mismatch_class=SIDE_CENTER_TARGET_NOT_TRACKED_TCP_CONTACTS_NEAR_TOP_UNDER_CLIPPING
+line9 pipeline dataset_rl_roarm_unblocked=False next=local_teacher_contact_geometry_or_tracking_fix_before_any_dataset_rl_robot
