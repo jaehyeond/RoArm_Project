@@ -1,0 +1,87 @@
+{
+  "answer": {
+    "can_move_now_to": [
+      "event_label_quality_metadata_done",
+      "ten_cm_tap_rl_env_contract_preflight_local_only"
+    ],
+    "cannot_move_yet_to": [
+      "strict_clean_action_teacher_dataset",
+      "tiny_action_dataset_dryrun_without_exception",
+      "large_isaaclab_dataset",
+      "isaaclab_rl_training",
+      "roarm_m3_pro_deployment"
+    ],
+    "policy_exception_needed_for": "noisy_tierb_action_teacher_tiny_dryrun_only"
+  },
+  "artifact_type": "cube10cm_link5corner_next_stage_promotion_gate_v1",
+  "branch": "professor_cube10cm_tap_reaction_quality_tier",
+  "evidence_flags": {
+    "event_labels_ready": true,
+    "legacy_builder_final_success_conflict": true,
+    "noisy_exception_missing": true,
+    "noisy_tierb_candidate_exists": true,
+    "rl_env_3cm_relocation_conflict": true,
+    "strict_clean_action_teacher_blocked": true,
+    "visual_supports_weak_1mm_only": true
+  },
+  "local_promotion_gate_only": true,
+  "no_gpu_isaaclab_dataset_training_robot_ssh": true,
+  "out_summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_link5corner_next_stage_promotion_gate_summary.out",
+  "source_files": {
+    "blocker_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_diffik_action_dataset_blocker_audit.json",
+    "event_manifest_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_link5corner_event_label_metadata_manifest.json",
+    "policy_gate_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_link5corner_noisy_tierb_teacher_policy_gate.json",
+    "visual_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_link5corner_visual_proxy_contact_inspection.json"
+  },
+  "stages": [
+    {
+      "evidence": "16/16 weak 1mm reaction labels and visual side-center/grazing/early-freeze review",
+      "name": "objective_and_visual_evidence",
+      "next": "do not chase 2-3mm unless explicitly required",
+      "promotion": "PASS_WEAK_1MM_ONLY",
+      "stage": 0
+    },
+    {
+      "evidence": "link5 event-label metadata manifest exists and has no action targets",
+      "name": "event_label_quality_metadata",
+      "next": "use as local metadata evidence only",
+      "promotion": "CAN_ADVANCE_NOW_DONE",
+      "stage": 1
+    },
+    {
+      "evidence": "clean teacher false; Tier B is noisy because clip remains high",
+      "name": "strict_clean_action_teacher",
+      "next": "needs clean teacher evidence, not just accepted windows",
+      "promotion": "BLOCKED",
+      "stage": 2
+    },
+    {
+      "evidence": "16 Tier-B candidate windows exist, but default policy blocks action dataset",
+      "name": "noisy_tierb_action_teacher_exception",
+      "next": "only user/professor can explicitly accept risky noisy teacher for a tiny dry run",
+      "promotion": "WAITING_EXPLICIT_EXCEPTION",
+      "stage": 3
+    },
+    {
+      "evidence": "no explicit noisy Tier-B exception recorded",
+      "name": "tiny_action_dataset_dryrun",
+      "next": "if exception is recorded later, dry run only; not a large dataset",
+      "promotion": "BLOCKED_UNLESS_EXCEPTION_RECORDED",
+      "stage": 4
+    },
+    {
+      "evidence": "existing env is 3cm/20g relocation-oriented, so only contract/preflight work is allowed",
+      "name": "ten_cm_tap_rl_env_contract_preflight",
+      "next": "write local 10cm/0.72kg tap env contract/random-sanity audit before training",
+      "promotion": "CAN_ADVANCE_LOCAL_ONLY",
+      "stage": 5
+    },
+    {
+      "evidence": "action teacher policy, 10cm env sanity, and robot safety gates are unresolved",
+      "name": "large_dataset_rl_roarm",
+      "next": "no large dataset, PPO/RL training, or RoArm deployment",
+      "promotion": "BLOCKED",
+      "stage": 6
+    }
+  ]
+}

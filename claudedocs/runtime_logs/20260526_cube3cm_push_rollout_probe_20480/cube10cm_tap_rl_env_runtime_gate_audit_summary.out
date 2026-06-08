@@ -1,0 +1,6 @@
+line1 artifact=cube10cm_tap_rl_env_runtime_gate_audit_v1 local_log_audit_only=YES gpu_runtime_launched_by_this_audit=NO dataset_generation=NO training=NO robot_control=NO ssh=NO
+line2 static_contract static_pass=True wrapper_default_off=True cube_size=0.100m cube_mass=0.720kg final_1cm_required_default=NO table_top_z=TABLE_Z
+line3 zero_action_gpu_sanity runtime_pass=True zero_quiet=True contact=0.0 reaction_signal_now=0.0 reaction_context=0.0 reaction_seen=0.0 overshoot=0.0 max_z_delta_m=0.000007514 max_speed_mps=0.025450669
+line4 random_gpu_sanity runtime_pass=True contract_only=True contact=0.0 reaction_context=0.0 reaction_seen=0.0 overshoot=0.0 tap_success=0.0
+line5 verdict wrapper_sanity_pass=True env_wrapper_unblocked_for_local_preflight_only=YES action_teacher_dataset=BLOCKED large_dataset=BLOCKED ppo_rl_training=BLOCKED roarm=BLOCKED
+line6 next allowed=local_rl_preflight_design_or_policy_gate_review not_allowed=ppo_training_large_dataset_roarm_or_noisy_tierb_action_teacher_without_exception

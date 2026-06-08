@@ -1,0 +1,166 @@
+{
+  "artifact_type": "cube10cm_tap_rl_preflight_policy_gate_v1",
+  "b200": false,
+  "branch": "professor_cube10cm_tap_reaction_quality_tier",
+  "dataset_generation": false,
+  "gate_matrix": [
+    {
+      "evidence": {
+        "contact": 16,
+        "events": 16,
+        "overshoot": 0,
+        "reaction": 16,
+        "tier_counts": {
+          "B_REACTION_VALID_FOLLOW_OK_CLIP_HIGH": 16
+        },
+        "weak_1mm": 16
+      },
+      "gate": "event_label_quality_tier_metadata",
+      "meaning": "May be used as event-label/quality-tier metadata, not as action targets.",
+      "status": "READY_LOCAL_ONLY"
+    },
+    {
+      "evidence": {
+        "random_contract_only": true,
+        "random_metrics": {
+          "contact_seen": 0.0,
+          "max_speed_mps": 0.02545066922903061,
+          "max_z_delta_m": 7.513910531997681e-06,
+          "overshoot_seen": 0.0,
+          "reaction_contact_context": 0.0,
+          "reaction_seen": 0.0,
+          "reaction_signal_now": 0.0,
+          "tap_success": 0.0,
+          "terminated_count": 0
+        },
+        "wrapper_sanity_pass": true,
+        "zero_metrics": {
+          "contact_seen": 0.0,
+          "max_speed_mps": 0.02545066922903061,
+          "max_z_delta_m": 7.513910531997681e-06,
+          "overshoot_seen": 0.0,
+          "reaction_contact_context": 0.0,
+          "reaction_seen": 0.0,
+          "reaction_signal_now": 0.0,
+          "tap_success": 0.0,
+          "terminated_count": 0
+        },
+        "zero_quiet_no_action": true
+      },
+      "gate": "default_off_10cm_tap_env_wrapper",
+      "meaning": "Env contract can be used for local preflight/design. It is not PPO evidence.",
+      "status": "READY_LOCAL_PREFLIGHT_ONLY"
+    },
+    {
+      "evidence": {
+        "ge_2mm_count": 0,
+        "ge_3mm_count": 0,
+        "weak_1mm_is_only_verified_objective": true
+      },
+      "gate": "strong_2_3mm_tap_requirement",
+      "meaning": "Do not tune contact geometry for 2-3mm unless professor/user records it as explicit target.",
+      "status": "NOT_REQUIRED_BY_CURRENT_EVIDENCE"
+    },
+    {
+      "evidence": {
+        "clean_teacher": false,
+        "clip_mean": 0.6666666666666666,
+        "follow_p95_to_cap": 0.20160675048828122,
+        "tier_a": 0,
+        "tier_b": 16
+      },
+      "gate": "strict_clean_action_teacher",
+      "meaning": "Do not use link5 DiffIK actions as default imitation targets.",
+      "status": "BLOCKED"
+    },
+    {
+      "evidence": {
+        "candidate_rows": 16,
+        "explicit_exception_recorded": false,
+        "tier_b": 16,
+        "visual_risk_preserved": true
+      },
+      "gate": "noisy_tier_b_action_teacher_exception",
+      "meaning": "If later allowed, it only permits a tiny audited dry run, not large data/RL/robot.",
+      "status": "REQUIRES_EXPLICIT_USER_PROFESSOR_EXCEPTION"
+    },
+    {
+      "evidence": {
+        "positive_contact_seen": 0.0,
+        "positive_control_result": "FAIL",
+        "positive_control_valid_runtime": true,
+        "positive_reaction_context": 0.0,
+        "positive_reaction_signal": 1.0,
+        "positive_tap_success": 0.0,
+        "random_action_contact": 0.0,
+        "random_action_tap_success": 0.0,
+        "zero_action_contact": 0.0
+      },
+      "gate": "positive_control_tap_sanity_in_new_wrapper",
+      "meaning": "Before PPO, the wrapper should register contact-gated reaction under a deliberate tiny scripted policy.",
+      "status": "RUN_FAILED"
+    },
+    {
+      "evidence": {
+        "noisy_tierb_exception_recorded": false,
+        "strict_action_teacher_ready": false,
+        "tiny_action_dataset_allowed": false
+      },
+      "gate": "tiny_action_dataset_dry_run",
+      "meaning": "This is format/filter validation only; currently not allowed.",
+      "status": "BLOCKED_UNTIL_EXCEPTION_OR_CLEAN_TEACHER"
+    },
+    {
+      "evidence": {
+        "positive_control_tap_sanity_ready": false,
+        "teacher_or_exception_ready": false,
+        "wrapper_preflight_ready": true
+      },
+      "gate": "ppo_rl_training",
+      "meaning": "Do not start PPO from random sanity alone.",
+      "status": "BLOCKED"
+    },
+    {
+      "evidence": {
+        "hardware_safety_replay_validated": false,
+        "ppo_policy_validated": false
+      },
+      "gate": "roarm_m3_pro_deploy",
+      "meaning": "No robot step before policy validation plus safety replay.",
+      "status": "BLOCKED"
+    }
+  ],
+  "gpu_runtime": false,
+  "high_level_verdict": {
+    "isaac_lab_confusion_resolved": "LOCAL_GPU_WRAPPER_SANITY_ALREADY_PASSED; CPU_OR_SANDBOX_FAILURE_IS_NOT_PROMOTION_EVIDENCE",
+    "may_move_to_large_dataset": false,
+    "may_move_to_local_preflight_design": true,
+    "may_move_to_ppo_training": false,
+    "may_move_to_roarm": false
+  },
+  "inputs": {
+    "event_manifest": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_link5corner_event_label_metadata_manifest.json",
+    "positive_control_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_sanity.json",
+    "runtime_gate": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_env_runtime_gate_audit.json",
+    "teacher_policy": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_link5corner_noisy_tierb_teacher_policy_gate.json",
+    "visual_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_link5corner_visual_proxy_contact_inspection.json"
+  },
+  "local_preflight_policy_gate_only": true,
+  "next_allowed_local_only": [
+    "freeze reward/done/log contract for RoArm-CubeTap10cm-Direct-v0",
+    "design one tiny scripted positive-control tap sanity for the new wrapper",
+    "if positive-control failed, design one revised closed-loop positive-control candidate",
+    "review whether noisy Tier-B action-teacher exception is explicitly allowed"
+  ],
+  "not_allowed": [
+    "ppo training",
+    "large dataset generation",
+    "RoArm deployment",
+    "noisy Tier-B action teacher dataset without explicit exception",
+    "2-3mm contact-geometry tuning without explicit professor/user requirement"
+  ],
+  "robot_control": false,
+  "ssh": false,
+  "track_a": false,
+  "training": false
+}

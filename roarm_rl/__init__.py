@@ -35,3 +35,13 @@ gym.register(
         "rsl_rl_cfg_entry_point": "roarm_rl.agents.rsl_rl_ppo_cfg:RoArmPickPPORunnerCfg",
     },
 )
+
+gym.register(
+    id="RoArm-CubeTap10cm-Direct-v0",
+    entry_point="roarm_rl.roarm_cube_push_env:RoArmCubeTap10cmEnv",
+    disable_env_checker=True,
+    kwargs={
+        "env_cfg_entry_point": "roarm_rl.roarm_cube_push_env:RoArmCubeTap10cmEnvCfg",
+        "rsl_rl_cfg_entry_point": "roarm_rl.agents.rsl_rl_ppo_cfg:RoArmPickPPORunnerCfg",
+    },
+)

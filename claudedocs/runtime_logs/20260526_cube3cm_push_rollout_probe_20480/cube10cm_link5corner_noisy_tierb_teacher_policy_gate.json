@@ -1,0 +1,54 @@
+{
+  "artifact_type": "cube10cm_link5corner_noisy_tierb_teacher_policy_gate_v1",
+  "branch": "professor_cube10cm_tap_reaction_quality_tier",
+  "evidence": {
+    "accepted_window_clip_any_rate_mean": 0.6666666666666666,
+    "accepted_window_follow_p95_to_cap_p95": 0.20160675048828122,
+    "accepted_windows": 16,
+    "clean_diffik_teacher_window_ready": false,
+    "clean_tap_strength_visual_verified": false,
+    "early_freeze_supported": true,
+    "event_count": 16,
+    "grazing_or_outside_face_supported": true,
+    "tier_a": 0,
+    "tier_b": 16,
+    "tier_c": 0,
+    "weak_1mm_objective_accepted": true
+  },
+  "local_policy_gate_only": true,
+  "next_gate": {
+    "before_large_dataset": "dataset_schema_plus_teacher_policy_must_be_resolved",
+    "before_rl": "validate_10cm_tap_rl_env_random_sanity",
+    "before_robot": "validated_policy_plus_hardware_safety_replay",
+    "if_exception_later": "record_exception_then_only_a_tiny_audited_action_dataset_dryrun",
+    "if_no_exception": "keep_link5_as_event_label_metadata_only"
+  },
+  "no_gpu_isaaclab_dataset_training_robot_ssh": true,
+  "out_summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_link5corner_noisy_tierb_teacher_policy_gate_summary.out",
+  "policy_interpretation": {
+    "default_noisy_action_teacher_allowed": false,
+    "event_labels_are_allowed_without_action_targets": true,
+    "exception_does_not_unblock_large_dataset_rl_or_robot": true,
+    "explicit_exception_requested": false,
+    "quality_policy_resolved_for_training": false,
+    "tier_b_is_not_clean_teacher": true,
+    "tier_b_means_noisy_due_high_clip": true
+  },
+  "source_files": {
+    "acceptance_matrix_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_link5corner_acceptance_blocker_matrix.json",
+    "event_manifest_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_link5corner_event_label_metadata_manifest.json",
+    "reaction_window_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_reaction_window_link5corner_position_seed962_audit.json",
+    "visual_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_link5corner_visual_proxy_contact_inspection.json"
+  },
+  "statuses": {
+    "default_action_teacher_dataset_policy": "BLOCKED_DEFAULT_POLICY",
+    "event_label_metadata_manifest": "READY_LOCAL_ONLY",
+    "isaaclab_rl": "BLOCKED",
+    "large_isaaclab_dataset": "BLOCKED",
+    "noisy_tierb_action_teacher_candidate": "CANDIDATE_EXISTS",
+    "noisy_tierb_exception": "REQUIRES_EXPLICIT_USER_PROFESSOR_EXCEPTION",
+    "roarm_m3_pro": "BLOCKED",
+    "strict_clean_action_teacher": "BLOCKED",
+    "tiny_action_dataset_dryrun": "BLOCKED_UNLESS_EXCEPTION_RECORDED"
+  }
+}

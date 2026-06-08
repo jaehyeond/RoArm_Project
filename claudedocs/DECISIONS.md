@@ -9248,3 +9248,191 @@ Sources:
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_link5corner_visual_proxy_contact_inspection_summary.out:1-8`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_link5corner_visual_proxy_contact_inspection.json:1-85`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_link5corner_visual_proxy_contact_inspection.html`
+
+## D172 - Do not confuse local GPU IsaacLab evidence, trace visual inspection, and the default-off RL wrapper
+
+Date: 2026-06-08
+
+Decision:
+
+- Isaac Lab is not considered broken for this branch. The accepted evidence is
+  the local RTX 4090/cuda:0 IsaacLab sanity, not any sandbox/CPU diagnostic
+  failure.
+- The link5-corner visual inspection and the new
+  `RoArm-CubeTap10cm-Direct-v0` wrapper are different layers. The visual
+  inspection explains the existing DiffIK trace contact geometry; the wrapper
+  prevents the RL objective from silently reverting to the old 3cm relocation
+  contract.
+- The current gate unblocks only local preflight/design: event-label/quality-tier
+  metadata is ready locally and the default-off 10cm tap wrapper contract passed
+  local sanity.
+- Random/zero-action wrapper sanity is not tap-success evidence. It proves the
+  env contract is stable and logs the right contact/reaction/overshoot fields.
+- PPO, large dataset generation, action-teacher dataset, and RoArm remain blocked
+  until a separate positive-control tap sanity and teacher-quality/exception
+  policy are resolved.
+
+Evidence:
+
+- Runtime environment probe summary lines 2-5 show local GPU availability:
+  `nvidia-smi` OK, torch CUDA available, device 0 is RTX 4090 Laptop, and CPU
+  sanity is not promotion evidence.
+- Static contract summary line 2 shows the old env is preserved and the new env
+  is registered default-off; line 4 confirms the tap objective, no default final
+  1cm requirement, and table-top alignment with `TABLE_Z`.
+- Runtime gate audit summary lines 3-4 show zero/random local GPU sanity passed,
+  but contact/reaction/tap-success are all `0.0`.
+- Runtime gate audit summary line 5 says wrapper sanity is unblocked only for
+  local preflight, while action teacher, large dataset, PPO, and RoArm remain
+  blocked.
+- Event-label manifest summary lines 1-6 say the link5 result is local metadata
+  only: 16 contact/reaction events, all Tier B, clean teacher false, default
+  action-teacher dataset not allowed, and RL/RoArm blocked.
+- Noisy Tier-B teacher policy summary lines 3-7 block strict action-teacher use:
+  clean teacher false, Tier B count 16, clip mean `0.666666667`, explicit
+  exception required, and large dataset/RL/RoArm still blocked.
+- Preflight/policy gate summary lines 1-7 consolidate the same state: IsaacLab
+  local GPU evidence is OK, event-label metadata and wrapper local preflight are
+  ready, strict action teacher and PPO/RoArm are blocked, and the next allowed
+  work is local reward/done/log contract freeze plus scripted positive-control
+  design.
+
+Implication:
+
+- When discussing the next step, say precisely which layer is being promoted:
+  event metadata, RL wrapper preflight, action teacher, PPO, or robot.
+- Do not infer PPO/RL readiness from random sanity or weak 1mm event labels.
+- Do not request another GPU runtime unless the exact next candidate is explicit
+  and approved.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_env_runtime_env_probe_summary.out:2-5`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_env_contract_static_audit_summary.out:2-6`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_env_runtime_gate_audit_summary.out:1-6`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_link5corner_event_label_metadata_manifest_summary.out:1-6`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_link5corner_noisy_tierb_teacher_policy_gate_summary.out:1-7`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_preflight_policy_gate_summary.out:1-7`
+- `sim_scripts/cube10cm_tap_rl_preflight_policy_gate.py`
+
+## D173 - Freeze the 10cm tap RL reward/done/log contract before any positive-control runtime
+
+Date: 2026-06-08
+
+Decision:
+
+- The next local step after the preflight/policy gate is not PPO and not a
+  dataset. It is a contract freeze plus a designed, not-yet-run, positive-control
+  sanity.
+- The default-off `RoArm-CubeTap10cm-Direct-v0` contract is frozen around
+  tap/reaction/contact, not final 1cm relocation.
+- Reaction must remain contact-gated: raw speed/displacement/z/tip signals are
+  logged separately and should not count as tap reaction without contact context.
+- The designed positive-control sanity may only be considered as one tiny local
+  GPU runtime after explicit approval. Passing it would show the wrapper can
+  register deliberate contact-gated reaction; it would not by itself unblock
+  action-teacher dataset, PPO, large data, or RoArm.
+
+Evidence:
+
+- Contract positive-control design summary line 1 confirms local design/static
+  audit only: no GPU runtime, dataset generation, training, robot control, SSH,
+  B200, or Track A.
+- Summary line 2 freezes the objective/reaction contract: final 1cm is not
+  required by default, tap target is `0.001m`, overshoot is `0.020m`, and
+  reaction is contact-gated.
+- Summary line 3 freezes reward/done: final-success leak count is `0`, overshoot
+  terminates, and success termination is off by default.
+- Summary line 4 freezes the logging contract with separate raw reaction,
+  contact context, reaction-seen, overshoot, and success logs.
+- Summary lines 5-6 define the not-yet-run scripted positive-control sanity:
+  `RoArm-CubeTap10cm-Direct-v0`, `cuda:0`, `num_envs=2`, `max_steps=120`, scripted
+  TCP DifferentialIK-to-joint-delta actions, and pass/fail based on contact,
+  contact-gated reaction, tap success, overshoot, and final flag.
+- Summary line 7 says this only unblocks consideration of a local positive-control
+  runtime request; PPO, large dataset, RoArm, and action teacher remain blocked.
+
+Implication:
+
+- The next runtime, if requested later, must be judged by the frozen contract and
+  not retroactively by final relocation or random-action behavior.
+- Do not start PPO from this design. A positive-control sanity has not been run.
+- Do not use noisy Tier-B link5 actions as teacher targets unless an explicit
+  exception is recorded.
+
+Sources:
+
+- `sim_scripts/cube10cm_tap_rl_contract_positive_control_design.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_contract_positive_control_design_summary.out:1-7`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_contract_positive_control_design.json:1-190`
+- `roarm_rl/roarm_cube_push_env.py:254-271,1053-1062,1095-1152`
+
+## D174 - First 10cm tap RL positive-control runtime fails contact, but validates the false-positive guard
+
+Date: 2026-06-08
+
+Decision:
+
+- The approved tiny local positive-control sanity was run on local RTX4090/cuda:0
+  with local USD and no dataset/PPO/robot/B200/SSH/Track A.
+- The first launch was blocked before env creation by a harness-only
+  `TerrainImporterCfg(use_terrain_origins)` incompatibility. That is not physics
+  evidence; the harness was fixed.
+- The actual rollout failed the positive-control gate. Reset IK and teacher goal
+  were valid, but the controller did not close the side-contact face gap, so no
+  contact context was ever registered.
+- This is useful negative evidence: raw reaction speed fired, but because contact
+  context stayed false, the wrapper did not promote it to reaction seen or tap
+  success.
+- Therefore the 10cm tap wrapper is still not PPO/RL-ready. Positive-control tap
+  is not passed; large dataset, action-teacher dataset, and RoArm remain blocked.
+- A revised `external_closed_loop` positive-control candidate is code-ready and
+  locally designed, but not run. Any new GPU runtime requires explicit approval.
+
+Evidence:
+
+- Positive-control summary line 1 shows an actual local tiny GPU runtime:
+  `status=FAIL`, `gpu_runtime=YES_LOCAL_TINY_ISAACLAB_POSITIVE_CONTROL`, no
+  dataset generation, training, robot control, SSH, B200, or Track A.
+- Summary line 2 confirms the env contract: `RoArm-CubeTap10cm-Direct-v0`,
+  `cuda:0`, cube size `0.1`, mass `0.72`, final 1cm required `False`.
+- Summary line 3 records the tested controller setup: `num_envs=2`,
+  `max_steps=120`, fixed cube `(0.25,0.0)`, push dir `(1.0,0.0)`,
+  precontact `0.02`, side-center TCP margin `-0.05`, goal push `0.006`.
+- Summary line 4 shows reset was not the blocker: IK endpoint reset rate `1.0`,
+  IK error `0.688510537mm`, teacher goal OK rate `1.0`, initial face gap
+  `-0.020252299m`, and vertical offset `0.000640199m`.
+- Summary line 5 shows the critical failure: contact seen `0.0`, reaction signal
+  `1.0`, reaction contact context `0.0`, reaction seen `0.0`, overshoot `0.0`,
+  and tap success `0.0`.
+- Summary line 6 shows motion stayed below the 1mm tap gate:
+  max displacement `0.000824004m`, max z delta `0.000043014m`, max speed
+  `0.077039227m/s`, terminated `0`, truncated `2`.
+- Failure audit summary line 3 shows the controller did not close the face gap:
+  final face gap `-0.021077018m`, gap moved by `-0.000824720m`, and the final
+  shortfall to the contact band was `0.011077018m`.
+- Failure audit line 5 confirms raw reaction without context and wrapper
+  false-positive blocking: `raw_reaction_without_context=True`,
+  `wrapper_blocked_false_positive=True`.
+- Revised candidate design summary lines 1-6 define the next possible local
+  candidate only: `external_closed_loop`, action smoothing `1.0`, contact joint
+  delta scale `1.0`, closed-loop push steps `72`, side-center TCP, status
+  `DESIGNED_NOT_RUN`, explicit GPU approval required.
+
+Implication:
+
+- Do not treat the positive-control as passed.
+- Do not start PPO, large dataset generation, action-teacher dataset, or RoArm.
+- The next technical question is narrow: can a closed-loop scripted IK controller
+  make the wrapper register contact-gated reaction under the already frozen
+  pass/fail gate?
+
+Sources:
+
+- `roarm_rl/test_positive_control_cube_tap10cm.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_sanity_summary.out:1-7`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_sanity.json:1-73`
+- `sim_scripts/cube10cm_tap_rl_positive_control_failure_audit.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_failure_audit_summary.out:1-7`
+- `sim_scripts/cube10cm_tap_rl_revised_positive_control_candidate_design.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_revised_positive_control_candidate_design_summary.out:1-6`

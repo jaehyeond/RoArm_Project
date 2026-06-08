@@ -1,0 +1,122 @@
+{
+  "artifact_type": "cube10cm_tap_rl_contract_positive_control_design_v1",
+  "b200": false,
+  "branch": "professor_cube10cm_tap_reaction_quality_tier",
+  "dataset_generation": false,
+  "done_contract": {
+    "frozen": true,
+    "lines": {
+      "optional_success_terminate": 1150,
+      "terminated_on_overshoot": 1148,
+      "time_truncation": 964
+    },
+    "success_terminate_default": false
+  },
+  "gate_interpretation": {
+    "after_design_can_request_runtime": false,
+    "large_dataset_unblocked_by_this": false,
+    "ppo_unblocked_by_this": false,
+    "random_sanity_is_not_tap_success": true,
+    "roarm_unblocked_by_this": false,
+    "wrapper_ready_for_local_preflight_design": true
+  },
+  "gpu_runtime": false,
+  "local_design_static_audit_only": true,
+  "log_contract": {
+    "frozen": true,
+    "lines": {
+      "contact_seen": 1124,
+      "final_required_flag": 1116,
+      "mass": 1118,
+      "max_disp": 1132,
+      "max_speed": 1135,
+      "max_z": 1134,
+      "overshoot_seen": 1130,
+      "reaction_context": 1126,
+      "reaction_seen": 1128,
+      "reaction_signal": 1125,
+      "size": 1117,
+      "tap_success": 1131
+    }
+  },
+  "objective_contract": {
+    "frozen": true,
+    "lines": {
+      "final_relocation_default_off": 255,
+      "objective_name": 254,
+      "overshoot_2cm": 263,
+      "success_terminate_default_off": 264,
+      "tap_target_1mm": 259
+    }
+  },
+  "positive_control_design": {
+    "action_semantics": "normalized_joint_delta_command",
+    "controller": "scripted_tcp_differential_ik_to_joint_delta_actions",
+    "device": "cuda:0",
+    "env_id": "RoArm-CubeTap10cm-Direct-v0",
+    "fail_criteria": [
+      "contact remains 0",
+      "reaction signal appears without contact context",
+      "overshoot seen",
+      "final relocation flag is nonzero",
+      "non-finite reward",
+      "missing required tap logs"
+    ],
+    "local_asset_required": true,
+    "max_steps": 120,
+    "num_envs": 2,
+    "pass_criteria": {
+      "contact_seen_rate_gt": 0.0,
+      "final_1cm_required_flag": 0.0,
+      "overshoot_seen_rate_eq": 0.0,
+      "reaction_contact_context_rate_gt": 0.0,
+      "reaction_seen_rate_gt": 0.0,
+      "tap_success_rate_gt": 0.0,
+      "terminated_count_eq": 0
+    },
+    "runtime_permission": "REQUIRES_EXPLICIT_APPROVAL",
+    "status": "DESIGNED_NOT_RUN",
+    "trajectory": [
+      "reset with cube at 10cm/0.72kg contract pose",
+      "move TCP to a conservative precontact point in front of live side face",
+      "advance through side-center contact using small joint-delta steps",
+      "stop when contact-gated reaction is observed or overshoot guard fires"
+    ]
+  },
+  "reaction_contract": {
+    "frozen": true,
+    "lines": {
+      "contact_context": 1059,
+      "contact_gated_reaction": 1060,
+      "overshoot": 1061,
+      "raw_reaction_signal": 1058,
+      "success": 1062
+    }
+  },
+  "reward_contract": {
+    "final_success_leaks": [],
+    "frozen": true,
+    "lines": {
+      "contact": 1106,
+      "contact_proximity": 1107,
+      "overshoot_penalty": 1110,
+      "progress": 894,
+      "reaction": 1108,
+      "tip_penalty": 1111,
+      "transient_disp": 1109
+    }
+  },
+  "robot_control": false,
+  "sanity_harness_contract": {
+    "frozen_for_design": true,
+    "lines": {
+      "default_cuda": 109,
+      "final_flag_assert": 235,
+      "local_usd": 23,
+      "required_logs": 219
+    }
+  },
+  "ssh": false,
+  "track_a": false,
+  "training": false
+}

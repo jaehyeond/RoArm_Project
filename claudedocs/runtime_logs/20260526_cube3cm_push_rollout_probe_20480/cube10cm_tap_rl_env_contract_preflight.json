@@ -1,0 +1,82 @@
+{
+  "artifact_type": "cube10cm_tap_rl_env_contract_preflight_v1",
+  "branch": "professor_cube10cm_tap_reaction_quality_tier",
+  "current_env_conflicts": {
+    "cube_size_3cm": 31,
+    "doc_3cm_task": 1,
+    "mass_20g": 72,
+    "push_target_4cm": 99,
+    "success_bonus": 173,
+    "success_disp_3cm": 100,
+    "success_speed_gate": 819,
+    "success_target_distance_gate": 818
+  },
+  "local_contract_preflight_only": true,
+  "next_implementation_step": "create a default-off 10cm tap env config or separate env wrapper that changes object size/mass/objective/reward/done/logging without starting training",
+  "no_gpu_isaaclab_dataset_training_robot_ssh": true,
+  "out_summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_env_contract_preflight_summary.out",
+  "required_contract": {
+    "object": {
+      "cube_mass_kg": 0.72,
+      "cube_size_m": [
+        0.1,
+        0.1,
+        0.1
+      ],
+      "density_preserving_from_professor_branch": true
+    },
+    "policy_boundaries": {
+      "action_teacher_dataset_available": false,
+      "event_labels_available": true,
+      "large_dataset_allowed": false,
+      "rl_training_allowed": false,
+      "robot_deploy_allowed": false
+    },
+    "primary_objective": {
+      "must_not_require_by_default": [
+        "final_1cm_relocation",
+        "final_retention",
+        "3cm_success_marker",
+        "target_xy_final_distance_success"
+      ],
+      "name": "tap_reaction_contact_not_final_relocation",
+      "requires": [
+        "contact_evidence",
+        "reaction_signal",
+        "no_posewrite",
+        "no_overshoot",
+        "weak_1mm_tap_reaction_if_accepted"
+      ]
+    },
+    "reward_and_done_contract": {
+      "done_should_not_default_to": [
+        "3cm_relocation_success",
+        "final_target_xy_distance_success"
+      ],
+      "random_sanity_before_training": [
+        "reset cube is 10cm and 0.72kg",
+        "zero/random policy logs contact/reaction/overshoot separately",
+        "success metric is tap-event, not relocation",
+        "no object posewrite or grasp attach"
+      ],
+      "reward_should_favor": [
+        "contact_event",
+        "small_transient_disp_or_speed_reaction",
+        "no_overshoot",
+        "low_tip_or_stability_sanity"
+      ]
+    }
+  },
+  "source_files": {
+    "event_manifest_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_link5corner_event_label_metadata_manifest.json",
+    "promotion_gate_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_link5corner_next_stage_promotion_gate.json",
+    "rl_env_py": "/home/cgxr/Documents/Robotics/RoArm_Project/roarm_rl/roarm_cube_push_env.py"
+  },
+  "statuses": {
+    "contract_preflight": "READY_LOCAL_ONLY",
+    "current_roarm_cube_push_env": "INCOMPATIBLE_WITH_10CM_TAP_CONTRACT",
+    "ppo_rl_training": "BLOCKED",
+    "random_sanity_runtime": "BLOCKED_UNTIL_ENV_CONTRACT_IMPLEMENTED",
+    "roarm_m3_pro_deployment": "BLOCKED"
+  }
+}

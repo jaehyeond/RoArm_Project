@@ -1,0 +1,5 @@
+line1 artifact=cube10cm_tap_rl_env_random_sanity_v1 status=PASS gpu_runtime=YES_LOCAL_TINY_ISAACLAB_RANDOM_SANITY dataset_generation=NO training=NO robot_control=NO ssh=NO
+line2 env_contract env_id=RoArm-CubeTap10cm-Direct-v0 cube_size_m=0.1 cube_mass_kg=0.72 terrain_table_z_m=-0.012117 final_1cm_required=False
+line3 rollout num_envs=2 steps=40 obs_shape=[2, 28] reward_finite=True truncated_count=0 terminated_count=0
+line4 tap_logs required_log_keys_present=True contact_seen=0.0 reaction_signal_now=0.0 reaction_contact_context=0.0 reaction_seen=0.0 overshoot_seen=0.0 tap_success=0.0
+line5 verdict random_sanity=PASS blocker=NONE ppo_rl_training=BLOCKED large_dataset=BLOCKED roarm=BLOCKED

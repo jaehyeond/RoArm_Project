@@ -1,0 +1,7 @@
+line1 artifact=cube10cm_link5corner_acceptance_blocker_matrix_v1 local_matrix_only=YES gpu_runtime=NO dataset_generation=NO training=NO robot_control=NO ssh=NO
+line2 decision weak_1mm_tap_reaction_accepted=True strong_tap_required_by_current_docs=False stop_contact_geometry_gpu_tuning=True
+line3 event_evidence reaction_gate_pass=True contact=1.000000000 reaction=1.000000000 overshoot=0.000000000 no_posewrite=True max_disp=0.001431603 speed=0.024424722 low_motion=1.000000000
+line4 visual_contact side_center_z_rate=1.000000000 proxy_not_top_rate=1.000000000 proxy_gap=-0.006247562 target_gap=-0.002771095 contact_stop_same=1.000000000
+line5 quality_teacher clean_teacher=False tiers={'B_REACTION_VALID_FOLLOW_OK_CLIP_HIGH': 16} clip_mean=0.666666667 follow_p95_to_cap=0.201606750 final_tcp_err=0.038090036 action_teacher_ready=False
+line6 matrix event_label_manifest=READY_LOCAL_ONLY diffik_action_teacher=BLOCKED large_isaaclab_dataset=BLOCKED ten_cm_rl_env_random_sanity=BLOCKED_BY_ENV_CONTRACT isaaclab_rl=BLOCKED roarm_m3_pro=BLOCKED
+line7 next_local_only build_or_update_link5_specific_event_label_metadata_manifest_and_teacher_policy_matrix; do_not_run_gpu_dataset_rl_roarm

@@ -1,0 +1,6 @@
+line1 artifact=cube10cm_tap_rl_env_contract_static_audit_v1 local_static_audit_only=YES gpu_runtime=NO dataset_generation=NO training=NO robot_control=NO ssh=NO
+line2 default_off old_env_preserved=True new_env_registered=True training_entrypoint_unchanged=True
+line3 object_contract cube_size=0.100m cube_mass=0.720kg size_line=33 mass_line=34
+line4 objective_contract objective=tap_reaction_contact_not_final_relocation final_1cm_required_by_default=NO table_top_z=TABLE_Z final_gate_leak_count=0 tap_target=0.001m overshoot=0.020m
+line5 logging_contract contact_reaction_overshoot_separate=True
+line6 verdict static_contract=PASS random_sanity_runtime=NEXT_IF_LOCAL_ISAACLAB_LAUNCHER_AVAILABLE ppo_rl_training=BLOCKED large_dataset=BLOCKED roarm=BLOCKED

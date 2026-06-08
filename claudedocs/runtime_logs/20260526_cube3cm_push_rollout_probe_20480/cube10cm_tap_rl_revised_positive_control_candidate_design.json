@@ -1,0 +1,71 @@
+{
+  "artifact_type": "cube10cm_tap_rl_revised_positive_control_candidate_design_v1",
+  "b200": false,
+  "branch": "professor_cube10cm_tap_reaction_quality_tier",
+  "candidate": {
+    "command": "conda run -n isaaclab --no-capture-output python -u -m roarm_rl.test_positive_control_cube_tap10cm --num_envs 2 --steps 120 --seed 962 --device cuda:0 --controller_mode external_closed_loop --action_smoothing_alpha 1.0 --contact_joint_delta_scale 1.0 --closed_loop_push_steps 72",
+    "does_not_change": [
+      "10cm/0.72kg object contract",
+      "tap/reaction/contact objective",
+      "final 1cm remains default-off",
+      "reward/done/pass-fail gate",
+      "dataset/RL/RoArm state"
+    ],
+    "fixed": {
+      "cube_xy_m": [
+        0.25,
+        0.0
+      ],
+      "device": "cuda:0",
+      "env_id": "RoArm-CubeTap10cm-Direct-v0",
+      "goal_push_m": 0.006,
+      "max_steps": 120,
+      "num_envs": 2,
+      "precontact_clearance_m": 0.02,
+      "push_dir": [
+        1.0,
+        0.0
+      ],
+      "tcp_top_margin_m": -0.05
+    },
+    "one_variable_intent": "controller_execution_only",
+    "pass_gate": {
+      "contact_seen_gt": 0.0,
+      "final_flag_eq": 0.0,
+      "overshoot_eq": 0.0,
+      "reaction_contact_context_gt": 0.0,
+      "reaction_seen_gt": 0.0,
+      "tap_success_gt": 0.0
+    },
+    "requires_explicit_gpu_approval": true,
+    "status": "DESIGNED_NOT_RUN"
+  },
+  "code_lines": {
+    "action_smoothing_arg": 195,
+    "closed_loop_action_call": 318,
+    "closed_loop_fn": 66,
+    "contact_delta_scale_arg": 196,
+    "controller_arg": 191
+  },
+  "code_ready": true,
+  "dataset_generation": false,
+  "failure_mode_ok": true,
+  "gpu_runtime": false,
+  "local_design_static_audit_only": true,
+  "prior_failure": {
+    "final_gap_shortfall_to_contact_band_m": 0.011077018231153488,
+    "raw_reaction_without_context": true,
+    "wrapper_blocked_false_positive": true
+  },
+  "robot_control": false,
+  "ssh": false,
+  "still_blocked": {
+    "action_teacher_dataset": "BLOCKED",
+    "large_dataset": "BLOCKED",
+    "ppo_rl_training": "BLOCKED",
+    "roarm": "BLOCKED"
+  },
+  "track_a": false,
+  "training": false,
+  "verdict": "READY_FOR_EXPLICIT_RUNTIME_APPROVAL_ONLY"
+}

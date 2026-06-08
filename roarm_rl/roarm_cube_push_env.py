@@ -15,7 +15,7 @@ import numpy as np
 import torch
 
 import isaaclab.sim as sim_utils
-from isaaclab.assets import RigidObjectCfg
+from isaaclab.assets import Articulation, RigidObject, RigidObjectCfg
 from isaaclab.utils import configclass
 from isaaclab.utils.math import sample_uniform
 
@@ -30,6 +30,13 @@ from roarm_rl.roarm_stack_env import (
 
 CUBE_SIZE_M = 0.030
 CUBE_CENTER_Z = TABLE_Z + CUBE_SIZE_M / 2.0
+CUBE10CM_SIZE_M = 0.100
+CUBE10CM_MASS_KG = 0.720
+CUBE10CM_CENTER_Z = TABLE_Z + CUBE10CM_SIZE_M / 2.0
+TAP_TABLE_SIZE_X_M = 1.000
+TAP_TABLE_SIZE_Y_M = 1.000
+TAP_TABLE_THICKNESS_M = 0.020
+TAP_TABLE_CENTER_Z = TABLE_Z - TAP_TABLE_THICKNESS_M / 2.0
 
 AUDIT_SPEED_P95_MPS = 1.302103193
 AUDIT_SPEED_P99_MPS = 1.733444051
@@ -171,6 +178,97 @@ class RoArmCubePushEnvCfg(RoArmStackEnvCfg):
     speed_penalty_start_mps: float = 0.500
     impact_terminal_penalty: float = 10.0
     success_bonus: float = 12.0
+
+
+@configclass
+class RoArmCubeTap10cmEnvCfg(RoArmCubePushEnvCfg):
+    """Default-off config for the professor 10cm/0.72kg tap/reaction task."""
+
+    tap_table: RigidObjectCfg = RigidObjectCfg(
+        prim_path="/World/envs/env_.*/TapTable",
+        spawn=sim_utils.CuboidCfg(
+            size=(TAP_TABLE_SIZE_X_M, TAP_TABLE_SIZE_Y_M, TAP_TABLE_THICKNESS_M),
+            rigid_props=sim_utils.RigidBodyPropertiesCfg(
+                kinematic_enabled=True,
+                disable_gravity=True,
+            ),
+            collision_props=sim_utils.CollisionPropertiesCfg(),
+            physics_material=sim_utils.RigidBodyMaterialCfg(
+                static_friction=1.5,
+                dynamic_friction=1.2,
+                restitution=0.0,
+            ),
+            visual_material=sim_utils.PreviewSurfaceCfg(
+                diffuse_color=(0.42, 0.42, 0.42),
+                metallic=0.0,
+            ),
+        ),
+        init_state=RigidObjectCfg.InitialStateCfg(
+            pos=(0.30, 0.00, TAP_TABLE_CENTER_Z),
+            rot=(1.0, 0.0, 0.0, 0.0),
+        ),
+    )
+
+    sponge: RigidObjectCfg = RigidObjectCfg(
+        prim_path="/World/envs/env_.*/Sponge",
+        spawn=sim_utils.CuboidCfg(
+            size=(CUBE10CM_SIZE_M, CUBE10CM_SIZE_M, CUBE10CM_SIZE_M),
+            rigid_props=sim_utils.RigidBodyPropertiesCfg(
+                solver_position_iteration_count=12,
+                solver_velocity_iteration_count=2,
+                max_angular_velocity=10.0,
+                max_linear_velocity=10.0,
+                max_depenetration_velocity=5.0,
+                disable_gravity=False,
+            ),
+            mass_props=sim_utils.MassPropertiesCfg(mass=CUBE10CM_MASS_KG),
+            collision_props=sim_utils.CollisionPropertiesCfg(),
+            physics_material=sim_utils.RigidBodyMaterialCfg(
+                static_friction=1.5,
+                dynamic_friction=1.2,
+                restitution=0.0,
+            ),
+            visual_material=sim_utils.PreviewSurfaceCfg(
+                diffuse_color=(0.32, 0.58, 0.86),
+                metallic=0.0,
+            ),
+        ),
+        init_state=RigidObjectCfg.InitialStateCfg(
+            pos=(0.30, 0.00, CUBE10CM_CENTER_Z),
+            rot=(1.0, 0.0, 0.0, 0.0),
+        ),
+    )
+
+    cube_size_x_m: float = CUBE10CM_SIZE_M
+    cube_size_y_m: float = CUBE10CM_SIZE_M
+    cube_size_z_m: float = CUBE10CM_SIZE_M
+    cube_push_target_disp_m: float = 0.001
+    cube_success_disp_m: float = 0.001
+    cube_success_target_tol_m: float = 1.0
+    cube_success_speed_max_mps: float = 10.0
+    cube_low_motion_disp_m: float = 0.0005
+    cube_far_target_terminate_m: float = 0.200
+    cube_impact_terminate_disp_m: float = 0.050
+    success_bonus: float = 0.0
+
+    tap_objective_name: str = "tap_reaction_contact_not_final_relocation"
+    tap_final_relocation_required: bool = False
+    tap_contact_face_band_m: float = 0.010
+    tap_contact_lateral_margin_m: float = 0.015
+    tap_contact_vertical_margin_m: float = 0.020
+    tap_reaction_disp_m: float = 0.001
+    tap_reaction_z_delta_m: float = 0.002
+    tap_reaction_speed_mps: float = 0.020
+    tap_reaction_tip_angle_deg: float = 1.0
+    tap_overshoot_disp_m: float = 0.020
+    tap_success_terminate: bool = False
+
+    tap_contact_reward_scale: float = 1.0
+    tap_reaction_reward_scale: float = 4.0
+    tap_transient_disp_reward_scale: float = 40.0
+    tap_contact_proximity_reward_scale: float = 0.8
+    tap_overshoot_penalty_scale: float = 12.0
+    tap_tip_penalty_scale: float = 0.02
 
 
 class RoArmCubePushEnv(RoArmStackEnv):
@@ -863,5 +961,192 @@ class RoArmCubePushEnv(RoArmStackEnv):
         )
         self._push_success_flag = self._push_success_flag | success_now
         terminated = success_now | terms["terminal_impact"]
+        truncated = self.episode_length_buf >= self.max_episode_length - 1
+        return terminated, truncated
+
+
+class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
+    """Default-off 10cm/0.72kg tap/reaction env with event-first metrics."""
+
+    cfg: RoArmCubeTap10cmEnvCfg
+
+    def __init__(self, cfg: RoArmCubeTap10cmEnvCfg, render_mode: str | None = None, **kwargs):
+        super().__init__(cfg, render_mode, **kwargs)
+        self._ensure_tap_buffers()
+
+    def _setup_scene(self):
+        self._robot = Articulation(self.cfg.robot)
+        self._sponge = RigidObject(self.cfg.sponge)
+        self._tap_table = RigidObject(self.cfg.tap_table)
+        self.scene.articulations["robot"] = self._robot
+        self.scene.rigid_objects["sponge"] = self._sponge
+        self.scene.rigid_objects["tap_table"] = self._tap_table
+
+        self.cfg.terrain.num_envs = self.scene.cfg.num_envs
+        self.cfg.terrain.env_spacing = self.scene.cfg.env_spacing
+        self._terrain = self.cfg.terrain.class_type(self.cfg.terrain)
+
+        self.scene.clone_environments(copy_from_source=False)
+        if self.device == "cpu":
+            self.scene.filter_collisions(global_prim_paths=[self.cfg.terrain.prim_path])
+
+        light_cfg = sim_utils.DomeLightCfg(intensity=1000.0, color=(0.85, 0.85, 0.85))
+        light_cfg.func("/World/Light", light_cfg)
+
+    def _ensure_tap_buffers(self) -> None:
+        self._ensure_push_buffers()
+        if hasattr(self, "_tap_contact_seen"):
+            return
+        self._tap_contact_seen = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
+        self._tap_reaction_seen = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
+        self._tap_overshoot_seen = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
+        self._tap_success_flag = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
+        self._tap_max_disp_along = torch.zeros(self.num_envs, device=self.device)
+        self._tap_max_disp_xy = torch.zeros(self.num_envs, device=self.device)
+        self._tap_max_z_delta = torch.zeros(self.num_envs, device=self.device)
+        self._tap_max_speed = torch.zeros(self.num_envs, device=self.device)
+        self._tap_max_tip_angle_deg = torch.zeros(self.num_envs, device=self.device)
+
+    def _reset_idx(self, env_ids: torch.Tensor | None):
+        super()._reset_idx(env_ids)
+        self._ensure_tap_buffers()
+        if env_ids is None:
+            env_ids = self._robot._ALL_INDICES
+        self._tap_contact_seen[env_ids] = False
+        self._tap_reaction_seen[env_ids] = False
+        self._tap_overshoot_seen[env_ids] = False
+        self._tap_success_flag[env_ids] = False
+        self._tap_max_disp_along[env_ids] = 0.0
+        self._tap_max_disp_xy[env_ids] = 0.0
+        self._tap_max_z_delta[env_ids] = 0.0
+        self._tap_max_speed[env_ids] = 0.0
+        self._tap_max_tip_angle_deg[env_ids] = 0.0
+
+    def _tap_terms(self) -> dict[str, torch.Tensor]:
+        self._ensure_tap_buffers()
+        terms = self._push_terms()
+
+        half_xy = torch.tensor(
+            (0.5 * float(self.cfg.cube_size_x_m), 0.5 * float(self.cfg.cube_size_y_m)),
+            device=self.device,
+            dtype=torch.float32,
+        )
+        half_z = 0.5 * float(self.cfg.cube_size_z_m)
+        rel_xy = self._tcp_pos_w[:, 0:2] - self._sponge_pos_w[:, 0:2]
+        along = torch.sum(rel_xy * self._push_dir_xy, dim=-1)
+        lateral = torch.norm(rel_xy - along.unsqueeze(-1) * self._push_dir_xy, p=2, dim=-1)
+        half_along = torch.sum(torch.abs(self._push_dir_xy) * half_xy.unsqueeze(0), dim=-1)
+        face_gap = along + half_along
+        vertical_offset = torch.abs(self._tcp_pos_w[:, 2] - self._sponge_pos_w[:, 2])
+        contact_proxy = (
+            (face_gap >= -float(self.cfg.tap_contact_face_band_m))
+            & (face_gap <= float(self.cfg.tap_contact_face_band_m))
+            & (lateral <= half_along + float(self.cfg.tap_contact_lateral_margin_m))
+            & (vertical_offset <= half_z + float(self.cfg.tap_contact_vertical_margin_m))
+        )
+        contact_proximity = 1.0 - torch.clamp(
+            torch.abs(face_gap) / max(float(self.cfg.tap_contact_face_band_m), 1.0e-6),
+            min=0.0,
+            max=1.0,
+        )
+
+        z_delta = torch.abs(self._sponge_pos_w[:, 2] - self._cube_start_w[:, 2])
+        disp_reaction = terms["disp_along"] >= float(self.cfg.tap_reaction_disp_m)
+        z_reaction = z_delta >= float(self.cfg.tap_reaction_z_delta_m)
+        speed_reaction = terms["speed"] >= float(self.cfg.tap_reaction_speed_mps)
+        tip_reaction = contact_proxy & (terms["tip_angle_deg"] >= float(self.cfg.tap_reaction_tip_angle_deg))
+        reaction_signal_now = disp_reaction | z_reaction | speed_reaction | tip_reaction
+        contact_context = contact_proxy | self._tap_contact_seen
+        reaction_now = contact_context & reaction_signal_now
+        overshoot_now = terms["disp_xy"] >= float(self.cfg.tap_overshoot_disp_m)
+        success_now = (contact_proxy | self._tap_contact_seen) & reaction_now & ~overshoot_now
+
+        terms.update(
+            {
+                "tap_contact_proxy": contact_proxy,
+                "tap_contact_proximity": contact_proximity,
+                "tap_contact_face_gap_m": face_gap,
+                "tap_contact_lateral_m": lateral,
+                "tap_contact_vertical_offset_m": vertical_offset,
+                "tap_z_delta_m": z_delta,
+                "tap_reaction_signal_now": reaction_signal_now,
+                "tap_reaction_contact_context": contact_context,
+                "tap_reaction_now": reaction_now,
+                "tap_overshoot_now": overshoot_now,
+                "tap_success_now": success_now,
+            }
+        )
+        return terms
+
+    def _update_tap_buffers(self, terms: dict[str, torch.Tensor]) -> torch.Tensor:
+        self._tap_contact_seen |= terms["tap_contact_proxy"]
+        self._tap_reaction_seen |= terms["tap_reaction_now"]
+        self._tap_overshoot_seen |= terms["tap_overshoot_now"]
+        self._tap_max_disp_along[:] = torch.maximum(self._tap_max_disp_along, torch.clamp(terms["disp_along"], min=0.0))
+        self._tap_max_disp_xy[:] = torch.maximum(self._tap_max_disp_xy, terms["disp_xy"])
+        self._tap_max_z_delta[:] = torch.maximum(self._tap_max_z_delta, terms["tap_z_delta_m"])
+        self._tap_max_speed[:] = torch.maximum(self._tap_max_speed, terms["speed"])
+        self._tap_max_tip_angle_deg[:] = torch.maximum(self._tap_max_tip_angle_deg, terms["tip_angle_deg"])
+        success_now = self._tap_contact_seen & self._tap_reaction_seen & ~self._tap_overshoot_seen
+        just_succeeded = success_now & ~self._tap_success_flag
+        self._tap_success_flag |= success_now
+        return just_succeeded
+
+    def _get_rewards(self) -> torch.Tensor:
+        self._compute_intermediate_values()
+        terms = self._tap_terms()
+        just_succeeded = self._update_tap_buffers(terms)
+
+        progress = torch.clamp(terms["disp_along"] - self._prev_disp_along, min=-0.005, max=0.005)
+        self._prev_disp_along[:] = terms["disp_along"].detach()
+        transient_disp = torch.clamp(terms["disp_along"], min=0.0, max=float(self.cfg.tap_overshoot_disp_m))
+        action_penalty = -torch.sum(self.actions ** 2, dim=-1) * self.cfg.action_penalty_scale
+        rewards = (
+            self.cfg.push_progress_reward_scale * progress
+            + self.cfg.tap_contact_reward_scale * terms["tap_contact_proxy"].float()
+            + self.cfg.tap_contact_proximity_reward_scale * terms["tap_contact_proximity"]
+            + self.cfg.tap_reaction_reward_scale * just_succeeded.float()
+            + self.cfg.tap_transient_disp_reward_scale * transient_disp
+            - self.cfg.tap_overshoot_penalty_scale * self._tap_overshoot_seen.float()
+            - self.cfg.tap_tip_penalty_scale * terms["tip_angle_deg"]
+            + action_penalty
+        )
+
+        self.extras["log"] = {
+            "cube_tap_objective_final_relocation_required": torch.zeros((), device=self.device),
+            "cube_tap_object_size_m": torch.tensor(float(self.cfg.cube_size_x_m), device=self.device),
+            "cube_tap_object_mass_kg": torch.tensor(CUBE10CM_MASS_KG, device=self.device),
+            "cube_tap_disp_along_m": terms["disp_along"].mean().detach(),
+            "cube_tap_disp_xy_m": terms["disp_xy"].mean().detach(),
+            "cube_tap_speed_mps": terms["speed"].mean().detach(),
+            "cube_tap_tip_angle_deg": terms["tip_angle_deg"].mean().detach(),
+            "cube_tap_contact_proxy_rate": terms["tap_contact_proxy"].float().mean().detach(),
+            "cube_tap_contact_seen_rate": self._tap_contact_seen.float().mean().detach(),
+            "cube_tap_reaction_signal_now_rate": terms["tap_reaction_signal_now"].float().mean().detach(),
+            "cube_tap_reaction_contact_context_rate": terms["tap_reaction_contact_context"].float().mean().detach(),
+            "cube_tap_reaction_now_rate": terms["tap_reaction_now"].float().mean().detach(),
+            "cube_tap_reaction_seen_rate": self._tap_reaction_seen.float().mean().detach(),
+            "cube_tap_overshoot_now_rate": terms["tap_overshoot_now"].float().mean().detach(),
+            "cube_tap_overshoot_seen_rate": self._tap_overshoot_seen.float().mean().detach(),
+            "cube_tap_success_rate": self._tap_success_flag.float().mean().detach(),
+            "cube_tap_max_disp_along_m": self._tap_max_disp_along.mean().detach(),
+            "cube_tap_max_disp_xy_m": self._tap_max_disp_xy.mean().detach(),
+            "cube_tap_max_z_delta_m": self._tap_max_z_delta.mean().detach(),
+            "cube_tap_max_speed_mps": self._tap_max_speed.mean().detach(),
+            "cube_tap_contact_face_gap_m": terms["tap_contact_face_gap_m"].mean().detach(),
+            "cube_tap_contact_lateral_m": terms["tap_contact_lateral_m"].mean().detach(),
+            "cube_tap_contact_vertical_offset_m": terms["tap_contact_vertical_offset_m"].mean().detach(),
+            "cube_push_grasped_marker_rate": self._grasped.float().mean().detach(),
+            "action_penalty": action_penalty.mean().detach(),
+        }
+        return rewards
+
+    def _get_dones(self) -> tuple[torch.Tensor, torch.Tensor]:
+        self._compute_intermediate_values()
+        terms = self._tap_terms()
+        self._update_tap_buffers(terms)
+        terminated = self._tap_overshoot_seen
+        if bool(self.cfg.tap_success_terminate):
+            terminated = terminated | self._tap_success_flag
         truncated = self.episode_length_buf >= self.max_episode_length - 1
         return terminated, truncated

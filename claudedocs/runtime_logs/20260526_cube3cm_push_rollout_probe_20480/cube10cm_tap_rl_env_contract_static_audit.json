@@ -1,0 +1,69 @@
+{
+  "artifact_type": "cube10cm_tap_rl_env_contract_static_audit_v1",
+  "branch": "professor_cube10cm_tap_reaction_quality_tier",
+  "default_off": {
+    "new_roarm_cube_tap10cm_env_registered": true,
+    "old_roarm_cube_push_env_preserved": true,
+    "training_entrypoint_unchanged": true
+  },
+  "local_static_audit_only": true,
+  "logging_contract": {
+    "contact_reaction_overshoot_separate": true,
+    "method_and_log_lines": {
+      "contact_log": 1124,
+      "final_relocation_log": 1116,
+      "overshoot_log": 1130,
+      "raw_reaction_signal_log": 1125,
+      "reaction_contact_context_log": 1126,
+      "reaction_log": 1128,
+      "tap_get_dones": 952,
+      "tap_get_rewards": 863,
+      "tap_terms": 1025
+    }
+  },
+  "next": {
+    "large_dataset": "BLOCKED",
+    "ppo_rl_training": "BLOCKED",
+    "random_sanity_runtime": "ALLOWED_NEXT_IF_LOCAL_ISAACLAB_LAUNCHER_AVAILABLE",
+    "roarm_deploy": "BLOCKED"
+  },
+  "no_gpu_isaaclab_dataset_training_robot_ssh": true,
+  "object_contract": {
+    "cube_mass_kg": 0.72,
+    "cube_size_m": 0.1,
+    "evidence_lines": {
+      "mass": 34,
+      "size": 33
+    }
+  },
+  "objective_contract": {
+    "cfg_requires_final": false,
+    "final_1cm_required_by_default": false,
+    "final_gate_leaks_in_tap_env_block": [],
+    "overshoot_m": 0.02,
+    "primary_objective": "tap_reaction_contact_not_final_relocation",
+    "tap_table_top_z_is_project_table_z": true,
+    "tap_target_m": 0.001
+  },
+  "source_lines": {
+    "new_contract": {
+      "cube10cm_mass_const": 34,
+      "cube10cm_size_const": 33,
+      "tap_cfg_class": 184,
+      "tap_env_class": 184,
+      "tap_env_registered": 40,
+      "tap_final_relocation_default_off": 255,
+      "tap_overshoot_2cm": 263,
+      "tap_table_center_z": 39,
+      "tap_table_cfg": 187,
+      "tap_table_static": 192,
+      "tap_target_1mm": 245
+    },
+    "old_env": {
+      "old_cube_size_3cm": 31,
+      "old_env_registered": 30,
+      "old_mass_20g": 79
+    }
+  },
+  "verdict": "PASS"
+}

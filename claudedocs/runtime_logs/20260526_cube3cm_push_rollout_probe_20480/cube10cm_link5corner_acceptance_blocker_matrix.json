@@ -1,0 +1,111 @@
+{
+  "artifact_type": "cube10cm_link5corner_acceptance_blocker_matrix_v1",
+  "branch": "professor_cube10cm_tap_reaction_quality_tier",
+  "decision": {
+    "do_not_claim_action_teacher_dataset_rl_roarm_readiness": true,
+    "stop_contact_geometry_gpu_tuning": true,
+    "strong_tap_required_by_current_docs": false,
+    "weak_1mm_tap_reaction_accepted_as_current_working_objective": true
+  },
+  "evidence": {
+    "accepted_window_clip_any_rate_mean": 0.6666666666666666,
+    "accepted_window_follow_p95_to_cap_p95": 0.20160675048828122,
+    "clean_diffik_teacher_window_ready": false,
+    "contact_evidence_rate": 1.0,
+    "contact_stop_same_as_contact_rate": 1.0,
+    "disp_1mm_rate": 1.0,
+    "disp_5mm_rate": 0.0,
+    "legacy_dataset_builder_final_success_conflict": true,
+    "low_motion_rate": 1.0,
+    "max_cube_speed_mean_mps": 0.02442472183611244,
+    "max_disp_along_push_mean_m": 0.0014316029846668243,
+    "no_posewrite": true,
+    "overshoot_rate": 0.0,
+    "proxy_gap_to_live_side_face_mean_m": -0.006247562170028753,
+    "proxy_not_top_rate": 1.0,
+    "proxy_side_center_z_near_5mm_rate": 1.0,
+    "quality_tier_counts": {
+      "B_REACTION_VALID_FOLLOW_OK_CLIP_HIGH": 16
+    },
+    "reaction_event_rate": 1.0,
+    "reaction_gate_pass": true,
+    "rl_env_3cm_relocation_conflict": true,
+    "summary_final_tcp_target_err_mean_m": 0.03809003601782024,
+    "target_gap_to_live_side_face_mean_m": -0.0027710951864720057
+  },
+  "local_matrix_only": true,
+  "matrix": [
+    {
+      "can_proceed_local_only": true,
+      "current_evidence": "primary gate PASS plus local visual inspection supports weak/grazing 1mm tap",
+      "item": "professor_tap_reaction_objective",
+      "status": "ACCEPT_WEAK_1MM_EVENT_UNLESS_STRONG_TAP_EXPLICITLY_REQUIRED",
+      "unblock_or_next": "record a new 2-3mm transient target only if professor/user explicitly requires it"
+    },
+    {
+      "can_proceed_local_only": false,
+      "current_evidence": "link5-corner proxy is side-center height but outside/grazing and early-freeze",
+      "item": "contact_geometry_gpu_tuning",
+      "status": "STOP",
+      "unblock_or_next": "do not run another GPU sweep from contact geometry without explicit stronger target"
+    },
+    {
+      "can_proceed_local_only": true,
+      "current_evidence": "reaction windows are accepted and all Tier B, but clean teacher is false",
+      "item": "link5_corner_quality_tier_metadata",
+      "status": "KEEP_AS_SIDE_CENTER_PROXY_EVIDENCE",
+      "unblock_or_next": "carry tier/clip/follow/proxy-contact fields as metadata, not action-dataset readiness"
+    },
+    {
+      "can_proceed_local_only": true,
+      "current_evidence": "event labels may use contact/reaction/no-overshoot plus quality metadata",
+      "item": "event_label_dataset_or_manifest",
+      "status": "READY_LOCAL_ONLY",
+      "unblock_or_next": "build or update only a link5-specific event-label manifest; no action targets"
+    },
+    {
+      "can_proceed_local_only": false,
+      "current_evidence": "clean teacher false, clip/final TCP gates not clean even though follow tier improved",
+      "item": "diffik_action_teacher_dataset",
+      "status": "BLOCKED",
+      "unblock_or_next": "needs clean teacher evidence or an explicit noisy-teacher exception policy"
+    },
+    {
+      "can_proceed_local_only": false,
+      "current_evidence": "action teacher is blocked and current link5 result is weak 1mm evidence only",
+      "item": "large_isaaclab_dataset",
+      "status": "BLOCKED",
+      "unblock_or_next": "only after action-teacher policy and dataset schema gates are resolved"
+    },
+    {
+      "can_proceed_local_only": true,
+      "current_evidence": "existing blocker audit says current env is 3cm relocation-oriented",
+      "item": "ten_cm_tap_rl_env_random_sanity",
+      "status": "BLOCKED_BY_ENV_CONTRACT",
+      "unblock_or_next": "write/validate 10cm/0.72kg tap reaction env random-sanity gate before training"
+    },
+    {
+      "can_proceed_local_only": false,
+      "current_evidence": "requires action/schema/env gates first",
+      "item": "isaaclab_rl_training",
+      "status": "BLOCKED",
+      "unblock_or_next": "no PPO/RL until local preflight gates pass"
+    },
+    {
+      "can_proceed_local_only": false,
+      "current_evidence": "no validated learned policy or hardware safety/replay gate",
+      "item": "roarm_m3_pro_deployment",
+      "status": "BLOCKED",
+      "unblock_or_next": "only after validated policy plus robot safety/replay evidence"
+    }
+  ],
+  "next_local_only_step": "freeze 1mm reaction objective unless explicitly upgraded; update/build link5-specific event-label metadata manifest and teacher-policy matrix, not action data or RL",
+  "no_gpu_isaaclab_dataset_training_robot_ssh": true,
+  "source_files": {
+    "legacy_blocker_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_diffik_action_dataset_blocker_audit.json",
+    "reaction_gate_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_link5corner_position_seed962_reaction_gate_audit.json",
+    "reaction_window_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_reaction_window_link5corner_position_seed962_audit.json",
+    "summary_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_link5corner_position_seed962_summary.json",
+    "visual_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_link5corner_visual_proxy_contact_inspection.json"
+  }
+}
