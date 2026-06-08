@@ -1,0 +1,120 @@
+{
+  "artifact_type": "cube10cm_link5_proxy_pose_trace_contract_audit_v1",
+  "branch": "professor_cube10cm_tap_reaction",
+  "cli_contract": {
+    "choices": {
+      "diffik_command_type": [
+        "position",
+        "pose"
+      ],
+      "diffik_pose_quat_mode": [
+        "current_link5",
+        "initial_link5"
+      ],
+      "tool_contact_proxy_mode": [
+        "hand_tcp",
+        "link5_collision_corner_011"
+      ]
+    },
+    "default_preserves_existing_hand_tcp_position_path": true,
+    "defaults": {
+      "diffik_command_type": "position",
+      "diffik_pose_quat_mode": "current_link5",
+      "tool_contact_proxy_mode": "hand_tcp"
+    }
+  },
+  "first_tiny_runtime_candidate": {
+    "change_from_seed962_pre020": {
+      "diffik_command_type": "position",
+      "diffik_pose_quat_mode": "current_link5",
+      "geometry_lateral_height_actuator_dls_cap": "UNCHANGED",
+      "tool_contact_proxy_mode": "hand_tcp -> link5_collision_corner_011"
+    },
+    "gpu_runtime": "ONE_TINY_LOCAL_ONLY",
+    "judge_order": [
+      "reaction/contact/no-posewrite/no-overshoot",
+      "tool_proxy_target_err and link5 quaternion trace",
+      "quality tier",
+      "final displacement secondary only"
+    ],
+    "name": "seed962_yplus_pre020_link5corner_position_trace_only",
+    "requires_explicit_approval": true
+  },
+  "local_audit_only": true,
+  "no_gpu_runtime_dataset_training_robot_ssh": true,
+  "pose_support": {
+    "pose_first_runtime_recommended": false,
+    "pose_support_available": true,
+    "reason": "pose command is implemented, but first runtime should isolate link5 proxy retargeting before adding a 6D pose constraint"
+  },
+  "runtime_mapping": {
+    "current_link5_quat_mode_present": true,
+    "diffik_cfg_uses_arg_command_type": true,
+    "initial_link5_quat_mode_present": true,
+    "link5_corner_constant_present": true,
+    "link5_proxy_branch_present": true,
+    "pose_command_uses_7d_command": true,
+    "position_default_uses_3d_link5_target": true,
+    "proxy_offset_uses_target_quat": true,
+    "runtime_mapping_ok": true
+  },
+  "source": {
+    "previous_line10": "line10 orientation_feasibility position_only=True face_abs_align_mean=0.961060792 face_align_ge_0p90_rate=1.000000000 orientation_path_validated_from_trace=False runtime_support_required=True",
+    "previous_line11": "line11 verdict proxy_position_promising=False link5_proxy_candidate_promising=True orientation_blocked=True selected_teacher_criterion=tool_oriented_side_contact_proxy verdict_class=LINK5_PROXY_REDUCES_TARGET_ERROR_BUT_ORIENTATION_AND_CONTACT_SEMANTICS_UNVALIDATED",
+    "previous_line12": "line12 pipeline dataset_rl_roarm_unblocked=False next=local_code_preflight_for_link5_collision_corner_proxy_with_pose_or_trace_support_before_gpu",
+    "previous_line9": "line9 proxy_target_feasibility current_link5_target_err_mean=0.053769121 proxy_required_link5_target_err_mean=0.040192105 proxy_vs_current_err_ratio_mean=0.748512386 proxy_required_link5_target_z_delta_mean=-0.034543147 stable_link5_proxy=True proxy_target_reduces_link5_error=True",
+    "previous_preflight_summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tool_contact_proxy_orientation_preflight_summary.out",
+    "probe_path": "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/cube3cm_push_diffik_probe.py"
+  },
+  "summary_contract": {
+    "required_summary_keys_present": {
+      "command_type": true,
+      "diffik_pose_quat_mode": true,
+      "final_tool_proxy_target_err_mean_m": true,
+      "min_tool_proxy_target_err_mean_m": true,
+      "tool_contact_proxy_mode": true,
+      "tool_proxy_label": true,
+      "tool_proxy_local_m": true
+    },
+    "summary_contract_ok": true
+  },
+  "trace_contract": {
+    "required_trace_fields_present": {
+      "diffik_command_type": true,
+      "diffik_pose_quat_mode": true,
+      "link5_qw_after": true,
+      "link5_qw_before": true,
+      "link5_qw_target": true,
+      "link5_qx_after": true,
+      "link5_qx_before": true,
+      "link5_qx_target": true,
+      "link5_qy_after": true,
+      "link5_qy_before": true,
+      "link5_qy_target": true,
+      "link5_qz_after": true,
+      "link5_qz_before": true,
+      "link5_qz_target": true,
+      "tool_contact_proxy_mode": true,
+      "tool_contact_target_x_m": true,
+      "tool_contact_target_y_m": true,
+      "tool_contact_target_z_m": true,
+      "tool_proxy_label": true,
+      "tool_proxy_target_err_after_m": true,
+      "tool_proxy_target_err_before_m": true,
+      "tool_proxy_target_z_err_after_m": true,
+      "tool_proxy_target_z_err_before_m": true,
+      "tool_proxy_x_after_m": true,
+      "tool_proxy_x_before_m": true,
+      "tool_proxy_y_after_m": true,
+      "tool_proxy_y_before_m": true,
+      "tool_proxy_z_after_m": true,
+      "tool_proxy_z_before_m": true
+    },
+    "trace_contract_ok": true
+  },
+  "verdict": {
+    "code_contract_ready_for_one_tiny_runtime_consideration": true,
+    "dataset_rl_roarm_unblocked": false,
+    "next": "consider_exactly_one_local_tiny_link5_proxy_position_trace_runtime_only_after_explicit_approval"
+  }
+}

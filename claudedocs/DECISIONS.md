@@ -8967,3 +8967,284 @@ Sources:
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_contact_frame_geometry_mismatch_topmargin_seed962_summary.out:1-9`
 - `sim_scripts/cube10cm_teacher_contact_frame_runtime_comparison_audit.py:1-6,65-150,153-190`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_teacher_contact_frame_runtime_comparison_audit_summary.out:1-7`
+
+## D168 - Tool proxy preflight rejects immediate GPU; link5 corner needs code preflight first
+
+Date: 2026-06-08
+
+Decision:
+
+- Do not treat existing seed962 `measured_contact_now` as direct proof of which
+  robot mesh physically touched the cube. In the probe it is driven by cube
+  displacement, not by a contact sensor.
+- The existing hand TCP and gripper collision mesh are not clean side-center
+  teacher proxies for the 10cm professor branch.
+- The only stable physical proxy found in existing traces is
+  `link5_collision:corner_011`, but it is still an upper/offset contact proxy,
+  not a verified clean side tap.
+- Therefore do not run GPU/IsaacLab yet. The next step is local code preflight
+  for a link5-corner proxy with pose or trace support before proposing any tiny
+  runtime.
+
+Evidence:
+
+- Added `sim_scripts/cube10cm_tool_contact_proxy_orientation_preflight.py`, a
+  local-only audit over existing seed962 traces and local URDF/STL assets. It
+  launches no IsaacLab runtime, no GPU, no data generation, no training, no robot
+  control, and no SSH.
+- Side-center preflight summary line 4 shows FK reconstruction is trustworthy:
+  `fk_tcp_err_p95=0.000001505` and `fk_trustworthy_5mm_p95=True`.
+- Side-center summary line 5 shows the current hand TCP is not side-center:
+  `side_center_dist_mean=0.056645103`, z error mean `0.048793540`, and side-center
+  near-10mm rate `0.0`.
+- Side-center summary line 6 shows the gripper collision mesh is not the contact
+  proxy: side-center distance mean `0.094208332`, z error mean `0.090346870`, and
+  cube AABB overlap `0.0`.
+- Side-center summary lines 7-8 show the best existing collision proxy is link5:
+  `mesh_mode=link5_collision`, `label_mode=link5_collision:corner_011`, AABB
+  overlap `1.0`, but side-center distance is still `0.040192105` with z error
+  `0.034543147` and near10/near20 both `0.0`.
+- Side-center summary line 9 shows why the link5 corner remains worth local code
+  preflight: retargeting it would reduce link5 target error from `0.053769121` to
+  `0.040192105` (`0.748512386x`) but requires a `-0.034543147m` link5 z move.
+- Side-center summary lines 10-12 show the blocker: current DiffIK is
+  position-only, orientation is not validated from trace, link5 proxy candidate
+  is promising but semantics are unvalidated, and dataset/RL/RoArm remain blocked.
+- Top-margin comparison summary line 9 shows the same link5 proxy is not a
+  top-margin teacher path: current link5 target error `0.011370077` would become
+  `0.043058712` (`3.801698970x`). This confirms the top-margin run was a tracking
+  shortcut, not the selected teacher path.
+- Probe code lines 660-661 define `measured_contact_now` from displacement
+  (`disp_along >= contact_detect_disp_m`), while `tcp_cube_dist` is merely a TCP
+  distance term from `_push_terms`, not a mesh contact-source label.
+- Local IsaacLab source confirms `DifferentialIKControllerCfg` supports
+  `command_type="pose"`, but current probe code still constructs the controller
+  with `command_type="position"`.
+
+Implication:
+
+- Next work is a local code preflight, not a runtime: specify how to command or
+  trace `link5_collision:corner_011` as a physical proxy, and decide whether pose
+  command support is needed to preserve orientation.
+- Do not use top-margin, final 1cm, dataset generation, RL, RoArm deployment, or
+  another broad search to bypass this blocker.
+
+Sources:
+
+- `sim_scripts/cube10cm_tool_contact_proxy_orientation_preflight.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tool_contact_proxy_orientation_preflight_summary.out:1-12`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tool_contact_proxy_orientation_preflight.json:51-180,671-679`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tool_contact_proxy_orientation_preflight_topmargin_seed962_summary.out:1-12`
+- `sim_scripts/cube3cm_push_diffik_probe.py:348-353,657-684`
+- `roarm_rl/roarm_cube_push_env.py:724-755`
+- `local_assets/roarm_m3/urdf/roarm_m3.urdf:122-161,225-238`
+- `/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaaclab/source/isaaclab/isaaclab/controllers/differential_ik_cfg.py:21-26`
+- `/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaaclab/source/isaaclab/isaaclab/controllers/differential_ik.py:79-84,122-146,163-172`
+
+## D169 - Link5 proxy code contract is ready; first runtime should isolate proxy retargeting, not pose
+
+Date: 2026-06-08
+
+Decision:
+
+- The local code preflight requested by D168 is now complete: the probe can
+  express `link5_collision:corner_011`, can optionally construct pose commands,
+  and can trace proxy/link5 geometry directly.
+- Keep the default runtime contract as hand-TCP + position. This preserves
+  existing seed962/previous-run comparability unless the new proxy option is
+  explicitly supplied.
+- Do not make the first GPU retest a pose-command retest. Pose support is useful
+  for a later controlled test, but using it first would mix proxy retargeting
+  with a 6D pose constraint on a 5-joint arm.
+- Therefore the only next tiny runtime candidate to consider, after explicit
+  approval, is fixed seed962 y+ pre020 geometry with `--tool_contact_proxy_mode
+  link5_collision_corner_011` and `--diffik_command_type position`, full trace
+  diagnostics, and no lateral/height/actuator/DLS/cap/top-margin changes.
+
+Evidence:
+
+- `sim_scripts/cube3cm_push_diffik_probe.py` now defines the selected
+  `LINK5_COLLISION_CORNER_011_LOCAL_M`, exposes `--diffik_command_type
+  position|pose`, `--diffik_pose_quat_mode current_link5|initial_link5`, and
+  `--tool_contact_proxy_mode hand_tcp|link5_collision_corner_011`, while defaults
+  remain `position`, `current_link5`, and `hand_tcp`.
+- The probe now passes `args.diffik_command_type` into
+  `DifferentialIKControllerCfg`, computes link5 body targets by subtracting the
+  selected tool-proxy offset, and constructs a 7D command only when
+  `--diffik_command_type pose` is explicitly selected.
+- Trace instrumentation now includes tool-contact target coordinates, proxy
+  before/after coordinates, proxy target errors, and link5 before/target/after
+  quaternions. Summary output now includes proxy mode/local offset and
+  min/final proxy target errors.
+- Added `sim_scripts/cube10cm_link5_proxy_pose_trace_contract_audit.py`, a
+  local-only audit that runs no IsaacLab runtime, no GPU, no data generation, no
+  training, no robot control, and no SSH.
+- Contract audit summary line 3 confirms the default contract is still
+  `command_type=position`, `proxy_mode=hand_tcp`, `pose_quat_mode=current_link5`,
+  and `default_preserves_existing=True`.
+- Contract audit summary line 4 confirms runtime mapping is present:
+  `diffik_cfg_uses_arg_command_type=True`, `link5_proxy_branch_present=True`,
+  `pose_7d_command_present=True`, `proxy_offset_uses_target_quat=True`, and
+  `runtime_mapping_ok=True`.
+- Contract audit summary lines 5-6 confirm trace/summary coverage:
+  29 required trace fields and 7 required summary keys are present.
+- Contract audit summary line 7 keeps pose out of the first runtime:
+  `pose_support_available=True` but `pose_first_runtime_recommended=False`.
+- Contract audit summary lines 8-9 name the only tiny candidate and keep
+  dataset/RL/RoArm blocked.
+
+Implication:
+
+- It is now reasonable to consider one tiny local runtime, but it is not yet
+  approved or executed.
+- Judge that future runtime by reaction/contact/no-posewrite/no-overshoot first,
+  then proxy target error/link5-quaternion evidence, then quality tier. Final
+  displacement remains secondary.
+- Do not start dataset generation, IsaacLab RL, RoArm-M3-Pro deployment, Track A,
+  1024/10240, B200/SSH, or any broad sweep from this code-contract result.
+
+Sources:
+
+- `sim_scripts/cube3cm_push_diffik_probe.py:31,77-83,356-388,587-623,734-812,834-869,920-1000,1233-1240`
+- `sim_scripts/cube10cm_link5_proxy_pose_trace_contract_audit.py:1-8,120-172,234-271`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_link5_proxy_pose_trace_contract_audit_summary.out:1-9`
+
+## D170 - Link5-corner runtime improves proxy tracking but weakens tap strength; still no data/RL unlock
+
+Date: 2026-06-08
+
+Decision:
+
+- The one approved tiny local IsaacLab runtime was valid and should be kept as
+  evidence: fixed seed962 y+ pre020 geometry, `--tool_contact_proxy_mode
+  link5_collision_corner_011`, `--diffik_command_type position`, and no
+  lateral/height/actuator/DLS/cap/top-margin changes.
+- The runtime passed the primary reaction/contact/no-posewrite/no-overshoot gate
+  and improved proxy tracking and reaction-window tier quality.
+- It did not unblock data/RL/RoArm because clean DiffIK teacher remains false
+  and the tap became weak: the object reaction is mostly a verified 1mm event,
+  not a stronger 2-3mm tap.
+- Therefore do not repeat the same runtime, do not scale to dataset/RL/RoArm,
+  and do not jump to pose first. The next evidence step is visual proxy-contact
+  inspection or one strength-preserving proxy variant only if a stronger tap is
+  actually required.
+
+Evidence:
+
+- Runtime stdout confirmed the contract: `command_type=position`,
+  `tool_contact_proxy_mode=link5_collision_corner_011`, proxy label
+  `link5_collision:corner_011`, 10cm/0.72kg object, fixed y+ seed962 geometry,
+  no training, no dataset generation, no grasp, and no rollout posewrite.
+- Reaction gate audit line 1/JSON lines 15-18 show PASS:
+  `reaction_event_rate=1.0`, `contact_evidence_rate=1.0`, no posewrite, and
+  `overshoot_rate=0.0`.
+- Reaction gate audit line 2/JSON lines 6, 12-13, and 26 show the actual tap
+  strength: final displacement `0.001403518m`, max displacement `0.001431603m`,
+  max speed `0.024424722m/s`, and tap gate `1.0`.
+- Summary JSON lines 64-70 show the weakness explicitly: 1mm rate is `1.0`, but
+  5mm/10mm/20mm/30mm rates are all `0.0`.
+- Reaction gate audit line 3/JSON lines 20, 22, and 27 show teacher quality is
+  still NOT_READY: final TCP error `0.038090036m`, DiffIK clip `0.515544884`,
+  and `teacher_quality_ready=false`.
+- Reaction-window audit lines 1-4 show 16/16 windows accepted, but
+  `clean_diffik_teacher_window_ready=false`, window clip mean `0.666666667`, and
+  all 16 windows are Tier B rather than Tier A.
+- Trace diagnostic lines 1-8 show trace diagnostics were active, but clipping is
+  still dominant: trace clip-any `0.516581633`, pre-stop clip `0.331521739`,
+  post-stop clip `0.956896552`, and likely mode `JOINT_STEP_CLIPPING_DOMINANT`.
+- Comparison audit line 4 shows proxy/tracking improved versus seed962 pre020:
+  clip `1.0 -> 0.515544884` and final TCP error
+  `0.051811996m -> 0.038090036m`.
+- Comparison audit line 5 shows the new proxy itself tracked closely:
+  min tool-proxy target error mean `0.000577164m` and final error mean
+  `0.002636088m`.
+- Comparison audit line 6 shows tap strength weakened versus seed962 pre020:
+  max displacement `0.002923813m -> 0.001431603m` and max speed
+  `0.127446551 -> 0.024424722m/s`.
+- Comparison audit line 7 shows quality-tier improvement but not clean teacher:
+  2B+14C became 16B, follow p95/cap improved `1.160505840 -> 0.201606750`, but
+  window clip remained `0.666666667`.
+- Comparison audit line 8 is the durable verdict:
+  reaction/contact/no-posewrite/no-overshoot pass, proxy tracking improved, tap
+  strength weakened, clean teacher false, and dataset/RL/RoArm false.
+
+Implication:
+
+- Keep link5-corner position as a useful proxy-tracking improvement, not as a
+  final teacher/data solution.
+- If 1mm tap is enough, stop GPU tuning and inspect/record visual proxy-contact
+  sanity before any data planning.
+- If a stronger 2-3mm tap is required, define that requirement first and design
+  exactly one strength-preserving proxy variant. Do not mix pose, lateral,
+  height, actuator, DLS, cap, and top-margin changes.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_link5corner_position_seed962_summary.json:22,28,36,50,60,64-70,78-79,104-117,123,130,140-142`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_link5corner_position_seed962_reaction_gate_audit.json:1-42`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_reaction_window_link5corner_position_seed962_audit.json:1-48`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_link5corner_position_seed962_trace_diagnostic_summary.json:1-140`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_link5corner_position_seed962_comparison_audit_summary.out:1-8`
+- `sim_scripts/cube10cm_link5corner_runtime_comparison_audit.py`
+
+## D171 - Link5-corner visual inspection verifies side-center proxy height, but the tap is grazing/early-freeze weak
+
+Date: 2026-06-08
+
+Decision:
+
+- The visual proxy-contact inspection for the link5-corner runtime is local
+  trace-only evidence, not a new IsaacLab runtime and not data/training/robot
+  execution.
+- It improves the previous visual concern in one important way: the selected
+  `link5_collision:corner_011` proxy is no longer a top-contact explanation. The
+  proxy point is at live cube side-center height.
+- It does not prove a clean stronger tap. At contact and max displacement, the
+  proxy/target remain outside the live approach face, and the measured-stop
+  controller freezes on the same rollout step as first contact.
+- Therefore the current result is a valid weak 1mm tap/reaction evidence point,
+  not an action-teacher dataset/RL/RoArm unlock.
+
+Evidence:
+
+- Visual inspection summary line 1 confirms the artifact is local trace-only:
+  no GPU runtime, dataset generation, training, robot control, or SSH.
+- Summary line 2 confirms the inspected runtime contract: 1568 trace rows, 16
+  envs, `tool_contact_proxy_mode=link5_collision_corner_011`, label
+  `link5_collision:corner_011`, `command_type=position`, and reaction gate PASS.
+- Summary line 3 shows proxy tracking at contact is close but not clean Tier-A:
+  mean proxy-target error `0.003834021m`, z error `0.001500659m`, 5mm rate
+  `1.0`, but 3mm rate `0.0`.
+- Summary line 4/JSON lines 24-40 show the proxy is side-center-height, not top:
+  `proxy_minus_cube_center_z_mean=0.000392607m`, side-center z near-5mm rate
+  `1.0`, `proxy_below_cube_top_mean=0.049607393m`, and proxy-not-top rate `1.0`.
+- Summary line 5/JSON lines 12-23 and 53-71 show the weak-contact placement:
+  the proxy is outside/grazing the live approach face by mean `-0.006247562m`,
+  the target is also outside by mean `-0.002771095m`, and both outside rates are
+  `1.0`.
+- Summary line 6 shows the freeze/strength evidence: max-displacement proxy gap
+  is still outside (`-0.004976191m`), contact and stop are the same rollout step
+  in all envs (`1.0`), max displacement mean is `0.001431603m`, mean speed is
+  `0.024424722m/s`, and low-motion is `1.0`.
+- Summary line 7 is the verdict: primary gate PASS, side-center proxy visual
+  verified, top contact rejected for this proxy, grazing/outside-face and
+  early-freeze supported, clean tap strength not visually verified, and
+  dataset/RL/RoArm not unblocked.
+
+Implication:
+
+- Keep `link5_collision:corner_011` as evidence that proxy retargeting can fix
+  height/contact semantics, but do not treat it as a final action teacher.
+- If the professor/user only needs a verified 1mm tap/reaction event, stop
+  contact-geometry GPU tuning and carry quality-tier metadata separately.
+- If a stronger 2-3mm transient tap is required, state that requirement first
+  and design exactly one local strength-preserving contact timing/through
+  candidate. Do not mix pose, lateral, height, actuator, DLS, cap, top-margin,
+  data generation, RL, or RoArm deployment.
+
+Sources:
+
+- `sim_scripts/cube10cm_link5corner_visual_proxy_contact_inspection.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_link5corner_visual_proxy_contact_inspection_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_link5corner_visual_proxy_contact_inspection.json:1-85`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_link5corner_visual_proxy_contact_inspection.html`

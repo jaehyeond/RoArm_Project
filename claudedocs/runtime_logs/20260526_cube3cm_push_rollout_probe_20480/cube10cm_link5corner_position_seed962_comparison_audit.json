@@ -1,0 +1,113 @@
+{
+  "artifact_type": "cube10cm_link5corner_runtime_comparison_audit_v1",
+  "branch": "professor_cube10cm_tap_reaction",
+  "contract": {
+    "new_diffik_command_type": "position",
+    "new_tool_contact_proxy_mode": "link5_collision_corner_011",
+    "new_tool_proxy_label": "link5_collision:corner_011",
+    "new_tool_proxy_local_m": [
+      -0.03099808096885681,
+      0.01777365244925022,
+      0.11988562345504761
+    ]
+  },
+  "local_audit_only": true,
+  "metrics": {
+    "contact_evidence_rate": {
+      "baseline": 1.0,
+      "new": 1.0,
+      "new_vs_baseline_ratio": 1.0
+    },
+    "controlled_push_rate": {
+      "baseline": 0.5625,
+      "new": 1.0,
+      "new_vs_baseline_ratio": 1.7777777777777777
+    },
+    "diffik_clip_rate_mean": {
+      "baseline": 1.0,
+      "new": 0.5155448839068413,
+      "new_vs_baseline_ratio": 0.5155448839068413
+    },
+    "final_disp_along_push_mean_m": {
+      "baseline": 0.0015818476676940918,
+      "new": 0.00140351802110672,
+      "new_vs_baseline_ratio": 0.8872649685368703
+    },
+    "final_tcp_target_err_mean_m": {
+      "baseline": 0.05181199568323791,
+      "new": 0.03809003601782024,
+      "new_vs_baseline_ratio": 0.7351586348978068
+    },
+    "low_motion_rate": {
+      "baseline": 1.0,
+      "new": 1.0,
+      "new_vs_baseline_ratio": 1.0
+    },
+    "max_cube_speed_mean_mps": {
+      "baseline": 0.12744655134156346,
+      "new": 0.02442472183611244,
+      "new_vs_baseline_ratio": 0.1916467850954468
+    },
+    "max_disp_along_push_mean_m": {
+      "baseline": 0.0029238127171993256,
+      "new": 0.0014316029846668243,
+      "new_vs_baseline_ratio": 0.4896356651865631
+    },
+    "overshoot_rate": {
+      "baseline": 0.0,
+      "new": 0.0,
+      "new_vs_baseline_ratio": null
+    },
+    "posewrite_calls": {
+      "baseline": 0.0,
+      "new": 0.0,
+      "new_vs_baseline_ratio": null
+    },
+    "reaction_event_rate": {
+      "baseline": 1.0,
+      "new": 1.0,
+      "new_vs_baseline_ratio": 1.0
+    }
+  },
+  "no_gpu_runtime_dataset_training_robot_ssh": true,
+  "proxy_metrics": {
+    "final_tool_proxy_target_err_mean_m": 0.0026360876363469288,
+    "min_tool_proxy_target_err_mean_m": 0.0005771636788267642,
+    "trace_clip_any_rate": 0.5165816326530612,
+    "trace_post_stop_clip_any_rate": 0.9568965517241379,
+    "trace_pre_stop_clip_any_rate": 0.33152173913043476
+  },
+  "source": {
+    "base_gate": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_xnegheight050_pre020_seed962_reaction_gate_audit.json",
+    "base_summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_xnegheight050_pre020_seed962_summary.json",
+    "base_window": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_reaction_window_seed962_audit.json",
+    "new_gate": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_link5corner_position_seed962_reaction_gate_audit.json",
+    "new_summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_link5corner_position_seed962_summary.json",
+    "new_trace_diag": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_cube10cm_m072_fixed_yplus16_goodxy_latneg020_link5corner_position_seed962_trace_diagnostic_summary.json",
+    "new_window": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_reaction_window_link5corner_position_seed962_audit.json"
+  },
+  "verdict": {
+    "clean_diffik_teacher_ready": false,
+    "dataset_rl_roarm_unblocked": false,
+    "next": "do_not_scale_dataset_or_rl; inspect_visual_proxy_contact_or_design_one_strength_preserving_proxy_variant_only_if_needed",
+    "proxy_tracking_improved": true,
+    "reaction_contact_no_posewrite_no_overshoot_pass": true,
+    "reaction_gate_pass": true,
+    "tap_strength_weakened_vs_baseline": true
+  },
+  "window": {
+    "baseline_accepted_window_count": 16,
+    "baseline_clip_any_rate_mean": 1.0,
+    "baseline_follow_p95_to_cap_p95": 1.1605058397565569,
+    "baseline_quality_tier_counts": {
+      "B_REACTION_VALID_FOLLOW_OK_CLIP_HIGH": 2,
+      "C_REACTION_VALID_FOLLOW_LAG": 14
+    },
+    "new_accepted_window_count": 16,
+    "new_clip_any_rate_mean": 0.6666666666666666,
+    "new_follow_p95_to_cap_p95": 0.20160675048828122,
+    "new_quality_tier_counts": {
+      "B_REACTION_VALID_FOLLOW_OK_CLIP_HIGH": 16
+    }
+  }
+}

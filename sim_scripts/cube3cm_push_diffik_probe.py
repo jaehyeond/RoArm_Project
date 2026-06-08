@@ -28,6 +28,7 @@ DEFAULT_LOCAL_USD = (
 )
 LOG_DIR = REPO / "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480"
 DISP_THRESHOLDS_M = (0.001, 0.005, 0.010, 0.020, 0.030)
+LINK5_COLLISION_CORNER_011_LOCAL_M = (-0.03099808120727539, 0.01777365303039551, 0.11988562011718751)
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -73,6 +74,13 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--settle_steps", type=int, default=8)
     parser.add_argument("--max_diffik_joint_step_rad", type=float, default=0.012)
     parser.add_argument("--dls_lambda", type=float, default=0.010)
+    parser.add_argument("--diffik_command_type", choices=("position", "pose"), default="position")
+    parser.add_argument("--diffik_pose_quat_mode", choices=("current_link5", "initial_link5"), default="current_link5")
+    parser.add_argument(
+        "--tool_contact_proxy_mode",
+        choices=("hand_tcp", "link5_collision_corner_011"),
+        default="hand_tcp",
+    )
     parser.add_argument("--arm_stiffness_override", type=float, default=None)
     parser.add_argument("--arm_damping_override", type=float, default=None)
     parser.add_argument("--arm_effort_limit_sim_override", type=float, default=None)
@@ -346,7 +354,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     jacobi_joint_ids = arm_joint_ids if inner._robot.is_fixed_base else [idx + 6 for idx in arm_joint_ids]
 
     diffik_cfg = DifferentialIKControllerCfg(
-        command_type="position",
+        command_type=args.diffik_command_type,
         use_relative_mode=False,
         ik_method="dls",
         ik_params={"lambda_val": float(args.dls_lambda)},
@@ -366,6 +374,18 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     zero_action = torch.zeros((n, inner.cfg.action_space), device=device, dtype=torch.float32)
     tcp_local = inner._tcp_local.unsqueeze(0).repeat(n, 1)
+    if args.tool_contact_proxy_mode == "hand_tcp":
+        tool_proxy_local = tcp_local.clone()
+        tool_proxy_label = "hand_tcp"
+    elif args.tool_contact_proxy_mode == "link5_collision_corner_011":
+        tool_proxy_local = torch.tensor(
+            LINK5_COLLISION_CORNER_011_LOCAL_M,
+            device=device,
+            dtype=torch.float32,
+        ).unsqueeze(0).repeat(n, 1)
+        tool_proxy_label = "link5_collision:corner_011"
+    else:
+        raise ValueError(f"unsupported tool_contact_proxy_mode={args.tool_contact_proxy_mode!r}")
     half_xy = torch.tensor((cube_size[0] / 2.0, cube_size[1] / 2.0), device=device, dtype=torch.float32)
     cube_top_half_z = float(cube_size[2] / 2.0)
 
@@ -385,7 +405,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         f"contact_controller_mode={args.contact_controller_mode} "
         f"contact_stop_target_mode={args.contact_stop_target_mode} "
         f"contact_stop_disp_m={contact_stop_disp_m:.6f} "
-        "controller=IsaacLab_DifferentialIKController ik_method=dls command_type=position "
+        f"controller=IsaacLab_DifferentialIKController ik_method=dls command_type={args.diffik_command_type} "
+        f"tool_contact_proxy_mode={args.tool_contact_proxy_mode} tool_proxy_label={tool_proxy_label} "
+        f"diffik_pose_quat_mode={args.diffik_pose_quat_mode} "
         "local_roarm_ik_dls_control_loop=NO training=NO dataset_generation=NO "
         "grasp=NO attach_posewrite=NO rollout_object_posewrite=NO",
         flush=True,
@@ -406,6 +428,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         f"v31_posx_max_diffik_joint_step_rad={args.v31_posx_max_diffik_joint_step_rad:.6f} "
         f"v31_lowx_max_diffik_joint_step_rad={args.v31_lowx_max_diffik_joint_step_rad:.6f} "
         f"dls_lambda={args.dls_lambda:.6f} "
+        f"tool_proxy_local_m=({float(tool_proxy_local[0, 0].item()):+.6f},"
+        f"{float(tool_proxy_local[0, 1].item()):+.6f},"
+        f"{float(tool_proxy_local[0, 2].item()):+.6f}) "
         f"arm_actuator_stiffness={arm_actuator.stiffness} arm_actuator_damping={arm_actuator.damping} "
         f"arm_actuator_effort_limit_sim={arm_actuator.effort_limit_sim} "
         f"arm_actuator_velocity_limit_sim={arm_actuator.velocity_limit_sim} "
@@ -415,7 +440,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     )
 
     records: list[dict[str, float | int | str]] = []
-    trace_records: list[dict[str, float | int]] = []
+    trace_records: list[dict[str, float | int | str]] = []
     trace_env_ids: list[int] = []
     if bool(args.trace_all_envs):
         trace_env_ids.extend(range(n))
@@ -559,30 +584,57 @@ def main(argv: Sequence[str] | None = None) -> int:
         target[:, 2] = z
         return target
 
-    def compute_diffik_joint_target(tcp_target_w: torch.Tensor) -> tuple[torch.Tensor, dict[str, torch.Tensor]]:
+    def compute_diffik_joint_target(
+        tool_contact_target_w: torch.Tensor,
+        pose_quat_target_w: torch.Tensor | None = None,
+    ) -> tuple[torch.Tensor, dict[str, torch.Tensor]]:
         root_pos_w = inner._robot.data.root_pos_w
         root_quat_w = inner._robot.data.root_quat_w
         link5_pos_w = inner._robot.data.body_pos_w[:, link5_body_idx].clone()
         link5_quat_w = inner._robot.data.body_quat_w[:, link5_body_idx].clone()
         link5_pos_b, link5_quat_b = subtract_frame_transforms(root_pos_w, root_quat_w, link5_pos_w, link5_quat_w)
-        tcp_offset_w = quat_rotate(link5_quat_w, tcp_local)
-        link5_target_w = tcp_target_w - tcp_offset_w
-        link5_target_b, _ = subtract_frame_transforms(root_pos_w, root_quat_w, link5_target_w)
+        if args.diffik_command_type == "pose":
+            if pose_quat_target_w is None:
+                raise ValueError("pose command requires pose_quat_target_w")
+            link5_quat_target_w = pose_quat_target_w
+        else:
+            link5_quat_target_w = link5_quat_w
+        tool_proxy_target_offset_w = quat_rotate(link5_quat_target_w, tool_proxy_local)
+        tool_proxy_offset_before_w = quat_rotate(link5_quat_w, tool_proxy_local)
+        tool_proxy_pos_before_w = link5_pos_w + tool_proxy_offset_before_w
+        link5_target_w = tool_contact_target_w - tool_proxy_target_offset_w
+        link5_target_b, link5_quat_target_b = subtract_frame_transforms(
+            root_pos_w,
+            root_quat_w,
+            link5_target_w,
+            link5_quat_target_w,
+        )
         jacobian = inner._robot.root_physx_view.get_jacobians()[:, jacobi_body_idx, :, jacobi_joint_ids]
         base_rot_matrix = matrix_from_quat(quat_inv(root_quat_w))
         jacobian = jacobian.clone()
         jacobian[:, :3, :] = torch.bmm(base_rot_matrix, jacobian[:, :3, :])
         jacobian[:, 3:, :] = torch.bmm(base_rot_matrix, jacobian[:, 3:, :])
         joint_pos = inner._robot.data.joint_pos[:, arm_joint_ids]
-        diffik.set_command(link5_target_b, ee_pos=link5_pos_b, ee_quat=link5_quat_b)
+        if args.diffik_command_type == "pose":
+            diffik_command = torch.cat((link5_target_b, link5_quat_target_b), dim=-1)
+        else:
+            diffik_command = link5_target_b
+        diffik.set_command(diffik_command, ee_pos=link5_pos_b, ee_quat=link5_quat_b)
         joint_pos_des = diffik.compute(link5_pos_b, link5_quat_b, jacobian, joint_pos)
         return joint_pos_des, {
             "link5_pos_w": link5_pos_w,
             "link5_quat_w": link5_quat_w,
+            "link5_quat_target_w": link5_quat_target_w,
             "link5_target_w": link5_target_w,
             "link5_pos_b": link5_pos_b,
             "link5_target_b": link5_target_b,
-            "tcp_offset_w": tcp_offset_w,
+            "link5_quat_target_b": link5_quat_target_b,
+            "tool_contact_target_w": tool_contact_target_w,
+            "tool_proxy_local": tool_proxy_local,
+            "tool_proxy_pos_before_w": tool_proxy_pos_before_w,
+            "tool_proxy_target_offset_w": tool_proxy_target_offset_w,
+            "tool_proxy_offset_before_w": tool_proxy_offset_before_w,
+            "diffik_command": diffik_command,
         }
 
     try:
@@ -604,9 +656,12 @@ def main(argv: Sequence[str] | None = None) -> int:
             inner._cube_start_w[:] = cube_start_w
             inner._target_world[:, 0:2] = cube_start_w[:, 0:2] + push_dir * float(env_cfg.cube_push_target_disp_m)
             inner._target_world[:, 2] = cube_start_w[:, 2]
+            episode_initial_link5_quat_w = inner._robot.data.body_quat_w[:, link5_body_idx].clone()
             min_tcp_cube_dist = torch.full((n,), float("inf"), device=device)
             min_tcp_target_err = torch.full((n,), float("inf"), device=device)
+            min_tool_proxy_target_err = torch.full((n,), float("inf"), device=device)
             final_tcp_target_err = torch.zeros((n,), device=device)
+            final_tool_proxy_target_err = torch.zeros((n,), device=device)
             max_cube_speed = torch.zeros((n,), device=device)
             max_disp_along = torch.full((n,), -float("inf"), device=device)
             max_cube_z_delta = torch.zeros((n,), device=device)
@@ -700,7 +755,15 @@ def main(argv: Sequence[str] | None = None) -> int:
                 tcp_pos_before_w = inner._tcp_pos_w.clone()
                 joint_target_before = inner.robot_dof_targets[:, arm_joint_ids].clone()
                 joint_pos_arm = inner._robot.data.joint_pos[:, arm_joint_ids].clone()
-                joint_pos_des, diffik_terms = compute_diffik_joint_target(tcp_target_w)
+                pose_quat_target_w = None
+                if args.diffik_command_type == "pose":
+                    if args.diffik_pose_quat_mode == "current_link5":
+                        pose_quat_target_w = inner._robot.data.body_quat_w[:, link5_body_idx].clone()
+                    elif args.diffik_pose_quat_mode == "initial_link5":
+                        pose_quat_target_w = episode_initial_link5_quat_w
+                    else:
+                        raise ValueError(f"unsupported diffik_pose_quat_mode={args.diffik_pose_quat_mode!r}")
+                joint_pos_des, diffik_terms = compute_diffik_joint_target(tcp_target_w, pose_quat_target_w)
                 raw_delta = joint_pos_des - joint_pos_arm
                 max_step = traj["max_joint_step"].unsqueeze(-1) * step_scale.unsqueeze(-1)
                 clip_mask = torch.abs(raw_delta) > max_step
@@ -727,12 +790,26 @@ def main(argv: Sequence[str] | None = None) -> int:
                 max_cube_z_delta = torch.maximum(max_cube_z_delta, inner._sponge_pos_w[:, 2] - cube_start_w[:, 2])
                 max_tip_angle_deg = torch.maximum(max_tip_angle_deg, post_step_terms["tip_angle_deg"])
                 link5_pos_after_w = inner._robot.data.body_pos_w[:, link5_body_idx].clone()
+                link5_quat_after_w = inner._robot.data.body_quat_w[:, link5_body_idx].clone()
+                tool_proxy_pos_after_w = link5_pos_after_w + quat_rotate(link5_quat_after_w, tool_proxy_local)
                 joint_pos_after = inner._robot.data.joint_pos[:, arm_joint_ids].clone()
                 robot_dof_targets_after = inner.robot_dof_targets[:, arm_joint_ids].clone()
                 tcp_err = torch.norm(inner._tcp_pos_w - tcp_target_w, p=2, dim=-1)
                 link5_err_after = torch.norm(link5_pos_after_w - diffik_terms["link5_target_w"], p=2, dim=-1)
+                tool_proxy_err_before = torch.norm(
+                    diffik_terms["tool_proxy_pos_before_w"] - diffik_terms["tool_contact_target_w"],
+                    p=2,
+                    dim=-1,
+                )
+                tool_proxy_err_after = torch.norm(
+                    tool_proxy_pos_after_w - diffik_terms["tool_contact_target_w"],
+                    p=2,
+                    dim=-1,
+                )
                 final_tcp_target_err = tcp_err
+                final_tool_proxy_target_err = tool_proxy_err_after
                 min_tcp_target_err = torch.minimum(min_tcp_target_err, tcp_err)
+                min_tool_proxy_target_err = torch.minimum(min_tool_proxy_target_err, tool_proxy_err_after)
                 min_tcp_cube_dist = torch.minimum(
                     min_tcp_cube_dist,
                     torch.norm(inner._tcp_pos_w - inner._sponge_pos_w, p=2, dim=-1),
@@ -755,6 +832,13 @@ def main(argv: Sequence[str] | None = None) -> int:
                             "cube_mass_kg": cube_mass_kg,
                             "object_size_ref_m": object_size_ref_m,
                             "tcp_height_mode": args.tcp_height_mode,
+                            "diffik_command_type": args.diffik_command_type,
+                            "diffik_pose_quat_mode": args.diffik_pose_quat_mode,
+                            "tool_contact_proxy_mode": args.tool_contact_proxy_mode,
+                            "tool_proxy_label": tool_proxy_label,
+                            "tool_proxy_local_x_m": float(tool_proxy_local[trace_idx, 0].detach().cpu().item()),
+                            "tool_proxy_local_y_m": float(tool_proxy_local[trace_idx, 1].detach().cpu().item()),
+                            "tool_proxy_local_z_m": float(tool_proxy_local[trace_idx, 2].detach().cpu().item()),
                             "tcp_center_height_offset_m": float(
                                 traj["tcp_center_height_offset"][trace_idx].detach().cpu().item()
                             ),
@@ -774,6 +858,15 @@ def main(argv: Sequence[str] | None = None) -> int:
                             "target_x_m": float(tcp_target_w[trace_idx, 0].detach().cpu().item()),
                             "target_y_m": float(tcp_target_w[trace_idx, 1].detach().cpu().item()),
                             "target_z_m": float(tcp_target_w[trace_idx, 2].detach().cpu().item()),
+                            "tool_contact_target_x_m": float(
+                                diffik_terms["tool_contact_target_w"][trace_idx, 0].detach().cpu().item()
+                            ),
+                            "tool_contact_target_y_m": float(
+                                diffik_terms["tool_contact_target_w"][trace_idx, 1].detach().cpu().item()
+                            ),
+                            "tool_contact_target_z_m": float(
+                                diffik_terms["tool_contact_target_w"][trace_idx, 2].detach().cpu().item()
+                            ),
                             "phase_alpha": float(alpha[trace_idx].detach().cpu().item()),
                             "through_target_mode": args.through_target_mode,
                             "contact_controller_mode": args.contact_controller_mode,
@@ -826,17 +919,79 @@ def main(argv: Sequence[str] | None = None) -> int:
                                     "clip_max_joint_name": arm_joint_names[max_local_idx],
                                     "tcp_target_err_before_m": float(tcp_err_before[trace_idx].detach().cpu().item()),
                                     "tcp_target_err_after_m": float(tcp_err[trace_idx].detach().cpu().item()),
+                                    "tool_proxy_target_err_before_m": float(
+                                        tool_proxy_err_before[trace_idx].detach().cpu().item()
+                                    ),
+                                    "tool_proxy_target_err_after_m": float(
+                                        tool_proxy_err_after[trace_idx].detach().cpu().item()
+                                    ),
+                                    "tool_proxy_target_z_err_before_m": float(
+                                        (
+                                            diffik_terms["tool_proxy_pos_before_w"][trace_idx, 2]
+                                            - diffik_terms["tool_contact_target_w"][trace_idx, 2]
+                                        )
+                                        .detach()
+                                        .cpu()
+                                        .item()
+                                    ),
+                                    "tool_proxy_target_z_err_after_m": float(
+                                        (
+                                            tool_proxy_pos_after_w[trace_idx, 2]
+                                            - diffik_terms["tool_contact_target_w"][trace_idx, 2]
+                                        )
+                                        .detach()
+                                        .cpu()
+                                        .item()
+                                    ),
                                     "link5_target_err_before_m": float(link5_err_before[trace_idx].detach().cpu().item()),
                                     "link5_target_err_after_m": float(link5_err_after[trace_idx].detach().cpu().item()),
                                     "link5_x_before_m": float(diffik_terms["link5_pos_w"][trace_idx, 0].detach().cpu().item()),
                                     "link5_y_before_m": float(diffik_terms["link5_pos_w"][trace_idx, 1].detach().cpu().item()),
                                     "link5_z_before_m": float(diffik_terms["link5_pos_w"][trace_idx, 2].detach().cpu().item()),
+                                    "link5_qw_before": float(diffik_terms["link5_quat_w"][trace_idx, 0].detach().cpu().item()),
+                                    "link5_qx_before": float(diffik_terms["link5_quat_w"][trace_idx, 1].detach().cpu().item()),
+                                    "link5_qy_before": float(diffik_terms["link5_quat_w"][trace_idx, 2].detach().cpu().item()),
+                                    "link5_qz_before": float(diffik_terms["link5_quat_w"][trace_idx, 3].detach().cpu().item()),
                                     "link5_target_x_m": float(diffik_terms["link5_target_w"][trace_idx, 0].detach().cpu().item()),
                                     "link5_target_y_m": float(diffik_terms["link5_target_w"][trace_idx, 1].detach().cpu().item()),
                                     "link5_target_z_m": float(diffik_terms["link5_target_w"][trace_idx, 2].detach().cpu().item()),
+                                    "link5_qw_target": float(
+                                        diffik_terms["link5_quat_target_w"][trace_idx, 0].detach().cpu().item()
+                                    ),
+                                    "link5_qx_target": float(
+                                        diffik_terms["link5_quat_target_w"][trace_idx, 1].detach().cpu().item()
+                                    ),
+                                    "link5_qy_target": float(
+                                        diffik_terms["link5_quat_target_w"][trace_idx, 2].detach().cpu().item()
+                                    ),
+                                    "link5_qz_target": float(
+                                        diffik_terms["link5_quat_target_w"][trace_idx, 3].detach().cpu().item()
+                                    ),
                                     "link5_x_after_m": float(link5_pos_after_w[trace_idx, 0].detach().cpu().item()),
                                     "link5_y_after_m": float(link5_pos_after_w[trace_idx, 1].detach().cpu().item()),
                                     "link5_z_after_m": float(link5_pos_after_w[trace_idx, 2].detach().cpu().item()),
+                                    "link5_qw_after": float(link5_quat_after_w[trace_idx, 0].detach().cpu().item()),
+                                    "link5_qx_after": float(link5_quat_after_w[trace_idx, 1].detach().cpu().item()),
+                                    "link5_qy_after": float(link5_quat_after_w[trace_idx, 2].detach().cpu().item()),
+                                    "link5_qz_after": float(link5_quat_after_w[trace_idx, 3].detach().cpu().item()),
+                                    "tool_proxy_x_before_m": float(
+                                        diffik_terms["tool_proxy_pos_before_w"][trace_idx, 0].detach().cpu().item()
+                                    ),
+                                    "tool_proxy_y_before_m": float(
+                                        diffik_terms["tool_proxy_pos_before_w"][trace_idx, 1].detach().cpu().item()
+                                    ),
+                                    "tool_proxy_z_before_m": float(
+                                        diffik_terms["tool_proxy_pos_before_w"][trace_idx, 2].detach().cpu().item()
+                                    ),
+                                    "tool_proxy_x_after_m": float(
+                                        tool_proxy_pos_after_w[trace_idx, 0].detach().cpu().item()
+                                    ),
+                                    "tool_proxy_y_after_m": float(
+                                        tool_proxy_pos_after_w[trace_idx, 1].detach().cpu().item()
+                                    ),
+                                    "tool_proxy_z_after_m": float(
+                                        tool_proxy_pos_after_w[trace_idx, 2].detach().cpu().item()
+                                    ),
                                     "tcp_x_before_m": float(tcp_pos_before_w[trace_idx, 0].detach().cpu().item()),
                                     "tcp_y_before_m": float(tcp_pos_before_w[trace_idx, 1].detach().cpu().item()),
                                     "tcp_z_before_m": float(tcp_pos_before_w[trace_idx, 2].detach().cpu().item()),
@@ -934,6 +1089,13 @@ def main(argv: Sequence[str] | None = None) -> int:
                         "cube_mass_kg": cube_mass_kg,
                         "object_size_ref_m": object_size_ref_m,
                         "tcp_height_mode": args.tcp_height_mode,
+                        "diffik_command_type": args.diffik_command_type,
+                        "diffik_pose_quat_mode": args.diffik_pose_quat_mode,
+                        "tool_contact_proxy_mode": args.tool_contact_proxy_mode,
+                        "tool_proxy_label": tool_proxy_label,
+                        "tool_proxy_local_x_m": float(tool_proxy_local[idx, 0].detach().cpu().item()),
+                        "tool_proxy_local_y_m": float(tool_proxy_local[idx, 1].detach().cpu().item()),
+                        "tool_proxy_local_z_m": float(tool_proxy_local[idx, 2].detach().cpu().item()),
                         "tcp_center_height_offset_m": float(
                             traj["tcp_center_height_offset"][idx].detach().cpu().item()
                         ),
@@ -1002,6 +1164,10 @@ def main(argv: Sequence[str] | None = None) -> int:
                         "min_tcp_cube_dist_m": float(min_tcp_cube_dist[idx].detach().cpu().item()),
                         "min_tcp_target_err_m": float(min_tcp_target_err[idx].detach().cpu().item()),
                         "final_tcp_target_err_m": float(final_tcp_target_err[idx].detach().cpu().item()),
+                        "min_tool_proxy_target_err_m": float(min_tool_proxy_target_err[idx].detach().cpu().item()),
+                        "final_tool_proxy_target_err_m": float(
+                            final_tool_proxy_target_err[idx].detach().cpu().item()
+                        ),
                         "max_joint_delta_abs_rad": float(max_joint_delta_abs[idx].detach().cpu().item()),
                         "diffik_clip_rate": float((clipped_steps[idx] / float(total_steps)).detach().cpu().item()),
                     }
@@ -1067,7 +1233,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     summary = {
         "controller": "IsaacLab_DifferentialIKController",
         "ik_method": "dls",
-        "command_type": "position",
+        "command_type": args.diffik_command_type,
+        "diffik_pose_quat_mode": args.diffik_pose_quat_mode,
+        "tool_contact_proxy_mode": args.tool_contact_proxy_mode,
+        "tool_proxy_label": tool_proxy_label,
+        "tool_proxy_local_m": [float(v) for v in tool_proxy_local[0].detach().cpu().tolist()],
         "local_roarm_ik_dls_control_loop": False,
         "training": False,
         "dataset_generation": False,
@@ -1201,6 +1371,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         "min_tcp_cube_dist_mean_m": mean("min_tcp_cube_dist_m"),
         "min_tcp_target_err_mean_m": mean("min_tcp_target_err_m"),
         "final_tcp_target_err_mean_m": mean("final_tcp_target_err_m"),
+        "min_tool_proxy_target_err_mean_m": mean("min_tool_proxy_target_err_m"),
+        "final_tool_proxy_target_err_mean_m": mean("final_tool_proxy_target_err_m"),
         "diffik_clip_rate_mean": mean("diffik_clip_rate"),
         "record_video": bool(args.record_video),
         "video_env_id": int(args.video_env_id) if args.record_video else None,
