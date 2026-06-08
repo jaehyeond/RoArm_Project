@@ -143,7 +143,8 @@ def _write_result(out_json: Path, out_summary: Path, result: dict[str, Any]) -> 
             f"controller_mode={result.get('controller_mode', 'NA')} "
             f"precontact_clearance_m={result.get('precontact_clearance_m', 'NA')} "
             f"tcp_top_margin_m={result.get('tcp_top_margin_m', 'NA')} "
-            f"goal_push_m={result.get('goal_push_m', 'NA')}"
+            f"goal_push_m={result.get('goal_push_m', 'NA')} "
+            f"max_joint_delta_per_step_rad={result.get('max_joint_delta_per_step_rad', 'NA')}"
         ),
         (
             "line4 reset_and_ik "
@@ -177,6 +178,12 @@ def _write_result(out_json: Path, out_summary: Path, result: dict[str, Any]) -> 
             "line7 action_path "
             f"tcp_cube_dist_m={result.get('last_log', {}).get('cube_push_tcp_cube_dist_m', 'NA')} "
             f"joint_delta_abs_mean={result.get('last_log', {}).get('cube_push_joint_delta_abs_mean', 'NA')} "
+            f"joint_delta_abs_max={result.get('last_log', {}).get('cube_push_joint_delta_abs_max', 'NA')} "
+            f"joint_delta_cap_rate={result.get('last_log', {}).get('cube_push_joint_delta_cap_rate', 'NA')} "
+            f"action_abs_mean={result.get('last_log', {}).get('cube_push_action_abs_mean', 'NA')} "
+            f"action_abs_max={result.get('last_log', {}).get('cube_push_action_abs_max', 'NA')} "
+            f"target_lead_abs_max={result.get('last_log', {}).get('cube_push_target_lead_abs_max', 'NA')} "
+            f"target_lead_limit_rate={result.get('last_log', {}).get('cube_push_target_lead_limit_rate', 'NA')} "
             f"contact_slowdown_mean={result.get('last_log', {}).get('cube_push_contact_slowdown_mean', 'NA')} "
             f"teacher_blend_mean={result.get('last_log', {}).get('cube_push_teacher_blend_mean', 'NA')} "
             f"action_penalty={result.get('last_log', {}).get('action_penalty', 'NA')}"
@@ -189,7 +196,9 @@ def _write_result(out_json: Path, out_summary: Path, result: dict[str, Any]) -> 
             f"shortfall_min={result.get('log_trace_stats', {}).get('cube_tap_contact_band_shortfall_m', {}).get('min', 'NA')} "
             f"shortfall_final={result.get('log_trace_stats', {}).get('cube_tap_contact_band_shortfall_m', {}).get('final', 'NA')} "
             f"tcp_dist_min={result.get('log_trace_stats', {}).get('cube_push_tcp_cube_dist_m', {}).get('min', 'NA')} "
-            f"joint_delta_abs_max={result.get('log_trace_stats', {}).get('cube_push_joint_delta_abs_mean', {}).get('max', 'NA')}"
+            f"joint_delta_abs_max={result.get('log_trace_stats', {}).get('cube_push_joint_delta_abs_max', {}).get('max', 'NA')} "
+            f"joint_delta_cap_rate_max={result.get('log_trace_stats', {}).get('cube_push_joint_delta_cap_rate', {}).get('max', 'NA')} "
+            f"target_lead_limit_rate_max={result.get('log_trace_stats', {}).get('cube_push_target_lead_limit_rate', {}).get('max', 'NA')}"
         ),
         (
             "line9 verdict "
@@ -224,6 +233,7 @@ def main() -> int:
     parser.add_argument("--closed_loop_ik_tol_mm", type=float, default=1.5)
     parser.add_argument("--action_smoothing_alpha", type=float, default=-1.0)
     parser.add_argument("--contact_joint_delta_scale", type=float, default=-1.0)
+    parser.add_argument("--max_joint_delta_per_step_rad", type=float, default=-1.0)
     parser.add_argument("--robot_usd_path", type=Path, default=DEFAULT_LOCAL_USD)
     parser.add_argument("--out_json", type=Path, default=DEFAULT_OUT_JSON)
     parser.add_argument("--out_summary", type=Path, default=DEFAULT_OUT_SUMMARY)
@@ -295,6 +305,8 @@ def main() -> int:
             cfg.action_smoothing_alpha = float(args.action_smoothing_alpha)
         if float(args.contact_joint_delta_scale) >= 0.0:
             cfg.contact_joint_delta_scale = float(args.contact_joint_delta_scale)
+        if float(args.max_joint_delta_per_step_rad) >= 0.0:
+            cfg.max_joint_delta_per_step_rad = float(args.max_joint_delta_per_step_rad)
         if args.num_envs < 8:
             cfg.scene.clone_in_fabric = False
             cfg.scene.replicate_physics = False
@@ -366,6 +378,13 @@ def main() -> int:
                     "cube_tap_contact_vertical_offset_m",
                     "cube_push_tcp_cube_dist_m",
                     "cube_push_joint_delta_abs_mean",
+                    "cube_push_joint_delta_abs_max",
+                    "cube_push_joint_delta_cap_rate",
+                    "cube_push_action_abs_mean",
+                    "cube_push_action_abs_max",
+                    "cube_push_target_lead_abs_mean",
+                    "cube_push_target_lead_abs_max",
+                    "cube_push_target_lead_limit_rate",
                     "cube_push_contact_slowdown_mean",
                     "cube_push_teacher_blend_mean",
                     "cube_tap_contact_seen_rate",
@@ -411,6 +430,13 @@ def main() -> int:
             "cube_tap_max_speed_mps",
             "cube_push_tcp_cube_dist_m",
             "cube_push_joint_delta_abs_mean",
+            "cube_push_joint_delta_abs_max",
+            "cube_push_joint_delta_cap_rate",
+            "cube_push_action_abs_mean",
+            "cube_push_action_abs_max",
+            "cube_push_target_lead_abs_mean",
+            "cube_push_target_lead_abs_max",
+            "cube_push_target_lead_limit_rate",
             "cube_push_contact_slowdown_mean",
             "cube_push_teacher_blend_mean",
             "cube_push_grasped_marker_rate",
@@ -474,6 +500,7 @@ def main() -> int:
             "closed_loop_push_steps": int(args.closed_loop_push_steps),
             "action_smoothing_alpha": float(cfg.action_smoothing_alpha),
             "contact_joint_delta_scale": float(cfg.contact_joint_delta_scale),
+            "max_joint_delta_per_step_rad": float(cfg.max_joint_delta_per_step_rad),
             "controller_goal_ok_rate": controller_goal_ok_rate,
             "obs_shape": list(obs_t.shape),
             "reward_mean": float(np.mean(rewards_all)) if rewards_all else 0.0,
@@ -526,6 +553,7 @@ def main() -> int:
             "goal_push_m": float(args.goal_push_m),
             "teacher_horizon_frac": float(args.teacher_horizon_frac),
             "closed_loop_push_steps": int(args.closed_loop_push_steps),
+            "max_joint_delta_per_step_rad": "UNKNOWN",
             "required_log_keys_present": False,
             "reset_metrics": {},
             "controller_metrics": {},

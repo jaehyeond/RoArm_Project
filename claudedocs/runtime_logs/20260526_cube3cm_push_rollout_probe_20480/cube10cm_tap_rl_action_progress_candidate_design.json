@@ -1,0 +1,139 @@
+{
+  "artifact_type": "cube10cm_tap_rl_action_progress_candidate_design_v1",
+  "b200": false,
+  "basis_ok": true,
+  "branch": "professor_cube10cm_tap_reaction_quality_tier",
+  "candidate": {
+    "command": "conda run -n isaaclab --no-capture-output python -u -m roarm_rl.test_positive_control_cube_tap10cm --num_envs 2 --steps 120 --seed 962 --device cuda:0 --controller_mode external_closed_loop --action_smoothing_alpha 1.0 --out_json /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_action_smoothing1_sanity.json --out_summary /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_action_smoothing1_sanity_summary.out",
+    "diagnostic_readout_if_primary_fails": [
+      "face_gap_best_m",
+      "shortfall_best_m",
+      "joint_delta_abs_max",
+      "tcp_dist_min_m",
+      "contact_slowdown_mean"
+    ],
+    "does_not_change": [
+      "10cm/0.72kg object contract",
+      "tap/reaction/contact objective",
+      "final 1cm remains default-off",
+      "contact band and reaction thresholds",
+      "cube placement and push direction",
+      "side-center TCP height",
+      "precontact clearance and through distance",
+      "controller mode",
+      "closed-loop push timing",
+      "contact slowdown scale",
+      "dataset/RL/RoArm state"
+    ],
+    "fixed": {
+      "closed_loop_push_steps": 72,
+      "contact_joint_delta_scale": 0.35,
+      "controller_mode": "external_closed_loop",
+      "cube_xy_m": [
+        0.25,
+        0.0
+      ],
+      "device": "cuda:0",
+      "env_id": "RoArm-CubeTap10cm-Direct-v0",
+      "goal_push_m": 0.006,
+      "max_steps": 120,
+      "num_envs": 2,
+      "precontact_clearance_m": 0.02,
+      "push_dir": [
+        1.0,
+        0.0
+      ],
+      "seed": 962,
+      "tcp_top_margin_m": -0.05
+    },
+    "one_variable_intent": "action_progress_gain_only",
+    "primary_pass_gate": {
+      "contact_seen_gt": 0.0,
+      "final_1cm_required_eq": false,
+      "overshoot_eq": 0.0,
+      "reaction_contact_context_gt": 0.0,
+      "reaction_seen_gt": 0.0,
+      "tap_success_gt": 0.0
+    },
+    "requires_explicit_gpu_approval": true,
+    "selected_runtime_knob_changes": [
+      "action_smoothing_alpha: 0.25 -> 1.0"
+    ],
+    "selected_runtime_knob_changes_count": 1,
+    "status": "DESIGNED_NOT_RUN"
+  },
+  "code_lines": {
+    "action_smoothing_apply": 660,
+    "action_smoothing_default": 120,
+    "contact_slowdown_apply": 122,
+    "delta_cap_apply": 121,
+    "harness_action_smoothing_arg": 225,
+    "harness_action_smoothing_override": 295,
+    "harness_closed_loop_alpha": 118,
+    "harness_trace_summary": 185,
+    "target_reference_apply": 685,
+    "target_write": 697
+  },
+  "code_ready": true,
+  "dataset_generation": false,
+  "gpu_runtime": false,
+  "local_design_static_audit_only": true,
+  "not_selected": {
+    "closed_loop_push_steps": {
+      "reason": "closed_loop_alpha reached 1.0, and the trace never approached the contact band",
+      "status": "NOT_SELECTED"
+    },
+    "contact_joint_delta_scale": {
+      "reason": "latest runtime recorded contact_slowdown_mean=1.0, so the contact slowdown path was inactive",
+      "status": "NOT_SELECTED"
+    },
+    "goal_push_or_contact_band": {
+      "reason": "would change through/contact geometry instead of the action application path",
+      "status": "NOT_SELECTED"
+    },
+    "joint_delta_reference": {
+      "reason": "plausible target-application knob, but current logs do not yet show target-vs-joint lead as the dominant cause",
+      "status": "RESERVE_NOT_SELECTED"
+    },
+    "max_joint_delta_per_step_rad": {
+      "reason": "latest scalar trace recorded joint_delta_abs_max below the 0.010rad cap; per-joint cap may still be audited later",
+      "status": "NOT_SELECTED_FIRST"
+    }
+  },
+  "previous_runtime": {
+    "action_smoothing_alpha": 0.25,
+    "closed_loop_alpha_final": 1.0,
+    "closed_loop_push_steps": 72,
+    "contact_joint_delta_scale": 0.35,
+    "contact_seen": 0.0,
+    "contact_slowdown_mean": 1.0,
+    "controller_mode": "external_closed_loop",
+    "external_runtime_valid": true,
+    "face_gap_best_improvement_from_initial_m": 0.0007449686527252197,
+    "face_gap_best_m": -0.019507329910993576,
+    "face_gap_moved_toward_band": true,
+    "face_gap_near_band": false,
+    "initial_face_gap_m": -0.020252298563718796,
+    "joint_delta_abs_max": 0.004999999888241291,
+    "reaction_context": 0.0,
+    "shortfall_best_m": 0.009507329910993576,
+    "shortfall_final_m": 0.01051849290728569,
+    "strict_knobs_ok": true,
+    "tap_success": 0.0,
+    "tcp_dist_min_m": 0.069517582654953
+  },
+  "result_audit": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_external_closed_loop_tcp_progress_result_audit.json",
+  "robot_control": false,
+  "runtime_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_tcp_progress_sanity.json",
+  "ssh": false,
+  "still_blocked": {
+    "diffik_action_dataset": "BLOCKED",
+    "large_dataset": "BLOCKED",
+    "ppo_rl_training": "BLOCKED",
+    "roarm": "BLOCKED",
+    "tiny_action_dataset_dry_run": "BLOCKED"
+  },
+  "track_a": false,
+  "training": false,
+  "verdict": "READY_FOR_EXPLICIT_RUNTIME_APPROVAL_ONLY"
+}

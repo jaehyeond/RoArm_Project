@@ -1,0 +1,95 @@
+{
+  "artifact_type": "cube10cm_tap_rl_cap_only_candidate_design_v1",
+  "b200": false,
+  "basis_ok": true,
+  "branch": "professor_cube10cm_tap_reaction_quality_tier",
+  "candidate": {
+    "command": "conda run -n isaaclab --no-capture-output python -u -m roarm_rl.test_positive_control_cube_tap10cm --num_envs 2 --steps 120 --seed 962 --device cuda:0 --controller_mode external_closed_loop --max_joint_delta_per_step_rad 0.040 --out_json /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_cap040_sanity.json --out_summary /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_cap040_sanity_summary.out",
+    "does_not_change": [
+      "10cm/0.72kg object contract",
+      "tap/reaction/contact objective",
+      "final 1cm remains default-off",
+      "contact band and reaction thresholds",
+      "action_scale",
+      "action_smoothing_alpha",
+      "contact slowdown scale",
+      "target reference and lead limit",
+      "geometry, side-center height, precontact, and through distance",
+      "dataset/RL/RoArm state"
+    ],
+    "fixed": {
+      "action_smoothing_alpha": 0.25,
+      "closed_loop_push_steps": 72,
+      "contact_joint_delta_scale": 0.35,
+      "controller_mode": "external_closed_loop",
+      "cube_xy_m": [
+        0.25,
+        0.0
+      ],
+      "device": "cuda:0",
+      "env_id": "RoArm-CubeTap10cm-Direct-v0",
+      "goal_push_m": 0.006,
+      "max_steps": 120,
+      "num_envs": 2,
+      "precontact_clearance_m": 0.02,
+      "push_dir": [
+        1.0,
+        0.0
+      ],
+      "seed": 962,
+      "tcp_top_margin_m": -0.05
+    },
+    "one_variable_intent": "remove_env_delta_cap_as_primary_limiter_while_preserving_action_scale",
+    "primary_pass_gate": {
+      "contact_seen_gt": 0.0,
+      "final_1cm_required_eq": false,
+      "overshoot_eq": 0.0,
+      "reaction_contact_context_gt": 0.0,
+      "reaction_seen_gt": 0.0,
+      "tap_success_gt": 0.0
+    },
+    "requires_explicit_gpu_approval": true,
+    "selected_runtime_knob_changes": [
+      "max_joint_delta_per_step_rad: 0.010 -> 0.040"
+    ],
+    "selected_runtime_knob_changes_count": 1,
+    "status": "DESIGNED_NOT_RUN"
+  },
+  "code_lines": {
+    "env_action_scale_default": 64,
+    "env_cap_apply": 671,
+    "env_cap_default": 121,
+    "harness_cap_arg": 236,
+    "harness_cap_override": 309,
+    "harness_cap_result": 503
+  },
+  "code_ready": true,
+  "dataset_generation": false,
+  "diagnostic_basis": {
+    "action_abs_max_trace": 1.0,
+    "cap_is_primary_current_hypothesis": true,
+    "joint_delta_abs_max_trace": 0.009999999776482582,
+    "joint_delta_cap_rate_trace": 0.5,
+    "target_lead_limit_rate_trace": 0.3333333432674408
+  },
+  "gpu_runtime": false,
+  "local_design_static_audit_only": true,
+  "not_selected": {
+    "action_scale": "NOT_SELECTED because changing it changes both command normalization and maximum raw delta",
+    "goal_push_or_contact_band": "NOT_SELECTED because that changes geometry rather than the action bottleneck",
+    "joint_delta_reference": "RESERVE because cap/action saturation is primary while lead-limit is secondary in current evidence",
+    "joint_target_lead_limit_rad": "RESERVE because lead limit is observed but not primary over the active cap"
+  },
+  "robot_control": false,
+  "ssh": false,
+  "still_blocked": {
+    "diffik_action_dataset": "BLOCKED",
+    "large_dataset": "BLOCKED",
+    "ppo_rl_training": "BLOCKED",
+    "roarm": "BLOCKED",
+    "tiny_action_dataset_dry_run": "BLOCKED"
+  },
+  "track_a": false,
+  "training": false,
+  "verdict": "READY_FOR_EXPLICIT_RUNTIME_APPROVAL_ONLY"
+}

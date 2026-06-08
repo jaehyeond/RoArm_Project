@@ -329,6 +329,13 @@ class RoArmCubePushEnv(RoArmStackEnv):
         self._ik_reset_err_mm = torch.zeros(self.num_envs, device=self.device)
         self._smoothed_actions = torch.zeros((self.num_envs, self.cfg.action_space), device=self.device)
         self._last_joint_delta_abs_mean = torch.zeros(self.num_envs, device=self.device)
+        self._last_joint_delta_abs_max = torch.zeros(self.num_envs, device=self.device)
+        self._last_joint_delta_cap_rate = torch.zeros(self.num_envs, device=self.device)
+        self._last_action_abs_mean = torch.zeros(self.num_envs, device=self.device)
+        self._last_action_abs_max = torch.zeros(self.num_envs, device=self.device)
+        self._last_target_lead_abs_mean = torch.zeros(self.num_envs, device=self.device)
+        self._last_target_lead_abs_max = torch.zeros(self.num_envs, device=self.device)
+        self._last_target_lead_limit_rate = torch.zeros(self.num_envs, device=self.device)
         self._last_contact_slowdown = torch.ones(self.num_envs, device=self.device)
         self._teacher_start_joints = torch.zeros((self.num_envs, self.cfg.action_space), device=self.device)
         self._teacher_goal_joints = torch.zeros((self.num_envs, self.cfg.action_space), device=self.device)
@@ -657,11 +664,16 @@ class RoArmCubePushEnv(RoArmStackEnv):
             self._last_bc_teacher_action_abs_mean[:] = torch.mean(torch.abs(bc_teacher_actions), dim=-1)
 
         alpha = float(self.cfg.action_smoothing_alpha)
+        self._last_action_abs_mean[:] = torch.mean(torch.abs(self.actions), dim=-1)
+        self._last_action_abs_max[:] = torch.max(torch.abs(self.actions), dim=-1).values
         self._smoothed_actions[:] = (1.0 - alpha) * self._smoothed_actions + alpha * self.actions
+        raw_delta = self.cfg.action_scale * self._smoothed_actions
+        max_delta = float(self.cfg.max_joint_delta_per_step_rad)
+        self._last_joint_delta_cap_rate[:] = (torch.abs(raw_delta) >= max_delta - 1.0e-9).float().mean(dim=-1)
         delta = torch.clamp(
-            self.cfg.action_scale * self._smoothed_actions,
-            -float(self.cfg.max_joint_delta_per_step_rad),
-            float(self.cfg.max_joint_delta_per_step_rad),
+            raw_delta,
+            -max_delta,
+            max_delta,
         )
 
         self._compute_intermediate_values()
@@ -681,6 +693,9 @@ class RoArmCubePushEnv(RoArmStackEnv):
         delta[:, self.gripper_joint_idx] = 0.0
 
         joint_pos = self._robot.data.joint_pos
+        lead_before = torch.abs(self.robot_dof_targets - joint_pos)
+        self._last_target_lead_abs_mean[:] = torch.mean(lead_before, dim=-1)
+        self._last_target_lead_abs_max[:] = torch.max(lead_before, dim=-1).values
         reference = str(getattr(self.cfg, "joint_delta_reference", "target"))
         if reference == "target":
             target_base = self.robot_dof_targets
@@ -688,14 +703,19 @@ class RoArmCubePushEnv(RoArmStackEnv):
             target_base = joint_pos
         else:
             raise ValueError(f"unsupported joint_delta_reference={reference!r}")
-        targets = target_base + delta
+        targets_unclamped = target_base + delta
         lead = float(self.cfg.joint_target_lead_limit_rad)
+        self._last_target_lead_limit_rate[:] = (
+            torch.abs(targets_unclamped - joint_pos) > lead + 1.0e-9
+        ).float().mean(dim=-1)
+        targets = targets_unclamped
         targets = torch.maximum(torch.minimum(targets, joint_pos + lead), joint_pos - lead)
         targets = torch.clamp(targets, self.robot_dof_lower_limits, self.robot_dof_upper_limits)
         targets[:, self.gripper_joint_idx] = 0.0
 
         self.robot_dof_targets[:] = targets
         self._last_joint_delta_abs_mean[:] = torch.mean(torch.abs(delta), dim=-1)
+        self._last_joint_delta_abs_max[:] = torch.max(torch.abs(delta), dim=-1).values
         self._last_contact_slowdown[:] = slowdown
 
     def _apply_action(self):
@@ -793,6 +813,13 @@ class RoArmCubePushEnv(RoArmStackEnv):
         self._push_success_flag[env_ids] = False
         self._smoothed_actions[env_ids] = 0.0
         self._last_joint_delta_abs_mean[env_ids] = 0.0
+        self._last_joint_delta_abs_max[env_ids] = 0.0
+        self._last_joint_delta_cap_rate[env_ids] = 0.0
+        self._last_action_abs_mean[env_ids] = 0.0
+        self._last_action_abs_max[env_ids] = 0.0
+        self._last_target_lead_abs_mean[env_ids] = 0.0
+        self._last_target_lead_abs_max[env_ids] = 0.0
+        self._last_target_lead_limit_rate[env_ids] = 0.0
         self._last_contact_slowdown[env_ids] = 1.0
         self._last_teacher_blend[env_ids] = 0.0
         self._last_bc_teacher_blend[env_ids] = 0.0
@@ -938,6 +965,13 @@ class RoArmCubePushEnv(RoArmStackEnv):
             "cube_push_ik_endpoint_reset_rate": self._ik_reset_ok.float().mean().detach(),
             "cube_push_ik_reset_err_mm": self._ik_reset_err_mm.mean().detach(),
             "cube_push_joint_delta_abs_mean": self._last_joint_delta_abs_mean.mean().detach(),
+            "cube_push_joint_delta_abs_max": self._last_joint_delta_abs_max.mean().detach(),
+            "cube_push_joint_delta_cap_rate": self._last_joint_delta_cap_rate.mean().detach(),
+            "cube_push_action_abs_mean": self._last_action_abs_mean.mean().detach(),
+            "cube_push_action_abs_max": self._last_action_abs_max.mean().detach(),
+            "cube_push_target_lead_abs_mean": self._last_target_lead_abs_mean.mean().detach(),
+            "cube_push_target_lead_abs_max": self._last_target_lead_abs_max.mean().detach(),
+            "cube_push_target_lead_limit_rate": self._last_target_lead_limit_rate.mean().detach(),
             "cube_push_contact_slowdown_mean": self._last_contact_slowdown.mean().detach(),
             "cube_push_teacher_blend_mean": self._last_teacher_blend.mean().detach(),
             "cube_push_teacher_goal_ok_rate": self._teacher_goal_ok.float().mean().detach(),
@@ -1138,6 +1172,13 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
             "cube_tap_contact_vertical_offset_m": terms["tap_contact_vertical_offset_m"].mean().detach(),
             "cube_push_tcp_cube_dist_m": terms["tcp_cube_dist"].mean().detach(),
             "cube_push_joint_delta_abs_mean": self._last_joint_delta_abs_mean.mean().detach(),
+            "cube_push_joint_delta_abs_max": self._last_joint_delta_abs_max.mean().detach(),
+            "cube_push_joint_delta_cap_rate": self._last_joint_delta_cap_rate.mean().detach(),
+            "cube_push_action_abs_mean": self._last_action_abs_mean.mean().detach(),
+            "cube_push_action_abs_max": self._last_action_abs_max.mean().detach(),
+            "cube_push_target_lead_abs_mean": self._last_target_lead_abs_mean.mean().detach(),
+            "cube_push_target_lead_abs_max": self._last_target_lead_abs_max.mean().detach(),
+            "cube_push_target_lead_limit_rate": self._last_target_lead_limit_rate.mean().detach(),
             "cube_push_contact_slowdown_mean": self._last_contact_slowdown.mean().detach(),
             "cube_push_teacher_blend_mean": self._last_teacher_blend.mean().detach(),
             "cube_push_grasped_marker_rate": self._grasped.float().mean().detach(),

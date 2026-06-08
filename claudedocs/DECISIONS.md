@@ -9736,3 +9736,194 @@ Sources:
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_tcp_progress_visual_contact_audit_summary.out:1-8`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_tcp_progress_visual_contact_audit.png`
 - `roarm_rl/test_positive_control_cube_tap10cm.py:66-74,177-193,346-389`
+
+## D180 - Next positive-control candidate is smoothing-only action progress, not geometry or timing
+
+Date: 2026-06-08
+
+Decision:
+
+- After the TCP-progress trace showed slight movement but no approach to the
+  contact band, a local-only candidate design audit was added and run.
+- The audit did not launch GPU/IsaacLab physics, generate datasets, train,
+  control RoArm, SSH/B200, or use Track A.
+- The selected next candidate changes exactly one runtime knob:
+  `action_smoothing_alpha 0.25 -> 1.0`.
+- Everything else stays fixed: `controller_mode=external_closed_loop`,
+  `closed_loop_push_steps=72`, `contact_joint_delta_scale=0.35`, cube placement,
+  push direction, side-center TCP height, precontact clearance, through distance,
+  contact/reaction gates, and final-1cm default-off.
+- Do not select `contact_joint_delta_scale` first because the latest runtime
+  recorded contact slowdown inactive (`1.0`).
+- Do not select `closed_loop_push_steps` first because closed-loop alpha already
+  reached `1.0`.
+- Do not change goal push/contact band first because that would move the
+  contact geometry rather than test action application.
+- Keep `joint_delta_reference` as a reserve target-application candidate; current
+  logs do not yet prove target-vs-joint lead is the dominant cause.
+- DiffIK action dataset, tiny action dry run, PPO/RL, large dataset, and RoArm
+  remain blocked until a contact-gated positive-control passes and teacher/action
+  policy is resolved.
+
+Evidence:
+
+- Candidate design summary line 1 confirms local design/static audit only:
+  no GPU runtime, dataset generation, training, robot control, SSH, B200, or
+  Track A.
+- Summary line 2 records the failure basis:
+  `code_ready=True`, `basis_ok=True`, contact `0.0`, reaction context `0.0`,
+  best face-gap improvement `0.000744969m`, best shortfall `0.009507330m`.
+- Summary line 3 records action-path basis:
+  previous smoothing `0.25`, closed-loop alpha final `1.0`, contact slowdown
+  `1.0`, joint-delta abs max `0.005000000`, TCP distance min `0.069517583m`.
+- Summary line 4 records the selected one-knob candidate:
+  `action_smoothing_alpha=0.25->1.0`, with controller mode, contact delta scale,
+  closed-loop steps, and geometry fixed.
+- Summary line 5 records the not-selected candidates and reasons.
+- Summary line 8 keeps DiffIK action dataset, tiny action dry run, PPO/RL, large
+  dataset, and RoArm blocked.
+
+Implication:
+
+- The next possible runtime, if explicitly approved, is one tiny local
+  cuda:0 positive-control run with `--action_smoothing_alpha 1.0`.
+- Passing still requires contact-gated reaction/tap success, not just a better
+  face-gap number.
+
+Sources:
+
+- `sim_scripts/cube10cm_tap_rl_action_progress_candidate_design.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_action_progress_candidate_design_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_action_progress_candidate_design.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_external_closed_loop_tcp_progress_result_audit_summary.out:1-9`
+
+## D181 - Smoothing 1.0 does not fix contact; per-joint cap/target-lead instrumentation is required before the next actuation diagnosis
+
+Date: 2026-06-08
+
+Decision:
+
+- After explicit user approval, exactly one tiny local RTX4090/cuda:0 runtime was
+  run for the smoothing-only candidate.
+- The run changed only `action_smoothing_alpha 0.25 -> 1.0`; controller mode,
+  closed-loop steps, contact slowdown scale, cube geometry, side-center height,
+  precontact, through distance, and gates stayed fixed.
+- The positive-control gate still failed: contact context/tap success were never
+  observed.
+- The smoothing hypothesis is not supported. It did not improve the best
+  contact-band shortfall or meaningful face-gap progress compared with the
+  previous strict external TCP-progress run.
+- A critical interpretation correction is now mandatory: previous summaries named
+  `joint_delta_abs_max`, but that value was the max over time of
+  `cube_push_joint_delta_abs_mean`, not a per-joint delta maximum. It cannot prove
+  the per-joint delta cap is inactive.
+- The env/harness now logs per-joint delta max, cap rate, action magnitude, target
+  lead, and lead-limit rate for the next approved diagnostic.
+- Do not proceed to DiffIK action dataset, tiny action dry run, PPO/RL, large
+  dataset, or RoArm.
+
+Evidence:
+
+- Smoothing runtime summary line 1 confirms a local tiny GPU runtime only:
+  no dataset generation, training, robot control, SSH, B200, or Track A.
+- Summary line 3 records the single changed candidate context:
+  `controller_mode=external_closed_loop`, fixed cube `(0.25,0.0)`, push dir
+  `(1.0,0.0)`, and side-center settings.
+- Summary line 5 shows the gate failure:
+  contact `0.0`, raw reaction signal `1.0`, reaction context `0.0`, reaction seen
+  `0.0`, tap success `0.0`, overshoot `0.0`.
+- Summary line 8 shows the trace still missed the band:
+  best face gap `-0.019533616m`, final `-0.020514678m`, best shortfall
+  `0.009533616m`, final shortfall `0.010514678m`.
+- Visual audit lines 3-6 confirm the final TCP remains outside the contact band
+  while lateral/height are OK and the wrapper blocks raw reaction without contact.
+- Result audit line 4 compares against the previous strict external baseline:
+  best improvement delta `-0.000026286m`; best shortfall worsened by
+  `0.000026286m`.
+- Result audit line 5 shows final gap changed only `0.000003815m`, mean-delta
+  trace stayed `0.005000000`, and slowdown stayed `1.0`.
+- Result audit lines 6-7 mark `smoothing_hypothesis_supported=False` and
+  `FAIL_SMOOTHING_NOT_ROOT_CAUSE`.
+- New source logs per-joint delta max, cap rate, action abs mean/max, target lead
+  abs mean/max, and target lead-limit rate.
+
+Implication:
+
+- The next allowed work is local-only target-reference/action-command/per-joint
+  cap diagnostic design using the new logs.
+- Any new cuda:0 runtime still requires explicit approval and must remain tiny.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_action_smoothing1_sanity_summary.out:1-9`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_action_smoothing1_failure_audit_summary.out:1-7`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_action_smoothing1_visual_contact_audit_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_action_smoothing1_visual_contact_audit.png`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_action_smoothing1_result_audit_summary.out:1-8`
+- `sim_scripts/cube10cm_tap_rl_action_smoothing1_result_audit.py`
+- `roarm_rl/roarm_cube_push_env.py:330-338,666-712,1173-1183`
+- `roarm_rl/test_positive_control_cube_tap10cm.py:177-200,371-391,416-436`
+
+## D182 - Cap/action saturation is now the primary action-path hypothesis; cap040 is designed but not run
+
+Date: 2026-06-08
+
+Decision:
+
+- The user approved the next tiny diagnostic gate for per-joint cap, action
+  command magnitude, and target lead.
+- One local RTX4090/cuda:0 runtime was run using the newly added action-path logs.
+  It did not generate datasets, train, control RoArm, SSH/B200, or use Track A.
+- The runtime kept strict external defaults: `action_smoothing_alpha=0.25`,
+  `contact_joint_delta_scale=0.35`, `closed_loop_push_steps=72`.
+- The positive-control still failed, but the actuation blocker is now more
+  specific: action commands saturate and the env per-joint delta cap is active.
+- Target lead-limit is observed in the trace, but it is secondary under current
+  evidence because cap/action saturation is active while slowdown is inactive.
+- A default-off harness override for `--max_joint_delta_per_step_rad` was added.
+- A cap-only candidate was designed but not run: exactly one knob,
+  `max_joint_delta_per_step_rad 0.010 -> 0.040`, leaving action scale, smoothing,
+  target reference/lead limit, geometry, and gates fixed.
+- DiffIK action dataset, tiny action dry run, PPO/RL, large dataset, and RoArm
+  remain blocked.
+
+Evidence:
+
+- Diagnostic runtime summary line 1 confirms a local tiny GPU runtime only:
+  no dataset generation, training, robot control, SSH, B200, or Track A.
+- Runtime line 5 shows the gate still failed:
+  contact `0.0`, reaction context `0.0`, reaction seen `0.0`, tap success `0.0`.
+- Runtime line 7 is the key new action-path evidence:
+  `action_abs_mean=0.5`, `action_abs_max=1.0`,
+  `joint_delta_abs_max=0.010000000`, `joint_delta_cap_rate=0.5`,
+  `contact_slowdown_mean=1.0`.
+- Runtime line 8 shows trace maxes:
+  `joint_delta_cap_rate_max=0.5`, `target_lead_limit_rate_max=0.333333343`,
+  best shortfall `0.009507330m`, final shortfall `0.010518493m`.
+- Failure/visual audits confirm this is still the along face-gap blocker, not
+  lateral or height.
+- Cap/target-lead result audit line 6 interprets the split:
+  action saturation true, per-joint cap observed true, slowdown false, lead-limit
+  observed true but not primary, and cap is the current primary hypothesis.
+- Cap-only design summary line 3 selects one candidate:
+  `max_joint_delta_per_step_rad=0.010->0.040`, with action scale, smoothing,
+  controller mode, and geometry fixed.
+
+Implication:
+
+- The next possible runtime, if explicitly approved, is one tiny local cuda:0
+  cap040 positive-control run.
+- Passing still requires contact-gated reaction/tap success, not just larger
+  joint deltas.
+- Do not start dataset/RL/RoArm from this diagnostic.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_cap_targetlead_diagnostic_sanity_summary.out:1-9`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_cap_targetlead_diagnostic_failure_audit_summary.out:1-7`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_cap_targetlead_diagnostic_visual_contact_audit_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_cap_targetlead_result_audit_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_cap_only_candidate_design_summary.out:1-7`
+- `sim_scripts/cube10cm_tap_rl_cap_targetlead_result_audit.py`
+- `sim_scripts/cube10cm_tap_rl_cap_only_candidate_design.py`
+- `roarm_rl/test_positive_control_cube_tap10cm.py:146-147,234-236,304-309,500-503`
