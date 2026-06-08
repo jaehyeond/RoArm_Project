@@ -1,0 +1,7 @@
+line1 artifact=cube10cm_tap_rl_positive_control_failure_audit_v1 local_log_audit_only=YES gpu_runtime_launched_by_this_audit=NO dataset_generation=NO training=NO robot_control=NO ssh=NO b200=NO track_a=NO
+line2 runtime_contract positive_runtime_valid=True status=FAIL device=cuda:0 controller_mode=external_closed_loop steps_executed=120 num_envs=2
+line3 reset_and_geometry reset_ik_ok=True teacher_goal_ok=False closed_loop_ik_ok=True controller_goal_ok=True initial_face_gap_m=-0.020252299 final_face_gap_m=-0.020518493 gap_delta_m=-0.000266194 final_gap_shortfall_to_band_m=0.010518493
+line4 contact_reaction contact_seen=0.0 reaction_signal=1.0 reaction_context=0.0 reaction_seen=0.0 tap_success=0.0 overshoot=0.0
+line5 motion max_disp_along_m=0.000824124 max_speed_mps=0.077181764 max_z_delta_m=0.000043120 raw_reaction_without_context=True wrapper_blocked_false_positive=True
+line6 verdict positive_control_pass=False failure_is_controller_gap=True env_wrapper_false_positive_guard=PASS ppo_rl_training=BLOCKED large_dataset=BLOCKED action_teacher=BLOCKED roarm=BLOCKED
+line7 next allowed=local_design_one_revised_closed_loop_positive_control_candidate new_gpu_runtime=REQUIRES_EXPLICIT_APPROVAL not_allowed=ppo_large_dataset_action_teacher_roarm

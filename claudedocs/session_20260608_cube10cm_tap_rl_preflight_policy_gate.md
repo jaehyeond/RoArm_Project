@@ -402,3 +402,82 @@
 - Current status:
   DiffIK action dataset, tiny action dry run, PPO/RL, large dataset, and RoArm
   remain blocked. Any cap040 runtime requires explicit approval.
+
+## Follow-Up: Cap040 Positive-Control
+
+- User explicitly approved the next runtime:
+  cap040 tiny cuda:0 positive-control, one run only.
+- Ran one local RTX4090/cuda:0 Isaac Lab sanity:
+  `RoArm-CubeTap10cm-Direct-v0`, `num_envs=2`, `max_steps=120`, `seed=962`,
+  `controller_mode=external_closed_loop`, single changed knob
+  `max_joint_delta_per_step_rad 0.010 -> 0.040`.
+- Not run:
+  DiffIK dataset generation, tiny action dataset dry run, PPO/RL, large dataset,
+  RoArm control, SSH/B200, Track A.
+- Runtime result:
+  still `FAIL`.
+- Runtime summary:
+  contact `0.0`, raw reaction signal `1.0`, reaction context `0.0`,
+  reaction seen `0.0`, tap success `0.0`, overshoot `0.0`,
+  max displacement `0.000824124m`, final face gap `-0.020518493m`,
+  best shortfall `0.009507330m`, final shortfall `0.010518493m`.
+- Cap effect:
+  the cap override did apply. Compared with the previous cap/target-lead
+  diagnostic, max trace joint delta went `0.010000000 -> 0.039999995`, and cap
+  rate went `0.5 -> 0.0`.
+- Contact progress:
+  there was no improvement. Best shortfall remained `0.009507330m`, best face
+  gap remained `-0.019507330m`, and both comparison deltas were `0.0`.
+- Visual audit:
+  final TCP remains outside the contact band. Lateral and vertical are OK;
+  the blocker is along-axis live face gap.
+- Interpretation:
+  cap-only is falsified as the primary positive-control blocker. The next
+  unresolved layer is target application, especially target lead-limit and/or
+  target-vs-joint reference.
+- 3cm DiffIK comparison:
+  prior 3cm DiffIK was indeed run first, but its own audit only said the
+  mechanism runtime ran. It did not mark dataset ready. The 3cm dataset build
+  later produced a candidate dataset, and BC smoke was only a pipeline smoke,
+  not a validated rollout. For 10cm, creating a DiffIK action dataset before
+  contact-gated positive-control would risk storing a failed/no-contact teacher.
+- Current status:
+  DiffIK action dataset, tiny action dry run, PPO/RL, large dataset, and RoArm
+  remain blocked.
+- Next allowed work:
+  local-only design of exactly one target-application candidate, likely choosing
+  between `joint_target_lead_limit` and `joint_delta_reference`. Any new GPU
+  runtime still requires explicit approval.
+
+## Follow-Up: Target-Application Candidate Design
+
+- After cap040, added a default-off harness override:
+  `--joint_target_lead_limit_rad`.
+- Added and ran `sim_scripts/cube10cm_tap_rl_target_application_candidate_design.py`.
+- This is local design/static audit only:
+  no GPU runtime, no Isaac Lab physics launch, no dataset generation, no
+  training, no robot control, no SSH/B200, no Track A.
+- Basis:
+  `code_ready=True`, `basis_ok=True`, cap-only falsified as primary, cap no
+  longer active, lead-limit observed, `target_lead_abs_max_trace=0.069168568`,
+  and `target_lead_limit_rate_trace=0.5`.
+- Selected next candidate:
+  baseline is cap040, changed knobs vs cap040 is exactly 1:
+  `joint_target_lead_limit_rad 0.060 -> 0.120`.
+- Fixed for that candidate:
+  `max_joint_delta_per_step_rad=0.040`, `joint_delta_reference=target`,
+  `action_scale=0.04`, `action_smoothing_alpha=0.25`,
+  `controller_mode=external_closed_loop`, cube geometry, side-center height,
+  precontact, through distance, and pass gates.
+- Not selected:
+  `joint_delta_reference` because it changes target-base semantics and likely
+  requires matching harness action-base review;
+  action scale because it changes command normalization;
+  goal push/contact band because it changes geometry;
+  smoothing because it was already tested;
+  cap-only because cap040 falsified it as primary.
+- Verdict:
+  `cap040_lead120` is ready only for explicit tiny cuda:0 runtime approval.
+- Current status:
+  DiffIK action dataset, tiny action dry run, PPO/RL, large dataset, and RoArm
+  remain blocked.

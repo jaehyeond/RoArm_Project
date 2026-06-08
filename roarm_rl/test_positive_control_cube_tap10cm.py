@@ -144,7 +144,8 @@ def _write_result(out_json: Path, out_summary: Path, result: dict[str, Any]) -> 
             f"precontact_clearance_m={result.get('precontact_clearance_m', 'NA')} "
             f"tcp_top_margin_m={result.get('tcp_top_margin_m', 'NA')} "
             f"goal_push_m={result.get('goal_push_m', 'NA')} "
-            f"max_joint_delta_per_step_rad={result.get('max_joint_delta_per_step_rad', 'NA')}"
+            f"max_joint_delta_per_step_rad={result.get('max_joint_delta_per_step_rad', 'NA')} "
+            f"joint_target_lead_limit_rad={result.get('joint_target_lead_limit_rad', 'NA')}"
         ),
         (
             "line4 reset_and_ik "
@@ -234,6 +235,7 @@ def main() -> int:
     parser.add_argument("--action_smoothing_alpha", type=float, default=-1.0)
     parser.add_argument("--contact_joint_delta_scale", type=float, default=-1.0)
     parser.add_argument("--max_joint_delta_per_step_rad", type=float, default=-1.0)
+    parser.add_argument("--joint_target_lead_limit_rad", type=float, default=-1.0)
     parser.add_argument("--robot_usd_path", type=Path, default=DEFAULT_LOCAL_USD)
     parser.add_argument("--out_json", type=Path, default=DEFAULT_OUT_JSON)
     parser.add_argument("--out_summary", type=Path, default=DEFAULT_OUT_SUMMARY)
@@ -307,6 +309,8 @@ def main() -> int:
             cfg.contact_joint_delta_scale = float(args.contact_joint_delta_scale)
         if float(args.max_joint_delta_per_step_rad) >= 0.0:
             cfg.max_joint_delta_per_step_rad = float(args.max_joint_delta_per_step_rad)
+        if float(args.joint_target_lead_limit_rad) >= 0.0:
+            cfg.joint_target_lead_limit_rad = float(args.joint_target_lead_limit_rad)
         if args.num_envs < 8:
             cfg.scene.clone_in_fabric = False
             cfg.scene.replicate_physics = False
@@ -501,6 +505,7 @@ def main() -> int:
             "action_smoothing_alpha": float(cfg.action_smoothing_alpha),
             "contact_joint_delta_scale": float(cfg.contact_joint_delta_scale),
             "max_joint_delta_per_step_rad": float(cfg.max_joint_delta_per_step_rad),
+            "joint_target_lead_limit_rad": float(cfg.joint_target_lead_limit_rad),
             "controller_goal_ok_rate": controller_goal_ok_rate,
             "obs_shape": list(obs_t.shape),
             "reward_mean": float(np.mean(rewards_all)) if rewards_all else 0.0,

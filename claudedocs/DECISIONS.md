@@ -9927,3 +9927,131 @@ Sources:
 - `sim_scripts/cube10cm_tap_rl_cap_targetlead_result_audit.py`
 - `sim_scripts/cube10cm_tap_rl_cap_only_candidate_design.py`
 - `roarm_rl/test_positive_control_cube_tap10cm.py:146-147,234-236,304-309,500-503`
+
+## D183 - Cap040 falsifies cap-only as the primary RL-wrapper positive-control blocker
+
+Date: 2026-06-08
+
+Decision:
+
+- The user explicitly approved exactly one tiny local cuda:0 cap040
+  positive-control runtime.
+- The runtime changed one knob only:
+  `max_joint_delta_per_step_rad 0.010 -> 0.040`.
+- It did not generate datasets, train, control RoArm, SSH/B200, or use Track A.
+- The cap override applied: per-joint delta trace reached about `0.040rad`, and
+  the joint-delta cap rate dropped to `0.0`.
+- Contact-gated tap still failed, and the best contact-band shortfall did not
+  improve versus the previous cap/target-lead diagnostic.
+- Therefore cap/action saturation alone is no longer the primary blocker.
+- The next local-only hypothesis family is target application:
+  `joint_target_lead_limit` or `joint_delta_reference`, with geometry, action
+  scale, smoothing, controller mode, and gates held fixed until a candidate is
+  designed.
+- DiffIK action dataset, tiny action dry run, PPO/RL, large dataset, and RoArm
+  remain blocked.
+
+Evidence:
+
+- Cap040 runtime summary line 1 confirms a local tiny GPU positive-control only:
+  no dataset generation, training, robot control, SSH, B200, or Track A.
+- Runtime line 3 confirms the single changed knob:
+  `max_joint_delta_per_step_rad=0.04`.
+- Runtime line 5 shows the gate still failed:
+  contact `0.0`, reaction context `0.0`, reaction seen `0.0`, tap success
+  `0.0`, overshoot `0.0`.
+- Runtime line 8 shows cap040 actually changed the action path:
+  `joint_delta_abs_max=0.039999995` and `joint_delta_cap_rate_max=0.0`.
+- Failure audit line 3 shows final face gap still outside band:
+  `final_face_gap_m=-0.020518493`, shortfall `0.010518493m`.
+- Visual audit line 4 confirms this is along-gap, not lateral/height:
+  `lateral_ok=True`, `vertical_ok=True`, `along_gap_blocker=True`.
+- Cap040 final result audit line 4 compares cap behavior:
+  cap rate `0.5 -> 0.0`, joint-delta trace `0.010000000 -> 0.039999995`.
+- Cap040 final result audit line 5 compares contact progress:
+  best shortfall stayed `0.009507330m`, best face gap stayed
+  `-0.019507330m`, both deltas `0.0`.
+- Cap040 final result audit line 6 shows the next target-application signal:
+  action max trace `1.0`, target lead abs max trace `0.069168568`, and
+  target lead-limit trace rate `0.5`; slowdown remains false.
+
+Implication:
+
+- Do not run another cap-only candidate.
+- Do not start DiffIK action dataset, tiny action dry run, PPO/RL, large dataset,
+  or RoArm from this failed positive-control.
+- The next allowed step is local-only design of exactly one target-application
+  candidate, likely choosing between `joint_target_lead_limit` and
+  `joint_delta_reference` after reading the action-path code and cap040 logs.
+- Any new cuda:0 runtime still requires explicit approval and must remain tiny.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_cap040_sanity_summary.out:1-9`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_cap040_failure_audit_summary.out:1-7`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_cap040_visual_contact_audit_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_cap040_visual_contact_audit.png`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_cap040_final_result_audit_summary.out:1-8`
+- `sim_scripts/cube10cm_tap_rl_cap040_result_audit.py`
+- `roarm_rl/roarm_cube_push_env.py:666-719`
+- `roarm_rl/test_positive_control_cube_tap10cm.py:77-119,361-402`
+
+## D184 - After cap040, the next designed candidate is lead-limit only, not DiffIK dataset
+
+Date: 2026-06-08
+
+Decision:
+
+- After D183, the next allowed work was local-only target-application candidate
+  design.
+- Added a default-off harness override for `--joint_target_lead_limit_rad`.
+- Designed but did not run the next tiny runtime candidate:
+  `cap040_lead120`.
+- The candidate uses cap040 as the baseline and changes exactly one additional
+  knob: `joint_target_lead_limit_rad 0.060 -> 0.120`.
+- Cap remains fixed at `0.040`; action scale, smoothing, controller mode,
+  geometry, target reference, and gates remain fixed.
+- `joint_delta_reference` is not selected first because it changes target-base
+  semantics and likely needs matching review of the harness action-base logic.
+- This is still a positive-control blocker workflow, not action dataset
+  construction.
+- DiffIK action dataset, tiny action dry run, PPO/RL, large dataset, and RoArm
+  remain blocked.
+
+Evidence:
+
+- Target-application candidate design summary line 1 confirms local design/static
+  audit only: no GPU runtime, dataset generation, training, robot control, SSH,
+  B200, or Track A.
+- Line 2 confirms the basis:
+  `code_ready=True`, `basis_ok=True`, cap-only falsified, cap no longer active,
+  lead-limit observed, target lead abs max trace `0.069168568`, and lead-limit
+  trace rate `0.5`.
+- Line 3 selects the exact candidate:
+  baseline cap040, changed knobs vs cap040 `1`, `joint_target_lead_limit_rad
+  0.060->0.120`, cap `0.040_fixed`, `joint_delta_reference=target_fixed`,
+  action scale and smoothing fixed.
+- Line 4 rejects non-selected candidates:
+  `joint_delta_reference` needs matching harness action-base review, action scale
+  changes command normalization, geometry changes contact geometry, smoothing was
+  already tested, and cap-only was falsified.
+- Line 7 keeps DiffIK action dataset, tiny action dataset dry run, PPO/RL, large
+  dataset, and RoArm blocked.
+- The harness now exposes the default-off lead-limit override, while the env
+  action path still applies target lead limiting after target/reference delta.
+
+Implication:
+
+- Do not run `cap040_lead120` without explicit approval.
+- Do not start DiffIK action dataset/RL/RoArm from the cap040 failure.
+- Direction remains correct: first prove the 10cm tap wrapper can record a
+  contact-gated positive-control under deliberate DiffIK/TCP commands; only then
+  consider action teacher dataset policy.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_target_application_candidate_design_summary.out:1-7`
+- `sim_scripts/cube10cm_tap_rl_target_application_candidate_design.py`
+- `roarm_rl/test_positive_control_cube_tap10cm.py`
+- `roarm_rl/roarm_cube_push_env.py:666-719`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_cap040_final_result_audit_summary.out:1-8`
