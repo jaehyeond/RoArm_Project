@@ -481,3 +481,44 @@
 - Current status:
   DiffIK action dataset, tiny action dry run, PPO/RL, large dataset, and RoArm
   remain blocked.
+
+## Follow-Up: Isaac Lab Direct IK Apply Source Cross-Check
+
+- User challenged the contradiction:
+  if TCP target and IK exist, why does contact progress not improve?
+- Checked local installed Isaac Lab source instead of relying on memory.
+- Isaac Lab `DifferentialInverseKinematicsAction` pattern:
+  process task-space command, compute `joint_pos_des`, then call
+  `set_joint_position_target(joint_pos_des, joint_ids)`.
+- Local Isaac Lab differential IK test uses the same direct joint-target apply
+  pattern.
+- Current harness pattern:
+  compute TCP target and IK, convert `target_rad - target_base_rad` back into
+  normalized RL action, then let env smoothing/action scale/cap/reference/lead
+  limit produce `robot_dof_targets`.
+- Interpretation:
+  current failure mixes two questions:
+  whether the TCP target/IK is correct, and whether the RL action-wrapper path
+  applies the resulting joint target strongly enough.
+- Added default-off `external_closed_loop_direct_apply` support in the tap
+  harness/env.
+- Added and ran `sim_scripts/cube10cm_tap_rl_direct_ik_apply_candidate_design.py`.
+- This is local design/static audit only:
+  no GPU runtime, no Isaac Lab physics launch, no dataset generation, no
+  training, no robot control, no SSH/B200, no Track A.
+- Result:
+  `code_ready=True`, `basis_ok=True`, `isaac_pattern_supported=True`.
+- Selected next diagnostic:
+  `direct_ik_apply_positive_control`.
+- Implementation status:
+  `HARNESS_AND_ENV_DEFAULT_OFF_MODE_READY`; designed but not run.
+- Purpose:
+  apply the IK joint target directly in an Isaac Lab-style positive-control loop
+  to separate target geometry/IK failure from RL action target-application
+  failure.
+- Reserve:
+  `cap040_lead120` moves behind direct-IK-apply; otherwise we may tune the
+  wrapper before proving the IK target itself works.
+- Current status:
+  DiffIK action dataset, tiny action dry run, PPO/RL, large dataset, and RoArm
+  remain blocked. Any direct-IK-apply cuda:0 runtime requires explicit approval.

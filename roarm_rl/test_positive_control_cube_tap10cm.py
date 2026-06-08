@@ -74,17 +74,18 @@ def _update_trace_stats(stats: dict[str, dict[str, float]], key: str, value: Any
     entry["final"] = scalar
 
 
-def _closed_loop_ik_action(inner: Any, cfg: Any, args: argparse.Namespace, step: int, torch_mod: Any) -> tuple[Any, dict[str, float]]:
+def _closed_loop_ik_joint_target(
+    inner: Any, cfg: Any, args: argparse.Namespace, step: int, torch_mod: Any
+) -> tuple[Any, dict[str, float]]:
     from sim_scripts.roarm_kinematics import ik_dls
 
     inner._compute_intermediate_values()
     cube_local = (inner._cube_start_w - inner.scene.env_origins).detach().cpu().numpy()
     push_dir = inner._push_dir_xy.detach().cpu().numpy()
     current_q_rad = inner._robot.data.joint_pos.detach().cpu().numpy()
-    target_base_rad = inner.robot_dof_targets.detach().cpu().numpy()
     half_xy = np.asarray([float(cfg.cube_size_x_m) * 0.5, float(cfg.cube_size_y_m) * 0.5], dtype=np.float64)
     alpha = min(1.0, max(0.0, float(step + 1) / max(float(args.closed_loop_push_steps), 1.0)))
-    actions = np.zeros((int(args.num_envs), int(cfg.action_space)), dtype=np.float32)
+    joint_targets = np.zeros((int(args.num_envs), int(cfg.action_space)), dtype=np.float32)
     ok_count = 0
     err_values: list[float] = []
     for env_id in range(int(args.num_envs)):
@@ -106,17 +107,25 @@ def _closed_loop_ik_action(inner: Any, cfg: Any, args: argparse.Namespace, step:
         )
         q_deg[5] = 0.0
         target_rad = np.radians(q_deg)
-        action = (target_rad - target_base_rad[env_id]) / max(float(cfg.action_scale), 1.0e-6)
-        action[5] = 0.0
-        actions[env_id] = np.clip(action, -1.0, 1.0).astype(np.float32)
+        target_rad[5] = 0.0
+        joint_targets[env_id] = target_rad.astype(np.float32)
         ok_count += int(bool(converged))
         err_values.append(float(err_mm))
-    action_t = torch_mod.tensor(actions, dtype=torch_mod.float32, device=inner.device)
+    target_t = torch_mod.tensor(joint_targets, dtype=torch_mod.float32, device=inner.device)
     metrics = {
         "closed_loop_ik_ok_rate": float(ok_count) / max(float(args.num_envs), 1.0),
         "closed_loop_ik_err_mm_mean": float(np.mean(err_values)) if err_values else float("nan"),
         "closed_loop_alpha": alpha,
     }
+    return target_t, metrics
+
+
+def _closed_loop_ik_action(inner: Any, cfg: Any, args: argparse.Namespace, step: int, torch_mod: Any) -> tuple[Any, dict[str, float]]:
+    target_t, metrics = _closed_loop_ik_joint_target(inner, cfg, args, step, torch_mod)
+    target_base = inner.robot_dof_targets.detach()
+    action_t = (target_t - target_base) / max(float(cfg.action_scale), 1.0e-6)
+    action_t[:, inner.gripper_joint_idx] = 0.0
+    action_t = torch_mod.clamp(action_t, -1.0, 1.0)
     return action_t, metrics
 
 
@@ -141,6 +150,7 @@ def _write_result(out_json: Path, out_summary: Path, result: dict[str, Any]) -> 
             f"cube_xy=({result.get('fixed_cube_x_m', 'NA')},{result.get('fixed_cube_y_m', 'NA')}) "
             f"push_dir=({result.get('fixed_push_dir_x', 'NA')},{result.get('fixed_push_dir_y', 'NA')}) "
             f"controller_mode={result.get('controller_mode', 'NA')} "
+            f"direct_ik_joint_target_apply={result.get('direct_ik_joint_target_apply', 'NA')} "
             f"precontact_clearance_m={result.get('precontact_clearance_m', 'NA')} "
             f"tcp_top_margin_m={result.get('tcp_top_margin_m', 'NA')} "
             f"goal_push_m={result.get('goal_push_m', 'NA')} "
@@ -228,7 +238,11 @@ def main() -> int:
     parser.add_argument("--tcp_top_margin_m", type=float, default=-0.050)
     parser.add_argument("--goal_push_m", type=float, default=0.006)
     parser.add_argument("--teacher_horizon_frac", type=float, default=1.0)
-    parser.add_argument("--controller_mode", choices=("builtin_teacher", "external_closed_loop"), default="builtin_teacher")
+    parser.add_argument(
+        "--controller_mode",
+        choices=("builtin_teacher", "external_closed_loop", "external_closed_loop_direct_apply"),
+        default="builtin_teacher",
+    )
     parser.add_argument("--closed_loop_push_steps", type=int, default=72)
     parser.add_argument("--closed_loop_ik_max_iter", type=int, default=80)
     parser.add_argument("--closed_loop_ik_tol_mm", type=float, default=1.5)
@@ -365,6 +379,10 @@ def main() -> int:
         for step in range(int(args.steps)):
             if args.controller_mode == "external_closed_loop":
                 action, controller_metrics = _closed_loop_ik_action(inner, cfg, args, step, torch)
+            elif args.controller_mode == "external_closed_loop_direct_apply":
+                joint_target, controller_metrics = _closed_loop_ik_joint_target(inner, cfg, args, step, torch)
+                inner._external_joint_targets_override = joint_target
+                action = zero_action
             else:
                 action = zero_action
             obs, reward, terminated, truncated, info = env.step(action)
@@ -454,7 +472,7 @@ def main() -> int:
         overshoot_seen = float(last_log.get("cube_tap_overshoot_seen_rate", 1.0))
         controller_goal_ok_rate = (
             float(controller_metrics.get("closed_loop_ik_ok_rate", 0.0))
-            if args.controller_mode == "external_closed_loop"
+            if args.controller_mode != "builtin_teacher"
             else float(reset_metrics["teacher_goal_ok_rate"])
         )
         positive_control_pass = (
@@ -502,6 +520,7 @@ def main() -> int:
             "goal_push_m": float(args.goal_push_m),
             "teacher_horizon_frac": float(args.teacher_horizon_frac),
             "closed_loop_push_steps": int(args.closed_loop_push_steps),
+            "direct_ik_joint_target_apply": args.controller_mode == "external_closed_loop_direct_apply",
             "action_smoothing_alpha": float(cfg.action_smoothing_alpha),
             "contact_joint_delta_scale": float(cfg.contact_joint_delta_scale),
             "max_joint_delta_per_step_rad": float(cfg.max_joint_delta_per_step_rad),
@@ -558,6 +577,7 @@ def main() -> int:
             "goal_push_m": float(args.goal_push_m),
             "teacher_horizon_frac": float(args.teacher_horizon_frac),
             "closed_loop_push_steps": int(args.closed_loop_push_steps),
+            "direct_ik_joint_target_apply": False,
             "max_joint_delta_per_step_rad": "UNKNOWN",
             "required_log_keys_present": False,
             "reset_metrics": {},

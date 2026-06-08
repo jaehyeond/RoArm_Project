@@ -1,0 +1,212 @@
+{
+  "action_smoothing_alpha": 0.25,
+  "artifact_type": "cube10cm_tap_rl_positive_control_sanity_v1",
+  "b200": false,
+  "blocker": "POSITIVE_CONTROL_GATE_FAIL",
+  "branch": "professor_cube10cm_tap_reaction_quality_tier",
+  "closed_loop_push_steps": 72,
+  "contact_joint_delta_scale": 0.35,
+  "controller_goal_ok_rate": 1.0,
+  "controller_metrics": {
+    "closed_loop_alpha": 1.0,
+    "closed_loop_ik_err_mm_mean": 0.6174697866014219,
+    "closed_loop_ik_ok_rate": 1.0
+  },
+  "controller_mode": "external_closed_loop_direct_apply",
+  "controller_trace_stats": {
+    "closed_loop_alpha": {
+      "final": 1.0,
+      "max": 1.0,
+      "min": 0.013888888888888888
+    },
+    "closed_loop_ik_err_mm_mean": {
+      "final": 0.6174697866014219,
+      "max": 1.4781778014542355,
+      "min": 0.48066278456641515
+    },
+    "closed_loop_ik_ok_rate": {
+      "final": 1.0,
+      "max": 1.0,
+      "min": 1.0
+    }
+  },
+  "cube_mass_kg": 0.72,
+  "cube_size_m": 0.1,
+  "dataset_generation": false,
+  "device": "cuda:0",
+  "direct_ik_joint_target_apply": true,
+  "elapsed_s": 7.275878667831421,
+  "env_id": "RoArm-CubeTap10cm-Direct-v0",
+  "final_1cm_required": false,
+  "fixed_cube_x_m": 0.25,
+  "fixed_cube_y_m": 0.0,
+  "fixed_push_dir_x": 1.0,
+  "fixed_push_dir_y": 0.0,
+  "goal_push_m": 0.006,
+  "gpu_runtime": "YES_LOCAL_TINY_ISAACLAB_POSITIVE_CONTROL",
+  "joint_target_lead_limit_rad": 0.06,
+  "last_log": {
+    "action_penalty": 0.0,
+    "cube_push_action_abs_max": 0.0,
+    "cube_push_action_abs_mean": 0.0,
+    "cube_push_contact_slowdown_mean": 1.0,
+    "cube_push_grasped_marker_rate": 0.0,
+    "cube_push_joint_delta_abs_max": 0.3587837219238281,
+    "cube_push_joint_delta_abs_mean": 0.13668248057365417,
+    "cube_push_joint_delta_cap_rate": 0.0,
+    "cube_push_target_lead_abs_max": 0.3587837219238281,
+    "cube_push_target_lead_abs_mean": 0.13668248057365417,
+    "cube_push_target_lead_limit_rate": 0.0,
+    "cube_push_tcp_cube_dist_m": 0.06971672177314758,
+    "cube_push_teacher_blend_mean": 0.0,
+    "cube_tap_contact_face_gap_m": -0.01956496760249138,
+    "cube_tap_contact_lateral_m": 4.930598606733838e-06,
+    "cube_tap_contact_proxy_rate": 0.0,
+    "cube_tap_contact_seen_rate": 0.0,
+    "cube_tap_contact_vertical_offset_m": 0.004597475752234459,
+    "cube_tap_disp_along_m": 0.0009225904941558838,
+    "cube_tap_disp_xy_m": 0.0009226639522239566,
+    "cube_tap_max_disp_along_m": 0.0009225904941558838,
+    "cube_tap_max_disp_xy_m": 0.0009226639522239566,
+    "cube_tap_max_speed_mps": 0.008078601211309433,
+    "cube_tap_max_z_delta_m": 1.2498348951339722e-06,
+    "cube_tap_object_mass_kg": 0.7200000286102295,
+    "cube_tap_object_size_m": 0.10000000149011612,
+    "cube_tap_objective_final_relocation_required": 0.0,
+    "cube_tap_overshoot_now_rate": 0.0,
+    "cube_tap_overshoot_seen_rate": 0.0,
+    "cube_tap_reaction_contact_context_rate": 0.0,
+    "cube_tap_reaction_now_rate": 0.0,
+    "cube_tap_reaction_seen_rate": 0.0,
+    "cube_tap_reaction_signal_now_rate": 0.0,
+    "cube_tap_speed_mps": 0.008078601211309433,
+    "cube_tap_success_rate": 0.0,
+    "cube_tap_tip_angle_deg": 0.0
+  },
+  "log_trace_stats": {
+    "cube_push_action_abs_max": {
+      "final": 0.0,
+      "max": 0.0,
+      "min": 0.0
+    },
+    "cube_push_action_abs_mean": {
+      "final": 0.0,
+      "max": 0.0,
+      "min": 0.0
+    },
+    "cube_push_contact_slowdown_mean": {
+      "final": 1.0,
+      "max": 1.0,
+      "min": 1.0
+    },
+    "cube_push_joint_delta_abs_max": {
+      "final": 0.3587837219238281,
+      "max": 0.4676227569580078,
+      "min": 0.004581928253173828
+    },
+    "cube_push_joint_delta_abs_mean": {
+      "final": 0.13668248057365417,
+      "max": 0.13668248057365417,
+      "min": 0.0019447803497314453
+    },
+    "cube_push_joint_delta_cap_rate": {
+      "final": 0.0,
+      "max": 0.0,
+      "min": 0.0
+    },
+    "cube_push_target_lead_abs_max": {
+      "final": 0.3587837219238281,
+      "max": 0.4676227569580078,
+      "min": 0.004581928253173828
+    },
+    "cube_push_target_lead_abs_mean": {
+      "final": 0.13668248057365417,
+      "max": 0.13668248057365417,
+      "min": 0.0019447803497314453
+    },
+    "cube_push_target_lead_limit_rate": {
+      "final": 0.0,
+      "max": 0.0,
+      "min": 0.0
+    },
+    "cube_push_tcp_cube_dist_m": {
+      "final": 0.06971672177314758,
+      "max": 0.08183380961418152,
+      "min": 0.06953912228345871
+    },
+    "cube_push_teacher_blend_mean": {
+      "final": 0.0,
+      "max": 0.0,
+      "min": 0.0
+    },
+    "cube_tap_contact_band_shortfall_m": {
+      "final": 0.009564967602491379,
+      "max": 0.014368952959775924,
+      "min": 0.009533615559339523
+    },
+    "cube_tap_contact_face_gap_m": {
+      "final": -0.01956496760249138,
+      "max": -0.019533615559339523,
+      "min": -0.024368952959775925
+    },
+    "cube_tap_contact_lateral_m": {
+      "final": 4.930598606733838e-06,
+      "max": 0.0008195069385692477,
+      "min": 3.1821122092878795e-07
+    },
+    "cube_tap_contact_seen_rate": {
+      "final": 0.0,
+      "max": 0.0,
+      "min": 0.0
+    },
+    "cube_tap_contact_vertical_offset_m": {
+      "final": 0.004597475752234459,
+      "max": 0.034141965210437775,
+      "min": 6.34659081697464e-05
+    },
+    "cube_tap_reaction_contact_context_rate": {
+      "final": 0.0,
+      "max": 0.0,
+      "min": 0.0
+    },
+    "cube_tap_success_rate": {
+      "final": 0.0,
+      "max": 0.0,
+      "min": 0.0
+    }
+  },
+  "max_joint_delta_per_step_rad": 0.01,
+  "max_steps": 120,
+  "missing_required_log_keys": [],
+  "num_envs": 2,
+  "obs_shape": [
+    2,
+    28
+  ],
+  "positive_control": "FAIL",
+  "precontact_clearance_m": 0.02,
+  "required_log_keys_present": true,
+  "reset_metrics": {
+    "ik_endpoint_reset_rate": 1.0,
+    "ik_reset_err_mm": 0.688510537147522,
+    "initial_contact_proxy_rate": 0.0,
+    "initial_face_gap_m": -0.020252298563718796,
+    "initial_vertical_offset_m": 0.0006401985883712769,
+    "teacher_goal_ok_rate": 0.0
+  },
+  "reward_finite": true,
+  "reward_mean": 0.03534895901878675,
+  "robot_control": false,
+  "robot_usd_path": "/home/cgxr/Documents/Robotics/RoArm_Project/b200_backup_20260522_final/tmp_p7/p7_branch_b_cube2cm_opposing_jaw_v7_collision_usd_d024/roarm_m3.usd",
+  "seed": 962,
+  "ssh": false,
+  "status": "FAIL",
+  "steps_executed": 120,
+  "tcp_top_margin_m": -0.05,
+  "teacher_horizon_frac": 1.0,
+  "terminated_count": 0,
+  "terrain_table_z_m": -0.012117,
+  "track_a": false,
+  "training": false,
+  "truncated_count": 2
+}

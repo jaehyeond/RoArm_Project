@@ -627,6 +627,31 @@ class RoArmCubePushEnv(RoArmStackEnv):
 
     def _pre_physics_step(self, actions: torch.Tensor):
         self._ensure_push_buffers()
+        override_targets = getattr(self, "_external_joint_targets_override", None)
+        if override_targets is not None:
+            self.actions = actions.clone().clamp(-1.0, 1.0)
+            targets = torch.clamp(override_targets, self.robot_dof_lower_limits, self.robot_dof_upper_limits)
+            targets[:, self.gripper_joint_idx] = 0.0
+            self.robot_dof_targets[:] = targets
+            self._external_joint_targets_override = None
+
+            joint_pos = self._robot.data.joint_pos
+            direct_delta = self.robot_dof_targets - joint_pos
+            self._last_action_abs_mean[:] = torch.mean(torch.abs(self.actions), dim=-1)
+            self._last_action_abs_max[:] = torch.max(torch.abs(self.actions), dim=-1).values
+            self._last_joint_delta_abs_mean[:] = torch.mean(torch.abs(direct_delta), dim=-1)
+            self._last_joint_delta_abs_max[:] = torch.max(torch.abs(direct_delta), dim=-1).values
+            self._last_joint_delta_cap_rate.zero_()
+            self._last_target_lead_abs_mean[:] = self._last_joint_delta_abs_mean
+            self._last_target_lead_abs_max[:] = self._last_joint_delta_abs_max
+            self._last_target_lead_limit_rate.zero_()
+            self._last_contact_slowdown[:] = 1.0
+            self._last_teacher_blend.zero_()
+            self._last_bc_teacher_blend.zero_()
+            self._last_bc_teacher_imitation_mse.zero_()
+            self._last_bc_teacher_action_abs_mean.zero_()
+            return
+
         policy_actions = actions.clone().clamp(-1.0, 1.0)
         teacher_blend = torch.zeros(self.num_envs, device=self.device)
         if float(self.cfg.scripted_teacher_blend) > 0.0:

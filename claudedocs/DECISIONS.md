@@ -10055,3 +10055,67 @@ Sources:
 - `roarm_rl/test_positive_control_cube_tap10cm.py`
 - `roarm_rl/roarm_cube_push_env.py:666-719`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_cap040_final_result_audit_summary.out:1-8`
+
+## D185 - Isaac Lab source cross-check makes direct IK apply the next diagnostic before lead-limit tuning
+
+Date: 2026-06-08
+
+Decision:
+
+- The user challenged why a TCP target/IK solution can exist while contact
+  progress does not improve.
+- Local installed Isaac Lab source was checked instead of relying on memory.
+- Isaac Lab's task-space action path computes `joint_pos_des` from the IK
+  controller and directly calls `set_joint_position_target`.
+- The current positive-control harness computes a TCP target and IK solution,
+  but then rewraps the result as normalized RL action. That action goes through
+  smoothing, action scale, cap, target reference, and lead-limit before
+  `robot_dof_targets` is applied.
+- Therefore `cap040_lead120` should be reserve, not the immediate next runtime.
+- Added default-off direct IK apply support in the tap harness/env:
+  apply the IK joint target directly in an Isaac Lab-style positive-control loop
+  to separate target geometry/IK failure from RL action target-application
+  failure.
+- This is still not dataset generation, PPO/RL, large dataset, or RoArm.
+
+Evidence:
+
+- Local Isaac Lab task-space action source creates a `DifferentialIKController`
+  and later computes `joint_pos_des` from current EE pose, jacobian, and joint
+  positions.
+- The same source then calls `set_joint_position_target(joint_pos_des, ...)`.
+- Local Isaac Lab differential IK test also applies `joint_pos_des` directly via
+  `robot.set_joint_position_target(joint_pos_des, arm_joint_ids)`.
+- The project harness computes `tcp_target` and IK, but linearly converts
+  `target_rad - target_base_rad` into normalized action before env processing.
+- The env action path applies smoothing/action scale/cap/lead-limit before
+  setting `robot_dof_targets`.
+- Direct-IK-apply candidate design summary line 2 confirms the basis is ready:
+  cap-only falsified, lead-limit observed, contact/tap still zero, and the Isaac
+  pattern is supported by local source.
+- Line 3 records the path comparison:
+  current path is IK target -> normalized RL action -> smoothing/scale/cap/lead;
+  Isaac pattern is IK compute -> joint position target.
+- Line 5 explicitly reserves `cap040_lead120` until after direct IK apply.
+- Line 4 confirms the default-off direct mode is implemented but not run:
+  `HARNESS_AND_ENV_DEFAULT_OFF_MODE_READY`.
+
+Implication:
+
+- Do not run another lead/cap/action-scale tuning candidate before direct IK
+  apply is checked.
+- If direct IK apply passes contact-gated tap, the blocker is the RL action
+  target-application wrapper.
+- If direct IK apply fails, the blocker is upstream target geometry/IK/reach,
+  and lead-limit tuning would have been a distraction.
+- DiffIK action dataset, tiny action dry run, PPO/RL, large dataset, and RoArm
+  remain blocked.
+
+Sources:
+
+- `/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaaclab/source/isaaclab/isaaclab/envs/mdp/actions/task_space_actions.py:92-211`
+- `/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaaclab/source/isaaclab/test/controllers/test_differential_ik.py:221-225`
+- `roarm_rl/test_positive_control_cube_tap10cm.py:91-111`
+- `roarm_rl/roarm_cube_push_env.py:666-719`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_direct_ik_apply_candidate_design_summary.out:1-6`
+- `sim_scripts/cube10cm_tap_rl_direct_ik_apply_candidate_design.py`

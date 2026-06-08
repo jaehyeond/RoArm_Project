@@ -1,0 +1,69 @@
+{
+  "artifact_type": "cube10cm_tap_rl_direct_ik_apply_candidate_design_v1",
+  "b200": false,
+  "basis": {
+    "best_shortfall_m": 0.009507329910993576,
+    "cap_only_falsified_as_primary": true,
+    "contact_seen": 0.0,
+    "lead_limit_observed": true,
+    "tap_success": 0.0,
+    "target_lead_limit_rate_trace": 0.5
+  },
+  "basis_ok": true,
+  "branch": "professor_cube10cm_tap_reaction_quality_tier",
+  "code_lines": {
+    "env_action_scale": 695,
+    "env_direct_override_read": 630,
+    "env_set_joint_position_target": 750,
+    "env_target_lead_clamp": 737,
+    "harness_action_rewrap": 126,
+    "harness_direct_mode_choice": 243,
+    "harness_direct_override_write": 384,
+    "harness_ik_target_compute": 100,
+    "isaac_task_space_compute": 207,
+    "isaac_task_space_direct_apply": 211,
+    "isaac_test_direct_apply": 225
+  },
+  "code_ready": true,
+  "dataset_generation": false,
+  "diagnosis": {
+    "current_path": "IK target -> normalized RL action -> smoothing/action_scale/cap/lead-limit -> robot_dof_targets",
+    "isaac_pattern": "task-space action controller compute -> joint_pos_des -> set_joint_position_target",
+    "why_next": "separates target_geometry_or_ik_failure from RL_action_target_application_failure before more lead/cap sweeps or any action dataset"
+  },
+  "gpu_runtime": false,
+  "isaac_pattern_supported": true,
+  "local_design_static_audit_only": true,
+  "not_selected_next": {
+    "action_scale": "changes command normalization",
+    "cap040_lead120": "reserve_after_direct_ik_apply; otherwise it may tune the wrapper before proving the IK target works",
+    "dataset_or_rl": "blocked until contact-gated positive-control passes",
+    "geometry_goal_push_or_contact_band": "changes contact geometry",
+    "joint_delta_reference": "reserve; changes action-base semantics"
+  },
+  "ready_for_explicit_runtime_approval_only": true,
+  "robot_control": false,
+  "selected_candidate": {
+    "changed_semantics": "bypass_RL_action_rewrap_and_apply_IK_joint_target_directly",
+    "controller": "external_closed_loop_ik",
+    "device": "cuda:0",
+    "geometry": "fixed_from_cap040",
+    "implementation_status": "HARNESS_AND_ENV_DEFAULT_OFF_MODE_READY",
+    "max_steps": 120,
+    "name": "direct_ik_apply_positive_control",
+    "num_envs": 2,
+    "pass_gate": "contact_seen>0 reaction_context>0 reaction_seen>0 tap_success>0 overshoot=0",
+    "seed": 962,
+    "status": "DESIGNED_NOT_RUN"
+  },
+  "ssh": false,
+  "still_blocked": {
+    "diffik_action_dataset": "BLOCKED",
+    "large_dataset": "BLOCKED",
+    "ppo_rl_training": "BLOCKED",
+    "roarm": "BLOCKED",
+    "tiny_action_dataset_dry_run": "BLOCKED"
+  },
+  "track_a": false,
+  "training": false
+}
