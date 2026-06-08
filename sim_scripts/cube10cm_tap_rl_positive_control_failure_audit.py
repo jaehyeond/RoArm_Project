@@ -37,15 +37,19 @@ def main() -> int:
 
     positive = _load(args.positive_json)
     reset = positive.get("reset_metrics", {})
+    controller_metrics = positive.get("controller_metrics", {})
     log = positive.get("last_log", {})
 
     contact_band_m = 0.010
+    controller_mode = str(positive.get("controller_mode", "builtin_teacher"))
     initial_face_gap = _float(reset, "initial_face_gap_m")
     final_face_gap = _float(log, "cube_tap_contact_face_gap_m")
     final_gap_shortfall_m = max(0.0, -contact_band_m - final_face_gap)
     gap_delta_m = final_face_gap - initial_face_gap
     reset_ik_ok = _float(reset, "ik_endpoint_reset_rate") > 0.0
     teacher_goal_ok = _float(reset, "teacher_goal_ok_rate") > 0.0
+    closed_loop_ik_ok = _float(controller_metrics, "closed_loop_ik_ok_rate") > 0.0
+    controller_goal_ok = closed_loop_ik_ok if controller_mode == "external_closed_loop" else teacher_goal_ok
     contact_seen = _float(log, "cube_tap_contact_seen_rate")
     reaction_signal = _float(log, "cube_tap_reaction_signal_now_rate")
     reaction_context = _float(log, "cube_tap_reaction_contact_context_rate")
@@ -70,7 +74,7 @@ def main() -> int:
     failure_is_controller_gap = (
         positive_runtime_valid
         and reset_ik_ok
-        and teacher_goal_ok
+        and controller_goal_ok
         and final_gap_shortfall_m > 0.0
         and contact_seen == 0.0
     )
@@ -88,8 +92,11 @@ def main() -> int:
         "track_a": False,
         "positive_runtime_valid": positive_runtime_valid,
         "positive_status": positive.get("status"),
+        "controller_mode": controller_mode,
         "reset_ik_ok": reset_ik_ok,
         "teacher_goal_ok": teacher_goal_ok,
+        "closed_loop_ik_ok": closed_loop_ik_ok,
+        "controller_goal_ok": controller_goal_ok,
         "contact_band_m": contact_band_m,
         "initial_face_gap_m": initial_face_gap,
         "final_face_gap_m": final_face_gap,
@@ -134,12 +141,14 @@ def main() -> int:
         (
             "line2 runtime_contract "
             f"positive_runtime_valid={positive_runtime_valid} status={positive.get('status')} "
-            f"device={positive.get('device')} steps_executed={positive.get('steps_executed')} "
+            f"device={positive.get('device')} controller_mode={controller_mode} "
+            f"steps_executed={positive.get('steps_executed')} "
             f"num_envs={positive.get('num_envs')}"
         ),
         (
             "line3 reset_and_geometry "
             f"reset_ik_ok={reset_ik_ok} teacher_goal_ok={teacher_goal_ok} "
+            f"closed_loop_ik_ok={closed_loop_ik_ok} controller_goal_ok={controller_goal_ok} "
             f"initial_face_gap_m={initial_face_gap:.9f} final_face_gap_m={final_face_gap:.9f} "
             f"gap_delta_m={gap_delta_m:.9f} final_gap_shortfall_to_band_m={final_gap_shortfall_m:.9f}"
         ),

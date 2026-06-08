@@ -9436,3 +9436,303 @@ Sources:
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_failure_audit_summary.out:1-7`
 - `sim_scripts/cube10cm_tap_rl_revised_positive_control_candidate_design.py`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_revised_positive_control_candidate_design_summary.out:1-6`
+
+## D175 - Visual contact-frame audit confirms the positive-control contact-zero cause is along-axis face gap
+
+Date: 2026-06-08
+
+Decision:
+
+- The failed 10cm tap positive-control result must be interpreted as a
+  controller/live-face gap failure, not as lateral placement, height placement,
+  or an RL/data unlock.
+- Added a local existing-log-only visual audit that creates PNG/SVG/HTML contact
+  frame artifacts. It does not launch IsaacLab, GPU physics, data generation,
+  training, robot control, SSH, B200, or Track A.
+- The visual audit reconstructs only reset/final scalar geometry from the saved
+  positive-control JSON. It is not a per-step trace/video, so do not overclaim
+  trajectory details from it.
+- The wrapper behavior is still correct: raw reaction speed without contact
+  context remains blocked from `reaction_seen` and `tap_success`.
+- The next possible technical question remains narrow: whether the already
+  designed `external_closed_loop` positive-control candidate can close the
+  live-face gap under the same frozen contact-gated pass/fail gate. Any new GPU
+  runtime still requires explicit approval.
+
+Evidence:
+
+- Visual contact audit summary line 1 records local visual audit only and no new
+  GPU/runtime/data/training/robot/SSH/B200/Track A.
+- Summary line 2 records the limitation and contract: reset/final scalar
+  reconstruction only, cube half `0.050000000m`, contact band
+  `[-0.010000000,+0.010000000]`.
+- Summary line 3 reconstructs the contact frame: initial/final along
+  `-0.070252299m/-0.071077018m`, initial/final face gap
+  `-0.020252299m/-0.021077018m`, final shortfall to band `0.011077018m`.
+- Summary line 4 shows the axis diagnosis: lateral and vertical are OK
+  (`0.000003905m` and `0.000538668m`), while along gap is the blocker. The
+  face-gap delta `-0.000824720m` nearly cancels cube displacement
+  `0.000824004m` (`abs=0.000000715m`).
+- Summary line 5 preserves the reaction guard: contact `0.0`, raw reaction
+  signal `1.0`, reaction context `0.0`, tap success `0.0`, wrapper false-positive
+  block `True`.
+- Summary lines 6-8 keep PPO/RL, large dataset, action teacher, and RoArm blocked
+  and allow only the single revised external-closed-loop positive-control runtime
+  after explicit approval.
+
+Implication:
+
+- Do not tune lateral/height/top-margin or start data/RL work to explain this
+  failure. The demonstrated blocker is the along-axis controller gap.
+- Do not claim positive-control tap success until contact context, reaction seen,
+  and tap success are all positive under the frozen wrapper gate.
+
+Sources:
+
+- `sim_scripts/cube10cm_tap_rl_positive_control_visual_contact_audit.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_visual_contact_audit_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_visual_contact_audit.json:1-67`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_visual_contact_audit.png`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_visual_contact_audit.html`
+
+## D176 - Revised positive-control candidate must be strict controller-mode only before any next GPU runtime
+
+Date: 2026-06-08
+
+Decision:
+
+- The earlier revised candidate wording in D174 is superseded for candidate
+  details. It mixed `controller_mode=external_closed_loop` with
+  `action_smoothing_alpha=1.0` and `contact_joint_delta_scale=1.0`.
+- That is too many knobs for the next diagnostic runtime. The next candidate, if
+  explicitly approved, must keep geometry, side-center height, contact proxy,
+  pass/fail gate, action smoothing, and contact delta scale fixed.
+- The selected candidate is now strict one-knob: change only
+  `controller_mode` from `builtin_teacher` to `external_closed_loop`.
+- The strength variant with smoothing/scale `1.0/1.0` is explicitly
+  `NOT_SELECTED_NOT_RUN`. It may not be used as the next runtime unless a later
+  decision deliberately promotes it after the strict candidate fails and the user
+  explicitly approves another runtime.
+
+Evidence:
+
+- Current harness exposes `controller_mode` with choices `builtin_teacher` and
+  `external_closed_loop`, plus separate smoothing/scale knobs.
+- Env defaults are `action_smoothing_alpha=0.25` and
+  `contact_joint_delta_scale=0.35`.
+- Revised candidate summary line 3 now records the selected strict candidate:
+  `strict_selected=True`, `changed_knobs=1`,
+  `controller_mode=builtin_teacher->external_closed_loop`,
+  `action_smoothing_alpha=env_default_0.25`,
+  `contact_joint_delta_scale=env_default_0.35`,
+  `closed_loop_push_steps=default_72`, status `DESIGNED_NOT_RUN`.
+- Summary line 4 records the not-selected strength variant:
+  `NOT_SELECTED_NOT_RUN`, because it would mix controller mode with action
+  smoothing and contact delta scale.
+- Summary lines 5-7 preserve the same pass gate and blocked state:
+  contact/reaction context/reaction seen/tap success must be `>0`, overshoot and
+  final flag must remain `0`; PPO/RL, large dataset, action teacher, and RoArm
+  remain blocked.
+
+Implication:
+
+- Do not run the old smoothing/scale `1.0/1.0` candidate as the next GPU
+  experiment.
+- If a new GPU runtime is explicitly approved, run only the strict
+  external-closed-loop positive-control candidate, and treat it as wrapper
+  positive-control evidence only, not dataset/RL/RoArm readiness.
+
+Sources:
+
+- `sim_scripts/cube10cm_tap_rl_revised_positive_control_candidate_design.py`
+- `roarm_rl/test_positive_control_cube_tap10cm.py:191-196,317-322`
+- `roarm_rl/roarm_cube_push_env.py:120-123`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_revised_positive_control_candidate_design_summary.out:1-7`
+
+## D177 - Strict external closed-loop positive-control still fails contact; next blocker is action-path/slowdown instrumentation, not PPO
+
+Date: 2026-06-08
+
+Decision:
+
+- The user explicitly approved exactly one strict external-closed-loop
+  positive-control runtime. It was run locally on RTX4090/cuda:0 with local USD,
+  `num_envs=2`, `max_steps=120`, `seed=962`, no dataset generation, no training,
+  no robot control, no SSH/B200, and no Track A.
+- The strict candidate preserved the one-knob rule: `controller_mode` changed to
+  `external_closed_loop`, while action smoothing, contact delta scale, closed-loop
+  push steps, geometry, side-center height, and pass/fail gates stayed fixed.
+- The runtime failed the positive-control gate again. External IK target solving
+  was OK, but contact context never registered.
+- This means the blocker has moved one layer deeper: from "can we run the
+  external controller?" to "why does an IK target that solves locally not move
+  the simulated TCP/contact proxy into the live face band?"
+- Do not start PPO/RL, large dataset generation, action-teacher dataset, or RoArm.
+  Do not run another GPU candidate without a new explicit approval.
+- Local code was corrected so external mode uses `closed_loop_ik_ok_rate` as the
+  controller-goal condition instead of stale `teacher_goal_ok_rate`. This does
+  not change the strict runtime verdict because contact remained zero.
+- Tap-wrapper logging was extended for the next approved diagnostic runtime with
+  actuator/action-path fields: TCP-cube distance, joint delta mean, contact
+  slowdown mean, and teacher blend mean. These fields are code-ready but not yet
+  runtime-verified under a new GPU run.
+
+Evidence:
+
+- Strict runtime summary line 1 shows a local tiny GPU runtime only:
+  `status=FAIL`, no data generation, training, robot control, SSH, B200, or Track A.
+- Summary line 3 records the strict candidate:
+  `controller_mode=external_closed_loop`, `num_envs=2`, `max_steps=120`,
+  fixed cube `(0.25,0.0)`, push dir `(1.0,0.0)`, precontact `0.02`,
+  side-center TCP margin `-0.05`, goal push `0.006`.
+- Summary line 4 shows controller target solving was not the blocker:
+  reset IK `1.0`, `closed_loop_ik_ok_rate=1.0`, closed-loop IK mean error later
+  audited as `0.617469787mm`. `teacher_goal_ok_rate=0.0` is expected in
+  external mode and is no longer used as the external controller-goal gate.
+- Summary lines 5-7 show the failure:
+  contact `0.0`, raw reaction signal `1.0`, reaction context `0.0`, reaction seen
+  `0.0`, tap success `0.0`, overshoot `0.0`, max displacement `0.000824124m`,
+  max speed `0.077135637m/s`; positive-control gate FAIL.
+- Failure audit line 3 shows the face-gap blocker remains:
+  final face gap `-0.020518493m`, final shortfall to contact band `0.010518493m`.
+- Visual audit line 4 shows lateral/vertical are OK and along gap is the blocker.
+- Result audit line 2 confirms strict knobs:
+  smoothing `0.25`, contact delta scale `0.35`, closed-loop steps `72`,
+  controller goal OK `1.0`.
+- Result audit line 4 compares builtin vs strict external:
+  final face gap improved by only `0.000558525m` and still missed the band.
+- Result audit line 5 confirms the local pass-gate correction for external mode.
+- Code now exposes tap-wrapper actuator diagnostic logs and requires them in the
+  positive-control harness for future runs.
+
+Implication:
+
+- Treat the strict external runtime as useful negative evidence, not an unlock.
+- The next allowed work is local-only design/instrumentation for one
+  action-path/slowdown/cap diagnostic candidate. Any new GPU runtime requires
+  explicit approval and must remain tiny.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_strict_sanity_summary.out:1-7`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_strict_failure_audit_summary.out:1-7`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_strict_visual_contact_audit_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_external_closed_loop_strict_result_audit_summary.out:1-7`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_strict_visual_contact_audit.png`
+- `roarm_rl/test_positive_control_cube_tap10cm.py:138-145,368-380`
+- `roarm_rl/roarm_cube_push_env.py:659-680,1136-1143`
+- `sim_scripts/cube10cm_tap_rl_external_closed_loop_strict_result_audit.py`
+
+## D178 - Instrumented action-path runtime weakens slowdown/cap blame; per-step TCP progress is the next diagnostic
+
+Date: 2026-06-08
+
+Decision:
+
+- After the user asked to proceed, one additional local RTX4090/cuda:0 strict
+  external positive-control sanity was run using the newly added action-path
+  logs. It was still tiny (`num_envs=2`, `max_steps=120`, `seed=962`) and did
+  not generate datasets, train, control RoArm, SSH/B200, or use Track A.
+- The run still failed the contact-gated positive-control gate.
+- The new action-path logs weaken the hypothesis that contact slowdown or the
+  per-step delta cap is the direct cause. Contact slowdown was inactive and mean
+  joint delta was below the cap.
+- The blocker remains live face-gap closure: the TCP/contact proxy remains
+  outside the contact band at the final scalar log.
+- Because the current runtime still records only scalar aggregates, the next
+  local-only instrumentation must capture per-step progress: face-gap min/max,
+  contact-band shortfall min/final, TCP distance min, joint-delta max, and
+  controller trace stats.
+- Differential IK action dataset has not been built. Dataset/RL/RoArm remain
+  blocked until contact-gated positive-control passes and teacher/action quality
+  policy is explicitly resolved.
+
+Evidence:
+
+- Instrumented runtime summary line 1 confirms the run was local tiny GPU only:
+  `status=FAIL`, no data generation, training, robot control, SSH, B200, or Track A.
+- Summary line 4 shows controller target solving still works:
+  `controller_goal_ok_rate=1.0`, `closed_loop_ik_ok_rate=1.0`.
+- Summary line 5 shows the failure remains:
+  contact `0.0`, raw reaction signal `1.0`, reaction context `0.0`,
+  reaction seen `0.0`, tap success `0.0`.
+- Summary line 7 is the new diagnostic evidence:
+  TCP-cube distance `0.070519388m`, joint delta abs mean `0.005000000`,
+  contact slowdown mean `1.0`, teacher blend `0.0`, action penalty `-0.015`.
+- Instrumented result audit line 6 interprets those values:
+  action-path logs are present, slowdown is inactive, and joint-delta cap is not
+  directly indicated.
+- Instrumented visual audit line 3 shows the final face gap remains outside the
+  contact band: `-0.020518493m`, shortfall `0.010518493m`.
+- Harness now has per-step aggregate trace support, but this has not yet been
+  runtime-verified by another GPU run.
+
+Implication:
+
+- Do not claim slowdown/cap as the proven root cause from current evidence.
+- Do not proceed to DiffIK dataset, PPO/RL, or RoArm. The next allowed work is
+  local-only per-step TCP progress instrumentation/design; any further GPU
+  runtime requires explicit approval.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_strict_instrumented_sanity_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_external_closed_loop_strict_instrumented_result_audit_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_strict_instrumented_visual_contact_audit_summary.out:1-8`
+- `roarm_rl/test_positive_control_cube_tap10cm.py:66-74,177-193,346-389`
+- `roarm_rl/roarm_cube_push_env.py:1136-1143`
+
+## D179 - TCP-progress trace shows slight movement but never near the contact band
+
+Date: 2026-06-08
+
+Decision:
+
+- The user asked to verify whether per-step TCP progress supports
+  controller/action mapping failure or timing/contact-band failure.
+- One local RTX4090/cuda:0 strict external sanity was run with per-step aggregate
+  trace logs. It did not generate datasets, train, control RoArm, SSH/B200, or
+  use Track A.
+- The result is still a positive-control FAIL.
+- The face gap does move slightly toward the band during the rollout, so this is
+  not a total action-mapping no-op.
+- However, the best face gap is still far outside the contact band. Therefore
+  the failure is not primarily "it reached the band and then timing/contact-stop
+  missed it." The stronger current hypothesis is insufficient action progress,
+  gain, or target application through the sim action path.
+- DiffIK action dataset, PPO/RL, large dataset, action teacher, and RoArm remain
+  blocked.
+
+Evidence:
+
+- TCP-progress runtime summary line 1 shows local tiny GPU only:
+  `status=FAIL`, no dataset generation, training, robot control, SSH, B200, or
+  Track A.
+- Summary line 5 preserves the failure: contact `0.0`, reaction context `0.0`,
+  reaction seen `0.0`, tap success `0.0`.
+- Summary line 7 shows action-path values: TCP-cube distance `0.070519388m`,
+  joint delta mean `0.005000000`, contact slowdown `1.0`, teacher blend `0.0`.
+- Summary line 8 is the key trace evidence:
+  face gap min/worst `-0.024245869m`, face gap max/best `-0.019507330m`, final
+  `-0.020518493m`, best contact-band shortfall `0.009507330m`, final shortfall
+  `0.010518493m`, TCP distance min `0.069517583m`, joint delta max `0.005000000`.
+- Result audit line 7 computes the interpretation:
+  best improvement from initial was only `0.000744969m`, `face_gap_moved_toward_band=True`,
+  but `face_gap_near_band=False`.
+- Final visual audit confirms the final TCP is still outside the contact band.
+
+Implication:
+
+- Do not move to DiffIK action dataset or RL.
+- Do not spend the next step on timing/contact-band tuning alone.
+- The next local-only work should design exactly one action-progress/gain/target
+  application candidate and its pass/fail audit. Any new GPU runtime requires
+  explicit approval.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_tcp_progress_sanity_summary.out:1-9`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_external_closed_loop_tcp_progress_result_audit_summary.out:1-9`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_tcp_progress_visual_contact_audit_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_tcp_progress_visual_contact_audit.png`
+- `roarm_rl/test_positive_control_cube_tap10cm.py:66-74,177-193,346-389`

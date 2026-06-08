@@ -1136,6 +1136,10 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
             "cube_tap_contact_face_gap_m": terms["tap_contact_face_gap_m"].mean().detach(),
             "cube_tap_contact_lateral_m": terms["tap_contact_lateral_m"].mean().detach(),
             "cube_tap_contact_vertical_offset_m": terms["tap_contact_vertical_offset_m"].mean().detach(),
+            "cube_push_tcp_cube_dist_m": terms["tcp_cube_dist"].mean().detach(),
+            "cube_push_joint_delta_abs_mean": self._last_joint_delta_abs_mean.mean().detach(),
+            "cube_push_contact_slowdown_mean": self._last_contact_slowdown.mean().detach(),
+            "cube_push_teacher_blend_mean": self._last_teacher_blend.mean().detach(),
             "cube_push_grasped_marker_rate": self._grasped.float().mean().detach(),
             "action_penalty": action_penalty.mean().detach(),
         }

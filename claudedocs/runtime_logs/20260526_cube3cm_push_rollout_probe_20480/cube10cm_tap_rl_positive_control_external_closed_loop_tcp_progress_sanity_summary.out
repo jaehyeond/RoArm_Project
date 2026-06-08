@@ -1,0 +1,9 @@
+line1 artifact=cube10cm_tap_rl_positive_control_sanity_v1 status=FAIL gpu_runtime=YES_LOCAL_TINY_ISAACLAB_POSITIVE_CONTROL dataset_generation=NO training=NO robot_control=NO ssh=NO b200=NO track_a=NO
+line2 env_contract env_id=RoArm-CubeTap10cm-Direct-v0 device=cuda:0 cube_size_m=0.1 cube_mass_kg=0.72 final_1cm_required=False
+line3 scripted_control num_envs=2 max_steps=120 steps_executed=120 cube_xy=(0.25,0.0) push_dir=(1.0,0.0) controller_mode=external_closed_loop precontact_clearance_m=0.02 tcp_top_margin_m=-0.05 goal_push_m=0.006
+line4 reset_and_ik ik_endpoint_reset_rate=1.0 ik_reset_err_mm=0.688510537147522 teacher_goal_ok_rate=0.0 controller_goal_ok_rate=1.0 initial_face_gap_m=-0.020252298563718796 initial_vertical_offset_m=0.0006401985883712769 closed_loop_ik_ok_rate=1.0
+line5 tap_logs required_log_keys_present=True contact_seen=0.0 reaction_signal_now=1.0 reaction_contact_context=0.0 reaction_seen=0.0 overshoot_seen=0.0 tap_success=0.0
+line6 reaction_metrics max_disp_along_m=0.0008241236209869385 max_z_delta_m=4.3118372559547424e-05 max_speed_mps=0.07713563740253448 terminated_count=0 truncated_count=2
+line7 action_path tcp_cube_dist_m=0.07051938772201538 joint_delta_abs_mean=0.004999999888241291 contact_slowdown_mean=1.0 teacher_blend_mean=0.0 action_penalty=-0.014999999664723873
+line8 trace_diagnostics face_gap_min=-0.024245869368314743 face_gap_max=-0.019507329910993576 face_gap_final=-0.02051849290728569 shortfall_min=0.009507329910993576 shortfall_final=0.01051849290728569 tcp_dist_min=0.069517582654953 joint_delta_abs_max=0.004999999888241291
+line9 verdict positive_control=FAIL blocker=POSITIVE_CONTROL_GATE_FAIL unblocks=wrapper_positive_control_evidence_only ppo_rl_training=BLOCKED large_dataset=BLOCKED action_teacher=BLOCKED roarm=BLOCKED

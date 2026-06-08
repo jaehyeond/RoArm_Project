@@ -3,11 +3,15 @@
   "b200": false,
   "branch": "professor_cube10cm_tap_reaction_quality_tier",
   "candidate": {
-    "command": "conda run -n isaaclab --no-capture-output python -u -m roarm_rl.test_positive_control_cube_tap10cm --num_envs 2 --steps 120 --seed 962 --device cuda:0 --controller_mode external_closed_loop --action_smoothing_alpha 1.0 --contact_joint_delta_scale 1.0 --closed_loop_push_steps 72",
+    "command": "conda run -n isaaclab --no-capture-output python -u -m roarm_rl.test_positive_control_cube_tap10cm --num_envs 2 --steps 120 --seed 962 --device cuda:0 --controller_mode external_closed_loop",
     "does_not_change": [
       "10cm/0.72kg object contract",
       "tap/reaction/contact objective",
       "final 1cm remains default-off",
+      "contact geometry thresholds",
+      "side-center TCP height",
+      "precontact and through distance",
+      "action smoothing and contact delta scale",
       "reward/done/pass-fail gate",
       "dataset/RL/RoArm state"
     ],
@@ -28,6 +32,14 @@
       ],
       "tcp_top_margin_m": -0.05
     },
+    "not_selected_strength_variant": {
+      "extra_knob_changes": [
+        "action_smoothing_alpha: 0.25 -> 1.0",
+        "contact_joint_delta_scale: 0.35 -> 1.0"
+      ],
+      "reason": "would mix controller_mode with action smoothing and contact delta scale",
+      "status": "NOT_SELECTED_NOT_RUN"
+    },
     "one_variable_intent": "controller_execution_only",
     "pass_gate": {
       "contact_seen_gt": 0.0,
@@ -38,13 +50,24 @@
       "tap_success_gt": 0.0
     },
     "requires_explicit_gpu_approval": true,
-    "status": "DESIGNED_NOT_RUN"
+    "selected_runtime_knob_changes": [
+      "controller_mode: builtin_teacher -> external_closed_loop"
+    ],
+    "selected_runtime_knob_changes_count": 1,
+    "status": "DESIGNED_NOT_RUN",
+    "uses_existing_defaults": {
+      "action_smoothing_alpha": 0.25,
+      "closed_loop_push_steps": 72,
+      "contact_joint_delta_scale": 0.35
+    }
   },
   "code_lines": {
     "action_smoothing_arg": 195,
+    "action_smoothing_default": 120,
     "closed_loop_action_call": 318,
     "closed_loop_fn": 66,
     "contact_delta_scale_arg": 196,
+    "contact_delta_scale_default": 123,
     "controller_arg": 191
   },
   "code_ready": true,

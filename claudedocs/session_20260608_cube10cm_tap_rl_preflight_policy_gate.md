@@ -118,3 +118,170 @@
   any new GPU runtime requires explicit approval.
 - Still blocked:
   PPO/RL, large dataset, action teacher/tiny action dataset, and RoArm.
+
+## Follow-Up: Positive-Control Visual Contact Audit
+
+- Added local existing-log-only visual audit:
+  `sim_scripts/cube10cm_tap_rl_positive_control_visual_contact_audit.py`.
+- Generated:
+  `cube10cm_tap_rl_positive_control_visual_contact_audit.png`,
+  `cube10cm_tap_rl_positive_control_visual_contact_audit.svg`,
+  `cube10cm_tap_rl_positive_control_visual_contact_audit.html`,
+  `cube10cm_tap_rl_positive_control_visual_contact_audit.json`, and summary.
+- Important limitation:
+  this is reset/final scalar reconstruction from saved JSON, not a per-step
+  video/trace. It does not launch IsaacLab/GPU, data generation, training,
+  robot control, SSH/B200, or Track A.
+- Summary line 3 reconstructs the contact frame:
+  initial/final along `-0.070252299m/-0.071077018m`, initial/final face gap
+  `-0.020252299m/-0.021077018m`, final shortfall to the `[-0.010,+0.010]m`
+  contact band `0.011077018m`.
+- Summary line 4 gives the axis diagnosis:
+  lateral and vertical are OK (`0.000003905m` and `0.000538668m`), while the
+  along gap remains outside the band. Gap delta `-0.000824720m` nearly cancels
+  cube displacement `0.000824004m` (`abs=0.000000715m`).
+- Summary line 5 confirms the guard:
+  contact `0.0`, raw reaction signal `1.0`, contact context `0.0`, tap success
+  `0.0`, wrapper false-positive blocking `True`.
+- Visual inspection of the generated PNG confirms the red final TCP marker stays
+  left/outside the green contact band; the failure is not a lateral or height
+  placement issue.
+- Still blocked:
+  PPO/RL, large dataset, action teacher/tiny action dataset, and RoArm.
+- Next possible runtime remains exactly one revised `external_closed_loop`
+  positive-control candidate only after explicit approval.
+
+## Follow-Up: Strict Revised Candidate Correction
+
+- Rechecked the revised candidate design because the old candidate was not truly
+  one-knob:
+  it combined `controller_mode=external_closed_loop` with
+  `action_smoothing_alpha=1.0` and `contact_joint_delta_scale=1.0`.
+- Updated and reran:
+  `sim_scripts/cube10cm_tap_rl_revised_positive_control_candidate_design.py`.
+- New summary line 3:
+  `strict_selected=True`, `changed_knobs=1`,
+  `controller_mode=builtin_teacher->external_closed_loop`,
+  `action_smoothing_alpha=env_default_0.25`,
+  `contact_joint_delta_scale=env_default_0.35`,
+  `closed_loop_push_steps=default_72`, status `DESIGNED_NOT_RUN`.
+- New summary line 4:
+  the smoothing/scale `1.0/1.0` strength variant is
+  `NOT_SELECTED_NOT_RUN` because it would mix controller mode with action
+  smoothing and contact delta scale.
+- The selected next candidate, if explicitly approved, is therefore strict
+  controller-mode-only. It still does not unblock PPO/RL, large dataset, action
+  teacher/tiny action dataset, or RoArm.
+
+## Follow-Up: Approved Strict External-Closed-Loop Runtime
+
+- User explicitly approved the next tiny GPU runtime.
+- Ran exactly one local RTX4090/cuda:0 IsaacLab positive-control runtime:
+  `RoArm-CubeTap10cm-Direct-v0`, local USD, `num_envs=2`, `max_steps=120`,
+  `seed=962`, fixed cube `(0.250, 0.000)`, push dir `(1, 0)`,
+  `controller_mode=external_closed_loop`, action smoothing default `0.25`,
+  contact delta scale default `0.35`, closed-loop push steps default `72`.
+- Not run:
+  PPO/RL, dataset generation, action-teacher dataset, RoArm control, SSH/B200,
+  Track A, or another GPU runtime after this one.
+- Runtime result: `FAIL`.
+  Strict external controller target solving worked
+  (`closed_loop_ik_ok_rate=1.0`, mean closed-loop IK error `0.617469787mm`), but
+  contact stayed `0.0`.
+- Tap logs:
+  raw reaction signal `1.0`, reaction contact context `0.0`, reaction seen
+  `0.0`, tap success `0.0`, overshoot `0.0`.
+- Motion:
+  max displacement `0.000824124m`, max speed `0.077135637m/s`, max z delta
+  `0.000043118m`.
+- Failure/visual audits:
+  final face gap `-0.020518493m`, contact-band shortfall `0.010518493m`.
+  Lateral and vertical were OK; along gap remains the blocker.
+- Comparison with builtin teacher positive-control:
+  strict external improved final face gap by only `0.000558525m`, still far
+  outside the `[-0.010,+0.010]m` contact band.
+- Corrected a local harness gate issue:
+  external mode now uses `closed_loop_ik_ok_rate` as the controller-goal gate
+  instead of stale `teacher_goal_ok_rate`. This does not change the runtime
+  verdict because contact/reaction context/tap success were all still zero.
+- Added future diagnostic log keys to the tap wrapper:
+  `cube_push_tcp_cube_dist_m`, `cube_push_joint_delta_abs_mean`,
+  `cube_push_contact_slowdown_mean`, and `cube_push_teacher_blend_mean`.
+  These are code-ready but not runtime-verified because no second GPU run was
+  launched after instrumentation.
+- Current interpretation:
+  the strict controller layer is not enough. The next blocker is likely in the
+  action application path, such as smoothing, per-step delta cap, contact
+  slowdown, target reference/lead limit, or some combination. This is not yet
+  proven because the just-finished runtime did not include those diagnostic log
+  keys.
+- Still blocked:
+  PPO/RL, large dataset, action teacher/tiny action dataset, and RoArm.
+- Next:
+  local-only design/instrumentation of one action-path/slowdown/cap diagnostic
+  candidate. Any new GPU runtime requires explicit approval.
+
+## Follow-Up: Instrumented Action-Path Sanity
+
+- User asked to proceed with the action-path diagnostic.
+- Ran one additional local RTX4090/cuda:0 tiny strict external sanity with the
+  newly added action-path logs:
+  `RoArm-CubeTap10cm-Direct-v0`, `num_envs=2`, `max_steps=120`, `seed=962`,
+  `controller_mode=external_closed_loop`.
+- Not run:
+  DiffIK dataset generation, PPO/RL, action-teacher dataset, RoArm control,
+  SSH/B200, Track A.
+- Runtime result: `FAIL`.
+  `controller_goal_ok_rate=1.0`, `closed_loop_ik_ok_rate=1.0`, but contact,
+  reaction context, reaction seen, and tap success stayed `0.0`.
+- New action-path logs:
+  TCP-cube distance `0.070519388m`, joint delta abs mean `0.005000000`,
+  contact slowdown mean `1.0`, teacher blend `0.0`, action penalty `-0.015`.
+- Interpretation:
+  contact slowdown is inactive, and the mean joint delta is below the `0.010rad`
+  per-step cap. So current final-scalar evidence does not support direct
+  slowdown/cap blame.
+- Failure/visual audits still show the same blocker:
+  final face gap `-0.020518493m`, shortfall `0.010518493m`, lateral/vertical OK.
+- Added per-step aggregate trace instrumentation to the harness after this run:
+  face gap min/max/final, contact-band shortfall min/final, TCP distance min,
+  joint delta max, and controller trace stats.
+- This new per-step aggregate code is compile-checked but not yet runtime-verified,
+  because no further GPU run was launched.
+- Current status:
+  the DiffIK action dataset has not been built. We are still in wrapper and
+  positive-control debugging. Dataset/RL/RoArm remain blocked.
+
+## Follow-Up: TCP-Progress Instrumented Sanity
+
+- User asked to verify whether the face gap closes mid-run.
+- Ran one local RTX4090/cuda:0 tiny strict external sanity with per-step
+  aggregate trace enabled:
+  `RoArm-CubeTap10cm-Direct-v0`, `num_envs=2`, `max_steps=120`, `seed=962`,
+  `controller_mode=external_closed_loop`.
+- Not run:
+  DiffIK dataset generation, PPO/RL, action-teacher dataset, RoArm control,
+  SSH/B200, Track A.
+- Runtime result: `FAIL`.
+- Key trace diagnostics:
+  initial face gap `-0.020252299m`, best/closest face gap `-0.019507330m`,
+  worst face gap `-0.024245869m`, final face gap `-0.020518493m`.
+- Best improvement from initial:
+  `0.000744969m`. The TCP/contact proxy does move slightly toward the band, so
+  the controller/action mapping is not a complete no-op.
+- But best contact-band shortfall is still `0.009507330m`.
+  It never gets near the `[-0.010,+0.010]m` band.
+- Action path:
+  contact slowdown `1.0`, joint delta max/mean `0.005000000`, TCP distance min
+  `0.069517583m`.
+- Interpretation:
+  this is not primarily a timing/contact-band miss. The evidence points to
+  insufficient action progress/gain/target application through the sim action
+  path.
+- Current status:
+  DiffIK action dataset is still not built. PPO/RL, large dataset, action
+  teacher/tiny action dataset, and RoArm remain blocked.
+- Next:
+  local-only design of exactly one action-progress/gain/target-application
+  candidate and its pass/fail audit. Any new GPU runtime requires explicit
+  approval.

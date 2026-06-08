@@ -15,6 +15,7 @@ from typing import Any
 REPO = Path(__file__).resolve().parents[1]
 LOG_DIR = REPO / "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480"
 HARNESS = REPO / "roarm_rl/test_positive_control_cube_tap10cm.py"
+ENV_SOURCE = REPO / "roarm_rl/roarm_cube_push_env.py"
 FAILURE_AUDIT = LOG_DIR / "cube10cm_tap_rl_positive_control_failure_audit.json"
 DEFAULT_OUT_JSON = LOG_DIR / "cube10cm_tap_rl_revised_positive_control_candidate_design.json"
 DEFAULT_OUT_SUMMARY = LOG_DIR / "cube10cm_tap_rl_revised_positive_control_candidate_design_summary.out"
@@ -35,6 +36,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--failure_audit", type=Path, default=FAILURE_AUDIT)
     parser.add_argument("--harness", type=Path, default=HARNESS)
+    parser.add_argument("--env_source", type=Path, default=ENV_SOURCE)
     parser.add_argument("--out_json", type=Path, default=DEFAULT_OUT_JSON)
     parser.add_argument("--out_summary", type=Path, default=DEFAULT_OUT_SUMMARY)
     args = parser.parse_args()
@@ -46,6 +48,8 @@ def main() -> int:
         "closed_loop_action_call": _line_of(args.harness, 'if args.controller_mode == "external_closed_loop"'),
         "action_smoothing_arg": _line_of(args.harness, 'parser.add_argument("--action_smoothing_alpha"'),
         "contact_delta_scale_arg": _line_of(args.harness, 'parser.add_argument("--contact_joint_delta_scale"'),
+        "action_smoothing_default": _line_of(args.env_source, "action_smoothing_alpha: float = 0.25"),
+        "contact_delta_scale_default": _line_of(args.env_source, "contact_joint_delta_scale: float = 0.35"),
     }
     code_ready = all(line is not None for line in code_lines.values())
     failure_mode_ok = (
@@ -60,9 +64,7 @@ def main() -> int:
             "conda run -n isaaclab --no-capture-output python -u "
             "-m roarm_rl.test_positive_control_cube_tap10cm "
             "--num_envs 2 --steps 120 --seed 962 --device cuda:0 "
-            "--controller_mode external_closed_loop "
-            "--action_smoothing_alpha 1.0 --contact_joint_delta_scale 1.0 "
-            "--closed_loop_push_steps 72"
+            "--controller_mode external_closed_loop"
         ),
         "fixed": {
             "env_id": "RoArm-CubeTap10cm-Direct-v0",
@@ -76,10 +78,31 @@ def main() -> int:
             "device": "cuda:0",
         },
         "one_variable_intent": "controller_execution_only",
+        "selected_runtime_knob_changes_count": 1,
+        "selected_runtime_knob_changes": [
+            "controller_mode: builtin_teacher -> external_closed_loop",
+        ],
+        "uses_existing_defaults": {
+            "closed_loop_push_steps": 72,
+            "action_smoothing_alpha": 0.25,
+            "contact_joint_delta_scale": 0.35,
+        },
+        "not_selected_strength_variant": {
+            "status": "NOT_SELECTED_NOT_RUN",
+            "reason": "would mix controller_mode with action smoothing and contact delta scale",
+            "extra_knob_changes": [
+                "action_smoothing_alpha: 0.25 -> 1.0",
+                "contact_joint_delta_scale: 0.35 -> 1.0",
+            ],
+        },
         "does_not_change": [
             "10cm/0.72kg object contract",
             "tap/reaction/contact objective",
             "final 1cm remains default-off",
+            "contact geometry thresholds",
+            "side-center TCP height",
+            "precontact and through distance",
+            "action smoothing and contact delta scale",
             "reward/done/pass-fail gate",
             "dataset/RL/RoArm state",
         ],
@@ -136,22 +159,28 @@ def main() -> int:
         ),
         (
             "line3 candidate "
-            f"code_ready={code_ready} controller_mode=external_closed_loop "
-            "action_smoothing_alpha=1.0 contact_joint_delta_scale=1.0 "
-            "closed_loop_push_steps=72 side_center_tcp=YES status=DESIGNED_NOT_RUN"
+            f"code_ready={code_ready} strict_selected=True changed_knobs=1 "
+            "controller_mode=builtin_teacher->external_closed_loop "
+            "action_smoothing_alpha=env_default_0.25 contact_joint_delta_scale=env_default_0.35 "
+            "closed_loop_push_steps=default_72 side_center_tcp=YES status=DESIGNED_NOT_RUN"
         ),
         (
-            "line4 pass_gate "
+            "line4 not_selected_strength_variant "
+            "status=NOT_SELECTED_NOT_RUN reason=would_mix_controller_mode_with_action_smoothing_and_contact_delta_scale "
+            "action_smoothing_alpha=1.0 contact_joint_delta_scale=1.0"
+        ),
+        (
+            "line5 pass_gate "
             "contact_seen>0 reaction_context>0 reaction_seen>0 tap_success>0 "
             "overshoot=0 final_flag=0"
         ),
         (
-            "line5 verdict "
+            "line6 verdict "
             f"ready_for_explicit_runtime_approval_only={code_ready and failure_mode_ok} "
             "ppo_rl_training=BLOCKED large_dataset=BLOCKED action_teacher=BLOCKED roarm=BLOCKED"
         ),
         (
-            "line6 next "
+            "line7 next "
             "new_gpu_runtime=REQUIRES_EXPLICIT_APPROVAL "
             "not_allowed=run_without_approval_or_ppo_large_dataset_action_teacher_roarm"
         ),

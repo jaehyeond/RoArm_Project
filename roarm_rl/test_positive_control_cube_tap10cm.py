@@ -63,6 +63,17 @@ def _tensor_mean(value: Any) -> float:
     return float(value)
 
 
+def _update_trace_stats(stats: dict[str, dict[str, float]], key: str, value: Any) -> None:
+    try:
+        scalar = float(value)
+    except (TypeError, ValueError):
+        return
+    entry = stats.setdefault(key, {"min": scalar, "max": scalar, "final": scalar})
+    entry["min"] = min(entry["min"], scalar)
+    entry["max"] = max(entry["max"], scalar)
+    entry["final"] = scalar
+
+
 def _closed_loop_ik_action(inner: Any, cfg: Any, args: argparse.Namespace, step: int, torch_mod: Any) -> tuple[Any, dict[str, float]]:
     from sim_scripts.roarm_kinematics import ik_dls
 
@@ -139,6 +150,7 @@ def _write_result(out_json: Path, out_summary: Path, result: dict[str, Any]) -> 
             f"ik_endpoint_reset_rate={result.get('reset_metrics', {}).get('ik_endpoint_reset_rate', 'NA')} "
             f"ik_reset_err_mm={result.get('reset_metrics', {}).get('ik_reset_err_mm', 'NA')} "
             f"teacher_goal_ok_rate={result.get('reset_metrics', {}).get('teacher_goal_ok_rate', 'NA')} "
+            f"controller_goal_ok_rate={result.get('controller_goal_ok_rate', 'NA')} "
             f"initial_face_gap_m={result.get('reset_metrics', {}).get('initial_face_gap_m', 'NA')} "
             f"initial_vertical_offset_m={result.get('reset_metrics', {}).get('initial_vertical_offset_m', 'NA')} "
             f"closed_loop_ik_ok_rate={result.get('controller_metrics', {}).get('closed_loop_ik_ok_rate', 'NA')}"
@@ -162,7 +174,25 @@ def _write_result(out_json: Path, out_summary: Path, result: dict[str, Any]) -> 
             f"truncated_count={result.get('truncated_count', 'NA')}"
         ),
         (
-            "line7 verdict "
+            "line7 action_path "
+            f"tcp_cube_dist_m={result.get('last_log', {}).get('cube_push_tcp_cube_dist_m', 'NA')} "
+            f"joint_delta_abs_mean={result.get('last_log', {}).get('cube_push_joint_delta_abs_mean', 'NA')} "
+            f"contact_slowdown_mean={result.get('last_log', {}).get('cube_push_contact_slowdown_mean', 'NA')} "
+            f"teacher_blend_mean={result.get('last_log', {}).get('cube_push_teacher_blend_mean', 'NA')} "
+            f"action_penalty={result.get('last_log', {}).get('action_penalty', 'NA')}"
+        ),
+        (
+            "line8 trace_diagnostics "
+            f"face_gap_min={result.get('log_trace_stats', {}).get('cube_tap_contact_face_gap_m', {}).get('min', 'NA')} "
+            f"face_gap_max={result.get('log_trace_stats', {}).get('cube_tap_contact_face_gap_m', {}).get('max', 'NA')} "
+            f"face_gap_final={result.get('log_trace_stats', {}).get('cube_tap_contact_face_gap_m', {}).get('final', 'NA')} "
+            f"shortfall_min={result.get('log_trace_stats', {}).get('cube_tap_contact_band_shortfall_m', {}).get('min', 'NA')} "
+            f"shortfall_final={result.get('log_trace_stats', {}).get('cube_tap_contact_band_shortfall_m', {}).get('final', 'NA')} "
+            f"tcp_dist_min={result.get('log_trace_stats', {}).get('cube_push_tcp_cube_dist_m', {}).get('min', 'NA')} "
+            f"joint_delta_abs_max={result.get('log_trace_stats', {}).get('cube_push_joint_delta_abs_mean', {}).get('max', 'NA')}"
+        ),
+        (
+            "line9 verdict "
             f"positive_control={result.get('positive_control', 'UNKNOWN')} "
             f"blocker={result.get('blocker', 'NONE')} "
             "unblocks=wrapper_positive_control_evidence_only "
@@ -313,6 +343,8 @@ def main() -> int:
         last_log: dict[str, Any] = {}
         steps_executed = 0
         controller_metrics: dict[str, float] = {}
+        controller_trace_stats: dict[str, dict[str, float]] = {}
+        log_trace_stats: dict[str, dict[str, float]] = {}
         zero_action = torch.zeros((args.num_envs, cfg.action_space), device=inner.device)
         for step in range(int(args.steps)):
             if args.controller_mode == "external_closed_loop":
@@ -328,6 +360,27 @@ def main() -> int:
             terminated_count += int(terminated.sum().item())
             if "log" in info:
                 last_log = {key: _scalar(value) for key, value in info["log"].items()}
+                for key in (
+                    "cube_tap_contact_face_gap_m",
+                    "cube_tap_contact_lateral_m",
+                    "cube_tap_contact_vertical_offset_m",
+                    "cube_push_tcp_cube_dist_m",
+                    "cube_push_joint_delta_abs_mean",
+                    "cube_push_contact_slowdown_mean",
+                    "cube_push_teacher_blend_mean",
+                    "cube_tap_contact_seen_rate",
+                    "cube_tap_reaction_contact_context_rate",
+                    "cube_tap_success_rate",
+                ):
+                    if key in last_log:
+                        _update_trace_stats(log_trace_stats, key, last_log[key])
+                if "cube_tap_contact_face_gap_m" in last_log:
+                    band = float(cfg.tap_contact_face_band_m)
+                    face_gap = float(last_log["cube_tap_contact_face_gap_m"])
+                    shortfall = max(0.0, -band - face_gap, face_gap - band)
+                    _update_trace_stats(log_trace_stats, "cube_tap_contact_band_shortfall_m", shortfall)
+                for key, value in controller_metrics.items():
+                    _update_trace_stats(controller_trace_stats, key, value)
             if step % max(1, int(args.steps) // 6) == 0:
                 print(
                     "[tap10cm-positive] "
@@ -356,6 +409,10 @@ def main() -> int:
             "cube_tap_max_disp_along_m",
             "cube_tap_max_z_delta_m",
             "cube_tap_max_speed_mps",
+            "cube_push_tcp_cube_dist_m",
+            "cube_push_joint_delta_abs_mean",
+            "cube_push_contact_slowdown_mean",
+            "cube_push_teacher_blend_mean",
             "cube_push_grasped_marker_rate",
         }
         missing_logs = sorted(required_log_keys - set(last_log))
@@ -365,11 +422,16 @@ def main() -> int:
         reaction_seen = float(last_log.get("cube_tap_reaction_seen_rate", 0.0))
         tap_success = float(last_log.get("cube_tap_success_rate", 0.0))
         overshoot_seen = float(last_log.get("cube_tap_overshoot_seen_rate", 1.0))
+        controller_goal_ok_rate = (
+            float(controller_metrics.get("closed_loop_ik_ok_rate", 0.0))
+            if args.controller_mode == "external_closed_loop"
+            else float(reset_metrics["teacher_goal_ok_rate"])
+        )
         positive_control_pass = (
             not missing_logs
             and final_required_log == 0.0
             and reset_metrics["ik_endpoint_reset_rate"] > 0.0
-            and reset_metrics["teacher_goal_ok_rate"] > 0.0
+            and controller_goal_ok_rate > 0.0
             and contact_seen > 0.0
             and reaction_context > 0.0
             and reaction_seen > 0.0
@@ -412,6 +474,7 @@ def main() -> int:
             "closed_loop_push_steps": int(args.closed_loop_push_steps),
             "action_smoothing_alpha": float(cfg.action_smoothing_alpha),
             "contact_joint_delta_scale": float(cfg.contact_joint_delta_scale),
+            "controller_goal_ok_rate": controller_goal_ok_rate,
             "obs_shape": list(obs_t.shape),
             "reward_mean": float(np.mean(rewards_all)) if rewards_all else 0.0,
             "reward_finite": True,
@@ -421,6 +484,8 @@ def main() -> int:
             "missing_required_log_keys": missing_logs,
             "reset_metrics": reset_metrics,
             "controller_metrics": controller_metrics,
+            "controller_trace_stats": controller_trace_stats,
+            "log_trace_stats": log_trace_stats,
             "last_log": last_log,
             "blocker": "NONE" if positive_control_pass else "POSITIVE_CONTROL_GATE_FAIL",
             "elapsed_s": time.time() - started,
