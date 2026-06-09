@@ -1,0 +1,55 @@
+{
+  "b200": false,
+  "bridge_patch": {
+    "candidate_branch_line": 829,
+    "candidate_mode_cfg_line": 139,
+    "default_mode_cfg_line": 134,
+    "diffik_controller_line": 425,
+    "env_nearface_line": 471,
+    "residual_scale_line": 835,
+    "smoke_arg_line": 69,
+    "smoke_contract_line": 425,
+    "telemetry_log_line": 1240
+  },
+  "d208_posthoc": {
+    "policy_task_pass_line": 7,
+    "summary_line": 6
+  },
+  "dataset_generation": false,
+  "decision": {
+    "base_controller": "Candidate6 near-face built-in DiffIK previous-target-base step-clipped joint target",
+    "candidate_action_mode": "candidate6_diffik_residual_joint",
+    "default_action_mode_must_remain": "joint_delta",
+    "existing_scripted_teacher_sufficient": false,
+    "next_patch": "tiny_no_training_candidate6_diffik_residual_preflight",
+    "policy_output": "small residual around Candidate6 base target",
+    "raw_joint_delta_more_iterations_next": false,
+    "runtime_after_patch": "tiny no-training preflight first, then tiny PPO smoke only if preflight passes"
+  },
+  "existing_teacher_not_candidate6": {
+    "dls_goal_line": 624,
+    "positive_control_built_in_diffik_in_env": true,
+    "scripted_teacher_blend_cfg_line": 131
+  },
+  "gpu_runtime": false,
+  "local_static_only": true,
+  "positive_control": {
+    "diffik_init_line": 340,
+    "direct_apply_line": 1207,
+    "promotion_contract_line": 2,
+    "promotion_stage0b_line": 7,
+    "step_clip_line": 446,
+    "target_base_mode_line": 429,
+    "target_path_nearface_line": 390
+  },
+  "rl_env_joint_delta_path": {
+    "doc_line": 8,
+    "policy_action_clamp_line": 830,
+    "raw_delta_line": 919,
+    "target_base_line": 950
+  },
+  "robot_control": false,
+  "ssh": false,
+  "track_a": false,
+  "training": false
+}

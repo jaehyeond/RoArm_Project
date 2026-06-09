@@ -11545,3 +11545,496 @@ Sources:
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_promotion_validation_audit_summary.out:1-10`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_promotion_validation_audit.json`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_promotion_stage0b_seed962_n8_sanity_summary.out:1-10`
+
+## D208 - Candidate6 pilot PPO smoke and corrected posthoc policy pass candidate
+
+Current State:
+
+- Added `roarm_rl/train_cube_tap10cm_ppo_smoke.py` as a tiny local PPO smoke
+  runner for the fixed Candidate6 10cm cube tap contract.  It is not a dataset
+  generator, action teacher, large PPO path, or RoArm deployment path.
+- Fixed the smoke script to use the same local backup USD as the Candidate6
+  positive-control harness:
+  `b200_backup_20260522_final/tmp_p7/p7_branch_b_cube2cm_opposing_jaw_v7_collision_usd_d024/roarm_m3.usd`.
+- The fixed RL smoke contract is `cube=(0.240,0.000)`, push dir `(+1,0)`,
+  `tap_contact_proxy_mode=link5_collision_aabb`,
+  `tool_contact_proxy_mode=hand_tcp`, `precontact_clearance_m=0.040`,
+  `episode_length_s=6.08`, eval steps `580`, policy target displacement
+  `0.006`, step clip `0.010`, lead limit `0.060`,
+  and `scripted_teacher_blend=0.0`.
+- Preflight PASSed with no training:
+  `preflight_pass=True`, contract violations `0`, finite zero-policy rollout,
+  finite untrained PPO policy rollout, and no contact/success as expected.
+- Tiny PPO smoke ran local RTX4090/cuda:0 with seed966, `num_envs=8`,
+  `max_iterations=3`, and `num_steps_per_env=64`.  It produced
+  `model_0.pt`, `model_1.pt`, and `model_2.pt`; checkpoint existence and
+  post-eval finiteness made `training_smoke_pass=True`.
+- The first smoke summary underreported policy task success because the smoke
+  script read non-existent log keys such as `cube_tap_success` instead of env
+  keys such as `cube_tap_success_rate`.  The script was corrected and the
+  loaded `model_2.pt` posthoc eval now supersedes that policy-task readout.
+
+Evidence:
+
+- Corrected posthoc checkpoint eval line 2 verifies the fixed contract and
+  `violations=0`.
+- Corrected posthoc checkpoint eval line 5 reports loaded-policy post-eval
+  `finite=True`, `tap_success_max=1.0`, `contact_seen_max=1.0`,
+  `reaction_seen_max=1.0`, `overshoot_max=0.0`,
+  `reward_mean_per_step=0.3094316795512488`,
+  `tcp_dist_min_m=0.08132576197385788`,
+  `lead_limit_rate_max=0.5`, and `joint_delta_cap_rate_max=0.5`.
+- Corrected posthoc checkpoint eval line 6 reports
+  `preflight_pass=True`, `policy_task_pass=True`,
+  `large_dataset_rl_roarm_unblocked=NO`, and `action_teacher_dataset=NO`.
+- One redirected `bash -lc` posthoc attempt wrote only stdout and did not update
+  summary files because Isaac/Kit could not acquire CUDA in that sandboxed
+  launch.  The valid corrected posthoc result is the later direct `conda run`
+  run that wrote the summary at `2026-06-09 15:46 KST`.
+
+Implication:
+
+- D208 upgrades the branch from "pilot RL smoke/design unblocked" to a tiny
+  fixed-contract PPO smoke with a loaded-checkpoint policy pass candidate.
+- This still is not large PPO/RL readiness.  The pass is fixed-geometry,
+  fixed-contract, and quality-tier-limited: posthoc JSON records very small
+  mean max displacement (`3.32072377204895e-05m`) plus nonzero lead-limit and
+  joint-delta-cap rates.
+- The next branch is fixed-contract RL policy promotion validation across
+  independent reset seeds and small env-scale settings.  Keep strict env
+  success, contact/reaction, overshoot, and quality metrics separated.
+- Large dataset generation, action-teacher dataset claims, RoArm deployment,
+  and Track A remain blocked.
+
+Sources:
+
+- `claudedocs/session_20260609_cube10cm_tap_rl_candidate6_pilot_ppo_smoke.md`
+- `roarm_rl/train_cube_tap10cm_ppo_smoke.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_pilot_ppo_preflight_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_pilot_ppo_smoke_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_pilot_ppo_smoke_posthoc_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_pilot_ppo_smoke_posthoc_summary.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_runs/cube10cm_tap_rl_candidate6_pilot_ppo_smoke/seed966_env8_it3/model_2.pt`
+
+## D209 - Candidate6 residual RL action path bridge and success-terminate pass route
+
+Current State:
+
+- The action-path critique is valid. Candidate6 positive-control PASS was
+  produced by built-in DiffIK direct target application, while the PPO env
+  default path was raw normalized joint-delta. D208 proved PPO plumbing, but it
+  did not transfer the Candidate6 controller into the policy action path.
+- Added default-off `rl_action_mode=candidate6_diffik_residual_joint` to
+  `roarm_rl/roarm_cube_push_env.py`. In that mode, the base target is the
+  Candidate6 near-face built-in DiffIK controller with previous-target-base,
+  `0.010rad` step clip, `0.060rad` lead limit, AABB contact, and hand TCP
+  proxy. The policy action is only a small joint residual around that base
+  target; default `joint_delta` behavior is preserved.
+- Added Candidate6 residual action-mode args and contract logging to
+  `roarm_rl/train_cube_tap10cm_ppo_smoke.py`, including
+  `--rl_action_mode candidate6_diffik_residual_joint`,
+  `--candidate6_diffik_residual_scale_rad`, and `--tap_success_terminate`.
+- Added local static bridge audit
+  `sim_scripts/cube10cm_tap_rl_action_path_bridge_design.py`. No GPU runtime,
+  training, dataset generation, robot control, SSH/B200, or Track A is involved
+  in that static audit.
+
+Evidence:
+
+- Static bridge audit line 2 pins the original Candidate6 positive-control
+  path: built-in DiffIK init line `340`, near-face line `390`,
+  previous-target-base line `429`, step clip line `446`, and direct apply line
+  `1207`.
+- Static bridge audit line 3 pins the default PPO path as raw joint-delta.
+- Static bridge audit line 8 pins the new residual bridge implementation:
+  default mode config line `134`, candidate branch line `829`, env near-face
+  line `471`, residual scale line `835`, telemetry line `1240`, smoke arg line
+  `69`, and smoke contract line `425`.
+- First local RTX4090/cuda:0 no-training bridge preflight with
+  `tap_success_terminate=False` proved action-path transfer but failed strict
+  quality after success: `candidate6_active_rate_max=1.0`,
+  `candidate6_numeric_ok_rate_min=1.0`, `tap_success_max=1.0`,
+  `contact_seen_max=1.0`, `reaction_seen_max=1.0`, but
+  `overshoot_max=0.625`.
+- Posthoc bridge audit line 4 explains the failure: Candidate6 was successfully
+  moved into the RL action path, but a fixed 580-step rollout without success
+  termination keeps pushing after success and accumulates overshoot.
+- Second local RTX4090/cuda:0 no-training pass-route preflight with
+  `tap_success_terminate=True` PASSed the strict zero-policy task under the
+  Candidate6 residual action path: summary line 2 reports contract violations
+  `0`, line 3 reports `tap_success_max=1.0`, `contact_seen_max=1.0`,
+  `reaction_seen_max=1.0`, `overshoot_max=0.0`, `candidate6_active_rate_max=1.0`,
+  and `candidate6_numeric_ok_rate_min=1.0`; line 7 reports
+  `zero_policy_task_pass=True`.
+
+Implication:
+
+- The current pass route is not more raw joint-delta PPO. It is residual RL on
+  top of the Candidate6 DiffIK base, with success termination/hold so the base
+  controller does not continue pushing after the tap objective is achieved.
+- The next valid step is a tiny training smoke using this action-path contract:
+  `rl_action_mode=candidate6_diffik_residual_joint` plus
+  `tap_success_terminate=True`. If that passes, then run promotion validation
+  across independent reset seeds/small env scale.
+- Large PPO/RL scale-up, dataset generation, action-teacher dataset claims,
+  and RoArm deployment remain blocked until the tiny training smoke and
+  promotion validation pass under this action-path contract.
+
+Sources:
+
+- `roarm_rl/roarm_cube_push_env.py`
+- `roarm_rl/train_cube_tap10cm_ppo_smoke.py`
+- `sim_scripts/cube10cm_tap_rl_action_path_bridge_design.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_action_path_bridge_design_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_diffik_residual_preflight_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_diffik_residual_success_terminate_preflight_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_diffik_residual_bridge_posthoc_audit_summary.out:1-6`
+
+## D210 - Candidate6 residual success-terminate tiny PPO smoke PASS
+
+Current State:
+
+- Ran the next tiny PPO smoke under the D209 action-path contract:
+  `rl_action_mode=candidate6_diffik_residual_joint`,
+  `tap_success_terminate=True`,
+  `candidate6_diffik_residual_scale_rad=0.002`, seed966, `num_envs=8`,
+  `max_iterations=3`, `num_steps_per_env=64`, eval steps `580`.
+- This is still a fixed-contract tiny smoke. It is not dataset generation, not
+  action-teacher data, not large PPO/RL scale-up, and not RoArm deployment.
+- The run wrote checkpoints under
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_runs/cube10cm_tap_rl_candidate6_diffik_residual_success_terminate_ppo_smoke/seed966_env8_it3/`.
+
+Evidence:
+
+- Training smoke summary line 2 verifies contract violations `0` under
+  `candidate6_diffik_residual_joint`, `tap_success_terminate=True`, residual
+  scale `0.002`, previous-target-base, and near-face target path.
+- Training smoke summary line 5 reports training ran and checkpoint exists.
+- Training smoke summary line 6 reports post-eval `finite=True`,
+  `tap_success_max=1.0`, `contact_seen_max=1.0`, `reaction_seen_max=1.0`,
+  `overshoot_max=0.0`, `candidate6_active_rate_max=1.0`,
+  `candidate6_numeric_ok_rate_min=1.0`, `candidate6_step_clip_rate_max=0.0`,
+  `candidate6_residual_abs_max_max=0.00041367902304045856`,
+  `lead_limit_rate_max=0.0`, and `joint_delta_cap_rate_max=0.0`.
+- Training smoke summary line 7 reports `training_smoke_pass=True` and
+  `policy_task_pass=True`, while preserving
+  `large_dataset_rl_roarm_unblocked=NO` and `action_teacher_dataset=NO`.
+- Reloaded-checkpoint posthoc summary line 5 verifies `checkpoint_exists=True`
+  and line 6 repeats loaded-policy PASS metrics from `model_2.pt`:
+  `tap_success_max=1.0`, `contact_seen_max=1.0`, `reaction_seen_max=1.0`,
+  `overshoot_max=0.0`, `candidate6_active_rate_max=1.0`,
+  `candidate6_numeric_ok_rate_min=1.0`, and residual max
+  `0.00041367902304045856`.
+- Audit line 7 records verdict
+  `CANDIDATE6_RESIDUAL_SUCCESS_TERMINATE_TINY_PPO_SMOKE_PASS`.
+
+Implication:
+
+- The residual action-path branch is now a real tiny PPO smoke pass, not just a
+  zero-policy bridge preflight. PPO can train for a minimal smoke without
+  breaking the Candidate6 base contract.
+- This still does not justify large PPO/RL, dataset generation, action-teacher
+  dataset claims, or RoArm deployment. The result is fixed geometry, one seed,
+  and small env scale.
+- The next valid research step is fixed-contract promotion validation across
+  independent reset seeds and small env-scale settings under the same residual
+  action-path contract.
+
+Sources:
+
+- `roarm_rl/roarm_cube_push_env.py`
+- `roarm_rl/train_cube_tap10cm_ppo_smoke.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_diffik_residual_success_terminate_ppo_smoke_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_diffik_residual_success_terminate_ppo_smoke_summary.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_diffik_residual_success_terminate_ppo_smoke_posthoc_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_diffik_residual_success_terminate_ppo_smoke_posthoc_summary.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_diffik_residual_success_terminate_ppo_smoke_audit_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_runs/cube10cm_tap_rl_candidate6_diffik_residual_success_terminate_ppo_smoke/seed966_env8_it3/model_2.pt`
+
+## D211 - Candidate6 residual success-terminate promotion validation PASS
+
+Current State:
+
+- Promoted the D210 `model_2.pt` only through fixed-contract loaded-checkpoint
+  evals. No training was run during promotion validation.
+- The validation changed only reset seed and small env scale:
+  seeds `967`, `968`, and `969` at `num_envs=8`, plus seed966 at
+  `num_envs=16`.
+- Geometry, contact proxy, target path, controller mode, success termination,
+  residual scale, episode/eval length, and checkpoint stayed fixed.
+- This is still not dataset generation, not action-teacher data, not VLA, not
+  RoArm deployment, and not a raw joint-delta result.
+
+Evidence:
+
+- Promotion seed967/968/969 summary line 2 verifies the same contract for each
+  run: `rl_action_mode=candidate6_diffik_residual_joint`,
+  `tap_success_terminate=True`, previous-target-base, near-face target path,
+  residual scale `0.002`, teacher blend `0.0`, and contract violations `0`.
+- Promotion seed967/968/969 summary line 6 reports loaded-policy PASS metrics
+  for each seed: `tap_success_max=1.0`, `contact_seen_max=1.0`,
+  `reaction_seen_max=1.0`, `overshoot_max=0.0`,
+  `candidate6_active_rate_max=1.0`, `candidate6_numeric_ok_rate_min=1.0`,
+  `candidate6_residual_abs_max_max=0.00041367902304045856`,
+  `lead_limit_rate_max=0.0`, and `joint_delta_cap_rate_max=0.0`.
+- Promotion seed967/968/969 summary line 7 reports
+  `policy_task_pass=True`, while preserving
+  `large_dataset_rl_roarm_unblocked=NO` and `action_teacher_dataset=NO`.
+- Promotion env16 summary line 2 verifies the same contract at
+  `num_envs=16`, contract violations `0`.
+- Promotion env16 summary line 6 reports loaded-policy PASS metrics:
+  `tap_success_max=1.0`, `contact_seen_max=1.0`, `reaction_seen_max=1.0`,
+  `overshoot_max=0.0`, `candidate6_active_rate_max=1.0`,
+  `candidate6_numeric_ok_rate_min=1.0`,
+  `candidate6_residual_abs_max_max=0.0004136791976634413`,
+  `lead_limit_rate_max=0.0`, and `joint_delta_cap_rate_max=0.0`.
+- Audit line 7 records verdict
+  `CANDIDATE6_RESIDUAL_SUCCESS_TERMINATE_PROMOTION_VALIDATION_PASS`.
+
+Implication:
+
+- The D210 tiny PPO checkpoint is promoted within the fixed Candidate6 residual
+  action-path contract: it survives independent seed evals and a small env-scale
+  eval without losing strict tap/contact/reaction success.
+- This means the next research branch should be a controlled residual PPO
+  learning ladder under the same action-path contract.
+- Raw joint-delta scale-up remains the wrong branch. Large dataset generation,
+  action-teacher dataset claims, VLA, and RoArm deployment remain blocked until
+  longer policy-quality and reproducibility gates pass.
+
+Sources:
+
+- `roarm_rl/roarm_cube_push_env.py`
+- `roarm_rl/train_cube_tap10cm_ppo_smoke.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_diffik_residual_success_terminate_promotion_seed967_summary.out:1-7`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_diffik_residual_success_terminate_promotion_seed968_summary.out:1-7`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_diffik_residual_success_terminate_promotion_seed969_summary.out:1-7`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_diffik_residual_success_terminate_promotion_env16_summary.out:1-7`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_diffik_residual_success_terminate_promotion_validation_audit_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_runs/cube10cm_tap_rl_candidate6_diffik_residual_success_terminate_ppo_smoke/seed966_env8_it3/model_2.pt`
+
+## D212 - Candidate6 residual PPO learning ladder PASS through 1.024M
+
+Current State:
+
+- Ran the controlled Candidate6 residual PPO learning ladder under the same
+  fixed contract as D211: `rl_action_mode=candidate6_diffik_residual_joint`,
+  `tap_success_terminate=True`, residual scale `0.002rad`, previous-target-base,
+  near-face target path, AABB contact, hand TCP proxy, no teacher blend.
+- This was local RTX4090/cuda:0 only. No SSH/B200, no Track A, no dataset
+  generation, no action-teacher data, and no robot/RoArm deployment.
+- Added the runner-only `--ppo_init_noise_std` override because L1 with the
+  default PPO noise `0.8` degraded the base pass.
+
+Evidence:
+
+- L1 default-noise run used `16 * 64 * 20 = 20,480` steps. It completed, but
+  post-eval line 6 dropped to `tap_success_max=0.75`,
+  `contact_seen_max=0.75`, `reaction_seen_max=0.75`; TensorBoard
+  `Train/mean_reward` fell `1.41705441 -> 0.120316416` and residual max stayed
+  near the `0.002rad` scale. This is a health-warning case, not the promoted
+  branch.
+- L1b with `--ppo_init_noise_std 0.2` used the same `20,480` steps. Summary
+  line 7 PASSed post-eval success/contact/reaction `1.0/1.0/1.0`, overshoot
+  `0.0`, lead-limit rate `0.0`, joint-delta cap rate `0.0`, residual max
+  `0.00033067120239138603`; TensorBoard reward stayed
+  `1.81253302 -> 1.8506515`.
+- L2 used `32 * 64 * 50 = 102,400` steps with `init_noise_std=0.2`. Summary
+  line 7 PASSed post-eval success/contact/reaction `1.0/1.0/1.0`, overshoot
+  `0.0`, lead-limit rate `0.0`, joint-delta cap rate `0.0`, residual max
+  `0.00034333037910982966`; TensorBoard reward improved
+  `1.80665839 -> 1.96147859`.
+- L3 used `32 * 64 * 500 = 1,024,000` steps with `init_noise_std=0.2`.
+  Summary line 7 PASSed post-eval success/contact/reaction `1.0/1.0/1.0`,
+  overshoot `0.0`, lead-limit rate `0.0`, joint-delta cap rate `0.0`,
+  residual max `0.0006555510917678475`; TensorBoard reward ran
+  `1.81298292 -> 1.95703006` with max `2.10515165`, policy noise std
+  `0.19977969 -> 0.06192378`, residual max
+  `0.000659053 -> 0.000282646`, and overshoot/lead/cap all stayed `0`.
+- L3 checkpoint exists at
+  `ppo_runs/cube10cm_tap_rl_candidate6_residual_l3_noise02_1m/seed973_env32_it500/model_499.pt`.
+
+Implication:
+
+- The correct pass route is not raw joint-delta PPO. It is PPO on the
+  Candidate6 DiffIK residual action path with a lower initial exploration noise.
+- The learning branch has now passed a 1.024M-step single-seed ladder, so the
+  next research step is checkpoint promotion/reproducibility validation for
+  `model_499.pt` across independent reset seeds and small env-scale settings.
+- Large dataset generation, action-teacher dataset claims, VLA, and RoArm
+  deployment remain blocked until that checkpoint validation and the next
+  quality-tier gates pass.
+
+Sources:
+
+- `roarm_rl/roarm_cube_push_env.py`
+- `roarm_rl/train_cube_tap10cm_ppo_smoke.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_residual_l1_20k_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_residual_l1b_noise02_20k_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_residual_l2_noise02_102k_summary.out:1-9`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_residual_l3_noise02_1m_summary.out:1-9`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_runs/cube10cm_tap_rl_candidate6_residual_l3_noise02_1m/seed973_env32_it500/model_499.pt`
+
+## D213 - L3 model_499 loaded-checkpoint promotion validation is partial, not strict PASS
+
+Current State:
+
+- Ran loaded-checkpoint promotion validation for the D212 L3
+  `model_499.pt`.
+- No training was run: every command used `--max_iterations 0` and
+  `--load_checkpoint`.
+- The contract stayed fixed: `rl_action_mode=candidate6_diffik_residual_joint`,
+  `tap_success_terminate=True`, residual scale `0.002`, previous-target-base,
+  near-face target path, AABB contact, hand TCP proxy, and PPO
+  `init_noise_std=0.2`.
+- Local RTX4090/cuda:0 only. No SSH/B200, no Track A, no dataset generation,
+  no action-teacher data, and no RoArm deployment.
+
+Evidence:
+
+- Seeds `974`, `975`, and `976` at `num_envs=32` all reported line 3 contract
+  violations `0`.
+- Those three seed summaries all reported line 7 loaded-policy eval with
+  success/contact/reaction `0.90625/0.90625/0.90625`, overshoot `0.0`,
+  lead-limit rate `0.0`, joint-delta cap rate `0.0`, and residual max
+  `0.0006555510917678475`.
+- Env-scale seed `977` at `num_envs=64` reported line 3 contract violations
+  `0`, but line 7 loaded-policy success/contact/reaction dropped to
+  `0.859375/0.859375/0.859375`; overshoot, lead-limit, and joint-delta cap
+  still stayed `0.0`, with residual max `0.0006555506261065602`.
+- Line 4 zero-policy pre-eval remained strict success `1.0` in these runs,
+  so the learned L3 residual is likely degrading a subset of envs relative to
+  the Candidate6 base.
+- The script line 8 still reports `policy_task_pass=True` because its current
+  criterion is `tap_success_max > 0.0`; this is weaker than the required
+  all-env checkpoint promotion criterion and should not be read as strict
+  promotion.
+
+Implication:
+
+- L3 `model_499.pt` remains a single-run learning-ladder PASS, but its
+  loaded-checkpoint promotion validation is partial and not strict PASS.
+- This blocks large PPO/data/VLA/RoArm claims from this checkpoint.
+- The next research step should be checkpoint selection or residual
+  regularization: compare earlier checkpoints such as L2 `model_49.pt` or
+  mid-L3 checkpoints under the same loaded-checkpoint promotion gate, and only
+  then decide whether to continue training with stronger residual/action
+  regularization.
+
+Sources:
+
+- `roarm_rl/train_cube_tap10cm_ppo_smoke.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_residual_l3_promotion_seed974_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_residual_l3_promotion_seed975_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_residual_l3_promotion_seed976_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_residual_l3_promotion_env64_seed977_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_runs/cube10cm_tap_rl_candidate6_residual_l3_noise02_1m/seed973_env32_it500/model_499.pt`
+
+## D214 - Cube position randomization exposes Candidate6 robustness gap; residual L1 does not recover it
+
+Current State:
+
+- Added default-off cube position randomization to
+  `roarm_rl/train_cube_tap10cm_ppo_smoke.py`.
+- The fixed contract is preserved when randomization extents are zero: seed982
+  line 3 reports cube x/y ranges `[0.24, 0.24]` and `[0.0, 0.0]`, while
+  line 4 reports zero-policy success/contact/reaction
+  `1.0/1.0/1.0` with overshoot `0.0`.
+- Randomization creates the needed non-saturated robustness problem:
+  xy +/-3cm seed978 line 4 drops to success/contact/reaction
+  `0.359375/0.359375/0.359375` with overshoot `0.046875`;
+  xy +/-1cm seed979 line 4 drops to `0.109375/0.109375/0.109375`
+  with overshoot `0.015625`.
+- A small randomized residual PPO L1 at xy +/-1cm
+  (`32*64*20=40,960` steps, seed983) did not improve the problem. Line 4
+  base pre-eval was `0.125/0.125/0.125`; line 7 post-eval was only
+  `0.0625/0.0625/0.0625` with residual max `0.00031939358450472355`;
+  line 8 reports `training_smoke_pass=False` and `policy_task_pass=False`.
+- Added reset IK metrics to the tap env log. xy +/-1cm resetmetric seed985
+  line 4 reports `ik_reset_rate_min=1.0`, `ik_reset_err_mm_max=1.316048622`,
+  Candidate6 active/numeric `1.0/1.0`, but success/contact/reaction still
+  `0.109375/0.109375/0.109375`.
+
+Implication:
+
+- The randomization branch is the correct research direction because the fixed
+  task was saturated by the Candidate6 base controller.
+- The immediate failure is not reset IK, numeric DiffIK activation, lead-limit,
+  or joint-delta cap. It is Candidate6 contact/trajectory robustness under
+  randomized cube poses.
+- Do not scale PPO, generate datasets, claim action-teacher data, run VLA, or
+  attempt RoArm deployment from this state.
+- The next pass route is a controller-side randomized-robustness candidate
+  before larger PPO: inspect contact by cube pose / face gap / tool-frame
+  geometry, then adjust the cube-relative trajectory/contact approach so the
+  base manifold is not catastrophically brittle. PPO should resume only after
+  the randomized base screen is no longer near zero.
+
+Sources:
+
+- `roarm_rl/train_cube_tap10cm_ppo_smoke.py`
+- `roarm_rl/roarm_cube_push_env.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_fixed_base_screen_seed982_summary.out:1-9`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_random_xy3cm_base_screen_seed978_summary.out:1-9`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_random_xy1cm_base_screen_seed979_summary.out:1-9`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_random_xy1cm_residual_l1_40k_seed983_summary.out:1-9`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_random_xy1cm_base_screen_resetmetric_seed985_summary.out:1-9`
+
+## D215 - Candidate7 current-pose/event metrics correct randomized base readout; joint-residual PPO remains harmful
+
+Current State:
+
+- Inspected Candidate6 target generation instead of adding another audit script.
+  The path was not hard-coded to absolute `0.25,0.0`; the base target used
+  `_cube_start_w`, which is written from the randomized reset pose.
+- Added default-off `candidate6_diffik_cube_reference_mode` with
+  `start_pose` as the default and `current_pose` as the opt-in Candidate7 mode.
+  Also added pending success-event logging so `tap_success_terminate=True`
+  asynchronous resets are not underreported by the old per-step max metric.
+- Current-pose fixed seed986 preserved the fixed pass: success/contact/reaction
+  `1.0/1.0/1.0`, overshoot `0.0`, contract violations `0`.
+- Corrected event metrics reverse the D214 near-zero interpretation. xy +/-1cm
+  current-pose seed998 reports `success_event_count=261`,
+  `success_episode_rate=0.9775280898876404`, and overshoot `0.015625`.
+  xy +/-3cm seed999 reports `success_event_count=429`,
+  `success_episode_rate=0.7210084033613445`, and overshoot `0.0625`.
+- Three xy +/-3cm joint-residual PPO L1 attempts failed the same-run
+  base-relative gate:
+  seed1000, residual scale `0.002`, noise `0.2`, improved success only from
+  `0.7047619048` to `0.7264705882` while overshoot jumped to `0.53125`;
+  seed1001, residual scale `0.001`, noise `0.1`, dropped success from
+  `0.7103658537` to `0.6833855799` and overshoot rose to `0.5`;
+  reward-safe seed1002 (`tap_transient_disp_reward_scale=10`,
+  `tap_overshoot_penalty_scale=80`, `action_penalty_scale=0.05`) still dropped
+  success from `0.7037037037` to `0.6623376623` and worsened overshoot from
+  `0.09375` to `0.34375`.
+- A deterministic current-pose corner check at `x=0.21,y=-0.03` seed1010
+  PASSed base-only with `success_episode_rate=1.0`, `tap_success_max=1.0`, and
+  overshoot `0.0`. Full corner grid was stopped because each full-horizon
+  screen was too slow for the value gained.
+
+Implication:
+
+- D214's randomization direction was correct, but the old summary metric was
+  misleading under success termination. The useful robustness problem is xy
+  +/-3cm with a base around `0.72` episode success, not xy +/-1cm near zero.
+- Larger PPO is not justified from the current joint-residual action space. It
+  either damages success, creates overshoot, or both.
+- The next pass route is not L2 and not more reward tweaking. Use a narrower
+  cube-relative target/waypoint residual or controller robustness candidate, then
+  rerun only L1 and require post-training success >= same-run base and overshoot
+  <= same-run base before scaling.
+- Large dataset generation, action-teacher dataset claims, VLA, and RoArm remain
+  blocked.
+
+Sources:
+
+- `roarm_rl/roarm_cube_push_env.py`
+- `roarm_rl/train_cube_tap10cm_ppo_smoke.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate7_currentpose_fixed_base_screen_seed986_summary.out:1-9`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate7_currentpose_random_xy1cm_base_screen_eventpending_seed998_summary.out:1-9`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate7_currentpose_random_xy3cm_base_screen_eventpending_seed999_summary.out:1-9`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate7_currentpose_random_xy3cm_residual_l1_40k_seed1000_summary.out:1-9`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate7_currentpose_random_xy3cm_residual_l1_safe_40k_seed1001_summary.out:1-9`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate7_currentpose_random_xy3cm_residual_l1_reward_safe_40k_seed1002_summary.out:1-9`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate7_currentpose_corner_x021_yneg003_base_seed1010_summary.out:1-9`

@@ -1,0 +1,8 @@
+candidate6_pilot_ppo_smoke_audit=v1 max_iterations=3 num_envs=8 seed=966 device=cuda:0
+contract cube_xy_m=[0.24, 0.0] push_dir=[1.0, 0.0] proxy=link5_collision_aabb policy_target_disp_m=0.006 step_clip_rad=0.01 lead_limit_rad=0.06 teacher_blend=0.0 violations=0
+zero_policy_pre_eval finite=True tap_success_max=0.0 contact_seen_max=0.0 reaction_seen_max=0.0 overshoot_max=0.0 reward_mean_per_step=0.00017694519543699148
+initial_ppo_policy_eval enabled=True finite=True tap_success_max=0.0 contact_seen_max=0.0 reaction_seen_max=0.0 overshoot_max=0.0
+training ran=True checkpoint_exists=True log_dir=/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_runs/cube10cm_tap_rl_candidate6_pilot_ppo_smoke/seed966_env8_it3
+post_eval enabled=True finite=True tap_success_max=0.0 contact_seen_max=0.0 reaction_seen_max=0.0 overshoot_max=0.0 reward_mean_per_step=0.2922730365270299
+verdict preflight_pass=True training_smoke_pass=True policy_task_pass=False large_dataset_rl_roarm_unblocked=NO action_teacher_dataset=NO
+outputs summary_json=claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_pilot_ppo_smoke_summary.json summary_out=claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_pilot_ppo_smoke_summary.out
