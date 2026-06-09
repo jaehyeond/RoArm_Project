@@ -69,12 +69,19 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--action_scale", type=float, default=0.050)
     parser.add_argument(
         "--rl_action_mode",
-        choices=("joint_delta", "candidate6_diffik_residual_joint"),
+        choices=(
+            "joint_delta",
+            "candidate6_diffik_residual_joint",
+            "candidate8_diffik_target_residual",
+        ),
         default="joint_delta",
     )
     parser.add_argument("--candidate6_diffik_push_steps", type=int, default=580)
     parser.add_argument("--candidate6_diffik_residual_scale_rad", type=float, default=0.002)
     parser.add_argument("--candidate6_diffik_lambda", type=float, default=0.010)
+    parser.add_argument("--candidate8_diffik_target_residual_forward_m", type=float, default=0.004)
+    parser.add_argument("--candidate8_diffik_target_residual_lateral_m", type=float, default=0.012)
+    parser.add_argument("--candidate8_diffik_target_residual_height_m", type=float, default=0.004)
     parser.add_argument("--tap_success_terminate", action="store_true")
     parser.add_argument(
         "--candidate6_diffik_no_hold_after_tap_success",
@@ -294,6 +301,10 @@ def _rollout(
         "candidate6_diffik_step_clip_rate_max": 0.0,
         "candidate6_diffik_residual_abs_max_max": 0.0,
         "candidate6_diffik_hold_success_rate_max": 0.0,
+        "candidate8_diffik_target_residual_abs_max_max": 0.0,
+        "candidate8_diffik_target_residual_forward_abs_max": 0.0,
+        "candidate8_diffik_target_residual_lateral_abs_max": 0.0,
+        "candidate8_diffik_target_residual_height_abs_max": 0.0,
     }
 
     with torch.inference_mode():
@@ -439,6 +450,26 @@ def _rollout(
                 "candidate6_diffik_hold_success_rate_max",
                 _maybe_float(log.get("cube_push_candidate6_diffik_hold_success_rate")),
             )
+            _update_max(
+                metrics,
+                "candidate8_diffik_target_residual_abs_max_max",
+                _maybe_float(log.get("cube_push_candidate8_diffik_target_residual_abs_max")),
+            )
+            _update_max(
+                metrics,
+                "candidate8_diffik_target_residual_forward_abs_max",
+                _maybe_float(log.get("cube_push_candidate8_diffik_target_residual_forward_abs")),
+            )
+            _update_max(
+                metrics,
+                "candidate8_diffik_target_residual_lateral_abs_max",
+                _maybe_float(log.get("cube_push_candidate8_diffik_target_residual_lateral_abs")),
+            )
+            _update_max(
+                metrics,
+                "candidate8_diffik_target_residual_height_abs_max",
+                _maybe_float(log.get("cube_push_candidate8_diffik_target_residual_height_abs")),
+            )
 
     metrics["reward_mean_per_step"] = (
         float(metrics["reward_mean_sum"]) / max(1, int(metrics["steps_executed"]))
@@ -462,6 +493,17 @@ def _has_task_success(metrics: dict[str, Any] | None) -> bool:
         float(metrics.get("tap_success_max") or 0.0) > 0.0
         or float(metrics.get("tap_success_event_count") or 0.0) > 0.0
     )
+
+
+def _success_episode_metric(metrics: dict[str, Any] | None) -> float | None:
+    if not metrics:
+        return None
+    value = metrics.get("tap_success_episode_rate")
+    if value is None:
+        value = metrics.get("tap_success_event_rate_per_env")
+    if value is None:
+        return None
+    return float(value)
 
 
 def _apply_candidate6_contract(cfg: Any, args: argparse.Namespace) -> dict[str, Any]:
@@ -503,6 +545,8 @@ def _apply_candidate6_contract(cfg: Any, args: argparse.Namespace) -> dict[str, 
     cfg.scripted_teacher_goal_push_m = float(args.policy_target_disp_m)
 
     cfg.rl_action_mode = str(args.rl_action_mode)
+    if cfg.rl_action_mode == "candidate8_diffik_target_residual":
+        cfg.action_space = 3
     cfg.candidate6_diffik_goal_push_m = float(args.policy_target_disp_m)
     cfg.candidate6_diffik_push_steps = int(args.candidate6_diffik_push_steps)
     cfg.candidate6_diffik_step_clip_rad = float(args.step_clip_rad)
@@ -512,6 +556,12 @@ def _apply_candidate6_contract(cfg: Any, args: argparse.Namespace) -> dict[str, 
     cfg.candidate6_diffik_target_base_mode = str(args.candidate6_diffik_target_base_mode)
     cfg.candidate6_diffik_target_path_mode = str(args.candidate6_diffik_target_path_mode)
     cfg.candidate6_diffik_cube_reference_mode = str(args.candidate6_diffik_cube_reference_mode)
+    cfg.candidate8_diffik_target_residual_forward_m = float(args.candidate8_diffik_target_residual_forward_m)
+    cfg.candidate8_diffik_target_residual_lateral_m = float(args.candidate8_diffik_target_residual_lateral_m)
+    cfg.candidate8_diffik_target_residual_height_m = float(args.candidate8_diffik_target_residual_height_m)
+    cfg.candidate8_diffik_target_residual_zero_after_contact = False
+    cfg.candidate8_diffik_target_residual_zero_after_reaction = False
+    cfg.candidate8_diffik_target_residual_zero_after_disp_m = 0.0
     cfg.joint_target_lead_limit_rad = float(args.joint_target_lead_limit_rad)
     cfg.action_scale = float(args.action_scale)
     if int(args.num_envs) < 8:
@@ -534,6 +584,7 @@ def _apply_candidate6_contract(cfg: Any, args: argparse.Namespace) -> dict[str, 
         "episode_length_s": cfg.episode_length_s,
         "precontact_clearance_m": cfg.ik_precontact_clearance_m,
         "rl_action_mode": cfg.rl_action_mode,
+        "policy_action_space": int(cfg.action_space),
         "step_clip_rad": cfg.candidate6_diffik_step_clip_rad,
         "candidate6_diffik_goal_push_m": cfg.candidate6_diffik_goal_push_m,
         "candidate6_diffik_push_steps": cfg.candidate6_diffik_push_steps,
@@ -543,6 +594,9 @@ def _apply_candidate6_contract(cfg: Any, args: argparse.Namespace) -> dict[str, 
         "candidate6_diffik_target_base_mode": cfg.candidate6_diffik_target_base_mode,
         "candidate6_diffik_target_path_mode": cfg.candidate6_diffik_target_path_mode,
         "candidate6_diffik_cube_reference_mode": cfg.candidate6_diffik_cube_reference_mode,
+        "candidate8_diffik_target_residual_forward_m": cfg.candidate8_diffik_target_residual_forward_m,
+        "candidate8_diffik_target_residual_lateral_m": cfg.candidate8_diffik_target_residual_lateral_m,
+        "candidate8_diffik_target_residual_height_m": cfg.candidate8_diffik_target_residual_height_m,
         "joint_target_lead_limit_rad": cfg.joint_target_lead_limit_rad,
         "action_scale": cfg.action_scale,
         "scripted_teacher_blend": cfg.scripted_teacher_blend,
@@ -575,6 +629,7 @@ def _contract_violations(contract: dict[str, Any], args: argparse.Namespace) -> 
         "joint_target_lead_limit_rad": 0.060,
         "scripted_teacher_blend": 0.0,
         "rl_action_mode": str(args.rl_action_mode),
+        "policy_action_space": 3 if str(args.rl_action_mode) == "candidate8_diffik_target_residual" else 6,
         "candidate6_diffik_goal_push_m": float(args.policy_target_disp_m),
         "candidate6_diffik_push_steps": int(args.candidate6_diffik_push_steps),
         "candidate6_diffik_residual_scale_rad": float(args.candidate6_diffik_residual_scale_rad),
@@ -582,6 +637,15 @@ def _contract_violations(contract: dict[str, Any], args: argparse.Namespace) -> 
         "candidate6_diffik_target_base_mode": str(args.candidate6_diffik_target_base_mode),
         "candidate6_diffik_target_path_mode": str(args.candidate6_diffik_target_path_mode),
         "candidate6_diffik_cube_reference_mode": str(args.candidate6_diffik_cube_reference_mode),
+        "candidate8_diffik_target_residual_forward_m": float(
+            args.candidate8_diffik_target_residual_forward_m
+        ),
+        "candidate8_diffik_target_residual_lateral_m": float(
+            args.candidate8_diffik_target_residual_lateral_m
+        ),
+        "candidate8_diffik_target_residual_height_m": float(
+            args.candidate8_diffik_target_residual_height_m
+        ),
     }
     violations: list[str] = []
     for key, expected_value in expected.items():
@@ -605,6 +669,7 @@ def _write_summary(summary: dict[str, Any], summary_json: Path, summary_out: Pat
     pre = summary.get("pre_eval") or {}
     initial = summary.get("initial_policy_eval") or {}
     post = summary.get("post_eval") or {}
+    candidate8_base_relative = summary.get("candidate8_base_relative") or {}
     lines = [
         "candidate6_pilot_ppo_smoke_audit=v2 "
         f"max_iterations={summary['max_iterations']} "
@@ -620,6 +685,7 @@ def _write_summary(summary: dict[str, Any], summary_json: Path, summary_out: Pat
         f"push_dir={summary['contract']['fixed_push_dir']} "
         f"proxy={summary['contract']['tap_contact_proxy_mode']} "
         f"rl_action_mode={summary['contract']['rl_action_mode']} "
+        f"policy_action_space={summary['contract']['policy_action_space']} "
         f"tap_success_terminate={summary['contract']['tap_success_terminate']} "
         f"tap_transient_disp_reward_scale={summary['contract']['tap_transient_disp_reward_scale']} "
         f"tap_overshoot_penalty_scale={summary['contract']['tap_overshoot_penalty_scale']} "
@@ -632,6 +698,9 @@ def _write_summary(summary: dict[str, Any], summary_json: Path, summary_out: Pat
         f"target_base_mode={summary['contract']['candidate6_diffik_target_base_mode']} "
         f"target_path_mode={summary['contract']['candidate6_diffik_target_path_mode']} "
         f"cube_reference_mode={summary['contract']['candidate6_diffik_cube_reference_mode']} "
+        f"candidate8_forward_m={summary['contract']['candidate8_diffik_target_residual_forward_m']} "
+        f"candidate8_lateral_m={summary['contract']['candidate8_diffik_target_residual_lateral_m']} "
+        f"candidate8_height_m={summary['contract']['candidate8_diffik_target_residual_height_m']} "
         f"teacher_blend={summary['contract']['scripted_teacher_blend']} "
         f"violations={len(summary['contract_violations'])}",
         "zero_policy_pre_eval "
@@ -693,6 +762,10 @@ def _write_summary(summary: dict[str, Any], summary_json: Path, summary_out: Pat
         f"candidate6_numeric_ok_rate_min={post.get('candidate6_diffik_numeric_ok_rate_min')} "
         f"candidate6_step_clip_rate_max={post.get('candidate6_diffik_step_clip_rate_max')} "
         f"candidate6_residual_abs_max_max={post.get('candidate6_diffik_residual_abs_max_max')} "
+        f"candidate8_target_residual_abs_max_max={post.get('candidate8_diffik_target_residual_abs_max_max')} "
+        f"candidate8_forward_abs_max={post.get('candidate8_diffik_target_residual_forward_abs_max')} "
+        f"candidate8_lateral_abs_max={post.get('candidate8_diffik_target_residual_lateral_abs_max')} "
+        f"candidate8_height_abs_max={post.get('candidate8_diffik_target_residual_height_abs_max')} "
         f"candidate6_hold_success_rate_max={post.get('candidate6_diffik_hold_success_rate_max')}",
         "verdict "
         f"preflight_pass={summary['preflight_pass']} "
@@ -702,6 +775,21 @@ def _write_summary(summary: dict[str, Any], summary_json: Path, summary_out: Pat
         f"policy_task_pass={summary['policy_task_pass']} "
         "large_dataset_rl_roarm_unblocked=NO "
         "action_teacher_dataset=NO",
+        "candidate8_base_relative "
+        f"enabled={bool(candidate8_base_relative)} "
+        f"pre_success_episode_rate={candidate8_base_relative.get('pre_success_episode_rate')} "
+        f"post_success_episode_rate={candidate8_base_relative.get('post_success_episode_rate')} "
+        f"success_episode_delta={candidate8_base_relative.get('success_episode_delta')} "
+        f"pre_overshoot_max={candidate8_base_relative.get('pre_overshoot_max')} "
+        f"post_overshoot_max={candidate8_base_relative.get('post_overshoot_max')} "
+        f"overshoot_delta={candidate8_base_relative.get('overshoot_delta')} "
+        f"target_residual_abs_max_max={candidate8_base_relative.get('target_residual_abs_max_max')} "
+        f"target_residual_forward_abs_max={candidate8_base_relative.get('target_residual_forward_abs_max')} "
+        f"target_residual_lateral_abs_max={candidate8_base_relative.get('target_residual_lateral_abs_max')} "
+        f"target_residual_height_abs_max={candidate8_base_relative.get('target_residual_height_abs_max')} "
+        f"signal_seen={candidate8_base_relative.get('signal_seen')} "
+        f"l1_health_pass={candidate8_base_relative.get('l1_health_pass')} "
+        f"l2_scale_candidate={candidate8_base_relative.get('l2_scale_candidate')}",
         f"outputs summary_json={summary_json} summary_out={summary_out}",
     ]
     summary_out.write_text("\n".join(lines) + "\n")
@@ -856,7 +944,10 @@ def main() -> None:
 
         checkpoint_exists = bool(checkpoint_path and checkpoint_path.exists())
         bridge_preflight_pass = True
-        if str(args.rl_action_mode) == "candidate6_diffik_residual_joint":
+        if str(args.rl_action_mode) in (
+            "candidate6_diffik_residual_joint",
+            "candidate8_diffik_target_residual",
+        ):
             bridge_preflight_pass = bool(
                 float(pre_eval["candidate6_diffik_active_rate_max"]) > 0.0
                 and pre_eval["candidate6_diffik_numeric_ok_rate_min"] is not None
@@ -896,6 +987,59 @@ def main() -> None:
                 and float(post_eval["tap_overshoot_max"]) <= 0.0
             )
 
+        candidate8_base_relative = None
+        if str(args.rl_action_mode) == "candidate8_diffik_target_residual" and post_eval:
+            pre_success = _success_episode_metric(pre_eval)
+            post_success = _success_episode_metric(post_eval)
+            pre_overshoot = float(pre_eval.get("tap_overshoot_max") or 0.0)
+            post_overshoot = float(post_eval.get("tap_overshoot_max") or 0.0)
+            target_residual_abs_max = float(
+                post_eval.get("candidate8_diffik_target_residual_abs_max_max") or 0.0
+            )
+            target_residual_forward_abs_max = float(
+                post_eval.get("candidate8_diffik_target_residual_forward_abs_max") or 0.0
+            )
+            target_residual_lateral_abs_max = float(
+                post_eval.get("candidate8_diffik_target_residual_lateral_abs_max") or 0.0
+            )
+            target_residual_height_abs_max = float(
+                post_eval.get("candidate8_diffik_target_residual_height_abs_max") or 0.0
+            )
+            signal_seen = target_residual_abs_max > 1.0e-6
+            success_delta = (
+                None if pre_success is None or post_success is None else post_success - pre_success
+            )
+            overshoot_delta = post_overshoot - pre_overshoot
+            l1_health_pass = bool(
+                post_eval["reward_finite_all"]
+                and post_eval["obs_finite_all"]
+                and post_eval["action_finite_all"]
+                and signal_seen
+                and success_delta is not None
+                and success_delta >= -0.10
+                and overshoot_delta <= 0.10
+            )
+            l2_scale_candidate = bool(
+                success_delta is not None
+                and success_delta >= 0.0
+                and overshoot_delta <= 0.0
+            )
+            candidate8_base_relative = {
+                "pre_success_episode_rate": pre_success,
+                "post_success_episode_rate": post_success,
+                "success_episode_delta": success_delta,
+                "pre_overshoot_max": pre_overshoot,
+                "post_overshoot_max": post_overshoot,
+                "overshoot_delta": overshoot_delta,
+                "target_residual_abs_max_max": target_residual_abs_max,
+                "target_residual_forward_abs_max": target_residual_forward_abs_max,
+                "target_residual_lateral_abs_max": target_residual_lateral_abs_max,
+                "target_residual_height_abs_max": target_residual_height_abs_max,
+                "signal_seen": signal_seen,
+                "l1_health_pass": l1_health_pass,
+                "l2_scale_candidate": l2_scale_candidate,
+            }
+
         summary = {
             "audit_version": "candidate6_pilot_ppo_smoke_v2",
             "seed": int(args.seed),
@@ -919,6 +1063,7 @@ def main() -> None:
             "preflight_pass": preflight_pass,
             "bridge_preflight_pass": bridge_preflight_pass,
             "zero_policy_task_pass": zero_policy_task_pass,
+            "candidate8_base_relative": candidate8_base_relative,
             "post_eval": post_eval,
             "checkpoint_path": str(checkpoint_path) if checkpoint_path else None,
             "checkpoint_exists": checkpoint_exists,

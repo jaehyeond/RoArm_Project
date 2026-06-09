@@ -1,0 +1,557 @@
+--- git status ---
+On branch master
+Your branch is up to date with 'origin/master'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   START_HERE.md
+	modified:   claudedocs/DECISIONS.md
+	modified:   claudedocs/EXPERIMENT_LEDGER.md
+	modified:   roarm_rl/roarm_cube_push_env.py
+	modified:   roarm_rl/train_cube_tap10cm_ppo_smoke.py
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate7_currentpose_xy3cm_same_seed1011_base_compare_summary.json
+	claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate7_currentpose_xy3cm_same_seed1011_base_compare_summary.out
+	claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate8_target_residual_xy3cm_l1_40k_seed1012_summary.json
+	claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate8_target_residual_xy3cm_l1_40k_seed1012_summary.out
+	claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate8_target_residual_xy3cm_zero_preflight_seed1011_summary.json
+	claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate8_target_residual_xy3cm_zero_preflight_seed1011_summary.out
+	claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate8b_latheight_xy3cm_l1_40k_seed1013_summary.json
+	claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate8b_latheight_xy3cm_l1_40k_seed1013_summary.out
+	claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate9a_zeroaftercontact_xy3cm_l1_40k_seed1013_summary.json
+	claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate9a_zeroaftercontact_xy3cm_l1_40k_seed1013_summary.out
+	claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate9b_rewardsafe_zeroaftercontact_xy3cm_l1_40k_seed1013_summary.json
+	claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate9b_rewardsafe_zeroaftercontact_xy3cm_l1_40k_seed1013_summary.out
+	claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_runs/cube10cm_tap_rl_candidate8_target_residual_xy3cm_l1_40k/
+	claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_runs/cube10cm_tap_rl_candidate8b_latheight_xy3cm_l1_40k/
+	claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_runs/cube10cm_tap_rl_candidate9a_zeroaftercontact_xy3cm_l1_40k/
+	claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_runs/cube10cm_tap_rl_candidate9b_rewardsafe_zeroaftercontact_xy3cm_l1_40k/
+	claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_runs/cube10cm_tap_rl_candidate9c_halfscale_rewardsafe_zeroaftercontact_xy3cm_l1_40k/
+	claudedocs/session_20260610_cube10cm_tap_rl_candidate8_target_residual.md
+
+no changes added to commit (use "git add" and/or "git commit -a") 
+
+
+--- git diff ---
+diff --git a/START_HERE.md b/START_HERE.md
+index 2dc6d46..e6b000c 100644
+--- a/START_HERE.md
++++ b/START_HERE.md
+@@ -1,8 +1,8 @@
+ # START_HERE.md
+ 
+-Last updated: 2026-06-09 KST (B200 disconnected; Track A remains blocked and separate. Active branch is the professor 10cm/0.72kg cube push/tap DiffIK diagnosis. Earlier final-displacement gates failed, and settled-start fixed16 still showed DiffIK clipping/lag, but local DLS feasibility means do not conclude the object is too heavy. The clarified objective is reaction/tap first and final displacement secondary. A local non-GPU reaction gate audit requires reaction evidence plus contact evidence, no posewrite, and no overshoot; it separates reaction PASS from teacher/RL readiness. seed938 is the negative control FAIL (`contact_evidence_rate=0.0`), seed939/seed940 PASS reaction gate but remain `teacher_quality_ready=false`, seed941 randomized 16-env FAILed on contact evidence `0.625`, cap-only seed942 worsened contact evidence to `0.5`, and fixed-y+ seed943 confirmed the y+ bucket is weak (`contact_evidence_rate=0.375`). A local y+ geometry/reach audit shows contact rows average max displacement `0.010986278m`, no-contact rows only `0.000069159m`, and workspace bins are asymmetric (`cube_y0_m<=0` contact `0.625`, `cube_y0_m>0` contact `0.125`, `cube_x0_m<0.25` contact `0.111111`, `cube_x0_m>=0.25` contact `0.714286`). A follow-up y+ trace path/actuator audit shows the target itself moves about `0.020000m` in world y and keeps start-cube side-center z, but final TCP error is mostly vertical (`0.844` contact / `0.859` no-contact z-error fraction) and clip_any remains `1.0` in both traced groups. The approved seed944 fixed-y+ height050 screen is a height-only FAIL: final TCP error improved to `0.022889409m`, but contact evidence fell to `0.0`, reaction was only `0.6875`, and clip remained `0.949198734`; do not use +5cm target height as a data/RL fix. The approved seed945 fixed-y+ good-workspace screen (`x=0.295,y=-0.044`) PASSed reaction/contact (`1.0/1.0`) with no overshoot/posewrite, proving workspace is a real contact discriminator, but `teacher_quality_ready=false` because final TCP error is `0.065514732m` and clip is `1.0`. Added default-preserving `--base_lateral_offset_m`; seed946 good-workspace lateral `-0.020m` PASSed reaction/contact and final 1cm relocation (`final_gate_rate=1.0`, `max_disp_mean_m=0.011251196m`, no overshoot/posewrite), but still `teacher_quality_ready=false` due final TCP error `0.062820967m` and DiffIK clip `1.0`. Added `sim_scripts/cube10cm_push_diffik_probe.py` as the standard 10cm entrypoint; it injects 10cm/0.72kg professor defaults into the shared legacy 3cm-named DiffIK engine while preserving explicit user overrides. Newer detail-trace repeat below supersedes the older no-runtime note; no dataset generation, PPO/RL scale-up, VLA, Track A runtime, 1024/10k, or larger candidate audit is approved from this.)
++Last updated: 2026-06-10 KST (D216 current truth: Candidate8 task-space target residual bridge is implemented and zero-action equals Candidate7 base, but both xy +/-3cm L1 PPO attempts failed by increasing overshoot; do not scale Candidate8 to L2/large PPO as-is. Next route is Candidate9 safety/credit assignment around the same low-dimensional DiffIK residual. B200 disconnected; no SSH/B200/Track A; dataset/VLA/RoArm/action-teacher claims remain blocked.)
+ 
+-2026-06-09 latest randomized robustness state: D215 supersedes D214 for the professor 10cm/0.72kg cube tap RL branch. Candidate6 was not hard-coded to absolute `0.25,0.0`; its base path used reset/start cube pose. Added default-off `candidate6_diffik_cube_reference_mode=current_pose` plus pending success-event metrics so success-termination asynchronous resets no longer underreport randomized success. Current-pose fixed seed986 PASSed (`1.0/1.0/1.0`, overshoot `0.0`). Corrected event metrics show xy +/-1cm base is almost solved, not near-zero: seed998 reports `success_event_count=261`, `success_episode_rate=0.9775280898876404`, overshoot `0.015625`. xy +/-3cm is the useful robustness task: seed999 reports `success_event_count=429`, `success_episode_rate=0.7210084033613445`, overshoot `0.0625`. Three joint-residual PPO L1 attempts under xy +/-3cm all failed the base-relative gate: seed1000 scale `0.002` slightly raised success (`0.7047619048 -> 0.7264705882`) but exploded overshoot to `0.53125`; seed1001 scale `0.001`/noise `0.1` dropped success (`0.7103658537 -> 0.6833855799`) and overshoot became `0.5`; reward-safe seed1002 (`transient=10`, `overshoot_penalty=80`, `action_penalty=0.05`) still dropped success (`0.7037037037 -> 0.6623376623`) and worsened overshoot (`0.09375 -> 0.34375`). One deterministic corner check at `x=0.21,y=-0.03` seed1010 PASSed base-only (`success_episode_rate=1.0`, overshoot `0.0`), so the randomized issue is not a global fixed-coordinate path bug. Current verdict: do not run L2/large PPO from joint-residual. Next pass route is a lower-dimensional cube-relative waypoint/target residual or controller robustness candidate, then PPO only after L1 beats or at least does not degrade the same-run base. Large dataset/VLA/RoArm/action-teacher claims remain NO.
++2026-06-10 latest randomized robustness/action-space state: D216 supersedes D215 for the professor 10cm/0.72kg cube tap RL branch. Implemented default-off `rl_action_mode=candidate8_diffik_target_residual`: a 5+1 DOF-aware low-dimensional task-space residual that changes only the Candidate6/Candidate7 DiffIK TCP target by forward/lateral/height offsets before DiffIK; no orientation residual, and zero action is required to equal the Candidate7 base. Static checks passed (`python3 -m py_compile roarm_rl/roarm_cube_push_env.py roarm_rl/train_cube_tap10cm_ppo_smoke.py`; `git diff --check`). Same-seed zero-policy preflight verified Candidate8 zero equals Candidate7/base at xy +/-3cm seed1011: both summaries report `success_episode_rate=0.7422360248447205`, `overshoot_max=0.125`, and bridge preflight PASS. However, both Candidate8 L1 learning attempts failed the base-relative health gate: default 3D target residual seed1012 changed success `0.7350993377483444 -> 0.6845425867507886` and overshoot `0.0625 -> 0.53125` despite reward increasing; conservative lateral/height-only seed1013 changed success `0.6772151898734177 -> 0.6725352112676056` and overshoot `0.125 -> 0.5`. Verdict: Candidate8 plumbing is valid, but the current reward/action contract lets PPO exploit tiny target residuals for transient reward while increasing overshoot. Do not run L2/large PPO from Candidate8 as-is. Next pass route is Candidate9: keep task-space/DiffIK residual, but add safety/credit assignment before scaling, e.g. overshoot-safe success/reward/termination and residual gating around contact/push phase, then rerun only L1. Large dataset/VLA/RoArm/action-teacher claims remain NO.
+ 
+ 2026-06-09 latest randomized robustness state: D214 supersedes D213 for the professor 10cm/0.72kg cube tap RL branch. Added default-off cube position randomization to the Candidate6 residual PPO smoke runner and kept fixed behavior intact: fixed seed982 line 3 reports zero randomization and line 4 reports zero-policy success/contact/reaction `1.0/1.0/1.0` with overshoot `0.0`. Randomization exposes a real robustness gap: xy +/-3cm seed978 line 4 falls to `0.359375/0.359375/0.359375` with overshoot `0.046875`; xy +/-1cm seed979 line 4 falls to `0.109375/0.109375/0.109375` with overshoot `0.015625`; x-only and y-only +/-1cm screens also fail. A small xy +/-1cm residual PPO L1 (`32*64*20=40,960` steps, seed983) did not recover it: line 4 base pre-eval was `0.125/0.125/0.125`, line 7 post-eval was only `0.0625/0.0625/0.0625`, and line 8 reports `training_smoke_pass=False`, `policy_task_pass=False`. Added reset IK metrics to the tap env log; xy +/-1cm resetmetric seed985 line 4 reports `ik_reset_rate_min=1.0`, `ik_reset_err_mm_max=1.316048622`, Candidate6 active/numeric `1.0/1.0`, but success/contact/reaction still `0.109375/0.109375/0.109375`, so the failure is not reset IK or numeric DiffIK activation. Current verdict: randomization is the right research direction, but blind larger PPO is not. The next pass route is a controller/trajectory robustness candidate for randomized cube poses, then PPO after the base manifold is not catastrophically brittle. Large dataset/VLA/RoArm/action-teacher claims remain NO.
+ 
+diff --git a/claudedocs/DECISIONS.md b/claudedocs/DECISIONS.md
+index db3d9db..4f0e360 100644
+--- a/claudedocs/DECISIONS.md
++++ b/claudedocs/DECISIONS.md
+@@ -12038,3 +12038,54 @@ Sources:
+ - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate7_currentpose_random_xy3cm_residual_l1_safe_40k_seed1001_summary.out:1-9`
+ - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate7_currentpose_random_xy3cm_residual_l1_reward_safe_40k_seed1002_summary.out:1-9`
+ - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate7_currentpose_corner_x021_yneg003_base_seed1010_summary.out:1-9`
++
++## D216 - Candidate8 task-space target residual bridge works, but current reward/action contract exploits overshoot
++
++Current State:
++
++- Implemented default-off `rl_action_mode=candidate8_diffik_target_residual`.
++  It applies a low-dimensional TCP target residual before Candidate6/Candidate7
++  DiffIK: forward, lateral, and height only. It does not expose orientation
++  residuals.
++- The implementation keeps the 5 arm joints plus separate gripper structure in
++  mind: policy does not directly solve the five-joint kinematics; DiffIK still
++  handles the arm target.
++- Same-seed xy +/-3cm zero-policy preflight verified Candidate8 zero action
++  equals the Candidate7/base controller. Candidate8 seed1011 and Candidate7
++  base seed1011 both report `success_episode_rate=0.7422360248447205` and
++  `overshoot_max=0.125`.
++- Default Candidate8 L1 seed1012 failed the base-relative health gate:
++  success changed `0.7350993377483444 -> 0.6845425867507886`, overshoot changed
++  `0.0625 -> 0.53125`, while reward increased
++  `0.08071071922940659 -> 0.10252326592032251`.
++- Conservative Candidate8b L1 seed1013 also failed: forward residual was disabled
++  and lateral/height scales were reduced to `0.006/0.002m`, but success changed
++  `0.6772151898734177 -> 0.6725352112676056` and overshoot changed
++  `0.125 -> 0.5`.
++- Static verification passed: `python3 -m py_compile
++  roarm_rl/roarm_cube_push_env.py roarm_rl/train_cube_tap10cm_ppo_smoke.py` and
++  `git diff --check`.
++
++Implication:
++
++- Candidate8 is a valid action-path bridge, but not a scaling-ready PPO
++  contract.
++- The failure is not "more PPO steps needed." The current objective lets PPO find
++  tiny target residuals that improve transient reward while worsening overshoot
++  and same-run base-relative quality.
++- Do not run Candidate8 L2/large PPO as-is.
++- Do not claim dataset, action-teacher, VLA, or RoArm readiness from Candidate8.
++- Next pass route is Candidate9: keep low-dimensional DiffIK target residual, but
++  add safety/credit assignment first, such as overshoot-safe reward/termination
++  and residual phase/contact gating. Rerun L1 only; L2 requires success not below
++  same-run base and overshoot not worse than same-run base.
++
++Sources:
++
++- `roarm_rl/roarm_cube_push_env.py`
++- `roarm_rl/train_cube_tap10cm_ppo_smoke.py`
++- `claudedocs/session_20260610_cube10cm_tap_rl_candidate8_target_residual.md`
++- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate8_target_residual_xy3cm_zero_preflight_seed1011_summary.out:1-9`
++- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate7_currentpose_xy3cm_same_seed1011_base_compare_summary.out:1-9`
++- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate8_target_residual_xy3cm_l1_40k_seed1012_summary.out:1-10`
++- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate8b_latheight_xy3cm_l1_40k_seed1013_summary.out:1-10`
+diff --git a/claudedocs/EXPERIMENT_LEDGER.md b/claudedocs/EXPERIMENT_LEDGER.md
+index 50aa104..9133e6c 100644
+--- a/claudedocs/EXPERIMENT_LEDGER.md
++++ b/claudedocs/EXPERIMENT_LEDGER.md
+@@ -255,3 +255,4 @@ Recommended next experiment:
+ | 2026-06-09 (Professor cube10cm tap RL L3 model_499 promotion validation) | local RTX4090/cuda:0 loaded-checkpoint evals, no training | Validate the L3 `model_499.pt` checkpoint across independent seeds and env scale before any larger PPO/data/RoArm claim | Loaded `model_499.pt` with `max_iterations=0`; no training, no dataset generation, no robot control, no SSH/B200, and no Track A. Seeds 974/975/976 at `num_envs=32` kept the fixed Candidate6 residual contract and line 3 contract violations `0`, but line 7 loaded-policy success/contact/reaction was only `0.90625/0.90625/0.90625` in each run. Env-scale seed977 at `num_envs=64` also kept contract violations `0`, but line 7 dropped to success/contact/reaction `0.859375/0.859375/0.859375`. All four runs kept overshoot/lead/cap `0.0` and residual max about `0.000655551rad`; zero-policy pre-eval stayed `1.0`, so the learned residual likely degrades a subset of envs relative to Candidate6 base. | Verdict `L3_MODEL_499_PROMOTION_PARTIAL_NOT_STRICT_PASS`. The checkpoint is not ready for large PPO/data/VLA/RoArm claims. Next step is checkpoint selection or residual regularization, not dataset/RoArm. | `claudedocs/DECISIONS.md#d213`; `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_residual_l3_promotion_seed974_summary.out:1-8`; `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_residual_l3_promotion_seed975_summary.out:1-8`; `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_residual_l3_promotion_seed976_summary.out:1-8`; `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_residual_l3_promotion_env64_seed977_summary.out:1-8`; `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_runs/cube10cm_tap_rl_candidate6_residual_l3_noise02_1m/seed973_env32_it500/model_499.pt`; `roarm_rl/train_cube_tap10cm_ppo_smoke.py` |
+ | 2026-06-09 (Professor cube10cm tap RL Candidate6 randomized robustness screen) | default-off cube randomization patch + local RTX4090/cuda:0 base screens + one small randomized residual PPO L1 | Move past fixed-contract saturation and test whether Candidate6/residual PPO has robustness value under small cube pose variation | Added default-off cube x/y randomization args and range logging to the PPO smoke runner. Fixed seed982 preserved the old contract and line 4 reports success/contact/reaction `1.0/1.0/1.0`, overshoot `0.0`. Base-only randomization screens failed: xy +/-3cm seed978 line 4 reports `0.359375/0.359375/0.359375`, overshoot `0.046875`; xy +/-1cm seed979 line 4 reports `0.109375/0.109375/0.109375`, overshoot `0.015625`. A small xy +/-1cm residual PPO L1 (`32*64*20=40,960` steps, seed983) worsened relative to base: line 4 pre-eval `0.125/0.125/0.125`, line 7 post-eval `0.0625/0.0625/0.0625`, line 8 `training_smoke_pass=False`. Added reset IK metrics; resetmetric seed985 line 4 reports `ik_reset_rate_min=1.0`, `ik_reset_err_mm_max=1.316048622`, Candidate6 active/numeric `1.0/1.0`, but success/contact/reaction still `0.109375/0.109375/0.109375`. | Verdict `RANDOMIZED_ROBUSTNESS_GAP_FOUND_RESIDUAL_L1_FAIL`. Randomization is the right next research direction, but larger PPO/data/RoArm are not unblocked. Next step is controller/trajectory robustness under randomized cube poses before PPO scale-up. | `claudedocs/DECISIONS.md#d214`; `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_fixed_base_screen_seed982_summary.out:1-9`; `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_random_xy3cm_base_screen_seed978_summary.out:1-9`; `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_random_xy1cm_base_screen_seed979_summary.out:1-9`; `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_random_xy1cm_residual_l1_40k_seed983_summary.out:1-9`; `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_random_xy1cm_base_screen_resetmetric_seed985_summary.out:1-9`; `roarm_rl/train_cube_tap10cm_ppo_smoke.py`; `roarm_rl/roarm_cube_push_env.py` |
+ | 2026-06-09 (Professor cube10cm tap RL Candidate7 current-pose/event metrics and randomized residual L1 stop) | default-off current-pose path option + pending success-event metric fix + local RTX4090/cuda:0 base/L1 screens | Check whether Candidate6 was absolute-coordinate overfit and whether randomized residual PPO should scale | Candidate6 target path was reset-pose-relative, not absolute. Added default-off `candidate6_diffik_cube_reference_mode=current_pose` and pending success-event metrics. Current-pose fixed seed986 stayed PASS. Corrected event metrics show xy +/-1cm seed998 is almost solved (`success_episode_rate=0.9775280898876404`, overshoot `0.015625`), while xy +/-3cm seed999 is the useful task (`success_episode_rate=0.7210084033613445`, overshoot `0.0625`). Joint-residual PPO L1 failed three ways: seed1000 improved success slightly but overshoot jumped to `0.53125`; seed1001 reduced success and overshoot stayed `0.5`; reward-safe seed1002 also reduced success and overshoot worsened to `0.34375`. A deterministic corner `x=0.21,y=-0.03` seed1010 PASSed base-only (`success_episode_rate=1.0`, overshoot `0.0`). | Verdict `CANDIDATE7_EVENT_METRIC_FIX_RANDOM_XY3CM_BASE_OK_JOINT_RESIDUAL_L1_STOP`. Do not run L2/large PPO from joint residual. Next pass route is a lower-dimensional cube-relative target/waypoint residual or controller robustness candidate, then L1 only with same-run base-relative gates. | `claudedocs/DECISIONS.md#d215`; `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate7_currentpose_random_xy1cm_base_screen_eventpending_seed998_summary.out:1-9`; `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate7_currentpose_random_xy3cm_base_screen_eventpending_seed999_summary.out:1-9`; `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate7_currentpose_random_xy3cm_residual_l1_40k_seed1000_summary.out:1-9`; `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate7_currentpose_random_xy3cm_residual_l1_safe_40k_seed1001_summary.out:1-9`; `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate7_currentpose_random_xy3cm_residual_l1_reward_safe_40k_seed1002_summary.out:1-9`; `roarm_rl/train_cube_tap10cm_ppo_smoke.py`; `roarm_rl/roarm_cube_push_env.py` |
++| 2026-06-10 (Professor cube10cm tap RL Candidate8 task-space target residual) | default-off action-mode patch + zero-policy preflight + two local RTX4090/cuda:0 L1 PPO screens | Test a 5+1 DOF-aware lower-dimensional DiffIK TCP target residual under xy +/-3cm randomization | Added `rl_action_mode=candidate8_diffik_target_residual`: policy action becomes forward/lateral/height target residual before Candidate6/Candidate7 DiffIK; no orientation residual; zero action should equal base. Same-seed zero-policy seed1011 verified Candidate8 zero and Candidate7/base match exactly at `success_episode_rate=0.7422360248447205`, `overshoot_max=0.125`. Default Candidate8 L1 seed1012 failed: success `0.7350993377483444 -> 0.6845425867507886`, overshoot `0.0625 -> 0.53125`, reward increased. Conservative Candidate8b seed1013 also failed despite forward `0.0m`, lateral `0.006m`, height `0.002m`: success `0.6772151898734177 -> 0.6725352112676056`, overshoot `0.125 -> 0.5`. Static checks passed. | Verdict `CANDIDATE8_TARGET_RESIDUAL_BRIDGE_VALID_L1_OVERSHOOT_EXPLOIT_STOP`. Do not run Candidate8 L2/large PPO as-is. Next pass route is Candidate9 safety/credit assignment around the same low-dimensional DiffIK residual: overshoot-safe reward/termination and residual phase/contact gating before another L1. Dataset/VLA/RoArm/action-teacher remain blocked. | `claudedocs/DECISIONS.md#d216`; `claudedocs/session_20260610_cube10cm_tap_rl_candidate8_target_residual.md`; `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate8_target_residual_xy3cm_zero_preflight_seed1011_summary.out:1-9`; `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate7_currentpose_xy3cm_same_seed1011_base_compare_summary.out:1-9`; `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate8_target_residual_xy3cm_l1_40k_seed1012_summary.out:1-10`; `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate8b_latheight_xy3cm_l1_40k_seed1013_summary.out:1-10`; `roarm_rl/roarm_cube_push_env.py`; `roarm_rl/train_cube_tap10cm_ppo_smoke.py` |
+diff --git a/roarm_rl/roarm_cube_push_env.py b/roarm_rl/roarm_cube_push_env.py
+index c021fc5..db5a1c3 100644
+--- a/roarm_rl/roarm_cube_push_env.py
++++ b/roarm_rl/roarm_cube_push_env.py
+@@ -141,6 +141,10 @@ class RoArmCubePushEnvCfg(RoArmStackEnvCfg):
+     candidate6_diffik_target_base_mode: str = "previous_joint_target"
+     candidate6_diffik_target_path_mode: str = "near_face_goal"
+     candidate6_diffik_cube_reference_mode: str = "start_pose"
++    candidate8_diffik_target_residual_forward_m: float = 0.004
++    candidate8_diffik_target_residual_lateral_m: float = 0.012
++    candidate8_diffik_target_residual_height_m: float = 0.004
++    candidate8_diffik_target_residual_zero_after_contact: bool = False
+     bc_teacher_checkpoint_path: str = ""
+     bc_teacher_blend: float = 0.0
+     bc_teacher_imitation_reward_scale: float = 0.0
+@@ -372,6 +376,11 @@ class RoArmCubePushEnv(RoArmStackEnv):
+         self._last_candidate6_diffik_residual_abs_mean = torch.zeros(self.num_envs, device=self.device)
+         self._last_candidate6_diffik_residual_abs_max = torch.zeros(self.num_envs, device=self.device)
+         self._last_candidate6_diffik_hold_success_rate = torch.zeros(self.num_envs, device=self.device)
++        self._last_candidate8_diffik_target_residual_abs_mean = torch.zeros(self.num_envs, device=self.device)
++        self._last_candidate8_diffik_target_residual_abs_max = torch.zeros(self.num_envs, device=self.device)
++        self._last_candidate8_diffik_target_residual_forward_abs = torch.zeros(self.num_envs, device=self.device)
++        self._last_candidate8_diffik_target_residual_lateral_abs = torch.zeros(self.num_envs, device=self.device)
++        self._last_candidate8_diffik_target_residual_height_abs = torch.zeros(self.num_envs, device=self.device)
+         self._candidate6_diffik_controller = None
+         if not hasattr(self, "_bc_arm_joint_ids"):
+             arm_joint_ids, _arm_joint_names = self._robot.find_joints(
+@@ -445,7 +454,9 @@ class RoArmCubePushEnv(RoArmStackEnv):
+             self._bc_arm_joint_ids if self._robot.is_fixed_base else [idx + 6 for idx in self._bc_arm_joint_ids]
+         )
+ 
+-    def _candidate6_diffik_base_joint_target(self) -> torch.Tensor:
++    def _candidate6_diffik_base_joint_target(
++        self, tcp_target_residual_w: torch.Tensor | None = None
++    ) -> torch.Tensor:
+         self._ensure_candidate6_diffik_controller()
+         self._compute_intermediate_values()
+ 
+@@ -487,6 +498,13 @@ class RoArmCubePushEnv(RoArmStackEnv):
+         pre_w[:, 2] = z
+         through_w[:, 2] = z
+         tcp_target_w = pre_w + alpha.unsqueeze(-1) * (through_w - pre_w)
++        if tcp_target_residual_w is not None:
++            if tcp_target_residual_w.shape != tcp_target_w.shape:
++                raise ValueError(
++                    "tcp_target_residual_w must have shape "
++                    f"{tuple(tcp_target_w.shape)}, got {tuple(tcp_target_residual_w.shape)}"
++                )
++            tcp_target_w = tcp_target_w + tcp_target_residual_w
+ 
+         root_pos_w = self._robot.data.root_pos_w
+         root_quat_w = self._robot.data.root_quat_w
+@@ -830,6 +848,11 @@ class RoArmCubePushEnv(RoArmStackEnv):
+             self._last_bc_teacher_imitation_mse.zero_()
+             self._last_bc_teacher_action_abs_mean.zero_()
+             self._last_candidate6_diffik_hold_success_rate.zero_()
++            self._last_candidate8_diffik_target_residual_abs_mean.zero_()
++            self._last_candidate8_diffik_target_residual_abs_max.zero_()
++            self._last_candidate8_diffik_target_residual_forward_abs.zero_()
++            self._last_candidate8_diffik_target_residual_lateral_abs.zero_()
++            self._last_candidate8_diffik_target_residual_height_abs.zero_()
+             return
+ 
+         action_mode = str(getattr(self.cfg, "rl_action_mode", "joint_delta"))
+@@ -871,6 +894,66 @@ class RoArmCubePushEnv(RoArmStackEnv):
+             self._last_bc_teacher_action_abs_mean.zero_()
+             self._last_candidate6_diffik_residual_abs_mean[:] = torch.mean(torch.abs(residual), dim=-1)
+             self._last_candidate6_diffik_residual_abs_max[:] = torch.max(torch.abs(residual), dim=-1).values
++            self._last_candidate8_diffik_target_residual_abs_mean.zero_()
++            self._last_candidate8_diffik_target_residual_abs_max.zero_()
++            self._last_candidate8_diffik_target_residual_forward_abs.zero_()
++            self._last_candidate8_diffik_target_residual_lateral_abs.zero_()
++            self._last_candidate8_diffik_target_residual_height_abs.zero_()
++            return
++        if action_mode == "candidate8_diffik_target_residual":
++            policy_actions = actions.clone().clamp(-1.0, 1.0)
++            push_dir = self._push_dir_xy
++            lateral_dir = torch.stack((-push_dir[:, 1], push_dir[:, 0]), dim=-1)
++            forward_m = policy_actions[:, 0] * float(self.cfg.candidate8_diffik_target_residual_forward_m)
++            lateral_m = policy_actions[:, 1] * float(self.cfg.candidate8_diffik_target_residual_lateral_m)
++            height_m = policy_actions[:, 2] * float(self.cfg.candidate8_diffik_target_residual_height_m)
++            target_residual_w = torch.zeros((self.num_envs, 3), device=self.device, dtype=torch.float32)
++            target_residual_w[:, 0:2] = (
++                push_dir * forward_m.unsqueeze(-1)
++                + lateral_dir * lateral_m.unsqueeze(-1)
++            )
++            target_residual_w[:, 2] = height_m
++            if bool(getattr(self.cfg, "candidate8_diffik_target_residual_zero_after_contact", False)):
++                contact_seen = getattr(self, "_tap_contact_seen", None)
++                if contact_seen is not None:
++                    active = (~contact_seen).float().unsqueeze(-1)
++                    target_residual_w = target_residual_w * active
++                    forward_m = forward_m * active.squeeze(-1)
++                    lateral_m = lateral_m * active.squeeze(-1)
++                    height_m = height_m * active.squeeze(-1)
++
++            targets = self._candidate6_diffik_base_joint_target(tcp_target_residual_w=target_residual_w)
++            joint_pos = self._robot.data.joint_pos
++            applied_delta = targets - joint_pos
++            self.actions = policy_actions
++            self.robot_dof_targets[:] = targets
++            self._last_action_abs_mean[:] = torch.mean(torch.abs(self.actions), dim=-1)
++            self._last_action_abs_max[:] = torch.max(torch.abs(self.actions), dim=-1).values
++            self._last_joint_delta_abs_mean[:] = torch.mean(torch.abs(applied_delta), dim=-1)
++            self._last_joint_delta_abs_max[:] = torch.max(torch.abs(applied_delta), dim=-1).values
++            self._last_joint_delta_cap_rate.zero_()
++            self._last_target_lead_abs_mean[:] = self._last_joint_delta_abs_mean
++            self._last_target_lead_abs_max[:] = self._last_joint_delta_abs_max
++            lead = float(self.cfg.joint_target_lead_limit_rad)
++            self._last_target_lead_limit_rate[:] = (
++                torch.abs(targets - joint_pos) > lead + 1.0e-9
++            ).float().mean(dim=-1)
++            self._last_contact_slowdown[:] = 1.0
++            self._last_teacher_blend.zero_()
++            self._last_bc_teacher_blend.zero_()
++            self._last_bc_teacher_imitation_mse.zero_()
++            self._last_bc_teacher_action_abs_mean.zero_()
++            self._last_candidate6_diffik_residual_abs_mean.zero_()
++            self._last_candidate6_diffik_residual_abs_max.zero_()
++            self._last_candidate8_diffik_target_residual_abs_mean[:] = torch.mean(
++                torch.abs(target_residual_w), dim=-1
++            )
++            self._last_candidate8_diffik_target_residual_abs_max[:] = torch.max(
++                torch.abs(target_residual_w), dim=-1
++            ).values
++            self._last_candidate8_diffik_target_residual_forward_abs[:] = torch.abs(forward_m)
++            self._last_candidate8_diffik_target_residual_lateral_abs[:] = torch.abs(lateral_m)
++            self._last_candidate8_diffik_target_residual_height_abs[:] = torch.abs(height_m)
+             return
+         if action_mode != "joint_delta":
+             raise ValueError(f"unsupported rl_action_mode={action_mode!r}")
+@@ -884,6 +967,11 @@ class RoArmCubePushEnv(RoArmStackEnv):
+         self._last_candidate6_diffik_residual_abs_mean.zero_()
+         self._last_candidate6_diffik_residual_abs_max.zero_()
+         self._last_candidate6_diffik_hold_success_rate.zero_()
++        self._last_candidate8_diffik_target_residual_abs_mean.zero_()
++        self._last_candidate8_diffik_target_residual_abs_max.zero_()
++        self._last_candidate8_diffik_target_residual_forward_abs.zero_()
++        self._last_candidate8_diffik_target_residual_lateral_abs.zero_()
++        self._last_candidate8_diffik_target_residual_height_abs.zero_()
+         teacher_blend = torch.zeros(self.num_envs, device=self.device)
+         if float(self.cfg.scripted_teacher_blend) > 0.0:
+             horizon = max(1, int(float(self.cfg.scripted_teacher_horizon_frac) * float(self.max_episode_length)))
+@@ -1092,6 +1180,11 @@ class RoArmCubePushEnv(RoArmStackEnv):
+         self._last_candidate6_diffik_residual_abs_mean[env_ids] = 0.0
+         self._last_candidate6_diffik_residual_abs_max[env_ids] = 0.0
+         self._last_candidate6_diffik_hold_success_rate[env_ids] = 0.0
++        self._last_candidate8_diffik_target_residual_abs_mean[env_ids] = 0.0
++        self._last_candidate8_diffik_target_residual_abs_max[env_ids] = 0.0
++        self._last_candidate8_diffik_target_residual_forward_abs[env_ids] = 0.0
++        self._last_candidate8_diffik_target_residual_lateral_abs[env_ids] = 0.0
++        self._last_candidate8_diffik_target_residual_height_abs[env_ids] = 0.0
+         self._teacher_start_joints[env_ids] = joint_pos
+         if float(self.cfg.scripted_teacher_blend) > 0.0:
+             teacher_goal, teacher_ok = self._ik_teacher_goal_joints(cube_local, push_dir, joint_pos)
+@@ -1252,6 +1345,11 @@ class RoArmCubePushEnv(RoArmStackEnv):
+             "cube_push_candidate6_diffik_residual_abs_mean": self._last_candidate6_diffik_residual_abs_mean.mean().detach(),
+             "cube_push_candidate6_diffik_residual_abs_max": self._last_candidate6_diffik_residual_abs_max.mean().detach(),
+             "cube_push_candidate6_diffik_hold_success_rate": self._last_candidate6_diffik_hold_success_rate.mean().detach(),
++            "cube_push_candidate8_diffik_target_residual_abs_mean": self._last_candidate8_diffik_target_residual_abs_mean.mean().detach(),
++            "cube_push_candidate8_diffik_target_residual_abs_max": self._last_candidate8_diffik_target_residual_abs_max.mean().detach(),
++            "cube_push_candidate8_diffik_target_residual_forward_abs": self._last_candidate8_diffik_target_residual_forward_abs.mean().detach(),
++            "cube_push_candidate8_diffik_target_residual_lateral_abs": self._last_candidate8_diffik_target_residual_lateral_abs.mean().detach(),
++            "cube_push_candidate8_diffik_target_residual_height_abs": self._last_candidate8_diffik_target_residual_height_abs.mean().detach(),
+             "bc_teacher_imitation_penalty": bc_imitation_penalty.mean().detach(),
+             "action_penalty": action_penalty.mean().detach(),
+         }
+@@ -1579,6 +1677,11 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
+             "cube_push_candidate6_diffik_residual_abs_mean": self._last_candidate6_diffik_residual_abs_mean.mean().detach(),
+             "cube_push_candidate6_diffik_residual_abs_max": self._last_candidate6_diffik_residual_abs_max.mean().detach(),
+             "cube_push_candidate6_diffik_hold_success_rate": self._last_candidate6_diffik_hold_success_rate.mean().detach(),
++            "cube_push_candidate8_diffik_target_residual_abs_mean": self._last_candidate8_diffik_target_residual_abs_mean.mean().detach(),
++            "cube_push_candidate8_diffik_target_residual_abs_max": self._last_candidate8_diffik_target_residual_abs_max.mean().detach(),
++            "cube_push_candidate8_diffik_target_residual_forward_abs": self._last_candidate8_diffik_target_residual_forward_abs.mean().detach(),
++            "cube_push_candidate8_diffik_target_residual_lateral_abs": self._last_candidate8_diffik_target_residual_lateral_abs.mean().detach(),
++            "cube_push_candidate8_diffik_target_residual_height_abs": self._last_candidate8_diffik_target_residual_height_abs.mean().detach(),
+             "cube_push_grasped_marker_rate": self._grasped.float().mean().detach(),
+             "action_penalty": action_penalty.mean().detach(),
+         }
+diff --git a/roarm_rl/train_cube_tap10cm_ppo_smoke.py b/roarm_rl/train_cube_tap10cm_ppo_smoke.py
+index 226b412..c04091f 100644
+--- a/roarm_rl/train_cube_tap10cm_ppo_smoke.py
++++ b/roarm_rl/train_cube_tap10cm_ppo_smoke.py
+@@ -69,12 +69,20 @@ def _parse_args() -> argparse.Namespace:
+     parser.add_argument("--action_scale", type=float, default=0.050)
+     parser.add_argument(
+         "--rl_action_mode",
+-        choices=("joint_delta", "candidate6_diffik_residual_joint"),
++        choices=(
++            "joint_delta",
++            "candidate6_diffik_residual_joint",
++            "candidate8_diffik_target_residual",
++        ),
+         default="joint_delta",
+     )
+     parser.add_argument("--candidate6_diffik_push_steps", type=int, default=580)
+     parser.add_argument("--candidate6_diffik_residual_scale_rad", type=float, default=0.002)
+     parser.add_argument("--candidate6_diffik_lambda", type=float, default=0.010)
++    parser.add_argument("--candidate8_diffik_target_residual_forward_m", type=float, default=0.004)
++    parser.add_argument("--candidate8_diffik_target_residual_lateral_m", type=float, default=0.012)
++    parser.add_argument("--candidate8_diffik_target_residual_height_m", type=float, default=0.004)
++    parser.add_argument("--candidate8_diffik_target_residual_zero_after_contact", action="store_true")
+     parser.add_argument("--tap_success_terminate", action="store_true")
+     parser.add_argument(
+         "--candidate6_diffik_no_hold_after_tap_success",
+@@ -294,6 +302,10 @@ def _rollout(
+         "candidate6_diffik_step_clip_rate_max": 0.0,
+         "candidate6_diffik_residual_abs_max_max": 0.0,
+         "candidate6_diffik_hold_success_rate_max": 0.0,
++        "candidate8_diffik_target_residual_abs_max_max": 0.0,
++        "candidate8_diffik_target_residual_forward_abs_max": 0.0,
++        "candidate8_diffik_target_residual_lateral_abs_max": 0.0,
++        "candidate8_diffik_target_residual_height_abs_max": 0.0,
+     }
+ 
+     with torch.inference_mode():
+@@ -439,6 +451,26 @@ def _rollout(
+                 "candidate6_diffik_hold_success_rate_max",
+                 _maybe_float(log.get("cube_push_candidate6_diffik_hold_success_rate")),
+             )
++            _update_max(
++                metrics,
++                "candidate8_diffik_target_residual_abs_max_max",
++                _maybe_float(log.get("cube_push_candidate8_diffik_target_residual_abs_max")),
++            )
++            _update_max(
++                metrics,
++                "candidate8_diffik_target_residual_forward_abs_max",
++                _maybe_float(log.get("cube_push_candidate8_diffik_target_residual_forward_abs")),
++            )
++            _update_max(
++                metrics,
++                "candidate8_diffik_target_residual_lateral_abs_max",
++                _maybe_float(log.get("cube_push_candidate8_diffik_target_residual_lateral_abs")),
++            )
++            _update_max(
++                metrics,
++                "candidate8_diffik_target_residual_height_abs_max",
++                _maybe_float(log.get("cube_push_candidate8_diffik_target_residual_height_abs")),
++            )
+ 
+     metrics["reward_mean_per_step"] = (
+         float(metrics["reward_mean_sum"]) / max(1, int(metrics["steps_executed"]))
+@@ -464,6 +496,17 @@ def _has_task_success(metrics: dict[str, Any] | None) -> bool:
+     )
+ 
+ 
++def _success_episode_metric(metrics: dict[str, Any] | None) -> float | None:
++    if not metrics:
++        return None
++    value = metrics.get("tap_success_episode_rate")
++    if value is None:
++        value = metrics.get("tap_success_event_rate_per_env")
++    if value is None:
++        return None
++    return float(value)
++
++
+ def _apply_candidate6_contract(cfg: Any, args: argparse.Namespace) -> dict[str, Any]:
+     cfg.scene.num_envs = int(args.num_envs)
+     cfg.seed = int(args.seed)
+@@ -512,6 +555,12 @@ def _apply_candidate6_contract(cfg: Any, args: argparse.Namespace) -> dict[str,
+     cfg.candidate6_diffik_target_base_mode = str(args.candidate6_diffik_target_base_mode)
+     cfg.candidate6_diffik_target_path_mode = str(args.candidate6_diffik_target_path_mode)
+     cfg.candidate6_diffik_cube_reference_mode = str(args.candidate6_diffik_cube_reference_mode)
++    cfg.candidate8_diffik_target_residual_forward_m = float(args.candidate8_diffik_target_residual_forward_m)
++    cfg.candidate8_diffik_target_residual_lateral_m = float(args.candidate8_diffik_target_residual_lateral_m)
++    cfg.candidate8_diffik_target_residual_height_m = float(args.candidate8_diffik_target_residual_height_m)
++    cfg.candidate8_diffik_target_residual_zero_after_contact = bool(
++        args.candidate8_diffik_target_residual_zero_after_contact
++    )
+     cfg.joint_target_lead_limit_rad = float(args.joint_target_lead_limit_rad)
+     cfg.action_scale = float(args.action_scale)
+     if int(args.num_envs) < 8:
+@@ -543,6 +592,10 @@ def _apply_candidate6_contract(cfg: Any, args: argparse.Namespace) -> dict[str,
+         "candidate6_diffik_target_base_mode": cfg.candidate6_diffik_target_base_mode,
+         "candidate6_diffik_target_path_mode": cfg.candidate6_diffik_target_path_mode,
+         "candidate6_diffik_cube_reference_mode": cfg.candidate6_diffik_cube_reference_mode,
++        "candidate8_diffik_target_residual_forward_m": cfg.candidate8_diffik_target_residual_forward_m,
++        "candidate8_diffik_target_residual_lateral_m": cfg.candidate8_diffik_target_residual_lateral_m,
++        "candidate8_diffik_target_residual_height_m": cfg.candidate8_diffik_target_residual_height_m,
++        "candidate8_diffik_target_residual_zero_after_contact": cfg.candidate8_diffik_target_residual_zero_after_contact,
+         "joint_target_lead_limit_rad": cfg.joint_target_lead_limit_rad,
+         "action_scale": cfg.action_scale,
+         "scripted_teacher_blend": cfg.scripted_teacher_blend,
+@@ -582,6 +635,18 @@ def _contract_violations(contract: dict[str, Any], args: argparse.Namespace) ->
+         "candidate6_diffik_target_base_mode": str(args.candidate6_diffik_target_base_mode),
+         "candidate6_diffik_target_path_mode": str(args.candidate6_diffik_target_path_mode),
+         "candidate6_diffik_cube_reference_mode": str(args.candidate6_diffik_cube_reference_mode),
++        "candidate8_diffik_target_residual_forward_m": float(
++            args.candidate8_diffik_target_residual_forward_m
++        ),
++        "candidate8_diffik_target_residual_lateral_m": float(
++            args.candidate8_diffik_target_residual_lateral_m
++        ),
++        "candidate8_diffik_target_residual_height_m": float(
++            args.candidate8_diffik_target_residual_height_m
++        ),
++        "candidate8_diffik_target_residual_zero_after_contact": bool(
++            args.candidate8_diffik_target_residual_zero_after_contact
++        ),
+     }
+     violations: list[str] = []
+     for key, expected_value in expected.items():
+@@ -605,6 +670,7 @@ def _write_summary(summary: dict[str, Any], summary_json: Path, summary_out: Pat
+     pre = summary.get("pre_eval") or {}
+     initial = summary.get("initial_policy_eval") or {}
+     post = summary.get("post_eval") or {}
++    candidate8_base_relative = summary.get("candidate8_base_relative") or {}
+     lines = [
+         "candidate6_pilot_ppo_smoke_audit=v2 "
+         f"max_iterations={summary['max_iterations']} "
+@@ -632,6 +698,10 @@ def _write_summary(summary: dict[str, Any], summary_json: Path, summary_out: Pat
+         f"target_base_mode={summary['contract']['candidate6_diffik_target_base_mode']} "
+         f"target_path_mode={summary['contract']['candidate6_diffik_target_path_mode']} "
+         f"cube_reference_mode={summary['contract']['candidate6_diffik_cube_reference_mode']} "
++        f"candidate8_forward_m={summary['contract']['candidate8_diffik_target_residual_forward_m']} "
++        f"candidate8_lateral_m={summary['contract']['candidate8_diffik_target_residual_lateral_m']} "
++        f"candidate8_height_m={summary['contract']['candidate8_diffik_target_residual_height_m']} "
++        f"candidate8_zero_after_contact={summary['contract']['candidate8_diffik_target_residual_zero_after_contact']} "
+         f"teacher_blend={summary['contract']['scripted_teacher_blend']} "
+         f"violations={len(summary['contract_violations'])}",
+         "zero_policy_pre_eval "
+@@ -693,6 +763,10 @@ def _write_summary(summary: dict[str, Any], summary_json: Path, summary_out: Pat
+         f"candidate6_numeric_ok_rate_min={post.get('candidate6_diffik_numeric_ok_rate_min')} "
+         f"candidate6_step_clip_rate_max={post.get('candidate6_diffik_step_clip_rate_max')} "
+         f"candidate6_residual_abs_max_max={post.get('candidate6_diffik_residual_abs_max_max')} "
++        f"candidate8_target_residual_abs_max_max={post.get('candidate8_diffik_target_residual_abs_max_max')} "
++        f"candidate8_forward_abs_max={post.get('candidate8_diffik_target_residual_forward_abs_max')} "
++        f"candidate8_lateral_abs_max={post.get('candidate8_diffik_target_residual_lateral_abs_max')} "
++        f"candidate8_height_abs_max={post.get('candidate8_diffik_target_residual_height_abs_max')} "
+         f"candidate6_hold_success_rate_max={post.get('candidate6_diffik_hold_success_rate_max')}",
+         "verdict "
+         f"preflight_pass={summary['preflight_pass']} "
+@@ -702,6 +776,21 @@ def _write_summary(summary: dict[str, Any], summary_json: Path, summary_out: Pat
+         f"policy_task_pass={summary['policy_task_pass']} "
+         "large_dataset_rl_roarm_unblocked=NO "
+         "action_teacher_dataset=NO",
++        "candidate8_base_relative "
++        f"enabled={bool(candidate8_base_relative)} "
++        f"pre_success_episode_rate={candidate8_base_relative.get('pre_success_episode_rate')} "
++        f"post_success_episode_rate={candidate8_base_relative.get('post_success_episode_rate')} "
++        f"success_episode_delta={candidate8_base_relative.get('success_episode_delta')} "
++        f"pre_overshoot_max={candidate8_base_relative.get('pre_overshoot_max')} "
++        f"post_overshoot_max={candidate8_base_relative.get('post_overshoot_max')} "
++        f"overshoot_delta={candidate8_base_relative.get('overshoot_delta')} "
++        f"target_residual_abs_max_max={candidate8_base_relative.get('target_residual_abs_max_max')} "
++        f"target_residual_forward_abs_max={candidate8_base_relative.get('target_residual_forward_abs_max')} "
++        f"target_residual_lateral_abs_max={candidate8_base_relative.get('target_residual_lateral_abs_max')} "
++        f"target_residual_height_abs_max={candidate8_base_relative.get('target_residual_height_abs_max')} "
++        f"signal_seen={candidate8_base_relative.get('signal_seen')} "
++        f"l1_health_pass={candidate8_base_relative.get('l1_health_pass')} "
++        f"l2_scale_candidate={candidate8_base_relative.get('l2_scale_candidate')}",
+         f"outputs summary_json={summary_json} summary_out={summary_out}",
+     ]
+     summary_out.write_text("\n".join(lines) + "\n")
+@@ -856,7 +945,10 @@ def main() -> None:
+ 
+         checkpoint_exists = bool(checkpoint_path and checkpoint_path.exists())
+         bridge_preflight_pass = True
+-        if str(args.rl_action_mode) == "candidate6_diffik_residual_joint":
++        if str(args.rl_action_mode) in (
++            "candidate6_diffik_residual_joint",
++            "candidate8_diffik_target_residual",
++        ):
+             bridge_preflight_pass = bool(
+                 float(pre_eval["candidate6_diffik_active_rate_max"]) > 0.0
+                 and pre_eval["candidate6_diffik_numeric_ok_rate_min"] is not None
+@@ -896,6 +988,59 @@ def main() -> None:
+                 and float(post_eval["tap_overshoot_max"]) <= 0.0
+             )
+ 
++        candidate8_base_relative = None
++        if str(args.rl_action_mode) == "candidate8_diffik_target_residual" and post_eval:
++            pre_success = _success_episode_metric(pre_eval)
++            post_success = _success_episode_metric(post_eval)
++            pre_overshoot = float(pre_eval.get("tap_overshoot_max") or 0.0)
++            post_overshoot = float(post_eval.get("tap_overshoot_max") or 0.0)
++            target_residual_abs_max = float(
++                post_eval.get("candidate8_diffik_target_residual_abs_max_max") or 0.0
++            )
++            target_residual_forward_abs_max = float(
++                post_eval.get("candidate8_diffik_target_residual_forward_abs_max") or 0.0
++            )
++            target_residual_lateral_abs_max = float(
++                post_eval.get("candidate8_diffik_target_residual_lateral_abs_max") or 0.0
++            )
++            target_residual_height_abs_max = float(
++                post_eval.get("candidate8_diffik_target_residual_height_abs_max") or 0.0
++            )
++            signal_seen = target_residual_abs_max > 1.0e-6
++            success_delta = (
++                None if pre_success is None or post_success is None else post_success - pre_success
++            )
++            overshoot_delta = post_overshoot - pre_overshoot
++            l1_health_pass = bool(
++                post_eval["reward_finite_all"]
++                and post_eval["obs_finite_all"]
++                and post_eval["action_finite_all"]
++                and signal_seen
++                and success_delta is not None
++                and success_delta >= -0.10
++                and overshoot_delta <= 0.10
++            )
++            l2_scale_candidate = bool(
++                success_delta is not None
++                and success_delta >= 0.0
++                and overshoot_delta <= 0.0
++            )
++            candidate8_base_relative = {
++                "pre_success_episode_rate": pre_success,
++                "post_success_episode_rate": post_success,
++                "success_episode_delta": success_delta,
++                "pre_overshoot_max": pre_overshoot,
++                "post_overshoot_max": post_overshoot,
++                "overshoot_delta": overshoot_delta,
++                "target_residual_abs_max_max": target_residual_abs_max,
++                "target_residual_forward_abs_max": target_residual_forward_abs_max,
++                "target_residual_lateral_abs_max": target_residual_lateral_abs_max,
++                "target_residual_height_abs_max": target_residual_height_abs_max,
++                "signal_seen": signal_seen,
++                "l1_health_pass": l1_health_pass,
++                "l2_scale_candidate": l2_scale_candidate,
++            }
++
+         summary = {
+             "audit_version": "candidate6_pilot_ppo_smoke_v2",
+             "seed": int(args.seed),
+@@ -919,6 +1064,7 @@ def main() -> None:
+             "preflight_pass": preflight_pass,
+             "bridge_preflight_pass": bridge_preflight_pass,
+             "zero_policy_task_pass": zero_policy_task_pass,
++            "candidate8_base_relative": candidate8_base_relative,
+             "post_eval": post_eval,
+             "checkpoint_path": str(checkpoint_path) if checkpoint_path else None,
+             "checkpoint_exists": checkpoint_exists,

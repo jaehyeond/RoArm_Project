@@ -6,7 +6,9 @@ a small RL task without using grasp attach or object pose writes during rollout.
 
 Default action semantics remain the project standard 6D normalized joint-delta
 command: robot_dof_targets += action_scale * action, clipped to joint limits.
-Candidate6 DiffIK residual control is an explicit opt-in mode.
+Candidate6 DiffIK residual control is an explicit opt-in mode. The target
+residual mode is intentionally a 3D policy action space: forward, lateral,
+height target waypoint residual before DiffIK.
 """
 from __future__ import annotations
 
@@ -141,6 +143,12 @@ class RoArmCubePushEnvCfg(RoArmStackEnvCfg):
     candidate6_diffik_target_base_mode: str = "previous_joint_target"
     candidate6_diffik_target_path_mode: str = "near_face_goal"
     candidate6_diffik_cube_reference_mode: str = "start_pose"
+    candidate8_diffik_target_residual_forward_m: float = 0.004
+    candidate8_diffik_target_residual_lateral_m: float = 0.012
+    candidate8_diffik_target_residual_height_m: float = 0.004
+    candidate8_diffik_target_residual_zero_after_contact: bool = False
+    candidate8_diffik_target_residual_zero_after_reaction: bool = False
+    candidate8_diffik_target_residual_zero_after_disp_m: float = 0.0
     bc_teacher_checkpoint_path: str = ""
     bc_teacher_blend: float = 0.0
     bc_teacher_imitation_reward_scale: float = 0.0
@@ -294,6 +302,12 @@ class RoArmCubePushEnv(RoArmStackEnv):
     cfg: RoArmCubePushEnvCfg
 
     def __init__(self, cfg: RoArmCubePushEnvCfg, render_mode: str | None = None, **kwargs):
+        action_mode = str(getattr(cfg, "rl_action_mode", "joint_delta"))
+        if action_mode == "candidate8_diffik_target_residual" and int(cfg.action_space) != 3:
+            raise ValueError(
+                "candidate8_diffik_target_residual requires cfg.action_space=3; "
+                "do not run it through the inherited 6D joint action scaffold"
+            )
         super().__init__(cfg, render_mode, **kwargs)
         self._ensure_push_buffers()
 
@@ -354,8 +368,9 @@ class RoArmCubePushEnv(RoArmStackEnv):
         self._last_target_lead_abs_max = torch.zeros(self.num_envs, device=self.device)
         self._last_target_lead_limit_rate = torch.zeros(self.num_envs, device=self.device)
         self._last_contact_slowdown = torch.ones(self.num_envs, device=self.device)
-        self._teacher_start_joints = torch.zeros((self.num_envs, self.cfg.action_space), device=self.device)
-        self._teacher_goal_joints = torch.zeros((self.num_envs, self.cfg.action_space), device=self.device)
+        joint_dim = int(self._robot.num_joints)
+        self._teacher_start_joints = torch.zeros((self.num_envs, joint_dim), device=self.device)
+        self._teacher_goal_joints = torch.zeros((self.num_envs, joint_dim), device=self.device)
         self._teacher_goal_ok = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
         self._last_teacher_blend = torch.zeros(self.num_envs, device=self.device)
         self._last_bc_teacher_blend = torch.zeros(self.num_envs, device=self.device)
@@ -372,6 +387,11 @@ class RoArmCubePushEnv(RoArmStackEnv):
         self._last_candidate6_diffik_residual_abs_mean = torch.zeros(self.num_envs, device=self.device)
         self._last_candidate6_diffik_residual_abs_max = torch.zeros(self.num_envs, device=self.device)
         self._last_candidate6_diffik_hold_success_rate = torch.zeros(self.num_envs, device=self.device)
+        self._last_candidate8_diffik_target_residual_abs_mean = torch.zeros(self.num_envs, device=self.device)
+        self._last_candidate8_diffik_target_residual_abs_max = torch.zeros(self.num_envs, device=self.device)
+        self._last_candidate8_diffik_target_residual_forward_abs = torch.zeros(self.num_envs, device=self.device)
+        self._last_candidate8_diffik_target_residual_lateral_abs = torch.zeros(self.num_envs, device=self.device)
+        self._last_candidate8_diffik_target_residual_height_abs = torch.zeros(self.num_envs, device=self.device)
         self._candidate6_diffik_controller = None
         if not hasattr(self, "_bc_arm_joint_ids"):
             arm_joint_ids, _arm_joint_names = self._robot.find_joints(
@@ -445,7 +465,9 @@ class RoArmCubePushEnv(RoArmStackEnv):
             self._bc_arm_joint_ids if self._robot.is_fixed_base else [idx + 6 for idx in self._bc_arm_joint_ids]
         )
 
-    def _candidate6_diffik_base_joint_target(self) -> torch.Tensor:
+    def _candidate6_diffik_base_joint_target(
+        self, tcp_target_residual_w: torch.Tensor | None = None
+    ) -> torch.Tensor:
         self._ensure_candidate6_diffik_controller()
         self._compute_intermediate_values()
 
@@ -487,6 +509,13 @@ class RoArmCubePushEnv(RoArmStackEnv):
         pre_w[:, 2] = z
         through_w[:, 2] = z
         tcp_target_w = pre_w + alpha.unsqueeze(-1) * (through_w - pre_w)
+        if tcp_target_residual_w is not None:
+            if tcp_target_residual_w.shape != tcp_target_w.shape:
+                raise ValueError(
+                    "tcp_target_residual_w must have shape "
+                    f"{tuple(tcp_target_w.shape)}, got {tuple(tcp_target_residual_w.shape)}"
+                )
+            tcp_target_w = tcp_target_w + tcp_target_residual_w
 
         root_pos_w = self._robot.data.root_pos_w
         root_quat_w = self._robot.data.root_quat_w
@@ -830,6 +859,11 @@ class RoArmCubePushEnv(RoArmStackEnv):
             self._last_bc_teacher_imitation_mse.zero_()
             self._last_bc_teacher_action_abs_mean.zero_()
             self._last_candidate6_diffik_hold_success_rate.zero_()
+            self._last_candidate8_diffik_target_residual_abs_mean.zero_()
+            self._last_candidate8_diffik_target_residual_abs_max.zero_()
+            self._last_candidate8_diffik_target_residual_forward_abs.zero_()
+            self._last_candidate8_diffik_target_residual_lateral_abs.zero_()
+            self._last_candidate8_diffik_target_residual_height_abs.zero_()
             return
 
         action_mode = str(getattr(self.cfg, "rl_action_mode", "joint_delta"))
@@ -871,6 +905,72 @@ class RoArmCubePushEnv(RoArmStackEnv):
             self._last_bc_teacher_action_abs_mean.zero_()
             self._last_candidate6_diffik_residual_abs_mean[:] = torch.mean(torch.abs(residual), dim=-1)
             self._last_candidate6_diffik_residual_abs_max[:] = torch.max(torch.abs(residual), dim=-1).values
+            self._last_candidate8_diffik_target_residual_abs_mean.zero_()
+            self._last_candidate8_diffik_target_residual_abs_max.zero_()
+            self._last_candidate8_diffik_target_residual_forward_abs.zero_()
+            self._last_candidate8_diffik_target_residual_lateral_abs.zero_()
+            self._last_candidate8_diffik_target_residual_height_abs.zero_()
+            return
+        if action_mode == "candidate8_diffik_target_residual":
+            policy_actions = actions.clone().clamp(-1.0, 1.0)
+            if policy_actions.shape[-1] != 3:
+                raise ValueError(
+                    "candidate8_diffik_target_residual expects exactly 3 policy "
+                    f"actions (forward, lateral, height), got {policy_actions.shape[-1]}"
+                )
+            if (
+                bool(getattr(self.cfg, "candidate8_diffik_target_residual_zero_after_contact", False))
+                or bool(getattr(self.cfg, "candidate8_diffik_target_residual_zero_after_reaction", False))
+                or float(getattr(self.cfg, "candidate8_diffik_target_residual_zero_after_disp_m", 0.0)) > 0.0
+            ):
+                raise ValueError(
+                    "candidate8_diffik_target_residual is the clean 3D target-residual "
+                    "action space; post-contact/reaction/displacement gates are disabled"
+                )
+            push_dir = self._push_dir_xy
+            lateral_dir = torch.stack((-push_dir[:, 1], push_dir[:, 0]), dim=-1)
+            forward_m = policy_actions[:, 0] * float(self.cfg.candidate8_diffik_target_residual_forward_m)
+            lateral_m = policy_actions[:, 1] * float(self.cfg.candidate8_diffik_target_residual_lateral_m)
+            height_m = policy_actions[:, 2] * float(self.cfg.candidate8_diffik_target_residual_height_m)
+            target_residual_w = torch.zeros((self.num_envs, 3), device=self.device, dtype=torch.float32)
+            target_residual_w[:, 0:2] = (
+                push_dir * forward_m.unsqueeze(-1)
+                + lateral_dir * lateral_m.unsqueeze(-1)
+            )
+            target_residual_w[:, 2] = height_m
+
+            targets = self._candidate6_diffik_base_joint_target(tcp_target_residual_w=target_residual_w)
+            joint_pos = self._robot.data.joint_pos
+            applied_delta = targets - joint_pos
+            self.actions = policy_actions
+            self.robot_dof_targets[:] = targets
+            self._last_action_abs_mean[:] = torch.mean(torch.abs(self.actions), dim=-1)
+            self._last_action_abs_max[:] = torch.max(torch.abs(self.actions), dim=-1).values
+            self._last_joint_delta_abs_mean[:] = torch.mean(torch.abs(applied_delta), dim=-1)
+            self._last_joint_delta_abs_max[:] = torch.max(torch.abs(applied_delta), dim=-1).values
+            self._last_joint_delta_cap_rate.zero_()
+            self._last_target_lead_abs_mean[:] = self._last_joint_delta_abs_mean
+            self._last_target_lead_abs_max[:] = self._last_joint_delta_abs_max
+            lead = float(self.cfg.joint_target_lead_limit_rad)
+            self._last_target_lead_limit_rate[:] = (
+                torch.abs(targets - joint_pos) > lead + 1.0e-9
+            ).float().mean(dim=-1)
+            self._last_contact_slowdown[:] = 1.0
+            self._last_teacher_blend.zero_()
+            self._last_bc_teacher_blend.zero_()
+            self._last_bc_teacher_imitation_mse.zero_()
+            self._last_bc_teacher_action_abs_mean.zero_()
+            self._last_candidate6_diffik_residual_abs_mean.zero_()
+            self._last_candidate6_diffik_residual_abs_max.zero_()
+            self._last_candidate8_diffik_target_residual_abs_mean[:] = torch.mean(
+                torch.abs(target_residual_w), dim=-1
+            )
+            self._last_candidate8_diffik_target_residual_abs_max[:] = torch.max(
+                torch.abs(target_residual_w), dim=-1
+            ).values
+            self._last_candidate8_diffik_target_residual_forward_abs[:] = torch.abs(forward_m)
+            self._last_candidate8_diffik_target_residual_lateral_abs[:] = torch.abs(lateral_m)
+            self._last_candidate8_diffik_target_residual_height_abs[:] = torch.abs(height_m)
             return
         if action_mode != "joint_delta":
             raise ValueError(f"unsupported rl_action_mode={action_mode!r}")
@@ -884,6 +984,11 @@ class RoArmCubePushEnv(RoArmStackEnv):
         self._last_candidate6_diffik_residual_abs_mean.zero_()
         self._last_candidate6_diffik_residual_abs_max.zero_()
         self._last_candidate6_diffik_hold_success_rate.zero_()
+        self._last_candidate8_diffik_target_residual_abs_mean.zero_()
+        self._last_candidate8_diffik_target_residual_abs_max.zero_()
+        self._last_candidate8_diffik_target_residual_forward_abs.zero_()
+        self._last_candidate8_diffik_target_residual_lateral_abs.zero_()
+        self._last_candidate8_diffik_target_residual_height_abs.zero_()
         teacher_blend = torch.zeros(self.num_envs, device=self.device)
         if float(self.cfg.scripted_teacher_blend) > 0.0:
             horizon = max(1, int(float(self.cfg.scripted_teacher_horizon_frac) * float(self.max_episode_length)))
@@ -1092,6 +1197,11 @@ class RoArmCubePushEnv(RoArmStackEnv):
         self._last_candidate6_diffik_residual_abs_mean[env_ids] = 0.0
         self._last_candidate6_diffik_residual_abs_max[env_ids] = 0.0
         self._last_candidate6_diffik_hold_success_rate[env_ids] = 0.0
+        self._last_candidate8_diffik_target_residual_abs_mean[env_ids] = 0.0
+        self._last_candidate8_diffik_target_residual_abs_max[env_ids] = 0.0
+        self._last_candidate8_diffik_target_residual_forward_abs[env_ids] = 0.0
+        self._last_candidate8_diffik_target_residual_lateral_abs[env_ids] = 0.0
+        self._last_candidate8_diffik_target_residual_height_abs[env_ids] = 0.0
         self._teacher_start_joints[env_ids] = joint_pos
         if float(self.cfg.scripted_teacher_blend) > 0.0:
             teacher_goal, teacher_ok = self._ik_teacher_goal_joints(cube_local, push_dir, joint_pos)
@@ -1252,6 +1362,11 @@ class RoArmCubePushEnv(RoArmStackEnv):
             "cube_push_candidate6_diffik_residual_abs_mean": self._last_candidate6_diffik_residual_abs_mean.mean().detach(),
             "cube_push_candidate6_diffik_residual_abs_max": self._last_candidate6_diffik_residual_abs_max.mean().detach(),
             "cube_push_candidate6_diffik_hold_success_rate": self._last_candidate6_diffik_hold_success_rate.mean().detach(),
+            "cube_push_candidate8_diffik_target_residual_abs_mean": self._last_candidate8_diffik_target_residual_abs_mean.mean().detach(),
+            "cube_push_candidate8_diffik_target_residual_abs_max": self._last_candidate8_diffik_target_residual_abs_max.mean().detach(),
+            "cube_push_candidate8_diffik_target_residual_forward_abs": self._last_candidate8_diffik_target_residual_forward_abs.mean().detach(),
+            "cube_push_candidate8_diffik_target_residual_lateral_abs": self._last_candidate8_diffik_target_residual_lateral_abs.mean().detach(),
+            "cube_push_candidate8_diffik_target_residual_height_abs": self._last_candidate8_diffik_target_residual_height_abs.mean().detach(),
             "bc_teacher_imitation_penalty": bc_imitation_penalty.mean().detach(),
             "action_penalty": action_penalty.mean().detach(),
         }
@@ -1579,6 +1694,11 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
             "cube_push_candidate6_diffik_residual_abs_mean": self._last_candidate6_diffik_residual_abs_mean.mean().detach(),
             "cube_push_candidate6_diffik_residual_abs_max": self._last_candidate6_diffik_residual_abs_max.mean().detach(),
             "cube_push_candidate6_diffik_hold_success_rate": self._last_candidate6_diffik_hold_success_rate.mean().detach(),
+            "cube_push_candidate8_diffik_target_residual_abs_mean": self._last_candidate8_diffik_target_residual_abs_mean.mean().detach(),
+            "cube_push_candidate8_diffik_target_residual_abs_max": self._last_candidate8_diffik_target_residual_abs_max.mean().detach(),
+            "cube_push_candidate8_diffik_target_residual_forward_abs": self._last_candidate8_diffik_target_residual_forward_abs.mean().detach(),
+            "cube_push_candidate8_diffik_target_residual_lateral_abs": self._last_candidate8_diffik_target_residual_lateral_abs.mean().detach(),
+            "cube_push_candidate8_diffik_target_residual_height_abs": self._last_candidate8_diffik_target_residual_height_abs.mean().detach(),
             "cube_push_grasped_marker_rate": self._grasped.float().mean().detach(),
             "action_penalty": action_penalty.mean().detach(),
         }

@@ -12038,3 +12038,295 @@ Sources:
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate7_currentpose_random_xy3cm_residual_l1_safe_40k_seed1001_summary.out:1-9`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate7_currentpose_random_xy3cm_residual_l1_reward_safe_40k_seed1002_summary.out:1-9`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate7_currentpose_corner_x021_yneg003_base_seed1010_summary.out:1-9`
+
+## D216 - Candidate8 task-space target residual bridge works, but current reward/action contract exploits overshoot
+
+Current State:
+
+- Implemented default-off `rl_action_mode=candidate8_diffik_target_residual`.
+  It applies a low-dimensional TCP target residual before Candidate6/Candidate7
+  DiffIK: forward, lateral, and height only. It does not expose orientation
+  residuals.
+- The implementation keeps the 5 arm joints plus separate gripper structure in
+  mind: policy does not directly solve the five-joint kinematics; DiffIK still
+  handles the arm target.
+- Same-seed xy +/-3cm zero-policy preflight verified Candidate8 zero action
+  equals the Candidate7/base controller. Candidate8 seed1011 and Candidate7
+  base seed1011 both report `success_episode_rate=0.7422360248447205` and
+  `overshoot_max=0.125`.
+- Default Candidate8 L1 seed1012 failed the base-relative health gate:
+  success changed `0.7350993377483444 -> 0.6845425867507886`, overshoot changed
+  `0.0625 -> 0.53125`, while reward increased
+  `0.08071071922940659 -> 0.10252326592032251`.
+- Conservative Candidate8b L1 seed1013 also failed: forward residual was disabled
+  and lateral/height scales were reduced to `0.006/0.002m`, but success changed
+  `0.6772151898734177 -> 0.6725352112676056` and overshoot changed
+  `0.125 -> 0.5`.
+- Static verification passed: `python3 -m py_compile
+  roarm_rl/roarm_cube_push_env.py roarm_rl/train_cube_tap10cm_ppo_smoke.py` and
+  `git diff --check`.
+
+Implication:
+
+- Candidate8 is a valid action-path bridge, but not a scaling-ready PPO
+  contract.
+- The failure is not "more PPO steps needed." The current objective lets PPO find
+  tiny target residuals that improve transient reward while worsening overshoot
+  and same-run base-relative quality.
+- Do not run Candidate8 L2/large PPO as-is.
+- Do not claim dataset, action-teacher, VLA, or RoArm readiness from Candidate8.
+- Next pass route is Candidate9: keep low-dimensional DiffIK target residual, but
+  add safety/credit assignment first, such as overshoot-safe reward/termination
+  and residual phase/contact gating. Rerun L1 only; L2 requires success not below
+  same-run base and overshoot not worse than same-run base.
+
+Sources:
+
+- `roarm_rl/roarm_cube_push_env.py`
+- `roarm_rl/train_cube_tap10cm_ppo_smoke.py`
+- `claudedocs/session_20260610_cube10cm_tap_rl_candidate8_target_residual.md`
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate8_target_residual_xy3cm_zero_preflight_seed1011_summary.out:1-9`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate7_currentpose_xy3cm_same_seed1011_base_compare_summary.out:1-9`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate8_target_residual_xy3cm_l1_40k_seed1012_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate8b_latheight_xy3cm_l1_40k_seed1013_summary.out:1-10`
+
+## D217 - Candidate9 reward-safe target residual is partial only; overshoot-safe credit is still unresolved
+
+Current State:
+
+- Added default-off `candidate8_diffik_target_residual_zero_after_contact`.
+  This gates the Candidate8 task-space target residual to zero after tap contact
+  is observed, while leaving zero-action/base behavior unchanged.
+- Candidate9a tested zero-after-contact alone under the Candidate8b lateral/height
+  contract at xy +/-3cm seed1013. It exactly reproduced the failure: success
+  changed `0.6772151898734177 -> 0.6725352112676056`, overshoot changed
+  `0.125 -> 0.5`, and `l1_health_pass=False`.
+- Candidate9b combined zero-after-contact with reward-safe weights:
+  transient displacement reward `0.0`, overshoot penalty `120.0`, action penalty
+  `0.05`. This is the best partial branch so far: success improved
+  `0.6772151898734177 -> 0.7161716171617162`, and overshoot was lower than
+  Candidate9a/Candidate8b (`0.25` vs `0.5`). It still failed the base-relative
+  gate because same-run base overshoot was `0.125`, so overshoot delta was
+  `0.125`; `l1_health_pass=False`, `l2_scale_candidate=False`.
+- Candidate9c halved lateral/height residual scale under the Candidate9b reward
+  contract. It worsened both success and overshoot: success
+  `0.6772151898734177 -> 0.6572327044025157`, overshoot `0.125 -> 0.59375`.
+- Static verification passed after the Candidate9 patch:
+  `python3 -m py_compile roarm_rl/roarm_cube_push_env.py
+  roarm_rl/train_cube_tap10cm_ppo_smoke.py` and `git diff --check`.
+
+Implication:
+
+- Zeroing residual only after contact is too late or too weak; the harmful
+  behavior is not just an obvious post-contact residual leak.
+- Reward-safe weights moved the policy in the right direction, but not far enough
+  to satisfy the same-run base-relative quality gate.
+- Do not run Candidate9b L2/large PPO yet, and do not treat it as dataset,
+  action-teacher, VLA, or RoArm readiness.
+- Do not spend time on naive residual-scale grids; Candidate9c shows smaller
+  scale can still worsen overshoot.
+- Next pass route is a stricter overshoot-safe credit/safety design around the
+  same low-dimensional DiffIK residual: for example, disable residual before the
+  overshoot margin using reaction/displacement state, or make overshoot-free
+  success the only meaningful positive learning credit. Then rerun exactly one
+  L1 health screen before any scale-up.
+
+Sources:
+
+- `roarm_rl/roarm_cube_push_env.py`
+- `roarm_rl/train_cube_tap10cm_ppo_smoke.py`
+- `claudedocs/session_20260610_cube10cm_tap_rl_candidate8_target_residual.md`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate9a_zeroaftercontact_xy3cm_l1_40k_seed1013_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate9b_rewardsafe_zeroaftercontact_xy3cm_l1_40k_seed1013_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate9c_halfscale_rewardsafe_zeroaftercontact_xy3cm_l1_40k_seed1013_summary.out:1-10`
+
+## D218 - Candidate10 displacement-gated residual also fails; simple phase gates are not enough
+
+Current State:
+
+- Added default-off Candidate10 gates to the Candidate8 target residual path:
+  `candidate8_diffik_target_residual_zero_after_reaction` and
+  `candidate8_diffik_target_residual_zero_after_disp_m`.
+- Static verification passed after the patch:
+  `python3 -m py_compile roarm_rl/roarm_cube_push_env.py
+  roarm_rl/train_cube_tap10cm_ppo_smoke.py`, `git diff --check`, and smoke-runner
+  help showed the new CLI args.
+- A first direct `python3 -m roarm_rl.train_cube_tap10cm_ppo_smoke ...` launch was
+  blocked by `ModuleNotFoundError: No module named 'gymnasium'`; this is a launch
+  environment issue, not a physics result. Valid local runtime used
+  `conda run -n isaaclab python -m roarm_rl.train_cube_tap10cm_ppo_smoke ...`.
+- Candidate10a kept the Candidate9b reward-safe contract at xy +/-3cm seed1013
+  and added `candidate8_diffik_target_residual_zero_after_disp_m=0.006`.
+  Contract violations were `0`.
+- Candidate10a failed worse than Candidate9b: same-run base was
+  `success_episode_rate=0.6772151898734177`, `overshoot_max=0.125`; post-eval was
+  `success_episode_rate=0.6946107784431138`, `overshoot_max=0.46875`;
+  base-relative line reports `success_episode_delta=0.01739558856969614`,
+  `overshoot_delta=0.34375`, `l1_health_pass=False`, `l2_scale_candidate=False`.
+
+Implication:
+
+- A simple displacement gate at the nominal target displacement is not a pass
+  route. It reduces the learned residual magnitude but still allows or induces
+  bad pose cases with overshoot.
+- Candidate9b remains the best partial branch among Candidate8/9/10, but it still
+  is not scale-ready.
+- Do not continue naive residual-scale grids or simple post-contact/displacement
+  gate stacking.
+- The next useful pass route should be more state-aware: either shrink the actual
+  policy action space to the three used target-residual axes, or add pose-binned
+  success/overshoot evidence and condition/gate residual only in randomized cube
+  pose regions where same-run base is weak.
+- Large PPO/L2, dataset generation, action-teacher claims, VLA, and RoArm
+  deployment remain blocked.
+
+Sources:
+
+- `roarm_rl/roarm_cube_push_env.py`
+- `roarm_rl/train_cube_tap10cm_ppo_smoke.py`
+- `claudedocs/session_20260610_cube10cm_tap_rl_candidate8_target_residual.md`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate10a_dispgate006_rewardsafe_zeroaftercontact_xy3cm_l1_40k_seed1013_summary.out:1-10`
+
+## D219 - The target-residual branch must be an actual 3D policy action space, not a gated 6D scaffold
+
+Current State:
+
+- D218 identified the correct next direction but the implementation still had a
+  critical mismatch: `rl_action_mode=candidate8_diffik_target_residual` used only
+  the first three action components as forward/lateral/height target residuals,
+  while the actual inherited policy action space remained 6D.
+- That means Candidate8/9/10 tested 3-axis interpretation on top of a 6D policy
+  scaffold, then tried to repair overshoot with gates or scale changes. This is
+  not the agreed action-space redesign.
+- The correction is now implemented static-only:
+  - the PPO smoke runner sets `cfg.action_space=3` for
+    `candidate8_diffik_target_residual`;
+  - the runner contract writes `policy_action_space=3`;
+  - the runner no longer exposes post-contact/reaction/displacement gate CLI args;
+  - env init rejects this mode unless `cfg.action_space == 3`;
+  - env step rejects any non-3D action tensor in this mode;
+  - env-level guard still rejects post-contact, reaction, or displacement gates
+    if they are manually enabled on this clean 3D target-residual branch;
+  - internal teacher joint buffers were separated from policy action space and
+    remain sized by `self._robot.num_joints`, so reducing policy action space does
+    not corrupt reset/teacher joint-state storage.
+- Static verification passed:
+  `python3 -m py_compile roarm_rl/roarm_cube_push_env.py
+  roarm_rl/train_cube_tap10cm_ppo_smoke.py` and `git diff --check`.
+- No new GPU runtime, zero=base preflight, L1 PPO, L2/large PPO, dataset, VLA,
+  action-teacher, or RoArm run has been performed after this correction.
+
+Implication:
+
+- Do not add another gate/half-scale/displacement variant as the next step.
+- Do not treat Candidate8/9/10 gated results as evidence that the actual 3D
+  action-space branch has failed; they were produced before the policy action
+  dimension was actually reduced.
+- The next valid runtime is exactly one zero-action same-seed preflight comparing
+  the corrected 3D target-residual mode against Candidate7/base. It must show
+  zero action equals base before any PPO.
+- L1 PPO is allowed only after that zero=base preflight passes. L2/large PPO,
+  dataset generation, action-teacher claims, VLA, and RoArm deployment remain
+  blocked until the corrected 3D branch passes the same-run L1 health gate.
+
+Sources:
+
+- `roarm_rl/roarm_cube_push_env.py`
+- `roarm_rl/train_cube_tap10cm_ppo_smoke.py`
+- `claudedocs/session_20260610_cube10cm_tap_rl_candidate8_target_residual.md`
+
+## D220 - Corrected 3D target-residual zero-action preflight matches Candidate7/base exactly
+
+Current State:
+
+- Ran exactly one approved local RTX4090/cuda:0 zero-policy preflight for the
+  corrected 3D target-residual branch:
+  `rl_action_mode=candidate8_diffik_target_residual`, `policy_action_space=3`,
+  xy +/-3cm, seed1011, `num_envs=32`, `max_iterations=0`, eval steps `580`.
+- No PPO training, checkpoint loading, dataset generation, VLA, action-teacher,
+  robot/RoArm, SSH/B200, or Track A work was run.
+- The corrected 3D run summary line 3 reports `policy_action_space=3` and
+  contract violations `0`.
+- Corrected 3D zero-action line 4 matches the existing same-seed Candidate7/base
+  line 4 exactly on the compared metrics:
+  `tap_success_max=0.28125`, `success_event_count=239.0`,
+  `success_event_rate_per_env=1.0`,
+  `success_episode_rate=0.7422360248447205`,
+  `contact_seen_max=0.28125`, `reaction_seen_max=0.28125`,
+  `overshoot_max=0.125`, `reward_mean_per_step=0.10634467779936727`,
+  `face_gap_final_m=-0.013820353895425797`,
+  `tcp_dist_min_m=0.0825260579586029`, `ik_reset_rate_min=1.0`,
+  `ik_reset_err_mm_max=1.2306809425354004`,
+  `candidate6_active_rate_max=1.0`,
+  `candidate6_numeric_ok_rate_min=1.0`,
+  `candidate6_hold_success_rate_max=0.0`.
+- Corrected 3D line 8 reports `preflight_pass=True` and
+  `bridge_preflight_pass=True`.
+
+Implication:
+
+- The D219 implementation bug gate is passed: zero action in the corrected 3D
+  policy action space is equivalent to Candidate7/base for this same-seed
+  preflight.
+- The next valid runtime, only with explicit approval, is one L1 health screen of
+  the clean corrected 3D target-residual branch. Do not add gates or half-scale
+  variants.
+- L2/large PPO, dataset generation, action-teacher claims, VLA, and RoArm
+  deployment remain blocked until the corrected 3D branch passes the same-run L1
+  health gate and is explicitly promoted.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate8_3daction_zero_preflight_seed1011_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate7_currentpose_xy3cm_same_seed1011_base_compare_summary.out:1-9`
+- `roarm_rl/roarm_cube_push_env.py`
+- `roarm_rl/train_cube_tap10cm_ppo_smoke.py`
+- `claudedocs/session_20260610_cube10cm_tap_rl_candidate8_target_residual.md`
+
+## D221 - Corrected 3D target-residual L1 still fails health; no L2 promotion
+
+Current State:
+
+- After D220 passed zero-action equivalence, ran exactly one explicitly approved
+  clean corrected 3D target-residual L1 health screen:
+  xy +/-3cm, seed1012, `num_envs=32`, `num_steps_per_env=64`,
+  `max_iterations=20`, `ppo_init_noise_std=0.2`, no gates,
+  `policy_action_space=3`.
+- No L2/large PPO, dataset generation, VLA, action-teacher, RoArm, SSH/B200, or
+  Track A work was run.
+- Summary line 3 reports `policy_action_space=3` and contract violations `0`.
+- Summary line 4 same-run zero-policy pre-eval:
+  `success_episode_rate=0.7350993377483444`, `overshoot_max=0.0625`,
+  `reward_mean_per_step=0.08071071922940659`, reset/numeric bridge OK.
+- Summary line 7 post-training eval:
+  `success_episode_rate=0.7027777777777777`, `overshoot_max=0.4375`,
+  `reward_mean_per_step=0.07069900840007026`,
+  `candidate8_target_residual_abs_max_max=0.0028551355935633183`,
+  forward/lateral/height residual max
+  `0.0009385579032823443 / 0.0028551355935633183 / 0.0009315494680777192`.
+- Summary line 9 base-relative gate:
+  `success_episode_delta=-0.03232155997056663`,
+  `overshoot_delta=0.375`, `signal_seen=True`, `l1_health_pass=False`,
+  `l2_scale_candidate=False`.
+
+Implication:
+
+- The action-space correction was necessary and verified, but it is not sufficient
+  to make the current reward/credit/task setup scale-ready.
+- Do not promote the corrected 3D policy to L2/large PPO.
+- Do not respond by reintroducing gates, half-scale grids, or displacement gates
+  as a reflex; those were already the failure mode D218/D219 were meant to avoid.
+- The next useful work must diagnose why a true 3D target-residual policy still
+  learns overshoot under xy +/-3cm: likely credit assignment, pose distribution,
+  termination/reward objective, or per-pose residual usefulness. Any next runtime
+  should be diagnostic or a single explicitly justified L1 design, not scale-up.
+- Dataset generation, action-teacher claims, VLA, and RoArm deployment remain
+  blocked.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate8_3daction_xy3cm_l1_40k_seed1012_summary.out:1-10`
+- `roarm_rl/roarm_cube_push_env.py`
+- `roarm_rl/train_cube_tap10cm_ppo_smoke.py`
+- `claudedocs/session_20260610_cube10cm_tap_rl_candidate8_target_residual.md`
