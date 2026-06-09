@@ -821,6 +821,153 @@
   strict contact-gated positive-control, DiffIK action dataset, tiny action
   dataset dry run, PPO/RL, large dataset, and RoArm.
 
+## Follow-Up: Horizon vs Clip Interpretation Audit
+
+- User asked whether the problem should simply be rendered in Isaac Sim and
+  whether the 10cm tap is failing because the step horizon is too short, i.e. the
+  robot is cut off while moving toward contact.
+- Before running any new Isaac Sim runtime, added and ran a local-only posthoc
+  audit from the existing x240 h580 ep608 reach trace and sanity JSON:
+  `sim_scripts/cube10cm_tap_rl_horizon_vs_clip_interpretation_audit.py`.
+- No GPU runtime, no dataset generation, no PPO/RL, no robot control, no
+  SSH/B200, no Track A.
+- Horizon summary line 2:
+  the existing x240 h580 ep608 trace is not an episode cutoff case:
+  `steps_executed=580`, `max_steps=580`, `terminated_count=0`,
+  `truncated_count=0`, command in-band steps `46..137`, final step `579`,
+  `episode_cutoff=NO`, `horizon_shortage=NO`.
+- Horizon summary line 3:
+  command target keeps progressing through the cube:
+  pre-contact delta `0.009993136m`, in-band-window delta `0.019768953m`,
+  post-window delta `0.096020695m`, final command face gap `0.105999991m`.
+- Horizon summary line 4:
+  applied joint-target FK moves away after the command contact window:
+  inside-window delta `-0.001222481m`, post-window delta `-0.005073384m`,
+  final applied FK face gap `-0.019887484m`.
+- Horizon summary line 5:
+  actual TCP also moves away after the command contact window:
+  inside-window delta `-0.001244128m`, post-window delta `-0.005120277m`,
+  final actual TCP face gap `-0.025572997m`.
+- Horizon summary line 6:
+  raw DiffIK delta max is `0.427774668rad`, clipped target delta max is
+  `0.010000000rad`, and actual joint step max is only `0.001492023rad`.
+- Horizon summary line 7 verdict:
+  `NOT_A_SIMPLE_MORE_HORIZON_STEPS_FIX`.
+- Interpretation:
+  increasing `steps`/episode horizon is not the same as changing the per-step
+  joint target generation contract. The continuous h580 ep608 case already ran
+  to the end without truncation. Under the same contract, the command keeps
+  moving through the object while applied FK and actual TCP remain precontact or
+  move away, so same-contract horizon inflation is not the next unblock.
+- Rendering note:
+  a plain Isaac Sim camera render can show that the visible TCP/cube do not make
+  strict contact, but it will not show the invisible command target or applied
+  joint-target FK. A useful render runtime, if explicitly approved later, should
+  overlay command target, applied FK target, actual TCP, cube face/contact band,
+  and timestep.
+- Next local-only unblock:
+  target-generation contract design separating Cartesian schedule, raw-delta
+  clip, target base (`actual joint_pos` versus previous target), and
+  actuator-follow/per-joint telemetry before any new tiny runtime.
+- Still blocked:
+  contact-gated positive-control, DiffIK action dataset, tiny action dataset dry
+  run, PPO/RL, large dataset, and RoArm.
+
+## Follow-Up: First-Button Target Path Audit
+
+- User challenged the direction of the debugging: a basic tap should put the TCP
+  on the object face, solve IK, and move there; repeated horizon/clip/follow
+  checks looked ineffective if the first controller contract itself was wrong.
+- Re-read the target path code instead of continuing to tune downstream knobs.
+- Found a first-button mismatch:
+  the positive-control target path used the legacy far-face-through formula. It
+  starts at `cube - push_dir * (half + precontact)`, but ends at
+  `cube + push_dir * (half + goal_push)`. In face-gap coordinates, this is not
+  final gap `goal_push`; it is final gap `cube_size + goal_push`.
+- Added default-off `--target_path_mode` to
+  `roarm_rl/test_positive_control_cube_tap10cm.py`.
+  Default stays `legacy_far_face_through` for log reproducibility. New explicit
+  candidate `near_face_goal` ends at near-face gap `goal_push_m`.
+- Added and ran local-only audit:
+  `sim_scripts/cube10cm_tap_rl_target_path_first_button_audit.py`.
+- No GPU runtime, no dataset generation, no PPO/RL, no robot control, no
+  SSH/B200, no Track A.
+- First-button audit line 2 code basis:
+  external DLS target path lines `160-164`, built-in DiffIK target path lines
+  `330-334`, parser arg line `683`.
+- First-button audit line 3:
+  cube size `0.100000000m`, half along `0.050000000m`, precontact
+  `0.020000000m`, goal push `0.006000000m`; legacy final face gap
+  `0.106000000m`; near-face goal final face gap `0.006000000m`; legacy path
+  delta `0.126000000m`; near-face path delta `0.026000000m`; ratio
+  `4.846153846`.
+- First-button audit line 4:
+  existing x240 command initial face gap `-0.019782793m`, final command face gap
+  `0.105999991m`, `matches_legacy_far_face=TRUE`,
+  `matches_near_face_goal=FALSE`, command inside steps `46..137`.
+- First-button audit line 5:
+  applied inside rows `0`, actual inside rows `0`; applied best face gap only
+  `-0.013487680m`, actual best face gap only `-0.018962901m`; applied FK error
+  grows from `0.122874349mm` to `127.058100165mm`.
+- First-button audit line 6 verdict:
+  `FIRST_BUTTON_MISMATCH_LEGACY_FAR_FACE_THROUGH_TARGET_FOR_10CM_TAP`.
+- Interpretation:
+  user's criticism is valid. The legacy target path does not implement the
+  intuitive "touch near face and push a few mm" target for 10cm. It asks the TCP
+  command to sweep across the whole 10cm object to the far side plus 6mm. This
+  makes the later step-clip/follow/horizon observations real but downstream of a
+  bad target-path assumption.
+- Next runtime candidate:
+  only after explicit approval, run one tiny local x240 h580 ep608 reach-trace
+  repeat with the same pose, strict contact gate, built-in step-clipped DiffIK,
+  `episode_length_s=6.08`, and only `--target_path_mode near_face_goal` changed.
+- Still blocked:
+  contact-gated positive-control, DiffIK action dataset, tiny action dataset dry
+  run, PPO/RL, large dataset, and RoArm.
+
+## Follow-Up: Reach-Contract Visual Audit
+
+- User asked why it stops before contact and whether a visual check would make
+  the reason clearer.
+- Added and ran local-only visual audit:
+  `sim_scripts/cube10cm_tap_rl_reach_contract_visual_audit.py`.
+- Inputs:
+  existing x240 per-step reach trace and root-cause summary only.
+- No GPU runtime, no dataset generation, no PPO/RL, no robot control, no
+  SSH/B200, no Track A.
+- Generated:
+  `cube10cm_tap_rl_reach_contract_visual_audit.svg`,
+  `.html`, `.json`, and `.summary.out`.
+- Rendered the HTML/SVG to:
+  `cube10cm_tap_rl_reach_contract_visual_audit.png` using local headless Chrome.
+- Visual inspection:
+  the PNG is not blank and shows the expected pattern. Blue command target line
+  crosses the green ±10mm contact band; orange applied-FK and red actual-TCP
+  lines stay below the band throughout.
+- Visual summary line 3:
+  command inside rows `184`, applied inside rows `0`, actual inside rows `0`,
+  first command in-band step `46`, last `137`.
+- Visual summary line 4:
+  at first in-band step `46`, command gap is `-0.009789657m`, applied FK is
+  `-0.013591619m`, actual TCP is `-0.019208591m`.
+- Visual summary line 5:
+  at mid step `92`, command gap is `0.000203449m`, applied FK is
+  `-0.014196436m`, actual TCP is `-0.019825798m`.
+- Visual summary line 6:
+  at final step `579`, command gap is `0.105999991m`, applied FK is
+  `-0.019887484m`, actual TCP is `-0.025572997m`.
+- Visual summary line 7 verdict:
+  `VISUAL_CONFIRMS_COMMAND_TARGET_PASSES_CONTACT_BAND_BUT_APPLIED_FK_AND_ACTUAL_TCP_STAY_PRECONTACT`.
+- Interpretation:
+  visually, the command target "goes into/through the cube," but that does not
+  mean the robot TCP does. The applied FK and actual TCP remain on the precontact
+  side. This makes the current cause easier to see: target-generation clipping
+  plus actuator follow lag, not contact-gate tolerance or cube mass as the first
+  cause.
+- Still blocked:
+  strict contact-gated positive-control, DiffIK action dataset, tiny action
+  dataset dry run, PPO/RL, large dataset, and RoArm.
+
 ## Follow-Up: Default-Off Per-Step Reach Trace Patch
 
 - User requested the D193 next unblock:

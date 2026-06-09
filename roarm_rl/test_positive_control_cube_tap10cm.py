@@ -158,7 +158,10 @@ def _closed_loop_ik_joint_target(
         pre = cube_local[env_id].copy()
         through = cube_local[env_id].copy()
         pre[:2] -= push_dir[env_id] * (half_along + float(args.precontact_clearance_m))
-        through[:2] += push_dir[env_id] * (half_along + float(args.goal_push_m))
+        if args.target_path_mode == "near_face_goal":
+            through[:2] += push_dir[env_id] * (float(args.goal_push_m) - half_along)
+        else:
+            through[:2] += push_dir[env_id] * (half_along + float(args.goal_push_m))
         side_center_z = cube_local[env_id, 2] + float(cfg.cube_size_z_m) * 0.5 + float(args.tcp_top_margin_m)
         pre[2] = side_center_z
         through[2] = side_center_z
@@ -325,7 +328,10 @@ def _closed_loop_builtin_diffik_joint_target(
     pre_w = cube_w.clone()
     through_w = cube_w.clone()
     pre_w[:, 0:2] = cube_w[:, 0:2] - push_dir * (half_along + float(args.precontact_clearance_m)).unsqueeze(-1)
-    through_w[:, 0:2] = cube_w[:, 0:2] + push_dir * (half_along + float(args.goal_push_m)).unsqueeze(-1)
+    if args.target_path_mode == "near_face_goal":
+        through_w[:, 0:2] = cube_w[:, 0:2] + push_dir * (float(args.goal_push_m) - half_along).unsqueeze(-1)
+    else:
+        through_w[:, 0:2] = cube_w[:, 0:2] + push_dir * (half_along + float(args.goal_push_m)).unsqueeze(-1)
     side_center_z = cube_w[:, 2] + float(cfg.cube_size_z_m) * 0.5 + float(args.tcp_top_margin_m)
     pre_w[:, 2] = side_center_z
     through_w[:, 2] = side_center_z
@@ -503,6 +509,7 @@ def _write_result(out_json: Path, out_summary: Path, result: dict[str, Any]) -> 
             f"push_dir=({result.get('fixed_push_dir_x', 'NA')},{result.get('fixed_push_dir_y', 'NA')}) "
             f"controller_mode={result.get('controller_mode', 'NA')} "
             f"direct_ik_joint_target_apply={result.get('direct_ik_joint_target_apply', 'NA')} "
+            f"target_path_mode={result.get('target_path_mode', 'NA')} "
             f"precontact_clearance_m={result.get('precontact_clearance_m', 'NA')} "
             f"tcp_top_margin_m={result.get('tcp_top_margin_m', 'NA')} "
             f"goal_push_m={result.get('goal_push_m', 'NA')} "
@@ -672,6 +679,11 @@ def main() -> int:
     parser.add_argument("--precontact_clearance_m", type=float, default=0.020)
     parser.add_argument("--tcp_top_margin_m", type=float, default=-0.050)
     parser.add_argument("--goal_push_m", type=float, default=0.006)
+    parser.add_argument(
+        "--target_path_mode",
+        choices=("legacy_far_face_through", "near_face_goal"),
+        default="legacy_far_face_through",
+    )
     parser.add_argument("--teacher_horizon_frac", type=float, default=1.0)
     parser.add_argument("--episode_length_s", type=float, default=-1.0)
     parser.add_argument(
@@ -1107,6 +1119,7 @@ def main() -> int:
             "fixed_push_dir_x": float(args.fixed_push_dir_x),
             "fixed_push_dir_y": float(args.fixed_push_dir_y),
             "controller_mode": str(args.controller_mode),
+            "target_path_mode": str(args.target_path_mode),
             "precontact_clearance_m": float(args.precontact_clearance_m),
             "tcp_top_margin_m": float(args.tcp_top_margin_m),
             "goal_push_m": float(args.goal_push_m),
@@ -1184,6 +1197,7 @@ def main() -> int:
             "fixed_push_dir_x": float(args.fixed_push_dir_x),
             "fixed_push_dir_y": float(args.fixed_push_dir_y),
             "controller_mode": str(args.controller_mode),
+            "target_path_mode": str(args.target_path_mode),
             "precontact_clearance_m": float(args.precontact_clearance_m),
             "tcp_top_margin_m": float(args.tcp_top_margin_m),
             "goal_push_m": float(args.goal_push_m),

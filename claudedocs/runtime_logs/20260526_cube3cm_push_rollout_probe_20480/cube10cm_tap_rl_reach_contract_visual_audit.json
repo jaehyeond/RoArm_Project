@@ -1,0 +1,62 @@
+{
+  "artifact_type": "cube10cm_tap_rl_reach_contract_visual_audit_v1",
+  "b200": false,
+  "dataset_generation": false,
+  "gpu_runtime": false,
+  "html": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_reach_contract_visual_audit.html",
+  "interpretation": "Visual confirms command target enters/passes the contact band, while FK of the applied joint target and actual TCP remain on the pre-contact side. This supports target-generation clipping plus actuator lag.",
+  "local_posthoc_visual_only": true,
+  "metrics": {
+    "actual_inside_rows": 0,
+    "applied_inside_rows": 0,
+    "command_inside_rows": 184,
+    "final_step": 579,
+    "first_command_inside_step": 46,
+    "last_command_inside_step": 137,
+    "snapshots": [
+      {
+        "actual_gap_m": -0.019208591431379318,
+        "applied_gap_m": -0.013591618721501053,
+        "applied_minus_actual_m": 0.005616972709878265,
+        "command_gap_m": -0.009789656847715378,
+        "command_minus_applied_m": 0.0038019618737856753,
+        "label": "first in-band",
+        "step": 46
+      },
+      {
+        "actual_gap_m": -0.019825797528028488,
+        "applied_gap_m": -0.014196436154635839,
+        "applied_minus_actual_m": 0.0056293613733926495,
+        "command_gap_m": 0.0002034492790699005,
+        "command_minus_applied_m": 0.01439988543370574,
+        "label": "mid",
+        "step": 92
+      },
+      {
+        "actual_gap_m": -0.020452719181776047,
+        "applied_gap_m": -0.014814100116805728,
+        "applied_minus_actual_m": 0.005638619064970318,
+        "command_gap_m": 0.00997929647564888,
+        "command_minus_applied_m": 0.02479339659245461,
+        "label": "last in-band",
+        "step": 137
+      },
+      {
+        "actual_gap_m": -0.025572996586561203,
+        "applied_gap_m": -0.019887484099544883,
+        "applied_minus_actual_m": 0.00568551248701632,
+        "command_gap_m": 0.10599999129772186,
+        "command_minus_applied_m": 0.12588747539726675,
+        "label": "final",
+        "step": 579
+      }
+    ]
+  },
+  "png": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_reach_contract_visual_audit.png",
+  "robot_control": false,
+  "ssh": false,
+  "svg": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_reach_contract_visual_audit.svg",
+  "trace": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_x240_reachtrace_trace.json",
+  "track_a": false,
+  "training": false
+}

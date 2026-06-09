@@ -1,0 +1,59 @@
+{
+  "artifact_type": "cube10cm_tap_rl_target_path_first_button_audit_v1",
+  "b200": false,
+  "constants": {
+    "cube_size_m": 0.1,
+    "goal_push_m": 0.006,
+    "half_along_m": 0.05,
+    "legacy_far_face_final_face_gap_m": 0.10600000000000001,
+    "legacy_over_near_face_path_ratio": 4.846153846153846,
+    "legacy_path_face_gap_delta_m": 0.126,
+    "near_face_goal_final_face_gap_m": 0.006,
+    "near_face_path_face_gap_delta_m": 0.026000000000000002,
+    "precontact_clearance_m": 0.02
+  },
+  "dataset_generation": false,
+  "existing_x240_trace": {
+    "actual_best_face_gap_m": -0.018962901085615158,
+    "actual_best_step": 18,
+    "actual_final_face_gap_m": -0.025572996586561203,
+    "actual_initial_face_gap_m": -0.021146010607481003,
+    "actual_inside_rows": 0,
+    "applied_best_face_gap_m": -0.013487679703673927,
+    "applied_best_step": 36,
+    "applied_final_face_gap_m": -0.019887484099544883,
+    "applied_fk_err_final_mm": 127.05810016506004,
+    "applied_fk_err_initial_mm": 0.12287434907735403,
+    "applied_initial_face_gap_m": -0.019905470905172418,
+    "applied_inside_rows": 0,
+    "command_final_face_gap_m": 0.10599999129772186,
+    "command_initial_face_gap_m": -0.019782792776823044,
+    "command_inside_first_step": 46,
+    "command_inside_last_step": 137,
+    "command_matches_legacy_far_face": true,
+    "command_matches_near_face_goal": false,
+    "final_step": 579
+  },
+  "gpu_runtime": false,
+  "inputs": {
+    "harness": "roarm_rl/test_positive_control_cube_tap10cm.py",
+    "sanity": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_x240_reachtrace_sanity.json",
+    "trace": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_x240_reachtrace_trace.json"
+  },
+  "line_refs": {
+    "builtin_legacy_pre": 330,
+    "builtin_legacy_through": 334,
+    "builtin_near_face_branch": 331,
+    "external_legacy_pre": 160,
+    "external_legacy_through": 164,
+    "external_near_face_branch": 161,
+    "parser_target_path_mode": 683
+  },
+  "local_posthoc_audit_only": true,
+  "next_local_step": "Use the default-off target_path_mode=near_face_goal candidate for one explicit tiny runtime only after approval. Keep contact gate strict and keep dataset/RL/RoArm blocked.",
+  "robot_control": false,
+  "ssh": false,
+  "track_a": false,
+  "training": false,
+  "verdict": "FIRST_BUTTON_MISMATCH_LEGACY_FAR_FACE_THROUGH_TARGET_FOR_10CM_TAP"
+}

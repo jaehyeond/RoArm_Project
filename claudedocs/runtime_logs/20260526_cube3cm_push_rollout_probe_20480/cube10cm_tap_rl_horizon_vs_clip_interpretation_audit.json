@@ -1,0 +1,112 @@
+{
+  "artifact_type": "cube10cm_tap_rl_horizon_vs_clip_interpretation_audit_v1",
+  "b200": false,
+  "clip": {
+    "actual_joint_step_abs_max_rad": 0.0014920234680175781,
+    "clipped_delta_abs_max_rad": 0.009999999776482582,
+    "raw_delta_abs_max_rad": 0.42777466773986816,
+    "step_clip_rad": 0.01
+  },
+  "command_inside_first_step": 46,
+  "command_inside_last_step": 137,
+  "dataset_generation": false,
+  "final_step": 579,
+  "gpu_runtime": false,
+  "interpretation": {
+    "episode_cutoff": false,
+    "episode_horizon_shortage": false,
+    "more_steps_same_contract_unblocks": false,
+    "why": "The continuous 580-step episode is not truncated, command enters the band at step 46 and continues through the cube. During and after the command-inside window, applied FK and actual TCP move away from the contact band, so this is not simply a too-short horizon."
+  },
+  "local_posthoc_audit_only": true,
+  "max_steps": 580,
+  "robot_control": false,
+  "sanity": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_x240_reachtrace_sanity.json",
+  "slopes": {
+    "actual_tcp": {
+      "inside_window": {
+        "delta_m": -0.0012441277503967285,
+        "end_m": -0.020452719181776047,
+        "end_step": 137.0,
+        "per_step_m": -1.367173352084317e-05,
+        "start_m": -0.019208591431379318,
+        "start_step": 46.0
+      },
+      "post_inside_to_final": {
+        "delta_m": -0.005120277404785156,
+        "end_m": -0.025572996586561203,
+        "end_step": 579.0,
+        "per_step_m": -1.1584338019875919e-05,
+        "start_m": -0.020452719181776047,
+        "start_step": 137.0
+      },
+      "pre_to_first_inside": {
+        "delta_m": 0.0019374191761016846,
+        "end_m": -0.019208591431379318,
+        "end_step": 46.0,
+        "per_step_m": 4.2117808176123575e-05,
+        "start_m": -0.021146010607481003,
+        "start_step": 0.0
+      }
+    },
+    "applied_fk": {
+      "inside_window": {
+        "delta_m": -0.0012224813953046754,
+        "end_m": -0.014814100116805728,
+        "end_step": 137.0,
+        "per_step_m": -1.3433861486864564e-05,
+        "start_m": -0.013591618721501053,
+        "start_step": 46.0
+      },
+      "post_inside_to_final": {
+        "delta_m": -0.005073383982739155,
+        "end_m": -0.019887484099544883,
+        "end_step": 579.0,
+        "per_step_m": -1.1478244304839716e-05,
+        "start_m": -0.014814100116805728,
+        "start_step": 137.0
+      },
+      "pre_to_first_inside": {
+        "delta_m": 0.006313852183671365,
+        "end_m": -0.013591618721501053,
+        "end_step": 46.0,
+        "per_step_m": 0.0001372576561667688,
+        "start_m": -0.019905470905172418,
+        "start_step": 0.0
+      }
+    },
+    "command": {
+      "inside_window": {
+        "delta_m": 0.019768953323364258,
+        "end_m": 0.00997929647564888,
+        "end_step": 137.0,
+        "per_step_m": 0.00021724124531169515,
+        "start_m": -0.009789656847715378,
+        "start_step": 46.0
+      },
+      "post_inside_to_final": {
+        "delta_m": 0.09602069482207298,
+        "end_m": 0.10599999129772186,
+        "end_step": 579.0,
+        "per_step_m": 0.00021724139100016512,
+        "start_m": 0.00997929647564888,
+        "start_step": 137.0
+      },
+      "pre_to_first_inside": {
+        "delta_m": 0.009993135929107666,
+        "end_m": -0.009789656847715378,
+        "end_step": 46.0,
+        "per_step_m": 0.00021724208541538405,
+        "start_m": -0.019782792776823044,
+        "start_step": 0.0
+      }
+    }
+  },
+  "ssh": false,
+  "steps_executed": 580,
+  "terminated_count": 0,
+  "trace": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_x240_reachtrace_trace.json",
+  "track_a": false,
+  "training": false,
+  "truncated_count": 0
+}
