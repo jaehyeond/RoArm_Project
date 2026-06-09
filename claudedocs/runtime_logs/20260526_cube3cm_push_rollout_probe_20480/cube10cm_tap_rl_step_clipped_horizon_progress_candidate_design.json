@@ -1,0 +1,137 @@
+{
+  "artifact_type": "cube10cm_tap_rl_step_clipped_horizon_progress_candidate_design_v1",
+  "b200": false,
+  "basis": {
+    "basis_ok": true,
+    "contract_summary_lines_2_9": [
+      "line2 answer why_10cm_steps_short=HARNESS_120_STEPS_AND_ENV_1P2S_AT_DT_0P01 ten_cm_max_steps=120 ten_cm_runtime_s=1.200 ten_cm_episode_length_s=1.200 not_due_to_random_position=YES",
+      "line3 target_policy ten_cm_target_random=NO ten_cm_fixed_cube_xy=(0.250,0.000) ten_cm_fixed_push_dir=(1.0,0.0) three_cm_default=random_unless_fixed_args three_cm_eval10240_fixed_args=None",
+      "line4 horizon_mass_size three_cm_steps=580 three_cm_episode_s=6.080 ten_cm_steps=120 ten_cm_runtime_s=1.200 size_ratio_10cm_over_3cm=3.333333 mass_ratio_10cm_over_3cm=36.000000 horizon_steps_ratio_3cm_over_10cm=4.833333 horizon_seconds_ratio_3cm_over_10cm=5.066667",
+      "line5 three_cm_contract controller=IsaacLab_DifferentialIKController command_type=position env_action_loop_bypassed=True base_steps=350 v3_posx_steps=580 max_diffik_joint_step_rad=0.035 diffik_clip_rate_mean=0.652074015 existing_eval_follow_columns=False",
+      "line6 three_cm_outcome_and_speed controlled_push_rate=0.943164062 success_marker_rate=0.594824219 low_motion_rate=0.042480469 impact_outlier_rate=0.007519531 max_cube_speed_mean_mps=0.400678317 speed_p95_mps=1.302103193 speed_p99_mps=1.733444051 top_impact_speed_mps_max=4.549609073",
+      "line7 ten_cm_contract baseline_closed_loop_push_steps=72 slow240_closed_loop_push_steps=240 max_steps_both=120 controller_mode=external_closed_loop_direct_apply action_wrapper_cap_inactive_by_zero_action=YES baseline_action_abs_max=0.0 slow240_action_abs_max=0.0",
+      "line8 ten_cm_follow_and_contact baseline_follow_final_rad=0.362854958 slow240_follow_final_rad=0.170210123 baseline_tap_success=0.0 slow240_tap_success=0.0 baseline_contact_seen=0.0 slow240_contact_seen=0.0",
+      "line9 verdict ten_cm_short_horizon_is_harness_contract=YES object_position_primary_cause=NO three_cm_had_speed_clip_guard_issues=YES contract_difference=LONG_CONTROLLED_PUSH_FILTERED_3CM_VS_SHORT_STRICT_CONTACT_GATED_10CM"
+    ],
+    "cube3cm_reference_lines": {
+      "clipped_delta": {
+        "line": 771,
+        "text": "clipped_delta = torch.maximum(torch.minimum(raw_delta, max_step), -max_step)"
+      },
+      "compute": {
+        "line": 623,
+        "text": "joint_pos_des = diffik.compute(link5_pos_b, link5_quat_b, jacobian, joint_pos)"
+      },
+      "diffik_cfg": {
+        "line": 356,
+        "text": "diffik_cfg = DifferentialIKControllerCfg("
+      },
+      "target_write": {
+        "line": 784,
+        "text": "inner.robot_dof_targets[:] = target_full"
+      }
+    },
+    "step_clipped_audit_lines_2_7": [
+      "line2 runtime_outcome status=FAIL controller_mode=isaac_builtin_diffik_step_clipped_direct_apply step_clip_rad=0.010 contact_seen=0.0 tap_success=0.0 professor_evidence=PASS terminated_count=0 truncated_count=2",
+      "line3 target_and_clip target_path_ok=True closed_loop_ik_ok_rate=1.0 target_inside_max=1.0 target_face_gap_final_m=0.105999991 raw_delta_final_rad=0.416009426 clipped_delta_final_rad=0.010000000 clip_rate_final=0.800000012",
+      "line4 actual_follow face_gap_max_m=-0.019376528 shortfall_min_m=0.009376528 shortfall_final_m=0.010520221 target_delta_final_rad=0.010000000 follow_final_rad=0.008570671 follow_max_rad=0.172334790 actual_step_final_rad=0.001987845",
+      "line5 comparison full_builtin_follow_final_rad=0.447358370 slow240_follow_final_rad=0.170210123 follow_lag_solved_vs_full_builtin=True baseline_shortfall_min_m=0.009533616 slow240_shortfall_min_m=0.009191336",
+      "line6 verdict primary_blocker=STEP_CLIPPED_DIFFIK_TARGET_APPLICATION_HORIZON_OR_PROGRESS_TOO_SHORT contact_gated_positive_control=RUN_FAILED diffik_action_dataset=BLOCKED tiny_action_dataset_dry_run=BLOCKED ppo_rl_training=BLOCKED large_dataset=BLOCKED roarm=BLOCKED",
+      "line7 next local_unblock=design_step_clipped_diffik_horizon_progress_candidate contact_gate_relaxation=NO dataset_rl_roarm=NO"
+    ]
+  },
+  "branch": "professor_cube10cm_tap_reaction_quality_tier",
+  "candidate": {
+    "changed_as_one_contract": {
+      "closed_loop_push_steps": "72 -> 580",
+      "steps": "120 -> 580"
+    },
+    "command": "conda run -n isaaclab --no-capture-output python -u -m roarm_rl.test_positive_control_cube_tap10cm --num_envs 2 --steps 580 --seed 962 --device cuda:0 --controller_mode isaac_builtin_diffik_step_clipped_direct_apply --closed_loop_push_steps 580 --builtin_diffik_step_clip_rad 0.010 --out_json /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_sanity.json --out_summary /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_sanity_summary.out",
+    "name": "isaac_builtin_diffik_step_clipped_h580_positive_control",
+    "out_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_sanity.json",
+    "out_summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_sanity_summary.out",
+    "status": "DESIGNED_NOT_RUN",
+    "unchanged": {
+      "builtin_diffik_lambda": 0.01,
+      "builtin_diffik_step_clip_rad": 0.01,
+      "contact_gate": "unchanged_strict",
+      "controller_mode": "isaac_builtin_diffik_step_clipped_direct_apply",
+      "cube_mass_kg": 0.72,
+      "cube_size_m": 0.1,
+      "cube_xy_m": [
+        0.25,
+        0.0
+      ],
+      "dataset_generation": false,
+      "geometry": "unchanged",
+      "push_dir_xy": [
+        1.0,
+        0.0
+      ],
+      "robot_control": false,
+      "training": false
+    }
+  },
+  "dataset_generation": false,
+  "gpu_runtime": false,
+  "local_design_only": true,
+  "outcome": {
+    "candidate": "READY_FOR_EXPLICIT_RUNTIME_APPROVAL_ONLY",
+    "contact_gated_positive_control": "RUN_FAILED",
+    "diffik_action_dataset": "BLOCKED",
+    "large_dataset": "BLOCKED",
+    "ppo_rl_training": "BLOCKED",
+    "roarm": "BLOCKED",
+    "tiny_action_dataset_dry_run": "BLOCKED"
+  },
+  "outputs": {
+    "json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_step_clipped_horizon_progress_candidate_design.json",
+    "summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_step_clipped_horizon_progress_candidate_design_summary.out"
+  },
+  "plans": {
+    "current_step_clipped_10cm": {
+      "closed_loop_push_steps": 72,
+      "max_steps": 120,
+      "runtime_s_at_dt_0p01": 1.2,
+      "target_face_gap_rate_m_per_step": 0.00175,
+      "target_final_alpha": 1.0,
+      "target_final_face_gap_m": 0.106,
+      "target_inside_band_first_step_1based": 6,
+      "target_inside_band_last_step_1based": 17,
+      "target_inside_band_step_count": 12
+    },
+    "selected_h580_candidate": {
+      "closed_loop_push_steps": 580,
+      "max_steps": 580,
+      "runtime_s_at_dt_0p01": 5.8,
+      "target_face_gap_rate_m_per_step": 0.00021724137931034484,
+      "target_final_alpha": 1.0,
+      "target_final_face_gap_m": 0.106,
+      "target_inside_band_first_step_1based": 47,
+      "target_inside_band_last_step_1based": 138,
+      "target_inside_band_step_count": 92
+    },
+    "slow240_direct_apply_reference": {
+      "closed_loop_push_steps": 240,
+      "max_steps": 120,
+      "runtime_s_at_dt_0p01": 1.2,
+      "target_face_gap_rate_m_per_step": 0.000525,
+      "target_final_alpha": 0.5,
+      "target_final_face_gap_m": 0.043,
+      "target_inside_band_first_step_1based": 20,
+      "target_inside_band_last_step_1based": 57,
+      "target_inside_band_step_count": 38
+    }
+  },
+  "rejected": {
+    "contact_gate_relaxation": "blocked_until_horizon_progress_result",
+    "dataset_or_rl": "blocked",
+    "geometry_change": "not selected before horizon parity is tested",
+    "roarm": "blocked",
+    "step_clip_change": "not selected; user asked steps/closed_loop_push_steps"
+  },
+  "robot_control": false,
+  "ssh": false,
+  "track_a": false,
+  "training": false
+}

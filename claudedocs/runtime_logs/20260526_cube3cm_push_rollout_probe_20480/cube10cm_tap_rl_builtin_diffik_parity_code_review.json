@@ -1,0 +1,218 @@
+{
+  "artifact_type": "cube10cm_tap_rl_builtin_diffik_parity_code_review_v1",
+  "b200": false,
+  "branch": "professor_cube10cm_tap_reaction_quality_tier",
+  "code_review": {
+    "contact_gate": [
+      {
+        "line": 1106,
+        "text": "            (face_gap >= -float(self.cfg.tap_contact_face_band_m))"
+      },
+      {
+        "line": 1123,
+        "text": "        contact_context = contact_proxy | self._tap_contact_seen"
+      },
+      {
+        "line": 1133,
+        "text": "        success_now = (contact_proxy | self._tap_contact_seen) & reaction_now & ~overshoot_now"
+      }
+    ],
+    "env_action_wrapper_scale_cap_lead": [
+      {
+        "line": 333,
+        "text": "        self._smoothed_actions = torch.zeros((self.num_envs, self.cfg.action_space), device=self.device)"
+      },
+      {
+        "line": 698,
+        "text": "        raw_delta = self.cfg.action_scale * self._smoothed_actions"
+      },
+      {
+        "line": 700,
+        "text": "        self._last_joint_delta_cap_rate[:] = (torch.abs(raw_delta) >= max_delta - 1.0e-9).float().mean(dim=-1)"
+      },
+      {
+        "line": 734,
+        "text": "        targets_unclamped = target_base + delta"
+      },
+      {
+        "line": 740,
+        "text": "        targets = torch.maximum(torch.minimum(targets, joint_pos + lead), joint_pos - lead)"
+      }
+    ],
+    "env_direct_override_read": {
+      "line": 633,
+      "text": "        override_targets = getattr(self, \"_external_joint_targets_override\", None)"
+    },
+    "isaac_task_space_pattern": [
+      {
+        "line": 93,
+        "text": "        self._ik_controller = DifferentialIKController("
+      },
+      {
+        "line": 207,
+        "text": "            joint_pos_des = self._ik_controller.compute(ee_pos_curr, ee_quat_curr, jacobian, joint_pos)"
+      },
+      {
+        "line": 211,
+        "text": "        self._asset.set_joint_position_target(joint_pos_des, self._joint_ids)"
+      }
+    ],
+    "original_10cm_transition_kept_builtin_diffik": true,
+    "tap_harness_action_rewrap": {
+      "line": 184,
+      "text": "    action_t = (target_t - target_base) / max(float(cfg.action_scale), 1.0e-6)"
+    },
+    "tap_harness_controller_choices": {
+      "line": 313,
+      "text": "        choices=(\"builtin_teacher\", \"external_closed_loop\", \"external_closed_loop_direct_apply\"),"
+    },
+    "tap_harness_direct_override_write": {
+      "line": 457,
+      "text": "                inner._external_joint_targets_override = joint_target"
+    },
+    "tap_harness_has_builtin_diffik_controller": false,
+    "tap_harness_local_ik_import": {
+      "line": 80,
+      "text": "    from sim_scripts.roarm_kinematics import fk_tcp, ik_dls"
+    },
+    "tap_harness_uses_local_ik_dls": true,
+    "ten_cm_probe_is_thin_wrapper_over_three_cm_diffik_engine": true,
+    "three_cm_probe_uses_builtin_diffik": true
+  },
+  "dataset_generation": false,
+  "decision_chain": {
+    "d118_original_10cm_controller_contract": [
+      "claudedocs/DECISIONS.md:6012-6019",
+      "claudedocs/DECISIONS.md:6030-6034"
+    ],
+    "d122_failure_interpretation": [
+      "claudedocs/DECISIONS.md:6212-6219",
+      "claudedocs/DECISIONS.md:6265-6272"
+    ],
+    "d185_why_direct_apply_was_created": [
+      "claudedocs/DECISIONS.md:10065-10079",
+      "claudedocs/DECISIONS.md:10081-10101"
+    ],
+    "d186_direct_apply_result": [
+      "claudedocs/DECISIONS.md:10129-10149",
+      "claudedocs/DECISIONS.md:10181-10189"
+    ],
+    "session_source_cross_check": [
+      "claudedocs/session_20260608_cube10cm_tap_rl_preflight_policy_gate.md:485-524",
+      "claudedocs/session_20260608_cube10cm_tap_rl_preflight_policy_gate.md:528-564"
+    ]
+  },
+  "existing_log_evidence": {
+    "controller_contract_summary_lines_1_10": [
+      "line1 artifact=cube10cm_vs_cube3cm_controller_contract_audit_v1 local_posthoc_audit_only=YES gpu_runtime_launched_by_this_audit=NO dataset_generation=NO training=NO robot_control=NO ssh=NO b200=NO track_a=NO",
+      "line2 answer why_10cm_steps_short=HARNESS_120_STEPS_AND_ENV_1P2S_AT_DT_0P01 ten_cm_max_steps=120 ten_cm_runtime_s=1.200 ten_cm_episode_length_s=1.200 not_due_to_random_position=YES",
+      "line3 target_policy ten_cm_target_random=NO ten_cm_fixed_cube_xy=(0.250,0.000) ten_cm_fixed_push_dir=(1.0,0.0) three_cm_default=random_unless_fixed_args three_cm_eval10240_fixed_args=None",
+      "line4 horizon_mass_size three_cm_steps=580 three_cm_episode_s=6.080 ten_cm_steps=120 ten_cm_runtime_s=1.200 size_ratio_10cm_over_3cm=3.333333 mass_ratio_10cm_over_3cm=36.000000 horizon_steps_ratio_3cm_over_10cm=4.833333 horizon_seconds_ratio_3cm_over_10cm=5.066667",
+      "line5 three_cm_contract controller=IsaacLab_DifferentialIKController command_type=position env_action_loop_bypassed=True base_steps=350 v3_posx_steps=580 max_diffik_joint_step_rad=0.035 diffik_clip_rate_mean=0.652074015 existing_eval_follow_columns=False",
+      "line6 three_cm_outcome_and_speed controlled_push_rate=0.943164062 success_marker_rate=0.594824219 low_motion_rate=0.042480469 impact_outlier_rate=0.007519531 max_cube_speed_mean_mps=0.400678317 speed_p95_mps=1.302103193 speed_p99_mps=1.733444051 top_impact_speed_mps_max=4.549609073",
+      "line7 ten_cm_contract baseline_closed_loop_push_steps=72 slow240_closed_loop_push_steps=240 max_steps_both=120 controller_mode=external_closed_loop_direct_apply action_wrapper_cap_inactive_by_zero_action=YES baseline_action_abs_max=0.0 slow240_action_abs_max=0.0",
+      "line8 ten_cm_follow_and_contact baseline_follow_final_rad=0.362854958 slow240_follow_final_rad=0.170210123 baseline_tap_success=0.0 slow240_tap_success=0.0 baseline_contact_seen=0.0 slow240_contact_seen=0.0",
+      "line9 verdict ten_cm_short_horizon_is_harness_contract=YES object_position_primary_cause=NO three_cm_had_speed_clip_guard_issues=YES contract_difference=LONG_CONTROLLED_PUSH_FILTERED_3CM_VS_SHORT_STRICT_CONTACT_GATED_10CM",
+      "line10 blocked_status rl_contact_gated_positive_control=FAIL diffik_action_dataset=BLOCKED tiny_action_dataset_dry_run=BLOCKED ppo_rl_training=BLOCKED large_dataset=BLOCKED roarm=BLOCKED"
+    ],
+    "direct_candidate_summary_lines_1_6": [
+      "line1 artifact=cube10cm_tap_rl_direct_ik_apply_candidate_design_v1 local_design_static_audit_only=YES gpu_runtime=NO dataset_generation=NO training=NO robot_control=NO ssh=NO b200=NO track_a=NO",
+      "line2 basis code_ready=True basis_ok=True isaac_pattern_supported=True cap_only_falsified_as_primary=True lead_limit_observed=True contact_seen=0.0 tap_success=0.0",
+      "line3 path_comparison current=IK_target_to_normalized_RL_action_to_smoothing_scale_cap_lead_limit_to_robot_dof_targets isaac_pattern=IK_controller_compute_to_joint_pos_des_to_set_joint_position_target",
+      "line4 selected_candidate status=DESIGNED_NOT_RUN name=direct_ik_apply_positive_control implementation_status=HARNESS_AND_ENV_DEFAULT_OFF_MODE_READY purpose=separate_target_geometry_or_ik_from_RL_action_target_application num_envs=2 max_steps=120 seed=962 device=cuda:0 geometry=fixed_from_cap040",
+      "line5 not_selected cap040_lead120=reserve_after_direct_ik_apply joint_delta_reference=reserve_changes_action_base_semantics action_scale=changes_command_normalization goal_push_or_contact_band=geometry_change dataset_or_rl=blocked",
+      "line6 verdict ready_for_explicit_runtime_approval_only=True diffik_action_dataset=BLOCKED tiny_action_dataset_dry_run=BLOCKED ppo_rl_training=BLOCKED large_dataset=BLOCKED roarm=BLOCKED"
+    ],
+    "direct_telemetry_audit_lines_1_7": [
+      "line1 artifact=cube10cm_tap_rl_direct_ik_telemetry_result_audit_v1 local_posthoc_audit_only=YES gpu_runtime_launched_by_this_audit=NO dataset_generation=NO training=NO robot_control=NO ssh=NO b200=NO track_a=NO",
+      "line2 runtime_outcome status=FAIL positive_control=FAIL professor_physical_reaction_seen=1.0 contact_seen=0.0 tap_success=0.0",
+      "line3 target_frame target_path_ok=True target_inside_max=1.0 target_face_gap_final_m=0.105999994 target_fk_err_max_mm=1.478177801 actual_fk_vs_sim_tcp_err_max_mm=0.000999977 fk_frame_ok=True",
+      "line4 follow_lag target_delta_abs_max_final_rad=0.358783723 direct_joint_follow_abs_max_final_rad=0.362854958 direct_joint_follow_abs_mean_final_rad=0.127495408 direct_actual_joint_step_abs_max_final_rad=0.030904710 actual_velocity_est_max_final_rad_s=3.090471029 near_velocity_limit=True",
+      "line5 exclusions wrapper_path_bypassed=True action_abs_max_trace=0.0 cap_rate=0.0 lead_limit_rate=0.0 observed_actual_face_gap_max_m=-0.019533616 observed_actual_shortfall_min_m=0.009533616",
+      "line6 verdict primary_blocker=DIRECT_JOINT_FOLLOW_ACTUATOR_TRACKING_LAG diffik_action_dataset=BLOCKED tiny_action_dataset_dry_run=BLOCKED ppo_rl_training=BLOCKED large_dataset=BLOCKED roarm=BLOCKED",
+      "line7 next local_design_next=actuator_follow_time_scale_candidate_design not_allowed=dataset_rl_roarm_or_action_teacher_before_contact_gated_positive_control"
+    ],
+    "direct_telemetry_summary_lines_1_10": [
+      "line1 artifact=cube10cm_tap_rl_positive_control_sanity_v1 status=FAIL gpu_runtime=YES_LOCAL_TINY_ISAACLAB_POSITIVE_CONTROL dataset_generation=NO training=NO robot_control=NO ssh=NO b200=NO track_a=NO",
+      "line2 env_contract env_id=RoArm-CubeTap10cm-Direct-v0 device=cuda:0 cube_size_m=0.1 cube_mass_kg=0.72 final_1cm_required=False",
+      "line3 scripted_control num_envs=2 max_steps=120 steps_executed=120 cube_xy=(0.25,0.0) push_dir=(1.0,0.0) controller_mode=external_closed_loop_direct_apply direct_ik_joint_target_apply=True precontact_clearance_m=0.02 tcp_top_margin_m=-0.05 goal_push_m=0.006 max_joint_delta_per_step_rad=0.01 joint_target_lead_limit_rad=0.06",
+      "line4 reset_and_ik ik_endpoint_reset_rate=1.0 ik_reset_err_mm=0.688510537147522 teacher_goal_ok_rate=0.0 controller_goal_ok_rate=1.0 initial_face_gap_m=-0.020252298563718796 initial_vertical_offset_m=0.0006401985883712769 closed_loop_ik_ok_rate=1.0",
+      "line5 tap_logs required_log_keys_present=True contact_seen=0.0 reaction_signal_now=0.0 reaction_contact_context=0.0 reaction_seen=0.0 professor_physical_reaction_seen=1.0 overshoot_seen=0.0 tap_success=0.0",
+      "line6 reaction_metrics max_disp_along_m=0.0009225904941558838 max_z_delta_m=1.2498348951339722e-06 max_speed_mps=0.008078601211309433 terminated_count=0 truncated_count=2",
+      "line7 action_path tcp_cube_dist_m=0.06971672177314758 joint_delta_abs_mean=0.13668248057365417 joint_delta_abs_max=0.3587837219238281 joint_delta_cap_rate=0.0 action_abs_mean=0.0 action_abs_max=0.0 target_lead_abs_max=0.3587837219238281 target_lead_limit_rate=0.0 contact_slowdown_mean=1.0 teacher_blend_mean=0.0 action_penalty=0.0",
+      "line8 trace_diagnostics face_gap_min=-0.024368952959775925 face_gap_max=-0.019533615559339523 face_gap_final=-0.01956496760249138 shortfall_min=0.009533615559339523 shortfall_final=0.009564967602491379 tcp_dist_min=0.06953912228345871 joint_delta_abs_max=0.4676227569580078 joint_delta_cap_rate_max=0.0 target_lead_limit_rate_max=0.0",
+      "line9 verdict professor_physical_reaction_evidence=PASS rl_contact_gated_positive_control=FAIL blocker=RL_CONTACT_GATED_POSITIVE_CONTROL_GATE_FAIL_ONLY professor_objective_metadata=SEPARATE_FROM_DATASET_RL ppo_rl_training=BLOCKED large_dataset=BLOCKED action_teacher=BLOCKED roarm=BLOCKED",
+      "line10 controller_telemetry target_face_gap_final=0.1059999942779541 target_inside_contact_band_final=0.0 target_fk_err_mm_final=0.6174697866014219 actual_fk_vs_sim_tcp_err_mm_final=0.0008805113287851255 target_delta_abs_max_final=0.35878372291593186 direct_joint_follow_abs_max_final=0.3628549575805664 direct_actual_joint_step_abs_max_final=0.030904710292816162"
+    ],
+    "slow240_audit_lines_1_8": [
+      "line1 artifact=cube10cm_tap_rl_slow240_result_audit_v1 local_posthoc_audit_only=YES gpu_runtime_launched_by_this_audit=NO dataset_generation=NO training=NO robot_control=NO ssh=NO b200=NO track_a=NO",
+      "line2 runtime_contract candidate=direct_ik_apply_slow240 changed_knobs=1 closed_loop_push_steps=72->240 controller_mode=external_closed_loop_direct_apply num_envs=2 max_steps=120 seed=962 device=cuda:0 geometry=unchanged action_wrapper_knobs=unchanged",
+      "line3 outcome baseline_contact=0.0 baseline_tap=0.0 slow240_contact=0.0 slow240_tap=0.0 slow240_professor_seen=1.0 slow240_reaction_signal_now=0.5",
+      "line4 follow_comparison baseline_follow_final_rad=0.362854958 slow240_follow_final_rad=0.170210123 follow_final_ratio=0.469085841 target_delta_ratio=0.474653743 actual_step_final_rad=0.017993897",
+      "line5 contact_gap_comparison baseline_shortfall_min_m=0.009533616 slow240_shortfall_min_m=0.009191336 shortfall_improvement_m=0.000342280 baseline_face_gap_max_m=-0.019533616 slow240_face_gap_max_m=-0.019191336 face_gap_gain_m=0.000342280",
+      "line6 exclusions target_enters_band_both=True fk_frame_ok_both=True wrapper_bypassed_both=True baseline_target_final_face_gap_m=0.105999994 slow240_target_final_face_gap_m=0.043000001 target_final_face_gap_reduction_m=0.062999994",
+      "line7 verdict FAIL_SLOW240_IMPROVES_FOLLOW_BUT_NOT_CONTACT timing_hypothesis_supported=True fixed_horizon_slowdown_insufficient=True rl_contact_gated_positive_control=FAIL diffik_action_dataset=BLOCKED tiny_action_dataset_dry_run=BLOCKED ppo_rl_training=BLOCKED large_dataset=BLOCKED roarm=BLOCKED",
+      "line8 next_local_only design_next=direct_ik_apply_slow360_candidate_design_only runtime_not_approved_by_this_audit=YES slow360_inside_steps=57 slow360_final_face_gap_m=0.022000000 dataset_rl_roarm_action_teacher=STILL_BLOCKED"
+    ]
+  },
+  "gpu_runtime": false,
+  "inputs": {
+    "claude": "/home/cgxr/Documents/Robotics/RoArm_Project/CLAUDE.md",
+    "controller_contract_summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_vs_cube3cm_controller_contract_audit_summary.out",
+    "cube10cm_probe": "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/cube10cm_push_diffik_probe.py",
+    "cube3cm_probe": "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/cube3cm_push_diffik_probe.py",
+    "decisions": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/DECISIONS.md",
+    "direct_candidate_summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_direct_ik_apply_candidate_design_summary.out",
+    "direct_telemetry_audit": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_direct_ik_telemetry_result_audit_summary.out",
+    "direct_telemetry_summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_direct_ik_apply_telemetry_sanity_summary.out",
+    "isaac_diffik_test": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaaclab/source/isaaclab/test/controllers/test_differential_ik.py",
+    "isaac_task_space": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaaclab/source/isaaclab/isaaclab/envs/mdp/actions/task_space_actions.py",
+    "ledger": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/EXPERIMENT_LEDGER.md",
+    "memory": "/home/cgxr/.claude/projects/-home-cgxr-Documents-Robotics-RoArm-Project/memory/MEMORY.md",
+    "session": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/session_20260608_cube10cm_tap_rl_preflight_policy_gate.md",
+    "slow240_audit": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_slow240_result_audit_summary.out",
+    "start_here": "/home/cgxr/Documents/Robotics/RoArm_Project/START_HERE.md",
+    "tap_env": "/home/cgxr/Documents/Robotics/RoArm_Project/roarm_rl/roarm_cube_push_env.py",
+    "tap_harness": "/home/cgxr/Documents/Robotics/RoArm_Project/roarm_rl/test_positive_control_cube_tap10cm.py"
+  },
+  "interpretation": {
+    "contact_gate_relaxation_before_parity_would_hide_controller_mismatch": true,
+    "current_10cm_tap_positive_control_is_not_built_in_diffik_parity": true,
+    "direct_apply_was_a_wrapper_isolation_diagnostic": true,
+    "direct_apply_was_not_the_original_10cm_controller_switch": true,
+    "recommended_next_step": "design or implement a default-off 10cm tap positive-control mode using IsaacLab built-in DifferentialIKController with live Jacobian parity before any contact-band/Tier-B exception",
+    "runtime_requires_explicit_approval": true
+  },
+  "local_code_review_only": true,
+  "memory_checked_but_repo_docs_primary": {
+    "claude_repo_docs_primary": [
+      "| `START_HERE.md` | Rolling current-state dashboard. New sessions boot from here. | Overwrite each major update. |",
+      "| `claudedocs/DECISIONS.md` | Durable lessons / do-not-repeat rules with evidence. | Append-only (`D001`, `D002`, ...). Mark superseded; never delete. |",
+      "| `claudedocs/EXPERIMENT_LEDGER.md` | Append-only table of major experiments + verdicts. | Append-only. |",
+      "| `HANDOFF.md`, `TASKS.md` | Historical (stale). | Do not trust unless `START_HERE.md` explicitly points to them. |",
+      "| `~/.claude/projects/.../memory/MEMORY.md` | Per-user auto-memory across all conversations (HARD RULES, recent sessions index). | Prepend recent sessions; HARD RULES never deleted. Complementary, NOT a replacement for `START_HERE.md`. |",
+      "Before answering current project-state questions or making edits:",
+      "6. Verify any metric from the referenced log/data file before citing it.",
+      "- Do not rely on memory-only claims. Cite the referenced file/line.",
+      "- Do not treat HANDOFF.md or TASKS.md as current state."
+    ],
+    "memory_line_74": "- **2026-06-08 (Professor cube10cm physical-reaction gate separation D188)**: Active branch remains professor 10cm/0.72kg cube push/tap DiffIK reaction-window + quality-tier, separate from Track A and no B200/SSH. User clarified weak physical object reaction is acceptable unless stronger 2-3mm transient tap is explicitly required. Current truth is repo docs/logs first: START_HERE.md line 75 and DECISIONS D188 separate `professor_physical_reaction_evidence` from strict `RL contact-gated positive-control`. Professor evidence is READY_PROFESSOR_EVIDENCE_ONLY; event-label metadata READY_LOCAL_ONLY; env wrapper READY_LOCAL_PREFLIGHT_ONLY. Direct-IK posthoc audit: max_disp_along_m 0.000922590, max_speed_mps 0.008078601, overshoot 0.0, professor_physical_reaction_evidence PASS, but contact/tap success 0.0 and RL positive-control RUN_FAILED. Do not claim clean action teacher/dataset/PPO/RL/RoArm readiness; those remain BLOCKED by separate teacher/action/RL gates. Next safe work: professor evidence package/event-label/quality-tier metadata, or local RL blocker debug only. Details: START_HERE.md:75, DECISIONS D188, EXPERIMENT_LEDGER row 230, cube10cm_tap_rl_preflight_policy_gate_summary.out:3-7, cube10cm_tap_rl_direct_ik_apply_result_audit_summary.out:4-8."
+  },
+  "outcome": {
+    "contact_gate_relaxation": "BLOCKED_BEFORE_BUILTIN_DIFFIK_PARITY_REVIEWED_OR_TESTED",
+    "diffik_action_dataset": "BLOCKED",
+    "large_dataset": "BLOCKED",
+    "parity_code_review": "READY_LOCAL_ONLY",
+    "ppo_rl_training": "BLOCKED",
+    "roarm": "BLOCKED",
+    "tiny_action_dataset_dry_run": "BLOCKED"
+  },
+  "outputs": {
+    "json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_builtin_diffik_parity_code_review.json",
+    "summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_builtin_diffik_parity_code_review_summary.out"
+  },
+  "robot_control": false,
+  "ssh": false,
+  "track_a": false,
+  "training": false
+}

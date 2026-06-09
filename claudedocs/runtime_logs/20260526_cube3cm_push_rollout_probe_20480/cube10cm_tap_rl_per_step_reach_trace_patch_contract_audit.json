@@ -1,0 +1,135 @@
+{
+  "artifact_type": "cube10cm_tap_rl_per_step_reach_trace_patch_contract_audit_v1",
+  "b200": false,
+  "basis": {
+    "basis_ok": true,
+    "reach_contract_summary_lines_6_9": [
+      "line6 trace_contract_gap existing_log_has_stats_only=True full_step_timeline_available=False applied_step_clipped_joint_target_fk_gap_available=False cannot_localize_time_alignment_from_existing_json=True",
+      "line7 required_next_schema default_off_per_step_reach_trace_fields=step_env_command_target_gap_applied_target_fk_gap_actual_tcp_gap_joint_follow_cube_reaction_done_flags action_fields=NO_DATASET_TEACHER_FIELDS",
+      "line8 verdict REACH_TRACE_CONTRACT_GAP_IDENTIFIED contact_gated_positive_control=RUN_FAILED diffik_action_dataset=BLOCKED tiny_action_dataset_dry_run=BLOCKED ppo_rl_training=BLOCKED large_dataset=BLOCKED roarm=BLOCKED",
+      "line9 next local_unblock=patch_default_off_per_step_reach_trace_then_run_one_tiny_repeat_only_after_approval contact_gate_relaxation=NO dataset_rl_roarm=NO"
+    ],
+    "reach_contract_verdict": "REACH_TRACE_CONTRACT_GAP_IDENTIFIED"
+  },
+  "branch": "professor_cube10cm_tap_reaction_quality_tier",
+  "candidate_runtime": {
+    "changed_relative_to_ep608": "adds_reach_trace_json_only",
+    "command": "conda run -n isaaclab --no-capture-output python -u -m roarm_rl.test_positive_control_cube_tap10cm --num_envs 2 --steps 580 --seed 962 --device cuda:0 --controller_mode isaac_builtin_diffik_step_clipped_direct_apply --closed_loop_push_steps 580 --builtin_diffik_step_clip_rad 0.010 --episode_length_s 6.08 --reach_trace_json /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_reachtrace_trace.json --out_json /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_reachtrace_sanity.json --out_summary /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_reachtrace_sanity_summary.out",
+    "kept": {
+      "builtin_diffik_step_clip_rad": 0.01,
+      "closed_loop_push_steps": 580,
+      "contact_gate": "unchanged_strict",
+      "controller_mode": "isaac_builtin_diffik_step_clipped_direct_apply",
+      "device": "cuda:0",
+      "episode_length_s": 6.08,
+      "geometry": "unchanged",
+      "num_envs": 2,
+      "seed": 962,
+      "steps": 580
+    },
+    "out_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_reachtrace_sanity.json",
+    "out_summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_reachtrace_sanity_summary.out",
+    "reach_trace_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_reachtrace_trace.json",
+    "status": "DESIGNED_NOT_RUN_REQUIRES_EXPLICIT_APPROVAL"
+  },
+  "code_checks": {
+    "code_ready": true,
+    "snippet_hits": {
+      "action_teacher_false": {
+        "line": 624,
+        "text": "\"action_teacher_dataset\": False,"
+      },
+      "actual_tcp_gap_field": {
+        "line": 641,
+        "text": "\"actual_tcp_face_gap_m\","
+      },
+      "applied_fk_metric_enabled": {
+        "line": 462,
+        "text": "\"closed_loop_target_fk_err_mm_mean\": applied_target_fk_err_mm_mean,"
+      },
+      "applied_target_fk_gap_field": {
+        "line": 218,
+        "text": "\"applied_joint_target_fk_face_gap_m\": float(applied_face_gap),"
+      },
+      "command_target_gap_field": {
+        "line": 214,
+        "text": "\"command_target_face_gap_m\": float(target_face_gap),"
+      },
+      "cube_reaction_field": {
+        "line": 650,
+        "text": "\"professor_physical_reaction_now\","
+      },
+      "done_flags": {
+        "line": 654,
+        "text": "\"terminated\","
+      },
+      "joint_follow_field": {
+        "line": 646,
+        "text": "\"direct_joint_follow_abs_max_rad\","
+      },
+      "reach_trace_arg": {
+        "line": 700,
+        "text": "parser.add_argument(\"--reach_trace_json\", type=Path, default=None)"
+      },
+      "result_trace_metadata": {
+        "line": 1127,
+        "text": "\"reach_trace_row_count\": len(reach_trace_rows),"
+      },
+      "trace_artifact_type": {
+        "line": 616,
+        "text": "\"artifact_type\": \"cube10cm_tap_rl_per_step_reach_trace_v1\","
+      },
+      "trace_writer": {
+        "line": 591,
+        "text": "def _write_reach_trace(out_path: Path, result: dict[str, Any], rows: list[dict[str, Any]]) -> None:"
+      },
+      "truncated_flag": {
+        "line": 655,
+        "text": "\"truncated\","
+      }
+    }
+  },
+  "dataset_generation": false,
+  "gpu_runtime": false,
+  "local_static_audit_only": true,
+  "outcome": {
+    "contact_gated_positive_control": "RUN_FAILED",
+    "diffik_action_dataset": "BLOCKED",
+    "large_dataset": "BLOCKED",
+    "patch_contract": "READY_LOCAL_ONLY",
+    "ppo_rl_training": "BLOCKED",
+    "roarm": "BLOCKED",
+    "runtime_approval_required": true,
+    "tiny_action_dataset_dry_run": "BLOCKED"
+  },
+  "outputs": {
+    "json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_per_step_reach_trace_patch_contract_audit.json",
+    "summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_per_step_reach_trace_patch_contract_audit_summary.out"
+  },
+  "robot_control": false,
+  "ssh": false,
+  "trace_contract": {
+    "default_off": true,
+    "enabled_only_by": "--reach_trace_json",
+    "no_action_fields_for_dataset_training": true,
+    "not_action_teacher_dataset": true,
+    "required_fields_present": [
+      "action_teacher_false",
+      "actual_tcp_gap_field",
+      "applied_fk_metric_enabled",
+      "applied_target_fk_gap_field",
+      "command_target_gap_field",
+      "cube_reaction_field",
+      "done_flags",
+      "joint_follow_field",
+      "reach_trace_arg",
+      "result_trace_metadata",
+      "trace_artifact_type",
+      "trace_writer",
+      "truncated_flag"
+    ],
+    "separate_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_reachtrace_trace.json"
+  },
+  "track_a": false,
+  "training": false
+}

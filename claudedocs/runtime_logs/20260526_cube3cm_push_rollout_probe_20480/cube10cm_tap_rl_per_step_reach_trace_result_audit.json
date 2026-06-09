@@ -1,0 +1,130 @@
+{
+  "artifact_type": "cube10cm_tap_rl_per_step_reach_trace_result_audit_v1",
+  "b200": false,
+  "contact_contract": {
+    "face_band_m": 0.01,
+    "face_band_source": "result.tap_contact_face_band_m_or_env_default_0p010"
+  },
+  "dataset_generation": false,
+  "face_gap_timeline": {
+    "actual_tcp": {
+      "best_shortfall_m": 0.00953418180346489,
+      "final_mean": -0.02587525174021721,
+      "inside": {
+        "first_step": null,
+        "last_step": null,
+        "rate": 0.0,
+        "true_rows": 0,
+        "unique_step_count": 0
+      },
+      "max": -0.01953418180346489,
+      "min": -0.025879275053739548
+    },
+    "applied_joint_target_fk": {
+      "best_shortfall_m": 0.004059909773716184,
+      "final_mean": -0.0202545717786477,
+      "inside": {
+        "first_step": null,
+        "last_step": null,
+        "rate": 0.0,
+        "true_rows": 0,
+        "unique_step_count": 0
+      },
+      "max": -0.014059909773716184,
+      "min": -0.020264468305521754
+    },
+    "command": {
+      "final_mean": 0.10599999129772186,
+      "inside": {
+        "first_step": 46,
+        "last_step": 137,
+        "rate": 0.15862068965517243,
+        "true_rows": 184,
+        "unique_step_count": 92
+      },
+      "max": 0.10599999129772186,
+      "min": -0.01978285238146782
+    },
+    "face_band_m": 0.01
+  },
+  "follow_and_reaction": {
+    "actual_joint_step_abs_max_rad": {
+      "final_mean": 0.001483529806137085,
+      "max": 0.0014868378639221191,
+      "min": 0.000292360782623291
+    },
+    "applied_target_fk_err_mm": {
+      "final_mean": 127.70432606160344,
+      "max": 127.71305949591019,
+      "min": 0.024404868745791564
+    },
+    "cube_disp_along_m": {
+      "final_mean": 0.0008673667907714844,
+      "max": 0.0008990764617919922,
+      "min": 0.0008044242858886719
+    },
+    "cube_speed_mps": {
+      "final_mean": 0.0009307197178713977,
+      "max": 0.07963307201862335,
+      "min": 6.850256613688543e-05
+    },
+    "direct_joint_follow_abs_max_rad": {
+      "final_mean": 0.010636448860168457,
+      "max": 0.010850667953491211,
+      "min": 0.002310037612915039
+    },
+    "professor_physical_reaction_seen_rate": 1.0,
+    "tap_success_seen_rate": 0.0,
+    "terminated_rate": 0.0,
+    "truncated_rate": 0.0
+  },
+  "gpu_runtime": false,
+  "inputs": {
+    "result_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_reachtrace_sanity.json",
+    "result_summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_reachtrace_sanity_summary.out",
+    "trace_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_reachtrace_trace.json"
+  },
+  "lateral_vertical_contract": {
+    "actual_lateral_max_m": 0.000234433522564359,
+    "actual_vertical_max_m": 0.020371563732624054,
+    "applied_lateral_max_m": 0.00017845922944039345,
+    "applied_vertical_max_m": 0.019194197705981186
+  },
+  "local_posthoc_audit_only": true,
+  "outcome": {
+    "actual_tcp_entered_contact_band": false,
+    "applied_joint_target_fk_entered_contact_band": false,
+    "command_target_entered_contact_band": true,
+    "diffik_action_dataset": "BLOCKED",
+    "large_dataset": "BLOCKED",
+    "ppo_rl_training": "BLOCKED",
+    "professor_physical_reaction_evidence": "PASS",
+    "rl_contact_gated_positive_control": "FAIL",
+    "roarm": "BLOCKED",
+    "verdict": "APPLIED_AND_ACTUAL_REACH_NEVER_ENTER_CONTACT_BAND"
+  },
+  "robot_control": false,
+  "runtime_summary_lines": {
+    "line1": "line1 artifact=cube10cm_tap_rl_positive_control_sanity_v1 status=FAIL gpu_runtime=YES_LOCAL_TINY_ISAACLAB_POSITIVE_CONTROL dataset_generation=NO training=NO robot_control=NO ssh=NO b200=NO track_a=NO",
+    "line10": "line10 controller_telemetry target_face_gap_final=0.10599999129772186 target_inside_contact_band_final=0.0 target_fk_err_mm_final=127.70432606160344 actual_fk_vs_sim_tcp_err_mm_final=0.0 target_delta_abs_max_final=0.009999990463256836 direct_joint_follow_abs_max_final=0.010640382766723633 direct_actual_joint_step_abs_max_final=0.0014851689338684082",
+    "line5": "line5 tap_logs required_log_keys_present=True contact_seen=0.0 reaction_signal_now=0.0 reaction_contact_context=0.0 reaction_seen=0.0 professor_physical_reaction_seen=1.0 overshoot_seen=0.0 tap_success=0.0",
+    "line8": "line8 trace_diagnostics face_gap_min=-0.02587525174021721 face_gap_max=-0.019535880535840988 face_gap_final=-0.02587525174021721 shortfall_min=0.009535880535840988 shortfall_final=0.015875251740217207 tcp_dist_min=0.06953751295804977 joint_delta_abs_max=0.01000000536441803 joint_delta_cap_rate_max=0.0 target_lead_limit_rate_max=0.0",
+    "line9": "line9 verdict professor_physical_reaction_evidence=PASS rl_contact_gated_positive_control=FAIL blocker=RL_CONTACT_GATED_POSITIVE_CONTROL_GATE_FAIL_ONLY professor_objective_metadata=SEPARATE_FROM_DATASET_RL ppo_rl_training=BLOCKED large_dataset=BLOCKED action_teacher=BLOCKED roarm=BLOCKED"
+  },
+  "ssh": false,
+  "trace_integrity": {
+    "action_teacher_dataset": false,
+    "artifact_type": "cube10cm_tap_rl_per_step_reach_trace_v1",
+    "env_ids": [
+      0,
+      1
+    ],
+    "expected_rows": 1160,
+    "row_count": 1160,
+    "row_count_ok": true,
+    "step_max": 579,
+    "step_min": 0
+  },
+  "track_a": false,
+  "training": false
+}

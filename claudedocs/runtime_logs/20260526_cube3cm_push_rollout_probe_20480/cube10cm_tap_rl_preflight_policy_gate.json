@@ -6,6 +6,19 @@
   "gate_matrix": [
     {
       "evidence": {
+        "direct_ik_max_disp_m": 0.0009225904941558838,
+        "direct_ik_max_speed_mps": 0.008078601211309433,
+        "direct_ik_professor_physical_reaction": "PASS",
+        "link5_event_label_ready": "READY_LOCAL_ONLY",
+        "link5_event_reactions": 16,
+        "link5_overshoot": 0
+      },
+      "gate": "professor_physical_reaction_evidence",
+      "meaning": "Use this for the professor/user weak physical object-reaction objective. It is separate from action-teacher, dataset, RL, and robot readiness.",
+      "status": "READY_PROFESSOR_EVIDENCE_ONLY"
+    },
+    {
+      "evidence": {
         "contact": 16,
         "events": 16,
         "overshoot": 0,
@@ -90,7 +103,7 @@
         "positive_control_result": "FAIL",
         "positive_control_valid_runtime": true,
         "positive_reaction_context": 0.0,
-        "positive_reaction_signal": 1.0,
+        "positive_reaction_signal": 0.0,
         "positive_tap_success": 0.0,
         "random_action_contact": 0.0,
         "random_action_tap_success": 0.0,
@@ -136,11 +149,14 @@
     "may_move_to_large_dataset": false,
     "may_move_to_local_preflight_design": true,
     "may_move_to_ppo_training": false,
-    "may_move_to_roarm": false
+    "may_move_to_roarm": false,
+    "professor_evidence_separate_from_rl_positive_control": true,
+    "professor_physical_reaction_evidence_ready": true
   },
   "inputs": {
+    "direct_ik_audit_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_direct_ik_apply_result_audit.json",
     "event_manifest": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_link5corner_event_label_metadata_manifest.json",
-    "positive_control_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_sanity.json",
+    "positive_control_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_direct_ik_apply_sanity.json",
     "runtime_gate": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_env_runtime_gate_audit.json",
     "teacher_policy": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_link5corner_noisy_tierb_teacher_policy_gate.json",
     "visual_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_link5corner_visual_proxy_contact_inspection.json"
@@ -150,14 +166,16 @@
     "freeze reward/done/log contract for RoArm-CubeTap10cm-Direct-v0",
     "design one tiny scripted positive-control tap sanity for the new wrapper",
     "if positive-control failed, design one revised closed-loop positive-control candidate",
-    "review whether noisy Tier-B action-teacher exception is explicitly allowed"
+    "review whether noisy Tier-B action-teacher exception is explicitly allowed",
+    "prepare professor-facing physical-reaction evidence package without claiming dataset/RL/RoArm readiness"
   ],
   "not_allowed": [
     "ppo training",
     "large dataset generation",
     "RoArm deployment",
     "noisy Tier-B action teacher dataset without explicit exception",
-    "2-3mm contact-geometry tuning without explicit professor/user requirement"
+    "2-3mm contact-geometry tuning without explicit professor/user requirement",
+    "blocking professor physical-reaction evidence on RL contact-gated positive-control"
   ],
   "robot_control": false,
   "ssh": false,

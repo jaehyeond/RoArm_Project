@@ -1,0 +1,332 @@
+{
+  "answer": {
+    "ten_cm_cube_position_policy": "FIXED_BY_HARNESS",
+    "ten_cm_env_step_dt_s": 0.01,
+    "ten_cm_episode_length_s": 1.2,
+    "ten_cm_fixed_cube_x_m": 0.25,
+    "ten_cm_fixed_cube_y_m": 0.0,
+    "ten_cm_fixed_push_dir": [
+      1.0,
+      0.0
+    ],
+    "ten_cm_runtime_max_steps": 120,
+    "ten_cm_runtime_seconds_at_dt": 1.2,
+    "ten_cm_steps_short_because": "the 10cm positive-control harness defaults to --steps=120 and the 10cm env episode_length_s is 1.2 with dt=0.01s; this is not caused by random object placement",
+    "ten_cm_target_random": false,
+    "three_cm_default_position_policy": "RANDOM_UNLESS_FIXED_ARGS_ARE_PASSED",
+    "three_cm_episode_length_s": 6.08,
+    "three_cm_eval10240_fixed_args": "fixed_cube_x_m=None fixed_cube_y_m=None fixed_push_dir=None",
+    "three_cm_probe_extends_episode_for_trajectory": true,
+    "three_cm_total_steps_per_trial": 580
+  },
+  "artifact_type": "cube10cm_vs_cube3cm_controller_contract_audit_v1",
+  "b200": false,
+  "branch": "professor_cube10cm_tap_reaction_quality_tier",
+  "comparison_table": [
+    {
+      "cube10cm_direct_ik_baseline": 0.1,
+      "cube10cm_direct_ik_slow240": 0.1,
+      "cube3cm_diffik_eval10240": 0.03,
+      "field": "size_m"
+    },
+    {
+      "cube10cm_direct_ik_baseline": 0.72,
+      "cube10cm_direct_ik_slow240": 0.72,
+      "cube3cm_diffik_eval10240": 0.02,
+      "field": "mass_kg"
+    },
+    {
+      "cube10cm_direct_ik_baseline": 120,
+      "cube10cm_direct_ik_slow240": 120,
+      "cube3cm_diffik_eval10240": 580,
+      "field": "runtime_horizon_steps"
+    },
+    {
+      "cube10cm_direct_ik_baseline": 1.2,
+      "cube10cm_direct_ik_slow240": 1.2,
+      "cube3cm_diffik_eval10240": 6.08,
+      "field": "runtime_horizon_s"
+    },
+    {
+      "cube10cm_direct_ik_baseline": "fixed cube=(0.25,0.0), push=(1.0,0.0)",
+      "cube10cm_direct_ik_slow240": "fixed cube=(0.25,0.0), push=(1.0,0.0)",
+      "cube3cm_diffik_eval10240": "random sampled; fixed args were None",
+      "field": "position_policy"
+    },
+    {
+      "cube10cm_direct_ik_baseline": "external_closed_loop_direct_apply",
+      "cube10cm_direct_ik_slow240": "external_closed_loop_direct_apply",
+      "cube3cm_diffik_eval10240": "IsaacLab_DifferentialIKController position command",
+      "field": "controller"
+    },
+    {
+      "cube10cm_direct_ik_baseline": "direct apply; wrapper action cap inactive, direct_follow_final_rad=0.3628549575805664",
+      "cube10cm_direct_ik_slow240": "direct apply; wrapper action cap inactive, direct_follow_final_rad=0.1702101230621338",
+      "cube3cm_diffik_eval10240": "DiffIK clipped delta; max_diffik_joint_step_rad=0.035, v3_posx_max=0.020, clip_rate_mean=0.652074015",
+      "field": "step_cap_or_follow"
+    },
+    {
+      "cube10cm_direct_ik_baseline": "env speed/contact slowdown exists, but direct-apply zero action bypasses wrapper path",
+      "cube10cm_direct_ik_slow240": "same direct-apply bypass; max_speed_mps=0.024404075",
+      "cube3cm_diffik_eval10240": "speed thresholds used by controlled filter; speed_p95=1.302103193, speed_p99=1.733444051",
+      "field": "speed_guard_or_speed_evidence"
+    },
+    {
+      "cube10cm_direct_ik_baseline": "strict contact/reaction tap gate; tap_success=0.0",
+      "cube10cm_direct_ik_slow240": "strict contact/reaction tap gate; tap_success=0.0",
+      "cube3cm_diffik_eval10240": "controlled_push_rate=0.9431640625, success_marker_rate=0.59482421875",
+      "field": "success_metric"
+    }
+  ],
+  "dataset_generation": false,
+  "gpu_runtime_launched_by_this_audit": false,
+  "inputs": {
+    "ten_cm_baseline_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_direct_ik_apply_telemetry_sanity.json",
+    "ten_cm_baseline_summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_direct_ik_apply_telemetry_sanity_summary.out",
+    "ten_cm_slow240_audit": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_slow240_result_audit.json",
+    "ten_cm_slow240_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_direct_ik_apply_slow240_sanity.json",
+    "ten_cm_slow240_summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_direct_ik_apply_slow240_sanity_summary.out",
+    "three_cm_audit": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_eval10240_seed779_audit.out",
+    "three_cm_controlled_filter": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/controlled_push_filter_audit.out",
+    "three_cm_csv": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_eval10240_seed779.csv",
+    "three_cm_stdout": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_eval10240_seed779_stdout.out",
+    "three_cm_summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_eval10240_seed779_summary.json"
+  },
+  "interpretation": {
+    "dataset_rl_roarm_status": "BLOCKED_UNTIL_CONTACT_GATED_POSITIVE_CONTROL_OR_EXPLICIT_NOISY_TIER_EXCEPTION_GATE",
+    "primary_contract_difference": "3cm DiffIK eval used a long, trajectory-sized, clipped controlled-push contract; 10cm tap uses a short strict contact-gated positive-control contract with direct-apply follow telemetry",
+    "slow240_result": "slowing the target schedule reduced direct follow error but still failed contact/tap, so horizon/follow timing is implicated but not yet sufficient",
+    "ten_cm_fixed_target_and_push_dir_verified": true,
+    "ten_cm_short_horizon_is_harness_contract": true,
+    "ten_cm_short_horizon_is_not_random_target_position": true,
+    "three_cm_also_had_speed_and_clip_issues": true,
+    "three_cm_eval10240_existing_csv_has_direct_follow_columns": false,
+    "three_cm_trace_code_can_record_follow_error_when_enabled": true
+  },
+  "local_posthoc_audit_only": true,
+  "outcome": {
+    "diffik_action_dataset": "BLOCKED",
+    "large_dataset": "BLOCKED",
+    "ppo_rl_training": "BLOCKED",
+    "professor_physical_reaction_evidence": "PASS",
+    "rl_contact_gated_positive_control": "FAIL",
+    "roarm": "BLOCKED",
+    "tiny_action_dataset_dry_run": "BLOCKED"
+  },
+  "outputs": {
+    "json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_vs_cube3cm_controller_contract_audit.json",
+    "summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_vs_cube3cm_controller_contract_audit_summary.out"
+  },
+  "ratios": {
+    "horizon_seconds_ratio_10cm_baseline_over_3cm": 0.19736842105263158,
+    "horizon_seconds_ratio_3cm_over_10cm_baseline": 5.066666666666667,
+    "horizon_steps_ratio_10cm_baseline_over_3cm": 0.20689655172413793,
+    "horizon_steps_ratio_3cm_over_10cm_baseline": 4.833333333333333,
+    "mass_ratio_10cm_over_3cm": 36.0,
+    "size_ratio_10cm_over_3cm": 3.3333333333333335
+  },
+  "robot_control": false,
+  "slow240_posthoc": {
+    "follow_final_ratio_slow240_over_baseline": 0.4690858413429317,
+    "shortfall_min_improvement_m": 0.00034227967262268066,
+    "target_timing_plans": {
+      "baseline": {
+        "closed_loop_push_steps": 72,
+        "max_steps": 120,
+        "target_face_gap_rate_m_per_step": 0.00175,
+        "target_final_face_gap_m": 0.106,
+        "target_inside_contact_band_first_step_1based": 6,
+        "target_inside_contact_band_last_step_1based": 17,
+        "target_inside_contact_band_step_count": 12
+      },
+      "slow240": {
+        "closed_loop_push_steps": 240,
+        "max_steps": 120,
+        "target_face_gap_rate_m_per_step": 0.000525,
+        "target_final_face_gap_m": 0.043,
+        "target_inside_contact_band_first_step_1based": 20,
+        "target_inside_contact_band_last_step_1based": 57,
+        "target_inside_contact_band_step_count": 38
+      },
+      "slow360_candidate_not_run": {
+        "closed_loop_push_steps": 360,
+        "max_steps": 120,
+        "target_face_gap_rate_m_per_step": 0.00035,
+        "target_final_face_gap_m": 0.021999999999999995,
+        "target_inside_contact_band_first_step_1based": 29,
+        "target_inside_contact_band_last_step_1based": 85,
+        "target_inside_contact_band_step_count": 57
+      }
+    },
+    "verdict": "FAIL_SLOW240_IMPROVES_FOLLOW_BUT_NOT_CONTACT"
+  },
+  "source_line_refs": {
+    "claude_current_state_protocol": [
+      "CLAUDE.md:5",
+      "CLAUDE.md:55"
+    ],
+    "env_dt": [
+      "roarm_rl/roarm_stack_env.py:108-116",
+      "roarm_rl/roarm_stack_env.py:401"
+    ],
+    "random_default_and_sampling": [
+      "roarm_rl/roarm_cube_push_env.py:97-105",
+      "roarm_rl/roarm_cube_push_env.py:772-784"
+    ],
+    "ten_cm_env_horizon_and_tap_contract": [
+      "roarm_rl/roarm_cube_push_env.py:63",
+      "roarm_rl/roarm_cube_push_env.py:254-267",
+      "roarm_rl/roarm_cube_push_env.py:1244-1252"
+    ],
+    "ten_cm_fixed_position_assignment": [
+      "roarm_rl/test_positive_control_cube_tap10cm.py:377-382"
+    ],
+    "ten_cm_harness_defaults": [
+      "roarm_rl/test_positive_control_cube_tap10cm.py:299-316"
+    ],
+    "ten_cm_logs": [
+      "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_direct_ik_apply_telemetry_sanity_summary.out:1-10",
+      "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_direct_ik_apply_slow240_sanity_summary.out:1-10",
+      "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_slow240_result_audit_summary.out:1-8"
+    ],
+    "ten_cm_output_contract": [
+      "roarm_rl/test_positive_control_cube_tap10cm.py:594-638"
+    ],
+    "ten_cm_runtime_loop_and_direct_apply": [
+      "roarm_rl/test_positive_control_cube_tap10cm.py:449-461"
+    ],
+    "three_cm_diffik_and_clip_loop": [
+      "sim_scripts/cube3cm_push_diffik_probe.py:356-362",
+      "sim_scripts/cube3cm_push_diffik_probe.py:587-624",
+      "sim_scripts/cube3cm_push_diffik_probe.py:734-784"
+    ],
+    "three_cm_logs": [
+      "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_eval10240_seed779_stdout.out:20-21",
+      "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/diffik_probe_v3_eval10240_seed779_audit.out:1-6",
+      "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/controlled_push_filter_audit.out:1-13",
+      "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/controlled_push_filter_audit.out:40-44"
+    ],
+    "three_cm_probe_defaults_and_episode_extension": [
+      "sim_scripts/cube3cm_push_diffik_probe.py:40-47",
+      "sim_scripts/cube3cm_push_diffik_probe.py:307-322"
+    ],
+    "three_cm_trace_follow_optional": [
+      "sim_scripts/cube3cm_push_diffik_probe.py:134-139",
+      "sim_scripts/cube3cm_push_diffik_probe.py:1015-1045"
+    ]
+  },
+  "ssh": false,
+  "ten_cm_baseline": {
+    "action_abs_max_trace": 0.0,
+    "closed_loop_alpha_final": 1.0,
+    "closed_loop_push_steps": 72,
+    "contact_seen": 0.0,
+    "controller_mode": "external_closed_loop_direct_apply",
+    "cube_mass_kg": 0.72,
+    "cube_size_m": 0.1,
+    "direct_actual_joint_step_abs_max_final_rad": 0.030904710292816162,
+    "direct_joint_follow_abs_max_final_rad": 0.3628549575805664,
+    "fixed_cube_x_m": 0.25,
+    "fixed_cube_y_m": 0.0,
+    "fixed_push_dir_x": 1.0,
+    "fixed_push_dir_y": 0.0,
+    "joint_delta_cap_rate_trace": 0.0,
+    "max_steps": 120,
+    "professor_physical_reaction_seen": 1.0,
+    "steps_executed": 120,
+    "summary_lines_1_10": [
+      "line1 artifact=cube10cm_tap_rl_positive_control_sanity_v1 status=FAIL gpu_runtime=YES_LOCAL_TINY_ISAACLAB_POSITIVE_CONTROL dataset_generation=NO training=NO robot_control=NO ssh=NO b200=NO track_a=NO",
+      "line2 env_contract env_id=RoArm-CubeTap10cm-Direct-v0 device=cuda:0 cube_size_m=0.1 cube_mass_kg=0.72 final_1cm_required=False",
+      "line3 scripted_control num_envs=2 max_steps=120 steps_executed=120 cube_xy=(0.25,0.0) push_dir=(1.0,0.0) controller_mode=external_closed_loop_direct_apply direct_ik_joint_target_apply=True precontact_clearance_m=0.02 tcp_top_margin_m=-0.05 goal_push_m=0.006 max_joint_delta_per_step_rad=0.01 joint_target_lead_limit_rad=0.06",
+      "line4 reset_and_ik ik_endpoint_reset_rate=1.0 ik_reset_err_mm=0.688510537147522 teacher_goal_ok_rate=0.0 controller_goal_ok_rate=1.0 initial_face_gap_m=-0.020252298563718796 initial_vertical_offset_m=0.0006401985883712769 closed_loop_ik_ok_rate=1.0",
+      "line5 tap_logs required_log_keys_present=True contact_seen=0.0 reaction_signal_now=0.0 reaction_contact_context=0.0 reaction_seen=0.0 professor_physical_reaction_seen=1.0 overshoot_seen=0.0 tap_success=0.0",
+      "line6 reaction_metrics max_disp_along_m=0.0009225904941558838 max_z_delta_m=1.2498348951339722e-06 max_speed_mps=0.008078601211309433 terminated_count=0 truncated_count=2",
+      "line7 action_path tcp_cube_dist_m=0.06971672177314758 joint_delta_abs_mean=0.13668248057365417 joint_delta_abs_max=0.3587837219238281 joint_delta_cap_rate=0.0 action_abs_mean=0.0 action_abs_max=0.0 target_lead_abs_max=0.3587837219238281 target_lead_limit_rate=0.0 contact_slowdown_mean=1.0 teacher_blend_mean=0.0 action_penalty=0.0",
+      "line8 trace_diagnostics face_gap_min=-0.024368952959775925 face_gap_max=-0.019533615559339523 face_gap_final=-0.01956496760249138 shortfall_min=0.009533615559339523 shortfall_final=0.009564967602491379 tcp_dist_min=0.06953912228345871 joint_delta_abs_max=0.4676227569580078 joint_delta_cap_rate_max=0.0 target_lead_limit_rate_max=0.0",
+      "line9 verdict professor_physical_reaction_evidence=PASS rl_contact_gated_positive_control=FAIL blocker=RL_CONTACT_GATED_POSITIVE_CONTROL_GATE_FAIL_ONLY professor_objective_metadata=SEPARATE_FROM_DATASET_RL ppo_rl_training=BLOCKED large_dataset=BLOCKED action_teacher=BLOCKED roarm=BLOCKED",
+      "line10 controller_telemetry target_face_gap_final=0.1059999942779541 target_inside_contact_band_final=0.0 target_fk_err_mm_final=0.6174697866014219 actual_fk_vs_sim_tcp_err_mm_final=0.0008805113287851255 target_delta_abs_max_final=0.35878372291593186 direct_joint_follow_abs_max_final=0.3628549575805664 direct_actual_joint_step_abs_max_final=0.030904710292816162"
+    ],
+    "tap_success": 0.0,
+    "target_face_gap_final_m": 0.1059999942779541,
+    "target_fk_err_max_mm": 1.4781778014542355,
+    "target_inside_contact_band_rate_max": 1.0
+  },
+  "ten_cm_slow240": {
+    "closed_loop_alpha_final": 0.5,
+    "closed_loop_push_steps": 240,
+    "contact_seen": 0.0,
+    "controller_mode": "external_closed_loop_direct_apply",
+    "direct_actual_joint_step_abs_max_final_rad": 0.017993897199630737,
+    "direct_joint_follow_abs_max_final_rad": 0.1702101230621338,
+    "max_steps": 120,
+    "professor_physical_reaction_seen": 1.0,
+    "steps_executed": 120,
+    "summary_lines_1_10": [
+      "line1 artifact=cube10cm_tap_rl_positive_control_sanity_v1 status=FAIL gpu_runtime=YES_LOCAL_TINY_ISAACLAB_POSITIVE_CONTROL dataset_generation=NO training=NO robot_control=NO ssh=NO b200=NO track_a=NO",
+      "line2 env_contract env_id=RoArm-CubeTap10cm-Direct-v0 device=cuda:0 cube_size_m=0.1 cube_mass_kg=0.72 final_1cm_required=False",
+      "line3 scripted_control num_envs=2 max_steps=120 steps_executed=120 cube_xy=(0.25,0.0) push_dir=(1.0,0.0) controller_mode=external_closed_loop_direct_apply direct_ik_joint_target_apply=True precontact_clearance_m=0.02 tcp_top_margin_m=-0.05 goal_push_m=0.006 max_joint_delta_per_step_rad=0.01 joint_target_lead_limit_rad=0.06",
+      "line4 reset_and_ik ik_endpoint_reset_rate=1.0 ik_reset_err_mm=0.688510537147522 teacher_goal_ok_rate=0.0 controller_goal_ok_rate=1.0 initial_face_gap_m=-0.020252298563718796 initial_vertical_offset_m=0.0006401985883712769 closed_loop_ik_ok_rate=1.0",
+      "line5 tap_logs required_log_keys_present=True contact_seen=0.0 reaction_signal_now=0.5 reaction_contact_context=0.0 reaction_seen=0.0 professor_physical_reaction_seen=1.0 overshoot_seen=0.0 tap_success=0.0",
+      "line6 reaction_metrics max_disp_along_m=0.0009421110153198242 max_z_delta_m=3.6638230085372925e-06 max_speed_mps=0.024404074996709824 terminated_count=0 truncated_count=2",
+      "line7 action_path tcp_cube_dist_m=0.06920942664146423 joint_delta_abs_mean=0.06408855319023132 joint_delta_abs_max=0.17029809951782227 joint_delta_cap_rate=0.0 action_abs_mean=0.0 action_abs_max=0.0 target_lead_abs_max=0.17029809951782227 target_lead_limit_rate=0.0 contact_slowdown_mean=1.0 teacher_blend_mean=0.0 action_penalty=0.0",
+      "line8 trace_diagnostics face_gap_min=-0.022105645388364792 face_gap_max=-0.019191335886716843 face_gap_final=-0.019191335886716843 shortfall_min=0.009191335886716842 shortfall_final=0.009191335886716842 tcp_dist_min=0.06920942664146423 joint_delta_abs_max=0.19804120063781738 joint_delta_cap_rate_max=0.0 target_lead_limit_rate_max=0.0",
+      "line9 verdict professor_physical_reaction_evidence=PASS rl_contact_gated_positive_control=FAIL blocker=RL_CONTACT_GATED_POSITIVE_CONTROL_GATE_FAIL_ONLY professor_objective_metadata=SEPARATE_FROM_DATASET_RL ppo_rl_training=BLOCKED large_dataset=BLOCKED action_teacher=BLOCKED roarm=BLOCKED",
+      "line10 controller_telemetry target_face_gap_final=0.04300000071525574 target_inside_contact_band_final=0.0 target_fk_err_mm_final=0.5798305458869171 actual_fk_vs_sim_tcp_err_mm_final=0.0008805113287851255 target_delta_abs_max_final=0.170298036899712 direct_joint_follow_abs_max_final=0.1702101230621338 direct_actual_joint_step_abs_max_final=0.017993897199630737"
+    ],
+    "tap_success": 0.0,
+    "target_face_gap_final_m": 0.04300000071525574,
+    "target_inside_contact_band_rate_max": 1.0
+  },
+  "three_cm": {
+    "audit_lines_1_6": [
+      "diffik_audit line1 csv_rows=10240 summary_trials=10240 row_count_match=True controller=IsaacLab_DifferentialIKController ik_method=dls local_roarm_ik_dls_control_loop=False",
+      "diffik_audit line2 mechanism_ok=True training=False dataset_generation=False grasp_attach=False rollout_object_posewrite=False posewrite_calls_during_rollout=0 env_auto_reset_disabled=True env_joint_delta_action_loop_bypassed=True grasp_ok=True",
+      "diffik_audit line3 controlled_push_rate=0.943164062 impact_outlier_rate=0.007519531 low_motion_rate=0.042480469 success_marker_rate=0.594824219",
+      "diffik_audit line4 disp_along_push_mean_m=0.035298955 disp_xy_mean_m=0.038060439 max_disp_xy_m=0.386441052 max_cube_speed_mps=2.300552368",
+      "diffik_audit line5 min_tcp_target_err_mean_m=0.008548812 final_tcp_target_err_mean_m=0.023529604 diffik_clip_rate_mean=0.652074015",
+      "diffik_audit line6 verdict=PASS_MECHANISM_DIFFIK_RUNTIME_RAN learned_policy=NO track_a_grasp_success=NO dataset_ready=NO"
+    ],
+    "base_total_steps_per_trial": 350,
+    "command_type": "position",
+    "controlled_filter_lines_1_13": [
+      "CONTROLLED_FILTER_INPUT rows=20480 summary_total_trials=20480 csv=/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/per_env.csv csv_md5=4c2864301bea8e2ae798a8f77adf23ab summary=/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/summary.json summary_md5=5c9278450b5531afb7b0ca2a1fed46ee",
+      "THRESHOLDS threshold_source=rollout_stats_audit.out_lines_5_7_9 low_motion_disp_xy_lt_m=0.005 controlled_disp_along_push_min_m=0.001 controlled_speed_max_mps=1.302103193 controlled_tip_max_deg=141.181661216 controlled_disp_xy_max_m=0.133549188 impact_speed_gt_mps=1.733444051 impact_disp_xy_gt_m=0.133549188 impact_tip_gt_deg=150.399799770",
+      "THRESHOLD_CHECK key=disp_xy_p99_m computed=0.133549188 audit=0.133549188 abs_diff=0.000000000129 match=YES",
+      "THRESHOLD_CHECK key=max_cube_speed_p95_mps computed=1.302103193 audit=1.302103193 abs_diff=0.000000000477 match=YES",
+      "THRESHOLD_CHECK key=max_cube_speed_p99_mps computed=1.733444051 audit=1.733444051 abs_diff=0.000000000238 match=YES",
+      "THRESHOLD_CHECK key=tip_angle_p95_deg computed=141.181661216 audit=141.181661216 abs_diff=0.000000000380 match=YES",
+      "THRESHOLD_CHECK key=tip_angle_p99_deg computed=150.399799770 audit=150.399799770 abs_diff=0.000000000133 match=YES",
+      "BUCKET name=valid_basic count=20480 rate=1.000000 criteria=\"ik_ok==1 and grasped_marker==0 and action_saturation_frac==0\"",
+      "BUCKET name=low_motion count=2510 rate=0.122559 criteria=\"disp_xy_m < 0.005\"",
+      "BUCKET name=controlled_push_p95 count=16537 rate=0.807471 criteria=\"valid_basic and disp_along_push_m>=0.001 and speed<=p95 and tip<=p95 and disp_xy<=p99\"",
+      "BUCKET name=impact_outlier_p99 count=547 rate=0.026709 criteria=\"speed>p99 or disp_xy>p99 or tip>p99\"",
+      "BUCKET name=failure_not_controlled count=3943 rate=0.192529 criteria=\"valid_basic and not controlled_push_p95\"",
+      "OUTLIER_REMOVAL_EFFECT removed_count=547 removed_rate=0.026709 all_mean_disp_xy_m=0.031809252 non_impact_mean_disp_xy_m=0.030130129 controlled_mean_disp_xy_m=0.030329521 all_std_disp_xy_m=0.028319945 non_impact_std_disp_xy_m=0.024637582 all_p95_disp_xy_m=0.089700271 non_impact_p95_disp_xy_m=0.085609618"
+    ],
+    "controlled_filter_top_outlier_lines_40_44": [
+      "TOP_IMPACT_OUTLIER rank=1 csv_line=7865 ep=7 env=695 dir=(-1,0) disp_xy_m=0.521036748 disp_push_m=0.283946991 speed_mps=4.549609073 tip_deg=33.532632333",
+      "TOP_IMPACT_OUTLIER rank=2 csv_line=6999 ep=6 env=853 dir=(0,1) disp_xy_m=0.503155234 disp_push_m=0.500144958 speed_mps=3.792765159 tip_deg=56.006829959",
+      "TOP_IMPACT_OUTLIER rank=3 csv_line=13141 ep=12 env=851 dir=(-1,0) disp_xy_m=0.465007623 disp_push_m=0.045145035 speed_mps=4.086038028 tip_deg=29.667221026",
+      "TOP_IMPACT_OUTLIER rank=4 csv_line=19238 ep=18 env=804 dir=(-1,0) disp_xy_m=0.372985863 disp_push_m=0.109077454 speed_mps=2.391108084 tip_deg=46.707432357",
+      "TOP_IMPACT_OUTLIER rank=5 csv_line=18648 ep=18 env=214 dir=(-1,0) disp_xy_m=0.301415593 disp_push_m=-0.260900497 speed_mps=3.317813962 tip_deg=63.162289215"
+    ],
+    "controlled_push_rate": 0.9431640625,
+    "controller": "IsaacLab_DifferentialIKController",
+    "diffik_clip_rate_mean": 0.6520740153413499,
+    "env_joint_delta_action_loop_bypassed": true,
+    "episode_length_s": 6.08,
+    "final_tcp_target_err_mean_m": 0.023529603747921613,
+    "impact_outlier_rate": 0.00751953125,
+    "low_motion_rate": 0.04248046875,
+    "max_cube_speed_mean_mps": 0.40067831689276545,
+    "max_diffik_joint_step_rad": 0.035,
+    "per_env_csv_has_follow_columns": false,
+    "stdout_line20": "[cube3cm_push_diffik_probe] isaac_run=YES num_envs=1024 episodes=10 total_trials=10240 controller=IsaacLab_DifferentialIKController ik_method=dls command_type=position local_roarm_ik_dls_control_loop=NO training=NO dataset_generation=NO grasp=NO attach_posewrite=NO rollout_object_posewrite=NO",
+    "stdout_line21": "[cube3cm_push_diffik_probe] robot_usd_path=/home/cgxr/Documents/Robotics/RoArm_Project/b200_backup_20260522_final/tmp_p7/p7_branch_b_cube2cm_opposing_jaw_v7_collision_usd_d024/roarm_m3.usd arm_joint_names=['base_link_to_link1', 'link1_to_link2', 'link2_to_link3', 'link3_to_link4', 'link4_to_link5'] ee_body=link5 body_idx=5 jacobi_body_idx=4 trajectory_variant=v3 base_steps=220/90/40 v2_posx_steps=260/150/50 v3_posx_steps=300/220/60 max_diffik_joint_step_rad=0.035000 v2_posx_max_diffik_joint_step_rad=0.028000 v3_posx_max_diffik_joint_step_rad=0.020000 dls_lambda=0.010000 env_auto_reset_disabled=YES env_joint_delta_action_loop_bypassed=YES episode_length_s=6.080",
+    "success_marker_rate": 0.59482421875,
+    "total_steps_per_trial": 580,
+    "v3_posx_total_steps_per_trial": 580
+  },
+  "track_a": false,
+  "training": false
+}

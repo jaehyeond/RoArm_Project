@@ -19,7 +19,10 @@ DEFAULT_EVENT_MANIFEST = LOG_DIR / "cube10cm_link5corner_event_label_metadata_ma
 DEFAULT_TEACHER_POLICY = LOG_DIR / "cube10cm_link5corner_noisy_tierb_teacher_policy_gate.json"
 DEFAULT_VISUAL_JSON = LOG_DIR / "cube10cm_link5corner_visual_proxy_contact_inspection.json"
 DEFAULT_RUNTIME_GATE = LOG_DIR / "cube10cm_tap_rl_env_runtime_gate_audit.json"
-DEFAULT_POSITIVE_CONTROL = LOG_DIR / "cube10cm_tap_rl_positive_control_sanity.json"
+DEFAULT_POSITIVE_CONTROL = (
+    LOG_DIR / "cube10cm_tap_rl_positive_control_external_closed_loop_direct_ik_apply_sanity.json"
+)
+DEFAULT_DIRECT_IK_AUDIT = LOG_DIR / "cube10cm_tap_rl_direct_ik_apply_result_audit.json"
 DEFAULT_OUT_JSON = LOG_DIR / "cube10cm_tap_rl_preflight_policy_gate.json"
 DEFAULT_OUT_SUMMARY = LOG_DIR / "cube10cm_tap_rl_preflight_policy_gate_summary.out"
 
@@ -32,6 +35,15 @@ def _status(value: bool, pass_name: str = "PASS", fail_name: str = "BLOCKED") ->
     return pass_name if value else fail_name
 
 
+def _float(value: Any, default: float = 0.0) -> float:
+    try:
+        if value is None or value == "":
+            return default
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--event_manifest", type=Path, default=DEFAULT_EVENT_MANIFEST)
@@ -39,6 +51,7 @@ def main() -> int:
     parser.add_argument("--visual_json", type=Path, default=DEFAULT_VISUAL_JSON)
     parser.add_argument("--runtime_gate", type=Path, default=DEFAULT_RUNTIME_GATE)
     parser.add_argument("--positive_control_json", type=Path, default=DEFAULT_POSITIVE_CONTROL)
+    parser.add_argument("--direct_ik_audit_json", type=Path, default=DEFAULT_DIRECT_IK_AUDIT)
     parser.add_argument("--out_json", type=Path, default=DEFAULT_OUT_JSON)
     parser.add_argument("--out_summary", type=Path, default=DEFAULT_OUT_SUMMARY)
     args = parser.parse_args()
@@ -48,6 +61,7 @@ def main() -> int:
     visual = _load(args.visual_json)
     runtime_gate = _load(args.runtime_gate)
     positive_control = _load(args.positive_control_json) if args.positive_control_json.exists() else {}
+    direct_ik_audit = _load(args.direct_ik_audit_json) if args.direct_ik_audit_json.exists() else {}
 
     counts = event_manifest.get("counts", {})
     policy_statuses = teacher_policy.get("statuses", {})
@@ -85,6 +99,26 @@ def main() -> int:
     noisy_tierb_exception_recorded = bool(policy_interp.get("explicit_exception_requested")) is True
     tiny_action_dataset_allowed = strict_action_teacher_ready or noisy_tierb_exception_recorded
 
+    professor_link5_physical_evidence_ready = (
+        bool(event_manifest.get("local_manifest_only")) is True
+        and int(counts.get("event_count", 0)) > 0
+        and int(counts.get("reaction_count", 0)) > 0
+        and int(counts.get("overshoot_count", -1)) == 0
+        and policy_statuses.get("event_label_metadata_manifest") == "READY_LOCAL_ONLY"
+    )
+    positive_last_log = positive_control.get("last_log", {})
+    positive_max_disp = _float(positive_last_log.get("cube_tap_max_disp_along_m"))
+    positive_max_speed = _float(positive_last_log.get("cube_tap_max_speed_mps"))
+    positive_overshoot = _float(positive_last_log.get("cube_tap_overshoot_seen_rate"), 1.0)
+    positive_physical_evidence_ready = (
+        positive_control.get("professor_physical_reaction_evidence") == "PASS"
+        or direct_ik_audit.get("professor_physical_reaction_evidence") == "PASS"
+        or ((positive_max_disp >= 0.0005 or positive_max_speed >= 0.005) and positive_overshoot == 0.0)
+    )
+    professor_physical_reaction_evidence_ready = (
+        professor_link5_physical_evidence_ready or positive_physical_evidence_ready
+    )
+
     positive_control_valid_runtime = (
         positive_control.get("gpu_runtime") == "YES_LOCAL_TINY_ISAACLAB_POSITIVE_CONTROL"
         and positive_control.get("device") == "cuda:0"
@@ -111,6 +145,27 @@ def main() -> int:
     )
 
     gate_matrix = [
+        {
+            "gate": "professor_physical_reaction_evidence",
+            "status": _status(
+                professor_physical_reaction_evidence_ready,
+                "READY_PROFESSOR_EVIDENCE_ONLY",
+            ),
+            "evidence": {
+                "link5_event_reactions": counts.get("reaction_count"),
+                "link5_overshoot": counts.get("overshoot_count"),
+                "link5_event_label_ready": policy_statuses.get("event_label_metadata_manifest"),
+                "direct_ik_professor_physical_reaction": direct_ik_audit.get(
+                    "professor_physical_reaction_evidence"
+                ),
+                "direct_ik_max_disp_m": direct_ik_audit.get("max_disp_along_m"),
+                "direct_ik_max_speed_mps": direct_ik_audit.get("max_speed_mps"),
+            },
+            "meaning": (
+                "Use this for the professor/user weak physical object-reaction objective. "
+                "It is separate from action-teacher, dataset, RL, and robot readiness."
+            ),
+        },
         {
             "gate": "event_label_quality_tier_metadata",
             "status": _status(event_label_ready, "READY_LOCAL_ONLY"),
@@ -233,9 +288,12 @@ def main() -> int:
             "visual_json": str(args.visual_json),
             "runtime_gate": str(args.runtime_gate),
             "positive_control_json": str(args.positive_control_json),
+            "direct_ik_audit_json": str(args.direct_ik_audit_json),
         },
         "high_level_verdict": {
             "isaac_lab_confusion_resolved": "LOCAL_GPU_WRAPPER_SANITY_ALREADY_PASSED; CPU_OR_SANDBOX_FAILURE_IS_NOT_PROMOTION_EVIDENCE",
+            "professor_physical_reaction_evidence_ready": professor_physical_reaction_evidence_ready,
+            "professor_evidence_separate_from_rl_positive_control": True,
             "may_move_to_local_preflight_design": wrapper_preflight_ready and event_label_ready,
             "may_move_to_ppo_training": ppo_preflight_ready,
             "may_move_to_large_dataset": False,
@@ -247,6 +305,7 @@ def main() -> int:
             "design one tiny scripted positive-control tap sanity for the new wrapper",
             "if positive-control failed, design one revised closed-loop positive-control candidate",
             "review whether noisy Tier-B action-teacher exception is explicitly allowed",
+            "prepare professor-facing physical-reaction evidence package without claiming dataset/RL/RoArm readiness",
         ],
         "not_allowed": [
             "ppo training",
@@ -254,6 +313,7 @@ def main() -> int:
             "RoArm deployment",
             "noisy Tier-B action teacher dataset without explicit exception",
             "2-3mm contact-geometry tuning without explicit professor/user requirement",
+            "blocking professor physical-reaction evidence on RL contact-gated positive-control",
         ],
     }
 
@@ -272,10 +332,12 @@ def main() -> int:
         ),
         (
             "line3 unblocked "
+            f"professor_physical_reaction_evidence={_status(professor_physical_reaction_evidence_ready, 'READY_PROFESSOR_EVIDENCE_ONLY')} "
             f"event_label_metadata={_status(event_label_ready, 'READY_LOCAL_ONLY')} "
             f"env_wrapper={_status(wrapper_preflight_ready, 'READY_LOCAL_PREFLIGHT_ONLY')} "
             f"weak_1mm_only_verified={weak_1mm_is_only_verified_objective} "
-            "strong_2_3mm_required_by_current_evidence=NO"
+            "strong_2_3mm_required_by_current_evidence=NO "
+            "professor_evidence_separate_from_rl_positive_control=YES"
         ),
         (
             "line4 teacher_policy "
@@ -295,20 +357,21 @@ def main() -> int:
         (
             "line6 rl_preflight "
             f"positive_control_tap_sanity={positive_control_status} "
+            f"professor_physical_reaction_evidence={_status(professor_physical_reaction_evidence_ready, 'READY_PROFESSOR_EVIDENCE_ONLY')} "
             "ppo_rl_training=BLOCKED large_dataset=BLOCKED roarm=BLOCKED "
-            "reason=random_sanity_or_failed_positive_control_does_not_prove_contact_gated_tap_success"
+            "reason=rl_contact_gated_positive_control_blocks_dataset_rl_not_professor_physical_evidence"
         ),
         (
             "line7 next "
-            "allowed=local_revised_closed_loop_positive_control_candidate_design "
-            "not_allowed=new_gpu_runtime_without_explicit_approval_or_ppo_large_dataset_roarm"
+            "allowed=professor_physical_reaction_evidence_package_or_local_rl_blocker_debug "
+            "not_allowed=claiming_action_teacher_dataset_rl_roarm_readiness"
         ),
     ]
     args.out_summary.write_text("\n".join(lines) + "\n", encoding="utf-8")
     for line in lines:
         print(line)
 
-    return 0 if wrapper_preflight_ready and event_label_ready else 2
+    return 0 if professor_physical_reaction_evidence_ready else 2
 
 
 if __name__ == "__main__":

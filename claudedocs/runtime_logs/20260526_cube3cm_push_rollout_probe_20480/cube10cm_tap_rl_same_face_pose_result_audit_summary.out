@@ -1,0 +1,9 @@
+line1 artifact=cube10cm_tap_rl_same_face_pose_result_audit_v1 local_posthoc_audit_only=YES gpu_runtime=NO dataset_generation=NO training=NO robot_control=NO ssh=NO b200=NO track_a=NO
+line2 design_basis selected_fixed_cube_x_m=0.240 selected_fixed_cube_y_m=0.000 change=fixed_cube_x_m_only same_3cm_center_face_rejected_for_plusx=YES
+line3 runtime_verdict status=FAIL professor_physical_reaction_evidence=PASS rl_contact_gated_positive_control=FAIL terminated_count=0 truncated_count=0
+line4 trace_integrity artifact_type=cube10cm_tap_rl_per_step_reach_trace_v1 action_teacher_dataset=False rows=1160 steps=0..579 env_ids=[0, 1]
+line5 command_target inside_rows=184 inside_unique_steps=92 first_step=46 last_step=137 face_gap_max=0.105999991
+line6 applied_joint_target_fk inside_rows=0 x250_shortfall_m=0.004059910 x240_shortfall_m=0.003457759 improvement_m=0.000602150 target_fk_err_mm_final_mean=127.058100165
+line7 actual_tcp inside_rows=0 x250_shortfall_m=0.009534182 x240_shortfall_m=0.008961143 improvement_m=0.000573039
+line8 follow_reaction direct_joint_follow_abs_max_rad_max=0.010857821 actual_joint_step_abs_max_rad_max=0.001492023 cube_disp_along_max_m=0.000899076 professor_seen_rate=1.000000000 tap_success_seen_rate=0.000000000
+line9 verdict X240_POSE_IMPROVES_FACE_SHORTFALL_BUT_STILL_NO_CONTACT command_target_crossed=YES applied_joint_target_fk_crossed=NO actual_tcp_crossed=NO diffik_action_dataset=BLOCKED ppo_rl_training=BLOCKED roarm=BLOCKED

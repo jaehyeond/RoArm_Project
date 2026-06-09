@@ -1,0 +1,188 @@
+{
+  "artifact_type": "cube10cm_tap_rl_builtin_diffik_parity_candidate_design_v1",
+  "b200": false,
+  "basis": {
+    "controller_contract_gap": [
+      "line5 three_cm_contract controller=IsaacLab_DifferentialIKController command_type=position env_action_loop_bypassed=True base_steps=350 v3_posx_steps=580 max_diffik_joint_step_rad=0.035 diffik_clip_rate_mean=0.652074015 existing_eval_follow_columns=False",
+      "line6 three_cm_outcome_and_speed controlled_push_rate=0.943164062 success_marker_rate=0.594824219 low_motion_rate=0.042480469 impact_outlier_rate=0.007519531 max_cube_speed_mean_mps=0.400678317 speed_p95_mps=1.302103193 speed_p99_mps=1.733444051 top_impact_speed_mps_max=4.549609073",
+      "line7 ten_cm_contract baseline_closed_loop_push_steps=72 slow240_closed_loop_push_steps=240 max_steps_both=120 controller_mode=external_closed_loop_direct_apply action_wrapper_cap_inactive_by_zero_action=YES baseline_action_abs_max=0.0 slow240_action_abs_max=0.0",
+      "line8 ten_cm_follow_and_contact baseline_follow_final_rad=0.362854958 slow240_follow_final_rad=0.170210123 baseline_tap_success=0.0 slow240_tap_success=0.0 baseline_contact_seen=0.0 slow240_contact_seen=0.0",
+      "line9 verdict ten_cm_short_horizon_is_harness_contract=YES object_position_primary_cause=NO three_cm_had_speed_clip_guard_issues=YES contract_difference=LONG_CONTROLLED_PUSH_FILTERED_3CM_VS_SHORT_STRICT_CONTACT_GATED_10CM"
+    ],
+    "cube10cm_probe_wraps_cube3cm_diffik_engine": true,
+    "cube3cm_probe_uses_builtin_diffik": true,
+    "isaac_task_space_reference": [
+      {
+        "line": 93,
+        "text": "self._ik_controller = DifferentialIKController("
+      },
+      {
+        "line": 207,
+        "text": "joint_pos_des = self._ik_controller.compute(ee_pos_curr, ee_quat_curr, jacobian, joint_pos)"
+      },
+      {
+        "line": 211,
+        "text": "self._asset.set_joint_position_target(joint_pos_des, self._joint_ids)"
+      }
+    ],
+    "original_10cm_transition_preserved_builtin_diffik": true,
+    "prior_direct_apply_failed": [
+      "line2 runtime_outcome status=FAIL positive_control=FAIL professor_physical_reaction_seen=1.0 contact_seen=0.0 tap_success=0.0",
+      "line3 target_frame target_path_ok=True target_inside_max=1.0 target_face_gap_final_m=0.105999994 target_fk_err_max_mm=1.478177801 actual_fk_vs_sim_tcp_err_max_mm=0.000999977 fk_frame_ok=True",
+      "line4 follow_lag target_delta_abs_max_final_rad=0.358783723 direct_joint_follow_abs_max_final_rad=0.362854958 direct_joint_follow_abs_mean_final_rad=0.127495408 direct_actual_joint_step_abs_max_final_rad=0.030904710 actual_velocity_est_max_final_rad_s=3.090471029 near_velocity_limit=True",
+      "line5 exclusions wrapper_path_bypassed=True action_abs_max_trace=0.0 cap_rate=0.0 lead_limit_rate=0.0 observed_actual_face_gap_max_m=-0.019533616 observed_actual_shortfall_min_m=0.009533616",
+      "line6 verdict primary_blocker=DIRECT_JOINT_FOLLOW_ACTUATOR_TRACKING_LAG diffik_action_dataset=BLOCKED tiny_action_dataset_dry_run=BLOCKED ppo_rl_training=BLOCKED large_dataset=BLOCKED roarm=BLOCKED"
+    ],
+    "slow240_failed": [
+      "line2 runtime_contract candidate=direct_ik_apply_slow240 changed_knobs=1 closed_loop_push_steps=72->240 controller_mode=external_closed_loop_direct_apply num_envs=2 max_steps=120 seed=962 device=cuda:0 geometry=unchanged action_wrapper_knobs=unchanged",
+      "line3 outcome baseline_contact=0.0 baseline_tap=0.0 slow240_contact=0.0 slow240_tap=0.0 slow240_professor_seen=1.0 slow240_reaction_signal_now=0.5",
+      "line4 follow_comparison baseline_follow_final_rad=0.362854958 slow240_follow_final_rad=0.170210123 follow_final_ratio=0.469085841 target_delta_ratio=0.474653743 actual_step_final_rad=0.017993897",
+      "line5 contact_gap_comparison baseline_shortfall_min_m=0.009533616 slow240_shortfall_min_m=0.009191336 shortfall_improvement_m=0.000342280 baseline_face_gap_max_m=-0.019533616 slow240_face_gap_max_m=-0.019191336 face_gap_gain_m=0.000342280",
+      "line6 exclusions target_enters_band_both=True fk_frame_ok_both=True wrapper_bypassed_both=True baseline_target_final_face_gap_m=0.105999994 slow240_target_final_face_gap_m=0.043000001 target_final_face_gap_reduction_m=0.062999994",
+      "line7 verdict FAIL_SLOW240_IMPROVES_FOLLOW_BUT_NOT_CONTACT timing_hypothesis_supported=True fixed_horizon_slowdown_insufficient=True rl_contact_gated_positive_control=FAIL diffik_action_dataset=BLOCKED tiny_action_dataset_dry_run=BLOCKED ppo_rl_training=BLOCKED large_dataset=BLOCKED roarm=BLOCKED"
+    ]
+  },
+  "branch": "professor_cube10cm_tap_reaction_quality_tier",
+  "candidate": {
+    "builtin_diffik_lambda": 0.01,
+    "changed_controller": "local_ik_dls_direct_apply -> isaac_builtin_diffik_direct_apply",
+    "changed_knobs": [
+      "controller implementation only"
+    ],
+    "command": "conda run -n isaaclab --no-capture-output python -u -m roarm_rl.test_positive_control_cube_tap10cm --num_envs 2 --steps 120 --seed 962 --device cuda:0 --controller_mode isaac_builtin_diffik_direct_apply --out_json /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_direct_apply_sanity.json --out_summary /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_direct_apply_sanity_summary.out",
+    "name": "isaac_builtin_diffik_direct_apply_positive_control",
+    "out_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_direct_apply_sanity.json",
+    "out_summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_direct_apply_sanity_summary.out",
+    "runtime_requires_explicit_approval": true,
+    "status": "DESIGNED_NOT_RUN",
+    "unchanged": {
+      "action_wrapper_knobs": "unchanged_bypassed_as_existing_direct_apply",
+      "contact_gate": "unchanged_strict",
+      "cube_mass_kg": 0.72,
+      "cube_size_m": 0.1,
+      "cube_xy_m": [
+        0.25,
+        0.0
+      ],
+      "dataset_generation": false,
+      "geometry": "unchanged",
+      "num_envs": 2,
+      "push_dir_xy": [
+        1.0,
+        0.0
+      ],
+      "robot_control": false,
+      "seed": 962,
+      "steps": 120,
+      "training": false
+    }
+  },
+  "code_checks": {
+    "checks": {
+      "base_frame_transform": true,
+      "builtin_diffik_cfg_position_abs_dls": true,
+      "builtin_diffik_import": true,
+      "contact_gate_unchanged": true,
+      "controller_mode_choice": true,
+      "diffik_compute": true,
+      "direct_joint_target_override": true,
+      "live_jacobian": true,
+      "metadata": true,
+      "tcp_tool_proxy_offset": true
+    },
+    "evidence_lines": {
+      "compute": {
+        "line": 273,
+        "text": "joint_pos_des = diffik.compute(link5_pos_b, link5_quat_b, jacobian, joint_pos_arm)"
+      },
+      "contact_gate": {
+        "line": 1133,
+        "text": "success_now = (contact_proxy | self._tap_contact_seen) & reaction_now & ~overshoot_now"
+      },
+      "controller_cfg": {
+        "line": 198,
+        "text": "diffik_cfg = DifferentialIKControllerCfg("
+      },
+      "helper": {
+        "line": 181,
+        "text": "def _init_builtin_diffik_state(inner: Any, args: argparse.Namespace) -> dict[str, Any]:"
+      },
+      "live_jacobian": {
+        "line": 263,
+        "text": "jacobian = inner._robot.root_physx_view.get_jacobians()[:, state[\"jacobi_body_idx\"], :, state[\"jacobi_joint_ids\"]]"
+      },
+      "metadata_apply": {
+        "line": 793,
+        "text": "\"isaac_builtin_diffik_controller_apply\": args.controller_mode == \"isaac_builtin_diffik_direct_apply\","
+      },
+      "mode_choice": {
+        "line": 454,
+        "text": "\"isaac_builtin_diffik_direct_apply\","
+      },
+      "override": {
+        "line": 605,
+        "text": "inner._external_joint_targets_override = joint_target"
+      },
+      "set_command": {
+        "line": 272,
+        "text": "diffik.set_command(link5_target_b, ee_pos=link5_pos_b, ee_quat=link5_quat_b)"
+      }
+    },
+    "ready": true
+  },
+  "dataset_generation": false,
+  "gpu_runtime": false,
+  "inputs": {
+    "claude": "/home/cgxr/Documents/Robotics/RoArm_Project/CLAUDE.md",
+    "contract_audit": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_vs_cube3cm_controller_contract_audit_summary.out",
+    "cube10cm_probe": "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/cube10cm_push_diffik_probe.py",
+    "cube3cm_probe": "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/cube3cm_push_diffik_probe.py",
+    "decisions": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/DECISIONS.md",
+    "direct_telemetry_audit": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_direct_ik_telemetry_result_audit_summary.out",
+    "isaac_task_space": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaaclab/source/isaaclab/isaaclab/envs/mdp/actions/task_space_actions.py",
+    "ledger": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/EXPERIMENT_LEDGER.md",
+    "memory": "/home/cgxr/.claude/projects/-home-cgxr-Documents-Robotics-RoArm-Project/memory/MEMORY.md",
+    "session": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/session_20260608_cube10cm_tap_rl_preflight_policy_gate.md",
+    "slow240_audit": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_slow240_result_audit_summary.out",
+    "start_here": "/home/cgxr/Documents/Robotics/RoArm_Project/START_HERE.md",
+    "tap_env": "/home/cgxr/Documents/Robotics/RoArm_Project/roarm_rl/roarm_cube_push_env.py",
+    "tap_harness": "/home/cgxr/Documents/Robotics/RoArm_Project/roarm_rl/test_positive_control_cube_tap10cm.py"
+  },
+  "local_design_only": true,
+  "memory_checked_but_repo_docs_primary": {
+    "claude_current_state_lines": [
+      "## Current-State Protocol",
+      "| `START_HERE.md` | Rolling current-state dashboard. New sessions boot from here. | Overwrite each major update. |",
+      "| `HANDOFF.md`, `TASKS.md` | Historical (stale). | Do not trust unless `START_HERE.md` explicitly points to them. |",
+      "Before answering current project-state questions or making edits:",
+      "6. Verify any metric from the referenced log/data file before citing it.",
+      "- Do not rely on memory-only claims. Cite the referenced file/line.",
+      "- Do not treat HANDOFF.md or TASKS.md as current state."
+    ],
+    "memory_line_74": "- **2026-06-08 (Professor cube10cm physical-reaction gate separation D188)**: Active branch remains professor 10cm/0.72kg cube push/tap DiffIK reaction-window + quality-tier, separate from Track A and no B200/SSH. User clarified weak physical object reaction is acceptable unless stronger 2-3mm transient tap is explicitly required. Current truth is repo docs/logs first: START_HERE.md line 75 and DECISIONS D188 separate `professor_physical_reaction_evidence` from strict `RL contact-gated positive-control`. Professor evidence is READY_PROFESSOR_EVIDENCE_ONLY; event-label metadata READY_LOCAL_ONLY; env wrapper READY_LOCAL_PREFLIGHT_ONLY. Direct-IK posthoc audit: max_disp_along_m 0.000922590, max_speed_mps 0.008078601, overshoot 0.0, professor_physical_reaction_evidence PASS, but contact/tap success 0.0 and RL positive-control RUN_FAILED. Do not claim clean action teacher/dataset/PPO/RL/RoArm readiness; those remain BLOCKED by separate teacher/action/RL gates. Next safe work: professor evidence package/event-label/quality-tier metadata, or local RL blocker debug only. Details: START_HERE.md:75, DECISIONS D188, EXPERIMENT_LEDGER row 230, cube10cm_tap_rl_preflight_policy_gate_summary.out:3-7, cube10cm_tap_rl_direct_ik_apply_result_audit_summary.out:4-8."
+  },
+  "outcome": {
+    "contact_gated_positive_control": "RUN_FAILED",
+    "diffik_action_dataset": "BLOCKED",
+    "large_dataset": "BLOCKED",
+    "parity_candidate": "READY_FOR_EXPLICIT_RUNTIME_APPROVAL_ONLY",
+    "ppo_rl_training": "BLOCKED",
+    "roarm": "BLOCKED",
+    "tiny_action_dataset_dry_run": "BLOCKED"
+  },
+  "outputs": {
+    "json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_builtin_diffik_parity_candidate_design.json",
+    "summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_builtin_diffik_parity_candidate_design_summary.out"
+  },
+  "rejected_before_this_runtime": {
+    "contact_gate_relaxation_or_tier_b_exception": "blocked_until_builtin_diffik_parity_runtime_result",
+    "dataset_or_rl": "blocked_until_contact_gated_positive_control_passes_or_explicit_noisy_teacher_policy_gate",
+    "lead_cap_action_scale_sweep": "blocked_until_controller_mismatch_checked",
+    "roarm": "blocked_until_policy_and_safety_gates",
+    "slow360_or_timing_sweep": "blocked_until_controller_mismatch_checked"
+  },
+  "robot_control": false,
+  "ssh": false,
+  "track_a": false,
+  "training": false
+}

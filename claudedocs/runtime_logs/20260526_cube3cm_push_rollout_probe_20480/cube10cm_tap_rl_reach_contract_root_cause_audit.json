@@ -1,0 +1,84 @@
+{
+  "artifact_type": "cube10cm_tap_rl_reach_contract_root_cause_audit_v1",
+  "b200": false,
+  "dataset_generation": false,
+  "diagnosis_values": {
+    "actual_inside_rows": 0,
+    "applied_inside_rows": 0,
+    "command_inside_rows": 184,
+    "command_inside_unique_steps": 92,
+    "first_applied_minus_actual_m": 0.005616972709878265,
+    "first_command_minus_applied_m": 0.0038019618737856753,
+    "inside_window_applied_minus_actual_m_mean": 0.00562939929621037,
+    "inside_window_command_minus_applied_m_mean": 0.014288675130233311
+  },
+  "gpu_runtime": false,
+  "inputs": {
+    "diagnosis": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_applied_target_tcp_reach_contract_diagnosis.json",
+    "env": "roarm_rl/roarm_cube_push_env.py",
+    "harness": "roarm_rl/test_positive_control_cube_tap10cm.py",
+    "isaac_actuator_cfg_source": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaaclab/source/isaaclab/isaaclab/actuators/actuator_cfg.py",
+    "isaac_diffik_source": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaaclab/source/isaaclab/isaaclab/controllers/differential_ik.py",
+    "sanity_x240": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_x240_reachtrace_sanity.json",
+    "stack_env": "roarm_rl/roarm_stack_env.py"
+  },
+  "line_refs": {
+    "env_override": 633,
+    "env_robot_target_write": 638,
+    "env_set_joint_position_target": 753,
+    "harness_arm_joint_target": 367,
+    "harness_diffik_compute": 362,
+    "harness_joint_pos_arm": 358,
+    "harness_raw_delta": 364,
+    "harness_step_clip": 366,
+    "harness_target_full_assign": 379,
+    "harness_target_full_from_actual": 378,
+    "isaac_actuator_stiffness": 113,
+    "isaac_diffik_return_current_plus_delta": 174,
+    "isaac_implicit_pd": 177,
+    "stack_arm_damping": 178,
+    "stack_arm_effort": 179,
+    "stack_arm_stiffness": 177,
+    "stack_arm_velocity": 180,
+    "stack_decimation": 108,
+    "stack_sim_dt": 115
+  },
+  "local_posthoc_audit_only": true,
+  "next_local_step": "Design a default-off code audit/patch candidate that separates target-generation schedule/clip/base from actuator-follow dynamics before any new tiny runtime.",
+  "robot_control": false,
+  "root_cause": {
+    "not_primary_causes": {
+      "command_target_geometry": "NOT_PRIMARY_CAUSE_COMMAND_TARGET_ENTERS_BAND",
+      "contact_gate": "NOT_PRIMARY_CAUSE_FOR_THIS_FAILURE",
+      "cube_mass": "NOT_FIRST_CAUSE_CONTACT_NOT_REACHED_BEFORE_PUSH_FORCE_MATTERS",
+      "fixed_pose_x285": "NOT_SUPPORTED_FOR_PLUSX"
+    },
+    "primary_target_generation_cause": {
+      "clipped_delta_abs_max_rad": 0.009999999776482582,
+      "raw_delta_abs_max_rad": 0.42777466773986816,
+      "reason": "DifferentialIK asks for a large current-pose-to-command correction, but the harness clips each joint correction to 0.010rad and builds target_full from current actual joint_pos. The FK of this one-step clipped target never reaches the face band.",
+      "status": "CONFIRMED",
+      "step_clip_rate_max": 0.4000000059604645,
+      "target_fk_err_final_mm": 127.05810016506004,
+      "target_full_delta_from_actual_abs_max_rad_max": 0.01000000536441803,
+      "target_tcp_err_before_final_m": 0.1319819986820221
+    },
+    "secondary_actuator_follow_cause": {
+      "actual_joint_speed_rad_s": 0.1492023468017578,
+      "actual_to_target_step_ratio": 0.14920226676342482,
+      "control_dt_s": 0.01,
+      "direct_actual_joint_step_abs_max_rad": 0.0014920234680175781,
+      "direct_joint_follow_abs_max_rad": 0.010857820510864258,
+      "reason": "The actual joint step is far smaller than the target lead. This is consistent with position-drive actuator dynamics, but torque telemetry is not present, so stiffness/damping/effort saturation cannot be split definitively yet.",
+      "status": "CONFIRMED_AS_LAG_NOT_PARAMETER-SPECIFIC"
+    },
+    "unresolved_without_extra_telemetry": [
+      "which joint contributes most to applied FK shortfall in the step-clipped path",
+      "whether effort_limit_sim saturates during the actual TCP lag",
+      "whether changing controller schedule, clip, target base, or actuator gains is the cleanest fix"
+    ]
+  },
+  "ssh": false,
+  "track_a": false,
+  "training": false
+}

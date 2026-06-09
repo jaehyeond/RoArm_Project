@@ -262,6 +262,9 @@ class RoArmCubeTap10cmEnvCfg(RoArmCubePushEnvCfg):
     tap_reaction_tip_angle_deg: float = 1.0
     tap_overshoot_disp_m: float = 0.020
     tap_success_terminate: bool = False
+    professor_physical_reaction_disp_m: float = 0.0005
+    professor_physical_reaction_speed_mps: float = 0.005
+    professor_physical_reaction_z_delta_m: float = 0.0005
 
     tap_contact_reward_scale: float = 1.0
     tap_reaction_reward_scale: float = 4.0
@@ -1058,6 +1061,7 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
             return
         self._tap_contact_seen = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
         self._tap_reaction_seen = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
+        self._professor_physical_reaction_seen = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
         self._tap_overshoot_seen = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
         self._tap_success_flag = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
         self._tap_max_disp_along = torch.zeros(self.num_envs, device=self.device)
@@ -1073,6 +1077,7 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
             env_ids = self._robot._ALL_INDICES
         self._tap_contact_seen[env_ids] = False
         self._tap_reaction_seen[env_ids] = False
+        self._professor_physical_reaction_seen[env_ids] = False
         self._tap_overshoot_seen[env_ids] = False
         self._tap_success_flag[env_ids] = False
         self._tap_max_disp_along[env_ids] = 0.0
@@ -1118,6 +1123,13 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
         contact_context = contact_proxy | self._tap_contact_seen
         reaction_now = contact_context & reaction_signal_now
         overshoot_now = terms["disp_xy"] >= float(self.cfg.tap_overshoot_disp_m)
+        professor_physical_reaction_signal = (
+            (torch.clamp(terms["disp_along"], min=0.0) >= float(self.cfg.professor_physical_reaction_disp_m))
+            | (terms["disp_xy"] >= float(self.cfg.professor_physical_reaction_disp_m))
+            | (z_delta >= float(self.cfg.professor_physical_reaction_z_delta_m))
+            | (terms["speed"] >= float(self.cfg.professor_physical_reaction_speed_mps))
+        )
+        professor_physical_reaction_now = professor_physical_reaction_signal & ~overshoot_now
         success_now = (contact_proxy | self._tap_contact_seen) & reaction_now & ~overshoot_now
 
         terms.update(
@@ -1132,6 +1144,8 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
                 "tap_reaction_contact_context": contact_context,
                 "tap_reaction_now": reaction_now,
                 "tap_overshoot_now": overshoot_now,
+                "professor_physical_reaction_signal": professor_physical_reaction_signal,
+                "professor_physical_reaction_now": professor_physical_reaction_now,
                 "tap_success_now": success_now,
             }
         )
@@ -1140,6 +1154,7 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
     def _update_tap_buffers(self, terms: dict[str, torch.Tensor]) -> torch.Tensor:
         self._tap_contact_seen |= terms["tap_contact_proxy"]
         self._tap_reaction_seen |= terms["tap_reaction_now"]
+        self._professor_physical_reaction_seen |= terms["professor_physical_reaction_now"]
         self._tap_overshoot_seen |= terms["tap_overshoot_now"]
         self._tap_max_disp_along[:] = torch.maximum(self._tap_max_disp_along, torch.clamp(terms["disp_along"], min=0.0))
         self._tap_max_disp_xy[:] = torch.maximum(self._tap_max_disp_xy, terms["disp_xy"])
@@ -1185,6 +1200,21 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
             "cube_tap_reaction_contact_context_rate": terms["tap_reaction_contact_context"].float().mean().detach(),
             "cube_tap_reaction_now_rate": terms["tap_reaction_now"].float().mean().detach(),
             "cube_tap_reaction_seen_rate": self._tap_reaction_seen.float().mean().detach(),
+            "cube_tap_professor_physical_reaction_signal_now_rate": terms[
+                "professor_physical_reaction_signal"
+            ].float().mean().detach(),
+            "cube_tap_professor_physical_reaction_now_rate": terms[
+                "professor_physical_reaction_now"
+            ].float().mean().detach(),
+            "cube_tap_professor_physical_reaction_seen_rate": self._professor_physical_reaction_seen.float()
+            .mean()
+            .detach(),
+            "cube_tap_professor_physical_reaction_disp_threshold_m": torch.tensor(
+                float(self.cfg.professor_physical_reaction_disp_m), device=self.device
+            ),
+            "cube_tap_professor_physical_reaction_speed_threshold_mps": torch.tensor(
+                float(self.cfg.professor_physical_reaction_speed_mps), device=self.device
+            ),
             "cube_tap_overshoot_now_rate": terms["tap_overshoot_now"].float().mean().detach(),
             "cube_tap_overshoot_seen_rate": self._tap_overshoot_seen.float().mean().detach(),
             "cube_tap_success_rate": self._tap_success_flag.float().mean().detach(),

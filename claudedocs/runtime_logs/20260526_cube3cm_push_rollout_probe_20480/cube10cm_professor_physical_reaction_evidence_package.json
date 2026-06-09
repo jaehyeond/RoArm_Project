@@ -1,0 +1,218 @@
+{
+  "artifact_type": "cube10cm_professor_physical_reaction_evidence_package_v1",
+  "blocked_gates": {
+    "diffik_action_dataset": "BLOCKED",
+    "large_dataset": "BLOCKED",
+    "ppo_rl_training": "BLOCKED",
+    "rl_contact_gated_positive_control": "RUN_FAILED",
+    "roarm": "BLOCKED",
+    "tiny_action_dataset_dry_run": "BLOCKED"
+  },
+  "branch": "professor_cube10cm_tap_reaction_quality_tier",
+  "caveats": {
+    "clean_tap_visual_verified": false,
+    "contact_gated_rl_success": "FAIL",
+    "dataset_rl_roarm_readiness": "BLOCKED",
+    "grazing_or_outside_face_behavior": true,
+    "noisy_tier_b_exception": "REQUIRES_EXPLICIT_USER_PROFESSOR_EXCEPTION",
+    "strict_clean_action_teacher": "BLOCKED",
+    "weak_physical_evidence_must_not_be_promoted": true
+  },
+  "event_label_quality_tier_metadata": {
+    "clean_teacher": false,
+    "contact": 16,
+    "default_action_teacher_dataset_allowed": false,
+    "event_label_metadata_status": "READY_LOCAL_ONLY",
+    "events": 16,
+    "ge_2mm": 0,
+    "ge_3mm": 0,
+    "linked_to_professor_evidence": true,
+    "local_manifest_only": true,
+    "not_action_teacher_dataset": true,
+    "not_lerobot_or_rlds_dataset": true,
+    "overshoot": 0,
+    "quality_tier_counts": {
+      "B_REACTION_VALID_FOLLOW_OK_CLIP_HIGH": 16
+    },
+    "reaction": 16,
+    "weak_1mm": 16
+  },
+  "local_only_contract": {
+    "b200": false,
+    "dataset_generation": false,
+    "gpu_runtime_launched_by_this_package": false,
+    "robot_control": false,
+    "ssh": false,
+    "track_a": false,
+    "training": false,
+    "uses_existing_logs_only": true
+  },
+  "next_branch_decision": {
+    "p0_evidence_checkpoint": "this package is one checkpoint inside the integrated professor-report pipeline, not an alternative to learning/RL",
+    "p1_p2_learning_rl_path": "continue by resolving the local RL/learning blockers: contact-gated positive-control, clean teacher or explicit noisy Tier-B exception gate, tiny dry run, large dataset, PPO/RL training, and only then RoArm/generalization"
+  },
+  "outputs": {
+    "json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_professor_physical_reaction_evidence_package.json",
+    "markdown": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_professor_physical_reaction_evidence_package.md",
+    "summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_professor_physical_reaction_evidence_package_summary.out"
+  },
+  "package_intent": "Freeze reproducible local evidence that a 10cm/0.72kg cube shows weak physical reaction; do not promote this to action-teacher, dataset, RL, or RoArm readiness.",
+  "professor_physical_reaction_evidence": {
+    "contact_seen": 0.0,
+    "direct_ik_professor_physical_reaction_evidence": "PASS",
+    "max_disp_along_m": 0.0009225904941558838,
+    "max_speed_mps": 0.008078601211309433,
+    "overshoot": 0.0,
+    "preflight_status": "READY_PROFESSOR_EVIDENCE_ONLY",
+    "professor_physical_reaction_evidence_only": true,
+    "reaction_context": 0.0,
+    "reaction_seen": 0.0,
+    "tap_success": 0.0,
+    "thresholds": {
+      "disp_m": 0.0005,
+      "speed_mps": 0.005
+    },
+    "verdict": "PROFESSOR_PHYSICAL_REACTION_PASS_RL_CONTACT_GATED_FAIL"
+  },
+  "schema_policy": {
+    "actual_action_payload_included": false,
+    "allowed_content": [
+      "source paths and checksums",
+      "event label counts",
+      "quality tier counts",
+      "weak physical reaction metrics",
+      "visual caveats",
+      "blocked readiness statuses"
+    ],
+    "copied_action_payload_keys": [],
+    "excluded_action_payload_key_families": [
+      "action",
+      "action_abs_max",
+      "action_abs_max_trace",
+      "action_abs_mean",
+      "actions",
+      "image_observations",
+      "joint_delta_abs_max",
+      "joint_delta_abs_max_trace",
+      "joint_delta_abs_mean",
+      "joint_delta_targets",
+      "joint_position_targets",
+      "normalized_actions",
+      "observations",
+      "policy_actions",
+      "robot_dof_targets",
+      "target_lead_abs_max",
+      "target_lead_abs_max_trace"
+    ]
+  },
+  "sources": [
+    {
+      "bytes": 3413,
+      "exists": true,
+      "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_direct_ik_apply_result_audit.json",
+      "role": "direct_ik_result_audit_json",
+      "sha256": "c596a2ac419664081d59783096ea51366058a95e03437098d71ca24adc97f985"
+    },
+    {
+      "bytes": 2530,
+      "exists": true,
+      "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_direct_ik_apply_result_audit_summary.out",
+      "role": "direct_ik_result_audit_summary",
+      "sha256": "87c54fd9bc0c9d6801949a151b78964392621b5ab50d3a8effdf56333a14e7a4",
+      "summary_lines": "4-8"
+    },
+    {
+      "bytes": 6454,
+      "exists": true,
+      "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_direct_ik_apply_sanity.json",
+      "role": "direct_ik_runtime_json",
+      "sha256": "4b147716dfb93aa530c4e818749c3672d8f92e364162a0551f54cca18089f11e"
+    },
+    {
+      "bytes": 2109,
+      "exists": true,
+      "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_direct_ik_apply_sanity_summary.out",
+      "role": "direct_ik_runtime_summary",
+      "sha256": "52d01cb2067a04c8cca89010ca2058ebb5976cd94b2719a65661022995ba8150",
+      "summary_lines": "1-9"
+    },
+    {
+      "bytes": 7578,
+      "exists": true,
+      "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_preflight_policy_gate.json",
+      "role": "preflight_policy_gate_json",
+      "sha256": "31bce5c23ace70a988a5b1ddb3e0b40abf173fc94d751bde2680d680243cc572"
+    },
+    {
+      "bytes": 1375,
+      "exists": true,
+      "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_preflight_policy_gate_summary.out",
+      "role": "preflight_policy_gate_summary",
+      "sha256": "e72d92f14a6ee25216807fc02f72dd83cf8ca86c74df19b8986b328816539446",
+      "summary_lines": "1-7"
+    },
+    {
+      "bytes": 45664,
+      "exists": true,
+      "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_link5corner_event_label_metadata_manifest.json",
+      "role": "event_label_quality_tier_metadata_json",
+      "sha256": "0be7269f0025f140e444bb52b79e9cffe34b60f28e6de471cf761069f550dfdf"
+    },
+    {
+      "bytes": 753,
+      "exists": true,
+      "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_link5corner_event_label_metadata_manifest_summary.out",
+      "role": "event_label_quality_tier_metadata_summary",
+      "sha256": "81dd3fe80110d0f65588301747891593b4f4d211135180ab7d42fc36be1532bf",
+      "summary_lines": "1-6"
+    },
+    {
+      "bytes": 2995,
+      "exists": true,
+      "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_link5corner_noisy_tierb_teacher_policy_gate.json",
+      "role": "teacher_policy_gate_json",
+      "sha256": "a97ad9844e2fb5bd5cc1f8ed73b471fe00444ef9c9685134e2dedd5ab24f8b79"
+    },
+    {
+      "bytes": 980,
+      "exists": true,
+      "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_link5corner_noisy_tierb_teacher_policy_gate_summary.out",
+      "role": "teacher_policy_gate_summary",
+      "sha256": "af7f45be00c48dda2f1eda6d1e372371b1a1702ebc9554ce5aac00fa8b7eae3a",
+      "summary_lines": "1-7"
+    },
+    {
+      "bytes": 5261,
+      "exists": true,
+      "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_direct_ik_apply_visual_contact_audit.html",
+      "role": "visual_contact_audit_html",
+      "sha256": "e09b8bc2a40af7dbde26ff30a1c1424d6a72fb231f4578c83faefffbf67cccea"
+    },
+    {
+      "bytes": 5177,
+      "exists": true,
+      "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_direct_ik_apply_visual_contact_audit.svg",
+      "role": "visual_contact_audit_svg",
+      "sha256": "9c2855038d5dc0f798bc2d7225b23227db2c98142b1af78e442b66db9c620e20"
+    },
+    {
+      "bytes": 49528,
+      "exists": true,
+      "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_direct_ik_apply_visual_contact_audit.png",
+      "role": "visual_contact_audit_png",
+      "sha256": "33e1c60269e18b0e028698a2d64ee8ce66016021feae81669777b3ae7ccde8da"
+    }
+  ],
+  "status": "READY_PROFESSOR_EVIDENCE_ONLY",
+  "visual_evidence_package": {
+    "along_gap_blocker": true,
+    "best_shortfall_to_contact_band_m": 0.009533615559339523,
+    "face_gap_near_band": false,
+    "final_shortfall_to_contact_band_m": 0.009564967602491379,
+    "html": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_direct_ik_apply_visual_contact_audit.html",
+    "lateral_ok": true,
+    "png": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_direct_ik_apply_visual_contact_audit.png",
+    "svg": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_direct_ik_apply_visual_contact_audit.svg",
+    "vertical_ok": true
+  }
+}

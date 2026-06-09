@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>10cm tap direct-IK visual contact audit</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; color: #0f172a; background: #f8fafc; }
+    img { max-width: 100%; border: 1px solid #cbd5e1; background: white; }
+    pre { padding: 16px; background: white; border: 1px solid #cbd5e1; overflow: auto; }
+  </style>
+</head>
+<body>
+  <h1>10cm tap direct-IK visual contact audit</h1>
+  <p>Local posthoc artifact only. No GPU runtime, dataset, training, robot control, SSH, B200, or Track A is launched by this audit.</p>
+  <p><a href="cube10cm_tap_rl_direct_ik_apply_visual_contact_audit.svg">SVG</a> | <a href="cube10cm_tap_rl_direct_ik_apply_visual_contact_audit.png">PNG</a></p>
+  <img src="cube10cm_tap_rl_direct_ik_apply_visual_contact_audit.svg" alt="direct IK contact-frame audit"/>
+  <h2>Result JSON</h2>
+  <pre>{
+  &quot;action_abs_max_trace&quot;: 0.0,
+  &quot;along_gap_blocker&quot;: true,
+  &quot;artifact_type&quot;: &quot;cube10cm_tap_rl_direct_ik_apply_result_audit_v1&quot;,
+  &quot;b200&quot;: false,
+  &quot;best_along_m&quot;: -0.06953361555933953,
+  &quot;best_face_gap_m&quot;: -0.019533615559339523,
+  &quot;best_improvement_from_initial_m&quot;: 0.0007186830043792725,
+  &quot;best_shortfall_to_contact_band_m&quot;: 0.009533615559339523,
+  &quot;branch&quot;: &quot;professor_cube10cm_tap_reaction_quality_tier&quot;,
+  &quot;cap040_best_face_gap_m&quot;: -0.019507329910993576,
+  &quot;cap040_best_shortfall_m&quot;: 0.009507329910993576,
+  &quot;closed_loop_ik_err_mm_mean&quot;: 0.6174697866014219,
+  &quot;closed_loop_ik_ok_rate&quot;: 1.0,
+  &quot;contact_band_m&quot;: 0.01,
+  &quot;contact_seen&quot;: 0.0,
+  &quot;controller_mode&quot;: &quot;external_closed_loop_direct_apply&quot;,
+  &quot;cube_half_along_m&quot;: 0.05,
+  &quot;dataset_generation&quot;: false,
+  &quot;device&quot;: &quot;cuda:0&quot;,
+  &quot;direct_apply_active&quot;: true,
+  &quot;direct_ik_apply_pass&quot;: false,
+  &quot;direct_runtime_valid&quot;: true,
+  &quot;face_gap_best_delta_vs_cap040_m&quot;: -2.6285648345947266e-05,
+  &quot;face_gap_moved_toward_band&quot;: true,
+  &quot;face_gap_near_band&quot;: false,
+  &quot;final_along_m&quot;: -0.06956496760249138,
+  &quot;final_face_gap_m&quot;: -0.01956496760249138,
+  &quot;final_lateral_m&quot;: 4.930598606733838e-06,
+  &quot;final_shortfall_to_contact_band_m&quot;: 0.009564967602491379,
+  &quot;final_vertical_offset_m&quot;: 0.004597475752234459,
+  &quot;gpu_runtime_launched_by_this_audit&quot;: false,
+  &quot;initial_along_m&quot;: -0.0702522985637188,
+  &quot;initial_face_gap_m&quot;: -0.020252298563718796,
+  &quot;joint_delta_abs_max_trace&quot;: 0.4676227569580078,
+  &quot;joint_delta_cap_rate_trace&quot;: 0.0,
+  &quot;lateral_ok&quot;: true,
+  &quot;local_posthoc_audit_only&quot;: true,
+  &quot;max_disp_along_m&quot;: 0.0009225904941558838,
+  &quot;max_speed_mps&quot;: 0.008078601211309433,
+  &quot;next&quot;: {
+    &quot;allowed_local_only&quot;: &quot;review_target_geometry_kinematic_frame_and_reach_before_any_new_runtime&quot;,
+    &quot;not_allowed&quot;: &quot;lead_cap_sweep_dataset_rl_roarm&quot;
+  },
+  &quot;outputs&quot;: {
+    &quot;html&quot;: &quot;/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_direct_ik_apply_visual_contact_audit.html&quot;,
+    &quot;png&quot;: &quot;/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_direct_ik_apply_visual_contact_audit.png&quot;,
+    &quot;svg&quot;: &quot;/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_direct_ik_apply_visual_contact_audit.svg&quot;
+  },
+  &quot;overshoot&quot;: 0.0,
+  &quot;professor_physical_disp_evidence_threshold_m&quot;: 0.0005,
+  &quot;professor_physical_reaction_evidence&quot;: &quot;PASS&quot;,
+  &quot;professor_physical_reaction_evidence_only&quot;: true,
+  &quot;professor_physical_speed_evidence_threshold_mps&quot;: 0.005,
+  &quot;reaction_context&quot;: 0.0,
+  &quot;reaction_seen&quot;: 0.0,
+  &quot;reaction_signal&quot;: 0.0,
+  &quot;rl_action_path_bypassed&quot;: true,
+  &quot;robot_control&quot;: false,
+  &quot;shortfall_delta_vs_cap040_m&quot;: 2.6285648345947266e-05,
+  &quot;ssh&quot;: false,
+  &quot;status&quot;: &quot;FAIL&quot;,
+  &quot;still_blocked&quot;: {
+    &quot;diffik_action_dataset&quot;: &quot;BLOCKED&quot;,
+    &quot;large_dataset&quot;: &quot;BLOCKED&quot;,
+    &quot;ppo_rl_training&quot;: &quot;BLOCKED&quot;,
+    &quot;roarm&quot;: &quot;BLOCKED&quot;,
+    &quot;tiny_action_dataset_dry_run&quot;: &quot;BLOCKED&quot;
+  },
+  &quot;tap_success&quot;: 0.0,
+  &quot;target_lead_abs_max_trace&quot;: 0.4676227569580078,
+  &quot;target_lead_limit_rate_trace&quot;: 0.0,
+  &quot;tcp_dist_min_m&quot;: 0.06953912228345871,
+  &quot;track_a&quot;: false,
+  &quot;training&quot;: false,
+  &quot;verdict&quot;: &quot;PROFESSOR_PHYSICAL_REACTION_PASS_RL_CONTACT_GATED_FAIL&quot;,
+  &quot;vertical_ok&quot;: true,
+  &quot;worst_face_gap_m&quot;: -0.024368952959775925,
+  &quot;wrapper_only_explanation_falsified&quot;: true
+}</pre>
+</body>
+</html>

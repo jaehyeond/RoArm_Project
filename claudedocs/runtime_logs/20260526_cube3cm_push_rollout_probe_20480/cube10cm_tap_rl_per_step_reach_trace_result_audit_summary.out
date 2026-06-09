@@ -1,0 +1,8 @@
+line1 artifact=cube10cm_tap_rl_per_step_reach_trace_result_audit_v1 local_posthoc_audit_only=YES gpu_runtime=NO dataset_generation=NO training=NO robot_control=NO ssh=NO b200=NO track_a=NO
+line2 trace_integrity artifact_type=cube10cm_tap_rl_per_step_reach_trace_v1 action_teacher_dataset=False rows=1160 expected_rows=1160 row_count_ok=True steps=0..579 env_ids=[0, 1]
+line3 runtime_verdict summary_status=FAIL professor_physical_reaction_evidence=PASS rl_contact_gated_positive_control=FAIL terminated_count=0 truncated_count=0
+line4 command_target inside_rows=184 inside_unique_steps=92 first_step=46 last_step=137 face_gap_min=-0.019782852 face_gap_max=0.105999991 face_gap_final_mean=0.105999991
+line5 applied_joint_target_fk inside_rows=0 face_gap_max=-0.014059910 best_shortfall_m=0.004059910 target_fk_err_mm_final_mean=127.704326062
+line6 actual_tcp inside_rows=0 face_gap_max=-0.019534182 best_shortfall_m=0.009534182 actual_lateral_max_m=0.000234434 actual_vertical_max_m=0.020371564
+line7 follow_reaction direct_joint_follow_abs_max_rad_max=0.010850668 actual_joint_step_abs_max_rad_max=0.001486838 cube_disp_along_max_m=0.000899076 cube_speed_max_mps=0.079633072 professor_seen_rate=1.000000000 tap_success_seen_rate=0.000000000
+line8 verdict APPLIED_AND_ACTUAL_REACH_NEVER_ENTER_CONTACT_BAND command_target_crossed=YES applied_joint_target_fk_crossed=NO actual_tcp_crossed=NO contact_gate_not_relaxed=YES diffik_action_dataset=BLOCKED ppo_rl_training=BLOCKED roarm=BLOCKED

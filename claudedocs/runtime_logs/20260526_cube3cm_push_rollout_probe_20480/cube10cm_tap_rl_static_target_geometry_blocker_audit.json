@@ -1,0 +1,86 @@
+{
+  "artifact_type": "cube10cm_tap_rl_static_target_geometry_blocker_audit_v1",
+  "b200": false,
+  "branch": "professor_cube10cm_tap_reaction_quality_tier",
+  "dataset_generation": false,
+  "gpu_runtime": false,
+  "local_static_existing_logs_only": true,
+  "next_step": {
+    "local_result": "gross target path under-command is falsified; the planned direct-IK target crosses the contact band, but observed TCP face gap stays outside",
+    "next_runtime_if_explicitly_allowed": "zero-control-knob direct-IK telemetry repeat",
+    "not_allowed": "dataset/RL/RoArm or lead/cap/action-scale sweep before telemetry split"
+  },
+  "observed_direct_runtime": {
+    "action_abs_max_trace": 0.0,
+    "best_face_gap_m": -0.019533615559339523,
+    "best_improvement_m": 0.0007186830043792725,
+    "best_shortfall_m": 0.009533615559339523,
+    "closed_loop_ik_err_mm_mean": 0.6174697866014219,
+    "closed_loop_ik_ok_rate": 1.0,
+    "contact_seen": 0.0,
+    "direct_apply_active": true,
+    "final_face_gap_m": -0.01956496760249138,
+    "final_lateral_m": 4.930598606733838e-06,
+    "final_shortfall_m": 0.009564967602491379,
+    "final_vertical_offset_m": 0.004597475752234459,
+    "initial_face_gap_m": -0.020252298563718796,
+    "joint_delta_cap_rate_trace": 0.0,
+    "max_disp_along_m": 0.0009225904941558838,
+    "max_speed_mps": 0.008078601211309433,
+    "rl_action_path_bypassed": true,
+    "tap_success": 0.0,
+    "target_lead_abs_max_trace": 0.4676227569580078,
+    "target_lead_limit_rate_trace": 0.0
+  },
+  "remaining_primary_split": [
+    "direct_joint_follow_or_actuator_tracking_lag",
+    "fk_model_vs_isaac_tcp_frame_mismatch",
+    "target_application_timing_or_reset_state_mismatch"
+  ],
+  "robot_control": false,
+  "ssh": false,
+  "static_exclusions": {
+    "gross_target_geometry_undercommand_falsified": true,
+    "lateral_vertical_not_blocker": true,
+    "live_cube_motion_explains_failure": false,
+    "target_final_vs_observed_final_face_gap_delta_m": 0.12556496760249136,
+    "wrapper_cap_lead_not_primary": true
+  },
+  "still_blocked": {
+    "contact_gated_positive_control": "RUN_FAILED",
+    "diffik_action_dataset": "BLOCKED",
+    "large_dataset": "BLOCKED",
+    "ppo_rl_training": "BLOCKED",
+    "roarm": "BLOCKED",
+    "tiny_action_dataset_dry_run": "BLOCKED"
+  },
+  "target_plan": {
+    "half_along_m": 0.05,
+    "pre_face_gap_m": -0.02,
+    "target_crosses_contact_band": true,
+    "target_face_gap_span_m": 0.126,
+    "target_final_face_gap_m": 0.106,
+    "target_inside_contact_band_first_step_1based": 6,
+    "target_inside_contact_band_last_step_1based": 17,
+    "target_inside_contact_band_step_count": 12,
+    "through_face_gap_m": 0.10600000000000001
+  },
+  "telemetry_state": {
+    "instrumentation_lines": {
+      "contact_face_gap_contract": 1103,
+      "direct_apply_override": 633,
+      "direct_apply_set_target": 638,
+      "direct_follow_metric": 288,
+      "fk_frame_metric": 168,
+      "target_face_gap_metric": 147,
+      "target_fk_metric": 165,
+      "target_inside_metric": 162,
+      "target_path_pre_xy": 103,
+      "target_path_through_xy": 104
+    },
+    "instrumentation_ready_in_harness": true,
+    "old_runtime_has_new_telemetry": false
+  },
+  "track_a": false,
+  "training": false
+}

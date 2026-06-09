@@ -1,0 +1,70 @@
+{
+  "action_and_follow_split": {
+    "action_abs_max_trace": 0.0,
+    "actual_velocity_est_max_final_rad_s": 3.090471029281616,
+    "actual_velocity_est_mean_final_rad_s": 1.0558456182479858,
+    "direct_actual_joint_step_abs_max_final_rad": 0.030904710292816162,
+    "direct_actual_joint_step_abs_mean_final_rad": 0.010558456182479858,
+    "direct_apply_active": true,
+    "direct_joint_follow_abs_max_final_rad": 0.3628549575805664,
+    "direct_joint_follow_abs_max_max_rad": 0.891493558883667,
+    "direct_joint_follow_abs_mean_final_rad": 0.1274954080581665,
+    "final_step_near_velocity_limit": true,
+    "joint_delta_cap_rate_trace": 0.0,
+    "target_delta_abs_max_final_rad": 0.35878372291593186,
+    "target_delta_abs_mean_final_rad": 0.35878372291593186,
+    "target_lead_limit_rate_trace": 0.0,
+    "velocity_limit_rad_s": 3.14,
+    "wrapper_path_bypassed": true
+  },
+  "artifact_type": "cube10cm_tap_rl_direct_ik_telemetry_result_audit_v1",
+  "b200": false,
+  "branch": "professor_cube10cm_tap_reaction_quality_tier",
+  "dataset_generation": false,
+  "gpu_runtime_launched_by_this_audit": false,
+  "local_posthoc_audit_only": true,
+  "next_step": {
+    "local_design_next": "actuator_follow_time_scale_candidate_design",
+    "not_allowed": "dataset/RL/RoArm or action-teacher dataset before contact-gated positive-control passes",
+    "selected_first_hypothesis": "slow the direct target progression before changing geometry/action scale/cap; telemetry points to follow lag under existing actuator dynamics"
+  },
+  "outcome": {
+    "contact_seen": 0.0,
+    "diffik_action_dataset": "BLOCKED",
+    "large_dataset": "BLOCKED",
+    "ppo_rl_training": "BLOCKED",
+    "primary_blocker": "DIRECT_JOINT_FOLLOW_ACTUATOR_TRACKING_LAG",
+    "professor_physical_reaction_seen": 1.0,
+    "roarm": "BLOCKED",
+    "tap_success": 0.0,
+    "tiny_action_dataset_dry_run": "BLOCKED"
+  },
+  "outputs": {
+    "json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_direct_ik_telemetry_result_audit.json",
+    "summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_direct_ik_telemetry_result_audit_summary.out"
+  },
+  "robot_control": false,
+  "ssh": false,
+  "target_and_frame_split": {
+    "actual_fk_vs_sim_tcp_err_max_mm": 0.000999976910052288,
+    "closed_loop_ik_ok_rate": 1.0,
+    "fk_frame_ok": true,
+    "observed_actual_face_gap_max_m": -0.019533615559339523,
+    "observed_actual_shortfall_min_m": 0.009533615559339523,
+    "target_face_gap_final_m": 0.1059999942779541,
+    "target_face_gap_min_m": -0.018250000476837155,
+    "target_fk_err_max_mm": 1.4781778014542355,
+    "target_inside_contact_band_rate_max": 1.0,
+    "target_path_ok": true
+  },
+  "telemetry_runtime": {
+    "blocker": "RL_CONTACT_GATED_POSITIVE_CONTROL_GATE_FAIL_ONLY",
+    "gpu_runtime": "YES_LOCAL_TINY_ISAACLAB_POSITIVE_CONTROL",
+    "json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_direct_ik_apply_telemetry_sanity.json",
+    "positive_control": "FAIL",
+    "status": "FAIL",
+    "summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_direct_ik_apply_telemetry_sanity_summary.out"
+  },
+  "track_a": false,
+  "training": false
+}

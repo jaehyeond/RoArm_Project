@@ -1,0 +1,97 @@
+{
+  "artifact_type": "cube10cm_tap_rl_episode_length_override_candidate_design_v1",
+  "b200": false,
+  "basis": {
+    "basis_ok": true,
+    "code_evidence": {
+      "cfg_override": {
+        "line": 529,
+        "text": "cfg.episode_length_s = float(args.episode_length_s)"
+      },
+      "env_default": {
+        "line": 63,
+        "text": "episode_length_s = 1.2"
+      },
+      "env_truncation": {
+        "line": 1026,
+        "text": "truncated = self.episode_length_buf >= self.max_episode_length - 1"
+      },
+      "episode_arg": {
+        "line": 469,
+        "text": "parser.add_argument(\"--episode_length_s\", type=float, default=-1.0)"
+      }
+    },
+    "contract_summary_lines_2_5": [
+      "line2 answer why_10cm_steps_short=HARNESS_120_STEPS_AND_ENV_1P2S_AT_DT_0P01 ten_cm_max_steps=120 ten_cm_runtime_s=1.200 ten_cm_episode_length_s=1.200 not_due_to_random_position=YES",
+      "line3 target_policy ten_cm_target_random=NO ten_cm_fixed_cube_xy=(0.250,0.000) ten_cm_fixed_push_dir=(1.0,0.0) three_cm_default=random_unless_fixed_args three_cm_eval10240_fixed_args=None",
+      "line4 horizon_mass_size three_cm_steps=580 three_cm_episode_s=6.080 ten_cm_steps=120 ten_cm_runtime_s=1.200 size_ratio_10cm_over_3cm=3.333333 mass_ratio_10cm_over_3cm=36.000000 horizon_steps_ratio_3cm_over_10cm=4.833333 horizon_seconds_ratio_3cm_over_10cm=5.066667",
+      "line5 three_cm_contract controller=IsaacLab_DifferentialIKController command_type=position env_action_loop_bypassed=True base_steps=350 v3_posx_steps=580 max_diffik_joint_step_rad=0.035 diffik_clip_rate_mean=0.652074015 existing_eval_follow_columns=False"
+    ],
+    "h580_audit_lines_2_7": [
+      "line2 runtime_outcome status=FAIL max_steps=580 steps_executed=580 closed_loop_push_steps=580 contact_seen=0.0 tap_success=0.0 professor_evidence=PASS terminated_count=0 truncated_count=8",
+      "line3 horizon_contract designed_runtime_s=5.800 actual_loop_steps=580 env_episode_cap_detected=True reason=truncated_count_positive_means_not_one_continuous_5p8s_episode",
+      "line4 actual_contact h580_face_gap_max_m=-0.019437712 h580_shortfall_min_m=0.009437712 h580_shortfall_final_m=0.010676415 step120_shortfall_min_m=0.009376528 h580_no_better_than_step120=True",
+      "line5 controller target_inside_max=1.0 target_face_gap_final_m=0.105999991 clip_rate_final=0.600000024 follow_final_rad=0.010833263 actual_step_final_rad=0.001789182",
+      "line6 verdict primary_blocker=ENV_EPISODE_LENGTH_1P2S_TRUNCATES_H580_HORIZON_TEST contact_gated_positive_control=RUN_FAILED diffik_action_dataset=BLOCKED tiny_action_dataset_dry_run=BLOCKED ppo_rl_training=BLOCKED large_dataset=BLOCKED roarm=BLOCKED",
+      "line7 next local_unblock=design_default_off_episode_length_override_then_repeat_step_clipped_horizon contact_gate_relaxation=NO dataset_rl_roarm=NO"
+    ],
+    "previous_primary_blocker": "ENV_EPISODE_LENGTH_1P2S_TRUNCATES_H580_HORIZON_TEST"
+  },
+  "branch": "professor_cube10cm_tap_reaction_quality_tier",
+  "candidate": {
+    "changed_relative_to_failed_h580": {
+      "episode_length_s": "1.2 -> 6.08"
+    },
+    "command": "conda run -n isaaclab --no-capture-output python -u -m roarm_rl.test_positive_control_cube_tap10cm --num_envs 2 --steps 580 --seed 962 --device cuda:0 --controller_mode isaac_builtin_diffik_step_clipped_direct_apply --closed_loop_push_steps 580 --builtin_diffik_step_clip_rad 0.010 --episode_length_s 6.08 --out_json /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_sanity.json --out_summary /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_sanity_summary.out",
+    "expected_env_max_episode_length": 608,
+    "kept_from_h580": {
+      "builtin_diffik_step_clip_rad": 0.01,
+      "closed_loop_push_steps": 580,
+      "contact_gate": "unchanged_strict",
+      "controller_mode": "isaac_builtin_diffik_step_clipped_direct_apply",
+      "cube_mass_kg": 0.72,
+      "cube_size_m": 0.1,
+      "cube_xy_m": [
+        0.25,
+        0.0
+      ],
+      "geometry": "unchanged",
+      "push_dir_xy": [
+        1.0,
+        0.0
+      ],
+      "steps": 580
+    },
+    "name": "isaac_builtin_diffik_step_clipped_h580_ep608_positive_control",
+    "out_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_sanity.json",
+    "out_summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_sanity_summary.out",
+    "status": "DESIGNED_NOT_RUN"
+  },
+  "dataset_generation": false,
+  "gpu_runtime": false,
+  "local_design_only": true,
+  "outcome": {
+    "candidate": "READY_FOR_EXPLICIT_RUNTIME_APPROVAL_ONLY",
+    "contact_gated_positive_control": "RUN_FAILED",
+    "diffik_action_dataset": "BLOCKED",
+    "large_dataset": "BLOCKED",
+    "ppo_rl_training": "BLOCKED",
+    "roarm": "BLOCKED",
+    "tiny_action_dataset_dry_run": "BLOCKED"
+  },
+  "outputs": {
+    "json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_episode_length_override_candidate_design.json",
+    "summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_episode_length_override_candidate_design_summary.out"
+  },
+  "rejected": {
+    "contact_gate_relaxation": "blocked_until_valid_continuous_horizon_result",
+    "dataset_or_rl": "blocked",
+    "geometry_change": "not selected",
+    "roarm": "blocked",
+    "step_clip_change": "not selected"
+  },
+  "robot_control": false,
+  "ssh": false,
+  "track_a": false,
+  "training": false
+}

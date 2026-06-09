@@ -1,0 +1,82 @@
+{
+  "artifact_type": "cube10cm_tap_rl_actuator_follow_time_scale_candidate_design_v1",
+  "b200": false,
+  "baseline_target_plan": {
+    "closed_loop_push_steps": 72,
+    "max_steps": 120,
+    "target_face_gap_rate_m_per_step": 0.00175,
+    "target_final_face_gap_m": 0.106,
+    "target_inside_contact_band_first_step_1based": 6,
+    "target_inside_contact_band_last_step_1based": 17,
+    "target_inside_contact_band_step_count": 12
+  },
+  "basis": {
+    "actual_velocity_est_max_final_rad_s": 3.090471029281616,
+    "basis_ok": true,
+    "direct_joint_follow_abs_max_final_rad": 0.3628549575805664,
+    "final_step_near_velocity_limit": true,
+    "fk_frame_ok": true,
+    "primary_blocker": "DIRECT_JOINT_FOLLOW_ACTUATOR_TRACKING_LAG",
+    "target_path_ok": true,
+    "velocity_limit_rad_s": 3.14,
+    "wrapper_path_bypassed": true
+  },
+  "branch": "professor_cube10cm_tap_reaction_quality_tier",
+  "candidate": {
+    "changed_knob": "closed_loop_push_steps 72 -> 240",
+    "changed_knobs": 1,
+    "command": "conda run -n isaaclab --no-capture-output python -u -m roarm_rl.test_positive_control_cube_tap10cm --num_envs 2 --steps 120 --seed 962 --device cuda:0 --controller_mode external_closed_loop_direct_apply --closed_loop_push_steps 240 --out_json /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_direct_ik_apply_slow240_sanity.json --out_summary /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_direct_ik_apply_slow240_sanity_summary.out",
+    "contact_band_dwell_gain_vs_baseline": 3.1666666666666665,
+    "name": "direct_ik_apply_slow240",
+    "out_json": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_direct_ik_apply_slow240_sanity.json",
+    "out_summary": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_direct_ik_apply_slow240_sanity_summary.out",
+    "status": "DESIGNED_NOT_RUN",
+    "target_face_gap_rate_ratio_vs_baseline": 0.3,
+    "unchanged": {
+      "action_scale": "unchanged",
+      "action_smoothing_alpha": "unchanged",
+      "controller_mode": "external_closed_loop_direct_apply",
+      "device": "cuda:0",
+      "geometry": "unchanged",
+      "goal_push_m": 0.006,
+      "joint_target_lead_limit_rad": 0.06,
+      "max_joint_delta_per_step_rad": 0.01,
+      "max_steps": 120,
+      "num_envs": 2,
+      "precontact_clearance_m": 0.02,
+      "seed": 962,
+      "tcp_top_margin_m": -0.05
+    }
+  },
+  "candidate_target_plan": {
+    "closed_loop_push_steps": 240,
+    "max_steps": 120,
+    "target_face_gap_rate_m_per_step": 0.000525,
+    "target_final_face_gap_m": 0.043,
+    "target_inside_contact_band_first_step_1based": 20,
+    "target_inside_contact_band_last_step_1based": 57,
+    "target_inside_contact_band_step_count": 38
+  },
+  "dataset_generation": false,
+  "gpu_runtime": false,
+  "local_design_only": true,
+  "rejected_now": {
+    "dataset_or_rl": "blocked until contact-gated positive-control passes",
+    "geometry_change": "telemetry showed target path and frame are OK",
+    "lead_cap_action_scale_sweep": "direct apply bypassed wrapper/cap/lead path",
+    "roarm": "blocked until policy and safety gates pass"
+  },
+  "robot_control": false,
+  "ssh": false,
+  "still_blocked": {
+    "contact_gated_positive_control": "RUN_FAILED",
+    "diffik_action_dataset": "BLOCKED",
+    "large_dataset": "BLOCKED",
+    "ppo_rl_training": "BLOCKED",
+    "roarm": "BLOCKED",
+    "tiny_action_dataset_dry_run": "BLOCKED"
+  },
+  "track_a": false,
+  "training": false,
+  "verdict": "READY_FOR_EXPLICIT_RUNTIME_APPROVAL_ONLY"
+}

@@ -10119,3 +10119,831 @@ Sources:
 - `roarm_rl/roarm_cube_push_env.py:666-719`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_direct_ik_apply_candidate_design_summary.out:1-6`
 - `sim_scripts/cube10cm_tap_rl_direct_ik_apply_candidate_design.py`
+
+## D186 - Direct IK apply fails contact too; wrapper-only explanation is falsified
+
+Date: 2026-06-08
+
+Decision:
+
+- The user approved one tiny local cuda:0 direct-IK-apply positive-control runtime.
+- The run used `RoArm-CubeTap10cm-Direct-v0`, `num_envs=2`,
+  `max_steps=120`, `seed=962`, and `controller_mode=external_closed_loop_direct_apply`.
+- It did not generate datasets, train, control RoArm, SSH/B200, or use Track A.
+- Direct apply was active and the RL action path was bypassed:
+  action max trace was `0.0`, cap rate was `0.0`, and lead-limit rate was `0.0`.
+- Closed-loop IK itself still looked numerically OK:
+  `closed_loop_ik_ok_rate=1.0`, mean IK error `0.617469787mm`.
+- Contact-gated tap still failed:
+  contact, reaction context, reaction seen, and tap success all remained `0.0`.
+- The object reaction also weakened below the 1mm objective signal:
+  max displacement was `0.000922590m` and reaction signal stayed `0.0`.
+- The visual contact-frame audit shows the same along-gap blocker:
+  initial, best, and final TCP positions remain outside the `[-10,+10]mm`
+  face-gap contact band, while lateral and vertical axes are OK.
+- Therefore the old explanation "the RL action wrapper alone is attenuating a
+  correct IK target" is falsified for this target/path.
+- The next question is not lead/cap/action-scale tuning. It is whether the
+  target geometry, FK frame agreement, or actuator/joint-follow path prevents
+  actual TCP closure.
+- DiffIK action dataset, tiny action dry run, PPO/RL, large dataset, and RoArm
+  remain blocked.
+
+Evidence:
+
+- Direct runtime summary line 1 confirms local tiny GPU only:
+  no dataset generation, training, robot control, SSH, B200, or Track A.
+- Runtime line 3 confirms `external_closed_loop_direct_apply` and
+  `direct_ik_joint_target_apply=True`.
+- Runtime line 4 shows controller IK OK:
+  closed-loop IK OK rate `1.0` and initial face gap `-0.020252299m`.
+- Runtime line 5 shows the gate failure:
+  contact `0.0`, reaction context `0.0`, reaction seen `0.0`, tap success `0.0`,
+  and overshoot `0.0`.
+- Runtime line 7 shows direct apply bypassed the normalized action path:
+  action abs max `0.0`, joint delta cap rate `0.0`, target lead-limit rate `0.0`,
+  with target/joint delta traces reaching large values instead.
+- Runtime line 8 shows the TCP never reached the contact band:
+  best face gap `-0.019533616m`, final face gap `-0.019564968m`,
+  best shortfall `0.009533616m`, and final shortfall `0.009564968m`.
+- Direct result audit line 2 confirms the posthoc interpretation:
+  direct runtime valid, direct apply active, and RL action path bypassed.
+- Direct result audit line 5 repeats the contact-frame trace and marks
+  `face_gap_near_band=False`.
+- Direct result audit line 6 compares against cap040:
+  direct best shortfall is slightly worse by `0.000026286m`.
+- Direct result audit line 7 confirms visual axis diagnosis:
+  lateral OK, vertical OK, along-gap blocker true, and TCP distance min
+  `0.069539122m`.
+- Direct result audit line 8 is the durable verdict:
+  `DIRECT_IK_APPLY_FAILS_CONTACT_BAND_WRAPPER_ONLY_EXPLANATION_FALSIFIED`.
+
+Implication:
+
+- Do not run `cap040_lead120`, `joint_delta_reference`, action-scale,
+  smoothing, or geometry changes as the next step.
+- Do not build DiffIK action data from this failure.
+- The only coherent next candidate is a telemetry-only repeat of the same tiny
+  direct-IK-apply runtime with zero control-knob changes, after explicit
+  approval, to split target geometry/FK-frame mismatch from actuator/joint
+  follow lag.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_direct_ik_apply_sanity_summary.out:1-9`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_direct_ik_apply_result_audit_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_direct_ik_apply_visual_contact_audit.png`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_direct_ik_apply_visual_contact_audit.html`
+- `sim_scripts/cube10cm_tap_rl_direct_ik_apply_result_audit.py`
+
+## D187 - Next runtime, if approved, must be direct-IK telemetry only with zero control-knob changes
+
+Date: 2026-06-08
+
+Decision:
+
+- After D186, added default-preserving telemetry to the direct positive-control
+  harness. This changes logs only, not control behavior.
+- New telemetry records:
+  target face gap, target inside-contact-band rate, target FK error,
+  actual-FK-vs-Isaac-TCP frame error, direct joint follow error, and actual
+  joint step magnitude.
+- Added and ran a local design/static audit for the next candidate.
+- The selected candidate is `direct_ik_apply_telemetry_repeat`.
+- It repeats `external_closed_loop_direct_apply` with `num_envs=2`,
+  `max_steps=120`, `seed=962`, `device=cuda:0`, and zero control-knob changes.
+- This is not an improvement attempt. It is a cause-splitting diagnostic before
+  any more lead/cap/action-wrapper or geometry changes.
+- DiffIK action dataset, tiny action dry run, PPO/RL, large dataset, and RoArm
+  remain blocked.
+
+Evidence:
+
+- Telemetry design summary line 1 confirms local design/static audit only:
+  no GPU runtime, dataset generation, training, robot control, SSH, B200, or
+  Track A.
+- Line 2 confirms the basis:
+  previous contact `0.0`, previous best shortfall `0.009533616m`, and
+  wrapper-only explanation falsified.
+- Line 3 confirms the harness line checks exist for all new telemetry keys.
+- Line 4 selects the exact next candidate:
+  `direct_ik_apply_telemetry_repeat`, zero control-knob changes, same direct
+  apply controller, `num_envs=2`, `max_steps=120`, `seed=962`, `cuda:0`.
+- Line 5 reserves `cap040_lead120`, `joint_delta_reference`, action-scale,
+  smoothing, and geometry changes.
+- Line 6 marks the candidate ready only for explicit runtime approval and keeps
+  data/RL/RoArm blocked.
+
+Implication:
+
+- If the telemetry repeat shows target face gap enters the band but actual TCP
+  does not, suspect actuator/follow/position-servo dynamics.
+- If the target face gap itself never enters the band, suspect target geometry.
+- If FK-vs-Isaac TCP frame error is large, suspect kinematic model/frame
+  mismatch before any policy/data step.
+
+Sources:
+
+- `roarm_rl/test_positive_control_cube_tap10cm.py:77-169`
+- `roarm_rl/test_positive_control_cube_tap10cm.py:280-287`
+- `roarm_rl/test_positive_control_cube_tap10cm.py:447-473`
+- `sim_scripts/cube10cm_tap_rl_direct_ik_telemetry_candidate_design.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_direct_ik_telemetry_candidate_design_summary.out:1-7`
+
+## D188 - Separate professor physical-reaction evidence from RL contact-gated positive-control
+
+Date: 2026-06-08
+
+Decision:
+
+- The professor/user 10cm/0.72kg cube push/tap objective accepts weak physical
+  object reaction unless a stronger 2-3mm transient requirement is explicitly
+  recorded.
+- Do not let the stricter RL wrapper positive-control gate redefine the
+  professor objective. A contact-gated tap success is required before action
+  teacher/dataset/RL/RoArm readiness, but it is not required to package
+  professor-facing weak physical-reaction evidence.
+- Added a separate tap-env evidence path:
+  `professor_physical_reaction_signal/now/seen`, based on weak displacement,
+  XY displacement, z delta, or speed without overshoot.
+- Preserved the stricter existing contact-gated `tap_reaction_seen` and
+  `tap_success` path for RL/dataset/RoArm gates.
+- Updated the positive-control harness, direct-IK result audit, and preflight
+  policy gate so the two statuses are reported separately.
+
+Evidence:
+
+- `roarm_rl/roarm_cube_push_env.py` now defines separate professor physical
+  reaction thresholds: displacement `0.0005m`, speed `0.005m/s`, and z delta
+  `0.0005m`.
+- The env still keeps the strict tap contract separate: objective
+  `tap_reaction_contact_not_final_relocation`, final relocation disabled,
+  contact band `0.010m`, and strict tap reaction displacement `0.001m`.
+- The positive-control harness now computes both
+  `rl_contact_gated_positive_control` and
+  `professor_physical_reaction_evidence`.
+- Direct-IK posthoc audit line 4 reports contact-gated failure but professor
+  physical evidence PASS: contact/reaction/tap success `0.0`, overshoot `0.0`,
+  max displacement `0.000922590m`, max speed `0.008078601m/s`,
+  `professor_physical_reaction_evidence=PASS`.
+- Direct-IK posthoc audit line 8 records the split verdict:
+  `PROFESSOR_PHYSICAL_REACTION_PASS_RL_CONTACT_GATED_FAIL`; dataset, tiny
+  action dry-run, PPO/RL, large dataset, and RoArm remain blocked.
+- Preflight policy gate line 3 records
+  `professor_physical_reaction_evidence=READY_PROFESSOR_EVIDENCE_ONLY` and
+  `professor_evidence_separate_from_rl_positive_control=YES`.
+- Preflight policy gate line 6 keeps the RL path blocked:
+  `positive_control_tap_sanity=RUN_FAILED`, PPO/RL, large dataset, and RoArm
+  `BLOCKED`, with reason
+  `rl_contact_gated_positive_control_blocks_dataset_rl_not_professor_physical_evidence`.
+
+Implication:
+
+- We can stop treating "strict contact-gated positive-control FAIL" as a reason
+  to block professor-facing weak physical reaction evidence.
+- Event-label/quality-tier metadata and professor evidence packaging may proceed
+  as local-only outputs.
+- Clean action teacher, tiny action dataset dry run, PPO/RL, large dataset, and
+  RoArm readiness remain blocked until a separate teacher/action/RL policy gate
+  is satisfied.
+
+Sources:
+
+- `roarm_rl/roarm_cube_push_env.py`
+- `roarm_rl/test_positive_control_cube_tap10cm.py`
+- `sim_scripts/cube10cm_tap_rl_direct_ik_apply_result_audit.py`
+- `sim_scripts/cube10cm_tap_rl_preflight_policy_gate.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_direct_ik_apply_result_audit_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_preflight_policy_gate_summary.out:1-7`
+
+## D189 - slow240 improves direct-IK follow but does not unblock contact-gated RL
+
+Date: 2026-06-09
+
+Decision:
+
+- The `direct_ik_apply_slow240` runtime is diagnostic evidence for actuator
+  follow/timing, not a contact-gated positive-control pass.
+- Slowing `closed_loop_push_steps 72 -> 240` reduced direct joint-follow error
+  and target-delta demand, but the actual TCP still never entered the contact
+  band.
+- Do not promote this result into DiffIK action-teacher dataset, tiny action
+  dry run, PPO/RL, large dataset, or RoArm readiness.
+- The next step may be a local-only timing/contact diagnostic design, but any
+  further GPU runtime still requires explicit approval.
+
+Evidence:
+
+- The runtime contract changed only one knob:
+  `closed_loop_push_steps=240`, `controller_mode=external_closed_loop_direct_apply`,
+  `num_envs=2`, `max_steps=120`, `seed=962`, `cuda:0`; geometry and action-wrapper
+  knobs stayed unchanged.
+- Runtime summary line 5 keeps contact-gated failure:
+  contact `0.0`, reaction context `0.0`, reaction seen `0.0`, tap success `0.0`,
+  while professor physical reaction seen is `1.0`.
+- Runtime summary line 8 keeps the TCP outside the contact band:
+  best face gap `-0.019191336m`, best shortfall `0.009191336m`.
+- Runtime summary line 10 records improved but still nonzero direct follow:
+  target final face gap `0.043000001m`, target FK error `0.579830546mm`,
+  actual-FK-vs-Isaac-TCP error `0.000880511mm`,
+  direct joint-follow final `0.170210123rad`.
+- The slow240 result audit line 4 compares baseline vs slow240 follow:
+  `0.362854958rad -> 0.170210123rad`, ratio `0.469085841`.
+- The slow240 result audit line 5 shows the contact-gap improvement was only
+  `0.000342280m`, leaving slow240 shortfall at `0.009191336m`.
+- The slow240 result audit line 6 excludes the main false alternatives:
+  target enters the band in both runs, FK frame is OK, and the wrapper path is
+  bypassed.
+- The slow240 result audit line 7 records the durable verdict:
+  `FAIL_SLOW240_IMPROVES_FOLLOW_BUT_NOT_CONTACT`; all downstream learning/robot
+  gates remain blocked.
+
+Implication:
+
+- Timing/follow is still a plausible local blocker, but fixed-horizon slow240 is
+  insufficient as a fix.
+- The learning path cannot start from this result. First resolve contact-gated
+  positive-control or record an explicit, separate noisy-teacher exception gate.
+- Next local work should stay in cause-splitting/design space, not dataset/RL/RoArm.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_external_closed_loop_direct_ik_apply_slow240_sanity_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_slow240_result_audit_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_slow240_result_audit.json`
+- `sim_scripts/cube10cm_tap_rl_slow240_result_audit.py`
+
+## D190 - Built-in DiffIK parity requires step-clipped target application, not full-target direct apply
+
+Date: 2026-06-09
+
+Decision:
+
+- The 10cm tap positive-control harness now has default-off IsaacLab built-in
+  `DifferentialIKController` modes, but full `joint_pos_des` direct apply is not
+  equivalent to the old 3cm successful cadence.
+- Full-target built-in DiffIK direct apply proves the controller compute and live
+  Jacobian path can run, but it still creates actuator-follow lag and must not be
+  treated as clean parity.
+- The closer 3cm parity path is built-in DiffIK plus step-clipped target
+  application (`raw_delta -> clipped_delta -> joint target`), because the 3cm
+  probe applied clipped deltas to `robot_dof_targets`.
+- Step-clipped built-in DiffIK fixes the full-target follow-lag symptom but still
+  fails strict contact-gated tap; do not relax the contact gate or start
+  dataset/RL/RoArm from this result.
+
+Evidence:
+
+- The parity candidate design summary line 2 verifies the original 10cm
+  transition kept built-in DiffIK and the 10cm wrapper over the 3cm DiffIK engine;
+  line 3 verifies the new built-in mode is code-ready with live Jacobian, base
+  frame transform, TCP tool-proxy offset, direct override, and metadata.
+- The full-target built-in DiffIK runtime audit line 3 shows target path was OK:
+  controller goal OK `1.0`, closed-loop IK OK `1.0`, numeric OK `1.0`, live
+  Jacobian `1.0`, target inside contact band max `1.0`, target final face gap
+  `0.105999991m`, and actual-FK-vs-Isaac-TCP error `0.000000000mm`.
+- The same audit line 4-5 shows why it is not clean parity: actual face gap max
+  stayed `-0.019483667m`, best shortfall `0.009483667m`, direct follow final
+  `0.447358370rad`, worse than both external direct baseline
+  `0.362854958rad` and slow240 `0.170210123rad`.
+- The full-target audit line 6 records the parity gap:
+  built-in DiffIK compute YES, full `joint_pos_des` direct apply YES, but 3cm
+  step-clipped target application NOT YET.
+- The step-clipped runtime audit line 3 shows the 3cm-style step-clipped path ran:
+  closed-loop IK OK `1.0`, target inside max `1.0`, raw delta final
+  `0.416009426rad`, clipped delta final `0.010000000rad`, clip-rate final
+  `0.800000012`.
+- The step-clipped audit line 4-5 shows follow lag was largely fixed:
+  follow final `0.008570671rad`, compared with full-target built-in
+  `0.447358370rad`, but actual contact was still outside the band with best
+  shortfall `0.009376528m`.
+- The step-clipped audit line 6 records the current blocker:
+  `STEP_CLIPPED_DIFFIK_TARGET_APPLICATION_HORIZON_OR_PROGRESS_TOO_SHORT`; all
+  downstream learning/robot gates remain blocked.
+
+Implication:
+
+- Do not say "10cm built-in DiffIK parity is solved" without distinguishing full
+  target apply from step-clipped target application.
+- The next local blocker is horizon/progress under the step-clipped path, not
+  contact-gate relaxation, dataset generation, PPO/RL, or RoArm.
+
+Sources:
+
+- `roarm_rl/test_positive_control_cube_tap10cm.py`
+- `sim_scripts/cube10cm_tap_rl_builtin_diffik_parity_candidate_design.py`
+- `sim_scripts/cube10cm_tap_rl_builtin_diffik_parity_result_audit.py`
+- `sim_scripts/cube10cm_tap_rl_builtin_diffik_step_clipped_candidate_design.py`
+- `sim_scripts/cube10cm_tap_rl_builtin_diffik_step_clipped_result_audit.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_builtin_diffik_parity_candidate_design_summary.out:1-7`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_builtin_diffik_parity_result_audit_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_builtin_diffik_step_clipped_result_audit_summary.out:1-7`
+
+## D191 - Increasing steps without the 10cm episode-length contract does not test a continuous h580 horizon
+
+Date: 2026-06-09
+
+Decision:
+
+- The h580 step-clipped DiffIK runtime is a failed diagnostic, but it must not be
+  interpreted as falsifying a continuous 5.8s horizon.
+- The 10cm env still has a 1.2s episode contract. Passing `--steps 580` and
+  `--closed_loop_push_steps 580` to the harness caused repeated truncation rather
+  than one continuous 580-step episode.
+- Before another h580-style runtime, add/design a default-off episode-length
+  override or equivalent env contract change. Do not relax the contact gate to
+  paper over this truncation mismatch.
+
+Evidence:
+
+- The horizon/progress candidate design line 2 records the intended comparison:
+  3cm `steps=580`, episode `6.080s`, while 10cm current is `steps=120`, `1.200s`.
+- The candidate design line 3 predicts why h580 was selected: current target
+  inside-band dwell `12` steps, candidate dwell `92` steps, candidate runtime
+  `5.800s`.
+- The h580 runtime summary line 3 confirms the intended harness settings:
+  `max_steps=580`, `steps_executed=580`,
+  `controller_mode=isaac_builtin_diffik_step_clipped_direct_apply`, and
+  `closed_loop_push_steps=580`.
+- The h580 runtime summary line 6 exposes the contract mismatch:
+  `terminated_count=0`, `truncated_count=8`; this is not one continuous 5.8s
+  episode.
+- The h580 result audit line 3 records
+  `env_episode_cap_detected=True` with reason
+  `truncated_count_positive_means_not_one_continuous_5p8s_episode`.
+- The h580 result audit line 4 shows h580 did not improve actual contact:
+  face gap max `-0.019437712m`, best shortfall `0.009437712m`, final shortfall
+  `0.010676415m`, versus step120 best shortfall `0.009376528m`.
+- The h580 result audit line 6 records the current primary blocker:
+  `ENV_EPISODE_LENGTH_1P2S_TRUNCATES_H580_HORIZON_TEST`; dataset/RL/RoArm gates
+  remain blocked.
+
+Implication:
+
+- Do not repeat `--steps 580` alone as a horizon test; it is known to hit the
+  10cm episode cap.
+- Next local-only unblock is an episode-length contract design/patch, then a
+  repeat step-clipped horizon runtime if explicitly approved.
+- Contact-gate relaxation, noisy teacher exception, dataset generation, PPO/RL,
+  and RoArm remain downstream of a valid positive-control or an explicit policy
+  exception.
+
+Sources:
+
+- `sim_scripts/cube10cm_tap_rl_step_clipped_horizon_progress_candidate_design.py`
+- `sim_scripts/cube10cm_tap_rl_step_clipped_h580_result_audit.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_step_clipped_horizon_progress_candidate_design_summary.out:1-7`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_sanity_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_step_clipped_h580_result_audit_summary.out:1-7`
+
+## D192 - Episode-length override validates continuous h580, but strict 10cm contact still fails
+
+Date: 2026-06-09
+
+Decision:
+
+- The default-off `--episode_length_s` harness override is accepted as the
+  correct way to test the 10cm step-clipped h580 horizon without changing
+  geometry, controller, step clip, or contact gate.
+- The one approved h580 ep608 runtime resolves the previous 1.2s episode-cap
+  blocker. It does not resolve the strict contact-gated positive-control.
+- Therefore the current blocker moves from episode-cap truncation to actual
+  contact/reach under continuous step-clipped built-in DiffIK:
+  `CONTINUOUS_STEP_CLIPPED_DIFFIK_H580_STILL_OUTSIDE_STRICT_CONTACT_BAND`.
+- Do not use this result to relax the contact gate by default, and do not start
+  DiffIK action dataset, tiny action dataset dry run, PPO/RL, large dataset, or
+  RoArm deployment.
+
+Evidence:
+
+- The harness patch is default-off: `--episode_length_s` is parsed only by the
+  tap positive-control harness, and `cfg.episode_length_s` is changed only when
+  the argument is positive.
+- The base env still defaults to `episode_length_s = 1.2` and truncates through
+  `self.episode_length_buf >= self.max_episode_length - 1`, so unrelated runs
+  retain the original contract.
+- The episode-override design summary line 2 records the basis:
+  previous blocker `ENV_EPISODE_LENGTH_1P2S_TRUNCATES_H580_HORIZON_TEST`,
+  default episode `1.2s`, and 3cm episode `6.080s`; line 4 selects only
+  `episode_length_s 1.2 -> 6.08` while keeping h580/step clip/geometry/contact
+  gate unchanged.
+- The ep608 runtime summary line 2 confirms `episode_length_s=6.08` and
+  `env_max_episode_length=608`; line 3 confirms `max_steps=580`,
+  `steps_executed=580`, `closed_loop_push_steps=580`, and controller
+  `isaac_builtin_diffik_step_clipped_direct_apply`.
+- Runtime summary line 6 confirms the continuous-horizon contract actually held:
+  `terminated_count=0`, `truncated_count=0`.
+- Runtime summary line 5 and line 9 keep the strict failure:
+  contact `0.0`, tap success `0.0`, professor weak physical evidence PASS,
+  and RL contact-gated positive-control FAIL.
+- The result audit line 3 records
+  `continuous_horizon_valid=True`, `episode_cap_blocker_resolved=True`, and the
+  previous h580 `truncated_count=8`.
+- The result audit line 4 shows contact did not improve: actual face-gap max
+  `-0.019535881m`, best shortfall `0.009535881m`, final shortfall
+  `0.015875252m`, no better than step120 `0.009376528m` or the truncated h580
+  `0.009437712m`.
+- The result audit line 5-6 shows the target/controller path still ran:
+  target inside-band max `1.0`, FK-vs-Isaac TCP error `0.000000000mm`,
+  clipped delta `0.010000000rad`, follow final `0.010640383rad`, and actual
+  step final `0.001485169rad`.
+- The result audit line 7 records the current primary blocker and keeps all
+  downstream learning/robot gates blocked.
+
+Implication:
+
+- The episode-cap hypothesis is no longer the active blocker for h580.
+- The next local-only unblock is a target-vs-actual contact trajectory and
+  reach-contract audit design, using existing logs/code first. Any new runtime
+  requires explicit approval.
+- Contact-gate relaxation or noisy-teacher exception can be discussed only after
+  the target/actual reach mismatch is audited; it should not hide this controller
+  result.
+
+Sources:
+
+- `roarm_rl/test_positive_control_cube_tap10cm.py`
+- `roarm_rl/roarm_cube_push_env.py`
+- `sim_scripts/cube10cm_tap_rl_episode_length_override_candidate_design.py`
+- `sim_scripts/cube10cm_tap_rl_episode_length_override_result_audit.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_episode_length_override_candidate_design_summary.out:1-7`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_sanity_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_episode_length_override_result_audit_summary.out:1-8`
+
+## D193 - Existing reach logs prove along-gap failure but not target/actual timing alignment
+
+Date: 2026-06-09
+
+Decision:
+
+- The current local evidence is enough to narrow the 10cm contact-gated failure
+  to the along face-gap/reach axis under the continuous step-clipped h580 run.
+- It is not enough to decide exactly when the command target, step-clipped joint
+  target FK, and actual TCP diverge, because existing JSON artifacts persist
+  only min/max/final trace stats.
+- Built-in step-clipped DiffIK currently logs command target face-gap and actual
+  TCP face-gap, but not the applied step-clipped joint-target FK face-gap; in
+  this mode `closed_loop_target_fk_err_mm_mean` is explicitly `nan`.
+- Therefore do not relax the contact gate or create noisy-teacher/RL exceptions
+  from the aggregate logs. The next local unblock is a default-off per-step
+  reach trace patch, followed by exactly one tiny repeat only after explicit
+  approval.
+
+Evidence:
+
+- The local reach-contract audit line 2 uses D192 as basis:
+  continuous h580 is valid, strict contact/tap remain `0.0`, and professor weak
+  evidence is PASS.
+- The audit line 3 records the contact gate contract and axis split:
+  face band `0.010m`, lateral limit `0.065m`, vertical limit `0.070m`; ep608
+  actual lateral max `0.000231256m` and vertical max `0.020352287m` are inside
+  their gates.
+- The audit line 4 records the command-vs-actual gap:
+  command target enters the band at least once (`command_target_inside_max=1.0`)
+  and finishes beyond the cube face (`0.105999991m`), while actual face-gap max
+  remains `-0.019535881m` with best shortfall `0.009535881m`.
+- The audit line 5 shows the strict failure is stable across recent relevant
+  runs: step120 best shortfall `0.009376528m`, truncated h580 `0.009437712m`,
+  direct telemetry `0.009533616m`, and slow240 `0.009191336m`; all still have
+  contact/tap success `0.0`.
+- The audit line 6 records the limiting data contract:
+  existing logs are stats-only, full step timeline is unavailable, and the
+  applied step-clipped joint-target FK gap is unavailable.
+- The code audit points to why: the harness `_update_trace_stats` stores only
+  `min/max/final`, and the built-in DiffIK path currently writes target FK error
+  as `nan`.
+- The audit line 7 defines the required next schema: per-step command target
+  gap, applied target FK gap, actual TCP gap, joint follow, cube reaction, and
+  done flags. These are diagnostic telemetry fields, not a dataset/action-teacher
+  release.
+
+Implication:
+
+- The remaining blocker is not episode horizon and not lateral/vertical contact
+  gate tolerance. It is a target/application/actual reach trajectory mismatch
+  along the face-gap axis.
+- The next code work should be a default-off per-step reach trace patch. It must
+  not change geometry, controller, step clip, contact gate, or readiness labels.
+- Dataset/RL/PPO/RoArm remain blocked until this reach contract is resolved or a
+  separate explicit policy exception is recorded.
+
+Sources:
+
+- `sim_scripts/cube10cm_tap_rl_target_actual_contact_trajectory_reach_contract_audit.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_target_actual_contact_trajectory_reach_contract_audit_summary.out:1-9`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_target_actual_contact_trajectory_reach_contract_audit.json`
+- `roarm_rl/test_positive_control_cube_tap10cm.py`
+- `roarm_rl/roarm_cube_push_env.py`
+
+## D194 - Per-step reach trace is default-off telemetry, not a readiness or dataset gate
+
+Date: 2026-06-09
+
+Decision:
+
+- The 10cm tap positive-control harness now has a default-off
+  `--reach_trace_json` path for per-step/per-env reach telemetry.
+- This patch is local-ready only. It does not itself run IsaacLab, prove contact,
+  relax the contact gate, create a dataset, start PPO/RL, or authorize RoArm.
+- The trace is diagnostic telemetry. It must stay separate from action-teacher
+  datasets and is explicitly marked `action_teacher_dataset=false`.
+- The one designed next runtime changes only `--reach_trace_json` relative to
+  the h580 ep608 step-clipped run; it still requires explicit approval before
+  execution.
+
+Evidence:
+
+- The per-step reach trace patch contract audit line 2 confirms the basis:
+  previous verdict `REACH_TRACE_CONTRACT_GAP_IDENTIFIED`.
+- Audit line 3 verifies code readiness: `--reach_trace_json` exists, the trace
+  writer exists, the applied FK metric is wired, and row-count metadata is added.
+- Audit line 4 verifies the schema includes command target gap, applied
+  joint-target FK gap, actual TCP gap, joint follow, cube reaction, and done
+  flags; it also records `action_teacher_dataset=False`, default-off behavior,
+  and separate JSON output.
+- The harness trace writer emits artifact type
+  `cube10cm_tap_rl_per_step_reach_trace_v1`, records no dataset/training/robot
+  control, and includes `action_teacher_dataset=False`.
+- The harness records per-step actual TCP face gap/lateral/vertical, actual
+  contact proxy, direct joint follow, actual joint step, cube displacement/speed,
+  professor reaction, tap success flags, and terminated/truncated flags only when
+  `--reach_trace_json` is provided.
+- Audit line 5 records the only designed candidate runtime:
+  h580 ep608 step-clipped positive-control with `reach_trace_json` added as the
+  only change; geometry, controller, step clip, episode length, and strict
+  contact gate are unchanged.
+- Audit line 6 keeps contact-gated positive-control failed and all downstream
+  learning/robot gates blocked.
+
+Implication:
+
+- The next runtime, if approved, is a diagnostic repeat to localize command
+  target vs applied joint-target FK vs actual TCP divergence. It is not a
+  training/data/RoArm step.
+- Do not interpret existence of the per-step trace patch as positive-control
+  success or readiness.
+- Do not run the candidate without explicit approval.
+
+Sources:
+
+- `roarm_rl/test_positive_control_cube_tap10cm.py`
+- `sim_scripts/cube10cm_tap_rl_per_step_reach_trace_patch_contract_audit.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_per_step_reach_trace_patch_contract_audit_summary.out:1-7`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_per_step_reach_trace_patch_contract_audit.json`
+
+## D195 - Per-step reach trace repeat localizes the strict failure before contact-gate relaxation
+
+Current State:
+
+- After explicit approval, exactly one local RTX4090/cuda:0 tiny repeat was run
+  from the D194 candidate.
+- The only added runtime output was `--reach_trace_json`; the h580 ep608
+  step-clipped built-in DiffIK contract, geometry, episode length, and strict
+  contact gate were unchanged.
+- The runtime still fails strict RL contact-gated positive-control, while
+  professor weak physical reaction evidence remains PASS.
+- The new trace is diagnostic telemetry only. It remains separate from
+  action-teacher datasets and records `action_teacher_dataset=False`.
+
+Evidence:
+
+- Runtime summary line 1 records status `FAIL` with local tiny GPU runtime only,
+  no dataset/training/robot/SSH/B200/Track A.
+- Runtime summary line 5 records `contact_seen=0.0`,
+  `professor_physical_reaction_seen=1.0`, and `tap_success=0.0`.
+- Runtime summary line 6 records `terminated_count=0` and `truncated_count=0`,
+  so the continuous h580 episode contract did not regress.
+- Runtime summary line 9 records professor evidence `PASS`, RL contact-gated
+  positive-control `FAIL`, and downstream training/robot gates blocked.
+- Trace result audit line 2 verifies the artifact type
+  `cube10cm_tap_rl_per_step_reach_trace_v1`, `action_teacher_dataset=False`,
+  `1160/1160` rows, steps `0..579`, envs `[0,1]`.
+- Trace result audit line 4 shows command target entered the contact band:
+  `inside_rows=184`, `inside_unique_steps=92`, `first_step=46`,
+  `last_step=137`, `face_gap_max=0.105999991`.
+- Trace result audit line 5 shows applied joint-target FK never entered the
+  contact band: `inside_rows=0`, `face_gap_max=-0.014059910`,
+  `best_shortfall_m=0.004059910`, and final target FK error
+  `127.704326062mm`.
+- Trace result audit line 6 shows actual TCP also never entered the contact
+  band: `inside_rows=0`, `face_gap_max=-0.019534182`,
+  `best_shortfall_m=0.009534182`, while lateral and vertical remain small.
+- Trace result audit line 7 records follow/reaction context:
+  direct joint follow max `0.010850668rad`, actual joint step max
+  `0.001486838rad`, cube displacement max `0.000899076m`, professor seen rate
+  `1.0`, tap success seen rate `0.0`.
+- Trace result audit line 8 sets the verdict:
+  `APPLIED_AND_ACTUAL_REACH_NEVER_ENTER_CONTACT_BAND`.
+
+Implication:
+
+- Do not relax the contact gate from this result. The command target crosses the
+  gate, but the applied joint-target FK and actual TCP do not, so gate relaxation
+  would hide a controller/application reach-contract failure.
+- Do not promote this trace to an action teacher, dataset, PPO/RL, large dataset,
+  or RoArm readiness claim.
+- The next local-only unblock is applied joint-target/reach-contract diagnosis:
+  code-review how the step-clipped built-in DiffIK target is converted into
+  applied joint targets and why its FK never reaches the face band before
+  discussing Tier-B/noisy exceptions.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_reachtrace_sanity_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_reachtrace_trace.json`
+- `sim_scripts/cube10cm_tap_rl_per_step_reach_trace_result_audit.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_per_step_reach_trace_result_audit_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_per_step_reach_trace_result_audit.json`
+
+## D196 - Same-face anchoring must be direction-aware; x240 improves but does not solve +x tap contact
+
+Current State:
+
+- The user challenged the fixed cube pose assumption for the 10cm tap positive
+  control. This was valid: a 10cm cube at the same center as a 3cm cube changes
+  the near-face position by half-size.
+- For the current fixed +x push test, however, preserving the near face of a
+  3cm cube centered at `x=0.250` would move the 10cm center to `x=0.285`, which
+  moves the +x near face farther from the previous reachable TCP range. Do not
+  use `x=0.285` as the +x fix.
+- A local design audit selected `fixed_cube_x_m=0.240`, `fixed_cube_y_m=0.000`
+  as the direction-aware same-near-face candidate: it matches the 3cm low-x
+  workspace near face and is within the observed actual TCP reach boundary.
+- The approved x240 tiny runtime improved the along-face shortfall slightly, but
+  still failed strict contact/tap. Pose correction is therefore part of the
+  diagnosis, not a sufficient unblock.
+
+Evidence:
+
+- Design audit line 2 records the current same-center contract:
+  10cm center `x=0.250`, near face `x=0.200`, previous actual best face gap
+  `-0.019534182`, and shortfall `0.009534182m`.
+- Design audit line 3 records the direction-aware candidate comparison:
+  same 3cm-center near-face would require 10cm center `x=0.285`, face `x=0.235`,
+  and is rejected for +x as a farther face; same 3cm-xmin near-face gives
+  center `x=0.240`, face `x=0.190`.
+- Design audit line 4 records the observed reach boundary:
+  `touch_center_max_x=0.240465818`, selected `fixed_cube_x_m=0.240`.
+- Runtime summary line 3 confirms the x240 run changed the cube pose while
+  keeping the step-clipped built-in DiffIK h580 ep608 contract.
+- Runtime summary line 5 and line 9 still record contact/tap `0.0`, professor
+  physical reaction evidence PASS, and RL contact-gated positive-control FAIL.
+- Result audit line 6 shows applied joint-target FK still entered 0 contact rows:
+  applied shortfall improved only `0.004059910 -> 0.003457759m`.
+- Result audit line 7 shows actual TCP also still entered 0 contact rows:
+  actual shortfall improved only `0.009534182 -> 0.008961143m`.
+- Result audit line 9 sets the verdict:
+  `X240_POSE_IMPROVES_FACE_SHORTFALL_BUT_STILL_NO_CONTACT`.
+
+Implication:
+
+- Do not claim the 10cm +x failure was just a bad fixed pose. x240 is a more
+  defensible +x pose than x250, and x285 is wrong for this direction, but x240
+  still does not contact.
+- The next local-only unblock remains applied joint-target/TCP reach-contract
+  diagnosis: why the command crosses while applied FK and actual TCP still do
+  not. Do not start dataset/PPO/RL/RoArm from the x240 run.
+
+Sources:
+
+- `sim_scripts/cube10cm_tap_rl_same_center_vs_same_face_pose_audit.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_same_center_vs_same_face_pose_audit_summary.out:1-6`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_x240_reachtrace_sanity_summary.out:1-10`
+- `sim_scripts/cube10cm_tap_rl_same_face_pose_result_audit.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_same_face_pose_result_audit_summary.out:1-9`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_same_face_pose_result_audit.json`
+
+## D197 - Reach-contract failure is split between target_full FK and actual TCP lag
+
+Current State:
+
+- The x240 fixed pose is a better +x pose than x250, but the strict contact
+  failure is not solved by pose.
+- The next local diagnosis used only existing x250/x240 per-step reach traces
+  and code. No GPU runtime, dataset generation, PPO/RL, robot control, SSH/B200,
+  or Track A work was run.
+- The target path itself crosses the face band, but the step-clipped built-in
+  DiffIK `target_full` FK never reaches the face band. The actual TCP then lags
+  behind that already-insufficient target.
+- Therefore contact-gate relaxation would hide a two-stage reach-contract
+  failure rather than fix it.
+
+Evidence:
+
+- Diagnosis line 2 pins the code contract:
+  target path `test_positive_control_cube_tap10cm.py:327-332`, built-in
+  DiffIK compute `:362`, step clip `:366`, `target_full` assignment `:379`,
+  applied FK trace `:413`, env direct target override
+  `roarm_cube_push_env.py:633-638`, `set_joint_position_target` `:753`,
+  post-step actual trace `test_positive_control_cube_tap10cm.py:895`, and tap
+  contact proxy `roarm_cube_push_env.py:1103-1105`.
+- Diagnosis line 3 shows x240 command target entered the contact band for
+  184 rows / 92 unique steps (`46..137`), moving from `-0.009789657m` through
+  `0.009979296m` and ending at `0.105999991m`.
+- Diagnosis line 4 shows applied joint-target FK still entered 0 rows:
+  best face gap `-0.013457759m`, best shortfall `0.003457759m`, final FK error
+  `127.058100165mm`.
+- Diagnosis line 5 shows actual TCP also entered 0 rows:
+  best face gap `-0.018961143m`, best shortfall `0.008961143m`.
+- Diagnosis line 6 splits the first command-band miss:
+  command-applied `0.003801962m`, applied-actual `0.005616973m`,
+  command-actual `0.009418935m`. Across the full command-inside window, the
+  mean command-applied miss grows to `0.014288675m` while applied-actual lag
+  stays about `0.005629399m`.
+- Diagnosis line 7 shows the follow/timing contract:
+  target follow remains near the `0.010rad` step clip, while actual joint motion
+  is only about `0.0014-0.0015rad` per step.
+- Diagnosis line 8 cross-checks x250 vs x240:
+  x240 improves applied shortfall by only `0.000602150m` and actual shortfall by
+  only `0.000573039m`.
+- Diagnosis line 9 verdict:
+  `TARGET_FULL_FK_NEVER_REACHES_FACE_BAND_AND_ACTUAL_TCP_LAGS_TARGET_FULL`.
+
+Implication:
+
+- The current blocker is not "the cube is too heavy" and not "the contact gate
+  is too strict" as the first explanation. The command asks for contact, but the
+  produced clipped joint target does not put the tool in the contact band, and
+  the simulated TCP trails that target further.
+- The next local-only unblock is code-level design around the step-clipped
+  built-in DiffIK target-generation contract: raw delta clipping, `target_full`
+  FK progression, Jacobian/tool-proxy frame, and whether the Cartesian command
+  schedule outruns the applied joint-target FK.
+- Do not start DiffIK action dataset, PPO/RL, large dataset, or RoArm from this
+  result.
+
+Sources:
+
+- `sim_scripts/cube10cm_tap_rl_applied_target_tcp_reach_contract_diagnosis.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_applied_target_tcp_reach_contract_diagnosis_summary.out:1-9`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_applied_target_tcp_reach_contract_diagnosis.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_x240_reachtrace_trace.json`
+
+## D198 - Primary cause is clipped current-joint-based target generation; secondary cause is actuator follow lag
+
+Current State:
+
+- D197 localized the failure to command target vs applied `target_full` FK vs
+  actual TCP. D198 answers the next question: why that split happens.
+- The audit used only local code, existing x240 trace/sanity JSON, and local
+  installed IsaacLab source. No GPU runtime, dataset generation, PPO/RL, robot,
+  SSH/B200, or Track A work was run.
+- The primary cause is not object mass, contact-gate tolerance, or x285 pose.
+  The primary cause is the harness' step-clipped, current-joint-based
+  target-generation contract.
+- The secondary cause is actual position-drive follow lag. The exact actuator
+  parameter split (effort limit vs stiffness vs damping) is not yet proved,
+  because torque/drive telemetry is not recorded.
+
+Evidence:
+
+- Root-cause summary line 2:
+  primary cause `STEP_CLIPPED_CURRENT_JOINT_BASED_TARGET_GENERATION`,
+  raw built-in DiffIK delta max `0.427774668rad`, clipped delta max
+  `0.010000000rad`, target delta from actual max `0.010000005rad`, final target
+  FK error `127.058100165mm`, final target TCP error before command
+  `0.131981999m`.
+- Root-cause summary line 3 pins the local code basis:
+  actual joint source line `358`, DiffIK compute `362`, raw delta `364`,
+  step clip `366`, `arm_joint_target = joint_pos_arm + clipped_delta_arm` `367`,
+  `target_full` seeded from actual joint pos `378`, target assignment `379`,
+  and installed IsaacLab `DifferentialIKController.compute()` returns
+  `joint_pos + delta_joint_pos` at source line `174`.
+- Root-cause summary line 4 records the consequence:
+  command target crosses the band (`184` rows / `92` unique steps), but applied
+  FK and actual TCP enter 0 rows; first command-applied miss is `0.003801962m`,
+  and command-inside-window mean command-applied miss is `0.014288675m`.
+- Root-cause summary line 5 records the secondary lag:
+  follow max `0.010857821rad`, actual joint step max `0.001492023rad`,
+  actual-to-target step ratio `0.149202267`, control dt `0.010000000s`.
+- Root-cause summary line 6 ties the secondary lag to the actuator path:
+  env override `roarm_cube_push_env.py:633-638`, `set_joint_position_target`
+  `:753`, DirectRLEnv control period from `decimation=2` and `dt=1/200`, arm
+  actuator stiffness/damping/effort/velocity `80/4/2.5/3.14`, and IsaacLab
+  implicit actuator PD handled by simulation.
+- Local installed IsaacLab source cross-check:
+  `DifferentialIKController.compute()` returns current joint position plus a
+  delta (`joint_pos + delta_joint_pos`), and implicit actuators handle PD in the
+  simulation. Official IsaacLab docs match this controller/action pattern.
+
+Implication:
+
+- The current failure is best explained as:
+  command target outruns a one-step clipped joint target, and actual physics
+  follows that insufficient target slowly.
+- Do not claim "cube too heavy" as the first cause: actual contact is never
+  reached before meaningful push force is the issue.
+- Do not relax contact gate from this evidence: the command crosses, but applied
+  `target_full` FK and actual TCP do not.
+- The next local-only unblock is a default-off target-generation contract design:
+  separate Cartesian schedule, raw-delta clip, target base (`actual joint_pos` vs
+  previous target), and actuator-follow telemetry before a new tiny runtime.
+- DiffIK action dataset, PPO/RL, large dataset, and RoArm remain blocked.
+
+Sources:
+
+- `sim_scripts/cube10cm_tap_rl_reach_contract_root_cause_audit.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_reach_contract_root_cause_audit_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_reach_contract_root_cause_audit.json`
+- `/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaaclab/source/isaaclab/isaaclab/controllers/differential_ik.py:148-174`
+- `/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaaclab/source/isaaclab/isaaclab/actuators/actuator_cfg.py:172-180`
