@@ -873,6 +873,131 @@
   contact-gated positive-control, DiffIK action dataset, tiny action dataset dry
   run, PPO/RL, large dataset, and RoArm.
 
+## Follow-Up: Near-Face Target Path Runtime
+
+- User explicitly approved the next tiny candidate:
+  run the same x240 h580 ep608 step-clipped built-in DiffIK contract, changing
+  only `--target_path_mode near_face_goal`, with per-step reach trace.
+- First launch inside the sandbox was not a physics result:
+  output summary was BLOCKED at `steps_executed=0` with
+  `ModuleNotFoundError: No module named 'roarm_rl'`, and stderr also had sandbox
+  CUDA device errors (`No CUDA devices found`).
+- Reran once as local unsandboxed GPU with
+  `PYTHONPATH=/home/cgxr/Documents/Robotics/RoArm_Project`; no dataset
+  generation, no PPO/RL, no robot control, no SSH/B200, no Track A.
+- Runtime summary line 1:
+  `status=FAIL`, `gpu_runtime=YES_LOCAL_TINY_ISAACLAB_POSITIVE_CONTROL`.
+- Runtime summary line 2:
+  env `RoArm-CubeTap10cm-Direct-v0`, `cuda:0`, cube size `0.1`, mass `0.72`,
+  final 1cm required false, `episode_length_s=6.08`, max episode length `608`.
+- Runtime summary line 3:
+  `num_envs=2`, `steps_executed=580`, cube `(0.24,0.0)`, push dir `(1,0)`,
+  controller `isaac_builtin_diffik_step_clipped_direct_apply`,
+  `target_path_mode=near_face_goal`, direct IK joint target apply true,
+  precontact `0.02`, goal push `0.006`, max joint delta per step `0.01`.
+- Runtime summary line 5:
+  strict contact/tap gate still fails: `contact_seen=0.0`,
+  `reaction_contact_context=0.0`, `reaction_seen=0.0`, `tap_success=0.0`;
+  professor weak reaction seen is `1.0`, overshoot `0.0`.
+- Runtime summary line 6:
+  weak physical reaction only: max displacement along `0.000868797m`, max speed
+  `0.076719582m/s`, terminated/truncated `0/0`.
+- Runtime summary line 8:
+  actual TCP remains outside contact band: face gap max `-0.018959235m`, final
+  `-0.024409305m`, best shortfall `0.008959235m`.
+- Runtime summary line 10:
+  near-face command path was applied: final target face gap `0.005999971m`,
+  target inside contact band final `1.0`; but target FK error is still
+  `25.145485846mm`, direct follow final `0.010684967rad`, actual joint step
+  final `0.001290381rad`.
+- Added and ran local-only posthoc comparison audit:
+  `sim_scripts/cube10cm_tap_rl_nearface_target_path_result_audit.py`.
+- Audit line 2:
+  first launch blocker `ModuleNotFoundError`, CUDA device error seen true, rerun
+  used unsandboxed + PYTHONPATH, runtime executed 580 steps, no truncation, reach
+  trace rows `1160`.
+- Audit line 3:
+  command target semantics fixed: legacy command final face gap `0.105999991m`,
+  near-face final `0.005999971m`, delta `-0.100000020m`, near-face command
+  inside steps `223..579`, inside rows `714`.
+- Audit line 4:
+  gate result remains RL FAIL / professor weak evidence PASS:
+  contact `0.0`, tap `0.0`, professor seen `1.0`, overshoot `0.0`.
+- Audit line 5:
+  applied and actual reach still never enter strict contact band:
+  near-face applied inside rows `0`, actual inside rows `0`, applied best face
+  gap `-0.014022207m`, actual best face gap `-0.018959235m`, actual best
+  shortfall `0.008959235m`.
+- Audit line 6:
+  final FK error improved greatly (`127.058100165mm -> 25.145485846mm`,
+  delta `-101.912614319mm`), but actual best shortfall improved by only
+  `-0.000003666m`.
+- Audit line 7 verdict:
+  `NEAR_FACE_TARGET_PATH_APPLIED_BUT_STRICT_CONTACT_STILL_FAILS_ACTUAL_TCP_PRECONTACT`.
+- Interpretation:
+  D201 first-button target-path issue was real and is now corrected for this
+  candidate. The remaining blocker is not "legacy command goes too far"; it is
+  now that applied target FK and actual TCP still remain precontact even while
+  the near-face command target sits in the strict contact band for many steps.
+- Next local-only design:
+  isolate target-base accumulation (`actual joint_pos` versus previous target),
+  precontact reset/initial offset, and actuator/drive follow telemetry. Do not
+  relax the contact gate, and do not start dataset/RL/RoArm.
+
+## Follow-Up: Remaining Blocker Decomposition Design
+
+- User requested a local-only decomposition design, explicitly not contact-gate
+  relaxation, across:
+  target-base accumulation, precontact reset/initial offset, and actuator/drive
+  follow telemetry.
+- Added and ran:
+  `sim_scripts/cube10cm_tap_rl_remaining_blocker_decomposition_design.py`.
+- No GPU runtime, no dataset generation, no PPO/RL, no robot control, no
+  SSH/B200, no Track A.
+- Design summary line 2 anchors the near-face state:
+  status `FAIL`, RL contact-gated positive-control `FAIL`, professor evidence
+  `PASS`, `steps_executed=580`, no truncation, command final face gap
+  `0.005999971m`, command inside steps `223..579`, command inside rows `714`,
+  applied inside rows `0`, actual inside rows `0`.
+- Design summary line 3 ranks the suspects:
+  rank1 `TARGET_BASE_ACCUMULATION_OR_APPLIED_TARGET_GENERATION`,
+  rank2 `ACTUATOR_DRIVE_FOLLOW`,
+  rank3 `PRECONTACT_RESET_INITIAL_OFFSET`;
+  contact-gate relaxation is not next.
+- Design summary line 4 target-base evidence:
+  harness uses actual joint position at line `364`, raw delta line `370`, step
+  clip line `372`, actual-base target line `373`, and `target_full` from actual
+  joint position line `384`. Applied best face gap is only `-0.014022207m`,
+  applied shortfall `0.004022207m`, final target FK error `25.145485846mm`, raw
+  delta final `0.095429182rad`, clipped final `0.010000000rad`.
+- Design summary line 5 reset/initial offset evidence:
+  initial command/applied/actual face gaps are
+  `-0.019955199/-0.020112728/-0.021178227m`; actual-command bias is
+  `-0.001223028m`; reset IK error is `1.065392971mm`; initial vertical offset is
+  `0.001003340m`. Reset is lower priority but not fully cleared.
+- Design summary line 6 actuator-follow evidence:
+  env override line `633`, `set_joint_position_target` line `753`, control
+  cadence `decimation=2` / `dt=1/200`, actuator settings
+  stiffness/damping/effort/velocity lines `177/178/179/180`; direct follow max
+  `0.010870218rad`, actual joint step max `0.001367390rad`,
+  actual-to-follow ratio `0.125792337`, and actual adds `0.004937029m` shortfall
+  over applied target.
+- Design summary line 7 next patch design:
+  add default-off `--reach_trace_detail_json`, default `None`, absent behavior
+  `NO_OUTPUT_NO_CONTROL_CHANGE`. The trace must include reset snapshot,
+  command/applied/actual scalar gaps, per-joint raw/clipped/target/actual/follow
+  arrays, joint velocity/acceleration, torque and limits. IsaacLab exposes
+  `joint_pos_target`, `computed_torque`, `applied_torque`, and `joint_vel`.
+- Design summary line 8 decision tree:
+  if previous-target counterfactual enters band, design previous-target-base
+  runtime; if applied enters but actual misses or torque saturates, design
+  actuator-follow runtime; if reset bias exceeds 2-3mm, design reset/precontact
+  recalibration; otherwise inspect FK/tool-frame with visual overlay.
+- Verdict:
+  default-off detail trace patch is the next implementation. Do not relax contact
+  gate. DiffIK action dataset, tiny dataset dry run, PPO/RL, large dataset, and
+  RoArm remain blocked.
+
 ## Follow-Up: First-Button Target Path Audit
 
 - User challenged the direction of the debugging: a basic tap should put the TCP
@@ -1341,6 +1466,56 @@
   design a default-off target-generation contract candidate that separates
   Cartesian schedule, raw-delta clip, target base (`actual joint_pos` versus prior
   target), and actuator-follow/per-joint telemetry before any new tiny runtime.
+- Still blocked:
+  strict contact-gated positive-control, DiffIK action dataset, tiny action
+  dataset dry run, PPO/RL, large dataset, and RoArm.
+
+## Follow-Up: Reach-Trace Detail Patch Contract
+
+- User asked to re-check whether the next step is the proper method and to keep
+  the RL/learning goal in view.
+- Critical decision:
+  the next step is still not contact-gate relaxation. The current blocker must be
+  decomposed with default-off telemetry because the near-face command is already
+  in-band while applied joint-target FK and actual TCP remain out-of-band.
+- Implemented default-off harness patch:
+  `--reach_trace_detail_json` in
+  `roarm_rl/test_positive_control_cube_tap10cm.py`.
+- No GPU runtime, no dataset generation, no PPO/RL, no robot control, no
+  SSH/B200, no Track A.
+- Added and ran local-only static audit:
+  `sim_scripts/cube10cm_tap_rl_reach_trace_detail_patch_contract_audit.py`.
+- Audit summary line 1:
+  local static audit only; `gpu_runtime=NO`, `dataset_generation=NO`,
+  `training=NO`, `robot_control=NO`, `ssh=NO`, `b200=NO`, `track_a=NO`.
+- Audit summary line 2:
+  basis verified from D203: command final face gap `0.005999971m`, applied
+  inside rows `0`, actual inside rows `0`.
+- Audit summary line 3:
+  parser arg line `890`, default-off behavior OK, separate detail JSON output,
+  and `control_change=NO`.
+- Audit summary line 4:
+  target-base trace fields are present: previous target state line `311`,
+  previous target update line `511`, raw delta line `491`, clipped delta line
+  `492`, post-step `joint_pos_target_after_arm_rad` line `820`.
+- Audit summary line 5:
+  actuator trace fields are present: joint velocity line `822`, joint
+  acceleration line `823`, computed torque line `824`, applied torque line
+  `825`, effort limit line `826`, velocity limit line `827`.
+- Audit summary line 6:
+  schema guard is OK; `contains_action_fields=false` and
+  `action_teacher_dataset=false`.
+- Audit summary line 7:
+  next runtime requires explicit approval and must keep the same nearface x240
+  h580 ep608 step-clipped built-in DiffIK contract, adding only basic and detail
+  trace outputs. Contact-gate relaxation is still not next.
+- Audit summary line 8:
+  verdict `READY_LOCAL_ONLY_DEFAULT_OFF_DETAIL_TRACE_PATCH`.
+- Interpretation:
+  this patch supports the RL/learning goal by preventing a false positive teacher
+  dataset. It records whether the next real fix should be previous-target-base
+  accumulation, actuator-follow timing/drive, reset/precontact recalibration, or
+  FK/tool-frame visual overlay.
 - Still blocked:
   strict contact-gated positive-control, DiffIK action dataset, tiny action
   dataset dry run, PPO/RL, large dataset, and RoArm.

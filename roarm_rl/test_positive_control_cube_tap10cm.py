@@ -28,6 +28,49 @@ DEFAULT_OUT_JSON = LOG_DIR / "cube10cm_tap_rl_positive_control_sanity.json"
 DEFAULT_OUT_SUMMARY = LOG_DIR / "cube10cm_tap_rl_positive_control_sanity_summary.out"
 ENV_ID = "RoArm-CubeTap10cm-Direct-v0"
 PROJECT_TABLE_Z = -0.012117
+HAND_TCP_LOCAL_M = (0.0, 0.0, 0.115428)
+LINK5_COLLISION_CORNER_011_LOCAL_M = (-0.03099808120727539, 0.01777365303039551, 0.11988562011718751)
+LINK5_TO_TCP_LOCAL_M = np.array(HAND_TCP_LOCAL_M, dtype=np.float64)
+
+
+def _rpy_rotation(roll: float, pitch: float, yaw: float) -> np.ndarray:
+    cr, sr = np.cos(roll), np.sin(roll)
+    cp, sp = np.cos(pitch), np.sin(pitch)
+    cy, sy = np.cos(yaw), np.sin(yaw)
+    rx = np.array(((1.0, 0.0, 0.0), (0.0, cr, -sr), (0.0, sr, cr)), dtype=np.float64)
+    ry = np.array(((cp, 0.0, sp), (0.0, 1.0, 0.0), (-sp, 0.0, cp)), dtype=np.float64)
+    rz = np.array(((cy, -sy, 0.0), (sy, cy, 0.0), (0.0, 0.0, 1.0)), dtype=np.float64)
+    return rz @ ry @ rx
+
+
+LINK5_TO_TCP_ROT = _rpy_rotation(np.pi / 2.0, -np.pi / 2.0, 0.0)
+
+
+def _tool_proxy_local_m(mode: str) -> tuple[float, float, float]:
+    if mode == "hand_tcp":
+        return HAND_TCP_LOCAL_M
+    if mode == "link5_collision_corner_011":
+        return LINK5_COLLISION_CORNER_011_LOCAL_M
+    raise ValueError(f"unsupported tool_contact_proxy_mode={mode!r}")
+
+
+def _tool_proxy_label(mode: str) -> str:
+    if mode == "hand_tcp":
+        return "hand_tcp"
+    if mode == "link5_collision_corner_011":
+        return "link5_collision:corner_011"
+    raise ValueError(f"unsupported tool_contact_proxy_mode={mode!r}")
+
+
+def _fk_tool_proxy_from_tcp_fk(
+    fk_full_func: Any,
+    joints_deg: np.ndarray,
+    tool_proxy_local: np.ndarray,
+) -> np.ndarray:
+    tcp_pos, tcp_rot = fk_full_func(joints_deg)
+    link5_rot = tcp_rot @ LINK5_TO_TCP_ROT.T
+    link5_pos = tcp_pos - link5_rot @ LINK5_TO_TCP_LOCAL_M
+    return link5_pos + link5_rot @ np.asarray(tool_proxy_local, dtype=np.float64)
 
 
 def _table_z_flat_terrain(difficulty: float, cfg: Any) -> tuple[list[Any], np.ndarray]:
@@ -98,6 +141,12 @@ def _bool_tensor_list(value: Any) -> list[bool]:
     return [bool(value)]
 
 
+def _optional_env_tensor_list(value: Any, env_id: int) -> list[float] | None:
+    if value is None:
+        return None
+    return _tensor_list(value[env_id])
+
+
 def _face_metrics_torch(point_w: Any, cube_w: Any, push_dir_xy: Any, cfg: Any, torch_mod: Any) -> dict[str, Any]:
     half_xy = torch_mod.tensor(
         [float(cfg.cube_size_x_m) * 0.5, float(cfg.cube_size_y_m) * 0.5],
@@ -133,7 +182,10 @@ def _reach_trace_from_metrics(metrics: dict[str, float], cfg: Any, args: argpars
 def _closed_loop_ik_joint_target(
     inner: Any, cfg: Any, args: argparse.Namespace, step: int, torch_mod: Any
 ) -> tuple[Any, dict[str, float]]:
-    from sim_scripts.roarm_kinematics import fk_tcp, ik_dls
+    from sim_scripts.roarm_kinematics import fk_full, ik_dls
+
+    if str(args.tool_contact_proxy_mode) != "hand_tcp":
+        raise ValueError("external_closed_loop IK currently supports only tool_contact_proxy_mode=hand_tcp")
 
     inner._compute_intermediate_values()
     cube_local = (inner._cube_start_w - inner.scene.env_origins).detach().cpu().numpy()
@@ -153,6 +205,7 @@ def _closed_loop_ik_joint_target(
     actual_fk_sim_tcp_err_values: list[float] = []
     target_delta_abs_max_values: list[float] = []
     reach_rows: list[dict[str, Any]] = []
+    tool_proxy_local_np = np.asarray(_tool_proxy_local_m(str(args.tool_contact_proxy_mode)), dtype=np.float64)
     for env_id in range(int(args.num_envs)):
         half_along = float(np.sum(np.abs(push_dir[env_id, :2]) * half_xy))
         pre = cube_local[env_id].copy()
@@ -190,8 +243,8 @@ def _closed_loop_ik_joint_target(
             and target_lateral <= half_along + float(cfg.tap_contact_lateral_margin_m)
             and target_vertical <= float(cfg.cube_size_z_m) * 0.5 + float(cfg.tap_contact_vertical_margin_m)
         )
-        target_fk = fk_tcp(q_deg)
-        actual_fk = fk_tcp(q_seed_deg)
+        target_fk = _fk_tool_proxy_from_tcp_fk(fk_full, q_deg, tool_proxy_local_np)
+        actual_fk = _fk_tool_proxy_from_tcp_fk(fk_full, q_seed_deg, tool_proxy_local_np)
         applied_rel_xy = target_fk[:2] - cube_local[env_id, :2]
         applied_along = float(np.dot(applied_rel_xy, push_dir[env_id, :2]))
         applied_lateral_vec = applied_rel_xy - applied_along * push_dir[env_id, :2]
@@ -290,9 +343,11 @@ def _init_builtin_diffik_state(inner: Any, args: argparse.Namespace) -> dict[str
         ik_method="dls",
         ik_params={"lambda_val": float(args.builtin_diffik_lambda)},
     )
+    tool_proxy_mode = str(args.tool_contact_proxy_mode)
     return {
         "diffik": DifferentialIKController(diffik_cfg, num_envs=inner.num_envs, device=inner.device),
         "arm_joint_ids": arm_joint_ids,
+        "arm_joint_names": list(_arm_joint_names),
         "jacobi_body_idx": jacobi_body_idx,
         "jacobi_joint_ids": jacobi_joint_ids,
         "link5_body_idx": link5_body_idx,
@@ -301,6 +356,9 @@ def _init_builtin_diffik_state(inner: Any, args: argparse.Namespace) -> dict[str
         "quat_rotate": quat_rotate,
         "subtract_frame_transforms": subtract_frame_transforms,
         "tool_proxy_local": inner._tcp_local.unsqueeze(0).repeat(inner.num_envs, 1),
+        "tool_contact_proxy_mode": tool_proxy_mode,
+        "tool_proxy_label": _tool_proxy_label(tool_proxy_mode),
+        "previous_arm_joint_target": None,
     }
 
 
@@ -313,7 +371,7 @@ def _closed_loop_builtin_diffik_joint_target(
     state: dict[str, Any],
     step_clip_rad: float | None = None,
 ) -> tuple[Any, dict[str, float]]:
-    from sim_scripts.roarm_kinematics import fk_tcp
+    from sim_scripts.roarm_kinematics import fk_full
 
     inner._compute_intermediate_values()
     cube_w = inner._cube_start_w
@@ -368,18 +426,47 @@ def _closed_loop_builtin_diffik_joint_target(
     joint_pos_des = diffik.compute(link5_pos_b, link5_quat_b, jacobian, joint_pos_arm)
     numeric_ok = torch_mod.isfinite(joint_pos_des).all(dim=-1)
     raw_delta_arm = joint_pos_des - joint_pos_arm
+    target_base_mode = str(getattr(args, "builtin_diffik_target_base_mode", "actual_joint_pos"))
+    previous_target_full = state.get("previous_arm_joint_target")
+    target_base_fallback_actual_rate = 0.0
+    if target_base_mode == "actual_joint_pos":
+        target_base_arm = joint_pos_arm
+    elif target_base_mode == "previous_joint_target":
+        if previous_target_full is None:
+            target_base_arm = joint_pos_arm
+            target_base_fallback_actual_rate = 1.0
+        else:
+            if int(previous_target_full.shape[-1]) == int(len(arm_joint_ids)):
+                target_base_arm = previous_target_full.detach()
+            else:
+                target_base_arm = previous_target_full[:, arm_joint_ids].detach()
+    else:
+        raise ValueError(f"unsupported builtin_diffik_target_base_mode={target_base_mode!r}")
     if step_clip_rad is not None and float(step_clip_rad) > 0.0:
         clipped_delta_arm = torch_mod.clamp(raw_delta_arm, -float(step_clip_rad), float(step_clip_rad))
-        arm_joint_target = joint_pos_arm + clipped_delta_arm
         step_clip_rate = float(
             (torch_mod.abs(raw_delta_arm) >= float(step_clip_rad) - 1.0e-9).float().mean().item()
         )
         step_clip_value = float(step_clip_rad)
     else:
         clipped_delta_arm = raw_delta_arm
-        arm_joint_target = joint_pos_des
         step_clip_rate = 0.0
         step_clip_value = 0.0
+    arm_joint_target_unclamped = target_base_arm + clipped_delta_arm
+    target_lead_limit_rate = 0.0
+    if target_base_mode == "previous_joint_target":
+        lead_limit = float(cfg.joint_target_lead_limit_rad)
+        if lead_limit > 0.0:
+            lead_mask = torch_mod.abs(arm_joint_target_unclamped - joint_pos_arm) > lead_limit + 1.0e-9
+            target_lead_limit_rate = float(lead_mask.float().mean().item())
+            arm_joint_target = torch_mod.maximum(
+                torch_mod.minimum(arm_joint_target_unclamped, joint_pos_arm + lead_limit),
+                joint_pos_arm - lead_limit,
+            )
+        else:
+            arm_joint_target = arm_joint_target_unclamped
+    else:
+        arm_joint_target = arm_joint_target_unclamped
 
     target_full = inner._robot.data.joint_pos.detach().clone()
     target_full[:, arm_joint_ids] = arm_joint_target
@@ -403,20 +490,41 @@ def _closed_loop_builtin_diffik_joint_target(
     target_delta_abs = torch_mod.abs(target_full - inner._robot.data.joint_pos)
     applied_target_fk_err_mm_mean = float("nan")
     reach_rows: list[dict[str, Any]] = []
-    if args.reach_trace_json is not None:
+    reach_detail_rows: list[dict[str, Any]] = []
+    trace_fk_enabled = args.reach_trace_json is not None or args.reach_trace_detail_json is not None
+    if trace_fk_enabled:
         target_full_np = target_full.detach().cpu().numpy()
+        tool_proxy_local_np = tool_proxy_local.detach().cpu().numpy()
         cube_w_np = cube_w.detach().cpu().numpy()
         origins_np = inner.scene.env_origins.detach().cpu().numpy()
         push_np = push_dir.detach().cpu().numpy()
         half_along_np = half_along.detach().cpu().numpy()
+        tcp_target_np = tcp_target_w.detach().cpu().numpy()
         applied_fk_err_values: list[float] = []
         command_face = _tensor_list(target_face_gap)
         command_lateral = _tensor_list(target_lateral)
         command_vertical = _tensor_list(target_vertical)
         command_inside = _bool_tensor_list(target_inside)
         target_delta_env = _tensor_list(target_delta_abs.max(dim=-1).values)
+        raw_delta_rows = raw_delta_arm.detach().clone()
+        clipped_delta_rows = clipped_delta_arm.detach().clone()
+        joint_pos_rows = joint_pos_arm.detach().clone()
+        joint_pos_des_rows = joint_pos_des.detach().clone()
+        target_base_rows = target_base_arm.detach().clone()
+        target_unclamped_rows = arm_joint_target_unclamped.detach().clone()
+        arm_joint_target_rows = arm_joint_target.detach().clone()
+        previous_arm_target = state.get("previous_arm_joint_target")
+        previous_target_rows = previous_arm_target.detach().clone() if previous_arm_target is not None else None
+        lower_arm_rows = inner.robot_dof_lower_limits[arm_joint_ids].detach().clone()
+        upper_arm_rows = inner.robot_dof_upper_limits[arm_joint_ids].detach().clone()
+        target_tcp_err_rows = _tensor_list(target_tcp_err_before_m)
+        actual_fk_sim_rows = _tensor_list(actual_fk_sim_tcp_err_mm)
         for env_id in range(int(args.num_envs)):
-            applied_tcp_local = fk_tcp(np.degrees(target_full_np[env_id]))
+            applied_tcp_local = _fk_tool_proxy_from_tcp_fk(
+                fk_full,
+                np.degrees(target_full_np[env_id]),
+                tool_proxy_local_np[env_id],
+            )
             applied_tcp_w = applied_tcp_local + origins_np[env_id]
             rel_xy = applied_tcp_w[:2] - cube_w_np[env_id, :2]
             applied_along = float(np.dot(rel_xy, push_np[env_id, :2]))
@@ -429,25 +537,77 @@ def _closed_loop_builtin_diffik_joint_target(
                 and applied_lateral <= float(half_along_np[env_id]) + float(cfg.tap_contact_lateral_margin_m)
                 and applied_vertical <= float(cfg.cube_size_z_m) * 0.5 + float(cfg.tap_contact_vertical_margin_m)
             )
-            applied_fk_err_mm = float(np.linalg.norm(applied_tcp_w - tcp_target_w.detach().cpu().numpy()[env_id]) * 1000.0)
+            applied_fk_err_mm = float(np.linalg.norm(applied_tcp_w - tcp_target_np[env_id]) * 1000.0)
             applied_fk_err_values.append(applied_fk_err_mm)
-            reach_rows.append(
-                {
-                    "env_id": env_id,
-                    "command_target_face_gap_m": command_face[env_id],
-                    "command_target_lateral_m": command_lateral[env_id],
-                    "command_target_vertical_offset_m": command_vertical[env_id],
-                    "command_target_inside_contact_band": command_inside[env_id],
-                    "applied_joint_target_fk_face_gap_m": float(applied_face_gap),
-                    "applied_joint_target_fk_lateral_m": applied_lateral,
-                    "applied_joint_target_fk_vertical_offset_m": applied_vertical,
-                    "applied_joint_target_fk_inside_contact_band": bool(applied_inside),
-                    "applied_joint_target_fk_err_mm": applied_fk_err_mm,
-                    "joint_target_delta_abs_max_rad": target_delta_env[env_id],
-                }
-            )
+            base_row = {
+                "env_id": env_id,
+                "command_target_face_gap_m": command_face[env_id],
+                "command_target_lateral_m": command_lateral[env_id],
+                "command_target_vertical_offset_m": command_vertical[env_id],
+                "command_target_inside_contact_band": command_inside[env_id],
+                "applied_joint_target_fk_face_gap_m": float(applied_face_gap),
+                "applied_joint_target_fk_lateral_m": applied_lateral,
+                "applied_joint_target_fk_vertical_offset_m": applied_vertical,
+                "applied_joint_target_fk_inside_contact_band": bool(applied_inside),
+                "applied_joint_target_fk_err_mm": applied_fk_err_mm,
+                "joint_target_delta_abs_max_rad": target_delta_env[env_id],
+            }
+            if args.reach_trace_json is not None:
+                reach_rows.append(dict(base_row))
+            if args.reach_trace_detail_json is not None:
+                previous_target = _optional_env_tensor_list(previous_target_rows, env_id)
+                current_minus_previous = None
+                previous_minus_actual = None
+                if previous_target_rows is not None:
+                    current_minus_previous = _tensor_list(arm_joint_target_rows[env_id] - previous_target_rows[env_id])
+                    previous_minus_actual = _tensor_list(previous_target_rows[env_id] - joint_pos_rows[env_id])
+                clip_mask = torch_mod.abs(raw_delta_rows[env_id]) >= float(step_clip_value) - 1.0e-9
+                detail_row = dict(base_row)
+                detail_row.update(
+                    {
+                        "step": int(step),
+                        "tap_contact_proxy_mode": str(getattr(cfg, "tap_contact_proxy_mode", "tcp_point")),
+                        "tool_contact_proxy_mode": str(state.get("tool_contact_proxy_mode", "hand_tcp")),
+                        "tool_proxy_label": str(state.get("tool_proxy_label", "hand_tcp")),
+                        "tool_proxy_local_m": [float(v) for v in tool_proxy_local_np[env_id].tolist()],
+                        "target_base_mode": target_base_mode,
+                        "target_path_mode": str(args.target_path_mode),
+                        "controller_mode": str(args.controller_mode),
+                        "closed_loop_alpha": float(alpha),
+                        "arm_joint_names": list(state.get("arm_joint_names", [])),
+                        "arm_joint_ids": [int(idx) for idx in arm_joint_ids],
+                        "joint_pos_before_arm_rad": _tensor_list(joint_pos_rows[env_id]),
+                        "joint_pos_des_arm_rad": _tensor_list(joint_pos_des_rows[env_id]),
+                        "target_base_arm_rad": _tensor_list(target_base_rows[env_id]),
+                        "target_base_minus_actual_arm_rad": _tensor_list(
+                            target_base_rows[env_id] - joint_pos_rows[env_id]
+                        ),
+                        "raw_delta_arm_rad": _tensor_list(raw_delta_rows[env_id]),
+                        "clipped_delta_arm_rad": _tensor_list(clipped_delta_rows[env_id]),
+                        "clip_mask_arm": _bool_tensor_list(clip_mask),
+                        "target_unclamped_arm_rad": _tensor_list(target_unclamped_rows[env_id]),
+                        "target_lead_limited_arm": _bool_tensor_list(
+                            torch_mod.abs(target_unclamped_rows[env_id] - joint_pos_rows[env_id])
+                            > float(cfg.joint_target_lead_limit_rad) + 1.0e-9
+                        ),
+                        "arm_joint_target_rad": _tensor_list(arm_joint_target_rows[env_id]),
+                        "target_full_arm_rad": _tensor_list(target_full[env_id, arm_joint_ids]),
+                        "target_delta_from_actual_arm_rad": _tensor_list(
+                            target_full[env_id, arm_joint_ids] - joint_pos_rows[env_id]
+                        ),
+                        "previous_arm_joint_target_rad": previous_target,
+                        "current_target_minus_previous_target_arm_rad": current_minus_previous,
+                        "previous_target_minus_actual_arm_rad": previous_minus_actual,
+                        "joint_lower_arm_rad": _tensor_list(lower_arm_rows),
+                        "joint_upper_arm_rad": _tensor_list(upper_arm_rows),
+                        "target_tcp_err_before_m": target_tcp_err_rows[env_id],
+                        "actual_fk_vs_sim_tcp_err_before_mm": actual_fk_sim_rows[env_id],
+                    }
+                )
+                reach_detail_rows.append(detail_row)
         applied_target_fk_err_mm_mean = float(np.mean(applied_fk_err_values)) if applied_fk_err_values else float("nan")
 
+    state["previous_arm_joint_target"] = arm_joint_target.detach().clone()
     metrics = {
         "closed_loop_ik_ok_rate": float(numeric_ok.float().mean().item()),
         "builtin_diffik_numeric_ok_rate": float(numeric_ok.float().mean().item()),
@@ -458,6 +618,15 @@ def _closed_loop_builtin_diffik_joint_target(
         "builtin_diffik_step_clip_rate": step_clip_rate,
         "builtin_diffik_raw_delta_abs_max_rad": float(torch_mod.abs(raw_delta_arm).max().item()),
         "builtin_diffik_clipped_delta_abs_max_rad": float(torch_mod.abs(clipped_delta_arm).max().item()),
+        "builtin_diffik_target_base_previous_target": 1.0 if target_base_mode == "previous_joint_target" else 0.0,
+        "builtin_diffik_target_base_fallback_actual_rate": target_base_fallback_actual_rate,
+        "builtin_diffik_target_base_minus_actual_abs_max_rad": float(
+            torch_mod.abs(target_base_arm - joint_pos_arm).max().item()
+        ),
+        "builtin_diffik_target_unclamped_delta_from_actual_abs_max_rad": float(
+            torch_mod.abs(arm_joint_target_unclamped - joint_pos_arm).max().item()
+        ),
+        "builtin_diffik_target_lead_limit_rate": target_lead_limit_rate,
         "closed_loop_alpha": float(alpha),
         "closed_loop_target_face_gap_m_mean": float(target_face_gap.mean().item()),
         "closed_loop_target_face_gap_m_min": float(target_face_gap.min().item()),
@@ -473,6 +642,8 @@ def _closed_loop_builtin_diffik_joint_target(
     }
     if args.reach_trace_json is not None:
         metrics["_reach_trace_rows"] = reach_rows
+    if args.reach_trace_detail_json is not None:
+        metrics["_reach_trace_detail_rows"] = reach_detail_rows
     return target_full, metrics
 
 
@@ -510,11 +681,19 @@ def _write_result(out_json: Path, out_summary: Path, result: dict[str, Any]) -> 
             f"controller_mode={result.get('controller_mode', 'NA')} "
             f"direct_ik_joint_target_apply={result.get('direct_ik_joint_target_apply', 'NA')} "
             f"target_path_mode={result.get('target_path_mode', 'NA')} "
+            f"tap_contact_proxy_mode={result.get('tap_contact_proxy_mode', 'NA')} "
+            f"tool_contact_proxy_mode={result.get('tool_contact_proxy_mode', 'NA')} "
+            f"tool_proxy_label={result.get('tool_proxy_label', 'NA')} "
+            f"builtin_diffik_target_base_mode={result.get('builtin_diffik_target_base_mode', 'NA')} "
             f"precontact_clearance_m={result.get('precontact_clearance_m', 'NA')} "
             f"tcp_top_margin_m={result.get('tcp_top_margin_m', 'NA')} "
             f"goal_push_m={result.get('goal_push_m', 'NA')} "
             f"max_joint_delta_per_step_rad={result.get('max_joint_delta_per_step_rad', 'NA')} "
-            f"joint_target_lead_limit_rad={result.get('joint_target_lead_limit_rad', 'NA')}"
+            f"joint_target_lead_limit_rad={result.get('joint_target_lead_limit_rad', 'NA')} "
+            f"arm_stiffness={result.get('arm_stiffness', 'NA')} "
+            f"arm_damping={result.get('arm_damping', 'NA')} "
+            f"arm_effort_limit={result.get('arm_effort_limit', 'NA')} "
+            f"arm_velocity_limit={result.get('arm_velocity_limit', 'NA')}"
         ),
         (
             "line4 reset_and_ik "
@@ -586,6 +765,9 @@ def _write_result(out_json: Path, out_summary: Path, result: dict[str, Any]) -> 
             f"target_fk_err_mm_final={result.get('controller_trace_stats', {}).get('closed_loop_target_fk_err_mm_mean', {}).get('final', 'NA')} "
             f"actual_fk_vs_sim_tcp_err_mm_final={result.get('controller_trace_stats', {}).get('closed_loop_actual_fk_vs_sim_tcp_err_mm_mean', {}).get('final', 'NA')} "
             f"target_delta_abs_max_final={result.get('controller_trace_stats', {}).get('closed_loop_target_delta_from_actual_abs_max_rad_max', {}).get('final', 'NA')} "
+            f"target_base_minus_actual_abs_max_final={result.get('controller_trace_stats', {}).get('builtin_diffik_target_base_minus_actual_abs_max_rad', {}).get('final', 'NA')} "
+            f"target_unclamped_delta_from_actual_abs_max_final={result.get('controller_trace_stats', {}).get('builtin_diffik_target_unclamped_delta_from_actual_abs_max_rad', {}).get('final', 'NA')} "
+            f"target_lead_limit_rate_final={result.get('controller_trace_stats', {}).get('builtin_diffik_target_lead_limit_rate', {}).get('final', 'NA')} "
             f"direct_joint_follow_abs_max_final={result.get('controller_trace_stats', {}).get('direct_joint_follow_abs_max_rad', {}).get('final', 'NA')} "
             f"direct_actual_joint_step_abs_max_final={result.get('controller_trace_stats', {}).get('direct_actual_joint_step_abs_max_rad', {}).get('final', 'NA')}"
         ),
@@ -611,6 +793,11 @@ def _write_reach_trace(out_path: Path, result: dict[str, Any], rows: list[dict[s
         "episode_length_s",
         "env_max_episode_length",
         "controller_mode",
+        "target_path_mode",
+        "tap_contact_proxy_mode",
+        "tool_contact_proxy_mode",
+        "tool_proxy_label",
+        "tool_proxy_local_m",
         "closed_loop_push_steps",
         "builtin_diffik_step_clip_rad",
         "direct_ik_joint_target_apply",
@@ -666,6 +853,131 @@ def _write_reach_trace(out_path: Path, result: dict[str, Any], rows: list[dict[s
     out_path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
+def _write_reach_trace_detail(out_path: Path, result: dict[str, Any], rows: list[dict[str, Any]]) -> None:
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    metadata_keys = (
+        "artifact_type",
+        "branch",
+        "env_id",
+        "num_envs",
+        "max_steps",
+        "steps_executed",
+        "seed",
+        "device",
+        "cube_size_m",
+        "cube_mass_kg",
+        "episode_length_s",
+        "env_max_episode_length",
+        "fixed_cube_x_m",
+        "fixed_cube_y_m",
+        "fixed_push_dir_x",
+        "fixed_push_dir_y",
+        "controller_mode",
+        "target_path_mode",
+        "tap_contact_proxy_mode",
+        "tool_contact_proxy_mode",
+        "tool_proxy_label",
+        "tool_proxy_local_m",
+        "precontact_clearance_m",
+        "tcp_top_margin_m",
+        "goal_push_m",
+        "closed_loop_push_steps",
+        "builtin_diffik_lambda",
+        "builtin_diffik_step_clip_rad",
+        "direct_ik_joint_target_apply",
+        "isaac_builtin_diffik_controller_apply",
+        "builtin_diffik_step_clipped_target_apply",
+        "rl_contact_gated_positive_control",
+        "professor_physical_reaction_evidence",
+        "reset_metrics",
+    )
+    artifact = {
+        "artifact_type": "cube10cm_tap_rl_reach_trace_detail_v1",
+        "local_gpu_runtime_telemetry": True,
+        "dataset_generation": False,
+        "training": False,
+        "robot_control": False,
+        "ssh": False,
+        "b200": False,
+        "track_a": False,
+        "action_teacher_dataset": False,
+        "contains_action_fields": False,
+        "default_off_arg": "--reach_trace_detail_json",
+        "metadata": {key: result.get(key) for key in metadata_keys if key in result},
+        "schema": [
+            "step",
+            "env_id",
+            "tap_contact_proxy_mode",
+            "tool_contact_proxy_mode",
+            "tool_proxy_label",
+            "tool_proxy_local_m",
+            "target_base_mode",
+            "target_path_mode",
+            "controller_mode",
+            "closed_loop_alpha",
+            "episode_length_s",
+            "cube_pos_w_xyz",
+            "push_dir_xy",
+            "arm_joint_names",
+            "arm_joint_ids",
+            "command_target_face_gap_m",
+            "command_target_lateral_m",
+            "command_target_vertical_offset_m",
+            "command_target_inside_contact_band",
+            "applied_joint_target_fk_face_gap_m",
+            "applied_joint_target_fk_lateral_m",
+            "applied_joint_target_fk_vertical_offset_m",
+            "applied_joint_target_fk_inside_contact_band",
+            "applied_joint_target_fk_err_mm",
+            "actual_tcp_face_gap_m",
+            "actual_tcp_lateral_m",
+            "actual_tcp_vertical_offset_m",
+            "actual_contact_proxy",
+            "target_tcp_err_before_m",
+            "actual_fk_vs_sim_tcp_err_before_mm",
+            "joint_pos_before_arm_rad",
+            "joint_pos_des_arm_rad",
+            "target_base_arm_rad",
+            "target_base_minus_actual_arm_rad",
+            "raw_delta_arm_rad",
+            "clipped_delta_arm_rad",
+            "clip_mask_arm",
+            "target_unclamped_arm_rad",
+            "target_lead_limited_arm",
+            "arm_joint_target_rad",
+            "target_full_arm_rad",
+            "target_delta_from_actual_arm_rad",
+            "previous_arm_joint_target_rad",
+            "current_target_minus_previous_target_arm_rad",
+            "previous_target_minus_actual_arm_rad",
+            "joint_lower_arm_rad",
+            "joint_upper_arm_rad",
+            "joint_pos_target_after_arm_rad",
+            "joint_pos_after_arm_rad",
+            "joint_vel_after_arm_rad",
+            "joint_acc_after_arm_rad",
+            "computed_torque_after_arm_nm",
+            "applied_torque_after_arm_nm",
+            "joint_effort_limit_arm_nm",
+            "joint_velocity_limit_arm_radps",
+            "direct_joint_follow_arm_rad",
+            "actual_joint_step_arm_rad",
+            "direct_joint_follow_abs_max_rad",
+            "actual_joint_step_abs_max_rad",
+            "cube_disp_along_m",
+            "cube_speed_mps",
+            "professor_physical_reaction_now",
+            "professor_physical_reaction_seen",
+            "tap_success_now",
+            "tap_success_seen",
+            "terminated",
+            "truncated",
+        ],
+        "rows": rows,
+    }
+    out_path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--num_envs", type=int, default=2)
@@ -702,14 +1014,34 @@ def main() -> int:
     parser.add_argument("--closed_loop_ik_tol_mm", type=float, default=1.5)
     parser.add_argument("--builtin_diffik_lambda", type=float, default=0.010)
     parser.add_argument("--builtin_diffik_step_clip_rad", type=float, default=0.010)
+    parser.add_argument(
+        "--builtin_diffik_target_base_mode",
+        choices=("actual_joint_pos", "previous_joint_target"),
+        default="actual_joint_pos",
+    )
+    parser.add_argument(
+        "--tool_contact_proxy_mode",
+        choices=("hand_tcp", "link5_collision_corner_011"),
+        default="hand_tcp",
+    )
+    parser.add_argument(
+        "--tap_contact_proxy_mode",
+        choices=("tcp_point", "link5_collision_aabb"),
+        default="tcp_point",
+    )
     parser.add_argument("--action_smoothing_alpha", type=float, default=-1.0)
     parser.add_argument("--contact_joint_delta_scale", type=float, default=-1.0)
     parser.add_argument("--max_joint_delta_per_step_rad", type=float, default=-1.0)
     parser.add_argument("--joint_target_lead_limit_rad", type=float, default=-1.0)
+    parser.add_argument("--arm_stiffness", type=float, default=-1.0)
+    parser.add_argument("--arm_damping", type=float, default=-1.0)
+    parser.add_argument("--arm_effort_limit", type=float, default=-1.0)
+    parser.add_argument("--arm_velocity_limit", type=float, default=-1.0)
     parser.add_argument("--robot_usd_path", type=Path, default=DEFAULT_LOCAL_USD)
     parser.add_argument("--out_json", type=Path, default=DEFAULT_OUT_JSON)
     parser.add_argument("--out_summary", type=Path, default=DEFAULT_OUT_SUMMARY)
     parser.add_argument("--reach_trace_json", type=Path, default=None)
+    parser.add_argument("--reach_trace_detail_json", type=Path, default=None)
     args = parser.parse_args()
 
     os.environ.setdefault("PYTHONUNBUFFERED", "1")
@@ -769,6 +1101,7 @@ def main() -> int:
         cfg.cube_y_max = float(args.fixed_cube_y_m)
         cfg.fixed_push_dir_x = float(args.fixed_push_dir_x)
         cfg.fixed_push_dir_y = float(args.fixed_push_dir_y)
+        cfg.tap_contact_proxy_mode = str(args.tap_contact_proxy_mode)
         cfg.ik_endpoint_reset = True
         cfg.ik_reset_jitter_rad = 0.0
         cfg.ik_precontact_clearance_m = float(args.precontact_clearance_m)
@@ -784,6 +1117,15 @@ def main() -> int:
             cfg.max_joint_delta_per_step_rad = float(args.max_joint_delta_per_step_rad)
         if float(args.joint_target_lead_limit_rad) >= 0.0:
             cfg.joint_target_lead_limit_rad = float(args.joint_target_lead_limit_rad)
+        arm_actuator = cfg.robot.actuators["arm"]
+        if float(args.arm_stiffness) >= 0.0:
+            arm_actuator.stiffness = float(args.arm_stiffness)
+        if float(args.arm_damping) >= 0.0:
+            arm_actuator.damping = float(args.arm_damping)
+        if float(args.arm_effort_limit) >= 0.0:
+            arm_actuator.effort_limit_sim = float(args.arm_effort_limit)
+        if float(args.arm_velocity_limit) >= 0.0:
+            arm_actuator.velocity_limit_sim = float(args.arm_velocity_limit)
         if args.num_envs < 8:
             cfg.scene.clone_in_fabric = False
             cfg.scene.replicate_physics = False
@@ -809,6 +1151,10 @@ def main() -> int:
         )
         env = gym.make(ENV_ID, cfg=cfg)
         inner = env.unwrapped
+        tool_proxy_mode = str(args.tool_contact_proxy_mode)
+        tool_proxy_local_m = _tool_proxy_local_m(tool_proxy_mode)
+        tool_proxy_label = _tool_proxy_label(tool_proxy_mode)
+        inner._tcp_local = torch.tensor(tool_proxy_local_m, device=inner.device, dtype=torch.float32)
         obs, _info = env.reset()
         obs_t = obs["policy"] if isinstance(obs, dict) else obs
         expected_shape = (args.num_envs, cfg.observation_space)
@@ -835,6 +1181,7 @@ def main() -> int:
         controller_trace_stats: dict[str, dict[str, float]] = {}
         log_trace_stats: dict[str, dict[str, float]] = {}
         reach_trace_rows: list[dict[str, Any]] = []
+        reach_trace_detail_rows: list[dict[str, Any]] = []
         zero_action = torch.zeros((args.num_envs, cfg.action_space), device=inner.device)
         builtin_diffik_mode = args.controller_mode in (
             "isaac_builtin_diffik_direct_apply",
@@ -848,6 +1195,7 @@ def main() -> int:
         for step in range(int(args.steps)):
             joint_target_for_step = None
             reach_trace_for_step = None
+            reach_trace_detail_for_step = None
             joint_pos_before_step = inner._robot.data.joint_pos.detach().clone()
             if args.controller_mode == "external_closed_loop":
                 action, controller_metrics = _closed_loop_ik_action(inner, cfg, args, step, torch)
@@ -886,6 +1234,8 @@ def main() -> int:
                 action = zero_action
             else:
                 action = zero_action
+            if args.reach_trace_detail_json is not None:
+                reach_trace_detail_for_step = controller_metrics.pop("_reach_trace_detail_rows", None)
             obs, reward, terminated, truncated, info = env.step(action)
             steps_executed = step + 1
             if joint_target_for_step is not None:
@@ -904,7 +1254,6 @@ def main() -> int:
             if args.reach_trace_json is not None and reach_trace_for_step is not None:
                 inner._compute_intermediate_values()
                 terms = inner._tap_terms()
-                actual_metrics = _face_metrics_torch(inner._tcp_pos_w, inner._sponge_pos_w, inner._push_dir_xy, cfg, torch)
                 follow_max = (
                     _tensor_list(follow_abs.max(dim=-1).values)
                     if joint_target_for_step is not None
@@ -917,10 +1266,10 @@ def main() -> int:
                 )
                 cube_pos_rows = inner._sponge_pos_w.detach().cpu().tolist()
                 push_rows = inner._push_dir_xy.detach().cpu().tolist()
-                actual_face = _tensor_list(actual_metrics["face_gap_m"])
-                actual_lateral = _tensor_list(actual_metrics["lateral_m"])
-                actual_vertical = _tensor_list(actual_metrics["vertical_offset_m"])
-                actual_inside = _bool_tensor_list(actual_metrics["inside_contact_band"])
+                actual_face = _tensor_list(terms["tap_contact_face_gap_m"])
+                actual_lateral = _tensor_list(terms["tap_contact_lateral_m"])
+                actual_vertical = _tensor_list(terms["tap_contact_vertical_offset_m"])
+                actual_inside = _bool_tensor_list(terms["tap_contact_proxy"])
                 cube_disp_along = _tensor_list(terms["disp_along"])
                 cube_speed = _tensor_list(terms["speed"])
                 professor_now = _bool_tensor_list(terms["professor_physical_reaction_now"])
@@ -955,6 +1304,91 @@ def main() -> int:
                         }
                     )
                     reach_trace_rows.append(row)
+            if args.reach_trace_detail_json is not None and reach_trace_detail_for_step is not None:
+                if builtin_diffik_state is None or joint_target_for_step is None:
+                    raise AssertionError("reach_trace_detail_json requires a built-in DiffIK direct joint-target mode")
+                inner._compute_intermediate_values()
+                terms = inner._tap_terms()
+                data = inner._robot.data
+                arm_joint_ids = builtin_diffik_state["arm_joint_ids"]
+                joint_pos_after_step = data.joint_pos.detach()
+                joint_pos_after_arm = joint_pos_after_step[:, arm_joint_ids]
+                joint_pos_before_arm = joint_pos_before_step[:, arm_joint_ids]
+                joint_target_arm = joint_target_for_step[:, arm_joint_ids]
+                joint_pos_target_arm = data.joint_pos_target[:, arm_joint_ids].detach()
+                joint_vel_arm = data.joint_vel[:, arm_joint_ids].detach()
+                joint_acc_arm = data.joint_acc[:, arm_joint_ids].detach()
+                computed_torque = getattr(data, "computed_torque", None)
+                computed_torque_arm = (
+                    computed_torque[:, arm_joint_ids].detach() if computed_torque is not None else None
+                )
+                applied_torque = getattr(data, "applied_torque", None)
+                applied_torque_arm = applied_torque[:, arm_joint_ids].detach() if applied_torque is not None else None
+                effort_limits = getattr(data, "joint_effort_limits", None)
+                effort_limit_arm = effort_limits[:, arm_joint_ids].detach() if effort_limits is not None else None
+                velocity_limits = getattr(data, "joint_vel_limits", None)
+                velocity_limit_arm = velocity_limits[:, arm_joint_ids].detach() if velocity_limits is not None else None
+                follow_arm = joint_target_arm - joint_pos_after_arm
+                actual_step_arm = joint_pos_after_arm - joint_pos_before_arm
+                cube_pos_rows = inner._sponge_pos_w.detach().cpu().tolist()
+                push_rows = inner._push_dir_xy.detach().cpu().tolist()
+                actual_face = _tensor_list(terms["tap_contact_face_gap_m"])
+                actual_lateral = _tensor_list(terms["tap_contact_lateral_m"])
+                actual_vertical = _tensor_list(terms["tap_contact_vertical_offset_m"])
+                actual_inside = _bool_tensor_list(terms["tap_contact_proxy"])
+                cube_disp_along = _tensor_list(terms["disp_along"])
+                cube_speed = _tensor_list(terms["speed"])
+                professor_now = _bool_tensor_list(terms["professor_physical_reaction_now"])
+                professor_seen = _bool_tensor_list(inner._professor_physical_reaction_seen)
+                tap_success_now = _bool_tensor_list(terms["tap_success_now"])
+                tap_success_seen = _bool_tensor_list(inner._tap_success_flag)
+                terminated_rows = _bool_tensor_list(terminated)
+                truncated_rows = _bool_tensor_list(truncated)
+                for base_row in reach_trace_detail_for_step:
+                    env_id = int(base_row["env_id"])
+                    row = dict(base_row)
+                    row.update(
+                        {
+                            "episode_length_s": float(cfg.episode_length_s),
+                            "cube_pos_w_xyz": [float(v) for v in cube_pos_rows[env_id]],
+                            "push_dir_xy": [float(v) for v in push_rows[env_id]],
+                            "actual_tcp_face_gap_m": actual_face[env_id],
+                            "actual_tcp_lateral_m": actual_lateral[env_id],
+                            "actual_tcp_vertical_offset_m": actual_vertical[env_id],
+                            "actual_contact_proxy": actual_inside[env_id],
+                            "joint_pos_target_after_arm_rad": _tensor_list(joint_pos_target_arm[env_id]),
+                            "joint_pos_after_arm_rad": _tensor_list(joint_pos_after_arm[env_id]),
+                            "joint_vel_after_arm_rad": _tensor_list(joint_vel_arm[env_id]),
+                            "joint_acc_after_arm_rad": _tensor_list(joint_acc_arm[env_id]),
+                            "computed_torque_after_arm_nm": _optional_env_tensor_list(
+                                computed_torque_arm, env_id
+                            ),
+                            "applied_torque_after_arm_nm": _optional_env_tensor_list(applied_torque_arm, env_id),
+                            "joint_effort_limit_arm_nm": _optional_env_tensor_list(effort_limit_arm, env_id),
+                            "joint_velocity_limit_arm_radps": _optional_env_tensor_list(
+                                velocity_limit_arm, env_id
+                            ),
+                            "direct_joint_follow_arm_rad": _tensor_list(follow_arm[env_id]),
+                            "actual_joint_step_arm_rad": _tensor_list(actual_step_arm[env_id]),
+                            "direct_joint_follow_abs_max_rad": float(torch.abs(follow_arm[env_id]).max().item()),
+                            "actual_joint_step_abs_max_rad": float(torch.abs(actual_step_arm[env_id]).max().item()),
+                            "cube_disp_along_m": cube_disp_along[env_id],
+                            "cube_speed_mps": cube_speed[env_id],
+                            "professor_physical_reaction_now": professor_now[env_id],
+                            "professor_physical_reaction_seen": professor_seen[env_id],
+                            "tap_success_now": tap_success_now[env_id],
+                            "tap_success_seen": tap_success_seen[env_id],
+                            "terminated": terminated_rows[env_id],
+                            "truncated": truncated_rows[env_id],
+                        }
+                    )
+                    reach_trace_detail_rows.append(row)
+            if builtin_diffik_state is not None and builtin_diffik_state.get("previous_arm_joint_target") is not None:
+                done_mask = terminated | truncated
+                if bool(done_mask.any().item()):
+                    arm_joint_ids = builtin_diffik_state["arm_joint_ids"]
+                    reset_joint_pos_arm = inner._robot.data.joint_pos.detach()[done_mask][:, arm_joint_ids]
+                    builtin_diffik_state["previous_arm_joint_target"][done_mask] = reset_joint_pos_arm
             if not torch.isfinite(reward).all():
                 raise AssertionError(f"non-finite reward at step {step}")
             rewards_all.append(float(reward.mean().item()))
@@ -1120,6 +1554,11 @@ def main() -> int:
             "fixed_push_dir_y": float(args.fixed_push_dir_y),
             "controller_mode": str(args.controller_mode),
             "target_path_mode": str(args.target_path_mode),
+            "tap_contact_proxy_mode": str(cfg.tap_contact_proxy_mode),
+            "tool_contact_proxy_mode": tool_proxy_mode,
+            "tool_proxy_label": tool_proxy_label,
+            "tool_proxy_local_m": [float(v) for v in tool_proxy_local_m],
+            "builtin_diffik_target_base_mode": str(args.builtin_diffik_target_base_mode),
             "precontact_clearance_m": float(args.precontact_clearance_m),
             "tcp_top_margin_m": float(args.tcp_top_margin_m),
             "goal_push_m": float(args.goal_push_m),
@@ -1135,9 +1574,18 @@ def main() -> int:
             "contact_joint_delta_scale": float(cfg.contact_joint_delta_scale),
             "max_joint_delta_per_step_rad": float(cfg.max_joint_delta_per_step_rad),
             "joint_target_lead_limit_rad": float(cfg.joint_target_lead_limit_rad),
+            "arm_stiffness": float(arm_actuator.stiffness),
+            "arm_damping": float(arm_actuator.damping),
+            "arm_effort_limit": float(arm_actuator.effort_limit_sim),
+            "arm_velocity_limit": float(arm_actuator.velocity_limit_sim),
             "reach_trace_enabled": args.reach_trace_json is not None,
             "reach_trace_json": str(args.reach_trace_json) if args.reach_trace_json is not None else None,
             "reach_trace_row_count": len(reach_trace_rows),
+            "reach_trace_detail_enabled": args.reach_trace_detail_json is not None,
+            "reach_trace_detail_json": str(args.reach_trace_detail_json)
+            if args.reach_trace_detail_json is not None
+            else None,
+            "reach_trace_detail_row_count": len(reach_trace_detail_rows),
             "controller_goal_ok_rate": controller_goal_ok_rate,
             "obs_shape": list(obs_t.shape),
             "reward_mean": float(np.mean(rewards_all)) if rewards_all else 0.0,
@@ -1164,6 +1612,8 @@ def main() -> int:
         }
         if args.reach_trace_json is not None:
             _write_reach_trace(args.reach_trace_json, result, reach_trace_rows)
+        if args.reach_trace_detail_json is not None:
+            _write_reach_trace_detail(args.reach_trace_detail_json, result, reach_trace_detail_rows)
         _write_result(args.out_json, args.out_summary, result)
         return 0 if positive_control_pass else 2
     except Exception as exc:
@@ -1198,6 +1648,11 @@ def main() -> int:
             "fixed_push_dir_y": float(args.fixed_push_dir_y),
             "controller_mode": str(args.controller_mode),
             "target_path_mode": str(args.target_path_mode),
+            "tap_contact_proxy_mode": str(args.tap_contact_proxy_mode),
+            "tool_contact_proxy_mode": str(args.tool_contact_proxy_mode),
+            "tool_proxy_label": _tool_proxy_label(str(args.tool_contact_proxy_mode)),
+            "tool_proxy_local_m": [float(v) for v in _tool_proxy_local_m(str(args.tool_contact_proxy_mode))],
+            "builtin_diffik_target_base_mode": str(args.builtin_diffik_target_base_mode),
             "precontact_clearance_m": float(args.precontact_clearance_m),
             "tcp_top_margin_m": float(args.tcp_top_margin_m),
             "goal_push_m": float(args.goal_push_m),
@@ -1211,7 +1666,19 @@ def main() -> int:
             "reach_trace_enabled": args.reach_trace_json is not None,
             "reach_trace_json": str(args.reach_trace_json) if args.reach_trace_json is not None else None,
             "reach_trace_row_count": 0,
+            "reach_trace_detail_enabled": args.reach_trace_detail_json is not None,
+            "reach_trace_detail_json": str(args.reach_trace_detail_json)
+            if args.reach_trace_detail_json is not None
+            else None,
+            "reach_trace_detail_row_count": 0,
             "max_joint_delta_per_step_rad": "UNKNOWN",
+            "joint_target_lead_limit_rad": "UNKNOWN",
+            "arm_stiffness": float(args.arm_stiffness) if float(args.arm_stiffness) >= 0.0 else "UNKNOWN",
+            "arm_damping": float(args.arm_damping) if float(args.arm_damping) >= 0.0 else "UNKNOWN",
+            "arm_effort_limit": float(args.arm_effort_limit) if float(args.arm_effort_limit) >= 0.0 else "UNKNOWN",
+            "arm_velocity_limit": float(args.arm_velocity_limit)
+            if float(args.arm_velocity_limit) >= 0.0
+            else "UNKNOWN",
             "required_log_keys_present": False,
             "reset_metrics": {},
             "controller_metrics": {},

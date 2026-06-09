@@ -17,7 +17,7 @@ import torch
 import isaaclab.sim as sim_utils
 from isaaclab.assets import Articulation, RigidObject, RigidObjectCfg
 from isaaclab.utils import configclass
-from isaaclab.utils.math import sample_uniform
+from isaaclab.utils.math import quat_rotate, sample_uniform
 
 from sim_scripts.roarm_kinematics import clip_joints, fk_tcp, ik_dls
 from roarm_rl.roarm_stack_env import (
@@ -37,6 +37,8 @@ TAP_TABLE_SIZE_X_M = 1.000
 TAP_TABLE_SIZE_Y_M = 1.000
 TAP_TABLE_THICKNESS_M = 0.020
 TAP_TABLE_CENTER_Z = TABLE_Z - TAP_TABLE_THICKNESS_M / 2.0
+LINK5_COLLISION_BBOX_MIN_M = (-0.03099808120727539, -0.01774634552001953, -0.0007495112419128418)
+LINK5_COLLISION_BBOX_MAX_M = (0.015497934341430665, 0.01777365303039551, 0.11988562011718751)
 
 AUDIT_SPEED_P95_MPS = 1.302103193
 AUDIT_SPEED_P99_MPS = 1.733444051
@@ -253,6 +255,7 @@ class RoArmCubeTap10cmEnvCfg(RoArmCubePushEnvCfg):
 
     tap_objective_name: str = "tap_reaction_contact_not_final_relocation"
     tap_final_relocation_required: bool = False
+    tap_contact_proxy_mode: str = "tcp_point"
     tap_contact_face_band_m: float = 0.010
     tap_contact_lateral_margin_m: float = 0.015
     tap_contact_vertical_margin_m: float = 0.020
@@ -1086,6 +1089,79 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
         self._tap_max_speed[env_ids] = 0.0
         self._tap_max_tip_angle_deg[env_ids] = 0.0
 
+    def _link5_collision_aabb_contact_terms(
+        self,
+        half_xy: torch.Tensor,
+        half_z: float,
+        half_along: torch.Tensor,
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
+        corners = torch.tensor(
+            [
+                (x, y, z)
+                for x in (LINK5_COLLISION_BBOX_MIN_M[0], LINK5_COLLISION_BBOX_MAX_M[0])
+                for y in (LINK5_COLLISION_BBOX_MIN_M[1], LINK5_COLLISION_BBOX_MAX_M[1])
+                for z in (LINK5_COLLISION_BBOX_MIN_M[2], LINK5_COLLISION_BBOX_MAX_M[2])
+            ],
+            device=self.device,
+            dtype=torch.float32,
+        )
+        n = int(self.num_envs)
+        link5_pos_w = self._robot.data.body_pos_w[:, self.link5_idx]
+        link5_quat_w = self._robot.data.body_quat_w[:, self.link5_idx]
+        local = corners.unsqueeze(0).expand(n, -1, -1)
+        quat = link5_quat_w.unsqueeze(1).expand(n, corners.shape[0], -1)
+        offset_w = quat_rotate(quat.reshape(-1, 4), local.reshape(-1, 3)).reshape(n, corners.shape[0], 3)
+        corners_w = link5_pos_w.unsqueeze(1) + offset_w
+
+        push_dir = self._push_dir_xy
+        lateral_dir = torch.stack((-push_dir[:, 1], push_dir[:, 0]), dim=-1)
+        half_lateral = torch.sum(torch.abs(lateral_dir) * half_xy.unsqueeze(0), dim=-1)
+        rel_xy = corners_w[:, :, 0:2] - self._sponge_pos_w[:, None, 0:2]
+        along = torch.sum(rel_xy * push_dir[:, None, :], dim=-1)
+        lateral_coord = torch.sum(rel_xy * lateral_dir[:, None, :], dim=-1)
+        z_coord = corners_w[:, :, 2]
+
+        along_min = along.min(dim=-1).values
+        along_max = along.max(dim=-1).values
+        lateral_min = lateral_coord.min(dim=-1).values
+        lateral_max = lateral_coord.max(dim=-1).values
+        z_min = z_coord.min(dim=-1).values
+        z_max = z_coord.max(dim=-1).values
+
+        band = float(self.cfg.tap_contact_face_band_m)
+        lateral_margin = float(self.cfg.tap_contact_lateral_margin_m)
+        vertical_margin = float(self.cfg.tap_contact_vertical_margin_m)
+        face_lower = -half_along - band
+        face_upper = -half_along + band
+        lateral_lower = -half_lateral - lateral_margin
+        lateral_upper = half_lateral + lateral_margin
+        z_lower = self._sponge_pos_w[:, 2] - half_z - vertical_margin
+        z_upper = self._sponge_pos_w[:, 2] + half_z + vertical_margin
+
+        face_overlap = (along_max >= face_lower) & (along_min <= face_upper)
+        lateral_overlap = (lateral_max >= lateral_lower) & (lateral_min <= lateral_upper)
+        vertical_overlap = (z_max >= z_lower) & (z_min <= z_upper)
+        contact_proxy = face_overlap & lateral_overlap & vertical_overlap
+
+        zeros = torch.zeros_like(along_max)
+        face_gap = torch.where(
+            along_max < face_lower,
+            along_max + half_along,
+            torch.where(along_min > face_upper, along_min + half_along, zeros),
+        )
+        lateral = torch.where(
+            lateral_max < lateral_lower,
+            lateral_lower - lateral_max,
+            torch.where(lateral_min > lateral_upper, lateral_min - lateral_upper, zeros),
+        )
+        vertical_offset = torch.where(
+            z_max < z_lower,
+            z_lower - z_max,
+            torch.where(z_min > z_upper, z_min - z_upper, zeros),
+        )
+        contact_proximity = 1.0 - torch.clamp(torch.abs(face_gap) / max(band, 1.0e-6), min=0.0, max=1.0)
+        return face_gap, lateral, vertical_offset, contact_proxy, contact_proximity
+
     def _tap_terms(self) -> dict[str, torch.Tensor]:
         self._ensure_tap_buffers()
         terms = self._push_terms()
@@ -1096,23 +1172,31 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
             dtype=torch.float32,
         )
         half_z = 0.5 * float(self.cfg.cube_size_z_m)
-        rel_xy = self._tcp_pos_w[:, 0:2] - self._sponge_pos_w[:, 0:2]
-        along = torch.sum(rel_xy * self._push_dir_xy, dim=-1)
-        lateral = torch.norm(rel_xy - along.unsqueeze(-1) * self._push_dir_xy, p=2, dim=-1)
         half_along = torch.sum(torch.abs(self._push_dir_xy) * half_xy.unsqueeze(0), dim=-1)
-        face_gap = along + half_along
-        vertical_offset = torch.abs(self._tcp_pos_w[:, 2] - self._sponge_pos_w[:, 2])
-        contact_proxy = (
-            (face_gap >= -float(self.cfg.tap_contact_face_band_m))
-            & (face_gap <= float(self.cfg.tap_contact_face_band_m))
-            & (lateral <= half_along + float(self.cfg.tap_contact_lateral_margin_m))
-            & (vertical_offset <= half_z + float(self.cfg.tap_contact_vertical_margin_m))
-        )
-        contact_proximity = 1.0 - torch.clamp(
-            torch.abs(face_gap) / max(float(self.cfg.tap_contact_face_band_m), 1.0e-6),
-            min=0.0,
-            max=1.0,
-        )
+        contact_proxy_mode = str(getattr(self.cfg, "tap_contact_proxy_mode", "tcp_point"))
+        if contact_proxy_mode == "tcp_point":
+            rel_xy = self._tcp_pos_w[:, 0:2] - self._sponge_pos_w[:, 0:2]
+            along = torch.sum(rel_xy * self._push_dir_xy, dim=-1)
+            lateral = torch.norm(rel_xy - along.unsqueeze(-1) * self._push_dir_xy, p=2, dim=-1)
+            face_gap = along + half_along
+            vertical_offset = torch.abs(self._tcp_pos_w[:, 2] - self._sponge_pos_w[:, 2])
+            contact_proxy = (
+                (face_gap >= -float(self.cfg.tap_contact_face_band_m))
+                & (face_gap <= float(self.cfg.tap_contact_face_band_m))
+                & (lateral <= half_along + float(self.cfg.tap_contact_lateral_margin_m))
+                & (vertical_offset <= half_z + float(self.cfg.tap_contact_vertical_margin_m))
+            )
+            contact_proximity = 1.0 - torch.clamp(
+                torch.abs(face_gap) / max(float(self.cfg.tap_contact_face_band_m), 1.0e-6),
+                min=0.0,
+                max=1.0,
+            )
+        elif contact_proxy_mode == "link5_collision_aabb":
+            face_gap, lateral, vertical_offset, contact_proxy, contact_proximity = (
+                self._link5_collision_aabb_contact_terms(half_xy, half_z, half_along)
+            )
+        else:
+            raise ValueError(f"unsupported tap_contact_proxy_mode={contact_proxy_mode!r}")
 
         z_delta = torch.abs(self._sponge_pos_w[:, 2] - self._cube_start_w[:, 2])
         disp_reaction = terms["disp_along"] >= float(self.cfg.tap_reaction_disp_m)

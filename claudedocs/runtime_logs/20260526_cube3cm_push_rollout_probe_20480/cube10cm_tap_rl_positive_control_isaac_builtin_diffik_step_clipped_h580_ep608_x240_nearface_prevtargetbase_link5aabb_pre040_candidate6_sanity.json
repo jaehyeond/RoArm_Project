@@ -1,0 +1,423 @@
+{
+  "action_smoothing_alpha": 0.25,
+  "arm_damping": 4.0,
+  "arm_effort_limit": 2.5,
+  "arm_stiffness": 80.0,
+  "arm_velocity_limit": 3.14,
+  "artifact_type": "cube10cm_tap_rl_positive_control_sanity_v1",
+  "b200": false,
+  "blocker": "NONE",
+  "branch": "professor_cube10cm_tap_reaction_quality_tier",
+  "builtin_diffik_lambda": 0.01,
+  "builtin_diffik_step_clip_rad": 0.01,
+  "builtin_diffik_step_clipped_target_apply": true,
+  "builtin_diffik_target_base_mode": "previous_joint_target",
+  "closed_loop_push_steps": 580,
+  "contact_joint_delta_scale": 0.35,
+  "controller_goal_ok_rate": 1.0,
+  "controller_metrics": {
+    "builtin_diffik_clipped_delta_abs_max_rad": 0.009999999776482582,
+    "builtin_diffik_live_jacobian": 1.0,
+    "builtin_diffik_numeric_ok_rate": 1.0,
+    "builtin_diffik_raw_delta_abs_max_rad": 0.016560077667236328,
+    "builtin_diffik_step_clip_rad": 0.01,
+    "builtin_diffik_step_clip_rate": 0.20000000298023224,
+    "builtin_diffik_step_clipped_target_apply": 1.0,
+    "builtin_diffik_target_base_fallback_actual_rate": 0.0,
+    "builtin_diffik_target_base_minus_actual_abs_max_rad": 0.06414914131164551,
+    "builtin_diffik_target_base_previous_target": 1.0,
+    "builtin_diffik_target_lead_limit_rate": 0.20000000298023224,
+    "builtin_diffik_target_tcp_err_before_m_mean": 0.005343214608728886,
+    "builtin_diffik_target_unclamped_delta_from_actual_abs_max_rad": 0.07414913177490234,
+    "builtin_diffik_tool_proxy_offset": 1.0,
+    "closed_loop_actual_fk_vs_sim_tcp_err_mm_mean": 0.0,
+    "closed_loop_alpha": 0.5758620689655173,
+    "closed_loop_ik_ok_rate": 1.0,
+    "closed_loop_target_delta_from_actual_abs_max_rad_max": 0.059999942779541016,
+    "closed_loop_target_delta_from_actual_abs_max_rad_mean": 0.059999942779541016,
+    "closed_loop_target_face_gap_m_max": -0.013510357588529587,
+    "closed_loop_target_face_gap_m_mean": -0.013510387390851974,
+    "closed_loop_target_face_gap_m_min": -0.013510417193174362,
+    "closed_loop_target_fk_err_mm_mean": 25.320492169918637,
+    "closed_loop_target_inside_contact_band_rate": 0.0,
+    "closed_loop_target_lateral_m_mean": 0.0,
+    "closed_loop_target_vertical_offset_m_mean": 3.725290298461914e-09,
+    "direct_actual_joint_step_abs_max_rad": 0.006734251976013184,
+    "direct_actual_joint_step_abs_mean_rad": 0.0022101544309407473,
+    "direct_joint_follow_abs_max_rad": 0.06445455551147461,
+    "direct_joint_follow_abs_mean_rad": 0.02400336228311062
+  },
+  "controller_mode": "isaac_builtin_diffik_step_clipped_direct_apply",
+  "controller_trace_stats": {
+    "builtin_diffik_clipped_delta_abs_max_rad": {
+      "final": 0.009999999776482582,
+      "max": 0.009999999776482582,
+      "min": 1.093745231628418e-05
+    },
+    "builtin_diffik_live_jacobian": {
+      "final": 1.0,
+      "max": 1.0,
+      "min": 1.0
+    },
+    "builtin_diffik_numeric_ok_rate": {
+      "final": 1.0,
+      "max": 1.0,
+      "min": 1.0
+    },
+    "builtin_diffik_raw_delta_abs_max_rad": {
+      "final": 0.016560077667236328,
+      "max": 0.016560077667236328,
+      "min": 1.093745231628418e-05
+    },
+    "builtin_diffik_step_clip_rad": {
+      "final": 0.01,
+      "max": 0.01,
+      "min": 0.01
+    },
+    "builtin_diffik_step_clip_rate": {
+      "final": 0.20000000298023224,
+      "max": 0.20000000298023224,
+      "min": 0.0
+    },
+    "builtin_diffik_step_clipped_target_apply": {
+      "final": 1.0,
+      "max": 1.0,
+      "min": 1.0
+    },
+    "builtin_diffik_target_base_fallback_actual_rate": {
+      "final": 0.0,
+      "max": 1.0,
+      "min": 0.0
+    },
+    "builtin_diffik_target_base_minus_actual_abs_max_rad": {
+      "final": 0.06414914131164551,
+      "max": 0.06414914131164551,
+      "min": 0.0
+    },
+    "builtin_diffik_target_base_previous_target": {
+      "final": 1.0,
+      "max": 1.0,
+      "min": 1.0
+    },
+    "builtin_diffik_target_lead_limit_rate": {
+      "final": 0.20000000298023224,
+      "max": 0.20000000298023224,
+      "min": 0.0
+    },
+    "builtin_diffik_target_tcp_err_before_m_mean": {
+      "final": 0.005343214608728886,
+      "max": 0.005343214608728886,
+      "min": 2.126847448380431e-06
+    },
+    "builtin_diffik_target_unclamped_delta_from_actual_abs_max_rad": {
+      "final": 0.07414913177490234,
+      "max": 0.07414913177490234,
+      "min": 0.0007550716400146484
+    },
+    "builtin_diffik_tool_proxy_offset": {
+      "final": 1.0,
+      "max": 1.0,
+      "min": 1.0
+    },
+    "closed_loop_actual_fk_vs_sim_tcp_err_mm_mean": {
+      "final": 0.0,
+      "max": 0.0,
+      "min": 0.0
+    },
+    "closed_loop_alpha": {
+      "final": 0.5758620689655173,
+      "max": 0.5758620689655173,
+      "min": 0.0017241379310344827
+    },
+    "closed_loop_ik_ok_rate": {
+      "final": 1.0,
+      "max": 1.0,
+      "min": 1.0
+    },
+    "closed_loop_target_delta_from_actual_abs_max_rad_max": {
+      "final": 0.059999942779541016,
+      "max": 0.059999942779541016,
+      "min": 0.0007550716400146484
+    },
+    "closed_loop_target_delta_from_actual_abs_max_rad_mean": {
+      "final": 0.059999942779541016,
+      "max": 0.059999942779541016,
+      "min": 0.0007548332214355469
+    },
+    "closed_loop_target_face_gap_m_max": {
+      "final": -0.013510357588529587,
+      "max": -0.013510357588529587,
+      "min": -0.03992069885134697
+    },
+    "closed_loop_target_face_gap_m_mean": {
+      "final": -0.013510387390851974,
+      "max": -0.013510387390851974,
+      "min": -0.03992072865366936
+    },
+    "closed_loop_target_face_gap_m_min": {
+      "final": -0.013510417193174362,
+      "max": -0.013510417193174362,
+      "min": -0.039920758455991745
+    },
+    "closed_loop_target_fk_err_mm_mean": {
+      "final": 25.320492169918637,
+      "max": 25.320492169918637,
+      "min": 0.1474697360414773
+    },
+    "closed_loop_target_inside_contact_band_rate": {
+      "final": 0.0,
+      "max": 0.0,
+      "min": 0.0
+    },
+    "closed_loop_target_lateral_m_mean": {
+      "final": 0.0,
+      "max": 0.0,
+      "min": 0.0
+    },
+    "closed_loop_target_vertical_offset_m_mean": {
+      "final": 3.725290298461914e-09,
+      "max": 3.725290298461914e-09,
+      "min": 3.725290298461914e-09
+    },
+    "direct_actual_joint_step_abs_max_rad": {
+      "final": 0.006734251976013184,
+      "max": 0.006734251976013184,
+      "min": 3.528594970703125e-05
+    },
+    "direct_actual_joint_step_abs_mean_rad": {
+      "final": 0.0022101544309407473,
+      "max": 0.0022101544309407473,
+      "min": 7.280433692358201e-06
+    },
+    "direct_joint_follow_abs_max_rad": {
+      "final": 0.06445455551147461,
+      "max": 0.06445455551147461,
+      "min": 0.0008227825164794922
+    },
+    "direct_joint_follow_abs_mean_rad": {
+      "final": 0.02400336228311062,
+      "max": 0.02400336228311062,
+      "min": 0.00018483369785826653
+    }
+  },
+  "cube_mass_kg": 0.72,
+  "cube_size_m": 0.1,
+  "dataset_generation": false,
+  "device": "cuda:0",
+  "direct_ik_joint_target_apply": true,
+  "elapsed_s": 11.467991352081299,
+  "env_id": "RoArm-CubeTap10cm-Direct-v0",
+  "env_max_episode_length": 608,
+  "episode_length_s": 6.08,
+  "final_1cm_required": false,
+  "fixed_cube_x_m": 0.24,
+  "fixed_cube_y_m": 0.0,
+  "fixed_push_dir_x": 1.0,
+  "fixed_push_dir_y": 0.0,
+  "goal_push_m": 0.006,
+  "gpu_runtime": "YES_LOCAL_TINY_ISAACLAB_POSITIVE_CONTROL",
+  "isaac_builtin_diffik_controller_apply": true,
+  "joint_target_lead_limit_rad": 0.06,
+  "last_log": {
+    "action_penalty": 0.0,
+    "cube_push_action_abs_max": 0.0,
+    "cube_push_action_abs_mean": 0.0,
+    "cube_push_contact_slowdown_mean": 1.0,
+    "cube_push_grasped_marker_rate": 0.0,
+    "cube_push_joint_delta_abs_max": 0.059999942779541016,
+    "cube_push_joint_delta_abs_mean": 0.024752289056777954,
+    "cube_push_joint_delta_cap_rate": 0.0,
+    "cube_push_target_lead_abs_max": 0.059999942779541016,
+    "cube_push_target_lead_abs_mean": 0.024752289056777954,
+    "cube_push_target_lead_limit_rate": 0.0,
+    "cube_push_tcp_cube_dist_m": 0.0696241557598114,
+    "cube_push_teacher_blend_mean": 0.0,
+    "cube_tap_contact_face_gap_m": 0.0,
+    "cube_tap_contact_lateral_m": 0.0,
+    "cube_tap_contact_proxy_rate": 1.0,
+    "cube_tap_contact_seen_rate": 1.0,
+    "cube_tap_contact_vertical_offset_m": 0.0,
+    "cube_tap_disp_along_m": 0.0009205937385559082,
+    "cube_tap_disp_xy_m": 0.0009205942624248564,
+    "cube_tap_max_disp_along_m": 0.0009205937385559082,
+    "cube_tap_max_disp_xy_m": 0.0009205942624248564,
+    "cube_tap_max_speed_mps": 0.07671958208084106,
+    "cube_tap_max_z_delta_m": 7.050298154354095e-05,
+    "cube_tap_object_mass_kg": 0.7200000286102295,
+    "cube_tap_object_size_m": 0.10000000149011612,
+    "cube_tap_objective_final_relocation_required": 0.0,
+    "cube_tap_overshoot_now_rate": 0.0,
+    "cube_tap_overshoot_seen_rate": 0.0,
+    "cube_tap_professor_physical_reaction_disp_threshold_m": 0.0005000000237487257,
+    "cube_tap_professor_physical_reaction_now_rate": 1.0,
+    "cube_tap_professor_physical_reaction_seen_rate": 1.0,
+    "cube_tap_professor_physical_reaction_signal_now_rate": 1.0,
+    "cube_tap_professor_physical_reaction_speed_threshold_mps": 0.004999999888241291,
+    "cube_tap_reaction_contact_context_rate": 1.0,
+    "cube_tap_reaction_now_rate": 0.5,
+    "cube_tap_reaction_seen_rate": 0.5,
+    "cube_tap_reaction_signal_now_rate": 0.5,
+    "cube_tap_speed_mps": 0.01920672319829464,
+    "cube_tap_success_rate": 0.5,
+    "cube_tap_tip_angle_deg": 0.07573524862527847
+  },
+  "log_trace_stats": {
+    "cube_push_action_abs_max": {
+      "final": 0.0,
+      "max": 0.0,
+      "min": 0.0
+    },
+    "cube_push_action_abs_mean": {
+      "final": 0.0,
+      "max": 0.0,
+      "min": 0.0
+    },
+    "cube_push_contact_slowdown_mean": {
+      "final": 1.0,
+      "max": 1.0,
+      "min": 1.0
+    },
+    "cube_push_joint_delta_abs_max": {
+      "final": 0.059999942779541016,
+      "max": 0.059999942779541016,
+      "min": 0.0007548332214355469
+    },
+    "cube_push_joint_delta_abs_mean": {
+      "final": 0.024752289056777954,
+      "max": 0.024752289056777954,
+      "min": 0.0001791591348592192
+    },
+    "cube_push_joint_delta_cap_rate": {
+      "final": 0.0,
+      "max": 0.0,
+      "min": 0.0
+    },
+    "cube_push_target_lead_abs_max": {
+      "final": 0.059999942779541016,
+      "max": 0.059999942779541016,
+      "min": 0.0007548332214355469
+    },
+    "cube_push_target_lead_abs_mean": {
+      "final": 0.024752289056777954,
+      "max": 0.024752289056777954,
+      "min": 0.0001791591348592192
+    },
+    "cube_push_target_lead_limit_rate": {
+      "final": 0.0,
+      "max": 0.0,
+      "min": 0.0
+    },
+    "cube_push_tcp_cube_dist_m": {
+      "final": 0.0696241557598114,
+      "max": 0.09114857763051987,
+      "min": 0.06825511902570724
+    },
+    "cube_push_teacher_blend_mean": {
+      "final": 0.0,
+      "max": 0.0,
+      "min": 0.0
+    },
+    "cube_tap_contact_band_shortfall_m": {
+      "final": 0.0,
+      "max": 0.011161627024412155,
+      "min": 0.0
+    },
+    "cube_tap_contact_face_gap_m": {
+      "final": 0.0,
+      "max": 0.0,
+      "min": -0.021161627024412155
+    },
+    "cube_tap_contact_lateral_m": {
+      "final": 0.0,
+      "max": 0.0,
+      "min": 0.0
+    },
+    "cube_tap_contact_seen_rate": {
+      "final": 1.0,
+      "max": 1.0,
+      "min": 0.0
+    },
+    "cube_tap_contact_vertical_offset_m": {
+      "final": 0.0,
+      "max": 0.0,
+      "min": 0.0
+    },
+    "cube_tap_professor_physical_reaction_now_rate": {
+      "final": 1.0,
+      "max": 1.0,
+      "min": 1.0
+    },
+    "cube_tap_professor_physical_reaction_seen_rate": {
+      "final": 1.0,
+      "max": 1.0,
+      "min": 1.0
+    },
+    "cube_tap_professor_physical_reaction_signal_now_rate": {
+      "final": 1.0,
+      "max": 1.0,
+      "min": 1.0
+    },
+    "cube_tap_reaction_contact_context_rate": {
+      "final": 1.0,
+      "max": 1.0,
+      "min": 0.0
+    },
+    "cube_tap_success_rate": {
+      "final": 0.5,
+      "max": 0.5,
+      "min": 0.0
+    }
+  },
+  "max_joint_delta_per_step_rad": 0.01,
+  "max_steps": 580,
+  "missing_required_log_keys": [],
+  "num_envs": 2,
+  "obs_shape": [
+    2,
+    28
+  ],
+  "positive_control": "PASS",
+  "precontact_clearance_m": 0.04,
+  "professor_physical_reaction_evidence": "PASS",
+  "professor_physical_reaction_evidence_only": false,
+  "reach_trace_detail_enabled": true,
+  "reach_trace_detail_json": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_x240_nearface_prevtargetbase_link5aabb_pre040_candidate6_detail_trace.json",
+  "reach_trace_detail_row_count": 668,
+  "reach_trace_enabled": true,
+  "reach_trace_json": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_x240_nearface_prevtargetbase_link5aabb_pre040_candidate6_trace.json",
+  "reach_trace_row_count": 668,
+  "required_log_keys_present": true,
+  "reset_metrics": {
+    "ik_endpoint_reset_rate": 1.0,
+    "ik_reset_err_mm": 1.169187068939209,
+    "initial_contact_proxy_rate": 0.0,
+    "initial_face_gap_m": -0.019569765776395798,
+    "initial_vertical_offset_m": 0.0,
+    "teacher_goal_ok_rate": 0.0
+  },
+  "reward_finite": true,
+  "reward_mean": 0.9590474285051495,
+  "rl_contact_gated_positive_control": "PASS",
+  "robot_control": false,
+  "robot_usd_path": "/home/cgxr/Documents/Robotics/RoArm_Project/b200_backup_20260522_final/tmp_p7/p7_branch_b_cube2cm_opposing_jaw_v7_collision_usd_d024/roarm_m3.usd",
+  "seed": 962,
+  "ssh": false,
+  "status": "PASS",
+  "steps_executed": 334,
+  "tap_contact_proxy_mode": "link5_collision_aabb",
+  "target_path_mode": "near_face_goal",
+  "tcp_top_margin_m": -0.05,
+  "teacher_horizon_frac": 1.0,
+  "terminated_count": 0,
+  "terrain_table_z_m": -0.012117,
+  "tool_contact_proxy_mode": "hand_tcp",
+  "tool_proxy_label": "hand_tcp",
+  "tool_proxy_local_m": [
+    0.0,
+    0.0,
+    0.115428
+  ],
+  "track_a": false,
+  "training": false,
+  "truncated_count": 0
+}

@@ -1,0 +1,31 @@
+/home/cgxr/miniconda3/lib/python3.13/site-packages/requests/__init__.py:113: RequestsDependencyWarning: urllib3 (2.6.1) or chardet (6.0.0.post1)/charset_normalizer (3.4.4) doesn't match a supported version!
+  warnings.warn(
+/home/cgxr/miniconda3/lib/python3.13/site-packages/requests/__init__.py:113: RequestsDependencyWarning: urllib3 (2.6.1) or chardet (6.0.0.post1)/charset_normalizer (3.4.4) doesn't match a supported version!
+  warnings.warn(
+/home/cgxr/miniconda3/lib/python3.13/site-packages/requests/__init__.py:113: RequestsDependencyWarning: urllib3 (2.6.1) or chardet (6.0.0.post1)/charset_normalizer (3.4.4) doesn't match a supported version!
+  warnings.warn(
+2026-06-09T04:12:53Z [63ms] [Error] [omni.datastore] Failed to acquire exclusive lock to data store (256>=256)
+2026-06-09T04:12:53Z [63ms] [Error] [omni.datastore] Failed to create local file data store at '/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/kit/cache/DerivedDataCache'
+2026-06-09T04:12:54Z [518ms] [Error] [omni.physx.tensors.plugin] CUDA error: no CUDA-capable device is detected: ../../../extensions/runtime/source/omni.physx.tensors/plugins/gpu/CudaCommon.h: 111
+2026-06-09T04:12:54Z [518ms] [Error] [omni.physx.tensors.plugin] Failed to create primary CUDA context
+Warp CUDA error 100: no CUDA-capable device is detected (in function init_cuda_driver, /builds/omniverse/warp/warp/native/cuda_util.cpp:266)
+Warp CUDA error 3: initialization error (in function cuda_device_get_count, /builds/omniverse/warp/warp/native/warp.cu:1769)
+2026-06-09T04:12:56Z [3,414ms] [Error] [omni.kit.app.plugin] failed to open file '/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/user.config.json' - unable to save the dictionary
+2026-06-09T04:12:57Z [3,441ms] [Error] [omni.gpucompute-cuda.plugin] CUDA error in createContext: no CUDA-capable device is detected: ../../../source/plugins/omni.gpucompute-cuda/GpuCompute-Cuda.cpp: 179 (device 910521488)
+2026-06-09T04:12:57Z [3,459ms] [Error] [carb.cudainterop.plugin] Could not initialize NVML: return code 9 (NVML_ERROR_DRIVER_NOT_LOADED: NVIDIA driver is not loaded.)
+2026-06-09T04:12:57Z [3,464ms] [Error] [carb.cudainterop.plugin] Could not initialize NVML: return code 9 (NVML_ERROR_DRIVER_NOT_LOADED: NVIDIA driver is not loaded.)
+2026-06-09T04:12:57Z [4,037ms] [Error] [gpu.foundation.plugin] No device could be created. Some known system issues:
+- The driver is not installed properly and requires a clean re-install.
+- Your GPUs do not support RayTracing: DXR or Vulkan ray_tracing, or hardware is excluded due to performance.
+- The driver cannot enumerate any GPU: driver, display, TCC mode or a docker issue. For Vulkan, test it with Vulkaninfo tool from Vulkan SDK, instead of nvidia-smi.
+- For Ubuntu, it requires server-xorg-core 1.20.7+ and a display to work without --no-window.
+- For Linux dockers, the setup is not complete. Install the latest driver, xServer and NVIDIA container runtime.
+
+2026-06-09T04:12:57Z [4,040ms] [Error] [gpu.foundation.plugin] Invalid getDeviceInfo parameters.
+2026-06-09T04:12:57Z [4,042ms] [Error] [carb.cudainterop.plugin] CUDA error 100: cudaErrorNoDevice - no CUDA-capable device is detected)
+2026-06-09T04:12:57Z [4,042ms] [Error] [carb.cudainterop.plugin] Failed to get the CUDA device.
+2026-06-09T04:12:57Z [4,042ms] [Error] [carb.cudainterop.plugin] CUDA error 100: cudaErrorNoDevice - no CUDA-capable device is detected)
+2026-06-09T04:12:57Z [4,042ms] [Error] [carb.cudainterop.plugin] Failed to set the CUDA device: 0
+2026-06-09T04:12:57Z [4,042ms] [Error] [omni.physx.plugin] No CUDA devices found
+2026-06-09T04:12:57Z [4,042ms] [Error] [omni.physx.plugin] Unable to create PxCudaContextManager!
+2026-06-09T04:12:57Z [4,054ms] [Error] [omni.kit.app.plugin] failed to open file '/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/user.config.json' - unable to save the dictionary

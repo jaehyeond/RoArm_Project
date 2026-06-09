@@ -1,0 +1,202 @@
+{
+  "artifact_type": "cube10cm_tap_rl_remaining_blocker_decomposition_design_v1",
+  "b200": false,
+  "dataset_generation": false,
+  "default_off_detail_trace_schema": {
+    "argument": "--reach_trace_detail_json",
+    "artifact_flags": {
+      "action_teacher_dataset": false,
+      "dataset_generation": false,
+      "robot_control": false,
+      "training": false
+    },
+    "behavior_when_absent": "NO_OUTPUT_NO_CONTROL_CHANGE",
+    "counterfactual_checks": [
+      "offline_previous_target_accumulation_delta_available",
+      "worst_joint_by_follow",
+      "worst_joint_by_clip",
+      "worst_joint_by_effort_saturation",
+      "whether_applied_fk_would_enter_band_under_previous_target_base"
+    ],
+    "default": null,
+    "metadata_fields": [
+      "target_path_mode",
+      "controller_mode",
+      "target_base_mode",
+      "step_clip_rad",
+      "episode_length_s",
+      "fixed_cube_pose",
+      "reset_command_face_gap_m",
+      "reset_actual_face_gap_m",
+      "reset_applied_fk_face_gap_m",
+      "reset_tcp_world_xyz",
+      "reset_cube_world_xyz"
+    ],
+    "per_step_joint_array_fields": [
+      "joint_pos_before_arm_rad",
+      "previous_joint_target_arm_rad",
+      "raw_delta_arm_rad",
+      "clipped_delta_arm_rad",
+      "arm_joint_target_rad",
+      "target_full_arm_rad",
+      "joint_pos_after_arm_rad",
+      "joint_vel_after_arm_rad",
+      "joint_acc_after_arm_rad",
+      "follow_after_arm_rad",
+      "actual_step_arm_rad",
+      "joint_pos_target_arm_rad",
+      "computed_torque_arm",
+      "applied_torque_arm",
+      "joint_effort_limit_arm",
+      "joint_vel_limit_arm"
+    ],
+    "per_step_scalar_fields": [
+      "command_face_gap_m",
+      "applied_fk_face_gap_m",
+      "actual_tcp_face_gap_m",
+      "command_minus_applied_m",
+      "applied_minus_actual_m",
+      "tap_success_now",
+      "terminated",
+      "truncated"
+    ]
+  },
+  "factor_ranking": [
+    {
+      "evidence": {
+        "applied_best_face_gap_m": -0.014022206867232323,
+        "applied_best_shortfall_m": 0.004022206867232323,
+        "applied_inside_rows": 0,
+        "clipped_delta_final_rad": 0.009999999776482582,
+        "command_inside_rows": 714,
+        "raw_delta_final_rad": 0.0954291820526123,
+        "target_fk_err_final_mm": 25.145485846114127
+      },
+      "factor": "target_base_accumulation_or_applied_target_generation",
+      "rank": 1,
+      "status": "PRIMARY_NEXT_DESIGN",
+      "why": "Command target is now near-face and inside-band for many rows, but applied joint-target FK still never enters the strict band. The code builds each target from current actual joint_pos plus clipped delta, so an actual-base non-accumulating contract remains the first remaining suspect."
+    },
+    {
+      "evidence": {
+        "actual_best_face_gap_m": -0.01895923539996147,
+        "actual_best_shortfall_m": 0.008959235399961471,
+        "actual_extra_shortfall_over_applied_best_m": 0.0049370285327291485,
+        "actual_inside_rows": 0,
+        "actual_joint_step_abs_max_rad": 0.0013673901557922363,
+        "actual_to_follow_step_ratio": 0.12579233654289035,
+        "actual_to_target_step_ratio": 0.13673894222673894,
+        "direct_follow_abs_max_rad": 0.010870218276977539
+      },
+      "factor": "actuator_drive_follow",
+      "rank": 2,
+      "status": "SECONDARY_BUT_REAL",
+      "why": "Actual TCP is behind the already-insufficient applied target. This cannot be the only cause because applied FK also misses the band, but it likely adds several millimeters of miss."
+    },
+    {
+      "evidence": {
+        "initial_actual_face_gap_m": -0.0211782269179821,
+        "initial_applied_face_gap_m": -0.02011272806343467,
+        "initial_command_face_gap_m": -0.01995519921183586,
+        "initial_face_gap_m_from_summary": -0.02035699412226677,
+        "initial_vertical_offset_m": 0.0010033398866653442,
+        "reset_actual_minus_command_m": -0.0012230277061462402,
+        "reset_applied_minus_command_m": -0.00015752885159880936,
+        "reset_ik_err_mm": 1.0653929710388184
+      },
+      "factor": "precontact_reset_or_initial_offset",
+      "rank": 3,
+      "status": "LOWER_PRIORITY_NOT_CLEARED",
+      "why": "Initial actual TCP is close to the intended precontact command and reset IK error is about 1mm, so reset offset is not the primary explanation for final failure. It still needs a reset snapshot because a 1-2mm initial bias matters when the remaining strict-band shortfall is millimeters."
+    }
+  ],
+  "gpu_runtime": false,
+  "inputs": {
+    "env": "roarm_rl/roarm_cube_push_env.py",
+    "harness": "roarm_rl/test_positive_control_cube_tap10cm.py",
+    "isaac_articulation_data": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaaclab/source/isaaclab/isaaclab/assets/articulation/articulation_data.py",
+    "nearface_result_audit": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_nearface_target_path_result_audit.json",
+    "nearface_sanity": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_x240_nearface_reachtrace_rerun1_sanity.json",
+    "nearface_trace": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_x240_nearface_reachtrace_rerun1_trace.json",
+    "stack_env": "roarm_rl/roarm_stack_env.py"
+  },
+  "line_refs": {
+    "env_contact_proxy": 1105,
+    "env_override_start": 633,
+    "env_set_joint_position_target": 753,
+    "harness_after_step_follow": 893,
+    "harness_applied_fk_trace": 419,
+    "harness_arm_target_actual_base": 373,
+    "harness_command_final_near_face_branch": 161,
+    "harness_joint_pos_arm": 364,
+    "harness_raw_delta": 370,
+    "harness_step_clip": 372,
+    "harness_target_full_actual_base": 384,
+    "isaac_applied_torque": 323,
+    "isaac_computed_torque": 315,
+    "isaac_joint_pos_target": 287,
+    "isaac_joint_vel": 735,
+    "stack_damping": 178,
+    "stack_decimation": 108,
+    "stack_dt": 115,
+    "stack_effort": 179,
+    "stack_stiffness": 177,
+    "stack_velocity": 180
+  },
+  "local_design_only": true,
+  "next_decision_tree": [
+    {
+      "if": "applied_fk_inside_rows_remains_0_and_previous_target_counterfactual_enters_band",
+      "then": "design one default-off previous-target-base tiny runtime candidate"
+    },
+    {
+      "if": "applied_fk_enters_band_but_actual_tcp_does_not_or_effort_saturates",
+      "then": "design actuator/drive follow candidate or gain/effort telemetry runtime"
+    },
+    {
+      "if": "reset_actual_minus_command_bias_exceeds_2_to_3mm_and_persists",
+      "then": "design reset/precontact recalibration candidate before controller tuning"
+    },
+    {
+      "if": "none_of_the_above",
+      "then": "do not proceed to dataset/RL; inspect FK/tool frame and joint limits with a visual overlay"
+    }
+  ],
+  "observed_nearface_state": {
+    "actual_best_face_gap_m": -0.01895923539996147,
+    "actual_best_shortfall_m": 0.008959235399961471,
+    "actual_best_step": 56,
+    "actual_extra_shortfall_over_applied_best_m": 0.0049370285327291485,
+    "actual_inside_rows": 0,
+    "applied_best_face_gap_m": -0.014022206867232323,
+    "applied_best_shortfall_m": 0.004022206867232323,
+    "applied_best_step": 166,
+    "applied_inside_rows": 0,
+    "command_final_face_gap_m": 0.005999971181154251,
+    "command_inside_first_step": 223,
+    "command_inside_last_step": 579,
+    "command_inside_rows": 714,
+    "command_inside_window": {
+      "actual_extra_shortfall_over_applied_mean_m": 0.00573379594694907,
+      "actual_shortfall_mean_m": 0.012544715574392084,
+      "applied_minus_actual_mean_m": 0.005733795946949069,
+      "applied_shortfall_mean_m": 0.006810919627443014,
+      "command_inside_first_step": 223.0,
+      "command_inside_last_step": 579.0,
+      "command_inside_rows": 714.0,
+      "command_minus_applied_mean_m": 0.014831582785758917
+    },
+    "nearface_result_audit_verdict": "NEAR_FACE_TARGET_PATH_APPLIED_BUT_STRICT_CONTACT_STILL_FAILS_ACTUAL_TCP_PRECONTACT",
+    "professor_physical_reaction_evidence": "PASS",
+    "rl_contact_gated_positive_control": "FAIL",
+    "status": "FAIL",
+    "steps_executed": 580,
+    "terminated_count": 0,
+    "truncated_count": 0
+  },
+  "robot_control": false,
+  "ssh": false,
+  "track_a": false,
+  "training": false,
+  "verdict": "DESIGN_READY_DEFAULT_OFF_REACH_DETAIL_TRACE_BEFORE_ANY_GATE_RELAXATION_OR_DATASET_RL"
+}

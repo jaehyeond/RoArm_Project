@@ -1,0 +1,191 @@
+{
+  "actuator_follow": {
+    "actual_to_follow_ratio_max": 0.439209726443769,
+    "actual_to_follow_ratio_mean": 0.11184361858585976,
+    "actual_to_follow_ratio_min": 0.03226612681512584,
+    "actual_to_follow_ratio_p95": 0.12453981276953824,
+    "actuator_follow_secondary": true,
+    "applied_torque_ratio_to_effort_limit": {
+      "count": 5800,
+      "max": {
+        "effort_limit_nm": 2.5,
+        "env_id": 0,
+        "joint_idx": 4,
+        "ratio": 1.0,
+        "step": 226,
+        "torque_nm": 2.5
+      },
+      "mean_ratio": 0.23940921893813707,
+      "p95_ratio": 1.0,
+      "saturation_fraction": 0.08586206896551724
+    },
+    "computed_torque_ratio_to_effort_limit": {
+      "count": 5800,
+      "max": {
+        "effort_limit_nm": 2.5,
+        "env_id": 0,
+        "joint_idx": 4,
+        "ratio": 2.0756996154785154,
+        "step": 513,
+        "torque_nm": -5.189249038696289
+      },
+      "mean_ratio": 0.27735824517746643,
+      "p95_ratio": 1.3678171157836914,
+      "saturation_fraction": 0.08586206896551724
+    }
+  },
+  "artifact_type": "cube10cm_tap_rl_reach_trace_detail_rerun1_audit_v1",
+  "b200": false,
+  "dataset_generation": false,
+  "decision": {
+    "contact_gate_relaxation": "NOT_NEXT",
+    "diffik_action_dataset": "BLOCKED",
+    "large_dataset": "BLOCKED",
+    "next_branch": "DESIGN_PREVIOUS_TARGET_BASE_RUNTIME_FIRST",
+    "ppo_rl_training": "BLOCKED",
+    "roarm": "BLOCKED"
+  },
+  "gate": {
+    "contact_seen": 0.0,
+    "professor_physical_reaction_evidence": "PASS",
+    "professor_physical_reaction_seen": 1.0,
+    "rl_contact_gated_positive_control": "FAIL",
+    "tap_success": 0.0
+  },
+  "gpu_runtime": false,
+  "inputs": {
+    "basic_trace_json": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_x240_nearface_reachtrace_detail_rerun1_trace.json",
+    "detail_trace_json": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_x240_nearface_reachtrace_detail_rerun1_detail_trace.json",
+    "sanity_json": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_x240_nearface_reachtrace_detail_rerun1_sanity.json",
+    "sanity_summary": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_x240_nearface_reachtrace_detail_rerun1_sanity_summary.out"
+  },
+  "local_posthoc_only": true,
+  "reach_split": {
+    "actual_tcp": {
+      "best_face_gap_m": -0.01895756646990776,
+      "best_shortfall_to_band_m": 0.00895756646990776,
+      "final_face_gap_m": -0.02440650388598442,
+      "final_shortfall_to_band_m": 0.01440650388598442,
+      "inside_first_step": null,
+      "inside_last_step": null,
+      "inside_rows": 0,
+      "inside_unique_steps": 0
+    },
+    "applied_joint_target_fk": {
+      "best_face_gap_m": -0.013995274353862275,
+      "best_shortfall_to_band_m": 0.003995274353862275,
+      "final_face_gap_m": -0.018663078564863822,
+      "final_shortfall_to_band_m": 0.008663078564863822,
+      "inside_first_step": null,
+      "inside_last_step": null,
+      "inside_rows": 0,
+      "inside_unique_steps": 0
+    },
+    "command": {
+      "best_face_gap_m": 0.005999971181154251,
+      "best_shortfall_to_band_m": 0.0,
+      "final_face_gap_m": 0.005999971181154251,
+      "final_shortfall_to_band_m": 0.0,
+      "inside_first_step": 223,
+      "inside_last_step": 579,
+      "inside_rows": 714,
+      "inside_unique_steps": 357
+    }
+  },
+  "reset_precontact": {
+    "initial_actual_face_gap_m": -0.0211782269179821,
+    "initial_applied_face_gap_m": -0.02011272806343467,
+    "initial_command_face_gap_m": -0.01995519921183586,
+    "reset_actual_minus_command_m": -0.0012230277061462402,
+    "reset_lower_priority_not_cleared": true
+  },
+  "robot_control": false,
+  "runtime": {
+    "builtin_diffik_step_clip_rad": 0.01,
+    "closed_loop_push_steps": 580,
+    "controller_mode": "isaac_builtin_diffik_step_clipped_direct_apply",
+    "episode_length_s": 6.08,
+    "fixed_cube_x_m": 0.24,
+    "fixed_cube_y_m": 0.0,
+    "num_envs": 2,
+    "reach_trace_detail_row_count": 1160,
+    "reach_trace_row_count": 1160,
+    "seed": 962,
+    "status": "FAIL",
+    "steps_executed": 580,
+    "target_path_mode": "near_face_goal",
+    "terminated_count": 0,
+    "truncated_count": 0
+  },
+  "schema_guard": {
+    "action_teacher_dataset": false,
+    "artifact_type": "cube10cm_tap_rl_reach_trace_detail_v1",
+    "contains_action_fields": false,
+    "rows": 1160,
+    "schema_len": 59
+  },
+  "ssh": false,
+  "summary_lines": [
+    "line1 artifact=cube10cm_tap_rl_positive_control_sanity_v1 status=FAIL gpu_runtime=YES_LOCAL_TINY_ISAACLAB_POSITIVE_CONTROL dataset_generation=NO training=NO robot_control=NO ssh=NO b200=NO track_a=NO",
+    "line2 env_contract env_id=RoArm-CubeTap10cm-Direct-v0 device=cuda:0 cube_size_m=0.1 cube_mass_kg=0.72 final_1cm_required=False episode_length_s=6.08 env_max_episode_length=608",
+    "line3 scripted_control num_envs=2 max_steps=580 steps_executed=580 cube_xy=(0.24,0.0) push_dir=(1.0,0.0) controller_mode=isaac_builtin_diffik_step_clipped_direct_apply direct_ik_joint_target_apply=True target_path_mode=near_face_goal precontact_clearance_m=0.02 tcp_top_margin_m=-0.05 goal_push_m=0.006 max_joint_delta_per_step_rad=0.01 joint_target_lead_limit_rad=0.06",
+    "line4 reset_and_ik ik_endpoint_reset_rate=1.0 ik_reset_err_mm=1.0653929710388184 teacher_goal_ok_rate=0.0 controller_goal_ok_rate=1.0 initial_face_gap_m=-0.02035699412226677 initial_vertical_offset_m=0.0010033398866653442 closed_loop_ik_ok_rate=1.0",
+    "line5 tap_logs required_log_keys_present=True contact_seen=0.0 reaction_signal_now=0.0 reaction_contact_context=0.0 reaction_seen=0.0 professor_physical_reaction_seen=1.0 overshoot_seen=0.0 tap_success=0.0",
+    "line6 reaction_metrics max_disp_along_m=0.0008687973022460938 max_z_delta_m=4.2941421270370483e-05 max_speed_mps=0.07671958208084106 terminated_count=0 truncated_count=0",
+    "line7 action_path tcp_cube_dist_m=0.07466363906860352 joint_delta_abs_mean=0.004331975243985653 joint_delta_abs_max=0.01000000536441803 joint_delta_cap_rate=0.0 action_abs_mean=0.0 action_abs_max=0.0 target_lead_abs_max=0.01000000536441803 target_lead_limit_rate=0.0 contact_slowdown_mean=1.0 teacher_blend_mean=0.0 action_penalty=0.0",
+    "line8 trace_diagnostics face_gap_min=-0.024409305304288864 face_gap_max=-0.01895923539996147 face_gap_final=-0.024409305304288864 shortfall_min=0.008959235399961471 shortfall_final=0.014409305304288864 tcp_dist_min=0.06895998120307922 joint_delta_abs_max=0.01000000536441803 joint_delta_cap_rate_max=0.0 target_lead_limit_rate_max=0.0",
+    "line9 verdict professor_physical_reaction_evidence=PASS rl_contact_gated_positive_control=FAIL blocker=RL_CONTACT_GATED_POSITIVE_CONTROL_GATE_FAIL_ONLY professor_objective_metadata=SEPARATE_FROM_DATASET_RL ppo_rl_training=BLOCKED large_dataset=BLOCKED action_teacher=BLOCKED roarm=BLOCKED",
+    "line10 controller_telemetry target_face_gap_final=0.005999971181154251 target_inside_contact_band_final=1.0 target_fk_err_mm_final=25.145485846114127 actual_fk_vs_sim_tcp_err_mm_final=0.0 target_delta_abs_max_final=0.01000000536441803 direct_joint_follow_abs_max_final=0.010684967041015625 direct_actual_joint_step_abs_max_final=0.0012903809547424316"
+  ],
+  "target_base": {
+    "counterfactual_fk_computed": false,
+    "interpretation": "current_target_minus_previous_target is near actual joint step scale, while previous_target_minus_actual remains near one clipped step; current actual-base generation is not accumulating target progress fast enough.",
+    "previous_target_base_indicated": true,
+    "vectors": {
+      "actual_joint_step_arm_rad": {
+        "absmax_rad": 0.0013673901557922363,
+        "mean_abs_rad": 0.0003916901976666348,
+        "nonnull_rows": 1160,
+        "p95_row_absmax_rad": 0.0013310611248016357
+      },
+      "clipped_delta_arm_rad": {
+        "absmax_rad": 0.009999999776482582,
+        "mean_abs_rad": 0.004168847477758979,
+        "nonnull_rows": 1160,
+        "p95_row_absmax_rad": 0.009999999776482582
+      },
+      "current_target_minus_previous_target_arm_rad": {
+        "absmax_rad": 0.0014195740222930908,
+        "mean_abs_rad": 0.00038759661179240686,
+        "nonnull_rows": 1158,
+        "p95_row_absmax_rad": 0.0013347864151000977
+      },
+      "direct_joint_follow_arm_rad": {
+        "absmax_rad": 0.010870218276977539,
+        "mean_abs_rad": 0.004032773812109318,
+        "nonnull_rows": 1160,
+        "p95_row_absmax_rad": 0.010845661163330078
+      },
+      "previous_target_minus_actual_arm_rad": {
+        "absmax_rad": 0.010870218276977539,
+        "mean_abs_rad": 0.0040310805689610105,
+        "nonnull_rows": 1158,
+        "p95_row_absmax_rad": 0.010845661163330078
+      },
+      "raw_delta_arm_rad": {
+        "absmax_rad": 0.0954291820526123,
+        "mean_abs_rad": 0.013506544605785629,
+        "nonnull_rows": 1160,
+        "p95_row_absmax_rad": 0.09011435508728027
+      },
+      "target_delta_from_actual_arm_rad": {
+        "absmax_rad": 0.01000000536441803,
+        "mean_abs_rad": 0.004168846124129788,
+        "nonnull_rows": 1160,
+        "p95_row_absmax_rad": 0.01000000536441803
+      }
+    }
+  },
+  "track_a": false,
+  "training": false
+}

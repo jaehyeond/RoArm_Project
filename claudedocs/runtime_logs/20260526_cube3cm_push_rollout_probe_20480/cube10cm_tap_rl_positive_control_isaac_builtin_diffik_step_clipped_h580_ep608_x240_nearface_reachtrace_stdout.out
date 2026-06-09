@@ -1,0 +1,39 @@
+Loading user config located at: '/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/user.config.json'
+[Info] [carb] Logging to file: /home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/kit/logs/Kit/Isaac-Sim/5.1/kit_20260609_131253.log
+2026-06-09T04:12:53Z [74ms] [Warning] [omni.usd_config.extension] Enable omni.materialx.libs extension to use MaterialX
+2026-06-09T04:12:53Z [239ms] [Warning] [omni.platforminfo.plugin] failed to open the default display.  Can't verify X Server version.
+2026-06-09T04:12:53Z [378ms] [Warning] [carb] Acquiring non optional plugin interface which is not listed as dependency: [omni::physx::IPhysxBenchmarks v1.0] (plugin: <default plugin>), by client: omni.physics.physx.plugin. Add it to CARB_PLUGIN_IMPL_DEPS() macro of a client.
+2026-06-09T04:12:54Z [512ms] [Warning] [omni.isaac.dynamic_control] omni.isaac.dynamic_control is deprecated as of Isaac Sim 4.5. No action is needed from end-users.
+2026-06-09T04:12:55Z [1,918ms] [Warning] [matplotlib] /home/cgxr/.config/matplotlib is not a writable directory
+2026-06-09T04:12:55Z [1,918ms] [Warning] [matplotlib] Matplotlib created a temporary cache directory at /tmp/matplotlib-2qye2p2v because there was an issue with the default path (/home/cgxr/.config/matplotlib); it is highly recommended to set the MPLCONFIGDIR environment variable to a writable directory, in particular to speed up the import of Matplotlib and to better support multiprocessing.
+
+|---------------------------------------------------------------------------------------------|
+| Driver Version: 0             | Graphics API: Vulkan
+|=============================================================================================|
+| GPU | Name                             | Active | LDA | GPU Memory | Vendor-ID | LUID       |
+|     |                                  |        |     |            | Device-ID | UUID       |
+|     |                                  |        |     |            | Bus-ID    |            |
+|=============================================================================================|
+| OS: 22.04.5 LTS (Jammy Jellyfish) ubuntu, Version: 22.04.5, Kernel: 6.8.0-111-generic
+| Processor: Intel(R) Core(TM) i9-14900HX
+| Bare Metal Cores: 24 | Bare Metal Logical Cores: 48
+| Available Cores:  32 
+|---------------------------------------------------------------------------------------------|
+| Total Memory (MB): 64020 | Free Memory: 29710
+| Total Page/Swap (MB): 0 | Free Page/Swap: 0
+|---------------------------------------------------------------------------------------------|
+2026-06-09T04:12:57Z [4,040ms] [Warning] [omni.physx.foundation.plugin] PhysXFoundation: Couldn't get driver version, failed to getDeviceInfo
+2026-06-09T04:12:57Z [4,040ms] [Warning] [omni.physx.foundation.plugin] PhysXFoundation: Unable to get IGpuFoundation, GpuDevices or Graphics!
+2026-06-09T04:12:57Z [4,042ms] [Warning] [omni.kvdb.plugin] Disabling key-value database because another kit process is locking it
+[INFO][AppLauncher]: Using device: cuda:0
+[INFO][AppLauncher]: Loading experience file: /home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaaclab/apps/isaaclab.python.headless.kit
+line1 artifact=cube10cm_tap_rl_positive_control_sanity_v1 status=BLOCKED gpu_runtime=NO_OR_FAILED_BEFORE_PASS dataset_generation=NO training=NO robot_control=NO ssh=NO b200=NO track_a=NO
+line2 env_contract env_id=RoArm-CubeTap10cm-Direct-v0 device=cuda:0 cube_size_m=UNKNOWN cube_mass_kg=UNKNOWN final_1cm_required=UNKNOWN episode_length_s=6.08 env_max_episode_length=UNKNOWN
+line3 scripted_control num_envs=2 max_steps=580 steps_executed=0 cube_xy=(0.24,0.0) push_dir=(1.0,0.0) controller_mode=isaac_builtin_diffik_step_clipped_direct_apply direct_ik_joint_target_apply=False target_path_mode=near_face_goal precontact_clearance_m=0.02 tcp_top_margin_m=-0.05 goal_push_m=0.006 max_joint_delta_per_step_rad=UNKNOWN joint_target_lead_limit_rad=NA
+line4 reset_and_ik ik_endpoint_reset_rate=NA ik_reset_err_mm=NA teacher_goal_ok_rate=NA controller_goal_ok_rate=NA initial_face_gap_m=NA initial_vertical_offset_m=NA closed_loop_ik_ok_rate=NA
+line5 tap_logs required_log_keys_present=False contact_seen=NA reaction_signal_now=NA reaction_contact_context=NA reaction_seen=NA professor_physical_reaction_seen=NA overshoot_seen=NA tap_success=NA
+line6 reaction_metrics max_disp_along_m=NA max_z_delta_m=NA max_speed_mps=NA terminated_count=NA truncated_count=NA
+line7 action_path tcp_cube_dist_m=NA joint_delta_abs_mean=NA joint_delta_abs_max=NA joint_delta_cap_rate=NA action_abs_mean=NA action_abs_max=NA target_lead_abs_max=NA target_lead_limit_rate=NA contact_slowdown_mean=NA teacher_blend_mean=NA action_penalty=NA
+line8 trace_diagnostics face_gap_min=NA face_gap_max=NA face_gap_final=NA shortfall_min=NA shortfall_final=NA tcp_dist_min=NA joint_delta_abs_max=NA joint_delta_cap_rate_max=NA target_lead_limit_rate_max=NA
+line9 verdict professor_physical_reaction_evidence=UNKNOWN rl_contact_gated_positive_control=BLOCKED blocker=ModuleNotFoundError professor_objective_metadata=SEPARATE_FROM_DATASET_RL ppo_rl_training=BLOCKED large_dataset=BLOCKED action_teacher=BLOCKED roarm=BLOCKED
+line10 controller_telemetry target_face_gap_final=NA target_inside_contact_band_final=NA target_fk_err_mm_final=NA actual_fk_vs_sim_tcp_err_mm_final=NA target_delta_abs_max_final=NA direct_joint_follow_abs_max_final=NA direct_actual_joint_step_abs_max_final=NA

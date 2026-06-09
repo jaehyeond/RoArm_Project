@@ -11133,3 +11133,415 @@ Sources:
 - `sim_scripts/cube10cm_tap_rl_target_path_first_button_audit.py`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_target_path_first_button_audit_summary.out:1-7`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_target_path_first_button_audit.json`
+
+## D202 - Near-face target path fixes the command semantics but does not yet produce strict contact
+
+Current State:
+
+- The user explicitly approved the next tiny runtime candidate after D201:
+  rerun the same x240 h580 ep608 step-clipped built-in DiffIK contract while
+  changing only `--target_path_mode near_face_goal`.
+- First launch inside the sandbox was not a physics result. It wrote a BLOCKED
+  summary with `ModuleNotFoundError: No module named 'roarm_rl'`, and stderr also
+  showed sandbox CUDA device errors. The rerun used local unsandboxed GPU with
+  `PYTHONPATH=/home/cgxr/Documents/Robotics/RoArm_Project`.
+- No dataset generation, PPO/RL, robot control, SSH/B200, or Track A work was
+  run.
+
+Evidence:
+
+- Near-face runtime summary line 1:
+  status `FAIL`, GPU runtime `YES_LOCAL_TINY_ISAACLAB_POSITIVE_CONTROL`, no
+  dataset/training/robot/SSH/B200/Track A.
+- Runtime line 2 confirms the environment contract:
+  10cm cube, mass `0.72kg`, `episode_length_s=6.08`,
+  `env_max_episode_length=608`.
+- Runtime line 3 confirms this was the intended candidate:
+  `steps_executed=580`, cube `(0.24,0.0)`, push dir `(1.0,0.0)`,
+  controller `isaac_builtin_diffik_step_clipped_direct_apply`,
+  `target_path_mode=near_face_goal`, direct target apply true, and
+  `max_joint_delta_per_step_rad=0.01`.
+- Runtime line 5 keeps the strict gate failed:
+  `contact_seen=0.0`, `reaction_contact_context=0.0`, `reaction_seen=0.0`,
+  `tap_success=0.0`, while professor weak physical reaction seen is `1.0`.
+- Runtime line 6 shows weak object reaction only:
+  max along displacement `0.000868797m`, max speed `0.076719582m/s`,
+  terminated/truncated counts `0/0`.
+- Runtime line 8 shows actual TCP remains precontact:
+  face gap max `-0.018959235m`, final `-0.024409305m`, best strict-band
+  shortfall `0.008959235m`.
+- Runtime line 10 proves the command target path was fixed:
+  final target face gap `0.005999971m` and final target inside-band rate `1.0`,
+  but target FK error remains `25.145485846mm` and actual joint step final is
+  only `0.001290381rad`.
+- Posthoc near-face result audit line 3 compares command semantics against the
+  legacy x240 trace: legacy command final face gap `0.105999991m`, near-face
+  `0.005999971m`, delta `-0.100000020m`, near-face command inside steps
+  `223..579`, inside rows `714`.
+- Posthoc audit line 5 keeps the reach failure:
+  near-face applied inside rows `0`, actual inside rows `0`, applied best face
+  gap `-0.014022207m`, actual best face gap `-0.018959235m`, actual best
+  shortfall `0.008959235m`.
+- Posthoc audit line 6 shows the partial improvement:
+  final applied FK error improved from `127.058100165mm` to `25.145485846mm`
+  (`-101.912614319mm`), but actual best shortfall improved only
+  `-0.000003666m`.
+- Posthoc audit line 7 verdict:
+  `NEAR_FACE_TARGET_PATH_APPLIED_BUT_STRICT_CONTACT_STILL_FAILS_ACTUAL_TCP_PRECONTACT`.
+
+Implication:
+
+- D201's first-button issue is real and the near-face target mode fixes the
+  command semantics. However, this is not enough to claim strict contact, action
+  teacher, dataset, PPO/RL, large dataset, or RoArm readiness.
+- The remaining blocker is now sharper: command target is near-face and inside
+  band for a long window, but applied joint-target FK and actual TCP still never
+  enter the strict face band.
+- Do not relax the contact gate from this result. The next local-only design
+  should isolate target-base accumulation (`actual joint_pos` versus prior
+  target), precontact reset/initial offset, and actuator/drive follow telemetry.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_x240_nearface_reachtrace_rerun1_sanity_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_x240_nearface_reachtrace_rerun1_sanity.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_x240_nearface_reachtrace_rerun1_trace.json`
+- `sim_scripts/cube10cm_tap_rl_nearface_target_path_result_audit.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_nearface_target_path_result_audit_summary.out:1-7`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_nearface_target_path_result_audit.json`
+
+## D203 - Remaining near-face blocker ranks target-base/applied-target generation before actuator and reset
+
+Current State:
+
+- After D202, the command target path is no longer the legacy far-face-through
+  path: near-face command ends at about `+6mm` face gap and is inside the strict
+  band for a long window. Strict contact still fails.
+- The user requested a local-only decomposition design across three suspects:
+  target-base accumulation, precontact reset/initial offset, and actuator/drive
+  follow telemetry. No contact-gate relaxation.
+- Added and ran
+  `sim_scripts/cube10cm_tap_rl_remaining_blocker_decomposition_design.py`.
+  No GPU runtime, dataset generation, PPO/RL, robot control, SSH/B200, or Track A
+  work was run.
+
+Evidence:
+
+- Design line 2 anchors the current near-face state:
+  status `FAIL`, RL contact-gated positive-control `FAIL`, professor weak
+  physical evidence `PASS`, `steps_executed=580`, no truncation, command final
+  face gap `0.005999971m`, command inside steps `223..579`, command inside rows
+  `714`, applied inside rows `0`, actual inside rows `0`.
+- Design line 3 ranks the remaining factors:
+  rank1 `TARGET_BASE_ACCUMULATION_OR_APPLIED_TARGET_GENERATION`,
+  rank2 `ACTUATOR_DRIVE_FOLLOW`,
+  rank3 `PRECONTACT_RESET_INITIAL_OFFSET`, and contact-gate relaxation is not
+  next.
+- Design line 4 pins target-base/applied-target evidence:
+  harness reads actual joint pos at line `364`, computes raw delta at `370`,
+  clips at `372`, builds arm target from actual base at `373`, and seeds
+  `target_full` from actual joint pos at `384`. The applied target still misses:
+  applied best face gap `-0.014022207m`, applied shortfall `0.004022207m`,
+  final target FK error `25.145485846mm`, raw delta final `0.095429182rad`,
+  clipped final `0.010000000rad`.
+- Design line 5 ranks reset/initial offset lower but not cleared:
+  initial command/applied/actual face gaps are
+  `-0.019955199/-0.020112728/-0.021178227m`; actual-command bias is
+  `-0.001223028m`; reset IK error is `1.065392971mm`; initial vertical offset is
+  `0.001003340m`.
+- Design line 6 confirms actuator/drive follow is real secondary:
+  env override starts at line `633`, `set_joint_position_target` at `753`,
+  control cadence lines `108/115`, actuator stiffness/damping/effort/velocity
+  lines `177/178/179/180`, direct follow max `0.010870218rad`, actual joint step
+  max `0.001367390rad`, actual-to-follow ratio `0.125792337`, and actual adds
+  about `0.004937029m` shortfall over applied target.
+- Design line 7 defines the next default-off trace patch:
+  add `--reach_trace_detail_json`, default `None`, absent behavior
+  `NO_OUTPUT_NO_CONTROL_CHANGE`, and capture reset snapshot, command/applied/
+  actual scalar gaps, per-joint raw/clipped/target/actual/follow arrays, joint
+  velocity/acceleration, torque, and limits.
+- Design line 8 fixes the decision tree:
+  if previous-target counterfactual enters band, design a previous-target-base
+  runtime; if applied enters but actual misses or torque saturates, design an
+  actuator-follow runtime; if reset bias exceeds 2-3mm, design reset/precontact
+  recalibration; otherwise inspect FK/tool-frame with visual overlay.
+
+Implication:
+
+- Do not relax contact gate from the near-face result. The command is now correct
+  enough to be in-band, but applied FK and actual TCP still remain precontact.
+- Do not start DiffIK action dataset, PPO/RL, large dataset, or RoArm. A clean
+  action teacher is still blocked because strict contact/tap is `0.0`.
+- The next implementation should be a default-off detail trace patch, not a
+  behavior-changing controller runtime. Its purpose is to answer whether the
+  applied target would enter the band under previous-target accumulation and
+  whether actuator torque/velocity/follow is the next true limiter.
+
+Sources:
+
+- `sim_scripts/cube10cm_tap_rl_remaining_blocker_decomposition_design.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_remaining_blocker_decomposition_design_summary.out:1-9`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_remaining_blocker_decomposition_design.json`
+- `roarm_rl/test_positive_control_cube_tap10cm.py:364-384`
+- `roarm_rl/roarm_cube_push_env.py:633`
+- `roarm_rl/roarm_cube_push_env.py:753`
+
+## D204 - Reach-trace detail patch is ready, but it is diagnosis telemetry, not a controller fix
+
+Current State:
+
+- After D203, the correct next step was to add detail telemetry, not to relax the
+  contact gate or change geometry/controller behavior.
+- Implemented default-off `--reach_trace_detail_json` in
+  `roarm_rl/test_positive_control_cube_tap10cm.py`.
+- Added and reran local-only static audit
+  `sim_scripts/cube10cm_tap_rl_reach_trace_detail_patch_contract_audit.py`.
+  No GPU runtime, dataset generation, PPO/RL, robot control, SSH/B200, or Track A
+  work was run.
+
+Evidence:
+
+- Audit line 1 confirms this was a local static audit only:
+  `gpu_runtime=NO`, `dataset_generation=NO`, `training=NO`, `robot_control=NO`,
+  `ssh=NO`, `b200=NO`, and `track_a=NO`.
+- Audit line 2 verifies the D203 basis still holds:
+  command final face gap `0.005999971m`, applied inside rows `0`, actual inside
+  rows `0`.
+- Audit line 3 verifies the default-off contract:
+  parser arg line `890`, `default_off_ok=True`, separate detail JSON output, and
+  `control_change=NO`.
+- Audit line 4 verifies target-base telemetry:
+  previous target state line `311`, previous target update line `511`, raw delta
+  line `491`, clipped delta line `492`, and post-step Isaac
+  `joint_pos_target_after_arm_rad` line `820`.
+- Audit line 5 verifies actuator telemetry:
+  joint velocity line `822`, joint acceleration line `823`, computed torque line
+  `824`, applied torque line `825`, effort limit line `826`, and velocity limit
+  line `827`.
+- Audit line 6 verifies schema guard:
+  `schema_ok=True`, `no_action_teacher_ok=True`, writer line `733`, artifact line
+  `768`, `contains_action_fields=false`, and `action_teacher_dataset=false`.
+- Audit line 7 fixes the next runtime, only if explicitly approved:
+  same-contract nearface x240 h580 ep608 step-clipped built-in DiffIK with both
+  basic and detail traces; contact gate relaxation is `NOT_NEXT`.
+- Audit line 8 verdict:
+  `READY_LOCAL_ONLY_DEFAULT_OFF_DETAIL_TRACE_PATCH`.
+
+Implication:
+
+- This patch is a diagnostic instrument. It does not make the controller clean, it
+  does not create an action teacher, and it does not unblock dataset/RL/RoArm.
+- The next approved runtime, if requested, must keep the same near-face x240 h580
+  ep608 step-clipped built-in DiffIK contract and only add the detail trace JSON
+  alongside the existing basic reach trace.
+- The first decision after that runtime should be based on the trace:
+  previous-target accumulation candidate, actuator-follow candidate, reset/
+  precontact recalibration, or FK/tool-frame visual overlay. Do not relax the
+  contact gate before this telemetry.
+
+Sources:
+
+- `roarm_rl/test_positive_control_cube_tap10cm.py`
+- `sim_scripts/cube10cm_tap_rl_reach_trace_detail_patch_contract_audit.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_reach_trace_detail_patch_contract_audit_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_reach_trace_detail_patch_contract_audit.json`
+
+## D205 - Detail trace confirms target-base first, with actuator saturation secondary
+
+Current State:
+
+- After D204, the user explicitly approved one tiny same-contract local GPU repeat:
+  nearface x240, h580, ep608, step-clipped built-in DiffIK, adding only
+  `--reach_trace_json` and `--reach_trace_detail_json`.
+- No dataset generation, PPO/RL, robot control, SSH/B200, or Track A work was
+  run.
+- Added and ran local posthoc detail audit
+  `sim_scripts/cube10cm_tap_rl_reach_trace_detail_rerun1_audit.py`.
+
+Evidence:
+
+- Runtime summary line 1 confirms local tiny GPU only:
+  `status=FAIL`, dataset/training/robot/SSH/B200/Track A all `NO`.
+- Runtime summary lines 2-3 confirm the contract:
+  cube size `0.1m`, mass `0.72kg`, `episode_length_s=6.08`,
+  `steps_executed=580`, `cube_xy=(0.24,0.0)`,
+  controller `isaac_builtin_diffik_step_clipped_direct_apply`,
+  `target_path_mode=near_face_goal`, and step clip `0.01`.
+- Runtime summary lines 5 and 9 keep the strict gate failed:
+  `contact_seen=0.0`, `tap_success=0.0`,
+  `rl_contact_gated_positive_control=FAIL`, while professor weak physical
+  reaction evidence remains `PASS`.
+- Audit line 4 verifies the detail schema:
+  rows `1160`, schema length `59`, `contains_action_fields=false`,
+  `action_teacher_dataset=false`.
+- Audit line 5 shows the core reach split:
+  command target inside rows `714` over steps `223..579`, final command face gap
+  `0.005999971m`, but applied inside rows `0` and actual inside rows `0`.
+  Applied best face gap is `-0.013995274m` with `0.003995274m` shortfall; actual
+  best face gap is `-0.018957566m` with `0.008957566m` shortfall.
+- Audit line 6 identifies the first branch:
+  raw delta max `0.095429182rad`, clipped delta max `0.010000000rad`,
+  previous-target-minus-actual max `0.010870218rad`, but
+  current-target-minus-previous max only `0.001419574rad`.
+  This indicates `DESIGN_PREVIOUS_TARGET_BASE_RUNTIME_FIRST`. Counterfactual FK
+  was not computed in this audit.
+- Audit line 7 shows actuator/drive saturation is a real secondary factor:
+  direct follow max `0.010870218rad`, actual joint step max `0.001367390rad`,
+  actual/follow mean ratio `0.111843619`, computed torque p95/max ratio
+  `1.367817116/2.075699615`, applied torque p95 `1.0`, and applied torque
+  saturation fraction `0.085862069`.
+- Audit line 8 keeps reset/precontact lower priority but not cleared:
+  initial command/applied/actual face gaps
+  `-0.019955199/-0.020112728/-0.021178227m`, actual-command bias
+  `-0.001223028m`.
+- Audit line 9 sets the next branch:
+  `DESIGN_PREVIOUS_TARGET_BASE_RUNTIME_FIRST`; contact-gate relaxation is
+  `NOT_NEXT`; DiffIK action dataset, PPO/RL, large dataset, and RoArm are
+  `BLOCKED`.
+
+Implication:
+
+- The command target is already correct enough for this diagnostic: it enters the
+  strict face band for a long window. The failure remains between target
+  generation/application and actual TCP contact.
+- The next useful unblock is a default-preserving previous-target-base diagnostic
+  design, not contact-gate relaxation and not dataset/RL.
+- Actuator saturation must be monitored in that next diagnostic, but it should be
+  treated as secondary until the applied joint-target FK enters the strict band
+  and the actual TCP still misses.
+
+Sources:
+
+- `claudedocs/session_20260609_cube10cm_tap_rl_detail_trace_rerun1.md`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_x240_nearface_reachtrace_detail_rerun1_sanity_summary.out:1-10`
+- `sim_scripts/cube10cm_tap_rl_reach_trace_detail_rerun1_audit.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_reach_trace_detail_rerun1_audit_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_reach_trace_detail_rerun1_audit.json`
+
+## D206 - Non-degenerate geometry-aware AABB positive-control pass
+
+Current State:
+
+- The user explicitly rejected more same-style audits and directed pass-candidate
+  work. Work stayed on the professor 10cm/0.72kg cube tap RL branch only.
+- No dataset generation, PPO/RL training, robot control, SSH/B200, or Track A
+  work was run.
+- Added default-off pass-candidate controls:
+  `--builtin_diffik_target_base_mode previous_joint_target`, arm actuator
+  override knobs, `--tool_contact_proxy_mode`, and
+  `--tap_contact_proxy_mode link5_collision_aabb`.
+- Updated detail trace instrumentation so `actual_contact_proxy` follows the same
+  tap contact metric selected by the env, while the trace remains
+  `contains_action_fields=false` and `action_teacher_dataset=false`.
+
+Evidence:
+
+- Candidate1 previous-target-base fixed the applied target path only:
+  applied FK inside rows `912`, actual point-contact rows `0`, strict contact
+  `0.0`.
+- Candidate2 drive boost increased cube displacement by `2.176736453x` over
+  Candidate1, but actual point-contact rows stayed `0`.
+- Candidate3 link5 single-corner proxy retarget kept applied FK inside rows
+  `1008`, but actual point-contact rows stayed `0`; the best actual shortfall
+  worsened to `0.012326123m`.
+- Candidate4 larger target lead (`0.120rad`) increased terminations to `29` and
+  still produced actual point-contact rows `0`.
+- Candidate5 geometry-aware link5 collision AABB contact PASSed, but it is not a
+  usable RL positive-control contract because default `precontact_clearance_m=0.020`
+  starts in contact: initial contact rate `1.0`.
+- Candidate6 geometry-aware link5 collision AABB with
+  `precontact_clearance_m=0.040` is the first non-degenerate strict
+  positive-control PASS:
+  `status=PASS`, `steps_executed=334`, initial contact `0.0`, first contact step
+  `162`, first success step `333`, actual contact rows `343`,
+  `contact_seen=1.0`, `tap_success=0.5`, `overshoot_seen=0.0`,
+  `terminated_count=0`, and `truncated_count=0`.
+- Candidate6 detail trace has rows `668`, schema length `67`,
+  `contains_action_fields=false`, and `action_teacher_dataset=false`.
+
+Implication:
+
+- The exact broken behavior was not that DiffIK could not move the object. The
+  controller could move/react the cube, but the strict gate used a single TCP
+  point that did not represent the collision geometry. Blind drive boost,
+  larger target lead, and one single link5 corner did not create a valid point
+  contact.
+- The pass route is geometry-aware contact semantics plus a reset/precontact
+  offset that starts outside contact. Candidate6 is the new tiny positive-control
+  contract for this branch.
+- Stage-0 IsaacLab validation planning is now unblocked for Candidate6. Large
+  dataset generation, PPO/RL scale-up, action-teacher dataset claims, and RoArm
+  deployment remain blocked until promotion validation beyond this 2-env
+  single-seed tiny pass.
+
+Sources:
+
+- `claudedocs/session_20260609_cube10cm_tap_rl_pass_candidates.md`
+- `roarm_rl/roarm_cube_push_env.py`
+- `roarm_rl/test_positive_control_cube_tap10cm.py`
+- `sim_scripts/cube10cm_tap_rl_pass_candidate_compare_audit.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_prevtarget_pass_candidates_audit_summary.out:1-12`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_x240_nearface_prevtargetbase_link5aabb_pre040_candidate6_sanity_summary.out:1-10`
+
+## D207 - Candidate6 Stage-0 promotion validation pass
+
+Current State:
+
+- Candidate6 is fixed as the Stage-0 positive-control contract for the professor
+  10cm/0.72kg cube tap RL branch:
+  `cube=(0.240,0.000)`, push dir `(+1,0)`,
+  `controller_mode=isaac_builtin_diffik_step_clipped_direct_apply`,
+  `target_path_mode=near_face_goal`,
+  `builtin_diffik_target_base_mode=previous_joint_target`,
+  `tap_contact_proxy_mode=link5_collision_aabb`,
+  `tool_contact_proxy_mode=hand_tcp`, `precontact_clearance_m=0.040`,
+  `episode_length_s=6.08`, `steps=580`, step clip `0.010`, lead limit
+  `0.060`, and default arm drive `80/4/2.5/3.14`.
+- Added `sim_scripts/cube10cm_tap_rl_candidate6_promotion_audit.py` to audit
+  the fixed contract, non-degenerate initial state, contact/tap pass, action
+  field guard, and termination/truncation guard across promotion runs.
+- No dataset generation, PPO/RL training, action-teacher dataset, robot control,
+  SSH/B200, or Track A work was run.
+- One direct base-Python launch was BLOCKED before Isaac startup by
+  `ModuleNotFoundError: No module named 'isaaclab'`; it is launch hygiene only
+  and not physics evidence. Valid runs used
+  `conda run -n isaaclab --no-capture-output python -u -m
+  roarm_rl.test_positive_control_cube_tap10cm`.
+
+Evidence:
+
+- Baseline Candidate6 seed962 `num_envs=2` remains promotion PASS:
+  initial contact `0.0`, first contact step `162`, first success step `333`,
+  actual contact rows `343`, `tap_success=0.5`, `contact_seen=1.0`,
+  overshoot `0.0`, term/trunc `0/0`, no action fields, contract violations `0`.
+- Stage0A multi-seed fixed-geometry validation PASSed for seed963, seed964, and
+  seed965, all `num_envs=2`, with the same metrics as baseline:
+  initial contact `0.0`, first contact step `162`, first success step `333`,
+  actual contact rows `343`, `tap_success=0.5`, `contact_seen=1.0`,
+  overshoot `0.0`, term/trunc `0/0`, no action fields, contract violations `0`.
+- Stage0B small env-scale validation PASSed for seed962 `num_envs=8`:
+  initial contact `0.0`, first contact step `162`, first success step `331`,
+  actual contact rows `1358`, `tap_success=0.375`, `contact_seen=1.0`,
+  overshoot `0.0`, term/trunc `0/0`, no action fields, contract violations `0`.
+- Promotion audit verdict:
+  `baseline_pass=True`, `stage0a_complete=True`, `stage0a_pass=True`,
+  `stage0b_complete=True`, `stage0b_pass=True`, and
+  `candidate6_promotion_validation_pass=True`.
+
+Implication:
+
+- The fixed AABB-contact Candidate6 contract is no longer a single lucky tiny
+  pass; it passed a small multi-seed and small env-scale promotion check.
+- This unblocks pilot RL smoke/design work using the fixed Candidate6 env
+  contract.
+- It still does not justify large dataset generation, PPO/RL scale-up, action
+  teacher dataset claims, or RoArm deployment. Those remain blocked until a
+  pilot RL smoke/replay path is designed and separately validated.
+
+Sources:
+
+- `claudedocs/session_20260609_cube10cm_tap_rl_candidate6_promotion_validation.md`
+- `sim_scripts/cube10cm_tap_rl_candidate6_promotion_audit.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_promotion_validation_audit_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_promotion_validation_audit.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_candidate6_promotion_stage0b_seed962_n8_sanity_summary.out:1-10`

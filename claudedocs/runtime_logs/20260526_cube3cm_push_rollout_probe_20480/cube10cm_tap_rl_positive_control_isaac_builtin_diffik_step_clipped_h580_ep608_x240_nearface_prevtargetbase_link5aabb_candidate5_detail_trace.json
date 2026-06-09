@@ -1,0 +1,605 @@
+{
+  "action_teacher_dataset": false,
+  "artifact_type": "cube10cm_tap_rl_reach_trace_detail_v1",
+  "b200": false,
+  "contains_action_fields": false,
+  "dataset_generation": false,
+  "default_off_arg": "--reach_trace_detail_json",
+  "local_gpu_runtime_telemetry": true,
+  "metadata": {
+    "artifact_type": "cube10cm_tap_rl_positive_control_sanity_v1",
+    "branch": "professor_cube10cm_tap_reaction_quality_tier",
+    "builtin_diffik_lambda": 0.01,
+    "builtin_diffik_step_clip_rad": 0.01,
+    "builtin_diffik_step_clipped_target_apply": true,
+    "closed_loop_push_steps": 580,
+    "controller_mode": "isaac_builtin_diffik_step_clipped_direct_apply",
+    "cube_mass_kg": 0.72,
+    "cube_size_m": 0.1,
+    "device": "cuda:0",
+    "direct_ik_joint_target_apply": true,
+    "env_id": "RoArm-CubeTap10cm-Direct-v0",
+    "env_max_episode_length": 608,
+    "episode_length_s": 6.08,
+    "fixed_cube_x_m": 0.24,
+    "fixed_cube_y_m": 0.0,
+    "fixed_push_dir_x": 1.0,
+    "fixed_push_dir_y": 0.0,
+    "goal_push_m": 0.006,
+    "isaac_builtin_diffik_controller_apply": true,
+    "max_steps": 580,
+    "num_envs": 2,
+    "precontact_clearance_m": 0.02,
+    "professor_physical_reaction_evidence": "PASS",
+    "reset_metrics": {
+      "ik_endpoint_reset_rate": 1.0,
+      "ik_reset_err_mm": 1.0653929710388184,
+      "initial_contact_proxy_rate": 1.0,
+      "initial_face_gap_m": 0.0,
+      "initial_vertical_offset_m": 0.0,
+      "teacher_goal_ok_rate": 0.0
+    },
+    "rl_contact_gated_positive_control": "PASS",
+    "seed": 962,
+    "steps_executed": 1,
+    "tap_contact_proxy_mode": "link5_collision_aabb",
+    "target_path_mode": "near_face_goal",
+    "tcp_top_margin_m": -0.05,
+    "tool_contact_proxy_mode": "hand_tcp",
+    "tool_proxy_label": "hand_tcp",
+    "tool_proxy_local_m": [
+      0.0,
+      0.0,
+      0.115428
+    ]
+  },
+  "robot_control": false,
+  "rows": [
+    {
+      "actual_contact_proxy": false,
+      "actual_fk_vs_sim_tcp_err_before_mm": 0.0,
+      "actual_joint_step_abs_max_rad": 0.0013673901557922363,
+      "actual_joint_step_arm_rad": [
+        1.4506383649859345e-06,
+        0.0013673901557922363,
+        -0.00017786026000976562,
+        -0.000375211238861084,
+        1.775765122147277e-05
+      ],
+      "actual_tcp_face_gap_m": -0.021158527582883835,
+      "actual_tcp_lateral_m": 3.8098794448160334e-06,
+      "actual_tcp_vertical_offset_m": 0.0007496103644371033,
+      "applied_joint_target_fk_err_mm": 0.15780299645223095,
+      "applied_joint_target_fk_face_gap_m": -0.020112778964711087,
+      "applied_joint_target_fk_inside_contact_band": false,
+      "applied_joint_target_fk_lateral_m": 6.614918503000745e-07,
+      "applied_joint_target_fk_vertical_offset_m": 8.912215545886504e-06,
+      "applied_torque_after_arm_nm": [
+        -6.92454632371664e-05,
+        -0.011185497045516968,
+        -0.012287989258766174,
+        -0.0017799288034439087,
+        3.5888515412807465e-05
+      ],
+      "arm_joint_ids": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "arm_joint_names": [
+        "base_link_to_link1",
+        "link1_to_link2",
+        "link2_to_link3",
+        "link3_to_link4",
+        "link4_to_link5"
+      ],
+      "arm_joint_target_rad": [
+        3.8937118915782776e-06,
+        0.32756271958351135,
+        2.3454089164733887,
+        0.3793623745441437,
+        9.680409857537597e-05
+      ],
+      "clip_mask_arm": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "clipped_delta_arm_rad": [
+        3.8937118915782776e-06,
+        0.006529420614242554,
+        -0.0014450550079345703,
+        -0.0021139979362487793,
+        9.680409857537597e-05
+      ],
+      "closed_loop_alpha": 0.0017241379310344827,
+      "command_target_face_gap_m": -0.01995522901415825,
+      "command_target_inside_contact_band": false,
+      "command_target_lateral_m": 0.0,
+      "command_target_vertical_offset_m": 3.725290298461914e-09,
+      "computed_torque_after_arm_nm": [
+        -6.92454632371664e-05,
+        -0.011185497045516968,
+        -0.012287989258766174,
+        -0.0017799288034439087,
+        3.5888515412807465e-05
+      ],
+      "controller_mode": "isaac_builtin_diffik_step_clipped_direct_apply",
+      "cube_disp_along_m": 0.0008044242858886719,
+      "cube_pos_w_xyz": [
+        1.2408044338226318,
+        3.4061511087202234e-06,
+        0.03791672736406326
+      ],
+      "cube_speed_mps": 0.07963346689939499,
+      "current_target_minus_previous_target_arm_rad": null,
+      "direct_joint_follow_abs_max_rad": 0.005162030458450317,
+      "direct_joint_follow_arm_rad": [
+        2.443073526592343e-06,
+        0.005162030458450317,
+        -0.0012671947479248047,
+        -0.0017387866973876953,
+        7.90464473539032e-05
+      ],
+      "env_id": 0,
+      "episode_length_s": 6.08,
+      "joint_acc_after_arm_rad": [
+        -0.0054575977846980095,
+        -2.678403377532959,
+        0.29490068554878235,
+        0.7072858810424805,
+        -0.033796437084674835
+      ],
+      "joint_effort_limit_arm_nm": [
+        2.5,
+        2.5,
+        2.5,
+        2.5,
+        2.5
+      ],
+      "joint_lower_arm_rad": [
+        -3.1415998935699463,
+        -1.5707999467849731,
+        -1.0,
+        -1.9199998378753662,
+        -3.1415998935699463
+      ],
+      "joint_pos_after_arm_rad": [
+        1.4506383649859345e-06,
+        0.32240068912506104,
+        2.3466761112213135,
+        0.38110116124153137,
+        1.775765122147277e-05
+      ],
+      "joint_pos_before_arm_rad": [
+        -6.096366113141137e-17,
+        0.3210332989692688,
+        2.3468539714813232,
+        0.38147637248039246,
+        0.0
+      ],
+      "joint_pos_des_arm_rad": [
+        3.8937118915782776e-06,
+        0.32756271958351135,
+        2.3454089164733887,
+        0.3793623745441437,
+        9.680409857537597e-05
+      ],
+      "joint_pos_target_after_arm_rad": [
+        3.8937118915782776e-06,
+        0.32756271958351135,
+        2.3454089164733887,
+        0.3793623745441437,
+        9.680409857537597e-05
+      ],
+      "joint_target_delta_abs_max_rad": 0.006529420614242554,
+      "joint_upper_arm_rad": [
+        3.1415998935699463,
+        1.5707999467849731,
+        2.9499998092651367,
+        1.9199998378753662,
+        3.1415998935699463
+      ],
+      "joint_vel_after_arm_rad": [
+        3.7667621654691175e-05,
+        0.10666517168283463,
+        -0.022847793996334076,
+        -0.03441828489303589,
+        0.0015750821912661195
+      ],
+      "joint_velocity_limit_arm_radps": [
+        3.140000104904175,
+        3.140000104904175,
+        3.140000104904175,
+        3.140000104904175,
+        3.140000104904175
+      ],
+      "previous_arm_joint_target_rad": null,
+      "previous_target_minus_actual_arm_rad": null,
+      "professor_physical_reaction_now": true,
+      "professor_physical_reaction_seen": true,
+      "push_dir_xy": [
+        1.0,
+        0.0
+      ],
+      "raw_delta_arm_rad": [
+        3.8937118915782776e-06,
+        0.006529420614242554,
+        -0.0014450550079345703,
+        -0.0021139979362487793,
+        9.680409857537597e-05
+      ],
+      "step": 0,
+      "tap_contact_proxy_mode": "link5_collision_aabb",
+      "tap_success_now": true,
+      "tap_success_seen": true,
+      "target_base_arm_rad": [
+        -6.096366113141137e-17,
+        0.3210332989692688,
+        2.3468539714813232,
+        0.38147637248039246,
+        0.0
+      ],
+      "target_base_minus_actual_arm_rad": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "target_base_mode": "previous_joint_target",
+      "target_delta_from_actual_arm_rad": [
+        3.8937118915782776e-06,
+        0.006529420614242554,
+        -0.0014450550079345703,
+        -0.0021139979362487793,
+        9.680409857537597e-05
+      ],
+      "target_full_arm_rad": [
+        3.8937118915782776e-06,
+        0.32756271958351135,
+        2.3454089164733887,
+        0.3793623745441437,
+        9.680409857537597e-05
+      ],
+      "target_lead_limited_arm": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "target_path_mode": "near_face_goal",
+      "target_tcp_err_before_m": 0.001080782269127667,
+      "target_unclamped_arm_rad": [
+        3.8937118915782776e-06,
+        0.32756271958351135,
+        2.3454089164733887,
+        0.3793623745441437,
+        9.680409857537597e-05
+      ],
+      "terminated": false,
+      "tool_contact_proxy_mode": "hand_tcp",
+      "tool_proxy_label": "hand_tcp",
+      "tool_proxy_local_m": [
+        0.0,
+        0.0,
+        0.11542800068855286
+      ],
+      "truncated": false
+    },
+    {
+      "actual_contact_proxy": false,
+      "actual_fk_vs_sim_tcp_err_before_mm": 0.0,
+      "actual_joint_step_abs_max_rad": 0.0013673901557922363,
+      "actual_joint_step_arm_rad": [
+        1.4508249250866356e-06,
+        0.0013673901557922363,
+        -0.00017786026000976562,
+        -0.0003752410411834717,
+        1.776000135578215e-05
+      ],
+      "actual_tcp_face_gap_m": -0.021197926253080368,
+      "actual_tcp_lateral_m": 1.535931460239226e-06,
+      "actual_tcp_vertical_offset_m": 0.0007311850786209106,
+      "applied_joint_target_fk_err_mm": 0.15776135974524091,
+      "applied_joint_target_fk_face_gap_m": -0.020112677039402338,
+      "applied_joint_target_fk_inside_contact_band": false,
+      "applied_joint_target_fk_lateral_m": 6.61499996224324e-07,
+      "applied_joint_target_fk_vertical_offset_m": 8.923118698253574e-06,
+      "applied_torque_after_arm_nm": [
+        -6.927835056558251e-05,
+        -0.011184871196746826,
+        -0.012292414903640747,
+        -0.0017818659543991089,
+        3.587501123547554e-05
+      ],
+      "arm_joint_ids": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "arm_joint_names": [
+        "base_link_to_link1",
+        "link1_to_link2",
+        "link2_to_link3",
+        "link3_to_link4",
+        "link4_to_link5"
+      ],
+      "arm_joint_target_rad": [
+        3.8937323552090675e-06,
+        0.3275628685951233,
+        2.3454084396362305,
+        0.3793621361255646,
+        9.681766096036881e-05
+      ],
+      "clip_mask_arm": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "clipped_delta_arm_rad": [
+        3.8937323552090675e-06,
+        0.006529569625854492,
+        -0.0014455318450927734,
+        -0.002114236354827881,
+        9.681766096036881e-05
+      ],
+      "closed_loop_alpha": 0.0017241379310344827,
+      "command_target_face_gap_m": -0.019955169409513474,
+      "command_target_inside_contact_band": false,
+      "command_target_lateral_m": 0.0,
+      "command_target_vertical_offset_m": 3.725290298461914e-09,
+      "computed_torque_after_arm_nm": [
+        -6.927835056558251e-05,
+        -0.011184871196746826,
+        -0.012292414903640747,
+        -0.0017818659543991089,
+        3.587501123547554e-05
+      ],
+      "controller_mode": "isaac_builtin_diffik_step_clipped_direct_apply",
+      "cube_disp_along_m": 0.0008438229560852051,
+      "cube_pos_w_xyz": [
+        -0.7591561675071716,
+        1.132203124143416e-06,
+        0.037935152649879456
+      ],
+      "cube_speed_mps": 0.07380570471286774,
+      "current_target_minus_previous_target_arm_rad": null,
+      "direct_joint_follow_abs_max_rad": 0.005162179470062256,
+      "direct_joint_follow_arm_rad": [
+        2.442907316435594e-06,
+        0.005162179470062256,
+        -0.0012676715850830078,
+        -0.0017389953136444092,
+        7.905765960458666e-05
+      ],
+      "env_id": 1,
+      "episode_length_s": 6.08,
+      "joint_acc_after_arm_rad": [
+        -0.00545972865074873,
+        -2.6784300804138184,
+        0.29481613636016846,
+        0.7072627544403076,
+        -0.03380086272954941
+      ],
+      "joint_effort_limit_arm_nm": [
+        2.5,
+        2.5,
+        2.5,
+        2.5,
+        2.5
+      ],
+      "joint_lower_arm_rad": [
+        -3.1415998935699463,
+        -1.5707999467849731,
+        -1.0,
+        -1.9199998378753662,
+        -3.1415998935699463
+      ],
+      "joint_pos_after_arm_rad": [
+        1.4508249250866356e-06,
+        0.32240068912506104,
+        2.3466761112213135,
+        0.381101131439209,
+        1.776000135578215e-05
+      ],
+      "joint_pos_before_arm_rad": [
+        -6.096366113141137e-17,
+        0.3210332989692688,
+        2.3468539714813232,
+        0.38147637248039246,
+        0.0
+      ],
+      "joint_pos_des_arm_rad": [
+        3.8937323552090675e-06,
+        0.3275628685951233,
+        2.3454084396362305,
+        0.3793621361255646,
+        9.681766096036881e-05
+      ],
+      "joint_pos_target_after_arm_rad": [
+        3.8937323552090675e-06,
+        0.3275628685951233,
+        2.3454084396362305,
+        0.3793621361255646,
+        9.681766096036881e-05
+      ],
+      "joint_target_delta_abs_max_rad": 0.006529569625854492,
+      "joint_upper_arm_rad": [
+        3.1415998935699463,
+        1.5707999467849731,
+        2.9499998092651367,
+        1.9199998378753662,
+        3.1415998935699463
+      ],
+      "joint_vel_after_arm_rad": [
+        3.766176087083295e-05,
+        0.10666786134243011,
+        -0.02285664714872837,
+        -0.03442268446087837,
+        0.0015753108309581876
+      ],
+      "joint_velocity_limit_arm_radps": [
+        3.140000104904175,
+        3.140000104904175,
+        3.140000104904175,
+        3.140000104904175,
+        3.140000104904175
+      ],
+      "previous_arm_joint_target_rad": null,
+      "previous_target_minus_actual_arm_rad": null,
+      "professor_physical_reaction_now": true,
+      "professor_physical_reaction_seen": true,
+      "push_dir_xy": [
+        1.0,
+        0.0
+      ],
+      "raw_delta_arm_rad": [
+        3.8937323552090675e-06,
+        0.006529569625854492,
+        -0.0014455318450927734,
+        -0.002114236354827881,
+        9.681766096036881e-05
+      ],
+      "step": 0,
+      "tap_contact_proxy_mode": "link5_collision_aabb",
+      "tap_success_now": true,
+      "tap_success_seen": true,
+      "target_base_arm_rad": [
+        -6.096366113141137e-17,
+        0.3210332989692688,
+        2.3468539714813232,
+        0.38147637248039246,
+        0.0
+      ],
+      "target_base_minus_actual_arm_rad": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "target_base_mode": "previous_joint_target",
+      "target_delta_from_actual_arm_rad": [
+        3.8937323552090675e-06,
+        0.006529569625854492,
+        -0.0014455318450927734,
+        -0.002114236354827881,
+        9.681766096036881e-05
+      ],
+      "target_full_arm_rad": [
+        3.8937323552090675e-06,
+        0.3275628685951233,
+        2.3454084396362305,
+        0.3793621361255646,
+        9.681766096036881e-05
+      ],
+      "target_lead_limited_arm": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "target_path_mode": "near_face_goal",
+      "target_tcp_err_before_m": 0.0010808265069499612,
+      "target_unclamped_arm_rad": [
+        3.8937323552090675e-06,
+        0.3275628685951233,
+        2.3454084396362305,
+        0.3793621361255646,
+        9.681766096036881e-05
+      ],
+      "terminated": false,
+      "tool_contact_proxy_mode": "hand_tcp",
+      "tool_proxy_label": "hand_tcp",
+      "tool_proxy_local_m": [
+        0.0,
+        0.0,
+        0.11542800068855286
+      ],
+      "truncated": false
+    }
+  ],
+  "schema": [
+    "step",
+    "env_id",
+    "tap_contact_proxy_mode",
+    "tool_contact_proxy_mode",
+    "tool_proxy_label",
+    "tool_proxy_local_m",
+    "target_base_mode",
+    "target_path_mode",
+    "controller_mode",
+    "closed_loop_alpha",
+    "episode_length_s",
+    "cube_pos_w_xyz",
+    "push_dir_xy",
+    "arm_joint_names",
+    "arm_joint_ids",
+    "command_target_face_gap_m",
+    "command_target_lateral_m",
+    "command_target_vertical_offset_m",
+    "command_target_inside_contact_band",
+    "applied_joint_target_fk_face_gap_m",
+    "applied_joint_target_fk_lateral_m",
+    "applied_joint_target_fk_vertical_offset_m",
+    "applied_joint_target_fk_inside_contact_band",
+    "applied_joint_target_fk_err_mm",
+    "actual_tcp_face_gap_m",
+    "actual_tcp_lateral_m",
+    "actual_tcp_vertical_offset_m",
+    "actual_contact_proxy",
+    "target_tcp_err_before_m",
+    "actual_fk_vs_sim_tcp_err_before_mm",
+    "joint_pos_before_arm_rad",
+    "joint_pos_des_arm_rad",
+    "target_base_arm_rad",
+    "target_base_minus_actual_arm_rad",
+    "raw_delta_arm_rad",
+    "clipped_delta_arm_rad",
+    "clip_mask_arm",
+    "target_unclamped_arm_rad",
+    "target_lead_limited_arm",
+    "arm_joint_target_rad",
+    "target_full_arm_rad",
+    "target_delta_from_actual_arm_rad",
+    "previous_arm_joint_target_rad",
+    "current_target_minus_previous_target_arm_rad",
+    "previous_target_minus_actual_arm_rad",
+    "joint_lower_arm_rad",
+    "joint_upper_arm_rad",
+    "joint_pos_target_after_arm_rad",
+    "joint_pos_after_arm_rad",
+    "joint_vel_after_arm_rad",
+    "joint_acc_after_arm_rad",
+    "computed_torque_after_arm_nm",
+    "applied_torque_after_arm_nm",
+    "joint_effort_limit_arm_nm",
+    "joint_velocity_limit_arm_radps",
+    "direct_joint_follow_arm_rad",
+    "actual_joint_step_arm_rad",
+    "direct_joint_follow_abs_max_rad",
+    "actual_joint_step_abs_max_rad",
+    "cube_disp_along_m",
+    "cube_speed_mps",
+    "professor_physical_reaction_now",
+    "professor_physical_reaction_seen",
+    "tap_success_now",
+    "tap_success_seen",
+    "terminated",
+    "truncated"
+  ],
+  "ssh": false,
+  "track_a": false,
+  "training": false
+}
