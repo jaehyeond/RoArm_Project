@@ -12330,3 +12330,244 @@ Sources:
 - `roarm_rl/roarm_cube_push_env.py`
 - `roarm_rl/train_cube_tap10cm_ppo_smoke.py`
 - `claudedocs/session_20260610_cube10cm_tap_rl_candidate8_target_residual.md`
+
+## D222 - Target-aligned 6mm reward patch keeps zero-action equivalence but L1 still fails
+
+Current State:
+
+- Implemented the reward/success contract correction for the professor 10cm cube
+  tap RL branch without changing the corrected 3D action space:
+  `policy_action_space=3`, no gates, no action-penalty change.
+- The tap reward no longer gives monotonic dense displacement reward up to the
+  20mm hard overshoot threshold. It now uses the existing
+  `tap_transient_disp_reward_scale` on a target-band reward peaked around
+  `policy_target_disp_m=0.006`.
+- Added fixed `tap_target_disp_tolerance_m=0.003`.
+- Success now requires contact/reaction plus the target displacement band, not
+  merely contact/reaction before the 20mm hard overshoot threshold.
+- Target-excess penalty is magnitude-based relative to the target band; the 20mm
+  overshoot threshold remains a hard safety termination.
+- Progress reward now rewards reducing target displacement error rather than
+  continuing to push farther.
+- Static verification passed:
+  `python3 -m py_compile roarm_rl/roarm_cube_push_env.py roarm_rl/train_cube_tap10cm_ppo_smoke.py`
+  and `git diff --check`.
+
+Zero-Action Preflight:
+
+- Ran two same-seed seed1011 zero-action preflights under the new reward semantics:
+  Candidate7/base and corrected 3D target residual.
+- No PPO training, dataset, VLA, action-teacher, RoArm, SSH/B200, or Track A work
+  was run for the preflight.
+- Candidate7/base line 3 and corrected 3D line 3 both report contract violations
+  `0`; corrected 3D line 3 reports `policy_action_space=3`.
+- Both line 4 reports match exactly:
+  `success_episode_rate=0.9696969696969697`, `overshoot_max=0.03125`,
+  `target_band_max=0.09375`,
+  `target_excess_max_m=0.00035376427695155144`,
+  `reward_mean_per_step=1.2511927620090286`.
+- Structured JSON comparison showed diff `0.0` for success/contact/reaction/
+  overshoot/target-band/target-excess/reward/face-gap/TCP/IK/Candidate6 metrics,
+  and Candidate8 target residual max stayed `0.0`.
+
+L1 Result:
+
+- Ran exactly one clean corrected 3D L1 health screen under the new reward:
+  xy +/-3cm, seed1012, `num_envs=32`, `num_steps_per_env=64`,
+  `max_iterations=20`, `ppo_init_noise_std=0.2`, no gates,
+  `policy_action_space=3`.
+- No L2/large PPO, dataset generation, VLA, action-teacher, RoArm, SSH/B200, or
+  Track A work was run.
+- L1 line 3 reports `policy_action_space=3`, `tap_target_disp_tolerance_m=0.003`,
+  and contract violations `0`.
+- L1 line 4 same-run zero-policy pre-eval:
+  `success_episode_rate=0.9411764705882353`, `overshoot_max=0.03125`,
+  `target_band_max=0.0625`,
+  `target_excess_max_m=0.0005192677490413189`,
+  `reward_mean_per_step=1.334799850809163`.
+- L1 line 7 post-training eval:
+  `success_episode_rate=0.43103448275862066`, `overshoot_max=0.28125`,
+  `target_band_max=0.03125`,
+  `target_excess_max_m=0.008653294295072556`,
+  `reward_mean_per_step=-3.8591888975480506`,
+  `candidate8_target_residual_abs_max_max=0.003051945473998785`.
+- L1 line 9 base-relative gate:
+  `success_episode_delta=-0.5101419878296146`, `overshoot_delta=0.25`,
+  `signal_seen=True`, `l1_health_pass=False`, `l2_scale_candidate=False`.
+
+Implication:
+
+- The reward diagnosis was correct and the target-aligned implementation passes
+  the zero-action equivalence gate, but this L1 policy is still not scale-ready.
+- Do not promote to L2/large PPO.
+- Do not respond by returning to action-space changes, simple gates, half-scale
+  grids, or displacement gates.
+- The next work must diagnose why the 6mm target-band reward remains hard for PPO
+  under xy +/-3cm. The new failure is not an implementation bridge failure; it is
+  likely credit sparsity/termination timing, target-band observability, base
+  trajectory target-band dwell, or PPO update behavior under the stricter reward.
+- Dataset generation, action-teacher claims, VLA, and RoArm deployment remain
+  blocked.
+
+Sources:
+
+- `roarm_rl/roarm_cube_push_env.py`
+- `roarm_rl/train_cube_tap10cm_ppo_smoke.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_rewardtarget_candidate7_currentpose_xy3cm_same_seed1011_base_compare_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_rewardtarget_candidate8_3daction_zero_preflight_seed1011_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_rewardtarget_candidate8_3daction_xy3cm_l1_40k_seed1012_summary.out:1-10`
+- `claudedocs/session_20260610_cube10cm_tap_rl_candidate8_target_residual.md`
+
+## D223 - L2 recovery probe does not recover target-aligned 3D residual; no Large PPO promotion
+
+Context:
+
+- D222 explicitly said not to scale the target-aligned 3D residual after the L1
+  health failure.
+- User then explicitly approved one diagnostic L2 recovery probe and asked to
+  consider Large PPO.
+- The purpose was narrow: test whether D222 L1 was only an early PPO exploration
+  dip that recovers with more steps.
+
+Run:
+
+- Ran exactly one local RTX4090/cuda:0 same-contract L2 recovery probe.
+- No code changes, no gates, no action-space changes, no reward changes, no
+  dataset generation, no VLA, no action-teacher, no RoArm, no SSH/B200, and no
+  Track A work.
+- Contract:
+  `rl_action_mode=candidate8_diffik_target_residual`,
+  `policy_action_space=3`, xy +/-3cm randomization, seed1012, `num_envs=32`,
+  `num_steps_per_env=64`, `max_iterations=50` (`102,400` PPO steps),
+  `ppo_init_noise_std=0.2`, current-pose cube reference, previous-target base,
+  near-face target path, `policy_target_disp_m=0.006`,
+  `tap_target_disp_tolerance_m=0.003`.
+
+Result:
+
+- L2 line 3 reports `policy_action_space=3`, contract violations `0`, and
+  `tap_target_disp_tolerance_m=0.003`.
+- L2 line 4 same-run zero-policy pre-eval:
+  `success_episode_rate=0.9411764705882353`, `overshoot_max=0.03125`,
+  `target_band_max=0.0625`,
+  `target_excess_max_m=0.0005192677490413189`,
+  `reward_mean_per_step=1.334799850809163`.
+- L2 line 7 post-training eval:
+  `success_episode_rate=0.45614035087719296`, `overshoot_max=0.625`,
+  `target_band_max=0.03125`,
+  `target_excess_max_m=0.01076299138367176`,
+  `reward_mean_per_step=-1.4619945263040477`,
+  `candidate8_target_residual_abs_max_max=0.0048493314534425735`.
+- L2 line 9 base-relative gate:
+  `success_episode_delta=-0.4850361197110423`,
+  `overshoot_delta=0.59375`, `signal_seen=True`,
+  `l1_health_pass=False`, `l2_scale_candidate=False`.
+
+Implication:
+
+- The early-dip recovery hypothesis is not supported by this run. L2 post
+  success is only slightly above the D222 L1 post value, still far below the
+  same-run base, and overshoot becomes much worse.
+- Large PPO has now been considered. Under the current pass/fail contract it is
+  not justified: the prerequisite L2 scale-candidate gate is false and the
+  longer run amplifies the main safety/quality failure.
+- Treat any further Large PPO on this exact contract as an explicit exploratory
+  override, not as protocol-supported promotion.
+- Do not continue reward/action/gate/scale micro-variants or blind scale-up.
+  The next step must be a structural direction decision for the task/training
+  setup.
+- Dataset generation, action-teacher claims, VLA, and RoArm deployment remain
+  blocked.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_rewardtarget_candidate8_3daction_xy3cm_l2_recovery_probe_102k_seed1012_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_rewardtarget_candidate8_3daction_xy3cm_l2_recovery_probe_102k_seed1012_summary.json`
+- `claudedocs/session_20260610_cube10cm_tap_rl_candidate8_target_residual.md`
+
+## D224 - TCP is not link5 origin, but hand_tcp is behind distal collision surface by about 4.5mm
+
+Context:
+
+- User raised a critical geometry suspicion: if IK solves for link5 origin rather
+  than the actual gripper contact point, the old `actual TCP` shortfall of about
+  9.5mm could be a fixed TCP-definition bug rather than actuator/step-clip
+  behavior.
+- Checked this locally from code/URDF/mesh/logs only. No new Isaac runtime, PPO,
+  dataset generation, VLA, action-teacher, RoArm, SSH/B200, or Track A work was
+  run.
+
+Findings:
+
+- `sim_scripts/roarm_kinematics.py` defines `link5_to_tcp` as
+  `[0, 0, 0.115428]` with `rpy=[pi/2, -pi/2, 0]`, and `fk_tcp()` returns this
+  TCP, not bare link5 origin.
+- `local_assets/roarm_m3/urdf/roarm_m3.urdf` defines the same fixed
+  `link5_to_hand_tcp` joint at `xyz="0 0 0.115428"` and
+  `rpy="1.5708 -1.5708 0"`.
+- `roarm_rl/roarm_stack_env.py` computes `_tcp_pos_w` as
+  `link5_pos + quat_rotate(link5_quat, TCP_LOCAL_OFFSET_M)`, with
+  `TCP_LOCAL_OFFSET_M=(0,0,0.115428)`.
+- Candidate6 built-in DiffIK does use link5 as the Isaac DiffIK body, but it
+  first subtracts the rotated TCP offset from the desired TCP target:
+  `link5_target_w = tcp_target_w - tool_proxy_offset_w`. This makes the link5
+  body target correspond to the desired hand_tcp target.
+- Numeric IK reset and goal checks also use `fk_tcp(q)` with the same
+  `link5_to_tcp` offset.
+- Existing positive-control telemetry is consistent with this frame wiring:
+  `actual_fk_vs_sim_tcp_err_mm_final=0.0`.
+
+Geometry nuance:
+
+- The suspicion is still partly right in a narrower way: `hand_tcp` is not the
+  most distal collision surface.
+- Current link5 collision AABB constants are
+  `z_max=0.11988562011718751`, while `hand_tcp` is at `z=0.115428`, so the
+  collision surface extends about `0.004457620117187506m` beyond the hand_tcp
+  point in link5-local z.
+- Existing mesh audit confirms the same scale: link5 raw STL z range ends at
+  about `119.89mm`, gripper_link closed z max is about `119.12mm`, and hand_tcp
+  is `115.43mm` in link5 frame.
+- This means old strict `tcp_point` contact/shortfall metrics were pessimistic
+  for physical contact by a few millimeters. It does not mean IK forgot the
+  full link5-to-gripper offset.
+
+Relation to the old 9.5mm shortfall:
+
+- The old x240 trace split is still coherent:
+  applied joint-target FK best shortfall was about `0.003457759m`, actual TCP
+  best shortfall was about `0.008961143m`, and the first applied-to-actual lag
+  was about `0.005616973m`.
+- The about-9mm actual TCP shortfall is therefore not a single fixed TCP-origin
+  error. It is better interpreted as a combination of:
+  - hand_tcp being several millimeters behind the distal collision surface; and
+  - actuator/position-drive or target-follow lag between applied target and
+    actual TCP.
+- This also explains why later `link5_collision_aabb` positive-control runs can
+  pass contact while raw hand_tcp-point metrics still look precontact.
+
+Current implication:
+
+- Do not "fix" IK by adding another full link5-to-gripper offset; that would
+  double-count an offset already present in FK, env TCP, and DiffIK target
+  conversion.
+- For tap/push contact, `link5_collision_aabb` is the more defensible contact
+  proxy than raw `tcp_point`. The current PPO smoke already sets
+  `tap_contact_proxy_mode="link5_collision_aabb"`.
+- D223 still governs the learning state: target-aligned corrected 3D L2 failed
+  and Large PPO is not justified. This D224 geometry check does not unblock
+  dataset generation, VLA, action-teacher, or RoArm.
+
+Sources:
+
+- `sim_scripts/roarm_kinematics.py:18-26`
+- `local_assets/roarm_m3/urdf/roarm_m3.urdf:233-239`
+- `roarm_rl/roarm_stack_env.py:86-87`
+- `roarm_rl/roarm_stack_env.py:1176-1179`
+- `roarm_rl/roarm_cube_push_env.py:523-548`
+- `roarm_rl/roarm_cube_push_env.py:43-44`
+- `roarm_rl/roarm_cube_push_env.py:1453-1505`
+- `roarm_rl/train_cube_tap10cm_ppo_smoke.py:546-549`
+- `mesh_audit/analyze_gripper.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_applied_target_tcp_reach_contract_diagnosis_summary.out:4-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_x240_nearface_prevtargetbase_link5aabb_pre040_candidate6_sanity_summary.out:3-10`

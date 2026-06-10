@@ -283,6 +283,7 @@ class RoArmCubeTap10cmEnvCfg(RoArmCubePushEnvCfg):
     tap_reaction_speed_mps: float = 0.020
     tap_reaction_tip_angle_deg: float = 1.0
     tap_overshoot_disp_m: float = 0.020
+    tap_target_disp_tolerance_m: float = 0.003
     tap_success_terminate: bool = False
     professor_physical_reaction_disp_m: float = 0.0005
     professor_physical_reaction_speed_mps: float = 0.005
@@ -1567,6 +1568,16 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
         contact_context = contact_proxy | self._tap_contact_seen
         reaction_now = contact_context & reaction_signal_now
         overshoot_now = terms["disp_xy"] >= float(self.cfg.tap_overshoot_disp_m)
+        target_disp_m = max(float(self.cfg.cube_push_target_disp_m), 1.0e-6)
+        target_tol_m = max(float(self.cfg.tap_target_disp_tolerance_m), 1.0e-6)
+        disp_along_pos = torch.clamp(terms["disp_along"], min=0.0)
+        target_disp_error = torch.abs(disp_along_pos - target_disp_m)
+        target_total_ok = terms["disp_xy"] <= target_disp_m + target_tol_m
+        target_band_now = (target_disp_error <= target_tol_m) & target_total_ok
+        target_band_reward_m = torch.clamp(target_tol_m - target_disp_error, min=0.0, max=target_tol_m)
+        target_band_reward_m = torch.where(target_total_ok, target_band_reward_m, torch.zeros_like(target_band_reward_m))
+        target_excess_m = torch.clamp(terms["disp_xy"] - (target_disp_m + target_tol_m), min=0.0)
+        target_excess_ratio = target_excess_m / target_tol_m
         professor_physical_reaction_signal = (
             (torch.clamp(terms["disp_along"], min=0.0) >= float(self.cfg.professor_physical_reaction_disp_m))
             | (terms["disp_xy"] >= float(self.cfg.professor_physical_reaction_disp_m))
@@ -1574,7 +1585,7 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
             | (terms["speed"] >= float(self.cfg.professor_physical_reaction_speed_mps))
         )
         professor_physical_reaction_now = professor_physical_reaction_signal & ~overshoot_now
-        success_now = (contact_proxy | self._tap_contact_seen) & reaction_now & ~overshoot_now
+        success_now = (contact_proxy | self._tap_contact_seen) & reaction_now & target_band_now & ~overshoot_now
 
         terms.update(
             {
@@ -1588,6 +1599,11 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
                 "tap_reaction_contact_context": contact_context,
                 "tap_reaction_now": reaction_now,
                 "tap_overshoot_now": overshoot_now,
+                "tap_target_disp_error_m": target_disp_error,
+                "tap_target_band_now": target_band_now,
+                "tap_target_band_reward_m": target_band_reward_m,
+                "tap_target_excess_m": target_excess_m,
+                "tap_target_excess_ratio": target_excess_ratio,
                 "professor_physical_reaction_signal": professor_physical_reaction_signal,
                 "professor_physical_reaction_now": professor_physical_reaction_now,
                 "tap_success_now": success_now,
@@ -1605,7 +1621,12 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
         self._tap_max_z_delta[:] = torch.maximum(self._tap_max_z_delta, terms["tap_z_delta_m"])
         self._tap_max_speed[:] = torch.maximum(self._tap_max_speed, terms["speed"])
         self._tap_max_tip_angle_deg[:] = torch.maximum(self._tap_max_tip_angle_deg, terms["tip_angle_deg"])
-        success_now = self._tap_contact_seen & self._tap_reaction_seen & ~self._tap_overshoot_seen
+        success_now = (
+            self._tap_contact_seen
+            & self._tap_reaction_seen
+            & terms["tap_target_band_now"]
+            & ~self._tap_overshoot_seen
+        )
         just_succeeded = success_now & ~self._tap_success_flag
         self._tap_success_flag |= success_now
         self._tap_just_succeeded_pending |= just_succeeded
@@ -1617,17 +1638,18 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
         self._update_tap_buffers(terms)
         just_succeeded = self._tap_just_succeeded_pending.clone()
 
-        progress = torch.clamp(terms["disp_along"] - self._prev_disp_along, min=-0.005, max=0.005)
+        target_disp_m = max(float(self.cfg.cube_push_target_disp_m), 1.0e-6)
+        prev_target_error = torch.abs(torch.clamp(self._prev_disp_along, min=0.0) - target_disp_m)
+        progress = torch.clamp(prev_target_error - terms["tap_target_disp_error_m"], min=-0.005, max=0.005)
         self._prev_disp_along[:] = terms["disp_along"].detach()
-        transient_disp = torch.clamp(terms["disp_along"], min=0.0, max=float(self.cfg.tap_overshoot_disp_m))
         action_penalty = -torch.sum(self.actions ** 2, dim=-1) * self.cfg.action_penalty_scale
         rewards = (
             self.cfg.push_progress_reward_scale * progress
             + self.cfg.tap_contact_reward_scale * terms["tap_contact_proxy"].float()
             + self.cfg.tap_contact_proximity_reward_scale * terms["tap_contact_proximity"]
             + self.cfg.tap_reaction_reward_scale * just_succeeded.float()
-            + self.cfg.tap_transient_disp_reward_scale * transient_disp
-            - self.cfg.tap_overshoot_penalty_scale * self._tap_overshoot_seen.float()
+            + self.cfg.tap_transient_disp_reward_scale * terms["tap_target_band_reward_m"]
+            - self.cfg.tap_overshoot_penalty_scale * terms["tap_target_excess_ratio"]
             - self.cfg.tap_tip_penalty_scale * terms["tip_angle_deg"]
             + action_penalty
         )
@@ -1646,6 +1668,15 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
             "cube_tap_reaction_contact_context_rate": terms["tap_reaction_contact_context"].float().mean().detach(),
             "cube_tap_reaction_now_rate": terms["tap_reaction_now"].float().mean().detach(),
             "cube_tap_reaction_seen_rate": self._tap_reaction_seen.float().mean().detach(),
+            "cube_tap_target_disp_m": torch.tensor(float(self.cfg.cube_push_target_disp_m), device=self.device),
+            "cube_tap_target_disp_tolerance_m": torch.tensor(
+                float(self.cfg.tap_target_disp_tolerance_m), device=self.device
+            ),
+            "cube_tap_target_disp_error_m": terms["tap_target_disp_error_m"].mean().detach(),
+            "cube_tap_target_band_rate": terms["tap_target_band_now"].float().mean().detach(),
+            "cube_tap_target_excess_m": terms["tap_target_excess_m"].mean().detach(),
+            "cube_tap_target_excess_ratio": terms["tap_target_excess_ratio"].mean().detach(),
+            "cube_tap_target_band_reward_m": terms["tap_target_band_reward_m"].mean().detach(),
             "cube_tap_professor_physical_reaction_signal_now_rate": terms[
                 "professor_physical_reaction_signal"
             ].float().mean().detach(),

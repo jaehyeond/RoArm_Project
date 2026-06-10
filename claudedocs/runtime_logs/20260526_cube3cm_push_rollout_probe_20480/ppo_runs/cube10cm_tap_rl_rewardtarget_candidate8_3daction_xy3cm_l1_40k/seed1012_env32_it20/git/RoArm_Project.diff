@@ -1,0 +1,216 @@
+--- git status ---
+On branch master
+Your branch is up to date with 'origin/master'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   roarm_rl/roarm_cube_push_env.py
+	modified:   roarm_rl/train_cube_tap10cm_ppo_smoke.py
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_rewardtarget_candidate7_currentpose_xy3cm_same_seed1011_base_compare_summary.json
+	claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_rewardtarget_candidate7_currentpose_xy3cm_same_seed1011_base_compare_summary.out
+	claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_rewardtarget_candidate8_3daction_zero_preflight_seed1011_summary.json
+	claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_rewardtarget_candidate8_3daction_zero_preflight_seed1011_summary.out
+	claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_runs/cube10cm_tap_rl_rewardtarget_candidate8_3daction_xy3cm_l1_40k/
+
+no changes added to commit (use "git add" and/or "git commit -a") 
+
+
+--- git diff ---
+diff --git a/roarm_rl/roarm_cube_push_env.py b/roarm_rl/roarm_cube_push_env.py
+index 75ff306..d936152 100644
+--- a/roarm_rl/roarm_cube_push_env.py
++++ b/roarm_rl/roarm_cube_push_env.py
+@@ -283,6 +283,7 @@ class RoArmCubeTap10cmEnvCfg(RoArmCubePushEnvCfg):
+     tap_reaction_speed_mps: float = 0.020
+     tap_reaction_tip_angle_deg: float = 1.0
+     tap_overshoot_disp_m: float = 0.020
++    tap_target_disp_tolerance_m: float = 0.003
+     tap_success_terminate: bool = False
+     professor_physical_reaction_disp_m: float = 0.0005
+     professor_physical_reaction_speed_mps: float = 0.005
+@@ -1567,6 +1568,16 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
+         contact_context = contact_proxy | self._tap_contact_seen
+         reaction_now = contact_context & reaction_signal_now
+         overshoot_now = terms["disp_xy"] >= float(self.cfg.tap_overshoot_disp_m)
++        target_disp_m = max(float(self.cfg.cube_push_target_disp_m), 1.0e-6)
++        target_tol_m = max(float(self.cfg.tap_target_disp_tolerance_m), 1.0e-6)
++        disp_along_pos = torch.clamp(terms["disp_along"], min=0.0)
++        target_disp_error = torch.abs(disp_along_pos - target_disp_m)
++        target_total_ok = terms["disp_xy"] <= target_disp_m + target_tol_m
++        target_band_now = (target_disp_error <= target_tol_m) & target_total_ok
++        target_band_reward_m = torch.clamp(target_tol_m - target_disp_error, min=0.0, max=target_tol_m)
++        target_band_reward_m = torch.where(target_total_ok, target_band_reward_m, torch.zeros_like(target_band_reward_m))
++        target_excess_m = torch.clamp(terms["disp_xy"] - (target_disp_m + target_tol_m), min=0.0)
++        target_excess_ratio = target_excess_m / target_tol_m
+         professor_physical_reaction_signal = (
+             (torch.clamp(terms["disp_along"], min=0.0) >= float(self.cfg.professor_physical_reaction_disp_m))
+             | (terms["disp_xy"] >= float(self.cfg.professor_physical_reaction_disp_m))
+@@ -1574,7 +1585,7 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
+             | (terms["speed"] >= float(self.cfg.professor_physical_reaction_speed_mps))
+         )
+         professor_physical_reaction_now = professor_physical_reaction_signal & ~overshoot_now
+-        success_now = (contact_proxy | self._tap_contact_seen) & reaction_now & ~overshoot_now
++        success_now = (contact_proxy | self._tap_contact_seen) & reaction_now & target_band_now & ~overshoot_now
+ 
+         terms.update(
+             {
+@@ -1588,6 +1599,11 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
+                 "tap_reaction_contact_context": contact_context,
+                 "tap_reaction_now": reaction_now,
+                 "tap_overshoot_now": overshoot_now,
++                "tap_target_disp_error_m": target_disp_error,
++                "tap_target_band_now": target_band_now,
++                "tap_target_band_reward_m": target_band_reward_m,
++                "tap_target_excess_m": target_excess_m,
++                "tap_target_excess_ratio": target_excess_ratio,
+                 "professor_physical_reaction_signal": professor_physical_reaction_signal,
+                 "professor_physical_reaction_now": professor_physical_reaction_now,
+                 "tap_success_now": success_now,
+@@ -1605,7 +1621,12 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
+         self._tap_max_z_delta[:] = torch.maximum(self._tap_max_z_delta, terms["tap_z_delta_m"])
+         self._tap_max_speed[:] = torch.maximum(self._tap_max_speed, terms["speed"])
+         self._tap_max_tip_angle_deg[:] = torch.maximum(self._tap_max_tip_angle_deg, terms["tip_angle_deg"])
+-        success_now = self._tap_contact_seen & self._tap_reaction_seen & ~self._tap_overshoot_seen
++        success_now = (
++            self._tap_contact_seen
++            & self._tap_reaction_seen
++            & terms["tap_target_band_now"]
++            & ~self._tap_overshoot_seen
++        )
+         just_succeeded = success_now & ~self._tap_success_flag
+         self._tap_success_flag |= success_now
+         self._tap_just_succeeded_pending |= just_succeeded
+@@ -1617,17 +1638,18 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
+         self._update_tap_buffers(terms)
+         just_succeeded = self._tap_just_succeeded_pending.clone()
+ 
+-        progress = torch.clamp(terms["disp_along"] - self._prev_disp_along, min=-0.005, max=0.005)
++        target_disp_m = max(float(self.cfg.cube_push_target_disp_m), 1.0e-6)
++        prev_target_error = torch.abs(torch.clamp(self._prev_disp_along, min=0.0) - target_disp_m)
++        progress = torch.clamp(prev_target_error - terms["tap_target_disp_error_m"], min=-0.005, max=0.005)
+         self._prev_disp_along[:] = terms["disp_along"].detach()
+-        transient_disp = torch.clamp(terms["disp_along"], min=0.0, max=float(self.cfg.tap_overshoot_disp_m))
+         action_penalty = -torch.sum(self.actions ** 2, dim=-1) * self.cfg.action_penalty_scale
+         rewards = (
+             self.cfg.push_progress_reward_scale * progress
+             + self.cfg.tap_contact_reward_scale * terms["tap_contact_proxy"].float()
+             + self.cfg.tap_contact_proximity_reward_scale * terms["tap_contact_proximity"]
+             + self.cfg.tap_reaction_reward_scale * just_succeeded.float()
+-            + self.cfg.tap_transient_disp_reward_scale * transient_disp
+-            - self.cfg.tap_overshoot_penalty_scale * self._tap_overshoot_seen.float()
++            + self.cfg.tap_transient_disp_reward_scale * terms["tap_target_band_reward_m"]
++            - self.cfg.tap_overshoot_penalty_scale * terms["tap_target_excess_ratio"]
+             - self.cfg.tap_tip_penalty_scale * terms["tip_angle_deg"]
+             + action_penalty
+         )
+@@ -1646,6 +1668,15 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
+             "cube_tap_reaction_contact_context_rate": terms["tap_reaction_contact_context"].float().mean().detach(),
+             "cube_tap_reaction_now_rate": terms["tap_reaction_now"].float().mean().detach(),
+             "cube_tap_reaction_seen_rate": self._tap_reaction_seen.float().mean().detach(),
++            "cube_tap_target_disp_m": torch.tensor(float(self.cfg.cube_push_target_disp_m), device=self.device),
++            "cube_tap_target_disp_tolerance_m": torch.tensor(
++                float(self.cfg.tap_target_disp_tolerance_m), device=self.device
++            ),
++            "cube_tap_target_disp_error_m": terms["tap_target_disp_error_m"].mean().detach(),
++            "cube_tap_target_band_rate": terms["tap_target_band_now"].float().mean().detach(),
++            "cube_tap_target_excess_m": terms["tap_target_excess_m"].mean().detach(),
++            "cube_tap_target_excess_ratio": terms["tap_target_excess_ratio"].mean().detach(),
++            "cube_tap_target_band_reward_m": terms["tap_target_band_reward_m"].mean().detach(),
+             "cube_tap_professor_physical_reaction_signal_now_rate": terms[
+                 "professor_physical_reaction_signal"
+             ].float().mean().detach(),
+diff --git a/roarm_rl/train_cube_tap10cm_ppo_smoke.py b/roarm_rl/train_cube_tap10cm_ppo_smoke.py
+index 87a1461..d5cd446 100644
+--- a/roarm_rl/train_cube_tap10cm_ppo_smoke.py
++++ b/roarm_rl/train_cube_tap10cm_ppo_smoke.py
+@@ -278,6 +278,9 @@ def _rollout(
+         "tap_disp_max": 0.0,
+         "tap_speed_max": 0.0,
+         "tap_contact_proxy_rate_max": 0.0,
++        "tap_target_band_max": 0.0,
++        "tap_target_disp_error_min": None,
++        "tap_target_excess_max": 0.0,
+         "tap_contact_face_gap_m_final": None,
+         "tap_contact_face_gap_abs_min": None,
+         "tap_contact_lateral_m_final": None,
+@@ -362,6 +365,22 @@ def _rollout(
+                 float(metrics["reaction_seen_max"]),
+                 _mean_float(log.get("cube_tap_reaction_seen_rate")),
+             )
++            metrics["tap_target_band_max"] = max(
++                float(metrics["tap_target_band_max"]),
++                _mean_float(log.get("cube_tap_target_band_rate")),
++            )
++            target_error = _maybe_float(log.get("cube_tap_target_disp_error_m"))
++            if target_error is not None:
++                if metrics["tap_target_disp_error_min"] is None:
++                    metrics["tap_target_disp_error_min"] = float(target_error)
++                else:
++                    metrics["tap_target_disp_error_min"] = min(
++                        float(metrics["tap_target_disp_error_min"]), float(target_error)
++                    )
++            metrics["tap_target_excess_max"] = max(
++                float(metrics["tap_target_excess_max"]),
++                _mean_float(log.get("cube_tap_target_excess_m")),
++            )
+             metrics["tap_disp_max"] = max(
+                 float(metrics["tap_disp_max"]),
+                 _mean_float(log.get("cube_tap_max_disp_along_m")),
+@@ -580,6 +599,7 @@ def _apply_candidate6_contract(cfg: Any, args: argparse.Namespace) -> dict[str,
+         "tap_overshoot_terminate": cfg.tap_overshoot_terminate,
+         "tap_transient_disp_reward_scale": cfg.tap_transient_disp_reward_scale,
+         "tap_overshoot_penalty_scale": cfg.tap_overshoot_penalty_scale,
++        "tap_target_disp_tolerance_m": cfg.tap_target_disp_tolerance_m,
+         "action_penalty_scale": cfg.action_penalty_scale,
+         "episode_length_s": cfg.episode_length_s,
+         "precontact_clearance_m": cfg.ik_precontact_clearance_m,
+@@ -623,6 +643,7 @@ def _contract_violations(contract: dict[str, Any], args: argparse.Namespace) ->
+             if args.tap_overshoot_penalty_scale is None
+             else float(args.tap_overshoot_penalty_scale)
+         ),
++        "tap_target_disp_tolerance_m": 0.003,
+         "action_penalty_scale": 0.005 if args.action_penalty_scale is None else float(args.action_penalty_scale),
+         "precontact_clearance_m": 0.040,
+         "step_clip_rad": 0.010,
+@@ -689,6 +710,7 @@ def _write_summary(summary: dict[str, Any], summary_json: Path, summary_out: Pat
+         f"tap_success_terminate={summary['contract']['tap_success_terminate']} "
+         f"tap_transient_disp_reward_scale={summary['contract']['tap_transient_disp_reward_scale']} "
+         f"tap_overshoot_penalty_scale={summary['contract']['tap_overshoot_penalty_scale']} "
++        f"tap_target_disp_tolerance_m={summary['contract']['tap_target_disp_tolerance_m']} "
+         f"action_penalty_scale={summary['contract']['action_penalty_scale']} "
+         f"policy_target_disp_m={summary['contract']['policy_target_disp_m']} "
+         f"step_clip_rad={summary['contract']['step_clip_rad']} "
+@@ -712,6 +734,9 @@ def _write_summary(summary: dict[str, Any], summary_json: Path, summary_out: Pat
+         f"contact_seen_max={pre.get('tap_contact_seen_max')} "
+         f"reaction_seen_max={pre.get('reaction_seen_max')} "
+         f"overshoot_max={pre.get('tap_overshoot_max')} "
++        f"target_band_max={pre.get('tap_target_band_max')} "
++        f"target_error_min_m={pre.get('tap_target_disp_error_min')} "
++        f"target_excess_max_m={pre.get('tap_target_excess_max')} "
+         f"reward_mean_per_step={pre.get('reward_mean_per_step')} "
+         f"face_gap_final_m={pre.get('tap_contact_face_gap_m_final')} "
+         f"tcp_dist_min_m={pre.get('tcp_cube_dist_m_min')} "
+@@ -730,6 +755,9 @@ def _write_summary(summary: dict[str, Any], summary_json: Path, summary_out: Pat
+         f"contact_seen_max={initial.get('tap_contact_seen_max')} "
+         f"reaction_seen_max={initial.get('reaction_seen_max')} "
+         f"overshoot_max={initial.get('tap_overshoot_max')} "
++        f"target_band_max={initial.get('tap_target_band_max')} "
++        f"target_error_min_m={initial.get('tap_target_disp_error_min')} "
++        f"target_excess_max_m={initial.get('tap_target_excess_max')} "
+         f"face_gap_final_m={initial.get('tap_contact_face_gap_m_final')} "
+         f"tcp_dist_min_m={initial.get('tcp_cube_dist_m_min')} "
+         f"ik_reset_rate_min={initial.get('ik_endpoint_reset_rate_min')} "
+@@ -751,6 +779,9 @@ def _write_summary(summary: dict[str, Any], summary_json: Path, summary_out: Pat
+         f"contact_seen_max={post.get('tap_contact_seen_max')} "
+         f"reaction_seen_max={post.get('reaction_seen_max')} "
+         f"overshoot_max={post.get('tap_overshoot_max')} "
++        f"target_band_max={post.get('tap_target_band_max')} "
++        f"target_error_min_m={post.get('tap_target_disp_error_min')} "
++        f"target_excess_max_m={post.get('tap_target_excess_max')} "
+         f"reward_mean_per_step={post.get('reward_mean_per_step')} "
+         f"face_gap_final_m={post.get('tap_contact_face_gap_m_final')} "
+         f"tcp_dist_min_m={post.get('tcp_cube_dist_m_min')} "

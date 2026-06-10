@@ -278,6 +278,9 @@ def _rollout(
         "tap_disp_max": 0.0,
         "tap_speed_max": 0.0,
         "tap_contact_proxy_rate_max": 0.0,
+        "tap_target_band_max": 0.0,
+        "tap_target_disp_error_min": None,
+        "tap_target_excess_max": 0.0,
         "tap_contact_face_gap_m_final": None,
         "tap_contact_face_gap_abs_min": None,
         "tap_contact_lateral_m_final": None,
@@ -361,6 +364,22 @@ def _rollout(
             metrics["reaction_seen_max"] = max(
                 float(metrics["reaction_seen_max"]),
                 _mean_float(log.get("cube_tap_reaction_seen_rate")),
+            )
+            metrics["tap_target_band_max"] = max(
+                float(metrics["tap_target_band_max"]),
+                _mean_float(log.get("cube_tap_target_band_rate")),
+            )
+            target_error = _maybe_float(log.get("cube_tap_target_disp_error_m"))
+            if target_error is not None:
+                if metrics["tap_target_disp_error_min"] is None:
+                    metrics["tap_target_disp_error_min"] = float(target_error)
+                else:
+                    metrics["tap_target_disp_error_min"] = min(
+                        float(metrics["tap_target_disp_error_min"]), float(target_error)
+                    )
+            metrics["tap_target_excess_max"] = max(
+                float(metrics["tap_target_excess_max"]),
+                _mean_float(log.get("cube_tap_target_excess_m")),
             )
             metrics["tap_disp_max"] = max(
                 float(metrics["tap_disp_max"]),
@@ -580,6 +599,7 @@ def _apply_candidate6_contract(cfg: Any, args: argparse.Namespace) -> dict[str, 
         "tap_overshoot_terminate": cfg.tap_overshoot_terminate,
         "tap_transient_disp_reward_scale": cfg.tap_transient_disp_reward_scale,
         "tap_overshoot_penalty_scale": cfg.tap_overshoot_penalty_scale,
+        "tap_target_disp_tolerance_m": cfg.tap_target_disp_tolerance_m,
         "action_penalty_scale": cfg.action_penalty_scale,
         "episode_length_s": cfg.episode_length_s,
         "precontact_clearance_m": cfg.ik_precontact_clearance_m,
@@ -623,6 +643,7 @@ def _contract_violations(contract: dict[str, Any], args: argparse.Namespace) -> 
             if args.tap_overshoot_penalty_scale is None
             else float(args.tap_overshoot_penalty_scale)
         ),
+        "tap_target_disp_tolerance_m": 0.003,
         "action_penalty_scale": 0.005 if args.action_penalty_scale is None else float(args.action_penalty_scale),
         "precontact_clearance_m": 0.040,
         "step_clip_rad": 0.010,
@@ -689,6 +710,7 @@ def _write_summary(summary: dict[str, Any], summary_json: Path, summary_out: Pat
         f"tap_success_terminate={summary['contract']['tap_success_terminate']} "
         f"tap_transient_disp_reward_scale={summary['contract']['tap_transient_disp_reward_scale']} "
         f"tap_overshoot_penalty_scale={summary['contract']['tap_overshoot_penalty_scale']} "
+        f"tap_target_disp_tolerance_m={summary['contract']['tap_target_disp_tolerance_m']} "
         f"action_penalty_scale={summary['contract']['action_penalty_scale']} "
         f"policy_target_disp_m={summary['contract']['policy_target_disp_m']} "
         f"step_clip_rad={summary['contract']['step_clip_rad']} "
@@ -712,6 +734,9 @@ def _write_summary(summary: dict[str, Any], summary_json: Path, summary_out: Pat
         f"contact_seen_max={pre.get('tap_contact_seen_max')} "
         f"reaction_seen_max={pre.get('reaction_seen_max')} "
         f"overshoot_max={pre.get('tap_overshoot_max')} "
+        f"target_band_max={pre.get('tap_target_band_max')} "
+        f"target_error_min_m={pre.get('tap_target_disp_error_min')} "
+        f"target_excess_max_m={pre.get('tap_target_excess_max')} "
         f"reward_mean_per_step={pre.get('reward_mean_per_step')} "
         f"face_gap_final_m={pre.get('tap_contact_face_gap_m_final')} "
         f"tcp_dist_min_m={pre.get('tcp_cube_dist_m_min')} "
@@ -730,6 +755,9 @@ def _write_summary(summary: dict[str, Any], summary_json: Path, summary_out: Pat
         f"contact_seen_max={initial.get('tap_contact_seen_max')} "
         f"reaction_seen_max={initial.get('reaction_seen_max')} "
         f"overshoot_max={initial.get('tap_overshoot_max')} "
+        f"target_band_max={initial.get('tap_target_band_max')} "
+        f"target_error_min_m={initial.get('tap_target_disp_error_min')} "
+        f"target_excess_max_m={initial.get('tap_target_excess_max')} "
         f"face_gap_final_m={initial.get('tap_contact_face_gap_m_final')} "
         f"tcp_dist_min_m={initial.get('tcp_cube_dist_m_min')} "
         f"ik_reset_rate_min={initial.get('ik_endpoint_reset_rate_min')} "
@@ -751,6 +779,9 @@ def _write_summary(summary: dict[str, Any], summary_json: Path, summary_out: Pat
         f"contact_seen_max={post.get('tap_contact_seen_max')} "
         f"reaction_seen_max={post.get('reaction_seen_max')} "
         f"overshoot_max={post.get('tap_overshoot_max')} "
+        f"target_band_max={post.get('tap_target_band_max')} "
+        f"target_error_min_m={post.get('tap_target_disp_error_min')} "
+        f"target_excess_max_m={post.get('tap_target_excess_max')} "
         f"reward_mean_per_step={post.get('reward_mean_per_step')} "
         f"face_gap_final_m={post.get('tap_contact_face_gap_m_final')} "
         f"tcp_dist_min_m={post.get('tcp_cube_dist_m_min')} "
