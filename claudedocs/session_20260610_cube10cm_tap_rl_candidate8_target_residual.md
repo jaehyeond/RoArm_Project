@@ -657,3 +657,75 @@ Implication:
 - This geometry check does not change D223 learning status: target-aligned 3D L2
   failed, Large PPO is not justified, and dataset/VLA/action-teacher/RoArm remain
   blocked.
+
+## D225 Base Failure Boundary Sweep With 6mm Objective Fixed
+
+Reason:
+
+- User agreed that more broad same-contract PPO was not justified after D223 and
+  asked to proceed with the corrected direction: keep the 6mm tap objective fixed
+  and search for initial cube pose regions where the scripted/base controller is
+  actually weak.
+- Ran no-training base-only probes only. No code changes, no PPO learning, no
+  Large PPO, no dataset, no VLA, no action-teacher, no RoArm, no SSH/B200, and no
+  Track A.
+
+Common contract:
+
+- `max_iterations=0`
+- `rl_action_mode=candidate8_diffik_target_residual`
+- `policy_action_space=3`
+- `policy_target_disp_m=0.006`
+- `tap_target_disp_tolerance_m=0.003`
+- `tap_contact_proxy_mode=link5_collision_aabb`
+- current-pose cube reference, previous-target base, near-face target path
+- `tap_success_terminate=True`
+
+Coarse randomization results:
+
+- Seed1020, n64, xy random half-extents:
+  - +/-3cm: success_episode `0.8888888888888888`, overshoot `0.015625`,
+    target_band `0.0625`.
+  - +/-5cm: success_episode `0.8690476190476191`, overshoot `0.09375`,
+    target_band `0.046875`.
+  - +/-7cm: success_episode `0.7941176470588235`, overshoot `0.15625`,
+    contact/reaction `0.984375`.
+  - +/-10cm: success_episode `0.78125`, overshoot `0.21875`,
+    contact/reaction `0.953125`.
+  - +/-15cm: success_episode `0.8090909090909091`, overshoot `0.125`,
+    contact/reaction `0.984375`.
+- All coarse runs kept `ik_reset_rate_min=1.0` and Candidate6 numeric OK `1.0`.
+- Interpretation: broad random xy pose range is not a clean next PPO
+  distribution. It mixes easy and weak bins and does not yield a monotonic
+  30-60% base-success boundary.
+
+Pose-bin results:
+
+- Seed1021, n32, fixed pose, no randomization:
+  - `(x=0.39, y=0.15)` succeeds cleanly:
+    success_episode `1.0`, target_band `0.6875`, overshoot `0.0`,
+    IK reset `1.0`.
+  - `(x=0.09, y=0.15)` fails target success:
+    `success_event_count=0.0`, `target_band=0.0`, contact/reaction `1.0`,
+    overshoot `0.0`, IK reset `1.0`, numeric OK `1.0`.
+  - `(x=0.14, y=0.15)` also fails target success with healthy contact/IK:
+    `success_event_count=0.0`, `target_band=0.0`, contact/reaction `1.0`,
+    overshoot `0.0`, IK reset `1.0`, numeric OK `1.0`.
+  - `(x=0.09, y=0.0)` succeeds by event/episode rate:
+    success_episode `0.992619926199262`, overshoot `0.03125`,
+    target_band `0.09375`.
+  - `(x=0.19, y=0.15)` and `(x=0.24, y=0.15)` recover event success:
+    success_episode `1.0`, overshoot `0.0`, target_band `0.15625` and
+    `0.1875`, respectively.
+
+Conclusion:
+
+- The useful base-weak region is pose-binned, not broad randomization scale:
+  close x with high positive lateral y.
+- The failure is not IK reset, numeric DiffIK activation, contact, or reaction.
+  It is 6mm target-band quality failure in a reachable/contacting region.
+- Next valid PPO step, only with explicit approval, is a small L1 on a fixed or
+  narrow curriculum around the close-x/high-y weak bin. Pass/fail before any L2:
+  learned policy must improve weak-bin target success/target-band versus same-run
+  base, keep overshoot near base (`0.0` on fixed weak bins), and keep IK reset and
+  numeric OK at `>=0.999`.

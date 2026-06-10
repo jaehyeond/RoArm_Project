@@ -12571,3 +12571,90 @@ Sources:
 - `mesh_audit/analyze_gripper.py`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_applied_target_tcp_reach_contract_diagnosis_summary.out:4-8`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_rl_positive_control_isaac_builtin_diffik_step_clipped_h580_ep608_x240_nearface_prevtargetbase_link5aabb_pre040_candidate6_sanity_summary.out:3-10`
+
+## D225 - Base failure boundary is pose-binned close-x/high-y target quality, not broad xy random scale
+
+Context:
+
+- After D223/D224, user directed the branch to stop blind PPO scaling and keep the
+  6mm tap objective fixed while finding where the scripted/base controller is
+  actually weak.
+- Ran local RTX4090/cuda:0 no-training base-only probes with
+  `max_iterations=0`; no code changes, PPO learning, Large PPO, dataset
+  generation, VLA, action-teacher, RoArm, SSH/B200, or Track A work.
+- Contract stayed on corrected 3D target-residual zero-action/base path:
+  `rl_action_mode=candidate8_diffik_target_residual`, `policy_action_space=3`,
+  `policy_target_disp_m=0.006`, `tap_target_disp_tolerance_m=0.003`,
+  `tap_contact_proxy_mode=link5_collision_aabb`, current-pose cube reference,
+  previous-target base, near-face target path, `tap_success_terminate=True`.
+
+Coarse random sweep:
+
+- Seed1020, n64, broad xy randomization half-extents:
+  - +/-3cm: success_episode `0.8888888888888888`, overshoot `0.015625`,
+    target_band `0.0625`.
+  - +/-5cm: success_episode `0.8690476190476191`, overshoot `0.09375`,
+    target_band `0.046875`.
+  - +/-7cm: success_episode `0.7941176470588235`, overshoot `0.15625`,
+    contact/reaction `0.984375`.
+  - +/-10cm: success_episode `0.78125`, overshoot `0.21875`,
+    contact/reaction `0.953125`.
+  - +/-15cm: success_episode `0.8090909090909091`, overshoot `0.125`,
+    contact/reaction `0.984375`.
+- All these runs kept `ik_reset_rate_min=1.0` and
+  `candidate6_numeric_ok_rate_min=1.0`.
+- Verdict: broad uniform xy randomization alone does not create a clean
+  30-60% base-success operating point; it mixes easy and weak regions and is
+  non-monotonic at this sample size. It does reveal quality degradation
+  (overshoot/target-band), but it is not the right next PPO distribution by
+  itself.
+
+Fixed pose-bin evidence:
+
+- Seed1021, n32, no randomization:
+  - `(x=0.39, y=0.15)` succeeds cleanly: success_episode `1.0`,
+    target_band `0.6875`, overshoot `0.0`, `ik_reset_rate_min=1.0`.
+  - `(x=0.09, y=0.15)` fails target success completely:
+    `success_event_count=0.0`, `target_band=0.0`, contact/reaction `1.0`,
+    overshoot `0.0`, `ik_reset_rate_min=1.0`,
+    `candidate6_numeric_ok_rate_min=1.0`.
+  - `(x=0.14, y=0.15)` also fails target success completely with the same
+    healthy IK/contact pattern: `success_event_count=0.0`, `target_band=0.0`,
+    contact/reaction `1.0`, overshoot `0.0`, `ik_reset_rate_min=1.0`,
+    numeric OK `1.0`.
+  - `(x=0.09, y=0.0)` succeeds by event/episode rate:
+    success_episode `0.992619926199262`, overshoot `0.03125`,
+    target_band `0.09375`, `ik_reset_rate_min=1.0`.
+  - `(x=0.19, y=0.15)` and `(x=0.24, y=0.15)` recover event success:
+    success_episode `1.0`, overshoot `0.0`, target_band `0.15625` and
+    `0.1875`, respectively.
+
+Implication:
+
+- The weak region is not "any large pose randomization" and not IK/contact
+  failure. It is a pose-binned 6mm target-quality failure around close x plus
+  high positive lateral y.
+- This is exactly the kind of base-weak operating region needed before another
+  residual PPO attempt. The next PPO candidate, if explicitly approved, should
+  use a fixed or narrow curriculum around the close-x/high-y weak bin, not
+  broad xy randomization and not the D223 same-contract L2/Large PPO path.
+- Candidate pass/fail gate before any L2 or Large PPO:
+  - same-run zero-action/base comparison on the weak-bin distribution;
+  - learned policy must improve target success/target-band from the weak base;
+  - overshoot must remain at or near base (`0.0` for the fixed weak bins);
+  - `ik_reset_rate_min` and Candidate6 numeric OK must stay `>=0.999`;
+  - no dataset/VLA/action-teacher/RoArm claims from this stage.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_base_failure_sweep_xy3cm_seed1020_n64_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_base_failure_sweep_xy5cm_seed1020_n64_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_base_failure_sweep_xy7cm_seed1020_n64_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_base_failure_sweep_xy10cm_seed1020_n64_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_base_failure_sweep_xy15cm_seed1020_n64_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_base_posebin_x009_y015_seed1021_n32_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_base_posebin_x014_y015_seed1021_n32_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_base_posebin_x019_y015_seed1021_n32_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_base_posebin_x024_y015_seed1021_n32_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_base_posebin_x039_y015_seed1021_n32_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_base_posebin_x009_y000_seed1021_n32_summary.out:1-10`
