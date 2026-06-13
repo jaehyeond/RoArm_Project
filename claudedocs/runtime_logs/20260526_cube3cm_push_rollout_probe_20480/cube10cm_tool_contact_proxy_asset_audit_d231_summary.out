@@ -1,0 +1,8 @@
+line1 artifact=cube10cm_tool_contact_proxy_asset_audit_d231 local_asset_audit_only=YES isaaclab_runtime=NO gpu=NO training=NO robot_control=NO ssh=NO
+line2 urdf_meshes link5_collision=/home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/urdf/meshes/link5.stl gripper_collision=/home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/urdf/meshes/gripper_link_collision_g2a.stl gripper_visual=/home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/urdf/meshes/gripper_link.stl
+line3 usd_collision_policy config_exists=True collision_from_visuals=False collider_type=convex_hull pxr_stage_read=not_available_in_local_python
+line4 native_bbox_size_m link5_collision=[0.046496015548706054, 0.035519998550415044, 0.12063513135910035] gripper_collision=[0.004, 0.004, 0.004] gripper_visual=[0.07785000038146972, 0.02523999881744385, 0.0393675656914711]
+line5 link5_frame_q0 link5_collision_distal_z=0.119885620 gripper_collision_distal_z=0.054035007 gripper_visual_distal_z=0.119117587 hand_tcp_z=0.115428000
+line6 gripper_collision_verdict max_size_m=0.004000029 tiny_proxy=True direct_gripper_collision_proxy_recommended=False
+line7 option2_verdict option2_direction=YES_AS_TOOL_SURFACE_UNION_NOT_AS_GRIPPER_LINK_COLLISION_ONLY link5_current_runtime_proxy=True requires_env_metric_change_before_ppo=True
+line8 promotion ppo_unblocked=False dataset_vla_roarm_unblocked=False

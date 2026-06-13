@@ -53,6 +53,7 @@ def _parse_args() -> argparse.Namespace:
         default=DEFAULT_RUNTIME_DIR
         / "cube10cm_tap_rl_candidate6_pilot_ppo_smoke_summary.out",
     )
+    parser.add_argument("--per_env_summary_json", type=Path, default=None)
     parser.add_argument(
         "--experiment_name",
         default="cube10cm_tap_rl_candidate6_pilot_ppo_smoke",
@@ -83,6 +84,7 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--candidate8_diffik_target_residual_lateral_m", type=float, default=0.012)
     parser.add_argument("--candidate8_diffik_target_residual_height_m", type=float, default=0.004)
     parser.add_argument("--tap_success_terminate", action="store_true")
+    parser.add_argument("--disable_tap_overshoot_terminate", action="store_true")
     parser.add_argument(
         "--candidate6_diffik_no_hold_after_tap_success",
         action="store_true",
@@ -116,6 +118,15 @@ def _parse_args() -> argparse.Namespace:
         help="Evaluate the untrained PPO policy before learning.",
     )
     parser.add_argument(
+        "--constant_policy_action",
+        default=None,
+        help=(
+            "Optional comma-separated deterministic policy action for eval only, "
+            "for example '1,0,0' in candidate8 3D mode. Requires "
+            "max_iterations=0 and no checkpoint."
+        ),
+    )
+    parser.add_argument(
         "--ppo_init_noise_std",
         type=float,
         default=None,
@@ -140,6 +151,21 @@ def _parse_args() -> argparse.Namespace:
         help="Optional action penalty override; default preserves env cfg.",
     )
     return parser.parse_args()
+
+
+def _parse_constant_policy_action(raw: str | None, action_dim: int) -> list[float] | None:
+    if raw is None:
+        return None
+    parts = [part.strip() for part in raw.split(",")]
+    if len(parts) != action_dim:
+        raise ValueError(
+            f"--constant_policy_action expected {action_dim} comma-separated values, got {len(parts)}"
+        )
+    values = [float(part) for part in parts]
+    for value in values:
+        if value < -1.0 or value > 1.0:
+            raise ValueError("--constant_policy_action values must be within [-1, 1]")
+    return values
 
 
 def _scalar(value: Any) -> float | bool | int | str | None:
@@ -275,6 +301,13 @@ def _rollout(
         "tap_success_episode_rate": None,
         "tap_overshoot_max": 0.0,
         "reaction_seen_max": 0.0,
+        "tap_useful_now_max": 0.0,
+        "tap_useful_seen_max": 0.0,
+        "tap_useful_seen_final": None,
+        "tap_contact_reaction_seen_max": 0.0,
+        "tap_contact_reaction_seen_final": None,
+        "tap_no_overshoot_seen_min": None,
+        "tap_no_overshoot_seen_final": None,
         "tap_disp_max": 0.0,
         "tap_speed_max": 0.0,
         "tap_contact_proxy_rate_max": 0.0,
@@ -364,6 +397,35 @@ def _rollout(
             metrics["reaction_seen_max"] = max(
                 float(metrics["reaction_seen_max"]),
                 _mean_float(log.get("cube_tap_reaction_seen_rate")),
+            )
+            _update_max(
+                metrics,
+                "tap_useful_now_max",
+                _maybe_float(log.get("cube_tap_useful_now_rate")),
+            )
+            _update_max(
+                metrics,
+                "tap_useful_seen_max",
+                _maybe_float(log.get("cube_tap_useful_seen_rate")),
+            )
+            metrics["tap_useful_seen_final"] = _maybe_float(
+                log.get("cube_tap_useful_seen_rate")
+            )
+            _update_max(
+                metrics,
+                "tap_contact_reaction_seen_max",
+                _maybe_float(log.get("cube_tap_contact_reaction_seen_rate")),
+            )
+            metrics["tap_contact_reaction_seen_final"] = _maybe_float(
+                log.get("cube_tap_contact_reaction_seen_rate")
+            )
+            _update_min(
+                metrics,
+                "tap_no_overshoot_seen_min",
+                _maybe_float(log.get("cube_tap_no_overshoot_seen_rate")),
+            )
+            metrics["tap_no_overshoot_seen_final"] = _maybe_float(
+                log.get("cube_tap_no_overshoot_seen_rate")
             )
             metrics["tap_target_band_max"] = max(
                 float(metrics["tap_target_band_max"]),
@@ -505,6 +567,49 @@ def _rollout(
     return metrics
 
 
+def _bool_list(tensor: Any) -> list[bool]:
+    return [bool(v) for v in tensor.detach().cpu().tolist()]
+
+
+def _float_list(tensor: Any) -> list[float]:
+    return [float(v) for v in tensor.detach().cpu().tolist()]
+
+
+def _collect_tap_per_env(inner_env: Any) -> list[dict[str, Any]]:
+    cube_local = inner_env._cube_start_w - inner_env.scene.env_origins
+    cube_x = _float_list(cube_local[:, 0])
+    cube_y = _float_list(cube_local[:, 1])
+    contact = _bool_list(inner_env._tap_contact_seen)
+    reaction = _bool_list(inner_env._tap_reaction_seen)
+    overshoot = _bool_list(inner_env._tap_overshoot_seen)
+    success = _bool_list(inner_env._tap_success_flag)
+    max_disp_along = _float_list(inner_env._tap_max_disp_along)
+    max_disp_xy = _float_list(inner_env._tap_max_disp_xy)
+    max_speed = _float_list(inner_env._tap_max_speed)
+    max_tip_angle_deg = _float_list(inner_env._tap_max_tip_angle_deg)
+
+    rows: list[dict[str, Any]] = []
+    for env_id in range(int(inner_env.num_envs)):
+        useful = bool(contact[env_id] and reaction[env_id] and not overshoot[env_id])
+        rows.append(
+            {
+                "env_id": env_id,
+                "cube_x_m": cube_x[env_id],
+                "cube_y_m": cube_y[env_id],
+                "contact_seen": contact[env_id],
+                "reaction_seen": reaction[env_id],
+                "overshoot_seen": overshoot[env_id],
+                "useful_seen": useful,
+                "target_band_success_seen": success[env_id],
+                "max_disp_along_m": max_disp_along[env_id],
+                "max_disp_xy_m": max_disp_xy[env_id],
+                "max_speed_mps": max_speed[env_id],
+                "max_tip_angle_deg": max_tip_angle_deg[env_id],
+            }
+        )
+    return rows
+
+
 def _has_task_success(metrics: dict[str, Any] | None) -> bool:
     if not metrics:
         return False
@@ -546,7 +651,7 @@ def _apply_candidate6_contract(cfg: Any, args: argparse.Namespace) -> dict[str, 
     cfg.tap_contact_proxy_mode = "link5_collision_aabb"
     cfg.tool_contact_proxy_mode = "hand_tcp"
     cfg.tap_success_terminate = bool(args.tap_success_terminate)
-    cfg.tap_overshoot_terminate = True
+    cfg.tap_overshoot_terminate = not bool(args.disable_tap_overshoot_terminate)
     if args.tap_transient_disp_reward_scale is not None:
         cfg.tap_transient_disp_reward_scale = float(args.tap_transient_disp_reward_scale)
     if args.tap_overshoot_penalty_scale is not None:
@@ -632,7 +737,7 @@ def _contract_violations(contract: dict[str, Any], args: argparse.Namespace) -> 
         "tap_contact_proxy_mode": "link5_collision_aabb",
         "tool_contact_proxy_mode": "hand_tcp",
         "tap_success_terminate": bool(args.tap_success_terminate),
-        "tap_overshoot_terminate": True,
+        "tap_overshoot_terminate": not bool(args.disable_tap_overshoot_terminate),
         "tap_transient_disp_reward_scale": (
             40.0
             if args.tap_transient_disp_reward_scale is None
@@ -691,6 +796,7 @@ def _write_summary(summary: dict[str, Any], summary_json: Path, summary_out: Pat
     initial = summary.get("initial_policy_eval") or {}
     post = summary.get("post_eval") or {}
     candidate8_base_relative = summary.get("candidate8_base_relative") or {}
+    constant_action = summary.get("constant_policy_action")
     lines = [
         "candidate6_pilot_ppo_smoke_audit=v2 "
         f"max_iterations={summary['max_iterations']} "
@@ -733,6 +839,12 @@ def _write_summary(summary: dict[str, Any], summary_json: Path, summary_out: Pat
         f"success_episode_rate={pre.get('tap_success_episode_rate')} "
         f"contact_seen_max={pre.get('tap_contact_seen_max')} "
         f"reaction_seen_max={pre.get('reaction_seen_max')} "
+        f"useful_seen_max={pre.get('tap_useful_seen_max')} "
+        f"useful_seen_final={pre.get('tap_useful_seen_final')} "
+        f"contact_reaction_seen_max={pre.get('tap_contact_reaction_seen_max')} "
+        f"contact_reaction_seen_final={pre.get('tap_contact_reaction_seen_final')} "
+        f"no_overshoot_seen_min={pre.get('tap_no_overshoot_seen_min')} "
+        f"no_overshoot_seen_final={pre.get('tap_no_overshoot_seen_final')} "
         f"overshoot_max={pre.get('tap_overshoot_max')} "
         f"target_band_max={pre.get('tap_target_band_max')} "
         f"target_error_min_m={pre.get('tap_target_disp_error_min')} "
@@ -754,6 +866,12 @@ def _write_summary(summary: dict[str, Any], summary_json: Path, summary_out: Pat
         f"success_episode_rate={initial.get('tap_success_episode_rate')} "
         f"contact_seen_max={initial.get('tap_contact_seen_max')} "
         f"reaction_seen_max={initial.get('reaction_seen_max')} "
+        f"useful_seen_max={initial.get('tap_useful_seen_max')} "
+        f"useful_seen_final={initial.get('tap_useful_seen_final')} "
+        f"contact_reaction_seen_max={initial.get('tap_contact_reaction_seen_max')} "
+        f"contact_reaction_seen_final={initial.get('tap_contact_reaction_seen_final')} "
+        f"no_overshoot_seen_min={initial.get('tap_no_overshoot_seen_min')} "
+        f"no_overshoot_seen_final={initial.get('tap_no_overshoot_seen_final')} "
         f"overshoot_max={initial.get('tap_overshoot_max')} "
         f"target_band_max={initial.get('tap_target_band_max')} "
         f"target_error_min_m={initial.get('tap_target_disp_error_min')} "
@@ -778,6 +896,12 @@ def _write_summary(summary: dict[str, Any], summary_json: Path, summary_out: Pat
         f"success_episode_rate={post.get('tap_success_episode_rate')} "
         f"contact_seen_max={post.get('tap_contact_seen_max')} "
         f"reaction_seen_max={post.get('reaction_seen_max')} "
+        f"useful_seen_max={post.get('tap_useful_seen_max')} "
+        f"useful_seen_final={post.get('tap_useful_seen_final')} "
+        f"contact_reaction_seen_max={post.get('tap_contact_reaction_seen_max')} "
+        f"contact_reaction_seen_final={post.get('tap_contact_reaction_seen_final')} "
+        f"no_overshoot_seen_min={post.get('tap_no_overshoot_seen_min')} "
+        f"no_overshoot_seen_final={post.get('tap_no_overshoot_seen_final')} "
         f"overshoot_max={post.get('tap_overshoot_max')} "
         f"target_band_max={post.get('tap_target_band_max')} "
         f"target_error_min_m={post.get('tap_target_disp_error_min')} "
@@ -821,6 +945,9 @@ def _write_summary(summary: dict[str, Any], summary_json: Path, summary_out: Pat
         f"signal_seen={candidate8_base_relative.get('signal_seen')} "
         f"l1_health_pass={candidate8_base_relative.get('l1_health_pass')} "
         f"l2_scale_candidate={candidate8_base_relative.get('l2_scale_candidate')}",
+        "deterministic_policy_action "
+        f"enabled={constant_action is not None} "
+        f"action={constant_action}",
         f"outputs summary_json={summary_json} summary_out={summary_out}",
     ]
     summary_out.write_text("\n".join(lines) + "\n")
@@ -868,6 +995,18 @@ def main() -> None:
         env = RslRlVecEnvWrapper(env)
         inner_env = env.unwrapped
         print("[candidate6-ppo-smoke] rsl_wrapper_created", flush=True)
+        action_dim = int(inner_env.cfg.action_space)
+        constant_policy_action = _parse_constant_policy_action(
+            args.constant_policy_action,
+            action_dim,
+        )
+        if constant_policy_action is not None and (
+            int(args.max_iterations) > 0 or args.load_checkpoint is not None
+        ):
+            raise ValueError(
+                "--constant_policy_action is eval-only and requires max_iterations=0 "
+                "with no --load_checkpoint"
+            )
 
         ppo_cfg = RoArmPickPPORunnerCfg()
         if args.ppo_init_noise_std is not None:
@@ -920,6 +1059,11 @@ def main() -> None:
             label="zero_policy_pre_eval",
         )
         print("[candidate6-ppo-smoke] zero_policy_pre_eval_done", flush=True)
+        pre_eval_per_env = (
+            _collect_tap_per_env(inner_env)
+            if args.per_env_summary_json is not None
+            else None
+        )
 
         initial_policy_eval = None
         if args.initial_policy_eval:
@@ -972,6 +1116,25 @@ def main() -> None:
                 label="loaded_checkpoint_policy_eval",
             )
             print("[candidate6-ppo-smoke] loaded_checkpoint_eval_done", flush=True)
+        elif constant_policy_action is not None:
+            action_tensor = torch.tensor(
+                constant_policy_action,
+                dtype=torch.float32,
+                device=inner_env.device,
+            ).unsqueeze(0)
+
+            def constant_policy(obs):
+                return action_tensor.repeat(obs.shape[0], 1)
+
+            post_eval = _rollout(
+                env,
+                inner_env,
+                torch,
+                steps=int(args.eval_steps),
+                policy=constant_policy,
+                label="constant_policy_action_eval",
+            )
+            print("[candidate6-ppo-smoke] constant_policy_eval_done", flush=True)
 
         checkpoint_exists = bool(checkpoint_path and checkpoint_path.exists())
         bridge_preflight_pass = True
@@ -1095,6 +1258,7 @@ def main() -> None:
             "bridge_preflight_pass": bridge_preflight_pass,
             "zero_policy_task_pass": zero_policy_task_pass,
             "candidate8_base_relative": candidate8_base_relative,
+            "constant_policy_action": constant_policy_action,
             "post_eval": post_eval,
             "checkpoint_path": str(checkpoint_path) if checkpoint_path else None,
             "checkpoint_exists": checkpoint_exists,
@@ -1103,6 +1267,21 @@ def main() -> None:
             "action_teacher_dataset": False,
         }
         _write_summary(summary, args.summary_json, args.summary_out)
+        if args.per_env_summary_json is not None and pre_eval_per_env is not None:
+            args.per_env_summary_json.parent.mkdir(parents=True, exist_ok=True)
+            args.per_env_summary_json.write_text(
+                json.dumps(
+                    {
+                        "seed": int(args.seed),
+                        "num_envs": int(args.num_envs),
+                        "contract": contract,
+                        "pre_eval_per_env": pre_eval_per_env,
+                    },
+                    indent=2,
+                    sort_keys=True,
+                )
+                + "\n"
+            )
         print(f"[candidate6-ppo-smoke] summary_written {args.summary_out}", flush=True)
         print(json.dumps(summary, indent=2, sort_keys=True))
 

@@ -729,3 +729,194 @@ Conclusion:
   learned policy must improve weak-bin target success/target-band versus same-run
   base, keep overshoot near base (`0.0` on fixed weak bins), and keep IK reset and
   numeric OK at `>=0.999`.
+
+## D226 Fixed Weak-Bin 3D Target-Residual L1
+
+Reason:
+
+- User explicitly approved the D225 next step: one small L1 on the fixed weak
+  bin, not broad randomization, not L2/Large PPO, and not another gate/scale
+  variant.
+- The goal was to test whether corrected 3D target residual can improve the
+  close-x/high-y target-band failure while keeping the 6mm tap objective fixed.
+
+Run:
+
+- Local RTX4090/cuda:0 valid runtime:
+  `conda run -n isaaclab python -m roarm_rl.train_cube_tap10cm_ppo_smoke`.
+- No code changes, no L2/Large PPO, no dataset, no VLA, no action-teacher, no
+  RoArm, no SSH/B200, no Track A.
+- Contract:
+  - fixed cube `(x=0.14, y=0.15)`;
+  - `rl_action_mode=candidate8_diffik_target_residual`;
+  - `policy_action_space=3`;
+  - `policy_target_disp_m=0.006`;
+  - `tap_target_disp_tolerance_m=0.003`;
+  - `tap_contact_proxy_mode=link5_collision_aabb`;
+  - current-pose cube reference, previous-target base, near-face target path;
+  - `tap_success_terminate=True`;
+  - seed1022, `num_envs=32`, `num_steps_per_env=64`,
+    `max_iterations=20`, `eval_steps=580`, `ppo_init_noise_std=0.2`.
+
+Result:
+
+- Summary line 3 reports contract violations `0`.
+- Same-run zero/base line 4 reproduced the weak-bin baseline:
+  `success_event_count=0.0`, `success_event_rate_per_env=0.0`,
+  `target_band_max=0.0`, contact/reaction `1.0`, overshoot `0.0`,
+  `target_error_min_m=0.004736782051622868`, `ik_reset_rate_min=1.0`,
+  and Candidate6 numeric OK `1.0`.
+- Training completed and checkpoint exists (line 6).
+- Post PPO line 7 still had no target success and no target-band hit:
+  `success_event_count=0.0`, `success_event_rate_per_env=0.0`,
+  `target_band_max=0.0`, contact/reaction `1.0`, overshoot `0.0`,
+  `target_error_min_m=0.005088201258331537`, `ik_reset_rate_min=1.0`,
+  Candidate6 numeric OK `1.0`.
+- The learned policy did produce nonzero 3D target residual signal
+  (`candidate8_target_residual_abs_max_max=0.0024720802903175354`,
+  lateral max `0.0024720802903175354`), but it did not move the task into the
+  target band.
+- Full JSON shows the failure is under-displacement/no-improvement, not
+  overshoot: zero/base `tap_disp_max=0.0012788265012204647`, while post PPO
+  `tap_disp_max=0.001013368833810091`; post forward residual max was only
+  `0.0007457147003151476m`, while lateral residual max was
+  `0.0024720802903175354m`.
+- Line 8 keeps `policy_task_pass=False`.
+- Line 9 reports `l1_health_pass=True` and `l2_scale_candidate=True`, but this
+  generic script flag is not the D225 research gate. D225 required learned
+  target success/target-band improvement over the weak base; here improvement is
+  exactly zero.
+
+Conclusion:
+
+- Verdict:
+  `WEAK_BIN_FIXED_3D_RESIDUAL_L1_NO_TARGET_BAND_IMPROVEMENT_NO_L2`.
+- This fixed-bin L1 is not an overshoot failure; it is a no-improvement failure.
+  That is still a failure for the research gate.
+- Do not run L2 or Large PPO from this result.
+- Do not use the script's line 9 `l2_scale_candidate=True` as promotion
+  evidence unless the pass/fail definition is updated to include the D225
+  target-band improvement requirement.
+- Next valid work is to inspect why residual action has no useful 6mm
+  target-band effect on `(x=0.14,y=0.15)`, or to design a narrow pose-bin
+  curriculum/evaluation that supplies learnable signal while preserving the
+  strict overshoot/IK/numeric gates.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_base_posebin_x014_y015_seed1021_n32_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_weakbin_x014_y015_3daction_l1_40k_seed1022_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_weakbin_x014_y015_3daction_l1_40k_seed1022_summary.json:85`
+
+## D227 Transition-Bin Controllability And Fixed-Bin L1 Pass
+
+Reason:
+
+- D226 showed the deep fixed weak bin `(x=0.14,y=0.15)` did not improve under a
+  learned 3D residual.
+- User directed the work to proceed step-by-step: deterministic controllability,
+  pose transition scan, then residual PPO only in a recoverable transition bin.
+
+Patch:
+
+- Added default-off `--constant_policy_action` to
+  `roarm_rl/train_cube_tap10cm_ppo_smoke.py`.
+- It evaluates a comma-separated deterministic policy action, for example
+  `1,0,0` in the clean 3D target-residual branch.
+- Guard: requires `max_iterations=0` and no checkpoint.
+- It does not change env, reward, controller, or action-space behavior.
+- Static check passed:
+  `python3 -m py_compile roarm_rl/train_cube_tap10cm_ppo_smoke.py`.
+
+Runtime note:
+
+- Sandboxed Isaac attempts could not see CUDA and wrote only failed stdout logs;
+  those are not physics evidence.
+- Valid runs used local unsandboxed `conda run -n isaaclab ...` and wrote
+  summary JSON/out files.
+
+Deep weak-bin authority sweep:
+
+- Fixed `(x=0.14,y=0.15)`, no PPO, current 3D residual authority.
+- Base `tap_disp_max=0.0012788265012204647`, target_band/success `0/0`,
+  overshoot `0`.
+- Constant action results:
+  - `[-1,0,0]`: `tap_disp_max=0.0011025783605873585`, target_band/success
+    `0/0`, overshoot `0`.
+  - `[0.5,0,0]`: `tap_disp_max=0.0014102389104664326`, target_band/success
+    `0/0`, overshoot `0`.
+  - `[1,0,0]`: `tap_disp_max=0.0014324532821774483`, target_band/success
+    `0/0`, overshoot `0`.
+- Conclusion: the D226 deep weak bin is not a good PPO stage under the current
+  action authority. Even max forward target residual does not approach the 6mm
+  target band.
+
+Pose transition scan:
+
+- Fixed `y=0.15`, no PPO, base-only:
+  - `x=0.15`: success_event_rate `0.0`, target_band `0.0`, overshoot `0.0`,
+    `tap_disp_max=0.0011791205033659935`.
+  - `x=0.16`: success_event_rate `0.0`, target_band `0.0`, overshoot `0.0`,
+    `tap_disp_max=0.001061825081706047`.
+  - `x=0.1625`: success_event_rate `0.0`, target_band `0.0`, overshoot `0.0`,
+    `tap_disp_max=0.0010696104727685452`.
+  - `x=0.16375`: success_event_rate `1.0`, target_band `0.3125`,
+    overshoot `0.0`, `tap_disp_max=0.0018082228489220142`.
+  - `x=0.165`: success_event_rate `1.0`, target_band `0.25`,
+    overshoot `0.0`, `tap_disp_max=0.0019375551491975784`.
+  - `x=0.17`: success_event_rate `1.0`, target_band `0.5`,
+    overshoot `0.0`, `tap_disp_max=0.002341517247259617`.
+  - `x=0.18`: success_event_rate `1.0`, target_band `0.25`,
+    overshoot `0.0`, `tap_disp_max=0.0013844901695847511`.
+- All kept contact/reaction `1.0`, IK reset `1.0`, numeric OK `1.0`.
+- Conclusion: the base transition is a sharp cliff around
+  `x=0.1625..0.16375,y=0.15`.
+
+Transition-fail deterministic residual:
+
+- At `(x=0.1625,y=0.15)`, base failed: success_event_rate `0.0`,
+  target_band `0.0`, overshoot `0.0`.
+- Deterministic `[1,0,0]` recovered: success_event_rate `1.0`,
+  success_episode `1.0`, target_band `0.5625`, overshoot `0.0`,
+  `tap_disp_max=0.002222532406449318`, forward residual
+  `0.004000000189989805`.
+- This proves the transition-fail bin is recoverable with current 3D residual
+  authority.
+
+Transition-fail L1:
+
+- Ran one small fixed-bin L1:
+  - fixed `(x=0.1625,y=0.15)`;
+  - seed1026, n32, `num_steps_per_env=64`, `max_iterations=20`;
+  - `ppo_init_noise_std=0.2`;
+  - clean 3D `candidate8_diffik_target_residual`;
+  - no gates, no L2/Large PPO.
+- Same-run zero/base line 4: success_event_rate `0.0`, target_band `0.0`,
+  overshoot `0.0`, IK/numeric `1.0`.
+- Post PPO line 7: success_event_rate `1.0`, success_episode `1.0`,
+  target_band `0.25`, overshoot `0.0`, target_excess `0.0`, IK/numeric `1.0`.
+- Residual signal: max `0.0033235999289900064`, forward
+  `0.0010062148794531822`, lateral `0.0033235999289900064`, height
+  `0.0014749628026038408`.
+
+Conclusion:
+
+- Verdict:
+  `TRANSITION_BIN_FIXED_3D_RESIDUAL_L1_PASS_FIXED_ONLY_NO_LARGE`.
+- This is the first clean positive PPO result for the professor 10cm cube tap
+  branch after correcting action space and moving to a recoverable pose bin.
+- It is fixed-bin single-seed evidence only. It does not unblock broad xy L2,
+  Large PPO, dataset, VLA, action-teacher, or RoArm.
+- Next valid step is fixed-bin promotion validation across independent seeds and
+  loaded-checkpoint eval, then a narrow transition curriculum around
+  `x=0.1625..0.16375,y=0.15` if promotion holds.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_weakbin_x014_y015_const_fwdneg1_seed1023_summary.out:1-11`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_weakbin_x014_y015_const_fwdp05_seed1023_summary.out:1-11`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_weakbin_x014_y015_const_fwdp1_seed1023_summary.out:1-11`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_base_posebin_x01625_y015_seed1024_n32_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_base_posebin_x016375_y015_seed1024_n32_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_transition_x01625_y015_const_fwdp1_seed1025_n32_summary.out:1-11`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_transition_x01625_y015_3daction_l1_40k_seed1026_summary.out:1-11`

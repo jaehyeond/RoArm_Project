@@ -12658,3 +12658,845 @@ Sources:
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_base_posebin_x024_y015_seed1021_n32_summary.out:1-10`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_base_posebin_x039_y015_seed1021_n32_summary.out:1-10`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_base_posebin_x009_y000_seed1021_n32_summary.out:1-10`
+
+## D226 - Fixed weak-bin 3D residual L1 does not improve target-band; no L2 promotion
+
+Date: 2026-06-10 KST
+
+Status:
+
+- Supersedes D225 for the active PPO learning result, while preserving D225's
+  pose-binned weak-region diagnosis and D224 geometry.
+- No code changes, no L2/Large PPO, no dataset/VLA/action-teacher/RoArm, no
+  SSH/B200, and no Track A work.
+
+Reason:
+
+- D225 found a clean weak region for the fixed 6mm tap objective:
+  close x plus high positive y, especially `(x=0.14, y=0.15)`.
+- User explicitly approved exactly one small L1 PPO screen on that weak bin.
+- The pass/fail gate was not "no overshoot only"; it required learned-policy
+  target success/target-band improvement over the same-run weak base, with
+  overshoot staying near the base and IK/numeric health remaining good.
+
+Run:
+
+- Valid local RTX4090/cuda:0 runtime:
+  `conda run -n isaaclab python -m roarm_rl.train_cube_tap10cm_ppo_smoke`.
+- Contract:
+  - fixed cube `(x=0.14, y=0.15)`;
+  - `rl_action_mode=candidate8_diffik_target_residual`;
+  - `policy_action_space=3`;
+  - `policy_target_disp_m=0.006`;
+  - `tap_target_disp_tolerance_m=0.003`;
+  - `tap_contact_proxy_mode=link5_collision_aabb`;
+  - current-pose cube reference, previous-target base, near-face target path;
+  - `tap_success_terminate=True`;
+  - seed1022, `num_envs=32`, `num_steps_per_env=64`,
+    `max_iterations=20`, `eval_steps=580`, `ppo_init_noise_std=0.2`.
+- Summary line 3 reports contract violations `0`.
+
+Result:
+
+- Same-run zero/base line 4 reproduced the D225 weak-bin failure:
+  `success_event_count=0.0`, `success_event_rate_per_env=0.0`,
+  `target_band_max=0.0`, contact/reaction `1.0`, overshoot `0.0`,
+  `target_error_min_m=0.004736782051622868`, `ik_reset_rate_min=1.0`,
+  and Candidate6 numeric OK `1.0`.
+- PPO training completed and checkpoint existed (line 6).
+- Post-eval line 7 still had no target success and no target-band hit:
+  `success_event_count=0.0`, `success_event_rate_per_env=0.0`,
+  `target_band_max=0.0`, contact/reaction `1.0`, overshoot `0.0`,
+  `target_error_min_m=0.005088201258331537`, `ik_reset_rate_min=1.0`,
+  Candidate6 numeric OK `1.0`, and nonzero 3D residual signal
+  (`candidate8_target_residual_abs_max_max=0.0024720802903175354`).
+- Full JSON confirms this was an under-displacement/no-improvement failure, not
+  an overshoot failure: zero/base `tap_disp_max=0.0012788265012204647`, while
+  post PPO `tap_disp_max=0.001013368833810091`; post target residual was mostly
+  lateral (`0.0024720802903175354m`) and only `0.0007457147003151476m`
+  forward.
+- Line 8 correctly keeps `policy_task_pass=False`.
+- Line 9 reports `l1_health_pass=True` and `l2_scale_candidate=True`, but this
+  generic script flag is not the D225 research gate because it does not encode
+  the required weak-base target success/target-band improvement.
+
+Decision:
+
+- Verdict:
+  `WEAK_BIN_FIXED_3D_RESIDUAL_L1_NO_TARGET_BAND_IMPROVEMENT_NO_L2`.
+- This L1 is safe in the narrow sense that it did not introduce overshoot on the
+  fixed weak bin, but it also did not solve or improve the weak-bin target
+  quality failure.
+- Do not promote this run to L2 or Large PPO.
+- Do not treat the script's line 9 `l2_scale_candidate=True` as promotion
+  evidence; D225 line 12643 required target success/target-band improvement,
+  and this run had none.
+- Next valid work is not more blind PPO scale. It is to inspect why the
+  residual action did not move `(x=0.14, y=0.15)` into the 6mm target band, or
+  to design a narrow pose-bin curriculum/evaluation that supplies learnable
+  target-band signal while keeping overshoot at the base level.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_base_posebin_x014_y015_seed1021_n32_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_weakbin_x014_y015_3daction_l1_40k_seed1022_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_weakbin_x014_y015_3daction_l1_40k_seed1022_summary.json:85`
+- `claudedocs/DECISIONS.md:12641`
+
+## D227 - Transition-bin residual is recoverable; first fixed-bin 3D L1 pass, no broad scale-up
+
+Date: 2026-06-10 KST
+
+Status:
+
+- Supersedes D226 as the active research state for the professor 10cm/0.72kg
+  cube tap RL robustness/action-space branch.
+- Added a default-off deterministic eval hook to the smoke runner; no env,
+  reward, controller, action-space, dataset, VLA, action-teacher, RoArm, SSH/B200,
+  or Track A work.
+- Ran local RTX4090/cuda:0 no-training probes and one small fixed transition-bin
+  L1 only. No L2 or Large PPO.
+
+Patch:
+
+- `roarm_rl/train_cube_tap10cm_ppo_smoke.py` now accepts
+  `--constant_policy_action`, a comma-separated deterministic policy action used
+  only for eval.
+- It is default-off and guarded: it requires `max_iterations=0` and no
+  checkpoint.
+- The runner records `constant_policy_action` in JSON and prints a
+  `deterministic_policy_action` summary line.
+- `python3 -m py_compile roarm_rl/train_cube_tap10cm_ppo_smoke.py` passed.
+
+Important runtime note:
+
+- Initial sandboxed Isaac attempts could not access CUDA and produced only
+  failed stdout logs with no summary files; those are not physics evidence.
+- Valid physics evidence below is from local unsandboxed
+  `conda run -n isaaclab ...` runs that wrote summary JSON/out files.
+
+Step 1 - deep weak-bin deterministic authority:
+
+- Fixed bin `(x=0.14, y=0.15)`, current 3D target-residual contract, no PPO.
+- Same-run base:
+  `tap_disp_max=0.0012788265012204647`, success/target_band `0/0`,
+  overshoot `0`.
+- Constant forward residual sweep:
+  - action `[-1,0,0]`: `tap_disp_max=0.0011025783605873585`,
+    target_band/success `0/0`, overshoot `0`.
+  - action `[0.5,0,0]`: `tap_disp_max=0.0014102389104664326`,
+    target_band/success `0/0`, overshoot `0`.
+  - action `[1,0,0]`: `tap_disp_max=0.0014324532821774483`,
+    target_band/success `0/0`, overshoot `0`.
+- Interpretation: D226's `(x=0.14,y=0.15)` fixed weak bin is too deep for the
+  current 3D residual authority. Even max forward residual (`+4mm` target
+  residual) does not get near the 6mm objective. Do not train more PPO there.
+
+Step 2 - pose transition base-only scan:
+
+- Kept `y=0.15`, fixed 6mm objective, `max_iterations=0`, n32.
+- Results:
+  - `x=0.15`: success_event_rate `0.0`, target_band `0.0`, overshoot `0.0`,
+    `tap_disp_max=0.0011791205033659935`.
+  - `x=0.16`: success_event_rate `0.0`, target_band `0.0`, overshoot `0.0`,
+    `tap_disp_max=0.001061825081706047`.
+  - `x=0.1625`: success_event_rate `0.0`, target_band `0.0`, overshoot `0.0`,
+    `tap_disp_max=0.0010696104727685452`.
+  - `x=0.16375`: success_event_rate `1.0`, target_band `0.3125`,
+    overshoot `0.0`, `tap_disp_max=0.0018082228489220142`.
+  - `x=0.165`: success_event_rate `1.0`, target_band `0.25`,
+    overshoot `0.0`, `tap_disp_max=0.0019375551491975784`.
+  - `x=0.17`: success_event_rate `1.0`, target_band `0.5`,
+    overshoot `0.0`, `tap_disp_max=0.002341517247259617`.
+  - `x=0.18`: success_event_rate `1.0`, target_band `0.25`,
+    overshoot `0.0`, `tap_disp_max=0.0013844901695847511`.
+- All valid pose-bin runs kept contact/reaction `1.0`, `ik_reset_rate_min=1.0`,
+  and Candidate6 numeric OK `1.0`.
+- Interpretation: the useful operating point is not the deep fail bin, but the
+  sharp transition around `x=0.1625..0.16375, y=0.15`.
+
+Step 3 - transition-fail deterministic residual:
+
+- At `(x=0.1625,y=0.15)`, base failed:
+  success_event_rate `0.0`, target_band `0.0`, overshoot `0.0`,
+  `tap_disp_max=0.0010696104727685452`.
+- Constant max forward action `[1,0,0]` recovered the task:
+  success_event_rate `1.0`, success_episode `1.0`, target_band `0.5625`,
+  overshoot `0.0`, `tap_disp_max=0.002222532406449318`,
+  forward residual `0.004000000189989805`.
+- Interpretation: this transition-fail bin is recoverable with the existing 3D
+  residual action authority.
+
+Step 4 - transition-fail fixed-bin L1:
+
+- Ran exactly one small PPO L1:
+  - fixed `(x=0.1625,y=0.15)`;
+  - seed1026, n32, `num_steps_per_env=64`, `max_iterations=20`;
+  - `ppo_init_noise_std=0.2`;
+  - clean `candidate8_diffik_target_residual`, policy action space `3`;
+  - current-pose cube reference, previous-target base, near-face target path;
+  - no gates, no Large PPO.
+- Same-run zero/base line 4:
+  success_event_rate `0.0`, target_band `0.0`, overshoot `0.0`,
+  IK/numeric `1.0`.
+- Post PPO line 7:
+  success_event_rate `1.0`, success_episode `1.0`, target_band `0.25`,
+  overshoot `0.0`, target_excess `0.0`, IK/numeric `1.0`.
+- Residual signal:
+  target residual max `0.0033235999289900064`,
+  forward max `0.0010062148794531822`,
+  lateral max `0.0033235999289900064`,
+  height max `0.0014749628026038408`.
+- Checkpoint exists under
+  `ppo_runs/cube10cm_tap_transition_x01625_y015_3daction_l1_40k/seed1026_env32_it20`.
+
+Decision:
+
+- Verdict:
+  `TRANSITION_BIN_FIXED_3D_RESIDUAL_L1_PASS_FIXED_ONLY_NO_LARGE`.
+- This is the first clean positive residual PPO result after moving away from
+  saturated or infeasible bins: learned policy improves a base-fail transition
+  bin to success while keeping overshoot at `0`.
+- It is not yet scale-ready. It is fixed-bin, single-seed L1 evidence only, and
+  the learned residual is less direct than the deterministic max-forward
+  positive control (policy used more lateral than forward residual).
+- Do not run broad xy L2/Large PPO, dataset, VLA, action-teacher, or RoArm from
+  this result.
+- Next valid step is promotion-style validation: independent seeds and/or loaded
+  checkpoint eval on the same fixed transition bin, then a narrow transition
+  curriculum around `x=0.1625..0.16375, y=0.15` if fixed-bin validation holds.
+
+Sources:
+
+- `roarm_rl/train_cube_tap10cm_ppo_smoke.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_weakbin_x014_y015_const_fwdneg1_seed1023_summary.out:1-11`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_weakbin_x014_y015_const_fwdp05_seed1023_summary.out:1-11`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_weakbin_x014_y015_const_fwdp1_seed1023_summary.out:1-11`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_base_posebin_x01625_y015_seed1024_n32_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_base_posebin_x016375_y015_seed1024_n32_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_transition_x01625_y015_const_fwdp1_seed1025_n32_summary.out:1-11`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_transition_x01625_y015_3daction_l1_40k_seed1026_summary.out:1-11`
+
+## D228 - Transition x-band constant baseline blocks PPO scale-up; target-band is the gate
+
+Date: 2026-06-10 KST
+
+Status:
+
+- Supersedes D227 as the active research state for the professor 10cm/0.72kg
+  cube tap RL robustness/action-space branch.
+- D227's fixed transition-bin result remains valid but fixed-only: it is not a
+  scale-up proof.
+- Ran local RTX4090/cuda:0 transition-band evals and exactly one small L1.
+- No code, env, reward, action-space, dataset, VLA, action-teacher, RoArm,
+  SSH/B200, pull, or Track A work.
+
+Setup:
+
+- Clean 3D target residual branch:
+  `rl_action_mode=candidate8_diffik_target_residual`, `policy_action_space=3`.
+- No gates, fixed 6mm objective, AABB contact:
+  `policy_target_disp_m=0.006`, `tap_target_disp_tolerance_m=0.003`,
+  `tap_contact_proxy_mode=link5_collision_aabb`.
+- Narrow transition x-band:
+  `fixed_cube_x_m=0.1625`,
+  `cube_randomization_half_extent_x_m=0.0025`, x range `[0.160,0.165]`,
+  `fixed_cube_y_m=0.15`, y fixed.
+- Valid runtimes used
+  `conda run -n isaaclab --no-capture-output python -u -m roarm_rl.train_cube_tap10cm_ppo_smoke`.
+
+Step 1 - same-band zero/base:
+
+- Seed1027, n64, no training:
+  success_event_rate_per_env `0.34375`, target_band `0.046875`,
+  overshoot `0.0`, contact/reaction `1.0`, IK/numeric OK.
+- This band is an event-success transition region, not a ceiling or deep
+  infeasible bin.
+
+Step 2 - constant residual baselines:
+
+- Seed1027, n64, no training, same x-band:
+  - `[0,0,0]`: event `0.296875`, target_band `0.0625`, overshoot `0.0`.
+  - `[0.25,0,0]`: event `0.546875`, target_band `0.0625`, overshoot `0.0`.
+  - `[0.5,0,0]`: event `1.0`, target_band `0.09375`, overshoot `0.0`.
+  - `[1,0,0]`: event `1.0`, target_band `0.078125`, overshoot `0.0`.
+  - `[0,0.25,0]`: event `0.21875`, target_band `0.0625`, overshoot `0.0`.
+  - `[0,-0.25,0]`: event `0.375`, target_band `0.0625`, overshoot `0.0`.
+- Best constant in this screen by target-band was `[0.5,0,0]` at `0.09375`;
+  best constants by event reached `1.0`.
+
+Step 3 - same-band PPO L1:
+
+- Seed1028, n64, `num_steps_per_env=64`, `max_iterations=20`,
+  `ppo_init_noise_std=0.2`, no gates, no L2/Large.
+- Same-run zero/base pre-eval:
+  event `0.34375`, target_band `0.046875`, overshoot `0.0`.
+- Post PPO:
+  event `0.234375`, target_band `0.0625`, overshoot `0.0`,
+  contact/reaction `1.0`, IK/numeric OK.
+- Residual signal existed:
+  target residual max `0.0028817979618906975`,
+  forward `0.0010318523272871971`,
+  lateral `0.0028817979618906975`,
+  height `0.0007148905424401164`.
+- Checkpoint exists under
+  `ppo_runs/cube10cm_tap_transition_xband0160_0165_y015_3daction_l1_82k/seed1028_env64_it20/model_19.pt`.
+
+Decision:
+
+- Verdict:
+  `TRANSITION_XBAND_CONSTANT_BASELINE_AND_L1_FAIL_NO_L2`.
+- Event success alone is not a valid promotion metric in this band. A simple
+  constant forward residual can drive event success to `1.0`, while 6mm
+  target-band quality remains weak.
+- Promotion must compare PPO against best constant on target-band / target-error
+  while preserving overshoot `0`, IK/numeric OK, and contract cleanliness.
+- The seed1028 x-band PPO L1 did not beat the best constant target-band
+  (`0.0625` vs `0.09375`) and reduced event rate below same-run zero/base
+  (`0.234375` vs `0.34375`).
+- Do not run L2/Large PPO on this x-band. Do not use D227 fixed-bin success to
+  claim generalized RL readiness.
+- Next valid work is to fix the target-quality promotion stage: either find a
+  pose curriculum where target-band has smoother learnable signal, or audit why
+  event success and 6mm target-band quality are decoupled before more PPO.
+
+Sources:
+
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_transition_xband0160_0165_y015_base_seed1027_n64_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_transition_xband0160_0165_y015_const_zero_seed1027_n64_summary.out:1-11`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_transition_xband0160_0165_y015_const_fwdp025_seed1027_n64_summary.out:1-11`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_transition_xband0160_0165_y015_const_fwdp05_seed1027_n64_summary.out:1-11`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_transition_xband0160_0165_y015_const_fwdp1_seed1027_n64_summary.out:1-11`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_transition_xband0160_0165_y015_const_latp025_seed1027_n64_summary.out:1-11`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_transition_xband0160_0165_y015_const_latneg025_seed1027_n64_summary.out:1-11`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_transition_xband0160_0165_y015_3daction_l1_82k_seed1028_summary.out:1-11`
+- `roarm_rl/train_cube_tap10cm_ppo_smoke.py`
+- `roarm_rl/roarm_cube_push_env.py`
+
+## D229 - Professor cube10cm tap RL useful-tap objective reframe and logging patch
+
+Date: 2026-06-11 KST
+
+Decision:
+
+- Reframe the active research claim away from requiring the 6mm target band as
+  the primary success criterion.
+- Primary useful-tap metric for the next discovery step is:
+  contact seen + physical reaction seen + no overshoot seen.
+- Keep `policy_target_disp_m=0.006` and `tap_target_disp_tolerance_m=0.003`
+  as quality-tier diagnostics. They are no longer the primary "just make a
+  useful tap" claim unless explicitly restored.
+- Do not reinterpret the legacy runtime `tap_success` as useful-tap success yet:
+  the current env success flag still includes the 6mm target band.
+
+Code change:
+
+- Logging only; no reward, control, action-space, reset, geometry, or PPO
+  training behavior changed.
+- Added env log fields:
+  - `cube_tap_useful_now_rate`
+  - `cube_tap_useful_seen_rate`
+  - `cube_tap_contact_reaction_seen_rate`
+  - `cube_tap_no_overshoot_seen_rate`
+- Added smoke summary fields:
+  - `useful_seen_max`
+  - `contact_reaction_seen_max`
+  - `no_overshoot_seen_min`
+- Static verification passed:
+  - `python3 -m py_compile roarm_rl/roarm_cube_push_env.py roarm_rl/train_cube_tap10cm_ppo_smoke.py`
+  - `git diff --check`
+
+Interpretation:
+
+- The sentence "base fails in useful-tap pose regions and RL recovers useful
+  tap" is a good thesis-shaped claim, but it is not proven by the current logs.
+- D225/D228 weak bins are weak under the 6mm target-band quality metric, not
+  under useful tap. Their base runs already reported contact/reaction `1.0`
+  and overshoot `0.0`, so they are base-pass bins for the D229 useful-tap
+  definition.
+- Existing broad base sweeps still suggest useful-tap failure can exist under
+  larger/randomized pose perturbations because overshoot rises and some
+  contact/reaction rates fall. Those broad logs are not enough for a promotion
+  claim; they only motivate a pose-binned useful-tap failure sweep.
+- If "useful tap" is defined too weakly as any touch, base may already solve it
+  and RL contribution disappears. The minimum useful definition must include
+  physical reaction and overshoot avoidance.
+
+Next gate:
+
+- Do not run L2/Large PPO from D225/D228.
+- Next runtime, only with explicit approval, should be base-only pose-binned
+  useful-tap failure discovery using the new fields.
+- A valid RL recovery test requires a pose region where base actually fails the
+  useful-tap metric through missing contact/reaction or overshoot, then a small
+  residual PPO L1 comparison against same-run base and simple constant
+  residual baselines.
+- No dataset, VLA, action-teacher, RoArm deployment, Track A mixing, SSH/B200,
+  pull, or `.ssh` work is unblocked.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260611_useful_tap_objective_reframe.md`
+- `roarm_rl/roarm_cube_push_env.py`
+- `roarm_rl/train_cube_tap10cm_ppo_smoke.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_base_posebin_x014_y015_seed1021_n32_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_transition_xband0160_0165_y015_base_seed1027_n64_summary.out:1-10`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_base_failure_sweep_xy10cm_seed1020_n64_summary.out:1-10`
+
+## D230 - Professor cube10cm tap RL useful-tap pose-band failure sweep
+
+Date: 2026-06-11 KST
+
+Decision:
+
+- Useful-tap base failure has now been found, but it is not a fixed single-pose
+  contact miss.
+- The current useful-tap failure mode is randomized pose-band overshoot:
+  contact/reaction is achieved, but some episodes over-tap and therefore fail
+  the clean useful-tap definition.
+- The correct next research stage is an xy +/-10cm randomized-band recovery
+  test, not D225/D228 fixed target-band bins and not fixed corner PPO.
+
+Code/audit changes:
+
+- Added smoke summary final fields:
+  - `useful_seen_final`
+  - `contact_reaction_seen_final`
+  - `no_overshoot_seen_final`
+- Added diagnostic CLI:
+  - `--per_env_summary_json`
+  - `--disable_tap_overshoot_terminate`
+- Fixed the tap env done logic so `cfg.tap_overshoot_terminate` is actually
+  respected. Default behavior remains terminate-on-overshoot unless the
+  diagnostic flag disables it.
+- Added `sim_scripts/cube10cm_tap_useful_posebin_sweep.py` as a diagnostic
+  helper, but the sequential Isaac env recreate path hung after the first bin
+  and is not used as durable evidence in this decision.
+- Static verification passed:
+  - `python3 -m py_compile roarm_rl/roarm_cube_push_env.py roarm_rl/train_cube_tap10cm_ppo_smoke.py sim_scripts/cube10cm_tap_useful_posebin_sweep.py`
+  - `git diff --check`
+
+Runtime evidence:
+
+- All runs were base-only local RTX4090/IsaacLab diagnostics. No PPO, L2,
+  Large PPO, dataset, VLA, action-teacher, RoArm, SSH/B200, pull, or Track A.
+- Legacy `--tap_success_terminate` was shown to be inappropriate for useful
+  final metrics: `(x=0.34,y=-0.10)` produced `useful_seen_final=0.3125` with
+  `done_count=32`, but the no-success-termination rerun of the same pose had
+  useful/contact-reaction/no-overshoot final `1.0` and overshoot `0.0`.
+- Fixed xy10 corners under no legacy success termination were all clean
+  useful-pass:
+  - `(0.14,-0.10)`, `(0.34,-0.10)`, `(0.14,+0.10)`, `(0.34,+0.10)`
+  - contact/reaction/useful final `1.0`, overshoot `0.0`.
+- Random xy10 no-termination per-env runs were stable across two seeds:
+  - seed1036 n64: contact/reaction final `1.0`, useful final `0.828125`,
+    no-overshoot final `0.828125`, overshoot `0.171875`, `done_count=0`.
+  - seed1037 n64: contact/reaction final `1.0`, useful final `0.828125`,
+    no-overshoot final `0.828125`, overshoot `0.171875`, `done_count=0`.
+  - Combined per-env result: `22/128` overshoot, `106/128` clean useful-tap.
+- Per-env overshoot samples were distributed inside the xy10 band rather than
+  only at corners. A representative overshoot sample from the random run,
+  `(x=0.197617,y=-0.085433)`, clean-passed when replayed as a fixed pose with
+  no terminations. Therefore the current failure should be treated as a
+  randomized-band / trajectory-conditioning failure, not a durable fixed-pose
+  failure.
+
+Interpretation:
+
+- The thesis-shaped sentence is valid only in distributional form:
+  "In a pose perturbation band where the scripted base over-taps some cases,
+  residual RL should recover clean useful tap by reducing overshoot while
+  preserving contact/reaction."
+- Do not state that base fails useful tap in D225/D228 target-band bins; those
+  are useful-pass bins and target-quality failures.
+- Do not use event/legacy `tap_success` as the promotion metric. For this
+  branch, primary promotion is clean useful tap: contact/reaction preserved and
+  overshoot reduced.
+
+Next gate:
+
+- Before PPO, run same-band xy10 constant-residual baselines using useful /
+  no-overshoot as the primary metric. If a constant residual already solves the
+  overshoot failure, the RL claim is weak.
+- Only then run one small residual PPO L1 on the same xy10 randomized band.
+- Promotion requires PPO to beat same-run base and best constant on useful /
+  no-overshoot while preserving contact/reaction `1.0`, finite obs/rewards/actions,
+  IK/numeric OK, and contract cleanliness.
+- L2/Large PPO, dataset, VLA, action-teacher, and RoArm remain blocked until
+  that small useful-tap gate passes.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260611_useful_tap_poseband_failure_sweep.md`
+- `roarm_rl/roarm_cube_push_env.py`
+- `roarm_rl/train_cube_tap10cm_ppo_smoke.py`
+- `sim_scripts/cube10cm_tap_useful_posebin_sweep.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_useful_random_xy10_no_terminations_seed1036_n64_summary.out:1-11`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_useful_random_xy10_no_terminations_seed1036_n64_per_env.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_useful_random_xy10_no_terminations_seed1037_n64_summary.out:1-11`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_useful_random_xy10_no_terminations_seed1037_n64_per_env.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tap_useful_posebin_x0197617_yneg0085433_no_terminations_seed1037_n16_summary.out:1-11`
+
+## D231 - Direct gripper collision is not the right replacement; use a tool-surface union if changing proxy
+
+Context:
+
+- Professor feedback asked whether the cube tap metric should use OBB/OABB and
+  whether the contact proxy should be built directly from the RoArm-M3-Pro
+  gripper rather than `link5_collision_aabb`.
+- This is a geometry/metric decision before any more PPO. It does not require a
+  GPU runtime.
+
+Audit:
+
+- Added and ran `sim_scripts/cube10cm_tool_contact_proxy_asset_audit.py`.
+- Scope was local asset/code audit only: no IsaacLab runtime, GPU, training,
+  dataset, VLA, action-teacher, RoArm, SSH/B200, pull, or Track A.
+- The audit compared:
+  - `link5` collision mesh: `meshes/link5.stl`;
+  - `gripper_link` collision mesh: `meshes/gripper_link_collision_g2a.stl`;
+  - `gripper_link` visual mesh: `meshes/gripper_link.stl`;
+  - USD converter config.
+
+Evidence:
+
+- Summary line 3 reports the USD converter policy:
+  `collision_from_visuals=False`, `collider_type=convex_hull`.
+- Summary line 4 reports native bbox sizes:
+  - `link5_collision=[0.046496015548706054, 0.035519998550415044, 0.12063513135910035]`;
+  - `gripper_collision=[0.004, 0.004, 0.004]`;
+  - `gripper_visual=[0.07785000038146972, 0.02523999881744385, 0.0393675656914711]`.
+- Summary line 5 reports link5-frame q0 distal z:
+  - `link5_collision_distal_z=0.119885620`;
+  - `gripper_collision_distal_z=0.054035007`;
+  - `gripper_visual_distal_z=0.119117587`;
+  - `hand_tcp_z=0.115428000`.
+- Summary line 6 reports
+  `direct_gripper_collision_proxy_recommended=False` because
+  `gripper_link_collision_g2a.stl` is a tiny proxy, not the full fingertip or
+  tool contact surface.
+- Summary line 7 records the actual branch decision:
+  `option2_direction=YES_AS_TOOL_SURFACE_UNION_NOT_AS_GRIPPER_LINK_COLLISION_ONLY`.
+
+Decision:
+
+- Do not silently replace `link5_collision_aabb` with direct
+  `gripper_link_collision_g2a` AABB/OBB. That collision mesh is only about
+  4mm and is not a valid representation of the full gripper contact surface for
+  cube tap.
+- The professor-facing "use the gripper/tool geometry directly" direction is
+  valid only if it is defined as a true tool-surface union:
+  fixed jaw / distal `link5` surface plus moving `gripper_link` full geometry or
+  a properly authored collision surface.
+- Under the current generated USD contract, `collision_from_visuals=false`, so
+  `gripper_link.stl` visual geometry is not automatically a physics collision.
+  If a visual-derived proxy is used for metrics, it must be named as such and
+  cross-checked against physical reaction/displacement.
+- Current `link5_collision_aabb` remains the current runtime proxy and is better
+  understood as the fixed-jaw/distal-tool proxy, not a bare wrist/TCP point.
+- PPO is not unblocked by this audit. Before the next PPO or constant-baseline
+  runtime, either explicitly accept the current `link5_collision_aabb` as the
+  fixed-jaw tool proxy for this sim contract, or implement a named
+  `tool_surface_union` metric and rerun a zero/base metric-equivalence sanity
+  check.
+
+Sources:
+
+- `claudedocs/session_20260611_tool_contact_proxy_asset_audit_d231.md`
+- `sim_scripts/cube10cm_tool_contact_proxy_asset_audit.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tool_contact_proxy_asset_audit_d231_summary.out:1-8`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_tool_contact_proxy_asset_audit_d231.json`
+- `local_assets/roarm_m3/urdf/roarm_m3.urdf:123-163`
+- `local_assets/roarm_m3/usd/config.yaml:17-20`
+
+## D232 - Camera contract first for visual trajectory dataset; disk gate before render scale-up
+
+Context:
+
+- Professor feedback shifts the next practical work from PPO promotion to a
+  top-view visual trajectory dataset path for the 10cm cube tap/push setup.
+- The dataset value depends on whether an Azure Kinect can later be mounted in
+  the real workspace with the same effective view. Therefore the sim camera must
+  be a physical camera contract, not an aesthetic viewport.
+- This decision is local audit/documentation only: no deletion, no Isaac Sim
+  render, no PPO, no dataset generation, no VLA/action-teacher, no RoArm, no
+  SSH/B200, no pull, and no Track A.
+
+Camera decision:
+
+- `sim_scripts/kinect_calib.yaml` intrinsics are reusable as camera-intrinsic
+  candidates: `fx=608.33`, `fy=608.28`, `cx=638.31`, `cy=365.26`,
+  `width=1280`, `height=720`.
+- The old `kinect_calib.yaml` extrinsics are hand-eye extrinsics and are not the
+  new top-view dataset pose. The top-view extrinsics must be newly specified
+  from a real mount plan.
+- The camera contract must record physical mount, table-to-camera height,
+  roll/pitch/yaw, inversion/flip/crop convention, workspace coverage, fps, and
+  self-occlusion metrics.
+- Raw visual storage should remain Azure-Kinect-compatible `1280x720` unless
+  deliberately revised. `224x224` is only a model preprocessing size.
+
+Required smoke gate before scale-up:
+
+- Run only a 5-10 episode smoke render after explicit approval.
+- Smoke must report marker/cube-corner reprojection error, cube self-occlusion
+  frame rates, render seconds per episode, MB per episode, codec decode-vs-source
+  comparison, and LeRobot load success.
+- Use LeRobot-style video+parquet with `observation.images.top`; PNG frames are
+  debug/smoke artifacts, not the full dataset storage format.
+- Split future data explicitly into `train_success`, `eval_boundary`,
+  `eval_failure`, and `debug_smoke`; record sampling ranges and seeds.
+
+Disk audit:
+
+- Local filesystem is too full for scale-up: 590G total, 522G used, 39G free,
+  94% used.
+- `/home/cgxr/Documents/Robotics` is about 270G, and `RoArm_Project` is about
+  269G.
+- Main space consumers:
+  - `outputs`: 96G, mostly repeated SmolVLA checkpoints;
+  - `claudedocs`: 35G, dominated by
+    `claudedocs/figures/p6v12_rollout/frames` at 34G with 73969 frame files;
+  - `collected_data`: 26G;
+  - `collected_data_v5`: 26G;
+  - `collected_data_v2_backup`: 19G;
+  - `b200_backup_20260521`: 19G;
+  - `b200_backup_20260522_final`: 18G;
+  - `collected_data_v6`: 13G;
+  - `openvla_oft_b200_pulls`: 8G.
+
+Cleanup decision:
+
+- Do not delete anything automatically.
+- Highest-value cleanup/archive candidate is
+  `claudedocs/figures/p6v12_rollout/frames` (34G raw/debug frames), preserving
+  compact outputs if needed.
+- Preserve SmolVLA `outputs/` by default. A follow-up outputs audit found 66
+  checkpoint directories with repeated large `model.safetensors` files and 58
+  optimizer-state files, but these are SmolVLA results and should not be deleted
+  merely because they are large.
+- If disk pressure requires touching `outputs/`, do not re-scan randomly or
+  delete arbitrary runs. Use this fixed D232 cleanup order only after explicit
+  approval and a manifest:
+  1. First remove/archive only `outputs/*/checkpoints/*/training_state`.
+     Estimated reclaim is about 25.6GB decimal. This preserves
+     `pretrained_model` inference artifacts, but loses training-resume state.
+  2. If more space is needed, prune to one representative checkpoint per run:
+     `smolvla_official=050000`, `smolvla_v2_cleaned=050000`,
+     `smolvla_v3_sponge=050000`, `smolvla_v5_multipos=200000`,
+     `smolvla_v6=last`, `smolvla_v6_b200=last`,
+     `smolvla_v6_stacking_b200=last`,
+     `smolvla_v6_stacking_v2_b200=010000`,
+     `smolvla_v6_stacking_v3_b200=020000`. Estimated reclaim is about
+     90.15GB decimal total; the old four large runs alone can reclaim about
+     74.1GB decimal.
+- `collected_data*`, `b200_backup_*`, and `openvla_oft_b200_pulls` are needed
+  data/backups. They are archive/move-only with explicit approval, not cleanup
+  or blind-delete candidates.
+- Do not start 100/1000 episode rendering with only 39G free. Provision external
+  storage or free at least about 100G before scale-up.
+
+Decision:
+
+- Current next work is camera contract + storage plan + 5-10 episode smoke
+  design, not PPO/L2/Large PPO.
+- D231 contact-proxy truth remains valid for the sim metric branch; D232 adds a
+  separate visual trajectory dataset contract branch.
+- Full dataset, VLA/action-teacher, RoArm, and PPO promotion remain blocked until
+  their respective gates pass.
+
+Sources:
+
+- `claudedocs/session_20260612_camera_contract_visual_dataset_disk_audit_d232.md`
+- `sim_scripts/kinect_calib.yaml:1-8`
+- `CLAUDE.md:318-345`
+- `scripts/render_p6v12_trajectory_replay.py:230-251`
+- `convert_to_lerobot_v3.py:94-110`
+- `sim_scripts/sim_to_lerobot.py:1-8,30-35,60-66`
+
+## D233 - Top-view camera contract v1 local smoke passes, LeRobot AV1 passes locally, scale-up still blocked
+
+Context:
+
+- D232 authorized a camera-contract-first path for the professor 10cm / 0.72kg
+  cube visual trajectory dataset, with raw `1280x720` top-view images and
+  LeRobot MP4+parquet as primary storage.
+- The user explicitly approved the next step-by-step smoke work.
+- This decision covers one local smoke render and LeRobot conversion/validation
+  only. No B200/SSH, pull, `.ssh` copy, deletion, archive, move, PPO/L2/Large
+  PPO, VLA/action-teacher, RoArm deployment, Track A, 100 episode chunk, or
+  1000/10000 episode dataset generation was performed.
+
+Format decision:
+
+- Existing `lerobot_dataset_v6` is not the professor-requested schema. It was
+  used only as a read-only AV1/LeRobot backend fixture.
+- The active schema remains the D232 professor visual trajectory contract:
+  frame-by-frame image-state pairs, `observation.images.top` video at
+  `1280x720`, per-frame state/action metadata in parquet, and PNG only for
+  smoke/debug/extraction.
+- Professor-facing framing remains: keep image-state pairs, store in standard
+  LeRobot MP4+parquet, and extract arbitrary PNG frames immediately when needed.
+
+Runtime result:
+
+- Added `sim_scripts/cube10cm_top_view_visual_smoke_render.py`,
+  `sim_scripts/cube10cm_top_view_smoke_to_lerobot.py`, and `extract_frames.py`.
+- Render smoke completed locally with 5 episodes, 975 frames, `1280x720`,
+  camera contract `cube10cm_top_view_v1_candidate`, and contract violations
+  `[]`.
+- Reprojection centroid error median/max was
+  `3.074639061891291px` / `9.956731449704932px`.
+- All-frame visibility was `975/975` full and `0` partial/full occlusion.
+  Contact-window visibility was `882/882` full and `0` partial/full occlusion.
+- Render elapsed time was `180.79416966438293s`, or
+  `5.392873021347648` captured frames/sec.
+- Debug PNG storage measured `52.3344778MB/episode`, projecting to
+  `5.2334477800000005GB` for 100 episodes, `52.3344778GB` for 1000 episodes,
+  and `523.344778GB` for 10000 episodes.
+
+LeRobot result:
+
+- LeRobot conversion/load/decode status was `PASS`.
+- Video key was `observation.images.top`; requested codec was `libsvtav1` and
+  actual codec was `av1`, `yuv420p`, `30fps`.
+- Total frames/episodes were `975` / `5`, and frame count matched.
+- Video storage measured `0.5964878MB/episode`, projecting to
+  `0.059648780000000005GB` for 100 episodes, `0.5964878GB` for 1000 episodes,
+  and `5.964878GB` for 10000 episodes.
+- Sampled LeRobot decode average/max was `0.016793251037597656s` /
+  `0.06672263145446777s`.
+- Sampled source PNG vs decoded MP4 mean-abs max was
+  `0.8939572482638889`; sampled absolute pixel max was `67`.
+- `extract_frames.py` successfully extracted episode `3`, frame `50` as a
+  `1280x720` PNG from the LeRobot MP4+parquet dataset.
+
+Disk/storage:
+
+- Local disk after smoke was about 590G total, 529G used, 32G free, 95% used.
+- PNG-at-scale is rejected by measured size. LeRobot MP4+parquet is the scale
+  storage path.
+- AV1 is locally acceptable through the installed LeRobot backend, but must be
+  repeated on RunPod/H100 through the training dataloader path before using AV1
+  for scale-up there. If that fails, switch the new dataset codec to H.264.
+
+Decision:
+
+- Verdict:
+  `TOP_VIEW_CAMERA_CONTRACT_V1_LOCAL_SMOKE_PASS_LEROBOT_AV1_LOCAL_PASS_SCALEUP_BLOCKED`.
+- Camera contract v1 is ready for professor visual/format confirmation and a
+  later 100-episode chunk proposal, not immediate full generation.
+- 100 episode chunk remains blocked until professor confirmation, storage/output
+  root decision, RunPod/H100 codec gate if applicable, and explicit approval.
+- 1000/10000 episode generation, deletion/archive/move, PPO/L2/Large PPO,
+  VLA/action-teacher, RoArm deployment, SSH/B200, pull, and Track A remain
+  blocked.
+
+Sources:
+
+- `claudedocs/session_20260612_cube10cm_top_view_visual_smoke_lerobot_d233.md`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_smoke_d232/render_summary.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_smoke_d232/lerobot_validation_summary.json`
+- `sim_scripts/cube10cm_top_view_visual_smoke_render.py`
+- `sim_scripts/cube10cm_top_view_smoke_to_lerobot.py`
+- `extract_frames.py`
+
+## D234 - Professor packet ready, storage root decided, RunPod/H100 AV1 dataloader gate passes
+
+Context:
+
+- D233 left four scale-up gates before a 100 episode chunk: professor
+  view/format confirmation, storage/output-root decision, RunPod/H100 AV1
+  dataloader decode/speed verification, and explicit approval.
+- User approved proceeding with those gates on 2026-06-13 KST.
+- This decision did not run Isaac Sim render, generate a 100 episode chunk,
+  generate 1000/10000 episodes, delete/archive/move local files, train PPO/L2/
+  Large PPO, start VLA/action-teacher work, deploy to RoArm, SSH JHPark/B200,
+  pull from B200, copy `.ssh`, or mix with Track A.
+
+Professor packet:
+
+- Created `claudedocs/professor_view_format_packet_cube10cm_top_view_d234.md`.
+- Created contact sheet
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_smoke_d232/professor_review_contact_sheet_d234.png`,
+  a `1326x1442` RGB PNG with 5 episodes and frames `0`, `97`, `194` per
+  episode.
+- Existing arbitrary-frame proof remains
+  `extract_ep003_frame050.png`, a `1280x720` RGB PNG.
+- The professor-facing wording is still: keep frame-by-frame image-state pairs,
+  store as LeRobot MP4+parquet, and extract arbitrary PNGs immediately when
+  needed.
+- Direct professor response is not recorded in repo docs yet; the packet is
+  prepared and ready.
+
+Storage/output-root:
+
+- Primary storage remains LeRobot MP4+parquet with video key
+  `observation.images.top`; PNG is debug/extraction only.
+- AV1 is selected for the next chunk by current evidence. H.264 is fallback only
+  if a future environment/tool cannot decode AV1 or decode speed fails.
+- Next 100 episode chunk, if explicitly launched later, should use fresh local
+  root
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_chunk100_d235`.
+- That local root is acceptable only for one 100 episode chunk because measured
+  retained debug PNG projects to about `5.2334477800000005GB` for 100 episodes,
+  while AV1 video projects to about `0.059648780000000005GB`.
+- Require pre-run free space at least about `25GB`; stop before launch if free
+  space has dropped below that. No cleanup is required for this one 100 episode
+  chunk under the current estimate.
+- 1000/10000 episodes remain blocked on local disk and require external/RunPod
+  storage, a no-full-PNG-retention pipeline, or explicitly approved cleanup/
+  archive.
+
+RunPod/H100 gate:
+
+- Created RunPod pod `86qyuxeldab9h4`, name
+  `roarm-cube10cm-av1-dataloader-d234`, image
+  `runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404`, secure H100 80GB, `20GB`
+  `/workspace`, `30GB` container disk, reported cost rate `$3.29/hr`.
+- Pod was created at `2026-06-12 16:58:49 UTC` and stopped at
+  `2026-06-12 17:16:07 UTC`, about 17 minutes active. It was stopped after
+  result retrieval and not deleted.
+- Cost rule for future RunPod use: always stop pods immediately after work;
+  if results are copied back and the remote environment is not needed, delete/
+  terminate the pod too because stopped pods can still accrue volume-storage
+  charges.
+- Uploaded only the 3.0M smoke LeRobot dataset tar and the read-only codec
+  preflight script. No render, training, or dataset generation ran on RunPod.
+- Installed isolated venv under `/workspace/roarm_d234/venv` because system pip
+  was blocked by PEP 668. Versions: `lerobot 0.4.4`, `torch 2.10.0`,
+  `torchcodec 0.10.0`, `av 15.1.0`, `imageio-ffmpeg 0.6.0`.
+
+RunPod/H100 result:
+
+- 50-sample decode PASS: codec `av1`, pix_fmt `yuv420p`, fps `30`, shape
+  `[720,1280,3]`, frames/episodes `975/5`, decoded image/state/action shapes
+  `[3,720,1280]` / `[6]` / `[6]`, avg/max decode
+  `0.032439069747924806s` / `0.11921572685241699s`.
+- Full 975-frame decode PASS: codec `av1`, pix_fmt `yuv420p`, fps `30`, shape
+  `[720,1280,3]`, frames/episodes `975/5`, decoded image/state/action shapes
+  `[3,720,1280]` / `[6]` / `[6]`, avg/max decode
+  `0.017871856689453125s` / `0.10865616798400879s`, elapsed
+  `26.368597984313965s`.
+
+Decision:
+
+- Verdict:
+  `PROFESSOR_PACKET_READY_STORAGE_ROOT_DECIDED_RUNPOD_H100_AV1_DATALOADER_PASS_100EP_NOT_RUN`.
+- The RunPod/H100 AV1 dataloader gate is closed for the current smoke dataset.
+- AV1 is selected for the next 100 episode chunk by current local + RunPod
+  evidence.
+- 100 episode chunk was not run in this session and should only launch with a
+  fresh explicit run instruction.
+- 1000/10000 episode generation, deletion/archive/move, PPO/L2/Large PPO,
+  VLA/action-teacher, RoArm deployment, SSH JHPark/B200, pull, `.ssh` copy, and
+  Track A remain blocked.
+
+Sources:
+
+- `claudedocs/session_20260613_cube10cm_top_view_professor_storage_runpod_d234.md`
+- `claudedocs/professor_view_format_packet_cube10cm_top_view_d234.md`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/runpod_d234/cube10cm_runpod_h100_av1_decode_preflight_d234.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/runpod_d234/cube10cm_runpod_h100_av1_decode_preflight_full_d234.json`

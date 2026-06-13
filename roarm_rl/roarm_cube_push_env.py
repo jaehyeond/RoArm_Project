@@ -1639,6 +1639,14 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
         just_succeeded = self._tap_just_succeeded_pending.clone()
 
         target_disp_m = max(float(self.cfg.cube_push_target_disp_m), 1.0e-6)
+        useful_now = (
+            (terms["tap_contact_proxy"] | self._tap_contact_seen)
+            & terms["tap_reaction_now"]
+            & ~terms["tap_overshoot_now"]
+        )
+        contact_reaction_seen = self._tap_contact_seen & self._tap_reaction_seen
+        useful_seen = contact_reaction_seen & ~self._tap_overshoot_seen
+        no_overshoot_seen = ~self._tap_overshoot_seen
         prev_target_error = torch.abs(torch.clamp(self._prev_disp_along, min=0.0) - target_disp_m)
         progress = torch.clamp(prev_target_error - terms["tap_target_disp_error_m"], min=-0.005, max=0.005)
         self._prev_disp_along[:] = terms["disp_along"].detach()
@@ -1668,6 +1676,10 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
             "cube_tap_reaction_contact_context_rate": terms["tap_reaction_contact_context"].float().mean().detach(),
             "cube_tap_reaction_now_rate": terms["tap_reaction_now"].float().mean().detach(),
             "cube_tap_reaction_seen_rate": self._tap_reaction_seen.float().mean().detach(),
+            "cube_tap_useful_now_rate": useful_now.float().mean().detach(),
+            "cube_tap_useful_seen_rate": useful_seen.float().mean().detach(),
+            "cube_tap_contact_reaction_seen_rate": contact_reaction_seen.float().mean().detach(),
+            "cube_tap_no_overshoot_seen_rate": no_overshoot_seen.float().mean().detach(),
             "cube_tap_target_disp_m": torch.tensor(float(self.cfg.cube_push_target_disp_m), device=self.device),
             "cube_tap_target_disp_tolerance_m": torch.tensor(
                 float(self.cfg.tap_target_disp_tolerance_m), device=self.device
@@ -1740,7 +1752,11 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
         self._compute_intermediate_values()
         terms = self._tap_terms()
         self._update_tap_buffers(terms)
-        terminated = self._tap_overshoot_seen
+        terminated = (
+            self._tap_overshoot_seen
+            if bool(self.cfg.tap_overshoot_terminate)
+            else torch.zeros_like(self._tap_overshoot_seen)
+        )
         if bool(self.cfg.tap_success_terminate):
             terminated = terminated | self._tap_success_flag
         truncated = self.episode_length_buf >= self.max_episode_length - 1
