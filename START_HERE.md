@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-06-13 KST (D234 current truth: professor view/format packet prepared, storage/output-root decided for one future 100ep chunk, RunPod/H100 AV1 LeRobot dataloader gate passed; 100ep chunk itself has not been run.)
+Last updated: 2026-06-13 KST (D238 current truth: manifest-fed 0-99 chunk renderer written and validate-only gate passed; no Isaac render or 100ep/1000ep generation has been run.)
 
 ## Current Truth
 
@@ -66,8 +66,103 @@ Last updated: 2026-06-13 KST (D234 current truth: professor view/format packet p
     Cost rule: always stop RunPod pods immediately after work; if all outputs
     are copied back and the pod environment is no longer needed, delete/terminate
     the pod too because stopped pods can still accrue volume-storage charges.
+- D235 schema/metadata result:
+  - Do not stuff all rich metadata into the LeRobot core parquet by default.
+    Keep standard LeRobot core fields for loader compatibility and write
+    companion metadata keyed by `global_index` plus (`episode_index`,
+    `frame_index`).
+  - Added `claudedocs/cube10cm_top_view_visual_dataset_schema_d235.md` and
+    `sim_scripts/cube10cm_top_view_metadata_companion.py`.
+  - Ran the companion builder on the existing D233 5ep smoke only. It wrote
+    `metadata_companion_d235/per_frame_metadata.parquet`,
+    `episode_metadata.parquet`, `metadata_schema.json`, and
+    `metadata_validation_summary.json`.
+  - Validation PASS: 975 companion rows / 5 episodes aligned with LeRobot core
+    `index`, `episode_index`, and `frame_index`. This was non-render,
+    non-training, and did not generate a new dataset chunk.
+- D236 sampling-contract result:
+  - Do not make the 0-99 chunk by repeating the D233 five smoke poses.
+  - Added `claudedocs/cube10cm_top_view_chunk100_sampling_contract_d236.md`.
+  - The next renderer should consume an explicit manifest with `split_candidate`,
+    `cube_x_m`, `cube_y_m`, `seed`, `sampling_rule`, `sampling_cell_id`,
+    `source_decision`, and `requires_posthoc_label_validation`.
+  - Proposed draft split: 5 `debug_smoke`, 65 `train_success_candidate`, 15
+    `eval_failure_candidate`, 15 `eval_boundary_candidate`. These are intended
+    buckets only; final labels must come from post-render contact/reaction/
+    overshoot/visibility/reprojection checks.
+- D237 manifest result:
+  - Added `sim_scripts/cube10cm_top_view_chunk100_manifest.py`.
+  - Generated deterministic manifest at
+    `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_chunk100_manifest_d236/episode_manifest.csv`
+    plus JSON and summary.
+  - Validation PASS: 100 rows, episode ids `0..99`, split counts
+    `debug_smoke=5`, `train_success_candidate=65`,
+    `eval_failure_candidate=15`, `eval_boundary_candidate=15`, all rows marked
+    `requires_posthoc_label_validation=True`.
+  - This is still non-render/no-dataset-generation. Boundary rows use `y=0.15`
+    candidates and require camera coverage validation before claims.
+- D238 renderer-prep result:
+  - Added `sim_scripts/cube10cm_top_view_visual_chunk_render.py`.
+  - The D233 smoke renderer remains capped at 1-10 episodes.
+  - The chunk renderer requires a manifest, copies it into the render root, and
+    attaches manifest fields to per-frame metadata.
+  - `--validate-only` PASSed without starting IsaacLab: 100 episodes,
+    split counts `5/65/15/15`.
+  - Actual 0-99 render remains blocked until explicit launch approval and disk/
+    output-root preflight.
 
-## Latest Result: D234
+## Latest Result: D238
+
+- Wrote the manifest-fed chunk renderer and validated only the non-render front
+  gate.
+- Decision:
+  - `MANIFEST_FED_CHUNK_RENDERER_VALIDATE_ONLY_PASS_RENDER_NOT_RUN`;
+  - The next runtime step is exactly one 0-99 render only after explicit launch
+    approval;
+  - Follow-on gates after render: LeRobot AV1 conversion, companion metadata,
+    LeRobot load/decode, PNG extraction, source-vs-decoded pixel diff, row
+    alignment, storage projection, visibility/reprojection.
+
+## Previous Result: D237
+
+- Generated and validated the deterministic 0-99 manifest from the D236 sampling
+  contract.
+- Decision:
+  - `CHUNK100_MANIFEST_PASS_RENDERER_STILL_BLOCKED`;
+  - Next non-render implementation step is a manifest-fed chunk renderer that
+    refuses to run without this manifest;
+  - Next runtime step, only after explicit launch approval, is 0-99 render +
+    LeRobot AV1 conversion + companion metadata + gate validation;
+  - No Isaac render, 0-99 data generation, or 0-999 expansion has run.
+
+## Previous Result: D236
+
+- User asked to proceed step-by-step with critical rechecking.
+- After D235 schema validation, checked D232/D233 sampling evidence and found a
+  blocker before renderer work: D232 requires explicit dataset splits and
+  recorded sampling ranges/seeds; D233 smoke only covered five camera poses.
+- Decision:
+  - `CHUNK100_SAMPLING_MANIFEST_REQUIRED_BEFORE_RENDERER_NO_RENDER`;
+  - First write/confirm a 0-99 manifest, then build a chunk renderer that refuses
+    to run without that manifest;
+  - Keep the smoke script capped at 1-10 episodes;
+  - No 0-99 or 0-999 render has been run.
+
+## Previous Result: D235
+
+- User asked to proceed step-by-step after clarifying parquet and rich metadata.
+- Verified that the existing smoke LeRobot core parquet contains only
+  `observation.state`, `action`, and timestamp/index columns while video is stored
+  separately as `observation.images.top`.
+- Decision:
+  - `LEROBOT_CORE_PLUS_COMPANION_METADATA_SCHEMA_PASS_NO_RENDER_NO_100EP`;
+  - Keep LeRobot core standard for future training compatibility;
+  - Store camera/cube/projection/visibility/contact audit fields in companion
+    metadata joined by frame indices;
+  - Next valid implementation step is a fresh 0-99 chunk render/convert only
+    after explicit launch approval and disk/output-root preflight.
+
+## Previous Result: D234
 
 - User approved proceeding with professor view/format, storage/output-root, and
   RunPod/H100 AV1 dataloader gates.
