@@ -1,0 +1,71 @@
+{
+  "all_requires_posthoc_label_validation": true,
+  "artifact": "cube10cm_top_view_labelaware_manifest_0_999_d241",
+  "bucket_counts": {
+    "clean_prior_candidate": 650,
+    "debug_camera_anchor": 50,
+    "overshoot_eval_candidate": 100,
+    "transition_mixed_probe": 200
+  },
+  "csv_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_labelaware_manifest_0_999_d241/episode_manifest.csv",
+  "episode_index_range": [
+    0,
+    999
+  ],
+  "errors": [],
+  "expected_bucket_counts": {
+    "clean_prior_candidate": 650,
+    "debug_camera_anchor": 50,
+    "overshoot_eval_candidate": 100,
+    "transition_mixed_probe": 200
+  },
+  "fields": [
+    "episode_index",
+    "split_candidate",
+    "intended_sampling_bucket",
+    "intended_role",
+    "cube_x_m",
+    "cube_y_m",
+    "seed",
+    "sampling_rule",
+    "sampling_cell_id",
+    "source_decision",
+    "requires_posthoc_label_validation",
+    "camera_coverage_required",
+    "expected_postrender_labels",
+    "label_policy"
+  ],
+  "forbidden_final_label_fields_present": false,
+  "json_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_labelaware_manifest_0_999_d241/episode_manifest.json",
+  "renderer_required_fields": [
+    "episode_index",
+    "split_candidate",
+    "cube_x_m",
+    "cube_y_m",
+    "seed",
+    "sampling_rule",
+    "sampling_cell_id",
+    "source_decision",
+    "requires_posthoc_label_validation"
+  ],
+  "rows": 1000,
+  "runtime": "NO_RENDER_NO_DATASET_GENERATION_NO_TRAINING",
+  "seed_base": 2410,
+  "seed_unique": true,
+  "source_policy": "D240_LABEL_AWARE_DESIGN_FROM_D241_RENDER_LABELS",
+  "status": "PASS",
+  "summary_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_labelaware_manifest_0_999_d241/manifest_summary.json",
+  "warnings": [
+    "This is a manifest-only artifact. It is not a rendered dataset.",
+    "Current cube10cm_top_view_visual_chunk_render.py is scoped to exactly 100 episodes; 0-999 render requires a separately approved renderer update or new renderer.",
+    "Expected labels are intent hints only. Final labels must come from post-render numeric validation."
+  ],
+  "x_range_m": {
+    "max": 0.39,
+    "min": 0.09
+  },
+  "y_range_m": {
+    "max": 0.15,
+    "min": -0.1
+  }
+}

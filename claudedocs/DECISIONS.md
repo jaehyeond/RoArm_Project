@@ -13673,3 +13673,343 @@ Sources:
 - `sim_scripts/cube10cm_top_view_metadata_companion.py`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/runpod_d234/cube10cm_runpod_h100_av1_decode_preflight_d234.json`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/runpod_d234/cube10cm_runpod_h100_av1_decode_preflight_full_d234.json`
+
+## D239 - Local 0-99 top-view chunk render and numeric labels complete, LeRobot still not run
+
+Evidence:
+
+- After explicit approval, the manifest-fed 0-99 renderer was run locally using
+  host GPU access. Sandbox Isaac/Kit could not see CUDA/Vulkan devices, so the
+  successful render used host GPU execution.
+- Failed/partial roots were preserved and not deleted: `d235` interrupted
+  partial, `d239` sandbox GPU/Vulkan failure, and `d240` 345-frame warning-spam
+  partial.
+- To keep the 100ep log usable, `roarm_rl/roarm_cube_push_env.py` was patched to
+  use IsaacLab `quat_apply` instead of deprecated `quat_rotate` at the two hot
+  paths used by the render. Static compile passed.
+- Successful root:
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_chunk100_d241`.
+- d241 render result: 100 episodes / 19,500 frames at `1280x720`, split counts
+  `debug_smoke=5`, `train_success_candidate=65`, `eval_failure_candidate=15`,
+  `eval_boundary_candidate=15`.
+- d241 render metrics: raw PNG total `5142551626` bytes,
+  `51.42551626MB/episode`, elapsed `4647.953013896942s`, effective captured FPS
+  `4.195395250704307`.
+- d241 camera metrics: all-frame visibility `19500/19500` full, contact-window
+  visibility `18372/18372` full, reprojection centroid median/max
+  `3.0758927127400306px` / `17.06565232897021px`, contract violations `[]`.
+- Added `sim_scripts/cube10cm_top_view_postrender_label_validation.py`; it reads
+  `frames.jsonl` only and writes episode-level numeric labels under
+  `postrender_label_validation_d241/`.
+- Label result: camera contract pass `100/100`, contact seen `100/100`,
+  reaction seen `100/100`, missing contact/reaction `0`, overshoot seen `39/100`,
+  useful clean `61/100`, legacy 6mm target-band success `62/100`.
+- Status counts: `clean_useful_tap=61`,
+  `contact_reaction_with_overshoot=39`. By split: debug `3/2`,
+  train-success candidate `49/16`, eval-failure candidate `8/7`, boundary
+  candidate `1/14` clean/overshoot.
+
+Implication:
+
+- The first local 100ep visual chunk is rendered and numerically labeled, but it
+  is not yet a LeRobot dataset.
+- `split_candidate` remains only a sampling bucket. Dataset filtering must use
+  post-render numeric labels such as `label_useful_clean_numeric`,
+  `label_overshoot_numeric`, and `label_camera_contract_numeric`.
+- Boundary camera coverage passed for this rendered chunk at the full visibility
+  and projection-inside level, but boundary episodes are mostly overshoot
+  outcomes, so they are not training-success demonstrations.
+- Next gated step, only after explicit approval, is d241 LeRobot AV1 conversion
+  plus companion metadata, LeRobot load/decode, PNG extraction, source-vs-decoded
+  pixel diff, and row alignment.
+- 0-999 / 1000 / 10000 expansion, deletion/archive/move, PPO/L2/Large PPO,
+  SmolVLA/VLA fine-tuning, action-teacher work, RoArm deployment, SSH
+  JHPark/B200 reconnect, pull, `.ssh` copy, and Track A remain blocked.
+
+Sources:
+
+- `claudedocs/session_20260613_cube10cm_top_view_chunk100_render_labels_d239.md`
+- `sim_scripts/cube10cm_top_view_visual_chunk_render.py`
+- `sim_scripts/cube10cm_top_view_postrender_label_validation.py`
+- `roarm_rl/roarm_cube_push_env.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_chunk100_d241/render_summary.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_chunk100_d241/postrender_label_validation_d241/label_validation_summary.json`
+
+## D240 - D241 LeRobot AV1, companion metadata, PNG extraction, and label-aware 0-999 design pass
+
+Evidence:
+
+- No new Isaac render, 0-999 generation, training, deletion, move, archive, SSH,
+  or B200 work was run.
+- The existing d241 render root was converted to LeRobot AV1 at
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_chunk100_d241/lerobot_dataset_av1`.
+- LeRobot validation passed: frames `19500`, episodes `100`, source frames
+  `19500`, frame count match `true`, requested codec `libsvtav1`, actual codec
+  `av1`, pixel format `yuv420p`, fps `30`.
+- Storage/codec metrics: video bytes total `56604396`, video MB/episode
+  `0.56604396`, projected video size `0.56604396GB/1000ep` and
+  `5.6604396GB/10000ep`, final LeRobot root about `56MB`, temporary PNG count
+  in the LeRobot root `0`.
+- LeRobot decode and pixel gate passed: sampled decode avg/max
+  `0.008618485927581788s` / `0.09812450408935547s`; sampled PNG-vs-decoded MP4
+  max mean abs diff `0.8940353732638889`; sampled max pixel abs diff `74`.
+- d241 companion metadata was generated under `metadata_companion_d241` and
+  passed row alignment: `19500` per-frame rows, `100` episodes, checked against
+  LeRobot core rows by `index`, `episode_index`, and `frame_index`.
+- `extract_frames.py` extracted
+  `debug_extract_frames_d241/episode_000099_frame_000050.png` from the d241 AV1
+  MP4. The extracted PNG is `1280x720`; same-frame source-vs-extracted mean abs
+  diff is `0.7776012731481482`, max abs diff `30`.
+- Added
+  `claudedocs/cube10cm_top_view_label_aware_0_999_manifest_design_d240.md`.
+  The design records that existing v6 data is only a codec/backend reference,
+  not the professor schema target; D241 `split_candidate` is a sampling bucket,
+  not a final label; and 0-999 planning must separate intended sampling from
+  post-render numeric labels.
+- D241 label evidence remains: useful clean `61/100`, overshoot `39/100`;
+  boundary samples are camera-covered but mostly overshoot
+  (`eval_boundary_candidate` clean/overshoot `1/14`).
+
+Implication:
+
+- The d241 0-99 rendered chunk is now a validated LeRobot AV1 dataset with
+  companion metadata and PNG extraction proof.
+- AV1 remains acceptable for this branch based on local d241 decode and the
+  earlier RunPod/H100 smoke decode gate, while H264 remains a fallback only if a
+  target training environment fails AV1 decode later.
+- The next non-render step, if continuing carefully, is to implement and
+  validate a label-aware 0-999 manifest generator. The next runtime step would
+  be a 0-999 render only after explicit approval and disk/output-root preflight.
+- If the goal is 1000 clean train-positive demonstrations, a naive 1000 episode
+  render is not enough; D241's observed clean rate is `61%`, so the sampling
+  distribution must be tightened or the render count must be over-generated.
+- 0-999 / 1000 / 10000 expansion, deletion/archive/move, PPO/L2/Large PPO,
+  SmolVLA/VLA fine-tuning, action-teacher work, RoArm deployment, SSH
+  JHPark/B200 reconnect, pull, `.ssh` copy, and Track A remain blocked.
+
+Sources:
+
+- `claudedocs/session_20260614_cube10cm_top_view_d241_lerobot_metadata_labelaware_d240.md`
+- `claudedocs/cube10cm_top_view_label_aware_0_999_manifest_design_d240.md`
+- `sim_scripts/cube10cm_top_view_smoke_to_lerobot.py`
+- `sim_scripts/cube10cm_top_view_metadata_companion.py`
+- `extract_frames.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_chunk100_d241/lerobot_validation_summary.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_chunk100_d241/metadata_companion_d241/metadata_validation_summary.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_chunk100_d241/postrender_label_validation_d241/episode_labels.csv`
+
+## D241 - Label-aware 0-999 manifest pass, render still blocked by 100ep-scoped renderer
+
+Evidence:
+
+- No IsaacLab render, image generation, LeRobot dataset build, training,
+  deletion, move, archive, SSH/B200, or RunPod work was run.
+- Added `sim_scripts/cube10cm_top_view_labelaware_manifest_0_999.py`.
+- The generator preserves the fields required by the existing manifest-fed
+  renderer: `episode_index`, `split_candidate`, `cube_x_m`, `cube_y_m`, `seed`,
+  `sampling_rule`, `sampling_cell_id`, `source_decision`, and
+  `requires_posthoc_label_validation`.
+- It also adds intent-only fields: `intended_sampling_bucket`, `intended_role`,
+  `camera_coverage_required`, `expected_postrender_labels`, and `label_policy`.
+- Generated manifest-only output root:
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_labelaware_manifest_0_999_d241`.
+- Validation passed: rows `1000`, episode ids `0..999`, seed base `2410`,
+  seeds unique, all rows require post-render label validation, forbidden final
+  label fields absent, x range `0.09..0.39`, y range `-0.1..0.15`.
+- Intended bucket counts match the D240 draft: `debug_camera_anchor=50`,
+  `clean_prior_candidate=650`, `transition_mixed_probe=200`,
+  `overshoot_eval_candidate=100`.
+- Independent CSV check passed: rows `1000`, contiguous ids `true`, unique seeds
+  `true`, all `requires_posthoc_label_validation=True`, all
+  `camera_coverage_required=True`, forbidden final label fields `[]`.
+- The generated output is small, about `1.1M`; it is not a rendered dataset.
+- The manifest summary records a critical warning: current
+  `sim_scripts/cube10cm_top_view_visual_chunk_render.py` is scoped to exactly
+  `100` episodes, so a 0-999 render requires a separately approved renderer
+  update or new renderer.
+
+Implication:
+
+- The project now has a validated label-aware 0-999 render plan, not a 0-999
+  dataset.
+- Do not feed this manifest into the current 100ep renderer and claim scale-up
+  readiness. The next non-render step is a 0-999 renderer update/new renderer
+  design with validate-only guard.
+- Final clean/overshoot/camera labels still must come only from post-render
+  numeric validation.
+- Any actual 0-999 / 1000 / 10000 render, deletion/archive/move, PPO/L2/Large
+  PPO, SmolVLA/VLA fine-tuning, action-teacher work, RoArm deployment, SSH
+  JHPark/B200 reconnect, pull, `.ssh` copy, and Track A remain blocked.
+
+Sources:
+
+- `claudedocs/session_20260614_cube10cm_top_view_labelaware_manifest_0_999_d241.md`
+- `sim_scripts/cube10cm_top_view_labelaware_manifest_0_999.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_labelaware_manifest_0_999_d241/manifest_summary.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_labelaware_manifest_0_999_d241/episode_manifest.csv`
+- `sim_scripts/cube10cm_top_view_visual_chunk_render.py`
+
+## D242 - 0-999-capable renderer validate-only pass, actual render still blocked
+
+Evidence:
+
+- No IsaacLab render, image generation, LeRobot dataset build, training,
+  deletion, move, archive, SSH/B200, or RunPod work was run.
+- Added `sim_scripts/cube10cm_top_view_visual_manifest_render.py`.
+- The old 100ep renderer `sim_scripts/cube10cm_top_view_visual_chunk_render.py`
+  was left unchanged for d239/d241 reproducibility.
+- The new renderer defaults to the D241 label-aware 0-999 manifest and
+  `--expected-episodes=1000`.
+- `--validate-only` reads and validates the manifest, writes a validation JSON,
+  and exits before importing or launching IsaacLab.
+- Actual render requires omitting `--validate-only` and passing
+  `--render-approved`; otherwise the script raises before rendering.
+- Validate-only output:
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_manifest_render_validate_d242.json`.
+- Validation passed: rows `1000`, expected episodes `1000`, episode range
+  `0..999`, split/intended bucket counts `debug_camera_anchor=50`,
+  `clean_prior_candidate=650`, `transition_mixed_probe=200`,
+  `overshoot_eval_candidate=100`, all rows require post-render label validation,
+  all rows require camera coverage, seed unique, robot USD exists, width/height/
+  fps `1280x720@30`, steps/capture-stride `580/3`.
+- Non-render evidence: validation summary records
+  `VALIDATE_ONLY_NO_RENDER_NO_DATASET_GENERATION_NO_TRAINING`,
+  `render_approved=false`, output render root exists `false`, and output render
+  root empty `true`. The actual render root `cube10cm_top_view_visual_0_999_d242`
+  was not created.
+
+Implication:
+
+- The branch now has a validated software path for checking a 0-999 manifest
+  without starting IsaacLab.
+- This still does not create a 0-999 dataset and does not close the runtime
+  scale-up gate.
+- Any actual 0-999 render must be explicitly approved as a runtime action and
+  must use disk/output-root preflight plus `--render-approved`.
+- Any 0-999 / 1000 / 10000 render, deletion/archive/move, PPO/L2/Large PPO,
+  SmolVLA/VLA fine-tuning, action-teacher work, RoArm deployment, SSH
+  JHPark/B200 reconnect, pull, `.ssh` copy, and Track A remain blocked until
+  separately approved.
+
+Sources:
+
+- `claudedocs/session_20260614_cube10cm_top_view_0_999_renderer_validate_d242.md`
+- `sim_scripts/cube10cm_top_view_visual_manifest_render.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_manifest_render_validate_d242.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_labelaware_manifest_0_999_d241/manifest_summary.json`
+- `sim_scripts/cube10cm_top_view_visual_chunk_render.py`
+
+## D243 - Local 0-999 runtime preflight blocked by disk
+
+Evidence:
+
+- User explicitly approved the next runtime direction and requested expected
+  time/capacity verification.
+- No IsaacLab render, image generation, LeRobot dataset build, training,
+  deletion, move, archive, SSH/B200, or RunPod work was run.
+- Local disk preflight showed `/dev/nvme0n1p5` at `632825225216` bytes total,
+  `572916858880` used, `27687411712` available, `96%` used.
+- `/tmp` is on the same filesystem and had only `27687079936` bytes available,
+  so it is not an alternate output root.
+- D241 measured 100 episodes / 19,500 frames with raw PNG total
+  `5142551626` bytes, `51.42551626MB/episode`, elapsed
+  `4647.953013896942s`, and effective render FPS `4.195395250704307`.
+- D241/D240 LeRobot AV1 output for those same 100 episodes was only
+  `56604396` bytes (`0.56604396MB/episode`), but the current renderer still
+  writes all raw PNG frames before post-render artifacts.
+- Scaling the measured D241 100ep run by 10 gives 1000 episodes / 195,000
+  frames, expected render time `46479.530s` (`12.911h`; practically about
+  `13-15h` with overhead), raw PNG `51425516260` bytes (`51.426GB` decimal),
+  AV1 video `566043960` bytes, and minimal raw PNG + video + JSONL + companion
+  metadata about `52.486GB`.
+- `sim_scripts/cube10cm_top_view_visual_manifest_render.py` confirms the runtime
+  requires `--render-approved`, creates `raw_env_render_frames`, and saves each
+  captured RGB frame as PNG before writing metadata and summary.
+- The actual 0-999 render root `cube10cm_top_view_visual_0_999_d242` remains
+  absent.
+
+Implication:
+
+- Verdict `LOCAL_0_999_RUNTIME_NOT_STARTED_DISK_HARD_BLOCK_D243`.
+- Starting the 0-999 render locally now would likely fail with disk-full before
+  completion and leave a partial output root. The current available space is
+  about `27.69GB`, below the projected `52.49GB` minimum and far below a safe
+  margin.
+- The next safe choices are: use an output root with at least about `60GB` free,
+  explicitly approve a cleanup/archive plan, redesign the renderer/conversion
+  pipeline to avoid retaining all raw PNG frames at once, or run on external/
+  RunPod storage with the established copy-back and stop/terminate cost rule.
+- The first D232 cleanup path (`outputs/*/checkpoints/*/training_state`, about
+  `25.6GB`) is not enough by itself for a safe 1000ep local run with margin.
+- Actual 0-999 local render, 1000/10000 scale-up, deletion/archive/move, PPO/L2/
+  Large PPO, SmolVLA/VLA fine-tuning, action-teacher work, RoArm deployment, SSH
+  JHPark/B200 reconnect, pull, `.ssh` copy, and Track A remain blocked until
+  separately approved.
+
+Sources:
+
+- `claudedocs/session_20260615_cube10cm_top_view_0_999_runtime_preflight_blocked_d243.md`
+- `START_HERE.md`
+- `sim_scripts/cube10cm_top_view_visual_manifest_render.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_chunk100_d241/render_summary.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_chunk100_d241/lerobot_validation_summary.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_labelaware_manifest_0_999_d241/manifest_summary.json`
+
+## D244 - P6v12 raw rollout frames cleanup complete
+
+Evidence:
+
+- User explicitly approved deleting only
+  `claudedocs/figures/p6v12_rollout/frames`.
+- No IsaacLab render, dataset generation, LeRobot conversion, training, RunPod,
+  SSH/B200, pull, `.ssh` copy, PPO, VLA, action-teacher, or RoArm work was run.
+- No `outputs/`, `collected_data*`, `b200_backup_*`, or
+  `openvla_oft_b200_pulls` files were touched.
+- Repo context confirms the folder was an older P6v12 lab-meeting visualization
+  raw PNG dump:
+  - `claudedocs/labmeeting_p6v12_rollout_20260513.md` records P6v12 as a
+    close-hover farming failure video artifact.
+  - `scripts/render_p6v12_policy_rollout.py` writes BasicWriter PNGs to
+    `<out_dir>/frames` before encoding `p6v12_rollout.mp4`.
+- Pre-delete manifest was written at
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/p6v12_rollout_frames_cleanup_d243/frames_manifest_predelete.tsv`.
+- Manifest line count `73366`; sha256
+  `45a0ece58f4e86cd605b262e4e43bce17b11c1326cb3285dfcccded6ea922e26`;
+  manifest size `3.7M`.
+- Deleted exactly `claudedocs/figures/p6v12_rollout/frames`.
+- Post-delete verification:
+  - `frames` path absent;
+  - `replay` still contains `200` PNG files;
+  - `p6v12_rollout.mp4`, `p6v12_trajectory.csv`, `replay`,
+    `replay_old_camera`, and `replay_silver_backup` remain present.
+- Post-delete `claudedocs/figures/p6v12_rollout` size is `67M`.
+- Post-delete `df -h .`: `590G` total, `501G` used, `60G` available, `90%`
+  used.
+- Post-delete `df -B1 .`: total `632825225216`, used `537226887168`,
+  available `63377383424`.
+- Compared with D243 baseline available `27687411712` bytes, net available-space
+  increase is `35689971712` bytes, about `35.69GB` decimal.
+
+Implication:
+
+- Verdict `P6V12_RAW_FRAMES_CLEANUP_COMPLETE_D244`.
+- The highest-value D232 cleanup candidate was removed after manifest and
+  explicit approval.
+- The compact P6v12 lab-meeting evidence remains preserved.
+- This improves local storage, but it does not automatically launch or approve
+  the 0-999 render. D243 projected the current raw-PNG-first renderer at about
+  `52.49GB` minimum for 1000 episodes before safety margin; current free space is
+  about `60G`, which is close to the lower bound.
+- Actual 0-999 local render, further cleanup, `outputs/` pruning, 1000/10000
+  scale-up, PPO/L2/Large PPO, SmolVLA/VLA fine-tuning, action-teacher work,
+  RoArm deployment, SSH JHPark/B200 reconnect, pull, `.ssh` copy, and Track A
+  remain blocked until separately approved.
+
+Sources:
+
+- `claudedocs/session_20260615_p6v12_rollout_frames_cleanup_d244.md`
+- `claudedocs/labmeeting_p6v12_rollout_20260513.md`
+- `scripts/render_p6v12_policy_rollout.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/p6v12_rollout_frames_cleanup_d243/frames_manifest_predelete.tsv`
+- `claudedocs/session_20260612_camera_contract_visual_dataset_disk_audit_d232.md`
+- `claudedocs/session_20260615_cube10cm_top_view_0_999_runtime_preflight_blocked_d243.md`

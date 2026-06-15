@@ -20,7 +20,7 @@ import torch
 import isaaclab.sim as sim_utils
 from isaaclab.assets import Articulation, RigidObject, RigidObjectCfg
 from isaaclab.utils import configclass
-from isaaclab.utils.math import matrix_from_quat, quat_inv, quat_rotate, sample_uniform, subtract_frame_transforms
+from isaaclab.utils.math import matrix_from_quat, quat_apply, quat_inv, sample_uniform, subtract_frame_transforms
 
 from sim_scripts.roarm_kinematics import clip_joints, fk_tcp, ik_dls
 from roarm_rl.roarm_stack_env import (
@@ -528,7 +528,7 @@ class RoArmCubePushEnv(RoArmStackEnv):
             link5_pos_w,
             link5_quat_w,
         )
-        tool_proxy_offset_w = quat_rotate(link5_quat_w, self._tcp_local.unsqueeze(0).repeat(self.num_envs, 1))
+        tool_proxy_offset_w = quat_apply(link5_quat_w, self._tcp_local.unsqueeze(0).repeat(self.num_envs, 1))
         link5_target_w = tcp_target_w - tool_proxy_offset_w
         link5_target_b, _ = subtract_frame_transforms(root_pos_w, root_quat_w, link5_target_w, link5_quat_w)
 
@@ -1471,7 +1471,7 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
         link5_quat_w = self._robot.data.body_quat_w[:, self.link5_idx]
         local = corners.unsqueeze(0).expand(n, -1, -1)
         quat = link5_quat_w.unsqueeze(1).expand(n, corners.shape[0], -1)
-        offset_w = quat_rotate(quat.reshape(-1, 4), local.reshape(-1, 3)).reshape(n, corners.shape[0], 3)
+        offset_w = quat_apply(quat.reshape(-1, 4), local.reshape(-1, 3)).reshape(n, corners.shape[0], 3)
         corners_w = link5_pos_w.unsqueeze(1) + offset_w
 
         push_dir = self._push_dir_xy

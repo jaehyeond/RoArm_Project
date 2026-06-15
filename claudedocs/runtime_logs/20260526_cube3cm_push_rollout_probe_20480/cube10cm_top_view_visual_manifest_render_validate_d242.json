@@ -1,0 +1,75 @@
+{
+  "all_camera_coverage_required": true,
+  "all_requires_posthoc_label_validation": true,
+  "artifact": "cube10cm_top_view_visual_manifest_render_d242",
+  "capture_stride": 3,
+  "episode_index_range": [
+    0,
+    999
+  ],
+  "expected_episodes": 1000,
+  "forbidden_final_label_fields": [
+    "label_camera_contract_numeric",
+    "label_overshoot_numeric",
+    "label_status",
+    "label_useful_clean_numeric"
+  ],
+  "fps": 30,
+  "height": 720,
+  "intended_bucket_counts": {
+    "clean_prior_candidate": 650,
+    "debug_camera_anchor": 50,
+    "overshoot_eval_candidate": 100,
+    "transition_mixed_probe": 200
+  },
+  "intent_fields_supported": [
+    "intended_sampling_bucket",
+    "intended_role",
+    "camera_coverage_required",
+    "expected_postrender_labels",
+    "label_policy"
+  ],
+  "manifest": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_labelaware_manifest_0_999_d241/episode_manifest.csv",
+  "manifest_fields_required": [
+    "episode_index",
+    "split_candidate",
+    "cube_x_m",
+    "cube_y_m",
+    "seed",
+    "sampling_rule",
+    "sampling_cell_id",
+    "source_decision",
+    "requires_posthoc_label_validation"
+  ],
+  "out_dir": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_0_999_d242",
+  "out_dir_empty": true,
+  "out_dir_exists": false,
+  "render_approved": false,
+  "robot_usd_exists": true,
+  "robot_usd_path": "/home/cgxr/Documents/Robotics/RoArm_Project/b200_backup_20260522_final/tmp_p7/p7_branch_b_cube2cm_opposing_jaw_v7_collision_usd_d024/roarm_m3.usd",
+  "rows": 1000,
+  "runtime": "VALIDATE_ONLY_NO_RENDER_NO_DATASET_GENERATION_NO_TRAINING",
+  "seed_unique": true,
+  "split_counts": {
+    "clean_prior_candidate": 650,
+    "debug_camera_anchor": 50,
+    "overshoot_eval_candidate": 100,
+    "transition_mixed_probe": 200
+  },
+  "status": "PASS",
+  "steps_per_episode": 580,
+  "warnings": [
+    "validate-only does not launch IsaacLab and does not render images",
+    "actual render still requires explicit runtime approval, disk/output-root preflight, and --render-approved",
+    "final clean/overshoot/camera labels must be assigned only by post-render numeric validation"
+  ],
+  "width": 1280,
+  "x_range_m": {
+    "max": 0.39,
+    "min": 0.09
+  },
+  "y_range_m": {
+    "max": 0.15,
+    "min": -0.1
+  }
+}
