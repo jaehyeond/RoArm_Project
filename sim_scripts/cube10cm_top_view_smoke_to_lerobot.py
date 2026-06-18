@@ -35,7 +35,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--repo-id", default="roarm_cube10cm_top_view_smoke_d232")
     parser.add_argument("--fps", type=int, default=FPS)
     parser.add_argument("--vcodec", default="libsvtav1")
+    parser.add_argument("--video-backend", default=None, help="LeRobot video decode backend, e.g. pyav.")
     parser.add_argument("--quality-samples", type=int, default=5)
+    parser.add_argument("--validate-only", action="store_true", help="Validate an existing LeRobot dataset without rebuilding it.")
     return parser.parse_args()
 
 
@@ -177,7 +179,7 @@ def validate_dataset(args: argparse.Namespace, rows: list[dict[str, Any]], build
     import numpy as np
 
     t0 = time.time()
-    ds = LeRobotDataset(args.repo_id, root=str(args.out_dir))
+    ds = LeRobotDataset(args.repo_id, root=str(args.out_dir), video_backend=args.video_backend)
     total_frames = int(ds.meta.total_frames)
     total_episodes = int(ds.meta.total_episodes)
     indices = sample_indices(total_frames, int(args.quality_samples))
@@ -224,6 +226,7 @@ def validate_dataset(args: argparse.Namespace, rows: list[dict[str, Any]], build
         "dataset_root": str(args.out_dir),
         "video_key": VIDEO_KEY,
         "requested_vcodec": str(args.vcodec),
+        "video_backend": args.video_backend,
         "info_codec": feature_info.get("video.codec"),
         "info_pix_fmt": feature_info.get("video.pix_fmt"),
         "info_fps": feature_info.get("video.fps"),
@@ -262,7 +265,17 @@ def main() -> None:
         f"rows={len(rows)} render_dir={args.render_dir} out_dir={args.out_dir} vcodec={args.vcodec}",
         flush=True,
     )
-    build_info = build_dataset(args, rows)
+    if args.validate_only:
+        if not args.out_dir.exists():
+            raise FileNotFoundError(args.out_dir)
+        build_info = {
+            "build_skipped": True,
+            "reason": "validate_only_existing_lerobot_dataset",
+            "episodes": len({int(row["episode_id"]) for row in rows}),
+            "source_frames": len(rows),
+        }
+    else:
+        build_info = build_dataset(args, rows)
     result = validate_dataset(args, rows, build_info)
     out_json = args.render_dir / "lerobot_validation_summary.json"
     out_json.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")

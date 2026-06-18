@@ -1,0 +1,135 @@
+{
+  "artifact": "cube10cm_top_view_split_distribution_d252",
+  "critical_findings": [
+    "학습용 정상 성공 예시는 x/y 전체 sampled workspace를 포함한다.",
+    "과하게 민 진단용 평가 데이터는 학습용 정상 성공 예시보다 높은 y 영역에 뚜렷하게 몰린다.",
+    "카메라 기준 실패 격리 데이터는 x 약 0.14-0.165m 근처에 몰리며, episode 721은 coverage 실패로 별도 주의가 필요하다."
+  ],
+  "label_package_dir": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_0_999_d242/label_package_d248",
+  "runtime": "NO_RENDER_NO_TRAINING_NO_DELETE_DISTRIBUTION_CHECK_ONLY",
+  "status": "PASS",
+  "subsplits": {
+    "eval_clean_holdout": {
+      "episodes": 82,
+      "split_candidate_counts": {
+        "clean_prior_candidate": 59,
+        "debug_camera_anchor": 3,
+        "overshoot_eval_candidate": 5,
+        "transition_mixed_probe": 15
+      },
+      "x": {
+        "max": 0.3584209978580475,
+        "mean": 0.23244221871945916,
+        "min": 0.09000000357627869,
+        "std": 0.06866439435597675
+      },
+      "x_band_counts": {
+        "center_x_0.16_to_0.28": 45,
+        "far_x_ge_0.28": 21,
+        "near_x_below_0.16": 16
+      },
+      "y": {
+        "max": 0.15000000596046448,
+        "mean": 0.004312341453552973,
+        "min": -0.10000000149011612,
+        "std": 0.07147566385771666
+      },
+      "y_band_counts": {
+        "boundary_y_ge_0.12": 7,
+        "high_y_0.05_to_0.12": 12,
+        "low_y_below_-0.05": 25,
+        "mid_y_-0.05_to_0.05": 38
+      }
+    },
+    "eval_overshoot_diagnostic": {
+      "episodes": 167,
+      "split_candidate_counts": {
+        "clean_prior_candidate": 25,
+        "debug_camera_anchor": 25,
+        "overshoot_eval_candidate": 57,
+        "transition_mixed_probe": 60
+      },
+      "x": {
+        "max": 0.38999998569488525,
+        "mean": 0.23995009582199736,
+        "min": 0.09000000357627869,
+        "std": 0.07117492128539707
+      },
+      "x_band_counts": {
+        "center_x_0.16_to_0.28": 91,
+        "far_x_ge_0.28": 50,
+        "near_x_below_0.16": 26
+      },
+      "y": {
+        "max": 0.15000000596046448,
+        "mean": 0.08234862930247348,
+        "min": -0.10000000149011612,
+        "std": 0.07533652666144498
+      },
+      "y_band_counts": {
+        "boundary_y_ge_0.12": 79,
+        "high_y_0.05_to_0.12": 45,
+        "low_y_below_-0.05": 20,
+        "mid_y_-0.05_to_0.05": 23
+      }
+    },
+    "quarantine_camera_fail": {
+      "episodes": 14,
+      "split_candidate_counts": {
+        "clean_prior_candidate": 13,
+        "transition_mixed_probe": 1
+      },
+      "x": {
+        "max": 0.16500000655651093,
+        "mean": 0.14848985629422323,
+        "min": 0.14000000059604645,
+        "std": 0.007065612613194444
+      },
+      "x_band_counts": {
+        "center_x_0.16_to_0.28": 1,
+        "near_x_below_0.16": 13
+      },
+      "y": {
+        "max": 0.036111000925302505,
+        "mean": -0.004563499774251666,
+        "min": -0.019999999552965164,
+        "std": 0.014173533899254924
+      },
+      "y_band_counts": {
+        "mid_y_-0.05_to_0.05": 14
+      }
+    },
+    "train_clean_positive": {
+      "episodes": 737,
+      "split_candidate_counts": {
+        "clean_prior_candidate": 553,
+        "debug_camera_anchor": 22,
+        "overshoot_eval_candidate": 38,
+        "transition_mixed_probe": 124
+      },
+      "x": {
+        "max": 0.38999998569488525,
+        "mean": 0.242590520060855,
+        "min": 0.09000000357627869,
+        "std": 0.06462326103669115
+      },
+      "x_band_counts": {
+        "center_x_0.16_to_0.28": 397,
+        "far_x_ge_0.28": 252,
+        "near_x_below_0.16": 88
+      },
+      "y": {
+        "max": 0.15000000596046448,
+        "mean": -0.008028418002612232,
+        "min": -0.10000000149011612,
+        "std": 0.06657358897778105
+      },
+      "y_band_counts": {
+        "boundary_y_ge_0.12": 59,
+        "high_y_0.05_to_0.12": 73,
+        "low_y_below_-0.05": 240,
+        "mid_y_-0.05_to_0.05": 365
+      }
+    }
+  }
+}

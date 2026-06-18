@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-06-15 KST (D244 current truth: approved cleanup removed only p6v12 raw rollout frames after manifest; free space rose from about 26G to 60G, but 0-999 render is still not automatically started because the current raw-PNG-first pipeline needs about 52.49GB minimum before safety margin.)
+Last updated: 2026-06-18 KST (D257 current truth: professor branch now has a LeRobot pair, RL transition/reward table, and PPO-compatible state-action teacher checkpoint; no Isaac Lab PPO runtime, render, cleanup, RunPod, B200, or RoArm control has been run.)
 
 ## Current Truth
 
@@ -220,8 +220,293 @@ Last updated: 2026-06-15 KST (D244 current truth: approved cleanup removed only 
   - This improves storage but does not automatically launch the 0-999 render;
     current free space is close to the D243 minimum requirement and has limited
     safety margin.
+- D245 outputs training-state cleanup result:
+  - User asked for a critical recheck and storage recovery using the D232 second
+    cleanup path.
+  - Deleted only `outputs/*/checkpoints/*/training_state` after manifest.
+  - Pre-delete manifest directory:
+    `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/outputs_training_state_cleanup_d245`.
+  - Deleted `58` training-state directories / `290` files; preserved `66`
+    `pretrained_model` directories.
+  - `training_state` represented SmolVLA exact-resume state
+    (optimizer/scheduler/RNG/step), not model weights. `pretrained_model`
+    inference/eval/new fine-tuning artifacts remain.
+  - Post-delete `df -h .`: `590G` total, `479G` used, `82G` available, `86%`
+    used.
+  - Net available-space increase from D245 pre-delete:
+    `23936794624` bytes, about `23.94GB` decimal. Net increase since D243:
+    about `59.61GB` decimal.
+  - Decision: `OUTPUTS_TRAINING_STATE_CLEANUP_COMPLETE_D245`.
+  - Actual 0-999 render still requires a fresh runtime decision and final
+    preflight; this cleanup only improves the storage gate.
+- D246 local 0-999 render + post-render label result:
+  - After explicit local runtime approval, ran
+    `sim_scripts/cube10cm_top_view_visual_manifest_render.py --render-approved --device cuda:0`
+    against the D241 0-999 manifest. This was Isaac render/data capture only:
+    no PPO, no VLA/SmolVLA fine-tuning, no action-teacher, no RoArm deployment,
+    no RunPod, no B200/SSH/pull, and no deletion/move/archive.
+  - Render root:
+    `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_0_999_d242`.
+  - Render summary: 1000 episodes / 195000 frames, `1280x720`, target `30fps`,
+    elapsed `28349.806646108627s` (about `7.88h`), effective captured FPS
+    `6.878353790351732`, raw PNG total `51386208295` bytes, about
+    `51.386208294999996MB/episode`, contract violations `[]`.
+  - Manifest buckets were preserved as intended buckets:
+    `debug_camera_anchor=50`, `clean_prior_candidate=650`,
+    `transition_mixed_probe=200`, `overshoot_eval_candidate=100`.
+  - Post-render labels were generated at
+    `postrender_label_validation_d246`: expected/actual episodes `1000/1000`,
+    frames `195000`, all episodes have `195` frames.
+  - Camera gate passed for `986/1000` episodes. Label status counts after camera
+    gate: `clean_useful_tap=819`, `contact_reaction_with_overshoot=167`,
+    `camera_quality_fail=14`, `missing_contact_or_reaction=0`.
+  - Raw event labels before camera filtering: useful-clean numeric `829`,
+    overshoot numeric `171`. The difference is the 14 camera-quality-fail
+    episodes: 10 clean-event and 4 overshoot-event episodes are excluded by
+    camera gate.
+  - Critical failure interpretation: 13 camera failures are clean-prior bucket
+    reprojection-gate failures just above `20px`; episode `721` is a stronger
+    coverage/projection failure (`projection_inside_frames=7/195`) and should be
+    treated as a camera-contract design warning before scale-up.
+  - Post-render disk state: output root is about `49G`; `df -h .` is `590G`
+    total, `528G` used, `33G` available, `95%` used.
+  - The renderer printed the done line and wrote `render_summary.json`; local
+    Kit close was then cleaned up manually because the script intentionally skips
+    `sim_app.close()` to avoid local close hangs. This makes the log show a
+    post-completion killed process, not a missing render artifact.
+  - Decision: `LOCAL_0_999_RENDER_D242_COMPLETE_POSTRENDER_LABELS_D246`.
+  - Next gated step is not training. It is LeRobot v3 conversion/load validation,
+    companion metadata generation, video codec/decode checks, PNG extraction
+    proof, source-vs-decoded pixel diff, and row alignment. Because only about
+    `33G` remains free, conversion or further scale-up requires a fresh storage
+    check and explicit approval.
+- D247 LeRobot v3 conversion + metadata result:
+  - User approved proceeding without cleanup. Raw PNGs were preserved; no deletion,
+    move, archive, render, PPO, VLA/SmolVLA fine-tuning, action-teacher, RoArm,
+    RunPod, B200/SSH/pull, or Track A was run.
+  - Converted existing D246 raw render to
+    `cube10cm_top_view_visual_0_999_d242/lerobot_dataset_av1_d247`.
+  - Final LeRobot dataset size is about `540M`; companion metadata is about
+    `34M`; extracted debug PNG folder is about `104K`.
+  - Initial validation in `lerobot` env failed after all `1000` episodes were
+    saved because default torchcodec loading failed against local
+    `torch==2.10.0+cu128` / missing FFmpeg shared libraries. This is an
+    environment/backend failure, not a missing dataset build.
+  - Patched `sim_scripts/cube10cm_top_view_smoke_to_lerobot.py` to support
+    `--validate-only` and `--video-backend`; revalidated the existing dataset
+    with `video_backend=pyav`.
+  - LeRobot validation PASS:
+    `total_frames=195000`, `total_episodes=1000`, codec `av1`, pix fmt
+    `yuv420p`, fps `30`, video bytes `548571183`,
+    `0.548571183MB/episode`, sampled decode avg/max
+    `0.015330815315246582s` / `0.017406463623046875s`, sampled
+    PNG-vs-decoded mean abs max `0.898435691550926`, max abs diff `80`.
+  - PyAV video frame-count check PASS: three MP4 files contain
+    `67275 + 87945 + 39780 = 195000` frames at `1280x720@30fps`.
+  - Companion metadata PASS: `195000` per-frame rows / `1000` episodes aligned
+    to LeRobot core parquet by `index`, `episode_index`, and `frame_index`.
+  - PNG extraction proof PASS:
+    episode `999`, frame `194`, extracted `1280x720` PNG; source-vs-extracted
+    mean/max abs diff `0.792978515625` / `31`.
+  - Post-conversion disk: `df -h .` remains about `590G` total, `528G` used,
+    `32G` available, `95%` used. Raw PNG storage remains the dominant disk cost.
+  - Decision: `D247_0_999_LEROBOT_AV1_PYAV_VALIDATION_METADATA_PASS`.
+  - Next work is analysis/packaging/filtering of the camera-gated labels or
+    storage policy for raw PNG retention. Any training remains separate.
+- D248 label package + camera-fail audit result:
+  - No render, training, deletion, move, archive, PPO, VLA/SmolVLA fine-tuning,
+    action-teacher, RoArm, RunPod, B200/SSH/pull, or Track A was run.
+  - Added `sim_scripts/cube10cm_top_view_package_label_splits.py`.
+  - Output package:
+    `cube10cm_top_view_visual_0_999_d242/label_package_d248`.
+  - Packaged all `1000` episodes:
+    `train_clean_positive=737`, `eval_clean_holdout=82`,
+    `eval_overshoot_diagnostic=167`, `quarantine_camera_fail=14`.
+  - Basis: only camera-pass `clean_useful_tap` episodes enter positive BC train;
+    10% of clean useful taps are deterministic held-out eval; camera-pass
+    overshoot episodes are diagnostic eval, not positive train; camera failures
+    are quarantined.
+  - Camera-fail audit: 13/14 failures are reprojection-only gate failures
+    (`projection_inside_frames=195/195`, full visibility `195/195`, max
+    reprojection error just over the `20px` gate); episode `721` is the stronger
+    camera coverage failure with `projection_inside_frames=7/195`.
+  - Visual audit exists at
+    `label_package_d248/camera_fail_contact_sheet.png` (`1780x2688` RGB PNG).
+  - Decision: `D248_LABEL_PACKAGE_TRAIN_EVAL_QUARANTINE_CAMERA_FAIL_AUDIT_PASS`.
+  - Next valid work is to decide whether to train only on
+    `train_clean_positive` locally/RunPod later, or first inspect/fix camera
+    contract around the 14 quarantined episodes. Training remains separate.
+- D249-D252 dataset freeze + filtered-loader preflight result:
+  - No render, training, deletion, move, archive, PPO, VLA/SmolVLA fine-tuning,
+    action-teacher, RoArm, RunPod, B200/SSH/pull, or Track A was run.
+  - D249 dataset freeze created
+    `dataset_freeze_d249` with freeze id
+    `cube10cm_top_view_0_999_v0_1_d249`, dataset card, and SHA256 manifest for
+    `24` primary files totaling `1089314018` bytes. Raw PNGs remain preserved
+    but are not individually SHA256 hashed.
+  - D250 filtered views created
+    `filtered_views_d250`: 학습용 정상 성공 예시
+    `train_clean_positive=143715` frames / `737` episodes, 평가용 정상 보류
+    예시 `eval_clean_holdout=15990` frames / `82` episodes, 과하게 민 케이스
+    진단용 평가 데이터 `eval_overshoot_diagnostic=32565` frames / `167`
+    episodes, 카메라 기준 실패 격리 데이터 `quarantine_camera_fail=2730`
+    frames / `14` episodes.
+  - D251 filtered dataloader smoke passed locally with `video_backend=pyav`:
+    all 4 splits decode through LeRobot with image shape `[3,720,1280]` and
+    state/action shape `[6]`; no training was run.
+  - D252 split distribution check passed: 학습용 정상 성공 예시는 sampled
+    workspace x/y range를 포함하고, 과하게 민 케이스는 high-y/boundary-y에
+    몰리며, 카메라 실패는 x 약 `0.14-0.165m` 근처와 episode `721` coverage
+    failure가 핵심 경고다.
+  - Decision: `D249_D252_DATASET_FREEZE_FILTERED_VIEW_DATALOADER_DISTRIBUTION_PASS`.
+  - Next valid work is a training preflight plan/dry-run only. Actual
+    SmolVLA/VLA fine-tuning remains blocked until explicit approval.
+- D253 training preflight result:
+  - No training, render, deletion, move, archive, PPO, action-teacher, RoArm,
+    RunPod, B200/SSH/pull, or Track A was run.
+  - Added `sim_scripts/cube10cm_top_view_training_preflight.py`.
+  - Output:
+    `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_0_999_d242/training_preflight_d253`.
+  - Status `PASS`: official LeRobot dataset factory consumed
+    `train_clean_positive` through `dataset.episodes` with `video_backend=pyav`.
+  - Selected training data is 학습용 정상 성공 예시
+    `train_clean_positive=737` episodes / `143715` frames.
+  - First DataLoader batch shape was image `[4,3,720,1280]`, state `[4,6]`,
+    action `[4,6]`.
+  - Critical limitation: LeRobot train has one dataset input;
+    `eval_clean_holdout` and `eval_overshoot_diagnostic` are not automatically
+    used by `lerobot-train`. They remain offline evaluation inputs for a later
+    script.
+  - Proposed commands were written but not executed:
+    50-step smoke and 20k candidate. Any actual SmolVLA/VLA fine-tuning remains
+    blocked until explicit approval.
+- D254 method-pipeline reframe:
+  - Added `claudedocs/cube10cm_top_view_method_pipeline_d254.md`.
+  - This corrects the framing: the professor-facing result is not "show some
+    validation images" and not "we trained SmolVLA." It is a repeatable method
+    pipeline:
+    1. camera contract;
+    2. Isaac Lab 0-999 visual trajectory generation;
+    3. post-render contact/reaction/overshoot/camera label validation;
+    4. LeRobot MP4+parquet storage;
+    5. train/eval/quarantine curation;
+    6. official LeRobot training-input preflight.
+  - SmolVLA 50-step smoke is now classified as an optional next gate to verify
+    training-loop connectivity, not as the core next research claim.
+  - Offline held-out evaluation still needs a separate script after an approved
+    checkpoint exists.
+  - No training, render, deletion, move, archive, RunPod, PPO, action-teacher,
+    RoArm, B200/SSH/pull, or Track A work was run for D254.
 
-## Latest Result: D244
+## Previous Result: D247
+
+- Converted the local D246 0-999 raw render into LeRobot v3 AV1+parquet and
+  generated companion metadata.
+- Decision:
+  - `D247_0_999_LEROBOT_AV1_PYAV_VALIDATION_METADATA_PASS`;
+  - LeRobot pyav load/decode validation passed for `195000` frames / `1000`
+    episodes;
+  - companion metadata row alignment passed;
+  - arbitrary PNG extraction passed on episode `999`, frame `194`;
+  - local default torchcodec path is currently broken in the `lerobot` env, so use
+    `video_backend=pyav` locally unless torchcodec/FFmpeg is repaired;
+  - local available space is still only about `32G`.
+
+## Latest Result: D257
+
+- Added and ran `sim_scripts/cube10cm_top_view_train_state_action_teacher.py`.
+- Trained a small PPO-compatible state-action teacher from D256
+  `ppo_actor_prior_teacher_rows_d256.csv`.
+- Scope was CPU supervised teacher fitting only:
+  no Isaac Lab PPO runtime, no render, no RunPod, no cleanup, no RoArm control.
+- Output root:
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_0_999_d242/state_action_teacher_d257`.
+- Checkpoint:
+  `cube10cm_d257_state_action_teacher_clipped0040.pt`
+  (`155965` bytes, sha256
+  `f81df20278ec9ceddef141729f717abbba2412a4a2f9f3a366d88b387caa76b8`).
+- Metrics:
+  - rows total/train/validation: `142978` / `128622` / `14356`;
+  - feature count `27`, target count `5`;
+  - baseline validation MSE norm `1.047513484954834`;
+  - final validation MSE norm `0.10824249684810638`;
+  - validation RMSE by joint rad:
+    `[0.003628572914749384, 0.004176619462668896, 0.003567545209079981, 0.0034607199486345053, 0.0011242240434512496]`;
+  - checkpoint reload/key/shape check passed.
+- Critical target decision:
+  - D257 trained on targets clipped to `+-0.040rad`, matching current
+    `bc_teacher_policy_delta_clip_rad`;
+  - train-clean-only raw target clip exceed rate is
+    `0.14844941179761922`;
+  - if the next session raises the teacher cap, retrain this checkpoint.
+- Wrote the next-session PPO smoke command:
+  `state_action_teacher_d257/ppo_data_prior_smoke_command_d257.txt`.
+- Verdict:
+  - `D257_STATE_ACTION_TEACHER_CHECKPOINT_PASS_NO_PPO_RUNTIME`.
+
+## Previous Result: D256
+
+- D256 converted the D247/D248 pair data into `194000` transition rows and
+  `142978` PPO teacher-prior rows from `train_clean_positive`.
+- D256 output root:
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_0_999_d242/rl_transition_preflight_d256`.
+- Verdict:
+  `D256_RL_TRANSITION_REWARD_PREFLIGHT_PASS_NO_TRAINING`.
+
+## Previous Result: D255
+
+- Checked the next optional runtime gate after D254: a 50-step SmolVLA
+  training-loop smoke using `train_clean_positive`.
+- Did not start training. CUDA preflight found:
+  - host GPU is visible through `nvidia-smi`;
+  - `isaaclab` env can see CUDA and the RTX 4090 Laptop GPU;
+  - `lerobot` env has the `lerobot-train` path but reports
+    `torch.cuda.is_available() == False`, `device_count == 0`, with
+    `Can't initialize NVML`;
+  - quick env overrides did not fix `lerobot` CUDA visibility.
+- Verdict:
+  - `D255_SMOLVLA_SMOKE_BLOCKED_LEROBOT_ENV_CUDA_FALSE_NO_TRAINING`;
+  - running smoke now would test a broken Python environment or CPU fallback,
+    not the intended LeRobot GPU training path.
+
+## Previous Result: D254
+
+- Reframed the professor branch as a method-pipeline proof rather than a data
+  preview or a premature SmolVLA training claim.
+- Decision:
+  - `D254_METHOD_PIPELINE_FRAMING_LOCKED_NO_TRAINING`;
+  - D246-D253 prove the pipeline through data generation, label validation,
+    LeRobot storage, split curation, and training-input preflight;
+  - SmolVLA smoke is optional training-loop connectivity verification, not the
+    core method result;
+  - no model-performance claim exists yet.
+
+## Previous Result: D246
+
+- Completed the approved local 0-999 top-view render and post-render numeric
+  labeling.
+- Decision:
+  - `LOCAL_0_999_RENDER_D242_COMPLETE_POSTRENDER_LABELS_D246`;
+  - raw render exists, but LeRobot v3 conversion has not been run yet;
+  - camera-contract usable subset is `986/1000`;
+  - camera-gated labels are `819` clean useful taps and `167` contact/reaction
+    with overshoot;
+  - local available space is now about `33G`, so further conversion/scale-up must
+    be storage-gated.
+
+## Previous Result: D245
+
+- Removed only approved SmolVLA checkpoint `training_state` directories after
+  manifest.
+- Decision:
+  - `OUTPUTS_TRAINING_STATE_CLEANUP_COMPLETE_D245`;
+  - `pretrained_model` model artifacts remain preserved;
+  - exact optimizer/scheduler/RNG resume from affected old SmolVLA checkpoints is
+    intentionally lost;
+  - local available space is now about `82G`;
+  - 0-999 render is not automatically launched by this cleanup.
+
+## Previous Result: D244
 
 - Removed only the approved P6v12 raw PNG dump after writing a manifest.
 - Decision:
@@ -526,45 +811,65 @@ Last updated: 2026-06-15 KST (D244 current truth: approved cleanup removed only 
 ## Active Direction
 
 - PPO promotion is frozen while the professor visual-dataset branch is active.
-- Next valid work, only with a fresh explicit run instruction, is one 100
-  episode visual chunk at
-  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_chunk100_d235`
-  after checking local free space is still at least about `25GB`.
-- Do not render 1000 episodes from D234. Local 1000/10000 scale remains blocked
-  by storage/pipeline constraints.
+- Current professor branch state is method-pipeline-ready plus data-prior PPO
+  input-ready through the D257 state-action teacher checkpoint, not
+  training-complete and not model-performance-proven.
+- Recommended next work:
+  1. inspect D257 outputs:
+     `state_action_teacher_metrics_d257.json`,
+     `cube10cm_d257_state_action_teacher_clipped0040.pt`, and
+     `ppo_data_prior_smoke_command_d257.txt`;
+  2. run a tiny Isaac Lab PPO data-prior smoke only with explicit runtime
+     approval;
+  3. verify checkpoint loading through `bc_teacher_checkpoint_path`,
+     nonzero `cube_push_bc_teacher_blend_mean`, and logged
+     `cube_push_bc_teacher_imitation_mse`;
+  4. stop/cleanup any Isaac/Kit/PPO process and verify GPU release;
+  5. do not claim learned policy or RoArm readiness until teacher-off eval passes.
+- Do not start actual SmolVLA/VLA fine-tuning, PPO, action-teacher, RoArm
+  deployment, RunPod runtime, or raw cleanup without explicit approval.
+- Do not generate 1000/10000 additional episodes from this result.
 - Do not run the xy10 useful-tap constant/PPO gate until the tool-contact proxy branch is explicitly closed:
   1. Either accept current `link5_collision_aabb` as the fixed-jaw/distal-tool metric for this sim contract; or
   2. Implement a named `tool_surface_union` contact metric and run zero/base metric-equivalence before any PPO.
 - Stop treating the 6mm target-band as the primary success gate if the professor/user goal is "make a useful tap."
 - Do not claim D225/D228 target-band weak bins prove useful-tap recovery.
 - Do not use fixed single-pose corners as the next PPO stage; D230 says corners pass and the useful failure appears in the randomized xy10 band.
-- After the proxy branch is closed, the next valid runtime, only with explicit approval, is a small xy10 useful-tap L1 screen after constant-residual baselines:
-  1. Same-band base: useful final/no-overshoot around `0.828125`, contact/reaction `1.0`.
-  2. Constant residual baselines on the same xy10 band, using useful/no-overshoot as the primary metric.
-  3. Small residual PPO L1 only if constants do not already solve overshoot.
-  4. Promotion requires useful/no-overshoot improvement over same-run base and best constant while preserving contact/reaction `1.0`, finite obs/reward/actions, contract cleanliness, and no L2/Large PPO until that passes.
+- If the RL branch is explicitly resumed later, use D229-D231/D248-D252 as
+  guardrails and do not mix claims with the professor visual-dataset branch.
 
 ## Must Read First
 
 1. `CLAUDE.md` Current-State Protocol.
-2. `claudedocs/DECISIONS.md` D234, D233, and D232 first; D224, D227, D228, D229,
-   D230, D231 only if resuming the RL branch.
-3. `claudedocs/EXPERIMENT_LEDGER.md` latest D234 row.
-4. `claudedocs/session_20260613_cube10cm_top_view_professor_storage_runpod_d234.md`.
-5. `claudedocs/professor_view_format_packet_cube10cm_top_view_d234.md`.
-6. `claudedocs/session_20260612_cube10cm_top_view_visual_smoke_lerobot_d233.md`.
-7. `claudedocs/session_20260612_camera_contract_visual_dataset_disk_audit_d232.md`.
-8. `claudedocs/session_20260611_tool_contact_proxy_asset_audit_d231.md`.
-9. `claudedocs/session_20260611_useful_tap_poseband_failure_sweep.md`.
-10. `claudedocs/session_20260611_useful_tap_objective_reframe.md`.
-11. `claudedocs/session_20260610_transition_xband_constant_baseline.md`.
-12. Runtime/audit summaries listed in D228-D234.
-13. Relevant code:
-   - `roarm_rl/train_cube_tap10cm_ppo_smoke.py`
+2. `START_HERE.md` D257 current truth and Active Direction.
+3. `claudedocs/DECISIONS.md` D257, D256, D254, D253, D249-D252, D248,
+   D247, D246, D232.
+4. `claudedocs/EXPERIMENT_LEDGER.md` latest D257 row.
+5. `claudedocs/session_20260618_cube10cm_top_view_state_action_teacher_d257.md`.
+6. `claudedocs/session_20260618_cube10cm_top_view_rl_transition_preflight_d256.md`.
+7. `claudedocs/cube10cm_top_view_method_pipeline_d254.md`.
+8. `claudedocs/session_20260617_cube10cm_top_view_method_pipeline_reframe_d254.md`.
+9. `claudedocs/session_20260617_cube10cm_top_view_training_preflight_d253.md`.
+10. `claudedocs/session_20260617_cube10cm_top_view_dataset_freeze_filtered_loader_distribution_d249_d252.md`.
+11. `claudedocs/session_20260617_cube10cm_top_view_label_package_d248.md`.
+12. `claudedocs/session_20260616_cube10cm_top_view_0_999_lerobot_metadata_d247.md`.
+13. `claudedocs/session_20260615_cube10cm_top_view_0_999_render_labels_d246.md`.
+14. `claudedocs/session_20260612_camera_contract_visual_dataset_disk_audit_d232.md`.
+15. D257 output root:
+   - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_0_999_d242/state_action_teacher_d257/state_action_teacher_metrics_d257.json`
+   - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_0_999_d242/state_action_teacher_d257/cube10cm_d257_state_action_teacher_clipped0040.pt`
+   - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_0_999_d242/state_action_teacher_d257/ppo_data_prior_smoke_command_d257.txt`
+16. Relevant code:
+   - `sim_scripts/cube10cm_top_view_train_state_action_teacher.py`
+   - `sim_scripts/cube10cm_top_view_build_rl_transition_dataset.py`
    - `roarm_rl/roarm_cube_push_env.py`
-   - `roarm_rl/roarm_stack_env.py`
-   - `sim_scripts/cube10cm_tool_contact_proxy_asset_audit.py`
-   - `sim_scripts/cube10cm_top_view_visual_smoke_render.py`
+   - `roarm_rl/train_cube_push_ppo.py`
+   - `sim_scripts/cube10cm_top_view_training_preflight.py`
+   - `sim_scripts/cube10cm_top_view_freeze_dataset.py`
+   - `sim_scripts/cube10cm_top_view_build_filtered_views.py`
+   - `sim_scripts/cube10cm_top_view_filtered_dataloader_smoke.py`
+   - `sim_scripts/cube10cm_top_view_split_distribution_check.py`
+   - `sim_scripts/cube10cm_top_view_package_label_splits.py`
    - `sim_scripts/cube10cm_top_view_smoke_to_lerobot.py`
    - `extract_frames.py`
 
