@@ -1,0 +1,38 @@
+# Corrected tiny PPO smoke command candidate. Not run in D270.
+# D257's original command was stale for this branch: it omitted PYTHONPATH=.,
+# env_kind=tap10cm, fixed +x push direction, env_target teacher features, and
+# link5_collision_aabb contact proxy.
+#
+# Run only after explicit PPO runtime approval, then inspect TensorBoard with
+# sim_scripts/cube10cm_top_view_tensorboard_scalar_gate.py.
+
+conda run -n isaaclab env PYTHONPATH=. python roarm_rl/train_cube_push_ppo.py \
+  --env_kind tap10cm \
+  --tap_contact_proxy_mode link5_collision_aabb \
+  --fixed_push_dir_x 1 \
+  --fixed_push_dir_y 0 \
+  --num_envs 32 \
+  --max_iterations 2 \
+  --seed 1257 \
+  --experiment_name cube10cm_d270_tap10cm_aabb_data_prior_smoke \
+  --logdir claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_data_prior_d270_logs \
+  --episode_length_s 6.0 \
+  --action_scale 0.04 \
+  --action_smoothing_alpha 1.0 \
+  --max_joint_delta_per_step_rad 0.04 \
+  --contact_joint_delta_scale 1.0 \
+  --fast_cube_joint_delta_scale 1.0 \
+  --joint_target_lead_limit_rad 0.06 \
+  --joint_delta_reference joint_pos \
+  --bc_teacher_checkpoint_path claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_0_999_d242/state_action_teacher_d257/cube10cm_d257_state_action_teacher_clipped0040.pt \
+  --bc_teacher_blend 1.0 \
+  --bc_teacher_imitation_reward_scale 5.0 \
+  --bc_teacher_policy_delta_clip_rad 0.04 \
+  --bc_teacher_policy_delta_scale 1.0 \
+  --bc_teacher_feature_target_mode env_target \
+  --bc_teacher_lowx_policy_delta_scale 1.0 \
+  --bc_teacher_highx_policy_delta_scale 0.8 \
+  --bc_teacher_delta_smoothing_alpha 0.85 \
+  --bc_teacher_phase_timing direct_steps \
+  --num_steps_per_env 24 \
+  --save_interval 1

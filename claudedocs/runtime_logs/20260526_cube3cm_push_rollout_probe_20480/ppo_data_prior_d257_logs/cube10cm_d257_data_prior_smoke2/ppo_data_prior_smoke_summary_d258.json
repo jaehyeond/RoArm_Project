@@ -1,0 +1,71 @@
+{
+  "artifact": "cube10cm_d258_ppo_data_prior_smoke",
+  "status": "PASS_WIRING_BEHAVIOR_UNPROVEN",
+  "verdict": "D258_PPO_DATA_PRIOR_SMOKE_WIRING_PASS_BEHAVIOR_UNPROVEN",
+  "date_kst": "2026-06-19",
+  "first_sandbox_attempt_result": "FAILED_PRE_RUNTIME",
+  "first_sandbox_attempt_failure": [
+    "Isaac/PhysX could not see CUDA device inside sandbox",
+    "original D257 command lacked PYTHONPATH=. so roarm_rl import failed"
+  ],
+  "host_command_delta": "reran outside sandbox with PYTHONPATH=.",
+  "runtime_executed": true,
+  "runtime_env": "conda env isaaclab, host GPU cuda:0",
+  "num_envs": 32,
+  "max_iterations": 2,
+  "num_steps_per_env": 24,
+  "total_timesteps": 1536,
+  "checkpoint_path": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_0_999_d242/state_action_teacher_d257/cube10cm_d257_state_action_teacher_clipped0040.pt",
+  "checkpoint_loaded_through_bc_teacher_checkpoint_path": true,
+  "bc_teacher_blend_values": [
+    1.0,
+    1.0
+  ],
+  "bc_teacher_imitation_mse_values": [
+    1.210442,
+    1.253437
+  ],
+  "bc_teacher_imitation_penalty_values": [
+    -6.052209,
+    -6.267184
+  ],
+  "mean_reward_final_logged": -392.534027,
+  "mean_episode_length_final_logged": 42.333332,
+  "cube_push_disp_along_m_values": [
+    -0.0,
+    0.000151
+  ],
+  "cube_push_disp_xy_m_values": [
+    0.000008,
+    0.000615
+  ],
+  "cube_push_tcp_cube_dist_m_values": [
+    0.338168,
+    0.32687
+  ],
+  "cube_push_controlled_rate_values": [
+    0.0,
+    0.018229
+  ],
+  "cube_push_low_motion_rate_values": [
+    1.0,
+    0.977865
+  ],
+  "cube_push_success_rate_values": [
+    0.0,
+    0.0
+  ],
+  "output_dir": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_data_prior_d257_logs/cube10cm_d257_data_prior_smoke2",
+  "generated_files": [
+    "events.out.tfevents.1781806911.cgxr-Legion-Pro-7-16IRX9H.915799.0",
+    "model_0.pt",
+    "model_1.pt"
+  ],
+  "generated_files_git_policy": "event and model_*.pt are ignored as generated runtime artifacts; this summary is the tracked evidence artifact",
+  "active_isaac_ppo_process_after_run": false,
+  "gpu_released_to_pre_run_baseline": true,
+  "teacher_off_eval_executed": false,
+  "roarm_deployment_ready": false,
+  "learned_policy_success_claim": false,
+  "critical_interpretation": "This smoke proves the data-prior PPO wiring loads and logs teacher metrics. It does not prove teacher-on behavior quality, PPO learning, teacher-off success, or RoArm readiness. Near-zero displacement and zero success over the two-iteration smoke require a teacher-only rollout/feature-alignment probe before any longer PPO run."
+}

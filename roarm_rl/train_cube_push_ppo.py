@@ -1,4 +1,4 @@
-"""PPO training entry point for the no-attach 3cm cube push task."""
+"""PPO training entry point for the no-attach cube push/tap tasks."""
 from __future__ import annotations
 
 import argparse
@@ -17,6 +17,7 @@ DEFAULT_LOCAL_USD = (
 
 def main() -> int:
     parser = argparse.ArgumentParser()
+    parser.add_argument("--env_kind", choices=("push3cm", "tap10cm"), default="push3cm")
     parser.add_argument("--num_envs", type=int, default=512)
     parser.add_argument("--max_iterations", type=int, default=50)
     parser.add_argument("--seed", type=int, default=0)
@@ -31,6 +32,13 @@ def main() -> int:
     parser.add_argument("--fast_cube_joint_delta_scale", type=float, default=None)
     parser.add_argument("--joint_target_lead_limit_rad", type=float, default=None)
     parser.add_argument("--joint_delta_reference", choices=("target", "joint_pos"), default=None)
+    parser.add_argument("--fixed_push_dir_x", type=float, default=None)
+    parser.add_argument("--fixed_push_dir_y", type=float, default=None)
+    parser.add_argument(
+        "--tap_contact_proxy_mode",
+        choices=("tcp_point", "link5_collision_aabb"),
+        default="link5_collision_aabb",
+    )
     parser.add_argument("--ik_precontact_clearance_m", type=float, default=None)
     parser.add_argument("--scripted_teacher_blend", type=float, default=None)
     parser.add_argument("--scripted_teacher_horizon_frac", type=float, default=None)
@@ -38,13 +46,20 @@ def main() -> int:
     parser.add_argument("--bc_teacher_checkpoint_path", type=str, default=None)
     parser.add_argument("--bc_teacher_blend", type=float, default=None)
     parser.add_argument("--bc_teacher_imitation_reward_scale", type=float, default=None)
+    parser.add_argument("--warm_start_checkpoint_path", type=str, default=None)
     parser.add_argument("--bc_teacher_policy_delta_clip_rad", type=float, default=None)
     parser.add_argument("--bc_teacher_policy_delta_scale", type=float, default=None)
+    parser.add_argument("--bc_teacher_feature_target_mode", choices=("tcp_target", "env_target"), default=None)
     parser.add_argument("--bc_teacher_posx_policy_delta_scale", type=float, default=None)
     parser.add_argument("--bc_teacher_lowx_policy_delta_scale", type=float, default=None)
     parser.add_argument("--bc_teacher_highx_policy_delta_scale", type=float, default=None)
     parser.add_argument("--bc_teacher_delta_smoothing_alpha", type=float, default=None)
     parser.add_argument("--bc_teacher_phase_timing", choices=("episode_scaled", "direct_steps"), default=None)
+    parser.add_argument("--d256_reset_csv_path", type=str, default=None)
+    parser.add_argument("--d256_reset_frame_index", type=int, default=None)
+    parser.add_argument("--d256_reset_sample_mode", choices=("random", "linspace"), default=None)
+    parser.add_argument("--d256_reset_episode_min", type=int, default=None)
+    parser.add_argument("--d256_reset_episode_max", type=int, default=None)
     parser.add_argument("--ik_endpoint_reset", action="store_true")
     parser.add_argument("--cube_success_disp_m", type=float, default=None)
     parser.add_argument("--cube_success_speed_max_mps", type=float, default=None)
@@ -58,13 +73,52 @@ def main() -> int:
     parser.add_argument("--target_distance_penalty_scale", type=float, default=None)
     parser.add_argument("--lateral_penalty_scale", type=float, default=None)
     parser.add_argument("--overshoot_penalty_scale", type=float, default=None)
+    parser.add_argument("--tap_success_terminate", action="store_true")
+    parser.add_argument("--tap_overshoot_terminate", action="store_true")
+    parser.add_argument("--tap_useful_terminate", action="store_true")
+    parser.add_argument("--tap_stop_after_useful_seen", action="store_true")
     parser.add_argument("--speed_penalty_scale", type=float, default=None)
     parser.add_argument("--speed_penalty_start_mps", type=float, default=None)
     parser.add_argument("--impact_terminal_penalty", type=float, default=None)
     parser.add_argument("--success_bonus", type=float, default=None)
     parser.add_argument("--num_steps_per_env", type=int, default=None)
     parser.add_argument("--save_interval", type=int, default=None)
+    parser.add_argument("--init_noise_std", type=float, default=None)
+    parser.add_argument("--ppo_learning_rate", type=float, default=None)
+    parser.add_argument("--ppo_num_learning_epochs", type=int, default=None)
+    parser.add_argument("--ppo_num_mini_batches", type=int, default=None)
+    parser.add_argument("--ppo_entropy_coef", type=float, default=None)
+    parser.add_argument("--ppo_clip_param", type=float, default=None)
+    parser.add_argument("--ppo_desired_kl", type=float, default=None)
+    parser.add_argument("--ppo_max_grad_norm", type=float, default=None)
+    parser.add_argument("--actor_preserve_blend", type=float, default=0.0)
+    parser.add_argument("--no_init_at_random_ep_len", action="store_true")
     args = parser.parse_args()
+
+    if (args.fixed_push_dir_x is None) != (args.fixed_push_dir_y is None):
+        raise ValueError("--fixed_push_dir_x and --fixed_push_dir_y must be set together")
+    if args.init_noise_std is not None and args.init_noise_std <= 0.0:
+        raise ValueError("--init_noise_std must be positive")
+    if args.ppo_learning_rate is not None and args.ppo_learning_rate <= 0.0:
+        raise ValueError("--ppo_learning_rate must be positive")
+    if args.ppo_num_learning_epochs is not None and args.ppo_num_learning_epochs <= 0:
+        raise ValueError("--ppo_num_learning_epochs must be positive")
+    if args.ppo_num_mini_batches is not None and args.ppo_num_mini_batches <= 0:
+        raise ValueError("--ppo_num_mini_batches must be positive")
+    if args.ppo_clip_param is not None and args.ppo_clip_param <= 0.0:
+        raise ValueError("--ppo_clip_param must be positive")
+    if args.ppo_desired_kl is not None and args.ppo_desired_kl <= 0.0:
+        raise ValueError("--ppo_desired_kl must be positive")
+    if args.ppo_max_grad_norm is not None and args.ppo_max_grad_norm <= 0.0:
+        raise ValueError("--ppo_max_grad_norm must be positive")
+    if not (0.0 <= args.actor_preserve_blend <= 1.0):
+        raise ValueError("--actor_preserve_blend must be in [0, 1]")
+    if (
+        args.d256_reset_episode_min is not None
+        and args.d256_reset_episode_max is not None
+        and args.d256_reset_episode_min > args.d256_reset_episode_max
+    ):
+        raise ValueError("--d256_reset_episode_min must be <= --d256_reset_episode_max")
 
     from isaaclab.app import AppLauncher
 
@@ -72,14 +126,21 @@ def main() -> int:
     sim_app = app_launcher.app
 
     import gymnasium as gym
+    import torch
     import roarm_rl  # noqa: F401 - registers envs lazily
     from isaaclab_rl.rsl_rl import RslRlVecEnvWrapper
     from rsl_rl.runners import OnPolicyRunner
 
     from roarm_rl.agents.rsl_rl_ppo_cfg import RoArmPickPPORunnerCfg
-    from roarm_rl.roarm_cube_push_env import RoArmCubePushEnvCfg
+    from roarm_rl.roarm_cube_push_env import RoArmCubePushEnvCfg, RoArmCubeTap10cmEnvCfg
 
-    env_cfg = RoArmCubePushEnvCfg()
+    if args.env_kind == "push3cm":
+        env_id = "RoArm-CubePush-Direct-v0"
+        env_cfg = RoArmCubePushEnvCfg()
+    else:
+        env_id = "RoArm-CubeTap10cm-Direct-v0"
+        env_cfg = RoArmCubeTap10cmEnvCfg()
+        env_cfg.tap_contact_proxy_mode = str(args.tap_contact_proxy_mode)
     env_cfg.scene.num_envs = args.num_envs
     env_cfg.seed = args.seed
     env_cfg.robot.spawn.usd_path = args.robot_usd_path
@@ -128,6 +189,14 @@ def main() -> int:
             f"{env_cfg.joint_delta_reference} -> {args.joint_delta_reference}"
         )
         env_cfg.joint_delta_reference = args.joint_delta_reference
+    if args.fixed_push_dir_x is not None and args.fixed_push_dir_y is not None:
+        print(
+            "[cube-push-train] fixed_push_dir_x/y: "
+            f"{env_cfg.fixed_push_dir_x}/{env_cfg.fixed_push_dir_y} -> "
+            f"{args.fixed_push_dir_x}/{args.fixed_push_dir_y}"
+        )
+        env_cfg.fixed_push_dir_x = args.fixed_push_dir_x
+        env_cfg.fixed_push_dir_y = args.fixed_push_dir_y
     if args.ik_precontact_clearance_m is not None:
         print(
             "[cube-push-train] ik_precontact_clearance_m: "
@@ -167,6 +236,8 @@ def main() -> int:
             f"{env_cfg.bc_teacher_imitation_reward_scale} -> {args.bc_teacher_imitation_reward_scale}"
         )
         env_cfg.bc_teacher_imitation_reward_scale = args.bc_teacher_imitation_reward_scale
+    if args.warm_start_checkpoint_path is not None and not Path(args.warm_start_checkpoint_path).exists():
+        raise FileNotFoundError(args.warm_start_checkpoint_path)
     if args.bc_teacher_policy_delta_clip_rad is not None:
         print(
             "[cube-push-train] bc_teacher_policy_delta_clip_rad: "
@@ -179,6 +250,12 @@ def main() -> int:
             f"{env_cfg.bc_teacher_policy_delta_scale} -> {args.bc_teacher_policy_delta_scale}"
         )
         env_cfg.bc_teacher_policy_delta_scale = args.bc_teacher_policy_delta_scale
+    if args.bc_teacher_feature_target_mode is not None:
+        print(
+            "[cube-push-train] bc_teacher_feature_target_mode: "
+            f"{env_cfg.bc_teacher_feature_target_mode} -> {args.bc_teacher_feature_target_mode}"
+        )
+        env_cfg.bc_teacher_feature_target_mode = args.bc_teacher_feature_target_mode
     if args.bc_teacher_posx_policy_delta_scale is not None:
         print(
             "[cube-push-train] bc_teacher_posx_policy_delta_scale: "
@@ -209,6 +286,36 @@ def main() -> int:
             f"{env_cfg.bc_teacher_phase_timing} -> {args.bc_teacher_phase_timing}"
         )
         env_cfg.bc_teacher_phase_timing = args.bc_teacher_phase_timing
+    if args.d256_reset_csv_path is not None:
+        print(
+            "[cube-push-train] d256_reset_csv_path: "
+            f"{env_cfg.d256_reset_csv_path or 'NONE'} -> {args.d256_reset_csv_path}"
+        )
+        env_cfg.d256_reset_csv_path = args.d256_reset_csv_path
+    if args.d256_reset_frame_index is not None:
+        print(
+            "[cube-push-train] d256_reset_frame_index: "
+            f"{env_cfg.d256_reset_frame_index} -> {args.d256_reset_frame_index}"
+        )
+        env_cfg.d256_reset_frame_index = args.d256_reset_frame_index
+    if args.d256_reset_sample_mode is not None:
+        print(
+            "[cube-push-train] d256_reset_sample_mode: "
+            f"{env_cfg.d256_reset_sample_mode} -> {args.d256_reset_sample_mode}"
+        )
+        env_cfg.d256_reset_sample_mode = args.d256_reset_sample_mode
+    if args.d256_reset_episode_min is not None:
+        print(
+            "[cube-push-train] d256_reset_episode_min: "
+            f"{env_cfg.d256_reset_episode_min} -> {args.d256_reset_episode_min}"
+        )
+        env_cfg.d256_reset_episode_min = args.d256_reset_episode_min
+    if args.d256_reset_episode_max is not None:
+        print(
+            "[cube-push-train] d256_reset_episode_max: "
+            f"{env_cfg.d256_reset_episode_max} -> {args.d256_reset_episode_max}"
+        )
+        env_cfg.d256_reset_episode_max = args.d256_reset_episode_max
     if args.cube_success_disp_m is not None:
         print(f"[cube-push-train] cube_success_disp_m: {env_cfg.cube_success_disp_m} -> {args.cube_success_disp_m}")
         env_cfg.cube_success_disp_m = args.cube_success_disp_m
@@ -272,6 +379,26 @@ def main() -> int:
             f"{env_cfg.overshoot_penalty_scale} -> {args.overshoot_penalty_scale}"
         )
         env_cfg.overshoot_penalty_scale = args.overshoot_penalty_scale
+    if args.tap_success_terminate:
+        if not hasattr(env_cfg, "tap_success_terminate"):
+            raise ValueError("--tap_success_terminate is only supported for --env_kind tap10cm")
+        print(f"[cube-push-train] tap_success_terminate: {env_cfg.tap_success_terminate} -> True")
+        env_cfg.tap_success_terminate = True
+    if args.tap_overshoot_terminate:
+        if not hasattr(env_cfg, "tap_overshoot_terminate"):
+            raise ValueError("--tap_overshoot_terminate is only supported for --env_kind tap10cm")
+        print(f"[cube-push-train] tap_overshoot_terminate: {env_cfg.tap_overshoot_terminate} -> True")
+        env_cfg.tap_overshoot_terminate = True
+    if args.tap_useful_terminate:
+        if not hasattr(env_cfg, "tap_useful_terminate"):
+            raise ValueError("--tap_useful_terminate is only supported for --env_kind tap10cm")
+        print(f"[cube-push-train] tap_useful_terminate: {env_cfg.tap_useful_terminate} -> True")
+        env_cfg.tap_useful_terminate = True
+    if args.tap_stop_after_useful_seen:
+        if not hasattr(env_cfg, "tap_stop_after_useful_seen"):
+            raise ValueError("--tap_stop_after_useful_seen is only supported for --env_kind tap10cm")
+        print(f"[cube-push-train] tap_stop_after_useful_seen: {env_cfg.tap_stop_after_useful_seen} -> True")
+        env_cfg.tap_stop_after_useful_seen = True
     if args.speed_penalty_scale is not None:
         print(f"[cube-push-train] speed_penalty_scale: {env_cfg.speed_penalty_scale} -> {args.speed_penalty_scale}")
         env_cfg.speed_penalty_scale = args.speed_penalty_scale
@@ -300,6 +427,36 @@ def main() -> int:
     if args.save_interval is not None:
         print(f"[cube-push-train] ppo_save_interval: {ppo_cfg.save_interval} -> {args.save_interval}")
         ppo_cfg.save_interval = args.save_interval
+    if args.init_noise_std is not None:
+        print(f"[cube-push-train] ppo_init_noise_std: {ppo_cfg.policy.init_noise_std} -> {args.init_noise_std}")
+        ppo_cfg.policy.init_noise_std = args.init_noise_std
+    if args.ppo_learning_rate is not None:
+        print(f"[cube-push-train] ppo_learning_rate: {ppo_cfg.algorithm.learning_rate} -> {args.ppo_learning_rate}")
+        ppo_cfg.algorithm.learning_rate = args.ppo_learning_rate
+    if args.ppo_num_learning_epochs is not None:
+        print(
+            "[cube-push-train] ppo_num_learning_epochs: "
+            f"{ppo_cfg.algorithm.num_learning_epochs} -> {args.ppo_num_learning_epochs}"
+        )
+        ppo_cfg.algorithm.num_learning_epochs = args.ppo_num_learning_epochs
+    if args.ppo_num_mini_batches is not None:
+        print(
+            "[cube-push-train] ppo_num_mini_batches: "
+            f"{ppo_cfg.algorithm.num_mini_batches} -> {args.ppo_num_mini_batches}"
+        )
+        ppo_cfg.algorithm.num_mini_batches = args.ppo_num_mini_batches
+    if args.ppo_entropy_coef is not None:
+        print(f"[cube-push-train] ppo_entropy_coef: {ppo_cfg.algorithm.entropy_coef} -> {args.ppo_entropy_coef}")
+        ppo_cfg.algorithm.entropy_coef = args.ppo_entropy_coef
+    if args.ppo_clip_param is not None:
+        print(f"[cube-push-train] ppo_clip_param: {ppo_cfg.algorithm.clip_param} -> {args.ppo_clip_param}")
+        ppo_cfg.algorithm.clip_param = args.ppo_clip_param
+    if args.ppo_desired_kl is not None:
+        print(f"[cube-push-train] ppo_desired_kl: {ppo_cfg.algorithm.desired_kl} -> {args.ppo_desired_kl}")
+        ppo_cfg.algorithm.desired_kl = args.ppo_desired_kl
+    if args.ppo_max_grad_norm is not None:
+        print(f"[cube-push-train] ppo_max_grad_norm: {ppo_cfg.algorithm.max_grad_norm} -> {args.ppo_max_grad_norm}")
+        ppo_cfg.algorithm.max_grad_norm = args.ppo_max_grad_norm
     ppo_cfg.experiment_name = args.experiment_name or (
         "roarm_cube_push_no_attach_" + datetime.now().strftime("%Y%m%d_%H%M%S")
     )
@@ -314,8 +471,8 @@ def main() -> int:
     log_dir = os.path.join(log_root_path, ppo_cfg.experiment_name)
 
     print(
-        "[cube-push-train] scope=no_attach_cube_push "
-        "env_id=RoArm-CubePush-Direct-v0 training=YES dataset_generation=NO "
+        "[cube-push-train] scope=no_attach_cube_push_or_tap "
+        f"env_kind={args.env_kind} env_id={env_id} training=YES dataset_generation=NO "
         "grasp_attach=NO rollout_object_posewrite=NO"
     )
     target_update = (
@@ -343,28 +500,116 @@ def main() -> int:
         f"action_smoothing_alpha={env_cfg.action_smoothing_alpha} "
         f"max_joint_delta_per_step_rad={env_cfg.max_joint_delta_per_step_rad} "
         f"contact_joint_delta_scale={env_cfg.contact_joint_delta_scale} "
-            f"joint_target_lead_limit_rad={env_cfg.joint_target_lead_limit_rad} "
-            f"joint_delta_reference={env_cfg.joint_delta_reference} "
-            f"ik_precontact_clearance_m={env_cfg.ik_precontact_clearance_m} "
-            f"scripted_teacher_blend={env_cfg.scripted_teacher_blend} "
-            f"scripted_teacher_horizon_frac={env_cfg.scripted_teacher_horizon_frac} "
-            f"bc_teacher_blend={env_cfg.bc_teacher_blend} "
-            f"bc_teacher_imitation_reward_scale={env_cfg.bc_teacher_imitation_reward_scale} "
-            f"bc_teacher_policy_delta_scale={env_cfg.bc_teacher_policy_delta_scale} "
-            f"bc_teacher_lowx_policy_delta_scale={env_cfg.bc_teacher_lowx_policy_delta_scale} "
-            f"bc_teacher_highx_policy_delta_scale={env_cfg.bc_teacher_highx_policy_delta_scale} "
-            f"bc_teacher_delta_smoothing_alpha={env_cfg.bc_teacher_delta_smoothing_alpha} "
-            f"bc_teacher_phase_timing={env_cfg.bc_teacher_phase_timing}"
-        )
+        f"fixed_push_dir_x={env_cfg.fixed_push_dir_x} "
+        f"fixed_push_dir_y={env_cfg.fixed_push_dir_y} "
+        f"tap_contact_proxy_mode={getattr(env_cfg, 'tap_contact_proxy_mode', 'NA')} "
+        f"tap_success_terminate={getattr(env_cfg, 'tap_success_terminate', 'NA')} "
+        f"tap_overshoot_terminate={getattr(env_cfg, 'tap_overshoot_terminate', 'NA')} "
+        f"tap_useful_terminate={getattr(env_cfg, 'tap_useful_terminate', 'NA')} "
+        f"tap_stop_after_useful_seen={getattr(env_cfg, 'tap_stop_after_useful_seen', 'NA')} "
+        f"joint_target_lead_limit_rad={env_cfg.joint_target_lead_limit_rad} "
+        f"joint_delta_reference={env_cfg.joint_delta_reference} "
+        f"ik_precontact_clearance_m={env_cfg.ik_precontact_clearance_m} "
+        f"scripted_teacher_blend={env_cfg.scripted_teacher_blend} "
+        f"scripted_teacher_horizon_frac={env_cfg.scripted_teacher_horizon_frac} "
+        f"bc_teacher_blend={env_cfg.bc_teacher_blend} "
+        f"bc_teacher_imitation_reward_scale={env_cfg.bc_teacher_imitation_reward_scale} "
+        f"bc_teacher_feature_target_mode={env_cfg.bc_teacher_feature_target_mode} "
+        f"bc_teacher_policy_delta_scale={env_cfg.bc_teacher_policy_delta_scale} "
+        f"bc_teacher_lowx_policy_delta_scale={env_cfg.bc_teacher_lowx_policy_delta_scale} "
+        f"bc_teacher_highx_policy_delta_scale={env_cfg.bc_teacher_highx_policy_delta_scale} "
+        f"bc_teacher_delta_smoothing_alpha={env_cfg.bc_teacher_delta_smoothing_alpha} "
+        f"bc_teacher_phase_timing={env_cfg.bc_teacher_phase_timing} "
+        f"d256_reset_csv_path={env_cfg.d256_reset_csv_path or 'NONE'} "
+        f"d256_reset_frame_index={env_cfg.d256_reset_frame_index} "
+        f"d256_reset_sample_mode={env_cfg.d256_reset_sample_mode} "
+        f"d256_reset_episode_min={env_cfg.d256_reset_episode_min} "
+        f"d256_reset_episode_max={env_cfg.d256_reset_episode_max}"
+    )
     print(f"[cube-push-train] bc_teacher_checkpoint_path={env_cfg.bc_teacher_checkpoint_path or 'NONE'}")
     print(f"[cube-push-train] robot_usd_path={env_cfg.robot.spawn.usd_path}")
     print(f"[cube-push-train] ppo: steps_per_env={ppo_cfg.num_steps_per_env}")
+    print(f"[cube-push-train] ppo: init_noise_std={ppo_cfg.policy.init_noise_std}")
+    print(
+        "[cube-push-train] ppo: "
+        f"learning_rate={ppo_cfg.algorithm.learning_rate} "
+        f"num_learning_epochs={ppo_cfg.algorithm.num_learning_epochs} "
+        f"num_mini_batches={ppo_cfg.algorithm.num_mini_batches} "
+        f"entropy_coef={ppo_cfg.algorithm.entropy_coef} "
+        f"clip_param={ppo_cfg.algorithm.clip_param} "
+        f"desired_kl={ppo_cfg.algorithm.desired_kl} "
+        f"max_grad_norm={ppo_cfg.algorithm.max_grad_norm}"
+    )
+    print(f"[cube-push-train] ppo: actor_preserve_blend={args.actor_preserve_blend}")
+    print(f"[cube-push-train] ppo: init_at_random_ep_len={not bool(args.no_init_at_random_ep_len)}")
     print(f"[cube-push-train] log_dir: {log_dir}")
 
-    env = gym.make("RoArm-CubePush-Direct-v0", cfg=env_cfg)
+    env = gym.make(env_id, cfg=env_cfg)
     env = RslRlVecEnvWrapper(env, clip_actions=1.0)
     runner = OnPolicyRunner(env, ppo_cfg.to_dict(), log_dir=log_dir, device=env.unwrapped.device)
-    runner.learn(num_learning_iterations=args.max_iterations, init_at_random_ep_len=True)
+    if args.warm_start_checkpoint_path is not None:
+        print(f"[cube-push-train] warm_start_checkpoint_path={args.warm_start_checkpoint_path}")
+        runner.load(args.warm_start_checkpoint_path, load_optimizer=False, map_location=env.unwrapped.device)
+        if args.init_noise_std is not None:
+            policy = runner.alg.policy
+            with torch.no_grad():
+                if getattr(policy, "noise_std_type", "scalar") == "scalar" and hasattr(policy, "std"):
+                    policy.std.fill_(float(args.init_noise_std))
+                    applied_std = float(policy.std.mean().detach().cpu().item())
+                elif getattr(policy, "noise_std_type", "") == "log" and hasattr(policy, "log_std"):
+                    policy.log_std.fill_(float(torch.log(torch.tensor(float(args.init_noise_std))).item()))
+                    applied_std = float(torch.exp(policy.log_std).mean().detach().cpu().item())
+                else:
+                    raise ValueError(
+                        "Cannot override PPO action noise after warm start: "
+                        f"unknown noise_std_type={getattr(policy, 'noise_std_type', None)}"
+                    )
+            print(f"[cube-push-train] ppo_init_noise_std_after_warm_start={applied_std:.6f}")
+    if args.actor_preserve_blend > 0.0:
+        policy = runner.alg.policy
+        preserve_prefixes = ("actor.", "actor_obs_normalizer.")
+        preserve_names = ("std", "log_std")
+        reference_state = {
+            key: value.detach().clone()
+            for key, value in policy.state_dict().items()
+            if key.startswith(preserve_prefixes) or key in preserve_names
+        }
+        if not reference_state:
+            raise ValueError("actor preservation requested, but no actor/reference keys were found")
+        original_update = runner.alg.update
+
+        def _actor_preserving_update():
+            loss_dict = original_update()
+            current_state = policy.state_dict()
+            max_pre_restore_delta = 0.0
+            with torch.no_grad():
+                for key, ref_value in reference_state.items():
+                    cur_value = current_state[key]
+                    if torch.is_floating_point(cur_value):
+                        pre_delta = torch.max(torch.abs(cur_value - ref_value)).detach().cpu().item()
+                        max_pre_restore_delta = max(max_pre_restore_delta, float(pre_delta))
+                        cur_value.copy_((1.0 - float(args.actor_preserve_blend)) * cur_value + float(args.actor_preserve_blend) * ref_value)
+                    else:
+                        cur_value.copy_(ref_value)
+            max_post_restore_delta = 0.0
+            post_state = policy.state_dict()
+            for key, ref_value in reference_state.items():
+                cur_value = post_state[key]
+                if torch.is_floating_point(cur_value):
+                    post_delta = torch.max(torch.abs(cur_value - ref_value)).detach().cpu().item()
+                    max_post_restore_delta = max(max_post_restore_delta, float(post_delta))
+            print(
+                "[cube-push-train] actor_preserve_after_update "
+                f"blend={args.actor_preserve_blend:.6f} "
+                f"keys={len(reference_state)} "
+                f"max_pre_restore_delta={max_pre_restore_delta:.9f} "
+                f"max_post_restore_delta={max_post_restore_delta:.9f}",
+                flush=True,
+            )
+            return loss_dict
+
+        runner.alg.update = _actor_preserving_update
+    runner.learn(num_learning_iterations=args.max_iterations, init_at_random_ep_len=not bool(args.no_init_at_random_ep_len))
 
     print(f"[cube-push-train] DONE checkpoints_at={log_dir}")
     env.close()

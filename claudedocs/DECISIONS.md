@@ -14743,3 +14743,1258 @@ Sources:
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_0_999_d242/state_action_teacher_d257/ppo_data_prior_smoke_command_d257.txt`
 - `roarm_rl/roarm_cube_push_env.py`
 - `roarm_rl/train_cube_push_ppo.py`
+
+## D258 - Data-prior PPO smoke loads D257 teacher and logs imitation metrics, but behavior remains unproven
+
+Evidence:
+
+- User asked to continue the top-view camera-contract method pipeline through the
+  training/eval connection.
+- Re-read current-state docs first. `START_HERE.md` D257 said the next concrete
+  runtime was a tiny Isaac Lab PPO data-prior smoke using the D257 teacher
+  checkpoint.
+- D257 checkpoint preflight passed again:
+  - sha256 `f81df20278ec9ceddef141729f717abbba2412a4a2f9f3a366d88b387caa76b8`;
+  - required keys present;
+  - feature count `27`;
+  - target count `5`;
+  - `x_mean` shape `(27,)`;
+  - `y_mean` shape `(5,)`.
+- First sandbox attempt with the saved D257 command failed before a valid smoke:
+  - Isaac/PhysX could not see a CUDA-capable device inside the sandbox;
+  - the command also hit `ModuleNotFoundError: No module named 'roarm_rl'`
+    because it lacked `PYTHONPATH=.`.
+- Reran the tiny smoke on the host GPU with `PYTHONPATH=.`:
+  - `num_envs=32`;
+  - `max_iterations=2`;
+  - `num_steps_per_env=24`;
+  - `bc_teacher_blend=1.0`;
+  - `bc_teacher_imitation_reward_scale=5.0`;
+  - `bc_teacher_policy_delta_clip_rad=0.04`;
+  - `bc_teacher_phase_timing=direct_steps`.
+- Output root:
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_data_prior_d257_logs/cube10cm_d257_data_prior_smoke2`.
+- Generated runtime artifacts:
+  - `events.out.tfevents.1781806911.cgxr-Legion-Pro-7-16IRX9H.915799.0`;
+  - `model_0.pt`;
+  - `model_1.pt`.
+- The event/model runtime artifacts are ignored by `.gitignore`; tracked evidence
+  is the D258 summary JSON/markdown and session log.
+- TensorBoard scalar extraction found:
+  - `cube_push_bc_teacher_blend_mean`: `1.0`, `1.0`;
+  - `cube_push_bc_teacher_imitation_mse`: `1.210442`, `1.253437`;
+  - `bc_teacher_imitation_penalty`: `-6.052209`, `-6.267184`;
+  - `cube_push_disp_along_m`: `-0.0`, `0.000151`;
+  - `cube_push_disp_xy_m`: `0.000008`, `0.000615`;
+  - `cube_push_tcp_cube_dist_m`: `0.338168`, `0.32687`;
+  - `cube_push_controlled_rate`: `0.0`, `0.018229`;
+  - `cube_push_low_motion_rate`: `1.0`, `0.977865`;
+  - `cube_push_success_rate`: `0.0`, `0.0`;
+  - `Train/mean_reward`: `-392.534027`;
+  - `Train/mean_episode_length`: `42.333332`.
+- Post-run checks found no active Isaac/PPO/torchrun process. GPU memory returned
+  to the pre-run baseline of about `2509MiB` used / `13436MiB` free.
+
+Implication:
+
+- Verdict `D258_PPO_DATA_PRIOR_SMOKE_WIRING_PASS_BEHAVIOR_UNPROVEN`.
+- The D257 teacher checkpoint loads through `bc_teacher_checkpoint_path`.
+- The PPO environment logs nonzero BC teacher blend and imitation metrics.
+- The smoke exits cleanly and releases the process/GPU.
+- This is not a learned-policy success, not teacher-off success, and not RoArm
+  readiness.
+- Near-zero displacement and zero success under `bc_teacher_blend=1.0` are a
+  warning. Do not launch a longer PPO merely because the wiring smoke passed.
+- The next valid step is a teacher-only rollout/feature-alignment probe with no
+  PPO learning. It should compare D258 env feature ranges against D256
+  train-clean feature ranges, inspect phase alpha timing, predicted joint deltas
+  before/after clamp, TCP-to-cube distance evolution, and whether teacher-on
+  reaches contact before any longer PPO.
+- Future direct execution of `roarm_rl/train_cube_push_ppo.py` from repo root
+  should include `PYTHONPATH=.` unless the import path is refactored.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260619_cube10cm_top_view_ppo_data_prior_smoke_d258.md`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_data_prior_d257_logs/cube10cm_d257_data_prior_smoke2/ppo_data_prior_smoke_summary_d258.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_data_prior_d257_logs/cube10cm_d257_data_prior_smoke2/ppo_data_prior_smoke_summary_d258.md`
+- `roarm_rl/roarm_cube_push_env.py`
+- `roarm_rl/train_cube_push_ppo.py`
+
+## D259 - Teacher-only rollout confirms no contact and exposes feature-contract mismatch; no long PPO
+
+Evidence:
+
+- User correctly challenged the D258 interpretation: the PPO data-prior wiring
+  passed, but teacher-on behavior was not proven. A longer PPO run would be
+  premature.
+- Added `sim_scripts/cube10cm_top_view_teacher_rollout_probe.py` to run no PPO
+  learning:
+  - loads the D257 teacher through the env sidecar;
+  - steps with teacher actions only;
+  - compares online features against D256 train-clean feature ranges;
+  - logs phase alpha, raw/clamped joint deltas, action saturation, TCP-to-cube
+    distance, contact threshold hits, and cube displacement.
+- Static checks passed:
+  - `python3 -m py_compile sim_scripts/cube10cm_top_view_teacher_rollout_probe.py`;
+  - `python3 -m py_compile roarm_rl/roarm_cube_push_env.py`.
+- First 10cm env attempt exposed a config bug:
+  `RoArmCubeTap10cmEnvCfg` did not define `tap_overshoot_terminate`, while
+  `_get_dones()` reads it. Added `tap_overshoot_terminate: bool = False`.
+- Ran three host-GPU teacher-only probes:
+  1. D258 reproduction, `RoArm-CubePush-Direct-v0`, cube size `0.03m`;
+  2. intended 10cm env, `RoArm-CubeTap10cm-Direct-v0`, cube size `0.1m`;
+  3. intended 10cm env with `fixed_push_dir_x=1`,
+     `fixed_push_dir_y=0`, and `ik_endpoint_reset=True`.
+- D258 reproduction result:
+  - contact rate `0.0`;
+  - first contact step `-1`;
+  - min TCP-cube distance mean/min/max
+    `0.21149027347564697` / `0.09386380761861801` /
+    `0.3410947620868683`;
+  - raw delta clip exceed rate `1.0`;
+  - action cap rate `0.7770743534482759`;
+  - feature outside D256 train min/max rate `0.5803001277139208`.
+- Intended 10cm result:
+  - contact rate `0.0`;
+  - first contact step `-1`;
+  - min TCP-cube distance mean/min/max
+    `0.18824803829193115` / `0.07045303285121918` /
+    `0.3121436536312103`;
+  - raw delta clip exceed rate `1.0`;
+  - action cap rate `0.7768139367816091`;
+  - feature outside D256 train min/max rate `0.593532487228608`.
+- 10cm +x/IK alignment attempt:
+  - contact rate `0.0`;
+  - first contact step `-1`;
+  - min TCP-cube distance mean/min/max
+    `0.08880475163459778` / `0.06847080588340759` /
+    `0.13267822563648224`;
+  - raw delta clip exceed rate `0.9999676724137931`;
+  - action cap rate `0.5438308189655172`;
+  - max disp along max `11.039312362670898m`, meaning some envs exploded and
+    this path is not valid for PPO promotion.
+- GPU returned to the observed baseline of about `2509MiB` used /
+  `13436MiB` free. Existing non-Isaac Python/Rerun compute contexts remain.
+
+Implication:
+
+- Verdict
+  `D259_TEACHER_ROLLOUT_PROBE_CONTACT_FAIL_FEATURE_CONTRACT_MISMATCH_NO_LONG_PPO`.
+- D258 did not prove teacher behavior. D259 confirms teacher-only does not reach
+  contact under the current env/feature contract.
+- D258 PPO smoke also used the default 3cm `RoArm-CubePush-Direct-v0` training
+  path, while D247-D257 data is professor 10cm cube data.
+- D256 teacher-prior rows are +x-only (`push_dx=1`, `push_dy=0`), but env reset
+  randomizes direction unless `fixed_push_dir_x/y` is set.
+- D256 `target_position_world_m` features and env-side `_bc_teacher_tcp_target()`
+  features are not the same semantic object. The clearest symptom is
+  `target_local_z_m`: D256 train is fixed at `0.03788299858570099`, while the
+  10cm env teacher feature is `0.0768829956650734..0.09088299423456192`.
+- Do not launch longer PPO until the feature contract, 10cm env selection,
+  push-direction contract, and reset/initial-joint distribution are aligned and
+  a teacher-only probe reaches plausible contact without action saturation or
+  cube explosion.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260619_cube10cm_top_view_teacher_rollout_probe_d259.md`
+- `sim_scripts/cube10cm_top_view_teacher_rollout_probe.py`
+- `roarm_rl/roarm_cube_push_env.py`
+- `roarm_rl/train_cube_push_ppo.py`
+- `sim_scripts/cube10cm_top_view_build_rl_transition_dataset.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/teacher_rollout_probe_d259/push3cm/teacher_rollout_probe_summary_d259.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/teacher_rollout_probe_d259/tap10cm/teacher_rollout_probe_summary_d259.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/teacher_rollout_probe_d259_posx_ik/tap10cm/teacher_rollout_probe_summary_d259.json`
+
+## D260 - TensorBoard dashboard/scalar gate added; D258 fails promotion
+
+Evidence:
+
+- User pointed out that before any long PPO, reward and policy/loss curves should
+  be checked through TensorBoard.
+- Verified TensorBoard availability:
+  - system Python does not have TensorBoard;
+  - `conda run -n isaaclab tensorboard --version` returns `2.20.0`;
+  - TensorBoard event accumulator import works in the `isaaclab` env.
+- D258 event log contains the expected dashboard scalar groups:
+  - reward: `Train/mean_reward`, `Train/mean_episode_length`;
+  - PPO/policy: `Loss/value_function`, `Loss/surrogate`, `Loss/entropy`,
+    `Loss/learning_rate`, `Policy/mean_noise_std`;
+  - task behavior: `Episode/cube_push_*`;
+  - BC teacher: `Episode/cube_push_bc_teacher_blend_mean`,
+    `Episode/cube_push_bc_teacher_imitation_mse`.
+- Added `sim_scripts/cube10cm_top_view_tensorboard_scalar_gate.py`.
+- Ran it on the existing D258 log dir:
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_data_prior_d257_logs/cube10cm_d257_data_prior_smoke2`.
+- Output:
+  - `tensorboard_scalar_gate_d260.json`;
+  - `tensorboard_scalar_gate_d260.md`.
+- Dashboard command recorded:
+  `conda run -n isaaclab tensorboard --logdir claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_data_prior_d257_logs/cube10cm_d257_data_prior_smoke2 --host 127.0.0.1 --port 6006`.
+- D258 TensorBoard scalar gate verdict:
+  `TENSORBOARD_GATE_FAIL_NO_PPO_PROMOTION`.
+- Gate issues:
+  - no task success/contact signal in TensorBoard;
+  - `cube_push_low_motion_rate` last `0.9778646230697632`;
+  - `cube_push_joint_delta_cap_rate` max `0.7411024570465088`.
+- Gate warnings:
+  - `Train/mean_reward` has only `1` point;
+  - `cube_push_tcp_cube_dist_m` last `0.3268700838088989`;
+  - `cube_push_disp_along_m` last `0.00015073080430738628`;
+  - `cube_push_controlled_rate` last `0.0182291679084301`.
+- PPO/policy scalar snapshot:
+  - `Train/mean_reward`: `-392.5340270996094`;
+  - `Loss/value_function`: `6711.08642578125 -> 6737.7255859375`;
+  - `Loss/surrogate`: `-0.011346347630023956 -> -0.012086811475455761`;
+  - `Loss/entropy`: `7.177923202514648 -> 7.179165840148926`;
+  - `Policy/mean_noise_std`: `0.8005133867263794 -> 0.8006278276443481`;
+  - `cube_push_success_rate`: `0.0 -> 0.0`;
+  - `cube_push_bc_teacher_imitation_mse`:
+    `1.2104418277740479 -> 1.253436803817749`.
+
+Implication:
+
+- Verdict `D260_TENSORBOARD_GATE_ADDED_D258_FAILS_NO_PPO_PROMOTION`.
+- TensorBoard is now part of the PPO promotion procedure, but it does not
+  supersede D259. The D259 feature-contract/contact blockers remain current.
+- A reward curve or policy/loss curve can support a tiny/short PPO decision only
+  after:
+  1. teacher-only behavior reaches plausible contact;
+  2. the PPO run uses the correct 10cm env and feature contract;
+  3. TensorBoard scalar gate passes;
+  4. teacher-off frozen eval passes.
+- Do not run long PPO from D258/D259/D260.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260619_cube10cm_top_view_tensorboard_gate_d260.md`
+- `sim_scripts/cube10cm_top_view_tensorboard_scalar_gate.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_data_prior_d257_logs/cube10cm_d257_data_prior_smoke2/tensorboard_scalar_gate_d260.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_data_prior_d257_logs/cube10cm_d257_data_prior_smoke2/tensorboard_scalar_gate_d260.md`
+- `claudedocs/session_20260619_cube10cm_top_view_ppo_data_prior_smoke_d258.md`
+
+## D261 - Feature-target contract partial fix; teacher-only contact still fails
+
+Evidence:
+
+- Added `bc_teacher_feature_target_mode` to the env teacher feature path:
+  - `tcp_target` preserves existing default behavior;
+  - `env_target` uses `self._target_world`, matching D256 visual-log
+    `target_position_world_m` semantics.
+- Updated the teacher-only probe to record `bc_teacher_feature_target_mode` and
+  write D261-tagged artifacts.
+- Updated `roarm_rl/train_cube_push_ppo.py` so a future tiny PPO smoke can be
+  explicitly routed to:
+  - `--env_kind tap10cm`;
+  - `--fixed_push_dir_x 1 --fixed_push_dir_y 0`;
+  - `--bc_teacher_feature_target_mode env_target`.
+- Static verification passed:
+  `python3 -m py_compile roarm_rl/roarm_cube_push_env.py roarm_rl/train_cube_push_ppo.py sim_scripts/cube10cm_top_view_teacher_rollout_probe.py`.
+- Ran teacher-only `tap10cm` fixed +x env_target probe with no IK reset:
+  - output:
+    `teacher_rollout_probe_d261_envtarget_posx/tap10cm/teacher_rollout_probe_summary_d261_envtarget_posx.json`;
+  - contact rate `0.0`;
+  - min TCP-cube distance mean/min/max
+    `0.2137620449066162/0.144382044672966/0.29925453662872314`;
+  - max disp along mean/max
+    `1.163780689239502e-05/2.765655517578125e-05`;
+  - raw delta clip exceed rate `0.7170689655172414`;
+  - action cap rate `0.37896012931034484`;
+  - feature outside train min/max rate `0.4267700351213282`.
+- The no-IK env_target probe fixed some D256 contract symptoms:
+  - `push_dx=1.0`;
+  - `push_dy=0.0`;
+  - `target_local_z_m=0.03788299858570099`.
+- Remaining no-IK blockers are still severe:
+  - arm joint features are outside train-clean range;
+  - `tcp_local_z_m` env range `0.10544683039188385..0.3680003881454468`
+    remains above train range `0.03739422559738159..0.0959378182888031`;
+  - target-to-TCP features remain outside train-clean range.
+- Ran teacher-only `tap10cm` fixed +x env_target probe with IK reset:
+  - output:
+    `teacher_rollout_probe_d261_envtarget_posx_ik/tap10cm/teacher_rollout_probe_summary_d261_envtarget_posx_ik.json`;
+  - contact rate `0.0`;
+  - min TCP-cube distance mean/min/max
+    `0.0902239978313446/0.07528560608625412/0.1327148675918579`;
+  - max disp along mean/max
+    `1.2454720735549927/10.891912460327148`;
+  - max disp xy mean/max `3.124444007873535/11.32904052734375`;
+  - raw delta abs max `264.475830078125`;
+  - raw delta clip exceed rate `0.6805603448275862`.
+- Post-run process/GPU check:
+  - no matching Isaac/PPO/teacher-probe/torchrun/rl_games process remained;
+  - GPU returned to the observed baseline, about `2509MiB` used /
+    `13436MiB` free, with pre-existing non-Isaac contexts still present.
+
+Implication:
+
+- Verdict:
+  `D261_FEATURE_TARGET_CONTRACT_PARTIAL_FIX_TEACHER_ONLY_CONTACT_FAIL_NO_PPO_PROMOTION`.
+- `env_target` and fixed +x routing are necessary but not sufficient.
+- IK reset is not a fix: it reduces distance but creates unstable/explosive
+  teacher rollout behavior.
+- Do not run long PPO.
+- Do not run even tiny PPO unless explicitly overriding the failed
+  teacher-only gate.
+- Next work is env reset/action rollout distribution alignment or retraining a
+  teacher on env-side rollout features, then rerunning teacher-only contact.
+- TensorBoard remains mandatory for any future PPO smoke, but D261 provides no
+  PPO candidate to dashboard.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260620_cube10cm_top_view_feature_contract_probe_d261.md`
+- `roarm_rl/roarm_cube_push_env.py`
+- `roarm_rl/train_cube_push_ppo.py`
+- `sim_scripts/cube10cm_top_view_teacher_rollout_probe.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/teacher_rollout_probe_d261_envtarget_posx/tap10cm/teacher_rollout_probe_summary_d261_envtarget_posx.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/teacher_rollout_probe_d261_envtarget_posx_ik/tap10cm/teacher_rollout_probe_summary_d261_envtarget_posx_ik.json`
+
+## D262-D264 - D256 pose reset improves support; direct D256 replay still misses contact
+
+Evidence:
+
+- Added D256 feature distribution visualization:
+  `sim_scripts/cube10cm_top_view_d256_feature_distribution_viz.py`.
+- Output root:
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d256_feature_distribution_viz_d262/`.
+- Key visualization:
+  `d256_vs_d261_normalized_support_bars.png`.
+- D262 confirms D261 live env ranges are outside D256 support for critical
+  features: arm joints, `tcp_local_z_m`, `target_to_tcp_*`, and
+  `tcp_to_cube_*`.
+- Updated the teacher-only probe with D256 initial-pose reset:
+  `--reset_pose_source d256_initial`.
+- D263 teacher-only from D256 frame-0 reset:
+  - output:
+    `teacher_rollout_probe_d263_d256_initial_reset/tap10cm/teacher_rollout_probe_summary_d263_d256_initial_reset.json`;
+  - initial feature outside train min/max rate `0.0`;
+  - initial feature outside train p01/p99 rate `0.19328703703703703`;
+  - contact rate `0.0`;
+  - min TCP-cube distance mean/min/max
+    `0.08348368108272552/0.06940185278654099/0.09543989598751068`;
+  - max disp along mean/max
+    `0.0014523034915328026/0.01252603530883789`;
+  - raw delta clip exceed rate `0.20877155172413794`;
+  - raw delta abs max `0.6774565577507019`;
+  - action cap rate `0.13050466954022988`.
+- D263 is an improvement over D261 no-IK:
+  - raw clip exceed `0.7170689655172414 -> 0.20877155172413794`;
+  - action cap `0.37896012931034484 -> 0.13050466954022988`;
+  - initial feature min/max OOD rate becomes `0.0`.
+- Added direct D256 action replay:
+  `sim_scripts/cube10cm_top_view_d256_action_replay_probe.py`.
+- D264 disables teacher and PPO, resets from D256 frame-0 state, and replays
+  D256 `state + joint_delta` targets directly with `hold_steps=3`.
+- D264 output:
+  `d256_action_replay_probe_d264/tap10cm/d256_action_replay_summary_d264.json`.
+- D264 result:
+  - teacher used `False`;
+  - contact rate `0.0`;
+  - min TCP-cube distance mean/min/max
+    `0.07518836855888367/0.06179572641849518/0.09923214465379715`;
+  - max disp along mean/max
+    `0.006767723709344864/0.017127275466918945`;
+  - max target jump abs mean/max
+    `0.06703907251358032/0.09352636337280273`.
+- Post-run checks:
+  - no matching Isaac/PPO/teacher-probe/action-replay/torchrun/rl_games process
+    remained;
+  - GPU returned to the observed baseline, about `2509MiB` used /
+    `13436MiB` free.
+
+Implication:
+
+- Verdict:
+  `D264_D256_POSE_RESET_IMPROVES_SUPPORT_ACTION_REPLAY_STILL_NO_CONTACT_NO_PPO`.
+- D256 pose reset is necessary and improves teacher stability, but it is not
+  sufficient.
+- Direct D256 action replay also misses the current env contact threshold
+  (`tcp_cube_dist < 0.055m`), so the blocker is not only D257 MLP
+  generalization.
+- Do not run PPO.
+- Next work is replay-contract diagnosis:
+  frame-to-env-step timing, action target semantics, contact proxy/threshold,
+  TCP/tool-surface geometry, and whether replay should use direct state
+  sequence, direct joint targets, or a trajectory-following controller.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260620_cube10cm_top_view_d256_pose_reset_replay_d262_d264.md`
+- `sim_scripts/cube10cm_top_view_d256_feature_distribution_viz.py`
+- `sim_scripts/cube10cm_top_view_teacher_rollout_probe.py`
+- `sim_scripts/cube10cm_top_view_d256_action_replay_probe.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d256_feature_distribution_viz_d262/d256_feature_distribution_summary_d262.md`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/teacher_rollout_probe_d263_d256_initial_reset/tap10cm/teacher_rollout_probe_summary_d263_d256_initial_reset.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d256_action_replay_probe_d264/tap10cm/d256_action_replay_summary_d264.json`
+
+## D265-D266 - D256 replay timing and recorded-state replay still miss current contact proxy
+
+Evidence:
+
+- Reused `sim_scripts/cube10cm_top_view_d256_action_replay_probe.py` for a
+  D265 direct-action replay timing sweep with teacher/PPO disabled.
+- `hold_steps=1/2/4/5` all had contact rate `0.0`; D264 `hold_steps=3` also
+  had contact rate `0.0`.
+- Minimum TCP-cube distance mins:
+  - hold 1: `0.06175459548830986`;
+  - hold 2: `0.061787448823451996`;
+  - hold 3: `0.06179572641849518`;
+  - hold 4: `0.06307728588581085`;
+  - hold 5: `0.0657862201333046`.
+- Added recorded-state sequence probe:
+  `sim_scripts/cube10cm_top_view_d256_state_sequence_probe.py`.
+- D266 writes D256 recorded arm joint states and cube poses into the live 10cm
+  env and measures current `_push_terms()` without teacher/PPO/action replay.
+- D266 output:
+  `d256_state_sequence_probe_d266/tap10cm/d256_state_sequence_summary_d266.json`.
+- D266 result:
+  - contact rate `0.0`;
+  - first contact step min `-1`;
+  - min TCP-cube distance mean/min/max
+    `0.07699309289455414/0.06270913034677505/0.1001250371336937`;
+  - max disp along mean/max
+    `0.0074400329031050205/0.018024206161499023`.
+- Verification:
+  - `python3 -m py_compile` passed;
+  - `git diff --check` passed;
+  - no Python/Isaac/PPO probe process remained;
+  - GPU returned to observed baseline around `2509MiB` used / `13436MiB`
+    free.
+
+Implication:
+
+- Verdict:
+  `D266_D256_RECORDED_STATE_SEQUENCE_STILL_NO_CONTACT_CONTACT_PROXY_CONTRACT_BLOCKER_NO_PPO`.
+- The problem is now more specific than D257 teacher generalization or replay
+  cadence.
+- Even the D256 recorded state sequence does not satisfy the current runtime
+  contact proxy `tcp_cube_dist < 0.055m`.
+- Do not run PPO.
+- Next work is contact-proxy contract diagnosis:
+  compare the D256 visual-label useful-tap definition against current
+  `_push_terms()` TCP distance, tool-surface/AABB contact geometry, and the
+  threshold used for reward/logging before reconsidering teacher-only or PPO.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260620_cube10cm_top_view_replay_contract_d265_d266.md`
+- `sim_scripts/cube10cm_top_view_d256_action_replay_probe.py`
+- `sim_scripts/cube10cm_top_view_d256_state_sequence_probe.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d256_action_replay_probe_d265_hold1/tap10cm/d256_action_replay_summary_d264.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d256_action_replay_probe_d265_hold2/tap10cm/d256_action_replay_summary_d264.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d256_action_replay_probe_d265_hold4/tap10cm/d256_action_replay_summary_d264.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d256_action_replay_probe_d265_hold5/tap10cm/d256_action_replay_summary_d264.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d256_state_sequence_probe_d266/tap10cm/d256_state_sequence_summary_d266.json`
+
+## D267-D270 - TCP contact gate was a false negative; AABB dataset contract restored
+
+Evidence:
+
+- Code review found that the top-view visual renderer records labels via
+  `inner_env._tap_terms()`.
+- The renderer uses `train_cube_tap10cm_ppo_smoke._apply_candidate6_contract()`,
+  which sets `tap_contact_proxy_mode="link5_collision_aabb"`.
+- Therefore D247/D256 labels are not raw TCP-point labels.
+- D264-D266 used `_push_terms().tcp_cube_dist < 0.055m`, so those runs were
+  measuring a different and overly strict contact gate.
+- Updated probes:
+  - `sim_scripts/cube10cm_top_view_d256_state_sequence_probe.py`;
+  - `sim_scripts/cube10cm_top_view_d256_action_replay_probe.py`;
+  - `sim_scripts/cube10cm_top_view_teacher_rollout_probe.py`.
+- Updated PPO entrypoint:
+  - `roarm_rl/train_cube_push_ppo.py` now exposes
+    `--tap_contact_proxy_mode {tcp_point,link5_collision_aabb}`;
+  - `tap10cm` default is set to `link5_collision_aabb`.
+- D267 same recorded D256 state sequence:
+  - with `link5_collision_aabb`: contact rate `1.0`, tap useful rate `1.0`,
+    TCP-threshold contact rate `0.0`;
+  - with `tcp_point`: contact rate `0.0`, tap useful rate `0.0`,
+    TCP-threshold contact rate `0.0`.
+- D268 direct D256 action replay with `link5_collision_aabb`, `hold_steps=3`:
+  - contact rate `1.0`;
+  - tap useful rate `1.0`;
+  - TCP-threshold contact rate `0.0`;
+  - max disp along mean/max
+    `0.006767723709344864/0.017127275466918945`.
+- D269 D257 teacher-only from D256 initial reset with
+  `link5_collision_aabb`:
+  - contact rate `0.71875`;
+  - tap useful rate `0.71875`;
+  - TCP-threshold contact rate `0.0`;
+  - max disp along mean/max
+    `0.0014523034915328026/0.01252603530883789`;
+  - raw delta clip exceed rate `0.20877155172413794`;
+  - action cap rate `0.13050466954022988`.
+- D270 offline audit over all D256 train-clean teacher rows:
+  - rows `142978`;
+  - `tap_contact_proxy` rate `0.8646784820042245`;
+  - `tap_contact_seen` and `tap_reaction_seen` rates
+    `0.9137559624557624`;
+  - `tap_overshoot_seen` rate `0.0`;
+  - `tcp_sphere_055` rate `0.0`;
+  - `tcp_point_face_band` rate `0.0`.
+- Prepared corrected tiny PPO command candidate, not run:
+  `cube10cm_top_view_visual_0_999_d242/state_action_teacher_d257/ppo_data_prior_smoke_command_d270_corrected_tap10cm_aabb.txt`.
+
+Implication:
+
+- Verdict:
+  `D270_TCP_CONTACT_GATE_FALSE_NEGATIVE_AABB_CONTRACT_RESTORED_NO_LONG_PPO`.
+- D264-D266 were valid evidence that raw TCP-point contact is too strict for
+  this dataset, but not evidence that D256 states/actions fail the visual label
+  contract.
+- The correct branch gate is AABB/tool-surface contact plus reaction,
+  displacement, no-overshoot, action saturation, and TensorBoard task scalars.
+- D257 teacher-only is no longer contact-zero under the correct proxy, but it is
+  still weaker than direct D256 replay on displacement.
+- Do not run long PPO.
+- Next valid runtime, only with explicit approval, is a tiny corrected
+  tap10cm+AABB PPO smoke followed by TensorBoard scalar gate and process/GPU
+  cleanup.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260620_cube10cm_top_view_contact_proxy_correction_d267_d270.md`
+- `sim_scripts/cube10cm_top_view_d256_state_sequence_probe.py`
+- `sim_scripts/cube10cm_top_view_d256_action_replay_probe.py`
+- `sim_scripts/cube10cm_top_view_teacher_rollout_probe.py`
+- `roarm_rl/train_cube_push_ppo.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d256_state_sequence_probe_d267_aabb/tap10cm/d256_state_sequence_summary_d267_aabb.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d256_state_sequence_probe_d267_tcppoint/tap10cm/d256_state_sequence_summary_d267_tcppoint.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d256_action_replay_probe_d268_aabb_hold3/tap10cm/d256_action_replay_summary_d268_aabb_hold3.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/teacher_rollout_probe_d269_aabb_d256_initial/tap10cm/teacher_rollout_probe_summary_d269_aabb_d256_initial.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d256_contact_contract_audit_d270/d256_contact_contract_audit_d270.json`
+
+## D272 - tap10cm AABB data-prior PPO wiring visible, behavior gate fails
+
+Evidence:
+
+- D271's corrected tiny PPO smoke used the right high-level route
+  (`tap10cm`, fixed +x, `link5_collision_aabb`, D257 checkpoint), but the tap
+  reward path did not log BC teacher blend/MSE/action magnitude into
+  TensorBoard.
+- The corrected TensorBoard gate re-read D271 and failed it with the original
+  behavior problems plus missing BC teacher scalars:
+  - no tap contact/reaction/useful signal;
+  - tap useful/success absent;
+  - joint-delta cap rate too high;
+  - BC teacher blend scalar missing;
+  - BC teacher imitation MSE scalar missing.
+- Patched `RoArmCubeTap10cmEnv._get_rewards()` so the tap branch now applies
+  `bc_teacher_imitation_reward_scale` via `bc_imitation_penalty`.
+- Patched tap extras to log both push-compatible and tap-specific BC teacher
+  metrics:
+  - `cube_push_bc_teacher_blend_mean`;
+  - `cube_push_bc_teacher_imitation_mse`;
+  - `cube_push_bc_teacher_action_abs_mean`;
+  - `cube_tap_bc_teacher_blend_mean`;
+  - `cube_tap_bc_teacher_imitation_mse`;
+  - `cube_tap_bc_teacher_action_abs_mean`;
+  - `bc_teacher_imitation_penalty`.
+- Patched `sim_scripts/cube10cm_top_view_tensorboard_scalar_gate.py` with:
+  - `--env_kind {auto,push3cm,tap10cm}`;
+  - `--expect_bc_teacher`;
+  - tap/AABB-specific gating that treats raw TCP distance as diagnostic and
+    prioritizes tap contact, useful/reaction, displacement, vertical offset,
+    overshoot, action cap, and BC teacher scalars.
+- D272 tiny PPO smoke ran with:
+  - `env_kind=tap10cm`;
+  - `tap_contact_proxy_mode=link5_collision_aabb`;
+  - fixed push direction `+x`;
+  - `num_envs=32`;
+  - `max_iterations=2`;
+  - `num_steps_per_env=24`;
+  - D257 `bc_teacher_checkpoint_path`;
+  - `bc_teacher_blend=1.0`;
+  - `bc_teacher_imitation_reward_scale=5.0`;
+  - `bc_teacher_feature_target_mode=env_target`;
+  - `bc_teacher_phase_timing=direct_steps`.
+- D272 output root:
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_data_prior_d272_logs/cube10cm_d272_tap10cm_aabb_bc_metrics_smoke/`.
+- D272 generated one TensorBoard event file plus `model_0.pt` and
+  `model_1.pt`; these are smoke artifacts, not learned-policy evidence.
+- D272 TensorBoard BC teacher metrics are now visible:
+  - `cube_push_bc_teacher_blend_mean`: `1.0 -> 1.0`;
+  - `cube_tap_bc_teacher_blend_mean`: `1.0 -> 1.0`;
+  - `cube_push_bc_teacher_imitation_mse`:
+    `0.9571873545646667 -> 0.9571402072906494`;
+  - `cube_tap_bc_teacher_imitation_mse`:
+    `0.9571873545646667 -> 0.9571402072906494`;
+  - `bc_teacher_imitation_penalty`:
+    `-4.7859368324279785 -> -4.785701751708984`.
+- D272 behavior still fails:
+  - `cube_tap_contact_proxy_rate`: `0.0 -> 0.0`;
+  - `cube_tap_contact_seen_rate`: `0.0 -> 0.0`;
+  - `cube_tap_useful_seen_rate`: `0.0 -> 0.0`;
+  - `cube_tap_success_rate`: `0.0 -> 0.0`;
+  - `cube_tap_max_disp_along_m` max:
+    `0.0005519219557754695`;
+  - `cube_tap_contact_vertical_offset_m` last:
+    `0.1504015177488327`;
+  - `cube_tap_overshoot_seen_rate` max:
+    `0.0651041716337204`;
+  - `cube_push_joint_delta_cap_rate` max:
+    `0.330078125`;
+  - `Train/mean_reward` decreased:
+    `-24.44062042236328 -> -70.10071563720703`.
+- D272 TensorBoard gate verdict:
+  `TENSORBOARD_GATE_FAIL_NO_PPO_PROMOTION`.
+- Post-run checks:
+  - `python -m py_compile` passed;
+  - `git diff --check` passed;
+  - D272 PPO smoke exited with code `0`;
+  - `ps -C python -C python3` showed no active local Python process;
+  - `nvidia-smi` returned to the observed baseline of about `2509MiB` used.
+
+Implication:
+
+- Verdict:
+  `D272_TAP10CM_AABB_DATA_PRIOR_WIRING_VISIBLE_BEHAVIOR_FAIL_NO_PPO_PROMOTION`.
+- D272 proves corrected data-prior wiring and TensorBoard observability, not
+  learned behavior.
+- This is not merely an over-strict TCP gate: raw TCP is now diagnostic only for
+  tap/AABB, while the failing metrics are AABB contact/useful/reaction,
+  displacement, overshoot, vertical offset, and action saturation.
+- The likely blocker is reset/pose-distribution mismatch. D269 teacher-only
+  from D256 initial reset had AABB contact/useful `0.71875/0.71875`, while D272
+  default PPO reset had contact/useful `0.0/0.0`.
+- Do not run long PPO.
+- Next work is D256 pose/reset distribution alignment in the PPO env or
+  teacher-only probe, then rerun teacher-on contact/useful before another tiny
+  PPO smoke.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260620_cube10cm_top_view_tap10cm_aabb_ppo_gate_d272.md`
+- `roarm_rl/roarm_cube_push_env.py`
+- `sim_scripts/cube10cm_top_view_tensorboard_scalar_gate.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_data_prior_d270_logs/cube10cm_d270_tap10cm_aabb_data_prior_smoke/tensorboard_scalar_gate_d271_regated_after_d272_patch.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_data_prior_d272_logs/cube10cm_d272_tap10cm_aabb_bc_metrics_smoke/tensorboard_scalar_gate_d272.json`
+
+## D277 - D256 reset-aligned teacher-on tiny PPO smoke emits TensorBoard reward, no long PPO
+
+Evidence:
+
+- Implemented an explicit D256 reset/pose-selection hook in
+  `roarm_rl/roarm_cube_push_env.py`:
+  - `d256_reset_csv_path`;
+  - `d256_reset_frame_index`;
+  - `d256_reset_sample_mode`.
+- The hook samples D256 train-clean rows at `frame_index_t=0` and writes the
+  D256 arm joints, gripper joint, cube local pose, target local pose, and push
+  direction at env reset.
+- The hook is opt-in only: if `d256_reset_csv_path` is empty, the existing
+  reset distribution remains unchanged.
+- Added TensorBoard extras for reset observability:
+  - `cube_push_d256_reset_active_rate`;
+  - `cube_push_d256_reset_episode_index_mean`;
+  - `cube_tap_d256_reset_active_rate`;
+  - `cube_tap_d256_reset_episode_index_mean`.
+- Added CLI wiring in `roarm_rl/train_cube_push_ppo.py`:
+  - `--d256_reset_csv_path`;
+  - `--d256_reset_frame_index`;
+  - `--d256_reset_sample_mode`;
+  - `--no_init_at_random_ep_len`.
+- Added probe/gate support:
+  - `sim_scripts/cube10cm_top_view_teacher_rollout_probe.py` now supports
+    `--reset_pose_source env_d256_initial`;
+  - `sim_scripts/cube10cm_top_view_tensorboard_scalar_gate.py` now supports
+    `--expect_d256_reset`.
+- D274 teacher-only from the env reset hook used `tap10cm`,
+  `link5_collision_aabb`, fixed +x, `bc_teacher_feature_target_mode=env_target`,
+  and D257 teacher prior:
+  - reset hook active rate `1.0`;
+  - initial feature outside train min/max `0.0`;
+  - AABB contact/useful/reaction `0.71875/0.71875/0.71875`;
+  - tap overshoot seen `0.03125`;
+  - min tap contact vertical offset mean/min/max `0.0/0.0/0.0`;
+  - max displacement along mean/max
+    `0.0014097457751631737/0.01252603530883789`;
+  - raw delta clip exceed `0.22213362068965517`;
+  - action cap rate `0.14152298850574713`.
+- D275 tiny PPO used D256 reset and D257 teacher prior, but kept the default
+  rsl_rl random episode-length offset. TensorBoard gate failed:
+  - issue: tap overshoot seen rate too high, max `0.125`;
+  - D256 reset active `1.0`;
+  - BC teacher blend `1.0`.
+- D276 disabled the random episode offset with `--no_init_at_random_ep_len`.
+  Overshoot stayed `0.0`, D256 reset and BC teacher blend stayed active, but a
+  two-iteration 24-step smoke did not complete an episode and therefore did not
+  emit `Train/mean_reward` / `Train/mean_episode_length`.
+- D277 ran a one-episode-complete tiny PPO smoke, still teacher-on:
+  - `tap10cm`;
+  - `link5_collision_aabb`;
+  - fixed +x;
+  - D256 reset frame `0`;
+  - `--no_init_at_random_ep_len`;
+  - D257 `bc_teacher_checkpoint_path`;
+  - `bc_teacher_blend=1.0`;
+  - `bc_teacher_imitation_reward_scale=5.0`;
+  - `bc_teacher_feature_target_mode=env_target`;
+  - `bc_teacher_phase_timing=direct_steps`;
+  - `num_envs=32`;
+  - `max_iterations=1`;
+  - `num_steps_per_env=600`;
+  - total timesteps `19,200`.
+- D277 TensorBoard gate verdict:
+  `TENSORBOARD_GATE_WARN_REQUIRES_MANUAL_REVIEW`.
+- D277 gate issues:
+  - none.
+- D277 gate warnings:
+  - short run: `Train/mean_reward` has `1` point, promotion gate expects at
+    least `10`;
+  - raw TCP-cube distance high for tap/AABB diagnostic:
+    `0.20408329367637634`.
+- D277 selected TensorBoard metrics:
+  - `Train/mean_reward=-3957.08154296875`;
+  - `Train/mean_episode_length=599.0`;
+  - `Loss/value_function=59124.1484375`;
+  - `Policy/mean_noise_std=0.8021852970123291`;
+  - `cube_push_d256_reset_active_rate=1.0`;
+  - `cube_tap_d256_reset_active_rate=1.0`;
+  - `cube_push_bc_teacher_blend_mean=1.0`;
+  - `cube_tap_bc_teacher_blend_mean=1.0`;
+  - `cube_push_bc_teacher_imitation_mse=0.66529381275177`;
+  - `cube_tap_contact_seen_rate=0.6662499904632568`;
+  - `cube_tap_reaction_seen_rate=0.6662499904632568`;
+  - `cube_tap_useful_seen_rate=0.6469791531562805`;
+  - `cube_tap_success_rate=0.6652604341506958`;
+  - `cube_tap_overshoot_seen_rate=0.019687499850988388`;
+  - `cube_tap_max_disp_along_m=0.0018036302644759417`;
+  - `cube_tap_contact_vertical_offset_m=0.015306632034480572`;
+  - `cube_push_joint_delta_cap_rate=0.15915799140930176`.
+- Static/runtime cleanup checks:
+  - `python -m py_compile` passed for the edited env, PPO entrypoint,
+    teacher-only probe, and TensorBoard gate;
+  - `git diff --check` passed;
+  - `ps -C python -C python3` showed no active local Python process;
+  - `nvidia-smi` showed the observed local baseline class state:
+    RTX 4090 Laptop GPU, `2509MiB` used, `13436MiB` free.
+
+Implication:
+
+- Verdict:
+  `D277_D256_RESET_ALIGNED_DATA_PRIOR_TINY_SMOKE_WARN_NO_LONG_PPO`.
+- D277 closes the D272 default-reset blocker: teacher-on behavior is plausible
+  only when the PPO env reset is aligned to the D256 train-clean frame-0
+  distribution.
+- `init_at_random_ep_len=True` is unsafe for this specific setup because D256
+  reset selects frame-0 states while `bc_teacher_phase_timing=direct_steps`
+  assumes the episode phase starts at step zero.
+- D277 is still teacher-on behavior, not learned-policy evidence:
+  `bc_teacher_blend=1.0`, one reward point, and no teacher-off eval.
+- The raw TCP warning is diagnostic under the D270 AABB/tool-surface contract
+  and does not override AABB contact/useful/reaction metrics.
+- Do not run long PPO from D277.
+- Next work is teacher-off frozen eval with the same D256 reset, same AABB
+  contract, no random episode offset, and TensorBoard gate requiring
+  `--expect_d256_reset`. No learned policy or RoArm readiness claim exists
+  until teacher-off eval passes.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260620_cube10cm_top_view_d256_reset_aligned_ppo_d273_d277.md`
+- `roarm_rl/roarm_cube_push_env.py`
+- `roarm_rl/train_cube_push_ppo.py`
+- `sim_scripts/cube10cm_top_view_teacher_rollout_probe.py`
+- `sim_scripts/cube10cm_top_view_tensorboard_scalar_gate.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/teacher_rollout_probe_d274_env_d256_reset_metrics/tap10cm/teacher_rollout_probe_summary_d274_env_d256_reset_teacher_only_metrics.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_data_prior_d275_logs/cube10cm_d275_tap10cm_aabb_d256reset_bc_smoke/tensorboard_scalar_gate_d275.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_data_prior_d276_logs/cube10cm_d276_tap10cm_aabb_d256reset_bc_no_randlen_smoke/tensorboard_scalar_gate_d276.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_data_prior_d277_logs/cube10cm_d277_tap10cm_aabb_d256reset_bc_episode_complete_smoke/tensorboard_scalar_gate_d277.json`
+
+## D278 - teacher-off frozen eval fails policy claim
+
+Evidence:
+
+- Added `sim_scripts/cube10cm_top_view_teacher_off_policy_eval.py`.
+- Evaluated the D277 PPO actor checkpoint:
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_data_prior_d277_logs/cube10cm_d277_tap10cm_aabb_d256reset_bc_episode_complete_smoke/model_0.pt`.
+- Valid D278 runtime used:
+  - `RoArm-CubeTap10cm-Direct-v0`;
+  - `tap_contact_proxy_mode=link5_collision_aabb`;
+  - D256 reset CSV
+    `cube10cm_top_view_visual_0_999_d242/rl_transition_preflight_d256/ppo_actor_prior_teacher_rows_d256.csv`;
+  - `d256_reset_frame_index=0`;
+  - `d256_reset_sample_mode=linspace`;
+  - fixed +x;
+  - `episode_length_s=6.0`;
+  - `eval_steps=580`;
+  - `num_envs=32`;
+  - `bc_teacher_blend=0.0`;
+  - `bc_teacher_imitation_reward_scale=0.0`;
+  - no BC teacher checkpoint loaded.
+- Invalid attempts before the valid D278 run were not counted:
+  - missing `PYTHONPATH=.`;
+  - sandboxed Isaac/PhysX could not see CUDA;
+  - initial script default pointed to the wrong D256 CSV name;
+  - default tap episode length was `1.2s`, not D277's `6.0s`;
+  - TensorDict finite-check needed explicit handling.
+- Valid D278 output:
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/teacher_off_policy_eval_d278/tap10cm/teacher_off_policy_eval_summary_d278.json`.
+- D278 verdict:
+  `TEACHER_OFF_FROZEN_EVAL_FAIL_NO_POLICY_CLAIM`.
+- D278 key metrics:
+  - D256 reset active rate `1.0`;
+  - BC teacher blend last `0.0`;
+  - contact/reaction/useful seen `0.875/0.875/0.5625`;
+  - success flag `0.875`;
+  - overshoot seen `0.3125`;
+  - max displacement along mean/max
+    `0.0024283849634230137/0.018782615661621094`;
+  - max displacement xy mean/max
+    `0.020250540226697922/0.10077980160713196`;
+  - min contact vertical offset mean/min/max `0.0/0.0/0.0`;
+  - last contact vertical offset mean/max
+    `0.02129734866321087/0.24940747022628784`;
+  - raw TCP-threshold contact seen `0.0`;
+  - joint-delta cap rate last/max trace
+    `0.1145833432674408/0.15625`;
+  - raw policy action abs mean/max trace
+    `0.1184795308344323/1.3003933429718018`;
+  - reward/obs/action finite all `True`.
+- D278 issues:
+  - tap overshoot seen rate too high: `0.3125`;
+  - tap contact vertical offset too high: max `0.24940747022628784`.
+- Cleanup checks:
+  - valid D278 exited cleanly;
+  - `ps -C python -C python3` showed no active local Python process;
+  - `nvidia-smi` returned to the observed baseline class state, about
+    `2509MiB` used.
+
+Implication:
+
+- Verdict:
+  `D278_TEACHER_OFF_FROZEN_EVAL_FAIL_NO_POLICY_CLAIM`.
+- The D277 actor is not totally inert when the BC teacher is disabled; it still
+  reaches AABB contact/reaction in many D256-reset states.
+- It is not controlled enough for a learned-policy claim because overshoot and
+  vertical-offset outliers fail the gate.
+- The high `tap_success_rate` is not sufficient because overshoot can happen
+  after or around the useful event; use useful/no-overshoot and vertical-offset
+  gates for promotion.
+- Do not run long PPO or a short PPO ladder from D278.
+- Next work is diagnostic action-trace comparison between D274/D277 teacher-on
+  behavior and D278 teacher-off actor behavior on the same D256 reset states.
+  No learned policy, teacher-off success, or RoArm readiness claim exists.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260620_cube10cm_top_view_teacher_off_eval_d278.md`
+- `sim_scripts/cube10cm_top_view_teacher_off_policy_eval.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/teacher_off_policy_eval_d278/tap10cm/teacher_off_policy_eval_summary_d278.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/teacher_off_policy_eval_d278/tap10cm/teacher_off_policy_eval_summary_d278.md`
+
+## D279 - actor-vs-teacher diagnostic trace blocks PPO promotion
+
+Evidence:
+
+- Added `sim_scripts/cube10cm_top_view_actor_teacher_trace.py`.
+- Ran one no-training local host-GPU diagnostic trace:
+  `env PYTHONPATH=. conda run -n isaaclab python sim_scripts/cube10cm_top_view_actor_teacher_trace.py`.
+- Evaluated the D277 PPO actor checkpoint:
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/ppo_data_prior_d277_logs/cube10cm_d277_tap10cm_aabb_d256reset_bc_episode_complete_smoke/model_0.pt`.
+- Loaded the D257 teacher checkpoint only as a comparison sidecar:
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_0_999_d242/state_action_teacher_d257/cube10cm_d257_state_action_teacher_clipped0040.pt`.
+- Valid D279 runtime used:
+  - `RoArm-CubeTap10cm-Direct-v0`;
+  - `tap_contact_proxy_mode=link5_collision_aabb`;
+  - D256 reset CSV
+    `cube10cm_top_view_visual_0_999_d242/rl_transition_preflight_d256/ppo_actor_prior_teacher_rows_d256.csv`;
+  - `d256_reset_frame_index=0`;
+  - `d256_reset_sample_mode=linspace`;
+  - fixed +x;
+  - `episode_length_s=6.0`;
+  - `eval_steps=580`;
+  - `num_envs=32`;
+  - `bc_teacher_blend=0.0`;
+  - `bc_teacher_imitation_reward_scale=0.0`;
+  - `bc_teacher_feature_target_mode=env_target`;
+  - `bc_teacher_phase_timing=direct_steps`.
+- D279 outputs:
+  - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_teacher_trace_d279/tap10cm/actor_teacher_trace_summary_d279.json`;
+  - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_teacher_trace_d279/tap10cm/actor_teacher_trace_summary_d279.md`;
+  - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_teacher_trace_d279/tap10cm/actor_teacher_trace_steps_d279.csv`;
+  - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_teacher_trace_d279/tap10cm/actor_teacher_trace_envs_d279.csv`.
+- D279 verdict:
+  `D279_ACTOR_TEACHER_TRACE_DIAGNOSTIC_BLOCKS_PPO_PROMOTION`.
+- D279 diagnostic class:
+  `actor_teacher_mismatch_plus_unsafe_physics`.
+- D279 key metrics:
+  - D256 reset active rate `1.0`;
+  - BC teacher blend last `0.0`;
+  - actor-teacher MSE/MAE/cosine
+    `0.46601414680480957/0.5703011751174927/0.07783761620521545`;
+  - actor clipped abs mean trace `0.11846771989146183`;
+  - teacher abs mean trace `0.5554168882908236`;
+  - actor raw clip exceed mean `0.00006285919727564886`;
+  - contact/reaction/useful seen `0.875/0.875/0.5625`;
+  - success flag `0.875`;
+  - overshoot seen `0.3125`;
+  - max displacement along mean/max
+    `0.0024283849634230137/0.018782615661621094`;
+  - max displacement xy mean/max
+    `0.020250540226697922/0.10077980160713196`;
+  - vertical max `0.24940747022628784`;
+  - joint-delta cap max trace `0.15625`.
+- Per-joint actor-vs-teacher abs gap:
+  - base `0.7280789017677307`;
+  - shoulder `0.6867650151252747`;
+  - elbow `0.7172043919563293`;
+  - wrist_pitch `0.7668752074241638`;
+  - wrist_roll `0.4209713637828827`;
+  - gripper `0.1019124984741211`.
+- Env grouping shows separate failure modes:
+  - overshoot group count `10`, max disp xy mean `0.059471823275089264`,
+    max vertical `0.0`;
+  - vertical-over-threshold group count `5`, max vertical
+    `0.14238949120044708`, max disp xy mean `0.0005952191422693431`.
+- Cleanup/verification:
+  - D279 exited cleanly;
+  - `python -m py_compile sim_scripts/cube10cm_top_view_actor_teacher_trace.py`
+    passed;
+  - `git diff --check` passed;
+  - narrowed D279/PPO/torchrun/rl_games process check found no active process;
+  - `nvidia-smi` returned to baseline class state, `833MiB` used and `0%` GPU
+    util in the 2026-06-25 local session.
+
+Implication:
+
+- D279 confirms D278 was not just an overly strict teacher-off eval.
+- The D277 actor is not following the D257 teacher action direction:
+  action cosine is near zero and actor action magnitude is about one-fifth of
+  the teacher sidecar magnitude.
+- Overshoot and vertical outliers are real and partially separate physics
+  failure modes.
+- Do not run long PPO or a short PPO ladder from D279.
+- Do not claim learned policy, teacher-off success, or RoArm readiness.
+- Next work should improve the actor/teacher learning bridge before PPO
+  scale-up: supervised actor warm-start/distillation or a revised imitation
+  schedule, then repeat teacher-off frozen eval and actor-vs-teacher trace under
+  the same D256 reset/AABB contract.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260625_cube10cm_top_view_actor_teacher_trace_d279.md`
+- `sim_scripts/cube10cm_top_view_actor_teacher_trace.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_teacher_trace_d279/tap10cm/actor_teacher_trace_summary_d279.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_teacher_trace_d279/tap10cm/actor_teacher_trace_summary_d279.md`
+
+## D280 - Cube10cm actor distillation and warm-start PPO smoke (2026-06-25)
+
+- Added supervised actor distillation from the D257 teacher into the D277 PPO
+  actor:
+  `sim_scripts/cube10cm_top_view_distill_actor_from_teacher.py`.
+- Added PPO warm-start support:
+  `roarm_rl/train_cube_push_ppo.py --warm_start_checkpoint_path`.
+- Added tap PPO termination flags:
+  `--tap_success_terminate`, `--tap_overshoot_terminate`.
+- Added teacher-off diagnostic gates:
+  `--zero_actions_after_useful_seen`, `--vertical_gate_mode`,
+  `--action_scale`, `--max_joint_delta_per_step_rad`.
+- Distilled actor checkpoint:
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_distill_d280/tap10cm/model_actor_distill_d280.pt`.
+- Checkpoint sha256:
+  `4c12862320883ebaab14c97043999e235224a5d892916d6a23f16189358639dd`.
+- Offline actor/teacher validation improved from MSE/cosine
+  `0.38865897059440613/0.32961708307266235` to
+  `0.01078740879893303/0.9815400838851929`.
+- Distilled actor rollout still blocked PPO promotion:
+  D279-style trace MSE/cosine `0.0765833854675293/0.8944697976112366`,
+  useful `0.59375`, overshoot `0.125`, vertical max
+  `0.22511835396289825`, joint cap max `0.7604166865348816`.
+- Default teacher-off eval also failed:
+  useful `0.59375`, overshoot `0.125`, joint cap max
+  `0.7604166865348816`.
+- Diagnostic post-useful hold plus contact-time vertical gate passed:
+  useful `0.71875`, overshoot `0.0`, joint cap max
+  `0.2135416716337204`, vertical gate value `0.0`.
+- One 1-iteration warm-start PPO smoke ran and wrote TensorBoard/checkpoint, but
+  TensorBoard gate failed:
+  `TENSORBOARD_GATE_FAIL_NO_PPO_PROMOTION`, issue
+  `joint-delta cap rate too high: max=0.3993055820465088`.
+- Trace after the 1-iteration PPO smoke worsened:
+  MSE/cosine `0.086099773645401/0.8869514465332031`,
+  useful `0.5`, overshoot `0.1875`, joint cap max `0.78125`.
+- Verdict:
+  `D280_ACTOR_DISTILL_IMPROVES_BRIDGE_BUT_PPO_PROMOTION_BLOCKED`.
+- Decision:
+  do not run long PPO or a PPO ladder from D280; do not claim learned policy,
+  teacher-off success, or RoArm readiness. Next work is to encode
+  stop-after-useful semantics in the env/reward/termination contract and rerun
+  teacher-off eval, actor-vs-teacher trace, and tiny TensorBoard gate.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260625_cube10cm_top_view_actor_distill_d280.md`
+- `sim_scripts/cube10cm_top_view_distill_actor_from_teacher.py`
+- `sim_scripts/cube10cm_top_view_teacher_off_policy_eval.py`
+- `sim_scripts/cube10cm_top_view_actor_teacher_trace.py`
+- `roarm_rl/train_cube_push_ppo.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_distill_d280/tap10cm/actor_distill_summary_d280.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_distill_d280/tap10cm/teacher_off_eval_after_distill/teacher_off_policy_eval_summary_d280.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_distill_d280/tap10cm/post_useful_hold_min_contact_gate/teacher_off_policy_eval_summary_d280_hold_min_contact_gate.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_distill_d280/tap10cm/ppo_warmstart_smoke/cube10cm_d280_warmstart_success_terminate_smoke/tensorboard_scalar_gate_d280.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_distill_d280/tap10cm/ppo_warmstart_smoke/cube10cm_d280_warmstart_success_terminate_smoke/actor_teacher_trace_after_ppo_smoke/actor_teacher_trace_summary_d279.json`
+
+## D281 - Cube10cm env stop contract and PPO update safety (2026-06-25)
+
+- Added default-off env contracts for stop-after-useful and useful termination:
+  `tap_stop_after_useful_seen` and `tap_useful_terminate`.
+- Added contact-time vertical gate/min-contact logging and env useful-hold
+  metrics to teacher-off eval, actor-vs-teacher trace, PPO TensorBoard gating,
+  and the tap env.
+- Added PPO warm-start safety controls:
+  `--init_noise_std` with post-`runner.load()` std override, plus PPO optimizer
+  knobs for learning rate, epochs, minibatches, entropy, clip, desired KL, and
+  grad norm.
+- Pre-PPO D280 actor under env stop/min-contact passed:
+  - teacher-off useful/overshoot/joint-cap
+    `0.71875/0.0/0.2135416716337204`;
+  - actor-vs-teacher MSE/cosine `0.05346343293786049/0.6641471982002258`;
+  - actor-vs-teacher useful/overshoot `0.71875/0.0`.
+- PPO collection safety improved only after post-load noise override:
+  - default noise `0.8` smoke failed TensorBoard on joint cap
+    `0.3923611342906952`;
+  - noise `0.1` smoke had no hard TensorBoard issues, joint cap
+    `0.1571180671453476`, BC imitation MSE `0.03936203941702843`.
+- Saved-checkpoint validation blocked promotion:
+  - noise `0.1` `model_0.pt` teacher-off eval failed with useful `0.0`,
+    overshoot `0.90625`, joint cap max `0.7135416865348816`;
+  - its trace failed with MSE/cosine
+    `0.2621913254261017/0.6388046145439148`.
+- Conservative PPO update still blocked promotion:
+  - collection TensorBoard had no hard issues, joint cap `0.1549479365348816`;
+  - saved `model_0.pt` teacher-off eval failed with useful `0.0`,
+    overshoot `0.34375`, joint cap max `0.7447916865348816`;
+  - saved-checkpoint trace failed with MSE/cosine `0.150615/0.777609`.
+- Verdict:
+  `D281_ENV_STOP_AND_NOISE_OVERRIDE_PASS_BUT_PPO_UPDATE_UNSAFE_NO_PROMOTION`.
+- Decision:
+  do not run long PPO or a PPO ladder. TensorBoard collection gates are
+  necessary but insufficient; every PPO smoke must be followed by saved
+  checkpoint teacher-off eval and actor-vs-teacher trace. Next work is actor
+  preservation inside PPO: auxiliary BC/teacher loss, KL-to-teacher/actor
+  regularization, or staged actor-freeze/value-only warmup before actor updates.
+
+Sources:
+
+- `claudedocs/session_20260625_cube10cm_top_view_env_stop_ppo_update_d281.md`
+- `START_HERE.md`
+- `roarm_rl/roarm_cube_push_env.py`
+- `roarm_rl/train_cube_push_ppo.py`
+- `sim_scripts/cube10cm_top_view_teacher_off_policy_eval.py`
+- `sim_scripts/cube10cm_top_view_actor_teacher_trace.py`
+- `sim_scripts/cube10cm_top_view_tensorboard_scalar_gate.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_distill_d281/tap10cm/teacher_off_eval_env_stop_min_contact/teacher_off_policy_eval_summary_d281_env_stop_min_contact.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_distill_d281/tap10cm/actor_teacher_trace_env_stop_min_contact/actor_teacher_trace_summary_d279.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_distill_d281/tap10cm/ppo_warmstart_useful_stop_noise010_reloadstd_smoke/cube10cm_d281_warmstart_useful_stop_noise010_reloadstd_smoke/teacher_off_eval_after_noise010_smoke/teacher_off_policy_eval_summary_d281_after_noise010_smoke.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_distill_d281/tap10cm/ppo_warmstart_conservative_update_smoke/cube10cm_d281_warmstart_conservative_update_smoke/teacher_off_eval_after_conservative_update/teacher_off_policy_eval_summary_d281_after_conservative_update.json`
+
+## D282 - Cube10cm PPO internal actor-preservation and corrected saved-checkpoint gates (2026-06-25)
+
+- Added PPO internal actor-preservation to `roarm_rl/train_cube_push_ppo.py`:
+  `--actor_preserve_blend`.
+- The implementation snapshots actor-related keys after warm-start/noise
+  override and blends those keys back after each PPO update:
+  `cur = (1 - blend) * cur + blend * ref`.
+- Preserved key families:
+  `actor.`, `actor_obs_normalizer.`, `std`, and `log_std` when present.
+- Corrected the D281 saved-checkpoint eval/trace protocol:
+  - `tap_useful_terminate` remains useful for training-runtime diagnostics;
+  - saved-checkpoint teacher-off eval and actor-vs-teacher trace should use
+    `tap_stop_after_useful_seen` and `vertical_gate_mode=min_contact`, but
+    should not use `tap_useful_terminate`;
+  - otherwise successful episodes can reset before summary collection and look
+    like failures.
+- Re-ran the D281 conservative checkpoint with corrected no-useful-terminate
+  eval/trace:
+  - teacher-off useful/overshoot/joint-cap
+    `0.8125/0.0/0.1666666716337204`;
+  - trace MSE/cosine `0.04292111471295357/0.6536584496498108`;
+  - trace useful/overshoot `0.8125/0.0`.
+- Ran D282 actor-freeze PPO smoke (`--actor_preserve_blend 1.0`):
+  - runtime logged `actor_preserve_after_update blend=1.000000 keys=13
+    max_pre_restore_delta=0.016347766 max_post_restore_delta=0.000000000`;
+  - corrected teacher-off eval passed:
+    useful/overshoot/joint-cap `0.71875/0.0/0.2135416716337204`;
+  - corrected trace passed:
+    MSE/cosine `0.05346343293786049/0.6641471982002258`,
+    useful/overshoot `0.71875/0.0`.
+- Ran D282 actor-preserve095 PPO smoke (`--actor_preserve_blend 0.95`):
+  - runtime logged `actor_preserve_after_update blend=0.950000 keys=13
+    max_pre_restore_delta=0.016167104 max_post_restore_delta=0.000808358`;
+  - corrected teacher-off eval passed:
+    useful/overshoot/joint-cap `0.71875/0.0/0.21875`;
+  - corrected trace passed:
+    MSE/cosine `0.05328662693500519/0.6633936166763306`,
+    useful/overshoot `0.71875/0.0`.
+- Ran a no-preservation conservative 10-iteration PPO smoke:
+  - TensorBoard verdict `TENSORBOARD_GATE_FAIL_NO_PPO_PROMOTION`;
+  - issue `joint-delta cap rate too high: max=0.6664496660232544`;
+  - reward rose from `-6.725722312927246` to `5.878491401672363`, but
+    useful last fell to `0.03125`, BC imitation MSE last rose to
+    `0.10183489322662354`, and raw TCP diagnostic last rose to
+    `0.5229541063308716`.
+- Evaluated saved `model_9.pt` from the no-preservation 10-iteration smoke:
+  - teacher-off eval failed:
+    useful/overshoot/joint-cap
+    `0.65625/0.03125/0.2760416567325592`,
+    policy action abs max trace `2.2301270961761475`;
+  - actor-vs-teacher trace blocked promotion:
+    MSE/cosine `0.05501702427864075/0.6031392812728882`,
+    useful/overshoot `0.65625/0.03125`,
+    joint cap max `0.2760416567325592`.
+- Verdict:
+  `D282_ACTOR_PRESERVATION_WIRED_1ITER_GATES_PASS_NO_PRESERVE_10ITER_FAIL_NO_LONG_PPO`.
+- Decision:
+  do not run long PPO. Reward increase alone is not a valid promotion signal.
+  The next valid runtime candidate is a short PPO variant with actor
+  preservation enabled, likely `--actor_preserve_blend 0.95`, followed by all
+  three gates: TensorBoard scalar gate, corrected teacher-off frozen eval, and
+  corrected actor-vs-teacher trace. No learned-policy or RoArm-readiness claim
+  exists.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260625_cube10cm_top_view_actor_preservation_d282.md`
+- `roarm_rl/train_cube_push_ppo.py`
+- `sim_scripts/cube10cm_top_view_teacher_off_policy_eval.py`
+- `sim_scripts/cube10cm_top_view_actor_teacher_trace.py`
+- `sim_scripts/cube10cm_top_view_tensorboard_scalar_gate.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d282/tap10cm/ppo_actor_freeze_smoke/cube10cm_d282_warmstart_actor_freeze_smoke/teacher_off_eval_after_actor_freeze_no_useful_term/teacher_off_policy_eval_summary_d282_after_actor_freeze_no_useful_term.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d282/tap10cm/ppo_actor_freeze_smoke/cube10cm_d282_warmstart_actor_freeze_smoke/actor_teacher_trace_after_actor_freeze_no_useful_term/actor_teacher_trace_summary_d279.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d282/tap10cm/ppo_actor_preserve095_smoke/cube10cm_d282_warmstart_actor_preserve095_smoke/teacher_off_eval_after_actor_preserve095_no_useful_term/teacher_off_policy_eval_summary_d282_after_actor_preserve095_no_useful_term.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d282/tap10cm/ppo_actor_preserve095_smoke/cube10cm_d282_warmstart_actor_preserve095_smoke/actor_teacher_trace_after_actor_preserve095_no_useful_term/actor_teacher_trace_summary_d279.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d282/tap10cm/ppo_conservative10_smoke/cube10cm_d282_conservative10_smoke/tensorboard_scalar_gate_d282_conservative10.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d282/tap10cm/ppo_conservative10_smoke/cube10cm_d282_conservative10_smoke/teacher_off_eval_model9_no_useful_term/teacher_off_policy_eval_summary_d282_conservative10_model9_no_useful_term.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d282/tap10cm/ppo_conservative10_smoke/cube10cm_d282_conservative10_smoke/actor_teacher_trace_model9_no_useful_term/actor_teacher_trace_summary_d279.json`
+
+## D283-D285 - Cube10cm short preserved-actor PPO gates and collection failure (2026-06-25)
+
+- Ran three additional short PPO gates after D282. None was a long PPO run:
+  - D283: `--actor_preserve_blend 0.95`, `--init_noise_std 0.1`,
+    `10` iterations;
+  - D284: `--actor_preserve_blend 0.95`, `--init_noise_std 0.02`,
+    `10` iterations;
+  - D285: `--actor_preserve_blend 1.0`, `--init_noise_std 0.02`,
+    `10` iterations.
+- D283 TensorBoard collection failed:
+  - verdict `TENSORBOARD_GATE_FAIL_NO_PPO_PROMOTION`;
+  - joint-cap max `0.6579861640930176`;
+  - useful last `0.03125`;
+  - reward `-6.631277561187744 -> 5.1462788581848145`;
+  - BC imitation MSE last `0.0750335305929184`.
+- D283 saved `model_9.pt` corrected teacher-off eval passed:
+  - useful/overshoot/joint-cap `0.71875/0.0/0.2135416716337204`;
+  - policy action abs max trace `3.6983871459960938`.
+- D283 saved `model_9.pt` corrected actor-vs-teacher trace passed:
+  - MSE/cosine `0.05202638357877731/0.6651849150657654`;
+  - useful/overshoot `0.71875/0.0`;
+  - joint cap max `0.2135416716337204`.
+- D284 lowered exploration noise to `0.02` but TensorBoard still failed:
+  - joint-cap max `0.6430121660232544`;
+  - useful last `0.03125`;
+  - reward `-6.0151824951171875 -> 5.879624843597412`;
+  - BC imitation MSE last `0.07686792314052582`.
+- D285 fully froze the actor (`blend=1.0`) and still failed TensorBoard:
+  - every update restored the actor with `max_post_restore_delta=0.000000000`;
+  - joint-cap max `0.6536458730697632`;
+  - useful last `0.03125`;
+  - reward `-6.012892246246338 -> 5.879622936248779`;
+  - BC imitation MSE last `0.06847621500492096`;
+  - D256 reset episode-index mean last `660.375`.
+- Interpretation:
+  - actor-preservation can keep a saved deterministic checkpoint usable, as D283
+    model_9 passed corrected teacher-off and trace gates;
+  - collection-time TensorBoard can still fail badly;
+  - lowering action noise did not fix collection;
+  - freezing actor updates did not fix collection;
+  - therefore the immediate blocker is reset-sample/state-distribution plus
+    action-cap pressure during collection, not just actor update drift.
+- Verdict:
+  `D285_COLLECTION_GATE_FAILS_EVEN_ACTOR_FREEZE_NO_LONG_PPO`.
+- Decision:
+  do not run long PPO and do not promote D283, D284, or D285. Next work should
+  be diagnostic/fix before more PPO: bin D256 reset samples by episode index and
+  actor action/cap statistics, then restrict/stratify reset samples or add an
+  explicit action-cap/teacher-KL constraint. Reward increase is not a valid
+  policy-progress claim.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260625_cube10cm_top_view_actor_preserve_short_gates_d283_d285.md`
+- `roarm_rl/train_cube_push_ppo.py`
+- `sim_scripts/cube10cm_top_view_tensorboard_scalar_gate.py`
+- `sim_scripts/cube10cm_top_view_teacher_off_policy_eval.py`
+- `sim_scripts/cube10cm_top_view_actor_teacher_trace.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d283/tap10cm/ppo_preserve095_10_smoke/cube10cm_d283_preserve095_10_smoke/tensorboard_scalar_gate_d283_preserve095_10.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d283/tap10cm/ppo_preserve095_10_smoke/cube10cm_d283_preserve095_10_smoke/teacher_off_eval_model9_no_useful_term/teacher_off_policy_eval_summary_d283_preserve095_10_model9_no_useful_term.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d283/tap10cm/ppo_preserve095_10_smoke/cube10cm_d283_preserve095_10_smoke/actor_teacher_trace_model9_no_useful_term/actor_teacher_trace_summary_d279.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d284/tap10cm/ppo_preserve095_noise002_10_smoke/cube10cm_d284_preserve095_noise002_10_smoke/tensorboard_scalar_gate_d284_preserve095_noise002_10.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d285/tap10cm/ppo_actorfreeze_noise002_10_smoke/cube10cm_d285_actorfreeze_noise002_10_smoke/tensorboard_scalar_gate_d285_actorfreeze_noise002_10.json`
+
+## D286 - Cube10cm D256 reset-bin actor diagnostic and failed action-scale fix (2026-06-26)
+
+- Added an opt-in D256 reset episode filter to the env:
+  - `d256_reset_episode_min`;
+  - `d256_reset_episode_max`.
+- Exposed the same filters through `roarm_rl/train_cube_push_ppo.py` so future
+  PPO smoke tests can restrict reset ranges without editing code.
+- Added `sim_scripts/cube10cm_top_view_d256_reset_bin_actor_probe.py`.
+  - This is a diagnostic script, not PPO training.
+  - It reuses one Isaac Lab app, changes the D256 reset episode filter per bin,
+    and records actor action magnitude, joint cap pressure, useful/contact
+    signal, overshoot, and actor-teacher sidecar agreement.
+- Ran D286 frozen-actor bin probes using the D285 actor-freeze checkpoint:
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d285/tap10cm/ppo_actorfreeze_noise002_10_smoke/cube10cm_d285_actorfreeze_noise002_10_smoke/model_9.pt`.
+- Default `action_scale=0.04`, `action_noise_std=0.02`, `580` steps:
+  - cap max by D256 episode bin:
+    `0.6302083730697632 / 0.7604166865348816 /
+    0.8229166865348816 / 0.703125 / 0.78125`;
+  - useful max across bins: `0.0`.
+- Reduced `action_scale=0.01`, `action_noise_std=0.02`, `580` steps:
+  - cap max by D256 episode bin:
+    `0.010416666977107525 / 0.015625 / 0.0052083334885537624 /
+    0.0781250074505806 / 0.0833333358168602`;
+  - useful max across bins: `0.0`.
+- Interpretation:
+  - D285 is not failing because of only one bad reset episode range.
+  - Reset-bin filtering alone is not enough.
+  - Action-scale reduction alone is not enough: it removes most cap pressure but
+    still produces no useful/contact signal.
+  - Another PPO smoke from D285 is not justified until the actor/teacher bridge
+    or action projection/constraint is repaired.
+- Verdict:
+  `D286_NO_RESET_BIN_OR_ACTION_SCALE_FIX_READY_FOR_PPO`.
+- Decision:
+  do not run long PPO and do not promote D283-D286. The next work should be a
+  non-PPO fix/diagnostic pass: repair actor/teacher bridge, add action
+  projection or explicit action-cap/teacher constraint, then rerun teacher-off
+  and D256 bin diagnostics before a TensorBoard-gated tiny PPO smoke.
+
+Sources:
+
+- `START_HERE.md`
+- `sim_scripts/cube10cm_top_view_d256_reset_bin_actor_probe.py`
+- `roarm_rl/roarm_cube_push_env.py`
+- `roarm_rl/train_cube_push_ppo.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d256_reset_bin_actor_probe_d286_comparison/tap10cm/d256_reset_bin_actor_probe_comparison_d286.md`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d256_reset_bin_actor_probe_d286_default_steps580_corrected/tap10cm/d256_reset_bin_actor_probe_summary_d286.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d256_reset_bin_actor_probe_d286_action_scale0010_steps580_corrected/tap10cm/d256_reset_bin_actor_probe_summary_d286.json`

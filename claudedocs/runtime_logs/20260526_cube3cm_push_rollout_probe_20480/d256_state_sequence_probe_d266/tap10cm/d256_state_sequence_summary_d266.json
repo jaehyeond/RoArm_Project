@@ -1,0 +1,77 @@
+{
+  "artifact": "cube10cm_d266_d256_state_sequence_probe",
+  "contact_env_count": 0,
+  "contact_rate": 0.0,
+  "contact_threshold_m": 0.055,
+  "env_id": "RoArm-CubeTap10cm-Direct-v0",
+  "first_contact_step_min": -1,
+  "hold_steps": 1,
+  "interpretation": "This writes D256 recorded arm/cube states into the live 10cm env and measures the current contact proxy. If this reaches contact while action replay does not, the controller/action replay contract is the main blocker. If it does not, the current contact proxy or tool/cube geometry is not equivalent to the visual-label contract.",
+  "last_state_info": {
+    "arm_joint_mean_rad": [
+      -0.09786595404148102,
+      0.3542298674583435,
+      2.507267713546753,
+      0.026226378977298737,
+      0.06191824749112129
+    ],
+    "cube_local_x_range_m": [
+      0.14366526901721954,
+      0.4020536243915558
+    ],
+    "cube_local_y_range_m": [
+      -0.09994717687368393,
+      0.13942371308803558
+    ]
+  },
+  "max_disp_along_m": {
+    "max": 0.018024206161499023,
+    "mean": 0.0074400329031050205,
+    "min": 0.0034220367670059204
+  },
+  "max_disp_xy_m": {
+    "max": 0.01803126558661461,
+    "mean": 0.008298545144498348,
+    "min": 0.003533791285008192
+  },
+  "min_tcp_cube_dist_m": {
+    "max": 0.1001250371336937,
+    "mean": 0.07699309289455414,
+    "min": 0.06270913034677505
+  },
+  "no_ppo_learning": true,
+  "num_envs": 32,
+  "reset_pose_info": {
+    "arm_joint_reset_mean_rad": [
+      -0.11336809396743774,
+      0.38995522260665894,
+      2.2954864501953125,
+      0.5119655132293701,
+      0.0
+    ],
+    "cube_local_x_range_m": [
+      0.14000000059604645,
+      0.38999998569488525
+    ],
+    "cube_local_y_range_m": [
+      -0.10000000149011612,
+      0.15000000596046448
+    ],
+    "episode_max": 999,
+    "episode_min": 1,
+    "episode_unique_count": 32,
+    "row_count": 32
+  },
+  "robot_usd_path": "b200_backup_20260522_final/tmp_p7/p7_branch_b_cube2cm_opposing_jaw_v7_collision_usd_d024/roarm_m3.usd",
+  "seed": 1266,
+  "selected_episode_max": 999,
+  "selected_episode_min": 1,
+  "selected_episode_unique_count": 32,
+  "status": "PASS_PROBE_EXECUTED",
+  "step_samples_csv": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d256_state_sequence_probe_d266/tap10cm/d256_state_sequence_step_samples_d266.csv",
+  "steps": 580,
+  "summary_json": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d256_state_sequence_probe_d266/tap10cm/d256_state_sequence_summary_d266.json",
+  "summary_md": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d256_state_sequence_probe_d266/tap10cm/d256_state_sequence_summary_d266.md",
+  "teacher_csv": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_0_999_d242/rl_transition_preflight_d256/ppo_actor_prior_teacher_rows_d256.csv",
+  "teacher_used": false
+}

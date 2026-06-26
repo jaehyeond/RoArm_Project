@@ -12,7 +12,9 @@ height target waypoint residual before DiffIK.
 """
 from __future__ import annotations
 
+import csv
 import math
+from pathlib import Path
 
 import numpy as np
 import torch
@@ -152,6 +154,7 @@ class RoArmCubePushEnvCfg(RoArmStackEnvCfg):
     bc_teacher_checkpoint_path: str = ""
     bc_teacher_blend: float = 0.0
     bc_teacher_imitation_reward_scale: float = 0.0
+    bc_teacher_feature_target_mode: str = "tcp_target"
     bc_teacher_policy_delta_clip_rad: float = 0.040
     bc_teacher_policy_delta_scale: float = 1.0
     bc_teacher_posx_policy_delta_scale: float = 1.0
@@ -182,6 +185,11 @@ class RoArmCubePushEnvCfg(RoArmStackEnvCfg):
     bc_teacher_midx_push_through_m: float = -1.0
     bc_teacher_highx_push_through_m: float = -1.0
     bc_teacher_phase_timing: str = "episode_scaled"
+    d256_reset_csv_path: str = ""
+    d256_reset_frame_index: int = 0
+    d256_reset_sample_mode: str = "random"
+    d256_reset_episode_min: int = -1
+    d256_reset_episode_max: int = -1
 
     push_progress_reward_scale: float = 60.0
     push_displacement_reward_scale: float = 18.0
@@ -284,7 +292,10 @@ class RoArmCubeTap10cmEnvCfg(RoArmCubePushEnvCfg):
     tap_reaction_tip_angle_deg: float = 1.0
     tap_overshoot_disp_m: float = 0.020
     tap_target_disp_tolerance_m: float = 0.003
+    tap_overshoot_terminate: bool = False
     tap_success_terminate: bool = False
+    tap_useful_terminate: bool = False
+    tap_stop_after_useful_seen: bool = False
     professor_physical_reaction_disp_m: float = 0.0005
     professor_physical_reaction_speed_mps: float = 0.005
     professor_physical_reaction_z_delta_m: float = 0.0005
@@ -377,6 +388,8 @@ class RoArmCubePushEnv(RoArmStackEnv):
         self._last_bc_teacher_blend = torch.zeros(self.num_envs, device=self.device)
         self._last_bc_teacher_imitation_mse = torch.zeros(self.num_envs, device=self.device)
         self._last_bc_teacher_action_abs_mean = torch.zeros(self.num_envs, device=self.device)
+        self._last_d256_reset_active = torch.zeros(self.num_envs, device=self.device)
+        self._last_d256_reset_episode_index = torch.full((self.num_envs,), -1.0, device=self.device)
         self._bc_prev_teacher_delta = torch.zeros((self.num_envs, 5), device=self.device)
         self._candidate6_prev_arm_joint_target = torch.zeros((self.num_envs, 5), device=self.device)
         self._candidate6_prev_arm_joint_target_valid = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
@@ -407,6 +420,118 @@ class RoArmCubePushEnv(RoArmStackEnv):
             )
             self._bc_arm_joint_ids = arm_joint_ids
         self._load_bc_teacher_if_needed()
+
+    def _load_d256_reset_table_if_needed(self) -> dict[str, torch.Tensor] | None:
+        path = str(getattr(self.cfg, "d256_reset_csv_path", "") or "")
+        if not path:
+            return None
+        if hasattr(self, "_d256_reset_table"):
+            return self._d256_reset_table
+
+        csv_path = Path(path).expanduser()
+        required = [
+            "episode_index",
+            "frame_index_t",
+            "cube_local_x_m",
+            "cube_local_y_m",
+            "cube_local_z_m",
+            "target_local_x_m",
+            "target_local_y_m",
+            "target_local_z_m",
+            "push_dx",
+            "push_dy",
+            "arm_joint_0_rad",
+            "arm_joint_1_rad",
+            "arm_joint_2_rad",
+            "arm_joint_3_rad",
+            "arm_joint_4_rad",
+            "gripper_joint_rad",
+        ]
+        frame_index = int(getattr(self.cfg, "d256_reset_frame_index", 0))
+        episode_min = int(getattr(self.cfg, "d256_reset_episode_min", -1))
+        episode_max = int(getattr(self.cfg, "d256_reset_episode_max", -1))
+        if episode_min >= 0 and episode_max >= 0 and episode_min > episode_max:
+            raise ValueError(
+                "d256_reset_episode_min must be <= d256_reset_episode_max "
+                f"when both are set, got {episode_min}>{episode_max}"
+            )
+        arm_rows: list[list[float]] = []
+        gripper_rows: list[float] = []
+        cube_rows: list[list[float]] = []
+        target_rows: list[list[float]] = []
+        push_rows: list[list[float]] = []
+        episode_rows: list[float] = []
+        with csv_path.open(newline="") as f:
+            reader = csv.DictReader(f)
+            if reader.fieldnames is None:
+                raise ValueError(f"empty D256 reset csv: {csv_path}")
+            missing = [c for c in required if c not in reader.fieldnames]
+            if missing:
+                raise ValueError(f"missing D256 reset columns in {csv_path}: {missing}")
+            for row in reader:
+                if int(float(row["frame_index_t"])) != frame_index:
+                    continue
+                episode_index = int(float(row["episode_index"]))
+                if episode_min >= 0 and episode_index < episode_min:
+                    continue
+                if episode_max >= 0 and episode_index > episode_max:
+                    continue
+                arm_rows.append([float(row[f"arm_joint_{idx}_rad"]) for idx in range(5)])
+                gripper_rows.append(float(row["gripper_joint_rad"]))
+                cube_rows.append(
+                    [
+                        float(row["cube_local_x_m"]),
+                        float(row["cube_local_y_m"]),
+                        float(row["cube_local_z_m"]),
+                    ]
+                )
+                target_rows.append(
+                    [
+                        float(row["target_local_x_m"]),
+                        float(row["target_local_y_m"]),
+                        float(row["target_local_z_m"]),
+                    ]
+                )
+                push_rows.append([float(row["push_dx"]), float(row["push_dy"])])
+                episode_rows.append(float(episode_index))
+        if not arm_rows:
+            raise ValueError(
+                f"no D256 reset rows for frame_index_t={frame_index} "
+                f"episode_min={episode_min} episode_max={episode_max} in {csv_path}"
+            )
+
+        self._d256_reset_table = {
+            "arm": torch.tensor(arm_rows, device=self.device, dtype=torch.float32),
+            "gripper": torch.tensor(gripper_rows, device=self.device, dtype=torch.float32),
+            "cube_local": torch.tensor(cube_rows, device=self.device, dtype=torch.float32),
+            "target_local": torch.tensor(target_rows, device=self.device, dtype=torch.float32),
+            "push_dir": torch.tensor(push_rows, device=self.device, dtype=torch.float32),
+            "episode_index": torch.tensor(episode_rows, device=self.device, dtype=torch.float32),
+        }
+        return self._d256_reset_table
+
+    def _sample_d256_reset_table(self, n: int) -> dict[str, torch.Tensor] | None:
+        table = self._load_d256_reset_table_if_needed()
+        if table is None:
+            return None
+        total = int(table["arm"].shape[0])
+        mode = str(getattr(self.cfg, "d256_reset_sample_mode", "random"))
+        if mode == "random":
+            idx = torch.randint(0, total, (n,), device=self.device)
+        elif mode == "linspace":
+            idx = torch.linspace(0, total - 1, n, device=self.device).round().long()
+        else:
+            raise ValueError(f"unsupported d256_reset_sample_mode={mode!r}")
+        push_dir = table["push_dir"][idx]
+        push_dir = push_dir / torch.clamp(torch.linalg.norm(push_dir, dim=-1, keepdim=True), min=1.0e-6)
+        return {
+            "arm": table["arm"][idx],
+            "gripper": table["gripper"][idx],
+            "cube_local": table["cube_local"][idx],
+            "target_local": table["target_local"][idx],
+            "push_dir": push_dir,
+            "episode_index": table["episode_index"][idx],
+        }
 
     def _load_bc_teacher_if_needed(self) -> None:
         if hasattr(self, "_bc_teacher_load_attempted"):
@@ -763,7 +888,14 @@ class RoArmCubePushEnv(RoArmStackEnv):
         origin = self.scene.env_origins
         cube_local = self._sponge_pos_w - origin
         tcp_local = self._tcp_pos_w - origin
-        target_local = tcp_target_w - origin
+        target_mode = str(getattr(self.cfg, "bc_teacher_feature_target_mode", "tcp_target"))
+        if target_mode == "tcp_target":
+            target_w = tcp_target_w
+        elif target_mode == "env_target":
+            target_w = self._target_world
+        else:
+            raise ValueError(f"unsupported bc_teacher_feature_target_mode={target_mode!r}")
+        target_local = target_w - origin
         tcp_to_cube = cube_local - tcp_local
         target_to_tcp = target_local - tcp_local
         target_to_cube = target_local - cube_local
@@ -1016,6 +1148,8 @@ class RoArmCubePushEnv(RoArmStackEnv):
         self._last_bc_teacher_blend.zero_()
         self._last_bc_teacher_imitation_mse.zero_()
         self._last_bc_teacher_action_abs_mean.zero_()
+        if hasattr(self, "_last_tap_stop_after_useful_hold"):
+            self._last_tap_stop_after_useful_hold.zero_()
         if getattr(self, "_bc_teacher_ready", False) and (bc_blend_value > 0.0 or bc_reward_scale > 0.0):
             bc_teacher_actions = self._bc_teacher_actions()
             bc_blend = torch.full((self.num_envs,), max(0.0, min(1.0, bc_blend_value)), device=self.device)
@@ -1024,6 +1158,11 @@ class RoArmCubePushEnv(RoArmStackEnv):
             self._last_bc_teacher_blend[:] = bc_blend
             self._last_bc_teacher_imitation_mse[:] = torch.mean((policy_actions - bc_teacher_actions) ** 2, dim=-1)
             self._last_bc_teacher_action_abs_mean[:] = torch.mean(torch.abs(bc_teacher_actions), dim=-1)
+        if bool(getattr(self.cfg, "tap_stop_after_useful_seen", False)) and hasattr(self, "_tap_contact_seen"):
+            useful_hold = self._tap_contact_seen & self._tap_reaction_seen & ~self._tap_overshoot_seen
+            self.actions = torch.where(useful_hold.unsqueeze(-1), torch.zeros_like(self.actions), self.actions)
+            if hasattr(self, "_last_tap_stop_after_useful_hold"):
+                self._last_tap_stop_after_useful_hold[:] = useful_hold.float()
 
         alpha = float(self.cfg.action_smoothing_alpha)
         self._last_action_abs_mean[:] = torch.mean(torch.abs(self.actions), dim=-1)
@@ -1102,33 +1241,48 @@ class RoArmCubePushEnv(RoArmStackEnv):
         if env_ids is None:
             env_ids = self._robot._ALL_INDICES
         n = len(env_ids)
+        d256_reset = self._sample_d256_reset_table(n)
 
-        sx = sample_uniform(self.cfg.cube_x_min, self.cfg.cube_x_max, (n,), self.device)
-        sy = sample_uniform(self.cfg.cube_y_min, self.cfg.cube_y_max, (n,), self.device)
-        cube_center_z = TABLE_Z + 0.5 * float(self.cfg.cube_size_z_m)
-        sz = torch.full((n,), cube_center_z, device=self.device)
+        if d256_reset is None:
+            sx = sample_uniform(self.cfg.cube_x_min, self.cfg.cube_x_max, (n,), self.device)
+            sy = sample_uniform(self.cfg.cube_y_min, self.cfg.cube_y_max, (n,), self.device)
+            cube_center_z = TABLE_Z + 0.5 * float(self.cfg.cube_size_z_m)
+            sz = torch.full((n,), cube_center_z, device=self.device)
 
-        dirs = torch.tensor(
-            ((1.0, 0.0), (-1.0, 0.0), (0.0, 1.0), (0.0, -1.0)),
-            device=self.device,
-            dtype=torch.float32,
-        )
-        if math.isfinite(float(self.cfg.fixed_push_dir_x)) and math.isfinite(float(self.cfg.fixed_push_dir_y)):
-            fixed_dir = torch.tensor(
-                [float(self.cfg.fixed_push_dir_x), float(self.cfg.fixed_push_dir_y)],
+            dirs = torch.tensor(
+                ((1.0, 0.0), (-1.0, 0.0), (0.0, 1.0), (0.0, -1.0)),
                 device=self.device,
                 dtype=torch.float32,
             )
-            fixed_norm = torch.linalg.norm(fixed_dir)
-            if float(fixed_norm.detach().cpu().item()) <= 1.0e-6:
-                raise ValueError("fixed push direction must be nonzero")
-            push_dir = fixed_dir.unsqueeze(0).repeat(n, 1) / fixed_norm
-        else:
-            dir_idx = torch.randint(0, 4, (n,), device=self.device)
-            push_dir = dirs[dir_idx]
+            if math.isfinite(float(self.cfg.fixed_push_dir_x)) and math.isfinite(float(self.cfg.fixed_push_dir_y)):
+                fixed_dir = torch.tensor(
+                    [float(self.cfg.fixed_push_dir_x), float(self.cfg.fixed_push_dir_y)],
+                    device=self.device,
+                    dtype=torch.float32,
+                )
+                fixed_norm = torch.linalg.norm(fixed_dir)
+                if float(fixed_norm.detach().cpu().item()) <= 1.0e-6:
+                    raise ValueError("fixed push direction must be nonzero")
+                push_dir = fixed_dir.unsqueeze(0).repeat(n, 1) / fixed_norm
+            else:
+                dir_idx = torch.randint(0, 4, (n,), device=self.device)
+                push_dir = dirs[dir_idx]
 
-        cube_local = torch.stack([sx, sy, sz], dim=-1)
-        if self.cfg.ik_endpoint_reset:
+            cube_local = torch.stack([sx, sy, sz], dim=-1)
+            target_local = cube_local.clone()
+            target_local[:, 0:2] = target_local[:, 0:2] + push_dir * self.cfg.cube_push_target_disp_m
+        else:
+            cube_local = d256_reset["cube_local"]
+            target_local = d256_reset["target_local"]
+            push_dir = d256_reset["push_dir"]
+
+        if d256_reset is not None:
+            joint_pos = self._robot.data.joint_pos.detach().clone()[env_ids]
+            joint_pos[:, self._bc_arm_joint_ids] = d256_reset["arm"]
+            joint_pos[:, self.gripper_joint_idx] = d256_reset["gripper"]
+            ik_ok = torch.zeros(n, dtype=torch.bool, device=self.device)
+            ik_err_mm = torch.zeros(n, device=self.device)
+        elif self.cfg.ik_endpoint_reset:
             joint_pos, ik_ok, ik_err_mm = self._ik_precontact_joints(cube_local, push_dir)
             if self.cfg.ik_reset_jitter_rad > 0.0:
                 jitter = sample_uniform(
@@ -1146,7 +1300,8 @@ class RoArmCubePushEnv(RoArmStackEnv):
             joint_pos = joint_pos + sample_uniform(-0.02, 0.02, (n, self._robot.num_joints), self.device)
             ik_ok = torch.zeros(n, dtype=torch.bool, device=self.device)
             ik_err_mm = torch.zeros(n, device=self.device)
-        joint_pos[:, self.gripper_joint_idx] = 0.0
+        if d256_reset is None:
+            joint_pos[:, self.gripper_joint_idx] = 0.0
         joint_pos = torch.clamp(joint_pos, self.robot_dof_lower_limits, self.robot_dof_upper_limits)
         joint_vel = torch.zeros_like(joint_pos)
         self._robot.write_joint_state_to_sim(joint_pos, joint_vel, env_ids=env_ids)
@@ -1163,8 +1318,6 @@ class RoArmCubePushEnv(RoArmStackEnv):
         self._sponge.write_root_pose_to_sim(cube_state[:, 0:7], env_ids=env_ids)
         self._sponge.write_root_velocity_to_sim(cube_state[:, 7:13], env_ids=env_ids)
 
-        target_local = cube_local.clone()
-        target_local[:, 0:2] = target_local[:, 0:2] + push_dir * self.cfg.cube_push_target_disp_m
         self._target_world[env_ids] = env_origins + target_local
 
         self._cube_start_w[env_ids] = cube_world
@@ -1187,6 +1340,11 @@ class RoArmCubePushEnv(RoArmStackEnv):
         self._last_bc_teacher_blend[env_ids] = 0.0
         self._last_bc_teacher_imitation_mse[env_ids] = 0.0
         self._last_bc_teacher_action_abs_mean[env_ids] = 0.0
+        self._last_d256_reset_active[env_ids] = 1.0 if d256_reset is not None else 0.0
+        if d256_reset is None:
+            self._last_d256_reset_episode_index[env_ids] = -1.0
+        else:
+            self._last_d256_reset_episode_index[env_ids] = d256_reset["episode_index"]
         self._bc_prev_teacher_delta[env_ids] = 0.0
         self._candidate6_prev_arm_joint_target[env_ids] = joint_pos[:, self._bc_arm_joint_ids]
         self._candidate6_prev_arm_joint_target_valid[env_ids] = False
@@ -1355,6 +1513,8 @@ class RoArmCubePushEnv(RoArmStackEnv):
             "cube_push_bc_teacher_blend_mean": self._last_bc_teacher_blend.mean().detach(),
             "cube_push_bc_teacher_imitation_mse": self._last_bc_teacher_imitation_mse.mean().detach(),
             "cube_push_bc_teacher_action_abs_mean": self._last_bc_teacher_action_abs_mean.mean().detach(),
+            "cube_push_d256_reset_active_rate": self._last_d256_reset_active.mean().detach(),
+            "cube_push_d256_reset_episode_index_mean": self._last_d256_reset_episode_index.mean().detach(),
             "cube_push_candidate6_diffik_active_rate": self._last_candidate6_diffik_active.mean().detach(),
             "cube_push_candidate6_diffik_numeric_ok_rate": self._last_candidate6_diffik_numeric_ok.mean().detach(),
             "cube_push_candidate6_diffik_raw_delta_abs_max": self._last_candidate6_diffik_raw_delta_abs_max.mean().detach(),
@@ -1432,6 +1592,8 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
         self._tap_max_z_delta = torch.zeros(self.num_envs, device=self.device)
         self._tap_max_speed = torch.zeros(self.num_envs, device=self.device)
         self._tap_max_tip_angle_deg = torch.zeros(self.num_envs, device=self.device)
+        self._tap_min_contact_vertical_offset = torch.full((self.num_envs,), torch.inf, device=self.device)
+        self._last_tap_stop_after_useful_hold = torch.zeros(self.num_envs, device=self.device)
 
     def _reset_idx(self, env_ids: torch.Tensor | None):
         super()._reset_idx(env_ids)
@@ -1449,6 +1611,8 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
         self._tap_max_z_delta[env_ids] = 0.0
         self._tap_max_speed[env_ids] = 0.0
         self._tap_max_tip_angle_deg[env_ids] = 0.0
+        self._tap_min_contact_vertical_offset[env_ids] = torch.inf
+        self._last_tap_stop_after_useful_hold[env_ids] = 0.0
 
     def _link5_collision_aabb_contact_terms(
         self,
@@ -1616,6 +1780,11 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
         self._tap_reaction_seen |= terms["tap_reaction_now"]
         self._professor_physical_reaction_seen |= terms["professor_physical_reaction_now"]
         self._tap_overshoot_seen |= terms["tap_overshoot_now"]
+        self._tap_min_contact_vertical_offset[:] = torch.where(
+            terms["tap_contact_proxy"],
+            torch.minimum(self._tap_min_contact_vertical_offset, terms["tap_contact_vertical_offset_m"]),
+            self._tap_min_contact_vertical_offset,
+        )
         self._tap_max_disp_along[:] = torch.maximum(self._tap_max_disp_along, torch.clamp(terms["disp_along"], min=0.0))
         self._tap_max_disp_xy[:] = torch.maximum(self._tap_max_disp_xy, terms["disp_xy"])
         self._tap_max_z_delta[:] = torch.maximum(self._tap_max_z_delta, terms["tap_z_delta_m"])
@@ -1647,10 +1816,17 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
         contact_reaction_seen = self._tap_contact_seen & self._tap_reaction_seen
         useful_seen = contact_reaction_seen & ~self._tap_overshoot_seen
         no_overshoot_seen = ~self._tap_overshoot_seen
+        min_contact_vertical_finite = torch.isfinite(self._tap_min_contact_vertical_offset)
+        min_contact_vertical = torch.where(
+            min_contact_vertical_finite,
+            self._tap_min_contact_vertical_offset,
+            torch.zeros_like(self._tap_min_contact_vertical_offset),
+        )
         prev_target_error = torch.abs(torch.clamp(self._prev_disp_along, min=0.0) - target_disp_m)
         progress = torch.clamp(prev_target_error - terms["tap_target_disp_error_m"], min=-0.005, max=0.005)
         self._prev_disp_along[:] = terms["disp_along"].detach()
         action_penalty = -torch.sum(self.actions ** 2, dim=-1) * self.cfg.action_penalty_scale
+        bc_imitation_penalty = -float(self.cfg.bc_teacher_imitation_reward_scale) * self._last_bc_teacher_imitation_mse
         rewards = (
             self.cfg.push_progress_reward_scale * progress
             + self.cfg.tap_contact_reward_scale * terms["tap_contact_proxy"].float()
@@ -1660,6 +1836,7 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
             - self.cfg.tap_overshoot_penalty_scale * terms["tap_target_excess_ratio"]
             - self.cfg.tap_tip_penalty_scale * terms["tip_angle_deg"]
             + action_penalty
+            + bc_imitation_penalty
         )
 
         self.extras["log"] = {
@@ -1716,6 +1893,9 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
             "cube_tap_contact_face_gap_m": terms["tap_contact_face_gap_m"].mean().detach(),
             "cube_tap_contact_lateral_m": terms["tap_contact_lateral_m"].mean().detach(),
             "cube_tap_contact_vertical_offset_m": terms["tap_contact_vertical_offset_m"].mean().detach(),
+            "cube_tap_min_contact_vertical_offset_m": min_contact_vertical.mean().detach(),
+            "cube_tap_min_contact_vertical_finite_rate": min_contact_vertical_finite.float().mean().detach(),
+            "cube_tap_stop_after_useful_hold_rate": self._last_tap_stop_after_useful_hold.mean().detach(),
             "cube_push_tcp_cube_dist_m": terms["tcp_cube_dist"].mean().detach(),
             "cube_push_joint_delta_abs_mean": self._last_joint_delta_abs_mean.mean().detach(),
             "cube_push_joint_delta_abs_max": self._last_joint_delta_abs_max.mean().detach(),
@@ -1729,6 +1909,16 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
             "cube_push_ik_endpoint_reset_rate": self._ik_reset_ok.float().mean().detach(),
             "cube_push_ik_reset_err_mm": self._ik_reset_err_mm.mean().detach(),
             "cube_push_teacher_blend_mean": self._last_teacher_blend.mean().detach(),
+            "cube_push_bc_teacher_blend_mean": self._last_bc_teacher_blend.mean().detach(),
+            "cube_push_bc_teacher_imitation_mse": self._last_bc_teacher_imitation_mse.mean().detach(),
+            "cube_push_bc_teacher_action_abs_mean": self._last_bc_teacher_action_abs_mean.mean().detach(),
+            "cube_tap_bc_teacher_blend_mean": self._last_bc_teacher_blend.mean().detach(),
+            "cube_tap_bc_teacher_imitation_mse": self._last_bc_teacher_imitation_mse.mean().detach(),
+            "cube_tap_bc_teacher_action_abs_mean": self._last_bc_teacher_action_abs_mean.mean().detach(),
+            "cube_push_d256_reset_active_rate": self._last_d256_reset_active.mean().detach(),
+            "cube_push_d256_reset_episode_index_mean": self._last_d256_reset_episode_index.mean().detach(),
+            "cube_tap_d256_reset_active_rate": self._last_d256_reset_active.mean().detach(),
+            "cube_tap_d256_reset_episode_index_mean": self._last_d256_reset_episode_index.mean().detach(),
             "cube_push_candidate6_diffik_active_rate": self._last_candidate6_diffik_active.mean().detach(),
             "cube_push_candidate6_diffik_numeric_ok_rate": self._last_candidate6_diffik_numeric_ok.mean().detach(),
             "cube_push_candidate6_diffik_raw_delta_abs_max": self._last_candidate6_diffik_raw_delta_abs_max.mean().detach(),
@@ -1743,6 +1933,7 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
             "cube_push_candidate8_diffik_target_residual_lateral_abs": self._last_candidate8_diffik_target_residual_lateral_abs.mean().detach(),
             "cube_push_candidate8_diffik_target_residual_height_abs": self._last_candidate8_diffik_target_residual_height_abs.mean().detach(),
             "cube_push_grasped_marker_rate": self._grasped.float().mean().detach(),
+            "bc_teacher_imitation_penalty": bc_imitation_penalty.mean().detach(),
             "action_penalty": action_penalty.mean().detach(),
         }
         self._tap_just_succeeded_pending.zero_()
@@ -1759,5 +1950,8 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
         )
         if bool(self.cfg.tap_success_terminate):
             terminated = terminated | self._tap_success_flag
+        if bool(getattr(self.cfg, "tap_useful_terminate", False)):
+            useful_seen = self._tap_contact_seen & self._tap_reaction_seen & ~self._tap_overshoot_seen
+            terminated = terminated | useful_seen
         truncated = self.episode_length_buf >= self.max_episode_length - 1
         return terminated, truncated
