@@ -1,0 +1,50 @@
+{
+  "actor_checkpoint": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_recovery_repair_d306/tap10cm/phase_c1_replay_plus_phase_lr5e5_ep100/model_actor_d256_replay_batches_d290.pt",
+  "aggregate_metrics": {
+    "cosine": 0.8587358593940735,
+    "mae": 0.10164138674736023,
+    "mse": 0.031194288283586502,
+    "pred_abs_max": 1.6340107917785645,
+    "pred_abs_mean": 0.2306647151708603,
+    "pred_clip_rate": 0.021623563021421432,
+    "target_abs_max": 1.0,
+    "target_abs_mean": 0.2605460584163666,
+    "target_clip_rate": 0.05732758715748787
+  },
+  "aggregate_samples": 6960,
+  "artifact_tag": "d306_offline_actor_vs_phase_target",
+  "batch_rows": [
+    {
+      "cosine": 0.8983221650123596,
+      "dataset": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d304/tap10cm/fresh_failed_episode_probe_d304/d304_failed6_d256_replay_dataset.pt",
+      "mae": 0.06286812573671341,
+      "mse": 0.016482677310705185,
+      "pred_abs_max": 1.6340113878250122,
+      "pred_abs_mean": 0.21053551137447357,
+      "pred_clip_rate": 0.03979885205626488,
+      "samples": 3480,
+      "target_abs_max": 1.0,
+      "target_abs_mean": 0.22222356498241425,
+      "target_clip_rate": 0.11465517431497574
+    },
+    {
+      "cosine": 0.8191496133804321,
+      "dataset": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_recovery_repair_d306/tap10cm/phase_target_dataset/phase_action_repair_dataset_d306_phase_c1_recovery065to010_clip085_smooth045.pt",
+      "mae": 0.14041465520858765,
+      "mse": 0.04590589553117752,
+      "pred_abs_max": 1.3900212049484253,
+      "pred_abs_mean": 0.2507939040660858,
+      "pred_clip_rate": 0.003448275849223137,
+      "samples": 3480,
+      "target_abs_max": 0.8500000238418579,
+      "target_abs_mean": 0.2988685369491577,
+      "target_clip_rate": 0.0
+    }
+  ],
+  "dataset_count": 2,
+  "issues": [],
+  "out_csv": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_recovery_repair_d306/tap10cm/phase_c1_replay_plus_phase_lr5e5_ep100/offline_actor_vs_phase_target/offline_actor_batch_diagnostic_rows_d290.csv",
+  "out_json": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_recovery_repair_d306/tap10cm/phase_c1_replay_plus_phase_lr5e5_ep100/offline_actor_vs_phase_target/offline_actor_batch_diagnostic_summary_d290.json",
+  "out_md": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_recovery_repair_d306/tap10cm/phase_c1_replay_plus_phase_lr5e5_ep100/offline_actor_vs_phase_target/offline_actor_batch_diagnostic_summary_d290.md",
+  "verdict": "D290_OFFLINE_ACTOR_BATCH_DIAGNOSTIC_PASS"
+}

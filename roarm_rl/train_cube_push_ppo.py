@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
 from datetime import datetime
 from pathlib import Path
@@ -54,7 +55,12 @@ def main() -> int:
     parser.add_argument("--bc_teacher_lowx_policy_delta_scale", type=float, default=None)
     parser.add_argument("--bc_teacher_highx_policy_delta_scale", type=float, default=None)
     parser.add_argument("--bc_teacher_delta_smoothing_alpha", type=float, default=None)
-    parser.add_argument("--bc_teacher_phase_timing", choices=("episode_scaled", "direct_steps"), default=None)
+    parser.add_argument(
+        "--bc_teacher_phase_timing",
+        choices=("episode_scaled", "direct_steps", "linear_episode", "linear_steps"),
+        default=None,
+    )
+    parser.add_argument("--bc_teacher_linear_phase_steps", type=int, default=None)
     parser.add_argument("--d256_reset_csv_path", type=str, default=None)
     parser.add_argument("--d256_reset_frame_index", type=int, default=None)
     parser.add_argument("--d256_reset_sample_mode", choices=("random", "linspace"), default=None)
@@ -77,6 +83,8 @@ def main() -> int:
     parser.add_argument("--tap_overshoot_terminate", action="store_true")
     parser.add_argument("--tap_useful_terminate", action="store_true")
     parser.add_argument("--tap_stop_after_useful_seen", action="store_true")
+    parser.add_argument("--tap_stop_after_disp_m", type=float, default=None)
+    parser.add_argument("--tap_contact_slowdown_use_proxy", action="store_true")
     parser.add_argument("--speed_penalty_scale", type=float, default=None)
     parser.add_argument("--speed_penalty_start_mps", type=float, default=None)
     parser.add_argument("--impact_terminal_penalty", type=float, default=None)
@@ -286,6 +294,12 @@ def main() -> int:
             f"{env_cfg.bc_teacher_phase_timing} -> {args.bc_teacher_phase_timing}"
         )
         env_cfg.bc_teacher_phase_timing = args.bc_teacher_phase_timing
+    if args.bc_teacher_linear_phase_steps is not None:
+        print(
+            "[cube-push-train] bc_teacher_linear_phase_steps: "
+            f"{env_cfg.bc_teacher_linear_phase_steps} -> {args.bc_teacher_linear_phase_steps}"
+        )
+        env_cfg.bc_teacher_linear_phase_steps = args.bc_teacher_linear_phase_steps
     if args.d256_reset_csv_path is not None:
         print(
             "[cube-push-train] d256_reset_csv_path: "
@@ -399,6 +413,22 @@ def main() -> int:
             raise ValueError("--tap_stop_after_useful_seen is only supported for --env_kind tap10cm")
         print(f"[cube-push-train] tap_stop_after_useful_seen: {env_cfg.tap_stop_after_useful_seen} -> True")
         env_cfg.tap_stop_after_useful_seen = True
+    if args.tap_stop_after_disp_m is not None:
+        if not hasattr(env_cfg, "tap_stop_after_disp_m"):
+            raise ValueError("--tap_stop_after_disp_m is only supported for --env_kind tap10cm")
+        print(
+            "[cube-push-train] tap_stop_after_disp_m: "
+            f"{env_cfg.tap_stop_after_disp_m} -> {args.tap_stop_after_disp_m}"
+        )
+        env_cfg.tap_stop_after_disp_m = args.tap_stop_after_disp_m
+    if args.tap_contact_slowdown_use_proxy:
+        if not hasattr(env_cfg, "tap_contact_slowdown_use_proxy"):
+            raise ValueError("--tap_contact_slowdown_use_proxy is only supported for --env_kind tap10cm")
+        print(
+            "[cube-push-train] tap_contact_slowdown_use_proxy: "
+            f"{env_cfg.tap_contact_slowdown_use_proxy} -> True"
+        )
+        env_cfg.tap_contact_slowdown_use_proxy = True
     if args.speed_penalty_scale is not None:
         print(f"[cube-push-train] speed_penalty_scale: {env_cfg.speed_penalty_scale} -> {args.speed_penalty_scale}")
         env_cfg.speed_penalty_scale = args.speed_penalty_scale
@@ -507,6 +537,8 @@ def main() -> int:
         f"tap_overshoot_terminate={getattr(env_cfg, 'tap_overshoot_terminate', 'NA')} "
         f"tap_useful_terminate={getattr(env_cfg, 'tap_useful_terminate', 'NA')} "
         f"tap_stop_after_useful_seen={getattr(env_cfg, 'tap_stop_after_useful_seen', 'NA')} "
+        f"tap_stop_after_disp_m={getattr(env_cfg, 'tap_stop_after_disp_m', 'NA')} "
+        f"tap_contact_slowdown_use_proxy={getattr(env_cfg, 'tap_contact_slowdown_use_proxy', 'NA')} "
         f"joint_target_lead_limit_rad={env_cfg.joint_target_lead_limit_rad} "
         f"joint_delta_reference={env_cfg.joint_delta_reference} "
         f"ik_precontact_clearance_m={env_cfg.ik_precontact_clearance_m} "
@@ -520,6 +552,7 @@ def main() -> int:
         f"bc_teacher_highx_policy_delta_scale={env_cfg.bc_teacher_highx_policy_delta_scale} "
         f"bc_teacher_delta_smoothing_alpha={env_cfg.bc_teacher_delta_smoothing_alpha} "
         f"bc_teacher_phase_timing={env_cfg.bc_teacher_phase_timing} "
+        f"bc_teacher_linear_phase_steps={env_cfg.bc_teacher_linear_phase_steps} "
         f"d256_reset_csv_path={env_cfg.d256_reset_csv_path or 'NONE'} "
         f"d256_reset_frame_index={env_cfg.d256_reset_frame_index} "
         f"d256_reset_sample_mode={env_cfg.d256_reset_sample_mode} "
@@ -610,6 +643,97 @@ def main() -> int:
 
         runner.alg.update = _actor_preserving_update
     runner.learn(num_learning_iterations=args.max_iterations, init_at_random_ep_len=not bool(args.no_init_at_random_ep_len))
+
+    if args.env_kind == "tap10cm":
+        inner = env.unwrapped
+        if hasattr(inner, "_tap_contact_seen"):
+            useful_seen = inner._tap_contact_seen & inner._tap_reaction_seen & ~inner._tap_overshoot_seen
+            contact_reaction_seen = inner._tap_contact_seen & inner._tap_reaction_seen
+            max_disp_along_ge_1mm = inner._tap_max_disp_along >= 0.001
+            max_disp_xy_ge_1mm = inner._tap_max_disp_xy >= 0.001
+            max_disp_along_ge_3mm = inner._tap_max_disp_along >= 0.003
+            max_disp_xy_ge_3mm = inner._tap_max_disp_xy >= 0.003
+            final_step = int(getattr(runner, "current_learning_iteration", max(0, int(args.max_iterations) - 1)))
+            collection_final_scalars = {
+                "CollectionFinal/cube_tap_contact_seen_rate": inner._tap_contact_seen.float().mean(),
+                "CollectionFinal/cube_tap_reaction_seen_rate": inner._tap_reaction_seen.float().mean(),
+                "CollectionFinal/cube_tap_contact_reaction_seen_rate": contact_reaction_seen.float().mean(),
+                "CollectionFinal/cube_tap_useful_seen_rate": useful_seen.float().mean(),
+                "CollectionFinal/cube_tap_success_rate": inner._tap_success_flag.float().mean(),
+                "CollectionFinal/cube_tap_overshoot_seen_rate": inner._tap_overshoot_seen.float().mean(),
+                "CollectionFinal/cube_tap_max_disp_along_m": inner._tap_max_disp_along.mean(),
+                "CollectionFinal/cube_tap_max_disp_xy_m": inner._tap_max_disp_xy.mean(),
+                "CollectionFinal/cube_tap_max_disp_along_max_m": inner._tap_max_disp_along.max(),
+                "CollectionFinal/cube_tap_max_disp_xy_max_m": inner._tap_max_disp_xy.max(),
+                "CollectionFinal/cube_tap_max_disp_along_ge_1mm_rate": max_disp_along_ge_1mm.float().mean(),
+                "CollectionFinal/cube_tap_max_disp_xy_ge_1mm_rate": max_disp_xy_ge_1mm.float().mean(),
+                "CollectionFinal/cube_tap_max_disp_along_ge_3mm_rate": max_disp_along_ge_3mm.float().mean(),
+                "CollectionFinal/cube_tap_max_disp_xy_ge_3mm_rate": max_disp_xy_ge_3mm.float().mean(),
+                "CollectionFinal/cube_tap_d256_reset_active_rate": inner._last_d256_reset_active.mean(),
+                "CollectionFinal/cube_push_joint_delta_cap_rate": inner._last_joint_delta_cap_rate.mean(),
+            }
+            if getattr(runner, "writer", None) is not None:
+                for tag, value in collection_final_scalars.items():
+                    runner.writer.add_scalar(tag, float(value.detach().cpu().item()), final_step)
+                runner.writer.flush()
+            print(
+                "[cube-push-train] collection_final "
+                f"useful={float(collection_final_scalars['CollectionFinal/cube_tap_useful_seen_rate'].detach().cpu().item()):.6f} "
+                f"overshoot={float(collection_final_scalars['CollectionFinal/cube_tap_overshoot_seen_rate'].detach().cpu().item()):.6f} "
+                f"max_xy_mean={float(collection_final_scalars['CollectionFinal/cube_tap_max_disp_xy_m'].detach().cpu().item()):.6f} "
+                f"max_xy_max={float(collection_final_scalars['CollectionFinal/cube_tap_max_disp_xy_max_m'].detach().cpu().item()):.6f}",
+                flush=True,
+            )
+            final_terms = inner._tap_terms()
+
+            def _tensor_list(name: str):
+                return getattr(inner, name).detach().cpu().tolist()
+
+            def _term_list(name: str):
+                return final_terms[name].detach().cpu().tolist()
+
+            trace_columns = {
+                "d256_reset_active": _tensor_list("_last_d256_reset_active"),
+                "d256_reset_episode_index": _tensor_list("_last_d256_reset_episode_index"),
+                "contact_seen": _tensor_list("_tap_contact_seen"),
+                "reaction_seen": _tensor_list("_tap_reaction_seen"),
+                "useful_seen": useful_seen.detach().cpu().tolist(),
+                "success": _tensor_list("_tap_success_flag"),
+                "overshoot_seen": _tensor_list("_tap_overshoot_seen"),
+                "max_disp_along_m": _tensor_list("_tap_max_disp_along"),
+                "max_disp_xy_m": _tensor_list("_tap_max_disp_xy"),
+                "max_z_delta_m": _tensor_list("_tap_max_z_delta"),
+                "max_speed_mps": _tensor_list("_tap_max_speed"),
+                "current_contact_proxy": _term_list("tap_contact_proxy"),
+                "current_face_gap_m": _term_list("tap_contact_face_gap_m"),
+                "current_lateral_m": _term_list("tap_contact_lateral_m"),
+                "current_vertical_offset_m": _term_list("tap_contact_vertical_offset_m"),
+                "action_abs_mean": _tensor_list("_last_action_abs_mean"),
+                "action_abs_max": _tensor_list("_last_action_abs_max"),
+                "joint_delta_abs_mean": _tensor_list("_last_joint_delta_abs_mean"),
+                "joint_delta_abs_max": _tensor_list("_last_joint_delta_abs_max"),
+                "joint_delta_cap_rate": _tensor_list("_last_joint_delta_cap_rate"),
+                "bc_teacher_blend": _tensor_list("_last_bc_teacher_blend"),
+                "bc_teacher_imitation_mse": _tensor_list("_last_bc_teacher_imitation_mse"),
+                "bc_teacher_action_abs_mean": _tensor_list("_last_bc_teacher_action_abs_mean"),
+                "tap_stop_after_useful_hold": _tensor_list("_last_tap_stop_after_useful_hold"),
+                "tap_stop_after_disp_hold": _tensor_list("_last_tap_stop_after_disp_hold"),
+            }
+            trace_path = os.path.join(log_dir, f"collection_final_env_trace_iter_{final_step}.jsonl")
+            with open(trace_path, "w", encoding="utf-8") as trace_file:
+                for env_idx in range(int(inner.num_envs)):
+                    row = {"env_id": env_idx, "final_step": final_step}
+                    for key, values in trace_columns.items():
+                        value = values[env_idx]
+                        if isinstance(value, bool):
+                            row[key] = value
+                        elif key in {"d256_reset_episode_index"}:
+                            row[key] = int(value)
+                        else:
+                            row[key] = float(value)
+                    json.dump(row, trace_file, sort_keys=True)
+                    trace_file.write("\n")
+            print(f"[cube-push-train] collection_final_env_trace={trace_path}", flush=True)
 
     print(f"[cube-push-train] DONE checkpoints_at={log_dir}")
     env.close()

@@ -68,12 +68,34 @@ TASK_TAGS = [
     "Episode/cube_tap_overshoot_seen_rate",
     "Episode/cube_tap_max_disp_along_m",
     "Episode/cube_tap_max_disp_xy_m",
+    "Episode/cube_tap_max_disp_along_ge_1mm_rate",
+    "Episode/cube_tap_max_disp_xy_ge_1mm_rate",
+    "Episode/cube_tap_max_disp_along_ge_3mm_rate",
+    "Episode/cube_tap_max_disp_xy_ge_3mm_rate",
     "Episode/cube_tap_contact_face_gap_m",
     "Episode/cube_tap_contact_lateral_m",
     "Episode/cube_tap_contact_vertical_offset_m",
     "Episode/cube_tap_min_contact_vertical_offset_m",
     "Episode/cube_tap_min_contact_vertical_finite_rate",
     "Episode/cube_tap_stop_after_useful_hold_rate",
+    "Episode/cube_tap_stop_after_disp_hold_rate",
+    "Episode/cube_tap_stop_after_disp_m",
+    "CollectionFinal/cube_tap_contact_seen_rate",
+    "CollectionFinal/cube_tap_reaction_seen_rate",
+    "CollectionFinal/cube_tap_contact_reaction_seen_rate",
+    "CollectionFinal/cube_tap_useful_seen_rate",
+    "CollectionFinal/cube_tap_success_rate",
+    "CollectionFinal/cube_tap_overshoot_seen_rate",
+    "CollectionFinal/cube_tap_max_disp_along_m",
+    "CollectionFinal/cube_tap_max_disp_xy_m",
+    "CollectionFinal/cube_tap_max_disp_along_max_m",
+    "CollectionFinal/cube_tap_max_disp_xy_max_m",
+    "CollectionFinal/cube_tap_max_disp_along_ge_1mm_rate",
+    "CollectionFinal/cube_tap_max_disp_xy_ge_1mm_rate",
+    "CollectionFinal/cube_tap_max_disp_along_ge_3mm_rate",
+    "CollectionFinal/cube_tap_max_disp_xy_ge_3mm_rate",
+    "CollectionFinal/cube_tap_d256_reset_active_rate",
+    "CollectionFinal/cube_push_joint_delta_cap_rate",
 ]
 
 
@@ -170,7 +192,16 @@ def _gate(args: argparse.Namespace, scalars: dict[str, dict[str, Any]]) -> tuple
     warnings: list[str] = []
     env_kind = _detect_env_kind(args, scalars)
 
+    train_episode_tags = {"Train/mean_reward", "Train/mean_episode_length"}
     missing_core = [tag for tag in CORE_TAGS if tag not in scalars]
+    if bool(args.allow_missing_train_episode_scalars):
+        missing_train = [tag for tag in missing_core if tag in train_episode_tags]
+        if missing_train:
+            warnings.append(
+                "missing Train episode scalars allowed for no-termination gate: "
+                f"{missing_train}"
+            )
+        missing_core = [tag for tag in missing_core if tag not in train_episode_tags]
     if missing_core:
         issues.append(f"missing core TensorBoard scalars: {missing_core}")
 
@@ -207,17 +238,20 @@ def _gate(args: argparse.Namespace, scalars: dict[str, dict[str, Any]]) -> tuple
             issues.append("missing tap task scalars for tap10cm TensorBoard gate")
         elif _finite(tap_contact) and float(tap_contact) < float(args.min_success_or_contact_rate):
             issues.append(
-                "no tap contact/reaction/useful signal in TensorBoard "
-                f"(max tap contact-like scalar={tap_contact})"
+                "tap contact/reaction signal below threshold in TensorBoard "
+                f"(max={tap_contact}, threshold={args.min_success_or_contact_rate})"
             )
         if _finite(tap_useful) and float(tap_useful) < float(args.min_tap_useful_seen_rate):
-            issues.append(f"tap useful/success signal remains absent: max={tap_useful}")
+            issues.append(
+                "tap useful/success signal below threshold in TensorBoard "
+                f"(max={tap_useful}, threshold={args.min_tap_useful_seen_rate})"
+            )
     else:
         success_like = max([v for v in (push_success, tap_success, tap_contact) if _finite(v)], default=None)
         if _finite(success_like) and float(success_like) < float(args.min_success_or_contact_rate):
             issues.append(
-                "no task success/contact signal in TensorBoard "
-                f"(max success/contact-like scalar={success_like})"
+                "task success/contact signal below threshold in TensorBoard "
+                f"(max={success_like}, threshold={args.min_success_or_contact_rate})"
             )
 
     if _finite(low_motion) and float(low_motion) > float(args.max_low_motion_rate):
@@ -243,13 +277,93 @@ def _gate(args: argparse.Namespace, scalars: dict[str, dict[str, Any]]) -> tuple
                 warnings.append("min-contact vertical scalar missing; fell back to last-frame vertical")
         tap_overshoot = _get(scalars, "Episode/cube_tap_overshoot_seen_rate", "max")
         if _finite(tap_disp) and float(tap_disp) < float(args.min_tap_max_disp_along_m):
-            warnings.append(f"tap max displacement remains small: max={tap_disp}")
+            msg = f"tap max displacement remains small: max={tap_disp}"
+            if bool(args.require_tap_displacement_gate):
+                issues.append(msg)
+            else:
+                warnings.append(msg)
+        elif bool(args.require_tap_displacement_gate) and not _finite(tap_disp):
+            issues.append("tap max displacement scalar is missing for required displacement gate")
+        tap_disp_along_1mm_rate = _get(scalars, "Episode/cube_tap_max_disp_along_ge_1mm_rate", "max")
+        tap_disp_xy_1mm_rate = _get(scalars, "Episode/cube_tap_max_disp_xy_ge_1mm_rate", "max")
+        if float(args.min_tap_disp_along_ge_1mm_rate) > 0.0:
+            if _finite(tap_disp_along_1mm_rate):
+                if float(tap_disp_along_1mm_rate) < float(args.min_tap_disp_along_ge_1mm_rate):
+                    issues.append(
+                        "tap along displacement 1mm rate below threshold: "
+                        f"max={tap_disp_along_1mm_rate}"
+                    )
+            else:
+                issues.append("tap along displacement 1mm rate scalar is missing")
+        if float(args.min_tap_disp_xy_ge_1mm_rate) > 0.0:
+            if _finite(tap_disp_xy_1mm_rate):
+                if float(tap_disp_xy_1mm_rate) < float(args.min_tap_disp_xy_ge_1mm_rate):
+                    issues.append(
+                        "tap XY displacement 1mm rate below threshold: "
+                        f"max={tap_disp_xy_1mm_rate}"
+                    )
+            else:
+                issues.append("tap XY displacement 1mm rate scalar is missing")
         if _finite(tap_vertical) and float(tap_vertical) > float(args.max_tap_contact_vertical_offset_m):
             warnings.append(
                 f"tap contact vertical offset remains high: mode={args.tap_vertical_gate_mode} value={tap_vertical}"
             )
         if _finite(tap_overshoot) and float(tap_overshoot) > float(args.max_tap_overshoot_seen_rate):
             issues.append(f"tap overshoot seen rate too high: max={tap_overshoot}")
+
+        if bool(args.require_collection_final_tap_gate):
+            final_contact_tags = [
+                "CollectionFinal/cube_tap_contact_seen_rate",
+                "CollectionFinal/cube_tap_reaction_seen_rate",
+                "CollectionFinal/cube_tap_contact_reaction_seen_rate",
+            ]
+            final_useful_tags = [
+                "CollectionFinal/cube_tap_useful_seen_rate",
+                "CollectionFinal/cube_tap_success_rate",
+            ]
+            if not _has_any(scalars, final_contact_tags + final_useful_tags):
+                issues.append("collection-final tap scalars are missing")
+            final_contact = _max_existing(scalars, final_contact_tags, "last")
+            final_useful = _get(scalars, "CollectionFinal/cube_tap_useful_seen_rate", "last")
+            final_success = _get(scalars, "CollectionFinal/cube_tap_success_rate", "last")
+            final_overshoot = _get(scalars, "CollectionFinal/cube_tap_overshoot_seen_rate", "last")
+            final_xy_1mm = _get(scalars, "CollectionFinal/cube_tap_max_disp_xy_ge_1mm_rate", "last")
+            final_d256_reset = _get(scalars, "CollectionFinal/cube_tap_d256_reset_active_rate", "last")
+            final_joint_cap = _get(scalars, "CollectionFinal/cube_push_joint_delta_cap_rate", "last")
+            if _finite(final_contact) and float(final_contact) < float(args.min_collection_final_success_or_contact_rate):
+                issues.append(
+                    "collection-final contact/reaction below threshold: "
+                    f"last={final_contact}, threshold={args.min_collection_final_success_or_contact_rate}"
+                )
+            if _finite(final_useful) and float(final_useful) < float(args.min_collection_final_tap_useful_seen_rate):
+                issues.append(
+                    "collection-final useful below threshold: "
+                    f"last={final_useful}, threshold={args.min_collection_final_tap_useful_seen_rate}"
+                )
+            if _finite(final_success) and float(args.min_collection_final_tap_success_rate) > 0.0:
+                if float(final_success) < float(args.min_collection_final_tap_success_rate):
+                    issues.append(
+                        "collection-final success below threshold: "
+                        f"last={final_success}, threshold={args.min_collection_final_tap_success_rate}"
+                    )
+            if _finite(final_overshoot) and float(final_overshoot) > float(args.max_collection_final_tap_overshoot_seen_rate):
+                issues.append(
+                    "collection-final overshoot above threshold: "
+                    f"last={final_overshoot}, threshold={args.max_collection_final_tap_overshoot_seen_rate}"
+                )
+            if float(args.min_collection_final_tap_disp_xy_ge_1mm_rate) > 0.0:
+                if _finite(final_xy_1mm):
+                    if float(final_xy_1mm) < float(args.min_collection_final_tap_disp_xy_ge_1mm_rate):
+                        issues.append(
+                            "collection-final XY displacement 1mm rate below threshold: "
+                            f"last={final_xy_1mm}, threshold={args.min_collection_final_tap_disp_xy_ge_1mm_rate}"
+                        )
+                else:
+                    issues.append("collection-final XY displacement 1mm scalar is missing")
+            if args.expect_d256_reset and _finite(final_d256_reset) and float(final_d256_reset) < 0.99:
+                issues.append(f"collection-final D256 reset hook is not active for all envs: last={final_d256_reset}")
+            if _finite(final_joint_cap) and float(final_joint_cap) > float(args.max_joint_delta_cap_rate):
+                issues.append(f"collection-final joint-delta cap rate too high: last={final_joint_cap}")
 
     joint_cap = _get(scalars, "Episode/cube_push_joint_delta_cap_rate", "max")
     target_lead_cap = _get(scalars, "Episode/cube_push_target_lead_limit_rate", "max")
@@ -328,11 +442,21 @@ def main() -> int:
     parser.add_argument("--env_kind", choices=("auto", "push3cm", "tap10cm"), default="auto")
     parser.add_argument("--expect_bc_teacher", action="store_true")
     parser.add_argument("--expect_d256_reset", action="store_true")
+    parser.add_argument("--allow_missing_train_episode_scalars", action="store_true")
     parser.add_argument("--min_iterations_for_promotion", type=int, default=10)
     parser.add_argument("--min_success_or_contact_rate", type=float, default=0.01)
     parser.add_argument("--min_tap_useful_seen_rate", type=float, default=0.01)
     parser.add_argument("--min_disp_along_m", type=float, default=0.001)
     parser.add_argument("--min_tap_max_disp_along_m", type=float, default=0.001)
+    parser.add_argument("--min_tap_disp_along_ge_1mm_rate", type=float, default=0.0)
+    parser.add_argument("--min_tap_disp_xy_ge_1mm_rate", type=float, default=0.0)
+    parser.add_argument("--require_tap_displacement_gate", action="store_true")
+    parser.add_argument("--require_collection_final_tap_gate", action="store_true")
+    parser.add_argument("--min_collection_final_success_or_contact_rate", type=float, default=0.90)
+    parser.add_argument("--min_collection_final_tap_useful_seen_rate", type=float, default=0.90)
+    parser.add_argument("--min_collection_final_tap_success_rate", type=float, default=0.0)
+    parser.add_argument("--max_collection_final_tap_overshoot_seen_rate", type=float, default=0.05)
+    parser.add_argument("--min_collection_final_tap_disp_xy_ge_1mm_rate", type=float, default=0.25)
     parser.add_argument("--max_tcp_cube_dist_m", type=float, default=0.08)
     parser.add_argument("--max_tap_contact_vertical_offset_m", type=float, default=0.08)
     parser.add_argument("--tap_vertical_gate_mode", choices=("last", "min_contact"), default="last")
@@ -342,6 +466,31 @@ def main() -> int:
     parser.add_argument("--max_joint_delta_cap_rate", type=float, default=0.25)
     parser.add_argument("--max_target_lead_limit_rate", type=float, default=0.25)
     args = parser.parse_args()
+
+    for name in (
+        "min_disp_along_m",
+        "min_tap_max_disp_along_m",
+        "min_tap_disp_along_ge_1mm_rate",
+        "min_tap_disp_xy_ge_1mm_rate",
+        "min_collection_final_success_or_contact_rate",
+        "min_collection_final_tap_useful_seen_rate",
+        "min_collection_final_tap_success_rate",
+        "max_collection_final_tap_overshoot_seen_rate",
+        "min_collection_final_tap_disp_xy_ge_1mm_rate",
+    ):
+        if float(getattr(args, name)) < 0.0:
+            raise ValueError(f"--{name} must be non-negative")
+    for name in (
+        "min_tap_disp_along_ge_1mm_rate",
+        "min_tap_disp_xy_ge_1mm_rate",
+        "min_collection_final_success_or_contact_rate",
+        "min_collection_final_tap_useful_seen_rate",
+        "min_collection_final_tap_success_rate",
+        "max_collection_final_tap_overshoot_seen_rate",
+        "min_collection_final_tap_disp_xy_ge_1mm_rate",
+    ):
+        if float(getattr(args, name)) > 1.0:
+            raise ValueError(f"--{name} must be <= 1.0")
 
     log_dir = args.log_dir
     if args.out_json is None:
@@ -374,11 +523,21 @@ def main() -> int:
             "detected_env_kind": env_kind,
             "expect_bc_teacher": bool(args.expect_bc_teacher),
             "expect_d256_reset": bool(args.expect_d256_reset),
+            "allow_missing_train_episode_scalars": bool(args.allow_missing_train_episode_scalars),
             "min_iterations_for_promotion": args.min_iterations_for_promotion,
             "min_success_or_contact_rate": args.min_success_or_contact_rate,
             "min_tap_useful_seen_rate": args.min_tap_useful_seen_rate,
             "min_disp_along_m": args.min_disp_along_m,
             "min_tap_max_disp_along_m": args.min_tap_max_disp_along_m,
+            "min_tap_disp_along_ge_1mm_rate": args.min_tap_disp_along_ge_1mm_rate,
+            "min_tap_disp_xy_ge_1mm_rate": args.min_tap_disp_xy_ge_1mm_rate,
+            "require_tap_displacement_gate": bool(args.require_tap_displacement_gate),
+            "require_collection_final_tap_gate": bool(args.require_collection_final_tap_gate),
+            "min_collection_final_success_or_contact_rate": args.min_collection_final_success_or_contact_rate,
+            "min_collection_final_tap_useful_seen_rate": args.min_collection_final_tap_useful_seen_rate,
+            "min_collection_final_tap_success_rate": args.min_collection_final_tap_success_rate,
+            "max_collection_final_tap_overshoot_seen_rate": args.max_collection_final_tap_overshoot_seen_rate,
+            "min_collection_final_tap_disp_xy_ge_1mm_rate": args.min_collection_final_tap_disp_xy_ge_1mm_rate,
             "max_tcp_cube_dist_m": args.max_tcp_cube_dist_m,
             "max_tap_contact_vertical_offset_m": args.max_tap_contact_vertical_offset_m,
             "tap_vertical_gate_mode": args.tap_vertical_gate_mode,

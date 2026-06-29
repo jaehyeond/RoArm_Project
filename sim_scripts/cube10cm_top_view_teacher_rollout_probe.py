@@ -225,6 +225,21 @@ def apply_d256_pose_reset(inner, reset_rows: list[dict[str, float]]) -> dict[str
     inner.episode_length_buf[env_ids] = 0
     inner._prev_disp_along[env_ids] = 0.0
     inner._push_success_flag[env_ids] = False
+    if hasattr(inner, "_tap_contact_seen"):
+        inner._tap_contact_seen[env_ids] = False
+        inner._tap_reaction_seen[env_ids] = False
+        inner._professor_physical_reaction_seen[env_ids] = False
+        inner._tap_overshoot_seen[env_ids] = False
+        inner._tap_success_flag[env_ids] = False
+        inner._tap_just_succeeded_pending[env_ids] = False
+        inner._tap_max_disp_along[env_ids] = 0.0
+        inner._tap_max_disp_xy[env_ids] = 0.0
+        inner._tap_max_z_delta[env_ids] = 0.0
+        inner._tap_max_speed[env_ids] = 0.0
+        inner._tap_max_tip_angle_deg[env_ids] = 0.0
+        inner._tap_min_contact_vertical_offset[env_ids] = torch.inf
+        inner._last_tap_stop_after_useful_hold[env_ids] = 0.0
+        inner._last_tap_stop_after_disp_hold[env_ids] = 0.0
     inner._smoothed_actions[env_ids] = 0.0
     inner._last_joint_delta_abs_mean[env_ids] = 0.0
     inner._last_joint_delta_abs_max[env_ids] = 0.0
@@ -246,6 +261,8 @@ def apply_d256_pose_reset(inner, reset_rows: list[dict[str, float]]) -> dict[str
     inner._grasped[env_ids] = False
     inner._was_grasped[env_ids] = False
 
+    inner.scene.write_data_to_sim()
+    inner.scene.update(inner.sim.get_physics_dt())
     inner._compute_intermediate_values()
     episodes = [int(row["episode_index"]) for row in reset_rows]
     return {
@@ -287,7 +304,12 @@ def main() -> int:
     parser.add_argument("--bc_teacher_lowx_policy_delta_scale", type=float, default=1.0)
     parser.add_argument("--bc_teacher_highx_policy_delta_scale", type=float, default=0.8)
     parser.add_argument("--bc_teacher_delta_smoothing_alpha", type=float, default=0.85)
-    parser.add_argument("--bc_teacher_phase_timing", choices=("episode_scaled", "direct_steps"), default="direct_steps")
+    parser.add_argument(
+        "--bc_teacher_phase_timing",
+        choices=("episode_scaled", "direct_steps", "linear_episode", "linear_steps"),
+        default="direct_steps",
+    )
+    parser.add_argument("--bc_teacher_linear_phase_steps", type=int, default=579)
     parser.add_argument("--bc_teacher_feature_target_mode", choices=("tcp_target", "env_target"), default="env_target")
     parser.add_argument(
         "--tap_contact_proxy_mode",
@@ -351,6 +373,7 @@ def main() -> int:
     env_cfg.bc_teacher_highx_policy_delta_scale = float(args.bc_teacher_highx_policy_delta_scale)
     env_cfg.bc_teacher_delta_smoothing_alpha = float(args.bc_teacher_delta_smoothing_alpha)
     env_cfg.bc_teacher_phase_timing = str(args.bc_teacher_phase_timing)
+    env_cfg.bc_teacher_linear_phase_steps = int(args.bc_teacher_linear_phase_steps)
     env_cfg.bc_teacher_feature_target_mode = str(args.bc_teacher_feature_target_mode)
     if args.env_kind == "tap10cm":
         env_cfg.tap_contact_proxy_mode = str(args.tap_contact_proxy_mode)
@@ -622,6 +645,7 @@ def main() -> int:
         "cube_size_x_m": float(inner.cfg.cube_size_x_m),
         "cube_size_z_m": float(inner.cfg.cube_size_z_m),
         "bc_teacher_phase_timing": str(inner.cfg.bc_teacher_phase_timing),
+        "bc_teacher_linear_phase_steps": int(inner.cfg.bc_teacher_linear_phase_steps),
         "bc_teacher_feature_target_mode": str(inner.cfg.bc_teacher_feature_target_mode),
         "bc_teacher_policy_delta_clip_rad": float(inner.cfg.bc_teacher_policy_delta_clip_rad),
         "tap_contact_proxy_mode": str(getattr(inner.cfg, "tap_contact_proxy_mode", "NA")),

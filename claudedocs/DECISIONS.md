@@ -15998,3 +15998,1243 @@ Sources:
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d256_reset_bin_actor_probe_d286_comparison/tap10cm/d256_reset_bin_actor_probe_comparison_d286.md`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d256_reset_bin_actor_probe_d286_default_steps580_corrected/tap10cm/d256_reset_bin_actor_probe_summary_d286.json`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d256_reset_bin_actor_probe_d286_action_scale0010_steps580_corrected/tap10cm/d256_reset_bin_actor_probe_summary_d286.json`
+
+## D287 - Cube10cm corrected reset-bin teacher/action contract diagnostic (2026-06-26)
+
+- Corrected `sim_scripts/cube10cm_top_view_d256_reset_bin_actor_probe.py` so it
+  reads env log scalars before terminate/reset clears buffers, uses zero-action
+  warmup, and supports `--exec_source actor|teacher|blend`.
+- Added default-off tap action-constraint knobs:
+  - `tap_stop_after_disp_m`;
+  - `tap_contact_slowdown_use_proxy`.
+- Exposed those knobs in `roarm_rl/train_cube_push_ppo.py` for later tiny PPO
+  smoke only after diagnostics pass.
+- Corrected D285 actor deterministic bin result with
+  `max_joint_delta_per_step_rad=0.040`:
+  - useful max range `0.28125..0.5625`;
+  - overshoot max range `0.125..0.75`;
+  - cap max `0.0`.
+- Teacher-only, same 5-bin contract:
+  - useful max range `0.21875..0.5625`;
+  - overshoot max range `0.15625..0.6875`;
+  - cap max `0.0`.
+- Teacher-only 20-bin coverage:
+  - useful max range `0.125..0.875`;
+  - overshoot max range `0.125..0.875`;
+  - safe bins `[]`.
+- Quick fixes failed to create safe bins:
+  - `bc_teacher_policy_delta_scale=0.5`;
+  - `tap_stop_after_disp_m=0.005`;
+  - `tap_contact_slowdown_use_proxy=True`.
+- Decision:
+  - D286 useful-zero was partly a diagnostic measurement artifact.
+  - But the corrected result is more blocking, not less: the D257 teacher/action
+    contract itself is not overshoot-safe over broader D256 reset coverage.
+  - Do not run long PPO.
+  - Do not run tiny PPO + TensorBoard gate yet.
+  - Next work is teacher/action-contract redesign: compare D256 visual
+    `clean_useful_tap` labels against current env overshoot semantics, then
+    rebuild or constrain teacher trajectory/action targets before actor
+    distillation or PPO.
+- Verdict:
+  `D287_TEACHER_ACTION_CONTRACT_UNSAFE_NO_PPO`.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260626_cube10cm_top_view_teacher_action_contract_d287.md`
+- `sim_scripts/cube10cm_top_view_d256_reset_bin_actor_probe.py`
+- `roarm_rl/roarm_cube_push_env.py`
+- `roarm_rl/train_cube_push_ppo.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d256_reset_bin_teacher_probe_d287_20bins_maxdelta0040_corrected/tap10cm/d256_reset_bin_actor_probe_summary_d286.json`
+
+## D288 - Cube10cm D256 label/replay/teacher bridge audit (2026-06-26)
+
+- Added data-only label/env contract audit:
+  `sim_scripts/cube10cm_top_view_d256_label_env_contract_audit.py`.
+- D256 `train_clean_positive` is clean under the current `0.020m` overshoot
+  threshold:
+  - episodes `737`;
+  - contact/reaction `737/737`;
+  - overshoot episodes `0`;
+  - `max_tap_disp_xy_m` min/p50/p90/p95/p99/max:
+    `0.000671 / 0.005821 / 0.013904 / 0.016036 / 0.018031 / 0.019745`;
+  - train-clean episodes with `max_xy >= 0.020m`: `0`.
+- D256 recorded-action replay in the live env is clean:
+  - `num_envs=32`, `steps=580`, `tap_contact_proxy_mode=link5_collision_aabb`;
+  - contact/useful `1.0/1.0`;
+  - max XY displacement max `0.017222005873918533m`;
+  - max along displacement max `0.017127275466918945m`.
+- Added `bc_teacher_phase_timing=linear_episode|linear_steps`,
+  `bc_teacher_linear_phase_steps`, and D256 reset-bin probe
+  `joint_delta_reference=joint_pos` support.
+- Teacher-only no-PPO probes still failed:
+  - `linear_steps` with old default target reference: safe bins `[]`,
+    overshoot max by 5 bins `0.1875 / 0.75 / 0.65625 / 0.65625 / 0.5`;
+  - `joint_pos + direct_steps`: safe bins `[]`, overshoot max
+    `0.15625 / 0.65625 / 0.59375 / 0.65625 / 0.4375`;
+  - `joint_pos + linear_steps`: safe bins `[]`, overshoot max
+    `0.125 / 0.71875 / 0.6875 / 0.5625 / 0.53125`;
+  - `joint_pos + linear_steps + bc_teacher_policy_delta_scale=0.5`: safe bins
+    `[]`, overshoot max
+    `0.125 / 0.5 / 0.6875 / 0.625 / 0.46875`.
+- Added teacher comparison to the D256 action replay probe. During clean replay:
+  - teacher-vs-recorded delta MSE/MAE/cosine:
+    `0.00013523723706308327 / 0.005776729541911005 / 0.8618926034148398`;
+  - teacher-vs-live-needed delta MSE/MAE/cosine:
+    `0.00012767873194851793 / 0.005706412376482682 / 0.8641119014343311`;
+  - teacher action abs mean/max `0.23752034487973514 / 1.0`;
+  - disabling teacher delta smoothing did not materially change the mismatch.
+- Decision:
+  - The D256 labels are not too loose.
+  - The live env can replay D256 recorded joint targets cleanly.
+  - The D257 MLP teacher is not safe as a closed-loop online teacher.
+  - Do not run long PPO.
+  - Do not run tiny PPO + TensorBoard gate from this MLP-teacher path yet.
+  - Next work is to replace the teacher/action bridge with recorded-action
+    replay-teacher or actor warm-start/distillation from D256 recorded actions,
+    then rerun teacher-off/bin diagnostics before any TensorBoard-gated PPO
+    smoke.
+- Verdict:
+  `D288_RECORDED_REPLAY_CLEAN_MLP_TEACHER_CLOSED_LOOP_UNSAFE_NO_PPO`.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260626_cube10cm_top_view_label_replay_teacher_bridge_d288.md`
+- `sim_scripts/cube10cm_top_view_d256_label_env_contract_audit.py`
+- `sim_scripts/cube10cm_top_view_d256_action_replay_probe.py`
+- `sim_scripts/cube10cm_top_view_d256_reset_bin_actor_probe.py`
+- `roarm_rl/roarm_cube_push_env.py`
+- `roarm_rl/train_cube_push_ppo.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d256_label_env_contract_audit_d288/d256_label_env_contract_audit_d288.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d256_action_replay_probe_d288/tap10cm/d256_action_replay_summary_d288_link5_32env_steps580_teacher_compare.json`
+
+## D289 - Cube10cm D256 replay-action actor bridge diagnostic (2026-06-26)
+
+- Extended D256 recorded-action replay to run through the normal policy action
+  path with current action-contract knobs. The 32-env replay was clean:
+  useful `1.0`, max XY `0.015575507655739784m`.
+- Added replay-action actor distillation from D256 recorded actions. The first
+  32-episode warm-start fit passed offline with validation MSE/cosine
+  `0.0072013/0.951601` and passed one teacher-off frozen eval:
+  useful `0.96875`, overshoot `0.0`, max XY max `0.00327298603951931m`.
+- The same actor failed D256 reset-bin coverage:
+  - verdict: `D286_D256_RESET_BIN_ACTOR_PROBE_FAIL_NO_SAFE_BIN`;
+  - useful max by 5 bins:
+    `0.8125 / 0.21875 / 0.4375 / 0.25 / 0.375`;
+  - overshoot max by 5 bins:
+    `0.15625 / 0.84375 / 0.71875 / 0.6875 / 0.625`;
+  - raw policy action max reached `186.31187438964844` in one bin.
+- Fresh-process recorded-action replay controls passed all five D256 episode
+  bins and an exact global-160 batch2 episode list. This confirms the D256
+  labels/replay are not the immediate blocker.
+- Naive 160-episode same-process distillation collection is invalid:
+  replay contamination appears after batch1, including batch3 max XY
+  `10.880388m`. Tap-buffer reset and scene sync were not sufficient.
+- In-process fresh env recreation hung after the first batch. The distillation
+  script now fails fast for `--fresh_env_per_batch` and for
+  `collection_episode_count > num_envs`; use separate-process single-batch
+  collection instead.
+- Decision:
+  - Do not run long PPO.
+  - Do not run tiny PPO + TensorBoard gate yet.
+  - Do not claim learned-policy success, broad teacher-off success, or RoArm
+    readiness.
+  - Next work is separate-process D256 replay-action dataset collection,
+    offline merge, broader actor distillation, then teacher-off/bin diagnostics.
+- Verdict:
+  `D289_REPLAY_ACTION_ACTOR_BRIDGE_PARTIAL_PASS_BIN_FAIL_MULTIBATCH_COLLECTION_UNSAFE_NO_PPO`.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260626_cube10cm_top_view_d256_replay_actor_bridge_d289.md`
+- `sim_scripts/cube10cm_top_view_d256_action_replay_probe.py`
+- `sim_scripts/cube10cm_top_view_distill_actor_from_d256_replay.py`
+- `sim_scripts/cube10cm_top_view_teacher_rollout_probe.py`
+- `sim_scripts/cube10cm_top_view_teacher_off_policy_eval.py`
+- `sim_scripts/cube10cm_top_view_d256_reset_bin_actor_probe.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d256_reset_bin_actor_probe_d289_d256_replay_actor_5bins/d256_reset_bin_actor_probe_summary_d286.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d256_action_replay_probe_d289_exact_batch_controls/tap10cm/d256_action_replay_summary_d289_policy_actions_exact_batch2.json`
+
+## D290 - Cube10cm D256 replay-batch actor closed-loop diagnostic (2026-06-27)
+
+- Executed the D289 separate-process collection plan. Five single-batch D256
+  replay-action datasets now cover episodes `1..999` with 92,800 total samples.
+  Every batch was physically clean under the normal policy action path:
+  useful `1.0`, overshoot `0.0`, max XY range
+  `0.009117063..0.016418220m`.
+- Trained the merged replay-batch actor warm-start. The selected 155-epoch
+  checkpoint reached validation MSE/cosine `0.004836/0.970317`.
+- Added an RSL inference-path offline batch diagnostic. The checkpoint-load
+  contract passed over all saved replay batches: aggregate MSE/MAE/cosine
+  `0.0047070058062672615/0.030751453712582588/0.9694145321846008`.
+- The actor passed one narrow teacher-off frozen eval: useful `0.96875`,
+  overshoot `0.0`, max XY `0.00327563239261508m`, joint-cap max `0.015625`.
+- The same actor failed D256 reset-bin closed-loop coverage:
+  - verdict: `D286_D256_RESET_BIN_ACTOR_PROBE_FAIL_NO_SAFE_BIN`;
+  - useful max by five bins:
+    `0.84375 / 0.21875 / 0.5 / 0.4375 / 0.25`;
+  - overshoot max by five bins:
+    `0.15625 / 0.78125 / 0.6875 / 0.625 / 0.625`;
+  - raw policy max reached `45.6846809387207`.
+- Negative controls did not open the PPO gate:
+  - `--exec_action_clip_abs 0.5` removed joint-cap pressure but overshoot stayed
+    high: `0.15625 / 0.8125 / 0.78125 / 0.71875 / 0.8125`;
+  - contact slowdown with `contact_joint_delta_scale=0.35` did not fix
+    overshoot;
+  - `--tap_stop_after_disp_m 0.015` did not materially improve clip-only;
+  - low-LR supervised refinement improved offline val MSE to `0.004294` but
+    reset-bin still failed.
+- Decision:
+  - The D256 replay-action path and checkpoint-load contract are clean.
+  - The remaining blocker is closed-loop imitation-error compounding: the actor
+    fits replay states offline but leaves the replay state manifold under its
+    own actions and then produces saturated or misdirected actions.
+  - Do not run long PPO.
+  - Do not run tiny PPO + TensorBoard gate yet.
+  - Do not claim learned-policy success, broad teacher-off success, or RoArm
+    readiness.
+  - Next work is DAgger-style closed-loop actor-rollout state aggregation with a
+    recovery label/oracle tied to the recorded D256 episode-time action sequence
+    or a safer constrained replay-teacher, then rerun offline, teacher-off, and
+    D256 reset-bin diagnostics.
+- Verdict:
+  `D290_REPLAY_BATCH_ACTOR_OFFLINE_PASS_TEACHER_OFF_NARROW_PASS_RESET_BIN_FAIL_CLOSED_LOOP_DAGGER_NEXT_NO_PPO`.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260627_cube10cm_top_view_d256_replay_batch_actor_d290.md`
+- `sim_scripts/cube10cm_top_view_distill_actor_from_d256_replay.py`
+- `sim_scripts/cube10cm_top_view_train_actor_from_replay_batches.py`
+- `sim_scripts/cube10cm_top_view_d290_offline_actor_batch_diagnostic.py`
+- `sim_scripts/cube10cm_top_view_d256_reset_bin_actor_probe.py`
+- `sim_scripts/cube10cm_top_view_teacher_off_policy_eval.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d256_replay_actor_batches_d290/`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_d256_replay_batches_d290/tap10cm_ep155/actor_d256_replay_batches_train_summary_d290.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_d256_replay_batches_d290/tap10cm_ep155/offline_batch_diagnostic/offline_actor_batch_diagnostic_summary_d290.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_d256_replay_batches_d290/tap10cm_ep155/teacher_off_eval/teacher_off_policy_eval_summary_d290.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d256_reset_bin_actor_probe_d290_replay_batch_actor_5bins/d256_reset_bin_actor_probe_summary_d286.json`
+
+## D291 - Cube10cm fresh env-hook actor bin diagnostic (2026-06-28)
+
+- Rechecked the D290 reset-bin failure before running PPO or training another
+  actor.
+- Updated `sim_scripts/cube10cm_top_view_d290_closed_loop_recovery_probe.py` so
+  the diagnostic can use either manual D256 pose reset or the runtime D256 env
+  reset hook.
+- Ran all five D256 episode bins as separate Isaac Lab processes using the D290
+  replay-batch actor checkpoint:
+  - bin0 `1..208`: useful `1.0`, overshoot `0.0`, max XY
+    `0.000329371279804036m`;
+  - bin1 `209..370`: useful `1.0`, overshoot `0.0`, max XY
+    `0.0020340927876532078m`;
+  - bin2 `371..537`: useful `1.0`, overshoot `0.0`, max XY
+    `0.011980446986854076m`;
+  - bin3 `538..715`: useful `1.0`, overshoot `0.0`, max XY
+    `0.0009295984636992216m`;
+  - bin4 `716..999`: useful `0.90625`, overshoot `0.0`, max XY
+    `0.008024415001273155m`.
+- Interpretation:
+  - The D290 same-process reused-env reset-bin failure is now suspect as a
+    diagnostic artifact and should not be used alone as the current PPO blocker.
+  - The D290 actor is not a final learned policy, but it does pass fresh
+    env-hook actor-only D256 bin coverage without overshoot.
+  - D291 recovery-label datasets exist, but recovery labels are still heavily
+    clipped, so do not immediately train another aggregation pass unless a
+    fresh-bin or teacher-off gate fails again.
+- Decision:
+  - No long PPO.
+  - No learned-policy or RoArm-readiness claim.
+  - Replace/fix the reused-env reset-bin diagnostic with fresh-per-bin gating.
+  - Next runtime candidate is only a tiny PPO + TensorBoard gate with actor
+    preservation after explicit runtime approval.
+- Verdict:
+  `D291_FRESH_ENVHOOK_ACTOR_BIN_DIAGNOSTIC_PASS_D290_REUSED_BIN_FAILURE_SUSPECT_NO_PPO_YET`.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260628_cube10cm_top_view_fresh_bin_actor_d291.md`
+- `sim_scripts/cube10cm_top_view_d290_closed_loop_recovery_probe.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/closed_loop_recovery_d291/tap10cm/closed_loop_recovery_summary_d291_closed_loop_recovery_bin0_envhook_ep001_208.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/closed_loop_recovery_d291/tap10cm/closed_loop_recovery_summary_d291_closed_loop_recovery_bin1_envhook_ep209_370.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/closed_loop_recovery_d291/tap10cm/closed_loop_recovery_summary_d291_closed_loop_recovery_bin2_envhook_ep371_537.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/closed_loop_recovery_d291/tap10cm/closed_loop_recovery_summary_d291_closed_loop_recovery_bin3_envhook_ep538_715.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/closed_loop_recovery_d291/tap10cm/closed_loop_recovery_summary_d291_closed_loop_recovery_bin4_envhook_ep716_999.json`
+
+## D292 - Cube10cm tiny PPO fresh-gate actor-freeze smoke (2026-06-28)
+
+- After explicit runtime approval, ran exactly one tiny Isaac Lab PPO smoke using
+  the D290 replay-batch actor under the D291 fresh-per-bin assumption.
+- Runtime contract:
+  - warm-start checkpoint:
+    `actor_d256_replay_batches_d290/tap10cm_ep155/model_actor_d256_replay_batches_d290.pt`;
+  - `max_iterations=1`, `num_envs=32`, `num_steps_per_env=24`,
+    `init_noise_std=0.005`;
+  - `actor_preserve_blend=1.0`;
+  - D256 env reset hook active with `d256_reset_sample_mode=linspace`;
+  - D257 MLP teacher disabled: `bc_teacher_checkpoint_path=NONE`,
+    `bc_teacher_blend=0.0`, `bc_teacher_imitation_reward_scale=0.0`.
+- PPO exited cleanly. Actor preservation restored the actor exactly:
+  `max_pre_restore_delta=0.017272532`,
+  `max_post_restore_delta=0.000000000`.
+- TensorBoard scalar gate:
+  - verdict `TENSORBOARD_GATE_WARN_REQUIRES_MANUAL_REVIEW`;
+  - hard issues `[]`;
+  - warnings: raw TCP-cube distance high for AABB diagnostic
+    `0.09063738584518433`, tap displacement tiny
+    `1.3096122529532295e-05m`;
+  - one-iteration collection useful/success/overshoot
+    `0.0768229216337204/0.0729166716337204/0.01302083395421505`;
+  - joint cap / target lead rates safe:
+    `0.0008680556202307343/0.0`.
+- Saved `model_0.pt` teacher-off frozen eval:
+  - verdict `TEACHER_OFF_FROZEN_EVAL_PASS_FOR_NEXT_SHORT_PPO_GATE`;
+  - useful/success/overshoot `0.96875/0.96875/0.0`;
+  - D256 reset active / BC teacher blend `1.0/0.0`;
+  - joint-cap max trace `0.015625`;
+  - max displacement along/XY
+    `0.0031909942626953125/0.00327563239261508m`;
+  - mean displacement along/XY remains small:
+    `0.0001180088147521019/0.0001241182180820033m`.
+- Decision:
+  - D292 passes runtime plumbing, actor-preservation, TensorBoard extraction, and
+    saved-checkpoint teacher-off eval.
+  - D292 does not prove learned-policy success because the actor was fully
+    preserved and TensorBoard returned manual-review warnings.
+  - Do not run long PPO and do not claim RoArm readiness.
+  - Next valid runtime candidate, only after explicit approval, is a constrained
+    short PPO gate with a clearer displacement/horizon contract.
+- Verdict:
+  `D292_TINY_PPO_ACTORFREEZE_TENSORBOARD_WARN_TEACHER_OFF_PASS_NO_LONG_PPO`.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260628_cube10cm_top_view_tiny_ppo_freshgate_d292.md`
+- `roarm_rl/train_cube_push_ppo.py`
+- `sim_scripts/cube10cm_top_view_tensorboard_scalar_gate.py`
+- `sim_scripts/cube10cm_top_view_teacher_off_policy_eval.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d292/tap10cm/ppo_replay_actor_freshgate_actorfreeze_1it/cube10cm_d292_replay_actor_freshgate_actorfreeze_1it/tensorboard_scalar_gate_d292.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d292/tap10cm/ppo_replay_actor_freshgate_actorfreeze_1it/cube10cm_d292_replay_actor_freshgate_actorfreeze_1it/teacher_off_eval_model0/teacher_off_policy_eval_summary_d292_model0.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d292/tap10cm/ppo_replay_actor_freshgate_actorfreeze_1it/cube10cm_d292_replay_actor_freshgate_actorfreeze_1it/model_0.pt`
+
+## D293 - Cube10cm displacement/horizon contract before next PPO (2026-06-29)
+
+- No Isaac Lab runtime, PPO training, render, cleanup, RunPod/B200/SSH, Track A,
+  SmolVLA/VLA fine-tuning, or RoArm deployment was performed.
+- Cross-checked D292 against the tool-object interaction primitive framing for
+  mining/excavation automation.
+- D292 remains a valid runtime/plumbing and saved-checkpoint gate:
+  - TensorBoard hard issues `[]`;
+  - saved teacher-off useful/success/overshoot `0.96875/0.96875/0.0`;
+  - D256 reset active / BC teacher blend `1.0/0.0`.
+- D292 is not a policy-success gate:
+  - TensorBoard tap max displacement along was only
+    `1.3096122529532295e-05m`;
+  - saved teacher-off mean displacement along/XY was only
+    `0.0001180088147521019/0.0001241182180820033m`;
+  - `actor_preserve_blend=1.0` intentionally restored the actor after PPO.
+- Displacement tiers are now the next contract:
+  - Tier 0: contact/reaction only, no overshoot;
+  - Tier 1: at least `0.001m` displacement;
+  - Tier 2: at least `0.003m` stable displacement;
+  - Tier 3: `0.005..0.010m` strong push tier;
+  - Fail: `>=0.020m` overshoot.
+- Next short PPO gate requirements:
+  - useful/contact/reaction `>=0.90`;
+  - overshoot `<=0.05`;
+  - D256 reset active `1.0`;
+  - BC teacher blend `0.0`;
+  - joint delta cap below existing ceiling `<=0.25`;
+  - TensorBoard tap max displacement along `>=0.001m`;
+  - teacher-off mean max displacement along or XY target `>=0.0005m`,
+    preferred `>=0.001m`;
+  - teacher-off max displacement along or XY `>=0.001m`.
+- Added code guardrails:
+  - `sim_scripts/cube10cm_top_view_tensorboard_scalar_gate.py` now supports
+    `--require_tap_displacement_gate`;
+  - `sim_scripts/cube10cm_top_view_teacher_off_policy_eval.py` now supports
+    `--min_mean_disp_along_m`, `--min_max_disp_along_m`,
+    `--min_mean_disp_xy_m`, and `--min_max_disp_xy_m`.
+- Posthoc D292 regate with `--require_tap_displacement_gate` and
+  `--min_tap_max_disp_along_m 0.001` now fails as intended:
+  - verdict `TENSORBOARD_GATE_FAIL_NO_PPO_PROMOTION`;
+  - issue `tap max displacement remains small: max=1.3096122529532295e-05`.
+- Physical spec:
+  - current env remains 10cm, `0.720kg`, static/dynamic friction `1.5/1.2`,
+    restitution `0.0`;
+  - treat `0.720kg` as a coherent density-preserving hard/stress tier if the
+    physical proxy object is lighter;
+  - future sim2real work should measure real object mass and add mass robustness,
+    but this is not required before the next short PPO gate.
+- Decision:
+  - Do not run long PPO.
+  - Do not claim learned-policy success or RoArm readiness.
+  - Do not promote D292 based on contact/reaction alone.
+  - Next runtime, only after explicit approval, is a constrained short PPO gate
+    with actor preservation, D256 reset active, BC teacher blend off,
+    `link5_collision_aabb`, TensorBoard displacement hard gate, and
+    saved-checkpoint teacher-off displacement gate.
+- Verdict:
+  `D293_DISPLACEMENT_HORIZON_CONTRACT_SET_NO_LONG_PPO`.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260629_cube10cm_top_view_displacement_horizon_contract_d293.md`
+- `sim_scripts/cube10cm_top_view_tensorboard_scalar_gate.py`
+- `sim_scripts/cube10cm_top_view_teacher_off_policy_eval.py`
+- `claudedocs/session_20260628_cube10cm_top_view_tiny_ppo_freshgate_d292.md`
+- `claudedocs/session_20260626_cube10cm_top_view_label_replay_teacher_bridge_d288.md`
+
+## D294 - Cube10cm displacement rate gate before next PPO (2026-06-29)
+
+- No Isaac Lab runtime, PPO training, render, cleanup, RunPod/B200/SSH, Track A,
+  SmolVLA/VLA fine-tuning, or RoArm deployment was performed.
+- D293 remains directionally correct: contact/reaction is necessary but not
+  sufficient, and D292 cannot be promoted to policy success.
+- D294 tightens the next gate because max displacement alone can be a false
+  positive if only one or two envs move.
+- D256 train-clean positive rate check from
+  `label_package_d248/episode_split_manifest.csv`:
+  - rows `737`;
+  - `max_tap_disp_xy_m >= 0.001`: `733/737`, rate `0.994572592`;
+  - `max_tap_disp_xy_m >= 0.003`: `727/737`, rate `0.986431479`;
+  - `max_tap_disp_along_m >= 0.001`: `729/737`, rate `0.989145183`;
+  - `max_tap_disp_along_m >= 0.003`: `723/737`, rate `0.981004071`.
+- Interpretation:
+  - A 1mm displacement-rate metric is not too strict relative to D256 clean
+    data.
+  - Next gates must check max displacement, mean displacement, and per-env
+    `>=1mm` rate together.
+  - Full/heavy actor preservation remains only a plumbing/safety gate, not a
+    learned-policy claim.
+- Added code guardrails:
+  - `roarm_rl/roarm_cube_push_env.py` logs
+    `cube_tap_max_disp_along_ge_1mm_rate`,
+    `cube_tap_max_disp_xy_ge_1mm_rate`,
+    `cube_tap_max_disp_along_ge_3mm_rate`, and
+    `cube_tap_max_disp_xy_ge_3mm_rate`;
+  - `sim_scripts/cube10cm_top_view_tensorboard_scalar_gate.py` supports
+    `--min_tap_disp_along_ge_1mm_rate` and
+    `--min_tap_disp_xy_ge_1mm_rate`;
+  - `sim_scripts/cube10cm_top_view_teacher_off_policy_eval.py` records along/XY
+    `>=1mm` and `>=3mm` rates and supports
+    `--min_disp_along_ge_1mm_rate` and `--min_disp_xy_ge_1mm_rate`.
+- Next constrained short PPO gate, only after explicit approval:
+  - TensorBoard:
+    `--require_tap_displacement_gate`,
+    `--min_tap_max_disp_along_m 0.001`,
+    and initial conservative `--min_tap_disp_xy_ge_1mm_rate 0.25`;
+  - teacher-off:
+    mean/max displacement thresholds plus initial conservative
+    `--min_disp_xy_ge_1mm_rate 0.25`.
+- The `0.25` rate is a first short-gate threshold only. D256 clean data supports
+  much higher rates, so later gates should move toward `0.90+` after runtime
+  stability is proven.
+- Decision:
+  - Do not run long PPO.
+  - Do not claim learned-policy success or RoArm readiness.
+  - Do not pass from max displacement alone.
+  - If the preserved-actor max/mean/rate gate passes, then consider partial
+    preservation or a very small real PPO actor-update gate.
+- Verdict:
+  `D294_DISPLACEMENT_RATE_GATE_ADDED_NO_RUNTIME_NO_LONG_PPO`.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260629_cube10cm_top_view_displacement_rate_gate_d294.md`
+- `roarm_rl/roarm_cube_push_env.py`
+- `sim_scripts/cube10cm_top_view_tensorboard_scalar_gate.py`
+- `sim_scripts/cube10cm_top_view_teacher_off_policy_eval.py`
+- `claudedocs/session_20260629_cube10cm_top_view_displacement_horizon_contract_d293.md`
+
+## D295 - Cube10cm rate-gated short PPO runtime (2026-06-29)
+
+- One explicitly approved constrained short PPO gate was run; this was not long
+  PPO and not a PPO ladder.
+- No render, cleanup, RunPod/B200/SSH, Track A, SmolVLA/VLA fine-tuning, or
+  RoArm deployment was performed.
+- Runtime contract:
+  - D290 replay-batch actor warm-start:
+    `actor_d256_replay_batches_d290/tap10cm_ep155/model_actor_d256_replay_batches_d290.pt`;
+  - `max_iterations=1`, `num_envs=32`, `num_steps_per_env=580`;
+  - D256 reset active, frame `0`, `linspace`;
+  - BC teacher off: `bc_teacher_blend=0.0`, imitation reward `0.0`;
+  - `link5_collision_aabb` contact proxy;
+  - `actor_preserve_blend=1.0`.
+- PPO exited cleanly and actor preservation restored exactly:
+  `max_pre_restore_delta=0.270150483`,
+  `max_post_restore_delta=0.000000000`.
+- Saved checkpoint:
+  `actor_preserve_d295/tap10cm/ppo_replay_actor_freshgate_actorfreeze_rate_1it/cube10cm_d295_replay_actor_freshgate_actorfreeze_rate_1it/model_0.pt`;
+  sha256
+  `d3073e7446652d6a7c7c6a160c336bfa7cdf8bf04ef988010adf6bd79b322b0a`.
+- TensorBoard scalar gate verdict:
+  `TENSORBOARD_GATE_FAIL_NO_PPO_PROMOTION`.
+  - Missing core scalars: `Train/mean_reward`, `Train/mean_episode_length`.
+  - Contact/reaction/success was `0.8786637783`; useful was
+    `0.8710668087`, below the `0.90` gate.
+  - Overshoot was low during collection: `0.0075969826`.
+  - Max displacement along/XY was `0.0025365781/0.0026646142m`.
+  - Along/XY `>=1mm` rate was `0.3124461174/0.3125`.
+  - D256 reset active `1.0`, BC teacher blend `0.0`, joint cap `0.0`.
+- Saved-checkpoint teacher-off eval under the D295 action contract verdict:
+  `TEACHER_OFF_FROZEN_EVAL_FAIL_NO_POLICY_CLAIM`.
+  - Contact/reaction/success `1.0`, useful `0.8125`.
+  - Overshoot `0.1875`, above the `0.05` gate.
+  - Max displacement along/XY
+    `0.0590043068/0.0590082631m`.
+  - Mean displacement along/XY
+    `0.0074102012/0.0106040258m`.
+  - Along/XY `>=1mm` rate `0.53125/0.6875`.
+  - Joint cap max trace `0.0`.
+- Interpretation:
+  - D295 removes the D292 short-horizon ambiguity: the actor can move the cube
+    by meaningful distances when enough rollout horizon is available.
+  - D295 does not prove learned policy success because the actor was fully
+    preserved and the saved checkpoint fails teacher-off due overshoot.
+  - The current blocker is controlled displacement, not displacement existence.
+- Decision:
+  - Do not run long PPO.
+  - Do not claim learned-policy success or RoArm readiness.
+  - Do not promote to partial actor preservation or real PPO actor updates yet.
+  - Next work is non-PPO overshoot-control diagnostic: compare raw D295 actor
+    eval against explicit action projection/constraint options such as
+    `tap_stop_after_disp_m`, useful-stop/zero-action safety, proxy contact
+    slowdown, and action clipping/projection.
+- Verdict:
+  `D295_RATE_GATED_SHORT_PPO_COLLECTION_PARTIAL_TEACHER_OFF_FAIL_NO_PROMOTION`.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260629_cube10cm_top_view_d295_rate_gate_runtime.md`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d295/tap10cm/ppo_replay_actor_freshgate_actorfreeze_rate_1it/ppo_command_d295.txt`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d295/tap10cm/ppo_replay_actor_freshgate_actorfreeze_rate_1it/cube10cm_d295_replay_actor_freshgate_actorfreeze_rate_1it/tensorboard_scalar_gate_d295.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d295/tap10cm/ppo_replay_actor_freshgate_actorfreeze_rate_1it/cube10cm_d295_replay_actor_freshgate_actorfreeze_rate_1it/teacher_off_eval_model0_d295_contract/teacher_off_policy_eval_summary_d295_model0.json`
+
+## D296 - Cube10cm overshoot-control diagnostic (2026-06-29)
+
+- No PPO training, long PPO, render, cleanup, RunPod/B200/SSH, Track A,
+  SmolVLA/VLA fine-tuning, or RoArm deployment was performed.
+- Purpose:
+  - diagnose D295 teacher-off overshoot without updating the actor;
+  - compare action projection/constraint options on the frozen D295 saved actor;
+  - test whether linspace D256 reset passes are robust to random D256 reset
+    sampling.
+- Updated `sim_scripts/cube10cm_top_view_teacher_off_policy_eval.py` with:
+  - `--tap_stop_after_disp_m`;
+  - `--tap_contact_slowdown_use_proxy`;
+  - `--exec_action_clip_abs`;
+  - per-env CSV output via `--out_env_csv`.
+- Common gate:
+  - useful `>=0.90`;
+  - overshoot `<=0.05`;
+  - mean XY displacement `>=0.0005m`;
+  - max XY displacement `>=0.001m`;
+  - XY `>=1mm` rate `>=0.25`.
+- Linspace D256 reset results:
+  - raw actor failed: useful `0.8125`, overshoot `0.1875`;
+  - `exec_clip_abs=0.5` passed: useful `1.0`, overshoot `0.0`,
+    mean/max XY `0.0036601/0.0191714m`, XY `>=1mm` rate `0.4375`;
+  - `tap_stop_after_disp_m=0.001` passed: useful `1.0`, overshoot `0.0`,
+    mean/max XY `0.0008960/0.0032587m`, XY `>=1mm` rate `0.6875`;
+  - `tap_stop_after_disp_m=0.003` passed: useful `1.0`, overshoot `0.0`,
+    mean/max XY `0.0021452/0.0038778m`, XY `>=1mm` rate `0.6875`;
+  - useful-stop/zero-action and proxy slowdown failed displacement rate
+    despite overshoot `0.0`.
+- Random D256 reset results:
+  - every tested constraint failed seeds `29603` and/or `29604`;
+  - `tap_stop_after_disp_m=0.003`: useful `0.75/0.75`,
+    overshoot `0.25/0.25`;
+  - `exec_clip_abs=0.5`: useful `0.75/0.625`,
+    overshoot `0.25/0.3125`;
+  - `tap_stop_after_disp_m=0.001`: useful `0.75/0.75`,
+    overshoot `0.25/0.25`;
+  - `exec_clip_abs=0.25`: useful `0.5/0.25`,
+    overshoot `0.25/0.28125`;
+  - `exec_clip_abs=0.5 + tap_stop_after_disp_m=0.001`: useful
+    `0.75/0.6875`, overshoot `0.25/0.25`.
+- Per-env audit of `stop_disp003_random_seed29604_envtrace_d296`:
+  - overshoot in `8/32` envs;
+  - D256 episode indices:
+    `339, 154, 198, 668, 736, 656, 195, 606`;
+  - all eight are original D256 `train_clean_positive` /
+    `clean_useful_tap` episodes with camera contract pass;
+  - original D256 max XY for those episodes was only `0.004109..0.008026m`;
+  - actor rollout max XY became `0.02119..0.03467m`;
+  - most failed rows had actor max along displacement `0.0`, indicating
+    off-axis/lateral displacement rather than controlled along-push movement.
+- Interpretation:
+  - Linspace reset was a false-positive-prone gate.
+  - The immediate blocker is not D256 label looseness.
+  - The actor closed-loop/action contract fails on random D256 reset states.
+  - Magnitude-only clipping and simple displacement-stop are insufficient.
+- Decision:
+  - Do not run long PPO.
+  - Do not run another tiny PPO gate from D296 constraints.
+  - Do not claim learned-policy success or RoArm readiness.
+  - Make random D256 reset sampling mandatory before any next PPO gate.
+  - Next work is episode-index-preserving actor/action diagnostics and
+    direction-aware actor/action repair before PPO.
+- Verdict:
+  `D296_ACTION_CONSTRAINT_LINSPACE_PASS_RANDOM_FAIL_NO_PPO`.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260629_cube10cm_top_view_d296_overshoot_control_diagnostic.md`
+- `sim_scripts/cube10cm_top_view_teacher_off_policy_eval.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d295/tap10cm/overshoot_control_d296/run_overshoot_control_matrix_d296.sh`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d295/tap10cm/overshoot_control_d296/run_candidate_random_checks_d296.sh`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d295/tap10cm/overshoot_control_d296/run_conservative_random_checks_d296.sh`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d295/tap10cm/overshoot_control_d296/stop_disp003_random_seed29604_envtrace_d296/teacher_off_policy_eval_envs_stop_disp003_random_seed29604_envtrace_d296.csv`
+
+## D297 - Cube10cm teacher-off reset-protocol re-audit (2026-06-29)
+
+- No PPO training, long PPO, render, cleanup, RunPod/B200/SSH, Track A,
+  SmolVLA/VLA fine-tuning, or RoArm deployment was performed.
+- Purpose:
+  - re-audit D296 random-reset overshoot before treating it as a real policy
+    failure;
+  - preserve episode/frame/action metadata for actor-vs-recorded and
+    actor-vs-recovery diagnostics;
+  - isolate whether the old teacher-off eval forced an extra reset step that
+    changed the apparent outcome.
+- Code updates:
+  - `sim_scripts/cube10cm_top_view_d290_closed_loop_recovery_probe.py` now
+    writes per-env/per-step action traces, reset-alignment CSV, recorded
+    actions, recovery actions, actor actions, and episode/frame metadata;
+  - `sim_scripts/cube10cm_top_view_teacher_off_policy_eval.py` now has
+    `--d256_reset_warmup_mode direct_reset|force_step_zero|force_step_policy`
+    and defaults to `direct_reset`.
+- Diagnostic results:
+  - exact D296 failing episodes under manual reset passed: useful `1.0`,
+    overshoot `0.0`, mean/max XY `0.0012649/0.0032778m`;
+  - env-hook random seed `29604` with the old forced-second-reset path
+    reproduced failure: useful `0.8125`, overshoot `0.15625`, max XY
+    `0.0531604m`;
+  - manual replay of the same env-hook-selected 32 episodes passed: useful
+    `0.96875`, overshoot `0.0`, max XY `0.0167372m`;
+  - env-hook seed `29604` with `--no-env_hook_force_second_reset` passed:
+    useful `1.0`, overshoot `0.0`, mean/max XY `0.0010001/0.0034951m`;
+  - reset-alignment audit showed zero error for cube pose, cube start, arm
+    joint state, arm target, arm velocity, cube linear velocity, and cube
+    angular velocity before action.
+- Corrected teacher-off gate:
+  - D295 saved actor, D256 random reset, BC teacher off, AABB contact proxy,
+    `tap_stop_after_disp_m=0.003`, `d256_reset_warmup_mode=direct_reset`;
+  - seed `29603` passed: useful `1.0`, overshoot `0.0`, mean/max XY
+    `0.0020230/0.0116959m`, XY `>=1mm` rate `0.53125`, XY `>=3mm` rate
+    `0.4375`, joint cap max `0.0`;
+  - seed `29604` passed: useful `1.0`, overshoot `0.0`, mean/max XY
+    `0.0011871/0.0040057m`, XY `>=1mm` rate `0.375`, XY `>=3mm` rate
+    `0.3125`, joint cap max `0.0`.
+- Interpretation:
+  - D296's old random-reset failure is superseded as a teacher-off eval
+    reset-protocol artifact.
+  - The immediate issue was not D256 label looseness and not actor-vs-recorded
+    action mismatch.
+  - Forced-step reset paths are diagnostic only and must not be used as policy
+    promotion gates.
+- Decision:
+  - Do not run long PPO.
+  - Do not claim learned-policy success or RoArm readiness.
+  - Do not use D296 forced-second-reset results as a promotion blocker unless
+    reproduced under the corrected direct-reset contract.
+  - Next valid runtime is one explicitly approved tiny PPO + TensorBoard gate
+    using the corrected direct-reset teacher-off contract, D256 random reset
+    recheck, actor preservation, BC teacher blend off, and D293/D294
+    displacement gates.
+- Verdict:
+  `D297_TEACHER_OFF_DIRECT_RESET_GATE_PASS_NO_PPO`.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260629_cube10cm_top_view_d297_teacher_off_reset_protocol.md`
+- `sim_scripts/cube10cm_top_view_teacher_off_policy_eval.py`
+- `sim_scripts/cube10cm_top_view_d290_closed_loop_recovery_probe.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d295/tap10cm/action_diagnostic_d297/teacher_off_direct_seed29603/teacher_off_policy_eval_summary_d297_direct_seed29603.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d295/tap10cm/action_diagnostic_d297/teacher_off_direct_seed29604/teacher_off_policy_eval_summary_d297_direct_seed29604.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d295/tap10cm/action_diagnostic_d297/random_envhook_direct_seed29604/closed_loop_recovery_summary_d297_random_envhook_direct_seed29604_actor_action_diagnostic.json`
+
+## D298 - Cube10cm tiny PPO direct-reset gate (2026-06-29)
+
+- Scope:
+  - Ran exactly one explicitly approved tiny PPO + TensorBoard gate.
+  - Used the corrected D297 direct-reset teacher-off eval as the posthoc saved
+    checkpoint validation path.
+  - No long PPO, PPO ladder, partial actor preservation, render, cleanup,
+    RunPod/B200/SSH, Track A, SmolVLA/VLA fine-tuning, or RoArm deployment was
+    performed.
+- PPO runtime:
+  - command:
+    `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d298/tap10cm/ppo_directreset_actorfreeze_random_stop003_1it/ppo_command_d298.txt`;
+  - output root:
+    `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d298/tap10cm/ppo_directreset_actorfreeze_random_stop003_1it/cube10cm_d298_directreset_actorfreeze_random_stop003_1it`;
+  - checkpoint:
+    `model_0.pt`, sha256
+    `4dcbebbaaafbd50166cd40d2610b903e7209491a542fb8e041dac1cd4b1faf70`;
+  - D256 reset was active, BC teacher blend was `0.0`,
+    `tap_stop_after_disp_m=0.003`, `tap_success_terminate=True`, and
+    `actor_preserve_blend=1.0`.
+- TensorBoard gate:
+  - verdict:
+    `TENSORBOARD_GATE_FAIL_NO_PPO_PROMOTION`;
+  - Train scalars exist: mean reward `10.783509254455566`, mean episode length
+    `64.90697479248047`;
+  - collection contact/reaction seen `0.7029094696044922`;
+  - useful seen `0.04482758790254593`;
+  - success `0.0023168104235082865`;
+  - overshoot seen `0.7133082151412964`;
+  - max along/XY displacement
+    `0.01091606542468071/0.03478653356432915m`;
+  - along/XY `>=1mm` rates
+    `0.3975215554237366/0.7559267282485962`;
+  - D256 reset active `1.0`, BC teacher blend `0.0`, joint cap `0.0`, target
+    lead `0.0`.
+- Saved-checkpoint teacher-off direct-reset re-eval:
+  - seed `29801` passed: useful `0.96875`, overshoot `0.03125`, mean/max XY
+    `0.004003090318292379/0.06263629347085953m`, XY `>=1mm` rate `0.5625`;
+  - seed `29604` passed: useful `1.0`, overshoot `0.0`, mean/max XY
+    `0.0011870721355080605/0.004005730152130127m`, XY `>=1mm` rate `0.375`;
+  - both had joint delta cap max trace `0.0`, D256 reset active `1.0`, and BC
+    teacher blend `0.0`.
+- Interpretation:
+  - PPO wiring and TensorBoard extraction work.
+  - D298 is not a promotion: collection-time useful/success rates are too low
+    and overshoot is too high.
+  - The saved actor checkpoint still passes direct-reset teacher-off eval, so
+    this is not clean evidence that the actor checkpoint was destroyed.
+  - The next hypothesis to test is collection-time reset/termination/episode
+    recycling mismatch: PPO collection path versus direct-reset teacher-off
+    eval, `tap_success_terminate`, stop-after-displacement hold timing, per-env
+    overshoot traces, and reset/contact-cache behavior.
+- Decision:
+  - Do not run long PPO.
+  - Do not run another PPO gate immediately.
+  - Do not claim learned-policy success or RoArm readiness.
+  - Next work is a non-PPO collection-time contract diagnostic.
+- Verdict:
+  `D298_TINY_PPO_TENSORBOARD_COLLECTION_FAIL_TEACHER_OFF_DIRECT_PASS_NO_PROMOTION`.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260629_cube10cm_top_view_d298_tiny_ppo_directreset_gate.md`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d298/tap10cm/ppo_directreset_actorfreeze_random_stop003_1it/ppo_command_d298.txt`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d298/tap10cm/ppo_directreset_actorfreeze_random_stop003_1it/tensorboard_dashboard_command_d298.txt`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d298/tap10cm/ppo_directreset_actorfreeze_random_stop003_1it/cube10cm_d298_directreset_actorfreeze_random_stop003_1it/tensorboard_scalar_gate_d298.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d298/tap10cm/ppo_directreset_actorfreeze_random_stop003_1it/cube10cm_d298_directreset_actorfreeze_random_stop003_1it/teacher_off_direct_seed29801/teacher_off_policy_eval_summary_d298_direct_seed29801.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d298/tap10cm/ppo_directreset_actorfreeze_random_stop003_1it/cube10cm_d298_directreset_actorfreeze_random_stop003_1it/teacher_off_direct_seed29604/teacher_off_policy_eval_summary_d298_direct_seed29604.json`
+
+## D299 - Cube10cm no-success-terminate collection contract (2026-06-29)
+
+- Scope:
+  - Ran non-PPO collection-time diagnostics to explain the D298 mismatch between
+    PPO collection failure and teacher-off direct-reset pass.
+  - Ran one explicitly approved tiny actor-preserved PPO re-gate after removing
+    `tap_success_terminate`.
+  - No long PPO, PPO ladder, partial actor preservation, real PPO actor update,
+    render, cleanup, RunPod/B200/SSH, Track A, VLA fine-tuning, or RoArm
+    deployment was performed.
+- Non-PPO diagnostic:
+  - With `tap_success_terminate=True`, collection failed:
+    - inference path useful/overshoot `0.09375/0.875`;
+    - PPO-like stochastic path useful/overshoot `0.0/0.84375`, max XY
+      `13.797537803649902m`.
+  - With PPO-like stochastic actions and no success termination, overshoot
+    disappeared in tested seeds:
+    - seed `29801`: useful/overshoot/max XY `1.0/0.0/0.007077273912727833m`;
+    - seed `29604`: useful/overshoot/max XY
+      `0.84375/0.0/0.013731294311583042m`.
+- Tiny PPO re-gate:
+  - Same D298 actor-preserved contract except `tap_success_terminate` was not
+    enabled.
+  - PPO exited cleanly and wrote `model_0.pt` sha256
+    `753df107215e434a421da8eb029f2daf8c028c0f33ab4b4be55d945511e6d971`.
+  - Actor preservation restored actor weights exactly:
+    `max_post_restore_delta=0.000000000`.
+- TensorBoard gate:
+  - Verdict `TENSORBOARD_GATE_WARN_REQUIRES_MANUAL_REVIEW`.
+  - Issues: none.
+  - Warnings: no-termination gate allowed missing `Train/mean_reward` and
+    `Train/mean_episode_length`; raw TCP distance remained high for the AABB
+    diagnostic.
+  - Collection contact/reaction/useful/success/overshoot:
+    `0.7676724195480347/0.7676724195480347/0.7658405303955078/0.7676724195480347/0.0018318966031074524`.
+  - Max along/XY displacement:
+    `0.001473818439990282/0.0016653359634801745m`; along/XY `>=1mm` rates:
+    `0.40420258045196533/0.4132543206214905`.
+  - D256 reset active `1.0`, BC teacher blend `0.0`, joint cap `0.0`.
+- Saved-checkpoint teacher-off direct-reset eval:
+  - seed `29801` passed: useful `0.96875`, overshoot `0.03125`, mean/max XY
+    `0.0040031/0.0626363m`, XY `>=1mm` rate `0.5625`;
+  - seed `29604` passed: useful `1.0`, overshoot `0.0`, mean/max XY
+    `0.0011871/0.0040057m`, XY `>=1mm` rate `0.375`;
+  - both had joint cap max trace `0.0`.
+- Interpretation:
+  - D298's collection overshoot explosion was tied to
+    `tap_success_terminate=True` episode recycle, not stochastic policy sampling
+    alone.
+  - Removing success termination fixes that overshoot failure mode under the
+    actor-preserved collection gate.
+  - D299 is not learned-policy success: actor was fully preserved, the
+    no-termination TensorBoard gate lacks completed-episode reward scalars, and
+    collection useful mean is improved but not `0.90+`.
+- Decision:
+  - Do not use `tap_success_terminate=True` for the current actor-preserved
+    tap10cm collection gate.
+  - Do not run long PPO, a PPO ladder, partial actor preservation, or real actor
+    updates from D299.
+  - Do not claim learned-policy success or RoArm readiness.
+  - Next work is gate-semantics cleanup: either set a collection-average useful
+    threshold around `0.65..0.75`, or add a final-state TensorBoard useful/success
+    metric before any new tiny no-success-terminate multi-seed gate.
+- Verdict:
+  `D299_NO_SUCCESS_TERMINATE_COLLECTION_OVERSHOOT_FIX_WARN_NO_LEARNED_POLICY`.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260629_cube10cm_top_view_d299_collection_contract_no_success_terminate.md`
+- `sim_scripts/cube10cm_top_view_teacher_off_policy_eval.py`
+- `sim_scripts/cube10cm_top_view_tensorboard_scalar_gate.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d298/tap10cm/collection_contract_d299/`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d299/tap10cm/ppo_directreset_actorfreeze_random_stop003_no_success_term_1it/ppo_command_d299.txt`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d299/tap10cm/ppo_directreset_actorfreeze_random_stop003_no_success_term_1it/tensorboard_dashboard_command_d299.txt`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d299/tap10cm/ppo_directreset_actorfreeze_random_stop003_no_success_term_1it/cube10cm_d299_directreset_actorfreeze_random_stop003_no_success_term_1it/tensorboard_scalar_gate_d299.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d299/tap10cm/ppo_directreset_actorfreeze_random_stop003_no_success_term_1it/cube10cm_d299_directreset_actorfreeze_random_stop003_no_success_term_1it/teacher_off_direct_seed29801/teacher_off_policy_eval_summary_d299_direct_seed29801.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d299/tap10cm/ppo_directreset_actorfreeze_random_stop003_no_success_term_1it/cube10cm_d299_directreset_actorfreeze_random_stop003_no_success_term_1it/teacher_off_direct_seed29604/teacher_off_policy_eval_summary_d299_direct_seed29604.json`
+
+## D300 - Cube10cm collection-final TensorBoard gate (2026-06-29)
+
+- Scope:
+  - Resolved the D299 gate-semantics question by adding final-state TensorBoard
+    scalars and running two explicitly approved tiny no-success-terminate
+    actor-preserved PPO re-gates.
+  - No long PPO, PPO ladder, partial actor preservation, real actor update,
+    render, cleanup, RunPod/B200/SSH, Track A, VLA fine-tuning, or RoArm
+    deployment was performed.
+- Code changes:
+  - `roarm_rl/train_cube_push_ppo.py` now writes `CollectionFinal/...`
+    TensorBoard scalars after PPO collection for tap10cm.
+  - `sim_scripts/cube10cm_top_view_tensorboard_scalar_gate.py` now supports
+    `--require_collection_final_tap_gate` and final-state thresholds.
+  - Final useful gating now uses
+    `CollectionFinal/cube_tap_useful_seen_rate` directly, not the max of useful
+    and success.
+- Common runtime contract:
+  - `tap10cm`, `num_envs=32`, `max_iterations=1`, `num_steps_per_env=580`,
+    D256 random frame-0 reset, `link5_collision_aabb`,
+    `tap_stop_after_disp_m=0.003`, `tap_success_terminate=False`,
+    `bc_teacher_blend=0.0`, `actor_preserve_blend=1.0`, and
+    `init_noise_std=0.005`.
+- Seed `29801`:
+  - PPO clean exit and actor `max_post_restore_delta=0.000000000`;
+  - checkpoint sha256
+    `753df107215e434a421da8eb029f2daf8c028c0f33ab4b4be55d945511e6d971`;
+  - collection-average useful/overshoot
+    `0.7658405303955078/0.0018318966031074524`;
+  - collection-final contact/reaction `0.84375`, useful `0.8125`, success
+    `0.84375`, overshoot `0.03125`, XY `>=1mm` `0.625`, mean/max XY
+    `0.0037104845978319645/0.053734444081783295m`;
+  - TensorBoard verdict `TENSORBOARD_GATE_FAIL_NO_PPO_PROMOTION`.
+- Seed `29604`:
+  - PPO clean exit and actor `max_post_restore_delta=0.000000000`;
+  - checkpoint sha256
+    `39e7080988517cab1ad017d9bc4f3ee69973eac351ae16ce6b583562d68eaf7b`;
+  - collection-average useful/overshoot `0.7738685607910156/0.0`;
+  - collection-final contact/reaction/useful/success `0.875`, overshoot `0.0`,
+    XY `>=1mm` `0.65625`, mean/max XY
+    `0.0023780229967087507/0.006142078433185816m`;
+  - TensorBoard verdict `TENSORBOARD_GATE_FAIL_NO_PPO_PROMOTION`.
+- Interpretation:
+  - D300 confirms D299: removing `tap_success_terminate` fixes the major D298
+    overshoot failure mode.
+  - The remaining blocker is final-state coverage, not overshoot.
+  - Seed `29604` misses the strict final useful gate by one env
+    (`28/32 = 0.875`); seed `29801` misses by more and has one overshoot env.
+  - Lowering the final useful gate to `0.85` would make seed `29604` look
+    acceptable, but that weakens the promotion standard.
+  - D300 is still not learned-policy success because actor was fully preserved
+    and completed-episode Train reward scalars are absent.
+- Decision:
+  - Do not run long PPO.
+  - Do not run a PPO ladder.
+  - Do not use `tap_success_terminate=True` for this actor-preserved tap10cm
+    collection gate.
+  - Do not claim learned-policy success, RoArm readiness, or mining automation
+    readiness.
+  - Next work is non-PPO final-coverage diagnostic: identify final envs that
+    miss contact/useful, then inspect episode index, action magnitude, contact
+    proxy, displacement, and overshoot.
+- Verdict:
+  `D300_COLLECTION_FINAL_TENSORBOARD_GATE_FAIL_NO_PROMOTION`.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260629_cube10cm_top_view_d300_collection_final_gate.md`
+- `roarm_rl/train_cube_push_ppo.py`
+- `sim_scripts/cube10cm_top_view_tensorboard_scalar_gate.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d300/tap10cm/ppo_directreset_actorfreeze_random_stop003_no_success_term_finalgate_seed29801_1it/cube10cm_d300_directreset_actorfreeze_random_stop003_no_success_term_finalgate_seed29801_1it/tensorboard_scalar_gate_d300_seed29801_finalgate.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d300/tap10cm/ppo_directreset_actorfreeze_random_stop003_no_success_term_finalgate_seed29604_1it/cube10cm_d300_directreset_actorfreeze_random_stop003_no_success_term_finalgate_seed29604_1it/tensorboard_scalar_gate_d300_seed29604_finalgate.json`
+
+## D301 - Cube10cm final-env non-PPO diagnostic (2026-06-29)
+
+- Scope:
+  - Diagnosed D300 final-state gate failures without PPO training.
+  - Added final per-env and per-env-step trace outputs to
+    `sim_scripts/cube10cm_top_view_teacher_off_policy_eval.py`.
+  - No long PPO, PPO ladder, partial actor preservation, real actor update,
+    render, cleanup, RunPod/B200/SSH, Track A, VLA fine-tuning, or RoArm
+    deployment was performed.
+- Runtime:
+  - D300 saved `model_0.pt` checkpoints only.
+  - `num_envs=32`, `eval_steps=580`, D256 random frame-0 reset,
+    `link5_collision_aabb`, `tap_stop_after_disp_m=0.003`,
+    `tap_success_terminate=False`, BC teacher off,
+    `action_mode=ppo_stochastic`.
+  - First sandbox run failed before env creation due no CUDA context inside the
+    sandbox. `nvidia-smi` was healthy, so the approved non-PPO diagnostics were
+    rerun outside the sandbox.
+- Results:
+  - Seed `29801`: saved-checkpoint diagnostic did not reproduce the D300
+    collection-final failure. Final useful/success/overshoot was `1.0/1.0/0.0`,
+    XY `>=1mm` `0.53125`, mean/max XY
+    `0.0020347752142697573/0.007077273912727833m`. It failed only because the
+    all-step RSL-like useful mean was `0.8638469827586207`.
+  - Seed `29604`: reproduced the final-coverage issue with final
+    contact/reaction/useful/success `0.84375`, overshoot `0.0`, XY `>=1mm`
+    `0.5`, mean/max XY
+    `0.0021026856265962124/0.013731294311583042m`.
+  - Seed `29604` failed envs were all `no_contact_seen`, not overshoot:
+    envs `2,10,24,25,31`, D256 episodes `221,198,13,322,935`.
+  - Failed envs started only `2..7mm` outside the `±0.010m` AABB face band, had
+    zero contact steps, almost no cube displacement (`~0.011mm`), and joint
+    delta cap `0.0`; action magnitude increased while face gap moved away.
+- Interpretation:
+  - Remaining blocker is hard reset/state coverage in far-cube / low joint-2
+    and joint-3 posture states.
+  - Do not relax the contact band to make these pass; that would hide actor
+    coverage failure.
+  - Useful/success alone is insufficient for the mining/excavation primitive
+    framing because some useful/success envs still have tiny displacement.
+  - D300 seed `29801` failed final envs cannot be exactly recovered from the
+    saved checkpoint alone. Future PPO gates must export collection-time
+    per-env final traces directly from `train_cube_push_ppo.py`.
+- Decision:
+  - Do not run long PPO.
+  - Do not run a PPO ladder.
+  - Do not use partial actor preservation or real actor updates yet.
+  - Next work is non-PPO hard-bin repair: isolate far-cube / low joint-2 and
+    joint-3 reset states, run actor-vs-teacher/action-direction diagnostics,
+    then add hard-bin supervised warm-start data or a pre-contact action
+    projection/approach constraint before any tiny PPO re-gate.
+- Verdict:
+  `D301_FINAL_ENV_DIAGNOSTIC_EDGE_RESET_NO_CONTACT_NO_PPO`.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260629_cube10cm_top_view_d301_final_env_diagnostic.md`
+- `sim_scripts/cube10cm_top_view_teacher_off_policy_eval.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d300/tap10cm/final_env_diagnostic_d301/seed29801/teacher_off_policy_eval_summary_d301_seed29801.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d300/tap10cm/final_env_diagnostic_d301/seed29604_trace/teacher_off_policy_eval_summary_d301_seed29604_trace.json`
+
+## D302 - Cube10cm hard-bin actor/teacher diagnostic (2026-06-29)
+
+> Superseded by D303 for the multi-bin actor/teacher failure interpretation.
+> Fresh one-bin processes for ep13, ep322, and ep935 pass; the D302 later-bin
+> failures reproduce only under sequential multi-bin reuse inside one Isaac
+> process.
+
+- Scope:
+  - Non-PPO hard-bin diagnostics over D301 failed D256 episodes
+    `221,198,13,322,935`.
+  - Compared D300 seed `29604` actor deterministic, D257 teacher-only, and
+    actor with `action_noise_std=0.005`.
+  - Added future PPO collection-time per-env final trace export to
+    `roarm_rl/train_cube_push_ppo.py`.
+- Code changes:
+  - `sim_scripts/cube10cm_top_view_d256_reset_bin_actor_probe.py` now supports
+    explicit `--episode_range`, `--reset_warmup_mode`, actor-vs-teacher
+    direction diagnostics, and final contact-geometry metrics.
+  - `roarm_rl/train_cube_push_ppo.py` now writes
+    `collection_final_env_trace_iter_<N>.jsonl` with per-env D256 episode,
+    contact/useful/overshoot, displacement, face gap, action magnitude,
+    joint-delta cap, and BC teacher diagnostics.
+- Results:
+  - Actor deterministic passed `221/198`, was partial on `322`, and overshot
+    on `13/935`.
+  - Actor plus `0.005` noise showed the same pattern, so stochastic noise is not
+    the main root cause.
+  - D257 teacher-only passed `221/198` but overshot `13/322/935`; it is not a
+    safe hard-bin repair target by itself.
+  - Joint delta cap stayed `0.0`; this is not a cap-saturation failure.
+- Decision:
+  - Do not run long PPO, PPO ladder, partial actor preservation, or real actor
+    updates from D302.
+  - Do not relax the AABB contact band to hide hard-bin failures.
+  - Do not use blind teacher-KL/teacher blending as the next repair because the
+    D257 teacher itself overshoots on key hard bins.
+  - Next work is non-PPO actor/action repair from D256 recorded state/action
+    alignment or a direction-aware pre-contact projection/approach constraint,
+    then teacher-off/bin diagnostics, then a single tiny PPO gate only if the
+    diagnostic passes.
+- Verdict:
+  `D302_HARD_BIN_ACTOR_TEACHER_DIAGNOSTIC_NO_PPO_NO_TEACHER_KL`.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260629_cube10cm_top_view_d302_hard_bin_actor_teacher.md`
+- `sim_scripts/cube10cm_top_view_d256_reset_bin_actor_probe.py`
+- `roarm_rl/train_cube_push_ppo.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d300/tap10cm/hard_bin_actor_teacher_d302/actor_deterministic_seed29604_model/d256_reset_bin_actor_probe_summary_d286.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d300/tap10cm/hard_bin_actor_teacher_d302/teacher_only_d257/d256_reset_bin_actor_probe_summary_d286.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d300/tap10cm/hard_bin_actor_teacher_d302/actor_noise005_seed29604_model/d256_reset_bin_actor_probe_summary_d286.json`
+
+## D303 - Cube10cm hard-bin process-contamination re-audit (2026-06-29)
+
+- Scope:
+  - Re-audit D302 before using it as a repair target.
+  - No PPO training, long PPO, PPO ladder, partial actor preservation, real
+    actor update, render, cleanup, RunPod/B200/SSH, Track A, VLA fine-tuning,
+    or RoArm deployment.
+- Results:
+  - D256 recorded-action replay over episodes `221,198,13,322,935` passed:
+    contact/reaction/useful `1.0/1.0/1.0`, overshoot `0.0`, max XY
+    `0.0018194274744018912m`.
+  - Offline D300 seed `29604` actor-vs-D256 hard-episode batch comparison
+    passed: MSE `0.007595527917146683`, MAE `0.03969154506921768`, cosine
+    `0.9679368734359741`.
+  - Manual closed-loop recovery on the same five episodes passed: useful `1.0`,
+    overshoot `0.0`, max XY `0.00030884623993188143m`.
+  - Fresh one-bin env-hook actor probes passed for ep13, ep322, and ep935 with
+    `num_envs=5`: useful `1.0`, overshoot `0.0`.
+  - Sequentially re-running all five bins inside one Isaac process reproduced
+    the D302-style later-bin failures, including ep13/935 overshoot and ep322
+    no-useful.
+- Decision:
+  - D302 multi-bin actor/teacher hard-bin failure claims are superseded.
+  - Do not use sequential multi-bin Isaac probes as blocker or promotion
+    evidence. Use fresh one-bin/fresh-process probes for hard-bin diagnostics.
+  - Do not apply D257 teacher-KL, hard-bin supervised repair, or action
+    projection based on D302 alone.
+  - The unresolved blocker returns to the true PPO collection path. Future tiny
+    PPO gates must use the new `collection_final_env_trace_iter_<N>.jsonl`
+    export from `roarm_rl/train_cube_push_ppo.py`.
+- Verdict:
+  `D303_HARD_BIN_MULTI_PROCESS_REAUDIT_SUPERSEDES_D302_NO_REPAIR_YET`.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260629_cube10cm_top_view_d303_hard_bin_reaudit.md`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d300/tap10cm/hard_bin_actor_teacher_d302/d303_hard_episode_d256_replay_dataset.pt`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d300/tap10cm/hard_bin_actor_teacher_d302/d303_offline_actor_vs_d256_hard_episodes/offline_actor_batch_diagnostic_summary_d290.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d300/tap10cm/hard_bin_actor_teacher_d302/d303_closed_loop_recovery_hard_episodes/closed_loop_recovery_summary_d303_closed_loop_recovery_hard_episodes.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d300/tap10cm/hard_bin_actor_teacher_d302/d303_envhook_ep13_n5_actor/d256_reset_bin_actor_probe_summary_d286.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d300/tap10cm/hard_bin_actor_teacher_d302/d303_envhook_ep322_n5_actor/d256_reset_bin_actor_probe_summary_d286.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d300/tap10cm/hard_bin_actor_teacher_d302/d303_envhook_ep935_n5_actor/d256_reset_bin_actor_probe_summary_d286.json`
+
+## D304 - Cube10cm PPO collection trace gate (2026-06-29)
+
+- Scope:
+  - One tiny no-success-terminate actor-preserved PPO collection trace gate.
+  - Diagnostic goal only: capture true PPO collection-path failed envs as
+    `collection_final_env_trace_iter_0.jsonl`.
+  - No long PPO, PPO ladder, partial actor preservation, real actor update,
+    render, cleanup, RunPod/B200/SSH, Track A, VLA fine-tuning, or RoArm
+    deployment.
+- Results:
+  - PPO clean-exited with `actor_preserve_blend=1.0`; actor restore was exact:
+    `max_post_restore_delta=0.000000000`.
+  - `model_0.pt` sha256:
+    `753df107215e434a421da8eb029f2daf8c028c0f33ab4b4be55d945511e6d971`.
+  - Trace JSONL sha256:
+    `38bc56857210d25cf46dc17db55f8843b2504afff15a49dcf275c98fe0848291`.
+  - TensorBoard gate failed promotion: collection-final contact/reaction
+    `0.84375`, useful `0.8125`, success `0.84375`, overshoot `0.03125`, XY
+    >=1mm `0.625`, mean/max XY `0.0037104846/0.0537344441m`.
+  - Failed collection-final D256 episodes were
+    `561,265,341,991,536,29`.
+  - D256 recorded-action replay for failed6 passed with contact/useful `1.0`,
+    overshoot `0.0`, mean/max XY `0.0097861877/0.0161318127m`.
+  - Offline actor-vs-D256 on failed6 passed with MSE `0.0061870781`, MAE
+    `0.0377806723`, cosine `0.9509615898`.
+  - Closed-loop recovery on failed6 warned: useful `0.833333`, overshoot `0.0`,
+    actor-vs-recovery MSE `1.084940`, recovery clip rate mean/max
+    `0.710805/0.966667`.
+  - Deterministic fresh probes for ep265 and ep991 still failed useful `0.0`
+    with cap pressure `0.833333`.
+- Decision:
+  - D304 satisfies the trace-diagnostic purpose but does not promote the policy.
+  - Do not run long PPO, a PPO ladder, partial actor preservation, or real actor
+    updates from D304.
+  - Do not lower the strict `0.90` collection-final contact/useful threshold as
+    a promotion standard based on D304.
+  - The next work is non-PPO closed-loop recovery/action repair, especially
+    failed-state recovery around ep561/ep265/ep991 or a pre-contact
+    projection/constraint, followed by fresh one-bin/direct-reset gates.
+- Verdict:
+  `D304_COLLECTION_TRACE_GATE_FAIL_NO_PROMOTION_CLOSED_LOOP_RECOVERY_REPAIR_NEXT`.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260629_cube10cm_top_view_d304_collection_trace_gate.md`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d304/tap10cm/ppo_directreset_actorfreeze_random_stop003_no_success_term_trace_seed29801_1it/cube10cm_d304_directreset_actorfreeze_random_stop003_no_success_term_trace_seed29801_1it/collection_final_env_trace_iter_0.jsonl`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d304/tap10cm/ppo_directreset_actorfreeze_random_stop003_no_success_term_trace_seed29801_1it/cube10cm_d304_directreset_actorfreeze_random_stop003_no_success_term_trace_seed29801_1it/tensorboard_scalar_gate_d304_seed29801_trace.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d304/tap10cm/fresh_failed_episode_probe_d304/d304_failed6_d256_replay_dataset.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d304/tap10cm/fresh_failed_episode_probe_d304/offline_actor_vs_d256_failed6/offline_actor_batch_diagnostic_summary_d290.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d304/tap10cm/fresh_failed_episode_probe_d304/closed_loop_recovery_failed6/closed_loop_recovery_summary_d304_closed_loop_recovery_failed6.json`
+
+## D305 - Cube10cm closed-loop recovery repair (2026-06-29)
+
+- Scope:
+  - Non-PPO supervised closed-loop recovery/action repair on D304 failed
+    episodes `561,265,341,991,536,29`.
+  - No long PPO, tiny PPO trace gate, PPO ladder, partial actor preservation,
+    real actor update, render, cleanup, RunPod/B200/SSH, Track A, VLA
+    fine-tuning, or RoArm deployment.
+- Results:
+  - Candidate-1 trained from the D304 actor-preserved checkpoint using D304
+    failed6 D256 replay plus D304 failed6 recovery data. Checkpoint sha256:
+    `07043ec3d75f70f08dbd827d029578d1c5a1d3be2d1a208035672fcd17b43b1d`.
+  - Candidate-1 offline actor-vs-replay/recovery passed with MSE `0.107297`
+    and cosine `0.822683`.
+  - Candidate-1 fresh default one-bin probes restored useful `1.0` and
+    overshoot `0.0` on all failed6, but ep561/536/991 still had cap `0.333333`.
+  - Candidate-1 under D304-like no-useful-stop + `tap_stop_after_disp_m=0.003`
+    kept useful `1.0` and overshoot `0.0` on ep561/265/991, but cap stayed
+    `0.333333/0.566667/0.666667` and displacement remained tiny.
+  - Candidate-1 closed-loop recovery improved useful to `1.0`, overshoot `0.0`,
+    mean/max XY `0.0011089662/0.0035506743m`, but MSE remained high
+    `0.890877` and cap max was `0.277778`.
+  - Candidate-2 reduced MSE to `0.705775` and cap max to `0.111111`, but useful
+    fell to `0.833333` and displacement collapsed to `0.0000167m` mean.
+  - `exec_action_clip_abs=0.75` on candidate-1 did not fix cap.
+- Decision:
+  - D305 partially repairs no-contact but does not unblock PPO.
+  - Do not run long PPO, tiny PPO trace gate, PPO ladder, partial actor
+    preservation, or real actor update from D305.
+  - Candidate-1 is the best D305 behavior candidate but remains no-promotion.
+  - Next work is phase/displacement-aware non-PPO action repair with explicit
+    cap/smoothness control and minimum displacement preservation.
+- Verdict:
+  `D305_CLOSED_LOOP_RECOVERY_REPAIR_PARTIAL_CONTACT_RESTORED_NO_PPO_PROMOTION`.
+
+Sources:
+
+- `START_HERE.md`
+- `claudedocs/session_20260629_cube10cm_top_view_d305_closed_loop_recovery_repair.md`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_recovery_repair_d305/tap10cm/failed6_replay_plus_recovery_lr1e4_ep80/`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_recovery_repair_d305/tap10cm/failed6_replay_plus_iter2_recovery_lr5e5_ep80/`
+
+## D306 - Cube10cm phase-aware action repair bracket (2026-06-30)
+
+- Scope:
+  - Non-PPO phase/displacement-aware supervised action repair after D305.
+  - No long PPO, tiny PPO trace gate, PPO ladder, partial actor preservation,
+    real actor update, render, cleanup, RunPod/B200/SSH, Track A, VLA
+    fine-tuning, or RoArm deployment.
+- Results:
+  - Candidate-1 rewrote D305 recovery targets with recovery weight
+    `0.65 -> 0.10`, target clip `0.85`, smooth alpha `0.45`.
+  - Candidate-1 trained from the D305 best actor with val MSE/cosine
+    `0.033446/0.852161`; checkpoint sha256
+    `a407729e342197dffd2b6395dafff1a7b6c7cb55d252c013efbfb9817530427c`.
+  - Candidate-1 offline actor-vs-target diagnostic passed with MSE/cosine
+    `0.031194/0.858736`.
+  - Under the true D304 runtime contract on ep561, candidate-1 restored useful
+    `1.0`, overshoot `0.0`, cap `0.0`, but max XY displacement was only
+    `0.000037225m`.
+  - Per-step trace showed late push underpower: D256 recorded elbow/wrist_pitch
+    abs mean `0.9646/0.7303`, actor `0.3992/0.0960`.
+  - Candidate-2 used stronger late-push targets with recovery weight
+    `0.50 -> 0.00`, target clip `1.0`, smooth alpha `0.80`; val MSE/cosine
+    `0.034521/0.854989`; checkpoint sha256
+    `8f5d154f9ba76bc467e96f73ed3017e21dd6b8ead265d547c3cadc4ff30844b5`.
+  - Candidate-2 unprojected ep561 produced max XY `0.041465m`, useful `1.0`,
+    cap `0.0`, but overshoot `1.0`.
+  - Candidate-2 action projection checks avoided overshoot but collapsed
+    displacement: clip `0.50` max XY `0.0000428m`, clip `0.75` max XY
+    `0.0000450m`, contact slowdown max XY `0.0000364m`.
+- Decision:
+  - D306 is not a PPO gate and not a learned-policy/RoArm-readiness claim.
+  - Do not run long PPO, tiny PPO trace gate, PPO ladder, partial actor
+    preservation, or real actor update from D306.
+  - The blocker is now a threshold/impulse control problem: safe scalar actor
+    actions are too weak, strong recorded-like actions overshoot.
+  - Next work is a non-PPO displacement/velocity-aware action governor or push
+    pulse controller using current displacement, cube velocity, contact state,
+    and braking before overshoot.
+- Verdict:
+  `D306_PHASE_ACTION_REPAIR_BRACKETED_TINY_VS_OVERSHOOT_NO_PPO_PROMOTION`.
+
+Sources:
+
+- `claudedocs/session_20260630_cube10cm_top_view_d306_phase_action_repair.md`
+- `sim_scripts/cube10cm_top_view_d306_phase_action_repair_dataset.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_recovery_repair_d306/tap10cm/phase_c1_replay_plus_phase_lr5e5_ep100/`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_recovery_repair_d306/tap10cm/phase_iter2_replay_plus_failed6_lr5e5_ep100/`
+- `START_HERE.md`
+
+## D307 - Cube10cm action governor partial diagnostic (2026-06-30)
+
+- Scope:
+  - Non-PPO displacement/velocity-aware action-governor diagnostic after D306.
+  - Added default-off `predict_stop` / `predict_brake` options to
+    `sim_scripts/cube10cm_top_view_d290_closed_loop_recovery_probe.py`.
+  - No long PPO, tiny PPO trace gate, PPO ladder, partial actor preservation,
+    real actor update, render, cleanup, RunPod/B200/SSH, Track A, VLA
+    fine-tuning, or RoArm deployment.
+- Results:
+  - D306 candidate-2 ep561 with `predict_stop`, horizon `0.060s`, speed stop
+    `0.060m/s`: useful `1.0`, overshoot `0.0`, cap `0.0`, but max XY only
+    `0.000696m`.
+  - D306 candidate-2 ep561 with `predict_stop`, horizon `0.020s`, speed stop
+    `0.200m/s`: useful `1.0`, overshoot `0.0`, cap `0.0`, max XY
+    `0.004996m`.
+  - The same best setting over D304 failed6 produced useful `1.0`, overshoot
+    `0.0`, cap `0.0`, mean/max XY `0.002727/0.007170m`, but only `4/6`
+    envs reached `>=1mm`; episodes `991` and `29` stayed at `0.023/0.027mm`.
+  - A recorded-target supervised repair from the D307 failed6 closed-loop
+    states reached offline val MSE/cosine `0.030512/0.883410` and checkpoint
+    sha256 `2d2bc75c30c0fb2241bf7a6230cc2513abac6a9a3ccfe5a7fd769479f4a1fa60`.
+  - That repaired actor collapsed in runtime failed6 rollout with the same
+    governor: useful `1.0`, overshoot `0.0`, cap `0.0`, mean/max XY
+    `0.0000154/0.0000228m`, XY `>=1mm` rate `0.0`.
+- Decision:
+  - D307 improves overshoot-heavy cases but does not meet the displacement
+    coverage contract.
+  - Episodes `991` and `29` show action-direction/contact-geometry failure, not
+    only late-stopping failure.
+  - Offline actor-vs-recorded improvement is not enough; runtime rollout still
+    decides.
+  - Do not run long PPO, tiny PPO trace gate, PPO ladder, partial actor
+    preservation, or real actor update from D307.
+  - Next work is non-PPO deployable action-space/control repair: either move a
+    default-off displacement/velocity governor into the env and broaden fresh
+    reset diagnostics, or change the action representation toward a tool/object
+    push primitive instead of brittle scalar joint deltas.
+- Verdict:
+  `D307_ACTION_GOVERNOR_PARTIAL_NO_PPO_PROMOTION`.
+
+Sources:
+
+- `claudedocs/session_20260630_cube10cm_top_view_d307_action_governor.md`
+- `sim_scripts/cube10cm_top_view_d290_closed_loop_recovery_probe.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/action_governor_d307/tap10cm/failed6_predict_stop_h020_v200/`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/action_governor_d307/tap10cm/recorded_repair_failed6_predict_stop_h020_v200/`
+- `START_HERE.md`

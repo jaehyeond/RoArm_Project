@@ -1,0 +1,838 @@
+{
+  "actor_probe": {
+    "bin_count": 5,
+    "bins": [
+      {
+        "bin_idx": 0,
+        "d256_frame0_rows": 147,
+        "episode_max": 208,
+        "episode_min": 1,
+        "joint_delta_cap_rate_max": 0.0,
+        "max_disp_along_mean_log_max_m": 0.005174568854272366,
+        "max_disp_xy_mean_log_max_m": 0.005851181223988533,
+        "overshoot_rate_log_max": 0.125,
+        "safe_for_next_smoke_candidate": false,
+        "useful_rate_log_max": 0.5625
+      },
+      {
+        "bin_idx": 1,
+        "d256_frame0_rows": 148,
+        "episode_max": 370,
+        "episode_min": 209,
+        "joint_delta_cap_rate_max": 0.0,
+        "max_disp_along_mean_log_max_m": 0.01267620362341404,
+        "max_disp_xy_mean_log_max_m": 0.02002914622426033,
+        "overshoot_rate_log_max": 0.5625,
+        "safe_for_next_smoke_candidate": false,
+        "useful_rate_log_max": 0.28125
+      },
+      {
+        "bin_idx": 2,
+        "d256_frame0_rows": 147,
+        "episode_max": 537,
+        "episode_min": 371,
+        "joint_delta_cap_rate_max": 0.0,
+        "max_disp_along_mean_log_max_m": 0.02221613936126232,
+        "max_disp_xy_mean_log_max_m": 0.027021996676921844,
+        "overshoot_rate_log_max": 0.59375,
+        "safe_for_next_smoke_candidate": false,
+        "useful_rate_log_max": 0.25
+      },
+      {
+        "bin_idx": 3,
+        "d256_frame0_rows": 148,
+        "episode_max": 715,
+        "episode_min": 538,
+        "joint_delta_cap_rate_max": 0.0,
+        "max_disp_along_mean_log_max_m": 0.017326854169368744,
+        "max_disp_xy_mean_log_max_m": 0.02503466047346592,
+        "overshoot_rate_log_max": 0.59375,
+        "safe_for_next_smoke_candidate": false,
+        "useful_rate_log_max": 0.21875
+      },
+      {
+        "bin_idx": 4,
+        "d256_frame0_rows": 147,
+        "episode_max": 999,
+        "episode_min": 716,
+        "joint_delta_cap_rate_max": 0.0,
+        "max_disp_along_mean_log_max_m": 0.005782776512205601,
+        "max_disp_xy_mean_log_max_m": 0.020204711705446243,
+        "overshoot_rate_log_max": 0.3125,
+        "safe_for_next_smoke_candidate": false,
+        "useful_rate_log_max": 0.34375
+      }
+    ],
+    "diagnostic_class": "cap_pressure_not_strongly_episode_bin_dependent",
+    "exec_source": null,
+    "exists": true,
+    "issues": [
+      "no bin met cap/overshoot/useful thresholds"
+    ],
+    "num_envs": 32,
+    "path": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d256_reset_bin_actor_probe_d287_maxdelta0040_corrected/tap10cm/d256_reset_bin_actor_probe_summary_d286.json",
+    "ranges": {
+      "action_abs_max_trace_max": {
+        "count": 5,
+        "max": 1.0,
+        "min": 1.0,
+        "p50": 1.0,
+        "p90": 1.0,
+        "p95": 1.0,
+        "p99": 1.0
+      },
+      "action_abs_mean_trace_mean": {
+        "count": 5,
+        "max": 0.5185518319172592,
+        "min": 0.314988899757636,
+        "p50": 0.3763599730963851,
+        "p90": 0.5185518319172592,
+        "p95": 0.5185518319172592,
+        "p99": 0.5185518319172592
+      },
+      "joint_delta_cap_rate_max_trace": {
+        "count": 5,
+        "max": 0.0,
+        "min": 0.0,
+        "p50": 0.0,
+        "p90": 0.0,
+        "p95": 0.0,
+        "p99": 0.0
+      },
+      "tap_contact_vertical_offset_mean_m": {
+        "count": 5,
+        "max": 0.12230338156223297,
+        "min": 0.04326514154672623,
+        "p50": 0.07358122617006302,
+        "p90": 0.12230338156223297,
+        "p95": 0.12230338156223297,
+        "p99": 0.12230338156223297
+      },
+      "tap_max_disp_along_mean_log_max_trace_m": {
+        "count": 5,
+        "max": 0.02221613936126232,
+        "min": 0.005174568854272366,
+        "p50": 0.01267620362341404,
+        "p90": 0.02221613936126232,
+        "p95": 0.02221613936126232,
+        "p99": 0.02221613936126232
+      },
+      "tap_max_disp_xy_mean_log_max_trace_m": {
+        "count": 5,
+        "max": 0.027021996676921844,
+        "min": 0.005851181223988533,
+        "p50": 0.020204711705446243,
+        "p90": 0.027021996676921844,
+        "p95": 0.027021996676921844,
+        "p99": 0.027021996676921844
+      },
+      "tap_overshoot_seen_rate_log_max_trace": {
+        "count": 5,
+        "max": 0.59375,
+        "min": 0.125,
+        "p50": 0.5625,
+        "p90": 0.59375,
+        "p95": 0.59375,
+        "p99": 0.59375
+      },
+      "tap_useful_seen_rate_log_max_trace": {
+        "count": 5,
+        "max": 0.5625,
+        "min": 0.21875,
+        "p50": 0.28125,
+        "p90": 0.5625,
+        "p95": 0.5625,
+        "p99": 0.5625
+      }
+    },
+    "safe_bins": [],
+    "verdict": "D286_D256_RESET_BIN_ACTOR_PROBE_FAIL_NO_SAFE_BIN"
+  },
+  "artifact": "cube10cm_d288_d256_label_env_contract_audit",
+  "episode_count_total": 1000,
+  "interpretation": "D256 train_clean_positive labels are clean under the same 0.020 m XY overshoot threshold, while D287 online teacher/actor probes still overshoot. This points to an online teacher/action execution contract problem, not a permissive label problem.",
+  "isaac_lab_launched": false,
+  "manifest": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_0_999_d242/label_package_d248/episode_split_manifest.csv",
+  "manifest_columns": [
+    "episode_index",
+    "package_split",
+    "package_subsplit",
+    "include_in_positive_bc_train",
+    "include_in_eval",
+    "quarantine",
+    "package_reason",
+    "label_status",
+    "split_candidate",
+    "sampling_cell_id",
+    "initial_cube_x_m",
+    "initial_cube_y_m",
+    "final_tap_disp_along_m",
+    "max_tap_disp_along_m",
+    "contact_seen_any",
+    "reaction_seen_any",
+    "overshoot_seen_any",
+    "camera_contract_pass",
+    "projection_inside_frames",
+    "full_visibility_frames",
+    "reprojection_gate_ok",
+    "centroid_error_px_max",
+    "reprojection_max_gate_px",
+    "label_useful_clean_numeric",
+    "label_overshoot_numeric",
+    "sampling_rule",
+    "source_decision",
+    "manifest_seed",
+    "requires_posthoc_label_validation",
+    "num_frames",
+    "frame_count_ok",
+    "first_global_index",
+    "last_global_index",
+    "first_frame_index",
+    "last_frame_index",
+    "first_sim_step",
+    "last_sim_step",
+    "duration_s",
+    "final_cube_x_m",
+    "final_cube_y_m",
+    "target_cube_x_m",
+    "target_cube_y_m",
+    "final_dx_m",
+    "final_dy_m",
+    "final_tap_disp_xy_m",
+    "max_tap_disp_xy_m",
+    "max_tap_speed_mps",
+    "legacy_target_band_success_any",
+    "contact_first_frame",
+    "contact_first_time_s",
+    "reaction_first_frame",
+    "reaction_first_time_s",
+    "overshoot_first_frame",
+    "overshoot_first_time_s",
+    "overshoot_before_contact",
+    "legacy_success_first_frame",
+    "legacy_success_first_time_s",
+    "partial_visibility_frames",
+    "full_occlusion_frames",
+    "full_visibility_ok",
+    "projection_inside_ok",
+    "centroid_error_px_median",
+    "centroid_error_px_p95",
+    "blue_coverage_min",
+    "blue_coverage_median",
+    "bbox_area_min",
+    "bbox_area_max",
+    "label_missing_contact_or_reaction_numeric",
+    "label_legacy_target_band_numeric",
+    "label_camera_contract_numeric"
+  ],
+  "next_order": [
+    "Do not run long PPO.",
+    "Run/review D256 recorded-action replay in the live env.",
+    "If replay is clean, rebuild or constrain the teacher/action bridge before actor distillation.",
+    "If replay also overshoots, fix env physics/action application or label-env semantics first.",
+    "Only after teacher-off/bin diagnostics pass, run tiny PPO smoke plus TensorBoard gate."
+  ],
+  "no_ppo_learning": true,
+  "overshoot_threshold_m": 0.02,
+  "split_stats": {
+    "eval_clean_holdout": {
+      "camera_contract_pass_count": 82,
+      "centroid_error_px_p95": {
+        "count": 82,
+        "max": 15.728607645085386,
+        "min": 0.4077535905512516,
+        "p50": 3.478813212501952,
+        "p90": 11.70157123520677,
+        "p95": 12.499988764839305,
+        "p99": 13.890247676668462
+      },
+      "contact_seen_any_count": 82,
+      "episode_count": 82,
+      "final_tap_disp_along_m": {
+        "count": 82,
+        "max": 0.014284998178482056,
+        "min": 0.00037901103496551514,
+        "p50": 0.006032571196556091,
+        "p90": 0.009980201721191406,
+        "p95": 0.011366769671440125,
+        "p99": 0.01374700665473938
+      },
+      "final_tap_disp_xy_m": {
+        "count": 82,
+        "max": 0.015414541587233543,
+        "min": 0.0006705968407914042,
+        "p50": 0.006632435135543346,
+        "p90": 0.013468190096318722,
+        "p95": 0.014127758331596851,
+        "p99": 0.015007726848125458
+      },
+      "label_status_values": [
+        "clean_useful_tap"
+      ],
+      "max_along_ge_env_overshoot_threshold_count": 0,
+      "max_tap_disp_along_m": {
+        "count": 82,
+        "max": 0.014409512281417847,
+        "min": 0.0006697848439216614,
+        "p50": 0.006032615900039673,
+        "p90": 0.009980201721191406,
+        "p95": 0.011369362473487854,
+        "p99": 0.01415109634399414
+      },
+      "max_tap_disp_xy_m": {
+        "count": 82,
+        "max": 0.015762964263558388,
+        "min": 0.0006705968407914042,
+        "p50": 0.0066325003281235695,
+        "p90": 0.013540436513721943,
+        "p95": 0.014127803966403008,
+        "p99": 0.015204966999590397
+      },
+      "max_tap_speed_mps": {
+        "count": 82,
+        "max": 0.30276525020599365,
+        "min": 0.0004411743429955095,
+        "p50": 0.08684766292572021,
+        "p90": 0.186117023229599,
+        "p95": 0.2249668687582016,
+        "p99": 0.30204883217811584
+      },
+      "max_xy_ge_env_overshoot_threshold_count": 0,
+      "overshoot_seen_any_count": 0,
+      "package_subsplit": "eval_clean_holdout",
+      "reaction_seen_any_count": 82
+    },
+    "eval_overshoot_diagnostic": {
+      "camera_contract_pass_count": 167,
+      "centroid_error_px_p95": {
+        "count": 167,
+        "max": 9.713238588102334,
+        "min": 1.0426549517036119,
+        "p50": 2.0981339069057605,
+        "p90": 5.0434363302243295,
+        "p95": 7.0696247218533985,
+        "p99": 8.746994311460043
+      },
+      "contact_seen_any_count": 167,
+      "episode_count": 167,
+      "final_tap_disp_along_m": {
+        "count": 167,
+        "max": 0.2628543972969055,
+        "min": -0.0344051867723465,
+        "p50": 0.061435580253601074,
+        "p90": 0.16077116131782532,
+        "p95": 0.20200926065444946,
+        "p99": 0.25426745414733887
+      },
+      "final_tap_disp_xy_m": {
+        "count": 167,
+        "max": 0.2636939287185669,
+        "min": 0.01944722793996334,
+        "p50": 0.0706624910235405,
+        "p90": 0.16241852939128876,
+        "p95": 0.20304632186889648,
+        "p99": 0.25428158044815063
+      },
+      "label_status_values": [
+        "contact_reaction_with_overshoot"
+      ],
+      "max_along_ge_env_overshoot_threshold_count": 144,
+      "max_tap_disp_along_m": {
+        "count": 167,
+        "max": 0.2635154128074646,
+        "min": 0.0,
+        "p50": 0.061435580253601074,
+        "p90": 0.16077116131782532,
+        "p95": 0.20200926065444946,
+        "p99": 0.2582883834838867
+      },
+      "max_tap_disp_xy_m": {
+        "count": 167,
+        "max": 0.2643071711063385,
+        "min": 0.02006884105503559,
+        "p50": 0.0706629529595375,
+        "p90": 0.16241852939128876,
+        "p95": 0.20304632186889648,
+        "p99": 0.2582937479019165
+      },
+      "max_tap_speed_mps": {
+        "count": 167,
+        "max": 1.028181552886963,
+        "min": 0.04827728122472763,
+        "p50": 0.21256254613399506,
+        "p90": 0.28784456849098206,
+        "p95": 0.3105314373970032,
+        "p99": 0.3470829725265503
+      },
+      "max_xy_ge_env_overshoot_threshold_count": 167,
+      "overshoot_seen_any_count": 167,
+      "package_subsplit": "eval_overshoot_diagnostic",
+      "reaction_seen_any_count": 167
+    },
+    "quarantine_camera_fail": {
+      "camera_contract_pass_count": 0,
+      "centroid_error_px_p95": {
+        "count": 14,
+        "max": 33.4014165935812,
+        "min": 11.99007632369078,
+        "p50": 14.475036255912773,
+        "p90": 23.765334139241638,
+        "p95": 23.765334139241638,
+        "p99": 33.4014165935812
+      },
+      "contact_seen_any_count": 14,
+      "episode_count": 14,
+      "final_tap_disp_along_m": {
+        "count": 14,
+        "max": 0.34203529357910156,
+        "min": 0.005152538418769836,
+        "p50": 0.005516737699508667,
+        "p90": 0.26809751987457275,
+        "p95": 0.26809751987457275,
+        "p99": 0.34203529357910156
+      },
+      "final_tap_disp_xy_m": {
+        "count": 14,
+        "max": 0.49488702416419983,
+        "min": 0.005153015721589327,
+        "p50": 0.005719269160181284,
+        "p90": 0.26879453659057617,
+        "p95": 0.26879453659057617,
+        "p99": 0.49488702416419983
+      },
+      "label_status_values": [
+        "camera_quality_fail"
+      ],
+      "max_along_ge_env_overshoot_threshold_count": 4,
+      "max_tap_disp_along_m": {
+        "count": 14,
+        "max": 0.34203535318374634,
+        "min": 0.00515255331993103,
+        "p50": 0.005517497658729553,
+        "p90": 0.2693636417388916,
+        "p95": 0.2693636417388916,
+        "p99": 0.34203535318374634
+      },
+      "max_tap_disp_xy_m": {
+        "count": 14,
+        "max": 0.4949861764907837,
+        "min": 0.005153030622750521,
+        "p50": 0.0057793608866631985,
+        "p90": 0.2700723707675934,
+        "p95": 0.2700723707675934,
+        "p99": 0.4949861764907837
+      },
+      "max_tap_speed_mps": {
+        "count": 14,
+        "max": 2.2406489849090576,
+        "min": 0.05419314280152321,
+        "p50": 0.07827609777450562,
+        "p90": 0.6489923000335693,
+        "p95": 0.6489923000335693,
+        "p99": 2.2406489849090576
+      },
+      "max_xy_ge_env_overshoot_threshold_count": 4,
+      "overshoot_seen_any_count": 4,
+      "package_subsplit": "quarantine_camera_fail",
+      "reaction_seen_any_count": 14
+    },
+    "train_clean_positive": {
+      "camera_contract_pass_count": 737,
+      "centroid_error_px_p95": {
+        "count": 737,
+        "max": 15.614617171747632,
+        "min": 0.28097655034377145,
+        "p50": 3.479116163091246,
+        "p90": 10.125241174219852,
+        "p95": 12.07032870313575,
+        "p99": 14.302592068651176
+      },
+      "contact_seen_any_count": 737,
+      "episode_count": 737,
+      "final_tap_disp_along_m": {
+        "count": 737,
+        "max": 0.018947407603263855,
+        "min": -0.01574036478996277,
+        "p50": 0.00528264045715332,
+        "p90": 0.010562270879745483,
+        "p95": 0.014090657234191895,
+        "p99": 0.017362460494041443
+      },
+      "final_tap_disp_xy_m": {
+        "count": 737,
+        "max": 0.019241757690906525,
+        "min": 0.0006705968407914042,
+        "p50": 0.0057683358900249004,
+        "p90": 0.013599012047052383,
+        "p95": 0.01599188894033432,
+        "p99": 0.017682570964097977
+      },
+      "label_status_values": [
+        "clean_useful_tap"
+      ],
+      "max_along_ge_env_overshoot_threshold_count": 0,
+      "max_tap_disp_along_m": {
+        "count": 737,
+        "max": 0.01945801079273224,
+        "min": 0.0,
+        "p50": 0.005283385515213013,
+        "p90": 0.010592177510261536,
+        "p95": 0.014560997486114502,
+        "p99": 0.01764822006225586
+      },
+      "max_tap_disp_xy_m": {
+        "count": 737,
+        "max": 0.019744515419006348,
+        "min": 0.0006705968407914042,
+        "p50": 0.005820862483233213,
+        "p90": 0.013904336839914322,
+        "p95": 0.016035862267017365,
+        "p99": 0.018031194806098938
+      },
+      "max_tap_speed_mps": {
+        "count": 737,
+        "max": 0.3803078234195709,
+        "min": 0.00043772210483439267,
+        "p50": 0.07070036977529526,
+        "p90": 0.19005432724952698,
+        "p95": 0.2564348578453064,
+        "p99": 0.3007034957408905
+      },
+      "max_xy_ge_env_overshoot_threshold_count": 0,
+      "overshoot_seen_any_count": 0,
+      "package_subsplit": "train_clean_positive",
+      "reaction_seen_any_count": 737
+    }
+  },
+  "status": "PASS_AUDIT_EXECUTED",
+  "teacher_probe": {
+    "bin_count": 20,
+    "bins": [
+      {
+        "bin_idx": 0,
+        "d256_frame0_rows": 37,
+        "episode_max": 67,
+        "episode_min": 1,
+        "joint_delta_cap_rate_max": 0.0,
+        "max_disp_along_mean_log_max_m": 0.004901766777038574,
+        "max_disp_xy_mean_log_max_m": 0.005531553644686937,
+        "overshoot_rate_log_max": 0.125,
+        "safe_for_next_smoke_candidate": false,
+        "useful_rate_log_max": 0.875
+      },
+      {
+        "bin_idx": 1,
+        "d256_frame0_rows": 37,
+        "episode_max": 119,
+        "episode_min": 69,
+        "joint_delta_cap_rate_max": 0.0,
+        "max_disp_along_mean_log_max_m": 0.004542388021945953,
+        "max_disp_xy_mean_log_max_m": 0.008163508027791977,
+        "overshoot_rate_log_max": 0.375,
+        "safe_for_next_smoke_candidate": false,
+        "useful_rate_log_max": 0.375
+      },
+      {
+        "bin_idx": 2,
+        "d256_frame0_rows": 37,
+        "episode_max": 166,
+        "episode_min": 120,
+        "joint_delta_cap_rate_max": 0.0,
+        "max_disp_along_mean_log_max_m": 0.01686195284128189,
+        "max_disp_xy_mean_log_max_m": 0.02203107252717018,
+        "overshoot_rate_log_max": 0.75,
+        "safe_for_next_smoke_candidate": false,
+        "useful_rate_log_max": 0.5
+      },
+      {
+        "bin_idx": 3,
+        "d256_frame0_rows": 36,
+        "episode_max": 208,
+        "episode_min": 167,
+        "joint_delta_cap_rate_max": 0.0,
+        "max_disp_along_mean_log_max_m": 0.017512694001197815,
+        "max_disp_xy_mean_log_max_m": 0.022409122437238693,
+        "overshoot_rate_log_max": 0.75,
+        "safe_for_next_smoke_candidate": false,
+        "useful_rate_log_max": 0.5
+      },
+      {
+        "bin_idx": 4,
+        "d256_frame0_rows": 37,
+        "episode_max": 250,
+        "episode_min": 209,
+        "joint_delta_cap_rate_max": 0.0,
+        "max_disp_along_mean_log_max_m": 0.017087116837501526,
+        "max_disp_xy_mean_log_max_m": 0.02298601157963276,
+        "overshoot_rate_log_max": 0.625,
+        "safe_for_next_smoke_candidate": false,
+        "useful_rate_log_max": 0.5
+      },
+      {
+        "bin_idx": 5,
+        "d256_frame0_rows": 37,
+        "episode_max": 290,
+        "episode_min": 251,
+        "joint_delta_cap_rate_max": 0.0,
+        "max_disp_along_mean_log_max_m": 0.012743234634399414,
+        "max_disp_xy_mean_log_max_m": 0.02205946296453476,
+        "overshoot_rate_log_max": 0.875,
+        "safe_for_next_smoke_candidate": false,
+        "useful_rate_log_max": 0.5
+      },
+      {
+        "bin_idx": 6,
+        "d256_frame0_rows": 37,
+        "episode_max": 331,
+        "episode_min": 291,
+        "joint_delta_cap_rate_max": 0.0,
+        "max_disp_along_mean_log_max_m": 0.013863861560821533,
+        "max_disp_xy_mean_log_max_m": 0.02210230380296707,
+        "overshoot_rate_log_max": 0.75,
+        "safe_for_next_smoke_candidate": false,
+        "useful_rate_log_max": 0.375
+      },
+      {
+        "bin_idx": 7,
+        "d256_frame0_rows": 37,
+        "episode_max": 370,
+        "episode_min": 332,
+        "joint_delta_cap_rate_max": 0.0,
+        "max_disp_along_mean_log_max_m": 0.014069326221942902,
+        "max_disp_xy_mean_log_max_m": 0.021990394219756126,
+        "overshoot_rate_log_max": 0.75,
+        "safe_for_next_smoke_candidate": false,
+        "useful_rate_log_max": 0.375
+      },
+      {
+        "bin_idx": 8,
+        "d256_frame0_rows": 37,
+        "episode_max": 407,
+        "episode_min": 371,
+        "joint_delta_cap_rate_max": 0.0,
+        "max_disp_along_mean_log_max_m": 0.020821616053581238,
+        "max_disp_xy_mean_log_max_m": 0.022964537143707275,
+        "overshoot_rate_log_max": 0.75,
+        "safe_for_next_smoke_candidate": false,
+        "useful_rate_log_max": 0.5
+      },
+      {
+        "bin_idx": 9,
+        "d256_frame0_rows": 36,
+        "episode_max": 447,
+        "episode_min": 408,
+        "joint_delta_cap_rate_max": 0.0,
+        "max_disp_along_mean_log_max_m": 0.03251476585865021,
+        "max_disp_xy_mean_log_max_m": 0.03537272661924362,
+        "overshoot_rate_log_max": 0.75,
+        "safe_for_next_smoke_candidate": false,
+        "useful_rate_log_max": 0.25
+      },
+      {
+        "bin_idx": 10,
+        "d256_frame0_rows": 37,
+        "episode_max": 491,
+        "episode_min": 448,
+        "joint_delta_cap_rate_max": 0.0,
+        "max_disp_along_mean_log_max_m": 0.019685350358486176,
+        "max_disp_xy_mean_log_max_m": 0.02047589421272278,
+        "overshoot_rate_log_max": 0.75,
+        "safe_for_next_smoke_candidate": false,
+        "useful_rate_log_max": 0.25
+      },
+      {
+        "bin_idx": 11,
+        "d256_frame0_rows": 37,
+        "episode_max": 537,
+        "episode_min": 492,
+        "joint_delta_cap_rate_max": 0.0,
+        "max_disp_along_mean_log_max_m": 0.016682855784893036,
+        "max_disp_xy_mean_log_max_m": 0.02042587846517563,
+        "overshoot_rate_log_max": 0.625,
+        "safe_for_next_smoke_candidate": false,
+        "useful_rate_log_max": 0.25
+      },
+      {
+        "bin_idx": 12,
+        "d256_frame0_rows": 37,
+        "episode_max": 582,
+        "episode_min": 538,
+        "joint_delta_cap_rate_max": 0.0,
+        "max_disp_along_mean_log_max_m": 0.015917204320430756,
+        "max_disp_xy_mean_log_max_m": 0.023888036608695984,
+        "overshoot_rate_log_max": 0.75,
+        "safe_for_next_smoke_candidate": false,
+        "useful_rate_log_max": 0.375
+      },
+      {
+        "bin_idx": 13,
+        "d256_frame0_rows": 37,
+        "episode_max": 623,
+        "episode_min": 583,
+        "joint_delta_cap_rate_max": 0.0,
+        "max_disp_along_mean_log_max_m": 0.014049023389816284,
+        "max_disp_xy_mean_log_max_m": 0.02436353638768196,
+        "overshoot_rate_log_max": 0.875,
+        "safe_for_next_smoke_candidate": false,
+        "useful_rate_log_max": 0.375
+      },
+      {
+        "bin_idx": 14,
+        "d256_frame0_rows": 37,
+        "episode_max": 672,
+        "episode_min": 624,
+        "joint_delta_cap_rate_max": 0.0,
+        "max_disp_along_mean_log_max_m": 0.018691815435886383,
+        "max_disp_xy_mean_log_max_m": 0.021648474037647247,
+        "overshoot_rate_log_max": 0.625,
+        "safe_for_next_smoke_candidate": false,
+        "useful_rate_log_max": 0.25
+      },
+      {
+        "bin_idx": 15,
+        "d256_frame0_rows": 37,
+        "episode_max": 715,
+        "episode_min": 673,
+        "joint_delta_cap_rate_max": 0.0,
+        "max_disp_along_mean_log_max_m": 0.018124647438526154,
+        "max_disp_xy_mean_log_max_m": 0.021219491958618164,
+        "overshoot_rate_log_max": 0.625,
+        "safe_for_next_smoke_candidate": false,
+        "useful_rate_log_max": 0.25
+      },
+      {
+        "bin_idx": 16,
+        "d256_frame0_rows": 36,
+        "episode_max": 775,
+        "episode_min": 716,
+        "joint_delta_cap_rate_max": 0.0,
+        "max_disp_along_mean_log_max_m": 0.012356437742710114,
+        "max_disp_xy_mean_log_max_m": 0.021273858845233917,
+        "overshoot_rate_log_max": 0.625,
+        "safe_for_next_smoke_candidate": false,
+        "useful_rate_log_max": 0.125
+      },
+      {
+        "bin_idx": 17,
+        "d256_frame0_rows": 37,
+        "episode_max": 835,
+        "episode_min": 776,
+        "joint_delta_cap_rate_max": 0.0,
+        "max_disp_along_mean_log_max_m": 0.011762544512748718,
+        "max_disp_xy_mean_log_max_m": 0.023120049387216568,
+        "overshoot_rate_log_max": 0.75,
+        "safe_for_next_smoke_candidate": false,
+        "useful_rate_log_max": 0.25
+      },
+      {
+        "bin_idx": 18,
+        "d256_frame0_rows": 37,
+        "episode_max": 901,
+        "episode_min": 836,
+        "joint_delta_cap_rate_max": 0.0,
+        "max_disp_along_mean_log_max_m": 0.013991773128509521,
+        "max_disp_xy_mean_log_max_m": 0.021811364218592644,
+        "overshoot_rate_log_max": 0.875,
+        "safe_for_next_smoke_candidate": false,
+        "useful_rate_log_max": 0.375
+      },
+      {
+        "bin_idx": 19,
+        "d256_frame0_rows": 37,
+        "episode_max": 999,
+        "episode_min": 902,
+        "joint_delta_cap_rate_max": 0.0,
+        "max_disp_along_mean_log_max_m": 0.011927679181098938,
+        "max_disp_xy_mean_log_max_m": 0.021351773291826248,
+        "overshoot_rate_log_max": 0.5,
+        "safe_for_next_smoke_candidate": false,
+        "useful_rate_log_max": 0.125
+      }
+    ],
+    "diagnostic_class": "cap_pressure_not_strongly_episode_bin_dependent",
+    "exec_source": "teacher",
+    "exists": true,
+    "issues": [
+      "no bin met cap/overshoot/useful thresholds"
+    ],
+    "num_envs": 8,
+    "path": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d256_reset_bin_teacher_probe_d287_20bins_maxdelta0040_corrected/tap10cm/d256_reset_bin_actor_probe_summary_d286.json",
+    "ranges": {
+      "action_abs_max_trace_max": {
+        "count": 20,
+        "max": 1.0,
+        "min": 0.800000011920929,
+        "p50": 1.0,
+        "p90": 1.0,
+        "p95": 1.0,
+        "p99": 1.0
+      },
+      "action_abs_mean_trace_mean": {
+        "count": 20,
+        "max": 0.6030916633020187,
+        "min": 0.14683163279892297,
+        "p50": 0.3733515905601711,
+        "p90": 0.5270838313992938,
+        "p95": 0.544004205871245,
+        "p99": 0.6030916633020187
+      },
+      "joint_delta_cap_rate_max_trace": {
+        "count": 20,
+        "max": 0.0,
+        "min": 0.0,
+        "p50": 0.0,
+        "p90": 0.0,
+        "p95": 0.0,
+        "p99": 0.0
+      },
+      "tap_contact_vertical_offset_mean_m": {
+        "count": 20,
+        "max": 0.14417335391044617,
+        "min": 0.0,
+        "p50": 0.05356968194246292,
+        "p90": 0.13935217261314392,
+        "p95": 0.14068487286567688,
+        "p99": 0.14417335391044617
+      },
+      "tap_max_disp_along_mean_log_max_trace_m": {
+        "count": 20,
+        "max": 0.03251476585865021,
+        "min": 0.004542388021945953,
+        "p50": 0.015917204320430756,
+        "p90": 0.019685350358486176,
+        "p95": 0.020821616053581238,
+        "p99": 0.03251476585865021
+      },
+      "tap_max_disp_xy_mean_log_max_trace_m": {
+        "count": 20,
+        "max": 0.03537272661924362,
+        "min": 0.005531553644686937,
+        "p50": 0.02203107252717018,
+        "p90": 0.023888036608695984,
+        "p95": 0.02436353638768196,
+        "p99": 0.03537272661924362
+      },
+      "tap_overshoot_seen_rate_log_max_trace": {
+        "count": 20,
+        "max": 0.875,
+        "min": 0.125,
+        "p50": 0.75,
+        "p90": 0.875,
+        "p95": 0.875,
+        "p99": 0.875
+      },
+      "tap_useful_seen_rate_log_max_trace": {
+        "count": 20,
+        "max": 0.875,
+        "min": 0.125,
+        "p50": 0.375,
+        "p90": 0.5,
+        "p95": 0.5,
+        "p99": 0.875
+      }
+    },
+    "safe_bins": [],
+    "verdict": "D286_D256_RESET_BIN_ACTOR_PROBE_FAIL_NO_SAFE_BIN"
+  },
+  "verdict": "D288_LABEL_CLEAN_TEACHER_ONLINE_CONTRACT_MISMATCH_CONFIRMED"
+}

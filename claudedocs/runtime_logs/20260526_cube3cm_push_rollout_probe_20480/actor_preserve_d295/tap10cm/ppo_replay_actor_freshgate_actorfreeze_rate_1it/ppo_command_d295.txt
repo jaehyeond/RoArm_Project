@@ -1,0 +1,26 @@
+env OMNI_KIT_ACCEPT_EULA=YES PYTHONPATH=. conda run -n isaaclab --no-capture-output python roarm_rl/train_cube_push_ppo.py \
+  --env_kind tap10cm \
+  --num_envs 32 \
+  --max_iterations 1 \
+  --num_steps_per_env 580 \
+  --seed 29501 \
+  --experiment_name cube10cm_d295_replay_actor_freshgate_actorfreeze_rate_1it \
+  --logdir claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d295/tap10cm/ppo_replay_actor_freshgate_actorfreeze_rate_1it \
+  --warm_start_checkpoint_path claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_d256_replay_batches_d290/tap10cm_ep155/model_actor_d256_replay_batches_d290.pt \
+  --episode_length_s 6.0 \
+  --action_scale 0.04 \
+  --max_joint_delta_per_step_rad 0.04 \
+  --joint_target_lead_limit_rad 0.06 \
+  --joint_delta_reference joint_pos \
+  --fixed_push_dir_x 1.0 \
+  --fixed_push_dir_y 0.0 \
+  --tap_contact_proxy_mode link5_collision_aabb \
+  --d256_reset_csv_path claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_0_999_d242/rl_transition_preflight_d256/ppo_actor_prior_teacher_rows_d256.csv \
+  --d256_reset_frame_index 0 \
+  --d256_reset_sample_mode linspace \
+  --bc_teacher_blend 0.0 \
+  --bc_teacher_imitation_reward_scale 0.0 \
+  --init_noise_std 0.005 \
+  --actor_preserve_blend 1.0 \
+  --save_interval 1 \
+  --no_init_at_random_ep_len

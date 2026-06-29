@@ -185,6 +185,7 @@ class RoArmCubePushEnvCfg(RoArmStackEnvCfg):
     bc_teacher_midx_push_through_m: float = -1.0
     bc_teacher_highx_push_through_m: float = -1.0
     bc_teacher_phase_timing: str = "episode_scaled"
+    bc_teacher_linear_phase_steps: int = 579
     d256_reset_csv_path: str = ""
     d256_reset_frame_index: int = 0
     d256_reset_sample_mode: str = "random"
@@ -296,6 +297,8 @@ class RoArmCubeTap10cmEnvCfg(RoArmCubePushEnvCfg):
     tap_success_terminate: bool = False
     tap_useful_terminate: bool = False
     tap_stop_after_useful_seen: bool = False
+    tap_stop_after_disp_m: float = 0.0
+    tap_contact_slowdown_use_proxy: bool = False
     professor_physical_reaction_disp_m: float = 0.0005
     professor_physical_reaction_speed_mps: float = 0.005
     professor_physical_reaction_z_delta_m: float = 0.0005
@@ -857,6 +860,12 @@ class RoArmCubePushEnv(RoArmStackEnv):
             step_v = self.episode_length_buf.float() / denom * total
         elif timing == "direct_steps":
             step_v = self.episode_length_buf.float()
+        elif timing == "linear_episode":
+            denom = max(float(self.max_episode_length - 1), 1.0)
+            return torch.clamp(self.episode_length_buf.float() / denom, min=0.0, max=1.0)
+        elif timing == "linear_steps":
+            denom = max(float(getattr(self.cfg, "bc_teacher_linear_phase_steps", 579)), 1.0)
+            return torch.clamp(self.episode_length_buf.float() / denom, min=0.0, max=1.0)
         else:
             raise ValueError(f"unsupported bc_teacher_phase_timing={timing!r}")
         push = torch.clamp(traj["push_steps"], min=1.0)
@@ -1150,6 +1159,8 @@ class RoArmCubePushEnv(RoArmStackEnv):
         self._last_bc_teacher_action_abs_mean.zero_()
         if hasattr(self, "_last_tap_stop_after_useful_hold"):
             self._last_tap_stop_after_useful_hold.zero_()
+        if hasattr(self, "_last_tap_stop_after_disp_hold"):
+            self._last_tap_stop_after_disp_hold.zero_()
         if getattr(self, "_bc_teacher_ready", False) and (bc_blend_value > 0.0 or bc_reward_scale > 0.0):
             bc_teacher_actions = self._bc_teacher_actions()
             bc_blend = torch.full((self.num_envs,), max(0.0, min(1.0, bc_blend_value)), device=self.device)
@@ -1163,6 +1174,12 @@ class RoArmCubePushEnv(RoArmStackEnv):
             self.actions = torch.where(useful_hold.unsqueeze(-1), torch.zeros_like(self.actions), self.actions)
             if hasattr(self, "_last_tap_stop_after_useful_hold"):
                 self._last_tap_stop_after_useful_hold[:] = useful_hold.float()
+        tap_stop_after_disp_m = float(getattr(self.cfg, "tap_stop_after_disp_m", 0.0))
+        if tap_stop_after_disp_m > 0.0 and hasattr(self, "_tap_max_disp_xy"):
+            disp_hold = (self._tap_max_disp_xy >= tap_stop_after_disp_m) & ~self._tap_overshoot_seen
+            self.actions = torch.where(disp_hold.unsqueeze(-1), torch.zeros_like(self.actions), self.actions)
+            if hasattr(self, "_last_tap_stop_after_disp_hold"):
+                self._last_tap_stop_after_disp_hold[:] = disp_hold.float()
 
         alpha = float(self.cfg.action_smoothing_alpha)
         self._last_action_abs_mean[:] = torch.mean(torch.abs(self.actions), dim=-1)
@@ -1180,8 +1197,12 @@ class RoArmCubePushEnv(RoArmStackEnv):
         self._compute_intermediate_values()
         terms = self._push_terms()
         slowdown = torch.ones(self.num_envs, device=self.device)
+        contact_slowdown_mask = terms["tcp_cube_dist"] < float(self.cfg.contact_slowdown_tcp_dist_m)
+        if bool(getattr(self.cfg, "tap_contact_slowdown_use_proxy", False)) and hasattr(self, "_tap_terms"):
+            tap_terms = self._tap_terms()
+            contact_slowdown_mask = contact_slowdown_mask | tap_terms["tap_contact_proxy"]
         slowdown = torch.where(
-            terms["tcp_cube_dist"] < float(self.cfg.contact_slowdown_tcp_dist_m),
+            contact_slowdown_mask,
             torch.full_like(slowdown, float(self.cfg.contact_joint_delta_scale)),
             slowdown,
         )
@@ -1594,6 +1615,7 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
         self._tap_max_tip_angle_deg = torch.zeros(self.num_envs, device=self.device)
         self._tap_min_contact_vertical_offset = torch.full((self.num_envs,), torch.inf, device=self.device)
         self._last_tap_stop_after_useful_hold = torch.zeros(self.num_envs, device=self.device)
+        self._last_tap_stop_after_disp_hold = torch.zeros(self.num_envs, device=self.device)
 
     def _reset_idx(self, env_ids: torch.Tensor | None):
         super()._reset_idx(env_ids)
@@ -1613,6 +1635,7 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
         self._tap_max_tip_angle_deg[env_ids] = 0.0
         self._tap_min_contact_vertical_offset[env_ids] = torch.inf
         self._last_tap_stop_after_useful_hold[env_ids] = 0.0
+        self._last_tap_stop_after_disp_hold[env_ids] = 0.0
 
     def _link5_collision_aabb_contact_terms(
         self,
@@ -1822,6 +1845,10 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
             self._tap_min_contact_vertical_offset,
             torch.zeros_like(self._tap_min_contact_vertical_offset),
         )
+        tap_max_disp_along_ge_1mm = self._tap_max_disp_along >= 0.001
+        tap_max_disp_xy_ge_1mm = self._tap_max_disp_xy >= 0.001
+        tap_max_disp_along_ge_3mm = self._tap_max_disp_along >= 0.003
+        tap_max_disp_xy_ge_3mm = self._tap_max_disp_xy >= 0.003
         prev_target_error = torch.abs(torch.clamp(self._prev_disp_along, min=0.0) - target_disp_m)
         progress = torch.clamp(prev_target_error - terms["tap_target_disp_error_m"], min=-0.005, max=0.005)
         self._prev_disp_along[:] = terms["disp_along"].detach()
@@ -1888,6 +1915,10 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
             "cube_tap_success_rate": self._tap_success_flag.float().mean().detach(),
             "cube_tap_max_disp_along_m": self._tap_max_disp_along.mean().detach(),
             "cube_tap_max_disp_xy_m": self._tap_max_disp_xy.mean().detach(),
+            "cube_tap_max_disp_along_ge_1mm_rate": tap_max_disp_along_ge_1mm.float().mean().detach(),
+            "cube_tap_max_disp_xy_ge_1mm_rate": tap_max_disp_xy_ge_1mm.float().mean().detach(),
+            "cube_tap_max_disp_along_ge_3mm_rate": tap_max_disp_along_ge_3mm.float().mean().detach(),
+            "cube_tap_max_disp_xy_ge_3mm_rate": tap_max_disp_xy_ge_3mm.float().mean().detach(),
             "cube_tap_max_z_delta_m": self._tap_max_z_delta.mean().detach(),
             "cube_tap_max_speed_mps": self._tap_max_speed.mean().detach(),
             "cube_tap_contact_face_gap_m": terms["tap_contact_face_gap_m"].mean().detach(),
@@ -1896,6 +1927,11 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
             "cube_tap_min_contact_vertical_offset_m": min_contact_vertical.mean().detach(),
             "cube_tap_min_contact_vertical_finite_rate": min_contact_vertical_finite.float().mean().detach(),
             "cube_tap_stop_after_useful_hold_rate": self._last_tap_stop_after_useful_hold.mean().detach(),
+            "cube_tap_stop_after_disp_hold_rate": self._last_tap_stop_after_disp_hold.mean().detach(),
+            "cube_tap_stop_after_disp_m": torch.tensor(float(self.cfg.tap_stop_after_disp_m), device=self.device),
+            "cube_tap_contact_slowdown_use_proxy": torch.tensor(
+                float(bool(self.cfg.tap_contact_slowdown_use_proxy)), device=self.device
+            ),
             "cube_push_tcp_cube_dist_m": terms["tcp_cube_dist"].mean().detach(),
             "cube_push_joint_delta_abs_mean": self._last_joint_delta_abs_mean.mean().detach(),
             "cube_push_joint_delta_abs_max": self._last_joint_delta_abs_max.mean().detach(),

@@ -1,0 +1,94 @@
+{
+  "action_scale": 0.04,
+  "action_smoothing_alpha": 1.0,
+  "artifact": "cube10cm_d289_policy_actions_32env_steps580_d256_action_replay_probe",
+  "bc_teacher_feature_target_mode": "env_target",
+  "bc_teacher_linear_phase_steps": 579,
+  "bc_teacher_phase_timing": "linear_steps",
+  "contact_env_count": 32,
+  "contact_joint_delta_scale": 1.0,
+  "contact_rate": 1.0,
+  "contact_threshold_m": 0.055,
+  "env_id": "RoArm-CubeTap10cm-Direct-v0",
+  "execution_mode": "policy_actions",
+  "fast_cube_joint_delta_scale": 1.0,
+  "first_contact_step_min": 0,
+  "first_tap_useful_step_min": 0,
+  "first_tcp_threshold_step_min": -1,
+  "hold_steps": 3,
+  "interpretation": "This replays D256 state+joint_delta targets directly in the live 10cm env. For tap10cm, contact_rate uses tap_contact_proxy_mode and tcp_threshold_contact_rate reports the older tcp_cube_dist threshold.",
+  "joint_delta_reference": "joint_pos",
+  "joint_target_lead_limit_rad": 0.06,
+  "max_disp_along_m": {
+    "max": 0.015506505966186523,
+    "mean": 0.005066641606390476,
+    "min": 9.298324584960938e-06
+  },
+  "max_disp_xy_m": {
+    "max": 0.015575507655739784,
+    "mean": 0.005660976283252239,
+    "min": 1.1587240805965848e-05
+  },
+  "max_joint_delta_per_step_rad": 0.04,
+  "max_target_jump_abs_rad": {
+    "max": 0.3174239993095398,
+    "mean": 0.1487588882446289,
+    "min": 0.04787039756774902
+  },
+  "min_tcp_cube_dist_m": {
+    "max": 0.09944278001785278,
+    "mean": 0.07555785775184631,
+    "min": 0.06173969805240631
+  },
+  "no_ppo_learning": true,
+  "num_envs": 32,
+  "reset_pose_info": {
+    "arm_joint_reset_mean_rad": [
+      -0.11336809396743774,
+      0.38995522260665894,
+      2.2954864501953125,
+      0.5119655132293701,
+      0.0
+    ],
+    "cube_local_x_range_m": [
+      0.14000000059604645,
+      0.38999998569488525
+    ],
+    "cube_local_y_range_m": [
+      -0.10000000149011612,
+      0.15000000596046448
+    ],
+    "episode_max": 999,
+    "episode_min": 1,
+    "episode_unique_count": 32,
+    "row_count": 32
+  },
+  "robot_usd_path": "b200_backup_20260522_final/tmp_p7/p7_branch_b_cube2cm_opposing_jaw_v7_collision_usd_d024/roarm_m3.usd",
+  "seed": 1264,
+  "selected_episode_max": 999,
+  "selected_episode_min": 1,
+  "selected_episode_unique_count": 32,
+  "status": "PASS_PROBE_EXECUTED",
+  "step_samples_csv": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d256_action_replay_probe_d289/tap10cm/d256_action_replay_step_samples_d289_policy_actions_32env_steps580.csv",
+  "steps": 580,
+  "summary_json": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d256_action_replay_probe_d289/tap10cm/d256_action_replay_summary_d289_policy_actions_32env_steps580.json",
+  "summary_md": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d256_action_replay_probe_d289/tap10cm/d256_action_replay_summary_d289_policy_actions_32env_steps580.md",
+  "tap_contact_proxy_mode": "link5_collision_aabb",
+  "tap_useful_env_count": 32,
+  "tap_useful_rate": 1.0,
+  "tcp_threshold_contact_env_count": 0,
+  "tcp_threshold_contact_rate": 0.0,
+  "teacher_action_abs_max": null,
+  "teacher_action_abs_mean": null,
+  "teacher_checkpoint_path": "",
+  "teacher_compare_steps": 0,
+  "teacher_compared": false,
+  "teacher_csv": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_0_999_d242/rl_transition_preflight_d256/ppo_actor_prior_teacher_rows_d256.csv",
+  "teacher_needed_delta_cosine_mean": null,
+  "teacher_needed_delta_mae_mean": null,
+  "teacher_needed_delta_mse_mean": null,
+  "teacher_recorded_delta_cosine_mean": null,
+  "teacher_recorded_delta_mae_mean": null,
+  "teacher_recorded_delta_mse_mean": null,
+  "teacher_used": false
+}

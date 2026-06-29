@@ -1,0 +1,191 @@
+{
+  "artifact_tag": "d305_failed6_replay_plus_iter2_recovery_lr5e5_ep80",
+  "batch_size": 512,
+  "dataset_count": 2,
+  "dataset_paths": [
+    "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d304/tap10cm/fresh_failed_episode_probe_d304/d304_failed6_d256_replay_dataset.pt",
+    "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_recovery_repair_d305/tap10cm/failed6_replay_plus_recovery_lr1e4_ep80/closed_loop_recovery_after_repair/closed_loop_recovery_dataset_d305_after_repair.pt"
+  ],
+  "epochs": 80,
+  "final_train_metrics": {
+    "cosine": 0.7706674337387085,
+    "mae": 0.1887112259864807,
+    "mse": 0.09024304896593094,
+    "pred_abs_max": 2.395293712615967,
+    "pred_abs_mean": 0.3682737350463867,
+    "target_abs_max": 1.0,
+    "target_abs_mean": 0.44190549850463867
+  },
+  "final_val_metrics": {
+    "cosine": 0.7680895328521729,
+    "mae": 0.19531278312206268,
+    "mse": 0.09565364569425583,
+    "pred_abs_max": 1.7789212465286255,
+    "pred_abs_mean": 0.3612493872642517,
+    "target_abs_max": 1.0,
+    "target_abs_mean": 0.4422387182712555
+  },
+  "final_val_per_dim": [
+    {
+      "abs_gap_mean": 0.14568732678890228,
+      "dim": 0,
+      "label": "base",
+      "mse": 0.046849995851516724,
+      "pred_abs_mean": 0.44653862714767456,
+      "pred_signed_mean": -0.42042961716651917,
+      "target_abs_mean": 0.4900328516960144,
+      "target_signed_mean": -0.44389578700065613
+    },
+    {
+      "abs_gap_mean": 0.24945423007011414,
+      "dim": 1,
+      "label": "shoulder",
+      "mse": 0.1297837793827057,
+      "pred_abs_mean": 0.2891475558280945,
+      "pred_signed_mean": -0.039482954889535904,
+      "target_abs_mean": 0.4024392068386078,
+      "target_signed_mean": -0.009525138884782791
+    },
+    {
+      "abs_gap_mean": 0.2242003232240677,
+      "dim": 2,
+      "label": "elbow",
+      "mse": 0.10021060705184937,
+      "pred_abs_mean": 0.5599608421325684,
+      "pred_signed_mean": -0.25272083282470703,
+      "target_abs_mean": 0.6704633235931396,
+      "target_signed_mean": -0.27305367588996887
+    },
+    {
+      "abs_gap_mean": 0.3157743215560913,
+      "dim": 3,
+      "label": "wrist_pitch",
+      "mse": 0.20966970920562744,
+      "pred_abs_mean": 0.5130034685134888,
+      "pred_signed_mean": -0.10968631505966187,
+      "target_abs_mean": 0.6991971135139465,
+      "target_signed_mean": -0.05908200889825821
+    },
+    {
+      "abs_gap_mean": 0.23645281791687012,
+      "dim": 4,
+      "label": "wrist_roll",
+      "mse": 0.08740755915641785,
+      "pred_abs_mean": 0.3585382401943207,
+      "pred_signed_mean": 0.18518587946891785,
+      "target_abs_mean": 0.3912997245788574,
+      "target_signed_mean": 0.2026597112417221
+    },
+    {
+      "abs_gap_mean": 0.000307584268739447,
+      "dim": 5,
+      "label": "gripper",
+      "mse": 2.4139978904713644e-07,
+      "pred_abs_mean": 0.000307584268739447,
+      "pred_signed_mean": 1.776893259375356e-05,
+      "target_abs_mean": 0.0,
+      "target_signed_mean": 0.0
+    }
+  ],
+  "initial_train_metrics": {
+    "cosine": 0.3476276397705078,
+    "mae": 0.4382052719593048,
+    "mse": 0.5415778756141663,
+    "pred_abs_max": 4.115160942077637,
+    "pred_abs_mean": 0.29424557089805603,
+    "target_abs_max": 1.0,
+    "target_abs_mean": 0.44190549850463867
+  },
+  "initial_val_metrics": {
+    "cosine": 0.3540828824043274,
+    "mae": 0.4287230372428894,
+    "mse": 0.5352842211723328,
+    "pred_abs_max": 3.3956403732299805,
+    "pred_abs_mean": 0.2871818542480469,
+    "target_abs_max": 1.0,
+    "target_abs_mean": 0.4422387182712555
+  },
+  "initial_val_per_dim": [
+    {
+      "abs_gap_mean": 0.517936110496521,
+      "dim": 0,
+      "label": "base",
+      "mse": 0.5325870513916016,
+      "pred_abs_mean": 0.24471469223499298,
+      "pred_signed_mean": -0.03818337246775627,
+      "target_abs_mean": 0.4900328516960144,
+      "target_signed_mean": -0.44389578700065613
+    },
+    {
+      "abs_gap_mean": 0.365607351064682,
+      "dim": 1,
+      "label": "shoulder",
+      "mse": 0.3358657956123352,
+      "pred_abs_mean": 0.33480796217918396,
+      "pred_signed_mean": -0.04588456079363823,
+      "target_abs_mean": 0.4024392068386078,
+      "target_signed_mean": -0.009525138884782791
+    },
+    {
+      "abs_gap_mean": 0.4515710473060608,
+      "dim": 2,
+      "label": "elbow",
+      "mse": 0.6133058667182922,
+      "pred_abs_mean": 0.5612887144088745,
+      "pred_signed_mean": -0.48679280281066895,
+      "target_abs_mean": 0.6704633235931396,
+      "target_signed_mean": -0.27305367588996887
+    },
+    {
+      "abs_gap_mean": 0.7575497627258301,
+      "dim": 3,
+      "label": "wrist_pitch",
+      "mse": 1.234386682510376,
+      "pred_abs_mean": 0.42261987924575806,
+      "pred_signed_mean": -0.2477136105298996,
+      "target_abs_mean": 0.6991971135139465,
+      "target_signed_mean": -0.05908200889825821
+    },
+    {
+      "abs_gap_mean": 0.477958619594574,
+      "dim": 4,
+      "label": "wrist_roll",
+      "mse": 0.4955519437789917,
+      "pred_abs_mean": 0.15794488787651062,
+      "pred_signed_mean": -0.059606634080410004,
+      "target_abs_mean": 0.3912997245788574,
+      "target_signed_mean": 0.2026597112417221
+    },
+    {
+      "abs_gap_mean": 0.0017150240018963814,
+      "dim": 5,
+      "label": "gripper",
+      "mse": 8.199112016882282e-06,
+      "pred_abs_mean": 0.0017150240018963814,
+      "pred_signed_mean": -2.0754758224938996e-05,
+      "target_abs_mean": 0.0,
+      "target_signed_mean": 0.0
+    }
+  ],
+  "issues": [
+    "final val cosine below threshold: 0.7680895328521729"
+  ],
+  "learning_rate": 5e-05,
+  "oracle_contact_seen_rate": 1.0,
+  "oracle_overshoot_seen_rate": 0.0,
+  "oracle_reaction_seen_rate": 1.0,
+  "oracle_useful_seen_rate": 1.0,
+  "out_checkpoint": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_recovery_repair_d305/tap10cm/failed6_replay_plus_iter2_recovery_lr5e5_ep80/model_actor_d256_replay_batches_d290.pt",
+  "out_csv": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_recovery_repair_d305/tap10cm/failed6_replay_plus_iter2_recovery_lr5e5_ep80/actor_d256_replay_batches_train_losses_d290.csv",
+  "out_json": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_recovery_repair_d305/tap10cm/failed6_replay_plus_iter2_recovery_lr5e5_ep80/actor_d256_replay_batches_train_summary_d290.json",
+  "out_md": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_recovery_repair_d305/tap10cm/failed6_replay_plus_iter2_recovery_lr5e5_ep80/actor_d256_replay_batches_train_summary_d290.md",
+  "sample_count": 6960,
+  "selected_episode_max": 991,
+  "selected_episode_min": 29,
+  "selected_episode_unique_count": 6,
+  "source_actor_checkpoint": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_recovery_repair_d305/tap10cm/failed6_replay_plus_recovery_lr1e4_ep80/model_actor_d256_replay_batches_d290.pt",
+  "train_samples": 6264,
+  "val_samples": 696,
+  "verdict": "D290_D256_REPLAY_BATCH_ACTOR_TRAIN_WARN_NEEDS_ROLLOUT_EVAL",
+  "weight_decay": 1e-05
+}
