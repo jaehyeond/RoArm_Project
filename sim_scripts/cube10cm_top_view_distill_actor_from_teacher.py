@@ -246,7 +246,13 @@ def main() -> int:
     action_labels = ["base", "shoulder", "elbow", "wrist_pitch", "wrist_roll", "gripper"]
     if len(action_labels) != int(target_all.shape[-1]):
         action_labels = [f"action_{idx}" for idx in range(int(target_all.shape[-1]))]
-    useful_seen = inner._tap_contact_seen & inner._tap_reaction_seen & ~inner._tap_overshoot_seen
+    useful_min_disp_m = max(float(getattr(inner.cfg, "tap_useful_min_disp_m", 0.001)), 0.0)
+    useful_seen = (
+        inner._tap_contact_seen
+        & inner._tap_reaction_seen
+        & (inner._tap_max_disp_xy >= useful_min_disp_m)
+        & ~inner._tap_overshoot_seen
+    )
     teacher_rollout_contact = _tensor_mean(inner._tap_contact_seen.float())
     teacher_rollout_reaction = _tensor_mean(inner._tap_reaction_seen.float())
     teacher_rollout_useful = _tensor_mean(useful_seen.float())
@@ -398,6 +404,7 @@ def main() -> int:
         "teacher_rollout_contact_seen_rate": teacher_rollout_contact,
         "teacher_rollout_reaction_seen_rate": teacher_rollout_reaction,
         "teacher_rollout_useful_seen_rate": teacher_rollout_useful,
+        "tap_useful_min_disp_m": useful_min_disp_m,
         "teacher_rollout_overshoot_seen_rate": teacher_rollout_overshoot,
         "phase_alpha_mean_first": phase_means[0] if phase_means else None,
         "phase_alpha_mean_last": phase_means[-1] if phase_means else None,

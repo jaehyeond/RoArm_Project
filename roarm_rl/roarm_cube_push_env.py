@@ -155,7 +155,7 @@ class RoArmCubePushEnvCfg(RoArmStackEnvCfg):
     candidate8_diffik_target_residual_zero_after_disp_m: float = 0.0
     tap_push_primitive_stop_disp_m: float = 0.003
     tap_push_primitive_speed_stop_mps: float = 0.200
-    tap_push_primitive_speed_stop_min_disp_m: float = 0.0
+    tap_push_primitive_speed_stop_min_disp_m: float = 0.001
     tap_push_primitive_stop_on_overshoot: bool = True
     bc_teacher_checkpoint_path: str = ""
     bc_teacher_blend: float = 0.0
@@ -297,6 +297,7 @@ class RoArmCubeTap10cmEnvCfg(RoArmCubePushEnvCfg):
     tap_reaction_z_delta_m: float = 0.002
     tap_reaction_speed_mps: float = 0.020
     tap_reaction_tip_angle_deg: float = 1.0
+    tap_useful_min_disp_m: float = 0.001
     tap_overshoot_disp_m: float = 0.020
     tap_target_disp_tolerance_m: float = 0.003
     tap_overshoot_terminate: bool = False
@@ -1282,7 +1283,13 @@ class RoArmCubePushEnv(RoArmStackEnv):
             self._last_bc_teacher_imitation_mse[:] = torch.mean((policy_actions - bc_teacher_actions) ** 2, dim=-1)
             self._last_bc_teacher_action_abs_mean[:] = torch.mean(torch.abs(bc_teacher_actions), dim=-1)
         if bool(getattr(self.cfg, "tap_stop_after_useful_seen", False)) and hasattr(self, "_tap_contact_seen"):
-            useful_hold = self._tap_contact_seen & self._tap_reaction_seen & ~self._tap_overshoot_seen
+            useful_min_disp_m = max(float(getattr(self.cfg, "tap_useful_min_disp_m", 0.001)), 0.0)
+            useful_hold = (
+                self._tap_contact_seen
+                & self._tap_reaction_seen
+                & (self._tap_max_disp_xy >= useful_min_disp_m)
+                & ~self._tap_overshoot_seen
+            )
             self.actions = torch.where(useful_hold.unsqueeze(-1), torch.zeros_like(self.actions), self.actions)
             if hasattr(self, "_last_tap_stop_after_useful_hold"):
                 self._last_tap_stop_after_useful_hold[:] = useful_hold.float()
@@ -1998,14 +2005,20 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
         contact_context = contact_proxy | self._tap_contact_seen
         reaction_now = contact_context & reaction_signal_now
         overshoot_now = terms["disp_xy"] >= float(self.cfg.tap_overshoot_disp_m)
+        useful_min_disp_m = max(float(getattr(self.cfg, "tap_useful_min_disp_m", 0.001)), 0.0)
         target_disp_m = max(float(self.cfg.cube_push_target_disp_m), 1.0e-6)
         target_tol_m = max(float(self.cfg.tap_target_disp_tolerance_m), 1.0e-6)
         disp_along_pos = torch.clamp(terms["disp_along"], min=0.0)
+        useful_min_disp_now = terms["disp_xy"] >= useful_min_disp_m
         target_disp_error = torch.abs(disp_along_pos - target_disp_m)
         target_total_ok = terms["disp_xy"] <= target_disp_m + target_tol_m
-        target_band_now = (target_disp_error <= target_tol_m) & target_total_ok
+        target_band_now = (target_disp_error <= target_tol_m) & target_total_ok & useful_min_disp_now
         target_band_reward_m = torch.clamp(target_tol_m - target_disp_error, min=0.0, max=target_tol_m)
-        target_band_reward_m = torch.where(target_total_ok, target_band_reward_m, torch.zeros_like(target_band_reward_m))
+        target_band_reward_m = torch.where(
+            target_total_ok & useful_min_disp_now,
+            target_band_reward_m,
+            torch.zeros_like(target_band_reward_m),
+        )
         target_excess_m = torch.clamp(terms["disp_xy"] - (target_disp_m + target_tol_m), min=0.0)
         target_excess_ratio = target_excess_m / target_tol_m
         professor_physical_reaction_signal = (
@@ -2029,6 +2042,7 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
                 "tap_reaction_contact_context": contact_context,
                 "tap_reaction_now": reaction_now,
                 "tap_overshoot_now": overshoot_now,
+                "tap_useful_min_disp_now": useful_min_disp_now,
                 "tap_target_disp_error_m": target_disp_error,
                 "tap_target_band_now": target_band_now,
                 "tap_target_band_reward_m": target_band_reward_m,
@@ -2056,9 +2070,11 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
         self._tap_max_z_delta[:] = torch.maximum(self._tap_max_z_delta, terms["tap_z_delta_m"])
         self._tap_max_speed[:] = torch.maximum(self._tap_max_speed, terms["speed"])
         self._tap_max_tip_angle_deg[:] = torch.maximum(self._tap_max_tip_angle_deg, terms["tip_angle_deg"])
+        useful_min_disp_seen = self._tap_max_disp_xy >= float(getattr(self.cfg, "tap_useful_min_disp_m", 0.001))
         success_now = (
             self._tap_contact_seen
             & self._tap_reaction_seen
+            & useful_min_disp_seen
             & terms["tap_target_band_now"]
             & ~self._tap_overshoot_seen
         )
@@ -2074,13 +2090,16 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
         just_succeeded = self._tap_just_succeeded_pending.clone()
 
         target_disp_m = max(float(self.cfg.cube_push_target_disp_m), 1.0e-6)
+        useful_min_disp_m = max(float(getattr(self.cfg, "tap_useful_min_disp_m", 0.001)), 0.0)
+        useful_min_disp_seen = self._tap_max_disp_xy >= useful_min_disp_m
         useful_now = (
             (terms["tap_contact_proxy"] | self._tap_contact_seen)
             & terms["tap_reaction_now"]
+            & terms["tap_useful_min_disp_now"]
             & ~terms["tap_overshoot_now"]
         )
         contact_reaction_seen = self._tap_contact_seen & self._tap_reaction_seen
-        useful_seen = contact_reaction_seen & ~self._tap_overshoot_seen
+        useful_seen = contact_reaction_seen & useful_min_disp_seen & ~self._tap_overshoot_seen
         no_overshoot_seen = ~self._tap_overshoot_seen
         min_contact_vertical_finite = torch.isfinite(self._tap_min_contact_vertical_offset)
         min_contact_vertical = torch.where(
@@ -2125,6 +2144,8 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
             "cube_tap_reaction_seen_rate": self._tap_reaction_seen.float().mean().detach(),
             "cube_tap_useful_now_rate": useful_now.float().mean().detach(),
             "cube_tap_useful_seen_rate": useful_seen.float().mean().detach(),
+            "cube_tap_useful_min_disp_m": torch.tensor(useful_min_disp_m, device=self.device),
+            "cube_tap_useful_min_disp_seen_rate": useful_min_disp_seen.float().mean().detach(),
             "cube_tap_contact_reaction_seen_rate": contact_reaction_seen.float().mean().detach(),
             "cube_tap_no_overshoot_seen_rate": no_overshoot_seen.float().mean().detach(),
             "cube_tap_target_disp_m": torch.tensor(float(self.cfg.cube_push_target_disp_m), device=self.device),
@@ -2245,7 +2266,13 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
         if bool(self.cfg.tap_success_terminate):
             terminated = terminated | self._tap_success_flag
         if bool(getattr(self.cfg, "tap_useful_terminate", False)):
-            useful_seen = self._tap_contact_seen & self._tap_reaction_seen & ~self._tap_overshoot_seen
+            useful_min_disp_m = max(float(getattr(self.cfg, "tap_useful_min_disp_m", 0.001)), 0.0)
+            useful_seen = (
+                self._tap_contact_seen
+                & self._tap_reaction_seen
+                & (self._tap_max_disp_xy >= useful_min_disp_m)
+                & ~self._tap_overshoot_seen
+            )
             terminated = terminated | useful_seen
         truncated = self.episode_length_buf >= self.max_episode_length - 1
         return terminated, truncated

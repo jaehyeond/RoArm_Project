@@ -647,7 +647,13 @@ def main() -> int:
     if args.env_kind == "tap10cm":
         inner = env.unwrapped
         if hasattr(inner, "_tap_contact_seen"):
-            useful_seen = inner._tap_contact_seen & inner._tap_reaction_seen & ~inner._tap_overshoot_seen
+            useful_min_disp_m = max(float(getattr(inner.cfg, "tap_useful_min_disp_m", 0.001)), 0.0)
+            useful_seen = (
+                inner._tap_contact_seen
+                & inner._tap_reaction_seen
+                & (inner._tap_max_disp_xy >= useful_min_disp_m)
+                & ~inner._tap_overshoot_seen
+            )
             contact_reaction_seen = inner._tap_contact_seen & inner._tap_reaction_seen
             max_disp_along_ge_1mm = inner._tap_max_disp_along >= 0.001
             max_disp_xy_ge_1mm = inner._tap_max_disp_xy >= 0.001
@@ -659,6 +665,7 @@ def main() -> int:
                 "CollectionFinal/cube_tap_reaction_seen_rate": inner._tap_reaction_seen.float().mean(),
                 "CollectionFinal/cube_tap_contact_reaction_seen_rate": contact_reaction_seen.float().mean(),
                 "CollectionFinal/cube_tap_useful_seen_rate": useful_seen.float().mean(),
+                "CollectionFinal/cube_tap_useful_min_disp_m": torch.tensor(useful_min_disp_m, device=inner.device),
                 "CollectionFinal/cube_tap_success_rate": inner._tap_success_flag.float().mean(),
                 "CollectionFinal/cube_tap_overshoot_seen_rate": inner._tap_overshoot_seen.float().mean(),
                 "CollectionFinal/cube_tap_max_disp_along_m": inner._tap_max_disp_along.mean(),

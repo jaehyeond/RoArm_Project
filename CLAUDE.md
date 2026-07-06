@@ -30,6 +30,18 @@ Before answering current project-state questions or making edits:
 5. Run `git status --short`.
 6. Verify any metric from the referenced log/data file before citing it.
 
+## Session progress rule
+
+- Every research session must run at least one experiment that can fail
+  (RL training with real updates, or perturbation evaluation), or explicitly
+  justify why not in the session doc.
+- Control-contract hardening is REACTIVE only: it is permitted solely in
+  response to a failure observed during training or perturbation evaluation.
+- A verdict ending in `NO_PPO_PROMOTION` without a training attempt or
+  perturbation evaluation in the same session requires explicit justification
+  against this rule.
+- Validation that cannot change a decision must not be run.
+
 ### Session boot prompt (paste this verbatim at new-session start)
 
 ```

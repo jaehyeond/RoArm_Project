@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-07-06 KST (D311 current truth: D310's default-off non-PPO env primitive `rl_action_mode="tap_push_primitive"` remains the active baseline. D311 broadened fresh32 random diagnostics to seeds `30703` and `30704`; with D310-equivalent speed stop min displacement `0.0m`, combined contact/reaction/useful/final proxy stayed `64/64/64/64`, overshoot `0/64`, cap `0.0`, but XY `>=1mm` was `63/64` because seed `30704` env `19` stopped at step `1` with max XY `0.7008mm`. Added default-preserving env config `tap_push_primitive_speed_stop_min_disp_m=0.0` and D290 CLI `--primitive_speed_stop_min_disp_m`. With opt-in `0.001m`, seeds `30703/30704` achieved combined contact/reaction/useful/final proxy `64/64/64/64`, overshoot `0/64`, primitive stop-latched `64/64`, cap `0.0`, XY `>=1mm` `64/64`, `>=3mm` `64/64`, `>=7mm` `0/64`, `>=20mm` `0/64`, max XY mean/max/min `0.003797/0.005945/0.003002m`. This is control-contract hardening, not PPO, not learned-policy promotion, no tiny PPO trace gate, no B200/SSH, and no RoArm readiness.)
+Last updated: 2026-07-06 KST (D312 current truth: D311 exposed a reward/metric hole: seed `30704` env `19` had contact/reaction/useful/final proxy true with only `0.7008mm` max XY displacement and primitive stop step `1`. D312 promotes the D311 opt-in `0.001m` speed-stop displacement floor into the default env/probe runtime contract and adds `tap_useful_min_disp_m=0.001` as the strict useful floor. Env reward/logging, success, useful termination, stop-after-useful, D290 closed-loop probe summaries, teacher-off eval, D256 bin probe, actor/teacher trace, distillation summaries, PPO collection-final scalars, and TensorBoard collection-final gate now require `>=1mm` XY displacement for useful/promotion claims. D290 now records cube size/mass/friction perturbation overrides. `CLAUDE.md` now requires each research session to run a failure-capable experiment or justify why not, and control-contract hardening is reactive-only. This was a code/docs stop-loss session: no Isaac runtime perturbation, no PPO, no tiny PPO trace gate, no learned policy promotion, no B200/SSH, no pull, no RoArm readiness.)
 
 ## Current Truth
 
@@ -8,19 +8,23 @@ Last updated: 2026-07-06 KST (D311 current truth: D310's default-off non-PPO env
   dataset camera-contract branch. The earlier tap RL branch is frozen unless
   explicitly resumed.
 - Do not mix with Track A grasp/dataset/training work.
-- D311 session doc:
-  `claudedocs/session_20260706_cube10cm_top_view_d311_speed_stop_min_disp.md`.
-- D311 verdict:
-  `D311_SPEED_STOP_MIN_DISP_CONTROL_HARDENING_PASS_NO_PPO_PROMOTION`.
+- D312 session doc:
+  `claudedocs/session_20260706_cube10cm_top_view_d312_stoploss_strict_useful.md`.
+- D312 perturbation protocol:
+  `claudedocs/cube10cm_top_view_d312_perturbation_protocol.md`.
+- D312 verdict:
+  `D312_STOPLOSS_STRICT_USEFUL_BASELINE_V1_NO_RUNTIME_NO_PPO`.
 - Current next concrete action:
-  treat D311 as a non-PPO env/runtime control-contract hardening pass, not a
-  learned policy. Next work is broader speed-min primitive diagnostics across
-  more random seeds plus contact-proxy/approach-face edge cases before deciding
-  whether `primitive_speed_stop_min_disp_m=0.001` should become the recommended
-  runtime setting. Do not run PPO or a tiny PPO trace gate yet. Do not use D308
-  forced-second-reset fresh32 overshoot as a policy-failure blocker unless
-  reproduced under corrected reset.
-- Research objective is useful tap: physical contact/reaction without overshoot. The runtime's legacy `tap_success` still encodes the 6mm target-band until explicitly changed; use D229/D230 useful-tap log fields for the new objective.
+  run one failure-capable non-PPO perturbation benchmark against baseline
+  controller v1 (`rl_action_mode="tap_push_primitive"`,
+  `tap_push_primitive_speed_stop_min_disp_m=0.001`,
+  `tap_useful_min_disp_m=0.001`). Do not run a seed-only validation campaign.
+  Do not harden the controller again unless a perturbation/training failure is
+  observed and documented. Do not run PPO or a tiny PPO trace gate before this
+  perturbation benchmark.
+- Research objective is strict useful tap: contact/reaction, no overshoot, and
+  actual XY displacement `>=1mm`. The runtime's 6mm target band remains a
+  quality-tier diagnostic; it is no longer sufficient for useful/promotion.
 - Keep `policy_target_disp_m=0.006` and `tap_target_disp_tolerance_m=0.003` as quality-tier diagnostics, not as the primary "any useful tap" claim.
 - Current clean residual action branch is 3D task-space target residual (`candidate8_diffik_target_residual`, `policy_action_space=3`), no gates.
 - D224 geometry remains current: hand TCP is already offset from link5; distal collision surface is about 4.46mm beyond hand_tcp. Do not add another TCP offset.
@@ -424,7 +428,48 @@ Last updated: 2026-07-06 KST (D311 current truth: D310's default-off non-PPO env
     `video_backend=pyav` locally unless torchcodec/FFmpeg is repaired;
   - local available space is still only about `32G`.
 
-## Latest Result: D307
+## Latest Result: D312
+
+- D312 purpose:
+  - Stop the D310-D311 pattern from turning into endless control-contract
+    hardening.
+  - Consume the D311 low-displacement edge case as a metric/reward contract
+    bug, not as a reason for another seed-only validation campaign.
+  - Establish baseline controller v1 and the next failure-capable perturbation
+    benchmark before any PPO or tiny PPO trace gate.
+- Code/docs changes:
+  - Promoted `tap_push_primitive_speed_stop_min_disp_m` default to `0.001`.
+  - Added `tap_useful_min_disp_m=0.001`.
+  - Strict useful now requires contact, reaction, no overshoot, and max XY
+    displacement `>=1mm` in env reward/logging, success, stop-after-useful,
+    useful termination, D290 probe summaries, teacher-off eval, D256 bin probe,
+    actor/teacher trace, distillation summaries, PPO collection-final scalars,
+    and TensorBoard collection-final gate.
+  - D290 gained perturbation overrides for cube size, mass, static friction, and
+    dynamic friction, and records those values in summary JSON.
+  - `CLAUDE.md` now includes a session progress rule: every research session
+    must run a failure-capable experiment or justify why not; control hardening
+    is reactive only; validation that cannot change a decision must not be run.
+- Decision:
+  - Baseline controller v1 is D311 primitive with
+    `rl_action_mode="tap_push_primitive"`,
+    `tap_push_primitive_speed_stop_min_disp_m=0.001`,
+    `tap_useful_min_disp_m=0.001`.
+  - This is not PPO, not learned-policy promotion, and not RoArm readiness.
+  - The next session must run a non-PPO perturbation benchmark unless it
+    explicitly justifies why no failure-capable experiment was possible.
+- D312 verdict:
+  `D312_STOPLOSS_STRICT_USEFUL_BASELINE_V1_NO_RUNTIME_NO_PPO`.
+- Primary D312 artifacts:
+  - `claudedocs/session_20260706_cube10cm_top_view_d312_stoploss_strict_useful.md`
+  - `claudedocs/cube10cm_top_view_d312_perturbation_protocol.md`
+  - `CLAUDE.md`
+  - `roarm_rl/roarm_cube_push_env.py`
+  - `sim_scripts/cube10cm_top_view_d290_closed_loop_recovery_probe.py`
+  - `roarm_rl/train_cube_push_ppo.py`
+  - `sim_scripts/cube10cm_top_view_tensorboard_scalar_gate.py`
+
+## Previous Result: D307
 
 - D307 purpose:
   - Continue from D306 without PPO.
@@ -2753,87 +2798,33 @@ Last updated: 2026-07-06 KST (D311 current truth: D310's default-off non-PPO env
 
 ## Active Direction
 
-- Long PPO promotion is frozen while the professor visual-dataset branch is
-  active.
-- Current professor branch state is method-pipeline-ready plus D256
-  transition/reward data, D257 state-action teacher checkpoint, D270 restored
-  AABB dataset contact contract, D277 D256-reset-aligned teacher-on tiny PPO
-  smoke, D280 supervised actor distillation, D281 env-stop/min-contact PPO
-  safety controls, D282 PPO internal actor-preservation, D283-D285 short
-  preserved-actor PPO gates, D286-D291 actor/teacher bridge diagnostics, D292
-  tiny PPO plumbing/checkpoint pass, D293 displacement/horizon contract, D294
-  max/mean/rate displacement gate, D295 constrained short PPO rate-gate
-  runtime, D296 non-PPO overshoot-control diagnostic, D297 reset-protocol
-  re-audit, D298 tiny PPO TensorBoard collection failure, D299
-  no-success-terminate collection overshoot fix, D300 collection-final
-  TensorBoard gate failure, D301 final-env diagnostic, D302 hard-bin
-  diagnostic later superseded by D303, D303 hard-bin process-contamination
-  re-audit, D304 true PPO collection-path JSONL trace gate failure, D305
-  non-PPO closed-loop recovery repair partial result, D306 phase-aware
-  action repair tiny-vs-overshoot bracket, and D307 non-PPO action-governor
-  partial diagnostic. It is still not
-  training-complete, learned policy, or RoArm-ready.
-- Recommended next work:
-  1. inspect D307 first:
-     `claudedocs/session_20260630_cube10cm_top_view_d307_action_governor.md`;
-  2. treat D307 as partial/no-promotion: `predict_stop` fixed ep561 from
-     `41.5mm` overshoot to `4.996mm` no-overshoot and failed6 reached useful
-     `1.0`, overshoot `0.0`, cap `0.0`, but only `4/6` envs reached
-     `>=1mm`; recorded-target repair improved offline metrics but collapsed
-     runtime displacement;
-  3. do not run long PPO, a PPO ladder, partial actor preservation, real actor
-     updates, or another tiny PPO trace gate from D307;
-  4. next work is non-PPO deployable action-space/control repair: either move a
-     default-off displacement/velocity governor into the env and broaden fresh
-     reset diagnostics, or change the action representation toward a tool/object
-     push primitive instead of brittle scalar joint deltas;
-  5. inspect D306:
-     `claudedocs/session_20260630_cube10cm_top_view_d306_phase_action_repair.md`;
-  6. treat D306 as no-promotion: candidate-1 restores useful contact but gives
-     only about `0.037mm` XY displacement on ep561; candidate-2 can create
-     `41.5mm` displacement but overshoots; global action clips and contact
-     slowdown collapse displacement below `0.05mm`;
-  7. do not run long PPO, a PPO ladder, partial actor preservation, real actor
-     updates, or another tiny PPO trace gate from D306;
-  8. inspect D305:
-     `claudedocs/session_20260629_cube10cm_top_view_d305_closed_loop_recovery_repair.md`;
-  9. treat D305 as partial repair/no-promotion: no-contact was repaired on the
-     failed6 diagnostic set, but D304-like displacement stayed tiny and cap
-     pressure stayed high;
-  10. do not run long PPO, a PPO ladder, partial actor preservation, real actor
-     updates, or another tiny PPO trace gate from D305;
-  11. inspect D304 as the true PPO collection-path trace source:
-     `claudedocs/session_20260629_cube10cm_top_view_d304_collection_trace_gate.md`;
-  12. treat D304 as no-promotion: true PPO collection-path trace exists, but the
-     collection-final gate failed contact/reaction `0.84375` and useful
-     `0.8125` versus the strict `0.90` promotion threshold;
-  13. do not lower the `0.90` final useful/contact gate as a promotion standard
-     unless the user explicitly chooses a weaker exploratory gate;
-  14. inspect D303 as the warning against stale sequential multi-bin probes:
-     `claudedocs/session_20260629_cube10cm_top_view_d303_hard_bin_reaudit.md`;
-  15. inspect D300 as the final-state TensorBoard scalar gate baseline:
-     `claudedocs/session_20260629_cube10cm_top_view_d300_collection_final_gate.md`;
-  16. inspect D299 as the success-termination negative-control fix:
-     `claudedocs/session_20260629_cube10cm_top_view_d299_collection_contract_no_success_terminate.md`;
-  17. do not use `tap_success_terminate=True` for the current actor-preserved
-     tap10cm collection gate;
-  18. inspect D298 as the negative control:
-     `claudedocs/session_20260629_cube10cm_top_view_d298_tiny_ppo_directreset_gate.md`;
-  19. inspect D297 next:
-     `claudedocs/session_20260629_cube10cm_top_view_d297_teacher_off_reset_protocol.md`;
-  20. keep `--d256_reset_warmup_mode direct_reset` as the default teacher-off
-     gate. The old forced-step paths are diagnostic only and must not be used as
-     promotion gates;
-  21. inspect D296 only as the negative control that motivated the reset-protocol
-     audit:
-     `claudedocs/session_20260629_cube10cm_top_view_d296_overshoot_control_diagnostic.md`;
-  22. keep the 10cm cube task framed as a tool-object interaction primitive:
-     contact, reaction, controlled displacement, no overshoot, and visual
-     trajectory output;
-  23. keep `link5_collision_aabb` as the current tap10cm contact proxy unless a
-     separately named `tool_surface_union` contract is implemented and validated;
-  24. do not claim final policy, learned policy, RoArm readiness, or mining
-      automation readiness from D307.
+- Long PPO and tiny PPO trace gates are frozen until a non-PPO perturbation
+  benchmark creates a concrete failure target. Do not run PPO merely because the
+  baseline controller now passes the nominal corrected reset distribution.
+- Baseline controller v1 is frozen as:
+  - `rl_action_mode="tap_push_primitive"`
+  - `tap_push_primitive_speed_stop_min_disp_m=0.001`
+  - `tap_useful_min_disp_m=0.001`
+  - useful/promotion requires contact, reaction, no overshoot, and max XY
+    displacement `>=1mm`.
+- Do not run another seed-only speed-min validation campaign. D311 already
+  showed that `0.001m` is strictly better than `0.0m` on the observed edge case,
+  and D312 promotes it with a fallback-controlled code change.
+- Next work must be one failure-capable non-PPO perturbation benchmark:
+  1. nominal baseline row for reproducibility;
+  2. mild physical perturbations: cube size `0.09/0.10/0.11m`, mass
+     `0.50/0.72/1.00kg`, friction low/nominal/high;
+  3. stricter reset/contact geometry cases only after the physical rows are
+     measured;
+  4. metrics: strict useful/contact/reaction, overshoot `<=5%`, cap low,
+     XY `>=1mm` and `>=3mm` rates, final/current proxy, stop step, max XY
+     distribution, and logged cube perturbation fields.
+- Control-contract hardening is reactive only. If the perturbation benchmark
+  fails, freeze the failure as an RL/control target before adding another
+  controller condition. If it passes, increase perturbation severity rather than
+  running more nominal seeds.
+- The 10cm cube top-view task remains a foundation fixture and benchmark, not a
+  POSCO/general VLA deployment claim.
 - Do not start actual SmolVLA/VLA fine-tuning, PPO, action-teacher, RoArm
   deployment, RunPod runtime, or raw cleanup without explicit approval.
 - Do not generate 1000/10000 additional episodes from this result.
@@ -2849,99 +2840,26 @@ Last updated: 2026-07-06 KST (D311 current truth: D310's default-off non-PPO env
 ## Must Read First
 
 1. `CLAUDE.md` Current-State Protocol.
-2. `START_HERE.md` D307 current truth and Active Direction.
-3. `claudedocs/DECISIONS.md` D307, D306, D305, D304, D303, D302, D301, D300, D299, D298, D297, D296, D295, D294, D293, D292, D291, D290, D288, D287, D286, D283-D285,
-   D282, D281, D257, D256, D254, D247, D246, D232.
-4. `claudedocs/EXPERIMENT_LEDGER.md` latest D307 row.
-5. `claudedocs/session_20260630_cube10cm_top_view_d307_action_governor.md`.
-6. D307 runtime/diagnostic output roots:
-   - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/action_governor_d307/tap10cm/failed6_predict_stop_h020_v200/`
-   - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/action_governor_d307/tap10cm/recorded_repair_failed6_predict_stop_h020_v200/`
-   - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/action_governor_d307/tap10cm/recorded_repair_lr5e5_ep80/`
-7. `claudedocs/session_20260630_cube10cm_top_view_d306_phase_action_repair.md`.
-8. D306 runtime/diagnostic output roots:
-   - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_recovery_repair_d306/tap10cm/phase_c1_replay_plus_phase_lr5e5_ep100/`
-   - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_recovery_repair_d306/tap10cm/phase_iter2_replay_plus_failed6_lr5e5_ep100/`
-   - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_recovery_repair_d306/tap10cm/fresh_onebin_iter2_d304runtime_ep561/`
-9. `claudedocs/session_20260629_cube10cm_top_view_d305_closed_loop_recovery_repair.md`.
-10. D305 runtime/diagnostic output roots:
-   - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_recovery_repair_d305/tap10cm/failed6_replay_plus_recovery_lr1e4_ep80/`
-   - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_recovery_repair_d305/tap10cm/failed6_replay_plus_iter2_recovery_lr5e5_ep80/`
-11. `claudedocs/session_20260629_cube10cm_top_view_d304_collection_trace_gate.md`.
-12. D304 runtime/diagnostic output roots:
-   - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d304/tap10cm/ppo_directreset_actorfreeze_random_stop003_no_success_term_trace_seed29801_1it/`
-   - `cube10cm_d304_directreset_actorfreeze_random_stop003_no_success_term_trace_seed29801_1it/collection_final_env_trace_iter_0.jsonl`
-   - `cube10cm_d304_directreset_actorfreeze_random_stop003_no_success_term_trace_seed29801_1it/tensorboard_scalar_gate_d304_seed29801_trace.json`
-   - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d304/tap10cm/fresh_failed_episode_probe_d304/`
-13. `claudedocs/session_20260629_cube10cm_top_view_d303_hard_bin_reaudit.md`.
-14. `claudedocs/session_20260629_cube10cm_top_view_d300_collection_final_gate.md`.
-15. D300 runtime output roots:
-   - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d300/tap10cm/ppo_directreset_actorfreeze_random_stop003_no_success_term_finalgate_seed29801_1it/`
-   - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d300/tap10cm/ppo_directreset_actorfreeze_random_stop003_no_success_term_finalgate_seed29604_1it/`
-   - `cube10cm_d300_directreset_actorfreeze_random_stop003_no_success_term_finalgate_seed29801_1it/tensorboard_scalar_gate_d300_seed29801_finalgate.json`
-   - `cube10cm_d300_directreset_actorfreeze_random_stop003_no_success_term_finalgate_seed29604_1it/tensorboard_scalar_gate_d300_seed29604_finalgate.json`
-16. `claudedocs/session_20260629_cube10cm_top_view_d299_collection_contract_no_success_terminate.md`.
-17. D299 diagnostic/runtime output roots:
-   - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d298/tap10cm/collection_contract_d299/`
-   - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d299/tap10cm/ppo_directreset_actorfreeze_random_stop003_no_success_term_1it/`
-   - `ppo_command_d299.txt`
-   - `tensorboard_dashboard_command_d299.txt`
-   - `cube10cm_d299_directreset_actorfreeze_random_stop003_no_success_term_1it/tensorboard_scalar_gate_d299.json`
-   - `cube10cm_d299_directreset_actorfreeze_random_stop003_no_success_term_1it/teacher_off_direct_seed29801/teacher_off_policy_eval_summary_d299_direct_seed29801.json`
-   - `cube10cm_d299_directreset_actorfreeze_random_stop003_no_success_term_1it/teacher_off_direct_seed29604/teacher_off_policy_eval_summary_d299_direct_seed29604.json`
-18. `claudedocs/session_20260629_cube10cm_top_view_d298_tiny_ppo_directreset_gate.md`.
-19. D298 PPO output root:
-   - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d298/tap10cm/ppo_directreset_actorfreeze_random_stop003_1it/`
-   - `ppo_command_d298.txt`
-   - `tensorboard_dashboard_command_d298.txt`
-   - `cube10cm_d298_directreset_actorfreeze_random_stop003_1it/tensorboard_scalar_gate_d298.json`
-   - `cube10cm_d298_directreset_actorfreeze_random_stop003_1it/teacher_off_direct_seed29801/teacher_off_policy_eval_summary_d298_direct_seed29801.json`
-   - `cube10cm_d298_directreset_actorfreeze_random_stop003_1it/teacher_off_direct_seed29604/teacher_off_policy_eval_summary_d298_direct_seed29604.json`
-20. `claudedocs/session_20260629_cube10cm_top_view_d297_teacher_off_reset_protocol.md`.
-21. D297 action/reset diagnostic output root:
-   - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d295/tap10cm/action_diagnostic_d297/`
-   - `teacher_off_direct_seed29603/teacher_off_policy_eval_summary_d297_direct_seed29603.json`
-   - `teacher_off_direct_seed29604/teacher_off_policy_eval_summary_d297_direct_seed29604.json`
-   - `random_envhook_seed29604/closed_loop_recovery_summary_d297_random_envhook_seed29604_actor_action_diagnostic.json`
-   - `random_envhook_direct_seed29604/closed_loop_recovery_summary_d297_random_envhook_direct_seed29604_actor_action_diagnostic.json`
-   - `reset_alignment_envhook_seed29604_vel/reset_alignment_envhook_seed29604_vel_d297.csv`
-22. `claudedocs/session_20260629_cube10cm_top_view_d296_overshoot_control_diagnostic.md`.
-23. D296 overshoot-control output root:
-   - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d295/tap10cm/overshoot_control_d296/`
-   - `run_overshoot_control_matrix_d296.sh`
-   - `run_candidate_random_checks_d296.sh`
-   - `run_conservative_random_checks_d296.sh`
-   - `stop_disp003_random_seed29604_envtrace_d296/teacher_off_policy_eval_envs_stop_disp003_random_seed29604_envtrace_d296.csv`
-24. `claudedocs/session_20260629_cube10cm_top_view_d295_rate_gate_runtime.md`.
-25. D295 PPO output root:
-   - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d295/tap10cm/ppo_replay_actor_freshgate_actorfreeze_rate_1it/`
-   - `ppo_command_d295.txt`
-   - `tensorboard_dashboard_command_d295.txt`
-   - `cube10cm_d295_replay_actor_freshgate_actorfreeze_rate_1it/tensorboard_scalar_gate_d295.json`
-   - `cube10cm_d295_replay_actor_freshgate_actorfreeze_rate_1it/teacher_off_eval_model0_d295_contract/teacher_off_policy_eval_summary_d295_model0.json`
-   - `cube10cm_d295_replay_actor_freshgate_actorfreeze_rate_1it/model_0.pt`
-26. `claudedocs/session_20260629_cube10cm_top_view_displacement_rate_gate_d294.md`.
-27. `claudedocs/session_20260629_cube10cm_top_view_displacement_horizon_contract_d293.md`.
-28. D292 PPO output root:
-   - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d292/tap10cm/ppo_replay_actor_freshgate_actorfreeze_1it/cube10cm_d292_replay_actor_freshgate_actorfreeze_1it/`
-   - `tensorboard_scalar_gate_d292.json`
-   - `teacher_off_eval_model0/teacher_off_policy_eval_summary_d292_model0.json`
-   - `model_0.pt`
-29. D291 fresh-per-bin gate:
-   - `claudedocs/session_20260628_cube10cm_top_view_fresh_bin_actor_d291.md`
-   - `sim_scripts/cube10cm_top_view_d290_closed_loop_recovery_probe.py`
-30. D290 replay-batch actor:
-   - `claudedocs/session_20260627_cube10cm_top_view_d256_replay_batch_actor_d290.md`
-   - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_d256_replay_batches_d290/tap10cm_ep155/model_actor_d256_replay_batches_d290.pt`
-31. Relevant code:
-   - `roarm_rl/roarm_cube_push_env.py`
-   - `roarm_rl/train_cube_push_ppo.py`
-   - `sim_scripts/cube10cm_top_view_tensorboard_scalar_gate.py`
-   - `sim_scripts/cube10cm_top_view_teacher_off_policy_eval.py`
-   - `sim_scripts/cube10cm_top_view_d256_action_replay_probe.py`
-   - `sim_scripts/cube10cm_top_view_d256_reset_bin_actor_probe.py`
-   - `sim_scripts/cube10cm_top_view_train_actor_from_replay_batches.py`
-   - `sim_scripts/cube10cm_top_view_train_state_action_teacher.py`
+2. `START_HERE.md` D312 current truth and Active Direction.
+3. `claudedocs/DECISIONS.md` latest D312, then D311-D307 for context.
+4. `claudedocs/EXPERIMENT_LEDGER.md` latest D312 row.
+5. `claudedocs/session_20260706_cube10cm_top_view_d312_stoploss_strict_useful.md`.
+6. `claudedocs/cube10cm_top_view_d312_perturbation_protocol.md`.
+7. `claudedocs/session_20260706_cube10cm_top_view_d311_speed_stop_min_disp.md`
+   for the `0.7008mm` low-displacement evidence and `0.001m` speed-min result.
+8. `claudedocs/session_20260701_cube10cm_top_view_d310_env_push_primitive_contract.md`
+   for the env primitive runtime contract.
+9. `claudedocs/session_20260701_cube10cm_top_view_d309_push_primitive_reset_reaudit.md`
+   for the corrected-reset and stop-termination evidence.
+10. `claudedocs/session_20260701_cube10cm_top_view_d308_env_governor_control_repair.md`
+    and `claudedocs/session_20260630_cube10cm_top_view_d307_action_governor.md`
+    only as negative/partial controls.
+11. Relevant code:
+    - `roarm_rl/roarm_cube_push_env.py`
+    - `sim_scripts/cube10cm_top_view_d290_closed_loop_recovery_probe.py`
+    - `roarm_rl/train_cube_push_ppo.py`
+    - `sim_scripts/cube10cm_top_view_tensorboard_scalar_gate.py`
+    - `sim_scripts/cube10cm_top_view_teacher_off_policy_eval.py`
 
 ## Archived D286 Must Read Reference
 

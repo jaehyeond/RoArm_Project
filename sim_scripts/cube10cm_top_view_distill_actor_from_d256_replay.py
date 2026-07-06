@@ -354,7 +354,13 @@ def main() -> int:
                 max_disp_xy = torch.maximum(max_disp_xy, terms["disp_xy"].detach())
                 max_disp_along = torch.maximum(max_disp_along, terms["disp_along"].detach())
 
-            useful_seen = inner._tap_contact_seen & inner._tap_reaction_seen & ~inner._tap_overshoot_seen
+            useful_min_disp_m = max(float(getattr(inner.cfg, "tap_useful_min_disp_m", 0.001)), 0.0)
+            useful_seen = (
+                inner._tap_contact_seen
+                & inner._tap_reaction_seen
+                & (inner._tap_max_disp_xy >= useful_min_disp_m)
+                & ~inner._tap_overshoot_seen
+            )
             batch_contact = _tensor_mean(inner._tap_contact_seen.float())
             batch_reaction = _tensor_mean(inner._tap_reaction_seen.float())
             batch_useful = _tensor_mean(useful_seen.float())
@@ -445,6 +451,7 @@ def main() -> int:
         "oracle_contact_seen_rate": oracle_contact,
         "oracle_reaction_seen_rate": oracle_reaction,
         "oracle_useful_seen_rate": oracle_useful,
+        "tap_useful_min_disp_m": max(float(getattr(inner.cfg, "tap_useful_min_disp_m", 0.001)), 0.0),
         "oracle_overshoot_seen_rate": oracle_overshoot,
         "oracle_max_disp_xy_mean_m": _tensor_mean(max_disp_xy_all),
         "oracle_max_disp_xy_max_m": _tensor_max(max_disp_xy_all),

@@ -156,6 +156,10 @@ def main() -> int:
     parser.add_argument("--joint_target_lead_limit_rad", type=float, default=0.06)
     parser.add_argument("--joint_delta_reference", choices=("target", "joint_pos"), default="joint_pos")
     parser.add_argument("--tap_contact_proxy_mode", choices=("tcp_point", "link5_collision_aabb"), default="link5_collision_aabb")
+    parser.add_argument("--cube_size_m", type=float, default=None)
+    parser.add_argument("--cube_mass_kg", type=float, default=None)
+    parser.add_argument("--cube_static_friction", type=float, default=None)
+    parser.add_argument("--cube_dynamic_friction", type=float, default=None)
     parser.add_argument("--tap_stop_after_useful_seen", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--tap_stop_after_disp_m", type=float, default=0.0)
     parser.add_argument("--tap_contact_slowdown_use_proxy", action=argparse.BooleanOptionalAction, default=False)
@@ -177,7 +181,7 @@ def main() -> int:
     parser.add_argument("--primitive_goal_disp_m", type=float, default=0.003)
     parser.add_argument("--primitive_push_steps", type=int, default=220)
     parser.add_argument("--primitive_speed_stop_mps", type=float, default=0.200)
-    parser.add_argument("--primitive_speed_stop_min_disp_m", type=float, default=0.0)
+    parser.add_argument("--primitive_speed_stop_min_disp_m", type=float, default=0.001)
     parser.add_argument("--primitive_diffik_step_clip_rad", type=float, default=0.010)
     parser.add_argument(
         "--primitive_target_path_mode",
@@ -233,6 +237,14 @@ def main() -> int:
         raise ValueError("--env_sample_every must be positive")
     if not (0.0 < float(args.exec_action_clip_abs) <= 1.0):
         raise ValueError("--exec_action_clip_abs must be in (0, 1]")
+    if args.cube_size_m is not None and float(args.cube_size_m) <= 0.0:
+        raise ValueError("--cube_size_m must be positive")
+    if args.cube_mass_kg is not None and float(args.cube_mass_kg) <= 0.0:
+        raise ValueError("--cube_mass_kg must be positive")
+    if args.cube_static_friction is not None and float(args.cube_static_friction) < 0.0:
+        raise ValueError("--cube_static_friction must be non-negative")
+    if args.cube_dynamic_friction is not None and float(args.cube_dynamic_friction) < 0.0:
+        raise ValueError("--cube_dynamic_friction must be non-negative")
     if float(args.action_governor_target_disp_m) <= 0.0:
         raise ValueError("--action_governor_target_disp_m must be positive")
     if float(args.action_governor_predict_horizon_s) < 0.0:
@@ -281,7 +293,7 @@ def main() -> int:
     from rsl_rl.runners import OnPolicyRunner
 
     from roarm_rl.agents.rsl_rl_ppo_cfg import RoArmPickPPORunnerCfg
-    from roarm_rl.roarm_cube_push_env import RoArmCubeTap10cmEnvCfg
+    from roarm_rl.roarm_cube_push_env import RoArmCubeTap10cmEnvCfg, TABLE_Z
     from sim_scripts.cube10cm_top_view_d256_action_replay_probe import load_episode_rows
     from sim_scripts.cube10cm_top_view_teacher_rollout_probe import apply_d256_pose_reset
 
@@ -306,6 +318,19 @@ def main() -> int:
     env_cfg.seed = int(args.seed)
     env_cfg.robot.spawn.usd_path = str(args.robot_usd_path)
     env_cfg.episode_length_s = float(args.episode_length_s)
+    if args.cube_size_m is not None:
+        cube_size_m = float(args.cube_size_m)
+        env_cfg.cube_size_x_m = cube_size_m
+        env_cfg.cube_size_y_m = cube_size_m
+        env_cfg.cube_size_z_m = cube_size_m
+        env_cfg.sponge.spawn.size = (cube_size_m, cube_size_m, cube_size_m)
+        env_cfg.sponge.init_state.pos = (0.30, 0.00, TABLE_Z + 0.5 * cube_size_m)
+    if args.cube_mass_kg is not None:
+        env_cfg.sponge.spawn.mass_props.mass = float(args.cube_mass_kg)
+    if args.cube_static_friction is not None:
+        env_cfg.sponge.spawn.physics_material.static_friction = float(args.cube_static_friction)
+    if args.cube_dynamic_friction is not None:
+        env_cfg.sponge.spawn.physics_material.dynamic_friction = float(args.cube_dynamic_friction)
     env_cfg.fixed_push_dir_x = 1.0
     env_cfg.fixed_push_dir_y = 0.0
     env_cfg.ik_endpoint_reset = False
@@ -748,7 +773,13 @@ def main() -> int:
             if args.out_step_env_csv is not None and (
                 step == 0 or step % int(args.env_sample_every) == 0 or step + 1 == int(args.steps)
             ):
-                useful_seen_step = inner._tap_contact_seen & inner._tap_reaction_seen & ~inner._tap_overshoot_seen
+                useful_min_disp_m = max(float(getattr(inner.cfg, "tap_useful_min_disp_m", 0.001)), 0.0)
+                useful_seen_step = (
+                    inner._tap_contact_seen
+                    & inner._tap_reaction_seen
+                    & (inner._tap_max_disp_xy >= useful_min_disp_m)
+                    & ~inner._tap_overshoot_seen
+                )
                 actor_cpu = actor_actions_clamped.detach().cpu()
                 exec_cpu = exec_actions.detach().cpu()
                 recorded_cpu = recorded_actions.detach().cpu()
@@ -828,7 +859,13 @@ def main() -> int:
                     step_env_rows.append(row)
 
             if step == 0 or (step + 1) % 50 == 0 or step + 1 == int(args.steps):
-                useful_seen_step = inner._tap_contact_seen & inner._tap_reaction_seen & ~inner._tap_overshoot_seen
+                useful_min_disp_m = max(float(getattr(inner.cfg, "tap_useful_min_disp_m", 0.001)), 0.0)
+                useful_seen_step = (
+                    inner._tap_contact_seen
+                    & inner._tap_reaction_seen
+                    & (inner._tap_max_disp_xy >= useful_min_disp_m)
+                    & ~inner._tap_overshoot_seen
+                )
                 step_rows.append(
                     {
                         "step": int(step),
@@ -874,7 +911,13 @@ def main() -> int:
                     }
                 )
 
-    useful_seen = inner._tap_contact_seen & inner._tap_reaction_seen & ~inner._tap_overshoot_seen
+    useful_min_disp_m = max(float(getattr(inner.cfg, "tap_useful_min_disp_m", 0.001)), 0.0)
+    useful_seen = (
+        inner._tap_contact_seen
+        & inner._tap_reaction_seen
+        & (inner._tap_max_disp_xy >= useful_min_disp_m)
+        & ~inner._tap_overshoot_seen
+    )
     actor_obs_all = torch.cat(actor_obs_parts, dim=0)
     target_all = torch.cat(target_parts, dim=0)
     actor_action_all = torch.cat(actor_action_parts, dim=0)
@@ -975,6 +1018,27 @@ def main() -> int:
         "joint_target_lead_limit_rad": float(inner.cfg.joint_target_lead_limit_rad),
         "joint_delta_reference": str(inner.cfg.joint_delta_reference),
         "exec_action_clip_abs": float(args.exec_action_clip_abs),
+        "cube_size_x_m": float(inner.cfg.cube_size_x_m),
+        "cube_size_y_m": float(inner.cfg.cube_size_y_m),
+        "cube_size_z_m": float(inner.cfg.cube_size_z_m),
+        "cube_spawn_size_m": [float(v) for v in getattr(inner.cfg.sponge.spawn, "size", ())],
+        "cube_mass_kg": float(getattr(inner.cfg.sponge.spawn.mass_props, "mass", math.nan)),
+        "cube_static_friction": float(
+            getattr(inner.cfg.sponge.spawn.physics_material, "static_friction", math.nan)
+        ),
+        "cube_dynamic_friction": float(
+            getattr(inner.cfg.sponge.spawn.physics_material, "dynamic_friction", math.nan)
+        ),
+        "d312_perturbation_overrides": {
+            "cube_size_m": float(args.cube_size_m) if args.cube_size_m is not None else None,
+            "cube_mass_kg": float(args.cube_mass_kg) if args.cube_mass_kg is not None else None,
+            "cube_static_friction": float(args.cube_static_friction)
+            if args.cube_static_friction is not None
+            else None,
+            "cube_dynamic_friction": float(args.cube_dynamic_friction)
+            if args.cube_dynamic_friction is not None
+            else None,
+        },
         "tap_contact_proxy_mode": str(args.tap_contact_proxy_mode),
         "tap_stop_after_useful_seen": bool(args.tap_stop_after_useful_seen),
         "tap_stop_after_disp_m": float(args.tap_stop_after_disp_m),
@@ -1057,6 +1121,7 @@ def main() -> int:
         "actor_contact_seen_rate": _tensor_mean(inner._tap_contact_seen.float()),
         "actor_reaction_seen_rate": _tensor_mean(inner._tap_reaction_seen.float()),
         "actor_useful_seen_rate": _tensor_mean(useful_seen.float()),
+        "tap_useful_min_disp_m": useful_min_disp_m,
         "actor_overshoot_seen_rate": _tensor_mean(inner._tap_overshoot_seen.float()),
         "actor_max_disp_xy_mean_m": _tensor_mean(max_disp_xy),
         "actor_max_disp_xy_max_m": _tensor_max(max_disp_xy),

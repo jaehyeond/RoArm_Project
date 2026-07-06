@@ -17482,3 +17482,44 @@ Sources:
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/action_space_control_repair_d311/tap10cm/fresh32_random_env_tap_push_primitive_matched_seed30703_speedmin001/`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/action_space_control_repair_d311/tap10cm/fresh32_random_env_tap_push_primitive_matched_seed30704_speedmin001/`
 - `START_HERE.md`
+
+## D312 - Freeze baseline v1 and make useful strict before perturbation (2026-07-06)
+
+- Scope:
+  - Continued after D311 on the professor 10cm / 0.72kg cube top-view visual
+    trajectory branch.
+  - Did not run Isaac runtime, PPO, tiny PPO trace gates, TensorBoard training,
+    torchrun, learned-policy updates, RoArm deployment, Track A, VLA/SmolVLA,
+    B200/SSH, pull, or `.ssh` copy.
+- Evidence:
+  - D311 showed a metric/reward hole: seed `30704` env `19` / D256 episode
+    `700` reported contact/reaction/useful/final proxy true with only
+    `0.7008mm` max XY displacement and primitive stop step `1`.
+  - D311 opt-in `0.001m` speed-stop minimum displacement fixed the observed
+    low-displacement case without losing the combined `64/64` nominal
+    contact/reaction/useful/final proxy result.
+- Decision:
+  - Promote `tap_push_primitive_speed_stop_min_disp_m=0.001` as the baseline
+    runtime/probe default.
+  - Add `tap_useful_min_disp_m=0.001` and treat useful/promotion as strict:
+    contact + reaction + no overshoot + max XY displacement `>=1mm`.
+  - Baseline controller v1 is D311 primitive with strict useful. It is a
+    baseline controller, not learned-policy success.
+  - Control-contract hardening is reactive only. Additional hardening must
+    answer an observed training or perturbation failure.
+  - The next research experiment must be a non-PPO perturbation benchmark; do
+    not run another nominal seed-only validation campaign and do not run PPO or
+    a tiny PPO trace gate before perturbation defines a failure target.
+- Verdict:
+  `D312_STOPLOSS_STRICT_USEFUL_BASELINE_V1_NO_RUNTIME_NO_PPO`.
+
+Sources:
+
+- `claudedocs/session_20260706_cube10cm_top_view_d312_stoploss_strict_useful.md`
+- `claudedocs/cube10cm_top_view_d312_perturbation_protocol.md`
+- `CLAUDE.md`
+- `START_HERE.md`
+- `roarm_rl/roarm_cube_push_env.py`
+- `sim_scripts/cube10cm_top_view_d290_closed_loop_recovery_probe.py`
+- `roarm_rl/train_cube_push_ppo.py`
+- `sim_scripts/cube10cm_top_view_tensorboard_scalar_gate.py`

@@ -461,7 +461,13 @@ def main() -> int:
             obs_finite_all = obs_finite_all and _obs_is_finite(torch, obs)
             action_finite_all = action_finite_all and bool(torch.isfinite(exec_actions).all().detach().cpu().item())
             step_terms = inner._tap_terms()
-            useful_seen_step = inner._tap_contact_seen & inner._tap_reaction_seen & ~inner._tap_overshoot_seen
+            useful_min_disp_m = max(float(getattr(inner.cfg, "tap_useful_min_disp_m", 0.001)), 0.0)
+            useful_seen_step = (
+                inner._tap_contact_seen
+                & inner._tap_reaction_seen
+                & (inner._tap_max_disp_xy >= useful_min_disp_m)
+                & ~inner._tap_overshoot_seen
+            )
 
             cap_trace.append(_tensor_mean(inner._last_joint_delta_cap_rate))
             action_abs_mean_trace.append(_tensor_mean(torch.abs(exec_actions).mean(dim=-1)))
@@ -487,7 +493,13 @@ def main() -> int:
             log_max_disp_xy_trace.append(_log_scalar(step_log, "cube_tap_max_disp_xy_m"))
 
         terms = inner._tap_terms()
-        useful_seen = inner._tap_contact_seen & inner._tap_reaction_seen & ~inner._tap_overshoot_seen
+        useful_min_disp_m = max(float(getattr(inner.cfg, "tap_useful_min_disp_m", 0.001)), 0.0)
+        useful_seen = (
+            inner._tap_contact_seen
+            & inner._tap_reaction_seen
+            & (inner._tap_max_disp_xy >= useful_min_disp_m)
+            & ~inner._tap_overshoot_seen
+        )
         static_stats = _static_bin_stats(rows, episode_min, episode_max)
         contact_seen_max = _max_with_log(contact_seen_trace, log_contact_seen_trace)
         reaction_seen_max = _max_with_log([], log_reaction_seen_trace)
@@ -522,6 +534,7 @@ def main() -> int:
             "tap_reaction_seen_rate_max_trace": reaction_seen_max,
             "tap_reaction_seen_rate_log_max_trace": _max_with_log([], log_reaction_seen_trace),
             "tap_useful_seen_rate": _tensor_mean(useful_seen.float()),
+            "tap_useful_min_disp_m": useful_min_disp_m,
             "tap_useful_seen_rate_max_trace": useful_seen_max,
             "tap_useful_seen_rate_post_step_buffer_max_trace": max(useful_seen_trace) if useful_seen_trace else 0.0,
             "tap_useful_seen_rate_log_max_trace": _max_with_log([], log_useful_seen_trace),

@@ -456,7 +456,7 @@ def main() -> int:
     parser.add_argument("--min_collection_final_tap_useful_seen_rate", type=float, default=0.90)
     parser.add_argument("--min_collection_final_tap_success_rate", type=float, default=0.0)
     parser.add_argument("--max_collection_final_tap_overshoot_seen_rate", type=float, default=0.05)
-    parser.add_argument("--min_collection_final_tap_disp_xy_ge_1mm_rate", type=float, default=0.25)
+    parser.add_argument("--min_collection_final_tap_disp_xy_ge_1mm_rate", type=float, default=0.90)
     parser.add_argument("--max_tcp_cube_dist_m", type=float, default=0.08)
     parser.add_argument("--max_tap_contact_vertical_offset_m", type=float, default=0.08)
     parser.add_argument("--tap_vertical_gate_mode", choices=("last", "min_contact"), default="last")

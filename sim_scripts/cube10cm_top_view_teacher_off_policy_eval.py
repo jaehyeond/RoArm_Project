@@ -359,7 +359,13 @@ def main() -> int:
             actions = torch.clamp(actions, -exec_clip, exec_clip)
             hold_mask = torch.zeros(inner.num_envs, dtype=torch.bool, device=inner.device)
             if bool(args.zero_actions_after_useful_seen):
-                hold_mask = inner._tap_contact_seen & inner._tap_reaction_seen & ~inner._tap_overshoot_seen
+                useful_min_disp_m = max(float(getattr(inner.cfg, "tap_useful_min_disp_m", 0.001)), 0.0)
+                hold_mask = (
+                    inner._tap_contact_seen
+                    & inner._tap_reaction_seen
+                    & (inner._tap_max_disp_xy >= useful_min_disp_m)
+                    & ~inner._tap_overshoot_seen
+                )
                 actions = torch.where(hold_mask.unsqueeze(-1), torch.zeros_like(actions), actions)
             action_finite_all = action_finite_all and bool(torch.isfinite(actions).all().detach().cpu().item())
             obs, rewards, dones, extras = env.step(actions)
@@ -391,7 +397,13 @@ def main() -> int:
             min_contact_vertical,
         )
         tcp_threshold_seen |= terms["tcp_cube_dist"] < float(inner.cfg.contact_slowdown_tcp_dist_m)
-        useful_seen = inner._tap_contact_seen & inner._tap_reaction_seen & ~inner._tap_overshoot_seen
+        useful_min_disp_m = max(float(getattr(inner.cfg, "tap_useful_min_disp_m", 0.001)), 0.0)
+        useful_seen = (
+            inner._tap_contact_seen
+            & inner._tap_reaction_seen
+            & (inner._tap_max_disp_xy >= useful_min_disp_m)
+            & ~inner._tap_overshoot_seen
+        )
         cap_mean = _tensor_mean(inner._last_joint_delta_cap_rate)
         action_abs_mean_per_env = torch.abs(actions).mean(dim=-1)
         action_abs_max_per_env = torch.abs(actions).max(dim=-1).values
@@ -502,7 +514,13 @@ def main() -> int:
     def _rsl_mean(key: str) -> float | None:
         return rsl_log_means.get(key)
 
-    useful_seen = inner._tap_contact_seen & inner._tap_reaction_seen & ~inner._tap_overshoot_seen
+    useful_min_disp_m = max(float(getattr(inner.cfg, "tap_useful_min_disp_m", 0.001)), 0.0)
+    useful_seen = (
+        inner._tap_contact_seen
+        & inner._tap_reaction_seen
+        & (inner._tap_max_disp_xy >= useful_min_disp_m)
+        & ~inner._tap_overshoot_seen
+    )
     issues: list[str] = []
     d256_active = _tensor_mean(inner._last_d256_reset_active)
     bc_blend_last = _tensor_mean(inner._last_bc_teacher_blend)
@@ -646,6 +664,7 @@ def main() -> int:
         "tap_contact_seen_rate": _tensor_mean(inner._tap_contact_seen.float()),
         "tap_reaction_seen_rate": _tensor_mean(inner._tap_reaction_seen.float()),
         "tap_useful_seen_rate": useful_rate,
+        "tap_useful_min_disp_m": useful_min_disp_m,
         "tap_success_rate": _tensor_mean(inner._tap_success_flag.float()),
         "tap_overshoot_seen_rate": overshoot_rate,
         "tap_contact_proxy_rate_last": _tensor_mean(final_terms["tap_contact_proxy"].float()),

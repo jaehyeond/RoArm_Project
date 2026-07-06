@@ -336,6 +336,7 @@ def main() -> int:
     mse_trace: list[float] = []
     cosine_trace: list[float] = []
     env_stop_after_useful_hold_rate_trace: list[float] = []
+    useful_min_disp_m = max(float(getattr(inner.cfg, "tap_useful_min_disp_m", 0.001)), 0.0)
 
     for step in range(int(args.eval_steps)):
         with torch.inference_mode():
@@ -379,7 +380,12 @@ def main() -> int:
 
         terms = inner._tap_terms()
         contact = terms["tap_contact_proxy"]
-        useful_seen = inner._tap_contact_seen & inner._tap_reaction_seen & ~inner._tap_overshoot_seen
+        useful_seen = (
+            inner._tap_contact_seen
+            & inner._tap_reaction_seen
+            & (inner._tap_max_disp_xy >= useful_min_disp_m)
+            & ~inner._tap_overshoot_seen
+        )
         max_vertical = torch.maximum(max_vertical, terms["tap_contact_vertical_offset_m"])
         min_contact_vertical = torch.where(
             contact,
@@ -485,7 +491,12 @@ def main() -> int:
         step_rows.append(row)
 
     final_terms = inner._tap_terms()
-    useful_seen = inner._tap_contact_seen & inner._tap_reaction_seen & ~inner._tap_overshoot_seen
+    useful_seen = (
+        inner._tap_contact_seen
+        & inner._tap_reaction_seen
+        & (inner._tap_max_disp_xy >= useful_min_disp_m)
+        & ~inner._tap_overshoot_seen
+    )
     steps_f = float(args.eval_steps)
     env_metrics = {
         "actor_teacher_mse_mean": env_sum_mse / steps_f,
@@ -640,6 +651,7 @@ def main() -> int:
         "tap_contact_seen_rate": _tensor_mean(inner._tap_contact_seen.float()),
         "tap_reaction_seen_rate": _tensor_mean(inner._tap_reaction_seen.float()),
         "tap_useful_seen_rate": _tensor_mean(useful_seen.float()),
+        "tap_useful_min_disp_m": useful_min_disp_m,
         "tap_success_rate": _tensor_mean(inner._tap_success_flag.float()),
         "tap_overshoot_seen_rate": overshoot_rate,
         "tap_contact_proxy_rate_last": _tensor_mean(final_terms["tap_contact_proxy"].float()),
