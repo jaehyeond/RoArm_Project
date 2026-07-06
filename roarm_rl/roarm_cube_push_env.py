@@ -324,6 +324,11 @@ class RoArmCubeTap10cmEnvCfg(RoArmCubePushEnvCfg):
     tap_transient_disp_reward_scale: float = 40.0
     tap_contact_proximity_reward_scale: float = 0.8
     tap_overshoot_penalty_scale: float = 12.0
+    tap_overshoot_seen_penalty_scale: float = 0.0
+    tap_strict_useful_reward_scale: float = 0.0
+    tap_strict_useful_seen_reward_scale: float = 0.0
+    tap_control_band_reward_scale: float = 0.0
+    tap_target_excess_quadratic_penalty_scale: float = 0.0
     tap_tip_penalty_scale: float = 0.02
 
 
@@ -2127,6 +2132,8 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
         contact_reaction_seen = self._tap_contact_seen & self._tap_reaction_seen
         useful_seen = contact_reaction_seen & useful_min_disp_seen & ~self._tap_overshoot_seen
         no_overshoot_seen = ~self._tap_overshoot_seen
+        control_band_now = terms["tap_useful_min_disp_now"] & ~terms["tap_overshoot_now"]
+        target_excess_ratio = terms["tap_target_excess_ratio"]
         min_contact_vertical_finite = torch.isfinite(self._tap_min_contact_vertical_offset)
         min_contact_vertical = torch.where(
             min_contact_vertical_finite,
@@ -2148,7 +2155,12 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
             + self.cfg.tap_contact_proximity_reward_scale * terms["tap_contact_proximity"]
             + self.cfg.tap_reaction_reward_scale * just_succeeded.float()
             + self.cfg.tap_transient_disp_reward_scale * terms["tap_target_band_reward_m"]
-            - self.cfg.tap_overshoot_penalty_scale * terms["tap_target_excess_ratio"]
+            + self.cfg.tap_strict_useful_reward_scale * useful_now.float()
+            + self.cfg.tap_strict_useful_seen_reward_scale * useful_seen.float()
+            + self.cfg.tap_control_band_reward_scale * control_band_now.float()
+            - self.cfg.tap_overshoot_penalty_scale * target_excess_ratio
+            - self.cfg.tap_overshoot_seen_penalty_scale * self._tap_overshoot_seen.float()
+            - self.cfg.tap_target_excess_quadratic_penalty_scale * target_excess_ratio.square()
             - self.cfg.tap_tip_penalty_scale * terms["tip_angle_deg"]
             + action_penalty
             + bc_imitation_penalty
@@ -2174,6 +2186,7 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
             "cube_tap_useful_min_disp_seen_rate": useful_min_disp_seen.float().mean().detach(),
             "cube_tap_contact_reaction_seen_rate": contact_reaction_seen.float().mean().detach(),
             "cube_tap_no_overshoot_seen_rate": no_overshoot_seen.float().mean().detach(),
+            "cube_tap_control_band_now_rate": control_band_now.float().mean().detach(),
             "cube_tap_target_disp_m": torch.tensor(float(self.cfg.cube_push_target_disp_m), device=self.device),
             "cube_tap_target_disp_tolerance_m": torch.tensor(
                 float(self.cfg.tap_target_disp_tolerance_m), device=self.device

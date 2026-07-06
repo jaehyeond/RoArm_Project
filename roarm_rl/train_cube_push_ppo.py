@@ -121,6 +121,16 @@ def main() -> int:
     parser.add_argument("--tap_stop_after_useful_seen", action="store_true")
     parser.add_argument("--tap_stop_after_disp_m", type=float, default=None)
     parser.add_argument("--tap_contact_slowdown_use_proxy", action="store_true")
+    parser.add_argument("--tap_contact_reward_scale", type=float, default=None)
+    parser.add_argument("--tap_reaction_reward_scale", type=float, default=None)
+    parser.add_argument("--tap_transient_disp_reward_scale", type=float, default=None)
+    parser.add_argument("--tap_contact_proximity_reward_scale", type=float, default=None)
+    parser.add_argument("--tap_overshoot_penalty_scale", type=float, default=None)
+    parser.add_argument("--tap_overshoot_seen_penalty_scale", type=float, default=None)
+    parser.add_argument("--tap_strict_useful_reward_scale", type=float, default=None)
+    parser.add_argument("--tap_strict_useful_seen_reward_scale", type=float, default=None)
+    parser.add_argument("--tap_control_band_reward_scale", type=float, default=None)
+    parser.add_argument("--tap_target_excess_quadratic_penalty_scale", type=float, default=None)
     parser.add_argument("--speed_penalty_scale", type=float, default=None)
     parser.add_argument("--speed_penalty_start_mps", type=float, default=None)
     parser.add_argument("--impact_terminal_penalty", type=float, default=None)
@@ -606,6 +616,27 @@ def main() -> int:
             f"{env_cfg.tap_contact_slowdown_use_proxy} -> True"
         )
         env_cfg.tap_contact_slowdown_use_proxy = True
+    tap_reward_args = (
+        "tap_contact_reward_scale",
+        "tap_reaction_reward_scale",
+        "tap_transient_disp_reward_scale",
+        "tap_contact_proximity_reward_scale",
+        "tap_overshoot_penalty_scale",
+        "tap_overshoot_seen_penalty_scale",
+        "tap_strict_useful_reward_scale",
+        "tap_strict_useful_seen_reward_scale",
+        "tap_control_band_reward_scale",
+        "tap_target_excess_quadratic_penalty_scale",
+    )
+    for name in tap_reward_args:
+        value = getattr(args, name)
+        if value is not None:
+            if not hasattr(env_cfg, name):
+                raise ValueError(f"--{name} is only supported for --env_kind tap10cm")
+            if float(value) < 0.0:
+                raise ValueError(f"--{name} must be non-negative")
+            print(f"[cube-push-train] {name}: {getattr(env_cfg, name)} -> {value}")
+            setattr(env_cfg, name, float(value))
     if args.speed_penalty_scale is not None:
         print(f"[cube-push-train] speed_penalty_scale: {env_cfg.speed_penalty_scale} -> {args.speed_penalty_scale}")
         env_cfg.speed_penalty_scale = args.speed_penalty_scale
@@ -733,6 +764,16 @@ def main() -> int:
         f"tap_stop_after_useful_seen={getattr(env_cfg, 'tap_stop_after_useful_seen', 'NA')} "
         f"tap_stop_after_disp_m={getattr(env_cfg, 'tap_stop_after_disp_m', 'NA')} "
         f"tap_contact_slowdown_use_proxy={getattr(env_cfg, 'tap_contact_slowdown_use_proxy', 'NA')} "
+        f"tap_contact_reward_scale={getattr(env_cfg, 'tap_contact_reward_scale', 'NA')} "
+        f"tap_reaction_reward_scale={getattr(env_cfg, 'tap_reaction_reward_scale', 'NA')} "
+        f"tap_transient_disp_reward_scale={getattr(env_cfg, 'tap_transient_disp_reward_scale', 'NA')} "
+        f"tap_contact_proximity_reward_scale={getattr(env_cfg, 'tap_contact_proximity_reward_scale', 'NA')} "
+        f"tap_overshoot_penalty_scale={getattr(env_cfg, 'tap_overshoot_penalty_scale', 'NA')} "
+        f"tap_overshoot_seen_penalty_scale={getattr(env_cfg, 'tap_overshoot_seen_penalty_scale', 'NA')} "
+        f"tap_strict_useful_reward_scale={getattr(env_cfg, 'tap_strict_useful_reward_scale', 'NA')} "
+        f"tap_strict_useful_seen_reward_scale={getattr(env_cfg, 'tap_strict_useful_seen_reward_scale', 'NA')} "
+        f"tap_control_band_reward_scale={getattr(env_cfg, 'tap_control_band_reward_scale', 'NA')} "
+        f"tap_target_excess_quadratic_penalty_scale={getattr(env_cfg, 'tap_target_excess_quadratic_penalty_scale', 'NA')} "
         f"joint_target_lead_limit_rad={env_cfg.joint_target_lead_limit_rad} "
         f"joint_delta_reference={env_cfg.joint_delta_reference} "
         f"ik_precontact_clearance_m={env_cfg.ik_precontact_clearance_m} "

@@ -17633,3 +17633,57 @@ Sources:
 - `roarm_rl/train_cube_push_ppo.py`
 - `roarm_rl/roarm_cube_push_env.py`
 - `START_HERE.md`
+
+## D316 - Reward-v1 short PPO improves overshoot but longer run is unstable (2026-07-07)
+
+- Scope:
+  - Analyzed the D315 low-friction primitive-residual PPO failure, repaired tap
+    reward wiring, and ran two failure-capable PPO follow-ups on local GPU.
+  - Did not use B200/SSH, pull, `.ssh` copy, RoArm deployment, Track A,
+    VLA/SmolVLA fine-tuning, or raw joint-delta revival.
+- Evidence:
+  - Reward audit found the generic train flag `--overshoot_penalty_scale` did
+    not tune the tap-specific `tap_overshoot_penalty_scale`; strict useful was
+    logged but not directly rewarded; and overshoot had no latched
+    overshoot-seen penalty.
+  - Added default-off tap reward knobs:
+    `tap_overshoot_seen_penalty_scale`,
+    `tap_strict_useful_reward_scale`,
+    `tap_strict_useful_seen_reward_scale`,
+    `tap_control_band_reward_scale`, and
+    `tap_target_excess_quadratic_penalty_scale`; exposed tap-specific reward
+    flags in `roarm_rl/train_cube_push_ppo.py`.
+  - Low-friction D314 proxy audit showed XY `>=1mm` `32/32` and XY `>=7mm`
+    `30/32`, but contact/reaction only `11/32`, so part of the low-friction
+    failure is a proxy-contract problem.
+  - High-friction D314 row remains suspect as a hard eval target because it
+    produced mean/max XY `3768.838/11989.522mm` and speed spikes around
+    `10m/s`.
+  - D316 reward-v1 30-iteration PPO:
+    contact/reaction `64/64`, useful `47/64`, overshoot `1/64`,
+    XY `>=1mm` `48/64`, XY `>=20mm` `1/64`, low-motion `<1mm` `16/64`,
+    max XY mean/max `6.372/62.538mm`.
+  - D316 reward-v1 warm-start 300-iteration PPO:
+    contact/reaction `64/64`, useful `39/64`, overshoot `23/64`,
+    XY `>=1mm` `62/64`, XY `>=20mm` `23/64`, low-motion `<1mm` `2/64`,
+    max XY mean/max `15.139/54.408mm`.
+- Decision:
+  - Reward-v1 is a real improvement over D315 at short horizon, but not a
+    promotion: it trades D315 over-push for low-motion, and longer training
+    reintroduces over-push.
+  - Continue PPO reward/control-shaping analysis on low friction with
+    baseline-vs-policy tables. Do not return to raw scalar joint deltas.
+  - Do not treat low-friction proxy misses as pure control failure without
+    proxy audit. Treat the high-friction 12m row as solver/runaway-suspect
+    until rendered or trace-confirmed.
+- Verdict:
+  `D316_REWARD_V1_SHORT_IMPROVES_LONGER_UNSTABLE_NO_PROMOTION`.
+
+Sources:
+
+- `claudedocs/session_20260707_cube10cm_top_view_d316_reward_v1_ppo.md`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/primitive_parameter_ppo_d316/tap10cm/d316_candidate8_friction_low_reward_v1_30it/d316_candidate8_friction_low_reward_v1_30it_summary.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/primitive_parameter_ppo_d316/tap10cm/d316_candidate8_friction_low_reward_v1_warm300/d316_candidate8_friction_low_reward_v1_warm300_summary.json`
+- `roarm_rl/roarm_cube_push_env.py`
+- `roarm_rl/train_cube_push_ppo.py`
+- `START_HERE.md`

@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-07-07 KST (D315 current truth: D314 completed the required 9-row non-PPO perturbation matrix. The baseline primitive held nominal/size-small/mass-light/observation-noise rows, weakened on size-large/mass-heavy, and broke on friction: low friction collapsed useful/contact to `10-11/32`, high friction produced `32/32` overshoot. D315 then satisfied the D313 positive PPO trigger by starting a real learnable primitive-residual PPO run with `rl_action_mode="candidate8_diffik_target_residual"` on low friction. That first 5-iteration PPO run recovered contact/reaction `64/64` but over-pushed: useful `32/64`, overshoot `32/64`, XY `>=20mm` `32/64`. No learned-policy promotion, no raw joint-delta revival, no RoArm/VLA/POSCO readiness. No B200/SSH, no pull, and no `.ssh` copy.)
+Last updated: 2026-07-07 KST (D316 current truth: D314 completed the required 9-row non-PPO perturbation matrix and identified friction as the first baseline-breaking axis. D315 satisfied the positive PPO trigger with real learnable `candidate8_diffik_target_residual` PPO on low friction, but over-pushed: useful `32/64`, overshoot `32/64`, XY `>=20mm` `32/64`. D316 audited the tap reward wiring, added default-off tap-specific strict-useful/overshoot reward knobs plus CLI flags, then ran reward-v1 PPO. The 30-iteration run improved useful to `47/64` and reduced overshoot to `1/64`, but left `16/64` low-motion cases below `1mm`. A warm-start 300-iteration run reduced low-motion to `2/64` but reintroduced overshoot `23/64` and lowered useful to `39/64`. Verdict: `D316_REWARD_V1_SHORT_IMPROVES_LONGER_UNSTABLE_NO_PROMOTION`. No learned-policy promotion, no raw joint-delta revival, no RoArm/VLA/POSCO readiness. No B200/SSH, no pull, and no `.ssh` copy.)
 
 ## Current Truth
 
@@ -8,24 +8,32 @@ Last updated: 2026-07-07 KST (D315 current truth: D314 completed the required 9-
   dataset camera-contract branch. The earlier tap RL branch is frozen unless
   explicitly resumed.
 - Do not mix with Track A grasp/dataset/training work.
+- D316 session doc:
+  `claudedocs/session_20260707_cube10cm_top_view_d316_reward_v1_ppo.md`.
 - D315 session doc:
   `claudedocs/session_20260707_cube10cm_top_view_d315_candidate8_primitive_residual_ppo_start.md`.
 - D314 session doc:
   `claudedocs/session_20260707_cube10cm_top_view_d314_perturbation_matrix_result.md`.
 - D314 aggregate:
   `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/perturbation_matrix_d314/tap10cm/d314_perturbation_matrix_aggregate.json`.
+- D316 PPO summaries:
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/primitive_parameter_ppo_d316/tap10cm/d316_candidate8_friction_low_reward_v1_30it/d316_candidate8_friction_low_reward_v1_30it_summary.json`,
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/primitive_parameter_ppo_d316/tap10cm/d316_candidate8_friction_low_reward_v1_warm300/d316_candidate8_friction_low_reward_v1_warm300_summary.json`.
 - D315 PPO summary:
   `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/primitive_parameter_ppo_d315/tap10cm/d315_candidate8_friction_low_5it/d315_candidate8_friction_low_5it_summary.json`.
+- D316 verdict:
+  `D316_REWARD_V1_SHORT_IMPROVES_LONGER_UNSTABLE_NO_PROMOTION`.
 - D315 verdict:
   `D315_CANDIDATE8_FRICTION_LOW_PPO_STARTED_OVERSHOOT_FAIL_NO_PROMOTION`.
 - D314 verdict:
   `D314_PERTURBATION_MATRIX_RESULT_FRICTION_BREAKS_BASELINE_NO_PROMOTION`.
 - Current next concrete action:
-  analyze and continue from the D315 overshoot-heavy learnable
-  primitive-residual PPO failure. The next PPO work should reduce overshoot
-  under friction variation while preserving contact/reaction, not return to raw
-  scalar joint deltas and not add a new hand-written controller patch before
-  analyzing the PPO failure mode.
+  continue from the D316 reward-v1 PPO result. The short run proves overshoot
+  can be reduced while preserving contact/reaction, but longer training shifts
+  back into over-push. Next work should adjust PPO reward/control shaping and
+  evaluate curves against baseline-vs-policy tables. Do not return to raw
+  scalar joint deltas and do not add a new hand-written controller patch before
+  learning analysis.
 - Research objective is strict useful tap: contact/reaction, no overshoot, and
   actual XY displacement `>=1mm`. The runtime's 6mm target band remains a
   quality-tier diagnostic; it is no longer sufficient for useful/promotion.
