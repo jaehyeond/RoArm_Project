@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-07-07 KST (D313 current truth: D312 fixed strict useful, but its perturbation protocol still lacked a positive PPO trigger, observation-noise rows, and a cap on severity escalation. D313 adds controller-side cube XY pose noise `candidate6_diffik_cube_pose_noise_xy_m` and D290 CLI `--primitive_cube_pose_noise_xy_m`; the noise is sampled per env on reset and applied only to the primitive controller cube reference, while reward/metric/referee terms remain ground truth. The D312/D313 perturbation matrix is now 9 rows: nominal, size2, mass2, friction2, observation-noise2 (`0.005m`, `0.015m`). Primitive-parameter PPO starts immediately after the 9 rows complete, regardless of result. Severity escalation is capped at one round. This was code/docs protocol repair, not Isaac runtime, not PPO, not tiny PPO trace gate, not learned-policy promotion, no B200/SSH, no pull, and no RoArm readiness.)
+Last updated: 2026-07-07 KST (D315 current truth: D314 completed the required 9-row non-PPO perturbation matrix. The baseline primitive held nominal/size-small/mass-light/observation-noise rows, weakened on size-large/mass-heavy, and broke on friction: low friction collapsed useful/contact to `10-11/32`, high friction produced `32/32` overshoot. D315 then satisfied the D313 positive PPO trigger by starting a real learnable primitive-residual PPO run with `rl_action_mode="candidate8_diffik_target_residual"` on low friction. That first 5-iteration PPO run recovered contact/reaction `64/64` but over-pushed: useful `32/64`, overshoot `32/64`, XY `>=20mm` `32/64`. No learned-policy promotion, no raw joint-delta revival, no RoArm/VLA/POSCO readiness. No B200/SSH, no pull, and no `.ssh` copy.)
 
 ## Current Truth
 
@@ -8,26 +8,35 @@ Last updated: 2026-07-07 KST (D313 current truth: D312 fixed strict useful, but 
   dataset camera-contract branch. The earlier tap RL branch is frozen unless
   explicitly resumed.
 - Do not mix with Track A grasp/dataset/training work.
-- D313 session doc:
-  `claudedocs/session_20260707_cube10cm_top_view_d313_ppo_trigger_obs_noise.md`.
-- D312/D313 perturbation protocol:
-  `claudedocs/cube10cm_top_view_d312_perturbation_protocol.md`.
-- D313 verdict:
-  `D313_PPO_TRIGGER_OBS_NOISE_PROTOCOL_READY_NO_RUNTIME_NO_PPO`.
+- D315 session doc:
+  `claudedocs/session_20260707_cube10cm_top_view_d315_candidate8_primitive_residual_ppo_start.md`.
+- D314 session doc:
+  `claudedocs/session_20260707_cube10cm_top_view_d314_perturbation_matrix_result.md`.
+- D314 aggregate:
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/perturbation_matrix_d314/tap10cm/d314_perturbation_matrix_aggregate.json`.
+- D315 PPO summary:
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/primitive_parameter_ppo_d315/tap10cm/d315_candidate8_friction_low_5it/d315_candidate8_friction_low_5it_summary.json`.
+- D315 verdict:
+  `D315_CANDIDATE8_FRICTION_LOW_PPO_STARTED_OVERSHOOT_FAIL_NO_PROMOTION`.
+- D314 verdict:
+  `D314_PERTURBATION_MATRIX_RESULT_FRICTION_BREAKS_BASELINE_NO_PROMOTION`.
 - Current next concrete action:
-  run the 9-row non-PPO perturbation matrix against baseline controller v1
-  (`rl_action_mode="tap_push_primitive"`,
-  `tap_push_primitive_speed_stop_min_disp_m=0.001`,
-  `tap_useful_min_disp_m=0.001`). Include observation-noise rows
-  `--primitive_cube_pose_noise_xy_m 0.005` and `0.015`. Do not run a seed-only
-  validation campaign. Do not harden the controller again unless a documented
-  perturbation/training failure requires it. After the 9 rows complete, start
-  primitive-parameter PPO regardless of result.
+  analyze and continue from the D315 overshoot-heavy learnable
+  primitive-residual PPO failure. The next PPO work should reduce overshoot
+  under friction variation while preserving contact/reaction, not return to raw
+  scalar joint deltas and not add a new hand-written controller patch before
+  analyzing the PPO failure mode.
 - Research objective is strict useful tap: contact/reaction, no overshoot, and
   actual XY displacement `>=1mm`. The runtime's 6mm target band remains a
   quality-tier diagnostic; it is no longer sufficient for useful/promotion.
 - Keep `policy_target_disp_m=0.006` and `tap_target_disp_tolerance_m=0.003` as quality-tier diagnostics, not as the primary "any useful tap" claim.
-- Current clean residual action branch is 3D task-space target residual (`candidate8_diffik_target_residual`, `policy_action_space=3`), no gates.
+- Baseline controller v1 is `tap_push_primitive` with strict useful, but it is
+  not a learnable PPO train mode because it ignores policy actions when
+  computing executed targets.
+- Current learnable primitive action branch is 3D task-space target residual
+  (`candidate8_diffik_target_residual`, `policy_action_space=3`). D315 proves
+  this path runs real PPO updates, but the first result is overshoot-heavy and
+  not a promotion.
 - D224 geometry remains current: hand TCP is already offset from link5; distal collision surface is about 4.46mm beyond hand_tcp. Do not add another TCP offset.
 - D231 tool-contact proxy truth:
   - The 10cm cube has a real physics collider; the current dispute is the robot tool-side reward/metric contact proxy.

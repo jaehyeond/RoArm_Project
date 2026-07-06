@@ -40,7 +40,43 @@ def main() -> int:
         choices=("tcp_point", "link5_collision_aabb"),
         default="link5_collision_aabb",
     )
+    parser.add_argument(
+        "--rl_action_mode",
+        choices=("joint_delta", "candidate6_diffik_residual_joint", "candidate8_diffik_target_residual"),
+        default=None,
+        help=(
+            "Learning action mode. tap_push_primitive is intentionally not exposed "
+            "here because it ignores policy actions and is only a baseline controller."
+        ),
+    )
+    parser.add_argument("--policy_action_space", type=int, default=None)
+    parser.add_argument("--cube_size_m", type=float, default=None)
+    parser.add_argument("--cube_mass_kg", type=float, default=None)
+    parser.add_argument("--cube_static_friction", type=float, default=None)
+    parser.add_argument("--cube_dynamic_friction", type=float, default=None)
     parser.add_argument("--ik_precontact_clearance_m", type=float, default=None)
+    parser.add_argument("--candidate6_diffik_goal_push_m", type=float, default=None)
+    parser.add_argument("--candidate6_diffik_push_steps", type=int, default=None)
+    parser.add_argument("--candidate6_diffik_step_clip_rad", type=float, default=None)
+    parser.add_argument(
+        "--candidate6_diffik_target_base_mode",
+        choices=("actual_joint_pos", "previous_joint_target"),
+        default=None,
+    )
+    parser.add_argument(
+        "--candidate6_diffik_target_path_mode",
+        choices=("near_face_goal", "legacy_far_face_through"),
+        default=None,
+    )
+    parser.add_argument(
+        "--candidate6_diffik_cube_reference_mode",
+        choices=("start_pose", "current_pose"),
+        default=None,
+    )
+    parser.add_argument("--candidate6_diffik_cube_pose_noise_xy_m", type=float, default=None)
+    parser.add_argument("--candidate8_diffik_target_residual_forward_m", type=float, default=None)
+    parser.add_argument("--candidate8_diffik_target_residual_lateral_m", type=float, default=None)
+    parser.add_argument("--candidate8_diffik_target_residual_height_m", type=float, default=None)
     parser.add_argument("--scripted_teacher_blend", type=float, default=None)
     parser.add_argument("--scripted_teacher_horizon_frac", type=float, default=None)
     parser.add_argument("--scripted_teacher_goal_push_m", type=float, default=None)
@@ -119,6 +155,46 @@ def main() -> int:
         raise ValueError("--ppo_desired_kl must be positive")
     if args.ppo_max_grad_norm is not None and args.ppo_max_grad_norm <= 0.0:
         raise ValueError("--ppo_max_grad_norm must be positive")
+    if args.policy_action_space is not None and args.policy_action_space <= 0:
+        raise ValueError("--policy_action_space must be positive")
+    if args.cube_size_m is not None and args.cube_size_m <= 0.0:
+        raise ValueError("--cube_size_m must be positive")
+    if args.cube_mass_kg is not None and args.cube_mass_kg <= 0.0:
+        raise ValueError("--cube_mass_kg must be positive")
+    if args.cube_static_friction is not None and args.cube_static_friction < 0.0:
+        raise ValueError("--cube_static_friction must be non-negative")
+    if args.cube_dynamic_friction is not None and args.cube_dynamic_friction < 0.0:
+        raise ValueError("--cube_dynamic_friction must be non-negative")
+    if args.candidate6_diffik_goal_push_m is not None and args.candidate6_diffik_goal_push_m <= 0.0:
+        raise ValueError("--candidate6_diffik_goal_push_m must be positive")
+    if args.candidate6_diffik_push_steps is not None and args.candidate6_diffik_push_steps <= 0:
+        raise ValueError("--candidate6_diffik_push_steps must be positive")
+    if args.candidate6_diffik_step_clip_rad is not None and args.candidate6_diffik_step_clip_rad <= 0.0:
+        raise ValueError("--candidate6_diffik_step_clip_rad must be positive")
+    if (
+        args.candidate6_diffik_cube_pose_noise_xy_m is not None
+        and args.candidate6_diffik_cube_pose_noise_xy_m < 0.0
+    ):
+        raise ValueError("--candidate6_diffik_cube_pose_noise_xy_m must be non-negative")
+    if (
+        args.candidate8_diffik_target_residual_forward_m is not None
+        and args.candidate8_diffik_target_residual_forward_m < 0.0
+    ):
+        raise ValueError("--candidate8_diffik_target_residual_forward_m must be non-negative")
+    if (
+        args.candidate8_diffik_target_residual_lateral_m is not None
+        and args.candidate8_diffik_target_residual_lateral_m < 0.0
+    ):
+        raise ValueError("--candidate8_diffik_target_residual_lateral_m must be non-negative")
+    if (
+        args.candidate8_diffik_target_residual_height_m is not None
+        and args.candidate8_diffik_target_residual_height_m < 0.0
+    ):
+        raise ValueError("--candidate8_diffik_target_residual_height_m must be non-negative")
+    if args.rl_action_mode == "candidate8_diffik_target_residual":
+        requested_action_space = 3 if args.policy_action_space is None else int(args.policy_action_space)
+        if requested_action_space != 3:
+            raise ValueError("candidate8_diffik_target_residual requires --policy_action_space 3")
     if not (0.0 <= args.actor_preserve_blend <= 1.0):
         raise ValueError("--actor_preserve_blend must be in [0, 1]")
     if (
@@ -140,7 +216,7 @@ def main() -> int:
     from rsl_rl.runners import OnPolicyRunner
 
     from roarm_rl.agents.rsl_rl_ppo_cfg import RoArmPickPPORunnerCfg
-    from roarm_rl.roarm_cube_push_env import RoArmCubePushEnvCfg, RoArmCubeTap10cmEnvCfg
+    from roarm_rl.roarm_cube_push_env import RoArmCubePushEnvCfg, RoArmCubeTap10cmEnvCfg, TABLE_Z
 
     if args.env_kind == "push3cm":
         env_id = "RoArm-CubePush-Direct-v0"
@@ -152,6 +228,44 @@ def main() -> int:
     env_cfg.scene.num_envs = args.num_envs
     env_cfg.seed = args.seed
     env_cfg.robot.spawn.usd_path = args.robot_usd_path
+    if args.rl_action_mode is not None:
+        print(f"[cube-push-train] rl_action_mode: {env_cfg.rl_action_mode} -> {args.rl_action_mode}")
+        env_cfg.rl_action_mode = args.rl_action_mode
+        if args.rl_action_mode == "candidate8_diffik_target_residual" and args.policy_action_space is None:
+            print(f"[cube-push-train] action_space: {env_cfg.action_space} -> 3")
+            env_cfg.action_space = 3
+    if args.policy_action_space is not None:
+        print(f"[cube-push-train] action_space: {env_cfg.action_space} -> {args.policy_action_space}")
+        env_cfg.action_space = int(args.policy_action_space)
+    if args.cube_size_m is not None:
+        cube_size_m = float(args.cube_size_m)
+        print(
+            "[cube-push-train] cube_size_m: "
+            f"{env_cfg.cube_size_x_m}/{env_cfg.cube_size_y_m}/{env_cfg.cube_size_z_m} -> {cube_size_m}"
+        )
+        env_cfg.cube_size_x_m = cube_size_m
+        env_cfg.cube_size_y_m = cube_size_m
+        env_cfg.cube_size_z_m = cube_size_m
+        env_cfg.sponge.spawn.size = (cube_size_m, cube_size_m, cube_size_m)
+        env_cfg.sponge.init_state.pos = (0.30, 0.00, TABLE_Z + 0.5 * cube_size_m)
+    if args.cube_mass_kg is not None:
+        print(
+            "[cube-push-train] cube_mass_kg: "
+            f"{env_cfg.sponge.spawn.mass_props.mass} -> {args.cube_mass_kg}"
+        )
+        env_cfg.sponge.spawn.mass_props.mass = float(args.cube_mass_kg)
+    if args.cube_static_friction is not None:
+        print(
+            "[cube-push-train] cube_static_friction: "
+            f"{env_cfg.sponge.spawn.physics_material.static_friction} -> {args.cube_static_friction}"
+        )
+        env_cfg.sponge.spawn.physics_material.static_friction = float(args.cube_static_friction)
+    if args.cube_dynamic_friction is not None:
+        print(
+            "[cube-push-train] cube_dynamic_friction: "
+            f"{env_cfg.sponge.spawn.physics_material.dynamic_friction} -> {args.cube_dynamic_friction}"
+        )
+        env_cfg.sponge.spawn.physics_material.dynamic_friction = float(args.cube_dynamic_friction)
     if args.ik_endpoint_reset:
         print("[cube-push-train] ik_endpoint_reset: True")
         env_cfg.ik_endpoint_reset = True
@@ -211,6 +325,69 @@ def main() -> int:
             f"{env_cfg.ik_precontact_clearance_m} -> {args.ik_precontact_clearance_m}"
         )
         env_cfg.ik_precontact_clearance_m = args.ik_precontact_clearance_m
+    if args.candidate6_diffik_goal_push_m is not None:
+        print(
+            "[cube-push-train] candidate6_diffik_goal_push_m: "
+            f"{env_cfg.candidate6_diffik_goal_push_m} -> {args.candidate6_diffik_goal_push_m}"
+        )
+        env_cfg.candidate6_diffik_goal_push_m = float(args.candidate6_diffik_goal_push_m)
+    if args.candidate6_diffik_push_steps is not None:
+        print(
+            "[cube-push-train] candidate6_diffik_push_steps: "
+            f"{env_cfg.candidate6_diffik_push_steps} -> {args.candidate6_diffik_push_steps}"
+        )
+        env_cfg.candidate6_diffik_push_steps = int(args.candidate6_diffik_push_steps)
+    if args.candidate6_diffik_step_clip_rad is not None:
+        print(
+            "[cube-push-train] candidate6_diffik_step_clip_rad: "
+            f"{env_cfg.candidate6_diffik_step_clip_rad} -> {args.candidate6_diffik_step_clip_rad}"
+        )
+        env_cfg.candidate6_diffik_step_clip_rad = float(args.candidate6_diffik_step_clip_rad)
+    if args.candidate6_diffik_target_base_mode is not None:
+        print(
+            "[cube-push-train] candidate6_diffik_target_base_mode: "
+            f"{env_cfg.candidate6_diffik_target_base_mode} -> {args.candidate6_diffik_target_base_mode}"
+        )
+        env_cfg.candidate6_diffik_target_base_mode = str(args.candidate6_diffik_target_base_mode)
+    if args.candidate6_diffik_target_path_mode is not None:
+        print(
+            "[cube-push-train] candidate6_diffik_target_path_mode: "
+            f"{env_cfg.candidate6_diffik_target_path_mode} -> {args.candidate6_diffik_target_path_mode}"
+        )
+        env_cfg.candidate6_diffik_target_path_mode = str(args.candidate6_diffik_target_path_mode)
+    if args.candidate6_diffik_cube_reference_mode is not None:
+        print(
+            "[cube-push-train] candidate6_diffik_cube_reference_mode: "
+            f"{env_cfg.candidate6_diffik_cube_reference_mode} -> {args.candidate6_diffik_cube_reference_mode}"
+        )
+        env_cfg.candidate6_diffik_cube_reference_mode = str(args.candidate6_diffik_cube_reference_mode)
+    if args.candidate6_diffik_cube_pose_noise_xy_m is not None:
+        print(
+            "[cube-push-train] candidate6_diffik_cube_pose_noise_xy_m: "
+            f"{env_cfg.candidate6_diffik_cube_pose_noise_xy_m} -> {args.candidate6_diffik_cube_pose_noise_xy_m}"
+        )
+        env_cfg.candidate6_diffik_cube_pose_noise_xy_m = float(args.candidate6_diffik_cube_pose_noise_xy_m)
+    if args.candidate8_diffik_target_residual_forward_m is not None:
+        print(
+            "[cube-push-train] candidate8_diffik_target_residual_forward_m: "
+            f"{env_cfg.candidate8_diffik_target_residual_forward_m} -> "
+            f"{args.candidate8_diffik_target_residual_forward_m}"
+        )
+        env_cfg.candidate8_diffik_target_residual_forward_m = float(args.candidate8_diffik_target_residual_forward_m)
+    if args.candidate8_diffik_target_residual_lateral_m is not None:
+        print(
+            "[cube-push-train] candidate8_diffik_target_residual_lateral_m: "
+            f"{env_cfg.candidate8_diffik_target_residual_lateral_m} -> "
+            f"{args.candidate8_diffik_target_residual_lateral_m}"
+        )
+        env_cfg.candidate8_diffik_target_residual_lateral_m = float(args.candidate8_diffik_target_residual_lateral_m)
+    if args.candidate8_diffik_target_residual_height_m is not None:
+        print(
+            "[cube-push-train] candidate8_diffik_target_residual_height_m: "
+            f"{env_cfg.candidate8_diffik_target_residual_height_m} -> "
+            f"{args.candidate8_diffik_target_residual_height_m}"
+        )
+        env_cfg.candidate8_diffik_target_residual_height_m = float(args.candidate8_diffik_target_residual_height_m)
     if args.scripted_teacher_blend is not None:
         print(
             "[cube-push-train] scripted_teacher_blend: "
@@ -505,18 +682,35 @@ def main() -> int:
         f"env_kind={args.env_kind} env_id={env_id} training=YES dataset_generation=NO "
         "grasp_attach=NO rollout_object_posewrite=NO"
     )
-    target_update = (
-        f"robot_dof_targets += action_scale({env_cfg.action_scale:.3f}) * action"
-        if env_cfg.joint_delta_reference == "target"
-        else f"robot_dof_targets = joint_pos + action_scale({env_cfg.action_scale:.3f}) * action"
-    )
+    if env_cfg.rl_action_mode == "joint_delta":
+        action_semantics = "normalized_joint_delta"
+        target_update = (
+            f"robot_dof_targets += action_scale({env_cfg.action_scale:.3f}) * action"
+            if env_cfg.joint_delta_reference == "target"
+            else f"robot_dof_targets = joint_pos + action_scale({env_cfg.action_scale:.3f}) * action"
+        )
+    elif env_cfg.rl_action_mode == "candidate6_diffik_residual_joint":
+        action_semantics = "candidate6_diffik_residual_joint"
+        target_update = "candidate6 DiffIK base target + learned arm-joint residual"
+    elif env_cfg.rl_action_mode == "candidate8_diffik_target_residual":
+        action_semantics = "candidate8_diffik_target_residual"
+        target_update = "candidate6 DiffIK tool/object target + learned forward/lateral/height residual"
+    else:
+        raise ValueError(f"unsupported train rl_action_mode={env_cfg.rl_action_mode!r}")
     print(
-        "[cube-push-train] action_semantics=normalized_joint_delta "
-        f"target_update='{target_update}' action_dim=6 action_clip=[-1,1] gripper_open_hold=YES"
+        f"[cube-push-train] action_semantics={action_semantics} "
+        f"target_update='{target_update}' action_dim={env_cfg.action_space} "
+        "action_clip=[-1,1] gripper_open_hold=YES"
     )
     print(f"[cube-push-train] env: num_envs={args.num_envs} max_iterations={args.max_iterations}")
     print(
         "[cube-push-train] curriculum "
+        f"action_space={env_cfg.action_space} "
+        f"rl_action_mode={env_cfg.rl_action_mode} "
+        f"cube_size_m={env_cfg.cube_size_x_m} "
+        f"cube_mass_kg={env_cfg.sponge.spawn.mass_props.mass} "
+        f"cube_static_friction={env_cfg.sponge.spawn.physics_material.static_friction} "
+        f"cube_dynamic_friction={env_cfg.sponge.spawn.physics_material.dynamic_friction} "
         f"ik_endpoint_reset={env_cfg.ik_endpoint_reset} "
         f"push_progress_reward_scale={env_cfg.push_progress_reward_scale} "
         f"push_displacement_reward_scale={env_cfg.push_displacement_reward_scale} "
@@ -542,6 +736,16 @@ def main() -> int:
         f"joint_target_lead_limit_rad={env_cfg.joint_target_lead_limit_rad} "
         f"joint_delta_reference={env_cfg.joint_delta_reference} "
         f"ik_precontact_clearance_m={env_cfg.ik_precontact_clearance_m} "
+        f"candidate6_diffik_goal_push_m={env_cfg.candidate6_diffik_goal_push_m} "
+        f"candidate6_diffik_push_steps={env_cfg.candidate6_diffik_push_steps} "
+        f"candidate6_diffik_step_clip_rad={env_cfg.candidate6_diffik_step_clip_rad} "
+        f"candidate6_diffik_target_base_mode={env_cfg.candidate6_diffik_target_base_mode} "
+        f"candidate6_diffik_target_path_mode={env_cfg.candidate6_diffik_target_path_mode} "
+        f"candidate6_diffik_cube_reference_mode={env_cfg.candidate6_diffik_cube_reference_mode} "
+        f"candidate6_diffik_cube_pose_noise_xy_m={env_cfg.candidate6_diffik_cube_pose_noise_xy_m} "
+        f"candidate8_diffik_target_residual_forward_m={env_cfg.candidate8_diffik_target_residual_forward_m} "
+        f"candidate8_diffik_target_residual_lateral_m={env_cfg.candidate8_diffik_target_residual_lateral_m} "
+        f"candidate8_diffik_target_residual_height_m={env_cfg.candidate8_diffik_target_residual_height_m} "
         f"scripted_teacher_blend={env_cfg.scripted_teacher_blend} "
         f"scripted_teacher_horizon_frac={env_cfg.scripted_teacher_horizon_frac} "
         f"bc_teacher_blend={env_cfg.bc_teacher_blend} "

@@ -17559,3 +17559,77 @@ Sources:
 - `sim_scripts/cube10cm_top_view_d290_closed_loop_recovery_probe.py`
 - `roarm_rl/train_cube_push_ppo.py`
 - `sim_scripts/cube10cm_top_view_tensorboard_scalar_gate.py`
+
+## D314 - Friction breaks the baseline after the 9-row perturbation matrix (2026-07-07)
+
+- Scope:
+  - Ran the D313-required 9-row non-PPO perturbation matrix on the professor
+    10cm / 0.72kg cube top-view branch.
+  - Did not use B200/SSH, pull, `.ssh` copy, RoArm deployment, Track A,
+    VLA/SmolVLA fine-tuning, or long PPO.
+- Evidence:
+  - Nominal, size `0.09m`, mass `0.50kg`, and observation-noise rows
+    `0.005/0.015m` kept strict useful `32/32` and overshoot `0/32`.
+  - Size `0.11m` and mass `1.00kg` weakened to strict useful `31/32`.
+  - Low friction `0.8/0.6` broke the baseline: strict useful `10/32`,
+    contact/reaction `11/32`, overshoot `1/32`, mean/max XY
+    `9.177/53.462mm`.
+  - High friction `2.2/1.8` broke catastrophically: strict useful `0/32`,
+    overshoot `32/32`, mean/max XY `3768.838/11989.522mm`.
+  - Observation-noise `0.015m` did not break this seed: strict useful
+    `32/32`, overshoot `0/32`, sampled abs mean/max `7.189/14.693mm`.
+- Decision:
+  - The baseline is not matrix-robust. The failure axis is friction, not
+    observation noise in this run.
+  - Do not hand-add another controller condition in response to D314. Freeze
+    friction as the RL/control target.
+  - Since the matrix did not pass all rows, do not run combined/severe
+    escalation first. Per D313, move to primitive-parameter learning on a
+    failing axis.
+- Verdict:
+  `D314_PERTURBATION_MATRIX_RESULT_FRICTION_BREAKS_BASELINE_NO_PROMOTION`.
+
+Sources:
+
+- `claudedocs/session_20260707_cube10cm_top_view_d314_perturbation_matrix_result.md`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/perturbation_matrix_d314/tap10cm/d314_perturbation_matrix_aggregate.json`
+- `sim_scripts/cube10cm_top_view_d290_closed_loop_recovery_probe.py`
+- `START_HERE.md`
+
+## D315 - Candidate8 primitive-residual PPO starts but over-pushes (2026-07-07)
+
+- Scope:
+  - Started primitive-residual PPO after the D314 matrix, satisfying the D313
+    positive PPO trigger.
+  - Did not run long PPO, RoArm deployment, Track A, VLA/SmolVLA fine-tuning,
+    B200/SSH, pull, or `.ssh` copy.
+- Evidence:
+  - Code inspection showed `tap_push_primitive` is not a learnable PPO action
+    mode: it logs policy actions but applies internally computed primitive
+    targets.
+  - `roarm_rl/train_cube_push_ppo.py` now exposes learnable non-joint modes,
+    cube friction overrides, and candidate6/candidate8 DiffIK parameters.
+    `tap_push_primitive` is intentionally not exposed as a train mode.
+  - First run `d315_candidate8_friction_low_5it` used
+    `candidate8_diffik_target_residual`, action space `3`, friction `0.8/0.6`,
+    `64` envs, `64` steps/env, `5` iterations, seed `31415`.
+  - Final collection trace: contact/reaction `64/64`, useful `32/64`,
+    overshoot `32/64`, current proxy `62/64`, XY `>=1mm` `64/64`,
+    `>=3mm` `63/64`, `>=7mm` `56/64`, `>=20mm` `32/64`, max XY
+    mean/min/max `27.589/1.802/55.642mm`, cap `0.0`.
+- Decision:
+  - PPO path is now real and learnable, but the first primitive-residual run is
+    overshoot-heavy and not a promotion.
+  - Next PPO work should reduce overshoot under friction variation while
+    preserving contact/reaction, not return to raw scalar joint deltas and not
+    add a new hand-written controller patch before analyzing this failure.
+- Verdict:
+  `D315_CANDIDATE8_FRICTION_LOW_PPO_STARTED_OVERSHOOT_FAIL_NO_PROMOTION`.
+
+Sources:
+
+- `claudedocs/session_20260707_cube10cm_top_view_d315_candidate8_primitive_residual_ppo_start.md`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/primitive_parameter_ppo_d315/tap10cm/d315_candidate8_friction_low_5it/d315_candidate8_friction_low_5it_summary.json`
+- `roarm_rl/train_cube_push_ppo.py`
+- `roarm_rl/roarm_cube_push_env.py`
+- `START_HERE.md`
