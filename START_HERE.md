@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-06-30 KST (D307 current truth: a default-off non-PPO action governor was added to `sim_scripts/cube10cm_top_view_d290_closed_loop_recovery_probe.py` after D306. D306 candidate-2 ep561 with `predict_stop`, horizon `0.020s`, speed stop `0.200m/s`, and the true D304 runtime action contract changed the D306 overshoot case from `0.041465m` XY with overshoot to useful `1.0`, overshoot `0.0`, cap `0.0`, max XY `0.004996m`. The same setting over D304 failed6 gave useful `1.0`, overshoot `0.0`, cap `0.0`, mean/max XY `0.002727/0.007170m`, but only `4/6` envs reached `>=1mm`; episodes `991` and `29` stayed at `0.023/0.027mm`. A recorded-target supervised repair reached offline val MSE/cosine `0.030512/0.883410` and checkpoint sha256 `2d2bc75c30c0fb2241bf7a6230cc2513abac6a9a3ccfe5a7fd769479f4a1fa60`, but runtime failed6 collapsed to mean/max XY `0.0000154/0.0000228m`. D307 is partial and no-promotion. Do not run long PPO, tiny PPO trace gate, PPO ladder, partial actor preservation, or real actor update from D307; next work is non-PPO deployable action-space/control repair.)
+Last updated: 2026-07-06 KST (D311 current truth: D310's default-off non-PPO env primitive `rl_action_mode="tap_push_primitive"` remains the active baseline. D311 broadened fresh32 random diagnostics to seeds `30703` and `30704`; with D310-equivalent speed stop min displacement `0.0m`, combined contact/reaction/useful/final proxy stayed `64/64/64/64`, overshoot `0/64`, cap `0.0`, but XY `>=1mm` was `63/64` because seed `30704` env `19` stopped at step `1` with max XY `0.7008mm`. Added default-preserving env config `tap_push_primitive_speed_stop_min_disp_m=0.0` and D290 CLI `--primitive_speed_stop_min_disp_m`. With opt-in `0.001m`, seeds `30703/30704` achieved combined contact/reaction/useful/final proxy `64/64/64/64`, overshoot `0/64`, primitive stop-latched `64/64`, cap `0.0`, XY `>=1mm` `64/64`, `>=3mm` `64/64`, `>=7mm` `0/64`, `>=20mm` `0/64`, max XY mean/max/min `0.003797/0.005945/0.003002m`. This is control-contract hardening, not PPO, not learned-policy promotion, no tiny PPO trace gate, no B200/SSH, and no RoArm readiness.)
 
 ## Current Truth
 
@@ -8,6 +8,18 @@ Last updated: 2026-06-30 KST (D307 current truth: a default-off non-PPO action g
   dataset camera-contract branch. The earlier tap RL branch is frozen unless
   explicitly resumed.
 - Do not mix with Track A grasp/dataset/training work.
+- D311 session doc:
+  `claudedocs/session_20260706_cube10cm_top_view_d311_speed_stop_min_disp.md`.
+- D311 verdict:
+  `D311_SPEED_STOP_MIN_DISP_CONTROL_HARDENING_PASS_NO_PPO_PROMOTION`.
+- Current next concrete action:
+  treat D311 as a non-PPO env/runtime control-contract hardening pass, not a
+  learned policy. Next work is broader speed-min primitive diagnostics across
+  more random seeds plus contact-proxy/approach-face edge cases before deciding
+  whether `primitive_speed_stop_min_disp_m=0.001` should become the recommended
+  runtime setting. Do not run PPO or a tiny PPO trace gate yet. Do not use D308
+  forced-second-reset fresh32 overshoot as a policy-failure blocker unless
+  reproduced under corrected reset.
 - Research objective is useful tap: physical contact/reaction without overshoot. The runtime's legacy `tap_success` still encodes the 6mm target-band until explicitly changed; use D229/D230 useful-tap log fields for the new objective.
 - Keep `policy_target_disp_m=0.006` and `tap_target_disp_tolerance_m=0.003` as quality-tier diagnostics, not as the primary "any useful tap" claim.
 - Current clean residual action branch is 3D task-space target residual (`candidate8_diffik_target_residual`, `policy_action_space=3`), no gates.

@@ -17238,3 +17238,247 @@ Sources:
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/action_governor_d307/tap10cm/failed6_predict_stop_h020_v200/`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/action_governor_d307/tap10cm/recorded_repair_failed6_predict_stop_h020_v200/`
 - `START_HERE.md`
+
+## D308 - Env action governor fresh reset diagnostic fails promotion (2026-07-01)
+
+- Scope:
+  - Moved the default-off displacement/velocity action governor from a local
+    probe-only diagnostic into the env runtime action contract as
+    `tap_action_governor_mode`.
+  - Added `--env_action_governor_mode` and current contact/reaction/overshoot
+    diagnostic fields to
+    `sim_scripts/cube10cm_top_view_d290_closed_loop_recovery_probe.py`.
+  - Ran only non-PPO fresh32 Isaac Lab diagnostics. No long PPO, tiny PPO trace
+    gate, PPO ladder, learned policy update, RoArm deployment, Track A, VLA,
+    B200/SSH/pull, render, or cleanup.
+- Results:
+  - `predict_stop` fresh32 random env-hook run with D306 candidate-2 actor,
+    horizon `0.020s`, speed stop `0.200m/s`, target displacement `0.003m`:
+    useful `0.8125`, overshoot `0.1875`, env stop latch `0.78125`, max XY
+    mean/max `0.006647647/0.033927362m`, XY `>=1mm` `25/32`, XY `>=3mm`
+    `8/32`, XY `>=20mm` `6/32`.
+  - `predict_brake` with the same settings did not improve the headline
+    metrics: useful `0.8125`, overshoot `0.1875`, max XY mean/max
+    `0.006538100/0.033946075m`, and the same `25/32`, `8/32`, and `6/32`
+    displacement counts.
+  - Current-proxy traces split the failure modes:
+    - First-step impulse/near-threshold inertia overshoot: overshoot envs
+      `3,4,27,31` were already over `20mm` at step `0`, and envs `9,24`
+      started at `19.5..19.6mm`, latched stop at step `1`, then crossed
+      `20mm` at step `2`.
+    - Tiny-displacement/contact-geometry failure: `7/32` envs stayed below
+      `1mm`; five had no env-governor latch, and several ended with current
+      contact proxy false despite latched contact/useful.
+- Decision:
+  - `predict_stop` means a default-off safety layer that zeroes actions after
+    contact context when current displacement, `disp + speed * horizon`, or
+    speed exceeds the configured threshold. It is a late stop governor, not an
+    action-direction or contact-geometry repair.
+  - `predict_brake` adds a short opposite-action pulse after latch, but the
+    fresh32 diagnostic shows it is insufficient for this actor/control
+    contract.
+  - Do not promote D308 to PPO, even tiny PPO trace gate. Do not tune simple
+    scalar joint stop/brake thresholds as the main next path.
+  - Next work is non-PPO action-space/control repair: change the actor/action
+    representation toward a tool/object push primitive or equivalent contract
+    that explicitly handles approach, contact face, push direction, bounded
+    push displacement, and recovery before any PPO gate.
+- Verdict:
+  `D308_ENV_GOVERNOR_FRESH32_FAIL_PUSH_PRIMITIVE_NEXT_NO_PPO`.
+
+Sources:
+
+- `claudedocs/session_20260701_cube10cm_top_view_d308_env_governor_control_repair.md`
+- `roarm_rl/roarm_cube_push_env.py`
+- `sim_scripts/cube10cm_top_view_d290_closed_loop_recovery_probe.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/action_governor_env_contract_d308/tap10cm/fresh32_random_predict_stop_h020_v200_proxy_now/`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/action_governor_env_contract_d308/tap10cm/fresh32_random_predict_brake_h020_v200_proxy_now/`
+- `START_HERE.md`
+
+## D309 - Cube10cm push primitive reset re-audit and stop termination (2026-07-01)
+
+- Scope:
+  - Continued the D307/D308 non-PPO action-space/control repair path.
+  - Did not run long PPO, tiny PPO trace gate, PPO training, TensorBoard,
+    torchrun, learned-policy update, RoArm deployment, Track A, VLA, B200/SSH,
+    pull, or `.ssh` copy.
+  - Re-audited whether the D308 broad fresh32 first-step overshoot was caused by
+    actor/control actions or by the old env-hook forced-second-reset protocol.
+  - Added `--exec_source zero|actor|tap_push_primitive` to the D290 closed-loop
+    recovery probe, plus primitive target-path/base/reference CLI options.
+  - Changed the D290 probe default to `--no-env_hook_force_second_reset`,
+    matching the D297 corrected reset-contract lesson.
+- Reset re-audit:
+  - Forced-second-reset zero-action 5-step diagnostic:
+    contact/useful/overshoot `18/13/6` of `32`, max XY mean/max
+    `4.548/26.208mm`, `>=20mm` `6/32`, and step-0 displacements up to
+    `26.027mm`.
+  - Corrected no-force-second-reset zero-action 5-step diagnostic:
+    contact/useful/overshoot `17/17/0` of `32`, max XY mean/max
+    `0.414/11.983mm`, `>=20mm` `0/32`, and step-0 max `5.620mm`.
+  - Interpretation: the D308 first-step overshoot cluster was not reliable
+    actor-action evidence under the old forced-second-reset protocol. D308's
+    env-governor instrumentation remains useful, but its broad fresh32 overshoot
+    should not be used as a policy-failure blocker unless reproduced under the
+    corrected reset contract.
+- Primitive comparison under corrected reset:
+  - Existing actor, seed `30701`: contact/reaction/useful/overshoot
+    `32/32/32/0`, but final current proxy only `11/32`, XY `>=1mm` `14/32`,
+    and low-displacement envs `18/32`.
+  - `near_face_goal + actual_joint_pos` primitive, seed `30701`:
+    final proxy `31/32`, overshoot `0/32`, but XY `>=1mm` only `8/32`.
+  - `legacy_far_face_through + actual_joint_pos` primitive, seed `30701`:
+    final proxy `32/32`, overshoot `0/32`, but XY `>=1mm` only `10/32`.
+  - `legacy_far_face_through + previous_joint_target` before stop termination:
+    seed `30701` had XY `>=1mm` `32/32`, overshoot `0/32`, max XY
+    `13.049mm`; seed `30702` had XY `>=1mm` `32/32` but overshoot `3/32`,
+    max XY `25.022mm`.
+- Stop-termination repair:
+  - The pre-repair primitive stop was only a latch: after reaching the stop
+    condition it continued holding the previous deep push target, so the tool
+    kept pressing into the object.
+  - Changed primitive stop to save current joint positions on the first stop
+    step and hold those positions afterward. This makes stop a primitive
+    termination condition, not a latch on the push target.
+- Final D309 fresh multi-episode result:
+  - Best primitive:
+    `tap_push_primitive`, `legacy_far_face_through`,
+    `previous_joint_target`, `start_pose`, goal `0.003m`, push steps `220`,
+    speed stop `0.200m/s`, step clip `0.010rad`, corrected reset.
+  - Seed `30701`: contact/reaction/useful/final proxy `32/32/32/32`,
+    overshoot `0/32`, cap mean/max `0.0/0.0`, max XY mean/max
+    `3.802/10.025mm`, XY `>=1mm` `32/32`, `>=3mm` `31/32`,
+    `>=7mm` `1/32`, `>=20mm` `0/32`.
+  - Seed `30702`: contact/reaction/useful/final proxy `32/32/32/32`,
+    overshoot `0/32`, cap mean/max `0.0/0.0`, max XY mean/max
+    `3.756/5.438mm`, XY `>=1mm` `32/32`, `>=3mm` `32/32`,
+    `>=7mm` `0/32`, `>=20mm` `0/32`.
+  - Combined `64` envs: contact/reaction/useful/final proxy `64/64/64/64`,
+    overshoot `0/64`, cap `0.0`, max XY mean/max `3.779/10.025mm`,
+    XY `>=1mm` `64/64`, `>=3mm` `63/64`, `>=7mm` `1/64`,
+    `>=20mm` `0/64`.
+- Decision:
+  - The user's skepticism was justified: a large part of the apparent difficulty
+    came from a reset-protocol artifact and from stop semantics that kept
+    pressing after the primitive should have terminated.
+  - The right repair is not more PPO and not scalar joint-delta threshold
+    tuning. The working direction is explicit tool/object push primitive control:
+    corrected reset, object-frame push-through target, accumulated joint target,
+    and stop termination by holding current joint state.
+  - D309 is still not learned-policy promotion and not RoArm readiness. It is a
+    non-PPO deployable-control proof point. Next work is to move the primitive
+    contract into the env/runtime path or broaden non-PPO primitive diagnostics
+    before considering any PPO gate.
+- Verdict:
+  `D309_PUSH_PRIMITIVE_STOPTERM_CORRECTED_RESET_PASS_NO_PPO_PROMOTION`.
+
+Sources:
+
+- `claudedocs/session_20260701_cube10cm_top_view_d309_push_primitive_reset_reaudit.md`
+- `sim_scripts/cube10cm_top_view_d290_closed_loop_recovery_probe.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/action_space_control_repair_d309/tap10cm/initial_impulse_zero_action/`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/action_space_control_repair_d309/tap10cm/initial_impulse_zero_action_no_force_second_reset/`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/action_space_control_repair_d309/tap10cm/fresh32_random_tap_push_primitive_legacy_far_prevtarget_stopterm_goal003_steps220_no_force_second_reset_seed30701/`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/action_space_control_repair_d309/tap10cm/fresh32_random_tap_push_primitive_legacy_far_prevtarget_stopterm_goal003_steps220_no_force_second_reset_seed30702/`
+- `START_HERE.md`
+
+## D310 - Env push primitive runtime contract reproduces D309 (2026-07-01)
+
+- Scope:
+  - Continued the D309 non-PPO action-space/control repair path.
+  - Did not run long PPO, tiny PPO trace gate, PPO training, TensorBoard,
+    torchrun, learned-policy update, RoArm deployment, Track A, VLA, B200/SSH,
+    pull, or `.ssh` copy.
+  - Moved the working D309 tool/object push primitive from probe-only
+    `_external_joint_targets_override` into the env runtime contract as
+    default-off `rl_action_mode="tap_push_primitive"`.
+  - Added `--exec_source env_tap_push_primitive` to the D290 closed-loop probe so
+    diagnostics can send zero actions while the env computes the bounded DiffIK
+    push target and primitive stop termination internally.
+- Code contract:
+  - `tap_push_primitive` uses the existing candidate6 DiffIK tool target path:
+    approach from the near side, push through the object frame, and accumulate
+    clipped joint targets with `previous_joint_target`.
+  - Primitive stop is a termination condition: when current XY displacement
+    reaches `0.003m`, speed reaches `0.200m/s`, or overshoot is seen, the env
+    saves current joint positions and holds them.
+  - Added env log scalars for primitive enabled, stop-latched rate, and target
+    delta magnitude.
+- Fresh multi-episode validation:
+  - Settings: corrected `--no-env_hook_force_second_reset`, `env_tap_push_primitive`,
+    `legacy_far_face_through`, `previous_joint_target`, `start_pose`, goal
+    `0.003m`, push steps `220`, speed stop `0.200m/s`, step clip `0.010rad`,
+    seeds `30701` and `30702`, `32` envs each.
+  - Seed `30701`: contact/reaction/useful/final proxy `32/32/32/32`,
+    overshoot `0/32`, cap mean/max `0.0/0.0`, max XY mean/max
+    `3.802/10.025mm`, XY `>=1mm` `32/32`, `>=3mm` `31/32`,
+    `>=7mm` `1/32`, `>=20mm` `0/32`.
+  - Seed `30702`: contact/reaction/useful/final proxy `32/32/32/32`,
+    overshoot `0/32`, cap mean/max `0.0/0.0`, max XY mean/max
+    `3.756/5.438mm`, XY `>=1mm` `32/32`, `>=3mm` `32/32`,
+    `>=7mm` `0/32`, `>=20mm` `0/32`.
+  - Combined `64` envs from per-env CSV: contact/reaction/useful/final proxy
+    `64/64/64/64`, overshoot `0/64`, primitive stop-latched `63/64`, cap
+    `0.0`, max XY mean/max `3.779/10.025mm`, XY `>=1mm` `64/64`,
+    `>=3mm` `63/64`, `>=7mm` `1/64`, `>=20mm` `0/64`.
+- Decision:
+  - D310 confirms the D309 primitive is no longer just a probe-side override; it
+    is now a deployable env/runtime action contract.
+  - This is still not learned-policy promotion and not RoArm readiness. It is a
+    non-PPO control-contract pass.
+  - Next work remains non-PPO: broaden primitive diagnostics over harder reset
+    coverage, tighten contact proxy/approach-face diagnostics, and only then
+    reconsider whether a tiny PPO trace gate is even useful.
+- Verdict:
+  `D310_ENV_PUSH_PRIMITIVE_CONTRACT_REPRODUCES_D309_NO_PPO_PROMOTION`.
+
+Sources:
+
+- `claudedocs/session_20260701_cube10cm_top_view_d310_env_push_primitive_contract.md`
+- `roarm_rl/roarm_cube_push_env.py`
+- `sim_scripts/cube10cm_top_view_d290_closed_loop_recovery_probe.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/action_space_control_repair_d310/tap10cm/fresh32_random_env_tap_push_primitive_legacy_far_prevtarget_stopterm_goal003_steps220_no_force_second_reset_seed30701/`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/action_space_control_repair_d310/tap10cm/fresh32_random_env_tap_push_primitive_legacy_far_prevtarget_stopterm_goal003_steps220_no_force_second_reset_seed30702/`
+- `START_HERE.md`
+
+## D311 - Speed-stop needs a minimum displacement gate before promotion (2026-07-06)
+
+- Scope:
+  - Continued the D310 non-PPO env primitive path.
+  - Did not run PPO, tiny PPO trace gates, TensorBoard training, torchrun,
+    learned-policy updates, RoArm deployment, Track A, VLA/SmolVLA, B200/SSH,
+    pull, or `.ssh` copy.
+  - Broadened corrected fresh32 random diagnostics to seeds `30703` and `30704`
+    using the D310-matched actor checkpoint and `exec_source=env_tap_push_primitive`.
+- Evidence:
+  - Baseline D310-equivalent speed-stop behavior (`speed_stop_min_disp=0.0m`)
+    kept contact/reaction/useful/final proxy at `64/64/64/64`, overshoot
+    `0/64`, and cap `0.0`, but only `63/64` reached XY `>=1mm`.
+  - The lone low-displacement case was seed `30704` env `19` / D256 episode
+    `700`: max XY `0.7008mm`, contact/reaction/useful/final proxy true,
+    overshoot false, and primitive stop step `1`.
+  - Adding default-preserving config `tap_push_primitive_speed_stop_min_disp_m`
+    and running with opt-in `0.001m` gave combined `64` env results:
+    contact/reaction/useful/final proxy `64/64/64/64`, overshoot `0/64`,
+    primitive stop-latched `64/64`, cap `0.0`, XY `>=1mm` `64/64`, XY
+    `>=3mm` `64/64`, and max XY mean/max/min `3.797/5.945/3.002mm`.
+- Decision:
+  - Speed alone must not terminate the push primitive before a minimum useful
+    displacement floor has accumulated.
+  - This is control-contract hardening, not PPO promotion and not reward
+    threshold tuning.
+  - Keep the config default at `0.0` to preserve D310 behavior until broader
+    diagnostics justify promoting `0.001m` as the recommended runtime setting.
+- Verdict:
+  `D311_SPEED_STOP_MIN_DISP_CONTROL_HARDENING_PASS_NO_PPO_PROMOTION`.
+
+Sources:
+
+- `claudedocs/session_20260706_cube10cm_top_view_d311_speed_stop_min_disp.md`
+- `roarm_rl/roarm_cube_push_env.py`
+- `sim_scripts/cube10cm_top_view_d290_closed_loop_recovery_probe.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/action_space_control_repair_d311/tap10cm/fresh32_random_env_tap_push_primitive_matched_seed30703/`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/action_space_control_repair_d311/tap10cm/fresh32_random_env_tap_push_primitive_matched_seed30704/`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/action_space_control_repair_d311/tap10cm/fresh32_random_env_tap_push_primitive_matched_seed30703_speedmin001/`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/action_space_control_repair_d311/tap10cm/fresh32_random_env_tap_push_primitive_matched_seed30704_speedmin001/`
+- `START_HERE.md`

@@ -141,7 +141,7 @@ def main() -> int:
     parser.add_argument("--episode_max", type=int, default=None)
     parser.add_argument("--episode_indices", type=str, default="")
     parser.add_argument("--reset_pose_source", choices=("manual", "env_hook"), default="manual")
-    parser.add_argument("--env_hook_force_second_reset", action=argparse.BooleanOptionalAction, default=True)
+    parser.add_argument("--env_hook_force_second_reset", action=argparse.BooleanOptionalAction, default=False)
     parser.add_argument("--env_hook_warmup_action_source", choices=("zero", "policy"), default="zero")
     parser.add_argument("--post_reset_scene_sync", action=argparse.BooleanOptionalAction, default=False)
     parser.add_argument("--d256_reset_sample_mode", choices=("random", "linspace"), default="linspace")
@@ -162,6 +162,39 @@ def main() -> int:
     parser.add_argument("--tap_useful_terminate", action=argparse.BooleanOptionalAction, default=False)
     parser.add_argument("--tap_overshoot_terminate", action=argparse.BooleanOptionalAction, default=False)
     parser.add_argument(
+        "--exec_source",
+        choices=("actor", "zero", "tap_push_primitive", "env_tap_push_primitive"),
+        default="actor",
+        help=(
+            "Action source for env.step. actor uses the frozen policy action. "
+            "zero sends all-zero actions. "
+            "tap_push_primitive ignores the actor for execution and writes a "
+            "bounded DiffIK tool/object push target through the env override. "
+            "env_tap_push_primitive enables the same contract inside the env "
+            "with rl_action_mode=tap_push_primitive."
+        ),
+    )
+    parser.add_argument("--primitive_goal_disp_m", type=float, default=0.003)
+    parser.add_argument("--primitive_push_steps", type=int, default=220)
+    parser.add_argument("--primitive_speed_stop_mps", type=float, default=0.200)
+    parser.add_argument("--primitive_speed_stop_min_disp_m", type=float, default=0.0)
+    parser.add_argument("--primitive_diffik_step_clip_rad", type=float, default=0.010)
+    parser.add_argument(
+        "--primitive_target_path_mode",
+        choices=("near_face_goal", "legacy_far_face_through"),
+        default="near_face_goal",
+    )
+    parser.add_argument(
+        "--primitive_cube_reference_mode",
+        choices=("start_pose", "current_pose"),
+        default="start_pose",
+    )
+    parser.add_argument(
+        "--primitive_target_base_mode",
+        choices=("actual_joint_pos", "previous_joint_target"),
+        default="actual_joint_pos",
+    )
+    parser.add_argument(
         "--action_governor_mode",
         choices=("off", "predict_stop", "predict_brake"),
         default="off",
@@ -178,6 +211,15 @@ def main() -> int:
     parser.add_argument("--action_governor_push_scale", type=float, default=1.0)
     parser.add_argument("--action_governor_brake_scale", type=float, default=0.35)
     parser.add_argument("--action_governor_brake_steps", type=int, default=2)
+    parser.add_argument(
+        "--env_action_governor_mode",
+        choices=("off", "predict_stop", "predict_brake"),
+        default="off",
+        help=(
+            "Use the env runtime action governor contract instead of the local "
+            "diagnostic governor. Reuses the action_governor_* parameters."
+        ),
+    )
     parser.add_argument("--max_recovery_clip_rate_mean", type=float, default=0.80)
     parser.add_argument("--max_actor_recovery_mse_mean", type=float, default=0.80)
     parser.add_argument("--artifact_tag", type=str, default="d290_closed_loop_recovery_probe")
@@ -205,6 +247,23 @@ def main() -> int:
         raise ValueError("--action_governor_brake_scale must be in [0, 1]")
     if int(args.action_governor_brake_steps) < 0:
         raise ValueError("--action_governor_brake_steps must be non-negative")
+    if str(args.action_governor_mode) != "off" and str(args.env_action_governor_mode) != "off":
+        raise ValueError("local and env action governors cannot be enabled together")
+    if float(args.primitive_goal_disp_m) <= 0.0:
+        raise ValueError("--primitive_goal_disp_m must be positive")
+    if int(args.primitive_push_steps) <= 0:
+        raise ValueError("--primitive_push_steps must be positive")
+    if float(args.primitive_speed_stop_mps) < 0.0:
+        raise ValueError("--primitive_speed_stop_mps must be non-negative")
+    if float(args.primitive_speed_stop_min_disp_m) < 0.0:
+        raise ValueError("--primitive_speed_stop_min_disp_m must be non-negative")
+    if float(args.primitive_diffik_step_clip_rad) <= 0.0:
+        raise ValueError("--primitive_diffik_step_clip_rad must be positive")
+    primitive_exec_source = str(args.exec_source) in {"tap_push_primitive", "env_tap_push_primitive"}
+    if primitive_exec_source and (
+        str(args.action_governor_mode) != "off" or str(args.env_action_governor_mode) != "off"
+    ):
+        raise ValueError("tap_push_primitive has its own stop contract; disable action governors")
     for path in (args.actor_checkpoint, args.teacher_csv):
         if not path.exists():
             raise FileNotFoundError(path)
@@ -271,6 +330,28 @@ def main() -> int:
     env_cfg.tap_contact_slowdown_use_proxy = bool(args.tap_contact_slowdown_use_proxy)
     env_cfg.tap_useful_terminate = bool(args.tap_useful_terminate)
     env_cfg.tap_overshoot_terminate = bool(args.tap_overshoot_terminate)
+    env_cfg.tap_action_governor_mode = str(args.env_action_governor_mode)
+    env_cfg.tap_action_governor_target_disp_m = float(args.action_governor_target_disp_m)
+    env_cfg.tap_action_governor_predict_horizon_s = float(args.action_governor_predict_horizon_s)
+    env_cfg.tap_action_governor_speed_stop_mps = float(args.action_governor_speed_stop_mps)
+    env_cfg.tap_action_governor_min_contact_steps = int(args.action_governor_min_contact_steps)
+    env_cfg.tap_action_governor_push_scale = float(args.action_governor_push_scale)
+    env_cfg.tap_action_governor_brake_scale = float(args.action_governor_brake_scale)
+    env_cfg.tap_action_governor_brake_steps = int(args.action_governor_brake_steps)
+    if primitive_exec_source:
+        env_cfg.candidate6_diffik_goal_push_m = float(args.primitive_goal_disp_m)
+        env_cfg.candidate6_diffik_push_steps = int(args.primitive_push_steps)
+        env_cfg.candidate6_diffik_step_clip_rad = float(args.primitive_diffik_step_clip_rad)
+        env_cfg.candidate6_diffik_target_base_mode = str(args.primitive_target_base_mode)
+        env_cfg.candidate6_diffik_target_path_mode = str(args.primitive_target_path_mode)
+        env_cfg.candidate6_diffik_cube_reference_mode = str(args.primitive_cube_reference_mode)
+        env_cfg.candidate6_diffik_hold_after_tap_success = False
+        env_cfg.tap_push_primitive_stop_disp_m = float(args.primitive_goal_disp_m)
+        env_cfg.tap_push_primitive_speed_stop_mps = float(args.primitive_speed_stop_mps)
+        env_cfg.tap_push_primitive_speed_stop_min_disp_m = float(args.primitive_speed_stop_min_disp_m)
+        env_cfg.tap_push_primitive_stop_on_overshoot = True
+    if str(args.exec_source) == "env_tap_push_primitive":
+        env_cfg.rl_action_mode = "tap_push_primitive"
     env_cfg.bc_teacher_checkpoint_path = ""
     env_cfg.bc_teacher_blend = 0.0
     env_cfg.bc_teacher_imitation_reward_scale = 0.0
@@ -405,6 +486,18 @@ def main() -> int:
                 "initial_disp_along_m": float(reset_terms["disp_along"][env_i].detach().cpu().item()),
                 "initial_lateral_abs_m": float(reset_terms["lateral_abs"][env_i].detach().cpu().item()),
                 "initial_tcp_cube_dist_m": float(reset_terms["tcp_cube_dist"][env_i].detach().cpu().item()),
+                "initial_tap_contact_proxy": int(
+                    bool(reset_terms["tap_contact_proxy"][env_i].detach().cpu().item())
+                ),
+                "initial_tap_contact_face_gap_m": float(
+                    reset_terms["tap_contact_face_gap_m"][env_i].detach().cpu().item()
+                ),
+                "initial_tap_contact_lateral_m": float(
+                    reset_terms["tap_contact_lateral_m"][env_i].detach().cpu().item()
+                ),
+                "initial_tap_contact_vertical_offset_m": float(
+                    reset_terms["tap_contact_vertical_offset_m"][env_i].detach().cpu().item()
+                ),
             }
         )
 
@@ -451,6 +544,13 @@ def main() -> int:
     governor_stop_count_trace: list[float] = []
     governor_brake_count_trace: list[float] = []
     governor_projected_disp_trace: list[float] = []
+    local_primitive_enabled = str(args.exec_source) == "tap_push_primitive"
+    env_primitive_enabled = str(args.exec_source) == "env_tap_push_primitive"
+    primitive_stop_latched = torch.zeros(inner.num_envs, device=device, dtype=torch.bool)
+    primitive_stop_step = torch.full((inner.num_envs,), -1, device=device, dtype=torch.long)
+    primitive_hold_targets = inner.robot_dof_targets.detach().clone()
+    primitive_target_delta_abs_mean_trace: list[float] = []
+    primitive_target_delta_abs_max_trace: list[float] = []
 
     with torch.inference_mode():
         for step in range(int(args.steps)):
@@ -500,6 +600,43 @@ def main() -> int:
             actor_actions_clamped = torch.clamp(actor_actions_raw, -1.0, 1.0)
 
             exec_actions = actor_actions
+            if str(args.exec_source) == "zero" or env_primitive_enabled:
+                exec_actions = torch.zeros_like(actor_actions)
+            primitive_stop_mask = torch.zeros(inner.num_envs, device=device, dtype=torch.bool)
+            primitive_target_delta_abs_mean = torch.zeros(inner.num_envs, device=device)
+            primitive_target_delta_abs_max = torch.zeros(inner.num_envs, device=device)
+            if local_primitive_enabled:
+                pre_terms = inner._tap_terms()
+                primitive_stop_now = (
+                    (pre_terms["disp_xy"] >= float(args.primitive_goal_disp_m))
+                    | (pre_terms["speed"] >= float(args.primitive_speed_stop_mps))
+                    | pre_terms["tap_overshoot_now"]
+                )
+                primitive_newly_stopped = primitive_stop_now & ~primitive_stop_latched
+                joint_pos_now = inner._robot.data.joint_pos
+                primitive_hold_targets = torch.where(
+                    primitive_newly_stopped.unsqueeze(-1),
+                    joint_pos_now.detach(),
+                    primitive_hold_targets,
+                )
+                primitive_stop_step = torch.where(
+                    primitive_newly_stopped,
+                    torch.full_like(primitive_stop_step, int(step)),
+                    primitive_stop_step,
+                )
+                primitive_stop_latched = primitive_stop_latched | primitive_stop_now
+                primitive_targets = inner._candidate6_diffik_base_joint_target()
+                primitive_targets = torch.where(
+                    primitive_stop_latched.unsqueeze(-1),
+                    primitive_hold_targets,
+                    primitive_targets,
+                )
+                primitive_delta = primitive_targets - joint_pos_now
+                primitive_target_delta_abs_mean = torch.mean(torch.abs(primitive_delta), dim=-1)
+                primitive_target_delta_abs_max = torch.max(torch.abs(primitive_delta), dim=-1).values
+                inner._external_joint_targets_override = primitive_targets.detach().clone()
+                exec_actions = torch.zeros_like(actor_actions)
+                primitive_stop_mask = primitive_stop_latched
             governor_projected_disp = torch.zeros(inner.num_envs, device=device)
             governor_stop_mask = torch.zeros(inner.num_envs, device=device, dtype=torch.bool)
             governor_brake_mask = torch.zeros(inner.num_envs, device=device, dtype=torch.bool)
@@ -587,6 +724,14 @@ def main() -> int:
             obs, rewards, dones, extras = env.step(exec_actions)
             if governor_enabled:
                 governor_prev_actions = exec_actions.detach().clone()
+            if env_primitive_enabled:
+                primitive_stop_latched = inner._tap_push_primitive_stop_latched.detach().clone()
+                primitive_stop_step = inner._tap_push_primitive_stop_step.detach().clone()
+                primitive_stop_mask = primitive_stop_latched
+                primitive_target_delta_abs_mean = inner._last_tap_push_primitive_target_delta_abs_mean.detach().clone()
+                primitive_target_delta_abs_max = inner._last_tap_push_primitive_target_delta_abs_max.detach().clone()
+            primitive_target_delta_abs_mean_trace.append(_tensor_mean(primitive_target_delta_abs_mean))
+            primitive_target_delta_abs_max_trace.append(_tensor_max(primitive_target_delta_abs_max))
             inner._compute_intermediate_values()
             terms = inner._tap_terms()
             max_disp_xy = torch.maximum(max_disp_xy, terms["disp_xy"].detach())
@@ -624,6 +769,20 @@ def main() -> int:
                         "disp_along_m": float(terms["disp_along"][env_i].detach().cpu().item()),
                         "disp_xy_m": float(terms["disp_xy"][env_i].detach().cpu().item()),
                         "lateral_disp_m": float(lateral_disp[env_i].detach().cpu().item()),
+                        "speed_mps": float(terms["speed"][env_i].detach().cpu().item()),
+                        "tcp_cube_dist_m": float(terms["tcp_cube_dist"][env_i].detach().cpu().item()),
+                        "tap_contact_face_gap_m": float(
+                            terms["tap_contact_face_gap_m"][env_i].detach().cpu().item()
+                        ),
+                        "tap_contact_lateral_m": float(
+                            terms["tap_contact_lateral_m"][env_i].detach().cpu().item()
+                        ),
+                        "tap_contact_vertical_offset_m": float(
+                            terms["tap_contact_vertical_offset_m"][env_i].detach().cpu().item()
+                        ),
+                        "tap_contact_proxy_now": int(bool(terms["tap_contact_proxy"][env_i].detach().cpu().item())),
+                        "tap_reaction_now": int(bool(terms["tap_reaction_now"][env_i].detach().cpu().item())),
+                        "tap_overshoot_now": int(bool(terms["tap_overshoot_now"][env_i].detach().cpu().item())),
                         "tap_contact_seen": int(bool(inner._tap_contact_seen[env_i].detach().cpu().item())),
                         "tap_reaction_seen": int(bool(inner._tap_reaction_seen[env_i].detach().cpu().item())),
                         "tap_useful_seen": int(bool(useful_seen_step[env_i].detach().cpu().item())),
@@ -635,6 +794,29 @@ def main() -> int:
                         "governor_brake_active": int(bool(governor_brake_mask[env_i].detach().cpu().item())),
                         "governor_contact_age_steps": int(governor_contact_age[env_i].detach().cpu().item()),
                         "governor_projected_disp_m": float(governor_projected_disp[env_i].detach().cpu().item()),
+                        "primitive_stop_latched": int(bool(primitive_stop_mask[env_i].detach().cpu().item())),
+                        "primitive_stop_step": int(primitive_stop_step[env_i].detach().cpu().item()),
+                        "primitive_target_delta_abs_mean": float(
+                            primitive_target_delta_abs_mean[env_i].detach().cpu().item()
+                        ),
+                        "primitive_target_delta_abs_max": float(
+                            primitive_target_delta_abs_max[env_i].detach().cpu().item()
+                        ),
+                        "env_governor_stop_latched": int(
+                            bool(inner._last_tap_action_governor_stop_latched[env_i].detach().cpu().item())
+                        ),
+                        "env_governor_brake_active": int(
+                            bool(inner._last_tap_action_governor_brake_active[env_i].detach().cpu().item())
+                        ),
+                        "env_governor_contact_age_steps": float(
+                            inner._last_tap_action_governor_contact_age[env_i].detach().cpu().item()
+                        ),
+                        "env_governor_projected_disp_m": float(
+                            inner._last_tap_action_governor_projected_disp[env_i].detach().cpu().item()
+                        ),
+                        "env_governor_stop_step": int(
+                            inner._tap_action_governor_stop_step[env_i].detach().cpu().item()
+                        ),
                     }
                     for dim, label in enumerate(action_labels):
                         row[f"actor_{label}"] = float(actor_cpu[env_i, dim].item())
@@ -668,6 +850,21 @@ def main() -> int:
                         "governor_stop_latched_rate": governor_stop_count_trace[-1],
                         "governor_brake_active_rate": governor_brake_count_trace[-1],
                         "governor_projected_disp_mean_m": governor_projected_disp_trace[-1],
+                        "primitive_stop_latched_rate": _tensor_mean(primitive_stop_latched.float()),
+                        "primitive_target_delta_abs_mean": primitive_target_delta_abs_mean_trace[-1],
+                        "primitive_target_delta_abs_max": primitive_target_delta_abs_max_trace[-1],
+                        "env_governor_stop_latched_rate": _tensor_mean(
+                            inner._last_tap_action_governor_stop_latched
+                        ),
+                        "env_governor_brake_active_rate": _tensor_mean(
+                            inner._last_tap_action_governor_brake_active
+                        ),
+                        "env_governor_projected_disp_mean_m": _tensor_mean(
+                            inner._last_tap_action_governor_projected_disp
+                        ),
+                        "env_governor_contact_age_steps_mean": _tensor_mean(
+                            inner._last_tap_action_governor_contact_age
+                        ),
                         "contact_seen_rate": _tensor_mean(inner._tap_contact_seen.float()),
                         "reaction_seen_rate": _tensor_mean(inner._tap_reaction_seen.float()),
                         "useful_seen_rate": _tensor_mean(useful_seen_step.float()),
@@ -759,6 +956,16 @@ def main() -> int:
             "initial_disp_xy_max_m": _tensor_max(reset_terms["disp_xy"]),
             "initial_lateral_abs_mean_m": _tensor_mean(reset_terms["lateral_abs"]),
             "initial_lateral_abs_max_m": _tensor_max(reset_terms["lateral_abs"]),
+            "initial_tap_contact_proxy_rate": _tensor_mean(reset_terms["tap_contact_proxy"].float()),
+            "initial_tap_contact_face_gap_mean_m": _tensor_mean(reset_terms["tap_contact_face_gap_m"]),
+            "initial_tap_contact_face_gap_min_m": float(
+                torch.min(reset_terms["tap_contact_face_gap_m"]).detach().cpu().item()
+            ),
+            "initial_tap_contact_face_gap_max_m": _tensor_max(reset_terms["tap_contact_face_gap_m"]),
+            "initial_tap_contact_lateral_mean_m": _tensor_mean(reset_terms["tap_contact_lateral_m"]),
+            "initial_tap_contact_vertical_offset_mean_m": _tensor_mean(
+                reset_terms["tap_contact_vertical_offset_m"]
+            ),
         },
         "action_scale": float(inner.cfg.action_scale),
         "action_smoothing_alpha": float(inner.cfg.action_smoothing_alpha),
@@ -774,6 +981,31 @@ def main() -> int:
         "tap_contact_slowdown_use_proxy": bool(args.tap_contact_slowdown_use_proxy),
         "tap_useful_terminate": bool(args.tap_useful_terminate),
         "tap_overshoot_terminate": bool(args.tap_overshoot_terminate),
+        "exec_source": str(args.exec_source),
+        "env_rl_action_mode": str(getattr(inner.cfg, "rl_action_mode", "joint_delta")),
+        "primitive_goal_disp_m": float(args.primitive_goal_disp_m),
+        "primitive_push_steps": int(args.primitive_push_steps),
+        "primitive_speed_stop_mps": float(args.primitive_speed_stop_mps),
+        "primitive_speed_stop_min_disp_m": float(args.primitive_speed_stop_min_disp_m),
+        "primitive_diffik_step_clip_rad": float(args.primitive_diffik_step_clip_rad),
+        "primitive_target_path_mode": str(args.primitive_target_path_mode),
+        "primitive_cube_reference_mode": str(args.primitive_cube_reference_mode),
+        "primitive_target_base_mode": str(args.primitive_target_base_mode),
+        "primitive_stop_latched_rate_final": _tensor_mean(primitive_stop_latched.float()),
+        "primitive_stop_step_min": int(
+            torch.min(primitive_stop_step[primitive_stop_step >= 0]).detach().cpu().item()
+        )
+        if bool((primitive_stop_step >= 0).any().detach().cpu().item())
+        else -1,
+        "primitive_stop_step_max": int(
+            torch.max(primitive_stop_step[primitive_stop_step >= 0]).detach().cpu().item()
+        )
+        if bool((primitive_stop_step >= 0).any().detach().cpu().item())
+        else -1,
+        "primitive_target_delta_abs_mean": _safe_mean(primitive_target_delta_abs_mean_trace),
+        "primitive_target_delta_abs_max": max(primitive_target_delta_abs_max_trace)
+        if primitive_target_delta_abs_max_trace
+        else 0.0,
         "action_governor_mode": str(args.action_governor_mode),
         "action_governor_target_disp_m": float(args.action_governor_target_disp_m),
         "action_governor_predict_horizon_s": float(args.action_governor_predict_horizon_s),
@@ -788,6 +1020,39 @@ def main() -> int:
         else -1,
         "action_governor_stop_step_max": int(torch.max(governor_stop_step[governor_stop_step >= 0]).detach().cpu().item())
         if bool((governor_stop_step >= 0).any().detach().cpu().item())
+        else -1,
+        "env_action_governor_mode": str(args.env_action_governor_mode),
+        "env_action_governor_stop_latched_rate_final": _tensor_mean(
+            inner._last_tap_action_governor_stop_latched
+        ),
+        "env_action_governor_brake_active_rate_final": _tensor_mean(
+            inner._last_tap_action_governor_brake_active
+        ),
+        "env_action_governor_projected_disp_mean_m_final": _tensor_mean(
+            inner._last_tap_action_governor_projected_disp
+        ),
+        "env_action_governor_contact_age_steps_mean_final": _tensor_mean(
+            inner._last_tap_action_governor_contact_age
+        ),
+        "env_action_governor_stop_step_min": int(
+            torch.min(
+                inner._tap_action_governor_stop_step[inner._tap_action_governor_stop_step >= 0]
+            )
+            .detach()
+            .cpu()
+            .item()
+        )
+        if bool((inner._tap_action_governor_stop_step >= 0).any().detach().cpu().item())
+        else -1,
+        "env_action_governor_stop_step_max": int(
+            torch.max(
+                inner._tap_action_governor_stop_step[inner._tap_action_governor_stop_step >= 0]
+            )
+            .detach()
+            .cpu()
+            .item()
+        )
+        if bool((inner._tap_action_governor_stop_step >= 0).any().detach().cpu().item())
         else -1,
         "actor_contact_seen_rate": _tensor_mean(inner._tap_contact_seen.float()),
         "actor_reaction_seen_rate": _tensor_mean(inner._tap_reaction_seen.float()),
@@ -889,13 +1154,43 @@ def main() -> int:
                     "max_disp_along_m": float(max_disp_along[env_i].detach().cpu().item()),
                     "max_disp_xy_m": float(max_disp_xy[env_i].detach().cpu().item()),
                     "max_lateral_disp_m": float(max_lateral_disp[env_i].detach().cpu().item()),
+                    "final_speed_mps": float(terms["speed"][env_i].detach().cpu().item()),
+                    "final_tcp_cube_dist_m": float(terms["tcp_cube_dist"][env_i].detach().cpu().item()),
+                    "final_tap_contact_face_gap_m": float(
+                        terms["tap_contact_face_gap_m"][env_i].detach().cpu().item()
+                    ),
+                    "final_tap_contact_lateral_m": float(
+                        terms["tap_contact_lateral_m"][env_i].detach().cpu().item()
+                    ),
+                    "final_tap_contact_vertical_offset_m": float(
+                        terms["tap_contact_vertical_offset_m"][env_i].detach().cpu().item()
+                    ),
+                    "final_tap_contact_proxy_now": int(
+                        bool(terms["tap_contact_proxy"][env_i].detach().cpu().item())
+                    ),
+                    "final_tap_reaction_now": int(bool(terms["tap_reaction_now"][env_i].detach().cpu().item())),
+                    "final_tap_overshoot_now": int(bool(terms["tap_overshoot_now"][env_i].detach().cpu().item())),
                     "actor_recorded_mse": _action_metrics(torch, env_actor, env_recorded)["mse"],
                     "actor_recorded_mae": _action_metrics(torch, env_actor, env_recorded)["mae"],
                     "actor_recorded_cosine": _action_metrics(torch, env_actor, env_recorded)["cosine"],
                     "actor_recovery_mse": _action_metrics(torch, env_actor, env_recovery)["mse"],
                     "actor_recovery_mae": _action_metrics(torch, env_actor, env_recovery)["mae"],
                     "actor_recovery_cosine": _action_metrics(torch, env_actor, env_recovery)["cosine"],
+                    "primitive_stop_step": int(primitive_stop_step[env_i].detach().cpu().item()),
+                    "primitive_stop_latched": int(bool(primitive_stop_latched[env_i].detach().cpu().item())),
                     "governor_stop_step": int(governor_stop_step[env_i].detach().cpu().item()),
+                    "env_governor_stop_step": int(
+                        inner._tap_action_governor_stop_step[env_i].detach().cpu().item()
+                    ),
+                    "env_governor_stop_latched": int(
+                        bool(inner._tap_action_governor_stop_latched[env_i].detach().cpu().item())
+                    ),
+                    "env_governor_contact_age_steps": float(
+                        inner._last_tap_action_governor_contact_age[env_i].detach().cpu().item()
+                    ),
+                    "env_governor_projected_disp_m": float(
+                        inner._last_tap_action_governor_projected_disp[env_i].detach().cpu().item()
+                    ),
                 }
             )
         args.out_env_csv.parent.mkdir(parents=True, exist_ok=True)

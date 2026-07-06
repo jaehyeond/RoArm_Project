@@ -8,7 +8,9 @@ Default action semantics remain the project standard 6D normalized joint-delta
 command: robot_dof_targets += action_scale * action, clipped to joint limits.
 Candidate6 DiffIK residual control is an explicit opt-in mode. The target
 residual mode is intentionally a 3D policy action space: forward, lateral,
-height target waypoint residual before DiffIK.
+height target waypoint residual before DiffIK. The tap push primitive is a
+default-off non-policy action mode that executes a bounded tool/object push
+target and terminates by holding the current joint state.
 """
 from __future__ import annotations
 
@@ -151,6 +153,10 @@ class RoArmCubePushEnvCfg(RoArmStackEnvCfg):
     candidate8_diffik_target_residual_zero_after_contact: bool = False
     candidate8_diffik_target_residual_zero_after_reaction: bool = False
     candidate8_diffik_target_residual_zero_after_disp_m: float = 0.0
+    tap_push_primitive_stop_disp_m: float = 0.003
+    tap_push_primitive_speed_stop_mps: float = 0.200
+    tap_push_primitive_speed_stop_min_disp_m: float = 0.0
+    tap_push_primitive_stop_on_overshoot: bool = True
     bc_teacher_checkpoint_path: str = ""
     bc_teacher_blend: float = 0.0
     bc_teacher_imitation_reward_scale: float = 0.0
@@ -299,6 +305,14 @@ class RoArmCubeTap10cmEnvCfg(RoArmCubePushEnvCfg):
     tap_stop_after_useful_seen: bool = False
     tap_stop_after_disp_m: float = 0.0
     tap_contact_slowdown_use_proxy: bool = False
+    tap_action_governor_mode: str = "off"
+    tap_action_governor_target_disp_m: float = 0.003
+    tap_action_governor_predict_horizon_s: float = 0.020
+    tap_action_governor_speed_stop_mps: float = 0.200
+    tap_action_governor_min_contact_steps: int = 1
+    tap_action_governor_push_scale: float = 1.0
+    tap_action_governor_brake_scale: float = 0.35
+    tap_action_governor_brake_steps: int = 2
     professor_physical_reaction_disp_m: float = 0.0005
     professor_physical_reaction_speed_mps: float = 0.005
     professor_physical_reaction_z_delta_m: float = 0.0005
@@ -409,6 +423,12 @@ class RoArmCubePushEnv(RoArmStackEnv):
         self._last_candidate8_diffik_target_residual_forward_abs = torch.zeros(self.num_envs, device=self.device)
         self._last_candidate8_diffik_target_residual_lateral_abs = torch.zeros(self.num_envs, device=self.device)
         self._last_candidate8_diffik_target_residual_height_abs = torch.zeros(self.num_envs, device=self.device)
+        self._tap_push_primitive_stop_latched = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
+        self._tap_push_primitive_stop_step = torch.full((self.num_envs,), -1, dtype=torch.long, device=self.device)
+        self._tap_push_primitive_hold_targets = torch.zeros((self.num_envs, self._robot.num_joints), device=self.device)
+        self._last_tap_push_primitive_stop_latched = torch.zeros(self.num_envs, device=self.device)
+        self._last_tap_push_primitive_target_delta_abs_mean = torch.zeros(self.num_envs, device=self.device)
+        self._last_tap_push_primitive_target_delta_abs_max = torch.zeros(self.num_envs, device=self.device)
         self._candidate6_diffik_controller = None
         if not hasattr(self, "_bc_arm_joint_ids"):
             arm_joint_ids, _arm_joint_names = self._robot.find_joints(
@@ -732,6 +752,54 @@ class RoArmCubePushEnv(RoArmStackEnv):
         self._last_candidate6_diffik_hold_success_rate[:] = hold_success.float()
         return target_full
 
+    def _tap_push_primitive_joint_target(self) -> torch.Tensor:
+        stop_disp_m = float(getattr(self.cfg, "tap_push_primitive_stop_disp_m", 0.003))
+        speed_stop_mps = float(getattr(self.cfg, "tap_push_primitive_speed_stop_mps", 0.200))
+        speed_stop_min_disp_m = float(getattr(self.cfg, "tap_push_primitive_speed_stop_min_disp_m", 0.0))
+        if stop_disp_m <= 0.0:
+            raise ValueError("tap_push_primitive_stop_disp_m must be positive")
+        if speed_stop_mps < 0.0:
+            raise ValueError("tap_push_primitive_speed_stop_mps must be non-negative")
+        if speed_stop_min_disp_m < 0.0:
+            raise ValueError("tap_push_primitive_speed_stop_min_disp_m must be non-negative")
+
+        pre_terms = self._tap_terms()
+        speed_stop_now = (pre_terms["speed"] >= speed_stop_mps) & (
+            pre_terms["disp_xy"] >= speed_stop_min_disp_m
+        )
+        stop_now = (pre_terms["disp_xy"] >= stop_disp_m) | speed_stop_now
+        if bool(getattr(self.cfg, "tap_push_primitive_stop_on_overshoot", True)):
+            stop_now = stop_now | pre_terms["tap_overshoot_now"]
+        newly_stopped = stop_now & ~self._tap_push_primitive_stop_latched
+
+        joint_pos = self._robot.data.joint_pos
+        self._tap_push_primitive_hold_targets[:] = torch.where(
+            newly_stopped.unsqueeze(-1),
+            joint_pos.detach(),
+            self._tap_push_primitive_hold_targets,
+        )
+        self._tap_push_primitive_stop_step[:] = torch.where(
+            newly_stopped,
+            self.episode_length_buf.to(dtype=torch.long),
+            self._tap_push_primitive_stop_step,
+        )
+        self._tap_push_primitive_stop_latched |= stop_now
+
+        push_targets = self._candidate6_diffik_base_joint_target()
+        targets = torch.where(
+            self._tap_push_primitive_stop_latched.unsqueeze(-1),
+            self._tap_push_primitive_hold_targets,
+            push_targets,
+        )
+        targets = torch.clamp(targets, self.robot_dof_lower_limits, self.robot_dof_upper_limits)
+        targets[:, self.gripper_joint_idx] = 0.0
+
+        target_delta = targets - joint_pos
+        self._last_tap_push_primitive_stop_latched[:] = self._tap_push_primitive_stop_latched.float()
+        self._last_tap_push_primitive_target_delta_abs_mean[:] = torch.mean(torch.abs(target_delta), dim=-1)
+        self._last_tap_push_primitive_target_delta_abs_max[:] = torch.max(torch.abs(target_delta), dim=-1).values
+        return targets
+
     def _ik_precontact_joints(self, cube_local: torch.Tensor, push_dir: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         cube_np = cube_local.detach().cpu().numpy().astype(np.float64)
         dir_np = push_dir.detach().cpu().numpy().astype(np.float64)
@@ -1006,9 +1074,53 @@ class RoArmCubePushEnv(RoArmStackEnv):
             self._last_candidate8_diffik_target_residual_forward_abs.zero_()
             self._last_candidate8_diffik_target_residual_lateral_abs.zero_()
             self._last_candidate8_diffik_target_residual_height_abs.zero_()
+            self._last_tap_push_primitive_stop_latched.zero_()
+            self._last_tap_push_primitive_target_delta_abs_mean.zero_()
+            self._last_tap_push_primitive_target_delta_abs_max.zero_()
             return
 
         action_mode = str(getattr(self.cfg, "rl_action_mode", "joint_delta"))
+        if action_mode != "tap_push_primitive":
+            self._last_tap_push_primitive_stop_latched.zero_()
+            self._last_tap_push_primitive_target_delta_abs_mean.zero_()
+            self._last_tap_push_primitive_target_delta_abs_max.zero_()
+        if action_mode == "tap_push_primitive":
+            policy_actions = actions.clone().clamp(-1.0, 1.0)
+            targets = self._tap_push_primitive_joint_target()
+
+            joint_pos = self._robot.data.joint_pos
+            applied_delta = targets - joint_pos
+            self.actions = policy_actions
+            self.robot_dof_targets[:] = targets
+            self._last_action_abs_mean[:] = torch.mean(torch.abs(self.actions), dim=-1)
+            self._last_action_abs_max[:] = torch.max(torch.abs(self.actions), dim=-1).values
+            self._last_joint_delta_abs_mean[:] = torch.mean(torch.abs(applied_delta), dim=-1)
+            self._last_joint_delta_abs_max[:] = torch.max(torch.abs(applied_delta), dim=-1).values
+            self._last_joint_delta_cap_rate.zero_()
+            self._last_target_lead_abs_mean[:] = self._last_joint_delta_abs_mean
+            self._last_target_lead_abs_max[:] = self._last_joint_delta_abs_max
+            lead = float(self.cfg.joint_target_lead_limit_rad)
+            self._last_target_lead_limit_rate[:] = (
+                torch.abs(targets - joint_pos) > lead + 1.0e-9
+            ).float().mean(dim=-1)
+            self._last_contact_slowdown[:] = 1.0
+            self._last_teacher_blend.zero_()
+            self._last_bc_teacher_blend.zero_()
+            self._last_bc_teacher_imitation_mse.zero_()
+            self._last_bc_teacher_action_abs_mean.zero_()
+            self._last_candidate6_diffik_residual_abs_mean.zero_()
+            self._last_candidate6_diffik_residual_abs_max.zero_()
+            self._last_candidate6_diffik_hold_success_rate.zero_()
+            self._last_candidate8_diffik_target_residual_abs_mean.zero_()
+            self._last_candidate8_diffik_target_residual_abs_max.zero_()
+            self._last_candidate8_diffik_target_residual_forward_abs.zero_()
+            self._last_candidate8_diffik_target_residual_lateral_abs.zero_()
+            self._last_candidate8_diffik_target_residual_height_abs.zero_()
+            if hasattr(self, "_last_tap_stop_after_useful_hold"):
+                self._last_tap_stop_after_useful_hold.zero_()
+            if hasattr(self, "_last_tap_stop_after_disp_hold"):
+                self._last_tap_stop_after_disp_hold.zero_()
+            return
         if action_mode == "candidate6_diffik_residual_joint":
             policy_actions = actions.clone().clamp(-1.0, 1.0)
             base_targets = self._candidate6_diffik_base_joint_target()
@@ -1180,6 +1292,7 @@ class RoArmCubePushEnv(RoArmStackEnv):
             self.actions = torch.where(disp_hold.unsqueeze(-1), torch.zeros_like(self.actions), self.actions)
             if hasattr(self, "_last_tap_stop_after_disp_hold"):
                 self._last_tap_stop_after_disp_hold[:] = disp_hold.float()
+        self._apply_tap_action_governor_if_enabled()
 
         alpha = float(self.cfg.action_smoothing_alpha)
         self._last_action_abs_mean[:] = torch.mean(torch.abs(self.actions), dim=-1)
@@ -1245,6 +1358,100 @@ class RoArmCubePushEnv(RoArmStackEnv):
         self._grasped[:] = False
         self._was_grasped[:] = False
         self._robot.set_joint_position_target(self.robot_dof_targets)
+
+    def _apply_tap_action_governor_if_enabled(self) -> None:
+        mode = str(getattr(self.cfg, "tap_action_governor_mode", "off"))
+        if mode == "off":
+            if hasattr(self, "_last_tap_action_governor_stop_latched"):
+                self._last_tap_action_governor_stop_latched.zero_()
+                self._last_tap_action_governor_brake_active.zero_()
+                self._last_tap_action_governor_projected_disp.zero_()
+                self._last_tap_action_governor_contact_age.zero_()
+            return
+        if mode not in {"predict_stop", "predict_brake"}:
+            raise ValueError(f"unsupported tap_action_governor_mode={mode!r}")
+        if not hasattr(self, "_tap_action_governor_stop_latched"):
+            return
+
+        target_disp = float(getattr(self.cfg, "tap_action_governor_target_disp_m", 0.003))
+        horizon_s = float(getattr(self.cfg, "tap_action_governor_predict_horizon_s", 0.020))
+        speed_stop = float(getattr(self.cfg, "tap_action_governor_speed_stop_mps", 0.200))
+        min_contact_steps = int(getattr(self.cfg, "tap_action_governor_min_contact_steps", 1))
+        push_scale = float(getattr(self.cfg, "tap_action_governor_push_scale", 1.0))
+        brake_scale = float(getattr(self.cfg, "tap_action_governor_brake_scale", 0.35))
+        brake_steps = int(getattr(self.cfg, "tap_action_governor_brake_steps", 2))
+        if target_disp <= 0.0:
+            raise ValueError("tap_action_governor_target_disp_m must be positive")
+        if horizon_s < 0.0:
+            raise ValueError("tap_action_governor_predict_horizon_s must be non-negative")
+        if speed_stop < 0.0:
+            raise ValueError("tap_action_governor_speed_stop_mps must be non-negative")
+        if min_contact_steps < 0:
+            raise ValueError("tap_action_governor_min_contact_steps must be non-negative")
+        if not (0.0 <= push_scale <= 1.0):
+            raise ValueError("tap_action_governor_push_scale must be in [0, 1]")
+        if not (0.0 <= brake_scale <= 1.0):
+            raise ValueError("tap_action_governor_brake_scale must be in [0, 1]")
+        if brake_steps < 0:
+            raise ValueError("tap_action_governor_brake_steps must be non-negative")
+
+        pre_terms = self._tap_terms()
+        self._tap_action_governor_contact_age[:] = torch.where(
+            pre_terms["tap_contact_proxy"] | self._tap_contact_seen,
+            self._tap_action_governor_contact_age + 1,
+            self._tap_action_governor_contact_age,
+        )
+        projected_disp = pre_terms["disp_xy"] + pre_terms["speed"] * horizon_s
+        can_stop = self._tap_action_governor_contact_age >= min_contact_steps
+        stop_now = can_stop & (
+            (pre_terms["disp_xy"] >= target_disp)
+            | (projected_disp >= target_disp)
+            | (pre_terms["speed"] >= speed_stop)
+        )
+        newly_stopped = stop_now & ~self._tap_action_governor_stop_latched
+        self._tap_action_governor_stop_step[:] = torch.where(
+            newly_stopped,
+            self.episode_length_buf.to(dtype=torch.long),
+            self._tap_action_governor_stop_step,
+        )
+        self._tap_action_governor_stop_latched |= stop_now
+
+        brake_mask = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
+        if mode == "predict_brake":
+            self._tap_action_governor_brake_source_actions[:] = torch.where(
+                newly_stopped.unsqueeze(-1),
+                self._tap_action_governor_prev_actions,
+                self._tap_action_governor_brake_source_actions,
+            )
+            self._tap_action_governor_brake_remaining[:] = torch.where(
+                newly_stopped,
+                torch.full_like(self._tap_action_governor_brake_remaining, brake_steps),
+                self._tap_action_governor_brake_remaining,
+            )
+            brake_mask = self._tap_action_governor_brake_remaining > 0
+            brake_actions = -brake_scale * self._tap_action_governor_brake_source_actions
+            self.actions = torch.where(
+                self._tap_action_governor_stop_latched.unsqueeze(-1),
+                torch.zeros_like(self.actions),
+                self.actions,
+            )
+            self.actions = torch.where(brake_mask.unsqueeze(-1), brake_actions, self.actions)
+            self._tap_action_governor_brake_remaining[:] = torch.clamp(
+                self._tap_action_governor_brake_remaining - brake_mask.long(),
+                min=0,
+            )
+        else:
+            self.actions = torch.where(
+                self._tap_action_governor_stop_latched.unsqueeze(-1),
+                torch.zeros_like(self.actions),
+                self.actions,
+            )
+        self.actions = torch.clamp(self.actions * push_scale, -1.0, 1.0)
+        self._tap_action_governor_prev_actions[:] = self.actions.detach()
+        self._last_tap_action_governor_stop_latched[:] = self._tap_action_governor_stop_latched.float()
+        self._last_tap_action_governor_brake_active[:] = brake_mask.float()
+        self._last_tap_action_governor_projected_disp[:] = projected_disp.detach()
+        self._last_tap_action_governor_contact_age[:] = self._tap_action_governor_contact_age.float()
 
     def _update_grasp_attach(self):
         # Defense-in-depth: even if a future code path calls this, object pose writes
@@ -1382,6 +1589,12 @@ class RoArmCubePushEnv(RoArmStackEnv):
         self._last_candidate8_diffik_target_residual_forward_abs[env_ids] = 0.0
         self._last_candidate8_diffik_target_residual_lateral_abs[env_ids] = 0.0
         self._last_candidate8_diffik_target_residual_height_abs[env_ids] = 0.0
+        self._tap_push_primitive_stop_latched[env_ids] = False
+        self._tap_push_primitive_stop_step[env_ids] = -1
+        self._tap_push_primitive_hold_targets[env_ids] = joint_pos
+        self._last_tap_push_primitive_stop_latched[env_ids] = 0.0
+        self._last_tap_push_primitive_target_delta_abs_mean[env_ids] = 0.0
+        self._last_tap_push_primitive_target_delta_abs_max[env_ids] = 0.0
         self._teacher_start_joints[env_ids] = joint_pos
         if float(self.cfg.scripted_teacher_blend) > 0.0:
             teacher_goal, teacher_ok = self._ik_teacher_goal_joints(cube_local, push_dir, joint_pos)
@@ -1549,6 +1762,13 @@ class RoArmCubePushEnv(RoArmStackEnv):
             "cube_push_candidate8_diffik_target_residual_forward_abs": self._last_candidate8_diffik_target_residual_forward_abs.mean().detach(),
             "cube_push_candidate8_diffik_target_residual_lateral_abs": self._last_candidate8_diffik_target_residual_lateral_abs.mean().detach(),
             "cube_push_candidate8_diffik_target_residual_height_abs": self._last_candidate8_diffik_target_residual_height_abs.mean().detach(),
+            "cube_push_tap_push_primitive_enabled": torch.tensor(
+                float(str(getattr(self.cfg, "rl_action_mode", "joint_delta")) == "tap_push_primitive"),
+                device=self.device,
+            ),
+            "cube_push_tap_push_primitive_stop_latched_rate": self._last_tap_push_primitive_stop_latched.mean().detach(),
+            "cube_push_tap_push_primitive_target_delta_abs_mean": self._last_tap_push_primitive_target_delta_abs_mean.mean().detach(),
+            "cube_push_tap_push_primitive_target_delta_abs_max": self._last_tap_push_primitive_target_delta_abs_max.mean().detach(),
             "bc_teacher_imitation_penalty": bc_imitation_penalty.mean().detach(),
             "action_penalty": action_penalty.mean().detach(),
         }
@@ -1616,6 +1836,19 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
         self._tap_min_contact_vertical_offset = torch.full((self.num_envs,), torch.inf, device=self.device)
         self._last_tap_stop_after_useful_hold = torch.zeros(self.num_envs, device=self.device)
         self._last_tap_stop_after_disp_hold = torch.zeros(self.num_envs, device=self.device)
+        self._tap_action_governor_contact_age = torch.zeros(self.num_envs, device=self.device, dtype=torch.long)
+        self._tap_action_governor_stop_latched = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
+        self._tap_action_governor_brake_remaining = torch.zeros(self.num_envs, device=self.device, dtype=torch.long)
+        self._tap_action_governor_prev_actions = torch.zeros((self.num_envs, self.cfg.action_space), device=self.device)
+        self._tap_action_governor_brake_source_actions = torch.zeros(
+            (self.num_envs, self.cfg.action_space),
+            device=self.device,
+        )
+        self._tap_action_governor_stop_step = torch.full((self.num_envs,), -1, device=self.device, dtype=torch.long)
+        self._last_tap_action_governor_stop_latched = torch.zeros(self.num_envs, device=self.device)
+        self._last_tap_action_governor_brake_active = torch.zeros(self.num_envs, device=self.device)
+        self._last_tap_action_governor_projected_disp = torch.zeros(self.num_envs, device=self.device)
+        self._last_tap_action_governor_contact_age = torch.zeros(self.num_envs, device=self.device)
 
     def _reset_idx(self, env_ids: torch.Tensor | None):
         super()._reset_idx(env_ids)
@@ -1636,6 +1869,16 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
         self._tap_min_contact_vertical_offset[env_ids] = torch.inf
         self._last_tap_stop_after_useful_hold[env_ids] = 0.0
         self._last_tap_stop_after_disp_hold[env_ids] = 0.0
+        self._tap_action_governor_contact_age[env_ids] = 0
+        self._tap_action_governor_stop_latched[env_ids] = False
+        self._tap_action_governor_brake_remaining[env_ids] = 0
+        self._tap_action_governor_prev_actions[env_ids] = 0.0
+        self._tap_action_governor_brake_source_actions[env_ids] = 0.0
+        self._tap_action_governor_stop_step[env_ids] = -1
+        self._last_tap_action_governor_stop_latched[env_ids] = 0.0
+        self._last_tap_action_governor_brake_active[env_ids] = 0.0
+        self._last_tap_action_governor_projected_disp[env_ids] = 0.0
+        self._last_tap_action_governor_contact_age[env_ids] = 0.0
 
     def _link5_collision_aabb_contact_terms(
         self,
@@ -1929,9 +2172,24 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
             "cube_tap_stop_after_useful_hold_rate": self._last_tap_stop_after_useful_hold.mean().detach(),
             "cube_tap_stop_after_disp_hold_rate": self._last_tap_stop_after_disp_hold.mean().detach(),
             "cube_tap_stop_after_disp_m": torch.tensor(float(self.cfg.tap_stop_after_disp_m), device=self.device),
+            "cube_tap_action_governor_enabled": torch.tensor(
+                float(str(getattr(self.cfg, "tap_action_governor_mode", "off")) != "off"),
+                device=self.device,
+            ),
+            "cube_tap_action_governor_stop_latched_rate": self._last_tap_action_governor_stop_latched.mean().detach(),
+            "cube_tap_action_governor_brake_active_rate": self._last_tap_action_governor_brake_active.mean().detach(),
+            "cube_tap_action_governor_projected_disp_m": self._last_tap_action_governor_projected_disp.mean().detach(),
+            "cube_tap_action_governor_contact_age_steps": self._last_tap_action_governor_contact_age.mean().detach(),
             "cube_tap_contact_slowdown_use_proxy": torch.tensor(
                 float(bool(self.cfg.tap_contact_slowdown_use_proxy)), device=self.device
             ),
+            "cube_tap_push_primitive_enabled": torch.tensor(
+                float(str(getattr(self.cfg, "rl_action_mode", "joint_delta")) == "tap_push_primitive"),
+                device=self.device,
+            ),
+            "cube_tap_push_primitive_stop_latched_rate": self._last_tap_push_primitive_stop_latched.mean().detach(),
+            "cube_tap_push_primitive_target_delta_abs_mean": self._last_tap_push_primitive_target_delta_abs_mean.mean().detach(),
+            "cube_tap_push_primitive_target_delta_abs_max": self._last_tap_push_primitive_target_delta_abs_max.mean().detach(),
             "cube_push_tcp_cube_dist_m": terms["tcp_cube_dist"].mean().detach(),
             "cube_push_joint_delta_abs_mean": self._last_joint_delta_abs_mean.mean().detach(),
             "cube_push_joint_delta_abs_max": self._last_joint_delta_abs_max.mean().detach(),
