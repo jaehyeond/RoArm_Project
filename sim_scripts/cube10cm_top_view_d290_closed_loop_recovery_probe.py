@@ -183,6 +183,7 @@ def main() -> int:
     parser.add_argument("--primitive_speed_stop_mps", type=float, default=0.200)
     parser.add_argument("--primitive_speed_stop_min_disp_m", type=float, default=0.001)
     parser.add_argument("--primitive_diffik_step_clip_rad", type=float, default=0.010)
+    parser.add_argument("--primitive_cube_pose_noise_xy_m", type=float, default=0.0)
     parser.add_argument(
         "--primitive_target_path_mode",
         choices=("near_face_goal", "legacy_far_face_through"),
@@ -271,6 +272,8 @@ def main() -> int:
         raise ValueError("--primitive_speed_stop_min_disp_m must be non-negative")
     if float(args.primitive_diffik_step_clip_rad) <= 0.0:
         raise ValueError("--primitive_diffik_step_clip_rad must be positive")
+    if float(args.primitive_cube_pose_noise_xy_m) < 0.0:
+        raise ValueError("--primitive_cube_pose_noise_xy_m must be non-negative")
     primitive_exec_source = str(args.exec_source) in {"tap_push_primitive", "env_tap_push_primitive"}
     if primitive_exec_source and (
         str(args.action_governor_mode) != "off" or str(args.env_action_governor_mode) != "off"
@@ -370,6 +373,7 @@ def main() -> int:
         env_cfg.candidate6_diffik_target_base_mode = str(args.primitive_target_base_mode)
         env_cfg.candidate6_diffik_target_path_mode = str(args.primitive_target_path_mode)
         env_cfg.candidate6_diffik_cube_reference_mode = str(args.primitive_cube_reference_mode)
+        env_cfg.candidate6_diffik_cube_pose_noise_xy_m = float(args.primitive_cube_pose_noise_xy_m)
         env_cfg.candidate6_diffik_hold_after_tap_success = False
         env_cfg.tap_push_primitive_stop_disp_m = float(args.primitive_goal_disp_m)
         env_cfg.tap_push_primitive_speed_stop_mps = float(args.primitive_speed_stop_mps)
@@ -1052,6 +1056,13 @@ def main() -> int:
         "primitive_speed_stop_mps": float(args.primitive_speed_stop_mps),
         "primitive_speed_stop_min_disp_m": float(args.primitive_speed_stop_min_disp_m),
         "primitive_diffik_step_clip_rad": float(args.primitive_diffik_step_clip_rad),
+        "primitive_cube_pose_noise_xy_m": float(args.primitive_cube_pose_noise_xy_m),
+        "primitive_cube_pose_noise_abs_mean_m": _tensor_mean(
+            torch.abs(inner._candidate6_cube_pose_noise_w_xy)
+        ),
+        "primitive_cube_pose_noise_abs_max_m": _tensor_max(
+            torch.abs(inner._candidate6_cube_pose_noise_w_xy)
+        ),
         "primitive_target_path_mode": str(args.primitive_target_path_mode),
         "primitive_cube_reference_mode": str(args.primitive_cube_reference_mode),
         "primitive_target_base_mode": str(args.primitive_target_base_mode),

@@ -147,6 +147,7 @@ class RoArmCubePushEnvCfg(RoArmStackEnvCfg):
     candidate6_diffik_target_base_mode: str = "previous_joint_target"
     candidate6_diffik_target_path_mode: str = "near_face_goal"
     candidate6_diffik_cube_reference_mode: str = "start_pose"
+    candidate6_diffik_cube_pose_noise_xy_m: float = 0.0
     candidate8_diffik_target_residual_forward_m: float = 0.004
     candidate8_diffik_target_residual_lateral_m: float = 0.012
     candidate8_diffik_target_residual_height_m: float = 0.004
@@ -411,6 +412,7 @@ class RoArmCubePushEnv(RoArmStackEnv):
         self._bc_prev_teacher_delta = torch.zeros((self.num_envs, 5), device=self.device)
         self._candidate6_prev_arm_joint_target = torch.zeros((self.num_envs, 5), device=self.device)
         self._candidate6_prev_arm_joint_target_valid = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
+        self._candidate6_cube_pose_noise_w_xy = torch.zeros((self.num_envs, 2), device=self.device)
         self._last_candidate6_diffik_active = torch.zeros(self.num_envs, device=self.device)
         self._last_candidate6_diffik_numeric_ok = torch.zeros(self.num_envs, device=self.device)
         self._last_candidate6_diffik_raw_delta_abs_max = torch.zeros(self.num_envs, device=self.device)
@@ -628,6 +630,12 @@ class RoArmCubePushEnv(RoArmStackEnv):
             cube_w = self._sponge_pos_w
         else:
             raise ValueError(f"unsupported candidate6_diffik_cube_reference_mode={cube_reference_mode!r}")
+        cube_pose_noise_xy_m = float(getattr(self.cfg, "candidate6_diffik_cube_pose_noise_xy_m", 0.0))
+        if cube_pose_noise_xy_m < 0.0:
+            raise ValueError("candidate6_diffik_cube_pose_noise_xy_m must be non-negative")
+        if cube_pose_noise_xy_m > 0.0:
+            cube_w = cube_w.clone()
+            cube_w[:, 0:2] = cube_w[:, 0:2] + self._candidate6_cube_pose_noise_w_xy
         push_dir = self._push_dir_xy
         half_xy = torch.tensor(
             (float(self.cfg.cube_size_x_m) * 0.5, float(self.cfg.cube_size_y_m) * 0.5),
@@ -1583,6 +1591,15 @@ class RoArmCubePushEnv(RoArmStackEnv):
         self._bc_prev_teacher_delta[env_ids] = 0.0
         self._candidate6_prev_arm_joint_target[env_ids] = joint_pos[:, self._bc_arm_joint_ids]
         self._candidate6_prev_arm_joint_target_valid[env_ids] = False
+        cube_pose_noise_xy_m = float(getattr(self.cfg, "candidate6_diffik_cube_pose_noise_xy_m", 0.0))
+        if cube_pose_noise_xy_m < 0.0:
+            raise ValueError("candidate6_diffik_cube_pose_noise_xy_m must be non-negative")
+        if cube_pose_noise_xy_m > 0.0:
+            self._candidate6_cube_pose_noise_w_xy[env_ids] = (
+                torch.rand((n, 2), device=self.device) * 2.0 - 1.0
+            ) * cube_pose_noise_xy_m
+        else:
+            self._candidate6_cube_pose_noise_w_xy[env_ids] = 0.0
         self._last_candidate6_diffik_active[env_ids] = 0.0
         self._last_candidate6_diffik_numeric_ok[env_ids] = 0.0
         self._last_candidate6_diffik_raw_delta_abs_max[env_ids] = 0.0
@@ -1761,6 +1778,15 @@ class RoArmCubePushEnv(RoArmStackEnv):
             "cube_push_candidate6_diffik_raw_delta_abs_max": self._last_candidate6_diffik_raw_delta_abs_max.mean().detach(),
             "cube_push_candidate6_diffik_clipped_delta_abs_max": self._last_candidate6_diffik_clipped_delta_abs_max.mean().detach(),
             "cube_push_candidate6_diffik_step_clip_rate": self._last_candidate6_diffik_step_clip_rate.mean().detach(),
+            "cube_push_candidate6_cube_pose_noise_xy_m": torch.tensor(
+                float(getattr(self.cfg, "candidate6_diffik_cube_pose_noise_xy_m", 0.0)), device=self.device
+            ),
+            "cube_push_candidate6_cube_pose_noise_abs_mean_m": torch.mean(
+                torch.abs(self._candidate6_cube_pose_noise_w_xy)
+            ).detach(),
+            "cube_push_candidate6_cube_pose_noise_abs_max_m": torch.max(
+                torch.abs(self._candidate6_cube_pose_noise_w_xy)
+            ).detach(),
             "cube_push_candidate6_diffik_residual_abs_mean": self._last_candidate6_diffik_residual_abs_mean.mean().detach(),
             "cube_push_candidate6_diffik_residual_abs_max": self._last_candidate6_diffik_residual_abs_max.mean().detach(),
             "cube_push_candidate6_diffik_hold_success_rate": self._last_candidate6_diffik_hold_success_rate.mean().detach(),

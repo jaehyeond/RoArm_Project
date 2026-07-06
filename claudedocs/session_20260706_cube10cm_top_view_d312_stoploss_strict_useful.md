@@ -54,7 +54,7 @@ This is a baseline controller and benchmark contract, not a learned policy, not 
 
 ## Why No Runtime Experiment In This Session
 
-This session implemented the stop-loss guardrail requested after the D311 strategic review. The new rule was added during this session, so the session is explicitly documented as a code/docs contract migration rather than a research experiment. The next research session must run a failure-capable perturbation evaluation or explicitly justify why that is impossible.
+This session implemented the stop-loss guardrail requested after the D311 strategic review. The new rule was added during this session, so the session is explicitly documented as a code/docs contract migration rather than a research experiment. This is the first allowed exception under the new session progress rule because it migrated a known observed failure into the metric/control contract and installed the rule itself. Future sessions cannot cite D312 as permission for no-runtime hardening. The next research session must run a failure-capable perturbation evaluation or explicitly justify why that is impossible.
 
 ## Next Required Experiment
 

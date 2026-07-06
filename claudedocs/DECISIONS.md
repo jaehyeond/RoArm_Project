@@ -15942,6 +15942,42 @@ Sources:
 - `claudedocs/session_20260625_cube10cm_top_view_actor_preserve_short_gates_d283_d285.md`
 - `roarm_rl/train_cube_push_ppo.py`
 - `sim_scripts/cube10cm_top_view_tensorboard_scalar_gate.py`
+
+## D313 - PPO starts after the 9-row perturbation matrix (2026-07-07)
+
+- Scope:
+  - Continued after D312 on the professor 10cm / 0.72kg cube top-view visual
+    trajectory branch.
+  - Did not run Isaac runtime, PPO, tiny PPO trace gates, TensorBoard training,
+    torchrun, learned-policy updates, RoArm deployment, Track A, VLA/SmolVLA,
+    B200/SSH, pull, or `.ssh` copy.
+- Evidence:
+  - D312 protocol had a negative PPO gate but no positive trigger.
+  - D312 protocol covered size, mass, and friction but omitted controller-side
+    observation noise, even though the primitive uses sim cube pose as its cube
+    reference.
+  - D312 escalation language allowed severity to become an unbounded ladder.
+- Decision:
+  - Add controller-side cube XY pose noise support and expose it through D290 as
+    `--primitive_cube_pose_noise_xy_m`.
+  - The perturbation matrix is now 9 rows: nominal, size2, mass2, friction2, and
+    observation-noise2 (`0.005m`, `0.015m`).
+  - Primitive-parameter PPO starts immediately after the 9-row matrix completes,
+    regardless of result. If baseline breaks, the failing axis is the RL proof
+    stage; if it does not break, PPO trains under domain randomization and is
+    evaluated on combined/severe rows.
+  - Escalation is capped at one round. Do not replace the seed ladder with an
+    unlimited severity ladder.
+- Verdict:
+  `D313_PPO_TRIGGER_OBS_NOISE_PROTOCOL_READY_NO_RUNTIME_NO_PPO`.
+
+Sources:
+
+- `claudedocs/session_20260707_cube10cm_top_view_d313_ppo_trigger_obs_noise.md`
+- `claudedocs/cube10cm_top_view_d312_perturbation_protocol.md`
+- `START_HERE.md`
+- `roarm_rl/roarm_cube_push_env.py`
+- `sim_scripts/cube10cm_top_view_d290_closed_loop_recovery_probe.py`
 - `sim_scripts/cube10cm_top_view_teacher_off_policy_eval.py`
 - `sim_scripts/cube10cm_top_view_actor_teacher_trace.py`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/actor_preserve_d283/tap10cm/ppo_preserve095_10_smoke/cube10cm_d283_preserve095_10_smoke/tensorboard_scalar_gate_d283_preserve095_10.json`

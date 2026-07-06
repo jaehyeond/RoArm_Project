@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-07-06 KST (D312 current truth: D311 exposed a reward/metric hole: seed `30704` env `19` had contact/reaction/useful/final proxy true with only `0.7008mm` max XY displacement and primitive stop step `1`. D312 promotes the D311 opt-in `0.001m` speed-stop displacement floor into the default env/probe runtime contract and adds `tap_useful_min_disp_m=0.001` as the strict useful floor. Env reward/logging, success, useful termination, stop-after-useful, D290 closed-loop probe summaries, teacher-off eval, D256 bin probe, actor/teacher trace, distillation summaries, PPO collection-final scalars, and TensorBoard collection-final gate now require `>=1mm` XY displacement for useful/promotion claims. D290 now records cube size/mass/friction perturbation overrides. `CLAUDE.md` now requires each research session to run a failure-capable experiment or justify why not, and control-contract hardening is reactive-only. This was a code/docs stop-loss session: no Isaac runtime perturbation, no PPO, no tiny PPO trace gate, no learned policy promotion, no B200/SSH, no pull, no RoArm readiness.)
+Last updated: 2026-07-07 KST (D313 current truth: D312 fixed strict useful, but its perturbation protocol still lacked a positive PPO trigger, observation-noise rows, and a cap on severity escalation. D313 adds controller-side cube XY pose noise `candidate6_diffik_cube_pose_noise_xy_m` and D290 CLI `--primitive_cube_pose_noise_xy_m`; the noise is sampled per env on reset and applied only to the primitive controller cube reference, while reward/metric/referee terms remain ground truth. The D312/D313 perturbation matrix is now 9 rows: nominal, size2, mass2, friction2, observation-noise2 (`0.005m`, `0.015m`). Primitive-parameter PPO starts immediately after the 9 rows complete, regardless of result. Severity escalation is capped at one round. This was code/docs protocol repair, not Isaac runtime, not PPO, not tiny PPO trace gate, not learned-policy promotion, no B200/SSH, no pull, and no RoArm readiness.)
 
 ## Current Truth
 
@@ -8,20 +8,21 @@ Last updated: 2026-07-06 KST (D312 current truth: D311 exposed a reward/metric h
   dataset camera-contract branch. The earlier tap RL branch is frozen unless
   explicitly resumed.
 - Do not mix with Track A grasp/dataset/training work.
-- D312 session doc:
-  `claudedocs/session_20260706_cube10cm_top_view_d312_stoploss_strict_useful.md`.
-- D312 perturbation protocol:
+- D313 session doc:
+  `claudedocs/session_20260707_cube10cm_top_view_d313_ppo_trigger_obs_noise.md`.
+- D312/D313 perturbation protocol:
   `claudedocs/cube10cm_top_view_d312_perturbation_protocol.md`.
-- D312 verdict:
-  `D312_STOPLOSS_STRICT_USEFUL_BASELINE_V1_NO_RUNTIME_NO_PPO`.
+- D313 verdict:
+  `D313_PPO_TRIGGER_OBS_NOISE_PROTOCOL_READY_NO_RUNTIME_NO_PPO`.
 - Current next concrete action:
-  run one failure-capable non-PPO perturbation benchmark against baseline
-  controller v1 (`rl_action_mode="tap_push_primitive"`,
+  run the 9-row non-PPO perturbation matrix against baseline controller v1
+  (`rl_action_mode="tap_push_primitive"`,
   `tap_push_primitive_speed_stop_min_disp_m=0.001`,
-  `tap_useful_min_disp_m=0.001`). Do not run a seed-only validation campaign.
-  Do not harden the controller again unless a perturbation/training failure is
-  observed and documented. Do not run PPO or a tiny PPO trace gate before this
-  perturbation benchmark.
+  `tap_useful_min_disp_m=0.001`). Include observation-noise rows
+  `--primitive_cube_pose_noise_xy_m 0.005` and `0.015`. Do not run a seed-only
+  validation campaign. Do not harden the controller again unless a documented
+  perturbation/training failure requires it. After the 9 rows complete, start
+  primitive-parameter PPO regardless of result.
 - Research objective is strict useful tap: contact/reaction, no overshoot, and
   actual XY displacement `>=1mm`. The runtime's 6mm target band remains a
   quality-tier diagnostic; it is no longer sufficient for useful/promotion.
@@ -428,7 +429,33 @@ Last updated: 2026-07-06 KST (D312 current truth: D311 exposed a reward/metric h
     `video_backend=pyav` locally unless torchcodec/FFmpeg is repaired;
   - local available space is still only about `32G`.
 
-## Latest Result: D312
+## Latest Result: D313
+
+- D313 purpose:
+  - Close D312's remaining loopholes: no positive PPO trigger, no observation
+    noise axis, and open-ended severity escalation.
+  - Make observation-noise rows executable by adding controller-side cube pose
+    noise to the primitive, without corrupting ground-truth metrics.
+- Code/docs changes:
+  - Added `candidate6_diffik_cube_pose_noise_xy_m` to the env config.
+  - Samples per-env cube XY pose noise on reset and applies it only to the
+    candidate6/tap-push primitive cube reference.
+  - Added D290 `--primitive_cube_pose_noise_xy_m` and summary fields for
+    configured/sampled pose noise.
+  - Updated the perturbation protocol to 9 rows: nominal, size2, mass2,
+    friction2, observation-noise2.
+  - Added positive trigger: primitive-parameter PPO starts immediately after the
+    9 rows complete, regardless of result.
+  - Capped severity escalation at one round.
+- D313 verdict:
+  `D313_PPO_TRIGGER_OBS_NOISE_PROTOCOL_READY_NO_RUNTIME_NO_PPO`.
+- Primary D313 artifacts:
+  - `claudedocs/session_20260707_cube10cm_top_view_d313_ppo_trigger_obs_noise.md`
+  - `claudedocs/cube10cm_top_view_d312_perturbation_protocol.md`
+  - `roarm_rl/roarm_cube_push_env.py`
+  - `sim_scripts/cube10cm_top_view_d290_closed_loop_recovery_probe.py`
+
+## Previous Result: D312
 
 - D312 purpose:
   - Stop the D310-D311 pattern from turning into endless control-contract
@@ -2798,9 +2825,10 @@ Last updated: 2026-07-06 KST (D312 current truth: D311 exposed a reward/metric h
 
 ## Active Direction
 
-- Long PPO and tiny PPO trace gates are frozen until a non-PPO perturbation
-  benchmark creates a concrete failure target. Do not run PPO merely because the
-  baseline controller now passes the nominal corrected reset distribution.
+- Long PPO is still frozen, but primitive-parameter PPO now has a positive
+  trigger: it starts immediately after the 9-row perturbation matrix completes,
+  regardless of result. Do not run PPO before those 9 rows. Do not return to raw
+  scalar joint-delta PPO as the first PPO target.
 - Baseline controller v1 is frozen as:
   - `rl_action_mode="tap_push_primitive"`
   - `tap_push_primitive_speed_stop_min_disp_m=0.001`
@@ -2810,19 +2838,22 @@ Last updated: 2026-07-06 KST (D312 current truth: D311 exposed a reward/metric h
 - Do not run another seed-only speed-min validation campaign. D311 already
   showed that `0.001m` is strictly better than `0.0m` on the observed edge case,
   and D312 promotes it with a fallback-controlled code change.
-- Next work must be one failure-capable non-PPO perturbation benchmark:
+- Next work must be the 9-row failure-capable non-PPO perturbation matrix:
   1. nominal baseline row for reproducibility;
   2. mild physical perturbations: cube size `0.09/0.10/0.11m`, mass
      `0.50/0.72/1.00kg`, friction low/nominal/high;
-  3. stricter reset/contact geometry cases only after the physical rows are
-     measured;
+  3. observation-noise rows:
+     `--primitive_cube_pose_noise_xy_m 0.005` and
+     `--primitive_cube_pose_noise_xy_m 0.015`;
   4. metrics: strict useful/contact/reaction, overshoot `<=5%`, cap low,
      XY `>=1mm` and `>=3mm` rates, final/current proxy, stop step, max XY
-     distribution, and logged cube perturbation fields.
+     distribution, logged cube perturbation fields, and logged controller-side
+     pose-noise fields.
 - Control-contract hardening is reactive only. If the perturbation benchmark
   fails, freeze the failure as an RL/control target before adding another
-  controller condition. If it passes, increase perturbation severity rather than
-  running more nominal seeds.
+  controller condition. If all 9 rows pass, one combined/severe escalation round
+  is allowed, then primitive-parameter PPO starts. Do not replace the old seed
+  ladder with an unlimited severity ladder.
 - The 10cm cube top-view task remains a foundation fixture and benchmark, not a
   POSCO/general VLA deployment claim.
 - Do not start actual SmolVLA/VLA fine-tuning, PPO, action-teacher, RoArm
@@ -2840,21 +2871,22 @@ Last updated: 2026-07-06 KST (D312 current truth: D311 exposed a reward/metric h
 ## Must Read First
 
 1. `CLAUDE.md` Current-State Protocol.
-2. `START_HERE.md` D312 current truth and Active Direction.
-3. `claudedocs/DECISIONS.md` latest D312, then D311-D307 for context.
-4. `claudedocs/EXPERIMENT_LEDGER.md` latest D312 row.
-5. `claudedocs/session_20260706_cube10cm_top_view_d312_stoploss_strict_useful.md`.
+2. `START_HERE.md` D313 current truth and Active Direction.
+3. `claudedocs/DECISIONS.md` latest D313, then D312-D307 for context.
+4. `claudedocs/EXPERIMENT_LEDGER.md` latest D313 row.
+5. `claudedocs/session_20260707_cube10cm_top_view_d313_ppo_trigger_obs_noise.md`.
 6. `claudedocs/cube10cm_top_view_d312_perturbation_protocol.md`.
-7. `claudedocs/session_20260706_cube10cm_top_view_d311_speed_stop_min_disp.md`
+7. `claudedocs/session_20260706_cube10cm_top_view_d312_stoploss_strict_useful.md`.
+8. `claudedocs/session_20260706_cube10cm_top_view_d311_speed_stop_min_disp.md`
    for the `0.7008mm` low-displacement evidence and `0.001m` speed-min result.
-8. `claudedocs/session_20260701_cube10cm_top_view_d310_env_push_primitive_contract.md`
+9. `claudedocs/session_20260701_cube10cm_top_view_d310_env_push_primitive_contract.md`
    for the env primitive runtime contract.
-9. `claudedocs/session_20260701_cube10cm_top_view_d309_push_primitive_reset_reaudit.md`
+10. `claudedocs/session_20260701_cube10cm_top_view_d309_push_primitive_reset_reaudit.md`
    for the corrected-reset and stop-termination evidence.
-10. `claudedocs/session_20260701_cube10cm_top_view_d308_env_governor_control_repair.md`
+11. `claudedocs/session_20260701_cube10cm_top_view_d308_env_governor_control_repair.md`
     and `claudedocs/session_20260630_cube10cm_top_view_d307_action_governor.md`
     only as negative/partial controls.
-11. Relevant code:
+12. Relevant code:
     - `roarm_rl/roarm_cube_push_env.py`
     - `sim_scripts/cube10cm_top_view_d290_closed_loop_recovery_probe.py`
     - `roarm_rl/train_cube_push_ppo.py`
