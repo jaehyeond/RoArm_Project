@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-07-07 KST (D319 current truth: advisor-confirmed chain is script push -> rendered pair dataset -> RL training -> RL policy large-scale data generation -> VLA training at the end. D319 ran a non-PPO baseline-v2 data-conveyor pilot with candidate8 zero-action + `candidate8_hybrid_stop_after_useful`. High-friction D314 `2.2/1.8` remains solver/runaway-suspect: useful `0/32`, overshoot `32/32`, mean/max XY `3.7688m/11.9895m`. D319 800ep envcsv pilot: low bin `0.7-0.9` accepted `289/300` (`96.3%`), mid `0.9-1.2` accepted `193/200` (`96.5%`), upper `1.2-1.6` accepted `58/300` (`19.3%`) with `242/300` overshoot, so low/mid are producer bins and upper is an RL contribution target. D319 accepted trajectories remain directionally narrow: commanded +x only. 200-row replay selection exists, but LeRobot append is blocked because existing visual renderers do not replay D319 D256-reset/friction/candidate8-hybrid trajectories. Verdict: `D319_DATA_CONVEYOR_LOW_MID_PRODUCER_UPPER_RL_TARGET_RENDER_REPLAY_GAP`.)
+Last updated: 2026-07-07 KST (D320 current truth: D319 replay-render smoke path is implemented and passed. D320 rendered 9 D319 replay episodes / 1314 frames from D256 reset episode + friction override + candidate8 zero-action + `candidate8_hybrid_stop_after_useful`; LeRobot v3 AV1 conversion passed in the `lerobot` env with `video_backend=pyav`, and a DataLoader one-batch smoke loaded `observation.images.top` as `[2,3,720,1280]`, state/action `[2,6]`. Upper-bin physicality audit: D319 upper overshoot rows `242`, `<300mm` `236/242` (`97.5%`) but meter-scale `>=1m` `6/242`, so upper `1.2-1.6` is a mixed physical-failure target with solver outliers to isolate, not a clean scale-up bin. Direction probe: non-+x directions are code-supported, but zero-action primitive is unstable (`-x` useful `3/5`, `+y` `1/5`, `-y` `3/5` with high overshoot). Verdict: `D320_REPLAY_RENDER_LEROBOT_PASS_UPPER_MIXED_DIRECTION_UNSTABLE`.)
 
 ## Current Truth
 
@@ -8,6 +8,16 @@ Last updated: 2026-07-07 KST (D319 current truth: advisor-confirmed chain is scr
   dataset camera-contract branch. The earlier tap RL branch is frozen unless
   explicitly resumed.
 - Do not mix with Track A grasp/dataset/training work.
+- D320 session doc:
+  `claudedocs/session_20260707_cube10cm_top_view_d320_replay_renderer_smoke_upper_physicality.md`.
+- D320 replay render root:
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d320/replay_smoke/render_d319_replay_smoke`.
+- D320 LeRobot smoke dataset:
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d320/replay_smoke/render_d319_replay_smoke/lerobot_dataset`.
+- D320 upper-bin audit:
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d320/replay_smoke/d320_upper_bin_physicality_audit.json`.
+- D320 direction probe:
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d320/direction_probe/direction_probe_summary.json`.
 - D319 session doc:
   `claudedocs/session_20260707_cube10cm_top_view_d319_rl_data_factory_conveyor_pilot.md`.
 - D319 direction doc:
@@ -52,14 +62,14 @@ Last updated: 2026-07-07 KST (D319 current truth: advisor-confirmed chain is scr
 - D314 verdict:
   `D314_PERTURBATION_MATRIX_RESULT_FRICTION_BREAKS_BASELINE_NO_PROMOTION`.
 - Current next concrete action:
-  implement a D319 replay-render smoke path before scaling the conveyor:
-  consume `d319_selected_200_for_replay_manifest.csv`, reproduce baseline-v2
-  candidate8 zero-action + hybrid-stop trajectories with the recorded D256
-  reset episode and friction/provenance metadata, render only 5-10 episodes
-  first, then convert/validate LeRobot v3. Do not fake this by reusing the old
-  0-999 videos. Do not run PPO in this immediate step, do not add controller
-  hand-conditions, and keep upper friction bin `1.2-1.6` frozen as an RL
-  contribution target.
+  do not scale blindly. Use the D320 replay renderer only after explicit
+  scale-up approval and disk preflight. Low/mid bins can be producer bins, but
+  upper `1.2-1.6` must be split into normal physical failures (`20-50mm`
+  dominant) and meter-scale solver outliers before any RL or dataset claim.
+  Direction diversity must be handled by an explicit direction-conditioned
+  generator or learned primitive parameter because D320 shows non-+x zero-action
+  primitive pushes are unstable. Do not run same-setting PPO, do not hand-patch
+  upper-bin controller conditions, and do not claim D319 as multi-direction data.
 - Active direction doc:
   `claudedocs/direction_20260708_rl_data_factory.md`. Durable strategic
   interpretation: RL is the data-factory engine for generating VLA training

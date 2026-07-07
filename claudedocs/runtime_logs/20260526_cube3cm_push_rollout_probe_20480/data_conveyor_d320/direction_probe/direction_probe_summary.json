@@ -1,0 +1,321 @@
+{
+  "artifact": "d320_candidate8_direction_probe",
+  "base_contract": {
+    "action_penalty_scale": 0.005,
+    "action_scale": 0.05,
+    "candidate6_diffik_cube_reference_mode": "current_pose",
+    "candidate6_diffik_goal_push_m": 0.006,
+    "candidate6_diffik_hold_after_tap_success": true,
+    "candidate6_diffik_lambda": 0.01,
+    "candidate6_diffik_push_steps": 580,
+    "candidate6_diffik_residual_scale_rad": 0.002,
+    "candidate6_diffik_target_base_mode": "previous_joint_target",
+    "candidate6_diffik_target_path_mode": "near_face_goal",
+    "candidate8_diffik_target_residual_forward_m": 0.004,
+    "candidate8_diffik_target_residual_height_m": 0.004,
+    "candidate8_diffik_target_residual_lateral_m": 0.012,
+    "cube_randomization_half_extent_m": [
+      0.04,
+      0.04
+    ],
+    "cube_x_range_m": [
+      0.19999999999999998,
+      0.27999999999999997
+    ],
+    "cube_xy_m": [
+      0.24,
+      0.0
+    ],
+    "cube_y_range_m": [
+      -0.04,
+      0.04
+    ],
+    "episode_length_s": 6.0,
+    "fixed_push_dir": [
+      1.0,
+      0.0
+    ],
+    "joint_target_lead_limit_rad": 0.06,
+    "policy_action_space": 3,
+    "policy_target_disp_m": 0.006,
+    "precontact_clearance_m": 0.04,
+    "rl_action_mode": "candidate8_diffik_target_residual",
+    "robot_usd_path": "/home/cgxr/Documents/Robotics/RoArm_Project/b200_backup_20260522_final/tmp_p7/p7_branch_b_cube2cm_opposing_jaw_v7_collision_usd_d024/roarm_m3.usd",
+    "scripted_teacher_blend": 0.0,
+    "step_clip_rad": 0.01,
+    "tap_contact_proxy_mode": "link5_collision_aabb",
+    "tap_overshoot_penalty_scale": 12.0,
+    "tap_overshoot_terminate": false,
+    "tap_success_terminate": false,
+    "tap_target_disp_tolerance_m": 0.003,
+    "tap_transient_disp_reward_scale": 40.0,
+    "tool_contact_proxy_mode": "hand_tcp"
+  },
+  "code_contract": {
+    "candidate8_uses_push_dir_and_lateral_dir": "roarm_rl/roarm_cube_push_env.py:1226-1238",
+    "env_fixed_push_dir_fields": "roarm_rl/roarm_cube_push_env.py:1593-1605"
+  },
+  "num_envs_per_direction": 5,
+  "results": [
+    {
+      "contact_count": 5,
+      "direction": "-x",
+      "env_rows": [
+        {
+          "contact": 1,
+          "disp_along_m_final": -0.002502918243408203,
+          "env_id": 0,
+          "hybrid_stop_step": 1,
+          "max_disp_xy_m": 0.0037357890978455544,
+          "overshoot": 0,
+          "push_dir_xy": [
+            -1.0,
+            0.0
+          ],
+          "reaction": 1,
+          "useful_filter": 1
+        },
+        {
+          "contact": 1,
+          "disp_along_m_final": 0.07983183860778809,
+          "env_id": 1,
+          "hybrid_stop_step": 1,
+          "max_disp_xy_m": 0.10296501219272614,
+          "overshoot": 1,
+          "push_dir_xy": [
+            -1.0,
+            0.0
+          ],
+          "reaction": 1,
+          "useful_filter": 0
+        },
+        {
+          "contact": 1,
+          "disp_along_m_final": 0.007577374577522278,
+          "env_id": 2,
+          "hybrid_stop_step": 1,
+          "max_disp_xy_m": 0.01876891776919365,
+          "overshoot": 0,
+          "push_dir_xy": [
+            -1.0,
+            0.0
+          ],
+          "reaction": 1,
+          "useful_filter": 1
+        },
+        {
+          "contact": 1,
+          "disp_along_m_final": 0.00335906445980072,
+          "env_id": 3,
+          "hybrid_stop_step": 1,
+          "max_disp_xy_m": 0.020192500203847885,
+          "overshoot": 1,
+          "push_dir_xy": [
+            -1.0,
+            0.0
+          ],
+          "reaction": 1,
+          "useful_filter": 0
+        },
+        {
+          "contact": 1,
+          "disp_along_m_final": 0.0071563720703125,
+          "env_id": 4,
+          "hybrid_stop_step": 1,
+          "max_disp_xy_m": 0.017643630504608154,
+          "overshoot": 0,
+          "push_dir_xy": [
+            -1.0,
+            0.0
+          ],
+          "reaction": 1,
+          "useful_filter": 1
+        }
+      ],
+      "max_disp_xy_m_max": 0.10296501219272614,
+      "max_disp_xy_m_mean": 0.03266116995364428,
+      "num_envs": 5,
+      "overshoot_count": 2,
+      "reaction_count": 5,
+      "requested_push_dir_xy": [
+        -1.0,
+        0.0
+      ],
+      "useful_filter_count": 3
+    },
+    {
+      "contact_count": 5,
+      "direction": "+y",
+      "env_rows": [
+        {
+          "contact": 1,
+          "disp_along_m_final": 0.006602585315704346,
+          "env_id": 0,
+          "hybrid_stop_step": -1,
+          "max_disp_xy_m": 0.038139428943395615,
+          "overshoot": 1,
+          "push_dir_xy": [
+            0.0,
+            1.0
+          ],
+          "reaction": 1,
+          "useful_filter": 0
+        },
+        {
+          "contact": 1,
+          "disp_along_m_final": -0.0010457038879394531,
+          "env_id": 1,
+          "hybrid_stop_step": -1,
+          "max_disp_xy_m": 0.03237075358629227,
+          "overshoot": 1,
+          "push_dir_xy": [
+            0.0,
+            1.0
+          ],
+          "reaction": 1,
+          "useful_filter": 0
+        },
+        {
+          "contact": 1,
+          "disp_along_m_final": 0.001454770565032959,
+          "env_id": 2,
+          "hybrid_stop_step": 1,
+          "max_disp_xy_m": 0.0146262152120471,
+          "overshoot": 0,
+          "push_dir_xy": [
+            0.0,
+            1.0
+          ],
+          "reaction": 1,
+          "useful_filter": 1
+        },
+        {
+          "contact": 1,
+          "disp_along_m_final": 0.07682627439498901,
+          "env_id": 3,
+          "hybrid_stop_step": 1,
+          "max_disp_xy_m": 0.10162298381328583,
+          "overshoot": 1,
+          "push_dir_xy": [
+            0.0,
+            1.0
+          ],
+          "reaction": 1,
+          "useful_filter": 0
+        },
+        {
+          "contact": 1,
+          "disp_along_m_final": 0.01876544952392578,
+          "env_id": 4,
+          "hybrid_stop_step": -1,
+          "max_disp_xy_m": 0.0275990329682827,
+          "overshoot": 1,
+          "push_dir_xy": [
+            0.0,
+            1.0
+          ],
+          "reaction": 1,
+          "useful_filter": 0
+        }
+      ],
+      "max_disp_xy_m_max": 0.10162298381328583,
+      "max_disp_xy_m_mean": 0.0428716829046607,
+      "num_envs": 5,
+      "overshoot_count": 4,
+      "reaction_count": 5,
+      "requested_push_dir_xy": [
+        0.0,
+        1.0
+      ],
+      "useful_filter_count": 1
+    },
+    {
+      "contact_count": 5,
+      "direction": "-y",
+      "env_rows": [
+        {
+          "contact": 1,
+          "disp_along_m_final": 0.00022280216217041016,
+          "env_id": 0,
+          "hybrid_stop_step": 191,
+          "max_disp_xy_m": 0.0010011657141149044,
+          "overshoot": 0,
+          "push_dir_xy": [
+            0.0,
+            -1.0
+          ],
+          "reaction": 1,
+          "useful_filter": 1
+        },
+        {
+          "contact": 1,
+          "disp_along_m_final": 0.0002989768981933594,
+          "env_id": 1,
+          "hybrid_stop_step": 185,
+          "max_disp_xy_m": 0.0010088894050568342,
+          "overshoot": 0,
+          "push_dir_xy": [
+            0.0,
+            -1.0
+          ],
+          "reaction": 1,
+          "useful_filter": 1
+        },
+        {
+          "contact": 1,
+          "disp_along_m_final": -0.02528834342956543,
+          "env_id": 2,
+          "hybrid_stop_step": -1,
+          "max_disp_xy_m": 0.03081650100648403,
+          "overshoot": 1,
+          "push_dir_xy": [
+            0.0,
+            -1.0
+          ],
+          "reaction": 1,
+          "useful_filter": 0
+        },
+        {
+          "contact": 1,
+          "disp_along_m_final": 0.00371551513671875,
+          "env_id": 3,
+          "hybrid_stop_step": -1,
+          "max_disp_xy_m": 0.02077794447541237,
+          "overshoot": 1,
+          "push_dir_xy": [
+            0.0,
+            -1.0
+          ],
+          "reaction": 1,
+          "useful_filter": 0
+        },
+        {
+          "contact": 1,
+          "disp_along_m_final": 0.00027108192443847656,
+          "env_id": 4,
+          "hybrid_stop_step": 152,
+          "max_disp_xy_m": 0.0010073166340589523,
+          "overshoot": 0,
+          "push_dir_xy": [
+            0.0,
+            -1.0
+          ],
+          "reaction": 1,
+          "useful_filter": 1
+        }
+      ],
+      "max_disp_xy_m_max": 0.03081650100648403,
+      "max_disp_xy_m_mean": 0.010922363447025418,
+      "num_envs": 5,
+      "overshoot_count": 2,
+      "reaction_count": 5,
+      "requested_push_dir_xy": [
+        0.0,
+        -1.0
+      ],
+      "useful_filter_count": 3
+    }
+  ],
+  "runtime": "DIRECTION_PROBE_NO_TRAINING",
+  "steps": 580
+}

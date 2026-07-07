@@ -17877,3 +17877,65 @@ Sources:
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d319/audit/d319_selected_200_for_replay_manifest.csv`
 - `sim_scripts/cube10cm_top_view_d319_data_conveyor_audit.py`
 - `START_HERE.md`
+
+## D320 Runtime - D319 replay renderer smoke passes, upper bin is mixed, direction zero-action is unstable (2026-07-07)
+
+- Scope:
+  - Implemented and ran the D319 replay-render smoke path for D320.
+  - No PPO, VLA, RoArm, B200/SSH/pull, large-scale generation, or controller
+    hand-condition was used.
+- Evidence:
+  - Added a 9-episode D320 smoke manifest from D319 rows: accepted `2` each
+    from low/mid/upper plus `3` upper overshoot rows.
+  - Added `sim_scripts/cube10cm_top_view_d320_replay_render.py`, which replays
+    D319 D256 reset episode + friction override + candidate8 zero-action +
+    `candidate8_hybrid_stop_after_useful`.
+  - Initial sandboxed render failed because Isaac could not see CUDA/NVML
+    (`No CUDA GPUs are available`), while host `nvidia-smi` saw the RTX 4090.
+    Rerunning with local GPU access passed.
+  - Render smoke output:
+    - `9` episodes, `1314` frames, `146` frames/episode.
+    - Raw PNG bytes `344057130`, `38.22857MB/episode`.
+    - Render time `202.47s`, effective captured FPS `6.49`.
+  - Low/mid replay rows closely reproduced D319 displacement. Upper replay rows
+    were dynamics-sensitive: one D319 upper accepted row replayed as `160.7mm`
+    overshoot, and one upper overshoot row replayed as `115.99mm` overshoot.
+  - LeRobot conversion passed in the `lerobot` conda env with
+    `video_backend=pyav`: `1314` frames / `9` episodes, codec `av1`,
+    `yuv420p`, `30fps`, `0.418127MB/episode`, sampled decode avg/max
+    `0.01177s/0.02086s`, sampled PNG-vs-decoded mean abs max `0.88714`.
+  - DataLoader one-batch validation passed: `observation.images.top`
+    `[2,3,720,1280]`, `observation.state` `[2,6]`, `action` `[2,6]`.
+  - Upper-bin physicality audit over D319 upper overshoot rows:
+    `236/242` (`97.5%`) are `<300mm`, but `6/242` (`2.5%`) are `>=1m`;
+    median/p95/max max-XY are `30.94mm/45.58mm/11140.39mm`.
+  - Direction probe confirmed code support for non-+x push direction but poor
+    zero-action robustness: `-x` useful/overshoot `3/5`/`2/5`, `+y`
+    `1/5`/`4/5`, `-y` `3/5`/`2/5`.
+- Decision:
+  - D319 replay-render -> LeRobot path is now viable for smoke-scale data.
+  - Low/mid producer bins may use this renderer in a future approved scale-up
+    after disk preflight.
+  - Upper `1.2-1.6` remains the RL contribution target, but it is mixed:
+    normal physical failures dominate, while meter-scale solver outliers must
+    be isolated before any dataset/training claim.
+  - D319 is still directionally narrow. Do not claim multi-direction data from
+    D319; direction diversity needs an explicit direction-conditioned generator
+    or learned primitive parameter.
+  - Do not hand-patch the upper-bin controller. Do not rerun same-setting PPO.
+- Verdict:
+  `D320_REPLAY_RENDER_LEROBOT_PASS_UPPER_MIXED_DIRECTION_UNSTABLE`.
+
+Sources:
+
+- `claudedocs/session_20260707_cube10cm_top_view_d320_replay_renderer_smoke_upper_physicality.md`
+- `sim_scripts/cube10cm_top_view_d320_prepare_replay_manifest.py`
+- `sim_scripts/cube10cm_top_view_d320_replay_render.py`
+- `sim_scripts/cube10cm_top_view_d320_lerobot_batch_check.py`
+- `sim_scripts/cube10cm_top_view_d320_direction_probe.py`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d320/replay_smoke/render_d319_replay_smoke/render_summary.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d320/replay_smoke/render_d319_replay_smoke/lerobot_validation_summary.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d320/replay_smoke/render_d319_replay_smoke/dataloader_batch_validation_d320.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d320/replay_smoke/d320_upper_bin_physicality_audit.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d320/direction_probe/direction_probe_summary.json`
+- `START_HERE.md`

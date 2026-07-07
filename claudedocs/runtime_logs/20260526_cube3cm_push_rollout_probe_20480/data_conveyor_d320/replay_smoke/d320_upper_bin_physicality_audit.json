@@ -1,0 +1,88 @@
+{
+  "artifact": "d320_upper_bin_physicality_audit",
+  "below_300mm_count": 236,
+  "below_300mm_rate": 0.9752066115702479,
+  "decision": "MIXED_PHYSICAL_FAILURE_WITH_SOLVER_OUTLIERS",
+  "histogram": [
+    {
+      "bin": "0-20mm",
+      "count": 0,
+      "hi_m": 0.02,
+      "lo_m": 0.0,
+      "rate": 0.0
+    },
+    {
+      "bin": "20-30mm",
+      "count": 111,
+      "hi_m": 0.03,
+      "lo_m": 0.02,
+      "rate": 0.45867768595041325
+    },
+    {
+      "bin": "30-50mm",
+      "count": 122,
+      "hi_m": 0.05,
+      "lo_m": 0.03,
+      "rate": 0.5041322314049587
+    },
+    {
+      "bin": "50-100mm",
+      "count": 3,
+      "hi_m": 0.1,
+      "lo_m": 0.05,
+      "rate": 0.012396694214876033
+    },
+    {
+      "bin": "100-300mm",
+      "count": 0,
+      "hi_m": 0.3,
+      "lo_m": 0.1,
+      "rate": 0.0
+    },
+    {
+      "bin": "300-1000mm",
+      "count": 0,
+      "hi_m": 1.0,
+      "lo_m": 0.3,
+      "rate": 0.0
+    },
+    {
+      "bin": ">=1000mm",
+      "count": 6,
+      "hi_m": null,
+      "lo_m": 1.0,
+      "rate": 0.024793388429752067
+    }
+  ],
+  "max_disp_xy_m_max": 11.140390396118164,
+  "max_disp_xy_m_quantiles": {
+    "0.0": 0.020067811012268066,
+    "0.1": 0.022602524608373642,
+    "0.25": 0.026185432448983192,
+    "0.5": 0.030943365767598152,
+    "0.75": 0.036314286291599274,
+    "0.9": 0.04046289995312691,
+    "0.95": 0.04557529836893082,
+    "0.99": 11.124628067016602,
+    "1.0": 11.140390396118164
+  },
+  "max_disp_xy_mm_quantiles": {
+    "0.0": 20.067811012268066,
+    "0.1": 22.602524608373642,
+    "0.25": 26.185432448983192,
+    "0.5": 30.943365767598152,
+    "0.75": 36.314286291599274,
+    "0.9": 40.46289995312691,
+    "0.95": 45.57529836893082,
+    "0.99": 11124.628067016602,
+    "1.0": 11140.390396118164
+  },
+  "meter_scale_count": 6,
+  "meter_scale_rate": 0.024793388429752067,
+  "pre_registered_decision_rule": {
+    "meter_scale_present": "solver contamination present; isolate outliers before using upper bin",
+    "mostly_under_300mm": "physical failure; RL contribution target"
+  },
+  "source_csv": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d319/audit/d319_all_env_filter_rows.csv",
+  "upper_overshoot_count": 242
+}

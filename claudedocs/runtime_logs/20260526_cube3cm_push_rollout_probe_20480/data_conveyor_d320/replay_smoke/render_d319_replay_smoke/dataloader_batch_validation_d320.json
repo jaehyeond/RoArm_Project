@@ -1,0 +1,54 @@
+{
+  "artifact": "d320_lerobot_dataloader_batch_validation",
+  "batch_keys": [
+    "action",
+    "episode_index",
+    "frame_index",
+    "index",
+    "observation.images.top",
+    "observation.state",
+    "task",
+    "task_index",
+    "timestamp"
+  ],
+  "batch_shapes": {
+    "action": [
+      2,
+      6
+    ],
+    "episode_index": [
+      2
+    ],
+    "frame_index": [
+      2
+    ],
+    "index": [
+      2
+    ],
+    "observation.images.top": [
+      2,
+      3,
+      720,
+      1280
+    ],
+    "observation.state": [
+      2,
+      6
+    ],
+    "task": "list",
+    "task_index": [
+      2
+    ],
+    "timestamp": [
+      2
+    ]
+  },
+  "batch_size": 2,
+  "dataset_root": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d320/replay_smoke/render_d319_replay_smoke/lerobot_dataset",
+  "repo_id": "roarm_cube10cm_top_view_d320_replay_smoke",
+  "runtime": "LEROBOT_DATALOADER_ONE_BATCH",
+  "status": "PASS",
+  "total_episodes": 9,
+  "total_frames": 1314,
+  "video_backend": "pyav"
+}

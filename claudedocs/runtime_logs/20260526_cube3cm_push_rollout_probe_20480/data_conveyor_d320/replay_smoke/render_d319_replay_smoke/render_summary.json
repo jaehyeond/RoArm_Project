@@ -1,0 +1,190 @@
+{
+  "artifact": "d320_d319_replay_smoke_render",
+  "contract": {
+    "action_penalty_scale": 0.005,
+    "action_scale": 0.05,
+    "candidate6_diffik_cube_reference_mode": "current_pose",
+    "candidate6_diffik_goal_push_m": 0.006,
+    "candidate6_diffik_hold_after_tap_success": true,
+    "candidate6_diffik_lambda": 0.01,
+    "candidate6_diffik_push_steps": 580,
+    "candidate6_diffik_residual_scale_rad": 0.002,
+    "candidate6_diffik_target_base_mode": "previous_joint_target",
+    "candidate6_diffik_target_path_mode": "near_face_goal",
+    "candidate8_diffik_target_residual_forward_m": 0.004,
+    "candidate8_diffik_target_residual_height_m": 0.004,
+    "candidate8_diffik_target_residual_lateral_m": 0.012,
+    "cube_randomization_half_extent_m": [
+      0.0,
+      0.0
+    ],
+    "cube_x_range_m": [
+      0.24,
+      0.24
+    ],
+    "cube_xy_m": [
+      0.24,
+      0.0
+    ],
+    "cube_y_range_m": [
+      0.0,
+      0.0
+    ],
+    "episode_length_s": 6.0,
+    "fixed_push_dir": [
+      1.0,
+      0.0
+    ],
+    "joint_target_lead_limit_rad": 0.06,
+    "policy_action_space": 3,
+    "policy_target_disp_m": 0.006,
+    "precontact_clearance_m": 0.04,
+    "rl_action_mode": "candidate8_diffik_target_residual",
+    "robot_usd_path": "/home/cgxr/Documents/Robotics/RoArm_Project/b200_backup_20260522_final/tmp_p7/p7_branch_b_cube2cm_opposing_jaw_v7_collision_usd_d024/roarm_m3.usd",
+    "scripted_teacher_blend": 0.0,
+    "step_clip_rad": 0.01,
+    "tap_contact_proxy_mode": "link5_collision_aabb",
+    "tap_overshoot_penalty_scale": 12.0,
+    "tap_overshoot_terminate": false,
+    "tap_success_terminate": false,
+    "tap_target_disp_tolerance_m": 0.003,
+    "tap_transient_disp_reward_scale": 40.0,
+    "tool_contact_proxy_mode": "hand_tcp"
+  },
+  "effective_render_fps": 6.489760117976073,
+  "elapsed_s": 202.47281503677368,
+  "episodes": 9,
+  "frames": 1314,
+  "frames_jsonl": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d320/replay_smoke/render_d319_replay_smoke/frames.jsonl",
+  "friction_replay_method": "reset_time_cube_friction_randomization_min_static_max_static_plus_1e-9",
+  "manifest": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d320/replay_smoke/d320_replay_smoke_manifest.csv",
+  "out_dir": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d320/replay_smoke/render_d319_replay_smoke",
+  "png_bytes_total": 344057130,
+  "png_mb_per_episode": 38.22857,
+  "replay_episode_metrics": [
+    {
+      "d319_bin": "bin_low_0p7_0p9",
+      "d319_episode_index": 568,
+      "d319_max_disp_xy_m": 0.007458625361323357,
+      "episode_id": 0,
+      "replay_contact_seen": 1,
+      "replay_hybrid_stop_step": 147,
+      "replay_overshoot_seen": 0,
+      "replay_reaction_seen": 1,
+      "replay_tap_disp_xy_m": 0.0074595194309949875,
+      "runtime_d256_episode_index": 568,
+      "source_role": "low_accepted"
+    },
+    {
+      "d319_bin": "bin_low_0p7_0p9",
+      "d319_episode_index": 335,
+      "d319_max_disp_xy_m": 0.007668779231607914,
+      "episode_id": 1,
+      "replay_contact_seen": 1,
+      "replay_hybrid_stop_step": 5,
+      "replay_overshoot_seen": 0,
+      "replay_reaction_seen": 1,
+      "replay_tap_disp_xy_m": 0.0076598203741014,
+      "runtime_d256_episode_index": 335,
+      "source_role": "low_accepted"
+    },
+    {
+      "d319_bin": "bin_mid_0p9_1p2",
+      "d319_episode_index": 206,
+      "d319_max_disp_xy_m": 0.012263176031410694,
+      "episode_id": 2,
+      "replay_contact_seen": 1,
+      "replay_hybrid_stop_step": 1,
+      "replay_overshoot_seen": 0,
+      "replay_reaction_seen": 1,
+      "replay_tap_disp_xy_m": 0.012259344570338726,
+      "runtime_d256_episode_index": 206,
+      "source_role": "mid_accepted"
+    },
+    {
+      "d319_bin": "bin_mid_0p9_1p2",
+      "d319_episode_index": 109,
+      "d319_max_disp_xy_m": 0.012212748639285564,
+      "episode_id": 3,
+      "replay_contact_seen": 1,
+      "replay_hybrid_stop_step": 1,
+      "replay_overshoot_seen": 0,
+      "replay_reaction_seen": 1,
+      "replay_tap_disp_xy_m": 0.011121310293674469,
+      "runtime_d256_episode_index": 109,
+      "source_role": "mid_accepted"
+    },
+    {
+      "d319_bin": "bin_upper_1p2_1p6",
+      "d319_episode_index": 939,
+      "d319_max_disp_xy_m": 0.01911051757633686,
+      "episode_id": 4,
+      "replay_contact_seen": 1,
+      "replay_hybrid_stop_step": 1,
+      "replay_overshoot_seen": 0,
+      "replay_reaction_seen": 1,
+      "replay_tap_disp_xy_m": 0.01850215531885624,
+      "runtime_d256_episode_index": 939,
+      "source_role": "upper_accepted"
+    },
+    {
+      "d319_bin": "bin_upper_1p2_1p6",
+      "d319_episode_index": 422,
+      "d319_max_disp_xy_m": 0.018093444406986237,
+      "episode_id": 5,
+      "replay_contact_seen": 1,
+      "replay_hybrid_stop_step": -1,
+      "replay_overshoot_seen": 1,
+      "replay_reaction_seen": 1,
+      "replay_tap_disp_xy_m": 0.16069604456424713,
+      "runtime_d256_episode_index": 422,
+      "source_role": "upper_accepted"
+    },
+    {
+      "d319_bin": "bin_upper_1p2_1p6",
+      "d319_episode_index": 679,
+      "d319_max_disp_xy_m": 0.031659193336963654,
+      "episode_id": 6,
+      "replay_contact_seen": 1,
+      "replay_hybrid_stop_step": 7,
+      "replay_overshoot_seen": 0,
+      "replay_reaction_seen": 1,
+      "replay_tap_disp_xy_m": 0.00020653943647630513,
+      "runtime_d256_episode_index": 679,
+      "source_role": "upper_overshoot_failure"
+    },
+    {
+      "d319_bin": "bin_upper_1p2_1p6",
+      "d319_episode_index": 997,
+      "d319_max_disp_xy_m": 0.022410888224840164,
+      "episode_id": 7,
+      "replay_contact_seen": 1,
+      "replay_hybrid_stop_step": 1,
+      "replay_overshoot_seen": 0,
+      "replay_reaction_seen": 1,
+      "replay_tap_disp_xy_m": 0.018468664959073067,
+      "runtime_d256_episode_index": 997,
+      "source_role": "upper_overshoot_failure"
+    },
+    {
+      "d319_bin": "bin_upper_1p2_1p6",
+      "d319_episode_index": 991,
+      "d319_max_disp_xy_m": 0.036470554769039154,
+      "episode_id": 8,
+      "replay_contact_seen": 1,
+      "replay_hybrid_stop_step": -1,
+      "replay_overshoot_seen": 1,
+      "replay_reaction_seen": 1,
+      "replay_tap_disp_xy_m": 0.11598928272724152,
+      "runtime_d256_episode_index": 991,
+      "source_role": "upper_overshoot_failure"
+    }
+  ],
+  "role_counts": {
+    "low_accepted": 2,
+    "mid_accepted": 2,
+    "upper_accepted": 2,
+    "upper_overshoot_failure": 3
+  },
+  "runtime": "D319_REPLAY_RENDER_ONLY_NO_TRAINING_NO_SCALEUP"
+}
