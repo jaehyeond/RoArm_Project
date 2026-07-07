@@ -81,6 +81,7 @@ def main() -> int:
     parser.add_argument("--candidate8_diffik_target_residual_forward_m", type=float, default=None)
     parser.add_argument("--candidate8_diffik_target_residual_lateral_m", type=float, default=None)
     parser.add_argument("--candidate8_diffik_target_residual_height_m", type=float, default=None)
+    parser.add_argument("--candidate8_hybrid_stop_after_useful", action="store_true")
     parser.add_argument("--scripted_teacher_blend", type=float, default=None)
     parser.add_argument("--scripted_teacher_horizon_frac", type=float, default=None)
     parser.add_argument("--scripted_teacher_goal_push_m", type=float, default=None)
@@ -88,6 +89,14 @@ def main() -> int:
     parser.add_argument("--bc_teacher_blend", type=float, default=None)
     parser.add_argument("--bc_teacher_imitation_reward_scale", type=float, default=None)
     parser.add_argument("--warm_start_checkpoint_path", type=str, default=None)
+    parser.add_argument("--eval_only_checkpoint_path", type=str, default=None)
+    parser.add_argument("--eval_only_steps", type=int, default=0)
+    parser.add_argument("--eval_only_out_dir", type=str, default=None)
+    parser.add_argument(
+        "--eval_only_policy_mode",
+        choices=("deterministic", "stochastic"),
+        default="deterministic",
+    )
     parser.add_argument("--bc_teacher_policy_delta_clip_rad", type=float, default=None)
     parser.add_argument("--bc_teacher_policy_delta_scale", type=float, default=None)
     parser.add_argument("--bc_teacher_feature_target_mode", choices=("tcp_target", "env_target"), default=None)
@@ -200,6 +209,14 @@ def main() -> int:
         raise ValueError("--candidate6_diffik_push_steps must be positive")
     if args.candidate6_diffik_step_clip_rad is not None and args.candidate6_diffik_step_clip_rad <= 0.0:
         raise ValueError("--candidate6_diffik_step_clip_rad must be positive")
+    if args.eval_only_steps < 0:
+        raise ValueError("--eval_only_steps must be non-negative")
+    if args.eval_only_checkpoint_path is not None and args.eval_only_steps <= 0:
+        raise ValueError("--eval_only_steps must be positive when --eval_only_checkpoint_path is set")
+    if args.eval_only_checkpoint_path is not None and args.warm_start_checkpoint_path is not None:
+        raise ValueError("--eval_only_checkpoint_path and --warm_start_checkpoint_path are mutually exclusive")
+    if args.eval_only_checkpoint_path is not None and not Path(args.eval_only_checkpoint_path).exists():
+        raise FileNotFoundError(args.eval_only_checkpoint_path)
     if (
         args.candidate6_diffik_cube_pose_noise_xy_m is not None
         and args.candidate6_diffik_cube_pose_noise_xy_m < 0.0
@@ -439,6 +456,12 @@ def main() -> int:
             f"{args.candidate8_diffik_target_residual_height_m}"
         )
         env_cfg.candidate8_diffik_target_residual_height_m = float(args.candidate8_diffik_target_residual_height_m)
+    if args.candidate8_hybrid_stop_after_useful:
+        print(
+            "[cube-push-train] candidate8_hybrid_stop_after_useful: "
+            f"{env_cfg.candidate8_hybrid_stop_after_useful} -> True"
+        )
+        env_cfg.candidate8_hybrid_stop_after_useful = True
     if args.scripted_teacher_blend is not None:
         print(
             "[cube-push-train] scripted_teacher_blend: "
@@ -834,6 +857,7 @@ def main() -> int:
         f"candidate8_diffik_target_residual_forward_m={env_cfg.candidate8_diffik_target_residual_forward_m} "
         f"candidate8_diffik_target_residual_lateral_m={env_cfg.candidate8_diffik_target_residual_lateral_m} "
         f"candidate8_diffik_target_residual_height_m={env_cfg.candidate8_diffik_target_residual_height_m} "
+        f"candidate8_hybrid_stop_after_useful={env_cfg.candidate8_hybrid_stop_after_useful} "
         f"scripted_teacher_blend={env_cfg.scripted_teacher_blend} "
         f"scripted_teacher_horizon_frac={env_cfg.scripted_teacher_horizon_frac} "
         f"bc_teacher_blend={env_cfg.bc_teacher_blend} "
@@ -872,6 +896,129 @@ def main() -> int:
     env = gym.make(env_id, cfg=env_cfg)
     env = RslRlVecEnvWrapper(env, clip_actions=1.0)
     runner = OnPolicyRunner(env, ppo_cfg.to_dict(), log_dir=log_dir, device=env.unwrapped.device)
+    if args.eval_only_checkpoint_path is not None:
+        inner = env.unwrapped
+        if int(args.eval_only_steps) >= int(inner.max_episode_length) - 1:
+            raise ValueError(
+                f"--eval_only_steps {args.eval_only_steps} would hit env truncation/reset; "
+                f"use <= {int(inner.max_episode_length) - 2} or increase --episode_length_s"
+            )
+        print(f"[cube-push-train] eval_only_checkpoint_path={args.eval_only_checkpoint_path}")
+        print(
+            "[cube-push-train] eval_only "
+            f"steps={args.eval_only_steps} policy_mode={args.eval_only_policy_mode} "
+            f"max_episode_length={int(inner.max_episode_length)}"
+        )
+        runner.load(args.eval_only_checkpoint_path, load_optimizer=False, map_location=inner.device)
+        env.reset()
+        obs = env.get_observations()
+        if str(args.eval_only_policy_mode) == "deterministic":
+            policy_fn = runner.get_inference_policy(device=inner.device)
+        else:
+            runner.eval_mode()
+            policy_fn = runner.alg.policy.act
+        with torch.inference_mode():
+            for _ in range(int(args.eval_only_steps)):
+                actions = torch.clamp(policy_fn(obs), -1.0, 1.0)
+                obs, _, _, _ = env.step(actions)
+        inner._compute_intermediate_values()
+        if args.env_kind != "tap10cm" or not hasattr(inner, "_tap_contact_seen"):
+            raise ValueError("--eval_only_checkpoint_path currently supports --env_kind tap10cm")
+        useful_min_disp_m = max(float(getattr(inner.cfg, "tap_useful_min_disp_m", 0.001)), 0.0)
+        useful_seen = (
+            inner._tap_contact_seen
+            & inner._tap_reaction_seen
+            & (inner._tap_max_disp_xy >= useful_min_disp_m)
+            & ~inner._tap_overshoot_seen
+        )
+        low_motion = inner._tap_max_disp_xy < 0.001
+        ge_20mm = inner._tap_max_disp_xy >= 0.020
+        final_terms = inner._tap_terms()
+        out_dir = Path(args.eval_only_out_dir) if args.eval_only_out_dir else Path(log_dir) / "eval_only"
+        out_dir.mkdir(parents=True, exist_ok=True)
+        summary = {
+            "checkpoint": str(args.eval_only_checkpoint_path),
+            "env_kind": str(args.env_kind),
+            "num_envs": int(args.num_envs),
+            "seed": int(args.seed),
+            "eval_only_steps": int(args.eval_only_steps),
+            "eval_only_policy_mode": str(args.eval_only_policy_mode),
+            "episode_length_s": float(inner.cfg.episode_length_s),
+            "max_episode_length": int(inner.max_episode_length),
+            "rl_action_mode": str(inner.cfg.rl_action_mode),
+            "policy_action_space": int(inner.cfg.action_space),
+            "cube_static_friction": float(inner.cfg.sponge.spawn.physics_material.static_friction),
+            "cube_dynamic_friction": float(inner.cfg.sponge.spawn.physics_material.dynamic_friction),
+            "cube_friction_randomize_min": float(inner.cfg.cube_friction_randomize_min),
+            "cube_friction_randomize_max": float(inner.cfg.cube_friction_randomize_max),
+            "tap_success_terminate": bool(inner.cfg.tap_success_terminate),
+            "tap_overshoot_terminate": bool(inner.cfg.tap_overshoot_terminate),
+            "tap_useful_terminate": bool(getattr(inner.cfg, "tap_useful_terminate", False)),
+            "tap_stop_after_useful_seen": bool(getattr(inner.cfg, "tap_stop_after_useful_seen", False)),
+            "tap_stop_after_disp_m": float(getattr(inner.cfg, "tap_stop_after_disp_m", 0.0)),
+            "tap_contact_slowdown_use_proxy": bool(getattr(inner.cfg, "tap_contact_slowdown_use_proxy", False)),
+            "candidate8_diffik_target_residual_forward_m": float(
+                inner.cfg.candidate8_diffik_target_residual_forward_m
+            ),
+            "candidate8_diffik_target_residual_lateral_m": float(
+                inner.cfg.candidate8_diffik_target_residual_lateral_m
+            ),
+            "candidate8_diffik_target_residual_height_m": float(
+                inner.cfg.candidate8_diffik_target_residual_height_m
+            ),
+            "candidate8_hybrid_stop_after_useful": bool(inner.cfg.candidate8_hybrid_stop_after_useful),
+            "candidate8_hybrid_stop_latched_rate": float(
+                inner._last_candidate8_hybrid_stop_latched.mean().detach().cpu().item()
+            ),
+            "contact_seen_rate": float(inner._tap_contact_seen.float().mean().detach().cpu().item()),
+            "reaction_seen_rate": float(inner._tap_reaction_seen.float().mean().detach().cpu().item()),
+            "strict_useful_seen_rate": float(useful_seen.float().mean().detach().cpu().item()),
+            "overshoot_seen_rate": float(inner._tap_overshoot_seen.float().mean().detach().cpu().item()),
+            "low_motion_lt_1mm_rate": float(low_motion.float().mean().detach().cpu().item()),
+            "max_disp_xy_ge_20mm_rate": float(ge_20mm.float().mean().detach().cpu().item()),
+            "max_disp_xy_mean_m": float(inner._tap_max_disp_xy.mean().detach().cpu().item()),
+            "max_disp_xy_max_m": float(inner._tap_max_disp_xy.max().detach().cpu().item()),
+            "joint_delta_cap_rate_mean": float(inner._last_joint_delta_cap_rate.mean().detach().cpu().item()),
+            "action_abs_mean": float(inner._last_action_abs_mean.mean().detach().cpu().item()),
+            "action_abs_max": float(inner._last_action_abs_max.max().detach().cpu().item()),
+            "current_contact_proxy_rate": float(final_terms["tap_contact_proxy"].float().mean().detach().cpu().item()),
+            "cube_randomized_static_friction_min": float(inner._cube_randomized_static_friction.min().detach().cpu().item()),
+            "cube_randomized_static_friction_max": float(inner._cube_randomized_static_friction.max().detach().cpu().item()),
+        }
+        summary_path = out_dir / "eval_only_summary.json"
+        trace_path = out_dir / "eval_only_env_trace.jsonl"
+        summary_path.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        trace_columns = {
+            "contact_seen": inner._tap_contact_seen.detach().cpu().tolist(),
+            "reaction_seen": inner._tap_reaction_seen.detach().cpu().tolist(),
+            "useful_seen": useful_seen.detach().cpu().tolist(),
+            "overshoot_seen": inner._tap_overshoot_seen.detach().cpu().tolist(),
+            "max_disp_xy_m": inner._tap_max_disp_xy.detach().cpu().tolist(),
+            "max_speed_mps": inner._tap_max_speed.detach().cpu().tolist(),
+            "current_contact_proxy": final_terms["tap_contact_proxy"].detach().cpu().tolist(),
+            "cube_static_friction": inner._cube_randomized_static_friction.detach().cpu().tolist(),
+            "cube_dynamic_friction": inner._cube_randomized_dynamic_friction.detach().cpu().tolist(),
+        }
+        with trace_path.open("w", encoding="utf-8") as trace_file:
+            for env_idx in range(int(inner.num_envs)):
+                row = {"env_id": int(env_idx)}
+                for key, values in trace_columns.items():
+                    value = values[env_idx]
+                    row[key] = bool(value) if isinstance(value, bool) else float(value)
+                json.dump(row, trace_file, sort_keys=True)
+                trace_file.write("\n")
+        print(
+            "[cube-push-train] eval_only_summary "
+            f"useful={summary['strict_useful_seen_rate']:.6f} "
+            f"overshoot={summary['overshoot_seen_rate']:.6f} "
+            f"low_motion={summary['low_motion_lt_1mm_rate']:.6f} "
+            f"max_xy_mean={summary['max_disp_xy_mean_m']:.6f} "
+            f"summary={summary_path}",
+            flush=True,
+        )
+        env.close()
+        sim_app.close()
+        return 0
     if args.warm_start_checkpoint_path is not None:
         print(f"[cube-push-train] warm_start_checkpoint_path={args.warm_start_checkpoint_path}")
         runner.load(args.warm_start_checkpoint_path, load_optimizer=False, map_location=env.unwrapped.device)
@@ -1019,6 +1166,7 @@ def main() -> int:
                 "tap_stop_after_disp_hold": _tensor_list("_last_tap_stop_after_disp_hold"),
                 "cube_static_friction": _tensor_list("_cube_randomized_static_friction"),
                 "cube_dynamic_friction": _tensor_list("_cube_randomized_dynamic_friction"),
+                "candidate8_hybrid_stop_latched": _tensor_list("_last_candidate8_hybrid_stop_latched"),
             }
             trace_path = os.path.join(log_dir, f"collection_final_env_trace_iter_{final_step}.jsonl")
             with open(trace_path, "w", encoding="utf-8") as trace_file:

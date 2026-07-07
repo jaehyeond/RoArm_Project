@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-07-07 KST (D317 current truth: Promotion Criteria V1 is now affirmative: friction `0.8/0.6` strict useful `>=65%`, overshoot `<=5%`, low-motion `<1mm <=10%`, nominal strict useful `>=90%`, reproducible across 3 seeds. D316 `model_29.pt` passed nominal/obs-noise D290 fresh32 but failed low-friction long-horizon cross-eval: strict useful `4/32`, overshoot `28/32`, mean/max XY `30.706/41.887mm`. Reward v2 was specified and run as 3-seed domain-randomized PPO over static friction `[0.7,1.6]`; collection-final useful/overshoot were seed31711 `24/64`/`19/64`, seed31712 `19/64`/`12/64`, seed31713 `27/64`/`12/64`. Peak useful in TensorBoard stayed around `50%` with peak overshoot `12..13%`. D290 peak-checkpoint cross-eval also failed low friction: useful `4/32`, `4/32`, `2/32`; overshoot `28/32`, `28/32`, `30/32`. Verdict: `D317_REWARD_V2_DOMAIN_RANDOMIZED_PPO_OVERSHOOT_FAIL`. No learned-policy promotion, no raw joint-delta revival, no hand-written controller condition addition, no RoArm/VLA/POSCO readiness. No B200/SSH, no pull, and no `.ssh` copy.)
+Last updated: 2026-07-07 KST (D318 current truth: train/eval contract diagnosis confirmed D317's low-friction failure was primarily long-horizon stop/stillness mismatch, not just reward scale. Same D317 `seed31713 model_225.pt` at fixed friction `0.8/0.6`, deterministic 580-step eval: train harness hybrid-off useful/overshoot `22/32`/`10/32`, train harness hybrid-on `32/32`/`0/32`; D290 D256-reset hybrid-off `8/32`/`24/32`, D290 hybrid-on `31/32`/`1/32`. Added default-off `candidate8_hybrid_stop_after_useful`, train eval-only checkpoint harness, and D290 hybrid/low-motion summary fields. Ran one hybrid reward-v2 PPO seed `31813` for 300 iterations; collection-final useful/overshoot was `36/64`/`18/64`. D290 checkpoint sweep over `model_0,25,...,275,299` with hybrid on showed all checkpoints effectively identical: low-friction useful/overshoot/low-motion `30/32`/`2/32`/`0/32`, nominal `32/32`/`0/32`/`0/32`. Zero-action actor matched the same low-friction and nominal results, proving no learned-policy contribution yet. Verdict: `D318_HYBRID_STOP_LONG_HORIZON_IMPROVES_ZERO_ACTION_MATCH_NO_PROMOTION`. No `PROMOTION_CANDIDATE`, no learned-policy promotion, no raw joint-delta revival, no RoArm/VLA/POSCO readiness. No B200/SSH, no pull, and no `.ssh` copy.)
 
 ## Current Truth
 
@@ -8,6 +8,8 @@ Last updated: 2026-07-07 KST (D317 current truth: Promotion Criteria V1 is now a
   dataset camera-contract branch. The earlier tap RL branch is frozen unless
   explicitly resumed.
 - Do not mix with Track A grasp/dataset/training work.
+- D318 session doc:
+  `claudedocs/session_20260707_cube10cm_top_view_d318_train_eval_contract_hybrid_stop.md`.
 - D317 session doc:
   `claudedocs/session_20260707_cube10cm_top_view_d317_reward_v2_domain_randomized_ppo.md`.
 - D316 session doc:
@@ -31,6 +33,8 @@ Last updated: 2026-07-07 KST (D317 current truth: Promotion Criteria V1 is now a
   `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/primitive_parameter_ppo_d316/tap10cm/d316_candidate8_friction_low_reward_v1_warm300/d316_candidate8_friction_low_reward_v1_warm300_summary.json`.
 - D315 PPO summary:
   `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/primitive_parameter_ppo_d315/tap10cm/d315_candidate8_friction_low_5it/d315_candidate8_friction_low_5it_summary.json`.
+- D318 verdict:
+  `D318_HYBRID_STOP_LONG_HORIZON_IMPROVES_ZERO_ACTION_MATCH_NO_PROMOTION`.
 - D317 verdict:
   `D317_REWARD_V2_DOMAIN_RANDOMIZED_PPO_OVERSHOOT_FAIL`.
 - D316 verdict:
@@ -40,13 +44,15 @@ Last updated: 2026-07-07 KST (D317 current truth: Promotion Criteria V1 is now a
 - D314 verdict:
   `D314_PERTURBATION_MATRIX_RESULT_FRICTION_BREAKS_BASELINE_NO_PROMOTION`.
 - Current next concrete action:
-  continue from D317's learned-stop failure. Reward scaling alone did not solve
-  low-friction long-horizon over-push. The next learning repair should make
-  primitive termination/stop timing part of the learnable action or use finite
-  action-chunk semantics, then evaluate against Promotion Criteria V1. Do not
-  add another hand-written controller condition, do not return to raw scalar
-  joint deltas, and do not use high-friction `2.2/1.8` as a training target
-  until render/trace audit resolves the 12m runaway row.
+  continue from D318's zero-action match. Hybrid stop fixes most long-horizon
+  over-push, but PPO contribution is unproven because all checkpoints and the
+  zero-action control produce the same D290 metrics. The next failure-capable
+  learning repair must make a policy-controllable primitive parameter matter
+  against a zero-action baseline, such as stop margin, target displacement band,
+  push direction, or approach/contact offset. Promotion tables must include the
+  zero-action baseline. Do not run a longer PPO ladder from D318, do not return
+  to raw scalar joint deltas, and do not use high-friction `2.2/1.8` as a
+  training target until render/trace audit resolves the 12m runaway row.
 - Research objective is strict useful tap: contact/reaction, no overshoot, and
   actual XY displacement `>=1mm`. The runtime's 6mm target band remains a
   quality-tier diagnostic; it is no longer sufficient for useful/promotion.

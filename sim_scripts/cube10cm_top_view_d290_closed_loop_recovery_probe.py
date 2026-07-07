@@ -194,6 +194,7 @@ def main() -> int:
     parser.add_argument("--candidate8_diffik_target_residual_forward_m", type=float, default=None)
     parser.add_argument("--candidate8_diffik_target_residual_lateral_m", type=float, default=None)
     parser.add_argument("--candidate8_diffik_target_residual_height_m", type=float, default=None)
+    parser.add_argument("--candidate8_hybrid_stop_after_useful", action="store_true")
     parser.add_argument(
         "--primitive_target_path_mode",
         choices=("near_face_goal", "legacy_far_face_through"),
@@ -388,6 +389,7 @@ def main() -> int:
         env_cfg.candidate8_diffik_target_residual_height_m = float(
             args.candidate8_diffik_target_residual_height_m
         )
+    env_cfg.candidate8_hybrid_stop_after_useful = bool(args.candidate8_hybrid_stop_after_useful)
     env_cfg.tap_stop_after_useful_seen = bool(args.tap_stop_after_useful_seen)
     env_cfg.tap_stop_after_disp_m = float(args.tap_stop_after_disp_m)
     env_cfg.tap_contact_slowdown_use_proxy = bool(args.tap_contact_slowdown_use_proxy)
@@ -889,6 +891,12 @@ def main() -> int:
                         "env_governor_stop_step": int(
                             inner._tap_action_governor_stop_step[env_i].detach().cpu().item()
                         ),
+                        "candidate8_hybrid_stop_latched": int(
+                            bool(inner._last_candidate8_hybrid_stop_latched[env_i].detach().cpu().item())
+                        ),
+                        "candidate8_hybrid_stop_step": int(
+                            inner._candidate8_hybrid_stop_step[env_i].detach().cpu().item()
+                        ),
                     }
                     for dim, label in enumerate(action_labels):
                         row[f"actor_{label}"] = float(actor_cpu[env_i, dim].item())
@@ -1108,6 +1116,30 @@ def main() -> int:
         "policy_cube_pose_noise_abs_max_m": _tensor_max(
             torch.abs(inner._policy_cube_pose_noise_w_xy)
         ),
+        "candidate8_hybrid_stop_after_useful": bool(inner.cfg.candidate8_hybrid_stop_after_useful),
+        "candidate8_hybrid_stop_latched_rate_final": _tensor_mean(
+            inner._last_candidate8_hybrid_stop_latched
+        ),
+        "candidate8_hybrid_stop_step_min": int(
+            torch.min(
+                inner._candidate8_hybrid_stop_step[inner._candidate8_hybrid_stop_step >= 0]
+            )
+            .detach()
+            .cpu()
+            .item()
+        )
+        if bool((inner._candidate8_hybrid_stop_step >= 0).any().detach().cpu().item())
+        else -1,
+        "candidate8_hybrid_stop_step_max": int(
+            torch.max(
+                inner._candidate8_hybrid_stop_step[inner._candidate8_hybrid_stop_step >= 0]
+            )
+            .detach()
+            .cpu()
+            .item()
+        )
+        if bool((inner._candidate8_hybrid_stop_step >= 0).any().detach().cpu().item())
+        else -1,
         "primitive_target_path_mode": str(args.primitive_target_path_mode),
         "primitive_cube_reference_mode": str(args.primitive_cube_reference_mode),
         "primitive_target_base_mode": str(args.primitive_target_base_mode),
@@ -1181,6 +1213,9 @@ def main() -> int:
         "actor_overshoot_seen_rate": _tensor_mean(inner._tap_overshoot_seen.float()),
         "actor_max_disp_xy_mean_m": _tensor_mean(max_disp_xy),
         "actor_max_disp_xy_max_m": _tensor_max(max_disp_xy),
+        "actor_max_disp_xy_ge_1mm_rate": _tensor_mean((max_disp_xy >= 0.001).float()),
+        "actor_low_motion_lt_1mm_rate": _tensor_mean((max_disp_xy < 0.001).float()),
+        "actor_max_disp_xy_ge_20mm_rate": _tensor_mean((max_disp_xy >= 0.020).float()),
         "actor_max_disp_along_mean_m": _tensor_mean(max_disp_along),
         "actor_max_disp_along_max_m": _tensor_max(max_disp_along),
         "actor_max_lateral_disp_mean_m": _tensor_mean(max_lateral_disp),
@@ -1311,6 +1346,12 @@ def main() -> int:
                     ),
                     "env_governor_projected_disp_m": float(
                         inner._last_tap_action_governor_projected_disp[env_i].detach().cpu().item()
+                    ),
+                    "candidate8_hybrid_stop_step": int(
+                        inner._candidate8_hybrid_stop_step[env_i].detach().cpu().item()
+                    ),
+                    "candidate8_hybrid_stop_latched": int(
+                        bool(inner._last_candidate8_hybrid_stop_latched[env_i].detach().cpu().item())
                     ),
                 }
             )

@@ -4,6 +4,44 @@ Durable project decisions and lessons. Append new decisions; do not delete old
 ones. If a decision is superseded, mark it as superseded and link the newer
 decision. Detailed evidence belongs in `claudedocs/session_*.md`.
 
+## D318 - Hybrid stop fixes long-horizon mismatch but does not prove policy contribution
+
+Evidence:
+
+- D317 low-friction failure was reproduced as a train/eval contract mismatch:
+  the same D317 `seed31713 model_225.pt` at fixed friction `0.8/0.6` produced
+  train-harness 580-step useful/overshoot `22/32`/`10/32` without hybrid stop,
+  but `32/32`/`0/32` with hybrid stop.
+- Under D290 D256-random reset, the same checkpoint changed from
+  useful/overshoot `8/32`/`24/32` without hybrid stop to `31/32`/`1/32` with
+  hybrid stop.
+- A D318 reward-v2 hybrid PPO seed (`31813`, 300 iterations, friction
+  randomized `[0.7,1.6]`) did not create a promotion candidate:
+  collection-final useful/overshoot was `36/64`/`18/64`.
+- D290 fresh32 checkpoint sweep for `model_0,25,...,275,299` with hybrid stop
+  produced effectively identical results for every checkpoint:
+  low-friction useful/overshoot/low-motion `30/32`/`2/32`/`0/32`, nominal
+  `32/32`/`0/32`/`0/32`.
+- Zero-action D290 matched the policy sweep: low-friction `30/32` useful and
+  `2/32` overshoot; nominal `32/32` useful and `0/32` overshoot.
+
+Implication:
+
+- Hybrid stop is a valid structural repair for the observed long-horizon
+  stop/stillness mismatch, but it currently dominates the behavior.
+- Do not claim learned-policy promotion from D318. The learned residual has not
+  beaten the zero-action baseline.
+- Future promotion tables must include a zero-action baseline when a scripted or
+  hybrid layer can dominate the action.
+- The next learning target should expose a policy-controllable primitive
+  parameter that can improve low-friction overshoot/useful beyond zero action
+  while preserving nominal performance. Candidate parameters: stop margin,
+  displacement band, push direction, or approach/contact offset.
+
+Source:
+
+- `claudedocs/session_20260707_cube10cm_top_view_d318_train_eval_contract_hybrid_stop.md`
+
 ## D001 - PPO-only reward shaping is not the main path
 
 Evidence:

@@ -158,6 +158,7 @@ class RoArmCubePushEnvCfg(RoArmStackEnvCfg):
     candidate8_diffik_target_residual_zero_after_contact: bool = False
     candidate8_diffik_target_residual_zero_after_reaction: bool = False
     candidate8_diffik_target_residual_zero_after_disp_m: float = 0.0
+    candidate8_hybrid_stop_after_useful: bool = False
     tap_push_primitive_stop_disp_m: float = 0.003
     tap_push_primitive_speed_stop_mps: float = 0.200
     tap_push_primitive_speed_stop_min_disp_m: float = 0.001
@@ -454,6 +455,10 @@ class RoArmCubePushEnv(RoArmStackEnv):
         self._last_candidate8_diffik_target_residual_forward_abs = torch.zeros(self.num_envs, device=self.device)
         self._last_candidate8_diffik_target_residual_lateral_abs = torch.zeros(self.num_envs, device=self.device)
         self._last_candidate8_diffik_target_residual_height_abs = torch.zeros(self.num_envs, device=self.device)
+        self._candidate8_hybrid_stop_latched = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
+        self._candidate8_hybrid_stop_step = torch.full((self.num_envs,), -1, dtype=torch.long, device=self.device)
+        self._candidate8_hybrid_hold_targets = torch.zeros((self.num_envs, self._robot.num_joints), device=self.device)
+        self._last_candidate8_hybrid_stop_latched = torch.zeros(self.num_envs, device=self.device)
         self._tap_push_primitive_stop_latched = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
         self._tap_push_primitive_stop_step = torch.full((self.num_envs,), -1, dtype=torch.long, device=self.device)
         self._tap_push_primitive_hold_targets = torch.zeros((self.num_envs, self._robot.num_joints), device=self.device)
@@ -1232,6 +1237,35 @@ class RoArmCubePushEnv(RoArmStackEnv):
 
             targets = self._candidate6_diffik_base_joint_target(tcp_target_residual_w=target_residual_w)
             joint_pos = self._robot.data.joint_pos
+            if bool(getattr(self.cfg, "candidate8_hybrid_stop_after_useful", False)):
+                if not hasattr(self, "_tap_contact_seen"):
+                    raise ValueError("candidate8_hybrid_stop_after_useful requires tap buffers")
+                useful_min_disp_m = max(float(getattr(self.cfg, "tap_useful_min_disp_m", 0.001)), 0.0)
+                hybrid_stop_now = (
+                    self._tap_contact_seen
+                    & self._tap_reaction_seen
+                    & (self._tap_max_disp_xy >= useful_min_disp_m)
+                    & ~self._tap_overshoot_seen
+                )
+                newly_stopped = hybrid_stop_now & ~self._candidate8_hybrid_stop_latched
+                self._candidate8_hybrid_hold_targets[:] = torch.where(
+                    newly_stopped.unsqueeze(-1),
+                    joint_pos.detach(),
+                    self._candidate8_hybrid_hold_targets,
+                )
+                self._candidate8_hybrid_stop_step[:] = torch.where(
+                    newly_stopped,
+                    self.episode_length_buf.to(dtype=torch.long),
+                    self._candidate8_hybrid_stop_step,
+                )
+                self._candidate8_hybrid_stop_latched |= hybrid_stop_now
+                targets = torch.where(
+                    self._candidate8_hybrid_stop_latched.unsqueeze(-1),
+                    self._candidate8_hybrid_hold_targets,
+                    targets,
+                )
+            else:
+                self._last_candidate8_hybrid_stop_latched.zero_()
             applied_delta = targets - joint_pos
             self.actions = policy_actions
             self.robot_dof_targets[:] = targets
@@ -1262,6 +1296,7 @@ class RoArmCubePushEnv(RoArmStackEnv):
             self._last_candidate8_diffik_target_residual_forward_abs[:] = torch.abs(forward_m)
             self._last_candidate8_diffik_target_residual_lateral_abs[:] = torch.abs(lateral_m)
             self._last_candidate8_diffik_target_residual_height_abs[:] = torch.abs(height_m)
+            self._last_candidate8_hybrid_stop_latched[:] = self._candidate8_hybrid_stop_latched.float()
             return
         if action_mode != "joint_delta":
             raise ValueError(f"unsupported rl_action_mode={action_mode!r}")
@@ -1680,6 +1715,10 @@ class RoArmCubePushEnv(RoArmStackEnv):
         self._last_candidate8_diffik_target_residual_forward_abs[env_ids] = 0.0
         self._last_candidate8_diffik_target_residual_lateral_abs[env_ids] = 0.0
         self._last_candidate8_diffik_target_residual_height_abs[env_ids] = 0.0
+        self._candidate8_hybrid_stop_latched[env_ids] = False
+        self._candidate8_hybrid_stop_step[env_ids] = -1
+        self._candidate8_hybrid_hold_targets[env_ids] = joint_pos
+        self._last_candidate8_hybrid_stop_latched[env_ids] = 0.0
         self._tap_push_primitive_stop_latched[env_ids] = False
         self._tap_push_primitive_stop_step[env_ids] = -1
         self._tap_push_primitive_hold_targets[env_ids] = joint_pos
@@ -1877,6 +1916,10 @@ class RoArmCubePushEnv(RoArmStackEnv):
             "cube_push_candidate8_diffik_target_residual_forward_abs": self._last_candidate8_diffik_target_residual_forward_abs.mean().detach(),
             "cube_push_candidate8_diffik_target_residual_lateral_abs": self._last_candidate8_diffik_target_residual_lateral_abs.mean().detach(),
             "cube_push_candidate8_diffik_target_residual_height_abs": self._last_candidate8_diffik_target_residual_height_abs.mean().detach(),
+            "cube_push_candidate8_hybrid_stop_enabled": torch.tensor(
+                float(getattr(self.cfg, "candidate8_hybrid_stop_after_useful", False)), device=self.device
+            ),
+            "cube_push_candidate8_hybrid_stop_latched_rate": self._last_candidate8_hybrid_stop_latched.mean().detach(),
             "cube_push_tap_push_primitive_enabled": torch.tensor(
                 float(str(getattr(self.cfg, "rl_action_mode", "joint_delta")) == "tap_push_primitive"),
                 device=self.device,
@@ -2385,6 +2428,10 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
             "cube_push_candidate8_diffik_target_residual_forward_abs": self._last_candidate8_diffik_target_residual_forward_abs.mean().detach(),
             "cube_push_candidate8_diffik_target_residual_lateral_abs": self._last_candidate8_diffik_target_residual_lateral_abs.mean().detach(),
             "cube_push_candidate8_diffik_target_residual_height_abs": self._last_candidate8_diffik_target_residual_height_abs.mean().detach(),
+            "cube_push_candidate8_hybrid_stop_enabled": torch.tensor(
+                float(getattr(self.cfg, "candidate8_hybrid_stop_after_useful", False)), device=self.device
+            ),
+            "cube_push_candidate8_hybrid_stop_latched_rate": self._last_candidate8_hybrid_stop_latched.mean().detach(),
             "cube_push_grasped_marker_rate": self._grasped.float().mean().detach(),
             "bc_teacher_imitation_penalty": bc_imitation_penalty.mean().detach(),
             "action_penalty": action_penalty.mean().detach(),
