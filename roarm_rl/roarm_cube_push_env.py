@@ -116,6 +116,9 @@ class RoArmCubePushEnvCfg(RoArmStackEnvCfg):
     cube_success_disp_m: float = 0.030
     cube_success_target_tol_m: float = 0.050
     cube_success_speed_max_mps: float = 0.500
+    cube_friction_randomize_min: float = 0.0
+    cube_friction_randomize_max: float = 0.0
+    cube_dynamic_friction_ratio: float = 0.8
     cube_low_motion_disp_m: float = 0.005
     cube_far_target_terminate_m: float = 0.120
     cube_impact_terminate_disp_m: float = 0.150
@@ -148,6 +151,7 @@ class RoArmCubePushEnvCfg(RoArmStackEnvCfg):
     candidate6_diffik_target_path_mode: str = "near_face_goal"
     candidate6_diffik_cube_reference_mode: str = "start_pose"
     candidate6_diffik_cube_pose_noise_xy_m: float = 0.0
+    policy_cube_pose_noise_xy_m: float = 0.0
     candidate8_diffik_target_residual_forward_m: float = 0.004
     candidate8_diffik_target_residual_lateral_m: float = 0.012
     candidate8_diffik_target_residual_height_m: float = 0.004
@@ -328,6 +332,7 @@ class RoArmCubeTap10cmEnvCfg(RoArmCubePushEnvCfg):
     tap_strict_useful_reward_scale: float = 0.0
     tap_strict_useful_seen_reward_scale: float = 0.0
     tap_control_band_reward_scale: float = 0.0
+    tap_control_band_max_disp_m: float = 0.0
     tap_target_excess_quadratic_penalty_scale: float = 0.0
     tap_tip_penalty_scale: float = 0.02
 
@@ -357,7 +362,14 @@ class RoArmCubePushEnv(RoArmStackEnv):
         )
 
         env_origins = self.scene.env_origins
-        sponge_pos_local = self._sponge_pos_w - env_origins
+        sponge_pos_policy_w = self._sponge_pos_w
+        policy_cube_pose_noise_xy_m = float(getattr(self.cfg, "policy_cube_pose_noise_xy_m", 0.0))
+        if policy_cube_pose_noise_xy_m < 0.0:
+            raise ValueError("policy_cube_pose_noise_xy_m must be non-negative")
+        if policy_cube_pose_noise_xy_m > 0.0:
+            sponge_pos_policy_w = sponge_pos_policy_w.clone()
+            sponge_pos_policy_w[:, 0:2] = sponge_pos_policy_w[:, 0:2] + self._policy_cube_pose_noise_w_xy
+        sponge_pos_local = sponge_pos_policy_w - env_origins
         tcp_pos_local = self._tcp_pos_w - env_origins
         target_world = self._target_world
         mode = str(getattr(self.cfg, "policy_obs_target_mode", "push_target"))
@@ -418,6 +430,17 @@ class RoArmCubePushEnv(RoArmStackEnv):
         self._candidate6_prev_arm_joint_target = torch.zeros((self.num_envs, 5), device=self.device)
         self._candidate6_prev_arm_joint_target_valid = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
         self._candidate6_cube_pose_noise_w_xy = torch.zeros((self.num_envs, 2), device=self.device)
+        self._policy_cube_pose_noise_w_xy = torch.zeros((self.num_envs, 2), device=self.device)
+        self._cube_randomized_static_friction = torch.full(
+            (self.num_envs,),
+            float(getattr(self.cfg.sponge.spawn.physics_material, "static_friction", 0.0)),
+            device=self.device,
+        )
+        self._cube_randomized_dynamic_friction = torch.full(
+            (self.num_envs,),
+            float(getattr(self.cfg.sponge.spawn.physics_material, "dynamic_friction", 0.0)),
+            device=self.device,
+        )
         self._last_candidate6_diffik_active = torch.zeros(self.num_envs, device=self.device)
         self._last_candidate6_diffik_numeric_ok = torch.zeros(self.num_envs, device=self.device)
         self._last_candidate6_diffik_raw_delta_abs_max = torch.zeros(self.num_envs, device=self.device)
@@ -1483,12 +1506,42 @@ class RoArmCubePushEnv(RoArmStackEnv):
         self._grasped[:] = False
         self._was_grasped[:] = False
 
+    def _apply_cube_friction_randomization(self, env_ids: torch.Tensor) -> None:
+        friction_min = float(getattr(self.cfg, "cube_friction_randomize_min", 0.0))
+        friction_max = float(getattr(self.cfg, "cube_friction_randomize_max", 0.0))
+        dynamic_ratio = float(getattr(self.cfg, "cube_dynamic_friction_ratio", 0.8))
+        if friction_min < 0.0 or friction_max < 0.0:
+            raise ValueError("cube friction randomization bounds must be non-negative")
+        if dynamic_ratio < 0.0:
+            raise ValueError("cube_dynamic_friction_ratio must be non-negative")
+        if friction_max <= friction_min:
+            static_default = float(getattr(self.cfg.sponge.spawn.physics_material, "static_friction", 0.0))
+            dynamic_default = float(getattr(self.cfg.sponge.spawn.physics_material, "dynamic_friction", 0.0))
+            self._cube_randomized_static_friction[env_ids] = static_default
+            self._cube_randomized_dynamic_friction[env_ids] = dynamic_default
+            return
+
+        physx_env_ids = env_ids.detach().cpu().to(dtype=torch.long)
+        materials = self._sponge.root_physx_view.get_material_properties()
+        shape_count = int(materials.shape[1])
+        static_samples = torch.rand(
+            (len(physx_env_ids), shape_count), device=materials.device
+        ) * (friction_max - friction_min) + friction_min
+        dynamic_samples = static_samples * dynamic_ratio
+        materials[physx_env_ids, :, 0] = static_samples
+        materials[physx_env_ids, :, 1] = torch.minimum(dynamic_samples, static_samples)
+        materials[physx_env_ids, :, 2] = 0.0
+        self._sponge.root_physx_view.set_material_properties(materials, physx_env_ids)
+        self._cube_randomized_static_friction[env_ids] = static_samples.mean(dim=1).to(self.device)
+        self._cube_randomized_dynamic_friction[env_ids] = dynamic_samples.mean(dim=1).to(self.device)
+
     def _reset_idx(self, env_ids: torch.Tensor | None):
         super()._reset_idx(env_ids)
         self._ensure_push_buffers()
         if env_ids is None:
             env_ids = self._robot._ALL_INDICES
         n = len(env_ids)
+        self._apply_cube_friction_randomization(env_ids)
         d256_reset = self._sample_d256_reset_table(n)
 
         if d256_reset is None:
@@ -1605,6 +1658,15 @@ class RoArmCubePushEnv(RoArmStackEnv):
             ) * cube_pose_noise_xy_m
         else:
             self._candidate6_cube_pose_noise_w_xy[env_ids] = 0.0
+        policy_cube_pose_noise_xy_m = float(getattr(self.cfg, "policy_cube_pose_noise_xy_m", 0.0))
+        if policy_cube_pose_noise_xy_m < 0.0:
+            raise ValueError("policy_cube_pose_noise_xy_m must be non-negative")
+        if policy_cube_pose_noise_xy_m > 0.0:
+            self._policy_cube_pose_noise_w_xy[env_ids] = (
+                torch.rand((n, 2), device=self.device) * 2.0 - 1.0
+            ) * policy_cube_pose_noise_xy_m
+        else:
+            self._policy_cube_pose_noise_w_xy[env_ids] = 0.0
         self._last_candidate6_diffik_active[env_ids] = 0.0
         self._last_candidate6_diffik_numeric_ok[env_ids] = 0.0
         self._last_candidate6_diffik_raw_delta_abs_max[env_ids] = 0.0
@@ -1778,6 +1840,12 @@ class RoArmCubePushEnv(RoArmStackEnv):
             "cube_push_bc_teacher_action_abs_mean": self._last_bc_teacher_action_abs_mean.mean().detach(),
             "cube_push_d256_reset_active_rate": self._last_d256_reset_active.mean().detach(),
             "cube_push_d256_reset_episode_index_mean": self._last_d256_reset_episode_index.mean().detach(),
+            "cube_push_friction_static_mean": self._cube_randomized_static_friction.mean().detach(),
+            "cube_push_friction_static_min": self._cube_randomized_static_friction.min().detach(),
+            "cube_push_friction_static_max": self._cube_randomized_static_friction.max().detach(),
+            "cube_push_friction_dynamic_mean": self._cube_randomized_dynamic_friction.mean().detach(),
+            "cube_push_friction_dynamic_min": self._cube_randomized_dynamic_friction.min().detach(),
+            "cube_push_friction_dynamic_max": self._cube_randomized_dynamic_friction.max().detach(),
             "cube_push_candidate6_diffik_active_rate": self._last_candidate6_diffik_active.mean().detach(),
             "cube_push_candidate6_diffik_numeric_ok_rate": self._last_candidate6_diffik_numeric_ok.mean().detach(),
             "cube_push_candidate6_diffik_raw_delta_abs_max": self._last_candidate6_diffik_raw_delta_abs_max.mean().detach(),
@@ -1791,6 +1859,15 @@ class RoArmCubePushEnv(RoArmStackEnv):
             ).detach(),
             "cube_push_candidate6_cube_pose_noise_abs_max_m": torch.max(
                 torch.abs(self._candidate6_cube_pose_noise_w_xy)
+            ).detach(),
+            "cube_push_policy_cube_pose_noise_xy_m": torch.tensor(
+                float(getattr(self.cfg, "policy_cube_pose_noise_xy_m", 0.0)), device=self.device
+            ),
+            "cube_push_policy_cube_pose_noise_abs_mean_m": torch.mean(
+                torch.abs(self._policy_cube_pose_noise_w_xy)
+            ).detach(),
+            "cube_push_policy_cube_pose_noise_abs_max_m": torch.max(
+                torch.abs(self._policy_cube_pose_noise_w_xy)
             ).detach(),
             "cube_push_candidate6_diffik_residual_abs_mean": self._last_candidate6_diffik_residual_abs_mean.mean().detach(),
             "cube_push_candidate6_diffik_residual_abs_max": self._last_candidate6_diffik_residual_abs_max.mean().detach(),
@@ -2132,7 +2209,13 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
         contact_reaction_seen = self._tap_contact_seen & self._tap_reaction_seen
         useful_seen = contact_reaction_seen & useful_min_disp_seen & ~self._tap_overshoot_seen
         no_overshoot_seen = ~self._tap_overshoot_seen
-        control_band_now = terms["tap_useful_min_disp_now"] & ~terms["tap_overshoot_now"]
+        control_band_max_disp_m = float(getattr(self.cfg, "tap_control_band_max_disp_m", 0.0))
+        control_band_upper_ok = (
+            terms["disp_xy"] <= control_band_max_disp_m
+            if control_band_max_disp_m > 0.0
+            else ~terms["tap_overshoot_now"]
+        )
+        control_band_now = terms["tap_useful_min_disp_now"] & control_band_upper_ok
         target_excess_ratio = terms["tap_target_excess_ratio"]
         min_contact_vertical_finite = torch.isfinite(self._tap_min_contact_vertical_offset)
         min_contact_vertical = torch.where(
@@ -2187,6 +2270,7 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
             "cube_tap_contact_reaction_seen_rate": contact_reaction_seen.float().mean().detach(),
             "cube_tap_no_overshoot_seen_rate": no_overshoot_seen.float().mean().detach(),
             "cube_tap_control_band_now_rate": control_band_now.float().mean().detach(),
+            "cube_tap_control_band_max_disp_m": torch.tensor(control_band_max_disp_m, device=self.device),
             "cube_tap_target_disp_m": torch.tensor(float(self.cfg.cube_push_target_disp_m), device=self.device),
             "cube_tap_target_disp_tolerance_m": torch.tensor(
                 float(self.cfg.tap_target_disp_tolerance_m), device=self.device
@@ -2273,11 +2357,26 @@ class RoArmCubeTap10cmEnv(RoArmCubePushEnv):
             "cube_push_d256_reset_episode_index_mean": self._last_d256_reset_episode_index.mean().detach(),
             "cube_tap_d256_reset_active_rate": self._last_d256_reset_active.mean().detach(),
             "cube_tap_d256_reset_episode_index_mean": self._last_d256_reset_episode_index.mean().detach(),
+            "cube_push_friction_static_mean": self._cube_randomized_static_friction.mean().detach(),
+            "cube_push_friction_static_min": self._cube_randomized_static_friction.min().detach(),
+            "cube_push_friction_static_max": self._cube_randomized_static_friction.max().detach(),
+            "cube_push_friction_dynamic_mean": self._cube_randomized_dynamic_friction.mean().detach(),
+            "cube_push_friction_dynamic_min": self._cube_randomized_dynamic_friction.min().detach(),
+            "cube_push_friction_dynamic_max": self._cube_randomized_dynamic_friction.max().detach(),
             "cube_push_candidate6_diffik_active_rate": self._last_candidate6_diffik_active.mean().detach(),
             "cube_push_candidate6_diffik_numeric_ok_rate": self._last_candidate6_diffik_numeric_ok.mean().detach(),
             "cube_push_candidate6_diffik_raw_delta_abs_max": self._last_candidate6_diffik_raw_delta_abs_max.mean().detach(),
             "cube_push_candidate6_diffik_clipped_delta_abs_max": self._last_candidate6_diffik_clipped_delta_abs_max.mean().detach(),
             "cube_push_candidate6_diffik_step_clip_rate": self._last_candidate6_diffik_step_clip_rate.mean().detach(),
+            "cube_push_policy_cube_pose_noise_xy_m": torch.tensor(
+                float(getattr(self.cfg, "policy_cube_pose_noise_xy_m", 0.0)), device=self.device
+            ),
+            "cube_push_policy_cube_pose_noise_abs_mean_m": torch.mean(
+                torch.abs(self._policy_cube_pose_noise_w_xy)
+            ).detach(),
+            "cube_push_policy_cube_pose_noise_abs_max_m": torch.max(
+                torch.abs(self._policy_cube_pose_noise_w_xy)
+            ).detach(),
             "cube_push_candidate6_diffik_residual_abs_mean": self._last_candidate6_diffik_residual_abs_mean.mean().detach(),
             "cube_push_candidate6_diffik_residual_abs_max": self._last_candidate6_diffik_residual_abs_max.mean().detach(),
             "cube_push_candidate6_diffik_hold_success_rate": self._last_candidate6_diffik_hold_success_rate.mean().detach(),

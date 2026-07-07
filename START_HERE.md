@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-07-07 KST (D316 current truth: D314 completed the required 9-row non-PPO perturbation matrix and identified friction as the first baseline-breaking axis. D315 satisfied the positive PPO trigger with real learnable `candidate8_diffik_target_residual` PPO on low friction, but over-pushed: useful `32/64`, overshoot `32/64`, XY `>=20mm` `32/64`. D316 audited the tap reward wiring, added default-off tap-specific strict-useful/overshoot reward knobs plus CLI flags, then ran reward-v1 PPO. The 30-iteration run improved useful to `47/64` and reduced overshoot to `1/64`, but left `16/64` low-motion cases below `1mm`. A warm-start 300-iteration run reduced low-motion to `2/64` but reintroduced overshoot `23/64` and lowered useful to `39/64`. Verdict: `D316_REWARD_V1_SHORT_IMPROVES_LONGER_UNSTABLE_NO_PROMOTION`. No learned-policy promotion, no raw joint-delta revival, no RoArm/VLA/POSCO readiness. No B200/SSH, no pull, and no `.ssh` copy.)
+Last updated: 2026-07-07 KST (D317 current truth: Promotion Criteria V1 is now affirmative: friction `0.8/0.6` strict useful `>=65%`, overshoot `<=5%`, low-motion `<1mm <=10%`, nominal strict useful `>=90%`, reproducible across 3 seeds. D316 `model_29.pt` passed nominal/obs-noise D290 fresh32 but failed low-friction long-horizon cross-eval: strict useful `4/32`, overshoot `28/32`, mean/max XY `30.706/41.887mm`. Reward v2 was specified and run as 3-seed domain-randomized PPO over static friction `[0.7,1.6]`; collection-final useful/overshoot were seed31711 `24/64`/`19/64`, seed31712 `19/64`/`12/64`, seed31713 `27/64`/`12/64`. Peak useful in TensorBoard stayed around `50%` with peak overshoot `12..13%`. D290 peak-checkpoint cross-eval also failed low friction: useful `4/32`, `4/32`, `2/32`; overshoot `28/32`, `28/32`, `30/32`. Verdict: `D317_REWARD_V2_DOMAIN_RANDOMIZED_PPO_OVERSHOOT_FAIL`. No learned-policy promotion, no raw joint-delta revival, no hand-written controller condition addition, no RoArm/VLA/POSCO readiness. No B200/SSH, no pull, and no `.ssh` copy.)
 
 ## Current Truth
 
@@ -8,6 +8,8 @@ Last updated: 2026-07-07 KST (D316 current truth: D314 completed the required 9-
   dataset camera-contract branch. The earlier tap RL branch is frozen unless
   explicitly resumed.
 - Do not mix with Track A grasp/dataset/training work.
+- D317 session doc:
+  `claudedocs/session_20260707_cube10cm_top_view_d317_reward_v2_domain_randomized_ppo.md`.
 - D316 session doc:
   `claudedocs/session_20260707_cube10cm_top_view_d316_reward_v1_ppo.md`.
 - D315 session doc:
@@ -16,11 +18,21 @@ Last updated: 2026-07-07 KST (D316 current truth: D314 completed the required 9-
   `claudedocs/session_20260707_cube10cm_top_view_d314_perturbation_matrix_result.md`.
 - D314 aggregate:
   `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/perturbation_matrix_d314/tap10cm/d314_perturbation_matrix_aggregate.json`.
+- D317 cross-eval summaries:
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d317_promotion_cross_eval/tap10cm/nominal/closed_loop_recovery_summary_d317_cross_eval_model29_nominal.json`,
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d317_promotion_cross_eval/tap10cm/friction_0p8_0p6/closed_loop_recovery_summary_d317_cross_eval_model29_friction_0p8_0p6.json`,
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d317_promotion_cross_eval/tap10cm/obs_noise_0p015/closed_loop_recovery_summary_d317_cross_eval_model29_obs_noise_0p015.json`.
+- D317 reward-v2 traces:
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/primitive_parameter_ppo_d317/tap10cm/d317_reward_v2_friction_uniform_seed31711/collection_final_env_trace_iter_299.jsonl`,
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/primitive_parameter_ppo_d317/tap10cm/d317_reward_v2_friction_uniform_seed31712/collection_final_env_trace_iter_299.jsonl`,
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/primitive_parameter_ppo_d317/tap10cm/d317_reward_v2_friction_uniform_seed31713/collection_final_env_trace_iter_299.jsonl`.
 - D316 PPO summaries:
   `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/primitive_parameter_ppo_d316/tap10cm/d316_candidate8_friction_low_reward_v1_30it/d316_candidate8_friction_low_reward_v1_30it_summary.json`,
   `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/primitive_parameter_ppo_d316/tap10cm/d316_candidate8_friction_low_reward_v1_warm300/d316_candidate8_friction_low_reward_v1_warm300_summary.json`.
 - D315 PPO summary:
   `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/primitive_parameter_ppo_d315/tap10cm/d315_candidate8_friction_low_5it/d315_candidate8_friction_low_5it_summary.json`.
+- D317 verdict:
+  `D317_REWARD_V2_DOMAIN_RANDOMIZED_PPO_OVERSHOOT_FAIL`.
 - D316 verdict:
   `D316_REWARD_V1_SHORT_IMPROVES_LONGER_UNSTABLE_NO_PROMOTION`.
 - D315 verdict:
@@ -28,12 +40,13 @@ Last updated: 2026-07-07 KST (D316 current truth: D314 completed the required 9-
 - D314 verdict:
   `D314_PERTURBATION_MATRIX_RESULT_FRICTION_BREAKS_BASELINE_NO_PROMOTION`.
 - Current next concrete action:
-  continue from the D316 reward-v1 PPO result. The short run proves overshoot
-  can be reduced while preserving contact/reaction, but longer training shifts
-  back into over-push. Next work should adjust PPO reward/control shaping and
-  evaluate curves against baseline-vs-policy tables. Do not return to raw
-  scalar joint deltas and do not add a new hand-written controller patch before
-  learning analysis.
+  continue from D317's learned-stop failure. Reward scaling alone did not solve
+  low-friction long-horizon over-push. The next learning repair should make
+  primitive termination/stop timing part of the learnable action or use finite
+  action-chunk semantics, then evaluate against Promotion Criteria V1. Do not
+  add another hand-written controller condition, do not return to raw scalar
+  joint deltas, and do not use high-friction `2.2/1.8` as a training target
+  until render/trace audit resolves the 12m runaway row.
 - Research objective is strict useful tap: contact/reaction, no overshoot, and
   actual XY displacement `>=1mm`. The runtime's 6mm target band remains a
   quality-tier diagnostic; it is no longer sufficient for useful/promotion.

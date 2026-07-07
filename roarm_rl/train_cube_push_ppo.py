@@ -54,6 +54,9 @@ def main() -> int:
     parser.add_argument("--cube_mass_kg", type=float, default=None)
     parser.add_argument("--cube_static_friction", type=float, default=None)
     parser.add_argument("--cube_dynamic_friction", type=float, default=None)
+    parser.add_argument("--cube_friction_randomize_min", type=float, default=None)
+    parser.add_argument("--cube_friction_randomize_max", type=float, default=None)
+    parser.add_argument("--cube_dynamic_friction_ratio", type=float, default=None)
     parser.add_argument("--ik_precontact_clearance_m", type=float, default=None)
     parser.add_argument("--candidate6_diffik_goal_push_m", type=float, default=None)
     parser.add_argument("--candidate6_diffik_push_steps", type=int, default=None)
@@ -74,6 +77,7 @@ def main() -> int:
         default=None,
     )
     parser.add_argument("--candidate6_diffik_cube_pose_noise_xy_m", type=float, default=None)
+    parser.add_argument("--policy_cube_pose_noise_xy_m", type=float, default=None)
     parser.add_argument("--candidate8_diffik_target_residual_forward_m", type=float, default=None)
     parser.add_argument("--candidate8_diffik_target_residual_lateral_m", type=float, default=None)
     parser.add_argument("--candidate8_diffik_target_residual_height_m", type=float, default=None)
@@ -130,6 +134,7 @@ def main() -> int:
     parser.add_argument("--tap_strict_useful_reward_scale", type=float, default=None)
     parser.add_argument("--tap_strict_useful_seen_reward_scale", type=float, default=None)
     parser.add_argument("--tap_control_band_reward_scale", type=float, default=None)
+    parser.add_argument("--tap_control_band_max_disp_m", type=float, default=None)
     parser.add_argument("--tap_target_excess_quadratic_penalty_scale", type=float, default=None)
     parser.add_argument("--speed_penalty_scale", type=float, default=None)
     parser.add_argument("--speed_penalty_start_mps", type=float, default=None)
@@ -175,6 +180,20 @@ def main() -> int:
         raise ValueError("--cube_static_friction must be non-negative")
     if args.cube_dynamic_friction is not None and args.cube_dynamic_friction < 0.0:
         raise ValueError("--cube_dynamic_friction must be non-negative")
+    if args.cube_friction_randomize_min is not None and args.cube_friction_randomize_min < 0.0:
+        raise ValueError("--cube_friction_randomize_min must be non-negative")
+    if args.cube_friction_randomize_max is not None and args.cube_friction_randomize_max < 0.0:
+        raise ValueError("--cube_friction_randomize_max must be non-negative")
+    if (args.cube_friction_randomize_min is None) != (args.cube_friction_randomize_max is None):
+        raise ValueError("--cube_friction_randomize_min and --cube_friction_randomize_max must be set together")
+    if (
+        args.cube_friction_randomize_min is not None
+        and args.cube_friction_randomize_max is not None
+        and args.cube_friction_randomize_max <= args.cube_friction_randomize_min
+    ):
+        raise ValueError("--cube_friction_randomize_max must be greater than --cube_friction_randomize_min")
+    if args.cube_dynamic_friction_ratio is not None and args.cube_dynamic_friction_ratio < 0.0:
+        raise ValueError("--cube_dynamic_friction_ratio must be non-negative")
     if args.candidate6_diffik_goal_push_m is not None and args.candidate6_diffik_goal_push_m <= 0.0:
         raise ValueError("--candidate6_diffik_goal_push_m must be positive")
     if args.candidate6_diffik_push_steps is not None and args.candidate6_diffik_push_steps <= 0:
@@ -186,6 +205,8 @@ def main() -> int:
         and args.candidate6_diffik_cube_pose_noise_xy_m < 0.0
     ):
         raise ValueError("--candidate6_diffik_cube_pose_noise_xy_m must be non-negative")
+    if args.policy_cube_pose_noise_xy_m is not None and args.policy_cube_pose_noise_xy_m < 0.0:
+        raise ValueError("--policy_cube_pose_noise_xy_m must be non-negative")
     if (
         args.candidate8_diffik_target_residual_forward_m is not None
         and args.candidate8_diffik_target_residual_forward_m < 0.0
@@ -276,6 +297,20 @@ def main() -> int:
             f"{env_cfg.sponge.spawn.physics_material.dynamic_friction} -> {args.cube_dynamic_friction}"
         )
         env_cfg.sponge.spawn.physics_material.dynamic_friction = float(args.cube_dynamic_friction)
+    if args.cube_friction_randomize_min is not None and args.cube_friction_randomize_max is not None:
+        print(
+            "[cube-push-train] cube_friction_randomize: "
+            f"{env_cfg.cube_friction_randomize_min}..{env_cfg.cube_friction_randomize_max} -> "
+            f"{args.cube_friction_randomize_min}..{args.cube_friction_randomize_max}"
+        )
+        env_cfg.cube_friction_randomize_min = float(args.cube_friction_randomize_min)
+        env_cfg.cube_friction_randomize_max = float(args.cube_friction_randomize_max)
+    if args.cube_dynamic_friction_ratio is not None:
+        print(
+            "[cube-push-train] cube_dynamic_friction_ratio: "
+            f"{env_cfg.cube_dynamic_friction_ratio} -> {args.cube_dynamic_friction_ratio}"
+        )
+        env_cfg.cube_dynamic_friction_ratio = float(args.cube_dynamic_friction_ratio)
     if args.ik_endpoint_reset:
         print("[cube-push-train] ik_endpoint_reset: True")
         env_cfg.ik_endpoint_reset = True
@@ -377,6 +412,12 @@ def main() -> int:
             f"{env_cfg.candidate6_diffik_cube_pose_noise_xy_m} -> {args.candidate6_diffik_cube_pose_noise_xy_m}"
         )
         env_cfg.candidate6_diffik_cube_pose_noise_xy_m = float(args.candidate6_diffik_cube_pose_noise_xy_m)
+    if args.policy_cube_pose_noise_xy_m is not None:
+        print(
+            "[cube-push-train] policy_cube_pose_noise_xy_m: "
+            f"{env_cfg.policy_cube_pose_noise_xy_m} -> {args.policy_cube_pose_noise_xy_m}"
+        )
+        env_cfg.policy_cube_pose_noise_xy_m = float(args.policy_cube_pose_noise_xy_m)
     if args.candidate8_diffik_target_residual_forward_m is not None:
         print(
             "[cube-push-train] candidate8_diffik_target_residual_forward_m: "
@@ -626,6 +667,7 @@ def main() -> int:
         "tap_strict_useful_reward_scale",
         "tap_strict_useful_seen_reward_scale",
         "tap_control_band_reward_scale",
+        "tap_control_band_max_disp_m",
         "tap_target_excess_quadratic_penalty_scale",
     )
     for name in tap_reward_args:
@@ -742,6 +784,9 @@ def main() -> int:
         f"cube_mass_kg={env_cfg.sponge.spawn.mass_props.mass} "
         f"cube_static_friction={env_cfg.sponge.spawn.physics_material.static_friction} "
         f"cube_dynamic_friction={env_cfg.sponge.spawn.physics_material.dynamic_friction} "
+        f"cube_friction_randomize_min={env_cfg.cube_friction_randomize_min} "
+        f"cube_friction_randomize_max={env_cfg.cube_friction_randomize_max} "
+        f"cube_dynamic_friction_ratio={env_cfg.cube_dynamic_friction_ratio} "
         f"ik_endpoint_reset={env_cfg.ik_endpoint_reset} "
         f"push_progress_reward_scale={env_cfg.push_progress_reward_scale} "
         f"push_displacement_reward_scale={env_cfg.push_displacement_reward_scale} "
@@ -773,6 +818,7 @@ def main() -> int:
         f"tap_strict_useful_reward_scale={getattr(env_cfg, 'tap_strict_useful_reward_scale', 'NA')} "
         f"tap_strict_useful_seen_reward_scale={getattr(env_cfg, 'tap_strict_useful_seen_reward_scale', 'NA')} "
         f"tap_control_band_reward_scale={getattr(env_cfg, 'tap_control_band_reward_scale', 'NA')} "
+        f"tap_control_band_max_disp_m={getattr(env_cfg, 'tap_control_band_max_disp_m', 'NA')} "
         f"tap_target_excess_quadratic_penalty_scale={getattr(env_cfg, 'tap_target_excess_quadratic_penalty_scale', 'NA')} "
         f"joint_target_lead_limit_rad={env_cfg.joint_target_lead_limit_rad} "
         f"joint_delta_reference={env_cfg.joint_delta_reference} "
@@ -784,6 +830,7 @@ def main() -> int:
         f"candidate6_diffik_target_path_mode={env_cfg.candidate6_diffik_target_path_mode} "
         f"candidate6_diffik_cube_reference_mode={env_cfg.candidate6_diffik_cube_reference_mode} "
         f"candidate6_diffik_cube_pose_noise_xy_m={env_cfg.candidate6_diffik_cube_pose_noise_xy_m} "
+        f"policy_cube_pose_noise_xy_m={env_cfg.policy_cube_pose_noise_xy_m} "
         f"candidate8_diffik_target_residual_forward_m={env_cfg.candidate8_diffik_target_residual_forward_m} "
         f"candidate8_diffik_target_residual_lateral_m={env_cfg.candidate8_diffik_target_residual_lateral_m} "
         f"candidate8_diffik_target_residual_height_m={env_cfg.candidate8_diffik_target_residual_height_m} "
@@ -970,6 +1017,8 @@ def main() -> int:
                 "bc_teacher_action_abs_mean": _tensor_list("_last_bc_teacher_action_abs_mean"),
                 "tap_stop_after_useful_hold": _tensor_list("_last_tap_stop_after_useful_hold"),
                 "tap_stop_after_disp_hold": _tensor_list("_last_tap_stop_after_disp_hold"),
+                "cube_static_friction": _tensor_list("_cube_randomized_static_friction"),
+                "cube_dynamic_friction": _tensor_list("_cube_randomized_dynamic_friction"),
             }
             trace_path = os.path.join(log_dir, f"collection_final_env_trace_iter_{final_step}.jsonl")
             with open(trace_path, "w", encoding="utf-8") as trace_file:

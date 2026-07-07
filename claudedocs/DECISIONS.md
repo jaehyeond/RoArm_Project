@@ -17687,3 +17687,60 @@ Sources:
 - `roarm_rl/roarm_cube_push_env.py`
 - `roarm_rl/train_cube_push_ppo.py`
 - `START_HERE.md`
+
+## D317 - Reward-v2 domain-randomized PPO still lacks stop semantics (2026-07-07)
+
+- Scope:
+  - Added positive Promotion Criteria V1 and Reward V2 Spec, cross-evaluated
+    D316 `model_29.pt`, and ran three real PPO seeds on a randomized
+    low-friction distribution.
+  - Did not use B200/SSH, pull, `.ssh` copy, RoArm deployment, Track A,
+    VLA/SmolVLA fine-tuning, raw joint-delta revival, high-friction training,
+    or a new hand-written controller condition.
+- Evidence:
+  - Promotion Criteria V1 is now affirmative: friction `0.8/0.6` strict useful
+    `>=65%`, overshoot `<=5%`, low-motion `<1mm <=10%`; nominal strict useful
+    `>=90%`; and all criteria reproduced across three seeds.
+  - D316 `model_29.pt` passed nominal and observation-noise `0.015m` D290
+    fresh32 rows with strict useful `32/32`, overshoot `0/32`, but failed the
+    low-friction row: strict useful `4/32`, overshoot `28/32`, mean/max XY
+    `30.706/41.887mm`.
+  - Reward v2 reduced displacement pressure (`tap_transient_disp_reward_scale`
+    `80.0 -> 8.0`) and made the `1..15mm` control band dominant
+    (`tap_control_band_reward_scale=16.0`,
+    `tap_control_band_max_disp_m=0.015`) while keeping strict useful and
+    overshoot penalties enabled.
+  - Three seed reward-v2 PPO over static friction `[0.7,1.6]` produced
+    collection-final strict useful/overshoot: seed31711 `24/64` and `19/64`,
+    seed31712 `19/64` and `12/64`, seed31713 `27/64` and `12/64`.
+  - TensorBoard peak useful stayed near `50%` with peak overshoot still
+    `12..13%`, above the `<=5%` criterion.
+  - D290 peak-checkpoint low-friction cross-eval confirmed long-horizon
+    over-push: seed31711 `model_25.pt` useful/overshoot `4/32`/`28/32`,
+    seed31712 `model_250.pt` `4/32`/`28/32`, seed31713 `model_225.pt`
+    `2/32`/`30/32`.
+- Decision:
+  - Reward v2 is a valid failure-capable PPO result, but it is not a promotion
+    candidate under the positive criteria.
+  - The remaining failure is not merely reward scale. The learnable residual
+    can create contact/reaction, but it does not learn stable primitive
+    termination/stop behavior under low-friction long-horizon evaluation.
+  - Next learning repair should expose stop timing, primitive termination, or
+    finite action-chunk semantics to the policy. Do not patch another
+    hand-written controller condition as the first response, and do not return
+    to raw scalar joint deltas.
+- Verdict:
+  `D317_REWARD_V2_DOMAIN_RANDOMIZED_PPO_OVERSHOOT_FAIL`.
+
+Sources:
+
+- `claudedocs/session_20260707_cube10cm_top_view_d317_reward_v2_domain_randomized_ppo.md`
+- `claudedocs/cube10cm_top_view_d312_perturbation_protocol.md`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/d317_promotion_cross_eval/tap10cm/friction_0p8_0p6/closed_loop_recovery_summary_d317_cross_eval_model29_friction_0p8_0p6.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/primitive_parameter_ppo_d317/tap10cm/d317_reward_v2_friction_uniform_seed31711/collection_final_env_trace_iter_299.jsonl`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/primitive_parameter_ppo_d317/tap10cm/d317_reward_v2_friction_uniform_seed31712/collection_final_env_trace_iter_299.jsonl`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/primitive_parameter_ppo_d317/tap10cm/d317_reward_v2_friction_uniform_seed31713/collection_final_env_trace_iter_299.jsonl`
+- `roarm_rl/roarm_cube_push_env.py`
+- `roarm_rl/train_cube_push_ppo.py`
+- `sim_scripts/cube10cm_top_view_d290_closed_loop_recovery_probe.py`
+- `START_HERE.md`

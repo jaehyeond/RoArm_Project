@@ -156,6 +156,12 @@ def main() -> int:
     parser.add_argument("--joint_target_lead_limit_rad", type=float, default=0.06)
     parser.add_argument("--joint_delta_reference", choices=("target", "joint_pos"), default="joint_pos")
     parser.add_argument("--tap_contact_proxy_mode", choices=("tcp_point", "link5_collision_aabb"), default="link5_collision_aabb")
+    parser.add_argument(
+        "--rl_action_mode",
+        choices=("joint_delta", "candidate6_diffik_residual_joint", "candidate8_diffik_target_residual"),
+        default="joint_delta",
+    )
+    parser.add_argument("--policy_action_space", type=int, default=None)
     parser.add_argument("--cube_size_m", type=float, default=None)
     parser.add_argument("--cube_mass_kg", type=float, default=None)
     parser.add_argument("--cube_static_friction", type=float, default=None)
@@ -184,6 +190,10 @@ def main() -> int:
     parser.add_argument("--primitive_speed_stop_min_disp_m", type=float, default=0.001)
     parser.add_argument("--primitive_diffik_step_clip_rad", type=float, default=0.010)
     parser.add_argument("--primitive_cube_pose_noise_xy_m", type=float, default=0.0)
+    parser.add_argument("--policy_cube_pose_noise_xy_m", type=float, default=0.0)
+    parser.add_argument("--candidate8_diffik_target_residual_forward_m", type=float, default=None)
+    parser.add_argument("--candidate8_diffik_target_residual_lateral_m", type=float, default=None)
+    parser.add_argument("--candidate8_diffik_target_residual_height_m", type=float, default=None)
     parser.add_argument(
         "--primitive_target_path_mode",
         choices=("near_face_goal", "legacy_far_face_through"),
@@ -274,6 +284,14 @@ def main() -> int:
         raise ValueError("--primitive_diffik_step_clip_rad must be positive")
     if float(args.primitive_cube_pose_noise_xy_m) < 0.0:
         raise ValueError("--primitive_cube_pose_noise_xy_m must be non-negative")
+    if float(args.policy_cube_pose_noise_xy_m) < 0.0:
+        raise ValueError("--policy_cube_pose_noise_xy_m must be non-negative")
+    if args.policy_action_space is not None and int(args.policy_action_space) <= 0:
+        raise ValueError("--policy_action_space must be positive")
+    if str(args.rl_action_mode) == "candidate8_diffik_target_residual":
+        requested_action_space = 3 if args.policy_action_space is None else int(args.policy_action_space)
+        if requested_action_space != 3:
+            raise ValueError("candidate8_diffik_target_residual requires --policy_action_space 3")
     primitive_exec_source = str(args.exec_source) in {"tap_push_primitive", "env_tap_push_primitive"}
     if primitive_exec_source and (
         str(args.action_governor_mode) != "off" or str(args.env_action_governor_mode) != "off"
@@ -353,6 +371,23 @@ def main() -> int:
     env_cfg.joint_target_lead_limit_rad = float(args.joint_target_lead_limit_rad)
     env_cfg.joint_delta_reference = str(args.joint_delta_reference)
     env_cfg.tap_contact_proxy_mode = str(args.tap_contact_proxy_mode)
+    env_cfg.rl_action_mode = str(args.rl_action_mode)
+    if args.policy_action_space is not None:
+        env_cfg.action_space = int(args.policy_action_space)
+    elif str(args.rl_action_mode) == "candidate8_diffik_target_residual":
+        env_cfg.action_space = 3
+    if args.candidate8_diffik_target_residual_forward_m is not None:
+        env_cfg.candidate8_diffik_target_residual_forward_m = float(
+            args.candidate8_diffik_target_residual_forward_m
+        )
+    if args.candidate8_diffik_target_residual_lateral_m is not None:
+        env_cfg.candidate8_diffik_target_residual_lateral_m = float(
+            args.candidate8_diffik_target_residual_lateral_m
+        )
+    if args.candidate8_diffik_target_residual_height_m is not None:
+        env_cfg.candidate8_diffik_target_residual_height_m = float(
+            args.candidate8_diffik_target_residual_height_m
+        )
     env_cfg.tap_stop_after_useful_seen = bool(args.tap_stop_after_useful_seen)
     env_cfg.tap_stop_after_disp_m = float(args.tap_stop_after_disp_m)
     env_cfg.tap_contact_slowdown_use_proxy = bool(args.tap_contact_slowdown_use_proxy)
@@ -366,6 +401,7 @@ def main() -> int:
     env_cfg.tap_action_governor_push_scale = float(args.action_governor_push_scale)
     env_cfg.tap_action_governor_brake_scale = float(args.action_governor_brake_scale)
     env_cfg.tap_action_governor_brake_steps = int(args.action_governor_brake_steps)
+    env_cfg.policy_cube_pose_noise_xy_m = float(args.policy_cube_pose_noise_xy_m)
     if primitive_exec_source:
         env_cfg.candidate6_diffik_goal_push_m = float(args.primitive_goal_disp_m)
         env_cfg.candidate6_diffik_push_steps = int(args.primitive_push_steps)
@@ -608,15 +644,16 @@ def main() -> int:
             needed_delta = target_arm - current_arm
             raw_arm_actions = needed_delta / max(float(inner.cfg.action_scale), 1.0e-6)
             recovery_actions = torch.zeros((inner.num_envs, int(inner.cfg.action_space)), device=device)
-            recovery_actions[:, inner._bc_arm_joint_ids] = torch.clamp(raw_arm_actions, -1.0, 1.0)
-            recovery_actions[:, inner.gripper_joint_idx] = 0.0
             recorded_actions = torch.zeros((inner.num_envs, int(inner.cfg.action_space)), device=device)
-            recorded_actions[:, inner._bc_arm_joint_ids] = torch.clamp(
-                recorded_delta / max(float(inner.cfg.action_scale), 1.0e-6),
-                -1.0,
-                1.0,
-            )
-            recorded_actions[:, inner.gripper_joint_idx] = 0.0
+            if int(inner.cfg.action_space) >= int(inner._robot.num_joints):
+                recovery_actions[:, inner._bc_arm_joint_ids] = torch.clamp(raw_arm_actions, -1.0, 1.0)
+                recovery_actions[:, inner.gripper_joint_idx] = 0.0
+                recorded_actions[:, inner._bc_arm_joint_ids] = torch.clamp(
+                    recorded_delta / max(float(inner.cfg.action_scale), 1.0e-6),
+                    -1.0,
+                    1.0,
+                )
+                recorded_actions[:, inner.gripper_joint_idx] = 0.0
             frame_indices = torch.tensor(
                 [int(float(rows[row_idx]["frame_index_t"])) for rows in episode_rows],
                 device=device,
@@ -1051,6 +1088,7 @@ def main() -> int:
         "tap_overshoot_terminate": bool(args.tap_overshoot_terminate),
         "exec_source": str(args.exec_source),
         "env_rl_action_mode": str(getattr(inner.cfg, "rl_action_mode", "joint_delta")),
+        "policy_action_space": int(inner.cfg.action_space),
         "primitive_goal_disp_m": float(args.primitive_goal_disp_m),
         "primitive_push_steps": int(args.primitive_push_steps),
         "primitive_speed_stop_mps": float(args.primitive_speed_stop_mps),
@@ -1062,6 +1100,13 @@ def main() -> int:
         ),
         "primitive_cube_pose_noise_abs_max_m": _tensor_max(
             torch.abs(inner._candidate6_cube_pose_noise_w_xy)
+        ),
+        "policy_cube_pose_noise_xy_m": float(args.policy_cube_pose_noise_xy_m),
+        "policy_cube_pose_noise_abs_mean_m": _tensor_mean(
+            torch.abs(inner._policy_cube_pose_noise_w_xy)
+        ),
+        "policy_cube_pose_noise_abs_max_m": _tensor_max(
+            torch.abs(inner._policy_cube_pose_noise_w_xy)
         ),
         "primitive_target_path_mode": str(args.primitive_target_path_mode),
         "primitive_cube_reference_mode": str(args.primitive_cube_reference_mode),

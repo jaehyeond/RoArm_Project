@@ -83,6 +83,38 @@ regardless of result.
 - The first PPO target is primitive-parameter learning, not a return to raw
   scalar joint-delta PPO.
 
+## Promotion Criteria V1
+
+Use an affirmative promotion definition. Do not use `NO_PROMOTION` as a default
+verdict when these checks have not been run.
+
+A learned primitive-parameter checkpoint is a `PROMOTION_CANDIDATE` only if all
+of the following hold:
+
+- Friction `0.8/0.6`: strict useful `>=65%`, overshoot `<=5%`, and low-motion
+  `<1mm <=10%`.
+- Nominal row: strict useful `>=90%`, i.e. no nominal-regression evidence.
+- Reproducibility: the criteria above hold across three different seeds.
+
+If a checkpoint satisfies the friction row but fails the nominal row, record it
+as a friction repair with nominal regression, not as a promotion candidate. If a
+checkpoint satisfies only one seed, record it as a single-seed candidate and
+continue exactly to the two remaining seeds; do not open a larger seed ladder.
+
+## Reward V2 Spec
+
+Reward v1 showed a two-sided failure: short PPO suppressed overshoot but left
+low-motion cases, while longer PPO reduced low-motion and moved back toward
+over-push. Reward v2 should remove the cliff-edge optimum:
+
+- Reduce target-band/transient displacement pressure by using
+  `tap_transient_disp_reward_scale=8.0` instead of `80.0`.
+- Keep strict useful reward and overshoot penalties enabled.
+- Make the control-band reward a dominant plateau reward over actual XY
+  displacement `1..15mm`, not merely ">=1mm and no overshoot".
+- Keep high-friction `2.2/1.8` isolated until render/trace audit resolves the
+  12m runaway row.
+
 ## Explicit Non-Goals
 
 - No long PPO.
