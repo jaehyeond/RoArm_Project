@@ -1,0 +1,27 @@
+# D290 Closed-Loop Recovery Probe
+
+- verdict: `D290_CLOSED_LOOP_RECOVERY_DATASET_PASS_FOR_AGGREGATION`
+- actor checkpoint: `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/primitive_parameter_ppo_d318/tap10cm/d318_hybrid_stop_reward_v2_seed31813/model_299.pt`
+- reset pose source: `env_hook`
+- selected episodes: `51..997` / `95`
+- samples: `58000`
+- actor rollout contact/useful/reaction: `1.0` / `0.9799999594688416` / `1.0`
+- actor rollout overshoot: `0.019999999552965164`
+- max XY mean/max: `0.01358508039265871` / `0.12654882669448853`
+- actor-vs-recovery MSE/MAE/cosine: `0.0666139349084476` / `0.20256856980508772` / `0.0`
+- actor-vs-recorded MSE/MAE/cosine: `0.06661392748355865` / `0.20256856083869934` / `0.0`
+- actor action abs mean/max: `0.20256856980508772` / `1.0`
+- recovery action abs mean/max: `0.0` / `0.0`
+- recovery clip rate mean/max: `0.5125172673957422` / `0.7460000514984131`
+- dataset path: `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d319/tap10cm/bin_mid_0p9_1p2/chunk_01/closed_loop_recovery_dataset_d319_bin_mid_chunk01.pt`
+- per-env CSV: ``
+- per-step/env action CSV: ``
+
+## Issues
+
+- none
+
+## Interpretation
+
+This probe executes the frozen actor, but labels the visited states with D256 recorded-time recovery actions.
+A pass here does not mean the actor is safe; it only means the collected closed-loop states look useful for the next supervised aggregation step.

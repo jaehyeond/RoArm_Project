@@ -17782,3 +17782,98 @@ Sources:
 - `roarm_rl/train_cube_push_ppo.py`
 - `sim_scripts/cube10cm_top_view_d290_closed_loop_recovery_probe.py`
 - `START_HERE.md`
+
+## D319 - Research direction pivots to RL data factory before VLA main training (2026-07-07)
+
+- Durable direction:
+  - The advisor-confirmed research chain is script push -> rendered pair dataset
+    -> RL training -> RL policy large-scale data generation -> VLA training at
+    the end.
+  - RL is the data-factory engine, not the final artifact. The 10cm cube
+    tap/push task is a validation fixture for the factory.
+- Literature anchor:
+  - RLDG, "Robotic Generalist Policy Distillation via Reinforcement Learning"
+    (arXiv:2412.09858), uses specialist RL policies to generate high-quality
+    fine-tuning datasets for generalist robot policies such as OpenVLA and
+    Octo.
+  - This repo's position is an RLDG-style sim-rendered variant with
+    perturbation-robustness rows and zero-action/scripted-baseline ablations.
+- Gates:
+  - Diversity collapse is a measured gate, not a comment: data pilots must
+    report condition-bin quotas, displacement variance, push-direction
+    histogram, and contact/proxy distribution against the existing script
+    dataset.
+  - Reward defects must not be copied at scale: reward-independent label
+    validation is the data-entry gate.
+  - Script-only VLA baseline is mandatory for the claim that RL-generated data
+    improves VLA performance. This is a parallel control requirement, not a
+    reversal of the advisor chain.
+  - Data-generation criteria are separate from deployment promotion criteria:
+    a bin with label-filter pass rate `>=30%` can produce data, while policy
+    deployment still requires stricter promotion gates.
+- D318 strategic consequence:
+  - Baseline v2 is candidate8 zero-action + `candidate8_hybrid_stop_after_useful`.
+  - The current candidate8 residual PPO setup is degenerate under hybrid stop:
+    all checkpoints match zero-action, so longer PPO with the same setting is
+    banned.
+  - Future RL must learn a parameter where zero-action cannot solve the task:
+    goal-conditioned displacement, push direction, stop margin, or
+    approach/contact offset. Every evaluation must include zero-action.
+- Immediate D319 action:
+  - Run a non-PPO data-conveyor pilot: high-friction artifact audit, baseline-v2
+    generation over friction bins, independent label filtering, small accepted
+    sample replay-render -> LeRobot conversion if runtime/storage gates permit,
+    and diversity audit versus the script-only 0-999 dataset.
+
+Sources:
+
+- `claudedocs/direction_20260708_rl_data_factory.md`
+- `START_HERE.md`
+- arXiv: `https://arxiv.org/abs/2412.09858`
+
+## D319 Runtime - Data-conveyor pilot separates producer bins from RL target bins (2026-07-07)
+
+- Scope:
+  - Ran a non-PPO baseline-v2 data-conveyor pilot with candidate8 zero-action +
+    `candidate8_hybrid_stop_after_useful`.
+  - Used local host GPU only. No B200/SSH/pull/RoArm/VLA/PPO/controller
+    hand-condition.
+- Evidence:
+  - High-friction D314 `2.2/1.8` audit remains solver/runaway-suspect: strict
+    useful `0/32`, overshoot `32/32`, contact/reaction `8/32`, mean/max XY
+    `3.7688m/11.9895m`, max speed `10.0m/s`, and primitive stop step `[1]`.
+  - D319 envcsv pilot generated `800` episodes over friction bins with D256
+    random reset and the independent filter
+    `contact=1 AND reaction=1 AND useful=1 AND overshoot=0 AND max XY>=1mm`.
+  - Bin pass rates:
+    - `0.7-0.9`: `289/300` accepted (`96.3%`), overshoot `11/300`.
+    - `0.9-1.2`: `193/200` accepted (`96.5%`), overshoot `7/200`.
+    - `1.2-1.6`: `58/300` accepted (`19.3%`), overshoot `242/300`.
+  - Diversity audit shows D319 accepted trajectories are still narrow:
+    commanded direction fixed +x for all `540` accepted rows. Existing
+    script-only 0-999 accepted corpus has `812` strict usable rows with a mixed
+    actual direction histogram around +x.
+  - A 200-row replay selection manifest exists, but existing top-view renderers
+    are manifest-fed fixed `cube_x/y` scripted renderers. They do not replay
+    D319's D256 reset episode, friction-bin material, and candidate8 hybrid-stop
+    trajectory into frames.
+- Decision:
+  - Low/mid friction bins are producer bins under the `>=30%` generator gate.
+  - Upper friction bin `1.2-1.6` is an RL contribution target. Do not patch it
+    with another hand-written controller condition.
+  - Do not fake D319 LeRobot append by reusing older 0-999 script videos. Build
+    a D319 replay renderer and smoke it on 5-10 episodes first.
+  - Same-setting longer PPO remains banned because D318 showed zero-action
+    matches the policy under hybrid stop. Future RL must control a parameter
+    where zero-action cannot solve the target bin.
+- Verdict:
+  `D319_DATA_CONVEYOR_LOW_MID_PRODUCER_UPPER_RL_TARGET_RENDER_REPLAY_GAP`.
+
+Sources:
+
+- `claudedocs/session_20260707_cube10cm_top_view_d319_rl_data_factory_conveyor_pilot.md`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d319/tap10cm/high_friction_audit/high_friction_audit_d319.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d319/audit/d319_data_conveyor_audit_summary.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d319/audit/d319_selected_200_for_replay_manifest.csv`
+- `sim_scripts/cube10cm_top_view_d319_data_conveyor_audit.py`
+- `START_HERE.md`

@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-07-07 KST (D318 current truth: train/eval contract diagnosis confirmed D317's low-friction failure was primarily long-horizon stop/stillness mismatch, not just reward scale. Same D317 `seed31713 model_225.pt` at fixed friction `0.8/0.6`, deterministic 580-step eval: train harness hybrid-off useful/overshoot `22/32`/`10/32`, train harness hybrid-on `32/32`/`0/32`; D290 D256-reset hybrid-off `8/32`/`24/32`, D290 hybrid-on `31/32`/`1/32`. Added default-off `candidate8_hybrid_stop_after_useful`, train eval-only checkpoint harness, and D290 hybrid/low-motion summary fields. Ran one hybrid reward-v2 PPO seed `31813` for 300 iterations; collection-final useful/overshoot was `36/64`/`18/64`. D290 checkpoint sweep over `model_0,25,...,275,299` with hybrid on showed all checkpoints effectively identical: low-friction useful/overshoot/low-motion `30/32`/`2/32`/`0/32`, nominal `32/32`/`0/32`/`0/32`. Zero-action actor matched the same low-friction and nominal results, proving no learned-policy contribution yet. Verdict: `D318_HYBRID_STOP_LONG_HORIZON_IMPROVES_ZERO_ACTION_MATCH_NO_PROMOTION`. No `PROMOTION_CANDIDATE`, no learned-policy promotion, no raw joint-delta revival, no RoArm/VLA/POSCO readiness. No B200/SSH, no pull, and no `.ssh` copy.)
+Last updated: 2026-07-07 KST (D319 current truth: advisor-confirmed chain is script push -> rendered pair dataset -> RL training -> RL policy large-scale data generation -> VLA training at the end. D319 ran a non-PPO baseline-v2 data-conveyor pilot with candidate8 zero-action + `candidate8_hybrid_stop_after_useful`. High-friction D314 `2.2/1.8` remains solver/runaway-suspect: useful `0/32`, overshoot `32/32`, mean/max XY `3.7688m/11.9895m`. D319 800ep envcsv pilot: low bin `0.7-0.9` accepted `289/300` (`96.3%`), mid `0.9-1.2` accepted `193/200` (`96.5%`), upper `1.2-1.6` accepted `58/300` (`19.3%`) with `242/300` overshoot, so low/mid are producer bins and upper is an RL contribution target. D319 accepted trajectories remain directionally narrow: commanded +x only. 200-row replay selection exists, but LeRobot append is blocked because existing visual renderers do not replay D319 D256-reset/friction/candidate8-hybrid trajectories. Verdict: `D319_DATA_CONVEYOR_LOW_MID_PRODUCER_UPPER_RL_TARGET_RENDER_REPLAY_GAP`.)
 
 ## Current Truth
 
@@ -8,6 +8,14 @@ Last updated: 2026-07-07 KST (D318 current truth: train/eval contract diagnosis 
   dataset camera-contract branch. The earlier tap RL branch is frozen unless
   explicitly resumed.
 - Do not mix with Track A grasp/dataset/training work.
+- D319 session doc:
+  `claudedocs/session_20260707_cube10cm_top_view_d319_rl_data_factory_conveyor_pilot.md`.
+- D319 direction doc:
+  `claudedocs/direction_20260708_rl_data_factory.md`.
+- D319 data-conveyor audit:
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d319/audit/d319_data_conveyor_audit_summary.json`.
+- D319 200-row replay selection manifest:
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d319/audit/d319_selected_200_for_replay_manifest.csv`.
 - D318 session doc:
   `claudedocs/session_20260707_cube10cm_top_view_d318_train_eval_contract_hybrid_stop.md`.
 - D317 session doc:
@@ -44,15 +52,19 @@ Last updated: 2026-07-07 KST (D318 current truth: train/eval contract diagnosis 
 - D314 verdict:
   `D314_PERTURBATION_MATRIX_RESULT_FRICTION_BREAKS_BASELINE_NO_PROMOTION`.
 - Current next concrete action:
-  continue from D318's zero-action match. Hybrid stop fixes most long-horizon
-  over-push, but PPO contribution is unproven because all checkpoints and the
-  zero-action control produce the same D290 metrics. The next failure-capable
-  learning repair must make a policy-controllable primitive parameter matter
-  against a zero-action baseline, such as stop margin, target displacement band,
-  push direction, or approach/contact offset. Promotion tables must include the
-  zero-action baseline. Do not run a longer PPO ladder from D318, do not return
-  to raw scalar joint deltas, and do not use high-friction `2.2/1.8` as a
-  training target until render/trace audit resolves the 12m runaway row.
+  implement a D319 replay-render smoke path before scaling the conveyor:
+  consume `d319_selected_200_for_replay_manifest.csv`, reproduce baseline-v2
+  candidate8 zero-action + hybrid-stop trajectories with the recorded D256
+  reset episode and friction/provenance metadata, render only 5-10 episodes
+  first, then convert/validate LeRobot v3. Do not fake this by reusing the old
+  0-999 videos. Do not run PPO in this immediate step, do not add controller
+  hand-conditions, and keep upper friction bin `1.2-1.6` frozen as an RL
+  contribution target.
+- Active direction doc:
+  `claudedocs/direction_20260708_rl_data_factory.md`. Durable strategic
+  interpretation: RL is the data-factory engine for generating VLA training
+  data; the existing 0-999 script dataset is the script-only baseline and
+  comparison/control corpus, not discarded data.
 - Research objective is strict useful tap: contact/reaction, no overshoot, and
   actual XY displacement `>=1mm`. The runtime's 6mm target band remains a
   quality-tier diagnostic; it is no longer sufficient for useful/promotion.
