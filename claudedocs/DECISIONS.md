@@ -18076,3 +18076,54 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d323/g0a_d323_alignment_summary.json`
 - `claudedocs/direction_20260708_grasp_pivot.md`
 - `START_HERE.md`
+
+## D324 - G0a visual debug artifacts become required for geometry/contact probes (2026-07-09)
+
+Decision:
+
+- Install a reusable visual-debug layer for geometry, pose, jaw-face, and
+  contact probes. From D324 onward, probes that reason about these quantities
+  should emit target-vs-actual frame diagnostics and at least one decision-time
+  snapshot when practical.
+
+Evidence:
+
+- Added `roarm_rl/viz_debug.py` with `draw_frames()`, `snapshot()`, offline
+  `snapshot_frame_plot()`, and optional `log_rerun()`.
+- Added `claudedocs/HOWTO_viz_debug.md`.
+- Added opt-in `--viz_debug_snapshots` to the D322/D323 G0a probes.
+- D324 visual gate passed with deterministic matplotlib snapshots:
+  - `d324_strict_target_vs_best_attempt.png` shows the D323 strict miss:
+    TCP `35.729mm`, link5 `+x` `5.942deg`, link5 `+z` `43.015deg`.
+  - `d324_position_only_tangent_minus1.png` shows the reachable-position but
+    infeasible-orientation trade-off: TCP `0.261mm`, link5 `+x` `9.148deg`,
+    link5 `+z` `69.124deg`.
+- Candidate visual sketches were recorded for:
+  - position-only tangent `-1`: `0.261mm`, `9.148deg`, `69.124deg`.
+  - orientation-weight `0.02`: `4.942mm`, `5.486deg`, `53.541deg`.
+  - strict-best weight `0.10`: `35.729mm`, `5.942deg`, `43.015deg`.
+
+Limits:
+
+- D324 is a tool session only. It does not change G0a success criteria, does not
+  tune `42mm`/`10mm`, and does not advance to G0b.
+- Isaac `VisualizationMarkers` helper is implemented, but the final D324
+  failable gate used the matplotlib backend because the local Kit marker run
+  terminated before metadata write-out.
+- `.rrd` was not generated because `rerun-sdk` is not installed. This remains
+  optional.
+
+Rule:
+
+- Do not accept future geometry/contact conclusions that rely only on scalar
+  logs when a target-vs-actual frame snapshot can be produced cheaply.
+- This requirement is single-frame debugging only. It does not permit large
+  renders, trajectory videos, new data generation, or variable-ladder
+  advancement without explicit user approval.
+
+Sources:
+
+- `claudedocs/session_20260709_grasp_g0a_d324_viz_debug.md`
+- `claudedocs/runtime_logs/grasp_track/viz_infra_d324/d324_viz_debug_summary.json`
+- `roarm_rl/viz_debug.py`
+- `sim_scripts/cube10cm_top_view_d324_viz_debug_demo.py`

@@ -40,6 +40,11 @@
 - 고정 조 파지면 proxy는 `TCP - link5 local x * 0.008m`로 둔다. `gripper_link` body origin은 파지면이 아니다. D323 정지 감사에서 `gripper_link in link5`는 대략 `[0, 0.018821, 0.052035]m`였다.
 - D323에서 검사한 strict side-grasp family는 도달 불가능했다: `link5 +z`를 수평 반경 방향으로, `link5 +x`를 수평 접선 방향으로 맞추는 목표는 best strict attempt도 TCP `35.729mm`, link5 `+z` `43.015deg` error로 gate를 넘지 못했다.
 - 반대로 위치만 보면 같은 TCP side target은 `0.261mm` error로 도달 가능하다. 그러나 그때 link5 `+z`는 radial에서 `69.124deg` 벗어난다. 그러므로 다음 G0a repair는 오프셋 수치 반복 튜닝이 아니라, 이 reachable wrist-axis family를 반영한 alignment criterion 재정의여야 한다.
+- D324 visual debug 정본: strict target vs best-attempt frame과 position-only
+  frame은 `claudedocs/runtime_logs/grasp_track/viz_infra_d324/`에 PNG로
+  고정했다. 이후 G0a 자세 기준을 논할 때는 D323 수치와 함께
+  `d324_strict_target_vs_best_attempt.png` 및
+  `d324_position_only_tangent_minus1.png`를 같이 확인한다.
 
 ## Tap Track Freeze
 

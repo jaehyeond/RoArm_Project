@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-07-09 KST (D323 current truth: G0a frame audit passed TCP contract; requested strict side-grasp pose family is infeasible, no ladder advance.)
+Last updated: 2026-07-09 KST (D324 current truth: G0a visual debug infra installed; D323 strict side-grasp infeasibility now has readable frame snapshots; no ladder advance.)
 
 ## Current Truth
 
@@ -22,10 +22,16 @@ Last updated: 2026-07-09 KST (D323 current truth: G0a frame audit passed TCP con
 - D323 frame audit / infeasibility outputs:
   `claudedocs/runtime_logs/grasp_track/g0a_d323/frame_audit.json`,
   `claudedocs/runtime_logs/grasp_track/g0a_d323/g0a_d323_alignment_summary.json`.
+- D324 visual debug session doc:
+  `claudedocs/session_20260709_grasp_g0a_d324_viz_debug.md`.
+- D324 visual debug outputs:
+  `claudedocs/runtime_logs/grasp_track/viz_infra_d324/d324_viz_debug_summary.json`,
+  `claudedocs/runtime_logs/grasp_track/viz_infra_d324/d324_strict_target_vs_best_attempt.png`,
+  `claudedocs/runtime_logs/grasp_track/viz_infra_d324/d324_position_only_tangent_minus1.png`.
 
 ## Active Case: G0a
 
-- New variable remains D322's `grasp pose geometry`; D323 introduced no new variable and is repair-only.
+- New variable remains D322's `grasp pose geometry`; D323 and D324 introduced no new variable and are repair/tool-only.
 - Invariants:
   - Existing 10cm cube, mass `0.72kg`.
   - Fixed object position `(x=0.30m, y=0.00m)`.
@@ -37,10 +43,26 @@ Last updated: 2026-07-09 KST (D323 current truth: G0a frame audit passed TCP con
   2. Fixed-jaw grasp face to cube face gap `<=3mm` with no penetration.
   3. Cube XY displacement `<5mm`.
   4. All 10 trials pass the same condition.
-- Output paths: D322 `claudedocs/runtime_logs/grasp_track/g0a_d322/`; D323 `claudedocs/runtime_logs/grasp_track/g0a_d323/`.
+- Output paths: D322 `claudedocs/runtime_logs/grasp_track/g0a_d322/`; D323 `claudedocs/runtime_logs/grasp_track/g0a_d323/`; D324 `claudedocs/runtime_logs/grasp_track/viz_infra_d324/`.
 
 ## Latest Result
 
+- D324 tool verdict: `D324_VIZ_DEBUG_SNAPSHOTS_PASS`.
+- D324 installed `roarm_rl/viz_debug.py`, `claudedocs/HOWTO_viz_debug.md`, and
+  opt-in `--viz_debug_snapshots` hooks for the D322/D323 G0a probes.
+- D324 visual gate:
+  - strict target vs best-attempt PNG is readable and shows the D323 miss:
+    TCP error `35.729mm`, link5 `+x` error `5.942deg`, link5 `+z` error
+    `43.015deg`.
+  - position-only tangent `-1` PNG is readable and shows the core trade-off:
+    TCP error `0.261mm`, link5 `+x` error `9.148deg`, link5 `+z` error
+    `69.124deg`.
+  - candidate sketch table is in
+    `claudedocs/runtime_logs/grasp_track/viz_infra_d324/d324_candidate_pose_table.md`.
+- D324 did not change G0a criteria, offsets, object/friction, gripper state, or
+  ladder stage. Isaac marker helper exists, but final visual gate used the
+  deterministic matplotlib backend; rerun `.rrd` was not generated because
+  `rerun-sdk` is not installed.
 - D323 repair verdict: `D323_G0A_STRICT_POSE_INFEASIBLE_STOP`.
 - D323 frame audit:
   - `hand_tcp` is not a separate runtime body; TCP is computed from link5.
@@ -78,7 +100,7 @@ Next session should repair G0a only:
 
 1. Do not advance to G0b/cylinder/gripper close.
 2. Do not loop on `42mm` or `10mm` offsets; D323 shows the blocker is orientation-family feasibility.
-3. Define an attainable G0a alignment criterion from the audited frame contract: fixed-jaw/TCP side position plus reachable wrist-axis family, not strict link5 `+z` horizontal radial if that remains infeasible.
+3. Define an attainable G0a alignment criterion from the audited frame contract and D324 snapshots: fixed-jaw/TCP side position plus reachable wrist-axis family, not strict link5 `+z` horizontal radial if that remains infeasible.
 4. Only after that criterion is explicit, rerun the same fixed cube/friction/no-close/no-render 10-trial G0a alignment criteria.
 
 ## Must Read First
@@ -90,9 +112,11 @@ Next session should repair G0a only:
 5. `claudedocs/D322_PROMPT.md`
 6. `claudedocs/direction_20260708_grasp_pivot.md`
 7. `claudedocs/session_20260709_grasp_g0a_d323_frame_repair_infeasible.md`
-8. `claudedocs/session_20260709_grasp_g0a_d322_alignment_fail.md`
-9. `sim_scripts/cube10cm_top_view_d323_grasp_g0a_frame_repair_probe.py`
-10. `sim_scripts/cube10cm_top_view_d322_grasp_g0a_alignment_probe.py`
+8. `claudedocs/session_20260709_grasp_g0a_d324_viz_debug.md`
+9. `claudedocs/HOWTO_viz_debug.md`
+10. `claudedocs/session_20260709_grasp_g0a_d322_alignment_fail.md`
+11. `sim_scripts/cube10cm_top_view_d323_grasp_g0a_frame_repair_probe.py`
+12. `sim_scripts/cube10cm_top_view_d322_grasp_g0a_alignment_probe.py`
 
 ## Durable Rules
 
@@ -106,6 +130,10 @@ Next session should repair G0a only:
   - Future ideas go to `claudedocs/BACKLOG.md`, not into implementation.
   - `START_HERE.md` Active Case is the single source of truth.
   - New grasp outputs go under `claudedocs/runtime_logs/grasp_track/<case>_<dNNN>/`.
+- Visualization Definition of Done (D324~):
+  - Geometry/pose/contact probes should emit target-vs-actual frame diagnostics
+    and decision-time snapshots via `roarm_rl.viz_debug` when practical.
+  - This is single-frame debugging only, not permission for large renders.
 
 ## Frozen / Background Assets
 

@@ -471,6 +471,52 @@ def _write_outputs(out_dir: Path, rows: list[dict[str, Any]], summary: dict[str,
     (out_dir / "g0a_d323_alignment_summary.md").write_text("\n".join(lines) + "\n")
 
 
+def _write_viz_debug_snapshots(out_dir: Path, summary: dict[str, Any]) -> list[str]:
+    """Optional D324+ single-frame debug snapshots.
+
+    This is an opt-in diagnostic path only; it does not alter D323 verdict logic.
+    """
+    from roarm_rl.viz_debug import frame_from_axes, snapshot_frame_plot
+
+    best = summary.get("best_strict_attempt") or summary.get("offline_feasibility", {}).get("best_strict_attempt")
+    if not best:
+        return []
+    viz_dir = out_dir / "viz_debug"
+    viz_dir.mkdir(parents=True, exist_ok=True)
+    target = frame_from_axes(
+        "d323_target_tcp",
+        best["target_tcp_m"],
+        x_axis=best["target_x_axis_world"],
+        z_axis=best["target_z_axis_world"],
+        role="target",
+        label="target TCP",
+    )
+    actual = {
+        "name": "d323_actual_best",
+        "label": "actual best",
+        "position": best["tcp_local_m"],
+        "axes": {
+            "x": best["link5_x_axis_world"],
+            "y": best["link5_y_axis_world"],
+            "z": best["link5_z_axis_world"],
+        },
+        "role": "actual",
+    }
+    path = viz_dir / "d323_target_vs_actual_best.png"
+    snapshot_frame_plot(
+        path,
+        [target, actual],
+        cube={"center": [0.30, 0.0, 0.037883], "size": 0.10},
+        title="D323 target vs actual best frame",
+        annotations=[
+            f"pos error = {float(best['pos_err_mm']):.3f} mm",
+            f"link5 +x error = {float(best['x_axis_err_deg']):.3f} deg",
+            f"link5 +z error = {float(best['z_axis_err_deg']):.3f} deg",
+        ],
+    )
+    return [_rel(path)]
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--out_dir", type=Path, default=DEFAULT_OUT_DIR)
@@ -489,6 +535,7 @@ def main() -> int:
     parser.add_argument("--pre_clearance_m", type=float, default=0.040)
     parser.add_argument("--radial_tip_past_near_face_m", type=float, default=0.010)
     parser.add_argument("--episode_length_s", type=float, default=5.5)
+    parser.add_argument("--viz_debug_snapshots", action="store_true")
     args = parser.parse_args()
 
     if int(args.num_trials) != 10:
@@ -714,6 +761,8 @@ def main() -> int:
             "dynamic_friction": float(args.dynamic_friction),
             "radial_tip_past_near_face_m": float(args.radial_tip_past_near_face_m),
         }
+        if args.viz_debug_snapshots:
+            summary["viz_debug_snapshots"] = _write_viz_debug_snapshots(args.out_dir, summary)
         _write_outputs(args.out_dir, rows, summary)
         env.close()
         sim_app.close()
@@ -922,6 +971,8 @@ def main() -> int:
             "no offset tuning loop",
         ],
     }
+    if args.viz_debug_snapshots:
+        summary["viz_debug_snapshots"] = _write_viz_debug_snapshots(args.out_dir, summary)
     _write_outputs(args.out_dir, rows, summary)
     env.close()
     sim_app.close()

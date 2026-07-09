@@ -1,0 +1,149 @@
+{
+  "active_case": "G0a",
+  "artifact": "d324_g0a_viz_debug_demo",
+  "candidate_rows": [
+    {
+      "description": "D323 position-only tangent -1",
+      "jaw_axis_tangent_error_deg": 9.147758919560466,
+      "name": "position_only_tangent_minus1",
+      "q_deg": [
+        9.14775891956048,
+        26.83251115390557,
+        118.30343441210222,
+        13.706458969954097,
+        0.0,
+        0.0
+      ],
+      "snapshot": "claudedocs/runtime_logs/grasp_track/viz_infra_d324/d324_candidate_position_only_tangent_minus1.png",
+      "tcp_position_error_mm": 0.2614975181316058,
+      "tool_axis_radial_error_deg": 69.12416480737011
+    },
+    {
+      "description": "orientation-weight 0.02; z tilt reduced about 10-20 deg",
+      "jaw_axis_tangent_error_deg": 5.4863146803352185,
+      "name": "tilt_reduced_weight_0p02",
+      "q_deg": [
+        9.139890685398937,
+        26.31829175363328,
+        135.0,
+        -18.323889391993003,
+        7.321342166719954,
+        0.0
+      ],
+      "snapshot": "claudedocs/runtime_logs/grasp_track/viz_infra_d324/d324_candidate_tilt_reduced_weight_0p02.png",
+      "tcp_position_error_mm": 4.941648022099086,
+      "tool_axis_radial_error_deg": 53.54073816716293
+    },
+    {
+      "description": "orientation-weight 0.10; strict best trade-off",
+      "jaw_axis_tangent_error_deg": 5.941795332826439,
+      "name": "strict_best_weight_0p10",
+      "q_deg": [
+        8.058291158718335,
+        27.39935004979528,
+        135.0,
+        -30.0,
+        5.453244054517687,
+        0.0
+      ],
+      "snapshot": "claudedocs/runtime_logs/grasp_track/viz_infra_d324/d324_candidate_strict_best_weight_0p10.png",
+      "tcp_position_error_mm": 35.729107261881154,
+      "tool_axis_radial_error_deg": 43.01531488916102
+    }
+  ],
+  "d323_summary": "claudedocs/runtime_logs/grasp_track/g0a_d323/g0a_d323_alignment_summary.json",
+  "marker_status": {
+    "backend": "isaac_markers",
+    "error": "skipped",
+    "ok": false
+  },
+  "new_experiment_variables": 0,
+  "non_goals": [
+    "no G0a criterion change",
+    "no 42/10mm tuning",
+    "no large render",
+    "no new object",
+    "no gripper close",
+    "no RL/PPO",
+    "no ladder advance",
+    "no B200/RoArm/VLA"
+  ],
+  "out_dir": "claudedocs/runtime_logs/grasp_track/viz_infra_d324",
+  "rerun_status": {
+    "backend": "rerun",
+    "error": "ModuleNotFoundError(\"No module named 'rerun'\")",
+    "ok": false
+  },
+  "snapshot_status": {
+    "candidates": {
+      "position_only_tangent_minus1": {
+        "backend": "matplotlib",
+        "frame_count": 5,
+        "frames": [
+          "position_only_tangent_minus1_target",
+          "position_only_tangent_minus1_actual",
+          "position_only_tangent_minus1_actual_fixed_jaw",
+          "cube_side_face",
+          "cube_object_frame"
+        ],
+        "ok": true,
+        "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/viz_infra_d324/d324_candidate_position_only_tangent_minus1.png"
+      },
+      "strict_best_weight_0p10": {
+        "backend": "matplotlib",
+        "frame_count": 5,
+        "frames": [
+          "strict_best_weight_0p10_target",
+          "strict_best_weight_0p10_actual",
+          "strict_best_weight_0p10_actual_fixed_jaw",
+          "cube_side_face",
+          "cube_object_frame"
+        ],
+        "ok": true,
+        "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/viz_infra_d324/d324_candidate_strict_best_weight_0p10.png"
+      },
+      "tilt_reduced_weight_0p02": {
+        "backend": "matplotlib",
+        "frame_count": 5,
+        "frames": [
+          "tilt_reduced_weight_0p02_target",
+          "tilt_reduced_weight_0p02_actual",
+          "tilt_reduced_weight_0p02_actual_fixed_jaw",
+          "cube_side_face",
+          "cube_object_frame"
+        ],
+        "ok": true,
+        "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/viz_infra_d324/d324_candidate_tilt_reduced_weight_0p02.png"
+      }
+    },
+    "position_only_tangent_minus1": {
+      "backend": "matplotlib",
+      "frame_count": 5,
+      "frames": [
+        "position_only_target_tcp",
+        "position_only_actual",
+        "position_only_actual_fixed_jaw",
+        "cube_side_face",
+        "cube_object_frame"
+      ],
+      "ok": true,
+      "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/viz_infra_d324/d324_position_only_tangent_minus1.png"
+    },
+    "strict_target_vs_best_attempt": {
+      "backend": "matplotlib",
+      "frame_count": 5,
+      "frames": [
+        "strict_target_tcp",
+        "strict_best_attempt",
+        "strict_best_attempt_fixed_jaw",
+        "cube_side_face",
+        "cube_object_frame"
+      ],
+      "ok": true,
+      "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/viz_infra_d324/d324_strict_target_vs_best_attempt.png"
+    }
+  },
+  "verdict": "D324_VIZ_DEBUG_SNAPSHOTS_PASS",
+  "visual_gate_pass": true,
+  "visual_gate_rule": "strict and position-only D323 case snapshots must exist and carry target-vs-actual frame annotations"
+}

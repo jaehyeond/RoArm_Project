@@ -56,6 +56,18 @@ Before answering current project-state questions or making edits:
   `claudedocs/runtime_logs/grasp_track/<case>_<dNNN>/`, and the path must be
   listed in `START_HERE.md` `Active Case`.
 
+## Visualization Definition of Done (D324~)
+
+- Any probe/evaluation that reasons about geometry, pose, contact, jaw faces, or
+  tool frames must emit visual diagnostics through `roarm_rl.viz_debug` when
+  practical.
+- Required artifacts are: target-vs-actual frame markers, at least one
+  decision-time diagnostic snapshot in the run output folder, and explicit
+  snapshot paths in the session document.
+- This rule is for single-frame debugging only. It does not relax the existing
+  ban on large renders, trajectory videos, new data generation, or variable
+  ladder advancement without explicit user approval.
+
 ### Session boot prompt (paste this verbatim at new-session start)
 
 ```

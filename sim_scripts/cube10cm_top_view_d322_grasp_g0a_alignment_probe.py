@@ -140,6 +140,48 @@ def _write_outputs(out_dir: Path, rows: list[dict[str, Any]], summary: dict[str,
     (out_dir / "g0a_alignment_summary.md").write_text("\n".join(lines) + "\n")
 
 
+def _write_viz_debug_snapshots(out_dir: Path, rows: list[dict[str, Any]]) -> list[str]:
+    """Optional D324+ target-vs-actual position snapshot for D322 rows."""
+    if not rows:
+        return []
+    from roarm_rl.viz_debug import frame_from_axes, snapshot_frame_plot
+
+    row = rows[0]
+    yaw = math.radians(float(row["base_yaw_target_deg"]))
+    jaw_axis = np.asarray([math.cos(yaw), math.sin(yaw), 0.0], dtype=np.float64)
+    target = frame_from_axes(
+        "d322_target_tcp",
+        [row["tcp_target_x_m"], row["tcp_target_y_m"], row["tcp_target_z_m"]],
+        x_axis=jaw_axis,
+        z_axis=[0.0, 0.0, 1.0],
+        role="target",
+        label="target TCP",
+    )
+    actual = frame_from_axes(
+        "d322_actual_tcp",
+        [row["tcp_actual_x_m"], row["tcp_actual_y_m"], row["tcp_actual_z_m"]],
+        x_axis=jaw_axis,
+        z_axis=[0.0, 0.0, 1.0],
+        role="actual",
+        label="actual TCP",
+    )
+    viz_dir = out_dir / "viz_debug"
+    viz_dir.mkdir(parents=True, exist_ok=True)
+    path = viz_dir / "d322_target_vs_actual_trial0.png"
+    snapshot_frame_plot(
+        path,
+        [target, actual],
+        cube={"center": [row["cube_x_m"], row["cube_y_m"], row["tcp_target_z_m"]], "size": 0.10},
+        title="D322 target vs actual TCP position",
+        annotations=[
+            f"trial = {int(row['trial'])}",
+            f"TCP pose error = {float(row['tcp_pose_error_mm']):.3f} mm",
+            f"fixed-jaw face gap = {float(row['fixed_jaw_face_gap_mm']):.3f} mm",
+        ],
+    )
+    return [_rel(path)]
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--out_dir", type=Path, default=DEFAULT_OUT_DIR)
@@ -157,6 +199,7 @@ def main() -> int:
     parser.add_argument("--episode_length_s", type=float, default=4.0)
     parser.add_argument("--ik_tol_mm", type=float, default=1.0)
     parser.add_argument("--ik_max_iter", type=int, default=250)
+    parser.add_argument("--viz_debug_snapshots", action="store_true")
     args = parser.parse_args()
 
     if int(args.num_trials) != 10:
@@ -381,6 +424,8 @@ def main() -> int:
         "out_dir": _rel(args.out_dir),
         "rows": rows,
     }
+    if args.viz_debug_snapshots:
+        summary["viz_debug_snapshots"] = _write_viz_debug_snapshots(args.out_dir, rows)
     _write_outputs(args.out_dir, rows, summary)
     print(
         "[d322-g0a] "
