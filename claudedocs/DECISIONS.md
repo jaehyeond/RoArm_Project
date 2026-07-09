@@ -4,6 +4,57 @@ Durable project decisions and lessons. Append new decisions; do not delete old
 ones. If a decision is superseded, mark it as superseded and link the newer
 decision. Detailed evidence belongs in `claudedocs/session_*.md`.
 
+## D321 - Physicality-gated low/mid script-v2 production passed, still +x-only
+
+Evidence:
+
+- Added a default-active D321 data acceptance gate: if max XY displacement is
+  `>=300mm`, classify the row as `solver_outlier` and exclude it from accepted
+  data.
+- The gate is reactive to D320 evidence: upper-bin audit found 6 meter-scale
+  solver outliers with max displacement about `11.14m`; `300mm` is three times
+  the 100mm cube width and is a task-scale physicality bound, not a tuned
+  controller condition.
+- D321 generated `2000` state episodes with D256 random reset, candidate8
+  zero-action + `candidate8_hybrid_stop_after_useful`, +x direction only, and
+  no PPO/RL training.
+- Low friction bin `0.7-0.9` accepted `954/1000` (`95.4%`), with reject reasons
+  `not_useful=46` and `solver_outlier=0`.
+- Mid friction bin `0.9-1.2` accepted `966/1000` (`96.6%`), with reject reasons
+  `not_useful=33` and `solver_outlier=1`.
+- Combined D321 accepted `1920/2000` (`96.0%`) and passed the D321 `>=90%`
+  production gate.
+- Replay render + LeRobot v3 append completed `10` chunks, `1920` episodes,
+  and `280320` frames. Final DataLoader one-batch validation passed with
+  `video_backend=pyav`, `observation.images.top` shape `[2,3,720,1280]`, and
+  state/action shapes `[2,6]`.
+- Raw PNG frames were transient only; post-run PNG search under the D321 render
+  root found no remaining PNG files.
+- Diversity audit shows D321 accepted data is commanded `+x` only:
+  `{"+x_object_frame_commanded": 1920}`. This is narrower than the script
+  0-999 accepted direction histogram.
+
+Implication:
+
+- The physicality gate is part of the data acceptance contract from D321 onward.
+  Do not tune the `300mm` threshold in a seed-by-seed loop; record outcomes and
+  revisit only with a new task-scale argument.
+- Low/mid bins are script-v2 producer bins for the data factory.
+- Upper `1.2-1.6` production remains blocked and reserved as an RL contribution
+  target after solver-outlier isolation.
+- D321 is not learned-policy success and not direction-diverse data. It is a
+  physicality-gated +x script-v2 production dataset.
+- Direction diversity should proceed through a goal-conditioned primitive or a
+  learned primitive-parameter experiment, with zero-action baselines per
+  direction.
+
+Source:
+
+- `claudedocs/session_20260708_cube10cm_top_view_d321_physicality_gate_low_mid_production.md`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d321/audit/d321_data_conveyor_audit_summary.json`
+- `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d321/render_lerobot_v1/d321_render_lerobot_summary.json`
+- `claudedocs/design_d321_goal_conditioned_primitive.md`
+
 ## D318 - Hybrid stop fixes long-horizon mismatch but does not prove policy contribution
 
 Evidence:

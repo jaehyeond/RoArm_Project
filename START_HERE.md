@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-07-07 KST (D320 current truth: D319 replay-render smoke path is implemented and passed. D320 rendered 9 D319 replay episodes / 1314 frames from D256 reset episode + friction override + candidate8 zero-action + `candidate8_hybrid_stop_after_useful`; LeRobot v3 AV1 conversion passed in the `lerobot` env with `video_backend=pyav`, and a DataLoader one-batch smoke loaded `observation.images.top` as `[2,3,720,1280]`, state/action `[2,6]`. Upper-bin physicality audit: D319 upper overshoot rows `242`, `<300mm` `236/242` (`97.5%`) but meter-scale `>=1m` `6/242`, so upper `1.2-1.6` is a mixed physical-failure target with solver outliers to isolate, not a clean scale-up bin. Direction probe: non-+x directions are code-supported, but zero-action primitive is unstable (`-x` useful `3/5`, `+y` `1/5`, `-y` `3/5` with high overshoot). Verdict: `D320_REPLAY_RENDER_LEROBOT_PASS_UPPER_MIXED_DIRECTION_UNSTABLE`.)
+Last updated: 2026-07-08 KST (D321 current truth: physicality-gated low/mid script-v2 production passed. The label gate now rejects `max XY displacement >=300mm` as `solver_outlier`, based on D320 meter-scale outliers and the 100mm cube task scale. D321 generated 2000 state episodes with D256 random reset, candidate8 zero-action + `candidate8_hybrid_stop_after_useful`, +x only, and no PPO. Low bin `0.7-0.9` accepted `954/1000` (`95.4%`); mid bin `0.9-1.2` accepted `966/1000` (`96.6%`) with one `solver_outlier`; combined accepted `1920/2000` (`96.0%`). Replay render + LeRobot v3 append completed 10 chunks / `1920` episodes / `280320` frames with `video_backend=pyav`; DataLoader one-batch validation loaded `observation.images.top` `[2,3,720,1280]`, state/action `[2,6]`; raw PNG frames were deleted after chunk append. D321 remains +x-only producer data, not direction-diverse data and not learned-policy success. Goal-conditioned primitive design draft was added for D322+. Verdict: `D321_PHYSICALITY_GATE_LOW_MID_LEROBOT_PASS_DESIGN_DRAFT`.)
 
 ## Current Truth
 
@@ -8,6 +8,16 @@ Last updated: 2026-07-07 KST (D320 current truth: D319 replay-render smoke path 
   dataset camera-contract branch. The earlier tap RL branch is frozen unless
   explicitly resumed.
 - Do not mix with Track A grasp/dataset/training work.
+- D321 session doc:
+  `claudedocs/session_20260708_cube10cm_top_view_d321_physicality_gate_low_mid_production.md`.
+- D321 audit:
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d321/audit/d321_data_conveyor_audit_summary.json`.
+- D321 LeRobot production dataset:
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d321/render_lerobot_v1/lerobot_dataset`.
+- D321 render/LeRobot summary:
+  `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d321/render_lerobot_v1/d321_render_lerobot_summary.json`.
+- D321 goal-conditioned primitive design:
+  `claudedocs/design_d321_goal_conditioned_primitive.md`.
 - D320 session doc:
   `claudedocs/session_20260707_cube10cm_top_view_d320_replay_renderer_smoke_upper_physicality.md`.
 - D320 replay render root:
@@ -62,14 +72,15 @@ Last updated: 2026-07-07 KST (D320 current truth: D319 replay-render smoke path 
 - D314 verdict:
   `D314_PERTURBATION_MATRIX_RESULT_FRICTION_BREAKS_BASELINE_NO_PROMOTION`.
 - Current next concrete action:
-  do not scale blindly. Use the D320 replay renderer only after explicit
-  scale-up approval and disk preflight. Low/mid bins can be producer bins, but
-  upper `1.2-1.6` must be split into normal physical failures (`20-50mm`
-  dominant) and meter-scale solver outliers before any RL or dataset claim.
-  Direction diversity must be handled by an explicit direction-conditioned
-  generator or learned primitive parameter because D320 shows non-+x zero-action
-  primitive pushes are unstable. Do not run same-setting PPO, do not hand-patch
-  upper-bin controller conditions, and do not claim D319 as multi-direction data.
+  use D321 as the physicality-gated low/mid script-v2 producer baseline and
+  move next to D322+ goal-conditioned primitive work. Direction diversity must
+  be handled by an explicit direction-conditioned generator or learned primitive
+  parameter because D320 showed non-+x zero-action primitive pushes are
+  unstable and D321 intentionally produced +x only. Upper `1.2-1.6` production
+  remains blocked and reserved as an RL contribution target after solver
+  outlier isolation. Do not run same-setting PPO, do not hand-patch upper-bin
+  controller conditions, do not claim D321 as multi-direction data, and do not
+  start VLA/RoArm/B200 work from this branch without a new explicit gate.
 - Active direction doc:
   `claudedocs/direction_20260708_rl_data_factory.md`. Durable strategic
   interpretation: RL is the data-factory engine for generating VLA training

@@ -52,6 +52,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--fps", type=int, default=30)
     parser.add_argument("--robot-usd-path", type=Path, default=DEFAULT_USD)
     parser.add_argument(
+        "--max-episodes",
+        type=int,
+        default=10,
+        help="Safety cap for the manifest. D320 smoke used 10; D321 chunk production raises this explicitly.",
+    )
+    parser.add_argument(
         "--close-sim-app",
         action="store_true",
         help="Explicitly close Isaac app. Default exits directly because local Kit close can hang.",
@@ -66,14 +72,16 @@ def rel(path: Path | str) -> str:
         return str(path)
 
 
-def read_manifest(path: Path) -> list[dict[str, str]]:
+def read_manifest(path: Path, max_episodes: int) -> list[dict[str, str]]:
     with path.open(newline="") as fh:
         rows = list(csv.DictReader(fh))
     if not rows:
         raise RuntimeError(f"empty replay manifest: {path}")
     rows.sort(key=lambda row: int(row["d320_episode_id"]))
-    if len(rows) > 10:
-        raise ValueError("D320 replay render is limited to <=10 episodes")
+    if int(max_episodes) <= 0:
+        raise ValueError("--max-episodes must be positive")
+    if len(rows) > int(max_episodes):
+        raise ValueError(f"replay render manifest has {len(rows)} episodes; max={int(max_episodes)}")
     return rows
 
 
@@ -157,7 +165,16 @@ def make_env_cfg(args: argparse.Namespace, row: dict[str, str]) -> tuple[Any, di
 
 
 def row_provenance(row: dict[str, str]) -> dict[str, Any]:
-    return {
+    provenance = {
+        "source": row.get("source", "d319"),
+        "source_seed": int(float(row["seed"])) if row.get("seed", "") not in {"", None} else -1,
+        "source_bin": row["bin"],
+        "source_chunk": row["chunk"],
+        "source_artifact_tag": row["artifact_tag"],
+        "source_env_id": int(row["env_id"]),
+        "source_episode_index": int(row["episode_index"]),
+        "source_static_friction": float(row["static_friction"]),
+        "source_dynamic_friction": float(row["dynamic_friction"]),
         "d319_bin": row["bin"],
         "d319_chunk": row["chunk"],
         "d319_artifact_tag": row["artifact_tag"],
@@ -179,6 +196,13 @@ def row_provenance(row: dict[str, str]) -> dict[str, Any]:
         "source_role": row["source_role"],
         "selection_reason": row["selection_reason"],
     }
+    for key, value in row.items():
+        if key.startswith("reset_"):
+            try:
+                provenance[key] = float(value)
+            except (TypeError, ValueError):
+                provenance[key] = value
+    return provenance
 
 
 def make_frame_row(
@@ -261,7 +285,7 @@ def main() -> None:
         raise ValueError("--capture-stride must be >= 1")
     if not args.robot_usd_path.exists():
         raise FileNotFoundError(f"local robot USD missing: {args.robot_usd_path}")
-    manifest_rows = read_manifest(args.manifest)
+    manifest_rows = read_manifest(args.manifest, int(args.max_episodes))
     args.out_dir.mkdir(parents=True, exist_ok=True)
     raw_frames_dir = args.out_dir / "raw_env_render_frames"
     if raw_frames_dir.exists() and any(raw_frames_dir.glob("*.png")):

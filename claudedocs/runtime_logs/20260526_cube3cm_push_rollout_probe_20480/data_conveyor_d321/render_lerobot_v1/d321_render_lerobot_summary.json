@@ -1,0 +1,98 @@
+{
+  "accepted_csv": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d321/audit/d321_accepted_env_rows.csv",
+  "artifact": "d321_render_lerobot_conveyor",
+  "chunks": 10,
+  "chunks_jsonl": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d321/render_lerobot_v1/d321_chunk_summaries.jsonl",
+  "dataset_root": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d321/render_lerobot_v1/lerobot_dataset",
+  "disk_after": {
+    "free_bytes": 31771250688,
+    "free_gb": 31.771250688,
+    "free_rate": 0.05020541126051926,
+    "path": ".",
+    "total_bytes": 632825225216,
+    "total_gb": 632.825225216,
+    "used_bytes": 568833019904,
+    "used_gb": 568.833019904
+  },
+  "disk_jsonl": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d321/render_lerobot_v1/d321_disk_checks.jsonl",
+  "elapsed_s": 56680.325000047684,
+  "episodes": 1920,
+  "frames": 280320,
+  "out_dir": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d321/render_lerobot_v1",
+  "plan": {
+    "disk_before": {
+      "free_bytes": 33963794432,
+      "free_gb": 33.963794432,
+      "free_rate": 0.053670102073455205,
+      "path": ".",
+      "total_bytes": 632825225216,
+      "total_gb": 632.825225216,
+      "used_bytes": 566640476160,
+      "used_gb": 566.64047616
+    },
+    "estimated_peak_bytes": 8452400000,
+    "estimated_raw_chunk_bytes": 7646000000,
+    "estimated_required_with_margin_bytes": 10142880000,
+    "estimated_video_total_bytes": 806400000,
+    "planned_chunk_size": 200,
+    "planned_total_episodes": 1920,
+    "requested_chunk_size": 200,
+    "requested_total_episodes": 1920,
+    "scale_reason": "no_scale_down"
+  },
+  "repo_id": "roarm_cube10cm_top_view_d321_script_v2_low_mid",
+  "runtime": "CHUNK_RENDER_APPEND_VALIDATE_RAW_DELETE",
+  "status": "PASS",
+  "validation": {
+    "batch_keys": [
+      "action",
+      "episode_index",
+      "frame_index",
+      "index",
+      "observation.images.top",
+      "observation.state",
+      "task",
+      "task_index",
+      "timestamp"
+    ],
+    "batch_shapes": {
+      "action": [
+        2,
+        6
+      ],
+      "episode_index": [
+        2
+      ],
+      "frame_index": [
+        2
+      ],
+      "index": [
+        2
+      ],
+      "observation.images.top": [
+        2,
+        3,
+        720,
+        1280
+      ],
+      "observation.state": [
+        2,
+        6
+      ],
+      "task": "list",
+      "task_index": [
+        2
+      ],
+      "timestamp": [
+        2
+      ]
+    },
+    "dataset_bytes": 782627028,
+    "dataset_root": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d321/render_lerobot_v1/lerobot_dataset",
+    "repo_id": "roarm_cube10cm_top_view_d321_script_v2_low_mid",
+    "status": "PASS",
+    "total_episodes": 1920,
+    "total_frames": 280320,
+    "video_backend": "pyav"
+  }
+}

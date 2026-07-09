@@ -1,0 +1,96 @@
+{
+  "artifact": "d320_d319_replay_smoke_render",
+  "contract": {
+    "action_penalty_scale": 0.005,
+    "action_scale": 0.05,
+    "candidate6_diffik_cube_reference_mode": "current_pose",
+    "candidate6_diffik_goal_push_m": 0.006,
+    "candidate6_diffik_hold_after_tap_success": true,
+    "candidate6_diffik_lambda": 0.01,
+    "candidate6_diffik_push_steps": 580,
+    "candidate6_diffik_residual_scale_rad": 0.002,
+    "candidate6_diffik_target_base_mode": "previous_joint_target",
+    "candidate6_diffik_target_path_mode": "near_face_goal",
+    "candidate8_diffik_target_residual_forward_m": 0.004,
+    "candidate8_diffik_target_residual_height_m": 0.004,
+    "candidate8_diffik_target_residual_lateral_m": 0.012,
+    "cube_randomization_half_extent_m": [
+      0.0,
+      0.0
+    ],
+    "cube_x_range_m": [
+      0.24,
+      0.24
+    ],
+    "cube_xy_m": [
+      0.24,
+      0.0
+    ],
+    "cube_y_range_m": [
+      0.0,
+      0.0
+    ],
+    "episode_length_s": 6.0,
+    "fixed_push_dir": [
+      1.0,
+      0.0
+    ],
+    "joint_target_lead_limit_rad": 0.06,
+    "policy_action_space": 3,
+    "policy_target_disp_m": 0.006,
+    "precontact_clearance_m": 0.04,
+    "rl_action_mode": "candidate8_diffik_target_residual",
+    "robot_usd_path": "/home/cgxr/Documents/Robotics/RoArm_Project/b200_backup_20260522_final/tmp_p7/p7_branch_b_cube2cm_opposing_jaw_v7_collision_usd_d024/roarm_m3.usd",
+    "scripted_teacher_blend": 0.0,
+    "step_clip_rad": 0.01,
+    "tap_contact_proxy_mode": "link5_collision_aabb",
+    "tap_overshoot_penalty_scale": 12.0,
+    "tap_overshoot_terminate": false,
+    "tap_success_terminate": false,
+    "tap_target_disp_tolerance_m": 0.003,
+    "tap_transient_disp_reward_scale": 40.0,
+    "tool_contact_proxy_mode": "hand_tcp"
+  },
+  "effective_render_fps": 6.298805271263378,
+  "elapsed_s": 46.35799765586853,
+  "episodes": 2,
+  "frames": 292,
+  "frames_jsonl": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d321/render_lerobot_preflight_2ep/renders/render_chunk_000/frames.jsonl",
+  "friction_replay_method": "reset_time_cube_friction_randomization_min_static_max_static_plus_1e-9",
+  "manifest": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d321/render_lerobot_preflight_2ep/manifests/d321_replay_manifest_chunk_000.csv",
+  "out_dir": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d321/render_lerobot_preflight_2ep/renders/render_chunk_000",
+  "png_bytes_total": 75259566,
+  "png_mb_per_episode": 37.629783,
+  "replay_episode_metrics": [
+    {
+      "d319_bin": "bin_low_0p7_0p9",
+      "d319_episode_index": 814,
+      "d319_max_disp_xy_m": 0.0063267117366194725,
+      "episode_id": 0,
+      "replay_contact_seen": 1,
+      "replay_hybrid_stop_step": 95,
+      "replay_overshoot_seen": 0,
+      "replay_reaction_seen": 1,
+      "replay_tap_disp_xy_m": 0.006322966422885656,
+      "runtime_d256_episode_index": 814,
+      "source_role": "d321_bin_low_0p7_0p9_accepted"
+    },
+    {
+      "d319_bin": "bin_low_0p7_0p9",
+      "d319_episode_index": 792,
+      "d319_max_disp_xy_m": 0.0062187486328184605,
+      "episode_id": 1,
+      "replay_contact_seen": 1,
+      "replay_hybrid_stop_step": 94,
+      "replay_overshoot_seen": 0,
+      "replay_reaction_seen": 1,
+      "replay_tap_disp_xy_m": 0.006741759832948446,
+      "runtime_d256_episode_index": 792,
+      "source_role": "d321_bin_low_0p7_0p9_accepted"
+    }
+  ],
+  "role_counts": {
+    "d321_bin_low_0p7_0p9_accepted": 2
+  },
+  "runtime": "D319_REPLAY_RENDER_ONLY_NO_TRAINING_NO_SCALEUP"
+}
