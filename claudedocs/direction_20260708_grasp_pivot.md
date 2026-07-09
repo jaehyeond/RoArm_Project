@@ -31,6 +31,16 @@
 - 30mm anchor stall: 37.88도.
 - G0b 이후 sim 계약: gripper joint lower 0.09rad + effort limit로 stall을 재현한다. D322 G0a에서는 활성화하지 않는다.
 
+## 그리퍼 좌표계 정본 (D323)
+
+- Live runtime에는 `hand_tcp`가 별도 body로 존재하지 않는다. TCP는 env contract로 계산된다:
+  `TCP = link5 position + link5 rotation * [0, 0, 0.115428]`.
+- D323 frame audit에서 세 정지 자세 모두 `TCP in link5 = [0, 0, 0.115428]m`로 확인됐다. 오차는 `0.000044~0.000063mm` 수준이다.
+- 도구축은 `link5 local +z`다. 조 분리축 계약은 `link5 local +x`이며, 가동 조는 `+x` 쪽으로 스윙한다.
+- 고정 조 파지면 proxy는 `TCP - link5 local x * 0.008m`로 둔다. `gripper_link` body origin은 파지면이 아니다. D323 정지 감사에서 `gripper_link in link5`는 대략 `[0, 0.018821, 0.052035]m`였다.
+- D323에서 검사한 strict side-grasp family는 도달 불가능했다: `link5 +z`를 수평 반경 방향으로, `link5 +x`를 수평 접선 방향으로 맞추는 목표는 best strict attempt도 TCP `35.729mm`, link5 `+z` `43.015deg` error로 gate를 넘지 못했다.
+- 반대로 위치만 보면 같은 TCP side target은 `0.261mm` error로 도달 가능하다. 그러나 그때 link5 `+z`는 radial에서 `69.124deg` 벗어난다. 그러므로 다음 G0a repair는 오프셋 수치 반복 튜닝이 아니라, 이 reachable wrist-axis family를 반영한 alignment criterion 재정의여야 한다.
+
 ## Tap Track Freeze
 
 Tap track은 D321 결과를 최종 산출물로 동결한다. D321 결과는 1,920 accepted episodes, combined acceptance 96.0%다. 인수 가능한 자산은 DiffIK 접근, D256 reset, 검증기 + 물리성 게이트, conveyor, 평가 규약, script 0~999 대조군이다.

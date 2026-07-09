@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-07-09 KST (D322 current truth: grasp track pivot installed; G0a alignment runtime failed 0/10.)
+Last updated: 2026-07-09 KST (D323 current truth: G0a frame audit passed TCP contract; requested strict side-grasp pose family is infeasible, no ladder advance.)
 
 ## Current Truth
 
@@ -17,10 +17,15 @@ Last updated: 2026-07-09 KST (D322 current truth: grasp track pivot installed; G
   `claudedocs/runtime_logs/grasp_track/g0a_d322/g0a_alignment_summary.json`.
 - D322 long-hold diagnostic sidecar:
   `claudedocs/runtime_logs/grasp_track/g0a_d322_longtrack_check/g0a_alignment_summary.json`.
+- D323 repair session doc:
+  `claudedocs/session_20260709_grasp_g0a_d323_frame_repair_infeasible.md`.
+- D323 frame audit / infeasibility outputs:
+  `claudedocs/runtime_logs/grasp_track/g0a_d323/frame_audit.json`,
+  `claudedocs/runtime_logs/grasp_track/g0a_d323/g0a_d323_alignment_summary.json`.
 
 ## Active Case: G0a
 
-- New variable: `grasp pose geometry` only: base yaw alignment + asymmetric fixed-jaw/moving-jaw TCP offset.
+- New variable remains D322's `grasp pose geometry`; D323 introduced no new variable and is repair-only.
 - Invariants:
   - Existing 10cm cube, mass `0.72kg`.
   - Fixed object position `(x=0.30m, y=0.00m)`.
@@ -28,15 +33,26 @@ Last updated: 2026-07-09 KST (D322 current truth: grasp track pivot installed; G
   - State-only, no render, no RL/PPO, no gripper close, no grasp, no lift.
   - 10cm cube is too wide for the measured practical gripper opening (~40-45mm), so G0a is alignment-only.
 - Pre-registered success criteria:
-  1. TCP pose error `<=5mm` and base-yaw error `<=3deg`.
+  1. TCP pose error `<=5mm` and pose/orientation error `<=3deg`.
   2. Fixed-jaw grasp face to cube face gap `<=3mm` with no penetration.
   3. Cube XY displacement `<5mm`.
   4. All 10 trials pass the same condition.
-- Output path: `claudedocs/runtime_logs/grasp_track/g0a_d322/`.
+- Output paths: D322 `claudedocs/runtime_logs/grasp_track/g0a_d322/`; D323 `claudedocs/runtime_logs/grasp_track/g0a_d323/`.
 
 ## Latest Result
 
-- D322 primary G0a runtime verdict: `D322_G0A_ALIGNMENT_FAIL`.
+- D323 repair verdict: `D323_G0A_STRICT_POSE_INFEASIBLE_STOP`.
+- D323 frame audit:
+  - `hand_tcp` is not a separate runtime body; TCP is computed from link5.
+  - `TCP = link5 + link5_rotation * [0, 0, 0.115428]m`.
+  - measured TCP-in-link5 offset error across three static poses: `0.000044~0.000063mm`.
+  - `gripper_link` origin is not the fixed-jaw face; audited `gripper_link in link5` is approximately `[0, 0.018821, 0.052035]m`.
+- D323 strict pose feasibility:
+  - requested family: link5 `+z` horizontal radial, link5 `+x` horizontal tangent, tangent offset `42mm`, radial tip depth `10mm`.
+  - best strict attempt still failed: TCP error `35.729mm`, link5 `+x` error `5.942deg`, link5 `+z` error `43.015deg`.
+  - position-only side target is reachable (`0.261mm` TCP error), but then link5 `+z` is about `69.124deg` away from radial.
+  - Step 3 retrial was not run because the prompt required stopping when the strict pose family is impossible.
+- D322 primary G0a runtime verdict: `D322_G0A_ALIGNMENT_FAIL` remains the previous runtime failure.
 - Primary 10-trial result:
   - pass all criteria: `0/10`.
   - failure counts: TCP pose `10/10`, fixed-jaw gap `10/10`, fixed-jaw penetration `10/10`, cube displacement `0/10`, base yaw `0/10`.
@@ -50,9 +66,9 @@ Last updated: 2026-07-09 KST (D322 current truth: grasp track pivot installed; G
   - mean fixed-jaw signed face gap: `-55.78mm`.
   - mean max arm joint tracking error: `0.174rad`.
 - Interpretation:
-  - Base yaw alignment itself is fine.
-  - The cube is not being pushed/moved; this is not a tap-style overshoot failure.
-  - The current low side-alignment TCP target is not being reached under the live RoArm actuator/pose contract, or the fixed-jaw/TCP proxy definition is not yet aligned with the USD tool frame.
+  - D322's offset-direction repair was necessary but insufficient.
+  - D323 confirms the TCP frame contract and rejects the stricter horizontal side-grasp orientation family as unreachable at the 10cm cube center height.
+  - The remaining G0a problem is target-representation feasibility, not PPO, not friction, not offset-number tuning.
 
 ## Next Concrete Action
 
@@ -60,10 +76,10 @@ Do **not** start G0b, cylinder spawn, gripper close, lift, RL/PPO, render, VLA, 
 
 Next session should repair G0a only:
 
-1. Verify actual USD link/jaw frame semantics for TCP, fixed jaw, and moving jaw.
-2. Query live link poses for link5 / gripper link / collision proxy at the failed final state.
-3. Decide whether the G0a target should be expressed as TCP, EEF, fixed-jaw face, or named tool-surface proxy.
-4. Keep the same fixed cube/friction/no-close/no-render setup and rerun the 10-trial alignment criteria.
+1. Do not advance to G0b/cylinder/gripper close.
+2. Do not loop on `42mm` or `10mm` offsets; D323 shows the blocker is orientation-family feasibility.
+3. Define an attainable G0a alignment criterion from the audited frame contract: fixed-jaw/TCP side position plus reachable wrist-axis family, not strict link5 `+z` horizontal radial if that remains infeasible.
+4. Only after that criterion is explicit, rerun the same fixed cube/friction/no-close/no-render 10-trial G0a alignment criteria.
 
 ## Must Read First
 
@@ -73,8 +89,10 @@ Next session should repair G0a only:
 4. `claudedocs/EXPERIMENT_LEDGER.md`
 5. `claudedocs/D322_PROMPT.md`
 6. `claudedocs/direction_20260708_grasp_pivot.md`
-7. `claudedocs/session_20260709_grasp_g0a_d322_alignment_fail.md`
-8. `sim_scripts/cube10cm_top_view_d322_grasp_g0a_alignment_probe.py`
+7. `claudedocs/session_20260709_grasp_g0a_d323_frame_repair_infeasible.md`
+8. `claudedocs/session_20260709_grasp_g0a_d322_alignment_fail.md`
+9. `sim_scripts/cube10cm_top_view_d323_grasp_g0a_frame_repair_probe.py`
+10. `sim_scripts/cube10cm_top_view_d322_grasp_g0a_alignment_probe.py`
 
 ## Durable Rules
 

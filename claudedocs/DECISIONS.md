@@ -18026,3 +18026,53 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d322/g0a_alignment_summary.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d322_longtrack_check/g0a_alignment_summary.json`
 - `START_HERE.md`
+
+## D323 - G0a frame repair validates TCP contract but rejects strict horizontal side-grasp pose family (2026-07-09)
+
+Evidence:
+
+- Added `sim_scripts/cube10cm_top_view_d323_grasp_g0a_frame_repair_probe.py`.
+  This is repair-only: no new ladder variable, no gripper close, no grasp, no
+  lift, no PPO/RL, no render scale-up, no VLA/RoArm/B200.
+- Live frame audit wrote
+  `claudedocs/runtime_logs/grasp_track/g0a_d323/frame_audit.json`.
+- Runtime `hand_tcp` is not a separate articulation body. The env computes TCP
+  from link5: `TCP = link5 position + link5 rotation * [0, 0, 0.115428]`.
+- Three static poses verified `TCP in link5 = [0, 0, 0.115428]m` with
+  `0.000044~0.000063mm` numerical offset error.
+- Static audit also showed `gripper_link` body origin is not the fixed-jaw face:
+  `gripper_link in link5 ~= [0, 0.018821, 0.052035]m` at the audited open poses.
+- The requested D323 strict pose family was link5 `+z` horizontal/radial and
+  link5 `+x` horizontal/tangential, with the cube center offset `42mm` along
+  jaw separation and TCP tip `10mm` past the near cube face.
+- Offline IK rejected that strict family under the `5mm/3deg` gate. The best
+  strict attempt still had TCP error `35.729mm`, link5 `+x` error `5.942deg`,
+  and link5 `+z` error `43.015deg`.
+- Position-only side target is reachable: TCP error `0.261mm`. But that
+  reachable family has link5 `+z` about `69.124deg` away from radial, so it is
+  not the requested strict side-grasp orientation.
+
+Decision:
+
+- Verdict: `D323_G0A_STRICT_POSE_INFEASIBLE_STOP`.
+- Step 3 10-trial retrial was correctly not run: the prompt required stopping
+  if the strict pose family was impossible, and forcing runtime trials after
+  that would be an invalid experiment.
+- Do not tune the `42mm` jaw offset or `10mm` radial depth repeatedly. D323
+  shows the blocker is orientation-family reachability, not scalar offset
+  tuning.
+- Do not advance to G0b, cylinder, gripper close, lift, PPO/RL, render, VLA,
+  RoArm, B200, friction/material changes, or randomization.
+- Next valid G0a work is to define an attainable alignment criterion using the
+  audited frame contract: fixed-jaw/TCP side position plus reachable wrist-axis
+  family, not strict link5 `+z` horizontal radial unless a valid IK solution is
+  first proven.
+
+Sources:
+
+- `claudedocs/session_20260709_grasp_g0a_d323_frame_repair_infeasible.md`
+- `sim_scripts/cube10cm_top_view_d323_grasp_g0a_frame_repair_probe.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d323/frame_audit.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d323/g0a_d323_alignment_summary.json`
+- `claudedocs/direction_20260708_grasp_pivot.md`
+- `START_HERE.md`
