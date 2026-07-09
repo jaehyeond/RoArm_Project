@@ -68,6 +68,15 @@ Before answering current project-state questions or making edits:
   ban on large renders, trajectory videos, new data generation, or variable
   ladder advancement without explicit user approval.
 
+## IsaacLab Environment Package Rule (D326~)
+
+- Any package install into the `isaaclab` conda environment must record the
+  dependency impact and verify the known Isaac-compatible pins afterward:
+  `numpy==1.26.0` and `psutil==5.9.8`.
+- If an install upgrades either package, immediately restore those pins and
+  verify imports before running Isaac. This rule comes from D325, where
+  installing `rerun-sdk` pulled incompatible `numpy 2.4.6` and `psutil 7.2.2`.
+
 ### Session boot prompt (paste this verbatim at new-session start)
 
 ```

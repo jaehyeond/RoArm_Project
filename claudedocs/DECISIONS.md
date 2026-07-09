@@ -18186,3 +18186,58 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d325/g0a_d325_alignment_summary.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d325/d325_trial_01_snapshot.png`
 - `claudedocs/runtime_logs/grasp_track/g0a_d325/d325_trial_01_frames.rrd`
+
+## D326 - G0a execution repair is blocked until teleport-static geometry passes (2026-07-09)
+
+Decision:
+
+- Do not repair actuator/trajectory execution for the D325 G0a target until the
+  same target passes a teleport-static version of the D325 four criteria.
+- D326's approved execution-contract repair was stopped before any contract
+  change because direct-write teleport to the offline IK solution failed the
+  fixed-jaw no-penetration gate.
+- Rerun v2 is installed as a diagnostic tool, but D326 only completed a static
+  RRD load check. Full motion-trial v2 logging remains pending until the static
+  target is valid.
+
+Evidence:
+
+- Teleport to the D324/D325 `position_only_tangent_minus1` IK solution produced:
+  - TCP error `0.349mm` (PASS).
+  - jaw tangent error `9.174deg` (PASS).
+  - contact point `49.733mm` below cube top (PASS).
+  - cube displacement `0.000mm` (PASS).
+  - fixed-jaw gap `-0.151mm`, penetration `0.151mm` (FAIL).
+  - max arm joint error `0.000000039rad`, so this was not actuator lag.
+- Therefore the D325 runtime miss cannot yet be attributed only to execution.
+  The static geometry/proxy contract is still inconsistent by a small but
+  hard-gated amount.
+- `roarm_rl/viz_debug.py` now supports Rerun URDF v2 logging:
+  actual/commanded URDF entities, per-step joint transforms, frame markers, cube,
+  blueprint, and optional live viewer. D326 static RRD loaded in headless Rerun
+  and produced a screenshot.
+
+Implication:
+
+- Next valid G0a work is static geometry repair or criterion audit: fixed-jaw
+  proxy, tangent-minus yaw error, and tangent offset mapping. Do not tune
+  runtime steps, lead limits, efforts, or hold duration before teleport-static
+  D325 criteria pass.
+- If a future prompt asks for execution-contract repair, first rerun the
+  teleport-static gate. If it fails, stop before applying execution repair.
+
+Environment rule:
+
+- D326 adds a durable `CLAUDE.md` rule: any package install into the `isaaclab`
+  env must record dependency impact and verify/restore `numpy==1.26.0` and
+  `psutil==5.9.8`, because D325 `rerun-sdk` installation upgraded both to
+  incompatible versions.
+
+Sources:
+
+- `claudedocs/session_20260709_grasp_g0a_d326_teleport_static_fail.md`
+- `sim_scripts/cube10cm_top_view_d326_grasp_g0a_execution_contract_probe.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d326/g0a_d326_execution_contract_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d326/d326_teleport_static_check.png`
+- `claudedocs/runtime_logs/grasp_track/g0a_d326/d326_teleport_static_v2.rrd`
+- `claudedocs/runtime_logs/grasp_track/g0a_d326/d326_teleport_static_v2_rerun_open.png`

@@ -49,6 +49,40 @@ status = log_rerun("debug.rrd", frames=[target, actual], joint_state={"q_deg": [
 If `rerun-sdk` is not installed, this helper returns a failure status and the
 PNG/marker path remains the required artifact.
 
+## Rerun v2 URDF Trace (D326~)
+
+`log_rerun()` also supports URDF-backed actual/commanded robot traces:
+
+```python
+status = log_rerun(
+    "debug_v2.rrd",
+    frames=[target, actual],
+    urdf_path="local_assets/roarm_m3/urdf/roarm_m3.urdf",
+    cube={"center": [0.30, 0.0, 0.037883], "size": 0.10},
+    joint_trace=[
+        {
+            "step": 0,
+            "actual_joint_rad_by_name": {
+                "base_link_to_link1": 0.0,
+                "link1_to_link2": 0.0,
+                "link2_to_link3": 1.57,
+                "link3_to_link4": 0.0,
+                "link4_to_link5": 0.0,
+                "link5_to_gripper_link": 0.0,
+            },
+            "commanded_joint_rad_by_name": {...},
+            "frames": [target, actual],
+        },
+    ],
+)
+```
+
+The resulting `.rrd` contains `/actual_robot`, `/commanded_robot`, `/frames`,
+and `/cube` entities. Use `rerun <file>.rrd --headless --screenshot-to <png>` as
+a non-GUI load check when a visible viewer is not practical. D326 only validated
+a static one-step trace because the teleport-static gate failed before a motion
+trial.
+
 ## D322/D323 Probes
 
 Both G0a probe scripts now expose an opt-in debug flag:

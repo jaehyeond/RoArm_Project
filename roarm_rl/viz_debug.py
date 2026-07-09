@@ -380,8 +380,18 @@ def log_rerun(
     frames: Iterable[Any] | None = None,
     joint_state: dict[str, Any] | None = None,
     urdf_path: str | Path | None = None,
+    joint_trace: Iterable[dict[str, Any]] | None = None,
+    cube: dict[str, Any] | None = None,
+    live_viewer: bool = False,
+    app_id: str = "roarm_viz_debug",
 ) -> dict[str, Any]:
-    """Optionally write a small rerun `.rrd` geometry log."""
+    """Optionally write a rerun `.rrd` geometry log.
+
+    Backward-compatible mode logs static frames and a text joint state.  When
+    `joint_trace` is supplied, D326-style v2 logging records two URDF models
+    (`actual_robot` and `commanded_robot`) over a shared integer `step`
+    timeline, plus the frame markers on the same timeline.
+    """
     try:
         import rerun as rr
     except Exception as exc:
@@ -389,13 +399,157 @@ def log_rerun(
 
     out_path = Path(path)
     out_path.parent.mkdir(parents=True, exist_ok=True)
+    frames_norm = [normalize_frame(pair) for pair in (frames or [])]
+    trace_rows = list(joint_trace or [])
+    urdf_actual_status: dict[str, Any] = {"attempted": False}
+    urdf_commanded_status: dict[str, Any] = {"attempted": False}
+    blueprint_status: dict[str, Any] = {"attempted": False}
     try:
-        rr.init("roarm_viz_debug", spawn=False)
+        rr.init(app_id, spawn=False)
+        if live_viewer:
+            rr.spawn()
+
+        try:
+            import rerun.blueprint as rrb
+
+            rr.send_blueprint(
+                rrb.Blueprint(
+                    rrb.Spatial3DView(
+                        origin="/",
+                        contents=[
+                            "/actual_robot/**",
+                            "/commanded_robot/**",
+                            "/frames/**",
+                            "/cube/**",
+                        ],
+                        name="D326 robot + target frames",
+                    ),
+                    auto_layout=True,
+                )
+            )
+            blueprint_status = {"attempted": True, "ok": True, "origin": "/"}
+        except Exception as exc:
+            blueprint_status = {"attempted": True, "ok": False, "error": repr(exc)}
+
+        actual_tree = None
+        commanded_tree = None
         if urdf_path is not None:
-            rr.log("urdf_path", rr.TextDocument(str(urdf_path)))
+            rr.log("metadata/urdf_path", rr.TextDocument(str(urdf_path)))
+            try:
+                from rerun.urdf import UrdfTree
+
+                actual_tree = UrdfTree.from_file_path(
+                    urdf_path,
+                    entity_path_prefix="/actual_robot",
+                    frame_prefix="actual",
+                    static_transform_entity_path="/actual_robot/tf_static",
+                )
+                actual_tree.log_urdf_to_recording()
+                urdf_actual_status = {
+                    "attempted": True,
+                    "ok": True,
+                    "name": actual_tree.name,
+                    "joint_count": len(actual_tree.joints()),
+                }
+                if trace_rows:
+                    commanded_tree = UrdfTree.from_file_path(
+                        urdf_path,
+                        entity_path_prefix="/commanded_robot",
+                        frame_prefix="commanded",
+                        static_transform_entity_path="/commanded_robot/tf_static",
+                    )
+                    commanded_tree.log_urdf_to_recording()
+                    urdf_commanded_status = {
+                        "attempted": True,
+                        "ok": True,
+                        "name": commanded_tree.name,
+                        "joint_count": len(commanded_tree.joints()),
+                    }
+            except Exception as exc:
+                urdf_actual_status = {"attempted": True, "ok": False, "error": repr(exc)}
+                if trace_rows:
+                    urdf_commanded_status = {"attempted": True, "ok": False, "error": repr(exc)}
         if joint_state is not None:
-            rr.log("joint_state", rr.TextDocument(str(joint_state)))
-        for frame in [normalize_frame(pair) for pair in (frames or [])]:
+            rr.log("metadata/joint_state", rr.TextDocument(str(joint_state)))
+        if cube is not None:
+            try:
+                center = _as_np3(cube.get("center"), default=(0.3, 0.0, 0.04))
+                size = float(cube.get("size", 0.10))
+                rr.log(
+                    "cube/body",
+                    rr.Boxes3D(
+                        centers=[center.tolist()],
+                        sizes=[[size, size, size]],
+                        colors=[[240, 190, 40, 70]],
+                        labels=["cube"],
+                    ),
+                )
+            except Exception as exc:
+                rr.log("metadata/cube_log_error", rr.TextDocument(repr(exc)))
+
+        def _log_frames(entity_prefix: str, frame_set: list[dict[str, Any]]) -> None:
+            for frame in frame_set:
+                pos = np.asarray(frame["position"], dtype=np.float64)
+                quat = np.asarray(frame["quat_wxyz"], dtype=np.float64)
+                rr.log(
+                    f"{entity_prefix}/{frame['name']}",
+                    rr.Transform3D(
+                        translation=pos,
+                        rotation=rr.Quaternion(xyzw=[quat[1], quat[2], quat[3], quat[0]]),
+                    ),
+                )
+                rr.log(
+                    f"{entity_prefix}/{frame['name']}/origin",
+                    rr.Points3D([pos.tolist()], radii=[0.006], labels=[frame.get("label", frame["name"])]),
+                )
+
+        _log_frames("frames", frames_norm)
+
+        def _log_tree_joints(tree: Any, prefix: str, joint_values: dict[str, float]) -> int:
+            if tree is None:
+                return 0
+            logged = 0
+            for joint in tree.joints():
+                value = float(joint_values.get(joint.name, 0.0))
+                rr.log(f"{prefix}/joints/{joint.name}", joint.compute_transform(value, clamp=True))
+                logged += 1
+            return logged
+
+        actual_joint_count = 0
+        commanded_joint_count = 0
+        for row in trace_rows:
+            step = int(row.get("step", 0))
+            rr.set_time("step", sequence=step)
+            actual_joints = dict(row.get("actual_joint_rad_by_name", {}))
+            commanded_joints = dict(row.get("commanded_joint_rad_by_name", {}))
+            actual_joint_count = max(actual_joint_count, _log_tree_joints(actual_tree, "/actual_robot", actual_joints))
+            commanded_joint_count = max(
+                commanded_joint_count,
+                _log_tree_joints(commanded_tree, "/commanded_robot", commanded_joints),
+            )
+            frame_set = [normalize_frame(pair) for pair in row.get("frames", frames_norm)]
+            _log_frames("frames", frame_set)
+            rr.log(
+                "metadata/step_diagnostics",
+                rr.TextDocument(str({k: v for k, v in row.items() if k not in {"frames"}})),
+            )
+
+        if trace_rows:
+            rr.log(
+                "metadata/joint_trace_summary",
+                rr.TextDocument(
+                    str(
+                        {
+                            "steps": len(trace_rows),
+                            "actual_joint_count": actual_joint_count,
+                            "commanded_joint_count": commanded_joint_count,
+                        }
+                    )
+                ),
+            )
+
+        rr.set_time("step", sequence=int(trace_rows[-1]["step"]) if trace_rows else 0)
+        for frame in frames_norm:
             pos = np.asarray(frame["position"], dtype=np.float64)
             quat = np.asarray(frame["quat_wxyz"], dtype=np.float64)
             rr.log(
@@ -403,6 +557,15 @@ def log_rerun(
                 rr.Transform3D(translation=pos, rotation=rr.Quaternion(xyzw=[quat[1], quat[2], quat[3], quat[0]])),
             )
         rr.save(str(out_path))
-        return {"ok": True, "backend": "rerun", "path": str(out_path)}
+        return {
+            "ok": True,
+            "backend": "rerun",
+            "path": str(out_path),
+            "trace_steps": len(trace_rows),
+            "urdf_actual_status": urdf_actual_status,
+            "urdf_commanded_status": urdf_commanded_status,
+            "blueprint_status": blueprint_status,
+            "live_viewer": bool(live_viewer),
+        }
     except Exception as exc:
         return {"ok": False, "backend": "rerun", "error": repr(exc)}

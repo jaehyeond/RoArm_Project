@@ -1,0 +1,187 @@
+{
+  "active_case": "G0a",
+  "artifact": "d326_g0a_execution_contract_probe",
+  "environment": {
+    "env_manifest_path": "claudedocs/env_manifest_isaaclab_d326.txt",
+    "isaaclab": {
+      "file": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaaclab/__init__.py",
+      "version": null
+    },
+    "isaacsim": {
+      "file": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/__init__.py",
+      "version": null
+    },
+    "numpy": {
+      "file": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/numpy/__init__.py",
+      "version": "1.26.0"
+    },
+    "omni.kit.app": {
+      "file": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/kit/kernel/py/omni/kit/app/__init__.py",
+      "kit_version": "107.3.3+production.229672.69cbf6ad.gl",
+      "version": null
+    },
+    "psutil": {
+      "file": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/psutil/__init__.py",
+      "version": "5.9.8"
+    },
+    "pxr.Usd": {
+      "file": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.libs-1.0.1+69cbf6ad.lx64.r.cp311/pxr/Usd/__init__.py",
+      "version": null
+    },
+    "python": "3.11.14 (main, Oct 21 2025, 18:31:21) [GCC 11.2.0]",
+    "python_executable": "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+    "rerun": {
+      "file": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/rerun_sdk/rerun/__init__.py",
+      "version": "0.34.1"
+    },
+    "robot_usd_path": "local_assets/roarm_m3/usd/roarm_m3.usd",
+    "urdf_path": "local_assets/roarm_m3/urdf/roarm_m3.urdf"
+  },
+  "new_variable": "none; D326 is G0a execution-contract repair",
+  "non_goals": [
+    "no G0b",
+    "no cylinder",
+    "no gripper close",
+    "no lift",
+    "no RL/PPO",
+    "no B200/RoArm/VLA"
+  ],
+  "teleport_check": {
+    "marker_status": {
+      "backend": "isaac_markers",
+      "frame_count": 6,
+      "ok": true,
+      "prim_path": "/World/D326TeleportFrames/frames"
+    },
+    "offline_ik": {
+      "converged": true,
+      "cost": 0.00034898328457732766,
+      "iterations": 13,
+      "link5_local_m": [
+        0.21860323674215215,
+        0.035302704343829344,
+        0.14577826591305235
+      ],
+      "link5_x_axis_world": [
+        0.15942661950683953,
+        -0.9872097816536369,
+        -2.2126665613094648e-17
+      ],
+      "link5_y_axis_world": [
+        -0.9205020202822847,
+        -0.14865384041981575,
+        -0.361355872215566
+      ],
+      "link5_z_axis_world": [
+        0.3567340517091884,
+        0.05760974514627317,
+        -0.9324279777094462
+      ],
+      "pos_err_mm": 0.34898328457732763,
+      "q_deg": [
+        9.173616744557895,
+        26.794526004074648,
+        118.34807889532898,
+        13.673906953577088,
+        0.0,
+        0.0
+      ],
+      "tcp_local_m": [
+        0.25978033486284036,
+        0.041952482006573366,
+        0.038149969302006384
+      ],
+      "x_axis_err_deg": 0.0,
+      "z_axis_err_deg": 0.0
+    },
+    "pass": false,
+    "prediction": "static check should satisfy D325 criteria if offline IK is valid; otherwise stop before contract repair",
+    "row": {
+      "actual_tcp_x_m": 0.2597801685333252,
+      "actual_tcp_y_m": 0.04195152223110199,
+      "actual_tcp_z_m": 0.03814961016178131,
+      "arm_joint_err_max_rad": 3.86079506142778e-08,
+      "commanded_tcp_pose_error_mm": 0.34898328457732763,
+      "commanded_tcp_x_m": 0.25978033486284036,
+      "commanded_tcp_y_m": 0.041952482006573366,
+      "commanded_tcp_z_m": 0.038149969302006384,
+      "contact_point_below_top_mm": 49.73339703871255,
+      "contact_point_z_m": 0.03814960154698844,
+      "cube_disp_xy_mm": 0.0,
+      "fixed_jaw_face_gap_mm": -0.1507991552256796,
+      "fixed_jaw_penetration_mm": 0.1507991552256796,
+      "ik_failure_steps": 0,
+      "jaw_tangent_error_deg": 9.173600552032397,
+      "pass_all": false,
+      "pass_contact_height": true,
+      "pass_cube_displacement": true,
+      "pass_fixed_jaw_gap": false,
+      "pass_jaw_tangent": true,
+      "pass_no_penetration": false,
+      "pass_tcp_pose": true,
+      "target_tcp_x_m": 0.260000011920929,
+      "target_tcp_y_m": 0.042,
+      "target_tcp_z_m": 0.03788299858570099,
+      "tcp_pose_error_mm": 0.348945470884017,
+      "trial": 1
+    },
+    "rrd_path": "claudedocs/runtime_logs/grasp_track/g0a_d326/d326_teleport_static_v2.rrd",
+    "rrd_status": {
+      "backend": "rerun",
+      "blueprint_status": {
+        "attempted": true,
+        "ok": true,
+        "origin": "/"
+      },
+      "live_viewer": false,
+      "ok": true,
+      "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d326/d326_teleport_static_v2.rrd",
+      "trace_steps": 1,
+      "urdf_actual_status": {
+        "attempted": true,
+        "joint_count": 8,
+        "name": "roarm_m3",
+        "ok": true
+      },
+      "urdf_commanded_status": {
+        "attempted": true,
+        "joint_count": 8,
+        "name": "roarm_m3",
+        "ok": true
+      }
+    },
+    "snapshot": "claudedocs/runtime_logs/grasp_track/g0a_d326/d326_teleport_static_check.png"
+  },
+  "v2_gate": {
+    "completed": false,
+    "headless_open_pass": true,
+    "headless_open_screenshot": "claudedocs/runtime_logs/grasp_track/g0a_d326/d326_teleport_static_v2_rerun_open.png",
+    "reason": "Teleport static check failed before a motion trial; v2 URDF/static RRD was still written for the stop state.",
+    "rrd_path": "claudedocs/runtime_logs/grasp_track/g0a_d326/d326_teleport_static_v2.rrd",
+    "rrd_status": {
+      "backend": "rerun",
+      "blueprint_status": {
+        "attempted": true,
+        "ok": true,
+        "origin": "/"
+      },
+      "live_viewer": false,
+      "ok": true,
+      "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d326/d326_teleport_static_v2.rrd",
+      "trace_steps": 1,
+      "urdf_actual_status": {
+        "attempted": true,
+        "joint_count": 8,
+        "name": "roarm_m3",
+        "ok": true
+      },
+      "urdf_commanded_status": {
+        "attempted": true,
+        "joint_count": 8,
+        "name": "roarm_m3",
+        "ok": true
+      }
+    }
+  },
+  "verdict": "D326_G0A_TELEPORT_STATIC_FAIL_STOP"
+}

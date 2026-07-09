@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-07-09 KST (D325 current truth: reachable G0a criterion adopted, but 10-trial runtime alignment failed; no ladder advance.)
+Last updated: 2026-07-09 KST (D326 current truth: G0a execution repair stopped because teleport-static D325 gate failed by 0.151mm jaw penetration; no ladder advance.)
 
 ## Current Truth
 
@@ -34,10 +34,16 @@ Last updated: 2026-07-09 KST (D325 current truth: reachable G0a criterion adopte
   `claudedocs/runtime_logs/grasp_track/g0a_d325/g0a_d325_alignment_summary.json`,
   `claudedocs/runtime_logs/grasp_track/g0a_d325/d325_trial_01_snapshot.png`,
   `claudedocs/runtime_logs/grasp_track/g0a_d325/d325_trial_01_frames.rrd`.
+- D326 execution-contract diagnosis session doc:
+  `claudedocs/session_20260709_grasp_g0a_d326_teleport_static_fail.md`.
+- D326 runtime outputs:
+  `claudedocs/runtime_logs/grasp_track/g0a_d326/g0a_d326_execution_contract_summary.json`,
+  `claudedocs/runtime_logs/grasp_track/g0a_d326/d326_teleport_static_check.png`,
+  `claudedocs/runtime_logs/grasp_track/g0a_d326/d326_teleport_static_v2.rrd`.
 
 ## Active Case: G0a
 
-- New variable remains D322's `grasp pose geometry`; D323-D325 introduced no new variable and are repair/tool/criterion-only inside G0a.
+- New variable remains D322's `grasp pose geometry`; D323-D326 introduced no new variable and are repair/tool/criterion/execution-diagnostic only inside G0a.
 - Invariants:
   - Existing 10cm cube, mass `0.72kg`.
   - Fixed object position `(x=0.30m, y=0.00m)`.
@@ -49,10 +55,27 @@ Last updated: 2026-07-09 KST (D325 current truth: reachable G0a criterion adopte
   2. `link5 +x` jaw-separation axis aligns with tangent `-1` within `15deg`.
   3. Fixed-jaw face to cube side: horizontal gap `<=5mm`, no penetration, and contact point at least `15mm` below cube top.
   4. Cube XY displacement `<5mm`; all 10 trials pass.
-- Output paths: D322 `claudedocs/runtime_logs/grasp_track/g0a_d322/`; D323 `claudedocs/runtime_logs/grasp_track/g0a_d323/`; D324 `claudedocs/runtime_logs/grasp_track/viz_infra_d324/`; D325 `claudedocs/runtime_logs/grasp_track/g0a_d325/`.
+- Output paths: D322 `claudedocs/runtime_logs/grasp_track/g0a_d322/`; D323 `claudedocs/runtime_logs/grasp_track/g0a_d323/`; D324 `claudedocs/runtime_logs/grasp_track/viz_infra_d324/`; D325 `claudedocs/runtime_logs/grasp_track/g0a_d325/`; D326 `claudedocs/runtime_logs/grasp_track/g0a_d326/`.
 
 ## Latest Result
 
+- D326 execution-contract diagnosis verdict:
+  `D326_G0A_TELEPORT_STATIC_FAIL_STOP`.
+- D326 corrected the D325 interpretation: before diagnosing actuator lag, the
+  D325 target must pass a teleport-static version of the same four criteria.
+- Teleport to the D324/D325 position-only tangent-minus IK solution:
+  - TCP error `0.349mm` PASS.
+  - jaw tangent error `9.174deg` PASS.
+  - contact point below top `49.733mm` PASS.
+  - cube displacement `0.000mm` PASS.
+  - fixed-jaw gap `-0.151mm` and penetration `0.151mm` FAIL.
+  - max arm joint error `0.000000039rad`, so this was not actuator lag.
+- D326 stopped before any execution-contract repair. No x3 step repair, lead
+  limit change, effort/stiffness change, or repaired 10-trial runtime gate was
+  run.
+- D326 upgraded Rerun logging to URDF v2 actual/commanded entities and wrote a
+  static `.rrd`; headless Rerun opened it and saved
+  `claudedocs/runtime_logs/grasp_track/g0a_d326/d326_teleport_static_v2_rerun_open.png`.
 - D325 criterion repair verdict: `D325_G0A_REDEFINED_ALIGNMENT_FAIL`.
 - D325 adopted D324 `position_only_tangent_minus1` as the active G0a family:
   `link5 +z` tool axis is free; `link5 +x` must align with tangent `-1`;
@@ -113,8 +136,9 @@ Last updated: 2026-07-09 KST (D325 current truth: reachable G0a criterion adopte
 - Interpretation:
   - D322's offset-direction repair was necessary but insufficient.
   - D323 confirms the TCP frame contract and rejects the stricter horizontal side-grasp orientation family as unreachable at the 10cm cube center height.
-  - D325 confirms the reachable tangent criterion still fails in runtime because the controller/actuator path does not reach the low side TCP pose.
-  - The remaining G0a problem is actuator/trajectory contract, not PPO, not friction, not offset-number tuning.
+  - D325 showed runtime did not reach the low side TCP pose.
+  - D326 shows actuator/trajectory repair is premature: teleport-static D325 geometry still violates the fixed-jaw no-penetration gate by `0.151mm`.
+  - The remaining G0a problem is static fixed-jaw geometry/proxy contract first, not PPO, not friction, not runtime-step/effort tuning.
 
 ## Next Concrete Action
 
@@ -123,9 +147,9 @@ Do **not** start G0b, cylinder spawn, gripper close, lift, RL/PPO, render, VLA, 
 Next session should repair G0a only:
 
 1. Do not advance to G0b/cylinder/gripper close.
-2. Do not tune `42mm`, `10mm`, `15deg`, or `15mm` gates.
-3. Diagnose commanded IK joint targets vs actual joints over time for the D325 target: step clipping, hold duration, drive stiffness/limits, or `_external_joint_targets_override` semantics.
-4. Only after the actuator/trajectory contract is fixed, rerun the same D325 10-trial G0a alignment criteria.
+2. Do not tune runtime steps, lead limits, effort, stiffness, or hold duration before teleport-static G0a passes.
+3. Recheck static geometry/proxy: fixed-jaw face proxy, tangent-minus yaw error, and how the 42mm tangent offset maps to jaw-face no-penetration when `link5 +x` has ~9deg tangent error.
+4. First gate for any next repair: teleport-static D325 criteria must pass. Only then resume commanded-vs-actual execution-contract diagnosis and 10-trial runtime alignment.
 
 ## Must Read First
 
@@ -138,11 +162,13 @@ Next session should repair G0a only:
 7. `claudedocs/session_20260709_grasp_g0a_d323_frame_repair_infeasible.md`
 8. `claudedocs/session_20260709_grasp_g0a_d324_viz_debug.md`
 9. `claudedocs/session_20260709_grasp_g0a_d325_redefined_alignment_fail.md`
-10. `claudedocs/HOWTO_viz_debug.md`
-11. `claudedocs/session_20260709_grasp_g0a_d322_alignment_fail.md`
-12. `sim_scripts/cube10cm_top_view_d325_grasp_g0a_redefined_alignment_probe.py`
-13. `sim_scripts/cube10cm_top_view_d323_grasp_g0a_frame_repair_probe.py`
-14. `sim_scripts/cube10cm_top_view_d322_grasp_g0a_alignment_probe.py`
+10. `claudedocs/session_20260709_grasp_g0a_d326_teleport_static_fail.md`
+11. `claudedocs/HOWTO_viz_debug.md`
+12. `claudedocs/session_20260709_grasp_g0a_d322_alignment_fail.md`
+13. `sim_scripts/cube10cm_top_view_d326_grasp_g0a_execution_contract_probe.py`
+14. `sim_scripts/cube10cm_top_view_d325_grasp_g0a_redefined_alignment_probe.py`
+15. `sim_scripts/cube10cm_top_view_d323_grasp_g0a_frame_repair_probe.py`
+16. `sim_scripts/cube10cm_top_view_d322_grasp_g0a_alignment_probe.py`
 
 ## Durable Rules
 
@@ -160,6 +186,9 @@ Next session should repair G0a only:
   - Geometry/pose/contact probes should emit target-vs-actual frame diagnostics
     and decision-time snapshots via `roarm_rl.viz_debug` when practical.
   - This is single-frame debugging only, not permission for large renders.
+- IsaacLab environment package rule (D326~):
+  - After any package install into `isaaclab`, record dependency impact and
+    verify/restore `numpy==1.26.0` and `psutil==5.9.8`.
 
 ## Frozen / Background Assets
 
