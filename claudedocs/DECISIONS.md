@@ -17990,3 +17990,39 @@ Sources:
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d320/replay_smoke/d320_upper_bin_physicality_audit.json`
 - `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/data_conveyor_d320/direction_probe/direction_probe_summary.json`
 - `START_HERE.md`
+
+## D322 - Grasp pivot starts with G0a alignment, not more tap/PPO expansion (2026-07-09)
+
+Evidence:
+
+- The D322 prompt installed the advisor-directed pivot: finish one case first,
+  add variables one at a time, defer VLA, defer friction randomization, and make
+  asymmetric gripper alignment beside the object the first grasp gate.
+- `claudedocs/direction_20260708_grasp_pivot.md` is now the durable plan.
+- `CLAUDE.md` now includes `Variable Ladder Protocol (D322~)`.
+- G0a runtime probe over 10 fixed-position trials failed: pass all criteria
+  `0/10`, TCP pose failure `10/10`, fixed-jaw gap/penetration failure `10/10`,
+  base-yaw failure `0/10`, cube displacement failure `0/10`.
+- The long-hold sidecar also failed with essentially the same pose and gap
+  errors, so this is not merely a short approach/hold setting.
+
+Implication:
+
+- Tap track D321 remains frozen as a data-pipeline asset, not the active case.
+- Do not start G0b cylinder, gripper close, lift, PPO/RL, render, VLA, RoArm,
+  B200, friction/material changes, or position randomization until G0a alignment
+  passes.
+- The next valid work is G0a repair only: verify USD TCP/fixed-jaw/moving-jaw
+  frame semantics and choose the correct alignment target representation
+  (TCP vs EEF vs named tool-surface proxy), then rerun the same 10-trial
+  criteria.
+
+Sources:
+
+- `claudedocs/D322_PROMPT.md`
+- `claudedocs/direction_20260708_grasp_pivot.md`
+- `claudedocs/session_20260709_grasp_g0a_d322_alignment_fail.md`
+- `sim_scripts/cube10cm_top_view_d322_grasp_g0a_alignment_probe.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d322/g0a_alignment_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d322_longtrack_check/g0a_alignment_summary.json`
+- `START_HERE.md`

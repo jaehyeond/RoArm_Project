@@ -42,6 +42,20 @@ Before answering current project-state questions or making edits:
   against this rule.
 - Validation that cannot change a decision must not be run.
 
+## Variable Ladder Protocol (D322~)
+
+- Each active case may introduce only one or two new variables. The session doc
+  must state near the top: `이번 case의 신규 변수: [...]`.
+- Future-looking ideas must not be implemented immediately. Append them to
+  `claudedocs/BACKLOG.md`, then return to the current critical path.
+- The `START_HERE.md` `Active Case` section is the single source of truth for
+  what is in scope. Everything outside it is a non-goal unless the user
+  explicitly approves a case change.
+- Folders are forward-only. Do not move or rename existing files/folders, so
+  old evidence paths remain valid. New grasp outputs must be created only under
+  `claudedocs/runtime_logs/grasp_track/<case>_<dNNN>/`, and the path must be
+  listed in `START_HERE.md` `Active Case`.
+
 ### Session boot prompt (paste this verbatim at new-session start)
 
 ```
