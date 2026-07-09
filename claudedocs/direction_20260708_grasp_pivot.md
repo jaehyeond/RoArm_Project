@@ -46,6 +46,26 @@
   `d324_strict_target_vs_best_attempt.png` 및
   `d324_position_only_tangent_minus1.png`를 같이 확인한다.
 
+## 채택 자세 family (D325)
+
+- D325에서 G0a 수리 기준으로 D324 `position_only_tangent_minus1` family를
+  채택했다.
+- 폐기된 구 기준: `link5 +z`를 수평 반경 방향으로 강제하는 조건. D323에서
+  best strict attempt도 TCP `35.729mm`, link5 `+z` `43.015deg` error였으므로
+  이 조건은 5-DOF 기구학상 G0a 기준으로 부적합하다.
+- 채택 기준:
+  - TCP는 기존 side target에 둔다: cube center 기준 radial `10mm` tip depth,
+    tangent offset `42mm` 유지.
+  - 조 분리축 `link5 +x`는 tangent `-1` 방향으로 고정하고, 수평 접선 오차
+    `<=15deg`를 허용한다.
+  - 도구축 `link5 +z`는 자유이며 reachable kinematics가 정하는 기움각을
+    허용한다. 이 각도를 별도 튜닝하지 않는다.
+  - 고정 조 파지면은 `TCP - link5 local x * 0.008m` proxy를 유지한다.
+- D325 10회 runtime 재판정은 실패했다: tangent 조건은 `10/10` 통과했지만,
+  실제 TCP가 목표보다 평균 `58.096mm` 높고 뒤에 머물러 TCP/gap/contact-height
+  gate가 `10/10` 실패했다. 이는 채택 yaw family 자체보다 runtime
+  actuator/trajectory contract 문제가 먼저 남았음을 뜻한다.
+
 ## Tap Track Freeze
 
 Tap track은 D321 결과를 최종 산출물로 동결한다. D321 결과는 1,920 accepted episodes, combined acceptance 96.0%다. 인수 가능한 자산은 DiffIK 접근, D256 reset, 검증기 + 물리성 게이트, conveyor, 평가 규약, script 0~999 대조군이다.

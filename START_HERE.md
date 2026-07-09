@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-07-09 KST (D324 current truth: G0a visual debug infra installed; D323 strict side-grasp infeasibility now has readable frame snapshots; no ladder advance.)
+Last updated: 2026-07-09 KST (D325 current truth: reachable G0a criterion adopted, but 10-trial runtime alignment failed; no ladder advance.)
 
 ## Current Truth
 
@@ -28,25 +28,48 @@ Last updated: 2026-07-09 KST (D324 current truth: G0a visual debug infra install
   `claudedocs/runtime_logs/grasp_track/viz_infra_d324/d324_viz_debug_summary.json`,
   `claudedocs/runtime_logs/grasp_track/viz_infra_d324/d324_strict_target_vs_best_attempt.png`,
   `claudedocs/runtime_logs/grasp_track/viz_infra_d324/d324_position_only_tangent_minus1.png`.
+- D325 redefined alignment session doc:
+  `claudedocs/session_20260709_grasp_g0a_d325_redefined_alignment_fail.md`.
+- D325 runtime outputs:
+  `claudedocs/runtime_logs/grasp_track/g0a_d325/g0a_d325_alignment_summary.json`,
+  `claudedocs/runtime_logs/grasp_track/g0a_d325/d325_trial_01_snapshot.png`,
+  `claudedocs/runtime_logs/grasp_track/g0a_d325/d325_trial_01_frames.rrd`.
 
 ## Active Case: G0a
 
-- New variable remains D322's `grasp pose geometry`; D323 and D324 introduced no new variable and are repair/tool-only.
+- New variable remains D322's `grasp pose geometry`; D323-D325 introduced no new variable and are repair/tool/criterion-only inside G0a.
 - Invariants:
   - Existing 10cm cube, mass `0.72kg`.
   - Fixed object position `(x=0.30m, y=0.00m)`.
   - Friction stays `static=1.5`, `dynamic=1.2`.
   - State-only, no render, no RL/PPO, no gripper close, no grasp, no lift.
   - 10cm cube is too wide for the measured practical gripper opening (~40-45mm), so G0a is alignment-only.
-- Pre-registered success criteria:
-  1. TCP pose error `<=5mm` and pose/orientation error `<=3deg`.
-  2. Fixed-jaw grasp face to cube face gap `<=3mm` with no penetration.
-  3. Cube XY displacement `<5mm`.
-  4. All 10 trials pass the same condition.
-- Output paths: D322 `claudedocs/runtime_logs/grasp_track/g0a_d322/`; D323 `claudedocs/runtime_logs/grasp_track/g0a_d323/`; D324 `claudedocs/runtime_logs/grasp_track/viz_infra_d324/`.
+- Active D325 G0a criterion:
+  1. TCP position error `<=5mm`.
+  2. `link5 +x` jaw-separation axis aligns with tangent `-1` within `15deg`.
+  3. Fixed-jaw face to cube side: horizontal gap `<=5mm`, no penetration, and contact point at least `15mm` below cube top.
+  4. Cube XY displacement `<5mm`; all 10 trials pass.
+- Output paths: D322 `claudedocs/runtime_logs/grasp_track/g0a_d322/`; D323 `claudedocs/runtime_logs/grasp_track/g0a_d323/`; D324 `claudedocs/runtime_logs/grasp_track/viz_infra_d324/`; D325 `claudedocs/runtime_logs/grasp_track/g0a_d325/`.
 
 ## Latest Result
 
+- D325 criterion repair verdict: `D325_G0A_REDEFINED_ALIGNMENT_FAIL`.
+- D325 adopted D324 `position_only_tangent_minus1` as the active G0a family:
+  `link5 +z` tool axis is free; `link5 +x` must align with tangent `-1`;
+  42mm tangent offset and 10mm radial tip depth were not changed.
+- D325 10-trial runtime result:
+  - pass all criteria: `0/10`.
+  - failure counts: TCP pose `10/10`, jaw tangent `0/10`, fixed-jaw gap
+    `10/10`, penetration `0/10`, contact height `10/10`, cube displacement
+    `0/10`.
+  - mean TCP error `58.096mm`; mean jaw tangent error `10.765deg`; mean gap
+    `11.996mm`; mean contact point below cube top `1.175mm`; mean cube
+    displacement `0.026mm`.
+  - max arm joint tracking error was `0.116-0.137rad`.
+- D325 interpretation: the adopted tangent family itself is not the blocker
+  because tangent passed `10/10`; runtime motion did not reach the low side TCP
+  target. Next work is actuator/trajectory contract diagnosis, not G0b and not
+  gate/offset tuning.
 - D324 tool verdict: `D324_VIZ_DEBUG_SNAPSHOTS_PASS`.
 - D324 installed `roarm_rl/viz_debug.py`, `claudedocs/HOWTO_viz_debug.md`, and
   opt-in `--viz_debug_snapshots` hooks for the D322/D323 G0a probes.
@@ -90,7 +113,8 @@ Last updated: 2026-07-09 KST (D324 current truth: G0a visual debug infra install
 - Interpretation:
   - D322's offset-direction repair was necessary but insufficient.
   - D323 confirms the TCP frame contract and rejects the stricter horizontal side-grasp orientation family as unreachable at the 10cm cube center height.
-  - The remaining G0a problem is target-representation feasibility, not PPO, not friction, not offset-number tuning.
+  - D325 confirms the reachable tangent criterion still fails in runtime because the controller/actuator path does not reach the low side TCP pose.
+  - The remaining G0a problem is actuator/trajectory contract, not PPO, not friction, not offset-number tuning.
 
 ## Next Concrete Action
 
@@ -99,9 +123,9 @@ Do **not** start G0b, cylinder spawn, gripper close, lift, RL/PPO, render, VLA, 
 Next session should repair G0a only:
 
 1. Do not advance to G0b/cylinder/gripper close.
-2. Do not loop on `42mm` or `10mm` offsets; D323 shows the blocker is orientation-family feasibility.
-3. Define an attainable G0a alignment criterion from the audited frame contract and D324 snapshots: fixed-jaw/TCP side position plus reachable wrist-axis family, not strict link5 `+z` horizontal radial if that remains infeasible.
-4. Only after that criterion is explicit, rerun the same fixed cube/friction/no-close/no-render 10-trial G0a alignment criteria.
+2. Do not tune `42mm`, `10mm`, `15deg`, or `15mm` gates.
+3. Diagnose commanded IK joint targets vs actual joints over time for the D325 target: step clipping, hold duration, drive stiffness/limits, or `_external_joint_targets_override` semantics.
+4. Only after the actuator/trajectory contract is fixed, rerun the same D325 10-trial G0a alignment criteria.
 
 ## Must Read First
 
@@ -113,10 +137,12 @@ Next session should repair G0a only:
 6. `claudedocs/direction_20260708_grasp_pivot.md`
 7. `claudedocs/session_20260709_grasp_g0a_d323_frame_repair_infeasible.md`
 8. `claudedocs/session_20260709_grasp_g0a_d324_viz_debug.md`
-9. `claudedocs/HOWTO_viz_debug.md`
-10. `claudedocs/session_20260709_grasp_g0a_d322_alignment_fail.md`
-11. `sim_scripts/cube10cm_top_view_d323_grasp_g0a_frame_repair_probe.py`
-12. `sim_scripts/cube10cm_top_view_d322_grasp_g0a_alignment_probe.py`
+9. `claudedocs/session_20260709_grasp_g0a_d325_redefined_alignment_fail.md`
+10. `claudedocs/HOWTO_viz_debug.md`
+11. `claudedocs/session_20260709_grasp_g0a_d322_alignment_fail.md`
+12. `sim_scripts/cube10cm_top_view_d325_grasp_g0a_redefined_alignment_probe.py`
+13. `sim_scripts/cube10cm_top_view_d323_grasp_g0a_frame_repair_probe.py`
+14. `sim_scripts/cube10cm_top_view_d322_grasp_g0a_alignment_probe.py`
 
 ## Durable Rules
 

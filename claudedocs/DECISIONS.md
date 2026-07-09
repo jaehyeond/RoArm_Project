@@ -18127,3 +18127,62 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/viz_infra_d324/d324_viz_debug_summary.json`
 - `roarm_rl/viz_debug.py`
 - `sim_scripts/cube10cm_top_view_d324_viz_debug_demo.py`
+
+## D325 - G0a adopts reachable tangent-minus criterion but runtime alignment still fails (2026-07-09)
+
+Decision:
+
+- Replace the unreachable strict G0a orientation criterion with the D324
+  `position_only_tangent_minus1` family:
+  - `link5 +z` tool axis is free and no longer required to be horizontal-radial.
+  - `link5 +x` jaw-separation axis must align with tangent `-1` within `15deg`.
+  - 42mm tangent offset and 10mm radial tip depth remain unchanged.
+  - fixed-jaw proxy remains `TCP - link5 local x * 0.008m`.
+
+Evidence:
+
+- D323 proved the old strict family infeasible: best strict attempt was TCP
+  `35.729mm`, link5 `+x` `5.942deg`, link5 `+z` `43.015deg`.
+- D324 made the trade-off visible and identified position-only tangent `-1` as
+  reachable at TCP `0.261mm`, link5 `+x` `9.148deg`, link5 `+z` `69.124deg`.
+- D325 structural height precheck for the adopted family passed:
+  contact point was `49.733mm` below cube top, above the `15mm` gate.
+- D325 runtime 10-trial verdict was `D325_G0A_REDEFINED_ALIGNMENT_FAIL`:
+  - pass all: `0/10`.
+  - TCP pose failed `10/10`: mean/min/max `58.096/56.492/60.673mm`.
+  - jaw tangent passed `10/10`: mean/min/max `10.765/9.941/11.460deg`.
+  - fixed-jaw gap failed `10/10`: mean/min/max `11.996/10.087/12.742mm`.
+  - contact-height gate failed `10/10`: mean/min/max below-top
+    `1.175/-1.591/1.921mm`.
+  - cube displacement passed `10/10`: mean/min/max `0.026/0.017/0.044mm`.
+  - max arm joint tracking error was `0.116-0.137rad`.
+- Visualization DoD passed in D325:
+  - Isaac markers ok at `/World/D325G0aFrames/frames`.
+  - snapshots for trials 1/5/10 were written.
+  - `rerun-sdk` import worked and `d325_trial_01_frames.rrd` was generated.
+
+Implication:
+
+- The new yaw/tangent family is not the remaining blocker; it passed the tangent
+  gate. Runtime motion did not reach the low side TCP target.
+- Do not tune `42mm`, `10mm`, `15deg`, or `15mm` in response to D325. The next
+  valid G0a repair is actuator/trajectory contract diagnosis: commanded IK
+  joints versus actual joints over time, step clipping, target hold duration,
+  drive stiffness/limits, or env action override semantics.
+- Do not advance to G0b/cylinder/gripper close/lift/RL/PPO/VLA/RoArm/B200 until
+  the redefined G0a runtime alignment passes.
+
+Environment note:
+
+- Installing latest `rerun-sdk 0.34.1` initially pulled `numpy 2.4.6` and
+  `psutil 7.2.2`, which conflict with Isaac Lab. The env was restored to
+  `numpy 1.26.0` and `psutil 5.9.8`; `import rerun` still succeeds. Future
+  rerun work should avoid unconstrained dependency upgrades.
+
+Sources:
+
+- `claudedocs/session_20260709_grasp_g0a_d325_redefined_alignment_fail.md`
+- `sim_scripts/cube10cm_top_view_d325_grasp_g0a_redefined_alignment_probe.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d325/g0a_d325_alignment_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d325/d325_trial_01_snapshot.png`
+- `claudedocs/runtime_logs/grasp_track/g0a_d325/d325_trial_01_frames.rrd`
