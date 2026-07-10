@@ -18459,3 +18459,59 @@ Sources:
 - `roarm_rl/roarm_stack_env.py`
 - `local_assets/roarm_m3/urdf/roarm_m3.urdf`
 - `claudedocs/runtime_logs/grasp_track/g0a_d328/stage_candidate_paths.json`
+
+## D330 - Correct-cylinder G0a alignment still fails; robot-link ContactSensor witness invalid (2026-07-10)
+
+Decision:
+
+- G0a is not complete. The D329 object redefinition to cylinder D34 x H90 was
+  necessary, but D330 shows it is not sufficient for runtime alignment success.
+- Do not advance to G0b, gripper close, lift, RL/PPO, randomization, VLA,
+  RoArm, B200, or cube reintroduction.
+- The next G0a diagnostic must stay on the correct cylinder object and address
+  two blockers: (1) alignment-only runtime moves the cylinder too much, and
+  (2) contact-force witness is still not valid.
+- Durable instrumentation correction: D329's "set
+  `activate_contact_sensors=True` and force trace will work" assumption was
+  incomplete. In D330, robot net/link4/link5/gripper_link ContactSensors still
+  fail PhysX contact view initialization. Treat their `0N` channel as
+  unavailable, not as no-contact evidence.
+
+Evidence:
+
+- D330 implemented the D329 minimal patch as a new probe-local script:
+  cylinder `D34 x H90`, mass placeholder `0.72kg`, friction `1.5/1.2`, fixed
+  object position, TCP z at cylinder center, D327 radial 2-waypoint approach,
+  and no waypoint search
+  (`sim_scripts/cyl34_top_view_d330_grasp_g0a_alignment_probe.py:321-430`,
+  `:663-682`).
+- Final D330 gate failed `0/10`. Failure counts: TCP pose `8/10`, jaw tangent
+  `0/10`, fixed-jaw gap `3/10`, penetration `0/10`, contact height `4/10`,
+  object displacement `10/10`. Mean TCP error was `36.033mm`; min/max
+  `1.884/80.530mm`; mean commanded TCP error `0.404mm`; mean object XY
+  displacement `19.070mm`.
+- Commanded FK being close while actual/object metrics fail means target math is
+  not the primary issue. Runtime execution/contact interaction on the cylinder
+  is the next issue.
+- ContactSensor documentation says force reporting depends on PhysX
+  ContactReporter and then a valid PhysX rigid-body/contact view
+  (`.../isaaclab/sensors/contact_sensor/contact_sensor.py:35-46`,
+  `:255-297`). D330 sets `activate_contact_sensors=True` on the robot spawn
+  (`sim_scripts/cyl34_top_view_d330_grasp_g0a_alignment_probe.py:327-331`), but
+  every robot-link witness fails initialization. This invalidates the D330
+  force trace.
+
+Implication:
+
+- The D329 wrong-object audit remains valid as a case-scope correction, but the
+  registered runtime prediction was not supported. Correct-cylinder G0a now
+  needs a contact-witness/drive/contact diagnostic, not a return to cube
+  collision repair and not G0b.
+
+Sources:
+
+- `claudedocs/session_20260710_grasp_g0a_d330_cyl_alignment_fail.md`
+- `sim_scripts/cyl34_top_view_d330_grasp_g0a_alignment_probe.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d330/g0a_d330_cyl_alignment_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d330/g0a_d330_cyl_alignment_trials.csv`
+- `START_HERE.md`

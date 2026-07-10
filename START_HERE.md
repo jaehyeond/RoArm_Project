@@ -1,15 +1,37 @@
 # START_HERE.md
 
-Last updated: 2026-07-10 late KST (D329 current truth: G0a has been running on
-the wrong object — the tap-track 10cm cube — since D322; user approved
-redefining the G0a object to the G0b cylinder D34 x H90. Next failable
-experiment is the D330 cylinder alignment probe.)
+Last updated: 2026-07-10 late KST (D330 current truth: G0a was rerun on the
+correct redefined cylinder D34 x H90 and still failed 0/10. Wrong-object was
+not a sufficient runtime explanation; contact-force instrumentation is still
+not valid because the robot-link ContactSensor witnesses fail PhysX view
+initialization.)
 
 ## Current Truth
 
 - Active pivot is **grasp track G0a (redefined: cylinder D34 x H90)**, not cube
   repairs, cube collision audits, tap expansion, PPO, VLA, Track A, RoArm
   deployment, or B200.
+- D330 runtime conclusion (session
+  `claudedocs/session_20260710_grasp_g0a_d330_cyl_alignment_fail.md`):
+  - Added `sim_scripts/cyl34_top_view_d330_grasp_g0a_alignment_probe.py` per
+    D329: probe-local cylinder `D34 x H90`, mass `0.72kg` placeholder, friction
+    `1.5/1.2`, fixed `(0.30, 0.00)`, TCP z at cylinder center, D327 radial
+    2-waypoint approach, no waypoint search.
+  - Final 10-trial gate failed `0/10`: TCP pose failures `8/10`, jaw tangent
+    failures `0/10`, fixed-jaw gap failures `3/10`, penetration failures
+    `0/10`, contact-height failures `4/10`, object-displacement failures
+    `10/10`.
+  - Mean TCP error `36.033mm` (min/max `1.884/80.530mm`), mean commanded TCP
+    error `0.404mm`, mean object XY displacement `19.070mm`. Commanded target
+    is close, but runtime/contact interaction disturbs the cylinder.
+  - The D329 wrong-object prediction was not supported as a sufficient runtime
+    explanation: cylinder improves some trials but does not yield one-digit TCP
+    error or 10/10 pass.
+  - Contact force trace remains invalid. D330 set
+    `env_cfg.robot.spawn.activate_contact_sensors=True`, but robot net/link4/
+    link5/gripper_link ContactSensors all fail PhysX contact view
+    initialization. Treat `0.000N` as a sensor-contract failure, not no-contact
+    evidence.
 - D329 audit conclusion (session
   `claudedocs/session_20260710_grasp_g0a_d329_object_mismatch_audit.md`):
   - G0a ran on the tap-track `10cm/0.72kg` cube since D322, pinned by
@@ -42,7 +64,7 @@ experiment is the D330 cylinder alignment probe.)
   `session_20260710_grasp_g0a_d328_collision_path_repair_fail.md`,
   `session_20260710_grasp_g0a_d329_object_mismatch_audit.md`.
 - Runtime outputs: `claudedocs/runtime_logs/grasp_track/g0a_d322/` ...
-  `g0a_d328/` (+ `viz_infra_d324/`). D329 is an audit session with no sim run.
+  `g0a_d330/` (+ `viz_infra_d324/`). D329 is an audit session with no sim run.
 
 ## Active Case: G0a (redefined 2026-07-10, user-approved)
 
@@ -63,15 +85,21 @@ experiment is the D330 cylinder alignment probe.)
   - Gates (structure unchanged, reparameterized to D34/H90): TCP `<=5mm`;
     tangent `<=15deg`; gap `[0, 5mm]`; no penetration; contact `>=15mm` below
     object top (`+0.0779` env-local); displacement `<5mm`; 10/10 trials.
-  - Contact witness repaired: probe-local
-    `env_cfg.robot.spawn.activate_contact_sensors = True` (reactive repair,
-    D328-justified).
-- Next runtime output path: `claudedocs/runtime_logs/grasp_track/g0a_d330/`.
+- Contact witness status: not repaired. Probe-local
+    `env_cfg.robot.spawn.activate_contact_sensors = True` is present, but
+    D330 robot-link ContactSensors fail to initialize their PhysX contact
+    views. The next correct-object G0a diagnostic must repair this witness
+    contract before treating force as evidence.
+- Latest runtime output path: `claudedocs/runtime_logs/grasp_track/g0a_d330/`.
 
 ## Latest Result
 
-- D329 verdict: `D329_G0A_WRONG_OBJECT_CASE_REDEFINE` (audit, no sim run;
-  failable experiment deferred to D330 with explicit justification).
+- D330 verdict: `D330_G0A_CYL_ALIGNMENT_FAIL` — correct-cylinder alignment
+  probe failed `0/10`; G0a is not complete and G0b transition remains blocked.
+  Artifacts: `claudedocs/runtime_logs/grasp_track/g0a_d330/` and
+  `claudedocs/session_20260710_grasp_g0a_d330_cyl_alignment_fail.md`.
+- D329 verdict: `D329_G0A_WRONG_OBJECT_CASE_REDEFINE` (audit, no sim run);
+  D330 has now executed the deferred failable experiment.
 - D328 verdict (superseded next-step, still-valid evidence):
   `D328_G0A_COLLISION_DRIVE_REPAIR_FAIL` — cube removed TCP error `1.512mm`
   vs cube present `72.178mm` (commanded `0.927mm` both); far_side_slide repair
@@ -90,17 +118,14 @@ Do **not** resume cube-targeted G0a work, waypoint search, blind drive/effort
 tuning, G0b grasp/lift, gripper close, RL/PPO, render, randomization, VLA,
 RoArm, or B200.
 
-1. User confirms two D330 design assumptions (session doc `## D330 최소 패치
-   설계` item 7): cylinder mass `0.72kg` hold, and alignment z at cylinder
-   center height.
-2. Implement `sim_scripts/cyl34_top_view_d330_grasp_g0a_alignment_probe.py`
-   per the D329 session-doc design (new file; no edits/renames of existing
-   probes or `roarm_rl` env files; probe-local overrides only).
-3. Run the D330 10-trial gate (failable). PASS 10/10 ->
-   `D330_G0A_CYL_ALIGNMENT_PASS`, discuss G0b entry. FAIL -> per-gate counts +
-   working contact-force trace + viz/Rerun; same stall signature would falsify
-   the wrong-object explanation for the runtime stall and reopen
-   collision/drive audit on the correct object.
+1. Stay on G0a cylinder D34 x H90. Do not reintroduce the cube.
+2. Repair/replace the contact witness contract on the correct cylinder object:
+   D330's robot-link ContactSensors fail PhysX view initialization, so force
+   cannot yet adjudicate link/table/cylinder contact.
+3. Diagnose why alignment-only runtime displaces the cylinder in `10/10`
+   trials despite close commanded FK. The discriminator should separate
+   free-space execution, table/cylinder contact, and gripper-link contact on
+   the cylinder without changing target offsets or gate thresholds.
 4. Keep Visualization DoD (D324) and the IsaacLab package rule (D326).
 
 ## Must Read First
@@ -110,9 +135,11 @@ RoArm, or B200.
 3. `claudedocs/DECISIONS.md` (tail: D329)
 4. `claudedocs/EXPERIMENT_LEDGER.md` (tail rows)
 5. `claudedocs/direction_20260708_grasp_pivot.md`
-6. `claudedocs/session_20260710_grasp_g0a_d329_object_mismatch_audit.md`
-7. `claudedocs/session_20260710_grasp_g0a_d328_collision_path_repair_fail.md`
-8. `sim_scripts/cube10cm_top_view_d327_grasp_g0a_standoff_execution_probe.py`
+6. `claudedocs/session_20260710_grasp_g0a_d330_cyl_alignment_fail.md`
+7. `claudedocs/session_20260710_grasp_g0a_d329_object_mismatch_audit.md`
+8. `claudedocs/session_20260710_grasp_g0a_d328_collision_path_repair_fail.md`
+9. `sim_scripts/cyl34_top_view_d330_grasp_g0a_alignment_probe.py`
+10. `sim_scripts/cube10cm_top_view_d327_grasp_g0a_standoff_execution_probe.py`
    (target/eval machinery that D330 reparameterizes)
 
 ## Durable Rules
