@@ -18241,3 +18241,67 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d326/d326_teleport_static_check.png`
 - `claudedocs/runtime_logs/grasp_track/g0a_d326/d326_teleport_static_v2.rrd`
 - `claudedocs/runtime_logs/grasp_track/g0a_d326/d326_teleport_static_v2_rerun_open.png`
+
+## D327 - G0a static standoff passes but effort repair fails runtime alignment (2026-07-10)
+
+Decision:
+
+- Adopt an alignment-only standoff of `2mm` for G0a:
+  `alignment tangent offset = D/2 - 8mm + 2mm`.
+- Keep the future grasp flush formula separate:
+  `grasp tangent offset = D/2 - 8mm`.
+- Do not tune epsilon or reinterpret this as G0b grasp clearance. The standoff is
+  a reactive repair for D326's zero-clearance static no-penetration failure.
+- Runtime execution diagnosis may proceed after the teleport-static gate passes,
+  but D327's single effort repair did not solve G0a.
+
+Evidence:
+
+- D327 teleport-static with `2mm` standoff passed all D325 gates:
+  - TCP error `0.349mm`.
+  - jaw tangent error `9.602deg`.
+  - fixed-jaw gap `1.837mm`.
+  - penetration `0.000mm`.
+  - contact point `49.733mm` below cube top.
+  - cube displacement `0.000mm`.
+- Baseline runtime still failed `0/10`:
+  - trial-1 actual TCP error `71.004mm`.
+  - trial-1 commanded TCP error `0.926mm`.
+  - torque saturation max `1.0`.
+  - final commanded-actual joint error `0.143rad`.
+- The x3 approach/hold diagnostic did not help:
+  - trial-1 x3 TCP error `72.719mm`.
+  - improvement over baseline `-1.715mm`.
+- The registered cause was joint/drive saturation, so D327 applied exactly one
+  execution-contract repair: `arm_effort_limit_sim = 8.0`.
+- The repaired 10-trial runtime still failed `0/10`:
+  - TCP pose failures `10/10`.
+  - fixed-jaw gap failures `10/10`.
+  - contact-height failures `10/10`.
+  - jaw tangent failures `0/10`.
+  - no-penetration failures `0/10`.
+  - cube-displacement failures `0/10`.
+  - final TCP errors stayed `67.556-70.849mm` while commanded TCP errors stayed
+    below `0.928mm`.
+
+Implication:
+
+- The remaining blocker is not static frame geometry, not time budget, and not a
+  simple effort-limit increase.
+- Do not change the D325 pose family, `2mm` standoff, `42mm`, `10mm`, `15deg`,
+  `15mm`, object/friction, or ladder stage in response to D327.
+- Next valid G0a work is a runtime actuator/drive semantics audit: position
+  drive stiffness/damping, effort/velocity limits as actually authored in USD,
+  external joint-target override semantics, and commanded-vs-actual joint
+  evolution in the D327 Rerun traces.
+- G0b/cylinder/gripper close/lift/RL/PPO/VLA/RoArm/B200 remain blocked.
+
+Sources:
+
+- `claudedocs/session_20260710_grasp_g0a_d327_standoff_execution_fail.md`
+- `sim_scripts/cube10cm_top_view_d327_grasp_g0a_standoff_execution_probe.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d327/g0a_d327_standoff_execution_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d327/g0a_d327_final_retest_trials.csv`
+- `claudedocs/runtime_logs/grasp_track/g0a_d327/d327_teleport_static_check.png`
+- `claudedocs/runtime_logs/grasp_track/g0a_d327/d327_final_effort_retest_trace_v2.rrd`
+- `claudedocs/runtime_logs/grasp_track/g0a_d327/d327_final_effort_retest_v2_rerun_open.png`

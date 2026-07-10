@@ -66,6 +66,23 @@
   gate가 `10/10` 실패했다. 이는 채택 yaw family 자체보다 runtime
   actuator/trajectory contract 문제가 먼저 남았음을 뜻한다.
 
+## 정렬 standoff 정본 (D327)
+
+- D326 teleport-static gate는 D325 목표가 fixed-jaw no-penetration을
+  `0.151mm` 위반한다는 것을 보였다. 원인은 정렬 목표가 고정 조 파지면을
+  큐브 표면에 간극 0으로 붙이는 zero-clearance 설계였기 때문이다.
+- D327부터 G0a 정렬 목표는 tangent offset을 `D/2 - 8mm + 2mm`로 둔다.
+  여기서 `2mm`는 정렬용 standoff이며, 튜닝 파라미터가 아니다.
+- G0b 이후 실제 파지/닫힘에서 사용할 flush 공식은 여전히 `D/2 - 8mm`다.
+  정렬용 목표와 파지용 목표를 혼동하지 않는다.
+- D327 teleport-static 결과는 이 standoff로 전 조건 PASS였다: TCP `0.349mm`,
+  jaw tangent `9.602deg`, fixed-jaw gap `1.837mm`, penetration `0.000mm`,
+  contact point `49.733mm` below top.
+- D327 runtime은 여전히 실패했다. x3 time extension은 개선하지 않았고,
+  `arm_effort_limit_sim=8.0` 단일 수리도 final `0/10`이었다. 따라서 다음
+  G0a 수리는 target/gate/epsilon 변경이 아니라 actuator/drive semantics와
+  external joint-target override 경로 진단이어야 한다.
+
 ## Tap Track Freeze
 
 Tap track은 D321 결과를 최종 산출물로 동결한다. D321 결과는 1,920 accepted episodes, combined acceptance 96.0%다. 인수 가능한 자산은 DiffIK 접근, D256 reset, 검증기 + 물리성 게이트, conveyor, 평가 규약, script 0~999 대조군이다.
