@@ -18371,3 +18371,91 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d328/stage_evidence.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d328/stage_candidate_paths.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d328/stage_final_collision.json`
+
+## D329 - G0a ran on a wrong object for its ladder goal; case redefined to the G0b cylinder (2026-07-10)
+
+Decision:
+
+- With explicit user approval (2026-07-10 session), redefine the G0a case object
+  from the tap-track `10cm/0.72kg` cube to the G0b cylinder `D34 x H90`.
+  This is a Variable Ladder case change, not another repair inside the D322
+  scope.
+- Stop all cube-targeted G0a work. The D328 next step ("true open-gripper
+  collision/sweep audit" on the cube) is superseded: the audit target itself was
+  the wrong object for the ladder's completion goal.
+- Durable rule: an active case must run on an object class consistent with the
+  ladder's first completed-case target unless the user explicitly approves a
+  proxy. "Reuse the existing asset to minimize variables" does not justify a
+  proxy object that makes the case's completion goal physically unattainable
+  (cube `100mm` vs practical gripper opening `40-45mm`).
+- Two instrumentation defects found in the D328 tooling must be fixed with D330:
+  the vacuous candidate "clearance" fallback and the inactive contact reporting.
+
+Evidence:
+
+- Provenance: the cube was not session drift. `claudedocs/D322_PROMPT.md:60`
+  pinned "기존 10cm 큐브 (개구 ~45mm < 100mm — 파지 불가, 정렬만 검증)" as an
+  invariant and `:79-80` non-goals forbade cylinder spawn; every D322-D328 probe
+  lists "no cylinder". The professor direction
+  `claudedocs/direction_20260708_grasp_pivot.md:10` says "원통 등 잘 잡히는
+  형태부터 시작한다" and `:28` records the practical opening `40-45mm`. The
+  object choice was never flagged as a risk in DECISIONS D322-D328, the session
+  docs, or `claudedocs/BACKLOG.md` (2026-07-10 audit).
+- Geometry (offline repo FK, re-derived 2026-07-10): the D327 alignment target
+  TCP `(0.260, +0.044, +0.037883)` env-local lies inside the cube xy footprint
+  (`x in [0.25, 0.35]`, `y in [-0.05, 0.05]`) at `50.0mm` below the cube top
+  (`+0.087883`). Only the fixed-jaw face proxy (`2mm` standoff) sits outside the
+  `+y` face; the moving-jaw-side volume below top height is solid cube. None of
+  the D328 candidate paths provides a collision-free corridor for the
+  moving-jaw side. `far_side_slide` is a horizontal mid-height straight-in path
+  (`(0.170, 0.044, 0.0379) -> (0.235, 0.044, 0.0379) -> target`), not an
+  over-top or far-side path.
+- Instrument defect 1: the D328 candidate "approach clearance `70.000mm`" for
+  `d327_radial` and `far_side_slide` is the fallback constant
+  `collision_repair_raise_m` recorded when no approach waypoint lies inside the
+  cube footprint
+  (`sim_scripts/cube10cm_top_view_d328_grasp_g0a_collision_vs_drive_probe.py:205-206`);
+  it is not a measured clearance. Only `high_corridor_drop`'s `20.264mm` was
+  measured. The `far_side_slide` selection was therefore based on a vacuous
+  metric, which explains why the repair could not work.
+- Instrument defect 2: the D328 ContactSensor `0.000N` reading has a concrete
+  cause: the robot USD is spawned with `activate_contact_sensors=False`
+  (`roarm_rl/roarm_stack_env.py:150`, inherited by `RoArmCubeTap10cmEnvCfg`),
+  and the D328 probe docstring itself acknowledges "The active env does not
+  configure contact sensors" (`...d328...probe.py:82`). Zero force is the
+  expected output of inactive contact reporting, not a physics mystery.
+- Gripper joint convention note (to prevent future misreading): in this sim,
+  gripper `q` LOW = OPEN, `q` HIGH = CLOSED (`roarm_rl/roarm_stack_env.py:702-704`
+  P6 v7 comment; grasp condition `q >= 0.4` at `:1195`). The G0a probes holding
+  `q = 0.0` do keep the gripper fully open. The direction doc's "URDF 기준
+  1.571rad" refers to the joint's travel range; URDF limits are `[0, 1.571]`
+  (`local_assets/roarm_m3/urdf/roarm_m3.urdf:230`).
+- Still valid from D322-D328: the TCP frame contract (D323), Visualization DoD
+  (D324), position-only tangent `-1` pose family (D325), `2mm` alignment
+  standoff (D327), and the cube-present collision discriminator (D328; all
+  reported numbers re-verified against the `g0a_d328` logs on 2026-07-10).
+
+Implication:
+
+- Next G0a work is D330: a cylinder alignment probe with the same pose family,
+  same `2mm` standoff, same gate structure, reparameterized to `D=0.034`
+  (tangent offset `D/2-8mm+2mm = 11mm`, radial offset `D/2-10mm = 7mm`), object
+  fixed at `(0.30, 0.00)`, simple radial approach only (no waypoint search), and
+  the contact witness repaired via a probe-local
+  `activate_contact_sensors=True` override.
+- If the cylinder probe still stalls `0/10` with the same signature, the
+  wrong-object explanation for the runtime stall is falsified and the
+  collision/drive audit resumes on the correct object.
+- G0b grasp/lift, gripper close, RL/PPO, randomization, render, VLA, RoArm, B200
+  remain blocked until G0a passes on the cylinder.
+
+Sources:
+
+- `claudedocs/session_20260710_grasp_g0a_d329_object_mismatch_audit.md`
+- `claudedocs/D322_PROMPT.md`
+- `claudedocs/direction_20260708_grasp_pivot.md`
+- `sim_scripts/cube10cm_top_view_d328_grasp_g0a_collision_vs_drive_probe.py`
+- `sim_scripts/cube10cm_top_view_d327_grasp_g0a_standoff_execution_probe.py`
+- `roarm_rl/roarm_stack_env.py`
+- `local_assets/roarm_m3/urdf/roarm_m3.urdf`
+- `claudedocs/runtime_logs/grasp_track/g0a_d328/stage_candidate_paths.json`
