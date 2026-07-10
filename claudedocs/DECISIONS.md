@@ -18515,3 +18515,81 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d330/g0a_d330_cyl_alignment_summary.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d330/g0a_d330_cyl_alignment_trials.csv`
 - `START_HERE.md`
+
+## D331 - External audit of the D330 analysis verifies six corrections; link5 convexHull collision becomes direct stage evidence (2026-07-11)
+
+Decision:
+
+- All six corrections from the user-supplied external critique of the D330
+  analysis are verified against the repo and adopted.
+- The D330 "10 trials" are 10 parallel envs and are not identical-condition
+  replicas: reset applies per-env `±0.02rad` joint jitter and the IK is
+  position-only, so per-env wrist configurations can differ in the 2-dim null
+  space; per-env commanded joint vectors and the object's final z/quaternion
+  were never recorded.
+- link5 and gripper_link physics collision are now directly confirmed as
+  convex hulls (`PhysicsMeshCollisionAPI`, `physics:approximation=convexHull`)
+  by pxr stage traversal, upgrading D231's converter-config inference to
+  direct evidence. The prims sit behind instance proxies, so default
+  `Stage.Traverse()` misses them (`Usd.TraverseInstanceProxies` required).
+- Durable data correction: the committed D330 `mass_note` "real 100-120g spec"
+  is an unmeasured second-AI estimate, not a spec. The real cylinder mass is
+  unmeasured; measure it before G0b. Committed artifacts stay as-is
+  (append-only); this entry is the correction of record.
+- Next failable experiment is pre-registered as D332: a static collision
+  discriminator on the cylinder (offline actual-hull overlap, fixed reset with
+  per-env joint logging, teleport + settle steps with full object pose
+  logging, validated cylinder-side contact witness, wrist null-space scan).
+  No collision mesh re-authoring, no target/gate changes, no waypoint search.
+
+Evidence:
+
+- Regime split: trials 2/4 pass TCP (`3.044/1.884mm`); trial 1 is intermediate
+  (TCP `27.233mm`, z `+19mm` above target, displacement `39.456mm` max);
+  stall trials 5/7/9/10 (`70.3-80.5mm`, z `0.090-0.098m`, joint err
+  `0.142-0.170rad`) — `g0a_d330_cyl_alignment_trials.csv`.
+- Jitter: `roarm_rl/roarm_cube_push_env.py:1636` (HOME + uniform ±0.02rad);
+  D330 probe uses `RoArmCubeTap10cmEnvCfg` (probe `:324,327`) with
+  `ik_endpoint_reset=False` (`:366`); IK seeded from jittered joints (`:655`);
+  orientation-free IK (`:678-679`). Trial rows contain no per-env commanded
+  joints and no object z/quaternion; the rrd traces env0 only.
+- USD: `/roarm_m3/link5/collisions/link5/node_STL_BINARY_` and
+  `/roarm_m3/gripper_link/collisions/gripper_link/node_STL_BINARY_` apply
+  `PhysicsCollisionAPI`+`PhysicsMeshCollisionAPI` with
+  `physics:approximation=convexHull` (`local_assets/roarm_m3/usd/roarm_m3.usd`,
+  read-only traversal 2026-07-11).
+- Physics: tipping threshold `F ≈ mgr/h ≈ 2.67N` for the standing D34xH90 at a
+  center-height push, vs sliding `μ_s·m·g ≈ 10.59N` (`μ_d·m·g ≈ 8.48N`) —
+  displacement magnitude cannot be inverted into contact force, and tilt
+  silently invalidates the upright-object proxy gates.
+- D326 scope/limits: the D326 rule targets execution repair on the D325 target;
+  d326 `_teleport_check` performs zero physics steps after the joint write
+  (d326 probe `:429-449`), so cloning it cannot detect hull contact or object
+  disturbance.
+- Mass-note leak: d330 probe `:964` and summary JSON
+  `/object_contract/mass_note`.
+- External scratch overlap numbers (raw STL `+4.04mm` clearance vs single
+  convex hull `~6.545mm` penetration at the env0 commanded pose) are
+  directionally supportive but out-of-repo, unrecorded, env0-only: not
+  decision evidence until reproduced as a recorded D332 artifact.
+
+Implication:
+
+- The leading hypothesis for D330's universal object displacement is the link5
+  convex-hull gap-fill artifact; D332 must confirm or refute it statically
+  before any drive/path/collision repair.
+- G0b precondition recorded in BACKLOG: `tool_surface_union` (D231) — the
+  moving jaw's 4mm collision proxy cannot support grasp physics even after
+  alignment passes.
+- G0b, gripper close, lift, RL/PPO, randomization, render, VLA, RoArm, B200,
+  cube reintroduction, and waypoint search remain blocked.
+
+Sources:
+
+- `claudedocs/session_20260711_grasp_g0a_d331_critique_audit_d332_design.md`
+- `claudedocs/runtime_logs/grasp_track/g0a_d330/g0a_d330_cyl_alignment_trials.csv`
+- `claudedocs/runtime_logs/grasp_track/g0a_d330/g0a_d330_cyl_alignment_summary.json`
+- `roarm_rl/roarm_cube_push_env.py`
+- `sim_scripts/cyl34_top_view_d330_grasp_g0a_alignment_probe.py`
+- `local_assets/roarm_m3/usd/roarm_m3.usd`
+- `START_HERE.md`
