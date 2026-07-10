@@ -83,6 +83,29 @@
   G0a 수리는 target/gate/epsilon 변경이 아니라 actuator/drive semantics와
   external joint-target override 경로 진단이어야 한다.
 
+## 런타임 정체 정본 (D328)
+
+- D328 cube-removal discriminator는 D327의 "drive semantics" 해석을 좁혔다.
+  큐브를 워크스페이스 밖으로 옮기면 동일 runtime 접근이 TCP error
+  `1.512mm`로 수렴했다. 큐브가 있으면 동일 명령의 TCP error가 `72.178mm`로
+  정체했다.
+- 따라서 현 G0a blocker는 순수한 external target override 실패가 아니라
+  cube-present collision/path geometry다. torque saturation은 여전히 보이지만
+  blocked path의 결과로 해석해야 하며, 추가 blind effort/stiffness tuning은
+  금지한다.
+- D328 ContactSensor는 `ok=True`였지만 max contact force가 `0.000N`이었다.
+  이는 cube-removal 결과와 모순되므로 현재 force trace를 유일한 접촉 증거로
+  쓰면 안 된다. 다음 G0a 수리는 contact witness 자체를 수리하거나 deterministic
+  collision/sweep geometry로 보강해야 한다.
+- D328에서 `d327_radial`, `far_side_slide`, `high_corridor_drop` 세 후보를
+  IK/approach-clearance로 비교했고 `far_side_slide`를 1건 수리로 채택했다.
+  그러나 final 10-trial은 `0/10`이었다. TCP error는 `58.656-59.379mm`로
+  개선됐지만 D325 gate에는 여전히 실패했다.
+- 결론: 다음 단계는 "다른 waypoint 하나 더"가 아니라 open gripper의 실제
+  collision/sweep audit이다. 고정 조, 가동 조 swing, link5, cube, table의
+  기하를 frame marker/Rerun/contact witness로 확인한 뒤에만 다음 path repair를
+  적용한다.
+
 ## Tap Track Freeze
 
 Tap track은 D321 결과를 최종 산출물로 동결한다. D321 결과는 1,920 accepted episodes, combined acceptance 96.0%다. 인수 가능한 자산은 DiffIK 접근, D256 reset, 검증기 + 물리성 게이트, conveyor, 평가 규약, script 0~999 대조군이다.

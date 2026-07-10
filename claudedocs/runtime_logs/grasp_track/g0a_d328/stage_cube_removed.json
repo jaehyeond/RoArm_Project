@@ -1,0 +1,196 @@
+{
+  "contact_sensor_status": {
+    "mode": "robot_net_forces_w",
+    "ok": true,
+    "prim_path": "/World/envs/env_.*/Robot/.*"
+  },
+  "cube_removed": true,
+  "cube_removed_info": {
+    "note": "target_info remains based on the original cube pose before removal",
+    "removed_local_xyz_m": [
+      1.2,
+      0.55,
+      0.03788299858570099
+    ]
+  },
+  "direct_write_through": false,
+  "drive_audit": {
+    "default_joint_damping": [
+      4.0,
+      4.0,
+      4.0,
+      4.0,
+      4.0
+    ],
+    "default_joint_stiffness": [
+      80.0,
+      80.0,
+      80.0,
+      80.0,
+      80.0
+    ],
+    "joint_damping": [
+      4.0,
+      4.0,
+      4.0,
+      4.0,
+      4.0
+    ],
+    "joint_effort_limits": [
+      2.5,
+      2.5,
+      2.5,
+      2.5,
+      2.5
+    ],
+    "joint_names": [
+      "base_link_to_link1",
+      "link1_to_link2",
+      "link2_to_link3",
+      "link3_to_link4",
+      "link4_to_link5"
+    ],
+    "joint_stiffness": [
+      80.0,
+      80.0,
+      80.0,
+      80.0,
+      80.0
+    ],
+    "joint_velocity_limits": [
+      3.140000104904175,
+      3.140000104904175,
+      3.140000104904175,
+      3.140000104904175,
+      3.140000104904175
+    ]
+  },
+  "environment": {
+    "isaaclab": {
+      "file": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaaclab/__init__.py",
+      "version": null
+    },
+    "isaacsim": {
+      "file": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/__init__.py",
+      "version": null
+    },
+    "numpy": {
+      "file": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/numpy/__init__.py",
+      "version": "1.26.0"
+    },
+    "omni.kit.app": {
+      "file": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/kit/kernel/py/omni/kit/app/__init__.py",
+      "kit_version": "107.3.3+production.229672.69cbf6ad.gl",
+      "version": null
+    },
+    "psutil": {
+      "file": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/psutil/__init__.py",
+      "version": "5.9.8"
+    },
+    "pxr.Usd": {
+      "file": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.libs-1.0.1+69cbf6ad.lx64.r.cp311/pxr/Usd/__init__.py",
+      "version": null
+    },
+    "python": "3.11.14 (main, Oct 21 2025, 18:31:21) [GCC 11.2.0]",
+    "python_executable": "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+    "rerun": {
+      "file": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/rerun_sdk/rerun/__init__.py",
+      "version": "0.34.1"
+    },
+    "robot_usd_path": "local_assets/roarm_m3/usd/roarm_m3.usd",
+    "urdf_path": "local_assets/roarm_m3/urdf/roarm_m3.urdf"
+  },
+  "failure_counts": {
+    "contact_height": 0,
+    "cube_displacement": 1,
+    "fixed_jaw_gap": 0,
+    "fixed_jaw_penetration": 0,
+    "jaw_tangent": 0,
+    "tcp_pose": 0
+  },
+  "label": "cube_removed_decision",
+  "marker_status": {
+    "backend": "isaac_markers",
+    "frame_count": 6,
+    "ok": true,
+    "prim_path": "/World/D328cube_removed_decisionFrames/frames"
+  },
+  "num_envs": 1,
+  "pass_all_count": 0,
+  "rows": [
+    {
+      "actual_tcp_x_m": 0.2585833668708801,
+      "actual_tcp_y_m": 0.04391052573919296,
+      "actual_tcp_z_m": 0.03736245632171631,
+      "arm_joint_err_max_rad": 0.0019338514634255621,
+      "commanded_tcp_pose_error_mm": 0.927136831635332,
+      "commanded_tcp_x_m": 0.2590837589314219,
+      "commanded_tcp_y_m": 0.043996860940870644,
+      "commanded_tcp_z_m": 0.03802460829617982,
+      "contact_point_below_top_mm": 50.53774855082513,
+      "contact_point_z_m": 0.03734525003487586,
+      "cube_disp_xy_mm": 1054.755687713623,
+      "fixed_jaw_face_gap_mm": 1.790172057515846,
+      "fixed_jaw_penetration_mm": 0.0,
+      "ik_failure_steps": 0,
+      "jaw_tangent_error_deg": 9.95028075254799,
+      "pass_all": false,
+      "pass_contact_height": true,
+      "pass_cube_displacement": false,
+      "pass_fixed_jaw_gap": true,
+      "pass_jaw_tangent": true,
+      "pass_no_penetration": true,
+      "pass_tcp_pose": true,
+      "target_tcp_x_m": 0.260000011920929,
+      "target_tcp_y_m": 0.044000000000000004,
+      "target_tcp_z_m": 0.03788299858570099,
+      "tcp_pose_error_mm": 1.5119037964662854,
+      "trial": 1
+    }
+  ],
+  "rrd_path": "claudedocs/runtime_logs/grasp_track/g0a_d328/d328_cube_removed_decision_trace_v2.rrd",
+  "rrd_status": {
+    "backend": "rerun",
+    "blueprint_status": {
+      "attempted": true,
+      "ok": true,
+      "origin": "/"
+    },
+    "live_viewer": false,
+    "ok": true,
+    "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d328/d328_cube_removed_decision_trace_v2.rrd",
+    "trace_steps": 320,
+    "urdf_actual_status": {
+      "attempted": true,
+      "joint_count": 8,
+      "name": "roarm_m3",
+      "ok": true
+    },
+    "urdf_commanded_status": {
+      "attempted": true,
+      "joint_count": 8,
+      "name": "roarm_m3",
+      "ok": true
+    }
+  },
+  "snapshots": [
+    {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d328/d328_cube_removed_decision_trial_01_snapshot.png",
+      "trial": 1
+    }
+  ],
+  "trace_stats": {
+    "final_joint_err_rad": 0.0019338428974151611,
+    "final_tcp_error_mm": 1.5119037964662854,
+    "first_contact_force_step": -1,
+    "first_tcp_error_mm": 301.24474864755575,
+    "max_contact_force_n": 0.0,
+    "max_joint_err_rad": 0.600060224533081,
+    "mid_tcp_error_mm": 12.56954665630196,
+    "min_tcp_error_mm": 1.5117973093715888,
+    "torque_saturation_rate_final": 0.0,
+    "torque_saturation_rate_max": 0.6,
+    "trace_steps": 320
+  },
+  "waypoint_mode": "d327_radial"
+}

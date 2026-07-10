@@ -1,0 +1,115 @@
+{
+  "candidates": [
+    {
+      "approach_waypoint_count_for_clearance": 1,
+      "clearance_note": "final waypoint is excluded because D327 teleport-static final pose already passes no-penetration; this table ranks approach corridor collision risk",
+      "ik_all_converged": true,
+      "max_ik_err_mm": 0.968126833682935,
+      "min_approach_tcp_over_cube_top_clearance_mm": 70.0,
+      "mode": "d327_radial",
+      "waypoint_count": 2
+    },
+    {
+      "approach_waypoint_count_for_clearance": 2,
+      "clearance_note": "final waypoint is excluded because D327 teleport-static final pose already passes no-penetration; this table ranks approach corridor collision risk",
+      "ik_all_converged": true,
+      "max_ik_err_mm": 0.9095224494092802,
+      "min_approach_tcp_over_cube_top_clearance_mm": 70.0,
+      "mode": "far_side_slide",
+      "waypoint_count": 3
+    },
+    {
+      "approach_waypoint_count_for_clearance": 2,
+      "clearance_note": "final waypoint is excluded because D327 teleport-static final pose already passes no-penetration; this table ranks approach corridor collision risk",
+      "ik_all_converged": true,
+      "max_ik_err_mm": 0.9531150549417827,
+      "min_approach_tcp_over_cube_top_clearance_mm": 20.263809981006396,
+      "mode": "high_corridor_drop",
+      "waypoint_count": 3
+    }
+  ],
+  "cube_start_local_m": [
+    0.30000001192092896,
+    0.0,
+    0.03788299858570099
+  ],
+  "environment": {
+    "isaaclab": {
+      "file": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaaclab/__init__.py",
+      "version": null
+    },
+    "isaacsim": {
+      "file": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/__init__.py",
+      "version": null
+    },
+    "numpy": {
+      "file": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/numpy/__init__.py",
+      "version": "1.26.0"
+    },
+    "omni.kit.app": {
+      "file": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/kit/kernel/py/omni/kit/app/__init__.py",
+      "kit_version": "107.3.3+production.229672.69cbf6ad.gl",
+      "version": null
+    },
+    "psutil": {
+      "file": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/psutil/__init__.py",
+      "version": "5.9.8"
+    },
+    "pxr.Usd": {
+      "file": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.libs-1.0.1+69cbf6ad.lx64.r.cp311/pxr/Usd/__init__.py",
+      "version": null
+    },
+    "python": "3.11.14 (main, Oct 21 2025, 18:31:21) [GCC 11.2.0]",
+    "python_executable": "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+    "rerun": {
+      "file": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/rerun_sdk/rerun/__init__.py",
+      "version": "0.34.1"
+    },
+    "robot_usd_path": "local_assets/roarm_m3/usd/roarm_m3.usd",
+    "urdf_path": "local_assets/roarm_m3/urdf/roarm_m3.urdf"
+  },
+  "label": "candidate_paths",
+  "selected_repair": {
+    "all_candidates": [
+      {
+        "approach_waypoint_count_for_clearance": 1,
+        "clearance_note": "final waypoint is excluded because D327 teleport-static final pose already passes no-penetration; this table ranks approach corridor collision risk",
+        "ik_all_converged": true,
+        "max_ik_err_mm": 0.968126833682935,
+        "min_approach_tcp_over_cube_top_clearance_mm": 70.0,
+        "mode": "d327_radial",
+        "waypoint_count": 2
+      },
+      {
+        "approach_waypoint_count_for_clearance": 2,
+        "clearance_note": "final waypoint is excluded because D327 teleport-static final pose already passes no-penetration; this table ranks approach corridor collision risk",
+        "ik_all_converged": true,
+        "max_ik_err_mm": 0.9095224494092802,
+        "min_approach_tcp_over_cube_top_clearance_mm": 70.0,
+        "mode": "far_side_slide",
+        "waypoint_count": 3
+      },
+      {
+        "approach_waypoint_count_for_clearance": 2,
+        "clearance_note": "final waypoint is excluded because D327 teleport-static final pose already passes no-penetration; this table ranks approach corridor collision risk",
+        "ik_all_converged": true,
+        "max_ik_err_mm": 0.9531150549417827,
+        "min_approach_tcp_over_cube_top_clearance_mm": 20.263809981006396,
+        "mode": "high_corridor_drop",
+        "waypoint_count": 3
+      }
+    ],
+    "selected_candidate": {
+      "approach_waypoint_count_for_clearance": 2,
+      "clearance_note": "final waypoint is excluded because D327 teleport-static final pose already passes no-penetration; this table ranks approach corridor collision risk",
+      "ik_all_converged": true,
+      "max_ik_err_mm": 0.9095224494092802,
+      "min_approach_tcp_over_cube_top_clearance_mm": 70.0,
+      "mode": "far_side_slide",
+      "waypoint_count": 3
+    },
+    "selected_mode": "far_side_slide",
+    "selection_rule": "max top-clearance among IK-feasible candidates",
+    "type": "waypoint_path_repair"
+  }
+}

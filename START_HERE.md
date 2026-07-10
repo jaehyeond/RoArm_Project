@@ -1,6 +1,6 @@
 # START_HERE.md
 
-Last updated: 2026-07-10 KST (D327 current truth: G0a 2mm alignment standoff fixes teleport-static geometry, but runtime effort repair still fails 0/10; no ladder advance.)
+Last updated: 2026-07-10 KST (D328 current truth: cube-removal discriminator confirms G0a runtime stall is cube-present collision/path geometry, not pure drive override; one path repair still fails 0/10; no ladder advance.)
 
 ## Current Truth
 
@@ -46,10 +46,16 @@ Last updated: 2026-07-10 KST (D327 current truth: G0a 2mm alignment standoff fix
   `claudedocs/runtime_logs/grasp_track/g0a_d327/g0a_d327_standoff_execution_summary.json`,
   `claudedocs/runtime_logs/grasp_track/g0a_d327/g0a_d327_final_retest_trials.csv`,
   `claudedocs/runtime_logs/grasp_track/g0a_d327/d327_final_effort_retest_trace_v2.rrd`.
+- D328 collision-vs-drive session doc:
+  `claudedocs/session_20260710_grasp_g0a_d328_collision_path_repair_fail.md`.
+- D328 runtime outputs:
+  `claudedocs/runtime_logs/grasp_track/g0a_d328/g0a_d328_collision_vs_drive_summary.json`,
+  `claudedocs/runtime_logs/grasp_track/g0a_d328/g0a_d328_final_retest_trials.csv`,
+  `claudedocs/runtime_logs/grasp_track/g0a_d328/d328_final_collision_path_retest_trace_v2.rrd`.
 
 ## Active Case: G0a
 
-- New variable remains D322's `grasp pose geometry`; D323-D327 introduced no ladder variable and are repair/tool/criterion/execution-diagnostic only inside G0a.
+- New variable remains D322's `grasp pose geometry`; D323-D328 introduced no ladder variable and are repair/tool/criterion/execution-diagnostic only inside G0a.
 - Invariants:
   - Existing 10cm cube, mass `0.72kg`.
   - Fixed object position `(x=0.30m, y=0.00m)`.
@@ -63,10 +69,46 @@ Last updated: 2026-07-10 KST (D327 current truth: G0a 2mm alignment standoff fix
   2. `link5 +x` jaw-separation axis aligns with tangent `-1` within `15deg`.
   3. Fixed-jaw face to cube side: horizontal gap `<=5mm`, no penetration, and contact point at least `15mm` below cube top.
   4. Cube XY displacement `<5mm`; all 10 trials pass.
-- Output paths: D322 `claudedocs/runtime_logs/grasp_track/g0a_d322/`; D323 `claudedocs/runtime_logs/grasp_track/g0a_d323/`; D324 `claudedocs/runtime_logs/grasp_track/viz_infra_d324/`; D325 `claudedocs/runtime_logs/grasp_track/g0a_d325/`; D326 `claudedocs/runtime_logs/grasp_track/g0a_d326/`; D327 `claudedocs/runtime_logs/grasp_track/g0a_d327/`.
+- Output paths: D322 `claudedocs/runtime_logs/grasp_track/g0a_d322/`; D323 `claudedocs/runtime_logs/grasp_track/g0a_d323/`; D324 `claudedocs/runtime_logs/grasp_track/viz_infra_d324/`; D325 `claudedocs/runtime_logs/grasp_track/g0a_d325/`; D326 `claudedocs/runtime_logs/grasp_track/g0a_d326/`; D327 `claudedocs/runtime_logs/grasp_track/g0a_d327/`; D328 `claudedocs/runtime_logs/grasp_track/g0a_d328/`.
 
 ## Latest Result
 
+- D328 collision-vs-drive verdict:
+  `D328_G0A_COLLISION_DRIVE_REPAIR_FAIL`.
+- D328 decision experiment:
+  - cube removed: TCP error `1.512mm`, commanded TCP error `0.927mm`,
+    joint error `0.00193rad`.
+  - cube present evidence: TCP error `72.178mm`, commanded TCP error
+    `0.927mm`, joint error `0.132rad`.
+  - judgement: branch A collision/path confirmed. The target and joint command
+    path are reachable in free space; the cube-present runtime path is the
+    blocker.
+- D328 evidence caveat:
+  - torque saturation remained visible in the cube-present trial
+    (`max=1.0`, final `0.8`), but now reads as a consequence of the blocked
+    cube-present path rather than a standalone drive-semantics root cause.
+  - D328 ContactSensor logging returned `0.000N` max contact force even though
+    removing the cube changed the outcome decisively. Treat that contact channel
+    as insufficient evidence until contact instrumentation is repaired.
+- D328 branch-A repair:
+  - candidate paths checked: `d327_radial`, `far_side_slide`,
+    `high_corridor_drop`.
+  - selected repair: `far_side_slide`, based on IK feasibility, `70.000mm`
+    approach TCP-over-top clearance, and lower max IK error (`0.910mm`) than
+    `d327_radial`.
+  - limitation: the clearance metric is an approach-corridor proxy, not a full
+    moving-jaw/link5 collision sweep.
+- D328 final 10-trial retest still failed `0/10`:
+  - TCP pose failures `10/10`.
+  - fixed-jaw gap failures `10/10`.
+  - contact-height failures `10/10`.
+  - jaw tangent failures `0/10`, penetration failures `0/10`, cube displacement
+    failures `0/10`.
+  - final TCP errors were `58.656-59.379mm`, improved from the cube-present
+    evidence `72.178mm` but still far outside the `<=5mm` gate.
+- D328 implication: the next valid G0a repair is true open-gripper collision
+  geometry/sweep and contact-witness audit. Do not continue blind drive/effort
+  tuning, do not tune standoff/gates/offsets, and do not advance to G0b.
 - D327 standoff/execution verdict:
   `D327_G0A_STANDOFF_EFFORT_REPAIR_FAIL`.
 - D327 fixed the D326 static blocker by separating alignment and future grasp
@@ -178,13 +220,16 @@ Next session should repair G0a only:
 2. Do not tune D327 standoff, `42mm`, `10mm`, `15deg`, `15mm`, object/friction,
    or pose family.
 3. Do not apply another blind effort/step escalation. D327 already rejected x3
-   time extension and `arm_effort_limit_sim=8.0`.
-4. Inspect runtime actuator/drive semantics: USD-authored drive stiffness/damping,
-   effort and velocity limits, external target override path, and commanded-vs-
-   actual joint traces in
-   `claudedocs/runtime_logs/grasp_track/g0a_d327/d327_final_effort_retest_trace_v2.rrd`.
-5. Re-run D325 four-condition 10-trial gate only after one specifically justified
-   execution-contract fix. Keep Visualization DoD.
+   time extension and `arm_effort_limit_sim=8.0`; D328 shows free-space runtime
+   reaches the same target.
+4. Do not rely on the current D328 ContactSensor force trace as the sole contact
+   witness. It returned `0.000N` while the cube-removal decision experiment
+   changed the outcome.
+5. Audit true open-gripper collision geometry and sweep: fixed jaw, moving jaw,
+   link5, cube, and table. Use snapshots/Rerun plus a repaired contact witness
+   or deterministic geometry sweep before trying another path repair.
+6. Re-run D325 four-condition 10-trial gate only after one specifically justified
+   collision-path/contact-instrumentation repair. Keep Visualization DoD.
 
 ## Must Read First
 
@@ -199,13 +244,15 @@ Next session should repair G0a only:
 9. `claudedocs/session_20260709_grasp_g0a_d325_redefined_alignment_fail.md`
 10. `claudedocs/session_20260709_grasp_g0a_d326_teleport_static_fail.md`
 11. `claudedocs/session_20260710_grasp_g0a_d327_standoff_execution_fail.md`
-12. `claudedocs/HOWTO_viz_debug.md`
-13. `claudedocs/session_20260709_grasp_g0a_d322_alignment_fail.md`
-14. `sim_scripts/cube10cm_top_view_d327_grasp_g0a_standoff_execution_probe.py`
-15. `sim_scripts/cube10cm_top_view_d326_grasp_g0a_execution_contract_probe.py`
-16. `sim_scripts/cube10cm_top_view_d325_grasp_g0a_redefined_alignment_probe.py`
-17. `sim_scripts/cube10cm_top_view_d323_grasp_g0a_frame_repair_probe.py`
-18. `sim_scripts/cube10cm_top_view_d322_grasp_g0a_alignment_probe.py`
+12. `claudedocs/session_20260710_grasp_g0a_d328_collision_path_repair_fail.md`
+13. `claudedocs/HOWTO_viz_debug.md`
+14. `claudedocs/session_20260709_grasp_g0a_d322_alignment_fail.md`
+15. `sim_scripts/cube10cm_top_view_d328_grasp_g0a_collision_vs_drive_probe.py`
+16. `sim_scripts/cube10cm_top_view_d327_grasp_g0a_standoff_execution_probe.py`
+17. `sim_scripts/cube10cm_top_view_d326_grasp_g0a_execution_contract_probe.py`
+18. `sim_scripts/cube10cm_top_view_d325_grasp_g0a_redefined_alignment_probe.py`
+19. `sim_scripts/cube10cm_top_view_d323_grasp_g0a_frame_repair_probe.py`
+20. `sim_scripts/cube10cm_top_view_d322_grasp_g0a_alignment_probe.py`
 
 ## Durable Rules
 

@@ -18305,3 +18305,69 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d327/d327_teleport_static_check.png`
 - `claudedocs/runtime_logs/grasp_track/g0a_d327/d327_final_effort_retest_trace_v2.rrd`
 - `claudedocs/runtime_logs/grasp_track/g0a_d327/d327_final_effort_retest_v2_rerun_open.png`
+
+## D328 - G0a runtime stall is cube-present collision/path; one path repair fails (2026-07-10)
+
+Decision:
+
+- Treat the D327/D328 runtime stall as a cube-present collision/path geometry
+  blocker, not as a pure drive/override-semantics blocker.
+- Do not continue blind effort, stiffness, step, hold-duration, standoff, gate,
+  or offset tuning in response to D328.
+- The current ContactSensor force channel is not sufficient as the only contact
+  witness for this G0a branch; it returned zero force in a run where cube
+  removal changed the result decisively.
+- The next valid G0a work is a true open-gripper collision/sweep and contact
+  instrumentation audit before another runtime path repair.
+
+Evidence:
+
+- Cube-removed discriminator:
+  - TCP error `1.512mm`.
+  - commanded TCP error `0.927mm`.
+  - final joint error `0.00193rad`.
+  - judgement: free-space runtime reaches the D327 target under the D325 `5mm`
+    gate.
+- Cube-present evidence trial:
+  - TCP error `72.178mm`.
+  - commanded TCP error `0.927mm`.
+  - final joint error `0.132rad`.
+  - torque saturation max `1.0`, final `0.8`.
+  - ContactSensor max contact force `0.000N`, which conflicts with the
+    cube-removal decision contrast and is therefore not a reliable negative
+    contact proof.
+- Branch-A repair candidates were checked by IK/geometry:
+  - `d327_radial`: IK feasible, max IK error `0.968mm`, approach clearance
+    `70.000mm`.
+  - `far_side_slide`: IK feasible, max IK error `0.910mm`, approach clearance
+    `70.000mm`.
+  - `high_corridor_drop`: IK feasible, max IK error `0.953mm`, approach
+    clearance `20.264mm`.
+  - selected repair: `far_side_slide`.
+- The repaired 10-trial runtime still failed `0/10`:
+  - TCP pose failures `10/10`.
+  - fixed-jaw gap failures `10/10`.
+  - contact-height failures `10/10`.
+  - jaw tangent, no-penetration, and cube-displacement failures `0/10`.
+  - final TCP errors `58.656-59.379mm`; better than the `72.178mm` evidence
+    trial but still outside the D325 gate.
+
+Implication:
+
+- D327's "drive saturation" interpretation was incomplete: the robot can reach
+  the same target when the cube is removed. Saturation should now be read as the
+  effect of a blocked cube-present path until proven otherwise.
+- The `far_side_slide` repair was not enough because its clearance check was an
+  approach-corridor proxy, not a full moving-jaw/link5 collision sweep.
+- G0b/cylinder/gripper close/lift/RL/PPO/VLA/RoArm/B200 remain blocked.
+
+Sources:
+
+- `claudedocs/session_20260710_grasp_g0a_d328_collision_path_repair_fail.md`
+- `sim_scripts/cube10cm_top_view_d328_grasp_g0a_collision_vs_drive_probe.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d328/g0a_d328_collision_vs_drive_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d328/g0a_d328_final_retest_trials.csv`
+- `claudedocs/runtime_logs/grasp_track/g0a_d328/stage_cube_removed.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d328/stage_evidence.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d328/stage_candidate_paths.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d328/stage_final_collision.json`
