@@ -288,9 +288,11 @@ def snapshot_frame_plot(
         pos = np.asarray(frame["position"], dtype=np.float64)
         rot = np.asarray(frame["rotation_matrix"], dtype=np.float64).reshape(3, 3)
         role = str(frame.get("role", "other"))
+        metadata = dict(frame.get("metadata", {}))
         role_color = ROLE_COLORS.get(role, ROLE_COLORS["other"])
         ax.scatter([pos[0]], [pos[1]], [pos[2]], color=role_color, s=56, depthshade=False)
-        ax.text(pos[0], pos[1], pos[2], f"  {frame.get('label', frame['name'])}", fontsize=8)
+        label_pos = pos + _as_np3(metadata.get("label_offset"), default=(0.0, 0.0, 0.0))
+        ax.text(label_pos[0], label_pos[1], label_pos[2], f"  {frame.get('label', frame['name'])}", fontsize=8)
         for axis_idx, axis_color, axis_name in (
             (0, "red", "x"),
             (1, "green", "y"),
@@ -309,7 +311,8 @@ def snapshot_frame_plot(
                 linewidth=2.0,
             )
             tip = pos + vec
-            ax.text(tip[0], tip[1], tip[2], axis_name, color=axis_color, fontsize=8)
+            if bool(metadata.get("show_axis_labels", True)):
+                ax.text(tip[0], tip[1], tip[2], axis_name, color=axis_color, fontsize=8)
             all_points.extend([pos, tip])
 
     note_lines = list(annotations or [])
@@ -327,7 +330,9 @@ def snapshot_frame_plot(
 
     all_arr = np.vstack(all_points) if all_points else np.zeros((1, 3), dtype=np.float64)
     _set_axes_equal(ax, all_arr)
-    ax.legend(loc="upper left", fontsize=8)
+    legend_handles, legend_labels = ax.get_legend_handles_labels()
+    if legend_handles:
+        ax.legend(legend_handles, legend_labels, loc="upper left", fontsize=8)
     fig.tight_layout()
     fig.savefig(out_path)
     plt.close(fig)

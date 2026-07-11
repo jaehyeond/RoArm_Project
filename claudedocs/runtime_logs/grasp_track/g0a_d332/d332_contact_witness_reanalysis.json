@@ -1,0 +1,98 @@
+{
+  "artifact": "D332_CONTACT_WITNESS_REANALYSIS",
+  "baseline": {
+    "baseline_disturbance_below_diagnostic_thresholds": true,
+    "expected_static_weight_n": 7.0632,
+    "max_object_disp_xy_mm": 0.4594832579910044,
+    "max_object_tilt_deg": 0.6726429081720693,
+    "net_force_last50_median_n": 7.063200712204043,
+    "net_force_max_n": 9.553137779235927,
+    "net_force_min_n": 6.284917354583797,
+    "net_force_vs_weight_error_n": 7.12204043296083e-07,
+    "net_positive_control_pass": true,
+    "physics_steps": 200,
+    "positive_control_pass": false,
+    "positive_control_source": "frozen gate: filtered support force; posthoc diagnostic: unfiltered net force",
+    "posthoc_reporter_diagnostic_pass": true,
+    "preregistered_positive_control_pass": false,
+    "robot_baseline_quiet_pass": true,
+    "robot_filter_baseline_max_n": {
+      "gripper_link": 0.0,
+      "link4": 0.0,
+      "link5": 0.0
+    },
+    "support_filter_limitation": "the root filter /World/ground returned no usable channel; raw stderr was not retained and the exact /World/ground/terrain/GroundPlane/CollisionPlane filter was not tested",
+    "support_filtered_channel_available": false,
+    "support_force_last50_median_n": 0.0,
+    "support_force_max_n": 0.0,
+    "support_positive_control_pass": false
+  },
+  "classification": {
+    "any_robot_contact_disturbance_timing_compatible": true,
+    "contact_onset_left_censored": true,
+    "disturbance_step": 0,
+    "first_observation_is_post_physics_step": true,
+    "interpretation": "the pre-step default mirror recook overlaps, but the preregistered support control failed and the first runtime sample couples ground depenetration with robot contact",
+    "link5_contact_disturbance_timing_compatible": false,
+    "link5_contact_step": -1,
+    "preregistered_support_positive_control_pass": false,
+    "runtime_scene_confounded": true,
+    "verdict": "D332_G0A_PRESTEP_MIRROR_HULL_OVERLAP_RUNTIME_GRIPPER_CONTACT_SCENE_CONFOUNDED_MIXED"
+  },
+  "source_trace_sha256": {
+    "baseline_trace_sha256": "a163b5d25e97b41d03c7b7e291eaddeff1c89d8c59541bff3e443b99ad858df2",
+    "final_snapshot_sha256": "c9e44394dfbe33db27e8a347539395fb43a600cc898ffea95dbc7aed2746598b",
+    "first_event_snapshot_sha256": "8455687865d3a89ca358de9143d77a04d19c09cb0c85ba0f4912b55ca3a085b8",
+    "invalid_attempt0": "claudedocs/runtime_logs/grasp_track/g0a_d332/attempt0_invalid_table_filter",
+    "method": "structured CSV reanalysis only; no additional physics run",
+    "offline_snapshot_sha256": "9c6d49d2348962aea4c867893e3e33223b32f32a78113c57876658ed3e1e11ed",
+    "target_trace_sha256": "ee922e2083ea25481ba1933f3ae1be53e3d1459b6a179c3990470547ab7dbe43"
+  },
+  "support_domain_audit": {
+    "active_support": "global terrain plane inferred from settled cylinder center z",
+    "baseline_first_post_step_net_force_n": 6.284917354583797,
+    "baseline_first_post_step_z_delta_mm": 12.256849185943608,
+    "clean_static_discriminator": false,
+    "confound": "each phase starts with 12.117mm ground penetration; first sample couples depenetration and contact",
+    "global_terrain_plane_z_m": 0.0,
+    "initial_cylinder_bottom_z_m": -0.012117000000000003,
+    "initial_ground_penetration_mm": 12.117000000000003,
+    "observed_baseline_final_cylinder_center_z_m": 0.044999606907367706,
+    "tap_table_top_z_m": -0.012117,
+    "target_first_post_step_net_force_n": 125.03320644409571,
+    "target_first_post_step_z_delta_mm": 12.707490102767949,
+    "terrain_above_tap_table_mm": 12.116999999999999
+  },
+  "target_first_contact_witness": {
+    "contact_point_relative_to_cylinder_center_mm": [
+      -9.845197200775146,
+      4.261483380105346,
+      21.044455468654633
+    ],
+    "contact_point_w_m": [
+      0.2915170192718506,
+      0.0033204699866473675,
+      0.06663494557142258
+    ],
+    "force_norm_n": 66.8662656659094,
+    "force_vs_displacement_xy_cosine": 0.9727249488210377,
+    "force_vs_velocity_xy_cosine": 0.969456980662155,
+    "force_w_n": [
+      62.33089065551758,
+      -24.206560134887695,
+      0.0007936945767141879
+    ],
+    "object_displacement_w_m": [
+      0.0013622164726257435,
+      -0.000941013393457979,
+      0.012707490102767949
+    ],
+    "object_velocity_w_mps": [
+      0.23911909759044647,
+      -0.17006660997867584,
+      0.11649389564990997
+    ],
+    "physics_step": 0,
+    "suspected_link": "gripper_link"
+  }
+}

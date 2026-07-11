@@ -1,0 +1,267 @@
+{
+  "artifact": "D332_OFFLINE_GEOMETRY_PRECHECK",
+  "artifacts": {
+    "canonical_joint_csv": "claudedocs/runtime_logs/grasp_track/g0a_d332/d332_canonical_joint_targets.csv",
+    "offline_json": "claudedocs/runtime_logs/grasp_track/g0a_d332/d332_offline_geometry_precheck.json",
+    "offline_snapshot": null
+  },
+  "canonical": {
+    "commanded_joint_deg": [
+      2.148728308569021,
+      31.10846571602184,
+      112.80045405661652,
+      10.484742437013027,
+      0.0,
+      0.0
+    ],
+    "commanded_joint_rad": [
+      0.03750238371533811,
+      0.5429451519883565,
+      1.9687393210325523,
+      0.1829932767494515,
+      0.0,
+      0.0
+    ],
+    "commanded_link5_pos_local_m": [
+      0.24256962865595555,
+      0.009101206424549271,
+      0.13755092923730766
+    ],
+    "commanded_link5_rot_local": [
+      [
+        0.03749359359483842,
+        -0.9011506519118578,
+        0.4318816191946337
+      ],
+      [
+        -0.9992968680223836,
+        -0.0338111500112798,
+        0.01620418759363276
+      ],
+      [
+        -2.646372962240873e-17,
+        -0.4321855026418034,
+        -0.9017847255893459
+      ]
+    ],
+    "commanded_tcp_error_mm": 0.8178119166311656,
+    "commanded_tcp_local_m": [
+      0.2924208601963537,
+      0.010971623390107113,
+      0.03345972193198064
+    ],
+    "home_seed_deg": [
+      0.0,
+      0.0,
+      90.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "ik": {
+      "converged": true,
+      "cost": 0.0008178119166311656,
+      "iterations": 12,
+      "link5_local_m": [
+        0.24256962865595555,
+        0.009101206424549271,
+        0.13755092923730766
+      ],
+      "link5_x_axis_world": [
+        0.03749359359483842,
+        -0.9992968680223836,
+        -2.646372962240873e-17
+      ],
+      "link5_y_axis_world": [
+        -0.9011506519118578,
+        -0.0338111500112798,
+        -0.4321855026418034
+      ],
+      "link5_z_axis_world": [
+        0.4318816191946337,
+        0.01620418759363276,
+        -0.9017847255893459
+      ],
+      "pos_err_mm": 0.8178119166311656,
+      "q_deg": [
+        2.148728308569021,
+        31.10846571602184,
+        112.80045405661652,
+        10.484742437013027,
+        0.0,
+        0.0
+      ],
+      "tcp_local_m": [
+        0.2924208601963537,
+        0.010971623390107113,
+        0.03345972193198064
+      ],
+      "x_axis_err_deg": 0.0,
+      "z_axis_err_deg": 0.0
+    },
+    "joint_names": [
+      "base_link_to_link1",
+      "link1_to_link2",
+      "link2_to_link3",
+      "link3_to_link4",
+      "link4_to_link5",
+      "link5_to_gripper_link"
+    ],
+    "object_center_local_m": [
+      0.3,
+      0.0,
+      0.032882999999999996
+    ],
+    "radial_axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "tangent_axis": [
+      0.0,
+      -1.0,
+      -0.0
+    ],
+    "target_formula": "TCP=center-radial*0.007-tangent*0.011; z=center_z",
+    "target_tcp_local_m": [
+      0.293,
+      0.011,
+      0.032882999999999996
+    ]
+  },
+  "cross_checks": {
+    "gjk_epa_depth_consistent_within_0p1mm": true,
+    "raw_clear_and_hull_overlap": true,
+    "signed_distance_collision_sign_consistent": true
+  },
+  "cylinder_contract": {
+    "axis": "Z",
+    "center_local_m": [
+      0.3,
+      0.0,
+      0.032882999999999996
+    ],
+    "height_m": 0.09,
+    "radius_m": 0.017
+  },
+  "geometry_contract": {
+    "hppfcl_hull_point_count": 200,
+    "link5_mesh": "local_assets/roarm_m3/urdf/meshes/link5.stl",
+    "link5_mesh_sha256": "1d63f374a78c1419b21eec63fa8efeef40d0d42ca89c5de3ceb0d86476d9c7eb",
+    "mesh_scale_m_per_unit": 0.001,
+    "method": "unrestricted mathematical Qhull + hppfcl GJK/EPA; default PhysX mirror recook deferred to runtime",
+    "physx_default_hull_vertex_limit": 64,
+    "raw_bounds_m": [
+      [
+        -0.03099808120727539,
+        -0.01774634552001953,
+        -0.0007495112419128418
+      ],
+      [
+        0.015497934341430665,
+        0.01777365303039551,
+        0.11988562011718751
+      ]
+    ],
+    "raw_face_count": 14092,
+    "raw_unique_vertex_count": 6926,
+    "raw_vertex_count": 42276,
+    "representation_warning": "mathematical full hull is not a mirror recook or a direct live-collider extraction",
+    "robot_usd": "local_assets/roarm_m3/usd/roarm_m3.usd",
+    "robot_usd_sha256": "a4be58e87b1f9790f2a2ed600f0620c79d3cfb95c608b3c598308d52f5e46fff",
+    "scipy_hull_face_count": 396,
+    "scipy_hull_vertex_count": 200,
+    "urdf": "local_assets/roarm_m3/urdf/roarm_m3.urdf",
+    "urdf_collision_origin": {
+      "rpy_rad": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "xyz_m": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "urdf_sha256": "64dc8d082cbce9a13a0697a11a0eaeaebbc54bbcd97e7aafaa40da483969dae2"
+  },
+  "mathematical_full_hull": {
+    "collision_count": 1,
+    "contact": {
+      "normal": [
+        0.7771455952226904,
+        -0.6293208433112399,
+        3.6822015915844323e-10
+      ],
+      "penetration_depth_m": 0.006363467230376948,
+      "position_m": [
+        0.2892794249893724,
+        0.00871853342699903,
+        0.07420884596511446
+      ]
+    },
+    "distance_normal": [
+      0.7771455952226904,
+      -0.6293208433112399,
+      3.6822015915844323e-10
+    ],
+    "is_collision": true,
+    "nearest_point_cylinder_m": [
+      0.2868067547251567,
+      0.010720864708901162,
+      0.07420884596394288
+    ],
+    "nearest_point_geometry_m": [
+      0.2917520952535881,
+      0.006716202145096897,
+      0.07420884596628603
+    ],
+    "signed_distance_m": -0.006363467230376948,
+    "signed_distance_mm": -6.363467230376948,
+    "verdict": "OVERLAP"
+  },
+  "new_variable": [],
+  "raw_stl_negative_control": {
+    "collision_count": 0,
+    "contact": null,
+    "distance_normal": [
+      -0.9770386824532147,
+      0.02233235291749381,
+      -0.21188836448293874
+    ],
+    "is_collision": false,
+    "nearest_point_cylinder_m": [
+      0.29935589678517316,
+      0.01698790359243301,
+      0.048777373081558835
+    ],
+    "nearest_point_geometry_m": [
+      0.2991951655577535,
+      0.021258698956347744,
+      0.048777389173822155
+    ],
+    "signed_distance_m": 0.004273818850648956,
+    "signed_distance_mm": 4.273818850648956,
+    "verdict": "CLEAR"
+  },
+  "signed_distance_thresholds_mm": {
+    "clear_at_or_above": 0.1,
+    "overlap_at_or_below": -0.1
+  },
+  "software": {
+    "hppfcl": "2.4.4",
+    "numpy": "1.26.0",
+    "python": "3.11.14 (main, Oct 21 2025, 18:31:21) [GCC 11.2.0]",
+    "scipy": "1.15.3",
+    "trimesh": "4.5.1"
+  },
+  "stop_rule": {
+    "default_physx_mirror_recook_required": true,
+    "nullspace_scan_required_now": false
+  },
+  "visualization": {
+    "note": "decision snapshot is written after the default PhysX mirror recook in runtime stage",
+    "offline_snapshot": null
+  }
+}

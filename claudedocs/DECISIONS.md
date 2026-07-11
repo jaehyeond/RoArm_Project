@@ -18593,3 +18593,96 @@ Sources:
 - `sim_scripts/cyl34_top_view_d330_grasp_g0a_alignment_probe.py`
 - `local_assets/roarm_m3/usd/roarm_m3.usd`
 - `START_HERE.md`
+
+## D332 - Pre-step mirror hull overlaps, but runtime gripper contact is ground-depenetration confounded (2026-07-11)
+
+Decision:
+
+- Final verdict is
+  `D332_G0A_PRESTEP_MIRROR_HULL_OVERLAP_RUNTIME_GRIPPER_CONTACT_SCENE_CONFOUNDED_MIXED`.
+- The frozen command-pose geometry strongly supports the D331 gap-fill
+  hypothesis: raw STL is clear, while a 35-vertex default PhysX mirror recook
+  of the exact live-stage link5 source mesh overlaps the D34 x H90 cylinder by
+  `6.236272mm`. This is not a direct extraction of the live articulation
+  collider cook or rigid-body ownership, so it is not promoted to "actual live
+  collider confirmed."
+- The runtime is not a clean static causal discriminator. Each phase resets the
+  cylinder bottom `12.117mm` inside the active global ground. The first
+  recorded target row follows a `+12.707490mm` vertical correction with
+  `125.033206N` net force while a `66.866266N` gripper_link lateral event is
+  observed. Ground depenetration and robot contact are coupled.
+- The frozen filtered-support positive-control gate failed. Unfiltered net
+  force matching weight validates net reporting only as a posthoc diagnostic;
+  the positive gripper event validates that channel. link4/link5 `0N` values
+  are sampled negatives without independent channel positive controls.
+- Do not claim collision-geometry class, link5-only causality, early-approach
+  timing, or final-hold/drive refutation from D332. No collision rewrite,
+  alignment-family change, or G0a/G0b promotion is authorized.
+
+Evidence:
+
+- Frozen target `[0.293,0.011,0.032883]m`; deterministic IK command
+  `[2.148728,31.108466,112.800454,10.484742,0,0]deg`; commanded TCP error
+  `0.817812mm`
+  (`sim_scripts/cyl34_top_view_d332_grasp_g0a_static_collision_discriminator.py:342-459`).
+- Raw STL control `+4.273819mm` clear; unrestricted mathematical hull
+  `-6.363467mm` overlap. The live-stage source mesh is transformed to
+  link5-local meters, mirrored with default `convexHull`, synchronously cooked,
+  and removed before physics (`probe:704-870`). Mirror-recook result:
+  `35` vertices / `48` polygons / `-6.236272mm`, with GJK/EPA agreement.
+  Direct live-instance cooking is explicitly unsupported.
+- The cylinder sensor is scene-owned and pre-PLAY; reporter threshold is
+  `0.0N`; body/count/path-map/tensor-shape hard checks pass
+  (`probe:504-701`). The helper also sets rigid-body sleep threshold to zero,
+  so D332 dynamics are not identical to D330.
+- D330's reporter paths resolved before its post-PLAY manual PhysX view-count
+  check failed (`d330 probe:482-510`). Its failure remains classified as an
+  articulation-body/view-domain lifecycle contract failure; lifecycle versus
+  articulation support is not isolated.
+- Frozen support gate: FAIL (`0N`). Root filter `/World/ground` returned no
+  usable channel, but raw warning output was not retained and the exact collider
+  path `/World/ground/terrain/GroundPlane/CollisionPlane` was never tested.
+  Do not generalize this to a GPU-filter limitation.
+- Posthoc reporter diagnostic: baseline last-50 net median `7.0632007N` vs
+  expected `7.0632N`; robot filters quiet. This does not retroactively pass
+  the preregistered filtered-support gate.
+- Scene confound from committed traces: initial ground penetration
+  `12.117000mm`; baseline first post-step z correction `+12.256849mm`;
+  target first post-step z correction/net force
+  `+12.707490mm/125.033206N`.
+- Target trace still records a real gripper_link filtered lateral event:
+  `66.866266N` in the first post-step row, force-motion XY cosine
+  `0.972725/0.969457`; sampled link5/link4 maxima `0/0N`. Final/max object
+  XY `10.282285/10.452925mm`, tilt `9.235161/9.439981deg`; these motion
+  values are not assigned to a robot-only cause.
+- Reanalysis uses only the two 200-row CSV traces and does not rerun physics
+  (`probe:1511-1702`). Visualization DoD passes with exactly three inspected
+  PNGs and one nonzero 200-step RRD. Runtime PNGs use CSV pose/joints plus repo
+  FK reconstruction; original live frames remain in the RRD.
+
+Implication:
+
+- D331's coarse-hull gap-fill mechanism remains the leading geometry
+  hypothesis, now with recorded mirror-recook evidence. It is not yet a
+  live-collider/body-specific repair decision.
+- D332 is a useful failed experiment: it discovered that the original object
+  pose is inconsistent with the active support domain and that the support
+  witness path/gate did not pass.
+- The wrist null-space scan and 10-trial gate were correctly not run after the
+  scene contract failed; neither could repair the confound.
+- The one next action is D333: disable only the redundant global-ground
+  collision so TapTable at `TABLE_Z` is the sole support, restore a valid
+  TapTable filtered-force positive control, and repeat the same one-env
+  200+200-step static discriminator with all object-relative geometry and
+  physics unchanged. Stop before collision ownership audit or repair.
+
+Sources:
+
+- `claudedocs/session_20260711_grasp_g0a_d332_static_collision_discriminator.md`
+- `sim_scripts/cyl34_top_view_d332_grasp_g0a_static_collision_discriminator.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d332/g0a_d332_static_collision_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d332/d332_offline_geometry_precheck.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d332/d332_contact_baseline_trace.csv`
+- `claudedocs/runtime_logs/grasp_track/g0a_d332/d332_teleport_settle_trace.csv`
+- `claudedocs/runtime_logs/grasp_track/g0a_d332/d332_contact_disturbance_trace_v2.rrd`
+- `START_HERE.md`

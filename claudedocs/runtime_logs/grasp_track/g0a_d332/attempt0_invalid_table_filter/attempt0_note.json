@@ -1,0 +1,12 @@
+{
+  "artifact": "D332_ATTEMPT0_INVALID_SUPPORT_FILTER",
+  "decision_evidence": false,
+  "reason": "nested PhysX filter paths were all mapped to index 0 and TapTable was not the active support surface",
+  "reactive_repair": "flatten and one-to-one validate filter indices; replace TapTable filter with /World/ground while keeping the same cylinder-owned ContactSensor",
+  "preserved_files": [
+    "d332_contact_baseline_trace.csv",
+    "d332_teleport_settle_trace.csv",
+    "g0a_d332_static_collision_summary.json",
+    "g0a_d332_static_collision_summary.md"
+  ]
+}
