@@ -1,0 +1,533 @@
+{
+  "active_case": "G0a cylinder D34xH90 alignment-only sole-support static retest",
+  "artifact_contract": {
+    "checks": {
+      "marker_status_ok": true,
+      "rrd_nonzero_file": true,
+      "rrd_status_ok": true,
+      "snapshot_count_between_1_and_3": true,
+      "snapshots_exist_and_nonzero": true
+    },
+    "pass": true
+  },
+  "artifacts": {
+    "baseline_trace_csv": "claudedocs/runtime_logs/grasp_track/g0a_d333/d333_contact_baseline_trace.csv",
+    "canonical_joint_csv": "claudedocs/runtime_logs/grasp_track/g0a_d333/d333_canonical_joint_targets.csv",
+    "frozen_invariant_contract_json": "claudedocs/runtime_logs/grasp_track/g0a_d333/d333_frozen_invariant_contract.json",
+    "prebaseline_contract_json": "claudedocs/runtime_logs/grasp_track/g0a_d333/d333_prebaseline_contract.json",
+    "rrd": "claudedocs/runtime_logs/grasp_track/g0a_d333/d333_sole_support_static_trace_v2.rrd",
+    "runtime_core_provisional_json": "claudedocs/runtime_logs/grasp_track/g0a_d333/d333_runtime_core_provisional.json",
+    "summary_json": "claudedocs/runtime_logs/grasp_track/g0a_d333/g0a_d333_sole_support_static_summary.json",
+    "summary_markdown": "claudedocs/runtime_logs/grasp_track/g0a_d333/g0a_d333_sole_support_static_summary.md",
+    "target_settle_trace_csv": "claudedocs/runtime_logs/grasp_track/g0a_d333/d333_teleport_settle_trace.csv"
+  },
+  "classification": {
+    "contact_onset_left_censored": true,
+    "d330_swept_approach_reattributed": false,
+    "first_link5_contact_step": -1,
+    "first_observation_is_post_physics_step": true,
+    "first_robot_contact_step": 0,
+    "interpretation": "a clean final-pose event or object disturbance remains without an immediate sampled link5 event; late or absent link5 attribution cannot support body-specific repair",
+    "object_disturbance_start_step": 0,
+    "target_settle_executed": true,
+    "verdict": "D333_G0A_CLEAN_STATIC_BODY_ATTRIBUTION_MIXED_STOP"
+  },
+  "environment": {
+    "hppfcl": "2.4.4",
+    "isaaclab": "2.3.0",
+    "isaacsim": "5.1.0.0",
+    "numpy": "1.26.0",
+    "psutil": "5.9.8",
+    "python": "3.11.14 (main, Oct 21 2025, 18:31:21) [GCC 11.2.0]",
+    "rerun-sdk": "0.34.1",
+    "scipy": "1.15.3",
+    "trimesh": "4.5.1"
+  },
+  "frozen_d332_contract": {
+    "canonical": {
+      "commanded_joint_deg": [
+        2.148728308569021,
+        31.10846571602184,
+        112.80045405661652,
+        10.484742437013027,
+        0.0,
+        0.0
+      ],
+      "commanded_joint_rad": [
+        0.03750238371533811,
+        0.5429451519883565,
+        1.9687393210325523,
+        0.1829932767494515,
+        0.0,
+        0.0
+      ],
+      "commanded_link5_pos_local_m": [
+        0.24256962865595555,
+        0.009101206424549271,
+        0.13755092923730766
+      ],
+      "commanded_link5_rot_local": [
+        [
+          0.03749359359483842,
+          -0.9011506519118578,
+          0.4318816191946337
+        ],
+        [
+          -0.9992968680223836,
+          -0.0338111500112798,
+          0.01620418759363276
+        ],
+        [
+          -2.646372962240873e-17,
+          -0.4321855026418034,
+          -0.9017847255893459
+        ]
+      ],
+      "commanded_tcp_error_mm": 0.8178119166311656,
+      "commanded_tcp_local_m": [
+        0.2924208601963537,
+        0.010971623390107113,
+        0.03345972193198064
+      ],
+      "home_seed_deg": [
+        0.0,
+        0.0,
+        90.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ik": {
+        "converged": true,
+        "cost": 0.0008178119166311656,
+        "iterations": 12,
+        "link5_local_m": [
+          0.24256962865595555,
+          0.009101206424549271,
+          0.13755092923730766
+        ],
+        "link5_x_axis_world": [
+          0.03749359359483842,
+          -0.9992968680223836,
+          -2.646372962240873e-17
+        ],
+        "link5_y_axis_world": [
+          -0.9011506519118578,
+          -0.0338111500112798,
+          -0.4321855026418034
+        ],
+        "link5_z_axis_world": [
+          0.4318816191946337,
+          0.01620418759363276,
+          -0.9017847255893459
+        ],
+        "pos_err_mm": 0.8178119166311656,
+        "q_deg": [
+          2.148728308569021,
+          31.10846571602184,
+          112.80045405661652,
+          10.484742437013027,
+          0.0,
+          0.0
+        ],
+        "tcp_local_m": [
+          0.2924208601963537,
+          0.010971623390107113,
+          0.03345972193198064
+        ],
+        "x_axis_err_deg": 0.0,
+        "z_axis_err_deg": 0.0
+      },
+      "joint_names": [
+        "base_link_to_link1",
+        "link1_to_link2",
+        "link2_to_link3",
+        "link3_to_link4",
+        "link4_to_link5",
+        "link5_to_gripper_link"
+      ],
+      "object_center_local_m": [
+        0.3,
+        0.0,
+        0.032882999999999996
+      ],
+      "offline_witness_cylinder_local_m": [
+        0.28666456592845707,
+        0.010543536619154886,
+        0.07511371815161982
+      ],
+      "radial_axis": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "tangent_axis": [
+        0.0,
+        -1.0,
+        -0.0
+      ],
+      "target_formula": "TCP=center-radial*0.007-tangent*0.011; z=center_z",
+      "target_tcp_local_m": [
+        0.293,
+        0.011,
+        0.032882999999999996
+      ]
+    },
+    "invariant_hard_contract": {
+      "checks": {
+        "baseline_steps_same_as_d332": true,
+        "num_envs_same_as_d332": true,
+        "object_center_same_as_d332": true,
+        "object_height_same_as_d332": true,
+        "object_radius_same_as_d332": true,
+        "physics_dt_same_as_d332": true,
+        "robot_usd_sha256_same_as_d332": true,
+        "seed_same_as_d332": true,
+        "target_steps_same_as_d332": true,
+        "urdf_sha256_same_as_d332": true
+      },
+      "dynamic_friction": 1.2,
+      "mass_kg": 0.72,
+      "pass": true,
+      "robot_usd": "local_assets/roarm_m3/usd/roarm_m3.usd",
+      "robot_usd_sha256": "a4be58e87b1f9790f2a2ed600f0620c79d3cfb95c608b3c598308d52f5e46fff",
+      "seed": 33201,
+      "static_friction": 1.5,
+      "urdf": "local_assets/roarm_m3/urdf/roarm_m3.urdf",
+      "urdf_sha256": "64dc8d082cbce9a13a0697a11a0eaeaebbc54bbcd97e7aafaa40da483969dae2"
+    },
+    "mirror_signed_distance_mm": -6.236272223162745,
+    "source_summary": "claudedocs/runtime_logs/grasp_track/g0a_d332/g0a_d332_static_collision_summary.json",
+    "source_summary_sha256": "05fdbd0144a55ed1785fccfefd79c310dc10ed982e996221377d55a3fde4c04a",
+    "source_verdict": "D332_G0A_PRESTEP_MIRROR_HULL_OVERLAP_RUNTIME_GRIPPER_CONTACT_SCENE_CONFOUNDED_MIXED"
+  },
+  "new_variable": [
+    "support_domain_global_ground_collision_disabled"
+  ],
+  "non_goals_respected": [
+    "no collision mesh rewrite or live-collider ownership scan",
+    "no target/gate/offset/standoff tuning",
+    "no waypoint, approach path, wrist null-space scan, or 10-trial gate",
+    "no gripper close/grasp/lift/G0b",
+    "no render beyond at most three diagnostic PNGs; no video",
+    "no RL/PPO/randomization/VLA/RoArm/B200/cube"
+  ],
+  "outcome_guards": {
+    "alignment_ladder_promoted": false,
+    "collision_repair_authorized": false,
+    "d330_swept_approach_reattributed": false,
+    "g0a_pass": false,
+    "stop_after_d333": true
+  },
+  "runtime": {
+    "baseline": {
+      "first_step_z_delta_mm": 3.354072575234568e-06,
+      "first_step_z_tolerance_mm": 0.5,
+      "hard_gate": {
+        "baseline_object_tilt_lt_1deg": true,
+        "baseline_object_xy_lt_0p5mm": true,
+        "first_step_abs_z_delta_le_0p5mm": true,
+        "last50_bottom_table_gap_abs_max_le_0p5mm": true,
+        "last50_table_fz_median_gt_1n": true,
+        "robot_filters_baseline_max_lt_0p1n": true,
+        "robot_root_position_drift_le_1e_6m": true,
+        "robot_root_rotation_drift_le_1e_6rad": true,
+        "sensor_contract": true,
+        "stage_contract": true
+      },
+      "hard_gate_pass": true,
+      "max_object_disp_xy_mm": 0.0037739450160181134,
+      "max_object_tilt_deg": 0.003364520785190337,
+      "max_robot_root_position_drift_m": 0.0,
+      "max_robot_root_rotation_drift_rad": 0.0,
+      "physics_steps": 200,
+      "robot_filter_baseline_max_n": {
+        "gripper_link": 0.0,
+        "link4": 0.0,
+        "link5": 0.0
+      },
+      "sensor_net_force_norm_last50_median_n": 7.063635349274513,
+      "support_positive_threshold_n": 1.0,
+      "support_table_force_norm_last50_median_n": 7.063635349274513,
+      "support_table_force_z_last50_median_n": 7.063635349273682,
+      "tail_bottom_table_gap_abs_max_mm": 0.00013455373122292502,
+      "tail_bottom_table_gap_tolerance_mm": 0.5
+    },
+    "baseline_physics_steps": 200,
+    "diagnostic_thresholds": {
+      "consecutive_steps": 2,
+      "first_step_abs_z_delta_mm": 0.5,
+      "object_tilt_disturbance_deg": 1.0,
+      "object_xy_disturbance_mm": 0.5,
+      "robot_force_event_n": 0.1,
+      "support_table_fz_n": 1.0,
+      "tail_bottom_table_gap_abs_mm": 0.5
+    },
+    "num_envs": 1,
+    "physics_dt_s": 0.005,
+    "seed": 33201,
+    "sensor_contract": {
+      "actual_tensor_shapes": {
+        "contact_pos_w": [
+          1,
+          1,
+          4,
+          3
+        ],
+        "force_matrix_w": [
+          1,
+          1,
+          4,
+          3
+        ],
+        "force_matrix_w_history": [
+          1,
+          1,
+          1,
+          4,
+          3
+        ],
+        "net_forces_w": [
+          1,
+          1,
+          3
+        ],
+        "net_forces_w_history": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "pos_w": [
+          1,
+          1,
+          3
+        ],
+        "quat_w": [
+          1,
+          1,
+          4
+        ]
+      },
+      "body_names": [
+        "Sponge"
+      ],
+      "errors": [],
+      "expected_tensor_shapes": {
+        "contact_pos_w": [
+          1,
+          1,
+          4,
+          3
+        ],
+        "force_matrix_w": [
+          1,
+          1,
+          4,
+          3
+        ],
+        "force_matrix_w_history": [
+          1,
+          1,
+          1,
+          4,
+          3
+        ],
+        "net_forces_w": [
+          1,
+          1,
+          3
+        ],
+        "net_forces_w_history": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "pos_w": [
+          1,
+          1,
+          3
+        ],
+        "quat_w": [
+          1,
+          1,
+          4
+        ]
+      },
+      "filter_count": 4,
+      "hard_contract_pass": true,
+      "instrumentation_side_effect": "activate_contact_sensors authors rigid-body sleep threshold 0",
+      "num_bodies": 1,
+      "num_instances": 1,
+      "reporter_threshold_n": 0.0,
+      "resolved_filter_index_by_label": {
+        "gripper_link": 3,
+        "link4": 1,
+        "link5": 2,
+        "support_table": 0
+      },
+      "resolved_filter_paths": [
+        "/World/envs/env_0/TapTable",
+        "/World/envs/env_0/Robot/link4",
+        "/World/envs/env_0/Robot/link5",
+        "/World/envs/env_0/Robot/gripper_link"
+      ],
+      "rigid_body_sleep_threshold": 0.0,
+      "sensor_count": 1,
+      "single_sample_threshold_crossing_by_robot_filter": {
+        "gripper_link": true,
+        "link4": false,
+        "link5": false
+      },
+      "support_filter_positive_control_valid": true
+    },
+    "stage_contract": {
+      "errors": [],
+      "expected_table_top_z_m": -0.012117,
+      "ground_collision_disabled_pass": true,
+      "hard_contract_pass": true,
+      "postplay_ground_colliders": [
+        {
+          "collision_enabled": false,
+          "path": "/World/ground/terrain/GroundPlane/CollisionPlane",
+          "type_name": "Plane"
+        }
+      ],
+      "preplay": {
+        "errors": [],
+        "expected_ground_collider_path": "/World/ground/terrain/GroundPlane/CollisionPlane",
+        "ground_colliders_after_disable": [
+          {
+            "collision_enabled": false,
+            "path": "/World/ground/terrain/GroundPlane/CollisionPlane",
+            "type_name": "Plane"
+          }
+        ],
+        "ground_colliders_before_disable": [
+          {
+            "collision_enabled": true,
+            "path": "/World/ground/terrain/GroundPlane/CollisionPlane",
+            "type_name": "Plane"
+          }
+        ],
+        "pass": true
+      },
+      "robot_is_fixed_base": true,
+      "table_body_path": "/World/envs/env_0/TapTable",
+      "table_collision_enabled_pass": true,
+      "table_collision_prims": [
+        {
+          "collision_enabled": true,
+          "path": "/World/envs/env_0/TapTable/geometry/mesh",
+          "type_name": "Cube"
+        }
+      ],
+      "table_expected_collider_path": "/World/envs/env_0/TapTable/geometry/mesh",
+      "table_top_error_mm": 2.9671192239288935e-07,
+      "table_top_pass": true,
+      "table_top_tolerance_mm": 0.01,
+      "table_top_z_m": -0.012117000296711922
+    },
+    "target_runtime_contract_pass": true,
+    "target_settle": {
+      "commanded_tcp_error_mm": 0.8178119166311656,
+      "final_bottom_table_gap_mm": -0.00038887065417422817,
+      "final_joint_tracking_error_rad": 0.020338058471679688,
+      "final_object_disp_xy_mm": 9.298849200607236,
+      "final_object_pos_local_m": [
+        0.3092646896839142,
+        -0.0007963174721226096,
+        0.033930178731679916
+      ],
+      "final_object_quat_wxyz": [
+        0.9994262456893921,
+        0.004707420244812965,
+        0.03353744000196457,
+        0.0005463861743919551
+      ],
+      "final_object_tilt_deg": 3.881523100769778,
+      "final_object_z_delta_mm": 1.0471787316799208,
+      "final_tcp_error_mm": 6.673174217638222,
+      "first_contact_step_by_link": {
+        "gripper_link": 0,
+        "link4": -1,
+        "link5": -1
+      },
+      "first_robot_contact_step": 0,
+      "max_abs_bottom_table_gap_mm": 0.26989364394619864,
+      "max_abs_object_z_delta_mm": 1.936368273019795,
+      "max_force_n_by_link": {
+        "gripper_link": 76.41275491914837,
+        "link4": 0.0,
+        "link5": 0.0
+      },
+      "max_force_step_by_link": {
+        "gripper_link": 0,
+        "link4": 0,
+        "link5": 0
+      },
+      "max_joint_tracking_error_rad": 0.04265546798706055,
+      "max_object_disp_xy_mm": 12.598178941303035,
+      "max_object_tilt_deg": 8.07451801993026,
+      "max_robot_root_position_drift_m": 0.0,
+      "max_robot_root_rotation_drift_rad": 0.0,
+      "min_tcp_error_mm": 2.3124877131196375,
+      "object_disturbance_start_step": 0,
+      "peak_object_angular_speed_radps": 7.496453822631681,
+      "peak_object_angular_speed_step": 0,
+      "peak_object_speed_mps": 0.3712585899518491,
+      "peak_object_speed_step": 1,
+      "support_table_force_norm_max_n": 135.44467163797137,
+      "support_table_force_z_last50_median_n": 8.697574138641357,
+      "support_table_force_z_max_n": 135.44467163085938,
+      "suspected_link": "gripper_link",
+      "trace_physics_steps": 200,
+      "vertical_support_disturbance_start_step": 1,
+      "xy_tilt_disturbance_start_step": 0
+    },
+    "target_settle_physics_steps_executed": 200,
+    "target_settle_physics_steps_requested": 200
+  },
+  "scientific_verdict_before_artifact_gate": "D333_G0A_CLEAN_STATIC_BODY_ATTRIBUTION_MIXED_STOP",
+  "verdict": "D333_G0A_CLEAN_STATIC_BODY_ATTRIBUTION_MIXED_STOP",
+  "visualization": {
+    "marker_status": {
+      "backend": "isaac_markers",
+      "frame_count": 7,
+      "ok": true,
+      "prim_path": "/World/D333SoleSupportFrames/frames"
+    },
+    "rrd_status": {
+      "backend": "rerun",
+      "blueprint_status": {
+        "attempted": true,
+        "ok": true,
+        "origin": "/"
+      },
+      "live_viewer": false,
+      "nonzero_file": true,
+      "ok": true,
+      "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d333/d333_sole_support_static_trace_v2.rrd",
+      "trace_steps": 200,
+      "urdf_actual_status": {
+        "attempted": true,
+        "joint_count": 8,
+        "name": "roarm_m3",
+        "ok": true
+      },
+      "urdf_commanded_status": {
+        "attempted": true,
+        "joint_count": 8,
+        "name": "roarm_m3",
+        "ok": true
+      }
+    },
+    "snapshot_count": 3,
+    "snapshots": [
+      "claudedocs/runtime_logs/grasp_track/g0a_d333/d333_baseline_final.png",
+      "claudedocs/runtime_logs/grasp_track/g0a_d333/d333_target_first_event.png",
+      "claudedocs/runtime_logs/grasp_track/g0a_d333/d333_target_final.png"
+    ]
+  }
+}

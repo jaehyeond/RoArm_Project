@@ -1,0 +1,371 @@
+{
+  "artifact": "D333_POSTRUN_CSV_REANALYSIS",
+  "baseline_recomputed": {
+    "first_step_z_delta_mm": 3.354072575234568e-06,
+    "last50_table_fz_median_n": 7.063635349273682,
+    "max_object_disp_xy_mm": 0.0037739450160181134,
+    "max_object_tilt_deg": 0.003364520785190337,
+    "robot_filter_max_n": {
+      "gripper_link": 0.0,
+      "link4": 0.0,
+      "link5": 0.0
+    },
+    "row_count": 200,
+    "tail_bottom_table_gap_abs_max_mm": 0.00013455373122292502
+  },
+  "d332_to_d333_comparison": {
+    "baseline_first_step_z_delta_mm": [
+      12.256849185943608,
+      3.354072575234568e-06
+    ],
+    "final_object_disp_xy_mm": [
+      10.282284948782715,
+      9.298849200607236
+    ],
+    "gripper_peak_force_n": [
+      66.8662656659094,
+      76.41275491914837
+    ],
+    "link5_peak_force_n": [
+      0.0,
+      0.0
+    ],
+    "max_object_disp_xy_mm": [
+      10.452924830800212,
+      12.598178941303035
+    ],
+    "target_first_step_z_delta_mm": [
+      12.707490102767949,
+      0.4807185394763991
+    ]
+  },
+  "frozen_contract_cross_check": {
+    "canonical_joint_csv_byte_identical": true,
+    "commanded_tcp_unique": [
+      [
+        0.2924208601963537,
+        0.010971623390107113,
+        0.03345972193198064
+      ]
+    ],
+    "target_steps": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120,
+      121,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      131,
+      132,
+      133,
+      134,
+      135,
+      136,
+      137,
+      138,
+      139,
+      140,
+      141,
+      142,
+      143,
+      144,
+      145,
+      146,
+      147,
+      148,
+      149,
+      150,
+      151,
+      152,
+      153,
+      154,
+      155,
+      156,
+      157,
+      158,
+      159,
+      160,
+      161,
+      162,
+      163,
+      164,
+      165,
+      166,
+      167,
+      168,
+      169,
+      170,
+      171,
+      172,
+      173,
+      174,
+      175,
+      176,
+      177,
+      178,
+      179,
+      180,
+      181,
+      182,
+      183,
+      184,
+      185,
+      186,
+      187,
+      188,
+      189,
+      190,
+      191,
+      192,
+      193,
+      194,
+      195,
+      196,
+      197,
+      198,
+      199
+    ],
+    "target_tcp_unique": [
+      [
+        0.293,
+        0.011,
+        0.032882999999999996
+      ]
+    ],
+    "target_time_first_last_s": [
+      0.005,
+      1.0
+    ]
+  },
+  "method": "structured CSV reanalysis only; no additional physics run",
+  "semantic_corrections": {
+    "center_z_disturbance_onset_step": 1,
+    "reason": "bottom/table gap never reached 0.5mm and TapTable force persisted",
+    "support_gap_disturbance_onset_step": -1,
+    "support_loss_observed": false,
+    "zero_force_link4_link5_max_force_step_is_minus_one": true
+  },
+  "source_sha256": {
+    "baseline_csv": "0f2b2dbda86c3c43378fa58e3498b4e1c4979764f038fe28b85fb38983aa16ef",
+    "d332_canonical_joint_csv": "371909530e4ee6fd9ce8ad4a284b0d8c2a2ab015060d34a7a37c05f076816403",
+    "d332_summary_json": "05fdbd0144a55ed1785fccfefd79c310dc10ed982e996221377d55a3fde4c04a",
+    "d333_canonical_joint_csv": "371909530e4ee6fd9ce8ad4a284b0d8c2a2ab015060d34a7a37c05f076816403",
+    "runtime_summary_json": "17f8dc238392bb5f1ab881560ad03a4fb23bfedc5898d5262f09e55298232dc2",
+    "target_csv": "f30c672089f3abad8b5c4b95242f2deb6986fdead0e9101e8242ab4055027cec"
+  },
+  "target_recomputed": {
+    "corrected_max_force_step_by_link": {
+      "gripper_link": 0,
+      "link4": -1,
+      "link5": -1
+    },
+    "gripper_last50_force_median_n": 2.0663048614856336,
+    "max_abs_final_bottom_table_gap_mm": [
+      0.26989364394619864,
+      -0.00038887065417422817
+    ],
+    "max_abs_final_z_delta_mm": [
+      1.936368273019795,
+      1.0471787316799208
+    ],
+    "max_final_tilt_deg": [
+      8.07451801993026,
+      3.881523100769778
+    ],
+    "max_final_xy_mm": [
+      12.598178941303035,
+      9.298849200607236
+    ],
+    "max_force_n_by_link": {
+      "gripper_link": 76.41275491914837,
+      "link4": 0.0,
+      "link5": 0.0
+    },
+    "net_minus_filtered_force_max_abs_component_n": 6.741611286997795e-06,
+    "net_minus_filtered_force_mean_abs_component_n": 9.252471545410461e-08,
+    "robot_filter_positive_step_count_ge_0p1n": {
+      "gripper_link": 180,
+      "link4": 0,
+      "link5": 0
+    },
+    "robot_filter_positive_step_ranges_ge_0p1n": {
+      "gripper_link": [
+        [
+          0,
+          1
+        ],
+        [
+          22,
+          199
+        ]
+      ],
+      "link4": [],
+      "link5": []
+    },
+    "row_count": 200,
+    "step0": {
+      "contact_point_below_reset_cylinder_top_mm": 11.248054428577431,
+      "contact_point_relative_to_reset_center_mm": [
+        -8.482980728149403,
+        3.3204699866473675,
+        33.751945571422574
+      ],
+      "force_vs_displacement_xy_cosine": 0.9999809861609779,
+      "force_vs_velocity_xy_cosine": 0.9512352418400675,
+      "gripper_contact_point_w_m": [
+        0.2915170192718506,
+        0.0033204699866473675,
+        0.06663494557142258
+      ],
+      "gripper_force_norm_n": 76.41275491914837,
+      "gripper_force_w_n": [
+        71.22986602783203,
+        -27.662525177001953,
+        0.0009070101659744978
+      ],
+      "net_force_norm_n": 155.5127613575136,
+      "object_disp_xy_mm": 1.4549372392421325,
+      "object_tilt_deg": 1.821227067988108,
+      "object_z_delta_mm": 0.4807185394763991,
+      "table_force_norm_n": 135.44467163797137
+    },
+    "two_consecutive_onset_step": {
+      "center_z": 1,
+      "gripper_link": 0,
+      "link4": -1,
+      "link5": -1,
+      "support_gap": -1,
+      "xy_or_tilt": 0
+    }
+  },
+  "verdict_cross_check": {
+    "match": true,
+    "recomputed_verdict": "D333_G0A_CLEAN_STATIC_BODY_ATTRIBUTION_MIXED_STOP",
+    "summary_verdict": "D333_G0A_CLEAN_STATIC_BODY_ATTRIBUTION_MIXED_STOP"
+  }
+}

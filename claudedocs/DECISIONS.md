@@ -18686,3 +18686,76 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d332/d332_teleport_settle_trace.csv`
 - `claudedocs/runtime_logs/grasp_track/g0a_d332/d332_contact_disturbance_trace_v2.rrd`
 - `START_HERE.md`
+
+## D333 - Sole-support repair passes; clean final pose still has gripper-attributed disturbance (2026-07-11)
+
+Decision:
+
+- Verdict is `D333_G0A_CLEAN_STATIC_BODY_ATTRIBUTION_MIXED_STOP`.
+- Disabling only the exact global-ground collider is a valid support-domain
+  repair. The TapTable is now the sole support and the frozen D332 baseline
+  contract passes.
+- The D332 step-0 event is not a ground-only artifact. At the same frozen
+  final pose, clean-scene robot contact and object disturbance remain and are
+  sampled under the `gripper_link` rigid-body filter, not link5.
+- Do not promote the D332 mirror-recooked link5 overlap to a live link5 cause.
+  Downgrade it from leading runtime blocker to an unresolved mirror/live-cook/
+  rigid-body-ownership mismatch.
+- Do not interpret link5 `0N` as proven no-contact. Link5 still lacks an
+  independent filter-specific positive control, while ContactSensor reports
+  filtered rigid-body normal force rather than exact collision-shape identity.
+- G0a is not passed. D330 swept approach is not reattributed, collision repair
+  is not authorized, and G0b/RL remain blocked.
+
+Evidence:
+
+- Stage contract: the only ground collider
+  `/World/ground/terrain/GroundPlane/CollisionPlane` changes true to false
+  pre-PLAY and remains false; TapTable collider stays enabled; table-top error
+  is `0.000000297mm`; robot is fixed-base with zero root drift.
+- Sensor contract: one cylinder body and four one-to-one filters resolve to
+  TapTable/link4/link5/gripper_link; reporter and sleep thresholds are zero.
+- Clean baseline 200 rows: first z correction `0.000003354mm`, last-50 table
+  Fz `7.063635349N`, bottom/table max tail gap `0.000134554mm`, max XY/tilt
+  `0.003773945mm/0.003364521deg`, and all robot filters `0N`. Every hard gate
+  passes.
+- Clean target 200 rows: gripper onset/disturbance onset `0/0`, gripper peak
+  `76.412754919N`, link4/link5 onset `-1/-1`; max/final XY
+  `12.598178941/9.298849201mm`, max/final tilt
+  `8.074518/3.881523deg`.
+- Gripper force persists in `180/200` rows. Filtered force vectors close the
+  cylinder net-force trace within `6.7417e-6N`; step-0 gripper force versus
+  object XY-displacement cosine is `0.999981`.
+- Ground removal changes D332 baseline/target first-step z corrections from
+  `12.256849/12.707490mm` to `0.000003/0.480719mm`, but gripper peak remains
+  (`66.866266 -> 76.412755N`) and final XY remains large
+  (`10.282285 -> 9.298849mm`). The `pop-into-gripper only` explanation is
+  refuted.
+- Three inspected PNGs, Isaac frame markers, and one non-empty 200-step RRD
+  pass Visualization DoD. Summary and CSV metrics were independently
+  recomputed with no mismatch.
+
+Implication:
+
+- Static target failure already blocks a clean D330 10-trial/swept rerun; such
+  a rerun cannot change the current repair decision.
+- The one next decision-changing task is D334: at the frozen D333 pre-step and
+  recorded post-step-0 poses, audit link5 and gripper_link live collision prims,
+  nearest rigid-body ownership, source/default-cook representation, and
+  cylinder signed distance/contact-point parity. AABB-only evidence is
+  forbidden.
+- D334 must stop before mesh rewrite or target-family change. Proxy/cook
+  artifact routes to a collision-representation repair decision; overlap with
+  actual tool geometry routes to a target-family repair decision; unresolved
+  parity remains MIXED_STOP.
+
+Sources:
+
+- `claudedocs/session_20260711_grasp_g0a_d333_sole_support_static_retest.md`
+- `sim_scripts/cyl34_top_view_d333_grasp_g0a_sole_support_static_retest.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d333/g0a_d333_sole_support_static_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d333/d333_contact_baseline_trace.csv`
+- `claudedocs/runtime_logs/grasp_track/g0a_d333/d333_teleport_settle_trace.csv`
+- `claudedocs/runtime_logs/grasp_track/g0a_d333/d333_postrun_csv_reanalysis.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d333/d333_sole_support_static_trace_v2.rrd`
+- `START_HERE.md`
