@@ -1,97 +1,94 @@
 # START_HERE.md
 
-Last updated: 2026-07-12 KST (D335 current truth: no raw-tool-clear target was
-found in the pre-registered finite grasp-semantic radial/tangent candidate set;
-the pre-physics gate correctly prevented all settle physics.)
+Last updated: 2026-07-12 KST (D336 current truth: the finite-grid caveat on
+D335 is discharged — the position-only r/t target family penetrates the
+cylinder at millimeter scale at every evaluated point, including the
+continuous optimum; zero physics steps ran.)
 
 ## Current Truth
 
 - Active pivot remains **grasp track G0a on cylinder D34 x H90**. Cube repair,
-  G0b close/lift, PPO/RL, VLA, randomization, real RoArm, and B200 remain out of
-  scope.
-- D335 verdict: `D335_G0A_TARGET_FAMILY_NO_FEASIBLE_CLEAR_STOP`.
-  - D334 old-target negative control was bit-exact with controlled physics `0`:
-    link5 raw `+4.2726455336mm` / CLEAR, gripper raw `-5.9566769497mm` /
-    OVERLAP, both deltas `0.000000mm`.
-  - Deterministic bounded search evaluated `2,629` unique candidates (`1,449`
-    coarse + `1,180` refinement). Frozen alignment gates passed `2,560`;
-    complete raw-tool clearance and full pass were both `0`.
-  - link5 raw was CLEAR `2,629/2,629`; gripper raw was OVERLAP `2,422`,
-    BORDERLINE `207`, CLEAR `0`.
-  - Best registered ranking row was `(r,t)=(14.6,13.9)mm`: link5
-    `+7.787464mm` / CLEAR, gripper BVH ranking scalar `-0.000121945mm` /
-    OVERLAP; TCP/tangent/gap/height gates passed. The scalar is not an EPA
-    penetration depth or exact near-miss magnitude.
-  - Pre-physics contract PASS, candidate gate FAIL, sim counter `0->0`,
-    `physics_licensed=false`, controlled physics steps `0`. No baseline or
-    target-settle artifacts exist, as required.
-  - Visualization DoD passed: one inspected decision PNG, six marker frames,
-    and one non-empty `2,480,172`-byte RRD.
-- D334 causal truth remains: the old D325 command overlaps the actual gripper
-  raw mesh; ownership is clean 1:1. Gripper cook parity `1.46%` FAIL is a
-  separate secondary representation finding.
+  G0b close/lift, PPO/RL, VLA, randomization, real RoArm, and B200 remain out
+  of scope.
+- D336 verdict: `D336_G0A_FINITE_GRID_CAVEAT_DISCHARGED_NO_CLEAR_STOP`.
+  - Zero new physical variables; method-only change (exact contact-level EPA
+    ranking + continuous refinement inside the frozen D335 family/domain).
+  - Controls bit-exact: old target link5 `+4.2726455336mm`/CLEAR, gripper
+    `-5.9566769497mm`/OVERLAP, deltas `0.000000mm` vs D334; grid parity vs
+    the pinned D335 CSV `0.000000mm`; exact layer `6.4606mm >= 5.8630mm`.
+  - `3,181` unique evaluations (2,629 exact rescore + 322 Nelder-Mead + 230
+    micro-grid): raw-clear `0`, full-pass `0`. Sim counter `0 -> 0`,
+    `physics_licensed=false`, controlled physics steps `0`.
+  - **Ranking-bias finding**: D335's BVH scalar was not a proximity measure.
+    D335 best `(14.6,13.9)mm` (scalar `-0.000122mm`) is actually `-7.830mm`
+    deep by certified EPA. True best basin: `(15.3897,9.0000)mm` at
+    `-4.285mm` (alignment-passing best `-4.396mm` at `(15.2774,9.0446)mm`);
+    worst `-11.299mm`. EPA 64-contact cap saturated everywhere → depths are
+    lower bounds of solid penetration.
+- D334 causal truth stands: the actual gripper raw mesh overlaps the
+  cylinder under this family; ownership is clean 1:1. Gripper cook parity
+  `1.46%` FAIL remains a separate secondary finding.
 
 ## Interpretation
 
-- D335 licenses a **finite executed-set** conclusion, not a proof that every
-  continuous r/t value is infeasible. Do not overclaim mathematical
-  impossibility from the sampled grid.
-- Do not repeat offset-only tuning, approach, or 10-trial runs in the current
-  HOME-seeded position-only family. No target was selected.
-- Do not expand beyond the anti-retreat boundary `r<=17mm` without explicitly
-  redefining grasp-depth/bracketing semantics; clearance by moving away from
-  the cylinder is not a G0a repair.
-- Collision-representation repair cannot replace an actual raw-tool-clear
-  command. It remains reserve, not the current critical-path fix.
-- D330 swept results remain scene-confounded and unreattributed.
+- The HOME-seeded position-only radial/tangent family is **closed at
+  millimeter scale**: no offset-only tuning, finer grid, or optimizer pass in
+  this family may be attempted again (D336). A `>=4.29mm` certified
+  penetration at the continuous optimum cannot become `+0.1mm` clearance by
+  position offsets.
+- Still an executed-set statement, not a continuum impossibility proof — but
+  the "maybe the grid missed a pocket" branch is gone.
+- The BVH distance scalar of a colliding mesh must never be used as a
+  near-miss/proximity measure; ranking uses contact-level EPA enumeration
+  (D336 method), judgment stays the exact clear rule.
+- Collision-representation repair cannot replace a raw-tool-clear command; it
+  remains reserve.
 
 ## Active Case: G0a
 
 - Object: cylinder radius `0.017m`, height `0.090m`, fixed `(0.300,0.000)`;
   mass placeholder `0.72kg` (real mass required before G0b).
 - Friction `static=1.5`, `dynamic=1.2`; no material/mass tuning.
-- Old target D325 `(radial,tangent)=(7,11)mm` is collision-invalid. D335 produced
-  no replacement target in the registered non-retreat scalar-offset set.
+- Old target D325 `(7,11)mm` is collision-invalid (D334). D335 found no clear
+  scalar-offset target; D336 closed the whole position-only family at
+  millimeter scale.
 - G0a gates remain: TCP `<=5mm`, tangent `<=15deg`, jaw gap `[0,5mm]`, no
   penetration, contact `>=15mm` below top, displacement `<5mm`, `10/10`.
-- Latest runtime output: `claudedocs/runtime_logs/grasp_track/g0a_d335/`.
+- Latest runtime output: `claudedocs/runtime_logs/grasp_track/g0a_d336/`.
 - Latest detailed session:
-  `claudedocs/session_20260712_grasp_g0a_d335_target_family_repair.md`.
+  `claudedocs/session_20260712_grasp_g0a_d336_finite_grid_caveat_discriminator.md`.
 
 ## Next Concrete Action
 
-**STOP for user case choice. Recommended active candidate: D336 finite-grid
-caveat discriminator** — no new physical variable; use the same audited raw
-tool geometry, frozen HOME-seeded r/t family, anti-retreat/alignment gates, and
-zero-step pre-physics contract, but apply a separately pre-registered
-continuous/finer feasibility method around the top basins. It must be capable
-of finding a `>=+0.1mm` raw-clear candidate; otherwise it stops without physics.
+**STOP for user case choice** (D336 discharged the caveat; no candidate
+exists to evaluate):
 
-Reserve choices (not active without user approval):
+- **(A) Recommended: add exactly one new reachable wrist/tool-orientation
+  variable** to the target family (reuse the same bounded r/t domain,
+  anti-retreat `r<=17mm`, alignment gates, and the D336 exact raw-tool
+  pre-physics gate). Quantitatively motivated: the jaw region needs
+  `>=~4.4mm` effective clearance change that position offsets cannot
+  produce. The unreachable D323 strict-axis family must not be resurrected.
+- (B) Explicitly redefine grasp-depth semantics before permitting `r>17mm`.
+- (C) Gripper collision-representation repair stays deferred until an actual
+  raw-clear target family exists.
 
-1. If finer feasibility also fails, add exactly one reachable
-   wrist/tool-orientation variable; do not resurrect the unreachable D323
-   strict-axis family.
-2. Explicitly redefine grasp-depth semantics before permitting `r>17mm`.
-3. Gripper collision-representation repair stays deferred until actual
-   raw-clear target feasibility exists.
-
-All future ideas are recorded in `claudedocs/BACKLOG.md`; none is implemented
+All future ideas go to `claudedocs/BACKLOG.md`; none is implemented
 automatically. `g0a_pass=false`; G0b/RL/ladder promotion remain blocked.
 
 ## Must Read First
 
 1. `AGENTS.md` (then `CLAUDE.md` only for Claude-specific workflow)
 2. `START_HERE.md`
-3. `claudedocs/DECISIONS.md` tail (D334-D335)
+3. `claudedocs/DECISIONS.md` tail (D334-D336)
 4. `claudedocs/EXPERIMENT_LEDGER.md` tail
 5. `claudedocs/direction_20260708_grasp_pivot.md`
-6. `claudedocs/session_20260712_grasp_g0a_d335_target_family_repair.md`
-7. `claudedocs/runtime_logs/grasp_track/g0a_d335/g0a_d335_target_family_repair_summary.json`
-8. `claudedocs/runtime_logs/grasp_track/g0a_d335/d335_candidate_scan.csv`
-9. `sim_scripts/cyl34_top_view_d335_grasp_g0a_target_family_repair.py`
-10. `claudedocs/session_20260712_grasp_g0a_d334_live_collision_shape_ownership_audit.md`
-11. `claudedocs/runtime_logs/grasp_track/g0a_d334/g0a_d334_live_collision_audit_summary.json`
+6. `claudedocs/session_20260712_grasp_g0a_d336_finite_grid_caveat_discriminator.md`
+7. `claudedocs/runtime_logs/grasp_track/g0a_d336/g0a_d336_finite_grid_caveat_summary.json`
+8. `claudedocs/runtime_logs/grasp_track/g0a_d336/d336_exact_clearance_map.png`
+9. `sim_scripts/cyl34_top_view_d336_grasp_g0a_finite_grid_caveat_discriminator.py`
+10. `claudedocs/session_20260712_grasp_g0a_d335_target_family_repair.md`
+11. `claudedocs/session_20260712_grasp_g0a_d334_live_collision_shape_ownership_audit.md`
 
 ## Durable Rules
 
@@ -103,7 +100,8 @@ automatically. `g0a_pass=false`; G0b/RL/ladder promotion remain blocked.
   `claudedocs/runtime_logs/grasp_track/<case>_<dNNN>/`; paths forward-only.
 - Unmeasured estimates are not specs. Unrecorded pilots are not evidence.
 - Distinguish raw mesh, mathematical hull, mirror cook, and live-volume-gated
-  cook. AABB-only reasoning is forbidden.
+  cook. AABB-only reasoning is forbidden. BVH distance scalars of colliding
+  meshes are ranking-invalid (D336); use contact-level EPA enumeration.
 - Visualization DoD and Isaac pins remain binding: `numpy==1.26.0`,
   `psutil==5.9.8` after any install.
 

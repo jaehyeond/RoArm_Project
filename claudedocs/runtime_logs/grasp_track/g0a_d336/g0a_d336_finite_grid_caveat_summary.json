@@ -1,0 +1,1754 @@
+{
+  "active_case": "G0a cylinder D34xH90 finite-grid caveat discriminator",
+  "artifact_contract": {
+    "checks": {
+      "marker_status_ok": true,
+      "rrd_nonzero_file": true,
+      "rrd_status_ok": true,
+      "snapshot_count_between_1_and_3": true,
+      "snapshots_exist_and_nonzero": true
+    },
+    "pass": true
+  },
+  "artifacts": {
+    "clearance_map_png": "claudedocs/runtime_logs/grasp_track/g0a_d336/d336_exact_clearance_map.png",
+    "continuous_scan_csv": "claudedocs/runtime_logs/grasp_track/g0a_d336/d336_continuous_scan.csv",
+    "decision_png": "claudedocs/runtime_logs/grasp_track/g0a_d336/d336_decision.png",
+    "exact_rescore_csv": "claudedocs/runtime_logs/grasp_track/g0a_d336/d336_exact_rescore.csv",
+    "frozen_contract": "claudedocs/runtime_logs/grasp_track/g0a_d336/d336_frozen_contract.json",
+    "negative_control": "claudedocs/runtime_logs/grasp_track/g0a_d336/d336_negative_control.json",
+    "prephysics_gate": "claudedocs/runtime_logs/grasp_track/g0a_d336/d336_prephysics_gate.json",
+    "rrd": "claudedocs/runtime_logs/grasp_track/g0a_d336/d336_caveat_discriminator_trace.rrd",
+    "scene_contract": "claudedocs/runtime_logs/grasp_track/g0a_d336/d336_prephysics_scene_contract.json",
+    "search": "claudedocs/runtime_logs/grasp_track/g0a_d336/d336_search.json",
+    "summary_json": "claudedocs/runtime_logs/grasp_track/g0a_d336/g0a_d336_finite_grid_caveat_summary.json",
+    "summary_markdown": "claudedocs/runtime_logs/grasp_track/g0a_d336/g0a_d336_finite_grid_caveat_summary.md"
+  },
+  "classification": {
+    "interpretation": "the registered exact re-scoring, continuous Nelder-Mead, and micro-grid method found no candidate clearing both audited raw tool shapes by >=+0.1mm under the frozen alignment gates; the D335 finite-grid caveat is discharged to this method's coverage, without claiming continuous-space impossibility",
+    "verdict": "D336_G0A_FINITE_GRID_CAVEAT_DISCHARGED_NO_CLEAR_STOP"
+  },
+  "controlled_physics_steps_total": 0,
+  "frozen_contract": {
+    "checks": {
+      "d334_sha256_matches_d335_record": true,
+      "d334_summary_sha256_pinned": true,
+      "d334_verdict": true,
+      "d335_csv_sha256_pinned": true,
+      "d335_summary_sha256_pinned": true,
+      "d335_verdict": true,
+      "grid_key_count_2629": true,
+      "method_constants_exact": true,
+      "numpy_pin": true,
+      "psutil_pin": true,
+      "robot_usd_hash_matches_d334": true,
+      "seed_33201": true,
+      "urdf_hash_matches_d334": true
+    },
+    "d334_summary": "claudedocs/runtime_logs/grasp_track/g0a_d334/g0a_d334_live_collision_audit_summary.json",
+    "d334_summary_sha256": "2ff44744df99c7a99d168cdd62a4f9186a5bbad6d673205282abb62b71097b26",
+    "d335_csv": "claudedocs/runtime_logs/grasp_track/g0a_d335/d335_candidate_scan.csv",
+    "d335_csv_sha256": "f7daa545c190416f1117c275c4e8b015bce721507c04500254adc074d25d5f79",
+    "d335_summary": "claudedocs/runtime_logs/grasp_track/g0a_d335/g0a_d335_target_family_repair_summary.json",
+    "d335_summary_sha256": "7ca98f31d6fc23ea0942d4863d2d7dbdce561293e181d5b1bd7a451dd0064d0e",
+    "environment": {
+      "numpy_pin_1_26_0": true,
+      "numpy_version": "1.26.0",
+      "psutil_pin_5_9_8": true,
+      "psutil_version": "5.9.8",
+      "versions": {
+        "hppfcl": "2.4.4",
+        "isaaclab": "2.3.0",
+        "isaacsim": "5.1.0.0",
+        "numpy": "1.26.0",
+        "psutil": "5.9.8",
+        "python": "3.11.14 (main, Oct 21 2025, 18:31:21) [GCC 11.2.0]",
+        "rerun-sdk": "0.34.1",
+        "scipy": "1.15.3",
+        "trimesh": "4.5.1"
+      }
+    },
+    "method": {
+      "clear_gate_mm": 0.1,
+      "epa_max_contacts": 64,
+      "micro_radius_mm": 0.05,
+      "micro_step_mm": 0.005,
+      "nm_fatol": 1e-05,
+      "nm_maxfev": 300,
+      "nm_seed_count": 5,
+      "nm_xatol_mm": 0.0001
+    },
+    "pass": true,
+    "robot_usd": "local_assets/roarm_m3/usd/roarm_m3.usd",
+    "robot_usd_sha256": "a4be58e87b1f9790f2a2ed600f0620c79d3cfb95c608b3c598308d52f5e46fff",
+    "urdf": "local_assets/roarm_m3/urdf/roarm_m3.urdf",
+    "urdf_sha256": "64dc8d082cbce9a13a0697a11a0eaeaebbc54bbcd97e7aafaa40da483969dae2"
+  },
+  "negative_controls": {
+    "artifact": "D336_NEGATIVE_CONTROLS",
+    "grid_parity": {
+      "pass": true,
+      "rows": [
+        {
+          "expected_gripper_bvh_mm": -0.00012194484645309221,
+          "expected_link5_bvh_mm": 7.787463648751304,
+          "expected_states": [
+            "clear",
+            "overlap"
+          ],
+          "observed_gripper_bvh_mm": -0.00012194484645309221,
+          "observed_link5_bvh_mm": 7.787463648751304,
+          "observed_states": [
+            "clear",
+            "overlap"
+          ],
+          "pass": true,
+          "radial_offset_um": 14600,
+          "tangent_offset_um": 13900
+        },
+        {
+          "expected_gripper_bvh_mm": -8.115950793546967,
+          "expected_link5_bvh_mm": 2.0161787624753913,
+          "expected_states": [
+            "clear",
+            "overlap"
+          ],
+          "observed_gripper_bvh_mm": -8.115950793546967,
+          "observed_link5_bvh_mm": 2.0161787624753913,
+          "observed_states": [
+            "clear",
+            "overlap"
+          ],
+          "pass": true,
+          "radial_offset_um": 0,
+          "tangent_offset_um": 9000
+        }
+      ],
+      "tolerance_mm": 0.05
+    },
+    "old_target_exact_layer": {
+      "expected_d334_epa_depth_mm": 5.863007382619745,
+      "observed_epa_contact_count": 64,
+      "observed_epa_max_abs_depth_mm": 6.460556421930386,
+      "observed_is_collision": true,
+      "pass": true,
+      "tolerance_mm": 0.05
+    },
+    "old_target_legacy": {
+      "artifact": "D335_OLD_TARGET_NEGATIVE_CONTROL",
+      "controlled_physics_steps": 0,
+      "pass": true,
+      "per_body": {
+        "gripper_link": {
+          "absolute_delta_mm": 0.0,
+          "consistency_hard_check_pass": true,
+          "expected_signed_distance_mm": -5.956676949725084,
+          "expected_state": "overlap",
+          "observed_signed_distance_mm": -5.956676949725084,
+          "observed_state": "overlap",
+          "pass": true,
+          "tolerance_mm": 0.05
+        },
+        "link5": {
+          "absolute_delta_mm": 0.0,
+          "consistency_hard_check_pass": true,
+          "expected_signed_distance_mm": 4.2726455336106985,
+          "expected_state": "clear",
+          "observed_signed_distance_mm": 4.2726455336106985,
+          "observed_state": "clear",
+          "pass": true,
+          "tolerance_mm": 0.05
+        }
+      },
+      "sim_step_counter_unchanged": true
+    },
+    "pass": true
+  },
+  "new_physical_variable_count": 0,
+  "new_variable": [],
+  "non_goals_respected": [
+    "no physics steps of any kind (sim.step never called)",
+    "no mesh/collision approximation or cooked-hull target compensation",
+    "no target z/wrist/nullspace/gripper-angle change",
+    "no domain expansion (r>17mm forbidden) or physics-driven retry",
+    "no waypoint/approach/10-trial/close/grasp/lift",
+    "no G0b/RL/PPO/randomization/VLA/RoArm/B200/cube"
+  ],
+  "outcome_guards": {
+    "alignment_ladder_promoted": false,
+    "collision_representation_changed": false,
+    "domain_expanded_after_result": false,
+    "g0a_pass": false,
+    "mesh_rewritten": false,
+    "physics_executed": false,
+    "stop_after_d336": true
+  },
+  "physics": {
+    "executed": false,
+    "licensed": false,
+    "note": "physics evaluation of a registered candidate is a separate later gate"
+  },
+  "physics_eval_candidate_registered": null,
+  "prephysics_gate": {
+    "artifact": "D336_PREPHYSICS_GATE",
+    "candidate_pass": false,
+    "checks": {
+      "all_rows_counter_unchanged": true,
+      "candidate_selected": false,
+      "decision_candidate_revalidated": true,
+      "negative_controls": true,
+      "probe_controlled_physics_steps_zero": true,
+      "sim_step_counter_unchanged_during_scan": true
+    },
+    "contract_pass": true,
+    "controlled_physics_steps": 0,
+    "decision": {
+      "commanded_tcp_error_mm": 0.9817877088203102,
+      "contact_point_below_top_mm": 44.28825278705478,
+      "exact_consistent": true,
+      "exact_min_clearance_mm": -4.2853737152419775,
+      "fixed_jaw_face_gap_mm": -0.034682407631519974,
+      "fixed_jaw_penetration_mm": 0.034682407631519974,
+      "gripper_link_epa_cap_saturated": true,
+      "gripper_link_epa_contact_count": 64,
+      "gripper_link_exact_signed_distance_mm": -4.2853737152419775,
+      "gripper_link_raw_signed_distance_mm": -3.025839442794585,
+      "gripper_link_raw_state": "overlap",
+      "ik_converged": true,
+      "jaw_tangent_error_deg": 1.8095139786172436,
+      "legacy_alignment_pass": false,
+      "legacy_checks": {
+        "anti_retreat_tip_past_near_face_nonnegative": true,
+        "commanded_tcp_error_le_5mm": true,
+        "contact_at_least_15mm_below_top": true,
+        "fixed_jaw_gap_0_to_5mm": false,
+        "ik_converged": true,
+        "jaw_tangent_le_15deg": true,
+        "live_exact_written_tcp_error_le_5mm": true,
+        "no_fixed_jaw_proxy_penetration": false
+      },
+      "link5_epa_cap_saturated": false,
+      "link5_epa_contact_count": 0,
+      "link5_exact_signed_distance_mm": 2.9201759579717796,
+      "link5_raw_signed_distance_mm": 2.9201759579717796,
+      "link5_raw_state": "clear",
+      "min_raw_clearance_mm": -3.025839442794585,
+      "pass": false,
+      "radial_offset_mm": 15.389743,
+      "radial_offset_nm": 15389743,
+      "radial_tip_past_near_face_mm": 1.6102570000000003,
+      "raw_checks": {
+        "gripper_link": false,
+        "link5": true
+      },
+      "raw_tool_clear_pass": false,
+      "shift_from_old_mm": 8.62483551182566,
+      "sim_step_counter_after": 0,
+      "sim_step_counter_before": 0,
+      "sim_step_counter_unchanged": true,
+      "stage": "decision_snapshot",
+      "tangent_offset_mm": 9.0,
+      "tangent_offset_nm": 9000000
+    },
+    "decision_candidate_parity": {
+      "checks": {
+        "exact_metric_delta_le_0p05mm": true,
+        "gripper_bvh_delta_le_0p05mm": true,
+        "link5_bvh_delta_le_0p05mm": true,
+        "offsets_exact": true,
+        "raw_states_exact": true
+      },
+      "pass": true
+    },
+    "physics_licensed": false,
+    "selected": null,
+    "sim_step_counter_end": 0,
+    "sim_step_counter_start": 0
+  },
+  "raw_source_contract": {
+    "body_set_exact": true,
+    "pass": true,
+    "per_body": {
+      "gripper_link": {
+        "checks": {
+          "exactly_one_enabled_collision_prim": true,
+          "nearest_rigid_body_owner_matches": true,
+          "path_matches_d334": true,
+          "source_mesh_matches_d334": true
+        },
+        "pass": true,
+        "rows": [
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/gripper_link/node_STL_BINARY_/mesh"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/gripper_link/node_STL_BINARY_",
+            "type_name": "Xform"
+          }
+        ],
+        "source_mesh_parity": {
+          "body_local_bounds_bit_near": true,
+          "face_count": true,
+          "fan_triangulated": true,
+          "mesh_prim_path": true,
+          "triangle_count": true,
+          "vertex_count": true
+        }
+      },
+      "link5": {
+        "checks": {
+          "exactly_one_enabled_collision_prim": true,
+          "nearest_rigid_body_owner_matches": true,
+          "path_matches_d334": true,
+          "source_mesh_matches_d334": true
+        },
+        "pass": true,
+        "rows": [
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/link5/node_STL_BINARY_/mesh"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/link5/node_STL_BINARY_",
+            "type_name": "Xform"
+          }
+        ],
+        "source_mesh_parity": {
+          "body_local_bounds_bit_near": true,
+          "face_count": true,
+          "fan_triangulated": true,
+          "mesh_prim_path": true,
+          "triangle_count": true,
+          "vertex_count": true
+        }
+      }
+    }
+  },
+  "scientific_verdict_before_artifact_gate": "D336_G0A_FINITE_GRID_CAVEAT_DISCHARGED_NO_CLEAR_STOP",
+  "search": {
+    "best": {
+      "commanded_tcp_error_mm": 0.9817877088203102,
+      "contact_point_below_top_mm": 44.28825278705478,
+      "exact_consistent": true,
+      "exact_min_clearance_mm": -4.2853737152419775,
+      "fixed_jaw_face_gap_mm": -0.034682407631519974,
+      "fixed_jaw_penetration_mm": 0.034682407631519974,
+      "gripper_link_epa_cap_saturated": true,
+      "gripper_link_epa_contact_count": 64,
+      "gripper_link_exact_signed_distance_mm": -4.2853737152419775,
+      "gripper_link_raw_signed_distance_mm": -3.025839442794585,
+      "gripper_link_raw_state": "overlap",
+      "ik_converged": true,
+      "jaw_tangent_error_deg": 1.8095139786172436,
+      "legacy_alignment_pass": false,
+      "legacy_checks": {
+        "anti_retreat_tip_past_near_face_nonnegative": true,
+        "commanded_tcp_error_le_5mm": true,
+        "contact_at_least_15mm_below_top": true,
+        "fixed_jaw_gap_0_to_5mm": false,
+        "ik_converged": true,
+        "jaw_tangent_le_15deg": true,
+        "live_exact_written_tcp_error_le_5mm": true,
+        "no_fixed_jaw_proxy_penetration": false
+      },
+      "link5_epa_cap_saturated": false,
+      "link5_epa_contact_count": 0,
+      "link5_exact_signed_distance_mm": 2.9201759579717796,
+      "link5_raw_signed_distance_mm": 2.9201759579717796,
+      "link5_raw_state": "clear",
+      "min_raw_clearance_mm": -3.025839442794585,
+      "pass": false,
+      "radial_offset_mm": 15.389743,
+      "radial_offset_nm": 15389743,
+      "radial_tip_past_near_face_mm": 1.6102570000000003,
+      "raw_checks": {
+        "gripper_link": false,
+        "link5": true
+      },
+      "raw_tool_clear_pass": false,
+      "shift_from_old_mm": 8.62483551182566,
+      "sim_step_counter_after": 0,
+      "sim_step_counter_before": 0,
+      "sim_step_counter_unchanged": true,
+      "stage": "nm_seed_4",
+      "tangent_offset_mm": 9.0,
+      "tangent_offset_nm": 9000000
+    },
+    "decision": {
+      "commanded_tcp_error_mm": 0.9817877088203102,
+      "contact_point_below_top_mm": 44.28825278705478,
+      "exact_consistent": true,
+      "exact_min_clearance_mm": -4.2853737152419775,
+      "fixed_jaw_face_gap_mm": -0.034682407631519974,
+      "fixed_jaw_penetration_mm": 0.034682407631519974,
+      "gripper_link_epa_cap_saturated": true,
+      "gripper_link_epa_contact_count": 64,
+      "gripper_link_exact_signed_distance_mm": -4.2853737152419775,
+      "gripper_link_raw_signed_distance_mm": -3.025839442794585,
+      "gripper_link_raw_state": "overlap",
+      "ik_converged": true,
+      "jaw_tangent_error_deg": 1.8095139786172436,
+      "legacy_alignment_pass": false,
+      "legacy_checks": {
+        "anti_retreat_tip_past_near_face_nonnegative": true,
+        "commanded_tcp_error_le_5mm": true,
+        "contact_at_least_15mm_below_top": true,
+        "fixed_jaw_gap_0_to_5mm": false,
+        "ik_converged": true,
+        "jaw_tangent_le_15deg": true,
+        "live_exact_written_tcp_error_le_5mm": true,
+        "no_fixed_jaw_proxy_penetration": false
+      },
+      "link5_epa_cap_saturated": false,
+      "link5_epa_contact_count": 0,
+      "link5_exact_signed_distance_mm": 2.9201759579717796,
+      "link5_raw_signed_distance_mm": 2.9201759579717796,
+      "link5_raw_state": "clear",
+      "min_raw_clearance_mm": -3.025839442794585,
+      "pass": false,
+      "radial_offset_mm": 15.389743,
+      "radial_offset_nm": 15389743,
+      "radial_tip_past_near_face_mm": 1.6102570000000003,
+      "raw_checks": {
+        "gripper_link": false,
+        "link5": true
+      },
+      "raw_tool_clear_pass": false,
+      "shift_from_old_mm": 8.62483551182566,
+      "sim_step_counter_after": 0,
+      "sim_step_counter_before": 0,
+      "sim_step_counter_unchanged": true,
+      "stage": "decision_snapshot",
+      "tangent_offset_mm": 9.0,
+      "tangent_offset_nm": 9000000
+    },
+    "domain": {
+      "anti_retreat": "17mm-r >= 0",
+      "clear_gate_mm": 0.1,
+      "radial_mm": [
+        0.0,
+        17.0
+      ],
+      "tangent_mm": [
+        9.0,
+        14.0
+      ]
+    },
+    "epa_cap_saturated_count": 3181,
+    "exact_consistent_count": 3181,
+    "executed": true,
+    "legacy_alignment_count": 2669,
+    "micro_center": {
+      "exact_min_clearance_mm": -4.2853737152419775,
+      "radial_offset_mm": 15.389743,
+      "tangent_offset_mm": 9.0
+    },
+    "nm_runs": [
+      {
+        "converged": true,
+        "final_objective": 4.2853737152419775,
+        "final_x_mm": [
+          15.389753720164297,
+          9.0
+        ],
+        "message": "Optimization terminated successfully.",
+        "nfev": 69,
+        "nit": 31,
+        "objective_calls": 69,
+        "seed_exact_min_clearance_mm": -4.394024087047293,
+        "seed_index": 0,
+        "seed_r_mm": 15.25,
+        "seed_t_mm": 9.0
+      },
+      {
+        "converged": true,
+        "final_objective": 4.2853737152419775,
+        "final_x_mm": [
+          15.389747796580195,
+          9.0
+        ],
+        "message": "Optimization terminated successfully.",
+        "nfev": 74,
+        "nit": 35,
+        "objective_calls": 74,
+        "seed_exact_min_clearance_mm": -4.587866301802701,
+        "seed_index": 1,
+        "seed_r_mm": 15.0,
+        "seed_t_mm": 9.0
+      },
+      {
+        "converged": true,
+        "final_objective": 4.2853737152419775,
+        "final_x_mm": [
+          15.389751828275621,
+          9.0
+        ],
+        "message": "Optimization terminated successfully.",
+        "nfev": 77,
+        "nit": 35,
+        "objective_calls": 77,
+        "seed_exact_min_clearance_mm": -4.721725606730406,
+        "seed_index": 2,
+        "seed_r_mm": 15.0,
+        "seed_t_mm": 9.25
+      },
+      {
+        "converged": true,
+        "final_objective": 4.285399789314158,
+        "final_x_mm": [
+          15.389675958361487,
+          9.0
+        ],
+        "message": "Optimization terminated successfully.",
+        "nfev": 61,
+        "nit": 30,
+        "objective_calls": 61,
+        "seed_exact_min_clearance_mm": -4.78075517415769,
+        "seed_index": 3,
+        "seed_r_mm": 14.75,
+        "seed_t_mm": 9.0
+      },
+      {
+        "converged": true,
+        "final_objective": 4.2853737152419775,
+        "final_x_mm": [
+          15.38974620165078,
+          9.0
+        ],
+        "message": "Optimization terminated successfully.",
+        "nfev": 105,
+        "nit": 50,
+        "objective_calls": 105,
+        "seed_exact_min_clearance_mm": -4.916291722118789,
+        "seed_index": 4,
+        "seed_r_mm": 14.75,
+        "seed_t_mm": 9.25
+      },
+      {
+        "converged": true,
+        "final_objective": 6.162525183227936,
+        "final_x_mm": [
+          17.0,
+          14.0
+        ],
+        "message": "Optimization terminated successfully.",
+        "nfev": 10,
+        "nit": 5,
+        "objective_calls": 10,
+        "seed_exact_min_clearance_mm": -7.83022745776385,
+        "seed_index": 5,
+        "seed_r_mm": 14.6,
+        "seed_t_mm": 13.9
+      }
+    ],
+    "nm_seeds": [
+      {
+        "exact_min_clearance_mm": -4.394024087047293,
+        "min_raw_clearance_mm": -3.126727250073587,
+        "radial_offset_mm": 15.25,
+        "tangent_offset_mm": 9.0
+      },
+      {
+        "exact_min_clearance_mm": -4.587866301802701,
+        "min_raw_clearance_mm": -3.3058813596821754,
+        "radial_offset_mm": 15.0,
+        "tangent_offset_mm": 9.0
+      },
+      {
+        "exact_min_clearance_mm": -4.721725606730406,
+        "min_raw_clearance_mm": -3.1467596428188847,
+        "radial_offset_mm": 15.0,
+        "tangent_offset_mm": 9.25
+      },
+      {
+        "exact_min_clearance_mm": -4.78075517415769,
+        "min_raw_clearance_mm": -3.483626147319738,
+        "radial_offset_mm": 14.75,
+        "tangent_offset_mm": 9.0
+      },
+      {
+        "exact_min_clearance_mm": -4.916291722118789,
+        "min_raw_clearance_mm": -3.322550844918402,
+        "radial_offset_mm": 14.75,
+        "tangent_offset_mm": 9.25
+      },
+      {
+        "exact_min_clearance_mm": -7.83022745776385,
+        "min_raw_clearance_mm": -0.00012194484645309221,
+        "radial_offset_mm": 14.6,
+        "tangent_offset_mm": 13.9
+      }
+    ],
+    "passing_count": 0,
+    "selected": null,
+    "stage_a_count": 2629,
+    "stage_b_count": 322,
+    "stage_c_count": 230,
+    "top_by_exact_clearance": [
+      {
+        "commanded_tcp_error_mm": 0.9817877088203102,
+        "contact_point_below_top_mm": 44.28825278705478,
+        "exact_consistent": true,
+        "exact_min_clearance_mm": -4.2853737152419775,
+        "fixed_jaw_face_gap_mm": -0.034682407631519974,
+        "fixed_jaw_penetration_mm": 0.034682407631519974,
+        "gripper_link_epa_cap_saturated": true,
+        "gripper_link_epa_contact_count": 64,
+        "gripper_link_exact_signed_distance_mm": -4.2853737152419775,
+        "gripper_link_raw_signed_distance_mm": -3.025839442794585,
+        "gripper_link_raw_state": "overlap",
+        "ik_converged": true,
+        "jaw_tangent_error_deg": 1.8095139786172436,
+        "legacy_alignment_pass": false,
+        "legacy_checks": {
+          "anti_retreat_tip_past_near_face_nonnegative": true,
+          "commanded_tcp_error_le_5mm": true,
+          "contact_at_least_15mm_below_top": true,
+          "fixed_jaw_gap_0_to_5mm": false,
+          "ik_converged": true,
+          "jaw_tangent_le_15deg": true,
+          "live_exact_written_tcp_error_le_5mm": true,
+          "no_fixed_jaw_proxy_penetration": false
+        },
+        "link5_epa_cap_saturated": false,
+        "link5_epa_contact_count": 0,
+        "link5_exact_signed_distance_mm": 2.9201759579717796,
+        "link5_raw_signed_distance_mm": 2.9201759579717796,
+        "link5_raw_state": "clear",
+        "min_raw_clearance_mm": -3.025839442794585,
+        "pass": false,
+        "radial_offset_mm": 15.389743,
+        "radial_offset_nm": 15389743,
+        "radial_tip_past_near_face_mm": 1.6102570000000003,
+        "raw_checks": {
+          "gripper_link": false,
+          "link5": true
+        },
+        "raw_tool_clear_pass": false,
+        "shift_from_old_mm": 8.62483551182566,
+        "sim_step_counter_after": 0,
+        "sim_step_counter_before": 0,
+        "sim_step_counter_unchanged": true,
+        "stage": "nm_seed_4",
+        "tangent_offset_mm": 9.0,
+        "tangent_offset_nm": 9000000
+      },
+      {
+        "commanded_tcp_error_mm": 0.9817877260174781,
+        "contact_point_below_top_mm": 44.28825278705478,
+        "exact_consistent": true,
+        "exact_min_clearance_mm": -4.2853737152419775,
+        "fixed_jaw_face_gap_mm": -0.034682407631519974,
+        "fixed_jaw_penetration_mm": 0.034682407631519974,
+        "gripper_link_epa_cap_saturated": true,
+        "gripper_link_epa_contact_count": 64,
+        "gripper_link_exact_signed_distance_mm": -4.2853737152419775,
+        "gripper_link_raw_signed_distance_mm": -3.025839442794585,
+        "gripper_link_raw_state": "overlap",
+        "ik_converged": true,
+        "jaw_tangent_error_deg": 1.8095139786172436,
+        "legacy_alignment_pass": false,
+        "legacy_checks": {
+          "anti_retreat_tip_past_near_face_nonnegative": true,
+          "commanded_tcp_error_le_5mm": true,
+          "contact_at_least_15mm_below_top": true,
+          "fixed_jaw_gap_0_to_5mm": false,
+          "ik_converged": true,
+          "jaw_tangent_le_15deg": true,
+          "live_exact_written_tcp_error_le_5mm": true,
+          "no_fixed_jaw_proxy_penetration": false
+        },
+        "link5_epa_cap_saturated": false,
+        "link5_epa_contact_count": 0,
+        "link5_exact_signed_distance_mm": 2.9201759579717796,
+        "link5_raw_signed_distance_mm": 2.9201759579717796,
+        "link5_raw_state": "clear",
+        "min_raw_clearance_mm": -3.025839442794585,
+        "pass": false,
+        "radial_offset_mm": 15.389744,
+        "radial_offset_nm": 15389744,
+        "radial_tip_past_near_face_mm": 1.6102560000000008,
+        "raw_checks": {
+          "gripper_link": false,
+          "link5": true
+        },
+        "raw_tool_clear_pass": false,
+        "shift_from_old_mm": 8.624836484568041,
+        "sim_step_counter_after": 0,
+        "sim_step_counter_before": 0,
+        "sim_step_counter_unchanged": true,
+        "stage": "nm_seed_1",
+        "tangent_offset_mm": 9.0,
+        "tangent_offset_nm": 9000000
+      },
+      {
+        "commanded_tcp_error_mm": 0.9817877604079125,
+        "contact_point_below_top_mm": 44.28825278705478,
+        "exact_consistent": true,
+        "exact_min_clearance_mm": -4.2853737152419775,
+        "fixed_jaw_face_gap_mm": -0.034682407631519974,
+        "fixed_jaw_penetration_mm": 0.034682407631519974,
+        "gripper_link_epa_cap_saturated": true,
+        "gripper_link_epa_contact_count": 64,
+        "gripper_link_exact_signed_distance_mm": -4.2853737152419775,
+        "gripper_link_raw_signed_distance_mm": -3.025839442794585,
+        "gripper_link_raw_state": "overlap",
+        "ik_converged": true,
+        "jaw_tangent_error_deg": 1.8095139786172436,
+        "legacy_alignment_pass": false,
+        "legacy_checks": {
+          "anti_retreat_tip_past_near_face_nonnegative": true,
+          "commanded_tcp_error_le_5mm": true,
+          "contact_at_least_15mm_below_top": true,
+          "fixed_jaw_gap_0_to_5mm": false,
+          "ik_converged": true,
+          "jaw_tangent_le_15deg": true,
+          "live_exact_written_tcp_error_le_5mm": true,
+          "no_fixed_jaw_proxy_penetration": false
+        },
+        "link5_epa_cap_saturated": false,
+        "link5_epa_contact_count": 0,
+        "link5_exact_signed_distance_mm": 2.9201759579717796,
+        "link5_raw_signed_distance_mm": 2.9201759579717796,
+        "link5_raw_state": "clear",
+        "min_raw_clearance_mm": -3.025839442794585,
+        "pass": false,
+        "radial_offset_mm": 15.389746,
+        "radial_offset_nm": 15389746,
+        "radial_tip_past_near_face_mm": 1.6102540000000003,
+        "raw_checks": {
+          "gripper_link": false,
+          "link5": true
+        },
+        "raw_tool_clear_pass": false,
+        "shift_from_old_mm": 8.62483843005282,
+        "sim_step_counter_after": 0,
+        "sim_step_counter_before": 0,
+        "sim_step_counter_unchanged": true,
+        "stage": "nm_seed_4",
+        "tangent_offset_mm": 9.0,
+        "tangent_offset_nm": 9000000
+      },
+      {
+        "commanded_tcp_error_mm": 0.9817877948054279,
+        "contact_point_below_top_mm": 44.28825278705478,
+        "exact_consistent": true,
+        "exact_min_clearance_mm": -4.2853737152419775,
+        "fixed_jaw_face_gap_mm": -0.034682407631519974,
+        "fixed_jaw_penetration_mm": 0.034682407631519974,
+        "gripper_link_epa_cap_saturated": true,
+        "gripper_link_epa_contact_count": 64,
+        "gripper_link_exact_signed_distance_mm": -4.2853737152419775,
+        "gripper_link_raw_signed_distance_mm": -3.025839442794585,
+        "gripper_link_raw_state": "overlap",
+        "ik_converged": true,
+        "jaw_tangent_error_deg": 1.8095139786172436,
+        "legacy_alignment_pass": false,
+        "legacy_checks": {
+          "anti_retreat_tip_past_near_face_nonnegative": true,
+          "commanded_tcp_error_le_5mm": true,
+          "contact_at_least_15mm_below_top": true,
+          "fixed_jaw_gap_0_to_5mm": false,
+          "ik_converged": true,
+          "jaw_tangent_le_15deg": true,
+          "live_exact_written_tcp_error_le_5mm": true,
+          "no_fixed_jaw_proxy_penetration": false
+        },
+        "link5_epa_cap_saturated": false,
+        "link5_epa_contact_count": 0,
+        "link5_exact_signed_distance_mm": 2.9201759579717796,
+        "link5_raw_signed_distance_mm": 2.9201759579717796,
+        "link5_raw_state": "clear",
+        "min_raw_clearance_mm": -3.025839442794585,
+        "pass": false,
+        "radial_offset_mm": 15.389748,
+        "radial_offset_nm": 15389748,
+        "radial_tip_past_near_face_mm": 1.6102519999999996,
+        "raw_checks": {
+          "gripper_link": false,
+          "link5": true
+        },
+        "raw_tool_clear_pass": false,
+        "shift_from_old_mm": 8.624840375537625,
+        "sim_step_counter_after": 0,
+        "sim_step_counter_before": 0,
+        "sim_step_counter_unchanged": true,
+        "stage": "nm_seed_1",
+        "tangent_offset_mm": 9.0,
+        "tangent_offset_nm": 9000000
+      },
+      {
+        "commanded_tcp_error_mm": 0.9817878291986484,
+        "contact_point_below_top_mm": 44.28825278705478,
+        "exact_consistent": true,
+        "exact_min_clearance_mm": -4.2853737152419775,
+        "fixed_jaw_face_gap_mm": -0.034682407631519974,
+        "fixed_jaw_penetration_mm": 0.034682407631519974,
+        "gripper_link_epa_cap_saturated": true,
+        "gripper_link_epa_contact_count": 64,
+        "gripper_link_exact_signed_distance_mm": -4.2853737152419775,
+        "gripper_link_raw_signed_distance_mm": -3.025839442794585,
+        "gripper_link_raw_state": "overlap",
+        "ik_converged": true,
+        "jaw_tangent_error_deg": 1.8095139786172436,
+        "legacy_alignment_pass": false,
+        "legacy_checks": {
+          "anti_retreat_tip_past_near_face_nonnegative": true,
+          "commanded_tcp_error_le_5mm": true,
+          "contact_at_least_15mm_below_top": true,
+          "fixed_jaw_gap_0_to_5mm": false,
+          "ik_converged": true,
+          "jaw_tangent_le_15deg": true,
+          "live_exact_written_tcp_error_le_5mm": true,
+          "no_fixed_jaw_proxy_penetration": false
+        },
+        "link5_epa_cap_saturated": false,
+        "link5_epa_contact_count": 0,
+        "link5_exact_signed_distance_mm": 2.9201759579717796,
+        "link5_raw_signed_distance_mm": 2.9201759579717796,
+        "link5_raw_state": "clear",
+        "min_raw_clearance_mm": -3.025839442794585,
+        "pass": false,
+        "radial_offset_mm": 15.38975,
+        "radial_offset_nm": 15389750,
+        "radial_tip_past_near_face_mm": 1.6102500000000006,
+        "raw_checks": {
+          "gripper_link": false,
+          "link5": true
+        },
+        "raw_tool_clear_pass": false,
+        "shift_from_old_mm": 8.624842321022454,
+        "sim_step_counter_after": 0,
+        "sim_step_counter_before": 0,
+        "sim_step_counter_unchanged": true,
+        "stage": "nm_seed_1",
+        "tangent_offset_mm": 9.0,
+        "tangent_offset_nm": 9000000
+      },
+      {
+        "commanded_tcp_error_mm": 0.981787846398355,
+        "contact_point_below_top_mm": 44.28825278705478,
+        "exact_consistent": true,
+        "exact_min_clearance_mm": -4.2853737152419775,
+        "fixed_jaw_face_gap_mm": -0.034682407631519974,
+        "fixed_jaw_penetration_mm": 0.034682407631519974,
+        "gripper_link_epa_cap_saturated": true,
+        "gripper_link_epa_contact_count": 64,
+        "gripper_link_exact_signed_distance_mm": -4.2853737152419775,
+        "gripper_link_raw_signed_distance_mm": -3.025839442794585,
+        "gripper_link_raw_state": "overlap",
+        "ik_converged": true,
+        "jaw_tangent_error_deg": 1.8095139786172436,
+        "legacy_alignment_pass": false,
+        "legacy_checks": {
+          "anti_retreat_tip_past_near_face_nonnegative": true,
+          "commanded_tcp_error_le_5mm": true,
+          "contact_at_least_15mm_below_top": true,
+          "fixed_jaw_gap_0_to_5mm": false,
+          "ik_converged": true,
+          "jaw_tangent_le_15deg": true,
+          "live_exact_written_tcp_error_le_5mm": true,
+          "no_fixed_jaw_proxy_penetration": false
+        },
+        "link5_epa_cap_saturated": false,
+        "link5_epa_contact_count": 0,
+        "link5_exact_signed_distance_mm": 2.9201759579717796,
+        "link5_raw_signed_distance_mm": 2.9201759579717796,
+        "link5_raw_state": "clear",
+        "min_raw_clearance_mm": -3.025839442794585,
+        "pass": false,
+        "radial_offset_mm": 15.389751,
+        "radial_offset_nm": 15389751,
+        "radial_tip_past_near_face_mm": 1.6102490000000012,
+        "raw_checks": {
+          "gripper_link": false,
+          "link5": true
+        },
+        "raw_tool_clear_pass": false,
+        "shift_from_old_mm": 8.624843293764878,
+        "sim_step_counter_after": 0,
+        "sim_step_counter_before": 0,
+        "sim_step_counter_unchanged": true,
+        "stage": "nm_seed_4",
+        "tangent_offset_mm": 9.0,
+        "tangent_offset_nm": 9000000
+      },
+      {
+        "commanded_tcp_error_mm": 0.9817878635937968,
+        "contact_point_below_top_mm": 44.28825278705478,
+        "exact_consistent": true,
+        "exact_min_clearance_mm": -4.2853737152419775,
+        "fixed_jaw_face_gap_mm": -0.034682407631519974,
+        "fixed_jaw_penetration_mm": 0.034682407631519974,
+        "gripper_link_epa_cap_saturated": true,
+        "gripper_link_epa_contact_count": 64,
+        "gripper_link_exact_signed_distance_mm": -4.2853737152419775,
+        "gripper_link_raw_signed_distance_mm": -3.025839442794585,
+        "gripper_link_raw_state": "overlap",
+        "ik_converged": true,
+        "jaw_tangent_error_deg": 1.8095139786172436,
+        "legacy_alignment_pass": false,
+        "legacy_checks": {
+          "anti_retreat_tip_past_near_face_nonnegative": true,
+          "commanded_tcp_error_le_5mm": true,
+          "contact_at_least_15mm_below_top": true,
+          "fixed_jaw_gap_0_to_5mm": false,
+          "ik_converged": true,
+          "jaw_tangent_le_15deg": true,
+          "live_exact_written_tcp_error_le_5mm": true,
+          "no_fixed_jaw_proxy_penetration": false
+        },
+        "link5_epa_cap_saturated": false,
+        "link5_epa_contact_count": 0,
+        "link5_exact_signed_distance_mm": 2.9201759579717796,
+        "link5_raw_signed_distance_mm": 2.9201759579717796,
+        "link5_raw_state": "clear",
+        "min_raw_clearance_mm": -3.025839442794585,
+        "pass": false,
+        "radial_offset_mm": 15.389752,
+        "radial_offset_nm": 15389752,
+        "radial_tip_past_near_face_mm": 1.610248,
+        "raw_checks": {
+          "gripper_link": false,
+          "link5": true
+        },
+        "raw_tool_clear_pass": false,
+        "shift_from_old_mm": 8.624844266507308,
+        "sim_step_counter_after": 0,
+        "sim_step_counter_before": 0,
+        "sim_step_counter_unchanged": true,
+        "stage": "nm_seed_2",
+        "tangent_offset_mm": 9.0,
+        "tangent_offset_nm": 9000000
+      },
+      {
+        "commanded_tcp_error_mm": 0.9817878979881532,
+        "contact_point_below_top_mm": 44.28825278705478,
+        "exact_consistent": true,
+        "exact_min_clearance_mm": -4.2853737152419775,
+        "fixed_jaw_face_gap_mm": -0.034682407631519974,
+        "fixed_jaw_penetration_mm": 0.034682407631519974,
+        "gripper_link_epa_cap_saturated": true,
+        "gripper_link_epa_contact_count": 64,
+        "gripper_link_exact_signed_distance_mm": -4.2853737152419775,
+        "gripper_link_raw_signed_distance_mm": -3.025839442794585,
+        "gripper_link_raw_state": "overlap",
+        "ik_converged": true,
+        "jaw_tangent_error_deg": 1.8095139786172436,
+        "legacy_alignment_pass": false,
+        "legacy_checks": {
+          "anti_retreat_tip_past_near_face_nonnegative": true,
+          "commanded_tcp_error_le_5mm": true,
+          "contact_at_least_15mm_below_top": true,
+          "fixed_jaw_gap_0_to_5mm": false,
+          "ik_converged": true,
+          "jaw_tangent_le_15deg": true,
+          "live_exact_written_tcp_error_le_5mm": true,
+          "no_fixed_jaw_proxy_penetration": false
+        },
+        "link5_epa_cap_saturated": false,
+        "link5_epa_contact_count": 0,
+        "link5_exact_signed_distance_mm": 2.9201759579717796,
+        "link5_raw_signed_distance_mm": 2.9201759579717796,
+        "link5_raw_state": "clear",
+        "min_raw_clearance_mm": -3.025839442794585,
+        "pass": false,
+        "radial_offset_mm": 15.389754,
+        "radial_offset_nm": 15389754,
+        "radial_tip_past_near_face_mm": 1.610246000000001,
+        "raw_checks": {
+          "gripper_link": false,
+          "link5": true
+        },
+        "raw_tool_clear_pass": false,
+        "shift_from_old_mm": 8.624846211992187,
+        "sim_step_counter_after": 0,
+        "sim_step_counter_before": 0,
+        "sim_step_counter_unchanged": true,
+        "stage": "nm_seed_0",
+        "tangent_offset_mm": 9.0,
+        "tangent_offset_nm": 9000000
+      },
+      {
+        "commanded_tcp_error_mm": 0.9817880011715925,
+        "contact_point_below_top_mm": 44.28825278705478,
+        "exact_consistent": true,
+        "exact_min_clearance_mm": -4.2853737152419775,
+        "fixed_jaw_face_gap_mm": -0.034682407631519974,
+        "fixed_jaw_penetration_mm": 0.034682407631519974,
+        "gripper_link_epa_cap_saturated": true,
+        "gripper_link_epa_contact_count": 64,
+        "gripper_link_exact_signed_distance_mm": -4.2853737152419775,
+        "gripper_link_raw_signed_distance_mm": -3.025839442794585,
+        "gripper_link_raw_state": "overlap",
+        "ik_converged": true,
+        "jaw_tangent_error_deg": 1.8095139786172436,
+        "legacy_alignment_pass": false,
+        "legacy_checks": {
+          "anti_retreat_tip_past_near_face_nonnegative": true,
+          "commanded_tcp_error_le_5mm": true,
+          "contact_at_least_15mm_below_top": true,
+          "fixed_jaw_gap_0_to_5mm": false,
+          "ik_converged": true,
+          "jaw_tangent_le_15deg": true,
+          "live_exact_written_tcp_error_le_5mm": true,
+          "no_fixed_jaw_proxy_penetration": false
+        },
+        "link5_epa_cap_saturated": false,
+        "link5_epa_contact_count": 0,
+        "link5_exact_signed_distance_mm": 2.9201759579717796,
+        "link5_raw_signed_distance_mm": 2.9201759579717796,
+        "link5_raw_state": "clear",
+        "min_raw_clearance_mm": -3.025839442794585,
+        "pass": false,
+        "radial_offset_mm": 15.38976,
+        "radial_offset_nm": 15389760,
+        "radial_tip_past_near_face_mm": 1.6102400000000006,
+        "raw_checks": {
+          "gripper_link": false,
+          "link5": true
+        },
+        "raw_tool_clear_pass": false,
+        "shift_from_old_mm": 8.624852048446975,
+        "sim_step_counter_after": 0,
+        "sim_step_counter_before": 0,
+        "sim_step_counter_unchanged": true,
+        "stage": "nm_seed_0",
+        "tangent_offset_mm": 9.0,
+        "tangent_offset_nm": 9000000
+      },
+      {
+        "commanded_tcp_error_mm": 0.9817880183673963,
+        "contact_point_below_top_mm": 44.28825278705478,
+        "exact_consistent": true,
+        "exact_min_clearance_mm": -4.2853737152419775,
+        "fixed_jaw_face_gap_mm": -0.034682407631519974,
+        "fixed_jaw_penetration_mm": 0.034682407631519974,
+        "gripper_link_epa_cap_saturated": true,
+        "gripper_link_epa_contact_count": 64,
+        "gripper_link_exact_signed_distance_mm": -4.2853737152419775,
+        "gripper_link_raw_signed_distance_mm": -3.025839442794585,
+        "gripper_link_raw_state": "overlap",
+        "ik_converged": true,
+        "jaw_tangent_error_deg": 1.8095139786172436,
+        "legacy_alignment_pass": false,
+        "legacy_checks": {
+          "anti_retreat_tip_past_near_face_nonnegative": true,
+          "commanded_tcp_error_le_5mm": true,
+          "contact_at_least_15mm_below_top": true,
+          "fixed_jaw_gap_0_to_5mm": false,
+          "ik_converged": true,
+          "jaw_tangent_le_15deg": true,
+          "live_exact_written_tcp_error_le_5mm": true,
+          "no_fixed_jaw_proxy_penetration": false
+        },
+        "link5_epa_cap_saturated": false,
+        "link5_epa_contact_count": 0,
+        "link5_exact_signed_distance_mm": 2.9201759579717796,
+        "link5_raw_signed_distance_mm": 2.9201759579717796,
+        "link5_raw_state": "clear",
+        "min_raw_clearance_mm": -3.025839442794585,
+        "pass": false,
+        "radial_offset_mm": 15.389761,
+        "radial_offset_nm": 15389761,
+        "radial_tip_past_near_face_mm": 1.6102389999999995,
+        "raw_checks": {
+          "gripper_link": false,
+          "link5": true
+        },
+        "raw_tool_clear_pass": false,
+        "shift_from_old_mm": 8.624853021189463,
+        "sim_step_counter_after": 0,
+        "sim_step_counter_before": 0,
+        "sim_step_counter_unchanged": true,
+        "stage": "nm_seed_2",
+        "tangent_offset_mm": 9.0,
+        "tangent_offset_nm": 9000000
+      },
+      {
+        "commanded_tcp_error_mm": 0.9817881043527746,
+        "contact_point_below_top_mm": 44.28825278705478,
+        "exact_consistent": true,
+        "exact_min_clearance_mm": -4.2853737152419775,
+        "fixed_jaw_face_gap_mm": -0.034682407631519974,
+        "fixed_jaw_penetration_mm": 0.034682407631519974,
+        "gripper_link_epa_cap_saturated": true,
+        "gripper_link_epa_contact_count": 64,
+        "gripper_link_exact_signed_distance_mm": -4.2853737152419775,
+        "gripper_link_raw_signed_distance_mm": -3.025839442794585,
+        "gripper_link_raw_state": "overlap",
+        "ik_converged": true,
+        "jaw_tangent_error_deg": 1.8095139786172436,
+        "legacy_alignment_pass": false,
+        "legacy_checks": {
+          "anti_retreat_tip_past_near_face_nonnegative": true,
+          "commanded_tcp_error_le_5mm": true,
+          "contact_at_least_15mm_below_top": true,
+          "fixed_jaw_gap_0_to_5mm": false,
+          "ik_converged": true,
+          "jaw_tangent_le_15deg": true,
+          "live_exact_written_tcp_error_le_5mm": true,
+          "no_fixed_jaw_proxy_penetration": false
+        },
+        "link5_epa_cap_saturated": false,
+        "link5_epa_contact_count": 0,
+        "link5_exact_signed_distance_mm": 2.9201759579717796,
+        "link5_raw_signed_distance_mm": 2.9201759579717796,
+        "link5_raw_state": "clear",
+        "min_raw_clearance_mm": -3.025839442794585,
+        "pass": false,
+        "radial_offset_mm": 15.389766,
+        "radial_offset_nm": 15389766,
+        "radial_tip_past_near_face_mm": 1.6102340000000004,
+        "raw_checks": {
+          "gripper_link": false,
+          "link5": true
+        },
+        "raw_tool_clear_pass": false,
+        "shift_from_old_mm": 8.624857884901989,
+        "sim_step_counter_after": 0,
+        "sim_step_counter_before": 0,
+        "sim_step_counter_unchanged": true,
+        "stage": "nm_seed_0",
+        "tangent_offset_mm": 9.0,
+        "tangent_offset_nm": 9000000
+      },
+      {
+        "commanded_tcp_error_mm": 0.9817882591256568,
+        "contact_point_below_top_mm": 44.28825278705478,
+        "exact_consistent": true,
+        "exact_min_clearance_mm": -4.2853737152419775,
+        "fixed_jaw_face_gap_mm": -0.034682407631519974,
+        "fixed_jaw_penetration_mm": 0.034682407631519974,
+        "gripper_link_epa_cap_saturated": true,
+        "gripper_link_epa_contact_count": 64,
+        "gripper_link_exact_signed_distance_mm": -4.2853737152419775,
+        "gripper_link_raw_signed_distance_mm": -3.025839442794585,
+        "gripper_link_raw_state": "overlap",
+        "ik_converged": true,
+        "jaw_tangent_error_deg": 1.8095139786172436,
+        "legacy_alignment_pass": false,
+        "legacy_checks": {
+          "anti_retreat_tip_past_near_face_nonnegative": true,
+          "commanded_tcp_error_le_5mm": true,
+          "contact_at_least_15mm_below_top": true,
+          "fixed_jaw_gap_0_to_5mm": false,
+          "ik_converged": true,
+          "jaw_tangent_le_15deg": true,
+          "live_exact_written_tcp_error_le_5mm": true,
+          "no_fixed_jaw_proxy_penetration": false
+        },
+        "link5_epa_cap_saturated": false,
+        "link5_epa_contact_count": 0,
+        "link5_exact_signed_distance_mm": 2.9201759579717796,
+        "link5_raw_signed_distance_mm": 2.9201759579717796,
+        "link5_raw_state": "clear",
+        "min_raw_clearance_mm": -3.025839442794585,
+        "pass": false,
+        "radial_offset_mm": 15.389775,
+        "radial_offset_nm": 15389775,
+        "radial_tip_past_near_face_mm": 1.6102249999999998,
+        "raw_checks": {
+          "gripper_link": false,
+          "link5": true
+        },
+        "raw_tool_clear_pass": false,
+        "shift_from_old_mm": 8.624866639584926,
+        "sim_step_counter_after": 0,
+        "sim_step_counter_before": 0,
+        "sim_step_counter_unchanged": true,
+        "stage": "nm_seed_0",
+        "tangent_offset_mm": 9.0,
+        "tangent_offset_nm": 9000000
+      },
+      {
+        "commanded_tcp_error_mm": 0.9817883107167643,
+        "contact_point_below_top_mm": 44.28825278705478,
+        "exact_consistent": true,
+        "exact_min_clearance_mm": -4.2853737152419775,
+        "fixed_jaw_face_gap_mm": -0.034682407631519974,
+        "fixed_jaw_penetration_mm": 0.034682407631519974,
+        "gripper_link_epa_cap_saturated": true,
+        "gripper_link_epa_contact_count": 64,
+        "gripper_link_exact_signed_distance_mm": -4.2853737152419775,
+        "gripper_link_raw_signed_distance_mm": -3.025839442794585,
+        "gripper_link_raw_state": "overlap",
+        "ik_converged": true,
+        "jaw_tangent_error_deg": 1.8095139786172436,
+        "legacy_alignment_pass": false,
+        "legacy_checks": {
+          "anti_retreat_tip_past_near_face_nonnegative": true,
+          "commanded_tcp_error_le_5mm": true,
+          "contact_at_least_15mm_below_top": true,
+          "fixed_jaw_gap_0_to_5mm": false,
+          "ik_converged": true,
+          "jaw_tangent_le_15deg": true,
+          "live_exact_written_tcp_error_le_5mm": true,
+          "no_fixed_jaw_proxy_penetration": false
+        },
+        "link5_epa_cap_saturated": false,
+        "link5_epa_contact_count": 0,
+        "link5_exact_signed_distance_mm": 2.9201759579717796,
+        "link5_raw_signed_distance_mm": 2.9201759579717796,
+        "link5_raw_state": "clear",
+        "min_raw_clearance_mm": -3.025839442794585,
+        "pass": false,
+        "radial_offset_mm": 15.389778,
+        "radial_offset_nm": 15389778,
+        "radial_tip_past_near_face_mm": 1.6102219999999996,
+        "raw_checks": {
+          "gripper_link": false,
+          "link5": true
+        },
+        "raw_tool_clear_pass": false,
+        "shift_from_old_mm": 8.624869557812687,
+        "sim_step_counter_after": 0,
+        "sim_step_counter_before": 0,
+        "sim_step_counter_unchanged": true,
+        "stage": "nm_seed_0",
+        "tangent_offset_mm": 9.0,
+        "tangent_offset_nm": 9000000
+      },
+      {
+        "commanded_tcp_error_mm": 0.9817865050196545,
+        "contact_point_below_top_mm": 44.2883420317813,
+        "exact_consistent": true,
+        "exact_min_clearance_mm": -4.285399789314158,
+        "fixed_jaw_face_gap_mm": -0.03467961475845174,
+        "fixed_jaw_penetration_mm": 0.03467961475845174,
+        "gripper_link_epa_cap_saturated": true,
+        "gripper_link_epa_contact_count": 64,
+        "gripper_link_exact_signed_distance_mm": -4.285399789314158,
+        "gripper_link_raw_signed_distance_mm": -3.0258724941417143,
+        "gripper_link_raw_state": "overlap",
+        "ik_converged": true,
+        "jaw_tangent_error_deg": 1.8095142269441746,
+        "legacy_alignment_pass": false,
+        "legacy_checks": {
+          "anti_retreat_tip_past_near_face_nonnegative": true,
+          "commanded_tcp_error_le_5mm": true,
+          "contact_at_least_15mm_below_top": true,
+          "fixed_jaw_gap_0_to_5mm": false,
+          "ik_converged": true,
+          "jaw_tangent_le_15deg": true,
+          "live_exact_written_tcp_error_le_5mm": true,
+          "no_fixed_jaw_proxy_penetration": false
+        },
+        "link5_epa_cap_saturated": false,
+        "link5_epa_contact_count": 0,
+        "link5_exact_signed_distance_mm": 2.9201657255833613,
+        "link5_raw_signed_distance_mm": 2.9201657255833613,
+        "link5_raw_state": "clear",
+        "min_raw_clearance_mm": -3.0258724941417143,
+        "pass": false,
+        "radial_offset_mm": 15.389673,
+        "radial_offset_nm": 15389673,
+        "radial_tip_past_near_face_mm": 1.6103269999999998,
+        "raw_checks": {
+          "gripper_link": false,
+          "link5": true
+        },
+        "raw_tool_clear_pass": false,
+        "shift_from_old_mm": 8.624767419874521,
+        "sim_step_counter_after": 0,
+        "sim_step_counter_before": 0,
+        "sim_step_counter_unchanged": true,
+        "stage": "nm_seed_1",
+        "tangent_offset_mm": 9.0,
+        "tangent_offset_nm": 9000000
+      },
+      {
+        "commanded_tcp_error_mm": 0.9817865566121052,
+        "contact_point_below_top_mm": 44.2883420317813,
+        "exact_consistent": true,
+        "exact_min_clearance_mm": -4.285399789314158,
+        "fixed_jaw_face_gap_mm": -0.03467961475845174,
+        "fixed_jaw_penetration_mm": 0.03467961475845174,
+        "gripper_link_epa_cap_saturated": true,
+        "gripper_link_epa_contact_count": 64,
+        "gripper_link_exact_signed_distance_mm": -4.285399789314158,
+        "gripper_link_raw_signed_distance_mm": -3.0258724941417143,
+        "gripper_link_raw_state": "overlap",
+        "ik_converged": true,
+        "jaw_tangent_error_deg": 1.8095142269441746,
+        "legacy_alignment_pass": false,
+        "legacy_checks": {
+          "anti_retreat_tip_past_near_face_nonnegative": true,
+          "commanded_tcp_error_le_5mm": true,
+          "contact_at_least_15mm_below_top": true,
+          "fixed_jaw_gap_0_to_5mm": false,
+          "ik_converged": true,
+          "jaw_tangent_le_15deg": true,
+          "live_exact_written_tcp_error_le_5mm": true,
+          "no_fixed_jaw_proxy_penetration": false
+        },
+        "link5_epa_cap_saturated": false,
+        "link5_epa_contact_count": 0,
+        "link5_exact_signed_distance_mm": 2.9201657255833613,
+        "link5_raw_signed_distance_mm": 2.9201657255833613,
+        "link5_raw_state": "clear",
+        "min_raw_clearance_mm": -3.0258724941417143,
+        "pass": false,
+        "radial_offset_mm": 15.389676,
+        "radial_offset_nm": 15389676,
+        "radial_tip_past_near_face_mm": 1.6103239999999999,
+        "raw_checks": {
+          "gripper_link": false,
+          "link5": true
+        },
+        "raw_tool_clear_pass": false,
+        "shift_from_old_mm": 8.624770338100372,
+        "sim_step_counter_after": 0,
+        "sim_step_counter_before": 0,
+        "sim_step_counter_unchanged": true,
+        "stage": "nm_seed_3",
+        "tangent_offset_mm": 9.0,
+        "tangent_offset_nm": 9000000
+      },
+      {
+        "commanded_tcp_error_mm": 0.9817866253973644,
+        "contact_point_below_top_mm": 44.2883420317813,
+        "exact_consistent": true,
+        "exact_min_clearance_mm": -4.285399789314158,
+        "fixed_jaw_face_gap_mm": -0.03467961475845174,
+        "fixed_jaw_penetration_mm": 0.03467961475845174,
+        "gripper_link_epa_cap_saturated": true,
+        "gripper_link_epa_contact_count": 64,
+        "gripper_link_exact_signed_distance_mm": -4.285399789314158,
+        "gripper_link_raw_signed_distance_mm": -3.0258724941417143,
+        "gripper_link_raw_state": "overlap",
+        "ik_converged": true,
+        "jaw_tangent_error_deg": 1.8095142269441746,
+        "legacy_alignment_pass": false,
+        "legacy_checks": {
+          "anti_retreat_tip_past_near_face_nonnegative": true,
+          "commanded_tcp_error_le_5mm": true,
+          "contact_at_least_15mm_below_top": true,
+          "fixed_jaw_gap_0_to_5mm": false,
+          "ik_converged": true,
+          "jaw_tangent_le_15deg": true,
+          "live_exact_written_tcp_error_le_5mm": true,
+          "no_fixed_jaw_proxy_penetration": false
+        },
+        "link5_epa_cap_saturated": false,
+        "link5_epa_contact_count": 0,
+        "link5_exact_signed_distance_mm": 2.9201657255833613,
+        "link5_raw_signed_distance_mm": 2.9201657255833613,
+        "link5_raw_state": "clear",
+        "min_raw_clearance_mm": -3.0258724941417143,
+        "pass": false,
+        "radial_offset_mm": 15.38968,
+        "radial_offset_nm": 15389680,
+        "radial_tip_past_near_face_mm": 1.6103200000000002,
+        "raw_checks": {
+          "gripper_link": false,
+          "link5": true
+        },
+        "raw_tool_clear_pass": false,
+        "shift_from_old_mm": 8.62477422906826,
+        "sim_step_counter_after": 0,
+        "sim_step_counter_before": 0,
+        "sim_step_counter_unchanged": true,
+        "stage": "nm_seed_4",
+        "tangent_offset_mm": 9.0,
+        "tangent_offset_nm": 9000000
+      },
+      {
+        "commanded_tcp_error_mm": 0.9817867113830026,
+        "contact_point_below_top_mm": 44.2883420317813,
+        "exact_consistent": true,
+        "exact_min_clearance_mm": -4.285399789314158,
+        "fixed_jaw_face_gap_mm": -0.03467961475845174,
+        "fixed_jaw_penetration_mm": 0.03467961475845174,
+        "gripper_link_epa_cap_saturated": true,
+        "gripper_link_epa_contact_count": 64,
+        "gripper_link_exact_signed_distance_mm": -4.285399789314158,
+        "gripper_link_raw_signed_distance_mm": -3.0258724941417143,
+        "gripper_link_raw_state": "overlap",
+        "ik_converged": true,
+        "jaw_tangent_error_deg": 1.8095142269441746,
+        "legacy_alignment_pass": false,
+        "legacy_checks": {
+          "anti_retreat_tip_past_near_face_nonnegative": true,
+          "commanded_tcp_error_le_5mm": true,
+          "contact_at_least_15mm_below_top": true,
+          "fixed_jaw_gap_0_to_5mm": false,
+          "ik_converged": true,
+          "jaw_tangent_le_15deg": true,
+          "live_exact_written_tcp_error_le_5mm": true,
+          "no_fixed_jaw_proxy_penetration": false
+        },
+        "link5_epa_cap_saturated": false,
+        "link5_epa_contact_count": 0,
+        "link5_exact_signed_distance_mm": 2.9201657255833613,
+        "link5_raw_signed_distance_mm": 2.9201657255833613,
+        "link5_raw_state": "clear",
+        "min_raw_clearance_mm": -3.0258724941417143,
+        "pass": false,
+        "radial_offset_mm": 15.389685,
+        "radial_offset_nm": 15389685,
+        "radial_tip_past_near_face_mm": 1.610315000000001,
+        "raw_checks": {
+          "gripper_link": false,
+          "link5": true
+        },
+        "raw_tool_clear_pass": false,
+        "shift_from_old_mm": 8.624779092778262,
+        "sim_step_counter_after": 0,
+        "sim_step_counter_before": 0,
+        "sim_step_counter_unchanged": true,
+        "stage": "nm_seed_3",
+        "tangent_offset_mm": 9.0,
+        "tangent_offset_nm": 9000000
+      },
+      {
+        "commanded_tcp_error_mm": 0.9817867285822535,
+        "contact_point_below_top_mm": 44.2883420317813,
+        "exact_consistent": true,
+        "exact_min_clearance_mm": -4.285399789314158,
+        "fixed_jaw_face_gap_mm": -0.03467961475845174,
+        "fixed_jaw_penetration_mm": 0.03467961475845174,
+        "gripper_link_epa_cap_saturated": true,
+        "gripper_link_epa_contact_count": 64,
+        "gripper_link_exact_signed_distance_mm": -4.285399789314158,
+        "gripper_link_raw_signed_distance_mm": -3.0258724941417143,
+        "gripper_link_raw_state": "overlap",
+        "ik_converged": true,
+        "jaw_tangent_error_deg": 1.8095142269441746,
+        "legacy_alignment_pass": false,
+        "legacy_checks": {
+          "anti_retreat_tip_past_near_face_nonnegative": true,
+          "commanded_tcp_error_le_5mm": true,
+          "contact_at_least_15mm_below_top": true,
+          "fixed_jaw_gap_0_to_5mm": false,
+          "ik_converged": true,
+          "jaw_tangent_le_15deg": true,
+          "live_exact_written_tcp_error_le_5mm": true,
+          "no_fixed_jaw_proxy_penetration": false
+        },
+        "link5_epa_cap_saturated": false,
+        "link5_epa_contact_count": 0,
+        "link5_exact_signed_distance_mm": 2.9201657255833613,
+        "link5_raw_signed_distance_mm": 2.9201657255833613,
+        "link5_raw_state": "clear",
+        "min_raw_clearance_mm": -3.0258724941417143,
+        "pass": false,
+        "radial_offset_mm": 15.389686,
+        "radial_offset_nm": 15389686,
+        "radial_tip_past_near_face_mm": 1.6103139999999998,
+        "raw_checks": {
+          "gripper_link": false,
+          "link5": true
+        },
+        "raw_tool_clear_pass": false,
+        "shift_from_old_mm": 8.624780065520278,
+        "sim_step_counter_after": 0,
+        "sim_step_counter_before": 0,
+        "sim_step_counter_unchanged": true,
+        "stage": "nm_seed_2",
+        "tangent_offset_mm": 9.0,
+        "tangent_offset_nm": 9000000
+      },
+      {
+        "commanded_tcp_error_mm": 0.9817867973728037,
+        "contact_point_below_top_mm": 44.2883420317813,
+        "exact_consistent": true,
+        "exact_min_clearance_mm": -4.285399789314158,
+        "fixed_jaw_face_gap_mm": -0.03467961475845174,
+        "fixed_jaw_penetration_mm": 0.03467961475845174,
+        "gripper_link_epa_cap_saturated": true,
+        "gripper_link_epa_contact_count": 64,
+        "gripper_link_exact_signed_distance_mm": -4.285399789314158,
+        "gripper_link_raw_signed_distance_mm": -3.0258724941417143,
+        "gripper_link_raw_state": "overlap",
+        "ik_converged": true,
+        "jaw_tangent_error_deg": 1.8095142269441746,
+        "legacy_alignment_pass": false,
+        "legacy_checks": {
+          "anti_retreat_tip_past_near_face_nonnegative": true,
+          "commanded_tcp_error_le_5mm": true,
+          "contact_at_least_15mm_below_top": true,
+          "fixed_jaw_gap_0_to_5mm": false,
+          "ik_converged": true,
+          "jaw_tangent_le_15deg": true,
+          "live_exact_written_tcp_error_le_5mm": true,
+          "no_fixed_jaw_proxy_penetration": false
+        },
+        "link5_epa_cap_saturated": false,
+        "link5_epa_contact_count": 0,
+        "link5_exact_signed_distance_mm": 2.9201657255833613,
+        "link5_raw_signed_distance_mm": 2.9201657255833613,
+        "link5_raw_state": "clear",
+        "min_raw_clearance_mm": -3.0258724941417143,
+        "pass": false,
+        "radial_offset_mm": 15.38969,
+        "radial_offset_nm": 15389690,
+        "radial_tip_past_near_face_mm": 1.6103100000000001,
+        "raw_checks": {
+          "gripper_link": false,
+          "link5": true
+        },
+        "raw_tool_clear_pass": false,
+        "shift_from_old_mm": 8.624783956488418,
+        "sim_step_counter_after": 0,
+        "sim_step_counter_before": 0,
+        "sim_step_counter_unchanged": true,
+        "stage": "nm_seed_1",
+        "tangent_offset_mm": 9.0,
+        "tangent_offset_nm": 9000000
+      },
+      {
+        "commanded_tcp_error_mm": 0.9817868489578193,
+        "contact_point_below_top_mm": 44.2883420317813,
+        "exact_consistent": true,
+        "exact_min_clearance_mm": -4.285399789314158,
+        "fixed_jaw_face_gap_mm": -0.03467961475845174,
+        "fixed_jaw_penetration_mm": 0.03467961475845174,
+        "gripper_link_epa_cap_saturated": true,
+        "gripper_link_epa_contact_count": 64,
+        "gripper_link_exact_signed_distance_mm": -4.285399789314158,
+        "gripper_link_raw_signed_distance_mm": -3.0258724941417143,
+        "gripper_link_raw_state": "overlap",
+        "ik_converged": true,
+        "jaw_tangent_error_deg": 1.8095142269441746,
+        "legacy_alignment_pass": false,
+        "legacy_checks": {
+          "anti_retreat_tip_past_near_face_nonnegative": true,
+          "commanded_tcp_error_le_5mm": true,
+          "contact_at_least_15mm_below_top": true,
+          "fixed_jaw_gap_0_to_5mm": false,
+          "ik_converged": true,
+          "jaw_tangent_le_15deg": true,
+          "live_exact_written_tcp_error_le_5mm": true,
+          "no_fixed_jaw_proxy_penetration": false
+        },
+        "link5_epa_cap_saturated": false,
+        "link5_epa_contact_count": 0,
+        "link5_exact_signed_distance_mm": 2.9201657255833613,
+        "link5_raw_signed_distance_mm": 2.9201657255833613,
+        "link5_raw_state": "clear",
+        "min_raw_clearance_mm": -3.0258724941417143,
+        "pass": false,
+        "radial_offset_mm": 15.389693,
+        "radial_offset_nm": 15389693,
+        "radial_tip_past_near_face_mm": 1.6103070000000002,
+        "raw_checks": {
+          "gripper_link": false,
+          "link5": true
+        },
+        "raw_tool_clear_pass": false,
+        "shift_from_old_mm": 8.624786874714587,
+        "sim_step_counter_after": 0,
+        "sim_step_counter_before": 0,
+        "sim_step_counter_unchanged": true,
+        "stage": "nm_seed_0",
+        "tangent_offset_mm": 9.0,
+        "tangent_offset_nm": 9000000
+      }
+    ],
+    "total_unique_count": 3181
+  },
+  "sensor_contract": {
+    "actual_tensor_shapes": {
+      "contact_pos_w": [
+        1,
+        1,
+        4,
+        3
+      ],
+      "force_matrix_w": [
+        1,
+        1,
+        4,
+        3
+      ],
+      "force_matrix_w_history": [
+        1,
+        1,
+        1,
+        4,
+        3
+      ],
+      "net_forces_w": [
+        1,
+        1,
+        3
+      ],
+      "net_forces_w_history": [
+        1,
+        1,
+        1,
+        3
+      ],
+      "pos_w": [
+        1,
+        1,
+        3
+      ],
+      "quat_w": [
+        1,
+        1,
+        4
+      ]
+    },
+    "body_names": [
+      "Sponge"
+    ],
+    "errors": [],
+    "expected_tensor_shapes": {
+      "contact_pos_w": [
+        1,
+        1,
+        4,
+        3
+      ],
+      "force_matrix_w": [
+        1,
+        1,
+        4,
+        3
+      ],
+      "force_matrix_w_history": [
+        1,
+        1,
+        1,
+        4,
+        3
+      ],
+      "net_forces_w": [
+        1,
+        1,
+        3
+      ],
+      "net_forces_w_history": [
+        1,
+        1,
+        1,
+        3
+      ],
+      "pos_w": [
+        1,
+        1,
+        3
+      ],
+      "quat_w": [
+        1,
+        1,
+        4
+      ]
+    },
+    "filter_count": 4,
+    "hard_contract_pass": true,
+    "instrumentation_side_effect": "activate_contact_sensors authors rigid-body sleep threshold 0",
+    "num_bodies": 1,
+    "num_instances": 1,
+    "reporter_threshold_n": 0.0,
+    "resolved_filter_index_by_label": {
+      "gripper_link": 3,
+      "link4": 1,
+      "link5": 2,
+      "support_table": 0
+    },
+    "resolved_filter_paths": [
+      "/World/envs/env_0/TapTable",
+      "/World/envs/env_0/Robot/link4",
+      "/World/envs/env_0/Robot/link5",
+      "/World/envs/env_0/Robot/gripper_link"
+    ],
+    "rigid_body_sleep_threshold": 0.0,
+    "sensor_count": 1
+  },
+  "stage_contract": {
+    "errors": [],
+    "expected_table_top_z_m": -0.012117,
+    "ground_collision_disabled_pass": true,
+    "hard_contract_pass": true,
+    "postplay_ground_colliders": [
+      {
+        "collision_enabled": false,
+        "path": "/World/ground/terrain/GroundPlane/CollisionPlane",
+        "type_name": "Plane"
+      }
+    ],
+    "preplay": {
+      "errors": [],
+      "expected_ground_collider_path": "/World/ground/terrain/GroundPlane/CollisionPlane",
+      "ground_colliders_after_disable": [
+        {
+          "collision_enabled": false,
+          "path": "/World/ground/terrain/GroundPlane/CollisionPlane",
+          "type_name": "Plane"
+        }
+      ],
+      "ground_colliders_before_disable": [
+        {
+          "collision_enabled": true,
+          "path": "/World/ground/terrain/GroundPlane/CollisionPlane",
+          "type_name": "Plane"
+        }
+      ],
+      "pass": true
+    },
+    "robot_is_fixed_base": true,
+    "table_body_path": "/World/envs/env_0/TapTable",
+    "table_collision_enabled_pass": true,
+    "table_collision_prims": [
+      {
+        "collision_enabled": true,
+        "path": "/World/envs/env_0/TapTable/geometry/mesh",
+        "type_name": "Cube"
+      }
+    ],
+    "table_expected_collider_path": "/World/envs/env_0/TapTable/geometry/mesh",
+    "table_top_error_mm": 2.9671192239288935e-07,
+    "table_top_pass": true,
+    "table_top_tolerance_mm": 0.01,
+    "table_top_z_m": -0.012117000296711922
+  },
+  "verdict": "D336_G0A_FINITE_GRID_CAVEAT_DISCHARGED_NO_CLEAR_STOP",
+  "visualization": {
+    "marker_status": {
+      "backend": "isaac_markers",
+      "frame_count": 6,
+      "ok": true,
+      "prim_path": "/World/D336CaveatDiscriminatorFrames/frames"
+    },
+    "rrd_status": {
+      "backend": "rerun",
+      "blueprint_status": {
+        "attempted": true,
+        "ok": true,
+        "origin": "/"
+      },
+      "live_viewer": false,
+      "nonzero_file": true,
+      "ok": true,
+      "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d336/d336_caveat_discriminator_trace.rrd",
+      "trace_steps": 1,
+      "urdf_actual_status": {
+        "attempted": true,
+        "joint_count": 8,
+        "name": "roarm_m3",
+        "ok": true
+      },
+      "urdf_commanded_status": {
+        "attempted": true,
+        "joint_count": 8,
+        "name": "roarm_m3",
+        "ok": true
+      }
+    },
+    "snapshot_count": 2,
+    "snapshots": [
+      "claudedocs/runtime_logs/grasp_track/g0a_d336/d336_decision.png",
+      "claudedocs/runtime_logs/grasp_track/g0a_d336/d336_exact_clearance_map.png"
+    ]
+  }
+}

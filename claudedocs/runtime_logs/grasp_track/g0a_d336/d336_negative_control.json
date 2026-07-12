@@ -1,0 +1,80 @@
+{
+  "artifact": "D336_NEGATIVE_CONTROLS",
+  "grid_parity": {
+    "pass": true,
+    "rows": [
+      {
+        "expected_gripper_bvh_mm": -0.00012194484645309221,
+        "expected_link5_bvh_mm": 7.787463648751304,
+        "expected_states": [
+          "clear",
+          "overlap"
+        ],
+        "observed_gripper_bvh_mm": -0.00012194484645309221,
+        "observed_link5_bvh_mm": 7.787463648751304,
+        "observed_states": [
+          "clear",
+          "overlap"
+        ],
+        "pass": true,
+        "radial_offset_um": 14600,
+        "tangent_offset_um": 13900
+      },
+      {
+        "expected_gripper_bvh_mm": -8.115950793546967,
+        "expected_link5_bvh_mm": 2.0161787624753913,
+        "expected_states": [
+          "clear",
+          "overlap"
+        ],
+        "observed_gripper_bvh_mm": -8.115950793546967,
+        "observed_link5_bvh_mm": 2.0161787624753913,
+        "observed_states": [
+          "clear",
+          "overlap"
+        ],
+        "pass": true,
+        "radial_offset_um": 0,
+        "tangent_offset_um": 9000
+      }
+    ],
+    "tolerance_mm": 0.05
+  },
+  "old_target_exact_layer": {
+    "expected_d334_epa_depth_mm": 5.863007382619745,
+    "observed_epa_contact_count": 64,
+    "observed_epa_max_abs_depth_mm": 6.460556421930386,
+    "observed_is_collision": true,
+    "pass": true,
+    "tolerance_mm": 0.05
+  },
+  "old_target_legacy": {
+    "artifact": "D335_OLD_TARGET_NEGATIVE_CONTROL",
+    "controlled_physics_steps": 0,
+    "pass": true,
+    "per_body": {
+      "gripper_link": {
+        "absolute_delta_mm": 0.0,
+        "consistency_hard_check_pass": true,
+        "expected_signed_distance_mm": -5.956676949725084,
+        "expected_state": "overlap",
+        "observed_signed_distance_mm": -5.956676949725084,
+        "observed_state": "overlap",
+        "pass": true,
+        "tolerance_mm": 0.05
+      },
+      "link5": {
+        "absolute_delta_mm": 0.0,
+        "consistency_hard_check_pass": true,
+        "expected_signed_distance_mm": 4.2726455336106985,
+        "expected_state": "clear",
+        "observed_signed_distance_mm": 4.2726455336106985,
+        "observed_state": "clear",
+        "pass": true,
+        "tolerance_mm": 0.05
+      }
+    },
+    "sim_step_counter_unchanged": true
+  },
+  "pass": true
+}

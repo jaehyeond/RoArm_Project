@@ -18886,3 +18886,74 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d335/d335_prephysics_gate.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d335/d335_prephysics_decision.png`
 - `START_HERE.md`
+
+## D336 - Continuous/exact re-search discharges the finite-grid caveat: the position-only family penetrates at millimeter scale everywhere (2026-07-12)
+
+Decision:
+
+- Verdict is `D336_G0A_FINITE_GRID_CAVEAT_DISCHARGED_NO_CLEAR_STOP`.
+- With zero new physical variables, the pre-registered exact re-scoring of all
+  `2,629` D335 grid keys plus continuous Nelder-Mead refinement (6 seeds) and
+  a micro-grid (`3,181` unique evaluations total) found no candidate whose
+  audited raw `link5 + gripper_link` tool surface clears the cylinder by
+  `>=+0.1mm` under the frozen alignment gates. Full-pass and raw-clear counts
+  are both `0/3,181`.
+- The D335 "near-miss" impression is refuted as a ranking artifact: the BVH
+  distance scalar of a colliding BVH mesh is not a proximity measure. D335's
+  best-ranked point `(14.6,13.9)mm` (scalar `-0.000122mm`) has a certified EPA
+  contact `7.830mm` deep; the true shallowest-penetration point in the whole
+  family is `(15.3897,9.0000)mm` at `-4.285mm` (alignment-passing best:
+  `-4.396mm` at `(15.2774,9.0446)mm`); the worst is `-11.299mm`. The
+  64-contact enumeration saturated everywhere, so these depths are lower
+  bounds of solid penetration.
+- Do not attempt any further offset-only tuning, finer grids, or optimizer
+  passes inside the HOME-seeded position-only radial/tangent family: a
+  `>=4.29mm` certified penetration at the continuous optimum cannot be
+  bridged to `+0.1mm` clearance by position offsets in this domain. This
+  closes the family at millimeter scale (still an executed-set statement, not
+  a continuum impossibility proof).
+- Physics never ran (`physics_licensed=false` by construction, controlled
+  steps `0`, sim counter `0->0`). `g0a_pass=false`; G0b/RL/ladder promotion
+  remain blocked. Next decision is the user's choice between reserve options:
+  (A) exactly one new reachable wrist/tool-orientation variable (same bounded
+  r/t domain and raw-tool pre-physics gate; the unreachable D323 strict-axis
+  family stays forbidden) or (B) explicit `r>17mm` grasp-depth redefinition.
+  Collision-representation repair remains deferred.
+
+Evidence:
+
+- Old-target negative control bit-exact vs D334 (deltas `0.000000mm`);
+  exact-layer control `6.460556mm >= 5.863007mm`; grid-parity rows
+  `(14.60,13.90)`/`(0.00,9.00)` bit-exact vs the pinned D335 CSV.
+- Frozen contract 13/13 PASS with all three input hashes pinned; pins
+  `numpy==1.26.0`, `psutil==5.9.8`; seed `33201`.
+- Independent CSV recount matched all counts and the zero-pass verdict
+  (`rescore 2,626 + 3 control-labeled` rows, `322` NM + `230` micro rows).
+- Visualization DoD PASS: two inspected PNGs (decision snapshot + full-domain
+  exact clearance map) and one non-empty RRD (`2,481,881` bytes).
+- Pre-run three-lens adversarial review confirmed 1 MAJOR (continuum
+  overclaim in a PNG title) + 4 MINOR findings, all fixed/registered before
+  runtime; 0 findings refuted.
+
+Implication:
+
+- Target-family feasibility inside `position_only_tangent_minus1` is closed.
+  Any raw-clear command for this gripper/cylinder pair requires a new
+  orientation (or grasp-depth) degree of freedom, quantitatively at least
+  `~4.4mm` of effective clearance change at the jaw region.
+- The BVH ranking scalar must never again be used as a proximity/near-miss
+  measure for colliding meshes in this track; use contact-level EPA
+  enumeration (registered D336 method) for ranking and keep the exact
+  clear-gate judgment unchanged.
+
+Sources:
+
+- `claudedocs/session_20260712_grasp_g0a_d336_finite_grid_caveat_discriminator.md`
+- `sim_scripts/cyl34_top_view_d336_grasp_g0a_finite_grid_caveat_discriminator.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d336/g0a_d336_finite_grid_caveat_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d336/d336_exact_rescore.csv`
+- `claudedocs/runtime_logs/grasp_track/g0a_d336/d336_continuous_scan.csv`
+- `claudedocs/runtime_logs/grasp_track/g0a_d336/d336_negative_control.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d336/d336_prephysics_gate.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d336/d336_exact_clearance_map.png`
+- `START_HERE.md`

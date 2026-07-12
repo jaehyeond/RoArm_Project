@@ -1,0 +1,76 @@
+{
+  "artifact": "D336_PREPHYSICS_GATE",
+  "candidate_pass": false,
+  "checks": {
+    "all_rows_counter_unchanged": true,
+    "candidate_selected": false,
+    "decision_candidate_revalidated": true,
+    "negative_controls": true,
+    "probe_controlled_physics_steps_zero": true,
+    "sim_step_counter_unchanged_during_scan": true
+  },
+  "contract_pass": true,
+  "controlled_physics_steps": 0,
+  "decision": {
+    "commanded_tcp_error_mm": 0.9817877088203102,
+    "contact_point_below_top_mm": 44.28825278705478,
+    "exact_consistent": true,
+    "exact_min_clearance_mm": -4.2853737152419775,
+    "fixed_jaw_face_gap_mm": -0.034682407631519974,
+    "fixed_jaw_penetration_mm": 0.034682407631519974,
+    "gripper_link_epa_cap_saturated": true,
+    "gripper_link_epa_contact_count": 64,
+    "gripper_link_exact_signed_distance_mm": -4.2853737152419775,
+    "gripper_link_raw_signed_distance_mm": -3.025839442794585,
+    "gripper_link_raw_state": "overlap",
+    "ik_converged": true,
+    "jaw_tangent_error_deg": 1.8095139786172436,
+    "legacy_alignment_pass": false,
+    "legacy_checks": {
+      "anti_retreat_tip_past_near_face_nonnegative": true,
+      "commanded_tcp_error_le_5mm": true,
+      "contact_at_least_15mm_below_top": true,
+      "fixed_jaw_gap_0_to_5mm": false,
+      "ik_converged": true,
+      "jaw_tangent_le_15deg": true,
+      "live_exact_written_tcp_error_le_5mm": true,
+      "no_fixed_jaw_proxy_penetration": false
+    },
+    "link5_epa_cap_saturated": false,
+    "link5_epa_contact_count": 0,
+    "link5_exact_signed_distance_mm": 2.9201759579717796,
+    "link5_raw_signed_distance_mm": 2.9201759579717796,
+    "link5_raw_state": "clear",
+    "min_raw_clearance_mm": -3.025839442794585,
+    "pass": false,
+    "radial_offset_mm": 15.389743,
+    "radial_offset_nm": 15389743,
+    "radial_tip_past_near_face_mm": 1.6102570000000003,
+    "raw_checks": {
+      "gripper_link": false,
+      "link5": true
+    },
+    "raw_tool_clear_pass": false,
+    "shift_from_old_mm": 8.62483551182566,
+    "sim_step_counter_after": 0,
+    "sim_step_counter_before": 0,
+    "sim_step_counter_unchanged": true,
+    "stage": "decision_snapshot",
+    "tangent_offset_mm": 9.0,
+    "tangent_offset_nm": 9000000
+  },
+  "decision_candidate_parity": {
+    "checks": {
+      "exact_metric_delta_le_0p05mm": true,
+      "gripper_bvh_delta_le_0p05mm": true,
+      "link5_bvh_delta_le_0p05mm": true,
+      "offsets_exact": true,
+      "raw_states_exact": true
+    },
+    "pass": true
+  },
+  "physics_licensed": false,
+  "selected": null,
+  "sim_step_counter_end": 0,
+  "sim_step_counter_start": 0
+}
