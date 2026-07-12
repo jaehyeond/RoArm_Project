@@ -18820,3 +18820,69 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d334/d334_signed_distance_matrix.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d334/d334_step0_replay_parity.json`
 - `START_HERE.md`
+
+## D335 - Bounded radial/tangent target repair has no raw-tool-clear candidate; physics stays gated (2026-07-12)
+
+Decision:
+
+- Verdict is `D335_G0A_TARGET_FAMILY_NO_FEASIBLE_CLEAR_STOP`.
+- In the pre-registered finite candidate set for the grasp-semantic scalar
+  target family (`r=0..17mm`, `t=9..14mm`, coarse `0.25mm` plus the exact
+  top-five `+/-0.50mm @ 0.05mm` refinement union), no candidate clears both
+  audited raw tool shapes while retaining all frozen G0a alignment gates.
+- Do not repeat offset-only tuning, approach, or 10-trial evaluation under this
+  target family. Do not expand past `r=17mm` without an explicit grasp-depth
+  semantics decision; clearance by retreat is not a G0a repair.
+- This is a finite executed-set result, not a mathematical proof over every
+  continuous radial/tangent offset. The best raw BVH scalar must not be called
+  a penetration depth or exact near-miss magnitude.
+- The gripper cook-parity issue remains real but secondary. Collision-
+  representation repair cannot substitute for an actual raw-tool-clear target,
+  so it is not promoted by D335.
+- `g0a_pass=false`; no target was selected, no physics ran, and G0b/RL/ladder
+  promotion remain blocked.
+
+Evidence:
+
+- Old-target negative control reproduced D334 bit-exactly with zero controlled
+  physics steps: link5 raw `+4.2726455336mm` / CLEAR and gripper raw
+  `-5.9566769497mm` / OVERLAP; both deltas `0.000000mm`.
+- Candidate CSV has `2,629` unique rows: `1,449` complete coarse + `1,180`
+  exact refinement candidates, with no missing/extra/duplicate keys. Frozen
+  alignment gates pass `2,560/2,629`; complete raw-tool clearance and full pass
+  are both `0/2,629`.
+- link5 raw is CLEAR `2,629/2,629`; gripper raw is OVERLAP `2,422` and
+  BORDERLINE `207`, CLEAR `0`.
+- Best registered ranking row is `(r,t)=(14.6,13.9)mm`: link5 raw
+  `+7.7874636488mm` / CLEAR, gripper raw BVH scalar
+  `-0.0001219448mm` / OVERLAP, commanded TCP error `0.970411mm`, tangent error
+  `2.785821deg`, fixed-jaw gap `4.844665mm`, contact point `44.298907mm` below
+  top. It is not selected because the required clearance is `>=+0.1mm`.
+- Stage/sensor/source-mesh/hash/pin contracts pass; all candidate sim counters
+  remain unchanged and the pre-physics gate records `physics_licensed=false`,
+  controlled steps `0`. No baseline/target artifacts exist, as required.
+- Visualization contract passes with one inspected decision PNG, six markers,
+  and one non-empty `2,480,172`-byte RRD.
+
+Implication:
+
+- The next decision must remain on G0a target feasibility. Before adding a new
+  physical variable, a separately approved continuous/finer feasibility
+  discriminator may test whether the finite-grid caveat can change the result.
+  If it cannot, the non-retreat target-family continuation is one new reachable
+  wrist/tool-orientation variable. Explicit `r>17mm` grasp-depth redefinition
+  is a separate user choice. None is implemented by D335.
+- Collision-representation work remains reserve until an actual raw-clear
+  target exists; mesh rewrite, G0b, and PPO stay blocked.
+
+Sources:
+
+- `claudedocs/session_20260712_grasp_g0a_d335_target_family_repair.md`
+- `sim_scripts/cyl34_top_view_d335_grasp_g0a_target_family_repair.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d335/g0a_d335_target_family_repair_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d335/d335_candidate_scan.csv`
+- `claudedocs/runtime_logs/grasp_track/g0a_d335/d335_candidate_search.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d335/d335_old_target_negative_control.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d335/d335_prephysics_gate.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d335/d335_prephysics_decision.png`
+- `START_HERE.md`

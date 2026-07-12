@@ -16,3 +16,15 @@ as the current Active Case.
   collision이 4mm proxy(convexHull, pxr 직접 확인)라 G0a alignment PASS 후에도
   G0b 파지 물리 불성립. G0b 진입 전 필수 collision 재저작 항목. (착수 금지,
   기록만.)
+
+- 2026-07-12 (D335): `target_family_continuous_feasibility` — registered finite
+  r/t set에서 raw-clear `0/2629`; 연속 domain 전체 불가능 증명은 아님. 새 물리
+  변수 전에 승인된 별도 case로 top basins의 continuous/finer discriminator를
+  실행할 수 있음. 현재 착수 금지.
+- 2026-07-12 (D335): `target_family_orientation` — finer feasibility도 실패할
+  경우 동일 anti-retreat r/t domain에 reachable wrist/tool-orientation 변수 1건을
+  추가하는 non-retreat 후속안. D323 strict-axis 재도입 금지; 사용자 case 승인 전
+  착수 금지.
+- 2026-07-12 (D335): `grasp_depth_semantics_r_gt_17mm` — `r>17mm`는 TCP를 near
+  face 밖으로 후퇴시키므로 clearance만 green이 되는 퇴행 가능성. 명시적인 새
+  grasp-depth/bracketing 계약과 사용자 승인 없이는 domain 확장 금지.
