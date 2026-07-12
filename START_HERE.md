@@ -28,6 +28,13 @@ continuous optimum; zero physics steps ran.)
 - D334 causal truth stands: the actual gripper raw mesh overlaps the
   cylinder under this family; ownership is clean 1:1. Gripper cook parity
   `1.46%` FAIL remains a separate secondary finding.
+- Post-D336 setup/rerun/plan audit (same day, no experiment): cylinder
+  definition is sound (analytic CylinderCfg, contract-checked; placeholders
+  mass `0.72kg`/friction `1.5/1.2` registered); rerun logs every run but live
+  viewer was never used and RRDs unopened since D333 — upgrade registered as
+  BACKLOG `rerun_pipeline_upgrade`; failure history classified: setup-debt
+  cleanup, not task difficulty (RL never attempted). See
+  `claudedocs/session_20260712_d336_posthoc_setup_rerun_plan_audit.md`.
 
 ## Interpretation
 
