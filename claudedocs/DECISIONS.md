@@ -18957,3 +18957,82 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d336/d336_prephysics_gate.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d336/d336_exact_clearance_map.png`
 - `START_HERE.md`
+
+## D337 - Open-jaw target gate: q5 convention error repaired, family feasible again (2,560/2,629); remaining blocker is the cooked-hull collision representation (2026-07-13)
+
+Decision:
+
+- Verdict is `D337_G0A_STATIC_RUNTIME_MIXED_STOP`.
+- Two audit findings are registered as durable facts:
+  1. **q5 convention error**: URDF gripper `q5=0` is CLOSED and `1.571rad`
+     OPEN (D322 contract: real max opening `88.3deg <-> 1.571rad`). The
+     D325-family text "open gripper q5=0" was wrong; every D330-D336 exact
+     write placed a closed moving jaw into the grasp volume. D334-D336
+     verdicts remain true as measured but are hereby scoped to the
+     closed-jaw sub-family.
+  2. **USD/URDF collision divergence**: the robot USD (2026-05-13) embeds
+     the full `gripper_link.stl` (41,094 vtx) as the moving-jaw collision
+     mesh, while the URDF was changed 2026-05-14 to a 4mm-box proxy
+     (`gripper_link_collision_g2a.stl`); the USD is stale vs the URDF file
+     but is the more physical representation and remains the audited truth.
+- With the single new variable `gripper_open_command` (`q5=1.5413rad` URDF =
+  98.1% of the open limit, ~`86.6deg` real opening — deliberately
+  sub-maximum), the pre-registered 2,629-key r/t scan yields `2,560`
+  full-pass raw-clear candidates (vs `0` closed-jaw in D335/D336). The
+  selected target is the **original D325 `(7,11)mm`** (shift 0), link5
+  `+4.2726mm` / gripper `+11.1751mm` clear.
+- The conditional 200-step sole-support settle is MIXED: raw meshes stayed
+  clear at every recorded reading (min link5 `+7.498mm`, gripper
+  `+9.595mm`), gripper force `0N`, final alignment PASS, final displacement
+  `2.754mm < 5mm` — but link5 recorded a `38.861N` step-0 impulse and the
+  object was disturbed (max XY `5.418mm`, tilt `4.208deg`) before settling
+  against link5 at `~1.70N`. The pre-registered attribution-timing gate
+  failed because the summary onset metric (`19`) missed the step-0 impulse
+  row; no verdict override is made.
+- Causal attribution (evidence): the physics collides with the **cooked
+  convex hull**, not the raw mesh — D334 certified link5's cooked hull
+  overlaps `-6.2367mm` at exactly this commanded pose. The deferral
+  condition for the collision-representation repair ("wait until a raw-clear
+  target exists") is now satisfied; that repair is the next critical-path
+  candidate, pending explicit user approval (it changes the collision asset,
+  e.g. USD regeneration from the URDF with a faithful convex decomposition,
+  which must also resolve the g2a-vs-full-mesh question for the moving jaw).
+- Do not re-run closed-jaw scans, offset-only searches, or a 10-trial under
+  the current cooked hulls. `g0a_pass=false`; G0b/RL/ladder blocked.
+
+Evidence:
+
+- Controls: closed-jaw bit-exact vs D334 (`0.000000mm`); exact-EPA parity vs
+  pinned D336 (`6.460556mm`); grid parity incl. link5 BVH (`0.000000mm`);
+  open-jaw scoping cross-check observed `+11.175088mm` vs predicted
+  `+11.175mm`; link5 q5-independence `0.0mm` over all 2,629 keys.
+- Design scoping (recorded in `g0a_d337/design_scoping/`): offline pipeline
+  validated at `0.0001mm` level vs the D336 runtime exact layer; q5 sweep at
+  `(7,11)`: `0.0rad -6.460mm` -> `1.5413rad +11.175mm`.
+- Pre-run adversarial review: 3 MAJOR (q5 mislabeled as "real max opening";
+  D335 hash pin unverified; decision PNG rendered post-physics) + 4 MINOR
+  fixed/registered before runtime; 4 findings refuted; 4 verifications cut
+  by a session usage limit were adopted as low-cost defensive fixes.
+- Full runtime numbers and hashes:
+  `claudedocs/session_20260713_grasp_g0a_d337_open_jaw_target_gate.md`.
+
+Implication:
+
+- G0a is no longer blocked by target geometry or the moving jaw; it is
+  blocked solely by collision representation fidelity. After a successful
+  representation repair, the frozen `(7,11)` open-jaw target should re-run
+  the D333-style settle and then the 10-trial alignment gate.
+- All future grasp-track commands must treat `q5=0` as CLOSED; "open" in sim
+  is `~1.541-1.571rad`. Real-robot transfer must use the D322 mapping and
+  the `cmd 0~5deg` stall ban.
+
+Sources:
+
+- `claudedocs/session_20260713_grasp_g0a_d337_open_jaw_target_gate.md`
+- `sim_scripts/cyl34_top_view_d337_grasp_g0a_open_jaw_target_gate.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d337/g0a_d337_open_jaw_target_gate_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d337/d337_open_jaw_scan.csv`
+- `claudedocs/runtime_logs/grasp_track/g0a_d337/d337_target_static_trace.csv`
+- `claudedocs/runtime_logs/grasp_track/g0a_d337/d337_target_raw_distance_trace.csv`
+- `claudedocs/runtime_logs/grasp_track/g0a_d337/design_scoping/`
+- `START_HERE.md`
