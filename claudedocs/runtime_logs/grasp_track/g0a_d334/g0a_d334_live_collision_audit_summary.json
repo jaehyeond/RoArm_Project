@@ -1,0 +1,1640 @@
+{
+  "active_case": "G0a cylinder D34xH90 frozen-pose live collision shape / ownership audit",
+  "artifact_contract": {
+    "checks": {
+      "marker_status_ok": true,
+      "rrd_nonzero_file": true,
+      "rrd_status_ok": true,
+      "snapshot_count_between_1_and_3": true,
+      "snapshots_exist_and_nonzero": true
+    },
+    "pass": true
+  },
+  "artifacts": {
+    "audit_trace_csv": "claudedocs/runtime_logs/grasp_track/g0a_d334/d334_audit_trace.csv",
+    "baseline_replay_trace_csv": "claudedocs/runtime_logs/grasp_track/g0a_d334/d334_baseline_replay_trace.csv",
+    "cook_parity_json": "claudedocs/runtime_logs/grasp_track/g0a_d334/d334_cook_parity.json",
+    "frozen_invariant_contract_json": "claudedocs/runtime_logs/grasp_track/g0a_d334/d334_frozen_invariant_contract.json",
+    "live_collider_inventory_json": "claudedocs/runtime_logs/grasp_track/g0a_d334/d334_live_collider_inventory.json",
+    "prebaseline_contract_json": "claudedocs/runtime_logs/grasp_track/g0a_d334/d334_prebaseline_contract.json",
+    "rrd": "claudedocs/runtime_logs/grasp_track/g0a_d334/d334_live_collision_audit_trace.rrd",
+    "signed_distance_matrix_json": "claudedocs/runtime_logs/grasp_track/g0a_d334/d334_signed_distance_matrix.json",
+    "step0_replay_parity_json": "claudedocs/runtime_logs/grasp_track/g0a_d334/d334_step0_replay_parity.json",
+    "summary_json": "claudedocs/runtime_logs/grasp_track/g0a_d334/g0a_d334_live_collision_audit_summary.json",
+    "summary_markdown": "claudedocs/runtime_logs/grasp_track/g0a_d334/g0a_d334_live_collision_audit_summary.md"
+  },
+  "canonical": {
+    "commanded_joint_deg": [
+      2.148728308569021,
+      31.10846571602184,
+      112.80045405661652,
+      10.484742437013027,
+      0.0,
+      0.0
+    ],
+    "commanded_joint_rad": [
+      0.03750238371533811,
+      0.5429451519883565,
+      1.9687393210325523,
+      0.1829932767494515,
+      0.0,
+      0.0
+    ],
+    "commanded_link5_pos_local_m": [
+      0.24256962865595555,
+      0.009101206424549271,
+      0.13755092923730766
+    ],
+    "commanded_link5_rot_local": [
+      [
+        0.03749359359483842,
+        -0.9011506519118578,
+        0.4318816191946337
+      ],
+      [
+        -0.9992968680223836,
+        -0.0338111500112798,
+        0.01620418759363276
+      ],
+      [
+        -2.646372962240873e-17,
+        -0.4321855026418034,
+        -0.9017847255893459
+      ]
+    ],
+    "commanded_tcp_error_mm": 0.8178119166311656,
+    "commanded_tcp_local_m": [
+      0.2924208601963537,
+      0.010971623390107113,
+      0.03345972193198064
+    ],
+    "home_seed_deg": [
+      0.0,
+      0.0,
+      90.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "ik": {
+      "converged": true,
+      "cost": 0.0008178119166311656,
+      "iterations": 12,
+      "link5_local_m": [
+        0.24256962865595555,
+        0.009101206424549271,
+        0.13755092923730766
+      ],
+      "link5_x_axis_world": [
+        0.03749359359483842,
+        -0.9992968680223836,
+        -2.646372962240873e-17
+      ],
+      "link5_y_axis_world": [
+        -0.9011506519118578,
+        -0.0338111500112798,
+        -0.4321855026418034
+      ],
+      "link5_z_axis_world": [
+        0.4318816191946337,
+        0.01620418759363276,
+        -0.9017847255893459
+      ],
+      "pos_err_mm": 0.8178119166311656,
+      "q_deg": [
+        2.148728308569021,
+        31.10846571602184,
+        112.80045405661652,
+        10.484742437013027,
+        0.0,
+        0.0
+      ],
+      "tcp_local_m": [
+        0.2924208601963537,
+        0.010971623390107113,
+        0.03345972193198064
+      ],
+      "x_axis_err_deg": 0.0,
+      "z_axis_err_deg": 0.0
+    },
+    "joint_names": [
+      "base_link_to_link1",
+      "link1_to_link2",
+      "link2_to_link3",
+      "link3_to_link4",
+      "link4_to_link5",
+      "link5_to_gripper_link"
+    ],
+    "object_center_local_m": [
+      0.3,
+      0.0,
+      0.032882999999999996
+    ],
+    "offline_witness_cylinder_local_m": [
+      0.28666456592845707,
+      0.010543536619154886,
+      0.07511371815161982
+    ],
+    "radial_axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "tangent_axis": [
+      0.0,
+      -1.0,
+      -0.0
+    ],
+    "target_formula": "TCP=center-radial*0.007-tangent*0.011; z=center_z",
+    "target_tcp_local_m": [
+      0.293,
+      0.011,
+      0.032882999999999996
+    ]
+  },
+  "classification": {
+    "evidence": [
+      {
+        "collider_path": "/World/envs/env_0/Robot/gripper_link/collisions/gripper_link/node_STL_BINARY_",
+        "pose": "pose_b_poststep0"
+      },
+      {
+        "collider_path": "/World/envs/env_0/Robot/gripper_link/collisions/gripper_link/node_STL_BINARY_",
+        "pose": "pose_a_prestep"
+      }
+    ],
+    "interpretation": "the raw tool mesh itself overlaps the cylinder at the frozen pose with the recorded gripper_link attribution; a target-family repair is the candidate",
+    "verdict": "D334_G0A_ACTUAL_TOOL_OVERLAP_SUPPORTED"
+  },
+  "distance_sets": [
+    {
+      "body_poses_w": {
+        "gripper_link": {
+          "pos_m": [
+            0.24808166921138763,
+            0.009306938387453556,
+            0.08249205350875854
+          ],
+          "quat_wxyz": [
+            -0.00999146793037653,
+            -0.8460749983787537,
+            -0.0158685315400362,
+            0.5327337980270386
+          ]
+        },
+        "link5": {
+          "pos_m": [
+            0.2425689995288849,
+            0.009100183844566345,
+            0.13755056262016296
+          ],
+          "quat_wxyz": [
+            0.1596081405878067,
+            -0.7023329138755798,
+            0.676476001739502,
+            -0.153733029961586
+          ]
+        }
+      },
+      "object_pos_w_m": [
+        0.30000001192092896,
+        0.0,
+        0.03288299962878227
+      ],
+      "object_quat_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "pose": "pose_a_prestep",
+      "queries": [
+        {
+          "body": "link5",
+          "certified": true,
+          "collider_path": "/World/envs/env_0/Robot/link5/collisions/link5/node_STL_BINARY_",
+          "collision_count": 1,
+          "consistency_hard_check_pass": true,
+          "contact": {
+            "normal": [
+              0.7845704229874171,
+              -0.6200397175773058,
+              1.7079222925406075e-08
+            ],
+            "penetration_depth_m": 0.006236686031376068,
+            "position_m": [
+              0.2891188319101261,
+              0.008619754960403635,
+              0.07509631120806334
+            ]
+          },
+          "distance_normal": [
+            0.7845704229874171,
+            -0.6200397175773058,
+            1.7079222925406075e-08
+          ],
+          "gjk_epa_depth_consistent_within_0p1mm": true,
+          "is_collision": true,
+          "nearest_point_cylinder_m": [
+            0.2866722722112879,
+            0.01055325148316001,
+            0.07509631115480447
+          ],
+          "nearest_point_geometry_m": [
+            0.29156539160896433,
+            0.006686258437647262,
+            0.07509631126132221
+          ],
+          "penetration_depth_m": 0.006236686031376068,
+          "pose": "pose_a_prestep",
+          "representation": "cooked",
+          "sign_consistent": true,
+          "signed_distance_m": -0.006236686031376068,
+          "signed_distance_mm": -6.236686031376069,
+          "verdict": "OVERLAP"
+        },
+        {
+          "body": "link5",
+          "certified": null,
+          "collider_path": "/World/envs/env_0/Robot/link5/collisions/link5/node_STL_BINARY_",
+          "collision_count": 0,
+          "consistency_hard_check_pass": true,
+          "contact": null,
+          "distance_normal": [
+            0.001636027421966859,
+            0.0016307833925680304,
+            0.6833487848973582
+          ],
+          "gjk_epa_depth_consistent_within_0p1mm": null,
+          "is_collision": false,
+          "nearest_point_cylinder_m": [
+            0.2993566609404968,
+            0.016987932123767552,
+            0.04877724452991125
+          ],
+          "nearest_point_geometry_m": [
+            0.29919495348352054,
+            0.021257516477540286,
+            0.04877726067229646
+          ],
+          "penetration_depth_m": null,
+          "pose": "pose_a_prestep",
+          "representation": "raw",
+          "sign_consistent": true,
+          "signed_distance_m": 0.004272645533610698,
+          "signed_distance_mm": 4.2726455336106985,
+          "verdict": "CLEAR"
+        },
+        {
+          "body": "gripper_link",
+          "certified": false,
+          "collider_path": "/World/envs/env_0/Robot/gripper_link/collisions/gripper_link/node_STL_BINARY_",
+          "collision_count": 1,
+          "consistency_hard_check_pass": true,
+          "contact": {
+            "normal": [
+              0.9320379711089583,
+              -0.36236062204786934,
+              4.2151021306668923e-07
+            ],
+            "penetration_depth_m": 0.01538672393829646,
+            "position_m": [
+              0.291342072986853,
+              0.00341372979738243,
+              0.0672386454898607
+            ]
+          },
+          "distance_normal": [
+            0.9320379711089583,
+            -0.36236062204786934,
+            4.2151021306668923e-07
+          ],
+          "gjk_epa_depth_consistent_within_0p1mm": true,
+          "is_collision": true,
+          "nearest_point_cylinder_m": [
+            0.2841715675061212,
+            0.006201501226162405,
+            0.06723864224703005
+          ],
+          "nearest_point_geometry_m": [
+            0.2985125784675847,
+            0.0006259583686024552,
+            0.06723864873269134
+          ],
+          "penetration_depth_m": 0.01538672393829646,
+          "pose": "pose_a_prestep",
+          "representation": "cooked",
+          "sign_consistent": true,
+          "signed_distance_m": -0.01538672393829646,
+          "signed_distance_mm": -15.38672393829646,
+          "verdict": "OVERLAP"
+        },
+        {
+          "body": "gripper_link",
+          "certified": null,
+          "collider_path": "/World/envs/env_0/Robot/gripper_link/collisions/gripper_link/node_STL_BINARY_",
+          "collision_count": 16,
+          "consistency_hard_check_pass": true,
+          "contact": {
+            "normal": [
+              0.3284919699707873,
+              -0.9445067631575969,
+              -3.7776573191704075e-06
+            ],
+            "penetration_depth_m": 0.005863007382619745,
+            "position_m": [
+              0.2953741855378648,
+              0.013285713263711023,
+              0.06766307942210667
+            ]
+          },
+          "distance_normal": [
+            -0.31282729006277554,
+            0.9498100265800421,
+            0.0
+          ],
+          "gjk_epa_depth_consistent_within_0p1mm": null,
+          "is_collision": true,
+          "nearest_point_cylinder_m": [
+            0.2955775954610325,
+            0.013305475758455839,
+            0.0673072937246264
+          ],
+          "nearest_point_geometry_m": [
+            0.2955775954610325,
+            0.013305475758455839,
+            0.0673072937246264
+          ],
+          "penetration_depth_m": 0.005863007382619745,
+          "pose": "pose_a_prestep",
+          "representation": "raw",
+          "sign_consistent": true,
+          "signed_distance_m": -0.005956676949725084,
+          "signed_distance_mm": -5.956676949725084,
+          "verdict": "OVERLAP"
+        }
+      ]
+    },
+    {
+      "body_poses_w": {
+        "gripper_link": {
+          "pos_m": [
+            0.24075548350811005,
+            0.010386279784142971,
+            0.08323410153388977
+          ],
+          "quat_wxyz": [
+            -0.011802597902715206,
+            -0.8399766087532043,
+            -0.018185295164585114,
+            0.542189359664917
+          ]
+        },
+        "link5": {
+          "pos_m": [
+            0.2364833801984787,
+            0.010206595994532108,
+            0.1384028196334839
+          ],
+          "quat_wxyz": [
+            0.15208658576011658,
+            -0.7060759663581848,
+            0.6760899424552917,
+            -0.14570043981075287
+          ]
+        }
+      },
+      "object_pos_w_m": [
+        0.30135947465896606,
+        -0.0005183348548598588,
+        0.033363718539476395
+      ],
+      "object_quat_wxyz": [
+        0.9998736381530762,
+        0.005583755671977997,
+        0.014879325404763222,
+        -0.00017455803754273802
+      ],
+      "pose": "pose_b_poststep0",
+      "queries": [
+        {
+          "body": "link5",
+          "certified": true,
+          "collider_path": "/World/envs/env_0/Robot/link5/collisions/link5/node_STL_BINARY_",
+          "collision_count": 0,
+          "consistency_hard_check_pass": true,
+          "contact": null,
+          "distance_normal": [
+            -0.7769763738263143,
+            0.6288070136024235,
+            0.030157157692877672
+          ],
+          "gjk_epa_depth_consistent_within_0p1mm": true,
+          "is_collision": false,
+          "nearest_point_cylinder_m": [
+            0.2891876098176514,
+            0.00978212495326393,
+            0.06870349535354761
+          ],
+          "nearest_point_geometry_m": [
+            0.2868226281403555,
+            0.01169610472899563,
+            0.06879528852485312
+          ],
+          "penetration_depth_m": null,
+          "pose": "pose_b_poststep0",
+          "representation": "cooked",
+          "sign_consistent": true,
+          "signed_distance_m": 0.0030438270158065586,
+          "signed_distance_mm": 3.0438270158065586,
+          "verdict": "CLEAR"
+        },
+        {
+          "body": "link5",
+          "certified": null,
+          "collider_path": "/World/envs/env_0/Robot/link5/collisions/link5/node_STL_BINARY_",
+          "collision_count": 0,
+          "consistency_hard_check_pass": true,
+          "contact": null,
+          "distance_normal": [
+            0.647777337902066,
+            -0.29147458597887155,
+            0.703865815499629
+          ],
+          "gjk_epa_depth_consistent_within_0p1mm": null,
+          "is_collision": false,
+          "nearest_point_cylinder_m": [
+            0.29726144663556475,
+            0.01572250105162397,
+            0.04712689959426388
+          ],
+          "nearest_point_geometry_m": [
+            0.29531514442484685,
+            0.022814708807292076,
+            0.0472641340839747
+          ],
+          "penetration_depth_m": null,
+          "pose": "pose_b_poststep0",
+          "representation": "raw",
+          "sign_consistent": true,
+          "signed_distance_m": 0.007355700948935484,
+          "signed_distance_mm": 7.355700948935484,
+          "verdict": "CLEAR"
+        },
+        {
+          "body": "gripper_link",
+          "certified": false,
+          "collider_path": "/World/envs/env_0/Robot/gripper_link/collisions/gripper_link/node_STL_BINARY_",
+          "collision_count": 1,
+          "consistency_hard_check_pass": true,
+          "contact": {
+            "normal": [
+              0.9301258954353058,
+              -0.36586344596361753,
+              -0.03177668246210735
+            ],
+            "penetration_depth_m": 0.005273719171997777,
+            "position_m": [
+              0.28894870192287525,
+              0.00438734452168116,
+              0.0656107249457389
+            ]
+          },
+          "distance_normal": [
+            0.9301258954353058,
+            -0.36586344596361753,
+            -0.03177668246210735
+          ],
+          "gjk_epa_depth_consistent_within_0p1mm": true,
+          "is_collision": true,
+          "nearest_point_cylinder_m": [
+            0.28649609053931085,
+            0.00535207505633691,
+            0.06569451559550035
+          ],
+          "nearest_point_geometry_m": [
+            0.2914013133064396,
+            0.00342261398702541,
+            0.06552693429597745
+          ],
+          "penetration_depth_m": 0.005273719171997777,
+          "pose": "pose_b_poststep0",
+          "representation": "cooked",
+          "sign_consistent": true,
+          "signed_distance_m": -0.005273719171997777,
+          "signed_distance_mm": -5.273719171997777,
+          "verdict": "OVERLAP"
+        },
+        {
+          "body": "gripper_link",
+          "certified": null,
+          "collider_path": "/World/envs/env_0/Robot/gripper_link/collisions/gripper_link/node_STL_BINARY_",
+          "collision_count": 16,
+          "consistency_hard_check_pass": true,
+          "contact": {
+            "normal": [
+              0.9692549029886588,
+              -0.24402381826180128,
+              -0.0315802019210927
+            ],
+            "penetration_depth_m": 0.0017216435971830779,
+            "position_m": [
+              0.28691127815245593,
+              0.0029847779345365654,
+              0.0738811670213513
+            ]
+          },
+          "distance_normal": [
+            -0.9692549029886588,
+            0.24402381826180128,
+            0.0315802019210927
+          ],
+          "gjk_epa_depth_consistent_within_0p1mm": null,
+          "is_collision": true,
+          "nearest_point_cylinder_m": [
+            0.28691127815245593,
+            0.0029847779345365654,
+            0.0738811670213513
+          ],
+          "nearest_point_geometry_m": [
+            0.28691127815245593,
+            0.0029847779345365654,
+            0.0738811670213513
+          ],
+          "penetration_depth_m": 0.0017216435971830779,
+          "pose": "pose_b_poststep0",
+          "representation": "raw",
+          "sign_consistent": true,
+          "signed_distance_m": -0.0017216435971830779,
+          "signed_distance_mm": -1.721643597183078,
+          "verdict": "OVERLAP"
+        }
+      ]
+    }
+  ],
+  "environment": {
+    "numpy_pin_1_26_0": true,
+    "numpy_version": "1.26.0",
+    "psutil_pin_5_9_8": true,
+    "psutil_version": "5.9.8",
+    "versions": {
+      "hppfcl": "2.4.4",
+      "isaaclab": "2.3.0",
+      "isaacsim": "5.1.0.0",
+      "numpy": "1.26.0",
+      "psutil": "5.9.8",
+      "python": "3.11.14 (main, Oct 21 2025, 18:31:21) [GCC 11.2.0]",
+      "rerun-sdk": "0.34.1",
+      "scipy": "1.15.3",
+      "trimesh": "4.5.1"
+    }
+  },
+  "frozen_contract": {
+    "checks": {
+      "baseline_steps_same_as_d333": true,
+      "d333_target_csv_exists": true,
+      "d333_verdict_is_mixed_stop": true,
+      "physics_dt_same_as_d333": true,
+      "robot_usd_sha256_same_as_d333": true,
+      "seed_same_as_d333": true,
+      "urdf_sha256_same_as_d333": true
+    },
+    "pass": true,
+    "robot_usd_sha256": "a4be58e87b1f9790f2a2ed600f0620c79d3cfb95c608b3c598308d52f5e46fff",
+    "seed": 33201,
+    "source_summary": "claudedocs/runtime_logs/grasp_track/g0a_d333/g0a_d333_sole_support_static_summary.json",
+    "source_summary_sha256": "17f8dc238392bb5f1ab881560ad03a4fb23bfedc5898d5262f09e55298232dc2",
+    "source_target_csv": "claudedocs/runtime_logs/grasp_track/g0a_d333/d333_teleport_settle_trace.csv",
+    "source_target_csv_sha256": "f30c672089f3abad8b5c4b95242f2deb6986fdead0e9101e8242ab4055027cec",
+    "urdf_sha256": "64dc8d082cbce9a13a0697a11a0eaeaebbc54bbcd97e7aafaa40da483969dae2"
+  },
+  "new_variable": [],
+  "non_goals_respected": [
+    "no mesh rewrite or collision-approximation change",
+    "no target/gate/offset/standoff tuning",
+    "no ownership scan beyond link5/gripper_link",
+    "no new physics beyond the 200+1 D333 replay",
+    "no gripper close/grasp/lift/G0b, no RL/PPO/randomization",
+    "no render beyond at most three diagnostic PNGs; no video"
+  ],
+  "outcome_guards": {
+    "alignment_ladder_promoted": false,
+    "collision_repair_authorized": false,
+    "g0a_pass": false,
+    "mesh_rewritten": false,
+    "stop_after_d334": true,
+    "target_repair_authorized": false
+  },
+  "ownership": {
+    "cross_body_attachments": [],
+    "parity_pass_all": true,
+    "per_body": {
+      "gripper_link": {
+        "matched": [
+          {
+            "physx": "/World/envs/env_0/Robot/gripper_link/collisions/gripper_link/node_STL_BINARY_",
+            "usd": "/World/envs/env_0/Robot/gripper_link/collisions/gripper_link/node_STL_BINARY_"
+          }
+        ],
+        "parity_pass": true,
+        "physx_collider_paths": [
+          "/World/envs/env_0/Robot/gripper_link/collisions/gripper_link/node_STL_BINARY_"
+        ],
+        "physx_unmatched": [],
+        "usd_enabled_collision_paths": [
+          "/World/envs/env_0/Robot/gripper_link/collisions/gripper_link/node_STL_BINARY_"
+        ],
+        "usd_unmatched": []
+      },
+      "link5": {
+        "matched": [
+          {
+            "physx": "/World/envs/env_0/Robot/link5/collisions/link5/node_STL_BINARY_",
+            "usd": "/World/envs/env_0/Robot/link5/collisions/link5/node_STL_BINARY_"
+          }
+        ],
+        "parity_pass": true,
+        "physx_collider_paths": [
+          "/World/envs/env_0/Robot/link5/collisions/link5/node_STL_BINARY_"
+        ],
+        "physx_unmatched": [],
+        "usd_enabled_collision_paths": [
+          "/World/envs/env_0/Robot/link5/collisions/link5/node_STL_BINARY_"
+        ],
+        "usd_unmatched": []
+      }
+    }
+  },
+  "point_probes": [
+    {
+      "cylinder_is_collision": true,
+      "cylinder_surface_distance_mm": -5.383438589602287,
+      "point_w_m": [
+        0.2915170192718506,
+        0.0033204699866473675,
+        0.06663494557142258
+      ],
+      "shapes": [
+        {
+          "body": "link5",
+          "collider_path": "/World/envs/env_0/Robot/link5/collisions/link5/node_STL_BINARY_",
+          "is_collision": false,
+          "on_surface_within_1mm": false,
+          "representation": "cooked",
+          "surface_distance_m": 0.009692408157826135,
+          "surface_distance_mm": 9.692408157826135,
+          "tag": "recorded_d333_step0"
+        },
+        {
+          "body": "link5",
+          "collider_path": "/World/envs/env_0/Robot/link5/collisions/link5/node_STL_BINARY_",
+          "is_collision": false,
+          "on_surface_within_1mm": false,
+          "representation": "raw",
+          "surface_distance_m": 0.019673856196874995,
+          "surface_distance_mm": 19.673856196874997,
+          "tag": "recorded_d333_step0"
+        },
+        {
+          "body": "gripper_link",
+          "collider_path": "/World/envs/env_0/Robot/gripper_link/collisions/gripper_link/node_STL_BINARY_",
+          "is_collision": false,
+          "on_surface_within_1mm": true,
+          "representation": "cooked",
+          "surface_distance_m": 0.0005492805879873627,
+          "surface_distance_mm": 0.5492805879873627,
+          "tag": "recorded_d333_step0"
+        },
+        {
+          "body": "gripper_link",
+          "collider_path": "/World/envs/env_0/Robot/gripper_link/collisions/gripper_link/node_STL_BINARY_",
+          "is_collision": false,
+          "on_surface_within_1mm": false,
+          "representation": "raw",
+          "surface_distance_m": 0.0012892316045827019,
+          "surface_distance_mm": 1.289231604582702,
+          "tag": "recorded_d333_step0"
+        }
+      ],
+      "tag": "recorded_d333_step0"
+    },
+    {
+      "cylinder_is_collision": true,
+      "cylinder_surface_distance_mm": -5.383438589602287,
+      "point_w_m": [
+        0.2915170192718506,
+        0.0033204699866473675,
+        0.06663494557142258
+      ],
+      "shapes": [
+        {
+          "body": "link5",
+          "collider_path": "/World/envs/env_0/Robot/link5/collisions/link5/node_STL_BINARY_",
+          "is_collision": false,
+          "on_surface_within_1mm": false,
+          "representation": "cooked",
+          "surface_distance_m": 0.009692408157826135,
+          "surface_distance_mm": 9.692408157826135,
+          "tag": "replayed_step0"
+        },
+        {
+          "body": "link5",
+          "collider_path": "/World/envs/env_0/Robot/link5/collisions/link5/node_STL_BINARY_",
+          "is_collision": false,
+          "on_surface_within_1mm": false,
+          "representation": "raw",
+          "surface_distance_m": 0.019673856196874995,
+          "surface_distance_mm": 19.673856196874997,
+          "tag": "replayed_step0"
+        },
+        {
+          "body": "gripper_link",
+          "collider_path": "/World/envs/env_0/Robot/gripper_link/collisions/gripper_link/node_STL_BINARY_",
+          "is_collision": false,
+          "on_surface_within_1mm": true,
+          "representation": "cooked",
+          "surface_distance_m": 0.0005492805879873627,
+          "surface_distance_mm": 0.5492805879873627,
+          "tag": "replayed_step0"
+        },
+        {
+          "body": "gripper_link",
+          "collider_path": "/World/envs/env_0/Robot/gripper_link/collisions/gripper_link/node_STL_BINARY_",
+          "is_collision": false,
+          "on_surface_within_1mm": false,
+          "representation": "raw",
+          "surface_distance_m": 0.0012892316045827019,
+          "surface_distance_mm": 1.289231604582702,
+          "tag": "replayed_step0"
+        }
+      ],
+      "tag": "replayed_step0"
+    }
+  ],
+  "pose_a_fk_parity": {
+    "commanded_link5_pos_local_m": [
+      0.24256962865595555,
+      0.009101206424549271,
+      0.13755092923730766
+    ],
+    "fk_vs_live_link5_error_mm": 0.0012553401225591791,
+    "live_link5_pos_local_m": [
+      0.2425689995288849,
+      0.009100183844566345,
+      0.13755056262016296
+    ],
+    "pose_a_contact_error": null,
+    "pose_a_row_present": true
+  },
+  "replay_parity": {
+    "checks": {
+      "gripper_contact_point_delta_le_1mm": true,
+      "gripper_force_rel_delta_le_1pct": true,
+      "object_pos_delta_le_0p05mm": true,
+      "tcp_delta_le_0p05mm": true
+    },
+    "gripper_contact_point_delta_mm": 0.0,
+    "gripper_force_ref_n": 76.41275491914837,
+    "gripper_force_relative_delta": 0.0,
+    "gripper_force_replay_n": 76.41275491914837,
+    "object_pos_delta_mm": 0.0,
+    "pass": true,
+    "tcp_delta_mm": 0.0,
+    "tolerances": {
+      "contact_point_m": 0.001,
+      "force_rel": 0.01,
+      "object_pos_m": 5e-05,
+      "tcp_m": 5e-05
+    }
+  },
+  "replayed_physics_steps": {
+    "all_steps_are_d333_replays": true,
+    "baseline": 200,
+    "target": 1
+  },
+  "runtime": {
+    "baseline_replay": {
+      "d333_reference": {
+        "first_step_z_delta_mm": 3.354072575234568e-06,
+        "support_table_force_z_last50_median_n": 7.063635349273682
+      },
+      "first_step_z_delta_mm": 3.354072575234568e-06,
+      "first_step_z_tolerance_mm": 0.5,
+      "hard_gate": {
+        "baseline_object_tilt_lt_1deg": true,
+        "baseline_object_xy_lt_0p5mm": true,
+        "first_step_abs_z_delta_le_0p5mm": true,
+        "last50_bottom_table_gap_abs_max_le_0p5mm": true,
+        "last50_table_fz_median_gt_1n": true,
+        "robot_filters_baseline_max_lt_0p1n": true,
+        "robot_root_position_drift_le_1e_6m": true,
+        "robot_root_rotation_drift_le_1e_6rad": true,
+        "sensor_contract": true,
+        "stage_contract": true
+      },
+      "hard_gate_pass": true,
+      "max_object_disp_xy_mm": 0.0037739450160181134,
+      "max_object_tilt_deg": 0.003364520785190337,
+      "max_robot_root_position_drift_m": 0.0,
+      "max_robot_root_rotation_drift_rad": 0.0,
+      "physics_steps": 200,
+      "robot_filter_baseline_max_n": {
+        "gripper_link": 0.0,
+        "link4": 0.0,
+        "link5": 0.0
+      },
+      "sensor_net_force_norm_last50_median_n": 7.063635349274513,
+      "support_positive_threshold_n": 1.0,
+      "support_table_force_norm_last50_median_n": 7.063635349274513,
+      "support_table_force_z_last50_median_n": 7.063635349273682,
+      "tail_bottom_table_gap_abs_max_mm": 0.00013455373122292502,
+      "tail_bottom_table_gap_tolerance_mm": 0.5
+    },
+    "num_envs": 1,
+    "physics_dt_s": 0.005,
+    "seed": 33201,
+    "sensor_contract": {
+      "actual_tensor_shapes": {
+        "contact_pos_w": [
+          1,
+          1,
+          4,
+          3
+        ],
+        "force_matrix_w": [
+          1,
+          1,
+          4,
+          3
+        ],
+        "force_matrix_w_history": [
+          1,
+          1,
+          1,
+          4,
+          3
+        ],
+        "net_forces_w": [
+          1,
+          1,
+          3
+        ],
+        "net_forces_w_history": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "pos_w": [
+          1,
+          1,
+          3
+        ],
+        "quat_w": [
+          1,
+          1,
+          4
+        ]
+      },
+      "body_names": [
+        "Sponge"
+      ],
+      "errors": [],
+      "expected_tensor_shapes": {
+        "contact_pos_w": [
+          1,
+          1,
+          4,
+          3
+        ],
+        "force_matrix_w": [
+          1,
+          1,
+          4,
+          3
+        ],
+        "force_matrix_w_history": [
+          1,
+          1,
+          1,
+          4,
+          3
+        ],
+        "net_forces_w": [
+          1,
+          1,
+          3
+        ],
+        "net_forces_w_history": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "pos_w": [
+          1,
+          1,
+          3
+        ],
+        "quat_w": [
+          1,
+          1,
+          4
+        ]
+      },
+      "filter_count": 4,
+      "hard_contract_pass": true,
+      "instrumentation_side_effect": "activate_contact_sensors authors rigid-body sleep threshold 0",
+      "num_bodies": 1,
+      "num_instances": 1,
+      "reporter_threshold_n": 0.0,
+      "resolved_filter_index_by_label": {
+        "gripper_link": 3,
+        "link4": 1,
+        "link5": 2,
+        "support_table": 0
+      },
+      "resolved_filter_paths": [
+        "/World/envs/env_0/TapTable",
+        "/World/envs/env_0/Robot/link4",
+        "/World/envs/env_0/Robot/link5",
+        "/World/envs/env_0/Robot/gripper_link"
+      ],
+      "rigid_body_sleep_threshold": 0.0,
+      "sensor_count": 1
+    },
+    "stage_contract": {
+      "errors": [],
+      "expected_table_top_z_m": -0.012117,
+      "ground_collision_disabled_pass": true,
+      "hard_contract_pass": true,
+      "postplay_ground_colliders": [
+        {
+          "collision_enabled": false,
+          "path": "/World/ground/terrain/GroundPlane/CollisionPlane",
+          "type_name": "Plane"
+        }
+      ],
+      "preplay": {
+        "errors": [],
+        "expected_ground_collider_path": "/World/ground/terrain/GroundPlane/CollisionPlane",
+        "ground_colliders_after_disable": [
+          {
+            "collision_enabled": false,
+            "path": "/World/ground/terrain/GroundPlane/CollisionPlane",
+            "type_name": "Plane"
+          }
+        ],
+        "ground_colliders_before_disable": [
+          {
+            "collision_enabled": true,
+            "path": "/World/ground/terrain/GroundPlane/CollisionPlane",
+            "type_name": "Plane"
+          }
+        ],
+        "pass": true
+      },
+      "robot_is_fixed_base": true,
+      "table_body_path": "/World/envs/env_0/TapTable",
+      "table_collision_enabled_pass": true,
+      "table_collision_prims": [
+        {
+          "collision_enabled": true,
+          "path": "/World/envs/env_0/TapTable/geometry/mesh",
+          "type_name": "Cube"
+        }
+      ],
+      "table_expected_collider_path": "/World/envs/env_0/TapTable/geometry/mesh",
+      "table_top_error_mm": 2.9671192239288935e-07,
+      "table_top_pass": true,
+      "table_top_tolerance_mm": 0.01,
+      "table_top_z_m": -0.012117000296711922
+    }
+  },
+  "scientific_verdict_before_artifact_gate": "D334_G0A_ACTUAL_TOOL_OVERLAP_SUPPORTED",
+  "shapes": [
+    {
+      "aabb_comparison_informational": {
+        "cooked_extents_shape_frame_m": [
+          0.0462202625349164,
+          0.035520000383257866,
+          0.12063513475004584
+        ],
+        "note": "informational corroboration only - never gate evidence",
+        "per_axis_abs_delta_m": [
+          46.174039403907955,
+          35.484480457380414,
+          120.51449842972215
+        ],
+        "per_axis_within_0p5mm": false,
+        "physx_aabb_local_max_m": [
+          15.497933387756348,
+          17.773653030395508,
+          119.8856201171875
+        ],
+        "physx_aabb_local_min_m": [
+          -30.722326278686523,
+          -17.746347427368164,
+          -0.7495134472846985
+        ],
+        "physx_extents_m": [
+          46.22025966644287,
+          35.52000045776367,
+          120.6351335644722
+        ],
+        "sorted_extent_abs_delta_m": [
+          35.484480457380414,
+          46.174039403907955,
+          120.51449842972215
+        ],
+        "sorted_within_0p5mm": false
+      },
+      "body": "link5",
+      "certified": true,
+      "collider_path": "/World/envs/env_0/Robot/link5/collisions/link5/node_STL_BINARY_",
+      "cook_source": "mirror_cook_of_live_stage_mesh",
+      "cook_state_guard": {
+        "max_abs_delta": 0.0,
+        "per_field_max_abs_delta": {
+          "joint_pos": 0.0,
+          "joint_vel": 0.0,
+          "object_root": 0.0
+        },
+        "tolerance": 1e-12,
+        "violated": false
+      },
+      "cooked_polygon_count": 48,
+      "cooked_vertex_count": 35,
+      "cooked_vertices_body_local_m": [
+        [
+          -0.005000000353902578,
+          0.01000047568231821,
+          -0.0007495112949982285
+        ],
+        [
+          -0.017130987718701363,
+          0.016721220687031746,
+          0.018828919157385826
+        ],
+        [
+          0.015243135392665863,
+          0.017103232443332672,
+          0.0037210395094007254
+        ],
+        [
+          0.010919047519564629,
+          -0.017746346071362495,
+          -0.00025747634936124086
+        ],
+        [
+          0.009000000543892384,
+          -0.013249525800347328,
+          -0.0007495112949982285
+        ],
+        [
+          0.015497935004532337,
+          -0.012115026824176311,
+          -0.00025747634936124086
+        ],
+        [
+          0.015497935004532337,
+          0.012434969656169415,
+          -0.00022866773360874504
+        ],
+        [
+          -0.009000000543892384,
+          0.0026204742025583982,
+          -0.0007495112949982285
+        ],
+        [
+          -0.011525849811732769,
+          -0.004603040870279074,
+          0.11918085068464279
+        ],
+        [
+          -0.023069029673933983,
+          -0.017746346071362495,
+          0.0944574624300003
+        ],
+        [
+          -0.011241743341088295,
+          -0.017716092988848686,
+          0.1066909208893776
+        ],
+        [
+          -0.013630948960781097,
+          -0.017746346071362495,
+          -0.00022866773360874504
+        ],
+        [
+          0.014346364885568619,
+          -0.017704159021377563,
+          0.0025755621027201414
+        ],
+        [
+          0.014323940500617027,
+          -0.017708487808704376,
+          0.04663250967860222
+        ],
+        [
+          -0.023249631747603416,
+          -0.017746346071362495,
+          0.06505408138036728
+        ],
+        [
+          -0.017130987718701363,
+          -0.017746346071362495,
+          0.003095795400440693
+        ],
+        [
+          0.012350368313491344,
+          0.015253657475113869,
+          0.06214563176035881
+        ],
+        [
+          -0.01002584956586361,
+          0.0014089910546317697,
+          0.11988562345504761
+        ],
+        [
+          -0.01002584956586361,
+          -0.004603040870279074,
+          0.11918085068464279
+        ],
+        [
+          0.012350368313491344,
+          -0.016746345907449722,
+          0.06214563176035881
+        ],
+        [
+          0.015168500132858753,
+          0.017205126583576202,
+          0.04663250967860222
+        ],
+        [
+          -0.01153585035353899,
+          0.016721220687031746,
+          0.1065593957901001
+        ],
+        [
+          0.015497935004532337,
+          -0.01623634621500969,
+          0.04663250967860222
+        ],
+        [
+          0.015465092845261097,
+          -0.01654679886996746,
+          0.004233032930642366
+        ],
+        [
+          -0.030722327530384064,
+          -0.002768434351310134,
+          0.07905182242393494
+        ],
+        [
+          -0.023204201832413673,
+          0.016721220687031746,
+          0.06447681039571762
+        ],
+        [
+          -0.030722327530384064,
+          0.0017433111788704991,
+          0.07905182242393494
+        ],
+        [
+          -0.030449403449892998,
+          0.0026131842751055956,
+          0.08625183254480362
+        ],
+        [
+          -0.023249631747603416,
+          0.016721220687031746,
+          0.09331714361906052
+        ],
+        [
+          -0.030722327530384064,
+          -0.002768434351310134,
+          0.08625183254480362
+        ],
+        [
+          -0.011525849811732769,
+          0.003577917581424117,
+          0.11918085068464279
+        ],
+        [
+          -0.010056101717054844,
+          0.015505327843129635,
+          0.10748028755187988
+        ],
+        [
+          -0.01002584956586361,
+          0.004018213599920273,
+          0.11880481243133545
+        ],
+        [
+          -0.022168854251503944,
+          0.016721220687031746,
+          0.09592639654874802
+        ],
+        [
+          0.007079828530550003,
+          0.01777365431189537,
+          0.013139466755092144
+        ]
+      ],
+      "direct_cook": {
+        "attempts": [
+          {
+            "convex_count": 0,
+            "prim_path": "/World/envs/env_0/Robot/link5/collisions/link5/node_STL_BINARY_",
+            "result": "PhysxCollisionRepresentationResult.RESULT_ERROR_COOKING_FAILED",
+            "valid": false
+          },
+          {
+            "convex_count": 0,
+            "prim_path": "/World/envs/env_0/Robot/link5/collisions/link5/node_STL_BINARY_/mesh",
+            "result": "PhysxCollisionRepresentationResult.RESULT_ERROR_INVALID_PARSING",
+            "valid": false
+          }
+        ],
+        "used": false
+      },
+      "live_owner_body": "link5",
+      "mirror_info": {
+        "mirror_removed": true
+      },
+      "ownership_crossed": false,
+      "parity_pass": true,
+      "physx_collider": {
+        "aabb_local_max_m": [
+          15.497933387756348,
+          17.773653030395508,
+          119.8856201171875
+        ],
+        "aabb_local_min_m": [
+          -30.722326278686523,
+          -17.746347427368164,
+          -0.7495134472846985
+        ],
+        "local_pos_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "local_rot_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "path": "/World/envs/env_0/Robot/link5/collisions/link5/node_STL_BINARY_",
+        "path_id": 113247233,
+        "result": "PhysxPropertyQueryResult.VALID",
+        "volume_m3": 0.00012151263217674568
+      },
+      "physx_collider_matched": true,
+      "source_mesh": {
+        "body_local_bounds_m": [
+          [
+            -0.030998082679605243,
+            -0.017746346362925717,
+            -0.000749511277512882
+          ],
+          [
+            0.01549793507754305,
+            0.017773653874598748,
+            0.11988562581144901
+          ]
+        ],
+        "face_count": 14092,
+        "fan_triangulated": false,
+        "mesh_prim_path": "/World/envs/env_0/Robot/link5/collisions/link5/node_STL_BINARY_/mesh",
+        "triangle_count": 14092,
+        "vertex_count": 42276
+      },
+      "usd_parent_body": "link5",
+      "usd_row": {
+        "approximation": "convexHull",
+        "collision_enabled": true,
+        "is_instance_proxy": true,
+        "mesh_prim_paths": [
+          "/World/envs/env_0/Robot/link5/collisions/link5/node_STL_BINARY_/mesh"
+        ],
+        "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+        "path": "/World/envs/env_0/Robot/link5/collisions/link5/node_STL_BINARY_",
+        "type_name": "Xform"
+      },
+      "volume_parity": {
+        "cooked_volume_m3": 0.00012157312191018923,
+        "pass": true,
+        "physx_volume_m3": 0.00012151263217674568,
+        "relative_difference": 0.0004978061322510138,
+        "tolerance": 0.005
+      }
+    },
+    {
+      "aabb_comparison_informational": {
+        "cooked_extents_shape_frame_m": [
+          0.07785000372678041,
+          0.025239999406039715,
+          0.03936756827170029
+        ],
+        "note": "informational corroboration only - never gate evidence",
+        "per_axis_abs_delta_m": [
+          77.77215133141726,
+          25.214759771712124,
+          39.3281975867576
+        ],
+        "per_axis_within_0p5mm": false,
+        "physx_aabb_local_max_m": [
+          67.08260345458984,
+          15.24036693572998,
+          0.7502212524414062
+        ],
+        "physx_aabb_local_min_m": [
+          -10.7673978805542,
+          -9.999632835388184,
+          -38.61734390258789
+        ],
+        "physx_extents_m": [
+          77.85000133514404,
+          25.239999771118164,
+          39.3675651550293
+        ],
+        "sorted_extent_abs_delta_m": [
+          25.214759771712124,
+          39.3281975867576,
+          77.77215133141726
+        ],
+        "sorted_within_0p5mm": false
+      },
+      "body": "gripper_link",
+      "certified": false,
+      "collider_path": "/World/envs/env_0/Robot/gripper_link/collisions/gripper_link/node_STL_BINARY_",
+      "cook_source": "mirror_cook_of_live_stage_mesh",
+      "cook_state_guard": {
+        "max_abs_delta": 0.0,
+        "per_field_max_abs_delta": {
+          "joint_pos": 0.0,
+          "joint_vel": 0.0,
+          "object_root": 0.0
+        },
+        "tolerance": 1e-12,
+        "violated": false
+      },
+      "cooked_polygon_count": 24,
+      "cooked_vertex_count": 24,
+      "cooked_vertices_body_local_m": [
+        [
+          -0.01036521140486002,
+          -0.004288544878363609,
+          -0.038617346435785294
+        ],
+        [
+          -0.003958327695727348,
+          -0.00995420292019844,
+          -0.038617346435785294
+        ],
+        [
+          -0.005550011992454529,
+          -0.00929490476846695,
+          0.0007502218359149992
+        ],
+        [
+          -0.01036521140486002,
+          -0.004288544878363609,
+          0.0007502218359149992
+        ],
+        [
+          -0.010767397470772266,
+          0.0026140555273741484,
+          0.0007502218359149992
+        ],
+        [
+          -0.010767397470772266,
+          0.0026140555273741484,
+          -0.03711734712123871
+        ],
+        [
+          0.01795095205307007,
+          -0.00995420292019844,
+          -0.038617346435785294
+        ],
+        [
+          0.01737370900809765,
+          -0.009999631904065609,
+          0.0007502218359149992
+        ],
+        [
+          0.016469677910208702,
+          0.015194937586784363,
+          0.0007502218359149992
+        ],
+        [
+          0.016469677910208702,
+          0.015194937586784363,
+          -0.038617346435785294
+        ],
+        [
+          -0.004521357361227274,
+          0.009819766506552696,
+          -0.038617346435785294
+        ],
+        [
+          -0.005550011992454529,
+          0.00929564144462347,
+          0.0007502218359149992
+        ],
+        [
+          0.030064156278967857,
+          0.015240367501974106,
+          0.0007502218359149992
+        ],
+        [
+          0.030641401186585426,
+          0.015194937586784363,
+          -0.038617346435785294
+        ],
+        [
+          0.06600183248519897,
+          -0.005983415991067886,
+          -0.02346433885395527
+        ],
+        [
+          0.06708260625600815,
+          -0.005983415991067886,
+          -0.020855115726590157
+        ],
+        [
+          0.06637787818908691,
+          -0.005983415991067886,
+          -0.01484308298677206
+        ],
+        [
+          0.06637787818908691,
+          -0.004483415745198727,
+          -0.023024041205644608
+        ],
+        [
+          0.051701053977012634,
+          -0.005312993656843901,
+          -0.038362547755241394
+        ],
+        [
+          0.06637787818908691,
+          -0.004483415745198727,
+          -0.01484308298677206
+        ],
+        [
+          -0.01036521140486002,
+          0.0042892806231975555,
+          -0.038617346435785294
+        ],
+        [
+          -0.010062670335173607,
+          0.004782983101904392,
+          0.0007502218359149992
+        ],
+        [
+          0.051701053977012634,
+          -0.005312993656843901,
+          0.0004954223986715078
+        ],
+        [
+          0.03267338499426842,
+          0.014159590937197208,
+          0.0007502218359149992
+        ]
+      ],
+      "direct_cook": {
+        "attempts": [
+          {
+            "convex_count": 0,
+            "prim_path": "/World/envs/env_0/Robot/gripper_link/collisions/gripper_link/node_STL_BINARY_",
+            "result": "PhysxCollisionRepresentationResult.RESULT_ERROR_COOKING_FAILED",
+            "valid": false
+          },
+          {
+            "convex_count": 0,
+            "prim_path": "/World/envs/env_0/Robot/gripper_link/collisions/gripper_link/node_STL_BINARY_/mesh",
+            "result": "PhysxCollisionRepresentationResult.RESULT_ERROR_INVALID_PARSING",
+            "valid": false
+          }
+        ],
+        "used": false
+      },
+      "live_owner_body": "gripper_link",
+      "mirror_info": {
+        "mirror_removed": true
+      },
+      "ownership_crossed": false,
+      "parity_pass": false,
+      "physx_collider": {
+        "aabb_local_max_m": [
+          67.08260345458984,
+          15.24036693572998,
+          0.7502212524414062
+        ],
+        "aabb_local_min_m": [
+          -10.7673978805542,
+          -9.999632835388184,
+          -38.61734390258789
+        ],
+        "local_pos_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "local_rot_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "path": "/World/envs/env_0/Robot/gripper_link/collisions/gripper_link/node_STL_BINARY_",
+        "path_id": 71305729,
+        "result": "PhysxPropertyQueryResult.VALID",
+        "volume_m3": 5.200370287639089e-05
+      },
+      "physx_collider_matched": true,
+      "source_mesh": {
+        "body_local_bounds_m": [
+          [
+            -0.010767397438303794,
+            -0.009999632356670897,
+            -0.0386173457368133
+          ],
+          [
+            0.06708260664084253,
+            0.015240367659608567,
+            0.0007502218245168529
+          ]
+        ],
+        "face_count": 13698,
+        "fan_triangulated": false,
+        "mesh_prim_path": "/World/envs/env_0/Robot/gripper_link/collisions/gripper_link/node_STL_BINARY_/mesh",
+        "triangle_count": 13698,
+        "vertex_count": 41094
+      },
+      "usd_parent_body": "gripper_link",
+      "usd_row": {
+        "approximation": "convexHull",
+        "collision_enabled": true,
+        "is_instance_proxy": true,
+        "mesh_prim_paths": [
+          "/World/envs/env_0/Robot/gripper_link/collisions/gripper_link/node_STL_BINARY_/mesh"
+        ],
+        "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+        "path": "/World/envs/env_0/Robot/gripper_link/collisions/gripper_link/node_STL_BINARY_",
+        "type_name": "Xform"
+      },
+      "volume_parity": {
+        "cooked_volume_m3": 5.124446624421253e-05,
+        "pass": false,
+        "physx_volume_m3": 5.200370287639089e-05,
+        "relative_difference": 0.014599664835079386,
+        "tolerance": 0.005
+      }
+    }
+  ],
+  "verdict": "D334_G0A_ACTUAL_TOOL_OVERLAP_SUPPORTED",
+  "visualization": {
+    "marker_status": {
+      "backend": "isaac_markers",
+      "frame_count": 7,
+      "ok": true,
+      "prim_path": "/World/D334AuditFrames/frames"
+    },
+    "rrd_status": {
+      "backend": "rerun",
+      "blueprint_status": {
+        "attempted": true,
+        "ok": true,
+        "origin": "/"
+      },
+      "live_viewer": false,
+      "nonzero_file": true,
+      "ok": true,
+      "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d334/d334_live_collision_audit_trace.rrd",
+      "trace_steps": 2,
+      "urdf_actual_status": {
+        "attempted": true,
+        "joint_count": 8,
+        "name": "roarm_m3",
+        "ok": true
+      },
+      "urdf_commanded_status": {
+        "attempted": true,
+        "joint_count": 8,
+        "name": "roarm_m3",
+        "ok": true
+      }
+    },
+    "snapshot_count": 3,
+    "snapshots": [
+      "claudedocs/runtime_logs/grasp_track/g0a_d334/d334_pose_a_shapes.png",
+      "claudedocs/runtime_logs/grasp_track/g0a_d334/d334_pose_b_shapes.png",
+      "claudedocs/runtime_logs/grasp_track/g0a_d334/d334_contact_map.png"
+    ]
+  }
+}

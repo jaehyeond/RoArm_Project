@@ -18759,3 +18759,64 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d333/d333_postrun_csv_reanalysis.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d333/d333_sole_support_static_trace_v2.rrd`
 - `START_HERE.md`
+
+## D334 - Frozen-pose live audit: the actual gripper tool geometry overlaps the cylinder; target-family repair is the candidate (2026-07-12)
+
+Decision:
+
+- Verdict is `D334_G0A_ACTUAL_TOOL_OVERLAP_SUPPORTED`.
+- The D333 step-0 `gripper_link` contact is explained by actual tool geometry,
+  not a cook/proxy artifact: the gripper collision STL (raw mesh) penetrates
+  the cylinder `5.9567mm` at the frozen commanded pose and `1.7216mm` at the
+  settled post-step-0 pose. The canonical D325 `position_only_tangent_minus1`
+  target family places the physical tool inside the object.
+- The D332 link5 mirror overlap is reconciled: it is a real cook artifact of
+  the link5 hull at the commanded pose (reproduced to `0.4um`; volume parity
+  `0.0498%`, certified) but link5 is clear (`+3.0438mm`) at the settled pose
+  with recorded `0N` - it was never the runtime cause.
+- The owner-mismatch hypothesis is refuted: live PhysX property-query
+  ownership is 1:1 (link5 and gripper_link each own exactly their own STL
+  convex hull; cross-body attachments `[]`).
+- Gripper cook parity FAILED (`1.46%` > `0.5%`): the cooked gripper hull
+  inflates `~3.5-9.4mm` beyond raw. Recorded as a secondary finding only.
+- Stop for user choice: the candidate next repair is a **target-family
+  repair**. No mesh rewrite, target change, or ladder promotion happened.
+
+Evidence:
+
+- Exact replay licence: baseline hard gate PASS; step-0 replay vs D333 CSV row
+  0 deltas all `0.000000mm`, gripper force `76.4128N` relative delta `0.00e+00`.
+- Signed distances (border 0.1mm, all GJK/EPA consistency checks PASS):
+  pose A link5 cooked/raw `-6.2367/+4.2726mm`; pose A gripper cooked/raw
+  `-15.3867/-5.9567mm`; pose B link5 `+3.0438/+7.3557mm`; pose B gripper
+  `-5.2737/-1.7216mm`.
+- Contact-point mapping: recorded==replayed point, `-5.3834mm` inside the
+  cylinder surface, `0.549mm` from the gripper cooked hull (on-surface),
+  `1.289mm` from gripper raw, `9.69mm` from link5.
+- Direct live cook on the instance-proxy prims fails
+  (`RESULT_ERROR_COOKING_FAILED` on the API Xform, `RESULT_ERROR_INVALID_PARSING`
+  on the mesh child); the mirror cook is the only cook route and its input
+  parity is now gated by live PhysX collider volume.
+- Visualization DoD: three inspected PNGs (pose A, pose B, zoomed contact
+  map) + one non-empty RRD; artifact contract PASS.
+
+Implication:
+
+- Re-running approach/10-trial gates under the current target family cannot
+  pass: the commanded pose itself collides. The one decision-changing next
+  step is a target-family repair (recompute the canonical target so the
+  actual tool surface clears the cylinder), pending explicit user approval.
+- Collision-representation work (gripper hull inflation, cook parity FAIL) is
+  a separate, secondary case and must not be bundled into the target repair
+  session (variable ladder).
+
+Sources:
+
+- `claudedocs/session_20260712_grasp_g0a_d334_live_collision_shape_ownership_audit.md`
+- `sim_scripts/cyl34_top_view_d334_grasp_g0a_live_collision_shape_ownership_audit.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d334/g0a_d334_live_collision_audit_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d334/d334_live_collider_inventory.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d334/d334_cook_parity.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d334/d334_signed_distance_matrix.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d334/d334_step0_replay_parity.json`
+- `START_HERE.md`
