@@ -462,22 +462,22 @@ def build_rerun_blueprint(mode: str = "robot_geometry") -> Any:
                 rrb.Horizontal(
                     rrb.Spatial3DView(
                         origin="/",
-                        contents="/cook/source/link5/**",
+                        contents=["/cook/source/link5/**", "/frames/**"],
                         name="link5 authored source (x0)",
                     ),
                     rrb.Spatial3DView(
                         origin="/",
-                        contents="/cook/instance/link5/**",
+                        contents=["/cook/instance/link5/**", "/frames/**"],
                         name="link5 live instance (x1)",
                     ),
                     rrb.Spatial3DView(
                         origin="/",
-                        contents="/cook/prototype/link5/**",
+                        contents=["/cook/prototype/link5/**", "/frames/**"],
                         name="link5 prototype (x1)",
                     ),
                     rrb.Spatial3DView(
                         origin="/",
-                        contents="/cook/candidate/link5/**",
+                        contents=["/cook/candidate/link5/**", "/frames/**"],
                         name="link5 candidate (x1)",
                     ),
                     column_shares=[0.25, 0.25, 0.25, 0.25],
@@ -485,22 +485,22 @@ def build_rerun_blueprint(mode: str = "robot_geometry") -> Any:
                 rrb.Horizontal(
                     rrb.Spatial3DView(
                         origin="/",
-                        contents="/cook/source/gripper_link/**",
+                        contents=["/cook/source/gripper_link/**", "/frames/**"],
                         name="gripper authored source (x0)",
                     ),
                     rrb.Spatial3DView(
                         origin="/",
-                        contents="/cook/instance/gripper_link/**",
+                        contents=["/cook/instance/gripper_link/**", "/frames/**"],
                         name="gripper live instance (x1)",
                     ),
                     rrb.Spatial3DView(
                         origin="/",
-                        contents="/cook/prototype/gripper_link/**",
+                        contents=["/cook/prototype/gripper_link/**", "/frames/**"],
                         name="gripper prototype (x1)",
                     ),
                     rrb.Spatial3DView(
                         origin="/",
-                        contents="/cook/candidate/gripper_link/**",
+                        contents=["/cook/candidate/gripper_link/**", "/frames/**"],
                         name="gripper candidate (x1)",
                     ),
                     column_shares=[0.25, 0.25, 0.25, 0.25],

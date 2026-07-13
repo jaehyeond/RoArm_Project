@@ -1,0 +1,42 @@
+{
+  "artifact": "D344_POSTRUN_ROOT_CAUSE_AUDIT_V1",
+  "registered_verdict_retained": "D344_G0A_ATTEMPT3_AUTHORING_CONTRACT_FAIL_STOP",
+  "registered_gate_that_failed": "all_prim_type_schema_metadata_attribute_relationship_semantics_equal_after_allowlist",
+  "read_only_audit": true,
+  "independent_process_count": 2,
+  "composed_prim_row_count": 310,
+  "registered_geometry_property_count": 39,
+  "raw_different_row_count": 194,
+  "raw_different_field_counts": {
+    "metadata": 194
+  },
+  "raw_metadata_difference_key_counts": {
+    "apiSchemas": 194
+  },
+  "runtime_address_only_row_count": 194,
+  "non_runtime_address_difference_count": 0,
+  "run_a": {
+    "raw_source_sha256": "f175acde3661412b16de19192796550972a42db94fd4b638e722c74a358a4abc",
+    "raw_variant_sha256": "6a5b44bd6e970c3c26d1de950ef0656bfea8ef991a34bb3502bea06069c2d178",
+    "normalized_source_sha256": "1e458982f356a6d546b73631abf133d302e0371f9a898eae674f76e65f82f9fe",
+    "normalized_variant_sha256": "1e458982f356a6d546b73631abf133d302e0371f9a898eae674f76e65f82f9fe"
+  },
+  "run_b": {
+    "raw_source_sha256": "0cde6268c857a3e26ce97e06db49512a3e6ffe5f78502b36b7a91b60434df6a9",
+    "raw_variant_sha256": "c75a84c226cdd48bb5c2669eef4e6d00e64daa6ef6354daadf13c5a4a595873f",
+    "normalized_source_sha256": "1e458982f356a6d546b73631abf133d302e0371f9a898eae674f76e65f82f9fe",
+    "normalized_variant_sha256": "1e458982f356a6d546b73631abf133d302e0371f9a898eae674f76e65f82f9fe"
+  },
+  "raw_hashes_changed_between_processes": true,
+  "normalized_hashes_equal_within_and_across_processes": true,
+  "root_cause": "repr(Sdf.TokenListOp) embedded a process-local memory address in apiSchemas metadata; the comparator hashed that address as authored semantics",
+  "asset_semantics_outside_registered_39_properties_proven_different": false,
+  "historical_reclassification_allowed": false,
+  "build_rerun_allowed": false,
+  "fresh_validation_run": false,
+  "rerun_completion_lifecycle_reached": false,
+  "runtime_environment_created": false,
+  "controlled_physics_steps": 0,
+  "g0a_pass": false,
+  "recommended_next_case": "D345 proof-only deterministic USD metadata comparator repair on immutable D344 attempt3; no asset mutation, Isaac runtime, Rerun, or physics"
+}

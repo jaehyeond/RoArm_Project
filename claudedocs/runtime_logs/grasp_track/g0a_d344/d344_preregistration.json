@@ -1,0 +1,144 @@
+{
+  "artifact": "D344_PREREGISTRATION_V1",
+  "case": "g0a_d344",
+  "date_kst": "2026-07-14",
+  "git_head": "7868abdf2f5c042d6757575a296b3c4881a52425",
+  "user_authorization": {
+    "authorized": true,
+    "scope": "proceed with the recommended next research case D344",
+    "source": "current user turn plus the preceding explicit approval chain"
+  },
+  "new_variables": [
+    "attempt3_fixed_point_collision_geometry"
+  ],
+  "new_variable_count": 1,
+  "registered_stages": [
+    "build",
+    "validate"
+  ],
+  "effective_run_limit": {
+    "build": 1,
+    "validate": 1,
+    "same_output_retry": 0
+  },
+  "registered_commands": {
+    "build": "env PYTHONPATH=/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.libs-1.0.1+69cbf6ad.lx64.r.cp311 LD_LIBRARY_PATH=/home/cgxr/miniconda3/envs/isaaclab/lib:/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.libs-1.0.1+69cbf6ad.lx64.r.cp311/bin /home/cgxr/miniconda3/envs/isaaclab/bin/python sim_scripts/cyl34_top_view_d344_grasp_g0a_attempt3_fixed_point_collision_geometry.py --stage build",
+    "validate": "OMNI_KIT_ACCEPT_EULA=YES conda run -n isaaclab --no-capture-output python sim_scripts/cyl34_top_view_d344_grasp_g0a_attempt3_fixed_point_collision_geometry.py --stage validate --headless"
+  },
+  "registered_environment": {
+    "python": "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+    "numpy": "1.26.0",
+    "psutil": "5.9.8",
+    "rerun_sdk_and_cli": "0.34.1",
+    "build_runtime": "standalone OpenUSD core; no Kit/SimulationContext",
+    "validate_runtime": "fresh Isaac Kit process; no physics advance"
+  },
+  "changed_parts": {
+    "link5": [
+      "part_011",
+      "part_018",
+      "part_023",
+      "part_024",
+      "part_040",
+      "part_041",
+      "part_045",
+      "part_054"
+    ],
+    "gripper_link": [
+      "part_000",
+      "part_035",
+      "part_036",
+      "part_048",
+      "part_057"
+    ]
+  },
+  "changed_part_count": 13,
+  "preserved_part_count": 115,
+  "source_inventory_counts": {
+    "d338_attempt1": 3,
+    "d339_attempt2": 18,
+    "d340": 33,
+    "d342": 13,
+    "d343": 6
+  },
+  "source_inventory_digests": {
+    "d338_attempt1": "708e6641ba1ac988d0f617fede238530e1db9a30573c535278ab0853bfca5f2e",
+    "d339_attempt2": "0dae41fd3937a0a8aea18488019c74f097d32f7b8de916943ff31334e30464a1",
+    "d340": "def37cc3c4d10cad8919ce71175211cc34fe2e8b567dbc107f13de151a92940d",
+    "d342": "7c205d7f6222a2a091a70bb1cf784b339512efbfe8d50bbb3b5ee8c2fed35232",
+    "d343": "f0c612377f8a0be3b98d7187ce962821af39d9e70eafbff2d6b2ba886b94bdd3"
+  },
+  "source_hashes": {
+    "d344_harness": "a62f2f5fda01d927361b3791e9a5b65bce386e242e428639f049e88031316d38",
+    "d344_session": "174457a8f275600250176bcb02c09238a567408aea9b47af03c5caa74c586d44",
+    "start_here": "fb2fe7197740916b2ef787e72bff3dec53ba0c1956c8893660f979a5906edbd4",
+    "parameter_audit": "4c785f4747fd4698b6b8640f29c5edcad7f0cc6f8b59d1732beb8c534048d326",
+    "d340_candidates": "f288d5232f039e58ccd209f332ebfabbf9fec137e746e97d9a3c58688420ef86",
+    "d342_evidence": "d42c29288208414cdbe0addaa7932ab82e196fcaad27f939cef90333b6c07ac8",
+    "d343_evidence": "95bb4e3787d300071f1bac22037814b732781cd72a69a0334a34a05a50ac920b",
+    "d343_summary": "880601aac768df38675603828258850aea796b6436a299c46f8cc489ed8b00da",
+    "d340_harness": "1bdea659fadd7801b0f5749cca6286c7eb90c95a857ed516e09e34ceb12a023a",
+    "d339_harness": "fd307cb573699f8a08df1ab580789188774158877b8abf0a05cc4c60ef6562d6",
+    "viz_debug": "1fe0be11e9f604bf2501155adbf98cc3836e52c236ca7494c5fd0d6fbdb0d7bb",
+    "rerun_contract": "90559c931bc753be97def463841d41426a2f1bd8e5ddd15a2a2ab08fb54a2e60"
+  },
+  "decomposition_parameters": {
+    "error_percentage": 1.0,
+    "hull_vertex_limit": 64,
+    "max_convex_hulls": 64,
+    "min_thickness_m": 0.0001,
+    "shrink_wrap": true,
+    "voxel_resolution": 1000000
+  },
+  "frozen_target": {
+    "q5_open_rad": 1.5413,
+    "radial_offset_mm": 7.0,
+    "tangent_offset_mm": 11.0,
+    "seed": 33201
+  },
+  "frozen_thresholds": {
+    "fixed_point_same_domain_surface_m": 1e-9,
+    "live_surface_parity_m": 0.0001,
+    "property_volume_relative": 0.05,
+    "target_clearance_mm": 0.1,
+    "raw_vs_live_target_delta_mm": 0.5
+  },
+  "min_thickness_identity": {
+    "requested_m": 0.0001,
+    "typed_float32_m": 0.00009999999747378752,
+    "bits_hex": "0x38d1b717"
+  },
+  "rrd_contract_sha256": "fc7d4c5fadf93ea4eac68ab46e29cb72cd1011e1a8e560bf03f943f4e15cd393",
+  "rerun_subject_counts": {
+    "part_mesh_entities": 512,
+    "raw_reference_mesh_entities": 2,
+    "cylinder_mesh_entities": 8,
+    "total_mesh_entities": 522,
+    "part_scalar_entities": 1024,
+    "representation_scalar_entities": 16,
+    "frame_entities": 12,
+    "exact_non_system_entities": 2100
+  },
+  "scope_guards": {
+    "physics_steps": 0,
+    "settle": false,
+    "ten_trial": false,
+    "g0b": false,
+    "rl": false,
+    "ladder_promotion": false,
+    "g0a_pass": false,
+    "canonical_asset_rewrite": false,
+    "d339_attempt2_rewrite": false
+  },
+  "stop_rules": [
+    "build mismatch stops before Isaac",
+    "any live 128-part failure stops before union query",
+    "target fidelity failure stops before physics",
+    "Rerun failure preserves scientific result but blocks next-case eligibility",
+    "all outcomes stop before physics and keep g0a_pass=false"
+  ],
+  "parameters_increased": [],
+  "parameters_changed": [],
+  "thresholds_relaxed": [],
+  "pass": true
+}

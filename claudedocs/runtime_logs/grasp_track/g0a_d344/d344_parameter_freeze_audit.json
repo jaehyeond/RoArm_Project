@@ -1,0 +1,73 @@
+{
+  "artifact": "D344_PARAMETER_FREEZE_AUDIT_V1",
+  "case": "g0a_d344",
+  "new_variables": [
+    "attempt3_fixed_point_collision_geometry"
+  ],
+  "new_variable_count": 1,
+  "physical_variable_changes": [
+    "apply the preregistered 13-part fixed-point geometry bundle once in a forward-only attempt3 derivative"
+  ],
+  "measurement_contracts_reused": [
+    "D339 callback-first prototype/instance cook capture",
+    "D340 65-path enabled/disabled property enumeration",
+    "D342 direct-authored byte domain before transform",
+    "D343 exact USD float32 typed-bit identity",
+    "D341 finalized Rerun observability lifecycle"
+  ],
+  "parameters_increased": [],
+  "parameters_changed": [],
+  "thresholds_relaxed": [],
+  "decomposition_parameters": {
+    "error_percentage": 1.0,
+    "hull_vertex_limit": 64,
+    "max_convex_hulls": 64,
+    "min_thickness_m": 0.0001,
+    "shrink_wrap": true,
+    "voxel_resolution": 1000000
+  },
+  "typed_min_thickness": {
+    "requested_m": 0.0001,
+    "expected_float32_m": 0.00009999999747378752,
+    "expected_bits_hex": "0x38d1b717",
+    "identity_gate": "exact float32 bits",
+    "compatibility_tolerance_m": 1e-10
+  },
+  "frozen_validation_thresholds": {
+    "live_surface_parity_m": 0.0001,
+    "property_volume_relative": 0.05,
+    "target_clearance_mm": 0.1,
+    "raw_vs_live_target_delta_mm": 0.5,
+    "fixed_point_same_domain_surface_m": 1e-9
+  },
+  "frozen_target_and_control": {
+    "q5_convention": "0=CLOSED",
+    "q5_open_rad": 1.5413,
+    "radial_offset_mm": 7.0,
+    "tangent_offset_mm": 11.0,
+    "tangent_sign": -1,
+    "seed": 33201,
+    "ik": "HOME-seeded position-only"
+  },
+  "scope_guards": {
+    "physics_steps": 0,
+    "settle": false,
+    "ten_trial": false,
+    "g0b": false,
+    "rl": false,
+    "ladder_promotion": false,
+    "g0a_pass": false,
+    "canonical_asset_rewrite": false,
+    "d339_attempt2_rewrite": false
+  },
+  "checks": {
+    "one_new_variable": true,
+    "parameters_increased_empty": true,
+    "parameters_changed_empty": true,
+    "thresholds_relaxed_empty": true,
+    "decomposition_matches_d339": true,
+    "target_and_control_match_d337_d339": true,
+    "physics_and_ladder_forbidden": true
+  },
+  "pass": true
+}

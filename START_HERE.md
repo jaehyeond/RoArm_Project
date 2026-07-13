@@ -1,129 +1,134 @@
 # START_HERE.md
 
-Last updated: 2026-07-13 KST. D343 completed with verdict
-`D343_USD_TYPED_FLOAT_READBACK_CONTRACT_PASS`. D342 remains FAIL;
-`g0a_pass=false`; attempt3 is absent; G0b/RL/ladder remain blocked.
+Last updated: 2026-07-14 KST. D344 ended with registered verdict
+`D344_G0A_ATTEMPT3_AUTHORING_CONTRACT_FAIL_STOP`. A forward-only attempt3
+asset exists, but fresh Isaac/live validation did not run. `g0a_pass=false`;
+G0b/RL/ladder remain blocked.
 
 ## Current Truth
 
-- Active pivot is cylinder grasp-track G0a (`r=0.017m`, `h=0.090m`). Cube,
-  G0b close/lift, PPO/RL, VLA, randomization, real hardware, and B200 are out
-  of scope.
-- q5 convention is repaired: URDF `q5=0` = CLOSED; sim OPEN is
-  `~1.541-1.571rad`. Frozen target/control uses `q5=1.5413rad`, `(7,11)mm`,
-  tangent sign `-1`, seed `33201`, HOME-seeded position-only IK.
-- D337 restored the open-jaw family (`2,560/2,629` raw-clear). The frozen target
-  had link5/gripper raw clearance `+4.2726/+11.1751mm`, but settle produced a
-  `38.861N` link5 step-0 impulse from cooked-hull inflation.
-- D338 attempt1 failed because global cooking statistics did not witness the
-  synchronous cook. D339 attempt2 repaired callback witnessing and proved two
-  independent cold cooks bit-exact, but fresh live fidelity failed on 13/128
-  pieces. D338 attempt1 and D339 attempt2 are immutable.
-- D340 captured one fixed-point candidate for each of those 13 pieces through
-  both live channels, but compared a transformed float64 stream with D339's
-  direct authored stream and stopped. D342 proved the intended direct authored
-  coordinate/hash contract `13/13`, but its overall registered gate remained
-  FAIL because it used an unregistered `1e-12m` minThickness comparator.
-- D341 installed the Rerun completion lifecycle. Spatial/temporal probes require
-  finalized footer, exact entity/timeline/component validation, embedded and
-  verified Blueprint, headless screenshot, and separate actual inspection.
-  Rerun is observability, never numerical/hash authority.
+- Active pivot remains cylinder grasp-track G0a (`r=0.017m`, `h=0.090m`).
+  Cube, G0b close/lift, PPO/RL, VLA, randomization, real hardware, and B200 are
+  out of scope.
+- q5 convention: URDF `q5=0` = CLOSED; sim OPEN is `~1.541-1.571rad`.
+  Frozen target/control is `q5=1.5413rad`, `(radial,tangent)=(7,11)mm`, tangent
+  sign `-1`, seed `33201`, HOME-seeded position-only IK.
+- D337 restored the open-jaw family (`2,560/2,629` raw-clear). At the frozen
+  target, raw link5/gripper clearances were `+4.2726/+11.1751mm`, but the old
+  cooked link5 hull caused a `38.861N` step-0 impulse.
+- D339 attempt2 proved two cold cooks bit-exact, then found 13/128 live-fidelity
+  failures. D340 captured matching fixed-point candidates for those 13 pieces.
+  D342 repaired the coordinate-stream proof; D343 repaired the typed float32
+  readback proof (`128/128`, bits `0x38d1b717`). Historical FAIL verdicts were
+  not rewritten.
+- D341 Rerun lifecycle remains mandatory for geometry/pose/contact/runtime
+  decisions: finalized footer, exact entities/timelines/components, embedded
+  Blueprint plus RBL, headless screenshot, and separate actual inspection.
+  Rerun is observability, not numerical/hash authority.
 
-## D343 Verified Result
+## D344 Verified Result
 
-- Sole new variable: measurement-only
-  `[usd_float_parameter_readback_contract]`; effective runs: `1`.
-- Preregistration passed `35/35` under standalone OpenUSD `0.24.5` with
-  `numpy==1.26.0`, `psutil==5.9.8`; Isaac Kit/GPU was not started.
-- All immutable D339 attempt2 parts passed: `128/128`, `32` predicates each,
-  total `4,096`, false `0`.
-- Direct Sdf spec/default/type/API authorship and composed Usd attr agreed.
-  Direct, composed, and D339-live unique bits were exactly `0x38d1b717`;
-  typed value was `9.999999747378752e-05m` for requested `0.0001m`.
-- Authored value/opinion passed `128/128`; resolve source was authored Default
-  `128/128`; schema fallback, blocked value, time-varying value, and nonzero
-  samples were each `0/128`; property stack was exactly one for all 128.
-- Direct and composed `metersPerUnit=1.0`; PhysX schema fallback is typed
-  `0.0010000000474974513m` (`0x3a83126f`), not the authored value.
-- D342 failure-subset anchors passed `13/13`. D342 remains
-  `D342_AUTHORED_COORDINATE_STREAM_HARNESS_TOLERANCE_DRIFT_FAIL_STOP`.
-- Adjacent negatives passed: `0x38d1b716` and `0x38d1b718` were rejected by
-  exact identity although frozen `1e-10m` accepted both. Exact bits are the
-  identity gate; `1e-10m` is compatibility diagnostic only.
-- Correct typed representation delta `2.526212488436659e-12m` passed frozen
-  `1e-10m` and reproduced D342 failure under executed `1e-12m`.
+- Sole new variable: `[attempt3_fixed_point_collision_geometry]`; effective
+  asset-build runs: `1`.
+- Build preflight passed all `26` checks. D338-D343 source inventories/hashes,
+  environment pins, exact 13-part set, user authorization, and stop rules were
+  valid before mutation.
+- New forward-only path:
+  `claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/`.
+- Asset authoring applied exactly `13` registered pieces and preserved `115`.
+  Nonphysics files were bit-exact; mass/center-of-mass/inertia were unchanged;
+  D338 attempt1 and D339 attempt2 stayed immutable.
+- Authored `minThickness` type/bits passed `128/128`; decomposition settings
+  stayed hull vertices `64`, max hulls `64`, voxel resolution `1,000,000`,
+  error `1.0`, min thickness `0.0001m`, shrink-wrap enabled.
+- The only failed core check was the composed-scene semantic hash after masking
+  the registered 39 geometry properties. The registered verdict therefore
+  remains FAIL and the fresh validation process was correctly not started.
 
-## Scope / Parameter / Artifact Audit
+## D344 Postrun Root Cause
 
-- 13→128 is coverage of the same scalar, not a new variable or parameter
-  change. It certifies the 115 parts a future attempt3 would retain.
-- Physical variables, existing parameter increases/changes, decomposition
-  changes, threshold relaxations, target/controller/solver changes:
-  `0/0/0/0/0/0`.
-- Collision asset writes, recooks, SimulationContext, physics steps, attempt3:
-  `0/0/false/0/absent`.
-- D339/D340/D342 remained exact at `18/33/13` files with digests
-  `0dae41fd3937a0a8aea18488019c74f097d32f7b8de916943ff31334e30464a1`,
-  `def37cc3c4d10cad8919ce71175211cc34fe2e8b567dbc107f13de151a92940d`,
-  `7c205d7f6222a2a091a70bb1cf784b339512efbfe8d50bbb3b5ee8c2fed35232`.
-- New Rerun was correctly omitted under the preregistered non-spatial,
-  non-temporal scalar/schema/bit exception. D342 RRD was context-only and not
-  reused as D343 completion evidence.
+- The whole physics layer became exact after removing the 39 allowed property
+  specs; all 310 composed paths, layer header, and non-geometry semantics were
+  otherwise structurally unchanged.
+- Exact row decomposition found `194/310` raw differences, all and only
+  `metadata.apiSchemas`. The comparator used `repr(Sdf.TokenListOp)`, which
+  embeds a process-local memory address. It therefore hashed runtime addresses
+  as if they were authored asset meaning.
+- Read-only diagnosis in two independent processes found non-address semantic
+  differences `0`. Raw hashes changed between processes, while every normalized
+  source/variant hash was exactly
+  `1e458982f356a6d546b73631abf133d302e0371f9a898eae674f76e65f82f9fe`.
+- This supports “comparator false difference,” not “live collider success.”
+  D344 is not retroactively reclassified, and the attempt3 build must not be
+  rerun or overwritten.
+
+## Scope / Parameter / Rerun Audit
+
+- New variables `1`; existing parameter increases `0`; parameter changes `0`;
+  threshold relaxations `0`; decomposition changes `0`; target/control/solver
+  changes `0`; physics parameter changes `0`.
+- Isaac runtime was not created; controlled physics steps `0`; settle and
+  10-trial absent.
+- D344 Rerun was preregistered for the fresh live-validation process. The build
+  hard-stop prohibited that process, so no RRD/RBL/screenshot/manual inspection
+  exists. Do not call D344 Rerun-complete; a future live case must execute the
+  full D341 lifecycle.
 
 ## Active Case / Next Concrete Action
 
-No further experiment or asset mutation is authorized. D343 stops after proof
-repair. Recommended next user choice is a separate D344 collision-asset case:
+No new case is authorized yet. Recommended next choice is D345, a proof-only
+`deterministic_usd_metadata_comparator` repair. If approved, its sole new
+measurement variable is `[deterministic_usd_metadata_comparator]`.
 
-1. Reuse immutable D340 candidate evidence and preserve D338 attempt1/D339
-   attempt2; create only forward-only `collision_asset/attempt3`.
-2. Author only the 13 registered fixed-point pieces; retain the other 115
-   pieces and all physical/decomposition/target/solver values unchanged.
-3. Apply the D342 direct-authored coordinate/hash contract and D343 exact typed
-   scalar contract before accepting the derivative.
-4. Run fresh live 128-piece/owner/enabled-enumeration and raw-vs-live fidelity
-   validation. No stale D339 live result may certify attempt3.
-5. Because D344 makes geometry/live-representation decisions, the D341 Rerun
-   lifecycle is mandatory at the decision point; D343's omission does not carry.
-6. Stop D344 before settle/10-trial/G0b/RL. Physics requires a later separately
-   approved case after fresh live PASS.
+1. Seal immutable D344 attempt3 and both D344 diagnosis files before execution.
+2. Read source and attempt3 only; do not write/copy/recook any collision asset.
+3. Serialize USD metadata by actual type and content. For `Sdf.TokenListOp`,
+   record the list-operation mode and token items, never `repr(...)` or an
+   object address.
+4. In two independent standalone-PXR processes, require identical canonical
+   rows and hashes after masking exactly the registered 39 geometry values.
+5. Include a negative control showing the old address-bearing representation
+   changes between processes and is rejected as nondeterministic.
+6. Stop without Isaac, GPU, Rerun, physics, settle, or promotion. This is a
+   preregistered non-spatial/non-temporal comparator audit.
+7. Only if D345 passes, request a separate D346 live-validation case for the
+   immutable D344 attempt3: 256 callback witnesses, 128-part fidelity, frozen
+   target-distance gate, and full D341 Rerun completion lifecycle.
 
-Reserve only: reactive step-0 onset-metric hardening inside a future settle.
+Reserve only: reactive step-0 onset-metric hardening inside a future settle;
+long-term purpose-built simple production colliders after this forensic chain.
 `r>17mm` grasp-depth redefinition remains unnecessary.
 
 ## Must Read First
 
 1. `AGENTS.md`
 2. `START_HERE.md`
-3. `claudedocs/DECISIONS.md` tail (D340-D343)
+3. `claudedocs/DECISIONS.md` tail (D341-D344)
 4. `claudedocs/EXPERIMENT_LEDGER.md` tail
-5. `claudedocs/session_20260713_grasp_g0a_d343_usd_typed_float_readback_contract_repair.md`
-6. `claudedocs/runtime_logs/grasp_track/g0a_d343/d343_usd_typed_float_readback_summary.json`
-7. `claudedocs/runtime_logs/grasp_track/g0a_d343/d343_usd_typed_float_readback_evidence.json`
-8. `claudedocs/session_20260713_grasp_g0a_d342_authored_coordinate_stream_repair.md`
-9. `claudedocs/session_20260713_grasp_g0a_d340_fixed_point_live_authoring_repair.md`
+5. `claudedocs/session_20260714_grasp_g0a_d344_attempt3_fixed_point_collision_geometry.md`
+6. `claudedocs/runtime_logs/grasp_track/g0a_d344/d344_attempt3_build_summary.json`
+7. `claudedocs/runtime_logs/grasp_track/g0a_d344/d344_postrun_root_cause_audit.json`
+8. `claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/d344_attempt3_asset_manifest.json`
+9. `claudedocs/session_20260713_grasp_g0a_d343_usd_typed_float_readback_contract_repair.md`
 10. `claudedocs/session_20260713_grasp_g0a_d341_rerun_observability_contract_repair.md`
 
 ## Durable Do-Not-Repeat Rules
 
 - `HANDOFF.md`/`TASKS.md` are stale. q5 `0` means CLOSED.
-- Exact hashes require the same coordinate/value/type stream. Prove direct
-  authored identity before mapping; mapped geometry uses numeric/solid gates.
-- Runtime comparators must be mechanically bound to the freeze source. A tighter
-  hardcoded tolerance is a parameter change, not conservative validation.
-- USD floats must preserve requested value, type, authored opinion/default,
-  resolve source, typed readback, bits, and comparator source. Exact bits are
-  typed identity authority; tolerance is compatibility evidence only.
-- In core-only PXR, prove unregistered API authorship from direct Sdf metadata;
-  do not infer asset absence from composed schema-registry omission.
-- Rerun omission is limited to preregistered scalar/schema/bit audits. Geometry,
-  pose, contact, frame, trajectory, event-time, Kit, cooking, or physics restores
-  the full D341 lifecycle.
-- D338 attempt1, D339 attempt2, D340, D342, and D343 effective outputs are
-  immutable. No overwrite, silent rerun, tolerance relaxation, or promotion.
+- Never hash default `repr(...)` of PXR objects as stable asset semantics.
+  Canonicalize actual typed content and prove cross-process determinism.
+- Exact geometry hashes require the same coordinate/value/type stream. Compare
+  direct authored identity before transforms; use numeric/solid gates after
+  mapping.
+- Comparator thresholds and serialization rules are registered parameters; do
+  not silently tighten, relax, or replace them after results.
+- Rerun omission is limited to preregistered scalar/schema/hash audits with no
+  spatial or temporal verdict. Geometry/live/Kit/cooking/physics restores D341.
+- D338 attempt1, D339 attempt2, D340, D342, D343, and D344 outputs are
+  immutable. No overwrite, silent rerun, retroactive PASS, or promotion.
 - `JOINT_LIMITS` removal, hardware control, B200/SSH/pull, `/half-clone`, and
   unapproved commit/push remain forbidden.
 
-Actual HEAD remains `b1476d1acc681f392eb3478da5192f3b3898085e` (`rerun 강제 및
-셋팅 완료`). D342/D343 work is intentionally uncommitted. Commit/push only on
-an explicit user request.
+Actual HEAD is `7868abdf2f5c042d6757575a296b3c4881a52425` (`D343`), equal
+to `origin/master` before D344. D344 code, state docs, and artifacts are
+intentionally uncommitted. Commit/push only on explicit user request.

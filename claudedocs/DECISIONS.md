@@ -19475,3 +19475,64 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d343/d343_usd_typed_float_readback_evidence.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d343/d343_usd_typed_float_readback_summary.json`
 - `START_HERE.md`
+
+## D344 - USD 객체의 실행 중 메모리 주소를 자산 의미로 해시하면 거짓 차이가 발생한다 (2026-07-14)
+
+Decision:
+
+- 등록 판정은 `D344_G0A_ATTEMPT3_AUTHORING_CONTRACT_FAIL_STOP`으로 보존한다.
+  D339 attempt2를 복사한 새 attempt3에는 사전 등록한 13개 조각만 적용됐고,
+  115개는 그대로 보존됐으며 최소 두께 자료형·비트는 128/128 통과했다. 하지만
+  전체 의미 비교 항목 하나가 실패했으므로 새 프로세스 실제 형상 검증은 실행하지
+  않았다.
+- D344 attempt3와 모든 D344 결과는 forward-only 증거다. 같은 경로에서 자산 생성
+  명령을 다시 실행하거나, 사후 분석으로 D344를 PASS로 바꾸지 않는다.
+- **지속 규칙:** USD/PXR 객체의 `repr(...)`를 결정적 자산 의미로 해시하지 않는다.
+  `Sdf.TokenListOp` 같은 객체의 기본 표현에는 프로세스별 메모리 주소가 포함될 수
+  있다. 메타데이터는 실제 토큰·연산 내용과 자료형을 주소 없는 정규 형식으로
+  직렬화하고, 서로 독립된 프로세스에서 같은 해시가 나오는지 확인해야 한다.
+- 읽기 전용 사후 진단 두 번에서 원본·attempt3의 310개 장면 항목 중 194개가
+  주소 포함 해시로 달랐으나, 전부 `apiSchemas` 객체 주소 차이뿐이었다. 주소가
+  아닌 차이는 0개였고, 주소만 제외한 네 해시는 모두
+  `1e458982f356a6d546b73631abf133d302e0371f9a898eae674f76e65f82f9fe`로 같았다.
+  이는 실패 원인을 비교기 거짓 차이로 좁히지만 실제 Isaac 충돌 형상 성공을
+  증명하지는 않는다.
+- D341 Rerun 절차는 임의 생략되지 않았다. Rerun은 등록상 두 번째 실제 형상
+  검증 프로세스에서 시작하게 되어 있었고, 첫 번째 작성 게이트 실패가 그 프로세스를
+  금지했다. D344에는 완료된 RRD/RBL/화면/육안 확인이 없으며 이를 Rerun 완료라고
+  부르지 않는다.
+- 기존 파라미터 증가·변경, 분해 설정 변경, 허용 기준 완화, 물리 진행은 모두 0건이다.
+  `g0a_pass=false`; G0b/RL/ladder는 계속 막힌다.
+
+Evidence:
+
+- 실행 전 자산 생성 검사는 전부 통과했다.
+- 작성 결과는 정확히 13개 변경, 115개 보존, 최소 두께 정확 판독 128/128이었다.
+- 물리층에서 허용한 39개 속성을 제거한 파일 전체는 원본과 동일했고, 경로 310개,
+  물리층 머리말, 질량·관성, 비물리 파일도 동일했다.
+- 실패한 합성 장면 해시의 원시 차이는 `metadata.apiSchemas` 194개뿐이었다.
+- 독립 프로세스 사이에서 주소 포함 원시 해시는 다시 달라졌고, 주소 없는 정규 해시는
+  원본/attempt3 및 두 프로세스 전체에서 같았다.
+- Isaac runtime 생성은 false, 물리 진행은 0회, 실제 형상 검증과 Rerun은 미실행이다.
+
+Implication:
+
+- 가장 좁은 다음 사례는 별도 승인된 D345 proof-only
+  `deterministic_usd_metadata_comparator` 수리다. immutable D344 attempt3만 읽고,
+  `apiSchemas`를 실제 내용으로 정규 직렬화해 두 독립 프로세스에서 결정성을
+  증명해야 한다. 자산 변경, Isaac, Rerun, 물리는 이 사례에서 금지한다.
+- D345가 통과해도 D344의 과거 판정은 바뀌지 않는다. 그 뒤 별도 신규 사례에서만
+  immutable attempt3를 대상으로 callback 256개, 실제 조각 128개, 목표 자세 거리,
+  D341 Rerun 완료 계약을 수행할 수 있다.
+
+Sources:
+
+- `claudedocs/session_20260714_grasp_g0a_d344_attempt3_fixed_point_collision_geometry.md`
+- `sim_scripts/cyl34_top_view_d344_grasp_g0a_attempt3_fixed_point_collision_geometry.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d344/d344_attempt3_build_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/d344_attempt3_asset_manifest.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/d340_attempt3_asset_manifest.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d344/d344_postrun_semantic_diagnosis.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d344/d344_postrun_semantic_diagnosis_repeat.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d344/d344_postrun_root_cause_audit.json`
+- `START_HERE.md`
