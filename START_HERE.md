@@ -1,8 +1,9 @@
 # START_HERE.md
 
-Last updated: 2026-07-13 KST (D339 complete:
-`D339_G0A_PREPHYSICS_CONTRACT_FAIL_STOP`; cook/build PASS, live-collider audit
-FAIL, physics `0` steps. D338 attempt1 and D339 attempt2 are immutable.)
+Last updated: 2026-07-13 KST (D340 complete:
+`D340_G0A_FIXED_POINT_CAPTURE_CONTRACT_FAIL_STOP`; all 26 cook callbacks and
+13 fixed-point subcontracts PASS, authored-stream hash gate FAIL. No attempt3,
+no validate, physics `0` steps. D338 attempt1/D339 attempt2 are immutable.)
 
 ## Current Truth
 
@@ -44,8 +45,23 @@ FAIL, physics `0` steps. D338 attempt1 and D339 attempt2 are immutable.)
     baseline/settle did not run; controlled physics steps `0`. One PNG and one
     non-empty 1-step RRD passed the artifact contract. No claim is licensed
     about target fidelity or static physics.
+- D340 verdict: `D340_G0A_FIXED_POINT_CAPTURE_CONTRACT_FAIL_STOP`.
+  - All 26 instance/prototype requests called back exactly once/inline with
+    `RESULT_VALID(0)`, one convex, zero serialization errors, full cache release
+    and settings restore. All 13 channel pairs were bit-exact (`0.0m` max
+    delta); containment and float32 round trip were `0.0m`; every part strictly
+    reduced vertices (`114 -> 100`, link5 part_041 removed two, others one).
+  - The sole failed check on all 13 was `authored_hash_matches_d339_manifest`.
+    D340 hashed the points after a near-identity body transform (max delta
+    `2.22e-16`), while D339's manifest hashes the direct authored Vec3f stream.
+    Bounds changed at most `2.22e-16m`, but all float64 hashes and 10/13 Qhull
+    topology hashes changed. This is a proof-frame false negative, not a cook
+    divergence or parameter increase; the registered FAIL verdict stands.
+  - Attempt3 is absent; validate/cooked-union/physics did not run; sim counter
+    `0->0`. PNG/RRD passed and were inspected. Existing scalar increases and
+    changes remain `0/0`; `g0a_pass=false`.
 
-## Active Case: G0a / D339
+## Active Case: G0a / D340
 
 - Object: cylinder r `0.017m`, h `0.090m`, fixed `(0.300,0.000)`; mass
   placeholder `0.72kg` (real mass required before G0b); friction `1.5/1.2`.
@@ -53,29 +69,28 @@ FAIL, physics `0` steps. D338 attempt1 and D339 attempt2 are immutable.)
   `q5=1.5413rad`; canonical candidate `(7,11)mm`.
 - G0a gates remain: TCP `<=5mm`, tangent `<=15deg`, jaw gap `[0,5mm]`, no
   penetration, contact `>=15mm` below top, displacement `<5mm`, `10/10`.
-- **D339 complete / stopped pre-physics**. 이번 case의 신규 변수:
-  `[cook_witness_contract]` (1개, measurement contract only).
-- Frozen intervention: D338's full-mesh link5/gripper decomposition candidate
-  and every physical/decomposition parameter remain unchanged. D339 changes
-  only how an independent cook is positively witnessed.
-- Output: `claudedocs/runtime_logs/grasp_track/g0a_d339/`; asset build writes
-  only to `collision_asset/attempt2/`. D338 `g0a_d338/.../attempt1/` is immutable.
+- **D340 complete / stopped at capture**. 이번 case의 신규 변수:
+  `[failing_part_fixed_point_geometry, enabled_shape_property_binding_contract]`
+  (exactly 2; one physical 13-part allowlist + one measurement-only contract).
+- Existing physical/decomposition/target/control/solver/cache/tolerance scalar
+  increases and changes are both `0`; `64 hull/body` is saturation of the
+  already-frozen D338 `maxConvexHulls=64`, not an increase.
+- Output: `claudedocs/runtime_logs/grasp_track/g0a_d340/`; the only allowed
+  derivative is forward-only `collision_asset/attempt3/`. D338 attempt1 and
+  D339 attempt2 are immutable.
 - Detailed registration and result:
-  `claudedocs/session_20260713_grasp_g0a_d339_cook_witness_contract_repair.md`.
+  `claudedocs/session_20260713_grasp_g0a_d340_fixed_point_live_authoring_repair.md`.
 - `g0a_pass=false`; G0b/RL/ladder remain blocked.
 
 ## Next Concrete Action
 
-Stop for user choice. Recommended next case is a separately pre-registered
-**D340 fixed-point live-authoring repair**: keep the D339 source, target,
-physics, decomposition parameters, and thresholds frozen; retain the 115
-passing parts and stabilize only the 13 failing parts after measuring both
-live-instance and prototype cook geometry. The property contract must separate
-the exact 64 enabled shapes from the one known disabled legacy enumeration row;
-enumeration alone is not active-collision evidence. D339 attempt2 is immutable.
-Collision-asset changes require explicit approval. Only a clean `64/64`
-per-body surface audit plus `128/128` property/direct volume binding may query
-the frozen cooked-union target distance; physics and 10-trial remain blocked.
+Stop for user choice. Recommended next case is a reactive, measurement-only
+**D341 authored-coordinate-stream contract repair**. Preserve D340 capture
+evidence; compare direct authored Vec3f points against the D339 manifest before
+any transform, and use body-mapped coordinates only for containment/proximity.
+Then preregister the still-uncreated attempt3 authoring plus fresh validation.
+Do not overwrite/rerun D340, do not relax the `1e-9m/0.1mm/5%/0.5mm` gates,
+and do not run physics. Collision authoring remains user-approval gated.
 
 Reserve choices (not active):
 
@@ -90,14 +105,15 @@ G0b/RL/ladder promotion remain blocked.
 
 1. `AGENTS.md` (then `CLAUDE.md` only for Claude-specific workflow)
 2. `START_HERE.md`
-3. `claudedocs/DECISIONS.md` tail (D334-D339)
+3. `claudedocs/DECISIONS.md` tail (D334-D340)
 4. `claudedocs/EXPERIMENT_LEDGER.md` tail
 5. `claudedocs/direction_20260708_grasp_pivot.md`
-6. `claudedocs/session_20260713_grasp_g0a_d339_cook_witness_contract_repair.md`
-7. `claudedocs/runtime_logs/grasp_track/g0a_d339/g0a_d339_cook_witness_contract_repair_summary.json`
-8. `claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2/d339_cook_witness_manifest.json`
-9. `claudedocs/runtime_logs/grasp_track/g0a_d339/d339_live_collider_audit.json`
-10. `claudedocs/session_20260713_grasp_g0a_d338_collision_representation_repair.md`
+6. `claudedocs/session_20260713_grasp_g0a_d340_fixed_point_live_authoring_repair.md`
+7. `claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_summary.json`
+8. `claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_postrun_root_cause_audit.json`
+9. `claudedocs/runtime_logs/grasp_track/g0a_d340/d340_preregistration.json`
+10. `claudedocs/session_20260713_grasp_g0a_d339_cook_witness_contract_repair.md`
+11. `claudedocs/runtime_logs/grasp_track/g0a_d339/d339_live_collider_audit.json`
 
 ## Durable Rules
 
@@ -117,6 +133,11 @@ G0b/RL/ladder promotion remain blocked.
   remove the legacy shape from D339's PhysX property query. Never infer live
   collider cardinality from authored USD inventory alone (D339).
 - D338 attempt1 and D339 attempt2 may never be reused or overwritten.
+- D340 may author only 13 registered derivative parts once; no iterative retry,
+  channel fallback, scalar increase, tolerance relaxation, or physics is allowed.
+- Bit-exact geometry hashes are meaningful only for the same coordinate stream.
+  Never compare direct authored Vec3f hashes to post-transform float64 hashes;
+  prove authored identity before mapping, then gate mapped geometry numerically.
 - Visualization DoD and Isaac pins binding: `numpy==1.26.0`, `psutil==5.9.8`.
 
 ## Frozen Background

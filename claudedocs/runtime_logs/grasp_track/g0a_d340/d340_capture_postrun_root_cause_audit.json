@@ -1,0 +1,88 @@
+{
+  "artifact": "D340_CAPTURE_POSTRUN_ROOT_CAUSE_AUDIT",
+  "d340_verdict_unchanged": "D340_G0A_FIXED_POINT_CAPTURE_CONTRACT_FAIL_STOP",
+  "does_not_reclassify_capture_as_pass": true,
+  "source_artifacts": {
+    "capture_summary": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_summary.json",
+    "capture_summary_sha256": "ba62c879e78bfa7db47b003e1bfdd4ee2bd4ff250b083e423f94ebec67992163",
+    "capture_candidates": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_fixed_point_candidates.json",
+    "capture_candidates_sha256": "f288d5232f039e58ccd209f332ebfabbf9fec137e746e97d9a3c58688420ef86",
+    "d339_live_audit": "claudedocs/runtime_logs/grasp_track/g0a_d339/d339_live_collider_audit.json",
+    "d339_live_audit_sha256": "6148252b654a6250faf78a1ebcde4caa57870e800fa1d3c45b93c803fdf882cb",
+    "d339_asset_manifest": "claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2/d339_asset_build_manifest.json",
+    "d339_asset_manifest_sha256": "3b46cb39a1f0ff655dcd46172ebaa84f727d833773275b18f944397007ae2589"
+  },
+  "callback_evidence": {
+    "witness_files": 26,
+    "instance_requests": 13,
+    "prototype_requests": 13,
+    "callback_exactly_once": 26,
+    "result_valid_name": 26,
+    "result_valid_value_zero": 26,
+    "convex_count_exactly_one": 26,
+    "serialization_error_files": 0,
+    "both_cache_release_calls_pass": 26,
+    "isolated_settings_restored": 26
+  },
+  "fixed_point_capture_subevidence": {
+    "part_count": 13,
+    "instance_prototype_consensus_pass": 13,
+    "instance_prototype_max_coordinate_delta_m": 0.0,
+    "output_contained_in_input_pass": 13,
+    "maximum_containment_violation_m": 0.0,
+    "strict_vertex_decrease_pass": 13,
+    "float32_roundtrip_pass": 13,
+    "maximum_float32_roundtrip_surface_delta_m": 0.0,
+    "initial_vertex_sum": 114,
+    "candidate_vertex_sum": 100,
+    "vertices_removed": 14,
+    "link5_vertices": "73 -> 64",
+    "gripper_link_vertices": "41 -> 36"
+  },
+  "sole_failing_check": {
+    "name": "authored_hash_matches_d339_manifest",
+    "failed_parts": 13,
+    "other_part_level_checks_failed": 0
+  },
+  "root_cause_discriminator": {
+    "d339_direct_authored_hash_check_true": 13,
+    "d339_attempt2_integrity_before_capture": true,
+    "d339_attempt2_integrity_after_capture": true,
+    "d338_attempt1_integrity_after_capture": true,
+    "d340_body_mapped_hash_matches_manifest": 0,
+    "vertex_count_equal_to_manifest": 13,
+    "topology_hash_equal_after_near_identity_transform": 3,
+    "topology_hash_changed_after_near_identity_transform": 10,
+    "maximum_prim_to_body_identity_delta": 2.220446049250313e-16,
+    "maximum_bounds_delta_m": 2.220446049250313e-16,
+    "maximum_centroid_delta_m": 1.1102230246251565e-16,
+    "maximum_volume_relative_delta": 6.772066266696707e-14,
+    "interpretation": "D339 hashed the authored USD point stream directly and all 13 hashes matched its manifest. D340 instead canonicalized the same points after an identity-gated prim-local-to-body float64 transform, then demanded the transformed bit hash equal the original authored-stream bit hash. Numerical deltas at 1e-16m changed all geometry hashes and ten Qhull topology hashes without a material geometry change. This is a coordinate-stream measurement-contract false negative, not an instance/prototype cook divergence or a parameter increase."
+  },
+  "per_part": [
+    {"body": "link5", "name": "part_011", "vertices": "9 -> 8", "transform_delta": 2.220446049250313e-16, "bounds_delta_m": 1.1102230246251565e-16, "volume_relative_delta": 8.161118478679269e-15},
+    {"body": "link5", "name": "part_018", "vertices": "7 -> 6", "transform_delta": 2.220446049250313e-16, "bounds_delta_m": 1.1102230246251565e-16, "volume_relative_delta": 2.8602194705458928e-15},
+    {"body": "link5", "name": "part_023", "vertices": "8 -> 7", "transform_delta": 2.220446049250313e-16, "bounds_delta_m": 6.938893903907228e-18, "volume_relative_delta": 1.2459355041756487e-15},
+    {"body": "link5", "name": "part_024", "vertices": "8 -> 7", "transform_delta": 2.220446049250313e-16, "bounds_delta_m": 1.1102230246251565e-16, "volume_relative_delta": 1.0487294425551843e-14},
+    {"body": "link5", "name": "part_040", "vertices": "10 -> 9", "transform_delta": 2.220446049250313e-16, "bounds_delta_m": 3.469446951953614e-18, "volume_relative_delta": 1.0760516316911321e-15},
+    {"body": "link5", "name": "part_041", "vertices": "14 -> 12", "transform_delta": 2.220446049250313e-16, "bounds_delta_m": 1.1102230246251565e-16, "volume_relative_delta": 4.542326739470057e-14},
+    {"body": "link5", "name": "part_045", "vertices": "8 -> 7", "transform_delta": 2.220446049250313e-16, "bounds_delta_m": 1.1102230246251565e-16, "volume_relative_delta": 6.772066266696707e-14},
+    {"body": "link5", "name": "part_054", "vertices": "9 -> 8", "transform_delta": 2.220446049250313e-16, "bounds_delta_m": 6.938893903907228e-18, "volume_relative_delta": 2.0807382708768665e-15},
+    {"body": "gripper_link", "name": "part_000", "vertices": "7 -> 6", "transform_delta": 1.1102230246251565e-16, "bounds_delta_m": 1.1102230246251565e-16, "volume_relative_delta": 5.09332510619143e-16},
+    {"body": "gripper_link", "name": "part_035", "vertices": "11 -> 10", "transform_delta": 1.1102230246251565e-16, "bounds_delta_m": 1.1102230246251565e-16, "volume_relative_delta": 1.9996417685503478e-15},
+    {"body": "gripper_link", "name": "part_036", "vertices": "7 -> 6", "transform_delta": 1.1102230246251565e-16, "bounds_delta_m": 1.1102230246251565e-16, "volume_relative_delta": 1.6363831007434387e-14},
+    {"body": "gripper_link", "name": "part_048", "vertices": "9 -> 8", "transform_delta": 1.1102230246251565e-16, "bounds_delta_m": 1.1102230246251565e-16, "volume_relative_delta": 4.177627442091291e-15},
+    {"body": "gripper_link", "name": "part_057", "vertices": "7 -> 6", "transform_delta": 1.1102230246251565e-16, "bounds_delta_m": 2.220446049250313e-16, "volume_relative_delta": 4.038617004251639e-14}
+  ],
+  "scope_guards": {
+    "attempt3_absent": true,
+    "validate_not_run": true,
+    "controlled_physics_steps": 0,
+    "simulation_counter": "0 -> 0",
+    "parameters_increased": [],
+    "g0a_pass": false,
+    "ladder_promoted": false
+  },
+  "recommended_next_case": "D341 reactive authored-coordinate-stream contract repair: preserve D340 capture evidence, compare the direct authored Vec3f point stream to the D339 manifest before any transform, keep body-mapped geometry for proximity/containment only, then separately preregister attempt3 authoring and fresh validation. User approval is required before changing the active case.",
+  "pass": true
+}

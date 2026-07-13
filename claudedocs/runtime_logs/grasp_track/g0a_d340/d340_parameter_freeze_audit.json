@@ -1,0 +1,199 @@
+{
+  "artifact": "D340_PARAMETER_FREEZE_AUDIT",
+  "status": "PRE_RUNTIME_LOCKED",
+  "verdict": "NO_EXISTING_PARAMETER_INCREASE",
+  "no_existing_parameter_increased": true,
+  "comparison_basis": [
+    "D338 preregistered candidate",
+    "D339 executed candidate",
+    "D340 preregistered candidate"
+  ],
+  "new_variables": [
+    "failing_part_fixed_point_geometry",
+    "enabled_shape_property_binding_contract"
+  ],
+  "variable_count": 2,
+  "physical_variables_changed": [
+    "failing_part_fixed_point_geometry"
+  ],
+  "measurement_only_variables": [
+    "enabled_shape_property_binding_contract"
+  ],
+  "existing_parameter_change_audit": {
+    "d338_to_d339_existing_parameter_increases": [],
+    "d338_to_d339_existing_parameter_changes": [],
+    "d339_to_d340_existing_parameter_increases": [],
+    "d339_to_d340_existing_parameter_changes": [],
+    "physical_scalar_changes": [],
+    "decomposition_parameter_changes": [],
+    "threshold_or_tolerance_relaxations": [],
+    "count_increased": 0,
+    "count_changed": 0,
+    "pass": true,
+    "interpretation": "No existing physical, decomposition, cache, control, solver, target, or tolerance scalar is increased or changed. The observed 64 hulls per body in D339 saturated the maxConvexHulls=64 value already frozen in D338; it was not a parameter increase."
+  },
+  "frozen_parameters": {
+    "decomposition": {
+      "hull_vertex_limit": 64,
+      "max_convex_hulls": 64,
+      "voxel_resolution": 1000000,
+      "error_percentage": 1.0,
+      "min_thickness_m": 0.0001,
+      "shrink_wrap": true,
+      "authored_per_part_approximation": "convexHull",
+      "authored_per_part_hull_vertex_limit": 64,
+      "authored_per_part_min_thickness_m": 0.0001
+    },
+    "cook_request": {
+      "during_request": {
+        "update_to_usd": false,
+        "ujitso_collision_cooking": false,
+        "use_local_mesh_cache": false,
+        "release_local_mesh_cache_before_request": true,
+        "release_runtime_mesh_cache_before_request": true
+      },
+      "saved_values_observed_in_d339": {
+        "update_to_usd": false,
+        "ujitso_collision_cooking": true,
+        "use_local_mesh_cache": true
+      },
+      "restoration_contract": "restore the exact values saved before every request"
+    },
+    "representation_gates": {
+      "independent_cook_coordinate_tolerance_m": 1e-09,
+      "live_surface_tolerance_m": 0.0001,
+      "authored_live_volume_relative_tolerance_diagnostic_only": 0.005,
+      "property_direct_volume_relative_tolerance_hard": 0.05,
+      "raw_anchor_tolerance_mm": 0.05,
+      "raw_cooked_task_fidelity_tolerance_mm": 0.5,
+      "minimum_clearance_mm": 0.1
+    },
+    "readback_tolerances": {
+      "prim_to_body_identity": 1e-09,
+      "stage_meters_per_unit": 1e-12,
+      "bounds": 1e-12,
+      "error_percentage": 1e-07,
+      "min_thickness_m": 1e-10
+    },
+    "target_and_control": {
+      "q5_open_rad": 1.5413,
+      "radial_offset_mm": 7.0,
+      "tangent_offset_mm": 11.0,
+      "tangent_sign": -1,
+      "seed": 33201,
+      "home_deg": [0.0, 0.0, 90.0, 0.0, 0.0, 0.0],
+      "ik_mode": "position_only",
+      "ik_max_iterations": 120,
+      "ik_position_tolerance_mm": 1.0
+    },
+    "runtime": {
+      "num_envs": 1,
+      "physics_dt_s": 0.005,
+      "decimation": 2,
+      "d340_controlled_physics_steps_required": 0,
+      "d338_d339_conditional_baseline_steps_retained_but_not_licensed": 200,
+      "d338_d339_conditional_target_steps_retained_but_not_licensed": 200
+    },
+    "robot": {
+      "fixed_base": true,
+      "gravity_enabled": true,
+      "max_depenetration_velocity_m_s": 5.0,
+      "self_collisions": false,
+      "solver_position_iterations": 12,
+      "solver_velocity_iterations": 1,
+      "arm_and_gripper_stiffness": 80.0,
+      "arm_and_gripper_damping": 4.0,
+      "arm_and_gripper_effort_limit": 2.5,
+      "arm_and_gripper_velocity_limit": 3.14
+    },
+    "cylinder": {
+      "center_m": [0.3, 0.0, 0.032883],
+      "radius_m": 0.017,
+      "height_m": 0.09,
+      "mass_kg": 0.72,
+      "static_friction": 1.5,
+      "dynamic_friction": 1.2,
+      "restitution": 0.0,
+      "solver_position_iterations": 12,
+      "solver_velocity_iterations": 2,
+      "max_angular_velocity_rad_s": 10.0,
+      "max_linear_velocity_m_s": 10.0,
+      "max_depenetration_velocity_m_s": 5.0,
+      "gravity_enabled": true
+    },
+    "table": {
+      "top_z_m": -0.012117,
+      "size_m": [1.0, 1.0, 0.02],
+      "center_z_m": -0.022117,
+      "kinematic": true,
+      "gravity_enabled": false,
+      "static_friction": 1.5,
+      "dynamic_friction": 1.2,
+      "restitution": 0.0,
+      "global_ground_collider_enabled": false
+    },
+    "tool_mass_semantics": {
+      "link5": {
+        "mass_kg": 0.015392799861729145,
+        "center_of_mass_m": [-0.007799999788403511, 0.0, 0.05949999764561653],
+        "diagonal_inertia": [2.0286899598431773e-05, 2.144270001736004e-05, 4.3949498831352685e-06],
+        "principal_axes_wxyz": [1.0, 0.0, 0.0, 0.0]
+      },
+      "gripper_link": {
+        "mass_kg": 0.0028707999736070633,
+        "center_of_mass_m": [0.027000000700354576, 0.0027000000700354576, -0.018935000523924828],
+        "diagonal_inertia": [5.232159878687526e-07, 1.8207100538347731e-06, 1.6023100215534214e-06],
+        "principal_axes_wxyz": [1.0, 0.0, 0.0, 0.0]
+      }
+    }
+  },
+  "intervention_allowlist": {
+    "gripper_link": [
+      "part_000",
+      "part_035",
+      "part_036",
+      "part_048",
+      "part_057"
+    ],
+    "link5": [
+      "part_011",
+      "part_018",
+      "part_023",
+      "part_024",
+      "part_040",
+      "part_041",
+      "part_045",
+      "part_054"
+    ],
+    "allowed_part_count": 13,
+    "retained_part_count": 115,
+    "allowed_attribute_changes": [
+      "points",
+      "faceVertexCounts",
+      "faceVertexIndices"
+    ],
+    "retained_requirement": "The other 115 parts remain exact in path, points, topology, parameters, schemas, transforms, collision state, and geometry hashes."
+  },
+  "property_inventory_contract": {
+    "enabled_expected_parts_per_body": 64,
+    "known_disabled_legacy_parts_per_body": 1,
+    "property_enumeration_rows_per_body": 65,
+    "certified_active_part_count_per_body": 64,
+    "disabled_legacy_enumeration_is_active_collision_evidence": false
+  },
+  "non_goals": [
+    "no raw STL, canonical USD, or URDF rewrite",
+    "no decomposition or tolerance increase",
+    "no target, q5, IK, seed, solver, actuator, object, table, or mass change",
+    "no physics, settle, 10-trial, G0b, RL, PPO, or ladder promotion"
+  ],
+  "checks": {
+    "variable_count_at_most_two": true,
+    "existing_parameter_increase_count_zero": true,
+    "existing_parameter_change_count_zero": true,
+    "allowed_part_count_exactly_thirteen": true,
+    "retained_part_count_exactly_one_hundred_fifteen": true,
+    "d340_prephysics_only": true
+  },
+  "pass": true
+}

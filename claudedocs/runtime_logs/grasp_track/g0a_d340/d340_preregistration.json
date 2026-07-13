@@ -1,0 +1,230 @@
+{
+  "artifact": "D340_PRE_RUNTIME_REGISTRATION",
+  "status": "D340_PRE_REGISTERED_CAPTURE_PENDING",
+  "baseline_head": "a51369554625b3a4bf31142193a4ae5f726dbf89",
+  "active_case": "G0a cylinder D34xH90 fixed-point live-authoring repair",
+  "new_variables": [
+    "failing_part_fixed_point_geometry",
+    "enabled_shape_property_binding_contract"
+  ],
+  "physical_variables_changed": [
+    "failing_part_fixed_point_geometry"
+  ],
+  "measurement_only_variables": [
+    "enabled_shape_property_binding_contract"
+  ],
+  "parameter_change_audit": {
+    "d338_to_d339_existing_parameter_increases": [],
+    "d338_to_d339_existing_parameter_changes": [],
+    "d339_to_d340_existing_parameter_increases": [],
+    "d339_to_d340_existing_parameter_changes": [],
+    "decomposition_or_threshold_relaxations": [],
+    "pass": true,
+    "interpretation": "No existing scalar was increased or changed. D339's 64 hulls per body are saturation of the maxConvexHulls=64 value already registered in D338."
+  },
+  "harness": {
+    "path": "sim_scripts/cyl34_top_view_d340_grasp_g0a_fixed_point_live_authoring_repair.py",
+    "script_sha256": "1bdea659fadd7801b0f5749cca6286c7eb90c95a857ed516e09e34ceb12a023a"
+  },
+  "parameter_freeze_audit_path": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_parameter_freeze_audit.json",
+  "parameter_freeze_audit_sha256": "9e7f5dae62f0aa4f3a0f7d936ab818bce54e9d896e555475c115bd6a3ed5526b",
+  "output_root": "claudedocs/runtime_logs/grasp_track/g0a_d340",
+  "initial_output_inventory": [
+    "d340_parameter_freeze_audit.json",
+    "d340_preregistration.json"
+  ],
+  "only_allowed_asset_attempt": "collision_asset/attempt3",
+  "source_attempt": "claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2",
+  "source_policy": "immutable; copy forward only after capture PASS",
+  "immutable_inputs": {
+    "d338_script_sha256": "f3d330a9a5ca6f886728d0e5dc8037baa68d83a2b911aa105904d7d369ead426",
+    "d338_summary_sha256": "0bda3990751253a7c50408b0106cdc9e3504a35e6ac4f72a9504de0b90aa9a1e",
+    "d338_attempt1_sha256": {
+      "d338_asset_build_manifest.json": "8fec513a4e344132f4e445061bbc383da2d6347f5e5883b4c53b2695da1acdda",
+      "d338_invocation_abort_001.json": "f168087ac672e2bffdd9fdf29b6200afcd69e6551e4fd9e891b1e8f7695c8d42",
+      "kit_20260713_114440.log": "075ce099543ae952e362c47e44894e92abb63e72610c274441e6a82690a87a6b"
+    },
+    "d339_script_sha256": "fd307cb573699f8a08df1ab580789188774158877b8abf0a05cc4c60ef6562d6",
+    "d339_summary_sha256": "727fe02f36cf6ae84260985bccf5324b9716e5338623a28003c92589b99f8418",
+    "d339_live_audit_sha256": "6148252b654a6250faf78a1ebcde4caa57870e800fa1d3c45b93c803fdf882cb",
+    "d339_full_output_inventory_sha256": {
+      "collision_asset/attempt2/d339_asset_build_manifest.json": "3b46cb39a1f0ff655dcd46172ebaa84f727d833773275b18f944397007ae2589",
+      "collision_asset/attempt2/d339_cook_witness_manifest.json": "7d0a82842af141c1e194ffcb5f9947777b8087c8fd56c72e13f684cf61481e81",
+      "collision_asset/attempt2/d339_gripper_link_cold1_callback_witness.json": "08a500ed54a5c42c02a77b981b96d629a7de9b09df593c9f25dc3698d7220a69",
+      "collision_asset/attempt2/d339_gripper_link_cold1_canonical_geometry.json": "dc258b27cdef5d29e23f1b5ef3041c3afb26f50d8c8ad9b222002532e95f2e5e",
+      "collision_asset/attempt2/d339_gripper_link_cold2_callback_witness.json": "a74fb98c347a8d2989dd16d038c60ab9602b516d04c0b7700846792f54a96dab",
+      "collision_asset/attempt2/d339_gripper_link_cold2_canonical_geometry.json": "24b3a026281beffd18b397762226a2663ec6dd056f03099b03ad350a59edad8c",
+      "collision_asset/attempt2/d339_hull_manifest.json": "d70a13edbb8500cde97ad23779811475e1c8bb2d0f6045b4183e704d2157bedd",
+      "collision_asset/attempt2/d339_link5_cold1_callback_witness.json": "e705e7ed5d3a9b4803eaeeac67e60b6494edba37cfecf9226f86e72d60b73a43",
+      "collision_asset/attempt2/d339_link5_cold1_canonical_geometry.json": "c45bd056b3487f92bc724474dbf850ea6da309fea90c4e0a90879ada7ba2b655",
+      "collision_asset/attempt2/d339_link5_cold2_callback_witness.json": "45741a69927b7df34ebeda421f5e3570f456008da843b2e6ed1e7dd9b7fc300d",
+      "collision_asset/attempt2/d339_link5_cold2_canonical_geometry.json": "d1819851586e7078c5b58fde47bec196e08063c1ed658f79743ec729dda5590e",
+      "collision_asset/attempt2/roarm_m3_fullmesh_convex_parts/.asset_hash": "ae762fcc536a0d02a157b695201e8e64d2f71c07bcc1563981aeda59fa48587f",
+      "collision_asset/attempt2/roarm_m3_fullmesh_convex_parts/configuration/roarm_m3_base.usd": "ea0ee8f258e935799cf927b8c67e871f935c09b3c9be4f971006937334a11841",
+      "collision_asset/attempt2/roarm_m3_fullmesh_convex_parts/configuration/roarm_m3_physics.usd": "9261986d363327e33beb0b555d0ffce320416e827e0b1a8532c8e938d25b8e44",
+      "collision_asset/attempt2/roarm_m3_fullmesh_convex_parts/configuration/roarm_m3_robot.usd": "2227536fcb8c9dae1aa9cc1cf422350fcf85e662eed97fe9ea48535c6b4aa65d",
+      "collision_asset/attempt2/roarm_m3_fullmesh_convex_parts/configuration/roarm_m3_sensor.usd": "3f44081f42b452bc5f9791a8df1c37e00ba5a6dc98a9e49e065c7acacdda0d0f",
+      "collision_asset/attempt2/roarm_m3_fullmesh_convex_parts/config.yaml": "5745bbb8d9e18716e96ffafdf05b01de302e4f86375ac3f155e82ecb94ab2937",
+      "collision_asset/attempt2/roarm_m3_fullmesh_convex_parts/roarm_m3.usd": "a4be58e87b1f9790f2a2ed600f0620c79d3cfb95c608b3c598308d52f5e46fff",
+      "d339_collision_representation_trace.rrd": "1b2cb570f3e78fdf2c231777f8baba048bdfa71e621c31b286145acff762f8d1",
+      "d339_d337_controls.json": "dd1dc30535ea8885059fbbf7955423cab6b7b00adf931f45244ef352adaafc39",
+      "d339_frozen_contract.json": "1222b2abf53dd13b9a4b38fb146317273d7a02e14a03593edf356af88bcb506e",
+      "d339_live_collider_audit.json": "6148252b654a6250faf78a1ebcde4caa57870e800fa1d3c45b93c803fdf882cb",
+      "d339_prephysics_scene_contract.json": "5fe40687f38dea3e0d7efbd75c3b576fbcc401a5099865c140459fda7026b725",
+      "d339_preregistration.json": "e3413268794f5741cd9114a3a27b747af6eb90472b0cb0b73c4bd83cda5e243a",
+      "d339_representation_decision.png": "818533e1808654b96284c8cc53a8eacfef46411ce8a4f2ef0962aabb25adafec",
+      "d339_representation_gate.json": "35ed7c718dcd3fc82b6dcb9f11b5c4d0a422f95cbe29d162a95ecf378230ec1b",
+      "g0a_d339_cook_witness_contract_repair_summary.json": "727fe02f36cf6ae84260985bccf5324b9716e5338623a28003c92589b99f8418",
+      "g0a_d339_cook_witness_contract_repair_summary.md": "a93d43a4b8a73c74e33082cf7d31d587b8319b32977e3f067fde4aed702f7b7a"
+    }
+  },
+  "frozen_parameters": {
+    "decomposition": {
+      "hull_vertex_limit": 64,
+      "max_convex_hulls": 64,
+      "voxel_resolution": 1000000,
+      "error_percentage": 1.0,
+      "min_thickness_m": 0.0001,
+      "shrink_wrap": true
+    },
+    "cook_request_behavior": {
+      "force_during_request": {
+        "update_to_usd": false,
+        "ujitso_collision_cooking": false,
+        "use_local_mesh_cache": false
+      },
+      "release_local_and_runtime_caches_before_each_request": true,
+      "restore_exact_saved_values_after_each_request": true
+    },
+    "gates": {
+      "instance_prototype_coordinate_tolerance_m": 1e-09,
+      "surface_tolerance_m": 0.0001,
+      "property_direct_volume_relative_tolerance": 0.05,
+      "raw_anchor_tolerance_mm": 0.05,
+      "raw_cooked_fidelity_tolerance_mm": 0.5,
+      "clearance_mm_min": 0.1
+    },
+    "task": {
+      "q5_open_rad": 1.5413,
+      "radial_offset_mm": 7.0,
+      "tangent_offset_mm": 11.0,
+      "tangent_sign": -1,
+      "seed": 33201,
+      "ik_mode": "HOME-seeded position-only",
+      "ik_max_iterations": 120,
+      "ik_position_tolerance_mm": 1.0
+    },
+    "runtime": {
+      "num_envs": 1,
+      "physics_dt_s": 0.005,
+      "decimation": 2,
+      "controlled_physics_steps_required": 0
+    }
+  },
+  "intervention_contract": {
+    "allowed_parts_by_body": {
+      "gripper_link": [
+        "part_000",
+        "part_035",
+        "part_036",
+        "part_048",
+        "part_057"
+      ],
+      "link5": [
+        "part_011",
+        "part_018",
+        "part_023",
+        "part_024",
+        "part_040",
+        "part_041",
+        "part_045",
+        "part_054"
+      ]
+    },
+    "allowed_part_count": 13,
+    "retained_part_count": 115,
+    "allowed_attribute_changes": [
+      "points",
+      "faceVertexCounts",
+      "faceVertexIndices"
+    ],
+    "retained_geometry_requirement": "bit-exact D339 attempt2",
+    "all_other_physics_layer_semantics": "exact after removing only 39 registered geometry properties",
+    "nonphysics_layers_and_files": "bit-exact D339 attempt2",
+    "raw_stl_urdf_canonical_usd_rewrite": false
+  },
+  "fixed_point_contract": {
+    "capture_request_order": [
+      "live_instance",
+      "prototype"
+    ],
+    "validate_request_order": [
+      "prototype",
+      "live_instance"
+    ],
+    "each_callback_exactly_once_inline": true,
+    "each_result": "RESULT_VALID",
+    "each_convex_count": 1,
+    "instance_prototype_geometry_must_equal": true,
+    "instance_prototype_coordinate_tolerance_m": 1e-09,
+    "choose_one_channel_on_divergence": false,
+    "capture_output_contained_in_input": true,
+    "capture_strict_vertex_decrease": true,
+    "authoring_roundtrip": "float32 exact",
+    "authoring_applications": 1,
+    "iterative_retry": false,
+    "fresh_process_validation": "require F(F(x)) == F(x) for both channels"
+  },
+  "property_binding_contract": {
+    "usd_enabled_expected_per_body": 64,
+    "usd_known_disabled_legacy_expected_per_body": 1,
+    "property_enumeration_rows_expected_per_body": 65,
+    "certified_active_parts_per_body": 64,
+    "legacy_enumeration_is_active_collision_evidence": false,
+    "surface_tolerance_m": 0.0001,
+    "property_direct_volume_relative_tolerance": 0.05,
+    "required_surface_pass": "64/64 each body",
+    "required_volume_pass": "128/128 total",
+    "link5_part_045_must_independently_pass": true
+  },
+  "phase_order": [
+    "capture",
+    "author_attempt3",
+    "fresh_validate",
+    "conditional_zero_step_cooked_union_query"
+  ],
+  "stage_commands": {
+    "capture": "OMNI_KIT_ACCEPT_EULA=YES conda run -n isaaclab --no-capture-output python sim_scripts/cyl34_top_view_d340_grasp_g0a_fixed_point_live_authoring_repair.py --stage capture",
+    "validate": "OMNI_KIT_ACCEPT_EULA=YES conda run -n isaaclab --no-capture-output python sim_scripts/cyl34_top_view_d340_grasp_g0a_fixed_point_live_authoring_repair.py --stage validate"
+  },
+  "hard_stop_conditions": [
+    "any preregistration, script, parameter-audit, D338 attempt1, or D339 attempt2 hash/inventory mismatch",
+    "capture output inventory is not exactly preregistration plus parameter audit",
+    "callback is not exactly once inline RESULT_VALID with one valid convex",
+    "instance and prototype geometry diverge; neither channel may be selected",
+    "capture output expands, does not strictly reduce vertices, cycles to x0, or fails float32 roundtrip",
+    "attempt3 changes any part outside the exact 13 or any property outside the 39 geometry properties",
+    "any of the 115 retained parts or any nonphysics file changes",
+    "USD active inventory is not exactly 64 plus one exact disabled legacy collider per body",
+    "property enumeration is not exactly the 64 enabled paths plus the known disabled legacy path",
+    "any of 128 parts fails two-channel equality, surface <=0.1mm, property/direct volume <=5%, ownership, transform, parameter, or GPU checks",
+    "controlled physics counter changes",
+    "frozen target cooked clearance is below +0.1mm or raw/cooked delta exceeds 0.5mm",
+    "required PNG, RRD, or frame-marker artifact fails"
+  ],
+  "conditional_union_gate": {
+    "licensed_only_after_surface_64_of_64_each_body": true,
+    "licensed_only_after_property_volume_128_of_128": true,
+    "clearance_mm_min": 0.1,
+    "raw_cooked_fidelity_mm_max": 0.5
+  },
+  "controlled_physics_steps_required": 0,
+  "success_license": "D340 prephysics representation support only. A separately preregistered settle case remains required; g0a_pass=false.",
+  "non_goals": [
+    "no physics or settle",
+    "no 10-trial",
+    "no G0b, RL, PPO, or ladder promotion",
+    "no target, q5, IK, solver, actuator, object, table, mass, decomposition, or tolerance change"
+  ],
+  "pass": true
+}

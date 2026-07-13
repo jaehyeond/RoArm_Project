@@ -19168,4 +19168,77 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2/d339_asset_build_manifest.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d339/d339_live_collider_audit.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d339/d339_representation_gate.json`
+
+## D340 - Fixed-point cook candidates agree, but bit-hashing a post-transform stream causes a capture false negative (2026-07-13)
+
+Decision:
+
+- Verdict is `D340_G0A_FIXED_POINT_CAPTURE_CONTRACT_FAIL_STOP`. The registered
+  capture gate failed, so no attempt3 asset was created and fresh validation,
+  cooked-union query, and physics were not run.
+- All 26 cache-isolated live requests nevertheless passed their direct witness:
+  callback exactly once/inline, `RESULT_VALID(0)`, exactly one convex, zero
+  serialization errors, both cache releases, and exact settings restoration.
+  All 13 instance/prototype pairs were bit-exact with maximum coordinate delta
+  `0.0m`. Containment and float32 round-trip deltas were `0.0m`; all 13 outputs
+  strictly reduced vertices (`114 -> 100`). These facts support the candidate
+  capture sub-evidence but do not override the overall registered FAIL.
+- The sole failed part-level check was
+  `authored_hash_matches_d339_manifest`, on all 13 parts. D339 computed that
+  hash directly from authored USD mesh points and its check remains true for
+  all 13 on the immutable attempt2. D340 instead re-canonicalized the same
+  points after the prim-local-to-body-local float64 transform and compared that
+  transformed bit stream to D339's original authored-stream bit hash.
+- The transform was identity within `2.220446049250313e-16`; maximum bounds and
+  centroid deltas were `2.220446049250313e-16m` and
+  `1.1102230246251565e-16m`, and maximum volume relative delta was
+  `6.772066266696707e-14`. Those machine-epsilon changes still changed all 13
+  float64 geometry hashes and 10/13 Qhull topology hashes.
+- **Durable hash-frame rule:** bit-exact geometry hashes prove equality only
+  when both sides use the same coordinate/value stream. Never compare a direct
+  authored Vec3f hash with a post-transform float64 hash, even when the
+  transform is identity-gated. First prove authored-stream equality before any
+  mapping; then prove mapped/body-local geometry with explicit numerical or
+  solid-distance gates.
+- D338 attempt1 and D339 attempt2 remained exact; simulation counter was
+  `0 -> 0`; controlled physics steps were `0`; the PNG/RRD artifact contract
+  passed. D338->D339 and D339->D340 existing scalar increases/changes were
+  `0/0`. `g0a_pass=false`; G0b/RL/ladder remain blocked.
+
+Evidence:
+
+- Capture summary: 13 registered parts, exact request order, exact failure set,
+  stage/sensor/raw/USD/integrity gates PASS, artifact contract PASS, and only
+  `all_13_capture_candidates_pass` false.
+- Candidate manifest: fixed-point capture contract true on all 13, with
+  instance/prototype geometry/hash/topology equality, zero coordinate delta,
+  strict vertex decrease, containment, and float32 round-trip gates all true.
+- Post-run root-cause audit cross-joins D340 capture metrics with D339's direct
+  authored hash check and direct-cook transform records; it preserves the D340
+  FAIL verdict rather than reclassifying it.
+- Attempt3 path is absent. Validation witness, live-128 audit, representation
+  gate, and physics artifacts are absent by design.
+
+Implication:
+
+- D340 capture evidence is immutable and must not be overwritten or rerun under
+  a changed contract.
+- The narrowest next candidate is a separately approved reactive D341
+  `authored_geometry_frame_contract` repair. It should reuse/pin the D340
+  callback evidence, compare the direct authored Vec3f point stream to the D339
+  manifest before any transform, retain body-mapped geometry only for
+  containment/proximity, and then separately preregister the still-uncreated
+  attempt3 authoring plus fresh validation.
+- No tolerance, decomposition, target, physics, or solver change is justified
+  by D340. D341 requires user approval as an active-case change.
+
+Sources:
+
+- `claudedocs/session_20260713_grasp_g0a_d340_fixed_point_live_authoring_repair.md`
+- `sim_scripts/cyl34_top_view_d340_grasp_g0a_fixed_point_live_authoring_repair.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_fixed_point_candidates.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_postrun_root_cause_audit.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_diagnostics.png`
+- `claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_trace.rrd`
 - `START_HERE.md`
