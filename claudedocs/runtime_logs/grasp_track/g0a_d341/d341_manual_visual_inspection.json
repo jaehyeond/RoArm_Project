@@ -1,0 +1,37 @@
+{
+  "artifact": "D341_RERUN_MANUAL_VISUAL_INSPECTION_V1",
+  "case": "g0a_d341",
+  "inspection_date_kst": "2026-07-13",
+  "inspection_method": "opened the generated PNG at original detail with the local image inspection tool",
+  "screenshot": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d341/d341_d340_cook_observability_rerun_inspection.png",
+    "sha256": "dc3f1d82e05d324f2fd032a0caca5077a04cbd3dc145f936bf897e0c1c8450ee",
+    "bytes": 10146168,
+    "registered_logical_window": "2400x1400",
+    "png_raster_dimensions": "4800x2800"
+  },
+  "observations": {
+    "eight_independent_spatial_panel_titles_visible": true,
+    "link5_source_instance_prototype_candidate_all_nonempty": true,
+    "gripper_source_instance_prototype_candidate_all_nonempty": true,
+    "variants_not_overlaid_in_the_same_spatial_panel": true,
+    "float64_metric_dataframe_visible": true,
+    "metric_dataframe_contains_part_idx_and_numeric_scalar_cells": true,
+    "cook_gate_event_table_visible": true,
+    "event_table_contains_info_and_warn_rows": true,
+    "d340_fail_retained_warning_visible": true,
+    "viewer_loading_notification_present": true,
+    "loading_notification_obscures_required_panel_title_or_geometry": false
+  },
+  "bounded_interpretation": [
+    "The screenshot proves that the fixed embedded Blueprint exposes all eight registered variant groups, the static metric table, and events in one decision view.",
+    "The source, instance, prototype, and candidate silhouettes are independently visible for both bodies; no claim of bit-exact equality is made from pixels.",
+    "The exact 52 geometry entities and their required components are certified by the archive contract, not by counting every part in this single view.",
+    "The screenshot shows the current part_idx slice rather than every one of the 67 event rows; full row presence is certified by exact entity/timeline/schema validation.",
+    "The Rerun status notification is a viewer overlay and does not hide any required panel title or the displayed decision geometry."
+  ],
+  "manual_visual_inspection_pass": true,
+  "scientific_verdict_override": false,
+  "d340_verdict_retained": "D340_G0A_FIXED_POINT_CAPTURE_CONTRACT_FAIL_STOP",
+  "g0a_pass": false
+}

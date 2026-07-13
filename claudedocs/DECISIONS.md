@@ -19242,3 +19242,84 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_diagnostics.png`
 - `claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_trace.rrd`
 - `START_HERE.md`
+
+## D341 - Rerun is complete only after finalized subject/schema evidence and a separate actual inspection (2026-07-13)
+
+Decision:
+
+- Verdict is `D341_RERUN_OBSERVABILITY_COMPLETION_CONTRACT_PASS`. This repairs
+  the observability contract only; D340 remains
+  `D340_G0A_FIXED_POINT_CAPTURE_CONTRACT_FAIL_STOP`, `g0a_pass=false`, and no
+  collision asset, physics, G0b/RL, or ladder promotion is licensed.
+- **Durable applicability rule:** a replayable RRD is mandatory when geometry,
+  pose, coordinate frames, collision/contact, trajectory, or synchronized
+  sensor time contributes to a verdict. A pure file/hash/schema audit may omit
+  Rerun only with a written no-spatial/no-temporal justification.
+- **Durable completion rule:** attach the footer-enabled file sink before the
+  first user log; record the actual decision subject and declared coordinate
+  frames/timelines; flush and finalize before gating; then require the exact
+  SDK/CLI pin, footer verify, exact non-system entity/timeline sets, required
+  component schemas, fixed embedded Blueprint, verified RBL export, headless
+  decision screenshot, and a separate documented visual inspection. Non-empty,
+  decodable, or rendered alone must not be called inspected/complete.
+- Rerun remains an observability layer. Original callback arrays and canonical
+  JSON/hashes are authoritative; Float32 display geometry must never be hashed
+  back into a bit-exact scientific gate. Training trackers own optimizer-scale
+  scalar history, while Rerun owns sampled spatial rollout/trajectory evidence.
+- Cook/representation layouts must expose source/instance/prototype/candidate
+  independently. D341 changed an ambiguous overlay into eight separate link5/
+  gripper panels and used a metric Dataframe for one-row static cook metrics.
+  Physics cases instead require the full executed step timeline, object/tool
+  state, decision scalars, and contact point/force evidence.
+- D340's actual RRD sha256 is
+  `8eb3d6130330334b9d6b457468cd4bb59097114c693cb7caa2e33a8f5993fe47`;
+  its session contains a preserved 63-character typo. The file was non-empty
+  but had no footer and no 13-part scientific subject. Therefore the historical
+  broad phrase "PNG/RRD inspected" is superseded: D340's PNG was inspected;
+  its RRD was generated but not completion-certified or visually inspected.
+- Directly executable scripts under `sim_scripts/` that import project packages
+  must bootstrap the resolved repo root before those imports, or an exact
+  `python sim_scripts/<file>.py` command may fail before the preregistered
+  harness begins. D341 recorded this attempt0 failure and amended only that
+  invocation contract before one effective run.
+
+Evidence:
+
+- Good D341 RRD/RBL were footer-complete (`742,647`/`96,376` bytes). Exact
+  archive contract passed for `254` non-system entities, four timelines, and
+  all required per-path components. Registered subject was `52` meshes,
+  `143` scalar rows, and `67` event rows.
+- The finalized-copy negative control removed `4,096` bytes and was rejected
+  with overall FAIL, `footer_manifest_present=false`, and explicit
+  `RRD footer verification failed`.
+- The `2400x1400` logical (`4800x2800` raster) screenshot was actually opened.
+  All eight independent geometry panels were non-empty; the metric Dataframe
+  and INFO/WARN event table were visible. The report explicitly does not infer
+  bit equality or full row enumeration from pixels.
+- D340 remained exact across `33 -> 33` files with digest
+  `ce77a75e9ee8ba559e57bf443e4eee587352498bbb154f91f06bb81b4462c8ab`;
+  attempt3 remained absent. Existing/decomposition/tolerance changes and
+  physics steps were all zero.
+
+Implication:
+
+- `roarm_rl.viz_debug.log_rerun` plus
+  `roarm_rl.rerun_contract.validate_rerun_artifact` is now the project Rerun
+  completion path. Automated output must remain pending until a separate
+  inspection report closes the manual gate.
+- D341 does not consume or replace the physical next step. The next candidate
+  remains separately approved D342 authored-coordinate-stream repair, using
+  D340 evidence without rerunning it and without relaxing any scientific gate.
+
+Sources:
+
+- `claudedocs/session_20260713_grasp_g0a_d341_rerun_observability_contract_repair.md`
+- `sim_scripts/cyl34_top_view_d341_rerun_observability_contract_repair.py`
+- `roarm_rl/viz_debug.py`
+- `roarm_rl/rerun_contract.py`
+- `tests/test_viz_debug_rerun_contract.py`
+- `claudedocs/HOWTO_viz_debug.md`
+- `claudedocs/runtime_logs/grasp_track/g0a_d341/d341_rerun_observability_automated_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d341/d341_manual_visual_inspection.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d341/d341_rerun_observability_completion_summary.json`
+- `START_HERE.md`

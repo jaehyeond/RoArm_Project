@@ -77,6 +77,36 @@ Before answering current project-state questions or making edits:
   ban on large renders, trajectory videos, new data generation, or variable
   ladder advancement without explicit user approval.
 
+## Rerun Observability Completion Contract (D341~)
+
+- A replayable RRD is mandatory when a verdict depends on geometry, pose,
+  coordinate frames, collision/contact, a trajectory, or synchronized sensor
+  time. Rerun may be omitted only for a pure file/hash/schema audit with no
+  spatial or temporal judgment; the session doc must state that justification.
+- Deterministic Isaac/batch work uses save-only recording by default. A live
+  Viewer is optional for exploration, but the file sink must be attached before
+  the first user log in either mode. The recording must be finalized by a
+  `RecordingStream` context exit or disconnect before any artifact gate runs.
+- The RRD must contain the actual decision subject, not only generic robot/frame
+  markers. Cook/representation cases log source, instance, prototype, and
+  candidate geometry as separate entities. Physics/settle cases log the full
+  executed step timeline plus decision scalars and contact points/force arrows;
+  a final or trial-1-only row is insufficient for a trajectory verdict.
+- Rerun is an observability/replay layer, not the bit-exact authority. Original
+  callback arrays and canonical JSON/hashes decide equality. Float64 metrics may
+  be plotted in Rerun, while its Float32 spatial copies are inspection evidence
+  only and must never be hashed back into a scientific gate.
+- Rerun completion requires all of the following: the exact SDK/CLI version pin;
+  footer-enabled `rrd verify` PASS after finalization; exact non-system entity,
+  timeline, and required-component contracts PASS; a fixed embedded blueprint
+  plus its verified `.rbl` export; a headless decision
+  screenshot; and an actual visual inspection whose path and observations are
+  recorded in the session doc. Non-empty generation, loadability, or screenshot
+  creation alone must never be reported as "inspected".
+- RRD, RBL, validation report, and inspection screenshot belong in the active
+  run output folder. If any required item fails, the visualization contract
+  fails without overriding the scientific verdict or relaxing a gate.
+
 ## IsaacLab Environment Package Rule (D326~)
 
 - Any package install into the `isaaclab` conda environment must record the
