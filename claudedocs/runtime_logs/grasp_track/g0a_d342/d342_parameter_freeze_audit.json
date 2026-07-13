@@ -1,0 +1,97 @@
+{
+  "artifact": "D342_PARAMETER_FREEZE_AUDIT_V1",
+  "status": "PRE_RUNTIME_LOCKED",
+  "verdict": "NO_EXISTING_PARAMETER_INCREASE_OR_CHANGE",
+  "new_variables": [
+    "authored_geometry_frame_contract"
+  ],
+  "variable_count": 1,
+  "measurement_only_variables": [
+    "authored_geometry_frame_contract"
+  ],
+  "physical_variables_changed": [],
+  "comparison_basis": {
+    "d339_executed_decomposition_manifest": "claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2/d339_hull_manifest.json",
+    "d340_freeze_audit": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_parameter_freeze_audit.json",
+    "d340_freeze_audit_sha256": "9e7f5dae62f0aa4f3a0f7d936ab818bce54e9d896e555475c115bd6a3ed5526b"
+  },
+  "existing_parameter_increases": [],
+  "existing_parameter_changes": [],
+  "decomposition_parameter_changes": [],
+  "threshold_relaxations": [],
+  "target_controller_solver_changes": [],
+  "object_table_mass_changes": [],
+  "collision_asset_writes": [],
+  "frozen_parameters": {
+    "decomposition": {
+      "hull_vertex_limit": 64,
+      "max_convex_hulls": 64,
+      "voxel_resolution": 1000000,
+      "error_percentage": 1.0,
+      "min_thickness_m": 0.0001,
+      "shrink_wrap": true,
+      "authored_per_part_approximation": "convexHull"
+    },
+    "geometry_contract": {
+      "prim_to_body_identity_tolerance_m": 1e-09,
+      "mapped_geometry_numeric_tolerance_m": 1e-09,
+      "live_surface_tolerance_m": 0.0001,
+      "property_direct_volume_relative_tolerance": 0.05,
+      "raw_cooked_task_fidelity_tolerance_mm": 0.5,
+      "minimum_clearance_mm": 0.1
+    },
+    "representation_gates": {
+      "independent_cook_coordinate_tolerance_m": 1e-09,
+      "live_surface_tolerance_m": 0.0001,
+      "authored_live_volume_relative_tolerance_diagnostic_only": 0.005,
+      "property_direct_volume_relative_tolerance_hard": 0.05,
+      "raw_anchor_tolerance_mm": 0.05,
+      "raw_cooked_task_fidelity_tolerance_mm": 0.5,
+      "minimum_clearance_mm": 0.1
+    },
+    "readback_tolerances": {
+      "prim_to_body_identity": 1e-09,
+      "stage_meters_per_unit": 1e-12,
+      "bounds": 1e-12,
+      "error_percentage": 1e-07,
+      "min_thickness_m": 1e-10
+    },
+    "target_and_control": {
+      "q5_open_rad": 1.5413,
+      "radial_offset_mm": 7.0,
+      "tangent_offset_mm": 11.0,
+      "tangent_sign": -1,
+      "seed": 33201,
+      "home_deg": [
+        0.0,
+        0.0,
+        90.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ik_mode": "position_only",
+      "ik_max_iterations": 120,
+      "ik_position_tolerance_mm": 1.0
+    }
+  },
+  "runtime_scope": {
+    "offline_usdc_read_only": true,
+    "recook_requests": 0,
+    "simulation_context_created": false,
+    "controlled_physics_steps": 0,
+    "attempt3_authoring": false,
+    "settle_or_ten_trial": false
+  },
+  "checks": {
+    "single_measurement_variable": true,
+    "existing_parameter_increase_count_zero": true,
+    "existing_parameter_change_count_zero": true,
+    "decomposition_parameter_change_count_zero": true,
+    "threshold_relaxation_count_zero": true,
+    "physical_variable_count_zero": true,
+    "collision_asset_write_count_zero": true,
+    "physics_step_count_zero": true
+  },
+  "pass": true
+}

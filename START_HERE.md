@@ -1,139 +1,129 @@
 # START_HERE.md
 
-Last updated: 2026-07-13 KST. D341 complete:
-`D341_RERUN_OBSERVABILITY_COMPLETION_CONTRACT_PASS`. This is an observability
-contract PASS only. D340 remains
-`D340_G0A_FIXED_POINT_CAPTURE_CONTRACT_FAIL_STOP`; `g0a_pass=false`, attempt3
-absent, and G0b/RL/ladder blocked.
+Last updated: 2026-07-13 KST. D343 completed with verdict
+`D343_USD_TYPED_FLOAT_READBACK_CONTRACT_PASS`. D342 remains FAIL;
+`g0a_pass=false`; attempt3 is absent; G0b/RL/ladder remain blocked.
 
 ## Current Truth
 
-- Active pivot remains grasp-track G0a on the cylinder (r `0.017m`, h
-  `0.090m`). Cube repair, G0b close/lift, PPO/RL, VLA, randomization, real
-  RoArm, and B200 are out of scope.
-- D337 repaired the q5 convention: URDF `q5=0` = CLOSED and sim OPEN is
-  `~1.541-1.571rad`. At `q5=1.5413`, `2,560/2,629` targets passed the raw-clear
-  grid; frozen `(7,11)mm` had link5/gripper clearances
-  `+4.2726/+11.1751mm`. Its settle still produced a link5 `38.861N` step-0
-  impulse and object disturbance because physics uses the inflated cooked hull.
-- D338 attempt1 proved global cook statistics do not witness the synchronous
-  explicit request path. D339 repaired the callback witness and produced the
-  immutable attempt2, but live recook fidelity failed on 13 of 128 parts.
-- D340 captured one fixed-point candidate through both live channels for those
-  13 parts. All 26 callbacks and every fixed-point subcheck passed except the
-  authored hash predicate: it compared direct authored Vec3f bits with a
-  post-transform float64 stream. The transform delta was only `2.22e-16m`, but
-  exact hashes changed on `13/13`; therefore D340 correctly stopped before
-  attempt3, validation, cooked-union query, or physics.
-- D341 repaired the project-wide Rerun completion contract without rerunning
-  D340 or changing geometry. The good RRD/RBL are footer-complete
-  (`742,647/96,376` bytes) and passed exact `254` non-system entities, four
-  timelines, and required component schemas. Subject: `52` meshes, `143`
-  scalars, `67` events.
-- The finalized-copy negative control removed `4,096` bytes and was rejected
-  with `footer_manifest_present=false` plus the explicit footer error.
-- The `2400x1400` logical (`4800x2800` raster) screenshot was actually opened:
-  all eight independent link5/gripper source/instance/prototype/candidate
-  panels, the metric Dataframe, and INFO/WARN events were visible. Pixels were
-  not used as bit-exact evidence.
-- D340 remained exact across `33 -> 33` files with digest
-  `ce77a75e9ee8ba559e57bf443e4eee587352498bbb154f91f06bb81b4462c8ab`.
-  Existing/decomposition/tolerance parameter changes, collision writes, and
-  physics steps in D341 were all `0`.
+- Active pivot is cylinder grasp-track G0a (`r=0.017m`, `h=0.090m`). Cube,
+  G0b close/lift, PPO/RL, VLA, randomization, real hardware, and B200 are out
+  of scope.
+- q5 convention is repaired: URDF `q5=0` = CLOSED; sim OPEN is
+  `~1.541-1.571rad`. Frozen target/control uses `q5=1.5413rad`, `(7,11)mm`,
+  tangent sign `-1`, seed `33201`, HOME-seeded position-only IK.
+- D337 restored the open-jaw family (`2,560/2,629` raw-clear). The frozen target
+  had link5/gripper raw clearance `+4.2726/+11.1751mm`, but settle produced a
+  `38.861N` link5 step-0 impulse from cooked-hull inflation.
+- D338 attempt1 failed because global cooking statistics did not witness the
+  synchronous cook. D339 attempt2 repaired callback witnessing and proved two
+  independent cold cooks bit-exact, but fresh live fidelity failed on 13/128
+  pieces. D338 attempt1 and D339 attempt2 are immutable.
+- D340 captured one fixed-point candidate for each of those 13 pieces through
+  both live channels, but compared a transformed float64 stream with D339's
+  direct authored stream and stopped. D342 proved the intended direct authored
+  coordinate/hash contract `13/13`, but its overall registered gate remained
+  FAIL because it used an unregistered `1e-12m` minThickness comparator.
+- D341 installed the Rerun completion lifecycle. Spatial/temporal probes require
+  finalized footer, exact entity/timeline/component validation, embedded and
+  verified Blueprint, headless screenshot, and separate actual inspection.
+  Rerun is observability, never numerical/hash authority.
 
-## Active Case: G0a / D341 Complete, D342 Approval Pending
+## D343 Verified Result
 
-- 이번 case의 신규 변수 was exactly one measurement-only variable:
-  `[rerun_observability_completion_contract]`.
-- Final D341 authority:
-  `claudedocs/runtime_logs/grasp_track/g0a_d341/d341_rerun_observability_completion_summary.json`.
-- The automated summary intentionally remains
-  `AUTOMATED_PASS_MANUAL_INSPECTION_PENDING`; it was not overwritten. The
-  separate manual report and final summary close the completion gate.
-- D340's actual RRD sha256 is
-  `8eb3d6130330334b9d6b457468cd4bb59097114c693cb7caa2e33a8f5993fe47`.
-  The preserved D340 session contains a 63-character typo. Its PNG was
-  inspected; its RRD was generated but lacked a footer/scientific subject and
-  was not visually completion-certified. Do not reuse the old broad
-  “PNG/RRD inspected” wording.
-- Output: `claudedocs/runtime_logs/grasp_track/g0a_d341/`.
-- HEAD remains `2c8a25f689bd7c7f3927a956755c8642764d81`; worktree changes are
-  intentionally uncommitted. Commit/push only on explicit user request.
+- Sole new variable: measurement-only
+  `[usd_float_parameter_readback_contract]`; effective runs: `1`.
+- Preregistration passed `35/35` under standalone OpenUSD `0.24.5` with
+  `numpy==1.26.0`, `psutil==5.9.8`; Isaac Kit/GPU was not started.
+- All immutable D339 attempt2 parts passed: `128/128`, `32` predicates each,
+  total `4,096`, false `0`.
+- Direct Sdf spec/default/type/API authorship and composed Usd attr agreed.
+  Direct, composed, and D339-live unique bits were exactly `0x38d1b717`;
+  typed value was `9.999999747378752e-05m` for requested `0.0001m`.
+- Authored value/opinion passed `128/128`; resolve source was authored Default
+  `128/128`; schema fallback, blocked value, time-varying value, and nonzero
+  samples were each `0/128`; property stack was exactly one for all 128.
+- Direct and composed `metersPerUnit=1.0`; PhysX schema fallback is typed
+  `0.0010000000474974513m` (`0x3a83126f`), not the authored value.
+- D342 failure-subset anchors passed `13/13`. D342 remains
+  `D342_AUTHORED_COORDINATE_STREAM_HARNESS_TOLERANCE_DRIFT_FAIL_STOP`.
+- Adjacent negatives passed: `0x38d1b716` and `0x38d1b718` were rejected by
+  exact identity although frozen `1e-10m` accepted both. Exact bits are the
+  identity gate; `1e-10m` is compatibility diagnostic only.
+- Correct typed representation delta `2.526212488436659e-12m` passed frozen
+  `1e-10m` and reproduced D342 failure under executed `1e-12m`.
 
-## Next Concrete Action
+## Scope / Parameter / Artifact Audit
 
-Stop for user approval. Recommended physical next case is D342, a separately
-pre-registered `authored_geometry_frame_contract` repair:
+- 13→128 is coverage of the same scalar, not a new variable or parameter
+  change. It certifies the 115 parts a future attempt3 would retain.
+- Physical variables, existing parameter increases/changes, decomposition
+  changes, threshold relaxations, target/controller/solver changes:
+  `0/0/0/0/0/0`.
+- Collision asset writes, recooks, SimulationContext, physics steps, attempt3:
+  `0/0/false/0/absent`.
+- D339/D340/D342 remained exact at `18/33/13` files with digests
+  `0dae41fd3937a0a8aea18488019c74f097d32f7b8de916943ff31334e30464a1`,
+  `def37cc3c4d10cad8919ce71175211cc34fe2e8b567dbc107f13de151a92940d`,
+  `7c205d7f6222a2a091a70bb1cf784b339512efbfe8d50bbb3b5ee8c2fed35232`.
+- New Rerun was correctly omitted under the preregistered non-spatial,
+  non-temporal scalar/schema/bit exception. D342 RRD was context-only and not
+  reused as D343 completion evidence.
 
-1. Reuse and pin immutable D340 callback/candidate evidence; do not rerun D340.
-2. Compare the direct authored Vec3f point stream with the D339 manifest before
-   any coordinate transform.
-3. Use body-mapped coordinates only for registered numerical containment and
-   proximity gates.
-4. Only after that proof passes, separately authorize the still-absent attempt3
-   authoring and fresh validation. Collision-asset mutation requires explicit
-   user approval.
+## Active Case / Next Concrete Action
 
-No tolerance, decomposition, target, controller, solver, or physics change is
-justified. Do not run settle or 10-trial before representation certification.
+No further experiment or asset mutation is authorized. D343 stops after proof
+repair. Recommended next user choice is a separate D344 collision-asset case:
 
-Reserve only:
+1. Reuse immutable D340 candidate evidence and preserve D338 attempt1/D339
+   attempt2; create only forward-only `collision_asset/attempt3`.
+2. Author only the 13 registered fixed-point pieces; retain the other 115
+   pieces and all physical/decomposition/target/solver values unchanged.
+3. Apply the D342 direct-authored coordinate/hash contract and D343 exact typed
+   scalar contract before accepting the derivative.
+4. Run fresh live 128-piece/owner/enabled-enumeration and raw-vs-live fidelity
+   validation. No stale D339 live result may certify attempt3.
+5. Because D344 makes geometry/live-representation decisions, the D341 Rerun
+   lifecycle is mandatory at the decision point; D343's omission does not carry.
+6. Stop D344 before settle/10-trial/G0b/RL. Physics requires a later separately
+   approved case after fresh live PASS.
 
-1. Onset-metric hardening for the step-0 impulse row, reactive within a future
-   settle case rather than standalone.
-2. `r>17mm` grasp-depth redefinition; currently unnecessary.
-
-## Rerun Completion Contract
-
-- Required for verdicts involving geometry, pose/frames, collision/contact,
-  trajectory, or synchronized sensor time. Pure file/hash/schema audit may
-  omit it only with written justification.
-- Order is mandatory: exact version pins -> pre-log footer-enabled sink ->
-  actual scientific subject and named coordinate frames/full timeline -> flush
-  and finalize -> footer/exact entity/timeline/component validation -> fixed
-  embedded Blueprint plus verified RBL export -> headless decision screenshot
-  -> separate actual inspection report.
-- Non-empty, decodable, loadable, or screenshot-created does not mean
-  “inspected” or “complete”. Automated evidence must remain pending until the
-  separate manual gate closes.
-- Rerun is observability, not numerical authority. Original callback arrays and
-  canonical JSON/hashes decide bit equality; Float32 display geometry must not
-  be hashed back into a scientific gate.
-- Cook cases expose source/instance/prototype/candidate independently. Physics
-  cases log every executed step plus object/tool state, decision scalars, and
-  contact points/force arrows. Training trackers own optimizer-scale history;
-  Rerun owns sampled spatial rollout evidence.
-- Directly invoked `sim_scripts/*.py` files importing project packages must
-  bootstrap the resolved repo root before those imports.
+Reserve only: reactive step-0 onset-metric hardening inside a future settle.
+`r>17mm` grasp-depth redefinition remains unnecessary.
 
 ## Must Read First
 
 1. `AGENTS.md`
 2. `START_HERE.md`
-3. `claudedocs/DECISIONS.md` tail (D334-D341)
+3. `claudedocs/DECISIONS.md` tail (D340-D343)
 4. `claudedocs/EXPERIMENT_LEDGER.md` tail
-5. `claudedocs/session_20260713_grasp_g0a_d341_rerun_observability_contract_repair.md`
-6. `claudedocs/runtime_logs/grasp_track/g0a_d341/d341_rerun_observability_completion_summary.json`
-7. `claudedocs/runtime_logs/grasp_track/g0a_d341/d341_manual_visual_inspection.json`
-8. `claudedocs/HOWTO_viz_debug.md`
+5. `claudedocs/session_20260713_grasp_g0a_d343_usd_typed_float_readback_contract_repair.md`
+6. `claudedocs/runtime_logs/grasp_track/g0a_d343/d343_usd_typed_float_readback_summary.json`
+7. `claudedocs/runtime_logs/grasp_track/g0a_d343/d343_usd_typed_float_readback_evidence.json`
+8. `claudedocs/session_20260713_grasp_g0a_d342_authored_coordinate_stream_repair.md`
 9. `claudedocs/session_20260713_grasp_g0a_d340_fixed_point_live_authoring_repair.md`
-10. `claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_summary.json`
-11. `claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_postrun_root_cause_audit.json`
+10. `claudedocs/session_20260713_grasp_g0a_d341_rerun_observability_contract_repair.md`
 
 ## Durable Do-Not-Repeat Rules
 
-- `HANDOFF.md` and `TASKS.md` are stale. Memory is an index, not evidence.
-- q5 convention: `q5=0` = CLOSED; sim OPEN = `~1.541-1.571rad`.
-- BVH scalar on colliding meshes is not penetration depth; use certified
-  contact-level EPA. Distinguish raw mesh, mathematical hull, mirror cook, and
-  live cook.
-- Global zero cooking-stat deltas do not witness synchronous explicit cooks.
-  Callback-first independent cooks and canonical geometry equality are needed.
-- Callback-repeatable decomposition does not prove live shape binding/fidelity.
-  USD disabled inventory does not by itself prove runtime collider exclusion.
-- Bit-exact geometry hashes require the same coordinate/value stream. Prove
-  authored identity before mapping, then use explicit mapped-geometry gates.
-- D338 attempt1, D339 attempt2, and D340 evidence are immutable. No overwrite,
-  D340 rerun, attempt3, threshold relaxation, or parameter increase.
-- `JOINT_LIMITS` removal, B200/SSH/pull, `/half-clone`, hardware control, and
+- `HANDOFF.md`/`TASKS.md` are stale. q5 `0` means CLOSED.
+- Exact hashes require the same coordinate/value/type stream. Prove direct
+  authored identity before mapping; mapped geometry uses numeric/solid gates.
+- Runtime comparators must be mechanically bound to the freeze source. A tighter
+  hardcoded tolerance is a parameter change, not conservative validation.
+- USD floats must preserve requested value, type, authored opinion/default,
+  resolve source, typed readback, bits, and comparator source. Exact bits are
+  typed identity authority; tolerance is compatibility evidence only.
+- In core-only PXR, prove unregistered API authorship from direct Sdf metadata;
+  do not infer asset absence from composed schema-registry omission.
+- Rerun omission is limited to preregistered scalar/schema/bit audits. Geometry,
+  pose, contact, frame, trajectory, event-time, Kit, cooking, or physics restores
+  the full D341 lifecycle.
+- D338 attempt1, D339 attempt2, D340, D342, and D343 effective outputs are
+  immutable. No overwrite, silent rerun, tolerance relaxation, or promotion.
+- `JOINT_LIMITS` removal, hardware control, B200/SSH/pull, `/half-clone`, and
   unapproved commit/push remain forbidden.
+
+Actual HEAD remains `b1476d1acc681f392eb3478da5192f3b3898085e` (`rerun 강제 및
+셋팅 완료`). D342/D343 work is intentionally uncommitted. Commit/push only on
+an explicit user request.

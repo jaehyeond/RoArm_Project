@@ -1,0 +1,108 @@
+{
+  "artifact": "D342_POSTRUN_ROOT_CAUSE_AUDIT_V1",
+  "case": "g0a_d342",
+  "overall_registered_verdict_preserved": "D342_AUTHORED_COORDINATE_STREAM_CONTRACT_FAIL_STOP",
+  "root_cause_verdict": "D342_UNREGISTERED_MIN_THICKNESS_READBACK_TOLERANCE_TIGHTENING",
+  "source_artifacts": {
+    "d342_evidence": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d342/d342_authored_coordinate_stream_evidence.json",
+      "sha256": "d42c29288208414cdbe0addaa7932ab82e196fcaad27f939cef90333b6c07ac8"
+    },
+    "d342_automated_summary": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d342/d342_authored_coordinate_stream_automated_summary.json",
+      "sha256": "73c81b2fa64537c36114eca31081430dcfec012b5f68d7afb6345c8d50913c40"
+    },
+    "d339_hull_manifest": "claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2/d339_hull_manifest.json",
+    "d339_live_audit": "claudedocs/runtime_logs/grasp_track/g0a_d339/d339_live_collider_audit.json",
+    "d340_parameter_audit": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_parameter_freeze_audit.json"
+  },
+  "registered_result": {
+    "direct_pass_count": 0,
+    "numeric_pass_count": 13,
+    "legacy_mixed_stream_rejected_count": 13,
+    "in_memory_perturbation_pass": true,
+    "rerun_validation_pass": true,
+    "d339_d340_immutability_pass": true
+  },
+  "direct_stream_subevidence": {
+    "part_count": 13,
+    "raw_points_f32_bytes_exact_preregistered": "13/13",
+    "raw_points_f32_array_exact_cold1": "13/13",
+    "cold1_cold2_points_f32_exact": "13/13",
+    "direct_triangles_exact_cold1": "13/13",
+    "cold1_cold2_triangles_exact": "13/13",
+    "direct_vertex_stream_hash_matches_manifest": "13/13",
+    "direct_topology_hash_matches_manifest": "13/13",
+    "direct_geometry_hash_matches_manifest": "13/13",
+    "vertex_and_triangle_counts_match_manifest": "13/13",
+    "sole_false_direct_predicate": "min_thickness_frozen_1e_4m, 0/13"
+  },
+  "numeric_subevidence": {
+    "mapped_vs_d340_x0_assignment_max_abs_delta_m": {
+      "min": 2.7755575615628914e-17,
+      "max": 1.1796119636642288e-16
+    },
+    "mapped_vs_d340_x0_surface_delta_m_max": 0.0,
+    "candidate_containment_violation_m_max": 0.0,
+    "consensus_candidate_surface_delta_m_max": 0.0,
+    "x0_to_candidate_shrink_distance_m": {
+      "min": 0.00018849648098626825,
+      "max": 0.004894877325528784,
+      "role": "diagnostic, not an equality gate"
+    }
+  },
+  "min_thickness_contract_audit": {
+    "frozen_requested_value_m": 0.0001,
+    "immutable_d339_float_readback_m": 9.999999747378752e-05,
+    "usd_attribute_type": "float",
+    "float32_bits_hex": "0x38d1b717",
+    "authored_value_opinion": true,
+    "schema_default_m_not_used": 0.001,
+    "stage_meters_per_unit": 1.0,
+    "absolute_float32_representation_delta_m": 2.526212488436659e-12,
+    "registered_d339_d340_readback_tolerance_m": 1e-10,
+    "d342_harness_applied_tolerance_m": 1e-12,
+    "unregistered_tightening_factor": 100.0,
+    "delta_over_d342_applied_tolerance": 2.5262124884366592,
+    "delta_over_registered_tolerance": 0.02526212488436659,
+    "passes_registered_tolerance": true,
+    "passes_d342_unregistered_tolerance": false,
+    "actual_parameter_increased": false,
+    "actual_parameter_changed": false,
+    "decomposition_changed": false,
+    "classification": "validator tolerance binding defect, not collision asset or authored-coordinate mismatch"
+  },
+  "negative_control": {
+    "registered_delta_m": 1e-05,
+    "actual_float32_delta_m": 1.0000541806221008e-05,
+    "actual_delta_within_1pct": true,
+    "raw_hash_rejected": true,
+    "manifest_geometry_hash_rejected": true,
+    "numeric_1e_9m_gate_rejected": true,
+    "source_file_written": false
+  },
+  "execution_contract_findings": {
+    "effective_scientific_execution_count": 1,
+    "registered_scientific_fail_was_printed": true,
+    "observed_process_exit_code": 0,
+    "exit_code_authority": false,
+    "reason": "SimulationApp.close terminated the process after artifacts were flushed but before Python could return the computed failure code 2.",
+    "future_requirement": "Persist verdict before close and preserve the computed process exit status across Kit shutdown."
+  },
+  "scope_guards": {
+    "new_variable_count": 1,
+    "physical_variable_changes": [],
+    "existing_parameter_increases": [],
+    "existing_parameter_changes": [],
+    "collision_asset_writes": [],
+    "recook_requests": 0,
+    "simulation_context_created": false,
+    "controlled_physics_steps": 0,
+    "attempt3_absent": true,
+    "g0a_pass": false,
+    "ladder_promoted": false
+  },
+  "interpretation": "The registered D342 case remains FAIL_STOP. Its intended authored-coordinate-stream hypothesis is positively supported as immutable sub-evidence, but the overall pass cannot be retroactively granted because an unregistered 100x tolerance tightening was part of the executed validator.",
+  "evidence_schema_defect": "D342 persisted only the minThickness predicate boolean, not the raw typed value, type name, authored-opinion state, or float bits.",
+  "recommended_next_case": "A separately approved D343 proof-only USD typed-float/readback-contract repair should preserve the raw typed value/type/authored opinion/bits, compare against np.float32(0.0001) bits or the already frozen 1e-10m tolerance from one source, and reject an adjacent-float32 negative. It may omit a new Rerun with a written pure schema/hash justification. Attempt3 asset authoring remains blocked for a later separately approved D344; any Kit harness must also preserve nonzero failure exit status."
+}

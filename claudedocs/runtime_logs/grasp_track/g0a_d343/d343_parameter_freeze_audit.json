@@ -1,0 +1,106 @@
+{
+  "artifact": "D343_PARAMETER_FREEZE_AUDIT_V1",
+  "status": "PRE_RUNTIME_LOCKED",
+  "verdict": "NO_PHYSICAL_OR_EXISTING_PARAMETER_INCREASE_OR_CHANGE",
+  "new_variables": [
+    "usd_float_parameter_readback_contract"
+  ],
+  "variable_count": 1,
+  "measurement_only_variables": [
+    "usd_float_parameter_readback_contract"
+  ],
+  "subject_count": 128,
+  "d342_failure_subset_count": 13,
+  "coverage_expansion": "13 D342 failure-subset parts to all 128 parts carrying the same authored scalar",
+  "coverage_expansion_is_new_variable": false,
+  "coverage_expansion_is_parameter_change": false,
+  "coverage_rationale": "The future attempt3 would replace only 13 pieces and retain 115 pieces. Reading the same immutable scalar on all 128 can change D344 eligibility without adding a physical variable or changing a value.",
+  "physical_variables_changed": [],
+  "existing_parameter_increases": [],
+  "existing_parameter_changes": [],
+  "decomposition_parameter_changes": [],
+  "threshold_relaxations": [],
+  "target_controller_solver_changes": [],
+  "object_table_mass_changes": [],
+  "collision_asset_writes": [],
+  "comparison_basis": {
+    "d339_executed_decomposition_manifest": "claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2/d339_hull_manifest.json",
+    "d339_executed_decomposition_manifest_sha256": "d70a13edbb8500cde97ad23779811475e1c8bb2d0f6045b4183e704d2157bedd",
+    "d340_parameter_freeze_audit": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_parameter_freeze_audit.json",
+    "d340_parameter_freeze_audit_sha256": "9e7f5dae62f0aa4f3a0f7d936ab818bce54e9d896e555475c115bd6a3ed5526b",
+    "d342_parameter_freeze_audit": "claudedocs/runtime_logs/grasp_track/g0a_d342/d342_parameter_freeze_audit.json",
+    "d342_parameter_freeze_audit_sha256": "75ca035361737e036fd84d79216299b0d860d4e5027a5fc1fa0a8157a1c068e4"
+  },
+  "typed_value_contract": {
+    "requested_value_m": 0.0001,
+    "usd_storage_type": "float",
+    "expected_float32_value_m": 0.00009999999747378752,
+    "expected_float32_bits_uint32": 953267991,
+    "expected_float32_bits_hex": "0x38d1b717",
+    "expected_float32_little_endian_bytes_hex": "17b7d138",
+    "primary_identity_gate": "exact float32 bits",
+    "frozen_compatibility_tolerance_m": 1e-10,
+    "compatibility_tolerance_is_identity_authority": false,
+    "d342_executed_unregistered_tolerance_m_diagnostic_only": 1e-12,
+    "new_physical_parameter": false,
+    "threshold_relaxation": false
+  },
+  "frozen_parameters": {
+    "decomposition": {
+      "hull_vertex_limit": 64,
+      "max_convex_hulls": 64,
+      "voxel_resolution": 1000000,
+      "error_percentage": 1.0,
+      "min_thickness_m": 0.0001,
+      "shrink_wrap": true,
+      "authored_per_part_approximation": "convexHull"
+    },
+    "readback_tolerances": {
+      "prim_to_body_identity": 1e-9,
+      "stage_meters_per_unit": 1e-12,
+      "bounds": 1e-12,
+      "error_percentage": 1e-7,
+      "min_thickness_m": 1e-10
+    },
+    "target_and_control": {
+      "q5_open_rad": 1.5413,
+      "radial_offset_mm": 7.0,
+      "tangent_offset_mm": 11.0,
+      "tangent_sign": -1,
+      "seed": 33201,
+      "home_deg": [
+        0.0,
+        0.0,
+        90.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ik_mode": "position_only",
+      "ik_max_iterations": 120,
+      "ik_position_tolerance_mm": 1.0
+    }
+  },
+  "runtime_scope": {
+    "standalone_pxr_core_read_only": true,
+    "geometry_arrays_read": false,
+    "recook_requests": 0,
+    "simulation_context_created": false,
+    "controlled_physics_steps": 0,
+    "attempt3_authoring": false,
+    "settle_or_ten_trial": false,
+    "rerun_created": false
+  },
+  "checks": {
+    "single_measurement_variable": true,
+    "coverage_is_same_scalar_not_new_variable": true,
+    "existing_parameter_increase_count_zero": true,
+    "existing_parameter_change_count_zero": true,
+    "decomposition_parameter_change_count_zero": true,
+    "threshold_relaxation_count_zero": true,
+    "physical_variable_count_zero": true,
+    "collision_asset_write_count_zero": true,
+    "physics_step_count_zero": true
+  },
+  "pass": true
+}

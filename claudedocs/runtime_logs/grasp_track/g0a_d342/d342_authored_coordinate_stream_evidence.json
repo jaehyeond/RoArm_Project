@@ -1,0 +1,1473 @@
+{
+  "artifact": "D342_AUTHORED_COORDINATE_STREAM_EVIDENCE_V1",
+  "body_mapped_domain": "numeric containment/proximity only; exact hash is non-authoritative",
+  "case": "g0a_d342",
+  "direct_pass_count": 0,
+  "exact_hash_domain": "direct authored stream before any coordinate transform",
+  "in_memory_perturbation": {
+    "actual_delta_within_1pct_of_registered": true,
+    "actual_float32_delta_m": 1.0000541806221008e-05,
+    "axis": "x",
+    "body": "link5",
+    "kind": "in-memory-only outward +10um authored-coordinate perturbation",
+    "manifest_geometry_hash_rejected": true,
+    "name": "part_011",
+    "numeric_1e_9m_gate_rejected": true,
+    "pass": true,
+    "raw_points_f32_hash_changed": true,
+    "registered_delta_m": 1e-05,
+    "source_file_written": false,
+    "symmetric_surface_delta_m": 1.0000541806221008e-05,
+    "vertex_index": 7
+  },
+  "legacy_mixed_stream_rejected_count": 13,
+  "new_variables": [
+    "authored_geometry_frame_contract"
+  ],
+  "numeric_pass_count": 13,
+  "part_count": 13,
+  "parts": [
+    {
+      "authored_path": "/colliders/link5/d338_convex_parts/part_011",
+      "body": "link5",
+      "body_mapping": {
+        "identity_max_abs_delta": 2.220446049250313e-16,
+        "identity_tolerance_m": 1e-09,
+        "matrix_row_major": [
+          [
+            1.0000000000000002,
+            5.823351512373315e-22,
+            2.6469779601696886e-23,
+            3.970466940254533e-23
+          ],
+          [
+            0.0,
+            0.9999999999999999,
+            -6.938893903907228e-18,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.9999999999999998,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "rerun_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "rerun_rigid_representation_residual": 3.3306690738754696e-16,
+        "rerun_translation_m": [
+          3.970466940254533e-23,
+          0.0,
+          0.0
+        ]
+      },
+      "direct_checks": {
+        "cold1_cold2_points_f32_exact": true,
+        "cold1_cold2_triangles_exact": true,
+        "collision_enabled": true,
+        "convex_hull_approximation": true,
+        "direct_geometry_hash_matches_manifest": true,
+        "direct_points_f32_array_exact_cold1": true,
+        "direct_points_f32_bytes_exact_preregistered": true,
+        "direct_topology_hash_matches_manifest": true,
+        "direct_triangles_exact_cold1": true,
+        "direct_vertex_stream_hash_matches_manifest": true,
+        "face_counts_all_triangles": true,
+        "face_indices_shape_valid": true,
+        "hull_vertex_limit_frozen_64": true,
+        "min_thickness_frozen_1e_4m": false,
+        "triangle_count_matches_manifest": true,
+        "vertex_count_matches_manifest": true
+      },
+      "direct_hashes": {
+        "face_counts_i8_sha256": "1b45a83d7582f20c87433ebf295b5c1152425933191bd9ef0bc8a5a96a66a838",
+        "face_indices_i8_sha256": "a294348f01ff055dda21ef68124317054c5ece89025056e2dad42dfc6fd779f2",
+        "geometry_f8_i8_sha256": "d9557db11a27359c151539959c195ec6e7735c6135af7bcf352766c9a8132d45",
+        "points_f32_sha256": "6d3503827df302f182d59a141609177bc1f9ba72f585727865881694e987f211",
+        "topology_i8_sha256": "a294348f01ff055dda21ef68124317054c5ece89025056e2dad42dfc6fd779f2",
+        "vertex_stream_f8_sha256": "2797b605ba5316501c7a2edc748737bed90f67c7bc0caf0ccb415e5dd1f13b95"
+      },
+      "direct_pass": false,
+      "direct_stream_definition": "ordered authored VtArray<Gf.Vec3f> as contiguous little-endian <f4; all-3 face counts and ordered face indices as contiguous <i8; no transform/sort/Qhull",
+      "expected_manifest_hashes": {
+        "geometry_sha256": "d9557db11a27359c151539959c195ec6e7735c6135af7bcf352766c9a8132d45",
+        "topology_sha256": "a294348f01ff055dda21ef68124317054c5ece89025056e2dad42dfc6fd779f2",
+        "vertex_stream_sha256": "2797b605ba5316501c7a2edc748737bed90f67c7bc0caf0ccb415e5dd1f13b95"
+      },
+      "name": "part_011",
+      "negative_domain_control": {
+        "expected_match": false,
+        "kind": "legacy post-transform exact-hash path",
+        "legacy_mapped_geometry_hash_matches_manifest": false,
+        "numeric_frame_equivalence_still_passes": true,
+        "rejected": true
+      },
+      "numeric_checks": {
+        "candidate_contained_in_mapped_x0_le_1e_9m": true,
+        "candidate_strict_vertex_decrease": true,
+        "consensus_candidate_surface_le_1e_9m": true,
+        "d340_fixed_point_subevidence_pass": true,
+        "instance_prototype_consensus_exact": true,
+        "mapped_vs_d340_x0_assignment_delta_le_1e_9m": true,
+        "mapped_vs_d340_x0_surface_delta_le_1e_9m": true,
+        "prim_to_body_transform_identity_le_1e_9m": true,
+        "rerun_rigid_frame_representation_residual_le_1e_9": true
+      },
+      "numeric_metrics": {
+        "candidate_containment_violation_m": 0.0,
+        "candidate_vertex_count": 8,
+        "consensus_candidate_surface_delta_m": 0.0,
+        "initial_vertex_count": 9,
+        "mapped_vs_d340_x0_assignment_max_abs_delta_m": 9.71445146547012e-17,
+        "mapped_vs_d340_x0_surface_delta_m": 0.0,
+        "x0_to_candidate_shrink_distance_m": 0.0004712425855753472
+      },
+      "numeric_pass": true,
+      "part_idx": 0,
+      "pass": false
+    },
+    {
+      "authored_path": "/colliders/link5/d338_convex_parts/part_018",
+      "body": "link5",
+      "body_mapping": {
+        "identity_max_abs_delta": 2.220446049250313e-16,
+        "identity_tolerance_m": 1e-09,
+        "matrix_row_major": [
+          [
+            1.0000000000000002,
+            5.823351512373315e-22,
+            2.6469779601696886e-23,
+            3.970466940254533e-23
+          ],
+          [
+            0.0,
+            0.9999999999999999,
+            -6.938893903907228e-18,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.9999999999999998,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "rerun_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "rerun_rigid_representation_residual": 3.3306690738754696e-16,
+        "rerun_translation_m": [
+          3.970466940254533e-23,
+          0.0,
+          0.0
+        ]
+      },
+      "direct_checks": {
+        "cold1_cold2_points_f32_exact": true,
+        "cold1_cold2_triangles_exact": true,
+        "collision_enabled": true,
+        "convex_hull_approximation": true,
+        "direct_geometry_hash_matches_manifest": true,
+        "direct_points_f32_array_exact_cold1": true,
+        "direct_points_f32_bytes_exact_preregistered": true,
+        "direct_topology_hash_matches_manifest": true,
+        "direct_triangles_exact_cold1": true,
+        "direct_vertex_stream_hash_matches_manifest": true,
+        "face_counts_all_triangles": true,
+        "face_indices_shape_valid": true,
+        "hull_vertex_limit_frozen_64": true,
+        "min_thickness_frozen_1e_4m": false,
+        "triangle_count_matches_manifest": true,
+        "vertex_count_matches_manifest": true
+      },
+      "direct_hashes": {
+        "face_counts_i8_sha256": "f5092d6e23f7af3894e91e34604e51f0538d5fa57fac91c2d87f3ac441c6daaf",
+        "face_indices_i8_sha256": "1367f0c1e88de07b21634b6a8f5d3cc35d443b580917c84af116910123176520",
+        "geometry_f8_i8_sha256": "e2c0149ba1ff3cee9fe5d0037dce73fead886655c3a0b365ffa3fca87d73fb3e",
+        "points_f32_sha256": "7d24f4ee87b3344af9725bd8f640ed1d13b10fdee1c2247ec52247c779fe8d44",
+        "topology_i8_sha256": "1367f0c1e88de07b21634b6a8f5d3cc35d443b580917c84af116910123176520",
+        "vertex_stream_f8_sha256": "6b69a583ced647a931eb74348b4655c2e2062d61faa3ea3d950a734feee89b54"
+      },
+      "direct_pass": false,
+      "direct_stream_definition": "ordered authored VtArray<Gf.Vec3f> as contiguous little-endian <f4; all-3 face counts and ordered face indices as contiguous <i8; no transform/sort/Qhull",
+      "expected_manifest_hashes": {
+        "geometry_sha256": "e2c0149ba1ff3cee9fe5d0037dce73fead886655c3a0b365ffa3fca87d73fb3e",
+        "topology_sha256": "1367f0c1e88de07b21634b6a8f5d3cc35d443b580917c84af116910123176520",
+        "vertex_stream_sha256": "6b69a583ced647a931eb74348b4655c2e2062d61faa3ea3d950a734feee89b54"
+      },
+      "name": "part_018",
+      "negative_domain_control": {
+        "expected_match": false,
+        "kind": "legacy post-transform exact-hash path",
+        "legacy_mapped_geometry_hash_matches_manifest": false,
+        "numeric_frame_equivalence_still_passes": true,
+        "rejected": true
+      },
+      "numeric_checks": {
+        "candidate_contained_in_mapped_x0_le_1e_9m": true,
+        "candidate_strict_vertex_decrease": true,
+        "consensus_candidate_surface_le_1e_9m": true,
+        "d340_fixed_point_subevidence_pass": true,
+        "instance_prototype_consensus_exact": true,
+        "mapped_vs_d340_x0_assignment_delta_le_1e_9m": true,
+        "mapped_vs_d340_x0_surface_delta_le_1e_9m": true,
+        "prim_to_body_transform_identity_le_1e_9m": true,
+        "rerun_rigid_frame_representation_residual_le_1e_9": true
+      },
+      "numeric_metrics": {
+        "candidate_containment_violation_m": 0.0,
+        "candidate_vertex_count": 6,
+        "consensus_candidate_surface_delta_m": 0.0,
+        "initial_vertex_count": 7,
+        "mapped_vs_d340_x0_assignment_max_abs_delta_m": 9.71445146547012e-17,
+        "mapped_vs_d340_x0_surface_delta_m": 0.0,
+        "x0_to_candidate_shrink_distance_m": 0.00018849648098626825
+      },
+      "numeric_pass": true,
+      "part_idx": 1,
+      "pass": false
+    },
+    {
+      "authored_path": "/colliders/link5/d338_convex_parts/part_023",
+      "body": "link5",
+      "body_mapping": {
+        "identity_max_abs_delta": 2.220446049250313e-16,
+        "identity_tolerance_m": 1e-09,
+        "matrix_row_major": [
+          [
+            1.0000000000000002,
+            5.823351512373315e-22,
+            2.6469779601696886e-23,
+            3.970466940254533e-23
+          ],
+          [
+            0.0,
+            0.9999999999999999,
+            -6.938893903907228e-18,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.9999999999999998,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "rerun_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "rerun_rigid_representation_residual": 3.3306690738754696e-16,
+        "rerun_translation_m": [
+          3.970466940254533e-23,
+          0.0,
+          0.0
+        ]
+      },
+      "direct_checks": {
+        "cold1_cold2_points_f32_exact": true,
+        "cold1_cold2_triangles_exact": true,
+        "collision_enabled": true,
+        "convex_hull_approximation": true,
+        "direct_geometry_hash_matches_manifest": true,
+        "direct_points_f32_array_exact_cold1": true,
+        "direct_points_f32_bytes_exact_preregistered": true,
+        "direct_topology_hash_matches_manifest": true,
+        "direct_triangles_exact_cold1": true,
+        "direct_vertex_stream_hash_matches_manifest": true,
+        "face_counts_all_triangles": true,
+        "face_indices_shape_valid": true,
+        "hull_vertex_limit_frozen_64": true,
+        "min_thickness_frozen_1e_4m": false,
+        "triangle_count_matches_manifest": true,
+        "vertex_count_matches_manifest": true
+      },
+      "direct_hashes": {
+        "face_counts_i8_sha256": "a71073dd0716f2767a33e0be3c26309d95186ea0a857a49e15b960f21d92f8c1",
+        "face_indices_i8_sha256": "b22954c7d926b3cba514b54c448e62a1f40698e0dff739fbc171dae39f8d39ed",
+        "geometry_f8_i8_sha256": "7dbcf07dbd92ac5cad782f19eef03c3ea1ac32f969b9dc4e29820d6bcb58f376",
+        "points_f32_sha256": "008f964510343869104803f8b414897c491092365472d5090adf78e0aae9fa0f",
+        "topology_i8_sha256": "b22954c7d926b3cba514b54c448e62a1f40698e0dff739fbc171dae39f8d39ed",
+        "vertex_stream_f8_sha256": "a783c97afd57c98bd53754d0e42ea28c3aabbd37779effcd99ea8c2d7ffca442"
+      },
+      "direct_pass": false,
+      "direct_stream_definition": "ordered authored VtArray<Gf.Vec3f> as contiguous little-endian <f4; all-3 face counts and ordered face indices as contiguous <i8; no transform/sort/Qhull",
+      "expected_manifest_hashes": {
+        "geometry_sha256": "7dbcf07dbd92ac5cad782f19eef03c3ea1ac32f969b9dc4e29820d6bcb58f376",
+        "topology_sha256": "b22954c7d926b3cba514b54c448e62a1f40698e0dff739fbc171dae39f8d39ed",
+        "vertex_stream_sha256": "a783c97afd57c98bd53754d0e42ea28c3aabbd37779effcd99ea8c2d7ffca442"
+      },
+      "name": "part_023",
+      "negative_domain_control": {
+        "expected_match": false,
+        "kind": "legacy post-transform exact-hash path",
+        "legacy_mapped_geometry_hash_matches_manifest": false,
+        "numeric_frame_equivalence_still_passes": true,
+        "rejected": true
+      },
+      "numeric_checks": {
+        "candidate_contained_in_mapped_x0_le_1e_9m": true,
+        "candidate_strict_vertex_decrease": true,
+        "consensus_candidate_surface_le_1e_9m": true,
+        "d340_fixed_point_subevidence_pass": true,
+        "instance_prototype_consensus_exact": true,
+        "mapped_vs_d340_x0_assignment_delta_le_1e_9m": true,
+        "mapped_vs_d340_x0_surface_delta_le_1e_9m": true,
+        "prim_to_body_transform_identity_le_1e_9m": true,
+        "rerun_rigid_frame_representation_residual_le_1e_9": true
+      },
+      "numeric_metrics": {
+        "candidate_containment_violation_m": 0.0,
+        "candidate_vertex_count": 7,
+        "consensus_candidate_surface_delta_m": 0.0,
+        "initial_vertex_count": 8,
+        "mapped_vs_d340_x0_assignment_max_abs_delta_m": 2.7755575615628914e-17,
+        "mapped_vs_d340_x0_surface_delta_m": 0.0,
+        "x0_to_candidate_shrink_distance_m": 0.00047011812361981285
+      },
+      "numeric_pass": true,
+      "part_idx": 2,
+      "pass": false
+    },
+    {
+      "authored_path": "/colliders/link5/d338_convex_parts/part_024",
+      "body": "link5",
+      "body_mapping": {
+        "identity_max_abs_delta": 2.220446049250313e-16,
+        "identity_tolerance_m": 1e-09,
+        "matrix_row_major": [
+          [
+            1.0000000000000002,
+            5.823351512373315e-22,
+            2.6469779601696886e-23,
+            3.970466940254533e-23
+          ],
+          [
+            0.0,
+            0.9999999999999999,
+            -6.938893903907228e-18,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.9999999999999998,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "rerun_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "rerun_rigid_representation_residual": 3.3306690738754696e-16,
+        "rerun_translation_m": [
+          3.970466940254533e-23,
+          0.0,
+          0.0
+        ]
+      },
+      "direct_checks": {
+        "cold1_cold2_points_f32_exact": true,
+        "cold1_cold2_triangles_exact": true,
+        "collision_enabled": true,
+        "convex_hull_approximation": true,
+        "direct_geometry_hash_matches_manifest": true,
+        "direct_points_f32_array_exact_cold1": true,
+        "direct_points_f32_bytes_exact_preregistered": true,
+        "direct_topology_hash_matches_manifest": true,
+        "direct_triangles_exact_cold1": true,
+        "direct_vertex_stream_hash_matches_manifest": true,
+        "face_counts_all_triangles": true,
+        "face_indices_shape_valid": true,
+        "hull_vertex_limit_frozen_64": true,
+        "min_thickness_frozen_1e_4m": false,
+        "triangle_count_matches_manifest": true,
+        "vertex_count_matches_manifest": true
+      },
+      "direct_hashes": {
+        "face_counts_i8_sha256": "a71073dd0716f2767a33e0be3c26309d95186ea0a857a49e15b960f21d92f8c1",
+        "face_indices_i8_sha256": "184826866f5426073de2538019900e5fbf4aef45c3e0a4a31d3c07baf24986e2",
+        "geometry_f8_i8_sha256": "89c24ebda3051c9deb1b754fd5002bf26c5921031640fa0dada2d2b8c251bff5",
+        "points_f32_sha256": "c2d017cd77284d4ebfafc1666c9e54813d17bfdf0a66728767ae853df1930951",
+        "topology_i8_sha256": "184826866f5426073de2538019900e5fbf4aef45c3e0a4a31d3c07baf24986e2",
+        "vertex_stream_f8_sha256": "7b4b6e9c864770778663510517a4a8c693fbffd11117c6900c0d55c92d17cc0a"
+      },
+      "direct_pass": false,
+      "direct_stream_definition": "ordered authored VtArray<Gf.Vec3f> as contiguous little-endian <f4; all-3 face counts and ordered face indices as contiguous <i8; no transform/sort/Qhull",
+      "expected_manifest_hashes": {
+        "geometry_sha256": "89c24ebda3051c9deb1b754fd5002bf26c5921031640fa0dada2d2b8c251bff5",
+        "topology_sha256": "184826866f5426073de2538019900e5fbf4aef45c3e0a4a31d3c07baf24986e2",
+        "vertex_stream_sha256": "7b4b6e9c864770778663510517a4a8c693fbffd11117c6900c0d55c92d17cc0a"
+      },
+      "name": "part_024",
+      "negative_domain_control": {
+        "expected_match": false,
+        "kind": "legacy post-transform exact-hash path",
+        "legacy_mapped_geometry_hash_matches_manifest": false,
+        "numeric_frame_equivalence_still_passes": true,
+        "rejected": true
+      },
+      "numeric_checks": {
+        "candidate_contained_in_mapped_x0_le_1e_9m": true,
+        "candidate_strict_vertex_decrease": true,
+        "consensus_candidate_surface_le_1e_9m": true,
+        "d340_fixed_point_subevidence_pass": true,
+        "instance_prototype_consensus_exact": true,
+        "mapped_vs_d340_x0_assignment_delta_le_1e_9m": true,
+        "mapped_vs_d340_x0_surface_delta_le_1e_9m": true,
+        "prim_to_body_transform_identity_le_1e_9m": true,
+        "rerun_rigid_frame_representation_residual_le_1e_9": true
+      },
+      "numeric_metrics": {
+        "candidate_containment_violation_m": 0.0,
+        "candidate_vertex_count": 7,
+        "consensus_candidate_surface_delta_m": 0.0,
+        "initial_vertex_count": 8,
+        "mapped_vs_d340_x0_assignment_max_abs_delta_m": 1.0755285551056204e-16,
+        "mapped_vs_d340_x0_surface_delta_m": 0.0,
+        "x0_to_candidate_shrink_distance_m": 0.0006872227001880133
+      },
+      "numeric_pass": true,
+      "part_idx": 3,
+      "pass": false
+    },
+    {
+      "authored_path": "/colliders/link5/d338_convex_parts/part_040",
+      "body": "link5",
+      "body_mapping": {
+        "identity_max_abs_delta": 2.220446049250313e-16,
+        "identity_tolerance_m": 1e-09,
+        "matrix_row_major": [
+          [
+            1.0000000000000002,
+            5.823351512373315e-22,
+            2.6469779601696886e-23,
+            3.970466940254533e-23
+          ],
+          [
+            0.0,
+            0.9999999999999999,
+            -6.938893903907228e-18,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.9999999999999998,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "rerun_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "rerun_rigid_representation_residual": 3.3306690738754696e-16,
+        "rerun_translation_m": [
+          3.970466940254533e-23,
+          0.0,
+          0.0
+        ]
+      },
+      "direct_checks": {
+        "cold1_cold2_points_f32_exact": true,
+        "cold1_cold2_triangles_exact": true,
+        "collision_enabled": true,
+        "convex_hull_approximation": true,
+        "direct_geometry_hash_matches_manifest": true,
+        "direct_points_f32_array_exact_cold1": true,
+        "direct_points_f32_bytes_exact_preregistered": true,
+        "direct_topology_hash_matches_manifest": true,
+        "direct_triangles_exact_cold1": true,
+        "direct_vertex_stream_hash_matches_manifest": true,
+        "face_counts_all_triangles": true,
+        "face_indices_shape_valid": true,
+        "hull_vertex_limit_frozen_64": true,
+        "min_thickness_frozen_1e_4m": false,
+        "triangle_count_matches_manifest": true,
+        "vertex_count_matches_manifest": true
+      },
+      "direct_hashes": {
+        "face_counts_i8_sha256": "32acaa8edd928afb7f01da6f2056ad48fe273193a591fea8c3dc64cc5a41362a",
+        "face_indices_i8_sha256": "4c343996282e585cd00c320a5e015a998ecacbc0681fd3402c3086b2a784343d",
+        "geometry_f8_i8_sha256": "17093edb3d41534cc201b482a4d4462205722adb398ca75d52349e2558152180",
+        "points_f32_sha256": "de74d07954ff042f8ea725bd154ea00c8b3e456171a769d670674a25f2d3f576",
+        "topology_i8_sha256": "4c343996282e585cd00c320a5e015a998ecacbc0681fd3402c3086b2a784343d",
+        "vertex_stream_f8_sha256": "5237779d692222644cfcba56e1ca0c8007a3a4c6e52ca6db88b2addce9a9e22c"
+      },
+      "direct_pass": false,
+      "direct_stream_definition": "ordered authored VtArray<Gf.Vec3f> as contiguous little-endian <f4; all-3 face counts and ordered face indices as contiguous <i8; no transform/sort/Qhull",
+      "expected_manifest_hashes": {
+        "geometry_sha256": "17093edb3d41534cc201b482a4d4462205722adb398ca75d52349e2558152180",
+        "topology_sha256": "4c343996282e585cd00c320a5e015a998ecacbc0681fd3402c3086b2a784343d",
+        "vertex_stream_sha256": "5237779d692222644cfcba56e1ca0c8007a3a4c6e52ca6db88b2addce9a9e22c"
+      },
+      "name": "part_040",
+      "negative_domain_control": {
+        "expected_match": false,
+        "kind": "legacy post-transform exact-hash path",
+        "legacy_mapped_geometry_hash_matches_manifest": false,
+        "numeric_frame_equivalence_still_passes": true,
+        "rejected": true
+      },
+      "numeric_checks": {
+        "candidate_contained_in_mapped_x0_le_1e_9m": true,
+        "candidate_strict_vertex_decrease": true,
+        "consensus_candidate_surface_le_1e_9m": true,
+        "d340_fixed_point_subevidence_pass": true,
+        "instance_prototype_consensus_exact": true,
+        "mapped_vs_d340_x0_assignment_delta_le_1e_9m": true,
+        "mapped_vs_d340_x0_surface_delta_le_1e_9m": true,
+        "prim_to_body_transform_identity_le_1e_9m": true,
+        "rerun_rigid_frame_representation_residual_le_1e_9": true
+      },
+      "numeric_metrics": {
+        "candidate_containment_violation_m": 0.0,
+        "candidate_vertex_count": 9,
+        "consensus_candidate_surface_delta_m": 0.0,
+        "initial_vertex_count": 10,
+        "mapped_vs_d340_x0_assignment_max_abs_delta_m": 1.0755285551056204e-16,
+        "mapped_vs_d340_x0_surface_delta_m": 0.0,
+        "x0_to_candidate_shrink_distance_m": 0.000642557376404691
+      },
+      "numeric_pass": true,
+      "part_idx": 4,
+      "pass": false
+    },
+    {
+      "authored_path": "/colliders/link5/d338_convex_parts/part_041",
+      "body": "link5",
+      "body_mapping": {
+        "identity_max_abs_delta": 2.220446049250313e-16,
+        "identity_tolerance_m": 1e-09,
+        "matrix_row_major": [
+          [
+            1.0000000000000002,
+            5.823351512373315e-22,
+            2.6469779601696886e-23,
+            3.970466940254533e-23
+          ],
+          [
+            0.0,
+            0.9999999999999999,
+            -6.938893903907228e-18,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.9999999999999998,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "rerun_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "rerun_rigid_representation_residual": 3.3306690738754696e-16,
+        "rerun_translation_m": [
+          3.970466940254533e-23,
+          0.0,
+          0.0
+        ]
+      },
+      "direct_checks": {
+        "cold1_cold2_points_f32_exact": true,
+        "cold1_cold2_triangles_exact": true,
+        "collision_enabled": true,
+        "convex_hull_approximation": true,
+        "direct_geometry_hash_matches_manifest": true,
+        "direct_points_f32_array_exact_cold1": true,
+        "direct_points_f32_bytes_exact_preregistered": true,
+        "direct_topology_hash_matches_manifest": true,
+        "direct_triangles_exact_cold1": true,
+        "direct_vertex_stream_hash_matches_manifest": true,
+        "face_counts_all_triangles": true,
+        "face_indices_shape_valid": true,
+        "hull_vertex_limit_frozen_64": true,
+        "min_thickness_frozen_1e_4m": false,
+        "triangle_count_matches_manifest": true,
+        "vertex_count_matches_manifest": true
+      },
+      "direct_hashes": {
+        "face_counts_i8_sha256": "d775222fcc8101da8cc00246b023631c1773631ed9f15c319197c016e6f21008",
+        "face_indices_i8_sha256": "504b14d335576edfe04669e3af951f953d473ec0d87241660ddac8af44a412ce",
+        "geometry_f8_i8_sha256": "54647d08735ee4887c6e29fcb00ba2f022115e2a66bee1f94ce7efd1834943a4",
+        "points_f32_sha256": "09004ea4a01ff16c5cbccc4259d3d701eb7c4d266f3750d616eab2dd80a7adf1",
+        "topology_i8_sha256": "504b14d335576edfe04669e3af951f953d473ec0d87241660ddac8af44a412ce",
+        "vertex_stream_f8_sha256": "a39484074c7ffbc9625b4b02d075e79c06bbf4070d49bc2418d91dd96d172405"
+      },
+      "direct_pass": false,
+      "direct_stream_definition": "ordered authored VtArray<Gf.Vec3f> as contiguous little-endian <f4; all-3 face counts and ordered face indices as contiguous <i8; no transform/sort/Qhull",
+      "expected_manifest_hashes": {
+        "geometry_sha256": "54647d08735ee4887c6e29fcb00ba2f022115e2a66bee1f94ce7efd1834943a4",
+        "topology_sha256": "504b14d335576edfe04669e3af951f953d473ec0d87241660ddac8af44a412ce",
+        "vertex_stream_sha256": "a39484074c7ffbc9625b4b02d075e79c06bbf4070d49bc2418d91dd96d172405"
+      },
+      "name": "part_041",
+      "negative_domain_control": {
+        "expected_match": false,
+        "kind": "legacy post-transform exact-hash path",
+        "legacy_mapped_geometry_hash_matches_manifest": false,
+        "numeric_frame_equivalence_still_passes": true,
+        "rejected": true
+      },
+      "numeric_checks": {
+        "candidate_contained_in_mapped_x0_le_1e_9m": true,
+        "candidate_strict_vertex_decrease": true,
+        "consensus_candidate_surface_le_1e_9m": true,
+        "d340_fixed_point_subevidence_pass": true,
+        "instance_prototype_consensus_exact": true,
+        "mapped_vs_d340_x0_assignment_delta_le_1e_9m": true,
+        "mapped_vs_d340_x0_surface_delta_le_1e_9m": true,
+        "prim_to_body_transform_identity_le_1e_9m": true,
+        "rerun_rigid_frame_representation_residual_le_1e_9": true
+      },
+      "numeric_metrics": {
+        "candidate_containment_violation_m": 0.0,
+        "candidate_vertex_count": 12,
+        "consensus_candidate_surface_delta_m": 0.0,
+        "initial_vertex_count": 14,
+        "mapped_vs_d340_x0_assignment_max_abs_delta_m": 1.1123914289701275e-16,
+        "mapped_vs_d340_x0_surface_delta_m": 0.0,
+        "x0_to_candidate_shrink_distance_m": 0.00024143546000308027
+      },
+      "numeric_pass": true,
+      "part_idx": 5,
+      "pass": false
+    },
+    {
+      "authored_path": "/colliders/link5/d338_convex_parts/part_045",
+      "body": "link5",
+      "body_mapping": {
+        "identity_max_abs_delta": 2.220446049250313e-16,
+        "identity_tolerance_m": 1e-09,
+        "matrix_row_major": [
+          [
+            1.0000000000000002,
+            5.823351512373315e-22,
+            2.6469779601696886e-23,
+            3.970466940254533e-23
+          ],
+          [
+            0.0,
+            0.9999999999999999,
+            -6.938893903907228e-18,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.9999999999999998,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "rerun_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "rerun_rigid_representation_residual": 3.3306690738754696e-16,
+        "rerun_translation_m": [
+          3.970466940254533e-23,
+          0.0,
+          0.0
+        ]
+      },
+      "direct_checks": {
+        "cold1_cold2_points_f32_exact": true,
+        "cold1_cold2_triangles_exact": true,
+        "collision_enabled": true,
+        "convex_hull_approximation": true,
+        "direct_geometry_hash_matches_manifest": true,
+        "direct_points_f32_array_exact_cold1": true,
+        "direct_points_f32_bytes_exact_preregistered": true,
+        "direct_topology_hash_matches_manifest": true,
+        "direct_triangles_exact_cold1": true,
+        "direct_vertex_stream_hash_matches_manifest": true,
+        "face_counts_all_triangles": true,
+        "face_indices_shape_valid": true,
+        "hull_vertex_limit_frozen_64": true,
+        "min_thickness_frozen_1e_4m": false,
+        "triangle_count_matches_manifest": true,
+        "vertex_count_matches_manifest": true
+      },
+      "direct_hashes": {
+        "face_counts_i8_sha256": "a71073dd0716f2767a33e0be3c26309d95186ea0a857a49e15b960f21d92f8c1",
+        "face_indices_i8_sha256": "4a2e51f2386b6d1d74f1ac4c47f813123c29f460f63ee89252c6c68085f1f109",
+        "geometry_f8_i8_sha256": "3d6ea25ee5ab70a4c05d6ac2e67a5d3df693874a4107f56845a58c65c0617bb2",
+        "points_f32_sha256": "60879ef667ca15d659dbdcdacaa5f508ca0193ddcec5efadde5b517036ac6e6d",
+        "topology_i8_sha256": "4a2e51f2386b6d1d74f1ac4c47f813123c29f460f63ee89252c6c68085f1f109",
+        "vertex_stream_f8_sha256": "93417df2e7a18e14df0ac9a5e25c2541c485def2ffb018b40dcb240331646849"
+      },
+      "direct_pass": false,
+      "direct_stream_definition": "ordered authored VtArray<Gf.Vec3f> as contiguous little-endian <f4; all-3 face counts and ordered face indices as contiguous <i8; no transform/sort/Qhull",
+      "expected_manifest_hashes": {
+        "geometry_sha256": "3d6ea25ee5ab70a4c05d6ac2e67a5d3df693874a4107f56845a58c65c0617bb2",
+        "topology_sha256": "4a2e51f2386b6d1d74f1ac4c47f813123c29f460f63ee89252c6c68085f1f109",
+        "vertex_stream_sha256": "93417df2e7a18e14df0ac9a5e25c2541c485def2ffb018b40dcb240331646849"
+      },
+      "name": "part_045",
+      "negative_domain_control": {
+        "expected_match": false,
+        "kind": "legacy post-transform exact-hash path",
+        "legacy_mapped_geometry_hash_matches_manifest": false,
+        "numeric_frame_equivalence_still_passes": true,
+        "rejected": true
+      },
+      "numeric_checks": {
+        "candidate_contained_in_mapped_x0_le_1e_9m": true,
+        "candidate_strict_vertex_decrease": true,
+        "consensus_candidate_surface_le_1e_9m": true,
+        "d340_fixed_point_subevidence_pass": true,
+        "instance_prototype_consensus_exact": true,
+        "mapped_vs_d340_x0_assignment_delta_le_1e_9m": true,
+        "mapped_vs_d340_x0_surface_delta_le_1e_9m": true,
+        "prim_to_body_transform_identity_le_1e_9m": true,
+        "rerun_rigid_frame_representation_residual_le_1e_9": true
+      },
+      "numeric_metrics": {
+        "candidate_containment_violation_m": 0.0,
+        "candidate_vertex_count": 7,
+        "consensus_candidate_surface_delta_m": 0.0,
+        "initial_vertex_count": 8,
+        "mapped_vs_d340_x0_assignment_max_abs_delta_m": 1.0755285551056204e-16,
+        "mapped_vs_d340_x0_surface_delta_m": 0.0,
+        "x0_to_candidate_shrink_distance_m": 0.004894877325528784
+      },
+      "numeric_pass": true,
+      "part_idx": 6,
+      "pass": false
+    },
+    {
+      "authored_path": "/colliders/link5/d338_convex_parts/part_054",
+      "body": "link5",
+      "body_mapping": {
+        "identity_max_abs_delta": 2.220446049250313e-16,
+        "identity_tolerance_m": 1e-09,
+        "matrix_row_major": [
+          [
+            1.0000000000000002,
+            5.823351512373315e-22,
+            2.6469779601696886e-23,
+            3.970466940254533e-23
+          ],
+          [
+            0.0,
+            0.9999999999999999,
+            -6.938893903907228e-18,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.9999999999999998,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "rerun_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "rerun_rigid_representation_residual": 3.3306690738754696e-16,
+        "rerun_translation_m": [
+          3.970466940254533e-23,
+          0.0,
+          0.0
+        ]
+      },
+      "direct_checks": {
+        "cold1_cold2_points_f32_exact": true,
+        "cold1_cold2_triangles_exact": true,
+        "collision_enabled": true,
+        "convex_hull_approximation": true,
+        "direct_geometry_hash_matches_manifest": true,
+        "direct_points_f32_array_exact_cold1": true,
+        "direct_points_f32_bytes_exact_preregistered": true,
+        "direct_topology_hash_matches_manifest": true,
+        "direct_triangles_exact_cold1": true,
+        "direct_vertex_stream_hash_matches_manifest": true,
+        "face_counts_all_triangles": true,
+        "face_indices_shape_valid": true,
+        "hull_vertex_limit_frozen_64": true,
+        "min_thickness_frozen_1e_4m": false,
+        "triangle_count_matches_manifest": true,
+        "vertex_count_matches_manifest": true
+      },
+      "direct_hashes": {
+        "face_counts_i8_sha256": "1b45a83d7582f20c87433ebf295b5c1152425933191bd9ef0bc8a5a96a66a838",
+        "face_indices_i8_sha256": "cc507f97885cf1b887ec79e0bd3ddd40382811d7a81553e10fc1dfb851987d01",
+        "geometry_f8_i8_sha256": "ab082432d2312bfec49b770a5f805c167b576a50c1e18ff0412c24a973e822e7",
+        "points_f32_sha256": "fcee176aef7693fc5062045803a09947a5d1250cd9d2db3f71450030cb01324d",
+        "topology_i8_sha256": "cc507f97885cf1b887ec79e0bd3ddd40382811d7a81553e10fc1dfb851987d01",
+        "vertex_stream_f8_sha256": "ff5fbd7389f32e0086be318d648a6c46c238c9ccae863f983b159e9c9b5c492f"
+      },
+      "direct_pass": false,
+      "direct_stream_definition": "ordered authored VtArray<Gf.Vec3f> as contiguous little-endian <f4; all-3 face counts and ordered face indices as contiguous <i8; no transform/sort/Qhull",
+      "expected_manifest_hashes": {
+        "geometry_sha256": "ab082432d2312bfec49b770a5f805c167b576a50c1e18ff0412c24a973e822e7",
+        "topology_sha256": "cc507f97885cf1b887ec79e0bd3ddd40382811d7a81553e10fc1dfb851987d01",
+        "vertex_stream_sha256": "ff5fbd7389f32e0086be318d648a6c46c238c9ccae863f983b159e9c9b5c492f"
+      },
+      "name": "part_054",
+      "negative_domain_control": {
+        "expected_match": false,
+        "kind": "legacy post-transform exact-hash path",
+        "legacy_mapped_geometry_hash_matches_manifest": false,
+        "numeric_frame_equivalence_still_passes": true,
+        "rejected": true
+      },
+      "numeric_checks": {
+        "candidate_contained_in_mapped_x0_le_1e_9m": true,
+        "candidate_strict_vertex_decrease": true,
+        "consensus_candidate_surface_le_1e_9m": true,
+        "d340_fixed_point_subevidence_pass": true,
+        "instance_prototype_consensus_exact": true,
+        "mapped_vs_d340_x0_assignment_delta_le_1e_9m": true,
+        "mapped_vs_d340_x0_surface_delta_le_1e_9m": true,
+        "prim_to_body_transform_identity_le_1e_9m": true,
+        "rerun_rigid_frame_representation_residual_le_1e_9": true
+      },
+      "numeric_metrics": {
+        "candidate_containment_violation_m": 0.0,
+        "candidate_vertex_count": 8,
+        "consensus_candidate_surface_delta_m": 0.0,
+        "initial_vertex_count": 9,
+        "mapped_vs_d340_x0_assignment_max_abs_delta_m": 1.0928757898653885e-16,
+        "mapped_vs_d340_x0_surface_delta_m": 0.0,
+        "x0_to_candidate_shrink_distance_m": 0.00041082384540817597
+      },
+      "numeric_pass": true,
+      "part_idx": 7,
+      "pass": false
+    },
+    {
+      "authored_path": "/colliders/gripper_link/d338_convex_parts/part_000",
+      "body": "gripper_link",
+      "body_mapping": {
+        "identity_max_abs_delta": 1.1102230246251565e-16,
+        "identity_tolerance_m": 1e-09,
+        "matrix_row_major": [
+          [
+            0.9999999999999999,
+            0.0,
+            0.0,
+            1.1102230246251565e-16
+          ],
+          [
+            -2.117582368135751e-22,
+            1.0,
+            6.352747104407253e-22,
+            0.0
+          ],
+          [
+            -1.3877787807814457e-17,
+            0.0,
+            1.0,
+            1.3877787807814457e-17
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "rerun_quaternion_xyzw": [
+          0.0,
+          6.93889390390723e-18,
+          -1.0587911840678757e-22,
+          1.0
+        ],
+        "rerun_rigid_representation_residual": 1.1102230246251565e-16,
+        "rerun_translation_m": [
+          1.1102230246251565e-16,
+          0.0,
+          1.3877787807814457e-17
+        ]
+      },
+      "direct_checks": {
+        "cold1_cold2_points_f32_exact": true,
+        "cold1_cold2_triangles_exact": true,
+        "collision_enabled": true,
+        "convex_hull_approximation": true,
+        "direct_geometry_hash_matches_manifest": true,
+        "direct_points_f32_array_exact_cold1": true,
+        "direct_points_f32_bytes_exact_preregistered": true,
+        "direct_topology_hash_matches_manifest": true,
+        "direct_triangles_exact_cold1": true,
+        "direct_vertex_stream_hash_matches_manifest": true,
+        "face_counts_all_triangles": true,
+        "face_indices_shape_valid": true,
+        "hull_vertex_limit_frozen_64": true,
+        "min_thickness_frozen_1e_4m": false,
+        "triangle_count_matches_manifest": true,
+        "vertex_count_matches_manifest": true
+      },
+      "direct_hashes": {
+        "face_counts_i8_sha256": "f5092d6e23f7af3894e91e34604e51f0538d5fa57fac91c2d87f3ac441c6daaf",
+        "face_indices_i8_sha256": "b62d7bb3b773d2c2977d510316de74256fad6a26c12f6a142415eaaf87724c56",
+        "geometry_f8_i8_sha256": "381dfc69c35e0dd5535924c5ca1ef9b9d4d532ab84bb0db31aa46b430f9efcee",
+        "points_f32_sha256": "944dfe3e1a5fd8fdd35cd97b25ae05abc1c266015b37d915be98c4625ce8dcaa",
+        "topology_i8_sha256": "b62d7bb3b773d2c2977d510316de74256fad6a26c12f6a142415eaaf87724c56",
+        "vertex_stream_f8_sha256": "fbffd7242d287c06ac8f6899493ca124db4b4b73fde7f580ffd61619d5fffff9"
+      },
+      "direct_pass": false,
+      "direct_stream_definition": "ordered authored VtArray<Gf.Vec3f> as contiguous little-endian <f4; all-3 face counts and ordered face indices as contiguous <i8; no transform/sort/Qhull",
+      "expected_manifest_hashes": {
+        "geometry_sha256": "381dfc69c35e0dd5535924c5ca1ef9b9d4d532ab84bb0db31aa46b430f9efcee",
+        "topology_sha256": "b62d7bb3b773d2c2977d510316de74256fad6a26c12f6a142415eaaf87724c56",
+        "vertex_stream_sha256": "fbffd7242d287c06ac8f6899493ca124db4b4b73fde7f580ffd61619d5fffff9"
+      },
+      "name": "part_000",
+      "negative_domain_control": {
+        "expected_match": false,
+        "kind": "legacy post-transform exact-hash path",
+        "legacy_mapped_geometry_hash_matches_manifest": false,
+        "numeric_frame_equivalence_still_passes": true,
+        "rejected": true
+      },
+      "numeric_checks": {
+        "candidate_contained_in_mapped_x0_le_1e_9m": true,
+        "candidate_strict_vertex_decrease": true,
+        "consensus_candidate_surface_le_1e_9m": true,
+        "d340_fixed_point_subevidence_pass": true,
+        "instance_prototype_consensus_exact": true,
+        "mapped_vs_d340_x0_assignment_delta_le_1e_9m": true,
+        "mapped_vs_d340_x0_surface_delta_le_1e_9m": true,
+        "prim_to_body_transform_identity_le_1e_9m": true,
+        "rerun_rigid_frame_representation_residual_le_1e_9": true
+      },
+      "numeric_metrics": {
+        "candidate_containment_violation_m": 0.0,
+        "candidate_vertex_count": 6,
+        "consensus_candidate_surface_delta_m": 0.0,
+        "initial_vertex_count": 7,
+        "mapped_vs_d340_x0_assignment_max_abs_delta_m": 1.1275702593849246e-16,
+        "mapped_vs_d340_x0_surface_delta_m": 0.0,
+        "x0_to_candidate_shrink_distance_m": 0.0002453971747290594
+      },
+      "numeric_pass": true,
+      "part_idx": 8,
+      "pass": false
+    },
+    {
+      "authored_path": "/colliders/gripper_link/d338_convex_parts/part_035",
+      "body": "gripper_link",
+      "body_mapping": {
+        "identity_max_abs_delta": 1.1102230246251565e-16,
+        "identity_tolerance_m": 1e-09,
+        "matrix_row_major": [
+          [
+            0.9999999999999999,
+            0.0,
+            0.0,
+            1.1102230246251565e-16
+          ],
+          [
+            -2.117582368135751e-22,
+            1.0,
+            6.352747104407253e-22,
+            0.0
+          ],
+          [
+            -1.3877787807814457e-17,
+            0.0,
+            1.0,
+            1.3877787807814457e-17
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "rerun_quaternion_xyzw": [
+          0.0,
+          6.93889390390723e-18,
+          -1.0587911840678757e-22,
+          1.0
+        ],
+        "rerun_rigid_representation_residual": 1.1102230246251565e-16,
+        "rerun_translation_m": [
+          1.1102230246251565e-16,
+          0.0,
+          1.3877787807814457e-17
+        ]
+      },
+      "direct_checks": {
+        "cold1_cold2_points_f32_exact": true,
+        "cold1_cold2_triangles_exact": true,
+        "collision_enabled": true,
+        "convex_hull_approximation": true,
+        "direct_geometry_hash_matches_manifest": true,
+        "direct_points_f32_array_exact_cold1": true,
+        "direct_points_f32_bytes_exact_preregistered": true,
+        "direct_topology_hash_matches_manifest": true,
+        "direct_triangles_exact_cold1": true,
+        "direct_vertex_stream_hash_matches_manifest": true,
+        "face_counts_all_triangles": true,
+        "face_indices_shape_valid": true,
+        "hull_vertex_limit_frozen_64": true,
+        "min_thickness_frozen_1e_4m": false,
+        "triangle_count_matches_manifest": true,
+        "vertex_count_matches_manifest": true
+      },
+      "direct_hashes": {
+        "face_counts_i8_sha256": "c1ab3c45f68ee5bfda3ad7aa046617b73b346ac7986860d364892540b64eedb0",
+        "face_indices_i8_sha256": "97672b0c31edacb29a82431f2fc9664b6d836347a64a7595059fd8f9122eacf4",
+        "geometry_f8_i8_sha256": "e7f35527b978269724da9233c1d007d62f64ad5dfcea3b60b9fa86f616a953af",
+        "points_f32_sha256": "d527abdaf3034e98bce83b5bd1d1c045bf95c03b374c2d583a3e9025e83fc46c",
+        "topology_i8_sha256": "97672b0c31edacb29a82431f2fc9664b6d836347a64a7595059fd8f9122eacf4",
+        "vertex_stream_f8_sha256": "17a0e14988c8cfc563ddc65ec721c873cb0f00939f6116d71e382feaf6b1dcab"
+      },
+      "direct_pass": false,
+      "direct_stream_definition": "ordered authored VtArray<Gf.Vec3f> as contiguous little-endian <f4; all-3 face counts and ordered face indices as contiguous <i8; no transform/sort/Qhull",
+      "expected_manifest_hashes": {
+        "geometry_sha256": "e7f35527b978269724da9233c1d007d62f64ad5dfcea3b60b9fa86f616a953af",
+        "topology_sha256": "97672b0c31edacb29a82431f2fc9664b6d836347a64a7595059fd8f9122eacf4",
+        "vertex_stream_sha256": "17a0e14988c8cfc563ddc65ec721c873cb0f00939f6116d71e382feaf6b1dcab"
+      },
+      "name": "part_035",
+      "negative_domain_control": {
+        "expected_match": false,
+        "kind": "legacy post-transform exact-hash path",
+        "legacy_mapped_geometry_hash_matches_manifest": false,
+        "numeric_frame_equivalence_still_passes": true,
+        "rejected": true
+      },
+      "numeric_checks": {
+        "candidate_contained_in_mapped_x0_le_1e_9m": true,
+        "candidate_strict_vertex_decrease": true,
+        "consensus_candidate_surface_le_1e_9m": true,
+        "d340_fixed_point_subevidence_pass": true,
+        "instance_prototype_consensus_exact": true,
+        "mapped_vs_d340_x0_assignment_delta_le_1e_9m": true,
+        "mapped_vs_d340_x0_surface_delta_le_1e_9m": true,
+        "prim_to_body_transform_identity_le_1e_9m": true,
+        "rerun_rigid_frame_representation_residual_le_1e_9": true
+      },
+      "numeric_metrics": {
+        "candidate_containment_violation_m": 0.0,
+        "candidate_vertex_count": 10,
+        "consensus_candidate_surface_delta_m": 0.0,
+        "initial_vertex_count": 11,
+        "mapped_vs_d340_x0_assignment_max_abs_delta_m": 1.0755285551056204e-16,
+        "mapped_vs_d340_x0_surface_delta_m": 0.0,
+        "x0_to_candidate_shrink_distance_m": 0.0005575939179275173
+      },
+      "numeric_pass": true,
+      "part_idx": 9,
+      "pass": false
+    },
+    {
+      "authored_path": "/colliders/gripper_link/d338_convex_parts/part_036",
+      "body": "gripper_link",
+      "body_mapping": {
+        "identity_max_abs_delta": 1.1102230246251565e-16,
+        "identity_tolerance_m": 1e-09,
+        "matrix_row_major": [
+          [
+            0.9999999999999999,
+            0.0,
+            0.0,
+            1.1102230246251565e-16
+          ],
+          [
+            -2.117582368135751e-22,
+            1.0,
+            6.352747104407253e-22,
+            0.0
+          ],
+          [
+            -1.3877787807814457e-17,
+            0.0,
+            1.0,
+            1.3877787807814457e-17
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "rerun_quaternion_xyzw": [
+          0.0,
+          6.93889390390723e-18,
+          -1.0587911840678757e-22,
+          1.0
+        ],
+        "rerun_rigid_representation_residual": 1.1102230246251565e-16,
+        "rerun_translation_m": [
+          1.1102230246251565e-16,
+          0.0,
+          1.3877787807814457e-17
+        ]
+      },
+      "direct_checks": {
+        "cold1_cold2_points_f32_exact": true,
+        "cold1_cold2_triangles_exact": true,
+        "collision_enabled": true,
+        "convex_hull_approximation": true,
+        "direct_geometry_hash_matches_manifest": true,
+        "direct_points_f32_array_exact_cold1": true,
+        "direct_points_f32_bytes_exact_preregistered": true,
+        "direct_topology_hash_matches_manifest": true,
+        "direct_triangles_exact_cold1": true,
+        "direct_vertex_stream_hash_matches_manifest": true,
+        "face_counts_all_triangles": true,
+        "face_indices_shape_valid": true,
+        "hull_vertex_limit_frozen_64": true,
+        "min_thickness_frozen_1e_4m": false,
+        "triangle_count_matches_manifest": true,
+        "vertex_count_matches_manifest": true
+      },
+      "direct_hashes": {
+        "face_counts_i8_sha256": "f5092d6e23f7af3894e91e34604e51f0538d5fa57fac91c2d87f3ac441c6daaf",
+        "face_indices_i8_sha256": "fff02fb9709ebcdf77ca7087595a8934916080e0e5c669942edd8c89e9d633d6",
+        "geometry_f8_i8_sha256": "237379ae430896e1e527ee9167a235bae1114141040cba7199a3649d75c1db05",
+        "points_f32_sha256": "6ac005110b04e79e3e06dc1d1e9424dd1797df0af51e3c35528d6786e9d726fc",
+        "topology_i8_sha256": "fff02fb9709ebcdf77ca7087595a8934916080e0e5c669942edd8c89e9d633d6",
+        "vertex_stream_f8_sha256": "02fa20f59d71639627b74662d2604c166ff40e59a09ff5d26c9f15d66ba81017"
+      },
+      "direct_pass": false,
+      "direct_stream_definition": "ordered authored VtArray<Gf.Vec3f> as contiguous little-endian <f4; all-3 face counts and ordered face indices as contiguous <i8; no transform/sort/Qhull",
+      "expected_manifest_hashes": {
+        "geometry_sha256": "237379ae430896e1e527ee9167a235bae1114141040cba7199a3649d75c1db05",
+        "topology_sha256": "fff02fb9709ebcdf77ca7087595a8934916080e0e5c669942edd8c89e9d633d6",
+        "vertex_stream_sha256": "02fa20f59d71639627b74662d2604c166ff40e59a09ff5d26c9f15d66ba81017"
+      },
+      "name": "part_036",
+      "negative_domain_control": {
+        "expected_match": false,
+        "kind": "legacy post-transform exact-hash path",
+        "legacy_mapped_geometry_hash_matches_manifest": false,
+        "numeric_frame_equivalence_still_passes": true,
+        "rejected": true
+      },
+      "numeric_checks": {
+        "candidate_contained_in_mapped_x0_le_1e_9m": true,
+        "candidate_strict_vertex_decrease": true,
+        "consensus_candidate_surface_le_1e_9m": true,
+        "d340_fixed_point_subevidence_pass": true,
+        "instance_prototype_consensus_exact": true,
+        "mapped_vs_d340_x0_assignment_delta_le_1e_9m": true,
+        "mapped_vs_d340_x0_surface_delta_le_1e_9m": true,
+        "prim_to_body_transform_identity_le_1e_9m": true,
+        "rerun_rigid_frame_representation_residual_le_1e_9": true
+      },
+      "numeric_metrics": {
+        "candidate_containment_violation_m": 0.0,
+        "candidate_vertex_count": 6,
+        "consensus_candidate_surface_delta_m": 0.0,
+        "initial_vertex_count": 7,
+        "mapped_vs_d340_x0_assignment_max_abs_delta_m": 1.0755285551056204e-16,
+        "mapped_vs_d340_x0_surface_delta_m": 0.0,
+        "x0_to_candidate_shrink_distance_m": 0.0006990674339094399
+      },
+      "numeric_pass": true,
+      "part_idx": 10,
+      "pass": false
+    },
+    {
+      "authored_path": "/colliders/gripper_link/d338_convex_parts/part_048",
+      "body": "gripper_link",
+      "body_mapping": {
+        "identity_max_abs_delta": 1.1102230246251565e-16,
+        "identity_tolerance_m": 1e-09,
+        "matrix_row_major": [
+          [
+            0.9999999999999999,
+            0.0,
+            0.0,
+            1.1102230246251565e-16
+          ],
+          [
+            -2.117582368135751e-22,
+            1.0,
+            6.352747104407253e-22,
+            0.0
+          ],
+          [
+            -1.3877787807814457e-17,
+            0.0,
+            1.0,
+            1.3877787807814457e-17
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "rerun_quaternion_xyzw": [
+          0.0,
+          6.93889390390723e-18,
+          -1.0587911840678757e-22,
+          1.0
+        ],
+        "rerun_rigid_representation_residual": 1.1102230246251565e-16,
+        "rerun_translation_m": [
+          1.1102230246251565e-16,
+          0.0,
+          1.3877787807814457e-17
+        ]
+      },
+      "direct_checks": {
+        "cold1_cold2_points_f32_exact": true,
+        "cold1_cold2_triangles_exact": true,
+        "collision_enabled": true,
+        "convex_hull_approximation": true,
+        "direct_geometry_hash_matches_manifest": true,
+        "direct_points_f32_array_exact_cold1": true,
+        "direct_points_f32_bytes_exact_preregistered": true,
+        "direct_topology_hash_matches_manifest": true,
+        "direct_triangles_exact_cold1": true,
+        "direct_vertex_stream_hash_matches_manifest": true,
+        "face_counts_all_triangles": true,
+        "face_indices_shape_valid": true,
+        "hull_vertex_limit_frozen_64": true,
+        "min_thickness_frozen_1e_4m": false,
+        "triangle_count_matches_manifest": true,
+        "vertex_count_matches_manifest": true
+      },
+      "direct_hashes": {
+        "face_counts_i8_sha256": "1b45a83d7582f20c87433ebf295b5c1152425933191bd9ef0bc8a5a96a66a838",
+        "face_indices_i8_sha256": "edc3dc3fa3f02b12e9625e58d9c2baf08d04760e2b10ba8dda099197af622ca6",
+        "geometry_f8_i8_sha256": "0d399c6458af0299a33d1a8bf356947fcb492a62162387eb8e0e4434f6737074",
+        "points_f32_sha256": "909cb449ffea7ee45f0c35c85e7b93c5dcd52008549fdbdfb755ebf88ade7bba",
+        "topology_i8_sha256": "edc3dc3fa3f02b12e9625e58d9c2baf08d04760e2b10ba8dda099197af622ca6",
+        "vertex_stream_f8_sha256": "7e782d90326a98cf96ff9e0e7f63a104899ddcdb57dae5ed5b59ece9f03e525a"
+      },
+      "direct_pass": false,
+      "direct_stream_definition": "ordered authored VtArray<Gf.Vec3f> as contiguous little-endian <f4; all-3 face counts and ordered face indices as contiguous <i8; no transform/sort/Qhull",
+      "expected_manifest_hashes": {
+        "geometry_sha256": "0d399c6458af0299a33d1a8bf356947fcb492a62162387eb8e0e4434f6737074",
+        "topology_sha256": "edc3dc3fa3f02b12e9625e58d9c2baf08d04760e2b10ba8dda099197af622ca6",
+        "vertex_stream_sha256": "7e782d90326a98cf96ff9e0e7f63a104899ddcdb57dae5ed5b59ece9f03e525a"
+      },
+      "name": "part_048",
+      "negative_domain_control": {
+        "expected_match": false,
+        "kind": "legacy post-transform exact-hash path",
+        "legacy_mapped_geometry_hash_matches_manifest": false,
+        "numeric_frame_equivalence_still_passes": true,
+        "rejected": true
+      },
+      "numeric_checks": {
+        "candidate_contained_in_mapped_x0_le_1e_9m": true,
+        "candidate_strict_vertex_decrease": true,
+        "consensus_candidate_surface_le_1e_9m": true,
+        "d340_fixed_point_subevidence_pass": true,
+        "instance_prototype_consensus_exact": true,
+        "mapped_vs_d340_x0_assignment_delta_le_1e_9m": true,
+        "mapped_vs_d340_x0_surface_delta_le_1e_9m": true,
+        "prim_to_body_transform_identity_le_1e_9m": true,
+        "rerun_rigid_frame_representation_residual_le_1e_9": true
+      },
+      "numeric_metrics": {
+        "candidate_containment_violation_m": 0.0,
+        "candidate_vertex_count": 8,
+        "consensus_candidate_surface_delta_m": 0.0,
+        "initial_vertex_count": 9,
+        "mapped_vs_d340_x0_assignment_max_abs_delta_m": 1.0408340855860843e-16,
+        "mapped_vs_d340_x0_surface_delta_m": 0.0,
+        "x0_to_candidate_shrink_distance_m": 0.0005978928087492285
+      },
+      "numeric_pass": true,
+      "part_idx": 11,
+      "pass": false
+    },
+    {
+      "authored_path": "/colliders/gripper_link/d338_convex_parts/part_057",
+      "body": "gripper_link",
+      "body_mapping": {
+        "identity_max_abs_delta": 1.1102230246251565e-16,
+        "identity_tolerance_m": 1e-09,
+        "matrix_row_major": [
+          [
+            0.9999999999999999,
+            0.0,
+            0.0,
+            1.1102230246251565e-16
+          ],
+          [
+            -2.117582368135751e-22,
+            1.0,
+            6.352747104407253e-22,
+            0.0
+          ],
+          [
+            -1.3877787807814457e-17,
+            0.0,
+            1.0,
+            1.3877787807814457e-17
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "rerun_quaternion_xyzw": [
+          0.0,
+          6.93889390390723e-18,
+          -1.0587911840678757e-22,
+          1.0
+        ],
+        "rerun_rigid_representation_residual": 1.1102230246251565e-16,
+        "rerun_translation_m": [
+          1.1102230246251565e-16,
+          0.0,
+          1.3877787807814457e-17
+        ]
+      },
+      "direct_checks": {
+        "cold1_cold2_points_f32_exact": true,
+        "cold1_cold2_triangles_exact": true,
+        "collision_enabled": true,
+        "convex_hull_approximation": true,
+        "direct_geometry_hash_matches_manifest": true,
+        "direct_points_f32_array_exact_cold1": true,
+        "direct_points_f32_bytes_exact_preregistered": true,
+        "direct_topology_hash_matches_manifest": true,
+        "direct_triangles_exact_cold1": true,
+        "direct_vertex_stream_hash_matches_manifest": true,
+        "face_counts_all_triangles": true,
+        "face_indices_shape_valid": true,
+        "hull_vertex_limit_frozen_64": true,
+        "min_thickness_frozen_1e_4m": false,
+        "triangle_count_matches_manifest": true,
+        "vertex_count_matches_manifest": true
+      },
+      "direct_hashes": {
+        "face_counts_i8_sha256": "f5092d6e23f7af3894e91e34604e51f0538d5fa57fac91c2d87f3ac441c6daaf",
+        "face_indices_i8_sha256": "dc8bf172cd71b4bb603b5e130f83f36d29fba0211fd1d0458e3ed7592cbdabda",
+        "geometry_f8_i8_sha256": "d766b962e7bde06d666c1caddb6542d16876efcd5194602314b23e08d6a86e91",
+        "points_f32_sha256": "df3b333298d46950a71bcef63c67241981344f94413154c5bdbf78d2fe86a07d",
+        "topology_i8_sha256": "dc8bf172cd71b4bb603b5e130f83f36d29fba0211fd1d0458e3ed7592cbdabda",
+        "vertex_stream_f8_sha256": "897030ceab272071f741c621dee12aaba7515945c5be48de129332471116f1b1"
+      },
+      "direct_pass": false,
+      "direct_stream_definition": "ordered authored VtArray<Gf.Vec3f> as contiguous little-endian <f4; all-3 face counts and ordered face indices as contiguous <i8; no transform/sort/Qhull",
+      "expected_manifest_hashes": {
+        "geometry_sha256": "d766b962e7bde06d666c1caddb6542d16876efcd5194602314b23e08d6a86e91",
+        "topology_sha256": "dc8bf172cd71b4bb603b5e130f83f36d29fba0211fd1d0458e3ed7592cbdabda",
+        "vertex_stream_sha256": "897030ceab272071f741c621dee12aaba7515945c5be48de129332471116f1b1"
+      },
+      "name": "part_057",
+      "negative_domain_control": {
+        "expected_match": false,
+        "kind": "legacy post-transform exact-hash path",
+        "legacy_mapped_geometry_hash_matches_manifest": false,
+        "numeric_frame_equivalence_still_passes": true,
+        "rejected": true
+      },
+      "numeric_checks": {
+        "candidate_contained_in_mapped_x0_le_1e_9m": true,
+        "candidate_strict_vertex_decrease": true,
+        "consensus_candidate_surface_le_1e_9m": true,
+        "d340_fixed_point_subevidence_pass": true,
+        "instance_prototype_consensus_exact": true,
+        "mapped_vs_d340_x0_assignment_delta_le_1e_9m": true,
+        "mapped_vs_d340_x0_surface_delta_le_1e_9m": true,
+        "prim_to_body_transform_identity_le_1e_9m": true,
+        "rerun_rigid_frame_representation_residual_le_1e_9": true
+      },
+      "numeric_metrics": {
+        "candidate_containment_violation_m": 0.0,
+        "candidate_vertex_count": 6,
+        "consensus_candidate_surface_delta_m": 0.0,
+        "initial_vertex_count": 7,
+        "mapped_vs_d340_x0_assignment_max_abs_delta_m": 1.1796119636642288e-16,
+        "mapped_vs_d340_x0_surface_delta_m": 0.0,
+        "x0_to_candidate_shrink_distance_m": 0.0004842949748167258
+      },
+      "numeric_pass": true,
+      "part_idx": 12,
+      "pass": false
+    }
+  ],
+  "scientific_authority": "immutable D339 USDC Vec3f/face arrays plus D339/D340 canonical JSON and hashes",
+  "scientific_pass": false,
+  "scientific_verdict": "D342_AUTHORED_COORDINATE_STREAM_CONTRACT_FAIL_STOP",
+  "scope_guards": {
+    "attempt3_absent": true,
+    "collision_asset_writes": [],
+    "controlled_physics_steps": 0,
+    "g0a_pass": false,
+    "ladder_promoted": false,
+    "recook_requests": 0,
+    "simulation_context_created": false
+  }
+}

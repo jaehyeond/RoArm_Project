@@ -396,6 +396,66 @@ def build_rerun_blueprint(mode: str = "robot_geometry") -> Any:
     """Build the fixed Rerun layout used by RoArm observability cases."""
     import rerun.blueprint as rrb
 
+    if mode == "authored_frame_contract":
+        def _body_row(body: str, label: str) -> Any:
+            return rrb.Horizontal(
+                rrb.Spatial3DView(
+                    origin="/",
+                    contents=f"/frame_contract/direct_authored/{body}/**",
+                    name=f"{label} direct authored x0 (prim-local)",
+                ),
+                rrb.Spatial3DView(
+                    origin="/",
+                    contents=f"/frame_contract/body_mapped_x0/{body}/**",
+                    name=f"{label} body-mapped x0",
+                ),
+                rrb.Spatial3DView(
+                    origin="/",
+                    contents=[
+                        f"/frame_contract/direct_authored/{body}/**",
+                        f"/frame_contract/body_mapped_x0/{body}/**",
+                    ],
+                    name=f"{label} direct vs mapped x0 overlay",
+                ),
+                rrb.Spatial3DView(
+                    origin="/",
+                    contents=[
+                        f"/frame_contract/body_mapped_x0/{body}/**",
+                        f"/frame_contract/body_mapped_x1/{body}/**",
+                    ],
+                    name=f"{label} mapped x0 vs candidate x1",
+                ),
+                column_shares=[0.25, 0.25, 0.25, 0.25],
+            )
+
+        return rrb.Blueprint(
+            rrb.Vertical(
+                _body_row("link5", "link5"),
+                _body_row("gripper_link", "gripper"),
+                rrb.Horizontal(
+                    rrb.DataframeView(
+                        origin="/metrics",
+                        contents="/metrics/**",
+                        name="Float64 frame metrics",
+                    ),
+                    rrb.DataframeView(
+                        origin="/gate",
+                        contents="/gate/**",
+                        name="per-part gate state",
+                    ),
+                    rrb.TextLogView(
+                        origin="/events",
+                        contents="/events/**",
+                        name="authored-frame events",
+                    ),
+                    column_shares=[0.52, 0.18, 0.30],
+                ),
+                row_shares=[0.35, 0.35, 0.30],
+            ),
+            auto_layout=False,
+            auto_views=False,
+            collapse_panels=True,
+        )
     if mode == "collision_gate":
         return rrb.Blueprint(
             rrb.Vertical(

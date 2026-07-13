@@ -19323,3 +19323,155 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d341/d341_manual_visual_inspection.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d341/d341_rerun_observability_completion_summary.json`
 - `START_HERE.md`
+
+## D342 - Authored geometry is exact, but an unregistered typed-float tolerance tightening invalidates the registered PASS gate (2026-07-13)
+
+Decision:
+
+- Registered verdict remains `D342_AUTHORED_COORDINATE_STREAM_CONTRACT_FAIL_STOP`;
+  bounded completion label is
+  `D342_AUTHORED_COORDINATE_STREAM_HARNESS_TOLERANCE_DRIFT_FAIL_STOP`.
+  Do not retroactively call the case PASS.
+- The intended authored-coordinate-stream hypothesis is nevertheless positive
+  immutable sub-evidence. Across all 13 registered pieces, raw authored `<f4>`
+  bytes, cold1/cold2 point and triangle arrays, and D339 manifest vertex,
+  topology, and combined geometry hashes matched `13/13`. Body-mapped numeric
+  checks passed `13/13`; the legacy mixed-domain hash was rejected `13/13`;
+  the in-memory `+10um` control was rejected by both hashes and proximity.
+- The sole false predicate on all 13 pieces was
+  `min_thickness_frozen_1e_4m`. D339 explicitly authored the USD `float`
+  `0.0001m`; typed readback is `9.999999747378752e-05m` with float32 bits
+  `0x38d1b717`, a normal `2.526212488436659e-12m` representation delta.
+  Stage `metersPerUnit=1.0`, and schema default `0.001m` was not used.
+- D339/D340 and the D342 parameter audit froze the min-thickness readback
+  tolerance at `1e-10m`, but the executed D342 validator hardcoded `1e-12m`.
+  This is an unregistered `100x` validator tightening, not physical or
+  decomposition parameter drift. Physical/decomposition parameter
+  increases/changes, asset writes, recooks, and physics steps were zero; the
+  validator comparator itself changed as described above.
+- **Durable parameter-binding rule:** a parameter-freeze audit is incomplete
+  unless every runtime comparator is mechanically bound to that frozen source.
+  A tighter hardcoded tolerance is still a parameter change; do not describe it
+  as conservative validation.
+- **Durable typed-value evidence rule:** for USD float parameters, persist the
+  requested value, attribute type, authored-opinion state, typed readback, raw
+  float bits, and comparator source. A boolean predicate alone is insufficient.
+- D342's footer-complete RRD/RBL and actual screenshot inspection passed: 238
+  exact non-system entities, three exact timelines, 15 frames, 39 meshes, 143
+  scalars, 16 events, and eight visible spatial panels. Rerun did not override
+  the scientific FAIL.
+- `SimulationApp.close()` terminated after the FAIL artifacts were flushed but
+  before Python returned computed code 2, so shell status was 0. Future Kit
+  harnesses must persist the verdict before close and preserve nonzero failure
+  status; exit code alone is not authority for this historical run.
+
+Evidence:
+
+- D339/D340 immutable inventories remained exact (`18->18`, `33->33`).
+- Direct predicates were true `13/13` except minThickness `0/13`; assignment
+  maximum was `1.1796119636642288e-16m`, while mapped surface, candidate
+  containment violation, and consensus/candidate surface maxima were `0.0m`.
+- The `+10um` control produced actual float32 delta
+  `1.0000541806221008e-05m` and wrote no source file.
+- RRD/RBL were `685,882/92,739` bytes; the screenshot was `4800x2800` raster
+  and `9,806,497` bytes. Minor viewer clipping, event timeline ordering, and
+  manual-pending metadata inconsistencies were recorded as non-decision issues.
+
+Implication:
+
+- D342 effective evidence is immutable and must not be silently rerun under a
+  changed comparator. `g0a_pass=false`; attempt3, G0b/RL, and ladder remain
+  blocked.
+- The narrowest next candidate is separately approved D343 proof-only
+  `[usd_float_parameter_readback_contract]`: preserve typed evidence, compare
+  exact expected float32 bits or bind the already frozen `1e-10m` tolerance
+  from one source, and reject an adjacent-float32 negative. It is a pure
+  schema/hash case and may omit a new Rerun only with written justification.
+- Only after D343 PASS may a separately approved D344 author attempt3 and run
+  fresh live validation. D343 itself does not authorize asset mutation.
+
+Sources:
+
+- `claudedocs/session_20260713_grasp_g0a_d342_authored_coordinate_stream_repair.md`
+- `sim_scripts/cyl34_top_view_d342_grasp_g0a_authored_coordinate_stream_repair.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d342/d342_authored_coordinate_stream_evidence.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d342/d342_authored_coordinate_stream_automated_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d342/d342_postrun_root_cause_audit.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d342/d342_rerun_manual_visual_inspection.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d342/d342_completion_summary.json`
+- `START_HERE.md`
+
+## D343 - Exact float32 bits repair the USD typed-readback proof contract across all D339 parts (2026-07-13)
+
+Decision:
+
+- Verdict is `D343_USD_TYPED_FLOAT_READBACK_CONTRACT_PASS`. The single new
+  measurement variable was `[usd_float_parameter_readback_contract]`; one
+  effective standalone-PXR run followed a `35/35` preregistration preflight.
+- All `128/128` immutable D339 attempt2 parts passed `32` typed-attribute
+  predicates each (`4,096` total, false `0`). Direct Sdf spec/default/type/API
+  authorship and composed Usd name/type/value/authored-opinion/resolve source
+  agreed. Every direct, composed, and D339-live value had bits `0x38d1b717`;
+  property stacks were exactly one immutable D339 physics-layer spec.
+- Direct and composed stage units were `metersPerUnit=1.0`. Every resolve source
+  was authored `Usd.ResolveInfoSourceDefault`; fallback, blocked, time-varying,
+  and nonzero time-sample counts were all `0/128`. The schema fallback is typed
+  `0.0010000000474974513m` (`0x3a83126f`), not the authored value.
+- The D342 failure subset cross-anchor passed `13/13`. D342 remains registered
+  FAIL; D343 does not retroactively reclassify it.
+- The failure-capable adjacent-float discriminator passed. Lower
+  `0x38d1b716` and upper `0x38d1b718` were both rejected by exact-bit identity,
+  while the frozen `1e-10m` comparator accepted both. The correct typed value's
+  decimal delta is `2.526212488436659e-12m`: it passes `1e-10m` and reproduces
+  D342's failure under its executed unregistered `1e-12m` comparator.
+- D339/D340/D342 inventories remained exact at `18/33/13` files with digests
+  `0dae41fd3937a0a8aea18488019c74f097d32f7b8de916943ff31334e30464a1`,
+  `def37cc3c4d10cad8919ce71175211cc34fe2e8b567dbc107f13de151a92940d`,
+  and `7c205d7f6222a2a091a70bb1cf784b339512efbfe8d50bbb3b5ee8c2fed35232`.
+  Physical variables, existing parameter increases/changes, decomposition
+  changes, threshold relaxations, asset writes, recooks, SimulationContext,
+  physics steps, and attempt3 authoring were all zero or absent.
+- New Rerun artifacts were intentionally omitted under the preregistered pure
+  scalar/schema/bit exception. D342 RRD was hash-pinned as context only and was
+  not reused as D343 completion evidence.
+
+Evidence:
+
+- Expected value: requested `0.0001m`, typed
+  `9.999999747378752e-05m`, uint32 `953267991`, bits `0x38d1b717`, little-endian
+  bytes `17b7d138`; one ULP is `7.275957614183426e-12m`.
+- Direct PhysX API authored token, direct Sdf default, authored composed value,
+  exact property-stack owner, and D339 live-readback bits passed `128/128`.
+- D342 comparator reproduction, adjacent controls, global unit/schema checks,
+  Rerun omission, scope guards, and before/after immutability all passed.
+
+Implication:
+
+- **Durable typed-identity rule:** exact float32 bits are the authority for a
+  preregistered USD `float` identity claim. A historical numeric tolerance is
+  compatibility evidence only; near `1e-4`, `1e-10m` admits adjacent floats.
+- **Durable core-PXR authorship rule:** when an applied schema plugin is not
+  registered, do not treat its omission from composed `GetAppliedSchemas()` as
+  asset absence. Prove authorship with direct Sdf `apiSchemas`/AttributeSpec and
+  independently prove the composed value/resolve source/property stack.
+- Expanding 13 failure-subset rows to all 128 rows of the same immutable scalar
+  is decision-relevant coverage, not a new variable or parameter increase. It
+  certifies the 115 parts a future attempt3 would retain.
+- Rerun omission is allowed only for a preregistered non-spatial,
+  non-temporal scalar/schema/bit audit. Any geometry, pose, contact, frame,
+  trajectory, event-time, Kit, cooking, or physics decision restores the D341
+  completion lifecycle.
+- D343 stops here. Its PASS makes a separately approved D344 attempt3 authoring
+  plus fresh live validation case eligible; it does not authorize D344, change
+  `g0a_pass=false`, or unblock G0b/RL/ladder.
+
+Sources:
+
+- `claudedocs/session_20260713_grasp_g0a_d343_usd_typed_float_readback_contract_repair.md`
+- `sim_scripts/cyl34_top_view_d343_grasp_g0a_usd_typed_float_readback_contract_repair.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d343/d343_preregistration.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d343/d343_parameter_freeze_audit.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d343/d343_rerun_omission_justification.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d343/d343_usd_typed_float_readback_evidence.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d343/d343_usd_typed_float_readback_summary.json`
+- `START_HERE.md`

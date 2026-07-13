@@ -185,6 +185,74 @@ class RerunContractTest(unittest.TestCase):
             self.assertFalse(negative["footer_manifest_present"])
             self.assertIn("RRD footer verification failed", negative["errors"])
 
+    def test_authored_frame_contract_blueprint_records_named_frames(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="roarm_rerun_test_") as tmp:
+            path = Path(tmp) / "authored_frame.rrd"
+            tetrahedron = {
+                "vertices_m": [
+                    [0.0, 0.0, 0.0],
+                    [0.01, 0.0, 0.0],
+                    [0.0, 0.01, 0.0],
+                    [0.0, 0.0, 0.01],
+                ],
+                "triangles": [[0, 2, 1], [0, 1, 3], [0, 3, 2], [1, 2, 3]],
+            }
+            meshes = []
+            for kind, frame in (
+                ("direct_authored", "link5_part_000_usd_prim_local"),
+                ("body_mapped_x0", "link5_body_local"),
+                ("body_mapped_x1", "link5_body_local"),
+            ):
+                meshes.append(
+                    {
+                        "entity_path": f"frame_contract/{kind}/link5/parts/part_000",
+                        "coordinate_frame": frame,
+                        **tetrahedron,
+                    }
+                )
+            status = log_rerun(
+                path,
+                blueprint_mode="authored_frame_contract",
+                coordinate_frames=[
+                    {
+                        "frame": "link5_body_local",
+                        "parent_frame": "tf#/",
+                        "entity_path": "coordinate_frames/link5/body_local",
+                    },
+                    {
+                        "frame": "link5_part_000_usd_prim_local",
+                        "parent_frame": "link5_body_local",
+                        "entity_path": "coordinate_frames/link5/part_000/usd_prim_local",
+                    },
+                ],
+                meshes=meshes,
+                scalar_trace=[
+                    {
+                        "entity_path": "metrics/link5/part_000/direct_geometry_hash_match",
+                        "value": 1.0,
+                        "sequence": {"part_idx": 0},
+                    },
+                    {
+                        "entity_path": "gate/link5/part_000/frame_contract_pass",
+                        "value": 1.0,
+                        "sequence": {"part_idx": 0},
+                    },
+                ],
+                events=[
+                    {
+                        "entity_path": "events/frame_contract",
+                        "text": "direct authored stream matched before mapping",
+                        "level": "INFO",
+                        "sequence": {"part_idx": 0},
+                    }
+                ],
+            )
+            self.assertTrue(status["ok"], status)
+            self.assertEqual(
+                status["archive_validation"]["timeline_contract"]["observed"],
+                ["blueprint", "log_time", "part_idx"],
+            )
+
     def test_urdf_prefix_is_not_escaped(self) -> None:
         with tempfile.TemporaryDirectory(prefix="roarm_rerun_test_") as tmp:
             root = Path(tmp)

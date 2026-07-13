@@ -1,0 +1,73 @@
+{
+  "artifact": "D342_PREREGISTRATION_AMENDMENT_001",
+  "status": "PRE_RUNTIME_LOCKED_REACTIVE_INVOCATION_ORDER_ONLY",
+  "parent_preregistration": "claudedocs/runtime_logs/grasp_track/g0a_d342/d342_preregistration.json",
+  "parent_prereg_sha256": "0abb91dfe31463cfa21f372b9b45ce88080cecdcd07cec6a756882dfa3ccc8f0",
+  "reason": "Preserve two launch-only attempt0 calls and defer SimulationApp.close until all scientific and Rerun artifacts are written and flushed.",
+  "scientific_execution_count_before_amendment": 0,
+  "scientific_artifacts_created_before_amendment": [],
+  "launch_only_attempts": [
+    {
+      "id": "attempt0a_sandbox_gpu_prelaunch",
+      "classification": "infrastructure_prelaunch_only",
+      "observed_stop": "GPU/Vulkan initialization failed before the D342 scientific harness entered immutable USDC readback.",
+      "scientific_execution_started": false,
+      "scientific_outputs_created": [],
+      "persistent_kit_log": null
+    },
+    {
+      "id": "attempt0b_host_shutdown_order",
+      "classification": "invocation_order_launch_only",
+      "observed_stop": "Immutable D339 USDC opened, then SimulationApp.close terminated the process before _evaluate.",
+      "scientific_execution_started": false,
+      "scientific_outputs_created": [],
+      "persistent_kit_log": {
+        "path": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/kit/logs/Kit/Isaac-Sim/5.1/kit_20260713_213834.log",
+        "bytes": 380538,
+        "sha256": "2a5e43d2d096d45445f555db3e8e568d8a88db59014af548e1eb39fd3e7d63cd"
+      }
+    }
+  ],
+  "reactive_change_scope": [
+    "Keep SimulationApp alive through direct exact evaluation, mapped numeric evaluation, perturbation, evidence write, Rerun finalize and validation, and automated summary write/flush.",
+    "Invoke SimulationApp.close only after authority and observability artifacts are complete; retain exceptional-exit cleanup."
+  ],
+  "new_variables": [
+    "authored_geometry_frame_contract"
+  ],
+  "scientific_contract_changes": [],
+  "physical_variable_changes": [],
+  "existing_parameter_increases": [],
+  "existing_parameter_changes": [],
+  "threshold_relaxations": [],
+  "decomposition_parameter_changes": [],
+  "collision_asset_writes": [],
+  "recook_requests": 0,
+  "simulation_context_created": false,
+  "controlled_physics_steps": 0,
+  "attempt3_authoring": false,
+  "rrd_contract_sha256": "1af167b166bf84db99071314c04d00b83e23568bba416028ce935e211aa37e82",
+  "registered_command_unchanged": "OMNI_KIT_ACCEPT_EULA=YES conda run -n isaaclab --no-capture-output python sim_scripts/cyl34_top_view_d342_grasp_g0a_authored_coordinate_stream_repair.py --headless",
+  "updated_d342_session_sha256": "58d626954f7375e29750a919f418622b201e6c9ede8d0264d0554f0f8419c0d9",
+  "updated_start_here_sha256": "227a28e2cdfb9e3856c29616c1e15a48b888b244e58500854d735081d6f45fca",
+  "updated_source_hashes": {
+    "d342_harness": "e1f9443f2676953b0398abee0e6653505a416f69bc4059cebd5b1cbc20042650",
+    "viz_debug": "5fd1004ba7d4707bd31f590b09d94f0326633d97f5b36dec22fee4a15b8d07ac",
+    "rerun_contract": "90559c931bc753be97def463841d41426a2f1bd8e5ddd15a2a2ab08fb54a2e60",
+    "rerun_contract_tests": "b10f798b990c6b9f27640df1e00cd35f56e72fa9f40157b7a3093b1f1f2ebc2f",
+    "d339_harness": "fd307cb573699f8a08df1ab580789188774158877b8abf0a05cc4c60ef6562d6",
+    "d339_hull_manifest": "d70a13edbb8500cde97ad23779811475e1c8bb2d0f6045b4183e704d2157bedd",
+    "d339_asset_manifest": "3b46cb39a1f0ff655dcd46172ebaa84f727d833773275b18f944397007ae2589",
+    "d339_live_audit": "6148252b654a6250faf78a1ebcde4caa57870e800fa1d3c45b93c803fdf882cb",
+    "d339_physics_usd": "9261986d363327e33beb0b555d0ffce320416e827e0b1a8532c8e938d25b8e44",
+    "d340_candidates": "f288d5232f039e58ccd209f332ebfabbf9fec137e746e97d9a3c58688420ef86",
+    "d340_postrun": "2d6bc90a71d9ec407206ade7c32069ad209f8a0ba40cb44a40f42281318a1207",
+    "d340_summary": "ba62c879e78bfa7db47b003e1bfdd4ee2bd4ff250b083e423f94ebec67992163",
+    "d340_parameter_audit": "9e7f5dae62f0aa4f3a0f7d936ab818bce54e9d896e555475c115bd6a3ed5526b",
+    "d339_link5_cold1": "c45bd056b3487f92bc724474dbf850ea6da309fea90c4e0a90879ada7ba2b655",
+    "d339_link5_cold2": "d1819851586e7078c5b58fde47bec196e08063c1ed658f79743ec729dda5590e",
+    "d339_gripper_link_cold1": "dc258b27cdef5d29e23f1b5ef3041c3afb26f50d8c8ad9b222002532e95f2e5e",
+    "d339_gripper_link_cold2": "24b3a026281beffd18b397762226a2663ec6dd056f03099b03ad350a59edad8c"
+  },
+  "stop_condition_unchanged": "Stop regardless of result; attempt3 authoring and fresh live validation require a separate user-approved case"
+}

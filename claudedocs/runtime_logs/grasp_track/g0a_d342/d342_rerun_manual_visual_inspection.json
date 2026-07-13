@@ -1,0 +1,61 @@
+{
+  "artifact": "D342_RERUN_MANUAL_VISUAL_INSPECTION_V1",
+  "case": "g0a_d342",
+  "inspected_actual_image": true,
+  "inspection_method": "Opened the registered PNG at original raster detail with the local image viewer.",
+  "screenshot": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d342/d342_authored_coordinate_stream_rerun_inspection.png",
+    "sha256": "5252ba148fa756f24a8966b6bde20f85ee7026773a2a8cb82fcd203e4d74422b",
+    "logical_window": "2400x1400",
+    "raster_dimensions": "4800x2800",
+    "bytes": 9806497
+  },
+  "visible_panels": {
+    "link5_direct_authored_x0_prim_local": true,
+    "link5_body_mapped_x0": true,
+    "link5_direct_vs_mapped_x0_overlay": true,
+    "link5_mapped_x0_vs_candidate_x1": true,
+    "gripper_direct_authored_x0_prim_local": true,
+    "gripper_body_mapped_x0": true,
+    "gripper_direct_vs_mapped_x0_overlay": true,
+    "gripper_mapped_x0_vs_candidate_x1": true,
+    "float64_frame_metrics": true,
+    "per_part_gate_state": true,
+    "authored_frame_events": true
+  },
+  "visual_observations": [
+    "All eight registered spatial panels are non-empty and independently labeled.",
+    "Direct-authored and body-mapped overlay geometry is visibly co-located at the displayed scale.",
+    "Mapped x0 and candidate x1 are separately colored and visible for both bodies.",
+    "The event table visibly reports direct=False, numeric=True, and legacy_mixed_hash_rejected=True across the displayed registered parts.",
+    "The metric and gate tables are rendered, but the screenshot does not expose all 143 scalar cells simultaneously."
+  ],
+  "non_decision_anomalies": [
+    "Viewer information toasts partially cover the upper-right panel but do not hide its geometry.",
+    "The metrics table is horizontally clipped; JSON/schema evidence is required for full 143-row coverage.",
+    "Verbose archive stats report events/frame_contract part_idx as UNSORTED even though all 16 events render coherently and the exact timeline-name contract passes.",
+    "The automated summary sets manual_visual_inspection_pending=false while log_status still says visual_inspection_complete=false and requires_posthoc_visual_inspection=true; this is a metadata-consistency defect, not an archive or scientific evidence change."
+  ],
+  "archive_contract": {
+    "validation_pass": true,
+    "rrd_bytes": 685882,
+    "rrd_sha256": "79fbc0541e3608adaa30cef4b2f8bcb60a0f0cfd58b1239d82e7e068601f22ff",
+    "rbl_bytes": 92739,
+    "rbl_sha256": "0e9c63dc7677c6a104e83e800abc626d4f0a639afbfdf2be7d55b1ee8968a1d7",
+    "exact_non_system_entities": 238,
+    "exact_timelines": [
+      "blueprint",
+      "log_time",
+      "part_idx"
+    ],
+    "coordinate_frames": 15,
+    "meshes": 39,
+    "scalars": 143,
+    "events": 16,
+    "footer_verify": true,
+    "component_contract_pass": true
+  },
+  "scientific_authority_boundary": "Pixels prove renderability and inspectability only. Exact 13/13 hash/numeric enumeration comes from the evidence JSON and finalized archive schema, not from image appearance.",
+  "visual_inspection_verdict": "D342_RERUN_OBSERVABILITY_INSPECTION_PASS",
+  "effect_on_scientific_verdict": "None. The overall D342 registered verdict remains FAIL_STOP because of the validator tolerance drift."
+}

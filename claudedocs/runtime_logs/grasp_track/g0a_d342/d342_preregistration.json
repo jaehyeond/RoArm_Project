@@ -1,0 +1,159 @@
+{
+  "artifact": "D342_AUTHORED_COORDINATE_STREAM_PREREGISTRATION_V1",
+  "status": "PRE_RUNTIME_LOCKED",
+  "case": "g0a_d342",
+  "git_head": "b1476d1acc681f392eb3478da5192f3b3898085e",
+  "new_variables": [
+    "authored_geometry_frame_contract"
+  ],
+  "variable_count": 1,
+  "variable_role": "measurement_only",
+  "part_allowlist": {
+    "link5": [
+      "part_011",
+      "part_018",
+      "part_023",
+      "part_024",
+      "part_040",
+      "part_041",
+      "part_045",
+      "part_054"
+    ],
+    "gripper_link": [
+      "part_000",
+      "part_035",
+      "part_036",
+      "part_048",
+      "part_057"
+    ]
+  },
+  "direct_stream_contract": {
+    "source": "immutable D339 attempt2 physics USDC",
+    "prim_path_template": "/colliders/{body}/d338_convex_parts/{part}",
+    "points": "authored-order VtArray<Gf.Vec3f>, contiguous little-endian <f4",
+    "faces": "all faceVertexCounts=3; authored-order faceVertexIndices, contiguous little-endian <i8",
+    "manifest_vertex_stream": "same direct Vec3f values promoted without transform to contiguous <f8",
+    "manifest_topology_stream": "authored-order triangles as contiguous <i8",
+    "manifest_geometry_stream": "<f8 point bytes concatenated with <i8 triangle bytes",
+    "forbidden_before_exact_hash": [
+      "coordinate transform",
+      "sorting",
+      "deduplication",
+      "Qhull recomputation",
+      "JSON/string repr",
+      "Rerun display readback"
+    ]
+  },
+  "mapped_stream_contract": {
+    "role": "numerical containment and proximity only",
+    "tolerance_m": 1e-09,
+    "exact_hash_authority": false,
+    "positive_gates": [
+      "prim_to_body identity delta",
+      "mapped direct vs D340 x0 assignment delta",
+      "mapped direct vs D340 x0 symmetric surface delta",
+      "D340 candidate containment in x0",
+      "D340 consensus vs candidate surface delta"
+    ]
+  },
+  "registered_negative_controls": {
+    "legacy_mixed_stream": {
+      "expected_direct_manifest_matches": 13,
+      "expected_body_mapped_manifest_matches": 0,
+      "expected_numeric_equivalence_passes": 13
+    },
+    "in_memory_coordinate_perturbation": {
+      "body": "link5",
+      "part": "part_011",
+      "vertex_selector": "x-max",
+      "axis": "x",
+      "registered_delta_m": 1e-05,
+      "allowed_delta_error_fraction": 0.01,
+      "source_file_write": false,
+      "required_rejections": [
+        "raw_points_f32_hash",
+        "manifest_geometry_hash",
+        "1e-9m symmetric proximity"
+      ]
+    }
+  },
+  "raw_points_f32_sha256": {
+    "link5/part_011": "6d3503827df302f182d59a141609177bc1f9ba72f585727865881694e987f211",
+    "link5/part_018": "7d24f4ee87b3344af9725bd8f640ed1d13b10fdee1c2247ec52247c779fe8d44",
+    "link5/part_023": "008f964510343869104803f8b414897c491092365472d5090adf78e0aae9fa0f",
+    "link5/part_024": "c2d017cd77284d4ebfafc1666c9e54813d17bfdf0a66728767ae853df1930951",
+    "link5/part_040": "de74d07954ff042f8ea725bd154ea00c8b3e456171a769d670674a25f2d3f576",
+    "link5/part_041": "09004ea4a01ff16c5cbccc4259d3d701eb7c4d266f3750d616eab2dd80a7adf1",
+    "link5/part_045": "60879ef667ca15d659dbdcdacaa5f508ca0193ddcec5efadde5b517036ac6e6d",
+    "link5/part_054": "fcee176aef7693fc5062045803a09947a5d1250cd9d2db3f71450030cb01324d",
+    "gripper_link/part_000": "944dfe3e1a5fd8fdd35cd97b25ae05abc1c266015b37d915be98c4625ce8dcaa",
+    "gripper_link/part_035": "d527abdaf3034e98bce83b5bd1d1c045bf95c03b374c2d583a3e9025e83fc46c",
+    "gripper_link/part_036": "6ac005110b04e79e3e06dc1d1e9424dd1797df0af51e3c35528d6786e9d726fc",
+    "gripper_link/part_048": "909cb449ffea7ee45f0c35c85e7b93c5dcd52008549fdbdfb755ebf88ade7bba",
+    "gripper_link/part_057": "df3b333298d46950a71bcef63c67241981344f94413154c5bdbf78d2fe86a07d"
+  },
+  "d339_attempt2_file_count": 18,
+  "d339_attempt2_inventory_digest": "0dae41fd3937a0a8aea18488019c74f097d32f7b8de916943ff31334e30464a1",
+  "d340_file_count": 33,
+  "d340_inventory_digest": "def37cc3c4d10cad8919ce71175211cc34fe2e8b567dbc107f13de151a92940d",
+  "d340_session_sha256": "24cbb2cf0a718d119bfd30121a536d4e6a1007738718eef44f0664820fc49762",
+  "d342_session_sha256": "7dd80f659f9eb5bd6d83791d827d7a839d0b05a44529bc7035e73de3a75cb065",
+  "start_here_sha256": "227a28e2cdfb9e3856c29616c1e15a48b888b244e58500854d735081d6f45fca",
+  "parameter_audit_sha256": "75ca035361737e036fd84d79216299b0d860d4e5027a5fc1fa0a8157a1c068e4",
+  "source_hashes": {
+    "d342_harness": "d1c21cecc7f803d173880b2453af0c5dc6b83ff7bff924ea437c578f3e5f841a",
+    "viz_debug": "5fd1004ba7d4707bd31f590b09d94f0326633d97f5b36dec22fee4a15b8d07ac",
+    "rerun_contract": "90559c931bc753be97def463841d41426a2f1bd8e5ddd15a2a2ab08fb54a2e60",
+    "rerun_contract_tests": "b10f798b990c6b9f27640df1e00cd35f56e72fa9f40157b7a3093b1f1f2ebc2f",
+    "d339_harness": "fd307cb573699f8a08df1ab580789188774158877b8abf0a05cc4c60ef6562d6",
+    "d339_hull_manifest": "d70a13edbb8500cde97ad23779811475e1c8bb2d0f6045b4183e704d2157bedd",
+    "d339_asset_manifest": "3b46cb39a1f0ff655dcd46172ebaa84f727d833773275b18f944397007ae2589",
+    "d339_live_audit": "6148252b654a6250faf78a1ebcde4caa57870e800fa1d3c45b93c803fdf882cb",
+    "d339_physics_usd": "9261986d363327e33beb0b555d0ffce320416e827e0b1a8532c8e938d25b8e44",
+    "d339_link5_cold1": "c45bd056b3487f92bc724474dbf850ea6da309fea90c4e0a90879ada7ba2b655",
+    "d339_link5_cold2": "d1819851586e7078c5b58fde47bec196e08063c1ed658f79743ec729dda5590e",
+    "d339_gripper_link_cold1": "dc258b27cdef5d29e23f1b5ef3041c3afb26f50d8c8ad9b222002532e95f2e5e",
+    "d339_gripper_link_cold2": "24b3a026281beffd18b397762226a2663ec6dd056f03099b03ad350a59edad8c",
+    "d340_candidates": "f288d5232f039e58ccd209f332ebfabbf9fec137e746e97d9a3c58688420ef86",
+    "d340_postrun": "2d6bc90a71d9ec407206ade7c32069ad209f8a0ba40cb44a40f42281318a1207",
+    "d340_summary": "ba62c879e78bfa7db47b003e1bfdd4ee2bd4ff250b083e423f94ebec67992163",
+    "d340_parameter_audit": "9e7f5dae62f0aa4f3a0f7d936ab818bce54e9d896e555475c115bd6a3ed5526b"
+  },
+  "environment": {
+    "rerun_sdk": "0.34.1",
+    "numpy": "1.26.0",
+    "psutil": "5.9.8",
+    "scipy": "1.15.3",
+    "trimesh": "4.5.1"
+  },
+  "rerun_version": "0.34.1",
+  "scipy_version": "1.15.3",
+  "trimesh_version": "4.5.1",
+  "scientific_subject_counts": {
+    "parts": 13,
+    "coordinate_frame_entities": 15,
+    "mesh_entities": 39,
+    "metric_scalar_rows": 130,
+    "gate_scalar_rows": 13,
+    "event_rows": 16,
+    "exact_non_system_entities": 238
+  },
+  "rrd_contract_sha256": "1af167b166bf84db99071314c04d00b83e23568bba416028ce935e211aa37e82",
+  "scope_guards": {
+    "physical_variables_changed": [],
+    "existing_parameter_increases": [],
+    "existing_parameter_changes": [],
+    "decomposition_parameter_changes": [],
+    "threshold_relaxations": [],
+    "collision_asset_writes": [],
+    "recook_requests": 0,
+    "simulation_context_created": false,
+    "controlled_physics_steps": 0,
+    "attempt3_absent_required": true,
+    "g0a_pass": false,
+    "ladder_promoted": false
+  },
+  "registered_command": "OMNI_KIT_ACCEPT_EULA=YES conda run -n isaaclab --no-capture-output python sim_scripts/cyl34_top_view_d342_grasp_g0a_authored_coordinate_stream_repair.py --headless",
+  "pass_condition": "13/13 direct exact + 13/13 mapped numeric + 13/13 legacy mixed-stream rejection + in-memory perturbation rejection + finalized exact Rerun contract + immutable D339/D340",
+  "stop_condition": "Stop regardless of result; attempt3 authoring and fresh live validation require a separate user-approved case"
+}

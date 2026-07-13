@@ -1,0 +1,134 @@
+{
+  "artifact": "D343_USD_TYPED_FLOAT_PREREGISTRATION_V1",
+  "status": "PRE_RUNTIME_LOCKED",
+  "case": "g0a_d343",
+  "git_head": "b1476d1acc681f392eb3478da5192f3b3898085e",
+  "new_variables": [
+    "usd_float_parameter_readback_contract"
+  ],
+  "variable_count": 1,
+  "measurement_only": true,
+  "subject_count": 128,
+  "part_allowlist": {
+    "bodies_in_order": [
+      "link5",
+      "gripper_link"
+    ],
+    "part_name_format": "part_%03d",
+    "index_range_inclusive": [
+      0,
+      63
+    ],
+    "per_body_count": 64
+  },
+  "d342_failure_subset_count": 13,
+  "d342_failure_subset_allowlist": {
+    "link5": [
+      "part_011",
+      "part_018",
+      "part_023",
+      "part_024",
+      "part_040",
+      "part_041",
+      "part_045",
+      "part_054"
+    ],
+    "gripper_link": [
+      "part_000",
+      "part_035",
+      "part_036",
+      "part_048",
+      "part_057"
+    ]
+  },
+  "requested_value_m": 0.0001,
+  "expected_float32_value_m": 0.00009999999747378752,
+  "expected_float32_bits_uint32": 953267991,
+  "expected_float32_bits_hex": "0x38d1b717",
+  "expected_float32_le_bytes_hex": "17b7d138",
+  "primary_identity_gate": "exact little-endian float32 bits",
+  "frozen_compatibility_tolerance_m": 1e-10,
+  "compatibility_tolerance_is_identity_authority": false,
+  "schema_default_m": 0.001,
+  "schema_default_float32_bits_hex": "0x3a83126f",
+  "schema_documented_units": "distance",
+  "negative_control": {
+    "kind": "in-memory adjacent float32 values on both sides",
+    "lower_bits_hex": "0x38d1b716",
+    "upper_bits_hex": "0x38d1b718",
+    "required_exact_bit_result": "reject both",
+    "required_frozen_tolerance_diagnostic": "accept both",
+    "source_write": false
+  },
+  "d342_comparator_reproduction": {
+    "required_frozen_1e_10_result": "correct typed value passes",
+    "required_executed_1e_12_result": "correct typed value fails",
+    "changes_d342_verdict": false
+  },
+  "registered_command": {
+    "python": "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+    "script": "sim_scripts/cyl34_top_view_d343_grasp_g0a_usd_typed_float_readback_contract_repair.py",
+    "argv": [],
+    "environment": {
+      "PYTHONPATH": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.libs-1.0.1+69cbf6ad.lx64.r.cp311",
+      "LD_LIBRARY_PATH": "/home/cgxr/miniconda3/envs/isaaclab/lib:/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.libs-1.0.1+69cbf6ad.lx64.r.cp311/bin"
+    }
+  },
+  "source_hashes": {
+    "d339_harness": "fd307cb573699f8a08df1ab580789188774158877b8abf0a05cc4c60ef6562d6",
+    "d339_hull_manifest": "d70a13edbb8500cde97ad23779811475e1c8bb2d0f6045b4183e704d2157bedd",
+    "d339_live_audit": "6148252b654a6250faf78a1ebcde4caa57870e800fa1d3c45b93c803fdf882cb",
+    "d339_physics_usd": "9261986d363327e33beb0b555d0ffce320416e827e0b1a8532c8e938d25b8e44",
+    "d340_harness": "1bdea659fadd7801b0f5749cca6286c7eb90c95a857ed516e09e34ceb12a023a",
+    "d340_parameter_audit": "9e7f5dae62f0aa4f3a0f7d936ab818bce54e9d896e555475c115bd6a3ed5526b",
+    "d342_completion": "6f57035fface51cd0c764c2aa19f97daca33700e808fd1ab537d10769579250b",
+    "d342_evidence": "d42c29288208414cdbe0addaa7932ab82e196fcaad27f939cef90333b6c07ac8",
+    "d342_harness": "e1f9443f2676953b0398abee0e6653505a416f69bc4059cebd5b1cbc20042650",
+    "d342_parameter_audit": "75ca035361737e036fd84d79216299b0d860d4e5027a5fc1fa0a8157a1c068e4",
+    "d342_root_cause": "9101fae1d2bbf216b29de5a5ce31439d0425b35aa92d576905fac9962bee692e",
+    "d342_rrd_context_only": "79fbc0541e3608adaa30cef4b2f8bcb60a0f0cfd58b1239d82e7e068601f22ff",
+    "d343_harness": "eaf9e60bde17fa093248282f7adb282ef570276afff71410965ff0a18f6240dd",
+    "pxr_physx_schema": "fe075bce4bde5ba7db69c6ccef0c4c26909336ab34c619129fc276f7cb4d7abc",
+    "pxr_sdf_module": "b4e3056cf5622e0f3036a74876b180c019e46beddc10beb821987020c0c7bbbc",
+    "pxr_usd_module": "0071f15c896e2252f647384d2276c9b7c9211c0c08f6553701a2432451d2d3c4"
+  },
+  "d343_session_sha256": "06d3d90375157cb7037c4fa9bf1685c09f78b4a6e45c0a7886ef649a3e8f680a",
+  "start_here_sha256": "4dc2a9551f0f2b060ac293977a94b4aec15c6debe92c998f57c3c3fd10148874",
+  "parameter_audit_sha256": "902ec275766663306a5fb20c1d4c381bb588f3f95132d790be1587247d472667",
+  "rerun_omission_sha256": "9c8e69c7f798756eea1a1a34a21bd2e74d7716e53992904b5ee7cc6ca5abd7c5",
+  "d339_attempt2_file_count": 18,
+  "d339_attempt2_inventory_digest": "0dae41fd3937a0a8aea18488019c74f097d32f7b8de916943ff31334e30464a1",
+  "d340_file_count": 33,
+  "d340_inventory_digest": "def37cc3c4d10cad8919ce71175211cc34fe2e8b567dbc107f13de151a92940d",
+  "d342_file_count": 13,
+  "d342_inventory_digest": "7c205d7f6222a2a091a70bb1cf784b339512efbfe8d50bbb3b5ee8c2fed35232",
+  "numpy_version": "1.26.0",
+  "psutil_version": "5.9.8",
+  "pxr_usd_version": [
+    0,
+    24,
+    5
+  ],
+  "scope_guards": {
+    "geometry_arrays_read": false,
+    "isaac_kit_started": false,
+    "simulation_context_created": false,
+    "collision_asset_writes": [],
+    "recook_requests": 0,
+    "controlled_physics_steps": 0,
+    "new_rerun_artifacts": [],
+    "attempt3_authoring": false,
+    "settle_or_ten_trial": false,
+    "g0a_promotion": false
+  },
+  "pass_requires": [
+    "all preregistration hashes, inventories, pins, and scope guards remain exact",
+    "direct Sdf and composed Usd typed contract passes 128/128",
+    "D342 failure-subset anchors pass 13/13",
+    "both adjacent float32 values are rejected by exact bits while accepted by the compatibility tolerance",
+    "the correct typed value passes frozen 1e-10 and fails D342 executed 1e-12",
+    "D339, D340, and D342 inventories remain immutable",
+    "attempt3 remains absent"
+  ],
+  "stop_rule": "D343 PASS only makes separately approved D344 eligible. It does not authorize asset mutation, physics, G0a promotion, G0b, RL, or ladder advancement."
+}

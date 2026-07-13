@@ -1,0 +1,37 @@
+{
+  "artifact": "D342_AUTHORED_COORDINATE_STREAM_COMPLETION_SUMMARY_V1",
+  "case": "g0a_d342",
+  "verdict": "D342_AUTHORED_COORDINATE_STREAM_HARNESS_TOLERANCE_DRIFT_FAIL_STOP",
+  "registered_automated_verdict": "D342_AUTHORED_COORDINATE_STREAM_CONTRACT_FAIL_STOP",
+  "completion_contract_pass": false,
+  "authored_coordinate_stream_subevidence_supported": true,
+  "direct_authored_hashes": "13/13 exact for raw f32, vertex, topology, and combined geometry streams",
+  "mapped_numeric_contract": "13/13 pass",
+  "legacy_domain_negative": "13/13 rejected",
+  "in_memory_10um_perturbation": "rejected by raw hash, manifest geometry hash, and 1e-9m proximity",
+  "rerun_observability": "archive/schema/render/manual inspection pass",
+  "failed_registered_predicate": "min_thickness_frozen_1e_4m, 0/13",
+  "failure_attribution": "D342 applied abs_tol=1e-12m although the frozen D339/D340 minThickness readback tolerance was 1e-10m. The immutable float32 readback delta is 2.526212488436659e-12m and passes the registered tolerance.",
+  "parameter_audit": {
+    "actual_parameter_increases": 0,
+    "actual_parameter_changes": 0,
+    "decomposition_changes": 0,
+    "unregistered_validator_tolerance_tightenings": 1,
+    "tightening_factor": 100.0
+  },
+  "scope": {
+    "asset_writes": 0,
+    "recooks": 0,
+    "physics_steps": 0,
+    "attempt3_absent": true,
+    "g0a_pass": false,
+    "g0b_rl_ladder_blocked": true
+  },
+  "source_paths": {
+    "scientific_evidence": "claudedocs/runtime_logs/grasp_track/g0a_d342/d342_authored_coordinate_stream_evidence.json",
+    "automated_summary": "claudedocs/runtime_logs/grasp_track/g0a_d342/d342_authored_coordinate_stream_automated_summary.json",
+    "root_cause_audit": "claudedocs/runtime_logs/grasp_track/g0a_d342/d342_postrun_root_cause_audit.json",
+    "manual_rerun_inspection": "claudedocs/runtime_logs/grasp_track/g0a_d342/d342_rerun_manual_visual_inspection.json"
+  },
+  "next_gate": "Stop D342. Separately approve D343 proof-only USD typed-float/readback-contract repair. Only after it passes may a separate D344 attempt3 collision-asset case be considered; future Kit harnesses must also preserve failure exit status."
+}

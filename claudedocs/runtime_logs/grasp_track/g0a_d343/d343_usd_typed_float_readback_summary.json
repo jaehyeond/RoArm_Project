@@ -1,0 +1,152 @@
+{
+  "actual_unique_float32_bits_hex": [
+    "0x38d1b717"
+  ],
+  "adjacent_negative_pass": true,
+  "artifact": "D343_USD_TYPED_FLOAT_READBACK_SUMMARY_V1",
+  "case": "g0a_d343",
+  "d342_comparator_reproduction_pass": true,
+  "d342_registered_verdict_preserved": true,
+  "d342_subset_anchor_pass_count": 13,
+  "d344_attempt3_eligible_for_separate_approval": true,
+  "d344_authorized": false,
+  "environment": {
+    "isaac_kit_started": false,
+    "numpy": "1.26.0",
+    "psutil": "5.9.8",
+    "pxr_usd_version": [
+      0,
+      24,
+      5
+    ],
+    "python": "3.11.14"
+  },
+  "evidence_path": "claudedocs/runtime_logs/grasp_track/g0a_d343/d343_usd_typed_float_readback_evidence.json",
+  "evidence_sha256": "95bb4e3787d300071f1bac22037814b732781cd72a69a0334a34a05a50ac920b",
+  "expected_float32_bits_hex": "0x38d1b717",
+  "expected_float32_bits_uint32": 953267991,
+  "expected_float32_le_bytes_hex": "17b7d138",
+  "expected_float32_value_m": 9.999999747378752e-05,
+  "float32_representation_delta_m": 2.526212488436659e-12,
+  "frozen_tolerance_accepts_both_adjacent_values": true,
+  "global_checks": {
+    "composed_meters_per_unit_one": true,
+    "d342_subset_anchor_exact_13": true,
+    "direct_layer_not_dirty_after": true,
+    "direct_layer_not_dirty_before": true,
+    "direct_meters_per_unit_authored": true,
+    "direct_meters_per_unit_one": true,
+    "live_audit_rows_exact_128": true,
+    "part_subject_exact_128": true,
+    "schema_declares_float": true,
+    "schema_documents_distance_units": true,
+    "schema_fallback_bits_distinct": true,
+    "sdf_layer_is_immutable_d339_physics": true,
+    "usd_root_layer_is_immutable_d339_physics": true
+  },
+  "immutability": {
+    "d339_digest_before_after": [
+      "0dae41fd3937a0a8aea18488019c74f097d32f7b8de916943ff31334e30464a1",
+      "0dae41fd3937a0a8aea18488019c74f097d32f7b8de916943ff31334e30464a1"
+    ],
+    "d339_exact": true,
+    "d339_file_count_before_after": [
+      18,
+      18
+    ],
+    "d340_digest_before_after": [
+      "def37cc3c4d10cad8919ce71175211cc34fe2e8b567dbc107f13de151a92940d",
+      "def37cc3c4d10cad8919ce71175211cc34fe2e8b567dbc107f13de151a92940d"
+    ],
+    "d340_exact": true,
+    "d340_file_count_before_after": [
+      33,
+      33
+    ],
+    "d342_digest_before_after": [
+      "7c205d7f6222a2a091a70bb1cf784b339512efbfe8d50bbb3b5ee8c2fed35232",
+      "7c205d7f6222a2a091a70bb1cf784b339512efbfe8d50bbb3b5ee8c2fed35232"
+    ],
+    "d342_exact": true,
+    "d342_file_count_before_after": [
+      13,
+      13
+    ],
+    "pass": true
+  },
+  "new_variables": [
+    "usd_float_parameter_readback_contract"
+  ],
+  "next_gate": "Stop D343. PASS only makes a separately approved D344 attempt3 authoring and fresh live-validation case eligible; it does not authorize mutation or G0a promotion.",
+  "one_ulp_m": 7.275957614183426e-12,
+  "part_count": 128,
+  "pass": true,
+  "preregistration_checks": {
+    "artifact": true,
+    "attempt3_absent": true,
+    "d339_inventory": true,
+    "d340_inventory": true,
+    "d342_anchor": true,
+    "d342_failure_subset_allowlist": true,
+    "d342_failure_subset_count": true,
+    "d342_inventory": true,
+    "expected_typed_bits": true,
+    "expected_typed_le_bytes": true,
+    "expected_typed_uint32": true,
+    "expected_typed_value": true,
+    "frozen_compatibility_tolerance": true,
+    "git_head": true,
+    "manifest_part_allowlist": true,
+    "new_variables": true,
+    "numpy_pin": true,
+    "parameter_audit": true,
+    "parameter_audit_sha256": true,
+    "part_allowlist": true,
+    "psutil_pin": true,
+    "pxr_version": true,
+    "registered_command": true,
+    "requested_value": true,
+    "rerun_omission": true,
+    "rerun_omission_sha256": true,
+    "schema_default": true,
+    "schema_default_bits": true,
+    "schema_units": true,
+    "session_sha256": true,
+    "source_hashes": true,
+    "start_here_sha256": true,
+    "status": true,
+    "subject_count": true,
+    "variable_count": true
+  },
+  "rerun": {
+    "d342_rrd_context_only_sha256": "79fbc0541e3608adaa30cef4b2f8bcb60a0f0cfd58b1239d82e7e068601f22ff",
+    "d342_rrd_reused_as_d343_artifact": false,
+    "new_artifacts": [],
+    "omission_contract_pass": true,
+    "omission_justification_path": "claudedocs/runtime_logs/grasp_track/g0a_d343/d343_rerun_omission_justification.json",
+    "omission_justification_sha256": "9c8e69c7f798756eea1a1a34a21bd2e74d7716e53992904b5ee7cc6ca5abd7c5",
+    "omitted": true
+  },
+  "schema_default_float32_bits_hex": "0x3a83126f",
+  "schema_default_typed_m": 0.0010000000474974513,
+  "scope_guards": {
+    "attempt3_absent": true,
+    "collision_asset_writes": [],
+    "controlled_physics_steps": 0,
+    "d342_verdict_changed": false,
+    "existing_parameter_changes": [],
+    "existing_parameter_increases": [],
+    "g0a_pass": false,
+    "geometry_arrays_read": false,
+    "isaac_kit_started": false,
+    "ladder_promoted": false,
+    "new_rerun_artifacts": [],
+    "physical_variables_changed": [],
+    "recook_requests": 0,
+    "simulation_context_created": false,
+    "standalone_pxr_only": true,
+    "threshold_relaxations": []
+  },
+  "typed_attribute_pass_count": 128,
+  "verdict": "D343_USD_TYPED_FLOAT_READBACK_CONTRACT_PASS"
+}
