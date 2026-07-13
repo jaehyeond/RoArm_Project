@@ -1,0 +1,74 @@
+{
+  "artifact": "D338_POSTRUN_CASE_SUMMARY",
+  "summary_origin": "post-run consolidation of immutable attempt1 failure evidence; no verdict override",
+  "verdict": "D338_G0A_ASSET_BUILD_CONTRACT_FAIL_STOP",
+  "active_case": "G0a cylinder D34xH90 collision-representation repair",
+  "new_variable": [
+    "collision_representation"
+  ],
+  "phase_reached": "link5_cold1 synchronous request returned control; registered cooking-statistics gate then failed",
+  "registered_gate_failure": {
+    "isolated_settings_applied": true,
+    "positive_scheduled_task_delta": false,
+    "all_scheduled_tasks_finished": true,
+    "positive_cache_miss_delta": false,
+    "no_cache_hit_during_isolated_cook": true,
+    "no_polygon_limit_warning": true,
+    "no_gpu_compatibility_warning": true,
+    "statistics_delta": {
+      "total_scheduled_tasks": 0,
+      "total_finished_tasks": 0,
+      "total_finished_cache_hit_tasks": 0,
+      "total_finished_cache_miss_tasks": 0,
+      "total_warnings_convex_polygon_limits_reached": 0,
+      "total_warnings_failed_gpu_compatibility": 0
+    },
+    "request_result_or_convex_count_recorded_before_failure": false,
+    "interpretation": "The registered positive-task/cache-miss witness is unsupported by this synchronous explicit cook path. D338 stops without deciding convex geometry quality."
+  },
+  "asset_build": {
+    "pass": false,
+    "asset_attempt": "attempt1",
+    "derivative_asset_created": false,
+    "hull_manifest_created": false,
+    "canonical_asset_changed": false
+  },
+  "physics": {
+    "environment_created": false,
+    "controlled_steps_total": 0,
+    "baseline_steps": 0,
+    "target_steps": 0
+  },
+  "evaluation": {
+    "live_representation_gate_run": false,
+    "raw_cooked_target_fidelity_evaluated": false,
+    "visualization_attempted": false,
+    "g0a_pass": false,
+    "ten_trial_run": false,
+    "ladder_promoted": false
+  },
+  "frozen_source_hashes_reverified_after_stop": {
+    "robot_usd_root_sha256": "a4be58e87b1f9790f2a2ed600f0620c79d3cfb95c608b3c598308d52f5e46fff",
+    "robot_usd_physics_layer_sha256": "1df07d387da76dcde4cd700ee1f9546cba25965776a9700897314ef884c37ed2",
+    "urdf_sha256": "64dc8d082cbce9a13a0697a11a0eaeaebbc54bbcd97e7aafaa40da483969dae2"
+  },
+  "artifacts": {
+    "asset_build_failure_manifest": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d338/collision_asset/attempt1/d338_asset_build_manifest.json",
+      "sha256": "8fec513a4e344132f4e445061bbc383da2d6347f5e5883b4c53b2695da1acdda"
+    },
+    "invocation_abort": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d338/collision_asset/attempt1/d338_invocation_abort_001.json",
+      "sha256": "f168087ac672e2bffdd9fdf29b6200afcd69e6551e4fd9e891b1e8f7695c8d42"
+    },
+    "kit_log": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d338/collision_asset/attempt1/kit_20260713_114440.log",
+      "sha256": "075ce099543ae952e362c47e44894e92abb63e72610c274441e6a82690a87a6b",
+      "bytes": 381911
+    }
+  },
+  "next_case_not_authorized": {
+    "recommended": "A separately pre-registered cook-witness repair may keep the exact decomposition candidate frozen, record RESULT_VALID/convex count before statistics, and treat unsupported global counters as informational while proving independence through cache-disabled distinct stages plus two-cook geometry equality.",
+    "attempt2_started": false
+  }
+}

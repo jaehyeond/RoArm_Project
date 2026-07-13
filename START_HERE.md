@@ -1,45 +1,51 @@
 # START_HERE.md
 
-Last updated: 2026-07-13 KST (D337 current truth: the q5 gripper convention
-error is repaired — the target family is feasible again with the jaw open
-(2,560/2,629 raw-clear); the sole remaining G0a blocker is the cooked-hull
-collision representation.)
+Last updated: 2026-07-13 KST (D339 complete:
+`D339_G0A_PREPHYSICS_CONTRACT_FAIL_STOP`; cook/build PASS, live-collider audit
+FAIL, physics `0` steps. D338 attempt1 and D339 attempt2 are immutable.)
 
 ## Current Truth
 
 - Active pivot remains **grasp track G0a on cylinder D34 x H90**. Cube repair,
   G0b close/lift, PPO/RL, VLA, randomization, real RoArm, and B200 remain out
   of scope.
-- D337 verdict: `D337_G0A_STATIC_RUNTIME_MIXED_STOP` — with a fully resolved
-  causal story:
-  - **q5 convention error (durable fact)**: URDF gripper `q5=0` = CLOSED,
-    `1.571rad` = OPEN (D322 mapping `real 88.3deg <-> 1.571rad`). The
-    D325-family "open gripper q5=0" was wrong; D330-D336 all wrote a closed
-    moving jaw into the grasp volume. D334-D336 conclusions stand but are
-    scoped to the closed-jaw sub-family.
-  - With `q5=1.5413rad` (98.1% of open limit, ~86.6deg real): open-jaw scan
-    passes `2,560/2,629`; selected target = **the original D325 `(7,11)mm`**
-    (link5 `+4.2726mm` / gripper `+11.1751mm` raw-clear); all controls
-    bit-exact; design scoping validated on the live stage (`+11.175088` vs
-    predicted `+11.175mm`).
-  - Conditional 200-step settle: raw meshes clear at every reading (min
-    `+7.498/+9.595mm`), gripper `0N`, final alignment PASS, final
-    displacement `2.754mm < 5mm` — but link5 hit a `38.861N` step-0 impulse
-    and the object was disturbed (max XY `5.418mm`, tilt `4.208deg`) before
-    resting against link5 at `~1.70N`. Attribution-timing gate failed on an
-    onset-metric limitation (recorded onset `19` missed the step-0 impulse
-    row) -> MIXED, no verdict override.
-  - **Causal attribution (evidence)**: physics collides with the cooked
-    convex hulls, not the raw meshes — D334 certified link5's cooked hull at
-    `-6.2367mm` overlap at exactly this pose. The moving-jaw and target
-    problems are solved; collision representation is the one blocker left.
+- D337 verdict: `D337_G0A_STATIC_RUNTIME_MIXED_STOP`. Durable q5 convention:
+  `q5=0` = CLOSED, `1.571rad` = OPEN. At `q5=1.5413`, the open-jaw scan passed
+  `2,560/2,629`; original `(7,11)mm` was raw-clear (`+4.2726/+11.1751mm`).
+  The 200-step settle kept raw meshes clear and final displacement `2.754mm`,
+  but a link5 `38.861N` step-0 impulse disturbed the object (max XY `5.418mm`,
+  tilt `4.208deg`). D334's cooked link5 hull overlaps `-6.2367mm` there, so
+  collision representation remains the blocker.
 - **USD/URDF divergence (durable fact)**: the robot USD (5/13) embeds full
   `gripper_link.stl` as the moving-jaw collision mesh; the URDF was changed
   5/14 to a 4mm-box proxy (`g2a`). The USD is stale vs the URDF but more
   physical; it remains the audited truth. Any regeneration must decide the
   moving-jaw representation explicitly.
+- D338 verdict: `D338_G0A_ASSET_BUILD_CONTRACT_FAIL_STOP`. attempt1's explicit
+  cook returned while every global cooking-statistics delta stayed zero; its
+  callback result/count was not recorded before the gate, so it licenses no
+  geometry claim. No derivative or physics was created; attempt1 is immutable.
+- D339 verdict: `D339_G0A_PREPHYSICS_CONTRACT_FAIL_STOP`.
+  - The repaired callback-first witness passed. All four fresh-stage requests
+    called back exactly once with `RESULT_VALID` and `64` serialized hulls.
+    For both link5 and gripper, cold1/cold2 had equal `64/64` part topology and
+    hashes with maximum coordinate delta `0.0m`. All six global counter deltas
+    again stayed zero and are informational only. D338 attempt1 stayed exact.
+  - attempt2 derivative build PASS: only the physics layer changed under the
+    registered allowlist; non-physics layers and tool mass/COM/inertia remained
+    equal. Both bodies saturated the frozen `maxConvexHulls=64` cap.
+  - Live audit FAIL. USD inventory correctly had 64 enabled new parts and one
+    disabled legacy hull per body, but PhysX property query still enumerated
+    `65` colliders by including that legacy path. Direct re-cook returned one
+    convex for every new part, yet surface fidelity `<=0.1mm` failed on link5
+    `8/64` (worst `4.894877mm`) and gripper `5/64` (worst `0.699067mm`), leaving
+    only `56/64` and `59/64` directly certified parts.
+  - Therefore cooked-union target distance was intentionally not queried;
+    baseline/settle did not run; controlled physics steps `0`. One PNG and one
+    non-empty 1-step RRD passed the artifact contract. No claim is licensed
+    about target fidelity or static physics.
 
-## Active Case: G0a
+## Active Case: G0a / D339
 
 - Object: cylinder r `0.017m`, h `0.090m`, fixed `(0.300,0.000)`; mass
   placeholder `0.72kg` (real mass required before G0b); friction `1.5/1.2`.
@@ -47,25 +53,31 @@ collision representation.)
   `q5=1.5413rad`; canonical candidate `(7,11)mm`.
 - G0a gates remain: TCP `<=5mm`, tangent `<=15deg`, jaw gap `[0,5mm]`, no
   penetration, contact `>=15mm` below top, displacement `<5mm`, `10/10`.
-- Latest runtime output: `claudedocs/runtime_logs/grasp_track/g0a_d337/`
-  (incl. `design_scoping/` and the first full-trajectory 200-step RRD).
-- Latest detailed session:
-  `claudedocs/session_20260713_grasp_g0a_d337_open_jaw_target_gate.md`.
+- **D339 complete / stopped pre-physics**. 이번 case의 신규 변수:
+  `[cook_witness_contract]` (1개, measurement contract only).
+- Frozen intervention: D338's full-mesh link5/gripper decomposition candidate
+  and every physical/decomposition parameter remain unchanged. D339 changes
+  only how an independent cook is positively witnessed.
+- Output: `claudedocs/runtime_logs/grasp_track/g0a_d339/`; asset build writes
+  only to `collision_asset/attempt2/`. D338 `g0a_d338/.../attempt1/` is immutable.
+- Detailed registration and result:
+  `claudedocs/session_20260713_grasp_g0a_d339_cook_witness_contract_repair.md`.
+- `g0a_pass=false`; G0b/RL/ladder remain blocked.
 
 ## Next Concrete Action
 
-**STOP for user case choice. Recommended: D338 collision-representation
-repair** — the D334/D335/D336 deferral condition ("wait until a raw-clear
-target exists") is now satisfied. Scope: regenerate/replace the robot
-collision representation so the cooked hulls match the raw meshes within a
-registered tolerance (primary offender: link5 cooked `-6.2367mm` at the
-canonical pose; secondary: gripper cook parity `1.46%` FAIL, and the
-g2a-vs-full-mesh moving-jaw decision). This changes a collision asset =
-explicit user approval + its own pre-registered case with the D337 controls
-as parity anchors. After it passes, re-run the frozen `(7,11)` open-jaw
-settle, then the 10-trial alignment gate (G0a 본 게이트).
+Stop for user choice. Recommended next case is a separately pre-registered
+**D340 fixed-point live-authoring repair**: keep the D339 source, target,
+physics, decomposition parameters, and thresholds frozen; retain the 115
+passing parts and stabilize only the 13 failing parts after measuring both
+live-instance and prototype cook geometry. The property contract must separate
+the exact 64 enabled shapes from the one known disabled legacy enumeration row;
+enumeration alone is not active-collision evidence. D339 attempt2 is immutable.
+Collision-asset changes require explicit approval. Only a clean `64/64`
+per-body surface audit plus `128/128` property/direct volume binding may query
+the frozen cooked-union target distance; physics and 10-trial remain blocked.
 
-Reserve choices:
+Reserve choices (not active):
 
 1. Onset-metric hardening (record impulse-row onsets) — REACTIVE fix allowed
    only as part of the next settle case, not standalone.
@@ -78,14 +90,14 @@ G0b/RL/ladder promotion remain blocked.
 
 1. `AGENTS.md` (then `CLAUDE.md` only for Claude-specific workflow)
 2. `START_HERE.md`
-3. `claudedocs/DECISIONS.md` tail (D334-D337)
+3. `claudedocs/DECISIONS.md` tail (D334-D339)
 4. `claudedocs/EXPERIMENT_LEDGER.md` tail
 5. `claudedocs/direction_20260708_grasp_pivot.md`
-6. `claudedocs/session_20260713_grasp_g0a_d337_open_jaw_target_gate.md`
-7. `claudedocs/runtime_logs/grasp_track/g0a_d337/g0a_d337_open_jaw_target_gate_summary.json`
-8. `claudedocs/runtime_logs/grasp_track/g0a_d337/design_scoping/d337_design_scoping_results.md`
-9. `claudedocs/session_20260712_grasp_g0a_d336_finite_grid_caveat_discriminator.md`
-10. `claudedocs/session_20260712_d336_posthoc_setup_rerun_plan_audit.md`
+6. `claudedocs/session_20260713_grasp_g0a_d339_cook_witness_contract_repair.md`
+7. `claudedocs/runtime_logs/grasp_track/g0a_d339/g0a_d339_cook_witness_contract_repair_summary.json`
+8. `claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2/d339_cook_witness_manifest.json`
+9. `claudedocs/runtime_logs/grasp_track/g0a_d339/d339_live_collider_audit.json`
+10. `claudedocs/session_20260713_grasp_g0a_d338_collision_representation_repair.md`
 
 ## Durable Rules
 
@@ -98,6 +110,13 @@ G0b/RL/ladder promotion remain blocked.
 - BVH distance scalars of colliding meshes are ranking-invalid (D336); use
   contact-level EPA enumeration. AABB-only reasoning is forbidden.
   Distinguish raw mesh, mathematical hull, mirror cook, live cook.
+- PhysX `get_cooking_statistics()` all-zero deltas do not positively witness
+  synchronous explicit `request_convex_collision_representation` (D338).
+- Callback-first two-cook geometry equality proves deterministic cook output,
+  not live shape binding/fidelity. USD `collisionEnabled=false` alone did not
+  remove the legacy shape from D339's PhysX property query. Never infer live
+  collider cardinality from authored USD inventory alone (D339).
+- D338 attempt1 and D339 attempt2 may never be reused or overwritten.
 - Visualization DoD and Isaac pins binding: `numpy==1.26.0`, `psutil==5.9.8`.
 
 ## Frozen Background

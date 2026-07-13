@@ -1,0 +1,1643 @@
+{
+  "artifact": "D339_PREPHYSICS_SCENE_CONTRACT",
+  "checks": {
+    "live_collider_audit": false,
+    "retained_raw_source_contract": true,
+    "sensor_contract": true,
+    "stage_contract": true
+  },
+  "pass": false,
+  "raw_source_contract": {
+    "body_set_exact": true,
+    "pass": true,
+    "per_body": {
+      "gripper_link": {
+        "checks": {
+          "exactly_one_retained_source": true,
+          "owner_matches": true,
+          "retained_source_convex_hull_token": true,
+          "retained_source_disabled": true,
+          "source_mesh_matches_d334": true
+        },
+        "inventory": [
+          {
+            "approximation": "convexHull",
+            "collision_enabled": false,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/gripper_link/node_STL_BINARY_/mesh"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/gripper_link/node_STL_BINARY_",
+            "type_name": "Xform"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_000"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_000",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_001"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_001",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_002"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_002",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_003"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_003",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_004"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_004",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_005"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_005",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_006"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_006",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_007"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_007",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_008"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_008",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_009"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_009",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_010"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_010",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_011"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_011",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_012"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_012",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_013"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_013",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_014"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_014",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_015"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_015",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_016"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_016",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_017"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_017",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_018"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_018",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_019"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_019",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_020"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_020",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_021"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_021",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_022"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_022",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_023"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_023",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_024"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_024",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_025"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_025",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_026"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_026",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_027"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_027",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_028"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_028",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_029"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_029",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_030"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_030",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_031"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_031",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_032"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_032",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_033"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_033",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_034"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_034",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_035"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_035",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_036"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_036",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_037"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_037",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_038"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_038",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_039"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_039",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_040"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_040",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_041"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_041",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_042"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_042",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_043"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_043",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_044"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_044",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_045"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_045",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_046"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_046",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_047"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_047",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_048"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_048",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_049"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_049",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_050"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_050",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_051"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_051",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_052"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_052",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_053"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_053",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_054"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_054",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_055"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_055",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_056"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_056",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_057"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_057",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_058"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_058",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_059"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_059",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_060"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_060",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_061"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_061",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_062"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_062",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_063"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/gripper_link",
+            "path": "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_063",
+            "type_name": "Mesh"
+          }
+        ],
+        "pass": true,
+        "source_mesh_parity": {
+          "bounds_bit_near": true,
+          "face_count": true,
+          "fan_triangulated": true,
+          "mesh_path": true,
+          "triangle_count": true,
+          "vertex_count": true
+        }
+      },
+      "link5": {
+        "checks": {
+          "exactly_one_retained_source": true,
+          "owner_matches": true,
+          "retained_source_convex_hull_token": true,
+          "retained_source_disabled": true,
+          "source_mesh_matches_d334": true
+        },
+        "inventory": [
+          {
+            "approximation": "convexHull",
+            "collision_enabled": false,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/link5/node_STL_BINARY_/mesh"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/link5/node_STL_BINARY_",
+            "type_name": "Xform"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_000"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_000",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_001"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_001",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_002"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_002",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_003"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_003",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_004"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_004",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_005"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_005",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_006"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_006",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_007"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_007",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_008"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_008",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_009"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_009",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_010"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_010",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_011"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_011",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_012"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_012",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_013"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_013",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_014"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_014",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_015"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_015",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_016"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_016",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_017"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_017",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_018"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_018",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_019"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_019",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_020"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_020",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_021"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_021",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_022"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_022",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_023"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_023",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_024"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_024",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_025"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_025",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_026"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_026",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_027"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_027",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_028"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_028",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_029"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_029",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_030"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_030",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_031"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_031",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_032"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_032",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_033"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_033",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_034"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_034",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_035"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_035",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_036"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_036",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_037"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_037",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_038"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_038",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_039"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_039",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_040"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_040",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_041"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_041",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_042"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_042",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_043"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_043",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_044"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_044",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_045"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_045",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_046"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_046",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_047"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_047",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_048"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_048",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_049"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_049",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_050"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_050",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_051"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_051",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_052"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_052",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_053"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_053",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_054"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_054",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_055"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_055",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_056"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_056",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_057"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_057",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_058"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_058",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_059"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_059",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_060"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_060",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_061"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_061",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_062"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_062",
+            "type_name": "Mesh"
+          },
+          {
+            "approximation": "convexHull",
+            "collision_enabled": true,
+            "is_instance_proxy": true,
+            "mesh_prim_paths": [
+              "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_063"
+            ],
+            "nearest_rigid_body_ancestor": "/World/envs/env_0/Robot/link5",
+            "path": "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_063",
+            "type_name": "Mesh"
+          }
+        ],
+        "pass": true,
+        "source_mesh_parity": {
+          "bounds_bit_near": true,
+          "face_count": true,
+          "fan_triangulated": true,
+          "mesh_path": true,
+          "triangle_count": true,
+          "vertex_count": true
+        }
+      }
+    }
+  },
+  "sensor_contract": {
+    "actual_tensor_shapes": {
+      "contact_pos_w": [
+        1,
+        1,
+        4,
+        3
+      ],
+      "force_matrix_w": [
+        1,
+        1,
+        4,
+        3
+      ],
+      "force_matrix_w_history": [
+        1,
+        1,
+        1,
+        4,
+        3
+      ],
+      "net_forces_w": [
+        1,
+        1,
+        3
+      ],
+      "net_forces_w_history": [
+        1,
+        1,
+        1,
+        3
+      ],
+      "pos_w": [
+        1,
+        1,
+        3
+      ],
+      "quat_w": [
+        1,
+        1,
+        4
+      ]
+    },
+    "body_names": [
+      "Sponge"
+    ],
+    "errors": [],
+    "expected_tensor_shapes": {
+      "contact_pos_w": [
+        1,
+        1,
+        4,
+        3
+      ],
+      "force_matrix_w": [
+        1,
+        1,
+        4,
+        3
+      ],
+      "force_matrix_w_history": [
+        1,
+        1,
+        1,
+        4,
+        3
+      ],
+      "net_forces_w": [
+        1,
+        1,
+        3
+      ],
+      "net_forces_w_history": [
+        1,
+        1,
+        1,
+        3
+      ],
+      "pos_w": [
+        1,
+        1,
+        3
+      ],
+      "quat_w": [
+        1,
+        1,
+        4
+      ]
+    },
+    "filter_count": 4,
+    "hard_contract_pass": true,
+    "instrumentation_side_effect": "activate_contact_sensors authors rigid-body sleep threshold 0",
+    "num_bodies": 1,
+    "num_instances": 1,
+    "reporter_threshold_n": 0.0,
+    "resolved_filter_index_by_label": {
+      "gripper_link": 3,
+      "link4": 1,
+      "link5": 2,
+      "support_table": 0
+    },
+    "resolved_filter_paths": [
+      "/World/envs/env_0/TapTable",
+      "/World/envs/env_0/Robot/link4",
+      "/World/envs/env_0/Robot/link5",
+      "/World/envs/env_0/Robot/gripper_link"
+    ],
+    "rigid_body_sleep_threshold": 0.0,
+    "sensor_count": 1
+  },
+  "stage_contract": {
+    "errors": [],
+    "expected_table_top_z_m": -0.012117,
+    "ground_collision_disabled_pass": true,
+    "hard_contract_pass": true,
+    "postplay_ground_colliders": [
+      {
+        "collision_enabled": false,
+        "path": "/World/ground/terrain/GroundPlane/CollisionPlane",
+        "type_name": "Plane"
+      }
+    ],
+    "preplay": {
+      "errors": [],
+      "expected_ground_collider_path": "/World/ground/terrain/GroundPlane/CollisionPlane",
+      "ground_colliders_after_disable": [
+        {
+          "collision_enabled": false,
+          "path": "/World/ground/terrain/GroundPlane/CollisionPlane",
+          "type_name": "Plane"
+        }
+      ],
+      "ground_colliders_before_disable": [
+        {
+          "collision_enabled": true,
+          "path": "/World/ground/terrain/GroundPlane/CollisionPlane",
+          "type_name": "Plane"
+        }
+      ],
+      "pass": true
+    },
+    "robot_is_fixed_base": true,
+    "table_body_path": "/World/envs/env_0/TapTable",
+    "table_collision_enabled_pass": true,
+    "table_collision_prims": [
+      {
+        "collision_enabled": true,
+        "path": "/World/envs/env_0/TapTable/geometry/mesh",
+        "type_name": "Cube"
+      }
+    ],
+    "table_expected_collider_path": "/World/envs/env_0/TapTable/geometry/mesh",
+    "table_top_error_mm": 2.9671192239288935e-07,
+    "table_top_pass": true,
+    "table_top_tolerance_mm": 0.01,
+    "table_top_z_m": -0.012117000296711922
+  }
+}

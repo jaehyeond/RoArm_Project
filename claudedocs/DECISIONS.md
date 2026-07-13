@@ -19036,3 +19036,136 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d337/d337_target_raw_distance_trace.csv`
 - `claudedocs/runtime_logs/grasp_track/g0a_d337/design_scoping/`
 - `START_HERE.md`
+
+## D338 - Synchronous explicit convex-cook statistics are non-instrumenting; collision-representation build stops before an asset exists (2026-07-13)
+
+Decision:
+
+- Verdict is `D338_G0A_ASSET_BUILD_CONTRACT_FAIL_STOP`.
+- D338's first immutable attempt reached the `link5_cold1` synchronous
+  `request_convex_collision_representation` call with UJITSO/local caching
+  disabled and both local/runtime mesh caches released. The call returned
+  control, but all six deltas from `get_cooking_statistics()` remained zero:
+  scheduled, finished, cache hit, cache miss, polygon-limit warning, and
+  GPU-compatibility warning.
+- **Durable measurement rule:** those global cooking-statistics counters do
+  not positively witness this explicit synchronous request path. A zero delta
+  must not be interpreted as either "no cook", "cache hit", or "cache miss";
+  future direct-cook independence must use the callback result/count plus
+  cache-disabled distinct stages and repeated canonical geometry equality.
+- The D338 implementation checked its registered positive scheduled/miss gate
+  before recording the callback result, so attempt1 licenses no claim about
+  result validity, convex count, decomposition quality, or raw-vs-cooked
+  fidelity. Do not retroactively infer `RESULT_VALID` from the returned call.
+- No derivative asset/hull manifest/task environment was created, and no
+  physics or visualization ran. `g0a_pass=false`; G0b/RL/ladder remain blocked.
+  attempt1 must not be overwritten or rerun under a relaxed D338 gate.
+
+Evidence:
+
+- Frozen source/parameter/pin checks advanced through source loading to the
+  first isolated cook. The registered statistics checks observed settings
+  isolation PASS, task-finished equality PASS (`0==0`), zero hits/warnings
+  PASS, but positive scheduled and positive miss both FAIL.
+- Controlled physics steps `0`; derivative asset absent; exactly the failure
+  manifest, numbered abort, and preserved Kit log were produced before the
+  post-run case summary.
+- Original root USD, physics layer, and URDF remained hash-identical after the
+  stop (`a4be58...e46fff`, `1df07d...7ed2`, `64dc8d...9dae2`).
+
+Implication:
+
+- D338 is complete at its pre-registered Phase-A STOP and cannot be repaired
+  post-result inside attempt1. The recommended next choice is a separately
+  pre-registered cook-witness contract case that freezes every physical and
+  decomposition parameter, records callback result/count before classification,
+  treats unsupported global statistics as informational, and writes only to a
+  forward-only attempt2 path.
+- Only after that build contract passes may the unchanged live owner/path/GPU,
+  `(7,11), q5=1.5413` raw-vs-cooked `<=0.5mm`/`>=+0.1mm` gate, and conditional
+  200+200 settle resume. This decision does not promote a 10-trial case.
+
+Sources:
+
+- `claudedocs/session_20260713_grasp_g0a_d338_collision_representation_repair.md`
+- `sim_scripts/cyl34_top_view_d338_grasp_g0a_collision_representation_repair.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d338/g0a_d338_collision_representation_repair_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d338/collision_asset/attempt1/d338_asset_build_manifest.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d338/collision_asset/attempt1/d338_invocation_abort_001.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d338/collision_asset/attempt1/kit_20260713_114440.log`
+- `START_HERE.md`
+
+## D339 - Callback-repeatable decomposition is proven, but USD convex-part authoring is not a live-geometry fixed point (2026-07-13)
+
+Decision:
+
+- Verdict is `D339_G0A_PREPHYSICS_CONTRACT_FAIL_STOP`.
+- The D338 measurement-contract blocker is repaired. On four fresh retained
+  stages, the callback ran exactly once and returned `RESULT_VALID` with `64`
+  serialized convexes. For both link5 and gripper, cold1/cold2 canonical
+  topology and every geometry hash matched with maximum coordinate delta
+  `0.0m`. All global cook-statistic deltas again remained zero and are
+  informational only. D338 attempt1 remained bit-exact.
+- The attempt2 derivative build passed: the physics layer was the only changed
+  layer under the registered semantic allowlist; non-physics layers and tool
+  mass/COM/inertia were preserved. Both bodies reached the frozen
+  `maxConvexHulls=64` cap.
+- **Durable live-representation rule:** callback-repeatable decomposition does
+  not prove that authored USD convex pieces become the same live collision
+  geometry. Authoring the returned convexes as `convexHull` meshes invokes
+  another PhysX cook. Although all 64 new pieces per body existed and each
+  direct-cooked to one valid convex, the live surface `<=0.1mm` gate failed on
+  8 link5 and 5 gripper pieces. Only `56/64` and `59/64` pieces respectively
+  passed every live certification check. Per-piece live surface and property
+  binding may not be skipped or replaced by authored hashes/bounds alone.
+- The worst live surface changes were link5 `part_045 = 4.894877mm` and
+  gripper `part_036 = 0.699067mm`; link5 `part_045` also failed the registered
+  property-vs-direct volume gate (`27.331672% > 5%`). All 13 surface failures
+  discarded one extreme vertex during re-cook except link5 `part_041`, which
+  discarded two.
+- The PhysX property query enumerated `65` paths per body: the exact 64 enabled
+  new pieces plus the old source `node_STL_BINARY_` path that USD inventory
+  marked collision-disabled. This proves only that `collisionEnabled=false`
+  does not remove the prim from this property-query enumeration; it does not
+  prove the disabled legacy shape actively participates in collision. Future
+  contracts must distinguish enabled expected shapes from known disabled
+  enumeration rows rather than infer activity from enumeration alone.
+- Because the live audit failed, D339 intentionally did not query the cooked
+  union at the frozen target and ran no baseline/settle physics (`0 -> 0`, zero
+  controlled steps). No raw-vs-cooked task-fidelity or static-runtime claim is
+  licensed. `g0a_pass=false`; G0b/RL/ladder remain blocked.
+
+Evidence:
+
+- Four raw callback witnesses independently recount one inline callback,
+  `RESULT_VALID`, `64/64` serialized parts, and zero serialization errors.
+- Independent post-run reconstruction of all canonical vertex/topology hashes
+  matches both cold copies for all `128` parts; maximum delta is `0.0m`.
+- Live inventory: `64` enabled plus `1` disabled legacy USD collider per body;
+  property query: `65` rows with no missing expected path; direct cook:
+  `64/64` valid per body; full certification: link5 `56/64`, gripper `59/64`.
+- Stage, sensor, raw-source, D337 controls, mass, owner, transform, bounds,
+  parameter-readback, GPU, and artifact contracts passed. Cooked-union query,
+  baseline trace, target trace, and final snapshot are intentionally absent.
+
+Implication:
+
+- D339 attempt2 is immutable evidence and must not be overwritten or tuned.
+- The narrowest future case is a separately approved prephysics-only
+  fixed-point live-authoring repair: preserve the 115 passing pieces; inspect
+  and stabilize only the 13 failing pieces; distinguish live-instance from
+  prototype geometry; retain all source/target/physics/decomposition settings
+  and all tolerances. Require `64/64` surface certification per body and
+  `128/128` property/direct volume binding before any cooked-union query or
+  physics. This does not authorize D340 or a tolerance relaxation.
+
+Sources:
+
+- `claudedocs/session_20260713_grasp_g0a_d339_cook_witness_contract_repair.md`
+- `sim_scripts/cyl34_top_view_d339_grasp_g0a_cook_witness_contract_repair.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d339/g0a_d339_cook_witness_contract_repair_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2/d339_cook_witness_manifest.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2/d339_asset_build_manifest.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d339/d339_live_collider_audit.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d339/d339_representation_gate.json`
+- `START_HERE.md`

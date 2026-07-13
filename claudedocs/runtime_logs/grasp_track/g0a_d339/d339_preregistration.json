@@ -1,0 +1,60 @@
+{
+  "artifact": "D339_PRE_RUNTIME_REGISTRATION",
+  "status": "D339_PRE_REGISTERED_RUNTIME_PENDING",
+  "new_variable": [
+    "cook_witness_contract"
+  ],
+  "physical_variables_changed": [],
+  "output_root": "claudedocs/runtime_logs/grasp_track/g0a_d339",
+  "only_allowed_asset_attempt": "collision_asset/attempt2",
+  "attempt1_policy": "immutable; exact three-file inventory and hashes hard-gated before and after D339 asset work",
+  "harness": {
+    "path": "sim_scripts/cyl34_top_view_d339_grasp_g0a_cook_witness_contract_repair.py",
+    "sha256": "fd307cb573699f8a08df1ab580789188774158877b8abf0a05cc4c60ef6562d6"
+  },
+  "pinned_d338": {
+    "helper_script_sha256": "f3d330a9a5ca6f886728d0e5dc8037baa68d83a2b911aa105904d7d369ead426",
+    "summary_sha256": "0bda3990751253a7c50408b0106cdc9e3504a35e6ac4f72a9504de0b90aa9a1e",
+    "attempt1_sha256": {
+      "d338_asset_build_manifest.json": "8fec513a4e344132f4e445061bbc383da2d6347f5e5883b4c53b2695da1acdda",
+      "d338_invocation_abort_001.json": "f168087ac672e2bffdd9fdf29b6200afcd69e6551e4fd9e891b1e8f7695c8d42",
+      "kit_20260713_114440.log": "075ce099543ae952e362c47e44894e92abb63e72610c274441e6a82690a87a6b"
+    }
+  },
+  "frozen_decomposition": {
+    "hull_vertex_limit": 64,
+    "max_convex_hulls": 64,
+    "voxel_resolution": 1000000,
+    "error_percentage": 1.0,
+    "min_thickness_m": 0.0001,
+    "shrink_wrap": true
+  },
+  "frozen_task": {
+    "radial_offset_mm": 7.0,
+    "tangent_offset_mm": 11.0,
+    "q5_open_rad": 1.5413,
+    "seed": 33201,
+    "clear_gate_mm": 0.1,
+    "raw_cooked_task_fidelity_tolerance_mm": 0.5,
+    "conditional_baseline_steps": 200,
+    "conditional_target_steps": 200
+  },
+  "phase_a_hard_witness": {
+    "callback_count": "exactly 1 per request",
+    "result": "RESULT_VALID value 0",
+    "convex_count": "1..64",
+    "callback_payload": "complete and structurally valid",
+    "stage_requests": "four unique live StageCache IDs and identifiers, re-resolved at final checkpoint",
+    "cache_conditions": "UJITSO/local cache disabled; local/runtime release calls complete; settings restore exact",
+    "geometry_equality": "per body equal canonical hull count/topology/combined sha256 and coordinate max delta <=1e-9m",
+    "statistics_role": "informational_only_non_gating"
+  },
+  "conditional_continuation": "only complete Phase-A and derivative-build PASS may enter the unchanged D338 live gate and conditional 200+200 settle",
+  "stop_boundary": "no 10-trial/G0b/RL/ladder promotion",
+  "pre_runtime_audits": [
+    "callback/control-flow READY",
+    "PhysX API/StageCache READY",
+    "USD/manifest/Phase-B-C bridge READY"
+  ],
+  "command": "OMNI_KIT_ACCEPT_EULA=YES conda run -n isaaclab --no-capture-output python sim_scripts/cyl34_top_view_d339_grasp_g0a_cook_witness_contract_repair.py"
+}
