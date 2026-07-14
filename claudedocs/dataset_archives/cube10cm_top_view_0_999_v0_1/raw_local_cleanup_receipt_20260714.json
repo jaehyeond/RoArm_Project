@@ -1,0 +1,84 @@
+{
+  "artifact": "cube10cm_top_view_0_999_v0_1_local_raw_cleanup",
+  "status": "LOCAL_RAW_CLEANUP_COMPLETE_WINDOWS_RAW_ARCHIVE_USER_CONFIRMED",
+  "documented_at": "2026-07-14T15:07:08+09:00",
+  "source_git_head": "25f085a388a29c18baffa5789cc0d47f713a4728",
+  "source_root": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_0_999_d242",
+  "raw_relative_root": "raw_env_render_frames",
+  "external_archive": {
+    "intermediate": {
+      "device": "/dev/sda1",
+      "filesystem": "exfat",
+      "label": "도관목",
+      "path": "/media/cgxr/도관목/RoARM/raw_env_render_frames",
+      "file_count": 195000,
+      "payload_bytes": 51386208295,
+      "relative_name_size_diff_count": 0,
+      "all_file_sha256_list_aggregate": "dfbf466ea9f69906f574ebf93bc051cdd3268d60b6b025aea8cb141eba16a586",
+      "verification": "MACHINE_VERIFIED_PASS"
+    },
+    "final": {
+      "location": "another Windows PC",
+      "verification": "USER_CONFIRMED_COMPLETE_NOT_LOCALLY_MOUNTED",
+      "user_confirmation": "Windows 최종 보관본 확인 완료"
+    },
+    "external_core_backup_claimed": false
+  },
+  "authorization": {
+    "local_raw_delete_approved": true,
+    "approved_scope": "local raw PNG 195,000 files only",
+    "approval_text": "Windows 최종 보관본 확인 완료. 로컬 raw PNG 195,000개만 삭제 승인."
+  },
+  "predelete": {
+    "raw_file_count": 195000,
+    "raw_payload_bytes": 51386208295,
+    "raw_allocated_bytes": 51792117760,
+    "other_entries_in_raw_directory": 0,
+    "nonraw_file_count": 267,
+    "nonraw_payload_bytes": 1627858015,
+    "manifest_path": "claudedocs/dataset_archives/cube10cm_top_view_0_999_v0_1/raw_predelete_manifest_20260714.tsv",
+    "manifest_entries": 195000,
+    "manifest_bytes": 21255018,
+    "manifest_sha256": "462418736b7dfe3542138441edec710dbc472da60a61fe065b4b91ff58427750",
+    "all_file_sha256_list_aggregate": "dfbf466ea9f69906f574ebf93bc051cdd3268d60b6b025aea8cb141eba16a586",
+    "disk_free_before_manifest_bytes": 29097226240,
+    "disk_free_immediately_predelete_bytes": 29072855040,
+    "filesystem_use_percent": 96,
+    "consumer_process_count": 0
+  },
+  "deletion": {
+    "method": "manifest-listed relative paths piped NUL-delimited to non-recursive rm --",
+    "recursive_delete_used": false,
+    "command_exit_code": 0
+  },
+  "postdelete": {
+    "raw_directory_exists": true,
+    "raw_entry_count": 0,
+    "raw_png_count": 0,
+    "nonraw_file_count": 267,
+    "nonraw_payload_bytes": 1627858015,
+    "d249_registered_file_count": 24,
+    "d249_registered_bytes": 1089314018,
+    "d249_sha256_validation": "PASS",
+    "git_tracked_deleted_count": 0,
+    "disk_free_bytes": 80836767744,
+    "disk_free_gain_from_immediate_predelete_bytes": 51763912704,
+    "filesystem_use_percent": 87
+  },
+  "restore": {
+    "required_for": [
+      "lossless D247 rebuild from PNG",
+      "source-vs-decoded pixel audit",
+      "D248 contact-sheet regeneration",
+      "exact raw-frame visual audit"
+    ],
+    "canonical_restore_path": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_0_999_d242/raw_env_render_frames",
+    "verify_against_manifest_before_use": true
+  },
+  "scientific_scope": {
+    "research_verdict_changed": false,
+    "active_case_advanced": false,
+    "experiment_run": false,
+    "justification": "Operational storage and integrity maintenance only."
+  }
+}

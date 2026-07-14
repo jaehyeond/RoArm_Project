@@ -1,0 +1,70 @@
+{
+  "artifact": "D349_SUPPLEMENTARY_SUMMARY_INSPECTION_VALIDATION_V1",
+  "case": "g0a_d349",
+  "inspection_date": "2026-07-14",
+  "purpose": "Make the four exact main-RRD summary TextLog values legible without rerunning Isaac or changing any scientific value.",
+  "scientific_authority": false,
+  "source_authority": "d349_frozen_target_distance_measurement.json and the four TextLog chunks in d349_frozen_target_distance.rrd",
+  "main_rrd": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d349/d349_frozen_target_distance.rrd",
+    "bytes": 6220113,
+    "sha256": "33ff02e7de2a979eb22b8cf07aac3fc45f564adfa2e604a79a012c015c8a7633"
+  },
+  "measurement": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d349/d349_frozen_target_distance_measurement.json",
+    "bytes": 444181,
+    "sha256": "5de6d14e37d6b74b202d1bb668120a6bb57221eac24ea5c751457ce9823b6300"
+  },
+  "main_rrd_textlog_values": {
+    "events/d349_summary/status": "OPEN q5=1.5413 | target=(7,11)mm | steps=0",
+    "events/d349_summary/link5": "L5 raw/live/delta=4.2726/4.2727/0.0001mm",
+    "events/d349_summary/gripper": "GR raw/live/delta=11.1751/11.3403/0.1652mm",
+    "events/d349_summary/scope": "gates=0.1/0.5mm | G0a=false | settle=separate"
+  },
+  "inspection_rrd": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d349/d349_summary_text_only.rrd",
+    "bytes": 32321,
+    "sha256": "5244763cd3264ef53dc2bc012bc9cbc858684efe64687e33a5441688e0148d2b",
+    "footer_verify": "PASS: 1 file verified without error"
+  },
+  "inspection_rbl": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d349/d349_summary_text_only.rbl",
+    "bytes": 26945,
+    "sha256": "326e89f6693832e112af44df4ccdb98d5896615400812efc98ac3c3b283a793b",
+    "footer_verify": "PASS: 1 file verified without error"
+  },
+  "inspection_screenshot": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d349/d349_summary_text_only.png",
+    "bytes": 368605,
+    "sha256": "700d4cbe670dacc8df9f5f1bda3e666b3690203686dc6d7761f9934e2a00c7de",
+    "logical_dimensions": "1600x900",
+    "raster_dimensions": "3200x1800",
+    "viewed_with": "view_image detail=original",
+    "all_registered_summary_values_legible": true,
+    "source_hashes_legible": true
+  },
+  "preserved_failed_attempts": [
+    {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d349/d349_summary_inspection.png",
+      "sha256": "ec367458b437d30b660255544b4ec321d66ef23cdeb36f1da86e8be916699014",
+      "result": "FAIL: external RBL did not override the main RRD embedded collision blueprint"
+    },
+    {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d349/d349_summary_inspection_attempt2.png",
+      "sha256": "1a33f3422e04c2804c73ba59c1267596ab84c759681f86c08330bf6bfffea464",
+      "result": "FAIL: blueprint-timeline-filtered inspection copy opened with an empty viewport"
+    }
+  ],
+  "checks": {
+    "no_isaac_rerun": true,
+    "no_physics_step": true,
+    "main_rrd_unchanged": true,
+    "measurement_unchanged": true,
+    "four_main_textlog_values_exact": true,
+    "inspection_rrd_footer_verify": true,
+    "inspection_rbl_footer_verify": true,
+    "original_resolution_viewed": true,
+    "inspection_copy_declares_non_authority": true
+  },
+  "pass": true
+}

@@ -1,11 +1,11 @@
 # START_HERE.md
 
-Last updated: 2026-07-14 KST. D348 is complete with verdict
-`D348_PHYSX_PROPERTY_QUERY_TOPOLOGY_SEMANTICS_SUPPORTED`. The only D347
-part failure was caused by comparing PhysX collider volume with a newly
-re-Qhulled vertex envelope instead of the callback's own polygon topology.
-The corrected representation gate is `128/128`, but the frozen target-distance
-query was not run. `g0a_pass=false`; settle, G0b, RL, and ladder remain blocked.
+Last updated: 2026-07-14 KST. D349 is complete with verdict
+`D349_FROZEN_OPEN_JAW_TARGET_LIVE_DISTANCE_SUPPORTED`. At the frozen OPEN
+target `(radial,tangent)=(7,11)mm`, q5 `1.5413rad`, both raw mesh and the
+D348-corrected live callback-topology surface proxy were clear and faithful
+before any physics step. `g0a_pass=false`; settle, G0b, RL, and ladder remain
+blocked unless the user separately approves a later case.
 
 ## Current Truth
 
@@ -17,7 +17,10 @@ query was not run. `g0a_pass=false`; settle, G0b, RL, and ladder remain blocked.
   sign `-1`, seed `33201`, HOME-seeded position-only IK.
 - D337 restored the open-jaw target family: `2,560/2,629` raw-clear candidates;
   selected target raw clearances were link5/gripper `+4.2726/+11.1751mm`.
-  These are D337 anchors, not D347/D348 target measurements.
+  D349 reproduced these raw anchors and measured the corresponding live proxy.
+- D348 proved the correct PhysX volume comparator: preserve callback polygon
+  topology instead of making a new vertex-only Qhull. The corrected gate is
+  `256/256` channels and `128/128` parts.
 - D344 attempt3 is the current collision derivative. D345 repaired its USD
   metadata comparator; D347 repaired validator extension activation order and
   captured all `256/256` callbacks.
@@ -26,93 +29,97 @@ query was not run. `g0a_pass=false`; settle, G0b, RL, and ladder remain blocked.
   and actual original-resolution inspection. Rerun is observability, never
   numerical authority.
 
-## D348 Verified Result
+## D349 Verified Result
 
-- New variables:
-  `[physx_property_query_volume_semantics, rerun_static_summary_and_hidpi_contract]`.
-  New physical variables `0`.
-- D348 was offline. It read immutable D347/D339 JSON and 256 callback files;
-  Isaac/PhysX startup, callback/cook requests, asset writes, target queries,
-  and physics steps were all `0`.
-- Asset, decomposition, 128-part count, `(7,11)mm/q5=1.5413rad` target, and
-  frozen property-volume tolerance `5%` were unchanged. No physical or verdict
-  parameter was increased, decreased, relaxed, added, or removed.
-- Raw instance/prototype callback payloads were exact `128/128`. All `256/256`
-  callback channels were closed and consistently oriented.
-- Callback polygon-topology volume versus PhysX property-query volume passed
-  `256/256` at the unchanged 5% gate. Maximum/median relative errors were
-  `1.362105296456897e-7` / `2.6262618696070446e-8`.
-- For link5 `part_045`, PhysX property volume was
-  `4.061547542733024e-7m^3`; callback-face volume was
-  `4.061547420257619e-7m^3`; relative error was
-  `3.015486183560612e-8` (`0.000003015486%`).
-- Re-Qhulling only the vertices produced a different envelope:
-  `5.171636397369118e-7m^3`, `27.3316720525%` from the property value.
-  The callback polygon's maximum Float32 plane residual was `0.3147465198mm`;
-  re-Qhulling therefore replaced, rather than preserved, the reported faces.
-- Center-translation independent volume recomputation changed at most
-  `2.117582368135751e-21m^3`. Historical passing controls, registered nearest
-  controls, and same-topology controls passed; a removed-face negative control
-  failed as required.
-- Scope is PhysX `107.3.26` plus the frozen D347 256 callbacks. Do not generalize
-  this to every PhysX version or internal implementation.
+- New variable: `[frozen_open_jaw_target_live_distance_gate]`; new physical
+  variables `0`.
+- Frozen assets, bodywise `64+64` decomposition, target, `0.1mm` clear gate,
+  `0.5mm` raw/live agreement gate, material, actuator, and physics settings were
+  unchanged. Asset write, cook callback, property query, and physics step were
+  all `0`.
+- D337 controls, D348 corrected audit `128/128`, active-part/owner/source
+  binding, stage/sensor/unit checks, exact target state, and all authoritative
+  pose-stream checks passed.
+- link5: raw `4.2726455336106985mm`, live proxy
+  `4.272736580324082mm`, absolute difference
+  `0.00009104671338366899mm` — PASS.
+- gripper_link: raw `11.175088374613944mm`, live proxy
+  `11.340262326338637mm`, absolute difference
+  `0.16517395172469307mm` — PASS.
+- Raw witness repeat was exact for both bodies. Both raw/live distances were
+  finite, non-colliding, `>=0.1mm`, and within `0.5mm` of one another.
+- Convex-support and vertex-only-Qhull distances are diagnostic only and had no
+  PASS/STOP authority.
 - Final completion summary SHA-256:
-  `bc93b77fbfbeee074b1241b8f48c0317745b62ff5bca5e2196da00d25eb28697`.
+  `6ec883c4ebf4dd25aa2795006699b1d09e3b554412e2dcfa86277de541bd677e`.
 
 ## HOME / Runtime Answer
 
 - Nominal project HOME is `[0,0,90,0,0,0]deg`.
-- D347 did not measure at exact HOME. Reset added frozen-seed joint jitter
-  `±0.02rad`, then forced q5 to `0rad` CLOSED. Callback/property APIs were read
-  at that HOME-near closed pose with simulation counter `0->0` and physics
-  steps `0`.
-- The q5 `1.5413rad` open target was teleported only for post-failure
-  visualization with `sim.forward`/zero-time update; the robot did not
-  physically move from HOME to the target.
-- D348 created no Isaac/PhysX runtime, so it had no reset or start pose. It
-  reinterpreted the immutable D347 measurements offline.
+- D349 reset was HOME-near, not exact HOME. Actual Float32 joint radians were
+  `[0.0189636499,0.0193511546,1.5649892092,-0.0134565402,-0.0147889536,0]`;
+  q5 `0` means CLOSED.
+- The frozen target was exact Float32
+  `[0.0375023820,0.5429451466,1.9687392712,0.1829932779,0,1.5413000584]`;
+  q5 was OPEN and the object pose was exact.
+- Exact-write used `sim.forward` plus zero-time update, not physical motion.
+  All eight recorded phases held the global simulation counter at `0`; controlled
+  physics steps were `0`.
 
-## D348 Rerun / Visual Result
+## D349 Rerun / Visual Result
 
-- Scientific attempt2 passed numerically but its actual Rerun screenshot failed:
-  timeline-dependent panels were blank and logical `2400x1400` was confused
-  with the HiDPI `4800x2800` raster. This failure is preserved.
-- Attempt3 caught escaped/truncated HOME text. Attempt4 preserved UTF-8 but
-  exposed missing Korean glyphs in Rerun 0.34.1. Both manual failures are
-  preserved and did not change science.
-- Attempt5 passed the registered short-ASCII viewer contract: coordinate frames
-  `2`, meshes `512`, Float64 scalars `1,280`, events `133`, non-system entities
-  `2,309`, exact timelines `4`; logical `2400x1400`, raster `4800x2800`, DPR 2.
-- Original-resolution inspection confirmed eight geometry panels, `5%`,
-  `256/256`, `128/128`, `D347 HOME-near; q5=0 CLOSED`, `0 steps`,
-  `D348 OFFLINE`, and `G0A=false`. Korean translation belongs in state docs and
-  user briefings because the viewer's bundled font lacks Korean glyphs.
+- Registered `MEASURED_AUTHORITY` archive passed: frames `6`, coordinate frames
+  `2`, meshes `522`, points `4`, arrows `4`, Float64 scalars `1,040`, events
+  `136`, exact non-system entities `2,112`, and exact timelines `4`.
+- Finalized RRD/RBL footer, embedded blueprint/export, required components,
+  counts, and headless render all passed. Main screenshot is logical
+  `2400x1400`, raster `4800x2800`.
+- Original-resolution inspection confirmed eight nonempty spatial panels,
+  raw/live separation witnesses for both bodies, target cylinder, and target /
+  commanded / actual frames. Viewer notices partly covered one corner but not
+  a decision subject.
+- The embedded event viewport did not visibly show the four static summary
+  rows. Two failed supplementary display attempts are preserved. A separate
+  non-authoritative text-only RRD, bound to the main evidence hashes, made the
+  exact four strings legible; it never replaces the main RRD or Float64 JSON.
 
 ## Active Case / Next User Choice
 
-- D348 and all attempts are forward-only: no edit, overwrite, silent rerun, or
-  retroactive change to D347's historical verdict.
-- Recommended next case is separately approved D349 measurement-only
-  `[frozen_open_jaw_target_live_distance_gate]`.
-- D349 should reuse immutable D344 attempt3, D337 `(7,11)mm/q5=1.5413rad`,
-  D337 controls, and D348's correct 128/128 topology-volume contract. It should
-  query raw-mesh and live-collider target distances before any physics step.
-- D349 must not alter assets, decomposition, target, tolerances, material,
-  actuator, or physics settings. Settle and ten-trial remain out of scope.
-- Only a separately completed target-distance PASS may make a later settle case
-  eligible. No automatic G0a/G0b/RL/ladder promotion follows.
+- D349 and all diagnostic/display attempts are forward-only and immutable; do
+  not edit, overwrite, silently rerun, or retroactively change D347-D349.
+- D349 completed the pre-physics distance question only. The live authority is
+  a bodywise 64-part BVH union reconstructed from D347 callback faces validated
+  by D348. It is an active-collider surface proxy, not a direct PhysX narrowphase
+  distance API result.
+- A separately approved settle evaluation is now eligible, but not authorized.
+  Do not start it without explicit user approval and a new case/path.
+- `g0a_pass=false`. No automatic settle, ten-trial, G0b, RL, PPO, or ladder
+  promotion follows from D349.
+
+## Operational Storage Sidecar
+
+- The pre-RL D242 0-999 raw PNG set is archived on another Windows PC per the
+  user's explicit final-copy confirmation. The intermediate 195,000-file copy
+  was machine-verified byte-for-byte before transfer.
+- The user explicitly approved local raw-only cleanup. All 195,000 PNGs were
+  removed; the canonical raw directory remains empty, while compact/control
+  `267` files / `1627858015` bytes remain local and D249 hashes PASS.
+- Disk free is now `80836767744` bytes (`87%` used). Restore raw pixels only to
+  the canonical path and verify `raw_predelete_manifest_20260714.tsv` first.
+- Receipt: `claudedocs/dataset_archives/cube10cm_top_view_0_999_v0_1/raw_local_cleanup_receipt_20260714.json`.
+- This storage operation does not change D349 or authorize settle, RL, or rendering.
 
 ## Must Read First
 
-1. `AGENTS.md`; `START_HERE.md`; DECISIONS D347-D348; ledger tail
-2. `claudedocs/session_20260714_grasp_g0a_d348_physx_property_query_volume_semantics.md`
-3. `claudedocs/runtime_logs/grasp_track/g0a_d348/attempt5_ascii_contract/d348_completion_summary.json`
-4. `claudedocs/runtime_logs/grasp_track/g0a_d348/attempt2/d348_callback_topology_volume_evidence.json`
-5. `claudedocs/runtime_logs/grasp_track/g0a_d348/attempt2/d348_matched_controls.json`
-6. `claudedocs/runtime_logs/grasp_track/g0a_d348/attempt2/d348_home_start_contract.json`
-7. `claudedocs/runtime_logs/grasp_track/g0a_d348/attempt5_ascii_contract/d348_ascii_rerun_validation.json`
-8. `claudedocs/runtime_logs/grasp_track/g0a_d348/attempt5_ascii_contract/d348_ascii_manual_visual_inspection.json`
-9. D347 session/completion/audit when tracing live callback provenance
+1. `AGENTS.md`; `START_HERE.md`; DECISIONS D348-D349; ledger tail
+2. `claudedocs/session_20260714_grasp_g0a_d349_frozen_open_jaw_target_live_distance_gate.md`
+3. `claudedocs/runtime_logs/grasp_track/g0a_d349/d349_completion_summary.json`
+4. `claudedocs/runtime_logs/grasp_track/g0a_d349/d349_frozen_target_distance_measurement.json`
+5. `claudedocs/runtime_logs/grasp_track/g0a_d349/d349_home_start_contract.json`
+6. `claudedocs/runtime_logs/grasp_track/g0a_d349/d349_rerun_validation.json`
+7. `claudedocs/runtime_logs/grasp_track/g0a_d349/d349_manual_visual_inspection.json`
+8. D348 session/evidence for callback-topology volume semantics
+9. D347 session/callback evidence when tracing live-proxy provenance
 
 ## Do Not Trust As Current / Durable Boundaries
 
@@ -120,16 +127,17 @@ query was not run. `g0a_pass=false`; settle, G0b, RL, and ladder remain blocked.
 - Do not call D347's `5.171636397...e-7m^3` value the callback-topology volume;
   it is the vertex-only re-Qhull envelope. The topology volume is
   `4.061547420...e-7m^3`.
-- D348 did not measure target clearance, collision, settle, grasp, or motion.
-  D337 target distances remain anchors only.
+- D349 measured only zero-step raw/live-proxy target clearance. It did not run
+  PhysX narrowphase distance, settle, grasp, contact trajectory, or motion.
 - A nominal HOME default is not proof that a runtime measurement used exact
   HOME. Record reset jitter, q5 override, simulation-step count, and whether a
   pose was physical or visualization-only.
 - Do not raise 5%, drop per-part checks, or substitute a vertex-only Qhull for
   callback face topology. Rerun display copies never replace original evidence.
-- D338-D348 evidence is immutable. `JOINT_LIMITS` removal, hardware control,
+- D338-D349 evidence is immutable. `JOINT_LIMITS` removal, hardware control,
   B200/SSH/pull, `/half-clone`, and unapproved commit/push remain forbidden.
 
-Base HEAD is `d452921e04b7d5082c20d4edcfcc44bcefc7c34d` (`D347`), pushed by the
-user. D348 code, state documents, and outputs are uncommitted; commit/push remains
-user-request-only.
+Base HEAD is `25f085a388a29c18baffa5789cc0d47f713a4728` (`D348완료`), matching
+`origin/master` when D349 was approved. The storage-cleanup manifest, receipt,
+plan, and session remained the unchanged external dirty baseline. D349
+state/code/output also remains uncommitted; commit/push remains user-request-only.

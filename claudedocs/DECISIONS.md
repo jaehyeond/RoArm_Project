@@ -19803,3 +19803,82 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d348/attempt5_ascii_contract/d348_completion_summary.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d348/attempt5_ascii_contract/d348_ascii_manual_visual_inspection.json`
 - `START_HERE.md`
+
+## D349 - 열린 목표의 사전 거리는 통과했지만 callback-face proxy를 PhysX narrowphase나 settle로 확대 해석하지 않는다 (2026-07-14)
+
+Decision:
+
+- 최종 판정은 `D349_FROZEN_OPEN_JAW_TARGET_LIVE_DISTANCE_SUPPORTED`다. 신규
+  변수는 measurement-only `[frozen_open_jaw_target_live_distance_gate]` 한 건,
+  신규 물리 변수는 0건이다. 자산, body당 64개 분해, `(7,11)mm`, q5
+  `1.5413rad`, clear `0.1mm`, raw/live 차이 `0.5mm`, 재질, 구동기, 물리 설정은
+  바꾸지 않았다. asset write, cook callback, PhysX property query, controlled
+  physics step은 모두 0회였다.
+- link5의 raw/live 거리는 `4.2726455336106985` /
+  `4.272736580324082mm`, 절대차는 `0.00009104671338366899mm`였다.
+  gripper_link는 `11.175088374613944` / `11.340262326338637mm`, 절대차는
+  `0.16517395172469307mm`였다. 두 body 모두 finite, 비충돌, 각각
+  `>=0.1mm`, raw/live 차이 `<=0.5mm`, live 64 parts, raw 반복 exact로 PASS했다.
+- **지속 규칙:** live 거리 판정 권위는 D347 callback vertex와 D348이 검증한
+  polygon topology를 삼각화한 body당 64-part `BVHModelOBBRSS` 표면 합집합이다.
+  `hppfcl.Convex` support distance와 vertex-only Qhull은 진단만 하며 값의 일치나
+  불일치로 PASS/STOP을 바꾸지 않는다. 이 권위값도 PhysX 내부 narrowphase의
+  직접 거리 API가 아니라 active-collider callback-face **surface proxy**다.
+- Reset 실제값은
+  `[0.01896364986896515,0.019351154565811157,1.5649892091751099,
+  -0.013456540182232857,-0.014788953587412834,0]rad`로 HOME-near,
+  q5=0 CLOSED였으며 exact HOME가 아니다. 동결 목표 actual은
+  `[0.03750238195061684,0.542945146560669,1.9687392711639404,
+  0.18299327790737152,0,1.5413000583648682]rad`로 commanded Float32와 exact,
+  q5 OPEN이었다.
+- Raw first, raw repeat, live authority, diagnostics를 순차 실행하는 동안 여덟
+  phase의 global simulation counter가 모두 0이었다. 목표 배치는
+  `sim.forward`/zero-time exact-write이지 HOME에서 목표로 가는 물리 이동이 아니다.
+- **지속 규칙:** 사전 거리 PASS는 settle, 접촉 궤적, 파지, G0a/G0b, RL 또는
+  ladder 판정이 아니다. D349 뒤에도 `g0a_pass=false`이며, 별도 사용자 승인을
+  받은 새 settle case의 자격만 생긴다.
+- **Rerun 주의:** exact TextLog가 RRD에 존재해도 embedded blueprint의 현재
+  viewport에 표시되지 않을 수 있다. 기계 검증과 원본 화면 육안 검사를 분리하고,
+  가독성 확인용 forward-only 사본을 쓰면 main RRD/measurement 해시에 묶고
+  명시적으로 비권위라고 표시한다. 그 사본은 main RRD나 Float64 JSON을 대체하지
+  않는다.
+
+Evidence:
+
+- D337 controls, D348 corrected audit `128/128`, runtime binding `64+64`, stage /
+  sensor / unit / raw-source, target state, authoritative pose streams가 모두 PASS했다.
+- Rerun `MEASURED_AUTHORITY` 계약은 frame 6, coordinate frame 2, mesh 522,
+  point 4, arrow 4, Float64 scalar 1,040, event 136, non-system entity 2,112와
+  timeline 4종을 exact로 통과했다. RRD/RBL footer, embedded blueprint/export,
+  headless screenshot도 PASS했다.
+- 원본 육안 검사에서 여덟 spatial panel, 두 body의 raw/live endpoint와 vector,
+  목표 원통, target/commanded/actual frame을 확인했다. main viewport의 summary
+  비가시성과 실패한 보조 표시 attempt 두 개를 보존한 뒤, source hash에 묶인
+  비권위 text-only RRD로 네 exact summary 문자열의 가독성만 확인했다.
+- Measurement / Rerun validation / manual inspection / completion summary
+  SHA-256은 각각
+  `5de6d14e37d6b74b202d1bb668120a6bb57221eac24ea5c751457ce9823b6300` /
+  `532c6d7064c3c618ed9c35b6013d55ddbd8b151bf29d03faa6411c4baaf5b6c1` /
+  `96b1e72b725154388ba11ff2d6093d9065aaa238bd041a196af1460f5268c456` /
+  `6ec883c4ebf4dd25aa2795006699b1d09e3b554412e2dcfa86277de541bd677e`다.
+
+Implication:
+
+- D349는 immutable이며 수정·덮어쓰기·silent rerun·소급 확대 판정하지 않는다.
+  `g0a_pass=false`; settle, ten-trial, G0b, RL, PPO, ladder는 미실행/차단 상태다.
+- 가장 좁은 다음 선택은 사용자가 별도로 승인하는 새 settle evaluation이다.
+  승인이 있기 전에는 case ID, 코드, 실행 경로를 만들거나 물리 step을 시작하지
+  않는다.
+
+Sources:
+
+- `claudedocs/session_20260714_grasp_g0a_d349_frozen_open_jaw_target_live_distance_gate.md`
+- `sim_scripts/cyl34_top_view_d349_grasp_g0a_frozen_open_jaw_target_live_distance_gate.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d349/d349_frozen_target_distance_measurement.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d349/d349_home_start_contract.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d349/d349_d348_corrected_live_topology_audit.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d349/d349_live_topology_runtime_binding.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d349/d349_rerun_validation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d349/d349_manual_visual_inspection.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d349/d349_completion_summary.json`
+- `START_HERE.md`

@@ -1,0 +1,68 @@
+{
+  "actuator_changes": [],
+  "artifact": "D349_PARAMETER_FREEZE_AUDIT_V1",
+  "asset_changes": [],
+  "checks": {
+    "decomposition_frozen": true,
+    "distance_gates_frozen": true,
+    "new_physical_variables_zero": true,
+    "new_variable_count_one": true,
+    "object_frozen": true,
+    "target_frozen": true
+  },
+  "decomposition_changes": [],
+  "decomposition_parameters": {
+    "error_percentage": 1.0,
+    "hull_vertex_limit": 64,
+    "max_convex_hulls": 64,
+    "min_thickness_m": 0.0001,
+    "shrink_wrap": true,
+    "voxel_resolution": 1000000
+  },
+  "material_changes": [],
+  "new_physical_variables": [],
+  "new_variable_count": 1,
+  "new_variables": [
+    "frozen_open_jaw_target_live_distance_gate"
+  ],
+  "parameters_added": [],
+  "parameters_changed": [],
+  "parameters_decreased": [],
+  "parameters_increased": [],
+  "parameters_removed": [],
+  "pass": true,
+  "physics_setting_changes": [],
+  "scope_guards": {
+    "asset_write": false,
+    "controlled_physics_steps": 0,
+    "cook_callback_requests": 0,
+    "g0a_pass": false,
+    "g0b": false,
+    "ladder_promotion": false,
+    "physx_property_queries": 0,
+    "rl": false,
+    "settle": false,
+    "ten_trial": false
+  },
+  "target": {
+    "ik": "HOME-seeded position-only",
+    "q5_rad": 1.5413,
+    "radial_offset_mm": 7.0,
+    "seed": 33201,
+    "tangent_offset_mm": 11.0,
+    "tangent_sign": -1.0
+  },
+  "target_changes": [],
+  "thresholds_relaxed": [],
+  "tolerances": {
+    "clear_gate_mm": 0.1,
+    "diagnostic_distance_delta_reference_mm": {
+      "provenance": "frozen D337 parity tolerance; display context only in D349",
+      "value": 0.05,
+      "verdict_authority": false
+    },
+    "property_volume_relative": 0.05,
+    "raw_live_fidelity_mm": 0.5,
+    "topology_volume_reproduction_abs_m3": 1e-18
+  }
+}

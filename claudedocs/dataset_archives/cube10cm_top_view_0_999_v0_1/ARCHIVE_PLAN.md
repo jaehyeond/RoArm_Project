@@ -1,12 +1,14 @@
 # Cube10cm Top-View 0-999 v0.1 USB Archive Plan
 
-Status: `PREFLIGHT_COMPLETE_COPY_NOT_STARTED`
+Status: `LOCAL_RAW_CLEANUP_COMPLETE_WINDOWS_RAW_ARCHIVE_USER_CONFIRMED`
 
 Date: 2026-07-14 KST
 
 This is an operational storage sidecar. It does not change the active cylinder
-grasp G0a case, consume D345, or authorize deletion. No USB write, local move,
-or local deletion has been performed.
+grasp G0a case or authorize any research-case advancement. Sections 4-8 retain
+the original preflight plan. The actual one-shot raw-only transfer and local
+cleanup are recorded in Section 10 and
+`raw_local_cleanup_receipt_20260714.json`.
 
 ## 1. Canonical identity
 
@@ -143,7 +145,7 @@ all non-raw files and the empty `episodes/episode_000..999` directories. Each
 raw tar includes only its registered contiguous filename range beneath
 `raw_env_render_frames/`.
 
-## 7. Current USB observation and stop condition
+## 7. Preflight USB observation and stop condition (historical)
 
 Observed USB on 2026-07-14:
 
@@ -173,9 +175,13 @@ The approvals are intentionally separate:
    pass at the final destination, permission to remove local raw PNGs. USB
    success alone is insufficient.
 
-No local deletion is currently authorized. If a future cleanup is approved,
-delete only the registered raw PNG members, preserve the canonical directory
-and all non-raw/control files, and record pre/post manifests and disk space.
+The actual workflow later differed from this five-trip proposal. The user
+manually copied the complete raw set in one pass to a 465.8GB exFAT device,
+Codex verified that intermediate copy byte-for-byte, and the user then confirmed
+the final Windows-PC copy. The user separately authorized deletion of exactly
+the local 195,000 raw PNG members. The compact/control core was not part of the
+observed USB copy and remains local intact; this completion does not claim an
+external core backup.
 
 ## 9. Future restore rule
 
@@ -191,3 +197,25 @@ connect the archive containing the corresponding batch. Restore to the exact
 canonical `raw_env_render_frames/` path and verify the member manifest before
 running a rebuild or pixel-comparison audit.
 
+## 10. Actual completion record
+
+- Final raw archive: another Windows PC, explicitly confirmed complete by the
+  user. It was not mounted locally for an independent final-destination hash.
+- Verified intermediate path:
+  `/media/cgxr/도관목/RoARM/raw_env_render_frames/`.
+- Intermediate verification: `195000` files / `51386208295` bytes; relative
+  names and sizes exact; all-file SHA-256-list aggregate exact at
+  `dfbf466ea9f69906f574ebf93bc051cdd3268d60b6b025aea8cb141eba16a586`.
+- Pre-delete manifest:
+  `raw_predelete_manifest_20260714.tsv`, `195000` entries,
+  `51386208295` registered bytes, SHA-256
+  `462418736b7dfe3542138441edec710dbc472da60a61fe065b4b91ff58427750`.
+- User deletion authorization was explicit. Deletion used only the manifest
+  paths and no recursive directory removal.
+- Post-delete: canonical raw directory retained and empty; non-raw/control
+  `267` files / `1627858015` bytes retained; D249's `24` registered compact
+  files / `1089314018` bytes re-hashed PASS; Git-tracked deletions `0`.
+- Disk free changed from `29072855040` bytes immediately before deletion to
+  `80836767744` bytes after deletion (`+51763912704` bytes); filesystem use
+  changed from `96%` to `87%`.
+- Receipt: `raw_local_cleanup_receipt_20260714.json`.

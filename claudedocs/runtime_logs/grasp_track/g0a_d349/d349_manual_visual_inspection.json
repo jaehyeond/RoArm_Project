@@ -1,0 +1,58 @@
+{
+  "artifact": "D349_RERUN_MANUAL_VISUAL_INSPECTION_V1",
+  "case": "g0a_d349",
+  "inspection_date": "2026-07-14",
+  "inspection_method": "view_image detail=original for the main Rerun screenshot, decision PNG, and supplementary exact-summary screenshot",
+  "rerun_screenshot": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d349/d349_frozen_target_distance_rerun.png",
+    "bytes": 9880129,
+    "sha256": "4bda1947771a1ff39d8836adb426c9f4d0c74ad01069a541969ab9ccc516ff7f",
+    "logical_dimensions": "2400x1400",
+    "raster_dimensions": "4800x2800"
+  },
+  "decision_png": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d349/d349_raw_live_target_distance_decision.png",
+    "bytes": 350996,
+    "sha256": "f51ddfd39fd0400d9ff82b6e0627935b6eb2889dc9c1435f01fe62d551397944",
+    "raster_dimensions": "1500x1125"
+  },
+  "supplementary_summary_inspection": {
+    "validation_path": "claudedocs/runtime_logs/grasp_track/g0a_d349/d349_summary_text_only_validation.json",
+    "screenshot_path": "claudedocs/runtime_logs/grasp_track/g0a_d349/d349_summary_text_only.png",
+    "screenshot_bytes": 368605,
+    "screenshot_sha256": "700d4cbe670dacc8df9f5f1bda3e666b3690203686dc6d7761f9934e2a00c7de",
+    "raster_dimensions": "3200x1800",
+    "role": "non-authoritative legibility view of the four exact main-RRD TextLog strings"
+  },
+  "observations": {
+    "eight_spatial_panels_visible_and_nonempty": true,
+    "raw_mesh_visible_for_both_bodies": true,
+    "live_64_part_union_visible_for_both_bodies": true,
+    "target_cylinder_visible": true,
+    "target_and_actual_frames_visible": true,
+    "four_distance_endpoint_pairs_visible": true,
+    "four_distance_vectors_visible": true,
+    "ascii_summary_distances_and_deltas_legible": true,
+    "ascii_summary_thresholds_open_q5_zero_steps_g0a_false_legible": true,
+    "prototype_and_candidate_panels_independent": true,
+    "required_content_not_obscured": true,
+    "decision_png_opened_and_legible": true
+  },
+  "visual_notes": [
+    "The main 4800x2800 screenshot shows four link5 panels and four gripper panels. Source is white, live instance blue, prototype magenta, and candidate green.",
+    "Raw and live clear-separation endpoint/vector labels are present for link5 and gripper. The target cylinder and target/commanded/actual frame markers are visible; the decision PNG makes their overlay especially clear.",
+    "Viewer loading notices cover part of the upper-right corner, but the candidate geometry and all decision subjects remain materially visible.",
+    "The embedded collision blueprint did not put the four static summary rows in the visible event-table viewport. Their exact presence was verified from the main RRD chunks, then a non-authoritative text-only RRD rendered those same strings and source hashes legibly.",
+    "The decision PNG title reports link5 raw/cook +4.273/+4.273 mm and gripper raw/cook +11.175/+11.340 mm; both clear-witness pairs and all three TCP markers are legible."
+  ],
+  "bounded_interpretation": [
+    "Rerun spatial geometry and the supplementary summary are Float32/display copies and never numerical or hash authority.",
+    "The authority values remain the original Float64 measurement JSON and immutable D347/D348 callback-topology evidence.",
+    "The live value is a D347 callback-face surface proxy, not a direct PhysX narrowphase distance API result.",
+    "This inspection supports only the zero-step frozen OPEN target-distance case; it does not support settle, grasp, G0a, G0b, RL, or ladder promotion."
+  ],
+  "manual_visual_inspection_pass": true,
+  "scientific_verdict_override": false,
+  "g0a_pass": false,
+  "settle_executed": false
+}

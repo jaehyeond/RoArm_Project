@@ -1,0 +1,181 @@
+{
+  "artifact": "D349_COMPLETION_SUMMARY_V1",
+  "automated_evidence": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d349/d349_automated_summary.json",
+    "scientific_verdict": "D349_FROZEN_OPEN_JAW_TARGET_LIVE_DISTANCE_SUPPORTED_MANUAL_PENDING",
+    "sha256": "5d96f67cdca3aaadbe777fa2ec5564f41acf116c4f112b82038f639c56e001ed"
+  },
+  "case": "g0a_d349",
+  "completion_contract_pass": true,
+  "final_verdict": "D349_FROZEN_OPEN_JAW_TARGET_LIVE_DISTANCE_SUPPORTED",
+  "input_checks": {
+    "critical_hashes": true,
+    "decision_hash": true,
+    "external_baseline": true,
+    "harness_hash": true,
+    "head": true,
+    "parameter_audit_hash": true,
+    "preflight_hash": true,
+    "preregistration_hash": true,
+    "rbl_hash": true,
+    "rerun_digest_registered": true,
+    "rerun_profile_registered": true,
+    "rerun_report_exact_to_automated": true,
+    "rrd_hash": true,
+    "screenshot_hash": true,
+    "source_inventories": true,
+    "state_hashes": true,
+    "status_scope": true
+  },
+  "interpretation": "D349 certifies only the zero-step frozen OPEN target distance of the D347 callback-face surface proxy when complete; it is not a direct PhysX narrowphase distance result and never certifies settle, grasp, G0a, G0b, RL, or ladder promotion.",
+  "manual_evidence": {
+    "checks": {
+      "artifact": true,
+      "bounded_interpretation": true,
+      "case": true,
+      "decision_bytes": true,
+      "decision_dimensions": true,
+      "decision_path": true,
+      "decision_sha": true,
+      "g0a_false": true,
+      "inspection_date": true,
+      "inspection_method": true,
+      "manual_pass": true,
+      "markdown_nonzero": true,
+      "observations": true,
+      "scientific_override_false": true,
+      "screenshot_bytes": true,
+      "screenshot_dimensions": true,
+      "screenshot_path": true,
+      "screenshot_sha": true,
+      "settle_false": true
+    },
+    "json_path": "claudedocs/runtime_logs/grasp_track/g0a_d349/d349_manual_visual_inspection.json",
+    "json_sha256": "96b1e72b725154388ba11ff2d6093d9065aaa238bd041a196af1460f5268c456",
+    "markdown_path": "claudedocs/runtime_logs/grasp_track/g0a_d349/d349_manual_visual_inspection.md",
+    "markdown_sha256": "3902986db5d51579a9d7f83087f5088f631ee42f8b88541b1927fbf141a28245",
+    "pass": true
+  },
+  "measurement_evidence": {
+    "diagnostics_have_verdict_authority": false,
+    "live_authority": "callback-topology triangle-surface BVH 64-part union",
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d349/d349_frozen_target_distance_measurement.json",
+    "per_body": {
+      "gripper_link": {
+        "absolute_delta_mm": 0.16517395172469307,
+        "checks": {
+          "authoritative_values_finite": true,
+          "live_clear_ge_0p1mm": true,
+          "live_epa_not_saturated": true,
+          "live_exact_consistent": true,
+          "live_not_collision": true,
+          "live_part_count_64": true,
+          "raw_clear_ge_0p1mm": true,
+          "raw_epa_not_saturated": true,
+          "raw_exact_consistent": true,
+          "raw_live_delta_le_0p5mm": true,
+          "raw_not_collision": true,
+          "raw_witness_repeat_exact": true
+        },
+        "cooked_exact_signed_distance_mm": 11.340262326338637,
+        "diagnostics": {
+          "callback_vertex_convex_support": {
+            "available": true,
+            "delta_from_topology_surface_authority_mm": 8.988599064707614e-05,
+            "exact_signed_distance_mm": 11.340352212329284,
+            "is_collision": false,
+            "reference_mm": 0.05,
+            "verdict_authority": false
+          },
+          "vertex_only_qhull": {
+            "available": true,
+            "delta_from_topology_surface_authority_mm": 8.988599064352343e-05,
+            "exact_signed_distance_mm": 11.34035221232928,
+            "is_collision": false,
+            "reference_mm": 0.05,
+            "verdict_authority": false
+          }
+        },
+        "live_authority": "D348 callback-topology triangle-surface BVH union",
+        "live_topology_exact_signed_distance_mm": 11.340262326338637,
+        "pass": true,
+        "raw_exact_signed_distance_mm": 11.175088374613944,
+        "raw_witness_repeat_exact_signed_distance_mm": 11.175088374613944,
+        "tolerance_mm": 0.5
+      },
+      "link5": {
+        "absolute_delta_mm": 9.104671338366899e-05,
+        "checks": {
+          "authoritative_values_finite": true,
+          "live_clear_ge_0p1mm": true,
+          "live_epa_not_saturated": true,
+          "live_exact_consistent": true,
+          "live_not_collision": true,
+          "live_part_count_64": true,
+          "raw_clear_ge_0p1mm": true,
+          "raw_epa_not_saturated": true,
+          "raw_exact_consistent": true,
+          "raw_live_delta_le_0p5mm": true,
+          "raw_not_collision": true,
+          "raw_witness_repeat_exact": true
+        },
+        "cooked_exact_signed_distance_mm": 4.272736580324082,
+        "diagnostics": {
+          "callback_vertex_convex_support": {
+            "available": true,
+            "delta_from_topology_surface_authority_mm": 1.8002488388901838e-11,
+            "exact_signed_distance_mm": 4.272736580342085,
+            "is_collision": false,
+            "reference_mm": 0.05,
+            "verdict_authority": false
+          },
+          "vertex_only_qhull": {
+            "available": true,
+            "delta_from_topology_surface_authority_mm": 1.8002488388901838e-11,
+            "exact_signed_distance_mm": 4.272736580342085,
+            "is_collision": false,
+            "reference_mm": 0.05,
+            "verdict_authority": false
+          }
+        },
+        "live_authority": "D348 callback-topology triangle-surface BVH union",
+        "live_topology_exact_signed_distance_mm": 4.272736580324082,
+        "pass": true,
+        "raw_exact_signed_distance_mm": 4.2726455336106985,
+        "raw_witness_repeat_exact_signed_distance_mm": 4.2726455336106985,
+        "tolerance_mm": 0.5
+      }
+    },
+    "sha256": "5de6d14e37d6b74b202d1bb668120a6bb57221eac24ea5c751457ce9823b6300"
+  },
+  "new_physical_variables": [],
+  "new_variables": [
+    "frozen_open_jaw_target_live_distance_gate"
+  ],
+  "next_case_requires_separate_approval": "settle evaluation",
+  "rerun_evidence": {
+    "machine_contract_pass": true,
+    "profile": "MEASURED_AUTHORITY",
+    "rbl_path": "claudedocs/runtime_logs/grasp_track/g0a_d349/d349_frozen_target_distance.rbl",
+    "rbl_sha256": "517c9be6e98803173d0305c313eb9eaa8cf8dea4c5a9d3647b6337ce844f72a9",
+    "rrd_path": "claudedocs/runtime_logs/grasp_track/g0a_d349/d349_frozen_target_distance.rrd",
+    "rrd_sha256": "33ff02e7de2a979eb22b8cf07aac3fc45f564adfa2e604a79a012c015c8a7633",
+    "screenshot_path": "claudedocs/runtime_logs/grasp_track/g0a_d349/d349_frozen_target_distance_rerun.png",
+    "screenshot_sha256": "4bda1947771a1ff39d8836adb426c9f4d0c74ad01069a541969ab9ccc516ff7f",
+    "validation_path": "claudedocs/runtime_logs/grasp_track/g0a_d349/d349_rerun_validation.json",
+    "validation_sha256": "532c6d7064c3c618ed9c35b6013d55ddbd8b151bf29d03faa6411c4baaf5b6c1"
+  },
+  "scope_guards": {
+    "asset_write": false,
+    "controlled_physics_steps": 0,
+    "cook_callback_requests": 0,
+    "g0a_pass": false,
+    "g0b_run": false,
+    "ladder_promoted": false,
+    "physx_property_queries": 0,
+    "rl_run": false,
+    "settle_executed": false,
+    "ten_trial_run": false
+  },
+  "separate_settle_case_eligible": true
+}
