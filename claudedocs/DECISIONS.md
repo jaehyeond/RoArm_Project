@@ -19882,3 +19882,72 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d349/d349_manual_visual_inspection.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d349/d349_completion_summary.json`
 - `START_HERE.md`
+
+## D350 - 실제 fixed-jaw 정렬은 8mm proxy나 축 방향만이 아니라 연결된 실제 표면의 중심선으로 판단해야 한다 (2026-07-14)
+
+Decision:
+
+- 최종 판정은
+  `D350_FROZEN_FIXED_JAW_GEOMETRY_MEASURED_AND_VIEWER_SUPPORTED`다. 본 case의 신규
+  변수는 `[fixed_jaw_semantic_surface_binding,
+  frozen_target_fixed_jaw_centerline_measurement]` 두 건, 신규 물리 변수는 0건이다.
+  동결 D349 Float32 target/object, 자산, body당 64개 분해, 허용값, 재질, 구동기,
+  물리 설정을 바꾸지 않았고 controlled physics step은 0회였다.
+- D349 raw nearest witness가 속한 실제 `link5` 연결 성분을 fixed jaw로 결정했다.
+  성분은 `7,250` faces / `3,519` unique vertices이며 digest는
+  `8f64ddb03308521ce905d0714def9b72e1e69871d2f9f13ea3bd2a3f07559a4d`다.
+  q5-moving child `gripper_link` 음성 대조군은 owner/parent 계약으로 거부됐다.
+- 중심축 수평 투영은 cylinder radial과 `1.1234550133840087deg`로 가깝지만,
+  cylinder radial station의 실제 중심선은 center 대비 tangent
+  `-24.055688140880633mm`, height `-20.360856323322935mm`, radial residual
+  `-0.4717441272236722mm`였다. actual witness height는
+  `+15.894261043514184mm`; legacy `TCP - link5 local x * 8mm` proxy와 actual
+  witness 차이는 `17.027401111623742mm`였다.
+- **지속 규칙:** fixed-jaw의 위치/정렬을 판단할 때 legacy 8mm proxy, body origin,
+  또는 축 방향 각도 하나만을 actual jaw-face 권위로 쓰지 않는다. nearest-witness로
+  결정적으로 결합한 실제 connected surface와 그 중심선/표면 witness를 사용한다.
+  D350에는 중심선/높이 성공 허용값이 없으므로 `aligned_pass=null`을 유지하며 과거
+  D325/D349를 소급 `FAIL` 또는 `PASS`로 바꾸지 않는다.
+- **관찰성 재발 방지 규칙:** Isaac viewport capture token 성공과 즉시 `stat`은 비동기
+  PNG sink 완료 증명이 아니다. app/process close 뒤 decode/hash/size 안정성을 검증한다.
+  또한 static Rerun Mesh3D만으로 exact `part_idx` timeline이 생긴다고 가정하지 않는다.
+  계약에 timeline이 필요하면 처음부터 temporal row를 쓰거나, 동일 entity와 원 payload에
+  결합된 non-static metadata witness를 별도로 기록한다. 원 실패 산출물은 덮어쓰지 않는다.
+
+Evidence:
+
+- 실제 `headless=False` Isaac Viewer는 `180.0072537449887s` 동안 `8,222` UI/render
+  update로 유지됐다. timeline은 pause, counter `0->0`, state drift `0`, controlled
+  physics step `0`이었다. post-close six PNG는 모두 `1280x720 RGBA`로 검증·육안
+  검사됐다. exact 64+64는 화면 눈대중이 아니라 runtime/archive 계약으로 확인했다.
+- Attempt1은 scientific `MEASURED`였지만 async PNG early-stat 세 건, static mesh의
+  missing `part_idx` timeline, `asset_write=false` Boolean polarity 때문에 관찰성 FAIL로
+  남는다. 별도 attempt2는 Isaac/physics/재측정 없이 원 recording payload `297/297`,
+  embedded blueprint `12/12`, static Mesh3D `130`, 원 five timelines를 exact 보존하고
+  temporal metadata `130`개만 추가했다.
+- Repaired RRD/RBL footer, exact entities/components `296/296`, headless screenshot
+  `4800x2800`, 일곱 이미지 원본 해상도 수동 검사가 모두 PASS했다. final completion
+  summary SHA-256은
+  `7866886a49ecfca1c16bd1283c89e920613a4c25581dadf5ebaa195e1303cedb`다.
+
+Implication:
+
+- D350은 immutable이다. `completion_pass=true`는 실제 표면 측정과 Viewer/Rerun
+  관찰성 완료를 뜻할 뿐 alignment/grasp/G0a PASS가 아니다. `g0a_pass=false`,
+  `settle_authorized=false`; settle, ten-trial, G0b, RL/PPO, ladder는 계속 차단한다.
+- 다음 좁은 후보는 actual connected jaw surface를 권위로 cylinder centerline을
+  통과하도록 OPEN target/IK placement를 설계하는 별도 geometry-repair case다. 이는
+  target/IK/path 변수 변경 가능성이 있으므로 사용자 별도 승인과 사전등록 전에는 case
+  ID, 코드, 출력 경로 또는 물리 실행을 만들지 않는다.
+
+Sources:
+
+- `claudedocs/session_20260714_grasp_g0a_d350_fixed_jaw_geometry_viewer.md`
+- `claudedocs/session_20260714_grasp_g0a_d350_observability_repair.md`
+- `sim_scripts/cyl34_top_view_d350_fixed_jaw_geometry_viewer.py`
+- `sim_scripts/cyl34_top_view_d350_observability_repair.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d350/d350_fixed_jaw_semantic_binding.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d350/d350_fixed_jaw_geometry_measurement.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d350/attempt2_observability_repair/d350_manual_visual_inspection.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d350/attempt2_observability_repair/d350_completion_summary.json`
+- `START_HERE.md`

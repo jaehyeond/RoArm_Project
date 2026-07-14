@@ -1,0 +1,185 @@
+{
+  "aligned_pass": null,
+  "artifact": "D350_AUTOMATED_SUMMARY_V1",
+  "automated_pass": false,
+  "case": "g0a_d350",
+  "controlled_physics_steps": 0,
+  "evidence_hashes": {},
+  "execution_order": [
+    {
+      "counter": 0,
+      "phase": "after_reset"
+    },
+    {
+      "counter": 0,
+      "phase": "after_exact_target_write"
+    },
+    {
+      "counter": 0,
+      "phase": "after_live_topology_binding"
+    },
+    {
+      "counter": 0,
+      "phase": "after_fixed_jaw_geometry_measurement"
+    },
+    {
+      "counter": 0,
+      "phase": "after_viewer_overlay_creation"
+    },
+    {
+      "counter": 0,
+      "phase": "after_rerun"
+    },
+    {
+      "counter": 0,
+      "phase": "after_viewer_capture"
+    },
+    {
+      "counter": 0,
+      "phase": "final"
+    }
+  ],
+  "g0a_pass": false,
+  "g0b_run": false,
+  "immutability": {
+    "asset_write": false,
+    "external_user_files_exact": true,
+    "input_hashes_exact": true,
+    "pass": false,
+    "source_inventories_exact": true
+  },
+  "ladder_promoted": false,
+  "launcher": {
+    "checks": {
+      "cameras_disabled": true,
+      "device_zero": true,
+      "gui_experience": true,
+      "headless_false": true,
+      "livestream_zero": true,
+      "offscreen_false": true,
+      "xr_disabled": true
+    },
+    "pass": true,
+    "values": {
+      "device_id": 0,
+      "enable_cameras": false,
+      "experience": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaaclab/apps/isaaclab.python.kit",
+      "headless": false,
+      "livestream": 0,
+      "offscreen_render": false,
+      "xr": false
+    }
+  },
+  "manual_visual_inspection_pending": true,
+  "measurement_metrics": {
+    "actual_witness_height_error_mm": 15.894261043514184,
+    "centerline_height_error_mm": -20.360856323322935,
+    "centerline_radial_residual_mm": -0.4717441272236722,
+    "centerline_tangent_offset_mm": -24.055688140880633,
+    "fixed_axis_pitch_deg": -67.5238792369183,
+    "fixed_axis_radial_angle_deg": 1.1234550133840087,
+    "fixed_axis_to_link5_plus_z_deg": 3.158094445844178,
+    "legacy_proxy_to_actual_witness_mm": 17.027401111623742,
+    "surface_normal_to_center_angle_deg": 36.765887128711086,
+    "surface_normal_to_gap_angle_deg": 0.020327446324421534
+  },
+  "measurement_pass": true,
+  "new_physical_variables": [],
+  "new_variables": [
+    "fixed_jaw_semantic_surface_binding",
+    "frozen_target_fixed_jaw_centerline_measurement"
+  ],
+  "observability_verdict": "D350_VIEWER_OR_RERUN_CONTRACT_FAIL_STOP",
+  "overlay_pass": true,
+  "rerun_pass": false,
+  "rl_run": false,
+  "scientific_verdict": "D350_FROZEN_FIXED_JAW_GEOMETRY_MEASURED_MANUAL_PENDING",
+  "semantic_binding_pass": true,
+  "settle_executed": false,
+  "target_guard": {
+    "actual_joint_rad_float32": [
+      0.03750238195061684,
+      0.542945146560669,
+      1.9687392711639404,
+      0.18299327790737152,
+      0.0,
+      1.5413000583648682
+    ],
+    "checks": {
+      "counter_zero": true,
+      "joint_float32_bit_exact": true,
+      "object_position_float32_bit_exact": true,
+      "object_quaternion_float32_bit_exact": true,
+      "q5_open_float32_bit_exact": true
+    },
+    "expected_joint_rad_float32": [
+      0.03750238195061684,
+      0.542945146560669,
+      1.9687392711639404,
+      0.18299327790737152,
+      0.0,
+      1.5413000583648682
+    ],
+    "expected_object_pos_float32": [
+      0.30000001192092896,
+      0.0,
+      0.03288299962878227
+    ],
+    "object_pos_float32": [
+      0.30000001192092896,
+      0.0,
+      0.03288299962878227
+    ],
+    "object_quat_float32": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "pass": true
+  },
+  "target_guard_after_interactive": {
+    "actual_joint_rad_float32": [
+      0.03750238195061684,
+      0.542945146560669,
+      1.9687392711639404,
+      0.18299327790737152,
+      0.0,
+      1.5413000583648682
+    ],
+    "checks": {
+      "counter_zero": true,
+      "joint_float32_bit_exact": true,
+      "object_position_float32_bit_exact": true,
+      "object_quaternion_float32_bit_exact": true,
+      "q5_open_float32_bit_exact": true
+    },
+    "expected_joint_rad_float32": [
+      0.03750238195061684,
+      0.542945146560669,
+      1.9687392711639404,
+      0.18299327790737152,
+      0.0,
+      1.5413000583648682
+    ],
+    "expected_object_pos_float32": [
+      0.30000001192092896,
+      0.0,
+      0.03288299962878227
+    ],
+    "object_pos_float32": [
+      0.30000001192092896,
+      0.0,
+      0.03288299962878227
+    ],
+    "object_quat_float32": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "pass": true
+  },
+  "ten_trial_run": false,
+  "viewer_capture_pass": false
+}

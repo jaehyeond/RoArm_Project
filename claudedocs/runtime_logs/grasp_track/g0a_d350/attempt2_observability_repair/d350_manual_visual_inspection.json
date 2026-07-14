@@ -1,0 +1,86 @@
+{
+  "artifact": "D350_REACTIVE_REPAIR_MANUAL_VISUAL_INSPECTION_V1",
+  "case": "g0a_d350",
+  "attempt": "attempt2_observability_repair",
+  "inspection_date": "2026-07-14",
+  "inspection_method": "functions.view_image detail=original; all seven PNGs opened and visually inspected at original raster resolution",
+  "images": {
+    "whole_oblique_physx": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d350/d350_whole_oblique_actual_physx_colliders.png",
+      "bytes": 687696,
+      "sha256": "209fdae70a89106624c2576526542dc28b58bc6aa8fe7ecb1d9acad223135b10",
+      "raster_dimensions": "1280x720",
+      "observation": "Actual Isaac Viewer whole-scene frame: assembled robot, tool, cylinder, and green PhysX collider wire are nonblank and unobscured."
+    },
+    "tool_oblique_physx": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d350/d350_tool_oblique_actual_physx_colliders.png",
+      "bytes": 698941,
+      "sha256": "a23a0f83bce878a542ca165922be515fc7371d0b78e2cabcec263bdf97f32094",
+      "raster_dimensions": "1280x720",
+      "observation": "Actual Isaac Viewer close frame: jaw/tool PhysX wire and target-cylinder outline are clear at the frozen pose."
+    },
+    "whole_oblique_colored": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d350/d350_whole_oblique_colored_64plus64.png",
+      "bytes": 713359,
+      "sha256": "38c0102c80cc89ef2d2775a5eb1cde22504246176649c633caf95c0a5a204fab",
+      "raster_dimensions": "1280x720",
+      "observation": "Whole-scene display-only colored collider families remain assembled with the full robot and yellow cylinder."
+    },
+    "tool_top": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d350/d350_tool_top_colored_64plus64.png",
+      "bytes": 423968,
+      "sha256": "cc90af396be2f93508049c5d1894841a0afbf893a6f416887efc40a6afb325b8",
+      "raster_dimensions": "1280x720",
+      "observation": "Top view shows the two jaw sides, colored tool collider pieces, and circular cylinder cap in a pose consistent with the other views."
+    },
+    "tool_side": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d350/d350_tool_side_colored_64plus64.png",
+      "bytes": 520382,
+      "sha256": "d0e2f6d9aafb888272d0cb34e5cfcfec24dda7a7e8cebd7cf49731e3e29859f5",
+      "raster_dimensions": "1280x720",
+      "observation": "Side view is nonblank and shows the tilted colored tool/fixed-jaw region beside the upright cylinder without decision-subject occlusion."
+    },
+    "tool_oblique": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d350/d350_tool_oblique_colored_64plus64.png",
+      "bytes": 693382,
+      "sha256": "3c5982c3e858cbb6cd30fbff13e1e54db168ee7c185ebf6e72274b20830909a6",
+      "raster_dimensions": "1280x720",
+      "observation": "Oblique close view clearly separates the display color families and shows the fixed-jaw surface region next to the target."
+    },
+    "rerun": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d350/attempt2_observability_repair/d350_fixed_jaw_geometry_rerun_repair.png",
+      "bytes": 10122575,
+      "sha256": "e4138bb1f507a746186b0f20a339571ef60aab7ced06e3846c23010dd6bb1d77",
+      "raster_dimensions": "4800x2800",
+      "observation": "Rerun spatial panel shows the assembled colored link5/gripper subject, target cylinder, fixed-jaw component, labeled frames, centerline, radial/tangent, normal, and gap arrows. The Float64 metrics panel is present, but numeric traces are not legible at the headless-selected part_idx."
+    }
+  },
+  "observations": {
+    "actual_isaac_viewer_was_observed_live": true,
+    "physx_whole_view_shows_robot_tool_and_target_colliders": true,
+    "physx_close_view_shows_jaw_and_target_collider_wire": true,
+    "colored_whole_view_is_nonblank_and_assembled": true,
+    "colored_top_view_is_nonblank_and_pose_consistent": true,
+    "colored_side_view_is_nonblank_and_pose_consistent": true,
+    "colored_oblique_view_is_nonblank_and_pose_consistent": true,
+    "two_colored_body_families_and_target_are_visible": true,
+    "fixed_jaw_surface_region_is_visible": true,
+    "rerun_128_part_entities_and_target_are_visible": true,
+    "rerun_frames_arrows_and_metrics_are_visible": true,
+    "no_blank_corrupt_swapped_or_decision_obscuring_image": true,
+    "exact_64_plus_64_count_attributed_to_machine_contract_not_eyeballing": true,
+    "all_seven_pngs_opened_at_original_resolution": true
+  },
+  "bounded_interpretation": [
+    "The exact 64 link5 plus 64 gripper count comes from the RRD entity/component and part_idx machine contract, not from visual counting.",
+    "The colored collider families are one-way Float32 display copies; D348 callback topology and canonical Float64 JSON remain scientific authority.",
+    "The green wire views are the actual Viewer PhysX collider visualization; the colored views are session-only display guides and did not mutate colliders.",
+    "The Rerun Float64 metrics pane is visible, but numeric traces are not legible at the selected part_idx; no metric is read back from this screenshot.",
+    "The fixed jaw means the retained raw link5 connected component containing the D349 nearest witness, not the gripper_left_link STL hypothesis or legacy 8 mm proxy.",
+    "Visual support does not create an alignment tolerance: aligned_pass remains null and g0a_pass remains false."
+  ],
+  "manual_visual_inspection_pass": true,
+  "scientific_verdict_override": false,
+  "g0a_pass": false,
+  "settle_executed": false
+}

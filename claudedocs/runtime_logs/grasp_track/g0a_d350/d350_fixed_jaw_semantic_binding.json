@@ -1,0 +1,80 @@
+{
+  "artifact": "D350_FIXED_JAW_SEMANTIC_BINDING_V1",
+  "case": "g0a_d350",
+  "checks": {
+    "component_nonempty": true,
+    "historical_witness_finite": true,
+    "owner_link5": true,
+    "q5_child_negative_control_rejected": true,
+    "repeat_digest_exact": true,
+    "repeat_minimum_exact": true,
+    "seed_residual_le_0p01mm": true,
+    "tied_faces_one_component": true
+  },
+  "first_binding": {
+    "component_bounds_local_m": [
+      [
+        -0.030998082679605243,
+        -0.017746346362925717,
+        0.016085633088245288
+      ],
+      [
+        -0.007059632636645108,
+        0.016721220810694833,
+        0.11988562581144901
+      ]
+    ],
+    "component_digest": "8f64ddb03308521ce905d0714def9b72e1e69871d2f9f13ea3bd2a3f07559a4d",
+    "component_face_count": 7250,
+    "component_unique_vertex_count": 3519,
+    "minimum_distance_m": 4.336808689942018e-17,
+    "raw_connected_component_count": 6,
+    "seed_face_closest_local_m": [
+      -0.010025849818548482,
+      -0.013072561884951433,
+      0.1047071582936353
+    ],
+    "seed_face_index": 1984,
+    "tied_component_roots": [
+      791
+    ],
+    "tied_face_indices": [
+      1984,
+      1985,
+      5964,
+      5965,
+      5966
+    ],
+    "welded_unique_vertex_count": 6926
+  },
+  "joint_owner_negative_control": {
+    "checks": {
+      "joint_revolute": true,
+      "moving_candidate_is_urdf_child_gripper_link": true,
+      "moving_child_rejected_by_parent_mismatch": true,
+      "selected_fixed_owner_is_urdf_parent_link5": true
+    },
+    "child": "gripper_link",
+    "joint": "link5_to_gripper_link",
+    "parent": "link5",
+    "pass": true,
+    "type": "revolute"
+  },
+  "not_used_as_authority": [
+    "gripper_left_link.stl mount hypothesis",
+    "legacy TCP-minus-8mm point proxy"
+  ],
+  "pass": true,
+  "repeat_component_digest": "8f64ddb03308521ce905d0714def9b72e1e69871d2f9f13ea3bd2a3f07559a4d",
+  "seed_local_m": [
+    -0.01002584981854847,
+    -0.013072561884951428,
+    0.10470715829363526
+  ],
+  "seed_world_m": [
+    0.29919495348352054,
+    0.021257516477540286,
+    0.04877726067229646
+  ],
+  "semantics": "retained raw link5 connected surface containing D349 authoritative nearest witness"
+}

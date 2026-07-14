@@ -1,0 +1,90 @@
+{
+  "alignment_success_tolerances": null,
+  "artifact": "D350_PARAMETER_FREEZE_AUDIT_V1",
+  "binding_numerical_tolerances": {
+    "d349_anchor_reproduction_mm": 1e-06,
+    "minimum_face_tie_m": 1e-09,
+    "seed_surface_residual_max_m": 1e-05
+  },
+  "case": "g0a_d350",
+  "checks": {
+    "alignment_success_tolerances_absent": true,
+    "binding_residual_registered": true,
+    "d349_complete": true,
+    "d349_g0a_false": true,
+    "decomposition_64_plus_64": true,
+    "distance_gates_frozen": true,
+    "expected_head_current": true,
+    "input_hashes_exact": true,
+    "new_physical_variables_zero": true,
+    "new_variable_count_two": true,
+    "numpy_pin": true,
+    "physics_scope_zero": true,
+    "psutil_pin": true,
+    "rerun_pin": true,
+    "rrd_entity_count_registered": true,
+    "target_contract_frozen": true,
+    "target_joint_float32_exact": true,
+    "target_object_float32_exact": true,
+    "target_quaternion_float32_exact": true,
+    "viewer_is_observability_not_variable": true
+  },
+  "distance_gates": {
+    "clear_min_mm": 0.1,
+    "raw_live_delta_max_mm": 0.5
+  },
+  "frozen_object_position_float32": [
+    0.30000001192092896,
+    0.0,
+    0.03288299962878227
+  ],
+  "frozen_object_quaternion_float32": [
+    1.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "frozen_target_joint_float32": [
+    0.03750238195061684,
+    0.542945146560669,
+    1.9687392711639404,
+    0.18299327790737152,
+    0.0,
+    1.5413000583648682
+  ],
+  "new_physical_variables": [],
+  "new_variables": [
+    "fixed_jaw_semantic_surface_binding",
+    "frozen_target_fixed_jaw_centerline_measurement"
+  ],
+  "pass": true,
+  "rerun": {
+    "contract_sha256": "a2b1ddb4a6fa55b30b7b277c7a1f37fa4b1d01995fa25b4e3385105442aa98de",
+    "counts": {
+      "arrow_entity_count": 5,
+      "coordinate_frame_count": 3,
+      "event_row_count": 5,
+      "exact_non_system_entity_count": 296,
+      "frame_count": 4,
+      "mesh_count": 130,
+      "point_entity_count": 1,
+      "scalar_row_count": 13
+    },
+    "sdk": "0.34.1"
+  },
+  "scope_guards": {
+    "asset_write": false,
+    "controlled_physics_steps": 0,
+    "decomposition_change": false,
+    "fresh_cook_callback_or_property_query": false,
+    "g0a_pass": false,
+    "g0b": false,
+    "ladder_promotion": false,
+    "material_mass_actuator_physics_change": false,
+    "rl_or_ppo": false,
+    "settle": false,
+    "target_change": false,
+    "ten_trial": false,
+    "tolerance_change": false
+  }
+}
