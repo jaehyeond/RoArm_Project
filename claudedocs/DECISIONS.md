@@ -19536,3 +19536,64 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d344/d344_postrun_semantic_diagnosis_repeat.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d344/d344_postrun_root_cause_audit.json`
 - `START_HERE.md`
+
+## D345 - USD 의미 비교는 자료형·값·목록 연산을 기록하고 두 독립 프로세스에서 같아야 한다 (2026-07-14)
+
+Decision:
+
+- 판정은 `D345_DETERMINISTIC_USD_METADATA_COMPARATOR_PASS`다. 신규 변수는
+  measurement-only `[deterministic_usd_metadata_comparator]` 1개였고, 등록 명령은
+  한 번만 실행했다. 자산 작성·복사·재조리, Isaac runtime, 물리 진행은 모두 0이다.
+- 두 standalone-PXR worker가 immutable D339 attempt2와 D344 attempt3를 각각 읽었다.
+  등록한 13개 조각의 `points`, `faceVertexCounts`, `faceVertexIndices` 값 39개만
+  가린 뒤, 네 방향의 310개 합성 장면 항목이 모두 같은 164,675,173바이트 정규
+  표현과 SHA-256
+  `3f85d121439060ef5c6deb49cab7860dbc72eb94e23e54617c4ac2b1f7cdcd09`를
+  만들었다. 미지원 자료형, 주소 패턴, time sample은 모두 0이었다.
+- 직접 물리층 `apiSchemas` 149개와 합성 장면 `apiSchemas` 194개를 분리해 기록했고,
+  두 자산·두 worker 전체에서 exact였다. 직접 목록 연산은 non-explicit `prepend`,
+  합성 결과는 explicit 목록이므로 최종 토큰만으로 둘을 대체하지 않는다.
+- 옛 `repr(Sdf.TokenListOp)` 방식은 각 worker에서 주소 패턴 194개를 만들었고,
+  독립 worker 해시가 `85a69a...42e1`과 `67a248...dff`로 달라졌다. 반면 주소 없는
+  정규 해시는 같았다. 토큰 하나 삭제(`3→2`)와 최종 토큰은 같지만
+  `prepend→explicit`으로 바꾼 반례도 두 worker가 모두 거부했다.
+- D339 attempt2 `18→18`, D344 attempt3 `9→9`, D344 전체 출력 `19→19`와 모든
+  묶음 해시는 실행 전후 exact였다. 기존 파라미터 증가/변경, 기준 완화, 분해 설정
+  변경은 `0/0/0/0`이다.
+- D345는 비공간·비시간 파일/자료형/스키마/해시 감사라 사전등록한 D341 예외에 따라
+  새 Rerun을 만들지 않았다. 이 예외는 실제 형상·거리·접촉을 판정하는 다음 사례에
+  적용되지 않는다.
+
+Evidence:
+
+- worker 내부 PID/nonce는 서로 달랐고 표준 오류는 각각 0바이트였다.
+- 전체 정규 행과 행별 해시, 직접/합성 목록 연산, 자료형 분포가 원본/attempt3 및
+  두 worker 사이에서 모두 같았다.
+- 원본 목록 연산 해시 `0cf931...e57`, 토큰 삭제 해시 `a277e0...70d8`, 연산 모드
+  변경 해시 `4a2c5d...2e0d`가 서로 달랐다.
+- D345 출력에는 JSON/Markdown만 있고 RRD/RBL/PNG/USD/STL 등 관찰·자산 파일은 없다.
+
+Implication:
+
+- **지속 규칙:** PXR 객체를 비교할 때 기본 `repr(...)`나 포괄적인 `str` fallback을
+  해시하지 않는다. 지원 자료형의 실제 필드를 폐쇄형으로 직렬화하고, 모르는 자료형은
+  즉시 실패시키며, 서로 독립된 프로세스에서 같은 결과를 요구한다.
+- **지속 규칙:** USD 목록 의미는 직접 Sdf 층의 작성 연산과 합성 Usd Stage의 최종
+  결과를 따로 보존한다. 플러그인이 없는 core-PXR의 `GetAppliedSchemas()`만 보고
+  PhysX 작성 토큰이 없다고 판단하지 않는다.
+- D345 PASS는 D344의 과거 FAIL을 바꾸거나 attempt3의 실제 충돌 성공을 증명하지
+  않는다. `g0a_pass=false`; G0b/RL/ladder는 계속 막힌다.
+- 가장 좁은 다음 후보는 별도 사용자 승인 D346 fresh live validation이다. immutable
+  attempt3를 대상으로 callback 256개, 실제 조각 128개, 고정 열린 조 목표 거리와
+  D341 Rerun 전체 완료 계약을 새 프로세스에서 검증해야 한다.
+
+Sources:
+
+- `claudedocs/session_20260714_grasp_g0a_d345_deterministic_usd_metadata_comparator.md`
+- `sim_scripts/cyl34_top_view_d345_grasp_g0a_deterministic_usd_metadata_comparator.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d345/d345_preregistration.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d345/d345_worker_a.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d345/d345_worker_b.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d345/d345_deterministic_usd_metadata_evidence.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d345/d345_deterministic_usd_metadata_summary.json`
+- `START_HERE.md`

@@ -51,6 +51,21 @@ Before answering current project-state questions or making edits:
   against this rule.
 - Validation that cannot change a decision must not be run.
 
+## Research briefing language and teaching rule
+
+- User-facing research briefings must be written primarily in Korean. Keep exact
+  code, schema, field, file, and verdict identifiers when needed, but explain each
+  unfamiliar English term in plain Korean at first use.
+- Never use only a `Dxxx`, attempt number, acronym, or internal check name as the
+  explanation. State what it is, why it was checked, what PASS/FAIL means, and
+  how it changes the next decision.
+- A step-by-step request means reporting auditable actions, observations, and
+  evidence in execution order. Do not replace that report with opaque labels.
+- The final experiment briefing follows this order: (1) what/why, (2) procedure
+  in observable steps, (3) quantified result with source paths, and (4) an
+  everyday-language verdict plus the next authorization boundary. Put this
+  briefing at the end of the turn so later tool chatter does not bury it.
+
 ## Variable Ladder Protocol (D322~)
 
 - Each active case may introduce only one or two new variables. The session doc

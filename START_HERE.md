@@ -1,9 +1,10 @@
 # START_HERE.md
 
-Last updated: 2026-07-14 KST. D344 ended with registered verdict
-`D344_G0A_ATTEMPT3_AUTHORING_CONTRACT_FAIL_STOP`. A forward-only attempt3
-asset exists, but fresh Isaac/live validation did not run. `g0a_pass=false`;
-G0b/RL/ladder remain blocked.
+Last updated: 2026-07-14 KST. D345 proof-only deterministic USD metadata
+comparator completed PASS in one registered run. It proves D344's sole semantic
+failure was an address-bearing comparator false difference; it does not certify
+attempt3 in Isaac/PhysX. D344 remains FAIL, `g0a_pass=false`, and G0b/RL/ladder
+remain blocked. A separate D346 live case is not authorized.
 
 ## Current Truth
 
@@ -26,91 +27,62 @@ G0b/RL/ladder remain blocked.
   Blueprint plus RBL, headless screenshot, and separate actual inspection.
   Rerun is observability, not numerical/hash authority.
 
-## D344 Verified Result
+## D345 Verified Result
 
-- Sole new variable: `[attempt3_fixed_point_collision_geometry]`; effective
-  asset-build runs: `1`.
-- Build preflight passed all `26` checks. D338-D343 source inventories/hashes,
-  environment pins, exact 13-part set, user authorization, and stop rules were
-  valid before mutation.
-- New forward-only path:
-  `claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/`.
-- Asset authoring applied exactly `13` registered pieces and preserved `115`.
-  Nonphysics files were bit-exact; mass/center-of-mass/inertia were unchanged;
-  D338 attempt1 and D339 attempt2 stayed immutable.
-- Authored `minThickness` type/bits passed `128/128`; decomposition settings
-  stayed hull vertices `64`, max hulls `64`, voxel resolution `1,000,000`,
-  error `1.0`, min thickness `0.0001m`, shrink-wrap enabled.
-- The only failed core check was the composed-scene semantic hash after masking
-  the registered 39 geometry properties. The registered verdict therefore
-  remains FAIL and the fresh validation process was correctly not started.
+- Verdict: `D345_DETERMINISTIC_USD_METADATA_COMPARATOR_PASS`; sole new variable
+  `[deterministic_usd_metadata_comparator]`; registered scientific runs `1`.
+- Two standalone-PXR workers each read immutable D339 attempt2 and D344 attempt3.
+  All four 310-row canonical streams were `164,675,173` bytes with SHA-256
+  `3f85d121439060ef5c6deb49cab7860dbc72eb94e23e54617c4ac2b1f7cdcd09`.
+  Unknown types, runtime-address leaks, and time samples were all `0`.
+- Exactly 39 registered geometry values were masked. Direct authored
+  `apiSchemas` `149` rows and composed metadata `194` rows were four-way exact.
+- The old `repr(TokenListOp)` negative control contained addresses in all 194
+  rows and changed hash across workers. Removing one PhysX token (`3->2`) and
+  changing `prepend` to `explicit` with the same final tokens were both rejected.
+- D339 attempt2 `18->18`, D344 attempt3 `9->9`, and D344 output `19->19` stayed
+  exact. Existing parameter increases/changes, threshold relaxations,
+  decomposition changes, asset operations, Isaac runtime, and physics were `0`.
+- Rerun was correctly omitted under the preregistered non-spatial/non-temporal
+  file/type/schema/hash exception. No RRD/RBL/PNG or collision asset was created.
 
-## D344 Postrun Root Cause
+## Active Boundary — D345 Complete / D346 Not Authorized
 
-- The whole physics layer became exact after removing the 39 allowed property
-  specs; all 310 composed paths, layer header, and non-geometry semantics were
-  otherwise structurally unchanged.
-- Exact row decomposition found `194/310` raw differences, all and only
-  `metadata.apiSchemas`. The comparator used `repr(Sdf.TokenListOp)`, which
-  embeds a process-local memory address. It therefore hashed runtime addresses
-  as if they were authored asset meaning.
-- Read-only diagnosis in two independent processes found non-address semantic
-  differences `0`. Raw hashes changed between processes, while every normalized
-  source/variant hash was exactly
-  `1e458982f356a6d546b73631abf133d302e0371f9a898eae674f76e65f82f9fe`.
-- This supports “comparator false difference,” not “live collider success.”
-  D344 is not retroactively reclassified, and the attempt3 build must not be
-  rerun or overwritten.
-
-## Scope / Parameter / Rerun Audit
-
-- New variables `1`; existing parameter increases `0`; parameter changes `0`;
-  threshold relaxations `0`; decomposition changes `0`; target/control/solver
-  changes `0`; physics parameter changes `0`.
-- Isaac runtime was not created; controlled physics steps `0`; settle and
-  10-trial absent.
-- D344 Rerun was preregistered for the fresh live-validation process. The build
-  hard-stop prohibited that process, so no RRD/RBL/screenshot/manual inspection
-  exists. Do not call D344 Rerun-complete; a future live case must execute the
-  full D341 lifecycle.
-
-## Active Case / Next Concrete Action
-
-No new case is authorized yet. Recommended next choice is D345, a proof-only
-`deterministic_usd_metadata_comparator` repair. If approved, its sole new
-measurement variable is `[deterministic_usd_metadata_comparator]`.
-
-1. Seal immutable D344 attempt3 and both D344 diagnosis files before execution.
-2. Read source and attempt3 only; do not write/copy/recook any collision asset.
-3. Serialize USD metadata by actual type and content. For `Sdf.TokenListOp`,
-   record the list-operation mode and token items, never `repr(...)` or an
-   object address.
-4. In two independent standalone-PXR processes, require identical canonical
-   rows and hashes after masking exactly the registered 39 geometry values.
-5. Include a negative control showing the old address-bearing representation
-   changes between processes and is rejected as nondeterministic.
-6. Stop without Isaac, GPU, Rerun, physics, settle, or promotion. This is a
-   preregistered non-spatial/non-temporal comparator audit.
-7. Only if D345 passes, request a separate D346 live-validation case for the
-   immutable D344 attempt3: 256 callback witnesses, 128-part fidelity, frozen
-   target-distance gate, and full D341 Rerun completion lifecycle.
+- D344 stays `D344_G0A_ATTEMPT3_AUTHORING_CONTRACT_FAIL_STOP`; no retroactive
+  PASS, attempt3 overwrite, or same-path D345 rerun is allowed.
+- D345 certifies comparator behavior and non-geometry semantic equality only.
+  It does not prove callback count, live 128-part fidelity, target clearance,
+  contact behavior, settle, or grasp success.
+- Recommended next choice is separately preregistered D346 fresh live validation
+  of immutable attempt3: callback `256`, actual pieces `128`, frozen open-jaw
+  `(7,11)mm` target gate, and full D341 Rerun completion. User approval is required
+  before any Isaac/Kit/GPU execution.
 
 Reserve only: reactive step-0 onset-metric hardening inside a future settle;
 long-term purpose-built simple production colliders after this forensic chain.
 `r>17mm` grasp-depth redefinition remains unnecessary.
 
+## Operational Storage Sidecar
+
+- User-authorized read-only audit completed for the pre-RL D242/D247 0-999
+  script corpus. It is not a current D322-D345 runtime input, but compact D247,
+  labels, D256, and D257 remain the frozen script-control lineage.
+- Keep the D242 parent and all non-raw/control files local. External archive
+  plan is one non-raw core copy plus five 200-episode raw-PNG batches; no USB
+  write or local deletion has started.
+- Plan: `claudedocs/dataset_archives/cube10cm_top_view_0_999_v0_1/ARCHIVE_PLAN.md`.
+- This storage sidecar does not change the completed D345 boundary or authorize D346.
+
 ## Must Read First
 
-1. `AGENTS.md`
-2. `START_HERE.md`
-3. `claudedocs/DECISIONS.md` tail (D341-D344)
-4. `claudedocs/EXPERIMENT_LEDGER.md` tail
+1. `AGENTS.md`; `START_HERE.md`; DECISIONS D341-D345; ledger tail
+2. `claudedocs/session_20260714_grasp_g0a_d345_deterministic_usd_metadata_comparator.md`
+3. `claudedocs/runtime_logs/grasp_track/g0a_d345/d345_deterministic_usd_metadata_summary.json`
+4. `claudedocs/runtime_logs/grasp_track/g0a_d345/d345_deterministic_usd_metadata_evidence.json`
 5. `claudedocs/session_20260714_grasp_g0a_d344_attempt3_fixed_point_collision_geometry.md`
-6. `claudedocs/runtime_logs/grasp_track/g0a_d344/d344_attempt3_build_summary.json`
-7. `claudedocs/runtime_logs/grasp_track/g0a_d344/d344_postrun_root_cause_audit.json`
-8. `claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/d344_attempt3_asset_manifest.json`
-9. `claudedocs/session_20260713_grasp_g0a_d343_usd_typed_float_readback_contract_repair.md`
-10. `claudedocs/session_20260713_grasp_g0a_d341_rerun_observability_contract_repair.md`
+6. `claudedocs/runtime_logs/grasp_track/g0a_d344/d344_postrun_root_cause_audit.json`
+7. `claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/d344_attempt3_asset_manifest.json`
+8. `claudedocs/session_20260713_grasp_g0a_d341_rerun_observability_contract_repair.md`
 
 ## Durable Do-Not-Repeat Rules
 
@@ -124,11 +96,12 @@ long-term purpose-built simple production colliders after this forensic chain.
   not silently tighten, relax, or replace them after results.
 - Rerun omission is limited to preregistered scalar/schema/hash audits with no
   spatial or temporal verdict. Geometry/live/Kit/cooking/physics restores D341.
-- D338 attempt1, D339 attempt2, D340, D342, D343, and D344 outputs are
+- D338 attempt1, D339 attempt2, D340, D342, D343, D344, and D345 outputs are
   immutable. No overwrite, silent rerun, retroactive PASS, or promotion.
 - `JOINT_LIMITS` removal, hardware control, B200/SSH/pull, `/half-clone`, and
   unapproved commit/push remain forbidden.
 
-Actual HEAD is `7868abdf2f5c042d6757575a296b3c4881a52425` (`D343`), equal
-to `origin/master` before D344. D344 code, state docs, and artifacts are
-intentionally uncommitted. Commit/push only on explicit user request.
+At preflight start, HEAD/origin were `c90b671f479e019f8582775dc0e041a8bb7ba2e0`
+(`D335 시작전`; tracked content through D344), already user-pushed. Dataset
+payloads and ignored D344 USD assets are not in that push. Current archive/state
+edits plus D345 work are uncommitted; commit/push remains user-approval-only.

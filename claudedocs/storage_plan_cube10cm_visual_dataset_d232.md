@@ -1,8 +1,8 @@
 # D232 Storage Plan - Cube10cm Top-View Visual Dataset
 
-Status: planning document plus D233 local smoke storage result. No deletion,
-archive, move, 100 episode chunk, or full dataset generation is authorized by
-this file.
+Status: planning document plus D233 local smoke storage result and the
+2026-07-14 D247/D249 USB archive preflight. No deletion, move, filesystem
+repair, or USB write is authorized by this file.
 
 ## Current Disk Truth
 
@@ -211,3 +211,36 @@ RunPod/H100 result:
   `0.10865616798400879s`.
 - Result JSON:
   `claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/runpod_d234/cube10cm_runpod_h100_av1_decode_preflight_full_d234.json`.
+
+## D247/D249 0-999 USB Archive Preflight - 2026-07-14
+
+The user authorized a dependency and archive-plan audit for the old 0-999
+script corpus. No copy, move, deletion, remount, or filesystem repair was run.
+This is an operational storage sidecar and does not change the active grasp
+case or consume the recommended D345 case number.
+
+Verified classification:
+
+- The 0-999 corpus was generated and converted before the first PPO runtime.
+- D319/D321 later use its labels and D256 derivative as a script-only control
+  and reset source, but current D322-D344 grasp work does not read it.
+- The compact D247 LeRobot dataset, labels, metadata, D256, and D257 remain
+  lineage-critical and stay local.
+- The `51386208295`-byte raw PNG source is archive-safe but not disposable. It
+  is the only part eligible for later local space reclamation.
+- Never move the D242 parent root. Copy the full non-raw/control payload once,
+  then archive raw frames in five 200-episode verified shuttle batches.
+- USB copy success is not local deletion approval. Require source-to-USB and
+  USB-to-final-destination hash PASS for core plus all five batches, followed by
+  a separate user approval before touching local raw PNGs.
+
+Canonical plan and machine inventory:
+
+- `claudedocs/dataset_archives/cube10cm_top_view_0_999_v0_1/ARCHIVE_PLAN.md`
+- `claudedocs/dataset_archives/cube10cm_top_view_0_999_v0_1/archive_inventory_20260714.json`
+- `claudedocs/dataset_archives/cube10cm_top_view_0_999_v0_1/raw_batches_20260714.tsv`
+
+The USB observed during preflight is exFAT UUID `B0C1-F936`, currently mounted
+read-only and containing unrelated `RELOC.zip`. A later transfer must begin by
+asking the user to connect/reconnect it and approve one exact trip, then
+rechecking identity, read-write state, and free space.

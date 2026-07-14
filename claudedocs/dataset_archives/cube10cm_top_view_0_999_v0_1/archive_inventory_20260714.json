@@ -1,0 +1,133 @@
+{
+  "artifact": "cube10cm_top_view_0_999_v0_1_usb_archive_preflight",
+  "status": "PREFLIGHT_COMPLETE_COPY_NOT_STARTED",
+  "date_kst": "2026-07-14",
+  "source_git_head": "c90b671f479e019f8582775dc0e041a8bb7ba2e0",
+  "source_root": "claudedocs/runtime_logs/20260526_cube3cm_push_rollout_probe_20480/cube10cm_top_view_visual_0_999_d242",
+  "freeze_id": "cube10cm_top_view_0_999_v0_1_d249",
+  "timeline": {
+    "generated_before_first_ppo": true,
+    "raw_and_compact_changed_after_2026_07_08": false,
+    "current_grasp_d322_d344_runtime_dependency": false,
+    "frozen_script_control_dependency": true
+  },
+  "inventory": {
+    "du_apparent_bytes": 53025215622,
+    "file_payload_bytes": 53014066310,
+    "file_count": 195267,
+    "symlink_count": 0,
+    "hardlink_file_count": 0,
+    "raw_png": {
+      "path": "raw_env_render_frames",
+      "file_count": 195000,
+      "payload_bytes": 51386208295,
+      "first_filename": "rgb_000000.png",
+      "last_filename": "rgb_194999.png",
+      "individual_sha256_available_before_this_preflight": false
+    },
+    "nonraw_control": {
+      "file_count": 267,
+      "payload_bytes": 1627858015,
+      "local_policy": "KEEP",
+      "external_policy": "COPY_ONCE_AS_CORE"
+    },
+    "lerobot_dataset_av1_d247": {
+      "file_count": 8,
+      "payload_bytes": 565313872,
+      "episodes": 1000,
+      "frames": 195000,
+      "codec": "av1",
+      "fps": 30,
+      "validation": "PASS_PYAV"
+    },
+    "metadata_companion_d247": {
+      "file_count": 4,
+      "payload_bytes": 34868154
+    },
+    "empty_episode_directories": 1000
+  },
+  "existing_d249_sha256_manifest": {
+    "entry_count": 24,
+    "covered_bytes": 1089314018,
+    "sufficient_for_usb_archive": false,
+    "gaps": [
+      "195000 raw PNG members",
+      "metadata_companion_d247/per_frame_metadata.parquet",
+      "metadata_companion_d247/episode_metadata.parquet",
+      "additional split, label, debug, and freeze files",
+      "post-D249 D256 and D257 derivatives"
+    ]
+  },
+  "raw_batches": [
+    {
+      "trip": 1,
+      "episode_start": 0,
+      "episode_end": 199,
+      "frame_start": 0,
+      "frame_end": 38999,
+      "file_count": 39000,
+      "payload_bytes": 10454762849
+    },
+    {
+      "trip": 2,
+      "episode_start": 200,
+      "episode_end": 399,
+      "frame_start": 39000,
+      "frame_end": 77999,
+      "file_count": 39000,
+      "payload_bytes": 10164485830
+    },
+    {
+      "trip": 3,
+      "episode_start": 400,
+      "episode_end": 599,
+      "frame_start": 78000,
+      "frame_end": 116999,
+      "file_count": 39000,
+      "payload_bytes": 10090886778
+    },
+    {
+      "trip": 4,
+      "episode_start": 600,
+      "episode_end": 799,
+      "frame_start": 117000,
+      "frame_end": 155999,
+      "file_count": 39000,
+      "payload_bytes": 10140133100
+    },
+    {
+      "trip": 5,
+      "episode_start": 800,
+      "episode_end": 999,
+      "frame_start": 156000,
+      "frame_end": 194999,
+      "file_count": 39000,
+      "payload_bytes": 10535939738
+    }
+  ],
+  "usb_observation": {
+    "device": "/dev/sda1",
+    "filesystem": "exfat",
+    "uuid": "B0C1-F936",
+    "mount_path": "/media/cgxr/B0C1-F936",
+    "total_bytes": 31447875584,
+    "free_bytes": 15333294080,
+    "mount_read_only": true,
+    "existing_unrelated_file": {
+      "path": "RELOC.zip",
+      "bytes": 16114254207,
+      "preserve": true
+    },
+    "write_eligible": false
+  },
+  "authorization": {
+    "usb_write_approved": false,
+    "usb_clear_approved": false,
+    "local_raw_delete_approved": false
+  },
+  "scientific_scope": {
+    "active_case_changed": false,
+    "d345_consumed": false,
+    "research_verdict_changed": false
+  }
+}
