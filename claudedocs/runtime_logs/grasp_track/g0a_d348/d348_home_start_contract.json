@@ -1,0 +1,168 @@
+{
+  "artifact": "D348_HOME_START_CONTRACT_V1",
+  "bounded_answer_ko": "D347 \uc2e4\uce21\uc740 \uc815\ud655\ud55c HOME\uc774 \uc544\ub2c8\ub77c HOME \uadfc\ubc29\uc758 \ub2eb\ud78c \uadf8\ub9ac\ud37c \uc790\uc138\uc5d0\uc11c \ucda9\ub3cc API\ub97c \uac80\uc0ac\ud588\ub2e4. \ubaa9\ud45c \uc5f4\ub9b0 \uc790\uc138\ub294 \ubb3c\ub9ac step \uc5c6\uc774 \uad00\ucc30\uc6a9\uc73c\ub85c\ub9cc \uae30\ub85d\ud588\ub2e4. D348\uc740 PhysX\ub97c \ub2e4\uc2dc \uc2e4\ud589\ud558\uc9c0 \uc54a\uace0 \uadf8 D347 \uc2e4\uce21\uc744 \uc7ac\ud310\ub3c5\ud55c\ub2e4.",
+  "checks": {
+    "authored_initial_state_exact_home": true,
+    "d347_controlled_physics_steps_zero": true,
+    "d347_sim_counter_unchanged": true,
+    "d348_does_not_change_reset": true,
+    "nominal_home_exact_deg": true,
+    "runtime_reset_adds_plus_minus_0p02_rad": true,
+    "runtime_reset_forces_q5_zero": true
+  },
+  "d347_callback_measurement_start": {
+    "classification": "HOME-near deterministic jitter, q5=0 closed",
+    "exact_absolute_joint_vector_persisted": false,
+    "per_joint_reset_jitter_deg_approx": [
+      -1.1459155903,
+      1.1459155903
+    ],
+    "per_joint_reset_jitter_rad": [
+      -0.02,
+      0.02
+    ],
+    "q5_after_reset_rad": 0.0,
+    "seed": 33201
+  },
+  "d347_post_failure_observability_pose": {
+    "method": "exact state write plus sim.forward and zero-dt update; controlled physics step 0",
+    "physical_home_to_target_motion": false,
+    "q5_rad": 1.5413
+  },
+  "d347_zero_step_source": {
+    "controlled_physics_steps": 0,
+    "global_sim_counter": {
+      "delta": 0,
+      "end": 0,
+      "start": 0,
+      "unchanged": true
+    },
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d347/d347_zero_step_representation_gate.json",
+    "sha256": "ebc6fa2e6ba708721a7ad8d8786f3a8e83fcb81c1f530391bfc37c8f0c7748d9"
+  },
+  "nominal_home_deg": [
+    0.0,
+    0.0,
+    90.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "pass": true,
+  "source_references": [
+    {
+      "lines": [
+        "39: HOME_DEG = np.array([0.0, 0.0, 90.0, 0.0, 0.0, 0.0], dtype=np.float64)",
+        "40: AUDIT_POSES_DEG = (",
+        "41:     (\"home\", HOME_DEG),",
+        "42:     (\"audit_pose_a\", np.array([0.0, 20.0, 120.0, 15.0, 0.0, 0.0], dtype=np.float64)),"
+      ],
+      "path": "sim_scripts/cube10cm_top_view_d323_grasp_g0a_frame_repair_probe.py",
+      "role": "nominal_home_definition",
+      "sha256": "088208552bf1aa448c82756f13b598039632a603e67d115b8b9a4b489df18393"
+    },
+    {
+      "lines": [
+        "161:         init_state=ArticulationCfg.InitialStateCfg(",
+        "162:             joint_pos={",
+        "163:                 \"base_link_to_link1\": 0.0,",
+        "164:                 \"link1_to_link2\": 0.0,",
+        "165:                 \"link2_to_link3\": math.pi / 2,",
+        "166:                 \"link3_to_link4\": 0.0,",
+        "167:                 \"link4_to_link5\": 0.0,",
+        "168:                 \"link5_to_gripper_link\": 0.0,",
+        "169:             },"
+      ],
+      "path": "roarm_rl/roarm_stack_env.py",
+      "role": "articulation_authored_initial_state",
+      "sha256": "726a57f4be83276fda1bb5b3eaf07a17f56d5c16cdbc0441bc14fb5c794a697d"
+    },
+    {
+      "lines": [
+        "1632:             home_pos = torch.tensor(HOME_RAD, device=self.device, dtype=torch.float32).unsqueeze(0).repeat(n, 1)",
+        "1633:             joint_pos = torch.where(ik_ok.unsqueeze(-1), joint_pos, home_pos)",
+        "1634:         else:",
+        "1635:             joint_pos = torch.tensor(HOME_RAD, device=self.device, dtype=torch.float32).unsqueeze(0).repeat(n, 1)",
+        "1636:             joint_pos = joint_pos + sample_uniform(-0.02, 0.02, (n, self._robot.num_joints), self.device)",
+        "1637:             ik_ok = torch.zeros(n, dtype=torch.bool, device=self.device)",
+        "1638:             ik_err_mm = torch.zeros(n, device=self.device)",
+        "1639:         if d256_reset is None:",
+        "1640:             joint_pos[:, self.gripper_joint_idx] = 0.0",
+        "1641:         joint_pos = torch.clamp(joint_pos, self.robot_dof_lower_limits, self.robot_dof_upper_limits)",
+        "1642:         joint_vel = torch.zeros_like(joint_pos)",
+        "1643:         self._robot.write_joint_state_to_sim(joint_pos, joint_vel, env_ids=env_ids)",
+        "1644:         self._robot.set_joint_position_target(joint_pos, env_ids=env_ids)",
+        "1645:         self.robot_dof_targets[env_ids] = joint_pos"
+      ],
+      "path": "roarm_rl/roarm_cube_push_env.py",
+      "role": "runtime_reset_home_jitter_and_closed_q5",
+      "sha256": "673c7cd415a2bcd1243ac100401977e8767aeb18880b3628e0f66947c0dcc057"
+    },
+    {
+      "lines": [
+        "1903:     args.robot_usd_path = VARIANT_ROBOT_USD",
+        "1904:     inner = d333._make_runtime_env(args)",
+        "1905:     try:",
+        "1906:         inner.reset(seed=int(args.seed))",
+        "1907:         counter_start = int(inner._sim_step_counter)"
+      ],
+      "path": "sim_scripts/cyl34_top_view_d347_grasp_g0a_asset_validator_activation_order_repair.py",
+      "role": "d347_reset_call",
+      "sha256": "57e75de4807237121747ff00035402474aa18ab624134c2fa4698bb17cb18d0b"
+    },
+    {
+      "lines": [
+        "2408: def _fallback_candidate_without_raw(inner: Any, reason: str) -> dict[str, Any]:",
+        "2409:     \"\"\"Materialize frozen frames without pretending missing raw evidence exists.\"\"\"",
+        "2410:     canonical = d337._canonical_with_q5(",
+        "2411:         OLD_RADIAL_NM / 1000.0,",
+        "2412:         OLD_TANGENT_NM / 1000.0,",
+        "2413:         Q5_OPEN_RAD,",
+        "2414:     )",
+        "2415:     counter_before = int(inner._sim_step_counter)",
+        "2416:     command = d332._write_exact_state(",
+        "2417:         inner,",
+        "2418:         np.asarray(canonical[\"commanded_joint_rad\"], dtype=np.float64),",
+        "2419:         d332.OBJECT_CENTER_LOCAL_M,",
+        "2420:     )",
+        "2421:     counter_after = int(inner._sim_step_counter)",
+        "2422:     alignment, frames = d335._alignment_at_current(inner, canonical)"
+      ],
+      "path": "sim_scripts/cyl34_top_view_d339_grasp_g0a_cook_witness_contract_repair.py",
+      "role": "fallback_exact_state_write_without_step",
+      "sha256": "fd307cb573699f8a08df1ab580789188774158877b8abf0a05cc4c60ef6562d6"
+    },
+    {
+      "lines": [
+        "578: def _write_exact_state(inner: Any, q_rad: np.ndarray, object_local_m: np.ndarray) -> Any:",
+        "579:     import torch",
+        "580: ",
+        "581:     env_ids = torch.arange(inner.num_envs, device=inner.device, dtype=torch.long)",
+        "582:     target = _joint_target_tensor(inner, q_rad)",
+        "583:     zero_joint_vel = torch.zeros_like(target)",
+        "584:     inner._robot.write_joint_state_to_sim(target, zero_joint_vel, env_ids=env_ids)",
+        "585:     inner._robot.set_joint_position_target(target, env_ids=env_ids)",
+        "586:     inner.robot_dof_targets[env_ids] = target",
+        "587:     inner._external_joint_targets_override = target.detach().clone()",
+        "588: ",
+        "589:     pose = torch.zeros((inner.num_envs, 7), device=inner.device, dtype=torch.float32)",
+        "590:     pose[:, :3] = inner.scene.env_origins + torch.tensor(",
+        "591:         object_local_m, device=inner.device, dtype=torch.float32",
+        "592:     ).unsqueeze(0)",
+        "593:     pose[:, 3] = 1.0",
+        "594:     velocity = torch.zeros((inner.num_envs, 6), device=inner.device, dtype=torch.float32)",
+        "595:     inner._sponge.write_root_pose_to_sim(pose, env_ids=env_ids)",
+        "596:     inner._sponge.write_root_velocity_to_sim(velocity, env_ids=env_ids)",
+        "597:     inner.scene.write_data_to_sim()",
+        "598:     inner.sim.forward()",
+        "599:     inner.scene.update(dt=0.0)",
+        "600:     inner._compute_intermediate_values()",
+        "601:     inner._d332_contact_sensor.reset(env_ids)",
+        "602:     return target"
+      ],
+      "path": "sim_scripts/cyl34_top_view_d332_grasp_g0a_static_collision_discriminator.py",
+      "role": "exact_state_write_forward_and_zero_dt_update",
+      "sha256": "3ab551232b9c3e2a3886578e5f4baa4589d578567758a351203c2260a1428ad4"
+    }
+  ]
+}

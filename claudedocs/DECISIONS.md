@@ -19731,3 +19731,75 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d347/d347_rerun_validation.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d347/d347_manual_visual_inspection.json`
 - `START_HERE.md`
+
+## D348 - PhysX 부피는 콜백 꼭짓점을 다시 감싼 외피가 아니라 콜백의 실제 면 연결 구조와 비교해야 한다 (2026-07-14)
+
+Decision:
+
+- 최종 판정은 `D348_PHYSX_PROPERTY_QUERY_TOPOLOGY_SEMANTICS_SUPPORTED`다.
+  신규 변수는 measurement-only `[physx_property_query_volume_semantics,
+  rerun_static_summary_and_hidpi_contract]` 두 건이고 신규 물리 변수는 0건이다.
+  자산·분해 설정·목표·허용값·물리값은 바꾸지 않았고 PhysX/cook/asset write/
+  target query/physics step은 모두 0회였다.
+- D347의 옛 비교기는 callback의 면 연결 목록을 버리고 꼭짓점만 SciPy Qhull로
+  다시 감싸 다른 외피를 만들었다. link5 `part_045`에서 이 외피 부피는
+  `5.171636397369118e-7m^3`이고 PhysX 속성 부피와의 차이는 `27.3316720525%`였다.
+  콜백의 실제 면 목록으로 계산하면 `4.061547420257619e-7m^3`이고 PhysX 속성
+  `4.061547542733024e-7m^3`와의 상대차는 `3.015486183560612e-8`뿐이다.
+- 전체 128조각에서 instance/prototype 원자료는 `128/128` 같았고, 256개 채널은
+  모두 닫힌·방향 일관 면 구조였다. 콜백 면 부피와 PhysX 속성 부피는 동결 5%에서
+  `256/256` 통과했다. 최대/중앙 상대차는 각각
+  `1.362105296456897e-7`/`2.6262618696070446e-8`, 원점 이동 독립 계산의 최대
+  부피 변화는 `2.117582368135751e-21m^3`였다. 면 제거 음성 대조군은 의도대로
+  거부됐다.
+- **지속 규칙:** callback이 꼭짓점과 polygon/index 목록을 함께 제공하면, 속성
+  부피 교차검사는 그 면 연결 구조를 보존해 계산한다. 꼭짓점-only Qhull은 새로운
+  외피를 만드는 진단값으로만 남기며 원래 callback 부피로 부르지 않는다. 특히
+  Float32 다각형이 완전 공면이 아닐 때 두 값은 달라질 수 있다.
+- D347의 당시 `127/128 FAIL`과 미실행 target query는 소급 변경하지 않는다. D348은
+  D347의 유일한 실패 원인을 비교기 의미 오류로 설명하고 올바른 기준의 `128/128`을
+  새로 인증했을 뿐이다. 결론 범위는 PhysX `107.3.26`과 보존된 256개 callback이다.
+- **지속 규칙:** Rerun 완료는 RRD/RBL 기계 검증만으로 끝내지 않는다. 실제 PNG를
+  원본 해상도로 열어 timeline 가시성, 논리 창 대 실제 HiDPI raster, 잘린 문장,
+  글꼴 누락까지 확인한다. Rerun 0.34.1 기계 화면에서 한글 글꼴이 없으면 짧은
+  ASCII 계약을 쓰고 한국어 번역은 상태 문서와 사용자 보고에 명시한다. 화면 메시/
+  수치는 표시 사본이지 원본 JSON/Float64 판정의 대체물이 아니다.
+- HOME의 명목값은 `[0,0,90,0,0,0]deg`지만 D347 callback 실측은 seed 흔들림
+  `±0.02rad`이 들어간 HOME 근방, q5=0 닫힘 자세였다. 물리 step은 0회였고 열린
+  목표 자세는 관찰용 순간 배치였다. D348은 그 자료의 오프라인 재판독이라 별도
+  reset/시작 자세가 없다.
+
+Evidence:
+
+- prepare attempt1의 Git porcelain 선행공백 파서 실패, attempt2의 과학 PASS와
+  기본 timeline 선택 불일치로 관련 패널이 비어 보인 문제/HiDPI 수동 FAIL,
+  attempt3의 긴/이스케이프 문장 FAIL, attempt4의
+  한글 누락 글리프 FAIL을 모두 별도 경로에 보존했다. 어떤 실패도 삭제하거나
+  소급 PASS하지 않았다.
+- 최종 attempt5는 좌표계 2, 메시 512, Float64 수치 1,280, 사건 133,
+  비시스템 entity 2,309와 timeline 4종을 exact로 검증했다. 논리 창
+  `2400x1400`, 실제 PNG `4800x2800`, DPR `2.0`이었고 여덟 형상과 짧은 완료
+  계약을 실제 화면에서 확인했다.
+- 과학 evidence/final completion SHA-256은 각각
+  `83b8c7b16181d0f5c545cfbeaa992c8ebfd69e2310dd33bce2a64234a1deaab6` /
+  `bc93b77fbfbeee074b1241b8f48c0317745b62ff5bca5e2196da00d25eb28697`다.
+
+Implication:
+
+- `g0a_pass=false`; D348은 target 거리, settle, ten-trial, G0b, RL, ladder를
+  실행하거나 허가하지 않았다.
+- 가장 좁은 다음 후보는 별도 승인 D349 measurement-only
+  `[frozen_open_jaw_target_live_distance_gate]`다. D344 attempt3 자산,
+  D337 `(7,11)mm/q5=1.5413rad`, D348의 올바른 128/128 계약으로 raw/live 목표
+  거리를 먼저 측정한다. 물리 step과 settle은 그 case에서 금지한다.
+
+Sources:
+
+- `claudedocs/session_20260714_grasp_g0a_d348_physx_property_query_volume_semantics.md`
+- `sim_scripts/cyl34_top_view_d348_grasp_g0a_physx_property_query_volume_semantics.py`
+- `sim_scripts/cyl34_top_view_d348_grasp_g0a_rerun_font_fallback_contract_repair.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d348/attempt2/d348_callback_topology_volume_evidence.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d348/attempt2/d348_matched_controls.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d348/attempt5_ascii_contract/d348_completion_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d348/attempt5_ascii_contract/d348_ascii_manual_visual_inspection.json`
+- `START_HERE.md`

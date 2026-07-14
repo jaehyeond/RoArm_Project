@@ -1,0 +1,39 @@
+{
+  "artifact": "D348_ATTEMPT2_MANUAL_VISUAL_INSPECTION_FAIL_V1",
+  "case": "g0a_d348",
+  "inspection_date_kst": "2026-07-14",
+  "inspection_method": "original_resolution_view_image",
+  "decision_png": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d348/attempt2/d348_volume_semantics_decision.png",
+    "sha256": "00a77861296b048c02c91f18086cf9ff02a728305d923f8c7b751bbdfee46db9",
+    "bytes": 564963,
+    "raster_dimensions": [2400, 1440]
+  },
+  "rerun_screenshot": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d348/attempt2/d348_volume_semantics_rerun.png",
+    "sha256": "9a3049e5c8670543c1bb49350c1e4a4039a40a7e80e5f70fcd7fec85bbfa94b7",
+    "bytes": 7997793,
+    "requested_logical_window": [2400, 1400],
+    "raster_dimensions": [4800, 2800],
+    "observed_device_pixel_ratio": 2.0
+  },
+  "observations": {
+    "both_bodies_visible": true,
+    "four_semantic_panels_distinguishable": true,
+    "part045_dedicated_geometry_views_visible": true,
+    "decision_png_numeric_root_cause_readable": true,
+    "frozen_5pct_and_128_of_128_readable_in_rerun": false,
+    "home_contract_and_verdict_event_readable_in_rerun": false,
+    "rerun_bottom_metrics_populated_at_default_timeline": false
+  },
+  "failure_causes": [
+    "The headless viewer selected the part_idx timeline, while the verdict events use event_idx; the event panel is blank.",
+    "The dataframe spans per-part temporal scalar entities and shows dashes at the captured default timeline instead of an aggregate verdict.",
+    "The viewer requested a 2400x1400 logical window but emitted a 4800x2800 HiDPI raster; the attempt2 manual checker incorrectly requires 2400x1400 physical pixels."
+  ],
+  "scientific_evidence_changed": false,
+  "scientific_verdict_override": false,
+  "manual_visual_inspection_pass": false,
+  "g0a_pass": false,
+  "reactive_next_action": "Preserve attempt2 and create a summary-static, HiDPI-aware Rerun-only attempt without recomputing the 256 callback results."
+}

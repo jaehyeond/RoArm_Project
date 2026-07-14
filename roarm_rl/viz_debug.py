@@ -520,6 +520,104 @@ def build_rerun_blueprint(mode: str = "robot_geometry") -> Any:
             auto_views=False,
             collapse_panels=True,
         )
+    if mode == "volume_semantics":
+        def _volume_body_row(body: str, label: str, suffix: str = "**") -> Any:
+            return rrb.Horizontal(
+                rrb.Spatial3DView(
+                    origin="/",
+                    contents=[f"/cook/source/{body}/{suffix}"],
+                    name=f"{label} instance: callback face topology",
+                ),
+                rrb.Spatial3DView(
+                    origin="/",
+                    contents=[f"/cook/instance/{body}/{suffix}"],
+                    name=f"{label} instance: vertex-only Qhull envelope",
+                ),
+                rrb.Spatial3DView(
+                    origin="/",
+                    contents=[f"/cook/prototype/{body}/{suffix}"],
+                    name=f"{label} prototype: callback face topology",
+                ),
+                rrb.Spatial3DView(
+                    origin="/",
+                    contents=[f"/cook/candidate/{body}/{suffix}"],
+                    name=f"{label} prototype: vertex-only Qhull envelope",
+                ),
+                column_shares=[0.25, 0.25, 0.25, 0.25],
+            )
+
+        return rrb.Blueprint(
+            rrb.Vertical(
+                _volume_body_row("link5", "link5 part_045 zoom", "parts/part_045"),
+                _volume_body_row("gripper_link", "gripper full body"),
+                rrb.Horizontal(
+                    rrb.DataframeView(
+                        origin="/metrics",
+                        contents="/metrics/**",
+                        name="Float64 topology/property volume metrics",
+                    ),
+                    rrb.TextLogView(
+                        origin="/events",
+                        contents="/events/**",
+                        name="D348 semantic gates",
+                    ),
+                    column_shares=[0.65, 0.35],
+                ),
+                row_shares=[0.35, 0.35, 0.30],
+            ),
+            auto_layout=False,
+            auto_views=False,
+            collapse_panels=True,
+        )
+    if mode == "volume_semantics_summary":
+        def _summary_body_row(body: str, label: str, suffix: str = "**") -> Any:
+            return rrb.Horizontal(
+                rrb.Spatial3DView(
+                    origin="/",
+                    contents=[f"/cook/source/{body}/{suffix}"],
+                    name=f"{label} instance: callback face topology",
+                ),
+                rrb.Spatial3DView(
+                    origin="/",
+                    contents=[f"/cook/instance/{body}/{suffix}"],
+                    name=f"{label} instance: vertex-only Qhull envelope",
+                ),
+                rrb.Spatial3DView(
+                    origin="/",
+                    contents=[f"/cook/prototype/{body}/{suffix}"],
+                    name=f"{label} prototype: callback face topology",
+                ),
+                rrb.Spatial3DView(
+                    origin="/",
+                    contents=[f"/cook/candidate/{body}/{suffix}"],
+                    name=f"{label} prototype: vertex-only Qhull envelope",
+                ),
+                column_shares=[0.25, 0.25, 0.25, 0.25],
+            )
+
+        return rrb.Blueprint(
+            rrb.Vertical(
+                _summary_body_row("link5", "link5 part_045 zoom", "parts/part_045"),
+                _summary_body_row("gripper_link", "gripper full body"),
+                rrb.Horizontal(
+                    rrb.TextDocumentView(
+                        origin="/metadata/run",
+                        contents="/metadata/run",
+                        name="D348 static scientific summary",
+                    ),
+                    rrb.TextLogView(
+                        origin="/events",
+                        contents="/events/**",
+                        name="D348 static completion event",
+                    ),
+                    column_shares=[0.68, 0.32],
+                ),
+                row_shares=[0.34, 0.34, 0.32],
+            ),
+            auto_layout=False,
+            auto_views=False,
+            collapse_panels=True,
+        )
     if mode != "robot_geometry":
         raise ValueError(f"unsupported Rerun blueprint mode: {mode!r}")
     return rrb.Blueprint(
@@ -749,7 +847,15 @@ def log_rerun(
             }
             recording.log(
                 "metadata/run",
-                rr.TextDocument(json.dumps(metadata, indent=2, sort_keys=True, default=str)),
+                rr.TextDocument(
+                    json.dumps(
+                        metadata,
+                        indent=2,
+                        sort_keys=True,
+                        default=str,
+                        ensure_ascii=False,
+                    )
+                ),
                 static=True,
             )
             expected_entities.add("metadata/run")

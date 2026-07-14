@@ -1,0 +1,51 @@
+{
+  "artifact": "D348_PHYSX_LOCAL_SOURCE_SEMANTICS_V1",
+  "binding_declaration": {
+    "lines": [
+      "3414:     def volume(self) -> float:",
+      "3415:         \"\"\"",
+      "3416:         Volume of the collider",
+      "3417: ",
+      "3418:         :type: float"
+    ],
+    "path": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.physx-107.3.26+107.3.3.lx64.r.cp311.u353/omni/physx/bindings/_physx.pyi",
+    "sha256": "ff13abb83480dcc707ac2ad60062306aef7a33f885d32ed4c8ee6dfea2008e79"
+  },
+  "bundled_test": {
+    "caveat": "The bundled test documents scale semantics, but its volume assertion is one-sided. D348 therefore treats the 256 frozen measurements, not this test, as the decisive evidence.",
+    "lines": [
+      "305:         # Scale the shape, but expecting ",
+      "306:         # - Local AABB will not  change with scale as it's declared as a local quantity",
+      "307:         # - Volume will change as it's declared as a global quantity",
+      "308:         expected_volume = 14.067450523376465",
+      "309: ",
+      "310:         def report_collider_scaled(collider_info : PhysxPropertyQueryColliderResponse):",
+      "311:             self.assertEqual(collider_info.result, PhysxPropertyQueryResult.VALID)",
+      "312:             self.assertEqual(str(PhysicsSchemaTools.intToSdfPath(collider_info.path_id)), expected_path)",
+      "313:             self.assertTrue(collider_info.aabb_local_max.x - expected_aabb_local_max[0] < toleranceEpsilon)",
+      "314:             self.assertTrue(collider_info.aabb_local_max.y - expected_aabb_local_max[1] < toleranceEpsilon)",
+      "315:             self.assertTrue(collider_info.aabb_local_max.z - expected_aabb_local_max[2] < toleranceEpsilon)",
+      "316:             self.assertTrue(collider_info.aabb_local_min.x - expected_aabb_local_min[0] < toleranceEpsilon)",
+      "317:             self.assertTrue(collider_info.aabb_local_min.y - expected_aabb_local_min[1] < toleranceEpsilon)",
+      "318:             self.assertTrue(collider_info.aabb_local_min.z - expected_aabb_local_min[2] < toleranceEpsilon)",
+      "319:             self.assertTrue(collider_info.volume - expected_volume < toleranceEpsilon)"
+    ],
+    "path": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.physx.tests-107.3.26+107.3.3.cp311.u353/omni/physxtests/tests/PhysxPropertyQueryInterface.py",
+    "sha256": "4c22d665fef5dce39bec2e1fb06c259c66d70e79764dac5c0ca3fe89fe07f108"
+  },
+  "checks": {
+    "d347_runtime_meters_per_unit_one": true,
+    "pyi_calls_value_collider_volume": true,
+    "test_calls_aabb_local_quantity": true,
+    "test_calls_volume_global_quantity": true,
+    "test_volume_assertion_is_one_sided": true
+  },
+  "pass": true,
+  "physx_version_scope": "107.3.26+107.3.3 / Isaac Sim 5.1 local installation",
+  "registered_interpretation": "For identity local transforms and stage meters-per-unit 1, compare the query volume to the closed polygon topology returned for that collider.",
+  "runtime_unit_evidence": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d347/d347_zero_step_representation_gate.json",
+    "runtime_meters_per_unit_one": true,
+    "sha256": "ebc6fa2e6ba708721a7ad8d8786f3a8e83fcb81c1f530391bfc37c8f0c7748d9"
+  }
+}
