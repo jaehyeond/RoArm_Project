@@ -1,0 +1,44 @@
+{
+  "artifact": "D346_RERUN_MANUAL_VISUAL_INSPECTION_V1",
+  "case": "g0a_d346",
+  "inspection_date_kst": "2026-07-14",
+  "inspection_method": "view_image detail=original for both the Rerun screenshot and decision PNG",
+  "rerun_screenshot": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_attempt3_live_representation_rerun.png",
+    "sha256": "f454d2a3ef36bb088a8c83d859bb28ab87222ec1545a77feaa111d7237225b67",
+    "bytes": 9413786,
+    "raster_dimensions": "4800x2800"
+  },
+  "decision_png": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_fresh_live_representation_decision.png",
+    "sha256": "3ac985c06a129f8a87175f0d42a2f08df597c2da17da4305722acd24abdd5b3a",
+    "bytes": 74902,
+    "raster_dimensions": "1076x665"
+  },
+  "observations": {
+    "eight_independent_spatial_panels_visible": true,
+    "link5_four_variants_nonempty": false,
+    "gripper_four_variants_nonempty": false,
+    "target_cylinder_visible_in_all_eight_panels": true,
+    "registered_frames_visible": true,
+    "metric_table_visible": true,
+    "event_table_visible": true,
+    "required_content_not_obscured": false,
+    "decision_png_opened_and_legible": true
+  },
+  "observed_failure_details": [
+    "The link5 and gripper live-instance/prototype panels contain no callback-derived collision-part meshes; only the cylinder and registered markers remain.",
+    "The metric table contains unavailable placeholders, and the event table reports WARN rows with live=FAIL and -1.0 placeholder errors.",
+    "Rerun loading and gRPC notifications obscure part of the upper-right candidate panel.",
+    "The separate decision PNG explicitly reports witness_manifest_256=False and fresh_live_audit_128=False and states that no partial or empty geometry union was queried."
+  ],
+  "bounded_interpretation": [
+    "The empty live panels are consistent with zero callback witnesses; they do not prove that the attempt3 geometry itself is empty or incorrect.",
+    "Pixel inspection is observability evidence only and does not replace callback arrays, hashes, or Float64 distance measurements.",
+    "Because the machine contract failed before the first callback, this inspection cannot license the frozen target query, settle, or G0a."
+  ],
+  "manual_visual_inspection_pass": false,
+  "scientific_verdict_override": false,
+  "d344_verdict_retained": "D344_G0A_ATTEMPT3_AUTHORING_CONTRACT_FAIL_STOP",
+  "g0a_pass": false
+}

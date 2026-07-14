@@ -19597,3 +19597,70 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d345/d345_deterministic_usd_metadata_evidence.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d345/d345_deterministic_usd_metadata_summary.json`
 - `START_HERE.md`
+
+## D346 - 확장 기능이 제공하는 Python 모듈은 정확한 확장을 먼저 활성화한 뒤 불러와야 한다 (2026-07-14)
+
+Decision:
+
+- 판정은 `D346_G0A_FRESH_LIVE_REPRESENTATION_FAIL_STOP`이다. 이 판정은 D344
+  attempt3 충돌 형상의 불합격이 아니다. 첫 live-cook callback 전에 검사 모듈 import가
+  중단되어 형상을 판정하지 못한 안전 정지다.
+- 신규 변수는 measurement-only
+  `[attempt3_fresh_live_representation_validation]` 1개다. 신규 물리 변수, 자산 쓰기,
+  기존 파라미터 증가/변경, 분해 설정 변경, 기준 완화는 모두 0이다.
+- 최초 관리형 실행은 CUDA가 숨겨져 `SimulationContext` 생성 중 중단됐다. callback,
+  reset 이후 측정, 목표 query, Rerun, controlled physics는 0이었다. 이 증거를 해시로
+  보존한 reactive amendment 뒤 GPU가 보이는 새 프로세스에서 유효 실행 1회만 했다.
+- 유효 preflight와 장면/센서/단위/raw-source 계약은 PASS했지만, D340 helper의
+  `from omni.physxassetvalidator ...`가 `ModuleNotFoundError`를 냈다. 그래서 witness
+  `0/256`, live part `0/128`, D337 control과 frozen-target raw/live 거리는 미실행/null,
+  simulation counter `0->0`, controlled physics `0`이었다. D344 attempt3와 이전 입력은
+  모두 immutable이었다.
+- 로컬 설치에는 `omni.physx.asset_validator` v`107.3.26`, 선언된 Python module
+  `omni.physxassetvalidator`, 공개 interface가 모두 존재한다. D340은 module import를
+  extension enable보다 먼저 수행한다. D339의 성공 선례는 exact extension을
+  enable/verify한 뒤 module을 import한다. 따라서 직접 원인은 설치 누락이나 API 이름
+  변경이 아니라 fresh minimal Kit 프로세스의 activation/import 순서다.
+- **지속 규칙:** Kit extension이 제공하는 Python namespace는 파일이 설치돼 있다는
+  사실만으로 import 가능하다고 가정하지 않는다. exact extension ID를 먼저 활성화하고
+  활성 상태를 확인한 뒤 module origin/API를 기록하며 import한다. 실패 시 수동
+  `PYTHONPATH`, private native library, 큰 bundle/custom experience로 우회하지 않는다.
+- **지속 규칙:** callback 형상이 빠진 Rerun placeholder scalar/event나 빈 공간 패널을
+  형상 증거로 취급하지 않는다. exact entity/component/count 계약과 실제 화면을 모두
+  요구한다.
+
+Evidence:
+
+- Rerun은 frame `6/6`, body frame `2/2`, scalar `1,040/1,040`, event `132/132`였지만
+  mesh `266/522`, non-system entity `1,588/2,100`으로 FAIL했다. 빠진 `256` meshes와
+  `512` entities는 callback-derived instance/prototype 형상에 해당한다.
+- RRD/RBL footer와 Rerun v`0.34.1`은 정상이었고 실제 `4800x2800` screenshot을 열었다.
+  여덟 패널은 배치됐지만 live-instance/prototype 네 패널에 callback part가 없고,
+  metric placeholder와 WARN event가 보였다. 수동 completion도 FAIL로 기록했다.
+- Decision PNG는 witness/live audit 실패와 부분/빈 union query 금지를 명시했다.
+  표시된 TCP `0.817895mm`와 jaw-tangent `2.148675deg`는 IK alignment error이지
+  collision clearance가 아니다.
+- Final completion summary SHA-256은
+  `98a0c126824a27e7651ea2fe352394eb8829a4bf1137532e180ed7ae5629bece`다.
+
+Implication:
+
+- D346 자체를 수정하거나 재실행하지 않는다. `g0a_pass=false`; settle, 10-trial,
+  G0b, RL, ladder는 계속 금지한다. D344 historical FAIL과 D345 comparator PASS도
+  그대로 유지한다.
+- 가장 좁은 다음 후보는 별도 승인 D347 measurement-only
+  `[physx_asset_validator_activation_order]`다. 새 wrapper/fresh output에서 exact
+  extension enable -> verify -> module/interface import만 수리하고, 같은 immutable
+  attempt3 및 `256 callback -> 128 parts -> conditional target -> full Rerun` 계약을
+  한 번 실행한다. 자산, 분해 설정, 목표, 허용값, controlled physics는 변경 0이다.
+
+Sources:
+
+- `claudedocs/session_20260714_grasp_g0a_d346_fresh_live_attempt3_validation.md`
+- `sim_scripts/cyl34_top_view_d346_grasp_g0a_fresh_live_attempt3_validation.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d346/d346_completion_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d346/d346_postrun_root_cause_audit.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d346/d346_raw_live_measurement.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d346/d346_rerun_validation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d346/d346_manual_visual_inspection.json`
+- `START_HERE.md`

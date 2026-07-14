@@ -1,0 +1,135 @@
+{
+  "artifact": "D346_POSTRUN_ROOT_CAUSE_AUDIT_V1",
+  "case": "g0a_d346",
+  "date_kst": "2026-07-14",
+  "classification": "INSTRUMENTATION_ACTIVATION_ORDER_FAIL_BEFORE_FIRST_CALLBACK",
+  "scientific_interpretation": "D346 did not reject any collision geometry. The live-cook measurement helper failed before request 1 of 256 because it imported the extension-provided Python module before enabling the extension.",
+  "authoritative_evidence": {
+    "automated_summary": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_automated_summary.json",
+      "sha256": "f5331ec4d7f0c08ea6bb4e89396e8d9bf3975e96b9655f042f49ce606956eaa4"
+    },
+    "raw_live_measurement": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_raw_live_measurement.json",
+      "sha256": "c85c9580ef2f2a1f406fb4393b15b9671029ea04eba01e98f0c6e92932eef0ba",
+      "error": "ModuleNotFoundError: No module named 'omni.physxassetvalidator'"
+    },
+    "effective_preflight": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_validate_preflight_effective.json",
+      "sha256": "4c548f5ce2f342e5856285cfbcf1fa9a6d3021475d304400faabc4b6463421f1",
+      "pass": true,
+      "gpu": "NVIDIA GeForce RTX 4090 Laptop GPU"
+    },
+    "gpu_visibility_amendment": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_gpu_visibility_reactive_amendment.json",
+      "sha256": "4c6303e2e305a016f5f95442312b260282b4f0cc552d0a6df60835514e2ae90c",
+      "pass": true
+    }
+  },
+  "local_installation_evidence": {
+    "extension_name": "omni.physx.asset_validator",
+    "extension_version": "107.3.26",
+    "extension_toml": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.physx.asset_validator-107.3.26+107.3.3.lx64.r.cp311.u353/config/extension.toml",
+    "extension_toml_sha256": "acfce81f8d06f2b7ae328addef7bce19ab7532945a136c840e1afc116073b29f",
+    "declared_python_module": "omni.physxassetvalidator",
+    "module_file_exists": true
+  },
+  "ordering_evidence": {
+    "failing_helper": "sim_scripts/cyl34_top_view_d340_grasp_g0a_fixed_point_live_authoring_repair.py:1567",
+    "failing_order": [
+      "import omni.physxassetvalidator",
+      "query extension manager",
+      "enable omni.physx.asset_validator"
+    ],
+    "working_precedent": "sim_scripts/cyl34_top_view_d339_grasp_g0a_cook_witness_contract_repair.py:1725",
+    "working_order": [
+      "query extension manager",
+      "enable omni.physx.asset_validator",
+      "verify extension enabled",
+      "import omni.physxassetvalidator"
+    ]
+  },
+  "executed_result": {
+    "registered_effective_execution_count": 1,
+    "callback_requests_expected": 256,
+    "callback_requests_observed": 0,
+    "active_parts_expected": 128,
+    "active_parts_classified": 0,
+    "frozen_target_query_executed": false,
+    "controlled_physics_steps": 0,
+    "simulation_counter": {
+      "start": 0,
+      "end": 0,
+      "delta": 0
+    },
+    "source_immutability_pass": true,
+    "asset_write": false,
+    "parameters_increased": 0,
+    "parameters_changed": 0,
+    "thresholds_relaxed": 0,
+    "decomposition_parameters_changed": 0,
+    "g0a_pass": false
+  },
+  "rerun_failure_record": {
+    "validation_path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_rerun_validation.json",
+    "validation_sha256": "390b66f2ede90d022c9d74a7c7541cc1d095827e88250fcc4652c2fe3533ffa9",
+    "machine_contract_pass": false,
+    "expected_meshes": 522,
+    "observed_meshes": 266,
+    "expected_non_system_entities": 2100,
+    "observed_non_system_entities": 1588,
+    "rrd": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_attempt3_live_representation.rrd",
+      "bytes": 4554359,
+      "sha256": "b9a4f2e7ca6568c7274c6fa9e7f34ffa5868fa2822f9343ea8e1fe3ffc788eec"
+    },
+    "rbl": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_attempt3_live_representation.rbl",
+      "bytes": 96496,
+      "sha256": "d19df02e3b698d4629f10afd237b0fc5479afdb657dfa61b62ba1e438968301e"
+    },
+    "screenshot": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_attempt3_live_representation_rerun.png",
+      "bytes": 9413786,
+      "sha256": "f454d2a3ef36bb088a8c83d859bb28ab87222ec1545a77feaa111d7237225b67",
+      "raster_dimensions": "4800x2800"
+    },
+    "actual_original_resolution_inspection": {
+      "method": "view_image detail=original",
+      "completed": true,
+      "observations": [
+        "Eight configured spatial panels were visible.",
+        "The live-instance and prototype panels had no measured part geometry; only the target cylinder and markers remained.",
+        "The metric table contained unavailable values and the event table showed WARN rows.",
+        "Viewer loading notifications obscured part of the upper-right panel, so the D341 visual completion condition was not met."
+      ],
+      "completion_manual_inspection_created": false,
+      "reason": "The machine Rerun contract failed first; a PASS manual-completion record would be misleading."
+    }
+  },
+  "decision_png": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_fresh_live_representation_decision.png",
+    "bytes": 74902,
+    "sha256": "3ac985c06a129f8a87175f0d42a2f08df597c2da17da4305722acd24abdd5b3a",
+    "raster_dimensions": "1076x665",
+    "actual_original_resolution_inspection": true,
+    "message": "D346 pre-physics contract STOP; witness_manifest_256=False; fresh_live_audit_128=False; no partial or empty geometry union queried."
+  },
+  "verdict": "D346_G0A_FRESH_LIVE_REPRESENTATION_FAIL_STOP",
+  "historical_verdicts_retained": {
+    "d344": "D344_G0A_ATTEMPT3_AUTHORING_CONTRACT_FAIL_STOP",
+    "d345": "D345_DETERMINISTIC_USD_METADATA_COMPARATOR_PASS"
+  },
+  "next_case_boundary": {
+    "recommended_case": "D347 asset-validator activation-order repair",
+    "allowed_change": "Enable and verify omni.physx.asset_validator before importing omni.physxassetvalidator, then reuse the frozen D346 scientific contract in a new forward-only case.",
+    "physical_variables": 0,
+    "asset_changes": 0,
+    "decomposition_parameter_changes": 0,
+    "target_changes": 0,
+    "threshold_relaxations": 0,
+    "d346_rerun_forbidden": true,
+    "settle_forbidden_until_full_live_and_rerun_pass": true
+  },
+  "pass": true
+}

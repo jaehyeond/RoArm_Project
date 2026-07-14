@@ -1,0 +1,100 @@
+{
+  "artifact": "D346_PARAMETER_FREEZE_AUDIT_V1",
+  "checks": {
+    "compatibility_tolerance_exact_d344_helper": true,
+    "cylinder_height_90mm": true,
+    "cylinder_radius_17mm": true,
+    "d337_link5_invariant_tolerance_0p05mm": true,
+    "d337_parity_tolerance_0p05mm": true,
+    "d337_scoping_open_tolerance_0p5mm": true,
+    "decomposition_exact_d338_helper": true,
+    "decomposition_exact_d339": true,
+    "decomposition_exact_d340_helper": true,
+    "decomposition_exact_d344_helper": true,
+    "dynamic_friction_1p2": true,
+    "error_percentage_one": true,
+    "fixed_point_tolerance_1e_9m": true,
+    "fixed_point_tolerance_exact_d339_helper": true,
+    "fixed_point_tolerance_exact_d340_helper": true,
+    "fixed_point_tolerance_exact_d344_helper": true,
+    "hull_vertex_limit_64": true,
+    "max_convex_hulls_64": true,
+    "min_thickness_float32_bits_exact": true,
+    "min_thickness_requested_0p0001m": true,
+    "object_mass_0p72kg": true,
+    "one_measurement_variable": true,
+    "property_volume_tolerance_5pct": true,
+    "q5_open_1p5413rad": true,
+    "raw_anchor_tolerance_0p05mm": true,
+    "seed_33201": true,
+    "shrink_wrap_true": true,
+    "static_friction_1p5": true,
+    "surface_tolerance_0p1mm": true,
+    "target_clear_gate_0p1mm": true,
+    "target_delta_gate_0p5mm": true,
+    "target_radial_7mm": true,
+    "target_tangent_11mm": true,
+    "target_tangent_sign_minus_one": true,
+    "typed_bits_exact_d344_helper": true,
+    "typed_bits_hex_exact_d344_helper": true,
+    "voxel_resolution_one_million": true
+  },
+  "decomposition_parameters": {
+    "error_percentage": 1.0,
+    "hull_vertex_limit": 64,
+    "max_convex_hulls": 64,
+    "min_thickness_m": 0.0001,
+    "shrink_wrap": true,
+    "voxel_resolution": 1000000
+  },
+  "existing_parameters_changed": [],
+  "existing_parameters_increased": [],
+  "measurement_only_runtime_operations": [
+    "cache-isolated synchronous prototype/instance cook requests",
+    "local and runtime mesh cache release before each request",
+    "temporary cooking instrumentation settings restored after every request",
+    "asset-validator extension enable if absent"
+  ],
+  "new_physical_variables": [],
+  "new_variable_count": 1,
+  "new_variables": [
+    "attempt3_fresh_live_representation_validation"
+  ],
+  "pass": true,
+  "registered_app_launcher": {
+    "animation_recording": false,
+    "device": "cuda:0",
+    "enable_cameras": false,
+    "experience": "",
+    "headless": true,
+    "kit_args": "",
+    "livestream": 0,
+    "rendering_mode": null,
+    "xr": false
+  },
+  "scene_constants": {
+    "cylinder_height_m": 0.09,
+    "cylinder_radius_m": 0.017,
+    "dynamic_friction": 1.2,
+    "mass_kg": 0.72,
+    "restitution": 0.0,
+    "static_friction": 1.5
+  },
+  "target": {
+    "ik": "HOME-seeded position-only",
+    "q5_rad": 1.5413,
+    "radial_offset_mm": 7.0,
+    "seed": 33201,
+    "tangent_offset_mm": 11.0,
+    "tangent_sign": -1.0
+  },
+  "thresholds_relaxed": [],
+  "tolerances": {
+    "fixed_point_m": 1e-09,
+    "live_surface_m": 0.0001,
+    "min_thickness_bits": "0x38d1b717",
+    "property_volume_relative": 0.05,
+    "raw_live_delta_mm": 0.5,
+    "target_clear_mm": 0.1
+  }
+}
