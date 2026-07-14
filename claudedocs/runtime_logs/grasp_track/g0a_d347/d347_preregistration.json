@@ -1,0 +1,903 @@
+{
+  "artifact": "D347_PREREGISTRATION_V1",
+  "asset_validator_activation_contract": {
+    "explicit_enable_call_count": 1,
+    "explicit_requested_extension_ids": [
+      "omni.physx.asset_validator"
+    ],
+    "extension_id": "omni.physx.asset_validator",
+    "fallback_count": 0,
+    "initial_extension_enabled": false,
+    "module_absent_before_enable": true,
+    "module_name": "omni.physxassetvalidator",
+    "module_origin_under_exact_extension": true,
+    "public_interface_required": true,
+    "retry_count": 0,
+    "simulation_app_update_calls": 0,
+    "verify_enabled_before_application_import": true
+  },
+  "callback_contract": {
+    "active_parts": 128,
+    "callbacks_per_request": 1,
+    "channels": [
+      "prototype",
+      "instance"
+    ],
+    "convexes_per_callback": 1,
+    "request_order": [
+      "prototype",
+      "instance"
+    ],
+    "requests": 256,
+    "result": "RESULT_VALID(0)",
+    "serialization_errors": 0,
+    "witness_persisted_before_classification": true
+  },
+  "case": "g0a_d347",
+  "eligibility_path": "claudedocs/runtime_logs/grasp_track/g0a_d347/d347_effective_eligibility.json",
+  "eligibility_sha256": "2cc9814264950a37a374e9a77b77f0f23b7b217be8beb4663bbe539864079a12",
+  "exact_non_system_entity_count": 2100,
+  "exact_timelines": [
+    "blueprint",
+    "event_idx",
+    "log_time",
+    "part_idx"
+  ],
+  "git_head": "d9d224be7793c02754992401a06c3b5eb94826fa",
+  "new_physical_variables": [],
+  "new_variable_count": 1,
+  "new_variables": [
+    "physx_asset_validator_activation_order"
+  ],
+  "parameter_audit_path": "claudedocs/runtime_logs/grasp_track/g0a_d347/d347_parameter_freeze_audit.json",
+  "parameter_audit_sha256": "417ca99f2c56d276f18ec455e1f3c499b0870796c57fe40379001a696022b669",
+  "pass": true,
+  "prepare_process_identity": {
+    "nonce": "a2b3717f10ea406cef900bf99813e354",
+    "pid": 3579025
+  },
+  "registered_scientific_execution_count": 1,
+  "registered_stages": [
+    "prepare",
+    "validate",
+    "manual_inspection",
+    "finalize"
+  ],
+  "rerun_contract_sha256": "cbe71de590efd56724a7bbd24fa25821bc9f6579adfc26f2bfe4c9b008360a37",
+  "rerun_subject_counts": {
+    "coordinate_frame_count": 2,
+    "event_row_count": 132,
+    "exact_non_system_entity_count": 2100,
+    "frame_count": 6,
+    "mesh_count": 522,
+    "scalar_row_count": 1040
+  },
+  "scope_guards": {
+    "collision_asset_build": false,
+    "collision_asset_write": false,
+    "controlled_physics_steps": 0,
+    "g0a_pass": false,
+    "g0b": false,
+    "ladder_promotion": false,
+    "recook_to_disk": false,
+    "rl": false,
+    "settle": false,
+    "ten_trial": false
+  },
+  "source_hashes": {
+    "d332_harness": "3ab551232b9c3e2a3886578e5f4baa4589d578567758a351203c2260a1428ad4",
+    "d333_harness": "e582f274fca44093b0e1367555459f22428c809792b6cfc3a9a336369dac68b7",
+    "d334_harness": "19d2f333c2aeec89282d230324b965e6f5af7e6d05648a858c5637fd24adf735",
+    "d334_summary": "2ff44744df99c7a99d168cdd62a4f9186a5bbad6d673205282abb62b71097b26",
+    "d335_harness": "0eb47ca0224e84820a5074df6359f1026395b24f4c7b77613cd617789e4b234d",
+    "d336_harness": "fad16d7029b43a4bea779df9bbe175a0318cb29cac9fcbde701b5456411205ff",
+    "d336_summary": "f449801302bd21769aadc43e67fd6bb884071d29d32b9b1e29f0166297220f00",
+    "d337_harness": "081d0a77c91b27373eadca51fd0d9aa530d14fcdf0f64b24797a9cf8e3109489",
+    "d338_harness": "f3d330a9a5ca6f886728d0e5dc8037baa68d83a2b911aa105904d7d369ead426",
+    "d339_harness": "fd307cb573699f8a08df1ab580789188774158877b8abf0a05cc4c60ef6562d6",
+    "d340_candidates": "f288d5232f039e58ccd209f332ebfabbf9fec137e746e97d9a3c58688420ef86",
+    "d340_harness": "1bdea659fadd7801b0f5749cca6286c7eb90c95a857ed516e09e34ceb12a023a",
+    "d344_build_summary": "e2f323e9d9b379b9e9957fb254882789db1d8fb9efa78813b78c97dd8bea15af",
+    "d344_core_manifest": "52bc2e40f586cd8401aa0fcabf23e5e733776b9c373082bd49fbda01190c2bb5",
+    "d344_harness": "a62f2f5fda01d927361b3791e9a5b65bce386e242e428639f049e88031316d38",
+    "d344_outer_manifest": "c318f7ef9e7f384db3e3f68785917bc58c731d21d8047d74dbc8d21bdd53985f",
+    "d344_root_cause": "2783b8cf7e1c2f055d4abd9299e1480212d70d7b0126da89c06a4caa20a9192d",
+    "d345_evidence": "68652b51c7a0667a63c5d4b1e812e43868af07a93b4b91838322f81ac4cb4379",
+    "d345_summary": "d7cd4d4b0cb4c5a010b8673b47cb010103c337642b6e9b33df1fe577ca73bba5",
+    "d346_completion": "98a0c126824a27e7651ea2fe352394eb8829a4bf1137532e180ed7ae5629bece",
+    "d346_harness": "004fe0989f004ee554d8eea81ad8a28c2817a0b39af7b61dd43139c4488e8d4f",
+    "d346_parameter_audit": "6e981770fb53cca671e3c38233f9849785bc5e115f7d7c2fd3addc54757c6deb",
+    "d346_preregistration": "e71a315223b4fe88cc532569b0f75d5725b476088c93b63fc75d11d33a9d6a7f",
+    "d346_raw_measurement": "c85c9580ef2f2a1f406fb4393b15b9671029ea04eba01e98f0c6e92932eef0ba",
+    "d346_root_cause": "3e53ee4415446df8abe891bc3f541b89a671d36803ad49e0bb87b006e813f23a",
+    "d347_harness": "57e75de4807237121747ff00035402474aa18ab624134c2fa4698bb17cb18d0b",
+    "d347_session": "d0aaf4d942889d1ca00326fc0b4691748d70fc88fb38e2d6ce63806d9548f246",
+    "frozen_urdf": "64dc8d082cbce9a13a0697a11a0eaeaebbc54bbcd97e7aafaa40da483969dae2",
+    "isaaclab_app_launcher": "9a0dfe41e34e43828fe29f4c578e71e9e036ec292c80973f8e88193906867ddd",
+    "rerun_contract": "90559c931bc753be97def463841d41426a2f1bd8e5ddd15a2a2ab08fb54a2e60",
+    "start_here": "34cca3e5b85286ad7321a7c4ac28fa351dcc7fa05f9ce382c23f3a0b37c8fa71",
+    "validator_binding_pyi": "8d8a183e7961eb47126f9258b1d6a6f640b7107d7d825ab1b735459100d2e4ea",
+    "validator_binding_so": "bb613f8caed43ce5cc159f0e5b35e25fecbe2904573521536e3694a92383ff11",
+    "validator_extension_toml": "acfce81f8d06f2b7ae328addef7bce19ab7532945a136c840e1afc116073b29f",
+    "validator_module_init": "3a278e123b0fd4fb522ca92acff7024f7d8e57eea86ef53eff9c87503990ae2f",
+    "validator_plugin_so": "ca4f2547f099f742e8509e514fe5a4c872c51b75207e0489fd8b70287bf091ed",
+    "viz_debug": "1fe0be11e9f604bf2501155adbf98cc3836e52c236ca7494c5fd0d6fbdb0d7bb"
+  },
+  "source_inventories": {
+    "d338_attempt1": {
+      "digest": "708e6641ba1ac988d0f617fede238530e1db9a30573c535278ab0853bfca5f2e",
+      "file_count": 3,
+      "root": "claudedocs/runtime_logs/grasp_track/g0a_d338/collision_asset/attempt1",
+      "rows": [
+        {
+          "bytes": 1906,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d338/collision_asset/attempt1/d338_asset_build_manifest.json",
+          "sha256": "8fec513a4e344132f4e445061bbc383da2d6347f5e5883b4c53b2695da1acdda"
+        },
+        {
+          "bytes": 1879,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d338/collision_asset/attempt1/d338_invocation_abort_001.json",
+          "sha256": "f168087ac672e2bffdd9fdf29b6200afcd69e6551e4fd9e891b1e8f7695c8d42"
+        },
+        {
+          "bytes": 381911,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d338/collision_asset/attempt1/kit_20260713_114440.log",
+          "sha256": "075ce099543ae952e362c47e44894e92abb63e72610c274441e6a82690a87a6b"
+        }
+      ]
+    },
+    "d339_attempt2": {
+      "digest": "0dae41fd3937a0a8aea18488019c74f097d32f7b8de916943ff31334e30464a1",
+      "file_count": 18,
+      "root": "claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2",
+      "rows": [
+        {
+          "bytes": 265277,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2/d339_asset_build_manifest.json",
+          "sha256": "3b46cb39a1f0ff655dcd46172ebaa84f727d833773275b18f944397007ae2589"
+        },
+        {
+          "bytes": 239980,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2/d339_cook_witness_manifest.json",
+          "sha256": "7d0a82842af141c1e194ffcb5f9947777b8087c8fd56c72e13f684cf61481e81"
+        },
+        {
+          "bytes": 254036,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2/d339_gripper_link_cold1_callback_witness.json",
+          "sha256": "08a500ed54a5c42c02a77b981b96d629a7de9b09df593c9f25dc3698d7220a69"
+        },
+        {
+          "bytes": 190139,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2/d339_gripper_link_cold1_canonical_geometry.json",
+          "sha256": "dc258b27cdef5d29e23f1b5ef3041c3afb26f50d8c8ad9b222002532e95f2e5e"
+        },
+        {
+          "bytes": 254036,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2/d339_gripper_link_cold2_callback_witness.json",
+          "sha256": "a74fb98c347a8d2989dd16d038c60ab9602b516d04c0b7700846792f54a96dab"
+        },
+        {
+          "bytes": 190139,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2/d339_gripper_link_cold2_canonical_geometry.json",
+          "sha256": "24b3a026281beffd18b397762226a2663ec6dd056f03099b03ad350a59edad8c"
+        },
+        {
+          "bytes": 249228,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2/d339_hull_manifest.json",
+          "sha256": "d70a13edbb8500cde97ad23779811475e1c8bb2d0f6045b4183e704d2157bedd"
+        },
+        {
+          "bytes": 297039,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2/d339_link5_cold1_callback_witness.json",
+          "sha256": "e705e7ed5d3a9b4803eaeeac67e60b6494edba37cfecf9226f86e72d60b73a43"
+        },
+        {
+          "bytes": 193621,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2/d339_link5_cold1_canonical_geometry.json",
+          "sha256": "c45bd056b3487f92bc724474dbf850ea6da309fea90c4e0a90879ada7ba2b655"
+        },
+        {
+          "bytes": 297039,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2/d339_link5_cold2_callback_witness.json",
+          "sha256": "45741a69927b7df34ebeda421f5e3570f456008da843b2e6ed1e7dd9b7fc300d"
+        },
+        {
+          "bytes": 193621,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2/d339_link5_cold2_canonical_geometry.json",
+          "sha256": "d1819851586e7078c5b58fde47bec196e08063c1ed658f79743ec729dda5590e"
+        },
+        {
+          "bytes": 32,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2/roarm_m3_fullmesh_convex_parts/.asset_hash",
+          "sha256": "ae762fcc536a0d02a157b695201e8e64d2f71c07bcc1563981aeda59fa48587f"
+        },
+        {
+          "bytes": 663,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2/roarm_m3_fullmesh_convex_parts/config.yaml",
+          "sha256": "5745bbb8d9e18716e96ffafdf05b01de302e4f86375ac3f155e82ecb94ab2937"
+        },
+        {
+          "bytes": 2769018,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2/roarm_m3_fullmesh_convex_parts/configuration/roarm_m3_base.usd",
+          "sha256": "ea0ee8f258e935799cf927b8c67e871f935c09b3c9be4f971006937334a11841"
+        },
+        {
+          "bytes": 30546,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2/roarm_m3_fullmesh_convex_parts/configuration/roarm_m3_physics.usd",
+          "sha256": "9261986d363327e33beb0b555d0ffce320416e827e0b1a8532c8e938d25b8e44"
+        },
+        {
+          "bytes": 1709,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2/roarm_m3_fullmesh_convex_parts/configuration/roarm_m3_robot.usd",
+          "sha256": "2227536fcb8c9dae1aa9cc1cf422350fcf85e662eed97fe9ea48535c6b4aa65d"
+        },
+        {
+          "bytes": 648,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2/roarm_m3_fullmesh_convex_parts/configuration/roarm_m3_sensor.usd",
+          "sha256": "3f44081f42b452bc5f9791a8df1c37e00ba5a6dc98a9e49e065c7acacdda0d0f"
+        },
+        {
+          "bytes": 1457,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2/roarm_m3_fullmesh_convex_parts/roarm_m3.usd",
+          "sha256": "a4be58e87b1f9790f2a2ed600f0620c79d3cfb95c608b3c598308d52f5e46fff"
+        }
+      ]
+    },
+    "d340": {
+      "digest": "def37cc3c4d10cad8919ce71175211cc34fe2e8b567dbc107f13de151a92940d",
+      "file_count": 33,
+      "root": "claudedocs/runtime_logs/grasp_track/g0a_d340",
+      "rows": [
+        {
+          "bytes": 4464,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_cook_witnesses/gripper_link_part_000_instance.json",
+          "sha256": "5b3a1dbbe52fdb8808f8c4baff92eba26e57809eebf2f7653216df84b5b1702c"
+        },
+        {
+          "bytes": 4432,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_cook_witnesses/gripper_link_part_000_prototype.json",
+          "sha256": "21869c865473f1f85e30ea591b6a93aeeb090478094bacf82ca675a065410ce7"
+        },
+        {
+          "bytes": 6051,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_cook_witnesses/gripper_link_part_035_instance.json",
+          "sha256": "3bb5d087a1bab309674fc4dc0a21c5ae9a9ead5e121a2d4bfe2dcbeb78580338"
+        },
+        {
+          "bytes": 6019,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_cook_witnesses/gripper_link_part_035_prototype.json",
+          "sha256": "da92aa31380bb1248708af4424500a836af45d756aaffd3512b444e998221c53"
+        },
+        {
+          "bytes": 4428,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_cook_witnesses/gripper_link_part_036_instance.json",
+          "sha256": "754b7392b8714de259056829b180c1106fc0cfa1a0f0e930c03b3f832b8c508c"
+        },
+        {
+          "bytes": 4396,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_cook_witnesses/gripper_link_part_036_prototype.json",
+          "sha256": "1c108a1a0e2bc9e9c6008ee8f7ce31f5ee5f908990864400952f0314e4f5eb24"
+        },
+        {
+          "bytes": 5080,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_cook_witnesses/gripper_link_part_048_instance.json",
+          "sha256": "244a88acd99a5a0c51beb4e61caf66c6ba0f0f9c596e2630d990110ca4a40916"
+        },
+        {
+          "bytes": 5048,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_cook_witnesses/gripper_link_part_048_prototype.json",
+          "sha256": "9da1279a137192a61f34b7b81640541a2b36f2a0cf2edba7208acf3d2533c7b3"
+        },
+        {
+          "bytes": 5101,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_cook_witnesses/gripper_link_part_057_instance.json",
+          "sha256": "f339a10a542dc0ab69d719cadd76688223c09084a60593b23febb0b1baa1ce04"
+        },
+        {
+          "bytes": 5069,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_cook_witnesses/gripper_link_part_057_prototype.json",
+          "sha256": "6dc3e4e365b2cfb59a918059c7780e8b5153d45ab605d389b940ec84dcdcf36d"
+        },
+        {
+          "bytes": 6039,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_cook_witnesses/link5_part_011_instance.json",
+          "sha256": "b59588b5b87fa4b7a08febeb886fc38d29a12e986be71e665caabb5afb35d808"
+        },
+        {
+          "bytes": 6015,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_cook_witnesses/link5_part_011_prototype.json",
+          "sha256": "d59f922718f1038d0da339a4406f161bb183cfd5b7f6ba7d2c90ec888dac0961"
+        },
+        {
+          "bytes": 5142,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_cook_witnesses/link5_part_018_instance.json",
+          "sha256": "30b4cf830d24367925e4592fbb0384f2ba18ae492d5a692cdc8fdcd6781f7a34"
+        },
+        {
+          "bytes": 5118,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_cook_witnesses/link5_part_018_prototype.json",
+          "sha256": "31758691a245720883a694b20ccb5923f0e3eb86ae0a2687fb894a5e5b89e01c"
+        },
+        {
+          "bytes": 5940,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_cook_witnesses/link5_part_023_instance.json",
+          "sha256": "f0af5bd0197469d0aefb97adb552920bf7ae0a1c29f71e2c37fb93d605f8b5d4"
+        },
+        {
+          "bytes": 5916,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_cook_witnesses/link5_part_023_prototype.json",
+          "sha256": "d550aad650df4ff163888526c15290ac53b29fd34ac57f3b4ad4645435f8908b"
+        },
+        {
+          "bytes": 5247,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_cook_witnesses/link5_part_024_instance.json",
+          "sha256": "b73abcb8ab3e798a3e9a241abaf22242f51e422690711b5f1ccac608e5ac3dfb"
+        },
+        {
+          "bytes": 5223,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_cook_witnesses/link5_part_024_prototype.json",
+          "sha256": "ecb53b2e8d0f4e4764977be0349fa0b2e7ebe18c653eca2c14620fef5fc8607c"
+        },
+        {
+          "bytes": 6501,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_cook_witnesses/link5_part_040_instance.json",
+          "sha256": "8d850b1fc02757162f5c580e6fe951be848808401cc824334775ad67a987c6f2"
+        },
+        {
+          "bytes": 6478,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_cook_witnesses/link5_part_040_prototype.json",
+          "sha256": "ce75d86a4d2b3c67a6cd27f6f0a13bbba132038e9e48010e29e4f20c3652c3c3"
+        },
+        {
+          "bytes": 7602,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_cook_witnesses/link5_part_041_instance.json",
+          "sha256": "7959dafbc35bbfb678babc3ac3ed218563178cd749393a960944bbcc686d46e2"
+        },
+        {
+          "bytes": 7578,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_cook_witnesses/link5_part_041_prototype.json",
+          "sha256": "0ceceeba27c667374c83c42a2f3d01ddd241220131fe59347f0ac7aed881d802"
+        },
+        {
+          "bytes": 4939,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_cook_witnesses/link5_part_045_instance.json",
+          "sha256": "259dcbbd9a1d3bd01ef4487ec8c06775be173d0204cc5701568c7f2525f98ad7"
+        },
+        {
+          "bytes": 4915,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_cook_witnesses/link5_part_045_prototype.json",
+          "sha256": "8ad66a9f9ee3fcb0ee58ab65fe1f913dd7062d380d03e88e9b9794f03f659a24"
+        },
+        {
+          "bytes": 6370,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_cook_witnesses/link5_part_054_instance.json",
+          "sha256": "3e6ca7fbe7ef5f6ced12c8d8e2b404ead6d88c37bfc95b54001b3d74a1c1c587"
+        },
+        {
+          "bytes": 6346,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_cook_witnesses/link5_part_054_prototype.json",
+          "sha256": "11409f18ee1f21be67c203e40ec39adc84f2697112b09e6bc4e817bbb165b6bc"
+        },
+        {
+          "bytes": 110208,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_diagnostics.png",
+          "sha256": "5d311f047113906287e352a14a2b9acf7de4498c3e731cca0a51098d5fe1bd66"
+        },
+        {
+          "bytes": 281587,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_fixed_point_candidates.json",
+          "sha256": "f288d5232f039e58ccd209f332ebfabbf9fec137e746e97d9a3c58688420ef86"
+        },
+        {
+          "bytes": 6630,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_postrun_root_cause_audit.json",
+          "sha256": "2d6bc90a71d9ec407206ade7c32069ad209f8a0ba40cb44a40f42281318a1207"
+        },
+        {
+          "bytes": 174851,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_summary.json",
+          "sha256": "ba62c879e78bfa7db47b003e1bfdd4ee2bd4ff250b083e423f94ebec67992163"
+        },
+        {
+          "bytes": 2480049,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_capture_trace.rrd",
+          "sha256": "8eb3d6130330334b9d6b457468cd4bb59097114c693cb7caa2e33a8f5993fe47"
+        },
+        {
+          "bytes": 6838,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_parameter_freeze_audit.json",
+          "sha256": "9e7f5dae62f0aa4f3a0f7d936ab818bce54e9d896e555475c115bd6a3ed5526b"
+        },
+        {
+          "bytes": 12218,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d340/d340_preregistration.json",
+          "sha256": "e4317d638fc48a6c591eed5a748935f299a32c584a5488f463d37acac179a038"
+        }
+      ]
+    },
+    "d342": {
+      "digest": "7c205d7f6222a2a091a70bb1cf784b339512efbfe8d50bbb3b5ee8c2fed35232",
+      "file_count": 13,
+      "root": "claudedocs/runtime_logs/grasp_track/g0a_d342",
+      "rows": [
+        {
+          "bytes": 92739,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d342/d342_authored_coordinate_stream.rbl",
+          "sha256": "0e9c63dc7677c6a104e83e800abc626d4f0a639afbfdf2be7d55b1ee8968a1d7"
+        },
+        {
+          "bytes": 685882,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d342/d342_authored_coordinate_stream.rrd",
+          "sha256": "79fbc0541e3608adaa30cef4b2f8bcb60a0f0cfd58b1239d82e7e068601f22ff"
+        },
+        {
+          "bytes": 531,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d342/d342_authored_coordinate_stream_automated_report.md",
+          "sha256": "361ed99128dddad0f534fc6c9b4837d5d9231ab42c4f5d705e1195a3c75f0b83"
+        },
+        {
+          "bytes": 436734,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d342/d342_authored_coordinate_stream_automated_summary.json",
+          "sha256": "73c81b2fa64537c36114eca31081430dcfec012b5f68d7afb6345c8d50913c40"
+        },
+        {
+          "bytes": 58464,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d342/d342_authored_coordinate_stream_evidence.json",
+          "sha256": "d42c29288208414cdbe0addaa7932ab82e196fcaad27f939cef90333b6c07ac8"
+        },
+        {
+          "bytes": 9806497,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d342/d342_authored_coordinate_stream_rerun_inspection.png",
+          "sha256": "5252ba148fa756f24a8966b6bde20f85ee7026773a2a8cb82fcd203e4d74422b"
+        },
+        {
+          "bytes": 1115,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d342/d342_completion_report.md",
+          "sha256": "50882285d3ae33bb371a625c7a1c84f41d745fa9887e47fd5907522f24640700"
+        },
+        {
+          "bytes": 2170,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d342/d342_completion_summary.json",
+          "sha256": "6f57035fface51cd0c764c2aa19f97daca33700e808fd1ab537d10769579250b"
+        },
+        {
+          "bytes": 3206,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d342/d342_parameter_freeze_audit.json",
+          "sha256": "75ca035361737e036fd84d79216299b0d860d4e5027a5fc1fa0a8157a1c068e4"
+        },
+        {
+          "bytes": 5564,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d342/d342_postrun_root_cause_audit.json",
+          "sha256": "9101fae1d2bbf216b29de5a5ce31439d0425b35aa92d576905fac9962bee692e"
+        },
+        {
+          "bytes": 7455,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d342/d342_preregistration.json",
+          "sha256": "0abb91dfe31463cfa21f372b9b45ce88080cecdcd07cec6a756882dfa3ccc8f0"
+        },
+        {
+          "bytes": 4606,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d342/d342_preregistration_amendment_001.json",
+          "sha256": "32aa99f83f3629166d47fbafbc957757e4c7301cd1c5999a4fc9bdace0962a1d"
+        },
+        {
+          "bytes": 3241,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d342/d342_rerun_manual_visual_inspection.json",
+          "sha256": "6fc2e56cf2107c32c55bd905e37eefbeda10f85faf53a86cbbb5825c81693be6"
+        }
+      ]
+    },
+    "d343": {
+      "digest": "f0c612377f8a0be3b98d7187ce962821af39d9e70eafbff2d6b2ba886b94bdd3",
+      "file_count": 6,
+      "root": "claudedocs/runtime_logs/grasp_track/g0a_d343",
+      "rows": [
+        {
+          "bytes": 4099,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d343/d343_parameter_freeze_audit.json",
+          "sha256": "902ec275766663306a5fb20c1d4c381bb588f3f95132d790be1587247d472667"
+        },
+        {
+          "bytes": 5857,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d343/d343_preregistration.json",
+          "sha256": "fb8f9c292042001aeb05d9b693d910797bd4a214d9e01427ccd54b7e2c387ce8"
+        },
+        {
+          "bytes": 1608,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d343/d343_rerun_omission_justification.json",
+          "sha256": "9c8e69c7f798756eea1a1a34a21bd2e74d7716e53992904b5ee7cc6ca5abd7c5"
+        },
+        {
+          "bytes": 612920,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d343/d343_usd_typed_float_readback_evidence.json",
+          "sha256": "95bb4e3787d300071f1bac22037814b732781cd72a69a0334a34a05a50ac920b"
+        },
+        {
+          "bytes": 478,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d343/d343_usd_typed_float_readback_report.md",
+          "sha256": "794fb1ba13501fa4645a67f81a56d1c732a74a5b8a99c6ae9955bcad5b5b19e1"
+        },
+        {
+          "bytes": 5171,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d343/d343_usd_typed_float_readback_summary.json",
+          "sha256": "880601aac768df38675603828258850aea796b6436a299c46f8cc489ed8b00da"
+        }
+      ]
+    },
+    "d344_all": {
+      "digest": "bd07acc09a8c89f4f8da78da7e9492546a8f2974864e3e42c9069a211195a3c8",
+      "file_count": 19,
+      "root": "claudedocs/runtime_logs/grasp_track/g0a_d344",
+      "rows": [
+        {
+          "bytes": 1077555,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/d340_attempt3_asset_manifest.json",
+          "sha256": "52bc2e40f586cd8401aa0fcabf23e5e733776b9c373082bd49fbda01190c2bb5"
+        },
+        {
+          "bytes": 1187921,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/d344_attempt3_asset_manifest.json",
+          "sha256": "c318f7ef9e7f384db3e3f68785917bc58c731d21d8047d74dbc8d21bdd53985f"
+        },
+        {
+          "bytes": 32,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/.asset_hash",
+          "sha256": "ae762fcc536a0d02a157b695201e8e64d2f71c07bcc1563981aeda59fa48587f"
+        },
+        {
+          "bytes": 663,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/config.yaml",
+          "sha256": "5745bbb8d9e18716e96ffafdf05b01de302e4f86375ac3f155e82ecb94ab2937"
+        },
+        {
+          "bytes": 2769018,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/configuration/roarm_m3_base.usd",
+          "sha256": "ea0ee8f258e935799cf927b8c67e871f935c09b3c9be4f971006937334a11841"
+        },
+        {
+          "bytes": 33705,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/configuration/roarm_m3_physics.usd",
+          "sha256": "043a5d35aa425c2589c77a34fcf415401ce9f9e7155e84ed75f6737df79fb503"
+        },
+        {
+          "bytes": 1709,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/configuration/roarm_m3_robot.usd",
+          "sha256": "2227536fcb8c9dae1aa9cc1cf422350fcf85e662eed97fe9ea48535c6b4aa65d"
+        },
+        {
+          "bytes": 648,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/configuration/roarm_m3_sensor.usd",
+          "sha256": "3f44081f42b452bc5f9791a8df1c37e00ba5a6dc98a9e49e065c7acacdda0d0f"
+        },
+        {
+          "bytes": 1457,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/roarm_m3.usd",
+          "sha256": "a4be58e87b1f9790f2a2ed600f0620c79d3cfb95c608b3c598308d52f5e46fff"
+        },
+        {
+          "bytes": 215,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d344/d344_attempt3_build_report.md",
+          "sha256": "60a7c243846ef476e3ffc5c0c5f23bb48c1950c97c22473376d98d04c98a66de"
+        },
+        {
+          "bytes": 912,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d344/d344_attempt3_build_summary.json",
+          "sha256": "e2f323e9d9b379b9e9957fb254882789db1d8fb9efa78813b78c97dd8bea15af"
+        },
+        {
+          "bytes": 22833,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d344/d344_build_preflight.json",
+          "sha256": "d5a032d8b4a3d8a011c074896a578eba811353a2965cb11d02076da084af77c4"
+        },
+        {
+          "bytes": 10448,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d344/d344_candidate_eligibility.json",
+          "sha256": "acd73d8ee57d8f07011244d0bdf953bb918800c91a9dfc6ddda8d3dcf03eb9c0"
+        },
+        {
+          "bytes": 2200,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d344/d344_parameter_freeze_audit.json",
+          "sha256": "4c785f4747fd4698b6b8640f29c5edcad7f0cc6f8b59d1732beb8c534048d326"
+        },
+        {
+          "bytes": 2230,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d344/d344_postrun_root_cause_audit.json",
+          "sha256": "2783b8cf7e1c2f055d4abd9299e1480212d70d7b0126da89c06a4caa20a9192d"
+        },
+        {
+          "bytes": 8644,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d344/d344_postrun_semantic_diagnose.py",
+          "sha256": "50d5739bf24526405bb9fe6d722605979e964305cc6ca21724887f9d86b4a9b3"
+        },
+        {
+          "bytes": 1314,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d344/d344_postrun_semantic_diagnosis.json",
+          "sha256": "ce83ad193fdd25067d30ff56dba71fc45ac64b120fa66847baaf7f4ba8f8c423"
+        },
+        {
+          "bytes": 1314,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d344/d344_postrun_semantic_diagnosis_repeat.json",
+          "sha256": "cbd2d2756bd760bd38f8ec50d7861c4d96989954530bbd02b5b68d985b7f6cd6"
+        },
+        {
+          "bytes": 5472,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d344/d344_preregistration.json",
+          "sha256": "75d354832817389d9e8670162445fedfcc43a4d4d0d2bf3f355865eb2128b6ea"
+        }
+      ]
+    },
+    "d344_attempt3": {
+      "digest": "ea6965199ff1f195a6d19d9c55febfe44cc9838f12651570c80d5bb97fa6caf1",
+      "file_count": 9,
+      "root": "claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3",
+      "rows": [
+        {
+          "bytes": 1077555,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/d340_attempt3_asset_manifest.json",
+          "sha256": "52bc2e40f586cd8401aa0fcabf23e5e733776b9c373082bd49fbda01190c2bb5"
+        },
+        {
+          "bytes": 1187921,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/d344_attempt3_asset_manifest.json",
+          "sha256": "c318f7ef9e7f384db3e3f68785917bc58c731d21d8047d74dbc8d21bdd53985f"
+        },
+        {
+          "bytes": 32,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/.asset_hash",
+          "sha256": "ae762fcc536a0d02a157b695201e8e64d2f71c07bcc1563981aeda59fa48587f"
+        },
+        {
+          "bytes": 663,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/config.yaml",
+          "sha256": "5745bbb8d9e18716e96ffafdf05b01de302e4f86375ac3f155e82ecb94ab2937"
+        },
+        {
+          "bytes": 2769018,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/configuration/roarm_m3_base.usd",
+          "sha256": "ea0ee8f258e935799cf927b8c67e871f935c09b3c9be4f971006937334a11841"
+        },
+        {
+          "bytes": 33705,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/configuration/roarm_m3_physics.usd",
+          "sha256": "043a5d35aa425c2589c77a34fcf415401ce9f9e7155e84ed75f6737df79fb503"
+        },
+        {
+          "bytes": 1709,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/configuration/roarm_m3_robot.usd",
+          "sha256": "2227536fcb8c9dae1aa9cc1cf422350fcf85e662eed97fe9ea48535c6b4aa65d"
+        },
+        {
+          "bytes": 648,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/configuration/roarm_m3_sensor.usd",
+          "sha256": "3f44081f42b452bc5f9791a8df1c37e00ba5a6dc98a9e49e065c7acacdda0d0f"
+        },
+        {
+          "bytes": 1457,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/roarm_m3.usd",
+          "sha256": "a4be58e87b1f9790f2a2ed600f0620c79d3cfb95c608b3c598308d52f5e46fff"
+        }
+      ]
+    },
+    "d345_all": {
+      "digest": "b859f9ad44de22cd9bb93e3f16bb3ee669721e3c788c45ec366c27cdcb4bb147",
+      "file_count": 8,
+      "root": "claudedocs/runtime_logs/grasp_track/g0a_d345",
+      "rows": [
+        {
+          "bytes": 4931,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d345/d345_deterministic_usd_metadata_evidence.json",
+          "sha256": "68652b51c7a0667a63c5d4b1e812e43868af07a93b4b91838322f81ac4cb4379"
+        },
+        {
+          "bytes": 598,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d345/d345_deterministic_usd_metadata_report.md",
+          "sha256": "9f9bc35f35a65bdc1d7605c87e3fd92c5ad67b1888457be7406e6ed28f3d1280"
+        },
+        {
+          "bytes": 1223,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d345/d345_deterministic_usd_metadata_summary.json",
+          "sha256": "d7cd4d4b0cb4c5a010b8673b47cb010103c337642b6e9b33df1fe577ca73bba5"
+        },
+        {
+          "bytes": 619,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d345/d345_parameter_freeze_audit.json",
+          "sha256": "92f2ab6c9d2dd13a1dde2517bcccf66eec78504596b2209f3d9c8cba859f878e"
+        },
+        {
+          "bytes": 8981,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d345/d345_preregistration.json",
+          "sha256": "9c31b8070d2051c00ebd6789facd6c8a59256cb9beefe8645a63ff41a277b6a3"
+        },
+        {
+          "bytes": 529,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d345/d345_rerun_omission_justification.json",
+          "sha256": "26286b714f087c7e87b5d855a31eca2f4cd9dd825a7bf7df8094d09d64e60a9b"
+        },
+        {
+          "bytes": 843434,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d345/d345_worker_a.json",
+          "sha256": "99991b382bf881502dc73009877cd09a5617be8d3a5a5610a0d047f741756974"
+        },
+        {
+          "bytes": 843434,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d345/d345_worker_b.json",
+          "sha256": "f2ac7cd3c9a9bc050d7fbc3d1bc05d9b8d062323f2ade619983024577f33eceb"
+        }
+      ]
+    },
+    "d346_all": {
+      "digest": "dde081a24d4c3e49503819997db5f402484a1c4526ae82e54c15b0d046fa5aa7",
+      "file_count": 26,
+      "root": "claudedocs/runtime_logs/grasp_track/g0a_d346",
+      "rows": [
+        {
+          "bytes": 96496,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_attempt3_live_representation.rbl",
+          "sha256": "d19df02e3b698d4629f10afd237b0fc5479afdb657dfa61b62ba1e438968301e"
+        },
+        {
+          "bytes": 4554359,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_attempt3_live_representation.rrd",
+          "sha256": "b9a4f2e7ca6568c7274c6fa9e7f34ffa5868fa2822f9343ea8e1fe3ffc788eec"
+        },
+        {
+          "bytes": 9413786,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_attempt3_live_representation_rerun.png",
+          "sha256": "f454d2a3ef36bb088a8c83d859bb28ab87222ec1545a77feaa111d7237225b67"
+        },
+        {
+          "bytes": 510,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_automated_report.md",
+          "sha256": "da9c74af14a0165a0fadaa9fc029dbc679fe61fc87b743ca21dc769e837c1e5f"
+        },
+        {
+          "bytes": 2722916,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_automated_summary.json",
+          "sha256": "f5331ec4d7f0c08ea6bb4e89396e8d9bf3975e96b9655f042f49ce606956eaa4"
+        },
+        {
+          "bytes": 391,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_completion_report.md",
+          "sha256": "47b47c91904818798323a0be7ebc29bacee148f70157792c3fecda10443944ae"
+        },
+        {
+          "bytes": 5516,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_completion_summary.json",
+          "sha256": "98a0c126824a27e7651ea2fe352394eb8829a4bf1137532e180ed7ae5629bece"
+        },
+        {
+          "bytes": 138,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_d337_frozen_controls.json",
+          "sha256": "7b85457dad3f3b7be8f4e224cfb9f8fae99328a55b622fcc968704140885bf9f"
+        },
+        {
+          "bytes": 16730,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_effective_eligibility.json",
+          "sha256": "fe173e7add5a9fc643b95425dd0225b4ed8c463c88fa4efd785f34d2aa55a825"
+        },
+        {
+          "bytes": 3002,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_fresh_live_representation_audit.json",
+          "sha256": "d9fd33cafe3e54f21ade489edb0d5c1d5b183e9a35b2b0c0f33fb0ad69e1c1e8"
+        },
+        {
+          "bytes": 74902,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_fresh_live_representation_decision.png",
+          "sha256": "3ac985c06a129f8a87175f0d42a2f08df597c2da17da4305722acd24abdd5b3a"
+        },
+        {
+          "bytes": 37966,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_gpu_visibility_reactive_amendment.json",
+          "sha256": "4c6303e2e305a016f5f95442312b260282b4f0cc552d0a6df60835514e2ae90c"
+        },
+        {
+          "bytes": 2423,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_manual_visual_inspection.json",
+          "sha256": "f911e91f7836f2e77c53b02d4b7722e744ad8f562155e8a7ad6ed12043c3f238"
+        },
+        {
+          "bytes": 813,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_manual_visual_inspection.md",
+          "sha256": "b0cbe25d54817b8afae639e876b99ee64d5559fa64d53ccacfb9c8bb4c06e445"
+        },
+        {
+          "bytes": 3171,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_parameter_freeze_audit.json",
+          "sha256": "6e981770fb53cca671e3c38233f9849785bc5e115f7d7c2fd3addc54757c6deb"
+        },
+        {
+          "bytes": 6286,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_postrun_root_cause_audit.json",
+          "sha256": "3e53ee4415446df8abe891bc3f541b89a671d36803ad49e0bb87b006e813f23a"
+        },
+        {
+          "bytes": 35317,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_preregistration.json",
+          "sha256": "e71a315223b4fe88cc532569b0f75d5725b476088c93b63fc75d11d33a9d6a7f"
+        },
+        {
+          "bytes": 894,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_raw_live_measurement.json",
+          "sha256": "c85c9580ef2f2a1f406fb4393b15b9671029ea04eba01e98f0c6e92932eef0ba"
+        },
+        {
+          "bytes": 2423,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_rerun_manual_visual_inspection.json",
+          "sha256": "f911e91f7836f2e77c53b02d4b7722e744ad8f562155e8a7ad6ed12043c3f238"
+        },
+        {
+          "bytes": 1076,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_rerun_manual_visual_inspection.md",
+          "sha256": "517d335d8ad49b4046aaf1320716d0b6af81cc899005dfa098d9a61a8ffe21cc"
+        },
+        {
+          "bytes": 2486725,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_rerun_validation.json",
+          "sha256": "390b66f2ede90d022c9d74a7c7541cc1d095827e88250fcc4652c2fe3533ffa9"
+        },
+        {
+          "bytes": 2306,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_runtime_exception.json",
+          "sha256": "21ecca9860192601b2b813a2bee43c51552470f490f346a7676b7f6aa4e9b624"
+        },
+        {
+          "bytes": 10801,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_validate_cook_witness_manifest.json",
+          "sha256": "0f65273a85c6718fa9268f4edb1431f7b448e716d95905080829417881dbbb0e"
+        },
+        {
+          "bytes": 53361,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_validate_preflight.json",
+          "sha256": "e0759345507dbf48df80a490cb4c9da05383658c4903a1a6a07beb940529515f"
+        },
+        {
+          "bytes": 54450,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_validate_preflight_effective.json",
+          "sha256": "4c548f5ce2f342e5856285cfbcf1fa9a6d3021475d304400faabc4b6463421f1"
+        },
+        {
+          "bytes": 820,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_zero_step_representation_gate.json",
+          "sha256": "fb737611c53a389049c2e83797ed301abea050a34eea13e4686c0743afe21ed8"
+        }
+      ]
+    }
+  },
+  "source_inventory_counts": {
+    "d338_attempt1": 3,
+    "d339_attempt2": 18,
+    "d340": 33,
+    "d342": 13,
+    "d343": 6,
+    "d344_all": 19,
+    "d344_attempt3": 9,
+    "d345_all": 8,
+    "d346_all": 26
+  },
+  "source_inventory_digests": {
+    "d338_attempt1": "708e6641ba1ac988d0f617fede238530e1db9a30573c535278ab0853bfca5f2e",
+    "d339_attempt2": "0dae41fd3937a0a8aea18488019c74f097d32f7b8de916943ff31334e30464a1",
+    "d340": "def37cc3c4d10cad8919ce71175211cc34fe2e8b567dbc107f13de151a92940d",
+    "d342": "7c205d7f6222a2a091a70bb1cf784b339512efbfe8d50bbb3b5ee8c2fed35232",
+    "d343": "f0c612377f8a0be3b98d7187ce962821af39d9e70eafbff2d6b2ba886b94bdd3",
+    "d344_all": "bd07acc09a8c89f4f8da78da7e9492546a8f2974864e3e42c9069a211195a3c8",
+    "d344_attempt3": "ea6965199ff1f195a6d19d9c55febfe44cc9838f12651570c80d5bb97fa6caf1",
+    "d345_all": "b859f9ad44de22cd9bb93e3f16bb3ee669721e3c788c45ec366c27cdcb4bb147",
+    "d346_all": "dde081a24d4c3e49503819997db5f402484a1c4526ae82e54c15b0d046fa5aa7"
+  },
+  "stop_order": [
+    "preflight before Isaac launch",
+    "exact extension enable -> verify -> public module/interface import",
+    "256 callback witnesses",
+    "128-part corrected classification",
+    "conditional frozen target query",
+    "zero controlled physics",
+    "Rerun machine validation",
+    "actual screenshot inspection"
+  ],
+  "user_authorization": {
+    "authorized": true,
+    "scope": "enable/verify/import order repair followed by one frozen D346 live-representation contract",
+    "source": "current user turn: step-by-step\uc73c\ub85c \uc21c\ucc28\uc801\uc73c\ub85c \uc0ac\uace0\ud558\uba74\uc11c D347 \uc9c4\ud589\ud574"
+  }
+}

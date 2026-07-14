@@ -1,10 +1,10 @@
 # START_HERE.md
 
-Last updated: 2026-07-14 KST. D346 is complete with verdict
-`D346_G0A_FRESH_LIVE_REPRESENTATION_FAIL_STOP`. This is an instrumentation
-activation-order STOP before callback 1/256, not a collision-geometry rejection.
-The immutable D344 attempt3 remains unclassified in fresh PhysX runtime.
-`g0a_pass=false`; settle, G0b, RL, and ladder remain blocked.
+Last updated: 2026-07-14 KST. D347 is complete with verdict
+`D347_G0A_FRESH_LIVE_REPRESENTATION_FAIL_STOP`. The D346 import-order defect is
+repaired and callback evidence is complete, but one of 128 collision pieces failed
+the frozen PhysX-volume cross-check. The target-distance query was therefore not
+run. `g0a_pass=false`; settle, G0b, RL, and ladder remain blocked.
 
 ## Current Truth
 
@@ -15,114 +15,116 @@ The immutable D344 attempt3 remains unclassified in fresh PhysX runtime.
   Frozen target is q5 `1.5413rad`, `(radial,tangent)=(7,11)mm`, tangent sign
   `-1`, seed `33201`, HOME-seeded position-only IK.
 - D337 restored the open-jaw target family: `2,560/2,629` raw-clear candidates;
-  frozen-target raw clearances link5/gripper `+4.2726/+11.1751mm`. The stale
-  cooked link5 hull caused the historical `38.861N` step-0 impulse.
-- D339 attempt2 proved independent cold-cook equality but found 13/128 live
-  fidelity failures. D340 captured fixed-point candidates; D342 repaired the
-  coordinate-stream proof; D343 proved typed float32 bits `0x38d1b717` on
-  128/128 parts.
-- D344 authored immutable attempt3 with 13 changed and 115 preserved parts, but
-  remains historical FAIL because its metadata comparator used address-bearing
-  PXR `repr`. D345 repaired that comparator across two independent processes;
-  D345 PASS did not reclassify D344 or certify live geometry.
-- D341 Rerun lifecycle remains mandatory for geometry/pose/contact/runtime:
-  finalized RRD/RBL, exact entities/timelines/components, headless screenshot,
-  and actual inspection. Rerun is observability, never numerical authority.
+  its frozen-target raw clearances are link5/gripper `+4.2726/+11.1751mm`.
+  These are D337 anchors, not D347 measurements.
+- D339 attempt2 proved two-cook equality but found 13 surface failures and the
+  link5 `part_045` volume discrepancy. D340/D342/D343 captured and repaired the
+  fixed-point, coordinate-stream, and typed-float proof contracts.
+- D344 authored immutable attempt3 with 13 changed and 115 preserved parts but
+  retained historical FAIL because its metadata comparator used address-bearing
+  PXR `repr`. D345 repaired that comparator; it did not retroactively pass D344.
+- D341 Rerun lifecycle is mandatory for geometry/pose/contact/runtime: finalized
+  RRD/RBL, exact entities/timelines/components, headless screenshot, and actual
+  inspection. Rerun is observability, never numerical authority.
 
-## D346 Verified Result
+## D347 Verified Result
 
-- New variable: `[attempt3_fresh_live_representation_validation]` (measurement
-  only). New physical variables `0`; parameter increases/changes/threshold
-  relaxations/decomposition changes `0/0/0/0`; asset writes `0`.
-- A first managed execution hid CUDA and stopped while constructing
-  `SimulationContext`. It produced callback `0`, physics `0`, no scientific
-  outputs, and was preserved as non-scientific evidence. A hash-chained reactive
-  amendment allowed one effective GPU execution without changing the experiment.
-- Effective preflight PASS: RTX 4090 visible; frozen source hashes/inventories,
-  numpy `1.26.0`, psutil `5.9.8`, Rerun `0.34.1`, AppLauncher, stage/sensor,
-  `metersPerUnit=1.0`, and retained raw source were exact.
-- The effective run stopped before the first callback with
-  `ModuleNotFoundError: No module named 'omni.physxassetvalidator'`.
-  Callback witness `0/256`; classified live parts `0/128`; D337 controls and
-  frozen raw/live distance query were correctly skipped; body distances are
-  `null`. Simulation counter `0->0`; controlled physics steps `0`.
-- This is not “128 parts failed.” The extension is installed as
-  `omni.physx.asset_validator` v`107.3.26` and declares Python module
-  `omni.physxassetvalidator`. D340 imports the module before enabling the
-  extension; D339's working sequence enables/verifies it before import.
-- D344 attempt3 and all earlier inputs remained immutable. D344 stays
-  `D344_G0A_ATTEMPT3_AUTHORING_CONTRACT_FAIL_STOP`; D345 stays PASS.
+- New variable: measurement-only `[physx_asset_validator_activation_order]`.
+  New physical variables `0`; parameters added/removed/changed/increased/decreased,
+  decomposition/target/scene/callback/Rerun changes, and threshold relaxations are
+  all `0`. Asset writes/recooks and controlled physics are `0`.
+- Fresh RTX 4090 validate ran exactly once. The exact extension
+  `omni.physx.asset_validator` v`107.3.26` began disabled; D347 enabled it once,
+  verified its ID/root/five pinned files, then imported
+  `omni.physxassetvalidator` and acquired its public interface. Retry, fallback,
+  manual `PYTHONPATH`, private `.so`, bundle/custom experience, and app-update
+  pump counts are all `0`.
+- The activation JSON was persisted before callback 1. Callback witnesses are
+  `256/256`: 128 pieces x prototype then instance, each callback once/inline,
+  `RESULT_VALID`, one convex, serialization error `0`, and settings/cache restore
+  PASS.
+- Corrected live audit is `127/128`: gripper `64/64`, link5 `63/64`. Surface,
+  fixed-point/preserved, typed float bits, owner, and GPU-compatible checks are
+  each `128/128`.
+- The sole failure is link5 `part_045`. Prototype and instance callback geometry
+  are bit-exact, surface error `0m`, and callback volume is
+  `5.171636397368745e-7m^3`. PhysX property-query reports
+  `4.061547542733024e-7m^3`; relative difference `27.331672%` exceeds the frozen
+  `5%` cross-check. Independent triangle-volume recomputation matched the callback
+  volume. This establishes a volume-channel discrepancy, not yet which channel's
+  semantics are appropriate.
+- Because the 128/128 prerequisite failed, D337 controls and raw/live target-union
+  distances were deliberately not queried. D347 body distances are `null`; this
+  run did not observe collision or clearance at the target.
+- Simulation counter stayed `0->0`; controlled physics `0`; settle, ten-trial,
+  G0b, RL, and ladder were not run. Inputs and D344 attempt3 stayed immutable.
+- Final completion summary SHA-256:
+  `93ae7a6daea4d8ba9af6fa09d01deb6c72017925375195a53804b0d55286d65e`.
 
-## D346 Rerun / Visual Result
+## D347 Rerun / Visual Result
 
-- Footer-complete RRD/RBL and screenshot exist, but the exact machine contract
-  failed: frames `6/6`, body frames `2/2`, meshes `266/522`, scalars
-  `1,040/1,040`, events `132/132`, non-system entities `1,588/2,100`.
-- Exactly 256 callback-derived instance/prototype meshes (and 512 related
-  entities) are absent. Placeholder scalar/event rows cannot replace geometry.
-- Original-resolution inspection found eight configured panels, but both bodies'
-  live-instance/prototype panels lacked callback part geometry; the table showed
-  unavailable values/WARN rows and viewer notifications obscured part of one
-  panel. Manual visual completion is FAIL.
-- Decision PNG correctly says pre-physics STOP and confirms that no partial/empty
-  live union was queried. Its TCP `0.817895mm` and jaw-tangent `2.148675deg`
-  values are IK alignment errors, not collision clearances.
-- Completion summary SHA-256:
-  `98a0c126824a27e7651ea2fe352394eb8829a4bf1137532e180ed7ae5629bece`.
-- Postrun root-cause JSON is a pre-manual-inspection diagnosis snapshot. Final
-  manual/completion authority is `d346_manual_visual_inspection.json` plus
-  `d346_completion_summary.json`.
+- Machine contract PASS: frames `6/6`, body frames `2/2`, meshes `522/522`,
+  Float64 scalars `1,040/1,040`, events `132/132`, non-system entities
+  `2,100/2,100`; RRD/RBL footer, entity, component, and registered timeline-name
+  checks passed.
+- Original-resolution inspection PASS. The `4800x2800` screenshot shows eight
+  nonempty independent link5/gripper source/instance/prototype/candidate panels,
+  target cylinder, frame markers, metric table, and event table. The `1076x665`
+  decision PNG is legible and reports the pre-physics stop.
+- Viewer notifications overlap a panel edge but do not hide required title or
+  decision geometry. CLI reports `/events/d347` `part_idx` as unsorted; registered
+  timeline names, `event_idx`/`log_time`, footer, entities, and components still
+  pass. Preserve this as an observability caveat, not the scientific failure.
 
-## Active Case — D346 Closed / D347 User Approval Pending
+## Active Case / Next User Choice
 
-- Do not edit or rerun D346. The next recommended case is D347 measurement-only
-  `[physx_asset_validator_activation_order]`.
-- D347's only allowed repair is: in a new wrapper/fresh process, record initial
-  extension state -> enable exact ID `omni.physx.asset_validator` -> verify true
-  -> import `omni.physxassetvalidator` and record module origin/API -> then call
-  the frozen D346 callback/part/target/Rerun contract once.
-- D347 must keep D344/D346 immutable and preserve callback `256`, parts `128`,
-  q5 `1.5413`, target `(7,11)mm`, all decomposition settings/tolerances, and
-  controlled physics `0`.
-- Forbidden shortcuts: manual `PYTHONPATH`, private `.so` import, whole PhysX
-  bundle/custom experience, `simulation_app.update()`, fallback/retry, asset
-  recook/rewrite, tolerance relaxation, or parameter tuning.
-- Even a future D347 PASS only makes a separately approved fresh settle case
-  eligible. It does not set `g0a_pass=true`.
-- Completion summary's `next_case_requires_separate_approval=null` refers only
-  to the unopened post-PASS settle gate; it does not negate the new D347 repair
-  recommendation from the postrun diagnosis.
+- D347 is complete and immutable: no edit, overwrite, or silent rerun.
+- Recommended next case is separately approved D348 measurement-only
+  `[physx_property_query_volume_semantics]`. Its question is narrow: why does
+  `part_045` have identical callback surfaces but a `27.331672%` property-query
+  volume difference, and are those two API outputs meant to describe the same
+  geometric quantity?
+- D348 must begin from immutable D339/D347 evidence and exact API/source semantics,
+  use matched passing controls, and keep the asset, decomposition settings, target,
+  all tolerances, and physics unchanged. It must not “fix” the result by raising
+  the `5%` threshold or dropping the per-part check.
+- Only if a new case proves that the volume cross-check is semantically valid and
+  obtains 128/128 may the frozen target-distance query become eligible. Settle is
+  a still-later, separately approved case; no automatic promotion follows.
 
 ## Must Read First
 
-1. `AGENTS.md`; `START_HERE.md`; DECISIONS D344-D346; ledger tail
-2. `claudedocs/session_20260714_grasp_g0a_d346_fresh_live_attempt3_validation.md`
-3. `claudedocs/runtime_logs/grasp_track/g0a_d346/d346_completion_summary.json`
-4. `claudedocs/runtime_logs/grasp_track/g0a_d346/d346_postrun_root_cause_audit.json`
-5. `claudedocs/runtime_logs/grasp_track/g0a_d346/d346_raw_live_measurement.json`
-6. `claudedocs/runtime_logs/grasp_track/g0a_d346/d346_rerun_validation.json`
-7. `claudedocs/session_20260714_grasp_g0a_d345_deterministic_usd_metadata_comparator.md`
-8. `claudedocs/session_20260714_grasp_g0a_d344_attempt3_fixed_point_collision_geometry.md`
-9. `claudedocs/session_20260713_grasp_g0a_d341_rerun_observability_contract_repair.md`
+1. `AGENTS.md`; `START_HERE.md`; DECISIONS D344-D347; ledger tail
+2. `claudedocs/session_20260714_grasp_g0a_d347_asset_validator_activation_order_repair.md`
+3. `claudedocs/runtime_logs/grasp_track/g0a_d347/d347_completion_summary.json`
+4. `claudedocs/runtime_logs/grasp_track/g0a_d347/d347_asset_validator_activation_order.json`
+5. `claudedocs/runtime_logs/grasp_track/g0a_d347/d347_validate_cook_witness_manifest.json`
+6. `claudedocs/runtime_logs/grasp_track/g0a_d347/d347_fresh_live_representation_audit.json`
+7. `claudedocs/runtime_logs/grasp_track/g0a_d347/d347_zero_step_representation_gate.json`
+8. `claudedocs/runtime_logs/grasp_track/g0a_d347/d347_rerun_validation.json`
+9. `claudedocs/runtime_logs/grasp_track/g0a_d347/d347_manual_visual_inspection.json`
+10. D346, D345, D344, and D341 session documents when tracing provenance
 
 ## Do Not Trust As Current / Durable Boundaries
 
 - `HANDOFF.md` and `TASKS.md` are stale. q5 `0` means CLOSED.
-- D346 `d346_rerun_manual_visual_inspection.json/.md` are preserved supplemental
-  files created under a guessed filename. Registered authority is
-  `d346_manual_visual_inspection.json/.md` plus `d346_completion_summary.json`.
-- Never hash default PXR `repr(...)`; canonicalize typed content and prove
-  cross-process determinism.
-- Extension-owned Python modules in a minimal fresh Kit process must be imported
-  only after the exact extension is enabled and verified. Installed files alone
-  do not prove that the namespace is active.
-- Rerun placeholders, empty panels, or nonzero files never substitute for missing
-  callback geometry or an exact completion contract.
-- D338 attempt1, D339 attempt2, D340, D342, D343, D344, D345, and D346 are
-  immutable: no overwrite, silent rerun, retroactive PASS, or promotion.
+- Do not report D337 anchor clearances as D347 measurements. D347 target queries
+  are empty/null by contract.
+- Do not summarize D347 as “target collision” or “128 parts failed.” It is one
+  volume cross-check failure after `256/256` callbacks and `127/128` part PASS.
+- `d347_raw_live_measurement.json` contains inherited D340 pre-correction fields.
+  Corrected authority is `d347_fresh_live_representation_audit.json`.
+- Callback hull volume and PhysX property-query volume are not interchangeable
+  until their semantics are independently established. Surface equality alone
+  does not waive the frozen volume gate.
+- Never hash default PXR `repr(...)`; canonicalize typed values and list operations.
+  Extension-owned modules must be imported only after exact extension enable and
+  verification.
+- D338-D347 evidence is forward-only: no overwrite, silent rerun, retroactive PASS,
+  or promotion. Rerun never substitutes for callback/Float64 evidence.
 - `JOINT_LIMITS` removal, hardware control, B200/SSH/pull, `/half-clone`, and
   unapproved commit/push remain forbidden.
 
-HEAD remains `b09b62e0ffad919b9bdc1bb6155de2f662f2ab5c` (`D345 및 roarm cube10cm
-render 및 fair데이터 이전`). D346 state/code/runtime outputs are uncommitted;
-commit/push is user-request-only.
+Base HEAD is `d9d224be7793c02754992401a06c3b5eb94826fa` (`D346`), pushed by the
+user. D347 code, state documents, and outputs are uncommitted; commit/push remains
+user-request-only.

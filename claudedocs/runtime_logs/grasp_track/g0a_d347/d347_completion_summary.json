@@ -1,0 +1,145 @@
+{
+  "artifact": "D347_COMPLETION_SUMMARY_V1",
+  "automated_evidence": {
+    "automated_pass": false,
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d347/d347_automated_summary.json",
+    "preserved_without_overwrite": true,
+    "scientific_verdict": "D347_G0A_FRESH_LIVE_REPRESENTATION_FAIL_STOP",
+    "sha256": "0f5bd784bba6f49485e15279acf1cc0a59a319395abc8e03346d2c2cb8315328"
+  },
+  "case": "g0a_d347",
+  "completion_contract_pass": false,
+  "final_verdict": "D347_G0A_FRESH_LIVE_REPRESENTATION_FAIL_STOP",
+  "finalize_input_checks": {
+    "activation_report_hash_matches_rerun_metadata_source": true,
+    "activation_report_present": true,
+    "decision_png_hash_still_matches_automated_summary": true,
+    "decision_png_present": true,
+    "git_head_exact": true,
+    "git_status_scope_only": true,
+    "matches_validate_after_inventory": true,
+    "rbl_hash_still_matches_machine_validation": true,
+    "rbl_present": true,
+    "rerun_screenshot_present": true,
+    "rrd_hash_still_matches_machine_validation": true,
+    "rrd_present": true,
+    "screenshot_hash_still_matches_machine_validation": true,
+    "source_hashes_still_exact": true,
+    "source_inventory_counts_still_exact": true,
+    "source_inventory_digests_still_exact": true,
+    "validate_preflight_hash_matches_automated_summary": true
+  },
+  "interpretation": "D347 certifies only the fresh pre-physics collision representation and frozen target when completion_contract_pass is true. It never certifies settle or G0a.",
+  "manual_evidence": {
+    "checks": {
+      "artifact_exact": true,
+      "bounded_interpretation_present": true,
+      "case_exact": true,
+      "d344_fail_retained": true,
+      "decision_png_bytes_exact": true,
+      "decision_png_dimensions_exact": true,
+      "decision_png_path_exact": true,
+      "decision_png_sha_exact": true,
+      "g0a_false": true,
+      "inspection_date_exact": true,
+      "inspection_method_original_view_image": true,
+      "manual_markdown_nonzero": true,
+      "manual_pass_true": true,
+      "required_observations_true": true,
+      "rerun_screenshot_bytes_exact": true,
+      "rerun_screenshot_dimensions_exact": true,
+      "rerun_screenshot_path_exact": true,
+      "rerun_screenshot_sha_exact": true,
+      "scientific_override_false": true
+    },
+    "json_path": "claudedocs/runtime_logs/grasp_track/g0a_d347/d347_manual_visual_inspection.json",
+    "json_sha256": "836b2df3f078ead25695ef46a9db9feb74f7ae0e4d6cdc38eb06cca341b948ee",
+    "manual_visual_inspection_pass": true,
+    "markdown_path": "claudedocs/runtime_logs/grasp_track/g0a_d347/d347_manual_visual_inspection.md",
+    "markdown_sha256": "184325fbe4662f9f2b33e0c03fa74c50165a492ffa4a9565d0311a985e6d1817"
+  },
+  "new_variables": [
+    "physx_asset_validator_activation_order"
+  ],
+  "next_case_requires_separate_approval": null,
+  "parameter_change_audit": {
+    "callback_contract_changes": 0,
+    "decomposition_parameter_changes": 0,
+    "existing_parameter_changes": 0,
+    "existing_parameter_decreases": 0,
+    "existing_parameter_increases": 0,
+    "new_physical_variables": 0,
+    "parameters_added": 0,
+    "parameters_removed": 0,
+    "rerun_count_changes": 0,
+    "threshold_relaxations": 0
+  },
+  "rerun_evidence": {
+    "exact_timelines": [
+      "blueprint",
+      "event_idx",
+      "log_time",
+      "part_idx"
+    ],
+    "expected_counts": {
+      "coordinate_frame_count": 2,
+      "event_row_count": 132,
+      "exact_non_system_entity_count": 2100,
+      "frame_count": 6,
+      "mesh_count": 522,
+      "scalar_row_count": 1040
+    },
+    "machine_contract_pass": true,
+    "rbl_bytes": 96422,
+    "rbl_path": "claudedocs/runtime_logs/grasp_track/g0a_d347/d347_attempt3_live_representation.rbl",
+    "rbl_sha256": "ad2b7f190bacfe51505cf27279ed76d22bb1fa71427d66a1b275b169e928421b",
+    "rrd_bytes": 6177066,
+    "rrd_path": "claudedocs/runtime_logs/grasp_track/g0a_d347/d347_attempt3_live_representation.rrd",
+    "rrd_sha256": "6d266688eafbb795f04184091f71cf9caeac9ca60b7f93e41701f8441bb73bf1",
+    "screenshot_bytes": 9818577,
+    "screenshot_path": "claudedocs/runtime_logs/grasp_track/g0a_d347/d347_attempt3_live_representation_rerun.png",
+    "screenshot_sha256": "7e00572357265355c947adf32c8119ccdef3cbaee56f7225fd2ef7428a3be9cb",
+    "validation_path": "claudedocs/runtime_logs/grasp_track/g0a_d347/d347_rerun_validation.json",
+    "validation_sha256": "ac44023f36245022d676c930a5c936d33577d9e9d4ef8b638a6a5ee97c6460f5"
+  },
+  "scientific_evidence": {
+    "active_part_counts": {
+      "fixed_point_or_preserved_pass": 128,
+      "gpu_compatible_pass": 128,
+      "observed_parts": 128,
+      "owner_pass": 128,
+      "part_pass": 127,
+      "surface_pass": 128,
+      "typed_bits_pass": 128,
+      "volume_pass": 127
+    },
+    "asset_validator_activation_order_pass": true,
+    "asset_validator_activation_order_path": "claudedocs/runtime_logs/grasp_track/g0a_d347/d347_asset_validator_activation_order.json",
+    "asset_validator_activation_order_sha256": "85e489dd31da707c41eaacff54d76ca4260fc455ca484a1cb1eb327299757330",
+    "body_distances": {
+      "gripper_link": null,
+      "link5": null
+    },
+    "callback_contract_pass": true,
+    "callback_witnesses": 256,
+    "fresh_live_audit_pass": false,
+    "target_clear_and_faithful": false
+  },
+  "scope_guards": {
+    "controlled_physics_steps": 0,
+    "d344_historical_verdict_retained": "D344_G0A_ATTEMPT3_AUTHORING_CONTRACT_FAIL_STOP",
+    "g0a_pass": false,
+    "g0b_run": false,
+    "ladder_promoted": false,
+    "rl_run": false,
+    "settle_executed": false,
+    "ten_trial_run": false
+  },
+  "single_execution_contract": {
+    "reactive_amendment_used": false,
+    "scientific_execution_count": 1,
+    "validate_preflight_path": "claudedocs/runtime_logs/grasp_track/g0a_d347/d347_validate_preflight.json",
+    "validate_preflight_sha256": "63403c7c59f06fa6a11fafffb7ab34e30f12c9819ae76119cfed8d311a7cada7"
+  },
+  "source_immutability_pass": true
+}

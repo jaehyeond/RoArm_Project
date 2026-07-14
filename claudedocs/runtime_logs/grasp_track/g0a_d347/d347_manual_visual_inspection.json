@@ -1,0 +1,46 @@
+{
+  "artifact": "D347_RERUN_MANUAL_VISUAL_INSPECTION_V1",
+  "case": "g0a_d347",
+  "inspection_date_kst": "2026-07-14",
+  "inspection_method": "view_image detail=original for both the Rerun screenshot and decision PNG",
+  "rerun_screenshot": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d347/d347_attempt3_live_representation_rerun.png",
+    "sha256": "7e00572357265355c947adf32c8119ccdef3cbaee56f7225fd2ef7428a3be9cb",
+    "bytes": 9818577,
+    "raster_dimensions": "4800x2800"
+  },
+  "decision_png": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d347/d347_fresh_live_representation_decision.png",
+    "sha256": "fb2d34a1aecae09488016655d352f0761a4bd4a50ad067104ff18688fe8b70b9",
+    "bytes": 97036,
+    "raster_dimensions": "1076x665"
+  },
+  "observations": {
+    "eight_independent_spatial_panels_visible": true,
+    "link5_four_variants_nonempty": true,
+    "gripper_four_variants_nonempty": true,
+    "target_cylinder_visible_in_all_eight_panels": true,
+    "registered_frames_visible": true,
+    "metric_table_visible": true,
+    "event_table_visible": true,
+    "required_content_not_obscured": true,
+    "decision_png_opened_and_legible": true
+  },
+  "observed_details": [
+    "link5와 gripper_link 각각에 대해 authored source, live instance, prototype, candidate의 네 패널 제목과 비어 있지 않은 형상이 독립적으로 보인다.",
+    "주황색 목표 원통과 등록된 frame marker/label이 여덟 공간 패널에 보인다.",
+    "하단 Float64 metric 표와 cook/gate event 표가 보이며 event 표에는 조각별 판정 행과 수치가 표시된다.",
+    "별도 decision PNG에는 witness_manifest_256=True, fresh_live_audit_128=False와 목표 거리 합집합을 조회하지 않았다는 STOP 문구가 읽힌다.",
+    "Rerun의 loading/gRPC 알림은 우측 상단 패널 가장자리에 겹치지만 해당 패널 제목과 판단에 필요한 후보 형상은 보인다."
+  ],
+  "bounded_interpretation": [
+    "화면 검사는 등록된 여덟 시각화 그룹과 진단 표가 실제로 열리고 보인다는 관찰성 증거다.",
+    "픽셀만으로 두 cook의 비트 단위 형상 동일성이나 부피 동일성을 증명하지 않는다. 그 판정은 callback 배열, 해시, PhysX property-query JSON이 담당한다.",
+    "수동 화면 검사가 통과해도 link5 part_045의 등록된 5% 부피 교차검사 실패를 무효화하지 않으며 목표 거리·settle·G0a를 허가하지 않는다.",
+    "Rerun 통계의 part_idx 비정렬 표시는 관찰성 주의사항이며, footer·엔티티·컴포넌트·등록된 시간축 이름 계약의 기계 통과와 과학 판정을 바꾸지 않는다."
+  ],
+  "manual_visual_inspection_pass": true,
+  "scientific_verdict_override": false,
+  "d344_verdict_retained": "D344_G0A_ATTEMPT3_AUTHORING_CONTRACT_FAIL_STOP",
+  "g0a_pass": false
+}

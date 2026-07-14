@@ -1,0 +1,319 @@
+{
+  "artifact": "D347_PARAMETER_FREEZE_AUDIT_V1",
+  "automatic_d346_to_d347_contract_diff": {
+    "baseline": {
+      "app_launcher": {
+        "animation_recording": false,
+        "device": "cuda:0",
+        "enable_cameras": false,
+        "experience": "",
+        "headless": true,
+        "kit_args": "",
+        "livestream": 0,
+        "rendering_mode": null,
+        "xr": false
+      },
+      "callback": {
+        "active_parts": 128,
+        "callbacks_per_request": 1,
+        "channels": [
+          "prototype",
+          "instance"
+        ],
+        "convexes_per_callback": 1,
+        "request_order": [
+          "prototype",
+          "instance"
+        ],
+        "requests": 256,
+        "result": "RESULT_VALID(0)",
+        "serialization_errors": 0,
+        "witness_persisted_before_classification": true
+      },
+      "decomposition": {
+        "error_percentage": 1.0,
+        "hull_vertex_limit": 64,
+        "max_convex_hulls": 64,
+        "min_thickness_m": 0.0001,
+        "shrink_wrap": true,
+        "voxel_resolution": 1000000
+      },
+      "rerun_counts": {
+        "coordinate_frame_count": 2,
+        "event_row_count": 132,
+        "exact_non_system_entity_count": 2100,
+        "frame_count": 6,
+        "mesh_count": 522,
+        "scalar_row_count": 1040
+      },
+      "scene": {
+        "cylinder_height_m": 0.09,
+        "cylinder_radius_m": 0.017,
+        "dynamic_friction": 1.2,
+        "mass_kg": 0.72,
+        "restitution": 0.0,
+        "static_friction": 1.5
+      },
+      "scope": {
+        "collision_asset_build": false,
+        "collision_asset_write": false,
+        "controlled_physics_steps": 0,
+        "g0a_pass": false,
+        "g0b": false,
+        "ladder_promotion": false,
+        "recook_to_disk": false,
+        "rl": false,
+        "settle": false,
+        "ten_trial": false
+      },
+      "target": {
+        "ik": "HOME-seeded position-only",
+        "q5_rad": 1.5413,
+        "radial_offset_nm": 7000000,
+        "seed": 33201,
+        "tangent_offset_nm": 11000000,
+        "tangent_sign": -1.0
+      },
+      "tolerances": {
+        "compatibility_m": 1e-10,
+        "d337_link5_invariant_mm": 0.05,
+        "d337_parity_mm": 0.05,
+        "d337_scoping_open_mm": 0.5,
+        "fixed_point_m": 1e-09,
+        "live_surface_m": 0.0001,
+        "min_thickness_bits": "0x38d1b717",
+        "property_volume_relative": 0.05,
+        "raw_anchor_mm": 0.05,
+        "raw_live_delta_mm": 0.5,
+        "target_clear_mm": 0.1
+      }
+    },
+    "baseline_authority": {
+      "d346_harness": "sim_scripts/cyl34_top_view_d346_grasp_g0a_fresh_live_attempt3_validation.py",
+      "d346_harness_sha256": "004fe0989f004ee554d8eea81ad8a28c2817a0b39af7b61dd43139c4488e8d4f",
+      "d346_parameter_audit": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_parameter_freeze_audit.json",
+      "d346_parameter_audit_sha256": "6e981770fb53cca671e3c38233f9849785bc5e115f7d7c2fd3addc54757c6deb",
+      "d346_preregistration": "claudedocs/runtime_logs/grasp_track/g0a_d346/d346_preregistration.json",
+      "d346_preregistration_sha256": "e71a315223b4fe88cc532569b0f75d5725b476088c93b63fc75d11d33a9d6a7f"
+    },
+    "callback_contract_changes": [],
+    "checks": {
+      "callback_contract_changes_empty": true,
+      "decomposition_parameter_changes_empty": true,
+      "existing_parameters_changed_empty": true,
+      "existing_parameters_decreased_empty": true,
+      "existing_parameters_increased_empty": true,
+      "parameters_added_empty": true,
+      "parameters_removed_empty": true,
+      "rerun_count_changes_empty": true,
+      "scene_parameter_changes_empty": true,
+      "target_parameter_changes_empty": true,
+      "thresholds_relaxed_empty": true
+    },
+    "decomposition_parameter_changes": [],
+    "effective": {
+      "app_launcher": {
+        "animation_recording": false,
+        "device": "cuda:0",
+        "enable_cameras": false,
+        "experience": "",
+        "headless": true,
+        "kit_args": "",
+        "livestream": 0,
+        "rendering_mode": null,
+        "xr": false
+      },
+      "callback": {
+        "active_parts": 128,
+        "callbacks_per_request": 1,
+        "channels": [
+          "prototype",
+          "instance"
+        ],
+        "convexes_per_callback": 1,
+        "request_order": [
+          "prototype",
+          "instance"
+        ],
+        "requests": 256,
+        "result": "RESULT_VALID(0)",
+        "serialization_errors": 0,
+        "witness_persisted_before_classification": true
+      },
+      "decomposition": {
+        "error_percentage": 1.0,
+        "hull_vertex_limit": 64,
+        "max_convex_hulls": 64,
+        "min_thickness_m": 0.0001,
+        "shrink_wrap": true,
+        "voxel_resolution": 1000000
+      },
+      "rerun_counts": {
+        "coordinate_frame_count": 2,
+        "event_row_count": 132,
+        "exact_non_system_entity_count": 2100,
+        "frame_count": 6,
+        "mesh_count": 522,
+        "scalar_row_count": 1040
+      },
+      "scene": {
+        "cylinder_height_m": 0.09,
+        "cylinder_radius_m": 0.017,
+        "dynamic_friction": 1.2,
+        "mass_kg": 0.72,
+        "restitution": 0.0,
+        "static_friction": 1.5
+      },
+      "scope": {
+        "collision_asset_build": false,
+        "collision_asset_write": false,
+        "controlled_physics_steps": 0,
+        "g0a_pass": false,
+        "g0b": false,
+        "ladder_promotion": false,
+        "recook_to_disk": false,
+        "rl": false,
+        "settle": false,
+        "ten_trial": false
+      },
+      "target": {
+        "ik": "HOME-seeded position-only",
+        "q5_rad": 1.5413,
+        "radial_offset_nm": 7000000,
+        "seed": 33201,
+        "tangent_offset_nm": 11000000,
+        "tangent_sign": -1.0
+      },
+      "tolerances": {
+        "compatibility_m": 1e-10,
+        "d337_link5_invariant_mm": 0.05,
+        "d337_parity_mm": 0.05,
+        "d337_scoping_open_mm": 0.5,
+        "fixed_point_m": 1e-09,
+        "live_surface_m": 0.0001,
+        "min_thickness_bits": "0x38d1b717",
+        "property_volume_relative": 0.05,
+        "raw_anchor_mm": 0.05,
+        "raw_live_delta_mm": 0.5,
+        "target_clear_mm": 0.1
+      }
+    },
+    "existing_parameters_changed": [],
+    "existing_parameters_decreased": [],
+    "existing_parameters_increased": [],
+    "new_physical_variables": [],
+    "parameters_added": [],
+    "parameters_removed": [],
+    "pass": true,
+    "rerun_count_changes": [],
+    "scene_parameter_changes": [],
+    "target_parameter_changes": [],
+    "thresholds_relaxed": []
+  },
+  "callback_contract_changes": [],
+  "checks": {
+    "compatibility_tolerance_exact_d344_helper": true,
+    "cylinder_height_90mm": true,
+    "cylinder_radius_17mm": true,
+    "d337_link5_invariant_tolerance_0p05mm": true,
+    "d337_parity_tolerance_0p05mm": true,
+    "d337_scoping_open_tolerance_0p5mm": true,
+    "decomposition_exact_d338_helper": true,
+    "decomposition_exact_d339": true,
+    "decomposition_exact_d340_helper": true,
+    "decomposition_exact_d344_helper": true,
+    "dynamic_friction_1p2": true,
+    "error_percentage_one": true,
+    "fixed_point_tolerance_1e_9m": true,
+    "fixed_point_tolerance_exact_d339_helper": true,
+    "fixed_point_tolerance_exact_d340_helper": true,
+    "fixed_point_tolerance_exact_d344_helper": true,
+    "hull_vertex_limit_64": true,
+    "max_convex_hulls_64": true,
+    "min_thickness_float32_bits_exact": true,
+    "min_thickness_requested_0p0001m": true,
+    "object_mass_0p72kg": true,
+    "one_measurement_variable": true,
+    "property_volume_tolerance_5pct": true,
+    "q5_open_1p5413rad": true,
+    "raw_anchor_tolerance_0p05mm": true,
+    "seed_33201": true,
+    "shrink_wrap_true": true,
+    "static_friction_1p5": true,
+    "surface_tolerance_0p1mm": true,
+    "target_clear_gate_0p1mm": true,
+    "target_delta_gate_0p5mm": true,
+    "target_radial_7mm": true,
+    "target_tangent_11mm": true,
+    "target_tangent_sign_minus_one": true,
+    "typed_bits_exact_d344_helper": true,
+    "typed_bits_hex_exact_d344_helper": true,
+    "voxel_resolution_one_million": true
+  },
+  "decomposition_parameter_changes": [],
+  "decomposition_parameters": {
+    "error_percentage": 1.0,
+    "hull_vertex_limit": 64,
+    "max_convex_hulls": 64,
+    "min_thickness_m": 0.0001,
+    "shrink_wrap": true,
+    "voxel_resolution": 1000000
+  },
+  "existing_parameters_changed": [],
+  "existing_parameters_decreased": [],
+  "existing_parameters_increased": [],
+  "measurement_only_runtime_operations": [
+    "cache-isolated synchronous prototype/instance cook requests",
+    "local and runtime mesh cache release before each request",
+    "temporary cooking instrumentation settings restored after every request",
+    "enable exact asset-validator extension once before application import",
+    "verify public module origin and interface before callback 1"
+  ],
+  "new_physical_variables": [],
+  "new_variable_count": 1,
+  "new_variables": [
+    "physx_asset_validator_activation_order"
+  ],
+  "parameters_added": [],
+  "parameters_removed": [],
+  "pass": true,
+  "registered_app_launcher": {
+    "animation_recording": false,
+    "device": "cuda:0",
+    "enable_cameras": false,
+    "experience": "",
+    "headless": true,
+    "kit_args": "",
+    "livestream": 0,
+    "rendering_mode": null,
+    "xr": false
+  },
+  "rerun_count_changes": [],
+  "scene_constants": {
+    "cylinder_height_m": 0.09,
+    "cylinder_radius_m": 0.017,
+    "dynamic_friction": 1.2,
+    "mass_kg": 0.72,
+    "restitution": 0.0,
+    "static_friction": 1.5
+  },
+  "scene_parameter_changes": [],
+  "target": {
+    "ik": "HOME-seeded position-only",
+    "q5_rad": 1.5413,
+    "radial_offset_mm": 7.0,
+    "seed": 33201,
+    "tangent_offset_mm": 11.0,
+    "tangent_sign": -1.0
+  },
+  "target_parameter_changes": [],
+  "thresholds_relaxed": [],
+  "tolerances": {
+    "fixed_point_m": 1e-09,
+    "live_surface_m": 0.0001,
+    "min_thickness_bits": "0x38d1b717",
+    "property_volume_relative": 0.05,
+    "raw_live_delta_mm": 0.5,
+    "target_clear_mm": 0.1
+  }
+}

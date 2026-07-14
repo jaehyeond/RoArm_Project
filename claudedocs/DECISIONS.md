@@ -19664,3 +19664,70 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d346/d346_rerun_validation.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d346/d346_manual_visual_inspection.json`
 - `START_HERE.md`
+
+## D347 - 검사 확장 활성화 순서는 수리됐지만 callback 형상 부피와 property-query 부피는 같은 값이라고 가정할 수 없다 (2026-07-14)
+
+Decision:
+
+- 판정은 `D347_G0A_FRESH_LIVE_REPRESENTATION_FAIL_STOP`이다. 신규 변수는
+  measurement-only `[physx_asset_validator_activation_order]` 한 건, 신규 물리
+  변수는 0건이다. 기존 파라미터의 추가·제거·변경·증가·감소, 분해·목표·장면·
+  callback·Rerun 변경, 허용값 완화, 자산 쓰기/recook은 모두 0이다.
+- fresh process에서 exact extension `omni.physx.asset_validator` v`107.3.26`을
+  비활성 상태에서 정확히 한 번 켜고 ID/root/고정 파일 해시를 확인한 뒤에만
+  `omni.physxassetvalidator`와 공개 interface를 import했다. 활성화 기록은 첫
+  callback보다 먼저 확정됐고 retry/fallback/manual `PYTHONPATH`/private `.so`/
+  bundle/custom experience/app-update pump는 모두 0이었다. 이는 D346의 순서 원인을
+  실제로 수리했다.
+- callback은 `256/256` 통과했다. 128조각 각각의 prototype 뒤 instance 요청,
+  callback 1회/inline, `RESULT_VALID`, 한 convex, 직렬화 오류 0, 설정·cache 원복이
+  모두 exact였다.
+- corrected live audit는 gripper `64/64`, link5 `63/64`, 총 `127/128`이다.
+  표면·고정점/보존·typed bits·owner·GPU 호환은 각각 `128/128`; 부피 교차검사는
+  `127/128`이다. 유일한 실패 link5 `part_045`는 두 callback geometry가 bit-exact이고
+  표면 오차 `0m`지만, callback 부피 `5.171636397368745e-7m^3`와 PhysX
+  property-query 부피 `4.061547542733024e-7m^3`의 상대차가 `27.331672%`로 동결
+  5%를 넘었다. callback 부피는 삼각형으로 독립 재계산해 일치했다.
+- **지속 규칙:** callback이 반환한 convex 삼각형 부피와 PhysX property-query의
+  `volume_m3`가 같은 의미라고 증명되지 않은 상태에서 서로 대체하지 않는다. 반대로
+  표면 오차 0만으로 등록된 부피 교차검사를 삭제하거나 5% 기준을 늘리지도 않는다.
+  두 API의 대상·변환·cook 단계·부피 정의를 통과 대조군과 함께 먼저 검증한다.
+- 128/128 선행조건 실패 뒤 D337 controls와 target raw/live union query는 계획대로
+  미실행됐다. D347 body distance는 `null`이며 D337 거리값은 참조 anchor일 뿐 D347
+  측정값이 아니다. simulation counter `0->0`, controlled physics 0; settle,
+  ten-trial, G0b, RL, ladder는 미실행이다.
+
+Evidence:
+
+- Rerun 기계 계약은 frame 6, body frame 2, mesh 522, Float64 scalar 1,040,
+  event 132, non-system entity 2,100으로 PASS했다. RRD/RBL footer, entity,
+  component, timeline-name 계약도 통과했다.
+- 원본 해상도 육안 검사는 여덟 개 비어 있지 않은 공간 패널, 목표 원통, frame,
+  metric/event 표와 별도 STOP PNG를 확인해 PASS했다. `/events/d347`의 `part_idx`
+  비정렬 표시는 보존할 Rerun 주의사항이나 과학 실패 원인은 아니다.
+- D344 attempt3와 D346 및 모든 입력 inventory는 실행 전후 exact였다. source
+  immutability와 finalize 입력 검사는 전부 PASS했다.
+- Final completion summary SHA-256은
+  `93ae7a6daea4d8ba9af6fa09d01deb6c72017925375195a53804b0d55286d65e`다.
+
+Implication:
+
+- D347은 immutable이며 수정·재실행·소급 PASS하지 않는다. `g0a_pass=false`;
+  target query, settle, G0b, RL, ladder는 계속 금지한다.
+- 가장 좁은 다음 후보는 별도 승인 D348 measurement-only
+  `[physx_property_query_volume_semantics]`다. immutable D339/D347 증거와 matched
+  passing controls로 두 부피 채널이 같은 물리량인지 검증한다. 자산, 분해 설정,
+  목표, 허용값, 물리는 바꾸지 않는다.
+
+Sources:
+
+- `claudedocs/session_20260714_grasp_g0a_d347_asset_validator_activation_order_repair.md`
+- `sim_scripts/cyl34_top_view_d347_grasp_g0a_asset_validator_activation_order_repair.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d347/d347_completion_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d347/d347_asset_validator_activation_order.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d347/d347_validate_cook_witness_manifest.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d347/d347_fresh_live_representation_audit.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d347/d347_zero_step_representation_gate.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d347/d347_rerun_validation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d347/d347_manual_visual_inspection.json`
+- `START_HERE.md`
