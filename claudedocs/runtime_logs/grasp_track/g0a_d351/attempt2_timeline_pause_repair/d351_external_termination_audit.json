@@ -1,0 +1,133 @@
+{
+  "artifact": "D351_ATTEMPT2_EXTERNAL_TERMINATION_AUDIT_V1",
+  "case": "g0a_d351",
+  "attempt": "attempt2_timeline_pause_repair",
+  "date": "2026-07-15 KST",
+  "classification": "D351_ATTEMPT2_PRE_SCIENCE_RUNTIME_LONG_RUN_STOP",
+  "authoritative_interpretation": "The fresh GUI validate passed preflight but did not emit the live-binding artifact or reach the zero-step bridge decision. After more than 60 minutes in the pre-science Isaac/runtime interval, the user approved SIGTERM. No moving-jaw geometry verdict exists.",
+  "process": {
+    "validate_pid": 1994061,
+    "parent_conda_pid": 1993816,
+    "command": "OMNI_KIT_ACCEPT_EULA=YES conda run -n isaaclab --no-capture-output python sim_scripts/cyl34_top_view_d351_attempt2_timeline_pause_repair.py --stage validate --viewer_hold_seconds 120",
+    "preflight_written_kst": "2026-07-15 17:18:36.029083294 +0900",
+    "simulation_app_shutdown_kst": "2026-07-15 18:20:09.335084557 +0900",
+    "kit_reported_shutdown_elapsed_s": 3693.302,
+    "termination_signal": "SIGTERM",
+    "termination_user_approved": true,
+    "signal_delivery_command_exit_code": 0,
+    "launcher_session_exit_code": 0,
+    "launcher_exit_zero_is_scientific_pass": false,
+    "shutdown_mode": "SIGTERM delivery was immediately followed by a logged graceful SimulationApp.close sequence; this causal interpretation combines operator/tool transcript evidence with the Kit log",
+    "post_shutdown_validate_pid_absent": true,
+    "post_shutdown_gpu_context_absent": true
+  },
+  "runtime_observations_diagnostic_only": {
+    "last_pretermination_process_elapsed": "01:00:17",
+    "sampled_process_cpu_percent_range": [201, 216],
+    "sampled_process_memory_percent": 7.9,
+    "sampled_gpu_memory_mib_range": [2482, 2486],
+    "sampled_gpu_sm_percent": 36,
+    "process_was_alive_and_computing": true,
+    "python_and_tbb_workers_observed_active": true,
+    "gdb_stack_attach_succeeded": false,
+    "gdb_attach_error": "Ubuntu Yama ptrace policy rejected the read-only attach; no process state was changed",
+    "root_cause_localized": false
+  },
+  "operator_tool_transcript_boundary": {
+    "not_reproducible_from_kit_log_alone": [
+      "termination_user_approved",
+      "signal_delivery_command_exit_code",
+      "launcher_session_exit_code",
+      "sampled_process_cpu_percent_range",
+      "sampled_process_memory_percent",
+      "sampled_gpu_memory_mib_range",
+      "sampled_gpu_sm_percent",
+      "python_and_tbb_workers_observed_active"
+    ],
+    "scientific_verdict_authority": false
+  },
+  "kit_log": {
+    "path": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/kit/logs/Kit/Isaac-Sim/5.1/kit_20260715_171836.log",
+    "bytes": 1275110,
+    "sha256": "b4eb319c2b19638f6e263e6b654fb517f494a847e073b573c24d4563e7f72e20",
+    "app_ready_elapsed_s": 13.36,
+    "simulation_app_startup_complete_elapsed_s": 15.953,
+    "last_pre_shutdown_logged_activity_elapsed_s": 16.393,
+    "shutdown_close_elapsed_s": 3693.182,
+    "shutdown_final_elapsed_s": 3693.302
+  },
+  "pre_termination_attempt2_inventory": {
+    "exact_file_count": 3,
+    "files": {
+      "d351_parameter_freeze_audit.json": {
+        "bytes": 2782,
+        "sha256": "98b5778e826d411f37606dd724093a1ff292040d8c1d350db3781508735502e2"
+      },
+      "d351_preregistration.json": {
+        "bytes": 88820,
+        "sha256": "eb05905a683842693dd5a0f7dff717cdae9c8bc4d9d6c51a9e5e7b21eba64fc1"
+      },
+      "d351_validate_preflight.json": {
+        "bytes": 1454,
+        "sha256": "035113da2ae94ec7d458d8f5e9a675bdac79f443fb3827f8555dfd4c37166334"
+      }
+    }
+  },
+  "preflight": {
+    "pass": true,
+    "checks_passed": 20,
+    "checks_total": 20,
+    "display": ":1",
+    "cuda": "NVIDIA GeForce RTX 4090 Laptop GPU",
+    "headless": false,
+    "livestream": 0,
+    "harness_sha256": "1e50334e22b780fa99b52b38d45abaef1f08ea6cf4ee6f613193f99e29df492f",
+    "parameter_audit_sha256": "98b5778e826d411f37606dd724093a1ff292040d8c1d350db3781508735502e2",
+    "preregistration_sha256": "eb05905a683842693dd5a0f7dff717cdae9c8bc4d9d6c51a9e5e7b21eba64fc1"
+  },
+  "stage_reachability": {
+    "real_isaac_gui_launched": true,
+    "validate_preflight_pass": true,
+    "attempt2_live_binding_written": false,
+    "attempt2_zero_step_bridge_completed": false,
+    "attempt2_raw_binding_completed": false,
+    "q5_evaluation_count": 0,
+    "q5_evaluation_count_semantics": "Proved by program order: the absent live-binding write precedes raw prerequisites and every counted q5 evaluation.",
+    "moving_surface_binding_written": false,
+    "measurement_written": false,
+    "sweep_csv_written": false,
+    "viewer_capture_written": false,
+    "rrd_written": false,
+    "automated_summary_written": false,
+    "runtime_exception_written": false,
+    "scientific_verdict": null,
+    "zero_step_bridge_verdict": null,
+    "controlled_physics_steps": null
+  },
+  "scope": {
+    "new_attempt2_scientific_variables": [],
+    "new_attempt2_physical_variables": [],
+    "target_ik_path_changed": false,
+    "asset_or_decomposition_changed": false,
+    "tolerance_changed": false,
+    "material_mass_actuator_physics_configuration_changed": false,
+    "settle_executed": false,
+    "ten_trial_run": false,
+    "g0b_run": false,
+    "rl_or_ppo_run": false,
+    "ladder_promoted": false,
+    "g0a_pass": false,
+    "automatic_retry_performed": false,
+    "commit_or_push_performed": false
+  },
+  "decision_boundary": {
+    "current_pose_closure_geometry_supported": null,
+    "current_pose_closure_geometry_rejected": null,
+    "target_ik_repair_justified_by_geometry": null,
+    "reason": "The requested moving-jaw closure measurement never ran.",
+    "same_attempt_retry_allowed": false,
+    "next_case_requires_separate_user_approval": true,
+    "recommended_next_case": "D352 [d351_validate_phase_localization_watchdog]"
+  },
+  "pass": false
+}

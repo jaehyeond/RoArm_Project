@@ -19951,3 +19951,67 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d350/attempt2_observability_repair/d350_manual_visual_inspection.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d350/attempt2_observability_repair/d350_completion_summary.json`
 - `START_HERE.md`
+
+## D351 - GUI preflight/app-ready 또는 signal 뒤 exit 0을 zero-step 기하 실행 증거로 취급하지 않는다 (2026-07-15)
+
+Decision:
+
+- D351의 과학 질문은 현재 자세에서 moving jaw가 OPEN→CLOSED로 움직일 때 실제
+  안쪽 면이 원통 barrel을 먼저 만나는지였다. attempt1은 corrected live
+  `64+64=128/128` binding 뒤 timeline `PLAY`를 관찰해 첫 q5 sample 전에 STOP했고,
+  attempt2는 그 timeline 경계를 reactive하게 보강했으나 live-binding artifact 전에
+  `3693.302s` 장기 실행되어 사용자 승인 `SIGTERM`으로 종료했다.
+- 최종 operational 판정은
+  `D351_ATTEMPT2_PRE_SCIENCE_RUNTIME_LONG_RUN_STOP`이다. moving-jaw closure geometry,
+  current-pose grasp feasibility, target/IK repair necessity는 모두 `null`이다.
+- **지속 규칙:** `headless=false` GUI launch, preflight PASS, app-ready, CPU/GPU 사용,
+  열린 Viewer 창만으로 harness가 live binding, zero-step bridge, q5 evaluation 또는
+  D351 collider view에 도달했다고 주장하지 않는다. 단계별 artifact/marker가 있어야 한다.
+- **지속 규칙:** 종료 signal을 Isaac이 graceful close로 처리하면 launcher/shell이
+  exit `0`일 수 있다. scientific/observability PASS는 exit code가 아니라 등록된 output
+  inventory, hash chain, completion contract로만 판정한다.
+- 같은 attempt를 조용히 재실행하지 않는다. 새 실행은 별도 승인된 forward-only case에서
+  `_make_runtime_env`, reset, corrected audit, live part progress, bridge 전후의 marker와
+  bounded wall-clock watchdog를 먼저 사전등록해야 한다. 이 instrumentation은 과학
+  surface/gate/target을 바꾸는 데 사용하지 않는다.
+
+Evidence:
+
+- attempt2 prepare parameter payload는 attempt1과 exact 같은 SHA-256
+  `98b5778e826d411f37606dd724093a1ff292040d8c1d350db3781508735502e2`였고,
+  preregistration SHA-256은
+  `eb05905a683842693dd5a0f7dff717cdae9c8bc4d9d6c51a9e5e7b21eba64fc1`였다.
+- fresh validate preflight는 `20/20 PASS`, real GUI/RTX 4090/`DISPLAY=:1`이었다.
+  preflight SHA-256은
+  `035113da2ae94ec7d458d8f5e9a675bdac79f443fb3827f8555dfd4c37166334`다.
+- Kit은 app-ready `13.360s`, startup-complete `15.953s`, 초기 활동 `16.393s`를
+  기록한 뒤 shutdown `3693.302s`까지 새 phase log가 없었다. 종료 직전에도
+  attempt2 폴더에는 parameter/prereg/preflight 3개만 있었고 live-binding,
+  bridge control, measurement, Viewer capture, RRD, runtime exception은 없었다.
+- q5 evaluation은 원 program order상 live-binding write와 raw prerequisite 뒤에만
+  호출되므로 `0`이다. five-snapshot bridge가 완료되지 않았으므로 controlled physics
+  steps는 `null`이며 사후 `0`으로 바꾸지 않는다.
+- 외부 종료 감사 SHA-256은
+  `af17995b40d5818055388f97e38cbb50f0895f3a2aa4d2cb7f5cf1df3b6166fe`,
+  Kit log SHA-256은
+  `b4eb319c2b19638f6e263e6b654fb517f494a847e073b573c24d4563e7f72e20`이다.
+
+Implication:
+
+- D351 attempt1/attempt2는 immutable runtime STOP 증거다. `g0a_pass=false`이며
+  target/IK repair, settle, ten-trial, G0b, RL/PPO, ladder로 승격하지 않는다.
+- 가장 좁은 다음 후보는 별도 승인 D352
+  `[d351_validate_phase_localization_watchdog]`다. 승인 전에는 코드, output path,
+  rerun 또는 target/IK 변경을 만들지 않는다. D352는 localization-only이며 q5 과학
+  측정 재개도 그 결과 뒤 별도 명시 승인을 받는다.
+
+Sources:
+
+- `claudedocs/session_20260715_grasp_g0a_d351_zero_step_closure_geometry.md`
+- `claudedocs/session_20260715_grasp_g0a_d351_timeline_pause_repair.md`
+- `sim_scripts/cyl34_top_view_d351_zero_step_closure_geometry.py`
+- `sim_scripts/cyl34_top_view_d351_attempt2_timeline_pause_repair.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d351/d351_runtime_exception.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d351/attempt2_timeline_pause_repair/d351_validate_preflight.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d351/attempt2_timeline_pause_repair/d351_external_termination_audit.json`
+- `START_HERE.md`

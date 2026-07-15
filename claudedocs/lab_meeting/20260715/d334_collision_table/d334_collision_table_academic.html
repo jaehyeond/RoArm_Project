@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1920, initial-scale=1">
+  <title>D334 충돌 형상 비교 — 논문형 표</title>
+  <style>
+    :root {
+      --ink: #24364d;
+      --muted: #68788b;
+      --rule: #bdc7d3;
+      --rule-strong: #2e496c;
+      --cyan: #13c3db;
+      --blue: #245aa4;
+      --blue-soft: #eef4fb;
+      --amber: #a94d16;
+      --amber-soft: #fff4ec;
+      --red: #b43b32;
+      --green: #35764a;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      width: 1920px;
+      height: 1080px;
+      margin: 0;
+      overflow: hidden;
+      background: #ffffff;
+    }
+
+    body {
+      font-family: "Noto Sans CJK KR", "Noto Sans KR", sans-serif;
+      color: var(--ink);
+      text-rendering: geometricPrecision;
+    }
+
+    .slide {
+      position: relative;
+      width: 1920px;
+      height: 1080px;
+      padding: 58px 100px 42px;
+      background: #ffffff;
+    }
+
+    .top-accent {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 9px;
+      background: var(--cyan);
+    }
+
+    .kicker {
+      margin: 0 0 8px;
+      color: #7f8995;
+      font-size: 21px;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+    }
+
+    h1 {
+      margin: 0;
+      color: #344961;
+      font-size: 47px;
+      font-weight: 800;
+      line-height: 1.18;
+      letter-spacing: -0.035em;
+    }
+
+    .scope {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 23px;
+      font-weight: 500;
+      letter-spacing: -0.012em;
+    }
+
+    .scope strong {
+      color: #3d5876;
+      font-weight: 750;
+    }
+
+    .concepts {
+      display: grid;
+      grid-template-columns: 1fr 1fr 0.82fr;
+      margin-top: 22px;
+      border-top: 1px solid #c8d1dc;
+      border-bottom: 1px solid #c8d1dc;
+      background: #f8fafc;
+    }
+
+    .concept {
+      min-height: 82px;
+      padding: 12px 20px 11px;
+      border-right: 1px solid #d3dae3;
+    }
+
+    .concept:last-child {
+      border-right: none;
+    }
+
+    .concept-title {
+      color: #294766;
+      font-size: 21px;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .concept-desc {
+      margin-top: 4px;
+      color: #617287;
+      font-size: 17px;
+      font-weight: 500;
+      line-height: 1.35;
+    }
+
+    .sign-legend {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      margin-top: 7px;
+      font-size: 18px;
+      font-weight: 720;
+    }
+
+    .sign-legend .plus { color: var(--green); }
+    .sign-legend .zero { color: #66788d; }
+    .sign-legend .minus { color: var(--red); }
+
+    .timeline {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 26px;
+      height: 46px;
+      margin-top: 12px;
+      color: #36506d;
+      background: var(--blue-soft);
+      border-left: 4px solid #4f7eb9;
+      font-size: 19px;
+      font-weight: 720;
+    }
+
+    .timeline .arrow {
+      color: #245aa4;
+      font-weight: 850;
+    }
+
+    .table-wrap {
+      margin-top: 14px;
+    }
+
+    .table-caption {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin: 0 2px 10px;
+    }
+
+    .table-caption .label {
+      color: var(--ink);
+      font-family: "Noto Serif CJK KR", serif;
+      font-size: 25px;
+      font-weight: 700;
+    }
+
+    .table-caption .metric {
+      color: #4f6074;
+      font-size: 21px;
+      font-weight: 650;
+    }
+
+    table {
+      width: 100%;
+      table-layout: fixed;
+      border-collapse: collapse;
+      border-top: 3px solid var(--rule-strong);
+      border-bottom: 3px solid var(--rule-strong);
+      font-size: 25px;
+    }
+
+    col.state { width: 20%; }
+    col.part { width: 22%; }
+    col.raw { width: 18%; }
+    col.cooked { width: 19%; }
+    col.reading { width: 21%; }
+
+    thead tr {
+      border-bottom: 2px solid var(--rule-strong);
+    }
+
+    th {
+      height: 64px;
+      padding: 10px 18px;
+      color: #334a66;
+      font-size: 23px;
+      font-weight: 760;
+      line-height: 1.25;
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    th.numeric,
+    td.numeric {
+      text-align: center;
+    }
+
+    th .en {
+      display: block;
+      margin-top: 2px;
+      color: #718195;
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--rule);
+    }
+
+    tbody tr.group-end {
+      border-bottom: 2px solid #8998aa;
+    }
+
+    tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    td {
+      height: 84px;
+      padding: 14px 18px;
+      vertical-align: middle;
+      line-height: 1.32;
+    }
+
+    td.state-cell {
+      color: #2c4665;
+      font-weight: 760;
+    }
+
+    .state-code {
+      display: inline-block;
+      min-width: 37px;
+      margin-right: 8px;
+      color: var(--blue);
+      font-weight: 850;
+    }
+
+    .subtext {
+      display: block;
+      margin-top: 4px;
+      color: #738194;
+      font-size: 19px;
+      font-weight: 500;
+    }
+
+    .part-name {
+      color: #284e81;
+      font-family: "Noto Sans Mono CJK KR", monospace;
+      font-size: 25px;
+      font-weight: 750;
+    }
+
+    .number {
+      font-family: "Noto Sans Mono CJK KR", monospace;
+      font-size: 31px;
+      font-weight: 750;
+      letter-spacing: -0.02em;
+    }
+
+    .positive { color: var(--green); }
+    .negative { color: var(--red); }
+
+    .overlap-state {
+      color: var(--red);
+      font-size: 25px;
+      font-weight: 760;
+    }
+
+    .key-mismatch td {
+      background: linear-gradient(90deg, rgba(255, 244, 236, 0.32), rgba(255, 244, 236, 0.75));
+    }
+
+    .key-mismatch td.state-cell,
+    .key-mismatch td.part-cell {
+      background: rgba(255, 244, 236, 0.30);
+    }
+
+    .interpretation {
+      color: #334b66;
+      font-weight: 650;
+    }
+
+    .interpretation.emphasis {
+      color: var(--amber);
+      font-weight: 780;
+    }
+
+    .findings {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-top: 18px;
+      padding: 14px 22px 13px;
+      border-top: 2px solid #9aa8b8;
+      border-bottom: 1px solid #cbd3dc;
+      background: #f8fafc;
+    }
+
+    .finding {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      align-items: start;
+      gap: 12px;
+    }
+
+    .finding .tag {
+      padding-top: 2px;
+      color: var(--blue);
+      font-family: "Noto Sans Mono CJK KR", monospace;
+      font-size: 22px;
+      font-weight: 850;
+    }
+
+    .finding .text {
+      color: #3e5269;
+      font-size: 21px;
+      font-weight: 550;
+      line-height: 1.45;
+    }
+
+    .finding strong {
+      color: #243d5b;
+      font-weight: 800;
+    }
+
+    .notes {
+      margin-top: 12px;
+      color: #596a7e;
+      font-size: 16.5px;
+      line-height: 1.50;
+    }
+
+    .notes p {
+      margin: 2px 0;
+    }
+
+    .note-mark {
+      display: inline-block;
+      min-width: 48px;
+      margin-right: 3px;
+      color: #354d69;
+      font-weight: 800;
+    }
+
+    .footer {
+      position: absolute;
+      right: 100px;
+      bottom: 20px;
+      color: #9aa4af;
+      font-size: 14px;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <main class="slide">
+    <div class="top-accent"></div>
+
+    <header>
+      <p class="kicker">RoArm-M3 원통 파지 · 충돌 형상 감사</p>
+      <h1>세밀한 충돌 표면 vs 한 덩어리 볼록 껍질</h1>
+      <p class="scope"><strong>D334</strong> · 그리퍼 닫힘(<strong>q5=0</strong>) · 각 부품을 64조각으로 나누기 전</p>
+    </header>
+
+    <section class="concepts" aria-label="초보자용 용어와 부호 설명">
+      <div class="concept">
+        <div class="concept-title">세밀한 충돌 표면</div>
+        <div class="concept-desc">로봇 파일에 저장된 삼각형을 따라 만든 충돌 판정용 표면<br>(source collision mesh)</div>
+      </div>
+      <div class="concept">
+        <div class="concept-title">한 덩어리 볼록 껍질</div>
+        <div class="concept-desc">물리 엔진 계산을 위해 움푹한 곳을 메우고 전체를 볼록하게 감싼 근사 모양<br>(single convex proxy)</div>
+      </div>
+      <div class="concept">
+        <div class="concept-title">숫자는 이렇게 읽음</div>
+        <div class="sign-legend"><span class="plus">+ 틈 있음</span><span class="zero">0 닿음</span><span class="minus">− 겹침</span></div>
+      </div>
+    </section>
+
+    <div class="timeline" aria-label="측정 시점 흐름">
+      <span>① 로봇·원통의 위치만 맞춤</span>
+      <span class="arrow">→ PhysX가 충돌을 5 ms 계산 →</span>
+      <span>② 충돌 반응이 자세에 반영됨</span>
+    </div>
+
+    <section class="table-wrap" aria-label="D334 충돌 형상 비교 표">
+      <div class="table-caption">
+        <span class="label">Table 1. 원통과 로봇 충돌 모양 사이의 틈 또는 겹침</span>
+        <span class="metric">단위: cm</span>
+      </div>
+
+      <table>
+        <colgroup>
+          <col class="state">
+          <col class="part">
+          <col class="raw">
+          <col class="cooked">
+          <col class="reading">
+        </colgroup>
+        <thead>
+          <tr>
+            <th>언제 측정했나?</th>
+            <th>구성요소</th>
+            <th class="numeric">세밀한 충돌 표면<span class="en">로봇 표면을 따라 만든 모양</span></th>
+            <th class="numeric">한 덩어리 볼록 껍질<span class="en">PhysX용 근사 모양</span></th>
+            <th>무슨 뜻인가?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="key-mismatch">
+            <td class="state-cell" rowspan="2"><span class="state-code">①</span>위치만 맞춘 직후<span class="subtext">충돌 반응은 아직 계산하지 않음</span></td>
+            <td class="part-cell"><span class="part-name">link5</span><span class="subtext">고정 손가락 쪽</span></td>
+            <td class="numeric"><span class="number positive">+0.43</span><span class="subtext">틈 있음</span></td>
+            <td class="numeric"><span class="number negative">−0.62</span><span class="subtext">겹침</span></td>
+            <td class="interpretation emphasis">껍질이 부풀어 충돌로 오판</td>
+          </tr>
+          <tr class="group-end">
+            <td class="part-cell"><span class="part-name">gripper_link</span><span class="subtext">움직이는 손가락</span></td>
+            <td class="numeric"><span class="overlap-state">겹침 확인*</span></td>
+            <td class="numeric"><span class="number negative">−1.54</span><span class="subtext">겹침 · 참고값</span></td>
+            <td class="interpretation">세밀한 표면도 원통과 겹침</td>
+          </tr>
+          <tr>
+            <td class="state-cell" rowspan="2"><span class="state-code">②</span>충돌 반응 1회 후<span class="subtext">시뮬레이터가 5 ms 계산한 뒤</span></td>
+            <td class="part-cell"><span class="part-name">link5</span><span class="subtext">고정 손가락 쪽</span></td>
+            <td class="numeric"><span class="number positive">+0.74</span><span class="subtext">틈 있음</span></td>
+            <td class="numeric"><span class="number positive">+0.30</span><span class="subtext">틈 있음</span></td>
+            <td class="interpretation">둘 다 원통과 떨어져 있음</td>
+          </tr>
+          <tr>
+            <td class="part-cell"><span class="part-name">gripper_link</span><span class="subtext">움직이는 손가락</span></td>
+            <td class="numeric"><span class="overlap-state">겹침 확인*</span></td>
+            <td class="numeric"><span class="number negative">−0.53</span><span class="subtext">겹침 · 참고값</span></td>
+            <td class="interpretation">세밀한 표면도 원통과 겹침</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="notes" aria-label="표 주석">
+      <p><span class="note-mark">핵심</span><strong>link5</strong>는 세밀한 표면 기준 0.43 cm 틈이지만, 한 덩어리 껍질은 0.62 cm 겹침으로 오판했다. 닫힌 <strong>gripper_link</strong>의 겹침은 D337의 OPEN 조건에서 해소됐다.</p>
+      <p><span class="note-mark">*</span>세밀한 표면은 삼각형 충돌 검사로 겹침만 확인했으므로, 신뢰할 수 없는 깊이 숫자는 쓰지 않았다.</p>
+    </section>
+
+    <div class="footer">Source: D334 signed-distance matrix · 2026-07-12</div>
+  </main>
+</body>
+</html>

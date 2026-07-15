@@ -50,3 +50,12 @@ as the current Active Case.
   기준으로 채택할 수는 있지만, 버전 의존적인 "자동" 상태로 두지 말고 한 번
   판독한 수치를 명시 계약으로 고정해야 한다. 충돌 형상 오차는 재질/마찰로
   보상하지 않는다. D345에는 도입하지 않으며 별도 사용자 승인 전 착수 금지.
+
+- 2026-07-15 (D351 runtime STOP): `d351_validate_phase_localization_watchdog`
+  — D351 attempt2는 preflight `20/20 PASS`와 실제 GUI launch 뒤 live-binding
+  artifact 전에 `3693.302s` 장기 실행됐다. 다음 후보는 과학 변수 없이
+  `_make_runtime_env`/reset/corrected audit/live part `0..127`/zero-step bridge에
+  forward-only phase marker와 bounded wall-clock watchdog를 추가해 장기 실행 위치를
+  먼저 국소화하는 별도 D352 case다. 동일 attempt 재실행, target/IK/gate 변경,
+  settle/RL 승격은 금지하며 사용자 별도 승인 전 착수하지 않는다. D352 자체는
+  localization-only이고 q5 science 재개는 그 결과 뒤 별도 명시 승인 대상이다.
