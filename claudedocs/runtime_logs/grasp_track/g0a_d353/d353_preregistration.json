@@ -1,0 +1,463 @@
+{
+  "artifact": "D353_PREREGISTRATION_V1",
+  "ast_scope": {
+    "artifact": "D353_AST_SCOPE_CONTRACT_V1",
+    "checks": {
+      "all_commit_method_calls_accounted_exact_one": true,
+      "all_pause_method_calls_accounted_exact_one": true,
+      "explicit_timeline_commit_source_call_site_exact_one": true,
+      "forbidden_app_update_aliases_absent": true,
+      "forbidden_control_physics_state_methods_absent": true,
+      "forbidden_exact_calls_absent": true,
+      "forbidden_fragment_calls_absent": true,
+      "hardware_control_absent": true,
+      "inherited_pause_helper_source_call_site_exact_two": true,
+      "initial_timeline_pause_source_call_site_exact_one": true,
+      "q5_grid_generation_absent": true,
+      "viewer_rerun_import_absent": true
+    },
+    "found_forbidden_calls": [],
+    "found_forbidden_fragment_calls": [],
+    "found_forbidden_method_calls": [],
+    "found_forbidden_update_alias_calls": [],
+    "inherited_pause_helper_call_site_count": 2,
+    "new_intervention_call_site": "timeline.commit",
+    "pass": true,
+    "timeline_commit_call_site_count": 1
+  },
+  "automatic_retry": false,
+  "case": "g0a_d353",
+  "case_name": "timeline_pause_pending_state_commit_bridge",
+  "controlled_steps_authority": {
+    "attestation_only_after_summary_fsync_and_exact_reread": true,
+    "attestation_path": "claudedocs/runtime_logs/grasp_track/g0a_d353/d353_timeline_commit_bridge_attestation.json",
+    "summary_must_keep_current_value_null": true,
+    "summary_path": "claudedocs/runtime_logs/grasp_track/g0a_d353/d353_timeline_commit_bridge_summary.json"
+  },
+  "git_head": "1f235b8a310afeb9f4f6734d69aba2a5430b7602",
+  "git_status_before_prepare_outputs": {
+    "START_HERE.md": " M",
+    "claudedocs/session_20260715_grasp_g0a_d353_timeline_pause_pending_state_commit_bridge.md": "??",
+    "sim_scripts/cyl34_top_view_d353_timeline_pause_pending_state_commit_bridge.py": "??"
+  },
+  "gpu_hardware_path": "claudedocs/runtime_logs/grasp_track/g0a_d353/d353_gpu_hardware_contract.json",
+  "gpu_hardware_sha256": "3bd3e947284ddd31cd39843b280cbd27ef74ddd214fe080d972b57be2237c675",
+  "harness_sha256": "ab37141d721f5ca9571e9008a065344b3fb818ac9164fd56cda3c5617952cda9",
+  "input_hashes": {
+    "authored_robot_usd": "a4be58e87b1f9790f2a2ed600f0620c79d3cfb95c608b3c598308d52f5e46fff",
+    "d332": "3ab551232b9c3e2a3886578e5f4baa4589d578567758a351203c2260a1428ad4",
+    "d333": "e582f274fca44093b0e1367555459f22428c809792b6cfc3a9a336369dac68b7",
+    "d334": "19d2f333c2aeec89282d230324b965e6f5af7e6d05648a858c5637fd24adf735",
+    "d334_summary": "2ff44744df99c7a99d168cdd62a4f9186a5bbad6d673205282abb62b71097b26",
+    "d339": "fd307cb573699f8a08df1ab580789188774158877b8abf0a05cc4c60ef6562d6",
+    "d348_evidence": "83b8c7b16181d0f5c545cfbeaa992c8ebfd69e2310dd33bce2a64234a1deaab6",
+    "d349": "33a9743337fa269b71e4da3ccccfabc1d746ee29e1582a3d0f8c4764f42d68b9",
+    "d349_measurement": "5de6d14e37d6b74b202d1bb668120a6bb57221eac24ea5c751457ce9823b6300",
+    "d350": "99a9b558754c9c4ebf83b265e4bcc70744e1981786066d1343c96cd046d4c538",
+    "d350_binding": "1ec1c309461357eeae89204fa55a498b64d2d216708ab6e6c7dfdd3d0b878c12",
+    "d350_completion": "7866886a49ecfca1c16bd1283c89e920613a4c25581dadf5ebaa195e1303cedb",
+    "d350_measurement": "4fe91e4cd37f5b0f064c7e9c91480881973ca51e651132af2c8feb57750e8446",
+    "rerun_contract": "90559c931bc753be97def463841d41426a2f1bd8e5ddd15a2a2ab08fb54a2e60",
+    "urdf": "64dc8d082cbce9a13a0697a11a0eaeaebbc54bbcd97e7aafaa40da483969dae2",
+    "variant_physics_usd": "043a5d35aa425c2589c77a34fcf415401ce9f9e7155e84ed75f6737df79fb503",
+    "variant_robot_usd": "a4be58e87b1f9790f2a2ed600f0620c79d3cfb95c608b3c598308d52f5e46fff",
+    "viz_debug": "622b7197afe8cdeb1bb5411f2a961aa9a9a5c58aaf248417fc145639374577c5"
+  },
+  "origin_master": "1f235b8a310afeb9f4f6734d69aba2a5430b7602",
+  "output_root": "claudedocs/runtime_logs/grasp_track/g0a_d353",
+  "parameter_path": "claudedocs/runtime_logs/grasp_track/g0a_d353/d353_parameter_freeze_audit.json",
+  "parameter_sha256": "e7dc9e5a0c16e89508ca289299c6c04c195721bc3574493fac784fecce3f2be7",
+  "pass": true,
+  "post_d353_q5_boundary": "requires result briefing and separate explicit approval",
+  "prechecks": {
+    "ast_scope": true,
+    "d351_d352_immutable": true,
+    "d351_inputs_exact": true,
+    "git_scope_only_d353": true,
+    "gpu_hardware": true,
+    "head_exact": true,
+    "origin_master_exact": true,
+    "parameter_freeze": true,
+    "session_declares_q5_forbidden": true,
+    "session_declares_single_variable": true,
+    "session_doc_exists": true,
+    "start_here_active_case_exact": true,
+    "start_here_git_truth_repaired": true,
+    "timeline_api": true,
+    "trace_line_map": true,
+    "user_sidecar_read_only_exact": true
+  },
+  "prepare_process_identity": {
+    "nonce": "5463503bcf7d5f6a16528e7d1ce89997",
+    "pid": 3165463
+  },
+  "prior_immutability": {
+    "d351": {
+      "attempt1_root_files": [
+        "d351_live_topology_runtime_binding.json",
+        "d351_parameter_freeze_audit.json",
+        "d351_preregistration.json",
+        "d351_runtime_exception.json",
+        "d351_validate_preflight.json"
+      ],
+      "attempt2_forbidden_outputs": [
+        "claudedocs/runtime_logs/grasp_track/g0a_d351/attempt2_timeline_pause_repair/d351_live_topology_runtime_binding.json",
+        "claudedocs/runtime_logs/grasp_track/g0a_d351/attempt2_timeline_pause_repair/d351_timeline_pause_repair_contract.json",
+        "claudedocs/runtime_logs/grasp_track/g0a_d351/attempt2_timeline_pause_repair/d351_moving_jaw_surface_binding.json",
+        "claudedocs/runtime_logs/grasp_track/g0a_d351/attempt2_timeline_pause_repair/d351_zero_step_closure_geometry_measurement.json",
+        "claudedocs/runtime_logs/grasp_track/g0a_d351/attempt2_timeline_pause_repair/d351_q5_closure_sweep.csv",
+        "claudedocs/runtime_logs/grasp_track/g0a_d351/attempt2_timeline_pause_repair/d351_viewer_capture_contract.json",
+        "claudedocs/runtime_logs/grasp_track/g0a_d351/attempt2_timeline_pause_repair/d351_zero_step_closure_geometry.rrd",
+        "claudedocs/runtime_logs/grasp_track/g0a_d351/attempt2_timeline_pause_repair/d351_zero_step_closure_geometry.rbl"
+      ],
+      "attempt2_root_files": [
+        "d351_external_termination_audit.json",
+        "d351_parameter_freeze_audit.json",
+        "d351_preregistration.json",
+        "d351_validate_preflight.json"
+      ],
+      "checks": {
+        "all_hashes_exact": true,
+        "attempt1_root_inventory_exact": true,
+        "attempt2_root_inventory_exact": true,
+        "attempt2_science_bridge_viewer_outputs_absent": true
+      },
+      "pass": true,
+      "rows": {
+        "claudedocs/runtime_logs/grasp_track/g0a_d351/attempt2_timeline_pause_repair/d351_external_termination_audit.json": {
+          "exists": true,
+          "expected_sha256": "af17995b40d5818055388f97e38cbb50f0895f3a2aa4d2cb7f5cf1df3b6166fe",
+          "sha256": "af17995b40d5818055388f97e38cbb50f0895f3a2aa4d2cb7f5cf1df3b6166fe"
+        },
+        "claudedocs/runtime_logs/grasp_track/g0a_d351/attempt2_timeline_pause_repair/d351_parameter_freeze_audit.json": {
+          "exists": true,
+          "expected_sha256": "98b5778e826d411f37606dd724093a1ff292040d8c1d350db3781508735502e2",
+          "sha256": "98b5778e826d411f37606dd724093a1ff292040d8c1d350db3781508735502e2"
+        },
+        "claudedocs/runtime_logs/grasp_track/g0a_d351/attempt2_timeline_pause_repair/d351_preregistration.json": {
+          "exists": true,
+          "expected_sha256": "eb05905a683842693dd5a0f7dff717cdae9c8bc4d9d6c51a9e5e7b21eba64fc1",
+          "sha256": "eb05905a683842693dd5a0f7dff717cdae9c8bc4d9d6c51a9e5e7b21eba64fc1"
+        },
+        "claudedocs/runtime_logs/grasp_track/g0a_d351/attempt2_timeline_pause_repair/d351_validate_preflight.json": {
+          "exists": true,
+          "expected_sha256": "035113da2ae94ec7d458d8f5e9a675bdac79f443fb3827f8555dfd4c37166334",
+          "sha256": "035113da2ae94ec7d458d8f5e9a675bdac79f443fb3827f8555dfd4c37166334"
+        },
+        "claudedocs/runtime_logs/grasp_track/g0a_d351/d351_live_topology_runtime_binding.json": {
+          "exists": true,
+          "expected_sha256": "9bc8d1c95f3c235816eb1c3c11516f3f27416e45b302cf8b6f9d5ee01ad6ec05",
+          "sha256": "9bc8d1c95f3c235816eb1c3c11516f3f27416e45b302cf8b6f9d5ee01ad6ec05"
+        },
+        "claudedocs/runtime_logs/grasp_track/g0a_d351/d351_parameter_freeze_audit.json": {
+          "exists": true,
+          "expected_sha256": "98b5778e826d411f37606dd724093a1ff292040d8c1d350db3781508735502e2",
+          "sha256": "98b5778e826d411f37606dd724093a1ff292040d8c1d350db3781508735502e2"
+        },
+        "claudedocs/runtime_logs/grasp_track/g0a_d351/d351_preregistration.json": {
+          "exists": true,
+          "expected_sha256": "d0639f51485b96395de88b0942ea4af13a768f31db89a400df7af97a25df1456",
+          "sha256": "d0639f51485b96395de88b0942ea4af13a768f31db89a400df7af97a25df1456"
+        },
+        "claudedocs/runtime_logs/grasp_track/g0a_d351/d351_runtime_exception.json": {
+          "exists": true,
+          "expected_sha256": "138097cee4a471b84202572639fd19c0cba6103d5a628d89a2af49bcbde71914",
+          "sha256": "138097cee4a471b84202572639fd19c0cba6103d5a628d89a2af49bcbde71914"
+        },
+        "claudedocs/runtime_logs/grasp_track/g0a_d351/d351_validate_preflight.json": {
+          "exists": true,
+          "expected_sha256": "3e3172ff595bdc48b4216ab0bbb30386a2fdf29f0786ab8d950881114d434660",
+          "sha256": "3e3172ff595bdc48b4216ab0bbb30386a2fdf29f0786ab8d950881114d434660"
+        },
+        "claudedocs/session_20260715_grasp_g0a_d351_timeline_pause_repair.md": {
+          "exists": true,
+          "expected_sha256": "436192b381b563e5b3c73d6997f12ea48a9600afca530547c4ec598253708bc1",
+          "sha256": "436192b381b563e5b3c73d6997f12ea48a9600afca530547c4ec598253708bc1"
+        },
+        "claudedocs/session_20260715_grasp_g0a_d351_zero_step_closure_geometry.md": {
+          "exists": true,
+          "expected_sha256": "20367375e05ce8cffb47f86ff0c1645a3544f5bf62516fe2e16a98919c356a06",
+          "sha256": "20367375e05ce8cffb47f86ff0c1645a3544f5bf62516fe2e16a98919c356a06"
+        },
+        "sim_scripts/cyl34_top_view_d351_attempt2_timeline_pause_repair.py": {
+          "exists": true,
+          "expected_sha256": "1e50334e22b780fa99b52b38d45abaef1f08ea6cf4ee6f613193f99e29df492f",
+          "sha256": "1e50334e22b780fa99b52b38d45abaef1f08ea6cf4ee6f613193f99e29df492f"
+        },
+        "sim_scripts/cyl34_top_view_d351_zero_step_closure_geometry.py": {
+          "exists": true,
+          "expected_sha256": "3c4501885af7590f5883b36666c984ce88728a24d40451ea0a600660a386107d",
+          "sha256": "3c4501885af7590f5883b36666c984ce88728a24d40451ea0a600660a386107d"
+        }
+      }
+    },
+    "d352": {
+      "checks": {
+        "all_hashes_exact": true,
+        "root_inventory_exact_15": true
+      },
+      "expected_root_inventory": [
+        "d352_faulthandler.txt",
+        "d352_gpu_cpu_telemetry.jsonl",
+        "d352_gpu_hardware_contract.json",
+        "d352_live_topology_runtime_binding.json",
+        "d352_localization_summary.json",
+        "d352_parameter_freeze_audit.json",
+        "d352_phase_markers.jsonl",
+        "d352_postrun_classification_audit.json",
+        "d352_preregistration.json",
+        "d352_raw_source_contract.json",
+        "d352_supervisor_audit.json",
+        "d352_supervisor_preflight.json",
+        "d352_validate_preflight.json",
+        "d352_worker_stdout_stderr.log",
+        "d352_zero_step_bridge_contract.json"
+      ],
+      "pass": true,
+      "root_inventory": [
+        "d352_faulthandler.txt",
+        "d352_gpu_cpu_telemetry.jsonl",
+        "d352_gpu_hardware_contract.json",
+        "d352_live_topology_runtime_binding.json",
+        "d352_localization_summary.json",
+        "d352_parameter_freeze_audit.json",
+        "d352_phase_markers.jsonl",
+        "d352_postrun_classification_audit.json",
+        "d352_preregistration.json",
+        "d352_raw_source_contract.json",
+        "d352_supervisor_audit.json",
+        "d352_supervisor_preflight.json",
+        "d352_validate_preflight.json",
+        "d352_worker_stdout_stderr.log",
+        "d352_zero_step_bridge_contract.json"
+      ],
+      "rows": {
+        "claudedocs/runtime_logs/grasp_track/g0a_d352/d352_faulthandler.txt": {
+          "exists": true,
+          "expected_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "claudedocs/runtime_logs/grasp_track/g0a_d352/d352_gpu_cpu_telemetry.jsonl": {
+          "exists": true,
+          "expected_sha256": "04dc29f902afc1ef3f142d424d0a98918defc735aa70ce5cfb698824b5684a2c",
+          "sha256": "04dc29f902afc1ef3f142d424d0a98918defc735aa70ce5cfb698824b5684a2c"
+        },
+        "claudedocs/runtime_logs/grasp_track/g0a_d352/d352_gpu_hardware_contract.json": {
+          "exists": true,
+          "expected_sha256": "77770159639b7ab2b0b2a9aae3e109a95564e51d93e2cd491c9259a706b15696",
+          "sha256": "77770159639b7ab2b0b2a9aae3e109a95564e51d93e2cd491c9259a706b15696"
+        },
+        "claudedocs/runtime_logs/grasp_track/g0a_d352/d352_live_topology_runtime_binding.json": {
+          "exists": true,
+          "expected_sha256": "8e607e1248c0670a7bed7ab65ccffd0b94ecd506259cd445efe0f7d09e366afb",
+          "sha256": "8e607e1248c0670a7bed7ab65ccffd0b94ecd506259cd445efe0f7d09e366afb"
+        },
+        "claudedocs/runtime_logs/grasp_track/g0a_d352/d352_localization_summary.json": {
+          "exists": true,
+          "expected_sha256": "2548cadc18b098680b8c5500237e4e363258df99ef96bd29d8327f0955c47d60",
+          "sha256": "2548cadc18b098680b8c5500237e4e363258df99ef96bd29d8327f0955c47d60"
+        },
+        "claudedocs/runtime_logs/grasp_track/g0a_d352/d352_parameter_freeze_audit.json": {
+          "exists": true,
+          "expected_sha256": "3c41109a92398fa9b5f19cb22cb07095a52863686f6f628b57a6bca34e3bb39e",
+          "sha256": "3c41109a92398fa9b5f19cb22cb07095a52863686f6f628b57a6bca34e3bb39e"
+        },
+        "claudedocs/runtime_logs/grasp_track/g0a_d352/d352_phase_markers.jsonl": {
+          "exists": true,
+          "expected_sha256": "09371d795a3e0214e3ddf335e7ff4a9bf78955c5b51ad85048e7b1700de389ce",
+          "sha256": "09371d795a3e0214e3ddf335e7ff4a9bf78955c5b51ad85048e7b1700de389ce"
+        },
+        "claudedocs/runtime_logs/grasp_track/g0a_d352/d352_postrun_classification_audit.json": {
+          "exists": true,
+          "expected_sha256": "92c186a7a4175101e7a3890f6bedf4cb6125bc5a78f13f38b79004a9b6035594",
+          "sha256": "92c186a7a4175101e7a3890f6bedf4cb6125bc5a78f13f38b79004a9b6035594"
+        },
+        "claudedocs/runtime_logs/grasp_track/g0a_d352/d352_preregistration.json": {
+          "exists": true,
+          "expected_sha256": "37843ebbf2708cd664bfa2b0b418ccad76e681da401c90a0d098e18a54430e8f",
+          "sha256": "37843ebbf2708cd664bfa2b0b418ccad76e681da401c90a0d098e18a54430e8f"
+        },
+        "claudedocs/runtime_logs/grasp_track/g0a_d352/d352_raw_source_contract.json": {
+          "exists": true,
+          "expected_sha256": "325004fdc98f01bc01e5534d96ce1e2abe410b47d21029f5961446f2b53f243b",
+          "sha256": "325004fdc98f01bc01e5534d96ce1e2abe410b47d21029f5961446f2b53f243b"
+        },
+        "claudedocs/runtime_logs/grasp_track/g0a_d352/d352_supervisor_audit.json": {
+          "exists": true,
+          "expected_sha256": "b1bacc589d63d5dff60746c4030635ad100f9a86b701598c1dece159004f70be",
+          "sha256": "b1bacc589d63d5dff60746c4030635ad100f9a86b701598c1dece159004f70be"
+        },
+        "claudedocs/runtime_logs/grasp_track/g0a_d352/d352_supervisor_preflight.json": {
+          "exists": true,
+          "expected_sha256": "d49bca00f90ff8230506613a73b6b97988d5b7ac3d556a36e6cbf9a2a6942285",
+          "sha256": "d49bca00f90ff8230506613a73b6b97988d5b7ac3d556a36e6cbf9a2a6942285"
+        },
+        "claudedocs/runtime_logs/grasp_track/g0a_d352/d352_validate_preflight.json": {
+          "exists": true,
+          "expected_sha256": "98942f35dd51ac67539e2bb866beb4b704985e2cf3fc20031603984edc5852bc",
+          "sha256": "98942f35dd51ac67539e2bb866beb4b704985e2cf3fc20031603984edc5852bc"
+        },
+        "claudedocs/runtime_logs/grasp_track/g0a_d352/d352_worker_stdout_stderr.log": {
+          "exists": true,
+          "expected_sha256": "16e3e0bdfc01dc8203d3a7a89173e9635d6da442ee708d59535ab2512293de77",
+          "sha256": "16e3e0bdfc01dc8203d3a7a89173e9635d6da442ee708d59535ab2512293de77"
+        },
+        "claudedocs/runtime_logs/grasp_track/g0a_d352/d352_zero_step_bridge_contract.json": {
+          "exists": true,
+          "expected_sha256": "26a05d8c76ceaf83a0ebf57324b50c7853d38ce2e6bd58c25e4484c13f9a0036",
+          "sha256": "26a05d8c76ceaf83a0ebf57324b50c7853d38ce2e6bd58c25e4484c13f9a0036"
+        },
+        "claudedocs/session_20260715_grasp_g0a_d352_d351_validate_phase_localization_watchdog.md": {
+          "exists": true,
+          "expected_sha256": "19e67399cf73c2379eb7fc8afba8a28c0bb95665bb4572bd10171a058a20fb29",
+          "sha256": "19e67399cf73c2379eb7fc8afba8a28c0bb95665bb4572bd10171a058a20fb29"
+        },
+        "sim_scripts/cyl34_top_view_d352_d351_validate_phase_localization_watchdog.py": {
+          "exists": true,
+          "expected_sha256": "3f770200d3ca729f106a74ba9e22390d4db5fdd4547e7091cf36ad46a59f65d0",
+          "sha256": "3f770200d3ca729f106a74ba9e22390d4db5fdd4547e7091cf36ad46a59f65d0"
+        }
+      }
+    },
+    "pass": true
+  },
+  "q5_science_authorized_inside_d353": false,
+  "run_nonce": "4126d64957e5851e893c7a30d4724951",
+  "single_effective_validate": true,
+  "state_hashes": {
+    "session_doc": "b08890805d8d771057326509ed60f9c77829e240a254e2761928ea42c32d8dce",
+    "start_here": "f31444347a824c7ee0d4bbf472241c50988a98155dcd84e21539cffd3ffff34b"
+  },
+  "timeline_api": {
+    "artifact": "D353_TIMELINE_API_CONTRACT_V1",
+    "checks": {
+      "all_hashes_exact": true,
+      "carb_pop_subscription_signature_pinned": true,
+      "frame_commit_immediate": true,
+      "frame_commit_main_thread_caution": true,
+      "get_timeline_returns_timeline": true,
+      "stub_commit_callbacks": true,
+      "stub_commit_silently_distinct": true,
+      "stub_tentative_time_getter_present": true,
+      "tests_pause_commit_discriminator": true,
+      "usage_deferred_next_frame": true
+    },
+    "extension": "omni.timeline-1.0.14+69cbf6ad.lx64.r.cp311",
+    "pass": true,
+    "rows": {
+      "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.timeline-1.0.14+69cbf6ad.lx64.r.cp311/config/extension.toml": {
+        "exists": true,
+        "expected_sha256": "3258f271440bb2f5240f5e222f25cd2e90ed4c2ecc86a4dd3239c9ad344e781c",
+        "sha256": "3258f271440bb2f5240f5e222f25cd2e90ed4c2ecc86a4dd3239c9ad344e781c"
+      },
+      "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.timeline-1.0.14+69cbf6ad.lx64.r.cp311/docs/FRAME_INTEGRITY.md": {
+        "exists": true,
+        "expected_sha256": "1db84fba636fa743bcf98a38561132323ad13fcb89dc91629a06812b123b2e37",
+        "sha256": "1db84fba636fa743bcf98a38561132323ad13fcb89dc91629a06812b123b2e37"
+      },
+      "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.timeline-1.0.14+69cbf6ad.lx64.r.cp311/docs/TIME_STEPPING.md": {
+        "exists": true,
+        "expected_sha256": "8741959b4d2d80cd0d5296a5d6ab20aa0bb659ef5b04b4aa6abb5ad3edd61059",
+        "sha256": "8741959b4d2d80cd0d5296a5d6ab20aa0bb659ef5b04b4aa6abb5ad3edd61059"
+      },
+      "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.timeline-1.0.14+69cbf6ad.lx64.r.cp311/docs/USAGE_PYTHON.md": {
+        "exists": true,
+        "expected_sha256": "3e3ad641192893c47d9bf09c73b3a1f220dfbefb5b8f754fc9b83c8e3f85a6dd",
+        "sha256": "3e3ad641192893c47d9bf09c73b3a1f220dfbefb5b8f754fc9b83c8e3f85a6dd"
+      },
+      "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.timeline-1.0.14+69cbf6ad.lx64.r.cp311/omni/timeline/__init__.py": {
+        "exists": true,
+        "expected_sha256": "4657e8a3cc5f1e8214a131f21f2f065e526de2d421b126ea144d69c3f51838a0",
+        "sha256": "4657e8a3cc5f1e8214a131f21f2f065e526de2d421b126ea144d69c3f51838a0"
+      },
+      "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.timeline-1.0.14+69cbf6ad.lx64.r.cp311/omni/timeline/_timeline.pyi": {
+        "exists": true,
+        "expected_sha256": "c5a431d83c24de23aefca0912ef819ae2f3322418264b81aba5279d4fe4ac35e",
+        "sha256": "c5a431d83c24de23aefca0912ef819ae2f3322418264b81aba5279d4fe4ac35e"
+      },
+      "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.timeline-1.0.14+69cbf6ad.lx64.r.cp311/omni/timeline/tests/tests.py": {
+        "exists": true,
+        "expected_sha256": "570b36d310e3f3a307c8a35c38ba277da051e6e1e8fc25da6889e794ad270638",
+        "sha256": "570b36d310e3f3a307c8a35c38ba277da051e6e1e8fc25da6889e794ad270638"
+      },
+      "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/kit/kernel/py/carb/events/_events.pyi": {
+        "exists": true,
+        "expected_sha256": "3dd85850696acfbbad92f7df19557df8401500bf4cb5b3151252de55ae925c55",
+        "sha256": "3dd85850696acfbbad92f7df19557df8401500bf4cb5b3151252de55ae925c55"
+      }
+    },
+    "semantics": {
+      "commit": "apply all pending state changes and invoke callbacks on calling thread",
+      "commit_silently": "forbidden because callbacks would be suppressed",
+      "forward_one_frame": "forbidden because it advances a frame",
+      "pause_request": "pending until next frame or explicit commit"
+    }
+  },
+  "trace_line_map": {
+    "checks": {
+      "function_first_line_exact": true,
+      "loop_exit_line_exact": true,
+      "part_start_line_exact": true,
+      "return_line_exact": true,
+      "source_hash_exact": true
+    },
+    "function_first_line": 816,
+    "loop_exit_line": 921,
+    "part_start_line": 835,
+    "pass": true,
+    "return_line": 960,
+    "source_path": "sim_scripts/cyl34_top_view_d349_grasp_g0a_frozen_open_jaw_target_live_distance_gate.py",
+    "source_sha256": "33a9743337fa269b71e4da3ccccfabc1d746ee29e1582a3d0f8c4764f42d68b9"
+  },
+  "user_sidecar": {
+    "checks": {
+      "all_exist": true,
+      "all_hashes_exact": true,
+      "non_file_inventory_empty": true,
+      "root_inventory_exact": true
+    },
+    "expected_root_inventory": [
+      "README.md",
+      "d334_collision_table_academic.html",
+      "d334_collision_table_academic.png"
+    ],
+    "non_file_inventory": [],
+    "pass": true,
+    "role": "user-owned non-scientific sidecar; read-only",
+    "root_inventory": [
+      "README.md",
+      "d334_collision_table_academic.html",
+      "d334_collision_table_academic.png"
+    ],
+    "rows": {
+      "claudedocs/lab_meeting/20260715/d334_collision_table/README.md": {
+        "exists": true,
+        "expected_sha256": "35e39f584737c888bcf7dfab6154c55c5d13d4154ee7f2042073e1c0a7e18783",
+        "git_status": null,
+        "sha256": "35e39f584737c888bcf7dfab6154c55c5d13d4154ee7f2042073e1c0a7e18783"
+      },
+      "claudedocs/lab_meeting/20260715/d334_collision_table/d334_collision_table_academic.html": {
+        "exists": true,
+        "expected_sha256": "6d38933f959eba916208ec04a329ba25e2bd753c90720576010c222a8bda679c",
+        "git_status": null,
+        "sha256": "6d38933f959eba916208ec04a329ba25e2bd753c90720576010c222a8bda679c"
+      },
+      "claudedocs/lab_meeting/20260715/d334_collision_table/d334_collision_table_academic.png": {
+        "exists": true,
+        "expected_sha256": "ddc9db2795f4d66b2564adf156829e6a143a599ceb72f6bb9fa28ab25e68a183",
+        "git_status": null,
+        "sha256": "ddc9db2795f4d66b2564adf156829e6a143a599ceb72f6bb9fa28ab25e68a183"
+      }
+    }
+  },
+  "watchdog": {
+    "automatic_retry": false,
+    "escalation_if_still_alive": "SIGKILL",
+    "faulthandler_grace_s": 5.0,
+    "faulthandler_signal": "SIGUSR1",
+    "marker_inactivity_s": 120.0,
+    "termination_grace_s": 30.0,
+    "termination_signal": "SIGTERM",
+    "total_worker_wall_clock_s": 300.0
+  }
+}

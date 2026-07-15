@@ -20091,3 +20091,77 @@ Sources:
 - `/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.timeline-1.0.14+69cbf6ad.lx64.r.cp311/docs/USAGE_PYTHON.md`
 - `/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.timeline-1.0.14+69cbf6ad.lx64.r.cp311/omni/timeline/_timeline.pyi`
 - `START_HERE.md`
+
+## D353 - zero-step PAUSE는 explicit commit과 독립 no-advance attestation으로만 확정한다 (2026-07-15)
+
+Decision:
+
+- D353는 승인된 신규 operational 변수 `explicit_timeline_commit_after_pause` 하나만 추가해
+  실제 `headless=false`, `DISPLAY=:1`, `cuda:0` validate를 정확히 한 번 실행했다.
+  D352와 exact 같은 initial pending 상태에서 `Timeline.commit()` 한 번이
+  `PLAY -> pending PLAY -> PAUSE`를 만들었고 STOP, next-frame, app update, physics step은
+  없었다. 최종 operational verdict는
+  `D353_TIMELINE_COMMIT_ZERO_STEP_BRIDGE_PASS_NO_SCIENCE`다.
+- **지속 규칙:** D353가 실제 검증한 pending PAUSE를 zero-step case에서 즉시 적용해야 하면,
+  승인·사전등록된 main-thread `Timeline.commit()`을 실제 pause request 직후 한 번만
+  사용한다. 이미 PAUSE인 경계에는 bare/redundant commit을 호출하지 않는다. PLAY/STOP의
+  commit 동작은 D353 결과로 일반화하지 않는다.
+- **지속 규칙:** commit 자체가 pending state와 callback 전부를 flush하므로 Boolean 전이만으로
+  zero-step을 주장하지 않는다. commit call window의 exact callback, timeline time/tick/metadata,
+  SimulationContext time/index, custom counter, joint/object bits, playSimulations setting,
+  director/thread, q5/geometry counter를 before/pending/post와 후속 canonical snapshot 전체에서
+  함께 고정해야 한다.
+- **지속 규칙:** controlled physics steps `0`은 worker summary 생성만으로 열지 않는다.
+  summary를 O_EXCL write/fsync한 뒤 exact reread하고, 별도 attestation이 그 summary hash와
+  전체 prerequisite를 묶은 뒤에만 권위값 `0`을 기록한다. 이 순서를 완료하지 못한 case는
+  `null`이며, 과거 D351/D352의 `null`을 소급 변경하지 않는다.
+- control bridge PASS는 q5 closure, geometry/contact, current-pose grasp feasibility,
+  target/IK repair 필요성 또는 G0a PASS가 아니다. q5 science는 결과 브리핑 뒤 별도 승인된
+  forward-only case에서만 재개한다.
+
+Evidence:
+
+- commit attempt/call/discriminating transition은 `1/1/1`이었다. before/pending는
+  `(playing,stopped)=(true,false)`, post는 `(false,false)`였고 PAUSE callback 한 개가 caller와
+  같은 MainThread에서 commit window
+  `[794216641029502, 794216641483941]ns` 안의 `794216641458132ns`에 발생했다.
+- before/pending/post 상세 9개 + canonical 5개 = 14 snapshot 모두 timeline time
+  `0.029999999329447746`, SimulationContext time/index
+  `0.009999999776482582/2`, custom step `0`, joint/object bits, geometry count `0`, q5
+  evaluation/state-write/trap `0/0/0`을 exact 보존했다.
+- corrected live binding `128/128`(link5 `64/64`, gripper_link `64/64`)과 raw binding이
+  PASS했고 raw JSON SHA-256
+  `325004fdc98f01bc01e5534d96ce1e2abe410b47d21029f5961446f2b53f243b`는 D352와 exact였다.
+- supervisor/worker preflight `25/25`, `35/35`; marker `304/304` valid; bridge authority worker
+  elapsed `21.847929378s`; `SimulationApp.close` start `22.440568720s`; exit `0`;
+  watchdog/runtime exception/retry 없음; 최종 inventory 17 files exact였다.
+- summary SHA-256
+  `7b8740cb176b3450936e796e6aa7dae72489fe625d08bef71da245e1b0be299a`를 fsync+reread한
+  attestation이 controlled steps `0`을 확정했다. attestation/final supervisor SHA-256은
+  `4758e9b09b3298ae0dd292f327bb37b474a624d3f0190629968c55cb091393d5` /
+  `65c57e69f017d7d7afbb5fd03b10b56e87bb1bbc442b1351a25c18a0a55a31a5`다.
+- GPU telemetry `26/26`은 utilization min/mean/max `0/2.6923076923/21%`였지만 warp
+  occupancy는 측정하지 않았다. single-env zero-step control test에서 낮은 active-time을
+  causal GPU failure나 tuning 필요성으로 해석하지 않는다.
+
+Implication:
+
+- D353는 immutable one-run control-repair PASS 증거다. D351/D352에서 관찰한 현재 zero-step
+  PAUSE prerequisite는 explicit commit으로 수리 가능하다고 지지되지만, D351 과거 장기 실행의
+  정확한 함수-level 원인은 marker/stack 부재 때문에 계속 `null`이다.
+- D350이 마지막 scientific + observability case다. D353 scientific/geometry/current-pose/
+  grasp/target-IK verdict는 모두 `null`, `g0a_pass=false`다.
+- 다음 후보는 D353 attestation을 상속하는 별도 승인 forward-only q5 closure-science case다.
+  승인 전에는 D354 code/output/prepare/validate, q5 sample, moving-surface 측정, target/IK 변경,
+  settle 또는 promotion을 만들지 않는다.
+
+Sources:
+
+- `claudedocs/session_20260715_grasp_g0a_d353_timeline_pause_pending_state_commit_bridge.md`
+- `sim_scripts/cyl34_top_view_d353_timeline_pause_pending_state_commit_bridge.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d353/d353_timeline_commit_event_contract.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d353/d353_zero_step_bridge_contract.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d353/d353_timeline_commit_bridge_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d353/d353_timeline_commit_bridge_attestation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d353/d353_supervisor_audit.json`
+- `START_HERE.md`

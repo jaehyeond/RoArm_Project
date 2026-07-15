@@ -1,0 +1,1433 @@
+{
+  "artifact": "D353_ZERO_STEP_BINDING_BRIDGE_V1",
+  "checks": {
+    "all_detailed_and_canonical_mutation_sentinels_exact": true,
+    "all_detailed_and_canonical_snapshot_count_exact_14": true,
+    "custom_step_counter_zero_at_every_snapshot": true,
+    "exact_five_bridge_snapshots": true,
+    "final_timeline_paused": true,
+    "geometry_evaluation_count_zero_before_guard": true,
+    "initial_timeline_paused": true,
+    "matched_d352_initial_pending_snapshot": true,
+    "no_app_update_or_physics_step_in_repair_bridge": true,
+    "pause_not_stop_at_every_primary_snapshot": true,
+    "phase_order_exact": true,
+    "play_simulations_false_when_readable_at_boundaries": true,
+    "primary_snapshot_metadata_exact": true,
+    "q5_counts_zero_at_every_primary_snapshot": true,
+    "reset_joint_and_object_float32_bits_exact_invariant": true,
+    "simulation_context_clock_available": true,
+    "simulation_context_clock_exact_invariant": true,
+    "timeline_time_bit_exact_invariant": true
+  },
+  "d353_scope": {
+    "commit_events": [
+      {
+        "before_pause": {
+          "custom_step_counter": 0,
+          "geometry_evaluation_call_count": 0,
+          "joint_float32": {
+            "bits_hex": "a8599b3c50869e3c9151c83fd2785cbc5e4d72bc00000000",
+            "sha256": "752f9028218e5a3b4f226feb5dbdd4ced84c783742e904bdbdd8d8323f5939f5",
+            "values": [
+              0.01896364986896515,
+              0.019351154565811157,
+              1.5649892091751099,
+              -0.013456540182232857,
+              -0.014788953587412834,
+              0.0
+            ]
+          },
+          "object_position_float32": {
+            "bits_hex": "9a99993e0000000053b0063d",
+            "sha256": "7c92fa4e59547af82b9b3f4d3f659982bdc9df6256eba57de08880aa2e2b5489",
+            "values": [
+              0.30000001192092896,
+              0.0,
+              0.03288299962878227
+            ]
+          },
+          "object_quaternion_float32": {
+            "bits_hex": "0000803f000000000000000000000000",
+            "sha256": "ccaf6f183579497e8bfcd71045c04286fd3c2e60f3641e3eea164b761a4494b7",
+            "values": [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "phase": "after_reset_before_initial_pause",
+          "play_simulations_setting": {
+            "error": null,
+            "readable": true,
+            "value": false
+          },
+          "q5_science_evaluation_count": 0,
+          "q5_science_state_write_count": 0,
+          "q5_trap_invocation_count": 0,
+          "simulation_context_clock": {
+            "current_time": 0.009999999776482582,
+            "current_time_step_index": 2
+          },
+          "simulation_context_clock_float64_bits": {
+            "current_time": "00000040e17a843f"
+          },
+          "thread": {
+            "ident": 134403133817920,
+            "is_main_thread": true,
+            "name": "MainThread"
+          },
+          "timeline_commit_call_count": 0,
+          "timeline_metadata": {
+            "auto_updating": true,
+            "current_tick": 0,
+            "director_none": true,
+            "fast_mode": true,
+            "float64_bits": {
+              "end_time": "000000000000f03f",
+              "start_time": "0000000000000000",
+              "target_framerate": "0000000000005940",
+              "tentative_time": "000000e051b89e3f",
+              "ticks_per_second": "0000000000005940",
+              "time_codes_per_second": "0000000000005940",
+              "zoom_end_time": "000000000000f03f",
+              "zoom_start_time": "0000000000000000"
+            },
+            "looping": true,
+            "play_every_frame": true,
+            "prerolling": false,
+            "ticks_per_frame": 1,
+            "zoomed": false
+          },
+          "timeline_playing": true,
+          "timeline_stopped": false,
+          "timeline_time": 0.029999999329447746,
+          "timeline_time_float64_bits": "000000e051b89e3f"
+        },
+        "checks": {
+          "callback_delta_exact": true,
+          "commit_attempt_success_pairing": true,
+          "commit_return_none_when_called": true,
+          "mutation_sentinels_exact": true,
+          "no_callback_before_explicit_commit": true,
+          "pause_block_and_commit_pairing": true,
+          "pending_to_pause_or_already_paused_noop": true,
+          "post_boundary_pause_not_stop": true,
+          "q5_trap_zero": true
+        },
+        "commit_attempt_count_after": 1,
+        "commit_call_count_after": 1,
+        "commit_called": true,
+        "commit_window": {
+          "caller_thread_ident": 134403133817920,
+          "end_monotonic_ns": 794216641483941,
+          "start_monotonic_ns": 794216641029502
+        },
+        "inherited_pause_event": {
+          "inherited_setting_writes": 1,
+          "pause_interventions": 1,
+          "phase": "after_reset_initial_pause",
+          "playing_before": true,
+          "playing_pre_commit": true
+        },
+        "mutation_checks": {
+          "custom_step_counter_zero": true,
+          "director_none": true,
+          "geometry_evaluation_count_zero": true,
+          "joint_object_float32_bits_exact": true,
+          "main_thread_snapshots": true,
+          "play_simulations_false": true,
+          "q5_science_count_zero": true,
+          "q5_science_state_write_count_zero": true,
+          "q5_trap_count_zero": true,
+          "rows_present": true,
+          "simulation_context_clock_exact": true,
+          "simulation_context_time_float64_bits_exact": true,
+          "timeline_metadata_exact": true,
+          "timeline_time_float64_bits_exact": true
+        },
+        "pass": true,
+        "pause_interventions": 1,
+        "phase": "after_reset_initial_pause",
+        "post_commit": {
+          "custom_step_counter": 0,
+          "geometry_evaluation_call_count": 0,
+          "joint_float32": {
+            "bits_hex": "a8599b3c50869e3c9151c83fd2785cbc5e4d72bc00000000",
+            "sha256": "752f9028218e5a3b4f226feb5dbdd4ced84c783742e904bdbdd8d8323f5939f5",
+            "values": [
+              0.01896364986896515,
+              0.019351154565811157,
+              1.5649892091751099,
+              -0.013456540182232857,
+              -0.014788953587412834,
+              0.0
+            ]
+          },
+          "object_position_float32": {
+            "bits_hex": "9a99993e0000000053b0063d",
+            "sha256": "7c92fa4e59547af82b9b3f4d3f659982bdc9df6256eba57de08880aa2e2b5489",
+            "values": [
+              0.30000001192092896,
+              0.0,
+              0.03288299962878227
+            ]
+          },
+          "object_quaternion_float32": {
+            "bits_hex": "0000803f000000000000000000000000",
+            "sha256": "ccaf6f183579497e8bfcd71045c04286fd3c2e60f3641e3eea164b761a4494b7",
+            "values": [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "phase": "after_reset_initial_pause_post_commit",
+          "play_simulations_setting": {
+            "error": null,
+            "readable": true,
+            "value": false
+          },
+          "q5_science_evaluation_count": 0,
+          "q5_science_state_write_count": 0,
+          "q5_trap_invocation_count": 0,
+          "simulation_context_clock": {
+            "current_time": 0.009999999776482582,
+            "current_time_step_index": 2
+          },
+          "simulation_context_clock_float64_bits": {
+            "current_time": "00000040e17a843f"
+          },
+          "thread": {
+            "ident": 134403133817920,
+            "is_main_thread": true,
+            "name": "MainThread"
+          },
+          "timeline_commit_call_count": 1,
+          "timeline_metadata": {
+            "auto_updating": true,
+            "current_tick": 0,
+            "director_none": true,
+            "fast_mode": true,
+            "float64_bits": {
+              "end_time": "000000000000f03f",
+              "start_time": "0000000000000000",
+              "target_framerate": "0000000000005940",
+              "tentative_time": "000000e051b89e3f",
+              "ticks_per_second": "0000000000005940",
+              "time_codes_per_second": "0000000000005940",
+              "zoom_end_time": "000000000000f03f",
+              "zoom_start_time": "0000000000000000"
+            },
+            "looping": true,
+            "play_every_frame": true,
+            "prerolling": false,
+            "ticks_per_frame": 1,
+            "zoomed": false
+          },
+          "timeline_playing": false,
+          "timeline_stopped": false,
+          "timeline_time": 0.029999999329447746,
+          "timeline_time_float64_bits": "000000e051b89e3f"
+        },
+        "post_pause_pre_commit": {
+          "custom_step_counter": 0,
+          "geometry_evaluation_call_count": 0,
+          "joint_float32": {
+            "bits_hex": "a8599b3c50869e3c9151c83fd2785cbc5e4d72bc00000000",
+            "sha256": "752f9028218e5a3b4f226feb5dbdd4ced84c783742e904bdbdd8d8323f5939f5",
+            "values": [
+              0.01896364986896515,
+              0.019351154565811157,
+              1.5649892091751099,
+              -0.013456540182232857,
+              -0.014788953587412834,
+              0.0
+            ]
+          },
+          "object_position_float32": {
+            "bits_hex": "9a99993e0000000053b0063d",
+            "sha256": "7c92fa4e59547af82b9b3f4d3f659982bdc9df6256eba57de08880aa2e2b5489",
+            "values": [
+              0.30000001192092896,
+              0.0,
+              0.03288299962878227
+            ]
+          },
+          "object_quaternion_float32": {
+            "bits_hex": "0000803f000000000000000000000000",
+            "sha256": "ccaf6f183579497e8bfcd71045c04286fd3c2e60f3641e3eea164b761a4494b7",
+            "values": [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "phase": "after_reset_pause_before_commit",
+          "play_simulations_setting": {
+            "error": null,
+            "readable": true,
+            "value": false
+          },
+          "q5_science_evaluation_count": 0,
+          "q5_science_state_write_count": 0,
+          "q5_trap_invocation_count": 0,
+          "simulation_context_clock": {
+            "current_time": 0.009999999776482582,
+            "current_time_step_index": 2
+          },
+          "simulation_context_clock_float64_bits": {
+            "current_time": "00000040e17a843f"
+          },
+          "thread": {
+            "ident": 134403133817920,
+            "is_main_thread": true,
+            "name": "MainThread"
+          },
+          "timeline_commit_call_count": 0,
+          "timeline_metadata": {
+            "auto_updating": true,
+            "current_tick": 0,
+            "director_none": true,
+            "fast_mode": true,
+            "float64_bits": {
+              "end_time": "000000000000f03f",
+              "start_time": "0000000000000000",
+              "target_framerate": "0000000000005940",
+              "tentative_time": "000000e051b89e3f",
+              "ticks_per_second": "0000000000005940",
+              "time_codes_per_second": "0000000000005940",
+              "zoom_end_time": "000000000000f03f",
+              "zoom_start_time": "0000000000000000"
+            },
+            "looping": true,
+            "play_every_frame": true,
+            "prerolling": false,
+            "ticks_per_frame": 1,
+            "zoomed": false
+          },
+          "timeline_playing": true,
+          "timeline_stopped": false,
+          "timeline_time": 0.029999999329447746,
+          "timeline_time_float64_bits": "000000e051b89e3f"
+        },
+        "timeline_callbacks": [
+          {
+            "callback_is_main_thread": true,
+            "callback_monotonic_ns": 794216641458132,
+            "callback_thread_ident": 134403133817920,
+            "callback_thread_name": "MainThread",
+            "event_name": "PAUSE",
+            "event_type": 1,
+            "phase": "after_reset_initial_pause",
+            "q5_trap_invocation_count": 0,
+            "sequence": 0,
+            "timeline_current_tick": 0,
+            "timeline_playing": false,
+            "timeline_stopped": false,
+            "timeline_time_float64_bits": "000000e051b89e3f"
+          }
+        ]
+      },
+      {
+        "before_pause": {
+          "custom_step_counter": 0,
+          "geometry_evaluation_call_count": 0,
+          "joint_float32": {
+            "bits_hex": "a8599b3c50869e3c9151c83fd2785cbc5e4d72bc00000000",
+            "sha256": "752f9028218e5a3b4f226feb5dbdd4ced84c783742e904bdbdd8d8323f5939f5",
+            "values": [
+              0.01896364986896515,
+              0.019351154565811157,
+              1.5649892091751099,
+              -0.013456540182232857,
+              -0.014788953587412834,
+              0.0
+            ]
+          },
+          "object_position_float32": {
+            "bits_hex": "9a99993e0000000053b0063d",
+            "sha256": "7c92fa4e59547af82b9b3f4d3f659982bdc9df6256eba57de08880aa2e2b5489",
+            "values": [
+              0.30000001192092896,
+              0.0,
+              0.03288299962878227
+            ]
+          },
+          "object_quaternion_float32": {
+            "bits_hex": "0000803f000000000000000000000000",
+            "sha256": "ccaf6f183579497e8bfcd71045c04286fd3c2e60f3641e3eea164b761a4494b7",
+            "values": [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "phase": "after_live_binding_before_pause_request",
+          "play_simulations_setting": {
+            "error": null,
+            "readable": true,
+            "value": false
+          },
+          "q5_science_evaluation_count": 0,
+          "q5_science_state_write_count": 0,
+          "q5_trap_invocation_count": 0,
+          "simulation_context_clock": {
+            "current_time": 0.009999999776482582,
+            "current_time_step_index": 2
+          },
+          "simulation_context_clock_float64_bits": {
+            "current_time": "00000040e17a843f"
+          },
+          "thread": {
+            "ident": 134403133817920,
+            "is_main_thread": true,
+            "name": "MainThread"
+          },
+          "timeline_commit_call_count": 1,
+          "timeline_metadata": {
+            "auto_updating": true,
+            "current_tick": 0,
+            "director_none": true,
+            "fast_mode": true,
+            "float64_bits": {
+              "end_time": "000000000000f03f",
+              "start_time": "0000000000000000",
+              "target_framerate": "0000000000005940",
+              "tentative_time": "000000e051b89e3f",
+              "ticks_per_second": "0000000000005940",
+              "time_codes_per_second": "0000000000005940",
+              "zoom_end_time": "000000000000f03f",
+              "zoom_start_time": "0000000000000000"
+            },
+            "looping": true,
+            "play_every_frame": true,
+            "prerolling": false,
+            "ticks_per_frame": 1,
+            "zoomed": false
+          },
+          "timeline_playing": false,
+          "timeline_stopped": false,
+          "timeline_time": 0.029999999329447746,
+          "timeline_time_float64_bits": "000000e051b89e3f"
+        },
+        "checks": {
+          "callback_delta_exact": true,
+          "commit_attempt_success_pairing": true,
+          "commit_return_none_when_called": true,
+          "mutation_sentinels_exact": true,
+          "no_callback_before_explicit_commit": true,
+          "pause_block_and_commit_pairing": true,
+          "pending_to_pause_or_already_paused_noop": true,
+          "post_boundary_pause_not_stop": true,
+          "q5_trap_zero": true
+        },
+        "commit_attempt_count_after": 1,
+        "commit_call_count_after": 1,
+        "commit_called": false,
+        "commit_window": {
+          "caller_thread_ident": null,
+          "end_monotonic_ns": null,
+          "start_monotonic_ns": null
+        },
+        "inherited_pause_event": {
+          "checks": {
+            "custom_counter_zero_unchanged": true,
+            "geometry_evaluation_count_still_zero": true,
+            "no_app_update_or_physics_step_called": true,
+            "simulation_context_clock_unchanged": true,
+            "timeline_paused_after": true,
+            "timeline_time_unchanged": true
+          },
+          "counter_after": 0,
+          "counter_before": 0,
+          "pass": true,
+          "pause_interventions": 0,
+          "phase": "after_live_topology_binding",
+          "playing_after": false,
+          "playing_before": false,
+          "simulation_context_clock_after": {
+            "current_time": 0.009999999776482582,
+            "current_time_step_index": 2
+          },
+          "simulation_context_clock_before": {
+            "current_time": 0.009999999776482582,
+            "current_time_step_index": 2
+          },
+          "timeline_time_after": 0.029999999329447746,
+          "timeline_time_before": 0.029999999329447746
+        },
+        "mutation_checks": {
+          "custom_step_counter_zero": true,
+          "director_none": true,
+          "geometry_evaluation_count_zero": true,
+          "joint_object_float32_bits_exact": true,
+          "main_thread_snapshots": true,
+          "play_simulations_false": true,
+          "q5_science_count_zero": true,
+          "q5_science_state_write_count_zero": true,
+          "q5_trap_count_zero": true,
+          "rows_present": true,
+          "simulation_context_clock_exact": true,
+          "simulation_context_time_float64_bits_exact": true,
+          "timeline_metadata_exact": true,
+          "timeline_time_float64_bits_exact": true
+        },
+        "pass": true,
+        "pause_interventions": 0,
+        "phase": "after_live_topology_binding",
+        "post_commit": {
+          "custom_step_counter": 0,
+          "geometry_evaluation_call_count": 0,
+          "joint_float32": {
+            "bits_hex": "a8599b3c50869e3c9151c83fd2785cbc5e4d72bc00000000",
+            "sha256": "752f9028218e5a3b4f226feb5dbdd4ced84c783742e904bdbdd8d8323f5939f5",
+            "values": [
+              0.01896364986896515,
+              0.019351154565811157,
+              1.5649892091751099,
+              -0.013456540182232857,
+              -0.014788953587412834,
+              0.0
+            ]
+          },
+          "object_position_float32": {
+            "bits_hex": "9a99993e0000000053b0063d",
+            "sha256": "7c92fa4e59547af82b9b3f4d3f659982bdc9df6256eba57de08880aa2e2b5489",
+            "values": [
+              0.30000001192092896,
+              0.0,
+              0.03288299962878227
+            ]
+          },
+          "object_quaternion_float32": {
+            "bits_hex": "0000803f000000000000000000000000",
+            "sha256": "ccaf6f183579497e8bfcd71045c04286fd3c2e60f3641e3eea164b761a4494b7",
+            "values": [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "phase": "after_live_topology_binding_post_commit",
+          "play_simulations_setting": {
+            "error": null,
+            "readable": true,
+            "value": false
+          },
+          "q5_science_evaluation_count": 0,
+          "q5_science_state_write_count": 0,
+          "q5_trap_invocation_count": 0,
+          "simulation_context_clock": {
+            "current_time": 0.009999999776482582,
+            "current_time_step_index": 2
+          },
+          "simulation_context_clock_float64_bits": {
+            "current_time": "00000040e17a843f"
+          },
+          "thread": {
+            "ident": 134403133817920,
+            "is_main_thread": true,
+            "name": "MainThread"
+          },
+          "timeline_commit_call_count": 1,
+          "timeline_metadata": {
+            "auto_updating": true,
+            "current_tick": 0,
+            "director_none": true,
+            "fast_mode": true,
+            "float64_bits": {
+              "end_time": "000000000000f03f",
+              "start_time": "0000000000000000",
+              "target_framerate": "0000000000005940",
+              "tentative_time": "000000e051b89e3f",
+              "ticks_per_second": "0000000000005940",
+              "time_codes_per_second": "0000000000005940",
+              "zoom_end_time": "000000000000f03f",
+              "zoom_start_time": "0000000000000000"
+            },
+            "looping": true,
+            "play_every_frame": true,
+            "prerolling": false,
+            "ticks_per_frame": 1,
+            "zoomed": false
+          },
+          "timeline_playing": false,
+          "timeline_stopped": false,
+          "timeline_time": 0.029999999329447746,
+          "timeline_time_float64_bits": "000000e051b89e3f"
+        },
+        "post_pause_pre_commit": {
+          "custom_step_counter": 0,
+          "geometry_evaluation_call_count": 0,
+          "joint_float32": {
+            "bits_hex": "a8599b3c50869e3c9151c83fd2785cbc5e4d72bc00000000",
+            "sha256": "752f9028218e5a3b4f226feb5dbdd4ced84c783742e904bdbdd8d8323f5939f5",
+            "values": [
+              0.01896364986896515,
+              0.019351154565811157,
+              1.5649892091751099,
+              -0.013456540182232857,
+              -0.014788953587412834,
+              0.0
+            ]
+          },
+          "object_position_float32": {
+            "bits_hex": "9a99993e0000000053b0063d",
+            "sha256": "7c92fa4e59547af82b9b3f4d3f659982bdc9df6256eba57de08880aa2e2b5489",
+            "values": [
+              0.30000001192092896,
+              0.0,
+              0.03288299962878227
+            ]
+          },
+          "object_quaternion_float32": {
+            "bits_hex": "0000803f000000000000000000000000",
+            "sha256": "ccaf6f183579497e8bfcd71045c04286fd3c2e60f3641e3eea164b761a4494b7",
+            "values": [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "phase": "after_live_repause_before_commit",
+          "play_simulations_setting": {
+            "error": null,
+            "readable": true,
+            "value": false
+          },
+          "q5_science_evaluation_count": 0,
+          "q5_science_state_write_count": 0,
+          "q5_trap_invocation_count": 0,
+          "simulation_context_clock": {
+            "current_time": 0.009999999776482582,
+            "current_time_step_index": 2
+          },
+          "simulation_context_clock_float64_bits": {
+            "current_time": "00000040e17a843f"
+          },
+          "thread": {
+            "ident": 134403133817920,
+            "is_main_thread": true,
+            "name": "MainThread"
+          },
+          "timeline_commit_call_count": 1,
+          "timeline_metadata": {
+            "auto_updating": true,
+            "current_tick": 0,
+            "director_none": true,
+            "fast_mode": true,
+            "float64_bits": {
+              "end_time": "000000000000f03f",
+              "start_time": "0000000000000000",
+              "target_framerate": "0000000000005940",
+              "tentative_time": "000000e051b89e3f",
+              "ticks_per_second": "0000000000005940",
+              "time_codes_per_second": "0000000000005940",
+              "zoom_end_time": "000000000000f03f",
+              "zoom_start_time": "0000000000000000"
+            },
+            "looping": true,
+            "play_every_frame": true,
+            "prerolling": false,
+            "ticks_per_frame": 1,
+            "zoomed": false
+          },
+          "timeline_playing": false,
+          "timeline_stopped": false,
+          "timeline_time": 0.029999999329447746,
+          "timeline_time_float64_bits": "000000e051b89e3f"
+        },
+        "timeline_callbacks": []
+      },
+      {
+        "before_pause": {
+          "custom_step_counter": 0,
+          "geometry_evaluation_call_count": 0,
+          "joint_float32": {
+            "bits_hex": "a8599b3c50869e3c9151c83fd2785cbc5e4d72bc00000000",
+            "sha256": "752f9028218e5a3b4f226feb5dbdd4ced84c783742e904bdbdd8d8323f5939f5",
+            "values": [
+              0.01896364986896515,
+              0.019351154565811157,
+              1.5649892091751099,
+              -0.013456540182232857,
+              -0.014788953587412834,
+              0.0
+            ]
+          },
+          "object_position_float32": {
+            "bits_hex": "9a99993e0000000053b0063d",
+            "sha256": "7c92fa4e59547af82b9b3f4d3f659982bdc9df6256eba57de08880aa2e2b5489",
+            "values": [
+              0.30000001192092896,
+              0.0,
+              0.03288299962878227
+            ]
+          },
+          "object_quaternion_float32": {
+            "bits_hex": "0000803f000000000000000000000000",
+            "sha256": "ccaf6f183579497e8bfcd71045c04286fd3c2e60f3641e3eea164b761a4494b7",
+            "values": [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "phase": "after_raw_binding_before_pause_request",
+          "play_simulations_setting": {
+            "error": null,
+            "readable": true,
+            "value": false
+          },
+          "q5_science_evaluation_count": 0,
+          "q5_science_state_write_count": 0,
+          "q5_trap_invocation_count": 0,
+          "simulation_context_clock": {
+            "current_time": 0.009999999776482582,
+            "current_time_step_index": 2
+          },
+          "simulation_context_clock_float64_bits": {
+            "current_time": "00000040e17a843f"
+          },
+          "thread": {
+            "ident": 134403133817920,
+            "is_main_thread": true,
+            "name": "MainThread"
+          },
+          "timeline_commit_call_count": 1,
+          "timeline_metadata": {
+            "auto_updating": true,
+            "current_tick": 0,
+            "director_none": true,
+            "fast_mode": true,
+            "float64_bits": {
+              "end_time": "000000000000f03f",
+              "start_time": "0000000000000000",
+              "target_framerate": "0000000000005940",
+              "tentative_time": "000000e051b89e3f",
+              "ticks_per_second": "0000000000005940",
+              "time_codes_per_second": "0000000000005940",
+              "zoom_end_time": "000000000000f03f",
+              "zoom_start_time": "0000000000000000"
+            },
+            "looping": true,
+            "play_every_frame": true,
+            "prerolling": false,
+            "ticks_per_frame": 1,
+            "zoomed": false
+          },
+          "timeline_playing": false,
+          "timeline_stopped": false,
+          "timeline_time": 0.029999999329447746,
+          "timeline_time_float64_bits": "000000e051b89e3f"
+        },
+        "checks": {
+          "callback_delta_exact": true,
+          "commit_attempt_success_pairing": true,
+          "commit_return_none_when_called": true,
+          "mutation_sentinels_exact": true,
+          "no_callback_before_explicit_commit": true,
+          "pause_block_and_commit_pairing": true,
+          "pending_to_pause_or_already_paused_noop": true,
+          "post_boundary_pause_not_stop": true,
+          "q5_trap_zero": true
+        },
+        "commit_attempt_count_after": 1,
+        "commit_call_count_after": 1,
+        "commit_called": false,
+        "commit_window": {
+          "caller_thread_ident": null,
+          "end_monotonic_ns": null,
+          "start_monotonic_ns": null
+        },
+        "inherited_pause_event": {
+          "checks": {
+            "custom_counter_zero_unchanged": true,
+            "geometry_evaluation_count_still_zero": true,
+            "no_app_update_or_physics_step_called": true,
+            "simulation_context_clock_unchanged": true,
+            "timeline_paused_after": true,
+            "timeline_time_unchanged": true
+          },
+          "counter_after": 0,
+          "counter_before": 0,
+          "pass": true,
+          "pause_interventions": 0,
+          "phase": "after_raw_shape_binding_before_prerequisites",
+          "playing_after": false,
+          "playing_before": false,
+          "simulation_context_clock_after": {
+            "current_time": 0.009999999776482582,
+            "current_time_step_index": 2
+          },
+          "simulation_context_clock_before": {
+            "current_time": 0.009999999776482582,
+            "current_time_step_index": 2
+          },
+          "timeline_time_after": 0.029999999329447746,
+          "timeline_time_before": 0.029999999329447746
+        },
+        "mutation_checks": {
+          "custom_step_counter_zero": true,
+          "director_none": true,
+          "geometry_evaluation_count_zero": true,
+          "joint_object_float32_bits_exact": true,
+          "main_thread_snapshots": true,
+          "play_simulations_false": true,
+          "q5_science_count_zero": true,
+          "q5_science_state_write_count_zero": true,
+          "q5_trap_count_zero": true,
+          "rows_present": true,
+          "simulation_context_clock_exact": true,
+          "simulation_context_time_float64_bits_exact": true,
+          "timeline_metadata_exact": true,
+          "timeline_time_float64_bits_exact": true
+        },
+        "pass": true,
+        "pause_interventions": 0,
+        "phase": "after_raw_shape_binding_before_prerequisites",
+        "post_commit": {
+          "custom_step_counter": 0,
+          "geometry_evaluation_call_count": 0,
+          "joint_float32": {
+            "bits_hex": "a8599b3c50869e3c9151c83fd2785cbc5e4d72bc00000000",
+            "sha256": "752f9028218e5a3b4f226feb5dbdd4ced84c783742e904bdbdd8d8323f5939f5",
+            "values": [
+              0.01896364986896515,
+              0.019351154565811157,
+              1.5649892091751099,
+              -0.013456540182232857,
+              -0.014788953587412834,
+              0.0
+            ]
+          },
+          "object_position_float32": {
+            "bits_hex": "9a99993e0000000053b0063d",
+            "sha256": "7c92fa4e59547af82b9b3f4d3f659982bdc9df6256eba57de08880aa2e2b5489",
+            "values": [
+              0.30000001192092896,
+              0.0,
+              0.03288299962878227
+            ]
+          },
+          "object_quaternion_float32": {
+            "bits_hex": "0000803f000000000000000000000000",
+            "sha256": "ccaf6f183579497e8bfcd71045c04286fd3c2e60f3641e3eea164b761a4494b7",
+            "values": [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "phase": "after_raw_shape_binding_before_prerequisites_post_commit",
+          "play_simulations_setting": {
+            "error": null,
+            "readable": true,
+            "value": false
+          },
+          "q5_science_evaluation_count": 0,
+          "q5_science_state_write_count": 0,
+          "q5_trap_invocation_count": 0,
+          "simulation_context_clock": {
+            "current_time": 0.009999999776482582,
+            "current_time_step_index": 2
+          },
+          "simulation_context_clock_float64_bits": {
+            "current_time": "00000040e17a843f"
+          },
+          "thread": {
+            "ident": 134403133817920,
+            "is_main_thread": true,
+            "name": "MainThread"
+          },
+          "timeline_commit_call_count": 1,
+          "timeline_metadata": {
+            "auto_updating": true,
+            "current_tick": 0,
+            "director_none": true,
+            "fast_mode": true,
+            "float64_bits": {
+              "end_time": "000000000000f03f",
+              "start_time": "0000000000000000",
+              "target_framerate": "0000000000005940",
+              "tentative_time": "000000e051b89e3f",
+              "ticks_per_second": "0000000000005940",
+              "time_codes_per_second": "0000000000005940",
+              "zoom_end_time": "000000000000f03f",
+              "zoom_start_time": "0000000000000000"
+            },
+            "looping": true,
+            "play_every_frame": true,
+            "prerolling": false,
+            "ticks_per_frame": 1,
+            "zoomed": false
+          },
+          "timeline_playing": false,
+          "timeline_stopped": false,
+          "timeline_time": 0.029999999329447746,
+          "timeline_time_float64_bits": "000000e051b89e3f"
+        },
+        "post_pause_pre_commit": {
+          "custom_step_counter": 0,
+          "geometry_evaluation_call_count": 0,
+          "joint_float32": {
+            "bits_hex": "a8599b3c50869e3c9151c83fd2785cbc5e4d72bc00000000",
+            "sha256": "752f9028218e5a3b4f226feb5dbdd4ced84c783742e904bdbdd8d8323f5939f5",
+            "values": [
+              0.01896364986896515,
+              0.019351154565811157,
+              1.5649892091751099,
+              -0.013456540182232857,
+              -0.014788953587412834,
+              0.0
+            ]
+          },
+          "object_position_float32": {
+            "bits_hex": "9a99993e0000000053b0063d",
+            "sha256": "7c92fa4e59547af82b9b3f4d3f659982bdc9df6256eba57de08880aa2e2b5489",
+            "values": [
+              0.30000001192092896,
+              0.0,
+              0.03288299962878227
+            ]
+          },
+          "object_quaternion_float32": {
+            "bits_hex": "0000803f000000000000000000000000",
+            "sha256": "ccaf6f183579497e8bfcd71045c04286fd3c2e60f3641e3eea164b761a4494b7",
+            "values": [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "phase": "after_raw_repause_before_commit",
+          "play_simulations_setting": {
+            "error": null,
+            "readable": true,
+            "value": false
+          },
+          "q5_science_evaluation_count": 0,
+          "q5_science_state_write_count": 0,
+          "q5_trap_invocation_count": 0,
+          "simulation_context_clock": {
+            "current_time": 0.009999999776482582,
+            "current_time_step_index": 2
+          },
+          "simulation_context_clock_float64_bits": {
+            "current_time": "00000040e17a843f"
+          },
+          "thread": {
+            "ident": 134403133817920,
+            "is_main_thread": true,
+            "name": "MainThread"
+          },
+          "timeline_commit_call_count": 1,
+          "timeline_metadata": {
+            "auto_updating": true,
+            "current_tick": 0,
+            "director_none": true,
+            "fast_mode": true,
+            "float64_bits": {
+              "end_time": "000000000000f03f",
+              "start_time": "0000000000000000",
+              "target_framerate": "0000000000005940",
+              "tentative_time": "000000e051b89e3f",
+              "ticks_per_second": "0000000000005940",
+              "time_codes_per_second": "0000000000005940",
+              "zoom_end_time": "000000000000f03f",
+              "zoom_start_time": "0000000000000000"
+            },
+            "looping": true,
+            "play_every_frame": true,
+            "prerolling": false,
+            "ticks_per_frame": 1,
+            "zoomed": false
+          },
+          "timeline_playing": false,
+          "timeline_stopped": false,
+          "timeline_time": 0.029999999329447746,
+          "timeline_time_float64_bits": "000000e051b89e3f"
+        },
+        "timeline_callbacks": []
+      }
+    ],
+    "control_repair_only": true,
+    "global_mutation_checks": {
+      "custom_step_counter_zero": true,
+      "director_none": true,
+      "geometry_evaluation_count_zero": true,
+      "joint_object_float32_bits_exact": true,
+      "main_thread_snapshots": true,
+      "play_simulations_false": true,
+      "q5_science_count_zero": true,
+      "q5_science_state_write_count_zero": true,
+      "q5_trap_count_zero": true,
+      "rows_present": true,
+      "simulation_context_clock_exact": true,
+      "simulation_context_time_float64_bits_exact": true,
+      "timeline_metadata_exact": true,
+      "timeline_time_float64_bits_exact": true
+    },
+    "global_mutation_snapshot_count": 14,
+    "matched_d352_initial_pending_snapshot": {
+      "baseline_phase": "after_reset_initial_pause_before_live_binding",
+      "checks": {
+        "custom_step_counter_exact": true,
+        "d352_first_snapshot_was_pending_play": true,
+        "d353_pending_is_same_play_not_stop": true,
+        "geometry_count_exact_zero": true,
+        "joint_object_float32_bits_exact": true,
+        "play_simulations_setting_exact": true,
+        "simulation_context_clock_exact": true,
+        "simulation_context_current_time_float64_bits_exact": true,
+        "source_hash_frozen_exact": true,
+        "timeline_time_float64_bits_exact": true
+      },
+      "current_phase": "after_reset_pause_before_commit",
+      "pass": true,
+      "source_path": "claudedocs/runtime_logs/grasp_track/g0a_d352/d352_zero_step_bridge_contract.json",
+      "source_sha256": "26a05d8c76ceaf83a0ebf57324b50c7853d38ce2e6bd58c25e4484c13f9a0036"
+    },
+    "q5_science_evaluation_count": 0,
+    "q5_trap_invocation_count": 0,
+    "single_new_variable": [
+      "explicit_timeline_commit_after_pause"
+    ],
+    "timeline_commit_attempt_count": 1,
+    "timeline_commit_call_count": 1
+  },
+  "expected_phases": [
+    "after_reset_initial_pause_before_live_binding",
+    "after_live_binding_before_repause",
+    "after_live_binding_after_repause",
+    "after_live_and_raw_binding_before_final_repause",
+    "after_live_and_raw_binding_after_final_repause"
+  ],
+  "pass": true,
+  "play_simulations_boundary_readability": [
+    true,
+    true
+  ],
+  "snapshots": [
+    {
+      "custom_step_counter": 0,
+      "geometry_evaluation_call_count": 0,
+      "joint_float32": {
+        "bits_hex": "a8599b3c50869e3c9151c83fd2785cbc5e4d72bc00000000",
+        "sha256": "752f9028218e5a3b4f226feb5dbdd4ced84c783742e904bdbdd8d8323f5939f5",
+        "values": [
+          0.01896364986896515,
+          0.019351154565811157,
+          1.5649892091751099,
+          -0.013456540182232857,
+          -0.014788953587412834,
+          0.0
+        ]
+      },
+      "object_position_float32": {
+        "bits_hex": "9a99993e0000000053b0063d",
+        "sha256": "7c92fa4e59547af82b9b3f4d3f659982bdc9df6256eba57de08880aa2e2b5489",
+        "values": [
+          0.30000001192092896,
+          0.0,
+          0.03288299962878227
+        ]
+      },
+      "object_quaternion_float32": {
+        "bits_hex": "0000803f000000000000000000000000",
+        "sha256": "ccaf6f183579497e8bfcd71045c04286fd3c2e60f3641e3eea164b761a4494b7",
+        "values": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "phase": "after_reset_initial_pause_before_live_binding",
+      "play_simulations_setting": {
+        "error": null,
+        "readable": true,
+        "value": false
+      },
+      "q5_science_evaluation_count": 0,
+      "q5_science_state_write_count": 0,
+      "q5_trap_invocation_count": 0,
+      "simulation_context_clock": {
+        "current_time": 0.009999999776482582,
+        "current_time_step_index": 2
+      },
+      "simulation_context_clock_float64_bits": {
+        "current_time": "00000040e17a843f"
+      },
+      "thread": {
+        "ident": 134403133817920,
+        "is_main_thread": true,
+        "name": "MainThread"
+      },
+      "timeline_commit_call_count": 1,
+      "timeline_metadata": {
+        "auto_updating": true,
+        "current_tick": 0,
+        "director_none": true,
+        "fast_mode": true,
+        "float64_bits": {
+          "end_time": "000000000000f03f",
+          "start_time": "0000000000000000",
+          "target_framerate": "0000000000005940",
+          "tentative_time": "000000e051b89e3f",
+          "ticks_per_second": "0000000000005940",
+          "time_codes_per_second": "0000000000005940",
+          "zoom_end_time": "000000000000f03f",
+          "zoom_start_time": "0000000000000000"
+        },
+        "looping": true,
+        "play_every_frame": true,
+        "prerolling": false,
+        "ticks_per_frame": 1,
+        "zoomed": false
+      },
+      "timeline_playing": false,
+      "timeline_stopped": false,
+      "timeline_time": 0.029999999329447746,
+      "timeline_time_float64_bits": "000000e051b89e3f"
+    },
+    {
+      "custom_step_counter": 0,
+      "geometry_evaluation_call_count": 0,
+      "joint_float32": {
+        "bits_hex": "a8599b3c50869e3c9151c83fd2785cbc5e4d72bc00000000",
+        "sha256": "752f9028218e5a3b4f226feb5dbdd4ced84c783742e904bdbdd8d8323f5939f5",
+        "values": [
+          0.01896364986896515,
+          0.019351154565811157,
+          1.5649892091751099,
+          -0.013456540182232857,
+          -0.014788953587412834,
+          0.0
+        ]
+      },
+      "object_position_float32": {
+        "bits_hex": "9a99993e0000000053b0063d",
+        "sha256": "7c92fa4e59547af82b9b3f4d3f659982bdc9df6256eba57de08880aa2e2b5489",
+        "values": [
+          0.30000001192092896,
+          0.0,
+          0.03288299962878227
+        ]
+      },
+      "object_quaternion_float32": {
+        "bits_hex": "0000803f000000000000000000000000",
+        "sha256": "ccaf6f183579497e8bfcd71045c04286fd3c2e60f3641e3eea164b761a4494b7",
+        "values": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "phase": "after_live_binding_before_repause",
+      "play_simulations_setting": {
+        "error": null,
+        "readable": true,
+        "value": false
+      },
+      "q5_science_evaluation_count": 0,
+      "q5_science_state_write_count": 0,
+      "q5_trap_invocation_count": 0,
+      "simulation_context_clock": {
+        "current_time": 0.009999999776482582,
+        "current_time_step_index": 2
+      },
+      "simulation_context_clock_float64_bits": {
+        "current_time": "00000040e17a843f"
+      },
+      "thread": {
+        "ident": 134403133817920,
+        "is_main_thread": true,
+        "name": "MainThread"
+      },
+      "timeline_commit_call_count": 1,
+      "timeline_metadata": {
+        "auto_updating": true,
+        "current_tick": 0,
+        "director_none": true,
+        "fast_mode": true,
+        "float64_bits": {
+          "end_time": "000000000000f03f",
+          "start_time": "0000000000000000",
+          "target_framerate": "0000000000005940",
+          "tentative_time": "000000e051b89e3f",
+          "ticks_per_second": "0000000000005940",
+          "time_codes_per_second": "0000000000005940",
+          "zoom_end_time": "000000000000f03f",
+          "zoom_start_time": "0000000000000000"
+        },
+        "looping": true,
+        "play_every_frame": true,
+        "prerolling": false,
+        "ticks_per_frame": 1,
+        "zoomed": false
+      },
+      "timeline_playing": false,
+      "timeline_stopped": false,
+      "timeline_time": 0.029999999329447746,
+      "timeline_time_float64_bits": "000000e051b89e3f"
+    },
+    {
+      "custom_step_counter": 0,
+      "geometry_evaluation_call_count": 0,
+      "joint_float32": {
+        "bits_hex": "a8599b3c50869e3c9151c83fd2785cbc5e4d72bc00000000",
+        "sha256": "752f9028218e5a3b4f226feb5dbdd4ced84c783742e904bdbdd8d8323f5939f5",
+        "values": [
+          0.01896364986896515,
+          0.019351154565811157,
+          1.5649892091751099,
+          -0.013456540182232857,
+          -0.014788953587412834,
+          0.0
+        ]
+      },
+      "object_position_float32": {
+        "bits_hex": "9a99993e0000000053b0063d",
+        "sha256": "7c92fa4e59547af82b9b3f4d3f659982bdc9df6256eba57de08880aa2e2b5489",
+        "values": [
+          0.30000001192092896,
+          0.0,
+          0.03288299962878227
+        ]
+      },
+      "object_quaternion_float32": {
+        "bits_hex": "0000803f000000000000000000000000",
+        "sha256": "ccaf6f183579497e8bfcd71045c04286fd3c2e60f3641e3eea164b761a4494b7",
+        "values": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "phase": "after_live_binding_after_repause",
+      "play_simulations_setting": {
+        "error": null,
+        "readable": true,
+        "value": false
+      },
+      "q5_science_evaluation_count": 0,
+      "q5_science_state_write_count": 0,
+      "q5_trap_invocation_count": 0,
+      "simulation_context_clock": {
+        "current_time": 0.009999999776482582,
+        "current_time_step_index": 2
+      },
+      "simulation_context_clock_float64_bits": {
+        "current_time": "00000040e17a843f"
+      },
+      "thread": {
+        "ident": 134403133817920,
+        "is_main_thread": true,
+        "name": "MainThread"
+      },
+      "timeline_commit_call_count": 1,
+      "timeline_metadata": {
+        "auto_updating": true,
+        "current_tick": 0,
+        "director_none": true,
+        "fast_mode": true,
+        "float64_bits": {
+          "end_time": "000000000000f03f",
+          "start_time": "0000000000000000",
+          "target_framerate": "0000000000005940",
+          "tentative_time": "000000e051b89e3f",
+          "ticks_per_second": "0000000000005940",
+          "time_codes_per_second": "0000000000005940",
+          "zoom_end_time": "000000000000f03f",
+          "zoom_start_time": "0000000000000000"
+        },
+        "looping": true,
+        "play_every_frame": true,
+        "prerolling": false,
+        "ticks_per_frame": 1,
+        "zoomed": false
+      },
+      "timeline_playing": false,
+      "timeline_stopped": false,
+      "timeline_time": 0.029999999329447746,
+      "timeline_time_float64_bits": "000000e051b89e3f"
+    },
+    {
+      "custom_step_counter": 0,
+      "geometry_evaluation_call_count": 0,
+      "joint_float32": {
+        "bits_hex": "a8599b3c50869e3c9151c83fd2785cbc5e4d72bc00000000",
+        "sha256": "752f9028218e5a3b4f226feb5dbdd4ced84c783742e904bdbdd8d8323f5939f5",
+        "values": [
+          0.01896364986896515,
+          0.019351154565811157,
+          1.5649892091751099,
+          -0.013456540182232857,
+          -0.014788953587412834,
+          0.0
+        ]
+      },
+      "object_position_float32": {
+        "bits_hex": "9a99993e0000000053b0063d",
+        "sha256": "7c92fa4e59547af82b9b3f4d3f659982bdc9df6256eba57de08880aa2e2b5489",
+        "values": [
+          0.30000001192092896,
+          0.0,
+          0.03288299962878227
+        ]
+      },
+      "object_quaternion_float32": {
+        "bits_hex": "0000803f000000000000000000000000",
+        "sha256": "ccaf6f183579497e8bfcd71045c04286fd3c2e60f3641e3eea164b761a4494b7",
+        "values": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "phase": "after_live_and_raw_binding_before_final_repause",
+      "play_simulations_setting": {
+        "error": null,
+        "readable": true,
+        "value": false
+      },
+      "q5_science_evaluation_count": 0,
+      "q5_science_state_write_count": 0,
+      "q5_trap_invocation_count": 0,
+      "simulation_context_clock": {
+        "current_time": 0.009999999776482582,
+        "current_time_step_index": 2
+      },
+      "simulation_context_clock_float64_bits": {
+        "current_time": "00000040e17a843f"
+      },
+      "thread": {
+        "ident": 134403133817920,
+        "is_main_thread": true,
+        "name": "MainThread"
+      },
+      "timeline_commit_call_count": 1,
+      "timeline_metadata": {
+        "auto_updating": true,
+        "current_tick": 0,
+        "director_none": true,
+        "fast_mode": true,
+        "float64_bits": {
+          "end_time": "000000000000f03f",
+          "start_time": "0000000000000000",
+          "target_framerate": "0000000000005940",
+          "tentative_time": "000000e051b89e3f",
+          "ticks_per_second": "0000000000005940",
+          "time_codes_per_second": "0000000000005940",
+          "zoom_end_time": "000000000000f03f",
+          "zoom_start_time": "0000000000000000"
+        },
+        "looping": true,
+        "play_every_frame": true,
+        "prerolling": false,
+        "ticks_per_frame": 1,
+        "zoomed": false
+      },
+      "timeline_playing": false,
+      "timeline_stopped": false,
+      "timeline_time": 0.029999999329447746,
+      "timeline_time_float64_bits": "000000e051b89e3f"
+    },
+    {
+      "custom_step_counter": 0,
+      "geometry_evaluation_call_count": 0,
+      "joint_float32": {
+        "bits_hex": "a8599b3c50869e3c9151c83fd2785cbc5e4d72bc00000000",
+        "sha256": "752f9028218e5a3b4f226feb5dbdd4ced84c783742e904bdbdd8d8323f5939f5",
+        "values": [
+          0.01896364986896515,
+          0.019351154565811157,
+          1.5649892091751099,
+          -0.013456540182232857,
+          -0.014788953587412834,
+          0.0
+        ]
+      },
+      "object_position_float32": {
+        "bits_hex": "9a99993e0000000053b0063d",
+        "sha256": "7c92fa4e59547af82b9b3f4d3f659982bdc9df6256eba57de08880aa2e2b5489",
+        "values": [
+          0.30000001192092896,
+          0.0,
+          0.03288299962878227
+        ]
+      },
+      "object_quaternion_float32": {
+        "bits_hex": "0000803f000000000000000000000000",
+        "sha256": "ccaf6f183579497e8bfcd71045c04286fd3c2e60f3641e3eea164b761a4494b7",
+        "values": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "phase": "after_live_and_raw_binding_after_final_repause",
+      "play_simulations_setting": {
+        "error": null,
+        "readable": true,
+        "value": false
+      },
+      "q5_science_evaluation_count": 0,
+      "q5_science_state_write_count": 0,
+      "q5_trap_invocation_count": 0,
+      "simulation_context_clock": {
+        "current_time": 0.009999999776482582,
+        "current_time_step_index": 2
+      },
+      "simulation_context_clock_float64_bits": {
+        "current_time": "00000040e17a843f"
+      },
+      "thread": {
+        "ident": 134403133817920,
+        "is_main_thread": true,
+        "name": "MainThread"
+      },
+      "timeline_commit_call_count": 1,
+      "timeline_metadata": {
+        "auto_updating": true,
+        "current_tick": 0,
+        "director_none": true,
+        "fast_mode": true,
+        "float64_bits": {
+          "end_time": "000000000000f03f",
+          "start_time": "0000000000000000",
+          "target_framerate": "0000000000005940",
+          "tentative_time": "000000e051b89e3f",
+          "ticks_per_second": "0000000000005940",
+          "time_codes_per_second": "0000000000005940",
+          "zoom_end_time": "000000000000f03f",
+          "zoom_start_time": "0000000000000000"
+        },
+        "looping": true,
+        "play_every_frame": true,
+        "prerolling": false,
+        "ticks_per_frame": 1,
+        "zoomed": false
+      },
+      "timeline_playing": false,
+      "timeline_stopped": false,
+      "timeline_time": 0.029999999329447746,
+      "timeline_time_float64_bits": "000000e051b89e3f"
+    }
+  ]
+}

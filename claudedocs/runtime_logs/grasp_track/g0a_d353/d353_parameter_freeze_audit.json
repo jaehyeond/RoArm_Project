@@ -1,0 +1,96 @@
+{
+  "artifact": "D353_PARAMETER_FREEZE_AUDIT_V1",
+  "case": "g0a_d353",
+  "case_name": "timeline_pause_pending_state_commit_bridge",
+  "checks": {
+    "gpu_telemetry_frozen_from_d352": true,
+    "only_authorized_true_scope_flag": true,
+    "operational_variable_exact_one": true,
+    "physical_variables_zero": true,
+    "planned_zero_not_result_authority": true,
+    "scientific_variables_zero": true,
+    "seed_frozen": true,
+    "watchdogs_frozen_from_d352": true
+  },
+  "commit_application": {
+    "already_paused_rule": "no redundant pause and no bare commit",
+    "call_rule": "one commit only when the inherited boundary issued pause request(s)",
+    "main_thread_only": true,
+    "minimum_discriminating_transitions": 1,
+    "registered_boundaries": [
+      "after_reset_initial_pause",
+      "after_live_topology_binding",
+      "after_raw_shape_binding_before_prerequisites"
+    ]
+  },
+  "inherited_controls": {
+    "durable_phase_marker_stream": "D352 append/fsync mechanism; preregistered D353 read-only commit fields",
+    "external_bounded_wall_clock_watchdog": "D352 frozen 120s/300s",
+    "gpu_cpu_telemetry": "D352 frozen informational observer"
+  },
+  "new_operational_variables": [
+    "explicit_timeline_commit_after_pause"
+  ],
+  "new_physical_variables": [],
+  "new_scientific_variables": [],
+  "pass": true,
+  "read_only_measurement_channels": [
+    "timeline all-event callback delta",
+    "timeline metadata exact snapshots",
+    "custom counter and SimulationContext clock",
+    "joint/object mutation sentinels"
+  ],
+  "rerun_omission": "Timeline transaction and exact mutation-sentinel verdict only; no geometry, pose, contact, trajectory, or synchronized sensor-time interpretation",
+  "result_semantics": {
+    "all_outcomes": {
+      "current_pose_support_or_rejection": null,
+      "g0a_pass": false,
+      "geometry_pass_or_fail": null,
+      "scientific_verdict": null,
+      "target_ik_repair_justification": null
+    },
+    "authority_sequence": [
+      "summary O_EXCL/fsync with candidate only",
+      "summary exact reread",
+      "separate attestation O_EXCL/fsync with authoritative result"
+    ],
+    "full_bridge": "controlled_physics_steps=0",
+    "historical_d351_d352_values_unchanged": true,
+    "incomplete_or_failed_bridge": "controlled_physics_steps=null"
+  },
+  "scope_guards": {
+    "asset_write_or_recook": false,
+    "authorized_timeline_commit_after_existing_pause": true,
+    "commit_silently": false,
+    "controlled_physics_steps_planned": 0,
+    "decomposition_change": false,
+    "forward_or_rewind_one_frame": false,
+    "fresh_property_or_cook_query": false,
+    "g0a_pass": false,
+    "g0b": false,
+    "gate_or_tolerance_change": false,
+    "geometry_or_current_pose_verdict": null,
+    "ladder_promotion": false,
+    "material_mass_actuator_physics_solver_or_renderer_change": false,
+    "moving_surface_measurement": false,
+    "other_new_playback_or_timeline_control": false,
+    "q0_q5_or_object_pose_change": false,
+    "q5_science_sample": false,
+    "rl_or_ppo": false,
+    "settle": false,
+    "simulation_app_or_kit_update": false,
+    "target_ik_or_path_change": false,
+    "ten_trial": false,
+    "vla": false
+  },
+  "watchdog": {
+    "automatic_retry": false,
+    "escalation_if_still_alive": "SIGKILL",
+    "faulthandler_grace_s": 5.0,
+    "faulthandler_signal": "SIGUSR1",
+    "marker_inactivity_s": 120.0,
+    "termination_grace_s": 30.0,
+    "termination_signal": "SIGTERM",
+    "total_worker_wall_clock_s": 300.0
+  }
+}

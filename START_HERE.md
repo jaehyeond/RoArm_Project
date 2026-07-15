@@ -1,10 +1,10 @@
 # START_HERE.md
 
 Last updated: 2026-07-15 KST. D350 remains the last completed scientific and
-observability case. D351 remains an operational pre-science STOP. D352 completed
-its single localization run and found a deferred timeline-state verification
-defect, but did not reproduce D351's 3693.302s long run or enter q5 science.
-`g0a_pass=false`, `settle_authorized=false`, and target/IK remains frozen.
+observability case. D351 is an operational pre-science STOP, D352 localized its
+pending Timeline state, and D353 proved the explicit-commit zero-step control
+repair in one run. D353 did not execute q5 science. No next executable case is
+authorized; `g0a_pass=false`, `settle_authorized=false`, and target/IK is frozen.
 
 ## Current Truth
 
@@ -14,123 +14,133 @@ defect, but did not reproduce D351's 3693.302s long run or enter q5 science.
 - q5 convention is fixed: URDF `q5=0` is CLOSED; frozen sim OPEN is
   `q5=1.5413rad`. Nominal HOME is `[0,0,90,0,0,0]deg`, but D347 measured a
   HOME-near q5=0 CLOSED state, not exact HOME.
-- D348 proved the PhysX property volume comparator must use the callback's
-  original polygon topology, not a newly generated vertex-only Qhull envelope.
-  The corrected representation gate is `256/256` channels and `128/128` parts.
-- D349 measured the frozen `(radial,tangent)=(7,11)mm`, sign `-1`, seed `33201`,
-  HOME-seeded position-only IK target before physics. Raw/live gaps were
-  link5 `4.2726455336/4.2727365803mm` and moving gripper
-  `11.1750883746/11.3402623263mm`. These do not prove contact or grasp.
-- D350 bound the actual connected fixed-jaw `link5` surface and measured it
-  without inventing an alignment tolerance. Its verdict is
+- D348 proved the PhysX property-volume comparator must use callback polygon
+  topology, not a new vertex-only Qhull. The corrected gate is `256/256`
+  channels and `128/128` parts.
+- D349 frozen-OPEN raw/live distances were link5
+  `4.2726455336/4.2727365803mm` and moving gripper
+  `11.1750883746/11.3402623263mm`. They do not prove contact or grasp.
+- D350 measured the actual connected fixed-jaw `link5` surface and completed
+  the real Isaac Viewer plus 64+64 collider visualization. Its verdict is
   `D350_FROZEN_FIXED_JAW_GEOMETRY_MEASURED_AND_VIEWER_SUPPORTED`, with
   `aligned_pass=null`, not an alignment/grasp PASS.
-- D352 proved D351 attempt2's repeated `timeline.pause()` checks were synchronous
-  checks of a deferred state change: all five snapshots remained PLAY while
-  step/time/clock/joint/object state stayed exact. This is a pre-q5 control STOP,
-  not evidence that physics advanced or that closure geometry passed/failed.
+- D352 showed that repeated `timeline.pause()` followed by immediate Boolean
+  checks only read the old committed PLAY state. Time, clock, joint, object,
+  and custom-step state stayed exact; this was a deferred-state control defect.
+- D353 applied that one pending state with one main-thread `Timeline.commit()`.
+  The state changed `PLAY -> pending PLAY -> PAUSE`, while all registered
+  time/world/state sentinels stayed exact and controlled physics steps were `0`.
+  This repairs the zero-step control bridge only; it is not q5 science.
 
 ## Last Scientific + Observability Case: D350
 
-- Output: `claudedocs/runtime_logs/grasp_track/g0a_d350/`. Actual fixed-jaw
-  connected surface was `7,250` faces / `3,519` vertices; centerline tangent/height
-  offsets were `-24.055688/-20.360856mm`, with `aligned_pass=null`.
-- Real Viewer ran `180.007254s` / `8,222` updates at zero controlled steps; six
-  Isaac captures and repaired RRD/RBL/manual inspection passed. Completion SHA:
-  `7866886a49ecfca1c16bd1283c89e920613a4c25581dadf5ebaa195e1303cedb`.
+- Output: `claudedocs/runtime_logs/grasp_track/g0a_d350/`. The connected fixed
+  jaw was `7,250` faces / `3,519` vertices; centerline tangent/height offsets
+  were `-24.055688/-20.360856mm`, with `aligned_pass=null`.
+- The real Viewer ran `180.007254s` / `8,222` updates at zero controlled steps;
+  six Isaac captures and repaired RRD/RBL/manual inspection passed. Completion
+  SHA-256: `7866886a49ecfca1c16bd1283c89e920613a4c25581dadf5ebaa195e1303cedb`.
 
 ## D351 Closed Outcome
 
-- Immutable attempt1 root: `claudedocs/runtime_logs/grasp_track/g0a_d351/`.
-  Forward-only attempt2 root: `claudedocs/runtime_logs/grasp_track/g0a_d351/attempt2_timeline_pause_repair/`.
-- attempt1 reached corrected live `128/128`, saw PLAY, and stopped before q5.
-  attempt2 parameter exact + preflight `20/20` + real GUI passed, but emitted no
-  live/bridge/raw/science artifact before user-approved SIGTERM at Kit
+- attempt1 reached corrected live `128/128`, observed PLAY, and stopped before
+  q5. Forward-only attempt2 passed exact parameters and preflight `20/20`, then
+  emitted no live/bridge/science artifact before user-approved SIGTERM at Kit
   `3693.302s`; it was not retried.
-- Verdict `D351_ATTEMPT2_PRE_SCIENCE_RUNTIME_LONG_RUN_STOP`; q5=`0` by program
-  order, controlled steps=`null`, science/geometry/current-pose/target-IK=`null`.
-  External audit SHA:
+- Verdict `D351_ATTEMPT2_PRE_SCIENCE_RUNTIME_LONG_RUN_STOP`; q5 count `0`,
+  controlled steps `null`, science/geometry/current-pose/target-IK `null`.
+  External-audit SHA-256:
   `af17995b40d5818055388f97e38cbb50f0895f3a2aa4d2cb7f5cf1df3b6166fe`.
 
 ## D352 Closed Outcome
 
-- Forward-only output:
-  `claudedocs/runtime_logs/grasp_track/g0a_d352/`. Prepare and one real
-  `headless=false`, `DISPLAY=:1`, `cuda:0` validate were run; no retry occurred.
-- AppLauncher took `18.496625s`, `_make_runtime_env` `3.228809s`, reset
-  `0.038351s`, corrected audit `0.096625s`, live builder `1.882320s`, payload
-  write `0.024480s`, and raw binding `1.937505s`. Localization completed at worker
-  elapsed `27.093245s`; live trace was `128/128`, body subchecks `64+64`, raw PASS.
-- Thus D351's `3693.302s` long run did not reproduce. The deterministic-block
-  hypothesis for the registered phases is unsupported, but D351's historical
-  function-level cause remains `null` because it has no marker or stack dump.
-- The exact five bridge snapshots all had `timeline_playing=true` even after
-  three pause calls at each repair boundary. Meanwhile custom counter stayed `0`,
-  timeline time, SimulationContext clock, and joint/object Float32 bits were exact,
-  and `/app/player/playSimulations=false` was readable.
-- Installed `omni.timeline 1.0.14` documents that state changes apply in the next
-  frame; `Timeline.commit()` applies pending state. D351 attempt2 called neither a
-  frame update nor commit before immediate `is_playing()`. The corrected operational
-  verdict is `D352_LOCALIZATION_COMPLETE_TIMELINE_PAUSE_PENDING_STATE_STOP`.
-- The raw supervisor string `D352_LOCALIZATION_EXCEPTION_STOP` is a catch-all
-  classifier defect: worker exit was `0`, watchdog false, runtime exception null.
-  The raw case PASS remains false.
-- D352 q5 count is `0`; controlled physics steps are `null` because the PAUSE
-  bridge failed. Science/geometry/current-pose/target-IK verdicts remain `null`,
-  `g0a_pass=false`. No moving-surface measurement, sweep, Viewer, RRD, or RBL exists.
-- GPU telemetry was 31/31 valid: device active-time min/mean/max
-  `0/3.870968/15%`, VRAM `2052/3863.968/7430MiB`, worker CPU
-  `4/127.935/724.7%`. This is device-level activity, not warp occupancy or a
-  causal bottleneck. A zero-step single-env audit has no batched GPU workload to
-  fill 76 SM, and GPU tuning is not a repair for pending timeline state.
-- Postrun classification audit SHA-256:
+- One real `headless=false`, `DISPLAY=:1`, `cuda:0` localization run completed
+  at worker elapsed `27.093245s`; live was `128/128`, body `64+64`, raw PASS,
+  watchdog false, and no retry occurred. D351's long run did not reproduce.
+- All five bridge snapshots remained PLAY even after pause requests, while
+  counter/time/SimulationContext/joint/object bits stayed exact. Corrected
+  verdict: `D352_LOCALIZATION_COMPLETE_TIMELINE_PAUSE_PENDING_STATE_STOP`.
+- q5 count `0`; controlled steps `null`; scientific/geometry/current-pose/
+  target-IK verdicts `null`; `g0a_pass=false`. GPU `31/31` active-time samples
+  were device activity, not warp occupancy or a causal bottleneck.
+- Postrun audit SHA-256:
   `92c186a7a4175101e7a3890f6bedf4cb6125bc5a78f13f38b79004a9b6035594`.
 
-## Next Authorization Boundary
+## D353 Closed Outcome
 
-- There is no approved executable case now. The narrow candidate is D353
-  `[timeline_pause_pending_state_commit_bridge]`, with exactly one new operational
-  variable: `explicit_timeline_commit_after_pause`.
-- D353 would prove PAUSE plus unchanged timeline time, SimulationContext clock,
-  custom step counter, joint/object Float32 bits, and q5 count zero. It must not
-  call `simulation_app.update()` or `forward_one_frame()` and must not run q5
-  science, geometry, target/IK, Viewer/Rerun, settle, or promotion.
-- Only after that zero-step bridge PASS may closure science be proposed in another
-  forward-only case. The user's q5-science intent is recorded, but the failed
-  bridge prevents using that authorization before a separately approved repair.
+- Forward-only output: `claudedocs/runtime_logs/grasp_track/g0a_d353/`.
+  Prepare and exactly one real `headless=false`, `DISPLAY=:1`, `cuda:0`
+  validate ran; no retry occurred. The only new variable was
+  `explicit_timeline_commit_after_pause`.
+- Supervisor/worker preflight passed `25/25` and `35/35`. The worker reached
+  bridge authority at elapsed `21.847929s`, reached `SimulationApp.close` at
+  `22.440569s`, and was reaped with exit `0`; watchdog false, runtime exception
+  absent, and the 17-file success inventory was exact.
+- Exactly one commit attempt/call caused one discriminating
+  `PLAY -> pending PLAY -> PAUSE` transition and one PAUSE callback inside the
+  commit window on the caller MainThread. Live/raw boundaries were already
+  PAUSE and correctly made no extra commit.
+- All 9 detailed + 5 canonical snapshots kept timeline time
+  `0.029999999329447746`, SimulationContext time/index
+  `0.009999999776482582/2`, custom counter `0`, joint/object bits, geometry
+  counter `0`, and q5 evaluation/state-write/trap counts `0` exact. Live was
+  `128/128` (`64+64`), and raw payload reproduced D352 exactly.
+- After summary fsync and exact reread, the separate attestation authoritatively
+  recorded D353 controlled physics steps `0`. D351/D352 historical controlled
+  values remain `null`.
+- Final verdict: `D353_TIMELINE_COMMIT_ZERO_STEP_BRIDGE_PASS_NO_SCIENCE`.
+  scientific/geometry/current-pose/grasp/target-IK verdicts remain `null`,
+  `g0a_pass=false`; no moving-surface measurement, q5 sweep, Viewer, RRD, or RBL
+  was produced.
+- GPU telemetry was `26/26` valid: utilization min/mean/max `0/2.6923/21%`,
+  VRAM `2052/4013/7437MiB`, worker CPU `9.3/153.644/740.2%`. This does not
+  measure warp occupancy; a one-env zero-step control case has no batched
+  workload with which to fill 76 SM.
+- Commit attestation / final supervisor SHA-256:
+  `4758e9b09b3298ae0dd292f327bb37b474a624d3f0190629968c55cb091393d5` /
+  `65c57e69f017d7d7afbb5fd03b10b56e87bb1bbc442b1351a25c18a0a55a31a5`.
+
+## Current Authorization Boundary
+
+- No D354 code, output path, prepare, or validate is authorized yet.
+- The narrow next candidate is a new forward-only current-pose q5 closure-science
+  case that inherits the D353 attested PAUSE bridge. Its exact science variables,
+  q5 sampling/sweep, moving-surface measurement, visualization, watchdog, and
+  artifact gates must be preregistered before one run.
+- D353 itself is immutable and must not be rerun or overwritten. q5 science can
+  start only after a new explicit user approval issued after the D353 briefing.
 
 ## Frozen Boundaries
 
-- Do not change assets, decomposition, target/IK/path, tolerances, material,
-  actuator, mass, or physics settings. Do not run settle, ten-trial, G0b,
-  RL/PPO, VLA, or ladder promotion.
-- Do not treat GUI launch, preflight PASS, CPU/GPU activity, an open Viewer, or
-  signal-followed exit `0` as proof that geometry or visualization completed.
-- Do not treat repeated `timeline.pause()` plus an immediate `is_playing()` query
-  as committed PAUSE. Timeline state is deferred; any commit-based repair must
-  separately prove zero timeline/SimulationContext/state advancement.
-- Do not call D347's vertex-only Qhull value callback-topology volume, and do not
-  substitute Rerun Float32 display copies for canonical Float64/callback data.
-- Do not use the legacy 8mm proxy or a near-radial PCA axis alone as actual
-  connected-jaw alignment authority.
-- `HANDOFF.md` and `TASKS.md` are stale. D338-D352 run evidence is immutable.
+- Do not change assets, decomposition, target/IK/path, q0-q5/object initial
+  state, gates/tolerances, material, actuator, mass, renderer, solver, or physics
+  settings without a separately approved case.
+- Do not run settle, ten-trial, G0b, RL/PPO, VLA, or ladder promotion. Do not
+  call D353 a geometry/contact/grasp PASS.
+- Deferred timeline commands require committed-state evidence. In a zero-step
+  case, any apply mechanism must also prove exact timeline/SimulationContext/
+  joint/object/state non-advancement.
+- Do not substitute vertex-only Qhull volume for callback topology or Rerun
+  Float32 display copies for canonical Float64/callback evidence.
+- `HANDOFF.md` and `TASKS.md` are stale. D338-D353 evidence is immutable.
   Hardware control, `JOINT_LIMITS` removal, B200/SSH/pull, `/half-clone`, and
   unapproved commit/push remain forbidden.
 
 ## Must Read First
 
-1. `AGENTS.md`; this file; DECISIONS D348-D352; ledger tail
-2. `claudedocs/session_20260714_grasp_g0a_d349_frozen_open_jaw_target_live_distance_gate.md`
-3. `claudedocs/session_20260714_grasp_g0a_d348_physx_property_query_volume_semantics.md`
+1. `AGENTS.md`; this file; DECISIONS D348-D353; ledger tail
+2. `claudedocs/session_20260714_grasp_g0a_d348_physx_property_query_volume_semantics.md`
+3. `claudedocs/session_20260714_grasp_g0a_d349_frozen_open_jaw_target_live_distance_gate.md`
 4. `claudedocs/session_20260714_grasp_g0a_d350_fixed_jaw_geometry_viewer.md`
 5. `claudedocs/session_20260714_grasp_g0a_d350_observability_repair.md`
-6. `claudedocs/runtime_logs/grasp_track/g0a_d350/attempt2_observability_repair/d350_completion_summary.json`
-   and `d350_manual_visual_inspection.json` in the same folder
-7. `claudedocs/session_20260715_grasp_g0a_d351_zero_step_closure_geometry.md`
-8. `claudedocs/session_20260715_grasp_g0a_d351_timeline_pause_repair.md`
-9. `claudedocs/runtime_logs/grasp_track/g0a_d351/attempt2_timeline_pause_repair/d351_external_termination_audit.json`
-10. `claudedocs/session_20260715_grasp_g0a_d352_d351_validate_phase_localization_watchdog.md`
-11. `claudedocs/runtime_logs/grasp_track/g0a_d352/d352_postrun_classification_audit.json`
+6. `claudedocs/session_20260715_grasp_g0a_d351_zero_step_closure_geometry.md`
+7. `claudedocs/session_20260715_grasp_g0a_d351_timeline_pause_repair.md`
+8. `claudedocs/runtime_logs/grasp_track/g0a_d351/attempt2_timeline_pause_repair/d351_external_termination_audit.json`
+9. `claudedocs/session_20260715_grasp_g0a_d352_d351_validate_phase_localization_watchdog.md`
+10. `claudedocs/runtime_logs/grasp_track/g0a_d352/d352_postrun_classification_audit.json`
+11. `claudedocs/session_20260715_grasp_g0a_d353_timeline_pause_pending_state_commit_bridge.md`
+12. D353 `d353_timeline_commit_bridge_attestation.json` and
+    `d353_supervisor_audit.json` in `claudedocs/runtime_logs/grasp_track/g0a_d353/`
 
 ## Operational Storage Sidecar
 
@@ -138,10 +148,9 @@ defect, but did not reproduce D351's 3693.302s long run or enter q5 science.
   local raw-only cleanup. Restore only through
   `raw_predelete_manifest_20260714.tsv` verification.
 - User-owned `claudedocs/lab_meeting/20260715/d334_collision_table/` is a
-  non-scientific sidecar. Do not modify or infer D351 science from it.
+  non-scientific sidecar. Do not modify it or infer D353 science from it.
 
-Base HEAD and local `origin/master` are
-`c2cfa5f41d4c15fec15330cfad38b9b14e4c4f61` (D351 operational STOP state).
-The worktree was clean before D352 implementation and now contains only the
-forward-only D352/state changes plus preexisting evidence. Commit/push remains
-user-request-only and was not performed.
+Base HEAD and local `origin/master` were cross-verified clean at
+`1f235b8a310afeb9f4f6734d69aba2a5430b7602` (`D352수정`) before D353 edits.
+The prior `c2cfa5f...` wording was stale after the user's D352 push. D353
+commit/push remains user-request-only and is not authorized.
