@@ -1,8 +1,9 @@
 # START_HERE.md
 
 Last updated: 2026-07-15 KST. D350 remains the last completed scientific and
-observability case. D351 is closed as an operational pre-science STOP, not as a
-closure-geometry PASS or FAIL. There is no approved active execution case.
+observability case. D351 remains an operational pre-science STOP. D352 completed
+its single localization run and found a deferred timeline-state verification
+defect, but did not reproduce D351's 3693.302s long run or enter q5 science.
 `g0a_pass=false`, `settle_authorized=false`, and target/IK remains frozen.
 
 ## Current Truth
@@ -24,76 +25,79 @@ closure-geometry PASS or FAIL. There is no approved active execution case.
   without inventing an alignment tolerance. Its verdict is
   `D350_FROZEN_FIXED_JAW_GEOMETRY_MEASURED_AND_VIEWER_SUPPORTED`, with
   `aligned_pass=null`, not an alignment/grasp PASS.
+- D352 proved D351 attempt2's repeated `timeline.pause()` checks were synchronous
+  checks of a deferred state change: all five snapshots remained PLAY while
+  step/time/clock/joint/object state stayed exact. This is a pre-q5 control STOP,
+  not evidence that physics advanced or that closure geometry passed/failed.
 
-## Last Completed Case: D350
+## Last Scientific + Observability Case: D350
 
-- Output: `claudedocs/runtime_logs/grasp_track/g0a_d350/`.
-- The actual fixed-jaw component contained `7,250` faces and `3,519` unique
-  vertices. At the cylinder radial station its centerline offset was tangent
-  `-24.055688mm`, height `-20.360856mm`, radial residual `-0.471744mm`.
-- The actual nearest fixed-jaw witness was `+15.894261mm` above cylinder center;
-  the legacy 8mm proxy differed from it by `17.027401mm`.
-- The real Isaac Viewer ran `180.007254s` over `8,222` UI/render updates with
-  timeline paused, counter `0->0`, state drift `0`, and physics steps `0`.
-- Six `1280x720 RGBA` Isaac captures showed the assembled robot, actual PhysX
-  collider display, and colored link5 `64` + gripper `64` parts. Repaired
-  RRD/RBL, exact entity/component checks, and manual visual inspection passed.
-- Completion summary SHA-256:
+- Output: `claudedocs/runtime_logs/grasp_track/g0a_d350/`. Actual fixed-jaw
+  connected surface was `7,250` faces / `3,519` vertices; centerline tangent/height
+  offsets were `-24.055688/-20.360856mm`, with `aligned_pass=null`.
+- Real Viewer ran `180.007254s` / `8,222` updates at zero controlled steps; six
+  Isaac captures and repaired RRD/RBL/manual inspection passed. Completion SHA:
   `7866886a49ecfca1c16bd1283c89e920613a4c25581dadf5ebaa195e1303cedb`.
 
 ## D351 Closed Outcome
 
 - Immutable attempt1 root: `claudedocs/runtime_logs/grasp_track/g0a_d351/`.
   Forward-only attempt2 root: `claudedocs/runtime_logs/grasp_track/g0a_d351/attempt2_timeline_pause_repair/`.
-- Approved question: before changing target/IK, zero-step measure whether the
-  actual moving-jaw inside surface first contacts the cylinder barrel while q5
-  closes from OPEN to CLOSED in the frozen D350 pose.
-- New scientific variables were limited to
-  `[moving_jaw_actual_contact_surface_binding, frozen_pose_q5_closure_sweep]`;
-  new physical variables were `0`. Assets, `64+64` decomposition, q0-q4/object,
-  target/IK/path, gates, material, actuator, and physics settings stayed frozen.
-- attempt1 launched the real `headless=False` Isaac GUI and wrote corrected live
-  binding `128/128`, then observed timeline `PLAY` and stopped before q5 sample 1.
-  Its q5 evaluation count is `0`; measurement, Viewer/RRD, and scientific verdict
-  are absent. Its controlled-physics-step field remains the recorded `null`.
-- Reactive attempt2 reproduced the exact attempt1 parameter SHA-256
-  `98b5778e826d411f37606dd724093a1ff292040d8c1d350db3781508735502e2`.
-  Fresh validate preflight was `20/20 PASS`; a real RTX 4090 GUI launched with
-  `headless=false` and `DISPLAY=:1`.
-- Kit logged app-ready `13.360s` and startup-complete `15.953s`, but no attempt2
-  live-binding, five-snapshot bridge, raw binding, measurement, D351 Viewer
-  capture, RRD, or runtime-exception artifact appeared before shutdown elapsed
-  `3693.302s`.
-- After more than 60 minutes, the user approved `SIGTERM`; Kit closed gracefully
-  and the process/GPU context disappeared. Shell exit `0` from graceful close is
-  not a scientific PASS. No automatic retry was made.
-- attempt2 q5 evaluation count is `0` by exact program order: the first q5 call
-  occurs only after the missing live-binding write and raw prerequisite.
-  Controlled physics steps remain `null` because the zero-step bridge never
-  completed; they must not be backfilled as `0`.
-- Final operational verdict:
-  `D351_ATTEMPT2_PRE_SCIENCE_RUNTIME_LONG_RUN_STOP`. Closure geometry,
-  current-pose grasp feasibility, and target/IK-repair justification are all
-  `null`. D351 has no completed Rerun/Viewer/collider inspection contract.
-- External termination audit SHA-256:
+- attempt1 reached corrected live `128/128`, saw PLAY, and stopped before q5.
+  attempt2 parameter exact + preflight `20/20` + real GUI passed, but emitted no
+  live/bridge/raw/science artifact before user-approved SIGTERM at Kit
+  `3693.302s`; it was not retried.
+- Verdict `D351_ATTEMPT2_PRE_SCIENCE_RUNTIME_LONG_RUN_STOP`; q5=`0` by program
+  order, controlled steps=`null`, science/geometry/current-pose/target-IK=`null`.
+  External audit SHA:
   `af17995b40d5818055388f97e38cbb50f0895f3a2aa4d2cb7f5cf1df3b6166fe`.
-  Kit log SHA-256:
-  `b4eb319c2b19638f6e263e6b654fb517f494a847e073b573c24d4563e7f72e20`.
 
-## Active Case / Next Authorization Boundary
+## D352 Closed Outcome
 
-- No case is currently approved for implementation or execution. D351 attempt1
-  and attempt2 are immutable STOP evidence and must not be rerun or overwritten.
-- The narrow next candidate, requiring separate user approval, is D352
-  `[d351_validate_phase_localization_watchdog]`. It would add only forward-only
-  phase markers and a bounded wall-clock watchdog around `_make_runtime_env`,
-  reset, corrected audit, live parts `0..127`, and the zero-step bridge.
-- D352 is localization-only: no q5 science sample, geometry verdict, target/IK
-  change, physics step, gate change, or promotion is authorized by this entry.
-  Resuming the q5 closure experiment after D352 requires another explicit user
-  approval.
-- A later target/IK geometry-repair case may be considered only if a completed
-  closure discriminator supplies evidence. D351 supplies no such evidence.
+- Forward-only output:
+  `claudedocs/runtime_logs/grasp_track/g0a_d352/`. Prepare and one real
+  `headless=false`, `DISPLAY=:1`, `cuda:0` validate were run; no retry occurred.
+- AppLauncher took `18.496625s`, `_make_runtime_env` `3.228809s`, reset
+  `0.038351s`, corrected audit `0.096625s`, live builder `1.882320s`, payload
+  write `0.024480s`, and raw binding `1.937505s`. Localization completed at worker
+  elapsed `27.093245s`; live trace was `128/128`, body subchecks `64+64`, raw PASS.
+- Thus D351's `3693.302s` long run did not reproduce. The deterministic-block
+  hypothesis for the registered phases is unsupported, but D351's historical
+  function-level cause remains `null` because it has no marker or stack dump.
+- The exact five bridge snapshots all had `timeline_playing=true` even after
+  three pause calls at each repair boundary. Meanwhile custom counter stayed `0`,
+  timeline time, SimulationContext clock, and joint/object Float32 bits were exact,
+  and `/app/player/playSimulations=false` was readable.
+- Installed `omni.timeline 1.0.14` documents that state changes apply in the next
+  frame; `Timeline.commit()` applies pending state. D351 attempt2 called neither a
+  frame update nor commit before immediate `is_playing()`. The corrected operational
+  verdict is `D352_LOCALIZATION_COMPLETE_TIMELINE_PAUSE_PENDING_STATE_STOP`.
+- The raw supervisor string `D352_LOCALIZATION_EXCEPTION_STOP` is a catch-all
+  classifier defect: worker exit was `0`, watchdog false, runtime exception null.
+  The raw case PASS remains false.
+- D352 q5 count is `0`; controlled physics steps are `null` because the PAUSE
+  bridge failed. Science/geometry/current-pose/target-IK verdicts remain `null`,
+  `g0a_pass=false`. No moving-surface measurement, sweep, Viewer, RRD, or RBL exists.
+- GPU telemetry was 31/31 valid: device active-time min/mean/max
+  `0/3.870968/15%`, VRAM `2052/3863.968/7430MiB`, worker CPU
+  `4/127.935/724.7%`. This is device-level activity, not warp occupancy or a
+  causal bottleneck. A zero-step single-env audit has no batched GPU workload to
+  fill 76 SM, and GPU tuning is not a repair for pending timeline state.
+- Postrun classification audit SHA-256:
+  `92c186a7a4175101e7a3890f6bedf4cb6125bc5a78f13f38b79004a9b6035594`.
+
+## Next Authorization Boundary
+
+- There is no approved executable case now. The narrow candidate is D353
+  `[timeline_pause_pending_state_commit_bridge]`, with exactly one new operational
+  variable: `explicit_timeline_commit_after_pause`.
+- D353 would prove PAUSE plus unchanged timeline time, SimulationContext clock,
+  custom step counter, joint/object Float32 bits, and q5 count zero. It must not
+  call `simulation_app.update()` or `forward_one_frame()` and must not run q5
+  science, geometry, target/IK, Viewer/Rerun, settle, or promotion.
+- Only after that zero-step bridge PASS may closure science be proposed in another
+  forward-only case. The user's q5-science intent is recorded, but the failed
+  bridge prevents using that authorization before a separately approved repair.
 
 ## Frozen Boundaries
 
@@ -102,17 +106,20 @@ closure-geometry PASS or FAIL. There is no approved active execution case.
   RL/PPO, VLA, or ladder promotion.
 - Do not treat GUI launch, preflight PASS, CPU/GPU activity, an open Viewer, or
   signal-followed exit `0` as proof that geometry or visualization completed.
+- Do not treat repeated `timeline.pause()` plus an immediate `is_playing()` query
+  as committed PAUSE. Timeline state is deferred; any commit-based repair must
+  separately prove zero timeline/SimulationContext/state advancement.
 - Do not call D347's vertex-only Qhull value callback-topology volume, and do not
   substitute Rerun Float32 display copies for canonical Float64/callback data.
 - Do not use the legacy 8mm proxy or a near-radial PCA axis alone as actual
   connected-jaw alignment authority.
-- `HANDOFF.md` and `TASKS.md` are stale. D338-D351 evidence is immutable.
+- `HANDOFF.md` and `TASKS.md` are stale. D338-D352 run evidence is immutable.
   Hardware control, `JOINT_LIMITS` removal, B200/SSH/pull, `/half-clone`, and
   unapproved commit/push remain forbidden.
 
 ## Must Read First
 
-1. `AGENTS.md`; this file; DECISIONS D348-D351; ledger tail
+1. `AGENTS.md`; this file; DECISIONS D348-D352; ledger tail
 2. `claudedocs/session_20260714_grasp_g0a_d349_frozen_open_jaw_target_live_distance_gate.md`
 3. `claudedocs/session_20260714_grasp_g0a_d348_physx_property_query_volume_semantics.md`
 4. `claudedocs/session_20260714_grasp_g0a_d350_fixed_jaw_geometry_viewer.md`
@@ -122,6 +129,8 @@ closure-geometry PASS or FAIL. There is no approved active execution case.
 7. `claudedocs/session_20260715_grasp_g0a_d351_zero_step_closure_geometry.md`
 8. `claudedocs/session_20260715_grasp_g0a_d351_timeline_pause_repair.md`
 9. `claudedocs/runtime_logs/grasp_track/g0a_d351/attempt2_timeline_pause_repair/d351_external_termination_audit.json`
+10. `claudedocs/session_20260715_grasp_g0a_d352_d351_validate_phase_localization_watchdog.md`
+11. `claudedocs/runtime_logs/grasp_track/g0a_d352/d352_postrun_classification_audit.json`
 
 ## Operational Storage Sidecar
 
@@ -132,5 +141,7 @@ closure-geometry PASS or FAIL. There is no approved active execution case.
   non-scientific sidecar. Do not modify or infer D351 science from it.
 
 Base HEAD and local `origin/master` are
-`cfd9e7501df89724c3cc2b1038fda05ce0d88e2f` (`D350`). The worktree was clean
-before D351 preregistration. Commit/push remains user-request-only.
+`c2cfa5f41d4c15fec15330cfad38b9b14e4c4f61` (D351 operational STOP state).
+The worktree was clean before D352 implementation and now contains only the
+forward-only D352/state changes plus preexisting evidence. Commit/push remains
+user-request-only and was not performed.

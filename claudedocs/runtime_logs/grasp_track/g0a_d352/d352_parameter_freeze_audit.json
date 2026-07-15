@@ -1,0 +1,82 @@
+{
+  "artifact": "D352_PARAMETER_FREEZE_AUDIT_V1",
+  "case": "g0a_d352",
+  "case_name": "d351_validate_phase_localization_watchdog",
+  "checks": {
+    "gpu_sample_nominal_1s": true,
+    "inactivity_watchdog_120s": true,
+    "no_true_occupancy_claim": true,
+    "operational_variables_exact_two": true,
+    "physical_variables_zero": true,
+    "planned_steps_zero_not_result_authority": true,
+    "scientific_variables_zero": true,
+    "scope_boolean_guards_false": true,
+    "seed_frozen": true,
+    "term_grace_30s": true,
+    "total_watchdog_300s": true
+  },
+  "new_operational_variables": [
+    "durable_phase_marker_stream",
+    "external_bounded_wall_clock_watchdog"
+  ],
+  "new_physical_variables": [],
+  "new_scientific_variables": [],
+  "pass": true,
+  "required_localization_boundaries": [
+    "source inventory and input hashes",
+    "AppLauncher start/end",
+    "_make_runtime_env start/end",
+    "reset start/end",
+    "corrected audit start/end",
+    "attempt2 first passive bridge snapshot start/end",
+    "live builder enter/return",
+    "live part 000..127 start/end",
+    "attempt2 live payload hash and zero-step pause bridge boundaries",
+    "full payload deepcopy/serialization/write start/end",
+    "raw binding start/end and final bridge before/after",
+    "SimulationApp close start/end"
+  ],
+  "rerun_omission": "operational control-flow/file-log localization only; no spatial geometry, pose, trajectory, contact, or synchronized sensor-time verdict",
+  "result_semantics": {
+    "all_outcomes": {
+      "current_pose_support_or_rejection": null,
+      "g0a_pass": false,
+      "scientific_verdict": null,
+      "target_ik_repair_justification": null
+    },
+    "bridge_complete": "controlled_physics_steps may be reported as 0 only if exact counter/clock bridge passes",
+    "bridge_incomplete": "controlled_physics_steps remains null"
+  },
+  "scope_guards": {
+    "asset_write_or_recook": false,
+    "controlled_physics_steps_planned": 0,
+    "decomposition_change": false,
+    "fresh_property_or_cook_query": false,
+    "g0a_pass": false,
+    "g0b": false,
+    "gate_or_tolerance_change": false,
+    "geometry_or_current_pose_verdict": null,
+    "ladder_promotion": false,
+    "material_mass_actuator_physics_solver_change": false,
+    "moving_surface_measurement": false,
+    "new_playback_or_timeline_control_beyond_d351_attempt2": false,
+    "q0_q4_or_object_pose_change": false,
+    "q5_science_sample": false,
+    "rl_or_ppo": false,
+    "settle": false,
+    "simulation_app_update": false,
+    "target_ik_or_path_change": false,
+    "ten_trial": false,
+    "vla": false
+  },
+  "watchdog": {
+    "automatic_retry": false,
+    "escalation_if_still_alive": "SIGKILL",
+    "faulthandler_grace_s": 5.0,
+    "faulthandler_signal": "SIGUSR1",
+    "marker_inactivity_s": 120.0,
+    "termination_grace_s": 30.0,
+    "termination_signal": "SIGTERM",
+    "total_worker_wall_clock_s": 300.0
+  }
+}

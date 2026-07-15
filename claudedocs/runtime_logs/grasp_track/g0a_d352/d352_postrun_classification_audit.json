@@ -1,0 +1,130 @@
+{
+  "artifact": "D352_POSTRUN_CLASSIFICATION_AUDIT_V1",
+  "case": "g0a_d352",
+  "purpose": "Separate the completed localization contract failure from the supervisor's catch-all exception label, without rerunning Isaac or changing any raw artifact.",
+  "authoritative_input_hashes": {
+    "d352_supervisor_audit.json": "b1bacc589d63d5dff60746c4030635ad100f9a86b701598c1dece159004f70be",
+    "d352_localization_summary.json": "2548cadc18b098680b8c5500237e4e363258df99ef96bd29d8327f0955c47d60",
+    "d352_zero_step_bridge_contract.json": "26a05d8c76ceaf83a0ebf57324b50c7853d38ce2e6bd58c25e4484c13f9a0036",
+    "d352_live_topology_runtime_binding.json": "8e607e1248c0670a7bed7ab65ccffd0b94ecd506259cd445efe0f7d09e366afb",
+    "d352_raw_source_contract.json": "325004fdc98f01bc01e5534d96ce1e2abe410b47d21029f5961446f2b53f243b",
+    "d352_phase_markers.jsonl": "09371d795a3e0214e3ddf335e7ff4a9bf78955c5b51ad85048e7b1700de389ce",
+    "d352_gpu_cpu_telemetry.jsonl": "04dc29f902afc1ef3f142d424d0a98918defc735aa70ce5cfb698824b5684a2c",
+    "d352_worker_stdout_stderr.log": "16e3e0bdfc01dc8203d3a7a89173e9635d6da442ee708d59535ab2512293de77"
+  },
+  "recorded_raw_results": {
+    "supervisor_operational_verdict": "D352_LOCALIZATION_EXCEPTION_STOP",
+    "supervisor_pass": false,
+    "localization_operational_verdict": "D352_LOCALIZATION_CONTRACT_FAIL_STOP",
+    "localization_pass": false,
+    "worker_exit_code": 0,
+    "watchdog_triggered": false,
+    "runtime_exception_field": null,
+    "runtime_exception_artifact_exists": false,
+    "worker_process_absent_after_reap": true,
+    "worker_process_group_absent_after_cleanup": true
+  },
+  "completed_boundaries": {
+    "app_launcher_duration_s": 18.496625182,
+    "make_runtime_env_duration_s": 3.228808587,
+    "reset_duration_s": 0.038351051,
+    "corrected_audit_duration_s": 0.096624583,
+    "live_builder_duration_s": 1.882319808,
+    "live_parts_started": 128,
+    "live_parts_ended": 128,
+    "live_link5_parts_passed": 64,
+    "live_gripper_link_parts_passed": 64,
+    "live_payload_write_duration_s": 0.024480171,
+    "raw_binding_duration_s": 1.93750473,
+    "raw_binding_pass": true,
+    "localization_complete_process_elapsed_s": 27.093244882,
+    "inner_close_duration_s": 0.601146027,
+    "kit_shutdown_log_elapsed_s": 27.925
+  },
+  "timeline_contract_evidence": {
+    "five_snapshots_written_in_exact_order": true,
+    "timeline_playing_values": [
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "play_simulations_false_when_readable_at_boundaries": true,
+    "pause_interventions_after_live": 3,
+    "pause_interventions_after_raw": 3,
+    "custom_step_counter_zero_at_every_snapshot": true,
+    "timeline_time_bit_exact_invariant": true,
+    "simulation_context_clock_exact_invariant": true,
+    "joint_and_object_float32_bits_exact_invariant": true,
+    "no_app_update_or_physics_step_called": true,
+    "q5_evaluation_count": 0,
+    "controlled_physics_steps": null
+  },
+  "installed_timeline_api_evidence": {
+    "extension": "omni.timeline-1.0.14+69cbf6ad.lx64.r.cp311",
+    "usage_doc_path": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.timeline-1.0.14+69cbf6ad.lx64.r.cp311/docs/USAGE_PYTHON.md",
+    "usage_doc_sha256": "3e3ad641192893c47d9bf09c73b3a1f220dfbefb5b8f754fc9b83c8e3f85a6dd",
+    "usage_doc_fact": "Timeline state changes are applied in the next frame; an immediate is_playing() query observes the prior committed state.",
+    "python_stub_path": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.timeline-1.0.14+69cbf6ad.lx64.r.cp311/omni/timeline/_timeline.pyi",
+    "python_stub_sha256": "c5a431d83c24de23aefca0912ef819ae2f3322418264b81aba5279d4fe4ac35e",
+    "python_stub_fact": "Timeline.commit() applies all pending state changes and invokes callbacks; commit_silently() applies pending changes without callbacks.",
+    "d351_attempt2_behavior": "The repair calls pause() up to three times and immediately queries is_playing(), but calls neither a Kit frame update nor Timeline.commit().",
+    "evidence_bounded_cause": "The pause requests remained pending, so the immediate PLAY observations do not show that pause() was ignored; they show that the pending timeline state was never applied before the contract query."
+  },
+  "classification_repair": {
+    "supervisor_classifier_behavior": "Any non-timeout localization with localization pass=false falls into D352_LOCALIZATION_EXCEPTION_STOP, even when worker exit_code=0 and runtime_exception is null.",
+    "recorded_supervisor_exception_label_supported": false,
+    "corrected_operational_verdict": "D352_LOCALIZATION_COMPLETE_TIMELINE_PAUSE_PENDING_STATE_STOP",
+    "case_pass": false,
+    "localization_objective_complete": true
+  },
+  "historical_d351_attempt2_scope": {
+    "3693_302_second_long_run_reproduced": false,
+    "deterministic_block_at_make_runtime_env_reset_audit_live_builder_serialization_or_raw_binding_supported": false,
+    "historical_function_level_cause": null,
+    "why_null": "D351 attempt2 has no phase marker or stack dump, while the one approved D352 reproduction completed every registered pre-science boundary. D352 can reject a deterministic repeatable block in those phases but cannot reconstruct the transient historical call stack."
+  },
+  "gpu_interpretation": {
+    "valid_samples": 31,
+    "gpu_active_time_percent_min_mean_max": [
+      0.0,
+      3.870967741935484,
+      15.0
+    ],
+    "memory_used_mib_min_mean_max": [
+      2052.0,
+      3863.967741935484,
+      7430.0
+    ],
+    "worker_cpu_percent_min_mean_max": [
+      4.0,
+      127.93548387096774,
+      724.7
+    ],
+    "warp_occupancy_measured": false,
+    "causal_bottleneck_authority": false,
+    "scope_interpretation": "This single-environment zero-step control-flow run contains no batched simulation stepping workload with which to fill all SM warp slots. Raising GPU occupancy would require a workload or settings change outside D352 and is not a valid repair for the pending timeline state."
+  },
+  "science_boundary": {
+    "scientific_verdict": null,
+    "geometry_pass_or_fail": null,
+    "current_pose_support_or_rejection": null,
+    "grasp_feasibility": null,
+    "target_ik_repair_justification": null,
+    "g0a_pass": false,
+    "moving_surface_measurement": null,
+    "q5_sweep": null,
+    "viewer_rerun_rrd_rbl": null
+  },
+  "next_candidate_not_executed": {
+    "candidate": "forward-only zero-step timeline pending-state commit proof",
+    "single_new_operational_variable": "explicit Timeline.commit() after pause()",
+    "required_checks": "PAUSE plus unchanged timeline time, SimulationContext clock, custom step counter, joint/object Float32 bits, and q5 count zero",
+    "authorization": "separate user approval required before code or execution"
+  },
+  "raw_artifacts_modified": false,
+  "automatic_retry_performed": false,
+  "commit_or_push_performed": false,
+  "audit_pass": true
+}

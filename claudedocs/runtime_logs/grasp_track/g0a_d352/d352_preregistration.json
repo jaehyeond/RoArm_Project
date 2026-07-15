@@ -1,0 +1,267 @@
+{
+  "artifact": "D352_PREREGISTRATION_V1",
+  "ast_scope": {
+    "artifact": "D352_AST_SCOPE_CONTRACT_V1",
+    "checks": {
+      "forbidden_calls_absent": true,
+      "hardware_control_absent": true,
+      "moving_surface_measurement_call_absent": true,
+      "q5_grid_generation_absent": true,
+      "viewer_rerun_import_absent": true
+    },
+    "forbidden_exact": [
+      "d351._evaluate_q5",
+      "d351._run_validate",
+      "d351._write_exact_state",
+      "d351a2._build_live_with_reactive_pause",
+      "d351a2._run_validate_with_reactive_repairs",
+      "inner.sim.step",
+      "inner.step",
+      "simulation_app.update"
+    ],
+    "found_forbidden_calls": [],
+    "pass": true,
+    "permitted_inherited_playback_controls": {
+      "attempt2_pause_without_update_calls": 2,
+      "initial_base_pause_reproduction": 1,
+      "meaning": "D351/attempt2 baseline playback suppression, not a physics-solver parameter change"
+    }
+  },
+  "automatic_retry": false,
+  "case": "g0a_d352",
+  "case_name": "d351_validate_phase_localization_watchdog",
+  "d351_immutability": {
+    "attempt1_root_files": [
+      "d351_live_topology_runtime_binding.json",
+      "d351_parameter_freeze_audit.json",
+      "d351_preregistration.json",
+      "d351_runtime_exception.json",
+      "d351_validate_preflight.json"
+    ],
+    "attempt2_forbidden_outputs": [
+      "claudedocs/runtime_logs/grasp_track/g0a_d351/attempt2_timeline_pause_repair/d351_live_topology_runtime_binding.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d351/attempt2_timeline_pause_repair/d351_timeline_pause_repair_contract.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d351/attempt2_timeline_pause_repair/d351_moving_jaw_surface_binding.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d351/attempt2_timeline_pause_repair/d351_zero_step_closure_geometry_measurement.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d351/attempt2_timeline_pause_repair/d351_q5_closure_sweep.csv",
+      "claudedocs/runtime_logs/grasp_track/g0a_d351/attempt2_timeline_pause_repair/d351_viewer_capture_contract.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d351/attempt2_timeline_pause_repair/d351_zero_step_closure_geometry.rrd",
+      "claudedocs/runtime_logs/grasp_track/g0a_d351/attempt2_timeline_pause_repair/d351_zero_step_closure_geometry.rbl"
+    ],
+    "attempt2_root_files": [
+      "d351_external_termination_audit.json",
+      "d351_parameter_freeze_audit.json",
+      "d351_preregistration.json",
+      "d351_validate_preflight.json"
+    ],
+    "checks": {
+      "all_hashes_exact": true,
+      "attempt1_root_inventory_exact": true,
+      "attempt2_root_inventory_exact": true,
+      "attempt2_science_bridge_viewer_outputs_absent": true
+    },
+    "pass": true,
+    "rows": {
+      "claudedocs/runtime_logs/grasp_track/g0a_d351/attempt2_timeline_pause_repair/d351_external_termination_audit.json": {
+        "exists": true,
+        "expected_sha256": "af17995b40d5818055388f97e38cbb50f0895f3a2aa4d2cb7f5cf1df3b6166fe",
+        "sha256": "af17995b40d5818055388f97e38cbb50f0895f3a2aa4d2cb7f5cf1df3b6166fe"
+      },
+      "claudedocs/runtime_logs/grasp_track/g0a_d351/attempt2_timeline_pause_repair/d351_parameter_freeze_audit.json": {
+        "exists": true,
+        "expected_sha256": "98b5778e826d411f37606dd724093a1ff292040d8c1d350db3781508735502e2",
+        "sha256": "98b5778e826d411f37606dd724093a1ff292040d8c1d350db3781508735502e2"
+      },
+      "claudedocs/runtime_logs/grasp_track/g0a_d351/attempt2_timeline_pause_repair/d351_preregistration.json": {
+        "exists": true,
+        "expected_sha256": "eb05905a683842693dd5a0f7dff717cdae9c8bc4d9d6c51a9e5e7b21eba64fc1",
+        "sha256": "eb05905a683842693dd5a0f7dff717cdae9c8bc4d9d6c51a9e5e7b21eba64fc1"
+      },
+      "claudedocs/runtime_logs/grasp_track/g0a_d351/attempt2_timeline_pause_repair/d351_validate_preflight.json": {
+        "exists": true,
+        "expected_sha256": "035113da2ae94ec7d458d8f5e9a675bdac79f443fb3827f8555dfd4c37166334",
+        "sha256": "035113da2ae94ec7d458d8f5e9a675bdac79f443fb3827f8555dfd4c37166334"
+      },
+      "claudedocs/runtime_logs/grasp_track/g0a_d351/d351_live_topology_runtime_binding.json": {
+        "exists": true,
+        "expected_sha256": "9bc8d1c95f3c235816eb1c3c11516f3f27416e45b302cf8b6f9d5ee01ad6ec05",
+        "sha256": "9bc8d1c95f3c235816eb1c3c11516f3f27416e45b302cf8b6f9d5ee01ad6ec05"
+      },
+      "claudedocs/runtime_logs/grasp_track/g0a_d351/d351_parameter_freeze_audit.json": {
+        "exists": true,
+        "expected_sha256": "98b5778e826d411f37606dd724093a1ff292040d8c1d350db3781508735502e2",
+        "sha256": "98b5778e826d411f37606dd724093a1ff292040d8c1d350db3781508735502e2"
+      },
+      "claudedocs/runtime_logs/grasp_track/g0a_d351/d351_preregistration.json": {
+        "exists": true,
+        "expected_sha256": "d0639f51485b96395de88b0942ea4af13a768f31db89a400df7af97a25df1456",
+        "sha256": "d0639f51485b96395de88b0942ea4af13a768f31db89a400df7af97a25df1456"
+      },
+      "claudedocs/runtime_logs/grasp_track/g0a_d351/d351_runtime_exception.json": {
+        "exists": true,
+        "expected_sha256": "138097cee4a471b84202572639fd19c0cba6103d5a628d89a2af49bcbde71914",
+        "sha256": "138097cee4a471b84202572639fd19c0cba6103d5a628d89a2af49bcbde71914"
+      },
+      "claudedocs/runtime_logs/grasp_track/g0a_d351/d351_validate_preflight.json": {
+        "exists": true,
+        "expected_sha256": "3e3172ff595bdc48b4216ab0bbb30386a2fdf29f0786ab8d950881114d434660",
+        "sha256": "3e3172ff595bdc48b4216ab0bbb30386a2fdf29f0786ab8d950881114d434660"
+      },
+      "claudedocs/session_20260715_grasp_g0a_d351_timeline_pause_repair.md": {
+        "exists": true,
+        "expected_sha256": "436192b381b563e5b3c73d6997f12ea48a9600afca530547c4ec598253708bc1",
+        "sha256": "436192b381b563e5b3c73d6997f12ea48a9600afca530547c4ec598253708bc1"
+      },
+      "claudedocs/session_20260715_grasp_g0a_d351_zero_step_closure_geometry.md": {
+        "exists": true,
+        "expected_sha256": "20367375e05ce8cffb47f86ff0c1645a3544f5bf62516fe2e16a98919c356a06",
+        "sha256": "20367375e05ce8cffb47f86ff0c1645a3544f5bf62516fe2e16a98919c356a06"
+      },
+      "sim_scripts/cyl34_top_view_d351_attempt2_timeline_pause_repair.py": {
+        "exists": true,
+        "expected_sha256": "1e50334e22b780fa99b52b38d45abaef1f08ea6cf4ee6f613193f99e29df492f",
+        "sha256": "1e50334e22b780fa99b52b38d45abaef1f08ea6cf4ee6f613193f99e29df492f"
+      },
+      "sim_scripts/cyl34_top_view_d351_zero_step_closure_geometry.py": {
+        "exists": true,
+        "expected_sha256": "3c4501885af7590f5883b36666c984ce88728a24d40451ea0a600660a386107d",
+        "sha256": "3c4501885af7590f5883b36666c984ce88728a24d40451ea0a600660a386107d"
+      }
+    }
+  },
+  "git_head": "c2cfa5f41d4c15fec15330cfad38b9b14e4c4f61",
+  "git_status_before_prepare_outputs": {
+    "START_HERE.md": " M",
+    "claudedocs/session_20260715_grasp_g0a_d352_d351_validate_phase_localization_watchdog.md": "??",
+    "sim_scripts/cyl34_top_view_d352_d351_validate_phase_localization_watchdog.py": "??"
+  },
+  "gpu_hardware_path": "claudedocs/runtime_logs/grasp_track/g0a_d352/d352_gpu_hardware_contract.json",
+  "gpu_hardware_sha256": "77770159639b7ab2b0b2a9aae3e109a95564e51d93e2cd491c9259a706b15696",
+  "gpu_telemetry": {
+    "device_metrics": [
+      "gpu utilization active-time sample",
+      "memory utilization",
+      "framebuffer memory",
+      "SM/memory clocks",
+      "P-state",
+      "power",
+      "temperature"
+    ],
+    "nominal_cadence_s": 1.0,
+    "process_metrics": [
+      "CPU percent",
+      "RSS",
+      "threads",
+      "status",
+      "I/O"
+    ],
+    "scientific_or_warp_occupancy_authority": false
+  },
+  "harness_sha256": "3f770200d3ca729f106a74ba9e22390d4db5fdd4547e7091cf36ad46a59f65d0",
+  "input_hashes": {
+    "authored_robot_usd": "a4be58e87b1f9790f2a2ed600f0620c79d3cfb95c608b3c598308d52f5e46fff",
+    "d332": "3ab551232b9c3e2a3886578e5f4baa4589d578567758a351203c2260a1428ad4",
+    "d333": "e582f274fca44093b0e1367555459f22428c809792b6cfc3a9a336369dac68b7",
+    "d334": "19d2f333c2aeec89282d230324b965e6f5af7e6d05648a858c5637fd24adf735",
+    "d334_summary": "2ff44744df99c7a99d168cdd62a4f9186a5bbad6d673205282abb62b71097b26",
+    "d339": "fd307cb573699f8a08df1ab580789188774158877b8abf0a05cc4c60ef6562d6",
+    "d348_evidence": "83b8c7b16181d0f5c545cfbeaa992c8ebfd69e2310dd33bce2a64234a1deaab6",
+    "d349": "33a9743337fa269b71e4da3ccccfabc1d746ee29e1582a3d0f8c4764f42d68b9",
+    "d349_measurement": "5de6d14e37d6b74b202d1bb668120a6bb57221eac24ea5c751457ce9823b6300",
+    "d350": "99a9b558754c9c4ebf83b265e4bcc70744e1981786066d1343c96cd046d4c538",
+    "d350_binding": "1ec1c309461357eeae89204fa55a498b64d2d216708ab6e6c7dfdd3d0b878c12",
+    "d350_completion": "7866886a49ecfca1c16bd1283c89e920613a4c25581dadf5ebaa195e1303cedb",
+    "d350_measurement": "4fe91e4cd37f5b0f064c7e9c91480881973ca51e651132af2c8feb57750e8446",
+    "rerun_contract": "90559c931bc753be97def463841d41426a2f1bd8e5ddd15a2a2ab08fb54a2e60",
+    "urdf": "64dc8d082cbce9a13a0697a11a0eaeaebbc54bbcd97e7aafaa40da483969dae2",
+    "variant_physics_usd": "043a5d35aa425c2589c77a34fcf415401ce9f9e7155e84ed75f6737df79fb503",
+    "variant_robot_usd": "a4be58e87b1f9790f2a2ed600f0620c79d3cfb95c608b3c598308d52f5e46fff",
+    "viz_debug": "622b7197afe8cdeb1bb5411f2a961aa9a9a5c58aaf248417fc145639374577c5"
+  },
+  "origin_master": "c2cfa5f41d4c15fec15330cfad38b9b14e4c4f61",
+  "output_root": "claudedocs/runtime_logs/grasp_track/g0a_d352",
+  "parameter_path": "claudedocs/runtime_logs/grasp_track/g0a_d352/d352_parameter_freeze_audit.json",
+  "parameter_sha256": "3c41109a92398fa9b5f19cb22cb07095a52863686f6f628b57a6bca34e3bb39e",
+  "pass": true,
+  "post_d352_q5_boundary": "requires result briefing and separate explicit confirmation",
+  "prechecks": {
+    "ast_scope": true,
+    "d351_attempts_immutable": true,
+    "d351_inputs_exact": true,
+    "git_scope_only_d352": true,
+    "gpu_hardware": true,
+    "head_exact": true,
+    "origin_master_exact": true,
+    "parameter_freeze": true,
+    "session_declares_two_operational_variables": true,
+    "session_doc_exists": true,
+    "start_here_active_case_exact": true,
+    "trace_line_map": true,
+    "user_sidecar_read_only_exact": true
+  },
+  "prepare_process_identity": {
+    "nonce": "cbba1a9884494455cfda940cc6087c2b",
+    "pid": 2656046
+  },
+  "q5_science_authorized_inside_d352": false,
+  "run_nonce": "23b968cb59e433786d4fc678aac61151",
+  "single_effective_validate": true,
+  "state_hashes": {
+    "session_doc": "85261016ad6bb052b89c2cd0b4b1873a0b5112c5f127be07894efd429d4e2641",
+    "start_here": "39328c9da8930b612c680034ce57d4942fd10fc704563a5f8e635e2bcd6ca17c"
+  },
+  "trace_line_map": {
+    "checks": {
+      "function_first_line_exact": true,
+      "loop_exit_line_exact": true,
+      "part_start_line_exact": true,
+      "return_line_exact": true,
+      "source_hash_exact": true
+    },
+    "function_first_line": 816,
+    "loop_exit_line": 921,
+    "part_start_line": 835,
+    "pass": true,
+    "return_line": 960,
+    "source_path": "sim_scripts/cyl34_top_view_d349_grasp_g0a_frozen_open_jaw_target_live_distance_gate.py",
+    "source_sha256": "33a9743337fa269b71e4da3ccccfabc1d746ee29e1582a3d0f8c4764f42d68b9"
+  },
+  "user_sidecar": {
+    "checks": {
+      "all_exist": true,
+      "all_hashes_exact": true
+    },
+    "pass": true,
+    "role": "user-owned non-scientific sidecar; read-only",
+    "rows": {
+      "claudedocs/lab_meeting/20260715/d334_collision_table/README.md": {
+        "exists": true,
+        "expected_sha256": "35e39f584737c888bcf7dfab6154c55c5d13d4154ee7f2042073e1c0a7e18783",
+        "git_status": null,
+        "sha256": "35e39f584737c888bcf7dfab6154c55c5d13d4154ee7f2042073e1c0a7e18783"
+      },
+      "claudedocs/lab_meeting/20260715/d334_collision_table/d334_collision_table_academic.html": {
+        "exists": true,
+        "expected_sha256": "6d38933f959eba916208ec04a329ba25e2bd753c90720576010c222a8bda679c",
+        "git_status": null,
+        "sha256": "6d38933f959eba916208ec04a329ba25e2bd753c90720576010c222a8bda679c"
+      },
+      "claudedocs/lab_meeting/20260715/d334_collision_table/d334_collision_table_academic.png": {
+        "exists": true,
+        "expected_sha256": "ddc9db2795f4d66b2564adf156829e6a143a599ceb72f6bb9fa28ab25e68a183",
+        "git_status": null,
+        "sha256": "ddc9db2795f4d66b2564adf156829e6a143a599ceb72f6bb9fa28ab25e68a183"
+      }
+    }
+  },
+  "watchdog": {
+    "automatic_retry": false,
+    "escalation_if_still_alive": "SIGKILL",
+    "faulthandler_grace_s": 5.0,
+    "faulthandler_signal": "SIGUSR1",
+    "marker_inactivity_s": 120.0,
+    "termination_grace_s": 30.0,
+    "termination_signal": "SIGTERM",
+    "total_worker_wall_clock_s": 300.0
+  }
+}

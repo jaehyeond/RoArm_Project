@@ -1,0 +1,332 @@
+{
+  "artifact": "D351_ATTEMPT2_ZERO_STEP_BINDING_BRIDGE_V1",
+  "checks": {
+    "custom_step_counter_zero_at_every_snapshot": true,
+    "exact_five_bridge_snapshots": true,
+    "final_timeline_paused": false,
+    "geometry_evaluation_count_zero_before_guard": true,
+    "initial_timeline_paused": false,
+    "no_app_update_or_physics_step_in_repair_bridge": true,
+    "phase_order_exact": true,
+    "play_simulations_false_when_readable_at_boundaries": true,
+    "reset_joint_and_object_float32_bits_exact_invariant": true,
+    "simulation_context_clock_available": true,
+    "simulation_context_clock_exact_invariant": true,
+    "timeline_time_bit_exact_invariant": true
+  },
+  "d352_scope": {
+    "inherited_playback_controls_reproduced": {
+      "attempt2_pause_events": [
+        {
+          "checks": {
+            "custom_counter_zero_unchanged": true,
+            "geometry_evaluation_count_still_zero": true,
+            "no_app_update_or_physics_step_called": true,
+            "simulation_context_clock_unchanged": true,
+            "timeline_paused_after": false,
+            "timeline_time_unchanged": true
+          },
+          "counter_after": 0,
+          "counter_before": 0,
+          "pass": false,
+          "pause_interventions": 3,
+          "phase": "after_live_topology_binding",
+          "playing_after": true,
+          "playing_before": true,
+          "simulation_context_clock_after": {
+            "current_time": 0.009999999776482582,
+            "current_time_step_index": 2
+          },
+          "simulation_context_clock_before": {
+            "current_time": 0.009999999776482582,
+            "current_time_step_index": 2
+          },
+          "timeline_time_after": 0.029999999329447746,
+          "timeline_time_before": 0.029999999329447746
+        },
+        {
+          "checks": {
+            "custom_counter_zero_unchanged": true,
+            "geometry_evaluation_count_still_zero": true,
+            "no_app_update_or_physics_step_called": true,
+            "simulation_context_clock_unchanged": true,
+            "timeline_paused_after": false,
+            "timeline_time_unchanged": true
+          },
+          "counter_after": 0,
+          "counter_before": 0,
+          "pass": false,
+          "pause_interventions": 3,
+          "phase": "after_raw_shape_binding_before_prerequisites",
+          "playing_after": true,
+          "playing_before": true,
+          "simulation_context_clock_after": {
+            "current_time": 0.009999999776482582,
+            "current_time_step_index": 2
+          },
+          "simulation_context_clock_before": {
+            "current_time": 0.009999999776482582,
+            "current_time_step_index": 2
+          },
+          "timeline_time_after": 0.029999999329447746,
+          "timeline_time_before": 0.029999999329447746
+        }
+      ],
+      "attempt2_pause_without_update_calls": 2,
+      "base_initial_playSimulations_false_write": 1,
+      "base_initial_timeline_pause_interventions": 1
+    },
+    "localization_only": true,
+    "new_playback_or_physics_setting_changes_beyond_frozen_d351_attempt2": 0,
+    "q5_evaluation_count": 0
+  },
+  "expected_phases": [
+    "after_reset_initial_pause_before_live_binding",
+    "after_live_binding_before_repause",
+    "after_live_binding_after_repause",
+    "after_live_and_raw_binding_before_final_repause",
+    "after_live_and_raw_binding_after_final_repause"
+  ],
+  "pass": false,
+  "play_simulations_boundary_readability": [
+    true,
+    true
+  ],
+  "snapshots": [
+    {
+      "custom_step_counter": 0,
+      "geometry_evaluation_call_count": 0,
+      "joint_float32": {
+        "bits_hex": "a8599b3c50869e3c9151c83fd2785cbc5e4d72bc00000000",
+        "sha256": "752f9028218e5a3b4f226feb5dbdd4ced84c783742e904bdbdd8d8323f5939f5",
+        "values": [
+          0.01896364986896515,
+          0.019351154565811157,
+          1.5649892091751099,
+          -0.013456540182232857,
+          -0.014788953587412834,
+          0.0
+        ]
+      },
+      "object_position_float32": {
+        "bits_hex": "9a99993e0000000053b0063d",
+        "sha256": "7c92fa4e59547af82b9b3f4d3f659982bdc9df6256eba57de08880aa2e2b5489",
+        "values": [
+          0.30000001192092896,
+          0.0,
+          0.03288299962878227
+        ]
+      },
+      "object_quaternion_float32": {
+        "bits_hex": "0000803f000000000000000000000000",
+        "sha256": "ccaf6f183579497e8bfcd71045c04286fd3c2e60f3641e3eea164b761a4494b7",
+        "values": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "phase": "after_reset_initial_pause_before_live_binding",
+      "play_simulations_setting": {
+        "error": null,
+        "readable": true,
+        "value": false
+      },
+      "simulation_context_clock": {
+        "current_time": 0.009999999776482582,
+        "current_time_step_index": 2
+      },
+      "timeline_playing": true,
+      "timeline_time": 0.029999999329447746
+    },
+    {
+      "custom_step_counter": 0,
+      "geometry_evaluation_call_count": 0,
+      "joint_float32": {
+        "bits_hex": "a8599b3c50869e3c9151c83fd2785cbc5e4d72bc00000000",
+        "sha256": "752f9028218e5a3b4f226feb5dbdd4ced84c783742e904bdbdd8d8323f5939f5",
+        "values": [
+          0.01896364986896515,
+          0.019351154565811157,
+          1.5649892091751099,
+          -0.013456540182232857,
+          -0.014788953587412834,
+          0.0
+        ]
+      },
+      "object_position_float32": {
+        "bits_hex": "9a99993e0000000053b0063d",
+        "sha256": "7c92fa4e59547af82b9b3f4d3f659982bdc9df6256eba57de08880aa2e2b5489",
+        "values": [
+          0.30000001192092896,
+          0.0,
+          0.03288299962878227
+        ]
+      },
+      "object_quaternion_float32": {
+        "bits_hex": "0000803f000000000000000000000000",
+        "sha256": "ccaf6f183579497e8bfcd71045c04286fd3c2e60f3641e3eea164b761a4494b7",
+        "values": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "phase": "after_live_binding_before_repause",
+      "play_simulations_setting": {
+        "error": null,
+        "readable": true,
+        "value": false
+      },
+      "simulation_context_clock": {
+        "current_time": 0.009999999776482582,
+        "current_time_step_index": 2
+      },
+      "timeline_playing": true,
+      "timeline_time": 0.029999999329447746
+    },
+    {
+      "custom_step_counter": 0,
+      "geometry_evaluation_call_count": 0,
+      "joint_float32": {
+        "bits_hex": "a8599b3c50869e3c9151c83fd2785cbc5e4d72bc00000000",
+        "sha256": "752f9028218e5a3b4f226feb5dbdd4ced84c783742e904bdbdd8d8323f5939f5",
+        "values": [
+          0.01896364986896515,
+          0.019351154565811157,
+          1.5649892091751099,
+          -0.013456540182232857,
+          -0.014788953587412834,
+          0.0
+        ]
+      },
+      "object_position_float32": {
+        "bits_hex": "9a99993e0000000053b0063d",
+        "sha256": "7c92fa4e59547af82b9b3f4d3f659982bdc9df6256eba57de08880aa2e2b5489",
+        "values": [
+          0.30000001192092896,
+          0.0,
+          0.03288299962878227
+        ]
+      },
+      "object_quaternion_float32": {
+        "bits_hex": "0000803f000000000000000000000000",
+        "sha256": "ccaf6f183579497e8bfcd71045c04286fd3c2e60f3641e3eea164b761a4494b7",
+        "values": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "phase": "after_live_binding_after_repause",
+      "play_simulations_setting": {
+        "error": null,
+        "readable": true,
+        "value": false
+      },
+      "simulation_context_clock": {
+        "current_time": 0.009999999776482582,
+        "current_time_step_index": 2
+      },
+      "timeline_playing": true,
+      "timeline_time": 0.029999999329447746
+    },
+    {
+      "custom_step_counter": 0,
+      "geometry_evaluation_call_count": 0,
+      "joint_float32": {
+        "bits_hex": "a8599b3c50869e3c9151c83fd2785cbc5e4d72bc00000000",
+        "sha256": "752f9028218e5a3b4f226feb5dbdd4ced84c783742e904bdbdd8d8323f5939f5",
+        "values": [
+          0.01896364986896515,
+          0.019351154565811157,
+          1.5649892091751099,
+          -0.013456540182232857,
+          -0.014788953587412834,
+          0.0
+        ]
+      },
+      "object_position_float32": {
+        "bits_hex": "9a99993e0000000053b0063d",
+        "sha256": "7c92fa4e59547af82b9b3f4d3f659982bdc9df6256eba57de08880aa2e2b5489",
+        "values": [
+          0.30000001192092896,
+          0.0,
+          0.03288299962878227
+        ]
+      },
+      "object_quaternion_float32": {
+        "bits_hex": "0000803f000000000000000000000000",
+        "sha256": "ccaf6f183579497e8bfcd71045c04286fd3c2e60f3641e3eea164b761a4494b7",
+        "values": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "phase": "after_live_and_raw_binding_before_final_repause",
+      "play_simulations_setting": {
+        "error": null,
+        "readable": true,
+        "value": false
+      },
+      "simulation_context_clock": {
+        "current_time": 0.009999999776482582,
+        "current_time_step_index": 2
+      },
+      "timeline_playing": true,
+      "timeline_time": 0.029999999329447746
+    },
+    {
+      "custom_step_counter": 0,
+      "geometry_evaluation_call_count": 0,
+      "joint_float32": {
+        "bits_hex": "a8599b3c50869e3c9151c83fd2785cbc5e4d72bc00000000",
+        "sha256": "752f9028218e5a3b4f226feb5dbdd4ced84c783742e904bdbdd8d8323f5939f5",
+        "values": [
+          0.01896364986896515,
+          0.019351154565811157,
+          1.5649892091751099,
+          -0.013456540182232857,
+          -0.014788953587412834,
+          0.0
+        ]
+      },
+      "object_position_float32": {
+        "bits_hex": "9a99993e0000000053b0063d",
+        "sha256": "7c92fa4e59547af82b9b3f4d3f659982bdc9df6256eba57de08880aa2e2b5489",
+        "values": [
+          0.30000001192092896,
+          0.0,
+          0.03288299962878227
+        ]
+      },
+      "object_quaternion_float32": {
+        "bits_hex": "0000803f000000000000000000000000",
+        "sha256": "ccaf6f183579497e8bfcd71045c04286fd3c2e60f3641e3eea164b761a4494b7",
+        "values": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "phase": "after_live_and_raw_binding_after_final_repause",
+      "play_simulations_setting": {
+        "error": null,
+        "readable": true,
+        "value": false
+      },
+      "simulation_context_clock": {
+        "current_time": 0.009999999776482582,
+        "current_time_step_index": 2
+      },
+      "timeline_playing": true,
+      "timeline_time": 0.029999999329447746
+    }
+  ]
+}

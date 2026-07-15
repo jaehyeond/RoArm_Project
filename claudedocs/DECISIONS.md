@@ -20015,3 +20015,79 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d351/attempt2_timeline_pause_repair/d351_validate_preflight.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d351/attempt2_timeline_pause_repair/d351_external_termination_audit.json`
 - `START_HERE.md`
+
+## D352 - timeline command 직후 상태 조회는 pending state의 적용 증거가 아니며 계약 FAIL과 runtime exception을 분리한다 (2026-07-15)
+
+Decision:
+
+- D352는 승인된 operational 변수
+  `[durable_phase_marker_stream, external_bounded_wall_clock_watchdog]`만 추가해
+  실제 `headless=false`, `DISPLAY=:1`, `cuda:0` validate를 한 번 실행했다. D351의
+  `3693.302s` 장기 실행은 재현되지 않았고 worker elapsed `27.093244882s`에
+  localization summary까지 완료했다.
+- corrected audit와 live part `128/128`, body `64+64`, raw binding은 전진/PASS했다.
+  그러나 exact five bridge snapshots 모두 `timeline_playing=true`였다. live/raw 뒤
+  각각 세 번 `pause()`를 요청해도 즉시 조회는 PLAY였고, 동시에 custom counter `0`,
+  timeline time, SimulationContext clock, joint/object Float32 bits는 exact 불변이었다.
+- 설치된 `omni.timeline 1.0.14` 문서는 state change가 다음 frame에 적용됨을 명시한다.
+  D351 attempt2는 frame update나 `Timeline.commit()` 없이 `pause()` 직후
+  `is_playing()`을 읽었다. 따라서 정확한 current blocker는 물리 전진이나 GPU 부족이
+  아니라 **pending timeline state를 synchronous하게 검증한 control-contract 오류**다.
+- **지속 규칙:** `play()`, `pause()`, `stop()` 같은 deferred timeline command 뒤의 즉시
+  Boolean 조회를 committed state 권위로 사용하지 않는다. next-frame을 쓰면 physics/time
+  변화가 생길 수 있으므로, zero-step case에서는 별도 승인된 pending-state apply 방법과
+  timeline time, SimulationContext clock, custom counter, joint/object bits 불변을 함께
+  증명해야 한다. 반복 command 호출은 state 적용을 대신하지 않는다.
+- **지속 규칙:** watchdog가 없고 worker exit `0`, runtime exception `null`, localization
+  artifact가 정상 생성된 contract FAIL을 `EXCEPTION_STOP`으로 뭉뚱그리지 않는다.
+  D352 supervisor의 raw 문자열은 catch-all taxonomy bug이며, 교정 operational verdict는
+  `D352_LOCALIZATION_COMPLETE_TIMELINE_PAUSE_PENDING_STATE_STOP`이다. case PASS는 여전히
+  false이고 과학/geometry 판정은 모두 null이다.
+- **지속 규칙:** 계측 재현이 모든 등록 phase를 통과했다고 해서 marker/stack 없는 과거
+  장기 실행의 정확한 함수 원인을 소급 발명하지 않는다. D352는 deterministic repeatable
+  block 가설만 지지하지 않을 뿐, D351 historical function-level cause는 `null`이다.
+- `nvidia-smi` active-time `0/3.870967742/15%`는 device-level 표본이고 warp occupancy가
+  아니다. single-env zero-step audit에서 76 SM을 포화시키는 것은 목표도 근거도 아니며,
+  GPU workload/settings를 바꾸는 것은 pending timeline state의 수리가 아니다.
+
+Evidence:
+
+- AppLauncher / `_make_runtime_env` / reset / corrected audit / live builder / raw binding
+  raw monotonic duration은 각각 `18.496625182 / 3.228808587 / 0.038351051 /
+  0.096624583 / 1.882319808 / 1.937504730s`였다. marker `300`개는 invalid `0`, watchdog 미발동,
+  worker/process-group cleanup PASS였다.
+- bridge는 exact five snapshots, phase order, state bits, timeline/SimulationContext clock,
+  counter `0`을 PASS했지만 initial/final paused 두 check가 FAIL했다. D352 q5 count는 `0`,
+  controlled physics steps는 bridge 미완료 정책에 따라 `null`이다.
+- GPU telemetry는 `31/31` valid, UUID mismatch `0`; VRAM min/mean/max
+  `2052/3863.967742/7430MiB`, worker CPU `4/127.935484/724.7%`였다. causal bottleneck과
+  achieved occupancy authority는 false다.
+- supervisor / localization / bridge / postrun audit SHA-256은 각각
+  `b1bacc589d63d5dff60746c4030635ad100f9a86b701598c1dece159004f70be` /
+  `2548cadc18b098680b8c5500237e4e363258df99ef96bd29d8327f0955c47d60` /
+  `26a05d8c76ceaf83a0ebf57324b50c7853d38ce2e6bd58c25e4484c13f9a0036` /
+  `92c186a7a4175101e7a3890f6bedf4cb6125bc5a78f13f38b79004a9b6035594`다.
+
+Implication:
+
+- D352는 immutable one-run operational evidence다. q5 science, moving-surface 측정,
+  geometry/current-pose/grasp/target-IK verdict는 모두 미실행/null이고 `g0a_pass=false`다.
+- 가장 좁은 다음 후보는 별도 승인 D353
+  `[timeline_pause_pending_state_commit_bridge]`다. 신규 operational 변수
+  `explicit_timeline_commit_after_pause` 하나만 zero-step으로 검증하고 q5 science는
+  포함하지 않는다. D353 bridge PASS 뒤에만 별도 forward-only q5 science case를 다시
+  명시 승인받는다.
+
+Sources:
+
+- `claudedocs/session_20260715_grasp_g0a_d352_d351_validate_phase_localization_watchdog.md`
+- `sim_scripts/cyl34_top_view_d352_d351_validate_phase_localization_watchdog.py`
+- `sim_scripts/cyl34_top_view_d351_attempt2_timeline_pause_repair.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d352/d352_phase_markers.jsonl`
+- `claudedocs/runtime_logs/grasp_track/g0a_d352/d352_zero_step_bridge_contract.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d352/d352_localization_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d352/d352_supervisor_audit.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d352/d352_postrun_classification_audit.json`
+- `/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.timeline-1.0.14+69cbf6ad.lx64.r.cp311/docs/USAGE_PYTHON.md`
+- `/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.timeline-1.0.14+69cbf6ad.lx64.r.cp311/omni/timeline/_timeline.pyi`
+- `START_HERE.md`
