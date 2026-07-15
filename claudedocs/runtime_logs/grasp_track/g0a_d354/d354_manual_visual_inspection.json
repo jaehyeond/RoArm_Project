@@ -1,0 +1,58 @@
+{
+  "artifact": "D354_MANUAL_VISUAL_INSPECTION_V1",
+  "case": "g0a_d354",
+  "date": "2026-07-16 KST",
+  "method": "view_image original_resolution",
+  "images": {
+    "open_physx": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_open_actual_physx_colliders.png",
+      "sha256": "63e6a9993781b03a35704d6a3ed0c663ba74747b42c7115254b02af2a7686b37",
+      "bytes": 699046,
+      "raster_dimensions": "1280x720",
+      "observation": "실제 Isaac OPEN 장면에서 그리퍼와 세워진 노란 실린더가 보이고, 링크5 및 이동 그리퍼의 실제 PhysX collider 외곽선이 초록색으로 정상 표시된다."
+    },
+    "decision_physx": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_decision_or_open_fallback_actual_physx_colliders.png",
+      "sha256": "d500a4fd9efb8c2f846f7c0b022d4d18f3144d16b77177d6f2d068c9247accce",
+      "bytes": 717081,
+      "raster_dimensions": "1280x720",
+      "observation": "마지막 clear 결정 자세의 실제 Isaac 장면에서 그리퍼·실린더 상대 배치와 초록 PhysX collider 외곽선이 함께 보이며 OPEN 파일과도 해시가 구분된다."
+    },
+    "decision_colored": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_decision_or_open_fallback_colored_64plus64.png",
+      "sha256": "2b2f62a3ceb62980348c02af0e54dcd1756f7c1924d53c47f743e904273e6717",
+      "bytes": 728111,
+      "raster_dimensions": "1280x720",
+      "observation": "링크5의 반투명 청록·보라 collider 묶음과 이동 그리퍼의 회색·베이지 collider 묶음이 노란 실린더 앞에서 시각적으로 구분된다."
+    },
+    "decision_side": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_decision_or_open_fallback_side_geometry.png",
+      "sha256": "fd5eae29dd31ec5e4fb0aa60a8f3776806fd92192a9a30e45512cd245c05e45a",
+      "bytes": 521942,
+      "raster_dimensions": "1280x720",
+      "observation": "측면에서 실린더 상단·배럴 경계와 기울어진 죠, inner patch 및 fixed/moving chord·witness 색상 오버레이가 함께 보인다."
+    },
+    "rerun": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_zero_step_closure_geometry_rerun.png",
+      "sha256": "b935825ff51893e5fb4f47d7066b600c219fddee8182b6419f1bfd5609b6dd52",
+      "bytes": 10357483,
+      "raster_dimensions": "4800x2800",
+      "observation": "Rerun 3D 패널에는 live_jaw 표면·patch/chord·q5 witness와 실린더가 보이고, Float64 metrics 및 events 패널에는 전체 q5 sample 타임라인과 거리·이벤트 행이 채워져 있다."
+    }
+  },
+  "checks": {
+    "actual_isaac_open_and_decision_or_fallback_pose_visible": true,
+    "actual_physx_colliders_visible": true,
+    "colored_link5_64_and_gripper_64_distinguishable": true,
+    "inner_patch_fixed_moving_chord_and_cylinder_feature_visible": true,
+    "rerun_full_q5_dynamic_live_surface_patch_and_witness_timeline_visible": true,
+    "no_obvious_empty_or_corrupt_panel": true
+  },
+  "manual_pass": true,
+  "scientific_override": false,
+  "bounded_interpretation": "이 PASS는 요구된 실제 Isaac/Rerun 판단 대상이 정상적으로 보인다는 관찰 가능성 판정에만 적용된다. 자동 수치·해시 gate 또는 D354_CONTACT_ORDER_UNRESOLVED_FAIL_STOP 과학 판정을 변경하지 않는다.",
+  "manual_markdown": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_manual_visual_inspection.md",
+    "sha256": "1ddc237ffdb0b9f14ad04fefcdd047bc9ce64a8d00c73fbece098a31ed05e695"
+  }
+}

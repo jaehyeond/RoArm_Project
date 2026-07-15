@@ -1,0 +1,232 @@
+{
+  "artifact": "D354_SUPERVISOR_AUDIT_V1",
+  "automatic_retry": false,
+  "case": "g0a_d354",
+  "checks": {
+    "automated_science_observability_pass": true,
+    "harness_state_hashes_exact": true,
+    "input_source_exact": true,
+    "markers_valid": true,
+    "no_automatic_retry": true,
+    "prior_immutable": true,
+    "process_group_absent": true,
+    "runtime_exception_absent": true,
+    "science_summary_pass": true,
+    "sidecar_read_only": true,
+    "telemetry_thread_joined": true,
+    "telemetry_valid": true,
+    "validate_inventory_exact_before_final_audit": true,
+    "watchdog_not_triggered": true,
+    "worker_exit_zero": true,
+    "worker_reaped": true,
+    "zero_step_attestation_pass": true
+  },
+  "commit_or_push_performed": false,
+  "expected_output_inventory_before_final_audit": [
+    "d354_automated_report.md",
+    "d354_automated_summary.json",
+    "d354_decision_or_open_fallback_actual_physx_colliders.png",
+    "d354_decision_or_open_fallback_colored_64plus64.png",
+    "d354_decision_or_open_fallback_side_geometry.png",
+    "d354_faulthandler.txt",
+    "d354_gpu_cpu_telemetry.jsonl",
+    "d354_gpu_hardware_contract.json",
+    "d354_inherited_supervisor_raw_audit.json",
+    "d354_live_topology_runtime_binding.json",
+    "d354_moving_jaw_surface_binding.json",
+    "d354_open_actual_physx_colliders.png",
+    "d354_parameter_freeze_audit.json",
+    "d354_phase_markers.jsonl",
+    "d354_preregistration.json",
+    "d354_q5_closure_sweep.csv",
+    "d354_raw_source_contract.json",
+    "d354_rerun_validation.json",
+    "d354_science_resume_summary.json",
+    "d354_supervisor_preflight.json",
+    "d354_validate_preflight.json",
+    "d354_viewer_capture_contract.json",
+    "d354_viewer_overlay_contract.json",
+    "d354_worker_stdout_stderr.log",
+    "d354_zero_step_closure_geometry.rbl",
+    "d354_zero_step_closure_geometry.rrd",
+    "d354_zero_step_closure_geometry_measurement.json",
+    "d354_zero_step_closure_geometry_rerun.png",
+    "d354_zero_step_science_arm_bridge.json",
+    "d354_zero_step_science_attestation.json"
+  ],
+  "g0a_pass": false,
+  "inherited_d352_supervisor_raw": {
+    "non_authoritative_reason": "D352's classifier intentionally rejects q5/Viewer outputs; D354 uses it only for process/watchdog/telemetry evidence.",
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_inherited_supervisor_raw_audit.json",
+    "raw_pass": false,
+    "return_code": 2,
+    "sha256": "8573cf15da469ccc1f7afcb0a43c7fcfa7985bf0b93164a5a0fc927a410df472"
+  },
+  "markers": {
+    "invalid_rows": [],
+    "last_valid": {
+      "actor": "worker",
+      "artifact": "D354_DURABLE_PHASE_MARKER_V1",
+      "auxiliary_state_only_writes": 13,
+      "details": null,
+      "event": "start",
+      "monotonic_ns": 816182174604643,
+      "phase": "SimulationApp.close",
+      "pid": 3690728,
+      "process_elapsed_s": 153.70643517,
+      "q5_cache_misses": 72,
+      "q5_evaluator_invocations": 377,
+      "run_nonce": "a4cd6ee91020c1a1e8cf18c4d2237ce73ea889e436738946a5f595e35c142e9e",
+      "science_armed": true,
+      "sequence": 1241,
+      "timeline_commit_attempt_count": 1,
+      "timeline_commit_call_count": 1,
+      "wall_time_iso": "2026-07-16T05:33:57.437970+09:00",
+      "wall_time_ns": 1784147637437968905
+    },
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_phase_markers.jsonl",
+    "sha256": "c6e44c8c3bda7692269026f89218cd96dfdd86d11eb9b8b94edeab8cdde125f8",
+    "valid_count": 1242
+  },
+  "operational_verdict": "D354_AUTOMATED_Q5_SCIENCE_AND_OBSERVABILITY_COMPLETE_PENDING_MANUAL",
+  "output_inventory_before_final_audit": [
+    "d354_automated_report.md",
+    "d354_automated_summary.json",
+    "d354_decision_or_open_fallback_actual_physx_colliders.png",
+    "d354_decision_or_open_fallback_colored_64plus64.png",
+    "d354_decision_or_open_fallback_side_geometry.png",
+    "d354_faulthandler.txt",
+    "d354_gpu_cpu_telemetry.jsonl",
+    "d354_gpu_hardware_contract.json",
+    "d354_inherited_supervisor_raw_audit.json",
+    "d354_live_topology_runtime_binding.json",
+    "d354_moving_jaw_surface_binding.json",
+    "d354_open_actual_physx_colliders.png",
+    "d354_parameter_freeze_audit.json",
+    "d354_phase_markers.jsonl",
+    "d354_preregistration.json",
+    "d354_q5_closure_sweep.csv",
+    "d354_raw_source_contract.json",
+    "d354_rerun_validation.json",
+    "d354_science_resume_summary.json",
+    "d354_supervisor_preflight.json",
+    "d354_validate_preflight.json",
+    "d354_viewer_capture_contract.json",
+    "d354_viewer_overlay_contract.json",
+    "d354_worker_stdout_stderr.log",
+    "d354_zero_step_closure_geometry.rbl",
+    "d354_zero_step_closure_geometry.rrd",
+    "d354_zero_step_closure_geometry_measurement.json",
+    "d354_zero_step_closure_geometry_rerun.png",
+    "d354_zero_step_science_arm_bridge.json",
+    "d354_zero_step_science_attestation.json"
+  ],
+  "pass": true,
+  "science_summary": {
+    "pass": true,
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_science_resume_summary.json",
+    "sha256": "bdd6a52412c9b512de60b3dfdf4710c1106ac8338a4d4bf51d3aa49a4f9f9883"
+  },
+  "scientific_verdict": "D354_CONTACT_ORDER_UNRESOLVED_FAIL_STOP",
+  "telemetry": {
+    "causal_bottleneck_authority": false,
+    "invalid_gpu_sample_count": 0,
+    "metrics": {
+      "gpu_util_percent": {
+        "count": 157,
+        "max": 42.0,
+        "mean": 12.235668789808917,
+        "min": 0.0
+      },
+      "memory_clock_mhz": {
+        "count": 157,
+        "max": 9001.0,
+        "mean": 8441.84076433121,
+        "min": 405.0
+      },
+      "memory_used_mib": {
+        "count": 157,
+        "max": 7601.0,
+        "mean": 7025.331210191082,
+        "min": 2052.0
+      },
+      "memory_util_percent": {
+        "count": 157,
+        "max": 16.0,
+        "mean": 3.477707006369427,
+        "min": 0.0
+      },
+      "power_w": {
+        "count": 157,
+        "max": 64.14,
+        "mean": 32.68547770700637,
+        "min": 4.64
+      },
+      "sm_clock_mhz": {
+        "count": 157,
+        "max": 2385.0,
+        "mean": 1489.2993630573249,
+        "min": 210.0
+      },
+      "temperature_c": {
+        "count": 157,
+        "max": 54.0,
+        "mean": 51.57324840764331,
+        "min": 47.0
+      }
+    },
+    "sample_count": 157,
+    "sample_start_interval_s": {
+      "count": 156,
+      "max": 1.004780235,
+      "mean": 1.0000011007051282,
+      "min": 0.995215585,
+      "requested_nominal_s": 1.0
+    },
+    "uuid_mismatch_sample_count": 0,
+    "valid_gpu_sample_count": 157,
+    "warp_occupancy_measured": false,
+    "worker_cpu_percent": {
+      "count": 156,
+      "max": 2982.1,
+      "mean": 280.02564102564094,
+      "min": 9.7,
+      "semantics": "psutil process percent; 100% is approximately one logical CPU"
+    }
+  },
+  "watchdog": {
+    "automatic_retry": false,
+    "elapsed_s": null,
+    "faulthandler_signal_sent": false,
+    "reason": null,
+    "sigkill_used": false,
+    "termination_signal": null,
+    "triggered": false
+  },
+  "worker": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/cyl34_top_view_d354_current_pose_q5_closure_science_resume.py",
+      "--stage",
+      "_worker",
+      "--out_dir",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d354",
+      "--seed",
+      "33201",
+      "--inactivity_watchdog_s",
+      "120.0",
+      "--total_watchdog_s",
+      "900.0"
+    ],
+    "exit_code": 0,
+    "pid": 3690728,
+    "process_absent_after_reap": true,
+    "process_group_absent_after_cleanup": true,
+    "process_group_cleanup_signal": null
+  },
+  "zero_step_attestation": {
+    "pass": true,
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_zero_step_science_attestation.json",
+    "sha256": "1975df11b13a774b89f953991d7fdac6e38d795e81a9535850b147d823740d20"
+  }
+}

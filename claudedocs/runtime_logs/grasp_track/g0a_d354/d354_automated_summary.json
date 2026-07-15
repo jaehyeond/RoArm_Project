@@ -1,0 +1,542 @@
+{
+  "aggregation_polarity_repair": {
+    "frozen_bug": "D351 asset_write=false was incorrectly included in all(values)",
+    "pass": true,
+    "positive_key": "asset_write_forbidden_and_absent=true",
+    "scientific_logic_changed": false,
+    "triggered": true
+  },
+  "artifact": "D354_AUTOMATED_SUMMARY_V1",
+  "automated_pass": true,
+  "automated_verdict": "D354_CONTACT_ORDER_UNRESOLVED_FAIL_STOP_MANUAL_PENDING",
+  "case": "g0a_d354",
+  "classification": {
+    "anchor_checks": {
+      "closed_raw_matches_d337": true,
+      "open_gripper_link_live_exact": true,
+      "open_gripper_link_raw_exact": true,
+      "open_link5_live_exact": true,
+      "open_link5_raw_exact": true
+    },
+    "closed_raw_d337_anchor_diagnostic_only": {
+      "absolute_delta_mm": 5.4432014451322175e-11,
+      "observed_mm": -6.460556421930386,
+      "reference_mm": -6.460556421875954,
+      "verdict_authority": false,
+      "within_0p05mm": true
+    },
+    "contact_common_endpoint_comparisons": [
+      {
+        "live": {
+          "common_exact_contract": true,
+          "distance_mm": -0.0009864198978583663,
+          "valid_clear": false,
+          "valid_for_signed_state": true,
+          "valid_overlap": true
+        },
+        "q5_float32_rad": 1.0269775390625,
+        "raw": {
+          "common_exact_contract": true,
+          "distance_mm": -0.000988475720559677,
+          "valid_clear": false,
+          "valid_for_signed_state": true,
+          "valid_overlap": true
+        },
+        "raw_live_absolute_delta_mm": 2.055822701310661e-06
+      },
+      {
+        "live": {
+          "common_exact_contract": true,
+          "distance_mm": 0.0010049780471806762,
+          "valid_clear": true,
+          "valid_for_signed_state": true,
+          "valid_overlap": false
+        },
+        "q5_float32_rad": 1.0269782543182373,
+        "raw": {
+          "common_exact_contract": true,
+          "distance_mm": 0.0010050812803802547,
+          "valid_clear": true,
+          "valid_for_signed_state": true,
+          "valid_overlap": false
+        },
+        "raw_live_absolute_delta_mm": 1.0323319957856666e-07
+      }
+    ],
+    "contract_checks": {
+      "all_counters_zero": true,
+      "all_runtime_joint_axis_pivot_contracts": true,
+      "all_state_guards": true,
+      "contact_common_rows_all_exact_valid_signed_states": true,
+      "endpoint_reverse_requery_exact": true,
+      "fixed_component_digest_reproduced": true,
+      "link5_live_q5_invariant": true,
+      "link5_raw_q5_invariant": true,
+      "live_clear_overlap_cylinder_feature_consensus": false,
+      "live_contact_order_certified": true,
+      "moving_contact_surface_identity_unambiguous": true,
+      "moving_surface_binding": false,
+      "open_gripper_link_live_exact": true,
+      "open_gripper_link_raw_exact": true,
+      "open_link5_live_exact": true,
+      "open_link5_raw_exact": true,
+      "open_raw_live_clearance_meets_inherited_0p1mm": true,
+      "raw_clear_overlap_cylinder_feature_consensus": false,
+      "raw_contact_order_certified": true,
+      "raw_live_contact_endpoint_signed_distance_agreement_le_0p5mm": true,
+      "raw_live_first_contact_surface_travel_delta_le_0p5mm": true,
+      "runtime_q5_decrease_rotation_sign_and_pivot_contract": true
+    },
+    "contract_pass": false,
+    "full_sweep_min_gripper_table_clearance_diagnostic_mm": 40.86601149340871,
+    "geometry_checks": {
+      "live_clear_overlap_contact_feature_barrel_interior": false,
+      "pinch_facing_exact_sign_and_order_contract": false,
+      "precontact_table_strict_clearance_continuously_certified": true,
+      "raw_clear_overlap_contact_feature_barrel_interior": false,
+      "raw_first_contact_on_frozen_distal_inner_patch": true
+    },
+    "live_first_contact_feature": {
+      "consensus": false,
+      "endpoints": {
+        "clear": {
+          "abs_height_m": 0.045,
+          "barrel_surface_residual_mm": 3.469446951953614e-15,
+          "cap_surface_residual_mm": 0.0,
+          "classification_rule": "strict z order only; no new geometric success tolerance",
+          "feature": "cap_or_rim_boundary",
+          "point_cylinder_local_m": [
+            -0.009360192140982715,
+            -0.014191081815136062,
+            0.045
+          ],
+          "point_world_m": [
+            0.29063981977994624,
+            -0.014191081815136062,
+            0.07788299962878227
+          ],
+          "radial_and_cap_residuals_verdict_authority": false,
+          "radial_m": 0.016999999999999998,
+          "strict_bottom_world_z_m": -0.012117000371217726,
+          "strict_top_world_z_m": 0.07788299962878227,
+          "strictly_between_cap_planes": false
+        },
+        "overlap": {
+          "abs_height_m": 0.044999619394590046,
+          "barrel_surface_residual_mm": 0.00031368802644315963,
+          "cap_surface_residual_mm": 0.0003806054099525502,
+          "classification_rule": "strict z order only; no new geometric success tolerance",
+          "feature": "barrel_interior",
+          "point_cylinder_local_m": [
+            -0.009360817463421767,
+            -0.014190293553059403,
+            0.044999619394590046
+          ],
+          "point_world_m": [
+            0.2906391944575072,
+            -0.014190293553059403,
+            0.07788261902337232
+          ],
+          "radial_and_cap_residuals_verdict_authority": false,
+          "radial_m": 0.016999686311973558,
+          "strict_bottom_world_z_m": -0.012117000371217726,
+          "strict_top_world_z_m": 0.07788299962878227,
+          "strictly_between_cap_planes": true
+        }
+      }
+    },
+    "live_link5_q5_range_mm": 0.0,
+    "max_raw_live_contact_endpoint_delta_mm": 2.055822701310661e-06,
+    "max_raw_live_precontact_delta_mm": 0.6963496444705264,
+    "min_gripper_table_clearance_mm": 65.42070265676648,
+    "moving_contact_patch_classification": "frozen_distal_inner_minus_local_y",
+    "pinch_facing_geometry": {
+      "checks": {
+        "cylinder_center_projection_inside_contact_chord": true,
+        "cylinder_support_witnesses_on_opposite_xy_halfplanes": true,
+        "first_contact_all_endpoints_on_frozen_inner_patch": true,
+        "fixed_normal_faces_moving_surface": true,
+        "jaw_surface_points_on_opposite_xy_sides_of_center": true,
+        "live_unflipped_inner_normals_same_hemisphere": true,
+        "moving_and_fixed_inward_normals_opposed": true,
+        "moving_normal_faces_fixed_surface": true,
+        "noninner_and_cap_competitors_excluded_over_full_bracket": false,
+        "paired_outer_patch_negative_control_rejected": true,
+        "q5_decrease_moves_along_moving_inward_normal": true,
+        "q5_decrease_moves_contact_toward_fixed_surface": true,
+        "raw_live_inward_normals_same_hemisphere": true
+      },
+      "chord_to_cylinder_axis_xy_miss_mm": 5.7698023005019685,
+      "close_velocity_along_moving_normal_dot_m_per_rad": 0.03292322557832947,
+      "close_velocity_toward_fixed_dot_m2_per_rad": 0.0015430203051304673,
+      "contact_chord_world_m": [
+        0.008555485682868957,
+        0.035449131889083704,
+        -0.029106514568393235
+      ],
+      "cylinder_center_projection_parameter": 0.43852315871005054,
+      "cylinder_support_midpoint_axis_xy_residual_mm": 5.19358371210922,
+      "cylinder_support_midpoint_world_m": [
+        0.29499824035034994,
+        0.001398425160826883,
+        0.06333012207934677
+      ],
+      "cylinder_support_opposition_xy_dot_m2": -0.0002350552456135054,
+      "cylinder_witness_height_delta_mm": 29.10575509887102,
+      "fixed_cylinder_witness_height_from_center_mm": 15.894244901128978,
+      "fixed_cylinder_witness_world_m": [
+        0.2993566609404968,
+        0.016987932123767552,
+        0.04877724452991125
+      ],
+      "fixed_inward_normal_world": [
+        0.03749265855282885,
+        -0.9992969031037453,
+        1.3802039769762478e-06
+      ],
+      "fixed_moving_height_difference_mm": 29.106514568393234,
+      "fixed_moving_normal_dot": -0.5174103148336132,
+      "fixed_normal_toward_moving_dot_m": 0.03510347998394331,
+      "fixed_surface_world_m": [
+        0.29919495348352054,
+        0.021257516477540286,
+        0.04877726067229646
+      ],
+      "moving_cylinder_witness_height_from_center_mm": 45.0,
+      "moving_cylinder_witness_world_m": [
+        0.29063981976020303,
+        -0.014191081802113786,
+        0.07788299962878227
+      ],
+      "moving_inward_normal_world": [
+        0.35018018772401716,
+        0.5309117183346466,
+        -0.7716907304487499
+      ],
+      "moving_normal_toward_fixed_dot_m": 0.044277548595302696,
+      "moving_surface_world_m": [
+        0.2906394678006516,
+        -0.014191615411543419,
+        0.07788377524068969
+      ],
+      "opposite_center_sides_xy_dot_m2": -0.0002941427134310359,
+      "pass": false,
+      "q5_decrease_velocity_world_m_per_rad": [
+        0.010000002257344591,
+        0.022545788353018268,
+        -0.02261475871914825
+      ],
+      "raw_live_inward_normal_dot": 1.0000000000000002,
+      "threshold_semantics": "only exact sign/order predicates gate; angle, height, and axis-miss values are measurement-only"
+    },
+    "precontact_table_corridor": {
+      "bound_formula": "2*Rmax*sin(abs(delta_q)/2)",
+      "certified_intervals": [
+        {
+          "clearance_hi_mm": 84.80917000839321,
+          "clearance_lo_mm": 84.07896705154361,
+          "depth": 0,
+          "hausdorff_bound_mm": 3.2435930274687994,
+          "q_hi": 1.5413000583648682,
+          "q_lo": 1.4931343793869019,
+          "strict_clear_margin_mm": 80.83537402407481
+        },
+        {
+          "clearance_hi_mm": 84.07896705154361,
+          "clearance_lo_mm": 83.34774336799798,
+          "depth": 0,
+          "hausdorff_bound_mm": 3.243585001179693,
+          "q_hi": 1.4931343793869019,
+          "q_lo": 1.444968819618225,
+          "strict_clear_margin_mm": 80.10415836681828
+        },
+        {
+          "clearance_hi_mm": 83.34774336799798,
+          "clearance_lo_mm": 81.34543657073928,
+          "depth": 0,
+          "hausdorff_bound_mm": 3.2435930274687994,
+          "q_hi": 1.444968819618225,
+          "q_lo": 1.3968031406402588,
+          "strict_clear_margin_mm": 78.10184354327048
+        },
+        {
+          "clearance_hi_mm": 81.34543657073928,
+          "clearance_lo_mm": 79.17725865293608,
+          "depth": 0,
+          "hausdorff_bound_mm": 3.243585001179693,
+          "q_hi": 1.3968031406402588,
+          "q_lo": 1.348637580871582,
+          "strict_clear_margin_mm": 75.93367365175638
+        },
+        {
+          "clearance_hi_mm": 79.17725865293608,
+          "clearance_lo_mm": 77.04504284130263,
+          "depth": 0,
+          "hausdorff_bound_mm": 3.2435930274687994,
+          "q_hi": 1.348637580871582,
+          "q_lo": 1.3004719018936157,
+          "strict_clear_margin_mm": 73.80144981383383
+        },
+        {
+          "clearance_hi_mm": 77.04504284130263,
+          "clearance_lo_mm": 74.95376606811797,
+          "depth": 0,
+          "hausdorff_bound_mm": 3.243585001179693,
+          "q_hi": 1.3004719018936157,
+          "q_lo": 1.252306342124939,
+          "strict_clear_margin_mm": 71.71018106693828
+        },
+        {
+          "clearance_hi_mm": 74.95376606811797,
+          "clearance_lo_mm": 72.90826665020856,
+          "depth": 0,
+          "hausdorff_bound_mm": 3.2435930274687994,
+          "q_hi": 1.252306342124939,
+          "q_lo": 1.2041406631469727,
+          "strict_clear_margin_mm": 69.66467362273976
+        },
+        {
+          "clearance_hi_mm": 72.90826665020856,
+          "clearance_lo_mm": 70.9132633187709,
+          "depth": 0,
+          "hausdorff_bound_mm": 3.243585001179693,
+          "q_hi": 1.2041406631469727,
+          "q_lo": 1.155975103378296,
+          "strict_clear_margin_mm": 67.6696783175912
+        },
+        {
+          "clearance_hi_mm": 70.9132633187709,
+          "clearance_lo_mm": 68.97212906291985,
+          "depth": 0,
+          "hausdorff_bound_mm": 3.2435930274687994,
+          "q_hi": 1.155975103378296,
+          "q_lo": 1.1078094244003296,
+          "strict_clear_margin_mm": 65.72853603545104
+        },
+        {
+          "clearance_hi_mm": 68.97212906291985,
+          "clearance_lo_mm": 67.0118769754484,
+          "depth": 0,
+          "hausdorff_bound_mm": 3.2435930274687994,
+          "q_hi": 1.1078094244003296,
+          "q_lo": 1.0596437454223633,
+          "strict_clear_margin_mm": 63.768283947979604
+        },
+        {
+          "clearance_hi_mm": 67.0118769754484,
+          "clearance_lo_mm": 65.42070265676648,
+          "depth": 0,
+          "hausdorff_bound_mm": 2.199887823506545,
+          "q_hi": 1.0596437454223633,
+          "q_lo": 1.0269782543182373,
+          "strict_clear_margin_mm": 63.22081483325994
+        }
+      ],
+      "endpoint_strictly_clear": true,
+      "precontact_table_clearance_certified": true,
+      "q_open_float32_rad": 1.5413000583648682,
+      "q_stop_float32_rad": 1.0269782543182373,
+      "representation_semantics": "per-row minimum raw/live gripper clearance certified with the maximum raw/live q5 rotation radius",
+      "rotation_radius_m": 0.06734892262996345,
+      "scientific_clearance_threshold_mm": 0.0,
+      "threshold_semantics": "strictly positive, not a new margin tolerance",
+      "unresolved_intervals": []
+    },
+    "raw_first_contact_feature": {
+      "consensus": false,
+      "endpoints": {
+        "clear": {
+          "abs_height_m": 0.045,
+          "barrel_surface_residual_mm": 0.0,
+          "cap_surface_residual_mm": 0.0,
+          "classification_rule": "strict z order only; no new geometric success tolerance",
+          "feature": "cap_or_rim_boundary",
+          "point_cylinder_local_m": [
+            -0.009360192160725922,
+            -0.014191081802113786,
+            0.045
+          ],
+          "point_world_m": [
+            0.29063981976020303,
+            -0.014191081802113786,
+            0.07788299962878227
+          ],
+          "radial_and_cap_residuals_verdict_authority": false,
+          "radial_m": 0.017,
+          "strict_bottom_world_z_m": -0.012117000371217726,
+          "strict_top_world_z_m": 0.07788299962878227,
+          "strictly_between_cap_planes": false
+        },
+        "overlap": {
+          "abs_height_m": 0.044999618601561694,
+          "barrel_surface_residual_mm": 0.0003160739767416043,
+          "cap_surface_residual_mm": 0.00038139843830387044,
+          "classification_rule": "strict z order only; no new geometric success tolerance",
+          "feature": "barrel_interior",
+          "point_cylinder_local_m": [
+            -0.009354319899599062,
+            -0.014194574766461255,
+            0.044999618601561694
+          ],
+          "point_world_m": [
+            0.2906456920213299,
+            -0.014194574766461255,
+            0.07788261823034397
+          ],
+          "radial_and_cap_residuals_verdict_authority": false,
+          "radial_m": 0.01699968392602326,
+          "strict_bottom_world_z_m": -0.012117000371217726,
+          "strict_top_world_z_m": 0.07788299962878227,
+          "strictly_between_cap_planes": true
+        }
+      }
+    },
+    "raw_link5_q5_range_mm": 0.0,
+    "raw_live_contact_q5_delta_rad": 0.0,
+    "raw_live_contact_q5_worst_case_delta_rad": 7.152557373046875e-07,
+    "raw_live_contact_surface_travel_delta_mm": 4.817170331236983e-05,
+    "runtime_q5_rotation_contract": {
+      "delta_q_rad": -1.5413000583648682,
+      "max_rotation_matrix_absolute_error": 3.845416884917796e-07,
+      "pass": true,
+      "pivot_position_delta_m": 0.0
+    },
+    "scientific_verdict": "D354_CONTACT_ORDER_UNRESOLVED_FAIL_STOP",
+    "verdict_semantics": "zero-step current pre-grasp closure geometry only; not simultaneous two-jaw contact, force closure, grasp, settle, or G0a"
+  },
+  "controlled_physics_steps": null,
+  "controlled_physics_steps_candidate": 0,
+  "controlled_steps_authority": "pending D354 fsync/reread attestation",
+  "evidence_hashes": {
+    "capture": "1eed4e46f684d677bcb9f669934a500c3f945fea7dc1d0ac7b512f0f5f7d6ca8",
+    "live_binding": "58948ae92297fbd50212c4065d5afcb569d2177e64b03134a002016de7831db4",
+    "measurement": "fd0d43c2a47abefad939fc0e980456cc396bbf3ba3bb104b28bcd999100f23ed",
+    "moving_binding": "548d45ec4eb1dacbb4cbdefe2b64a3ed99ce72f4f5ffaaa6a9ee1e2b38756b15",
+    "overlay": "c787ee39b1fca8411e6cd2cb498dd812674d396fd92f02596d1bec35e5c2feea",
+    "parameter_freeze": "9da4a9dca570535a6c20d5283753c34c0e5937449b0c59c0e778ce5739870531",
+    "preregistration": "dc3defad370f394008927a6dc261fcf9aac8b7b2b60a5d34c950c696c1f45349",
+    "rbl": "f9503397f8d211ea07637d8c7808ac86a4359e023633644699490955e64877eb",
+    "rerun_screenshot": "b935825ff51893e5fb4f47d7066b600c219fddee8182b6419f1bfd5609b6dd52",
+    "rerun_validation": "3631c5eef695a2cdfe42b3ce6fd9dbed314c832872a5cf2859db510b567f4b16",
+    "rrd": "815062de388042a648b91204578c567a26d7b8d0e3c84f1ae619bd0e262dd6fb",
+    "sweep_csv": "44d378ccecb7aea4c191ad6e3de2228446955fa242b2666e99d10449d633dcab",
+    "validate_preflight": "73131a584bd2a7456f1a787cc98074a50b36709b2010842a8743851434053808"
+  },
+  "execution_count": 70,
+  "execution_counters": {
+    "auxiliary_state_only_write_attempts": 13,
+    "auxiliary_state_only_write_successes": 13,
+    "distinct_repeat_cache_count": 1,
+    "evaluator_cache_miss_state_write_attempts": 72,
+    "evaluator_cache_miss_state_write_successes": 72,
+    "evaluator_invocations_including_cache_hits": 377,
+    "primary_unique_rows": 70,
+    "repeat_unique_rows": 2,
+    "viewer_ui_guard_failures": 0,
+    "viewer_ui_updates": 11161
+  },
+  "fixed_component_digest_reproduction_pass": true,
+  "g0a_pass": false,
+  "g0b_run": false,
+  "harness_sha256": "f9676df74a61cdeadaccdbf3437f0304e4333c7dcc65d00b5fd40a2a4344b1ae",
+  "immutability": {
+    "asset_write_forbidden_and_absent": true,
+    "git_scope_only_d354": true,
+    "input_hashes_exact": true,
+    "pass": true,
+    "preexisting_user_files_read_only_exact": true,
+    "source_inventories_exact": true
+  },
+  "inherited_d351_scientific_variables": [
+    "moving_jaw_actual_contact_surface_binding",
+    "frozen_pose_q5_closure_sweep"
+  ],
+  "ladder_promoted": false,
+  "launcher": {
+    "checks": {
+      "cameras_disabled": true,
+      "device_zero": true,
+      "gui_experience": true,
+      "headless_false": true,
+      "livestream_zero": true,
+      "offscreen_false": true,
+      "xr_disabled": true
+    },
+    "pass": true,
+    "values": {
+      "device_id": 0,
+      "enable_cameras": false,
+      "experience": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaaclab/apps/isaaclab.python.kit",
+      "headless": false,
+      "livestream": 0,
+      "offscreen_render": false,
+      "xr": false
+    }
+  },
+  "live_contact_bracket": {
+    "clear_endpoint_contract": {
+      "common_exact_contract": true,
+      "distance_mm": 0.0010049780471806762,
+      "valid_clear": true,
+      "valid_for_signed_state": true,
+      "valid_overlap": false
+    },
+    "depth": 16,
+    "distance_clear_mm": 0.0010049780471806762,
+    "distance_overlap_mm": -0.0009864198978583663,
+    "numeric_width_target_rad": 1e-06,
+    "overlap_endpoint_contract": {
+      "common_exact_contract": true,
+      "distance_mm": -0.0009864198978583663,
+      "valid_clear": false,
+      "valid_for_signed_state": true,
+      "valid_overlap": true
+    },
+    "q_clear_float32_rad": 1.0269782543182373,
+    "q_overlap_float32_rad": 1.0269775390625,
+    "q_width_rad": 7.152557373046875e-07
+  },
+  "manual_visual_inspection_pending": true,
+  "moving_surface_binding_pass": false,
+  "new_physical_variables": [],
+  "new_variables": [],
+  "observability_pass": true,
+  "overlay_pass": true,
+  "postclose_png_validation_pending": true,
+  "raw_contact_bracket": {
+    "clear_endpoint_contract": {
+      "common_exact_contract": true,
+      "distance_mm": 0.0010050812803802547,
+      "valid_clear": true,
+      "valid_for_signed_state": true,
+      "valid_overlap": false
+    },
+    "depth": 16,
+    "distance_clear_mm": 0.0010050812803802547,
+    "distance_overlap_mm": -0.000988475720559677,
+    "numeric_width_target_rad": 1e-06,
+    "overlap_endpoint_contract": {
+      "common_exact_contract": true,
+      "distance_mm": -0.000988475720559677,
+      "valid_clear": false,
+      "valid_for_signed_state": true,
+      "valid_overlap": true
+    },
+    "q_clear_float32_rad": 1.0269782543182373,
+    "q_overlap_float32_rad": 1.0269775390625,
+    "q_width_rad": 7.152557373046875e-07
+  },
+  "rerun_pass": true,
+  "rl_or_ppo_run": false,
+  "scientific_contract_pass": false,
+  "scientific_result_recorded": true,
+  "scientific_verdict": "D354_CONTACT_ORDER_UNRESOLVED_FAIL_STOP",
+  "settle_executed": false,
+  "state_hashes": {
+    "session_doc": "227eaa21f523a9012f64afc0ee87f298e5cc9aeb9b2cc990b2ec0e4eda914cb5",
+    "start_here": "4be742fff700ab752bf62b983ed84d40aa446353f1d5bbb5db7dc45af87342d9"
+  },
+  "target_ik_path_changed": false,
+  "ten_trial_run": false,
+  "viewer_capture_tokens_pass": true
+}

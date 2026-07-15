@@ -1,0 +1,114 @@
+{
+  "artifact": "D354_PARAMETER_FREEZE_AUDIT_V1",
+  "case": "g0a_d354",
+  "checks": {
+    "d351_parameter_contract_pass": true,
+    "d352_live_trace_line_map_frozen_original_pass": true,
+    "d353_commit_primitive_called_once_in_source": true,
+    "head_exact": true,
+    "inherited_d351_variables_exact": true,
+    "new_physical_variables_zero": true,
+    "new_scientific_variables_zero": true,
+    "no_direct_timeline_commit_in_d354_source": true,
+    "no_gpu_clock_power_or_kernel_mutation": true,
+    "no_sim_step_call_in_d354_source": true,
+    "no_target_ik_path_mutation_api": true,
+    "single_operational_bookkeeping_variable_exact": true,
+    "viewer_hold_exact_120": true,
+    "watchdogs_exact": true
+  },
+  "control_bridge": {
+    "authority": "D353 attestation plus fresh conditional commit reproduction",
+    "commit_policy": "one commit only if the reset PAUSE request remains pending PLAY"
+  },
+  "d351_parameter_contract": {
+    "artifact": "D351_PARAMETER_FREEZE_AUDIT_V1",
+    "checks": {
+      "clear_gate_inherited": true,
+      "contact_width_1e_6": true,
+      "controlled_steps_zero": true,
+      "d350_fixed_digest_exact": true,
+      "fidelity_gate_inherited": true,
+      "grid_count_33": true,
+      "live_gripper_triangle_count_frozen_832": true,
+      "live_inner_face_count_frozen_40": true,
+      "live_inner_face_key_hash_frozen": true,
+      "live_inner_part_count_frozen_17": true,
+      "moving_inner_face_ids_exact": true,
+      "moving_outer_face_ids_exact": true,
+      "new_physical_variables_zero": true,
+      "new_variables_exact_two": true,
+      "q5_closed_zero": true,
+      "q5_open_exact": true,
+      "scope_all_zero_false": true,
+      "table_gate_is_strict_zero_not_new_margin": true
+    },
+    "new_physical_variables": [],
+    "new_variables": [
+      "moving_jaw_actual_contact_surface_binding",
+      "frozen_pose_q5_closure_sweep"
+    ],
+    "numerical_controls_not_scientific_success_tolerances": {
+      "closed_d337_anchor_diagnostic_only_mm": 0.05,
+      "contact_bracket_width_rad": 1e-06,
+      "d350_inherited_binding_residual_m": 1e-05,
+      "d350_inherited_face_tie_m": 1e-09,
+      "max_recursion_depth": 32,
+      "runtime_axis_pivot_integrity_m": 1e-06
+    },
+    "pass": true,
+    "sampling": {
+      "anchor_grid": "float32 linspace(1.5413000583648682,0,33)",
+      "contact_bracket_width_rad": 1e-06,
+      "interval_bound": "2*Rmax*sin(abs(delta_q)/2)",
+      "max_recursion_depth": 32
+    },
+    "scope_guards": {
+      "asset_write": false,
+      "controlled_physics_steps": 0,
+      "decomposition_change": false,
+      "fresh_cook_callback_or_property_query": false,
+      "g0a_pass": false,
+      "g0b": false,
+      "ladder_promotion": false,
+      "material_mass_actuator_physics_change": false,
+      "object_runtime_pose_change": false,
+      "q0_q4_change": false,
+      "rl_or_ppo": false,
+      "settle": false,
+      "target_ik_or_path_change": false,
+      "ten_trial": false,
+      "tolerance_change": false
+    },
+    "surface_identity": {
+      "classification": "frozen authored face identity plus exact closing-motion sign",
+      "competitor_exclusion": "raw and D348 callback-topology live non-inner complements plus their inner surfaces versus analytic zero-height cylinder cap disks must exceed each representation's bracket motion bound",
+      "inner_face_range_inclusive": [
+        672,
+        1164
+      ],
+      "negative_endpoint_policy": "non-inner/non-barrel endpoint evidence is FAIL_STOP unless a future separate case preregisters a symmetric first-feature certificate",
+      "new_distance_or_angle_success_tolerance": null,
+      "outer_negative_control_face_range_inclusive": [
+        13205,
+        13697
+      ],
+      "overlap_authority": "all non-saturated hpp-fcl Contact.b1 triangle ids; live contacts projected to raw under inherited 0.5mm"
+    }
+  },
+  "inherited_d351_scientific_variables": [
+    "moving_jaw_actual_contact_surface_binding",
+    "frozen_pose_q5_closure_sweep"
+  ],
+  "new_operational_variables": [
+    "positive_asset_write_immutability_aggregation"
+  ],
+  "new_physical_variables": [],
+  "new_scientific_variables": [],
+  "pass": true,
+  "watchdog": {
+    "automatic_retry": false,
+    "marker_inactivity_s": 120.0,
+    "total_wall_clock_s": 900.0
+  }
+}

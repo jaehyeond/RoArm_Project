@@ -20165,3 +20165,88 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d353/d353_timeline_commit_bridge_attestation.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d353/d353_supervisor_audit.json`
 - `START_HERE.md`
+
+## D354 - cap/rim에서 barrel로 바뀌는 접촉 bracket은 barrel-first 증명이 아니며 파생 patch 해시 불일치를 asset 변조로 해석하지 않는다 (2026-07-16)
+
+Decision:
+
+- D354는 D353의 conditional main-thread `Timeline.commit()` bridge를 새 process에서 다시
+  확정한 뒤 frozen D351 q5 closure 계약을 실제 `headless=false`, `DISPLAY=:1`, `cuda:0`
+  RTX 4090에서 정확히 한 번 실행했다. raw/live contact order와 table corridor는 인증됐지만,
+  최종 과학 verdict는 `D354_CONTACT_ORDER_UNRESOLVED_FAIL_STOP`이다.
+- raw/live의 first-contact q5 bracket은 동일했다. clear
+  `1.0269782543182373rad`, overlap `1.0269775390625rad`, 폭
+  `7.152557373046875e-7rad`에서 raw signed distance는
+  `+0.0010050812803802547/-0.000988475720559677mm`, live는
+  `+0.0010049780471806762/-0.0009864198978583663mm`였다.
+- 그러나 strict feature classifier에서 raw/live clear endpoint는 모두 cylinder-local
+  `z=+0.045m`의 `cap_or_rim_boundary`, 다음 overlap endpoint만
+  `barrel_interior`였다. 그러므로 clear/overlap feature consensus와 full-bracket
+  cap competitor exclusion이 false다. **지속 규칙:** 숫자 bracket과 signed-distance
+  contact-order가 정밀하게 일치해도 두 endpoint가 같은 `barrel_interior` feature라는
+  frozen 양성 계약을 만족하지 않으면 barrel-first, pinch/order, current-pose eligibility
+  또는 geometry-repair recommendation으로 확대하지 않는다. 새 tolerance를 사후 도입해
+  cap/rim boundary를 barrel로 재분류하지 않는다.
+- moving 접점의 frozen distal inner patch identity와 raw/live surface consensus는
+  unambiguous였다. 동시에 전체 moving-surface binding은 별도 derived-hash gate에서 false였다.
+  authored point/index/count stream, face ID/order, vertex/edge/face set은 exact였지만
+  raw-derived paired-XZ SHA `98ef77e6...18bbae`가 frozen authored SHA
+  `917b7154...bcaf9`와 달랐고 derived vertex/triangle/patch 및 runtime round-trip 일부가
+  불일치했다. **지속 규칙:** immutable source stream이 exact인 상태의 파생 hash 실패를
+  asset/decomposition mutation이나 접촉 표면 모호성으로 오진하지 않는다. 반대로 별도
+  provenance 감사 없이 binding PASS로 완화하지도 않는다.
+- `completion_pass=true`는 승인된 실패 가능한 측정, zero-step attestation, Viewer/RRD/RBL,
+  hash chain과 수동 검사가 끝났다는 뜻이다. `scientific_contract_pass=false`,
+  `g0a_pass=false`를 뒤집지 않는다. 이 case는 양쪽 죠 동시 접촉, force closure, 마찰,
+  settle, grasp/hold/lift 또는 물리적 불가능을 판정하지 않았다.
+- D354 summary/inherited raw audit의 legacy key `d352_q5_evaluation_count=377`은 잘못 붙은
+  비권위 이름이며 실제로 D354 evaluator invocation `377`을 복제한다. D352 과거 q5 count는
+  계속 `0`이다. count는 case-qualified field와 원 session authority로 읽는다.
+
+Evidence:
+
+- evaluator invocation / cache-miss write / primary unique row는 `377/72/70`; repeat row
+  `2`, auxiliary write `13/13`, Viewer UI update `11161`, guard failure `0`이었다. 별도
+  summary fsync+reread attestation만 controlled physics steps를 권위값 `0`으로 확정했다.
+- raw/live contact q delta는 `0rad`, contact surface travel delta는
+  `0.00004817170331236983mm`, 최대 contact endpoint 거리 차이는
+  `0.000002055822701310661mm`였다. precontact table 최소 실제 clearance는
+  `65.42070265676648mm`, 연속 인증 최소 strict margin은 `63.22081483325994mm`였다.
+- worker는 elapsed `153.70643517s`에 `SimulationApp.close`를 시작하고 exit `0`으로
+  종료됐다. marker `1242/1242`, watchdog/retry/runtime exception `0`; 실제 Viewer hold
+  `120.007414064s`, 네 Isaac PNG와 `4800x2800` Rerun screenshot 수동 검사가 PASS했다.
+- RRD/RBL footer verify와 exact contract가 PASS했다: dynamic sample `70`, mesh `131`,
+  point/arrow/scalar/event row `350/280/350/70`, entity/component path `279/279`.
+- GPU telemetry `157/157` valid의 active-time mean/max는 `12.2357/42%`, VRAM max
+  `7601MiB`, SM clock max `2385MHz`였다. warp occupancy는 측정하지 않았고 GPU 설정도
+  바꾸지 않았다. startup의 `Failed to clone in Fabric` 한 줄은 보존됐지만 이후 전체
+  측정/관측/close가 완료되어 이번 STOP의 원인이 아니다.
+- completion / measurement / moving-binding / supervisor SHA-256은 각각
+  `5cc70c8aa1e50532fa4ec27756496d6b9f9447156c56ef700084b44c16226f86` /
+  `fd0d43c2a47abefad939fc0e980456cc396bbf3ba3bb104b28bcd999100f23ed` /
+  `548d45ec4eb1dacbb4cbdefe2b64a3ed99ce72f4f5ffaaa6a9ee1e2b38756b15` /
+  `ea54be6c636e49096ebef02d7b2a1ce903df9c8d7806ef771dd19a60196e57c7`다.
+
+Implication:
+
+- D354는 immutable one-run scientific + observability FAIL_STOP 증거이며 재실행하지 않는다.
+  현재 자세의 barrel-first closure eligibility는 인증되지 않았지만 grasp 가능/불가능이나
+  target/IK/path repair 필요성도 아직 확정되지 않았다. settle, ten-trial, G0b, RL/PPO,
+  VLA, ladder는 차단되고 `g0a_pass=false`다.
+- 승인된 다음 Active Case는 없다. 가장 좁은 다음 후보는 새 Isaac 실행이나 target 변경 없이
+  원 authored/raw stream만으로 derived moving-jaw patch hash provenance를 감사하는 별도
+  forward-only offline case다. cap/rim boundary discriminator와 target/IK/path 변경은 그
+  결과 뒤에도 각각 별도 승인과 사전등록이 필요하다.
+
+Sources:
+
+- `claudedocs/session_20260716_grasp_g0a_d354_current_pose_q5_closure_science_resume.md`
+- `sim_scripts/cyl34_top_view_d354_current_pose_q5_closure_science_resume.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d354/d354_zero_step_closure_geometry_measurement.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d354/d354_moving_jaw_surface_binding.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d354/d354_zero_step_science_attestation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d354/d354_supervisor_audit.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d354/d354_rerun_validation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d354/d354_manual_visual_inspection.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d354/d354_completion_summary.json`
+- `START_HERE.md`

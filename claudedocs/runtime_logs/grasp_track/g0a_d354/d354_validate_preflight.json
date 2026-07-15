@@ -1,0 +1,132 @@
+{
+  "artifact": "D354_VALIDATE_PREFLIGHT_V1",
+  "case": "g0a_d354",
+  "checks": {
+    "app_args_exact": true,
+    "cuda_4090_device_zero": true,
+    "cuda_available": true,
+    "display_exact_gui": true,
+    "environment_exact_preregistered": true,
+    "fresh_worker_pid": true,
+    "git_scope_only_d354": true,
+    "gpu_contract_exact": true,
+    "gpu_identity_matches_preregistered": true,
+    "harness_and_state_hashes_exact": true,
+    "head_origin_exact": true,
+    "headless_false": true,
+    "input_source_exact": true,
+    "launch_token_exact": true,
+    "livestream_zero": true,
+    "parent_is_supervisor": true,
+    "prereg_and_supervisor_pass": true,
+    "prior_immutable": true,
+    "run_nonce_exact": true,
+    "runtime_inventory_no_science_outputs_yet": true,
+    "runtime_inventory_required": true,
+    "sidecar_read_only": true,
+    "viewer_hold_exact": true
+  },
+  "environment": {
+    "app_arg_checks": {
+      "cameras_disabled": true,
+      "cpu_false": true,
+      "device_cuda_zero": true,
+      "experience_default": true,
+      "headless_false": true,
+      "kit_args_empty": true,
+      "livestream_zero": true,
+      "xr_disabled": true
+    },
+    "display": ":1",
+    "gpu": {
+      "artifact": "D354_GPU_HARDWARE_CONTRACT_V1",
+      "checks": {
+        "compute_capability_8_9": true,
+        "cuda_available": true,
+        "cuda_device_zero": true,
+        "driver_580_159_03": true,
+        "gpu_name_exact": true,
+        "max_threads_per_sm_1536": true,
+        "nvidia_compute_capability_8_9": true,
+        "nvidia_index_zero": true,
+        "nvidia_memory_total_16376_mib": true,
+        "nvidia_name_exact": true,
+        "nvidia_query_pass": true,
+        "registered_python": true,
+        "sm_count_76": true,
+        "torch_2_7_0_cu128": true,
+        "torch_cuda_12_8": true,
+        "total_memory_exact": true,
+        "uuid_exact": true,
+        "warp_size_32": true
+      },
+      "derived_capacity_not_achieved_occupancy": {
+        "maximum_resident_warp_slots_all_sms": 3648,
+        "maximum_resident_warp_slots_per_sm": 48,
+        "semantics": "capacity only; nvidia-smi GPU utilization is active-time sampling, not achieved warp occupancy"
+      },
+      "no_gpu_configuration_mutation": {
+        "clock_change": false,
+        "persistence_mode_change": false,
+        "power_limit_change": false,
+        "profiler_or_kernel_replay": false
+      },
+      "nvidia_smi": {
+        "attempts": [
+          {
+            "attempt": 1,
+            "returncode": 0,
+            "stderr": "",
+            "stdout": "0, NVIDIA GeForce RTX 4090 Laptop GPU, GPU-05b1a3f8-b7cf-dc57-06aa-741fe2daa4b4, 580.159.03, 16376, 8.9, 175.00"
+          }
+        ],
+        "command": [
+          "nvidia-smi",
+          "--query-gpu=index,name,uuid,driver_version,memory.total,compute_cap,power.max_limit",
+          "--format=csv,noheader,nounits"
+        ],
+        "compute_capability": "8.9",
+        "driver_version": "580.159.03",
+        "index": "0",
+        "memory_total_mib": "16376",
+        "name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+        "power_max_w": "175.00",
+        "returncode": 0,
+        "stderr": "",
+        "stdout": "0, NVIDIA GeForce RTX 4090 Laptop GPU, GPU-05b1a3f8-b7cf-dc57-06aa-741fe2daa4b4, 580.159.03, 16376, 8.9, 175.00",
+        "uuid": "GPU-05b1a3f8-b7cf-dc57-06aa-741fe2daa4b4"
+      },
+      "pass": true,
+      "torch": {
+        "compute_capability": [
+          8,
+          9
+        ],
+        "cuda_available": true,
+        "device_index": 0,
+        "max_threads_per_sm": 1536,
+        "name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+        "sm_count": 76,
+        "torch_cuda": "12.8",
+        "torch_version": "2.7.0+cu128",
+        "total_memory_bytes": 16718168064,
+        "warp_size": 32
+      },
+      "workload_interpretation": {
+        "gpu_telemetry_is_active_time_not_warp_occupancy": true,
+        "no_batch_or_kernel_tuning_authorized": true,
+        "one_environment_zero_step_geometry_case": true,
+        "reason": "Changing environment count, kernels, solver, renderer, or physics for SM occupancy would change the frozen case; cuda:0 is used without such mutation."
+      }
+    }
+  },
+  "harness_sha256": "f9676df74a61cdeadaccdbf3437f0304e4333c7dcc65d00b5fd40a2a4344b1ae",
+  "parameter_audit_sha256": "9da4a9dca570535a6c20d5283753c34c0e5937449b0c59c0e778ce5739870531",
+  "pass": true,
+  "preregistration_sha256": "dc3defad370f394008927a6dc261fcf9aac8b7b2b60a5d34c950c696c1f45349",
+  "run_nonce": "a4cd6ee91020c1a1e8cf18c4d2237ce73ea889e436738946a5f595e35c142e9e",
+  "validate_process_identity": {
+    "nonce": "876f4d413070959d6c140f89f63f5264",
+    "pid": 3690728
+  }
+}
