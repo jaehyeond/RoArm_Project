@@ -20520,3 +20520,161 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d358/d358_completion_summary.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d354/d354_moving_jaw_surface_binding.json`
 - `START_HERE.md`
+
+## D359 - historical hash는 실제 generator의 source-point-ID remap과 나중 validator의 coordinate-row remap을 구분해 계보화한다 (2026-07-16)
+
+Decision:
+
+- 최종 판정은 `D359_D351_HASH_PROVENANCE_RECOVERED`다. D351 expected 8-field
+  bundle을 최초 출력한 보존 Codex subagent transcript call, 그 bound output, 최초 Git
+  commit, source/remap 독립 replay를 모두 연결했다.
+- Actual generator는 D344 attempt3 composed stage에서 원본 face가 참조하는 point ID를
+  오름차순으로 정렬해 vertex stream과 triangle remap을 만들었다. 이 방식은 frozen
+  D351 bundle을 `8/8` 재현했고 별도 tuple/dict/`struct.pack` 구현도 `8/8` exact였다.
+- 같은 transcript의 뒤 설명과 최종 D351 validator는 coordinate row를
+  lexicographic `np.unique(axis=0, return_inverse=True)`로 정렬하면서 actual generator
+  해시를 그대로 expected로 붙였다. 이 방식은 historical bundle의 paired-XZ `2/8`만
+  맞고, D358 current-authored bundle과는 `8/8` exact였다.
+- **지속 규칙:** geometry identity hash는 source points/faces와 dtype/unit만 기록해서는
+  충분하지 않다. vertex remap의 key가 original point ID인지 coordinate tuple인지,
+  ordering, duplicate welding semantics, triangle remap을 함께 provenance로 고정한다.
+  Generator output을 설명 코드나 validator에 옮길 때는 그 코드 자체로 독립 재생한
+  bundle이 exact인지 검사한다.
+- **지속 규칙:** top-level USD file hash가 같아도 relative composed sublayer는 다를 수
+  있으므로 composed-stage provenance에는 used-layer inventory/hash를 포함한다. 이번에는
+  D344/local physics sublayer가 달랐지만 결정 patch의 points/counts/indices stream은
+  exact 같았고 original-ID replay가 두 source 모두 `8/8`이어서 discriminating cause는
+  source geometry가 아니라 remap semantics였다.
+- D358의 20,736 grid는 source point ID를 버린 뒤 coordinate tuple order만 바꿨으므로
+  `original_point_id_ascending` recipe가 없었다. 따라서 D358 FAIL_STOP은 당시 등록
+  search에 대해 정당하며 immutable이다. D359가 새 evidence source를 찾아 원인을
+  forward-only로 닫았을 뿐 D358을 소급 PASS로 바꾸지 않는다.
+- Paired-XZ만 두 semantics에서 같았던 것은 마지막 XZ coordinate sort가 앞선 vertex
+  ordering 차이를 제거했기 때문이다. 일부 derived field 일치를 full bundle
+  provenance로 확대하지 않는다.
+
+Evidence:
+
+- Transcript session은 `/root/d351_patch_design`, 시작 Git `cfd9e750...`; actual call/output은
+  line `1433/1434`, timestamp `2026-07-15T06:19:46.955Z` /
+  `2026-07-15T06:19:47.297Z`, later mismatched narration은 line `1510` event duplicate와
+  line `1511` canonical response다.
+- D351 8개 field의 최초 Git 도입은 모두
+  `c2cfa5f41d4c15fec15330cfad38b9b14e4c4f61`; parent에는 D351 harness가 없다.
+- 2x2 replay는 D344/local × original-ID/coordinate에서 각각
+  `8/8, 8/8, 2/8, 2/8`; reverse-ID 음성 대조군은 거부됐다.
+- Sole audit invocation `1`, evidence/completion elapsed
+  `34.150002633/34.178689804s`, sidecar unchanged, forbidden modules absent,
+  Isaac/q5/physics/contact count `0`이다.
+- Evidence/completion SHA-256:
+  `9a4c2aa38bfc8e26722852a328d5f228aeccba17e372b017767f4da7c281f822` /
+  `bfa66efc2e3f36bc7c781558fa118e6cc5f243d8dba948c19f59852fbdf21f85`.
+- Forward-only clarification은 evidence의 `committed_d351_blob_sha256`이 helper `.strip()`
+  뒤 text diagnostic임을 명시하고 실제 committed/current file byte SHA-256
+  `3c450188...107d`를 고정했다. Clarification SHA-256은
+  `a6645de539e2bc1106e71bd1462fc40da7806a6bd6e8ea8d734091d269794c9b`다.
+
+Implication:
+
+- D351/D354/D358 evidence와 verdict는 immutable이며 expected constant 교체나 gate 완화를
+  하지 않는다. `g0a_pass=false`와 D354 contact-order unresolved도 유지한다.
+- 사용자가 승인한 다음 순차 case는 별도 preregistered bounded PhysX moving-jaw close다.
+  body-level contact force와 object motion을 interface-visible camera로 관찰하되 exact
+  moving face/cap-rim, force closure, hold/lift, grasp/G0a 또는 target/IK repair로 자동
+  확대하지 않는다.
+
+Sources:
+
+- `claudedocs/session_20260716_grasp_g0a_d359_d351_historical_hash_generator_lineage.md`
+- `sim_scripts/cyl34_top_view_d359_d351_historical_hash_generator_lineage.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d359/d359_preregistration.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d359/d359_historical_hash_provenance_evidence.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d359/d359_completion_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d359/d359_postcompletion_lineage_clarification.json`
+- `sim_scripts/cyl34_top_view_d351_zero_step_closure_geometry.py`
+- `sim_scripts/cyl34_top_view_d358_moving_jaw_patch_hash_provenance_retry.py`
+- `START_HERE.md`
+
+## D360 - contact-rich sensor capacity failure와 물리 판정을 분리하고 per-step prefix를 즉시 보존한다 (2026-07-16)
+
+Decision:
+
+- 최종 operational verdict는
+  `D360_SINGLE_INVOCATION_CUDA_DEVICE_ASSERT_AFTER_243_CONTROLLED_STEPS_PRE_TRACE_FAIL_STOP`다.
+  `physical_verdict=null`, `body_identity=null`,
+  `moving_gripper_contact_supported=null`,
+  `object_motion_after_moving_gripper_contact_supported=null`,
+  `g0a_pass=false`다.
+- Prepare와 worker preflight, D348 corrected `128/128` part audit, live `64+64`
+  binding, frozen stage/actuator/object 및 sole-support sensor prerequisite는 PASS했다.
+  OPEN baseline은 `200/200` step까지 완료됐고, q5 target은 `0.0 rad`로 정확히 한
+  번 바뀌었으며 q0-q4 target bit는 유지됐다. Worker exception의 completed controlled
+  physics step은 `243`이므로 closure row 43개까지 메모리에서 계산됐다.
+- Contact capture counter `233`과 motion capture counter `243`은 program order상 각각
+  두 연속 row의 any-monitored-robot `>=0.1N` trigger와 object XY `>=0.5mm` 또는 tilt
+  `>=1deg` trigger가 있었다는 provisional 순서만 보존한다. Body label과 수치가 trace
+  전에 RAM에만 있었으므로 moving-gripper 접촉이나 실제 cylinder motion verdict로
+  승격하지 않는다.
+- D333에서 상속한 ContactSensor는 `track_contact_points=True`,
+  `max_contact_data_count_per_prim=16`이었다. IsaacLab 구현에서 이 값은 filter별이
+  아니라 `16 * body 1 * env 1 = 16` 총 capacity다. Log가 먼저 `>16` incomplete
+  contact-data 경고를 남기고 곧바로 ATen index range assertion과 PhysX CUDA
+  device-side assert를 남겼다. 이는 contact-rich 관측 버퍼/인덱싱의 operational
+  failure이며 geometry/contact/grasp FAIL이 아니다.
+- **지속 규칙:** `max_contact_data_count_per_prim`을 filter 수로 곱해 해석하지 않는다.
+  Contact-rich multi-collider case는 body/env total capacity를 정적으로 budget하고,
+  overflow 경고를 과학 trace 손실 가능성이 있는 hard operational failure로 다룬다.
+- **지속 규칙:** per-step 최소 결정 row와 event의 body/value는 optional screenshot,
+  RRD 또는 post-loop summary보다 먼저 append-only로 durable-write/fsync한다. GPU/context
+  failure 뒤에도 완료 prefix가 남지 않는 구현으로 body/contact/motion verdict를 내리지
+  않는다.
+- **지속 규칙:** 자원 효율을 오류 원인으로 추정하지 않는다. D360 오류 인접 sample은
+  VRAM used/free `7695/8249MiB`, GPU utilization `43%`, RAM available
+  `11283103744 bytes`였고 OOM은 없었다. ATen out-of-range index는 Warp/SM occupancy
+  조정으로 고칠 수 없다.
+- D360은 sole invocation 뒤 immutable이다. Supervisor가 고정한 post-worker 16개와
+  supervisor summary를 합친 현재 `g0a_d360/` 17개 파일을 추가, 덮어쓰기,
+  rename하지 않고 retry/finalize하지 않는다. Worker exit `-9`의 SIGKILL 발신자는
+  기록되지 않았으므로 watchdog/user/OOM으로 특정하지 않는다.
+
+Evidence:
+
+- Supervisor: pass false, watchdog false, worker exit `-9`, worker exception true,
+  worker summary false, telemetry `102` samples.
+- Worker exception: controlled steps `243`, q5 update count `1`; phase stream:
+  baseline `200/200`, target update once, provisional contact/motion capture counters
+  `233/243`.
+- Raw log line 367부터 `maxContactDataCount=16` overflow warning, ATen
+  `indexSelectLargeIndex` assertion, PhysX tensor device-side assert가 순서대로 남았다.
+- Full telemetry extrema: GPU used max `7703MiB`, free min `8241MiB`, utilization max
+  `43%`, available RAM min `11063463936 bytes`.
+- Original-resolution inspection: eight `1280x720 RGBA` Isaac PNGs decode PASS, but
+  moving-jaw/cylinder interface와 numeric/body overlay가 불충분해 body/contact/motion을
+  독립 판정할 수 없다.
+- Core SHA-256 supervisor/phase/exception/log/prerequisite:
+  `54bb8a80...f026c` / `381c9ae6...66971` / `1dfb7ffe...0fb1` /
+  `1bd0aa5a...ecf5` / `bfd20dc2...7dae`.
+
+Implication:
+
+- D359 provenance는 복구됐지만 D360 physical question은 답하지 못했다. D354
+  contact-order unresolved와 `g0a_pass=false`는 유지하며 target/IK repair도 정당화되지
+  않는다.
+- 다음 가장 좁은 후보는 별도 승인 D361
+  `[contact_point_capacity_and_prefix_trace_repair]`다. 정확히 사전등록한 capacity
+  budget과 durable prefix trace를 검증한 뒤에만 actual q5/PhysX science 재실행을
+  고려한다. Asset/decomposition/gate/material/mass/actuator/solver/physics/target/IK/path와
+  initial state는 동결한다.
+
+Sources:
+
+- `claudedocs/session_20260716_grasp_g0a_d360_current_pose_bounded_physx_contact_motion.md`
+- `sim_scripts/cyl34_top_view_d360_current_pose_bounded_physx_contact_motion.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d360/d360_prepare_preflight.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d360/d360_runtime_prerequisites.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d360/d360_phase_markers.jsonl`
+- `claudedocs/runtime_logs/grasp_track/g0a_d360/d360_worker_exception.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d360/d360_worker_stdout_stderr.log`
+- `claudedocs/runtime_logs/grasp_track/g0a_d360/d360_supervisor_summary.json`
+- `sim_scripts/cyl34_top_view_d333_grasp_g0a_sole_support_static_retest.py`
+- `START_HERE.md`

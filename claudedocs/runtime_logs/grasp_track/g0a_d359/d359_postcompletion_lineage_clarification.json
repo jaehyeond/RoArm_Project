@@ -1,0 +1,37 @@
+{
+  "artifact": "D359_POSTCOMPLETION_LINEAGE_CLARIFICATION_V1",
+  "case": "g0a_d359",
+  "reason": "Forward-only precision repair after independent review; original evidence and completion remain immutable.",
+  "clarifications": {
+    "committed_d351_blob_sha256": {
+      "original_evidence_field": "git_lineage.committed_d351_blob_sha256",
+      "original_evidence_value": "cd1619e26c36e24a23326c13ec206d0ee7322d381d2521df70f08ddcf48513a7",
+      "original_value_semantics": "SHA-256 of git-show stdout after helper _run() applied strip(); the final LF was removed, so this is not the Git blob/file byte SHA-256.",
+      "git_blob_object_id_sha1": "9294e00f1c9953f3947e9093529e6bf206b0127c",
+      "actual_committed_file_byte_sha256": "3c4501885af7590f5883b36666c984ce88728a24d40451ea0a600660a386107d",
+      "current_d351_file_byte_sha256": "3c4501885af7590f5883b36666c984ce88728a24d40451ea0a600660a386107d",
+      "committed_and_current_file_bytes_equal": true,
+      "impact_on_provenance_verdict": "none; the 8/8 generator replay, first-commit identity, transcript binding, and parent path-absence checks do not depend on the mislabeled diagnostic field"
+    },
+    "later_narration_records": {
+      "duplicate_event_line": 1510,
+      "duplicate_event_raw_line_sha256": "ae2da4113ddb17c74e31061847c8afbaee421bc2b7daca5243d0443a0c9be05d",
+      "canonical_response_item_line": 1511,
+      "canonical_response_item_raw_line_sha256": "d1d78ac96bc5c331cdbe504d72c4123872fdfdefcebd4ec0df00367c27fa1585",
+      "semantics": "Both records carry the same later coordinate-lexicographic narration; line 1510 is the event duplicate and line 1511 is the canonical response_item message."
+    },
+    "transcript_pins": {
+      "full_transcript_sha256": "75f9f04762a99dd0a551d1455b6c2c5d0244c8d5453a54084c34f046fcc78ffa",
+      "full_transcript_size_bytes": 23924191,
+      "session_meta_line_1_raw_sha256": "d3bfb8e711b6465c40f9548db3095b04da713b72e59fbb281884f11ab95f9775",
+      "generator_call_line_1433_raw_sha256": "6c1b02e5fbe888d7acc2e00ac353f14ce89527b3716e6150a618e05846f3a580",
+      "generator_output_line_1434_raw_sha256": "b3365986d53b6722258d4b7ea4e49d5a8b60d4800e17c205436b0d82c49519d0"
+    }
+  },
+  "preserved_verdict": "D359_D351_HASH_PROVENANCE_RECOVERED",
+  "d359_evidence_sha256": "9a4c2aa38bfc8e26722852a328d5f228aeccba17e372b017767f4da7c281f822",
+  "d359_completion_sha256": "bfa66efc2e3f36bc7c781558fa118e6cc5f243d8dba948c19f59852fbdf21f85",
+  "rerun_or_overwrite_count": 0,
+  "isaac_q5_physics_contact_count": 0,
+  "pass": true
+}

@@ -1,0 +1,114 @@
+{
+  "artifact": "D360_PREPARE_PREFLIGHT_V1",
+  "case": "g0a_d360",
+  "checks": {
+    "all_inputs_exist": true,
+    "d334_sidecar_present": true,
+    "display_exact_and_reachable": true,
+    "git_scope_only_d360": true,
+    "gpu_free_at_least_8gib": true,
+    "gpu_rtx4090_laptop_sm89": true,
+    "head_origin_master_and_registered_base_exact": true,
+    "korean_font_exists": true,
+    "numpy_pin_1p26p0": true,
+    "parameter_contract": true,
+    "psutil_pin_5p9p8": true,
+    "ram_available_at_least_10gib": true,
+    "registered_python_exact": true,
+    "rerun_cli_0p34p1": true,
+    "rerun_sdk_0p34p1": true,
+    "session_preregistered": true
+  },
+  "d334_sidecar_before": {
+    "claudedocs/lab_meeting/20260715/d334_collision_table/README.md": "35e39f584737c888bcf7dfab6154c55c5d13d4154ee7f2042073e1c0a7e18783",
+    "claudedocs/lab_meeting/20260715/d334_collision_table/d334_collision_table_academic.html": "6d38933f959eba916208ec04a329ba25e2bd753c90720576010c222a8bda679c",
+    "claudedocs/lab_meeting/20260715/d334_collision_table/d334_collision_table_academic.png": "ddc9db2795f4d66b2564adf156829e6a143a599ceb72f6bb9fa28ab25e68a183"
+  },
+  "environment": {
+    "display": ":1",
+    "numpy": "1.26.0",
+    "psutil": "5.9.8",
+    "python": "/home/cgxr/miniconda3/envs/isaaclab/bin/python3.11",
+    "rerun_cli": "rerun-cli 0.34.1 (base lance map_view nasm native_viewer oss_server perf_telemetry re_server release_full release_no_web_viewer web_viewer) [rustc 1.92.0 (ded5c06cf 2025-12-08), LLVM 21.1.3] x86_64-unknown-linux-gnu prepare-release-0.34.1 4efb18f, built 2026-07-07T16:20:42.173372603Z\nVideo features: av1 ffmpeg nasm",
+    "rerun_sdk": "0.34.1"
+  },
+  "git": {
+    "head": "d4671d4bdefa4f6e5ef1f2f28b8e318c100b7cb5",
+    "origin_master": "d4671d4bdefa4f6e5ef1f2f28b8e318c100b7cb5",
+    "status": [
+      " M START_HERE.md",
+      " M claudedocs/DECISIONS.md",
+      " M claudedocs/EXPERIMENT_LEDGER.md",
+      "?? claudedocs/runtime_logs/grasp_track/g0a_d359/",
+      "?? claudedocs/session_20260716_grasp_g0a_d359_d351_historical_hash_generator_lineage.md",
+      "?? claudedocs/session_20260716_grasp_g0a_d360_current_pose_bounded_physx_contact_motion.md",
+      "?? sim_scripts/cyl34_top_view_d359_d351_historical_hash_generator_lineage.py",
+      "?? sim_scripts/cyl34_top_view_d360_current_pose_bounded_physx_contact_motion.py"
+    ]
+  },
+  "gpu_and_ram": {
+    "command": [
+      "nvidia-smi",
+      "--query-gpu=index,name,uuid,compute_cap,memory.total,memory.used,memory.free,utilization.gpu,temperature.gpu,pstate",
+      "--format=csv,noheader,nounits"
+    ],
+    "compute_capability": "8.9",
+    "index": 0,
+    "memory_free_mib": 13894,
+    "memory_total_mib": 16376,
+    "memory_used_mib": 2050,
+    "name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+    "pstate": "P8",
+    "ram_available_bytes": 17264902144,
+    "ram_total_bytes": 67130757120,
+    "returncode": 0,
+    "stderr": "",
+    "temperature_c": 46,
+    "utilization_gpu_percent": 0,
+    "uuid": "GPU-05b1a3f8-b7cf-dc57-06aa-741fe2daa4b4"
+  },
+  "input_hashes": {
+    "claudedocs/runtime_logs/grasp_track/g0a_d334/g0a_d334_live_collision_audit_summary.json": "2ff44744df99c7a99d168cdd62a4f9186a5bbad6d673205282abb62b71097b26",
+    "claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/configuration/roarm_m3_physics.usd": "043a5d35aa425c2589c77a34fcf415401ce9f9e7155e84ed75f6737df79fb503",
+    "claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/roarm_m3.usd": "a4be58e87b1f9790f2a2ed600f0620c79d3cfb95c608b3c598308d52f5e46fff",
+    "claudedocs/runtime_logs/grasp_track/g0a_d348/attempt2/d348_callback_topology_volume_evidence.json": "83b8c7b16181d0f5c545cfbeaa992c8ebfd69e2310dd33bce2a64234a1deaab6",
+    "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_zero_step_closure_geometry_measurement.json": "fd0d43c2a47abefad939fc0e980456cc396bbf3ba3bb104b28bcd999100f23ed",
+    "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_zero_step_science_attestation.json": "1975df11b13a774b89f953991d7fdac6e38d795e81a9535850b147d823740d20",
+    "claudedocs/runtime_logs/grasp_track/g0a_d359/d359_completion_summary.json": "bfa66efc2e3f36bc7c781558fa118e6cc5f243d8dba948c19f59852fbdf21f85",
+    "claudedocs/runtime_logs/grasp_track/g0a_d359/d359_postcompletion_lineage_clarification.json": "a6645de539e2bc1106e71bd1462fc40da7806a6bd6e8ea8d734091d269794c9b",
+    "claudedocs/session_20260716_grasp_g0a_d360_current_pose_bounded_physx_contact_motion.md": "006d25a52776cb537fffe84da905507208b6d7950fab90c27795254bcbc5147e",
+    "local_assets/roarm_m3/urdf/roarm_m3.urdf": "64dc8d082cbce9a13a0697a11a0eaeaebbc54bbcd97e7aafaa40da483969dae2",
+    "sim_scripts/cyl34_top_view_d333_grasp_g0a_sole_support_static_retest.py": "e582f274fca44093b0e1367555459f22428c809792b6cfc3a9a336369dac68b7",
+    "sim_scripts/cyl34_top_view_d351_zero_step_closure_geometry.py": "3c4501885af7590f5883b36666c984ce88728a24d40451ea0a600660a386107d"
+  },
+  "parameters": {
+    "baseline_semantics": "frozen q0-q4 plus q5 OPEN; never D333 HOME baseline",
+    "checks": {
+      "camera_is_d351_verified_oblique": true,
+      "cylinder_contract_exact": true,
+      "d354_first_overlap_exact": true,
+      "d354_last_clear_exact": true,
+      "d354_raw_live_q5_brackets_identical": true,
+      "d359_forward_clarification_semantics": true,
+      "d359_lineage_completion_semantics": true,
+      "exactly_two_new_variables": true,
+      "object_position_exact": true,
+      "object_quaternion_exact": true,
+      "physics_dt_exact": true,
+      "q5_closed_exact": true,
+      "q5_open_exact": true,
+      "q_frozen_matches_d351_bits": true,
+      "registered_base_git_exact": true,
+      "seed_33201": true,
+      "session_harness_sha_pin_exact_once": true,
+      "step_horizons_exact": true,
+      "thresholds_inherited_exact": true
+    },
+    "closure_horizon_semantics": "300 steps is a contact-observation horizon, not q5=0 settle proof",
+    "effort_cap_nm": 2.5,
+    "initial_proportional_error_torque_diagnostic_nm": 123.30400466918945,
+    "pass": true
+  },
+  "pass": true,
+  "utc": "2026-07-16T10:47:27.052106+00:00"
+}

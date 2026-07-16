@@ -1,0 +1,689 @@
+{
+  "artifact": "D359_D351_HISTORICAL_HASH_PROVENANCE_EVIDENCE_V1",
+  "case": "g0a_d359",
+  "checks": {
+    "d358_omission_audit_pass": true,
+    "forbidden_modules_absent": true,
+    "git_lineage_pass": true,
+    "sidecar_unchanged_after": true,
+    "source_remap_replay_pass": true,
+    "transcript_lineage_pass": true
+  },
+  "d358_omitted_axis_audit": {
+    "checks": {
+      "d351_expected_constants_present": true,
+      "d351_runtime_validator_coordinate_unique": true,
+      "d358_coordinate_tuple_flatten": true,
+      "d358_original_point_id_recipe_absent": true,
+      "d358_vertex_axes_coordinate_only": true
+    },
+    "d351_harness_sha256": "3c4501885af7590f5883b36666c984ce88728a24d40451ea0a600660a386107d",
+    "d358_harness_sha256": "e5fdc1fc98c85db1b2533ae45e080999681a9b88c59c593bf5cb8869ee87757a",
+    "explanation": "D358 varied ordering of coordinate tuples after source point IDs had already been discarded; the historical generator keyed the remap by ascending original point ID.",
+    "pass": true
+  },
+  "elapsed_seconds": 34.150002633,
+  "git_lineage": {
+    "checks": {
+      "all_fields_have_history": true,
+      "all_first_introduced_same_commit": true,
+      "first_commit_file_contains_all_expected": true,
+      "parent_lacks_d351_harness": true
+    },
+    "committed_d351_blob_sha256": "cd1619e26c36e24a23326c13ec206d0ee7322d381d2521df70f08ddcf48513a7",
+    "fields": {
+      "inner_paired_xz": {
+        "first": "c2cfa5f41d4c15fec15330cfad38b9b14e4c4f61|2026-07-15T18:45:18+09:00|jaehyeond|Isaac\ub0b4\ubd80 \ubb38\uc81c\ub85c \ub3c4\ub2ec \ud655\uc778 \uc2e4\ud328. \ud655\uc778\uc694\ub9dd",
+        "history": [
+          "c2cfa5f41d4c15fec15330cfad38b9b14e4c4f61|2026-07-15T18:45:18+09:00|jaehyeond|Isaac\ub0b4\ubd80 \ubb38\uc81c\ub85c \ub3c4\ub2ec \ud655\uc778 \uc2e4\ud328. \ud655\uc778\uc694\ub9dd",
+          "64aa5b2c9552a053a3a9a34551fbfd168ce644ba|2026-07-16T07:01:53+09:00|jaehyeond|D354\uc791\uc5c5 Isaac sim \uc815\uc0c1 \uc791\ub3d9",
+          "161f6d9d185bb41eb29259349ee0fd897a3c6de8|2026-07-16T10:11:51+09:00|jaehyeond|D355",
+          "d4671d4bdefa4f6e5ef1f2f28b8e318c100b7cb5|2026-07-16T16:08:35+09:00|jaehyeond|D358 \uc9c4\ud589"
+        ],
+        "history_count": 4
+      },
+      "inner_patch": {
+        "first": "c2cfa5f41d4c15fec15330cfad38b9b14e4c4f61|2026-07-15T18:45:18+09:00|jaehyeond|Isaac\ub0b4\ubd80 \ubb38\uc81c\ub85c \ub3c4\ub2ec \ud655\uc778 \uc2e4\ud328. \ud655\uc778\uc694\ub9dd",
+        "history": [
+          "c2cfa5f41d4c15fec15330cfad38b9b14e4c4f61|2026-07-15T18:45:18+09:00|jaehyeond|Isaac\ub0b4\ubd80 \ubb38\uc81c\ub85c \ub3c4\ub2ec \ud655\uc778 \uc2e4\ud328. \ud655\uc778\uc694\ub9dd",
+          "161f6d9d185bb41eb29259349ee0fd897a3c6de8|2026-07-16T10:11:51+09:00|jaehyeond|D355"
+        ],
+        "history_count": 2
+      },
+      "inner_triangle": {
+        "first": "c2cfa5f41d4c15fec15330cfad38b9b14e4c4f61|2026-07-15T18:45:18+09:00|jaehyeond|Isaac\ub0b4\ubd80 \ubb38\uc81c\ub85c \ub3c4\ub2ec \ud655\uc778 \uc2e4\ud328. \ud655\uc778\uc694\ub9dd",
+        "history": [
+          "c2cfa5f41d4c15fec15330cfad38b9b14e4c4f61|2026-07-15T18:45:18+09:00|jaehyeond|Isaac\ub0b4\ubd80 \ubb38\uc81c\ub85c \ub3c4\ub2ec \ud655\uc778 \uc2e4\ud328. \ud655\uc778\uc694\ub9dd",
+          "161f6d9d185bb41eb29259349ee0fd897a3c6de8|2026-07-16T10:11:51+09:00|jaehyeond|D355"
+        ],
+        "history_count": 2
+      },
+      "inner_vertex": {
+        "first": "c2cfa5f41d4c15fec15330cfad38b9b14e4c4f61|2026-07-15T18:45:18+09:00|jaehyeond|Isaac\ub0b4\ubd80 \ubb38\uc81c\ub85c \ub3c4\ub2ec \ud655\uc778 \uc2e4\ud328. \ud655\uc778\uc694\ub9dd",
+        "history": [
+          "c2cfa5f41d4c15fec15330cfad38b9b14e4c4f61|2026-07-15T18:45:18+09:00|jaehyeond|Isaac\ub0b4\ubd80 \ubb38\uc81c\ub85c \ub3c4\ub2ec \ud655\uc778 \uc2e4\ud328. \ud655\uc778\uc694\ub9dd",
+          "161f6d9d185bb41eb29259349ee0fd897a3c6de8|2026-07-16T10:11:51+09:00|jaehyeond|D355"
+        ],
+        "history_count": 2
+      },
+      "outer_paired_xz": {
+        "first": "c2cfa5f41d4c15fec15330cfad38b9b14e4c4f61|2026-07-15T18:45:18+09:00|jaehyeond|Isaac\ub0b4\ubd80 \ubb38\uc81c\ub85c \ub3c4\ub2ec \ud655\uc778 \uc2e4\ud328. \ud655\uc778\uc694\ub9dd",
+        "history": [
+          "c2cfa5f41d4c15fec15330cfad38b9b14e4c4f61|2026-07-15T18:45:18+09:00|jaehyeond|Isaac\ub0b4\ubd80 \ubb38\uc81c\ub85c \ub3c4\ub2ec \ud655\uc778 \uc2e4\ud328. \ud655\uc778\uc694\ub9dd",
+          "64aa5b2c9552a053a3a9a34551fbfd168ce644ba|2026-07-16T07:01:53+09:00|jaehyeond|D354\uc791\uc5c5 Isaac sim \uc815\uc0c1 \uc791\ub3d9",
+          "161f6d9d185bb41eb29259349ee0fd897a3c6de8|2026-07-16T10:11:51+09:00|jaehyeond|D355",
+          "d4671d4bdefa4f6e5ef1f2f28b8e318c100b7cb5|2026-07-16T16:08:35+09:00|jaehyeond|D358 \uc9c4\ud589"
+        ],
+        "history_count": 4
+      },
+      "outer_patch": {
+        "first": "c2cfa5f41d4c15fec15330cfad38b9b14e4c4f61|2026-07-15T18:45:18+09:00|jaehyeond|Isaac\ub0b4\ubd80 \ubb38\uc81c\ub85c \ub3c4\ub2ec \ud655\uc778 \uc2e4\ud328. \ud655\uc778\uc694\ub9dd",
+        "history": [
+          "c2cfa5f41d4c15fec15330cfad38b9b14e4c4f61|2026-07-15T18:45:18+09:00|jaehyeond|Isaac\ub0b4\ubd80 \ubb38\uc81c\ub85c \ub3c4\ub2ec \ud655\uc778 \uc2e4\ud328. \ud655\uc778\uc694\ub9dd",
+          "161f6d9d185bb41eb29259349ee0fd897a3c6de8|2026-07-16T10:11:51+09:00|jaehyeond|D355"
+        ],
+        "history_count": 2
+      },
+      "outer_triangle": {
+        "first": "c2cfa5f41d4c15fec15330cfad38b9b14e4c4f61|2026-07-15T18:45:18+09:00|jaehyeond|Isaac\ub0b4\ubd80 \ubb38\uc81c\ub85c \ub3c4\ub2ec \ud655\uc778 \uc2e4\ud328. \ud655\uc778\uc694\ub9dd",
+        "history": [
+          "c2cfa5f41d4c15fec15330cfad38b9b14e4c4f61|2026-07-15T18:45:18+09:00|jaehyeond|Isaac\ub0b4\ubd80 \ubb38\uc81c\ub85c \ub3c4\ub2ec \ud655\uc778 \uc2e4\ud328. \ud655\uc778\uc694\ub9dd",
+          "161f6d9d185bb41eb29259349ee0fd897a3c6de8|2026-07-16T10:11:51+09:00|jaehyeond|D355"
+        ],
+        "history_count": 2
+      },
+      "outer_vertex": {
+        "first": "c2cfa5f41d4c15fec15330cfad38b9b14e4c4f61|2026-07-15T18:45:18+09:00|jaehyeond|Isaac\ub0b4\ubd80 \ubb38\uc81c\ub85c \ub3c4\ub2ec \ud655\uc778 \uc2e4\ud328. \ud655\uc778\uc694\ub9dd",
+        "history": [
+          "c2cfa5f41d4c15fec15330cfad38b9b14e4c4f61|2026-07-15T18:45:18+09:00|jaehyeond|Isaac\ub0b4\ubd80 \ubb38\uc81c\ub85c \ub3c4\ub2ec \ud655\uc778 \uc2e4\ud328. \ud655\uc778\uc694\ub9dd",
+          "161f6d9d185bb41eb29259349ee0fd897a3c6de8|2026-07-16T10:11:51+09:00|jaehyeond|D355"
+        ],
+        "history_count": 2
+      }
+    },
+    "first_commit": "c2cfa5f41d4c15fec15330cfad38b9b14e4c4f61",
+    "parent_commit": "cfd9e7501df89724c3cc2b1038fda05ce0d88e2f",
+    "parent_has_d351_harness": false,
+    "pass": true
+  },
+  "interpretation_boundary": {
+    "contact_grasp_target_ik_decision": null,
+    "d351_d354_d358_immutable": true,
+    "expected_hash_replacement_performed": false,
+    "g0a_pass": false,
+    "gate_relaxation_performed": false,
+    "isaac_or_physics_run": false
+  },
+  "pass": true,
+  "replay_matrix": {
+    "checks": {
+      "both_streams_match_frozen": true,
+      "coordinate_remap_matches_only_paired_xz_historical_2_of_8": true,
+      "d344_coordinate_matches_d358_current_8_of_8": true,
+      "d344_historical_point_id_8_of_8": true,
+      "independent_struct_pack_matches_historical": true,
+      "local_coordinate_matches_d358_current_8_of_8": true,
+      "local_historical_point_id_8_of_8": true,
+      "reverse_point_id_rejected": true,
+      "source_streams_identical": true
+    },
+    "d358_current_authored_bundle": {
+      "inner_paired_xz": "917b7154601d23984db01ebbd4adccdb272771920f225d1a021540b4b03bcaf9",
+      "inner_patch": "7478ac187dd4fbd1358d0e3c6d0fc5e433a5cc5bd5978cc416d39d72af45a877",
+      "inner_triangle": "d90afe18cab0c18063c224beab16223ea6a8fe61260a07c70b38a7dbd25d2349",
+      "inner_vertex": "caa7d9676b68b7444cb70aa178628216d5b5dc25fe2681622fdce2ea425398f9",
+      "outer_paired_xz": "917b7154601d23984db01ebbd4adccdb272771920f225d1a021540b4b03bcaf9",
+      "outer_patch": "e0a8f4cc0fe11326bc14ddc93262ec351bb30045812462fa425d71ec440c7361",
+      "outer_triangle": "bd024ff9435ecc8d811a656b96bf5c96028e0b1d247526f1e6b2dbeb4a6ad241",
+      "outer_vertex": "3e24cab3292da854f53ab5fadb3c3e73964656e9afb8064002043145ab386131"
+    },
+    "independent_struct_pack_bundle": {
+      "inner_paired_xz": "917b7154601d23984db01ebbd4adccdb272771920f225d1a021540b4b03bcaf9",
+      "inner_patch": "c927e8c628073f9f1d8fc0250d8190a71bb2b0701b97b41d7f8069b216c3531b",
+      "inner_triangle": "5644e9a66386d68945d340a46cfa9e1507b6dd55cf0b721823ef6afb079b9e17",
+      "inner_vertex": "13c65ee478a2668896ec2a8f1e237a9ba7b7e6e0ef40ab08cb350087d3a74d55",
+      "outer_paired_xz": "917b7154601d23984db01ebbd4adccdb272771920f225d1a021540b4b03bcaf9",
+      "outer_patch": "9b430c7d7e8c389eb648726014d61169aa671ec910f94a782084b467e96d6486",
+      "outer_triangle": "5644e9a66386d68945d340a46cfa9e1507b6dd55cf0b721823ef6afb079b9e17",
+      "outer_vertex": "0d9f7f856eb66d5f749303aa7f4bac8138a595d228dff8424221a6b0b732772a"
+    },
+    "pass": true,
+    "rows": {
+      "d344_attempt3_composed": {
+        "coordinate_lexicographic_unique": {
+          "bundle": {
+            "inner_paired_xz": "917b7154601d23984db01ebbd4adccdb272771920f225d1a021540b4b03bcaf9",
+            "inner_patch": "7478ac187dd4fbd1358d0e3c6d0fc5e433a5cc5bd5978cc416d39d72af45a877",
+            "inner_triangle": "d90afe18cab0c18063c224beab16223ea6a8fe61260a07c70b38a7dbd25d2349",
+            "inner_vertex": "caa7d9676b68b7444cb70aa178628216d5b5dc25fe2681622fdce2ea425398f9",
+            "outer_paired_xz": "917b7154601d23984db01ebbd4adccdb272771920f225d1a021540b4b03bcaf9",
+            "outer_patch": "e0a8f4cc0fe11326bc14ddc93262ec351bb30045812462fa425d71ec440c7361",
+            "outer_triangle": "bd024ff9435ecc8d811a656b96bf5c96028e0b1d247526f1e6b2dbeb4a6ad241",
+            "outer_vertex": "3e24cab3292da854f53ab5fadb3c3e73964656e9afb8064002043145ab386131"
+          },
+          "historical_match_count": 2,
+          "inner": {
+            "blob_lengths": {
+              "face": 3944,
+              "patch": 21572,
+              "triangle": 11832,
+              "vertex": 5796
+            },
+            "face_count": 493,
+            "face_sha256": "6d97da67c58f38152e97da74e544cdd179fb5352cdc06ec223b33353f187b0d6",
+            "paired_xz_sha256": "917b7154601d23984db01ebbd4adccdb272771920f225d1a021540b4b03bcaf9",
+            "patch_sha256": "7478ac187dd4fbd1358d0e3c6d0fc5e433a5cc5bd5978cc416d39d72af45a877",
+            "source_point_id_count": null,
+            "triangle_sha256": "d90afe18cab0c18063c224beab16223ea6a8fe61260a07c70b38a7dbd25d2349",
+            "vertex_count": 483,
+            "vertex_sha256": "caa7d9676b68b7444cb70aa178628216d5b5dc25fe2681622fdce2ea425398f9"
+          },
+          "matches_historical_by_field": {
+            "inner_paired_xz": true,
+            "inner_patch": false,
+            "inner_triangle": false,
+            "inner_vertex": false,
+            "outer_paired_xz": true,
+            "outer_patch": false,
+            "outer_triangle": false,
+            "outer_vertex": false
+          },
+          "outer": {
+            "blob_lengths": {
+              "face": 3944,
+              "patch": 21572,
+              "triangle": 11832,
+              "vertex": 5796
+            },
+            "face_count": 493,
+            "face_sha256": "35b3eda85e97375771e540d5e7b1131b5acf3df0952ee6e394059c70b79d1a60",
+            "paired_xz_sha256": "917b7154601d23984db01ebbd4adccdb272771920f225d1a021540b4b03bcaf9",
+            "patch_sha256": "e0a8f4cc0fe11326bc14ddc93262ec351bb30045812462fa425d71ec440c7361",
+            "source_point_id_count": null,
+            "triangle_sha256": "bd024ff9435ecc8d811a656b96bf5c96028e0b1d247526f1e6b2dbeb4a6ad241",
+            "vertex_count": 483,
+            "vertex_sha256": "3e24cab3292da854f53ab5fadb3c3e73964656e9afb8064002043145ab386131"
+          },
+          "remap": "coordinate_lexicographic_unique"
+        },
+        "original_point_id_ascending": {
+          "bundle": {
+            "inner_paired_xz": "917b7154601d23984db01ebbd4adccdb272771920f225d1a021540b4b03bcaf9",
+            "inner_patch": "c927e8c628073f9f1d8fc0250d8190a71bb2b0701b97b41d7f8069b216c3531b",
+            "inner_triangle": "5644e9a66386d68945d340a46cfa9e1507b6dd55cf0b721823ef6afb079b9e17",
+            "inner_vertex": "13c65ee478a2668896ec2a8f1e237a9ba7b7e6e0ef40ab08cb350087d3a74d55",
+            "outer_paired_xz": "917b7154601d23984db01ebbd4adccdb272771920f225d1a021540b4b03bcaf9",
+            "outer_patch": "9b430c7d7e8c389eb648726014d61169aa671ec910f94a782084b467e96d6486",
+            "outer_triangle": "5644e9a66386d68945d340a46cfa9e1507b6dd55cf0b721823ef6afb079b9e17",
+            "outer_vertex": "0d9f7f856eb66d5f749303aa7f4bac8138a595d228dff8424221a6b0b732772a"
+          },
+          "historical_match_count": 8,
+          "inner": {
+            "blob_lengths": {
+              "face": 3944,
+              "patch": 33524,
+              "triangle": 11832,
+              "vertex": 17748
+            },
+            "face_count": 493,
+            "face_sha256": "6d97da67c58f38152e97da74e544cdd179fb5352cdc06ec223b33353f187b0d6",
+            "paired_xz_sha256": "917b7154601d23984db01ebbd4adccdb272771920f225d1a021540b4b03bcaf9",
+            "patch_sha256": "c927e8c628073f9f1d8fc0250d8190a71bb2b0701b97b41d7f8069b216c3531b",
+            "source_point_id_count": 1479,
+            "triangle_sha256": "5644e9a66386d68945d340a46cfa9e1507b6dd55cf0b721823ef6afb079b9e17",
+            "vertex_count": 1479,
+            "vertex_sha256": "13c65ee478a2668896ec2a8f1e237a9ba7b7e6e0ef40ab08cb350087d3a74d55"
+          },
+          "matches_historical_by_field": {
+            "inner_paired_xz": true,
+            "inner_patch": true,
+            "inner_triangle": true,
+            "inner_vertex": true,
+            "outer_paired_xz": true,
+            "outer_patch": true,
+            "outer_triangle": true,
+            "outer_vertex": true
+          },
+          "outer": {
+            "blob_lengths": {
+              "face": 3944,
+              "patch": 33524,
+              "triangle": 11832,
+              "vertex": 17748
+            },
+            "face_count": 493,
+            "face_sha256": "35b3eda85e97375771e540d5e7b1131b5acf3df0952ee6e394059c70b79d1a60",
+            "paired_xz_sha256": "917b7154601d23984db01ebbd4adccdb272771920f225d1a021540b4b03bcaf9",
+            "patch_sha256": "9b430c7d7e8c389eb648726014d61169aa671ec910f94a782084b467e96d6486",
+            "source_point_id_count": 1479,
+            "triangle_sha256": "5644e9a66386d68945d340a46cfa9e1507b6dd55cf0b721823ef6afb079b9e17",
+            "vertex_count": 1479,
+            "vertex_sha256": "0d9f7f856eb66d5f749303aa7f4bac8138a595d228dff8424221a6b0b732772a"
+          },
+          "remap": "original_point_id_ascending"
+        },
+        "reverse_original_point_id": {
+          "bundle": {
+            "inner_paired_xz": "917b7154601d23984db01ebbd4adccdb272771920f225d1a021540b4b03bcaf9",
+            "inner_patch": "49e072c9d55b59947c71691da7f7aa97d6c31258524d78c064e8b110787514ba",
+            "inner_triangle": "1c5a27aa442743c0390dccde5610dbe2d56be0250a95c0abe41522c4de5892cb",
+            "inner_vertex": "97ccea52717e3e54d5c15682b74fbfef04b66c8c607a65ffb4dc1a5a00722b75",
+            "outer_paired_xz": "917b7154601d23984db01ebbd4adccdb272771920f225d1a021540b4b03bcaf9",
+            "outer_patch": "81015b0e0f3da99bcf9cb82217bd7596674da14d3fbae002f525e82f3ce00f28",
+            "outer_triangle": "1c5a27aa442743c0390dccde5610dbe2d56be0250a95c0abe41522c4de5892cb",
+            "outer_vertex": "dd5cfa88eb588c0947c72747d07a98fa2144bdb44cfeea01555732c4888f5d2b"
+          },
+          "historical_match_count": 2,
+          "inner": {
+            "blob_lengths": {
+              "face": 3944,
+              "patch": 33524,
+              "triangle": 11832,
+              "vertex": 17748
+            },
+            "face_count": 493,
+            "face_sha256": "6d97da67c58f38152e97da74e544cdd179fb5352cdc06ec223b33353f187b0d6",
+            "paired_xz_sha256": "917b7154601d23984db01ebbd4adccdb272771920f225d1a021540b4b03bcaf9",
+            "patch_sha256": "49e072c9d55b59947c71691da7f7aa97d6c31258524d78c064e8b110787514ba",
+            "source_point_id_count": 1479,
+            "triangle_sha256": "1c5a27aa442743c0390dccde5610dbe2d56be0250a95c0abe41522c4de5892cb",
+            "vertex_count": 1479,
+            "vertex_sha256": "97ccea52717e3e54d5c15682b74fbfef04b66c8c607a65ffb4dc1a5a00722b75"
+          },
+          "matches_historical_by_field": {
+            "inner_paired_xz": true,
+            "inner_patch": false,
+            "inner_triangle": false,
+            "inner_vertex": false,
+            "outer_paired_xz": true,
+            "outer_patch": false,
+            "outer_triangle": false,
+            "outer_vertex": false
+          },
+          "outer": {
+            "blob_lengths": {
+              "face": 3944,
+              "patch": 33524,
+              "triangle": 11832,
+              "vertex": 17748
+            },
+            "face_count": 493,
+            "face_sha256": "35b3eda85e97375771e540d5e7b1131b5acf3df0952ee6e394059c70b79d1a60",
+            "paired_xz_sha256": "917b7154601d23984db01ebbd4adccdb272771920f225d1a021540b4b03bcaf9",
+            "patch_sha256": "81015b0e0f3da99bcf9cb82217bd7596674da14d3fbae002f525e82f3ce00f28",
+            "source_point_id_count": 1479,
+            "triangle_sha256": "1c5a27aa442743c0390dccde5610dbe2d56be0250a95c0abe41522c4de5892cb",
+            "vertex_count": 1479,
+            "vertex_sha256": "dd5cfa88eb588c0947c72747d07a98fa2144bdb44cfeea01555732c4888f5d2b"
+          },
+          "remap": "reverse_original_point_id"
+        }
+      },
+      "local_composed": {
+        "coordinate_lexicographic_unique": {
+          "bundle": {
+            "inner_paired_xz": "917b7154601d23984db01ebbd4adccdb272771920f225d1a021540b4b03bcaf9",
+            "inner_patch": "7478ac187dd4fbd1358d0e3c6d0fc5e433a5cc5bd5978cc416d39d72af45a877",
+            "inner_triangle": "d90afe18cab0c18063c224beab16223ea6a8fe61260a07c70b38a7dbd25d2349",
+            "inner_vertex": "caa7d9676b68b7444cb70aa178628216d5b5dc25fe2681622fdce2ea425398f9",
+            "outer_paired_xz": "917b7154601d23984db01ebbd4adccdb272771920f225d1a021540b4b03bcaf9",
+            "outer_patch": "e0a8f4cc0fe11326bc14ddc93262ec351bb30045812462fa425d71ec440c7361",
+            "outer_triangle": "bd024ff9435ecc8d811a656b96bf5c96028e0b1d247526f1e6b2dbeb4a6ad241",
+            "outer_vertex": "3e24cab3292da854f53ab5fadb3c3e73964656e9afb8064002043145ab386131"
+          },
+          "historical_match_count": 2,
+          "inner": {
+            "blob_lengths": {
+              "face": 3944,
+              "patch": 21572,
+              "triangle": 11832,
+              "vertex": 5796
+            },
+            "face_count": 493,
+            "face_sha256": "6d97da67c58f38152e97da74e544cdd179fb5352cdc06ec223b33353f187b0d6",
+            "paired_xz_sha256": "917b7154601d23984db01ebbd4adccdb272771920f225d1a021540b4b03bcaf9",
+            "patch_sha256": "7478ac187dd4fbd1358d0e3c6d0fc5e433a5cc5bd5978cc416d39d72af45a877",
+            "source_point_id_count": null,
+            "triangle_sha256": "d90afe18cab0c18063c224beab16223ea6a8fe61260a07c70b38a7dbd25d2349",
+            "vertex_count": 483,
+            "vertex_sha256": "caa7d9676b68b7444cb70aa178628216d5b5dc25fe2681622fdce2ea425398f9"
+          },
+          "matches_historical_by_field": {
+            "inner_paired_xz": true,
+            "inner_patch": false,
+            "inner_triangle": false,
+            "inner_vertex": false,
+            "outer_paired_xz": true,
+            "outer_patch": false,
+            "outer_triangle": false,
+            "outer_vertex": false
+          },
+          "outer": {
+            "blob_lengths": {
+              "face": 3944,
+              "patch": 21572,
+              "triangle": 11832,
+              "vertex": 5796
+            },
+            "face_count": 493,
+            "face_sha256": "35b3eda85e97375771e540d5e7b1131b5acf3df0952ee6e394059c70b79d1a60",
+            "paired_xz_sha256": "917b7154601d23984db01ebbd4adccdb272771920f225d1a021540b4b03bcaf9",
+            "patch_sha256": "e0a8f4cc0fe11326bc14ddc93262ec351bb30045812462fa425d71ec440c7361",
+            "source_point_id_count": null,
+            "triangle_sha256": "bd024ff9435ecc8d811a656b96bf5c96028e0b1d247526f1e6b2dbeb4a6ad241",
+            "vertex_count": 483,
+            "vertex_sha256": "3e24cab3292da854f53ab5fadb3c3e73964656e9afb8064002043145ab386131"
+          },
+          "remap": "coordinate_lexicographic_unique"
+        },
+        "original_point_id_ascending": {
+          "bundle": {
+            "inner_paired_xz": "917b7154601d23984db01ebbd4adccdb272771920f225d1a021540b4b03bcaf9",
+            "inner_patch": "c927e8c628073f9f1d8fc0250d8190a71bb2b0701b97b41d7f8069b216c3531b",
+            "inner_triangle": "5644e9a66386d68945d340a46cfa9e1507b6dd55cf0b721823ef6afb079b9e17",
+            "inner_vertex": "13c65ee478a2668896ec2a8f1e237a9ba7b7e6e0ef40ab08cb350087d3a74d55",
+            "outer_paired_xz": "917b7154601d23984db01ebbd4adccdb272771920f225d1a021540b4b03bcaf9",
+            "outer_patch": "9b430c7d7e8c389eb648726014d61169aa671ec910f94a782084b467e96d6486",
+            "outer_triangle": "5644e9a66386d68945d340a46cfa9e1507b6dd55cf0b721823ef6afb079b9e17",
+            "outer_vertex": "0d9f7f856eb66d5f749303aa7f4bac8138a595d228dff8424221a6b0b732772a"
+          },
+          "historical_match_count": 8,
+          "inner": {
+            "blob_lengths": {
+              "face": 3944,
+              "patch": 33524,
+              "triangle": 11832,
+              "vertex": 17748
+            },
+            "face_count": 493,
+            "face_sha256": "6d97da67c58f38152e97da74e544cdd179fb5352cdc06ec223b33353f187b0d6",
+            "paired_xz_sha256": "917b7154601d23984db01ebbd4adccdb272771920f225d1a021540b4b03bcaf9",
+            "patch_sha256": "c927e8c628073f9f1d8fc0250d8190a71bb2b0701b97b41d7f8069b216c3531b",
+            "source_point_id_count": 1479,
+            "triangle_sha256": "5644e9a66386d68945d340a46cfa9e1507b6dd55cf0b721823ef6afb079b9e17",
+            "vertex_count": 1479,
+            "vertex_sha256": "13c65ee478a2668896ec2a8f1e237a9ba7b7e6e0ef40ab08cb350087d3a74d55"
+          },
+          "matches_historical_by_field": {
+            "inner_paired_xz": true,
+            "inner_patch": true,
+            "inner_triangle": true,
+            "inner_vertex": true,
+            "outer_paired_xz": true,
+            "outer_patch": true,
+            "outer_triangle": true,
+            "outer_vertex": true
+          },
+          "outer": {
+            "blob_lengths": {
+              "face": 3944,
+              "patch": 33524,
+              "triangle": 11832,
+              "vertex": 17748
+            },
+            "face_count": 493,
+            "face_sha256": "35b3eda85e97375771e540d5e7b1131b5acf3df0952ee6e394059c70b79d1a60",
+            "paired_xz_sha256": "917b7154601d23984db01ebbd4adccdb272771920f225d1a021540b4b03bcaf9",
+            "patch_sha256": "9b430c7d7e8c389eb648726014d61169aa671ec910f94a782084b467e96d6486",
+            "source_point_id_count": 1479,
+            "triangle_sha256": "5644e9a66386d68945d340a46cfa9e1507b6dd55cf0b721823ef6afb079b9e17",
+            "vertex_count": 1479,
+            "vertex_sha256": "0d9f7f856eb66d5f749303aa7f4bac8138a595d228dff8424221a6b0b732772a"
+          },
+          "remap": "original_point_id_ascending"
+        },
+        "reverse_original_point_id": {
+          "bundle": {
+            "inner_paired_xz": "917b7154601d23984db01ebbd4adccdb272771920f225d1a021540b4b03bcaf9",
+            "inner_patch": "49e072c9d55b59947c71691da7f7aa97d6c31258524d78c064e8b110787514ba",
+            "inner_triangle": "1c5a27aa442743c0390dccde5610dbe2d56be0250a95c0abe41522c4de5892cb",
+            "inner_vertex": "97ccea52717e3e54d5c15682b74fbfef04b66c8c607a65ffb4dc1a5a00722b75",
+            "outer_paired_xz": "917b7154601d23984db01ebbd4adccdb272771920f225d1a021540b4b03bcaf9",
+            "outer_patch": "81015b0e0f3da99bcf9cb82217bd7596674da14d3fbae002f525e82f3ce00f28",
+            "outer_triangle": "1c5a27aa442743c0390dccde5610dbe2d56be0250a95c0abe41522c4de5892cb",
+            "outer_vertex": "dd5cfa88eb588c0947c72747d07a98fa2144bdb44cfeea01555732c4888f5d2b"
+          },
+          "historical_match_count": 2,
+          "inner": {
+            "blob_lengths": {
+              "face": 3944,
+              "patch": 33524,
+              "triangle": 11832,
+              "vertex": 17748
+            },
+            "face_count": 493,
+            "face_sha256": "6d97da67c58f38152e97da74e544cdd179fb5352cdc06ec223b33353f187b0d6",
+            "paired_xz_sha256": "917b7154601d23984db01ebbd4adccdb272771920f225d1a021540b4b03bcaf9",
+            "patch_sha256": "49e072c9d55b59947c71691da7f7aa97d6c31258524d78c064e8b110787514ba",
+            "source_point_id_count": 1479,
+            "triangle_sha256": "1c5a27aa442743c0390dccde5610dbe2d56be0250a95c0abe41522c4de5892cb",
+            "vertex_count": 1479,
+            "vertex_sha256": "97ccea52717e3e54d5c15682b74fbfef04b66c8c607a65ffb4dc1a5a00722b75"
+          },
+          "matches_historical_by_field": {
+            "inner_paired_xz": true,
+            "inner_patch": false,
+            "inner_triangle": false,
+            "inner_vertex": false,
+            "outer_paired_xz": true,
+            "outer_patch": false,
+            "outer_triangle": false,
+            "outer_vertex": false
+          },
+          "outer": {
+            "blob_lengths": {
+              "face": 3944,
+              "patch": 33524,
+              "triangle": 11832,
+              "vertex": 17748
+            },
+            "face_count": 493,
+            "face_sha256": "35b3eda85e97375771e540d5e7b1131b5acf3df0952ee6e394059c70b79d1a60",
+            "paired_xz_sha256": "917b7154601d23984db01ebbd4adccdb272771920f225d1a021540b4b03bcaf9",
+            "patch_sha256": "81015b0e0f3da99bcf9cb82217bd7596674da14d3fbae002f525e82f3ce00f28",
+            "source_point_id_count": 1479,
+            "triangle_sha256": "1c5a27aa442743c0390dccde5610dbe2d56be0250a95c0abe41522c4de5892cb",
+            "vertex_count": 1479,
+            "vertex_sha256": "dd5cfa88eb588c0947c72747d07a98fa2144bdb44cfeea01555732c4888f5d2b"
+          },
+          "remap": "reverse_original_point_id"
+        }
+      }
+    },
+    "sources": {
+      "d344_attempt3_composed": {
+        "all_triangles": true,
+        "face_count": 13698,
+        "point_count": 41094,
+        "root_sha256": "a4be58e87b1f9790f2a2ed600f0620c79d3cfb95c608b3c598308d52f5e46fff",
+        "stage_path": "claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/roarm_m3.usd",
+        "stream_hashes": {
+          "face_counts_i64": "f17eac58b9b109f98f7a69efcc3b1e64b632d805ccca8cc8883cf0349e07cb6c",
+          "face_indices_i64": "205a08458b895d96c6eb9593d1f04a8815629f7f972a889cce683b86955f2545",
+          "points_f32_mm": "b89c67e99bd253ae710e6b0a2fcacd0b27263d6ede29fe6f6334ed70247895ed"
+        },
+        "used_layers": [
+          {
+            "identifier": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/configuration/roarm_m3_base.usd",
+            "real_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/configuration/roarm_m3_base.usd",
+            "sha256": "ea0ee8f258e935799cf927b8c67e871f935c09b3c9be4f971006937334a11841",
+            "size": 2769018
+          },
+          {
+            "identifier": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/configuration/roarm_m3_physics.usd",
+            "real_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/configuration/roarm_m3_physics.usd",
+            "sha256": "043a5d35aa425c2589c77a34fcf415401ce9f9e7155e84ed75f6737df79fb503",
+            "size": 33705
+          },
+          {
+            "identifier": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/configuration/roarm_m3_robot.usd",
+            "real_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/configuration/roarm_m3_robot.usd",
+            "sha256": "2227536fcb8c9dae1aa9cc1cf422350fcf85e662eed97fe9ea48535c6b4aa65d",
+            "size": 1709
+          },
+          {
+            "identifier": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/configuration/roarm_m3_sensor.usd",
+            "real_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/configuration/roarm_m3_sensor.usd",
+            "sha256": "3f44081f42b452bc5f9791a8df1c37e00ba5a6dc98a9e49e065c7acacdda0d0f",
+            "size": 648
+          },
+          {
+            "identifier": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/roarm_m3.usd",
+            "real_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/roarm_m3.usd",
+            "sha256": "a4be58e87b1f9790f2a2ed600f0620c79d3cfb95c608b3c598308d52f5e46fff",
+            "size": 1457
+          },
+          {
+            "identifier": "anon:0x394aa7d0:roarm_m3-session.usda",
+            "real_path": null
+          }
+        ]
+      },
+      "local_composed": {
+        "all_triangles": true,
+        "face_count": 13698,
+        "point_count": 41094,
+        "root_sha256": "a4be58e87b1f9790f2a2ed600f0620c79d3cfb95c608b3c598308d52f5e46fff",
+        "stage_path": "local_assets/roarm_m3/usd/roarm_m3.usd",
+        "stream_hashes": {
+          "face_counts_i64": "f17eac58b9b109f98f7a69efcc3b1e64b632d805ccca8cc8883cf0349e07cb6c",
+          "face_indices_i64": "205a08458b895d96c6eb9593d1f04a8815629f7f972a889cce683b86955f2545",
+          "points_f32_mm": "b89c67e99bd253ae710e6b0a2fcacd0b27263d6ede29fe6f6334ed70247895ed"
+        },
+        "used_layers": [
+          {
+            "identifier": "/home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/usd/configuration/roarm_m3_base.usd",
+            "real_path": "/home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/usd/configuration/roarm_m3_base.usd",
+            "sha256": "ea0ee8f258e935799cf927b8c67e871f935c09b3c9be4f971006937334a11841",
+            "size": 2769018
+          },
+          {
+            "identifier": "/home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/usd/configuration/roarm_m3_physics.usd",
+            "real_path": "/home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/usd/configuration/roarm_m3_physics.usd",
+            "sha256": "1df07d387da76dcde4cd700ee1f9546cba25965776a9700897314ef884c37ed2",
+            "size": 4242
+          },
+          {
+            "identifier": "/home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/usd/configuration/roarm_m3_robot.usd",
+            "real_path": "/home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/usd/configuration/roarm_m3_robot.usd",
+            "sha256": "2227536fcb8c9dae1aa9cc1cf422350fcf85e662eed97fe9ea48535c6b4aa65d",
+            "size": 1709
+          },
+          {
+            "identifier": "/home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/usd/configuration/roarm_m3_sensor.usd",
+            "real_path": "/home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/usd/configuration/roarm_m3_sensor.usd",
+            "sha256": "3f44081f42b452bc5f9791a8df1c37e00ba5a6dc98a9e49e065c7acacdda0d0f",
+            "size": 648
+          },
+          {
+            "identifier": "/home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/usd/roarm_m3.usd",
+            "real_path": "/home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/usd/roarm_m3.usd",
+            "sha256": "a4be58e87b1f9790f2a2ed600f0620c79d3cfb95c608b3c598308d52f5e46fff",
+            "size": 1457
+          },
+          {
+            "identifier": "anon:0x394ccae0:roarm_m3-session.usda",
+            "real_path": null
+          }
+        ]
+      }
+    }
+  },
+  "root_cause": {
+    "actual_generator_remap": "ascending original USD point ID",
+    "actual_generator_source": "D344 attempt3 composed stage",
+    "discriminating_variable": "vertex remap key/order, not geometry or metric unit",
+    "later_validator_remap": "coordinate-row lexicographic unique",
+    "why_d358_missed_it": "D358 varied ordering of coordinate tuples after source point IDs had already been discarded; the historical generator keyed the remap by ascending original point ID.",
+    "why_paired_xz_still_matched": "paired-XZ applies a second coordinate sort, erasing the prior vertex-list ordering difference"
+  },
+  "scope_counts": {
+    "asset_gate_hash_target_ik_path_changes": 0,
+    "commit_push": 0,
+    "d334_sidecar_writes": 0,
+    "distance_contact_cap_rim_queries": 0,
+    "physics_steps": 0,
+    "q5_science_or_state_write": 0,
+    "simulation_app_kit_isaac_gpu": 0
+  },
+  "transcript_lineage": {
+    "actual_generator_call": {
+      "call_id": "call_wllbuGOV6T8Td1VIor3SdVoV",
+      "input_length": 2373,
+      "input_sha256": "82f58f3eb7a1c69bb44698ecaba29906633722eb629f30ba6d19a952bd4aa5d4",
+      "line": 1433,
+      "timestamp": "2026-07-15T06:19:46.955Z",
+      "uses_coordinate_row_unique": false,
+      "uses_d344_attempt3_composed_stage": true,
+      "uses_original_point_id_ascending": true
+    },
+    "actual_generator_output": {
+      "call_id": "call_wllbuGOV6T8Td1VIor3SdVoV",
+      "contains_all_expected": true,
+      "contains_expected": {
+        "inner_paired_xz": true,
+        "inner_patch": true,
+        "inner_triangle": true,
+        "inner_vertex": true,
+        "outer_paired_xz": true,
+        "outer_patch": true,
+        "outer_triangle": true,
+        "outer_vertex": true
+      },
+      "line": 1434,
+      "output_sha256": "0b07edcc52439430f8e931fe121d4a29c279e3b15f68f220613905cb87b61a72",
+      "timestamp": "2026-07-15T06:19:47.297Z"
+    },
+    "checks": {
+      "actual_call_and_later_narration_semantics_differ": true,
+      "actual_call_found": true,
+      "actual_output_contains_all_expected": true,
+      "bound_output_found": true,
+      "later_narration_found": true,
+      "session_meta_found": true,
+      "subagent_path_d351_patch_design": true
+    },
+    "hash_occurrence_lines": [
+      {
+        "line": 1434,
+        "timestamp": "2026-07-15T06:19:47.297Z",
+        "type": "response_item"
+      },
+      {
+        "line": 1510,
+        "timestamp": "2026-07-15T06:28:31.653Z",
+        "type": "event_msg"
+      },
+      {
+        "line": 1511,
+        "timestamp": "2026-07-15T06:28:31.665Z",
+        "type": "response_item"
+      },
+      {
+        "line": 1513,
+        "timestamp": "2026-07-15T06:28:31.686Z",
+        "type": "event_msg"
+      }
+    ],
+    "later_narration": {
+      "claims_coordinate_lexicographic_unique": true,
+      "claims_local_asset_path": true,
+      "line": 1510,
+      "message_sha256": "ac036ea0fb00595754d0bfd183c7561198bdf3338b9cecb580ead148cdc7757f",
+      "timestamp": "2026-07-15T06:28:31.653Z"
+    },
+    "pass": true,
+    "session_meta": {
+      "agent_nickname": "Einstein",
+      "agent_path": "/root/d351_patch_design",
+      "forked_from_id": "019f5f22-c117-77d3-98de-a4de95db4f53",
+      "git_commit_at_session_start": "cfd9e7501df89724c3cc2b1038fda05ce0d88e2f",
+      "line": 1,
+      "session_id": "019f6463-d763-7761-bb62-68bfe4f993f2",
+      "timestamp": "2026-07-15T06:08:12.946Z"
+    },
+    "transcript_path": "/home/cgxr/.codex/sessions/2026/07/15/rollout-2026-07-15T15-08-12-019f6463-d763-7761-bb62-68bfe4f993f2.jsonl",
+    "transcript_sha256": "75f9f04762a99dd0a551d1455b6c2c5d0244c8d5453a54084c34f046fcc78ffa"
+  },
+  "verdict": "D359_D351_HASH_PROVENANCE_RECOVERED"
+}

@@ -1,0 +1,87 @@
+{
+  "actuator_frozen": {
+    "authority": "ArticulationData.applied_torque; computed_torque and joint_effort_limits retained",
+    "damping": 4.0,
+    "effort_limit_sim_nm": 2.5,
+    "initial_error_times_kp_nm_diagnostic": 123.30400466918945,
+    "stiffness": 80.0,
+    "velocity_limit_sim_rad_s": 3.14
+  },
+  "artifact": "D360_PREREGISTRATION_V1",
+  "base_git": "d4671d4bdefa4f6e5ef1f2f28b8e318c100b7cb5",
+  "baseline_steps": 200,
+  "camera": {
+    "opposite_eye": [
+      0.49,
+      0.32,
+      0.28
+    ],
+    "primary_eye": [
+      0.49,
+      -0.32,
+      0.28
+    ],
+    "source": "D351/D354 verified oblique plus symmetric anti-occlusion companion",
+    "target": [
+      0.285,
+      0.0,
+      0.055
+    ]
+  },
+  "case": "g0a_d360",
+  "case_name": "current_pose_bounded_physx_contact_motion",
+  "closure_max_steps": 300,
+  "d334_sidecar_before": {
+    "claudedocs/lab_meeting/20260715/d334_collision_table/README.md": "35e39f584737c888bcf7dfab6154c55c5d13d4154ee7f2042073e1c0a7e18783",
+    "claudedocs/lab_meeting/20260715/d334_collision_table/d334_collision_table_academic.html": "6d38933f959eba916208ec04a329ba25e2bd753c90720576010c222a8bda679c",
+    "claudedocs/lab_meeting/20260715/d334_collision_table/d334_collision_table_academic.png": "ddc9db2795f4d66b2564adf156829e6a143a599ceb72f6bb9fa28ab25e68a183"
+  },
+  "harness_sha256": "86bd2af855effb3bc31f067fd6cc7a4cb7088c422da3ae828d48f4e31d92fd5a",
+  "input_hashes": {
+    "claudedocs/runtime_logs/grasp_track/g0a_d334/g0a_d334_live_collision_audit_summary.json": "2ff44744df99c7a99d168cdd62a4f9186a5bbad6d673205282abb62b71097b26",
+    "claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/configuration/roarm_m3_physics.usd": "043a5d35aa425c2589c77a34fcf415401ce9f9e7155e84ed75f6737df79fb503",
+    "claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/roarm_m3.usd": "a4be58e87b1f9790f2a2ed600f0620c79d3cfb95c608b3c598308d52f5e46fff",
+    "claudedocs/runtime_logs/grasp_track/g0a_d348/attempt2/d348_callback_topology_volume_evidence.json": "83b8c7b16181d0f5c545cfbeaa992c8ebfd69e2310dd33bce2a64234a1deaab6",
+    "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_zero_step_closure_geometry_measurement.json": "fd0d43c2a47abefad939fc0e980456cc396bbf3ba3bb104b28bcd999100f23ed",
+    "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_zero_step_science_attestation.json": "1975df11b13a774b89f953991d7fdac6e38d795e81a9535850b147d823740d20",
+    "claudedocs/runtime_logs/grasp_track/g0a_d359/d359_completion_summary.json": "bfa66efc2e3f36bc7c781558fa118e6cc5f243d8dba948c19f59852fbdf21f85",
+    "claudedocs/runtime_logs/grasp_track/g0a_d359/d359_postcompletion_lineage_clarification.json": "a6645de539e2bc1106e71bd1462fc40da7806a6bd6e8ea8d734091d269794c9b",
+    "claudedocs/session_20260716_grasp_g0a_d360_current_pose_bounded_physx_contact_motion.md": "006d25a52776cb537fffe84da905507208b6d7950fab90c27795254bcbc5147e",
+    "local_assets/roarm_m3/urdf/roarm_m3.urdf": "64dc8d082cbce9a13a0697a11a0eaeaebbc54bbcd97e7aafaa40da483969dae2",
+    "sim_scripts/cyl34_top_view_d333_grasp_g0a_sole_support_static_retest.py": "e582f274fca44093b0e1367555459f22428c809792b6cfc3a9a336369dac68b7",
+    "sim_scripts/cyl34_top_view_d351_zero_step_closure_geometry.py": "3c4501885af7590f5883b36666c984ce88728a24d40451ea0a600660a386107d"
+  },
+  "new_variables": [
+    "bounded_time_evolved_q5_close_execution",
+    "anti_occlusion_contact_force_motion_observation"
+  ],
+  "pass": true,
+  "physics_dt_s": 0.005,
+  "prepare_sha256": "68e0699c7e0a96b1b8fb5e439ab5ede144e73eb35890998ada49d0ecf6984d40",
+  "prohibitions": [
+    "no target/IK/path change",
+    "no asset/decomposition/gate/material/mass/actuator/physics change",
+    "no exact face/cap-rim/grasp/G0a classification",
+    "no retry or overwrite"
+  ],
+  "result_boundaries": {
+    "cap_rim_or_barrel_order": null,
+    "exact_manifold_or_face": null,
+    "force_closure": null,
+    "g0a_pass": false,
+    "grasp_success": null
+  },
+  "run_nonce": "81d325fc64bde4d6a863526acd55a1c1",
+  "single_invocation_no_retry": true,
+  "thresholds": {
+    "consecutive_steps": 2,
+    "effort_saturation_abs_tolerance_nm_diagnostic": 0.0001,
+    "object_tilt_event_deg": 1.0,
+    "object_xy_event_m": 0.0005,
+    "robot_force_event_n": 0.1
+  },
+  "watchdogs_seconds": {
+    "inactivity": 300.0,
+    "total": 900.0
+  }
+}
