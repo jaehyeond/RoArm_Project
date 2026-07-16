@@ -20250,3 +20250,84 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d354/d354_manual_visual_inspection.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d354/d354_completion_summary.json`
 - `START_HERE.md`
+
+## D355 - plain IsaacLab Python의 PXR 접근 실패는 provenance science가 아니며 자동 Rerun 검증은 실제 화면 검사를 대체하지 않는다 (2026-07-16)
+
+Decision:
+
+- D355는 승인된 offline/no-Isaac derived moving-jaw patch-hash provenance 계약을
+  사전등록하고 audit를 정확히 한 번 호출했지만, 첫 `_source_arrays()`의
+  `from pxr import Gf, Usd, UsdGeom`에서 `ModuleNotFoundError`로 중단됐다. 최종
+  operational verdict는 `D355_OFFLINE_INPUT_OR_OBSERVABILITY_FAIL_STOP`이다.
+- **지속 규칙:** plain `isaaclab` Conda Python에서 top-level `pxr`가 import 가능하다고
+  추정하지 않는다. Isaac에 번들된 PXR/Omniverse 모듈을 쓰는 경로는 preflight에서
+  정확한 bootstrap 계약을 고정해야 한다. `isaacsim` 자체도 `SimulationApp`을 먼저
+  instantiate한 뒤 다른 Omniverse/Isaac 모듈을 import하도록 요구한다.
+- **지속 규칙:** `isaac_launch=0`으로 사전등록한 offline case를 살리기 위해 extension-cache
+  경로를 수동 주입하거나 `SimulationApp`을 몰래 시작하거나 standalone OpenUSD를 설치하지
+  않는다. 각 방법은 별도 runtime/dependency 변수이므로 새 forward-only case와 명시 승인이
+  필요하다. IsaacLab env 패키지 설치 시 기존 numpy/psutil pin 규칙도 그대로 적용한다.
+- PXR input stop 이전에는 USD/authored/raw stream, recipe, perturbation, patch digest가 하나도
+  계산되지 않았다. 따라서 provenance 결과는 `null`이다. 이 결과를 derived-hash provenance
+  localized/FAIL, geometry 변화, asset mutation, current-pose 판정 또는 GPU/warp/SM 문제로
+  확대하지 않는다.
+- **지속 규칙:** RRD footer/entity/component 자동 PASS만으로 “시각화 완료”를 선언하지 않는다.
+  D355 attempt3는 자동 PASS였지만 실제 PNG의 static-scalar Dataframe에
+  `Unknown timeline`이 보였다. 원본 해상도 수동 검사에서 보이는 view-level 오류는 FAIL이며,
+  forward-only repair 뒤 다시 실제 화면을 열어야 한다. 정적 exact count는 temporal Dataframe
+  대신 정적 TextDocument로 표현하거나 명시 timeline을 등록한다.
+- D342 잔류 worker cleanup은 과학과 분리한다. 승인된 SIGTERM 뒤 wrapper만 사라지고 worker가
+  재부착되어 남았다면 cleanup PASS로 쓰지 않으며, SIGKILL은 별도 승인 없이 보내지 않는다.
+
+Evidence:
+
+- audit invocation marker는 `count=1`, `no_retry=true`, PID `179644`; phase marker는
+  `audit_started`, `audit_exception` 두 줄뿐이다. 예외 traceback은 audit harness
+  `_source_arrays()`의 PXR import에서 끝난다.
+- USD stream load / recipe candidate / negative control / patch hash / q5 evaluation /
+  controlled physics step / Isaac launch / 새 cap-rim classification은 모두 `0`이다.
+- 이 source chain과 repaired observability를 묶은 postrun operational audit SHA-256은
+  `9f04faecc9dc983f14224174167f40a110655fb9c0b24d8e18e7ad7da2e56acd`다.
+- installed `isaacsim/__init__.py`는 Kit kernel/environment/PYTHONPATH bootstrap을 수행하고,
+  exception guidance에서 `SimulationApp` instance 생성 뒤 Omniverse/Isaac import를 요구한다.
+  D350/D354는 이 순서를 사용했으므로 과거 Isaac 성공과 D355 plain-Python 실패는 모순이 아니다.
+- failure-only attempt4 RRD/RBL/PNG SHA-256은
+  `807939f8...c8f7` / `bf1fe216...948e` / `adc31f4b...1340`이다.
+  `4800x2800` 원본 검사에서 red PXR stop, invocation `1`, 모든 downstream count `0`,
+  실제축척/`DISPLAY EXAGGERATED` D354 context, 빈 패널/Unknown timeline 부재가 확인됐다.
+  completion SHA-256은
+  `1b1be283537927f0d6cfb9ee52d521cd24b9db3207b8112d8d13f41e75f7e5b1`이다.
+- persistent inspection-only Rerun native viewer의 GPU allocation은 `617MiB`; launch 후 전체
+  GPU는 `2692/16376MiB` used, `13253MiB` free였다. Isaac/q5/physics count는 계속 `0`이다.
+- D342 SIGTERM 후 wrapper PID `1729610`은 사라졌지만 worker `1729639`는 PPID `1123`,
+  RSS `977284KiB`, GPU `320MiB`로 남았다. cleanup audit SHA-256은
+  `82b5d63a5d5e57555e76eeeb6b0b1e304c2c4e15e6056bac276fbf8037890b9b`다.
+
+Implication:
+
+- D354는 계속 최신 science authority이며
+  `D354_CONTACT_ORDER_UNRESOLVED_FAIL_STOP`, controlled steps `0`,
+  `g0a_pass=false`다. D355는 이 verdict나 grasp/target-IK 해석을 바꾸지 않는다.
+- D355는 immutable one-invocation operational FAIL_STOP 증거다. 같은 output을 재사용하거나
+  덮어쓰지 않는다.
+- 가장 좁은 다음 후보는 별도 승인 새 forward-only readonly Kit-bootstrap provenance case다.
+  bootstrap은 PXR input access에만 쓰고 q5, physics, cap/rim science, asset write,
+  target/IK/path는 계속 금지한다. standalone OpenUSD 설치 및 D342 SIGKILL은 각각 별도 승인
+  경계다.
+
+Sources:
+
+- `claudedocs/session_20260716_grasp_g0a_d355_moving_jaw_patch_hash_provenance_audit.md`
+- `sim_scripts/cyl34_top_view_d355_moving_jaw_patch_hash_provenance_audit.py`
+- `sim_scripts/cyl34_top_view_d355_attempt4_failure_observability_blueprint_repair.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d355/d355_audit_invocation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d355/d355_phase_markers.jsonl`
+- `claudedocs/runtime_logs/grasp_track/g0a_d355/d355_runtime_exception.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d355/d355_postrun_operational_audit.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d355/attempt4_failure_observability/d355_attempt4_failure_observability_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d355/attempt4_failure_observability/d355_attempt4_failure_manual_visual_inspection.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d355/attempt4_failure_observability/d355_attempt4_failure_observability_completion.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d355/d342_residual_sigterm_cleanup_audit.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d355/d355_persistent_inspection_viewer_audit.json`
+- `/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/__init__.py`
+- `START_HERE.md`

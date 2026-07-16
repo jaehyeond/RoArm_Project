@@ -1,0 +1,45 @@
+{
+  "artifact": "D355_PERSISTENT_INSPECTION_VIEWER_AUDIT_V1",
+  "launched_at": "2026-07-16T09:54:31+09:00",
+  "viewer": "Rerun 0.34.1 native GUI",
+  "display": ":1",
+  "mode": "persistent inspection-only",
+  "source_rrd": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d355/attempt4_failure_observability/d355_attempt1_failure_explained_attempt4.rrd",
+    "sha256": "807939f8f2d23c3eb470652afb6035351fbedb678e76edfa7e4b1745e022c8f7"
+  },
+  "observed_processes": [
+    {
+      "pid": 253504,
+      "role": "conda launcher"
+    },
+    {
+      "pid": 253512,
+      "role": "Python Rerun CLI wrapper"
+    },
+    {
+      "pid": 253513,
+      "role": "native Rerun viewer"
+    }
+  ],
+  "gpu_after_launch": {
+    "name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+    "total_mib": 16376,
+    "used_mib": 2692,
+    "free_mib": 13253,
+    "utilization_gpu_percent": 21,
+    "utilization_memory_percent": 4,
+    "pstate": "P8",
+    "viewer_process_mib": 617
+  },
+  "scope_guards": {
+    "isaac_launch_count": 0,
+    "usd_stream_load_count": 0,
+    "patch_hash_computation_count": 0,
+    "q5_evaluation_count": 0,
+    "controlled_physics_steps": 0,
+    "cap_rim_classification_count": 0
+  },
+  "science_changed": false,
+  "pass": true
+}

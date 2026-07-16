@@ -1,0 +1,56 @@
+{
+  "artifact": "D355_ATTEMPT3_FAILURE_OBSERVABILITY_INVENTORY_REPAIR_PREREGISTRATION_V1",
+  "checks": {
+    "attempt1_actual_inventory_exact": true,
+    "attempt2_actual_inventory_exact": true,
+    "attempt2_prepare_recorded_fail": true,
+    "d354_measurement_exact": true,
+    "immutable_failure_sources_exact": true,
+    "original_audit_invocation_exactly_one": true,
+    "repo_root_inserted": true
+  },
+  "expected_source_hashes": {
+    "invocation": "3bbc44edbec995fcbba0093fb7d9615290dbc32ffb65a8e12fc6b86bbb75a8f2",
+    "phases": "1e5808892cbda91a7e7efb5e8a530468ae7d00b06abd961462f40c78b7da138c",
+    "preregistration": "6cfaf0efa802546bed0177b88d8467a5d8ca1055ec113907b69bb5a81606325d",
+    "runtime_exception": "48bcad5c5740651f7aa8157616b64a639b79f67af5033e60dfe939da4bfdebde"
+  },
+  "harness": {
+    "sha256": "36b5a5f2e04b9d8fdeb87f2343c2c835a0bf18ec5176193f14b61c61d5c4300c"
+  },
+  "new_operational_variable": [
+    "actual_prior_observability_inventory"
+  ],
+  "pass": true,
+  "prior_observability_inventories": {
+    "attempt1": {
+      "d355_attempt1_failure_observability_preregistration.json": "4735db0f75e3a2674d931313fa086967d82c50f844fe4272de7c7c370893d011"
+    },
+    "attempt2": {
+      "d355_attempt2_failure_observability_preregistration.json": "d837fdad220eeae80cf6b961fd3ed044aba47a205e37fdd5df4fdfa15a65c049"
+    }
+  },
+  "role": "failure render only; never a provenance audit retry",
+  "scope_guards": {
+    "controlled_physics_steps": 0,
+    "isaac_launch_count": 0,
+    "patch_hash_computation_count": 0,
+    "pxr_import_count": 0,
+    "q5_evaluation_count": 0,
+    "second_audit_count": 0
+  },
+  "shared_renderer": {
+    "path": "sim_scripts/cyl34_top_view_d355_attempt1_failure_observability.py",
+    "sha256": "1060eef48fee27cc91906fefe9b1d91190b4f02d6aef6aae57ef1112f37127ae"
+  },
+  "source_hashes": {
+    "invocation": "3bbc44edbec995fcbba0093fb7d9615290dbc32ffb65a8e12fc6b86bbb75a8f2",
+    "phases": "1e5808892cbda91a7e7efb5e8a530468ae7d00b06abd961462f40c78b7da138c",
+    "preregistration": "6cfaf0efa802546bed0177b88d8467a5d8ca1055ec113907b69bb5a81606325d",
+    "runtime_exception": "48bcad5c5740651f7aa8157616b64a639b79f67af5033e60dfe939da4bfdebde"
+  },
+  "wrapper_harness": {
+    "path": "sim_scripts/cyl34_top_view_d355_attempt3_failure_observability_inventory_repair.py",
+    "sha256": "36b5a5f2e04b9d8fdeb87f2343c2c835a0bf18ec5176193f14b61c61d5c4300c"
+  }
+}

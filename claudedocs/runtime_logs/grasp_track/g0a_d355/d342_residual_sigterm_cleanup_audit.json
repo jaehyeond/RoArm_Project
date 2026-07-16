@@ -1,0 +1,47 @@
+{
+  "artifact": "D355_D342_RESIDUAL_SIGTERM_CLEANUP_AUDIT_V1",
+  "observed_at": "2026-07-16T09:55:32+09:00",
+  "scope": "operational cleanup only; no D342 or D355 scientific reinterpretation",
+  "lineage_before_signal": {
+    "parent": {
+      "pid": 1729610,
+      "role": "bash wrapper"
+    },
+    "worker": {
+      "pid": 1729639,
+      "ppid": 1729610,
+      "pgid": 1729601,
+      "sid": 1729601,
+      "command": "python sim_scripts/cyl34_top_view_d342_grasp_g0a_authored_coordinate_stream_repair.py --headless"
+    }
+  },
+  "approved_signal_sequence": [
+    {
+      "signal": "SIGTERM",
+      "target_kind": "worker_pid",
+      "target": 1729639
+    },
+    {
+      "signal": "SIGTERM",
+      "target_kind": "process_group",
+      "target": 1729601
+    }
+  ],
+  "post_signal_observation": {
+    "parent_1729610_present": false,
+    "worker_1729639_present": true,
+    "worker_ppid": 1123,
+    "worker_pgid": 1729601,
+    "worker_sid": 1729601,
+    "worker_state": "Sl",
+    "worker_elapsed": "2-12:14:31",
+    "worker_rss_kib": 977284,
+    "worker_gpu_memory_mib": 320,
+    "interpretation": "The wrapper exited, but the worker ignored or did not complete shutdown after SIGTERM and was reparented. Cleanup is not complete."
+  },
+  "cleanup_pass": false,
+  "sigkill_authorized": false,
+  "additional_signal_sent": false,
+  "scientific_state_changed": false,
+  "verdict": "D342_RESIDUAL_SIGTERM_CLEANUP_INCOMPLETE_STOP"
+}

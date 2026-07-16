@@ -1,0 +1,185 @@
+{
+  "artifact": "D355_PREREGISTRATION_V1",
+  "candidate_recipe_axes": {
+    "coordinate_source": [
+      "authored_f4_mm",
+      "authored_f8_mm",
+      "authored_f8_m",
+      "authored_f4_m",
+      "raw_f8_m",
+      "raw_f8_mm",
+      "raw_f4_m",
+      "raw_roundtrip_f4_mm",
+      "raw_roundtrip_f4_m"
+    ],
+    "digest_blob_order": [
+      "FVT",
+      "FTV",
+      "VFT",
+      "VTF",
+      "TFV",
+      "TVF"
+    ],
+    "face_order": [
+      "ascending",
+      "descending"
+    ],
+    "face_winding": [
+      "preserve",
+      "flip_1_2"
+    ],
+    "signed_zero": [
+      "preserve",
+      "normalize_positive"
+    ],
+    "triangle_mode": [
+      "preserve",
+      "cyclic_min",
+      "unoriented_index_sort"
+    ],
+    "triangle_row_order": [
+      "face_order",
+      "lexicographic_rows"
+    ],
+    "triangle_serialization": [
+      "<i4",
+      "<i8"
+    ],
+    "vertex_order": [
+      "lexicographic_unique",
+      "stable_first_occurrence"
+    ],
+    "vertex_serialization": [
+      "<f4",
+      "<f8"
+    ]
+  },
+  "case": "g0a_d355",
+  "case_name": "moving_jaw_patch_hash_provenance_audit",
+  "checks": {
+    "d354_hashes_exact": true,
+    "head_equals_origin_master": true,
+    "head_expected": true,
+    "numpy_1_26_0": true,
+    "psutil_5_9_8": true,
+    "rerun_0_34_1": true
+  },
+  "decision_rule": {
+    "localized": "all immutable inputs and current D351/D354 streams reproduce exactly; both independent implementations agree; every frozen expected derived hash is reproduced by at least one preregistered recipe; all registered negative controls behave as declared",
+    "scientific_boundary": "neither outcome changes D354_CONTACT_ORDER_UNRESOLVED_FAIL_STOP, performs a cap/rim discriminator, or licenses target/IK/path repair",
+    "unresolved": "any frozen stream/current observed hash fails reproduction, any expected derived hash has no declared recipe, independent implementations disagree, or a negative control fails"
+  },
+  "expected_d354_input_hashes": {
+    "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_completion_summary.json": "5cc70c8aa1e50532fa4ec27756496d6b9f9447156c56ef700084b44c16226f86",
+    "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_moving_jaw_surface_binding.json": "548d45ec4eb1dacbb4cbdefe2b64a3ed99ce72f4f5ffaaa6a9ee1e2b38756b15",
+    "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_zero_step_closure_geometry_measurement.json": "fd0d43c2a47abefad939fc0e980456cc396bbf3ba3bb104b28bcd999100f23ed",
+    "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_zero_step_science_attestation.json": "1975df11b13a774b89f953991d7fdac6e38d795e81a9535850b147d823740d20"
+  },
+  "expected_success_inventory_after_audit": [
+    "d355_audit_invocation.json",
+    "d355_automated_report.md",
+    "d355_patch_hash_provenance.rbl",
+    "d355_patch_hash_provenance.rrd",
+    "d355_patch_hash_provenance_evidence.json",
+    "d355_patch_hash_provenance_rerun.png",
+    "d355_phase_markers.jsonl",
+    "d355_preregistration.json",
+    "d355_rerun_validation.json"
+  ],
+  "frozen_hash_targets": {
+    "authored_stream": {
+      "face_counts_i64": "f17eac58b9b109f98f7a69efcc3b1e64b632d805ccca8cc8883cf0349e07cb6c",
+      "face_indices_i64": "205a08458b895d96c6eb9593d1f04a8815629f7f972a889cce683b86955f2545",
+      "points_f32_mm": "b89c67e99bd253ae710e6b0a2fcacd0b27263d6ede29fe6f6334ed70247895ed"
+    },
+    "d339_raw_full_vertex_stream": "522a4f0fe91a04bf54c5c8be6492748c7490fc557fa8c0867200d97332dfa9db",
+    "d354_observed_authored_patch": {
+      "inner_paired_xz": "917b7154601d23984db01ebbd4adccdb272771920f225d1a021540b4b03bcaf9",
+      "inner_patch": "7478ac187dd4fbd1358d0e3c6d0fc5e433a5cc5bd5978cc416d39d72af45a877",
+      "inner_triangle": "d90afe18cab0c18063c224beab16223ea6a8fe61260a07c70b38a7dbd25d2349",
+      "inner_vertex": "caa7d9676b68b7444cb70aa178628216d5b5dc25fe2681622fdce2ea425398f9",
+      "outer_paired_xz": "917b7154601d23984db01ebbd4adccdb272771920f225d1a021540b4b03bcaf9",
+      "outer_patch": "e0a8f4cc0fe11326bc14ddc93262ec351bb30045812462fa425d71ec440c7361",
+      "outer_triangle": "bd024ff9435ecc8d811a656b96bf5c96028e0b1d247526f1e6b2dbeb4a6ad241",
+      "outer_vertex": "3e24cab3292da854f53ab5fadb3c3e73964656e9afb8064002043145ab386131"
+    },
+    "d354_raw_paired_xz": "98ef77e6c5080e96f763eab04c48d4d6c06c9bc1a8b79995bd0fffa32618bbae",
+    "frozen_expected_patch": {
+      "inner_paired_xz": "917b7154601d23984db01ebbd4adccdb272771920f225d1a021540b4b03bcaf9",
+      "inner_patch": "c927e8c628073f9f1d8fc0250d8190a71bb2b0701b97b41d7f8069b216c3531b",
+      "inner_triangle": "5644e9a66386d68945d340a46cfa9e1507b6dd55cf0b721823ef6afb079b9e17",
+      "inner_vertex": "13c65ee478a2668896ec2a8f1e237a9ba7b7e6e0ef40ab08cb350087d3a74d55",
+      "outer_paired_xz": "917b7154601d23984db01ebbd4adccdb272771920f225d1a021540b4b03bcaf9",
+      "outer_patch": "9b430c7d7e8c389eb648726014d61169aa671ec910f94a782084b467e96d6486",
+      "outer_triangle": "5644e9a66386d68945d340a46cfa9e1507b6dd55cf0b721823ef6afb079b9e17",
+      "outer_vertex": "0d9f7f856eb66d5f749303aa7f4bac8138a595d228dff8424221a6b0b732772a"
+    }
+  },
+  "git_status_before_prepare": [
+    "M START_HERE.md",
+    "?? claudedocs/session_20260716_grasp_g0a_d355_moving_jaw_patch_hash_provenance_audit.md",
+    "?? sim_scripts/cyl34_top_view_d355_moving_jaw_patch_hash_provenance_audit.py"
+  ],
+  "harness": {
+    "path": "sim_scripts/cyl34_top_view_d355_moving_jaw_patch_hash_provenance_audit.py",
+    "sha256": "b1fe5bf0f42c3d30a2b56d6809e17cfe4785eb7dcb610e2cf6fc05fb57c50d46"
+  },
+  "head": "64aa5b2c9552a053a3a9a34551fbfd168ce644ba",
+  "independent_recalculation": {
+    "implementation_a": "NumPy vectorized unique/remap and contiguous typed blobs",
+    "implementation_b": "Python tuple sorting/dictionaries plus struct.pack; no NumPy hashing",
+    "required_exact_targets": [
+      "authored current recipe",
+      "raw full body-local f64 stream",
+      "raw paired-XZ current recipe"
+    ]
+  },
+  "input_hashes": {
+    "claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2/d339_asset_build_manifest.json": "3b46cb39a1f0ff655dcd46172ebaa84f727d833773275b18f944397007ae2589",
+    "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_completion_summary.json": "5cc70c8aa1e50532fa4ec27756496d6b9f9447156c56ef700084b44c16226f86",
+    "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_moving_jaw_surface_binding.json": "548d45ec4eb1dacbb4cbdefe2b64a3ed99ce72f4f5ffaaa6a9ee1e2b38756b15",
+    "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_zero_step_closure_geometry_measurement.json": "fd0d43c2a47abefad939fc0e980456cc396bbf3ba3bb104b28bcd999100f23ed",
+    "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_zero_step_science_attestation.json": "1975df11b13a774b89f953991d7fdac6e38d795e81a9535850b147d823740d20",
+    "local_assets/roarm_m3/usd/roarm_m3.usd": "a4be58e87b1f9790f2a2ed600f0620c79d3cfb95c608b3c598308d52f5e46fff"
+  },
+  "negative_controls": {
+    "big_endian": "typed byte hash changes",
+    "digest_order_FTV": "patch digest changes; component blobs unchanged",
+    "flip_winding": "triangle/patch changes; vertex set unchanged",
+    "fortran_order_without_canonical_contiguity": "vertex byte hash changes",
+    "reverse_face_order": "face/triangle/patch changes; vertex set unchanged",
+    "wrong_dtype_f8_instead_of_f4": "vertex/XZ/patch change; topology unchanged",
+    "wrong_unit_m_instead_of_mm": "vertex/XZ/patch change; topology unchanged"
+  },
+  "new_physical_variables": [],
+  "new_variables": [
+    "derived_moving_jaw_patch_hash_provenance_semantics"
+  ],
+  "origin_master": "64aa5b2c9552a053a3a9a34551fbfd168ce644ba",
+  "pass": true,
+  "scope_guards": {
+    "asset_write_count": 0,
+    "cap_rim_scientific_classification_count": 0,
+    "controlled_physics_steps": 0,
+    "d354_read_only": true,
+    "isaac_launch_count": 0,
+    "physx_query_count": 0,
+    "q5_evaluation_count": 0,
+    "source_assets_read_only": true,
+    "target_ik_path_change_count": 0
+  },
+  "single_run_contract": {
+    "audit_stage_allowed_count": 1,
+    "invocation_marker_created_exclusively_before_data_read": "claudedocs/runtime_logs/grasp_track/g0a_d355/d355_audit_invocation.json",
+    "no_retry_or_overwrite": true,
+    "prepare_is_not_the_audit": true
+  },
+  "visualization_contract": {
+    "d354_boundary_panel": "immutable historical JSON copy only; display magnification has no verdict authority",
+    "manual_original_resolution_inspection_required": true,
+    "rerun_version": "0.34.1",
+    "rrd_rbl_footer_and_exact_contract_required": true,
+    "save_only": true,
+    "screenshot_window": "2400x1400 (expected HiDPI raster 4800x2800)"
+  }
+}

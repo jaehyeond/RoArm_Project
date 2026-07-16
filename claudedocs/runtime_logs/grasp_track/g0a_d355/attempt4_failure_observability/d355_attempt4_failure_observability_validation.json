@@ -1,0 +1,650 @@
+{
+  "artifact": "ROARM_RERUN_ARTIFACT_VALIDATION_V1",
+  "blueprint_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d355/attempt4_failure_observability/d355_attempt1_failure_explained_attempt4.rbl",
+  "blueprint_verify": {
+    "attempted": true,
+    "bytes": 79039,
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "verify",
+      "--check-footers",
+      "true",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d355/attempt4_failure_observability/d355_attempt1_failure_explained_attempt4.rbl"
+    ],
+    "ok": true,
+    "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d355/attempt4_failure_observability/d355_attempt1_failure_explained_attempt4.rbl",
+    "returncode": 0,
+    "sha256": "bf1fe2163aa322e81413900ef38d87a0740e18dc82b51cd7b1e6784813a0948e",
+    "stderr": "1 file verified without error.\n",
+    "stdout": ""
+  },
+  "bytes": 148850,
+  "component_contract": {
+    "checks": {
+      "/context/d354_frozen/clear_endpoint": {
+        "observed": [
+          "Points3D:colors",
+          "Points3D:labels",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true,
+        "required": [
+          "Points3D:colors",
+          "Points3D:labels",
+          "Points3D:positions",
+          "Points3D:radii"
+        ]
+      },
+      "/context/d354_frozen/cylinder": {
+        "observed": [
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true,
+        "required": [
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ]
+      },
+      "/context/d354_frozen/exploded_pair": {
+        "observed": [
+          "Points3D:colors",
+          "Points3D:labels",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true,
+        "required": [
+          "Points3D:colors",
+          "Points3D:labels",
+          "Points3D:positions",
+          "Points3D:radii"
+        ]
+      },
+      "/context/d354_frozen/overlap_endpoint": {
+        "observed": [
+          "Points3D:colors",
+          "Points3D:labels",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true,
+        "required": [
+          "Points3D:colors",
+          "Points3D:labels",
+          "Points3D:positions",
+          "Points3D:radii"
+        ]
+      },
+      "/events/d355_attempt1/exact_exception": {
+        "observed": [
+          "TextLog:level",
+          "TextLog:text"
+        ],
+        "pass": true,
+        "required": [
+          "TextLog:level",
+          "TextLog:text"
+        ]
+      },
+      "/events/d355_attempt1/manual_validation_lesson": {
+        "observed": [
+          "TextLog:level",
+          "TextLog:text"
+        ],
+        "pass": true,
+        "required": [
+          "TextLog:level",
+          "TextLog:text"
+        ]
+      },
+      "/events/d355_attempt1/root_cause": {
+        "observed": [
+          "TextLog:level",
+          "TextLog:text"
+        ],
+        "pass": true,
+        "required": [
+          "TextLog:level",
+          "TextLog:text"
+        ]
+      },
+      "/events/d355_attempt1/science_boundary": {
+        "observed": [
+          "TextLog:level",
+          "TextLog:text"
+        ],
+        "pass": true,
+        "required": [
+          "TextLog:level",
+          "TextLog:text"
+        ]
+      },
+      "/events/d355_attempt1/verdict": {
+        "observed": [
+          "TextLog:level",
+          "TextLog:text"
+        ],
+        "pass": true,
+        "required": [
+          "TextLog:level",
+          "TextLog:text"
+        ]
+      },
+      "/failure_pipeline/nodes": {
+        "observed": [
+          "Points3D:colors",
+          "Points3D:labels",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true,
+        "required": [
+          "Points3D:colors",
+          "Points3D:labels",
+          "Points3D:positions",
+          "Points3D:radii"
+        ]
+      },
+      "/failure_pipeline/transitions": {
+        "observed": [
+          "Arrows3D:colors",
+          "Arrows3D:labels",
+          "Arrows3D:origins",
+          "Arrows3D:radii",
+          "Arrows3D:vectors"
+        ],
+        "pass": true,
+        "required": [
+          "Arrows3D:colors",
+          "Arrows3D:labels",
+          "Arrows3D:origins",
+          "Arrows3D:radii",
+          "Arrows3D:vectors"
+        ]
+      },
+      "/metadata/counts": {
+        "observed": [
+          "TextDocument:media_type",
+          "TextDocument:text"
+        ],
+        "pass": true,
+        "required": [
+          "TextDocument:text"
+        ]
+      },
+      "/metadata/run": {
+        "observed": [
+          "TextDocument:media_type",
+          "TextDocument:text"
+        ],
+        "pass": true,
+        "required": [
+          "TextDocument:text"
+        ]
+      },
+      "/metrics/d355_attempt1/audit_invocation_count": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/metrics/d355_attempt1/controlled_physics_steps": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/metrics/d355_attempt1/d354_clear_z_m_historical": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/metrics/d355_attempt1/d354_overlap_z_m_historical": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/metrics/d355_attempt1/isaac_launch_count": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/metrics/d355_attempt1/negative_control_execution_count": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/metrics/d355_attempt1/patch_hash_computation_count": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/metrics/d355_attempt1/q5_evaluation_count": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/metrics/d355_attempt1/recipe_candidate_evaluation_count": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/metrics/d355_attempt1/standalone_pxr_import_available": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/metrics/d355_attempt1/usd_stream_load_count": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      }
+    },
+    "pass": true
+  },
+  "entity_path_contract": {
+    "checks": {
+      "/context/d354_frozen/clear_endpoint": true,
+      "/context/d354_frozen/cylinder": true,
+      "/context/d354_frozen/exploded_pair": true,
+      "/context/d354_frozen/overlap_endpoint": true,
+      "/events/d355_attempt1/exact_exception": true,
+      "/events/d355_attempt1/manual_validation_lesson": true,
+      "/events/d355_attempt1/root_cause": true,
+      "/events/d355_attempt1/science_boundary": true,
+      "/events/d355_attempt1/verdict": true,
+      "/failure_pipeline/nodes": true,
+      "/failure_pipeline/transitions": true,
+      "/metadata/counts": true,
+      "/metadata/run": true,
+      "/metrics/d355_attempt1/audit_invocation_count": true,
+      "/metrics/d355_attempt1/controlled_physics_steps": true,
+      "/metrics/d355_attempt1/d354_clear_z_m_historical": true,
+      "/metrics/d355_attempt1/d354_overlap_z_m_historical": true,
+      "/metrics/d355_attempt1/isaac_launch_count": true,
+      "/metrics/d355_attempt1/negative_control_execution_count": true,
+      "/metrics/d355_attempt1/patch_hash_computation_count": true,
+      "/metrics/d355_attempt1/q5_evaluation_count": true,
+      "/metrics/d355_attempt1/recipe_candidate_evaluation_count": true,
+      "/metrics/d355_attempt1/standalone_pxr_import_available": true,
+      "/metrics/d355_attempt1/usd_stream_load_count": true
+    },
+    "exact_non_system_match": true,
+    "forbidden_fragment_absent": {
+      "/\\/": true
+    },
+    "missing_exact": [],
+    "observed_all": [
+      "/__properties",
+      "/blueprint_panel",
+      "/container/0800fd13-0ad6-4a8c-abdb-5bafd778878f",
+      "/container/3a507284-e913-4c09-9091-d452b4f36cba",
+      "/container/522b8aca-e0c1-4b6c-a279-f30f1c129131",
+      "/context/d354_frozen/clear_endpoint",
+      "/context/d354_frozen/cylinder",
+      "/context/d354_frozen/exploded_pair",
+      "/context/d354_frozen/overlap_endpoint",
+      "/events/d355_attempt1/exact_exception",
+      "/events/d355_attempt1/manual_validation_lesson",
+      "/events/d355_attempt1/root_cause",
+      "/events/d355_attempt1/science_boundary",
+      "/events/d355_attempt1/verdict",
+      "/failure_pipeline/nodes",
+      "/failure_pipeline/transitions",
+      "/metadata/counts",
+      "/metadata/run",
+      "/metrics/d355_attempt1/audit_invocation_count",
+      "/metrics/d355_attempt1/controlled_physics_steps",
+      "/metrics/d355_attempt1/d354_clear_z_m_historical",
+      "/metrics/d355_attempt1/d354_overlap_z_m_historical",
+      "/metrics/d355_attempt1/isaac_launch_count",
+      "/metrics/d355_attempt1/negative_control_execution_count",
+      "/metrics/d355_attempt1/patch_hash_computation_count",
+      "/metrics/d355_attempt1/q5_evaluation_count",
+      "/metrics/d355_attempt1/recipe_candidate_evaluation_count",
+      "/metrics/d355_attempt1/standalone_pxr_import_available",
+      "/metrics/d355_attempt1/usd_stream_load_count",
+      "/selection_panel",
+      "/time_panel",
+      "/view/05d3e3f2-447a-4836-b823-f946586a4175",
+      "/view/05d3e3f2-447a-4836-b823-f946586a4175/ViewContents",
+      "/view/1da1b6e8-bdd4-4499-9274-c102c300f0b8",
+      "/view/1da1b6e8-bdd4-4499-9274-c102c300f0b8/ViewContents",
+      "/view/57eced8c-f9a3-47e8-93d5-52b5bba09e26",
+      "/view/57eced8c-f9a3-47e8-93d5-52b5bba09e26/ViewContents",
+      "/view/a43cde96-f77a-467b-b9d3-27de60512f21",
+      "/view/a43cde96-f77a-467b-b9d3-27de60512f21/Background",
+      "/view/a43cde96-f77a-467b-b9d3-27de60512f21/EyeControls3D",
+      "/view/a43cde96-f77a-467b-b9d3-27de60512f21/LineGrid3D",
+      "/view/a43cde96-f77a-467b-b9d3-27de60512f21/ViewContents",
+      "/view/b2fca59f-dd2f-43cf-aea5-3e79d9f94da5",
+      "/view/b2fca59f-dd2f-43cf-aea5-3e79d9f94da5/Background",
+      "/view/b2fca59f-dd2f-43cf-aea5-3e79d9f94da5/EyeControls3D",
+      "/view/b2fca59f-dd2f-43cf-aea5-3e79d9f94da5/LineGrid3D",
+      "/view/b2fca59f-dd2f-43cf-aea5-3e79d9f94da5/ViewContents",
+      "/viewport"
+    ],
+    "observed_non_system": [
+      "/context/d354_frozen/clear_endpoint",
+      "/context/d354_frozen/cylinder",
+      "/context/d354_frozen/exploded_pair",
+      "/context/d354_frozen/overlap_endpoint",
+      "/events/d355_attempt1/exact_exception",
+      "/events/d355_attempt1/manual_validation_lesson",
+      "/events/d355_attempt1/root_cause",
+      "/events/d355_attempt1/science_boundary",
+      "/events/d355_attempt1/verdict",
+      "/failure_pipeline/nodes",
+      "/failure_pipeline/transitions",
+      "/metadata/counts",
+      "/metadata/run",
+      "/metrics/d355_attempt1/audit_invocation_count",
+      "/metrics/d355_attempt1/controlled_physics_steps",
+      "/metrics/d355_attempt1/d354_clear_z_m_historical",
+      "/metrics/d355_attempt1/d354_overlap_z_m_historical",
+      "/metrics/d355_attempt1/isaac_launch_count",
+      "/metrics/d355_attempt1/negative_control_execution_count",
+      "/metrics/d355_attempt1/patch_hash_computation_count",
+      "/metrics/d355_attempt1/q5_evaluation_count",
+      "/metrics/d355_attempt1/recipe_candidate_evaluation_count",
+      "/metrics/d355_attempt1/standalone_pxr_import_available",
+      "/metrics/d355_attempt1/usd_stream_load_count"
+    ],
+    "pass": true,
+    "unexpected_non_system": []
+  },
+  "errors": [],
+  "exact_entity_paths": [
+    "/context/d354_frozen/clear_endpoint",
+    "/context/d354_frozen/cylinder",
+    "/context/d354_frozen/exploded_pair",
+    "/context/d354_frozen/overlap_endpoint",
+    "/events/d355_attempt1/exact_exception",
+    "/events/d355_attempt1/manual_validation_lesson",
+    "/events/d355_attempt1/root_cause",
+    "/events/d355_attempt1/science_boundary",
+    "/events/d355_attempt1/verdict",
+    "/failure_pipeline/nodes",
+    "/failure_pipeline/transitions",
+    "/metadata/counts",
+    "/metadata/run",
+    "/metrics/d355_attempt1/audit_invocation_count",
+    "/metrics/d355_attempt1/controlled_physics_steps",
+    "/metrics/d355_attempt1/d354_clear_z_m_historical",
+    "/metrics/d355_attempt1/d354_overlap_z_m_historical",
+    "/metrics/d355_attempt1/isaac_launch_count",
+    "/metrics/d355_attempt1/negative_control_execution_count",
+    "/metrics/d355_attempt1/patch_hash_computation_count",
+    "/metrics/d355_attempt1/q5_evaluation_count",
+    "/metrics/d355_attempt1/recipe_candidate_evaluation_count",
+    "/metrics/d355_attempt1/standalone_pxr_import_available",
+    "/metrics/d355_attempt1/usd_stream_load_count"
+  ],
+  "exact_timeline_names": [
+    "blueprint",
+    "log_time"
+  ],
+  "expected_entity_components": {
+    "/context/d354_frozen/clear_endpoint": [
+      "Points3D:colors",
+      "Points3D:labels",
+      "Points3D:positions",
+      "Points3D:radii"
+    ],
+    "/context/d354_frozen/cylinder": [
+      "Mesh3D:albedo_factor",
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/context/d354_frozen/exploded_pair": [
+      "Points3D:colors",
+      "Points3D:labels",
+      "Points3D:positions",
+      "Points3D:radii"
+    ],
+    "/context/d354_frozen/overlap_endpoint": [
+      "Points3D:colors",
+      "Points3D:labels",
+      "Points3D:positions",
+      "Points3D:radii"
+    ],
+    "/events/d355_attempt1/exact_exception": [
+      "TextLog:level",
+      "TextLog:text"
+    ],
+    "/events/d355_attempt1/manual_validation_lesson": [
+      "TextLog:level",
+      "TextLog:text"
+    ],
+    "/events/d355_attempt1/root_cause": [
+      "TextLog:level",
+      "TextLog:text"
+    ],
+    "/events/d355_attempt1/science_boundary": [
+      "TextLog:level",
+      "TextLog:text"
+    ],
+    "/events/d355_attempt1/verdict": [
+      "TextLog:level",
+      "TextLog:text"
+    ],
+    "/failure_pipeline/nodes": [
+      "Points3D:colors",
+      "Points3D:labels",
+      "Points3D:positions",
+      "Points3D:radii"
+    ],
+    "/failure_pipeline/transitions": [
+      "Arrows3D:colors",
+      "Arrows3D:labels",
+      "Arrows3D:origins",
+      "Arrows3D:radii",
+      "Arrows3D:vectors"
+    ],
+    "/metadata/counts": [
+      "TextDocument:text"
+    ],
+    "/metadata/run": [
+      "TextDocument:text"
+    ],
+    "/metrics/d355_attempt1/audit_invocation_count": [
+      "Scalars:scalars"
+    ],
+    "/metrics/d355_attempt1/controlled_physics_steps": [
+      "Scalars:scalars"
+    ],
+    "/metrics/d355_attempt1/d354_clear_z_m_historical": [
+      "Scalars:scalars"
+    ],
+    "/metrics/d355_attempt1/d354_overlap_z_m_historical": [
+      "Scalars:scalars"
+    ],
+    "/metrics/d355_attempt1/isaac_launch_count": [
+      "Scalars:scalars"
+    ],
+    "/metrics/d355_attempt1/negative_control_execution_count": [
+      "Scalars:scalars"
+    ],
+    "/metrics/d355_attempt1/patch_hash_computation_count": [
+      "Scalars:scalars"
+    ],
+    "/metrics/d355_attempt1/q5_evaluation_count": [
+      "Scalars:scalars"
+    ],
+    "/metrics/d355_attempt1/recipe_candidate_evaluation_count": [
+      "Scalars:scalars"
+    ],
+    "/metrics/d355_attempt1/standalone_pxr_import_available": [
+      "Scalars:scalars"
+    ],
+    "/metrics/d355_attempt1/usd_stream_load_count": [
+      "Scalars:scalars"
+    ]
+  },
+  "expected_entity_paths": [
+    "/context/d354_frozen/clear_endpoint",
+    "/context/d354_frozen/cylinder",
+    "/context/d354_frozen/exploded_pair",
+    "/context/d354_frozen/overlap_endpoint",
+    "/events/d355_attempt1/exact_exception",
+    "/events/d355_attempt1/manual_validation_lesson",
+    "/events/d355_attempt1/root_cause",
+    "/events/d355_attempt1/science_boundary",
+    "/events/d355_attempt1/verdict",
+    "/failure_pipeline/nodes",
+    "/failure_pipeline/transitions",
+    "/metadata/counts",
+    "/metadata/run",
+    "/metrics/d355_attempt1/audit_invocation_count",
+    "/metrics/d355_attempt1/controlled_physics_steps",
+    "/metrics/d355_attempt1/d354_clear_z_m_historical",
+    "/metrics/d355_attempt1/d354_overlap_z_m_historical",
+    "/metrics/d355_attempt1/isaac_launch_count",
+    "/metrics/d355_attempt1/negative_control_execution_count",
+    "/metrics/d355_attempt1/patch_hash_computation_count",
+    "/metrics/d355_attempt1/q5_evaluation_count",
+    "/metrics/d355_attempt1/recipe_candidate_evaluation_count",
+    "/metrics/d355_attempt1/standalone_pxr_import_available",
+    "/metrics/d355_attempt1/usd_stream_load_count"
+  ],
+  "expected_rerun_version": "0.34.1",
+  "expected_timeline_names": [],
+  "external_rbl_role": "verified fixed-layout export; the 0.34.1 CLI does not guarantee that an external RBL overrides an already-active embedded blueprint",
+  "footer_manifest_present": true,
+  "forbidden_entity_fragments": [
+    "/\\/"
+  ],
+  "headless_render": {
+    "attempted": true,
+    "bytes": 1012112,
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "--headless",
+      "--window-size",
+      "2400x1400",
+      "--screenshot-to",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d355/attempt4_failure_observability/d355_attempt1_failure_explained_attempt4_rerun.png",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d355/attempt4_failure_observability/d355_attempt1_failure_explained_attempt4.rrd"
+    ],
+    "file_nonzero": true,
+    "ok": true,
+    "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d355/attempt4_failure_observability/d355_attempt1_failure_explained_attempt4_rerun.png",
+    "returncode": 0,
+    "sha256": "adc31f4bb71359013ece0a194db9dde7f2722dbb616e8dcfe53b866138dc1340",
+    "stderr": "2026-07-16T00:52:34.220868Z  INFO re_perf_telemetry::telemetry: Telemetry initialized enabled=false service=rerun trace_mode=\"off\" traces=off logs=off metrics=off tracy=false\n2026-07-16T00:52:34.467492Z  INFO re_grpc_server: Listening for gRPC connections on 0.0.0.0:9876. Connect by running `rerun --connect rerun+http://127.0.0.1:9876/proxy`\n2026-07-16T00:52:34.467786Z  INFO re_importer::import_file: Loading \"/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d355/attempt4_failure_observability/d355_attempt1_failure_explained_attempt4.rrd\"…\n2026-07-16T00:52:34.571429Z  INFO re_viewer::headless: Headless viewer running at 2400x1400.\n2026-07-16T00:52:34.803547Z  INFO re_viewer::screenshotter: Screenshot saved to \"/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d355/attempt4_failure_observability/d355_attempt1_failure_explained_attempt4_rerun.png\"\n2026-07-16T00:52:34.820342Z  INFO re_viewer::screenshotter: Screenshot copied to clipboard\n2026-07-16T00:52:34.824843Z  INFO re_viewer::headless: Headless viewer received close request, shutting down.\n",
+    "stdout": ""
+  },
+  "human_visual_inspection_required": true,
+  "pass": true,
+  "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d355/attempt4_failure_observability/d355_attempt1_failure_explained_attempt4.rrd",
+  "print_verbose": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "print",
+      "-v",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d355/attempt4_failure_observability/d355_attempt1_failure_explained_attempt4.rrd"
+    ],
+    "ok": true,
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "Showing data after migration to latest Rerun version\nStoreInfo {\n    store_id: StoreId(\n        Recording,\n        \"roarm_g0a_d355_attempt1_failure_attempt4\",\n        \"g0a_d355_attempt1_failure_observability_attempt4\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nStoreInfo {\n    store_id: StoreId(\n        Recording,\n        \"roarm_g0a_d355_attempt1_failure_attempt4\",\n        \"g0a_d355_attempt1_failure_observability_attempt4\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nChunk(chunk_18C29EEF864B138202b36f28358cf2fe) with 1 rows (632 B) - /__properties - data columns: [/__properties@RecordingInfo:start_time]\nStoreInfo {\n    store_id: StoreId(\n        Blueprint,\n        \"roarm_g0a_d355_attempt1_failure_attempt4\",\n        \"rec_2532ae8b2fe14e0e9d313a6044482997\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nStoreInfo {\n    store_id: StoreId(\n        Blueprint,\n        \"roarm_g0a_d355_attempt1_failure_attempt4\",\n        \"rec_2532ae8b2fe14e0e9d313a6044482997\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nChunk(chunk_18C29EEF8663BDCC0736b656fbb292a2) with 1 rows (916 B) - /view/b2fca59f-dd2f-43cf-aea5-3e79d9f94da5/LineGrid3D - data columns: [/view/b2fca59f-dd2f-43cf-aea5-3e79d9f94da5/LineGrid3D@LineGrid3D:visible]\nChunk(chunk_18C29EEF8664223B0736b656fbb292a3) with 1 rows (926 B) - /view/57eced8c-f9a3-47e8-93d5-52b5bba09e26/ViewContents - data columns: [/view/57eced8c-f9a3-47e8-93d5-52b5bba09e26/ViewContents@ViewContents:query]\nChunk(chunk_18C29EEF866430AF0736b656fbb292a4) with 1 rows (930 B) - /view/1da1b6e8-bdd4-4499-9274-c102c300f0b8/ViewContents - data columns: [/view/1da1b6e8-bdd4-4499-9274-c102c300f0b8/ViewContents@ViewContents:query]\nChunk(chunk_18C29EEF86643B6C0736b656fbb292a5) with 1 rows (1.2 KiB) - /viewport - data columns: [/viewport@ViewportBlueprint:auto_layout /viewport@ViewportBlueprint:auto_views /viewport@ViewportBlueprint:root_container]\nChunk(chunk_18C29EEF86645FE50736b656fbb292a6) with 1 rows (1.2 KiB) - /view/b2fca59f-dd2f-43cf-aea5-3e79d9f94da5 - data columns: [/view/b2fca59f-dd2f-43cf-aea5-3e79d9f94da5@ViewBlueprint:class_identifier /view/b2fca59f-dd2f-43cf-aea5-3e79d9f94da5@ViewBlueprint:display_name /view/b2fca59f-dd2f-43cf-aea5-3e79d9f94da5@ViewBlueprint:space_origin]\nChunk(chunk_18C29EEF8664748D0736b656fbb292a7) with 1 rows (1.3 KiB) - /container/522b8aca-e0c1-4b6c-a279-f30f1c129131 - data columns: [/container/522b8aca-e0c1-4b6c-a279-f30f1c129131@ContainerBlueprint:col_shares /container/522b8aca-e0c1-4b6c-a279-f30f1c129131@ContainerBlueprint:container_kind /container/522b8aca-e0c1-4b6c-a279-f30f1c129131@ContainerBlueprint:contents]\nChunk(chunk_18C29EEF866488F30736b656fbb292a8) with 1 rows (1.2 KiB) - /view/a43cde96-f77a-467b-b9d3-27de60512f21 - data columns: [/view/a43cde96-f77a-467b-b9d3-27de60512f21@ViewBlueprint:class_identifier /view/a43cde96-f77a-467b-b9d3-27de60512f21@ViewBlueprint:display_name /view/a43cde96-f77a-467b-b9d3-27de60512f21@ViewBlueprint:space_origin]\nChunk(chunk_18C29EEF86649D430736b656fbb292a9) with 1 rows (1.4 KiB) - /view/a43cde96-f77a-467b-b9d3-27de60512f21/EyeControls3D - data columns: [/view/a43cde96-f77a-467b-b9d3-27de60512f21/EyeControls3D@EyeControls3D:eye_up /view/a43cde96-f77a-467b-b9d3-27de60512f21/EyeControls3D@EyeControls3D:kind /view/a43cde96-f77a-467b-b9d3-27de60512f21/EyeControls3D@EyeControls3D:look_target /view/a43cde96-f77a-467b-b9d3-27de60512f21/EyeControls3D@EyeControls3D:position]\nChunk(chunk_18C29EEF8664BDE30736b656fbb292aa) with 1 rows (1.2 KiB) - /view/57eced8c-f9a3-47e8-93d5-52b5bba09e26 - data columns: [/view/57eced8c-f9a3-47e8-93d5-52b5bba09e26@ViewBlueprint:class_identifier /view/57eced8c-f9a3-47e8-93d5-52b5bba09e26@ViewBlueprint:display_name /view/57eced8c-f9a3-47e8-93d5-52b5bba09e26@ViewBlueprint:space_origin]\nChunk(chunk_18C29EEF8664C8EF0736b656fbb292ab) with 1 rows (928 B) - /view/a43cde96-f77a-467b-b9d3-27de60512f21/ViewContents - data columns: [/view/a43cde96-f77a-467b-b9d3-27de60512f21/ViewContents@ViewContents:query]\nChunk(chunk_18C29EEF8664D7B50736b656fbb292ac) with 1 rows (1.2 KiB) - /view/05d3e3f2-447a-4836-b823-f946586a4175 - data columns: [/view/05d3e3f2-447a-4836-b823-f946586a4175@ViewBlueprint:class_identifier /view/05d3e3f2-447a-4836-b823-f946586a4175@ViewBlueprint:display_name /view/05d3e3f2-447a-4836-b823-f946586a4175@ViewBlueprint:space_origin]\nChunk(chunk_18C29EEF8664E2E10736b656fbb292ad) with 1 rows (1.2 KiB) - /container/0800fd13-0ad6-4a8c-abdb-5bafd778878f - data columns: [/container/0800fd13-0ad6-4a8c-abdb-5bafd778878f@ContainerBlueprint:col_shares /container/0800fd13-0ad6-4a8c-abdb-5bafd778878f@ContainerBlueprint:container_kind /container/0800fd13-0ad6-4a8c-abdb-5bafd778878f@ContainerBlueprint:contents]\nChunk(chunk_18C29EEF8664F4EA0736b656fbb292ae) with 1 rows (929 B) - /view/b2fca59f-dd2f-43cf-aea5-3e79d9f94da5/ViewContents - data columns: [/view/b2fca59f-dd2f-43cf-aea5-3e79d9f94da5/ViewContents@ViewContents:query]\nChunk(chunk_18C29EEF866508AD0736b656fbb292af) with 1 rows (1.2 KiB) - /container/3a507284-e913-4c09-9091-d452b4f36cba - data columns: [/container/3a507284-e913-4c09-9091-d452b4f36cba@ContainerBlueprint:container_kind /container/3a507284-e913-4c09-9091-d452b4f36cba@ContainerBlueprint:contents /container/3a507284-e913-4c09-9091-d452b4f36cba@ContainerBlueprint:row_shares]\nChunk(chunk_18C29EEF866520E90736b656fbb292b0) with 1 rows (1.0 KiB) - /view/a43cde96-f77a-467b-b9d3-27de60512f21/Background - data columns: [/view/a43cde96-f77a-467b-b9d3-27de60512f21/Background@Background:color /view/a43cde96-f77a-467b-b9d3-27de60512f21/Background@Background:kind]\nChunk(chunk_18C29EEF86652AFE0736b656fbb292b1) with 1 rows (916 B) - /view/a43cde96-f77a-467b-b9d3-27de60512f21/LineGrid3D - data columns: [/view/a43cde96-f77a-467b-b9d3-27de60512f21/LineGrid3D@LineGrid3D:visible]\nChunk(chunk_18C29EEF866532F60736b656fbb292b2) with 1 rows (883 B) - /blueprint_panel - data columns: [/blueprint_panel@PanelBlueprint:state]\nChunk(chunk_18C29EEF86654B3B0736b656fbb292b3) with 1 rows (1.4 KiB) - /view/b2fca59f-dd2f-43cf-aea5-3e79d9f94da5/EyeControls3D - data columns: [/view/b2fca59f-dd2f-43cf-aea5-3e79d9f94da5/EyeControls3D@EyeControls3D:eye_up /view/b2fca59f-dd2f-43cf-aea5-3e79d9f94da5/EyeControls3D@EyeControls3D:kind /view/b2fca59f-dd2f-43cf-aea5-3e79d9f94da5/EyeControls3D@EyeControls3D:look_target /view/b2fca59f-dd2f-43cf-aea5-3e79d9f94da5/EyeControls3D@EyeControls3D:position]\nChunk(chunk_18C29EEF866560F50736b656fbb292b4) with 1 rows (924 B) - /view/05d3e3f2-447a-4836-b823-f946586a4175/ViewContents - data columns: [/view/05d3e3f2-447a-4836-b823-f946586a4175/ViewContents@ViewContents:query]\nChunk(chunk_18C29EEF8665693C0736b656fbb292b5) with 1 rows (1.2 KiB) - /view/1da1b6e8-bdd4-4499-9274-c102c300f0b8 - data columns: [/view/1da1b6e8-bdd4-4499-9274-c102c300f0b8@ViewBlueprint:class_identifier /view/1da1b6e8-bdd4-4499-9274-c102c300f0b8@ViewBlueprint:display_name /view/1da1b6e8-bdd4-4499-9274-c102c300f0b8@ViewBlueprint:space_origin]\nChunk(chunk_18C29EEF86657C6F0736b656fbb292b6) with 1 rows (1.0 KiB) - /view/b2fca59f-dd2f-43cf-aea5-3e79d9f94da5/Background - data columns: [/view/b2fca59f-dd2f-43cf-aea5-3e79d9f94da5/Background@Background:color /view/b2fca59f-dd2f-43cf-aea5-3e79d9f94da5/Background@Background:kind]\nChunk(chunk_18C29EEF866586A50736b656fbb292b7) with 1 rows (883 B) - /selection_panel - data columns: [/selection_panel@PanelBlueprint:state]\nChunk(chunk_18C29EEF866596660736b656fbb292b8) with 1 rows (885 B) - /time_panel - data columns: [/time_panel@TimePanelBlueprint:state]\nBlueprintActivationCommand(StoreId(Blueprint, \"roarm_g0a_d355_attempt1_failure_attempt4\", \"rec_2532ae8b2fe14e0e9d313a6044482997\"), make_active: true, make_default: true)\nChunk(chunk_18C29EEF86801D667d8ae0e906f44d89) with 1 rows (1.3 KiB) - /failure_pipeline/transitions - data columns: [/failure_pipeline/transitions@Arrows3D:colors /failure_pipeline/transitions@Arrows3D:labels /failure_pipeline/transitions@Arrows3D:origins /failure_pipeline/transitions@Arrows3D:radii /failure_pipeline/transitions@Arrows3D:vectors]\nChunk(chunk_18C29EEF86807F4F7d8ae0e906f44d8a) with 1 rows (652 B) - /metrics/d355_attempt1/usd_stream_load_count - data columns: [/metrics/d355_attempt1/usd_stream_load_count@Scalars:scalars]\nChunk(chunk_18C29EEF868088EE7d8ae0e906f44d8b) with 1 rows (652 B) - /metrics/d355_attempt1/q5_evaluation_count - data columns: [/metrics/d355_attempt1/q5_evaluation_count@Scalars:scalars]\nChunk(chunk_18C29EEF86809D547d8ae0e906f44d8c) with 1 rows (652 B) - /metrics/d355_attempt1/negative_control_execution_count - data columns: [/metrics/d355_attempt1/negative_control_execution_count@Scalars:scalars]\nChunk(chunk_18C29EEF8680A6217d8ae0e906f44d8d) with 1 rows (811 B) - /events/d355_attempt1/verdict - data columns: [/events/d355_attempt1/verdict@TextLog:level /events/d355_attempt1/verdict@TextLog:text]\nChunk(chunk_18C29EEF8680B1327d8ae0e906f44d8e) with 1 rows (1.1 KiB) - /context/d354_frozen/overlap_endpoint - data columns: [/context/d354_frozen/overlap_endpoint@Points3D:colors /context/d354_frozen/overlap_endpoint@Points3D:labels /context/d354_frozen/overlap_endpoint@Points3D:positions /context/d354_frozen/overlap_endpoint@Points3D:radii]\nChunk(chunk_18C29EEF8680C91D7d8ae0e906f44d8f) with 1 rows (4.3 KiB) - /context/d354_frozen/cylinder - data columns: [/context/d354_frozen/cylinder@Mesh3D:albedo_factor /context/d354_frozen/cylinder@Mesh3D:triangle_indices /context/d354_frozen/cylinder@Mesh3D:vertex_positions]\nChunk(chunk_18C29EEF8680DD377d8ae0e906f44d90) with 1 rows (811 B) - /events/d355_attempt1/exact_exception - data columns: [/events/d355_attempt1/exact_exception@TextLog:level /events/d355_attempt1/exact_exception@TextLog:text]\nChunk(chunk_18C29EEF8680E6537d8ae0e906f44d91) with 1 rows (971 B) - /metadata/counts - data columns: [/metadata/counts@TextDocument:media_type /metadata/counts@TextDocument:text]\nChunk(chunk_18C29EEF8680F0337d8ae0e906f44d92) with 1 rows (1.2 KiB) - /failure_pipeline/nodes - data columns: [/failure_pipeline/nodes@Points3D:colors /failure_pipeline/nodes@Points3D:labels /failure_pipeline/nodes@Points3D:positions /failure_pipeline/nodes@Points3D:radii]\nChunk(chunk_18C29EEF868106667d8ae0e906f44d93) with 1 rows (1.1 KiB) - /metadata/run - data columns: [/metadata/run@TextDocument:media_type /metadata/run@TextDocument:text]\nChunk(chunk_18C29EEF8681210D7d8ae0e906f44d94) with 1 rows (1.1 KiB) - /context/d354_frozen/clear_endpoint - data columns: [/context/d354_frozen/clear_endpoint@Points3D:colors /context/d354_frozen/clear_endpoint@Points3D:labels /context/d354_frozen/clear_endpoint@Points3D:positions /context/d354_frozen/clear_endpoint@Points3D:radii]\nChunk(chunk_18C29EEF86813D287d8ae0e906f44d95) with 1 rows (652 B) - /metrics/d355_attempt1/isaac_launch_count - data columns: [/metrics/d355_attempt1/isaac_launch_count@Scalars:scalars]\nChunk(chunk_18C29EEF868144077d8ae0e906f44d96) with 1 rows (652 B) - /metrics/d355_attempt1/controlled_physics_steps - data columns: [/metrics/d355_attempt1/controlled_physics_steps@Scalars:scalars]\nChunk(chunk_18C29EEF86814A7D7d8ae0e906f44d97) with 1 rows (652 B) - /metrics/d355_attempt1/d354_overlap_z_m_historical - data columns: [/metrics/d355_attempt1/d354_overlap_z_m_historical@Scalars:scalars]\nChunk(chunk_18C29EEF868150A47d8ae0e906f44d98) with 1 rows (865 B) - /events/d355_attempt1/manual_validation_lesson - data columns: [/events/d355_attempt1/manual_validation_lesson@TextLog:level /events/d355_attempt1/manual_validation_lesson@TextLog:text]\nChunk(chunk_18C29EEF8681607C7d8ae0e906f44d99) with 1 rows (652 B) - /metrics/d355_attempt1/audit_invocation_count - data columns: [/metrics/d355_attempt1/audit_invocation_count@Scalars:scalars]\nChunk(chunk_18C29EEF86816FB67d8ae0e906f44d9a) with 1 rows (1.1 KiB) - /context/d354_frozen/exploded_pair - data columns: [/context/d354_frozen/exploded_pair@Points3D:colors /context/d354_frozen/exploded_pair@Points3D:labels /context/d354_frozen/exploded_pair@Points3D:positions /context/d354_frozen/exploded_pair@Points3D:radii]\nChunk(chunk_18C29EEF8681838D7d8ae0e906f44d9b) with 1 rows (652 B) - /metrics/d355_attempt1/recipe_candidate_evaluation_count - data columns: [/metrics/d355_attempt1/recipe_candidate_evaluation_count@Scalars:scalars]\nChunk(chunk_18C29EEF86818A217d8ae0e906f44d9c) with 1 rows (652 B) - /metrics/d355_attempt1/patch_hash_computation_count - data columns: [/metrics/d355_attempt1/patch_hash_computation_count@Scalars:scalars]\nChunk(chunk_18C29EEF868198197d8ae0e906f44d9d) with 1 rows (652 B) - /metrics/d355_attempt1/d354_clear_z_m_historical - data columns: [/metrics/d355_attempt1/d354_clear_z_m_historical@Scalars:scalars]\nChunk(chunk_18C29EEF86819EFE7d8ae0e906f44d9e) with 1 rows (845 B) - /events/d355_attempt1/root_cause - data columns: [/events/d355_attempt1/root_cause@TextLog:level /events/d355_attempt1/root_cause@TextLog:text]\nChunk(chunk_18C29EEF8681AF327d8ae0e906f44d9f) with 1 rows (840 B) - /events/d355_attempt1/science_boundary - data columns: [/events/d355_attempt1/science_boundary@TextLog:level /events/d355_attempt1/science_boundary@TextLog:text]\nChunk(chunk_18C29EEF8681B7357d8ae0e906f44da0) with 1 rows (652 B) - /metrics/d355_attempt1/standalone_pxr_import_available - data columns: [/metrics/d355_attempt1/standalone_pxr_import_available@Scalars:scalars]\n"
+  },
+  "rendered_blueprint_source": "active blueprint embedded in the RRD",
+  "screenshot_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d355/attempt4_failure_observability/d355_attempt1_failure_explained_attempt4_rerun.png",
+  "screenshot_window_size": "2400x1400",
+  "sha256": "807939f8f2d23c3eb470652afb6035351fbedb678e76edfa7e4b1745e022c8f7",
+  "stats": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "stats",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d355/attempt4_failure_observability/d355_attempt1_failure_explained_attempt4.rrd"
+    ],
+    "ok": true,
+    "returncode": 0,
+    "stderr": "2026-07-16T00:52:34.095069Z  INFO rerun::commands::rrd::stats: processing input…\n2026-07-16T00:52:34.099637Z  INFO rerun::commands::rrd::stats: computing stats…\n",
+    "stdout": "Overview\n----------\nnum_chunks = 48\nnum_entity_paths = 48\nnum_chunks_without_components = 0 (0.000%)\nnum_rows = 48\nnum_rows_min = 1\nnum_rows_max = 1\nnum_rows_avg = 1.000\nnum_static = 25\nnum_indexes_min = 0\nnum_indexes_max = 2\nnum_indexes_avg = 0.958\nnum_components_min = 1\nnum_components_max = 5\nnum_components_avg = 2.062\n\nNum chunks per entity\n---------------------\n/__properties: 1\n/blueprint_panel: 1\n/container/0800fd13-0ad6-4a8c-abdb-5bafd778878f: 1\n/container/3a507284-e913-4c09-9091-d452b4f36cba: 1\n/container/522b8aca-e0c1-4b6c-a279-f30f1c129131: 1\n/context/d354_frozen/clear_endpoint: 1\n/context/d354_frozen/cylinder: 1\n/context/d354_frozen/exploded_pair: 1\n/context/d354_frozen/overlap_endpoint: 1\n/events/d355_attempt1/exact_exception: 1\n/events/d355_attempt1/manual_validation_lesson: 1\n/events/d355_attempt1/root_cause: 1\n/events/d355_attempt1/science_boundary: 1\n/events/d355_attempt1/verdict: 1\n/failure_pipeline/nodes: 1\n/failure_pipeline/transitions: 1\n/metadata/counts: 1\n/metadata/run: 1\n/metrics/d355_attempt1/audit_invocation_count: 1\n/metrics/d355_attempt1/controlled_physics_steps: 1\n/metrics/d355_attempt1/d354_clear_z_m_historical: 1\n/metrics/d355_attempt1/d354_overlap_z_m_historical: 1\n/metrics/d355_attempt1/isaac_launch_count: 1\n/metrics/d355_attempt1/negative_control_execution_count: 1\n/metrics/d355_attempt1/patch_hash_computation_count: 1\n/metrics/d355_attempt1/q5_evaluation_count: 1\n/metrics/d355_attempt1/recipe_candidate_evaluation_count: 1\n/metrics/d355_attempt1/standalone_pxr_import_available: 1\n/metrics/d355_attempt1/usd_stream_load_count: 1\n/selection_panel: 1\n/time_panel: 1\n/view/05d3e3f2-447a-4836-b823-f946586a4175: 1\n/view/05d3e3f2-447a-4836-b823-f946586a4175/ViewContents: 1\n/view/1da1b6e8-bdd4-4499-9274-c102c300f0b8: 1\n/view/1da1b6e8-bdd4-4499-9274-c102c300f0b8/ViewContents: 1\n/view/57eced8c-f9a3-47e8-93d5-52b5bba09e26: 1\n/view/57eced8c-f9a3-47e8-93d5-52b5bba09e26/ViewContents: 1\n/view/a43cde96-f77a-467b-b9d3-27de60512f21: 1\n/view/a43cde96-f77a-467b-b9d3-27de60512f21/Background: 1\n/view/a43cde96-f77a-467b-b9d3-27de60512f21/EyeControls3D: 1\n/view/a43cde96-f77a-467b-b9d3-27de60512f21/LineGrid3D: 1\n/view/a43cde96-f77a-467b-b9d3-27de60512f21/ViewContents: 1\n/view/b2fca59f-dd2f-43cf-aea5-3e79d9f94da5: 1\n/view/b2fca59f-dd2f-43cf-aea5-3e79d9f94da5/Background: 1\n/view/b2fca59f-dd2f-43cf-aea5-3e79d9f94da5/EyeControls3D: 1\n/view/b2fca59f-dd2f-43cf-aea5-3e79d9f94da5/LineGrid3D: 1\n/view/b2fca59f-dd2f-43cf-aea5-3e79d9f94da5/ViewContents: 1\n/viewport: 1\n\nNum chunks per index\n--------------------\nblueprint: 23\nlog_time: 23\n\nNum chunks per component\n------------------------\nArrows3D:colors: 1\nArrows3D:labels: 1\nArrows3D:origins: 1\nArrows3D:radii: 1\nArrows3D:vectors: 1\nBackground:color: 2\nBackground:kind: 2\nContainerBlueprint:col_shares: 2\nContainerBlueprint:container_kind: 3\nContainerBlueprint:contents: 3\nContainerBlueprint:row_shares: 1\nEyeControls3D:eye_up: 2\nEyeControls3D:kind: 2\nEyeControls3D:look_target: 2\nEyeControls3D:position: 2\nLineGrid3D:visible: 2\nMesh3D:albedo_factor: 1\nMesh3D:triangle_indices: 1\nMesh3D:vertex_positions: 1\nPanelBlueprint:state: 2\nPoints3D:colors: 4\nPoints3D:labels: 4\nPoints3D:positions: 4\nPoints3D:radii: 4\nRecordingInfo:start_time: 1\nScalars:scalars: 11\nTextDocument:media_type: 2\nTextDocument:text: 2\nTextLog:level: 5\nTextLog:text: 5\nTimePanelBlueprint:state: 1\nViewBlueprint:class_identifier: 5\nViewBlueprint:display_name: 5\nViewBlueprint:space_origin: 5\nViewContents:query: 5\nViewportBlueprint:auto_layout: 1\nViewportBlueprint:auto_views: 1\nViewportBlueprint:root_container: 1\n\nSize (schema + data, compressed)\n--------------------------------\nipc_size_bytes_total = 66.2 KiB\nipc_size_bytes_min = 911 B\nipc_size_bytes_max = 6.2 KiB\nipc_size_bytes_avg = 1.4 KiB\nipc_size_bytes_p50 = 1.2 KiB\nipc_size_bytes_p90 = 1.8 KiB\nipc_size_bytes_p95 = 1.8 KiB\nipc_size_bytes_p99 = 6.2 KiB\nipc_size_bytes_p999 = 6.2 KiB\n\nSize (schema + data, uncompressed)\n----------------------------------\nipc_size_bytes_total = 149 KiB\nipc_size_bytes_min = 1.6 KiB\nipc_size_bytes_max = 10.3 KiB\nipc_size_bytes_avg = 3.1 KiB\nipc_size_bytes_p50 = 2.6 KiB\nipc_size_bytes_p90 = 4.2 KiB\nipc_size_bytes_p95 = 5.1 KiB\nipc_size_bytes_p99 = 10.3 KiB\nipc_size_bytes_p999 = 10.3 KiB\n\nSize (schema only, uncompressed)\n--------------------------------\nipc_size_bytes_total = 79.4 KiB\nipc_size_bytes_min = 1016 B\nipc_size_bytes_max = 2.8 KiB\nipc_size_bytes_avg = 1.7 KiB\nipc_size_bytes_p50 = 1.5 KiB\nipc_size_bytes_p90 = 2.3 KiB\nipc_size_bytes_p95 = 2.5 KiB\nipc_size_bytes_p99 = 2.8 KiB\nipc_size_bytes_p999 = 2.8 KiB\n\nSize (data only, uncompressed)\n------------------------------\nipc_size_bytes_total = 69.6 KiB\nipc_size_bytes_min = 656 B\nipc_size_bytes_max = 8.4 KiB\nipc_size_bytes_avg = 1.5 KiB\nipc_size_bytes_p50 = 1.2 KiB\nipc_size_bytes_p90 = 2.1 KiB\nipc_size_bytes_p95 = 2.3 KiB\nipc_size_bytes_p99 = 8.4 KiB\nipc_size_bytes_p999 = 8.4 KiB\n\nUnsorted timelines\n------------------\n(none — every timeline on every chunk is sorted)\n\nFooters\n-------\nnum_manifests = 2 (one per recording)\n\nFooter manifest for StoreId(Blueprint, \"roarm_g0a_d355_attempt1_failure_attempt4\", \"rec_2532ae8b2fe14e0e9d313a6044482997\")\n  num_chunks_indexed = 23\n  num_static_chunks = 0\n  num_entity_paths = 23\n  manifest_num_columns = 151\n  sorbet_schema_num_fields = 52\n  sorbet_schema_sha256 = e9354e0fc0f71100f263ac3002eb045277cd74de502d1de1e9a478923674ac8c\n  chunk_byte_size_total (native) = 34.7 KiB\n  chunk_byte_size_uncompressed_total = 79.1 KiB\n\nFooter manifest for StoreId(Recording, \"roarm_g0a_d355_attempt1_failure_attempt4\", \"g0a_d355_attempt1_failure_observability_attempt4\")\n  num_chunks_indexed = 25\n  num_static_chunks = 25\n  num_entity_paths = 25\n  manifest_num_columns = 25\n  sorbet_schema_num_fields = 51\n  sorbet_schema_sha256 = bbce03fdb93be2895f21ca21efb67e80e7e3f97d003803e7ffe6c43df7387c3b\n  chunk_byte_size_total (native) = 37.4 KiB\n  chunk_byte_size_uncompressed_total = 69.9 KiB\n"
+  },
+  "timeline_contract": {
+    "checks": {},
+    "exact_match": true,
+    "observed": [
+      "blueprint",
+      "log_time"
+    ],
+    "pass": true
+  },
+  "verify": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "verify",
+      "--check-footers",
+      "true",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d355/attempt4_failure_observability/d355_attempt1_failure_explained_attempt4.rrd"
+    ],
+    "ok": true,
+    "returncode": 0,
+    "stderr": "1 file verified without error.\n",
+    "stdout": ""
+  },
+  "version": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "--version"
+    ],
+    "expected_version_match": true,
+    "ok": true,
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "rerun-cli 0.34.1 (base lance map_view nasm native_viewer oss_server perf_telemetry re_server release_full release_no_web_viewer web_viewer) [rustc 1.92.0 (ded5c06cf 2025-12-08), LLVM 21.1.3] x86_64-unknown-linux-gnu prepare-release-0.34.1 4efb18f, built 2026-07-07T16:20:42.173372603Z\nVideo features: av1 ffmpeg nasm\n"
+  }
+}
