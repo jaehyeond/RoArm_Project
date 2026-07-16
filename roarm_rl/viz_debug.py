@@ -618,6 +618,48 @@ def build_rerun_blueprint(mode: str = "robot_geometry") -> Any:
             auto_views=False,
             collapse_panels=True,
         )
+    if mode == "d357_beginner_result":
+        return rrb.Blueprint(
+            rrb.Vertical(
+                rrb.Spatial3DView(
+                    origin="/",
+                    contents=[
+                        "/actual_robot/**",
+                        "/frames/**",
+                        "/geometry/**",
+                    ],
+                    name="D354 robot + cylinder (display-only replay)",
+                    eye_controls=rrb.EyeControls3D(
+                        kind=rrb.Eye3DKind.Orbital,
+                        position=(0.48, -0.42, 0.30),
+                        look_target=(0.22, 0.0, 0.08),
+                        eye_up=(0.0, 0.0, 1.0),
+                    ),
+                    spatial_information=rrb.SpatialInformation(
+                        target_frame="tf#/",
+                        show_axes=True,
+                        show_bounding_box=False,
+                    ),
+                ),
+                rrb.Horizontal(
+                    rrb.TimeSeriesView(
+                        origin="/metrics/d357",
+                        contents="/metrics/d357/**",
+                        name="q5 and signed distance",
+                    ),
+                    rrb.TextLogView(
+                        origin="/events/d357",
+                        contents="/events/d357/**",
+                        name="three display poses (no force test)",
+                    ),
+                    column_shares=[0.55, 0.45],
+                ),
+                row_shares=[0.76, 0.24],
+            ),
+            auto_layout=False,
+            auto_views=False,
+            collapse_panels=True,
+        )
     if mode != "robot_geometry":
         raise ValueError(f"unsupported Rerun blueprint mode: {mode!r}")
     return rrb.Blueprint(

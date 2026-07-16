@@ -1,0 +1,79 @@
+{
+  "artifact": "D357_PREREGISTRATION_V1",
+  "base_git": "161f6d9d185bb41eb29259349ee0fd897a3c6de8",
+  "case": "g0a_d357",
+  "case_name": "d354_beginner_result_visualization_repair",
+  "d354_hashes": {
+    "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_completion_summary.json": "5cc70c8aa1e50532fa4ec27756496d6b9f9447156c56ef700084b44c16226f86",
+    "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_zero_step_closure_geometry_measurement.json": "fd0d43c2a47abefad939fc0e980456cc396bbf3ba3bb104b28bcd999100f23ed",
+    "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_zero_step_science_attestation.json": "1975df11b13a774b89f953991d7fdac6e38d795e81a9535850b147d823740d20"
+  },
+  "exact_counters": {
+    "contact_or_overlap_queries": 0,
+    "controlled_physics_steps": 0,
+    "display_only_q5_state_writes": 3,
+    "distance_queries": 0,
+    "isaac_visualization_invocations": 1,
+    "new_classifications": 0,
+    "q5_science_evaluator_invocations": 0
+  },
+  "frozen_q5_states_rad_float32": {
+    "first_overlap": 1.0269775390625,
+    "last_clear": 1.0269782543182373,
+    "open": 1.5413000583648682
+  },
+  "harness_sha256": "cdb6fc3fec5884050e34b19cf6e4943874f2d36c8f79b0bb90e8430816bb870e",
+  "new_physical_variables": [],
+  "new_variables": [
+    "d354_beginner_result_visualization_contract"
+  ],
+  "pass": true,
+  "prepare_sha256": "c009e3ccb9e1296f228a0584191e44f51803ce7089dacb6fe33acc9c76daa549",
+  "prohibitions": [
+    "no D354 evaluator or classifier",
+    "no distance/contact/overlap query",
+    "no physics step",
+    "no target/IK/path or asset/physics configuration change",
+    "no retry or overwrite"
+  ],
+  "registered_command": [
+    "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+    "sim_scripts/cyl34_top_view_d357_d354_beginner_result_visualization_repair.py",
+    "--stage",
+    "run"
+  ],
+  "rerun_exact_inventory": {
+    "non_system_entity_count": 62,
+    "non_system_entity_paths_sha256": "2a872536c08c44ed9ba00a82f82ad72f4109039bb86df521eed0c92857866ef2",
+    "timeline_names": [
+      "blueprint",
+      "log_time",
+      "step"
+    ]
+  },
+  "run_nonce": "f7de50d8d6eb37fa1d4cf0be6fdcf531",
+  "same_camera": {
+    "eye": [
+      0.285,
+      -0.42,
+      0.09
+    ],
+    "target": [
+      0.285,
+      0.0,
+      0.055
+    ]
+  },
+  "session_sha256_at_prepare": "ace4e3e49f3d7e5d1ea84fbc167dca9c5643f0802389d5020ff554031e8c40dc",
+  "viewer_hold_seconds": 60.0,
+  "watchdogs_seconds": {
+    "inactivity": 120.0,
+    "total": 300.0
+  },
+  "worker_command_shape": [
+    "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+    "sim_scripts/cyl34_top_view_d357_d354_beginner_result_visualization_repair.py",
+    "--stage",
+    "_worker"
+  ]
+}

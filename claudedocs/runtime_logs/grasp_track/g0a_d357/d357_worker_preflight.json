@@ -1,0 +1,45 @@
+{
+  "artifact": "D357_WORKER_PREFLIGHT_V1",
+  "checks": {
+    "d354_hashes_exact": true,
+    "device_cuda0": true,
+    "display_exact": true,
+    "exclusive_invocation_marker_exact": true,
+    "gpu_free_at_least_8gib": true,
+    "harness_exact": true,
+    "head_origin_exact": true,
+    "headless_false": true,
+    "livestream_zero": true,
+    "no_pxr_omni_isaaclab_isaacsim_carb_runtime_before_applauncher": true,
+    "one_time_worker_token_exact": true,
+    "parent_is_registered_supervisor": true,
+    "prereg_pass": true,
+    "ram_available_at_least_10gib": true,
+    "registered_python_exact": true
+  },
+  "early_runtime_modules": [],
+  "gpu_and_ram": {
+    "command": [
+      "nvidia-smi",
+      "--query-gpu=index,name,uuid,compute_cap,memory.total,memory.used,memory.free,utilization.gpu,temperature.gpu,pstate",
+      "--format=csv,noheader,nounits"
+    ],
+    "compute_capability": "8.9",
+    "index": 0,
+    "memory_free_mib": 13269,
+    "memory_total_mib": 16376,
+    "memory_used_mib": 2676,
+    "name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+    "pstate": "P8",
+    "ram_available_bytes": 17768501248,
+    "ram_total_bytes": 67130757120,
+    "returncode": 0,
+    "stderr": "",
+    "temperature_c": 48,
+    "utilization_gpu_percent": 22,
+    "uuid": "GPU-05b1a3f8-b7cf-dc57-06aa-741fe2daa4b4"
+  },
+  "pass": true,
+  "pid": 1441464,
+  "utc": "2026-07-16T05:34:22.045154+00:00"
+}

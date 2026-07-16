@@ -123,6 +123,7 @@ def validate_rerun_artifact(
     blueprint_path: str | Path | None = None,
     screenshot_path: str | Path | None = None,
     screenshot_window_size: str = "2400x1400",
+    screenshot_port: str | None = None,
     cli_path: str | Path | None = None,
     expected_version: str = RERUN_CONTRACT_VERSION,
     timeout_s: float = 120.0,
@@ -175,6 +176,7 @@ def validate_rerun_artifact(
         ),
         "screenshot_path": str(screenshot) if screenshot is not None else None,
         "screenshot_window_size": str(screenshot_window_size),
+        "screenshot_port": screenshot_port,
         "human_visual_inspection_required": screenshot is not None,
     }
     if not artifact.is_file():
@@ -300,15 +302,18 @@ def validate_rerun_artifact(
                 "path": str(screenshot),
             }
         else:
-            command = [
-                cli,
-                "--headless",
-                "--window-size",
-                str(screenshot_window_size),
-                "--screenshot-to",
-                str(screenshot),
-                str(artifact),
-            ]
+            command = [cli, "--headless"]
+            if screenshot_port is not None:
+                command.extend(["--port", str(screenshot_port)])
+            command.extend(
+                [
+                    "--window-size",
+                    str(screenshot_window_size),
+                    "--screenshot-to",
+                    str(screenshot),
+                    str(artifact),
+                ]
+            )
             render = _run(command, timeout_s=timeout_s)
             render.update(
                 {

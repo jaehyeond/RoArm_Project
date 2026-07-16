@@ -1,0 +1,32 @@
+{
+  "artifact": "D357_MANUAL_VISUAL_INSPECTION_V1",
+  "case": "g0a_d357",
+  "inspection_method": "all eight PNGs opened and inspected at original resolution",
+  "inspected_paths": [
+    "claudedocs/runtime_logs/grasp_track/g0a_d357/d357_open_same_camera_actual_physx.png",
+    "claudedocs/runtime_logs/grasp_track/g0a_d357/d357_last_clear_same_camera_actual_physx.png",
+    "claudedocs/runtime_logs/grasp_track/g0a_d357/d357_first_overlap_same_camera_actual_physx.png",
+    "claudedocs/runtime_logs/grasp_track/g0a_d357/d357_three_pose_beginner_sheet_ko.png",
+    "claudedocs/runtime_logs/grasp_track/g0a_d357/d357_contact_section_actual_scale_ko.png",
+    "claudedocs/runtime_logs/grasp_track/g0a_d357/d357_contact_section_z50000_display_only_ko.png",
+    "claudedocs/runtime_logs/grasp_track/g0a_d357/d357_d354_result_visualization_rerun.png",
+    "claudedocs/runtime_logs/grasp_track/g0a_d357/d357_isaac_camera_occlusion_addendum_ko.png"
+  ],
+  "observations": {
+    "three_actual_isaac_captures": "All three decode at 1280x720 and show the cylinder with its green PhysX collider outline. The moving jaw is occluded behind the cylinder in this exact side camera, so the three frames look nearly identical and do not visually prove contact.",
+    "three_pose_sheet": "Korean glyphs, titles, q5 values, and explanatory rows are readable with no overlap or clipping. Its geometric explanation is inherited from D354 data rather than directly visible in the occluded camera frames; the forward-only addendum makes this limitation explicit.",
+    "actual_scale_section": "Clear and unclipped. It accurately states that the 0.000381398 mm z difference is sub-pixel at actual scale and that the drawing is not a new contact judgment.",
+    "magnified_section": "Clear and unclipped. The 50000x Z-only exaggeration is prominent and explicitly labeled display-only.",
+    "rerun_screenshot": "The actual robot, both jaws, and cylinder are visible in the fixed 3D view. The three ASCII event rows are readable and state no physics/contact-force/grasp test. The screenshot is layout replay evidence, not numerical or force evidence.",
+    "occlusion_addendum": "Clear Korean text with no overlap, clipping, or missing glyph. It separates what the Isaac capture proves, what camera occlusion prevents seeing, and which PhysX/grasp tests remain unexecuted."
+  },
+  "camera_occlusion_found": true,
+  "camera_occlusion_effect": "same-camera Isaac PNGs alone cannot show the moving-jaw/cylinder interface or distinguish contact",
+  "combined_bundle_beginner_readable": true,
+  "physics_contact_or_grasp_visually_proven": false,
+  "scientific_verdict_inherited": "D354_CONTACT_ORDER_UNRESOLVED_FAIL_STOP",
+  "scientific_verdict_changed": false,
+  "g0a_pass": false,
+  "verdict": "D357_MANUAL_VISUAL_INSPECTION_PASS_WITH_FORWARD_ONLY_OCCLUSION_ADDENDUM",
+  "pass": true
+}

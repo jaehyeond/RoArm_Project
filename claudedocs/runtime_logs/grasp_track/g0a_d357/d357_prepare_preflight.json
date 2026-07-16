@@ -1,0 +1,105 @@
+{
+  "artifact": "D357_PREPARE_PREFLIGHT_V1",
+  "case": "g0a_d357",
+  "checks": {
+    "d354_hashes_exact": true,
+    "d354_science_frozen_unresolved": true,
+    "display_exact": true,
+    "display_x_server_reachable": true,
+    "font_exists": true,
+    "font_loads_and_korean_bbox_nonempty": true,
+    "git_scope_only_registered_state_and_d357": true,
+    "gpu_compute_capability_sm89": true,
+    "gpu_free_at_least_8gib": true,
+    "gpu_is_rtx4090_laptop": true,
+    "head_origin_exact": true,
+    "numpy_pin_1p26p0": true,
+    "psutil_pin_5p9p8": true,
+    "ram_available_at_least_12gib": true,
+    "registered_python_exact": true,
+    "rerun_cli_exact_path_executable": true,
+    "rerun_cli_version_0p34p1": true,
+    "rerun_sdk_version_0p34p1": true,
+    "session_preregistered": true
+  },
+  "d334_sidecar_before": {
+    "claudedocs/lab_meeting/20260715/d334_collision_table/README.md": "35e39f584737c888bcf7dfab6154c55c5d13d4154ee7f2042073e1c0a7e18783",
+    "claudedocs/lab_meeting/20260715/d334_collision_table/d334_collision_table_academic.html": "6d38933f959eba916208ec04a329ba25e2bd753c90720576010c222a8bda679c",
+    "claudedocs/lab_meeting/20260715/d334_collision_table/d334_collision_table_academic.png": "ddc9db2795f4d66b2564adf156829e6a143a599ceb72f6bb9fa28ab25e68a183"
+  },
+  "d354_hashes": {
+    "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_completion_summary.json": "5cc70c8aa1e50532fa4ec27756496d6b9f9447156c56ef700084b44c16226f86",
+    "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_zero_step_closure_geometry_measurement.json": "fd0d43c2a47abefad939fc0e980456cc396bbf3ba3bb104b28bcd999100f23ed",
+    "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_zero_step_science_attestation.json": "1975df11b13a774b89f953991d7fdac6e38d795e81a9535850b147d823740d20"
+  },
+  "environment": {
+    "display": ":1",
+    "numpy": "1.26.0",
+    "psutil": "5.9.8",
+    "python": "/home/cgxr/miniconda3/envs/isaaclab/bin/python3.11"
+  },
+  "git": {
+    "head": "161f6d9d185bb41eb29259349ee0fd897a3c6de8",
+    "origin_master": "161f6d9d185bb41eb29259349ee0fd897a3c6de8",
+    "status": [
+      " M START_HERE.md",
+      " M claudedocs/DECISIONS.md",
+      " M claudedocs/EXPERIMENT_LEDGER.md",
+      " M roarm_rl/rerun_contract.py",
+      " M roarm_rl/viz_debug.py",
+      "?? claudedocs/session_20260716_grasp_g0a_d356_d355_pxr_root_cause_correction.md",
+      "?? claudedocs/session_20260716_grasp_g0a_d357_d354_beginner_result_visualization_repair.md",
+      "?? sim_scripts/cyl34_top_view_d357_d354_beginner_result_visualization_repair.py"
+    ]
+  },
+  "gpu_and_ram": {
+    "command": [
+      "nvidia-smi",
+      "--query-gpu=index,name,uuid,compute_cap,memory.total,memory.used,memory.free,utilization.gpu,temperature.gpu,pstate",
+      "--format=csv,noheader,nounits"
+    ],
+    "compute_capability": "8.9",
+    "index": 0,
+    "memory_free_mib": 13269,
+    "memory_total_mib": 16376,
+    "memory_used_mib": 2676,
+    "name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+    "pstate": "P8",
+    "ram_available_bytes": 17735069696,
+    "ram_total_bytes": 67130757120,
+    "returncode": 0,
+    "stderr": "",
+    "temperature_c": 47,
+    "utilization_gpu_percent": 21,
+    "uuid": "GPU-05b1a3f8-b7cf-dc57-06aa-741fe2daa4b4"
+  },
+  "pass": true,
+  "postprocess_dependency_preflight": {
+    "error": null,
+    "font_korean_bbox": [
+      0,
+      11,
+      174,
+      45
+    ],
+    "font_path": "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
+    "rerun_sdk_version": "0.34.1"
+  },
+  "rerun_cli": {
+    "path": "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "rerun-cli 0.34.1 (base lance map_view nasm native_viewer oss_server perf_telemetry re_server release_full release_no_web_viewer web_viewer) [rustc 1.92.0 (ded5c06cf 2025-12-08), LLVM 21.1.3] x86_64-unknown-linux-gnu prepare-release-0.34.1 4efb18f, built 2026-07-07T16:20:42.173372603Z\nVideo features: av1 ffmpeg nasm"
+  },
+  "utc": "2026-07-16T05:33:10.036055+00:00",
+  "x_display": {
+    "command": [
+      "xdpyinfo",
+      "-display",
+      ":1"
+    ],
+    "display_line": "name of display:    :1",
+    "returncode": 0,
+    "stderr": ""
+  }
+}

@@ -20331,3 +20331,192 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d355/d355_persistent_inspection_viewer_audit.json`
 - `/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/__init__.py`
 - `START_HERE.md`
+
+## D356 - D355는 Isaac 실패가 아니라 이미 검증된 standalone-core-PXR 실행환경과 import/version preflight의 누락이었다 (2026-07-16)
+
+Decision:
+
+- 판정은 `D356_D355_PXR_ROOT_CAUSE_CORRECTED_NO_RERUN`이다. D355의 invocation
+  1회, `ModuleNotFoundError`, downstream 실행 0, operational FAIL_STOP,
+  provenance `null`, no-retry와 모든 immutable hash는 바꾸지 않는다.
+- D355에서 plain `isaaclab` Python이 top-level `pxr`를 자동 노출하지 않았다는
+  관찰은 맞다. 그러나 `SimulationApp`이 유일한 PXR 경로이고 readonly Kit bootstrap이
+  가장 좁은 다음 후보라는 D355의 추론은 이 결정으로 superseded다.
+- D343과 D345는 동일 설치의 bundled `omni.usd.libs` 경로를 `PYTHONPATH`와
+  `LD_LIBRARY_PATH`에 사전등록해 Kit/SimulationApp/Physics/GPU 없이 OpenUSD
+  `0.24.5`를 사용했다. D343은 `standalone_pxr_only=true`, D345 worker는
+  `runtime_environment_created=false`로 각각 PASS했다.
+- D355 prepare는 Git/hash/package pin만 검사하고 PXR import, registered path,
+  OpenUSD version preflight를 검사하지 않았다. invocation marker 뒤 첫 PXR import에서
+  멈췄으므로 직접 원인은 known standalone-core-PXR environment inheritance와
+  import/version preflight의 누락이다. Isaac Sim, RTX, warp/SM 또는 PhysX 실패가 아니다.
+- **지속 규칙:** offline USD audit은 사용할 PXR 경로를 `prepare` 전에 하나로
+  사전등록하고, 유일한 audit invocation marker보다 먼저 별도 preflight에서 exact
+  Python/path/import/`Usd.GetVersion()`을 확인한다. plain Python, bundled core-PXR,
+  Kit bootstrap을 서로 같은 경로로 부르지 않는다.
+- 봉인된 실패 attempt 안에서 즉석 env 주입이나 Kit launch를 하지 않는 D355 규칙은
+  유지한다. 수리는 항상 새 forward-only case/output에서 한다.
+
+Evidence:
+
+- D343 registered env는 bundled `omni.usd.libs`의 exact `PYTHONPATH`와
+  `LD_LIBRARY_PATH`를 기록했고 summary는 `isaac_kit_started=false`, OpenUSD
+  `[0,24,5]`, `standalone_pxr_only=true`다.
+- D345 preregistration과 독립 worker는 같은 env, OpenUSD `[0,24,5]`,
+  `runtime_environment_created=false`, PASS를 기록했다.
+- D355 prepare check에는 PXR 항목이 없고 runtime exception은
+  `_source_arrays()`의 첫 `from pxr import ...` 한 줄이다. USD/hash/q5/physics/Isaac
+  count는 모두 0이다.
+
+Implication:
+
+- D355와 그 output/session/decision/ledger row는 historical immutable 증거로 남긴다.
+  원인 정정은 D356에서만 읽는다.
+- 사용자가 승인한 다음 순차 case는 D357 beginner-readable D354 visualization repair다.
+  그 뒤 D358 provenance retry는 D343/D345 bundled-core-PXR 환경을 exact 상속하고
+  audit invocation 전에 import/version preflight를 통과해야 한다. Kit bootstrap은
+  reserve이고 새 package 설치는 별도 범위다.
+
+Sources:
+
+- `claudedocs/session_20260716_grasp_g0a_d356_d355_pxr_root_cause_correction.md`
+- `claudedocs/runtime_logs/grasp_track/g0a_d343/d343_preregistration.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d343/d343_usd_typed_float_readback_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d345/d345_preregistration.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d345/d345_worker_a.json`
+- `sim_scripts/cyl34_top_view_d355_moving_jaw_patch_hash_provenance_audit.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d355/d355_runtime_exception.json`
+- `START_HERE.md`
+
+## D357 - 실제 Isaac 화면이 존재해도 결정 대상 접촉면이 가려지면 접촉 증거가 아니며, 표시 재현과 PhysX 접촉 시험을 분리한다 (2026-07-16)
+
+Decision:
+
+- 판정은 `D357_D354_BEGINNER_VISUALIZATION_REPAIR_COMPLETE`다. 한 번의 실제
+  `headless=false` Isaac GUI invocation에서 frozen D354 OPEN, last-clear,
+  first-overlap 표시 상태를 동일 side camera로 저장하고 정상 종료했다.
+- q5 science evaluator, distance/contact/overlap query, 새 classification, controlled
+  physics step은 모두 `0`; frozen full-state display reassertion만 `3/3`이었다.
+  따라서 D357은 D354 결과를 보여 주는 관찰성 case이며 접촉력·마찰·파지 시험이 아니다.
+- **지속 규칙:** 실제 Isaac 캡처라는 사실만으로 접촉을 주장하지 않는다. 접촉/geometry
+  verdict가 시각 증거에 의존할 때는 결정 대상인 죠-물체 interface가 실제 view에서 보여야
+  한다. 가림(occlusion), sub-pixel 차이, 동일하게 보이는 연속 자세는 수동 검사에서 명시하고
+  필요하면 새 forward-only 보충 view를 사전등록한다.
+- **지속 규칙:** Rerun은 전체 배치·시간·설명 재생층이고, 접촉력이나 canonical
+  geometry authority가 아니다. Rerun에서 죠와 원통이 겹쳐 보이는 것, 또는 q5 state를
+  표시한 것은 PhysX force/contact/grasp 성공 증거가 아니다.
+- 동일 camera의 세 Isaac PNG에서는 moving jaw가 원통 뒤에 가려졌다. 기존 PNG/시트/RRD는
+  덮어쓰지 않았고, forward-only Korean occlusion addendum로 “보인 것 / 가려진 것 /
+  실행하지 않은 시험”을 분리했다.
+
+Evidence:
+
+- worker exit `0`, watchdog false, supervisor elapsed `84.53322536998894s`, Viewer
+  hold `60.02044868003577s`, UI update `565`다.
+- worker engine log에는 non-fatal `Failed to clone in Fabric` error와 missing
+  `d338_convex_parts` warnings가 있으므로 “log-clean”으로 부르지 않는다. 이후 scene/capture/
+  hold/close는 완료됐다. `timeline_time_zero_unchanged` check 이름도 부정확하며 실제 의미는
+  nonzero reset baseline timeline `0.03s`, sim `0.01s/index2`에서 추가 진행 없음이다.
+- display write attempts/successes `3/3`; conditional Timeline.commit `1`회 뒤
+  timeline/SimulationContext/custom counter/joint/object state no-advance checks가 PASS했다.
+- GPU 82 samples에서 VRAM `2676..8321MiB`, utilization `0..36%`(평균
+  `9.963414634146341%`)였다. 이 정지화면 hold는 GPU 포화 workload가 아니며 Warp/SM
+  tuning 원인/해결 증거가 아니다.
+- RRD/RBL/footer/exact 62-entity inventory/exact timelines/headless screenshot이 PASS했다.
+  원본 해상도 8 PNG 수동 검사는 camera occlusion을 명시한 결합 bundle을 PASS했다.
+- occlusion addendum SHA-256은
+  `567aab0e719c3cef52470c8b275b46b3f3b492b8eaadb9213c5b1e726309294f`, completion
+  SHA-256은 `89a20139c12d6936ae052d0069829f0381e6935ba5dcb1b3dcbf581fc3581e71`이다.
+
+Implication:
+
+- D354의 scientific verdict는 계속 `D354_CONTACT_ORDER_UNRESOLVED_FAIL_STOP`,
+  `g0a_pass=false`다. 팔이 원통 위치까지 배치됐음은 보였지만 실제로 죠를 닫아 원통이
+  밀리거나 회전하는지, 양쪽 죠가 닿는지, 버티거나 드는지는 아직 시험하지 않았다.
+- 다음 승인 case D358은 bundled standalone core-PXR를 쓰는 순수 offline derived-hash
+  provenance 감사다. Isaac/q5/physics/cap-rim 판정은 금지된다. 이후 실제 PhysX 접촉 시험은
+  D358 결과 뒤 별도 승인·사전등록이 필요하다.
+
+Sources:
+
+- `claudedocs/session_20260716_grasp_g0a_d357_d354_beginner_result_visualization_repair.md`
+- `sim_scripts/cyl34_top_view_d357_d354_beginner_result_visualization_repair.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d357/d357_worker_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d357/d357_supervisor_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d357/d357_rerun_validation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d357/d357_manual_visual_inspection.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d357/d357_isaac_camera_occlusion_addendum_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d357/d357_completion_summary.json`
+- `START_HERE.md`
+
+## D358 - 현재 authored 계산은 재현되지만 D351 historical derived-hash 6개는 등록된 provenance family에서 복원되지 않았다 (2026-07-16)
+
+Decision:
+
+- 판정은 `D358_HASH_PROVENANCE_UNRESOLVED_FAIL_STOP`이다. 사전등록된 bundled
+  standalone core-PXR 환경과 유일한 audit invocation은 정상 완주했지만, D351에
+  상수로 고정된 8개 expected derived field 중 paired-XZ 2개만 재현되고 inner/outer
+  vertex·triangle·patch 6개는 `20,736` recipe 어느 것에도 일치하지 않았다.
+- 이것은 Isaac Sim/Kit/GPU/PhysX 실행 실패가 아니다. OpenUSD `0.24.5`, exact
+  PXR module origins/binary hashes, NumPy `1.26.0`, psutil `5.9.8` preflight가 PASS했고
+  D358 process의 forbidden modules는 없었으며 case-local SimulationApp/Kit/Isaac/GPU/
+  q5/physics/contact contract count는 모두 0이었다.
+- D354 current authored 8-field bundle, raw full stream과 raw inner paired-XZ는
+  재현됐다. current authored/raw 독립 구현 `17/17`과 perturbation negative controls
+  `7/7`도 PASS했다. 따라서 현재 canonicalization 계산 자체의 비결정성으로 판정하지
+  않는다.
+- D354 authored bundle과 같은 해시를 내는 registered recipe는 4개였다. 따라서 hash
+  equality만으로 signed-zero 처리나 동치 dtype roundtrip 중 하나를 유일한 실제
+  provenance로 역추론하지 않는다. 또한 `20,736` grid 밖의 미등록 source/remap/
+  serialization 가능성은 남아 있다.
+- **지속 규칙:** historical expected derived hash가 등록된 source/unit/dtype/order/
+  canonicalization family에서 재현되지 않으면, 이를 geometry change나 상수 오류로
+  단정하지 않는다. 원 generator/source/commit 증거를 찾기 전에는 expected hash를
+  현재 관측값으로 교체하거나 binding gate를 완화하지 않는다.
+- **지속 규칙:** process exit `0`/`operational_pass=true`와 provenance/scientific
+  `pass=false`를 분리한다. 전자는 감사 프로그램이 완주했다는 뜻이고 후자는 질문이
+  해결되지 않았다는 뜻이다.
+- D358 completion의 `operational_pass`와 scope counters는 completion literal이므로
+  단독 측정 authority가 아니다. operational completion은 exit0, prereg/current
+  environment/input 재검사, ordered phase markers와 exact inventory를 함께 근거로
+  하며, scope는 D358 process/case에만 한정한다. 별도 persistent Isaac GUI의 시스템
+  전체 상태로 확대 해석하지 않는다.
+- D354의 `D354_CONTACT_ORDER_UNRESOLVED_FAIL_STOP`, `g0a_pass=false`, cap/rim과
+  current-pose grasp/target-IK 미판정은 그대로 유지한다.
+
+Evidence:
+
+- sole audit count `1`, recipe search `90.19101224502083s`, completion marker
+  `90.21373272209894s`, watchdog/재시도 없음이다.
+- frozen expected match count는 inner/outer paired-XZ 각각 capped `50`, 나머지 6개
+  각각 `0`; unique reproduced field 수는 `2/8`, coherent bundle은 false다.
+- D354 observed authored bundle은 exact recipe로 전부 재현됐다. authored point/count/
+  index stream도 exact이고 raw full stream SHA-256
+  `522a4f0fe91a04bf54c5c8be6492748c7490fc557fa8c0867200d97332dfa9db`와
+  raw inner paired-XZ `98ef77e6...18bbae`가 재현됐다.
+- authored Float32-mm ↔ runtime Float64-m roundtrip은 `123,282` component 중
+  `58,506`, `41,094` vertex 중 `36,519`가 bit-different였고 최대 차이는
+  `0.0000031862526839177008mm`였다. 이 roundtrip 변형을 포함한 grid도 미재현
+  6개를 만들지 못했으므로 단순 unit/dtype 원인으로 확정할 수 없다.
+- D334 user-owned sidecar는 before/after exact이고 case-local scope guard는 전부 0이다.
+
+Implication:
+
+- D358은 immutable 완료이며 rerun/overwrite하지 않는다.
+- 가장 좁은 후속 후보는 D351 expected 6개 상수의 최초 generator/source/commit을
+  읽기 전용으로 추적하는 별도 forward-only historical provenance case다.
+- 실제 PhysX jaw closure/contact force/object motion 시각 시험도 별도 후보지만,
+  D357처럼 죠-원통 interface가 가려지지 않는 camera를 사전등록하고 새 사용자 승인을
+  받아야 한다. 어느 후보도 D358에서 자동 실행하지 않는다.
+
+Sources:
+
+- `claudedocs/session_20260716_grasp_g0a_d358_moving_jaw_patch_hash_provenance_retry.md`
+- `sim_scripts/cyl34_top_view_d358_moving_jaw_patch_hash_provenance_retry.py`
+- `sim_scripts/cyl34_top_view_d351_zero_step_closure_geometry.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d358/d358_preregistration.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d358/d358_patch_hash_provenance_evidence.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d358/d358_phase_markers.jsonl`
+- `claudedocs/runtime_logs/grasp_track/g0a_d358/d358_completion_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d354/d354_moving_jaw_surface_binding.json`
+- `START_HERE.md`

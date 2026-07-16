@@ -1,0 +1,254 @@
+{
+  "artifact": "D358_PREREGISTRATION_V1",
+  "candidate_count": 20736,
+  "case": "g0a_d358",
+  "checks": {
+    "candidate_grid_20736": true,
+    "d358_output_initially_empty": true,
+    "environment_preflight_pass": true,
+    "frozen_input_hashes_exact": true,
+    "head_equals_origin_master": true,
+    "head_expected": true,
+    "new_variable_count_two": true
+  },
+  "d334_sidecar_before": {
+    "file_count": 3,
+    "files": [
+      {
+        "bytes": 2935,
+        "path": "claudedocs/lab_meeting/20260715/d334_collision_table/README.md",
+        "sha256": "35e39f584737c888bcf7dfab6154c55c5d13d4154ee7f2042073e1c0a7e18783"
+      },
+      {
+        "bytes": 12493,
+        "path": "claudedocs/lab_meeting/20260715/d334_collision_table/d334_collision_table_academic.html",
+        "sha256": "6d38933f959eba916208ec04a329ba25e2bd753c90720576010c222a8bda679c"
+      },
+      {
+        "bytes": 255289,
+        "path": "claudedocs/lab_meeting/20260715/d334_collision_table/d334_collision_table_academic.png",
+        "sha256": "ddc9db2795f4d66b2564adf156829e6a143a599ceb72f6bb9fa28ab25e68a183"
+      }
+    ],
+    "inventory_sha256": "86c3a8f58b0866458910d2cab13da69f04c2dba5ddfc430a8b648367d759fef2"
+  },
+  "decision_rule": {
+    "coherent": "all frozen/current streams and independent controls pass and one registered recipe reproduces all eight frozen expected fields simultaneously",
+    "composite": "all frozen/current streams and independent controls pass and every expected field is reproducible, but no one registered recipe reproduces the eight-field bundle",
+    "science_boundary": "all outcomes preserve D354_CONTACT_ORDER_UNRESOLVED_FAIL_STOP and cannot change cap/rim, target/IK/path, or a gate",
+    "unresolved": "a frozen/current stream, independent implementation, negative control, or one or more expected fields remain unreproduced"
+  },
+  "expected_input_hashes": {
+    "claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2/d339_asset_build_manifest.json": "3b46cb39a1f0ff655dcd46172ebaa84f727d833773275b18f944397007ae2589",
+    "claudedocs/runtime_logs/grasp_track/g0a_d343/d343_preregistration.json": "fb8f9c292042001aeb05d9b693d910797bd4a214d9e01427ccd54b7e2c387ce8",
+    "claudedocs/runtime_logs/grasp_track/g0a_d345/d345_preregistration.json": "9c31b8070d2051c00ebd6789facd6c8a59256cb9beefe8645a63ff41a277b6a3",
+    "claudedocs/runtime_logs/grasp_track/g0a_d345/d345_worker_a.json": "99991b382bf881502dc73009877cd09a5617be8d3a5a5610a0d047f741756974",
+    "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_completion_summary.json": "5cc70c8aa1e50532fa4ec27756496d6b9f9447156c56ef700084b44c16226f86",
+    "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_moving_jaw_surface_binding.json": "548d45ec4eb1dacbb4cbdefe2b64a3ed99ce72f4f5ffaaa6a9ee1e2b38756b15",
+    "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_zero_step_closure_geometry_measurement.json": "fd0d43c2a47abefad939fc0e980456cc396bbf3ba3bb104b28bcd999100f23ed",
+    "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_zero_step_science_attestation.json": "1975df11b13a774b89f953991d7fdac6e38d795e81a9535850b147d823740d20",
+    "claudedocs/runtime_logs/grasp_track/g0a_d357/d357_completion_summary.json": "89a20139c12d6936ae052d0069829f0381e6935ba5dcb1b3dcbf581fc3581e71",
+    "local_assets/roarm_m3/usd/roarm_m3.usd": "a4be58e87b1f9790f2a2ed600f0620c79d3cfb95c608b3c598308d52f5e46fff",
+    "sim_scripts/cyl34_top_view_d355_moving_jaw_patch_hash_provenance_audit.py": "b1fe5bf0f42c3d30a2b56d6809e17cfe4785eb7dcb610e2cf6fc05fb57c50d46"
+  },
+  "expected_success_inventory": [
+    "d358_audit_invocation.json",
+    "d358_automated_report.md",
+    "d358_completion_summary.json",
+    "d358_patch_hash_provenance_evidence.json",
+    "d358_phase_markers.jsonl",
+    "d358_preregistration.json"
+  ],
+  "frozen_helper": {
+    "path": "sim_scripts/cyl34_top_view_d355_moving_jaw_patch_hash_provenance_audit.py",
+    "sha256": "b1fe5bf0f42c3d30a2b56d6809e17cfe4785eb7dcb610e2cf6fc05fb57c50d46"
+  },
+  "git_status_before_prepare": [
+    "M START_HERE.md",
+    " M claudedocs/DECISIONS.md",
+    " M claudedocs/EXPERIMENT_LEDGER.md",
+    " M roarm_rl/rerun_contract.py",
+    " M roarm_rl/viz_debug.py",
+    "?? claudedocs/runtime_logs/grasp_track/g0a_d357/",
+    "?? claudedocs/session_20260716_grasp_g0a_d356_d355_pxr_root_cause_correction.md",
+    "?? claudedocs/session_20260716_grasp_g0a_d357_d354_beginner_result_visualization_repair.md",
+    "?? claudedocs/session_20260716_grasp_g0a_d358_moving_jaw_patch_hash_provenance_retry.md",
+    "?? sim_scripts/cyl34_top_view_d357_d354_beginner_result_visualization_repair.py",
+    "?? sim_scripts/cyl34_top_view_d358_moving_jaw_patch_hash_provenance_retry.py"
+  ],
+  "harness": {
+    "path": "sim_scripts/cyl34_top_view_d358_moving_jaw_patch_hash_provenance_retry.py",
+    "sha256": "e5fdc1fc98c85db1b2533ae45e080999681a9b88c59c593bf5cb8869ee87757a"
+  },
+  "head": "161f6d9d185bb41eb29259349ee0fd897a3c6de8",
+  "independent_recalculation": "NumPy canonicalization versus Python tuple/dict/struct.pack for authored and raw inner+outer vertex, triangle, patch, paired-XZ, plus the full raw stream",
+  "input_hashes": {
+    "claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2/d339_asset_build_manifest.json": "3b46cb39a1f0ff655dcd46172ebaa84f727d833773275b18f944397007ae2589",
+    "claudedocs/runtime_logs/grasp_track/g0a_d343/d343_preregistration.json": "fb8f9c292042001aeb05d9b693d910797bd4a214d9e01427ccd54b7e2c387ce8",
+    "claudedocs/runtime_logs/grasp_track/g0a_d345/d345_preregistration.json": "9c31b8070d2051c00ebd6789facd6c8a59256cb9beefe8645a63ff41a277b6a3",
+    "claudedocs/runtime_logs/grasp_track/g0a_d345/d345_worker_a.json": "99991b382bf881502dc73009877cd09a5617be8d3a5a5610a0d047f741756974",
+    "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_completion_summary.json": "5cc70c8aa1e50532fa4ec27756496d6b9f9447156c56ef700084b44c16226f86",
+    "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_moving_jaw_surface_binding.json": "548d45ec4eb1dacbb4cbdefe2b64a3ed99ce72f4f5ffaaa6a9ee1e2b38756b15",
+    "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_zero_step_closure_geometry_measurement.json": "fd0d43c2a47abefad939fc0e980456cc396bbf3ba3bb104b28bcd999100f23ed",
+    "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_zero_step_science_attestation.json": "1975df11b13a774b89f953991d7fdac6e38d795e81a9535850b147d823740d20",
+    "claudedocs/runtime_logs/grasp_track/g0a_d357/d357_completion_summary.json": "89a20139c12d6936ae052d0069829f0381e6935ba5dcb1b3dcbf581fc3581e71",
+    "local_assets/roarm_m3/usd/roarm_m3.usd": "a4be58e87b1f9790f2a2ed600f0620c79d3cfb95c608b3c598308d52f5e46fff",
+    "sim_scripts/cyl34_top_view_d355_moving_jaw_patch_hash_provenance_audit.py": "b1fe5bf0f42c3d30a2b56d6809e17cfe4785eb7dcb610e2cf6fc05fb57c50d46"
+  },
+  "negative_controls": [
+    "wrong_unit_m_instead_of_mm",
+    "wrong_dtype_f8_instead_of_f4",
+    "big_endian",
+    "fortran_order_without_canonical_contiguity",
+    "reverse_face_order",
+    "flip_winding",
+    "digest_order_FTV",
+    "each_target_matching_recipe_big_endian_rejected",
+    "each_target_matching_recipe_fortran_layout_rejected"
+  ],
+  "new_physical_variables": [],
+  "new_variables": [
+    "bundled_standalone_core_pxr_execution_contract",
+    "derived_moving_jaw_patch_hash_provenance_semantics"
+  ],
+  "origin_master": "161f6d9d185bb41eb29259349ee0fd897a3c6de8",
+  "pass": true,
+  "recipe_axes": {
+    "coordinate_source": [
+      "authored_f4_mm",
+      "authored_f8_mm",
+      "authored_f8_m",
+      "authored_f4_m",
+      "raw_f8_m",
+      "raw_f8_mm",
+      "raw_f4_m",
+      "raw_roundtrip_f4_mm",
+      "raw_roundtrip_f4_m"
+    ],
+    "digest_blob_order": [
+      "FVT",
+      "FTV",
+      "VFT",
+      "VTF",
+      "TFV",
+      "TVF"
+    ],
+    "face_order": [
+      "ascending",
+      "descending"
+    ],
+    "face_winding": [
+      "preserve",
+      "flip_1_2"
+    ],
+    "signed_zero": [
+      "preserve",
+      "normalize_positive"
+    ],
+    "triangle_mode": [
+      "preserve",
+      "cyclic_min",
+      "unoriented_index_sort"
+    ],
+    "triangle_row_order": [
+      "face_order",
+      "lexicographic_rows"
+    ],
+    "triangle_serialization": [
+      "<i4",
+      "<i8"
+    ],
+    "vertex_order": [
+      "lexicographic_unique",
+      "stable_first_occurrence"
+    ],
+    "vertex_serialization": [
+      "<f4",
+      "<f8"
+    ]
+  },
+  "registered_command": {
+    "argv": [
+      "--stage",
+      "audit"
+    ],
+    "environment": {
+      "LD_LIBRARY_PATH": "/home/cgxr/miniconda3/envs/isaaclab/lib:/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.libs-1.0.1+69cbf6ad.lx64.r.cp311/bin",
+      "PYTHONPATH": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.libs-1.0.1+69cbf6ad.lx64.r.cp311"
+    },
+    "python": "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+    "python_flags": [
+      "-B"
+    ],
+    "script": "sim_scripts/cyl34_top_view_d358_moving_jaw_patch_hash_provenance_retry.py"
+  },
+  "rerun_omission": "D358 is a pure file/hash/schema provenance audit with no spatial or temporal judgment; canonical JSON and original byte hashes are sufficient and Rerun is intentionally omitted",
+  "scope_guards": {
+    "asset_writes": 0,
+    "d334_sidecar_writes": 0,
+    "dependency_changes": 0,
+    "distance_contact_queries": 0,
+    "gpu_or_nvidia_smi": 0,
+    "isaac_gui": 0,
+    "new_cap_rim_classifications": 0,
+    "physics_steps": 0,
+    "q5_science": 0,
+    "simulation_app_or_kit": 0,
+    "target_ik_path_changes": 0
+  },
+  "session_doc": {
+    "path": "claudedocs/session_20260716_grasp_g0a_d358_moving_jaw_patch_hash_provenance_retry.md",
+    "sha256": "bca21d3404411c420a17741d41b1c80ce1f9453c0aa4f790424052355ced6d53"
+  },
+  "single_run_contract": {
+    "audit_invocation_count": 1,
+    "no_retry_or_overwrite": true,
+    "prepare_is_not_audit": true,
+    "timeout_seconds": 300
+  },
+  "standalone_core_pxr_preflight": {
+    "checks": {
+      "gf_from_registered_root": true,
+      "in_memory_smoke_stage_valid": true,
+      "ld_library_path_exact": true,
+      "no_isaac_kit_gpu_modules": true,
+      "numpy_1_26_0": true,
+      "openusd_0_24_5": true,
+      "psutil_5_9_8": true,
+      "pxr_binary_hashes_exact": true,
+      "pxr_package_from_registered_root": true,
+      "pxr_root_exists": true,
+      "python_exact_or_same_resolved_binary": true,
+      "pythonpath_exact": true,
+      "usd_from_registered_root": true,
+      "usdgeom_from_registered_root": true
+    },
+    "forbidden_modules_after": [],
+    "forbidden_modules_before": [],
+    "ld_library_path": "/home/cgxr/miniconda3/envs/isaaclab/lib:/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.libs-1.0.1+69cbf6ad.lx64.r.cp311/bin",
+    "module_origins": {
+      "Gf": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.libs-1.0.1+69cbf6ad.lx64.r.cp311/pxr/Gf/__init__.py",
+      "Usd": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.libs-1.0.1+69cbf6ad.lx64.r.cp311/pxr/Usd/__init__.py",
+      "UsdGeom": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.libs-1.0.1+69cbf6ad.lx64.r.cp311/pxr/UsdGeom/__init__.py"
+    },
+    "numpy_version": "1.26.0",
+    "pass": true,
+    "psutil_version": "5.9.8",
+    "pxr_binary_hashes": {
+      "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.libs-1.0.1+69cbf6ad.lx64.r.cp311/pxr/Sdf/_sdf.so": "b4e3056cf5622e0f3036a74876b180c019e46beddc10beb821987020c0c7bbbc",
+      "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.libs-1.0.1+69cbf6ad.lx64.r.cp311/pxr/Usd/_usd.so": "0071f15c896e2252f647384d2276c9b7c9211c0c08f6553701a2432451d2d3c4"
+    },
+    "pxr_package_paths": [
+      "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.libs-1.0.1+69cbf6ad.lx64.r.cp311/pxr"
+    ],
+    "python_executable": "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+    "python_executable_resolved": "/home/cgxr/miniconda3/envs/isaaclab/bin/python3.11",
+    "pythonpath": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.libs-1.0.1+69cbf6ad.lx64.r.cp311",
+    "smoke_stage_valid": true,
+    "usd_version": [
+      0,
+      24,
+      5
+    ]
+  }
+}
