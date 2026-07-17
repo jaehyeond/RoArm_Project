@@ -20749,3 +20749,89 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d361/d361_failure_injection_results.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d361/d361_completion_summary.json`
 - `START_HERE.md`
+
+## D362 - 완결된 PhysX trace와 실패한 시각 관측 계약을 별도 판정한다 (2026-07-17)
+
+Decision:
+
+- D362는 승인된 actual Isaac/PhysX invocation을 정확히 한 번 실행했고 retry하지 않았다.
+  Worker는 OPEN baseline `200` + q5-close observation `300` = controlled physics `500`
+  row를 완료했으며 q5 target update는 OPEN→`0.0rad` 한 번이다. Physical sub-verdict는
+  `D362_MOVING_JAW_CONTACT_AND_OBJECT_MOTION_OBSERVED`다.
+- Moving `gripper_link`의 등록 `>=0.1N` 2-row contact는 closure step `31/32`, cylinder
+  motion은 step `41/42`, fixed `link5` contact는 step `45/46`에 확인됐다. Link4는 이
+  500-row registered sensor/filter에서 positive count/force가 없었다. 이는 moving jaw가
+  먼저 힘을 가한 body-level 증거지만 exact face/manifold, cap/rim/barrel order, force
+  closure 또는 stable grasp 증거가 아니다.
+- Cylinder endpoint는 XY `60.61899778989994mm`, tilt delta
+  `89.99777464743418deg`, z delta `-28.000520542263985mm`였다. 현재 자세는 원통에 닿아
+  크게 밀고 넘어뜨렸지만 잡아 유지한 결과가 아니며 `g0a_pass=false`다.
+- D361 runtime capacity는 이 exact run에서 cfg/derived/backend 모두 `33,280`, backend
+  buffer shapes exact, observed high-water `22`, registered overflow warning `0`으로 충분했다.
+  Prefix는 500 observations/1,002 records를 seal했고 independent recovery는
+  `COMPLETE_SEALED_PREFIX`였다. 이 sufficiency를 inventory/version이 다른 case에
+  일반화하지 않는다.
+- Overall operational verdict는
+  `D362_SINGLE_INVOCATION_PHYSX_TRACE_COMPLETE_OBSERVABILITY_FAIL_STOP`다. imageio의
+  `macro_block_size=16`이 registered `1920x1080` frame을 `1920x1088`로 바꿔 video
+  resolution gate와 supervisor phase contract가 FAIL했다. Worker exit는 `0`, outer
+  supervisor exit는 `2`; physics crash/overflow/watchdog failure가 아니다.
+- **지속 규칙:** PNG가 nonempty이고 registered resolution으로 decode된다는 사실만으로
+  actual physics-state capture라고 판정하지 않는다. D362의 precommand/contact/motion/
+  final Isaac PNG는 yellow-cylinder bbox와 centroid가 사실상 같았지만 canonical tensor
+  trace는 final 60.619mm/약 90deg 전도를 기록했다. Capture마다 rendered object pose/
+  orientation을 canonical trace state와 수치 대조해야 한다.
+- **지속 규칙:** actual Isaac renderer, Rerun/derived trace replay, canonical sensor/tensor
+  evidence를 분리한다. Rerun/video가 trace의 전도를 잘 보여도 stale actual viewport를
+  대신하지 않으며, actual viewport 실패가 canonical prefix를 지우지도 않는다.
+- D362/D332 controlled step은 `sim.step(render=False)`와 default
+  `update_fabric=False`를 사용했고, capture는 `simulation_app.update()`만 호출했다.
+  설치 IsaacLab render 경로가 요구하는 `forward()` Fabric flush가 capture 전에 없었다.
+  이것이 stale actual PNG의 확인된 구현 결손이다. D350의 정적 state-write 경로는
+  `forward()`를 호출하므로 한 pose가 정상 표시된 사실과 모순되지 않는다. Log의
+  `[Error] Failed to clone in Fabric` 또는 timeline pause 자체를 별도 단일 원인이라고
+  확정하지 않는다.
+- D362 output 33개는 immutable failure evidence다. Automated/manual PASS/finalize artifact는
+  생성하지 않았고 기존 MP4/report/PNG를 고치거나 physics를 재실행하지 않는다.
+
+Evidence:
+
+- OPEN baseline PASS; q5 target update `1`; controlled steps `500`; worker exit `0`.
+- Moving confirmation step `32` force `2.8690685090N`; motion onset/confirmation step
+  `41/42`; link5 onset/confirmation `45/46`; peak gripper/link5/link4 force
+  `43.8583399286/23.2278652547/0.0N`.
+- Prefix SHA-256 `aa7f7419...1a8e`; worker summary `10f7bd39...217d`; physics trace
+  `9483146c...2044`; supervisor `bac1d037...4385`; worker log `3620e4f8...28c6`.
+- Video report: H.264/yuv420p, `250` frames, `20fps`, full decode PASS, actual
+  `[1920,1088]`, exact-resolution check false. Worker log line 367 records the automatic
+  1080→1088 resize.
+- Read-only HSV component audit of actual primary PNGs returned identical
+  `(628,299,90,209)` cylinder bbox for precommand/contact/motion/final and centroids within
+  `0.1px`, contradicting the final trace pose on the display layer.
+
+Implication:
+
+- D362 answers the narrow body-level physical question: moving jaw contact was followed by
+  cylinder motion, then later fixed-link5 contact. It does not complete G0a and does not by
+  itself choose a target/IK repair.
+- The next narrow candidate requires separate approval: D363
+  `[d362_trace_replay_1080_and_isaac_render_sync_repair]`. It reads immutable D362 trace,
+  repairs exact 1080 replay encoding in a new forward-only output, and validates one registered
+  zero-step Fabric flush before capture at recorded decision states. It must run no q5/physics
+  science and change no target/IK/path or physical configuration.
+
+Sources:
+
+- `claudedocs/session_20260717_grasp_g0a_d362_capacity_prefix_integrated_physx_contact_motion.md`
+- `sim_scripts/cyl34_top_view_d362_current_pose_capacity_prefix_integrated_physx_contact_motion.py`
+- `sim_scripts/cyl34_top_view_d350_fixed_jaw_geometry_viewer.py`
+- `sim_scripts/cyl34_top_view_d332_grasp_g0a_static_collision_discriminator.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d362/d362_runtime_prerequisites.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d362/d362_durable_step_prefix.jsonl`
+- `claudedocs/runtime_logs/grasp_track/g0a_d362/d362_durable_step_prefix_audit.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d362/d362_physics_trace.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d362/d362_worker_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d362/d362_interface_visible_trace_replay_report.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d362/d362_worker_stdout_stderr.log`
+- `claudedocs/runtime_logs/grasp_track/g0a_d362/d362_supervisor_summary.json`
+- `START_HERE.md`

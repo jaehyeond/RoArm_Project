@@ -1,0 +1,2219 @@
+{
+  "artifact": "D362_WORKER_SUMMARY_V1",
+  "asset_decomposition_gate_material_mass_actuator_physics_changed": false,
+  "baseline": {
+    "checks": {
+      "all_finite": true,
+      "exact_200_steps": true,
+      "first_step_abs_z_delta_le_0p5mm": true,
+      "frozen_open_target_every_step": true,
+      "last50_bottom_table_gap_abs_max_le_0p5mm": true,
+      "object_tilt_lt_1deg": true,
+      "object_xy_lt_0p5mm": true,
+      "q5_effort_authority_every_step": true,
+      "robot_filters_max_lt_0p1n": true,
+      "robot_root_position_drift_le_1e_6m": true,
+      "robot_root_rotation_drift_le_1e_6rad": true,
+      "stage_and_sensor_contracts_pass": true,
+      "support_table_fz_last50_median_gt_1n": true
+    },
+    "first_contact_step_by_filter": {
+      "gripper_link": -1,
+      "link4": -1,
+      "link5": -1
+    },
+    "first_object_motion_step": -1,
+    "first_step_object_z_delta_mm": 3.725290298461914e-06,
+    "last50_bottom_table_gap_abs_max_mm": 0.00013455373122292502,
+    "max_object_disp_xy_mm": 0.003773643762621384,
+    "max_object_tilt_deg": 0.003364520785190337,
+    "max_robot_root_position_drift_m": 0.0,
+    "max_robot_root_rotation_drift_rad": 0.0,
+    "pass": true,
+    "precommand_object_motion_confound": false,
+    "precommand_robot_contact_confound": false,
+    "q5_actual_final_rad": 1.5412912368774414,
+    "q5_actual_start_rad": 1.5412994623184204,
+    "robot_filter_max_n": {
+      "gripper_link": 0.0,
+      "link4": 0.0,
+      "link5": 0.0
+    },
+    "support_table_fz_last50_median_n": 7.063635349273682
+  },
+  "beginner_sheet": {
+    "dimensions": [
+      3840,
+      1720
+    ],
+    "pass": true,
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d362/d362_beginner_result_sheet_ko.png",
+    "sha256": "4603348b48ca4f6ca1ca7938f39b8251d1a26b84a1744e92a1e6657da362ca22"
+  },
+  "cap_rim_science": null,
+  "capture_event_metadata": {
+    "contact": {
+      "confirmation_phase_step": 32,
+      "onset_phase_step": 31,
+      "phase": "q5_close_observation",
+      "qualifying_body_labels": [
+        "gripper_link"
+      ]
+    },
+    "motion": {
+      "confirmation_phase_step": 42,
+      "onset_phase_step": 41,
+      "phase": "q5_close_observation"
+    }
+  },
+  "capture_reports": {
+    "contact": {
+      "opposite": {
+        "bytes": 601466,
+        "dimensions": [
+          1280,
+          720
+        ],
+        "mode": "RGBA",
+        "pass": true,
+        "path": "claudedocs/runtime_logs/grasp_track/g0a_d362/d362_contact_confirmation_actual_physx_interface_opposite.png",
+        "sha256": "4a9dee7e88830addf978c46f102e33c9f3db9105f5a721899b29c7c7ed24ac55"
+      },
+      "primary": {
+        "bytes": 608327,
+        "dimensions": [
+          1280,
+          720
+        ],
+        "mode": "RGBA",
+        "pass": true,
+        "path": "claudedocs/runtime_logs/grasp_track/g0a_d362/d362_contact_confirmation_actual_physx_interface.png",
+        "sha256": "c7433ebbf7e926aee09d854ba9bc365d984e214716d45d2a36e6be3e471eebde"
+      }
+    },
+    "final": {
+      "opposite": {
+        "bytes": 596031,
+        "dimensions": [
+          1280,
+          720
+        ],
+        "mode": "RGBA",
+        "pass": true,
+        "path": "claudedocs/runtime_logs/grasp_track/g0a_d362/d362_final_actual_physx_interface_opposite.png",
+        "sha256": "825c0c6bcba41bbfdd7b77c59945a4d3817487a80cd8b52bd0107664e8505226"
+      },
+      "primary": {
+        "bytes": 610350,
+        "dimensions": [
+          1280,
+          720
+        ],
+        "mode": "RGBA",
+        "pass": true,
+        "path": "claudedocs/runtime_logs/grasp_track/g0a_d362/d362_final_actual_physx_interface.png",
+        "sha256": "9dfa359b669b953cdfc060511514163e7a17d3a20681b1bd4f0cd988804662a0"
+      }
+    },
+    "initial": {
+      "opposite": {
+        "bytes": 599856,
+        "dimensions": [
+          1280,
+          720
+        ],
+        "mode": "RGBA",
+        "pass": true,
+        "path": "claudedocs/runtime_logs/grasp_track/g0a_d362/d362_initial_open_actual_physx_interface_opposite.png",
+        "sha256": "deb9fd5c3fd3f879bd06b3c6314beeae5e59bcf533f4273d898e35c976fdd07c"
+      },
+      "primary": {
+        "bytes": 614487,
+        "dimensions": [
+          1280,
+          720
+        ],
+        "mode": "RGBA",
+        "pass": true,
+        "path": "claudedocs/runtime_logs/grasp_track/g0a_d362/d362_initial_open_actual_physx_interface_primary.png",
+        "sha256": "56bcdd90705655058c9cfde00448ae06487e846b865a9669ca82461da3711031"
+      }
+    },
+    "motion": {
+      "opposite": {
+        "bytes": 595728,
+        "dimensions": [
+          1280,
+          720
+        ],
+        "mode": "RGBA",
+        "pass": true,
+        "path": "claudedocs/runtime_logs/grasp_track/g0a_d362/d362_motion_confirmation_actual_physx_interface_opposite.png",
+        "sha256": "a5197efebe7a005145572f8bbc07947aef178e65d37921b14874d0d3ebb1e67b"
+      },
+      "primary": {
+        "bytes": 608747,
+        "dimensions": [
+          1280,
+          720
+        ],
+        "mode": "RGBA",
+        "pass": true,
+        "path": "claudedocs/runtime_logs/grasp_track/g0a_d362/d362_motion_confirmation_actual_physx_interface.png",
+        "sha256": "abaa6cc85c1eb413c06bd95eeb72d84171eea8d3b7f5af1f646555455eba2147"
+      }
+    },
+    "start": {
+      "opposite": {
+        "bytes": 596400,
+        "dimensions": [
+          1280,
+          720
+        ],
+        "mode": "RGBA",
+        "pass": true,
+        "path": "claudedocs/runtime_logs/grasp_track/g0a_d362/d362_open_precommand_actual_physx_interface_opposite.png",
+        "sha256": "3f53f5f4a30256cf8c4591b74426f9fa9392af95f5eebb3a56d7f13eb40efa8f"
+      },
+      "primary": {
+        "bytes": 608673,
+        "dimensions": [
+          1280,
+          720
+        ],
+        "mode": "RGBA",
+        "pass": true,
+        "path": "claudedocs/runtime_logs/grasp_track/g0a_d362/d362_open_precommand_actual_physx_interface.png",
+        "sha256": "e193e17f00ab29bcba27c42bfd9f4dd28ae3a59da1888d2f0b5741de9a375511"
+      }
+    }
+  },
+  "captures": {
+    "contact": {
+      "opposite": {
+        "camera_eye": [
+          0.49,
+          0.32,
+          0.28
+        ],
+        "camera_target": [
+          0.285,
+          0.0,
+          0.055
+        ],
+        "guard_after": {
+          "body_pos_bits": "00000000000000000000000079011bb09035b2ad97908f3d000000000000e03011faf93deac0173e1efbb23b1a449e3e4e986e3ec0b30c3c62a9443e4125783e9955123c12610c3e06977d3e8c87153c82f5a73d",
+          "body_quat_bits": "0000803f000000000000000000000000e1f47f3f86ab3331971c023265e7963c974e1f3f63081cbf5a8ab7be04ecabbe63ab523eb40a6cbe7e212b3f2d302d3f9a29123ef02e2cbea6d32f3ffd4a313f441a223e1bd133bf754d2d3ff83e1cbe454f8abed49b3ebfd6decc3ebe0aec3e",
+          "counter": 233,
+          "joint_pos_bits": "e9e9163dc8580b3fb728fc3f59563c3ea78048b8fdf5823f",
+          "joint_vel_bits": "268192be1b5430be27a3083d0f7e013efcb22540740e38c0",
+          "object_ang_vel_bits": "d94414be41170e3d221c653b",
+          "object_lin_vel_bits": "e66047ba425d093bd5906037",
+          "object_pos_bits": "819a993efe3cc736eeb1063d",
+          "object_quat_bits": "ffff7f3f370009b893297d38456bbd35",
+          "simulation_clock": {
+            "current_time": 1.1749999737367034,
+            "current_time_step_index": 235
+          },
+          "timeline_playing": false,
+          "timeline_stopped": false,
+          "timeline_time": 0.029999999329447746
+        },
+        "guard_before": {
+          "body_pos_bits": "00000000000000000000000079011bb09035b2ad97908f3d000000000000e03011faf93deac0173e1efbb23b1a449e3e4e986e3ec0b30c3c62a9443e4125783e9955123c12610c3e06977d3e8c87153c82f5a73d",
+          "body_quat_bits": "0000803f000000000000000000000000e1f47f3f86ab3331971c023265e7963c974e1f3f63081cbf5a8ab7be04ecabbe63ab523eb40a6cbe7e212b3f2d302d3f9a29123ef02e2cbea6d32f3ffd4a313f441a223e1bd133bf754d2d3ff83e1cbe454f8abed49b3ebfd6decc3ebe0aec3e",
+          "counter": 233,
+          "joint_pos_bits": "e9e9163dc8580b3fb728fc3f59563c3ea78048b8fdf5823f",
+          "joint_vel_bits": "268192be1b5430be27a3083d0f7e013efcb22540740e38c0",
+          "object_ang_vel_bits": "d94414be41170e3d221c653b",
+          "object_lin_vel_bits": "e66047ba425d093bd5906037",
+          "object_pos_bits": "819a993efe3cc736eeb1063d",
+          "object_quat_bits": "ffff7f3f370009b893297d38456bbd35",
+          "simulation_clock": {
+            "current_time": 1.1749999737367034,
+            "current_time_step_index": 235
+          },
+          "timeline_playing": false,
+          "timeline_stopped": false,
+          "timeline_time": 0.029999999329447746
+        },
+        "path": "claudedocs/runtime_logs/grasp_track/g0a_d362/d362_contact_confirmation_actual_physx_interface_opposite.png",
+        "pause_bridge": {
+          "after": {
+            "body_pos_bits": "00000000000000000000000079011bb09035b2ad97908f3d000000000000e03011faf93deac0173e1efbb23b1a449e3e4e986e3ec0b30c3c62a9443e4125783e9955123c12610c3e06977d3e8c87153c82f5a73d",
+            "body_quat_bits": "0000803f000000000000000000000000e1f47f3f86ab3331971c023265e7963c974e1f3f63081cbf5a8ab7be04ecabbe63ab523eb40a6cbe7e212b3f2d302d3f9a29123ef02e2cbea6d32f3ffd4a313f441a223e1bd133bf754d2d3ff83e1cbe454f8abed49b3ebfd6decc3ebe0aec3e",
+            "counter": 233,
+            "joint_pos_bits": "e9e9163dc8580b3fb728fc3f59563c3ea78048b8fdf5823f",
+            "joint_vel_bits": "268192be1b5430be27a3083d0f7e013efcb22540740e38c0",
+            "object_ang_vel_bits": "d94414be41170e3d221c653b",
+            "object_lin_vel_bits": "e66047ba425d093bd5906037",
+            "object_pos_bits": "819a993efe3cc736eeb1063d",
+            "object_quat_bits": "ffff7f3f370009b893297d38456bbd35",
+            "simulation_clock": {
+              "current_time": 1.1749999737367034,
+              "current_time_step_index": 235
+            },
+            "timeline_playing": false,
+            "timeline_stopped": false,
+            "timeline_time": 0.029999999329447746
+          },
+          "before": {
+            "body_pos_bits": "00000000000000000000000079011bb09035b2ad97908f3d000000000000e03011faf93deac0173e1efbb23b1a449e3e4e986e3ec0b30c3c62a9443e4125783e9955123c12610c3e06977d3e8c87153c82f5a73d",
+            "body_quat_bits": "0000803f000000000000000000000000e1f47f3f86ab3331971c023265e7963c974e1f3f63081cbf5a8ab7be04ecabbe63ab523eb40a6cbe7e212b3f2d302d3f9a29123ef02e2cbea6d32f3ffd4a313f441a223e1bd133bf754d2d3ff83e1cbe454f8abed49b3ebfd6decc3ebe0aec3e",
+            "counter": 233,
+            "joint_pos_bits": "e9e9163dc8580b3fb728fc3f59563c3ea78048b8fdf5823f",
+            "joint_vel_bits": "268192be1b5430be27a3083d0f7e013efcb22540740e38c0",
+            "object_ang_vel_bits": "d94414be41170e3d221c653b",
+            "object_lin_vel_bits": "e66047ba425d093bd5906037",
+            "object_pos_bits": "819a993efe3cc736eeb1063d",
+            "object_quat_bits": "ffff7f3f370009b893297d38456bbd35",
+            "simulation_clock": {
+              "current_time": 1.1749999737367034,
+              "current_time_step_index": 235
+            },
+            "timeline_playing": false,
+            "timeline_stopped": false,
+            "timeline_time": 0.029999999329447746
+          },
+          "checks": {
+            "clock_unchanged": true,
+            "commit_at_most_once": true,
+            "counter_unchanged": true,
+            "paused_not_stopped": true,
+            "state_bits_unchanged": true
+          },
+          "commit_count": 0,
+          "pass": true
+        },
+        "physics_unchanged": true,
+        "role": "contact_opposite"
+      },
+      "primary": {
+        "camera_eye": [
+          0.49,
+          -0.32,
+          0.28
+        ],
+        "camera_target": [
+          0.285,
+          0.0,
+          0.055
+        ],
+        "guard_after": {
+          "body_pos_bits": "00000000000000000000000079011bb09035b2ad97908f3d000000000000e03011faf93deac0173e1efbb23b1a449e3e4e986e3ec0b30c3c62a9443e4125783e9955123c12610c3e06977d3e8c87153c82f5a73d",
+          "body_quat_bits": "0000803f000000000000000000000000e1f47f3f86ab3331971c023265e7963c974e1f3f63081cbf5a8ab7be04ecabbe63ab523eb40a6cbe7e212b3f2d302d3f9a29123ef02e2cbea6d32f3ffd4a313f441a223e1bd133bf754d2d3ff83e1cbe454f8abed49b3ebfd6decc3ebe0aec3e",
+          "counter": 233,
+          "joint_pos_bits": "e9e9163dc8580b3fb728fc3f59563c3ea78048b8fdf5823f",
+          "joint_vel_bits": "268192be1b5430be27a3083d0f7e013efcb22540740e38c0",
+          "object_ang_vel_bits": "d94414be41170e3d221c653b",
+          "object_lin_vel_bits": "e66047ba425d093bd5906037",
+          "object_pos_bits": "819a993efe3cc736eeb1063d",
+          "object_quat_bits": "ffff7f3f370009b893297d38456bbd35",
+          "simulation_clock": {
+            "current_time": 1.1749999737367034,
+            "current_time_step_index": 235
+          },
+          "timeline_playing": false,
+          "timeline_stopped": false,
+          "timeline_time": 0.029999999329447746
+        },
+        "guard_before": {
+          "body_pos_bits": "00000000000000000000000079011bb09035b2ad97908f3d000000000000e03011faf93deac0173e1efbb23b1a449e3e4e986e3ec0b30c3c62a9443e4125783e9955123c12610c3e06977d3e8c87153c82f5a73d",
+          "body_quat_bits": "0000803f000000000000000000000000e1f47f3f86ab3331971c023265e7963c974e1f3f63081cbf5a8ab7be04ecabbe63ab523eb40a6cbe7e212b3f2d302d3f9a29123ef02e2cbea6d32f3ffd4a313f441a223e1bd133bf754d2d3ff83e1cbe454f8abed49b3ebfd6decc3ebe0aec3e",
+          "counter": 233,
+          "joint_pos_bits": "e9e9163dc8580b3fb728fc3f59563c3ea78048b8fdf5823f",
+          "joint_vel_bits": "268192be1b5430be27a3083d0f7e013efcb22540740e38c0",
+          "object_ang_vel_bits": "d94414be41170e3d221c653b",
+          "object_lin_vel_bits": "e66047ba425d093bd5906037",
+          "object_pos_bits": "819a993efe3cc736eeb1063d",
+          "object_quat_bits": "ffff7f3f370009b893297d38456bbd35",
+          "simulation_clock": {
+            "current_time": 1.1749999737367034,
+            "current_time_step_index": 235
+          },
+          "timeline_playing": false,
+          "timeline_stopped": false,
+          "timeline_time": 0.029999999329447746
+        },
+        "path": "claudedocs/runtime_logs/grasp_track/g0a_d362/d362_contact_confirmation_actual_physx_interface.png",
+        "pause_bridge": {
+          "after": {
+            "body_pos_bits": "00000000000000000000000079011bb09035b2ad97908f3d000000000000e03011faf93deac0173e1efbb23b1a449e3e4e986e3ec0b30c3c62a9443e4125783e9955123c12610c3e06977d3e8c87153c82f5a73d",
+            "body_quat_bits": "0000803f000000000000000000000000e1f47f3f86ab3331971c023265e7963c974e1f3f63081cbf5a8ab7be04ecabbe63ab523eb40a6cbe7e212b3f2d302d3f9a29123ef02e2cbea6d32f3ffd4a313f441a223e1bd133bf754d2d3ff83e1cbe454f8abed49b3ebfd6decc3ebe0aec3e",
+            "counter": 233,
+            "joint_pos_bits": "e9e9163dc8580b3fb728fc3f59563c3ea78048b8fdf5823f",
+            "joint_vel_bits": "268192be1b5430be27a3083d0f7e013efcb22540740e38c0",
+            "object_ang_vel_bits": "d94414be41170e3d221c653b",
+            "object_lin_vel_bits": "e66047ba425d093bd5906037",
+            "object_pos_bits": "819a993efe3cc736eeb1063d",
+            "object_quat_bits": "ffff7f3f370009b893297d38456bbd35",
+            "simulation_clock": {
+              "current_time": 1.1749999737367034,
+              "current_time_step_index": 235
+            },
+            "timeline_playing": false,
+            "timeline_stopped": false,
+            "timeline_time": 0.029999999329447746
+          },
+          "before": {
+            "body_pos_bits": "00000000000000000000000079011bb09035b2ad97908f3d000000000000e03011faf93deac0173e1efbb23b1a449e3e4e986e3ec0b30c3c62a9443e4125783e9955123c12610c3e06977d3e8c87153c82f5a73d",
+            "body_quat_bits": "0000803f000000000000000000000000e1f47f3f86ab3331971c023265e7963c974e1f3f63081cbf5a8ab7be04ecabbe63ab523eb40a6cbe7e212b3f2d302d3f9a29123ef02e2cbea6d32f3ffd4a313f441a223e1bd133bf754d2d3ff83e1cbe454f8abed49b3ebfd6decc3ebe0aec3e",
+            "counter": 233,
+            "joint_pos_bits": "e9e9163dc8580b3fb728fc3f59563c3ea78048b8fdf5823f",
+            "joint_vel_bits": "268192be1b5430be27a3083d0f7e013efcb22540740e38c0",
+            "object_ang_vel_bits": "d94414be41170e3d221c653b",
+            "object_lin_vel_bits": "e66047ba425d093bd5906037",
+            "object_pos_bits": "819a993efe3cc736eeb1063d",
+            "object_quat_bits": "ffff7f3f370009b893297d38456bbd35",
+            "simulation_clock": {
+              "current_time": 1.1749999737367034,
+              "current_time_step_index": 235
+            },
+            "timeline_playing": true,
+            "timeline_stopped": false,
+            "timeline_time": 0.029999999329447746
+          },
+          "checks": {
+            "clock_unchanged": true,
+            "commit_at_most_once": true,
+            "counter_unchanged": true,
+            "paused_not_stopped": true,
+            "state_bits_unchanged": true
+          },
+          "commit_count": 1,
+          "pass": true
+        },
+        "physics_unchanged": true,
+        "role": "contact_primary"
+      }
+    },
+    "final": {
+      "opposite": {
+        "camera_eye": [
+          0.49,
+          0.32,
+          0.28
+        ],
+        "camera_target": [
+          0.285,
+          0.0,
+          0.055
+        ],
+        "guard_after": {
+          "body_pos_bits": "000000000000000000000000fcebc92fe00c82ad97908f3d000000b20000a8b112faf93d36e6173efa58b63bec349e3e31a16e3e6b3b0f3cd076443e102c783ebaf5143c292e0c3ec69b7d3e8038183c4c8fa73d",
+          "body_quat_bits": "0000803f0000000000000000000000007bf47f3f05df3631631c0232af97993c655e1f3fd8091cbf6285b7be63b1abbe9a20523e9ff46bbe65232b3fb73a2d3f4de1113e6d5d2cbecdd02f3fb64e313f5e1b223e6ddf33bf0b402d3f05241cbee03324bca95758bfdad881bccfc7083f",
+          "counter": 500,
+          "joint_pos_bits": "4d9a193df58b0b3fe62cfc3ff08c3b3e230093b6b9e5842a",
+          "joint_vel_bits": "4570b138a97d13bd7e3440bcdaa79ebad357e937f326a22f",
+          "object_ang_vel_bits": "5fe9413e2df0a93d8510bbb9",
+          "object_lin_vel_bits": "5827af3a64685cbbb39b95b8",
+          "object_pos_bits": "b6e4b63ee126a43cfc01a03b",
+          "object_quat_bits": "a1f7323f7cf73cbe0ebf2e3f916cd93d",
+          "simulation_clock": {
+            "current_time": 2.509999943897128,
+            "current_time_step_index": 502
+          },
+          "timeline_playing": false,
+          "timeline_stopped": false,
+          "timeline_time": 0.029999999329447746
+        },
+        "guard_before": {
+          "body_pos_bits": "000000000000000000000000fcebc92fe00c82ad97908f3d000000b20000a8b112faf93d36e6173efa58b63bec349e3e31a16e3e6b3b0f3cd076443e102c783ebaf5143c292e0c3ec69b7d3e8038183c4c8fa73d",
+          "body_quat_bits": "0000803f0000000000000000000000007bf47f3f05df3631631c0232af97993c655e1f3fd8091cbf6285b7be63b1abbe9a20523e9ff46bbe65232b3fb73a2d3f4de1113e6d5d2cbecdd02f3fb64e313f5e1b223e6ddf33bf0b402d3f05241cbee03324bca95758bfdad881bccfc7083f",
+          "counter": 500,
+          "joint_pos_bits": "4d9a193df58b0b3fe62cfc3ff08c3b3e230093b6b9e5842a",
+          "joint_vel_bits": "4570b138a97d13bd7e3440bcdaa79ebad357e937f326a22f",
+          "object_ang_vel_bits": "5fe9413e2df0a93d8510bbb9",
+          "object_lin_vel_bits": "5827af3a64685cbbb39b95b8",
+          "object_pos_bits": "b6e4b63ee126a43cfc01a03b",
+          "object_quat_bits": "a1f7323f7cf73cbe0ebf2e3f916cd93d",
+          "simulation_clock": {
+            "current_time": 2.509999943897128,
+            "current_time_step_index": 502
+          },
+          "timeline_playing": false,
+          "timeline_stopped": false,
+          "timeline_time": 0.029999999329447746
+        },
+        "path": "claudedocs/runtime_logs/grasp_track/g0a_d362/d362_final_actual_physx_interface_opposite.png",
+        "pause_bridge": {
+          "after": {
+            "body_pos_bits": "000000000000000000000000fcebc92fe00c82ad97908f3d000000b20000a8b112faf93d36e6173efa58b63bec349e3e31a16e3e6b3b0f3cd076443e102c783ebaf5143c292e0c3ec69b7d3e8038183c4c8fa73d",
+            "body_quat_bits": "0000803f0000000000000000000000007bf47f3f05df3631631c0232af97993c655e1f3fd8091cbf6285b7be63b1abbe9a20523e9ff46bbe65232b3fb73a2d3f4de1113e6d5d2cbecdd02f3fb64e313f5e1b223e6ddf33bf0b402d3f05241cbee03324bca95758bfdad881bccfc7083f",
+            "counter": 500,
+            "joint_pos_bits": "4d9a193df58b0b3fe62cfc3ff08c3b3e230093b6b9e5842a",
+            "joint_vel_bits": "4570b138a97d13bd7e3440bcdaa79ebad357e937f326a22f",
+            "object_ang_vel_bits": "5fe9413e2df0a93d8510bbb9",
+            "object_lin_vel_bits": "5827af3a64685cbbb39b95b8",
+            "object_pos_bits": "b6e4b63ee126a43cfc01a03b",
+            "object_quat_bits": "a1f7323f7cf73cbe0ebf2e3f916cd93d",
+            "simulation_clock": {
+              "current_time": 2.509999943897128,
+              "current_time_step_index": 502
+            },
+            "timeline_playing": false,
+            "timeline_stopped": false,
+            "timeline_time": 0.029999999329447746
+          },
+          "before": {
+            "body_pos_bits": "000000000000000000000000fcebc92fe00c82ad97908f3d000000b20000a8b112faf93d36e6173efa58b63bec349e3e31a16e3e6b3b0f3cd076443e102c783ebaf5143c292e0c3ec69b7d3e8038183c4c8fa73d",
+            "body_quat_bits": "0000803f0000000000000000000000007bf47f3f05df3631631c0232af97993c655e1f3fd8091cbf6285b7be63b1abbe9a20523e9ff46bbe65232b3fb73a2d3f4de1113e6d5d2cbecdd02f3fb64e313f5e1b223e6ddf33bf0b402d3f05241cbee03324bca95758bfdad881bccfc7083f",
+            "counter": 500,
+            "joint_pos_bits": "4d9a193df58b0b3fe62cfc3ff08c3b3e230093b6b9e5842a",
+            "joint_vel_bits": "4570b138a97d13bd7e3440bcdaa79ebad357e937f326a22f",
+            "object_ang_vel_bits": "5fe9413e2df0a93d8510bbb9",
+            "object_lin_vel_bits": "5827af3a64685cbbb39b95b8",
+            "object_pos_bits": "b6e4b63ee126a43cfc01a03b",
+            "object_quat_bits": "a1f7323f7cf73cbe0ebf2e3f916cd93d",
+            "simulation_clock": {
+              "current_time": 2.509999943897128,
+              "current_time_step_index": 502
+            },
+            "timeline_playing": false,
+            "timeline_stopped": false,
+            "timeline_time": 0.029999999329447746
+          },
+          "checks": {
+            "clock_unchanged": true,
+            "commit_at_most_once": true,
+            "counter_unchanged": true,
+            "paused_not_stopped": true,
+            "state_bits_unchanged": true
+          },
+          "commit_count": 0,
+          "pass": true
+        },
+        "physics_unchanged": true,
+        "role": "final_opposite"
+      },
+      "primary": {
+        "camera_eye": [
+          0.49,
+          -0.32,
+          0.28
+        ],
+        "camera_target": [
+          0.285,
+          0.0,
+          0.055
+        ],
+        "guard_after": {
+          "body_pos_bits": "000000000000000000000000fcebc92fe00c82ad97908f3d000000b20000a8b112faf93d36e6173efa58b63bec349e3e31a16e3e6b3b0f3cd076443e102c783ebaf5143c292e0c3ec69b7d3e8038183c4c8fa73d",
+          "body_quat_bits": "0000803f0000000000000000000000007bf47f3f05df3631631c0232af97993c655e1f3fd8091cbf6285b7be63b1abbe9a20523e9ff46bbe65232b3fb73a2d3f4de1113e6d5d2cbecdd02f3fb64e313f5e1b223e6ddf33bf0b402d3f05241cbee03324bca95758bfdad881bccfc7083f",
+          "counter": 500,
+          "joint_pos_bits": "4d9a193df58b0b3fe62cfc3ff08c3b3e230093b6b9e5842a",
+          "joint_vel_bits": "4570b138a97d13bd7e3440bcdaa79ebad357e937f326a22f",
+          "object_ang_vel_bits": "5fe9413e2df0a93d8510bbb9",
+          "object_lin_vel_bits": "5827af3a64685cbbb39b95b8",
+          "object_pos_bits": "b6e4b63ee126a43cfc01a03b",
+          "object_quat_bits": "a1f7323f7cf73cbe0ebf2e3f916cd93d",
+          "simulation_clock": {
+            "current_time": 2.509999943897128,
+            "current_time_step_index": 502
+          },
+          "timeline_playing": false,
+          "timeline_stopped": false,
+          "timeline_time": 0.029999999329447746
+        },
+        "guard_before": {
+          "body_pos_bits": "000000000000000000000000fcebc92fe00c82ad97908f3d000000b20000a8b112faf93d36e6173efa58b63bec349e3e31a16e3e6b3b0f3cd076443e102c783ebaf5143c292e0c3ec69b7d3e8038183c4c8fa73d",
+          "body_quat_bits": "0000803f0000000000000000000000007bf47f3f05df3631631c0232af97993c655e1f3fd8091cbf6285b7be63b1abbe9a20523e9ff46bbe65232b3fb73a2d3f4de1113e6d5d2cbecdd02f3fb64e313f5e1b223e6ddf33bf0b402d3f05241cbee03324bca95758bfdad881bccfc7083f",
+          "counter": 500,
+          "joint_pos_bits": "4d9a193df58b0b3fe62cfc3ff08c3b3e230093b6b9e5842a",
+          "joint_vel_bits": "4570b138a97d13bd7e3440bcdaa79ebad357e937f326a22f",
+          "object_ang_vel_bits": "5fe9413e2df0a93d8510bbb9",
+          "object_lin_vel_bits": "5827af3a64685cbbb39b95b8",
+          "object_pos_bits": "b6e4b63ee126a43cfc01a03b",
+          "object_quat_bits": "a1f7323f7cf73cbe0ebf2e3f916cd93d",
+          "simulation_clock": {
+            "current_time": 2.509999943897128,
+            "current_time_step_index": 502
+          },
+          "timeline_playing": false,
+          "timeline_stopped": false,
+          "timeline_time": 0.029999999329447746
+        },
+        "path": "claudedocs/runtime_logs/grasp_track/g0a_d362/d362_final_actual_physx_interface.png",
+        "pause_bridge": {
+          "after": {
+            "body_pos_bits": "000000000000000000000000fcebc92fe00c82ad97908f3d000000b20000a8b112faf93d36e6173efa58b63bec349e3e31a16e3e6b3b0f3cd076443e102c783ebaf5143c292e0c3ec69b7d3e8038183c4c8fa73d",
+            "body_quat_bits": "0000803f0000000000000000000000007bf47f3f05df3631631c0232af97993c655e1f3fd8091cbf6285b7be63b1abbe9a20523e9ff46bbe65232b3fb73a2d3f4de1113e6d5d2cbecdd02f3fb64e313f5e1b223e6ddf33bf0b402d3f05241cbee03324bca95758bfdad881bccfc7083f",
+            "counter": 500,
+            "joint_pos_bits": "4d9a193df58b0b3fe62cfc3ff08c3b3e230093b6b9e5842a",
+            "joint_vel_bits": "4570b138a97d13bd7e3440bcdaa79ebad357e937f326a22f",
+            "object_ang_vel_bits": "5fe9413e2df0a93d8510bbb9",
+            "object_lin_vel_bits": "5827af3a64685cbbb39b95b8",
+            "object_pos_bits": "b6e4b63ee126a43cfc01a03b",
+            "object_quat_bits": "a1f7323f7cf73cbe0ebf2e3f916cd93d",
+            "simulation_clock": {
+              "current_time": 2.509999943897128,
+              "current_time_step_index": 502
+            },
+            "timeline_playing": false,
+            "timeline_stopped": false,
+            "timeline_time": 0.029999999329447746
+          },
+          "before": {
+            "body_pos_bits": "000000000000000000000000fcebc92fe00c82ad97908f3d000000b20000a8b112faf93d36e6173efa58b63bec349e3e31a16e3e6b3b0f3cd076443e102c783ebaf5143c292e0c3ec69b7d3e8038183c4c8fa73d",
+            "body_quat_bits": "0000803f0000000000000000000000007bf47f3f05df3631631c0232af97993c655e1f3fd8091cbf6285b7be63b1abbe9a20523e9ff46bbe65232b3fb73a2d3f4de1113e6d5d2cbecdd02f3fb64e313f5e1b223e6ddf33bf0b402d3f05241cbee03324bca95758bfdad881bccfc7083f",
+            "counter": 500,
+            "joint_pos_bits": "4d9a193df58b0b3fe62cfc3ff08c3b3e230093b6b9e5842a",
+            "joint_vel_bits": "4570b138a97d13bd7e3440bcdaa79ebad357e937f326a22f",
+            "object_ang_vel_bits": "5fe9413e2df0a93d8510bbb9",
+            "object_lin_vel_bits": "5827af3a64685cbbb39b95b8",
+            "object_pos_bits": "b6e4b63ee126a43cfc01a03b",
+            "object_quat_bits": "a1f7323f7cf73cbe0ebf2e3f916cd93d",
+            "simulation_clock": {
+              "current_time": 2.509999943897128,
+              "current_time_step_index": 502
+            },
+            "timeline_playing": true,
+            "timeline_stopped": false,
+            "timeline_time": 0.029999999329447746
+          },
+          "checks": {
+            "clock_unchanged": true,
+            "commit_at_most_once": true,
+            "counter_unchanged": true,
+            "paused_not_stopped": true,
+            "state_bits_unchanged": true
+          },
+          "commit_count": 1,
+          "pass": true
+        },
+        "physics_unchanged": true,
+        "role": "final_primary"
+      }
+    },
+    "initial": {
+      "opposite": {
+        "camera_eye": [
+          0.49,
+          0.32,
+          0.28
+        ],
+        "camera_target": [
+          0.285,
+          0.0,
+          0.055
+        ],
+        "guard_after": {
+          "body_pos_bits": "000000000000000000000000fc7ab230c0f805ad98908f3d000000b20000a0b111faf93d627c173ef4dbb53bde5e9e3edba36e3e983e0f3c9019453e0264783ef018153c0eda0c3e1d097e3e1e7c183c98f1a83d",
+          "body_quat_bits": "0000803f0000000000000000000000007bf47f3fe4e03631631c02324199993ca9461f3f72f01bbfaadbb7be6209acbe5f5a533edd2a6dbe95082b3fd8222d3f2331133eb4aa2dbe4dbc2f3f5c3d313f5170233e17cc33bf882d2d3f316c1dbed0acc1be533a1ebf4df7133f4e21c03e",
+          "counter": 0,
+          "joint_pos_bits": "199c193d74fe0a3fa6fffb3f97623b3e000000005249c53f",
+          "joint_vel_bits": "000000000000000000000000000000000000000000000000",
+          "object_ang_vel_bits": "000000000000000000000000",
+          "object_lin_vel_bits": "000000000000000000000000",
+          "object_pos_bits": "9a99993e0000000053b0063d",
+          "object_quat_bits": "0000803f000000000000000000000000",
+          "simulation_clock": {
+            "current_time": 0.009999999776482582,
+            "current_time_step_index": 2
+          },
+          "timeline_playing": false,
+          "timeline_stopped": false,
+          "timeline_time": 0.029999999329447746
+        },
+        "guard_before": {
+          "body_pos_bits": "000000000000000000000000fc7ab230c0f805ad98908f3d000000b20000a0b111faf93d627c173ef4dbb53bde5e9e3edba36e3e983e0f3c9019453e0264783ef018153c0eda0c3e1d097e3e1e7c183c98f1a83d",
+          "body_quat_bits": "0000803f0000000000000000000000007bf47f3fe4e03631631c02324199993ca9461f3f72f01bbfaadbb7be6209acbe5f5a533edd2a6dbe95082b3fd8222d3f2331133eb4aa2dbe4dbc2f3f5c3d313f5170233e17cc33bf882d2d3f316c1dbed0acc1be533a1ebf4df7133f4e21c03e",
+          "counter": 0,
+          "joint_pos_bits": "199c193d74fe0a3fa6fffb3f97623b3e000000005249c53f",
+          "joint_vel_bits": "000000000000000000000000000000000000000000000000",
+          "object_ang_vel_bits": "000000000000000000000000",
+          "object_lin_vel_bits": "000000000000000000000000",
+          "object_pos_bits": "9a99993e0000000053b0063d",
+          "object_quat_bits": "0000803f000000000000000000000000",
+          "simulation_clock": {
+            "current_time": 0.009999999776482582,
+            "current_time_step_index": 2
+          },
+          "timeline_playing": false,
+          "timeline_stopped": false,
+          "timeline_time": 0.029999999329447746
+        },
+        "path": "claudedocs/runtime_logs/grasp_track/g0a_d362/d362_initial_open_actual_physx_interface_opposite.png",
+        "pause_bridge": {
+          "after": {
+            "body_pos_bits": "000000000000000000000000fc7ab230c0f805ad98908f3d000000b20000a0b111faf93d627c173ef4dbb53bde5e9e3edba36e3e983e0f3c9019453e0264783ef018153c0eda0c3e1d097e3e1e7c183c98f1a83d",
+            "body_quat_bits": "0000803f0000000000000000000000007bf47f3fe4e03631631c02324199993ca9461f3f72f01bbfaadbb7be6209acbe5f5a533edd2a6dbe95082b3fd8222d3f2331133eb4aa2dbe4dbc2f3f5c3d313f5170233e17cc33bf882d2d3f316c1dbed0acc1be533a1ebf4df7133f4e21c03e",
+            "counter": 0,
+            "joint_pos_bits": "199c193d74fe0a3fa6fffb3f97623b3e000000005249c53f",
+            "joint_vel_bits": "000000000000000000000000000000000000000000000000",
+            "object_ang_vel_bits": "000000000000000000000000",
+            "object_lin_vel_bits": "000000000000000000000000",
+            "object_pos_bits": "9a99993e0000000053b0063d",
+            "object_quat_bits": "0000803f000000000000000000000000",
+            "simulation_clock": {
+              "current_time": 0.009999999776482582,
+              "current_time_step_index": 2
+            },
+            "timeline_playing": false,
+            "timeline_stopped": false,
+            "timeline_time": 0.029999999329447746
+          },
+          "before": {
+            "body_pos_bits": "000000000000000000000000fc7ab230c0f805ad98908f3d000000b20000a0b111faf93d627c173ef4dbb53bde5e9e3edba36e3e983e0f3c9019453e0264783ef018153c0eda0c3e1d097e3e1e7c183c98f1a83d",
+            "body_quat_bits": "0000803f0000000000000000000000007bf47f3fe4e03631631c02324199993ca9461f3f72f01bbfaadbb7be6209acbe5f5a533edd2a6dbe95082b3fd8222d3f2331133eb4aa2dbe4dbc2f3f5c3d313f5170233e17cc33bf882d2d3f316c1dbed0acc1be533a1ebf4df7133f4e21c03e",
+            "counter": 0,
+            "joint_pos_bits": "199c193d74fe0a3fa6fffb3f97623b3e000000005249c53f",
+            "joint_vel_bits": "000000000000000000000000000000000000000000000000",
+            "object_ang_vel_bits": "000000000000000000000000",
+            "object_lin_vel_bits": "000000000000000000000000",
+            "object_pos_bits": "9a99993e0000000053b0063d",
+            "object_quat_bits": "0000803f000000000000000000000000",
+            "simulation_clock": {
+              "current_time": 0.009999999776482582,
+              "current_time_step_index": 2
+            },
+            "timeline_playing": false,
+            "timeline_stopped": false,
+            "timeline_time": 0.029999999329447746
+          },
+          "checks": {
+            "clock_unchanged": true,
+            "commit_at_most_once": true,
+            "counter_unchanged": true,
+            "paused_not_stopped": true,
+            "state_bits_unchanged": true
+          },
+          "commit_count": 0,
+          "pass": true
+        },
+        "physics_unchanged": true,
+        "role": "initial_opposite"
+      },
+      "primary": {
+        "camera_eye": [
+          0.49,
+          -0.32,
+          0.28
+        ],
+        "camera_target": [
+          0.285,
+          0.0,
+          0.055
+        ],
+        "guard_after": {
+          "body_pos_bits": "000000000000000000000000fc7ab230c0f805ad98908f3d000000b20000a0b111faf93d627c173ef4dbb53bde5e9e3edba36e3e983e0f3c9019453e0264783ef018153c0eda0c3e1d097e3e1e7c183c98f1a83d",
+          "body_quat_bits": "0000803f0000000000000000000000007bf47f3fe4e03631631c02324199993ca9461f3f72f01bbfaadbb7be6209acbe5f5a533edd2a6dbe95082b3fd8222d3f2331133eb4aa2dbe4dbc2f3f5c3d313f5170233e17cc33bf882d2d3f316c1dbed0acc1be533a1ebf4df7133f4e21c03e",
+          "counter": 0,
+          "joint_pos_bits": "199c193d74fe0a3fa6fffb3f97623b3e000000005249c53f",
+          "joint_vel_bits": "000000000000000000000000000000000000000000000000",
+          "object_ang_vel_bits": "000000000000000000000000",
+          "object_lin_vel_bits": "000000000000000000000000",
+          "object_pos_bits": "9a99993e0000000053b0063d",
+          "object_quat_bits": "0000803f000000000000000000000000",
+          "simulation_clock": {
+            "current_time": 0.009999999776482582,
+            "current_time_step_index": 2
+          },
+          "timeline_playing": false,
+          "timeline_stopped": false,
+          "timeline_time": 0.029999999329447746
+        },
+        "guard_before": {
+          "body_pos_bits": "000000000000000000000000fc7ab230c0f805ad98908f3d000000b20000a0b111faf93d627c173ef4dbb53bde5e9e3edba36e3e983e0f3c9019453e0264783ef018153c0eda0c3e1d097e3e1e7c183c98f1a83d",
+          "body_quat_bits": "0000803f0000000000000000000000007bf47f3fe4e03631631c02324199993ca9461f3f72f01bbfaadbb7be6209acbe5f5a533edd2a6dbe95082b3fd8222d3f2331133eb4aa2dbe4dbc2f3f5c3d313f5170233e17cc33bf882d2d3f316c1dbed0acc1be533a1ebf4df7133f4e21c03e",
+          "counter": 0,
+          "joint_pos_bits": "199c193d74fe0a3fa6fffb3f97623b3e000000005249c53f",
+          "joint_vel_bits": "000000000000000000000000000000000000000000000000",
+          "object_ang_vel_bits": "000000000000000000000000",
+          "object_lin_vel_bits": "000000000000000000000000",
+          "object_pos_bits": "9a99993e0000000053b0063d",
+          "object_quat_bits": "0000803f000000000000000000000000",
+          "simulation_clock": {
+            "current_time": 0.009999999776482582,
+            "current_time_step_index": 2
+          },
+          "timeline_playing": false,
+          "timeline_stopped": false,
+          "timeline_time": 0.029999999329447746
+        },
+        "path": "claudedocs/runtime_logs/grasp_track/g0a_d362/d362_initial_open_actual_physx_interface_primary.png",
+        "pause_bridge": {
+          "after": {
+            "body_pos_bits": "000000000000000000000000fc7ab230c0f805ad98908f3d000000b20000a0b111faf93d627c173ef4dbb53bde5e9e3edba36e3e983e0f3c9019453e0264783ef018153c0eda0c3e1d097e3e1e7c183c98f1a83d",
+            "body_quat_bits": "0000803f0000000000000000000000007bf47f3fe4e03631631c02324199993ca9461f3f72f01bbfaadbb7be6209acbe5f5a533edd2a6dbe95082b3fd8222d3f2331133eb4aa2dbe4dbc2f3f5c3d313f5170233e17cc33bf882d2d3f316c1dbed0acc1be533a1ebf4df7133f4e21c03e",
+            "counter": 0,
+            "joint_pos_bits": "199c193d74fe0a3fa6fffb3f97623b3e000000005249c53f",
+            "joint_vel_bits": "000000000000000000000000000000000000000000000000",
+            "object_ang_vel_bits": "000000000000000000000000",
+            "object_lin_vel_bits": "000000000000000000000000",
+            "object_pos_bits": "9a99993e0000000053b0063d",
+            "object_quat_bits": "0000803f000000000000000000000000",
+            "simulation_clock": {
+              "current_time": 0.009999999776482582,
+              "current_time_step_index": 2
+            },
+            "timeline_playing": false,
+            "timeline_stopped": false,
+            "timeline_time": 0.029999999329447746
+          },
+          "before": {
+            "body_pos_bits": "000000000000000000000000fc7ab230c0f805ad98908f3d000000b20000a0b111faf93d627c173ef4dbb53bde5e9e3edba36e3e983e0f3c9019453e0264783ef018153c0eda0c3e1d097e3e1e7c183c98f1a83d",
+            "body_quat_bits": "0000803f0000000000000000000000007bf47f3fe4e03631631c02324199993ca9461f3f72f01bbfaadbb7be6209acbe5f5a533edd2a6dbe95082b3fd8222d3f2331133eb4aa2dbe4dbc2f3f5c3d313f5170233e17cc33bf882d2d3f316c1dbed0acc1be533a1ebf4df7133f4e21c03e",
+            "counter": 0,
+            "joint_pos_bits": "199c193d74fe0a3fa6fffb3f97623b3e000000005249c53f",
+            "joint_vel_bits": "000000000000000000000000000000000000000000000000",
+            "object_ang_vel_bits": "000000000000000000000000",
+            "object_lin_vel_bits": "000000000000000000000000",
+            "object_pos_bits": "9a99993e0000000053b0063d",
+            "object_quat_bits": "0000803f000000000000000000000000",
+            "simulation_clock": {
+              "current_time": 0.009999999776482582,
+              "current_time_step_index": 2
+            },
+            "timeline_playing": false,
+            "timeline_stopped": false,
+            "timeline_time": 0.029999999329447746
+          },
+          "checks": {
+            "clock_unchanged": true,
+            "commit_at_most_once": true,
+            "counter_unchanged": true,
+            "paused_not_stopped": true,
+            "state_bits_unchanged": true
+          },
+          "commit_count": 0,
+          "pass": true
+        },
+        "physics_unchanged": true,
+        "role": "initial_primary"
+      }
+    },
+    "motion": {
+      "opposite": {
+        "camera_eye": [
+          0.49,
+          0.32,
+          0.28
+        ],
+        "camera_target": [
+          0.285,
+          0.0,
+          0.055
+        ],
+        "guard_after": {
+          "body_pos_bits": "00000000000000000000000010d4d4ae406f0d2c97908f3d000000b20000943112faf93d6f30153ee560843b4c499f3e1dde6d3edb10d33b7e09483ec5ab773ecec3db3b32cc0f3e3f5e7d3e841fe03b72d8ae3d",
+          "body_quat_bits": "0000803f000000000000000000000000b4f97f3f003507310b1f02328c1e633c82521e3f2fd41bbf663bb8becc85afbee7135b3e751f6ebe56f32a3ff2882c3ff2f7163e198a2abe47ed2f3f820a313fe2e4223e500733bfb7ef2d3f739e1ebe23166cbe78f645bf5742b03e0abcf53e",
+          "counter": 243,
+          "joint_pos_bits": "b320e33c87e0073fb6f2fb3f375a473e84b393ba0dba5d3f",
+          "joint_vel_bits": "1725f2bea67047bdf334adbca26d9abf7043b53f4aff12c0",
+          "object_ang_vel_bits": "376f3cbfb9f6f63ea94a81be",
+          "object_lin_vel_bits": "f0c5a33c0a15c73cb54a673c",
+          "object_pos_bits": "14df993e45f9ba39569e073d",
+          "object_quat_bits": "54fe7f3fe22783bb2a92c13b44ad6938",
+          "simulation_clock": {
+            "current_time": 1.2249999726191163,
+            "current_time_step_index": 245
+          },
+          "timeline_playing": false,
+          "timeline_stopped": false,
+          "timeline_time": 0.029999999329447746
+        },
+        "guard_before": {
+          "body_pos_bits": "00000000000000000000000010d4d4ae406f0d2c97908f3d000000b20000943112faf93d6f30153ee560843b4c499f3e1dde6d3edb10d33b7e09483ec5ab773ecec3db3b32cc0f3e3f5e7d3e841fe03b72d8ae3d",
+          "body_quat_bits": "0000803f000000000000000000000000b4f97f3f003507310b1f02328c1e633c82521e3f2fd41bbf663bb8becc85afbee7135b3e751f6ebe56f32a3ff2882c3ff2f7163e198a2abe47ed2f3f820a313fe2e4223e500733bfb7ef2d3f739e1ebe23166cbe78f645bf5742b03e0abcf53e",
+          "counter": 243,
+          "joint_pos_bits": "b320e33c87e0073fb6f2fb3f375a473e84b393ba0dba5d3f",
+          "joint_vel_bits": "1725f2bea67047bdf334adbca26d9abf7043b53f4aff12c0",
+          "object_ang_vel_bits": "376f3cbfb9f6f63ea94a81be",
+          "object_lin_vel_bits": "f0c5a33c0a15c73cb54a673c",
+          "object_pos_bits": "14df993e45f9ba39569e073d",
+          "object_quat_bits": "54fe7f3fe22783bb2a92c13b44ad6938",
+          "simulation_clock": {
+            "current_time": 1.2249999726191163,
+            "current_time_step_index": 245
+          },
+          "timeline_playing": false,
+          "timeline_stopped": false,
+          "timeline_time": 0.029999999329447746
+        },
+        "path": "claudedocs/runtime_logs/grasp_track/g0a_d362/d362_motion_confirmation_actual_physx_interface_opposite.png",
+        "pause_bridge": {
+          "after": {
+            "body_pos_bits": "00000000000000000000000010d4d4ae406f0d2c97908f3d000000b20000943112faf93d6f30153ee560843b4c499f3e1dde6d3edb10d33b7e09483ec5ab773ecec3db3b32cc0f3e3f5e7d3e841fe03b72d8ae3d",
+            "body_quat_bits": "0000803f000000000000000000000000b4f97f3f003507310b1f02328c1e633c82521e3f2fd41bbf663bb8becc85afbee7135b3e751f6ebe56f32a3ff2882c3ff2f7163e198a2abe47ed2f3f820a313fe2e4223e500733bfb7ef2d3f739e1ebe23166cbe78f645bf5742b03e0abcf53e",
+            "counter": 243,
+            "joint_pos_bits": "b320e33c87e0073fb6f2fb3f375a473e84b393ba0dba5d3f",
+            "joint_vel_bits": "1725f2bea67047bdf334adbca26d9abf7043b53f4aff12c0",
+            "object_ang_vel_bits": "376f3cbfb9f6f63ea94a81be",
+            "object_lin_vel_bits": "f0c5a33c0a15c73cb54a673c",
+            "object_pos_bits": "14df993e45f9ba39569e073d",
+            "object_quat_bits": "54fe7f3fe22783bb2a92c13b44ad6938",
+            "simulation_clock": {
+              "current_time": 1.2249999726191163,
+              "current_time_step_index": 245
+            },
+            "timeline_playing": false,
+            "timeline_stopped": false,
+            "timeline_time": 0.029999999329447746
+          },
+          "before": {
+            "body_pos_bits": "00000000000000000000000010d4d4ae406f0d2c97908f3d000000b20000943112faf93d6f30153ee560843b4c499f3e1dde6d3edb10d33b7e09483ec5ab773ecec3db3b32cc0f3e3f5e7d3e841fe03b72d8ae3d",
+            "body_quat_bits": "0000803f000000000000000000000000b4f97f3f003507310b1f02328c1e633c82521e3f2fd41bbf663bb8becc85afbee7135b3e751f6ebe56f32a3ff2882c3ff2f7163e198a2abe47ed2f3f820a313fe2e4223e500733bfb7ef2d3f739e1ebe23166cbe78f645bf5742b03e0abcf53e",
+            "counter": 243,
+            "joint_pos_bits": "b320e33c87e0073fb6f2fb3f375a473e84b393ba0dba5d3f",
+            "joint_vel_bits": "1725f2bea67047bdf334adbca26d9abf7043b53f4aff12c0",
+            "object_ang_vel_bits": "376f3cbfb9f6f63ea94a81be",
+            "object_lin_vel_bits": "f0c5a33c0a15c73cb54a673c",
+            "object_pos_bits": "14df993e45f9ba39569e073d",
+            "object_quat_bits": "54fe7f3fe22783bb2a92c13b44ad6938",
+            "simulation_clock": {
+              "current_time": 1.2249999726191163,
+              "current_time_step_index": 245
+            },
+            "timeline_playing": false,
+            "timeline_stopped": false,
+            "timeline_time": 0.029999999329447746
+          },
+          "checks": {
+            "clock_unchanged": true,
+            "commit_at_most_once": true,
+            "counter_unchanged": true,
+            "paused_not_stopped": true,
+            "state_bits_unchanged": true
+          },
+          "commit_count": 0,
+          "pass": true
+        },
+        "physics_unchanged": true,
+        "role": "motion_opposite"
+      },
+      "primary": {
+        "camera_eye": [
+          0.49,
+          -0.32,
+          0.28
+        ],
+        "camera_target": [
+          0.285,
+          0.0,
+          0.055
+        ],
+        "guard_after": {
+          "body_pos_bits": "00000000000000000000000010d4d4ae406f0d2c97908f3d000000b20000943112faf93d6f30153ee560843b4c499f3e1dde6d3edb10d33b7e09483ec5ab773ecec3db3b32cc0f3e3f5e7d3e841fe03b72d8ae3d",
+          "body_quat_bits": "0000803f000000000000000000000000b4f97f3f003507310b1f02328c1e633c82521e3f2fd41bbf663bb8becc85afbee7135b3e751f6ebe56f32a3ff2882c3ff2f7163e198a2abe47ed2f3f820a313fe2e4223e500733bfb7ef2d3f739e1ebe23166cbe78f645bf5742b03e0abcf53e",
+          "counter": 243,
+          "joint_pos_bits": "b320e33c87e0073fb6f2fb3f375a473e84b393ba0dba5d3f",
+          "joint_vel_bits": "1725f2bea67047bdf334adbca26d9abf7043b53f4aff12c0",
+          "object_ang_vel_bits": "376f3cbfb9f6f63ea94a81be",
+          "object_lin_vel_bits": "f0c5a33c0a15c73cb54a673c",
+          "object_pos_bits": "14df993e45f9ba39569e073d",
+          "object_quat_bits": "54fe7f3fe22783bb2a92c13b44ad6938",
+          "simulation_clock": {
+            "current_time": 1.2249999726191163,
+            "current_time_step_index": 245
+          },
+          "timeline_playing": false,
+          "timeline_stopped": false,
+          "timeline_time": 0.029999999329447746
+        },
+        "guard_before": {
+          "body_pos_bits": "00000000000000000000000010d4d4ae406f0d2c97908f3d000000b20000943112faf93d6f30153ee560843b4c499f3e1dde6d3edb10d33b7e09483ec5ab773ecec3db3b32cc0f3e3f5e7d3e841fe03b72d8ae3d",
+          "body_quat_bits": "0000803f000000000000000000000000b4f97f3f003507310b1f02328c1e633c82521e3f2fd41bbf663bb8becc85afbee7135b3e751f6ebe56f32a3ff2882c3ff2f7163e198a2abe47ed2f3f820a313fe2e4223e500733bfb7ef2d3f739e1ebe23166cbe78f645bf5742b03e0abcf53e",
+          "counter": 243,
+          "joint_pos_bits": "b320e33c87e0073fb6f2fb3f375a473e84b393ba0dba5d3f",
+          "joint_vel_bits": "1725f2bea67047bdf334adbca26d9abf7043b53f4aff12c0",
+          "object_ang_vel_bits": "376f3cbfb9f6f63ea94a81be",
+          "object_lin_vel_bits": "f0c5a33c0a15c73cb54a673c",
+          "object_pos_bits": "14df993e45f9ba39569e073d",
+          "object_quat_bits": "54fe7f3fe22783bb2a92c13b44ad6938",
+          "simulation_clock": {
+            "current_time": 1.2249999726191163,
+            "current_time_step_index": 245
+          },
+          "timeline_playing": false,
+          "timeline_stopped": false,
+          "timeline_time": 0.029999999329447746
+        },
+        "path": "claudedocs/runtime_logs/grasp_track/g0a_d362/d362_motion_confirmation_actual_physx_interface.png",
+        "pause_bridge": {
+          "after": {
+            "body_pos_bits": "00000000000000000000000010d4d4ae406f0d2c97908f3d000000b20000943112faf93d6f30153ee560843b4c499f3e1dde6d3edb10d33b7e09483ec5ab773ecec3db3b32cc0f3e3f5e7d3e841fe03b72d8ae3d",
+            "body_quat_bits": "0000803f000000000000000000000000b4f97f3f003507310b1f02328c1e633c82521e3f2fd41bbf663bb8becc85afbee7135b3e751f6ebe56f32a3ff2882c3ff2f7163e198a2abe47ed2f3f820a313fe2e4223e500733bfb7ef2d3f739e1ebe23166cbe78f645bf5742b03e0abcf53e",
+            "counter": 243,
+            "joint_pos_bits": "b320e33c87e0073fb6f2fb3f375a473e84b393ba0dba5d3f",
+            "joint_vel_bits": "1725f2bea67047bdf334adbca26d9abf7043b53f4aff12c0",
+            "object_ang_vel_bits": "376f3cbfb9f6f63ea94a81be",
+            "object_lin_vel_bits": "f0c5a33c0a15c73cb54a673c",
+            "object_pos_bits": "14df993e45f9ba39569e073d",
+            "object_quat_bits": "54fe7f3fe22783bb2a92c13b44ad6938",
+            "simulation_clock": {
+              "current_time": 1.2249999726191163,
+              "current_time_step_index": 245
+            },
+            "timeline_playing": false,
+            "timeline_stopped": false,
+            "timeline_time": 0.029999999329447746
+          },
+          "before": {
+            "body_pos_bits": "00000000000000000000000010d4d4ae406f0d2c97908f3d000000b20000943112faf93d6f30153ee560843b4c499f3e1dde6d3edb10d33b7e09483ec5ab773ecec3db3b32cc0f3e3f5e7d3e841fe03b72d8ae3d",
+            "body_quat_bits": "0000803f000000000000000000000000b4f97f3f003507310b1f02328c1e633c82521e3f2fd41bbf663bb8becc85afbee7135b3e751f6ebe56f32a3ff2882c3ff2f7163e198a2abe47ed2f3f820a313fe2e4223e500733bfb7ef2d3f739e1ebe23166cbe78f645bf5742b03e0abcf53e",
+            "counter": 243,
+            "joint_pos_bits": "b320e33c87e0073fb6f2fb3f375a473e84b393ba0dba5d3f",
+            "joint_vel_bits": "1725f2bea67047bdf334adbca26d9abf7043b53f4aff12c0",
+            "object_ang_vel_bits": "376f3cbfb9f6f63ea94a81be",
+            "object_lin_vel_bits": "f0c5a33c0a15c73cb54a673c",
+            "object_pos_bits": "14df993e45f9ba39569e073d",
+            "object_quat_bits": "54fe7f3fe22783bb2a92c13b44ad6938",
+            "simulation_clock": {
+              "current_time": 1.2249999726191163,
+              "current_time_step_index": 245
+            },
+            "timeline_playing": true,
+            "timeline_stopped": false,
+            "timeline_time": 0.029999999329447746
+          },
+          "checks": {
+            "clock_unchanged": true,
+            "commit_at_most_once": true,
+            "counter_unchanged": true,
+            "paused_not_stopped": true,
+            "state_bits_unchanged": true
+          },
+          "commit_count": 1,
+          "pass": true
+        },
+        "physics_unchanged": true,
+        "role": "motion_primary"
+      }
+    },
+    "start": {
+      "opposite": {
+        "camera_eye": [
+          0.49,
+          0.32,
+          0.28
+        ],
+        "camera_target": [
+          0.285,
+          0.0,
+          0.055
+        ],
+        "guard_after": {
+          "body_pos_bits": "000000000000000000000000fcebc92fe00c82ad97908f3d000000b20000a0b011faf93da8e6173ea259b63bbe349e3e63a16e3e883b0f3c4676443e162e783eebf6143cee2d0c3ea29f7d3e443a183c318fa73d",
+          "body_quat_bits": "0000803f0000000000000000000000007bf47f3f05df3631631c0232af97993c7e5e1f3ff4091cbf0685b7be05b1abbedd1f523ee4f36bbe76232b3fc53a2d3fd1ec113ed9682cbe1bd02f3f1e4e313feb26223eebde33bf413f2d3f6c2f1cbea939c2beef0c1ebf55cc133faeacc03e",
+          "counter": 200,
+          "joint_pos_bits": "559a193d898c0b3fe02cfc3f77693b3e58663cb70849c53f",
+          "joint_vel_bits": "2a0b2538cc7d14bd28394ebc4b62203ac8833c39aec52439",
+          "object_ang_vel_bits": "6f6743badb841ebd3648123c",
+          "object_lin_vel_bits": "162f21bb9c42ea3909b336ba",
+          "object_pos_bits": "d799993e9de4bd35ecb0063d",
+          "object_quat_bits": "ffff7f3fd67821b7c21f9637e38de334",
+          "simulation_clock": {
+            "current_time": 1.0099999774247408,
+            "current_time_step_index": 202
+          },
+          "timeline_playing": false,
+          "timeline_stopped": false,
+          "timeline_time": 0.029999999329447746
+        },
+        "guard_before": {
+          "body_pos_bits": "000000000000000000000000fcebc92fe00c82ad97908f3d000000b20000a0b011faf93da8e6173ea259b63bbe349e3e63a16e3e883b0f3c4676443e162e783eebf6143cee2d0c3ea29f7d3e443a183c318fa73d",
+          "body_quat_bits": "0000803f0000000000000000000000007bf47f3f05df3631631c0232af97993c7e5e1f3ff4091cbf0685b7be05b1abbedd1f523ee4f36bbe76232b3fc53a2d3fd1ec113ed9682cbe1bd02f3f1e4e313feb26223eebde33bf413f2d3f6c2f1cbea939c2beef0c1ebf55cc133faeacc03e",
+          "counter": 200,
+          "joint_pos_bits": "559a193d898c0b3fe02cfc3f77693b3e58663cb70849c53f",
+          "joint_vel_bits": "2a0b2538cc7d14bd28394ebc4b62203ac8833c39aec52439",
+          "object_ang_vel_bits": "6f6743badb841ebd3648123c",
+          "object_lin_vel_bits": "162f21bb9c42ea3909b336ba",
+          "object_pos_bits": "d799993e9de4bd35ecb0063d",
+          "object_quat_bits": "ffff7f3fd67821b7c21f9637e38de334",
+          "simulation_clock": {
+            "current_time": 1.0099999774247408,
+            "current_time_step_index": 202
+          },
+          "timeline_playing": false,
+          "timeline_stopped": false,
+          "timeline_time": 0.029999999329447746
+        },
+        "path": "claudedocs/runtime_logs/grasp_track/g0a_d362/d362_open_precommand_actual_physx_interface_opposite.png",
+        "pause_bridge": {
+          "after": {
+            "body_pos_bits": "000000000000000000000000fcebc92fe00c82ad97908f3d000000b20000a0b011faf93da8e6173ea259b63bbe349e3e63a16e3e883b0f3c4676443e162e783eebf6143cee2d0c3ea29f7d3e443a183c318fa73d",
+            "body_quat_bits": "0000803f0000000000000000000000007bf47f3f05df3631631c0232af97993c7e5e1f3ff4091cbf0685b7be05b1abbedd1f523ee4f36bbe76232b3fc53a2d3fd1ec113ed9682cbe1bd02f3f1e4e313feb26223eebde33bf413f2d3f6c2f1cbea939c2beef0c1ebf55cc133faeacc03e",
+            "counter": 200,
+            "joint_pos_bits": "559a193d898c0b3fe02cfc3f77693b3e58663cb70849c53f",
+            "joint_vel_bits": "2a0b2538cc7d14bd28394ebc4b62203ac8833c39aec52439",
+            "object_ang_vel_bits": "6f6743badb841ebd3648123c",
+            "object_lin_vel_bits": "162f21bb9c42ea3909b336ba",
+            "object_pos_bits": "d799993e9de4bd35ecb0063d",
+            "object_quat_bits": "ffff7f3fd67821b7c21f9637e38de334",
+            "simulation_clock": {
+              "current_time": 1.0099999774247408,
+              "current_time_step_index": 202
+            },
+            "timeline_playing": false,
+            "timeline_stopped": false,
+            "timeline_time": 0.029999999329447746
+          },
+          "before": {
+            "body_pos_bits": "000000000000000000000000fcebc92fe00c82ad97908f3d000000b20000a0b011faf93da8e6173ea259b63bbe349e3e63a16e3e883b0f3c4676443e162e783eebf6143cee2d0c3ea29f7d3e443a183c318fa73d",
+            "body_quat_bits": "0000803f0000000000000000000000007bf47f3f05df3631631c0232af97993c7e5e1f3ff4091cbf0685b7be05b1abbedd1f523ee4f36bbe76232b3fc53a2d3fd1ec113ed9682cbe1bd02f3f1e4e313feb26223eebde33bf413f2d3f6c2f1cbea939c2beef0c1ebf55cc133faeacc03e",
+            "counter": 200,
+            "joint_pos_bits": "559a193d898c0b3fe02cfc3f77693b3e58663cb70849c53f",
+            "joint_vel_bits": "2a0b2538cc7d14bd28394ebc4b62203ac8833c39aec52439",
+            "object_ang_vel_bits": "6f6743badb841ebd3648123c",
+            "object_lin_vel_bits": "162f21bb9c42ea3909b336ba",
+            "object_pos_bits": "d799993e9de4bd35ecb0063d",
+            "object_quat_bits": "ffff7f3fd67821b7c21f9637e38de334",
+            "simulation_clock": {
+              "current_time": 1.0099999774247408,
+              "current_time_step_index": 202
+            },
+            "timeline_playing": false,
+            "timeline_stopped": false,
+            "timeline_time": 0.029999999329447746
+          },
+          "checks": {
+            "clock_unchanged": true,
+            "commit_at_most_once": true,
+            "counter_unchanged": true,
+            "paused_not_stopped": true,
+            "state_bits_unchanged": true
+          },
+          "commit_count": 0,
+          "pass": true
+        },
+        "physics_unchanged": true,
+        "role": "start_opposite"
+      },
+      "primary": {
+        "camera_eye": [
+          0.49,
+          -0.32,
+          0.28
+        ],
+        "camera_target": [
+          0.285,
+          0.0,
+          0.055
+        ],
+        "guard_after": {
+          "body_pos_bits": "000000000000000000000000fcebc92fe00c82ad97908f3d000000b20000a0b011faf93da8e6173ea259b63bbe349e3e63a16e3e883b0f3c4676443e162e783eebf6143cee2d0c3ea29f7d3e443a183c318fa73d",
+          "body_quat_bits": "0000803f0000000000000000000000007bf47f3f05df3631631c0232af97993c7e5e1f3ff4091cbf0685b7be05b1abbedd1f523ee4f36bbe76232b3fc53a2d3fd1ec113ed9682cbe1bd02f3f1e4e313feb26223eebde33bf413f2d3f6c2f1cbea939c2beef0c1ebf55cc133faeacc03e",
+          "counter": 200,
+          "joint_pos_bits": "559a193d898c0b3fe02cfc3f77693b3e58663cb70849c53f",
+          "joint_vel_bits": "2a0b2538cc7d14bd28394ebc4b62203ac8833c39aec52439",
+          "object_ang_vel_bits": "6f6743badb841ebd3648123c",
+          "object_lin_vel_bits": "162f21bb9c42ea3909b336ba",
+          "object_pos_bits": "d799993e9de4bd35ecb0063d",
+          "object_quat_bits": "ffff7f3fd67821b7c21f9637e38de334",
+          "simulation_clock": {
+            "current_time": 1.0099999774247408,
+            "current_time_step_index": 202
+          },
+          "timeline_playing": false,
+          "timeline_stopped": false,
+          "timeline_time": 0.029999999329447746
+        },
+        "guard_before": {
+          "body_pos_bits": "000000000000000000000000fcebc92fe00c82ad97908f3d000000b20000a0b011faf93da8e6173ea259b63bbe349e3e63a16e3e883b0f3c4676443e162e783eebf6143cee2d0c3ea29f7d3e443a183c318fa73d",
+          "body_quat_bits": "0000803f0000000000000000000000007bf47f3f05df3631631c0232af97993c7e5e1f3ff4091cbf0685b7be05b1abbedd1f523ee4f36bbe76232b3fc53a2d3fd1ec113ed9682cbe1bd02f3f1e4e313feb26223eebde33bf413f2d3f6c2f1cbea939c2beef0c1ebf55cc133faeacc03e",
+          "counter": 200,
+          "joint_pos_bits": "559a193d898c0b3fe02cfc3f77693b3e58663cb70849c53f",
+          "joint_vel_bits": "2a0b2538cc7d14bd28394ebc4b62203ac8833c39aec52439",
+          "object_ang_vel_bits": "6f6743badb841ebd3648123c",
+          "object_lin_vel_bits": "162f21bb9c42ea3909b336ba",
+          "object_pos_bits": "d799993e9de4bd35ecb0063d",
+          "object_quat_bits": "ffff7f3fd67821b7c21f9637e38de334",
+          "simulation_clock": {
+            "current_time": 1.0099999774247408,
+            "current_time_step_index": 202
+          },
+          "timeline_playing": false,
+          "timeline_stopped": false,
+          "timeline_time": 0.029999999329447746
+        },
+        "path": "claudedocs/runtime_logs/grasp_track/g0a_d362/d362_open_precommand_actual_physx_interface.png",
+        "pause_bridge": {
+          "after": {
+            "body_pos_bits": "000000000000000000000000fcebc92fe00c82ad97908f3d000000b20000a0b011faf93da8e6173ea259b63bbe349e3e63a16e3e883b0f3c4676443e162e783eebf6143cee2d0c3ea29f7d3e443a183c318fa73d",
+            "body_quat_bits": "0000803f0000000000000000000000007bf47f3f05df3631631c0232af97993c7e5e1f3ff4091cbf0685b7be05b1abbedd1f523ee4f36bbe76232b3fc53a2d3fd1ec113ed9682cbe1bd02f3f1e4e313feb26223eebde33bf413f2d3f6c2f1cbea939c2beef0c1ebf55cc133faeacc03e",
+            "counter": 200,
+            "joint_pos_bits": "559a193d898c0b3fe02cfc3f77693b3e58663cb70849c53f",
+            "joint_vel_bits": "2a0b2538cc7d14bd28394ebc4b62203ac8833c39aec52439",
+            "object_ang_vel_bits": "6f6743badb841ebd3648123c",
+            "object_lin_vel_bits": "162f21bb9c42ea3909b336ba",
+            "object_pos_bits": "d799993e9de4bd35ecb0063d",
+            "object_quat_bits": "ffff7f3fd67821b7c21f9637e38de334",
+            "simulation_clock": {
+              "current_time": 1.0099999774247408,
+              "current_time_step_index": 202
+            },
+            "timeline_playing": false,
+            "timeline_stopped": false,
+            "timeline_time": 0.029999999329447746
+          },
+          "before": {
+            "body_pos_bits": "000000000000000000000000fcebc92fe00c82ad97908f3d000000b20000a0b011faf93da8e6173ea259b63bbe349e3e63a16e3e883b0f3c4676443e162e783eebf6143cee2d0c3ea29f7d3e443a183c318fa73d",
+            "body_quat_bits": "0000803f0000000000000000000000007bf47f3f05df3631631c0232af97993c7e5e1f3ff4091cbf0685b7be05b1abbedd1f523ee4f36bbe76232b3fc53a2d3fd1ec113ed9682cbe1bd02f3f1e4e313feb26223eebde33bf413f2d3f6c2f1cbea939c2beef0c1ebf55cc133faeacc03e",
+            "counter": 200,
+            "joint_pos_bits": "559a193d898c0b3fe02cfc3f77693b3e58663cb70849c53f",
+            "joint_vel_bits": "2a0b2538cc7d14bd28394ebc4b62203ac8833c39aec52439",
+            "object_ang_vel_bits": "6f6743badb841ebd3648123c",
+            "object_lin_vel_bits": "162f21bb9c42ea3909b336ba",
+            "object_pos_bits": "d799993e9de4bd35ecb0063d",
+            "object_quat_bits": "ffff7f3fd67821b7c21f9637e38de334",
+            "simulation_clock": {
+              "current_time": 1.0099999774247408,
+              "current_time_step_index": 202
+            },
+            "timeline_playing": true,
+            "timeline_stopped": false,
+            "timeline_time": 0.029999999329447746
+          },
+          "checks": {
+            "clock_unchanged": true,
+            "commit_at_most_once": true,
+            "counter_unchanged": true,
+            "paused_not_stopped": true,
+            "state_bits_unchanged": true
+          },
+          "commit_count": 1,
+          "pass": true
+        },
+        "physics_unchanged": true,
+        "role": "start_primary"
+      }
+    }
+  },
+  "case": "g0a_d362",
+  "closure": {
+    "body_attribution_semantics": "gripper_link is moving jaw authority; link5 is fixed-jaw/other-body evidence only",
+    "cap_rim_or_barrel_order": null,
+    "d354_static_first_overlap_q5_reached_diagnostic": true,
+    "exact_face_or_manifold": null,
+    "final_q5_actual_rad": 2.3607312393987556e-13,
+    "first_contact_step_by_filter": {
+      "gripper_link": 31,
+      "link4": -1,
+      "link5": 45
+    },
+    "first_fixed_link5_contact_step": 45,
+    "first_jaw_contact_label": "gripper_link",
+    "first_jaw_contact_step": 31,
+    "first_moving_gripper_contact_step": 31,
+    "first_object_motion_step": 41,
+    "first_other_robot_body_contact_step": 45,
+    "first_q5_closed_direction_response_step": 0,
+    "fixed_base_root_contract_pass": true,
+    "force_closure_or_grasp": null,
+    "full_300_step_observation_horizon": true,
+    "g0a_pass": false,
+    "jaw_contact_point_finite": true,
+    "max_object_absolute_tilt_deg": 90.02567713668601,
+    "max_object_disp_xy_mm": 60.61899778989994,
+    "max_object_tilt_deg": 89.99976442907867,
+    "max_robot_root_position_drift_m": 0.0,
+    "max_robot_root_rotation_drift_rad": 0.0,
+    "minimum_q5_actual_rad": -2.2886089724727388e-12,
+    "moving_contact_point_label": "gripper_link",
+    "moving_gripper_link_contact_supported": true,
+    "object_motion_after_contact_supported": true,
+    "open_baseline_precommand_motion_confound": false,
+    "open_baseline_robot_contact_confound": false,
+    "peak_force_by_filter": {
+      "gripper_link": {
+        "force_norm_n": 43.85833992858175,
+        "phase_step": 54
+      },
+      "link4": {
+        "force_norm_n": 0.0,
+        "phase_step": 0
+      },
+      "link5": {
+        "force_norm_n": 23.227865254723564,
+        "phase_step": 55
+      }
+    },
+    "peak_robot_force": {
+      "force_norm_n": 43.85833992858175,
+      "label": "gripper_link",
+      "phase_step": 54
+    },
+    "physics_steps": 300,
+    "positive_body_level_contact_supported": true,
+    "q5_actual_precommand_rad": 1.5412912368774414,
+    "q5_applied_effort_saturated_any": true,
+    "q5_applied_effort_saturation_fraction": 0.31,
+    "q5_closed_direction_response": true,
+    "qualifying_contact_point_finite_by_filter": {
+      "gripper_link": true,
+      "link4": null,
+      "link5": true
+    },
+    "static_bracket_is_not_positive_contact_requirement": true,
+    "verdict": "D362_MOVING_JAW_CONTACT_AND_OBJECT_MOTION_OBSERVED",
+    "zero_force_semantics": "absence of a positive filtered event does not prove no contact"
+  },
+  "controlled_physics_steps": 500,
+  "durable_prefix_audit": {
+    "append_receipt_count": 1002,
+    "artifact": "D362_DURABLE_STEP_PREFIX_AUDIT_V1",
+    "audit": {
+      "artifact": "D361_PREFIX_AUDIT_V1",
+      "chain_integrity_pass": true,
+      "complete_pass": true,
+      "file_bytes": 2744124,
+      "file_sha256": "aa7f7419516f4dda723290d89389df680ef3336f2b16984d4f467b76eee41a8e",
+      "integrity_error": null,
+      "last_observed_step": {
+        "global_step": 500,
+        "phase": "q5_close_observation",
+        "phase_step": 299
+      },
+      "last_record_sha256": "e1307b52a1710ff618cc2fa6e831ed1d1fc90540682cc90d7892d0d86aec6c72",
+      "last_valid_kind": "seal",
+      "observation_count": 500,
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d362/d362_durable_step_prefix.jsonl",
+      "recoverable_prefix_pass": true,
+      "sealed": true,
+      "terminal_inflight_step": null,
+      "trailing_byte_count": 0,
+      "trailing_bytes_sha256": null,
+      "valid_prefix_byte_count": 2744124,
+      "valid_record_count": 1002,
+      "validated_header_payload": {
+        "body_labels": [
+          "support_table",
+          "link4",
+          "link5",
+          "gripper_link"
+        ],
+        "case": "g0a_d362",
+        "execution_contract": {
+          "legal_seals": {
+            "full_500_step_horizon_complete": [
+              500
+            ],
+            "open_baseline_hard_gate_fail_stop": [
+              200
+            ]
+          }
+        },
+        "filter_index_by_body": {
+          "gripper_link": 3,
+          "link4": 1,
+          "link5": 2,
+          "support_table": 0
+        },
+        "lineage": {
+          "actual_invocation_sha256": "ec0d4df020849785cd801d7fbf36f4bce4f07ee58ca7fc2ea6159f2efeeeaf9b",
+          "harness_sha256": "80fb5f47ec01de67c23b11f92fc6b46f3bff7063fc9474436a7863cf1c9df11c",
+          "inherited_d361_capacity_budget_sha256": "ca5edc818fee321dad257dcf3d1ba4574b6c446471a7ff7abc7c8ab790bf79f5",
+          "inherited_d361_protocol_contract_sha256": "dead1591fbf53f080bae0ca28643bb22147ee99a6b07f71a9285865e2c1d8e13",
+          "prepare_preflight_sha256": "71b1b16bebc3c2a0fe1829ce8e22e8c46dd88ae8daaaad656b882ae2ac0f7aa3",
+          "preregistration_sha256": "1eebbf12cf23c99a83e1640ce409efe8e0cde9ab2c0b5db43c06485ac7969e91"
+        },
+        "overwrite_allowed": false,
+        "profile": "D362_ACTUAL_PHYSX_DURABLE_PREFIX_V1",
+        "registered_total_capacity": 33280,
+        "resolved_filter_paths": [
+          "/World/envs/env_0/TapTable",
+          "/World/envs/env_0/Robot/link4",
+          "/World/envs/env_0/Robot/link5",
+          "/World/envs/env_0/Robot/gripper_link"
+        ],
+        "resume_allowed": false,
+        "scenario": "actual_frozen_d360_contract_d362_single_invocation",
+        "sensor_body_names": [
+          "Sponge"
+        ],
+        "state_row_contract": {
+          "authority": "D360 _state_row exact top-level field contract",
+          "required_top_level_keys": [
+            "global_step",
+            "phase",
+            "phase_step",
+            "physics_time_s",
+            "simulation_clock",
+            "timeline_time_s",
+            "actual_joint_rad",
+            "actual_joint_vel_rad_s",
+            "target_joint_rad",
+            "q5_actual_rad",
+            "q5_velocity_rad_s",
+            "q5_target_rad",
+            "q5_error_rad",
+            "q0_q4_actual_minus_frozen_rad",
+            "q0_q4_max_abs_drift_rad",
+            "q5_torque",
+            "object_pos_w_m",
+            "object_quat_wxyz",
+            "object_lin_vel_w_mps",
+            "object_ang_vel_w_radps",
+            "object_disp_w_m",
+            "object_disp_xy_mm",
+            "object_z_delta_mm",
+            "object_tilt_deg",
+            "object_tilt_delta_from_reference_deg",
+            "object_bottom_table_gap_mm",
+            "robot_root_pos_w_m",
+            "robot_root_quat_wxyz",
+            "robot_root_position_drift_m",
+            "robot_root_rotation_drift_rad",
+            "link5_pos_w_m",
+            "link5_quat_wxyz",
+            "gripper_pos_w_m",
+            "gripper_quat_wxyz",
+            "contact",
+            "finite"
+          ]
+        },
+        "subject_kind": "actual_d362_d360_inherited_physx_contact_motion_evidence"
+      }
+    },
+    "case": "g0a_d362",
+    "checks": {
+      "all_contact_ranges_within_capacity": true,
+      "append_receipts_all_fsync_reread": true,
+      "high_water_below_or_equal_capacity": true,
+      "no_terminal_inflight_step": true,
+      "no_trailing_bytes": true,
+      "observation_count_matches_trace": true,
+      "sealed": true,
+      "state_rows_reconcile_exact": true,
+      "wire_and_semantic_complete": true
+    },
+    "contact_point_high_water_mark": 22,
+    "inherited_protocol_sha256": "dead1591fbf53f080bae0ca28643bb22147ee99a6b07f71a9285865e2c1d8e13",
+    "pass": true,
+    "prefix_path": "claudedocs/runtime_logs/grasp_track/g0a_d362/d362_durable_step_prefix.jsonl",
+    "prefix_sha256": "aa7f7419516f4dda723290d89389df680ef3336f2b16984d4f467b76eee41a8e",
+    "reported_contact_point_count_max": 22,
+    "trace_state_reconciliation_first_difference": null
+  },
+  "exact_manifold_or_face": null,
+  "force_closure_or_grasp": null,
+  "g0a_pass": false,
+  "initial_state_checks": {
+    "counter_zero": true,
+    "full_q_float32_exact": true,
+    "joint_velocity_float32_zero_exact": true,
+    "object_angular_velocity_float32_zero_exact": true,
+    "object_linear_velocity_float32_zero_exact": true,
+    "object_position_float32_exact": true,
+    "object_quaternion_float32_exact": true,
+    "q0_q4_exact": true,
+    "q5_open_exact": true
+  },
+  "interface_visibility": null,
+  "interface_visibility_pending_manual_original_resolution_inspection": true,
+  "launcher": {
+    "checks": {
+      "cameras_disabled": true,
+      "device_zero": true,
+      "gui_experience": true,
+      "headless_false": true,
+      "livestream_zero": true,
+      "offscreen_false": true,
+      "xr_disabled": true
+    },
+    "pass": true,
+    "values": {
+      "device_id": 0,
+      "enable_cameras": false,
+      "experience": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaaclab/apps/isaaclab.python.kit",
+      "headless": false,
+      "livestream": 0,
+      "offscreen_render": false,
+      "xr": false
+    }
+  },
+  "new_variables": [
+    "runtime_contact_capacity_and_durable_prefix_integration",
+    "interface_visible_trace_replay_video"
+  ],
+  "observability_artifact_pass": false,
+  "observability_checks": {
+    "all_qualifying_robot_force_points_finite_for_observability": true,
+    "beginner_sheet": true,
+    "conditional_event_capture_pairs_decode": true,
+    "contact_png_iff_confirmed": true,
+    "durable_prefix_exact_reconciliation": true,
+    "initial_start_final_two_view_actual_isaac_png": true,
+    "motion_png_iff_confirmed": true,
+    "rerun_rrd_rbl_verify_screenshot": true,
+    "trace_replay_video_and_storyboard": false
+  },
+  "operational_trace_checks": {
+    "all_trace_rows_finite": true,
+    "closure_horizon_exact_if_baseline_pass": true,
+    "controlled_steps_exact": true,
+    "durable_prefix_contract": true,
+    "inputs_unchanged": true,
+    "q0_q4_target_float32_bits_frozen_every_step": true,
+    "q5_target_update_count": true,
+    "registered_q5_effort_limit_2p5_every_step": true,
+    "runtime_contact_capacity_contract": true,
+    "settings_restored": true,
+    "sidecar_unchanged": true,
+    "timeline_playing_not_stopped_and_nondecreasing_each_step": true,
+    "trace_exact_count": true
+  },
+  "pass": true,
+  "q0_q4_actual_drift": {
+    "baseline_end": {
+      "actual_minus_frozen_rad": [
+        -1.6838312149047852e-06,
+        0.002167999744415283,
+        0.0013802051544189453,
+        2.6226043701171875e-05,
+        -1.1229501978959888e-05
+      ],
+      "global_step": 200,
+      "max_abs_drift_rad": 0.002167999744415283,
+      "phase": "frozen_open_baseline",
+      "phase_step": 199
+    },
+    "failure_threshold": null,
+    "final": {
+      "actual_minus_frozen_rad": [
+        -1.7136335372924805e-06,
+        0.0021591782569885254,
+        0.00138092041015625,
+        0.00016154348850250244,
+        -4.380957307148492e-06
+      ],
+      "global_step": 500,
+      "max_abs_drift_rad": 0.0021591782569885254,
+      "phase": "q5_close_observation",
+      "phase_step": 299
+    },
+    "first_any_robot_contact_onset": {
+      "actual_minus_frozen_rad": [
+        -7.471442222595215e-05,
+        0.0021576285362243652,
+        0.0013490915298461914,
+        0.00010527670383453369,
+        -8.443247452305513e-07
+      ],
+      "global_step": 232,
+      "max_abs_drift_rad": 0.0021576285362243652,
+      "phase": "q5_close_observation",
+      "phase_step": 31
+    },
+    "first_object_motion_onset": {
+      "actual_minus_frozen_rad": [
+        -0.008827682584524155,
+        -0.011039137840270996,
+        0.00012934207916259766,
+        0.010880202054977417,
+        -0.0010021163616329432
+      ],
+      "global_step": 242,
+      "max_abs_drift_rad": 0.011039137840270996,
+      "phase": "q5_close_observation",
+      "phase_step": 41
+    },
+    "initial_exact_state": {
+      "actual_minus_frozen_rad": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "max_abs_drift_rad": 0.0
+    },
+    "maximum_observed": {
+      "actual_minus_frozen_rad": [
+        -0.021993755362927914,
+        -0.025083720684051514,
+        -0.028458714485168457,
+        0.04380311071872711,
+        -0.008999149315059185
+      ],
+      "global_step": 260,
+      "max_abs_drift_rad": 0.04380311071872711,
+      "phase": "q5_close_observation",
+      "phase_step": 59
+    },
+    "moving_gripper_contact_onset": {
+      "actual_minus_frozen_rad": [
+        -7.471442222595215e-05,
+        0.0021576285362243652,
+        0.0013490915298461914,
+        0.00010527670383453369,
+        -8.443247452305513e-07
+      ],
+      "global_step": 232,
+      "max_abs_drift_rad": 0.0021576285362243652,
+      "phase": "q5_close_observation",
+      "phase_step": 31
+    },
+    "semantics": "finite actual drift is reported, not failed; only target mutation or nonfinite state is operational failure"
+  },
+  "q5_target_update_count": 1,
+  "qualifying_robot_point_contract": {
+    "all_qualifying_robot_event_points_finite": true,
+    "by_filter": {
+      "gripper_link": {
+        "event_point_checks": [
+          {
+            "onset_global_row": 231,
+            "onset_phase_step": 31,
+            "phase": "q5_close_observation",
+            "two_event_points_finite": true
+          }
+        ],
+        "qualifying_onset_global_row": 231,
+        "qualifying_onset_global_rows": [
+          231
+        ],
+        "two_event_points_finite": true
+      },
+      "link4": {
+        "event_point_checks": [],
+        "qualifying_onset_global_row": null,
+        "qualifying_onset_global_rows": [],
+        "two_event_points_finite": null
+      },
+      "link5": {
+        "event_point_checks": [
+          {
+            "onset_global_row": 245,
+            "onset_phase_step": 45,
+            "phase": "q5_close_observation",
+            "two_event_points_finite": true
+          }
+        ],
+        "qualifying_onset_global_row": 245,
+        "qualifying_onset_global_rows": [
+          245
+        ],
+        "two_event_points_finite": true
+      }
+    },
+    "qualifying_event_count": 2
+  },
+  "rerun_validation_path": "claudedocs/runtime_logs/grasp_track/g0a_d362/d362_rerun_validation.json",
+  "reset_internal_transition": {
+    "after": {
+      "custom_step_counter": 0,
+      "simulation_clock": {
+        "current_time": 0.009999999776482582,
+        "current_time_step_index": 2
+      },
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "timeline_time_s": 0.029999999329447746
+    },
+    "before": {
+      "custom_step_counter": 0,
+      "simulation_clock": {
+        "current_time": 0.009999999776482582,
+        "current_time_step_index": 2
+      },
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "timeline_time_s": 0.029999999329447746
+    },
+    "controlled_d362_sample_count": 0,
+    "semantics": "reset-internal work is reported separately and excluded from the 200+300 controlled rows"
+  },
+  "restore_checks": {
+    "physx_setting_restored": true,
+    "play_setting_restored": true,
+    "timeline_final_paused_not_stopped": true
+  },
+  "runtime_contact_capacity": {
+    "actual_shape_counts": {
+      "gripper_link": 64,
+      "link4": 1,
+      "link5": 64,
+      "sensor_cylinder": 1,
+      "support_table": 1
+    },
+    "authority": "D361 installed PhysX-5.6.1 shape-pair envelope integrated at runtime",
+    "backend_detailed_contact_buffer_shapes": [
+      [
+        33280,
+        1
+      ],
+      [
+        33280,
+        3
+      ],
+      [
+        33280,
+        3
+      ],
+      [
+        33280,
+        1
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        1,
+        4
+      ]
+    ],
+    "backend_max_contact_data_count": 33280,
+    "checks": {
+      "actual_shape_inventory_exact": true,
+      "backend_allocation_33280": true,
+      "backend_detailed_buffer_shapes_exact": true,
+      "d361_capacity_hash_exact": true,
+      "d361_protocol_hash_exact": true,
+      "derived_capacity_33280": true,
+      "environment_one": true,
+      "filter_count_four": true,
+      "live_topology_matches_stage_link5_gripper": true,
+      "paused_buffer_probe_added_zero_physics_steps": true,
+      "resolved_filter_index_exact": true,
+      "resolved_filter_paths_exact": true,
+      "sensor_body_one": true,
+      "sensor_cfg_33280": true
+    },
+    "derived_total_capacity": 33280,
+    "enabled_collision_paths_by_label": {
+      "gripper_link": [
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_000",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_001",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_002",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_003",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_004",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_005",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_006",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_007",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_008",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_009",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_010",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_011",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_012",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_013",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_014",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_015",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_016",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_017",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_018",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_019",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_020",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_021",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_022",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_023",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_024",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_025",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_026",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_027",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_028",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_029",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_030",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_031",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_032",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_033",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_034",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_035",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_036",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_037",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_038",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_039",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_040",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_041",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_042",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_043",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_044",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_045",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_046",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_047",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_048",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_049",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_050",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_051",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_052",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_053",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_054",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_055",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_056",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_057",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_058",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_059",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_060",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_061",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_062",
+        "/World/envs/env_0/Robot/gripper_link/collisions/d338_convex_parts/part_063"
+      ],
+      "link4": [
+        "/World/envs/env_0/Robot/link4/collisions/link4/node_STL_BINARY_"
+      ],
+      "link5": [
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_000",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_001",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_002",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_003",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_004",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_005",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_006",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_007",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_008",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_009",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_010",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_011",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_012",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_013",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_014",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_015",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_016",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_017",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_018",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_019",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_020",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_021",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_022",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_023",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_024",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_025",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_026",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_027",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_028",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_029",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_030",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_031",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_032",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_033",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_034",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_035",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_036",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_037",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_038",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_039",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_040",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_041",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_042",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_043",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_044",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_045",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_046",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_047",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_048",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_049",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_050",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_051",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_052",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_053",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_054",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_055",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_056",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_057",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_058",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_059",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_060",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_061",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_062",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_063"
+      ],
+      "sensor_cylinder": [
+        "/World/envs/env_0/Sponge/geometry/mesh"
+      ],
+      "support_table": [
+        "/World/envs/env_0/TapTable/geometry/mesh"
+      ]
+    },
+    "expected_backend_detailed_contact_buffer_shapes": [
+      [
+        33280,
+        1
+      ],
+      [
+        33280,
+        3
+      ],
+      [
+        33280,
+        3
+      ],
+      [
+        33280,
+        1
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        1,
+        4
+      ]
+    ],
+    "pass": true,
+    "paused_buffer_probe": {
+      "after": {
+        "custom_step_counter": 0,
+        "simulation_clock": {
+          "current_time": 0.009999999776482582,
+          "current_time_step_index": 2
+        }
+      },
+      "before": {
+        "custom_step_counter": 0,
+        "simulation_clock": {
+          "current_time": 0.009999999776482582,
+          "current_time_step_index": 2
+        }
+      }
+    },
+    "per_geometry_pair_contact_envelope": 256,
+    "sensor_cfg_max_contact_data_count_per_prim": 33280
+  },
+  "runtime_prerequisites_path": "claudedocs/runtime_logs/grasp_track/g0a_d362/d362_runtime_prerequisites.json",
+  "target_ik_path_changed": false,
+  "trace_replay_video": {
+    "artifact": "D362_INTERFACE_VISIBLE_TRACE_REPLAY_REPORT_V1",
+    "authority": "canonical D362 trace + D348 live collider display copy; physics not recomputed",
+    "canonical_trace_path": "claudedocs/runtime_logs/grasp_track/g0a_d362/d362_physics_trace.json",
+    "canonical_trace_sha256": "9483146c4941e6518614c63acbf221128a564bafa7a9928d41e633ee6e4e2044",
+    "case": "g0a_d362",
+    "checks": {
+      "encoded_codec_h264_from_libx264": true,
+      "encoded_pixel_format_yuv420p": true,
+      "ffmpeg_full_decode_pass": true,
+      "first_middle_last_decode_nonblank": true,
+      "fps_20": true,
+      "frame_count_exact": true,
+      "full_500_trace_has_registered_250_frames": true,
+      "physics_not_recomputed": true,
+      "resolution_1920x1080": false,
+      "source_endpoints_included": true,
+      "storyboard_1920x1080_nonblank": true,
+      "video_nonempty": true
+    },
+    "decode_samples": [
+      {
+        "decode_ok": true,
+        "frame_index": 0,
+        "nonblank": true,
+        "pixel_stddev": 34.75225919837738,
+        "shape": [
+          1088,
+          1920,
+          3
+        ]
+      },
+      {
+        "decode_ok": true,
+        "frame_index": 125,
+        "nonblank": true,
+        "pixel_stddev": 35.86786768420629,
+        "shape": [
+          1088,
+          1920,
+          3
+        ]
+      },
+      {
+        "decode_ok": true,
+        "frame_index": 249,
+        "nonblank": true,
+        "pixel_stddev": 35.948296242045025,
+        "shape": [
+          1088,
+          1920,
+          3
+        ]
+      }
+    ],
+    "display_scope_limitation": "The frozen live topology binding contains link5+gripper 64+64 only; link4 is shown only by its authoritative aggregated sensor point/force, while actual Isaac captures retain the full robot view.",
+    "duration_seconds": 12.5,
+    "encoded_frame_count": 250,
+    "full_decode": {
+      "ffmpeg": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/imageio_ffmpeg/binaries/ffmpeg-linux-x86_64-v7.0.2",
+      "returncode": 0,
+      "stderr": "Input #0, mov,mp4,m4a,3gp,3g2,mj2, from '/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d362/d362_interface_visible_trace_replay.mp4':\n  Metadata:\n    major_brand     : isom\n    minor_version   : 512\n    compatible_brands: isomiso2avc1mp41\n    encoder         : Lavf61.1.100\n    comment         : D362 canonical trace replay; physics not recomputed\n  Duration: 00:00:12.50, start: 0.000000, bitrate: 1946 kb/s\n  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 1920x1088, 1943 kb/s, 20 fps, 20 tbr, 10240 tbn (default)\n      Metadata:\n        handler_name    : VideoHandler\n        vendor_id       : [0][0][0][0]\n        encoder         : Lavc61.3.100 libx264\nStream mapping:\n  Stream #0:0 -> #0:0 (h264 (native) -> wrapped_avframe (native))\nPress [q] to stop, [?] for help\nOutput #0, null, to 'pipe:':\n  Metadata:\n    major_brand     : isom\n    minor_version   : 512\n    compatible_brands: isomiso2avc1mp41\n    comment         : D362 canonical trace replay; physics not recomputed\n    encoder         : Lavf61.1.100\n  Stream #0:0(und): Video: wrapped_avframe, yuv420p(progressive), 1920x1088, q=2-31, 200 kb/s, 20 fps, 20 tbn (default)\n      Metadata:\n        handler_name    : VideoHandler\n        vendor_id       : [0][0][0][0]\n        encoder         : Lavc61.3.100 wrapped_avframe\n[out#0/null @ 0x15935bc0] video:107KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown\nframe=  250 fps=0.0 q=-0.0 Lsize=N/A time=00:00:12.50 bitrate=N/A speed=88.7x    \n"
+    },
+    "pass": false,
+    "reported_fps": 20.0,
+    "reported_frame_count": 250,
+    "reported_resolution": [
+      1920,
+      1088
+    ],
+    "source_row_indices": [
+      0,
+      2,
+      4,
+      6,
+      8,
+      10,
+      12,
+      14,
+      16,
+      18,
+      20,
+      22,
+      24,
+      26,
+      28,
+      30,
+      32,
+      34,
+      36,
+      38,
+      40,
+      42,
+      44,
+      46,
+      48,
+      50,
+      52,
+      54,
+      56,
+      58,
+      60,
+      62,
+      64,
+      66,
+      68,
+      70,
+      72,
+      74,
+      76,
+      78,
+      80,
+      82,
+      84,
+      86,
+      88,
+      90,
+      92,
+      94,
+      96,
+      98,
+      100,
+      102,
+      104,
+      106,
+      108,
+      110,
+      112,
+      114,
+      116,
+      118,
+      120,
+      122,
+      124,
+      126,
+      128,
+      130,
+      132,
+      134,
+      136,
+      138,
+      140,
+      142,
+      144,
+      146,
+      148,
+      150,
+      152,
+      154,
+      156,
+      158,
+      160,
+      162,
+      164,
+      166,
+      168,
+      170,
+      172,
+      174,
+      176,
+      178,
+      180,
+      182,
+      184,
+      186,
+      188,
+      190,
+      192,
+      194,
+      196,
+      198,
+      200,
+      202,
+      204,
+      206,
+      208,
+      210,
+      212,
+      214,
+      216,
+      218,
+      220,
+      222,
+      224,
+      226,
+      228,
+      230,
+      232,
+      234,
+      236,
+      238,
+      240,
+      242,
+      244,
+      246,
+      248,
+      250,
+      252,
+      254,
+      256,
+      258,
+      260,
+      262,
+      264,
+      266,
+      268,
+      270,
+      272,
+      274,
+      276,
+      278,
+      280,
+      282,
+      284,
+      286,
+      288,
+      290,
+      292,
+      294,
+      296,
+      298,
+      300,
+      302,
+      304,
+      306,
+      308,
+      310,
+      312,
+      314,
+      316,
+      318,
+      320,
+      322,
+      324,
+      326,
+      328,
+      330,
+      332,
+      334,
+      336,
+      338,
+      340,
+      342,
+      344,
+      346,
+      348,
+      350,
+      352,
+      354,
+      356,
+      358,
+      360,
+      362,
+      364,
+      366,
+      368,
+      370,
+      372,
+      374,
+      376,
+      378,
+      380,
+      382,
+      384,
+      386,
+      388,
+      390,
+      392,
+      394,
+      396,
+      398,
+      400,
+      402,
+      404,
+      406,
+      408,
+      410,
+      412,
+      414,
+      416,
+      418,
+      420,
+      422,
+      424,
+      426,
+      428,
+      430,
+      432,
+      434,
+      436,
+      438,
+      440,
+      442,
+      444,
+      446,
+      448,
+      450,
+      452,
+      454,
+      456,
+      458,
+      460,
+      462,
+      464,
+      466,
+      468,
+      470,
+      472,
+      474,
+      476,
+      478,
+      480,
+      482,
+      484,
+      486,
+      488,
+      490,
+      492,
+      494,
+      496,
+      499
+    ],
+    "storyboard_dimensions": [
+      1920,
+      1080
+    ],
+    "storyboard_path": "claudedocs/runtime_logs/grasp_track/g0a_d362/d362_interface_visible_trace_replay_storyboard.png",
+    "storyboard_pixel_stddev": 33.01616072963888,
+    "storyboard_sha256": "43f0e634c41d1e867972e1bc3c0aea3219c3d26d5bd31afda97deb826a3809a7",
+    "storyboard_sources": [
+      {
+        "label": "initial recorded row",
+        "source_row_index": 0
+      },
+      {
+        "label": "OPEN pre-command row",
+        "source_row_index": 199
+      },
+      {
+        "label": "first 2-row contact confirmation",
+        "source_row_index": 232
+      },
+      {
+        "label": "first 2-row motion confirmation",
+        "source_row_index": 242
+      }
+    ],
+    "trace_row_count": 500,
+    "video_bytes": 3041232,
+    "video_path": "claudedocs/runtime_logs/grasp_track/g0a_d362/d362_interface_visible_trace_replay.mp4",
+    "video_sha256": "0a352c2e5f10f4a4fb13525e927eef657e58dc60a97b422e9c68c71db967a23d"
+  }
+}

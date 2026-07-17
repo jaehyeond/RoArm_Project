@@ -1,147 +1,126 @@
 # START_HERE.md
 
-Last updated: 2026-07-16 KST. D361 completed the offline total-contact-capacity
-and durable per-step/body/value prefix repair. No actual q5/PhysX science or new
-contact video ran. There is now no active approved case; an actual rerun still
-requires a new explicit user approval.
+Last updated: 2026-07-17 KST. D362 consumed its one approved Isaac/PhysX invocation.
+Its canonical 500-row physics trace is complete, but the exact-video and actual-viewport
+observability contract failed. D362 is concluded/frozen without finalize or retry.
 
 ## Current Truth
 
-- Pivot: cylinder grasp-track G0a. Cylinder radius is `0.017m = 17mm = 1.7cm`;
-  diameter is `0.034m = 34mm = 3.4cm`; height is `0.090m = 90mm = 9cm`.
-- q5 convention: `q5=0` is CLOSED; frozen sim OPEN is `q5=1.5413rad`.
-  D347 measured HOME-near + q5=0 CLOSED, not exact HOME.
-- D348 proved PhysX volume must use callback polygon topology, not a new
-  vertex-only Qhull. Corrected gate: `256/256` channels, `128/128` parts.
-- D349 frozen-OPEN raw/live distances: link5
-  `4.2726455336/4.2727365803mm`; moving gripper
-  `11.1750883746/11.3402623263mm`. These are not contact/grasp proof.
-- D350 completed connected fixed-jaw surface measurement, real Isaac Viewer,
-  and 64+64 collider visualization, but `aligned_pass=null`, `g0a_pass=false`.
-- D351 never reached q5 science. D352 localized deferred Timeline PAUSE; D353
-  proved exactly one conditional `Timeline.commit()` applies PAUSE with zero
-  registered world advance.
-- Latest completed zero-step geometry science remains D354:
-  `D354_CONTACT_ORDER_UNRESOLVED_FAIL_STOP`, controlled physics steps `0`,
-  `g0a_pass=false`.
-- Latest completed control/evidence case is D361:
-  `D361_CONTACT_CAPACITY_AND_PREFIX_TRACE_REPAIR_PASS_NO_PHYSICS`. It does not
-  change D354/D360 physical nulls or `g0a_pass=false`.
+- Pivot: cylinder grasp-track G0a. Cylinder radius is `0.017m = 17mm = 1.7cm`,
+  diameter `0.034m = 34mm = 3.4cm`, height `0.090m = 90mm = 9cm`.
+- q5 convention: `q5=0` CLOSED; frozen sim OPEN `q5=1.5413rad`. D347 measured
+  HOME-near + q5=0 CLOSED, not exact HOME.
+- D348 corrected callback-topology gate is `256/256` channels, `128/128` parts;
+  live connected link5/gripper binding is `64+64`.
+- D350 proved a real static Isaac Viewer/collider display, not dynamic PhysX-tensor to
+  renderer synchronization. It remained `aligned_pass=null`, `g0a_pass=false`.
+- D354 zero-step contact order remained unresolved at the cylinder top cap/rim boundary.
+- D359 recovered the historical hash generator as original-point-ID ordering; no
+  geometry/unit/GPU/Warp cause and no old gate rewrite.
+- D360 actual physics failed after 243 controlled rows because total detailed-contact
+  capacity was 16; body/value rows were lost and all physical claims stayed null.
+- D361 registered capacity `33,280` and proved the durable prefix protocol offline, but
+  did not run physics.
+- D362 now supplies the first durable body/value actual-physics answer. It does not
+  prove grasp or complete G0a.
 
-## D354 Scientific Boundary
+## D362 Completed Physical Sub-result
 
-- Raw/live shared q5 last-clear/first-overlap bracket
-  `1.0269782543182373/1.0269775390625rad`, width
-  `7.152557373046875e-7rad`.
-- Both clear endpoints were exactly cylinder-local top `z=+0.045m`, classified
-  `cap_or_rim_boundary`; adjacent overlap endpoints alone were
-  `barrel_interior`. Barrel-first was therefore not established.
-- This neither proves current-pose grasp nor proves it impossible, and does not
-  justify target/IK repair.
+- Output: `claudedocs/runtime_logs/grasp_track/g0a_d362/` — exactly 33 files,
+  immutable; do not add, overwrite, rename, resume, retry, or finalize.
+- One `headless=false` RTX/GUI Isaac worker completed OPEN baseline `200/200` and
+  q5-close `300/300`; controlled physics `500`, q5 target update `1`, worker exit `0`.
+- OPEN baseline had no registered robot contact or threshold cylinder motion.
+- Moving `gripper_link` contact onset/confirmation: closure step `31/32`.
+- Cylinder motion onset/confirmation: step `41/42`, ten physics steps (`0.05s`) after
+  moving-jaw onset.
+- Fixed `link5` contact onset/confirmation: step `45/46`; link4 registered positive
+  count/force event: `0` in all 500 rows. This does not prove absolute no-contact.
+- Peak moving-gripper/link5/link4 filtered force:
+  `43.8583399/23.2278653/0.0N`.
+- Endpoint cylinder XY/tilt/z change:
+  `60.6189978mm/89.9977746deg/-28.0005205mm` — it was pushed over, not held.
+- Physical sub-verdict:
+  `D362_MOVING_JAW_CONTACT_AND_OBJECT_MOTION_OBSERVED`.
+- Exact face/manifold, cap/rim/barrel order, force closure, stable grasp, hold/lift,
+  target/IK repair justification remain `null`; `g0a_pass=false`.
 
-## D359 Completed Evidence-Lineage Recovery
+## D362 Capacity / Evidence Completion
 
-- Output: `claudedocs/runtime_logs/grasp_track/g0a_d359/`.
-- Verdict: `D359_D351_HASH_PROVENANCE_RECOVERED`.
-- Actual historical generator used ascending original USD point IDs. Later
-  narration/validator used coordinate-row lexicographic unique.
-- Original-ID replay reproduced frozen D351 `8/8` for both D344/local streams;
-  coordinate replay reproduced historical `2/8` but D358 current-authored
-  `8/8`.
-- Root cause was vertex-remap/serialization provenance, not geometry, unit,
-  Isaac, PhysX, GPU, Warp, or SM efficiency. D351/D354/D358 remain immutable;
-  no expected hash or gate was changed.
+- Runtime sensor cfg, derived envelope, and PhysX backend max were all `33,280`.
+- Actual collider inventory was cylinder/table/link4/link5/gripper `1/1/1/64/64`;
+  six backend detailed-contact buffer shapes matched the preregistration.
+- Observed contact-point high-water was `22/33,280`; registered overflow warnings `0`.
+  This closes D361 runtime sufficiency only for this exact inventory/version/run.
+- Durable prefix SHA-256 `aa7f7419516f4dda723290d89389df680ef3336f2b16984d4f467b76eee41a8e`:
+  500 observations, 1,002 records, sealed, tail 0, terminal inflight null.
+- Supervisor recovery classified it `COMPLETE_SEALED_PREFIX`; no watchdog, worker
+  exception, retry, target/IK/path, or physical-setting change occurred.
 
-## D360 Sole Actual-Physics Invocation
+## D362 Overall FAIL_STOP — Observability, Not Physics Crash
 
-- Output `g0a_d360/` is immutable: no add/overwrite/rename/retry/finalize.
-- Verdict:
-  `D360_SINGLE_INVOCATION_CUDA_DEVICE_ASSERT_AFTER_243_CONTROLLED_STEPS_PRE_TRACE_FAIL_STOP`;
-  all physical/body/contact/motion fields `null`, `g0a_pass=false`.
-- One real GUI/RTX run passed prepare `16/16`, worker preflight `14/14`, corrected
-  live binding `128/128 (64+64)`, OPEN baseline `200/200`, then changed only q5
-  target once to `0.0rad`. Exception evidence records 243 completed steps, so 43
-  closure rows existed only in RAM.
-- Counters 233/243 preserve only that the registered any-robot contact and object
-  motion triggers fired in program order. Lost body/value rows mean no moving-jaw,
-  force, q5-response, displacement, or contact-location claim is allowed.
-- Root operational failure: inherited detailed-contact total capacity was
-  `16 × 1 body × 1 env = 16`; four filters did not multiply it. Log warned
-  `>16`, then ATen index bounds and PhysX CUDA device asserts occurred.
-- This was not a geometry verdict or recorded OOM/Warp/SM failure. GPU used/free
-  extrema were `7703/8241MiB`, utilization max `43%`; exit `-9` sender unknown.
-- Eight actual failure-state PNGs exist but do not expose the interface/body/value;
-  trace/summary/final/RRD/RBL never existed.
+- Overall verdict:
+  `D362_SINGLE_INVOCATION_PHYSX_TRACE_COMPLETE_OBSERVABILITY_FAIL_STOP`.
+- Trace-replay MP4 was H.264/yuv420p, 250 frames, 20fps, full-decode PASS, but
+  imageio `macro_block_size=16` resized registered `1920x1080` to `1920x1088`.
+  Video report/phase contract therefore failed; supervisor outer exit was `2`.
+- Manual original-resolution MP4 quadrants, storyboard, and beginner sheet were
+  legible; the exact-resolution gate is still binding and was not relaxed.
+- More importantly, precommand/contact/motion/final actual Isaac PNGs all retained
+  the same upright cylinder bbox `(628,299,90,209)` with centroids within 0.1px,
+  while the canonical final trace recorded 60.619mm motion and ~90deg toppling.
+- Therefore actual viewport temporal/state synchronization was not established.
+  Rerun/video correctly displaying the canonical trace does not repair stale Isaac PNGs.
+- Confirmed implementation gap: controlled steps used `sim.step(render=False)` with
+  default `update_fabric=False`, then capture used only `app.update()` without the
+  `forward()` Fabric flush used by IsaacLab render and D350's static state-write path.
+  The separate `Failed to clone in Fabric` log is not proven as another single cause.
+- No automated summary, manual PASS artifact, or completion/finalize artifact exists.
 
-## D361 Completed Capacity / Prefix Repair
+## Active Case / Next Approval Boundary
 
-- Output: `claudedocs/runtime_logs/grasp_track/g0a_d361/` (immutable; do not
-  rerun, overwrite, add, rename, or resume).
-- Exact installed-version/shape envelope:
-  `33,280 = 1 sensor cylinder × (1 table + 1 link4 + 64 link5 + 64 gripper)
-  × 256 PhysX-5.6.1 contacts/geometry-pair`.
-- Direct/per-filter capacity and visible-memory arithmetic passed; checks
-  `13/13`, negative controls `9/9`. Visible detail arrays are
-  `1,064,960B = 1.015625MiB` plus count/start 32B. Actual runtime sufficiency
-  remains `null` because no PhysX run occurred.
-- Durable protocol: exclusive `header/(step_begin,step_observation)*/seal`, each
-  record fsync + fresh exact reread, previous/self SHA-256, full inherited D360
-  state, exact body/filter path-index, force vector/norm, contact-count range and
-  high-water, independently recomputed event body/value, registered seal count.
-- Offline failure injection passed `17/17`. Normal reference was 8 records/3
-  observations/seal; abrupt exits recovered `0/1/1` completed observations and
-  isolated a 147-byte partial tail. Four ordinary tamper cases and four
-  hash-valid semantic tamper cases were rejected. Per-test journal 17 rows was
-  durable before aggregate verdict.
-- Exact artifacts `23/23`; D360 tree and D334 sidecar unchanged; exception,
-  image/video/RRD/RBL absent. Isaac/PhysX/physics-step/q5/change counts all `0`.
-- Final nulls: contacting body, force, object motion, current-pose support,
-  grasp feasibility all `null`; `g0a_pass=false`.
-
-## No Active Approved Case
-
-- Narrow next candidate: a new forward-only bounded actual q5/PhysX
-  contact-motion rerun that inherits the exact frozen D360 scene/target/physics
-  variables and integrates D361 capacity + durable prefix before invocation.
-- It may include a newly approved interface-visible contact video, but capacity
-  or trace PASS alone is never contact/grasp/G0a proof.
-- This candidate is **not approved**. Do not prepare, implement, or execute it
-  until the user explicitly approves a new case and its variable boundary.
+- No case is currently approved for execution.
+- Recommended separate candidate: D363
+  `[d362_trace_replay_1080_and_isaac_render_sync_repair]`, observability-only.
+- Candidate variable 1: regenerate the immutable D362 trace in a new forward-only
+  output as exact 1920x1080 H.264/yuv420p; no physics/q5 recomputation.
+- Candidate variable 2: apply one preregistered zero-step Fabric flush at the four
+  recorded decision states, then compare rendered cylinder pose with canonical trace.
+- D363 would allow no controlled physics step, q5 science sample/update, cap/rim
+  discriminator, target/IK/path or asset/decomposition/gate/material/mass/actuator/
+  solver/physics change. It requires a new explicit user approval.
+- Any later cap/rim science, target/IK repair, settle/grasp/G0a, ten-trial, G0b,
+  RL/PPO/VLA, or ladder promotion requires another separate approval.
 
 ## Frozen Boundaries
 
-- No target/IK/path or initial q0-q5/object-state change.
-- No asset, cook, decomposition, gate/tolerance, material, mass, actuator,
-  renderer, solver, physics, or dependency change without a new scoped case.
-- No exact cap/rim/barrel discriminator, force-closure claim, grasp/hold/lift,
-  settle, ten-trial, G0b, RL/PPO, VLA, or ladder promotion.
-- Do not substitute Rerun Float32 display data or vertex-only Qhull for canonical
-  callback/Float64 evidence.
-- D351-D360 evidence is immutable. Do not modify user-owned
-  `claudedocs/lab_meeting/20260715/d334_collision_table/`.
-- `HANDOFF.md` and `TASKS.md` are stale. No hardware, B200/SSH, unapproved
-  signal, commit, or push.
+- Freeze D351-D362 evidence and paths. Do not modify the user-owned
+  `claudedocs/lab_meeting/20260715/d334_collision_table/` sidecar.
+- Do not substitute Rerun Float32 display values or vertex-only Qhull for canonical
+  callback/Float64/sensor evidence.
+- `HANDOFF.md` and `TASKS.md` are stale. No hardware, B200/SSH, unapproved signal,
+  dependency install, commit, or push.
 
 ## Operational Residue
 
-- No D360 Isaac/Kit/Rerun worker remains.
-- Historical D342 worker PID `1729639` still survives/reparented after the
-  previously approved SIGTERM. SIGKILL or another signal is not approved.
+- Post-D362 check found no active Isaac/Kit/D342/D362 worker.
+- Isaac telemetry transmitter PID `719072` remains; it is not the simulator worker and
+  was not signaled. The older recorded D342 PID `1729639` no longer exists.
 
 ## Must Read First
 
-1. `AGENTS.md`; this file; DECISIONS D360-D361; ledger tail
-2. `claudedocs/session_20260716_grasp_g0a_d361_contact_point_capacity_and_prefix_trace_repair.md`
-3. D361 preregistration, capacity, protocol, failure results/journal, completion
-4. `claudedocs/session_20260716_grasp_g0a_d360_current_pose_bounded_physx_contact_motion.md`
-5. D360 prerequisites, phase, exception, raw log, supervisor JSON
-6. D359 session/evidence and D354 measurement/binding/attestation/completion
-7. D333 sensor/trace, D348 topology, D353/D352 bridge, D351 original/repair
+1. `AGENTS.md`; this file; DECISIONS D360-D362; ledger tail
+2. `claudedocs/session_20260717_grasp_g0a_d362_capacity_prefix_integrated_physx_contact_motion.md`
+3. D362 runtime prerequisites, prefix/audit, physics trace, worker/video/Rerun/supervisor
+4. `claudedocs/session_20260716_grasp_g0a_d361_contact_point_capacity_and_prefix_trace_repair.md`
+5. D360 session/prerequisites/phase/exception/raw log/supervisor
+6. D359 provenance and D354 measurement/binding/attestation/completion evidence
+7. D350 static Viewer, D348 topology, D353/D352 bridge, D351 original/repair
 
 ## Git
 
-- Current base verified at D361 boot: `HEAD == origin/master ==
-  e7ed71ca80768df9037c16e53a12d3c032af3d5d`.
-- Worktree was clean at D361 boot and is intentionally dirty only with completed
-  forward-only D361 code, state docs, and evidence.
-- No commit or push is authorized.
+- Verified `HEAD == origin/master ==
+  68f2ff040831c13b0198fe68ef88fe84a76a9df3`, commit `D361완결 및 동결`.
+- Worktree was clean before D362. Current uncommitted changes are the forward-only
+  D362 harness/output/session plus START_HERE/DECISIONS/ledger updates.
+- No commit or push is authorized or performed in D362.
