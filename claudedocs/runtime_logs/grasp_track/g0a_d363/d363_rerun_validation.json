@@ -1,0 +1,417 @@
+{
+  "artifact": "ROARM_RERUN_ARTIFACT_VALIDATION_V1",
+  "blueprint_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d363/d363_fabric_render_sync.rbl",
+  "blueprint_verify": {
+    "attempted": true,
+    "bytes": 60407,
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "verify",
+      "--check-footers",
+      "true",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d363/d363_fabric_render_sync.rbl"
+    ],
+    "ok": true,
+    "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d363/d363_fabric_render_sync.rbl",
+    "returncode": 0,
+    "sha256": "7f482b327c9f99e2a89ab173c432f918997b85c9200535b4f84629ce87684ff5",
+    "stderr": "1 file verified without error.\n",
+    "stdout": ""
+  },
+  "bytes": 12578836,
+  "component_contract": {
+    "checks": {
+      "/captures/opposite": {
+        "observed": [
+          "Image:buffer",
+          "Image:format"
+        ],
+        "pass": true,
+        "required": [
+          "Image:buffer",
+          "Image:format"
+        ]
+      },
+      "/captures/primary": {
+        "observed": [
+          "Image:buffer",
+          "Image:format"
+        ],
+        "pass": true,
+        "required": [
+          "Image:buffer",
+          "Image:format"
+        ]
+      },
+      "/events/sync": {
+        "observed": [
+          "TextLog:level",
+          "TextLog:text"
+        ],
+        "pass": true,
+        "required": [
+          "TextLog:level",
+          "TextLog:text"
+        ]
+      },
+      "/geometry/cylinder_expected": {
+        "observed": [
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true,
+        "required": [
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ]
+      },
+      "/metadata/run": {
+        "observed": [
+          "TextDocument:text"
+        ],
+        "pass": true,
+        "required": [
+          "TextDocument:text"
+        ]
+      },
+      "/metrics/control/controlled_physics_steps": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/metrics/control/simulation_time_delta_s": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/metrics/cylinder/centroid_x_px": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/summary/beginner_sheet": {
+        "observed": [
+          "Image:buffer",
+          "Image:format"
+        ],
+        "pass": true,
+        "required": [
+          "Image:buffer",
+          "Image:format"
+        ]
+      }
+    },
+    "pass": true
+  },
+  "entity_path_contract": {
+    "checks": {
+      "/captures/opposite": true,
+      "/captures/primary": true,
+      "/events/sync": true,
+      "/geometry/cylinder_expected": true,
+      "/metadata/run": true,
+      "/metrics/control/contact_queries": true,
+      "/metrics/control/controlled_physics_steps": true,
+      "/metrics/control/custom_step_counter_delta": true,
+      "/metrics/control/explicit_forward_count": true,
+      "/metrics/control/q5_science_samples": true,
+      "/metrics/control/q5_target_updates": true,
+      "/metrics/control/simulation_step_index_delta": true,
+      "/metrics/control/simulation_time_delta_s": true,
+      "/metrics/control/timeline_time_delta_s": true,
+      "/metrics/cylinder/bbox_height_px": true,
+      "/metrics/cylinder/bbox_width_px": true,
+      "/metrics/cylinder/centroid_x_px": true,
+      "/metrics/cylinder/centroid_y_px": true,
+      "/metrics/cylinder/mask_area_px": true,
+      "/metrics/cylinder/pca_axis_angle_deg": true,
+      "/metrics/trace/object_tilt_delta_deg": true,
+      "/metrics/trace/object_xy_disp_mm": true,
+      "/summary/beginner_sheet": true
+    },
+    "exact_non_system_match": true,
+    "forbidden_fragment_absent": {
+      "/\\/": true
+    },
+    "missing_exact": [],
+    "observed_all": [
+      "/__properties",
+      "/blueprint_panel",
+      "/captures/opposite",
+      "/captures/primary",
+      "/container/0c821747-9bff-401b-bd16-4b962a06b6b1",
+      "/container/5e9981db-26e4-40e8-9c18-951006413d1d",
+      "/container/c504d8ef-510b-4534-b3ec-15611d17df2a",
+      "/events/sync",
+      "/geometry/cylinder_expected",
+      "/metadata/run",
+      "/metrics/control/contact_queries",
+      "/metrics/control/controlled_physics_steps",
+      "/metrics/control/custom_step_counter_delta",
+      "/metrics/control/explicit_forward_count",
+      "/metrics/control/q5_science_samples",
+      "/metrics/control/q5_target_updates",
+      "/metrics/control/simulation_step_index_delta",
+      "/metrics/control/simulation_time_delta_s",
+      "/metrics/control/timeline_time_delta_s",
+      "/metrics/cylinder/bbox_height_px",
+      "/metrics/cylinder/bbox_width_px",
+      "/metrics/cylinder/centroid_x_px",
+      "/metrics/cylinder/centroid_y_px",
+      "/metrics/cylinder/mask_area_px",
+      "/metrics/cylinder/pca_axis_angle_deg",
+      "/metrics/trace/object_tilt_delta_deg",
+      "/metrics/trace/object_xy_disp_mm",
+      "/selection_panel",
+      "/summary/beginner_sheet",
+      "/time_panel",
+      "/view/03074b92-4161-4e0a-bbe3-c650f3a79a19",
+      "/view/03074b92-4161-4e0a-bbe3-c650f3a79a19/ViewContents",
+      "/view/216771c7-7453-45e2-bb41-2d08568604d5",
+      "/view/216771c7-7453-45e2-bb41-2d08568604d5/ViewContents",
+      "/view/265df6f1-30e1-4897-81da-d81dad887d08",
+      "/view/265df6f1-30e1-4897-81da-d81dad887d08/ViewContents",
+      "/view/6bd45557-c898-46ac-8e49-c01f237bb88c",
+      "/view/6bd45557-c898-46ac-8e49-c01f237bb88c/ViewContents",
+      "/view/92159412-ffc6-4b84-99bb-d7d280004215",
+      "/view/92159412-ffc6-4b84-99bb-d7d280004215/ViewContents",
+      "/view/b7b8ce97-bc8c-4a3b-a650-f476ef0df195",
+      "/view/b7b8ce97-bc8c-4a3b-a650-f476ef0df195/ViewContents",
+      "/viewport"
+    ],
+    "observed_non_system": [
+      "/captures/opposite",
+      "/captures/primary",
+      "/events/sync",
+      "/geometry/cylinder_expected",
+      "/metadata/run",
+      "/metrics/control/contact_queries",
+      "/metrics/control/controlled_physics_steps",
+      "/metrics/control/custom_step_counter_delta",
+      "/metrics/control/explicit_forward_count",
+      "/metrics/control/q5_science_samples",
+      "/metrics/control/q5_target_updates",
+      "/metrics/control/simulation_step_index_delta",
+      "/metrics/control/simulation_time_delta_s",
+      "/metrics/control/timeline_time_delta_s",
+      "/metrics/cylinder/bbox_height_px",
+      "/metrics/cylinder/bbox_width_px",
+      "/metrics/cylinder/centroid_x_px",
+      "/metrics/cylinder/centroid_y_px",
+      "/metrics/cylinder/mask_area_px",
+      "/metrics/cylinder/pca_axis_angle_deg",
+      "/metrics/trace/object_tilt_delta_deg",
+      "/metrics/trace/object_xy_disp_mm",
+      "/summary/beginner_sheet"
+    ],
+    "pass": true,
+    "unexpected_non_system": []
+  },
+  "errors": [],
+  "exact_entity_paths": [
+    "/captures/opposite",
+    "/captures/primary",
+    "/events/sync",
+    "/geometry/cylinder_expected",
+    "/metadata/run",
+    "/metrics/control/contact_queries",
+    "/metrics/control/controlled_physics_steps",
+    "/metrics/control/custom_step_counter_delta",
+    "/metrics/control/explicit_forward_count",
+    "/metrics/control/q5_science_samples",
+    "/metrics/control/q5_target_updates",
+    "/metrics/control/simulation_step_index_delta",
+    "/metrics/control/simulation_time_delta_s",
+    "/metrics/control/timeline_time_delta_s",
+    "/metrics/cylinder/bbox_height_px",
+    "/metrics/cylinder/bbox_width_px",
+    "/metrics/cylinder/centroid_x_px",
+    "/metrics/cylinder/centroid_y_px",
+    "/metrics/cylinder/mask_area_px",
+    "/metrics/cylinder/pca_axis_angle_deg",
+    "/metrics/trace/object_tilt_delta_deg",
+    "/metrics/trace/object_xy_disp_mm",
+    "/summary/beginner_sheet"
+  ],
+  "exact_timeline_names": [
+    "blueprint",
+    "log_time",
+    "sync_step"
+  ],
+  "expected_entity_components": {
+    "/captures/opposite": [
+      "Image:buffer",
+      "Image:format"
+    ],
+    "/captures/primary": [
+      "Image:buffer",
+      "Image:format"
+    ],
+    "/events/sync": [
+      "TextLog:level",
+      "TextLog:text"
+    ],
+    "/geometry/cylinder_expected": [
+      "Mesh3D:albedo_factor",
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/metadata/run": [
+      "TextDocument:text"
+    ],
+    "/metrics/control/controlled_physics_steps": [
+      "Scalars:scalars"
+    ],
+    "/metrics/control/simulation_time_delta_s": [
+      "Scalars:scalars"
+    ],
+    "/metrics/cylinder/centroid_x_px": [
+      "Scalars:scalars"
+    ],
+    "/summary/beginner_sheet": [
+      "Image:buffer",
+      "Image:format"
+    ]
+  },
+  "expected_entity_paths": [
+    "/captures/opposite",
+    "/captures/primary",
+    "/events/sync",
+    "/geometry/cylinder_expected",
+    "/metadata/run",
+    "/metrics/control/contact_queries",
+    "/metrics/control/controlled_physics_steps",
+    "/metrics/control/custom_step_counter_delta",
+    "/metrics/control/explicit_forward_count",
+    "/metrics/control/q5_science_samples",
+    "/metrics/control/q5_target_updates",
+    "/metrics/control/simulation_step_index_delta",
+    "/metrics/control/simulation_time_delta_s",
+    "/metrics/control/timeline_time_delta_s",
+    "/metrics/cylinder/bbox_height_px",
+    "/metrics/cylinder/bbox_width_px",
+    "/metrics/cylinder/centroid_x_px",
+    "/metrics/cylinder/centroid_y_px",
+    "/metrics/cylinder/mask_area_px",
+    "/metrics/cylinder/pca_axis_angle_deg",
+    "/metrics/trace/object_tilt_delta_deg",
+    "/metrics/trace/object_xy_disp_mm",
+    "/summary/beginner_sheet"
+  ],
+  "expected_rerun_version": "0.34.1",
+  "expected_timeline_names": [
+    "sync_step"
+  ],
+  "external_rbl_role": "verified fixed-layout export; the 0.34.1 CLI does not guarantee that an external RBL overrides an already-active embedded blueprint",
+  "footer_manifest_present": true,
+  "forbidden_entity_fragments": [
+    "/\\/"
+  ],
+  "headless_render": {
+    "attempted": true,
+    "bytes": 6352527,
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "--headless",
+      "--port",
+      "auto",
+      "--window-size",
+      "3200x1800",
+      "--screenshot-to",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d363/d363_fabric_render_sync_rerun.png",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d363/d363_fabric_render_sync.rrd"
+    ],
+    "file_nonzero": true,
+    "ok": true,
+    "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d363/d363_fabric_render_sync_rerun.png",
+    "returncode": 0,
+    "sha256": "8b27e52ea6604c1c48b80efa9aaa67f8dae28ae8abec378866af0d2df217592c",
+    "stderr": "2026-07-17T18:28:16.593886Z  INFO re_perf_telemetry::telemetry: Telemetry initialized enabled=false service=rerun trace_mode=\"off\" traces=off logs=off metrics=off tracy=false\n2026-07-17T18:28:16.856130Z  INFO re_grpc_server: Listening for gRPC connections on 0.0.0.0:9876. Connect by running `rerun --connect rerun+http://127.0.0.1:9876/proxy`\n2026-07-17T18:28:16.856501Z  INFO re_importer::import_file: Loading \"/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d363/d363_fabric_render_sync.rrd\"…\n2026-07-17T18:28:17.167378Z  INFO re_viewer::headless: Headless viewer running at 3200x1800.\n2026-07-17T18:28:17.614579Z  INFO re_viewer::screenshotter: Screenshot saved to \"/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d363/d363_fabric_render_sync_rerun.png\"\n2026-07-17T18:28:17.644137Z  INFO re_viewer::screenshotter: Screenshot copied to clipboard\n2026-07-17T18:28:17.657453Z  INFO re_viewer::headless: Headless viewer received close request, shutting down.\n",
+    "stdout": ""
+  },
+  "human_visual_inspection_required": true,
+  "pass": true,
+  "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d363/d363_fabric_render_sync.rrd",
+  "print_verbose": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "print",
+      "-v",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d363/d363_fabric_render_sync.rrd"
+    ],
+    "ok": true,
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "Showing data after migration to latest Rerun version\nStoreInfo {\n    store_id: StoreId(\n        Recording,\n        \"roarm_g0a_d363_fabric_render_sync\",\n        \"g0a_d363_fabric_render_sync\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nStoreInfo {\n    store_id: StoreId(\n        Recording,\n        \"roarm_g0a_d363_fabric_render_sync\",\n        \"g0a_d363_fabric_render_sync\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nChunk(chunk_18C3271FFED3919C5c175eaefab06ad7) with 1 rows (632 B) - /__properties - data columns: [/__properties@RecordingInfo:start_time]\nStoreInfo {\n    store_id: StoreId(\n        Blueprint,\n        \"roarm_g0a_d363_fabric_render_sync\",\n        \"rec_3803a115882f42dea4d97eec1a3534f8\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nStoreInfo {\n    store_id: StoreId(\n        Blueprint,\n        \"roarm_g0a_d363_fabric_render_sync\",\n        \"rec_3803a115882f42dea4d97eec1a3534f8\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nChunk(chunk_18C3272005E8AFBF76639639bc056a38) with 1 rows (1.2 KiB) - /view/216771c7-7453-45e2-bb41-2d08568604d5 - data columns: [/view/216771c7-7453-45e2-bb41-2d08568604d5@ViewBlueprint:class_identifier /view/216771c7-7453-45e2-bb41-2d08568604d5@ViewBlueprint:display_name /view/216771c7-7453-45e2-bb41-2d08568604d5@ViewBlueprint:space_origin]\nChunk(chunk_18C3272005E9332576639639bc056a39) with 1 rows (923 B) - /view/265df6f1-30e1-4897-81da-d81dad887d08/ViewContents - data columns: [/view/265df6f1-30e1-4897-81da-d81dad887d08/ViewContents@ViewContents:query]\nChunk(chunk_18C3272005E93EAF76639639bc056a3a) with 1 rows (923 B) - /view/216771c7-7453-45e2-bb41-2d08568604d5/ViewContents - data columns: [/view/216771c7-7453-45e2-bb41-2d08568604d5/ViewContents@ViewContents:query]\nChunk(chunk_18C3272005E9475F76639639bc056a3b) with 1 rows (1.2 KiB) - /view/92159412-ffc6-4b84-99bb-d7d280004215 - data columns: [/view/92159412-ffc6-4b84-99bb-d7d280004215@ViewBlueprint:class_identifier /view/92159412-ffc6-4b84-99bb-d7d280004215@ViewBlueprint:display_name /view/92159412-ffc6-4b84-99bb-d7d280004215@ViewBlueprint:space_origin]\nChunk(chunk_18C3272005E96BC676639639bc056a3c) with 1 rows (1.2 KiB) - /view/6bd45557-c898-46ac-8e49-c01f237bb88c - data columns: [/view/6bd45557-c898-46ac-8e49-c01f237bb88c@ViewBlueprint:class_identifier /view/6bd45557-c898-46ac-8e49-c01f237bb88c@ViewBlueprint:display_name /view/6bd45557-c898-46ac-8e49-c01f237bb88c@ViewBlueprint:space_origin]\nChunk(chunk_18C3272005E982BE76639639bc056a3d) with 1 rows (902 B) - /viewport - data columns: [/viewport@ViewportBlueprint:root_container]\nChunk(chunk_18C3272005E9986076639639bc056a3e) with 1 rows (1.2 KiB) - /container/c504d8ef-510b-4534-b3ec-15611d17df2a - data columns: [/container/c504d8ef-510b-4534-b3ec-15611d17df2a@ContainerBlueprint:container_kind /container/c504d8ef-510b-4534-b3ec-15611d17df2a@ContainerBlueprint:contents /container/c504d8ef-510b-4534-b3ec-15611d17df2a@ContainerBlueprint:row_shares]\nChunk(chunk_18C3272005E9B4D476639639bc056a3f) with 1 rows (923 B) - /view/92159412-ffc6-4b84-99bb-d7d280004215/ViewContents - data columns: [/view/92159412-ffc6-4b84-99bb-d7d280004215/ViewContents@ViewContents:query]\nChunk(chunk_18C3272005E9BEA176639639bc056a40) with 1 rows (1.2 KiB) - /view/b7b8ce97-bc8c-4a3b-a650-f476ef0df195 - data columns: [/view/b7b8ce97-bc8c-4a3b-a650-f476ef0df195@ViewBlueprint:class_identifier /view/b7b8ce97-bc8c-4a3b-a650-f476ef0df195@ViewBlueprint:display_name /view/b7b8ce97-bc8c-4a3b-a650-f476ef0df195@ViewBlueprint:space_origin]\nChunk(chunk_18C3272005E9DCC276639639bc056a41) with 1 rows (923 B) - /view/6bd45557-c898-46ac-8e49-c01f237bb88c/ViewContents - data columns: [/view/6bd45557-c898-46ac-8e49-c01f237bb88c/ViewContents@ViewContents:query]\nChunk(chunk_18C3272005E9E49376639639bc056a42) with 1 rows (883 B) - /blueprint_panel - data columns: [/blueprint_panel@PanelBlueprint:state]\nChunk(chunk_18C3272005E9ED1876639639bc056a43) with 1 rows (1.2 KiB) - /view/265df6f1-30e1-4897-81da-d81dad887d08 - data columns: [/view/265df6f1-30e1-4897-81da-d81dad887d08@ViewBlueprint:class_identifier /view/265df6f1-30e1-4897-81da-d81dad887d08@ViewBlueprint:display_name /view/265df6f1-30e1-4897-81da-d81dad887d08@ViewBlueprint:space_origin]\nChunk(chunk_18C3272005E9F95F76639639bc056a44) with 1 rows (923 B) - /view/03074b92-4161-4e0a-bbe3-c650f3a79a19/ViewContents - data columns: [/view/03074b92-4161-4e0a-bbe3-c650f3a79a19/ViewContents@ViewContents:query]\nChunk(chunk_18C3272005EA0AF176639639bc056a45) with 1 rows (1.2 KiB) - /view/03074b92-4161-4e0a-bbe3-c650f3a79a19 - data columns: [/view/03074b92-4161-4e0a-bbe3-c650f3a79a19@ViewBlueprint:class_identifier /view/03074b92-4161-4e0a-bbe3-c650f3a79a19@ViewBlueprint:display_name /view/03074b92-4161-4e0a-bbe3-c650f3a79a19@ViewBlueprint:space_origin]\nChunk(chunk_18C3272005EA260F76639639bc056a46) with 1 rows (1.2 KiB) - /container/0c821747-9bff-401b-bd16-4b962a06b6b1 - data columns: [/container/0c821747-9bff-401b-bd16-4b962a06b6b1@ContainerBlueprint:col_shares /container/0c821747-9bff-401b-bd16-4b962a06b6b1@ContainerBlueprint:container_kind /container/0c821747-9bff-401b-bd16-4b962a06b6b1@ContainerBlueprint:contents]\nChunk(chunk_18C3272005EA3ABE76639639bc056a47) with 1 rows (1.3 KiB) - /container/5e9981db-26e4-40e8-9c18-951006413d1d - data columns: [/container/5e9981db-26e4-40e8-9c18-951006413d1d@ContainerBlueprint:container_kind /container/5e9981db-26e4-40e8-9c18-951006413d1d@ContainerBlueprint:contents /container/5e9981db-26e4-40e8-9c18-951006413d1d@ContainerBlueprint:row_shares]\nChunk(chunk_18C3272005EA470776639639bc056a48) with 1 rows (883 B) - /selection_panel - data columns: [/selection_panel@PanelBlueprint:state]\nChunk(chunk_18C3272005EA5E9476639639bc056a49) with 1 rows (885 B) - /time_panel - data columns: [/time_panel@TimePanelBlueprint:state]\nChunk(chunk_18C3272005EA701776639639bc056a4a) with 1 rows (923 B) - /view/b7b8ce97-bc8c-4a3b-a650-f476ef0df195/ViewContents - data columns: [/view/b7b8ce97-bc8c-4a3b-a650-f476ef0df195/ViewContents@ViewContents:query]\nBlueprintActivationCommand(StoreId(Blueprint, \"roarm_g0a_d363_fabric_render_sync\", \"rec_3803a115882f42dea4d97eec1a3534f8\"), make_active: true, make_default: true)\nChunk(chunk_18C327200B26B73D6a64550e4eacea8a) with 1 rows (11.9 MiB) - /summary/beginner_sheet - data columns: [/summary/beginner_sheet@Image:buffer /summary/beginner_sheet@Image:format]\nChunk(chunk_18C327200CA4D5846a64550e4eacea8b) with 1 rows (1.3 MiB) - /captures/primary - data columns: [/captures/primary@Image:buffer /captures/primary@Image:format]\nChunk(chunk_18C327200CB6E9B26a64550e4eacea8c) with 1 rows (1.3 MiB) - /captures/opposite - data columns: [/captures/opposite@Image:buffer /captures/opposite@Image:format]\nChunk(chunk_18C327200E31B77A6a64550e4eacea8d) with 1 rows (1.3 MiB) - /captures/primary - data columns: [/captures/primary@Image:buffer /captures/primary@Image:format]\nChunk(chunk_18C327200E39E0DC6a64550e4eacea8e) with 1 rows (1.3 MiB) - /captures/opposite - data columns: [/captures/opposite@Image:buffer /captures/opposite@Image:format]\nChunk(chunk_18C327200FC2E6CF6a64550e4eacea8f) with 1 rows (1.3 MiB) - /captures/primary - data columns: [/captures/primary@Image:buffer /captures/primary@Image:format]\nChunk(chunk_18C327200FCB62BD6a64550e4eacea90) with 1 rows (1.3 MiB) - /captures/opposite - data columns: [/captures/opposite@Image:buffer /captures/opposite@Image:format]\nChunk(chunk_18C327201149532C6a64550e4eacea91) with 1 rows (1.3 MiB) - /captures/primary - data columns: [/captures/primary@Image:buffer /captures/primary@Image:format]\nChunk(chunk_18C32720114F76AE6a64550e4eacea92) with 1 rows (1.3 MiB) - /captures/opposite - data columns: [/captures/opposite@Image:buffer /captures/opposite@Image:format]\nChunk(chunk_18C3272012C38B766a64550e4eacea93) with 1 rows (1.3 MiB) - /captures/primary - data columns: [/captures/primary@Image:buffer /captures/primary@Image:format]\nChunk(chunk_18C3272012CCD09E6a64550e4eacea94) with 1 rows (1.3 MiB) - /captures/opposite - data columns: [/captures/opposite@Image:buffer /captures/opposite@Image:format]\nChunk(chunk_18C3272014418F9D6a64550e4eacea95) with 1 rows (1.3 MiB) - /captures/primary - data columns: [/captures/primary@Image:buffer /captures/primary@Image:format]\nChunk(chunk_18C327201448F4276a64550e4eacea96) with 1 rows (1.3 MiB) - /captures/opposite - data columns: [/captures/opposite@Image:buffer /captures/opposite@Image:format]\nChunk(chunk_18C3272015BDCF536a64550e4eacea97) with 1 rows (1.3 MiB) - /captures/primary - data columns: [/captures/primary@Image:buffer /captures/primary@Image:format]\nChunk(chunk_18C3272015C5E7966a64550e4eacea98) with 1 rows (1.3 MiB) - /captures/opposite - data columns: [/captures/opposite@Image:buffer /captures/opposite@Image:format]\nChunk(chunk_18C327201738E1936a64550e4eacea99) with 1 rows (1.3 MiB) - /captures/primary - data columns: [/captures/primary@Image:buffer /captures/primary@Image:format]\nChunk(chunk_18C32720173FF1726a64550e4eacea9a) with 1 rows (1.3 MiB) - /captures/opposite - data columns: [/captures/opposite@Image:buffer /captures/opposite@Image:format]\nChunk(chunk_18C32720174579CA6a64550e4eacea9b) with 8 rows (1.0 KiB) - /metrics/trace/object_tilt_delta_deg - data columns: [/metrics/trace/object_tilt_delta_deg@Scalars:scalars]\nChunk(chunk_18C3272017465F026a64550e4eacea9c) with 8 rows (1.0 KiB) - /metrics/cylinder/centroid_x_px - data columns: [/metrics/cylinder/centroid_x_px@Scalars:scalars]\nChunk(chunk_18C327201746B1C56a64550e4eacea9d) with 8 rows (1.0 KiB) - /metrics/control/explicit_forward_count - data columns: [/metrics/control/explicit_forward_count@Scalars:scalars]\nChunk(chunk_18C3272017470F3F6a64550e4eacea9e) with 8 rows (1.0 KiB) - /metrics/control/contact_queries - data columns: [/metrics/control/contact_queries@Scalars:scalars]\nChunk(chunk_18C3272017475ABE6a64550e4eacea9f) with 8 rows (1.0 KiB) - /metrics/cylinder/pca_axis_angle_deg - data columns: [/metrics/cylinder/pca_axis_angle_deg@Scalars:scalars]\nChunk(chunk_18C327201747B2A86a64550e4eaceaa0) with 8 rows (1.0 KiB) - /metrics/control/simulation_step_index_delta - data columns: [/metrics/control/simulation_step_index_delta@Scalars:scalars]\nChunk(chunk_18C32720174815BA6a64550e4eaceaa1) with 8 rows (19.4 KiB) - /geometry/cylinder_expected - data columns: [/geometry/cylinder_expected@Mesh3D:albedo_factor /geometry/cylinder_expected@Mesh3D:triangle_indices /geometry/cylinder_expected@Mesh3D:vertex_positions]\nChunk(chunk_18C3272017DB0BB16a64550e4eaceaa2) with 8 rows (1.0 KiB) - /metrics/cylinder/bbox_height_px - data columns: [/metrics/cylinder/bbox_height_px@Scalars:scalars]\nChunk(chunk_18C3272017DB69A06a64550e4eaceaa3) with 8 rows (1.0 KiB) - /metrics/control/q5_target_updates - data columns: [/metrics/control/q5_target_updates@Scalars:scalars]\nChunk(chunk_18C3272017DBB51F6a64550e4eaceaa4) with 1 rows (810 B) - /metadata/run - data columns: [/metadata/run@TextDocument:text]\nChunk(chunk_18C3272017DBD6E96a64550e4eaceaa5) with 8 rows (1.0 KiB) - /metrics/control/simulation_time_delta_s - data columns: [/metrics/control/simulation_time_delta_s@Scalars:scalars]\nChunk(chunk_18C3272017DC23A16a64550e4eaceaa6) with 8 rows (1.0 KiB) - /metrics/cylinder/mask_area_px - data columns: [/metrics/cylinder/mask_area_px@Scalars:scalars]\nChunk(chunk_18C3272017DC6A996a64550e4eaceaa7) with 8 rows (1.0 KiB) - /metrics/control/controlled_physics_steps - data columns: [/metrics/control/controlled_physics_steps@Scalars:scalars]\nChunk(chunk_18C3272017DCCEE76a64550e4eaceaa8) with 8 rows (1.0 KiB) - /metrics/cylinder/bbox_width_px - data columns: [/metrics/cylinder/bbox_width_px@Scalars:scalars]\nChunk(chunk_18C3272017DD1EA76a64550e4eaceaa9) with 8 rows (1.0 KiB) - /metrics/control/custom_step_counter_delta - data columns: [/metrics/control/custom_step_counter_delta@Scalars:scalars]\nChunk(chunk_18C3272017DD80606a64550e4eaceaaa) with 8 rows (1.5 KiB) - /events/sync - data columns: [/events/sync@TextLog:level /events/sync@TextLog:text]\nChunk(chunk_18C3272017DE00B86a64550e4eaceaab) with 8 rows (1.0 KiB) - /metrics/control/timeline_time_delta_s - data columns: [/metrics/control/timeline_time_delta_s@Scalars:scalars]\nChunk(chunk_18C3272017DE48306a64550e4eaceaac) with 8 rows (1.0 KiB) - /metrics/cylinder/centroid_y_px - data columns: [/metrics/cylinder/centroid_y_px@Scalars:scalars]\nChunk(chunk_18C3272017DE8E736a64550e4eaceaad) with 8 rows (1.0 KiB) - /metrics/trace/object_xy_disp_mm - data columns: [/metrics/trace/object_xy_disp_mm@Scalars:scalars]\nChunk(chunk_18C3272017DEDEB06a64550e4eaceaae) with 8 rows (1.0 KiB) - /metrics/control/q5_science_samples - data columns: [/metrics/control/q5_science_samples@Scalars:scalars]\n"
+  },
+  "rendered_blueprint_source": "active blueprint embedded in the RRD",
+  "screenshot_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d363/d363_fabric_render_sync_rerun.png",
+  "screenshot_port": "auto",
+  "screenshot_window_size": "3200x1800",
+  "sha256": "1b9ea16488970bed1385de7334cd9258c2115bfa1942e36dde613d65f4773f89",
+  "stats": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "stats",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d363/d363_fabric_render_sync.rrd"
+    ],
+    "ok": true,
+    "returncode": 0,
+    "stderr": "2026-07-17T18:28:16.345390Z  INFO rerun::commands::rrd::stats: processing input…\n2026-07-17T18:28:16.394314Z  INFO rerun::commands::rrd::stats: computing stats…\n",
+    "stdout": "Overview\n----------\nnum_chunks = 57\nnum_entity_paths = 43\nnum_chunks_without_components = 0 (0.000%)\nnum_rows = 190\nnum_rows_min = 1\nnum_rows_max = 8\nnum_rows_avg = 3.333\nnum_static = 3\nnum_indexes_min = 0\nnum_indexes_max = 2\nnum_indexes_avg = 1.895\nnum_components_min = 1\nnum_components_max = 3\nnum_components_avg = 1.667\n\nNum chunks per entity\n---------------------\n/__properties: 1\n/blueprint_panel: 1\n/captures/opposite: 8\n/captures/primary: 8\n/container/0c821747-9bff-401b-bd16-4b962a06b6b1: 1\n/container/5e9981db-26e4-40e8-9c18-951006413d1d: 1\n/container/c504d8ef-510b-4534-b3ec-15611d17df2a: 1\n/events/sync: 1\n/geometry/cylinder_expected: 1\n/metadata/run: 1\n/metrics/control/contact_queries: 1\n/metrics/control/controlled_physics_steps: 1\n/metrics/control/custom_step_counter_delta: 1\n/metrics/control/explicit_forward_count: 1\n/metrics/control/q5_science_samples: 1\n/metrics/control/q5_target_updates: 1\n/metrics/control/simulation_step_index_delta: 1\n/metrics/control/simulation_time_delta_s: 1\n/metrics/control/timeline_time_delta_s: 1\n/metrics/cylinder/bbox_height_px: 1\n/metrics/cylinder/bbox_width_px: 1\n/metrics/cylinder/centroid_x_px: 1\n/metrics/cylinder/centroid_y_px: 1\n/metrics/cylinder/mask_area_px: 1\n/metrics/cylinder/pca_axis_angle_deg: 1\n/metrics/trace/object_tilt_delta_deg: 1\n/metrics/trace/object_xy_disp_mm: 1\n/selection_panel: 1\n/summary/beginner_sheet: 1\n/time_panel: 1\n/view/03074b92-4161-4e0a-bbe3-c650f3a79a19: 1\n/view/03074b92-4161-4e0a-bbe3-c650f3a79a19/ViewContents: 1\n/view/216771c7-7453-45e2-bb41-2d08568604d5: 1\n/view/216771c7-7453-45e2-bb41-2d08568604d5/ViewContents: 1\n/view/265df6f1-30e1-4897-81da-d81dad887d08: 1\n/view/265df6f1-30e1-4897-81da-d81dad887d08/ViewContents: 1\n/view/6bd45557-c898-46ac-8e49-c01f237bb88c: 1\n/view/6bd45557-c898-46ac-8e49-c01f237bb88c/ViewContents: 1\n/view/92159412-ffc6-4b84-99bb-d7d280004215: 1\n/view/92159412-ffc6-4b84-99bb-d7d280004215/ViewContents: 1\n/view/b7b8ce97-bc8c-4a3b-a650-f476ef0df195: 1\n/view/b7b8ce97-bc8c-4a3b-a650-f476ef0df195/ViewContents: 1\n/viewport: 1\n\nNum chunks per index\n--------------------\nblueprint: 19\nlog_time: 54\nsync_step: 35\n\nNum chunks per component\n------------------------\nContainerBlueprint:col_shares: 1\nContainerBlueprint:container_kind: 3\nContainerBlueprint:contents: 3\nContainerBlueprint:row_shares: 2\nImage:buffer: 17\nImage:format: 17\nMesh3D:albedo_factor: 1\nMesh3D:triangle_indices: 1\nMesh3D:vertex_positions: 1\nPanelBlueprint:state: 2\nRecordingInfo:start_time: 1\nScalars:scalars: 17\nTextDocument:text: 1\nTextLog:level: 1\nTextLog:text: 1\nTimePanelBlueprint:state: 1\nViewBlueprint:class_identifier: 6\nViewBlueprint:display_name: 6\nViewBlueprint:space_origin: 6\nViewContents:query: 6\nViewportBlueprint:root_container: 1\n\nSize (schema + data, compressed)\n--------------------------------\nipc_size_bytes_total = 11.9 MiB\nipc_size_bytes_min = 913 B\nipc_size_bytes_max = 1.8 MiB\nipc_size_bytes_avg = 214 KiB\nipc_size_bytes_p50 = 1.3 KiB\nipc_size_bytes_p90 = 643 KiB\nipc_size_bytes_p95 = 646 KiB\nipc_size_bytes_p99 = 1.8 MiB\nipc_size_bytes_p999 = 1.8 MiB\n\nSize (schema + data, uncompressed)\n----------------------------------\nipc_size_bytes_total = 74.4 MiB\nipc_size_bytes_min = 1.7 KiB\nipc_size_bytes_max = 26.7 MiB\nipc_size_bytes_avg = 1.3 MiB\nipc_size_bytes_p50 = 2.6 KiB\nipc_size_bytes_p90 = 3.0 MiB\nipc_size_bytes_p95 = 3.0 MiB\nipc_size_bytes_p99 = 26.7 MiB\nipc_size_bytes_p999 = 26.7 MiB\n\nSize (schema only, uncompressed)\n--------------------------------\nipc_size_bytes_total = 100.1 KiB\nipc_size_bytes_min = 1016 B\nipc_size_bytes_max = 2.3 KiB\nipc_size_bytes_avg = 1.8 KiB\nipc_size_bytes_p50 = 1.6 KiB\nipc_size_bytes_p90 = 2.2 KiB\nipc_size_bytes_p95 = 2.3 KiB\nipc_size_bytes_p99 = 2.3 KiB\nipc_size_bytes_p999 = 2.3 KiB\n\nSize (data only, uncompressed)\n------------------------------\nipc_size_bytes_total = 74.3 MiB\nipc_size_bytes_min = 656 B\nipc_size_bytes_max = 26.7 MiB\nipc_size_bytes_avg = 1.3 MiB\nipc_size_bytes_p50 = 1.1 KiB\nipc_size_bytes_p90 = 3.0 MiB\nipc_size_bytes_p95 = 3.0 MiB\nipc_size_bytes_p99 = 26.7 MiB\nipc_size_bytes_p999 = 26.7 MiB\n\nUnsorted timelines\n------------------\n(none — every timeline on every chunk is sorted)\n\nFooters\n-------\nnum_manifests = 2 (one per recording)\n\nFooter manifest for StoreId(Blueprint, \"roarm_g0a_d363_fabric_render_sync\", \"rec_3803a115882f42dea4d97eec1a3534f8\")\n  num_chunks_indexed = 19\n  num_static_chunks = 0\n  num_entity_paths = 19\n  manifest_num_columns = 88\n  sorbet_schema_num_fields = 40\n  sorbet_schema_sha256 = b14cc80f37d1acf6e99c4e6ecf87e5fa09132c47486db33420c7bb314ffe39f9\n  chunk_byte_size_total (native) = 28.0 KiB\n  chunk_byte_size_uncompressed_total = 62.7 KiB\n\nFooter manifest for StoreId(Recording, \"roarm_g0a_d363_fabric_render_sync\", \"g0a_d363_fabric_render_sync\")\n  num_chunks_indexed = 38\n  num_static_chunks = 3\n  num_entity_paths = 24\n  manifest_num_columns = 69\n  sorbet_schema_num_fields = 33\n  sorbet_schema_sha256 = ea0416130136ae74a83a3ea441f477b3d3ea1d0842d3c18556302e6d7002702c\n  chunk_byte_size_total (native) = 11.9 MiB\n  chunk_byte_size_uncompressed_total = 74.3 MiB\n"
+  },
+  "timeline_contract": {
+    "checks": {
+      "sync_step": true
+    },
+    "exact_match": true,
+    "observed": [
+      "blueprint",
+      "log_time",
+      "sync_step"
+    ],
+    "pass": true
+  },
+  "verify": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "verify",
+      "--check-footers",
+      "true",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d363/d363_fabric_render_sync.rrd"
+    ],
+    "ok": true,
+    "returncode": 0,
+    "stderr": "1 file verified without error.\n",
+    "stdout": ""
+  },
+  "version": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "--version"
+    ],
+    "expected_version_match": true,
+    "ok": true,
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "rerun-cli 0.34.1 (base lance map_view nasm native_viewer oss_server perf_telemetry re_server release_full release_no_web_viewer web_viewer) [rustc 1.92.0 (ded5c06cf 2025-12-08), LLVM 21.1.3] x86_64-unknown-linux-gnu prepare-release-0.34.1 4efb18f, built 2026-07-07T16:20:42.173372603Z\nVideo features: av1 ffmpeg nasm\n"
+  }
+}

@@ -1,0 +1,174 @@
+{
+  "artifact": "D363_PREPARE_PREFLIGHT_V1",
+  "case": "g0a_d363",
+  "checks": {
+    "d334_sidecar_bound": true,
+    "d348_frozen_display_topology": true,
+    "d362_harness_sha_exact": true,
+    "d362_manifest_exact": true,
+    "d362_supervisor_sha_exact": true,
+    "d362_trace_contract": true,
+    "d362_video_report_sha_exact": true,
+    "d362_worker_summary_sha_exact": true,
+    "d363_d362_inode_disjoint": true,
+    "display_xdpyinfo": true,
+    "ffmpeg_available": true,
+    "git_scope_d363_only": true,
+    "gpu_free_gate": true,
+    "gpu_rtx4090_sm89": true,
+    "harness_hash_bound": true,
+    "head_origin_master_exact": true,
+    "input_hashes_bound": true,
+    "negative_controls": true,
+    "no_runtime_modules_before_applauncher": true,
+    "numpy_pin_1p26p0": true,
+    "psutil_pin_5p9p8": true,
+    "ram_free_gate": true,
+    "registered_python": true,
+    "rerun_pin": true,
+    "static_source_audit": true
+  },
+  "display_check_returncode": 0,
+  "ffmpeg_check": {
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "7.0.2-static\n/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/imageio_ffmpeg/binaries/ffmpeg-linux-x86_64-v7.0.2\n"
+  },
+  "frozen_display_topology": {
+    "authority": "frozen D348 callback vertices/topology; D362 renderer display-only",
+    "checks": {
+      "all_128_rows_valid": true,
+      "body_sequence_exact_64_plus_64": true,
+      "evidence_artifact_exact": true,
+      "evidence_pass": true,
+      "evidence_sha_exact": true,
+      "global_indices_exact_0_to_127": true,
+      "part_counts_64_plus_64": true,
+      "source_rows_exact_128": true
+    },
+    "display_topology_stream_sha256": "69f31013057739f91bb6e15ddcc6baec9e95595f639c45c668896917bfaf8ea4",
+    "fresh_live_query_performed": false,
+    "part_counts": {
+      "gripper_link": 64,
+      "link5": 64
+    },
+    "pass": true,
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d348/attempt2/d348_callback_topology_volume_evidence.json",
+    "sha256": "83b8c7b16181d0f5c545cfbeaa992c8ebfd69e2310dd33bce2a64234a1deaab6"
+  },
+  "git_status": [
+    " M START_HERE.md",
+    "?? claudedocs/runtime_logs/grasp_track/g0a_d363/",
+    "?? claudedocs/session_20260718_grasp_g0a_d363_trace_replay_1080_and_isaac_render_sync_repair.md",
+    "?? sim_scripts/cyl34_top_view_d363_d362_trace_replay_1080_and_isaac_render_sync_repair.py"
+  ],
+  "gpu_and_ram": {
+    "compute_capability": "8.9",
+    "memory_free_mib": 13894,
+    "memory_total_mib": 16376,
+    "memory_used_mib": 2051,
+    "name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+    "query_returncode": 0,
+    "ram_available_bytes": 16566030336,
+    "raw": "NVIDIA GeForce RTX 4090 Laptop GPU, 8.9, 16376, 2051, 13894, 18, 2",
+    "utilization_gpu_percent": 18,
+    "utilization_memory_percent": 2
+  },
+  "negative_controls": {
+    "pass": true,
+    "passed": 12,
+    "tests": {
+      "reference_no_advance_accept": true,
+      "reference_video_accept": true,
+      "reject_1088": true,
+      "reject_clock_increment": true,
+      "reject_d362_tree_manifest_mutation": true,
+      "reject_duplicate_index": true,
+      "reject_fifth_forward": true,
+      "reject_missing_endpoint": true,
+      "reject_q5_target_update": true,
+      "reject_step_increment": true,
+      "reject_wrong_decision_row_index": true,
+      "reject_wrong_middle_permutation": true
+    },
+    "total": 12
+  },
+  "pass": true,
+  "pins": {
+    "numpy": "1.26.0",
+    "psutil": "5.9.8"
+  },
+  "preregistration_sha256": "2f0beee3ca22c028493a4eaf1e6c534e776eb4213ed11d275593e859c3f412c0",
+  "rerun_check": {
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "rerun-cli 0.34.1 (base lance map_view nasm native_viewer oss_server perf_telemetry re_server release_full release_no_web_viewer web_viewer) [rustc 1.92.0 (ded5c06cf 2025-12-08), LLVM 21.1.3] x86_64-unknown-linux-gnu prepare-release-0.34.1 4efb18f, built 2026-07-07T16:20:42.173372603Z\nVideo features: av1 ffmpeg nasm\n"
+  },
+  "residual_process_audit": {
+    "gate_role": "recorded input risk; resource gates remain authoritative",
+    "known_d342_pid_1729639_observed": true,
+    "rows": [
+      {
+        "command": "/usr/libexec/polkitd --no-debug",
+        "create_time": 1783331459.24,
+        "pid": 975,
+        "ppid": 1,
+        "status": "sleeping"
+      },
+      {
+        "command": "/usr/libexec/rtkit-daemon",
+        "create_time": 1783331459.47,
+        "pid": 1168,
+        "ppid": 1,
+        "status": "sleeping"
+      },
+      {
+        "command": "/usr/libexec/packagekitd",
+        "create_time": 1783331463.4,
+        "pid": 1964,
+        "ppid": 1,
+        "status": "sleeping"
+      },
+      {
+        "command": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.kit.telemetry-0.5.2+69cbf6ad.lx64.r.cp311/omni.telemetry.transmitter/omni.telemetry.transmitter --/telemetry/enableAnonymousAppName=true --/telemetry/enableAnonymousData=true --/telemetry/useOpenEndpoint=true --/telemetry/mode=\"\" --/telemetry/logging/warnFilter/0=\"*\" --/telemetry/enableNVDF=false --/telemetry/enableSentry=false --/telemetry/removePIISentry=false --/telemetry/appRootPath=\"\" --/telemetry/dsn=\"https://b61f14dfc36f4beabadf4d9dba8e492b@sentry.perflab.nvidia.com/834\" --/telemetry/openEndpointUrl=\"https://opentelemetry.analytics.nvidiagrid.net/api/v3/topic/omniverse-team.open.omni-open-collector\" --/telemetry/openTestEndpointUrl=\"https://opentelemetry.analytics.nvidiagrid.net/api/v3/topic/omniverse-team.open.omni-test-open-collector\" --/telemetry/enterpriseOpenEndpointUrl=\"https://opentelemetry.analytics.nvidiagrid.net/api/v3/topic/omniverse-team.open.omni-ove-open-collector\" --/telemetry/enterpriseOpenTestEndpointUrl=\"https://opentelemetry.analytics.nvidiagrid.net/api/v3/topic/omniverse-team.open.omni-ove-test-open-collector\" --/log/outputStreamLevel=\"Warning\" --/log/debugConsoleLevel=\"Warning\" --/log/fileLogLevel=\"Info\" --/log/fileMaxCount=30 --/log/includeTimeStamp=true --/log/setElapsedTimeUnits=\"milliseconds\" --/log/enabled=true --/log/async=false --/log/fileFlushLevel=\"verbose\" --/log/flushStandardStreamOutput=false --/log/enableDebugConsoleOutput=true --/log/enableColorOutput=true --/log/processGroupId=0 --/log/includeSource=true --/log/includeChannel=true --/log/includeFilename=false --/log/includeLineNumber=false --/log/includeFunctionName=false --/log/includeThreadId=false --/log/includeProcessId=false --/log/includeTraceId=false --/log/detail=false --/log/fullDetail=false --/log/forceAnsiColor=false --/log/fileAppend=false --/log/utcTimestamp=true --/log/microsecondTimestamp=false --/log/enableStandardStreamOutput=false --/log/file=/home/cgxr/.nvidia-omniverse/logs/omni.telemetry.transmitter.log --/log/level=Info --/log/file=/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/kit/logs/omni.telemetry.transmitter.log --/log/level=Warning --/privacy/personalization=true --/privacy/performance=true --/privacy/usage=true --/privacy/userId=48bcbf521aee1125 --/telemetry/extraFieldsToAdd=schemaid --/structuredLog/extraFields/schemaid=omniverse-team.open.omni-open-collector:1 --/telemetry/runEnvironment=Individual --/telemetry/transmitter/0/authenticate=false --/telemetry/transmitter/0/eventProtocol=defaultWithList --/telemetry/transmitter/0/endpoint=https://opentelemetry.analytics.nvidiagrid.net/api/v3/topic/omniverse-team.open.omni-open-collector",
+        "create_time": 1784033845.47,
+        "pid": 719072,
+        "ppid": 1123,
+        "status": "sleeping"
+      },
+      {
+        "command": "python sim_scripts/cyl34_top_view_d342_grasp_g0a_authored_coordinate_stream_repair.py --headless",
+        "create_time": 1783946313.4,
+        "pid": 1729639,
+        "ppid": 1123,
+        "status": "sleeping"
+      },
+      {
+        "command": "/home/cgxr/miniconda3/envs/isaaclab/bin/python sim_scripts/cyl34_top_view_d363_d362_trace_replay_1080_and_isaac_render_sync_repair.py --stage prepare",
+        "create_time": 1784312776.79,
+        "pid": 1902655,
+        "ppid": 11749,
+        "status": "running"
+      }
+    ],
+    "signal_sent": false
+  },
+  "static_source_audit": {
+    "checks": {
+      "decision_rows_exact_literal": true,
+      "macro_block_size_one_literal": true,
+      "no_d332_physics_step_call": true,
+      "no_env_step_call": true,
+      "no_fresh_corrected_live_audit": true,
+      "no_fresh_live_topology_binding": true,
+      "no_inner_sim_render": true,
+      "no_joint_target_write": true,
+      "no_physics_setting_mutation_in_set_calls": true,
+      "no_scene_write_data_to_sim": true,
+      "no_sim_step_call": true,
+      "one_explicit_forward_call_site": true
+    },
+    "pass": true
+  },
+  "utc": "2026-07-17T18:26:17.829867+00:00"
+}

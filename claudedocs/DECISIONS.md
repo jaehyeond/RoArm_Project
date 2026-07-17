@@ -20835,3 +20835,78 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d362/d362_worker_stdout_stderr.log`
 - `claudedocs/runtime_logs/grasp_track/g0a_d362/d362_supervisor_summary.json`
 - `START_HERE.md`
+
+## D363 - exact trace replay 성공과 실제 viewport 동기화 실패를 분리하고 cache readback을 backend attestation으로 오인하지 않는다 (2026-07-18)
+
+Decision:
+
+- D363은 immutable D362 trace의 표시 결함만 다룬 observability-only case다. 승인된
+  Isaac worker는 정확히 1회 실행됐고 retry하지 않았다. Controlled physics step, q5
+  science sample, q5 target update, contact query는 모두 `0`; direct display-state write와
+  explicit `SimulationContext.forward()`는 각각 `4`였다.
+- D362 canonical trace 재생 MP4는 `macro_block_size=1`로 정확히 `1920x1080`, 250 frames,
+  20fps, 12.5s, H.264/yuv420p와 full decode를 PASS했다. D362의 기존 1920x1088 실패
+  파일은 수정하지 않았다. 새 영상은 physics 재계산이 아니라 frozen 500-row trace의
+  시각 재생이다.
+- Actual Isaac render synchronization은 FAIL이다. Primary precommand-after→final-after의
+  centroid/axis/IoU는 `0.049105px/0.049759deg/0.996594`, opposite는
+  `0.161524px/0.118677deg/0.994711`이었다. Primary final-before→after도
+  `0.011875px/0.003691deg/0.999471`이고 final-after는 toppled가 아니었다. 원본 16개
+  수동 검사에서도 네 기록 상태와 양 camera의 원통이 계속 upright였다.
+- **지속 규칙:** `write_*_to_sim()` 직후 `AssetData` property를 다시 읽은 bit-exact
+  결과를 독립 PhysX backend readback으로 부르지 않는다. 설치 IsaacLab writer는 먼저
+  내부 cache를 입력 clone으로 갱신하고 backend setter를 호출하며, data timestamp가
+  진전되지 않으면 property는 backend getter 대신 같은 cache를 반환한다. D363의
+  `all_write_readback_bits_exact=true`는 AssetData cache self-read만 증명한다.
+- **지속 규칙:** explicit `forward()` call count만으로 Fabric/Hydra 동기화를 증명하지
+  않는다. Run-level `cfg.use_fabric`, `_fabric_iface`, 선택된 `force_update/update` callable,
+  independent PhysX getter, USDRT/Fabric world transform, Hydra pixel을 같은 상태·같은
+  전후 순서로 독립 계측해야 끊긴 층을 판별할 수 있다.
+- D362의 “capture 전에 `forward()`가 없었다”는 구현 관찰 자체는 맞지만, 그것이 stale
+  viewport의 충분한 원인이라는 추론은 D363으로 superseded다. D363은 explicit
+  `forward()` 4회를 넣고도 actual cylinder가 갱신되지 않았으므로, missing-forward만
+  고치면 render sync가 복구된다고 다시 가정하지 않는다.
+- D363 worker log의 generic `Failed to clone in Fabric`는 기록하되 단일 root cause로
+  승격하지 않는다. 같은 오류가 D352/D353/D354/D357/D360/D362에도 반복됐고, D363은
+  target prim별 clone failure나 Fabric interface/callable을 계측하지 않았다. CPU
+  powersave/PCIe Gen1 경고도 성능 위험일 뿐 stale pose의 직접 원인 증거가 아니다.
+- Rerun 0.34.1의 exact timelines/entities/components/footer/RBL/headless screenshot은
+  PASS했고 actual upright image와 canonical toppled panel의 불일치를 숨기지 않았다.
+  Rerun PASS는 actual Hydra sync FAIL을 덮지 않는다.
+- 최종 verdict는 `D363_OBSERVABILITY_OR_INTEGRITY_FAIL_STOP`, completion `pass=false`다.
+  D362 physical sub-verdict는 상속만 하며 cap/rim/barrel, exact face/manifold, force
+  closure, stable grasp, target/IK repair justification는 `null`, `g0a_pass=false`다.
+
+Evidence:
+
+- Worker exit `0`, watchdog `null`, elapsed `54.454797s`; GPU used max/free min
+  `7760/8185MiB`, utilization max `42%`, worker RSS max `7,166,943,232B`.
+- Exact video SHA-256 `2385fc89...51e4`; source-index registered/observed digest
+  `2524ce07...4347`; full manual playback `13.21s`, source row `0..499` observed.
+- RRD SHA-256 `1b9ea164...3f89`; required manual visual paths/hashes `22/22` exact.
+- D362 33-file manifest, D334 sidecar, harness/input hashes, D363-D362 inode separation,
+  37 automated-bound artifacts and precompletion inventory/hash map stayed exact.
+- Completion hash `e55a155b...f078`; precompletion hash-manifest digest
+  `09acea8e...9138`.
+
+Implication:
+
+- D363 output is immutable; do not rerun, resume, overwrite, or reinterpret the exact trace
+  video as new physical evidence.
+- The next narrow candidate requires separate approval: observability-only D364
+  `[paused_render_state_layer_localization]`. With frozen D362 states and zero physics steps,
+  record before/after values at AssetData cache, independent PhysX getter, USD/USDRT/Fabric
+  matrix, and Hydra pixel layers, plus Fabric interface/callable attestation. This must happen
+  before another render-sync repair or any q5/physics/cap-rim/target-IK work.
+
+Sources:
+
+- `claudedocs/session_20260718_grasp_g0a_d363_trace_replay_1080_and_isaac_render_sync_repair.md`
+- `sim_scripts/cyl34_top_view_d363_d362_trace_replay_1080_and_isaac_render_sync_repair.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d363/d363_d362_trace_replay_report.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d363/d363_fabric_render_sync_report.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d363/d363_worker_stdout_stderr.log`
+- `claudedocs/runtime_logs/grasp_track/g0a_d363/d363_rerun_validation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d363/d363_manual_visual_inspection.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d363/d363_completion_summary.json`
+- `START_HERE.md`

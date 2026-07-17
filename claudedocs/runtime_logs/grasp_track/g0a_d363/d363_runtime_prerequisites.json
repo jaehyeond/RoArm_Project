@@ -1,0 +1,133 @@
+{
+  "artifact": "D363_RUNTIME_PREREQUISITES_V1",
+  "checks": {
+    "controlled_counter_baseline_zero": true,
+    "frozen_display_topology_64_plus_64": true,
+    "frozen_display_topology_exact_preregistered": true,
+    "joint_order_exact": true,
+    "no_fresh_live_topology_or_corrected_audit": true,
+    "simulation_clock_fields_available": true,
+    "timeline_paused_not_stopped": true,
+    "trace_contract": true
+  },
+  "controlled_zero_step_baseline": {
+    "custom_step_counter": 0,
+    "joint_pos_bits": "a8599b3c50869e3c9151c83fd2785cbc5e4d72bc00000000",
+    "joint_vel_bits": "000000000000000000000000000000000000000000000000",
+    "object_ang_vel_bits": "000000000000000000000000",
+    "object_lin_vel_bits": "000000000000000000000000",
+    "object_pos_bits": "9a99993e0000000053b0063d",
+    "object_quat_bits": "0000803f000000000000000000000000",
+    "simulation_clock": {
+      "current_time": 0.009999999776482582,
+      "current_time_step_index": 2
+    },
+    "timeline_playing": false,
+    "timeline_stopped": false,
+    "timeline_time_s": 0.029999999329447746
+  },
+  "frozen_display_topology": {
+    "authority": "frozen D348 callback vertices/topology; D362 renderer display-only",
+    "checks": {
+      "all_128_rows_valid": true,
+      "body_sequence_exact_64_plus_64": true,
+      "evidence_artifact_exact": true,
+      "evidence_pass": true,
+      "evidence_sha_exact": true,
+      "global_indices_exact_0_to_127": true,
+      "part_counts_64_plus_64": true,
+      "source_rows_exact_128": true
+    },
+    "display_topology_stream_sha256": "69f31013057739f91bb6e15ddcc6baec9e95595f639c45c668896917bfaf8ea4",
+    "fresh_live_query_performed": false,
+    "part_counts": {
+      "gripper_link": 64,
+      "link5": 64
+    },
+    "pass": true,
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d348/attempt2/d348_callback_topology_volume_evidence.json",
+    "sha256": "83b8c7b16181d0f5c545cfbeaa992c8ebfd69e2310dd33bce2a64234a1deaab6"
+  },
+  "launcher": {
+    "checks": {
+      "cameras_disabled": true,
+      "device_zero": true,
+      "gui_experience": true,
+      "headless_false": true,
+      "livestream_zero": true,
+      "offscreen_false": true,
+      "xr_disabled": true
+    },
+    "pass": true,
+    "values": {
+      "device_id": 0,
+      "enable_cameras": false,
+      "experience": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaaclab/apps/isaaclab.python.kit",
+      "headless": false,
+      "livestream": 0,
+      "offscreen_render": false,
+      "xr": false
+    }
+  },
+  "pass": true,
+  "pause_bridge": {
+    "after": {
+      "custom_step_counter": 0,
+      "joint_pos_bits": "a8599b3c50869e3c9151c83fd2785cbc5e4d72bc00000000",
+      "joint_vel_bits": "000000000000000000000000000000000000000000000000",
+      "object_ang_vel_bits": "000000000000000000000000",
+      "object_lin_vel_bits": "000000000000000000000000",
+      "object_pos_bits": "9a99993e0000000053b0063d",
+      "object_quat_bits": "0000803f000000000000000000000000",
+      "simulation_clock": {
+        "current_time": 0.009999999776482582,
+        "current_time_step_index": 2
+      },
+      "timeline_playing": false,
+      "timeline_stopped": false,
+      "timeline_time_s": 0.029999999329447746
+    },
+    "before": {
+      "custom_step_counter": 0,
+      "joint_pos_bits": "a8599b3c50869e3c9151c83fd2785cbc5e4d72bc00000000",
+      "joint_vel_bits": "000000000000000000000000000000000000000000000000",
+      "object_ang_vel_bits": "000000000000000000000000",
+      "object_lin_vel_bits": "000000000000000000000000",
+      "object_pos_bits": "9a99993e0000000053b0063d",
+      "object_quat_bits": "0000803f000000000000000000000000",
+      "simulation_clock": {
+        "current_time": 0.009999999776482582,
+        "current_time_step_index": 2
+      },
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "timeline_time_s": 0.029999999329447746
+    },
+    "checks": {
+      "clock_unchanged": true,
+      "commit_at_most_once": true,
+      "counter_unchanged": true,
+      "paused_not_stopped": true,
+      "state_bits_unchanged": true
+    },
+    "commit_count": 1,
+    "pass": true
+  },
+  "reset_internal_transition": {
+    "after": {
+      "custom_step_counter": 0,
+      "simulation_clock": {
+        "current_time": 0.009999999776482582,
+        "current_time_step_index": 2
+      }
+    },
+    "before": {
+      "custom_step_counter": 0,
+      "simulation_clock": {
+        "current_time": 0.009999999776482582,
+        "current_time_step_index": 2
+      }
+    },
+    "excluded_from_d363_controlled_steps": true
+  }
+}
