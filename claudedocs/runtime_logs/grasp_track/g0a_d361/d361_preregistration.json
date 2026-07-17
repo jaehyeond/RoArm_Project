@@ -1,0 +1,293 @@
+{
+  "artifact": "D361_PREREGISTRATION_V1",
+  "base_git": "e7ed71ca80768df9037c16e53a12d3c032af3d5d",
+  "capacity_budget_preflight": {
+    "actual_shape_counts": {
+      "gripper_link": 64,
+      "link4": 1,
+      "link5": 64,
+      "sensor_cylinder": 1,
+      "support_table": 1
+    },
+    "artifact": "D361_VERSION_ALIGNED_CONTACT_CAPACITY_BUDGET_V1",
+    "authority_scope": "future detailed-contact allocation contract only",
+    "case": "g0a_d361",
+    "checks": {
+      "actual_shape_inventory_exact": true,
+      "all_negative_controls_reject": true,
+      "cylinder_static_source_contract_pass": true,
+      "d360_environment_count_one": true,
+      "d360_filter_count_four": true,
+      "d360_prerequisites_pass": true,
+      "d360_sensor_body_count_one": true,
+      "detail_bytes_1064960": true,
+      "direct_capacity_33280": true,
+      "filter_shape_total_130": true,
+      "independent_bytes_match": true,
+      "independent_capacity_matches": true,
+      "physx_plugin_exact_5_6_1_string_once": true
+    },
+    "cylinder_static_source_checks": {
+      "collision_applied_to_mesh_prim_present": true,
+      "one_mesh_prim_path_convention_present": true,
+      "single_cylinder_prim_type_call_present": true,
+      "spawn_cylinder_definition_present": true
+    },
+    "formula": {
+      "derived_reported_contact_allocation_envelope": 33280,
+      "direct_total_capacity": 33280,
+      "filter_shape_count": 130,
+      "future_cfg_max_contact_data_count_per_prim": 33280,
+      "independent_sum_total_capacity": 33280,
+      "number_of_environments": 1,
+      "number_of_sensor_bodies": 1,
+      "per_filter_capacities": {
+        "gripper_link": 16384,
+        "link4": 256,
+        "link5": 16384,
+        "support_table": 256
+      },
+      "per_geometry_pair_contact_envelope": 256,
+      "sensor_shape_count": 1
+    },
+    "frontend_memory": {
+      "arrays": {
+        "normal_float32_components_per_contact": 3,
+        "normal_force_float32_components_per_contact": 1,
+        "point_float32_components_per_contact": 3,
+        "separation_float32_components_per_contact": 1
+      },
+      "backend_internal_allocation_included": false,
+      "bytes_per_contact": 32,
+      "count_and_start_uint32_bytes": 32,
+      "detail_array_bytes": 1064960,
+      "detail_array_mib": 1.015625
+    },
+    "installed_runtime_identity": {
+      "isaacsim_python_distribution": "5.1.0.0",
+      "omni_physx_extension": "107.3.26+107.3.3",
+      "physx_5_6_1_null_terminated_string_offsets": [
+        9753628
+      ],
+      "physx_plugin_path": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.physx-107.3.26+107.3.3.lx64.r.cp311.u353/bin/libomni.physx.plugin.so",
+      "physx_plugin_sha256": "03fbf17e6f0dc3f9006c8c00aa0ca572a72fd69498874df6dd900dac726c9909"
+    },
+    "link4_offline_core_pxr_inventory": {
+      "artifact": "D361_CORE_PXR_LINK4_COLLISION_INVENTORY_V1",
+      "default_prim": "/roarm_m3",
+      "enabled_count": 1,
+      "kit_or_physx_runtime_launched": false,
+      "rows": [
+        {
+          "collision_enabled": true,
+          "path": "/colliders/link4/link4/node_STL_BINARY_",
+          "type_name": "Xform"
+        }
+      ],
+      "stderr": "",
+      "subprocess_returncode": 0,
+      "usd_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/configuration/roarm_m3_physics.usd"
+    },
+    "negative_controls": {
+      "exact_boundary_accepted": true,
+      "filter_count_double_multiplication_rejected": true,
+      "legacy_16_rejected": true,
+      "link5_minus_one_shape_rejected": true,
+      "one_below_exact_boundary_rejected": true,
+      "one_hidden_extra_filter_shape_rejected": true,
+      "stale_physx_5_3_limit_64_rejected": true,
+      "two_sensor_shapes_rejected": true,
+      "wrong_filter_count_multiplication_16x4_rejected": true
+    },
+    "pass": true,
+    "physx_pair_limit_authority": {
+      "name": "PxContactBuffer::MAX_CONTACTS",
+      "source_declaration": "static const PxU32 MAX_CONTACTS = 256",
+      "url": "https://raw.githubusercontent.com/NVIDIA-Omniverse/PhysX/107.3-omni-and-physx-5.6.1/physx/include/geomutils/PxContactBuffer.h",
+      "value": 256,
+      "version": "NVIDIA-Omniverse PhysX tag 107.3-omni-and-physx-5.6.1"
+    },
+    "runtime_sufficiency": null,
+    "runtime_sufficiency_reason": "D361 does not launch Isaac/PhysX; a separately approved future run must validate warning absence and observed counts",
+    "scientific_or_physics_execution": false
+  },
+  "capacity_budget_preflight_canonical_sha256": "576795206d1671529a1feae27c8f284533b1d5ef5b8d9fcd096cd7768ad1fd74",
+  "capacity_formula": {
+    "filter_shape_total": 130,
+    "filter_shapes": {
+      "gripper_link": 64,
+      "link4": 1,
+      "link5": 64,
+      "support_table": 1
+    },
+    "physx_contacts_per_geometry_pair": 256,
+    "product": 33280,
+    "sensor_shapes": 1
+  },
+  "case": "g0a_d361",
+  "case_name": "contact_point_capacity_and_prefix_trace_repair",
+  "d334_sidecar_before": {
+    "claudedocs/lab_meeting/20260715/d334_collision_table/README.md": "35e39f584737c888bcf7dfab6154c55c5d13d4154ee7f2042073e1c0a7e18783",
+    "claudedocs/lab_meeting/20260715/d334_collision_table/d334_collision_table_academic.html": "6d38933f959eba916208ec04a329ba25e2bd753c90720576010c222a8bda679c",
+    "claudedocs/lab_meeting/20260715/d334_collision_table/d334_collision_table_academic.png": "ddc9db2795f4d66b2564adf156829e6a143a599ceb72f6bb9fa28ab25e68a183"
+  },
+  "d360_tree_before": {
+    "claudedocs/runtime_logs/grasp_track/g0a_d360/d360_contact_confirmation_actual_physx_interface.png": {
+      "bytes": 606803,
+      "sha256": "77aeeaeecdaff702acf917a1495751d3bf1670a3217cf879dfc4b23fc9ea1743"
+    },
+    "claudedocs/runtime_logs/grasp_track/g0a_d360/d360_contact_confirmation_actual_physx_interface_opposite.png": {
+      "bytes": 598155,
+      "sha256": "11b10f6d52578eb1280df926ecd556f9236b71d724a56438ea43b998ea6eaa10"
+    },
+    "claudedocs/runtime_logs/grasp_track/g0a_d360/d360_initial_open_actual_physx_interface_opposite.png": {
+      "bytes": 598685,
+      "sha256": "3f132aceadc6fee793223131edd082944f291cd08ab7fe2634cf371356399b4a"
+    },
+    "claudedocs/runtime_logs/grasp_track/g0a_d360/d360_initial_open_actual_physx_interface_primary.png": {
+      "bytes": 613166,
+      "sha256": "d5779e106fa65c3b3f29bc258cfa017525adcfd66be63099794f93dd20fff762"
+    },
+    "claudedocs/runtime_logs/grasp_track/g0a_d360/d360_isaac_invocation_marker.json": {
+      "bytes": 717,
+      "sha256": "c8819ccbba19c82fc6a9212d3d6b058c83b9eefa83e9203e187e248695d08cf4"
+    },
+    "claudedocs/runtime_logs/grasp_track/g0a_d360/d360_motion_confirmation_actual_physx_interface.png": {
+      "bytes": 609397,
+      "sha256": "4fe30b9e92483a569ce60a8da972fbbe5b708035b8e6b71e4cc0eac9ccf80f80"
+    },
+    "claudedocs/runtime_logs/grasp_track/g0a_d360/d360_motion_confirmation_actual_physx_interface_opposite.png": {
+      "bytes": 597905,
+      "sha256": "b180dde71faa890ca06626b280eac0fe140551827c2d14f06f906f272785c6ae"
+    },
+    "claudedocs/runtime_logs/grasp_track/g0a_d360/d360_open_precommand_actual_physx_interface.png": {
+      "bytes": 609455,
+      "sha256": "b4fc2e2ac5249ea8eec87dfb5b3187d99e5939fe3874ad26396fa2648f7c3fd7"
+    },
+    "claudedocs/runtime_logs/grasp_track/g0a_d360/d360_open_precommand_actual_physx_interface_opposite.png": {
+      "bytes": 595375,
+      "sha256": "1d5262eeb549994801883d174d6c9973f498116bf8108694d1df923b01e1943b"
+    },
+    "claudedocs/runtime_logs/grasp_track/g0a_d360/d360_phase_markers.jsonl": {
+      "bytes": 10932,
+      "sha256": "381c9ae67a72558c9ed99362c30bd93221dbce18a73e54c7256ddfac58d66971"
+    },
+    "claudedocs/runtime_logs/grasp_track/g0a_d360/d360_prepare_preflight.json": {
+      "bytes": 6178,
+      "sha256": "68e0699c7e0a96b1b8fb5e439ab5ede144e73eb35890998ada49d0ecf6984d40"
+    },
+    "claudedocs/runtime_logs/grasp_track/g0a_d360/d360_preregistration.json": {
+      "bytes": 4412,
+      "sha256": "2e76357aeec09c2bebdd4d6e8a3c7a5d0f69d63214afbb62cda899876eb2fc4a"
+    },
+    "claudedocs/runtime_logs/grasp_track/g0a_d360/d360_runtime_prerequisites.json": {
+      "bytes": 3011588,
+      "sha256": "bfd20dc2ab678d9929c0dd8f54323f8f4b17707c6c89d099b1374b814c467dae"
+    },
+    "claudedocs/runtime_logs/grasp_track/g0a_d360/d360_supervisor_summary.json": {
+      "bytes": 84422,
+      "sha256": "54bb8a80569048e0299183ae8ed86e81b82a527ec67329c43d4c9e8cb12f026c"
+    },
+    "claudedocs/runtime_logs/grasp_track/g0a_d360/d360_worker_exception.json": {
+      "bytes": 2257,
+      "sha256": "1dfb7ffe863f77ece3dc8acafc09b134325b147f1a392907ad5692a9fd650fb1"
+    },
+    "claudedocs/runtime_logs/grasp_track/g0a_d360/d360_worker_preflight.json": {
+      "bytes": 1344,
+      "sha256": "a9e09450f17a459c406ac8e8fa001b91f1d7b0ff880641a1377370e0d2c00876"
+    },
+    "claudedocs/runtime_logs/grasp_track/g0a_d360/d360_worker_stdout_stderr.log": {
+      "bytes": 31293,
+      "sha256": "1bd0aa5a6060da283c8f84b83a0608156624de68aea47eba8c08b5878fc3ecf5"
+    }
+  },
+  "expected_artifacts_after_completion": [
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/d361_completion_summary.json",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/d361_contact_capacity_budget.json",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/d361_failure_injection_results.json",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/d361_failure_injection_results.jsonl",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/d361_offline_invocation_marker.json",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/d361_phase_markers.jsonl",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/d361_prefix_protocol_contract.json",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/d361_prepare_preflight.json",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/d361_preregistration.json",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/body_force_byte_flip.jsonl",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/duplicate_sequence.jsonl",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/event_semantic_tamper_rehashed.jsonl",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/exit_after_begin.jsonl",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/exit_after_observation.jsonl",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/header_semantic_tamper_rehashed.jsonl",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/middle_record_delete.jsonl",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/nan_reject.jsonl",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/partial_tail.jsonl",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/premature_seal_rehashed.jsonl",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/record_reorder.jsonl",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/reference_sealed_prefix.jsonl",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/schema_reject_missing_body.jsonl",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/state_row_semantic_tamper_rehashed.jsonl"
+  ],
+  "expected_artifacts_before_completion": [
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/d361_contact_capacity_budget.json",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/d361_failure_injection_results.json",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/d361_failure_injection_results.jsonl",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/d361_offline_invocation_marker.json",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/d361_phase_markers.jsonl",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/d361_prefix_protocol_contract.json",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/d361_prepare_preflight.json",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/d361_preregistration.json",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/body_force_byte_flip.jsonl",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/duplicate_sequence.jsonl",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/event_semantic_tamper_rehashed.jsonl",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/exit_after_begin.jsonl",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/exit_after_observation.jsonl",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/header_semantic_tamper_rehashed.jsonl",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/middle_record_delete.jsonl",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/nan_reject.jsonl",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/partial_tail.jsonl",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/premature_seal_rehashed.jsonl",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/record_reorder.jsonl",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/reference_sealed_prefix.jsonl",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/schema_reject_missing_body.jsonl",
+    "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/state_row_semantic_tamper_rehashed.jsonl"
+  ],
+  "g0a_pass": false,
+  "harness_sha256": "6f41dee2cbe5ce651ef09e0f540a23c008d83f5e7fb6407ec152dd2e972cb608",
+  "input_hashes": {
+    "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaaclab/source/isaaclab/isaaclab/sensors/contact_sensor/contact_sensor.py": "c2b039eb46d55416a8699d82b2385abae563c3c4ab4404ad08fa68310ffa6c64",
+    "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaaclab/source/isaaclab/isaaclab/sensors/contact_sensor/contact_sensor_cfg.py": "adb530a2d26ec0ca21160a20c2491c921267764915c3b29108a4ad1bd88171f8",
+    "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaaclab/source/isaaclab/isaaclab/sim/spawners/shapes/shapes.py": "e39d452c3a5e5f927197a99f6ca74d95914e910f96ae1d7a1b1ef01538df6ef7",
+    "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.physics.tensors-107.3.26+107.3.3.lx64.r.cp311.u353/omni/physics/tensors/impl/api.py": "5dd16f8a37eccc94ac82338d6c1127e785cccf761cae1f6f18ef03d55b0f325f",
+    "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.physx-107.3.26+107.3.3.lx64.r.cp311.u353/bin/libomni.physx.plugin.so": "03fbf17e6f0dc3f9006c8c00aa0ca572a72fd69498874df6dd900dac726c9909",
+    "claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/configuration/roarm_m3_physics.usd": "043a5d35aa425c2589c77a34fcf415401ce9f9e7155e84ed75f6737df79fb503",
+    "claudedocs/runtime_logs/grasp_track/g0a_d360/d360_runtime_prerequisites.json": "bfd20dc2ab678d9929c0dd8f54323f8f4b17707c6c89d099b1374b814c467dae",
+    "claudedocs/runtime_logs/grasp_track/g0a_d360/d360_supervisor_summary.json": "54bb8a80569048e0299183ae8ed86e81b82a527ec67329c43d4c9e8cb12f026c",
+    "claudedocs/runtime_logs/grasp_track/g0a_d360/d360_worker_exception.json": "1dfb7ffe863f77ece3dc8acafc09b134325b147f1a392907ad5692a9fd650fb1",
+    "claudedocs/session_20260716_grasp_g0a_d360_current_pose_bounded_physx_contact_motion.md": "97ef49eb31a754be4f12ea0c5f961ddfede4d19656df7147e3f10a63b21f9291",
+    "sim_scripts/cyl34_top_view_d333_grasp_g0a_sole_support_static_retest.py": "e582f274fca44093b0e1367555459f22428c809792b6cfc3a9a336369dac68b7",
+    "sim_scripts/cyl34_top_view_d360_current_pose_bounded_physx_contact_motion.py": "86bd2af855effb3bc31f067fd6cc7a4cb7088c422da3ae828d48f4e31d92fd5a"
+  },
+  "new_variables": [
+    "version_aligned_total_contact_point_capacity_budget",
+    "durable_framed_step_prefix_protocol"
+  ],
+  "one_offline_failure_injection_invocation": true,
+  "optional_failure_only_artifact": "claudedocs/runtime_logs/grasp_track/g0a_d361/d361_runtime_exception.json",
+  "pass": true,
+  "physics_runtime_sufficiency": null,
+  "prefix_schema": "D361_DURABLE_STEP_PREFIX_V1",
+  "prohibitions": [
+    "no Isaac Sim/Kit/IsaacLab application launch",
+    "no q5 command or sample",
+    "no PhysX simulation, contact science query, or physics step",
+    "no new contact image/video/RRD/RBL",
+    "no target/IK/path or initial state change",
+    "no asset/decomposition/gate/material/mass/actuator/solver/physics/renderer/dependency change",
+    "no physical/contact/grasp/G0a verdict",
+    "no D360 mutation/retry/finalize",
+    "no D334 sidecar mutation",
+    "no commit or push"
+  ],
+  "registered_total_contact_capacity": 33280,
+  "session_prereg_sha256": "88f8de25bad6f287c9b049152ca967716470fda31cb22a88810d9dae37aa7da1",
+  "utc": "2026-07-16T13:08:53.350412+00:00"
+}

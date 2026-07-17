@@ -1,0 +1,137 @@
+{
+  "artifact": "D361_DURABLE_PREFIX_PROTOCOL_CONTRACT_V1",
+  "canonical_json": {
+    "allow_nan": false,
+    "ensure_ascii": false,
+    "separators": [
+      ",",
+      ":"
+    ],
+    "sort_keys": true
+  },
+  "durability_order": [
+    "single-writer exclusive create and nonblocking flock",
+    "short-write loop",
+    "file fsync for every record",
+    "fresh read-only descriptor pread of exact appended byte range",
+    "parent directory fsync after file creation"
+  ],
+  "file_creation_flags": [
+    "O_WRONLY",
+    "O_CREAT",
+    "O_EXCL",
+    "O_APPEND",
+    "O_CLOEXEC"
+  ],
+  "future_integration_requires_separate_physics_approval": true,
+  "header_contract": {
+    "body_labels_in_filter_order": [
+      "support_table",
+      "link4",
+      "link5",
+      "gripper_link"
+    ],
+    "filter_index_by_body": {
+      "gripper_link": 3,
+      "link4": 1,
+      "link5": 2,
+      "support_table": 0
+    },
+    "full_d360_state_row_keys": [
+      "global_step",
+      "phase",
+      "phase_step",
+      "physics_time_s",
+      "simulation_clock",
+      "timeline_time_s",
+      "actual_joint_rad",
+      "actual_joint_vel_rad_s",
+      "target_joint_rad",
+      "q5_actual_rad",
+      "q5_velocity_rad_s",
+      "q5_target_rad",
+      "q5_error_rad",
+      "q0_q4_actual_minus_frozen_rad",
+      "q0_q4_max_abs_drift_rad",
+      "q5_torque",
+      "object_pos_w_m",
+      "object_quat_wxyz",
+      "object_lin_vel_w_mps",
+      "object_ang_vel_w_radps",
+      "object_disp_w_m",
+      "object_disp_xy_mm",
+      "object_z_delta_mm",
+      "object_tilt_deg",
+      "object_tilt_delta_from_reference_deg",
+      "object_bottom_table_gap_mm",
+      "robot_root_pos_w_m",
+      "robot_root_quat_wxyz",
+      "robot_root_position_drift_m",
+      "robot_root_rotation_drift_rad",
+      "link5_pos_w_m",
+      "link5_quat_wxyz",
+      "gripper_pos_w_m",
+      "gripper_quat_wxyz",
+      "contact",
+      "finite"
+    ],
+    "future_actual_execution_contract_must_be_registered_separately": true,
+    "lineage_keys": [
+      "capacity_budget_sha256",
+      "harness_sha256",
+      "offline_invocation_sha256",
+      "prepare_preflight_sha256",
+      "preregistration_sha256",
+      "protocol_contract_sha256"
+    ],
+    "profile": "D361_OFFLINE_SYNTHETIC_PREFIX_EVALUATION_V1",
+    "resolved_filter_paths_in_order": [
+      "/World/envs/env_0/TapTable",
+      "/World/envs/env_0/Robot/link4",
+      "/World/envs/env_0/Robot/link5",
+      "/World/envs/env_0/Robot/gripper_link"
+    ],
+    "sensor_body_names": [
+      "Sponge"
+    ],
+    "synthetic_evaluation_legal_seals": {
+      "offline_reference_horizon_complete": [
+        3
+      ]
+    }
+  },
+  "observation_atomic_subjects": [
+    "full D360 state_row",
+    "support_table/link4/link5/gripper_link force vector, norm, contact point",
+    "instantaneous threshold body map",
+    "two-step confirmed body labels and previous/current force values",
+    "two-step object-motion previous/current values",
+    "reported contact-point count and registered total capacity"
+  ],
+  "pass": true,
+  "record_kinds": [
+    "header",
+    "step_begin",
+    "step_observation",
+    "seal"
+  ],
+  "recovery": {
+    "complete_corrupt_line": "fail at first corrupt line; never skip forward",
+    "partial_tail": "preserve original bytes; trust only preceding complete records",
+    "resume_or_overwrite": false,
+    "seal": "write before optional full JSON/CSV/RRD; absence means incomplete",
+    "seal_acceptance": "reason and observation count must match the exact header legal_seals map",
+    "trusted_prefix": "first consecutive newline+JSON+sequence+previous-hash+self-hash+schema-valid records only",
+    "unmatched_step_begin": "report terminal inflight step separately from completed observations"
+  },
+  "schema": "D361_DURABLE_STEP_PREFIX_V1",
+  "scientific_authority": false,
+  "step_order": [
+    "step_begin fsync before attempted physics step",
+    "physics step",
+    "full inherited D360 state_row and contact-count diagnostic",
+    "same-phase instantaneous/two-step event body/value projection",
+    "step_observation fsync and exact reread",
+    "only then memory row, screenshot, RRD, or summary"
+  ]
+}

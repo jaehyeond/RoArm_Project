@@ -20678,3 +20678,74 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d360/d360_supervisor_summary.json`
 - `sim_scripts/cyl34_top_view_d333_grasp_g0a_sole_support_static_retest.py`
 - `START_HERE.md`
+
+## D361 - version-aligned total capacity와 semantic durable prefix를 실제 물리 판정 전에 검증한다 (2026-07-16)
+
+Decision:
+
+- 최종 verdict는 `D361_CONTACT_CAPACITY_AND_PREFIX_TRACE_REPAIR_PASS_NO_PHYSICS`다.
+  D361은 Isaac/PhysX/q5를 실행하지 않은 control/evidence repair이며 접촉·운동·grasp
+  판정 case가 아니다.
+- 설치 PhysX plugin은 `5.6.1`이고, 같은 NVIDIA-Omniverse
+  `107.3-omni-and-physx-5.6.1` source tag의
+  `PxContactBuffer::MAX_CONTACTS=256`을 사용한다. 동결 collision inventory는 sensor
+  cylinder `1`, table `1`, link4 `1`, link5 `64`, gripper `64`다. 따라서 보수적 총
+  reported-contact allocation envelope는
+  `1 × (1+1+64+64) × 256 = 33,280`이다. 1 env/1 sensor body이므로 미래
+  `max_contact_data_count_per_prim` 등록값도 `33,280`이다.
+- **지속 규칙:** 상세 contact capacity는 filter 수나 old value를 임의로 곱하지 않는다.
+  설치 runtime version의 pair envelope, sensor collision-shape 수, 각 filter의 실제
+  collision-shape 수, body/env multiplier를 모두 provenance로 고정하고 독립 합산한다.
+  Inventory/version이 바뀌면 재산정한다. Static budget PASS를 runtime sufficiency로
+  부르지 않으며 실제 warning 부재와 high-water 관측 전에는 sufficiency를 `null`로 둔다.
+- **지속 규칙:** physics step 전에 `step_begin`을 append+fsync하고, step 뒤 전체 inherited
+  state row, body/filter path-index, force vector/norm/contact point, contact count/start/
+  high-water, 직전·현재 row에서 재계산한 event body/value를 한 `step_observation`으로
+  append+fsync+exact-reread한다. Optional image/RRD/summary는 그 뒤에만 쓴다.
+- **지속 규칙:** hash-chain이 유효하다는 이유만으로 payload 의미를 신뢰하지 않는다.
+  Header lineage, 전체 state field, force vector/norm, filter attribution, range overlap,
+  monotonic high-water, event projection, 허용 seal reason/count를 독립 semantic verifier로
+  검사한다. Partial tail은 수정하지 않고 마지막 연속 유효 prefix와 terminal inflight
+  step을 분리한다. Resume/overwrite는 금지한다.
+- D361 reference와 perturbation `17/17`이 PASS했다. 정상 prefix는 8 records/3 completed
+  observations/seal이고 append receipt `8/8`이 fsync 후 exact reread PASS였다. `os._exit`
+  후 begin-only, observation-complete, 147-byte partial-tail 복구가 구분됐다. 원 hash
+  tamper 4종과 hash를 다시 맞춘 wrong event/header/premature seal/truncated state 4종을
+  모두 거부했다. Per-test result journal 17줄은 aggregate 전에 durable-write됐다.
+- D361 output `23/23`, D360 tree와 D334 sidecar unchanged, runtime exception/media 없음이다.
+  Scope counts는 Isaac/PhysX/physics step/q5/media/RRD/target-IK/asset-setting 모두 0이다.
+  `contacting_body/contact_force/object_motion/current_pose/grasp_feasibility=null`,
+  `g0a_pass=false`다.
+
+Evidence:
+
+- Capacity checks `13/13`, negative controls `9/9`; total `33,280`; visible detail arrays
+  `1,064,960 bytes = 1.015625 MiB` plus count/start 32 bytes; backend internal allocation
+  excluded; `runtime_sufficiency=null`.
+- Normal reference: sequence `0..7`, observation `3`, terminal inflight `null`, tail `0`,
+  complete/hash-chain PASS. Abrupt exits `73/74/75` recovered `0/1/1` observations and
+  partial-tail `147 bytes` only in exit 75.
+- Rehashed semantic negatives retained valid wire hash chains but failed with exact wrong-event,
+  wrong-header, unauthorized count-1 seal, and missing-`q5_actual_rad` diagnostics.
+- Completion/failure/capacity SHA-256:
+  `3a1c9ce2...b095` / `817a2d7d...502b` / `ca5edc81...79f5`.
+
+Implication:
+
+- D361 is immutable; do not rerun or overwrite it. D360 physical/body/value question remains
+  unanswered and D354 contact-order unresolved remains unchanged.
+- Actual q5/PhysX contact-motion rerun and new contact video require a new explicit approval.
+  That future case must inherit frozen D360 scene/target/physics variables and integrate the exact
+  D361 capacity/header/prefix contract before invocation. It must not turn capacity or trace
+  integrity PASS into contact, grasp, or G0a proof.
+
+Sources:
+
+- `claudedocs/session_20260716_grasp_g0a_d361_contact_point_capacity_and_prefix_trace_repair.md`
+- `sim_scripts/cyl34_top_view_d361_contact_point_capacity_and_prefix_trace_repair.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d361/d361_preregistration.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d361/d361_contact_capacity_budget.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d361/d361_prefix_protocol_contract.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d361/d361_failure_injection_results.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d361/d361_completion_summary.json`
+- `START_HERE.md`

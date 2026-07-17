@@ -1,0 +1,2261 @@
+{
+  "artifact": "D361_OFFLINE_PREFIX_FAILURE_INJECTION_RESULTS_V1",
+  "durable_per_test_result_journal": "claudedocs/runtime_logs/grasp_track/g0a_d361/d361_failure_injection_results.jsonl",
+  "failure_capable_perturbation_evaluation": true,
+  "isaac_launch_count": 0,
+  "new_contact_media_count": 0,
+  "pass": true,
+  "passed": 17,
+  "physx_step_count": 0,
+  "q5_sample_count": 0,
+  "subject_kind": "offline_synthetic_protocol_fixtures_not_physics_evidence",
+  "test_passes": {
+    "body_force_byte_flip": true,
+    "duplicate_sequence": true,
+    "event_semantic_tamper_rehashed": true,
+    "exclusive_create_negative": true,
+    "exit_after_begin": true,
+    "exit_after_observation": true,
+    "header_semantic_tamper_rehashed": true,
+    "middle_record_delete": true,
+    "nan_reject": true,
+    "normal_sealed": true,
+    "partial_tail": true,
+    "prefix_projection_reconciliation_negative": true,
+    "prefix_projection_reconciliation_positive": true,
+    "premature_seal_rehashed": true,
+    "record_reorder": true,
+    "schema_reject_missing_body": true,
+    "state_row_semantic_tamper_rehashed": true
+  },
+  "tests": {
+    "body_force_byte_flip": {
+      "audit": {
+        "artifact": "D361_PREFIX_AUDIT_V1",
+        "chain_integrity_pass": false,
+        "complete_pass": false,
+        "file_bytes": 14135,
+        "file_sha256": "62acda53bf6e3f0706e0526cbc4d57809d55a7037127ccb99ff1cad33a52fe22",
+        "integrity_error": {
+          "byte_offset": 6351,
+          "complete_line": true,
+          "error_type": "ValueError",
+          "message": "self hash mismatch"
+        },
+        "last_observed_step": {
+          "global_step": 201,
+          "phase": "synthetic_closure",
+          "phase_step": 0
+        },
+        "last_record_sha256": "77a716899a767d04404332daecc856ed4f8089464f4dc4631963eb258a687af6",
+        "last_valid_kind": "step_begin",
+        "observation_count": 1,
+        "path": "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/body_force_byte_flip.jsonl",
+        "recoverable_prefix_pass": true,
+        "sealed": false,
+        "terminal_inflight_step": {
+          "global_step": 202,
+          "phase": "synthetic_closure",
+          "phase_step": 1
+        },
+        "trailing_byte_count": 7784,
+        "trailing_bytes_sha256": "cecc82b18adf700d6408096b81bd6bfe15bc62ed597ef86767aecea4f36903e5",
+        "valid_prefix_byte_count": 6351,
+        "valid_record_count": 4,
+        "validated_header_payload": {
+          "body_labels": [
+            "support_table",
+            "link4",
+            "link5",
+            "gripper_link"
+          ],
+          "case": "g0a_d361",
+          "execution_contract": {
+            "legal_seals": {
+              "offline_reference_horizon_complete": [
+                3
+              ]
+            }
+          },
+          "filter_index_by_body": {
+            "gripper_link": 3,
+            "link4": 1,
+            "link5": 2,
+            "support_table": 0
+          },
+          "lineage": {
+            "capacity_budget_sha256": "ca5edc818fee321dad257dcf3d1ba4574b6c446471a7ff7abc7c8ab790bf79f5",
+            "harness_sha256": "6f41dee2cbe5ce651ef09e0f540a23c008d83f5e7fb6407ec152dd2e972cb608",
+            "offline_invocation_sha256": "f48084086398f6e4d2fc888fb294f764f0003a311f23fff8e1dbee07efd3f867",
+            "prepare_preflight_sha256": "b0ade378ab1b673b2dceca18141b91fdcb451b0706b06c6c4f095b3a67022c72",
+            "preregistration_sha256": "87250fc30146887dd4c372092bed95a9491c67e7812426834ee37467c7c6de76",
+            "protocol_contract_sha256": "dead1591fbf53f080bae0ca28643bb22147ee99a6b07f71a9285865e2c1d8e13"
+          },
+          "overwrite_allowed": false,
+          "profile": "D361_OFFLINE_SYNTHETIC_PREFIX_EVALUATION_V1",
+          "registered_total_capacity": 33280,
+          "resolved_filter_paths": [
+            "/World/envs/env_0/TapTable",
+            "/World/envs/env_0/Robot/link4",
+            "/World/envs/env_0/Robot/link5",
+            "/World/envs/env_0/Robot/gripper_link"
+          ],
+          "resume_allowed": false,
+          "scenario": "normal_sealed",
+          "sensor_body_names": [
+            "Sponge"
+          ],
+          "state_row_contract": {
+            "authority": "D360 _state_row exact top-level field contract",
+            "required_top_level_keys": [
+              "global_step",
+              "phase",
+              "phase_step",
+              "physics_time_s",
+              "simulation_clock",
+              "timeline_time_s",
+              "actual_joint_rad",
+              "actual_joint_vel_rad_s",
+              "target_joint_rad",
+              "q5_actual_rad",
+              "q5_velocity_rad_s",
+              "q5_target_rad",
+              "q5_error_rad",
+              "q0_q4_actual_minus_frozen_rad",
+              "q0_q4_max_abs_drift_rad",
+              "q5_torque",
+              "object_pos_w_m",
+              "object_quat_wxyz",
+              "object_lin_vel_w_mps",
+              "object_ang_vel_w_radps",
+              "object_disp_w_m",
+              "object_disp_xy_mm",
+              "object_z_delta_mm",
+              "object_tilt_deg",
+              "object_tilt_delta_from_reference_deg",
+              "object_bottom_table_gap_mm",
+              "robot_root_pos_w_m",
+              "robot_root_quat_wxyz",
+              "robot_root_position_drift_m",
+              "robot_root_rotation_drift_rad",
+              "link5_pos_w_m",
+              "link5_quat_wxyz",
+              "gripper_pos_w_m",
+              "gripper_quat_wxyz",
+              "contact",
+              "finite"
+            ]
+          },
+          "subject_kind": "offline_synthetic_protocol_fixture_not_physics_evidence"
+        }
+      },
+      "pass": true
+    },
+    "duplicate_sequence": {
+      "audit": {
+        "artifact": "D361_PREFIX_AUDIT_V1",
+        "chain_integrity_pass": false,
+        "complete_pass": false,
+        "file_bytes": 14527,
+        "file_sha256": "ef86dd78586bbd8c6da3b2a6c2afcab08e5f1b67be57a25d0a0a0592efb038d3",
+        "integrity_error": {
+          "byte_offset": 6351,
+          "complete_line": true,
+          "error_type": "ValueError",
+          "message": "sequence mismatch"
+        },
+        "last_observed_step": {
+          "global_step": 201,
+          "phase": "synthetic_closure",
+          "phase_step": 0
+        },
+        "last_record_sha256": "77a716899a767d04404332daecc856ed4f8089464f4dc4631963eb258a687af6",
+        "last_valid_kind": "step_begin",
+        "observation_count": 1,
+        "path": "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/duplicate_sequence.jsonl",
+        "recoverable_prefix_pass": true,
+        "sealed": false,
+        "terminal_inflight_step": {
+          "global_step": 202,
+          "phase": "synthetic_closure",
+          "phase_step": 1
+        },
+        "trailing_byte_count": 8176,
+        "trailing_bytes_sha256": "91d527613a62fb6e436642849a9e8511a7fbf858f24554c46398c6884d160078",
+        "valid_prefix_byte_count": 6351,
+        "valid_record_count": 4,
+        "validated_header_payload": {
+          "body_labels": [
+            "support_table",
+            "link4",
+            "link5",
+            "gripper_link"
+          ],
+          "case": "g0a_d361",
+          "execution_contract": {
+            "legal_seals": {
+              "offline_reference_horizon_complete": [
+                3
+              ]
+            }
+          },
+          "filter_index_by_body": {
+            "gripper_link": 3,
+            "link4": 1,
+            "link5": 2,
+            "support_table": 0
+          },
+          "lineage": {
+            "capacity_budget_sha256": "ca5edc818fee321dad257dcf3d1ba4574b6c446471a7ff7abc7c8ab790bf79f5",
+            "harness_sha256": "6f41dee2cbe5ce651ef09e0f540a23c008d83f5e7fb6407ec152dd2e972cb608",
+            "offline_invocation_sha256": "f48084086398f6e4d2fc888fb294f764f0003a311f23fff8e1dbee07efd3f867",
+            "prepare_preflight_sha256": "b0ade378ab1b673b2dceca18141b91fdcb451b0706b06c6c4f095b3a67022c72",
+            "preregistration_sha256": "87250fc30146887dd4c372092bed95a9491c67e7812426834ee37467c7c6de76",
+            "protocol_contract_sha256": "dead1591fbf53f080bae0ca28643bb22147ee99a6b07f71a9285865e2c1d8e13"
+          },
+          "overwrite_allowed": false,
+          "profile": "D361_OFFLINE_SYNTHETIC_PREFIX_EVALUATION_V1",
+          "registered_total_capacity": 33280,
+          "resolved_filter_paths": [
+            "/World/envs/env_0/TapTable",
+            "/World/envs/env_0/Robot/link4",
+            "/World/envs/env_0/Robot/link5",
+            "/World/envs/env_0/Robot/gripper_link"
+          ],
+          "resume_allowed": false,
+          "scenario": "normal_sealed",
+          "sensor_body_names": [
+            "Sponge"
+          ],
+          "state_row_contract": {
+            "authority": "D360 _state_row exact top-level field contract",
+            "required_top_level_keys": [
+              "global_step",
+              "phase",
+              "phase_step",
+              "physics_time_s",
+              "simulation_clock",
+              "timeline_time_s",
+              "actual_joint_rad",
+              "actual_joint_vel_rad_s",
+              "target_joint_rad",
+              "q5_actual_rad",
+              "q5_velocity_rad_s",
+              "q5_target_rad",
+              "q5_error_rad",
+              "q0_q4_actual_minus_frozen_rad",
+              "q0_q4_max_abs_drift_rad",
+              "q5_torque",
+              "object_pos_w_m",
+              "object_quat_wxyz",
+              "object_lin_vel_w_mps",
+              "object_ang_vel_w_radps",
+              "object_disp_w_m",
+              "object_disp_xy_mm",
+              "object_z_delta_mm",
+              "object_tilt_deg",
+              "object_tilt_delta_from_reference_deg",
+              "object_bottom_table_gap_mm",
+              "robot_root_pos_w_m",
+              "robot_root_quat_wxyz",
+              "robot_root_position_drift_m",
+              "robot_root_rotation_drift_rad",
+              "link5_pos_w_m",
+              "link5_quat_wxyz",
+              "gripper_pos_w_m",
+              "gripper_quat_wxyz",
+              "contact",
+              "finite"
+            ]
+          },
+          "subject_kind": "offline_synthetic_protocol_fixture_not_physics_evidence"
+        }
+      },
+      "pass": true
+    },
+    "event_semantic_tamper_rehashed": {
+      "audit": {
+        "artifact": "D361_PREFIX_AUDIT_V1",
+        "chain_integrity_pass": false,
+        "complete_pass": false,
+        "file_bytes": 14135,
+        "file_sha256": "7cbe7786a2b33ef875df89c25a378c6ba71b76084e309aa076f57449b28ad548",
+        "integrity_error": {
+          "byte_offset": 6351,
+          "complete_line": true,
+          "error_type": "ValueError",
+          "message": "event body/value projection differs from the current and previous state rows"
+        },
+        "last_observed_step": {
+          "global_step": 201,
+          "phase": "synthetic_closure",
+          "phase_step": 0
+        },
+        "last_record_sha256": "77a716899a767d04404332daecc856ed4f8089464f4dc4631963eb258a687af6",
+        "last_valid_kind": "step_begin",
+        "observation_count": 1,
+        "path": "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/event_semantic_tamper_rehashed.jsonl",
+        "recoverable_prefix_pass": true,
+        "sealed": false,
+        "terminal_inflight_step": {
+          "global_step": 202,
+          "phase": "synthetic_closure",
+          "phase_step": 1
+        },
+        "trailing_byte_count": 7784,
+        "trailing_bytes_sha256": "5d8a1e4492e99ec931e61a710774be26a1d7a4e47243b4f70b7f1c1d5a53a688",
+        "valid_prefix_byte_count": 6351,
+        "valid_record_count": 4,
+        "validated_header_payload": {
+          "body_labels": [
+            "support_table",
+            "link4",
+            "link5",
+            "gripper_link"
+          ],
+          "case": "g0a_d361",
+          "execution_contract": {
+            "legal_seals": {
+              "offline_reference_horizon_complete": [
+                3
+              ]
+            }
+          },
+          "filter_index_by_body": {
+            "gripper_link": 3,
+            "link4": 1,
+            "link5": 2,
+            "support_table": 0
+          },
+          "lineage": {
+            "capacity_budget_sha256": "ca5edc818fee321dad257dcf3d1ba4574b6c446471a7ff7abc7c8ab790bf79f5",
+            "harness_sha256": "6f41dee2cbe5ce651ef09e0f540a23c008d83f5e7fb6407ec152dd2e972cb608",
+            "offline_invocation_sha256": "f48084086398f6e4d2fc888fb294f764f0003a311f23fff8e1dbee07efd3f867",
+            "prepare_preflight_sha256": "b0ade378ab1b673b2dceca18141b91fdcb451b0706b06c6c4f095b3a67022c72",
+            "preregistration_sha256": "87250fc30146887dd4c372092bed95a9491c67e7812426834ee37467c7c6de76",
+            "protocol_contract_sha256": "dead1591fbf53f080bae0ca28643bb22147ee99a6b07f71a9285865e2c1d8e13"
+          },
+          "overwrite_allowed": false,
+          "profile": "D361_OFFLINE_SYNTHETIC_PREFIX_EVALUATION_V1",
+          "registered_total_capacity": 33280,
+          "resolved_filter_paths": [
+            "/World/envs/env_0/TapTable",
+            "/World/envs/env_0/Robot/link4",
+            "/World/envs/env_0/Robot/link5",
+            "/World/envs/env_0/Robot/gripper_link"
+          ],
+          "resume_allowed": false,
+          "scenario": "normal_sealed",
+          "sensor_body_names": [
+            "Sponge"
+          ],
+          "state_row_contract": {
+            "authority": "D360 _state_row exact top-level field contract",
+            "required_top_level_keys": [
+              "global_step",
+              "phase",
+              "phase_step",
+              "physics_time_s",
+              "simulation_clock",
+              "timeline_time_s",
+              "actual_joint_rad",
+              "actual_joint_vel_rad_s",
+              "target_joint_rad",
+              "q5_actual_rad",
+              "q5_velocity_rad_s",
+              "q5_target_rad",
+              "q5_error_rad",
+              "q0_q4_actual_minus_frozen_rad",
+              "q0_q4_max_abs_drift_rad",
+              "q5_torque",
+              "object_pos_w_m",
+              "object_quat_wxyz",
+              "object_lin_vel_w_mps",
+              "object_ang_vel_w_radps",
+              "object_disp_w_m",
+              "object_disp_xy_mm",
+              "object_z_delta_mm",
+              "object_tilt_deg",
+              "object_tilt_delta_from_reference_deg",
+              "object_bottom_table_gap_mm",
+              "robot_root_pos_w_m",
+              "robot_root_quat_wxyz",
+              "robot_root_position_drift_m",
+              "robot_root_rotation_drift_rad",
+              "link5_pos_w_m",
+              "link5_quat_wxyz",
+              "gripper_pos_w_m",
+              "gripper_quat_wxyz",
+              "contact",
+              "finite"
+            ]
+          },
+          "subject_kind": "offline_synthetic_protocol_fixture_not_physics_evidence"
+        }
+      },
+      "expected_semantic_error_fragment": "event body/value projection",
+      "pass": true,
+      "wire_hash_chain_valid_before_semantic_validation": true
+    },
+    "exclusive_create_negative": {
+      "after_sha256": "4fec59e0332621355fd4c52f2be16768ee9afce19dcc6b936528cd859e35c95a",
+      "before_sha256": "4fec59e0332621355fd4c52f2be16768ee9afce19dcc6b936528cd859e35c95a",
+      "error": "FileExistsError",
+      "pass": true
+    },
+    "exit_after_begin": {
+      "audit": {
+        "artifact": "D361_PREFIX_AUDIT_V1",
+        "chain_integrity_pass": true,
+        "complete_pass": false,
+        "file_bytes": 2710,
+        "file_sha256": "fdf8459e208dd32ecc04bdd0e16a3c709787aed050697365270d4941c381020d",
+        "integrity_error": null,
+        "last_observed_step": null,
+        "last_record_sha256": "8896d26925621af1151d65eb9ceb1f54c0a98dc6a4f2d75dae787b58ef43d6e1",
+        "last_valid_kind": "step_begin",
+        "observation_count": 0,
+        "path": "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/exit_after_begin.jsonl",
+        "recoverable_prefix_pass": true,
+        "sealed": false,
+        "terminal_inflight_step": {
+          "global_step": 201,
+          "phase": "synthetic_closure",
+          "phase_step": 0
+        },
+        "trailing_byte_count": 0,
+        "trailing_bytes_sha256": null,
+        "valid_prefix_byte_count": 2710,
+        "valid_record_count": 2,
+        "validated_header_payload": {
+          "body_labels": [
+            "support_table",
+            "link4",
+            "link5",
+            "gripper_link"
+          ],
+          "case": "g0a_d361",
+          "execution_contract": {
+            "legal_seals": {
+              "offline_reference_horizon_complete": [
+                3
+              ]
+            }
+          },
+          "filter_index_by_body": {
+            "gripper_link": 3,
+            "link4": 1,
+            "link5": 2,
+            "support_table": 0
+          },
+          "lineage": {
+            "capacity_budget_sha256": "ca5edc818fee321dad257dcf3d1ba4574b6c446471a7ff7abc7c8ab790bf79f5",
+            "harness_sha256": "6f41dee2cbe5ce651ef09e0f540a23c008d83f5e7fb6407ec152dd2e972cb608",
+            "offline_invocation_sha256": "f48084086398f6e4d2fc888fb294f764f0003a311f23fff8e1dbee07efd3f867",
+            "prepare_preflight_sha256": "b0ade378ab1b673b2dceca18141b91fdcb451b0706b06c6c4f095b3a67022c72",
+            "preregistration_sha256": "87250fc30146887dd4c372092bed95a9491c67e7812426834ee37467c7c6de76",
+            "protocol_contract_sha256": "dead1591fbf53f080bae0ca28643bb22147ee99a6b07f71a9285865e2c1d8e13"
+          },
+          "overwrite_allowed": false,
+          "profile": "D361_OFFLINE_SYNTHETIC_PREFIX_EVALUATION_V1",
+          "registered_total_capacity": 33280,
+          "resolved_filter_paths": [
+            "/World/envs/env_0/TapTable",
+            "/World/envs/env_0/Robot/link4",
+            "/World/envs/env_0/Robot/link5",
+            "/World/envs/env_0/Robot/gripper_link"
+          ],
+          "resume_allowed": false,
+          "scenario": "exit_after_begin",
+          "sensor_body_names": [
+            "Sponge"
+          ],
+          "state_row_contract": {
+            "authority": "D360 _state_row exact top-level field contract",
+            "required_top_level_keys": [
+              "global_step",
+              "phase",
+              "phase_step",
+              "physics_time_s",
+              "simulation_clock",
+              "timeline_time_s",
+              "actual_joint_rad",
+              "actual_joint_vel_rad_s",
+              "target_joint_rad",
+              "q5_actual_rad",
+              "q5_velocity_rad_s",
+              "q5_target_rad",
+              "q5_error_rad",
+              "q0_q4_actual_minus_frozen_rad",
+              "q0_q4_max_abs_drift_rad",
+              "q5_torque",
+              "object_pos_w_m",
+              "object_quat_wxyz",
+              "object_lin_vel_w_mps",
+              "object_ang_vel_w_radps",
+              "object_disp_w_m",
+              "object_disp_xy_mm",
+              "object_z_delta_mm",
+              "object_tilt_deg",
+              "object_tilt_delta_from_reference_deg",
+              "object_bottom_table_gap_mm",
+              "robot_root_pos_w_m",
+              "robot_root_quat_wxyz",
+              "robot_root_position_drift_m",
+              "robot_root_rotation_drift_rad",
+              "link5_pos_w_m",
+              "link5_quat_wxyz",
+              "gripper_pos_w_m",
+              "gripper_quat_wxyz",
+              "contact",
+              "finite"
+            ]
+          },
+          "subject_kind": "offline_synthetic_protocol_fixture_not_physics_evidence"
+        }
+      },
+      "child_returncode": 73,
+      "child_stderr": "",
+      "child_stdout": "",
+      "pass": true,
+      "recovered_observation_payloads": [],
+      "termination_mechanism": "os._exit abrupt process termination; not claimed as SIGKILL"
+    },
+    "exit_after_observation": {
+      "audit": {
+        "artifact": "D361_PREFIX_AUDIT_V1",
+        "chain_integrity_pass": true,
+        "complete_pass": false,
+        "file_bytes": 5968,
+        "file_sha256": "721c7a6fb769075ef91f11df77af6554284d02b832dc732d18c1706080ff815b",
+        "integrity_error": null,
+        "last_observed_step": {
+          "global_step": 201,
+          "phase": "synthetic_closure",
+          "phase_step": 0
+        },
+        "last_record_sha256": "21121c1add9c43d863049efe91dcdb6aebb0de1f1ef35d5a67bbd7d66e717ed3",
+        "last_valid_kind": "step_observation",
+        "observation_count": 1,
+        "path": "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/exit_after_observation.jsonl",
+        "recoverable_prefix_pass": true,
+        "sealed": false,
+        "terminal_inflight_step": null,
+        "trailing_byte_count": 0,
+        "trailing_bytes_sha256": null,
+        "valid_prefix_byte_count": 5968,
+        "valid_record_count": 3,
+        "validated_header_payload": {
+          "body_labels": [
+            "support_table",
+            "link4",
+            "link5",
+            "gripper_link"
+          ],
+          "case": "g0a_d361",
+          "execution_contract": {
+            "legal_seals": {
+              "offline_reference_horizon_complete": [
+                3
+              ]
+            }
+          },
+          "filter_index_by_body": {
+            "gripper_link": 3,
+            "link4": 1,
+            "link5": 2,
+            "support_table": 0
+          },
+          "lineage": {
+            "capacity_budget_sha256": "ca5edc818fee321dad257dcf3d1ba4574b6c446471a7ff7abc7c8ab790bf79f5",
+            "harness_sha256": "6f41dee2cbe5ce651ef09e0f540a23c008d83f5e7fb6407ec152dd2e972cb608",
+            "offline_invocation_sha256": "f48084086398f6e4d2fc888fb294f764f0003a311f23fff8e1dbee07efd3f867",
+            "prepare_preflight_sha256": "b0ade378ab1b673b2dceca18141b91fdcb451b0706b06c6c4f095b3a67022c72",
+            "preregistration_sha256": "87250fc30146887dd4c372092bed95a9491c67e7812426834ee37467c7c6de76",
+            "protocol_contract_sha256": "dead1591fbf53f080bae0ca28643bb22147ee99a6b07f71a9285865e2c1d8e13"
+          },
+          "overwrite_allowed": false,
+          "profile": "D361_OFFLINE_SYNTHETIC_PREFIX_EVALUATION_V1",
+          "registered_total_capacity": 33280,
+          "resolved_filter_paths": [
+            "/World/envs/env_0/TapTable",
+            "/World/envs/env_0/Robot/link4",
+            "/World/envs/env_0/Robot/link5",
+            "/World/envs/env_0/Robot/gripper_link"
+          ],
+          "resume_allowed": false,
+          "scenario": "exit_after_observation",
+          "sensor_body_names": [
+            "Sponge"
+          ],
+          "state_row_contract": {
+            "authority": "D360 _state_row exact top-level field contract",
+            "required_top_level_keys": [
+              "global_step",
+              "phase",
+              "phase_step",
+              "physics_time_s",
+              "simulation_clock",
+              "timeline_time_s",
+              "actual_joint_rad",
+              "actual_joint_vel_rad_s",
+              "target_joint_rad",
+              "q5_actual_rad",
+              "q5_velocity_rad_s",
+              "q5_target_rad",
+              "q5_error_rad",
+              "q0_q4_actual_minus_frozen_rad",
+              "q0_q4_max_abs_drift_rad",
+              "q5_torque",
+              "object_pos_w_m",
+              "object_quat_wxyz",
+              "object_lin_vel_w_mps",
+              "object_ang_vel_w_radps",
+              "object_disp_w_m",
+              "object_disp_xy_mm",
+              "object_z_delta_mm",
+              "object_tilt_deg",
+              "object_tilt_delta_from_reference_deg",
+              "object_bottom_table_gap_mm",
+              "robot_root_pos_w_m",
+              "robot_root_quat_wxyz",
+              "robot_root_position_drift_m",
+              "robot_root_rotation_drift_rad",
+              "link5_pos_w_m",
+              "link5_quat_wxyz",
+              "gripper_pos_w_m",
+              "gripper_quat_wxyz",
+              "contact",
+              "finite"
+            ]
+          },
+          "subject_kind": "offline_synthetic_protocol_fixture_not_physics_evidence"
+        }
+      },
+      "child_returncode": 74,
+      "child_stderr": "",
+      "child_stdout": "",
+      "pass": true,
+      "recovered_observation_payloads": [
+        {
+          "contact_point_capacity_diagnostic": {
+            "all_ranges_within_capacity": true,
+            "by_filter": {
+              "gripper_link": {
+                "count": 5,
+                "exclusive_end_index": 17,
+                "filter_index": 3,
+                "start_index": 12
+              },
+              "link4": {
+                "count": 1,
+                "exclusive_end_index": 9,
+                "filter_index": 1,
+                "start_index": 8
+              },
+              "link5": {
+                "count": 3,
+                "exclusive_end_index": 12,
+                "filter_index": 2,
+                "start_index": 9
+              },
+              "support_table": {
+                "count": 8,
+                "exclusive_end_index": 8,
+                "filter_index": 0,
+                "start_index": 0
+              }
+            },
+            "count_sum": 17,
+            "high_water_mark": 17,
+            "max_exclusive_end_index": 17,
+            "registered_total_capacity": 33280,
+            "remaining_capacity": 33263,
+            "reported_contact_point_count": 17
+          },
+          "event_projection": {
+            "contact_events": {},
+            "instantaneous_contact_threshold_by_body": {
+              "gripper_link": true,
+              "link4": false,
+              "link5": false
+            },
+            "instantaneous_object_motion": false,
+            "thresholds": {
+              "confirmation_rows": 2,
+              "contact_force_n": 0.1,
+              "object_tilt_deg": 1.0,
+              "object_xy_mm": 0.5
+            },
+            "two_step_confirmed_contact_bodies": [],
+            "two_step_object_motion_event": null
+          },
+          "state_row": {
+            "actual_joint_rad": [
+              0.0,
+              0.5,
+              1.9,
+              0.18,
+              0.0,
+              1.5
+            ],
+            "actual_joint_vel_rad_s": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              -0.2
+            ],
+            "contact": {
+              "by_filter": {
+                "gripper_link": {
+                  "contact_point_w_m": [
+                    0.3,
+                    0.0,
+                    0.045
+                  ],
+                  "filter_index": 3,
+                  "force_norm_n": 0.11,
+                  "force_w_n": [
+                    0.11,
+                    0.0,
+                    0.0
+                  ]
+                },
+                "link4": {
+                  "contact_point_w_m": null,
+                  "filter_index": 1,
+                  "force_norm_n": 0.0,
+                  "force_w_n": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ]
+                },
+                "link5": {
+                  "contact_point_w_m": null,
+                  "filter_index": 2,
+                  "force_norm_n": 0.02,
+                  "force_w_n": [
+                    0.02,
+                    0.0,
+                    0.0
+                  ]
+                },
+                "support_table": {
+                  "contact_point_w_m": [
+                    0.3,
+                    0.0,
+                    0.045
+                  ],
+                  "filter_index": 0,
+                  "force_norm_n": 7.06,
+                  "force_w_n": [
+                    7.06,
+                    0.0,
+                    0.0
+                  ]
+                }
+              },
+              "net_force_norm_n": 7.1899999999999995,
+              "net_force_w_n": [
+                7.1899999999999995,
+                0.0,
+                0.0
+              ]
+            },
+            "finite": true,
+            "global_step": 201,
+            "gripper_pos_w_m": [
+              0.3,
+              0.0,
+              0.05
+            ],
+            "gripper_quat_wxyz": [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "link5_pos_w_m": [
+              0.3,
+              0.0,
+              0.05
+            ],
+            "link5_quat_wxyz": [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "object_ang_vel_w_radps": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "object_bottom_table_gap_mm": 0.0,
+            "object_disp_w_m": [
+              0.0004,
+              0.0,
+              0.0
+            ],
+            "object_disp_xy_mm": 0.4,
+            "object_lin_vel_w_mps": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "object_pos_w_m": [
+              0.3004,
+              0.0,
+              0.032883
+            ],
+            "object_quat_wxyz": [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "object_tilt_deg": 0.0,
+            "object_tilt_delta_from_reference_deg": 0.0,
+            "object_z_delta_mm": 0.0,
+            "phase": "synthetic_closure",
+            "phase_step": 0,
+            "physics_time_s": 1.005,
+            "q0_q4_actual_minus_frozen_rad": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "q0_q4_max_abs_drift_rad": 0.0,
+            "q5_actual_rad": 1.5,
+            "q5_error_rad": -1.5,
+            "q5_target_rad": 0.0,
+            "q5_torque": {
+              "abs_applied_over_limit": 1.0,
+              "applied_torque_nm": -2.5,
+              "authority": "synthetic_offline_fixture",
+              "computed_torque_nm": -2.5,
+              "effort_saturated_diagnostic": true,
+              "registered_effort_limit_nm": 2.5,
+              "saturation_abs_tolerance_nm": 0.0001
+            },
+            "q5_velocity_rad_s": -0.2,
+            "robot_root_pos_w_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "robot_root_position_drift_m": 0.0,
+            "robot_root_quat_wxyz": [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "robot_root_rotation_drift_rad": 0.0,
+            "simulation_clock": {
+              "current_time": 1.005,
+              "current_time_step_index": 201
+            },
+            "target_joint_rad": [
+              0.0,
+              0.5,
+              1.9,
+              0.18,
+              0.0,
+              0.0
+            ],
+            "timeline_time_s": 1.005
+          },
+          "step_identity": {
+            "global_step": 201,
+            "phase": "synthetic_closure",
+            "phase_step": 0
+          },
+          "subject_kind": "offline_synthetic_protocol_fixture_not_physics_evidence"
+        }
+      ],
+      "termination_mechanism": "os._exit abrupt process termination; not claimed as SIGKILL"
+    },
+    "header_semantic_tamper_rehashed": {
+      "audit": {
+        "artifact": "D361_PREFIX_AUDIT_V1",
+        "chain_integrity_pass": false,
+        "complete_pass": false,
+        "file_bytes": 14135,
+        "file_sha256": "024747789990b6f126f5b1768f354891d61196563aa76297f9db17000a1e2358",
+        "integrity_error": {
+          "byte_offset": 0,
+          "complete_line": true,
+          "error_type": "ValueError",
+          "message": "header body label order mismatch"
+        },
+        "last_observed_step": null,
+        "last_record_sha256": null,
+        "last_valid_kind": null,
+        "observation_count": 0,
+        "path": "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/header_semantic_tamper_rehashed.jsonl",
+        "recoverable_prefix_pass": false,
+        "sealed": false,
+        "terminal_inflight_step": null,
+        "trailing_byte_count": 14135,
+        "trailing_bytes_sha256": "024747789990b6f126f5b1768f354891d61196563aa76297f9db17000a1e2358",
+        "valid_prefix_byte_count": 0,
+        "valid_record_count": 0,
+        "validated_header_payload": null
+      },
+      "expected_semantic_error_fragment": "header body label order",
+      "pass": true,
+      "wire_hash_chain_valid_before_semantic_validation": true
+    },
+    "middle_record_delete": {
+      "audit": {
+        "artifact": "D361_PREFIX_AUDIT_V1",
+        "chain_integrity_pass": false,
+        "complete_pass": false,
+        "file_bytes": 13743,
+        "file_sha256": "fbb8687456d4382e6d3e7ab6cc880ba3fee4c1751a2f4cf5afc00d976ebbe1b2",
+        "integrity_error": {
+          "byte_offset": 5959,
+          "complete_line": true,
+          "error_type": "ValueError",
+          "message": "sequence mismatch"
+        },
+        "last_observed_step": {
+          "global_step": 201,
+          "phase": "synthetic_closure",
+          "phase_step": 0
+        },
+        "last_record_sha256": "3001c29f7531cc83adf009ecd9e3a632cee87b662fa9ca1bea82d244aefec619",
+        "last_valid_kind": "step_observation",
+        "observation_count": 1,
+        "path": "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/middle_record_delete.jsonl",
+        "recoverable_prefix_pass": true,
+        "sealed": false,
+        "terminal_inflight_step": null,
+        "trailing_byte_count": 7784,
+        "trailing_bytes_sha256": "435415a16edcd9f4a77cebfcd1a5d18cd7e0edd646ed98044bcddd1846a3896e",
+        "valid_prefix_byte_count": 5959,
+        "valid_record_count": 3,
+        "validated_header_payload": {
+          "body_labels": [
+            "support_table",
+            "link4",
+            "link5",
+            "gripper_link"
+          ],
+          "case": "g0a_d361",
+          "execution_contract": {
+            "legal_seals": {
+              "offline_reference_horizon_complete": [
+                3
+              ]
+            }
+          },
+          "filter_index_by_body": {
+            "gripper_link": 3,
+            "link4": 1,
+            "link5": 2,
+            "support_table": 0
+          },
+          "lineage": {
+            "capacity_budget_sha256": "ca5edc818fee321dad257dcf3d1ba4574b6c446471a7ff7abc7c8ab790bf79f5",
+            "harness_sha256": "6f41dee2cbe5ce651ef09e0f540a23c008d83f5e7fb6407ec152dd2e972cb608",
+            "offline_invocation_sha256": "f48084086398f6e4d2fc888fb294f764f0003a311f23fff8e1dbee07efd3f867",
+            "prepare_preflight_sha256": "b0ade378ab1b673b2dceca18141b91fdcb451b0706b06c6c4f095b3a67022c72",
+            "preregistration_sha256": "87250fc30146887dd4c372092bed95a9491c67e7812426834ee37467c7c6de76",
+            "protocol_contract_sha256": "dead1591fbf53f080bae0ca28643bb22147ee99a6b07f71a9285865e2c1d8e13"
+          },
+          "overwrite_allowed": false,
+          "profile": "D361_OFFLINE_SYNTHETIC_PREFIX_EVALUATION_V1",
+          "registered_total_capacity": 33280,
+          "resolved_filter_paths": [
+            "/World/envs/env_0/TapTable",
+            "/World/envs/env_0/Robot/link4",
+            "/World/envs/env_0/Robot/link5",
+            "/World/envs/env_0/Robot/gripper_link"
+          ],
+          "resume_allowed": false,
+          "scenario": "normal_sealed",
+          "sensor_body_names": [
+            "Sponge"
+          ],
+          "state_row_contract": {
+            "authority": "D360 _state_row exact top-level field contract",
+            "required_top_level_keys": [
+              "global_step",
+              "phase",
+              "phase_step",
+              "physics_time_s",
+              "simulation_clock",
+              "timeline_time_s",
+              "actual_joint_rad",
+              "actual_joint_vel_rad_s",
+              "target_joint_rad",
+              "q5_actual_rad",
+              "q5_velocity_rad_s",
+              "q5_target_rad",
+              "q5_error_rad",
+              "q0_q4_actual_minus_frozen_rad",
+              "q0_q4_max_abs_drift_rad",
+              "q5_torque",
+              "object_pos_w_m",
+              "object_quat_wxyz",
+              "object_lin_vel_w_mps",
+              "object_ang_vel_w_radps",
+              "object_disp_w_m",
+              "object_disp_xy_mm",
+              "object_z_delta_mm",
+              "object_tilt_deg",
+              "object_tilt_delta_from_reference_deg",
+              "object_bottom_table_gap_mm",
+              "robot_root_pos_w_m",
+              "robot_root_quat_wxyz",
+              "robot_root_position_drift_m",
+              "robot_root_rotation_drift_rad",
+              "link5_pos_w_m",
+              "link5_quat_wxyz",
+              "gripper_pos_w_m",
+              "gripper_quat_wxyz",
+              "contact",
+              "finite"
+            ]
+          },
+          "subject_kind": "offline_synthetic_protocol_fixture_not_physics_evidence"
+        }
+      },
+      "pass": true
+    },
+    "nan_reject": {
+      "canonical_json_nan_error": "Out of range float values are not JSON compliant",
+      "file_bytes": 0,
+      "file_exists": true,
+      "pass": true,
+      "writer_schema_error": "header payload keys are not exact"
+    },
+    "normal_sealed": {
+      "independent_hard_coded_oracle": {
+        "checks": {
+          "step_0_capacity_values": true,
+          "step_0_confirmed_body_order": true,
+          "step_0_contact_body_values": true,
+          "step_0_instantaneous_body_map": true,
+          "step_0_instantaneous_motion": true,
+          "step_0_motion_values": true,
+          "step_1_capacity_values": true,
+          "step_1_confirmed_body_order": true,
+          "step_1_contact_body_values": true,
+          "step_1_instantaneous_body_map": true,
+          "step_1_instantaneous_motion": true,
+          "step_1_motion_values": true,
+          "step_2_capacity_values": true,
+          "step_2_confirmed_body_order": true,
+          "step_2_contact_body_values": true,
+          "step_2_instantaneous_body_map": true,
+          "step_2_instantaneous_motion": true,
+          "step_2_motion_values": true,
+          "three_payloads": true
+        },
+        "pass": true
+      },
+      "pass": true,
+      "receipt_all_exact_reread": true,
+      "receipt_count": 8,
+      "reconciliation": {
+        "audit": {
+          "artifact": "D361_PREFIX_AUDIT_V1",
+          "chain_integrity_pass": true,
+          "complete_pass": true,
+          "file_bytes": 14135,
+          "file_sha256": "4fec59e0332621355fd4c52f2be16768ee9afce19dcc6b936528cd859e35c95a",
+          "integrity_error": null,
+          "last_observed_step": {
+            "global_step": 203,
+            "phase": "synthetic_closure",
+            "phase_step": 2
+          },
+          "last_record_sha256": "b246689bfb376a85d8444ce4d8136f6c32f8f0daac3ad3b2d740201744066135",
+          "last_valid_kind": "seal",
+          "observation_count": 3,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/reference_sealed_prefix.jsonl",
+          "recoverable_prefix_pass": true,
+          "sealed": true,
+          "terminal_inflight_step": null,
+          "trailing_byte_count": 0,
+          "trailing_bytes_sha256": null,
+          "valid_prefix_byte_count": 14135,
+          "valid_record_count": 8,
+          "validated_header_payload": {
+            "body_labels": [
+              "support_table",
+              "link4",
+              "link5",
+              "gripper_link"
+            ],
+            "case": "g0a_d361",
+            "execution_contract": {
+              "legal_seals": {
+                "offline_reference_horizon_complete": [
+                  3
+                ]
+              }
+            },
+            "filter_index_by_body": {
+              "gripper_link": 3,
+              "link4": 1,
+              "link5": 2,
+              "support_table": 0
+            },
+            "lineage": {
+              "capacity_budget_sha256": "ca5edc818fee321dad257dcf3d1ba4574b6c446471a7ff7abc7c8ab790bf79f5",
+              "harness_sha256": "6f41dee2cbe5ce651ef09e0f540a23c008d83f5e7fb6407ec152dd2e972cb608",
+              "offline_invocation_sha256": "f48084086398f6e4d2fc888fb294f764f0003a311f23fff8e1dbee07efd3f867",
+              "prepare_preflight_sha256": "b0ade378ab1b673b2dceca18141b91fdcb451b0706b06c6c4f095b3a67022c72",
+              "preregistration_sha256": "87250fc30146887dd4c372092bed95a9491c67e7812426834ee37467c7c6de76",
+              "protocol_contract_sha256": "dead1591fbf53f080bae0ca28643bb22147ee99a6b07f71a9285865e2c1d8e13"
+            },
+            "overwrite_allowed": false,
+            "profile": "D361_OFFLINE_SYNTHETIC_PREFIX_EVALUATION_V1",
+            "registered_total_capacity": 33280,
+            "resolved_filter_paths": [
+              "/World/envs/env_0/TapTable",
+              "/World/envs/env_0/Robot/link4",
+              "/World/envs/env_0/Robot/link5",
+              "/World/envs/env_0/Robot/gripper_link"
+            ],
+            "resume_allowed": false,
+            "scenario": "normal_sealed",
+            "sensor_body_names": [
+              "Sponge"
+            ],
+            "state_row_contract": {
+              "authority": "D360 _state_row exact top-level field contract",
+              "required_top_level_keys": [
+                "global_step",
+                "phase",
+                "phase_step",
+                "physics_time_s",
+                "simulation_clock",
+                "timeline_time_s",
+                "actual_joint_rad",
+                "actual_joint_vel_rad_s",
+                "target_joint_rad",
+                "q5_actual_rad",
+                "q5_velocity_rad_s",
+                "q5_target_rad",
+                "q5_error_rad",
+                "q0_q4_actual_minus_frozen_rad",
+                "q0_q4_max_abs_drift_rad",
+                "q5_torque",
+                "object_pos_w_m",
+                "object_quat_wxyz",
+                "object_lin_vel_w_mps",
+                "object_ang_vel_w_radps",
+                "object_disp_w_m",
+                "object_disp_xy_mm",
+                "object_z_delta_mm",
+                "object_tilt_deg",
+                "object_tilt_delta_from_reference_deg",
+                "object_bottom_table_gap_mm",
+                "robot_root_pos_w_m",
+                "robot_root_quat_wxyz",
+                "robot_root_position_drift_m",
+                "robot_root_rotation_drift_rad",
+                "link5_pos_w_m",
+                "link5_quat_wxyz",
+                "gripper_pos_w_m",
+                "gripper_quat_wxyz",
+                "contact",
+                "finite"
+              ]
+            },
+            "subject_kind": "offline_synthetic_protocol_fixture_not_physics_evidence"
+          }
+        },
+        "expected_observation_count": 3,
+        "first_difference": null,
+        "observed_observation_count": 3,
+        "pass": true
+      }
+    },
+    "partial_tail": {
+      "audit": {
+        "artifact": "D361_PREFIX_AUDIT_V1",
+        "chain_integrity_pass": true,
+        "complete_pass": false,
+        "file_bytes": 6105,
+        "file_sha256": "8167fdcb45c5978d23acc44dab3023c3e91adaf8575a9a3ae8adbedbfec39b7f",
+        "integrity_error": null,
+        "last_observed_step": {
+          "global_step": 201,
+          "phase": "synthetic_closure",
+          "phase_step": 0
+        },
+        "last_record_sha256": "45e5c3f67919685933de62c2cc400e515d5a933ad34827cc12d9d0c487a75b48",
+        "last_valid_kind": "step_observation",
+        "observation_count": 1,
+        "path": "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/partial_tail.jsonl",
+        "recoverable_prefix_pass": true,
+        "sealed": false,
+        "terminal_inflight_step": null,
+        "trailing_byte_count": 147,
+        "trailing_bytes_sha256": "8b3a438463a859c76d909224452790c4a6186f5252f98e883b1b89ecad6ef794",
+        "valid_prefix_byte_count": 5958,
+        "valid_record_count": 3,
+        "validated_header_payload": {
+          "body_labels": [
+            "support_table",
+            "link4",
+            "link5",
+            "gripper_link"
+          ],
+          "case": "g0a_d361",
+          "execution_contract": {
+            "legal_seals": {
+              "offline_reference_horizon_complete": [
+                3
+              ]
+            }
+          },
+          "filter_index_by_body": {
+            "gripper_link": 3,
+            "link4": 1,
+            "link5": 2,
+            "support_table": 0
+          },
+          "lineage": {
+            "capacity_budget_sha256": "ca5edc818fee321dad257dcf3d1ba4574b6c446471a7ff7abc7c8ab790bf79f5",
+            "harness_sha256": "6f41dee2cbe5ce651ef09e0f540a23c008d83f5e7fb6407ec152dd2e972cb608",
+            "offline_invocation_sha256": "f48084086398f6e4d2fc888fb294f764f0003a311f23fff8e1dbee07efd3f867",
+            "prepare_preflight_sha256": "b0ade378ab1b673b2dceca18141b91fdcb451b0706b06c6c4f095b3a67022c72",
+            "preregistration_sha256": "87250fc30146887dd4c372092bed95a9491c67e7812426834ee37467c7c6de76",
+            "protocol_contract_sha256": "dead1591fbf53f080bae0ca28643bb22147ee99a6b07f71a9285865e2c1d8e13"
+          },
+          "overwrite_allowed": false,
+          "profile": "D361_OFFLINE_SYNTHETIC_PREFIX_EVALUATION_V1",
+          "registered_total_capacity": 33280,
+          "resolved_filter_paths": [
+            "/World/envs/env_0/TapTable",
+            "/World/envs/env_0/Robot/link4",
+            "/World/envs/env_0/Robot/link5",
+            "/World/envs/env_0/Robot/gripper_link"
+          ],
+          "resume_allowed": false,
+          "scenario": "partial_tail",
+          "sensor_body_names": [
+            "Sponge"
+          ],
+          "state_row_contract": {
+            "authority": "D360 _state_row exact top-level field contract",
+            "required_top_level_keys": [
+              "global_step",
+              "phase",
+              "phase_step",
+              "physics_time_s",
+              "simulation_clock",
+              "timeline_time_s",
+              "actual_joint_rad",
+              "actual_joint_vel_rad_s",
+              "target_joint_rad",
+              "q5_actual_rad",
+              "q5_velocity_rad_s",
+              "q5_target_rad",
+              "q5_error_rad",
+              "q0_q4_actual_minus_frozen_rad",
+              "q0_q4_max_abs_drift_rad",
+              "q5_torque",
+              "object_pos_w_m",
+              "object_quat_wxyz",
+              "object_lin_vel_w_mps",
+              "object_ang_vel_w_radps",
+              "object_disp_w_m",
+              "object_disp_xy_mm",
+              "object_z_delta_mm",
+              "object_tilt_deg",
+              "object_tilt_delta_from_reference_deg",
+              "object_bottom_table_gap_mm",
+              "robot_root_pos_w_m",
+              "robot_root_quat_wxyz",
+              "robot_root_position_drift_m",
+              "robot_root_rotation_drift_rad",
+              "link5_pos_w_m",
+              "link5_quat_wxyz",
+              "gripper_pos_w_m",
+              "gripper_quat_wxyz",
+              "contact",
+              "finite"
+            ]
+          },
+          "subject_kind": "offline_synthetic_protocol_fixture_not_physics_evidence"
+        }
+      },
+      "child_returncode": 75,
+      "child_stderr": "",
+      "child_stdout": "",
+      "pass": true,
+      "recovered_observation_payloads": [
+        {
+          "contact_point_capacity_diagnostic": {
+            "all_ranges_within_capacity": true,
+            "by_filter": {
+              "gripper_link": {
+                "count": 5,
+                "exclusive_end_index": 17,
+                "filter_index": 3,
+                "start_index": 12
+              },
+              "link4": {
+                "count": 1,
+                "exclusive_end_index": 9,
+                "filter_index": 1,
+                "start_index": 8
+              },
+              "link5": {
+                "count": 3,
+                "exclusive_end_index": 12,
+                "filter_index": 2,
+                "start_index": 9
+              },
+              "support_table": {
+                "count": 8,
+                "exclusive_end_index": 8,
+                "filter_index": 0,
+                "start_index": 0
+              }
+            },
+            "count_sum": 17,
+            "high_water_mark": 17,
+            "max_exclusive_end_index": 17,
+            "registered_total_capacity": 33280,
+            "remaining_capacity": 33263,
+            "reported_contact_point_count": 17
+          },
+          "event_projection": {
+            "contact_events": {},
+            "instantaneous_contact_threshold_by_body": {
+              "gripper_link": true,
+              "link4": false,
+              "link5": false
+            },
+            "instantaneous_object_motion": false,
+            "thresholds": {
+              "confirmation_rows": 2,
+              "contact_force_n": 0.1,
+              "object_tilt_deg": 1.0,
+              "object_xy_mm": 0.5
+            },
+            "two_step_confirmed_contact_bodies": [],
+            "two_step_object_motion_event": null
+          },
+          "state_row": {
+            "actual_joint_rad": [
+              0.0,
+              0.5,
+              1.9,
+              0.18,
+              0.0,
+              1.5
+            ],
+            "actual_joint_vel_rad_s": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              -0.2
+            ],
+            "contact": {
+              "by_filter": {
+                "gripper_link": {
+                  "contact_point_w_m": [
+                    0.3,
+                    0.0,
+                    0.045
+                  ],
+                  "filter_index": 3,
+                  "force_norm_n": 0.11,
+                  "force_w_n": [
+                    0.11,
+                    0.0,
+                    0.0
+                  ]
+                },
+                "link4": {
+                  "contact_point_w_m": null,
+                  "filter_index": 1,
+                  "force_norm_n": 0.0,
+                  "force_w_n": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ]
+                },
+                "link5": {
+                  "contact_point_w_m": null,
+                  "filter_index": 2,
+                  "force_norm_n": 0.02,
+                  "force_w_n": [
+                    0.02,
+                    0.0,
+                    0.0
+                  ]
+                },
+                "support_table": {
+                  "contact_point_w_m": [
+                    0.3,
+                    0.0,
+                    0.045
+                  ],
+                  "filter_index": 0,
+                  "force_norm_n": 7.06,
+                  "force_w_n": [
+                    7.06,
+                    0.0,
+                    0.0
+                  ]
+                }
+              },
+              "net_force_norm_n": 7.1899999999999995,
+              "net_force_w_n": [
+                7.1899999999999995,
+                0.0,
+                0.0
+              ]
+            },
+            "finite": true,
+            "global_step": 201,
+            "gripper_pos_w_m": [
+              0.3,
+              0.0,
+              0.05
+            ],
+            "gripper_quat_wxyz": [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "link5_pos_w_m": [
+              0.3,
+              0.0,
+              0.05
+            ],
+            "link5_quat_wxyz": [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "object_ang_vel_w_radps": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "object_bottom_table_gap_mm": 0.0,
+            "object_disp_w_m": [
+              0.0004,
+              0.0,
+              0.0
+            ],
+            "object_disp_xy_mm": 0.4,
+            "object_lin_vel_w_mps": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "object_pos_w_m": [
+              0.3004,
+              0.0,
+              0.032883
+            ],
+            "object_quat_wxyz": [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "object_tilt_deg": 0.0,
+            "object_tilt_delta_from_reference_deg": 0.0,
+            "object_z_delta_mm": 0.0,
+            "phase": "synthetic_closure",
+            "phase_step": 0,
+            "physics_time_s": 1.005,
+            "q0_q4_actual_minus_frozen_rad": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "q0_q4_max_abs_drift_rad": 0.0,
+            "q5_actual_rad": 1.5,
+            "q5_error_rad": -1.5,
+            "q5_target_rad": 0.0,
+            "q5_torque": {
+              "abs_applied_over_limit": 1.0,
+              "applied_torque_nm": -2.5,
+              "authority": "synthetic_offline_fixture",
+              "computed_torque_nm": -2.5,
+              "effort_saturated_diagnostic": true,
+              "registered_effort_limit_nm": 2.5,
+              "saturation_abs_tolerance_nm": 0.0001
+            },
+            "q5_velocity_rad_s": -0.2,
+            "robot_root_pos_w_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "robot_root_position_drift_m": 0.0,
+            "robot_root_quat_wxyz": [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "robot_root_rotation_drift_rad": 0.0,
+            "simulation_clock": {
+              "current_time": 1.005,
+              "current_time_step_index": 201
+            },
+            "target_joint_rad": [
+              0.0,
+              0.5,
+              1.9,
+              0.18,
+              0.0,
+              0.0
+            ],
+            "timeline_time_s": 1.005
+          },
+          "step_identity": {
+            "global_step": 201,
+            "phase": "synthetic_closure",
+            "phase_step": 0
+          },
+          "subject_kind": "offline_synthetic_protocol_fixture_not_physics_evidence"
+        }
+      ],
+      "termination_mechanism": "os._exit abrupt process termination; not claimed as SIGKILL"
+    },
+    "prefix_projection_reconciliation_negative": {
+      "pass": true,
+      "reconciliation": {
+        "audit": {
+          "artifact": "D361_PREFIX_AUDIT_V1",
+          "chain_integrity_pass": true,
+          "complete_pass": true,
+          "file_bytes": 14135,
+          "file_sha256": "4fec59e0332621355fd4c52f2be16768ee9afce19dcc6b936528cd859e35c95a",
+          "integrity_error": null,
+          "last_observed_step": {
+            "global_step": 203,
+            "phase": "synthetic_closure",
+            "phase_step": 2
+          },
+          "last_record_sha256": "b246689bfb376a85d8444ce4d8136f6c32f8f0daac3ad3b2d740201744066135",
+          "last_valid_kind": "seal",
+          "observation_count": 3,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/reference_sealed_prefix.jsonl",
+          "recoverable_prefix_pass": true,
+          "sealed": true,
+          "terminal_inflight_step": null,
+          "trailing_byte_count": 0,
+          "trailing_bytes_sha256": null,
+          "valid_prefix_byte_count": 14135,
+          "valid_record_count": 8,
+          "validated_header_payload": {
+            "body_labels": [
+              "support_table",
+              "link4",
+              "link5",
+              "gripper_link"
+            ],
+            "case": "g0a_d361",
+            "execution_contract": {
+              "legal_seals": {
+                "offline_reference_horizon_complete": [
+                  3
+                ]
+              }
+            },
+            "filter_index_by_body": {
+              "gripper_link": 3,
+              "link4": 1,
+              "link5": 2,
+              "support_table": 0
+            },
+            "lineage": {
+              "capacity_budget_sha256": "ca5edc818fee321dad257dcf3d1ba4574b6c446471a7ff7abc7c8ab790bf79f5",
+              "harness_sha256": "6f41dee2cbe5ce651ef09e0f540a23c008d83f5e7fb6407ec152dd2e972cb608",
+              "offline_invocation_sha256": "f48084086398f6e4d2fc888fb294f764f0003a311f23fff8e1dbee07efd3f867",
+              "prepare_preflight_sha256": "b0ade378ab1b673b2dceca18141b91fdcb451b0706b06c6c4f095b3a67022c72",
+              "preregistration_sha256": "87250fc30146887dd4c372092bed95a9491c67e7812426834ee37467c7c6de76",
+              "protocol_contract_sha256": "dead1591fbf53f080bae0ca28643bb22147ee99a6b07f71a9285865e2c1d8e13"
+            },
+            "overwrite_allowed": false,
+            "profile": "D361_OFFLINE_SYNTHETIC_PREFIX_EVALUATION_V1",
+            "registered_total_capacity": 33280,
+            "resolved_filter_paths": [
+              "/World/envs/env_0/TapTable",
+              "/World/envs/env_0/Robot/link4",
+              "/World/envs/env_0/Robot/link5",
+              "/World/envs/env_0/Robot/gripper_link"
+            ],
+            "resume_allowed": false,
+            "scenario": "normal_sealed",
+            "sensor_body_names": [
+              "Sponge"
+            ],
+            "state_row_contract": {
+              "authority": "D360 _state_row exact top-level field contract",
+              "required_top_level_keys": [
+                "global_step",
+                "phase",
+                "phase_step",
+                "physics_time_s",
+                "simulation_clock",
+                "timeline_time_s",
+                "actual_joint_rad",
+                "actual_joint_vel_rad_s",
+                "target_joint_rad",
+                "q5_actual_rad",
+                "q5_velocity_rad_s",
+                "q5_target_rad",
+                "q5_error_rad",
+                "q0_q4_actual_minus_frozen_rad",
+                "q0_q4_max_abs_drift_rad",
+                "q5_torque",
+                "object_pos_w_m",
+                "object_quat_wxyz",
+                "object_lin_vel_w_mps",
+                "object_ang_vel_w_radps",
+                "object_disp_w_m",
+                "object_disp_xy_mm",
+                "object_z_delta_mm",
+                "object_tilt_deg",
+                "object_tilt_delta_from_reference_deg",
+                "object_bottom_table_gap_mm",
+                "robot_root_pos_w_m",
+                "robot_root_quat_wxyz",
+                "robot_root_position_drift_m",
+                "robot_root_rotation_drift_rad",
+                "link5_pos_w_m",
+                "link5_quat_wxyz",
+                "gripper_pos_w_m",
+                "gripper_quat_wxyz",
+                "contact",
+                "finite"
+              ]
+            },
+            "subject_kind": "offline_synthetic_protocol_fixture_not_physics_evidence"
+          }
+        },
+        "expected_observation_count": 3,
+        "first_difference": "$[1].state_row.contact.by_filter.gripper_link.force_norm_n: 8.12 != 0.12",
+        "observed_observation_count": 3,
+        "pass": false
+      }
+    },
+    "prefix_projection_reconciliation_positive": {
+      "pass": true,
+      "reconciliation": {
+        "audit": {
+          "artifact": "D361_PREFIX_AUDIT_V1",
+          "chain_integrity_pass": true,
+          "complete_pass": true,
+          "file_bytes": 14135,
+          "file_sha256": "4fec59e0332621355fd4c52f2be16768ee9afce19dcc6b936528cd859e35c95a",
+          "integrity_error": null,
+          "last_observed_step": {
+            "global_step": 203,
+            "phase": "synthetic_closure",
+            "phase_step": 2
+          },
+          "last_record_sha256": "b246689bfb376a85d8444ce4d8136f6c32f8f0daac3ad3b2d740201744066135",
+          "last_valid_kind": "seal",
+          "observation_count": 3,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/reference_sealed_prefix.jsonl",
+          "recoverable_prefix_pass": true,
+          "sealed": true,
+          "terminal_inflight_step": null,
+          "trailing_byte_count": 0,
+          "trailing_bytes_sha256": null,
+          "valid_prefix_byte_count": 14135,
+          "valid_record_count": 8,
+          "validated_header_payload": {
+            "body_labels": [
+              "support_table",
+              "link4",
+              "link5",
+              "gripper_link"
+            ],
+            "case": "g0a_d361",
+            "execution_contract": {
+              "legal_seals": {
+                "offline_reference_horizon_complete": [
+                  3
+                ]
+              }
+            },
+            "filter_index_by_body": {
+              "gripper_link": 3,
+              "link4": 1,
+              "link5": 2,
+              "support_table": 0
+            },
+            "lineage": {
+              "capacity_budget_sha256": "ca5edc818fee321dad257dcf3d1ba4574b6c446471a7ff7abc7c8ab790bf79f5",
+              "harness_sha256": "6f41dee2cbe5ce651ef09e0f540a23c008d83f5e7fb6407ec152dd2e972cb608",
+              "offline_invocation_sha256": "f48084086398f6e4d2fc888fb294f764f0003a311f23fff8e1dbee07efd3f867",
+              "prepare_preflight_sha256": "b0ade378ab1b673b2dceca18141b91fdcb451b0706b06c6c4f095b3a67022c72",
+              "preregistration_sha256": "87250fc30146887dd4c372092bed95a9491c67e7812426834ee37467c7c6de76",
+              "protocol_contract_sha256": "dead1591fbf53f080bae0ca28643bb22147ee99a6b07f71a9285865e2c1d8e13"
+            },
+            "overwrite_allowed": false,
+            "profile": "D361_OFFLINE_SYNTHETIC_PREFIX_EVALUATION_V1",
+            "registered_total_capacity": 33280,
+            "resolved_filter_paths": [
+              "/World/envs/env_0/TapTable",
+              "/World/envs/env_0/Robot/link4",
+              "/World/envs/env_0/Robot/link5",
+              "/World/envs/env_0/Robot/gripper_link"
+            ],
+            "resume_allowed": false,
+            "scenario": "normal_sealed",
+            "sensor_body_names": [
+              "Sponge"
+            ],
+            "state_row_contract": {
+              "authority": "D360 _state_row exact top-level field contract",
+              "required_top_level_keys": [
+                "global_step",
+                "phase",
+                "phase_step",
+                "physics_time_s",
+                "simulation_clock",
+                "timeline_time_s",
+                "actual_joint_rad",
+                "actual_joint_vel_rad_s",
+                "target_joint_rad",
+                "q5_actual_rad",
+                "q5_velocity_rad_s",
+                "q5_target_rad",
+                "q5_error_rad",
+                "q0_q4_actual_minus_frozen_rad",
+                "q0_q4_max_abs_drift_rad",
+                "q5_torque",
+                "object_pos_w_m",
+                "object_quat_wxyz",
+                "object_lin_vel_w_mps",
+                "object_ang_vel_w_radps",
+                "object_disp_w_m",
+                "object_disp_xy_mm",
+                "object_z_delta_mm",
+                "object_tilt_deg",
+                "object_tilt_delta_from_reference_deg",
+                "object_bottom_table_gap_mm",
+                "robot_root_pos_w_m",
+                "robot_root_quat_wxyz",
+                "robot_root_position_drift_m",
+                "robot_root_rotation_drift_rad",
+                "link5_pos_w_m",
+                "link5_quat_wxyz",
+                "gripper_pos_w_m",
+                "gripper_quat_wxyz",
+                "contact",
+                "finite"
+              ]
+            },
+            "subject_kind": "offline_synthetic_protocol_fixture_not_physics_evidence"
+          }
+        },
+        "expected_observation_count": 3,
+        "first_difference": null,
+        "observed_observation_count": 3,
+        "pass": true
+      }
+    },
+    "premature_seal_rehashed": {
+      "audit": {
+        "artifact": "D361_PREFIX_AUDIT_V1",
+        "chain_integrity_pass": false,
+        "complete_pass": false,
+        "file_bytes": 6382,
+        "file_sha256": "aa52e0c41da859dd0cab07304aede091178101a830ed5298890d98fe5e59393b",
+        "integrity_error": {
+          "byte_offset": 5959,
+          "complete_line": true,
+          "error_type": "ValueError",
+          "message": "seal is not registered for reason/count: reason='offline_reference_horizon_complete', observation_count=1"
+        },
+        "last_observed_step": {
+          "global_step": 201,
+          "phase": "synthetic_closure",
+          "phase_step": 0
+        },
+        "last_record_sha256": "3001c29f7531cc83adf009ecd9e3a632cee87b662fa9ca1bea82d244aefec619",
+        "last_valid_kind": "step_observation",
+        "observation_count": 1,
+        "path": "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/premature_seal_rehashed.jsonl",
+        "recoverable_prefix_pass": true,
+        "sealed": false,
+        "terminal_inflight_step": null,
+        "trailing_byte_count": 423,
+        "trailing_bytes_sha256": "c7cfc370fe22b4756869e27a12fc15d1f10e59c9c2788f8f1476313a55948f5a",
+        "valid_prefix_byte_count": 5959,
+        "valid_record_count": 3,
+        "validated_header_payload": {
+          "body_labels": [
+            "support_table",
+            "link4",
+            "link5",
+            "gripper_link"
+          ],
+          "case": "g0a_d361",
+          "execution_contract": {
+            "legal_seals": {
+              "offline_reference_horizon_complete": [
+                3
+              ]
+            }
+          },
+          "filter_index_by_body": {
+            "gripper_link": 3,
+            "link4": 1,
+            "link5": 2,
+            "support_table": 0
+          },
+          "lineage": {
+            "capacity_budget_sha256": "ca5edc818fee321dad257dcf3d1ba4574b6c446471a7ff7abc7c8ab790bf79f5",
+            "harness_sha256": "6f41dee2cbe5ce651ef09e0f540a23c008d83f5e7fb6407ec152dd2e972cb608",
+            "offline_invocation_sha256": "f48084086398f6e4d2fc888fb294f764f0003a311f23fff8e1dbee07efd3f867",
+            "prepare_preflight_sha256": "b0ade378ab1b673b2dceca18141b91fdcb451b0706b06c6c4f095b3a67022c72",
+            "preregistration_sha256": "87250fc30146887dd4c372092bed95a9491c67e7812426834ee37467c7c6de76",
+            "protocol_contract_sha256": "dead1591fbf53f080bae0ca28643bb22147ee99a6b07f71a9285865e2c1d8e13"
+          },
+          "overwrite_allowed": false,
+          "profile": "D361_OFFLINE_SYNTHETIC_PREFIX_EVALUATION_V1",
+          "registered_total_capacity": 33280,
+          "resolved_filter_paths": [
+            "/World/envs/env_0/TapTable",
+            "/World/envs/env_0/Robot/link4",
+            "/World/envs/env_0/Robot/link5",
+            "/World/envs/env_0/Robot/gripper_link"
+          ],
+          "resume_allowed": false,
+          "scenario": "normal_sealed",
+          "sensor_body_names": [
+            "Sponge"
+          ],
+          "state_row_contract": {
+            "authority": "D360 _state_row exact top-level field contract",
+            "required_top_level_keys": [
+              "global_step",
+              "phase",
+              "phase_step",
+              "physics_time_s",
+              "simulation_clock",
+              "timeline_time_s",
+              "actual_joint_rad",
+              "actual_joint_vel_rad_s",
+              "target_joint_rad",
+              "q5_actual_rad",
+              "q5_velocity_rad_s",
+              "q5_target_rad",
+              "q5_error_rad",
+              "q0_q4_actual_minus_frozen_rad",
+              "q0_q4_max_abs_drift_rad",
+              "q5_torque",
+              "object_pos_w_m",
+              "object_quat_wxyz",
+              "object_lin_vel_w_mps",
+              "object_ang_vel_w_radps",
+              "object_disp_w_m",
+              "object_disp_xy_mm",
+              "object_z_delta_mm",
+              "object_tilt_deg",
+              "object_tilt_delta_from_reference_deg",
+              "object_bottom_table_gap_mm",
+              "robot_root_pos_w_m",
+              "robot_root_quat_wxyz",
+              "robot_root_position_drift_m",
+              "robot_root_rotation_drift_rad",
+              "link5_pos_w_m",
+              "link5_quat_wxyz",
+              "gripper_pos_w_m",
+              "gripper_quat_wxyz",
+              "contact",
+              "finite"
+            ]
+          },
+          "subject_kind": "offline_synthetic_protocol_fixture_not_physics_evidence"
+        }
+      },
+      "expected_semantic_error_fragment": "seal is not registered",
+      "pass": true,
+      "wire_hash_chain_valid_before_semantic_validation": true
+    },
+    "record_reorder": {
+      "audit": {
+        "artifact": "D361_PREFIX_AUDIT_V1",
+        "chain_integrity_pass": false,
+        "complete_pass": false,
+        "file_bytes": 14135,
+        "file_sha256": "ede7bc1028fb2718a1f9644383143e7dece4a8d8c259db9f7efc1a4a9af48a78",
+        "integrity_error": {
+          "byte_offset": 5959,
+          "complete_line": true,
+          "error_type": "ValueError",
+          "message": "sequence mismatch"
+        },
+        "last_observed_step": {
+          "global_step": 201,
+          "phase": "synthetic_closure",
+          "phase_step": 0
+        },
+        "last_record_sha256": "3001c29f7531cc83adf009ecd9e3a632cee87b662fa9ca1bea82d244aefec619",
+        "last_valid_kind": "step_observation",
+        "observation_count": 1,
+        "path": "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/record_reorder.jsonl",
+        "recoverable_prefix_pass": true,
+        "sealed": false,
+        "terminal_inflight_step": null,
+        "trailing_byte_count": 8176,
+        "trailing_bytes_sha256": "ca78b22de6a0efa1efa49046039bdf425c3a4a552154543f4644a2cb6ad1658b",
+        "valid_prefix_byte_count": 5959,
+        "valid_record_count": 3,
+        "validated_header_payload": {
+          "body_labels": [
+            "support_table",
+            "link4",
+            "link5",
+            "gripper_link"
+          ],
+          "case": "g0a_d361",
+          "execution_contract": {
+            "legal_seals": {
+              "offline_reference_horizon_complete": [
+                3
+              ]
+            }
+          },
+          "filter_index_by_body": {
+            "gripper_link": 3,
+            "link4": 1,
+            "link5": 2,
+            "support_table": 0
+          },
+          "lineage": {
+            "capacity_budget_sha256": "ca5edc818fee321dad257dcf3d1ba4574b6c446471a7ff7abc7c8ab790bf79f5",
+            "harness_sha256": "6f41dee2cbe5ce651ef09e0f540a23c008d83f5e7fb6407ec152dd2e972cb608",
+            "offline_invocation_sha256": "f48084086398f6e4d2fc888fb294f764f0003a311f23fff8e1dbee07efd3f867",
+            "prepare_preflight_sha256": "b0ade378ab1b673b2dceca18141b91fdcb451b0706b06c6c4f095b3a67022c72",
+            "preregistration_sha256": "87250fc30146887dd4c372092bed95a9491c67e7812426834ee37467c7c6de76",
+            "protocol_contract_sha256": "dead1591fbf53f080bae0ca28643bb22147ee99a6b07f71a9285865e2c1d8e13"
+          },
+          "overwrite_allowed": false,
+          "profile": "D361_OFFLINE_SYNTHETIC_PREFIX_EVALUATION_V1",
+          "registered_total_capacity": 33280,
+          "resolved_filter_paths": [
+            "/World/envs/env_0/TapTable",
+            "/World/envs/env_0/Robot/link4",
+            "/World/envs/env_0/Robot/link5",
+            "/World/envs/env_0/Robot/gripper_link"
+          ],
+          "resume_allowed": false,
+          "scenario": "normal_sealed",
+          "sensor_body_names": [
+            "Sponge"
+          ],
+          "state_row_contract": {
+            "authority": "D360 _state_row exact top-level field contract",
+            "required_top_level_keys": [
+              "global_step",
+              "phase",
+              "phase_step",
+              "physics_time_s",
+              "simulation_clock",
+              "timeline_time_s",
+              "actual_joint_rad",
+              "actual_joint_vel_rad_s",
+              "target_joint_rad",
+              "q5_actual_rad",
+              "q5_velocity_rad_s",
+              "q5_target_rad",
+              "q5_error_rad",
+              "q0_q4_actual_minus_frozen_rad",
+              "q0_q4_max_abs_drift_rad",
+              "q5_torque",
+              "object_pos_w_m",
+              "object_quat_wxyz",
+              "object_lin_vel_w_mps",
+              "object_ang_vel_w_radps",
+              "object_disp_w_m",
+              "object_disp_xy_mm",
+              "object_z_delta_mm",
+              "object_tilt_deg",
+              "object_tilt_delta_from_reference_deg",
+              "object_bottom_table_gap_mm",
+              "robot_root_pos_w_m",
+              "robot_root_quat_wxyz",
+              "robot_root_position_drift_m",
+              "robot_root_rotation_drift_rad",
+              "link5_pos_w_m",
+              "link5_quat_wxyz",
+              "gripper_pos_w_m",
+              "gripper_quat_wxyz",
+              "contact",
+              "finite"
+            ]
+          },
+          "subject_kind": "offline_synthetic_protocol_fixture_not_physics_evidence"
+        }
+      },
+      "pass": true
+    },
+    "schema_reject_missing_body": {
+      "audit": {
+        "artifact": "D361_PREFIX_AUDIT_V1",
+        "chain_integrity_pass": true,
+        "complete_pass": false,
+        "file_bytes": 2720,
+        "file_sha256": "070d4c5f440242da0b4e606ccd8fec9eb08ff433711a99c50ad0df586aa1f416",
+        "integrity_error": null,
+        "last_observed_step": null,
+        "last_record_sha256": "75f7ba8f2cfa560288d57c27640a014e065f36366760b4b3638a68a7bca641fd",
+        "last_valid_kind": "step_begin",
+        "observation_count": 0,
+        "path": "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/schema_reject_missing_body.jsonl",
+        "recoverable_prefix_pass": true,
+        "sealed": false,
+        "terminal_inflight_step": {
+          "global_step": 201,
+          "phase": "synthetic_closure",
+          "phase_step": 0
+        },
+        "trailing_byte_count": 0,
+        "trailing_bytes_sha256": null,
+        "valid_prefix_byte_count": 2720,
+        "valid_record_count": 2,
+        "validated_header_payload": {
+          "body_labels": [
+            "support_table",
+            "link4",
+            "link5",
+            "gripper_link"
+          ],
+          "case": "g0a_d361",
+          "execution_contract": {
+            "legal_seals": {
+              "offline_reference_horizon_complete": [
+                3
+              ]
+            }
+          },
+          "filter_index_by_body": {
+            "gripper_link": 3,
+            "link4": 1,
+            "link5": 2,
+            "support_table": 0
+          },
+          "lineage": {
+            "capacity_budget_sha256": "ca5edc818fee321dad257dcf3d1ba4574b6c446471a7ff7abc7c8ab790bf79f5",
+            "harness_sha256": "6f41dee2cbe5ce651ef09e0f540a23c008d83f5e7fb6407ec152dd2e972cb608",
+            "offline_invocation_sha256": "f48084086398f6e4d2fc888fb294f764f0003a311f23fff8e1dbee07efd3f867",
+            "prepare_preflight_sha256": "b0ade378ab1b673b2dceca18141b91fdcb451b0706b06c6c4f095b3a67022c72",
+            "preregistration_sha256": "87250fc30146887dd4c372092bed95a9491c67e7812426834ee37467c7c6de76",
+            "protocol_contract_sha256": "dead1591fbf53f080bae0ca28643bb22147ee99a6b07f71a9285865e2c1d8e13"
+          },
+          "overwrite_allowed": false,
+          "profile": "D361_OFFLINE_SYNTHETIC_PREFIX_EVALUATION_V1",
+          "registered_total_capacity": 33280,
+          "resolved_filter_paths": [
+            "/World/envs/env_0/TapTable",
+            "/World/envs/env_0/Robot/link4",
+            "/World/envs/env_0/Robot/link5",
+            "/World/envs/env_0/Robot/gripper_link"
+          ],
+          "resume_allowed": false,
+          "scenario": "schema_reject_missing_body",
+          "sensor_body_names": [
+            "Sponge"
+          ],
+          "state_row_contract": {
+            "authority": "D360 _state_row exact top-level field contract",
+            "required_top_level_keys": [
+              "global_step",
+              "phase",
+              "phase_step",
+              "physics_time_s",
+              "simulation_clock",
+              "timeline_time_s",
+              "actual_joint_rad",
+              "actual_joint_vel_rad_s",
+              "target_joint_rad",
+              "q5_actual_rad",
+              "q5_velocity_rad_s",
+              "q5_target_rad",
+              "q5_error_rad",
+              "q0_q4_actual_minus_frozen_rad",
+              "q0_q4_max_abs_drift_rad",
+              "q5_torque",
+              "object_pos_w_m",
+              "object_quat_wxyz",
+              "object_lin_vel_w_mps",
+              "object_ang_vel_w_radps",
+              "object_disp_w_m",
+              "object_disp_xy_mm",
+              "object_z_delta_mm",
+              "object_tilt_deg",
+              "object_tilt_delta_from_reference_deg",
+              "object_bottom_table_gap_mm",
+              "robot_root_pos_w_m",
+              "robot_root_quat_wxyz",
+              "robot_root_position_drift_m",
+              "robot_root_rotation_drift_rad",
+              "link5_pos_w_m",
+              "link5_quat_wxyz",
+              "gripper_pos_w_m",
+              "gripper_quat_wxyz",
+              "contact",
+              "finite"
+            ]
+          },
+          "subject_kind": "offline_synthetic_protocol_fixture_not_physics_evidence"
+        }
+      },
+      "error": "state_row contact.by_filter body set is not exact",
+      "pass": true
+    },
+    "state_row_semantic_tamper_rehashed": {
+      "audit": {
+        "artifact": "D361_PREFIX_AUDIT_V1",
+        "chain_integrity_pass": false,
+        "complete_pass": false,
+        "file_bytes": 14114,
+        "file_sha256": "17bad47923e0a7b8c0567812b8c5b1f0e7a5ef37815da029b4f84e982bab3ddf",
+        "integrity_error": {
+          "byte_offset": 6351,
+          "complete_line": true,
+          "error_type": "ValueError",
+          "message": "state_row top-level field set mismatch: missing=['q5_actual_rad'], extra=[]"
+        },
+        "last_observed_step": {
+          "global_step": 201,
+          "phase": "synthetic_closure",
+          "phase_step": 0
+        },
+        "last_record_sha256": "77a716899a767d04404332daecc856ed4f8089464f4dc4631963eb258a687af6",
+        "last_valid_kind": "step_begin",
+        "observation_count": 1,
+        "path": "claudedocs/runtime_logs/grasp_track/g0a_d361/failure_injection/state_row_semantic_tamper_rehashed.jsonl",
+        "recoverable_prefix_pass": true,
+        "sealed": false,
+        "terminal_inflight_step": {
+          "global_step": 202,
+          "phase": "synthetic_closure",
+          "phase_step": 1
+        },
+        "trailing_byte_count": 7763,
+        "trailing_bytes_sha256": "3723c765329f49085eb8b24ff24703eb7fdefc3d1543e7c394f8f9ab877ae49e",
+        "valid_prefix_byte_count": 6351,
+        "valid_record_count": 4,
+        "validated_header_payload": {
+          "body_labels": [
+            "support_table",
+            "link4",
+            "link5",
+            "gripper_link"
+          ],
+          "case": "g0a_d361",
+          "execution_contract": {
+            "legal_seals": {
+              "offline_reference_horizon_complete": [
+                3
+              ]
+            }
+          },
+          "filter_index_by_body": {
+            "gripper_link": 3,
+            "link4": 1,
+            "link5": 2,
+            "support_table": 0
+          },
+          "lineage": {
+            "capacity_budget_sha256": "ca5edc818fee321dad257dcf3d1ba4574b6c446471a7ff7abc7c8ab790bf79f5",
+            "harness_sha256": "6f41dee2cbe5ce651ef09e0f540a23c008d83f5e7fb6407ec152dd2e972cb608",
+            "offline_invocation_sha256": "f48084086398f6e4d2fc888fb294f764f0003a311f23fff8e1dbee07efd3f867",
+            "prepare_preflight_sha256": "b0ade378ab1b673b2dceca18141b91fdcb451b0706b06c6c4f095b3a67022c72",
+            "preregistration_sha256": "87250fc30146887dd4c372092bed95a9491c67e7812426834ee37467c7c6de76",
+            "protocol_contract_sha256": "dead1591fbf53f080bae0ca28643bb22147ee99a6b07f71a9285865e2c1d8e13"
+          },
+          "overwrite_allowed": false,
+          "profile": "D361_OFFLINE_SYNTHETIC_PREFIX_EVALUATION_V1",
+          "registered_total_capacity": 33280,
+          "resolved_filter_paths": [
+            "/World/envs/env_0/TapTable",
+            "/World/envs/env_0/Robot/link4",
+            "/World/envs/env_0/Robot/link5",
+            "/World/envs/env_0/Robot/gripper_link"
+          ],
+          "resume_allowed": false,
+          "scenario": "normal_sealed",
+          "sensor_body_names": [
+            "Sponge"
+          ],
+          "state_row_contract": {
+            "authority": "D360 _state_row exact top-level field contract",
+            "required_top_level_keys": [
+              "global_step",
+              "phase",
+              "phase_step",
+              "physics_time_s",
+              "simulation_clock",
+              "timeline_time_s",
+              "actual_joint_rad",
+              "actual_joint_vel_rad_s",
+              "target_joint_rad",
+              "q5_actual_rad",
+              "q5_velocity_rad_s",
+              "q5_target_rad",
+              "q5_error_rad",
+              "q0_q4_actual_minus_frozen_rad",
+              "q0_q4_max_abs_drift_rad",
+              "q5_torque",
+              "object_pos_w_m",
+              "object_quat_wxyz",
+              "object_lin_vel_w_mps",
+              "object_ang_vel_w_radps",
+              "object_disp_w_m",
+              "object_disp_xy_mm",
+              "object_z_delta_mm",
+              "object_tilt_deg",
+              "object_tilt_delta_from_reference_deg",
+              "object_bottom_table_gap_mm",
+              "robot_root_pos_w_m",
+              "robot_root_quat_wxyz",
+              "robot_root_position_drift_m",
+              "robot_root_rotation_drift_rad",
+              "link5_pos_w_m",
+              "link5_quat_wxyz",
+              "gripper_pos_w_m",
+              "gripper_quat_wxyz",
+              "contact",
+              "finite"
+            ]
+          },
+          "subject_kind": "offline_synthetic_protocol_fixture_not_physics_evidence"
+        }
+      },
+      "expected_semantic_error_fragment": "state_row top-level",
+      "pass": true,
+      "wire_hash_chain_valid_before_semantic_validation": true
+    }
+  },
+  "total": 17
+}
