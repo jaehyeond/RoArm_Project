@@ -1,0 +1,36 @@
+{
+  "artifact": "D364_MANUAL_BASELINE_VISUAL_INSPECTION_V1",
+  "case": "g0a_d364",
+  "automated_summary_sha256": "2f117cc55a8666fe3a05fd8cc32ab55cc869b7134e8d262023d24d29978365d7",
+  "inspected_paths": [
+    "claudedocs/runtime_logs/grasp_track/g0a_d364/d364_baseline_opposite_actual_isaac.png",
+    "claudedocs/runtime_logs/grasp_track/g0a_d364/d364_baseline_primary_actual_isaac.png"
+  ],
+  "inspected_sha256": {
+    "claudedocs/runtime_logs/grasp_track/g0a_d364/d364_baseline_opposite_actual_isaac.png": "d9e2b8e8ae98efd27952f7954ab9723c34d7689ff174f0b187b38ad6c85bd1d6",
+    "claudedocs/runtime_logs/grasp_track/g0a_d364/d364_baseline_primary_actual_isaac.png": "c1dfafe7e8559a4fd172b8496b957c98e28e063e7f43c0d7e6e6e32be4b3c888"
+  },
+  "original_resolution_inspected": true,
+  "primary_observation": {
+    "resolution": [1280, 720],
+    "yellow_cylinder_visible": true,
+    "cylinder_upright": true,
+    "cylinder_toppled": false,
+    "bbox_xywh": [628, 299, 90, 209],
+    "component_area_px": 17003,
+    "pca_axis_angle_deg": 90.98373702250113
+  },
+  "opposite_observation": {
+    "resolution": [1280, 720],
+    "yellow_cylinder_visible": true,
+    "cylinder_upright": true,
+    "cylinder_toppled": false,
+    "bbox_xywh": [562, 299, 90, 209],
+    "component_area_px": 17010,
+    "pca_axis_angle_deg": 89.0367106474457
+  },
+  "observation_ko": "두 원본 1280x720 Isaac 캡처에서 노란 원통은 모두 수직으로 선 baseline 자세이며 로봇 말단과 함께 선명하게 보인다. 두 반대 시점이 같은 upright 상태를 독립적으로 확인한다.",
+  "scope_limit": "worker가 pose write 전에 prerequisite FAIL_STOP했으므로 post-write/post-forward 시각자료나 propagation verdict는 존재하지 않는다.",
+  "no_new_q5_contact_cap_rim_grasp_claim": true,
+  "pass_for_available_baseline_only": true
+}

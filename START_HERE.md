@@ -1,8 +1,7 @@
 # START_HERE.md
 
-Last updated: 2026-07-18 KST. D363 observability-only case is concluded and frozen.
-Exact 1080 trace replay passed; actual Isaac viewport state synchronization failed.
-No later case is approved.
+Last updated: 2026-07-18 KST. D365 observability-only localization completed and is frozen.
+No further runtime, repair, or q5/physics science case is currently approved.
 
 ## Current Truth
 
@@ -19,7 +18,7 @@ No later case is approved.
   geometry/unit/GPU/Warp cause and no old gate rewrite.
 - D360 failed before durable physical evidence because total contact-point capacity was 16.
   D361 registered capacity `33,280` and proved the durable prefix protocol offline.
-- D362 is the current physical authority. D363 changed only its observability layer.
+- D362 is the current physical authority. D363-D365 changed only observability/control evidence.
 
 ## D362 Frozen Physical Sub-result
 
@@ -42,95 +41,99 @@ No later case is approved.
 
 - Output: `claudedocs/runtime_logs/grasp_track/g0a_d363/`; completion verdict
   `D363_OBSERVABILITY_OR_INTEGRITY_FAIL_STOP`, `pass=false`. Freeze/no rerun.
-- Prepare `25/25` and worker preflight `15/15` passed. One worker exited `0` after
-  `54.454797s`; watchdog/retry/postprocess exception were absent.
-- Controlled physics step, q5 science sample, q5 target update, contact query were all `0`.
-  Direct display-state writes and explicit `SimulationContext.forward()` were `4/4`.
-- D362 33-file manifest, D334 sidecar, inputs/harness, D363-D362 inode separation,
-  37 bound artifacts and precompletion inventory/hash map stayed exact.
+- Exact frozen-trace replay passed at `1920x1080`, 250 frames, 20fps, 12.5s,
+  H.264/yuv420p/full decode. D362's existing 1088-height file remains immutable.
+- Four AssetData writes plus four explicit `SimulationContext.forward()` calls used zero
+  physics/q5/contact, but all 16 actual Isaac views stayed upright. Primary
+  precommand→final centroid/axis/IoU was `0.049105px/0.049759deg/0.996594`.
+- Rerun/footer/RBL/screenshot and all-frame video inspection passed but did not repair Hydra.
+- D363 bit-exact readback was AssetData cache self-read, not independent PhysX evidence.
+  Generic `Failed to clone in Fabric`, CPU/PCIe/VRAM/Warp/SM are not proven causes.
 
-### Exact 1080 Replay — PASS
+## D364 Completed Pre-write Localization Attempt
 
-- Immutable D362 trace was regenerated as exact `1920x1080`, 250 frames, 20fps,
-  12.5s, H.264/yuv420p. Full decode and exact source-index digest passed.
-- MP4 SHA-256:
-  `2385fc89094acb03a7e8c3aa0b203e73a1e9a110dc9eb63c1116601c51a951e4`.
-- Manual all-frame playback saw upright row 0, contact/tilt transition, and toppled/moved
-  row 499. Every frame says physics was not recomputed.
-- D362's original 1920x1088 failure file remains immutable.
+- Output: `claudedocs/runtime_logs/grasp_track/g0a_d364/`; freeze/no rerun/overwrite.
+- Operational verdict:
+  `D364_PREWRITE_OPTIONAL_FABRIC_COMPATIBILITY_ATTRIBUTE_MISMODELED_FAIL_STOP`.
+  `localization_verdict=null`, `g0a_pass=false`.
+- Prepare passed. One actual `headless=false` worker reached launcher, env, reset, paused
+  timeline, two baseline layer records, and two guarded 1280x720 captures; no retry.
+- Root compatibility `_worldPosition/_worldOrientation/_worldScale` attrs were absent, so the
+  preregistered required-layer gate stopped before mutation. This does not mean Fabric failed:
+  root and render-mesh hierarchy local/current/cached matrices were valid.
+- Independent PhysX and Fabric root-hierarchy baseline matched exactly at position
+  `[0.3000000119,0,0.0328829996]m`, quaternion wxyz `[1,0,0,0]`. Independent static
+  root→mesh reconstruction max-abs error was `0.0`.
+- Actual counts: cylinder pose write `0`, explicit forward `0`, controlled physics/q5
+  science/q5 target/contact query `0`, invocation/retry `1/0`.
+- Both manually inspected baseline views were upright. Primary/opposite yellow area
+  `17003/17010px`; no post-write/final captures, report, or RRD exist by program order.
+- Outer process exit `0` was misleading: worker exception + terminal stop + missing worker
+  summary are completion authority. Never use worker exit code alone as PASS.
+- GPU used max/free min `7760/8185MiB`, utilization max `22%`, worker RSS max
+  `7,055,708,160B`; watchdog null.
 
-### Actual Isaac Render Synchronization — FAIL
+## D365 Completed Hierarchy Localization
 
-- All 16 actual primary/opposite, before/after PNGs decoded, but the cylinder stayed
-  upright at essentially the same location in all four recorded states.
-- Primary precommand→final centroid/axis/IoU:
-  `0.049105px/0.049759deg/0.996594`; opposite:
-  `0.161524px/0.118677deg/0.994711`.
-- Primary final-before→after was only `0.011875px/0.003691deg/0.999471`.
-  D362 stale-final→D363 final-after was `0.111188px/0.084595deg/0.996066`.
-  Both actual final views were `toppled=false`.
-- Rerun 0.34.1 validation passed with exact timelines `blueprint/log_time/sync_step`,
-  footer/RBL/headless screenshot. It honestly shows actual upright images beside a
-  canonical toppled trace panel; Rerun PASS does not repair Hydra FAIL.
-- Manual required paths/hashes `22/22` exact; final moved/toppled seen `false`, manual
-  `pass=false`.
+- Output: `claudedocs/runtime_logs/grasp_track/g0a_d365/`; freeze both the sandbox-access
+  attempt1 and completed `attempt2_host_access_prepare_repair/`; no rerun/overwrite.
+- Attempt2 prepare `19/19` PASS. One actual `headless=false` worker/no retry completed in
+  `28.8189958s`, exit `0`, watchdog null. Pose write/forward were `1/1`; controlled physics,
+  q5 science, q5 target, contact query were all `0`.
+- AssetData cache and independent PhysX tensor view became `TARGET` immediately after write.
+  IFabricHierarchy root current, mesh current, Boundable mesh cached worldMatrix, and Hydra
+  pixels remained `BASELINE` even after public `SimulationContext.forward()`.
+- Optional compatibility `_world*` remained `UNAVAILABLE` and optional root cached worldMatrix
+  remained `BASELINE`; neither gated the verdict. Selected Fabric callable was the actual bound
+  `force_update`; Fabric/FSD/Hydra-transform attestations were true.
+- Primary baseline→post-forward centroid/axis/IoU was
+  `0.0144265px/0.0191790deg/0.999118`; opposite was
+  `0.0134108px/0.00654886deg/0.997652`. All six 1280x720 captures stayed upright.
+- Exact 8-path original visual inspection, RRD/RBL/footer/entity/timeline/component checks,
+  manual checks `14/14`, integrity checks `19/19` PASS.
+- Final verdict: `D365_PHYSX_TO_FABRIC_HIERARCHY_NOT_PROPAGATED`, completion `pass=true`.
+  This localizes the display-state break; it does not identify the deeper missing update/commit
+  event and is not a grasp-science PASS/FAIL. D362 physical sub-result and all nulls remain.
 
-## D363 Root-cause Boundary
+## Current Authorization Boundary
 
-- `all_write_readback_bits_exact=true` was an IsaacLab AssetData cache self-read, not an
-  independent PhysX backend getter. The writer updates its cache before the backend setter,
-  and D363 did not advance the data timestamp that would trigger a backend re-read.
-- The explicit `forward()` call count is exact, but D363 did not attest run-level
-  `cfg.use_fabric`, `_fabric_iface`, selected `force_update/update`, independent
-  `root_physx_view.get_transforms()`, or USDRT/Fabric world matrices.
-- Therefore the break is localized only to somewhere in
-  `AssetData cache → PhysX backend → Fabric/USDRT → Hydra`; the exact arrow is unknown.
-- Worker log contains generic `Failed to clone in Fabric`, but the same line appears in
-  D352/D353/D354/D357/D360/D362. It is not proven as the D363 root cause. CPU powersave,
-  PCIe Gen1, VRAM, Warp, or SM efficiency are also not demonstrated causes.
-- Telemetry: GPU used max/free min `7760/8185MiB`, utilization max `42%`, worker RSS max
-  `7,166,943,232B`. Utilization is not Warp occupancy or SM-efficiency evidence.
-
-## Active Case / Next Approval Boundary
-
-- There is no active approved case.
-- Narrowest candidate: D364 `[paused_render_state_layer_localization]`, observability-only.
-  With frozen D362 states and zero physics steps, read before/after at:
-  1. AssetData cache,
-  2. independent PhysX getter,
-  3. USD plus USDRT/Fabric world matrix,
-  4. Hydra yellow-mask centroid/axis.
-- D364 must also attest Fabric enable/interface and the actual `force_update/update` callable.
-  It is not approved and must not be implemented or run without explicit user authorization.
-- Any q5/physics science, cap/rim discriminator, target/IK/path repair, asset/physics setting
-  change, grasp/settle/hold/lift, ten-trial, G0b, RL/PPO/VLA needs separate approval.
+- No active approved case. Before a new runtime repair, the next candidate should first trace the
+  installed public setter→PhysX scene update→Fabric hierarchy update ordering/commit contract.
+- Any bridge experiment, q5/physics science, cap/rim discriminator, target/IK/path repair,
+  asset/physics setting change, grasp/settle/hold/lift, ten-trial, G0b, RL/PPO/VLA needs a new
+  explicit approval and forward-only preregistration.
 
 ## Frozen Boundaries / Operational Residue
 
-- Freeze D351-D363 paths. Do not modify the user-owned
+- Freeze D351-D365 paths. Do not modify the user-owned
   `claudedocs/lab_meeting/20260715/d334_collision_table/` sidecar.
 - Do not substitute Rerun Float32 display values or vertex-only Qhull for canonical
   callback/Float64/sensor evidence.
-- Historical D342 worker PID `1729639` remains under user-systemd PID `1123`, RSS about
-  954MiB and GPU 320MiB. D363 did not grant signal authority; it was not terminated.
+- Historical D342 worker PID `1729639` remained under user-systemd PID `1123`. One previously
+  approved SIGTERM was sent after lineage recheck, but the process remained `Sl`; no SIGKILL or
+  unapproved signal was used. Its observed GPU allocation was 320MiB.
 - `HANDOFF.md` and `TASKS.md` are stale. No hardware, B200/SSH, dependency install,
-  commit, push, or signal was performed.
+  commit, push, or unapproved signal was performed.
 
 ## Must Read First
 
-1. `AGENTS.md`; this file; DECISIONS D362-D363; ledger tail
-2. `claudedocs/session_20260718_grasp_g0a_d363_trace_replay_1080_and_isaac_render_sync_repair.md`
-3. D363 completion, sync report, exact-video report, manual inspection, Rerun validation,
+1. `AGENTS.md`; this file; DECISIONS D362-D365; ledger tail
+2. `claudedocs/session_20260718_grasp_g0a_d365_hierarchy_current_render_cache_propagation_localization.md`
+3. D365 completion, localization report, layer journal/audit, supervisor, Rerun validation,
+   manual inspection, and six original Isaac PNGs
+4. `claudedocs/session_20260718_grasp_g0a_d364_paused_render_state_layer_localization.md`;
+   D364 runtime attestation, worker exception/phase markers, baseline manual inspection,
+   and pre-write failure completion
+5. `claudedocs/session_20260718_grasp_g0a_d363_trace_replay_1080_and_isaac_render_sync_repair.md`
+6. D363 completion, sync report, exact-video report, manual inspection, Rerun validation,
    worker log and supervisor summary
-4. `claudedocs/session_20260717_grasp_g0a_d362_capacity_prefix_integrated_physx_contact_motion.md`
-5. D362 runtime prerequisites, durable prefix/audit, physics trace, worker and supervisor
-6. D361 capacity/prefix session; D360 exception/session when tracing the failure lineage
-7. D359 provenance; D354 measurement/binding; D350 static Viewer; D348 topology
+7. `claudedocs/session_20260717_grasp_g0a_d362_capacity_prefix_integrated_physx_contact_motion.md`
+8. D362 runtime prerequisites, durable prefix/audit, physics trace, worker and supervisor;
+   then D361/D360/D359/D354/D350/D348 lineage as needed
 
 ## Git
 
-- Verified before D363 edits: `HEAD == origin/master ==
-  f085463d2e994a633cd1bcefe0c98c0b6c19e18e`, commit
-  `D363 observability-only 전 저장`; worktree was clean.
-- Current uncommitted changes are D363-only harness/output/state documentation. No commit or
-  push is authorized or performed.
+- Verified before D364/D365 edits: `HEAD == origin/master ==
+  94c0644ef3d4e69278bc864f0f8c2f3a40908dc8`, commit `D363test`; worktree was clean.
+- Current uncommitted changes contain frozen D364 and completed D365 evidence/state/harness.
+  No commit or push is authorized or performed.

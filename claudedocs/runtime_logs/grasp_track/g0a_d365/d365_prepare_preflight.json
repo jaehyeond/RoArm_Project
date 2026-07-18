@@ -1,0 +1,36 @@
+{
+  "artifact": "D365_PREPARE_PREFLIGHT_V1",
+  "case": "g0a_d365",
+  "checks": {
+    "d334_sidecar_nonempty": true,
+    "d362_manifest_33": true,
+    "d363_manifest_40": true,
+    "d364_completion_evidence_map_exact": true,
+    "d364_manifest_17": true,
+    "display_available": false,
+    "git_scope_d364_d365_only": true,
+    "gpu_exact": false,
+    "gpu_free_gate": false,
+    "head_origin_exact": true,
+    "input_hashes_exact": true,
+    "negative_controls_pass": true,
+    "numpy_pin": true,
+    "psutil_pin": true,
+    "ram_free_gate": true,
+    "rerun_pin": true,
+    "session_preregistered": true,
+    "static_source_audit_pass": true
+  },
+  "display_returncode": 1,
+  "gpu_and_ram": {
+    "nvidia_smi_returncode": 9,
+    "nvidia_smi_stderr": "",
+    "ram_available_bytes": 15810953216
+  },
+  "pass": false,
+  "preregistration_sha256": "2b81e3609bb89d64d48061235e8baa8541f787d873a319fd0dd000695803e668",
+  "rerun_version_output": "rerun-cli 0.34.1 (base lance map_view nasm native_viewer oss_server perf_telemetry re_server release_full release_no_web_viewer web_viewer) [rustc 1.92.0 (ded5c06cf 2025-12-08), LLVM 21.1.3] x86_64-unknown-linux-gnu prepare-release-0.34.1 4efb18f, built 2026-07-07T16:20:42.173372603Z\nVideo features: av1 ffmpeg nasm\n2026-07-18T04:12:32.570151Z ERROR re_analytics: Failed to initialize analytics: Read-only file system (os error 30)",
+  "session_preregistration_bytes": 9282,
+  "session_preregistration_sha256": "aaaca82b3eeb0e3d7902e5c73b384d3b1f691b760241317c7108adc0a27547d0",
+  "utc": "2026-07-18T04:12:32.666012+00:00"
+}

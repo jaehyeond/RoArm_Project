@@ -20910,3 +20910,131 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d363/d363_manual_visual_inspection.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d363/d363_completion_summary.json`
 - `START_HERE.md`
+
+## D364 - optional Fabric compatibility 속성을 필수 전달층으로 두지 않고 worker exit code 단독을 완료 권위로 쓰지 않는다 (2026-07-18)
+
+Decision:
+
+- D364는 frozen D362 final pose를 사용해 cache→PhysX→Fabric hierarchy→Hydra 단절을
+  zero-step으로 국소화하려던 observability-only case다. 실제 `headless=false` worker는
+  정확히 1회 실행됐고 retry하지 않았다.
+- 실제 scene의 root `/World/envs/env_0/Sponge`에서 compatibility `_worldPosition`,
+  `_worldOrientation`, `_worldScale` attributes는 모두 invalid/absent였다. 이것은 Fabric
+  전체 부재가 아니다. 같은 root의 hierarchy local/current/cached matrices와 render mesh의
+  hierarchy local/current/cached matrices는 valid였고, root hierarchy current baseline은
+  독립 PhysX getter baseline과 정확히 일치했다.
+- **지속 규칙:** USDRT compatibility `_world*` 속성은 존재를 runtime에서 확인하기 전에는
+  필수 직렬 propagation layer로 preregister하지 않는다. 이 scene의 직접 경로는 independent
+  PhysX tensor view → IFabricHierarchy root/mesh current → Boundable mesh cached worldMatrix
+  → Hydra다. Absent compatibility attrs는 optional diagnostic/negative control이다.
+- D364는 이 잘못된 prerequisite에서 pose write 전에 안전 정지했다. Actual counts는 root
+  pose write `0`, explicit forward `0`, controlled physics/q5 science/q5 target/contact query
+  모두 `0`; post-write/final PNG, localization report, RRD/RBL은 없다. 따라서 render 단절
+  verdict는 `null`이며 D363 문제를 해결하거나 국소화하지 않았다.
+- **지속 규칙:** OS worker exit code `0`만 성공 권위로 쓰지 않는다. D364에서는 Kit close
+  뒤 outer process가 `0`이었지만 `d364_worker_exception.json`, terminal
+  `worker_exception:stop`, worker summary 부재가 명백한 FAIL을 증명했다. 이후 supervisor는
+  exception absence + terminal completion marker + worker summary를 함께 요구한다.
+- 최종 operational verdict는
+  `D364_PREWRITE_OPTIONAL_FABRIC_COMPATIBILITY_ATTRIBUTE_MISMODELED_FAIL_STOP`,
+  `localization_verdict=null`, `g0a_pass=false`다.
+
+Evidence:
+
+- Independent PhysX/root hierarchy baseline position `[0.30000001192092896, 0.0,
+  0.03288299962878227]m`, quaternion wxyz `[1,0,0,0]`; authored-relative baseline mesh
+  reconstruction max-abs `0.0`.
+- Two original 1280x720 baseline images were manually inspected upright. Primary/opposite yellow
+  area `17003/17010px`, bbox `[628,299,90,209]` / `[562,299,90,209]`, PCA axis
+  `90.983737/89.036711deg`.
+- Worker resource maximum/minimum: GPU used/free `7760/8185MiB`, utilization max `22%`, worker
+  RSS max `7,055,708,160B`; watchdog `null`.
+- D362 33-file tree, D363 40-file tree, frozen input hashes and D334 sidecar remained unchanged.
+- Failure completion SHA-256 `845f3b39...0211`; runtime attestation `777ea962...eb4`;
+  worker exception `f1a9d533...cd6b`.
+
+Implication:
+
+- Freeze D364 output; do not rerun/resume/overwrite it or call the pre-write failure a render
+  propagation FAIL.
+- The next narrow candidate requires separate approval: D365
+  `[hierarchy_current_render_cache_propagation_localization]`. It may remove only the invalid
+  compatibility prerequisite, inherit D364 raw baseline, and perform one cylinder pose write plus
+  one public `SimulationContext.forward()` with zero controlled physics/q5/contact. No target/IK/
+  path/asset/physics setting or grasp science change is implied.
+
+Sources:
+
+- `claudedocs/session_20260718_grasp_g0a_d364_paused_render_state_layer_localization.md`
+- `sim_scripts/cyl34_top_view_d364_paused_render_state_layer_localization.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d364/d364_runtime_fabric_attestation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d364/d364_worker_exception.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d364/d364_worker_phase_markers.jsonl`
+- `claudedocs/runtime_logs/grasp_track/g0a_d364/d364_manual_baseline_visual_inspection.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d364/d364_prewrite_fail_completion.json`
+- `START_HERE.md`
+
+## D365 - independent PhysX TARGET을 Fabric hierarchy/Hydra 전달 증명으로 대체하지 않는다 (2026-07-18)
+
+Decision:
+
+- D365는 D364에서 필수로 잘못 모델링한 compatibility `_world*`를 optional diagnostic으로
+  내리고, frozen D362 row 499 pose 한 번을 `AssetData cache → independent PhysX tensor view
+  → IFabricHierarchy root current → render-mesh current → Boundable mesh cached worldMatrix →
+  Hydra pixels` 순서로 측정한 observability-only case다.
+- Sole actual `headless=false` worker/no retry에서 pose write와 public
+  `SimulationContext.forward()`는 각각 `1`; controlled physics, q5 science, q5 target update,
+  contact query는 모두 `0`이었다. Worker exit `0`, elapsed `28.81899581302423s`, watchdog와
+  exception은 없었다.
+- Cache와 독립 `root_physx_view.get_transforms()`는 `post_write_immediate`부터 `TARGET`이었다.
+  그러나 root hierarchy current, mesh current, Boundable mesh cached worldMatrix와 Hydra는
+  public forward 뒤까지 `BASELINE`이었다. Optional `_world*`는 계속 `UNAVAILABLE`, optional
+  root cached worldMatrix는 `BASELINE`이었다.
+- **지속 규칙:** asset cache self-read와 독립 PhysX tensor readback을 구분하되, 독립 PhysX
+  readback이 target이라는 사실도 Fabric hierarchy current 또는 실제 renderer 전달을
+  대신하지 않는다. Dynamic pose 판정에는 각 전달층을 같은 checkpoint에서 독립 계측한다.
+- **지속 규칙:** `cfg.use_fabric=true`, interface/FSD/Hydra Fabric transform setting true,
+  실제 interface에 bound된 `force_update`, public `forward()` call/return true만으로 propagation
+  PASS를 선언하지 않는다. 이번 paused zero-step 경로의 측정된 첫 단절은 PhysX tensor
+  view→Fabric hierarchy current다. 더 내부의 필요한 update/commit event나 generic clone
+  warning의 인과는 별도 증거 없이 확정하지 않는다.
+- 모든 actual Isaac PNG는 upright였다. Baseline→post-forward primary
+  centroid/axis/IoU `0.0144264878px/0.0191789834deg/0.9991181139`, opposite
+  `0.0134108139px/0.0065488569deg/0.9976521688`이었다. Rerun은 실제 여섯 upright image와
+  commanded toppled geometry를 함께 보여 불일치를 보존했다.
+- 최종 verdict는 `D365_PHYSX_TO_FABRIC_HIERARCHY_NOT_PROPAGATED`, completion `pass=true`다.
+  이는 localization/evidence 완료이지 physics, contact, grasp 또는 G0a 성공이 아니다.
+  D362 physical sub-result는 그대로이고 cap/rim, exact face/manifold, force closure, stable
+  grasp, hold/lift, target/IK repair justification는 `null`, `g0a_pass=false`다.
+
+Evidence:
+
+- Attempt2 prepare `19/19`; layer journal `6/6`; manual checks `14/14`; completion integrity
+  `19/19`; output inventory `27/27`.
+- Target vs baseline separation은 position max-axis `0.057213664054870605m`, quaternion
+  angular `91.29174613972452deg`; target trace displacement/tilt는
+  `60.61899778989994mm/89.99777464743418deg`다.
+- GPU used max/free min `8576/7369MiB`, utilization max `37%`, worker RSS max
+  `7,131,017,216B`; 이 값은 SM/Warp occupancy가 아니며 단절의 원인 증거가 아니다.
+- Completion SHA-256 `efb2ece5...752d`; report `b82065bf...5420`; RRD
+  `73a2a1d5...056`; manual inspection `ce0c8e02...9a72`.
+
+Implication:
+
+- D365 attempt1/attempt2 output은 동결한다. 재실행하거나 서로 합치거나 덮어쓰지 않는다.
+- 다음 runtime repair 전에 installed IsaacLab/Isaac Sim의 rigid-body tensor setter 이후
+  PhysX scene update와 Fabric hierarchy update가 요구하는 public ordering/commit 계약을
+  source/API 계보로 좁힌다. 그 뒤에도 bridge 하나만 별도 승인·사전등록해 검증한다.
+- 어떤 q5/physics/contact/cap-rim/grasp science 재개도 새 명시 승인이 필요하다.
+
+Sources:
+
+- `claudedocs/session_20260718_grasp_g0a_d365_hierarchy_current_render_cache_propagation_localization.md`
+- `sim_scripts/cyl34_top_view_d365_hierarchy_current_render_cache_propagation_localization.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_state_layer_localization_report.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_layer_readback_journal.jsonl`
+- `claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_supervisor_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_rerun_validation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_manual_visual_inspection.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_completion_summary.json`
+- `START_HERE.md`

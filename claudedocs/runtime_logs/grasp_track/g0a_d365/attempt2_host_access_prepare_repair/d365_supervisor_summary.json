@@ -1,0 +1,4156 @@
+{
+  "artifact": "D365_SUPERVISOR_SUMMARY_V1",
+  "automatic_retry": false,
+  "case": "g0a_d365",
+  "command": [
+    "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/cyl34_top_view_d365_hierarchy_current_render_cache_propagation_localization.py",
+    "--stage",
+    "_worker",
+    "--out_dir",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair",
+    "--seed",
+    "33201"
+  ],
+  "contact_query_count": 0,
+  "controlled_physics_steps": 0,
+  "display_state_write_count": 1,
+  "display_state_write_returned": true,
+  "elapsed_seconds": 28.81899581302423,
+  "explicit_forward_count": 1,
+  "explicit_forward_returned": true,
+  "g0a_pass": false,
+  "journal_worker_checkpoint_match": {
+    "checks": {
+      "labels_exact": true,
+      "payloads_exact": true
+    },
+    "expected_labels": [
+      "baseline_pre_capture",
+      "baseline_post_capture",
+      "post_write_immediate",
+      "post_write_after_app_update",
+      "post_forward_immediate",
+      "post_forward_after_app_update"
+    ],
+    "journal_sha256": "288cece6e1a170dd412deecbfe89faf106dc6201715a3fb0aeb048e0d59b27d7",
+    "observed_labels": [
+      "baseline_pre_capture",
+      "baseline_post_capture",
+      "post_write_immediate",
+      "post_write_after_app_update",
+      "post_forward_immediate",
+      "post_forward_after_app_update"
+    ],
+    "pass": true,
+    "payload_matches": {
+      "baseline_post_capture": true,
+      "baseline_pre_capture": true,
+      "post_forward_after_app_update": true,
+      "post_forward_immediate": true,
+      "post_write_after_app_update": true,
+      "post_write_immediate": true
+    },
+    "worker_summary_sha256": "3babf239358f48ae5d2edd2124e3bcdb29d76ef5464a82b958c9fddd3a2e8c2e"
+  },
+  "layer_journal_audit": {
+    "artifact": "D365_LAYER_READBACK_JOURNAL_AUDIT_V1",
+    "case": "g0a_d365",
+    "checks": {
+      "all_getter_clock_guards_true": true,
+      "hash_chain_exact": true,
+      "labels_exact": true,
+      "six_records": true
+    },
+    "errors": [],
+    "journal_path": "claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_layer_readback_journal.jsonl",
+    "journal_sha256": "288cece6e1a170dd412deecbfe89faf106dc6201715a3fb0aeb048e0d59b27d7",
+    "labels": [
+      "baseline_pre_capture",
+      "baseline_post_capture",
+      "post_write_immediate",
+      "post_write_after_app_update",
+      "post_forward_immediate",
+      "post_forward_after_app_update"
+    ],
+    "pass": true,
+    "record_count": 6,
+    "terminal_record_sha256": "46b0ceffa14941f2975a1e69788759f6a606f8ecbc3574dbe2f12ca0c6fe679e",
+    "utc": "2026-07-18T08:32:25.659274+00:00"
+  },
+  "localization_report": {
+    "artifact": "D365_STATE_LAYER_LOCALIZATION_REPORT_V1",
+    "authored_usd_is_dynamic_authority": false,
+    "baseline_layers_exact": true,
+    "baseline_pose_wxyz": [
+      0.30000001192092896,
+      0.0,
+      0.03288299962878227,
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "baseline_target_pose_separation": {
+      "position_and_rotation": {
+        "match": false,
+        "position_max_abs_error_m": 0.057213664054870605,
+        "quaternion_angular_error_deg": 91.29174613972452
+      },
+      "trace_tilt_delta_deg": 89.99777464743418,
+      "trace_xy_displacement_mm": 60.61899778989994
+    },
+    "cap_rim_science": null,
+    "case": "g0a_d365",
+    "contact_query_count": 0,
+    "controlled_physics_steps": 0,
+    "diagnostic_layer_keys": [
+      "fabric_root_compatibility",
+      "fabric_root_cached_render"
+    ],
+    "diagnostic_temporal_classes": {
+      "fabric_root_cached_render": [
+        "BASELINE",
+        "BASELINE",
+        "BASELINE",
+        "BASELINE",
+        "BASELINE",
+        "BASELINE"
+      ],
+      "fabric_root_compatibility": [
+        "UNAVAILABLE",
+        "UNAVAILABLE",
+        "UNAVAILABLE",
+        "UNAVAILABLE",
+        "UNAVAILABLE",
+        "UNAVAILABLE"
+      ]
+    },
+    "diagnostic_terminal_classes": {
+      "root_cached": "BASELINE",
+      "root_compatibility": "UNAVAILABLE"
+    },
+    "fabric_attestation": {
+      "app_use_fabric_scene_delegate": true,
+      "cfg_use_fabric": true,
+      "hydra_reads_transforms_from_fabric": true,
+      "interface_has_force_update": true,
+      "interface_has_update": true,
+      "interface_present": true,
+      "interface_repr": "<omni.physxfabric.bindings._physxFabric.PhysXFabric object at 0x73e068cc6af0>",
+      "interface_type": "omni.physxfabric.bindings._physxFabric.PhysXFabric",
+      "is_fabric_enabled": true,
+      "physics_fabric_enabled_setting": true,
+      "rt_stage_fabric_id": "<usdrt.helpers._helpers.FabricId object at 0x73dea87a39f0>",
+      "rt_stage_id": "<usdrt.helpers._helpers.UsdStageId object at 0x73dea87a39f0>",
+      "selected_callable_bound_to_interface": true,
+      "selected_callable_name": "force_update",
+      "selected_callable_repr": "<bound method PyCapsule.force_update of <omni.physxfabric.bindings._physxFabric.PhysXFabric object at 0x73e068cc6af0>>",
+      "selected_callable_type": "builtins.method"
+    },
+    "first_target_phase": {
+      "cache": "post_write_immediate",
+      "fabric_mesh_cached_render": null,
+      "fabric_mesh_current": null,
+      "fabric_root_current": null,
+      "hydra": null,
+      "physx_tensor_view": "post_write_immediate"
+    },
+    "g0a_pass": false,
+    "getter_side_effect_detected": false,
+    "grasp_or_g0a_science": null,
+    "hydra_phase_classes": {
+      "baseline": "BASELINE",
+      "post_forward": "BASELINE",
+      "post_write_no_forward": "BASELINE"
+    },
+    "hydra_phase_views": {
+      "baseline": {
+        "opposite": {
+          "class": "BASELINE",
+          "materially_different_from_baseline": false,
+          "toppled": false,
+          "upright": true
+        },
+        "primary": {
+          "class": "BASELINE",
+          "materially_different_from_baseline": false,
+          "toppled": false,
+          "upright": true
+        }
+      },
+      "post_forward": {
+        "opposite": {
+          "class": "BASELINE",
+          "materially_different_from_baseline": false,
+          "toppled": false,
+          "upright": true
+        },
+        "primary": {
+          "class": "BASELINE",
+          "materially_different_from_baseline": false,
+          "toppled": false,
+          "upright": true
+        }
+      },
+      "post_write_no_forward": {
+        "opposite": {
+          "class": "BASELINE",
+          "materially_different_from_baseline": false,
+          "toppled": false,
+          "upright": true
+        },
+        "primary": {
+          "class": "BASELINE",
+          "materially_different_from_baseline": false,
+          "toppled": false,
+          "upright": true
+        }
+      }
+    },
+    "hydra_temporal_classes": [
+      "BASELINE",
+      "BASELINE",
+      "BASELINE"
+    ],
+    "hydra_views": {
+      "opposite": {
+        "class": "BASELINE",
+        "materially_different_from_baseline": false,
+        "toppled": false,
+        "upright": true
+      },
+      "primary": {
+        "class": "BASELINE",
+        "materially_different_from_baseline": false,
+        "toppled": false,
+        "upright": true
+      }
+    },
+    "linear_terminal_classes": {
+      "cache": "TARGET",
+      "hydra": "BASELINE",
+      "mesh_cached": "BASELINE",
+      "mesh_current": "BASELINE",
+      "physx": "TARGET",
+      "root_current": "BASELINE"
+    },
+    "localization_verdict": "D365_PHYSX_TO_FABRIC_HIERARCHY_NOT_PROPAGATED",
+    "nonmonotonic_downstream_target_after_upstream_baseline": false,
+    "operational_localization_complete": true,
+    "pass": true,
+    "phase_downstream_ahead": {
+      "baseline_post_capture": false,
+      "baseline_pre_capture": false,
+      "post_forward_after_app_update": false,
+      "post_forward_immediate": false,
+      "post_write_after_app_update": false,
+      "post_write_immediate": false
+    },
+    "phase_layers": {
+      "baseline_post_capture": {
+        "authored_usd_control": {
+          "mesh": {
+            "dynamic_authority": false,
+            "prim_path": "/World/envs/env_0/Sponge/geometry/mesh",
+            "prim_valid": true,
+            "role": "authored USD control only; Fabric-enabled runtime may leave this stale",
+            "type_name": "Cylinder",
+            "world_transform": {
+              "matrix_row_major": [
+                [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227,
+                  1.0
+                ]
+              ],
+              "position_m": [
+                0.30000001192092896,
+                0.0,
+                0.03288299962878227
+              ],
+              "quaternion_wxyz": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            }
+          },
+          "root": {
+            "dynamic_authority": false,
+            "prim_path": "/World/envs/env_0/Sponge",
+            "prim_valid": true,
+            "role": "authored USD control only; Fabric-enabled runtime may leave this stale",
+            "type_name": "Xform",
+            "world_transform": {
+              "matrix_row_major": [
+                [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227,
+                  1.0
+                ]
+              ],
+              "position_m": [
+                0.30000001192092896,
+                0.0,
+                0.03288299962878227
+              ],
+              "quaternion_wxyz": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            }
+          }
+        },
+        "cache": {
+          "baseline": {
+            "match": true,
+            "position_max_abs_error_m": 0.0,
+            "quaternion_angular_error_deg": 0.0
+          },
+          "class": "BASELINE",
+          "target": {
+            "match": false,
+            "position_max_abs_error_m": 0.057213664054870605,
+            "quaternion_angular_error_deg": 91.29174613972452
+          }
+        },
+        "fabric_mesh_cached_render": {
+          "baseline_match": true,
+          "baseline_max_abs": 0.0,
+          "class": "BASELINE",
+          "target_match": false,
+          "target_max_abs": 1.0000014844936587
+        },
+        "fabric_mesh_current": {
+          "baseline_match": true,
+          "baseline_max_abs": 0.0,
+          "class": "BASELINE",
+          "target_match": false,
+          "target_max_abs": 1.0000014844936587
+        },
+        "fabric_root_cached_render": {
+          "baseline_match": true,
+          "baseline_max_abs": 0.0,
+          "class": "BASELINE",
+          "target_match": false,
+          "target_max_abs": 1.0000014844936587
+        },
+        "fabric_root_compatibility": {
+          "baseline": null,
+          "class": "UNAVAILABLE",
+          "target": null
+        },
+        "fabric_root_current": {
+          "baseline_match": true,
+          "baseline_max_abs": 0.0,
+          "class": "BASELINE",
+          "target_match": false,
+          "target_max_abs": 1.0000014844936587
+        },
+        "getter_transition": {
+          "fabric_full_snapshot_after_sha256": "6c7c3ce0ecb19a39e76d9397cffc74242388e4a522a29ce40bbf3b79a32da4cb",
+          "fabric_full_snapshot_before_sha256": "6c7c3ce0ecb19a39e76d9397cffc74242388e4a522a29ce40bbf3b79a32da4cb",
+          "mesh_cached_matrix_max_abs": 0.0,
+          "mesh_cached_presence_changed": false,
+          "mesh_current_matrix_max_abs": 0.0,
+          "mesh_current_presence_changed": false,
+          "optional_full_fabric_snapshot_changed": false,
+          "required_fabric_changed_across_physx_getter": false,
+          "required_matrix_changed": false,
+          "required_presence_changed": false,
+          "root_current_matrix_max_abs": 0.0,
+          "root_current_presence_changed": false
+        },
+        "physx_tensor_view": {
+          "baseline": {
+            "match": true,
+            "position_max_abs_error_m": 0.0,
+            "quaternion_angular_error_deg": 0.0
+          },
+          "class": "BASELINE",
+          "target": {
+            "match": false,
+            "position_max_abs_error_m": 0.057213664054870605,
+            "quaternion_angular_error_deg": 91.29174613972452
+          }
+        },
+        "raw_fabric": {
+          "mesh": {
+            "compat_local_matrix": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "fallback_to_usd_used": false,
+            "has_local_xform": false,
+            "has_world_xform": false,
+            "hierarchy_cached_world_matrix": {
+              "valid": true,
+              "value": {
+                "matrix_row_major": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.30000001192092896,
+                    0.0,
+                    0.03288299962878227,
+                    1.0
+                  ]
+                ],
+                "position_m": [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227
+                ],
+                "quaternion_wxyz": [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "value_present": true
+            },
+            "hierarchy_current_computed_world_matrix": {
+              "matrix_row_major": [
+                [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227,
+                  1.0
+                ]
+              ],
+              "position_m": [
+                0.30000001192092896,
+                0.0,
+                0.03288299962878227
+              ],
+              "quaternion_wxyz": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "hierarchy_local_matrix": {
+              "valid": true,
+              "value": {
+                "matrix_row_major": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "position_m": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "quaternion_wxyz": [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "value_present": true
+            },
+            "prim_path": "/World/envs/env_0/Sponge/geometry/mesh",
+            "prim_valid": true,
+            "type_name": "Cylinder",
+            "world_orientation": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "world_position": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "world_scale": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            }
+          },
+          "root": {
+            "compat_local_matrix": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "fallback_to_usd_used": false,
+            "has_local_xform": false,
+            "has_world_xform": false,
+            "hierarchy_cached_world_matrix": {
+              "valid": true,
+              "value": {
+                "matrix_row_major": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.30000001192092896,
+                    0.0,
+                    0.03288299962878227,
+                    1.0
+                  ]
+                ],
+                "position_m": [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227
+                ],
+                "quaternion_wxyz": [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "value_present": true
+            },
+            "hierarchy_current_computed_world_matrix": {
+              "matrix_row_major": [
+                [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227,
+                  1.0
+                ]
+              ],
+              "position_m": [
+                0.30000001192092896,
+                0.0,
+                0.03288299962878227
+              ],
+              "quaternion_wxyz": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "hierarchy_local_matrix": {
+              "valid": true,
+              "value": {
+                "matrix_row_major": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.30000001192092896,
+                    0.0,
+                    0.03288299962878227,
+                    1.0
+                  ]
+                ],
+                "position_m": [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227
+                ],
+                "quaternion_wxyz": [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "value_present": true
+            },
+            "prim_path": "/World/envs/env_0/Sponge",
+            "prim_valid": true,
+            "type_name": "Xform",
+            "world_orientation": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "world_position": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "world_scale": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            }
+          }
+        }
+      },
+      "baseline_pre_capture": {
+        "authored_usd_control": {
+          "mesh": {
+            "dynamic_authority": false,
+            "prim_path": "/World/envs/env_0/Sponge/geometry/mesh",
+            "prim_valid": true,
+            "role": "authored USD control only; Fabric-enabled runtime may leave this stale",
+            "type_name": "Cylinder",
+            "world_transform": {
+              "matrix_row_major": [
+                [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227,
+                  1.0
+                ]
+              ],
+              "position_m": [
+                0.30000001192092896,
+                0.0,
+                0.03288299962878227
+              ],
+              "quaternion_wxyz": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            }
+          },
+          "root": {
+            "dynamic_authority": false,
+            "prim_path": "/World/envs/env_0/Sponge",
+            "prim_valid": true,
+            "role": "authored USD control only; Fabric-enabled runtime may leave this stale",
+            "type_name": "Xform",
+            "world_transform": {
+              "matrix_row_major": [
+                [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227,
+                  1.0
+                ]
+              ],
+              "position_m": [
+                0.30000001192092896,
+                0.0,
+                0.03288299962878227
+              ],
+              "quaternion_wxyz": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            }
+          }
+        },
+        "cache": {
+          "baseline": {
+            "match": true,
+            "position_max_abs_error_m": 0.0,
+            "quaternion_angular_error_deg": 0.0
+          },
+          "class": "BASELINE",
+          "target": {
+            "match": false,
+            "position_max_abs_error_m": 0.057213664054870605,
+            "quaternion_angular_error_deg": 91.29174613972452
+          }
+        },
+        "fabric_mesh_cached_render": {
+          "baseline_match": true,
+          "baseline_max_abs": 0.0,
+          "class": "BASELINE",
+          "target_match": false,
+          "target_max_abs": 1.0000014844936587
+        },
+        "fabric_mesh_current": {
+          "baseline_match": true,
+          "baseline_max_abs": 0.0,
+          "class": "BASELINE",
+          "target_match": false,
+          "target_max_abs": 1.0000014844936587
+        },
+        "fabric_root_cached_render": {
+          "baseline_match": true,
+          "baseline_max_abs": 0.0,
+          "class": "BASELINE",
+          "target_match": false,
+          "target_max_abs": 1.0000014844936587
+        },
+        "fabric_root_compatibility": {
+          "baseline": null,
+          "class": "UNAVAILABLE",
+          "target": null
+        },
+        "fabric_root_current": {
+          "baseline_match": true,
+          "baseline_max_abs": 0.0,
+          "class": "BASELINE",
+          "target_match": false,
+          "target_max_abs": 1.0000014844936587
+        },
+        "getter_transition": {
+          "fabric_full_snapshot_after_sha256": "6c7c3ce0ecb19a39e76d9397cffc74242388e4a522a29ce40bbf3b79a32da4cb",
+          "fabric_full_snapshot_before_sha256": "6c7c3ce0ecb19a39e76d9397cffc74242388e4a522a29ce40bbf3b79a32da4cb",
+          "mesh_cached_matrix_max_abs": 0.0,
+          "mesh_cached_presence_changed": false,
+          "mesh_current_matrix_max_abs": 0.0,
+          "mesh_current_presence_changed": false,
+          "optional_full_fabric_snapshot_changed": false,
+          "required_fabric_changed_across_physx_getter": false,
+          "required_matrix_changed": false,
+          "required_presence_changed": false,
+          "root_current_matrix_max_abs": 0.0,
+          "root_current_presence_changed": false
+        },
+        "physx_tensor_view": {
+          "baseline": {
+            "match": true,
+            "position_max_abs_error_m": 0.0,
+            "quaternion_angular_error_deg": 0.0
+          },
+          "class": "BASELINE",
+          "target": {
+            "match": false,
+            "position_max_abs_error_m": 0.057213664054870605,
+            "quaternion_angular_error_deg": 91.29174613972452
+          }
+        },
+        "raw_fabric": {
+          "mesh": {
+            "compat_local_matrix": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "fallback_to_usd_used": false,
+            "has_local_xform": false,
+            "has_world_xform": false,
+            "hierarchy_cached_world_matrix": {
+              "valid": true,
+              "value": {
+                "matrix_row_major": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.30000001192092896,
+                    0.0,
+                    0.03288299962878227,
+                    1.0
+                  ]
+                ],
+                "position_m": [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227
+                ],
+                "quaternion_wxyz": [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "value_present": true
+            },
+            "hierarchy_current_computed_world_matrix": {
+              "matrix_row_major": [
+                [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227,
+                  1.0
+                ]
+              ],
+              "position_m": [
+                0.30000001192092896,
+                0.0,
+                0.03288299962878227
+              ],
+              "quaternion_wxyz": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "hierarchy_local_matrix": {
+              "valid": true,
+              "value": {
+                "matrix_row_major": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "position_m": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "quaternion_wxyz": [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "value_present": true
+            },
+            "prim_path": "/World/envs/env_0/Sponge/geometry/mesh",
+            "prim_valid": true,
+            "type_name": "Cylinder",
+            "world_orientation": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "world_position": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "world_scale": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            }
+          },
+          "root": {
+            "compat_local_matrix": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "fallback_to_usd_used": false,
+            "has_local_xform": false,
+            "has_world_xform": false,
+            "hierarchy_cached_world_matrix": {
+              "valid": true,
+              "value": {
+                "matrix_row_major": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.30000001192092896,
+                    0.0,
+                    0.03288299962878227,
+                    1.0
+                  ]
+                ],
+                "position_m": [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227
+                ],
+                "quaternion_wxyz": [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "value_present": true
+            },
+            "hierarchy_current_computed_world_matrix": {
+              "matrix_row_major": [
+                [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227,
+                  1.0
+                ]
+              ],
+              "position_m": [
+                0.30000001192092896,
+                0.0,
+                0.03288299962878227
+              ],
+              "quaternion_wxyz": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "hierarchy_local_matrix": {
+              "valid": true,
+              "value": {
+                "matrix_row_major": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.30000001192092896,
+                    0.0,
+                    0.03288299962878227,
+                    1.0
+                  ]
+                ],
+                "position_m": [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227
+                ],
+                "quaternion_wxyz": [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "value_present": true
+            },
+            "prim_path": "/World/envs/env_0/Sponge",
+            "prim_valid": true,
+            "type_name": "Xform",
+            "world_orientation": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "world_position": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "world_scale": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            }
+          }
+        }
+      },
+      "post_forward_after_app_update": {
+        "authored_usd_control": {
+          "mesh": {
+            "dynamic_authority": false,
+            "prim_path": "/World/envs/env_0/Sponge/geometry/mesh",
+            "prim_valid": true,
+            "role": "authored USD control only; Fabric-enabled runtime may leave this stale",
+            "type_name": "Cylinder",
+            "world_transform": {
+              "matrix_row_major": [
+                [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227,
+                  1.0
+                ]
+              ],
+              "position_m": [
+                0.30000001192092896,
+                0.0,
+                0.03288299962878227
+              ],
+              "quaternion_wxyz": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            }
+          },
+          "root": {
+            "dynamic_authority": false,
+            "prim_path": "/World/envs/env_0/Sponge",
+            "prim_valid": true,
+            "role": "authored USD control only; Fabric-enabled runtime may leave this stale",
+            "type_name": "Xform",
+            "world_transform": {
+              "matrix_row_major": [
+                [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227,
+                  1.0
+                ]
+              ],
+              "position_m": [
+                0.30000001192092896,
+                0.0,
+                0.03288299962878227
+              ],
+              "quaternion_wxyz": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            }
+          }
+        },
+        "cache": {
+          "baseline": {
+            "match": false,
+            "position_max_abs_error_m": 0.057213664054870605,
+            "quaternion_angular_error_deg": 91.29174613972452
+          },
+          "class": "TARGET",
+          "target": {
+            "match": true,
+            "position_max_abs_error_m": 0.0,
+            "quaternion_angular_error_deg": 0.0
+          }
+        },
+        "fabric_mesh_cached_render": {
+          "baseline_match": true,
+          "baseline_max_abs": 0.0,
+          "class": "BASELINE",
+          "target_match": false,
+          "target_max_abs": 1.0000014844936587
+        },
+        "fabric_mesh_current": {
+          "baseline_match": true,
+          "baseline_max_abs": 0.0,
+          "class": "BASELINE",
+          "target_match": false,
+          "target_max_abs": 1.0000014844936587
+        },
+        "fabric_root_cached_render": {
+          "baseline_match": true,
+          "baseline_max_abs": 0.0,
+          "class": "BASELINE",
+          "target_match": false,
+          "target_max_abs": 1.0000014844936587
+        },
+        "fabric_root_compatibility": {
+          "baseline": null,
+          "class": "UNAVAILABLE",
+          "target": null
+        },
+        "fabric_root_current": {
+          "baseline_match": true,
+          "baseline_max_abs": 0.0,
+          "class": "BASELINE",
+          "target_match": false,
+          "target_max_abs": 1.0000014844936587
+        },
+        "getter_transition": {
+          "fabric_full_snapshot_after_sha256": "6c7c3ce0ecb19a39e76d9397cffc74242388e4a522a29ce40bbf3b79a32da4cb",
+          "fabric_full_snapshot_before_sha256": "6c7c3ce0ecb19a39e76d9397cffc74242388e4a522a29ce40bbf3b79a32da4cb",
+          "mesh_cached_matrix_max_abs": 0.0,
+          "mesh_cached_presence_changed": false,
+          "mesh_current_matrix_max_abs": 0.0,
+          "mesh_current_presence_changed": false,
+          "optional_full_fabric_snapshot_changed": false,
+          "required_fabric_changed_across_physx_getter": false,
+          "required_matrix_changed": false,
+          "required_presence_changed": false,
+          "root_current_matrix_max_abs": 0.0,
+          "root_current_presence_changed": false
+        },
+        "physx_tensor_view": {
+          "baseline": {
+            "match": false,
+            "position_max_abs_error_m": 0.057213664054870605,
+            "quaternion_angular_error_deg": 91.29174613972452
+          },
+          "class": "TARGET",
+          "target": {
+            "match": true,
+            "position_max_abs_error_m": 0.0,
+            "quaternion_angular_error_deg": 0.0
+          }
+        },
+        "raw_fabric": {
+          "mesh": {
+            "compat_local_matrix": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "fallback_to_usd_used": false,
+            "has_local_xform": false,
+            "has_world_xform": false,
+            "hierarchy_cached_world_matrix": {
+              "valid": true,
+              "value": {
+                "matrix_row_major": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.30000001192092896,
+                    0.0,
+                    0.03288299962878227,
+                    1.0
+                  ]
+                ],
+                "position_m": [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227
+                ],
+                "quaternion_wxyz": [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "value_present": true
+            },
+            "hierarchy_current_computed_world_matrix": {
+              "matrix_row_major": [
+                [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227,
+                  1.0
+                ]
+              ],
+              "position_m": [
+                0.30000001192092896,
+                0.0,
+                0.03288299962878227
+              ],
+              "quaternion_wxyz": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "hierarchy_local_matrix": {
+              "valid": true,
+              "value": {
+                "matrix_row_major": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "position_m": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "quaternion_wxyz": [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "value_present": true
+            },
+            "prim_path": "/World/envs/env_0/Sponge/geometry/mesh",
+            "prim_valid": true,
+            "type_name": "Cylinder",
+            "world_orientation": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "world_position": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "world_scale": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            }
+          },
+          "root": {
+            "compat_local_matrix": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "fallback_to_usd_used": false,
+            "has_local_xform": false,
+            "has_world_xform": false,
+            "hierarchy_cached_world_matrix": {
+              "valid": true,
+              "value": {
+                "matrix_row_major": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.30000001192092896,
+                    0.0,
+                    0.03288299962878227,
+                    1.0
+                  ]
+                ],
+                "position_m": [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227
+                ],
+                "quaternion_wxyz": [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "value_present": true
+            },
+            "hierarchy_current_computed_world_matrix": {
+              "matrix_row_major": [
+                [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227,
+                  1.0
+                ]
+              ],
+              "position_m": [
+                0.30000001192092896,
+                0.0,
+                0.03288299962878227
+              ],
+              "quaternion_wxyz": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "hierarchy_local_matrix": {
+              "valid": true,
+              "value": {
+                "matrix_row_major": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.30000001192092896,
+                    0.0,
+                    0.03288299962878227,
+                    1.0
+                  ]
+                ],
+                "position_m": [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227
+                ],
+                "quaternion_wxyz": [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "value_present": true
+            },
+            "prim_path": "/World/envs/env_0/Sponge",
+            "prim_valid": true,
+            "type_name": "Xform",
+            "world_orientation": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "world_position": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "world_scale": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            }
+          }
+        }
+      },
+      "post_forward_immediate": {
+        "authored_usd_control": {
+          "mesh": {
+            "dynamic_authority": false,
+            "prim_path": "/World/envs/env_0/Sponge/geometry/mesh",
+            "prim_valid": true,
+            "role": "authored USD control only; Fabric-enabled runtime may leave this stale",
+            "type_name": "Cylinder",
+            "world_transform": {
+              "matrix_row_major": [
+                [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227,
+                  1.0
+                ]
+              ],
+              "position_m": [
+                0.30000001192092896,
+                0.0,
+                0.03288299962878227
+              ],
+              "quaternion_wxyz": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            }
+          },
+          "root": {
+            "dynamic_authority": false,
+            "prim_path": "/World/envs/env_0/Sponge",
+            "prim_valid": true,
+            "role": "authored USD control only; Fabric-enabled runtime may leave this stale",
+            "type_name": "Xform",
+            "world_transform": {
+              "matrix_row_major": [
+                [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227,
+                  1.0
+                ]
+              ],
+              "position_m": [
+                0.30000001192092896,
+                0.0,
+                0.03288299962878227
+              ],
+              "quaternion_wxyz": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            }
+          }
+        },
+        "cache": {
+          "baseline": {
+            "match": false,
+            "position_max_abs_error_m": 0.057213664054870605,
+            "quaternion_angular_error_deg": 91.29174613972452
+          },
+          "class": "TARGET",
+          "target": {
+            "match": true,
+            "position_max_abs_error_m": 0.0,
+            "quaternion_angular_error_deg": 0.0
+          }
+        },
+        "fabric_mesh_cached_render": {
+          "baseline_match": true,
+          "baseline_max_abs": 0.0,
+          "class": "BASELINE",
+          "target_match": false,
+          "target_max_abs": 1.0000014844936587
+        },
+        "fabric_mesh_current": {
+          "baseline_match": true,
+          "baseline_max_abs": 0.0,
+          "class": "BASELINE",
+          "target_match": false,
+          "target_max_abs": 1.0000014844936587
+        },
+        "fabric_root_cached_render": {
+          "baseline_match": true,
+          "baseline_max_abs": 0.0,
+          "class": "BASELINE",
+          "target_match": false,
+          "target_max_abs": 1.0000014844936587
+        },
+        "fabric_root_compatibility": {
+          "baseline": null,
+          "class": "UNAVAILABLE",
+          "target": null
+        },
+        "fabric_root_current": {
+          "baseline_match": true,
+          "baseline_max_abs": 0.0,
+          "class": "BASELINE",
+          "target_match": false,
+          "target_max_abs": 1.0000014844936587
+        },
+        "getter_transition": {
+          "fabric_full_snapshot_after_sha256": "6c7c3ce0ecb19a39e76d9397cffc74242388e4a522a29ce40bbf3b79a32da4cb",
+          "fabric_full_snapshot_before_sha256": "6c7c3ce0ecb19a39e76d9397cffc74242388e4a522a29ce40bbf3b79a32da4cb",
+          "mesh_cached_matrix_max_abs": 0.0,
+          "mesh_cached_presence_changed": false,
+          "mesh_current_matrix_max_abs": 0.0,
+          "mesh_current_presence_changed": false,
+          "optional_full_fabric_snapshot_changed": false,
+          "required_fabric_changed_across_physx_getter": false,
+          "required_matrix_changed": false,
+          "required_presence_changed": false,
+          "root_current_matrix_max_abs": 0.0,
+          "root_current_presence_changed": false
+        },
+        "physx_tensor_view": {
+          "baseline": {
+            "match": false,
+            "position_max_abs_error_m": 0.057213664054870605,
+            "quaternion_angular_error_deg": 91.29174613972452
+          },
+          "class": "TARGET",
+          "target": {
+            "match": true,
+            "position_max_abs_error_m": 0.0,
+            "quaternion_angular_error_deg": 0.0
+          }
+        },
+        "raw_fabric": {
+          "mesh": {
+            "compat_local_matrix": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "fallback_to_usd_used": false,
+            "has_local_xform": false,
+            "has_world_xform": false,
+            "hierarchy_cached_world_matrix": {
+              "valid": true,
+              "value": {
+                "matrix_row_major": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.30000001192092896,
+                    0.0,
+                    0.03288299962878227,
+                    1.0
+                  ]
+                ],
+                "position_m": [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227
+                ],
+                "quaternion_wxyz": [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "value_present": true
+            },
+            "hierarchy_current_computed_world_matrix": {
+              "matrix_row_major": [
+                [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227,
+                  1.0
+                ]
+              ],
+              "position_m": [
+                0.30000001192092896,
+                0.0,
+                0.03288299962878227
+              ],
+              "quaternion_wxyz": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "hierarchy_local_matrix": {
+              "valid": true,
+              "value": {
+                "matrix_row_major": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "position_m": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "quaternion_wxyz": [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "value_present": true
+            },
+            "prim_path": "/World/envs/env_0/Sponge/geometry/mesh",
+            "prim_valid": true,
+            "type_name": "Cylinder",
+            "world_orientation": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "world_position": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "world_scale": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            }
+          },
+          "root": {
+            "compat_local_matrix": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "fallback_to_usd_used": false,
+            "has_local_xform": false,
+            "has_world_xform": false,
+            "hierarchy_cached_world_matrix": {
+              "valid": true,
+              "value": {
+                "matrix_row_major": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.30000001192092896,
+                    0.0,
+                    0.03288299962878227,
+                    1.0
+                  ]
+                ],
+                "position_m": [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227
+                ],
+                "quaternion_wxyz": [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "value_present": true
+            },
+            "hierarchy_current_computed_world_matrix": {
+              "matrix_row_major": [
+                [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227,
+                  1.0
+                ]
+              ],
+              "position_m": [
+                0.30000001192092896,
+                0.0,
+                0.03288299962878227
+              ],
+              "quaternion_wxyz": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "hierarchy_local_matrix": {
+              "valid": true,
+              "value": {
+                "matrix_row_major": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.30000001192092896,
+                    0.0,
+                    0.03288299962878227,
+                    1.0
+                  ]
+                ],
+                "position_m": [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227
+                ],
+                "quaternion_wxyz": [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "value_present": true
+            },
+            "prim_path": "/World/envs/env_0/Sponge",
+            "prim_valid": true,
+            "type_name": "Xform",
+            "world_orientation": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "world_position": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "world_scale": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            }
+          }
+        }
+      },
+      "post_write_after_app_update": {
+        "authored_usd_control": {
+          "mesh": {
+            "dynamic_authority": false,
+            "prim_path": "/World/envs/env_0/Sponge/geometry/mesh",
+            "prim_valid": true,
+            "role": "authored USD control only; Fabric-enabled runtime may leave this stale",
+            "type_name": "Cylinder",
+            "world_transform": {
+              "matrix_row_major": [
+                [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227,
+                  1.0
+                ]
+              ],
+              "position_m": [
+                0.30000001192092896,
+                0.0,
+                0.03288299962878227
+              ],
+              "quaternion_wxyz": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            }
+          },
+          "root": {
+            "dynamic_authority": false,
+            "prim_path": "/World/envs/env_0/Sponge",
+            "prim_valid": true,
+            "role": "authored USD control only; Fabric-enabled runtime may leave this stale",
+            "type_name": "Xform",
+            "world_transform": {
+              "matrix_row_major": [
+                [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227,
+                  1.0
+                ]
+              ],
+              "position_m": [
+                0.30000001192092896,
+                0.0,
+                0.03288299962878227
+              ],
+              "quaternion_wxyz": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            }
+          }
+        },
+        "cache": {
+          "baseline": {
+            "match": false,
+            "position_max_abs_error_m": 0.057213664054870605,
+            "quaternion_angular_error_deg": 91.29174613972452
+          },
+          "class": "TARGET",
+          "target": {
+            "match": true,
+            "position_max_abs_error_m": 0.0,
+            "quaternion_angular_error_deg": 0.0
+          }
+        },
+        "fabric_mesh_cached_render": {
+          "baseline_match": true,
+          "baseline_max_abs": 0.0,
+          "class": "BASELINE",
+          "target_match": false,
+          "target_max_abs": 1.0000014844936587
+        },
+        "fabric_mesh_current": {
+          "baseline_match": true,
+          "baseline_max_abs": 0.0,
+          "class": "BASELINE",
+          "target_match": false,
+          "target_max_abs": 1.0000014844936587
+        },
+        "fabric_root_cached_render": {
+          "baseline_match": true,
+          "baseline_max_abs": 0.0,
+          "class": "BASELINE",
+          "target_match": false,
+          "target_max_abs": 1.0000014844936587
+        },
+        "fabric_root_compatibility": {
+          "baseline": null,
+          "class": "UNAVAILABLE",
+          "target": null
+        },
+        "fabric_root_current": {
+          "baseline_match": true,
+          "baseline_max_abs": 0.0,
+          "class": "BASELINE",
+          "target_match": false,
+          "target_max_abs": 1.0000014844936587
+        },
+        "getter_transition": {
+          "fabric_full_snapshot_after_sha256": "6c7c3ce0ecb19a39e76d9397cffc74242388e4a522a29ce40bbf3b79a32da4cb",
+          "fabric_full_snapshot_before_sha256": "6c7c3ce0ecb19a39e76d9397cffc74242388e4a522a29ce40bbf3b79a32da4cb",
+          "mesh_cached_matrix_max_abs": 0.0,
+          "mesh_cached_presence_changed": false,
+          "mesh_current_matrix_max_abs": 0.0,
+          "mesh_current_presence_changed": false,
+          "optional_full_fabric_snapshot_changed": false,
+          "required_fabric_changed_across_physx_getter": false,
+          "required_matrix_changed": false,
+          "required_presence_changed": false,
+          "root_current_matrix_max_abs": 0.0,
+          "root_current_presence_changed": false
+        },
+        "physx_tensor_view": {
+          "baseline": {
+            "match": false,
+            "position_max_abs_error_m": 0.057213664054870605,
+            "quaternion_angular_error_deg": 91.29174613972452
+          },
+          "class": "TARGET",
+          "target": {
+            "match": true,
+            "position_max_abs_error_m": 0.0,
+            "quaternion_angular_error_deg": 0.0
+          }
+        },
+        "raw_fabric": {
+          "mesh": {
+            "compat_local_matrix": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "fallback_to_usd_used": false,
+            "has_local_xform": false,
+            "has_world_xform": false,
+            "hierarchy_cached_world_matrix": {
+              "valid": true,
+              "value": {
+                "matrix_row_major": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.30000001192092896,
+                    0.0,
+                    0.03288299962878227,
+                    1.0
+                  ]
+                ],
+                "position_m": [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227
+                ],
+                "quaternion_wxyz": [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "value_present": true
+            },
+            "hierarchy_current_computed_world_matrix": {
+              "matrix_row_major": [
+                [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227,
+                  1.0
+                ]
+              ],
+              "position_m": [
+                0.30000001192092896,
+                0.0,
+                0.03288299962878227
+              ],
+              "quaternion_wxyz": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "hierarchy_local_matrix": {
+              "valid": true,
+              "value": {
+                "matrix_row_major": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "position_m": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "quaternion_wxyz": [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "value_present": true
+            },
+            "prim_path": "/World/envs/env_0/Sponge/geometry/mesh",
+            "prim_valid": true,
+            "type_name": "Cylinder",
+            "world_orientation": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "world_position": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "world_scale": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            }
+          },
+          "root": {
+            "compat_local_matrix": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "fallback_to_usd_used": false,
+            "has_local_xform": false,
+            "has_world_xform": false,
+            "hierarchy_cached_world_matrix": {
+              "valid": true,
+              "value": {
+                "matrix_row_major": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.30000001192092896,
+                    0.0,
+                    0.03288299962878227,
+                    1.0
+                  ]
+                ],
+                "position_m": [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227
+                ],
+                "quaternion_wxyz": [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "value_present": true
+            },
+            "hierarchy_current_computed_world_matrix": {
+              "matrix_row_major": [
+                [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227,
+                  1.0
+                ]
+              ],
+              "position_m": [
+                0.30000001192092896,
+                0.0,
+                0.03288299962878227
+              ],
+              "quaternion_wxyz": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "hierarchy_local_matrix": {
+              "valid": true,
+              "value": {
+                "matrix_row_major": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.30000001192092896,
+                    0.0,
+                    0.03288299962878227,
+                    1.0
+                  ]
+                ],
+                "position_m": [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227
+                ],
+                "quaternion_wxyz": [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "value_present": true
+            },
+            "prim_path": "/World/envs/env_0/Sponge",
+            "prim_valid": true,
+            "type_name": "Xform",
+            "world_orientation": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "world_position": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "world_scale": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            }
+          }
+        }
+      },
+      "post_write_immediate": {
+        "authored_usd_control": {
+          "mesh": {
+            "dynamic_authority": false,
+            "prim_path": "/World/envs/env_0/Sponge/geometry/mesh",
+            "prim_valid": true,
+            "role": "authored USD control only; Fabric-enabled runtime may leave this stale",
+            "type_name": "Cylinder",
+            "world_transform": {
+              "matrix_row_major": [
+                [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227,
+                  1.0
+                ]
+              ],
+              "position_m": [
+                0.30000001192092896,
+                0.0,
+                0.03288299962878227
+              ],
+              "quaternion_wxyz": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            }
+          },
+          "root": {
+            "dynamic_authority": false,
+            "prim_path": "/World/envs/env_0/Sponge",
+            "prim_valid": true,
+            "role": "authored USD control only; Fabric-enabled runtime may leave this stale",
+            "type_name": "Xform",
+            "world_transform": {
+              "matrix_row_major": [
+                [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227,
+                  1.0
+                ]
+              ],
+              "position_m": [
+                0.30000001192092896,
+                0.0,
+                0.03288299962878227
+              ],
+              "quaternion_wxyz": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            }
+          }
+        },
+        "cache": {
+          "baseline": {
+            "match": false,
+            "position_max_abs_error_m": 0.057213664054870605,
+            "quaternion_angular_error_deg": 91.29174613972452
+          },
+          "class": "TARGET",
+          "target": {
+            "match": true,
+            "position_max_abs_error_m": 0.0,
+            "quaternion_angular_error_deg": 0.0
+          }
+        },
+        "fabric_mesh_cached_render": {
+          "baseline_match": true,
+          "baseline_max_abs": 0.0,
+          "class": "BASELINE",
+          "target_match": false,
+          "target_max_abs": 1.0000014844936587
+        },
+        "fabric_mesh_current": {
+          "baseline_match": true,
+          "baseline_max_abs": 0.0,
+          "class": "BASELINE",
+          "target_match": false,
+          "target_max_abs": 1.0000014844936587
+        },
+        "fabric_root_cached_render": {
+          "baseline_match": true,
+          "baseline_max_abs": 0.0,
+          "class": "BASELINE",
+          "target_match": false,
+          "target_max_abs": 1.0000014844936587
+        },
+        "fabric_root_compatibility": {
+          "baseline": null,
+          "class": "UNAVAILABLE",
+          "target": null
+        },
+        "fabric_root_current": {
+          "baseline_match": true,
+          "baseline_max_abs": 0.0,
+          "class": "BASELINE",
+          "target_match": false,
+          "target_max_abs": 1.0000014844936587
+        },
+        "getter_transition": {
+          "fabric_full_snapshot_after_sha256": "6c7c3ce0ecb19a39e76d9397cffc74242388e4a522a29ce40bbf3b79a32da4cb",
+          "fabric_full_snapshot_before_sha256": "6c7c3ce0ecb19a39e76d9397cffc74242388e4a522a29ce40bbf3b79a32da4cb",
+          "mesh_cached_matrix_max_abs": 0.0,
+          "mesh_cached_presence_changed": false,
+          "mesh_current_matrix_max_abs": 0.0,
+          "mesh_current_presence_changed": false,
+          "optional_full_fabric_snapshot_changed": false,
+          "required_fabric_changed_across_physx_getter": false,
+          "required_matrix_changed": false,
+          "required_presence_changed": false,
+          "root_current_matrix_max_abs": 0.0,
+          "root_current_presence_changed": false
+        },
+        "physx_tensor_view": {
+          "baseline": {
+            "match": false,
+            "position_max_abs_error_m": 0.057213664054870605,
+            "quaternion_angular_error_deg": 91.29174613972452
+          },
+          "class": "TARGET",
+          "target": {
+            "match": true,
+            "position_max_abs_error_m": 0.0,
+            "quaternion_angular_error_deg": 0.0
+          }
+        },
+        "raw_fabric": {
+          "mesh": {
+            "compat_local_matrix": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "fallback_to_usd_used": false,
+            "has_local_xform": false,
+            "has_world_xform": false,
+            "hierarchy_cached_world_matrix": {
+              "valid": true,
+              "value": {
+                "matrix_row_major": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.30000001192092896,
+                    0.0,
+                    0.03288299962878227,
+                    1.0
+                  ]
+                ],
+                "position_m": [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227
+                ],
+                "quaternion_wxyz": [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "value_present": true
+            },
+            "hierarchy_current_computed_world_matrix": {
+              "matrix_row_major": [
+                [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227,
+                  1.0
+                ]
+              ],
+              "position_m": [
+                0.30000001192092896,
+                0.0,
+                0.03288299962878227
+              ],
+              "quaternion_wxyz": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "hierarchy_local_matrix": {
+              "valid": true,
+              "value": {
+                "matrix_row_major": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "position_m": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "quaternion_wxyz": [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "value_present": true
+            },
+            "prim_path": "/World/envs/env_0/Sponge/geometry/mesh",
+            "prim_valid": true,
+            "type_name": "Cylinder",
+            "world_orientation": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "world_position": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "world_scale": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            }
+          },
+          "root": {
+            "compat_local_matrix": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "fallback_to_usd_used": false,
+            "has_local_xform": false,
+            "has_world_xform": false,
+            "hierarchy_cached_world_matrix": {
+              "valid": true,
+              "value": {
+                "matrix_row_major": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.30000001192092896,
+                    0.0,
+                    0.03288299962878227,
+                    1.0
+                  ]
+                ],
+                "position_m": [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227
+                ],
+                "quaternion_wxyz": [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "value_present": true
+            },
+            "hierarchy_current_computed_world_matrix": {
+              "matrix_row_major": [
+                [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227,
+                  1.0
+                ]
+              ],
+              "position_m": [
+                0.30000001192092896,
+                0.0,
+                0.03288299962878227
+              ],
+              "quaternion_wxyz": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "hierarchy_local_matrix": {
+              "valid": true,
+              "value": {
+                "matrix_row_major": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.30000001192092896,
+                    0.0,
+                    0.03288299962878227,
+                    1.0
+                  ]
+                ],
+                "position_m": [
+                  0.30000001192092896,
+                  0.0,
+                  0.03288299962878227
+                ],
+                "quaternion_wxyz": [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "value_present": true
+            },
+            "prim_path": "/World/envs/env_0/Sponge",
+            "prim_valid": true,
+            "type_name": "Xform",
+            "world_orientation": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "world_position": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            },
+            "world_scale": {
+              "valid": false,
+              "value": null,
+              "value_present": false
+            }
+          }
+        }
+      }
+    },
+    "phase_linear_classes": {
+      "baseline_post_capture": [
+        "BASELINE",
+        "BASELINE",
+        "BASELINE",
+        "BASELINE",
+        "BASELINE",
+        "BASELINE"
+      ],
+      "baseline_pre_capture": [
+        "BASELINE",
+        "BASELINE",
+        "BASELINE",
+        "BASELINE",
+        "BASELINE"
+      ],
+      "post_forward_after_app_update": [
+        "TARGET",
+        "TARGET",
+        "BASELINE",
+        "BASELINE",
+        "BASELINE",
+        "BASELINE"
+      ],
+      "post_forward_immediate": [
+        "TARGET",
+        "TARGET",
+        "BASELINE",
+        "BASELINE",
+        "BASELINE"
+      ],
+      "post_write_after_app_update": [
+        "TARGET",
+        "TARGET",
+        "BASELINE",
+        "BASELINE",
+        "BASELINE",
+        "BASELINE"
+      ],
+      "post_write_immediate": [
+        "TARGET",
+        "TARGET",
+        "BASELINE",
+        "BASELINE",
+        "BASELINE"
+      ]
+    },
+    "physx_getter_semantics": "independent tensor-view readback; solver-internal commit not separately attested",
+    "pixel_comparisons": {
+      "opposite": {
+        "baseline_to_post_forward": {
+          "axis_delta_deg": 0.006548856853399343,
+          "centroid_delta_px": 0.013410813923302773,
+          "criteria": {
+            "axis_delta_ge_15deg": false,
+            "centroid_delta_ge_15px": false,
+            "iou_le_0p85": false
+          },
+          "mask_iou": 0.9976521688090626,
+          "materially_different": false
+        },
+        "baseline_to_post_write_no_forward": {
+          "axis_delta_deg": 0.06703527943095366,
+          "centroid_delta_px": 0.09915304311583632,
+          "criteria": {
+            "axis_delta_ge_15deg": false,
+            "centroid_delta_ge_15px": false,
+            "iou_le_0p85": false
+          },
+          "mask_iou": 0.9962991247136227,
+          "materially_different": false
+        },
+        "post_write_no_forward_to_post_forward": {
+          "axis_delta_deg": 0.06048642257755432,
+          "centroid_delta_px": 0.10488487007203755,
+          "criteria": {
+            "axis_delta_ge_15deg": false,
+            "centroid_delta_ge_15px": false,
+            "iou_le_0p85": false
+          },
+          "mask_iou": 0.9959492779147587,
+          "materially_different": false
+        }
+      },
+      "primary": {
+        "baseline_to_post_forward": {
+          "axis_delta_deg": 0.019178983364014357,
+          "centroid_delta_px": 0.014426487842385519,
+          "criteria": {
+            "axis_delta_ge_15deg": false,
+            "centroid_delta_ge_15px": false,
+            "iou_le_0p85": false
+          },
+          "mask_iou": 0.999118113939679,
+          "materially_different": false
+        },
+        "baseline_to_post_write_no_forward": {
+          "axis_delta_deg": 0.01947466351585092,
+          "centroid_delta_px": 0.024791656831202297,
+          "criteria": {
+            "axis_delta_ge_15deg": false,
+            "centroid_delta_ge_15px": false,
+            "iou_le_0p85": false
+          },
+          "mask_iou": 0.9988240136414418,
+          "materially_different": false
+        },
+        "post_write_no_forward_to_post_forward": {
+          "axis_delta_deg": 0.0002956801518365637,
+          "centroid_delta_px": 0.02840037264396651,
+          "criteria": {
+            "axis_delta_ge_15deg": false,
+            "centroid_delta_ge_15px": false,
+            "iou_le_0p85": false
+          },
+          "mask_iou": 0.9991176470588236,
+          "materially_different": false
+        }
+      }
+    },
+    "pixel_metrics": {
+      "baseline": {
+        "opposite": {
+          "area_px": 17009,
+          "bbox_xywh": [
+            562,
+            299,
+            90,
+            209
+          ],
+          "centroid_xy_px": [
+            608.0171673819742,
+            400.8657181492151
+          ],
+          "image_height": 720,
+          "image_width": 1280,
+          "pass": true,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_baseline_opposite_actual_isaac.png",
+          "pca_axis_angle_deg": 89.03972291617781,
+          "sha256": "e81c5f81d3a496e1fc87a94f34a97bfdaeebd807bd83ba4aa5baf7e550a20332",
+          "toppled": false,
+          "upright": true
+        },
+        "primary": {
+          "area_px": 17006,
+          "bbox_xywh": [
+            628,
+            299,
+            90,
+            209
+          ],
+          "centroid_xy_px": [
+            671.0713865694461,
+            400.8518758085382
+          ],
+          "image_height": 720,
+          "image_width": 1280,
+          "pass": true,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_baseline_primary_actual_isaac.png",
+          "pca_axis_angle_deg": 91.00220267062386,
+          "sha256": "af52aebdd3b801c1d311b0d697239f102c270d94f552e46ad64f570cb208715c",
+          "toppled": false,
+          "upright": true
+        }
+      },
+      "post_forward": {
+        "opposite": {
+          "area_px": 17025,
+          "bbox_xywh": [
+            562,
+            299,
+            90,
+            209
+          ],
+          "centroid_xy_px": [
+            608.0265491923642,
+            400.87530102790015
+          ],
+          "image_height": 720,
+          "image_width": 1280,
+          "pass": true,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_post_forward_opposite_actual_isaac.png",
+          "pca_axis_angle_deg": 89.03317405932441,
+          "sha256": "7e8fcb3bf0eceff903b338e1ffcc7e8c0a8010297911897acd108d9bdf83b07a",
+          "toppled": false,
+          "upright": true
+        },
+        "primary": {
+          "area_px": 16997,
+          "bbox_xywh": [
+            628,
+            299,
+            90,
+            209
+          ],
+          "centroid_xy_px": [
+            671.064070130023,
+            400.8394422545155
+          ],
+          "image_height": 720,
+          "image_width": 1280,
+          "pass": true,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_post_forward_primary_actual_isaac.png",
+          "pca_axis_angle_deg": 90.98302368725984,
+          "sha256": "77878f5aa9b15f6e56e2731a1122105053d7ecbacb0477ad5788a18980cfb489",
+          "toppled": false,
+          "upright": true
+        }
+      },
+      "post_write_no_forward": {
+        "opposite": {
+          "area_px": 16974,
+          "bbox_xywh": [
+            562,
+            299,
+            90,
+            209
+          ],
+          "centroid_xy_px": [
+            607.9255920820078,
+            400.9037351243078
+          ],
+          "image_height": 720,
+          "image_width": 1280,
+          "pass": true,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_post_write_no_forward_opposite_actual_isaac.png",
+          "pca_axis_angle_deg": 88.97268763674685,
+          "sha256": "26bc3cf8d23a34736ceb0114305184f4b1618e95578b9acc05e1aa0fdbc2b2b3",
+          "toppled": false,
+          "upright": true
+        },
+        "primary": {
+          "area_px": 16988,
+          "bbox_xywh": [
+            628,
+            299,
+            90,
+            209
+          ],
+          "centroid_xy_px": [
+            671.0497409936426,
+            400.86396279726864
+          ],
+          "image_height": 720,
+          "image_width": 1280,
+          "pass": true,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_post_write_no_forward_primary_actual_isaac.png",
+          "pca_axis_angle_deg": 90.98272800710801,
+          "sha256": "c84ef583536427288f4d39636ffcbcbdf5bf7ba50a7623f31f82ae10fb043f7e",
+          "toppled": false,
+          "upright": true
+        }
+      }
+    },
+    "prerequisites": {
+      "all_png_metrics_pass": true,
+      "baseline_root_mesh_compose_pass": true,
+      "fabric_enabled_and_delegate_attested": true,
+      "no_getter_clock_advance": true,
+      "selected_force_update": true,
+      "terminal_layers_available": true,
+      "worker_counter_contract_pass": true
+    },
+    "purpose": "localize paused zero-step cylinder pose visibility break; no physics/q5/contact science",
+    "q5_science_sample_count": 0,
+    "q5_target_update_count": 0,
+    "supporting_phase_findings": {
+      "any_fabric_change_across_physx_getter": false,
+      "hydra_became_target_before_public_forward": false,
+      "optional_compatibility_terminal_class": "UNAVAILABLE",
+      "optional_root_cached_terminal_class": "BASELINE",
+      "physx_became_target_immediately_after_write": true,
+      "root_cached_became_target_only_after_post_forward_app": false,
+      "root_current_became_target_after_app_without_forward": false,
+      "root_current_became_target_after_forward": false
+    },
+    "target_global_step": 500,
+    "target_pose_wxyz": [
+      0.35721367597579956,
+      0.020038070157170296,
+      0.004883049055933952,
+      0.6990910172462463,
+      -0.1845378279685974,
+      0.6826027631759644,
+      0.1061641052365303
+    ],
+    "target_row_index": 499,
+    "temporal_classes": {
+      "cache": [
+        "BASELINE",
+        "BASELINE",
+        "TARGET",
+        "TARGET",
+        "TARGET",
+        "TARGET"
+      ],
+      "fabric_mesh_cached_render": [
+        "BASELINE",
+        "BASELINE",
+        "BASELINE",
+        "BASELINE",
+        "BASELINE",
+        "BASELINE"
+      ],
+      "fabric_mesh_current": [
+        "BASELINE",
+        "BASELINE",
+        "BASELINE",
+        "BASELINE",
+        "BASELINE",
+        "BASELINE"
+      ],
+      "fabric_root_current": [
+        "BASELINE",
+        "BASELINE",
+        "BASELINE",
+        "BASELINE",
+        "BASELINE",
+        "BASELINE"
+      ],
+      "physx_tensor_view": [
+        "BASELINE",
+        "BASELINE",
+        "TARGET",
+        "TARGET",
+        "TARGET",
+        "TARGET"
+      ]
+    },
+    "temporal_other": {
+      "cache": false,
+      "fabric_mesh_cached_render": false,
+      "fabric_mesh_current": false,
+      "fabric_root_current": false,
+      "hydra": false,
+      "physx_tensor_view": false
+    },
+    "temporal_regressions": {
+      "cache": false,
+      "fabric_mesh_cached_render": false,
+      "fabric_mesh_current": false,
+      "fabric_root_current": false,
+      "hydra": false,
+      "physx_tensor_view": false
+    },
+    "terminal_classes": {
+      "cache": "TARGET",
+      "hydra": "BASELINE",
+      "mesh_cached": "BASELINE",
+      "mesh_current": "BASELINE",
+      "physx": "TARGET",
+      "root_cached": "BASELINE",
+      "root_compatibility": "UNAVAILABLE",
+      "root_current": "BASELINE"
+    },
+    "utc": "2026-07-18T08:32:25.825047+00:00"
+  },
+  "pass": true,
+  "post_checks": {
+    "all_six_png_stable_after_close": true,
+    "d334_sidecar_unchanged": true,
+    "d362_manifest_unchanged": true,
+    "d363_manifest_unchanged": true,
+    "d364_manifest_unchanged": true,
+    "input_hashes_unchanged": true,
+    "journal_worker_checkpoint_exact": true,
+    "layer_journal_audit_pass": true,
+    "localization_report_concrete_pass": true,
+    "postprocess_exception_absent": true,
+    "rerun_pass": true,
+    "watchdog_not_triggered": true,
+    "worker_exception_absent": true,
+    "worker_exit_zero": true,
+    "worker_phase_pass": true,
+    "worker_summary_pass": true
+  },
+  "postprocess_errors": [],
+  "q5_science_sample_count": 0,
+  "q5_target_update_count": 0,
+  "rerun": {
+    "pass": true,
+    "rbl_path": "claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_state_layer_localization.rbl",
+    "rbl_sha256": "9f22a53bf8c76d384c8a564ee226f0c1850e3ec2eeda8273b157c1d633249f45",
+    "rrd_path": "claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_state_layer_localization.rrd",
+    "rrd_sha256": "73a2a1d5954e6dfadfb7e562ea2ac4de8dcd80413e94b58db8abab069378a056",
+    "screenshot_path": "claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_state_layer_localization_rerun.png",
+    "screenshot_sha256": "76b46cc2d92ebc5e7dd50dffa3b61e3eeb14451ae5e9177ef7a021ece16b35e9",
+    "validation_path": "claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_rerun_validation.json",
+    "validation_sha256": "bf72ab481f595e72017b37171e979414f0afe9d9ddec49cbbdb41424089f0a18"
+  },
+  "resource_summary": {
+    "gpu_free_mib_min": 7369,
+    "gpu_used_mib_max": 8576,
+    "gpu_utilization_percent_max": 37,
+    "samples": 28,
+    "worker_rss_bytes_max": 7131017216
+  },
+  "stable_capture_reports": [
+    {
+      "observations": [
+        {
+          "bytes": 612581,
+          "sha256": "af52aebdd3b801c1d311b0d697239f102c270d94f552e46ad64f570cb208715c"
+        },
+        {
+          "bytes": 612581,
+          "sha256": "af52aebdd3b801c1d311b0d697239f102c270d94f552e46ad64f570cb208715c"
+        },
+        {
+          "bytes": 612581,
+          "sha256": "af52aebdd3b801c1d311b0d697239f102c270d94f552e46ad64f570cb208715c"
+        }
+      ],
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_baseline_primary_actual_isaac.png",
+      "stable": true
+    },
+    {
+      "observations": [
+        {
+          "bytes": 593672,
+          "sha256": "e81c5f81d3a496e1fc87a94f34a97bfdaeebd807bd83ba4aa5baf7e550a20332"
+        },
+        {
+          "bytes": 593672,
+          "sha256": "e81c5f81d3a496e1fc87a94f34a97bfdaeebd807bd83ba4aa5baf7e550a20332"
+        },
+        {
+          "bytes": 593672,
+          "sha256": "e81c5f81d3a496e1fc87a94f34a97bfdaeebd807bd83ba4aa5baf7e550a20332"
+        }
+      ],
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_baseline_opposite_actual_isaac.png",
+      "stable": true
+    },
+    {
+      "observations": [
+        {
+          "bytes": 610035,
+          "sha256": "c84ef583536427288f4d39636ffcbcbdf5bf7ba50a7623f31f82ae10fb043f7e"
+        },
+        {
+          "bytes": 610035,
+          "sha256": "c84ef583536427288f4d39636ffcbcbdf5bf7ba50a7623f31f82ae10fb043f7e"
+        },
+        {
+          "bytes": 610035,
+          "sha256": "c84ef583536427288f4d39636ffcbcbdf5bf7ba50a7623f31f82ae10fb043f7e"
+        }
+      ],
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_post_write_no_forward_primary_actual_isaac.png",
+      "stable": true
+    },
+    {
+      "observations": [
+        {
+          "bytes": 596198,
+          "sha256": "26bc3cf8d23a34736ceb0114305184f4b1618e95578b9acc05e1aa0fdbc2b2b3"
+        },
+        {
+          "bytes": 596198,
+          "sha256": "26bc3cf8d23a34736ceb0114305184f4b1618e95578b9acc05e1aa0fdbc2b2b3"
+        },
+        {
+          "bytes": 596198,
+          "sha256": "26bc3cf8d23a34736ceb0114305184f4b1618e95578b9acc05e1aa0fdbc2b2b3"
+        }
+      ],
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_post_write_no_forward_opposite_actual_isaac.png",
+      "stable": true
+    },
+    {
+      "observations": [
+        {
+          "bytes": 606356,
+          "sha256": "77878f5aa9b15f6e56e2731a1122105053d7ecbacb0477ad5788a18980cfb489"
+        },
+        {
+          "bytes": 606356,
+          "sha256": "77878f5aa9b15f6e56e2731a1122105053d7ecbacb0477ad5788a18980cfb489"
+        },
+        {
+          "bytes": 606356,
+          "sha256": "77878f5aa9b15f6e56e2731a1122105053d7ecbacb0477ad5788a18980cfb489"
+        }
+      ],
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_post_forward_primary_actual_isaac.png",
+      "stable": true
+    },
+    {
+      "observations": [
+        {
+          "bytes": 594700,
+          "sha256": "7e8fcb3bf0eceff903b338e1ffcc7e8c0a8010297911897acd108d9bdf83b07a"
+        },
+        {
+          "bytes": 594700,
+          "sha256": "7e8fcb3bf0eceff903b338e1ffcc7e8c0a8010297911897acd108d9bdf83b07a"
+        },
+        {
+          "bytes": 594700,
+          "sha256": "7e8fcb3bf0eceff903b338e1ffcc7e8c0a8010297911897acd108d9bdf83b07a"
+        }
+      ],
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_post_forward_opposite_actual_isaac.png",
+      "stable": true
+    }
+  ],
+  "telemetry": [
+    {
+      "elapsed_s": 0.007665536017157137,
+      "gpu": {
+        "gpu_name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+        "memory_free_mib": 13078,
+        "memory_total_mib": 16376,
+        "memory_used_mib": 2867,
+        "nvidia_smi_returncode": 0,
+        "nvidia_smi_stderr": "",
+        "ram_available_bytes": 13665214464,
+        "utilization_gpu_percent": 18
+      },
+      "phase_bytes": 0,
+      "worker_cpu_percent": 0.0,
+      "worker_rss_bytes": 618496
+    },
+    {
+      "elapsed_s": 1.036009470000863,
+      "gpu": {
+        "gpu_name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+        "memory_free_mib": 13078,
+        "memory_total_mib": 16376,
+        "memory_used_mib": 2867,
+        "nvidia_smi_returncode": 0,
+        "nvidia_smi_stderr": "",
+        "ram_available_bytes": 13434122240,
+        "utilization_gpu_percent": 25
+      },
+      "phase_bytes": 267,
+      "worker_cpu_percent": 707.0,
+      "worker_rss_bytes": 409374720
+    },
+    {
+      "elapsed_s": 2.0774921820266172,
+      "gpu": {
+        "gpu_name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+        "memory_free_mib": 12682,
+        "memory_total_mib": 16376,
+        "memory_used_mib": 3263,
+        "nvidia_smi_returncode": 0,
+        "nvidia_smi_stderr": "",
+        "ram_available_bytes": 12523716608,
+        "utilization_gpu_percent": 3
+      },
+      "phase_bytes": 267,
+      "worker_cpu_percent": 83.5,
+      "worker_rss_bytes": 1456402432
+    },
+    {
+      "elapsed_s": 3.161854531033896,
+      "gpu": {
+        "gpu_name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+        "memory_free_mib": 12670,
+        "memory_total_mib": 16376,
+        "memory_used_mib": 3274,
+        "nvidia_smi_returncode": 0,
+        "nvidia_smi_stderr": "",
+        "ram_available_bytes": 12488122368,
+        "utilization_gpu_percent": 0
+      },
+      "phase_bytes": 267,
+      "worker_cpu_percent": 10.1,
+      "worker_rss_bytes": 1466507264
+    },
+    {
+      "elapsed_s": 4.179874106077477,
+      "gpu": {
+        "gpu_name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+        "memory_free_mib": 12670,
+        "memory_total_mib": 16376,
+        "memory_used_mib": 3274,
+        "nvidia_smi_returncode": 0,
+        "nvidia_smi_stderr": "",
+        "ram_available_bytes": 12475846656,
+        "utilization_gpu_percent": 0
+      },
+      "phase_bytes": 267,
+      "worker_cpu_percent": 3.9,
+      "worker_rss_bytes": 1466515456
+    },
+    {
+      "elapsed_s": 5.201593377045356,
+      "gpu": {
+        "gpu_name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+        "memory_free_mib": 12670,
+        "memory_total_mib": 16376,
+        "memory_used_mib": 3274,
+        "nvidia_smi_returncode": 0,
+        "nvidia_smi_stderr": "",
+        "ram_available_bytes": 12471934976,
+        "utilization_gpu_percent": 0
+      },
+      "phase_bytes": 267,
+      "worker_cpu_percent": 3.9,
+      "worker_rss_bytes": 1466515456
+    },
+    {
+      "elapsed_s": 6.225764148053713,
+      "gpu": {
+        "gpu_name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+        "memory_free_mib": 12652,
+        "memory_total_mib": 16376,
+        "memory_used_mib": 3292,
+        "nvidia_smi_returncode": 0,
+        "nvidia_smi_stderr": "",
+        "ram_available_bytes": 12478799872,
+        "utilization_gpu_percent": 0
+      },
+      "phase_bytes": 267,
+      "worker_cpu_percent": 80.1,
+      "worker_rss_bytes": 1477197824
+    },
+    {
+      "elapsed_s": 7.2906262300675735,
+      "gpu": {
+        "gpu_name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+        "memory_free_mib": 12652,
+        "memory_total_mib": 16376,
+        "memory_used_mib": 3292,
+        "nvidia_smi_returncode": 0,
+        "nvidia_smi_stderr": "",
+        "ram_available_bytes": 12299091968,
+        "utilization_gpu_percent": 0
+      },
+      "phase_bytes": 267,
+      "worker_cpu_percent": 22.5,
+      "worker_rss_bytes": 1527545856
+    },
+    {
+      "elapsed_s": 8.313329603057355,
+      "gpu": {
+        "gpu_name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+        "memory_free_mib": 12652,
+        "memory_total_mib": 16376,
+        "memory_used_mib": 3292,
+        "nvidia_smi_returncode": 0,
+        "nvidia_smi_stderr": "",
+        "ram_available_bytes": 12305453056,
+        "utilization_gpu_percent": 0
+      },
+      "phase_bytes": 267,
+      "worker_cpu_percent": 4.9,
+      "worker_rss_bytes": 1527545856
+    },
+    {
+      "elapsed_s": 9.336265960009769,
+      "gpu": {
+        "gpu_name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+        "memory_free_mib": 12646,
+        "memory_total_mib": 16376,
+        "memory_used_mib": 3298,
+        "nvidia_smi_returncode": 0,
+        "nvidia_smi_stderr": "",
+        "ram_available_bytes": 11963777024,
+        "utilization_gpu_percent": 2
+      },
+      "phase_bytes": 267,
+      "worker_cpu_percent": 120.2,
+      "worker_rss_bytes": 2122993664
+    },
+    {
+      "elapsed_s": 10.359557088115253,
+      "gpu": {
+        "gpu_name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+        "memory_free_mib": 12614,
+        "memory_total_mib": 16376,
+        "memory_used_mib": 3330,
+        "nvidia_smi_returncode": 0,
+        "nvidia_smi_stderr": "",
+        "ram_available_bytes": 11801210880,
+        "utilization_gpu_percent": 0
+      },
+      "phase_bytes": 267,
+      "worker_cpu_percent": 101.6,
+      "worker_rss_bytes": 2497015808
+    },
+    {
+      "elapsed_s": 11.380867000087164,
+      "gpu": {
+        "gpu_name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+        "memory_free_mib": 12614,
+        "memory_total_mib": 16376,
+        "memory_used_mib": 3330,
+        "nvidia_smi_returncode": 0,
+        "nvidia_smi_stderr": "",
+        "ram_available_bytes": 11608035328,
+        "utilization_gpu_percent": 0
+      },
+      "phase_bytes": 267,
+      "worker_cpu_percent": 116.5,
+      "worker_rss_bytes": 2670178304
+    },
+    {
+      "elapsed_s": 12.422500909073278,
+      "gpu": {
+        "gpu_name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+        "memory_free_mib": 12614,
+        "memory_total_mib": 16376,
+        "memory_used_mib": 3330,
+        "nvidia_smi_returncode": 0,
+        "nvidia_smi_stderr": "",
+        "ram_available_bytes": 11528921088,
+        "utilization_gpu_percent": 2
+      },
+      "phase_bytes": 267,
+      "worker_cpu_percent": 95.0,
+      "worker_rss_bytes": 2848612352
+    },
+    {
+      "elapsed_s": 13.445551614044234,
+      "gpu": {
+        "gpu_name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+        "memory_free_mib": 12632,
+        "memory_total_mib": 16376,
+        "memory_used_mib": 3312,
+        "nvidia_smi_returncode": 0,
+        "nvidia_smi_stderr": "",
+        "ram_available_bytes": 11481944064,
+        "utilization_gpu_percent": 2
+      },
+      "phase_bytes": 267,
+      "worker_cpu_percent": 33.2,
+      "worker_rss_bytes": 2918359040
+    },
+    {
+      "elapsed_s": 14.467510146088898,
+      "gpu": {
+        "gpu_name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+        "memory_free_mib": 12632,
+        "memory_total_mib": 16376,
+        "memory_used_mib": 3312,
+        "nvidia_smi_returncode": 0,
+        "nvidia_smi_stderr": "",
+        "ram_available_bytes": 11483860992,
+        "utilization_gpu_percent": 0
+      },
+      "phase_bytes": 267,
+      "worker_cpu_percent": 4.9,
+      "worker_rss_bytes": 2918359040
+    },
+    {
+      "elapsed_s": 15.4878106120741,
+      "gpu": {
+        "gpu_name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+        "memory_free_mib": 12632,
+        "memory_total_mib": 16376,
+        "memory_used_mib": 3312,
+        "nvidia_smi_returncode": 0,
+        "nvidia_smi_stderr": "",
+        "ram_available_bytes": 11473874944,
+        "utilization_gpu_percent": 0
+      },
+      "phase_bytes": 267,
+      "worker_cpu_percent": 4.9,
+      "worker_rss_bytes": 2907758592
+    },
+    {
+      "elapsed_s": 16.507547084009275,
+      "gpu": {
+        "gpu_name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+        "memory_free_mib": 12632,
+        "memory_total_mib": 16376,
+        "memory_used_mib": 3312,
+        "nvidia_smi_returncode": 0,
+        "nvidia_smi_stderr": "",
+        "ram_available_bytes": 11486793728,
+        "utilization_gpu_percent": 0
+      },
+      "phase_bytes": 267,
+      "worker_cpu_percent": 4.9,
+      "worker_rss_bytes": 2907758592
+    },
+    {
+      "elapsed_s": 17.530176811036654,
+      "gpu": {
+        "gpu_name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+        "memory_free_mib": 12632,
+        "memory_total_mib": 16376,
+        "memory_used_mib": 3312,
+        "nvidia_smi_returncode": 0,
+        "nvidia_smi_stderr": "",
+        "ram_available_bytes": 11484856320,
+        "utilization_gpu_percent": 0
+      },
+      "phase_bytes": 267,
+      "worker_cpu_percent": 6.8,
+      "worker_rss_bytes": 2908422144
+    },
+    {
+      "elapsed_s": 18.550117121078074,
+      "gpu": {
+        "gpu_name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+        "memory_free_mib": 12506,
+        "memory_total_mib": 16376,
+        "memory_used_mib": 3439,
+        "nvidia_smi_returncode": 0,
+        "nvidia_smi_stderr": "",
+        "ram_available_bytes": 10607534080,
+        "utilization_gpu_percent": 8
+      },
+      "phase_bytes": 267,
+      "worker_cpu_percent": 383.4,
+      "worker_rss_bytes": 4027817984
+    },
+    {
+      "elapsed_s": 19.57824744703248,
+      "gpu": {
+        "gpu_name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+        "memory_free_mib": 12434,
+        "memory_total_mib": 16376,
+        "memory_used_mib": 3511,
+        "nvidia_smi_returncode": 0,
+        "nvidia_smi_stderr": "",
+        "ram_available_bytes": 9833648128,
+        "utilization_gpu_percent": 6
+      },
+      "phase_bytes": 267,
+      "worker_cpu_percent": 650.7,
+      "worker_rss_bytes": 4944097280
+    },
+    {
+      "elapsed_s": 20.600051055080257,
+      "gpu": {
+        "gpu_name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+        "memory_free_mib": 10345,
+        "memory_total_mib": 16376,
+        "memory_used_mib": 5600,
+        "nvidia_smi_returncode": 0,
+        "nvidia_smi_stderr": "",
+        "ram_available_bytes": 9534578688,
+        "utilization_gpu_percent": 4
+      },
+      "phase_bytes": 534,
+      "worker_cpu_percent": 188.9,
+      "worker_rss_bytes": 5276852224
+    },
+    {
+      "elapsed_s": 21.623971469001845,
+      "gpu": {
+        "gpu_name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+        "memory_free_mib": 10085,
+        "memory_total_mib": 16376,
+        "memory_used_mib": 5860,
+        "nvidia_smi_returncode": 0,
+        "nvidia_smi_stderr": "",
+        "ram_available_bytes": 9499213824,
+        "utilization_gpu_percent": 17
+      },
+      "phase_bytes": 534,
+      "worker_cpu_percent": 59.6,
+      "worker_rss_bytes": 5398974464
+    },
+    {
+      "elapsed_s": 22.660687723080628,
+      "gpu": {
+        "gpu_name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+        "memory_free_mib": 7617,
+        "memory_total_mib": 16376,
+        "memory_used_mib": 8328,
+        "nvidia_smi_returncode": 0,
+        "nvidia_smi_stderr": "",
+        "ram_available_bytes": 7881224192,
+        "utilization_gpu_percent": 5
+      },
+      "phase_bytes": 534,
+      "worker_cpu_percent": 424.5,
+      "worker_rss_bytes": 6751768576
+    },
+    {
+      "elapsed_s": 23.681603523087688,
+      "gpu": {
+        "gpu_name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+        "memory_free_mib": 7696,
+        "memory_total_mib": 16376,
+        "memory_used_mib": 8249,
+        "nvidia_smi_returncode": 0,
+        "nvidia_smi_stderr": "",
+        "ram_available_bytes": 8016384000,
+        "utilization_gpu_percent": 6
+      },
+      "phase_bytes": 1471,
+      "worker_cpu_percent": 143.0,
+      "worker_rss_bytes": 6958309376
+    },
+    {
+      "elapsed_s": 24.703411620110273,
+      "gpu": {
+        "gpu_name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+        "memory_free_mib": 7369,
+        "memory_total_mib": 16376,
+        "memory_used_mib": 8576,
+        "nvidia_smi_returncode": 0,
+        "nvidia_smi_stderr": "",
+        "ram_available_bytes": 7831863296,
+        "utilization_gpu_percent": 7
+      },
+      "phase_bytes": 2642,
+      "worker_cpu_percent": 338.6,
+      "worker_rss_bytes": 7126278144
+    },
+    {
+      "elapsed_s": 25.730882912059315,
+      "gpu": {
+        "gpu_name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+        "memory_free_mib": 7369,
+        "memory_total_mib": 16376,
+        "memory_used_mib": 8576,
+        "nvidia_smi_returncode": 0,
+        "nvidia_smi_stderr": "",
+        "ram_available_bytes": 7779258368,
+        "utilization_gpu_percent": 37
+      },
+      "phase_bytes": 4424,
+      "worker_cpu_percent": 341.6,
+      "worker_rss_bytes": 7131017216
+    },
+    {
+      "elapsed_s": 26.75201957707759,
+      "gpu": {
+        "gpu_name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+        "memory_free_mib": 8841,
+        "memory_total_mib": 16376,
+        "memory_used_mib": 7104,
+        "nvidia_smi_returncode": 0,
+        "nvidia_smi_stderr": "",
+        "ram_available_bytes": 8746598400,
+        "utilization_gpu_percent": 5
+      },
+      "phase_bytes": 4424,
+      "worker_cpu_percent": 162.6,
+      "worker_rss_bytes": 6159900672
+    },
+    {
+      "elapsed_s": 27.77257884305436,
+      "gpu": {
+        "gpu_name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+        "memory_free_mib": 9776,
+        "memory_total_mib": 16376,
+        "memory_used_mib": 6168,
+        "nvidia_smi_returncode": 0,
+        "nvidia_smi_stderr": "",
+        "ram_available_bytes": 8739446784,
+        "utilization_gpu_percent": 6
+      },
+      "phase_bytes": 4424,
+      "worker_cpu_percent": 102.9,
+      "worker_rss_bytes": 6156083200
+    }
+  ],
+  "utc": "2026-07-18T08:32:29.070937+00:00",
+  "watchdog_reason": null,
+  "worker_exit_code": 0,
+  "worker_phase_contract": {
+    "checks": {
+      "nonempty": true,
+      "one_forward_marker_count_one": true,
+      "owner_exact": true,
+      "required_exact_once": true,
+      "required_order_exact": true,
+      "sequence_exact": true,
+      "six_capture_marker_order_exact": true,
+      "six_capture_markers_unique": true,
+      "terminal_worker_summary_exact": true,
+      "worker_exception_marker_absent": true
+    },
+    "details": {
+      "capture_roles": [
+        "baseline_primary",
+        "baseline_opposite",
+        "post_write_no_forward_primary",
+        "post_write_no_forward_opposite",
+        "post_forward_primary",
+        "post_forward_opposite"
+      ],
+      "expected_capture_role_order": [
+        "baseline_primary",
+        "baseline_opposite",
+        "post_write_no_forward_primary",
+        "post_write_no_forward_opposite",
+        "post_forward_primary",
+        "post_forward_opposite"
+      ],
+      "forward_rows": [
+        {
+          "details": {
+            "forward_count": 1
+          },
+          "event": "complete",
+          "owner": "worker",
+          "phase": "explicit_simulation_context_forward",
+          "sequence": 18,
+          "utc": "2026-07-18T08:32:18.168898+00:00"
+        }
+      ],
+      "required_positions": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        11,
+        12,
+        13,
+        16,
+        17,
+        20
+      ]
+    },
+    "pass": true,
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_worker_phase_markers.jsonl",
+    "required_counts": {
+      "AppLauncher:complete": 1,
+      "AppLauncher:start": 1,
+      "baseline_layers:complete": 1,
+      "baseline_layers:start": 1,
+      "direct_root_pose_write:complete": 1,
+      "direct_root_pose_write:start": 1,
+      "explicit_simulation_context_forward:complete": 1,
+      "explicit_simulation_context_forward:start": 1,
+      "make_runtime_env:complete": 1,
+      "make_runtime_env:start": 1,
+      "reset:complete": 1,
+      "reset:start": 1,
+      "timeline_pause:complete": 1,
+      "worker_preflight:complete": 1,
+      "worker_summary:complete": 1
+    },
+    "row_count": 21,
+    "sha256": "1e581efe0875dc9cb709f5bc96d56bf6e09031604f042a61eb8434f46e305713"
+  }
+}

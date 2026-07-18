@@ -1,0 +1,404 @@
+{
+  "artifact": "ROARM_RERUN_ARTIFACT_VALIDATION_V1",
+  "blueprint_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_state_layer_localization.rbl",
+  "blueprint_verify": {
+    "attempted": true,
+    "bytes": 65842,
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "verify",
+      "--check-footers",
+      "true",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_state_layer_localization.rbl"
+    ],
+    "ok": true,
+    "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_state_layer_localization.rbl",
+    "returncode": 0,
+    "sha256": "9f22a53bf8c76d384c8a564ee226f0c1850e3ec2eeda8273b157c1d633249f45",
+    "stderr": "1 file verified without error.\n",
+    "stdout": ""
+  },
+  "bytes": 9806970,
+  "component_contract": {
+    "checks": {
+      "/captures/opposite": {
+        "observed": [
+          "Image:buffer",
+          "Image:format"
+        ],
+        "pass": true,
+        "required": [
+          "Image:buffer",
+          "Image:format"
+        ]
+      },
+      "/captures/primary": {
+        "observed": [
+          "Image:buffer",
+          "Image:format"
+        ],
+        "pass": true,
+        "required": [
+          "Image:buffer",
+          "Image:format"
+        ]
+      },
+      "/events/localization": {
+        "observed": [
+          "TextLog:level",
+          "TextLog:text"
+        ],
+        "pass": true,
+        "required": [
+          "TextLog:level",
+          "TextLog:text"
+        ]
+      },
+      "/geometry/cylinder_commanded": {
+        "observed": [
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true,
+        "required": [
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ]
+      },
+      "/metadata/run": {
+        "observed": [
+          "TextDocument:text"
+        ],
+        "pass": true,
+        "required": [
+          "TextDocument:text"
+        ]
+      },
+      "/metrics/control/controlled_physics_steps": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/metrics/layers/cache_is_target": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/metrics/layers/hydra_is_target": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/summary/localization_sheet": {
+        "observed": [
+          "Image:buffer",
+          "Image:format"
+        ],
+        "pass": true,
+        "required": [
+          "Image:buffer",
+          "Image:format"
+        ]
+      }
+    },
+    "pass": true
+  },
+  "entity_path_contract": {
+    "checks": {
+      "/captures/opposite": true,
+      "/captures/primary": true,
+      "/events/localization": true,
+      "/geometry/cylinder_commanded": true,
+      "/metadata/run": true,
+      "/metrics/control/contact_queries": true,
+      "/metrics/control/controlled_physics_steps": true,
+      "/metrics/control/display_state_writes": true,
+      "/metrics/control/explicit_forward_calls": true,
+      "/metrics/control/q5_science_samples": true,
+      "/metrics/control/q5_target_updates": true,
+      "/metrics/layers/cache_is_target": true,
+      "/metrics/layers/diagnostic_root_cached_is_target": true,
+      "/metrics/layers/diagnostic_root_compatibility_is_target": true,
+      "/metrics/layers/hydra_is_target": true,
+      "/metrics/layers/mesh_cached_is_target": true,
+      "/metrics/layers/mesh_current_is_target": true,
+      "/metrics/layers/physx_is_target": true,
+      "/metrics/layers/root_current_is_target": true,
+      "/summary/localization_sheet": true
+    },
+    "exact_non_system_match": true,
+    "forbidden_fragment_absent": {
+      "/\\/": true
+    },
+    "missing_exact": [],
+    "observed_all": [
+      "/__properties",
+      "/blueprint_panel",
+      "/captures/opposite",
+      "/captures/primary",
+      "/container/85a3a3f7-8c0d-47a3-99b0-753556b54c3c",
+      "/container/c92fd50c-be92-4ef4-b4d7-2a6baca4acfa",
+      "/container/f0e1c54d-bebf-4f6a-8444-f4e8c01cbdf0",
+      "/events/localization",
+      "/geometry/cylinder_commanded",
+      "/metadata/run",
+      "/metrics/control/contact_queries",
+      "/metrics/control/controlled_physics_steps",
+      "/metrics/control/display_state_writes",
+      "/metrics/control/explicit_forward_calls",
+      "/metrics/control/q5_science_samples",
+      "/metrics/control/q5_target_updates",
+      "/metrics/layers/cache_is_target",
+      "/metrics/layers/diagnostic_root_cached_is_target",
+      "/metrics/layers/diagnostic_root_compatibility_is_target",
+      "/metrics/layers/hydra_is_target",
+      "/metrics/layers/mesh_cached_is_target",
+      "/metrics/layers/mesh_current_is_target",
+      "/metrics/layers/physx_is_target",
+      "/metrics/layers/root_current_is_target",
+      "/selection_panel",
+      "/summary/localization_sheet",
+      "/time_panel",
+      "/view/0b8dcaed-19f1-4748-9f5f-9fa677033f22",
+      "/view/0b8dcaed-19f1-4748-9f5f-9fa677033f22/ViewContents",
+      "/view/2083eb4a-520f-457a-9961-6043e08ef047",
+      "/view/2083eb4a-520f-457a-9961-6043e08ef047/ViewContents",
+      "/view/375b6aa0-5625-4a73-92ba-c78abab7b52c",
+      "/view/375b6aa0-5625-4a73-92ba-c78abab7b52c/ViewContents",
+      "/view/66259ebd-b2e5-4500-80ae-b727cc10ec06",
+      "/view/66259ebd-b2e5-4500-80ae-b727cc10ec06/ViewContents",
+      "/view/96c78e8e-e678-446b-9ec7-55fe3b9bfeb5",
+      "/view/96c78e8e-e678-446b-9ec7-55fe3b9bfeb5/ViewContents",
+      "/view/c10a443f-c925-4318-96fa-b86570429314",
+      "/view/c10a443f-c925-4318-96fa-b86570429314/ViewContents",
+      "/view/ec935393-b792-48b1-9a96-6d5e3b9f93c8",
+      "/view/ec935393-b792-48b1-9a96-6d5e3b9f93c8/ViewContents",
+      "/viewport"
+    ],
+    "observed_non_system": [
+      "/captures/opposite",
+      "/captures/primary",
+      "/events/localization",
+      "/geometry/cylinder_commanded",
+      "/metadata/run",
+      "/metrics/control/contact_queries",
+      "/metrics/control/controlled_physics_steps",
+      "/metrics/control/display_state_writes",
+      "/metrics/control/explicit_forward_calls",
+      "/metrics/control/q5_science_samples",
+      "/metrics/control/q5_target_updates",
+      "/metrics/layers/cache_is_target",
+      "/metrics/layers/diagnostic_root_cached_is_target",
+      "/metrics/layers/diagnostic_root_compatibility_is_target",
+      "/metrics/layers/hydra_is_target",
+      "/metrics/layers/mesh_cached_is_target",
+      "/metrics/layers/mesh_current_is_target",
+      "/metrics/layers/physx_is_target",
+      "/metrics/layers/root_current_is_target",
+      "/summary/localization_sheet"
+    ],
+    "pass": true,
+    "unexpected_non_system": []
+  },
+  "errors": [],
+  "exact_entity_paths": [
+    "/captures/opposite",
+    "/captures/primary",
+    "/events/localization",
+    "/geometry/cylinder_commanded",
+    "/metadata/run",
+    "/metrics/control/contact_queries",
+    "/metrics/control/controlled_physics_steps",
+    "/metrics/control/display_state_writes",
+    "/metrics/control/explicit_forward_calls",
+    "/metrics/control/q5_science_samples",
+    "/metrics/control/q5_target_updates",
+    "/metrics/layers/cache_is_target",
+    "/metrics/layers/diagnostic_root_cached_is_target",
+    "/metrics/layers/diagnostic_root_compatibility_is_target",
+    "/metrics/layers/hydra_is_target",
+    "/metrics/layers/mesh_cached_is_target",
+    "/metrics/layers/mesh_current_is_target",
+    "/metrics/layers/physx_is_target",
+    "/metrics/layers/root_current_is_target",
+    "/summary/localization_sheet"
+  ],
+  "exact_timeline_names": [
+    "blueprint",
+    "localization_phase",
+    "log_time"
+  ],
+  "expected_entity_components": {
+    "/captures/opposite": [
+      "Image:buffer",
+      "Image:format"
+    ],
+    "/captures/primary": [
+      "Image:buffer",
+      "Image:format"
+    ],
+    "/events/localization": [
+      "TextLog:level",
+      "TextLog:text"
+    ],
+    "/geometry/cylinder_commanded": [
+      "Mesh3D:albedo_factor",
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/metadata/run": [
+      "TextDocument:text"
+    ],
+    "/metrics/control/controlled_physics_steps": [
+      "Scalars:scalars"
+    ],
+    "/metrics/layers/cache_is_target": [
+      "Scalars:scalars"
+    ],
+    "/metrics/layers/hydra_is_target": [
+      "Scalars:scalars"
+    ],
+    "/summary/localization_sheet": [
+      "Image:buffer",
+      "Image:format"
+    ]
+  },
+  "expected_entity_paths": [
+    "/captures/opposite",
+    "/captures/primary",
+    "/events/localization",
+    "/geometry/cylinder_commanded",
+    "/metadata/run",
+    "/metrics/control/contact_queries",
+    "/metrics/control/controlled_physics_steps",
+    "/metrics/control/display_state_writes",
+    "/metrics/control/explicit_forward_calls",
+    "/metrics/control/q5_science_samples",
+    "/metrics/control/q5_target_updates",
+    "/metrics/layers/cache_is_target",
+    "/metrics/layers/diagnostic_root_cached_is_target",
+    "/metrics/layers/diagnostic_root_compatibility_is_target",
+    "/metrics/layers/hydra_is_target",
+    "/metrics/layers/mesh_cached_is_target",
+    "/metrics/layers/mesh_current_is_target",
+    "/metrics/layers/physx_is_target",
+    "/metrics/layers/root_current_is_target",
+    "/summary/localization_sheet"
+  ],
+  "expected_rerun_version": "0.34.1",
+  "expected_timeline_names": [
+    "localization_phase"
+  ],
+  "external_rbl_role": "verified fixed-layout export; the 0.34.1 CLI does not guarantee that an external RBL overrides an already-active embedded blueprint",
+  "footer_manifest_present": true,
+  "forbidden_entity_fragments": [
+    "/\\/"
+  ],
+  "headless_render": {
+    "attempted": true,
+    "bytes": 7055899,
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "--headless",
+      "--port",
+      "auto",
+      "--window-size",
+      "3200x1800",
+      "--screenshot-to",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_state_layer_localization_rerun.png",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_state_layer_localization.rrd"
+    ],
+    "file_nonzero": true,
+    "ok": true,
+    "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_state_layer_localization_rerun.png",
+    "returncode": 0,
+    "sha256": "76b46cc2d92ebc5e7dd50dffa3b61e3eeb14451ae5e9177ef7a021ece16b35e9",
+    "stderr": "2026-07-18T08:32:27.879772Z  INFO re_perf_telemetry::telemetry: Telemetry initialized enabled=false service=rerun trace_mode=\"off\" traces=off logs=off metrics=off tracy=false\n2026-07-18T08:32:28.126778Z  INFO re_grpc_server: Listening for gRPC connections on 0.0.0.0:9876. Connect by running `rerun --connect rerun+http://127.0.0.1:9876/proxy`\n2026-07-18T08:32:28.129582Z  INFO re_importer::import_file: Loading \"/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_state_layer_localization.rrd\"…\n2026-07-18T08:32:28.351959Z  INFO re_viewer::headless: Headless viewer running at 3200x1800.\n2026-07-18T08:32:28.813578Z  INFO re_viewer::screenshotter: Screenshot saved to \"/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_state_layer_localization_rerun.png\"\n2026-07-18T08:32:28.843187Z  INFO re_viewer::screenshotter: Screenshot copied to clipboard\n2026-07-18T08:32:28.867642Z  INFO re_viewer::headless: Headless viewer received close request, shutting down.\n",
+    "stdout": ""
+  },
+  "human_visual_inspection_required": true,
+  "pass": true,
+  "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_state_layer_localization.rrd",
+  "print_verbose": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "print",
+      "-v",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_state_layer_localization.rrd"
+    ],
+    "ok": true,
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "Showing data after migration to latest Rerun version\nStoreInfo {\n    store_id: StoreId(\n        Recording,\n        \"roarm_g0a_d365_state_layer_localization\",\n        \"g0a_d365_state_layer_localization\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nStoreInfo {\n    store_id: StoreId(\n        Recording,\n        \"roarm_g0a_d365_state_layer_localization\",\n        \"g0a_d365_state_layer_localization\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nChunk(chunk_18C35531264B23DE1bae670e93d7ccfd) with 1 rows (632 B) - /__properties - data columns: [/__properties@RecordingInfo:start_time]\nStoreInfo {\n    store_id: StoreId(\n        Blueprint,\n        \"roarm_g0a_d365_state_layer_localization\",\n        \"rec_0acdafee73c1411b905763d9719d2ab4\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nStoreInfo {\n    store_id: StoreId(\n        Blueprint,\n        \"roarm_g0a_d365_state_layer_localization\",\n        \"rec_0acdafee73c1411b905763d9719d2ab4\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nChunk(chunk_18C3553131394EA2781210c6c781ca8d) with 1 rows (923 B) - /view/375b6aa0-5625-4a73-92ba-c78abab7b52c/ViewContents - data columns: [/view/375b6aa0-5625-4a73-92ba-c78abab7b52c/ViewContents@ViewContents:query]\nChunk(chunk_18C35531313A0525781210c6c781ca8e) with 1 rows (1.2 KiB) - /view/66259ebd-b2e5-4500-80ae-b727cc10ec06 - data columns: [/view/66259ebd-b2e5-4500-80ae-b727cc10ec06@ViewBlueprint:class_identifier /view/66259ebd-b2e5-4500-80ae-b727cc10ec06@ViewBlueprint:display_name /view/66259ebd-b2e5-4500-80ae-b727cc10ec06@ViewBlueprint:space_origin]\nChunk(chunk_18C35531313A1D92781210c6c781ca8f) with 1 rows (885 B) - /time_panel - data columns: [/time_panel@TimePanelBlueprint:state]\nChunk(chunk_18C35531313A2EA9781210c6c781ca90) with 1 rows (923 B) - /view/66259ebd-b2e5-4500-80ae-b727cc10ec06/ViewContents - data columns: [/view/66259ebd-b2e5-4500-80ae-b727cc10ec06/ViewContents@ViewContents:query]\nChunk(chunk_18C35531313A53FF781210c6c781ca91) with 1 rows (902 B) - /viewport - data columns: [/viewport@ViewportBlueprint:root_container]\nChunk(chunk_18C35531313A79F7781210c6c781ca92) with 1 rows (1.2 KiB) - /view/ec935393-b792-48b1-9a96-6d5e3b9f93c8 - data columns: [/view/ec935393-b792-48b1-9a96-6d5e3b9f93c8@ViewBlueprint:class_identifier /view/ec935393-b792-48b1-9a96-6d5e3b9f93c8@ViewBlueprint:display_name /view/ec935393-b792-48b1-9a96-6d5e3b9f93c8@ViewBlueprint:space_origin]\nChunk(chunk_18C35531313A9704781210c6c781ca93) with 1 rows (923 B) - /view/0b8dcaed-19f1-4748-9f5f-9fa677033f22/ViewContents - data columns: [/view/0b8dcaed-19f1-4748-9f5f-9fa677033f22/ViewContents@ViewContents:query]\nChunk(chunk_18C35531313AA379781210c6c781ca94) with 1 rows (923 B) - /view/2083eb4a-520f-457a-9961-6043e08ef047/ViewContents - data columns: [/view/2083eb4a-520f-457a-9961-6043e08ef047/ViewContents@ViewContents:query]\nChunk(chunk_18C35531313AB0B6781210c6c781ca95) with 1 rows (1.2 KiB) - /container/c92fd50c-be92-4ef4-b4d7-2a6baca4acfa - data columns: [/container/c92fd50c-be92-4ef4-b4d7-2a6baca4acfa@ContainerBlueprint:container_kind /container/c92fd50c-be92-4ef4-b4d7-2a6baca4acfa@ContainerBlueprint:contents /container/c92fd50c-be92-4ef4-b4d7-2a6baca4acfa@ContainerBlueprint:row_shares]\nChunk(chunk_18C35531313ADD99781210c6c781ca96) with 1 rows (1.2 KiB) - /view/375b6aa0-5625-4a73-92ba-c78abab7b52c - data columns: [/view/375b6aa0-5625-4a73-92ba-c78abab7b52c@ViewBlueprint:class_identifier /view/375b6aa0-5625-4a73-92ba-c78abab7b52c@ViewBlueprint:display_name /view/375b6aa0-5625-4a73-92ba-c78abab7b52c@ViewBlueprint:space_origin]\nChunk(chunk_18C35531313AF2B2781210c6c781ca97) with 1 rows (1.2 KiB) - /view/2083eb4a-520f-457a-9961-6043e08ef047 - data columns: [/view/2083eb4a-520f-457a-9961-6043e08ef047@ViewBlueprint:class_identifier /view/2083eb4a-520f-457a-9961-6043e08ef047@ViewBlueprint:display_name /view/2083eb4a-520f-457a-9961-6043e08ef047@ViewBlueprint:space_origin]\nChunk(chunk_18C35531313B0544781210c6c781ca98) with 1 rows (1.3 KiB) - /container/85a3a3f7-8c0d-47a3-99b0-753556b54c3c - data columns: [/container/85a3a3f7-8c0d-47a3-99b0-753556b54c3c@ContainerBlueprint:container_kind /container/85a3a3f7-8c0d-47a3-99b0-753556b54c3c@ContainerBlueprint:contents /container/85a3a3f7-8c0d-47a3-99b0-753556b54c3c@ContainerBlueprint:row_shares]\nChunk(chunk_18C35531313B17FA781210c6c781ca99) with 1 rows (1.2 KiB) - /view/0b8dcaed-19f1-4748-9f5f-9fa677033f22 - data columns: [/view/0b8dcaed-19f1-4748-9f5f-9fa677033f22@ViewBlueprint:class_identifier /view/0b8dcaed-19f1-4748-9f5f-9fa677033f22@ViewBlueprint:display_name /view/0b8dcaed-19f1-4748-9f5f-9fa677033f22@ViewBlueprint:space_origin]\nChunk(chunk_18C35531313B3590781210c6c781ca9a) with 1 rows (1.2 KiB) - /container/f0e1c54d-bebf-4f6a-8444-f4e8c01cbdf0 - data columns: [/container/f0e1c54d-bebf-4f6a-8444-f4e8c01cbdf0@ContainerBlueprint:col_shares /container/f0e1c54d-bebf-4f6a-8444-f4e8c01cbdf0@ContainerBlueprint:container_kind /container/f0e1c54d-bebf-4f6a-8444-f4e8c01cbdf0@ContainerBlueprint:contents]\nChunk(chunk_18C35531313B5B1C781210c6c781ca9b) with 1 rows (883 B) - /blueprint_panel - data columns: [/blueprint_panel@PanelBlueprint:state]\nChunk(chunk_18C35531313B745B781210c6c781ca9c) with 1 rows (923 B) - /view/96c78e8e-e678-446b-9ec7-55fe3b9bfeb5/ViewContents - data columns: [/view/96c78e8e-e678-446b-9ec7-55fe3b9bfeb5/ViewContents@ViewContents:query]\nChunk(chunk_18C35531313B8320781210c6c781ca9d) with 1 rows (1.2 KiB) - /view/c10a443f-c925-4318-96fa-b86570429314 - data columns: [/view/c10a443f-c925-4318-96fa-b86570429314@ViewBlueprint:class_identifier /view/c10a443f-c925-4318-96fa-b86570429314@ViewBlueprint:display_name /view/c10a443f-c925-4318-96fa-b86570429314@ViewBlueprint:space_origin]\nChunk(chunk_18C35531313BACDC781210c6c781ca9e) with 1 rows (1.2 KiB) - /view/96c78e8e-e678-446b-9ec7-55fe3b9bfeb5 - data columns: [/view/96c78e8e-e678-446b-9ec7-55fe3b9bfeb5@ViewBlueprint:class_identifier /view/96c78e8e-e678-446b-9ec7-55fe3b9bfeb5@ViewBlueprint:display_name /view/96c78e8e-e678-446b-9ec7-55fe3b9bfeb5@ViewBlueprint:space_origin]\nChunk(chunk_18C35531313BC99A781210c6c781ca9f) with 1 rows (883 B) - /selection_panel - data columns: [/selection_panel@PanelBlueprint:state]\nChunk(chunk_18C35531313BD5AF781210c6c781caa0) with 1 rows (923 B) - /view/c10a443f-c925-4318-96fa-b86570429314/ViewContents - data columns: [/view/c10a443f-c925-4318-96fa-b86570429314/ViewContents@ViewContents:query]\nChunk(chunk_18C35531313BE197781210c6c781caa1) with 1 rows (923 B) - /view/ec935393-b792-48b1-9a96-6d5e3b9f93c8/ViewContents - data columns: [/view/ec935393-b792-48b1-9a96-6d5e3b9f93c8/ViewContents@ViewContents:query]\nBlueprintActivationCommand(StoreId(Blueprint, \"roarm_g0a_d365_state_layer_localization\", \"rec_0acdafee73c1411b905763d9719d2ab4\"), make_active: true, make_default: true)\nChunk(chunk_18C355313A1DD3B66493630e81043aa2) with 1 rows (20.6 MiB) - /summary/localization_sheet - data columns: [/summary/localization_sheet@Image:buffer /summary/localization_sheet@Image:format]\nChunk(chunk_18C355313B95E7CF6493630e81043aa3) with 1 rows (1.3 MiB) - /captures/primary - data columns: [/captures/primary@Image:buffer /captures/primary@Image:format]\nChunk(chunk_18C355313BA788F46493630e81043aa4) with 1 rows (1.3 MiB) - /captures/opposite - data columns: [/captures/opposite@Image:buffer /captures/opposite@Image:format]\nChunk(chunk_18C355313D216ED76493630e81043aa5) with 1 rows (1.3 MiB) - /captures/primary - data columns: [/captures/primary@Image:buffer /captures/primary@Image:format]\nChunk(chunk_18C355313D33985C6493630e81043aa6) with 1 rows (1.3 MiB) - /captures/opposite - data columns: [/captures/opposite@Image:buffer /captures/opposite@Image:format]\nChunk(chunk_18C355313EB5156A6493630e81043aa7) with 1 rows (1.3 MiB) - /captures/primary - data columns: [/captures/primary@Image:buffer /captures/primary@Image:format]\nChunk(chunk_18C355313EC80B026493630e81043aa8) with 1 rows (1.3 MiB) - /captures/opposite - data columns: [/captures/opposite@Image:buffer /captures/opposite@Image:format]\nChunk(chunk_18C355313ECE29016493630e81043aa9) with 3 rows (1.3 KiB) - /events/localization - data columns: [/events/localization@TextLog:level /events/localization@TextLog:text]\nChunk(chunk_18C355313ED580BE6493630e81043aaa) with 3 rows (949 B) - /metrics/layers/diagnostic_root_cached_is_target - data columns: [/metrics/layers/diagnostic_root_cached_is_target@Scalars:scalars]\nChunk(chunk_18C355313ED5C55D6493630e81043aab) with 3 rows (941 B) - /metrics/layers/cache_is_target - data columns: [/metrics/layers/cache_is_target@Scalars:scalars]\nChunk(chunk_18C355313ED5D8CE6493630e81043aac) with 3 rows (941 B) - /metrics/control/contact_queries - data columns: [/metrics/control/contact_queries@Scalars:scalars]\nChunk(chunk_18C355313ED5EAD76493630e81043aad) with 3 rows (952 B) - /metrics/layers/diagnostic_root_compatibility_is_target - data columns: [/metrics/layers/diagnostic_root_compatibility_is_target@Scalars:scalars]\nChunk(chunk_18C355313ED602786493630e81043aae) with 3 rows (957 B) - /metrics/control/explicit_forward_calls - data columns: [/metrics/control/explicit_forward_calls@Scalars:scalars]\nChunk(chunk_18C355313ED614EA6493630e81043aaf) with 3 rows (941 B) - /metrics/layers/hydra_is_target - data columns: [/metrics/layers/hydra_is_target@Scalars:scalars]\nChunk(chunk_18C355313ED624786493630e81043ab0) with 3 rows (943 B) - /metrics/layers/mesh_cached_is_target - data columns: [/metrics/layers/mesh_cached_is_target@Scalars:scalars]\nChunk(chunk_18C355313ED634BF6493630e81043ab1) with 3 rows (957 B) - /metrics/control/q5_target_updates - data columns: [/metrics/control/q5_target_updates@Scalars:scalars]\nChunk(chunk_18C355313ED64C136493630e81043ab2) with 1 rows (885 B) - /metadata/run - data columns: [/metadata/run@TextDocument:text]\nChunk(chunk_18C355313ED6578F6493630e81043ab3) with 3 rows (957 B) - /metrics/control/display_state_writes - data columns: [/metrics/control/display_state_writes@Scalars:scalars]\nChunk(chunk_18C355313ED66C8B6493630e81043ab4) with 3 rows (957 B) - /metrics/control/controlled_physics_steps - data columns: [/metrics/control/controlled_physics_steps@Scalars:scalars]\nChunk(chunk_18C355313ED67A086493630e81043ab5) with 3 rows (944 B) - /metrics/layers/root_current_is_target - data columns: [/metrics/layers/root_current_is_target@Scalars:scalars]\nChunk(chunk_18C355313ED692D46493630e81043ab6) with 3 rows (8.0 KiB) - /geometry/cylinder_commanded - data columns: [/geometry/cylinder_commanded@Mesh3D:albedo_factor /geometry/cylinder_commanded@Mesh3D:triangle_indices /geometry/cylinder_commanded@Mesh3D:vertex_positions]\nChunk(chunk_18C355313ED6FDB16493630e81043ab7) with 3 rows (944 B) - /metrics/layers/mesh_current_is_target - data columns: [/metrics/layers/mesh_current_is_target@Scalars:scalars]\nChunk(chunk_18C355313ED70B146493630e81043ab8) with 3 rows (957 B) - /metrics/control/q5_science_samples - data columns: [/metrics/control/q5_science_samples@Scalars:scalars]\nChunk(chunk_18C355313ED71E6F6493630e81043ab9) with 3 rows (941 B) - /metrics/layers/physx_is_target - data columns: [/metrics/layers/physx_is_target@Scalars:scalars]\n"
+  },
+  "rendered_blueprint_source": "active blueprint embedded in the RRD",
+  "screenshot_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_state_layer_localization_rerun.png",
+  "screenshot_port": "auto",
+  "screenshot_window_size": "3200x1800",
+  "sha256": "73a2a1d5954e6dfadfb7e562ea2ac4de8dcd80413e94b58db8abab069378a056",
+  "stats": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "stats",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_state_layer_localization.rrd"
+    ],
+    "ok": true,
+    "returncode": 0,
+    "stderr": "2026-07-18T08:32:27.642291Z  INFO rerun::commands::rrd::stats: processing input…\n2026-07-18T08:32:27.707985Z  INFO rerun::commands::rrd::stats: computing stats…\n",
+    "stdout": "Overview\n----------\nnum_chunks = 46\nnum_entity_paths = 42\nnum_chunks_without_components = 0 (0.000%)\nnum_rows = 78\nnum_rows_min = 1\nnum_rows_max = 3\nnum_rows_avg = 1.696\nnum_static = 3\nnum_indexes_min = 0\nnum_indexes_max = 2\nnum_indexes_avg = 1.870\nnum_components_min = 1\nnum_components_max = 3\nnum_components_avg = 1.652\n\nNum chunks per entity\n---------------------\n/__properties: 1\n/blueprint_panel: 1\n/captures/opposite: 3\n/captures/primary: 3\n/container/85a3a3f7-8c0d-47a3-99b0-753556b54c3c: 1\n/container/c92fd50c-be92-4ef4-b4d7-2a6baca4acfa: 1\n/container/f0e1c54d-bebf-4f6a-8444-f4e8c01cbdf0: 1\n/events/localization: 1\n/geometry/cylinder_commanded: 1\n/metadata/run: 1\n/metrics/control/contact_queries: 1\n/metrics/control/controlled_physics_steps: 1\n/metrics/control/display_state_writes: 1\n/metrics/control/explicit_forward_calls: 1\n/metrics/control/q5_science_samples: 1\n/metrics/control/q5_target_updates: 1\n/metrics/layers/cache_is_target: 1\n/metrics/layers/diagnostic_root_cached_is_target: 1\n/metrics/layers/diagnostic_root_compatibility_is_target: 1\n/metrics/layers/hydra_is_target: 1\n/metrics/layers/mesh_cached_is_target: 1\n/metrics/layers/mesh_current_is_target: 1\n/metrics/layers/physx_is_target: 1\n/metrics/layers/root_current_is_target: 1\n/selection_panel: 1\n/summary/localization_sheet: 1\n/time_panel: 1\n/view/0b8dcaed-19f1-4748-9f5f-9fa677033f22: 1\n/view/0b8dcaed-19f1-4748-9f5f-9fa677033f22/ViewContents: 1\n/view/2083eb4a-520f-457a-9961-6043e08ef047: 1\n/view/2083eb4a-520f-457a-9961-6043e08ef047/ViewContents: 1\n/view/375b6aa0-5625-4a73-92ba-c78abab7b52c: 1\n/view/375b6aa0-5625-4a73-92ba-c78abab7b52c/ViewContents: 1\n/view/66259ebd-b2e5-4500-80ae-b727cc10ec06: 1\n/view/66259ebd-b2e5-4500-80ae-b727cc10ec06/ViewContents: 1\n/view/96c78e8e-e678-446b-9ec7-55fe3b9bfeb5: 1\n/view/96c78e8e-e678-446b-9ec7-55fe3b9bfeb5/ViewContents: 1\n/view/c10a443f-c925-4318-96fa-b86570429314: 1\n/view/c10a443f-c925-4318-96fa-b86570429314/ViewContents: 1\n/view/ec935393-b792-48b1-9a96-6d5e3b9f93c8: 1\n/view/ec935393-b792-48b1-9a96-6d5e3b9f93c8/ViewContents: 1\n/viewport: 1\n\nNum chunks per index\n--------------------\nblueprint: 21\nlocalization_phase: 22\nlog_time: 43\n\nNum chunks per component\n------------------------\nContainerBlueprint:col_shares: 1\nContainerBlueprint:container_kind: 3\nContainerBlueprint:contents: 3\nContainerBlueprint:row_shares: 2\nImage:buffer: 7\nImage:format: 7\nMesh3D:albedo_factor: 1\nMesh3D:triangle_indices: 1\nMesh3D:vertex_positions: 1\nPanelBlueprint:state: 2\nRecordingInfo:start_time: 1\nScalars:scalars: 14\nTextDocument:text: 1\nTextLog:level: 1\nTextLog:text: 1\nTimePanelBlueprint:state: 1\nViewBlueprint:class_identifier: 7\nViewBlueprint:display_name: 7\nViewBlueprint:space_origin: 7\nViewContents:query: 7\nViewportBlueprint:root_container: 1\n\nSize (schema + data, compressed)\n--------------------------------\nipc_size_bytes_total = 9.3 MiB\nipc_size_bytes_min = 913 B\nipc_size_bytes_max = 5.5 MiB\nipc_size_bytes_avg = 207 KiB\nipc_size_bytes_p50 = 1.2 KiB\nipc_size_bytes_p90 = 645 KiB\nipc_size_bytes_p95 = 647 KiB\nipc_size_bytes_p99 = 5.5 MiB\nipc_size_bytes_p999 = 5.5 MiB\n\nSize (schema + data, uncompressed)\n----------------------------------\nipc_size_bytes_total = 64.3 MiB\nipc_size_bytes_min = 1.7 KiB\nipc_size_bytes_max = 46.4 MiB\nipc_size_bytes_avg = 1.4 MiB\nipc_size_bytes_p50 = 2.6 KiB\nipc_size_bytes_p90 = 3.0 MiB\nipc_size_bytes_p95 = 3.0 MiB\nipc_size_bytes_p99 = 46.4 MiB\nipc_size_bytes_p999 = 46.4 MiB\n\nSize (schema only, uncompressed)\n--------------------------------\nipc_size_bytes_total = 79.5 KiB\nipc_size_bytes_min = 1016 B\nipc_size_bytes_max = 2.3 KiB\nipc_size_bytes_avg = 1.7 KiB\nipc_size_bytes_p50 = 1.5 KiB\nipc_size_bytes_p90 = 2.2 KiB\nipc_size_bytes_p95 = 2.3 KiB\nipc_size_bytes_p99 = 2.3 KiB\nipc_size_bytes_p999 = 2.3 KiB\n\nSize (data only, uncompressed)\n------------------------------\nipc_size_bytes_total = 64.2 MiB\nipc_size_bytes_min = 656 B\nipc_size_bytes_max = 46.4 MiB\nipc_size_bytes_avg = 1.4 MiB\nipc_size_bytes_p50 = 1.1 KiB\nipc_size_bytes_p90 = 3.0 MiB\nipc_size_bytes_p95 = 3.0 MiB\nipc_size_bytes_p99 = 46.4 MiB\nipc_size_bytes_p999 = 46.4 MiB\n\nUnsorted timelines\n------------------\n(none — every timeline on every chunk is sorted)\n\nFooters\n-------\nnum_manifests = 2 (one per recording)\n\nFooter manifest for StoreId(Blueprint, \"roarm_g0a_d365_state_layer_localization\", \"rec_0acdafee73c1411b905763d9719d2ab4\")\n  num_chunks_indexed = 21\n  num_static_chunks = 0\n  num_entity_paths = 21\n  manifest_num_columns = 88\n  sorbet_schema_num_fields = 44\n  sorbet_schema_sha256 = 94e11dedd04cf17fb19c02ef3cbd6ecae66e34204f4be233bc037f17bb47dde2\n  chunk_byte_size_total (native) = 31.1 KiB\n  chunk_byte_size_uncompressed_total = 69.5 KiB\n\nFooter manifest for StoreId(Recording, \"roarm_g0a_d365_state_layer_localization\", \"g0a_d365_state_layer_localization\")\n  num_chunks_indexed = 25\n  num_static_chunks = 3\n  num_entity_paths = 21\n  manifest_num_columns = 69\n  sorbet_schema_num_fields = 30\n  sorbet_schema_sha256 = d6652eeb384fe18b1f8183c9c602e0fbbd1e8bfcfdfb2a99435b69085d7f33db\n  chunk_byte_size_total (native) = 9.3 MiB\n  chunk_byte_size_uncompressed_total = 64.2 MiB\n"
+  },
+  "timeline_contract": {
+    "checks": {
+      "localization_phase": true
+    },
+    "exact_match": true,
+    "observed": [
+      "blueprint",
+      "localization_phase",
+      "log_time"
+    ],
+    "pass": true
+  },
+  "verify": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "verify",
+      "--check-footers",
+      "true",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_state_layer_localization.rrd"
+    ],
+    "ok": true,
+    "returncode": 0,
+    "stderr": "1 file verified without error.\n",
+    "stdout": ""
+  },
+  "version": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "--version"
+    ],
+    "expected_version_match": true,
+    "ok": true,
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "rerun-cli 0.34.1 (base lance map_view nasm native_viewer oss_server perf_telemetry re_server release_full release_no_web_viewer web_viewer) [rustc 1.92.0 (ded5c06cf 2025-12-08), LLVM 21.1.3] x86_64-unknown-linux-gnu prepare-release-0.34.1 4efb18f, built 2026-07-07T16:20:42.173372603Z\nVideo features: av1 ffmpeg nasm\n"
+  }
+}
