@@ -21038,3 +21038,82 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_manual_visual_inspection.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d365/attempt2_host_access_prepare_repair/d365_completion_summary.json`
 - `START_HERE.md`
+
+## D366 - PAUSE 뒤 PLAY prerequisite를 확정하지 못하면 one-step propagation 판정은 null이다 (2026-07-19)
+
+Decision:
+
+- D366은 D365 환경과 측정기를 상속해 frozen cylinder pose write `1`, controlled
+  `sim.step(render=False)` `1`, inherited public `forward()` `1`을 계획한 actual
+  observability worker를 정확히 한 번 실행했다. Prepare `22/22`, worker preflight `20/20`,
+  runtime prerequisite `17/17`, 양 camera baseline까지 PASS했지만 raw `timeline.play()` 직후
+  required `playing-not-stopped` guard가 false여서 pose write 전 안전정지했다.
+- **지속 규칙:** D353의 explicit `Timeline.commit()` 증거는 승인된 PAUSE request에만
+  적용한다. PLAY/STOP으로 일반화하지 않는다. PAUSE 뒤 PLAY가 필요한 case는 PLAY request의
+  적용 방법을 별도 신규 변수로 사전등록하고, before/request/post raw
+  `(is_playing,is_stopped)`, timeline time, SimulationContext time/index, custom counter,
+  physics callback, object/joint bits를 직접 보존해야 한다.
+- **지속 규칙:** `playing_not_stopped=false`만 남고 post-request raw Boolean tuple을 저장하지
+  않은 경우, pending PLAY와 일치한다고 설명할 수는 있어도 정확한 tuple이나 내부 원인을 직접
+  관찰값으로 승격하지 않는다. D366의 직접 관찰은 PLAY prerequisite 미입증과 physics state
+  no-advance까지다.
+- **지속 규칙:** pose write/step/forward 전에 guard가 멈춘 run을 PhysX→Fabric, mesh/cache,
+  Hydra propagation PASS/FAIL로 분류하지 않는다. Worker exception의 program-order count는
+  write/step/forward `0/0/0`, callback `0`, q5 science/target/contact query `0/0/0`이지만,
+  registered controlled-step bridge가 끝나지 않았으므로 `controlled_physics_steps=null`이다.
+- **지속 규칙:** exception 뒤 cleanup에 함수별 marker가 없고 watchdog가 발생하면 정확히
+  `inner.close()` 또는 `simulation_app.close()` 중 어디가 걸렸는지 발명하지 않는다. 다음
+  runtime control case는 callback removal과 두 close의 start/end marker를 둔다. Worker exit
+  `0`도 exception/summary 부재/watchdog를 덮는 PASS 권위가 아니다.
+- Public Core `SimulationContext.play()`는 이 설치 소스에서 `timeline.play()` 뒤
+  `timeline.commit()`을 호출하며 docstring은 physics-handle propagation을 위한 내부 step을
+  경고한다. Exact-one-controlled-step case에서 source semantics를 다시 입증하지 않고 이 API로
+  조용히 바꾸지 않는다.
+
+Evidence:
+
+- Initial PAUSE bridge는 commit `1`, paused-not-stopped, physics no-advance PASS였다. Reset/controlled
+  baseline SimulationContext time/index는 `0.009999999776482582s/2`, timeline time
+  `0.029999999329447746s`, custom counter/callback `0/0`이었다.
+- PLAY guard 기록은 `playing_not_stopped=false`, `play_commit_not_used=true`,
+  `physics_state_unchanged=true`다. Worker exception은 preflight 뒤 `20.252107s`에 남았다.
+- Layer journal은 baseline `2/8` record만 보존해 hash chain/getter clock guard는 PASS, required
+  count/labels는 FAIL했다. Post-step PhysX/Fabric/Hydra 자료, final PNG, report, RRD/RBL은 없다.
+- Supervisor phase-inactivity watchdog는 `204.97441041003913s`에 종료됐고 worker summary는 없다.
+  종료 후 registered supervisor/worker/NGX child와 D366 GPU PID가 모두 사라졌다. Manual signal과
+  retry는 `0`이다.
+- Device-level GPU used max/free min `8576/7369MiB`, utilization max `68%`, worker RSS max
+  `7,104,565,248B`다. 이는 Warp/SM occupancy도, PLAY guard 실패의 causal evidence도 아니다.
+- Completion SHA-256은
+  `cc061e07fca358d18467255a5ad02a6460513eae6bed5cccc463870b9ecf2f7d`이다.
+- 독립 final audit가 prepare 원본 `22/22`를 draft의 `21/21`에서 교정하고 pending PLAY
+  표현을 guard-failure 관찰로 제한한 correction audit SHA-256은
+  `2f55c13bbd127654260f318798b2a6a76b0a8dc39cce1efe13502f0137a86312`다. 런타임
+  verdict/counter/null은 변하지 않았다.
+
+Implication:
+
+- D366 output은 immutable one-run pre-step safe-stop evidence로 동결하고 같은 경로에서 재실행,
+  retry, overwrite하지 않는다. D362 physical authority와 D365 localization은 변하지 않고,
+  post-step propagation, contact, cap/rim, grasp, target/IK justification는 `null`,
+  `g0a_pass=false`다.
+- 가장 좁은 다음 후보는 별도 승인 zero-step control-only PLAY pending-state commit bridge다.
+  Explicit commit 한 변수와 raw state/clock attestation만 검증하고 cylinder write, physics step,
+  q5/contact, public forward, science를 실행하지 않는다.
+- 그 bridge 결과 뒤 D366의 one-write/one-step/one-forward 질문 재개는 다시 별도 명시 승인을
+  받아 forward-only 새 경로에서만 수행한다.
+
+Sources:
+
+- `claudedocs/session_20260719_grasp_g0a_d366_tensor_step_fabric_visibility_commit.md`
+- `sim_scripts/cyl34_top_view_d366_tensor_step_fabric_visibility_commit.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d366/d366_worker_exception.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d366/d366_worker_phase_markers.jsonl`
+- `claudedocs/runtime_logs/grasp_track/g0a_d366/d366_supervisor_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d366/d366_runtime_step_fabric_attestation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d366/d366_pre_step_play_guard_safe_stop_completion.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d366/d366_baseline_only_manual_visual_inspection.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d366/d366_postrun_process_cleanup_audit.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d366/d366_postcompletion_correction_audit.json`
+- `/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/exts/isaacsim.core.api/isaacsim/core/api/simulation_context/simulation_context.py`
+- `START_HERE.md`

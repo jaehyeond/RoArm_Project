@@ -59,3 +59,12 @@ as the current Active Case.
   먼저 국소화하는 별도 D352 case다. 동일 attempt 재실행, target/IK/gate 변경,
   settle/RL 승격은 금지하며 사용자 별도 승인 전 착수하지 않는다. D352 자체는
   localization-only이고 q5 science 재개는 그 결과 뒤 별도 명시 승인 대상이다.
+
+- 2026-07-19 (D366 pre-step STOP): `timeline_play_pending_state_commit_bridge`
+  — D366은 initial PAUSE bridge와 baseline까지 통과했지만 raw `timeline.play()` 직후
+  `playing_not_stopped=false`, physics no-advance에서 pose write 전에 멈췄다. 별도 승인
+  zero-step control case는 explicit `Timeline.commit()` after PLAY 한 변수만 검증하고,
+  before/request/post raw timeline tuple·clock·callback·joint/object bits와 cleanup close
+  start/end marker를 보존한다. Cylinder write, physics step, public forward, q5/contact/science는
+  전부 `0`으로 유지한다. 이 bridge 뒤 one-write/one-step/one-forward 재개도 다시 별도 승인
+  대상이며, 현재 착수 금지.

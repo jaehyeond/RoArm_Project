@@ -1,0 +1,40 @@
+{
+  "artifact": "D366_POSTCOMPLETION_CORRECTION_AUDIT_V1",
+  "case": "g0a_d366",
+  "reason": "Independent final consistency review found one prepare-check count error and one wording overclaim in newly created postrun audit artifacts before user handoff.",
+  "authoritative_prepare_source": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d366/d366_prepare_preflight.json",
+    "sha256": "5be8e392c435dbe61dae713034c9d730d2baf423ebdcf1a5464d4dd0dd32965b",
+    "checks_length": 22,
+    "all_checks_true": true
+  },
+  "corrections": [
+    {
+      "field": "baseline manual-inspection omission wording",
+      "superseded_sha256": "de8ee270ea28d8a918d5e2d7bc90848d79533a8fade6cbf012372a5071fbfd54",
+      "current_path": "claudedocs/runtime_logs/grasp_track/g0a_d366/d366_baseline_only_manual_visual_inspection.json",
+      "current_sha256": "6ab676901e7f849079f10b37c061bebd03bd2355a5918f223e8cd9b9a6a9c66f",
+      "superseded_meaning": "Called the stop a pending PLAY transition.",
+      "corrected_meaning": "Calls the direct observation a PLAY-state guard stop and explicitly states that the post-request timeline Boolean tuple was not serialized."
+    },
+    {
+      "field": "completion preflight.prepare_checks_passed and prepare_checks_total",
+      "superseded_values": [21, 21],
+      "superseded_sha256_after_wording_rebind": "826214ed6ed864ec4cdb306430c9e0b489af717c3620083a64c9b7c048c909de",
+      "current_values": [22, 22],
+      "current_path": "claudedocs/runtime_logs/grasp_track/g0a_d366/d366_pre_step_play_guard_safe_stop_completion.json",
+      "current_sha256": "cc061e07fca358d18467255a5ad02a6460513eae6bed5cccc463870b9ecf2f7d",
+      "scope": "Only the two prepare count integers changed in this correction. The D366 runtime verdict, call counters, nulls, watchdog, and approval boundary are unchanged."
+    }
+  ],
+  "earlier_intermediate_completion_sha256": "c8e0bab9d0ef444a61fb998cc2b54c58e74bbc22a8f3139f8f1da16dca5ed463",
+  "lineage_note": "The postrun manual/completion files were corrected before final user handoff instead of hiding the discrepancy. Their superseded hashes are retained here; the current paths and current hashes above are authoritative.",
+  "state_docs_corrected_to_prepare_22_of_22": [
+    "START_HERE.md",
+    "claudedocs/session_20260719_grasp_g0a_d366_tensor_step_fabric_visibility_commit.md",
+    "claudedocs/DECISIONS.md",
+    "claudedocs/EXPERIMENT_LEDGER.md"
+  ],
+  "scientific_or_runtime_result_changed": false,
+  "pass": true
+}

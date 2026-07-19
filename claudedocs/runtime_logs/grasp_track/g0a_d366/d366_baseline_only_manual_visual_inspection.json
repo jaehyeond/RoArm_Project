@@ -1,0 +1,40 @@
+{
+  "artifact": "D366_BASELINE_ONLY_MANUAL_VISUAL_INSPECTION_V1",
+  "case": "g0a_d366",
+  "inspection_scope": "baseline_only_before_timeline_play_request",
+  "inspection_method": "original-resolution direct visual inspection",
+  "inspection_utc": "2026-07-18T16:19:56Z",
+  "images": [
+    {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d366/d366_baseline_primary_actual_isaac.png",
+      "sha256": "b82ed94f8b72e2ba7165abed854c5c95930faa7b49a4d1be70b428c610f3784f",
+      "width_px": 1280,
+      "height_px": 720,
+      "format": "PNG RGBA 8-bit",
+      "observation": "Yellow upright cylinder and white RoArm gripper are visible from the registered primary baseline camera."
+    },
+    {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d366/d366_baseline_opposite_actual_isaac.png",
+      "sha256": "4c26cbdf2e25208bdd84aaa9eb90cf29a1bf7c8594522b33d7fd7959dd9be8cc",
+      "width_px": 1280,
+      "height_px": 720,
+      "format": "PNG RGBA 8-bit",
+      "observation": "The same yellow upright cylinder and white RoArm gripper are visible from the registered opposite baseline camera."
+    }
+  ],
+  "checks": {
+    "both_files_decode_at_registered_resolution": true,
+    "both_registered_camera_views_were_inspected": true,
+    "baseline_cylinder_upright_in_both_views": true,
+    "baseline_scene_subject_visible_in_both_views": true,
+    "post_write_image_exists": false,
+    "post_step_image_exists": false,
+    "post_forward_image_exists": false,
+    "spatial_or_temporal_verdict_supported": false
+  },
+  "scope_pass": true,
+  "d366_visualization_completion": false,
+  "rrd_rbl_generated": false,
+  "omission_reason": "The worker safety-stopped at the PLAY-state guard before the pose write, controlled physics step, public forward, and post-step decision subject. The precise post-request timeline Boolean tuple was not serialized. Baseline PNGs are startup evidence only and cannot support a post-step PhysX/Fabric/Hydra verdict.",
+  "g0a_pass": false
+}

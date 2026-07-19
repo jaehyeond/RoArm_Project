@@ -1,0 +1,128 @@
+{
+  "artifact": "D366_PRE_STEP_PLAY_GUARD_SAFE_STOP_COMPLETION_V1",
+  "case": "g0a_d366",
+  "completion_utc": "2026-07-18T16:19:56Z",
+  "approved_question": "After one frozen cylinder pose write, one controlled sim.step(render=False), and one inherited public forward(), do post-step PhysX and Fabric/Hydra agree at the same state?",
+  "answer": null,
+  "final_verdict": "D366_MEASUREMENT_OR_INTEGRITY_FAIL_STOP",
+  "stop_localization": "timeline_play_guard_before_pose_write",
+  "stop_observation": {
+    "timeline_play_request_count": 1,
+    "timeline_commit_after_play_request_count": 0,
+    "playing_not_stopped_guard": false,
+    "physics_state_unchanged_across_play_request": true,
+    "precise_post_request_playing_and_stopped_tuple_persisted": false,
+    "interpretation": "The registered immediate PLAY prerequisite was not proven. A pending PLAY request is consistent with D352-D353 lineage, but the exact post-request Boolean tuple was not serialized and is therefore not promoted to a direct D366 observation."
+  },
+  "preflight": {
+    "prepare_checks_passed": 22,
+    "prepare_checks_total": 22,
+    "worker_checks_passed": 20,
+    "worker_checks_total": 20,
+    "launcher_headless": false,
+    "launcher_device_id": 0,
+    "runtime_prerequisite_checks_passed": 17,
+    "runtime_prerequisite_checks_total": 17
+  },
+  "registered_counts": {
+    "actual_worker": 1,
+    "automatic_retry": 0,
+    "cylinder_pose_write": 1,
+    "controlled_step_call": 1,
+    "explicit_public_forward": 1,
+    "q5_science_sample": 0,
+    "q5_target_update": 0,
+    "contact_query": 0
+  },
+  "observed_program_order_counts_from_worker_exception": {
+    "actual_worker": 1,
+    "automatic_retry": 0,
+    "cylinder_pose_write": 0,
+    "controlled_step_call": 0,
+    "controlled_step_returned": false,
+    "controlled_physics_steps": null,
+    "physics_callback_count": 0,
+    "physics_callback_dts": [],
+    "explicit_public_forward": 0,
+    "explicit_public_forward_returned": false,
+    "q5_science_sample": 0,
+    "q5_target_update": 0,
+    "contact_query": 0
+  },
+  "counter_authority_note": "The worker exception was written at the failing guard and is the program-order authority for zero call counters. The supervisor fields are null because no worker summary was produced; those nulls denote incomplete completion evidence and do not prove that a registered call occurred.",
+  "controlled_physics_steps_note": "This field remains null, not zero, because the registered controlled-step bridge never completed. The reset-internal transition is explicitly excluded from the controlled-step contract.",
+  "science_and_localization": {
+    "post_step_independent_physx_pose": null,
+    "post_step_fabric_root_pose": null,
+    "post_step_render_mesh_pose": null,
+    "post_step_render_cache_pose": null,
+    "post_step_hydra_visual_class": null,
+    "post_step_physx_fabric_hydra_agreement": null,
+    "contact_occurred_during_registered_step": null,
+    "q5_or_grasp_science_recomputed": false,
+    "cap_rim_science": null,
+    "grasp_or_g0a_science": null,
+    "g0a_pass": false
+  },
+  "observability_artifacts": {
+    "baseline_layer_records": 2,
+    "registered_layer_records": 8,
+    "baseline_png_count": 2,
+    "post_step_png_count": 0,
+    "rrd_generated": false,
+    "rbl_generated": false,
+    "post_step_report_generated": false,
+    "reason": "The worker stopped before creation of the post-step decision subject."
+  },
+  "shutdown": {
+    "worker_exception_elapsed_from_worker_preflight_seconds": 20.252107,
+    "supervisor_elapsed_seconds": 204.97441041003913,
+    "watchdog_reason": "phase_inactivity",
+    "worker_exit_code": 0,
+    "worker_exit_code_is_pass_authority": false,
+    "cleanup_exact_function_localization": null,
+    "cleanup_note": "After the worker_exception marker, no further worker phase marker was written. The watchdog terminated the registered process group during cleanup; the exact blocking cleanup call was not instrumented and is not inferred.",
+    "postrun_registered_processes_absent": true,
+    "manual_signal_sent": false
+  },
+  "integrity": {
+    "d362_d363_d364_d365_immutable": true,
+    "d334_sidecar_unchanged": true,
+    "staged_d365_continuity_unchanged": true,
+    "head_origin_unchanged": true,
+    "automatic_retry_absent": true
+  },
+  "bound_artifacts": {
+    "worker_exception": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d366/d366_worker_exception.json",
+      "sha256": "4ad206fdf93c4ce6bb31c3ec083419f788bb29b2f858ee19282c93a95e5c2d60"
+    },
+    "worker_phases": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d366/d366_worker_phase_markers.jsonl",
+      "sha256": "fdda9376eb35e989516e282e05529e4b960f41c836bd99ea7ea0cbf500bf38ea"
+    },
+    "supervisor_summary": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d366/d366_supervisor_summary.json",
+      "sha256": "45044522d4d22a874663b23cefa517a3a4e8a8bef00561db6274c3cab9dfae89"
+    },
+    "supervisor_phases": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d366/d366_supervisor_phase_markers.jsonl",
+      "sha256": "1cf1ceeec158d3b27e4f78709dcc8be1acf47cebd52ed552aeec2bd32928e3e0"
+    },
+    "runtime_prerequisites": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d366/d366_runtime_step_fabric_attestation.json",
+      "sha256": "e7974c5870b9e753a6668b36b78cbcd1aa13a036fd0613a7c7c875efd2ba0c2c"
+    },
+    "baseline_manual_inspection": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d366/d366_baseline_only_manual_visual_inspection.json",
+      "sha256": "6ab676901e7f849079f10b37c061bebd03bd2355a5918f223e8cd9b9a6a9c66f"
+    },
+    "process_cleanup_audit": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d366/d366_postrun_process_cleanup_audit.json",
+      "sha256": "682456e59ad550220a9b1e13088c376f6d099c69ecc9d80021e0112b4002c8e0"
+    }
+  },
+  "completion_pass": false,
+  "retry_permitted_in_same_path": false,
+  "next_case_requires_explicit_user_approval": true
+}

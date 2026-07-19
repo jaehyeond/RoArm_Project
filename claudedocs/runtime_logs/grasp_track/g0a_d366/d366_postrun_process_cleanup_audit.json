@@ -1,0 +1,32 @@
+{
+  "artifact": "D366_POSTRUN_PROCESS_CLEANUP_AUDIT_V1",
+  "case": "g0a_d366",
+  "audit_utc": "2026-07-18T16:19:56Z",
+  "registered_processes": {
+    "supervisor_pid": 1308152,
+    "worker_pid": 1308264,
+    "worker_child_pid": 1310087,
+    "worker_child_name": "nvidia-ngx-upda"
+  },
+  "supervisor_shutdown": {
+    "watchdog_reason": "phase_inactivity",
+    "elapsed_seconds": 204.97441041003913,
+    "worker_exit_code": 0,
+    "manual_signal_sent_by_research_operator": false,
+    "automatic_retry": false
+  },
+  "postrun_queries": {
+    "pgrep_pattern": "cyl34_top_view_d366_tensor_step_fabric_visibility_commit",
+    "pgrep_exit_code": 1,
+    "matching_processes": [],
+    "registered_supervisor_present": false,
+    "registered_worker_present": false,
+    "registered_worker_child_present": false,
+    "registered_worker_pid_present_in_nvidia_smi_compute_apps": false
+  },
+  "unrelated_processes": {
+    "modified_or_signaled": false,
+    "note": "Other pre-existing GPU processes, including historical PID 1729639, were observed but left untouched."
+  },
+  "pass": true
+}
