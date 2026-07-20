@@ -21117,3 +21117,78 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d366/d366_postcompletion_correction_audit.json`
 - `/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/exts/isaacsim.core.api/isaacsim/core/api/simulation_context/simulation_context.py`
 - `START_HERE.md`
+
+## D367 - raw PLAY commit의 zero-step bridge PASS와 terminal close completion FAIL을 분리한다 (2026-07-19)
+
+Decision:
+
+- D367은 D366의 pre-step PLAY prerequisite만 새 변수
+  `explicit_timeline_commit_after_raw_play_request`로 검증한 zero-step control-only case다. 한
+  actual `headless=false` worker/no retry에서 raw tuple은 직접
+  `(false,false) → (false,false) → (true,false) → (true,false)`로 관찰됐다. Raw
+  `timeline.play()`만으로는 같은 frame의 pending 상태가 적용되지 않았고, 같은 MainThread의
+  explicit `Timeline.commit()` 뒤에 PLAY가 적용됐다.
+- **지속 규칙:** 이 결과는 이 설치 stack의 D367 raw PLAY 조건에만 적용한다. STOP이나 Core
+  public `SimulationContext.play()`로 일반화하지 않는다. Public API는 설치 소스에서 별도의
+  내부 propagation step을 경고하므로 exact-step case에서 조용히 대체하지 않는다.
+- **지속 규칙:** D366-equivalent PAUSED baseline을 만드는 inherited PAUSE commit과 새 PLAY
+  commit을 분리 계수한다. D367은 inherited PAUSE `1`, discriminating PLAY attempt/call/return
+  `1/1/1`, runtime total commit `2`다. 새 변수 commit만 세어 total을 `1`로 쓰지 않는다.
+- PLAY callback(type `0`)은 commit window 안에서 정확히 한 번, commit caller와 같은
+  MainThread에서 발생했고 `(true,false)`를 보았다. Timeline/SimulationContext/custom counter/
+  physics callback/joint/object bits는 네 controlled snapshot에서 exact invariant였다. 별도
+  summary reread/hash attestation `7/7` 뒤 권위 있는 controlled physics step은 `0`이다.
+- 따라서 제한된 bridge subresult는
+  `D367_TIMELINE_PLAY_COMMIT_ZERO_STEP_BRIDGE_PASS_NO_SCIENCE`다. Cylinder write/controlled
+  step/public forward/q5 science/q5 target/contact query는 모두 `0`; PhysX-Fabric-Hydra,
+  cap/rim, grasp 및 target/IK/path 과학 판정은 `null`, `g0a_pass=false`다.
+- **지속 규칙:** 설치된 `SimulationApp.close()`는 line 821에서 shutdown을 알린 뒤 line
+  838의 `shutdown_and_release_framework()`에서 Python process를 종료한다. 이 stack에서
+  `close()` 반환 뒤 worker가 쓰는 marker는 completion gate로 요구하지 않는다. 미래 contract는
+  pre-close durable sentinel과 외부 supervisor의 exit/no-watchdog/no-residue를 권위로 설계해야
+  한다.
+- D367 사전등록은 post-return `SimulationApp.close():end`, worker terminal marker와 cleanup
+  artifact를 전체 PASS에 요구했다. 실행 뒤 이 gate를 느슨하게 바꾸지 않았으므로 원
+  completion은 `pass=false`, `D367_MEASUREMENT_OR_INTEGRITY_FAIL_STOP`으로 보존한다. Bridge
+  subresult PASS가 overall completion FAIL을 덮지 않는다.
+
+Evidence:
+
+- Prepare `18/18`, failure-capable negative controls `34/34`; actual worker/retry `1/0`.
+- Commit duration `7,010,253ns`; PLAY callback offset `635,400ns`; timeline time/tick
+  `0.029999999329447746s/0`; SimulationContext time/index
+  `0.009999999776482582s/2`; physics callback/custom counter `0/0`.
+- Contract precondition/event/main/counter `9/9`, `10/10`, `12/12`, `4/4`; zero-step
+  attestation `7/7`; cleanup entry `4/4`.
+- Cleanup는 subscription release, callback remove, `inner.close()` start/end까지 완료했다.
+  `inner.close()`는 `0.67826319s`; final worker marker는 `SimulationApp.close():start`, log는
+  `[17.608s] Simulation App Shutting Down`까지다. Worker exit `0`, watchdog/SIGTERM/SIGKILL
+  없음, process group/GPU allocation residue 없음이다.
+- Supervisor elapsed `19.401926056016237s`; GPU used max/free min `8185/7760MiB`, GPU
+  utilization max `8%`, worker RSS max `6,949,773,312B`.
+- Completion/contract/attestation/postrun-audit SHA-256은 각각
+  `828defad...5b4`, `017a4ad8...030`, `219f4350...0cd`, `d7940872...311`이다.
+
+Implication:
+
+- D367 path는 동결하고 재실행/retry/overwrite하지 않는다. D366 one-write/one-step/one-forward
+  재개를 “D367 overall PASS”에 조건부로 둔 사용자 승인은 충족되지 않았으므로 이번 turn에서
+  소비하지 않는다.
+- 다음 선택은 별도 승인이다. (a) immutable D367 evidence와 설치 소스만 사용하는 offline
+  terminal-close attestation contract repair, 또는 (b) 사용자가 overall cleanup FAIL과 bridge
+  PASS를 명시적으로 구분해 수용하고 새 forward-only physics/Fabric 측정을 승인하는 경로다.
+- 어느 경로도 q5/contact/cap-rim/grasp science, target/IK/path, asset/physics setting 변경을
+  암묵적으로 승인하지 않는다.
+
+Sources:
+
+- `claudedocs/session_20260719_grasp_g0a_d367_timeline_play_pending_state_commit_localization.md`
+- `sim_scripts/cyl34_top_view_d367_timeline_play_pending_state_commit_localization.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d367/d367_play_commit_contract.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d367/d367_zero_step_attestation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d367/d367_cleanup_entry_state.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d367/d367_supervisor_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d367/d367_completion_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d367/d367_postrun_classification_audit.json`
+- `/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/exts/isaacsim.simulation_app/isaacsim/simulation_app/simulation_app.py`
+- `START_HERE.md`

@@ -1,7 +1,8 @@
 # START_HERE.md
 
-Last updated: 2026-07-19 KST. D366 actual observability worker ran exactly once and safely
-stopped at the pre-write PLAY prerequisite. No D366 retry or post-step science occurred.
+Last updated: 2026-07-19 KST. D367 actual worker `1/1` is complete and frozen. Its PLAY
+zero-step bridge subresult passed, but preregistered overall completion failed only at an
+unreachable post-`SimulationApp.close()` marker. No D366 measurement resume is active.
 
 ## Current Truth
 
@@ -18,30 +19,42 @@ stopped at the pre-write PLAY prerequisite. No D366 retry or post-step science o
   geometry/unit/GPU/Warp cause and no old gate rewrite.
 - D360 failed before durable physical evidence because total contact-point capacity was 16.
   D361 registered capacity `33,280` and proved the durable prefix protocol offline.
-- D362 is the current physical authority. D363-D366 changed only observability/control evidence.
+- D362 is the current physical authority. D363-D367 changed only observability/control evidence.
+- D367 directly proved raw PLAY pending-state commit behavior with zero controlled physics, but
+  its overall completion is not PASS because the installed terminal close cannot return to write
+  the preregistered post-close marker.
 
-## Active Case — none approved; latest D366 tensor-step Fabric visibility commit is complete
+## Latest D367 — PLAY Bridge PASS, Overall Completion FAIL
 
-- Output: `claudedocs/runtime_logs/grasp_track/g0a_d366/`; freeze/no rerun/overwrite.
-- Prepare/worker/runtime prerequisites passed `22/22`, `20/20`, `17/17`. One actual
-  `headless=false`, `cuda:0` worker/no retry reached the D353 PAUSE bridge, independent
-  PhysX/Fabric baseline, and two actual 1280x720 Isaac captures.
-- One raw `timeline.play()` request then recorded `playing_not_stopped=false`,
-  `play_commit_not_used=true`, `physics_state_unchanged=true`. The exact post-request
-  `(is_playing,is_stopped)` tuple was not serialized, so pending PLAY is lineage-consistent
-  interpretation rather than a direct D366 value.
-- The worker safety-stopped before mutation. Program-order counts from the exception are
-  pose write/step call/public forward `0/0/0`, callback `0`, q5 science/target/contact query
-  `0/0/0`; registered bridge completion `controlled_physics_steps=null`.
-- Layer journal ended at baseline `2/8`; no post-step PhysX/Fabric/Hydra evidence, final PNG,
-  report, RRD, or RBL exists. Post-step agreement and all science verdicts are `null`.
-- Exception marker appeared after `20.252107s`; cleanup then triggered the phase-inactivity
-  watchdog at `204.97441041003913s`. Exit `0` is not PASS authority. Registered D366
-  supervisor/worker/NGX child and GPU allocation were absent in the postrun host audit.
-- Final verdict: `D366_MEASUREMENT_OR_INTEGRITY_FAIL_STOP`, `g0a_pass=false`.
-- Final consistency audit corrected a postrun draft count from `21/21` to the original
-  prepare authority `22/22` and replaced a direct “pending PLAY” claim with “PLAY guard
-  failure”; correction audit SHA-256 `2f55c13b...6312`.
+- Output `claudedocs/runtime_logs/grasp_track/g0a_d367/` is frozen; no rerun/retry/overwrite.
+- Prepare `18/18`, failure-capable negative controls `34/34`; actual worker/retry `1/0`.
+- Raw `(playing,stopped)` was directly
+  `(false,false) → (false,false) → (true,false) → (true,false)`: raw PLAY stayed pending and
+  the one new MainThread commit applied it.
+- Inherited PAUSE commit `1`, PLAY attempt/call/return `1/1/1`, total runtime commit `2`.
+  Exact one PLAY callback(type `0`) occurred inside the `7,010,253ns` commit window.
+- Timeline/SimulationContext/custom counter/physics callback/joint/cylinder bits were exact
+  invariant. Hash-bound zero-step attestation `7/7` makes controlled physics steps `0`.
+- Cylinder write/step/public forward/q5 science/q5 target/contact query were all `0`.
+  Bridge subresult: `D367_TIMELINE_PLAY_COMMIT_ZERO_STEP_BRIDGE_PASS_NO_SCIENCE`.
+- Cleanup reached observer/callback release, `inner.close()` end, then
+  `SimulationApp.close():start` and `Simulation App Shutting Down`. The installed close calls
+  terminal `shutdown_and_release_framework()`; Python cannot write a post-return marker.
+- Because that marker was nevertheless preregistered as an overall gate, original completion is
+  preserved as `pass=false`, `D367_MEASUREMENT_OR_INTEGRITY_FAIL_STOP`. This is a cleanup-contract
+  mismatch, not a failed PLAY bridge or physics result.
+- PhysX-Fabric-Hydra, cap/rim, grasp, target/IK/path science remains `null`; `g0a_pass=false`.
+
+## Latest Completed D366 Safe Stop
+
+- Output `claudedocs/runtime_logs/grasp_track/g0a_d366/` is frozen/no rerun/overwrite.
+- Prepare/worker/runtime prerequisites passed `22/22`, `20/20`, `17/17`; one actual worker
+  reached baseline, then raw PLAY guard recorded `playing_not_stopped=false` and stopped before
+  write/step/forward. Exact post-request tuple was not serialized.
+- Program-order write/step/forward/callback/q5/target/contact counts were all zero, but the
+  registered bridge was incomplete so `controlled_physics_steps=null`.
+- Cleanup phase-inactivity watchdog occurred at `204.97441041003913s`; final verdict
+  `D366_MEASUREMENT_OR_INTEGRITY_FAIL_STOP`, science `null`, `g0a_pass=false`.
 
 ## D362 Frozen Physical Sub-result
 
@@ -60,80 +73,37 @@ stopped at the pre-write PLAY prerequisite. No D366 retry or post-step science o
 - Exact face/manifold, cap/rim/barrel order, force closure, stable grasp, hold/lift,
   target/IK repair justification remain `null`; `g0a_pass=false`.
 
-## D363 Completed Observability Case
+## D363-D365 Frozen Observability Lineage
 
-- Output: `claudedocs/runtime_logs/grasp_track/g0a_d363/`; completion verdict
-  `D363_OBSERVABILITY_OR_INTEGRITY_FAIL_STOP`, `pass=false`. Freeze/no rerun.
-- Exact frozen-trace replay passed at `1920x1080`, 250 frames, 20fps, 12.5s,
-  H.264/yuv420p/full decode. D362's existing 1088-height file remains immutable.
-- Four AssetData writes plus four explicit `SimulationContext.forward()` calls used zero
-  physics/q5/contact, but all 16 actual Isaac views stayed upright. Primary
-  precommand→final centroid/axis/IoU was `0.049105px/0.049759deg/0.996594`.
-- Rerun/footer/RBL/screenshot and all-frame video inspection passed but did not repair Hydra.
-- D363 bit-exact readback was AssetData cache self-read, not independent PhysX evidence.
-  Generic `Failed to clone in Fabric`, CPU/PCIe/VRAM/Warp/SM are not proven causes.
-
-## D364 Completed Pre-write Localization Attempt
-
-- Output: `claudedocs/runtime_logs/grasp_track/g0a_d364/`; freeze/no rerun/overwrite.
-- Operational verdict:
-  `D364_PREWRITE_OPTIONAL_FABRIC_COMPATIBILITY_ATTRIBUTE_MISMODELED_FAIL_STOP`.
-  `localization_verdict=null`, `g0a_pass=false`.
-- Prepare passed. One actual `headless=false` worker reached launcher, env, reset, paused
-  timeline, two baseline layer records, and two guarded 1280x720 captures; no retry.
-- Root compatibility `_worldPosition/_worldOrientation/_worldScale` attrs were absent, so the
-  preregistered required-layer gate stopped before mutation. This does not mean Fabric failed:
-  root and render-mesh hierarchy local/current/cached matrices were valid.
-- Independent PhysX and Fabric root-hierarchy baseline matched exactly at position
-  `[0.3000000119,0,0.0328829996]m`, quaternion wxyz `[1,0,0,0]`. Independent static
-  root→mesh reconstruction max-abs error was `0.0`.
-- Actual counts: cylinder pose write `0`, explicit forward `0`, controlled physics/q5
-  science/q5 target/contact query `0`, invocation/retry `1/0`.
-- Both manually inspected baseline views were upright. Primary/opposite yellow area
-  `17003/17010px`; no post-write/final captures, report, or RRD exist by program order.
-- Outer process exit `0` was misleading: worker exception + terminal stop + missing worker
-  summary are completion authority. Never use worker exit code alone as PASS.
-- GPU used max/free min `7760/8185MiB`, utilization max `22%`, worker RSS max
-  `7,055,708,160B`; watchdog null.
-
-## D365 Completed Hierarchy Localization
-
-- Output: `claudedocs/runtime_logs/grasp_track/g0a_d365/`; freeze both the sandbox-access
-  attempt1 and completed `attempt2_host_access_prepare_repair/`; no rerun/overwrite.
-- Attempt2 prepare `19/19` PASS. One actual `headless=false` worker/no retry completed in
-  `28.8189958s`, exit `0`, watchdog null. Pose write/forward were `1/1`; controlled physics,
-  q5 science, q5 target, contact query were all `0`.
-- AssetData cache and independent PhysX tensor view became `TARGET` immediately after write.
-  IFabricHierarchy root current, mesh current, Boundable mesh cached worldMatrix, and Hydra
-  pixels remained `BASELINE` even after public `SimulationContext.forward()`.
-- Optional compatibility `_world*` remained `UNAVAILABLE` and optional root cached worldMatrix
-  remained `BASELINE`; neither gated the verdict. Selected Fabric callable was the actual bound
-  `force_update`; Fabric/FSD/Hydra-transform attestations were true.
-- Primary baseline→post-forward centroid/axis/IoU was
-  `0.0144265px/0.0191790deg/0.999118`; opposite was
-  `0.0134108px/0.00654886deg/0.997652`. All six 1280x720 captures stayed upright.
-- Exact 8-path original visual inspection, RRD/RBL/footer/entity/timeline/component checks,
-  manual checks `14/14`, integrity checks `19/19` PASS.
-- Final verdict: `D365_PHYSX_TO_FABRIC_HIERARCHY_NOT_PROPAGATED`, completion `pass=true`.
-  This localizes the display-state break; it does not identify the deeper missing update/commit
-  event and is not a grasp-science PASS/FAIL. D362 physical sub-result and all nulls remain.
+- D363 regenerated the immutable D362 trace at exact `1920x1080`, but its actual Isaac views
+  stayed upright; cache self-read was not independent PhysX proof. Completion failed.
+- D364 stopped before mutation because absent compatibility `_world*` attrs had been modeled as
+  required. This did not prove Fabric failure; write/forward/physics were `0/0/0`.
+- D365 removed only that invalid prerequisite. One pose write made asset cache and independent
+  PhysX tensor TARGET, while Fabric hierarchy/mesh/cache and Hydra stayed BASELINE through one
+  public forward. It localized the measured break at PhysX tensor→Fabric hierarchy under the
+  paused zero-step route; it did not prove the missing update mechanism or any grasp science.
+- All D363-D365 outputs and visual evidence remain frozen. Generic clone warnings, CPU/PCIe,
+  VRAM, Warp or SM efficiency were never proven causal.
 
 ## Current Authorization Boundary
 
-- D366 authorization is consumed. No new Isaac/control/science case is currently approved.
-- Narrow next candidate: a separately approved zero-step PLAY pending-state commit bridge.
-  It may test one explicit `Timeline.commit()` after raw PLAY while serializing raw
-  before/request/post state and clocks; no cylinder write, physics step, public forward,
-  q5/contact, or science.
-- Resuming D366's one-write/one-step/one-forward comparison after that bridge requires another
-  explicit approval and a new forward-only path.
+- D367 control-only authorization was consumed by one actual worker/no retry; no active runtime
+  case remains.
+- The user's conditional statement about resuming D366 after a D367 overall PASS was not
+  consumed: bridge subresult PASS와 overall completion FAIL을 먼저 보고하고 새 forward-only
+  경계를 다시 승인받는다.
+- Next narrow choices are a separately approved offline terminal-close attestation contract
+  repair, or an explicit user acceptance of the bridge/overall split followed by a newly named
+  one-write/one-step/one-forward measurement case.
+- Cylinder write, physics step, public forward, q5/contact or science remain unauthorized here.
 - Any q5/physics science, cap/rim discriminator, target/IK/path repair,
   asset/physics setting change, grasp/settle/hold/lift, ten-trial, G0b, RL/PPO/VLA needs a new
   explicit approval and forward-only preregistration.
 
 ## Frozen Boundaries / Operational Residue
 
-- Freeze D351-D366 paths. Do not modify the user-owned
+- Freeze D351-D367 paths. Do not modify the user-owned
   `claudedocs/lab_meeting/20260715/d334_collision_table/` sidecar.
 - Do not substitute Rerun Float32 display values or vertex-only Qhull for canonical
   callback/Float64/sensor evidence.
@@ -145,29 +115,28 @@ stopped at the pre-write PLAY prerequisite. No D366 retry or post-step science o
 
 ## Must Read First
 
-1. `AGENTS.md`; this file; DECISIONS D362-D366; ledger tail
-2. `claudedocs/session_20260719_grasp_g0a_d366_tensor_step_fabric_visibility_commit.md`;
+1. `AGENTS.md`; this file; DECISIONS D353 and D362-D367; ledger tail
+2. `claudedocs/session_20260719_grasp_g0a_d367_timeline_play_pending_state_commit_localization.md`
+3. `claudedocs/session_20260719_grasp_g0a_d366_tensor_step_fabric_visibility_commit.md`;
    D366 worker exception/phases, runtime prerequisites, supervisor, completion, baseline manual
    inspection, and process cleanup audit
-3. `claudedocs/session_20260718_grasp_g0a_d365_hierarchy_current_render_cache_propagation_localization.md`
-4. D365 completion, localization report, layer journal/audit, supervisor, Rerun validation,
+4. `claudedocs/session_20260718_grasp_g0a_d365_hierarchy_current_render_cache_propagation_localization.md`
+5. D365 completion, localization report, layer journal/audit, supervisor, Rerun validation,
    manual inspection, and six original Isaac PNGs
-5. `claudedocs/session_20260718_grasp_g0a_d364_paused_render_state_layer_localization.md`;
+6. `claudedocs/session_20260718_grasp_g0a_d364_paused_render_state_layer_localization.md`;
    D364 runtime attestation, worker exception/phase markers, baseline manual inspection,
    and pre-write failure completion
-6. `claudedocs/session_20260718_grasp_g0a_d363_trace_replay_1080_and_isaac_render_sync_repair.md`
-7. D363 completion, sync report, exact-video report, manual inspection, Rerun validation,
+7. `claudedocs/session_20260718_grasp_g0a_d363_trace_replay_1080_and_isaac_render_sync_repair.md`
+8. D363 completion, sync report, exact-video report, manual inspection, Rerun validation,
    worker log and supervisor summary
-8. `claudedocs/session_20260717_grasp_g0a_d362_capacity_prefix_integrated_physx_contact_motion.md`
-9. D362 runtime prerequisites, durable prefix/audit, physics trace, worker and supervisor;
+9. `claudedocs/session_20260717_grasp_g0a_d362_capacity_prefix_integrated_physx_contact_motion.md`
+10. D362 runtime prerequisites, durable prefix/audit, physics trace, worker and supervisor;
    then D361/D360/D359/D354/D350/D348 lineage as needed
 
 ## Git
 
-- Verified immediately before the approved D365 evidence-continuity edit:
-  `HEAD == origin/master == ce99a2cc24bd7a3112418739edc1b4ce1c6ef8c9`, commit
-  `D365완료`; worktree was clean.
-- The approved uncommitted continuity preparation is limited to this Git-block correction
-  plus exact-path Git preservation of D365 attempt2's ignored eight PNGs and one worker log.
-  D366 adds only its forward-only harness/session/output and state-doc updates in the working
-  tree. No broad ignore rule was changed, and no commit or push was performed.
+- Verified at D367 boot:
+  `HEAD == origin/master == 9f956a42db1bb43c817ffe435a4e9698707049f1`, subject
+  `D366`; worktree was clean before D367 preregistration edits.
+- Current authorized uncommitted scope is limited to D367 harness/session/output plus
+  `START_HERE.md` and post-result append-only state docs. No commit/push is authorized.

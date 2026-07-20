@@ -68,3 +68,15 @@ as the current Active Case.
   start/end marker를 보존한다. Cylinder write, physics step, public forward, q5/contact/science는
   전부 `0`으로 유지한다. 이 bridge 뒤 one-write/one-step/one-forward 재개도 다시 별도 승인
   대상이며, 현재 착수 금지.
+
+- 2026-07-19 (D367 결과): 위 `timeline_play_pending_state_commit_bridge`의 제한된 제어
+  질문은 PASS로 해소됐다. 남은 별도 후보는
+  `simulation_app_terminal_close_attestation_contract_repair`다. Immutable D367 evidence와
+  설치 소스만 읽어 terminal/non-returning `SimulationApp.close()` completion authority를
+  pre-close durable sentinel + supervisor exit/no-watchdog/no-residue로 perturbation 검증한다.
+  Isaac invocation, q5, physics, contact는 전부 `0`; 사용자 승인 전 착수 금지.
+- 2026-07-19 (D367 결과): `tensor_step_fabric_visibility_commit_resume`는 D367 bridge PASS를
+  상속해 D366의 frozen cylinder one-write/one-step/one-forward 질문을 새 forward-only
+  경로에서 다시 측정하는 후보다. D367 overall completion FAIL을 사용자가 명시적으로 구분해
+  수용하고 새 case를 승인하기 전에는 착수 금지. q5/contact/cap-rim/grasp science와
+  target/IK/path·asset/physics 설정 변경은 포함하지 않는다.
