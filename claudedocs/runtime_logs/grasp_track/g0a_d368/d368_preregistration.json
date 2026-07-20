@@ -1,0 +1,339 @@
+{
+  "artifact": "D368_PREREGISTRATION_V1",
+  "case": "g0a_d368",
+  "checks": {
+    "environment_preflight_pass": true,
+    "frozen_inputs_exact": true,
+    "head_equals_origin_master": true,
+    "head_expected": true,
+    "installed_nvidia_schema_facts_pass": true,
+    "new_variable_count_two": true,
+    "output_empty_before_preregistration": true
+  },
+  "d334_sidecar_before": {
+    "file_count": 3,
+    "files": [
+      {
+        "bytes": 2935,
+        "path": "claudedocs/lab_meeting/20260715/d334_collision_table/README.md",
+        "sha256": "35e39f584737c888bcf7dfab6154c55c5d13d4154ee7f2042073e1c0a7e18783"
+      },
+      {
+        "bytes": 12493,
+        "path": "claudedocs/lab_meeting/20260715/d334_collision_table/d334_collision_table_academic.html",
+        "sha256": "6d38933f959eba916208ec04a329ba25e2bd753c90720576010c222a8bda679c"
+      },
+      {
+        "bytes": 255289,
+        "path": "claudedocs/lab_meeting/20260715/d334_collision_table/d334_collision_table_academic.png",
+        "sha256": "ddc9db2795f4d66b2564adf156829e6a143a599ceb72f6bb9fa28ab25e68a183"
+      }
+    ],
+    "inventory_sha256": "86c3a8f58b0866458910d2cab13da69f04c2dba5ddfc430a8b648367d759fef2"
+  },
+  "decision_rule": {
+    "measured": "D368_CURRENT_64CAP_SEMANTIC_ALLOCATION_MEASURED_NO_PHYSICS",
+    "measurement_fail_stop": "D368_SEMANTIC_AUTHORITY_OR_ALLOCATION_INTEGRITY_FAIL_STOP",
+    "observability_or_completion_fail_stop": "D368_OBSERVABILITY_OR_COMPLETION_INTEGRITY_FAIL_STOP",
+    "pass_semantics": "allocation inventory/provenance completed, not collider adequacy or optimality",
+    "visualization_failure_does_not_override_measurement_verdict": true
+  },
+  "dynamic_hashes": {
+    "AGENTS.md": "f1ef5a083f12534efae494fe9fec290fb3eb0a1f1b8b6fc03b8f33d1e372ed34",
+    "START_HERE.md": "8153bac0cc088659f635954e2b044228976293447c2da018ab9856c00ee91082",
+    "claudedocs/session_20260720_grasp_g0a_d368_current_64cap_semantic_allocation_audit.md": "e4191a24bbfe0aac854d160bdb740e3269ea957c94eeaf02f477bdf3391dcf5a",
+    "roarm_rl/rerun_contract.py": "aaafcd93b9da3d8a97d61a53753ec9667bb98bec7391c91c98974f7ce9c66c1e",
+    "roarm_rl/viz_debug.py": "703aaafab93f515023fd9e6a271e3cd819bfee3dd35fa903b74809267dce6270",
+    "sim_scripts/cyl34_top_view_d368_current_64cap_semantic_allocation_audit.py": "a760260129071a25ac40f3b7338ab0957714dde001c31cbafa6d319bc51971c9"
+  },
+  "environment_preflight": {
+    "blueprint_constructed": true,
+    "checks": {
+      "d368_blueprint_constructed": true,
+      "ld_library_path_exact": true,
+      "matplotlib_cache_is_registered_tmp": true,
+      "no_isaac_kit_physx_warp_torch_modules": true,
+      "numpy_pin": true,
+      "openusd_0_24_5": true,
+      "path_uses_isaaclab_bin_first": true,
+      "psutil_pin": true,
+      "pxr_modules_from_registered_root": true,
+      "python_exact": true,
+      "pythonpath_exact": true,
+      "rerun_cli_pin": true,
+      "rerun_pin": true,
+      "standalone_usd_smoke": true
+    },
+    "forbidden_modules_after": [],
+    "forbidden_modules_before": [],
+    "ld_library_path": "/home/cgxr/miniconda3/envs/isaaclab/lib:/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.libs-1.0.1+69cbf6ad.lx64.r.cp311/bin",
+    "module_origins": {
+      "Gf": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.libs-1.0.1+69cbf6ad.lx64.r.cp311/pxr/Gf/__init__.py",
+      "Usd": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.libs-1.0.1+69cbf6ad.lx64.r.cp311/pxr/Usd/__init__.py",
+      "UsdGeom": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.libs-1.0.1+69cbf6ad.lx64.r.cp311/pxr/UsdGeom/__init__.py"
+    },
+    "mplconfigdir": "/tmp/roarm_d368_matplotlib_cache",
+    "openusd_version": [
+      0,
+      24,
+      5
+    ],
+    "pass": true,
+    "path_first": "/home/cgxr/miniconda3/envs/isaaclab/bin",
+    "python_executable": "/home/cgxr/miniconda3/envs/isaaclab/bin/python3.11",
+    "pythonpath": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.libs-1.0.1+69cbf6ad.lx64.r.cp311",
+    "rerun_cli": {
+      "path": "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "returncode": 0,
+      "stderr": "2026-07-20T13:07:45.223269Z ERROR re_analytics: Failed to initialize analytics: Read-only file system (os error 30)",
+      "stdout": "rerun-cli 0.34.1 (base lance map_view nasm native_viewer oss_server perf_telemetry re_server release_full release_no_web_viewer web_viewer) [rustc 1.92.0 (ded5c06cf 2025-12-08), LLVM 21.1.3] x86_64-unknown-linux-gnu prepare-release-0.34.1 4efb18f, built 2026-07-07T16:20:42.173372603Z\nVideo features: av1 ffmpeg nasm"
+    },
+    "smoke_stage_valid": true,
+    "versions": {
+      "matplotlib": "3.10.3",
+      "numpy": "1.26.0",
+      "psutil": "5.9.8",
+      "rerun_sdk": "0.34.1",
+      "rtree": "1.3.0",
+      "scipy": "1.15.3",
+      "trimesh": "4.5.1"
+    }
+  },
+  "expected_input_hashes": {
+    "claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2/d339_gripper_link_cold1_callback_witness.json": "08a500ed54a5c42c02a77b981b96d629a7de9b09df593c9f25dc3698d7220a69",
+    "claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2/d339_link5_cold1_callback_witness.json": "e705e7ed5d3a9b4803eaeeac67e60b6494edba37cfecf9226f86e72d60b73a43",
+    "claudedocs/runtime_logs/grasp_track/g0a_d348/attempt2/d348_callback_topology_volume_evidence.json": "83b8c7b16181d0f5c545cfbeaa992c8ebfd69e2310dd33bce2a64234a1deaab6",
+    "claudedocs/runtime_logs/grasp_track/g0a_d350/d350_fixed_jaw_geometry_measurement.json": "4fe91e4cd37f5b0f064c7e9c91480881973ca51e651132af2c8feb57750e8446",
+    "claudedocs/runtime_logs/grasp_track/g0a_d350/d350_fixed_jaw_semantic_binding.json": "1ec1c309461357eeae89204fa55a498b64d2d216708ab6e6c7dfdd3d0b878c12",
+    "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_moving_jaw_surface_binding.json": "548d45ec4eb1dacbb4cbdefe2b64a3ed99ce72f4f5ffaaa6a9ee1e2b38756b15",
+    "claudedocs/runtime_logs/grasp_track/g0a_d359/d359_historical_hash_provenance_evidence.json": "9a4c2aa38bfc8e26722852a328d5f228aeccba17e372b017767f4da7c281f822",
+    "local_assets/roarm_m3/urdf/roarm_m3.urdf": "64dc8d082cbce9a13a0697a11a0eaeaebbc54bbcd97e7aafaa40da483969dae2",
+    "local_assets/roarm_m3/usd/roarm_m3.usd": "a4be58e87b1f9790f2a2ed600f0620c79d3cfb95c608b3c598308d52f5e46fff",
+    "sim_scripts/cyl34_top_view_d359_d351_historical_hash_generator_lineage.py": "961939863649f483f00ce667b347bfe79f38bb623eb713b38bad084930762ea3"
+  },
+  "expected_success_inventory": [
+    "d368_audit_invocation.json",
+    "d368_automated_report.md",
+    "d368_automated_summary.json",
+    "d368_completion_summary.json",
+    "d368_manual_visual_inspection.json",
+    "d368_manual_visual_inspection.md",
+    "d368_phase_markers.jsonl",
+    "d368_preregistration.json",
+    "d368_rerun_validation.json",
+    "d368_semantic_allocation.rbl",
+    "d368_semantic_allocation.rrd",
+    "d368_semantic_allocation_evidence.json",
+    "d368_semantic_allocation_rerun.png",
+    "d368_semantic_allocation_summary_1920x1080.png"
+  ],
+  "git_status_before_prepare": [
+    "M AGENTS.md",
+    " M START_HERE.md",
+    " M roarm_rl/viz_debug.py",
+    "?? claudedocs/session_20260720_grasp_g0a_d368_current_64cap_semantic_allocation_audit.md",
+    "?? sim_scripts/cyl34_top_view_d368_current_64cap_semantic_allocation_audit.py"
+  ],
+  "head": "7c4819632bb193c8fd552372c919f8a107675b41",
+  "input_hashes": {
+    "claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2/d339_gripper_link_cold1_callback_witness.json": "08a500ed54a5c42c02a77b981b96d629a7de9b09df593c9f25dc3698d7220a69",
+    "claudedocs/runtime_logs/grasp_track/g0a_d339/collision_asset/attempt2/d339_link5_cold1_callback_witness.json": "e705e7ed5d3a9b4803eaeeac67e60b6494edba37cfecf9226f86e72d60b73a43",
+    "claudedocs/runtime_logs/grasp_track/g0a_d348/attempt2/d348_callback_topology_volume_evidence.json": "83b8c7b16181d0f5c545cfbeaa992c8ebfd69e2310dd33bce2a64234a1deaab6",
+    "claudedocs/runtime_logs/grasp_track/g0a_d350/d350_fixed_jaw_geometry_measurement.json": "4fe91e4cd37f5b0f064c7e9c91480881973ca51e651132af2c8feb57750e8446",
+    "claudedocs/runtime_logs/grasp_track/g0a_d350/d350_fixed_jaw_semantic_binding.json": "1ec1c309461357eeae89204fa55a498b64d2d216708ab6e6c7dfdd3d0b878c12",
+    "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_moving_jaw_surface_binding.json": "548d45ec4eb1dacbb4cbdefe2b64a3ed99ce72f4f5ffaaa6a9ee1e2b38756b15",
+    "claudedocs/runtime_logs/grasp_track/g0a_d359/d359_historical_hash_provenance_evidence.json": "9a4c2aa38bfc8e26722852a328d5f228aeccba17e372b017767f4da7c281f822",
+    "local_assets/roarm_m3/urdf/roarm_m3.urdf": "64dc8d082cbce9a13a0697a11a0eaeaebbc54bbcd97e7aafaa40da483969dae2",
+    "local_assets/roarm_m3/usd/roarm_m3.usd": "a4be58e87b1f9790f2a2ed600f0620c79d3cfb95c608b3c598308d52f5e46fff",
+    "sim_scripts/cyl34_top_view_d359_d351_historical_hash_generator_lineage.py": "961939863649f483f00ce667b347bfe79f38bb623eb713b38bad084930762ea3"
+  },
+  "negative_controls": [
+    "owner_swap_rejected",
+    "moving_outer_as_inner_rejected_by_normal_sign",
+    "callback_topology_to_qhull_authority_substitution_rejected",
+    "disabled_legacy_65th_part_rejected",
+    "meter_to_millimeter_x1000_rejected",
+    "part_order_permutation_changes_ordered_but_not_canonical_hash",
+    "coordinate_and_reverse_point_id_remaps_rejected",
+    "d350_seed_component_removal_worsens_anchor"
+  ],
+  "new_physical_variables": [],
+  "new_variables": [
+    "semantic_contact_patch_authority",
+    "current_64cap_part_to_patch_allocation"
+  ],
+  "null_boundaries": {
+    "actual_gpu_contact_execution": null,
+    "collider_count_tipping_causality": null,
+    "current_64cap_optimal": null,
+    "g0a_pass": false,
+    "grasp_feasibility": null,
+    "physics_equivalence": null
+  },
+  "nvidia_official_source_contract": {
+    "distinction": {
+      "optimality_claim": null,
+      "physx_5_6_1_role": "supplementary official corroboration; no claim that Isaac Sim 5.1 embeds this exact SDK semver",
+      "project_authored_candidate": {
+        "hullVertexLimit": 64,
+        "maxConvexHulls": 64
+      },
+      "schema_default": {
+        "hullVertexLimit": 64,
+        "maxConvexHulls": 32
+      },
+      "ui_authoring_range": {
+        "hullVertexLimit": [
+          8,
+          64
+        ],
+        "maxConvexHulls": [
+          1,
+          2048
+        ]
+      }
+    },
+    "installed_physx_schema_extension": "107.3.26+107.3.3",
+    "installed_physx_sdk_semver": null,
+    "official_urls": [
+      "https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/rigid_bodies_articulations/collision.html",
+      "https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/guides/current_limitations.html",
+      "https://nvidia-omniverse.github.io/PhysX/physx/5.6.1/docs/GPURigidBodies.html",
+      "https://docs.isaacsim.omniverse.nvidia.com/5.1.0/py/source/extensions/isaacsim.core.api/docs/index.html"
+    ],
+    "pass": true,
+    "property_database_path": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.kit.property.physx-107.3.26+107.3.3.cp311.u353/omni/kit/property/physx/database.py",
+    "property_database_sha256": "4c46d4ae503f0608770a0e130f037e6eae51971007f1b0a570704c56a1fe01b5",
+    "property_database_sha256_exact": true,
+    "public_physx_reference_version": "5.6.1",
+    "public_physx_reference_version_matches_installed_runtime": null,
+    "schema_default_hull_vertex_limit_64": true,
+    "schema_default_max_convex_hulls_32": true,
+    "schema_path": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.schema.physx-107.3.26+107.3.3.lx64.r.cp311.u353/plugins/PhysxSchema/resources/schema.usda",
+    "schema_sha256": "fe075bce4bde5ba7db69c6ccef0c4c26909336ab34c619129fc276f7cb4d7abc",
+    "schema_sha256_exact": true,
+    "ui_hull_vertex_range_8_64": true,
+    "ui_max_convex_hulls_range_1_2048": true
+  },
+  "origin_master": "7c4819632bb193c8fd552372c919f8a107675b41",
+  "pass": true,
+  "registered_command": {
+    "argv": [
+      "--stage",
+      "audit"
+    ],
+    "environment": {
+      "LD_LIBRARY_PATH": "/home/cgxr/miniconda3/envs/isaaclab/lib:/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.libs-1.0.1+69cbf6ad.lx64.r.cp311/bin",
+      "MPLCONFIGDIR": "/tmp/roarm_d368_matplotlib_cache",
+      "PATH_prefix": "/home/cgxr/miniconda3/envs/isaaclab/bin",
+      "PYTHONPATH": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.libs-1.0.1+69cbf6ad.lx64.r.cp311"
+    },
+    "python": "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+    "python_flags": [
+      "-B"
+    ],
+    "script": "sim_scripts/cyl34_top_view_d368_current_64cap_semantic_allocation_audit.py"
+  },
+  "registered_fixed_patch": {
+    "digest": "6d896eceb21ec0d92b8bc2b8b9262b04ca601ee28954d56799b3e8a026e931fb",
+    "face_count": 267,
+    "face_id_max": 2006,
+    "face_id_min": 1740,
+    "face_ids_sha256": "caaf745b81ce1af79ef7381cadbc533e786af58d6b706de4fb997f08b33ac06b",
+    "unique_vertex_count": 255
+  },
+  "registered_metrics": [
+    "certified carriers plus recurrent/union nearest-sample attribution diagnostics",
+    "callback vertices/polygons/max vertices per polygon/topology triangles",
+    "overlap-prone whole-carrier part-volume sum",
+    "raw-patch to live and certified-live to raw sampled max/P95/RMS",
+    "normal disagreement and D350 seed witness nearest part",
+    "per-part tie-inclusive nearest-region sample incidence plus mixed-certified/no-certified-face inventory",
+    "offline GPU geometry limits only; actual GPU contact execution null"
+  ],
+  "registered_moving_inner": {
+    "face_count": 40,
+    "face_key_sha256": "5bb7ad8a21826cb0709da55f85b0e3772114a782e1263483c180963aa9eccab5",
+    "part_count": 17,
+    "part_names": [
+      "part_030",
+      "part_035",
+      "part_042",
+      "part_045",
+      "part_046",
+      "part_047",
+      "part_048",
+      "part_050",
+      "part_051",
+      "part_053",
+      "part_056",
+      "part_058",
+      "part_059",
+      "part_060",
+      "part_061",
+      "part_062",
+      "part_063"
+    ]
+  },
+  "sampling_contract": {
+    "distance_role": "metric only; no new whole-patch hard fidelity threshold",
+    "families": [
+      "unique_vertices",
+      "unique_edge_midpoints",
+      "triangle_centroids",
+      "fixed_barycentric_refined"
+    ],
+    "nearest_query": "exact point-to-triangle surface query through trimesh/rtree",
+    "refined_barycentric_weights": [
+      [
+        0.6,
+        0.2,
+        0.2
+      ],
+      [
+        0.2,
+        0.6,
+        0.2
+      ],
+      [
+        0.2,
+        0.2,
+        0.6
+      ]
+    ],
+    "tie_tolerance_m": 1e-09
+  },
+  "scope_guards": {
+    "contact_queries": 0,
+    "cook_or_decomposition": 0,
+    "d334_sidecar_writes": 0,
+    "isaac_or_physx": 0,
+    "material_mass_actuator_physics_changes": 0,
+    "nvidia_smi": 0,
+    "physics_steps": 0,
+    "q5_science": 0,
+    "rerun_display_render_allowed": 1,
+    "simulation_app_or_kit": 0,
+    "target_ik_path_changes": 0,
+    "usd_or_asset_writes": 0,
+    "warp_or_cuda_compute": 0
+  },
+  "semantic_rules": {
+    "certified_classification_policy": "preserve mixed_certified and no_certified_contact_face; never force a whole hull into a raw semantic label from nearest distance alone",
+    "current_live_authority": "D348 instance.vertices_m + original witness polygons + instance.topology_triangles",
+    "forbidden_authorities": [
+      "qhull_triangles",
+      "D339 current convex geometry",
+      "Rerun Float32 geometry"
+    ],
+    "gripper_link": "frozen inner raw faces 672..1164 (-localY), outer negative faces 13205..13697 (+localY), original-point-ID identity and D354 live-inner subpartition replay",
+    "link5": "D350 seed face 1984 support plane within 1e-9m, same oriented normal within 1-dot <= 1e-12, exact-welded edge-connected, BFS/union-find traversal agreement"
+  },
+  "single_run_contract": {
+    "audit_invocation_count": 1,
+    "manual_then_finalize_is_control_only": true,
+    "no_retry_or_overwrite": true,
+    "prepare_is_not_audit": true,
+    "timeout_seconds": 900
+  }
+}

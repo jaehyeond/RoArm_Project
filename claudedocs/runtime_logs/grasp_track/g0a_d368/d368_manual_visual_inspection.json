@@ -1,0 +1,52 @@
+{
+  "artifact": "D368_MANUAL_ORIGINAL_RESOLUTION_VISUAL_INSPECTION_V1",
+  "case": "g0a_d368",
+  "inspection_performed": true,
+  "inspection_mode": "both PNGs opened with original-resolution visual inspection",
+  "files": [
+    {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d368/d368_semantic_allocation_summary_1920x1080.png",
+      "bytes": 419562,
+      "sha256": "3ef14771e67f13483917e7651ef5a085a766a46961d5ed7f81b477d1ccae1796",
+      "dimensions": [1920, 1080],
+      "observations": [
+        "Four geometry panels are nonblank and the semantic colors are distinguishable.",
+        "The bottom authority, NULL-optimality text, and legend are readable.",
+        "Upper-row axis labels approach or overlap lower-row panel titles, so layout is not fully clean."
+      ]
+    },
+    {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d368/d368_semantic_allocation_rerun.png",
+      "bytes": 10677462,
+      "sha256": "fdc88cf268f336c1efd1b49fe20a241605e54ac3ff86b2c055f2ff20b9dcc9e2",
+      "dimensions": [4800, 2800],
+      "observations": [
+        "All four spatial views are nonblank and critical-only zoom filtering is visible.",
+        "The allocation-count panel is empty and explicitly shows Unknown timeline.",
+        "Moving-jaw marker labels overlap, and a message-proxy Operation not permitted notification is visible."
+      ]
+    }
+  ],
+  "checks": {
+    "opened_both_pngs_original_resolution": true,
+    "summary_four_panels_nonblank": true,
+    "rerun_four_spatial_views_nonblank": true,
+    "link5_cyan_seed_patch_and_certified_carrier_state_visible": true,
+    "moving_cyan_inner_patch_and_certified_carrier_state_visible": true,
+    "purple_outer_and_yellow_dual_legend_consistent": true,
+    "metric_and_scope_text_legible_no_overlap": false,
+    "no_unknown_timeline_or_empty_panel": false,
+    "display_only_and_optimality_null_label_visible": true
+  },
+  "observations": [
+    "Numerical Float64 measurement evidence was written before visualization and remains authoritative.",
+    "The human-facing observability contract fails because the metric panel is on an unknown timeline and text overlaps remain.",
+    "No audit retry, physics execution, or artifact overwrite was performed."
+  ],
+  "markdown_path": "claudedocs/runtime_logs/grasp_track/g0a_d368/d368_manual_visual_inspection.md",
+  "markdown_sha256": "1da43014625e60c22211d3288180b4a44861a9da7faa266358169b57b7d1e2ea",
+  "pass": false,
+  "measurement_verdict_preserved": "D368_CURRENT_64CAP_SEMANTIC_ALLOCATION_MEASURED_NO_PHYSICS",
+  "expected_completion_verdict": "D368_OBSERVABILITY_OR_COMPLETION_INTEGRITY_FAIL_STOP",
+  "g0a_pass": false
+}

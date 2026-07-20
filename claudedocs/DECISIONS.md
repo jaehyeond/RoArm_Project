@@ -21192,3 +21192,131 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d367/d367_postrun_classification_audit.json`
 - `/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/exts/isaacsim.simulation_app/isaacsim/simulation_app/simulation_app.py`
 - `START_HERE.md`
+
+## D368 - current 64-cap의 의미 배분 측정과 최적성·물리 인과·시각 완료를 분리한다 (2026-07-20)
+
+Decision:
+
+- D368은 frozen raw mesh와 D348 callback 원 polygon topology만 읽은 forward-only offline
+  semantic-allocation audit다. Prepare `7/7` 뒤 actual audit `1`회/no retry로 실행했고
+  Isaac/Kit/PhysX/Warp/CUDA compute, q5, controlled physics step, contact query, recook 및
+  asset/USD write는 모두 `0`이다.
+- **지속 규칙:** `maxConvexHulls`, `hullVertexLimit`, 실제 생성 part 수, 각 part의
+  vertex/polygon/per-face vertex 수, 실제 GPU contact execution을 서로 다른 주장으로 기록한다.
+  설치된 Omni Physics schema 기본값은 `maxConvexHulls=32`, `hullVertexLimit=64`, UI 범위는
+  각각 `1..2048`, `8..64`다. 현재 프로젝트 입력 `64/64`는 형상 보존 우선의
+  **current 64-cap reference candidate**이지 비교실험으로 찾은 최적값이 아니다.
+- 접촉면 의미 권위는 callback 원 face가 raw patch와 직접 대응한
+  `certified_surface_carrier`다. 전체 vertex/centroid/refined sample의 nearest-part 배분은
+  해상도 진단일 뿐 접촉면을 운반한다는 권위가 아니며, certified face가 없는 part는 중립적인
+  `no_certified_contact_face`로 남긴다.
+- Certified allocation은 link5 D350 seed-plane `12 faces / 4 parts`, moving inner
+  `40 / 17`, moving outer `36 / 16`이었다. Moving part 중 `16`개는 inner와 outer를 모두
+  운반했고 `part_035` 한 개는 inner-only였다. 이는 jaw 두께를 가로지르는 convex part에서
+  가능한 배분 사실이며, 그 자체로 결함·최적성·D362 전도 원인이 아니다.
+- 현재 `128/128` callback parts는 관찰된 offline geometry에서 `vertices<=64`,
+  `polygons<=64`, `vertices_per_polygon<=32`였다. 실제 D362 contact pair가 GPU contact path에서
+  실행됐는지는 instrumentation이 없으므로 `actual_gpu_contact_execution=null`이다.
+- NVIDIA 공식 자료는 설치된 Omni Physics `107.3` 문서/스키마와 버전을 맞춰 우선 사용한다.
+  PhysX `5.6.1` GPU 문서의 64 vertices/polygons 및 face당 32 vertices 제한은 보강 근거지만,
+  이 설치의 exact PhysX SDK semver가 로컬에서 확인되지 않았으므로 동일 버전 주장으로 쓰지 않는다.
+- Automated Rerun schema/footer/entity/component/RBL 검증 PASS는 사람의 시각 검사 대신이 아니다.
+  D368 Rerun의 `Unknown timeline` 빈 metric panel과 label/text overlap 때문에
+  `visualization_pass=false`; 이미 완성된 수치 측정 verdict는 보존하되 overall completion은
+  시각 계약 FAIL로 분리한다.
+
+Evidence:
+
+- Prepare `7/7`; actual audit elapsed `42.26971553196199s`; invocation/retry `1/0`;
+  registered perturbation controls `8/8` PASS. Vertex-only Qhull topology는 callback topology와
+  `128/128` parts에서 달랐다.
+- Certified source-vertex max residual은 fixed/inner/outer 각각
+  `0.02411815088069773 / 0.07899064240440935 / 0.07899064240429812mm`, normal error max는
+  모두 `0deg`다.
+- Nearest-sample diagnostic P95/max는 fixed
+  `0.1309419611/0.2803960136mm`, inner `0.2006238851/0.6693417955mm`, outer
+  `0.3081875088/0.8007207893mm`다. 새 hard fidelity threshold로 승격하지 않는다.
+- Measurement verdict는
+  `D368_CURRENT_64CAP_SEMANTIC_ALLOCATION_MEASURED_NO_PHYSICS`; manual visual inspection 뒤
+  completion verdict는 `D368_OBSERVABILITY_OR_COMPLETION_INTEGRITY_FAIL_STOP`이다.
+- Evidence/RRD/RBL/Rerun-PNG/summary-PNG/manual/completion SHA-256은 각각
+  `be2a422b...9cf5`, `f66a9fe4...5af0`, `9b4db461...b8e`, `fdc88cf2...c9e2`,
+  `3ef14771...1796`, `21068831...ab17`, `d56a5c20...4dd6`다.
+
+Implication:
+
+- D368 output은 동결하며 같은 audit를 재실행·retry·overwrite하지 않는다.
+  `current_64cap_optimal`, `physics_equivalence`, `collider_count_tipping_causality`,
+  `actual_gpu_contact_execution`, `grasp_feasibility`는 모두 `null`, `g0a_pass=false`다.
+- 이후 collider 후보 비교는 hull count만 비교하지 않고 같은 certified-face carrier,
+  distance/budget, GPU-geometry 및 별도 승인 physical-contact 지표를 함께 사용해야 한다.
+- 가장 좁은 다음 후보는 immutable D368 evidence/RRD만 읽어 metric timeline과 text layout을
+  고치는 **별도 승인이 필요한** D369 observability-only repair다. 후보 Pareto 생성/비교와
+  pose/physics 검증은 그 뒤의 별도 승인 case다.
+
+Sources:
+
+- `claudedocs/session_20260720_grasp_g0a_d368_current_64cap_semantic_allocation_audit.md`
+- `sim_scripts/cyl34_top_view_d368_current_64cap_semantic_allocation_audit.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d368/d368_preregistration.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d368/d368_semantic_allocation_evidence.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d368/d368_rerun_validation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d368/d368_manual_visual_inspection.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d368/d368_completion_summary.json`
+- `START_HERE.md`
+
+## D369 - host worker 시작과 Rerun Viewer invocation을 분리하고 direct-script import를 사전검증한다 (2026-07-20)
+
+Decision:
+
+- D369은 immutable D368 evidence/RRD만 읽어 `Unknown timeline` metric panel과 text overlap을
+  고치려 한 observability-only case다. 신규 변수는 `timeline_free_static_metric_overlay`,
+  `label_suppressed_professor_layout` 두 개이고, preregistration `14/14`와 failure-capable
+  baseline/perturbation `10/10`은 PASS했다.
+- 승인된 host `render` worker는 정확히 한 번 시작했지만 Rerun Viewer는 호출되지 않았다.
+  Presentation RRD/RBL 생성 뒤 `roarm_rl.rerun_contract` import가
+  `ModuleNotFoundError`로 종료됐고 exception은 `render_invocation_exists=false`를 기록했다.
+  따라서 worker attempt `1`, Viewer invocation `0`, automatic retry `0`을 서로 다른 계수로
+  보존한다.
+- **지속 규칙:** repo-local package를 import하는 `sim_scripts/*.py` direct-script worker는
+  preregistration 전에 실제 production command와 동일한 방식으로 import preflight를 통과해야
+  한다. Repo root를 계산하는 것만으로는 충분하지 않으며, harness 자체의 명시적 import-root
+  bootstrap 또는 module-form invocation을 hash-bound contract로 둔다. Ambient `PYTHONPATH`에
+  조용히 의존하지 않는다.
+- **지속 규칙:** 한 번/no-retry case가 Viewer 전 단계에서 멈추더라도 같은 output path에서
+  수정·재실행하지 않는다. Worker start, pre-render gate, Viewer invocation, PNG, manual
+  inspection, finalize를 각각 별도 단계와 계수로 기록한다.
+
+Evidence:
+
+- Phase stream은 등록된 12개 중 처음 7개만 보존했다. 마지막은
+  `single_presentation_archive_finalized`; `pre_render_artifact_contract_pass`와
+  `one_shot_headless_render_invoked`는 없다.
+- Runtime exception은 `ModuleNotFoundError("No module named 'roarm_rl'")`,
+  `render_invocation_exists=false`, `render_retry_forbidden=true`다.
+- D368 bit-exact copy/recording-only projection/overlay/RBL/presentation RRD SHA-256은 각각
+  `f66a9fe4...5af0`, `ce00df2f...403e`, `1df88ad1...9cc2`, `429407b1...e216`,
+  `0f394dec...02aab`이다. 이것들은 pre-render partial artifacts이며 completed visual contract로
+  승격하지 않는다.
+- Render invocation/receipt, raw PNG, 1920x1080 board, automated/validation/manual/completion
+  artifact는 모두 없다. Collider regeneration, Isaac/Kit/PhysX, SimulationApp, q5, physics
+  step, contact, target/IK/path, asset/settings 및 Warp/CUDA compute는 모두 `0`이다.
+
+Implication:
+
+- Overall verdict는 `D369_OBSERVABILITY_OR_COMPLETION_INTEGRITY_FAIL_STOP`이다. D368 수치
+  측정은 변경되지 않았고 D368의 visual defect repair는 `null`; withheld 다섯 과학 필드는
+  `null`, `g0a_pass=false`다.
+- D369 output을 동결하고 retry/attempt2/overwrite/finalize하지 않는다. 가장 좁은 다음 후보는
+  별도 승인 `D370 [d369_project_root_import_preflight_visual_resume]`다. 새 forward-only path에서
+  production-command import preflight 한 변수를 먼저 검증한 뒤에만 display-only pre-render
+  gate와 최대 한 번의 Rerun Viewer를 재개한다.
+
+Sources:
+
+- `claudedocs/session_20260720_grasp_g0a_d369_d368_professor_visual_contract_repair.md`
+- `sim_scripts/cyl34_top_view_d369_d368_professor_visual_contract_repair.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d369/d369_preregistration.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d369/d369_phase_markers.jsonl`
+- `claudedocs/runtime_logs/grasp_track/g0a_d369/d369_runtime_exception.json`
+- `START_HERE.md`

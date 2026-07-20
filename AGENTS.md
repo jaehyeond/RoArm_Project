@@ -39,6 +39,27 @@ Before answering current project-state questions or making edits:
 5. Run `git status --short`.
 6. Verify any metric from the referenced log/data file before citing it.
 
+## NVIDIA Stack Official-Source Verification Rule
+
+For questions or changes involving Omniverse, Isaac Sim, Isaac Lab, Kit, PhysX,
+Fabric, Hydra, Warp, CUDA, or RTX, use this evidence order before making a
+technical claim:
+
+1. Identify the installed product, extension, SDK, driver, and relevant schema
+   versions first.
+2. Consult version-matched NVIDIA official documentation, API references,
+   schemas, and published source before using forums, blogs, or search summaries.
+3. Explicitly distinguish UI authoring ranges, schema defaults, SDK/engine hard
+   limits, CPU/GPU compatibility limits, and project-authored settings. Never
+   present one category as another.
+4. Cross-check the public documentation against the installed package's
+   schema/source and this repo's original JSON/log/runtime evidence.
+5. In the user briefing, list the official document title, URL, applicable
+   version, and the local `file:line` evidence used. Mark version mismatches and
+   any inference that is not stated directly by NVIDIA.
+6. Third-party material is supplementary only and must not replace an available
+   NVIDIA primary source for NVIDIA-stack semantics or limits.
+
 ## Session progress rule
 
 - Every research session must run at least one experiment that can fail

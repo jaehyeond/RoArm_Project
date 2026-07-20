@@ -660,6 +660,109 @@ def build_rerun_blueprint(mode: str = "robot_geometry") -> Any:
             auto_views=False,
             collapse_panels=True,
         )
+    if mode == "d368_semantic_allocation":
+        def _semantic_view(
+            *,
+            name: str,
+            contents: list[str],
+            position: tuple[float, float, float],
+            look_target: tuple[float, float, float],
+        ) -> Any:
+            return rrb.Spatial3DView(
+                origin="/",
+                contents=contents,
+                name=name,
+                eye_controls=rrb.EyeControls3D(
+                    kind=rrb.Eye3DKind.Orbital,
+                    position=position,
+                    look_target=look_target,
+                    eye_up=(0.0, 0.0, 1.0),
+                ),
+                spatial_information=rrb.SpatialInformation(
+                    target_frame="tf#/",
+                    show_axes=True,
+                    show_bounding_box=False,
+                ),
+            )
+
+        link5_full_contents = [
+            "/semantic/source/link5/**",
+            "/semantic/collider/link5/**",
+            "/semantic/anchors/link5/**",
+            "/semantic/normals/link5/**",
+        ]
+        link5_zoom_contents = [
+            "/semantic/source/link5/seed_contact_plane_patch",
+            "/semantic/collider/link5/certified_seed_patch_carrier/**",
+            "/semantic/anchors/link5/**",
+            "/semantic/normals/link5/**",
+        ]
+        gripper_full_contents = [
+            "/semantic/source/gripper_link/**",
+            "/semantic/collider/gripper_link/**",
+            "/semantic/anchors/gripper_link/**",
+            "/semantic/normals/gripper_link/**",
+        ]
+        gripper_zoom_contents = [
+            "/semantic/source/gripper_link/inner_contact_patch",
+            "/semantic/source/gripper_link/outer_negative_patch",
+            "/semantic/collider/gripper_link/certified_inner_patch_carrier/**",
+            "/semantic/collider/gripper_link/dual_inner_outer_patch_carrier/**",
+            "/semantic/collider/gripper_link/outer_negative_patch_carrier/**",
+            "/semantic/anchors/gripper_link/**",
+            "/semantic/normals/gripper_link/**",
+        ]
+        return rrb.Blueprint(
+            rrb.Vertical(
+                rrb.Horizontal(
+                    _semantic_view(
+                        name="link5: all 64 current hulls",
+                        contents=link5_full_contents,
+                        position=(0.18, -0.22, 0.16),
+                        look_target=(-0.005, 0.0, 0.065),
+                    ),
+                    _semantic_view(
+                        name="link5: D350 seed-plane patch zoom",
+                        contents=link5_zoom_contents,
+                        position=(0.08, -0.10, 0.14),
+                        look_target=(-0.010, 0.0, 0.100),
+                    ),
+                    column_shares=[0.5, 0.5],
+                ),
+                rrb.Horizontal(
+                    _semantic_view(
+                        name="moving jaw: all 64 current hulls",
+                        contents=gripper_full_contents,
+                        position=(0.15, -0.18, 0.08),
+                        look_target=(0.030, 0.0, -0.018),
+                    ),
+                    _semantic_view(
+                        name="moving jaw: frozen inner patch zoom",
+                        contents=gripper_zoom_contents,
+                        position=(0.10, -0.10, 0.04),
+                        look_target=(0.045, -0.006, -0.020),
+                    ),
+                    column_shares=[0.5, 0.5],
+                ),
+                rrb.Horizontal(
+                    rrb.DataframeView(
+                        origin="/metrics/d368",
+                        contents="/metrics/d368/**",
+                        name="allocation counts and geometry budget",
+                    ),
+                    rrb.TextLogView(
+                        origin="/events/d368_summary",
+                        contents="/events/d368_summary",
+                        name="legend and scope boundary",
+                    ),
+                    column_shares=[0.58, 0.42],
+                ),
+                row_shares=[0.38, 0.38, 0.24],
+            ),
+            auto_layout=False,
+            auto_views=False,
+            collapse_panels=True,
+        )
     if mode != "robot_geometry":
         raise ValueError(f"unsupported Rerun blueprint mode: {mode!r}")
     return rrb.Blueprint(
