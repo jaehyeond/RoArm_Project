@@ -21383,3 +21383,164 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d370/d370_professor_visual_contract_rerun.png`
 - `claudedocs/runtime_logs/grasp_track/g0a_d370/d370_runtime_exception.json`
 - `START_HERE.md`
+
+## D371 - 같은 원본의 cap32는 오프라인 후보로 남지만 단일 remainder convex는 빈 공간을 메운다 (2026-07-21)
+
+Decision:
+
+- D371은 current 64-cap A, 같은 raw full mesh의 R64/R32, 그리고 D368 contact-carrier를
+  보존한 C1/C2를 비교한 cook-plus-offline-geometry case다. 신규 변수는
+  `offline_collider_candidate_family`와
+  `professor_facing_candidate_comparison_capture_contract` 두 개다.
+- **지속 규칙:** NVIDIA schema 기본 `maxConvexHulls=32`는 출발 후보이지 RoArm 형상의
+  최적값이 아니다. `R64 ↔ R32`처럼 같은 원본·환경·공통 cook 설정에서 cap 하나만 바꾼
+  비교로 형상 손실을 측정한 뒤에만 다음 단계로 보낸다. A와 fresh R64는 계보가 다르므로
+  한 변수의 인과 대조군으로 부르지 않는다.
+- **지속 규칙:** 접촉 운반 part를 보존해도 나머지 비접촉 geometry 전체를 한 convex
+  envelope로 합치면 원래의 빈 공간을 메울 수 있다. C1/C2의
+  `collapsed_structural_remainder`는 frozen OPEN에서 link5를 각각
+  `-6.2759049387/-6.0535204177mm` 겹치게 했다. 이 두 prototype은 물리시험 전에
+  탈락시키며 같은 one-remainder 구성을 반복하지 않는다. 이는 의미 기반 분할 일반을
+  기각한 것이 아니며, 실제 구조 구역을 먼저 분할한 뒤 각 구역을 convex화해야 한다.
+- **지속 규칙:** offline gate와 Pareto membership은 live asset 동일성, GPU 성능,
+  physics equivalence, 전도 감소, 파지 성공을 증명하지 않는다. reduced-count 후보는 먼저
+  새 asset의 callback polygon/live readback identity를 확인하고, 그 뒤 같은
+  pose/trajectory에서 현재 기준선과 paired physical test를 해야 한다.
+- **지속 규칙:** hash-bound measurement가 presentation 전에 기록됐다면 후속 CLI/font/HiDPI
+  표시 실패와 수치 판정을 분리한다. 다만 mandatory Rerun presentation 계약 자체는 FAIL로
+  보존하고 완료로 승격하지 않는다.
+
+Evidence:
+
+- Prepare `11/11`, failure-capable negative controls `4/4`, worker/retry `1/0`,
+  return `0`, elapsed `27.346966849872842s`, registered cook callbacks `16/16`;
+  32 callback/canonical artifacts independent rehash PASS.
+- 실제 part 수는 A `64+64=128`, R64 `64+64=128`, R32 `32+32=64`,
+  C1 `5+18=23`, C2 `11+24=35`다.
+- frozen-OPEN link5/moving-jaw 거리는 A
+  `4.2727365803/11.3402623263mm`, R64
+  `4.2727365803/11.3402623264mm`, R32
+  `4.2727365803/11.4715195927mm`로 PASS했다. C1/C2는 link5 collision과 raw
+  거리 변화 `10.5485504723/10.3261659513mm`로 FAIL했다.
+- 1mm-grid A-reference ghost/undercoverage는 R32 `1836/196mm^3`,
+  C1 `108618/1023mm^3`, C2 `102217/910mm^3`다. raw exterior→candidate
+  최대오차는 A/R64/R32/C1/C2 순으로
+  `2.5366950019/2.5366950019/2.6814841507/14.1690950622/10.2869800470mm`다.
+- Offline task-gate 적격 후보는 A/R64/R32이고, 그 안의 Pareto 비지배 후보는
+  A와 R32다. R64는 A에 지배됐다. scalar score/global optimum은 `null`.
+- Measurement verdict는 `D371_OFFLINE_COLLIDER_PARETO_MEASURED_NO_PHYSICS`.
+  SimulationContext/reset/controlled physics/q5/live contact/cylinder write/live asset write/
+  target-IK-path/settings는 모두 `0`; offline static part queries `378`.
+- 교수용 1920x1080 board 세 장은 original-resolution manual inspection PASS. 원 RRD
+  validation은 ambient PATH의 CLI 부재로 FAIL했고, absolute-CLI repair의 data validation은
+  PASS했지만 screenshot이 `7680x4320`으로 HiDPI 배증되고 한글 glyph가 깨져 Rerun
+  presentation은 FAIL이다. Original overall verdict
+  `D371_OBSERVABILITY_OR_COMPLETION_INTEGRITY_FAIL_STOP`과 repair `pass=false`를 유지한다.
+- D334 sidecar 세 파일은 사전등록 SHA-256과 종료 후 값이 3/3 동일하다.
+
+Implication:
+
+- R32는 이번 비교에서 총 part를 절반으로 줄이면서 frozen-OPEN gate를 통과한 유일한
+  reduced-count 후보다. 이를 “32가 최적” 또는 “실제 파지가 개선됨”으로 표현하지 않는다.
+- D371과 `visual_repair_attempt1`을 동결하고 retry/overwrite/finalize하지 않는다.
+  `physics_equivalence`, `actual_gpu_contact_execution`,
+  `collider_count_tipping_causality`, `grasp_feasibility`,
+  `current64_optimal`은 `null`, `g0a_pass=false`다.
+- 다음 최소 후보는 별도 승인
+  `D372 [raw64_raw32_live_asset_identity_preflight]`다. physics/q5/contact 없이 fresh
+  R64와 R32 callback polygons를 서로 다른 새 forward-only asset에 materialize하고 live
+  `64+64`/`32+32` identity를 확인한다. 그 결과가 PASS한 뒤에만 R64↔R32 paired
+  cylinder physics를 다시 별도 승인받는다. A↔선택 후보는 필요 시 후속 실용 비교이며
+  cap-only 인과시험으로 표현하지 않는다.
+
+Sources:
+
+- `claudedocs/session_20260721_grasp_g0a_d371_offline_collider_candidate_pareto_comparison.md`
+- `sim_scripts/cyl34_top_view_d371_offline_collider_candidate_pareto_comparison.py`
+- `sim_scripts/cyl34_top_view_d371_offline_collider_cook_worker.py`
+- `sim_scripts/cyl34_top_view_d371_rerun_absolute_cli_visual_repair.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d371/d371_preregistration.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d371/d371_offline_collider_comparison_evidence.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d371/d371_worker_supervisor.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d371/d371_runtime_exception.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d371/d371_cap_comparison_1920x1080.png`
+- `claudedocs/runtime_logs/grasp_track/g0a_d371/d371_semantic_comparison_1920x1080.png`
+- `claudedocs/runtime_logs/grasp_track/g0a_d371/d371_contact_detail_1920x1080.png`
+- `claudedocs/runtime_logs/grasp_track/g0a_d371/visual_repair_attempt1/d371_rerun_absolute_cli_validation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d371/visual_repair_attempt1/d371_visual_repair_manual_inspection.json`
+- `START_HERE.md`
+
+## D372 - 자동 분해 개수와 수동 의미 기반 복합 충돌체 개수를 분리하고, 실제 물리 전 live identity를 먼저 검증한다 (2026-07-21)
+
+Decision:
+
+- 사용자의 새 명시 승인으로 D371이 제안했던 raw64/raw32 live preflight보다 교수님 안
+  `link5 몸통 박스 + 고정 턱 별도 + 움직이는 턱 별도` 설계를 먼저 수행했다. D371의 다음 후보
+  문장은 역사로 보존하되 현 방향으로는 supersede한다.
+- D372의 신규 변수는 `semantic_owner_region_partition_v1`과
+  `manual_compound_primitive_budget_v1` 두 개다. `link5=16`, `gripper_link=18`, 합계 `34`의
+  task-local P34 후보를 오프라인에서 만들었다.
+- **지속 규칙:** 설치 schema의 `maxConvexHulls=32`는 자동 convex decomposition 기본값이다.
+  수동으로 여러 child collider를 배치할 때의 목표 개수, 엔진 hard limit, 최적값으로 해석하지 않는다.
+  UI `1..2048`도 property editor authoring 범위일 뿐 엔진 절대 한계나 최적값이 아니다.
+- **지속 규칙:** 단순 비접촉 몸통은 primitive box를 우선하되, 접촉 턱의 구멍과 열린 입구를
+  하나의 convex envelope로 메우지 않는다. 고정 턱은 `link5`, 움직이는 턱은
+  `gripper_link` owner를 유지하고 접촉층과 필요한 인접 지지대를 분리한다.
+- 2D void 수치는 접촉층+인접 jaw-backbone만의 진단이다. connector/moving-support를 제외하며
+  full-candidate, through-depth, 3D physics equivalence의 증거로 사용하지 않는다.
+- 저장 D362 pose 재계산의 첫 겹침 step 일치는 counterfactual geometry replay다. 새 후보가 같은
+  동역학과 전도를 만든다는 인과 증명이 아니다.
+
+Evidence:
+
+- attempt1은 외부 설치 `database.py`를 repo-relative 입력으로 변환한 prepare-only
+  `ValueError`다. preregistration/run/measurement는 없었고 그대로 동결했다.
+- attempt2 prepare `8/8`; actual run/retry `1/0`; finalize checks `15/15` PASS.
+- 역할별 part는 link5 `structural_body 1 + connector_support 3 + fixed_jaw 10 +
+  fixed_jaw_backbone 2`, gripper_link `moving_support 4 + moving_jaw 12 +
+  moving_jaw_backbone 2`다. 128 대비 94개, `73.4375%` 감소한 설계 후보다.
+- raw sample outside-candidate P95/max는 link5
+  `0.1795673203/1.0937375550mm`, gripper_link
+  `0.1872935098/1.1572354710mm`다.
+- 2D void fill은 fixed `0/1.4176018901%`, moving open mouth/internal diagnostic
+  `8.6018957346/27.1668822768%`다.
+- frozen OPEN P34 clearance는 link5 `4.2726834003mm`, gripper_link
+  `10.9714602318mm`; D349 raw와 차이는 `0.0000378667/0.2036281428mm`다.
+- immutable D362 61-row replay first overlap은 link5 A64/P34 `246/246`, moving
+  `232/232`; transition-window max delta `0.0270367065/0.0025090084mm`다.
+- failure-capable negative controls `5/5` PASS. 접촉층 제거 시 D350/D354 seed 손실은
+  fixed/moving `3.5013612402/2.1517001921mm`다.
+- exact 1920x1080 board 3개, RRD/RBL/footer/entity/component/timeline, original-resolution
+  manual inspection과 visualization이 PASS했다. Rerun 물리 PNG는 `3840x2160`; 정보성 알림
+  3개와 보조 event row clipping은 기록했지만 의사결정 geometry/curve를 가리지 않았다.
+- scope는 SimulationApp/Kit, Isaac/PhysX, cook/automatic decomposition, q5, physics step,
+  live contact, USD/live asset write, target/IK/path, material/mass/actuator/physics change가 모두 `0`다.
+
+Implication:
+
+- completion verdict는
+  `D372_PROFESSOR_SEMANTIC_COMPOUND_CANDIDATE_OFFLINE_PASS_NO_PHYSICS`다.
+  이는 다음 live-asset identity preflight 후보로서의 오프라인 적격성 PASS이지 실제 속도·접촉·
+  전도·파지 또는 전역 최적성 PASS가 아니다.
+- `live_asset_identity`, `actual_gpu_contact_execution`, `physics_equivalence`,
+  `D362_replay_causal_equivalence`, `runtime_speed`, `tipping_causality`,
+  `grasp_feasibility`, `global_optimum`은 모두 `null`; `g0a_pass=false`다.
+- D372 경로를 동결하고 retry/overwrite하지 않는다. 다음 최소 후보는 별도 승인
+  `D373 [p34_live_asset_identity_preflight]`다. 새 asset에서 physics/q5/contact 0을 유지한 채
+  live callback/readback `16+18` owner/vertex/polygon identity만 검증한다.
+- 물리 비교는 그 PASS 뒤 다시 별도 승인받고 A64, link5-only P34, gripper-only P34,
+  both-P34를 동일 조건에서 forward-only로 분리한다. target/IK/path와 중앙높이/wrist 수정은
+  collider 효과와 섞지 않는다.
+
+Sources:
+
+- `claudedocs/session_20260721_grasp_g0a_d372_professor_semantic_compound_collider_design_offline.md`
+- `sim_scripts/cyl34_top_view_d372_professor_semantic_compound_collider_design_offline.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d372/d372_runtime_exception.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d372/attempt2_external_schema_path_repair/d372_preregistration.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d372/attempt2_external_schema_path_repair/d372_professor_semantic_candidate_geometry.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d372/attempt2_external_schema_path_repair/d372_professor_semantic_candidate_evidence.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d372/attempt2_external_schema_path_repair/d372_professor_semantic_candidate_report.md`
+- `claudedocs/runtime_logs/grasp_track/g0a_d372/attempt2_external_schema_path_repair/d372_manual_visual_inspection.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d372/attempt2_external_schema_path_repair/d372_completion_summary.json`
+- `START_HERE.md`

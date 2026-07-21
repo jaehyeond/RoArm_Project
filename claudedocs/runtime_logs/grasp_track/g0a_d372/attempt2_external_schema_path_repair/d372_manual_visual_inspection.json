@@ -1,0 +1,78 @@
+{
+  "artifact": "D372_MANUAL_ORIGINAL_RESOLUTION_VISUAL_INSPECTION_V1",
+  "case": "g0a_d372",
+  "attempt": "attempt2_external_schema_path_repair",
+  "inspection_performed": true,
+  "inspection_method": "all four PNG files opened through view_image with detail=original",
+  "files": [
+    {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d372/attempt2_external_schema_path_repair/d372_ownership_and_split_1920x1080.png",
+      "bytes": 346016,
+      "sha256": "5a3af485bd3a355876c9c33cba924ec4ee64d0d5e1d1b885210c50d3e5f0632a",
+      "dimensions": [1920, 1080],
+      "observations": [
+        "link5 raw mesh and 16-part candidate are separated from gripper_link raw mesh and 18-part candidate",
+        "body, connector, fixed-contact, moving-support, and moving-contact colors are distinguishable",
+        "titles, panel labels, and the full bottom legend have no overlap or clipping"
+      ],
+      "pass": true
+    },
+    {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d372/attempt2_external_schema_path_repair/d372_jaw_void_preservation_1920x1080.png",
+      "bytes": 119250,
+      "sha256": "daa570f287cad0650cece2ebc9efce16201f1c8d6f5c48be97401e452bc1656b",
+      "dimensions": [1920, 1080],
+      "observations": [
+        "fixed-jaw primary and secondary openings remain visible in the 2-D contact-layer diagnostic",
+        "moving-jaw open mouth and internal-window diagnostic remain visible",
+        "the image explicitly remains a contact-layer plus adjacent-backbone diagnostic, not a full 3-D proof"
+      ],
+      "pass": true
+    },
+    {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d372/attempt2_external_schema_path_repair/d372_frozen_open_clearance_1920x1080.png",
+      "bytes": 203110,
+      "sha256": "9380c91104c35b7be6136fe58e1250063aad3848a0739b29b10e2d9993ed5abb",
+      "dimensions": [1920, 1080],
+      "observations": [
+        "cylinder and P34 candidate are visible at frozen OPEN and at the stored D362 first-overlap coordinates",
+        "4.273 mm and 10.971 mm clearances plus phase/global indices are legible",
+        "the no-new-q5, zero-physics-step, and no-live-contact boundary is visible"
+      ],
+      "pass": true
+    },
+    {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d372/attempt2_external_schema_path_repair/d372_rerun_inspection.png",
+      "bytes": 7174701,
+      "sha256": "45cd34cc07a33521e9f1308ffa6b4a182f76bf7f80ca0d1e490924bf9541fb88",
+      "dimensions": [3840, 2160],
+      "observations": [
+        "link5, gripper_link, cylinder plus P34, and stored distance-curve panels are visible with the d362_phase_step timeline",
+        "three informational startup notifications remain but do not occlude decision geometry or the distance graph",
+        "the auxiliary lower event row is horizontally clipped at panel width; it is not authority and the complete legend is preserved on the 1080p ownership board",
+        "there is no Unknown timeline panel and no error notification"
+      ],
+      "pass": true
+    }
+  ],
+  "checks": {
+    "all_four_pngs_opened_at_original_resolution": true,
+    "three_professor_boards_are_exact_1920x1080": true,
+    "professor_board_text_has_no_overlap_or_clipping": true,
+    "owner_and_role_colors_are_distinguishable": true,
+    "jaw_contact_layer_void_diagnostic_is_legible": true,
+    "frozen_open_and_stored_trace_subjects_are_legible": true,
+    "rerun_core_geometry_and_distance_graph_are_visible": true,
+    "rerun_exact_d362_phase_step_timeline_is_visible": true,
+    "no_unknown_timeline_or_error_notification": true,
+    "informational_notifications_do_not_occlude_decision_geometry": true,
+    "rerun_physical_and_logical_resolution_are_not_conflated": true,
+    "offline_no_physics_no_grasp_boundary_is_preserved": true
+  },
+  "pass": true,
+  "markdown_path": "claudedocs/runtime_logs/grasp_track/g0a_d372/attempt2_external_schema_path_repair/d372_manual_visual_inspection.md",
+  "markdown_sha256": "7dc7c5a6ae3478fcaa02a1e7916ba62e26279613d59121fef90de0101dccdd2a",
+  "measurement_verdict_preserved": "D372_PROFESSOR_SEMANTIC_COMPOUND_CANDIDATE_OFFLINE_PASS_NO_PHYSICS",
+  "expected_completion_verdict": "D372_PROFESSOR_SEMANTIC_COMPOUND_CANDIDATE_OFFLINE_PASS_NO_PHYSICS",
+  "g0a_pass": false
+}

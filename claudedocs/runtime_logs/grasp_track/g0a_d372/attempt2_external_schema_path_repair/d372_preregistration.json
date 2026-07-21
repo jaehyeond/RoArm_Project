@@ -1,0 +1,334 @@
+{
+  "artifact": "D372_PREREGISTRATION_V1",
+  "attempt": "attempt2_external_schema_path_repair",
+  "case": "g0a_d372",
+  "checks": {
+    "all_inputs_exist": true,
+    "attempt1_prepare_failure_preserved_without_run": true,
+    "environment_pass": true,
+    "head_equals_origin_master": true,
+    "head_expected": true,
+    "installed_nvidia_contract_pass": true,
+    "new_variable_count_two": true,
+    "output_empty_before_preregistration": true
+  },
+  "d334_sidecar_before": {
+    "file_count": 3,
+    "files": [
+      {
+        "bytes": 2935,
+        "path": "claudedocs/lab_meeting/20260715/d334_collision_table/README.md",
+        "sha256": "35e39f584737c888bcf7dfab6154c55c5d13d4154ee7f2042073e1c0a7e18783"
+      },
+      {
+        "bytes": 12493,
+        "path": "claudedocs/lab_meeting/20260715/d334_collision_table/d334_collision_table_academic.html",
+        "sha256": "6d38933f959eba916208ec04a329ba25e2bd753c90720576010c222a8bda679c"
+      },
+      {
+        "bytes": 255289,
+        "path": "claudedocs/lab_meeting/20260715/d334_collision_table/d334_collision_table_academic.png",
+        "sha256": "ddc9db2795f4d66b2564adf156829e6a143a599ceb72f6bb9fa28ab25e68a183"
+      }
+    ],
+    "inventory_sha256": "86c3a8f58b0866458910d2cab13da69f04c2dba5ddfc430a8b648367d759fef2"
+  },
+  "decision_rule": {
+    "fail": "D372_PROFESSOR_SEMANTIC_COMPOUND_CANDIDATE_OFFLINE_FAIL_STOP",
+    "pass": "D372_PROFESSOR_SEMANTIC_COMPOUND_CANDIDATE_OFFLINE_PASS_NO_PHYSICS",
+    "pass_means": "offline candidate geometry is internally eligible for a later live-asset identity preflight; not physics equivalence, speed, grasp, or optimality",
+    "visualization_fail": "D372_OBSERVABILITY_OR_COMPLETION_INTEGRITY_FAIL_STOP"
+  },
+  "design_contract": {
+    "expected_part_counts": {
+      "gripper_link": 18,
+      "link5": 16,
+      "total": 34
+    },
+    "expected_role_counts": {
+      "gripper_link": {
+        "moving_jaw": 12,
+        "moving_jaw_backbone": 2,
+        "moving_support": 4
+      },
+      "link5": {
+        "connector_support": 3,
+        "fixed_jaw": 10,
+        "fixed_jaw_backbone": 2,
+        "structural_body": 1
+      }
+    },
+    "fixed_jaw_partition": "seven functional bands around two large openings, then split omitted >=2mm2 components when a large opening would gain >1mm2 false fill",
+    "ignored_missing_component_below_mm2": 2.0,
+    "major_void_min_area_mm2": 20.0,
+    "mass_inertia_policy": "preserve existing explicit URDF/USD mass and inertia in any later asset; no mass/inertia write in D372",
+    "moving_jaw_partition": "six functional bands around the open mouth and internal window, then one convex prism per omitted >=2mm2 connected brace",
+    "ownership": {
+      "gripper_link": "separate q5 child rigid body; proximal support hulls + moving-jaw contact prisms and separated upper/lower backbones",
+      "link5": "one rigid body; one lower-housing box + connector/pivot support + fixed-jaw contact prisms and side backbones"
+    },
+    "raster_step_mm": 0.25,
+    "required_fixed_base_zone_names": [
+      "lower_bridge",
+      "lower_left_leg",
+      "lower_right_leg",
+      "middle_bridge",
+      "roof_bridge",
+      "upper_left_leg",
+      "upper_right_leg"
+    ],
+    "required_moving_base_zone_names": [
+      "center_bridge",
+      "distal_nose_bridge",
+      "proximal_lower_rail",
+      "proximal_upper_rail",
+      "window_lower_rail",
+      "window_upper_rail"
+    ],
+    "semantic_selection_formulas": {
+      "fixed_backbone_left": "raw broad component; y in [-0.0177465,-0.0162360], x in [-0.023250,-0.011525], z in [0.016085,0.107613] m",
+      "fixed_backbone_right": "raw broad component; y in [0.015211,0.016722], x in [-0.023250,-0.011525], z in [0.016085,0.107613] m",
+      "lower_pivot_hub": "raw broad component; x in [-0.0311,-0.0100], y in [-0.0096,0.0086], z in [0.0790,0.0878] m",
+      "moving_lower_backbone": "raw gripper vertices at x >= D354 inner-patch x minimum, y >= D354 outer plane, z <= D354 inner-patch bottom edge",
+      "moving_proximal_support": "raw gripper vertices at x <= D354 inner-contact-patch x minimum; split by mouth z bounds and each branch median y",
+      "moving_upper_backbone": "raw gripper vertices at x >= D354 inner-patch x minimum, y >= D354 outer plane, z >= D354 inner-patch top edge"
+    },
+    "structural_primitives": {
+      "gripper_link": [
+        "proximal_upper_arm_hull_a",
+        "proximal_upper_arm_hull_b",
+        "proximal_lower_arm_hull_a",
+        "proximal_lower_arm_hull_b",
+        "moving_upper_backbone",
+        "moving_lower_backbone"
+      ],
+      "link5": [
+        "lower_housing_box",
+        "neck_connector_box",
+        "pivot_support_box",
+        "lower_pivot_hub",
+        "fixed_backbone_left",
+        "fixed_backbone_right"
+      ]
+    }
+  },
+  "environment": {
+    "checks": {
+      "no_isaac_kit_physx_warp_torch_modules": true,
+      "numpy_1_26_0": true,
+      "openusd_0_24_5": true,
+      "psutil_5_9_8": true,
+      "python_exact": true,
+      "rerun_0_34_1": true,
+      "rerun_cli_0_34_1": true
+    },
+    "forbidden_modules": [],
+    "ld_library_path": "/home/cgxr/miniconda3/envs/isaaclab/lib:/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.libs-1.0.1+69cbf6ad.lx64.r.cp311/bin",
+    "openusd_version": [
+      0,
+      24,
+      5
+    ],
+    "pass": true,
+    "path_first": "/home/cgxr/miniconda3/envs/isaaclab/bin",
+    "python": "/home/cgxr/miniconda3/envs/isaaclab/bin/python3.11",
+    "pythonpath": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.libs-1.0.1+69cbf6ad.lx64.r.cp311",
+    "rerun_cli": {
+      "returncode": 0,
+      "stderr": "2026-07-21T10:13:57.346770Z ERROR re_analytics: Failed to initialize analytics: Read-only file system (os error 30)",
+      "stdout": "rerun-cli 0.34.1 (base lance map_view nasm native_viewer oss_server perf_telemetry re_server release_full release_no_web_viewer web_viewer) [rustc 1.92.0 (ded5c06cf 2025-12-08), LLVM 21.1.3] x86_64-unknown-linux-gnu prepare-release-0.34.1 4efb18f, built 2026-07-07T16:20:42.173372603Z\nVideo features: av1 ffmpeg nasm"
+    },
+    "versions": {
+      "hppfcl": "2.4.4",
+      "matplotlib": "3.10.3",
+      "numpy": "1.26.0",
+      "psutil": "5.9.8",
+      "rerun": "0.34.1",
+      "scipy": "1.15.3",
+      "trimesh": "4.5.1"
+    }
+  },
+  "git_status_before_prepare": [
+    "M START_HERE.md",
+    " M claudedocs/DECISIONS.md",
+    " M claudedocs/EXPERIMENT_LEDGER.md",
+    " M roarm_rl/viz_debug.py",
+    "?? claudedocs/runtime_logs/grasp_track/g0a_d371/",
+    "?? claudedocs/runtime_logs/grasp_track/g0a_d372/",
+    "?? claudedocs/session_20260721_grasp_g0a_d371_offline_collider_candidate_pareto_comparison.md",
+    "?? sim_scripts/cyl34_top_view_d371_offline_collider_candidate_pareto_comparison.py",
+    "?? sim_scripts/cyl34_top_view_d371_offline_collider_cook_worker.py",
+    "?? sim_scripts/cyl34_top_view_d371_rerun_absolute_cli_visual_repair.py",
+    "?? sim_scripts/cyl34_top_view_d372_professor_semantic_compound_collider_design_offline.py"
+  ],
+  "harness_sha256": "c546370d118e52b0d6d106f9e55a9e32ec3a3009296af094a906b322bdcb4bf7",
+  "head": "4a1120b801e808071583136e78954c78ca941dc8",
+  "input_hashes": {
+    "claudedocs/runtime_logs/grasp_track/g0a_d349/d349_frozen_target_distance_measurement.json": "5de6d14e37d6b74b202d1bb668120a6bb57221eac24ea5c751457ce9823b6300",
+    "claudedocs/runtime_logs/grasp_track/g0a_d350/d350_fixed_jaw_geometry_measurement.json": "4fe91e4cd37f5b0f064c7e9c91480881973ca51e651132af2c8feb57750e8446",
+    "claudedocs/runtime_logs/grasp_track/g0a_d350/d350_fixed_jaw_semantic_binding.json": "1ec1c309461357eeae89204fa55a498b64d2d216708ab6e6c7dfdd3d0b878c12",
+    "claudedocs/runtime_logs/grasp_track/g0a_d354/d354_moving_jaw_surface_binding.json": "548d45ec4eb1dacbb4cbdefe2b64a3ed99ce72f4f5ffaaa6a9ee1e2b38756b15",
+    "claudedocs/runtime_logs/grasp_track/g0a_d362/d362_physics_trace.json": "9483146c4941e6518614c63acbf221128a564bafa7a9928d41e633ee6e4e2044",
+    "claudedocs/runtime_logs/grasp_track/g0a_d368/d368_semantic_allocation_evidence.json": "be2a422b0c74e4781b76a640c5312070b84876b1cb9e661d47e705ccdf789cf5",
+    "claudedocs/runtime_logs/grasp_track/g0a_d371/d371_offline_collider_comparison_evidence.json": "e300063d37de44d895da3b96ea6ac95c0d108d217f6f74c458bab218d7bccdf5",
+    "claudedocs/runtime_logs/grasp_track/g0a_d372/d372_runtime_exception.json": "3f6762d7e6dde5046b7a9965dadde2cd07a91ef4347bc650e1e75b4d73e01e45",
+    "local_assets/roarm_m3/urdf/roarm_m3.urdf": "64dc8d082cbce9a13a0697a11a0eaeaebbc54bbcd97e7aafaa40da483969dae2",
+    "local_assets/roarm_m3/usd/roarm_m3.usd": "a4be58e87b1f9790f2a2ed600f0620c79d3cfb95c608b3c598308d52f5e46fff",
+    "roarm_rl/rerun_contract.py": "aaafcd93b9da3d8a97d61a53753ec9667bb98bec7391c91c98974f7ce9c66c1e",
+    "roarm_rl/viz_debug.py": "247970ef1de26f547085bb68edb44b6b5819cfdbf6cb07476b52919fbf9ee719",
+    "sim_scripts/cyl34_top_view_d368_current_64cap_semantic_allocation_audit.py": "a760260129071a25ac40f3b7338ab0957714dde001c31cbafa6d319bc51971c9",
+    "sim_scripts/cyl34_top_view_d371_offline_collider_candidate_pareto_comparison.py": "a907d650da1a28f3302ea4c52e6a8356e32cb38239e27686a5e4478c99c20242"
+  },
+  "negative_controls": [
+    "full_link5_AABB must be rejected by frozen-open collision/clearance",
+    "single fixed-jaw envelope must fill both major openings and be rejected",
+    "single moving-jaw envelope must fill the open mouth and be rejected",
+    "removing fixed and moving contact layers must lose the D350 and D354 certified seeds",
+    "owner swap must be rejected against URDF parent/child plus D350/D354 owner subresults"
+  ],
+  "new_physical_variables": [],
+  "new_variables": [
+    "semantic_owner_region_partition_v1",
+    "manual_compound_primitive_budget_v1"
+  ],
+  "nvidia_contract": {
+    "checks": {
+      "isaac_sim_5_1_0_0": true,
+      "omni_physx_107_3_26": true,
+      "schema_default_32": true,
+      "schema_vertex_limit_64": true,
+      "ui_hull_vertex_limit_range_8_64": true,
+      "ui_max_convex_hulls_range_1_2048": true
+    },
+    "default_hull_vertex_limit_64": true,
+    "default_max_convex_hulls_32": true,
+    "extension_version_line": 5,
+    "installed_isaac_sim": "5.1.0.0",
+    "installed_isaac_sim_source": "importlib.metadata",
+    "installed_omni_physx_extension": "107.3.26",
+    "installed_omni_physx_extension_source": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.physx-107.3.26+107.3.3.lx64.r.cp311.u353/config/extension.toml",
+    "installed_physx_sdk_semver": null,
+    "manual_compound_note": "32 is an automatic decomposition default, not a target count for child primitives",
+    "official_sources": [
+      {
+        "title": "Omni Physics 107.3 Rigid Bodies",
+        "url": "https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/rigid_bodies_articulations/rigid_bodies.html",
+        "use": "one rigid body may own multiple child colliders"
+      },
+      {
+        "title": "Omni Physics 107.3 Colliders",
+        "url": "https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/rigid_bodies_articulations/collision.html",
+        "use": "primitives first, convex meshes when needed"
+      },
+      {
+        "title": "Isaac Sim 5.1 Physics Simulation Fundamentals",
+        "url": "https://docs.isaacsim.omniverse.nvidia.com/5.1.0/physics/simulation_fundamentals.html",
+        "use": "multiple convex shapes preserve concave openings"
+      },
+      {
+        "title": "Isaac Sim 5.1 Performance Optimization Handbook",
+        "url": "https://docs.isaacsim.omniverse.nvidia.com/5.1.0/reference_material/sim_performance_optimization_handbook.html",
+        "use": "use the simplest collision approximation that satisfies precision"
+      },
+      {
+        "title": "PhysX 5.6.1 GPU Rigid Bodies",
+        "url": "https://nvidia-omniverse.github.io/PhysX/physx/5.6.1/docs/GPURigidBodies.html",
+        "use": "supplementary convex geometry limits; not an installed SDK identity claim"
+      },
+      {
+        "title": "Omni Physics 107.3 PhysX Schema API",
+        "url": "https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/schemas/physxschema.html",
+        "use": "version-matched schema API defaults for hullVertexLimit and maxConvexHulls"
+      }
+    ],
+    "pass": true,
+    "property_database_info_data_line": 887,
+    "property_database_path": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.kit.property.physx-107.3.26+107.3.3.cp311.u353/omni/kit/property/physx/database.py",
+    "property_database_ranges_line": 954,
+    "property_database_sha256": "4c46d4ae503f0608770a0e130f037e6eae51971007f1b0a570704c56a1fe01b5",
+    "schema_hull_vertex_limit_line": 886,
+    "schema_max_convex_hulls_line": 895,
+    "schema_path": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.schema.physx-107.3.26+107.3.3.lx64.r.cp311.u353/plugins/PhysxSchema/resources/schema.usda",
+    "schema_sha256": "fe075bce4bde5ba7db69c6ccef0c4c26909336ab34c619129fc276f7cb4d7abc",
+    "ui_hull_vertex_limit_range_8_64": true,
+    "ui_max_convex_hulls_range_1_2048": true,
+    "ui_range_note": "2048 is an installed property-editor authoring maximum, not an engine hard limit or optimum"
+  },
+  "origin_master": "4a1120b801e808071583136e78954c78ca941dc8",
+  "pass": true,
+  "preceding_prepare_failure": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d372/d372_runtime_exception.json",
+    "semantics": "prepare-only external installed-file relative-path bug; run invocation 0; no Isaac/PhysX/q5/physics",
+    "sha256": "3f6762d7e6dde5046b7a9965dadde2cd07a91ef4347bc650e1e75b4d73e01e45"
+  },
+  "registered_gates": {
+    "A64_and_P34_first_collision_global_steps_exact": {
+      "gripper_link": 232,
+      "link5": 246
+    },
+    "absolute_delta_from_D349_raw_max_mm": 0.5,
+    "contact_seed_to_candidate_max_mm": 0.25,
+    "frozen_open_clearance_min_mm": 0.1,
+    "immutable_D362_trace_phase": "q5_close_observation",
+    "immutable_D362_trace_phase_steps": [
+      0,
+      60
+    ],
+    "major_void_gate_scope": "2-D contact-skin plus adjacent jaw-backbone diagnostic only; connector/support parts excluded; not a full-candidate or through-depth proof",
+    "major_void_max_fill_fraction": {
+      "fixed_primary": 0.05,
+      "fixed_secondary": 0.05,
+      "moving_internal_window_diagnostic": 0.3,
+      "moving_open_mouth": 0.1
+    },
+    "part_counts_exact": {
+      "gripper_link": 18,
+      "link5": 16,
+      "total": 34
+    },
+    "patch_max_ghost_distance_mm": {
+      "fixed": 2.0,
+      "moving": 2.0
+    },
+    "patch_max_ghost_ratio": {
+      "fixed": 0.1,
+      "moving": 0.15
+    },
+    "patch_max_missing_ratio": {
+      "fixed": 0.01,
+      "moving": 0.005
+    },
+    "per_convex_project_authored_gpu_eligibility_gate": {
+      "polygons_max": 64,
+      "semantics": "project gate informed by the cited PhysX GPU guide; not a schema default or proof of runtime GPU execution",
+      "vertices_max": 64,
+      "vertices_per_polygon_max": 32
+    },
+    "raw_semantic_face_classification_overlap_and_missing": 0,
+    "raw_surface_sample_to_candidate_max_mm": 3.5,
+    "raw_surface_sample_to_candidate_p95_max_mm": 2.0,
+    "structural_source_vertices_must_all_be_contained": true,
+    "transition_window_A64_vs_P34_abs_distance_delta_max_mm": 0.1,
+    "whole_raw_surface_containment": "diagnostic only; point-count/tessellation density is not a pass authority"
+  },
+  "scope_guards": {
+    "cook_or_automatic_decomposition": 0,
+    "immutable_D362_trace_read_only_replay_allowed": true,
+    "isaac_or_physx": 0,
+    "live_contact_queries": 0,
+    "material_mass_actuator_physics_changes": 0,
+    "offline_hppfcl_static_geometry_queries_allowed": true,
+    "physics_steps": 0,
+    "q5_samples": 0,
+    "rerun_save_and_headless_screenshot_allowed": true,
+    "simulation_app_or_kit": 0,
+    "target_ik_path_changes": 0,
+    "usd_or_live_asset_writes": 0
+  },
+  "single_run_contract": {
+    "automatic_retry_count": 0,
+    "forward_only": true,
+    "run_invocation_count": 1
+  },
+  "title": "professor_semantic_compound_collider_design_offline"
+}

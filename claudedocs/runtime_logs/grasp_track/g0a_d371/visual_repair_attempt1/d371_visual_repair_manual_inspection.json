@@ -1,0 +1,54 @@
+{
+  "artifact": "D371_RERUN_ABSOLUTE_CLI_VISUAL_REPAIR_MANUAL_INSPECTION_V1",
+  "case": "g0a_d371_visual_repair_attempt1",
+  "inspection_performed": true,
+  "inspection_method": "all four PNG files opened through view_image at original resolution",
+  "checks": {
+    "all_four_pngs_opened_at_original_resolution": true,
+    "three_professor_boards_are_exact_1920x1080": true,
+    "rerun_screenshot_is_exact_3840x2160": false,
+    "candidate_columns_and_actual_counts_are_legible": true,
+    "source_contact_patch_cyan_and_retained_parts_yellow_are_distinguishable": true,
+    "no_unknown_timeline_or_empty_metric_panel": true,
+    "no_notification_obscures_candidate_geometry": true,
+    "Korean_text_has_no_overlap_or_clipping": false,
+    "offline_no_physics_no_grasp_boundary_is_visible": true,
+    "original_failed_run_artifacts_remain_immutable": true
+  },
+  "files": [
+    {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d371/d371_cap_comparison_1920x1080.png",
+      "sha256": "bc4e6afc90af5303f03d842c81f14302ce96c1447d277662aa2c4f3a9ae15d3a",
+      "bytes": 465604,
+      "dimensions": [1920, 1080],
+      "observations": "raw/A/R64/R32 and both bodies are visible; actual counts and the no-physics boundary are legible without overlap"
+    },
+    {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d371/d371_semantic_comparison_1920x1080.png",
+      "sha256": "7887650eafe9015104b4c68695f6118bda92fbd29569f88eddbc384591528791",
+      "bytes": 399568,
+      "dimensions": [1920, 1080],
+      "observations": "C1/C2 one-hull remainders visibly bridge large voids while retained parts remain yellow; titles and counts are legible"
+    },
+    {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d371/d371_contact_detail_1920x1080.png",
+      "sha256": "5f5d13aa0d3ed387620742aca4d8f9ecdcbb3fc9020bb7a58c7aae4a795ffe86",
+      "bytes": 489052,
+      "dimensions": [1920, 1080],
+      "observations": "cyan raw contact patches and yellow retained parts are distinguishable; C1/C2 green remainder intrusion is visible"
+    },
+    {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d371/visual_repair_attempt1/d371_collider_comparison_rerun_absolute_cli.png",
+      "sha256": "f7cae3aa6b40fc848974c784b7adf07d2e39d953b62760a86df4ad728b673c0e",
+      "bytes": 34157239,
+      "dimensions": [7680, 4320],
+      "observations": "two rows and five candidate views are visible; notifications stay in the right buffer, but HiDPI doubled the pixels and Korean panel glyphs render as boxes"
+    }
+  ],
+  "markdown_path": "claudedocs/runtime_logs/grasp_track/g0a_d371/visual_repair_attempt1/d371_visual_repair_manual_inspection.md",
+  "markdown_sha256": "37ecbf35e8c359e1c2a7bed78468d2a11c17121d800b68c0b857f9f3ad27dfd6",
+  "professor_boards_pass": true,
+  "rerun_data_contract_pass": true,
+  "rerun_presentation_contract_pass": false,
+  "pass": false
+}

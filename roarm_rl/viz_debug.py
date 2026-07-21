@@ -763,6 +763,140 @@ def build_rerun_blueprint(mode: str = "robot_geometry") -> Any:
             auto_views=False,
             collapse_panels=True,
         )
+    if mode == "d371_collider_comparison":
+        candidate_specs = [
+            ("current64", "현재 보정 64"),
+            ("raw64", "원본 자동 64"),
+            ("raw32", "원본 자동 32"),
+            ("semantic_c1", "접촉부 보존 C1"),
+            ("semantic_c2", "턱 주변 보존 C2"),
+        ]
+
+        def _comparison_view(body: str, candidate: str, label: str) -> Any:
+            if body == "link5":
+                position = (0.18, -0.22, 0.16)
+                look_target = (-0.005, 0.0, 0.065)
+            else:
+                position = (0.15, -0.18, 0.08)
+                look_target = (0.030, 0.0, -0.018)
+            return rrb.Spatial3DView(
+                origin="/",
+                contents=[
+                    f"/compare/{candidate}/{body}/**",
+                    f"/compare/contact_patch/{candidate}/{body}/**",
+                ],
+                name=f"{body} | {label}",
+                eye_controls=rrb.EyeControls3D(
+                    kind=rrb.Eye3DKind.Orbital,
+                    position=position,
+                    look_target=look_target,
+                    eye_up=(0.0, 0.0, 1.0),
+                ),
+                spatial_information=rrb.SpatialInformation(
+                    target_frame="tf#/",
+                    show_axes=False,
+                    show_bounding_box=False,
+                ),
+            )
+
+        def _comparison_row(body: str) -> Any:
+            views = [
+                _comparison_view(body, candidate, label)
+                for candidate, label in candidate_specs
+            ]
+            # The sixth, deliberately empty panel is a notification buffer.  A
+            # headless Viewer notification must not cover decision geometry.
+            views.append(
+                rrb.Spatial3DView(
+                    origin="/",
+                    contents=f"/compare/notification_buffer/{body}/**",
+                    name="알림 여백 (형상 없음)",
+                    spatial_information=rrb.SpatialInformation(
+                        target_frame="tf#/",
+                        show_axes=False,
+                        show_bounding_box=False,
+                    ),
+                )
+            )
+            return rrb.Horizontal(*views, column_shares=[1.0 / 6.0] * 6)
+
+        return rrb.Blueprint(
+            rrb.Vertical(
+                _comparison_row("link5"),
+                _comparison_row("gripper_link"),
+                row_shares=[0.5, 0.5],
+            ),
+            auto_layout=False,
+            auto_views=False,
+            collapse_panels=True,
+        )
+    if mode == "d372_semantic_compound":
+        def _d372_local_view(body: str, position: tuple[float, float, float], target: tuple[float, float, float]) -> Any:
+            return rrb.Spatial3DView(
+                origin="/",
+                contents=[
+                    f"/semantic/source/{body}/**",
+                    f"/semantic/collider/{body}/**",
+                ],
+                name=f"D372 local split | {body}",
+                eye_controls=rrb.EyeControls3D(
+                    kind=rrb.Eye3DKind.Orbital,
+                    position=position,
+                    look_target=target,
+                    eye_up=(0.0, 0.0, 1.0),
+                ),
+                spatial_information=rrb.SpatialInformation(
+                    target_frame="tf#/",
+                    show_axes=True,
+                    show_bounding_box=False,
+                ),
+            )
+
+        return rrb.Blueprint(
+            rrb.Vertical(
+                rrb.Horizontal(
+                    _d372_local_view("link5", (0.13, -0.16, 0.13), (-0.005, 0.0, 0.065)),
+                    _d372_local_view("gripper_link", (0.11, -0.13, 0.055), (0.030, 0.0, -0.018)),
+                    column_shares=[0.5, 0.5],
+                ),
+                rrb.Horizontal(
+                    rrb.Spatial3DView(
+                        origin="/",
+                        contents="/d372/world/**",
+                        name="D372 frozen-OPEN cylinder + P34 candidate",
+                        eye_controls=rrb.EyeControls3D(
+                            kind=rrb.Eye3DKind.Orbital,
+                            position=(0.43, -0.25, 0.22),
+                            look_target=(0.29, -0.01, 0.06),
+                            eye_up=(0.0, 0.0, 1.0),
+                        ),
+                        spatial_information=rrb.SpatialInformation(
+                            target_frame="tf#/",
+                            show_axes=True,
+                            show_bounding_box=False,
+                        ),
+                    ),
+                    rrb.Vertical(
+                        rrb.TimeSeriesView(
+                            origin="/metrics/d372_trace",
+                            contents="/metrics/d372_trace/**",
+                            name="D362 stored distance replay (mm)",
+                        ),
+                        rrb.TextLogView(
+                            origin="/events/d372_summary",
+                            contents="/events/d372_summary",
+                            name="D372 scope and legend",
+                        ),
+                        row_shares=[0.58, 0.42],
+                    ),
+                    column_shares=[0.68, 0.32],
+                ),
+                row_shares=[0.48, 0.52],
+            ),
+            auto_layout=False,
+            auto_views=False,
+            collapse_panels=True,
+        )
     if mode != "robot_geometry":
         raise ValueError(f"unsupported Rerun blueprint mode: {mode!r}")
     return rrb.Blueprint(
