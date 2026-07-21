@@ -1,0 +1,153 @@
+{
+  "artifact": "D373_FAIL_STOP_ATTESTATION_V1",
+  "case": "g0a_d373",
+  "attempt": "attempt1_p34_live_asset_identity_preflight",
+  "recorded_at_kst": "2026-07-22",
+  "authority": "append-only derived attestation over immutable D373 raw artifacts; not a controller completion summary",
+  "verdict": "D373_P34_LIVE_ASSET_IDENTITY_FAIL_STOP",
+  "identity_pass": false,
+  "geometry_fail_or_pass": null,
+  "g0a_pass": false,
+  "physical_comparison_authorized": false,
+  "sources": {
+    "preregistration": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/d373_preregistration.json",
+      "sha256": "f6cc93647c16ad441776846308601d797fcdcdf081ba2e57c0cec4b571b21e2d"
+    },
+    "worker_supervisor": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/d373_worker_supervisor.json",
+      "sha256": "3891bb51fbab02731edbea43e516048b6b4fac4b005e6bec5f27c5cabcb39643"
+    },
+    "worker_raw_summary": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/d373_worker_raw_summary.json",
+      "sha256": "dd57da307acf6134487bcd1dfa4a847fd41f24832177421f6291c45b06091373"
+    },
+    "worker_preclose_sentinel": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/d373_worker_preclose_sentinel.json",
+      "sha256": "a32f6f423d0b7620a940d534e9f70bdc873fcdea90852d3731fdf6cc19bfa06a"
+    },
+    "worker_stdout": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/d373_worker_stdout.log",
+      "sha256": "b5766ff871b552118f86049a5b6a38dec609be4e555d3748bc5794bea48ad43a"
+    }
+  },
+  "execution": {
+    "actual_worker": 1,
+    "automatic_retry": 0,
+    "elapsed_s": 7.671346287010238,
+    "process_returncode": 0,
+    "supervisor_pass": true,
+    "worker_protocol_pass": false,
+    "watchdog_timeout_s": 900.0,
+    "timed_out": false,
+    "signal_sent": false
+  },
+  "raw_successes": {
+    "derivative_asset_materializations": 1,
+    "link5_active_p34_parts": 16,
+    "gripper_link_active_p34_parts": 18,
+    "active_p34_parts_total": 34,
+    "active_a64_parts": 0,
+    "disabled_known_legacy_parts": 2,
+    "authored_float32_points_counts_indices_payload_exact": "34/34",
+    "live_instance_points_counts_indices_exact": "34/34",
+    "live_prototype_points_counts_indices_exact": "34/34",
+    "owner_path_count_bijection_exact": "34/34",
+    "physx_stage_attach": true,
+    "physx_callback_protocol_channels_pass": "68/68",
+    "physx_callback_part_rows_pass": "34/34",
+    "mass_api_link5_gripper_link_max_abs_delta": 0.0,
+    "timeline_stopped_tuple_bit_exact": true,
+    "worker_exception": null
+  },
+  "failed_or_blocked_gates": {
+    "float32_min_thickness_gate": {
+      "classification": "proven_false_failure_in_gate",
+      "registered_decimal_m": 0.0001,
+      "observed_float32_m": 0.00009999999747378752,
+      "absolute_delta_m": 2.526212488436659e-12,
+      "registered_atol_m": 1e-12,
+      "direct_readback_rows_pass": "0/34",
+      "live_inventory_rows_pass": "0/34",
+      "only_failed_per_row_check": "min_thickness_frozen",
+      "lineage": "regression of D342's same 1e-12m failure after D343 established exact typed Float32 bits 0x38d1b717",
+      "meaning": "Float32 schema quantization was not normalized before an over-tight scalar comparison; this is not evidence of geometry or physics-setting corruption"
+    },
+    "physx_property_query": {
+      "classification": "failed_with_version-matched_instance-proxy incompatibility evidence",
+      "link5": "PhysxPropertyQueryResult.ERROR_PARSING",
+      "gripper_link": "PhysxPropertyQueryResult.ERROR_PARSING",
+      "valid_queries": "0/2",
+      "expected_collider_rows": {
+        "link5_including_disabled_legacy": 17,
+        "gripper_link_including_disabled_legacy": 19
+      },
+      "observed_error_rows_per_body": 1,
+      "stage_fact": "/World/Robot was set instanceable and both articulation rigid-body descendants were instance proxies",
+      "runtime_fact": "installed PhysX logged RigidBodyAPI on an instance proxy not supported for link5 and gripper_link",
+      "official_version_matched_fact": "Omni Physics 107.3 states articulation links may not be scenegraph-instanced"
+    },
+    "canonical_comparator_population": {
+      "classification": "proven_instance-proxy_traversal_blind_spot",
+      "base_visible_rows": 35,
+      "variant_visible_rows": 35,
+      "visible_rows_outside_registered_subtrees_bit_exact": true,
+      "reported_base_a64_paths": 0,
+      "reported_variant_p34_paths": 0,
+      "reported_variant_p34_meshes": 0,
+      "cause": "D345 default Usd.PrimRange.Stage traversal omitted instance proxies while D373 live inventory explicitly traversed them",
+      "meaning": "the zero P34 population is an audit-scope failure, not evidence that the materialized P34 colliders are absent"
+    },
+    "supervisor_authority": {
+      "classification": "proven_returncode_false_positive",
+      "supervisor_pass": true,
+      "worker_protocol_pass": false,
+      "meaning": "process exit 0 only proved orderly shutdown; it did not prove the worker contract"
+    }
+  },
+  "unclassified_due_to_fail_stop": {
+    "authored_callback_surface_gate": null,
+    "authored_callback_bounds_gate": null,
+    "authored_callback_original_polygon_topology_volume_gate": null,
+    "callback_property_volume_gate": null,
+    "live_property_mass_com_inertia_axes_gate": null,
+    "full_p34_live_identity": null,
+    "physics_equivalence": null,
+    "tipping_causality": null,
+    "grasp_feasibility": null
+  },
+  "visualization": {
+    "exact_1920x1080_board": "not_run_null_due_upstream_fail_stop",
+    "save_only_rrd": "not_run_null_due_upstream_fail_stop",
+    "rbl": "not_run_null_due_upstream_fail_stop",
+    "manual_original_resolution_inspection": "not_run_null_due_upstream_fail_stop",
+    "reason": "the frozen controller stops before classification and visualization when worker_protocol_pass is false; no unregistered bypass was used"
+  },
+  "scope_counters": {
+    "physics_steps": 0,
+    "simulation_context_constructions": 0,
+    "resets": 0,
+    "public_forwards": 0,
+    "timeline_play_requests": 0,
+    "timeline_commit_requests": 0,
+    "q5_commands": 0,
+    "q5_samples": 0,
+    "contact_queries": 0,
+    "cylinder_creates_or_writes": 0,
+    "target_ik_path_pose_changes": 0,
+    "automatic_convex_decomposition_sweeps": 0,
+    "inherited_material_mass_actuator_physics_setting_changes": 0,
+    "isaac_hydra_renders": 0,
+    "simulation_app_update_pumps": 0
+  },
+  "sidecar_unchanged": {
+    "file_count": 3,
+    "inventory_sha256": "86c3a8f58b0866458910d2cab13da69f04c2dba5ddfc430a8b648367d759fef2",
+    "pass": true
+  },
+  "frozen": true,
+  "normal_analyze_invoked": false,
+  "normal_finalize_invoked": false,
+  "retry_allowed": false,
+  "next_boundary": "seek separate approval for a forward-only offline D374 fail-stop provenance and failure-visualization case; any repaired live Isaac worker is a later separate approval, and physical comparison remains blocked until a repaired live-identity case passes"
+}

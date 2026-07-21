@@ -21544,3 +21544,81 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d372/attempt2_external_schema_path_repair/d372_manual_visual_inspection.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d372/attempt2_external_schema_path_repair/d372_completion_summary.json`
 - `START_HERE.md`
+
+## D373 - live P34 원시 획득 성공과 identity 계약 PASS를 분리하고, typed scalar·instance proxy·supervisor 권위를 고친 뒤에만 물리로 간다 (2026-07-22)
+
+Decision:
+
+- D372 Float64 P34를 derivative USD에 한 번 materialize하고 Isaac/PhysX load/cook/readback을
+  actual worker `1`, retry `0`으로 실행했다. 최종 operational verdict는
+  `D373_P34_LIVE_ASSET_IDENTITY_FAIL_STOP`이다.
+- **지속 규칙:** schema type이 Float32인 물리 속성은 Python Float64 decimal과 임의의 더
+  좁은 tolerance로 직접 비교하지 않는다. 등록 기준을 schema dtype으로 먼저 양자화한 뒤
+  bit-exact 또는 dtype-aware tolerance를 사전등록한다.
+- **지속 규칙:** collision geometry의 scenegraph instancing과 dynamic rigid-body owner의
+  instancing을 구분한다. articulation 전체 root를 instanceable로 만들어 link owner를 instance
+  proxy로 둔 채 property query하지 않는다. Omni Physics 107.3은 articulation link instancing을
+  금지하고, 설치 PhysX도 해당 RigidBodyAPI proxy를 unsupported로 기록했다.
+- **지속 규칙:** instanceable asset population/metadata 감사는 `Usd.TraverseInstanceProxies()`
+  또는 direct authored layer를 명시한다. 기본 `Usd.PrimRange.Stage(stage)`의 zero count를
+  asset absence로 해석하지 않는다.
+- **지속 규칙:** supervisor는 process return `0`만으로 PASS를 선언하지 않는다. worker의
+  hash-bound 내부 verdict와 preclose sentinel을 읽어 일치시켜야 한다. 정상 cleanup과 계약
+  PASS는 별도 권위다.
+- Callback acquisition PASS만으로 surface/bounds/topology-volume/property/mass 전체 identity를
+  PASS시키지 않는다. 후속 등록 분류가 실행되지 않았다면 그 gate는 `null`이다.
+
+Evidence:
+
+- preregistration `13/13` PASS. actual worker/retry `1/0`, elapsed
+  `7.671346287010238s`, return `0`, timeout/signal 없음.
+- derivative active inventory는 정확히 link5 `16` + gripper_link `18` = `34`, active A64
+  `0`, disabled legacy `2`였다. direct Float32 points/counts/indices/aggregate와 composed live
+  instance/prototype authored stream은 각 `34/34 exact`였다.
+- PhysX callback protocol은 `68/68` valid였고 worker exception은 `null`이었다. authored
+  MassAPI mass/COM/inertia/principal-axes max delta는 두 body 모두 `0.0`이었다.
+- 그러나 direct/live 34개 row는 모두 오직 `min_thickness_frozen`에서 실패했다. observed
+  Float32는 `0.00009999999747378752m`; decimal `0.0001m`과 차이는
+  `2.526212488436659e-12m`, 등록 tolerance `1e-12m`의 약 `2.5262배`다. 이는 geometry
+  손상이 아니라 typed-scalar gate의 false failure다. D342가 같은 delta와 `1e-12m`
+  drift로 이미 실패했고 D343이 exact bits `0x38d1b717`로 수리했으므로, D373은 알려진
+  실패 계약을 다시 도입한 do-not-repeat regression이다.
+- D373이 `/World/Robot`을 instanceable로 만든 후 설치 PhysX는 link5/gripper_link의
+  `RigidBodyAPI on an instance proxy not supported`를 기록했다. 두 property query는
+  `ERROR_PARSING(5)`, valid `0/2`였다. D339 non-instance rigid-body owner 경로는 같은
+  query가 VALID였고 update pump도 `0`이어서 pump/cook 미완료 원인은 배제됐다.
+- D345 comparator는 기본 stage traversal로 base/variant 상위 `35/35` rows만 보고 A64/P34
+  population을 `0/0`으로 기록했다. D373의 proxy-aware live inventory `34`와 callback `68`이
+  asset absence를 반증한다. visible 35-row outside-subtree equality만 제한적으로 유효하다.
+- supervisor는 `pass=true`였지만 raw summary와 preclose sentinel은
+  `worker_protocol_pass=false`였다. raw worker가 authority다.
+- physics step, q5, contact, cylinder, target/IK/path, decomposition sweep, inherited physical
+  setting change는 모두 `0`이다.
+- Frozen controller는 worker false이면 normal analyze 전 중단한다. 따라서 exact 1920x1080,
+  RRD/RBL, manual inspection, full callback numeric classification은
+  `not_run/null_due_upstream_fail_stop`이다. analyze/finalize 우회는 실행하지 않았다.
+
+Implication:
+
+- D373은 P34 geometry FAIL도 identity PASS도 아니다. P34 34-part materialization과 raw
+  callback 획득은 지지하지만, full authored↔live↔PhysX identity와 물리 결론은 `null`이다.
+- D373 attempt1을 동결하고 retry/overwrite/analyze/finalize하지 않는다. `g0a_pass=false`이며
+  physical comparison은 승인되지 않았다.
+- 다음 최소 후보는 별도 승인 offline-only
+  `D374 [d373_fail_stop_provenance_and_failure_visualization]`이다. immutable D373만 읽어 네
+  authority 단절을 formalize하고 실패 전용 exact board/RRD를 만든다. repaired live worker는
+  그 뒤 별도 case이며, repaired identity PASS 전에는 A64/P34 physical comparison으로 가지
+  않는다.
+
+Sources:
+
+- `claudedocs/session_20260722_grasp_g0a_d373_p34_live_asset_identity_preflight.md`
+- `sim_scripts/cyl34_top_view_d373_p34_live_asset_identity_preflight.py`
+- `sim_scripts/cyl34_top_view_d373_p34_live_asset_worker.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/d373_preregistration.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/d373_worker_supervisor.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/d373_worker_raw_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/d373_worker_preclose_sentinel.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/d373_fail_stop_attestation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d339/d339_live_collider_audit.json`
+- `START_HERE.md`

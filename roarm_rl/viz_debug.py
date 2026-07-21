@@ -520,6 +520,63 @@ def build_rerun_blueprint(mode: str = "robot_geometry") -> Any:
             auto_views=False,
             collapse_panels=True,
         )
+    if mode == "d373_p34_identity":
+        def _d373_row(body: str) -> Any:
+            return rrb.Horizontal(
+                rrb.Spatial3DView(
+                    origin="/",
+                    contents=f"/d373/source/{body}/**",
+                    name=f"{body} | D372 Float64 source",
+                ),
+                rrb.Spatial3DView(
+                    origin="/",
+                    contents=f"/d373/authored/{body}/**",
+                    name=f"{body} | USD Float32 readback",
+                ),
+                rrb.Spatial3DView(
+                    origin="/",
+                    contents=f"/d373/instance/{body}/**",
+                    name=f"{body} | PhysX instance callback",
+                ),
+                rrb.Spatial3DView(
+                    origin="/",
+                    contents=f"/d373/prototype/{body}/**",
+                    name=f"{body} | PhysX prototype callback",
+                ),
+                column_shares=[0.25, 0.25, 0.25, 0.25],
+            )
+
+        return rrb.Blueprint(
+            rrb.Vertical(
+                _d373_row("link5"),
+                _d373_row("gripper_link"),
+                rrb.Horizontal(
+                    rrb.DataframeView(
+                        origin="/metrics/d373",
+                        contents="/metrics/d373/**",
+                        name="D373 identity metrics",
+                    ),
+                    rrb.Tabs(
+                        rrb.TextLogView(
+                            origin="/events/d373_summary",
+                            contents="/events/d373_summary",
+                            name="D373 scope and verdict",
+                        ),
+                        rrb.DataframeView(
+                            origin="/gate/d373",
+                            contents="/gate/d373/**",
+                            name="D373 gate state",
+                        ),
+                        active_tab=0,
+                    ),
+                    column_shares=[0.58, 0.42],
+                ),
+                row_shares=[0.35, 0.35, 0.30],
+            ),
+            auto_layout=False,
+            auto_views=False,
+            collapse_panels=True,
+        )
     if mode == "volume_semantics":
         def _volume_body_row(body: str, label: str, suffix: str = "**") -> Any:
             return rrb.Horizontal(
