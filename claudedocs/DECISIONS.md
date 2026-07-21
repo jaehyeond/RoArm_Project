@@ -21320,3 +21320,66 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d369/d369_phase_markers.jsonl`
 - `claudedocs/runtime_logs/grasp_track/g0a_d369/d369_runtime_exception.json`
 - `START_HERE.md`
+
+## D370 - import 성공·Viewer 성공과 교수용 시각 완료를 분리하고 해상도 비불변 pixel gate를 금지한다 (2026-07-21)
+
+Decision:
+
+- D370은 frozen D368/D369 evidence/display만 읽고
+  `production_command_repo_root_import_preflight` 한 변수만 추가한 observability-only case다.
+  정상 production direct-script 명령에서 explicit repo-root bootstrap과 exact helper import가
+  PASS했고, bootstrap-disabled control은 D369의 `ModuleNotFoundError`를 정확히 재현했다.
+- **지속 규칙:** direct-script import preflight PASS, Rerun Viewer return `0`, PNG 존재를 각각
+  시각 완료와 분리한다. 실제 원본해상도 화면이 가독성 계약을 만족하고 board/manual/finalize가
+  모두 존재하기 전에는 visualization PASS로 승격하지 않는다.
+- **지속 규칙:** 서로 다른 출력 해상도와 sampling stride에 고정 absolute color-pixel count를
+  그대로 적용하지 않는다. D370의 moving-full purple은 실제 화면과 zoom에 존재했지만 strided
+  sample `23`이 고정 threshold `25`보다 2 작아 gate가 중단됐다. 이 threshold를 D370에서
+  사후 완화하지 않고, 후속 case에서 resolution-normalized 또는 localization-aware gate와
+  음성대조군을 먼저 사전등록한다.
+- **지속 규칙:** headless Viewer가 capture 시점에 표시하는 informational notification도
+  professor-facing text를 가리면 시각 FAIL이다. D370에는 gRPC listen/loading/headless-running
+  알림 3개가 upper TextDocument를 덮었다. 이것이 단순 시간 경과로 사라지는지는 아직 검증하지
+  않았으므로, 후속 case는 bounded screenshot-stability 조건을 별도 변수로 검증해야 한다.
+
+Evidence:
+
+- Prepare checks `18/18`, failure-capable controls `9/9`; enabled import return `0`, disabled
+  return `86`, helper SHA-256 `aaafcd93...107d`.
+- Host worker/Viewer/retry `1/1/0`. Phase stream은 `9/14`; pre-render contract와 loopback PASS,
+  Viewer return `0`, elapsed `0.7552606039680541s`, raw PNG `3840x2160`,
+  `6,557,083B`, SHA-256 `7df0231a...4a32`다.
+- Four panels were all nonblank. Semantic-color sampled counts were link5 full
+  cyan/green/blue `309/542/3709`, link5 zoom cyan/green `1204/1715`, moving full
+  cyan/yellow/purple/blue `729/684/23/853`, moving zoom cyan/yellow/purple
+  `2287/2367/98`. Only moving-full purple `23<25` failed.
+- Original-resolution inspection found all four named spatial views and both static cards, bottom
+  timeline `log_time`, no `Unknown timeline` or empty metric panel, and no in-scene label text.
+  Three informational notifications obscured the upper card. Phase 10, professor board,
+  automated/validation/manual/completion artifacts are absent.
+- RRD/RBL active copies remained bit-exact at `0f394dec...02aab` and `429407b1...e216`.
+  Runtime exception SHA-256 is `bbfe7602...05a9`.
+
+Implication:
+
+- Overall verdict is `D370_OBSERVABILITY_OR_COMPLETION_INTEGRITY_FAIL_STOP`. Import repair and
+  one-shot Viewer capture are PASS subresults, but the professor visual contract is FAIL and D370
+  must not be retried, overwritten, post-hoc boarded, or finalized.
+- Collider/Isaac/Kit/PhysX/SimulationApp/q5/physics/contact/target-IK-path/asset-setting/
+  Warp-CUDA/`nvidia-smi` remained `0`. Five scientific fields remain `null`; `g0a_pass=false`.
+- A next observability case needs separate approval and at most two preregistered variables:
+  bounded notification-free screenshot stability and a resolution-normalized semantic-presence
+  gate. Collider Pareto and physical grasp science remain later separate cases.
+
+Sources:
+
+- `claudedocs/session_20260721_grasp_g0a_d370_d369_project_root_import_preflight_visual_resume.md`
+- `sim_scripts/cyl34_top_view_d370_d369_project_root_import_preflight_visual_resume.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d370/d370_preregistration.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d370/d370_phase_markers.jsonl`
+- `claudedocs/runtime_logs/grasp_track/g0a_d370/d370_import_preflight_attestation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d370/d370_render_invocation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d370/d370_render_receipt.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d370/d370_professor_visual_contract_rerun.png`
+- `claudedocs/runtime_logs/grasp_track/g0a_d370/d370_runtime_exception.json`
+- `START_HERE.md`

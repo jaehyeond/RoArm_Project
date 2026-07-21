@@ -1,29 +1,22 @@
 # START_HERE.md
 
-Last updated: 2026-07-21 KST. D369's approved host worker was consumed once and stopped before the
-Rerun Viewer because the direct script could not import the repo-local `roarm_rl` package. D368's
-authoritative offline allocation measurement remains frozen, and its human visual defects remain
-unrepaired. No new experiment, Viewer retry, physics, or collider-candidate case is authorized.
+Last updated: 2026-07-21 KST. D370 proved the production direct-script repo-root import repair and
+completed one Rerun Viewer capture, then froze at phase 9/14 because the raw color heuristic missed
+purple by `23<25`; original-resolution inspection also found three informational notifications
+obscuring the upper card. No further visual, physics, or collider case is authorized.
 
 ## Current Truth
 
-- Pivot: cylinder grasp-track G0a. Cylinder radius is `0.017m = 17mm = 1.7cm`,
-  diameter `0.034m = 34mm = 3.4cm`, height `0.090m = 90mm = 9cm`.
-- q5 convention: `q5=0` CLOSED; frozen sim OPEN `q5=1.5413rad`. D347 measured
-  HOME-near + q5=0 CLOSED, not exact HOME.
-- D348 corrected callback-topology gate is `256/256` channels, `128/128` parts;
-  live connected link5/gripper binding is `64+64`.
-- D350 proved a real static Isaac Viewer/collider display, not dynamic PhysX-tensor to
-  renderer synchronization. It remained `aligned_pass=null`, `g0a_pass=false`.
-- D354 zero-step contact order remains unresolved at the cylinder top cap/rim boundary.
-- D359 recovered the historical hash generator as original-point-ID ordering; no
-  geometry/unit/GPU/Warp cause and no old gate rewrite.
-- D360 failed before durable physical evidence because total contact-point capacity was 16.
-  D361 registered capacity `33,280` and proved the durable prefix protocol offline.
-- D362 is the current physical authority. D363-D367 changed only observability/control evidence.
-- D367 directly proved raw PLAY pending-state commit behavior with zero controlled physics, but
-  its overall completion is not PASS because the installed terminal close cannot return to write
-  the preregistered post-close marker.
+- Pivot: cylinder grasp-track G0a. Cylinder radius/diameter/height are
+  `0.017/0.034/0.090m = 17/34/90mm`; `q5=0` CLOSED, frozen OPEN `1.5413rad`.
+- D348 callback-topology gate is `256/256` channels and `128/128` parts; live connected binding is
+  `64+64`. D350 static Viewer passed, but alignment/G0a remained null/false; D354 cap/rim order is
+  unresolved.
+- D359 recovered the historical hash ordering. D361 raised the contact capacity to `33,280`.
+  D362 remains physical authority: moving jaw `31/32`, cylinder motion `41/42`, fixed link5 `45/46`,
+  endpoint XY/tilt/z delta `60.6189978mm/89.9977746deg/-28.0005205mm`—pushed over, not held.
+- D363-D367 are observability/control only. D367 proved zero-step PLAY commit but overall cleanup
+  completion remained FAIL.
 - D368 measured the existing `64 link5 + 64 gripper_link` as a **current 64-cap reference
   candidate**, not an optimum. Measurement verdict is
   `D368_CURRENT_64CAP_SEMANTIC_ALLOCATION_MEASURED_NO_PHYSICS`.
@@ -34,24 +27,29 @@ unrepaired. No new experiment, Viewer retry, physics, or collider-candidate case
   at phase `7/12` on `ModuleNotFoundError: No module named 'roarm_rl'`. Worker/viewer/retry counts are
   `1/0/0`; no PNG/manual/finalize exists. This was before Viewer and is not an Isaac/PhysX/GPU/Rerun
   renderer failure. Verdict: `D369_OBSERVABILITY_OR_COMPLETION_INTEGRITY_FAIL_STOP`.
+- D370 prepare/import and one-shot Viewer-capture subresults PASS, but overall visual completion
+  FAIL. Prepare `18/18`, controls `9/9`; worker/Viewer/retry `1/1/0`; phase prefix `9/14`.
+  Viewer returned `0` and wrote a `3840x2160` PNG. No `Unknown timeline`/empty metric panel or
+  in-scene label text remained, but moving-full purple sampled `23<25` and three informational
+  notifications covered the upper text card. No board/manual/finalize exists. Overall verdict:
+  `D370_OBSERVABILITY_OR_COMPLETION_INTEGRITY_FAIL_STOP`.
 
-## Latest D369 — Presentation Prepared, Viewer Not Invoked
+## Latest D370 — Import Repaired, Viewer Captured, Visual Completion FAIL
 
-- Output `claudedocs/runtime_logs/grasp_track/g0a_d369/` is frozen; no retry, attempt2, overwrite,
-  synthetic manual inspection, or finalize.
-- 이번 case의 신규 변수는 `timeline_free_static_metric_overlay`와
-  `label_suppressed_professor_layout` 두 개뿐이었다.
-- The exact D368 RRD bit-copy, recording-only display copy, static overlay, RBL, and merged
-  presentation RRD were serialized. Their existence is a partial operational milestone, not proof
-  that the visual defects were repaired.
-- Phase sequence ended after `single_presentation_archive_finalized`. The later pre-render gate,
-  invocation artifact, actual Viewer subprocess, screenshots, manual inspection, and completion were
-  never reached.
-- Immediate cause: the direct `sim_scripts/...py` launch had no explicit repo-root import bootstrap;
-  its late `from roarm_rl.rerun_contract import ...` failed. D368 used an explicit path bootstrap.
-- Collider/Isaac/PhysX/SimulationApp/q5/physics/contact/target-IK-path/asset-setting/Warp-CUDA counts
-  stayed zero. `visualization_repair_pass=null`; D368 science fields remain null and
-  `g0a_pass=false`.
+- Frozen case: `D370 [d369_project_root_import_preflight_visual_resume]`.
+- Output path: `claudedocs/runtime_logs/grasp_track/g0a_d370/`; do not retry, overwrite, synthesize
+  the missing board, or finalize.
+- 이번 case의 신규 변수: `production_command_repo_root_import_preflight` only.
+- Exact direct-script preflight removed ambient `PYTHONPATH`: enabled bootstrap return `0`; disabled
+  control return `86` with exact `No module named 'roarm_rl'`; helper SHA `aaafcd93...107d`.
+- Frozen D369 presentation/RBL were copied bit-exact (`0f394dec...02aab`,
+  `429407b1...e216`); pre-render contract passed and Viewer return was `0`.
+- Raw PNG SHA `7df0231a...4a32`; exception SHA `bbfe7602...05a9`. The fixed absolute `25`-pixel
+  smoke threshold is not resolution-invariant authority and may not be lowered post hoc.
+- Original inspection: four views and two cards exist; `log_time` is selected; three Rerun
+  informational notifications obscure the top card. Therefore visual completion is false.
+- All collider/Isaac/PhysX/q5/physics/contact/target-IK-path/settings/Warp-CUDA counters stayed zero;
+  five science fields remain `null`, `g0a_pass=false`.
 
 ## Latest D368 — Semantic Allocation Measured, Visual Completion FAIL
 
@@ -68,40 +66,17 @@ unrepaired. No new experiment, Viewer retry, physics, or collider-candidate case
   Project `64/64` is a reference candidate, not NVIDIA's optimum. Five withheld fields remain
   `null`; `g0a_pass=false`.
 
-## Latest D367 — PLAY Bridge PASS, Overall Completion FAIL
-
-- Output `claudedocs/runtime_logs/grasp_track/g0a_d367/` is frozen; no rerun/retry/overwrite.
-- Prepare/controls/worker/retry were `18/18`, `34/34`, `1`, `0`. Raw tuple was
-  `(false,false) → (false,false) → (true,false) → (true,false)`; one MainThread commit applied PLAY
-  with zero controlled physics and invariant joint/object bits.
-- Bridge subresult is `D367_TIMELINE_PLAY_COMMIT_ZERO_STEP_BRIDGE_PASS_NO_SCIENCE`, but the original
-  overall completion remains `D367_MEASUREMENT_OR_INTEGRITY_FAIL_STOP` because a preregistered marker
-  after terminal `SimulationApp.close()` could not be written. Science remains null; `g0a_pass=false`.
-
-## D362 Frozen Physical Sub-result
-
-- Output `claudedocs/runtime_logs/grasp_track/g0a_d362/` is an immutable 33-file tree.
-- One actual `headless=false` Isaac/PhysX worker completed OPEN `200/200` and q5-close
-  `300/300`: controlled physics `500`, q5 target update `1`, worker exit `0`.
-- Moving-jaw contact was step `31/32`, cylinder motion `41/42`, fixed link5 `45/46`; peak
-  gripper/link5/link4 force was `43.8583399/23.2278653/0.0N`.
-- Endpoint XY/tilt/z change was `60.6189978mm/89.9977746deg/-28.0005205mm`: pushed over, not held.
-  Physical sub-verdict is `D362_MOVING_JAW_CONTACT_AND_OBJECT_MOTION_OBSERVED`.
-- Exact face/manifold, cap/rim/barrel order, force closure, stable grasp, hold/lift,
-  target/IK repair justification remain `null`; `g0a_pass=false`.
-
 ## Current Authorization Boundary
 
-- Active case: none. D369 approval was consumed by one host worker and its path is frozen.
-- The narrow next candidate is unapproved
-  `D370 [d369_project_root_import_preflight_visual_resume]`. It may be proposed only as a new
-  forward-only observability path with production-command repo-root import preflight/bootstrap,
-  immutable evidence binding, one host worker/no retry, and at most one Rerun Viewer invocation.
-  It may not silently inherit authorization from D369.
+- D370 approval was consumed by one host worker and one Viewer invocation. D370 is now frozen;
+  there is no active approved case.
+- A narrow next observability candidate would need separate approval and at most two preregistered
+  variables: bounded notification-free screenshot stability and a resolution-normalized
+  semantic-presence gate over immutable D370/D369 inputs.
 - D368 offline authorization was consumed by one actual audit/no retry; its output remains frozen.
-- After a readable professor-facing visual is complete, a collider Pareto case may generate and
+- Only after a readable professor-facing visual is complete may a collider Pareto case generate and
   compare separately preregistered semantic-split candidates using identical allocation and budget
-  metrics. Candidate generation/recook is not authorized now.
+  metrics. The next visual candidate and candidate generation/recook are both unauthorized now.
 - Pose-only center-height/wrist comparisons and actual physics/contact/grasp tests are later,
   separate cases. Neither D368 nor D369 may answer those questions.
 - The user's conditional statement about resuming D366 after a D367 overall PASS was not
@@ -113,7 +88,7 @@ unrepaired. No new experiment, Viewer retry, physics, or collider-candidate case
 
 ## Frozen Boundaries / Operational Residue
 
-- Freeze D351-D369 paths. Do not modify the user-owned
+- Freeze D351-D370 paths. Do not modify the user-owned
   `claudedocs/lab_meeting/20260715/d334_collision_table/` sidecar.
 - Do not substitute Rerun Float32 display values or vertex-only Qhull for canonical
   callback/Float64/sensor evidence.
@@ -125,29 +100,17 @@ unrepaired. No new experiment, Viewer retry, physics, or collider-candidate case
 
 ## Must Read First
 
-1. `AGENTS.md`; this file; DECISIONS D362-D369; ledger tail
-2. `claudedocs/session_20260720_grasp_g0a_d369_d368_professor_visual_contract_repair.md`
-3. D369 preregistration, phase markers, and runtime exception under
-   `claudedocs/runtime_logs/grasp_track/g0a_d369/`
-4. `claudedocs/session_20260720_grasp_g0a_d368_current_64cap_semantic_allocation_audit.md`
-5. D368 preregistration, semantic-allocation evidence, Rerun validation, manual inspection and
-   completion summary under `claudedocs/runtime_logs/grasp_track/g0a_d368/`
-6. `claudedocs/session_20260719_grasp_g0a_d367_timeline_play_pending_state_commit_localization.md`
-7. `claudedocs/session_20260717_grasp_g0a_d362_capacity_prefix_integrated_physx_contact_motion.md`
-8. D362 runtime prerequisites, durable prefix/audit, physics trace, worker and supervisor;
-   then D361/D360/D359/D354/D350/D348 lineage only as needed
+1. `AGENTS.md`; this file; DECISIONS D368-D370; ledger tail
+2. D370 session plus preregistration, phases, import attestation, invocation/receipt, raw PNG, and
+   exception under `claudedocs/runtime_logs/grasp_track/g0a_d370/`
+3. D369 session and its frozen eight-file output; D368 session, evidence, manual, and completion
+4. D367 session for the zero-step PLAY bridge; D362 session and immutable physical trace
+5. D361/D360/D359/D354/D350/D348 lineage only when the next approved case requires it
 
 ## Git
 
-- Verified at D368 boot:
-  `HEAD == origin/master == 7c4819632bb193c8fd552372c919f8a107675b41`, subject
-  `D367 status`; worktree was clean before this session.
-- Current authorized uncommitted scope is limited to the NVIDIA official-source rule in
-  `AGENTS.md`, D368 harness/session/output, D368 Rerun blueprint support in
-  `roarm_rl/viz_debug.py`, the frozen D369 harness/session/forward-only partial output, this
-  dashboard, DECISIONS D368-D369, and the D368-D369 ledger rows. No commit/push was performed or is
-  authorized.
-- During D369 closeout, untracked `claudedocs/portable_guides/` appeared outside this case while a
-  separate `claude` process was live. D369 did not create, inspect for authority, modify, or include
-  that path. Per the cross-tool rule, further repo editing must wait until the user separates the
-  other tool session.
+- Verified at D370 boot and again after the one-shot run:
+  `HEAD == origin/master == 888b92b4dfdb41e56d94fdffe4c0cb4d6e303297`, subject `D369진행`;
+  worktree was clean at boot. Current uncommitted changes are only this dashboard, D370 harness,
+  D370 session/state rows, and `g0a_d370/` artifacts. D368-D369 outputs stayed immutable. No
+  commit/push was performed or authorized.

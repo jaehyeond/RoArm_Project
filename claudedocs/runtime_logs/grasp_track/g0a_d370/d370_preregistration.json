@@ -1,0 +1,457 @@
+{
+  "artifact": "D370_PREREGISTRATION_V1",
+  "case": "g0a_d370",
+  "checks": {
+    "d369_lineage_exact": true,
+    "dirty_scope_allowed": true,
+    "failure_capable_controls_9_of_9": true,
+    "fonts_present_and_hash_bound": true,
+    "forbidden_modules_absent": true,
+    "frozen_d369_board_plan_pass": true,
+    "head_origin_expected": true,
+    "isaac_compatible_pins_unchanged": true,
+    "new_variable_exactly_one": true,
+    "no_new_physical_variables": true,
+    "output_empty_before_preregistration": true,
+    "preflight_output_remained_empty": true,
+    "production_and_render_command_prefix_exact": true,
+    "production_preflight_ambient_pythonpath_absent": true,
+    "production_preflight_payload_pass": true,
+    "production_preflight_return_zero": true,
+    "rerun_version_exact": true,
+    "scope_guards_exact": true,
+    "source_manifest_exact": true
+  },
+  "d369_lineage_checks": {
+    "d369_base_copy_equals_d368_rrd": true,
+    "d369_blueprint_spec_exact": true,
+    "d369_display_variables_exact": true,
+    "d369_exception_exact": true,
+    "d369_partial_inventory_exact_8": true,
+    "d369_phase_prefix_exact_7": true,
+    "d369_phase_times_forward_only": true,
+    "d369_preregistration_exact": true,
+    "d369_science_boundary_exact": true
+  },
+  "decision_rule": "Only after preregistration PASS may one host render worker run. Any worker/Viewer failure freezes D370 with no retry. Visual PASS cannot change D368 science.",
+  "disabled_bootstrap_control": {
+    "ambient_pythonpath_removed": true,
+    "host_render_gate_removed": true,
+    "mode": "disabled",
+    "payload": {
+      "artifact": "D370_IMPORT_PREFLIGHT_NEGATIVE_V1",
+      "bootstrap_mode": "disabled",
+      "error": "No module named 'roarm_rl'",
+      "error_name": "roarm_rl",
+      "error_type": "ModuleNotFoundError",
+      "pass": false,
+      "repo_root": "/home/cgxr/Documents/Robotics/RoArm_Project",
+      "repo_root_occurrences": 0
+    },
+    "result": {
+      "command": [
+        "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+        "-B",
+        "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/cyl34_top_view_d370_d369_project_root_import_preflight_visual_resume.py",
+        "--stage",
+        "import-preflight"
+      ],
+      "elapsed_seconds": 0.0520092120859772,
+      "ok": false,
+      "returncode": 86,
+      "stderr": "",
+      "stdout": "{\"artifact\": \"D370_IMPORT_PREFLIGHT_NEGATIVE_V1\", \"bootstrap_mode\": \"disabled\", \"error\": \"No module named 'roarm_rl'\", \"error_name\": \"roarm_rl\", \"error_type\": \"ModuleNotFoundError\", \"pass\": false, \"repo_root\": \"/home/cgxr/Documents/Robotics/RoArm_Project\", \"repo_root_occurrences\": 0}\n"
+    }
+  },
+  "dynamic_source_manifest": {
+    "roarm_rl/rerun_contract.py": "aaafcd93b9da3d8a97d61a53753ec9667bb98bec7391c91c98974f7ce9c66c1e",
+    "sim_scripts/cyl34_top_view_d370_d369_project_root_import_preflight_visual_resume.py": "97fe9e5c9ec7ee255016ad4bbc277757860dcefe8433832ac99ff2c3e764c01e"
+  },
+  "expected_phase_sequence": [
+    "render_worker_started",
+    "production_command_import_attestation_rechecked",
+    "frozen_d369_manifest_verified",
+    "frozen_d368_authority_verified",
+    "active_rrd_rbl_bitexact_copies_written",
+    "pre_render_artifact_contract_pass",
+    "host_loopback_bind_capability_pass",
+    "one_shot_viewer_invocation_recorded",
+    "one_shot_viewer_returned",
+    "raw_png_automated_gate_pass",
+    "professor_board_written",
+    "automated_validation_finalized",
+    "manual_visual_inspection_contract_pass",
+    "completion_gate_pass"
+  ],
+  "facts": {
+    "artifact": "D368_CURRENT_64CAP_SEMANTIC_ALLOCATION_EVIDENCE_V1",
+    "case": "g0a_d368",
+    "classification_counts": {
+      "gripper_link": {
+        "certified:inner_contact_patch": 1,
+        "mixed_certified:inner_contact_patch+outer_negative_patch": 16,
+        "no_certified_contact_face": 47
+      },
+      "link5": {
+        "certified:seed_contact_plane_patch": 4,
+        "no_certified_contact_face": 60
+      }
+    },
+    "fixed": {
+      "face_count": 12,
+      "part_count": 4
+    },
+    "hull_vertex_limit": {
+      "project_input": 64,
+      "schema_default": 64,
+      "ui_range": [
+        8,
+        64
+      ]
+    },
+    "installed_physx_sdk_semver": null,
+    "installed_schema_extension": "107.3.26+107.3.3",
+    "interpretation_boundary": {
+      "actual_gpu_contact_execution": null,
+      "collider_count_tipping_causality": null,
+      "current_64cap_optimal": null,
+      "g0a_pass": false,
+      "grasp_feasibility": null,
+      "physics_equivalence": null
+    },
+    "max_convex_hulls": {
+      "optimality_claim": null,
+      "project_input": 64,
+      "schema_default": 32,
+      "ui_range": [
+        1,
+        2048
+      ]
+    },
+    "measurement_pass": true,
+    "measurement_verdict": "D368_CURRENT_64CAP_SEMANTIC_ALLOCATION_MEASURED_NO_PHYSICS",
+    "moving_inner": {
+      "face_count": 40,
+      "part_count": 17
+    },
+    "moving_outer": {
+      "face_count": 36,
+      "part_count": 16
+    },
+    "negative_controls": {
+      "pass": true,
+      "passed": 8,
+      "total": 8
+    },
+    "part_counts": {
+      "gripper_link": 64,
+      "link5": 64
+    },
+    "scope_guards": {
+      "contact_queries": 0,
+      "cook_or_decomposition": 0,
+      "d334_sidecar_writes": 0,
+      "isaac_or_physx": 0,
+      "material_mass_actuator_physics_changes": 0,
+      "nvidia_smi": 0,
+      "physics_steps": 0,
+      "q5_science": 0,
+      "rerun_display_render_allowed": 1,
+      "simulation_app_or_kit": 0,
+      "target_ik_path_changes": 0,
+      "usd_or_asset_writes": 0,
+      "warp_or_cuda_compute": 0
+    },
+    "total_parts": 128
+  },
+  "failure_capable_controls": {
+    "baseline": {
+      "ambient_pythonpath_removed": true,
+      "host_render_gate_removed": true,
+      "mode": "enabled",
+      "payload": {
+        "ambient_pythonpath_present": false,
+        "artifact": "D370_IMPORT_PREFLIGHT_V1",
+        "bootstrap_mode": "enabled",
+        "checks": {
+          "ambient_pythonpath_absent": true,
+          "bootstrap_mode_enabled": true,
+          "bytecode_disabled": true,
+          "contract_version_exact": true,
+          "direct_script_exact": true,
+          "helper_hash_exact": true,
+          "helper_path_exact": true,
+          "python_executable_exact": true,
+          "repo_cwd_exact": true,
+          "repo_root_is_sys_path_0": true,
+          "repo_root_present_exactly_once": true,
+          "required_symbols_callable": true
+        },
+        "cwd": "/home/cgxr/Documents/Robotics/RoArm_Project",
+        "dont_write_bytecode": true,
+        "helper_path": "/home/cgxr/Documents/Robotics/RoArm_Project/roarm_rl/rerun_contract.py",
+        "helper_sha256": "aaafcd93b9da3d8a97d61a53753ec9667bb98bec7391c91c98974f7ce9c66c1e",
+        "pass": true,
+        "python_executable": "/home/cgxr/miniconda3/envs/isaaclab/bin/python3.11",
+        "repo_root": "/home/cgxr/Documents/Robotics/RoArm_Project",
+        "repo_root_occurrences": 1,
+        "script_path": "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/cyl34_top_view_d370_d369_project_root_import_preflight_visual_resume.py",
+        "symbols": {
+          "_entity_paths": true,
+          "_is_system_entity": true,
+          "validate_rerun_artifact": true
+        },
+        "sys_path_0": "/home/cgxr/Documents/Robotics/RoArm_Project"
+      },
+      "result": {
+        "command": [
+          "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+          "-B",
+          "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/cyl34_top_view_d370_d369_project_root_import_preflight_visual_resume.py",
+          "--stage",
+          "import-preflight"
+        ],
+        "elapsed_seconds": 0.17500161286443472,
+        "ok": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": "{\"ambient_pythonpath_present\": false, \"artifact\": \"D370_IMPORT_PREFLIGHT_V1\", \"bootstrap_mode\": \"enabled\", \"checks\": {\"ambient_pythonpath_absent\": true, \"bootstrap_mode_enabled\": true, \"bytecode_disabled\": true, \"contract_version_exact\": true, \"direct_script_exact\": true, \"helper_hash_exact\": true, \"helper_path_exact\": true, \"python_executable_exact\": true, \"repo_cwd_exact\": true, \"repo_root_is_sys_path_0\": true, \"repo_root_present_exactly_once\": true, \"required_symbols_callable\": true}, \"cwd\": \"/home/cgxr/Documents/Robotics/RoArm_Project\", \"dont_write_bytecode\": true, \"helper_path\": \"/home/cgxr/Documents/Robotics/RoArm_Project/roarm_rl/rerun_contract.py\", \"helper_sha256\": \"aaafcd93b9da3d8a97d61a53753ec9667bb98bec7391c91c98974f7ce9c66c1e\", \"pass\": true, \"python_executable\": \"/home/cgxr/miniconda3/envs/isaaclab/bin/python3.11\", \"repo_root\": \"/home/cgxr/Documents/Robotics/RoArm_Project\", \"repo_root_occurrences\": 1, \"script_path\": \"/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/cyl34_top_view_d370_d369_project_root_import_preflight_visual_resume.py\", \"symbols\": {\"_entity_paths\": true, \"_is_system_entity\": true, \"validate_rerun_artifact\": true}, \"sys_path_0\": \"/home/cgxr/Documents/Robotics/RoArm_Project\"}\n"
+      }
+    },
+    "checks": {
+      "ambient_pythonpath_dependence_rejects": true,
+      "baseline_accepts": true,
+      "d369_source_hash_tamper_rejects": true,
+      "disabled_bootstrap_reproduces_d369_failure": true,
+      "missing_repo_root_rejects": true,
+      "second_host_worker_rejects": true,
+      "second_viewer_rejects": true,
+      "wrong_helper_hash_rejects": true,
+      "wrong_helper_path_rejects": true
+    },
+    "disabled_bootstrap": {
+      "ambient_pythonpath_removed": true,
+      "host_render_gate_removed": true,
+      "mode": "disabled",
+      "payload": {
+        "artifact": "D370_IMPORT_PREFLIGHT_NEGATIVE_V1",
+        "bootstrap_mode": "disabled",
+        "error": "No module named 'roarm_rl'",
+        "error_name": "roarm_rl",
+        "error_type": "ModuleNotFoundError",
+        "pass": false,
+        "repo_root": "/home/cgxr/Documents/Robotics/RoArm_Project",
+        "repo_root_occurrences": 0
+      },
+      "result": {
+        "command": [
+          "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+          "-B",
+          "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/cyl34_top_view_d370_d369_project_root_import_preflight_visual_resume.py",
+          "--stage",
+          "import-preflight"
+        ],
+        "elapsed_seconds": 0.0520092120859772,
+        "ok": false,
+        "returncode": 86,
+        "stderr": "",
+        "stdout": "{\"artifact\": \"D370_IMPORT_PREFLIGHT_NEGATIVE_V1\", \"bootstrap_mode\": \"disabled\", \"error\": \"No module named 'roarm_rl'\", \"error_name\": \"roarm_rl\", \"error_type\": \"ModuleNotFoundError\", \"pass\": false, \"repo_root\": \"/home/cgxr/Documents/Robotics/RoArm_Project\", \"repo_root_occurrences\": 0}\n"
+      }
+    },
+    "pass": true,
+    "passed": 9,
+    "total": 9
+  },
+  "fonts": {
+    "bold": {
+      "bytes": 705684,
+      "path": "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+      "sha256": "d1c3ff99f1e1ce1827a33efd4dad81f40babda06bff9e43bd7591c86662a287b"
+    },
+    "regular": {
+      "bytes": 757076,
+      "path": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+      "sha256": "690243adfefe0ce154b547db6205794bd30ac4277275179517a90994f4980648"
+    }
+  },
+  "frozen_d369_board_plan_contract": {
+    "checks": {
+      "d369_negative_control_baseline_pass": true,
+      "frozen_layout_dimensions_exact": true,
+      "frozen_layout_items_exact_21": true,
+      "frozen_layout_summary_exact": true,
+      "required_professor_lines_preserved": true
+    },
+    "item_count": 21,
+    "layout_sha256": "adf0973b417ccb54ac6c8e086ab5a713a87555e13a95f48d203332fe95353dea",
+    "pass": true,
+    "required_lines": [
+      "Actual GPU contact execution: NULL (not instrumented)",
+      "Frozen D368 controls: 8/8 PASS",
+      "Installed schema extension: 107.3.26+107.3.3",
+      "Separate hullVertexLimit: 64 (schema 64 | UI 8..64)"
+    ]
+  },
+  "head": "888b92b4dfdb41e56d94fdffe4c0cb4d6e303297",
+  "inherited_display_variables": [
+    "timeline_free_static_metric_overlay",
+    "label_suppressed_professor_layout"
+  ],
+  "new_physical_variables": [],
+  "new_variables": [
+    "production_command_repo_root_import_preflight"
+  ],
+  "pass": true,
+  "production_import_preflight": {
+    "ambient_pythonpath_removed": true,
+    "host_render_gate_removed": true,
+    "mode": "enabled",
+    "payload": {
+      "ambient_pythonpath_present": false,
+      "artifact": "D370_IMPORT_PREFLIGHT_V1",
+      "bootstrap_mode": "enabled",
+      "checks": {
+        "ambient_pythonpath_absent": true,
+        "bootstrap_mode_enabled": true,
+        "bytecode_disabled": true,
+        "contract_version_exact": true,
+        "direct_script_exact": true,
+        "helper_hash_exact": true,
+        "helper_path_exact": true,
+        "python_executable_exact": true,
+        "repo_cwd_exact": true,
+        "repo_root_is_sys_path_0": true,
+        "repo_root_present_exactly_once": true,
+        "required_symbols_callable": true
+      },
+      "cwd": "/home/cgxr/Documents/Robotics/RoArm_Project",
+      "dont_write_bytecode": true,
+      "helper_path": "/home/cgxr/Documents/Robotics/RoArm_Project/roarm_rl/rerun_contract.py",
+      "helper_sha256": "aaafcd93b9da3d8a97d61a53753ec9667bb98bec7391c91c98974f7ce9c66c1e",
+      "pass": true,
+      "python_executable": "/home/cgxr/miniconda3/envs/isaaclab/bin/python3.11",
+      "repo_root": "/home/cgxr/Documents/Robotics/RoArm_Project",
+      "repo_root_occurrences": 1,
+      "script_path": "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/cyl34_top_view_d370_d369_project_root_import_preflight_visual_resume.py",
+      "symbols": {
+        "_entity_paths": true,
+        "_is_system_entity": true,
+        "validate_rerun_artifact": true
+      },
+      "sys_path_0": "/home/cgxr/Documents/Robotics/RoArm_Project"
+    },
+    "result": {
+      "command": [
+        "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+        "-B",
+        "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/cyl34_top_view_d370_d369_project_root_import_preflight_visual_resume.py",
+        "--stage",
+        "import-preflight"
+      ],
+      "elapsed_seconds": 0.17500161286443472,
+      "ok": true,
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "{\"ambient_pythonpath_present\": false, \"artifact\": \"D370_IMPORT_PREFLIGHT_V1\", \"bootstrap_mode\": \"enabled\", \"checks\": {\"ambient_pythonpath_absent\": true, \"bootstrap_mode_enabled\": true, \"bytecode_disabled\": true, \"contract_version_exact\": true, \"direct_script_exact\": true, \"helper_hash_exact\": true, \"helper_path_exact\": true, \"python_executable_exact\": true, \"repo_cwd_exact\": true, \"repo_root_is_sys_path_0\": true, \"repo_root_present_exactly_once\": true, \"required_symbols_callable\": true}, \"cwd\": \"/home/cgxr/Documents/Robotics/RoArm_Project\", \"dont_write_bytecode\": true, \"helper_path\": \"/home/cgxr/Documents/Robotics/RoArm_Project/roarm_rl/rerun_contract.py\", \"helper_sha256\": \"aaafcd93b9da3d8a97d61a53753ec9667bb98bec7391c91c98974f7ce9c66c1e\", \"pass\": true, \"python_executable\": \"/home/cgxr/miniconda3/envs/isaaclab/bin/python3.11\", \"repo_root\": \"/home/cgxr/Documents/Robotics/RoArm_Project\", \"repo_root_occurrences\": 1, \"script_path\": \"/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/cyl34_top_view_d370_d369_project_root_import_preflight_visual_resume.py\", \"symbols\": {\"_entity_paths\": true, \"_is_system_entity\": true, \"validate_rerun_artifact\": true}, \"sys_path_0\": \"/home/cgxr/Documents/Robotics/RoArm_Project\"}\n"
+    }
+  },
+  "production_render_command": [
+    "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+    "-B",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/cyl34_top_view_d370_d369_project_root_import_preflight_visual_resume.py",
+    "--stage",
+    "render"
+  ],
+  "render_contract": {
+    "allowed_raw_png_dimensions": [
+      [
+        1920,
+        1080
+      ],
+      [
+        3840,
+        2160
+      ],
+      [
+        4800,
+        2800
+      ]
+    ],
+    "automatic_retry_count": 0,
+    "board_dimensions": [
+      1920,
+      1080
+    ],
+    "host_gate": {
+      "D370_HOST_RENDER_APPROVED": "1"
+    },
+    "host_worker_count": 1,
+    "viewer_input": "claudedocs/runtime_logs/grasp_track/g0a_d370/d370_d369_presentation_bitexact.rrd",
+    "viewer_invocation_count": 1,
+    "window_size": "1920x1080"
+  },
+  "science_boundary": {
+    "actual_gpu_contact_execution": null,
+    "collider_count_tipping_causality": null,
+    "current_64cap_optimal": null,
+    "g0a_pass": false,
+    "grasp_feasibility": null,
+    "physics_equivalence": null
+  },
+  "scope_guards": {
+    "collider_regeneration_or_recook": 0,
+    "contact_queries": 0,
+    "isaac_or_kit_or_physx": 0,
+    "material_mass_actuator_physics_changes": 0,
+    "nvidia_smi": 0,
+    "physics_steps": 0,
+    "q5_science_or_target": 0,
+    "rerun_display_render_allowed": 1,
+    "simulation_app": 0,
+    "target_ik_path_changes": 0,
+    "usd_or_asset_writes": 0,
+    "warp_or_cuda_compute": 0
+  },
+  "source_manifest": {
+    "claudedocs/runtime_logs/grasp_track/g0a_d368/d368_semantic_allocation.rrd": {
+      "bytes": 1339534,
+      "sha256": "f66a9fe41c625e3460b341eef2bfb0e107fbccdca4bf012c28b77e694efb5af0"
+    },
+    "claudedocs/runtime_logs/grasp_track/g0a_d368/d368_semantic_allocation_evidence.json": {
+      "bytes": 953696,
+      "sha256": "be2a422b0c74e4781b76a640c5312070b84876b1cb9e661d47e705ccdf789cf5"
+    },
+    "claudedocs/runtime_logs/grasp_track/g0a_d369/d369_d368_base_bitexact_copy.rrd": {
+      "bytes": 1339534,
+      "sha256": "f66a9fe41c625e3460b341eef2bfb0e107fbccdca4bf012c28b77e694efb5af0"
+    },
+    "claudedocs/runtime_logs/grasp_track/g0a_d369/d369_d368_recording_only_display_copy.rrd": {
+      "bytes": 1237161,
+      "sha256": "ce00df2fbb95630e58439e9d7fd13afd56e27d3386581da8c71edac902f2403e"
+    },
+    "claudedocs/runtime_logs/grasp_track/g0a_d369/d369_phase_markers.jsonl": {
+      "bytes": 860,
+      "sha256": "5ddae9f25f33fab446954e197b478af937fd3ded458cdf59aa8526ec01457efa"
+    },
+    "claudedocs/runtime_logs/grasp_track/g0a_d369/d369_preregistration.json": {
+      "bytes": 73385,
+      "sha256": "f991aaeefd88d5066773b573d2a540b8c7d5658ef4252a792d9f422378338642"
+    },
+    "claudedocs/runtime_logs/grasp_track/g0a_d369/d369_professor_visual_contract.rbl": {
+      "bytes": 105470,
+      "sha256": "429407b11120167655c059085e8f3f4ef81191d49f4b5728dc20cfdfda45e216"
+    },
+    "claudedocs/runtime_logs/grasp_track/g0a_d369/d369_professor_visual_contract.rrd": {
+      "bytes": 1347605,
+      "sha256": "0f394dec88ad1d253d5c4e0996e80a01752b272b3a4e04ff0a0f0de439302aab"
+    },
+    "claudedocs/runtime_logs/grasp_track/g0a_d369/d369_runtime_exception.json": {
+      "bytes": 911,
+      "sha256": "0b338694f77d34f910764ed99f5be6e61d1a554cd347c53be978d0496e47d1bb"
+    },
+    "claudedocs/runtime_logs/grasp_track/g0a_d369/d369_static_text_overlay.rrd": {
+      "bytes": 9229,
+      "sha256": "1df88ad1a0aad052d3ba879e49aa10164cc878a8793fc61a07dea8dda79d9cc2"
+    }
+  }
+}
