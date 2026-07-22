@@ -21686,3 +21686,63 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d374/attempt1_d373_fail_stop_provenance_and_failure_visualization/d374_manual_visual_inspection.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d374/attempt1_d373_fail_stop_provenance_and_failure_visualization/d374_completion_summary.json`
 - `START_HERE.md`
+
+## D375 - live acquisition 성공과 종료 권위를 분리하고, 정상 반환 없는 worker를 full identity PASS로 승격하지 않는다 (2026-07-22)
+
+Decision:
+
+- D373의 whole-robot instancing을 제거하고 동결 P34 asset을 non-instance articulation owner로
+  읽는 one-worker/no-retry live repair를 수행했다. 최종 verdict는
+  `D375_P34_LIVE_ASSET_IDENTITY_CONTRACT_REPAIR_FAIL_STOP`이다.
+- **지속 규칙:** raw worker와 preclose가 PASS하고 해시가 일치해도 process timeout/signal/
+  nonzero return이면 hash-bound supervisor 전체 PASS로 승격하지 않는다. acquisition subresult와
+  terminal lifecycle authority를 별도로 기록한다.
+- **지속 규칙:** NVIDIA 공식 `SimulationApp.close()` 계약은 graceful cleanup과
+  `skip_cleanup=True` immediate exit를 제공하지만, 특정 workload의 정상 반환은 로컬 실행으로
+  검증해야 한다. release note의 일반 hang fix만으로 이번 hang 원인을 확정하지 않는다.
+- D375 FAIL 뒤 callback surface/bounds/topology-volume offline classifier와 Rerun을 우회 실행하지
+  않는다. 실패 시각화는 immutable evidence 전용 forward-only case로 분리한다.
+
+Evidence:
+
+- attempt1은 sandboxed child `nvidia-smi` return `9` 하나로 prepare FAIL, actual worker `0`이다.
+  직접 host GPU는 RTX 4090 Laptop, driver `580.159.03`, total/free `16376/15465MiB`, CC `8.9`로
+  정상이다.
+- attempt2 external GPU attestation repair는 prereg checks `21/21`, negative controls `4/4`
+  PASS. actual worker/retry `1/0`, callback/property queries `34/2`, physics/q5/contact `0/0/0`이다.
+- owner 세 prim은 모두 non-instance/non-proxy이고 direct/live P34는 `34/34` PASS다.
+  callback protocol `34/34`, property는 link5 rigid/collider `VALID 1 + 17/17`, gripper_link
+  `VALID 1 + 19/19`; masses는 `0.015392799861729145/0.0028707999736070633kg`다.
+- authored MassAPI의 mass/COM/inertia/axes delta는 두 body 모두 `0.0`; frozen asset은 전후
+  bit-exact다. raw/preclose protocol과 summary SHA/counter/timeline binding은 PASS다.
+- worker가 PASS stdout과 preclose를 기록한 뒤 `launcher.app.close()`/interpreter-teardown
+  구간에서 process exit에 도달하지 않았다. post-close marker가 없으므로 내부 blocking call은
+  미확정이다.
+  supervisor는 `900s` timeout 후 SIGTERM, 추가 `20s` 후 SIGKILL; elapsed
+  `920.3908159369603s`, return `-9`, operational/effective PASS `false`다.
+- fail-closed analyzer는 surface/bounds/original-polygon topology-volume, 1920×1080 board,
+  RRD/RBL/manual inspection을 실행하지 않았다.
+
+Implication:
+
+- whole-robot instancing 제거가 D373 `ERROR_PARSING`을 실제 `VALID` property subresult로
+  바꿨다는 제한적 관측은 유효하다. 그러나 D375 full identity는 FAIL_STOP이며 geometry PASS나
+  physics PASS가 아니다.
+- authored↔callback full identity, A64/P34 physics equivalence/speed, tipping causality,
+  grasp feasibility는 `null`; `g0a_pass=false`다.
+- D375 attempt1/attempt2를 동결하고 retry/overwrite하지 않는다. 다음 최소 후보는 별도 승인
+  `D376 [d375_terminal_close_provenance_and_failure_visualization]` offline-only case다. 실제
+  lifecycle repair worker와 A64/P34 cylinder physics는 각각 그 뒤 별도 승인한다.
+
+Sources:
+
+- `claudedocs/session_20260722_grasp_g0a_d375_p34_live_asset_identity_contract_repair_fail_stop.md`
+- `sim_scripts/cyl34_top_view_d375_p34_live_asset_identity_contract_repair.py`
+- `sim_scripts/cyl34_top_view_d375_p34_live_asset_identity_contract_repair_worker.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d375/d375_external_gpu_attestation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d375/attempt2_external_gpu_attestation_repair/d375_preregistration.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d375/attempt2_external_gpu_attestation_repair/d375_worker_raw_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d375/attempt2_external_gpu_attestation_repair/d375_worker_preclose_sentinel.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d375/attempt2_external_gpu_attestation_repair/d375_worker_supervisor.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d375/attempt2_external_gpu_attestation_repair/d375_fail_stop_attestation.json`
+- `START_HERE.md`

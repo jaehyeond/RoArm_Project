@@ -1,0 +1,36 @@
+{
+  "artifact": "D375_EXTERNAL_GPU_ATTESTATION_V1",
+  "captured_at": "2026-07-22T10:51:07+09:00",
+  "capture_mode": "direct_host_nvidia_smi_outside_the_sandboxed_prepare_child",
+  "command": [
+    "nvidia-smi",
+    "--query-gpu=index,uuid,name,driver_version,memory.total,memory.used,memory.free,compute_cap",
+    "--format=csv,noheader"
+  ],
+  "returncode": 0,
+  "stdout": "0, GPU-05b1a3f8-b7cf-dc57-06aa-741fe2daa4b4, NVIDIA GeForce RTX 4090 Laptop GPU, 580.159.03, 16376 MiB, 480 MiB, 15465 MiB, 8.9",
+  "stderr": "",
+  "parsed": {
+    "index": 0,
+    "uuid": "GPU-05b1a3f8-b7cf-dc57-06aa-741fe2daa4b4",
+    "name": "NVIDIA GeForce RTX 4090 Laptop GPU",
+    "driver_version": "580.159.03",
+    "memory_total_mib": 16376,
+    "memory_used_mib": 480,
+    "memory_free_mib": 15465,
+    "compute_capability": "8.9"
+  },
+  "compute_process_observation": {
+    "command": [
+      "nvidia-smi",
+      "--query-compute-apps=pid,process_name,used_memory",
+      "--format=csv,noheader"
+    ],
+    "returncode": 0,
+    "stdout": "4159377, python3, 390 MiB",
+    "pid_identity": "python3 -m mcp_memory_service.server",
+    "isaac_process_detected": false
+  },
+  "pass": true,
+  "scope_note": "This attests GPU availability for D375 preregistration only; it is not a physics or geometry result."
+}
