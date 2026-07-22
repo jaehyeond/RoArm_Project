@@ -21622,3 +21622,67 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/d373_fail_stop_attestation.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d339/d339_live_collider_audit.json`
 - `START_HERE.md`
+
+## D374 - 실패 계보 PASS와 live identity PASS를 분리하고, callback 원 다각형을 시각 권위의 출발점으로 삼는다 (2026-07-22)
+
+Decision:
+
+- immutable D373/D343 증거만 읽는 offline-only D374를 actual audit `1`, retry `0`으로
+  완료했다. verdict는
+  `D374_D373_FAIL_STOP_PROVENANCE_AND_FAILURE_VISUALIZATION_PASS`다.
+- **지속 규칙:** 이전 typed-scalar case를 상속할 때 후속 raw가 `typeName`/bits를 직접
+  저장하지 않았다면 “bits 직접 관측”으로 승격하지 않는다. D373은 numeric value만
+  기록했으므로 D343 exact bits `0x38d1b717`과 동일 schema SHA를 계보로 연결하되,
+  D373 raw bits/typeName은 `null`로 보존한다.
+- **지속 규칙:** property query가 nonzero error를 반환한 row의 empty path, path ID 0,
+  zero mass/volume은 error sentinel이다. 실제 질량·부피 측정값으로 인용하지 않는다.
+- **지속 규칙:** instance callback polygon을 시각화할 때 instance/prototype exact equality를
+  먼저 확인하고 한 채널만 그린다. callback polygon fan triangulation과 Rerun Float32 copy는
+  inspection-only이며 original callback JSON/hash를 geometry authority로 유지한다.
+- **지속 규칙:** 서로 다른 articulation body의 owner-local geometry는 frozen world/q5 pose가
+  없으면 임의로 조립하지 않는다. exploded layout은 표시용 이동임을 명시한다.
+- **지속 규칙:** Rerun logical window size와 HiDPI physical screenshot pixels를 구분한다.
+  exact presentation resolution은 별도 board dimension으로 검사하고 Viewer screenshot은
+  load/layout 육안 증거로 기록한다.
+
+Evidence:
+
+- preregistration의 frozen hash/env/source checks와 failure-capable controls `4/4`가 PASS했다.
+- D343 typed value `0.00009999999747378752m`는 D373 direct/live numeric row 각 `34/34`와
+  같았다. D374 typed scalar retest/packing/ULP recompute는 `0/0`이다.
+- installed runtime의 instance-proxy warning은 link5/gripper_link에 존재했고 property query는
+  둘 다 `ERROR_PARSING(5)`였다. default comparator P34 count `0`과 달리 proxy-aware live
+  inventory/callback part는 `34/34`였다.
+- old supervisor `pass=true`, raw/preclose `worker_protocol_pass=false`, preclose↔raw SHA exact다.
+  hash-bound repaired effective PASS는 `false`다.
+- callback witness protocol/hash는 `68/68`, instance↔prototype original-polygon payload는
+  `34/34 exact`다. link5/gripper_link는 `16/18`; 합계 vertices/original polygons는
+  `314/262`, part max는 `13/17`이다.
+- exact 1920×1080 board 4개, save-only RRD/RBL, strict footer/entity/timeline/component,
+  headless capture 1회와 original-resolution manual inspection이 PASS했다. Rerun file은
+  DPR 2 때문에 `3840x2160`이며 decision subject를 startup notification이 가리지 않았다.
+- Isaac/PhysX/USD write/physics/q5/contact/cylinder/target-IK-path/collider regeneration/
+  decomposition sweep는 모두 `0`; D373/D334 sidecar inventory는 전후 bit-exact다.
+
+Implication:
+
+- D374 PASS는 D373 failure provenance와 시각화 completion PASS다. D373의
+  `D373_P34_LIVE_ASSET_IDENTITY_FAIL_STOP`을 바꾸지 않는다.
+- full P34 live identity, authored↔callback surface/bounds/topology-volume, live property
+  mass/COM/inertia, physics equivalence/speed, tipping causality와 grasp feasibility는 모두
+  `null`; `g0a_pass=false`다.
+- D374 경로를 동결하고 retry/overwrite하지 않는다. 다음 최소 후보는 별도 승인
+  `D375 [p34_live_asset_identity_contract_repair]`다. D343 typed contract와 D374 traversal/
+  non-instance owner/property/hash-bound supervisor 계약을 상속한 one-worker/no-retry live
+  identity가 PASS하기 전에는 A64/P34 cylinder physics를 실행하지 않는다.
+
+Sources:
+
+- `claudedocs/session_20260722_grasp_g0a_d374_d373_fail_stop_provenance_and_failure_visualization.md`
+- `sim_scripts/cyl34_top_view_d374_d373_fail_stop_provenance_and_failure_visualization.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d374/attempt1_d373_fail_stop_provenance_and_failure_visualization/d374_preregistration.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d374/attempt1_d373_fail_stop_provenance_and_failure_visualization/d374_failure_provenance_evidence.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d374/attempt1_d373_fail_stop_provenance_and_failure_visualization/d374_live_repair_contract.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d374/attempt1_d373_fail_stop_provenance_and_failure_visualization/d374_manual_visual_inspection.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d374/attempt1_d373_fail_stop_provenance_and_failure_visualization/d374_completion_summary.json`
+- `START_HERE.md`

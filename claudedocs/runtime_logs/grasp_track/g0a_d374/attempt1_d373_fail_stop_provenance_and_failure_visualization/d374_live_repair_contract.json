@@ -1,0 +1,26 @@
+{
+  "artifact": "D374_LATER_LIVE_WORKER_REPAIR_CONTRACT_V1",
+  "instance_proxy_traversal": {
+    "absence_rule": "zero rows from default traversal may not prove collider absence",
+    "rule": "separate default Stage traversal from proxy-aware traversal; P34 population requires TraverseInstanceProxies plus direct authored-layer audit"
+  },
+  "pass": true,
+  "promotion_boundary": {
+    "D374_does_not_authorize_A64_vs_P34_physics": true,
+    "next_live_identity_must_pass_before_physics_comparison": true,
+    "requires_separate_user_approval": true
+  },
+  "property_query_stage": {
+    "rule": "keep articulation rigid-body owners non-instance; collider geometry leaf/prototype instancing may be separately retained only if installed runtime accepts it",
+    "validity_rule": "ERROR_PARSING or nonzero result is an error; zero path/mass/volume in that row is sentinel data, not a measurement"
+  },
+  "scope": "contract only; D374 does not implement or run the repaired live worker",
+  "typed_float32": {
+    "D374_retest_count": 0,
+    "rule": "inherit D343 typed Float32 authority; compare stored typed value/bits, never decimal 0.0001 with 1e-12m"
+  },
+  "worker_supervisor_authority": {
+    "cleanup_rule": "orderly return code proves cleanup only",
+    "effective_pass_formula": "returncode==0 AND supervisor_operational_pass AND raw.worker_protocol_pass AND preclose.worker_protocol_pass AND preclose.summary_sha256==sha256(raw)"
+  }
+}

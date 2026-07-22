@@ -954,6 +954,74 @@ def build_rerun_blueprint(mode: str = "robot_geometry") -> Any:
             auto_views=False,
             collapse_panels=True,
         )
+    if mode == "d374_fail_stop_provenance":
+        def _d374_view(
+            *,
+            body: str,
+            arrangement: str,
+            position: tuple[float, float, float],
+            target: tuple[float, float, float],
+        ) -> Any:
+            return rrb.Spatial3DView(
+                origin="/",
+                contents=f"/d374/{arrangement}/{body}/**",
+                name=f"P34 {body} | {arrangement}",
+                eye_controls=rrb.EyeControls3D(
+                    kind=rrb.Eye3DKind.Orbital,
+                    position=position,
+                    look_target=target,
+                    eye_up=(0.0, 0.0, 1.0),
+                ),
+                spatial_information=rrb.SpatialInformation(
+                    target_frame="tf#/",
+                    show_axes=False,
+                    show_bounding_box=False,
+                ),
+            )
+
+        return rrb.Blueprint(
+            rrb.Vertical(
+                rrb.Horizontal(
+                    _d374_view(
+                        body="link5",
+                        arrangement="assembled",
+                        position=(0.13, -0.16, 0.13),
+                        target=(-0.005, 0.0, 0.065),
+                    ),
+                    _d374_view(
+                        body="gripper_link",
+                        arrangement="assembled",
+                        position=(0.11, -0.13, 0.055),
+                        target=(0.030, 0.0, -0.018),
+                    ),
+                    column_shares=[0.5, 0.5],
+                ),
+                rrb.Horizontal(
+                    _d374_view(
+                        body="link5",
+                        arrangement="exploded",
+                        position=(0.22, -0.34, 0.20),
+                        target=(0.0, 0.0, 0.0),
+                    ),
+                    _d374_view(
+                        body="gripper_link",
+                        arrangement="exploded",
+                        position=(0.24, -0.36, 0.18),
+                        target=(0.0, 0.0, 0.0),
+                    ),
+                    column_shares=[0.5, 0.5],
+                ),
+                rrb.TextLogView(
+                    origin="/events/d374",
+                    contents="/events/d374/**",
+                    name="D373 failure provenance and D374 scope",
+                ),
+                row_shares=[0.42, 0.42, 0.16],
+            ),
+            auto_layout=False,
+            auto_views=False,
+            collapse_panels=True,
+        )
     if mode != "robot_geometry":
         raise ValueError(f"unsupported Rerun blueprint mode: {mode!r}")
     return rrb.Blueprint(

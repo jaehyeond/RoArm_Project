@@ -1,0 +1,31 @@
+{
+  "artifact": "D374_MANUAL_ORIGINAL_RESOLUTION_VISUAL_INSPECTION_V1",
+  "inspection_method": "Each PNG was opened with view_image at original detail after the one approved D374 run.",
+  "inspected_sha256": {
+    "assembled_and_exploded": "a73e78d2a1dbf2d5626a80ca5b6151a0a04220438f1fc45b731196c8c674d9eb",
+    "failure_provenance": "d3978a03a2e921c8aa9c3399ee7d56bddab2bc74b78bea09bdab06988b520225",
+    "gripper_link_18": "4ce7c32598281bd6fd50438c4be4a905962b5a0549a7c29d12d89ef3395fc5f7",
+    "link5_16": "79601564b217390940ae564eedac969d946d2893591756d70555dfcbca69a0ae",
+    "rerun_inspection": "fa6266c87f1b2962e2269492811e05ecac52c2c6987d4d54a98275b40c125db3"
+  },
+  "observations": {
+    "failure_provenance": "The four failure cards are readable at original 1920x1080 resolution. Titles, body text, and the null/g0a footer do not overlap or clip.",
+    "assembled_and_exploded": "Both owner-local assembled subjects and both display-only exploded arrangements are visible. The labels explicitly prevent interpreting the exploded grids as a q5/world pose. The overview is context; the two part sheets provide detail.",
+    "link5_16": "A complete 4x4 sheet is visible: p000 through p015, one tile each. Role colors, callback polygon edges, names, and per-part millimetre bounds are readable without tile overlap.",
+    "gripper_link_18": "A complete 3x6 sheet is visible: p000 through p017, one tile each. Long names are intentionally ellipsized in a few titles, while IDs and dimensions remain readable and no title overlaps another tile.",
+    "rerun_inspection": "The fixed blueprint shows link5/gripper_link assembled views, link5/gripper_link exploded views, and the D374 event log. The upper-right startup notifications do not cover the gripper subject. The requested logical viewer window was 1920x1080, while the desktop DPR=2 capture is 3840x2160 physical pixels; exact presentation authority remains the four 1920x1080 boards."
+  },
+  "checks": {
+    "all_four_exact_boards_inspected_at_original_resolution": true,
+    "failure_text_no_overlap_or_clipping": true,
+    "link5_tiles_exactly_16_and_visible": true,
+    "gripper_link_tiles_exactly_18_and_visible": true,
+    "assembled_and_exploded_scope_labels_visible": true,
+    "role_colors_visually_distinct": true,
+    "rerun_four_spatial_views_and_event_log_visible": true,
+    "rerun_startup_notifications_do_not_hide_decision_subject": true,
+    "no_visual_observation_promoted_null_science_gate": true
+  },
+  "scientific_authority": "None. This is visual inspection evidence only; immutable callback JSON and hashes remain authoritative.",
+  "pass": true
+}
