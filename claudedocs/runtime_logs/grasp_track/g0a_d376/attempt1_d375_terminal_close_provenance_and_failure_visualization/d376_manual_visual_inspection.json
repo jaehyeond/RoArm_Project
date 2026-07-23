@@ -1,0 +1,36 @@
+{
+  "artifact": "D376_MANUAL_ORIGINAL_RESOLUTION_VISUAL_INSPECTION_V1",
+  "inspection_method": "functions.view_image detail=original for both exact boards and the Rerun headless screenshot",
+  "inspected_sha256": {
+    "cross_case_classification": "c32f39d9ef370bc850f7d0b773c6290ff18bd758f477543c9f4cd8e10b51cfdf",
+    "rerun_inspection": "b18450f4c8f0f5cc9f6a7508691ba7d42acf4af288c7af326c0d1ee08a6ce8f6",
+    "terminal_timeline": "36fa3111ec4250e1e866fe4680f0de9a1d036b40416d38113865728dc531a0a1"
+  },
+  "observations": {
+    "terminal_timeline": [
+      "1920x1080 원본에서 제목, 여섯 단계, 세 설명 상자, 하단 판정이 모두 잘림 없이 보인다.",
+      "측정 완료와 종료 미완료가 녹색/적색 단계로 분리되어 있고 화살표 순서가 명확하다.",
+      "증명된 사실, NVIDIA 6.0 기반 최유력 후보, StageCache 촉발 가설이 서로 섞이지 않는다."
+    ],
+    "cross_case_classification": [
+      "1920x1080 원본에서 D351, D367, D373, D375 네 행의 제목과 근거 문장이 겹치지 않는다.",
+      "D367 정상 종료, D373 정체성 검사 실패, D375 실제 종료 미완료의 차이를 한 화면에서 읽을 수 있다."
+    ],
+    "rerun_inspection": [
+      "HiDPI 2배 래스터인 3840x2160 원본에서 여섯 시간 사건과 세 정적 판정 문장이 모두 보인다.",
+      "ASCII만 사용해 한글 글리프 누락은 없고 본문끼리 겹치지 않는다.",
+      "timestamp 시간축이 1970년 날짜 형식으로 표시되어 초보자용 지속시간 판독에는 덜 직관적이다. 정확한 920.3908159369603초 권위는 JSON과 두 설명판이다.",
+      "샌드박스에서 로컬 message proxy server 권한 경고 토스트가 보이지만 RRD 로딩, 표, 그래프, headless screenshot return 0에는 영향을 주지 않았다."
+    ]
+  },
+  "checks": {
+    "both_exact_boards_legible": true,
+    "no_text_overlap_or_clipping_on_exact_boards": true,
+    "success_and_failure_boundaries_visually_separated": true,
+    "four_failure_classes_visually_distinct": true,
+    "rerun_required_rows_visible": true,
+    "rerun_limitations_explicitly_recorded": true,
+    "visuals_do_not_claim_full_identity_or_physics_pass": true
+  },
+  "pass": true
+}

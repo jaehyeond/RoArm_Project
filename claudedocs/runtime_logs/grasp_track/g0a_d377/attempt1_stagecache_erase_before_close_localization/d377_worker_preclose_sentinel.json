@@ -1,0 +1,78 @@
+{
+  "artifact": "D375_WORKER_PRECLOSE_SENTINEL_V1",
+  "counters": {
+    "automatic_convex_decomposition_sweeps": 0,
+    "automatic_retries": 0,
+    "contact_queries": 0,
+    "cylinder_creates_or_writes": 0,
+    "d343_contract_retests": 0,
+    "derivative_asset_materializations": 0,
+    "isaac_hydra_renders": 0,
+    "material_mass_actuator_physics_setting_changes": 0,
+    "physics_steps": 0,
+    "physx_callback_requests": 34,
+    "physx_property_queries": 2,
+    "physx_stage_attaches": 1,
+    "physx_stage_detaches": 1,
+    "public_forwards": 0,
+    "q5_commands": 0,
+    "q5_samples": 0,
+    "resets": 0,
+    "simulation_app_launches": 1,
+    "simulation_app_update_pumps": 0,
+    "simulation_context_constructions": 0,
+    "stagecache_erase_calls": 1,
+    "target_ik_path_pose_changes": 0,
+    "timeline_commit_requests": 0,
+    "timeline_play_requests": 0,
+    "usd_stage_file_writes": 0,
+    "worker_invocations": 1
+  },
+  "phase_prefix_bytes": 11226,
+  "phase_prefix_sha256": "5e9def57a16618737075692a45355c845bd04de450d585c86007e42677d40e70",
+  "safe_to_close_app": true,
+  "stagecache_erase": {
+    "after": {
+      "contains_stage": false,
+      "find_old_id_present": false,
+      "id_int": null,
+      "id_valid": false
+    },
+    "api": "UsdUtils.StageCache.Get().Erase(stage)",
+    "before": {
+      "contains_stage": true,
+      "find_old_id_matches_stage": true,
+      "find_old_id_present": true,
+      "id_int": 9223002,
+      "id_matches_registered_stage_id": true,
+      "id_valid": true
+    },
+    "checks": {
+      "after_contains_false": true,
+      "after_find_old_id_absent": true,
+      "after_id_invalid": true,
+      "before_contains_true": true,
+      "before_find_matches_stage": true,
+      "before_id_matches_registered_stage_id": true,
+      "before_id_valid": true,
+      "erase_call_count_exactly_one": true,
+      "erase_return_true": true,
+      "python_stage_reference_retained": true
+    },
+    "erase_return": true,
+    "pass": true,
+    "placement": "immediately_after_successful_physx_detach",
+    "python_stage_reference_retained": true
+  },
+  "summary_path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_worker_raw_summary.json",
+  "summary_sha256": "f14d2cf38cffc03a3121719a4dac0a62d612b46926a5ff6afcc10cd143717fb1",
+  "timeline_after": {
+    "current_time_s": 0.0,
+    "end_time": 1.6666666666666667,
+    "is_playing": false,
+    "is_stopped": true,
+    "start_time": 0.0,
+    "time_codes_per_seconds": 60.0
+  },
+  "worker_protocol_pass": true
+}

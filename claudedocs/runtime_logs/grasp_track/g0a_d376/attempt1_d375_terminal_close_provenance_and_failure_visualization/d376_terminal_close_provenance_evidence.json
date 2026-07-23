@@ -1,0 +1,305 @@
+{
+  "D375_effective_identity_pass_preserved": false,
+  "D375_program_order": {
+    "callback_rows_passed": 34,
+    "cleanup_end_to_supervisor_exit_s": 914.65653135,
+    "configured_term_grace_s": 20.0,
+    "kit_last_lines": [
+      {
+        "line": 2280,
+        "text": "2026-07-22T01:53:17Z [4,792ms] [Info] [omni.physx.plugin] Using CUDA device ordinal 0."
+      },
+      {
+        "line": 2281,
+        "text": "2026-07-22T01:53:18Z [5,466ms] [Info] [omni.physx.plugin] Using CUDA device ordinal 0."
+      },
+      {
+        "line": 2282,
+        "text": "2026-07-22T01:53:18Z [5,504ms] [Info] [simulation_app.simulation_app] SimulationApp.close: Closing application"
+      },
+      {
+        "line": 2283,
+        "text": "2026-07-22T01:53:18Z [5,504ms] [Info] [simulation_app.simulation_app] SimulationApp.close: Replicator shutdown finished"
+      },
+      {
+        "line": 2284,
+        "text": "2026-07-22T01:53:18Z [5,522ms] [Info] [simulation_app.simulation_app] SimulationApp.close: Stage closed"
+      },
+      {
+        "line": 2285,
+        "text": "2026-07-22T01:53:18Z [5,523ms] [Info] [omni.kit.app.plugin] [5.550s] Simulation App Shutting Down"
+      },
+      {
+        "line": 2286,
+        "text": "2026-07-22T01:53:18Z [5,523ms] [Info] [simulation_app.simulation_app] SimulationApp.close: shutting down app and releasing framework"
+      }
+    ],
+    "property_collider_counts": {
+      "gripper_link": 19,
+      "link5": 17
+    },
+    "returncode": -9,
+    "supervisor_elapsed_s": 920.3908159369603,
+    "supervisor_overrun_after_timeout_s": 20.39081593696028,
+    "timeout_s": 900.0
+  },
+  "D375_verdict_preserved": "D375_P34_LIVE_ASSET_IDENTITY_CONTRACT_REPAIR_FAIL_STOP",
+  "artifact": "D376_D375_TERMINAL_CLOSE_PROVENANCE_EVIDENCE_V1",
+  "attempt": "attempt1_d375_terminal_close_provenance_and_failure_visualization",
+  "case": "g0a_d376",
+  "checks": {
+    "D351_attempt1_binding_success_timeline_only_false": true,
+    "D351_attempt2_external_termination_exact": true,
+    "D351_attempt2_root_cause_unlocalized": true,
+    "D367_clean_exit_not_hang": true,
+    "D373_clean_exit_not_hang": true,
+    "D375_controller_term_grace_and_kill_order_bound": true,
+    "D375_effective_identity_pass_false": true,
+    "callback_34_of_34": true,
+    "cleanup_end_reached": true,
+    "fast_shutdown_was_already_true": true,
+    "installed_source_calls_shutdown_and_release": true,
+    "kit_log_ends_at_release_boundary": true,
+    "kit_reaches_stage_close_and_framework_release": true,
+    "physics_q5_contact_zero": true,
+    "property_17_plus_19_valid": true,
+    "raw_and_preclose_protocol_true": true,
+    "raw_preclose_hash_exact": true,
+    "skip_cleanup_and_graceful_use_same_installed_native_call": true,
+    "startup_gpu_capacity_healthy_and_no_kit_oom_evidence": true,
+    "timeout_term_kill_return_minus9": true
+  },
+  "cross_case_classification": [
+    {
+      "case": "D351",
+      "evidence_summary": "attempt1은 Isaac/128 binding 성공 뒤 timeline_paused=false; attempt2는 3693.302초 뒤 승인 SIGTERM·exit 0, 내부 원인 null.",
+      "plain_class": "두 현상: timeline_paused 선행조건 실패 + 원인 미확정 장기 실행",
+      "same_as_D375": false
+    },
+    {
+      "case": "D367",
+      "evidence_summary": "worker exit 0, 19.401926초, watchdog·SIGTERM·SIGKILL·잔류 프로세스 없음.",
+      "plain_class": "정상 종료를 우리 post-close 표식 계약이 FAIL로 잘못 분류",
+      "same_as_D375": false
+    },
+    {
+      "case": "D373",
+      "evidence_summary": "worker exit 0, 7.671346초. instance-proxy ERROR_PARSING stage라 D375의 non-instance VALID-property stage와 상태가 다름.",
+      "plain_class": "Isaac 종료는 정상; identity 감사 코드·instance-proxy 구조가 실패",
+      "same_as_D375": false
+    },
+    {
+      "case": "D375",
+      "evidence_summary": "raw/preclose PASS 뒤 900초 timeout→TERM→KILL, 총 920.390816초, return -9.",
+      "plain_class": "측정 완료 뒤 terminal framework-release 경계에서 실제 non-exit",
+      "same_as_D375": true
+    }
+  ],
+  "g0a_pass": false,
+  "hypotheses": {
+    "proven_boundary": {
+      "classification": "terminal framework-release / process-exit boundary",
+      "confidence": "proven by external non-exit plus exact last Kit log and installed call order",
+      "not_proven_below_native_call": true
+    },
+    "rejected_or_unsupported": [
+      "GPU/VRAM shortage as established cause",
+      "Warp/SM tuning failure",
+      "P34 geometry failure",
+      "callback count overload",
+      "PhysX detach failure",
+      "current stage close failure",
+      "all Isaac 5.1 runs always hang"
+    ],
+    "strongest_mechanism_candidate": {
+      "classification": "main-thread GIL versus carb.tasking worker teardown deadlock in shutdown_and_release_framework",
+      "exact_identity": null,
+      "reason_null": "no D375 thread dump or native stack",
+      "support": "NVIDIA Isaac Sim 6.0 release note bug 5948099 replaces the exact call used by installed 5.1",
+      "version_mismatch": "6.0 mechanism evidence; D375 ran 5.1"
+    },
+    "workload_trigger_candidate": {
+      "classification": "valid custom in-memory articulation stage remained in StageCache after PhysX detach",
+      "not_sufficient_alone": "D373 also omitted Erase but exited 0; D373's articulation parse failed whereas D375 created valid PhysX objects",
+      "single_variable_causality": null,
+      "support": "D375 worker Insert+detach with no Erase; installed NVIDIA PhysX helper defines detach+StageCache.Erase"
+    }
+  },
+  "installed_source_provenance": {
+    "D373_worker_stage_lifecycle_control": {
+      "erase_match_count": 0,
+      "matching_lines": [
+        {
+          "line": 460,
+          "text": "    cache = UsdUtils.StageCache.Get()"
+        },
+        {
+          "line": 463,
+          "text": "        stage_id = cache.Insert(stage)"
+        },
+        {
+          "line": 1098,
+          "text": "                get_physx_simulation_interface().detach_stage()"
+        }
+      ],
+      "path": "sim_scripts/cyl34_top_view_d373_p34_live_asset_worker.py",
+      "process_exit_zero": true,
+      "sha256": "d763b7aaff759906f5b6c19a6895ef30dfc7725808b88b94c90662ff3bba5885"
+    },
+    "D375_controller_termination_order": {
+      "matching_lines": [
+        {
+          "line": 615,
+          "text": "        process.terminate()"
+        },
+        {
+          "line": 618,
+          "text": "            stdout, stderr = process.communicate(timeout=20.0)"
+        },
+        {
+          "line": 620,
+          "text": "            process.kill()"
+        },
+        {
+          "line": 622,
+          "text": "            stdout, stderr = process.communicate(timeout=20.0)"
+        }
+      ],
+      "path": "sim_scripts/cyl34_top_view_d375_p34_live_asset_identity_contract_repair.py",
+      "sha256": "70cb1bf9b0d518117fe90c848a9cefbdb95c8a0cabd4f3fa0fc5a37aae29c5e1"
+    },
+    "D375_worker_stage_lifecycle": {
+      "erase_match_count": 0,
+      "matching_lines": [
+        {
+          "line": 263,
+          "text": "    cache = UsdUtils.StageCache.Get()"
+        },
+        {
+          "line": 266,
+          "text": "        stage_id = cache.Insert(stage)"
+        },
+        {
+          "line": 718,
+          "text": "                get_physx_simulation_interface().detach_stage()"
+        }
+      ],
+      "path": "sim_scripts/cyl34_top_view_d375_p34_live_asset_identity_contract_repair_worker.py",
+      "sha256": "4b2bbef3cf445ef4c9c9a8de2bac8a01087180502ef134129f9bcfb444020fa4"
+    },
+    "kit_log": {
+      "path": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/kit/logs/Kit/Isaac-Sim/5.1/kit_20260722_105312.log",
+      "sha256": "6522efde45e776fabf3186ddf362d509a6a3b04f999adc5024c28f41dce1ccc9",
+      "snapshot_path": "claudedocs/runtime_logs/grasp_track/g0a_d376/attempt1_d375_terminal_close_provenance_and_failure_visualization/d376_frozen_d375_kit_log.txt",
+      "snapshot_sha256": "6522efde45e776fabf3186ddf362d509a6a3b04f999adc5024c28f41dce1ccc9"
+    },
+    "physx_utils": {
+      "matching_lines": [
+        {
+          "line": 582,
+          "text": "def new_memory_stage(attach_stage=True, file_to_load=\"\"):"
+        },
+        {
+          "line": 588,
+          "text": "    cache.Insert(stage)"
+        },
+        {
+          "line": 595,
+          "text": "def release_memory_stage(stage, detach_stage=True):"
+        },
+        {
+          "line": 597,
+          "text": "        get_physx_simulation_interface().detach_stage()"
+        },
+        {
+          "line": 599,
+          "text": "    cache.Erase(stage)"
+        }
+      ],
+      "path": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.physx-107.3.26+107.3.3.lx64.r.cp311.u353/omni/physx/scripts/utils.py",
+      "sha256": "d7e62f14d065257032a5f0d7d54f24840df25babb51311c5d779aa459e20dcc1"
+    },
+    "simulation_app": {
+      "matching_lines": [
+        {
+          "line": 763,
+          "text": "    def close(self, wait_for_replicator=True, skip_cleanup=False) -> None:"
+        },
+        {
+          "line": 788,
+          "text": "        if skip_cleanup:"
+        },
+        {
+          "line": 793,
+          "text": "            self._app.shutdown_and_release_framework()"
+        },
+        {
+          "line": 814,
+          "text": "            self.context.close_stage()"
+        },
+        {
+          "line": 838,
+          "text": "            self._app.shutdown_and_release_framework()"
+        }
+      ],
+      "path": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/exts/isaacsim.simulation_app/isaacsim/simulation_app/simulation_app.py",
+      "sha256": "7cbaa6f00e935a6f14bf1c28ec0db089fd924e931f3b0deee07a822f9b7d0090"
+    }
+  },
+  "new_variables": [
+    "d375_terminal_close_provenance_contract_v1",
+    "d375_terminal_failure_visualization_projection_v1"
+  ],
+  "next_authorization_boundary": "A separate live control case must test exactly one lifecycle variable before full P34 identity classification or any A64/P34 cylinder physics comparison.",
+  "official_source_attestation": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d376/attempt1_d375_terminal_close_provenance_and_failure_visualization/d376_nvidia_official_source_attestation.json",
+    "sha256": "df253c95c5aa552363cf631c4e832ae292dd9f1704a3402468990f5b84b56691"
+  },
+  "official_sources": [
+    {
+      "applicable_version": "installed Isaac Sim 5.1.0 / extension 2.12.2",
+      "claim": "close(skip_cleanup=False) is graceful cleanup; skip_cleanup=True is immediate exit; fast_shutdown defaults true",
+      "title": "Isaac Sim 5.1.0 isaacsim.simulation_app API",
+      "url": "https://docs.isaacsim.omniverse.nvidia.com/5.1.0/py/source/extensions/isaacsim.simulation_app/docs/index.html"
+    },
+    {
+      "applicable_version": "installed Isaac Sim 5.1.0",
+      "claim": "records stage-close and exit-hang fixes but does not identify this workload's cause",
+      "title": "Isaac Sim 5.1.0 Release Notes",
+      "url": "https://docs.isaacsim.omniverse.nvidia.com/5.1.0/overview/release_notes.html"
+    },
+    {
+      "applicable_version": "later version; mechanism evidence only, not installed behavior",
+      "claim": "replaced shutdown_and_release_framework with app.shutdown to avoid main-thread GIL/carb.tasking teardown deadlock (5948099)",
+      "title": "Isaac Sim 6.0.0 Release Notes",
+      "url": "https://docs.isaacsim.omniverse.nvidia.com/6.0.0/overview/release_notes.html"
+    }
+  ],
+  "pass": true,
+  "scientific_or_causal_nulls": {
+    "D375_shutdown_interval_runtime_gpu_telemetry": null,
+    "StageCache_Erase_single_variable_causality": null,
+    "bug_5948099_exact_identity": null,
+    "exact_native_thread_or_plugin_blocker": null,
+    "full_authored_callback_classifier_result": null,
+    "grasp_feasibility": null,
+    "physics_equivalence_or_tipping_causality": null
+  },
+  "scope_counters": {
+    "automatic_decomposition_sweeps": 0,
+    "automatic_retries": 0,
+    "collider_regenerations": 0,
+    "contact_queries": 0,
+    "cylinder_writes": 0,
+    "isaac_launches": 0,
+    "offline_audit_invocations": 1,
+    "physics_steps": 0,
+    "physx_calls": 0,
+    "q5_commands": 0,
+    "q5_samples": 0,
+    "target_ik_path_changes": 0,
+    "usd_writes": 0
+  },
+  "verdict": "D376_D375_TERMINAL_CLOSE_PROVENANCE_AND_FAILURE_VISUALIZATION_PASS",
+  "what_and_why": "Separate D375's successful live acquisition from its terminal non-exit, and distinguish it from earlier unrelated Isaac-labelled failures without rerunning Isaac."
+}

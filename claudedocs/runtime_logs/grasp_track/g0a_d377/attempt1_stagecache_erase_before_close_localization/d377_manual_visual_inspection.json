@@ -1,0 +1,30 @@
+{
+  "artifact": "D377_MANUAL_VISUAL_INSPECTION_V1",
+  "board": {
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_d375_vs_d377_stagecache_erase_1920x1080.png",
+    "sha256": "6e1c2433970fabe69eddd66d7cd6b31ac23636455ec476146b3b6c9ec85a59b3"
+  },
+  "d375_vs_d377_difference_readable": true,
+  "no_text_overlap_or_clipping": true,
+  "observations": [
+    "The exact 1920x1080 board is readable at original resolution with no overlapping or clipped cards; it visibly preserves workload=False, Erase pre/post=True, return=0, and the null causal verdict.",
+    "The 3840x2160 HiDPI Rerun capture shows a duration-based lifecycle_elapsed_s axis and ten curated critical events, including callback 34/34, property completion, detach, StageCache Contains True to False, close start, and external return 0 without timeout.",
+    "The Rerun lower verdict panel is not fully readable because the Korean causal text is rendered as square missing-glyph boxes. English boundary/scope/verdict identifiers remain visible, and Viewer notifications do not cover the event timeline, but the missing glyphs require a fail-closed manual result."
+  ],
+  "pass": false,
+  "rerun_screenshot": {
+    "dimensions": [
+      3840,
+      2160
+    ],
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_rerun_inspection.png",
+    "requested_logical_window": "1920x1080",
+    "sha256": "50b021a483887ca55b8eafaa81da3bbe6a5db25a81c60d3a8437ad88fc4aa807"
+  },
+  "rerun_timeline_and_boundary_readable": false,
+  "reviewed_original_resolution": true
+}

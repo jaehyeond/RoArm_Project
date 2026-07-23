@@ -1,0 +1,60 @@
+{
+  "accessed_date": "2026-07-22",
+  "artifact": "D376_NVIDIA_OFFICIAL_SOURCE_ATTESTATION_V1",
+  "external_web_claim_machine_frozen": false,
+  "external_web_claim_review": "manually verified from NVIDIA official pages at the registered URL/line references; final briefing must cite the live URL",
+  "installed_5_1_changelog": {
+    "matching_lines": [
+      {
+        "line": 5,
+        "text": "- Fix hang on shutdown by forcing the current stage to close"
+      },
+      {
+        "line": 20,
+        "text": "- Fix for hang on exit"
+      }
+    ],
+    "path": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/exts/isaacsim.simulation_app/docs/CHANGELOG.md",
+    "sha256": "7fde35e91127c26e2b8ecf3b67a6301787fe3e43040aa37269d99b131ae11a18"
+  },
+  "installed_5_1_local_source_pass": true,
+  "installed_stack": {
+    "compute_capability": "8.9",
+    "driver": "580.159.03",
+    "gpu": "NVIDIA GeForce RTX 4090 Laptop GPU",
+    "isaac_lab": "2.3.0",
+    "isaac_sim": "5.1.0.0",
+    "kernel_carbonite": "206.6",
+    "kit": "107.3.3",
+    "omni_physx_schema": "107.3.26",
+    "simulation_app_extension": "2.12.2"
+  },
+  "pass": true,
+  "sources": [
+    {
+      "applicable_version": "installed Isaac Sim 5.1.0 / extension 2.12.2",
+      "claim": "close(skip_cleanup=False) is graceful cleanup; skip_cleanup=True is immediate exit; fast_shutdown defaults true",
+      "title": "Isaac Sim 5.1.0 isaacsim.simulation_app API",
+      "url": "https://docs.isaacsim.omniverse.nvidia.com/5.1.0/py/source/extensions/isaacsim.simulation_app/docs/index.html",
+      "verified_interpretation": "5.1 documents graceful versus immediate close and fast_shutdown=True; installed 5.1 still routes both close branches through shutdown_and_release_framework.",
+      "web_line_reference": "713-736 and 851-892"
+    },
+    {
+      "applicable_version": "installed Isaac Sim 5.1.0",
+      "claim": "records stage-close and exit-hang fixes but does not identify this workload's cause",
+      "title": "Isaac Sim 5.1.0 Release Notes",
+      "url": "https://docs.isaacsim.omniverse.nvidia.com/5.1.0/overview/release_notes.html",
+      "verified_interpretation": "5.1 records stage-close and exit-hang fixes; D375 proves stage close passed, so those notes do not identify the later framework-release stall.",
+      "web_line_reference": "1262-1285"
+    },
+    {
+      "applicable_version": "later version; mechanism evidence only, not installed behavior",
+      "claim": "replaced shutdown_and_release_framework with app.shutdown to avoid main-thread GIL/carb.tasking teardown deadlock (5948099)",
+      "title": "Isaac Sim 6.0.0 Release Notes",
+      "url": "https://docs.isaacsim.omniverse.nvidia.com/6.0.0/overview/release_notes.html",
+      "verified_interpretation": "6.0 later replaced the exact framework-release call to avoid a documented GIL/carb.tasking teardown deadlock; this strongly supports a mechanism but is not an exact D375 thread dump.",
+      "web_line_reference": "2974-2998, especially 2992"
+    }
+  ],
+  "version_separation_preserved": true
+}

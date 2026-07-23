@@ -1,0 +1,68 @@
+{
+  "artifact": "D377_HASH_BOUND_PROCESS_GROUP_SUPERVISOR_V1",
+  "automatic_retry_count": 0,
+  "close_start_first_seen_s": 6.515878254082054,
+  "effective_preanalysis_pass": true,
+  "elapsed_s": 6.733121555997059,
+  "erase_exact_preanalysis": true,
+  "gpu_compute_rows_after": [
+    {
+      "pid": 4159377,
+      "process_name": "python3",
+      "used_memory_mib": "390"
+    }
+  ],
+  "hash_authority_checks": {
+    "close_start_marker_present": true,
+    "preclose_counters_exact": true,
+    "preclose_erase_exact": true,
+    "preclose_phase_prefix_sha_exact": true,
+    "preclose_summary_path_exact": true,
+    "preclose_summary_sha_exact": true,
+    "preclose_timeline_exact": true,
+    "preclose_worker_protocol_pass": true,
+    "raw_worker_protocol_pass": true,
+    "safe_to_close_app": true
+  },
+  "hash_authority_pass": true,
+  "kill_wait_expired": false,
+  "note": "D375 workload equivalence is independently evaluated only in analyze",
+  "operational_checks": {
+    "all_required_artifacts": true,
+    "kill_wait_did_not_expire": true,
+    "no_process_group_residue": true,
+    "no_sigkill": true,
+    "no_sigterm": true,
+    "no_watchdog_timeout": true,
+    "no_worker_gpu_pid_residue": true,
+    "process_reaped": true,
+    "returncode_zero": true
+  },
+  "operational_pass": true,
+  "pass": true,
+  "pgid": 3192969,
+  "pid": 3192969,
+  "process_group_residue": [],
+  "required_artifacts": {
+    "claim": true,
+    "phase_markers": true,
+    "preclose": true,
+    "raw_summary": true
+  },
+  "returncode": 0,
+  "sigkill_sent": false,
+  "sigterm_sent": false,
+  "stderr": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_worker_stderr.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stdout": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_worker_stdout.log",
+    "sha256": "e72c81108b6392e2b676c33247e1a1af0ad0333190ecc9a81dc5f5d74a17b2c2"
+  },
+  "timed_out": false,
+  "timeout_last_phase": null,
+  "watchdog_s": 120.0,
+  "worker_gpu_residue": [],
+  "worker_spawn_count": 1
+}

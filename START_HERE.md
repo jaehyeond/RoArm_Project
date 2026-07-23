@@ -1,120 +1,138 @@
 # START_HERE.md
 
-Last updated: 2026-07-22 KST. D375 ran one repaired P34 live-identity worker. Its
-live acquisition/property subresult passed, but Isaac did not return from shutdown before the
-bounded watchdog, so the overall case is frozen as FAIL_STOP. No physics was run.
+Last updated: 2026-07-23 KST. D377 ran the approved one-variable StageCache lifecycle
+localization exactly once. The worker exited cleanly, but the preregistered workload comparator
+produced a false negative from run-dependent diagnostic identifiers. The frozen formal verdict
+therefore remains FAIL_STOP pending a separately approved offline authority repair.
 
 ## Current Truth
 
 - Pivot: cylinder grasp-track G0a. Cylinder radius/diameter/height are
   `0.017/0.034/0.090m = 17/34/90mm`; `q5=0` CLOSED and frozen OPEN is `1.5413rad`.
-- D362 remains the physical authority: the current A64 path pushed the cylinder over rather
-  than holding it. D372-D375 did not rerun or supersede that physical result.
-- D368 established `64 link5 + 64 gripper_link` as a current 64-cap reference candidate,
+- D362 remains the latest physical authority: the current A64 path pushed the cylinder over
+  rather than holding it. D372-D377 did not run cylinder physics or supersede that result.
+- D368 established `64 link5 + 64 gripper_link` as the current 64-cap reference candidate,
   not an optimum. `maxConvexHulls=32` is an automatic-decomposition schema default, not a
-  manual compound target count or engine hard limit.
-- D372 built the professor's task-local P34 offline candidate:
-  - link5 `16`: body box-shaped convex Mesh `1`, connector/pivot support `3`, fixed-jaw
-    contact pieces `10`, fixed-jaw backbones `2`.
-  - gripper_link `18`: moving support `4`, moving-jaw contact pieces `12`, moving-jaw
-    backbones `2`.
-  - total `34`, a design-count reduction from A64 total `128`, not a speed/physics/optimality
-    result.
-- D373 materialized P34 and acquired limited raw data but failed its identity contract because
-  of Float32 comparator, unsupported articulation owner instancing, traversal, and supervisor
-  defects. D374 proved those defects and visualized the frozen D373 failure offline.
-- D375 removed whole-robot instancing while reusing the exact D373 P34 asset. Before shutdown:
-  - `/World/Robot`, `link5`, and `gripper_link` were non-instance/non-proxy;
-  - direct/live P34 `34/34`, callback protocol `34/34` passed;
-  - property queries were VALID for link5 `17/17` and gripper_link `19/19` collider rows;
-  - authored mass/COM/inertia/axes deltas were `0.0`.
-- D375 still ended `D375_P34_LIVE_ASSET_IDENTITY_CONTRACT_REPAIR_FAIL_STOP`: after writing
-  a hash-exact raw/preclose PASS, the process did not exit in the subsequent
-  `SimulationApp.close()`/interpreter-teardown window. No post-close marker exists, so the
-  internal blocking call remains unlocalized.
-  The supervisor timed out at `900s`, sent SIGTERM then SIGKILL, elapsed
-  `920.3908159369603s`, return `-9`, effective PASS `false`.
-- Therefore full authored↔callback surface/bounds/original-polygon topology-volume identity,
-  physical equivalence/speed, tipping causality, and grasp feasibility remain `null`;
-  `g0a_pass=false`.
+  manual-compound target count or engine hard limit.
+- D372 built the professor's task-local P34 offline candidate, not a global optimum:
+  - link5 `16`: body convex box `1`, connector/pivot support `3`, fixed-jaw contact pieces `10`,
+    fixed-jaw backbones `2`.
+  - gripper_link `18`: moving support `4`, moving-jaw contact pieces `12`, moving backbones `2`.
+  - total `34`, versus A64 total `128`; speed, physics, tipping, and grasp equivalence are null.
+- D373 materialized P34 but failed its identity contract because of comparator, unsupported
+  articulation-owner instancing, traversal, and supervisor defects. D374 proved and visualized
+  those defects offline.
+- D375 removed whole-robot instancing and reached valid acquisition before shutdown: direct/live
+  P34 `34/34`, callback protocol `34/34`, property-query collider rows `17+19` VALID, and authored
+  mass/COM/inertia/axes deltas `0.0`. It then failed to exit: watchdog `900s`, SIGTERM, `20s`,
+  SIGKILL, elapsed `920.3908159369603s`, return `-9`.
+- D376 localized that non-exit to the terminal framework-release/process-exit boundary. The exact
+  native blocker is null. Installed Isaac Sim `5.1.0.0` already used `fastShutdown=True`; both
+  graceful and skip-cleanup paths reach `shutdown_and_release_framework()`. NVIDIA's later 6.0
+  fix for bug 5948099 is mechanism evidence only, not exact D375 bug identity.
 
-## D375 Verified Results
+## D377 Verified Results
 
-- Attempt1 was prepare-only: sandboxed child `nvidia-smi` returned `9`; actual worker `0`.
-  Direct host query proved RTX 4090 Laptop, driver `580.159.03`, VRAM
-  `16376/480/15465MiB` total/used/free, compute capability `8.9`.
-- Forward-only attempt2 external GPU attestation: prereg checks `21/21`, negative controls
-  `4/4` PASS; actual worker/retry `1/0`.
-- Installed stack: Isaac Sim `5.1.0.0`, Isaac Lab `2.3.0`, Omni PhysX/schema `107.3.26`;
-  `numpy==1.26.0`, `psutil==5.9.8`.
-- Frozen P34 asset was not rewritten or rematerialized. Active A64 count `0`; disabled known
-  legacy count `2`; timeline stayed STOP at `0.0s`.
-- `link5`: rigid result VALID, collider `17/17 VALID`, mass
-  `0.015392799861729145kg`.
-- `gripper_link`: rigid result VALID, collider `19/19 VALID`, mass
-  `0.0028707999736070633kg`.
-- Worker raw/preclose protocol `true/true`; summary SHA/counter/timeline binding exact.
-  Supervisor hash authority passed, but operational/effective authority failed due timeout and
-  signals.
-- Simulation launch/PhysX attach-detach/callback/property query = `1/1-1/34/2`.
-  Physics step, q5, contact, cylinder, public forward, reset, target/IK/path, decomposition
-  sweep, material/mass/actuator/physics change, asset/USD write = all `0`.
-- Fail-closed analysis did not run the full geometry classifier or create 1920×1080/RRD/RBL;
-  these are `not_run_due_worker_authority_fail`, not visual PASS.
-- Both D375 attempts and the user-owned D334 sidecar are frozen; do not retry or overwrite.
+- New lifecycle variable: one `UsdUtils.StageCache.Get().Erase(stage)` immediately after the
+  inherited successful PhysX detach. Python retained the `stage` reference; shutdown API,
+  `fastShutdown`, asset, settings, and D375 acquisition workload were otherwise frozen.
+- Preregistration checks `17/17` and negative controls `7/7` passed. Actual worker/retry `1/0`;
+  bounded watchdog `120s`.
+- The worker reproduced callback `34`, property queries `2`, and collider rows link5 `17` plus
+  gripper_link `19`. PhysX attach/detach were `1/1`.
+- Before Erase: StageCache `Contains(stage)=true` and the registered ID found the same stage.
+  Erase was called exactly once and returned `true`. After Erase: `Contains=false`, the old ID
+  was invalid/absent, while the Python stage reference remained retained.
+- The process exited with return `0` in `6.733121555997059s`. Timeout, SIGTERM, SIGKILL,
+  process-group residue, and worker GPU residue were all absent. Thus Isaac did not time out in
+  D377.
+- Physics step, q5 command/sample, contact query, cylinder write, public forward, reset,
+  timeline play/commit, automatic decomposition sweep, and target/IK/path or physical-setting
+  changes were all `0`.
+- The preregistered comparator nevertheless reported workload mismatch and froze verdict
+  `D377_STAGECACHE_ERASE_BEFORE_CLOSE_LOCALIZATION_FAIL_STOP`, branch
+  `UPSTREAM_WORKLOAD_MISMATCH_ERASE_EFFECT_NULL`. Do not rewrite or promote this artifact.
+
+## Post-result Authority Audit
+
+- A read-only independent diff found exactly `68` selected-signature differences:
+  - `34` callback witness hashes changed only because each witness included a runtime object
+    memory address in `request_return_repr`.
+  - `34` `prototype_path_diagnostic` fields changed only in run-assigned `__Prototype_N` numbers.
+- Removing only those two non-authoritative run-dependent fields makes the D375 and D377
+  termination workloads identical with independent canonical SHA-256
+  `28aadb5ff26270039df58f7cd06080bf7afcdec001402e886a6edf1483fdfe31`.
+- Callback payloads were otherwise exact `34/34`: total vertices `314`, indices `1016`, original
+  polygons `262`. Property rows differed only in opaque runtime `path_id` values `38` and
+  elapsed-time values `2`; mass, inertia, volume, AABB, local pose, result, and semantic path were
+  exact.
+- This proves a comparator false negative, not a preregistered D377 PASS. Consequently the clean
+  exit strongly motivates StageCache retention as a conditional trigger in this run, but formal
+  causal support remains null until a new forward-only offline authority repair is approved.
+- Missing Erase is not a universal necessary cause: D373 also omitted Erase and exited `0`.
+  D377 also does not prove stage-object destruction or exact NVIDIA bug 5948099 identity.
+
+## Observability Status
+
+- The exact decision board is `1920x1080`; save-only RRD/RBL passed automated Rerun `0.34.1`
+  footer/entity/timeline/component checks. The actual HiDPI Viewer PNG is `3840x2160` physical.
+- Manual completion failed because the Rerun capture's lower Korean text rendered as square
+  missing glyphs. More importantly, the board truthfully reflects the frozen but now-known-false
+  comparator result `workload=False`; it must not be used as the corrected professor-facing
+  explanation.
+- Overall D377 completion remains false. `g0a_pass=false`; P34 full live identity, physical
+  equivalence/speed, tipping causality, current-pose closure, contact, and grasp feasibility are
+  all null.
 
 ## Active Case / Authorization Boundary
 
-- No case is currently approved. D375 is complete as FAIL_STOP and frozen.
-- Recommended next minimum, not yet approved:
-  `D376 [d375_terminal_close_provenance_and_failure_visualization]`.
-  - Read immutable D375 JSON/logs only; Isaac/PhysX rerun `0`.
-  - Localize the program-order boundary around preclose, `SimulationApp.close()`, watchdog,
-    SIGTERM, and SIGKILL without guessing the internal hang cause.
-  - Compare installed Isaac Sim 5.1 source with version-matched NVIDIA lifecycle docs.
-  - Produce an exact 1920×1080 failure board plus save-only RRD/RBL and manual inspection.
-- A later live lifecycle repair must choose one preregistered variable (for example the official
-  immediate-exit path versus a supervisor-owned terminal contract) and obtain separate approval.
-- A repaired full live-identity PASS is still required before any A64, link5-only P34,
-  gripper-only P34, or both-P34 cylinder physics comparison.
-- Physical comparison, center-height/wrist pose repair, target/IK/path, material/mass/actuator/
-  physics changes, settle/hold/lift, ten-trial, G0b, RL/PPO/VLA each require separate approval.
+- D377 is complete and frozen. There is no currently approved active case.
+- Recommended next minimum is unapproved
+  `D378 [d377_ephemeral_identifier_provenance_and_workload_authority_repair]`, offline-only.
+  It would read immutable D375/D377 JSON/witnesses, preregister exactly which runtime diagnostic
+  fields are excluded from termination-workload identity, independently recompute the corrected
+  digest, and render an ASCII-only corrected explanation. It must not launch Isaac/PhysX or run
+  q5, physics, contact, cylinder, target/IK/path, or collider regeneration.
+- Only after that authority repair may a separately approved full P34 live-identity classifier
+  be considered. A64/P34 cylinder physics, center-height/wrist repair, settle/hold/lift, ten-trial,
+  G0b, RL/PPO/VLA each remain separately gated.
 
 ## Frozen Boundaries / Do Not Repeat
 
 - Do not call P34's 34 parts a mathematical, global, or performance optimum.
-- Do not claim D375 full live identity PASS from the preclose acquisition subresult.
-- Do not treat a timeout/SIGKILL worker as successful because its raw JSON says PASS.
-- Do not repeat whole-robot instancing of dynamic articulation links.
-- Do not repeat decimal `0.0001` versus typed Float32 with `1e-12m` after D343.
-- Default traversal zero is not collider absence when instance proxies are omitted.
-- Property-query values are authority only when result is `VALID`.
-- Callback protocol PASS alone is not full surface/property identity PASS.
-- Do not bypass fail-closed classification to manufacture presentation artifacts.
-- NVIDIA release-note hang fixes do not by themselves identify this workload's hang cause.
+- Do not claim D375 full live identity PASS from its preclose acquisition subresult.
+- Do not claim D377 formal lifecycle PASS from its clean exit; preserve the frozen FAIL_STOP and
+  separately label the post-result comparator false negative.
+- Never include runtime memory addresses, generated prototype ordinals, opaque property `path_id`,
+  or elapsed time in canonical geometry/workload identity unless their identity role is separately
+  proven and preregistered.
+- Callback protocol PASS alone is not full surface/property identity PASS. Property values are
+  authority only when result is `VALID`.
+- Do not repeat whole-robot instancing of dynamic articulation links, decimal-vs-typed-Float32
+  over-tight comparison, default traversal without instance proxies, or raw-summary-only worker
+  success without external process-exit authority.
+- NVIDIA later-version release notes do not identify the installed-version failure by themselves.
 - Do not modify `claudedocs/lab_meeting/20260715/d334_collision_table/`.
-- `HANDOFF.md` and `TASKS.md` are stale. No hardware, B200/SSH, dependency install, commit,
-  push, new signal, new live worker, or physical comparison is authorized.
+- `HANDOFF.md` and `TASKS.md` are stale. No hardware, dependency install, signal, commit, push,
+  physical comparison, or further live worker is authorized.
 
 ## Must Read First
 
-1. `AGENTS.md`; this file; DECISIONS D373-D375; ledger tail
-2. `claudedocs/session_20260722_grasp_g0a_d375_p34_live_asset_identity_contract_repair_fail_stop.md`
-3. D375 attempt2 preregistration, raw summary, preclose sentinel, supervisor, fail attestation
-4. D374 session/repair contract only when tracing inherited authority
-5. D373 raw only when comparing instance-proxy failure to D375 VALID property rows
-6. D372 geometry/completion only when tracing the frozen P34 design source
-7. Version-matched NVIDIA Omni Physics 107.3 and Isaac Sim 5.1 lifecycle docs
-8. D362 physical trace only after a physical comparison is separately approved
+1. `AGENTS.md`; this file; DECISIONS D375-D377; ledger tail
+2. `claudedocs/session_20260723_grasp_g0a_d377_stagecache_erase_before_close_localization.md`
+3. D377 preregistration, worker raw/preclose/supervisor, localization evidence, completion, and
+   manual inspection under the single D377 attempt path
+4. D375 attempt2 raw/preclose/supervisor/fail evidence for the frozen baseline
+5. D376 provenance and NVIDIA-source attestation for lifecycle interpretation
+6. D373 only for the no-Erase normal-exit counterexample; D372 for P34 design provenance
+7. D362 physical trace only after a physical comparison is separately approved
 
 ## Git
 
-- Session boot verified `HEAD == origin/master ==
-  3d71aac219ba16f3262dc94b1898a459eaa534e7`, subject
-  `D373_P34_LIVE_ASSET_IDENTITY_FAIL_STOP과 g0a_pass=false`, with a clean worktree before
-  D375 edits.
-- Current worktree contains only the uncommitted D375 implementation, attempt1/attempt2
-  evidence, and D375 state-doc updates described here.
-- No D375 PNG/RRD/RBL was created because the worker-authority gate failed before
-  classification/visualization.
+- D377 boot and closeout verified `HEAD == origin/master ==
+  e30f7f99d44252f509e383627738f3ad7967ea93`, subject `D375`.
+- The worktree was clean after the user's D375 push and before approved D376 edits. It now contains
+  only the approved forward-only D376 and D377 code, evidence, visualization, and state-doc work.
+- D376/D377 PNGs are preserved at exact paths but may be hidden by the repository `*.png` ignore
+  rule. D375/D376 paths were not overwritten; D334 sidecar remained unchanged.
 - Commit/push was not authorized and was not performed.

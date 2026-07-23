@@ -1,0 +1,303 @@
+{
+  "artifact": "D377_STAGECACHE_ERASE_BEFORE_CLOSE_LOCALIZATION_EVIDENCE_V1",
+  "attempt": "attempt1_stagecache_erase_before_close_localization",
+  "case": "g0a_d377",
+  "causal_interpretation": "D375 workload가 같지 않아 Erase 효과는 판정할 수 없음(null)",
+  "erase_audit": {
+    "checks": {
+      "after_contains_false": true,
+      "after_find_old_id_absent": true,
+      "after_id_invalid": true,
+      "before_contains_true": true,
+      "before_find_matches_stage": true,
+      "before_id_matches_registered": true,
+      "before_id_valid": true,
+      "call_counter_exactly_one": true,
+      "erase_return_true": true,
+      "placement_exact": true,
+      "python_stage_reference_retained": true,
+      "worker_erase_pass": true
+    },
+    "pass": true,
+    "record": {
+      "after": {
+        "contains_stage": false,
+        "find_old_id_present": false,
+        "id_int": null,
+        "id_valid": false
+      },
+      "api": "UsdUtils.StageCache.Get().Erase(stage)",
+      "before": {
+        "contains_stage": true,
+        "find_old_id_matches_stage": true,
+        "find_old_id_present": true,
+        "id_int": 9223002,
+        "id_matches_registered_stage_id": true,
+        "id_valid": true
+      },
+      "checks": {
+        "after_contains_false": true,
+        "after_find_old_id_absent": true,
+        "after_id_invalid": true,
+        "before_contains_true": true,
+        "before_find_matches_stage": true,
+        "before_id_matches_registered_stage_id": true,
+        "before_id_valid": true,
+        "erase_call_count_exactly_one": true,
+        "erase_return_true": true,
+        "python_stage_reference_retained": true
+      },
+      "erase_return": true,
+      "pass": true,
+      "placement": "immediately_after_successful_physx_detach",
+      "python_stage_reference_retained": true
+    }
+  },
+  "external_clean_exit": true,
+  "frozen_inventory_checks": {
+    "D334_sidecar_unchanged": true,
+    "D373_asset_unchanged": true,
+    "D375_and_installed_fixed_hashes_exact": true,
+    "D376_evidence_unchanged": true,
+    "registered_inputs_exist_and_hash_exact": true
+  },
+  "frozen_inventory_pass": true,
+  "hash_authority_pass": true,
+  "lifecycle_localization_pass": false,
+  "new_variables": [
+    "explicit_stagecache_erase_after_physx_detach_v1"
+  ],
+  "observability_role": "offline display of lifecycle evidence; raw JSON/process return remain authority",
+  "observed_counts": {
+    "callbacks": 34,
+    "property_queries": 2,
+    "stagecache_erase_calls": 1
+  },
+  "phase_audit": {
+    "checks": {
+      "callback_progress_exactly_34": true,
+      "close_return_marker_optional_max_1": true,
+      "close_start_exactly_1": true,
+      "erase_after_exactly_1": true,
+      "erase_before_exactly_1": true,
+      "erase_call_end_exactly_1": true,
+      "erase_call_start_exactly_1": true,
+      "property_query_end_exactly_2": true,
+      "property_query_start_exactly_2": true,
+      "required_subsequence_order": true
+    },
+    "close_returned_optional_observed": false,
+    "names": [
+      "prepare_start",
+      "preregistration_frozen",
+      "supervisor_spawn_start",
+      "simulation_app_launch_start",
+      "simulation_app_launch_end",
+      "worker_execution_start",
+      "noninstance_inspection_stage_create_start",
+      "noninstance_owner_and_inventory_gate_end",
+      "physx_stage_attach_start",
+      "physx_stage_attach_end",
+      "callback_progress",
+      "callback_progress",
+      "callback_progress",
+      "callback_progress",
+      "callback_progress",
+      "callback_progress",
+      "callback_progress",
+      "callback_progress",
+      "callback_progress",
+      "callback_progress",
+      "callback_progress",
+      "callback_progress",
+      "callback_progress",
+      "callback_progress",
+      "callback_progress",
+      "callback_progress",
+      "callback_progress",
+      "callback_progress",
+      "callback_progress",
+      "callback_progress",
+      "callback_progress",
+      "callback_progress",
+      "callback_progress",
+      "callback_progress",
+      "callback_progress",
+      "callback_progress",
+      "callback_progress",
+      "callback_progress",
+      "callback_progress",
+      "callback_progress",
+      "callback_progress",
+      "callback_progress",
+      "callback_progress",
+      "callback_progress",
+      "property_query_start",
+      "property_query_end",
+      "property_query_start",
+      "property_query_end",
+      "worker_cleanup_start",
+      "physx_stage_detach_start",
+      "physx_stage_detach_end",
+      "stagecache_erase_before",
+      "stagecache_erase_call_start",
+      "stagecache_erase_call_end",
+      "stagecache_erase_after",
+      "worker_cleanup_end",
+      "simulation_app_close_start",
+      "worker_process_exit_observed"
+    ],
+    "pass": true,
+    "phase_count": 58,
+    "required_indices": {
+      "noninstance_inspection_stage_create_start": 6,
+      "noninstance_owner_and_inventory_gate_end": 7,
+      "physx_stage_attach_end": 9,
+      "physx_stage_attach_start": 8,
+      "physx_stage_detach_end": 50,
+      "physx_stage_detach_start": 49,
+      "simulation_app_close_start": 56,
+      "simulation_app_launch_end": 4,
+      "simulation_app_launch_start": 3,
+      "stagecache_erase_after": 54,
+      "stagecache_erase_before": 51,
+      "stagecache_erase_call_end": 53,
+      "stagecache_erase_call_start": 52,
+      "worker_cleanup_end": 55,
+      "worker_cleanup_start": 48,
+      "worker_execution_start": 5,
+      "worker_process_exit_observed": 57
+    }
+  },
+  "registered_input_hash_checks": {
+    "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/exts/isaacsim.simulation_app/isaacsim/simulation_app/simulation_app.py": true,
+    "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.physx-107.3.26+107.3.3.lx64.r.cp311.u353/omni/physx/scripts/utils.py": true,
+    "claudedocs/runtime_logs/grasp_track/g0a_d372/attempt2_external_schema_path_repair/d372_professor_semantic_candidate_geometry.json": true,
+    "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/d373_worker_raw_summary.json": true,
+    "claudedocs/runtime_logs/grasp_track/g0a_d375/attempt2_external_gpu_attestation_repair/d375_fail_stop_attestation.json": true,
+    "claudedocs/runtime_logs/grasp_track/g0a_d375/attempt2_external_gpu_attestation_repair/d375_worker_preclose_sentinel.json": true,
+    "claudedocs/runtime_logs/grasp_track/g0a_d375/attempt2_external_gpu_attestation_repair/d375_worker_raw_summary.json": true,
+    "claudedocs/runtime_logs/grasp_track/g0a_d375/attempt2_external_gpu_attestation_repair/d375_worker_supervisor.json": true,
+    "claudedocs/runtime_logs/grasp_track/g0a_d376/attempt1_d375_terminal_close_provenance_and_failure_visualization/d376_completion_summary.json": true,
+    "claudedocs/runtime_logs/grasp_track/g0a_d376/attempt1_d375_terminal_close_provenance_and_failure_visualization/d376_frozen_d375_kit_log.txt": true,
+    "claudedocs/runtime_logs/grasp_track/g0a_d376/attempt1_d375_terminal_close_provenance_and_failure_visualization/d376_nvidia_official_source_attestation.json": true,
+    "claudedocs/runtime_logs/grasp_track/g0a_d376/attempt1_d375_terminal_close_provenance_and_failure_visualization/d376_terminal_close_provenance_evidence.json": true
+  },
+  "result_branch": "UPSTREAM_WORKLOAD_MISMATCH_ERASE_EFFECT_NULL",
+  "scientific_and_promotion_boundaries": {
+    "contact_or_tipping": null,
+    "exact_nvidia_bug_5948099_identity": null,
+    "full_p34_authored_callback_identity": null,
+    "g0a_pass": false,
+    "grasp_feasibility": null,
+    "physics_equivalence": null,
+    "q5_closure": null,
+    "stage_object_destroyed": null
+  },
+  "supervisor": {
+    "artifact": "D377_HASH_BOUND_PROCESS_GROUP_SUPERVISOR_V1",
+    "automatic_retry_count": 0,
+    "close_start_first_seen_s": 6.515878254082054,
+    "effective_preanalysis_pass": true,
+    "elapsed_s": 6.733121555997059,
+    "erase_exact_preanalysis": true,
+    "gpu_compute_rows_after": [
+      {
+        "pid": 4159377,
+        "process_name": "python3",
+        "used_memory_mib": "390"
+      }
+    ],
+    "hash_authority_checks": {
+      "close_start_marker_present": true,
+      "preclose_counters_exact": true,
+      "preclose_erase_exact": true,
+      "preclose_phase_prefix_sha_exact": true,
+      "preclose_summary_path_exact": true,
+      "preclose_summary_sha_exact": true,
+      "preclose_timeline_exact": true,
+      "preclose_worker_protocol_pass": true,
+      "raw_worker_protocol_pass": true,
+      "safe_to_close_app": true
+    },
+    "hash_authority_pass": true,
+    "kill_wait_expired": false,
+    "note": "D375 workload equivalence is independently evaluated only in analyze",
+    "operational_checks": {
+      "all_required_artifacts": true,
+      "kill_wait_did_not_expire": true,
+      "no_process_group_residue": true,
+      "no_sigkill": true,
+      "no_sigterm": true,
+      "no_watchdog_timeout": true,
+      "no_worker_gpu_pid_residue": true,
+      "process_reaped": true,
+      "returncode_zero": true
+    },
+    "operational_pass": true,
+    "pass": true,
+    "pgid": 3192969,
+    "pid": 3192969,
+    "process_group_residue": [],
+    "required_artifacts": {
+      "claim": true,
+      "phase_markers": true,
+      "preclose": true,
+      "raw_summary": true
+    },
+    "returncode": 0,
+    "sigkill_sent": false,
+    "sigterm_sent": false,
+    "stderr": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_worker_stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stdout": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_worker_stdout.log",
+      "sha256": "e72c81108b6392e2b676c33247e1a1af0ad0333190ecc9a81dc5f5d74a17b2c2"
+    },
+    "timed_out": false,
+    "timeout_last_phase": null,
+    "watchdog_s": 120.0,
+    "worker_gpu_residue": [],
+    "worker_spawn_count": 1
+  },
+  "verdict": "D377_STAGECACHE_ERASE_BEFORE_CLOSE_LOCALIZATION_FAIL_STOP",
+  "what_and_why": "Test whether explicit removal of the already-detached D375 in-memory stage from the singleton StageCache is sufficient for one clean process exit.",
+  "worker_and_retry": [
+    1,
+    0
+  ],
+  "workload_equivalence": {
+    "baseline_selected_canonical_sha256": "ec930163ac2a9cdbf7342630dccd34d5467fa3618dfd0d6213066fbaa12b0b7b",
+    "checks": {
+      "asset_immutable": true,
+      "callback_count_34": true,
+      "properties_valid": true,
+      "property_collider_counts_17_19": true,
+      "property_query_count_2": true,
+      "selected_canonical_sha_exact": false,
+      "timeline_stop_time_zero_exact": true,
+      "worker_protocol_pass": true
+    },
+    "d377_selected_canonical_sha256": "758504733115b8740a972fe99ea63f9303d5759505d03a29e1e9c9570fa13c81",
+    "differing_top_level_fields": [
+      "callback_rows",
+      "live_inventory"
+    ],
+    "pass": false,
+    "role": "termination-workload equivalence only; no geometry identity promotion"
+  },
+  "zero_scope_checks": {
+    "automatic_convex_decomposition_sweeps": true,
+    "contact_queries": true,
+    "cylinder_creates_or_writes": true,
+    "material_mass_actuator_physics_setting_changes": true,
+    "physics_steps": true,
+    "public_forwards": true,
+    "q5_commands": true,
+    "q5_samples": true,
+    "simulation_app_update_pumps": true,
+    "target_ik_path_pose_changes": true
+  }
+}

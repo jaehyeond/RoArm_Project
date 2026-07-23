@@ -1,0 +1,321 @@
+{
+  "artifact": "ROARM_RERUN_ARTIFACT_VALIDATION_V1",
+  "blueprint_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_stagecache_erase_localization.rbl",
+  "blueprint_verify": {
+    "attempted": true,
+    "bytes": 43615,
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "verify",
+      "--check-footers",
+      "true",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_stagecache_erase_localization.rbl"
+    ],
+    "ok": true,
+    "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_stagecache_erase_localization.rbl",
+    "returncode": 0,
+    "sha256": "6bc0c53d485e4831c693bf6c497c997e7e69b5642de2c0ea3f7786c591d7a82a",
+    "stderr": "1 file verified without error.\n",
+    "stdout": ""
+  },
+  "bytes": 67991,
+  "component_contract": {
+    "checks": {
+      "/events/d377/boundary": {
+        "observed": [
+          "TextLog:level",
+          "TextLog:text"
+        ],
+        "pass": true,
+        "required": [
+          "TextLog:level",
+          "TextLog:text"
+        ]
+      },
+      "/events/d377/scope": {
+        "observed": [
+          "TextLog:level",
+          "TextLog:text"
+        ],
+        "pass": true,
+        "required": [
+          "TextLog:level",
+          "TextLog:text"
+        ]
+      },
+      "/events/d377/timeline": {
+        "observed": [
+          "TextLog:level",
+          "TextLog:text"
+        ],
+        "pass": true,
+        "required": [
+          "TextLog:level",
+          "TextLog:text"
+        ]
+      },
+      "/events/d377/verdict": {
+        "observed": [
+          "TextLog:level",
+          "TextLog:text"
+        ],
+        "pass": true,
+        "required": [
+          "TextLog:level",
+          "TextLog:text"
+        ]
+      },
+      "/metadata/run": {
+        "observed": [
+          "TextDocument:text"
+        ],
+        "pass": true,
+        "required": [
+          "TextDocument:text"
+        ]
+      },
+      "/metrics/d377/erase_return__1_true_0_false_minus1_unknown": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/metrics/d377/process_terminal_state__1_clean_0_running_minus1_forced_or_fail": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/metrics/d377/stagecache_contains__1_true_0_false_minus1_unknown": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      }
+    },
+    "pass": true
+  },
+  "entity_path_contract": {
+    "checks": {
+      "/events/d377/boundary": true,
+      "/events/d377/scope": true,
+      "/events/d377/timeline": true,
+      "/events/d377/verdict": true,
+      "/metadata/run": true,
+      "/metrics/d377/erase_return__1_true_0_false_minus1_unknown": true,
+      "/metrics/d377/process_terminal_state__1_clean_0_running_minus1_forced_or_fail": true,
+      "/metrics/d377/stagecache_contains__1_true_0_false_minus1_unknown": true
+    },
+    "exact_non_system_match": true,
+    "forbidden_fragment_absent": {
+      "/\\/": true
+    },
+    "missing_exact": [],
+    "observed_all": [
+      "/__properties",
+      "/blueprint_panel",
+      "/container/48bd159a-1d02-4ec5-8326-fe226888624c",
+      "/container/caabcdb6-55e7-4662-ab27-22521c52ec06",
+      "/events/d377/boundary",
+      "/events/d377/scope",
+      "/events/d377/timeline",
+      "/events/d377/verdict",
+      "/metadata/run",
+      "/metrics/d377/erase_return__1_true_0_false_minus1_unknown",
+      "/metrics/d377/process_terminal_state__1_clean_0_running_minus1_forced_or_fail",
+      "/metrics/d377/stagecache_contains__1_true_0_false_minus1_unknown",
+      "/selection_panel",
+      "/time_panel",
+      "/view/40237105-ae15-46d4-a159-38fd7dc145f8",
+      "/view/40237105-ae15-46d4-a159-38fd7dc145f8/ViewContents",
+      "/view/60c28663-4bc2-4f90-9b66-93a9d052e4a2",
+      "/view/60c28663-4bc2-4f90-9b66-93a9d052e4a2/ViewContents",
+      "/view/da77a189-38d0-4ac0-ad20-d263832777cc",
+      "/view/da77a189-38d0-4ac0-ad20-d263832777cc/ViewContents",
+      "/viewport"
+    ],
+    "observed_non_system": [
+      "/events/d377/boundary",
+      "/events/d377/scope",
+      "/events/d377/timeline",
+      "/events/d377/verdict",
+      "/metadata/run",
+      "/metrics/d377/erase_return__1_true_0_false_minus1_unknown",
+      "/metrics/d377/process_terminal_state__1_clean_0_running_minus1_forced_or_fail",
+      "/metrics/d377/stagecache_contains__1_true_0_false_minus1_unknown"
+    ],
+    "pass": true,
+    "unexpected_non_system": []
+  },
+  "errors": [],
+  "exact_entity_paths": [
+    "/events/d377/boundary",
+    "/events/d377/scope",
+    "/events/d377/timeline",
+    "/events/d377/verdict",
+    "/metadata/run",
+    "/metrics/d377/erase_return__1_true_0_false_minus1_unknown",
+    "/metrics/d377/process_terminal_state__1_clean_0_running_minus1_forced_or_fail",
+    "/metrics/d377/stagecache_contains__1_true_0_false_minus1_unknown"
+  ],
+  "exact_timeline_names": [
+    "blueprint",
+    "lifecycle_elapsed_s",
+    "log_time"
+  ],
+  "expected_entity_components": {
+    "/events/d377/boundary": [
+      "TextLog:level",
+      "TextLog:text"
+    ],
+    "/events/d377/scope": [
+      "TextLog:level",
+      "TextLog:text"
+    ],
+    "/events/d377/timeline": [
+      "TextLog:level",
+      "TextLog:text"
+    ],
+    "/events/d377/verdict": [
+      "TextLog:level",
+      "TextLog:text"
+    ],
+    "/metadata/run": [
+      "TextDocument:text"
+    ],
+    "/metrics/d377/erase_return__1_true_0_false_minus1_unknown": [
+      "Scalars:scalars"
+    ],
+    "/metrics/d377/process_terminal_state__1_clean_0_running_minus1_forced_or_fail": [
+      "Scalars:scalars"
+    ],
+    "/metrics/d377/stagecache_contains__1_true_0_false_minus1_unknown": [
+      "Scalars:scalars"
+    ]
+  },
+  "expected_entity_paths": [
+    "/events/d377/boundary",
+    "/events/d377/scope",
+    "/events/d377/timeline",
+    "/events/d377/verdict",
+    "/metadata/run",
+    "/metrics/d377/erase_return__1_true_0_false_minus1_unknown",
+    "/metrics/d377/process_terminal_state__1_clean_0_running_minus1_forced_or_fail",
+    "/metrics/d377/stagecache_contains__1_true_0_false_minus1_unknown"
+  ],
+  "expected_rerun_version": "0.34.1",
+  "expected_timeline_names": [
+    "blueprint",
+    "lifecycle_elapsed_s",
+    "log_time"
+  ],
+  "external_rbl_role": "verified fixed-layout export; the 0.34.1 CLI does not guarantee that an external RBL overrides an already-active embedded blueprint",
+  "footer_manifest_present": true,
+  "forbidden_entity_fragments": [
+    "/\\/"
+  ],
+  "headless_render": {
+    "attempted": true,
+    "bytes": 797138,
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "--headless",
+      "--port",
+      "auto",
+      "--window-size",
+      "1920x1080",
+      "--screenshot-to",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_rerun_inspection.png",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_stagecache_erase_localization.rrd"
+    ],
+    "file_nonzero": true,
+    "ok": true,
+    "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_rerun_inspection.png",
+    "returncode": 0,
+    "sha256": "50b021a483887ca55b8eafaa81da3bbe6a5db25a81c60d3a8437ad88fc4aa807",
+    "stderr": "2026-07-23T05:52:53.852651Z  INFO re_perf_telemetry::telemetry: Telemetry initialized enabled=false service=rerun trace_mode=\"off\" traces=off logs=off metrics=off tracy=false\n2026-07-23T05:52:54.070729Z  INFO re_grpc_server: Listening for gRPC connections on 0.0.0.0:9876. Connect by running `rerun --connect rerun+http://127.0.0.1:9876/proxy`\n2026-07-23T05:52:54.071088Z  INFO re_importer::import_file: Loading \"/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_stagecache_erase_localization.rrd\"…\n2026-07-23T05:52:54.116642Z  INFO re_viewer::headless: Headless viewer running at 1920x1080.\n2026-07-23T05:52:54.260812Z  INFO re_viewer::screenshotter: Screenshot saved to \"/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_rerun_inspection.png\"\n2026-07-23T05:52:54.271115Z  INFO re_viewer::screenshotter: Screenshot copied to clipboard\n2026-07-23T05:52:54.273203Z  INFO re_viewer::headless: Headless viewer received close request, shutting down.\n",
+    "stdout": ""
+  },
+  "human_visual_inspection_required": true,
+  "pass": true,
+  "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_stagecache_erase_localization.rrd",
+  "print_verbose": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "print",
+      "-v",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_stagecache_erase_localization.rrd"
+    ],
+    "ok": true,
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "Showing data after migration to latest Rerun version\nStoreInfo {\n    store_id: StoreId(\n        Recording,\n        \"roarm_g0a_d377_stagecache_erase\",\n        \"g0a_d377_stagecache_erase_localization\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nStoreInfo {\n    store_id: StoreId(\n        Recording,\n        \"roarm_g0a_d377_stagecache_erase\",\n        \"g0a_d377_stagecache_erase_localization\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nChunk(chunk_18C4D562F89B5B681f1203076000c7a0) with 1 rows (632 B) - /__properties - data columns: [/__properties@RecordingInfo:start_time]\nStoreInfo {\n    store_id: StoreId(\n        Blueprint,\n        \"roarm_g0a_d377_stagecache_erase\",\n        \"rec_3c746d74524d451e89c034c98abac64c\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nStoreInfo {\n    store_id: StoreId(\n        Blueprint,\n        \"roarm_g0a_d377_stagecache_erase\",\n        \"rec_3c746d74524d451e89c034c98abac64c\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nChunk(chunk_18C4D562FEFEBCAE0c726bbdaa25eb52) with 1 rows (926 B) - /view/da77a189-38d0-4ac0-ad20-d263832777cc/ViewContents - data columns: [/view/da77a189-38d0-4ac0-ad20-d263832777cc/ViewContents@ViewContents:query]\nChunk(chunk_18C4D562FEFF32400c726bbdaa25eb53) with 1 rows (1.2 KiB) - /container/48bd159a-1d02-4ec5-8326-fe226888624c - data columns: [/container/48bd159a-1d02-4ec5-8326-fe226888624c@ContainerBlueprint:col_shares /container/48bd159a-1d02-4ec5-8326-fe226888624c@ContainerBlueprint:container_kind /container/48bd159a-1d02-4ec5-8326-fe226888624c@ContainerBlueprint:contents]\nChunk(chunk_18C4D562FEFF48260c726bbdaa25eb54) with 1 rows (1.2 KiB) - /viewport - data columns: [/viewport@ViewportBlueprint:auto_layout /viewport@ViewportBlueprint:auto_views /viewport@ViewportBlueprint:root_container]\nChunk(chunk_18C4D562FEFF57BE0c726bbdaa25eb55) with 1 rows (951 B) - /view/60c28663-4bc2-4f90-9b66-93a9d052e4a2/ViewContents - data columns: [/view/60c28663-4bc2-4f90-9b66-93a9d052e4a2/ViewContents@ViewContents:query]\nChunk(chunk_18C4D562FEFF71950c726bbdaa25eb56) with 1 rows (1.2 KiB) - /view/da77a189-38d0-4ac0-ad20-d263832777cc - data columns: [/view/da77a189-38d0-4ac0-ad20-d263832777cc@ViewBlueprint:class_identifier /view/da77a189-38d0-4ac0-ad20-d263832777cc@ViewBlueprint:display_name /view/da77a189-38d0-4ac0-ad20-d263832777cc@ViewBlueprint:space_origin]\nChunk(chunk_18C4D562FEFF8F070c726bbdaa25eb57) with 1 rows (1.2 KiB) - /view/60c28663-4bc2-4f90-9b66-93a9d052e4a2 - data columns: [/view/60c28663-4bc2-4f90-9b66-93a9d052e4a2@ViewBlueprint:class_identifier /view/60c28663-4bc2-4f90-9b66-93a9d052e4a2@ViewBlueprint:display_name /view/60c28663-4bc2-4f90-9b66-93a9d052e4a2@ViewBlueprint:space_origin]\nChunk(chunk_18C4D562FEFFA3030c726bbdaa25eb58) with 1 rows (883 B) - /blueprint_panel - data columns: [/blueprint_panel@PanelBlueprint:state]\nChunk(chunk_18C4D562FEFFB3640c726bbdaa25eb59) with 1 rows (1.2 KiB) - /container/caabcdb6-55e7-4662-ab27-22521c52ec06 - data columns: [/container/caabcdb6-55e7-4662-ab27-22521c52ec06@ContainerBlueprint:container_kind /container/caabcdb6-55e7-4662-ab27-22521c52ec06@ContainerBlueprint:contents /container/caabcdb6-55e7-4662-ab27-22521c52ec06@ContainerBlueprint:row_shares]\nChunk(chunk_18C4D562FEFFBF850c726bbdaa25eb5a) with 1 rows (883 B) - /selection_panel - data columns: [/selection_panel@PanelBlueprint:state]\nChunk(chunk_18C4D562FEFFD6280c726bbdaa25eb5b) with 1 rows (928 B) - /view/40237105-ae15-46d4-a159-38fd7dc145f8/ViewContents - data columns: [/view/40237105-ae15-46d4-a159-38fd7dc145f8/ViewContents@ViewContents:query]\nChunk(chunk_18C4D562FEFFDDD90c726bbdaa25eb5c) with 1 rows (885 B) - /time_panel - data columns: [/time_panel@TimePanelBlueprint:state]\nChunk(chunk_18C4D562FEFFE7140c726bbdaa25eb5d) with 1 rows (1.2 KiB) - /view/40237105-ae15-46d4-a159-38fd7dc145f8 - data columns: [/view/40237105-ae15-46d4-a159-38fd7dc145f8@ViewBlueprint:class_identifier /view/40237105-ae15-46d4-a159-38fd7dc145f8@ViewBlueprint:display_name /view/40237105-ae15-46d4-a159-38fd7dc145f8@ViewBlueprint:space_origin]\nBlueprintActivationCommand(StoreId(Blueprint, \"roarm_g0a_d377_stagecache_erase\", \"rec_3c746d74524d451e89c034c98abac64c\"), make_active: true, make_default: true)\nChunk(chunk_18C4D562FF16B94F3aedafa28af7d063) with 3 rows (957 B) - /metrics/d377/stagecache_contains__1_true_0_false_minus1_unknown - data columns: [/metrics/d377/stagecache_contains__1_true_0_false_minus1_unknown@Scalars:scalars]\nChunk(chunk_18C4D562FF17AA883aedafa28af7d064) with 2 rows (932 B) - /metrics/d377/erase_return__1_true_0_false_minus1_unknown - data columns: [/metrics/d377/erase_return__1_true_0_false_minus1_unknown@Scalars:scalars]\nChunk(chunk_18C4D562FF17C0ED3aedafa28af7d065) with 1 rows (918 B) - /metadata/run - data columns: [/metadata/run@TextDocument:text]\nChunk(chunk_18C4D562FF17CB943aedafa28af7d066) with 1 rows (822 B) - /events/d377/scope - data columns: [/events/d377/scope@TextLog:level /events/d377/scope@TextLog:text]\nChunk(chunk_18C4D562FF17FF853aedafa28af7d067) with 10 rows (1.4 KiB) - /events/d377/timeline - data columns: [/events/d377/timeline@TextLog:level /events/d377/timeline@TextLog:text]\nChunk(chunk_18C4D562FF1865EF3aedafa28af7d068) with 2 rows (942 B) - /metrics/d377/process_terminal_state__1_clean_0_running_minus1_forced_or_fail - data columns: [/metrics/d377/process_terminal_state__1_clean_0_running_minus1_forced_or_fail@Scalars:scalars]\nChunk(chunk_18C4D562FF1883933aedafa28af7d069) with 1 rows (812 B) - /events/d377/verdict - data columns: [/events/d377/verdict@TextLog:level /events/d377/verdict@TextLog:text]\nChunk(chunk_18C4D562FF188EA83aedafa28af7d06a) with 1 rows (871 B) - /events/d377/boundary - data columns: [/events/d377/boundary@TextLog:level /events/d377/boundary@TextLog:text]\n"
+  },
+  "rendered_blueprint_source": "active blueprint embedded in the RRD",
+  "screenshot_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_rerun_inspection.png",
+  "screenshot_port": "auto",
+  "screenshot_window_size": "1920x1080",
+  "sha256": "f9616da3f6e5080dc3589fba0535cc7a7473781c32c81f1777cebb8fdb0b5d3f",
+  "stats": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "stats",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_stagecache_erase_localization.rrd"
+    ],
+    "ok": true,
+    "returncode": 0,
+    "stderr": "2026-07-23T05:52:53.751264Z  INFO rerun::commands::rrd::stats: processing input…\n2026-07-23T05:52:53.752727Z  INFO rerun::commands::rrd::stats: computing stats…\n",
+    "stdout": "Overview\n----------\nnum_chunks = 21\nnum_entity_paths = 21\nnum_chunks_without_components = 0 (0.000%)\nnum_rows = 34\nnum_rows_min = 1\nnum_rows_max = 10\nnum_rows_avg = 1.619\nnum_static = 5\nnum_indexes_min = 0\nnum_indexes_max = 2\nnum_indexes_avg = 1.524\nnum_components_min = 1\nnum_components_max = 3\nnum_components_avg = 1.762\n\nNum chunks per entity\n---------------------\n/__properties: 1\n/blueprint_panel: 1\n/container/48bd159a-1d02-4ec5-8326-fe226888624c: 1\n/container/caabcdb6-55e7-4662-ab27-22521c52ec06: 1\n/events/d377/boundary: 1\n/events/d377/scope: 1\n/events/d377/timeline: 1\n/events/d377/verdict: 1\n/metadata/run: 1\n/metrics/d377/erase_return__1_true_0_false_minus1_unknown: 1\n/metrics/d377/process_terminal_state__1_clean_0_running_minus1_forced_or_fail: 1\n/metrics/d377/stagecache_contains__1_true_0_false_minus1_unknown: 1\n/selection_panel: 1\n/time_panel: 1\n/view/40237105-ae15-46d4-a159-38fd7dc145f8: 1\n/view/40237105-ae15-46d4-a159-38fd7dc145f8/ViewContents: 1\n/view/60c28663-4bc2-4f90-9b66-93a9d052e4a2: 1\n/view/60c28663-4bc2-4f90-9b66-93a9d052e4a2/ViewContents: 1\n/view/da77a189-38d0-4ac0-ad20-d263832777cc: 1\n/view/da77a189-38d0-4ac0-ad20-d263832777cc/ViewContents: 1\n/viewport: 1\n\nNum chunks per index\n--------------------\nblueprint: 12\nlifecycle_elapsed_s: 4\nlog_time: 16\n\nNum chunks per component\n------------------------\nContainerBlueprint:col_shares: 1\nContainerBlueprint:container_kind: 2\nContainerBlueprint:contents: 2\nContainerBlueprint:row_shares: 1\nPanelBlueprint:state: 2\nRecordingInfo:start_time: 1\nScalars:scalars: 3\nTextDocument:text: 1\nTextLog:level: 4\nTextLog:text: 4\nTimePanelBlueprint:state: 1\nViewBlueprint:class_identifier: 3\nViewBlueprint:display_name: 3\nViewBlueprint:space_origin: 3\nViewContents:query: 3\nViewportBlueprint:auto_layout: 1\nViewportBlueprint:auto_views: 1\nViewportBlueprint:root_container: 1\n\nSize (schema + data, compressed)\n--------------------------------\nipc_size_bytes_total = 27.7 KiB\nipc_size_bytes_min = 913 B\nipc_size_bytes_max = 1.9 KiB\nipc_size_bytes_avg = 1.3 KiB\nipc_size_bytes_p50 = 1.2 KiB\nipc_size_bytes_p90 = 1.6 KiB\nipc_size_bytes_p95 = 1.7 KiB\nipc_size_bytes_p99 = 1.9 KiB\nipc_size_bytes_p999 = 1.9 KiB\n\nSize (schema + data, uncompressed)\n----------------------------------\nipc_size_bytes_total = 62.7 KiB\nipc_size_bytes_min = 1.7 KiB\nipc_size_bytes_max = 4.1 KiB\nipc_size_bytes_avg = 3.0 KiB\nipc_size_bytes_p50 = 2.6 KiB\nipc_size_bytes_p90 = 4.1 KiB\nipc_size_bytes_p95 = 4.1 KiB\nipc_size_bytes_p99 = 4.1 KiB\nipc_size_bytes_p999 = 4.1 KiB\n\nSize (schema only, uncompressed)\n--------------------------------\nipc_size_bytes_total = 34.6 KiB\nipc_size_bytes_min = 1016 B\nipc_size_bytes_max = 2.4 KiB\nipc_size_bytes_avg = 1.6 KiB\nipc_size_bytes_p50 = 1.5 KiB\nipc_size_bytes_p90 = 2.3 KiB\nipc_size_bytes_p95 = 2.3 KiB\nipc_size_bytes_p99 = 2.4 KiB\nipc_size_bytes_p999 = 2.4 KiB\n\nSize (data only, uncompressed)\n------------------------------\nipc_size_bytes_total = 28.0 KiB\nipc_size_bytes_min = 656 B\nipc_size_bytes_max = 2.1 KiB\nipc_size_bytes_avg = 1.3 KiB\nipc_size_bytes_p50 = 1.1 KiB\nipc_size_bytes_p90 = 1.9 KiB\nipc_size_bytes_p95 = 1.9 KiB\nipc_size_bytes_p99 = 2.1 KiB\nipc_size_bytes_p999 = 2.1 KiB\n\nUnsorted timelines\n------------------\n(none — every timeline on every chunk is sorted)\n\nFooters\n-------\nnum_manifests = 2 (one per recording)\n\nFooter manifest for StoreId(Recording, \"roarm_g0a_d377_stagecache_erase\", \"g0a_d377_stagecache_erase_localization\")\n  num_chunks_indexed = 9\n  num_static_chunks = 5\n  num_entity_paths = 9\n  manifest_num_columns = 34\n  sorbet_schema_num_fields = 16\n  sorbet_schema_sha256 = aeb5d78a8c8a1de3b910ad65f72092c12e042a8726f444398f830882c47cbf59\n  chunk_byte_size_total (native) = 12.3 KiB\n  chunk_byte_size_uncompressed_total = 22.8 KiB\n\nFooter manifest for StoreId(Blueprint, \"roarm_g0a_d377_stagecache_erase\", \"rec_3c746d74524d451e89c034c98abac64c\")\n  num_chunks_indexed = 12\n  num_static_chunks = 0\n  num_entity_paths = 12\n  manifest_num_columns = 102\n  sorbet_schema_num_fields = 27\n  sorbet_schema_sha256 = 796fd5e2c9dd8cce5adfb888e8a168f823c7c5980b93879be73d0a7c083b88dc\n  chunk_byte_size_total (native) = 17.7 KiB\n  chunk_byte_size_uncompressed_total = 39.9 KiB\n"
+  },
+  "timeline_contract": {
+    "checks": {
+      "blueprint": true,
+      "lifecycle_elapsed_s": true,
+      "log_time": true
+    },
+    "exact_match": true,
+    "observed": [
+      "blueprint",
+      "lifecycle_elapsed_s",
+      "log_time"
+    ],
+    "pass": true
+  },
+  "verify": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "verify",
+      "--check-footers",
+      "true",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_stagecache_erase_localization.rrd"
+    ],
+    "ok": true,
+    "returncode": 0,
+    "stderr": "1 file verified without error.\n",
+    "stdout": ""
+  },
+  "version": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "--version"
+    ],
+    "expected_version_match": true,
+    "ok": true,
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "rerun-cli 0.34.1 (base lance map_view nasm native_viewer oss_server perf_telemetry re_server release_full release_no_web_viewer web_viewer) [rustc 1.92.0 (ded5c06cf 2025-12-08), LLVM 21.1.3] x86_64-unknown-linux-gnu prepare-release-0.34.1 4efb18f, built 2026-07-07T16:20:42.173372603Z\nVideo features: av1 ffmpeg nasm\n"
+  }
+}

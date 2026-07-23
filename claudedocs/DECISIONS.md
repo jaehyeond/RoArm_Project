@@ -21746,3 +21746,173 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d375/attempt2_external_gpu_attestation_repair/d375_worker_supervisor.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d375/attempt2_external_gpu_attestation_repair/d375_fail_stop_attestation.json`
 - `START_HERE.md`
+
+## D376 - 같은 "Isaac 실패"를 단계별로 분류하고, D375는 측정 뒤 framework-release/process-exit 경계의 실제 non-exit로만 확정한다 (2026-07-22)
+
+Decision:
+
+- immutable D375와 과거 D351/D367/D373 증거만 읽는 offline-only D376을 actual audit `1`,
+  retry `0`으로 완료했다. verdict는
+  `D376_D375_TERMINAL_CLOSE_PROVENANCE_AND_FAILURE_VISUALIZATION_PASS`다.
+- **지속 규칙:** Isaac/Kit이 언급된 FAIL을 한 원인으로 묶지 않는다. startup, timeline
+  선행조건, identity 감사 코드, physics 실행, cleanup, native framework release, 외부 process
+  exit를 program order와 외부 supervisor authority로 따로 분류한다.
+- **지속 규칙:** 마지막 Kit 로그와 외부 timeout은 멈춘 경계를 증명하지만, 네이티브 함수
+  안의 정확한 thread/plugin을 증명하지 않는다. thread dump/native stack이 없으면 그 식별은
+  `null`로 보존한다.
+- **지속 규칙:** 이후 버전 NVIDIA release note의 동일 함수 deadlock fix는 강한 메커니즘
+  근거가 될 수 있지만 설치 버전의 exact bug identity로 승격하지 않는다.
+- **지속 규칙:** D375는 이미 `fastShutdown=True`였다. 설치 Isaac Sim 5.1의 graceful path와
+  `skip_cleanup=True` path가 모두 `shutdown_and_release_framework()`를 호출하므로, 어느
+  설정도 live 단일변수 결과 없이 proven repair라고 부르지 않는다.
+- **지속 규칙:** custom memory stage는 PhysX detach 뒤 `StageCache.Erase(stage)`까지 명시적으로
+  수명주기를 닫는 것을 기본 후보로 삼되, D373 no-Erase/exit0 반례 때문에 누락 자체를 충분조건
+  또는 확정 원인이라고 하지 않는다.
+- **지속 규칙:** Rerun logical window size와 HiDPI physical PNG를 구분한다. exact 발표 해상도
+  권위는 dimension-gated board에 두고 Viewer PNG는 load/layout inspection으로 기록한다.
+
+Evidence:
+
+- D375 callback `34/34`, property collider link5 `17` + gripper_link `19`, raw/preclose
+  protocol/hash, PhysX detach, cleanup-end는 종료 전에 PASS했다. physics/q5/contact는 `0/0/0`이다.
+- exact Kit log는 `5.504s` close 시작, Replicator finished, `5.522s` Stage closed,
+  `5.523s` framework release 직전 문장까지 기록한 뒤 EOF다. SHA-256은
+  `6522efde45e776fabf3186ddf362d509a6a3b04f999adc5024c28f41dce1ccc9`다.
+- supervisor는 `900.0s` timeout→SIGTERM→등록된 `20.0s` grace→SIGKILL 순서로 종료했다.
+  elapsed `920.3908159369603s`, return `-9`, cleanup-end→exit gap `914.65653135s`다.
+- 설치 `simulation_app.py` extension `2.12.2`는 graceful line `838`과 skip-cleanup line
+  `793`에서 같은 `shutdown_and_release_framework()`를 호출한다. NVIDIA Isaac Sim 6.0
+  release note는 이 호출을 `app.shutdown()`으로 바꿔 main-thread GIL 대 `carb.tasking`
+  worker teardown deadlock을 피했다고 명시한다(5948099). 이는 later-version mechanism
+  evidence이며 D375 exact identity는 `null`이다.
+- 설치 Omni PhysX `107.3.26` helper는 detach와 `StageCache.Erase(stage)`를 짝으로 수행한다.
+  D375는 Insert+detach/no-Erase였지만, D373도 같은 no-Erase 상태에서 `7.671346287010238s`,
+  return `0`으로 끝났으므로 단일변수 인과는 `null`이다.
+- D367은 `19.401926056s`, return `0`의 정상 종료 후 marker-contract 오분류였고 D373은
+  정상 종료 뒤 identity/instance-proxy FAIL이었다. D351 attempt2 내부 장기 실행 원인은
+  여전히 미확정이다.
+- preregistration `18/18`, registered evidence/logic guards `6/6` PASS; spoofed-return은 실제
+  perturbation이지만 여섯 guard 모두가 executable perturbation은 아니다. exact 1920×1080 board 2개,
+  save-only RRD `63,882B`, RBL `43,641B`, strict Rerun `0.34.1` validation과 원본해상도
+  inspection이 PASS했다. HiDPI Viewer PNG는 physical `3840x2160`으로 별도 기록했다.
+- Isaac launch, PhysX call, physics/q5/contact, cylinder/USD/collider/target-IK-path change와
+  decomposition sweep는 모두 `0`; D375/D334 sidecar는 전후 bit-exact다.
+
+Implication:
+
+- 증명된 D375 경계는 terminal framework-release/process-exit이며, P34 geometry, callback
+  overload, PhysX detach, stage close, Warp/SM, GPU/VRAM shortage를 원인으로 확정할 근거는 없다.
+  시작 GPU 용량은 건강했고 Kit OOM 증거가 없지만 shutdown interval telemetry가 없으므로
+  절대 배제 표현도 금지한다.
+- D376 PASS는 provenance/observability completion뿐이다. D375 effective identity는
+  `false`; full authored↔callback classifier, physical equivalence/speed, tipping causality와
+  grasp feasibility는 `null`; `g0a_pass=false`다.
+- D376 경로를 동결하고 retry/overwrite하지 않는다. 다음 최소 후보는 별도 승인
+  `D377 [d375_stagecache_erase_before_close_localization]` 단일변수 live control이다. lifecycle
+  PASS 뒤에도 full P34 classifier는 별도 승인해야 하며 그 전 A64/P34 cylinder physics는 금지한다.
+
+Sources:
+
+- `claudedocs/session_20260722_grasp_g0a_d376_d375_terminal_close_provenance_and_failure_visualization.md`
+- `sim_scripts/cyl34_top_view_d376_d375_terminal_close_provenance_and_failure_visualization.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d376/attempt1_d375_terminal_close_provenance_and_failure_visualization/d376_preregistration.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d376/attempt1_d375_terminal_close_provenance_and_failure_visualization/d376_terminal_close_provenance_evidence.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d376/attempt1_d375_terminal_close_provenance_and_failure_visualization/d376_nvidia_official_source_attestation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d376/attempt1_d375_terminal_close_provenance_and_failure_visualization/d376_frozen_d375_kit_log.txt`
+- `claudedocs/runtime_logs/grasp_track/g0a_d376/attempt1_d375_terminal_close_provenance_and_failure_visualization/d376_manual_visual_inspection.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d376/attempt1_d375_terminal_close_provenance_and_failure_visualization/d376_completion_summary.json`
+- NVIDIA Isaac Sim 5.1.0 `isaacsim.simulation_app` API:
+  https://docs.isaacsim.omniverse.nvidia.com/5.1.0/py/source/extensions/isaacsim.simulation_app/docs/index.html
+- NVIDIA Isaac Sim 5.1.0 Release Notes:
+  https://docs.isaacsim.omniverse.nvidia.com/5.1.0/overview/release_notes.html
+- NVIDIA Isaac Sim 6.0.0 Release Notes:
+  https://docs.isaacsim.omniverse.nvidia.com/6.0.0/overview/release_notes.html
+- `START_HERE.md`
+
+## D377 - clean process exit와 사전등록 comparator 권위를 분리하고, runtime 식별자를 canonical workload identity에서 제외한다 (2026-07-23)
+
+Decision:
+
+- 승인된 단일 lifecycle 변수 `explicit_stagecache_erase_after_physx_detach_v1`를 actual worker
+  `1`, retry `0`으로 한 번 실행했다. PhysX detach 직후
+  `UsdUtils.StageCache.Get().Erase(stage)`를 정확히 한 번 호출했고, Python `stage` reference,
+  shutdown API, `fastShutdown`, P34 asset, settings, D375 acquisition workload는 동결했다.
+- **지속 규칙:** 실제 process가 clean exit했다고 해서 사전등록된 workload-equivalence gate를
+  건너뛰어 인과 PASS로 승격하지 않는다. D377 frozen verdict
+  `D377_STAGECACHE_ERASE_BEFORE_CLOSE_LOCALIZATION_FAIL_STOP`과 formal causal interpretation
+  `null`은 그대로 보존한다.
+- **지속 규칙:** runtime object memory address, generated `__Prototype_N` ordinal,
+  opaque property `path_id`, elapsed time는 geometry/termination workload의 의미적 정체성이
+  아니다. 별도 의미가 사전 증명되지 않은 한 canonical identity digest에 넣지 않는다.
+- **지속 규칙:** callback witness file SHA를 권위로 쓸 때는 그 파일에 비권위 runtime 표현이
+  섞이지 않았는지 먼저 검사한다. 원 payload가 exact여도 diagnostic 문자열 하나가 파일 SHA
+  전체를 오염시킬 수 있다.
+- **지속 규칙:** 사후 정규화가 comparator false negative를 증명해도 기존 verdict를 소급
+  수정하지 않는다. immutable 원증거를 읽는 새 forward-only offline case에서 제외 필드와
+  canonical digest를 먼저 사전등록해야 한다.
+- **지속 규칙:** StageCache `Erase` 성공은 cache membership 제거를 뜻한다. retained Python
+  reference가 있는 실험에서 stage-object destruction으로 표현하지 않는다.
+- **지속 규칙:** Rerun의 자동 schema/footer/timeline PASS와 실제 읽을 수 있는 발표자료 PASS를
+  분리한다. missing glyph가 있거나 frozen false-negative 문구가 있으면 manual/visual completion
+  FAIL이며 교수님용 결론 그림으로 사용하지 않는다.
+
+Evidence:
+
+- preregistration checks `17/17`, negative controls `7/7` PASS. callback/property queries
+  `34/2`, property collider rows link5/gripper_link `17/19`, attach/detach `1/1`; physics/q5/contact/
+  cylinder/forward/reset/timeline play/commit/setting changes는 모두 `0`이다.
+- Erase 전 cache `Contains=true`, ID valid/find same stage; Erase return `true`, call count `1`;
+  Erase 후 `Contains=false`, old ID invalid/find absent; Python stage reference retained가 모두
+  PASS했다.
+- worker는 `6.733121555997059s`, return `0`으로 종료했다. watchdog timeout, SIGTERM,
+  SIGKILL, process-group residue, worker GPU residue는 모두 없었다. 따라서 D377에서 Isaac
+  timeout은 재현되지 않았다.
+- preregistered selected hashes는 D375
+  `ec930163ac2a9cdbf7342630dccd34d5467fa3618dfd0d6213066fbaa12b0b7b` 대 D377
+  `758504733115b8740a972fe99ea63f9303d5759505d03a29e1e9c9570fa13c81`로 달라 formal gate가
+  fail-closed했다.
+- 독립 read-only diff의 selected 차이 `68`개는 callback witness SHA `34`개와
+  `prototype_path_diagnostic` `34`개뿐이었다. 각 witness 원 JSON은
+  `request_return_repr`의 실행별 memory address 한 leaf만 달랐고, prototype은 생성 ordinal만
+  달랐다.
+- 이 두 비권위 selected 필드를 제외하면 D375/D377 termination workload 독립 canonical
+  SHA-256은 양쪽 모두
+  `28aadb5ff26270039df58f7cd06080bf7afcdec001402e886a6edf1483fdfe31`이다. callback payload
+  `34/34`, vertices/indices/original polygons `314/1016/262`도 exact다.
+- property raw 차이 `40`개는 runtime `path_id` `38`개와 elapsed `2`개뿐이다. mass, COM,
+  inertia, axes, volume, AABB, local pose, semantic path, result, counts는 exact다.
+- exact board `1920x1080`, RRD `67,991B`, RBL `43,615B`와 strict Rerun `0.34.1` automated
+  checks는 PASS했다. 그러나 HiDPI physical `3840x2160` Viewer의 하단 한글 glyph가 깨졌고,
+  board도 frozen comparator의 `workload=False`를 표시하므로 manual/visual completion은 FAIL이다.
+
+Implication:
+
+- D377은 one-Erase 뒤 clean exit라는 강한 operational observation을 남겼다. authoritative
+  workload는 사후 감사상 동일하지만 그 정규화가 사전등록되지 않았으므로 StageCache
+  retention의 conditional-trigger causal support는 formal `null`로 보존한다.
+- D373은 no-Erase인데도 exit `0`이었으므로 missing Erase는 일반적인 필요조건이 아니다.
+  D377은 stage destruction, exact NVIDIA 5948099 identity, full P34 live identity를 증명하지
+  않는다.
+- cylinder physics/q5/contact를 실행하지 않았으므로 physical equivalence/speed, tipping,
+  closure, grasp feasibility는 모두 `null`; `g0a_pass=false`다.
+- D377 경로를 동결하고 retry/overwrite하지 않는다. 다음 최소 후보는 별도 승인 offline-only
+  `D378 [d377_ephemeral_identifier_provenance_and_workload_authority_repair]`이다. 그 뒤에도 full
+  P34 classifier와 cylinder physics는 각각 별도 승인한다.
+
+Sources:
+
+- `claudedocs/session_20260723_grasp_g0a_d377_stagecache_erase_before_close_localization.md`
+- `sim_scripts/cyl34_top_view_d377_d375_stagecache_erase_before_close_localization.py`
+- `sim_scripts/cyl34_top_view_d377_d375_stagecache_erase_before_close_localization_worker.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_preregistration.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_worker_raw_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_worker_preclose_sentinel.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_worker_supervisor.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_stagecache_erase_localization_evidence.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_manual_visual_inspection.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_completion_summary.json`
+- NVIDIA Isaac Sim 5.1.0 `SimulationApp` API:
+  https://docs.isaacsim.omniverse.nvidia.com/5.1.0/py/source/extensions/isaacsim.simulation_app/docs/index.html
+- NVIDIA Kit 107.3.1 `UsdUtils.StageCache` API:
+  https://docs.omniverse.nvidia.com/kit/docs/pxr-usd-api/107.3.1/pxr/UsdUtils.html
+- `START_HERE.md`

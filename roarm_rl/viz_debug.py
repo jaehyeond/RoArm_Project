@@ -1079,6 +1079,68 @@ def build_rerun_blueprint(mode: str = "robot_geometry") -> Any:
             auto_views=False,
             collapse_panels=True,
         )
+    if mode == "d376_terminal_close_provenance":
+        return rrb.Blueprint(
+            rrb.Horizontal(
+                rrb.TimeSeriesView(
+                    origin="/metrics/d376",
+                    contents="/metrics/d376/**",
+                    name="D375 terminal phase code",
+                ),
+                rrb.Vertical(
+                    rrb.TextLogView(
+                        origin="/events/d376/timeline",
+                        contents="/events/d376/timeline",
+                        name="observed program order",
+                    ),
+                    rrb.TextLogView(
+                        origin="/events/d376",
+                        contents=[
+                            "/events/d376/classification",
+                            "/events/d376/hypothesis",
+                            "/events/d376/boundary",
+                        ],
+                        name="classification and boundary",
+                    ),
+                    row_shares=[0.58, 0.42],
+                ),
+                column_shares=[0.42, 0.58],
+            ),
+            auto_layout=False,
+            auto_views=False,
+            collapse_panels=True,
+        )
+    if mode == "d377_stagecache_erase_localization":
+        return rrb.Blueprint(
+            rrb.Horizontal(
+                rrb.TimeSeriesView(
+                    origin="/metrics/d377",
+                    contents="/metrics/d377/**",
+                    name="D377 StageCache and terminal state",
+                ),
+                rrb.Vertical(
+                    rrb.TextLogView(
+                        origin="/events/d377/timeline",
+                        contents="/events/d377/timeline",
+                        name="observed lifecycle order",
+                    ),
+                    rrb.TextLogView(
+                        origin="/events/d377",
+                        contents=[
+                            "/events/d377/verdict",
+                            "/events/d377/boundary",
+                            "/events/d377/scope",
+                        ],
+                        name="verdict and limits",
+                    ),
+                    row_shares=[0.62, 0.38],
+                ),
+                column_shares=[0.44, 0.56],
+            ),
+            auto_layout=False,
+            auto_views=False,
+            collapse_panels=True,
+        )
     if mode != "robot_geometry":
         raise ValueError(f"unsupported Rerun blueprint mode: {mode!r}")
     return rrb.Blueprint(
@@ -1191,6 +1253,9 @@ def _set_rerun_row_times(recording: Any, row: dict[str, Any]) -> set[str]:
         names.add(str(name))
     for name, value in dict(row.get("timestamp", {})).items():
         recording.set_time(str(name), timestamp=float(value))
+        names.add(str(name))
+    for name, value in dict(row.get("duration", {})).items():
+        recording.set_time(str(name), duration=float(value))
         names.add(str(name))
     return names
 
