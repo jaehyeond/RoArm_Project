@@ -1,0 +1,1034 @@
+{
+  "artifact": "D386_OBSERVED_NO_COVER_LAYER_VERTEX_BUDGET_LOCALIZATION_EVIDENCE_V1",
+  "attempt": "attempt1_observed_no_cover_layer_minimum_vertex_budget_localization",
+  "case": "g0a_d386",
+  "complete_p34_vertex_budget": null,
+  "complete_source_child_count": null,
+  "complete_total_part_count": null,
+  "current_scope_counters": {
+    "alternate_partition_evaluations": 0,
+    "asset_or_usd_reads": 0,
+    "asset_or_usd_writes": 0,
+    "automatic_decomposition_sweeps": 0,
+    "collider_materializations_or_regenerations": 0,
+    "contact_queries": 0,
+    "controlled_physics_steps": 0,
+    "cylinder_creates_or_writes": 0,
+    "internal_overlap_allowances": 0,
+    "isaac_launches": 0,
+    "kit_launches": 0,
+    "live_callback_queries": 0,
+    "material_mass_actuator_physics_setting_changes": 0,
+    "physx_launches": 0,
+    "q5_samples": 0,
+    "target_ik_path_changes": 0,
+    "tolerance_changes": 0,
+    "warp_or_cuda_launches": 0
+  },
+  "cylinder_29x50_rendered_or_measured": false,
+  "diagnostic_geometry_payload_sha256": "887e939b29f1ef13098d8d4ea02406415fece6f9770f3f66b9f20c022271b427",
+  "execution_contract": {
+    "offline_only": true,
+    "provenance_checks": {
+      "head_unchanged_after_prepare": true,
+      "input_hashes_unchanged_after_prepare": true,
+      "origin_unchanged_after_prepare": true,
+      "script_hash_unchanged_after_prepare": true,
+      "start_here_hash_unchanged_after_prepare": true
+    },
+    "retry_index": 0,
+    "worker_invocation_index": 1
+  },
+  "finite_localized_layer_count": 3,
+  "frozen_contract": {
+    "baseline_vertex_budget": 12,
+    "contiguous_fan_group_size": [
+      1,
+      4
+    ],
+    "maximum_localization_budget": 64,
+    "maximum_polygons": 64,
+    "maximum_vertices_per_polygon": 32,
+    "positive_volume_child_overlap": 0,
+    "positive_volume_epsilon_m3": 1e-18,
+    "surface_tolerance_mm": 0.1,
+    "target_layers": [
+      {
+        "body": "gripper_link",
+        "name": "proximal_upper_arm_hull_a",
+        "prim_name": "p000_proximal_upper_arm_hull_a",
+        "region_index": 0,
+        "region_name": "z_layer_00",
+        "role": "moving_support"
+      },
+      {
+        "body": "gripper_link",
+        "name": "proximal_lower_arm_hull_a",
+        "prim_name": "p002_proximal_lower_arm_hull_a",
+        "region_index": 1,
+        "region_name": "z_layer_01",
+        "role": "moving_support"
+      },
+      {
+        "body": "link5",
+        "name": "fixed_backbone_left",
+        "prim_name": "p013_fixed_backbone_left",
+        "region_index": 1,
+        "region_name": "y_layer_01",
+        "role": "fixed_jaw_backbone"
+      },
+      {
+        "body": "link5",
+        "name": "fixed_backbone_right",
+        "prim_name": "p014_fixed_backbone_right",
+        "region_index": 0,
+        "region_name": "y_layer_00",
+        "role": "fixed_jaw_backbone"
+      }
+    ],
+    "topology_volume_relative_tolerance": 0.005
+  },
+  "g0a_pass": false,
+  "global_semantic_preservation_pass": null,
+  "input_hashes": {
+    "d379_evidence": "8eacbad796e8532c3d856b865e90dc54481f0f2003a266c3ebfaa8e93de37af5",
+    "d385_completion": "2caf6c47ad563c9ad82b84d5c3367139943f95c98c62a590b3551a967def91c2",
+    "d385_evidence": "4ff64045d4e2e7ecc3601927d1d6c97fd1a61b636e838241f9fded6b02e3cc00",
+    "d385_script": "ea1d76a8db9c78a3cae9de50a62e0a25283d5550346dad158e641a0da321c5ed"
+  },
+  "installed_stack": {
+    "frozen_d385_helper_script": "sim_scripts/cyl34_top_view_d385_p34_source_hull_semantic_low_count_redesign.py",
+    "frozen_d385_helper_script_sha256": "ea1d76a8db9c78a3cae9de50a62e0a25283d5550346dad158e641a0da321c5ed",
+    "isaac_lab_installed_not_launched": "2.3.0",
+    "isaac_sim_installed_not_launched": "5.1.0.0",
+    "rerun_sdk": "0.34.1"
+  },
+  "layer_results": [
+    {
+      "body": "gripper_link",
+      "boundary": {
+        "baseline_budget": 12,
+        "baseline_cover_exists": false,
+        "evaluated_budget_values": [
+          12,
+          27,
+          28
+        ],
+        "maximum_search_budget": 64,
+        "maximum_search_budget_cover_exists": null,
+        "minimum_budget": 28,
+        "minimum_budget_cover_exists": true,
+        "minimum_budget_minus_one": 27,
+        "minimum_budget_minus_one_cover_exists": false
+      },
+      "boundary_checks": {
+        "baseline12_no_cover": true,
+        "minimum_cover_exists": true,
+        "minimum_minus_one_no_cover": true,
+        "minimum_strictly_above_12_if_finite": true,
+        "null_has_no_cover_at_64": true
+      },
+      "candidate_graph": {
+        "broad_profile_vertex_count": 22,
+        "candidate_count": 74,
+        "geometry_constructed_count": 74,
+        "non_vertex_pass_count": 74,
+        "rejection_reason_counts": {},
+        "triangle_count": 20
+      },
+      "d385_budget12_replay": {
+        "checks": {
+          "d385_helper_error_message_bit_exact": true,
+          "d385_helper_raised_registered_no_cover": true,
+          "independent_budget12_cover_absent": true
+        },
+        "pass": true,
+        "recorded_error": {
+          "message": "z_layer_00: no contiguous fan-cell cover satisfies max-12 vertices; candidate_rejections=10; reason_counts={\"registered_child_compatibility_gate_failed\": 10}",
+          "type": "RegisteredNoCoverError"
+        },
+        "replayed_error": {
+          "message": "z_layer_00: no contiguous fan-cell cover satisfies max-12 vertices; candidate_rejections=10; reason_counts={\"registered_child_compatibility_gate_failed\": 10}",
+          "type": "RegisteredNoCoverError"
+        }
+      },
+      "dynamic_programming": {
+        "canonical_cover_at_minimum": {
+          "child_count": 6,
+          "cut_states": [
+            0,
+            1,
+            5,
+            9,
+            13,
+            17,
+            20
+          ],
+          "maximum_child_vertex_count": 28
+        },
+        "minimax_dp_cut_states": [
+          0,
+          1,
+          5,
+          9,
+          13,
+          17,
+          20
+        ],
+        "minimum_bottleneck_vertex_budget": 28
+      },
+      "identity_checks": {
+        "body_exact": true,
+        "d385_failure_layer_prefix_exact": true,
+        "d385_failure_name_exact": true,
+        "d385_failure_role_exact": true,
+        "name_exact": true,
+        "prim_name_exact": true,
+        "role_exact": true
+      },
+      "independent_exhaustive_enumeration": {
+        "canonical_cover_at_minimum": {
+          "child_count": 6,
+          "cut_states": [
+            0,
+            1,
+            5,
+            9,
+            13,
+            17,
+            20
+          ],
+          "maximum_child_vertex_count": 28
+        },
+        "complete_path_count": 283953,
+        "minimum_bottleneck_vertex_budget": 28
+      },
+      "localization_pass": true,
+      "method_checks": {
+        "bounded_graph_reachability_agrees_with_finiteness": true,
+        "dp_and_exhaustive_budget_agree": true,
+        "dp_and_exhaustive_canonical_cut_agree": true,
+        "dp_and_exhaustive_finiteness_agree": true
+      },
+      "minimum_admissible_vertex_budget_within_12_64": 28,
+      "name": "proximal_upper_arm_hull_a",
+      "non_vertex_gate_frontier": {
+        "end_reachable_with_frozen_gates_and_vertex_le64": true,
+        "frontier_blocking_candidates": [],
+        "reachable_states_from_zero": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "states_that_can_reach_end": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ]
+      },
+      "parent_layer_polygon_count": 23,
+      "parent_layer_vertex_count": 24,
+      "pre_split_interval_m": [
+        -0.010903562419116497,
+        -0.010135913267731667
+      ],
+      "pre_split_levels_m": [
+        -0.010903562419116497,
+        -0.010135913267731667,
+        -0.0007497782353311777,
+        0.0007502218359149992
+      ],
+      "prim_name": "p000_proximal_upper_arm_hull_a",
+      "region_index": 0,
+      "region_name": "z_layer_00",
+      "role": "moving_support",
+      "selected_threshold_cover": {
+        "child_count": 6,
+        "cut_states": [
+          0,
+          1,
+          5,
+          9,
+          13,
+          17,
+          20
+        ],
+        "maximum_child_vertex_count": 28
+      },
+      "selected_threshold_geometry_metrics": {
+        "checks": {
+          "coverage_le_0p1mm": true,
+          "each_child_polygons_le_64": true,
+          "each_child_positive_volume": true,
+          "each_child_vertices_per_polygon_le_32": true,
+          "each_child_vertices_within_local_minimum": true,
+          "outward_le_0p1mm": true,
+          "positive_volume_overlap_zero": true,
+          "volume_relative_le_0p5percent": true
+        },
+        "child_count": 6,
+        "child_volume_sum_mm3": 1.9021258703166934,
+        "maximum_child_polygon_count": 49,
+        "maximum_child_vertex_count": 28,
+        "maximum_vertices_per_child_polygon": 6,
+        "outward_halfspace_violation_mm": 6.311752700355333e-07,
+        "overlap_certificate": {
+          "method": "different thin layers have disjoint registered intervals; same-layer fan cells have disjoint triangle-index ranges",
+          "pass": true,
+          "positive_overlap_pair_count": 0,
+          "positive_overlap_pairs": []
+        },
+        "parent_surface_coverage_halfspace_violation_mm": 3.593147385530515e-07,
+        "parent_volume_mm3": 1.9021255158501336,
+        "pass": true,
+        "surface_sample_count": 266,
+        "uncovered_sample_count_gt_0p0001mm": 0,
+        "volume_relative_error": 1.8635287576192464e-07
+      },
+      "thin_axis_index": 2,
+      "thin_axis_name": "z"
+    },
+    {
+      "body": "gripper_link",
+      "boundary": {
+        "baseline_budget": 12,
+        "baseline_cover_exists": false,
+        "evaluated_budget_values": [
+          12,
+          64
+        ],
+        "maximum_search_budget": 64,
+        "maximum_search_budget_cover_exists": false,
+        "minimum_budget": null,
+        "minimum_budget_cover_exists": null,
+        "minimum_budget_minus_one": null,
+        "minimum_budget_minus_one_cover_exists": null
+      },
+      "boundary_checks": {
+        "baseline12_no_cover": true,
+        "minimum_cover_exists": true,
+        "minimum_minus_one_no_cover": true,
+        "minimum_strictly_above_12_if_finite": true,
+        "null_has_no_cover_at_64": true
+      },
+      "candidate_graph": {
+        "broad_profile_vertex_count": 24,
+        "candidate_count": 82,
+        "geometry_constructed_count": 82,
+        "non_vertex_pass_count": 40,
+        "rejection_reason_counts": {
+          "polygon_count_gt_64": 42
+        },
+        "triangle_count": 22
+      },
+      "d385_budget12_replay": {
+        "checks": {
+          "d385_helper_error_message_bit_exact": true,
+          "d385_helper_raised_registered_no_cover": true,
+          "independent_budget12_cover_absent": true
+        },
+        "pass": true,
+        "recorded_error": {
+          "message": "z_layer_01: no contiguous fan-cell cover satisfies max-12 vertices; candidate_rejections=12; reason_counts={\"registered_child_compatibility_gate_failed\": 12}",
+          "type": "RegisteredNoCoverError"
+        },
+        "replayed_error": {
+          "message": "z_layer_01: no contiguous fan-cell cover satisfies max-12 vertices; candidate_rejections=12; reason_counts={\"registered_child_compatibility_gate_failed\": 12}",
+          "type": "RegisteredNoCoverError"
+        }
+      },
+      "dynamic_programming": null,
+      "identity_checks": {
+        "body_exact": true,
+        "d385_failure_layer_prefix_exact": true,
+        "d385_failure_name_exact": true,
+        "d385_failure_role_exact": true,
+        "name_exact": true,
+        "prim_name_exact": true,
+        "role_exact": true
+      },
+      "independent_exhaustive_enumeration": null,
+      "localization_pass": false,
+      "method_checks": {
+        "bounded_graph_reachability_agrees_with_finiteness": true,
+        "dp_and_exhaustive_budget_agree": true,
+        "dp_and_exhaustive_canonical_cut_agree": true,
+        "dp_and_exhaustive_finiteness_agree": true
+      },
+      "minimum_admissible_vertex_budget_within_12_64": null,
+      "name": "proximal_lower_arm_hull_a",
+      "non_vertex_gate_frontier": {
+        "end_reachable_with_frozen_gates_and_vertex_le64": false,
+        "frontier_blocking_candidates": [],
+        "reachable_states_from_zero": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "states_that_can_reach_end": [
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      "parent_layer_polygon_count": 46,
+      "parent_layer_vertex_count": 46,
+      "pre_split_interval_m": [
+        -0.03711734712123871,
+        -0.027731211856007576
+      ],
+      "pre_split_levels_m": [
+        -0.038617346435785294,
+        -0.03711734712123871,
+        -0.027731211856007576,
+        -0.02696356363594532
+      ],
+      "prim_name": "p002_proximal_lower_arm_hull_a",
+      "region_index": 1,
+      "region_name": "z_layer_01",
+      "role": "moving_support",
+      "selected_threshold_cover": null,
+      "selected_threshold_geometry_metrics": null,
+      "thin_axis_index": 2,
+      "thin_axis_name": "z"
+    },
+    {
+      "body": "link5",
+      "boundary": {
+        "baseline_budget": 12,
+        "baseline_cover_exists": false,
+        "evaluated_budget_values": [
+          12,
+          29,
+          30
+        ],
+        "maximum_search_budget": 64,
+        "maximum_search_budget_cover_exists": null,
+        "minimum_budget": 30,
+        "minimum_budget_cover_exists": true,
+        "minimum_budget_minus_one": 29,
+        "minimum_budget_minus_one_cover_exists": false
+      },
+      "boundary_checks": {
+        "baseline12_no_cover": true,
+        "minimum_cover_exists": true,
+        "minimum_minus_one_no_cover": true,
+        "minimum_strictly_above_12_if_finite": true,
+        "null_has_no_cover_at_64": true
+      },
+      "candidate_graph": {
+        "broad_profile_vertex_count": 20,
+        "candidate_count": 66,
+        "geometry_constructed_count": 66,
+        "non_vertex_pass_count": 66,
+        "rejection_reason_counts": {},
+        "triangle_count": 18
+      },
+      "d385_budget12_replay": {
+        "checks": {
+          "d385_helper_error_message_bit_exact": true,
+          "d385_helper_raised_registered_no_cover": true,
+          "independent_budget12_cover_absent": true
+        },
+        "pass": true,
+        "recorded_error": {
+          "message": "y_layer_01: no contiguous fan-cell cover satisfies max-12 vertices; candidate_rejections=4; reason_counts={\"registered_child_compatibility_gate_failed\": 4}",
+          "type": "RegisteredNoCoverError"
+        },
+        "replayed_error": {
+          "message": "y_layer_01: no contiguous fan-cell cover satisfies max-12 vertices; candidate_rejections=4; reason_counts={\"registered_child_compatibility_gate_failed\": 4}",
+          "type": "RegisteredNoCoverError"
+        }
+      },
+      "dynamic_programming": {
+        "canonical_cover_at_minimum": {
+          "child_count": 5,
+          "cut_states": [
+            0,
+            4,
+            6,
+            10,
+            14,
+            18
+          ],
+          "maximum_child_vertex_count": 30
+        },
+        "minimax_dp_cut_states": [
+          0,
+          4,
+          6,
+          10,
+          14,
+          18
+        ],
+        "minimum_bottleneck_vertex_budget": 30
+      },
+      "identity_checks": {
+        "body_exact": true,
+        "d385_failure_layer_prefix_exact": true,
+        "d385_failure_name_exact": true,
+        "d385_failure_role_exact": true,
+        "name_exact": true,
+        "prim_name_exact": true,
+        "role_exact": true
+      },
+      "independent_exhaustive_enumeration": {
+        "canonical_cover_at_minimum": {
+          "child_count": 5,
+          "cut_states": [
+            0,
+            4,
+            6,
+            10,
+            14,
+            18
+          ],
+          "maximum_child_vertex_count": 30
+        },
+        "complete_path_count": 76424,
+        "minimum_bottleneck_vertex_budget": 30
+      },
+      "localization_pass": true,
+      "method_checks": {
+        "bounded_graph_reachability_agrees_with_finiteness": true,
+        "dp_and_exhaustive_budget_agree": true,
+        "dp_and_exhaustive_canonical_cut_agree": true,
+        "dp_and_exhaustive_finiteness_agree": true
+      },
+      "minimum_admissible_vertex_budget_within_12_64": 30,
+      "name": "fixed_backbone_left",
+      "non_vertex_gate_frontier": {
+        "end_reachable_with_frozen_gates_and_vertex_le64": true,
+        "frontier_blocking_candidates": [],
+        "reachable_states_from_zero": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18
+        ],
+        "states_that_can_reach_end": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18
+        ]
+      },
+      "parent_layer_polygon_count": 22,
+      "parent_layer_vertex_count": 23,
+      "pre_split_interval_m": [
+        -0.01624634675681591,
+        -0.01623634621500969
+      ],
+      "pre_split_levels_m": [
+        -0.017746346071362495,
+        -0.01624634675681591,
+        -0.01623634621500969
+      ],
+      "prim_name": "p013_fixed_backbone_left",
+      "region_index": 1,
+      "region_name": "y_layer_01",
+      "role": "fixed_jaw_backbone",
+      "selected_threshold_cover": {
+        "child_count": 5,
+        "cut_states": [
+          0,
+          4,
+          6,
+          10,
+          14,
+          18
+        ],
+        "maximum_child_vertex_count": 30
+      },
+      "selected_threshold_geometry_metrics": {
+        "checks": {
+          "coverage_le_0p1mm": true,
+          "each_child_polygons_le_64": true,
+          "each_child_positive_volume": true,
+          "each_child_vertices_per_polygon_le_32": true,
+          "each_child_vertices_within_local_minimum": true,
+          "outward_le_0p1mm": true,
+          "positive_volume_overlap_zero": true,
+          "volume_relative_le_0p5percent": true
+        },
+        "child_count": 5,
+        "child_volume_sum_mm3": 3.061637921979908,
+        "maximum_child_polygon_count": 55,
+        "maximum_child_vertex_count": 30,
+        "maximum_vertices_per_child_polygon": 7,
+        "outward_halfspace_violation_mm": 8.184670059752097e-07,
+        "overlap_certificate": {
+          "method": "different thin layers have disjoint registered intervals; same-layer fan cells have disjoint triangle-index ranges",
+          "pass": true,
+          "positive_overlap_pair_count": 0,
+          "positive_overlap_pairs": []
+        },
+        "parent_surface_coverage_halfspace_violation_mm": 6.724402354385539e-07,
+        "parent_volume_mm3": 3.0615591295398685,
+        "pass": true,
+        "surface_sample_count": 254,
+        "uncovered_sample_count_gt_0p0001mm": 0,
+        "volume_relative_error": 2.5736050393251484e-05
+      },
+      "thin_axis_index": 1,
+      "thin_axis_name": "y"
+    },
+    {
+      "body": "link5",
+      "boundary": {
+        "baseline_budget": 12,
+        "baseline_cover_exists": false,
+        "evaluated_budget_values": [
+          12,
+          13
+        ],
+        "maximum_search_budget": 64,
+        "maximum_search_budget_cover_exists": null,
+        "minimum_budget": 13,
+        "minimum_budget_cover_exists": true,
+        "minimum_budget_minus_one": 12,
+        "minimum_budget_minus_one_cover_exists": false
+      },
+      "boundary_checks": {
+        "baseline12_no_cover": true,
+        "minimum_cover_exists": true,
+        "minimum_minus_one_no_cover": true,
+        "minimum_strictly_above_12_if_finite": true,
+        "null_has_no_cover_at_64": true
+      },
+      "candidate_graph": {
+        "broad_profile_vertex_count": 23,
+        "candidate_count": 78,
+        "geometry_constructed_count": 77,
+        "non_vertex_pass_count": 77,
+        "rejection_reason_counts": {
+          "degenerate_geometry": 1
+        },
+        "triangle_count": 21
+      },
+      "d385_budget12_replay": {
+        "checks": {
+          "d385_helper_error_message_bit_exact": true,
+          "d385_helper_raised_registered_no_cover": true,
+          "independent_budget12_cover_absent": true
+        },
+        "pass": true,
+        "recorded_error": {
+          "message": "y_layer_00: no contiguous fan-cell cover satisfies max-12 vertices; candidate_rejections=10; reason_counts={\"registered_child_compatibility_gate_failed\": 10}",
+          "type": "RegisteredNoCoverError"
+        },
+        "replayed_error": {
+          "message": "y_layer_00: no contiguous fan-cell cover satisfies max-12 vertices; candidate_rejections=10; reason_counts={\"registered_child_compatibility_gate_failed\": 10}",
+          "type": "RegisteredNoCoverError"
+        }
+      },
+      "dynamic_programming": {
+        "canonical_cover_at_minimum": {
+          "child_count": 6,
+          "cut_states": [
+            0,
+            1,
+            5,
+            9,
+            13,
+            17,
+            21
+          ],
+          "maximum_child_vertex_count": 13
+        },
+        "minimax_dp_cut_states": [
+          0,
+          1,
+          5,
+          9,
+          13,
+          17,
+          21
+        ],
+        "minimum_bottleneck_vertex_budget": 13
+      },
+      "identity_checks": {
+        "body_exact": true,
+        "d385_failure_layer_prefix_exact": true,
+        "d385_failure_name_exact": true,
+        "d385_failure_role_exact": true,
+        "name_exact": true,
+        "prim_name_exact": true,
+        "role_exact": true
+      },
+      "independent_exhaustive_enumeration": {
+        "canonical_cover_at_minimum": {
+          "child_count": 6,
+          "cut_states": [
+            0,
+            1,
+            5,
+            9,
+            13,
+            17,
+            21
+          ],
+          "maximum_child_vertex_count": 13
+        },
+        "complete_path_count": 263384,
+        "minimum_bottleneck_vertex_budget": 13
+      },
+      "localization_pass": true,
+      "method_checks": {
+        "bounded_graph_reachability_agrees_with_finiteness": true,
+        "dp_and_exhaustive_budget_agree": true,
+        "dp_and_exhaustive_canonical_cut_agree": true,
+        "dp_and_exhaustive_finiteness_agree": true
+      },
+      "minimum_admissible_vertex_budget_within_12_64": 13,
+      "name": "fixed_backbone_right",
+      "non_vertex_gate_frontier": {
+        "end_reachable_with_frozen_gates_and_vertex_le64": true,
+        "frontier_blocking_candidates": [
+          {
+            "bounded_path_rejection_reasons": [
+              "degenerate_geometry"
+            ],
+            "end_state": 21,
+            "error_type": "ValueError",
+            "geometry_constructed": false,
+            "group_size": 1,
+            "maximum_vertices_per_polygon": null,
+            "non_vertex_gates_pass": false,
+            "polygon_count": null,
+            "rejection_reasons": [
+              "degenerate_geometry"
+            ],
+            "start_state": 20,
+            "vertex_count": null,
+            "volume_m3": null
+          }
+        ],
+        "reachable_states_from_zero": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21
+        ],
+        "states_that_can_reach_end": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          21
+        ]
+      },
+      "parent_layer_polygon_count": 24,
+      "parent_layer_vertex_count": 25,
+      "pre_split_interval_m": [
+        0.015211222693324089,
+        0.015221220441162586
+      ],
+      "pre_split_levels_m": [
+        0.015211222693324089,
+        0.015221220441162586,
+        0.015242956578731537,
+        0.016721220687031746
+      ],
+      "prim_name": "p014_fixed_backbone_right",
+      "region_index": 0,
+      "region_name": "y_layer_00",
+      "role": "fixed_jaw_backbone",
+      "selected_threshold_cover": {
+        "child_count": 6,
+        "cut_states": [
+          0,
+          1,
+          5,
+          9,
+          13,
+          17,
+          21
+        ],
+        "maximum_child_vertex_count": 13
+      },
+      "selected_threshold_geometry_metrics": {
+        "checks": {
+          "coverage_le_0p1mm": true,
+          "each_child_polygons_le_64": true,
+          "each_child_positive_volume": true,
+          "each_child_vertices_per_polygon_le_32": true,
+          "each_child_vertices_within_local_minimum": true,
+          "outward_le_0p1mm": true,
+          "positive_volume_overlap_zero": true,
+          "volume_relative_le_0p5percent": true
+        },
+        "child_count": 6,
+        "child_volume_sum_mm3": 3.0607513796658736,
+        "maximum_child_polygon_count": 18,
+        "maximum_child_vertex_count": 13,
+        "maximum_vertices_per_child_polygon": 8,
+        "outward_halfspace_violation_mm": 4.256505113653386e-07,
+        "overlap_certificate": {
+          "method": "different thin layers have disjoint registered intervals; same-layer fan cells have disjoint triangle-index ranges",
+          "pass": true,
+          "positive_overlap_pair_count": 0,
+          "positive_overlap_pairs": []
+        },
+        "parent_surface_coverage_halfspace_violation_mm": 9.678084375575047e-08,
+        "parent_volume_mm3": 3.060732233485122,
+        "pass": true,
+        "surface_sample_count": 278,
+        "uncovered_sample_count_gt_0p0001mm": 0,
+        "volume_relative_error": 6.255424941142787e-06
+      },
+      "thin_axis_index": 1,
+      "thin_axis_name": "y"
+    }
+  ],
+  "live_gpu_compatibility_pass": null,
+  "live_identity_pass": null,
+  "localization_pass": false,
+  "materializable_candidate": false,
+  "measurement_authority": "immutable D379 authored Float32 streams, immutable D385 first-failure evidence, and D385's frozen offline geometry helpers",
+  "method_contract_checks": {
+    "all_boundary_checks_pass": true,
+    "all_budget12_replays_exact": true,
+    "all_finite_witness_geometry_gates_pass": true,
+    "all_independent_methods_agree": true,
+    "d385_completion_pass": true,
+    "d385_scientific_verdict_frozen": true,
+    "evaluated_layers_exact_registered_four": true,
+    "forbidden_runtime_counters_zero": true,
+    "immutable_input_hashes_exact": true,
+    "one_full_graph_and_one_b12_replay_per_target_layer": true,
+    "shadowed_layer_evaluation_count_zero": true,
+    "target_inventory_exact_four": true
+  },
+  "method_contract_pass": true,
+  "new_variables": [
+    "observed_no_cover_layer_exact_minimax_vertex_budget_localizer_v1"
+  ],
+  "next_authorization_boundary": "Do not select or apply a vertex budget, evaluate later layers, change the partition/non-vertex gates, materialize USD/PhysX, or create/run the 29x50mm cylinder without a new explicit approval.",
+  "null_localized_layer_count": 1,
+  "observed_four_layer_required_maximum_diagnostic_only": null,
+  "official_sources": [
+    {
+      "applicability": "version-matched collider/cooking context only; D386 does not run a cook",
+      "title": "Omni Physics 107.3 - Colliders",
+      "url": "https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/rigid_bodies_articulations/collision.html"
+    },
+    {
+      "applicability": "vertices, polygons, and face-width remain separate conditions; offline D386 is not a live GPU verdict",
+      "title": "PhysX 5.6.1 - GPU Rigid Bodies",
+      "url": "https://nvidia-omniverse.github.io/PhysX/physx/5.6.1/docs/GPURigidBodies.html"
+    },
+    {
+      "applicability": "local source cross-check for distinct compatibility conditions; D386 keeps non-vertex gates frozen",
+      "title": "PhysX 107.3 GuConvexMesh::isGpuCompatible",
+      "url": "https://raw.githubusercontent.com/NVIDIA-Omniverse/PhysX/107.3-omni-and-physx-5.6.1/physx/source/geomutils/src/convex/GuConvexMesh.cpp"
+    }
+  ],
+  "p34_authored_to_cooked_identity_pass": false,
+  "parent_wide_vertex_budget": null,
+  "partial_finite_localized_maximum_diagnostic_only": 30,
+  "physics_or_grasp_result": null,
+  "repair_materialized": false,
+  "scope_statement": {
+    "evaluated_layer_count": 4,
+    "evaluation_counts_by_target_layer": [
+      {
+        "body": "gripper_link",
+        "frozen_d385_b12_helper_replays": 1,
+        "full_graph_enumerations": 1,
+        "prim_name": "p000_proximal_upper_arm_hull_a",
+        "region_name": "z_layer_00"
+      },
+      {
+        "body": "gripper_link",
+        "frozen_d385_b12_helper_replays": 1,
+        "full_graph_enumerations": 1,
+        "prim_name": "p002_proximal_lower_arm_hull_a",
+        "region_name": "z_layer_01"
+      },
+      {
+        "body": "link5",
+        "frozen_d385_b12_helper_replays": 1,
+        "full_graph_enumerations": 1,
+        "prim_name": "p013_fixed_backbone_left",
+        "region_name": "y_layer_01"
+      },
+      {
+        "body": "link5",
+        "frozen_d385_b12_helper_replays": 1,
+        "full_graph_enumerations": 1,
+        "prim_name": "p014_fixed_backbone_right",
+        "region_name": "y_layer_00"
+      }
+    ],
+    "first_observed_layers_only": true,
+    "parent_wide_or_complete_p34_inference_authorized": false,
+    "shadowed_or_later_layer_evaluation_count": 0,
+    "shadowed_or_later_layer_keys_evaluated": [],
+    "shadowed_or_later_layers": [
+      {
+        "body": "gripper_link",
+        "parent_name": "proximal_upper_arm_hull_a",
+        "prim_name": "p000_proximal_upper_arm_hull_a",
+        "region_name": "z_layer_01",
+        "status": "present_but_not_evaluated"
+      },
+      {
+        "body": "gripper_link",
+        "parent_name": "proximal_upper_arm_hull_a",
+        "prim_name": "p000_proximal_upper_arm_hull_a",
+        "region_name": "z_layer_02",
+        "status": "present_but_not_evaluated"
+      },
+      {
+        "body": "gripper_link",
+        "parent_name": "proximal_lower_arm_hull_a",
+        "prim_name": "p002_proximal_lower_arm_hull_a",
+        "region_name": "z_layer_00",
+        "status": "present_but_not_evaluated"
+      },
+      {
+        "body": "gripper_link",
+        "parent_name": "proximal_lower_arm_hull_a",
+        "prim_name": "p002_proximal_lower_arm_hull_a",
+        "region_name": "z_layer_02",
+        "status": "present_but_not_evaluated"
+      },
+      {
+        "body": "link5",
+        "parent_name": "fixed_backbone_left",
+        "prim_name": "p013_fixed_backbone_left",
+        "region_name": "y_layer_00",
+        "status": "present_but_not_evaluated"
+      },
+      {
+        "body": "link5",
+        "parent_name": "fixed_backbone_right",
+        "prim_name": "p014_fixed_backbone_right",
+        "region_name": "y_layer_01",
+        "status": "present_but_not_evaluated"
+      },
+      {
+        "body": "link5",
+        "parent_name": "fixed_backbone_right",
+        "prim_name": "p014_fixed_backbone_right",
+        "region_name": "y_layer_02",
+        "status": "present_but_not_evaluated"
+      }
+    ]
+  },
+  "script_sha256": "60b5b2d15518baa0427e44f0928a46993e78eeba45307636b234cb0b042acf8d",
+  "selected_budget_application_count": 0,
+  "selected_vertex_budget": null,
+  "verdict": "D386_OBSERVED_LAYER_VERTEX_BUDGET_NOT_LOCALIZABLE_FAIL_STOP",
+  "what_and_why": "Localize the exact minimum child-vertex budget, if any within 12..64, for only D385's four first-observed no-cover layers while freezing its partition and every non-vertex gate."
+}

@@ -1,0 +1,26 @@
+{
+  "artifact": "D386_MANUAL_VISUAL_INSPECTION_V1",
+  "artifact_hashes": {
+    "claudedocs/runtime_logs/grasp_track/g0a_d386/attempt1_observed_no_cover_layer_minimum_vertex_budget_localization/d386_rerun_inspection.png": "c73729887dfb42008080fa3218377ec7df256d44ca84627a485a203cdc6467e5",
+    "claudedocs/runtime_logs/grasp_track/g0a_d386/attempt1_observed_no_cover_layer_minimum_vertex_budget_localization/d386_vertex_budget_localization_1920x1080.png": "68d1f320e5913d3bbe6edd83990494f5699807b541fbec6cc1be52d24a17d180"
+  },
+  "attempt": "attempt1_observed_no_cover_layer_minimum_vertex_budget_localization",
+  "case": "g0a_d386",
+  "checks": {
+    "all_four_registered_layer_cards_visible": true,
+    "board_exact_1920x1080_and_readable": true,
+    "boundary_labels_readable": true,
+    "finite_and_null_results_visually_unambiguous": true,
+    "no_budget_adoption_live_or_physics_claim": true,
+    "rerun_geometry_and_metadata_readable": true,
+    "shadowed_layers_not_evaluated_notice_visible": true
+  },
+  "inspection_authority": "direct visual inspection of the exact board PNG and headless Rerun screenshot; canonical JSON remains numeric authority",
+  "observations": [
+    "The exact 1920x1080 board shows all four registered first-failure layers without title overlap or clipping. The finite 30, 13, and 28 threshold witnesses are colored, while proximal_lower_arm_hull_a/z_layer_01 is separately red and marked NULL through 64.",
+    "The footer explicitly states that only the first failed layer of each parent was measured, later layers were not evaluated, and USD, Isaac, PhysX, cylinder, physics, contact, and grasp were not run.",
+    "The headless Rerun screenshot visibly contains the four shifted layer subjects and the decision metadata. The requested 1920x1080 window was saved as a 3840x2160 HiDPI PNG; this is not used as the exact-size board authority.",
+    "Rerun displayed a notification-buffer warning that its message proxy server was not permitted in the sandbox. The RRD and RBL nevertheless loaded, the viewer returned 0, and exact entity, component, timeline, footer, and version validation passed. The warning is recorded and is not treated as geometry or numeric authority."
+  ],
+  "pass": true
+}

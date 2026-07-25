@@ -1,0 +1,185 @@
+{
+  "approved_scope": "offline-only exact minimum vertex-budget localization for D385's four first-observed no-cover layers",
+  "artifact": "D386_PREREGISTRATION_V1",
+  "attempt": "attempt1_observed_no_cover_layer_minimum_vertex_budget_localization",
+  "case": "g0a_d386",
+  "checks": {
+    "baseline_budget_exact_12": true,
+    "d385_first_observed_failure_inventory_exact_four": true,
+    "font_bold_present": true,
+    "font_regular_present": true,
+    "forbidden_runtime_imports_absent": true,
+    "head_exact": true,
+    "input_hashes_exact": true,
+    "maximum_localization_budget_exact_64": true,
+    "non_vertex_gates_frozen": true,
+    "one_new_variable_exact": true,
+    "origin_exact": true,
+    "output_create_added_only_d386_root": true,
+    "rerun_cli_present": true,
+    "start_here_active_case_present": true,
+    "start_here_budget_range_12_64_present": true,
+    "start_here_first_observed_scope_present": true,
+    "start_here_no_overlap_gate_present": true,
+    "start_here_output_path_present": true,
+    "start_here_shadowed_not_evaluated_present": true,
+    "start_here_variable_present": true,
+    "worktree_before_output_create_exact": true
+  },
+  "environment": {
+    "executable": "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+    "forbidden_import_roots_found": [],
+    "git_status_after_output_create": [
+      " M START_HERE.md",
+      " M claudedocs/BACKLOG.md",
+      " M claudedocs/DECISIONS.md",
+      " M claudedocs/EXPERIMENT_LEDGER.md",
+      "?? claudedocs/runtime_logs/grasp_track/g0a_d385/",
+      "?? claudedocs/runtime_logs/grasp_track/g0a_d386/",
+      "?? claudedocs/session_20260725_grasp_g0a_d385_p34_source_hull_semantic_low_count_redesign.md",
+      "?? sim_scripts/cyl34_top_view_d385_p34_source_hull_semantic_low_count_redesign.py",
+      "?? sim_scripts/cyl34_top_view_d386_d385_minimum_admissible_vertex_budget_localization.py"
+    ],
+    "git_status_before_output_create": [
+      " M START_HERE.md",
+      " M claudedocs/BACKLOG.md",
+      " M claudedocs/DECISIONS.md",
+      " M claudedocs/EXPERIMENT_LEDGER.md",
+      "?? claudedocs/runtime_logs/grasp_track/g0a_d385/",
+      "?? claudedocs/session_20260725_grasp_g0a_d385_p34_source_hull_semantic_low_count_redesign.md",
+      "?? sim_scripts/cyl34_top_view_d385_p34_source_hull_semantic_low_count_redesign.py",
+      "?? sim_scripts/cyl34_top_view_d386_d385_minimum_admissible_vertex_budget_localization.py"
+    ],
+    "head": "35f10e3079b19e51209ba4cf1dd66391a431b053",
+    "import_roots": [
+      "PIL",
+      "__future__",
+      "argparse",
+      "ast",
+      "csv",
+      "hashlib",
+      "importlib",
+      "json",
+      "math",
+      "matplotlib",
+      "mpl_toolkits",
+      "numpy",
+      "os",
+      "pathlib",
+      "rerun",
+      "roarm_rl",
+      "signal",
+      "subprocess",
+      "sys",
+      "time",
+      "typing"
+    ],
+    "input_hashes": {
+      "d379_evidence": "8eacbad796e8532c3d856b865e90dc54481f0f2003a266c3ebfaa8e93de37af5",
+      "d385_completion": "2caf6c47ad563c9ad82b84d5c3367139943f95c98c62a590b3551a967def91c2",
+      "d385_evidence": "4ff64045d4e2e7ecc3601927d1d6c97fd1a61b636e838241f9fded6b02e3cc00",
+      "d385_script": "ea1d76a8db9c78a3cae9de50a62e0a25283d5550346dad158e641a0da321c5ed"
+    },
+    "origin_master": "35f10e3079b19e51209ba4cf1dd66391a431b053",
+    "python": "3.11.14 (main, Oct 21 2025, 18:31:21) [GCC 11.2.0]",
+    "script_path": "sim_scripts/cyl34_top_view_d386_d385_minimum_admissible_vertex_budget_localization.py",
+    "script_sha256": "60b5b2d15518baa0427e44f0928a46993e78eeba45307636b234cb0b042acf8d",
+    "start_here_sha256": "192eb0c2ac0016b1866f1ffc09dd3ea557166efb2eec09fd808858961de5b89e"
+  },
+  "explicit_nonclaims": {
+    "complete_p34_budget": null,
+    "complete_source_child_count": null,
+    "complete_total_part_count": null,
+    "later_or_shadowed_layer_evaluations": 0,
+    "live_gpu_or_physics_or_grasp_result": null,
+    "materializable_candidate": false,
+    "parent_wide_budget": null,
+    "selected_or_adopted_budget": null
+  },
+  "failure_semantics": "All four layers must have a finite B*>12 within 12..64 and pass independent minimality and frozen geometry gates for localization PASS. Any null is NOT_LOCALIZABLE_FAIL_STOP; any provenance or algorithm disagreement is CONTRACT_FAIL_STOP. Partial finite minima remain diagnostic only.",
+  "forbidden_runtime_counters": {
+    "alternate_partition_evaluations": 0,
+    "asset_or_usd_reads": 0,
+    "asset_or_usd_writes": 0,
+    "automatic_decomposition_sweeps": 0,
+    "collider_materializations_or_regenerations": 0,
+    "contact_queries": 0,
+    "controlled_physics_steps": 0,
+    "cylinder_creates_or_writes": 0,
+    "internal_overlap_allowances": 0,
+    "isaac_launches": 0,
+    "kit_launches": 0,
+    "live_callback_queries": 0,
+    "material_mass_actuator_physics_setting_changes": 0,
+    "physx_launches": 0,
+    "q5_samples": 0,
+    "target_ik_path_changes": 0,
+    "tolerance_changes": 0,
+    "warp_or_cuda_launches": 0
+  },
+  "frozen_non_vertex_gates": {
+    "maximum_polygons": 64,
+    "maximum_vertices_per_polygon": 32,
+    "positive_volume_child_overlap": 0,
+    "positive_volume_epsilon_m3": 1e-18,
+    "surface_tolerance_mm": 0.1,
+    "topology_volume_relative_tolerance": 0.005
+  },
+  "new_variables": [
+    "observed_no_cover_layer_exact_minimax_vertex_budget_localizer_v1"
+  ],
+  "pass": true,
+  "registered_method": {
+    "boundary_proof": "B=12 no-cover replay; for finite B*, B*-1 no-cover and B* cover; for null, B=64 no-cover",
+    "budget_range_inclusive": [
+      12,
+      64
+    ],
+    "complete_candidate_graph_enumerations_per_layer": 1,
+    "construction": "D385 authored thin-layer interval, broad-profile fan anchor/order, contiguous group size 1..4, and original-parent intersection",
+    "frozen_d385_b12_helper_replays_per_layer": 1,
+    "independent_localizer": "exhaustive enumeration of every complete fixed-gate path",
+    "primary_localizer": "dynamic-programming minimization of the maximum child vertex count over complete contiguous paths"
+  },
+  "target_layers": [
+    {
+      "body": "gripper_link",
+      "name": "proximal_upper_arm_hull_a",
+      "prim_name": "p000_proximal_upper_arm_hull_a",
+      "region_index": 0,
+      "region_name": "z_layer_00",
+      "role": "moving_support"
+    },
+    {
+      "body": "gripper_link",
+      "name": "proximal_lower_arm_hull_a",
+      "prim_name": "p002_proximal_lower_arm_hull_a",
+      "region_index": 1,
+      "region_name": "z_layer_01",
+      "role": "moving_support"
+    },
+    {
+      "body": "link5",
+      "name": "fixed_backbone_left",
+      "prim_name": "p013_fixed_backbone_left",
+      "region_index": 1,
+      "region_name": "y_layer_01",
+      "role": "fixed_jaw_backbone"
+    },
+    {
+      "body": "link5",
+      "name": "fixed_backbone_right",
+      "prim_name": "p014_fixed_backbone_right",
+      "region_index": 0,
+      "region_name": "y_layer_00",
+      "role": "fixed_jaw_backbone"
+    }
+  ],
+  "worker_contract": {
+    "actual_worker_invocations": 1,
+    "rerun_viewer_invocations_maximum": 1,
+    "retries": 0,
+    "watchdog_seconds": 300.0,
+    "watchdog_signal_authority": "on timeout only, signal the newly created D386-owned worker process group; never signal unrelated/external processes"
+  }
+}

@@ -22432,3 +22432,159 @@ Sources:
 - NVIDIA PhysX SDK 5.6.1 `Geometry` and `PxCooking.h`
 - local installed PhysxSchema `107.3.26`
 - `START_HERE.md`
+
+## D385 — A partial low-count source-hull split is not a candidate; complete counts remain null, and installed-schema string markers must match actual syntax
+
+Date: 2026-07-25
+
+Decision:
+
+- D384의 profile-prism 정확 수리 `46`개와 이미 통과한 P34 부품 `17`개를
+  동결하고, 실패한 일반 source 3-D hull `8`개에만 registered
+  thin-layer/profile-cell 분할을 적용했다.
+- source child 하나의 authored vertex 최대 `12`, source child `<=64`,
+  total `<128`, surface/topology-volume `0.1mm/0.5%`, positive-volume
+  child overlap `0`, D372 semantic preservation을 동시에 만족해야 완성
+  후보로 인정한다.
+- 일부 부모에서 나온 child를 더해 완성 count라고 보고하지 않는다. 단 한
+  부모라도 등록 분할의 complete cover가 없으면 source child count와 total
+  count는 `null`이고 materialization할 후보가 없다.
+- D385는 offline design FAIL_STOP이다. Isaac/PhysX/physics/grasp 실패로
+  해석하지 않는다.
+- 설치 schema/source marker는 실제 파일 문법으로 검사해야 한다.
+  `default = 64`/`range=(...)` 같은 잘못된 문자열 matcher의 false를 설정
+  부재로 해석하지 않는다.
+
+Evidence:
+
+- complete partition은 `4/8`: `proximal_upper_arm_hull_b=4`,
+  `proximal_lower_arm_hull_b=4`, `moving_upper_backbone=6`,
+  `moving_lower_backbone=6`; 부분 source child 합은 `20`이다.
+- no-cover `4/8`: `proximal_upper_arm_hull_a(z_layer_00)`,
+  `proximal_lower_arm_hull_a(z_layer_01)`,
+  `fixed_backbone_left(y_layer_01)`,
+  `fixed_backbone_right(y_layer_00)`.
+- 따라서 `semantic_source_children=null`, `total_parts=null`,
+  offline_design_pass=false이며 verdict는
+  `D385_SEMANTIC_THIN_LAYER_PROFILE_CELL_NO_ADMISSIBLE_CANDIDATE_FAIL_STOP`.
+- attempt1은 output-create-before-status 순서 때문에 prepare에서 멈췄고
+  worker/design/Viewer `0`이다. attempt2는 Git-status capture 순서만
+  수리했다.
+- attempt2 worker/retry `1/0`, return `0`, elapsed
+  `4.530759936897084s`, timeout/signal/process residue `0`.
+- exact `1920x1080` board, save-only RRD/RBL, one headless Viewer, manual
+  checks `7/7`, completion checks `13/13`이 PASS했다.
+- asset/USD/Isaac/Kit/PhysX/live callback/cylinder/physics/q5/contact/
+  target-IK-path/Warp-CUDA counters는 전부 `0`; live identity와 GPU
+  compatibility는 null, `g0a_pass=false`.
+- D385 evidence의 `schema_markers=false` 네 값은 diagnostic string-match
+  false negative다. 설치 PhysX schema `107.3.26`은
+  `hullVertexLimit=64`, `maxConvexHulls=32`; property DB는 UI range
+  `8..64`, `1..2048`을 실제로 가진다. 이 marker는 design gate에
+  사용되지 않아 verdict는 바뀌지 않는다.
+
+Implication:
+
+- `20`은 완성된 compound 수가 아니며 `17+46+20=83`을 D385 후보 count로
+  보고하지 않는다.
+- `12 vertices/child`, source `<=64`, total `<128`은 project-authored
+  design gates다. NVIDIA default/hard limit 또는 GPU PASS가 아니다.
+- 다음 권장 최소 후보는 별도 승인 offline-only
+  `D386 [d385_minimum_admissible_vertex_budget_localization]`이다. 동일
+  분할법과 geometry/semantic gates를 동결하고 실패한 네 층이 요구하는
+  최소 vertex budget만 찾은 뒤 한 budget을 선택한다.
+- 다른 partition, tolerance relaxation, internal overlap, automatic
+  decomposition sweep, direct-polygon bridge, USD/live identity와 cylinder
+  physics는 자동 진행하지 않는다.
+- D385 attempts1-2를 동결하고 재실행하거나 덮어쓰지 않는다.
+
+Sources:
+
+- `claudedocs/session_20260725_grasp_g0a_d385_p34_source_hull_semantic_low_count_redesign.md`
+- `sim_scripts/cyl34_top_view_d385_p34_source_hull_semantic_low_count_redesign.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d385/attempt1_semantic_axis_slab_low_count_redesign/d385_preregistration.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d385/attempt2_precreate_git_status_capture_repair/d385_p34_source_hull_redesign_evidence.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d385/attempt2_precreate_git_status_capture_repair/d385_source_parent_metrics.csv`
+- `claudedocs/runtime_logs/grasp_track/g0a_d385/attempt2_precreate_git_status_capture_repair/d385_offline_worker_supervisor.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d385/attempt2_precreate_git_status_capture_repair/d385_manual_visual_inspection.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d385/attempt2_precreate_git_status_capture_repair/d385_completion_summary.json`
+- NVIDIA Omni Physics 107.3 `Rigid Bodies`, `Colliders`
+- NVIDIA PhysX SDK 5.6.1 `GPU Simulation`
+- NVIDIA PhysX 107.3 `GuConvexMesh.cpp`
+- local installed PhysxSchema/property database `107.3.26`
+- `START_HERE.md`
+
+## D386 — A vertex-budget increase is not a repair when the fixed candidate graph is disconnected by another compatibility gate
+
+Date: 2026-07-25
+
+Decision:
+
+- D385에서 처음 관찰된 no-cover layer 네 개만 대상으로, 동일한
+  thin-layer/profile-fan construction과 모든 non-vertex gate를 동결한
+  offline minimum-bottleneck localization을 수행했다.
+- 최소 vertex budget은 complete candidate graph를 한 번 만든 뒤 계산한다.
+  budget별로 geometry를 다시 생성하는 sweep으로 보고하지 않는다. 동결
+  baseline helper replay가 필요하면 full graph generation과 별도 횟수로
+  사전등록하고 실제 계수한다.
+- 어떤 layer가 `vertex_count<=64` 범위에서 complete fixed-gate path를 갖지
+  않으면 그 값은 `null`이다. 다른 유한 layer의 최대값을 전역 budget으로
+  선택하거나 적용하지 않는다.
+- D385의 네 failure는 각 부모의 first-observed layer다. 조기중단 뒤의 layer를
+  계산하지 않은 상태에서 parent-wide 또는 complete-P34 budget을 주장하지
+  않는다.
+- 과학적 FAIL과 completion PASS를 분리한다. D386 completion PASS는 worker,
+  provenance, 시각화, nonclaim이 완결됐다는 뜻이며 collider design PASS가
+  아니다.
+
+Evidence:
+
+- D385 `B=12` no-cover exact replay `4/4`, dynamic-programming과 independent
+  exhaustive result agreement `4/4`.
+- finite minima:
+  `fixed_backbone_left/y_layer_01=30` (`29` FAIL, 5 children),
+  `fixed_backbone_right/y_layer_00=13` (`12` FAIL, 6 children),
+  `proximal_upper_arm_hull_a/z_layer_00=28` (`27` FAIL, 6 children).
+- `proximal_lower_arm_hull_a/z_layer_01`은 `B=64`에서도 no-cover다.
+  constructed candidates `82`, fixed `polygon_count<=64` 거부 `42`,
+  non-vertex gate 통과 `40`, complete path `0`; minimum=`null`.
+- 세 finite witness의 surface `0.1mm`, topology-volume `0.5%`,
+  polygon `64`, face width `32`, positive volume, overlap `0` gate는 모두
+  PASS했다.
+- later/shadowed layers `7`개는 inventory-only이고 evaluation count `0`.
+- finite diagnostic maximum은 `30`이지만 observed-four maximum,
+  selected/parent-wide/complete-P34 budget, complete counts는 모두 `null`;
+  materializable candidate=false.
+- worker/retry `1/0`, return `0`, elapsed `4.933896491071209s`, no
+  timeout/signal/residue. Exact 1920×1080 board, RRD/RBL strict validation,
+  manual checks `7/7`, completion PASS.
+- alternate partition, tolerance/overlap relaxation, USD/Isaac/PhysX/live,
+  cylinder/physics/q5/contact/target-IK-path/settings counters는 모두 `0`.
+- verdict:
+  `D386_OBSERVED_LAYER_VERTEX_BUDGET_NOT_LOCALIZABLE_FAIL_STOP`.
+
+Implication:
+
+- `12→30` 일괄 완화는 승인된 다음 단계가 아니며 현재 evidence로 정당화되지
+  않는다. 한 layer는 vertex budget이 아니라 frozen polygon gate와 후보
+  연결성 때문에 막혔다.
+- repair 설계 전에 D386에서 계산하지 않은 later/shadowed `7`개 layer를
+  같은 fixed graph로 완결 감사하는 별도 승인 case가 우선이다.
+- 그 결과 뒤 polygon-gated layer의 partition/representation repair를 별도
+  한두 변수 case로 설계한다. gate 제거, internal overlap, USD/live identity,
+  actual `29x50mm` cylinder와 physics/grasp를 결합하지 않는다.
+- D386 attempt1을 동결하고 재실행하거나 덮어쓰지 않는다.
+
+Sources:
+
+- `claudedocs/session_20260725_grasp_g0a_d386_minimum_admissible_vertex_budget_localization.md`
+- `sim_scripts/cyl34_top_view_d386_d385_minimum_admissible_vertex_budget_localization.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d386/attempt1_observed_no_cover_layer_minimum_vertex_budget_localization/d386_preregistration.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d386/attempt1_observed_no_cover_layer_minimum_vertex_budget_localization/d386_vertex_budget_localization_evidence.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d386/attempt1_observed_no_cover_layer_minimum_vertex_budget_localization/d386_candidate_cell_metrics.csv`
+- `claudedocs/runtime_logs/grasp_track/g0a_d386/attempt1_observed_no_cover_layer_minimum_vertex_budget_localization/d386_manual_visual_inspection.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d386/attempt1_observed_no_cover_layer_minimum_vertex_budget_localization/d386_completion_summary.json`
+- NVIDIA Omni Physics 107.3 `Colliders`
+- NVIDIA PhysX SDK 5.6.1 `GPU Simulation`
+- NVIDIA PhysX 107.3 `GuConvexMesh.cpp`
+- `START_HERE.md`

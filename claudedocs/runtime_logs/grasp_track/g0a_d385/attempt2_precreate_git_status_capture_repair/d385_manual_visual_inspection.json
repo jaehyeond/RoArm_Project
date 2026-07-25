@@ -1,0 +1,24 @@
+{
+  "artifact": "D385_MANUAL_VISUAL_INSPECTION_V1",
+  "case": "g0a_d385",
+  "attempt": "attempt2_precreate_git_status_capture_repair",
+  "artifact_hashes": {
+    "claudedocs/runtime_logs/grasp_track/g0a_d385/attempt2_precreate_git_status_capture_repair/d385_source_hull_redesign_1920x1080.png": "f397a407e699d0ee6881c26fd377107fc37774840f4e1a2fac6eb0c3cf3cdb32",
+    "claudedocs/runtime_logs/grasp_track/g0a_d385/attempt2_precreate_git_status_capture_repair/d385_rerun_inspection.png": "19ce633a390d2e6d19702814d0e8846591b62622d5c5f98a2e1f97a8192cc8b8"
+  },
+  "checks": {
+    "board_exact_1920x1080_and_readable": true,
+    "all_eight_parent_cards_visible": true,
+    "four_failed_parents_visibly_identified": true,
+    "partial_children_not_presented_as_complete_candidate": true,
+    "rerun_geometry_and_metadata_readable": true,
+    "no_text_overlap_or_clipping": true,
+    "no_live_or_physics_claim": true
+  },
+  "observations": [
+    "The 1920x1080 board shows all eight source parents; four failed parents remain gray without candidate children, while four passing parents show colored child meshes.",
+    "The red footer states that 20 source children are partial diagnostics, the complete total is NULL, and the offline design verdict is FAIL.",
+    "The Rerun capture shows the logged parent and partial-child geometry plus the decision metadata; the restricted-sandbox message-proxy notification does not obscure either evidence panel."
+  ],
+  "pass": true
+}

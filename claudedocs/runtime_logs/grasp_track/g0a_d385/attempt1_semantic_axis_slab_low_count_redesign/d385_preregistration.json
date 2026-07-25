@@ -1,0 +1,132 @@
+{
+  "approved_scope": "offline-only redesign of the eight failed source 3-D hulls",
+  "artifact": "D385_PREREGISTRATION_V1",
+  "attempt": "attempt1_semantic_axis_slab_low_count_redesign",
+  "case": "g0a_d385",
+  "checks": {
+    "font_bold_present": true,
+    "font_regular_present": true,
+    "forbidden_runtime_imports_absent": true,
+    "head_exact": true,
+    "input_hashes_exact": true,
+    "origin_exact": true,
+    "registered_max12_exact": true,
+    "registered_overlap_zero_present": true,
+    "rerun_cli_present": true,
+    "source_budget_exact": true,
+    "start_here_case_present": true,
+    "start_here_output_path_present": true,
+    "start_here_variable_1_present": true,
+    "start_here_variable_2_present": true,
+    "total_reference_exact": true,
+    "worktree_only_expected_d385_changes": false
+  },
+  "environment": {
+    "executable": "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+    "forbidden_import_roots_found": [],
+    "git_status_short": [
+      " M START_HERE.md",
+      "?? claudedocs/runtime_logs/grasp_track/g0a_d385/",
+      "?? sim_scripts/cyl34_top_view_d385_p34_source_hull_semantic_low_count_redesign.py"
+    ],
+    "head": "35f10e3079b19e51209ba4cf1dd66391a431b053",
+    "import_roots": [
+      "PIL",
+      "__future__",
+      "argparse",
+      "ast",
+      "csv",
+      "hashlib",
+      "importlib",
+      "json",
+      "math",
+      "matplotlib",
+      "mpl_toolkits",
+      "numpy",
+      "os",
+      "pathlib",
+      "rerun",
+      "roarm_rl",
+      "scipy",
+      "signal",
+      "subprocess",
+      "sys",
+      "time",
+      "typing"
+    ],
+    "origin_master": "35f10e3079b19e51209ba4cf1dd66391a431b053",
+    "python": "3.11.14 (main, Oct 21 2025, 18:31:21) [GCC 11.2.0]",
+    "script_path": "sim_scripts/cyl34_top_view_d385_p34_source_hull_semantic_low_count_redesign.py",
+    "script_sha256": "ef6c430f2c42a6f71e272f0c4e2a9d2c0f7ab2ce9ea2b8710355c52ddb68a9f2",
+    "start_here_sha256": "f003b22ef66b78b3f74def28e1b1713266193bb0d595838b39568159bf739207"
+  },
+  "explicit_nulls_after_case": [
+    "repair_materialized",
+    "live_identity_pass",
+    "live_gpu_compatibility_pass",
+    "physics_or_grasp_result"
+  ],
+  "failure_semantics": "If any of the eight parents has no registered max-12 cover, the complete source count and total part count are null and the case ends NO_ADMISSIBLE_CANDIDATE_FAIL_STOP.  Partial children are diagnostic only and are not a materializable candidate.",
+  "forbidden_runtime_counters": {
+    "asset_or_usd_reads": 0,
+    "asset_or_usd_writes": 0,
+    "automatic_decomposition_sweeps": 0,
+    "collider_materializations_or_regenerations": 0,
+    "contact_queries": 0,
+    "controlled_physics_steps": 0,
+    "cylinder_creates_or_writes": 0,
+    "isaac_launches": 0,
+    "kit_launches": 0,
+    "live_callback_queries": 0,
+    "physx_launches": 0,
+    "q5_samples": 0,
+    "target_ik_path_changes": 0,
+    "warp_or_cuda_launches": 0
+  },
+  "frozen": {
+    "exact_profile_children": 46,
+    "input_hashes": {
+      "d372_evidence": "d68f658089aaf838ff454e9d0b301ec3f602785a3a730b3c329aa7785010e984",
+      "d372_geometry": "12fd1f32c35dfb9ae36cbbb412f6a51536aa1cc07c2dc17d05a5d189f3ee83e4",
+      "d379_evidence": "8eacbad796e8532c3d856b865e90dc54481f0f2003a266c3ebfaa8e93de37af5",
+      "d380_evidence": "4c64d08e117501dd15a5836ce56ef8b963d188044beac465e645e53a17710bd1",
+      "d384_evidence": "16ed5696d7198913367806e3ee13cf17a2b3f83c0c28d139115aa1d51c40822f"
+    },
+    "unchanged_passing_parts": 17
+  },
+  "new_variables": [
+    "source_hull_semantic_thin_layer_profile_cell_partition_v1",
+    "source_child_max12_vertex_budget_v1"
+  ],
+  "official_sources": [
+    {
+      "title": "Omni Physics 107.3 - Colliders",
+      "url": "https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/rigid_bodies_articulations/collision.html"
+    },
+    {
+      "title": "Omni Physics 107.3 - Rigid Bodies",
+      "url": "https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/rigid_bodies_articulations/rigid_bodies.html"
+    },
+    {
+      "title": "PhysX 5.6.1 - GPU Rigid Bodies",
+      "url": "https://nvidia-omniverse.github.io/PhysX/physx/5.6.1/docs/GPURigidBodies.html"
+    }
+  ],
+  "pass": false,
+  "registered_construction": "split at every authored thin-layer coordinate; partition each broad profile into contiguous fan cells of at most six profile vertices; intersect each cell prism with the original parent",
+  "registered_gates": {
+    "maximum_vertices_per_source_child": 12,
+    "outward_and_uncovered_surface_maximum_mm": 0.1,
+    "owner_role_and_d372_semantics_preserved": true,
+    "positive_volume_child_overlap": 0,
+    "source_children_maximum": 64,
+    "topology_volume_relative_maximum": 0.005,
+    "total_parts_exclusive_maximum": 128
+  },
+  "worker_contract": {
+    "actual_worker_invocations": 1,
+    "rerun_viewer_invocations_maximum": 1,
+    "retries": 0,
+    "watchdog_seconds": 300.0
+  }
+}

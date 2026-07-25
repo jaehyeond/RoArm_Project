@@ -1,0 +1,517 @@
+{
+  "artifact": "D385_P34_SOURCE_HULL_SEMANTIC_LOW_COUNT_EVIDENCE_V1",
+  "attempt": "attempt2_precreate_git_status_capture_repair",
+  "candidate_geometry_payload_sha256": "8d32772c0205270fd35cab485d15e0266eb9ce47f5257025bad39b58e8df54e2",
+  "case": "g0a_d385",
+  "counts": {
+    "checks": {
+      "complete_eight_parent_candidate": false,
+      "source_children_le_64": false,
+      "total_identity": false,
+      "total_parts_below_128": false
+    },
+    "exact_profile_children": 46,
+    "partial_source_children_before_fail_stop": 20,
+    "pass": false,
+    "semantic_source_children": null,
+    "source_budget": 64,
+    "total_exclusive_reference": 128,
+    "total_parts": null,
+    "unchanged_passing_parts": 17
+  },
+  "current_scope_counters": {
+    "asset_or_usd_reads": 0,
+    "asset_or_usd_writes": 0,
+    "automatic_decomposition_sweeps": 0,
+    "collider_materializations_or_regenerations": 0,
+    "contact_queries": 0,
+    "controlled_physics_steps": 0,
+    "cylinder_creates_or_writes": 0,
+    "isaac_launches": 0,
+    "kit_launches": 0,
+    "live_callback_queries": 0,
+    "physx_launches": 0,
+    "q5_samples": 0,
+    "target_ik_path_changes": 0,
+    "warp_or_cuda_launches": 0
+  },
+  "cylinder_29x50_rendered_or_measured": false,
+  "design_checks": {
+    "all_source_parent_partitions_pass": false,
+    "complete_eight_parent_candidate": false,
+    "forbidden_runtime_counters_zero": true,
+    "immutable_input_hashes_exact": true,
+    "negative_controls_all_pass": false,
+    "passing_parts_exact_17": true,
+    "profile_children_exact_46": true,
+    "profile_failed_keys_exact_9": true,
+    "profile_parent_repairs_all_pass": true,
+    "semantic_preservation_pass": false,
+    "source_children_le_64": false,
+    "source_failed_keys_exact_d384": true,
+    "source_parent_names_exact_8": true,
+    "total_identity": false,
+    "total_parts_below_128": false
+  },
+  "execution_contract": {
+    "offline_only": true,
+    "provenance_checks": {
+      "head_unchanged_after_prepare": true,
+      "input_hashes_unchanged_after_prepare": true,
+      "origin_unchanged_after_prepare": true,
+      "script_hash_unchanged_after_prepare": true,
+      "start_here_hash_unchanged_after_prepare": true
+    },
+    "retry_index": 0,
+    "worker_invocation_index": 1
+  },
+  "frozen_contract": {
+    "count_basis": "project comparison against A64 64+64; not an NVIDIA hard limit or optimum",
+    "passing_parts": 17,
+    "profile_children": 46,
+    "source_child_budget": 64,
+    "surface_tolerance_mm": 0.1,
+    "topology_volume_relative_tolerance": 0.005,
+    "total_part_reference_exclusive": 128
+  },
+  "g0a_pass": false,
+  "input_hashes": {
+    "d372_evidence": "d68f658089aaf838ff454e9d0b301ec3f602785a3a730b3c329aa7785010e984",
+    "d372_geometry": "12fd1f32c35dfb9ae36cbbb412f6a51536aa1cc07c2dc17d05a5d189f3ee83e4",
+    "d379_evidence": "8eacbad796e8532c3d856b865e90dc54481f0f2003a266c3ebfaa8e93de37af5",
+    "d380_evidence": "4c64d08e117501dd15a5836ce56ef8b963d188044beac465e645e53a17710bd1",
+    "d384_evidence": "16ed5696d7198913367806e3ee13cf17a2b3f83c0c28d139115aa1d51c40822f"
+  },
+  "installed_stack": {
+    "isaac_lab": "2.3.0",
+    "isaac_sim": "5.1.0.0",
+    "physx_property_db_path": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.kit.property.physx-107.3.26+107.3.3.cp311.u353/omni/kit/property/physx/database.py",
+    "physx_property_db_sha256": "4c46d4ae503f0608770a0e130f037e6eae51971007f1b0a570704c56a1fe01b5",
+    "physx_schema_path": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.schema.physx-107.3.26+107.3.3.lx64.r.cp311.u353/plugins/PhysxSchema/resources/schema.usda",
+    "physx_schema_sha256": "fe075bce4bde5ba7db69c6ccef0c4c26909336ab34c619129fc276f7cb4d7abc",
+    "rerun_sdk": "0.34.1",
+    "schema_markers": {
+      "hull_vertex_limit_default_64": false,
+      "max_convex_hulls_default_32": false,
+      "property_ui_hull_range_8_64_present": false,
+      "property_ui_max_hulls_range_1_2048_present": false
+    }
+  },
+  "live_gpu_compatibility_pass": null,
+  "live_identity_pass": null,
+  "measurement_authority": "immutable D372/D379/D380/D384 JSON plus Float64 offline calculation on registered Float32 authored streams",
+  "negative_controls": {
+    "evaluated": false,
+    "pass": false,
+    "passed": 0,
+    "reason": "candidate-dependent perturbation controls were not run after registered construction fail-stop",
+    "total": 0
+  },
+  "new_variables": [
+    "source_hull_semantic_thin_layer_profile_cell_partition_v1",
+    "source_child_max12_vertex_budget_v1"
+  ],
+  "next_authorization_boundary": "If offline PASS, separately approve Float32 child-stream materialization and one live PhysX authored-to-cooked identity readback; do not combine with cylinder physics.",
+  "official_sources": [
+    {
+      "title": "Omni Physics 107.3 - Colliders",
+      "url": "https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/rigid_bodies_articulations/collision.html",
+      "use": "primitive-first guidance; convex mesh is cooked; mesh-merge is not used for void-sensitive compound parts"
+    },
+    {
+      "title": "Omni Physics 107.3 - Rigid Bodies",
+      "url": "https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/rigid_bodies_articulations/rigid_bodies.html",
+      "use": "multiple child colliders on one rigid body"
+    },
+    {
+      "title": "PhysX 5.6.1 - GPU Rigid Bodies",
+      "url": "https://nvidia-omniverse.github.io/PhysX/physx/5.6.1/docs/GPURigidBodies.html",
+      "use": "per-convex GPU compatibility conditions; offline vertex count alone is not a live GPU PASS"
+    },
+    {
+      "title": "PhysX 107.3 GuConvexMesh::isGpuCompatible",
+      "url": "https://raw.githubusercontent.com/NVIDIA-Omniverse/PhysX/107.3-omni-and-physx-5.6.1/physx/source/geomutils/src/convex/GuConvexMesh.cpp",
+      "use": "vertices, polygons, face width, GPU edge data, and shape-ratio conditions are distinct"
+    }
+  ],
+  "offline_design_pass": false,
+  "p34_authored_to_cooked_identity_pass": false,
+  "partition_failures": [
+    {
+      "body": "gripper_link",
+      "error_message": "z_layer_00: no contiguous fan-cell cover satisfies max-12 vertices; candidate_rejections=10; reason_counts={\"registered_child_compatibility_gate_failed\": 10}",
+      "error_type": "RegisteredNoCoverError",
+      "name": "proximal_upper_arm_hull_a",
+      "prim_name": "p000_proximal_upper_arm_hull_a",
+      "role": "moving_support"
+    },
+    {
+      "body": "gripper_link",
+      "error_message": "z_layer_01: no contiguous fan-cell cover satisfies max-12 vertices; candidate_rejections=12; reason_counts={\"registered_child_compatibility_gate_failed\": 12}",
+      "error_type": "RegisteredNoCoverError",
+      "name": "proximal_lower_arm_hull_a",
+      "prim_name": "p002_proximal_lower_arm_hull_a",
+      "role": "moving_support"
+    },
+    {
+      "body": "link5",
+      "error_message": "y_layer_01: no contiguous fan-cell cover satisfies max-12 vertices; candidate_rejections=4; reason_counts={\"registered_child_compatibility_gate_failed\": 4}",
+      "error_type": "RegisteredNoCoverError",
+      "name": "fixed_backbone_left",
+      "prim_name": "p013_fixed_backbone_left",
+      "role": "fixed_jaw_backbone"
+    },
+    {
+      "body": "link5",
+      "error_message": "y_layer_00: no contiguous fan-cell cover satisfies max-12 vertices; candidate_rejections=10; reason_counts={\"registered_child_compatibility_gate_failed\": 10}",
+      "error_type": "RegisteredNoCoverError",
+      "name": "fixed_backbone_right",
+      "prim_name": "p014_fixed_backbone_right",
+      "role": "fixed_jaw_backbone"
+    }
+  ],
+  "physics_or_grasp_result": null,
+  "profile_repair": {
+    "child_count": 46,
+    "parent_rows": [
+      {
+        "body": "gripper_link",
+        "child_count": 5,
+        "maximum_child_vertex_count": 6,
+        "name": "moving_jaw_00_proximal_upper_rail",
+        "pass": true,
+        "role": "moving_jaw",
+        "volume_relative_error": 4.1316162240067205e-16
+      },
+      {
+        "body": "gripper_link",
+        "child_count": 5,
+        "maximum_child_vertex_count": 6,
+        "name": "moving_jaw_01_proximal_lower_rail",
+        "pass": true,
+        "role": "moving_jaw",
+        "volume_relative_error": 0.0
+      },
+      {
+        "body": "gripper_link",
+        "child_count": 6,
+        "maximum_child_vertex_count": 6,
+        "name": "moving_jaw_05_distal_nose_bridge",
+        "pass": true,
+        "role": "moving_jaw",
+        "volume_relative_error": 2.0189082413655919e-16
+      },
+      {
+        "body": "gripper_link",
+        "child_count": 4,
+        "maximum_child_vertex_count": 6,
+        "name": "moving_jaw_06_moving_brace_01",
+        "pass": true,
+        "role": "moving_jaw",
+        "volume_relative_error": 4.0020446592545085e-16
+      },
+      {
+        "body": "gripper_link",
+        "child_count": 6,
+        "maximum_child_vertex_count": 6,
+        "name": "moving_jaw_07_moving_brace_02",
+        "pass": true,
+        "role": "moving_jaw",
+        "volume_relative_error": 1.7111776101788894e-16
+      },
+      {
+        "body": "gripper_link",
+        "child_count": 6,
+        "maximum_child_vertex_count": 6,
+        "name": "moving_jaw_09_moving_brace_04",
+        "pass": true,
+        "role": "moving_jaw",
+        "volume_relative_error": 1.7375033341688026e-16
+      },
+      {
+        "body": "gripper_link",
+        "child_count": 5,
+        "maximum_child_vertex_count": 6,
+        "name": "moving_jaw_10_moving_brace_05",
+        "pass": true,
+        "role": "moving_jaw",
+        "volume_relative_error": 6.196288602205352e-16
+      },
+      {
+        "body": "link5",
+        "child_count": 4,
+        "maximum_child_vertex_count": 6,
+        "name": "fixed_jaw_00_lower_bridge",
+        "pass": true,
+        "role": "fixed_jaw",
+        "volume_relative_error": 1.9703017653277125e-16
+      },
+      {
+        "body": "link5",
+        "child_count": 5,
+        "maximum_child_vertex_count": 6,
+        "name": "fixed_jaw_06_roof_bridge",
+        "pass": true,
+        "role": "fixed_jaw",
+        "volume_relative_error": 5.049378622182027e-16
+      }
+    ],
+    "pass": true
+  },
+  "repair_materialized": false,
+  "script_sha256": "ea1d76a8db9c78a3cae9de50a62e0a25283d5550346dad158e641a0da321c5ed",
+  "semantic_preservation": {
+    "evaluated": false,
+    "pass": false,
+    "preserved_claim": null,
+    "reason": "registered source partition failed before a complete eight-parent candidate existed"
+  },
+  "source_parent_metrics": [
+    {
+      "body": "gripper_link",
+      "checks": {
+        "registered_partition_constructed": false
+      },
+      "child_count": 0,
+      "child_volume_sum_mm3": 0.0,
+      "maximum_child_polygon_count": null,
+      "maximum_child_vertex_count": null,
+      "maximum_vertices_per_child_polygon": null,
+      "name": "proximal_upper_arm_hull_a",
+      "outward_halfspace_violation_mm": null,
+      "overlap_certificate": null,
+      "parent_surface_coverage_halfspace_violation_mm": null,
+      "parent_vertex_count": 44,
+      "parent_volume_mm3": 1643.0956051660498,
+      "partition_error": {
+        "message": "z_layer_00: no contiguous fan-cell cover satisfies max-12 vertices; candidate_rejections=10; reason_counts={\"registered_child_compatibility_gate_failed\": 10}",
+        "type": "RegisteredNoCoverError"
+      },
+      "pass": false,
+      "role": "moving_support",
+      "surface_sample_count": 0,
+      "uncovered_sample_count_gt_0p0001mm": null,
+      "volume_relative_error": null
+    },
+    {
+      "body": "gripper_link",
+      "checks": {
+        "child_count_positive": true,
+        "coverage_le_0p1mm": true,
+        "each_child_polygons_le_64": true,
+        "each_child_positive_volume": true,
+        "each_child_vertices_le_12": true,
+        "each_child_vertices_per_polygon_le_32": true,
+        "outward_le_0p1mm": true,
+        "positive_volume_overlap_zero": true,
+        "volume_relative_le_0p5percent": true
+      },
+      "child_count": 4,
+      "child_volume_sum_mm3": 394.760139588098,
+      "maximum_child_polygon_count": 8,
+      "maximum_child_vertex_count": 12,
+      "maximum_vertices_per_child_polygon": 6,
+      "name": "proximal_upper_arm_hull_b",
+      "outward_halfspace_violation_mm": 1.734723475976807e-15,
+      "overlap_certificate": {
+        "method": "different thin layers have disjoint registered intervals; same-layer fan cells have disjoint triangle-index ranges",
+        "pass": true,
+        "positive_overlap_pair_count": 0,
+        "positive_overlap_pairs": []
+      },
+      "parent_surface_coverage_halfspace_violation_mm": 1.734723475976807e-15,
+      "parent_vertex_count": 34,
+      "parent_volume_mm3": 394.7601395880979,
+      "pass": true,
+      "role": "moving_support",
+      "surface_sample_count": 386,
+      "uncovered_sample_count_gt_0p0001mm": 0,
+      "volume_relative_error": 2.682112700569625e-16
+    },
+    {
+      "body": "gripper_link",
+      "checks": {
+        "registered_partition_constructed": false
+      },
+      "child_count": 0,
+      "child_volume_sum_mm3": 0.0,
+      "maximum_child_polygon_count": null,
+      "maximum_child_vertex_count": null,
+      "maximum_vertices_per_child_polygon": null,
+      "name": "proximal_lower_arm_hull_a",
+      "outward_halfspace_violation_mm": null,
+      "overlap_certificate": null,
+      "parent_surface_coverage_halfspace_violation_mm": null,
+      "parent_vertex_count": 44,
+      "parent_volume_mm3": 1643.095280191575,
+      "partition_error": {
+        "message": "z_layer_01: no contiguous fan-cell cover satisfies max-12 vertices; candidate_rejections=12; reason_counts={\"registered_child_compatibility_gate_failed\": 12}",
+        "type": "RegisteredNoCoverError"
+      },
+      "pass": false,
+      "role": "moving_support",
+      "surface_sample_count": 0,
+      "uncovered_sample_count_gt_0p0001mm": null,
+      "volume_relative_error": null
+    },
+    {
+      "body": "gripper_link",
+      "checks": {
+        "child_count_positive": true,
+        "coverage_le_0p1mm": true,
+        "each_child_polygons_le_64": true,
+        "each_child_positive_volume": true,
+        "each_child_vertices_le_12": true,
+        "each_child_vertices_per_polygon_le_32": true,
+        "outward_le_0p1mm": true,
+        "positive_volume_overlap_zero": true,
+        "volume_relative_le_0p5percent": true
+      },
+      "child_count": 4,
+      "child_volume_sum_mm3": 394.759940444883,
+      "maximum_child_polygon_count": 8,
+      "maximum_child_vertex_count": 12,
+      "maximum_vertices_per_child_polygon": 6,
+      "name": "proximal_lower_arm_hull_b",
+      "outward_halfspace_violation_mm": 1.734723475976807e-15,
+      "overlap_certificate": {
+        "method": "different thin layers have disjoint registered intervals; same-layer fan cells have disjoint triangle-index ranges",
+        "pass": true,
+        "positive_overlap_pair_count": 0,
+        "positive_overlap_pairs": []
+      },
+      "parent_surface_coverage_halfspace_violation_mm": 1.734723475976807e-15,
+      "parent_vertex_count": 34,
+      "parent_volume_mm3": 394.759940444883,
+      "pass": true,
+      "role": "moving_support",
+      "surface_sample_count": 386,
+      "uncovered_sample_count_gt_0p0001mm": 0,
+      "volume_relative_error": 0.0
+    },
+    {
+      "body": "gripper_link",
+      "checks": {
+        "child_count_positive": true,
+        "coverage_le_0p1mm": true,
+        "each_child_polygons_le_64": true,
+        "each_child_positive_volume": true,
+        "each_child_vertices_le_12": true,
+        "each_child_vertices_per_polygon_le_32": true,
+        "outward_le_0p1mm": true,
+        "positive_volume_overlap_zero": true,
+        "volume_relative_le_0p5percent": true
+      },
+      "child_count": 6,
+      "child_volume_sum_mm3": 420.4031128098949,
+      "maximum_child_polygon_count": 17,
+      "maximum_child_vertex_count": 12,
+      "maximum_vertices_per_child_polygon": 6,
+      "name": "moving_upper_backbone",
+      "outward_halfspace_violation_mm": 7.688819754492204e-07,
+      "overlap_certificate": {
+        "method": "different thin layers have disjoint registered intervals; same-layer fan cells have disjoint triangle-index ranges",
+        "pass": true,
+        "positive_overlap_pair_count": 0,
+        "positive_overlap_pairs": []
+      },
+      "parent_surface_coverage_halfspace_violation_mm": 1.0762516919338161e-07,
+      "parent_vertex_count": 20,
+      "parent_volume_mm3": 420.40308988925244,
+      "pass": true,
+      "role": "moving_jaw_backbone",
+      "surface_sample_count": 218,
+      "uncovered_sample_count_gt_0p0001mm": 0,
+      "volume_relative_error": 5.45206327399131e-08
+    },
+    {
+      "body": "gripper_link",
+      "checks": {
+        "child_count_positive": true,
+        "coverage_le_0p1mm": true,
+        "each_child_polygons_le_64": true,
+        "each_child_positive_volume": true,
+        "each_child_vertices_le_12": true,
+        "each_child_vertices_per_polygon_le_32": true,
+        "outward_le_0p1mm": true,
+        "positive_volume_overlap_zero": true,
+        "volume_relative_le_0p5percent": true
+      },
+      "child_count": 6,
+      "child_volume_sum_mm3": 420.40270756365544,
+      "maximum_child_polygon_count": 18,
+      "maximum_child_vertex_count": 12,
+      "maximum_vertices_per_child_polygon": 6,
+      "name": "moving_lower_backbone",
+      "outward_halfspace_violation_mm": 1.2291007170373014e-06,
+      "overlap_certificate": {
+        "method": "different thin layers have disjoint registered intervals; same-layer fan cells have disjoint triangle-index ranges",
+        "pass": true,
+        "positive_overlap_pair_count": 0,
+        "positive_overlap_pairs": []
+      },
+      "parent_surface_coverage_halfspace_violation_mm": 6.143987332785095e-07,
+      "parent_vertex_count": 20,
+      "parent_volume_mm3": 420.4026502674118,
+      "pass": true,
+      "role": "moving_jaw_backbone",
+      "surface_sample_count": 218,
+      "uncovered_sample_count_gt_0p0001mm": 0,
+      "volume_relative_error": 1.3628896866106088e-07
+    },
+    {
+      "body": "link5",
+      "checks": {
+        "registered_partition_constructed": false
+      },
+      "child_count": 0,
+      "child_volume_sum_mm3": 0.0,
+      "maximum_child_polygon_count": null,
+      "maximum_child_vertex_count": null,
+      "maximum_vertices_per_child_polygon": null,
+      "name": "fixed_backbone_left",
+      "outward_halfspace_violation_mm": null,
+      "overlap_certificate": null,
+      "parent_surface_coverage_halfspace_violation_mm": null,
+      "parent_vertex_count": 38,
+      "parent_volume_mm3": 1142.5442696789344,
+      "partition_error": {
+        "message": "y_layer_01: no contiguous fan-cell cover satisfies max-12 vertices; candidate_rejections=4; reason_counts={\"registered_child_compatibility_gate_failed\": 4}",
+        "type": "RegisteredNoCoverError"
+      },
+      "pass": false,
+      "role": "fixed_jaw_backbone",
+      "surface_sample_count": 0,
+      "uncovered_sample_count_gt_0p0001mm": null,
+      "volume_relative_error": null
+    },
+    {
+      "body": "link5",
+      "checks": {
+        "registered_partition_constructed": false
+      },
+      "child_count": 0,
+      "child_volume_sum_mm3": 0.0,
+      "maximum_child_polygon_count": null,
+      "maximum_child_vertex_count": null,
+      "maximum_vertices_per_child_polygon": null,
+      "name": "fixed_backbone_right",
+      "outward_halfspace_violation_mm": null,
+      "overlap_certificate": null,
+      "parent_surface_coverage_halfspace_violation_mm": null,
+      "parent_vertex_count": 39,
+      "parent_volume_mm3": 1142.554071595616,
+      "partition_error": {
+        "message": "y_layer_00: no contiguous fan-cell cover satisfies max-12 vertices; candidate_rejections=10; reason_counts={\"registered_child_compatibility_gate_failed\": 10}",
+        "type": "RegisteredNoCoverError"
+      },
+      "pass": false,
+      "role": "fixed_jaw_backbone",
+      "surface_sample_count": 0,
+      "uncovered_sample_count_gt_0p0001mm": null,
+      "volume_relative_error": null
+    }
+  ],
+  "verdict": "D385_SEMANTIC_THIN_LAYER_PROFILE_CELL_NO_ADMISSIBLE_CANDIDATE_FAIL_STOP",
+  "what_and_why": "Replace only the eight D379/D380 failed general source hulls with deterministic thin-layer profile cells while freezing the D384 exact profile repair and all prior semantic gates."
+}

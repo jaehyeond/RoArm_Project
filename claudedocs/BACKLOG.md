@@ -80,3 +80,31 @@ as the current Active Case.
   경로에서 다시 측정하는 후보다. D367 overall completion FAIL을 사용자가 명시적으로 구분해
   수용하고 새 case를 승인하기 전에는 착수 금지. q5/contact/cap-rim/grasp science와
   target/IK/path·asset/physics 설정 변경은 포함하지 않는다.
+
+- 2026-07-25 (D385 결과): `d385_minimum_admissible_vertex_budget_localization`
+  — D385의 thin-layer/profile-cell 분할은 8개 source parent 중 4개만 완결했고,
+  나머지 4개는 max-12 vertex gate에서 no-cover였다. 동일 partition,
+  surface/topology-volume/overlap/semantic gate를 동결한 채 실패한 네 layer가
+  요구하는 최소 child-vertex budget만 offline에서 국소화하는 다음 후보.
+  자동 후보 sweep이나 gate 완화 PASS가 아니며, 결과 뒤 한 budget을 별도
+  선택해야 한다. 다른 partition, internal overlap, USD/live identity,
+  Isaac/PhysX/cylinder/physics/q5/contact는 사용자 승인 전 착수 금지.
+
+- 2026-07-25 (D386 결과): 위
+  `d385_minimum_admissible_vertex_budget_localization`은 완료됐다. 세
+  first-observed layer의 minimum은 `13/28/30`이지만 lower moving-support
+  `z_layer_01`은 `B=64`에서도 no-cover다. `82` candidates 중 `42`가 frozen
+  polygon-count gate를 넘고 나머지 `40`도 complete path를 만들지 못했다.
+  따라서 `30`을 전역 budget으로 선택/적용하는 방향은 폐기한다.
+- 2026-07-25 (D386 결과): 다음 최소 후보
+  `d386_shadowed_layer_fixed_graph_completion_localization` — D386에서
+  inventory만 한 later/shadowed `7` layers에 같은 fixed graph, `12..64`
+  bounded localizer와 frozen non-vertex gates를 적용해 전체 실패 지도를
+  완성한다. 새 partition이나 gate relaxation이 아니며 offline-only다.
+  사용자 승인 전 착수 금지.
+- 2026-07-25 (D386 이후 reserve):
+  `polygon_gated_layer_minimum_partition_representation_repair_design` —
+  shadowed-layer map이 완성된 뒤에만 polygon-gated layer를 위한 한두 변수
+  partition/representation repair를 설계한다. polygon gate 제거, internal
+  overlap, USD/live identity, actual `29x50mm` cylinder와 physics/grasp를
+  결합하지 않는다. 사용자 승인 전 착수 금지.
