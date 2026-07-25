@@ -22202,3 +22202,233 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d381/attempt1_d380_visual_contract_repair/d381_partial_board_visual_inspection.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d381/attempt1_d380_visual_contract_repair/d381_fail_stop_attestation.json`
 - `START_HERE.md`
+
+## D382 - RBL의 query/display-name 값 검증에는 `rrd print -v` summary를 쓰지 않는다 (2026-07-25)
+
+Decision:
+
+- immutable D380/D381 자료를 읽는 observability-only worker `1`, retry `0`으로
+  D381의 JSON-native scalar와 serialize-before-create 수리를 검증했다.
+- **지속 규칙:** 설치된 Rerun 0.34.1에서 `rrd print -v`는 fully-qualified name
+  summary이고 실제 chunk data value를 숨긴다. `ViewContents:query`,
+  `ViewBlueprint:display_name`, `space_origin` 같은 저장값을 문자열로 검증하려면
+  `rrd print -vvv` 또는 동일 값을 직접 읽는 structured API를 사용한다.
+- **지속 규칙:** `-v` 출력에 query/view-name 문자열이 없다는 이유만으로 RBL에서
+  청사진 값이 빠졌다고 판정하지 않는다. 같은 immutable RBL의 data-visible 출력 또는
+  structured readback을 음성대조군과 함께 확인한다.
+- **지속 규칙:** RRD/RBL의 생성·`rrd verify` PASS와 실제 Viewer 육안검사를 분리한다.
+  Viewer 이전 validator에서 멈추면 screenshot/receipt가 없으므로 visualization
+  completion은 FAIL_STOP이다.
+- D382 attempt1을 동결하고 같은 경로에서 worker나 Viewer를 재시도하지 않는다.
+
+Evidence:
+
+- preregistration checks `25/25`, negative controls `15/15`, immutable input hashes
+  `21/21`이 PASS했다.
+- worker/retry `1/0`, return `1`, elapsed `1.4710988369770348s`; timeout/TERM/KILL/
+  process residue는 모두 false다.
+- D381의 144B 부분 JSON 문제는 재발하지 않았다. D382 layout JSON은 `10877B`,
+  checks `9/9` PASS, SHA
+  `7b961cdf8bd606c05438e120728fe243653262de81aa45947a1db0b1c03ab79c`다.
+- exact `1920x1080`, `230110B` board는 D381과 bit-exact이며 SHA
+  `19bd70781403eb11c4eaefb6adb60ab91a5e6ca9f67f2929548f8afff0b7f06d`다.
+- recording equivalence PASS 뒤 RBL `69301B`와 presentation RRD `305981B`가
+  생성됐다. 사후 read-only `rrd verify`는 두 파일을 오류 없이 검증했다.
+- frozen validator는 `rrd print -v` 출력에서 등록값 6개를 찾아 `0/6`으로
+  실패했다. 같은 RBL의 `-vvv` 출력에는 notification query, summary query, 네 view
+  name이 `6/6` 존재했다. 따라서 RBL 누락이 아니라 verbosity mismatch에 의한
+  false negative다.
+- 실패는 loopback/Viewer 호출보다 앞이다. actual Viewer/retry `0/0`; receipt,
+  screenshot, full Rerun validation, manual completion은 없다.
+- Isaac/Kit/PhysX/USD/collider/cylinder/physics/q5/contact/target-IK-path 작업은
+  모두 `0`이었다.
+
+Implication:
+
+- operational verdict는
+  `D382_LAYOUT_JSON_SERIALIZATION_REPAIR_PASS_RBL_PRINT_VERBOSITY_FALSE_NEGATIVE_FAIL_STOP`.
+  JSON 수리와 board/RRD/RBL sub-result는 보존하지만 D382 전체 presentation
+  completion은 PASS가 아니다.
+- D380 numeric verdict
+  `D380_FAILED_PART_PROVENANCE_AUDIT_PASS_REPAIR_REQUIRED`, P34 identity=false,
+  physics/grasp null, `g0a_pass=false`는 그대로다.
+- 다음 최소 후보는 별도 승인, immutable D382 RRD/RBL만 읽는 forward-only
+  `D383 [d382_rbl_data_value_verbosity_validation_resume]`이다. 신규 변수는
+  `-v -> -vvv` 또는 structured exact data-value authority 하나뿐이며,
+  Viewer 최대 `1`/retry `0`과 원본 해상도 육안검사만 재개한다.
+
+Sources:
+
+- `claudedocs/session_20260725_grasp_g0a_d382_layout_validation_native_scalar_serialization_repair.md`
+- `sim_scripts/cyl34_top_view_d382_d381_layout_validation_native_scalar_serialization_repair.py`
+- `sim_scripts/cyl34_top_view_d381_d380_visual_contract_repair.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d382/attempt1_d381_layout_validation_native_scalar_serialization_repair/d382_preregistration.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d382/attempt1_d381_layout_validation_native_scalar_serialization_repair/d382_board_layout_validation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d382/attempt1_d381_layout_validation_native_scalar_serialization_repair/d382_recording_equivalence.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d382/attempt1_d381_layout_validation_native_scalar_serialization_repair/d382_offline_worker_stderr.log`
+- `claudedocs/runtime_logs/grasp_track/g0a_d382/attempt1_d381_layout_validation_native_scalar_serialization_repair/d382_offline_worker_supervisor.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d382/attempt1_d381_layout_validation_native_scalar_serialization_repair/d382_rbl_print_verbosity_provenance_audit.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d382/attempt1_d381_layout_validation_native_scalar_serialization_repair/d382_fail_stop_attestation.json`
+- local installed Rerun 0.34.1 `rerun rrd print --help`
+- `START_HERE.md`
+
+## D383 - RBL data-value 검사는 `-vvv`, RRD component-name 검사는 `-v`로 역할을 분리하고 HiDPI 물리 픽셀을 논리 창 크기로 오인하지 않는다 (2026-07-25)
+
+Decision:
+
+- immutable D382 board/layout/RBL/presentation RRD 네 파일만 읽는
+  observability-only worker `1`, retry `0`, Viewer 최대 `1`, retry `0`으로
+  D382의 RBL print-verbosity false negative 이후 단계를 재개했다.
+- 이번 case의 신규 변수는
+  `rbl_data_value_print_verbosity_v1` 하나다. RBL에 저장된 query와 view-name
+  **값**의 권위만 `rrd print -v`에서 `rrd print -vvv`로 바꿨다.
+- **지속 규칙:** `roarm_rl.rerun_contract.validate_rerun_artifact()` 내부의
+  `rrd print -v`는 RRD entity/component column-name 계약을 읽는 용도이므로
+  그대로 둔다. RBL data-value 검사와 RRD component-name 검사를 같은 verbosity로
+  일괄 변경하지 않는다.
+- **지속 규칙:** Viewer `--window-size 1920x1080`은 논리 창 크기다. HiDPI
+  환경에서 screenshot 파일이 `3840x2160` 물리 픽셀이 될 수 있다. 정적 board의
+  exact `1920x1080` gate와 Viewer screenshot의 native physical-pixel 기록을
+  분리하고, Viewer PNG를 거짓으로 exact `1920x1080`이라고 판정하지 않는다.
+- D383 attempt1을 동결하고 D381-D383 경로를 재실행하거나 덮어쓰지 않는다.
+
+Evidence:
+
+- preregistration checks `20/20`, negative controls `10/10`, immutable D382
+  input hashes `4/4`가 PASS했다.
+- D382 board `230110B`, layout `10877B`, RBL `69301B`, presentation RRD
+  `305981B`를 D383에 bit-exact copy했다. 네 copy 모두 `regenerated=false`다.
+- 같은 copied RBL에서 summary-only `-v`는 등록 marker `0/6`, data-visible
+  `-vvv`는 notification query, summary query, 네 view name `6/6`을 반환했다.
+- strict Rerun validation은 version `0.34.1`, RRD/RBL footer verify, exact
+  non-system entities `70`, exact component contracts `70`, exact timelines
+  `blueprint`/`log_time`를 PASS했다. strict helper의 screenshot 실행은 `0`이다.
+- worker/retry `1/0`, Viewer/retry `1/0`, return `0`, elapsed
+  `2.169500295072794s`; timeout/TERM/KILL/process residue는 모두 false다.
+- Viewer 명령은 동결된 `--headless --bind 127.0.0.1 --port auto
+  --hide-welcome-screen --window-size 1920x1080`을 1회 사용했다. Viewer 자체
+  elapsed는 `1.5463953481521457s`, screenshot은 `6674956B`,
+  `3840x2160`, SHA-256
+  `e1f9dabec210738a54c80db2d00a8876ec6ae80a0cc71d07528d4bcda0591d6a`다.
+- 원본 해상도 manual checks `11/11` PASS: 네 geometry view와 summary가
+  보이고, visible timeline은 `log_time`, notification은 오른쪽 빈 buffer에만
+  있으며 decision content를 가리지 않았다.
+- Isaac/Kit/PhysX/USD/asset/collider/cylinder/physics/public forward/q5/contact/
+  target-IK-path/settings 작업은 모두 `0`이다.
+
+Implication:
+
+- completion verdict는
+  `D383_RBL_DATA_VALUE_VERBOSITY_VALIDATION_RESUME_PASS`다. 이는 D380 결과의
+  presentation/observability completion만 복구한다.
+- D380 numeric verdict
+  `D380_FAILED_PART_PROVENANCE_AUDIT_PASS_REPAIR_REQUIRED`, P34
+  authored-to-cooked identity=false, representation/live identity와
+  OPEN clearance/contact/q5/grasp/target-IK-path null, `g0a_pass=false`는
+  그대로다.
+- 다음 과학 최소 후보는 별도 승인
+  `D384 [p34_failed_part_representation_repair_design]`이다. D379/D380의 17개
+  inward-elided part를 대상으로 한두 repair 변수만 사전등록하는 offline
+  design-only case이며, asset materialization/live identity와 29x50 physics는
+  이후에도 각각 별도 승인이다.
+
+Sources:
+
+- `claudedocs/session_20260725_grasp_g0a_d383_rbl_data_value_verbosity_validation_resume.md`
+- `sim_scripts/cyl34_top_view_d383_d382_rbl_data_value_verbosity_validation_resume.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d383/attempt1_d382_rbl_data_value_verbosity_validation_resume/d383_preregistration.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d383/attempt1_d382_rbl_data_value_verbosity_validation_resume/d383_bitexact_copy_manifest.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d383/attempt1_d382_rbl_data_value_verbosity_validation_resume/d383_rbl_data_value_validation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d383/attempt1_d382_rbl_data_value_verbosity_validation_resume/d383_rerun_validation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d383/attempt1_d382_rbl_data_value_verbosity_validation_resume/d383_viewer_receipt.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d383/attempt1_d382_rbl_data_value_verbosity_validation_resume/d383_manual_visual_inspection.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d383/attempt1_d382_rbl_data_value_verbosity_validation_resume/d383_offline_worker_supervisor.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d383/attempt1_d382_rbl_data_value_verbosity_validation_resume/d383_completion_summary.json`
+- local installed Rerun 0.34.1 `rerun rrd print --help`
+- `START_HERE.md`
+
+## D384 — Exact authored-only repair can preserve geometry yet still fail the low-count objective; public USD direct-polygon authoring is not available in the installed schema
+
+Date: 2026-07-25
+
+Decision:
+
+- D379/D380에서 안쪽으로 깎인 P34 실패부품 `17`개는 profile prism `9`개와
+  source 3-D convex hull `8`개로 분리해 다뤄야 한다.
+- 원 작성 형상만 사용하는 정확 분할은 geometry audit에는 유효하지만, 현재
+  A64 total-reference `128`보다 작아야 한다는 프로젝트 count gate도 별도로
+  통과해야 한다.
+- 설치된 공개 USD schema에 points+polygons direct selector가 없으므로 저수준
+  PhysX direct-polygon 경로를 “최소 USD 수리”라고 부르거나 곧바로
+  materialize하지 않는다. C++/opaque cooked-data bridge는 별도 표현
+  파이프라인이자 reserve-only 방향이다.
+- D384 결과는 offline design FAIL_STOP이다. Isaac/PhysX/physics/grasp 실패로
+  해석하지 않는다.
+- 새 실제 제품 target `29x50mm`는 아직 actual Isaac/Rerun
+  authoring/readback/render가 없다. 기존 D350/D362/D363 자료는 old
+  `34x90mm` target 근거다.
+- 새 cylinder primitive case에서는 authored radius/height뿐 아니라 NVIDIA
+  `SETTING_COLLISION_APPROXIMATE_CYLINDERS`와 실제 collision representation을
+  함께 기록한다. 설정이 true이면 primitive가 convex mesh로 근사될 수 있다.
+
+Evidence:
+
+- 실패형상 분류는 profile `9`, source hull `8`이다.
+- registered exact partition은 통과 part `17` + profile children `46` +
+  source merged cells `205` = total `268`; `<128` gate FAIL이다.
+- exact tetra upper-bound는 통과 part `17` + profile children `46` +
+  positive tetrahedra `495` = total `558`; zero/sliver `40`은 기각됐다.
+- direct points+polygons 구조 전제는 `17/17` PASS이고 이론상 total `34`지만,
+  public USD selector=false, materialization-ready=false, live capability와
+  identity는 null이다.
+- frozen surface/topology-volume gate는 `0.1mm/0.5%`; 음성대조군 `8/8`
+  PASS다.
+- Isaac/Kit/PhysX, asset/USD, collider generation, cylinder, physics, q5,
+  contact, target/IK/path counters는 모두 `0`이다.
+- canonical verdict:
+  `D384_REPRESENTATION_REPAIR_DESIGN_NO_ADMISSIBLE_LOW_COUNT_CANDIDATE_FAIL_STOP`.
+- attempt6에서 exact `1920x1080` board, save-only RRD/RBL, fixed cameras,
+  notification buffer, ASCII Rerun text, manual checks `9/9`, final checks
+  `15/15`가 PASS했다. presentation verdict는
+  `D384_PRESENTATION_CONTRACT_REPAIRED_PASS`다.
+- postcompletion read-only label audit에서 attempt6 JSON `13`개 중 `10`개의
+  `artifact` string이 inherited `ATTEMPT3` schema label, `3`개가
+  `ATTEMPT6` label임을 확인했다. label-clean=false지만 directory/file path,
+  explicit `attempt` field, SHA-256은 attempt6을 가리키며 content/numeric/
+  presentation verdict는 바뀌지 않았다. 동결 파일은 수정하지 않았다.
+- `repair_materialized=false`, `live_identity_pass=null`,
+  `p34_authored_to_cooked_identity_pass=false`, `g0a_pass=false`.
+- local installed `PhysxConvexHullCollisionAPI`는 `hullVertexLimit`과
+  `minThickness`만 선언하고, `PhysxCookedDataAPI`는 opaque `uchar[] buffer`를
+  노출한다.
+
+Implication:
+
+- exact 분할의 geometry PASS와 연구 후보의 count-budget PASS를 혼동하지
+  않는다. `268`과 `558`은 최적값도 NVIDIA limit도 아니다.
+- 다음 권장 최소 후보는 별도 승인 offline-only
+  `D385 [p34_source_hull_semantic_low_count_redesign]`이다. general source
+  hull `8`개만 의미 영역 기반 low-count primitive/convex parts로 재설계하고
+  profile exact split, 통과 part, void/source-coverage/contact-seed 및
+  D379/D380 gate를 동결한다.
+- low-count candidate가 offline PASS하기 전 repaired asset을 만들지 않는다.
+  그 뒤에도 materialization/live identity와 actual-product `29x50mm`
+  zero-step visualization/physics는 각각 별도 승인이다.
+- D384 attempts1-6을 동결하고 재실행하거나 덮어쓰지 않는다.
+- `artifact` string만으로 실행 attempt를 판정하지 않는다. forward-only path,
+  explicit `attempt`, SHA-256을 실행 계보 권위로 함께 사용한다.
+
+Sources:
+
+- `claudedocs/session_20260725_grasp_g0a_d384_p34_failed_part_representation_repair_design.md`
+- `sim_scripts/cyl34_top_view_d384_p34_failed_part_representation_repair_design.py`
+- `sim_scripts/cyl34_top_view_d384_attempt2_callback_vertex_count_field_repair.py`
+- `sim_scripts/cyl34_top_view_d384_attempt6_rerun_ascii_glyph_compatibility_repair.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d384/attempt2_callback_vertex_count_field_preflight_repair/d384_p34_representation_repair_design_evidence.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d384/attempt6_rerun_ascii_glyph_compatibility_repair/d384_attempt6_manual_visual_inspection.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d384/attempt6_rerun_ascii_glyph_compatibility_repair/d384_attempt6_completion_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d384/postcompletion_attempt6_artifact_label_provenance_audit/d384_attempt6_artifact_label_provenance_audit.json`
+- NVIDIA Omni Physics 107.3 `Colliders`
+- NVIDIA PhysX SDK 5.6.1 `Geometry` and `PxCooking.h`
+- local installed PhysxSchema `107.3.26`
+- `START_HERE.md`

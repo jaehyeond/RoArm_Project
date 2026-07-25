@@ -1,0 +1,83 @@
+{
+  "artifact": "D383_RBL_DATA_VALUE_VALIDATION_V1",
+  "attempt": "attempt1_d382_rbl_data_value_verbosity_validation_resume",
+  "case": "g0a_d383",
+  "checks": {
+    "authority_command_exactly_vvv": true,
+    "data_visible_authority_return_zero": true,
+    "data_visible_authority_six_of_six": true,
+    "strict_helper_component_verbosity_unchanged": true,
+    "summary_only_negative_control_return_zero": true,
+    "summary_only_negative_control_zero_of_six": true
+  },
+  "data_visible_authority": {
+    "marker_contract": {
+      "all_expected_markers_present": true,
+      "expected_markers_present": 6,
+      "expected_markers_total": 6,
+      "markers": {
+        "/presentation/d381/notification_buffer": true,
+        "/presentation/d381/summary": true,
+        "link5 | authored failed parts": true,
+        "link5 | cooked failed parts": true,
+        "moving side | authored failed parts": true,
+        "moving side | cooked failed parts": true
+      }
+    },
+    "result": {
+      "command": [
+        "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+        "rrd",
+        "print",
+        "-vvv",
+        "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d383/attempt1_d382_rbl_data_value_verbosity_validation_resume/d383_d382_layout_bitexact_copy.rbl"
+      ],
+      "elapsed_seconds": 0.0652108050417155,
+      "ok": true,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_bytes": 140100,
+      "stdout_sha256": "1375210cbdbd8ee9bb0c2409c7b58923d4aa2d0caf1712e0633c192822c7afa2",
+      "timed_out": false
+    },
+    "role": "registered RBL data-value authority"
+  },
+  "new_variable": "rbl_data_value_print_verbosity_v1",
+  "pass": true,
+  "summary_only_negative_control": {
+    "marker_contract": {
+      "all_expected_markers_present": false,
+      "expected_markers_present": 0,
+      "expected_markers_total": 6,
+      "markers": {
+        "/presentation/d381/notification_buffer": false,
+        "/presentation/d381/summary": false,
+        "link5 | authored failed parts": false,
+        "link5 | cooked failed parts": false,
+        "moving side | authored failed parts": false,
+        "moving side | cooked failed parts": false
+      }
+    },
+    "result": {
+      "command": [
+        "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+        "rrd",
+        "print",
+        "-v",
+        "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d383/attempt1_d382_rbl_data_value_verbosity_validation_resume/d383_d382_layout_bitexact_copy.rbl"
+      ],
+      "elapsed_seconds": 0.036168577149510384,
+      "ok": true,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_bytes": 6875,
+      "stdout_sha256": "0eb79230701d110c1bc66d387bb162ed438ca53adc2f3dc50b3fcb216fccb025",
+      "timed_out": false
+    },
+    "role": "negative control only; not data-value authority"
+  }
+}

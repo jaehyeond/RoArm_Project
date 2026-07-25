@@ -1,0 +1,92 @@
+{
+  "artifact": "D382_RBL_PRINT_VERBOSITY_PROVENANCE_AUDIT_V1",
+  "case": "g0a_d382",
+  "attempt": "attempt1_d381_layout_validation_native_scalar_serialization_repair",
+  "audit_scope": "read_only_post_failure_localization",
+  "immutable_subjects": {
+    "frozen_d381_script": {
+      "path": "sim_scripts/cyl34_top_view_d381_d380_visual_contract_repair.py",
+      "sha256": "b58a60ad8f0d8873973c9171f03cb7bd75401c205db074a49a9a498d98adbd2d"
+    },
+    "d382_rbl": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d382/attempt1_d381_layout_validation_native_scalar_serialization_repair/d382_notification_safe_layout.rbl",
+      "bytes": 69301,
+      "sha256": "979ddd6b4a32bfc97e13d75dfb99625af0d0bed90fc1fd9588347667f284b28c"
+    },
+    "d382_presentation_rrd": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d382/attempt1_d381_layout_validation_native_scalar_serialization_repair/d382_notification_safe_presentation.rrd",
+      "bytes": 305981,
+      "sha256": "6c4ad99428f8da0ef842031b161e69db906971084da6d3444c1b76c8c27a7d9a"
+    }
+  },
+  "installed_cli": {
+    "path": "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+    "version": "0.34.1",
+    "local_help_semantics": {
+      "-v": "summary with fully-qualified names",
+      "-vv": "all chunk metadata headers with data hidden",
+      "-vvv": "all chunk metadata headers and the data itself"
+    }
+  },
+  "expected_data_value_markers": [
+    "/presentation/d381/notification_buffer",
+    "/presentation/d381/summary",
+    "link5 | authored failed parts",
+    "link5 | cooked failed parts",
+    "moving side | authored failed parts",
+    "moving side | cooked failed parts"
+  ],
+  "read_only_command_results": {
+    "rrd_print_v": {
+      "returncode": 0,
+      "captured_output_bytes": 6992,
+      "expected_markers_present": 0,
+      "expected_markers_total": 6,
+      "all_expected_markers_present": false
+    },
+    "rrd_print_vvv": {
+      "returncode": 0,
+      "captured_output_bytes": 140217,
+      "expected_markers_present": 6,
+      "expected_markers_total": 6,
+      "all_expected_markers_present": true
+    },
+    "rrd_verify": {
+      "returncode": 0,
+      "files_verified": 2,
+      "summary": "2 files verified without error."
+    }
+  },
+  "frozen_validator": {
+    "print_command_source_lines": "sim_scripts/cyl34_top_view_d381_d380_visual_contract_repair.py:1058-1061",
+    "blueprint_check_source_lines": "sim_scripts/cyl34_top_view_d381_d380_visual_contract_repair.py:1062-1089",
+    "requested_verbosity": "-v",
+    "searched_for_data_values_in_summary_only_output": true
+  },
+  "diagnosis": {
+    "rbl_missing_registered_queries_or_view_names": false,
+    "rbl_registered_queries_and_view_names_present": true,
+    "frozen_validator_verbosity_mismatch": true,
+    "blueprint_contract_result_is_false_negative": true,
+    "viewer_launch_reached": false,
+    "viewer_invocations": 0
+  },
+  "scope_counters": {
+    "post_failure_worker_invocations": 0,
+    "post_failure_viewer_invocations": 0,
+    "isaac_launches": 0,
+    "kit_launches": 0,
+    "physx_calls": 0,
+    "asset_or_usd_reads": 0,
+    "asset_or_usd_writes": 0,
+    "collider_changes": 0,
+    "cylinder_creates_or_writes": 0,
+    "physics_steps": 0,
+    "q5_commands_or_samples": 0,
+    "contact_queries": 0,
+    "target_ik_path_pose_changes": 0
+  },
+  "audit_verdict": "D382_RBL_PRINT_VERBOSITY_PROVENANCE_AUDIT_PASS",
+  "audit_pass": true,
+  "d382_completion_pass": false
+}

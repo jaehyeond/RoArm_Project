@@ -1,0 +1,48 @@
+{
+  "artifact": "D384_ATTEMPT6_MANUAL_VISUAL_INSPECTION_V1",
+  "attempt": "attempt6_rerun_ascii_glyph_compatibility_repair",
+  "board": {
+    "bytes": 205881,
+    "exact_1920x1080": true,
+    "height": 1080,
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d384/attempt6_rerun_ascii_glyph_compatibility_repair/d384_attempt6_presentation_board_1920x1080.png",
+    "sha256": "308f9890b0677a65ef6422081d753649d1ea27256df75e1c52fad90dd250b007",
+    "width": 1920
+  },
+  "canonical_evidence": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d384/attempt2_callback_vertex_count_field_preflight_repair/d384_p34_representation_repair_design_evidence.json",
+    "sha256": "16ed5696d7198913367806e3ee13cf17a2b3f83c0c28d139115aa1d51c40822f"
+  },
+  "case": "g0a_d384",
+  "inspection_checks": {
+    "board_counts_match_canonical_json": true,
+    "board_exact_1920x1080_and_legible": true,
+    "board_no_text_clipping_or_overlap": true,
+    "decision_summary_visible": true,
+    "notifications_confined_to_empty_buffer": true,
+    "profile_parent_and_children_whole_shape_visible": true,
+    "rerun_no_decision_obscuring_overlap": true,
+    "rerun_no_unknown_timeline": true,
+    "source_hull_whole_shape_visible": true
+  },
+  "inspector_result": "PASS: the fixed board and Rerun presentation are legible, correctly framed, and preserve the canonical D384 fail-stop result.",
+  "observations": [
+    "The static board is exactly 1920x1080; Korean titles, labels, decision boxes, bar chart, legend, and footer are legible without clipping or overlap.",
+    "The board preserves the canonical 17/34, 268, 558, theoretical 34, runtime NULL, P34 identity FAIL, and g0a_pass=false values.",
+    "The Rerun profile parent and its exact children are fully visible with useful margin.",
+    "The Rerun source-hull witness is fully visible with useful margin.",
+    "ASCII English view titles and TextDocument decision content render legibly; no square replacement glyphs are visible.",
+    "Viewer notifications are confined to the right-side empty notification buffer and do not cover geometry or the decision summary.",
+    "The visible timeline is log_time; no Unknown timeline label is present.",
+    "The Viewer PNG records 3840x2160 native HiDPI pixels for a 1920x1080 logical command; only the static board claims exact physical 1920x1080."
+  ],
+  "pass": true,
+  "rerun_screenshot": {
+    "bytes": 6810982,
+    "exact_1920x1080": false,
+    "height": 2160,
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d384/attempt6_rerun_ascii_glyph_compatibility_repair/d384_attempt6_rerun_inspection.png",
+    "sha256": "2356a58f8fb1229860c4b80704c9195fd14cdc36b8bf57758ce47e98a64eea78",
+    "width": 3840
+  }
+}

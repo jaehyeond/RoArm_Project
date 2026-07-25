@@ -1,0 +1,31 @@
+{
+  "artifact": "D384_ATTEMPT4_JSON_NATIVE_SCALAR_PREFLIGHT_V1",
+  "attempt3_failure": {
+    "attempt3_rerun_or_overwrite": false,
+    "classification": "HARNESS_JSON_NUMPY_BOOL_SERIALIZATION_ERROR_AFTER_BOARD",
+    "observed_hashes": {
+      "script": "c0354cbb8e537a787d5b0657c9ac843070613470f7331e06314e146b35d72278",
+      "stderr": "dd8de6dc111c809815b0c9b9f7c9f29e6b2397399bea10ac7ecbcd6dc0d2ba90",
+      "supervisor": "cba82f6e03ec49825a6ed31a8e05f52454fb4efbdf6e810b02dfc30dbb08bd43"
+    }
+  },
+  "checks": {
+    "attempt3_failed_before_rerun_projection": true,
+    "attempt3_hashes_exact": true,
+    "attempt3_no_timeout_signal_or_residue": true,
+    "attempt3_not_rerun_or_overwritten": true,
+    "attempt3_return_one": true,
+    "attempt3_worker_one_retry_zero": true,
+    "exact_exception_classified": true,
+    "repair_is_json_boundary_only": true
+  },
+  "pass": true,
+  "repair": {
+    "new_scientific_or_design_variables": 0,
+    "presentation_variables_inherited": [
+      "board_reserved_header_layout_v1",
+      "rerun_explicit_camera_notification_buffer_v1"
+    ],
+    "scope": "recursive NumPy scalar to JSON-native scalar conversion at the write boundary only"
+  }
+}

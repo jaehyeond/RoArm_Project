@@ -1,0 +1,129 @@
+{
+  "artifact": "D382_FAIL_STOP_ATTESTATION_V1",
+  "case": "g0a_d382",
+  "attempt": "attempt1_d381_layout_validation_native_scalar_serialization_repair",
+  "operational_verdict": "D382_LAYOUT_JSON_SERIALIZATION_REPAIR_PASS_RBL_PRINT_VERBOSITY_FALSE_NEGATIVE_FAIL_STOP",
+  "completion_pass": false,
+  "preregistration": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d382/attempt1_d381_layout_validation_native_scalar_serialization_repair/d382_preregistration.json",
+    "sha256": "926cc4dc3ffe474a097ac96b8792ab7cfb9e3926a39b062610bdd8eea6b11ab8",
+    "checks_passed": 25,
+    "checks_total": 25,
+    "negative_controls_passed": 15,
+    "negative_controls_total": 15,
+    "pass": true
+  },
+  "execution": {
+    "actual_offline_presentation_workers": 1,
+    "automatic_worker_retries": 0,
+    "worker_returncode": 1,
+    "elapsed_seconds": 1.4710988369770348,
+    "watchdog_seconds": 300.0,
+    "timed_out": false,
+    "sigterm_sent": false,
+    "sigkill_sent": false,
+    "process_group_alive_after_wait": false,
+    "actual_rerun_viewer_invocations": 0,
+    "automatic_viewer_retries": 0
+  },
+  "serialization_repair_result": {
+    "json_native_recursive_scalar_normalization": true,
+    "serialize_before_exclusive_create": true,
+    "layout_validation_valid_json": true,
+    "layout_validation_checks_passed": 9,
+    "layout_validation_checks_total": 9,
+    "layout_validation_pass": true,
+    "layout_boolean_values_are_json_native_bool": true,
+    "negative_unserializable_partial_file_absent": true,
+    "negative_nan_partial_file_absent": true
+  },
+  "static_board_result": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d382/attempt1_d381_layout_validation_native_scalar_serialization_repair/d382_d381_visual_contract_repaired_1920x1080.png",
+    "bytes": 230110,
+    "sha256": "19bd70781403eb11c4eaefb6adb60ab91a5e6ca9f67f2929548f8afff0b7f06d",
+    "exact_1920x1080": true,
+    "bitexact_with_frozen_d381_board": true,
+    "partial_original_resolution_inspection_pass": true
+  },
+  "presentation_subresults": {
+    "recording_equivalence_pass": true,
+    "recording_equivalence_sha256": "ba811049c3e21fc13300d2228445cbb06225fb09fde38e0e9ad61ebaf575b618",
+    "rbl_created": true,
+    "rbl_sha256": "979ddd6b4a32bfc97e13d75dfb99625af0d0bed90fc1fd9588347667f284b28c",
+    "presentation_rrd_created": true,
+    "presentation_rrd_sha256": "6c4ad99428f8da0ef842031b161e69db906971084da6d3444c1b76c8c27a7d9a",
+    "post_failure_rrd_verify_files": 2,
+    "post_failure_rrd_verify_returncode": 0,
+    "rbl_registered_markers_present_under_vvv": "6/6"
+  },
+  "first_failure": {
+    "source": "sim_scripts/cyl34_top_view_d381_d380_visual_contract_repair.py:1058-1089",
+    "exception": "RuntimeError: D381 blueprint contract failed",
+    "frozen_print_verbosity": "-v",
+    "failed_checks": {
+      "notification_buffer_query_serialized": false,
+      "summary_query_serialized": false,
+      "four_spatial_view_names_serialized": false
+    },
+    "program_order_boundary": "after presentation RRD/RBL creation and before loopback preflight or Viewer launch"
+  },
+  "post_failure_localization": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d382/attempt1_d381_layout_validation_native_scalar_serialization_repair/d382_rbl_print_verbosity_provenance_audit.json",
+    "sha256": "93c46926048fe043ef193757181f3f28762d6959c31c25a66fe3d243f6d45527",
+    "rrd_print_v_markers": "0/6",
+    "rrd_print_vvv_markers": "6/6",
+    "rbl_content_missing": false,
+    "validator_false_negative": true,
+    "audit_pass": true
+  },
+  "partial_visual_inspection": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d382/attempt1_d381_layout_validation_native_scalar_serialization_repair/d382_partial_visual_inspection.json",
+    "sha256": "f9bace3484e5fa350f4e3350bc7832e069530b234e0dacb0a1145cdc32122168",
+    "static_board_pass": true,
+    "rerun_visual_inspection": null,
+    "pass": false
+  },
+  "not_created_or_not_reached": {
+    "worker_claim": false,
+    "rerun_validation": false,
+    "viewer_receipt": false,
+    "rerun_screenshot": false,
+    "manual_visual_inspection_template": false,
+    "manual_visual_inspection": false,
+    "completion_summary": false
+  },
+  "scope_counters": {
+    "d379_reads": 0,
+    "numeric_or_geometry_audit_invocations": 0,
+    "representation_or_tolerance_changes": 0,
+    "asset_or_usd_reads": 0,
+    "asset_or_usd_writes": 0,
+    "collider_materializations_or_regenerations": 0,
+    "automatic_decomposition_sweeps": 0,
+    "isaac_launches": 0,
+    "kit_launches": 0,
+    "physx_calls": 0,
+    "cylinder_creates_or_writes": 0,
+    "physics_steps": 0,
+    "public_forwards": 0,
+    "q5_commands": 0,
+    "q5_samples": 0,
+    "contact_queries": 0,
+    "target_ik_path_pose_changes": 0,
+    "material_mass_actuator_physics_setting_changes": 0,
+    "external_or_preexisting_process_signals": 0
+  },
+  "preserved_scientific_state": {
+    "d380_numeric_verdict": "D380_FAILED_PART_PROVENANCE_AUDIT_PASS_REPAIR_REQUIRED",
+    "p34_authored_to_cooked_identity_pass": false,
+    "g0a_pass": false,
+    "p34_representation_repair": null,
+    "p34_repaired_live_identity": null,
+    "actual_open_jaw_clearance": null,
+    "cylinder_contact_or_tipping": null,
+    "q5_closure": null,
+    "grasp_feasibility": null,
+    "target_ik_path_justification": null
+  },
+  "next_authorization_boundary": "A new forward-only observability-only case may inherit the immutable D382 board/RRD/RBL, change only the RBL data-value inspection authority from `rrd print -v` to `rrd print -vvv` (or an exact structured equivalent), and then perform at most one Viewer capture. No D382 retry and no representation, Isaac/PhysX, target, or physics work are authorized."
+}

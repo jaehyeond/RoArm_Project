@@ -1,0 +1,41 @@
+{
+  "artifact": "D382_PARTIAL_VISUAL_INSPECTION_V1",
+  "case": "g0a_d382",
+  "attempt": "attempt1_d381_layout_validation_native_scalar_serialization_repair",
+  "inspection_scope": "static_board_only",
+  "inspection_method": {
+    "tool": "functions.view_image",
+    "detail": "original",
+    "displayed_resolution": [
+      1920,
+      1080
+    ]
+  },
+  "board": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d382/attempt1_d381_layout_validation_native_scalar_serialization_repair/d382_d381_visual_contract_repaired_1920x1080.png",
+    "bytes": 230110,
+    "sha256": "19bd70781403eb11c4eaefb6adb60ab91a5e6ca9f67f2929548f8afff0b7f06d",
+    "bitexact_with_d381_board": true
+  },
+  "inspection_checks": {
+    "board_exact_1920x1080": true,
+    "board_no_decision_obscuring_text_overlap": true,
+    "board_all_registered_labels_inside_canvas": true,
+    "board_frozen_geometry_subjects_visible": true,
+    "board_displayed_facts_match_d380": true,
+    "rerun_four_geometry_views_visible": null,
+    "rerun_summary_visible": null,
+    "rerun_notifications_only_in_empty_buffer": null,
+    "rerun_no_unknown_timeline": null,
+    "rerun_no_decision_obscuring_overlap": null,
+    "rerun_geometry_consistent_with_d380": null
+  },
+  "observations": [
+    "The title, subtitle, two geometry panels, result summary, both lower charts, legends, and footnote are visible at the original 1920x1080 resolution.",
+    "No decision-obscuring overlap or registered-label clipping was observed on the static board.",
+    "The worker stopped before the Rerun Viewer call, so no Rerun screenshot exists and the Rerun-specific visual checks remain null."
+  ],
+  "inspector_result": "PARTIAL_STATIC_BOARD_PASS_RERUN_NOT_REACHED",
+  "d382_completion_pass": false,
+  "pass": false
+}

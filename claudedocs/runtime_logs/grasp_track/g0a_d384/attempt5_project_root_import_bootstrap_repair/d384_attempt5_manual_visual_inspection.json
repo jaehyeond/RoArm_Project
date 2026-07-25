@@ -1,0 +1,47 @@
+{
+  "artifact": "D384_ATTEMPT5_MANUAL_VISUAL_INSPECTION_V1",
+  "attempt": "attempt5_project_root_import_bootstrap_repair",
+  "board": {
+    "bytes": 205881,
+    "exact_1920x1080": true,
+    "height": 1080,
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d384/attempt5_project_root_import_bootstrap_repair/d384_attempt5_presentation_board_1920x1080.png",
+    "sha256": "308f9890b0677a65ef6422081d753649d1ea27256df75e1c52fad90dd250b007",
+    "width": 1920
+  },
+  "canonical_evidence": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d384/attempt2_callback_vertex_count_field_preflight_repair/d384_p34_representation_repair_design_evidence.json",
+    "sha256": "16ed5696d7198913367806e3ee13cf17a2b3f83c0c28d139115aa1d51c40822f"
+  },
+  "case": "g0a_d384",
+  "inspection_checks": {
+    "board_counts_match_canonical_json": true,
+    "board_exact_1920x1080_and_legible": true,
+    "board_no_text_clipping_or_overlap": true,
+    "decision_summary_visible": false,
+    "notifications_confined_to_empty_buffer": true,
+    "profile_parent_and_children_whole_shape_visible": true,
+    "rerun_no_decision_obscuring_overlap": true,
+    "rerun_no_unknown_timeline": true,
+    "source_hull_whole_shape_visible": true
+  },
+  "inspector_result": "FAIL: the fixed board passes, but Rerun renders Korean labels and decision text as unreadable square glyphs.",
+  "observations": [
+    "The static board is exactly 1920x1080; its Korean title, subtitle, panel labels, decision boxes, bar chart, legend, and footer are legible without clipping or overlap.",
+    "The board preserves the canonical 17/34, 268, 558, theoretical 34, runtime NULL, and g0a_pass=false values.",
+    "Both Rerun geometry witnesses are fully inside their viewports and are no longer clipped by over-zoom.",
+    "Viewer notifications are confined to the right-side empty notification buffer and do not cover geometry or the bottom decision panel.",
+    "The visible timeline is log_time; no Unknown timeline label is present.",
+    "Rerun renders Korean view titles and most Korean TextDocument content as square glyphs, so the decision summary is not readable.",
+    "The glyph failure is presentation-only and does not alter the canonical JSON design verdict."
+  ],
+  "pass": false,
+  "rerun_screenshot": {
+    "bytes": 6746550,
+    "exact_1920x1080": false,
+    "height": 2160,
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d384/attempt5_project_root_import_bootstrap_repair/d384_attempt5_rerun_inspection.png",
+    "sha256": "dcbaa645ea2223fd787d210c05a4fd868f433f422577a9be7b5eac258e9fa714",
+    "width": 3840
+  }
+}

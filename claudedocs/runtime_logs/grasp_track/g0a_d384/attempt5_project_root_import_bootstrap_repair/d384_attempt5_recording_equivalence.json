@@ -1,0 +1,48 @@
+{
+  "artifact": "D384_ATTEMPT3_RECORDING_EQUIVALENCE_V1",
+  "checks": {
+    "derived_one_recording_zero_blueprints": true,
+    "recording_summary_exact": true,
+    "rrd_compare_return_zero": true,
+    "source_one_recording_one_blueprint": true
+  },
+  "derived_store_inventory": {
+    "blueprints": 0,
+    "recordings": 1
+  },
+  "derived_summary_sha256": "97ceab440caab05df742904c215990bfa41e4114478e6029948e54cc489d9c53",
+  "pass": true,
+  "recording_only": {
+    "bytes": 49137,
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d384/attempt5_project_root_import_bootstrap_repair/d384_attempt5_recording_only.rrd",
+    "sha256": "4766b1fa3b559f829f835b3d3c216fc74d35c00acdd9314e18e6c85be79c103b"
+  },
+  "rrd_compare": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "compare",
+      "--unordered",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d384/attempt2_callback_vertex_count_field_preflight_repair/d384_p34_representation_repair_design.rrd",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d384/attempt5_project_root_import_bootstrap_repair/d384_attempt5_recording_only.rrd"
+    ],
+    "elapsed_seconds": 0.03411895106546581,
+    "ok": true,
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "",
+    "timed_out": false
+  },
+  "source": {
+    "bytes": 88453,
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d384/attempt2_callback_vertex_count_field_preflight_repair/d384_p34_representation_repair_design.rrd",
+    "sha256": "a357fd47b429d7ca9097c2cd1439836b060ce7d43a564fa2328c5a285f9c6008"
+  },
+  "source_store_inventory": {
+    "application_id": "roarm_g0a_d384_repair_design",
+    "blueprints": 1,
+    "recording_id": "g0a_d384_repair_design",
+    "recordings": 1
+  },
+  "source_summary_sha256": "97ceab440caab05df742904c215990bfa41e4114478e6029948e54cc489d9c53"
+}

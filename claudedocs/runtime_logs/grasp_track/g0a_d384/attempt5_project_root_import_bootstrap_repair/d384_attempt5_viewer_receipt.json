@@ -1,0 +1,69 @@
+{
+  "actual_viewer_invocations": 1,
+  "artifact": "D384_ATTEMPT3_VIEWER_RECEIPT_V1",
+  "authorized_viewer_invocations_max": 1,
+  "automatic_viewer_retries": 0,
+  "checks": {
+    "automatic_viewer_retries_zero": true,
+    "loopback_preflight_pass": true,
+    "message_proxy_crash_absent": true,
+    "operation_not_permitted_absent": true,
+    "screenshot_nonempty": true,
+    "viewer_command_has_loopback_bind": true,
+    "viewer_invocations_exactly_one": true,
+    "viewer_not_timed_out": true,
+    "viewer_return_zero": true
+  },
+  "command": [
+    "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+    "--headless",
+    "--bind",
+    "127.0.0.1",
+    "--port",
+    "auto",
+    "--hide-welcome-screen",
+    "--window-size",
+    "1920x1080",
+    "--screenshot-to",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d384/attempt5_project_root_import_bootstrap_repair/d384_attempt5_rerun_inspection.png",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d384/attempt5_project_root_import_bootstrap_repair/d384_attempt5_presentation.rrd"
+  ],
+  "loopback_preflight": {
+    "address": "127.0.0.1",
+    "bind_ok": true,
+    "elapsed_seconds": 7.633119821548462e-05,
+    "ephemeral_port": 55255
+  },
+  "pass": true,
+  "result": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "--headless",
+      "--bind",
+      "127.0.0.1",
+      "--port",
+      "auto",
+      "--hide-welcome-screen",
+      "--window-size",
+      "1920x1080",
+      "--screenshot-to",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d384/attempt5_project_root_import_bootstrap_repair/d384_attempt5_rerun_inspection.png",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d384/attempt5_project_root_import_bootstrap_repair/d384_attempt5_presentation.rrd"
+    ],
+    "elapsed_seconds": 1.336257654009387,
+    "ok": true,
+    "returncode": 0,
+    "stderr": "2026-07-25T10:26:50.130449Z  INFO re_perf_telemetry::telemetry: Telemetry initialized enabled=false service=rerun trace_mode=\"off\" traces=off logs=off metrics=off tracy=false\nlibEGL warning: egl: failed to create dri2 screen\n2026-07-25T10:26:50.228932Z  INFO re_grpc_server: Listening for gRPC connections on 127.0.0.1:9876. Connect by running `rerun --connect rerun+http://127.0.0.1:9876/proxy`\n2026-07-25T10:26:50.229217Z  INFO re_importer::import_file: Loading \"/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d384/attempt5_project_root_import_bootstrap_repair/d384_attempt5_presentation.rrd\"…\n2026-07-25T10:26:51.111331Z  INFO re_viewer::headless: Headless viewer running at 1920x1080.\n2026-07-25T10:26:51.357340Z  INFO re_viewer::screenshotter: Screenshot saved to \"/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d384/attempt5_project_root_import_bootstrap_repair/d384_attempt5_rerun_inspection.png\"\n2026-07-25T10:26:51.367523Z  INFO re_viewer::screenshotter: Screenshot copied to clipboard\n2026-07-25T10:26:51.371241Z  INFO re_viewer::headless: Headless viewer received close request, shutting down.\n",
+    "stdout": "",
+    "timed_out": false
+  },
+  "screenshot": {
+    "bytes": 6746550,
+    "exact_1920x1080": false,
+    "height": 2160,
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d384/attempt5_project_root_import_bootstrap_repair/d384_attempt5_rerun_inspection.png",
+    "sha256": "dcbaa645ea2223fd787d210c05a4fd868f433f422577a9be7b5eac258e9fa714",
+    "width": 3840
+  },
+  "screenshot_dimension_policy": "The Viewer command uses a 1920x1080 logical window. Native HiDPI physical pixels are recorded without resampling; only the static board is required to be exactly 1920x1080 pixels."
+}
