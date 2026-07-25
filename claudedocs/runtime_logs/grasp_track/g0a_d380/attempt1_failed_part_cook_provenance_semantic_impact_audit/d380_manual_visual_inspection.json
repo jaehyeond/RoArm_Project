@@ -1,0 +1,44 @@
+{
+  "artifact": "D380_MANUAL_VISUAL_INSPECTION_V1",
+  "attempt": "attempt1_failed_part_cook_provenance_semantic_impact_audit",
+  "authority_chain": {
+    "invocation_sha256": "19f38f4b8d8a7b3df03eb583e210cde988531070cf540358d8b5020c9d9779c3",
+    "preregistration_sha256": "0e7e0d11fd38cdfe086872c685116290ab113a4a2a2c6ff0d850bc7f334befb4",
+    "supervisor_sha256": "e14f7bee95e118c67d8194ba6d46abc13166f5382b90be3ca67f3beefe1a13a7",
+    "worker_claim_sha256": "32b9fb3958f8e9dc354bfb826fc7b672f9872838ec9ded51c9f59cf45d07bf53"
+  },
+  "board": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d380/attempt1_failed_part_cook_provenance_semantic_impact_audit/d380_p34_failed_part_cook_provenance_1920x1080.png",
+    "sha256": "61317db2dd22e94f35ea37e8b9258fe02eba29e57ec92b96d014356d14a4d9ca"
+  },
+  "case": "g0a_d380",
+  "evidence": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d380/attempt1_failed_part_cook_provenance_semantic_impact_audit/d380_p34_failed_part_cook_provenance_evidence.json",
+    "sha256": "4c64d08e117501dd15a5836ce56ef8b963d188044beac465e645e53a17710bd1"
+  },
+  "inspection_checks": {
+    "authored_cooked_and_omitted_geometry_visible": true,
+    "board_exact_1920x1080_legible": false,
+    "board_no_text_clipping_or_overlap": false,
+    "rerun_four_spatial_views_visible": true,
+    "rerun_geometry_consistent_with_board": true,
+    "rerun_no_decision_obscuring_overlap": false,
+    "rerun_no_unknown_timeline": true,
+    "surface_and_volume_plots_match_evidence": true
+  },
+  "inspector_result": "FAIL",
+  "observations": [
+    "The exact 1920x1080 board contains the correct geometry and metrics, but its main subtitle overlaps both 3D panel titles and several left-side bar labels are clipped.",
+    "The Rerun screenshot shows all four authored/cooked geometry views and no Unknown timeline panel, but startup notifications cover part of the right-hand audit summary.",
+    "These presentation defects do not alter the canonical JSON provenance audit, but they fail the required human visual-inspection contract."
+  ],
+  "pass": false,
+  "rerun_screenshot": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d380/attempt1_failed_part_cook_provenance_semantic_impact_audit/d380_rerun_inspection.png",
+    "sha256": "730374f419654e829177a426418ca2756fc503e59f563ace01f770b3c9bcb8c6"
+  },
+  "template": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d380/attempt1_failed_part_cook_provenance_semantic_impact_audit/d380_manual_visual_inspection_template.json",
+    "sha256": "59f83e6978020b5a78a1ea9d0d777739fc2a0e622d77796ab3e00a6af0c305c5"
+  }
+}

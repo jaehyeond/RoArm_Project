@@ -1,0 +1,29 @@
+{
+  "artifact": "D378_MANUAL_ORIGINAL_RESOLUTION_VISUAL_INSPECTION_V1",
+  "checks": {
+    "D377_frozen_verdict_not_rewritten": true,
+    "board_text_legible_no_overlap_or_clipping": false,
+    "raw_fail_and_corrected_pass_visually_separated": true,
+    "rerun_ascii_text_has_no_missing_glyphs": true,
+    "rerun_required_rows_visible": true,
+    "scope_and_remaining_nulls_visible": true
+  },
+  "inspected_sha256": {
+    "board": "2e94b4a3a3cd670491ebcd42fd0567667237b5c21ec8806bdb6bb8aed33851e2",
+    "rerun_inspection": "267735d18052a01d9e514bc3510441c390f17711efc05ca2cfefaf16ec38333b"
+  },
+  "inspection_method": "functions.view_image detail=original for the exact board and the Rerun headless screenshot",
+  "observations": {
+    "board": [
+      "The 1920x1080 board title, top three boxes, digest box, and payload box are readable.",
+      "The final line in the Observed terminal outcomes body crosses below its blue container and sits too close to the footer verdict.",
+      "The board therefore fails the registered no-overlap and no-clipping presentation requirement."
+    ],
+    "rerun_inspection": [
+      "The 3840x2160 HiDPI screenshot shows all five audit rows and all three static boundary rows.",
+      "All display text is ASCII and no missing-glyph squares are visible.",
+      "A sandbox message-proxy warning toast is present but does not cover the audit rows or verdict rows."
+    ]
+  },
+  "pass": false
+}

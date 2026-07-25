@@ -21916,3 +21916,289 @@ Sources:
 - NVIDIA Kit 107.3.1 `UsdUtils.StageCache` API:
   https://docs.omniverse.nvidia.com/kit/docs/pxr-usd-api/107.3.1/pxr/UsdUtils.html
 - `START_HERE.md`
+
+## D378 - canonical workload authority는 의미 payload와 실행별 진단 식별자를 분리하고, pairwise 종료 support를 universal root cause로 확대하지 않는다 (2026-07-24)
+
+Decision:
+
+- immutable D375/D377/D334 증거만 읽는 offline audit `1`, retry `0`으로
+  `D378_EPHEMERAL_IDENTIFIER_PROVENANCE_AND_WORKLOAD_AUTHORITY_REPAIR_PASS`를 완료했다.
+- **지속 규칙:** runtime object memory address, generated prototype ordinal, opaque runtime
+  `path_id`, elapsed time를 canonical geometry/property/workload identity에 넣지 않는다.
+  제외는 exact preregistered manifest에 한정하고 raw file/SHA는 provenance로 보존한다.
+- **지속 규칙:** callback witness file의 전체 SHA를 곧바로 geometry authority로 쓰지 않는다.
+  실제 vertices/indices/original polygons와 의미 field를 독립 canonicalization하고, 제외
+  manifest 과확장은 failure-capable negative control로 거부한다.
+- **지속 규칙:** corrected workload가 같고 종료 결과가 다른 한 pair는 conditional-trigger
+  support를 줄 수 있지만 universal necessity나 exact native root cause를 증명하지 않는다.
+  반례가 있으면 해당 항목은 `null`로 남긴다.
+- **지속 규칙:** 자동 layout PASS와 원본 해상도 manual visual PASS를 모두 요구한다.
+  subpixel gate 실패를 사후 완화하지 말고 forward-only로 측정된 위치 보정을 수행한다.
+- D377의 동결 verdict/artifact를 소급 수정하지 않는다. D378은 별도 authority case다.
+
+Evidence:
+
+- V1 selected digest는 D375 `ec930163...b0b7b`, D377 `75850473...13c81`로 달랐다.
+  selected 차이 `68`개는 callback witness SHA `34`개(runtime memory address)와
+  `prototype_path_diagnostic` `34`개(generated `__Prototype_N`)뿐이었다.
+- exact manifest 적용 뒤 selected diff `0`, corrected workload SHA-256은 양쪽 모두
+  `28aadb5ff26270039df58f7cd06080bf7afcdec001402e886a6edf1483fdfe31`이다.
+- callback payload `34/34` exact, vertices/indices/original polygons `314/1016/262`;
+  normalized witness aggregate는 양쪽 모두 `0a56d790...abfe8c`다.
+- raw property 차이 `40`개는 `path_id 38 + elapsed_s 2`; normalized diff `0`, 양쪽 digest
+  `4710c182...fe7c1f`다. mass/COM/inertia/axes/volume/AABB/local pose/semantic path/result/count는
+  authority에 남았다.
+- evidence checks `23/23`, failure-capable negative controls `11/11` PASS.
+- D375는 Erase `0`, timeout, `920.3908159369603s`, return `-9`; D377은 Erase `1`,
+  contract PASS, `6.733121555997059s`, return `0`. 이 pair의 conditional trigger support는
+  true지만 universal necessity와 exact native root cause는 `null`; D373 no-Erase/exit0
+  반례가 있다.
+- attempt1은 prereg Git-path 계약, attempt3은 START_HERE exact-path 등록에서 각각 audit/board
+  `0`으로 멈췄다. attempt2 authority는 PASS했지만 board overflow로 manual FAIL. attempt4는
+  outcome inset `6.40px < 6.48px` 한 항목으로 FAIL. attempt5는 Y `+2.16px`, measured inset
+  `8.56px`, containment `12/12`, overlap `4/4`, same-box separation `6/6`, manual `6/6`,
+  final `21/21` PASS했다.
+- final board exact `1920x1080`; reused RRD/RBL `63,972/43,735B`, Rerun `0.34.1` strict
+  validation과 original-resolution inspection PASS.
+- Isaac/PhysX/USD/collider/physics/q5/contact/cylinder/target-IK-path work는 모두 `0`;
+  `g0a_pass=false`다.
+
+Implication:
+
+- D377의 selected workload mismatch는 meaningful workload drift가 아니라 comparator false
+  negative였음이 새 forward-only authority로 확정되었다.
+- full P34 live identity, A64/P34 physics equivalence/speed, 29x50 target contact/tipping,
+  closure/grasp/target-IK-path justification은 모두 `null`이다.
+- D378의 모든 attempt를 동결한다. 다음 최소 후보는 별도 승인
+  `D379 [p34_full_live_identity_classifier_resume]`; 29x50 geometry rebase와 physics는
+  각각 별도 case다.
+
+Sources:
+
+- `claudedocs/session_20260724_grasp_g0a_d378_ephemeral_identifier_provenance_and_workload_authority_repair.md`
+- `sim_scripts/cyl34_top_view_d378_d377_ephemeral_identifier_provenance_and_workload_authority_repair.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d378/attempt2_preregistration_status_order_repair/d378_workload_authority_repair_evidence.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d378/attempt2_preregistration_status_order_repair/d378_workload_authority_repair.rrd`
+- `claudedocs/runtime_logs/grasp_track/g0a_d378/attempt5_measured_outcome_inset_repair/d378_attempt5_layout_validation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d378/attempt5_measured_outcome_inset_repair/d378_attempt5_manual_visual_inspection.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d378/attempt5_measured_outcome_inset_repair/d378_final_completion_summary.json`
+- `START_HERE.md`
+
+## D379 - collider 경로/binding PASS와 authored-to-cooked 형상 identity PASS를 분리한다 (2026-07-25)
+
+Decision:
+
+- immutable D372/D373/D377/D378 evidence만 읽는 offline classifier `1`, retry `0`으로
+  P34 full live identity를 판정했다. 새 Isaac/Kit/PhysX/USD/collider/cylinder/physics/q5/
+  contact/pose 작업은 모두 `0`이었다.
+- **지속 규칙:** collider part count, path bijection, typed USD readback, callback 재현성,
+  property-query VALID가 모두 PASS해도 authored surface와 PhysX cooked collision surface의
+  identity를 대신하지 않는다.
+- **지속 규칙:** callback topology-volume과 PhysX property-volume이 일치한다면 property
+  query가 실제 cooked shape를 읽는다는 강한 binding 증거다. 그 값이 authored geometry와
+  다르면 tolerance를 완화하지 말고 representation을 수리한다.
+- **지속 규칙:** nominal cylinder target에는 NVIDIA가 precise mapping을 명시한 primitive
+  cylinder를 먼저 사용한다. 실측 비원통 특징이 접촉에 중요하다는 증거 전에는 target
+  convex decomposition을 추가하지 않는다.
+- **지속 규칙:** 실제 제품 규격과 역사적 D362 규격을 분리한다. D362는 D34xH90/0.72kg
+  전용 과거 물리증거이고, 실제 제품 명목 D29xH50에는 접촉순서/전도 결과를 전이하지 않는다.
+- D379 identity FAIL과 Rerun presentation completion FAIL을 분리한다. presentation 문제는
+  원 JSON의 형상 판정을 무효화하지 않는다.
+
+Evidence:
+
+- attempt1은 D372 top-level `pass` 오가정으로 prepare에서 멈췄다. 실제 권위 field는
+  `measurement_pass=true`; classifier/board/Rerun/Isaac은 모두 `0`이었다.
+- attempt2 preregistration `22/22` PASS. offline worker `1`, retry `0`, return `0`,
+  elapsed `3.7800336838699877s`; timeout/TERM/KILL/residue 모두 false였다.
+- direct/live/typed/callback payload는 각각 `34/34`; property rows는 link5/gripper
+  `17/19` 모두 VALID. callback↔property volume max relative delta
+  `6.443186705889919e-8`, mass/COM/inertia/axes max delta
+  `1.1368683772161603e-13`, negative controls `6/6` PASS였다.
+- full identity는 `17/34`: link5 `12/16`, gripper_link `5/18`.
+  - surface FAIL `17`, max `0.684166832184637mm` > `0.1mm`
+  - bounds FAIL `2`, max `0.2500005066394806mm` > `0.1mm`
+  - authored↔callback topology-volume FAIL `15`, max `6.677679161440082%` >
+    `0.5%`
+  - polygon-plane FAIL `1`, max `7.737191610970862e-5m` > `1e-5m`.
+- exact 1920x1080 board는 원 JSON과 일치하고 읽을 수 있었다. RRD/RBL strict validation과
+  Viewer return은 PASS했지만, `Unknown timeline`, notification-title overlap, verdict clipping
+  때문에 manual presentation completion은 FAIL했다.
+
+Implication:
+
+- frozen identity verdict는
+  `D379_P34_FULL_LIVE_IDENTITY_CLASSIFIER_RESUME_FAIL_STOP`; P34를 현재 상태로 physical
+  equivalence/speed 또는 grasp 시험에 사용하지 않는다.
+- overall completion verdict는
+  `D379_OBSERVABILITY_OR_COMPLETION_INTEGRITY_FAIL_STOP`; 이는 identity FAIL을 덮어쓰지
+  않는다.
+- actual product D29xH50 geometry rebase는 필요하지만, 먼저 17 failed P34 parts의 cook
+  provenance와 jaw/void/clearance 영향을 감사한다. 그 결과에 따라 cooked output을 별도
+  candidate로 수용하거나 representation을 수리하고, 별도 live identity PASS를 받아야
+  collider 효과와 target/pose 효과를 분리할 수 있다.
+- P34 physics, D29xH50 physics, q5/contact/hold/lift, grasp feasibility는 모두 `null`;
+  `g0a_pass=false`.
+- 다음 최소 후보는 별도 승인
+  `D380 [p34_failed_part_cook_provenance_and_semantic_impact_audit]`.
+
+Sources:
+
+- `claudedocs/session_20260725_grasp_g0a_d379_p34_full_live_identity_classifier_resume.md`
+- `sim_scripts/cyl34_top_view_d379_p34_full_live_identity_classifier_resume.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d379/attempt1_p34_full_live_identity_classifier_resume/d379_runtime_exception.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d379/attempt2_d372_measurement_field_repair/d379_preregistration.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d379/attempt2_d372_measurement_field_repair/d379_p34_full_live_identity_evidence.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d379/attempt2_d372_measurement_field_repair/d379_offline_worker_supervisor.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d379/attempt2_d372_measurement_field_repair/d379_manual_visual_inspection.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d379/attempt2_d372_measurement_field_repair/d379_completion_summary.json`
+- NVIDIA Omni Physics 107.3 Colliders:
+  https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/rigid_bodies_articulations/collision.html
+- `START_HERE.md`
+
+## D380 - cooked-vertex subset은 inward erosion을 증명하지만 실제 jaw gap/contact를 대신하지 않는다 (2026-07-25)
+
+Decision:
+
+- immutable D379 identity evidence만 읽는 offline audit `1`, retry `0`으로
+  `D380_FAILED_PART_PROVENANCE_AUDIT_PASS_REPAIR_REQUIRED`를 완료했다.
+  Isaac/Kit/PhysX/USD/collider/cylinder/physics/q5/contact/pose 작업은 모두 `0`이었다.
+- **지속 규칙:** 같은 body-local binding에서 closed convex authored part의 cooked callback
+  vertex가 authored vertex의 exact subset이고 cooked hull이 authored support planes 안에
+  포함되면 one-sided inward erosion으로 판정할 수 있다. 이때 cooked union은 authored
+  union의 subset이므로 새 void fill, outward protrusion, 순수 set-distance clearance 감소는
+  없다.
+- **지속 규칙:** 위 subset 관계는 실제 OPEN jaw gap, cylinder-facing patch, contact
+  timing, penetration, `contactOffset/restOffset`, CCD 또는 solver/reporting timing을
+  증명하지 않는다. 이 값은 common live frame과 별도 physics authority가 없으면 `null`로
+  둔다.
+- **지속 규칙:** 개별 part original-topology volume의 합은 compound boolean-union volume
+  또는 void volume이 아니다. 겹치는 part를 포함하므로 반드시 `part-volume sum
+  diagnostic`으로만 표기한다.
+- **지속 규칙:** 입력 part의 최대 authored vertex 수가 `hullVertexLimit`보다 작으면
+  vertex 삭제를 cap overflow의 결과라고 주장하지 않는다. 내부 cook heuristic/tolerance는
+  공식 또는 직접 측정 증거가 없으면 `null`이다.
+- **지속 규칙:** canonical JSON 수치 판정과 presentation completion을 분리한다. 자동
+  Rerun 계약이 PASS해도 원본 해상도 human inspection의 overlap/clipping이 FAIL이면
+  presentation completion은 FAIL로 동결하되 수치 판정을 소급 변경하지 않는다.
+
+Evidence:
+
+- preregistration `24/24`; prepare negatives `4/4`; worker/retry `1/0`,
+  return `0`, elapsed `3.5377263869158924s`; timeout/TERM/KILL/residue false.
+- D379 failed set `17/34`를 exact 재현했다: link5 `4`, gripper_link `13`.
+  signature는 surface `2`, surface+volume `12`, plane+surface+volume `1`,
+  bounds+surface+volume `2`다.
+- failed authored/retained/omitted vertex는 `401/178/223`; inherited `0.1mm`
+  밖으로 누락된 vertex `181`; introduced/moved JSON-coordinate vertex `0`.
+- `34/34` cooked vertex set이 authored vertex의 JSON-numeric-exact subset이고,
+  `34/34` authored-convex containment가 PASS했다. failed 17개 분류는 전부
+  `AUTHORED_VERTEX_ELISION_WITH_INWARD_COOK`이다.
+- failed-part original-topology volume 합은
+  `8708.834857803575 -> 8367.592932676003mm^3`, loss
+  `341.24192512757054mm^3`, `3.91834189876502%`다. boolean union/void volume은
+  아니다.
+- fixed/moving jaw-system one-sided surface bound는
+  `0.684166832184637/0.4416586800734206mm`, sum
+  `1.1258255122580576mm`; 실제 OPEN gap 변화는 `null`이다.
+- max authored unique vertices per part `44 < 64`; capacity overflow는 false이고 exact
+  internal cook cause는 `null`이다. negative controls `7/7` PASS.
+- 독립 D379-only 재계산은 failed set, signature, vertex counts, subset/containment,
+  volume sum과 semantic monotonic result를 재현했다. embedded Float32 authored points에서
+  직접 재계산한 authored sum과 D379 stored D372 topology-volume authority 사이
+  `0.000983mm^3` 차이는 gate에 영향이 없으며 D380은 사전등록대로 stored authority를
+  사용했다.
+- exact `1920x1080` board와 RRD/RBL, strict Rerun validation은 생성/PASS했다. 하지만
+  board subtitle-title overlap, left bar label clipping, Rerun notification-summary
+  overlap 때문에 manual inspection은 FAIL했고 final completion은
+  `D380_OBSERVABILITY_OR_COMPLETION_INTEGRITY_FAIL_STOP`이다.
+
+Implication:
+
+- D379 identity FAIL은 outward inflation이 아니라 authored-vertex omission에 따른
+  inward erosion으로 국소화되었다. `hullVertexLimit=64` overflow가 원인은 아니다.
+- 현재 P34는 authored-to-cooked identity false이므로 representation을 수리하고 별도 live
+  identity PASS를 받기 전 P34 cylinder physics로 진행하지 않는다. tolerance 완화로
+  통과시키지 않는다.
+- actual OPEN clearance, authored void-volume change, cylinder contact/tipping,
+  29x50 pose/mass/physics, q5/grasp/target-IK-path는 모두 `null`; `g0a_pass=false`.
+- D380 attempt1을 동결한다. 다음 후보는 별도 승인 offline presentation repair와 별도
+  representation-repair design이며, 어느 것도 D380 승인에 포함되지 않는다.
+
+Sources:
+
+- `claudedocs/session_20260725_grasp_g0a_d380_p34_failed_part_cook_provenance_and_semantic_impact_audit.md`
+- `sim_scripts/cyl34_top_view_d380_p34_failed_part_cook_provenance_and_semantic_impact_audit.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d380/attempt1_failed_part_cook_provenance_semantic_impact_audit/d380_preregistration.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d380/attempt1_failed_part_cook_provenance_semantic_impact_audit/d380_offline_worker_supervisor.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d380/attempt1_failed_part_cook_provenance_semantic_impact_audit/d380_p34_failed_part_cook_provenance_evidence.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d380/attempt1_failed_part_cook_provenance_semantic_impact_audit/d380_manual_visual_inspection.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d380/attempt1_failed_part_cook_provenance_semantic_impact_audit/d380_completion_summary.json`
+- NVIDIA Omni Physics 107.3 Colliders:
+  https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/rigid_bodies_articulations/collision.html
+- NVIDIA Omni Physics 107.3 Query The Mass and Volume:
+  https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/mass_inertia_queries.html
+- `START_HERE.md`
+
+## D381 - 시각 layout 측정값도 JSON-native scalar로 정규화하고, 등록 횟수와 실제 program-order 실행 횟수를 분리한다 (2026-07-25)
+
+Decision:
+
+- immutable D380 자료만 읽는 observability-only presentation worker `1`, retry `0`을
+  실행했으나 board layout-validation JSON 기록에서
+  `D381_BOARD_VALIDATION_JSON_SERIALIZATION_FAIL_STOP`으로 종료했다.
+- **지속 규칙:** Matplotlib/NumPy에서 나온 좌표뿐 아니라 비교 결과도 Python
+  `float`/`bool` 또는 명시적 JSON-native 재귀 정규화를 거친 뒤 기록한다.
+  `numpy.bool_`를 Python 표준 JSON encoder에 직접 넘기지 않는다.
+- **지속 규칙:** evidence JSON은 먼저 전체 직렬화 가능성을 검증한 뒤
+  exclusive-create한다. `open("x")` 뒤 streaming dump 중 실패해 생긴 부분 JSON은
+  파일 존재 여부가 true여도 authority가 아니며, 수정·이어쓰기·파싱하지 않는다.
+- **지속 규칙:** preregistered Viewer count와 actual Viewer count를 분리한다.
+  upstream program-order 단계에서 중단되면 등록값 `1`을 실제 실행으로 보고하지 않고,
+  phase marker와 downstream artifact 부재를 함께 사용해 actual count를 판정한다.
+- D381 attempt1을 동결하며 같은 경로를 재실행하거나 잘린 JSON을 덮어쓰지 않는다.
+
+Evidence:
+
+- preregistration checks `15/15`, negative controls `10/10` PASS; D380 input hashes
+  `11/11`, source hashes `3/3`, `HEAD==origin/master`가 exact였다.
+- worker/retry `1/0`, return `1`, elapsed `0.7154044299386442s`; timeout/TERM/KILL/
+  process residue 모두 false다.
+- exact `1920x1080`, `230110B` board는 먼저 저장됐고 SHA-256은
+  `19bd70781403eb11c4eaefb6adb60ab91a5e6ca9f67f2929548f8afff0b7f06d`다.
+  그러나 `_render_board()`가 layout JSON 기록 중 반환하지 못해 `board_repaired`
+  phase는 기록되지 않았다.
+- 첫 JSON field
+  `artist_bboxes_display_pixels.footnote.inside_canvas_with_6px_margin`에서
+  `TypeError: Object of type bool_ is not JSON serializable`가 발생했다.
+  잘린 validation file은 `144B`다.
+- recording-only RRD, 새 RBL, presentation merge, Rerun validation, Viewer receipt/
+  screenshot이 모두 없고 program order상 actual Viewer invocation은 `0`이다.
+- 독립 최소 재현에서 Matplotlib Bbox coordinate `numpy.float64`의 비교와 `and`
+  결과가 `numpy.bool_`이며 표준 JSON encoder가 같은 TypeError를 냈다.
+- D379/numeric audit/Isaac/Kit/PhysX/USD/collider/cylinder/physics/q5/contact/
+  target-IK-path/settings 작업은 모두 `0`이다.
+
+Implication:
+
+- 이번 실패는 Isaac Sim, GPU, PhysX, Rerun 또는 P34 geometry failure가 아니라
+  D381 presentation validation serialization defect다.
+- D380 numeric verdict
+  `D380_FAILED_PART_PROVENANCE_AUDIT_PASS_REPAIR_REQUIRED`, P34 identity=false,
+  `g0a_pass=false`를 그대로 보존한다. D381 full presentation completion은 미완료다.
+- 다음 최소 후보는 별도 승인, 새 forward-only observability-only
+  `D382 [d381_layout_validation_native_scalar_serialization_repair]`이다.
+  JSON-native scalar normalization과 serialize-before-create만 수리하고, D380 입력/
+  표시 사실/worker-viewer 횟수 계약은 동결한다. representation/live identity와 모든
+  target/physics/q5/contact는 여전히 별도 승인이다.
+
+Sources:
+
+- `claudedocs/session_20260725_grasp_g0a_d381_d380_visual_contract_repair.md`
+- `sim_scripts/cyl34_top_view_d381_d380_visual_contract_repair.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d381/attempt1_d380_visual_contract_repair/d381_preregistration.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d381/attempt1_d380_visual_contract_repair/d381_offline_worker_stderr.log`
+- `claudedocs/runtime_logs/grasp_track/g0a_d381/attempt1_d380_visual_contract_repair/d381_offline_worker_supervisor.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d381/attempt1_d380_visual_contract_repair/d381_partial_board_visual_inspection.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d381/attempt1_d380_visual_contract_repair/d381_fail_stop_attestation.json`
+- `START_HERE.md`

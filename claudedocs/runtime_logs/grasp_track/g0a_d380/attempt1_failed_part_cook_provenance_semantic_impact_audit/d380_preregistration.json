@@ -1,0 +1,172 @@
+{
+  "artifact": "D380_PREREGISTRATION_V1",
+  "attempt": "attempt1_failed_part_cook_provenance_semantic_impact_audit",
+  "callback_volume_semantics": "Use the original callback polygon-topology volume already embedded by D379; do not compute a new Qhull volume.",
+  "case": "g0a_d380",
+  "checks": {
+    "d379_all_authored_approximation_convex_hull": true,
+    "d379_all_hull_vertex_limits_64": true,
+    "d379_artifact_exact": true,
+    "d379_authored_rows_34": true,
+    "d379_current_scope_was_offline": true,
+    "d379_failed_parts_17": true,
+    "d379_g0a_false": true,
+    "d379_identity_false": true,
+    "d379_parts_34": true,
+    "d379_property_audit_and_local_bindings_exact": true,
+    "d379_thresholds_exact_unchanged": true,
+    "d379_verdict_exact": true,
+    "dependency_versions_exact": true,
+    "font_bold_exists": true,
+    "font_regular_exists": true,
+    "head_equals_origin_master": true,
+    "interpreter_exact_isaaclab_python": true,
+    "official_sources_embedded": true,
+    "rerun_cli_exists": true,
+    "script_forbidden_imports_absent": true,
+    "sole_measurement_input_exists": true,
+    "sole_measurement_input_sha256_exact": true,
+    "sole_measurement_input_under_d379": true,
+    "start_here_active_case_exact": true
+  },
+  "dependency_versions": {
+    "matplotlib": "3.10.3",
+    "numpy": "1.26.0",
+    "pillow": "11.3.0",
+    "psutil": "5.9.8",
+    "rerun_sdk": "0.34.1",
+    "trimesh": "4.5.1"
+  },
+  "git": {
+    "head": "2acb5b99567946d343e95e61087357193da0826c",
+    "origin_master": "2acb5b99567946d343e95e61087357193da0826c",
+    "subject": "D377(376case)"
+  },
+  "inherited_thresholds_unchanged": {
+    "authored_callback_topology_volume_relative": 0.005,
+    "authored_mass_state_atol": 1e-12,
+    "bounds_tolerance_m": 0.0001,
+    "callback_property_volume_relative": 0.05,
+    "polygon_plane_residual_tolerance_m": 1e-05,
+    "property_mass_state_atol": 1e-09,
+    "surface_tolerance_m": 0.0001
+  },
+  "input_allowlist": [
+    {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d379/attempt2_d372_measurement_field_repair/d379_p34_full_live_identity_evidence.json",
+      "role": "sole measurement authority",
+      "sha256": "8eacbad796e8532c3d856b865e90dc54481f0f2003a266c3ebfaa8e93de37af5"
+    }
+  ],
+  "input_hashes": {
+    "d379_identity_evidence": "8eacbad796e8532c3d856b865e90dc54481f0f2003a266c3ebfaa8e93de37af5"
+  },
+  "interpreter": {
+    "registered": "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+    "registered_resolved": "/home/cgxr/miniconda3/envs/isaaclab/bin/python3.11",
+    "resolved": "/home/cgxr/miniconda3/envs/isaaclab/bin/python3.11",
+    "sys_executable": "/home/cgxr/miniconda3/envs/isaaclab/bin/python"
+  },
+  "new_variables": [
+    "failed_part_cook_provenance_classifier_v1",
+    "body_local_semantic_monotonic_impact_contract_v1"
+  ],
+  "official_sources_inherited_from_d379": [
+    {
+      "applicable_version": "installed omni.physx 107.3.26",
+      "title": "Omni Physics 107.3 - Rigid Bodies",
+      "url": "https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/rigid_bodies_articulations/rigid_bodies.html",
+      "use": "one rigid body may own multiple child colliders"
+    },
+    {
+      "applicable_version": "installed omni.physx 107.3.26",
+      "title": "Omni Physics 107.3 - Query The Mass and Volume",
+      "url": "https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/mass_inertia_queries.html",
+      "use": "VALID-only frozen property-query authority"
+    },
+    {
+      "applicable_version": "installed omni.physx 107.3.26",
+      "title": "Omni Physics 107.3 - Colliders",
+      "url": "https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/rigid_bodies_articulations/collision.html",
+      "use": "convex collider and compound-collider semantics"
+    }
+  ],
+  "pass": true,
+  "prepare_negative_controls": {
+    "controls": {
+      "forbidden_import_mutation_detected": true,
+      "non_d379_path_rejected": true,
+      "relaxed_surface_threshold_differs": true,
+      "wrong_input_hash_rejected": true
+    },
+    "pass": true,
+    "passed": 4,
+    "total": 4
+  },
+  "registered_dirty_baseline": [
+    "M START_HERE.md",
+    " M claudedocs/DECISIONS.md",
+    " M claudedocs/EXPERIMENT_LEDGER.md",
+    " M roarm_rl/viz_debug.py",
+    "?? claudedocs/runtime_logs/grasp_track/g0a_d378/",
+    "?? claudedocs/runtime_logs/grasp_track/g0a_d379/",
+    "?? claudedocs/runtime_logs/grasp_track/g0a_d380/",
+    "?? claudedocs/session_20260724_grasp_g0a_d378_ephemeral_identifier_provenance_and_workload_authority_repair.md",
+    "?? claudedocs/session_20260725_grasp_g0a_d379_p34_full_live_identity_classifier_resume.md",
+    "?? sim_scripts/cyl34_top_view_d378_attempt3_ascii_board_layout_repair.py",
+    "?? sim_scripts/cyl34_top_view_d378_d377_ephemeral_identifier_provenance_and_workload_authority_repair.py",
+    "?? sim_scripts/cyl34_top_view_d379_p34_full_live_identity_classifier_resume.py",
+    "?? sim_scripts/cyl34_top_view_d380_p34_failed_part_cook_provenance_and_semantic_impact_audit.py"
+  ],
+  "registered_execution": {
+    "actual_offline_worker_invocations": 1,
+    "asset_or_usd_reads": 0,
+    "asset_or_usd_writes": 0,
+    "automatic_decomposition_sweeps": 0,
+    "automatic_retries": 0,
+    "board_exact_pixels": [
+      1920,
+      1080
+    ],
+    "bounded_watchdog_seconds": 300.0,
+    "collider_materializations_or_regenerations": 0,
+    "contact_queries": 0,
+    "cylinder_creates_or_writes": 0,
+    "headless_rerun_viewer_max": 1,
+    "isaac_launches": 0,
+    "kit_launches": 0,
+    "material_mass_actuator_physics_setting_changes": 0,
+    "physics_steps": 0,
+    "physx_calls": 0,
+    "public_forwards": 0,
+    "q5_commands": 0,
+    "q5_samples": 0,
+    "save_only_rrd_rbl": true,
+    "target_ik_path_pose_changes": 0
+  },
+  "registered_measurements": [
+    "exact D379 failed set and gate signatures",
+    "JSON numeric exact cooked-vertex subset of authored vertices",
+    "authored original-triangle closure and supporting-plane convexity",
+    "retained/omitted/introduced vertex counts",
+    "D379 directed solid-surface distances and axis bounds",
+    "D379 original callback polygon-topology signed volume loss",
+    "same-transform set-containment effect on jaw/void/clearance"
+  ],
+  "registered_nulls": [
+    "exact internal PhysX cook algorithm/tolerance cause",
+    "actual OPEN jaw clearance or common-frame gap",
+    "mouth/window void volume change",
+    "cylinder-facing face identity",
+    "cylinder/contact/q5/physics/grasp result",
+    "target/IK/path justification"
+  ],
+  "roundoff_policy": "Float64 supporting-plane computations use a machine-epsilon roundoff budget only; it is not a replacement geometry tolerance or D379 acceptance gate.",
+  "source_hashes": {
+    "d380_script": "6a78a39c11ab5d34140fd6dd135975c514b5e6653ba6b6927b7acf16d597f215",
+    "rerun_contract": "aaafcd93b9da3d8a97d61a53753ec9667bb98bec7391c91c98974f7ce9c66c1e",
+    "start_here_active_case_authorization": "83156e8d6667b64d573984188feb815b6758bb47ae08aaf5f93bb61370d8c8fa",
+    "viz_debug": "4b5f821ad43652f529dfaa2f92b2826d9cd4973635e34521cc2b3a93ab0193d0"
+  },
+  "what_and_why": "Audit only the immutable D379 embedded authored/cooked geometry to explain 17 failures and bound geometry-only semantic impact."
+}

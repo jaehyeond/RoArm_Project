@@ -1141,6 +1141,37 @@ def build_rerun_blueprint(mode: str = "robot_geometry") -> Any:
             auto_views=False,
             collapse_panels=True,
         )
+    if mode == "d378_workload_authority_repair":
+        return rrb.Blueprint(
+            rrb.Horizontal(
+                rrb.TimeSeriesView(
+                    origin="/metrics/d378",
+                    contents="/metrics/d378/**",
+                    name="D378 comparator repair stages",
+                ),
+                rrb.Vertical(
+                    rrb.TextLogView(
+                        origin="/events/d378/timeline",
+                        contents="/events/d378/timeline",
+                        name="offline audit order",
+                    ),
+                    rrb.TextLogView(
+                        origin="/events/d378",
+                        contents=[
+                            "/events/d378/verdict",
+                            "/events/d378/boundary",
+                            "/events/d378/scope",
+                        ],
+                        name="verdict and limits",
+                    ),
+                    row_shares=[0.62, 0.38],
+                ),
+                column_shares=[0.44, 0.56],
+            ),
+            auto_layout=False,
+            auto_views=False,
+            collapse_panels=True,
+        )
     if mode != "robot_geometry":
         raise ValueError(f"unsupported Rerun blueprint mode: {mode!r}")
     return rrb.Blueprint(

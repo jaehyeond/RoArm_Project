@@ -1,0 +1,287 @@
+{
+  "artifact": "ROARM_RERUN_ARTIFACT_VALIDATION_V1",
+  "blueprint_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d378/attempt2_preregistration_status_order_repair/d378_workload_authority_repair.rbl",
+  "blueprint_verify": {
+    "attempted": true,
+    "bytes": 43735,
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "verify",
+      "--check-footers",
+      "true",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d378/attempt2_preregistration_status_order_repair/d378_workload_authority_repair.rbl"
+    ],
+    "ok": true,
+    "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d378/attempt2_preregistration_status_order_repair/d378_workload_authority_repair.rbl",
+    "returncode": 0,
+    "sha256": "08e72cbccf3eacc304fb941cec98838ab7de5660232f94378593714d26406e49",
+    "stderr": "2026-07-24T03:50:08.915303Z ERROR re_analytics: Failed to initialize analytics: Read-only file system (os error 30)\n1 file verified without error.\n",
+    "stdout": ""
+  },
+  "bytes": 63972,
+  "component_contract": {
+    "checks": {
+      "/events/d378/boundary": {
+        "observed": [
+          "TextLog:level",
+          "TextLog:text"
+        ],
+        "pass": true,
+        "required": [
+          "TextLog:level",
+          "TextLog:text"
+        ]
+      },
+      "/events/d378/scope": {
+        "observed": [
+          "TextLog:level",
+          "TextLog:text"
+        ],
+        "pass": true,
+        "required": [
+          "TextLog:level",
+          "TextLog:text"
+        ]
+      },
+      "/events/d378/timeline": {
+        "observed": [
+          "TextLog:level",
+          "TextLog:text"
+        ],
+        "pass": true,
+        "required": [
+          "TextLog:level",
+          "TextLog:text"
+        ]
+      },
+      "/events/d378/verdict": {
+        "observed": [
+          "TextLog:level",
+          "TextLog:text"
+        ],
+        "pass": true,
+        "required": [
+          "TextLog:level",
+          "TextLog:text"
+        ]
+      },
+      "/metadata/run": {
+        "observed": [
+          "TextDocument:text"
+        ],
+        "pass": true,
+        "required": [
+          "TextDocument:text"
+        ]
+      },
+      "/metrics/d378/authority_repair_progress": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      }
+    },
+    "pass": true
+  },
+  "entity_path_contract": {
+    "checks": {
+      "/events/d378/boundary": true,
+      "/events/d378/scope": true,
+      "/events/d378/timeline": true,
+      "/events/d378/verdict": true,
+      "/metadata/run": true,
+      "/metrics/d378/authority_repair_progress": true
+    },
+    "exact_non_system_match": true,
+    "forbidden_fragment_absent": {
+      "/\\/": true
+    },
+    "missing_exact": [],
+    "observed_all": [
+      "/__properties",
+      "/blueprint_panel",
+      "/container/04f734a3-bc94-4f44-9a42-46f895d57765",
+      "/container/ce6f35b1-98fb-4a10-a661-fafd7a6b3e78",
+      "/events/d378/boundary",
+      "/events/d378/scope",
+      "/events/d378/timeline",
+      "/events/d378/verdict",
+      "/metadata/run",
+      "/metrics/d378/authority_repair_progress",
+      "/selection_panel",
+      "/time_panel",
+      "/view/57b41ab8-fa19-463b-a88a-c0f045514f55",
+      "/view/57b41ab8-fa19-463b-a88a-c0f045514f55/ViewContents",
+      "/view/a3027a15-4ef1-4695-bf89-36459b8d7943",
+      "/view/a3027a15-4ef1-4695-bf89-36459b8d7943/ViewContents",
+      "/view/d27a9376-a966-47b9-ade2-7139570a36bf",
+      "/view/d27a9376-a966-47b9-ade2-7139570a36bf/ViewContents",
+      "/viewport"
+    ],
+    "observed_non_system": [
+      "/events/d378/boundary",
+      "/events/d378/scope",
+      "/events/d378/timeline",
+      "/events/d378/verdict",
+      "/metadata/run",
+      "/metrics/d378/authority_repair_progress"
+    ],
+    "pass": true,
+    "unexpected_non_system": []
+  },
+  "errors": [],
+  "exact_entity_paths": [
+    "/events/d378/boundary",
+    "/events/d378/scope",
+    "/events/d378/timeline",
+    "/events/d378/verdict",
+    "/metadata/run",
+    "/metrics/d378/authority_repair_progress"
+  ],
+  "exact_timeline_names": [
+    "audit_step",
+    "blueprint",
+    "log_time"
+  ],
+  "expected_entity_components": {
+    "/events/d378/boundary": [
+      "TextLog:level",
+      "TextLog:text"
+    ],
+    "/events/d378/scope": [
+      "TextLog:level",
+      "TextLog:text"
+    ],
+    "/events/d378/timeline": [
+      "TextLog:level",
+      "TextLog:text"
+    ],
+    "/events/d378/verdict": [
+      "TextLog:level",
+      "TextLog:text"
+    ],
+    "/metadata/run": [
+      "TextDocument:text"
+    ],
+    "/metrics/d378/authority_repair_progress": [
+      "Scalars:scalars"
+    ]
+  },
+  "expected_entity_paths": [
+    "/events/d378/boundary",
+    "/events/d378/scope",
+    "/events/d378/timeline",
+    "/events/d378/verdict",
+    "/metadata/run",
+    "/metrics/d378/authority_repair_progress"
+  ],
+  "expected_rerun_version": "0.34.1",
+  "expected_timeline_names": [
+    "audit_step",
+    "blueprint",
+    "log_time"
+  ],
+  "external_rbl_role": "verified fixed-layout export; the 0.34.1 CLI does not guarantee that an external RBL overrides an already-active embedded blueprint",
+  "footer_manifest_present": true,
+  "forbidden_entity_fragments": [
+    "/\\/"
+  ],
+  "headless_render": {
+    "attempted": true,
+    "bytes": 677805,
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "--headless",
+      "--port",
+      "auto",
+      "--window-size",
+      "1920x1080",
+      "--screenshot-to",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d378/attempt2_preregistration_status_order_repair/d378_rerun_inspection.png",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d378/attempt2_preregistration_status_order_repair/d378_workload_authority_repair.rrd"
+    ],
+    "file_nonzero": true,
+    "ok": true,
+    "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d378/attempt2_preregistration_status_order_repair/d378_rerun_inspection.png",
+    "returncode": 0,
+    "sha256": "267735d18052a01d9e514bc3510441c390f17711efc05ca2cfefaf16ec38333b",
+    "stderr": "2026-07-24T03:50:08.961122Z ERROR re_analytics: Failed to initialize analytics: Read-only file system (os error 30)\n2026-07-24T03:50:08.963122Z  INFO re_perf_telemetry::telemetry: Telemetry initialized enabled=false service=rerun trace_mode=\"off\" traces=off logs=off metrics=off tracy=false\n2026-07-24T03:50:09.057935Z  WARN egui_wgpu: Software rasterizer detected - loss of performance expected. backend: Vulkan, device_type: Cpu, name: \"llvmpipe (LLVM 15.0.7, 256 bits)\", driver: \"llvmpipe\", driver_info: \"Mesa 23.2.1-1ubuntu3.1~22.04.4 (LLVM 15.0.7)\", vendor: Mesa (0x10005), subgroup_size: 8..=8, transient_saves_memory: false\n2026-07-24T03:50:09.060420Z  WARN re_renderer::context: Software rasterizer detected - expect poor performance. See: https://www.rerun.io/docs/overview/installing-rerun/troubleshooting#graphics-issues\n2026-07-24T03:50:09.060428Z  INFO re_renderer::context: wgpu adapter backend: Vulkan, device_type: Cpu, name: \"llvmpipe (LLVM 15.0.7, 256 bits)\", driver: \"llvmpipe\", driver_info: \"Mesa 23.2.1-1ubuntu3.1~22.04.4 (LLVM 15.0.7)\"\n2026-07-24T03:50:09.165224Z ERROR re_grpc_server: message proxy server crashed: Operation not permitted (os error 1)\n2026-07-24T03:50:09.165550Z  INFO re_importer::import_file: Loading \"/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d378/attempt2_preregistration_status_order_repair/d378_workload_authority_repair.rrd\"…\n2026-07-24T03:50:09.408019Z  INFO re_viewer::headless: Headless viewer running at 1920x1080.\n2026-07-24T03:50:09.903359Z  INFO re_viewer::screenshotter: Screenshot saved to \"/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d378/attempt2_preregistration_status_order_repair/d378_rerun_inspection.png\"\n2026-07-24T03:50:09.913552Z  INFO re_viewer::screenshotter: Screenshot copied to clipboard\n2026-07-24T03:50:09.915806Z  INFO re_viewer::headless: Headless viewer received close request, shutting down.\n",
+    "stdout": ""
+  },
+  "human_visual_inspection_required": true,
+  "pass": true,
+  "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d378/attempt2_preregistration_status_order_repair/d378_workload_authority_repair.rrd",
+  "print_verbose": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "print",
+      "-v",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d378/attempt2_preregistration_status_order_repair/d378_workload_authority_repair.rrd"
+    ],
+    "ok": true,
+    "returncode": 0,
+    "stderr": "2026-07-24T03:50:08.858705Z ERROR re_analytics: Failed to initialize analytics: Read-only file system (os error 30)\n",
+    "stdout": "Showing data after migration to latest Rerun version\nStoreInfo {\n    store_id: StoreId(\n        Recording,\n        \"roarm_g0a_d378_workload_authority_repair\",\n        \"g0a_d378_workload_authority_repair\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nStoreInfo {\n    store_id: StoreId(\n        Recording,\n        \"roarm_g0a_d378_workload_authority_repair\",\n        \"g0a_d378_workload_authority_repair\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nChunk(chunk_18C51D44B92E61CF7a29b959dbca6ac6) with 1 rows (632 B) - /__properties - data columns: [/__properties@RecordingInfo:start_time]\nStoreInfo {\n    store_id: StoreId(\n        Blueprint,\n        \"roarm_g0a_d378_workload_authority_repair\",\n        \"rec_a1712eed1410428eba93fb3d224a8e73\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nStoreInfo {\n    store_id: StoreId(\n        Blueprint,\n        \"roarm_g0a_d378_workload_authority_repair\",\n        \"rec_a1712eed1410428eba93fb3d224a8e73\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nChunk(chunk_18C51D44BFCA171E1b998357e892d823) with 1 rows (885 B) - /time_panel - data columns: [/time_panel@TimePanelBlueprint:state]\nChunk(chunk_18C51D44BFCA96EA1b998357e892d824) with 1 rows (926 B) - /view/a3027a15-4ef1-4695-bf89-36459b8d7943/ViewContents - data columns: [/view/a3027a15-4ef1-4695-bf89-36459b8d7943/ViewContents@ViewContents:query]\nChunk(chunk_18C51D44BFCAA68E1b998357e892d825) with 1 rows (928 B) - /view/57b41ab8-fa19-463b-a88a-c0f045514f55/ViewContents - data columns: [/view/57b41ab8-fa19-463b-a88a-c0f045514f55/ViewContents@ViewContents:query]\nChunk(chunk_18C51D44BFCAAF6E1b998357e892d826) with 1 rows (1.2 KiB) - /view/57b41ab8-fa19-463b-a88a-c0f045514f55 - data columns: [/view/57b41ab8-fa19-463b-a88a-c0f045514f55@ViewBlueprint:class_identifier /view/57b41ab8-fa19-463b-a88a-c0f045514f55@ViewBlueprint:display_name /view/57b41ab8-fa19-463b-a88a-c0f045514f55@ViewBlueprint:space_origin]\nChunk(chunk_18C51D44BFCACB3B1b998357e892d827) with 1 rows (1.2 KiB) - /view/d27a9376-a966-47b9-ade2-7139570a36bf - data columns: [/view/d27a9376-a966-47b9-ade2-7139570a36bf@ViewBlueprint:class_identifier /view/d27a9376-a966-47b9-ade2-7139570a36bf@ViewBlueprint:display_name /view/d27a9376-a966-47b9-ade2-7139570a36bf@ViewBlueprint:space_origin]\nChunk(chunk_18C51D44BFCAE9001b998357e892d828) with 1 rows (1.2 KiB) - /view/a3027a15-4ef1-4695-bf89-36459b8d7943 - data columns: [/view/a3027a15-4ef1-4695-bf89-36459b8d7943@ViewBlueprint:class_identifier /view/a3027a15-4ef1-4695-bf89-36459b8d7943@ViewBlueprint:display_name /view/a3027a15-4ef1-4695-bf89-36459b8d7943@ViewBlueprint:space_origin]\nChunk(chunk_18C51D44BFCAFBF31b998357e892d829) with 1 rows (951 B) - /view/d27a9376-a966-47b9-ade2-7139570a36bf/ViewContents - data columns: [/view/d27a9376-a966-47b9-ade2-7139570a36bf/ViewContents@ViewContents:query]\nChunk(chunk_18C51D44BFCB0D081b998357e892d82a) with 1 rows (1.2 KiB) - /viewport - data columns: [/viewport@ViewportBlueprint:auto_layout /viewport@ViewportBlueprint:auto_views /viewport@ViewportBlueprint:root_container]\nChunk(chunk_18C51D44BFCB1E991b998357e892d82b) with 1 rows (883 B) - /blueprint_panel - data columns: [/blueprint_panel@PanelBlueprint:state]\nChunk(chunk_18C51D44BFCB2F9A1b998357e892d82c) with 1 rows (883 B) - /selection_panel - data columns: [/selection_panel@PanelBlueprint:state]\nChunk(chunk_18C51D44BFCB42191b998357e892d82d) with 1 rows (1.2 KiB) - /container/04f734a3-bc94-4f44-9a42-46f895d57765 - data columns: [/container/04f734a3-bc94-4f44-9a42-46f895d57765@ContainerBlueprint:container_kind /container/04f734a3-bc94-4f44-9a42-46f895d57765@ContainerBlueprint:contents /container/04f734a3-bc94-4f44-9a42-46f895d57765@ContainerBlueprint:row_shares]\nChunk(chunk_18C51D44BFCB4EF71b998357e892d82e) with 1 rows (1.2 KiB) - /container/ce6f35b1-98fb-4a10-a661-fafd7a6b3e78 - data columns: [/container/ce6f35b1-98fb-4a10-a661-fafd7a6b3e78@ContainerBlueprint:col_shares /container/ce6f35b1-98fb-4a10-a661-fafd7a6b3e78@ContainerBlueprint:container_kind /container/ce6f35b1-98fb-4a10-a661-fafd7a6b3e78@ContainerBlueprint:contents]\nBlueprintActivationCommand(StoreId(Blueprint, \"roarm_g0a_d378_workload_authority_repair\", \"rec_a1712eed1410428eba93fb3d224a8e73\"), make_active: true, make_default: true)\nChunk(chunk_18C51D44BFD7B5BF05f5cafbac74c142) with 1 rows (834 B) - /events/d378/verdict - data columns: [/events/d378/verdict@TextLog:level /events/d378/verdict@TextLog:text]\nChunk(chunk_18C51D44BFD8154105f5cafbac74c143) with 1 rows (849 B) - /events/d378/boundary - data columns: [/events/d378/boundary@TextLog:level /events/d378/boundary@TextLog:text]\nChunk(chunk_18C51D44BFD839A805f5cafbac74c144) with 5 rows (984 B) - /metrics/d378/authority_repair_progress - data columns: [/metrics/d378/authority_repair_progress@Scalars:scalars]\nChunk(chunk_18C51D44BFD8DF0705f5cafbac74c145) with 1 rows (839 B) - /events/d378/scope - data columns: [/events/d378/scope@TextLog:level /events/d378/scope@TextLog:text]\nChunk(chunk_18C51D44BFD9063905f5cafbac74c146) with 5 rows (1.3 KiB) - /events/d378/timeline - data columns: [/events/d378/timeline@TextLog:level /events/d378/timeline@TextLog:text]\nChunk(chunk_18C51D44BFD9697005f5cafbac74c147) with 1 rows (979 B) - /metadata/run - data columns: [/metadata/run@TextDocument:text]\n"
+  },
+  "rendered_blueprint_source": "active blueprint embedded in the RRD",
+  "screenshot_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d378/attempt2_preregistration_status_order_repair/d378_rerun_inspection.png",
+  "screenshot_port": "auto",
+  "screenshot_window_size": "1920x1080",
+  "sha256": "6e605b48e88e6aa0dce4b264f2db193b3dbfd9ff702895ea401a57e6763344e8",
+  "stats": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "stats",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d378/attempt2_preregistration_status_order_repair/d378_workload_authority_repair.rrd"
+    ],
+    "ok": true,
+    "returncode": 0,
+    "stderr": "2026-07-24T03:50:08.803574Z ERROR re_analytics: Failed to initialize analytics: Read-only file system (os error 30)\n2026-07-24T03:50:08.806518Z  INFO rerun::commands::rrd::stats: processing input…\n2026-07-24T03:50:08.808250Z  INFO rerun::commands::rrd::stats: computing stats…\n",
+    "stdout": "Overview\n----------\nnum_chunks = 19\nnum_entity_paths = 19\nnum_chunks_without_components = 0 (0.000%)\nnum_rows = 27\nnum_rows_min = 1\nnum_rows_max = 5\nnum_rows_avg = 1.421\nnum_static = 5\nnum_indexes_min = 0\nnum_indexes_max = 2\nnum_indexes_avg = 1.474\nnum_components_min = 1\nnum_components_max = 3\nnum_components_avg = 1.842\n\nNum chunks per entity\n---------------------\n/__properties: 1\n/blueprint_panel: 1\n/container/04f734a3-bc94-4f44-9a42-46f895d57765: 1\n/container/ce6f35b1-98fb-4a10-a661-fafd7a6b3e78: 1\n/events/d378/boundary: 1\n/events/d378/scope: 1\n/events/d378/timeline: 1\n/events/d378/verdict: 1\n/metadata/run: 1\n/metrics/d378/authority_repair_progress: 1\n/selection_panel: 1\n/time_panel: 1\n/view/57b41ab8-fa19-463b-a88a-c0f045514f55: 1\n/view/57b41ab8-fa19-463b-a88a-c0f045514f55/ViewContents: 1\n/view/a3027a15-4ef1-4695-bf89-36459b8d7943: 1\n/view/a3027a15-4ef1-4695-bf89-36459b8d7943/ViewContents: 1\n/view/d27a9376-a966-47b9-ade2-7139570a36bf: 1\n/view/d27a9376-a966-47b9-ade2-7139570a36bf/ViewContents: 1\n/viewport: 1\n\nNum chunks per index\n--------------------\naudit_step: 2\nblueprint: 12\nlog_time: 14\n\nNum chunks per component\n------------------------\nContainerBlueprint:col_shares: 1\nContainerBlueprint:container_kind: 2\nContainerBlueprint:contents: 2\nContainerBlueprint:row_shares: 1\nPanelBlueprint:state: 2\nRecordingInfo:start_time: 1\nScalars:scalars: 1\nTextDocument:text: 1\nTextLog:level: 4\nTextLog:text: 4\nTimePanelBlueprint:state: 1\nViewBlueprint:class_identifier: 3\nViewBlueprint:display_name: 3\nViewBlueprint:space_origin: 3\nViewContents:query: 3\nViewportBlueprint:auto_layout: 1\nViewportBlueprint:auto_views: 1\nViewportBlueprint:root_container: 1\n\nSize (schema + data, compressed)\n--------------------------------\nipc_size_bytes_total = 25.2 KiB\nipc_size_bytes_min = 913 B\nipc_size_bytes_max = 1.7 KiB\nipc_size_bytes_avg = 1.3 KiB\nipc_size_bytes_p50 = 1.2 KiB\nipc_size_bytes_p90 = 1.6 KiB\nipc_size_bytes_p95 = 1.7 KiB\nipc_size_bytes_p99 = 1.7 KiB\nipc_size_bytes_p999 = 1.7 KiB\n\nSize (schema + data, uncompressed)\n----------------------------------\nipc_size_bytes_total = 57.6 KiB\nipc_size_bytes_min = 1.7 KiB\nipc_size_bytes_max = 4.1 KiB\nipc_size_bytes_avg = 3.0 KiB\nipc_size_bytes_p50 = 2.6 KiB\nipc_size_bytes_p90 = 4.1 KiB\nipc_size_bytes_p95 = 4.1 KiB\nipc_size_bytes_p99 = 4.1 KiB\nipc_size_bytes_p999 = 4.1 KiB\n\nSize (schema only, uncompressed)\n--------------------------------\nipc_size_bytes_total = 31.7 KiB\nipc_size_bytes_min = 1016 B\nipc_size_bytes_max = 2.4 KiB\nipc_size_bytes_avg = 1.7 KiB\nipc_size_bytes_p50 = 1.5 KiB\nipc_size_bytes_p90 = 2.3 KiB\nipc_size_bytes_p95 = 2.4 KiB\nipc_size_bytes_p99 = 2.4 KiB\nipc_size_bytes_p999 = 2.4 KiB\n\nSize (data only, uncompressed)\n------------------------------\nipc_size_bytes_total = 25.9 KiB\nipc_size_bytes_min = 656 B\nipc_size_bytes_max = 1.9 KiB\nipc_size_bytes_avg = 1.4 KiB\nipc_size_bytes_p50 = 1.2 KiB\nipc_size_bytes_p90 = 1.9 KiB\nipc_size_bytes_p95 = 1.9 KiB\nipc_size_bytes_p99 = 1.9 KiB\nipc_size_bytes_p999 = 1.9 KiB\n\nUnsorted timelines\n------------------\n(none — every timeline on every chunk is sorted)\n\nFooters\n-------\nnum_manifests = 2 (one per recording)\n\nFooter manifest for StoreId(Recording, \"roarm_g0a_d378_workload_authority_repair\", \"g0a_d378_workload_authority_repair\")\n  num_chunks_indexed = 7\n  num_static_chunks = 5\n  num_entity_paths = 7\n  manifest_num_columns = 34\n  sorbet_schema_num_fields = 14\n  sorbet_schema_sha256 = 384c89c5a13fa77dba7da0709c6e3089c2e13b9ac9414345c2bf453091cdeb61\n  chunk_byte_size_total (native) = 9.6 KiB\n  chunk_byte_size_uncompressed_total = 17.7 KiB\n\nFooter manifest for StoreId(Blueprint, \"roarm_g0a_d378_workload_authority_repair\", \"rec_a1712eed1410428eba93fb3d224a8e73\")\n  num_chunks_indexed = 12\n  num_static_chunks = 0\n  num_entity_paths = 12\n  manifest_num_columns = 102\n  sorbet_schema_num_fields = 27\n  sorbet_schema_sha256 = 64a676fc8d777d26133f5c7a68a0aee99a6256b0774e8ebc743c44fa0572e37d\n  chunk_byte_size_total (native) = 17.8 KiB\n  chunk_byte_size_uncompressed_total = 39.9 KiB\n"
+  },
+  "timeline_contract": {
+    "checks": {
+      "audit_step": true,
+      "blueprint": true,
+      "log_time": true
+    },
+    "exact_match": true,
+    "observed": [
+      "audit_step",
+      "blueprint",
+      "log_time"
+    ],
+    "pass": true
+  },
+  "verify": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "verify",
+      "--check-footers",
+      "true",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d378/attempt2_preregistration_status_order_repair/d378_workload_authority_repair.rrd"
+    ],
+    "ok": true,
+    "returncode": 0,
+    "stderr": "2026-07-24T03:50:08.750626Z ERROR re_analytics: Failed to initialize analytics: Read-only file system (os error 30)\n1 file verified without error.\n",
+    "stdout": ""
+  },
+  "version": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "--version"
+    ],
+    "expected_version_match": true,
+    "ok": true,
+    "returncode": 0,
+    "stderr": "2026-07-24T03:50:08.702875Z ERROR re_analytics: Failed to initialize analytics: Read-only file system (os error 30)\n",
+    "stdout": "rerun-cli 0.34.1 (base lance map_view nasm native_viewer oss_server perf_telemetry re_server release_full release_no_web_viewer web_viewer) [rustc 1.92.0 (ded5c06cf 2025-12-08), LLVM 21.1.3] x86_64-unknown-linux-gnu prepare-release-0.34.1 4efb18f, built 2026-07-07T16:20:42.173372603Z\nVideo features: av1 ffmpeg nasm\n"
+  }
+}

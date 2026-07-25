@@ -1,0 +1,215 @@
+{
+  "artifact": "D381_PREREGISTRATION_V1",
+  "attempt": "attempt1_d380_visual_contract_repair",
+  "case": "g0a_d381",
+  "checks": {
+    "all_d380_input_hashes_exact": true,
+    "all_d380_inputs_exist": true,
+    "d380_completion_failed_only_as_separate_boundary": true,
+    "d380_evidence_audit_pass": true,
+    "d380_facts_exact": true,
+    "d380_manual_failed_for_registered_reasons": true,
+    "d380_rerun_validation_pass": true,
+    "dependency_versions_exact": true,
+    "fonts_exist": true,
+    "head_equals_origin_master": true,
+    "input_allowlist_only_under_d380": true,
+    "interpreter_exact": true,
+    "rerun_cli_exists": true,
+    "script_forbidden_imports_absent": true,
+    "start_here_authorizes_exact_case_and_path": true
+  },
+  "dependency_versions": {
+    "matplotlib": "3.10.3",
+    "numpy": "1.26.0",
+    "pillow": "11.3.0",
+    "psutil": "5.9.8",
+    "pyarrow": "23.0.1",
+    "rerun_sdk": "0.34.1"
+  },
+  "frozen_display_facts": {
+    "actual_open_clearance_mm": null,
+    "all_parts": 34,
+    "authored_vertices": 401,
+    "cylinder_or_contact_result": null,
+    "failed_parts": 17,
+    "failed_volume_loss_mm3": 341.24192512757054,
+    "failed_volume_loss_percent": 3.91834189876502,
+    "g0a_pass": false,
+    "gripper_failed": 13,
+    "introduced_or_moved": 0,
+    "jaw_separation_bound_mm": 1.1258255122580576,
+    "link5_failed": 4,
+    "omitted_over_0_1mm": 181,
+    "omitted_vertices": 223,
+    "p34_identity_pass": false,
+    "retained_vertices": 178,
+    "verdict": "D380_FAILED_PART_PROVENANCE_AUDIT_PASS_REPAIR_REQUIRED"
+  },
+  "frozen_display_facts_sha256": "6ad196b4289854742afe111c143372ea7dc38e68e538d845b8359d0bdea98e36",
+  "git": {
+    "head": "2acb5b99567946d343e95e61087357193da0826c",
+    "origin_master": "2acb5b99567946d343e95e61087357193da0826c",
+    "subject": "D377(376case)"
+  },
+  "input_allowlist": [
+    {
+      "name": "completion_fail",
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d380/attempt1_failed_part_cook_provenance_semantic_impact_audit/d380_completion_summary.json",
+      "sha256": "b163e76fec3f08caf41bdd754dcb5bf97752384e0d7cd9a6d4970262fbe43421"
+    },
+    {
+      "name": "evidence",
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d380/attempt1_failed_part_cook_provenance_semantic_impact_audit/d380_p34_failed_part_cook_provenance_evidence.json",
+      "sha256": "4c64d08e117501dd15a5836ce56ef8b963d188044beac465e645e53a17710bd1"
+    },
+    {
+      "name": "failed_board",
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d380/attempt1_failed_part_cook_provenance_semantic_impact_audit/d380_p34_failed_part_cook_provenance_1920x1080.png",
+      "sha256": "61317db2dd22e94f35ea37e8b9258fe02eba29e57ec92b96d014356d14a4d9ca"
+    },
+    {
+      "name": "failed_screenshot",
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d380/attempt1_failed_part_cook_provenance_semantic_impact_audit/d380_rerun_inspection.png",
+      "sha256": "730374f419654e829177a426418ca2756fc503e59f563ace01f770b3c9bcb8c6"
+    },
+    {
+      "name": "manual_fail",
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d380/attempt1_failed_part_cook_provenance_semantic_impact_audit/d380_manual_visual_inspection.json",
+      "sha256": "edbbbbc3c018a27069d5675695ecbc8e204529bd71e2ec6c4bce72636371e10e"
+    },
+    {
+      "name": "metrics_csv",
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d380/attempt1_failed_part_cook_provenance_semantic_impact_audit/d380_failed_part_metrics.csv",
+      "sha256": "885806a2164c0703d8ecf2594ff19afacd86a11fdb648bb593415e6281ec1d9c"
+    },
+    {
+      "name": "rbl",
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d380/attempt1_failed_part_cook_provenance_semantic_impact_audit/d380_p34_failed_part_cook_provenance.rbl",
+      "sha256": "a2b8eed159ecb48b4c816a5e0b0565bc36796f7f1fb05dc92923a73b1115683f"
+    },
+    {
+      "name": "rerun_validation",
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d380/attempt1_failed_part_cook_provenance_semantic_impact_audit/d380_rerun_validation.json",
+      "sha256": "2f41362a0a24b1dfd8e7f143798478b85ff9a05e22e6d72e06faa8b406891e05"
+    },
+    {
+      "name": "rrd",
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d380/attempt1_failed_part_cook_provenance_semantic_impact_audit/d380_p34_failed_part_cook_provenance.rrd",
+      "sha256": "7ae91348bc6cc64b583c1e92ff2ea8776647a660042471a075d9216b9fadcaff"
+    },
+    {
+      "name": "supervisor",
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d380/attempt1_failed_part_cook_provenance_semantic_impact_audit/d380_offline_worker_supervisor.json",
+      "sha256": "e14f7bee95e118c67d8194ba6d46abc13166f5382b90be3ca67f3beefe1a13a7"
+    },
+    {
+      "name": "worker_claim",
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d380/attempt1_failed_part_cook_provenance_semantic_impact_audit/d380_offline_worker_claim.json",
+      "sha256": "32b9fb3958f8e9dc354bfb826fc7b672f9872838ec9ded51c9f59cf45d07bf53"
+    }
+  ],
+  "input_hashes": {
+    "completion_fail": "b163e76fec3f08caf41bdd754dcb5bf97752384e0d7cd9a6d4970262fbe43421",
+    "evidence": "4c64d08e117501dd15a5836ce56ef8b963d188044beac465e645e53a17710bd1",
+    "failed_board": "61317db2dd22e94f35ea37e8b9258fe02eba29e57ec92b96d014356d14a4d9ca",
+    "failed_screenshot": "730374f419654e829177a426418ca2756fc503e59f563ace01f770b3c9bcb8c6",
+    "manual_fail": "edbbbbc3c018a27069d5675695ecbc8e204529bd71e2ec6c4bce72636371e10e",
+    "metrics_csv": "885806a2164c0703d8ecf2594ff19afacd86a11fdb648bb593415e6281ec1d9c",
+    "rbl": "a2b8eed159ecb48b4c816a5e0b0565bc36796f7f1fb05dc92923a73b1115683f",
+    "rerun_validation": "2f41362a0a24b1dfd8e7f143798478b85ff9a05e22e6d72e06faa8b406891e05",
+    "rrd": "7ae91348bc6cc64b583c1e92ff2ea8776647a660042471a075d9216b9fadcaff",
+    "supervisor": "e14f7bee95e118c67d8194ba6d46abc13166f5382b90be3ca67f3beefe1a13a7",
+    "worker_claim": "32b9fb3958f8e9dc354bfb826fc7b672f9872838ec9ded51c9f59cf45d07bf53"
+  },
+  "negative_controls": {
+    "controls": {
+      "decision_content_in_buffer_rejected": true,
+      "display_fact_mutation_rejected": true,
+      "g0a_flip_rejected": true,
+      "numeric_audit_nonzero_rejected": true,
+      "p34_identity_flip_rejected": true,
+      "second_viewer_request_rejected": true,
+      "synthetic_left_clip_detectable": true,
+      "synthetic_overlap_detectable": true,
+      "wrong_board_size_rejected": true,
+      "wrong_evidence_hash_rejected": true
+    },
+    "pass": true,
+    "passed": 10,
+    "total": 10
+  },
+  "new_variables": [
+    "d380_board_pixel_layout_repair_v1",
+    "d380_rerun_notification_buffer_layout_v1"
+  ],
+  "pass": true,
+  "registered_dirty_baseline": [
+    "M START_HERE.md",
+    " M claudedocs/DECISIONS.md",
+    " M claudedocs/EXPERIMENT_LEDGER.md",
+    " M roarm_rl/viz_debug.py",
+    "?? claudedocs/runtime_logs/grasp_track/g0a_d378/",
+    "?? claudedocs/runtime_logs/grasp_track/g0a_d379/",
+    "?? claudedocs/runtime_logs/grasp_track/g0a_d380/",
+    "?? claudedocs/runtime_logs/grasp_track/g0a_d381/",
+    "?? claudedocs/session_20260724_grasp_g0a_d378_ephemeral_identifier_provenance_and_workload_authority_repair.md",
+    "?? claudedocs/session_20260725_grasp_g0a_d379_p34_full_live_identity_classifier_resume.md",
+    "?? claudedocs/session_20260725_grasp_g0a_d380_p34_failed_part_cook_provenance_and_semantic_impact_audit.md",
+    "?? sim_scripts/cyl34_top_view_d378_attempt3_ascii_board_layout_repair.py",
+    "?? sim_scripts/cyl34_top_view_d378_d377_ephemeral_identifier_provenance_and_workload_authority_repair.py",
+    "?? sim_scripts/cyl34_top_view_d379_p34_full_live_identity_classifier_resume.py",
+    "?? sim_scripts/cyl34_top_view_d380_p34_failed_part_cook_provenance_and_semantic_impact_audit.py",
+    "?? sim_scripts/cyl34_top_view_d381_d380_visual_contract_repair.py"
+  ],
+  "registered_execution": {
+    "actual_offline_presentation_workers": 1,
+    "asset_or_usd_reads": 0,
+    "asset_or_usd_writes": 0,
+    "automatic_decomposition_sweeps": 0,
+    "automatic_viewer_retries": 0,
+    "automatic_worker_retries": 0,
+    "board_exact_pixels": [
+      1920,
+      1080
+    ],
+    "bounded_viewer_timeout_seconds": 240.0,
+    "bounded_worker_watchdog_seconds": 300.0,
+    "collider_materializations_or_regenerations": 0,
+    "contact_queries": 0,
+    "cylinder_creates_or_writes": 0,
+    "d379_reads": 0,
+    "isaac_launches": 0,
+    "kit_launches": 0,
+    "material_mass_actuator_physics_setting_changes": 0,
+    "numeric_or_geometry_audit_invocations": 0,
+    "physics_steps": 0,
+    "physx_calls": 0,
+    "public_forwards": 0,
+    "q5_commands": 0,
+    "q5_samples": 0,
+    "rerun_viewer_invocations": 1,
+    "target_ik_path_pose_changes": 0
+  },
+  "registered_repairs": [
+    "exact 1920x1080 board title/subtitle/panel separation",
+    "all 34 bar-chart tick labels inside canvas",
+    "D380 board geometry crops reused without rerendering geometry",
+    "D380 RRD recording-store-only semantic projection",
+    "new active blueprint with right 28% empty notification buffer",
+    "one headless Viewer capture and original-resolution inspection"
+  ],
+  "registered_unchanged": {
+    "actual_open_clearance_mm": null,
+    "cylinder_or_contact_result": null,
+    "d380_numeric_verdict": "D380_FAILED_PART_PROVENANCE_AUDIT_PASS_REPAIR_REQUIRED",
+    "g0a_pass": false,
+    "p34_identity_pass": false
+  },
+  "source_hashes": {
+    "d381_script": "b58a60ad8f0d8873973c9171f03cb7bd75401c205db074a49a9a498d98adbd2d",
+    "rerun_contract": "aaafcd93b9da3d8a97d61a53753ec9667bb98bec7391c91c98974f7ce9c66c1e",
+    "start_here_active_case_authorization": "658636982060c9203856b728b865e14d3b80752441fb41468f036dd0d01bd5b0"
+  },
+  "what_and_why": "Repair only D380 presentation overlap/clipping from immutable D380 artifacts, preserving its numeric verdict and all nulls."
+}

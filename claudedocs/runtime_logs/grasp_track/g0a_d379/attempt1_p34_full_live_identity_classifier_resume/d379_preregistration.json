@@ -1,0 +1,1043 @@
+{
+  "artifact": "D379_PREREGISTRATION_V1",
+  "attempt": "attempt1_p34_full_live_identity_classifier_resume",
+  "authorities": {
+    "d343_typed_float32_contract_retest_count": 0,
+    "d372_float64_geometry": true,
+    "d373_frozen_instance_witnesses": true,
+    "d375_classifier_code_and_thresholds": true,
+    "d377_clean_raw_preclose_supervisor": true,
+    "d378_corrected_termination_workload": true
+  },
+  "case": "g0a_d379",
+  "checks": {
+    "d343_summary_and_evidence_pass": true,
+    "d343_typed_contract_exact": true,
+    "d372_completion_pass": true,
+    "d372_evidence_pass": false,
+    "d375_registered_identity_contract_exact": true,
+    "d378_corrected_authority_exact": true,
+    "d379_output_root_is_forward_only_dirty_path": true,
+    "dirty_paths_exactly_registered_D378_plus_D379": true,
+    "fixed_input_hashes_exact": true,
+    "fonts_exist": true,
+    "forbidden_NVIDIA_modules_absent": true,
+    "head_equals_origin_master": true,
+    "immutable_inventories_exact": true,
+    "offline_dependencies_present": true,
+    "prepare_negative_controls_pass": true,
+    "python_exact": true,
+    "registered_dirty_baseline_all_present": true,
+    "repo_root_sys_path_zero": true,
+    "rerun_cli_exists": true,
+    "rerun_sdk_exact": true,
+    "start_here_attempt_path_registered": true
+  },
+  "environment": {
+    "dependency_preflight": {
+      "modules": {
+        "PIL": {
+          "distribution": "Pillow",
+          "module_spec_present": true,
+          "version": "11.3.0"
+        },
+        "matplotlib": {
+          "distribution": "matplotlib",
+          "module_spec_present": true,
+          "version": "3.10.3"
+        },
+        "rerun": {
+          "distribution": "rerun-sdk",
+          "module_spec_present": true,
+          "version": "0.34.1"
+        },
+        "trimesh": {
+          "distribution": "trimesh",
+          "module_spec_present": true,
+          "version": "4.5.1"
+        }
+      },
+      "pass": true
+    },
+    "forbidden_modules_loaded": [],
+    "numpy": "1.26.0",
+    "python": "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+    "rerun_cli": "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+    "rerun_sdk": "0.34.1",
+    "trimesh": "4.5.1"
+  },
+  "expected_fixed_hashes": {
+    "claudedocs/runtime_logs/grasp_track/g0a_d343/d343_usd_typed_float_readback_evidence.json": "95bb4e3787d300071f1bac22037814b732781cd72a69a0334a34a05a50ac920b",
+    "claudedocs/runtime_logs/grasp_track/g0a_d343/d343_usd_typed_float_readback_summary.json": "880601aac768df38675603828258850aea796b6436a299c46f8cc489ed8b00da",
+    "claudedocs/runtime_logs/grasp_track/g0a_d372/attempt2_external_schema_path_repair/d372_completion_summary.json": "57f3ed8fe6f057d059980a78bb51be8e881d8300297a4f41def6ddf94ad0cf43",
+    "claudedocs/runtime_logs/grasp_track/g0a_d372/attempt2_external_schema_path_repair/d372_professor_semantic_candidate_evidence.json": "d68f658089aaf838ff454e9d0b301ec3f602785a3a730b3c329aa7785010e984",
+    "claudedocs/runtime_logs/grasp_track/g0a_d372/attempt2_external_schema_path_repair/d372_professor_semantic_candidate_geometry.json": "12fd1f32c35dfb9ae36cbbb412f6a51536aa1cc07c2dc17d05a5d189f3ee83e4",
+    "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/d373_worker_raw_summary.json": "dd57da307acf6134487bcd1dfa4a847fd41f24832177421f6291c45b06091373",
+    "claudedocs/runtime_logs/grasp_track/g0a_d375/attempt2_external_gpu_attestation_repair/d375_preregistration.json": "4048cc8201029e4f4d196fe6f68e1f0fdfe90907627b20edeb57ca9a6709744b",
+    "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_preregistration.json": "01cc3f55e2bb5e7718b5eed210501a37622bc731dbe9e4bc623f97e91f885d87",
+    "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_worker_preclose_sentinel.json": "4a312e20b4444f84897864e013b1f4eb74ce57aeb52377bfaa0ee9e3d068cc89",
+    "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_worker_raw_summary.json": "f14d2cf38cffc03a3121719a4dac0a62d612b46926a5ff6afcc10cd143717fb1",
+    "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_worker_supervisor.json": "1c0a4754da7fa0bae748e6c1095a1c39982ab50cef6202c6918f742fb635ce49",
+    "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt2_preregistration_status_order_repair/d378_workload_authority_repair_evidence.json": "e9c3d1cadf9cc9516d0d08792a44b6d824fea7ac8cd0849dffc9a25f3bafda88",
+    "sim_scripts/cyl34_top_view_d373_p34_live_asset_identity_preflight.py": "df5e404133ff22846cec469ccfdb969946288a72d6d040a3564a9bc3ed8ba2af",
+    "sim_scripts/cyl34_top_view_d375_p34_live_asset_identity_contract_repair.py": "70cb1bf9b0d518117fe90c848a9cefbdb95c8a0cabd4f3fa0fc5a37aae29c5e1"
+  },
+  "expected_inventory_checks": {
+    "claudedocs/lab_meeting/20260715/d334_collision_table": true,
+    "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses": true,
+    "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses": true
+  },
+  "failure_capable_post_controls": [
+    "delete one callback polygon must break closed topology",
+    "perturb mass beyond inherited 1e-9 guard must be detected"
+  ],
+  "forward_only_output": "claudedocs/runtime_logs/grasp_track/g0a_d379/attempt1_p34_full_live_identity_classifier_resume",
+  "git": {
+    "expected_dirty_paths": [
+      "START_HERE.md",
+      "claudedocs/DECISIONS.md",
+      "claudedocs/EXPERIMENT_LEDGER.md",
+      "claudedocs/runtime_logs/grasp_track/g0a_d378/",
+      "claudedocs/runtime_logs/grasp_track/g0a_d379/",
+      "claudedocs/session_20260724_grasp_g0a_d378_ephemeral_identifier_provenance_and_workload_authority_repair.md",
+      "roarm_rl/viz_debug.py",
+      "sim_scripts/cyl34_top_view_d378_attempt3_ascii_board_layout_repair.py",
+      "sim_scripts/cyl34_top_view_d378_d377_ephemeral_identifier_provenance_and_workload_authority_repair.py",
+      "sim_scripts/cyl34_top_view_d379_p34_full_live_identity_classifier_resume.py"
+    ],
+    "head": "2acb5b99567946d343e95e61087357193da0826c",
+    "inherited_dirty_scope": "approved D378 completion/state evidence; preserved without modification by D379",
+    "origin_master": "2acb5b99567946d343e95e61087357193da0826c",
+    "status_paths": [
+      "START_HERE.md",
+      "claudedocs/DECISIONS.md",
+      "claudedocs/EXPERIMENT_LEDGER.md",
+      "claudedocs/runtime_logs/grasp_track/g0a_d378/",
+      "claudedocs/runtime_logs/grasp_track/g0a_d379/",
+      "claudedocs/session_20260724_grasp_g0a_d378_ephemeral_identifier_provenance_and_workload_authority_repair.md",
+      "roarm_rl/viz_debug.py",
+      "sim_scripts/cyl34_top_view_d378_attempt3_ascii_board_layout_repair.py",
+      "sim_scripts/cyl34_top_view_d378_d377_ephemeral_identifier_provenance_and_workload_authority_repair.py",
+      "sim_scripts/cyl34_top_view_d379_p34_full_live_identity_classifier_resume.py"
+    ]
+  },
+  "input_hashes": {
+    "claudedocs/runtime_logs/grasp_track/g0a_d343/d343_usd_typed_float_readback_evidence.json": "95bb4e3787d300071f1bac22037814b732781cd72a69a0334a34a05a50ac920b",
+    "claudedocs/runtime_logs/grasp_track/g0a_d343/d343_usd_typed_float_readback_summary.json": "880601aac768df38675603828258850aea796b6436a299c46f8cc489ed8b00da",
+    "claudedocs/runtime_logs/grasp_track/g0a_d372/attempt2_external_schema_path_repair/d372_completion_summary.json": "57f3ed8fe6f057d059980a78bb51be8e881d8300297a4f41def6ddf94ad0cf43",
+    "claudedocs/runtime_logs/grasp_track/g0a_d372/attempt2_external_schema_path_repair/d372_professor_semantic_candidate_evidence.json": "d68f658089aaf838ff454e9d0b301ec3f602785a3a730b3c329aa7785010e984",
+    "claudedocs/runtime_logs/grasp_track/g0a_d372/attempt2_external_schema_path_repair/d372_professor_semantic_candidate_geometry.json": "12fd1f32c35dfb9ae36cbbb412f6a51536aa1cc07c2dc17d05a5d189f3ee83e4",
+    "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/d373_worker_raw_summary.json": "dd57da307acf6134487bcd1dfa4a847fd41f24832177421f6291c45b06091373",
+    "claudedocs/runtime_logs/grasp_track/g0a_d375/attempt2_external_gpu_attestation_repair/d375_preregistration.json": "4048cc8201029e4f4d196fe6f68e1f0fdfe90907627b20edeb57ca9a6709744b",
+    "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_preregistration.json": "01cc3f55e2bb5e7718b5eed210501a37622bc731dbe9e4bc623f97e91f885d87",
+    "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_worker_preclose_sentinel.json": "4a312e20b4444f84897864e013b1f4eb74ce57aeb52377bfaa0ee9e3d068cc89",
+    "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_worker_raw_summary.json": "f14d2cf38cffc03a3121719a4dac0a62d612b46926a5ff6afcc10cd143717fb1",
+    "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_worker_supervisor.json": "1c0a4754da7fa0bae748e6c1095a1c39982ab50cef6202c6918f742fb635ce49",
+    "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt2_preregistration_status_order_repair/d378_workload_authority_repair_evidence.json": "e9c3d1cadf9cc9516d0d08792a44b6d824fea7ac8cd0849dffc9a25f3bafda88",
+    "sim_scripts/cyl34_top_view_d373_p34_live_asset_identity_preflight.py": "df5e404133ff22846cec469ccfdb969946288a72d6d040a3564a9bc3ed8ba2af",
+    "sim_scripts/cyl34_top_view_d375_p34_live_asset_identity_contract_repair.py": "70cb1bf9b0d518117fe90c848a9cefbdb95c8a0cabd4f3fa0fc5a37aae29c5e1"
+  },
+  "inventories_before": {
+    "claudedocs/lab_meeting/20260715/d334_collision_table": {
+      "file_count": 3,
+      "files": [
+        {
+          "bytes": 2935,
+          "path": "claudedocs/lab_meeting/20260715/d334_collision_table/README.md",
+          "sha256": "35e39f584737c888bcf7dfab6154c55c5d13d4154ee7f2042073e1c0a7e18783"
+        },
+        {
+          "bytes": 12493,
+          "path": "claudedocs/lab_meeting/20260715/d334_collision_table/d334_collision_table_academic.html",
+          "sha256": "6d38933f959eba916208ec04a329ba25e2bd753c90720576010c222a8bda679c"
+        },
+        {
+          "bytes": 255289,
+          "path": "claudedocs/lab_meeting/20260715/d334_collision_table/d334_collision_table_academic.png",
+          "sha256": "ddc9db2795f4d66b2564adf156829e6a143a599ceb72f6bb9fa28ab25e68a183"
+        }
+      ],
+      "inventory_sha256": "86c3a8f58b0866458910d2cab13da69f04c2dba5ddfc430a8b648367d759fef2",
+      "root": "claudedocs/lab_meeting/20260715/d334_collision_table"
+    },
+    "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses": {
+      "file_count": 68,
+      "files": [
+        {
+          "bytes": 8910,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p000_proximal_upper_arm_hull_a_instance.json",
+          "sha256": "61daa726f7e49c1ba62fb1ed291ac2397e713521740c1e37f421a587c6f6a82a"
+        },
+        {
+          "bytes": 8890,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p000_proximal_upper_arm_hull_a_prototype.json",
+          "sha256": "cab7221c73fc091b5850448e52694aee5163d136923e95c0551d752d2ce45649"
+        },
+        {
+          "bytes": 7277,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p001_proximal_upper_arm_hull_b_instance.json",
+          "sha256": "8f0133298014a663b46d76bcc576f5086884d73116728b0e95111aaf6228c3b9"
+        },
+        {
+          "bytes": 7257,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p001_proximal_upper_arm_hull_b_prototype.json",
+          "sha256": "e72f92baa1040e4373bc7a1be7da98a658d18057b4cf49cfc4a148f4cc0290e1"
+        },
+        {
+          "bytes": 8615,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p002_proximal_lower_arm_hull_a_instance.json",
+          "sha256": "06fa28620bd6a8749abb5b4e363c1a4051ee31bda695e0416a2bf6e3c622625d"
+        },
+        {
+          "bytes": 8595,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p002_proximal_lower_arm_hull_a_prototype.json",
+          "sha256": "f5a5df6165c523fe28b4a1ef6131f9406f88af3ca1fe312bf1dc1ffe78942b76"
+        },
+        {
+          "bytes": 7244,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p003_proximal_lower_arm_hull_b_instance.json",
+          "sha256": "ef81900b4d4e20e23e752dfcb30796037088cef6cae5641de893fa3f819c4b3f"
+        },
+        {
+          "bytes": 7224,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p003_proximal_lower_arm_hull_b_prototype.json",
+          "sha256": "f26a4774bd632866bb82587d996c48c483da213972dfa7cb4ed44f07a5ecc309"
+        },
+        {
+          "bytes": 5741,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p004_moving_jaw_00_proximal_upper_rail_instance.json",
+          "sha256": "1d620786033ee6b5b82e7a7c41f07811f6dc673a1fcc37db08ba5d87fa1ea14a"
+        },
+        {
+          "bytes": 5721,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p004_moving_jaw_00_proximal_upper_rail_prototype.json",
+          "sha256": "c03166ccf8065ff353f9f2ca3de7d4485d587a53698cbaa9587a1497ebba16bd"
+        },
+        {
+          "bytes": 5099,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p005_moving_jaw_01_proximal_lower_rail_instance.json",
+          "sha256": "17c13e41acab08600dc18616df0a783328e5fadad9e90daedd2b8567a576253b"
+        },
+        {
+          "bytes": 5079,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p005_moving_jaw_01_proximal_lower_rail_prototype.json",
+          "sha256": "e9cc308d9145f4397d19597c544add9531731ff091269834818a49b03c196bd6"
+        },
+        {
+          "bytes": 4451,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p006_moving_jaw_02_center_bridge_instance.json",
+          "sha256": "ce1541e12a4da8f76c388759a914044b503197786fa703bd70a81222dc5c5ae4"
+        },
+        {
+          "bytes": 4431,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p006_moving_jaw_02_center_bridge_prototype.json",
+          "sha256": "67eab9cbc2c9f89cf4a293f76a149475725864ab8bf5f1b90230a7851bd964d9"
+        },
+        {
+          "bytes": 4492,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p007_moving_jaw_03_window_upper_rail_instance.json",
+          "sha256": "63ac2e91e6be7496358402e53731abcc910fd8222b5264303554ee85318fa81e"
+        },
+        {
+          "bytes": 4472,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p007_moving_jaw_03_window_upper_rail_prototype.json",
+          "sha256": "9f0ef04c63e6317eee979c54f3f1352f773809e6738801e404aad602f44dfc14"
+        },
+        {
+          "bytes": 4500,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p008_moving_jaw_04_window_lower_rail_instance.json",
+          "sha256": "055ff396ba5feef31707408ae353cd047e4a1eb54e4d3ae45be578495a5136ee"
+        },
+        {
+          "bytes": 4480,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p008_moving_jaw_04_window_lower_rail_prototype.json",
+          "sha256": "56814bb68172a8b34ac63c5b6a288f15c355235a47b2073830267295d1dc75f5"
+        },
+        {
+          "bytes": 5502,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p009_moving_jaw_05_distal_nose_bridge_instance.json",
+          "sha256": "395c691bb834dc5273ef54fb6410a36d5b7b65a36251a92df12e5710298c2405"
+        },
+        {
+          "bytes": 5482,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p009_moving_jaw_05_distal_nose_bridge_prototype.json",
+          "sha256": "b6254b556ddfba7036ddae11ee079bd8910a48c2f54f881ec6c2948e0cee151a"
+        },
+        {
+          "bytes": 4518,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p010_moving_jaw_06_moving_brace_01_instance.json",
+          "sha256": "c3ca42dec1e068bad37035520e84e9ea93cc32b87cd2100666485e2413634c2c"
+        },
+        {
+          "bytes": 4498,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p010_moving_jaw_06_moving_brace_01_prototype.json",
+          "sha256": "82d0a55d3433553c2b46646a2b3ec12cde9adcd34331da47f0491eb1fd47d23f"
+        },
+        {
+          "bytes": 5798,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p011_moving_jaw_07_moving_brace_02_instance.json",
+          "sha256": "359900090b4d9bf5e400b839f869b1df6987dbd9c552e37f8341b95a47a12dac"
+        },
+        {
+          "bytes": 5778,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p011_moving_jaw_07_moving_brace_02_prototype.json",
+          "sha256": "c65cfd6e40fb133d2765be7cbc4cad9fe20b1b92cfcf9c4a178d80a42f7ccee2"
+        },
+        {
+          "bytes": 3905,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p012_moving_jaw_08_moving_brace_03_instance.json",
+          "sha256": "b31d30e24c29b079472b38450044462202ee137cd6a850e22b2e12c04da0a550"
+        },
+        {
+          "bytes": 3885,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p012_moving_jaw_08_moving_brace_03_prototype.json",
+          "sha256": "b85687c4e4b0724286e3cd5caad09d4fd79c9556039096d81c81395748143819"
+        },
+        {
+          "bytes": 5724,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p013_moving_jaw_09_moving_brace_04_instance.json",
+          "sha256": "667af6e78160962444a354aec64888511618895edbd799509a7842d5c901b2a3"
+        },
+        {
+          "bytes": 5704,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p013_moving_jaw_09_moving_brace_04_prototype.json",
+          "sha256": "c02bae4cfad3c3291842e21e3c90d3d937f982bda3d7de2fba0538ce25fdd487"
+        },
+        {
+          "bytes": 4486,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p014_moving_jaw_10_moving_brace_05_instance.json",
+          "sha256": "308541d9aaf829cd098ae92a59492419df22a7f10bfc9fb82d2f2596ecfe5c9a"
+        },
+        {
+          "bytes": 4466,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p014_moving_jaw_10_moving_brace_05_prototype.json",
+          "sha256": "b2324c4972826630d8698fde1e1891fa62306ec99336521ba9ad19668bb9152d"
+        },
+        {
+          "bytes": 3886,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p015_moving_jaw_11_moving_brace_06_instance.json",
+          "sha256": "142bd5f389423dde03eeb9ad64fc38fa848a35dce26aa081cd8ed099b407a2e1"
+        },
+        {
+          "bytes": 3866,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p015_moving_jaw_11_moving_brace_06_prototype.json",
+          "sha256": "f7d88a7665517a100e37abc9d53fdba855f4b48c5031a5a0fe27d67b395caa90"
+        },
+        {
+          "bytes": 5567,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p016_moving_upper_backbone_instance.json",
+          "sha256": "0ac545dfaa7ed69d64132fbd210506381152bb435fd9d19f978f217439fe810d"
+        },
+        {
+          "bytes": 5547,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p016_moving_upper_backbone_prototype.json",
+          "sha256": "3bfceb3bc13c672b7b0414475351c3b016b3ef5d8b6b34e25f1119942c2c896b"
+        },
+        {
+          "bytes": 5552,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p017_moving_lower_backbone_instance.json",
+          "sha256": "5d3756f5406cfc0a23732603a3e405c301bfeabd20f38c0feb0ebad564c803d2"
+        },
+        {
+          "bytes": 5532,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/gripper_link_p017_moving_lower_backbone_prototype.json",
+          "sha256": "73b7680790358d6b12d984df1913267b6243c0de57e00dee19ae43b255a5cb3d"
+        },
+        {
+          "bytes": 4379,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/link5_p000_lower_housing_box_instance.json",
+          "sha256": "8416056e3c5b7e943b19c6231ed14ac0d6fceedd39496418f06242f812b3f32e"
+        },
+        {
+          "bytes": 4366,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/link5_p000_lower_housing_box_prototype.json",
+          "sha256": "e15fda08e74aff554a8a9ce671ab1dc45e096af3ea4c1de46e937fa49486890d"
+        },
+        {
+          "bytes": 4399,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/link5_p001_neck_connector_box_instance.json",
+          "sha256": "a17f56e14eda32de537fd09adb95b3aaf731a1c564440d8fe4191f5c0e6e173a"
+        },
+        {
+          "bytes": 4386,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/link5_p001_neck_connector_box_prototype.json",
+          "sha256": "e9f98330885122dd75847c5b6e866ae3934fcf744a405b2dd5a6bc9d2bb54905"
+        },
+        {
+          "bytes": 4404,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/link5_p002_pivot_support_box_instance.json",
+          "sha256": "f57962e5ad8744d99cf14f566b567c592942c4470c0f62bee400edfa92d051a7"
+        },
+        {
+          "bytes": 4391,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/link5_p002_pivot_support_box_prototype.json",
+          "sha256": "d549bb25e8c01accc4c9f85f1c0b6a3e779507088deddb5aaa6e1ec45be0244e"
+        },
+        {
+          "bytes": 5072,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/link5_p003_fixed_jaw_00_lower_bridge_instance.json",
+          "sha256": "783ac32773e7fe6f93f38f0e803e812b290aaf29ef0444b6342f7559ee80aa47"
+        },
+        {
+          "bytes": 5059,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/link5_p003_fixed_jaw_00_lower_bridge_prototype.json",
+          "sha256": "8c0d6a60bbf44ca485549b07d46873c8a3afe6cc9a11c4c722a974e89b20ab81"
+        },
+        {
+          "bytes": 4430,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/link5_p004_fixed_jaw_01_lower_left_leg_instance.json",
+          "sha256": "413a1d58d31c91b498c538d81bcdd7b89cd2106e141fa574ab779b653858c462"
+        },
+        {
+          "bytes": 4417,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/link5_p004_fixed_jaw_01_lower_left_leg_prototype.json",
+          "sha256": "09162e6b69c66e95f8978798d9c766d48bf01bb94fc43d230c285f6d6d45dfd6"
+        },
+        {
+          "bytes": 4437,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/link5_p005_fixed_jaw_02_lower_right_leg_instance.json",
+          "sha256": "b4fd43714c28aec7c6f22d077edfe7da6a07b61e73bad1a3f8b27bcf365a1b6e"
+        },
+        {
+          "bytes": 4424,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/link5_p005_fixed_jaw_02_lower_right_leg_prototype.json",
+          "sha256": "17a8806dcbece55f77706d0f6c5206b222d151ca9c93faa885851b78e4683dc7"
+        },
+        {
+          "bytes": 4401,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/link5_p006_fixed_jaw_03_middle_bridge_instance.json",
+          "sha256": "bf08aa4015bf0b420deb4a315608da644a468160177c7ee5dd365bb65e43925e"
+        },
+        {
+          "bytes": 4388,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/link5_p006_fixed_jaw_03_middle_bridge_prototype.json",
+          "sha256": "299df37878335aa9d56b6675b88b28acb7b7e9c5ebc9947981f7ae67fd4e5dd7"
+        },
+        {
+          "bytes": 5048,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/link5_p007_fixed_jaw_04_upper_left_leg_instance.json",
+          "sha256": "ae664c7b4330d4d2af10f0153521560d6d43f3ccd4b3834f7ab85d9df8d611e7"
+        },
+        {
+          "bytes": 5035,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/link5_p007_fixed_jaw_04_upper_left_leg_prototype.json",
+          "sha256": "26cbacf625ff94006054aa3d4b2c23b4f2de59b5b5a76d48d3a9411cd4056bbe"
+        },
+        {
+          "bytes": 5047,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/link5_p008_fixed_jaw_05_upper_right_leg_instance.json",
+          "sha256": "7276793a6bd0a98236689788a00de3bc09a7b8210e0d5dced65b413be1272719"
+        },
+        {
+          "bytes": 5034,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/link5_p008_fixed_jaw_05_upper_right_leg_prototype.json",
+          "sha256": "9316a044c2d7a23105d0bff2510297da3b3fefdd9651d0892b8ebf2f0259668d"
+        },
+        {
+          "bytes": 4486,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/link5_p009_fixed_jaw_06_roof_bridge_instance.json",
+          "sha256": "37ccdb8e7d72e0bd55b33986ad1a7c3dd4ada4f5460aa6e9645e0b61d39b0547"
+        },
+        {
+          "bytes": 4473,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/link5_p009_fixed_jaw_06_roof_bridge_prototype.json",
+          "sha256": "0d99c19d834aeccd4537eed1df18cd4e572cbc5276749fb3a944fa826eddf421"
+        },
+        {
+          "bytes": 3849,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/link5_p010_fixed_jaw_07_fixed_brace_01_a_instance.json",
+          "sha256": "e2e3a26c0c24588d2facae2cdd5670fc3c221372061f2dd656951a2e035b70bf"
+        },
+        {
+          "bytes": 3836,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/link5_p010_fixed_jaw_07_fixed_brace_01_a_prototype.json",
+          "sha256": "0ae326a11162c4e7cf4dd4ed217d43a65e4eaee02884f92b5ebd2b29ca472132"
+        },
+        {
+          "bytes": 4442,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/link5_p011_fixed_jaw_08_fixed_brace_01_b_instance.json",
+          "sha256": "6bc4678b0c322ff1ef62a7232ea3c8d6c73fd7204924c5c25880fa4658891987"
+        },
+        {
+          "bytes": 4429,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/link5_p011_fixed_jaw_08_fixed_brace_01_b_prototype.json",
+          "sha256": "a152a1a52590b57c59a3f04c8a84ae1868ed33b654768c1f03661eff596c3507"
+        },
+        {
+          "bytes": 3842,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/link5_p012_fixed_jaw_09_fixed_brace_02_instance.json",
+          "sha256": "fe7bc5543483446249b728931f3767c80d8c2cefaa4fcfa22b09e5fa7931eda5"
+        },
+        {
+          "bytes": 3829,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/link5_p012_fixed_jaw_09_fixed_brace_02_prototype.json",
+          "sha256": "04f899f8034ce0c88c047c0d41a3f917a35f8995fd926f3c1d4a6c4acd8c41a6"
+        },
+        {
+          "bytes": 6345,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/link5_p013_fixed_backbone_left_instance.json",
+          "sha256": "c30db2c03c39352f984d96f9526646dc2d3d85ae0ce50d306f74a01570278b16"
+        },
+        {
+          "bytes": 6332,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/link5_p013_fixed_backbone_left_prototype.json",
+          "sha256": "c3721b3ff45384f7d64c5821a6f42277ef924388d365501678d9d81bf2afd10f"
+        },
+        {
+          "bytes": 6345,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/link5_p014_fixed_backbone_right_instance.json",
+          "sha256": "44e1241c8e7a99ec507eacb77e48b0cc55c3a917a8de38b3f006206164e984a6"
+        },
+        {
+          "bytes": 6332,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/link5_p014_fixed_backbone_right_prototype.json",
+          "sha256": "83de90e9cfd7e6c3b8ed578980068125e104b679ee1ae6fae2849f8d72a5e063"
+        },
+        {
+          "bytes": 5630,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/link5_p015_lower_pivot_hub_instance.json",
+          "sha256": "dbab9ab6d5fb16e268c60d042156162bcd5cd6309493907aeaf50b5a9f885147"
+        },
+        {
+          "bytes": 5617,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses/link5_p015_lower_pivot_hub_prototype.json",
+          "sha256": "74da07abd6749819ecb65cc9cda13f2a85e42d5196efc71f587f35cf74261d47"
+        }
+      ],
+      "inventory_sha256": "e2333e7d50b4bdebf147ce94da62f05773783e856ed1528f1acfa2c3f54ce1ac",
+      "root": "claudedocs/runtime_logs/grasp_track/g0a_d373/attempt1_p34_live_asset_identity_preflight/callback_witnesses"
+    },
+    "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses": {
+      "file_count": 34,
+      "files": [
+        {
+          "bytes": 8735,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses/gripper_link_p000_proximal_upper_arm_hull_a_live.json",
+          "sha256": "478474df43c1d7423c95f7a02fa87f8236d8bc4583e88a3399855924163bc7f5"
+        },
+        {
+          "bytes": 7102,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses/gripper_link_p001_proximal_upper_arm_hull_b_live.json",
+          "sha256": "e9fd8c6b729466b5ff5da38154085306560e1a11268378bcfb0a4566bf703498"
+        },
+        {
+          "bytes": 8440,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses/gripper_link_p002_proximal_lower_arm_hull_a_live.json",
+          "sha256": "8ac7ea577ccd8e7c8823828b6341e69a4d618d70c829f1be2253d489e3edf706"
+        },
+        {
+          "bytes": 7069,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses/gripper_link_p003_proximal_lower_arm_hull_b_live.json",
+          "sha256": "0c3dddf8f358bbdc94b7144ed199834bb39fe0c4f1c9682c13274661344b9f03"
+        },
+        {
+          "bytes": 5550,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses/gripper_link_p004_moving_jaw_00_proximal_upper_rail_live.json",
+          "sha256": "1bdb6df87bef8add4cb48e71a81bfa9a8f1717729028ef41674eb82d19fe36b8"
+        },
+        {
+          "bytes": 4908,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses/gripper_link_p005_moving_jaw_01_proximal_lower_rail_live.json",
+          "sha256": "4ee91de45067fa92aa702b5e7e7c96fde686ecde77cc216c1f3cdcc431d4065c"
+        },
+        {
+          "bytes": 4272,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses/gripper_link_p006_moving_jaw_02_center_bridge_live.json",
+          "sha256": "82c64272cda8930df0d0689787a38c2ef910845df7be77b5c54f7b60a62c8c78"
+        },
+        {
+          "bytes": 4305,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses/gripper_link_p007_moving_jaw_03_window_upper_rail_live.json",
+          "sha256": "3323c87b62e1e5cc0e4209632fbb7b6f918f082c4565465d22f99c3a3f1225f1"
+        },
+        {
+          "bytes": 4313,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses/gripper_link_p008_moving_jaw_04_window_lower_rail_live.json",
+          "sha256": "51db273f989153c722311c357e23ae87c06f0e3b9669528351b7c4fdb093a396"
+        },
+        {
+          "bytes": 5313,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses/gripper_link_p009_moving_jaw_05_distal_nose_bridge_live.json",
+          "sha256": "102f23dc29bad798a270b2780022b61bfa577afb58eb601ae61ba8ac0deafc96"
+        },
+        {
+          "bytes": 4335,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses/gripper_link_p010_moving_jaw_06_moving_brace_01_live.json",
+          "sha256": "a8192bf67b24efb64aaf97db94fbf0d516be18b55361db3e0c887c4f88118c40"
+        },
+        {
+          "bytes": 5615,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses/gripper_link_p011_moving_jaw_07_moving_brace_02_live.json",
+          "sha256": "5fd931116b7865d2f2fe10bf68a6a4e7f8e2076ad5b6119f53b5093af0c717d3"
+        },
+        {
+          "bytes": 3722,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses/gripper_link_p012_moving_jaw_08_moving_brace_03_live.json",
+          "sha256": "765d05a1702c954d4e980f6d2e9b82b36335ae965265f4af2bf681c5d69f2cc3"
+        },
+        {
+          "bytes": 5541,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses/gripper_link_p013_moving_jaw_09_moving_brace_04_live.json",
+          "sha256": "ade1bd74d53c8b485cc407ff6a8061e4886b6daeabe14b74a7a50cc23edb51bc"
+        },
+        {
+          "bytes": 4303,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses/gripper_link_p014_moving_jaw_10_moving_brace_05_live.json",
+          "sha256": "07c7d79edd22916c070e03065fa74f586894a900360dd4081c184f67563bbd5c"
+        },
+        {
+          "bytes": 3703,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses/gripper_link_p015_moving_jaw_11_moving_brace_06_live.json",
+          "sha256": "719bf419105f0869cfed9b1638f1afd38db2067d66e08505176d16d264ce99f4"
+        },
+        {
+          "bytes": 5400,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses/gripper_link_p016_moving_upper_backbone_live.json",
+          "sha256": "9556fad10551d66df2547ebe7fe47350edfd70acfa8b3917f41efdcb6831c706"
+        },
+        {
+          "bytes": 5385,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses/gripper_link_p017_moving_lower_backbone_live.json",
+          "sha256": "a651dcc46da0fff7f932f24f79b9c8fb0b7834d66ccea74f2a597a8deca15d9e"
+        },
+        {
+          "bytes": 4227,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses/link5_p000_lower_housing_box_live.json",
+          "sha256": "1485eca02731cb6d1a024677eb8a27d36803913bdf1eff553b462ed755e38c9a"
+        },
+        {
+          "bytes": 4245,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses/link5_p001_neck_connector_box_live.json",
+          "sha256": "4228c40af25c36eaa515e6071e5f92e266f8d4e7e4743ce6a88c3edffe4ed896"
+        },
+        {
+          "bytes": 4252,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses/link5_p002_pivot_support_box_live.json",
+          "sha256": "8f4d8994ad71851218df22aff10e4b8d78e3f30aca807cc1e5dc8e6f3d6e565d"
+        },
+        {
+          "bytes": 4904,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses/link5_p003_fixed_jaw_00_lower_bridge_live.json",
+          "sha256": "c0a00667c71423fef60be64e03bc9aa7779046ae3e64ef1c8bd2fd5ee02fd6db"
+        },
+        {
+          "bytes": 4258,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses/link5_p004_fixed_jaw_01_lower_left_leg_live.json",
+          "sha256": "9ded5193a4c94e743b88821a3c23a623d2c3fe5e81dc23bdf7aa50a9214f35e7"
+        },
+        {
+          "bytes": 4263,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses/link5_p005_fixed_jaw_02_lower_right_leg_live.json",
+          "sha256": "6fbcf7dde937d820b3e45bb8f076c70f3aed93a6ed618ecade5aeefa2b04f7d8"
+        },
+        {
+          "bytes": 4231,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses/link5_p006_fixed_jaw_03_middle_bridge_live.json",
+          "sha256": "8c06df0291c600b29b0b2e793d4d03cd6b5d6546820231e2a4e51b6bc0fa923e"
+        },
+        {
+          "bytes": 4876,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses/link5_p007_fixed_jaw_04_upper_left_leg_live.json",
+          "sha256": "7e5b284f30b5c09e0003e8852b20f086f417e565c70f6b9f697a58f6c1dcc084"
+        },
+        {
+          "bytes": 4873,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses/link5_p008_fixed_jaw_05_upper_right_leg_live.json",
+          "sha256": "8baf48d21b3ac150c81e863c8c1eb61e7d90342d904b86414a9e602cedee40d9"
+        },
+        {
+          "bytes": 4320,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses/link5_p009_fixed_jaw_06_roof_bridge_live.json",
+          "sha256": "57275e0b762bdb62601305bc7255b8ee23f0f1b6005224f9833505d03ac136ae"
+        },
+        {
+          "bytes": 3673,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses/link5_p010_fixed_jaw_07_fixed_brace_01_a_live.json",
+          "sha256": "41a4125a33886a1bb95f333e755e9ee52e586f050344fa01d4f1d37bf7244380"
+        },
+        {
+          "bytes": 4266,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses/link5_p011_fixed_jaw_08_fixed_brace_01_b_live.json",
+          "sha256": "aaf5fbd34e8d90d55752a43416fa0dcb5d0fd4218a4b186130b96dacc9ff3cf8"
+        },
+        {
+          "bytes": 3670,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses/link5_p012_fixed_jaw_09_fixed_brace_02_live.json",
+          "sha256": "3d9b1d1d653a76b5a882071c690628a586001953b338006a9cab8a5a24b8dfb0"
+        },
+        {
+          "bytes": 6189,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses/link5_p013_fixed_backbone_left_live.json",
+          "sha256": "b53f95848240e1cc56e0408e6eed648205c454dfa0f3d4012e93e2b5655f0e78"
+        },
+        {
+          "bytes": 6187,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses/link5_p014_fixed_backbone_right_live.json",
+          "sha256": "65dec51b53225a4f7b90d1585bfd92321acd488c474afe49af249d4bef4fbb14"
+        },
+        {
+          "bytes": 5482,
+          "path": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses/link5_p015_lower_pivot_hub_live.json",
+          "sha256": "006deaa7695dea219de6399a2792cf640fae52d8df1ffc32b5a625cfcb8768aa"
+        }
+      ],
+      "inventory_sha256": "afe7535f91c38f02f25c768f154afa361606c4a95019089f38eda93b939c4815",
+      "root": "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/callback_witnesses"
+    }
+  },
+  "new_variables": [
+    "p34_full_live_identity_classifier_resume_v1"
+  ],
+  "official_sources": [
+    {
+      "applicable_version": "installed omni.physx 107.3.26",
+      "title": "Omni Physics 107.3 - Rigid Bodies",
+      "url": "https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/rigid_bodies_articulations/rigid_bodies.html",
+      "use": "one rigid body may own multiple child colliders"
+    },
+    {
+      "applicable_version": "installed omni.physx 107.3.26",
+      "title": "Omni Physics 107.3 - Query The Mass and Volume",
+      "url": "https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/mass_inertia_queries.html",
+      "use": "VALID-only frozen property-query authority"
+    },
+    {
+      "applicable_version": "installed omni.physx 107.3.26",
+      "title": "Omni Physics 107.3 - Colliders",
+      "url": "https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/rigid_bodies_articulations/collision.html",
+      "use": "convex collider and compound-collider semantics"
+    }
+  ],
+  "pass": false,
+  "prepare_negative_controls": {
+    "controls": {
+      "error_parsing_is_not_valid_measurement": true,
+      "instanceable_owner_is_rejected": true,
+      "missing_live_path_breaks_bijection": true,
+      "mutated_preclose_sha_breaks_authority": true
+    },
+    "exact_key_set": true,
+    "pass": true,
+    "source": "frozen D375 prepare controls"
+  },
+  "registered_dirty_baseline_snapshot": {
+    "all_present": true,
+    "canonical_sha256": "ebcdbc7e1bf334414284b27e9f4d2d41470429219b965988bf8b8430617b858d",
+    "entries": {
+      "START_HERE.md": {
+        "bytes": 8017,
+        "kind": "file",
+        "sha256": "a5e1f93071596ccb4aed8fc6d417b3921947a2f2b4fc064e5ed117bac8a4eec8"
+      },
+      "claudedocs/DECISIONS.md": {
+        "bytes": 1250127,
+        "kind": "file",
+        "sha256": "079535799d7015a11e39bdd1421b8dc7e957e4a5dbb149a3a0ed1286c144fe3d"
+      },
+      "claudedocs/EXPERIMENT_LEDGER.md": {
+        "bytes": 737662,
+        "kind": "file",
+        "sha256": "78314ef579aabb54d91be25981a71251a99c950da9d27c6181897a4d97793889"
+      },
+      "claudedocs/runtime_logs/grasp_track/g0a_d378/": {
+        "inventory": {
+          "file_count": 39,
+          "files": [
+            {
+              "bytes": 425,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt1_ephemeral_identifier_provenance_and_workload_authority_repair/d378_phase_markers.jsonl",
+              "sha256": "2167452f4b781b26a6483fea66532f92cbfc5ec37fc001488332419f414c8408"
+            },
+            {
+              "bytes": 36980,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt1_ephemeral_identifier_provenance_and_workload_authority_repair/d378_preregistration.json",
+              "sha256": "64168f87e04add54890ed0619d9383e1fae9cb342165c35dab5eee3dec193fa9"
+            },
+            {
+              "bytes": 1710,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt1_ephemeral_identifier_provenance_and_workload_authority_repair/d378_runtime_exception.json",
+              "sha256": "a1ec1ed88017ee684f4a62a7f8e76b9ee2260cc2de950bd5387ac7aa0995a053"
+            },
+            {
+              "bytes": 22236,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt2_preregistration_status_order_repair/d378_automated_summary.json",
+              "sha256": "9a17fdcdf8d74ca3da9288af55163aa2af4ef7e6668fc0edee461e5f41800544"
+            },
+            {
+              "bytes": 50506,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt2_preregistration_status_order_repair/d378_completion_summary.json",
+              "sha256": "d44b5581576cfddfba20cf6fa01c5a8ee79cfd5dea3613d5ee338cbee8fb0cd0"
+            },
+            {
+              "bytes": 230599,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt2_preregistration_status_order_repair/d378_corrected_workload_authority_1920x1080.png",
+              "sha256": "2e94b4a3a3cd670491ebcd42fd0567667237b5c21ec8806bdb6bb8aed33851e2"
+            },
+            {
+              "bytes": 1430,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt2_preregistration_status_order_repair/d378_manual_visual_inspection.json",
+              "sha256": "02bd77b0ae90d9dd18dbfe6feaaf7c707a567bb9d12228703347cfb2f6dd7b77"
+            },
+            {
+              "bytes": 634,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt2_preregistration_status_order_repair/d378_manual_visual_inspection_template.json",
+              "sha256": "5dc1c0236684d8ec74fc7700593b27f1fb78aa6215ef4c1ffcf783f11c28bf84"
+            },
+            {
+              "bytes": 421,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt2_preregistration_status_order_repair/d378_offline_invocation.json",
+              "sha256": "148500c66da6f3455e78d79578800710ae345d81c34bdf831805500ef0ee18d3"
+            },
+            {
+              "bytes": 1926,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt2_preregistration_status_order_repair/d378_phase_markers.jsonl",
+              "sha256": "2900c144a4ee2bacb35858e34f5e73ec627af020902f0a1de02f683e47475847"
+            },
+            {
+              "bytes": 39811,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt2_preregistration_status_order_repair/d378_preregistration.json",
+              "sha256": "f44917b67d22725aa7b81a748ddd9547b97d32ae1a715a6b80743b541f6ad558"
+            },
+            {
+              "bytes": 677805,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt2_preregistration_status_order_repair/d378_rerun_inspection.png",
+              "sha256": "267735d18052a01d9e514bc3510441c390f17711efc05ca2cfefaf16ec38333b"
+            },
+            {
+              "bytes": 21944,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt2_preregistration_status_order_repair/d378_rerun_validation.json",
+              "sha256": "e583a9121ce9fd734ca0d877d3db0226ff2abbe8029f4abe3886824eb5a4022f"
+            },
+            {
+              "bytes": 2702,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt2_preregistration_status_order_repair/d378_runtime_exception.json",
+              "sha256": "5baeb6afb75e74e0db514a6aea563c698790deb6d7e7c6b8775ec0b4c4bc3cb1"
+            },
+            {
+              "bytes": 43735,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt2_preregistration_status_order_repair/d378_workload_authority_repair.rbl",
+              "sha256": "08e72cbccf3eacc304fb941cec98838ab7de5660232f94378593714d26406e49"
+            },
+            {
+              "bytes": 63972,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt2_preregistration_status_order_repair/d378_workload_authority_repair.rrd",
+              "sha256": "6e605b48e88e6aa0dce4b264f2db193b3dbfd9ff702895ea401a57e6763344e8"
+            },
+            {
+              "bytes": 51308,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt2_preregistration_status_order_repair/d378_workload_authority_repair_evidence.json",
+              "sha256": "e9c3d1cadf9cc9516d0d08792a44b6d824fea7ac8cd0849dffc9a25f3bafda88"
+            },
+            {
+              "bytes": 425,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt3_ascii_board_layout_repair/d378_attempt3_phase_markers.jsonl",
+              "sha256": "253f9f4820407a9aae55c67efc68ced5018b132d3bacec5ce5d932e6a474c686"
+            },
+            {
+              "bytes": 37330,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt3_ascii_board_layout_repair/d378_attempt3_preregistration.json",
+              "sha256": "73a5effc87acd900bb4bbae932b7df8327c2e4c63f3b6b593abcacf013a63f9b"
+            },
+            {
+              "bytes": 1770,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt3_ascii_board_layout_repair/d378_attempt3_runtime_exception.json",
+              "sha256": "e9acbc31e869c43fd2b6407d344bf49acd2d7d577b165deb94c6fe9689ca010c"
+            },
+            {
+              "bytes": 512,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt4_start_here_registration_string_repair/d378_attempt4_invocation.json",
+              "sha256": "f61098673ff0f5d8508c80e8d51ec4aa21181631e4fc86dd20256adc7122927a"
+            },
+            {
+              "bytes": 3421,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt4_start_here_registration_string_repair/d378_attempt4_layout_validation.json",
+              "sha256": "3f78b5fc2c6cc9ee226351cf0c5de4b0f017d05e5aa3e12b0d63ebe2c65b0c02"
+            },
+            {
+              "bytes": 634,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt4_start_here_registration_string_repair/d378_attempt4_manual_visual_inspection_template.json",
+              "sha256": "8965781908f8aca37b0b963c1b93f5bd5ea1bf3671928bd5ecfd475f6cc07871"
+            },
+            {
+              "bytes": 829,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt4_start_here_registration_string_repair/d378_attempt4_phase_markers.jsonl",
+              "sha256": "d2211076ff542592c9e02599e68c0a0384d53b467d88b98258fc337e75cbd532"
+            },
+            {
+              "bytes": 39193,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt4_start_here_registration_string_repair/d378_attempt4_preregistration.json",
+              "sha256": "0d7f2a07c458aa39b9a877d0523c6783a686e3398509168bec3331574ff23471"
+            },
+            {
+              "bytes": 1506,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt4_start_here_registration_string_repair/d378_attempt4_runtime_exception.json",
+              "sha256": "21e70ca9498adc69c21a017684d1cada9f05490127f2b2c7204ddaaaa85fd48d"
+            },
+            {
+              "bytes": 5361,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt4_start_here_registration_string_repair/d378_attempt4_visual_repair_evidence.json",
+              "sha256": "d37439d70a4dfb82728e7835dcf832096a7d5d55eaf58fc6d0261bf1aad0fe62"
+            },
+            {
+              "bytes": 213043,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt4_start_here_registration_string_repair/d378_corrected_workload_authority_repaired_1920x1080.png",
+              "sha256": "2aa6ae1f193d0643e14544d664ca0dcf412b3f59f5b36e33086b344e3c283931"
+            },
+            {
+              "bytes": 512,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt5_measured_outcome_inset_repair/d378_attempt5_invocation.json",
+              "sha256": "aa0b73b7787060f0f8de734213103e6869595af3d837d3c47bbf5f12e2c2663c"
+            },
+            {
+              "bytes": 3962,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt5_measured_outcome_inset_repair/d378_attempt5_layout_validation.json",
+              "sha256": "d69be57cb7a88407d29e3c78b14bdc1df7105440789b97aee1eef9193a055cd7"
+            },
+            {
+              "bytes": 1567,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt5_measured_outcome_inset_repair/d378_attempt5_manual_visual_inspection.json",
+              "sha256": "fd93103fb5094de1d2ac6e13d1a70898795de569f8d5399ff36fb0fa1636f499"
+            },
+            {
+              "bytes": 634,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt5_measured_outcome_inset_repair/d378_attempt5_manual_visual_inspection_template.json",
+              "sha256": "2fcbae386cab2eeccd3fb2cf1929d99d30f4e11f0b99c8d381a459fec4ef2839"
+            },
+            {
+              "bytes": 1048,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt5_measured_outcome_inset_repair/d378_attempt5_phase_markers.jsonl",
+              "sha256": "7c4b43c345ad7ebb55c4a11ff6a035f79fbc724cc958ec2d03badb09c3c5964e"
+            },
+            {
+              "bytes": 40733,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt5_measured_outcome_inset_repair/d378_attempt5_preregistration.json",
+              "sha256": "0c79c4a078e3b837153d4a40f92f931eb4a13bd0fa076d59366b6e454579fa70"
+            },
+            {
+              "bytes": 6983,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt5_measured_outcome_inset_repair/d378_attempt5_visual_repair_evidence.json",
+              "sha256": "98b35c235505463d04ff64e2a4f78bb02f5bb4e6529c717845667890e9e6ec6b"
+            },
+            {
+              "bytes": 213043,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt5_measured_outcome_inset_repair/d378_corrected_workload_authority_repaired_1920x1080.png",
+              "sha256": "e788c54e34b9f3f3adbb0e2ed7322432f38d3587cd079761a36c15fb30b96b32"
+            },
+            {
+              "bytes": 53467,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/attempt5_measured_outcome_inset_repair/d378_final_completion_summary.json",
+              "sha256": "90a59cf01db98b9c4d54229611da5d41202b6967348138df14fdbca071da22dd"
+            },
+            {
+              "bytes": 9886,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/d378_attempt4_driver.py",
+              "sha256": "11f101e524d05e791e47d656eeb0298d4efc20fd8ce9b0b57bf3e9b075d3c0bf"
+            },
+            {
+              "bytes": 13808,
+              "path": "claudedocs/runtime_logs/grasp_track/g0a_d378/d378_attempt5_driver.py",
+              "sha256": "9b5de15a03efdd5f4d47827af64a804435276cb71c10f4b6c2be802df6f6351b"
+            }
+          ],
+          "inventory_sha256": "b951cc7ec2c24601f8fc8ecf91ca92c6ebf15318a138c4c060d1153cdfc55ff3",
+          "root": "claudedocs/runtime_logs/grasp_track/g0a_d378"
+        },
+        "kind": "directory"
+      },
+      "claudedocs/session_20260724_grasp_g0a_d378_ephemeral_identifier_provenance_and_workload_authority_repair.md": {
+        "bytes": 9970,
+        "kind": "file",
+        "sha256": "b1462e0ddc34538b2fec01e6566d3a013258b270ad39100fe4c8d7cbd700e05c"
+      },
+      "roarm_rl/viz_debug.py": {
+        "bytes": 72151,
+        "kind": "file",
+        "sha256": "4b5f821ad43652f529dfaa2f92b2826d9cd4973635e34521cc2b3a93ab0193d0"
+      },
+      "sim_scripts/cyl34_top_view_d378_attempt3_ascii_board_layout_repair.py": {
+        "bytes": 32699,
+        "kind": "file",
+        "sha256": "0cc64d148c36a9a2b13fdf0793bc7f2a6f1b24f2658120cefa8a667a00dc8b88"
+      },
+      "sim_scripts/cyl34_top_view_d378_d377_ephemeral_identifier_provenance_and_workload_authority_repair.py": {
+        "bytes": 65542,
+        "kind": "file",
+        "sha256": "9860d8664dfd3ac77f9bbf650950351d78ea49796a2000a6bf084aabacb28e86"
+      }
+    }
+  },
+  "registered_identity_contract": {
+    "authored_callback_topology_volume_relative": 0.005,
+    "bounds_tolerance_m": 0.0001,
+    "callback_channel": "one actual live composed path per P34 part; 34 total",
+    "callback_property_volume_relative": 0.05,
+    "direct_authored_parts": {
+      "gripper_link": 18,
+      "link5": 16
+    },
+    "frozen_d373_callback": "immutable comparison channel only; no new request",
+    "mass_com_inertia_axes_atol": 1e-09,
+    "owner_flags": "Robot/link5/gripper_link all non-instance and non-proxy before attach",
+    "property_rows_including_disabled_legacy": {
+      "gripper_link": 19,
+      "link5": 17
+    },
+    "proxy_aware_live_parts": {
+      "gripper_link": 18,
+      "link5": 16
+    },
+    "result_authority": "rigid body and every collider must be VALID with exact paths",
+    "surface_tolerance_m": 0.0001,
+    "volume_semantics": "D348 callback original polygon topology; no new Qhull"
+  },
+  "run_contract": {
+    "actual_offline_worker_invocations": 1,
+    "automatic_retries": 0,
+    "bounded_wall_clock_watchdog_s": 360.0,
+    "headless_rerun_viewer_max": 1,
+    "isaac_or_physx_workers": 0,
+    "offline_audit_invocations": 1,
+    "rerun_save_only": 1,
+    "strict_zero_scope": [
+      "isaac_launches",
+      "kit_launches",
+      "physx_calls",
+      "usd_reads_or_writes",
+      "collider_materializations_or_regenerations",
+      "automatic_decomposition_sweeps",
+      "physics_steps",
+      "public_forwards",
+      "q5_commands",
+      "q5_samples",
+      "contact_queries",
+      "cylinder_creates_or_writes",
+      "target_ik_path_pose_changes",
+      "material_mass_actuator_physics_setting_changes"
+    ],
+    "term_grace_s": 10.0
+  },
+  "source_hashes": {
+    "frozen_d373_controller": "df5e404133ff22846cec469ccfdb969946288a72d6d040a3564a9bc3ed8ba2af",
+    "frozen_d375_classifier": "70cb1bf9b0d518117fe90c848a9cefbdb95c8a0cabd4f3fa0fc5a37aae29c5e1",
+    "harness": "46c5f91d18e4a8fb70d589787ffabf9c4b5a5b71ad344e208ae874bbfbb70dbd",
+    "rerun_contract": "aaafcd93b9da3d8a97d61a53753ec9667bb98bec7391c91c98974f7ce9c66c1e",
+    "viz_debug": "4b5f821ad43652f529dfaa2f92b2826d9cd4973635e34521cc2b3a93ab0193d0"
+  },
+  "thresholds": {
+    "authored_callback_topology_volume_relative": 0.005,
+    "authored_mass_state_atol": 1e-12,
+    "bounds_tolerance_m": 0.0001,
+    "callback_property_volume_relative": 0.05,
+    "polygon_plane_residual_tolerance_m": 1e-05,
+    "property_mass_state_atol": 1e-09,
+    "surface_tolerance_m": 0.0001
+  },
+  "typed_float32_authority_inherited": {
+    "d343_retest_count": 0,
+    "decimal_0_0001_comparator_forbidden": true,
+    "expected_bits_hex": "0x38d1b717",
+    "expected_type_name": "float",
+    "expected_value_m": 9.999999747378752e-05
+  },
+  "what_and_why": "Resume the frozen D375 full P34 classifier offline over the immutable D377 clean-run evidence after D378 repaired workload authority, without any new NVIDIA runtime or grasp science."
+}

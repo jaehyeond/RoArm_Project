@@ -1,0 +1,118 @@
+{
+  "artifact": "D381_FAIL_STOP_ATTESTATION_V1",
+  "case": "g0a_d381",
+  "attempt": "attempt1_d380_visual_contract_repair",
+  "operational_verdict": "D381_BOARD_VALIDATION_JSON_SERIALIZATION_FAIL_STOP",
+  "completion_pass": false,
+  "first_failure": {
+    "phase": "board_layout_validation_json_write",
+    "exception_type": "TypeError",
+    "exception_message": "Object of type bool_ is not JSON serializable",
+    "stderr_path": "claudedocs/runtime_logs/grasp_track/g0a_d381/attempt1_d380_visual_contract_repair/d381_offline_worker_stderr.log",
+    "stderr_sha256": "2218c2837dee983d451f0b38e6e0c1b398bf3679daf66051918bd5cb3dcbfeec",
+    "program_order": "The board PNG was saved, then _write_json_x failed while serializing the first NumPy bool_ in the layout-validation object. _render_board did not return, so presentation archive construction and Viewer capture were not reached.",
+    "root_cause": "Matplotlib Bbox coordinates are numpy.float64. The four comparisons at script lines 685-690 therefore produce numpy.bool_; Python's standard json encoder does not serialize numpy.bool_ without an explicit built-in bool conversion.",
+    "independent_type_reproduction": {
+      "bbox_coordinate_type": "float64",
+      "comparison_type": "bool_",
+      "boolean_and_expression_type": "bool_",
+      "json_result": "TypeError",
+      "minimal_repair_not_applied_to_frozen_attempt": "Cast validation booleans to built-in bool before JSON serialization."
+    }
+  },
+  "execution": {
+    "actual_offline_presentation_workers": 1,
+    "automatic_worker_retries": 0,
+    "worker_returncode": 1,
+    "elapsed_seconds": 0.7154044299386442,
+    "watchdog_seconds": 300.0,
+    "timed_out": false,
+    "sigterm_sent": false,
+    "sigkill_sent": false,
+    "process_group_alive_after_wait": false,
+    "actual_rerun_viewer_invocations": 0,
+    "automatic_viewer_retries": 0,
+    "actual_recording_only_rrd_projections": 0,
+    "actual_rbl_writes": 0,
+    "actual_presentation_rrd_merges": 0
+  },
+  "scope_counters": {
+    "d379_reads": 0,
+    "numeric_or_geometry_audit_invocations": 0,
+    "asset_or_usd_reads": 0,
+    "asset_or_usd_writes": 0,
+    "collider_materializations_or_regenerations": 0,
+    "automatic_decomposition_sweeps": 0,
+    "isaac_launches": 0,
+    "kit_launches": 0,
+    "physx_calls": 0,
+    "cylinder_creates_or_writes": 0,
+    "physics_steps": 0,
+    "public_forwards": 0,
+    "q5_commands": 0,
+    "q5_samples": 0,
+    "contact_queries": 0,
+    "target_ik_path_pose_changes": 0,
+    "material_mass_actuator_physics_setting_changes": 0
+  },
+  "artifacts": {
+    "preregistration": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d381/attempt1_d380_visual_contract_repair/d381_preregistration.json",
+      "sha256": "fdffbe48ebd6af275ca534acf197952d3f8430287a20bbdf06af7d596512cc69",
+      "pass": true,
+      "checks": "15/15",
+      "negative_controls": "10/10"
+    },
+    "invocation": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d381/attempt1_d380_visual_contract_repair/d381_offline_presentation_invocation.json",
+      "sha256": "a53254cd290b8d74d34d8cbfff88954abbf975e192d5b1edbde459d9913473ae"
+    },
+    "supervisor": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d381/attempt1_d380_visual_contract_repair/d381_offline_worker_supervisor.json",
+      "sha256": "e2930719620aba6d67fd929c74f150d48ab4c7562ad0e27c65964721c399298a",
+      "pass": false
+    },
+    "emitted_board": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d381/attempt1_d380_visual_contract_repair/d381_d380_visual_contract_repaired_1920x1080.png",
+      "sha256": "19bd70781403eb11c4eaefb6adb60ab91a5e6ca9f67f2929548f8afff0b7f06d",
+      "width": 1920,
+      "height": 1080,
+      "completion_authority": false
+    },
+    "truncated_layout_validation": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d381/attempt1_d380_visual_contract_repair/d381_board_layout_validation.json",
+      "sha256": "bd8140b23bb4794eef67f98eb84aac670f7669e7d5d0d51be1f48a0f61942dba",
+      "valid_json": false,
+      "authority": "Do not parse, repair, or overwrite."
+    },
+    "partial_board_visual_inspection": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d381/attempt1_d380_visual_contract_repair/d381_partial_board_visual_inspection.json",
+      "sha256": "58639f2cf3a76bc40ad6921479b32d1645abcf8498fdaba636bc1b13995ba0e1",
+      "pass": false
+    }
+  },
+  "integrity": {
+    "d380_input_hashes_exact_11_of_11": true,
+    "preregistered_source_hashes_exact": true,
+    "head_equals_origin_master": true,
+    "head": "2acb5b99567946d343e95e61087357193da0826c",
+    "origin_master": "2acb5b99567946d343e95e61087357193da0826c",
+    "attempt_path_frozen_no_retry": true
+  },
+  "preserved_d380_result": {
+    "numeric_verdict": "D380_FAILED_PART_PROVENANCE_AUDIT_PASS_REPAIR_REQUIRED",
+    "p34_authored_to_cooked_identity_pass": false,
+    "g0a_pass": false
+  },
+  "remaining_nulls": {
+    "d381_complete_visual_contract": null,
+    "p34_representation_repair": null,
+    "p34_repaired_live_identity": null,
+    "actual_open_jaw_clearance": null,
+    "cylinder_contact_or_tipping": null,
+    "q5_closure": null,
+    "grasp_feasibility": null,
+    "target_ik_path_justification": null
+  },
+  "next_authorization_boundary": "A new forward-only observability-only case may change only NumPy-to-built-in boolean normalization in the layout-validation serialization path, inherit all D381 frozen inputs and presentation contracts, and use a new output directory. No retry or overwrite of D381 attempt1 is permitted."
+}

@@ -1,0 +1,24 @@
+{
+  "artifact": "D379_MANUAL_ORIGINAL_RESOLUTION_VISUAL_INSPECTION_V1",
+  "inspected_sha256": {
+    "board": "788e400799698b1df5c7add30c4561a1e61f9a4bdc53125c4ec6f7602bb19be0",
+    "rerun_inspection": "8df39e72c700beb4106d30af862131e7bc0eb2f7e1c1bf2fd2692651fae1a7a3"
+  },
+  "checks": {
+    "board_exact_size_and_four_columns_legible": true,
+    "source_authored_d373_d377_channels_distinguishable": true,
+    "metrics_and_thresholds_legible": true,
+    "verdict_matches_evidence": true,
+    "no_text_overlap_or_clipping": false,
+    "scope_boundary_and_g0a_false_visible": true,
+    "rerun_required_rows_visible": false
+  },
+  "observations": [
+    "The exact 1920x1080 board is legible. Both link5 and gripper_link show D372 source, USD Float32 readback, D373 frozen callback, and D377 clean-run callback in four labeled columns.",
+    "The board clearly shows identity FAIL, callback 17/34, frozen D373 payload exact 34/34, property rows 17+19, typed Float32 34/34, max surface 0.684167 mm, max bounds 0.250001 mm, and g0a_pass=false.",
+    "The Rerun screenshot contains all eight geometry views, but the lower metrics panel displays Unknown timeline instead of the required scalar rows.",
+    "A Viewer notification overlays part of the fourth top-row title, and the single-line verdict table text is clipped horizontally.",
+    "The Rerun presentation defect does not change the original JSON/callback identity FAIL, but it prevents the observability completion contract from passing."
+  ],
+  "pass": false
+}

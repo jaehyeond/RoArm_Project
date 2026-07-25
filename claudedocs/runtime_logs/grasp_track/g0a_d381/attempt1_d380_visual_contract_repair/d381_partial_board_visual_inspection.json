@@ -1,0 +1,30 @@
+{
+  "artifact": "D381_PARTIAL_BOARD_VISUAL_INSPECTION_V1",
+  "case": "g0a_d381",
+  "attempt": "attempt1_d380_visual_contract_repair",
+  "inspection_scope": "The emitted 1920x1080 static board only; no Rerun artifact or screenshot existed.",
+  "board": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d381/attempt1_d380_visual_contract_repair/d381_d380_visual_contract_repaired_1920x1080.png",
+    "sha256": "19bd70781403eb11c4eaefb6adb60ab91a5e6ca9f67f2929548f8afff0b7f06d",
+    "width": 1920,
+    "height": 1080
+  },
+  "inspection_checks": {
+    "board_exact_1920x1080": true,
+    "main_title_and_subtitle_do_not_overlap": true,
+    "chart_tick_labels_are_visible_inside_canvas": true,
+    "frozen_link5_and_gripper_geometry_subjects_are_visible": true,
+    "summary_panel_is_readable": true,
+    "rerun_four_geometry_views_visible": false,
+    "rerun_summary_visible": false,
+    "rerun_notification_buffer_verified": false
+  },
+  "observations": [
+    "The D381 static board is exactly 1920x1080 and visibly repairs the D380 title/subtitle collision and left-label clipping.",
+    "Both frozen D380 geometry crops, the 17-part inward-distance chart, the part-volume-loss chart, and the preserved D380 summary are readable.",
+    "Small dash-like remnants are visible near the top edge of each frozen geometry crop; they do not obscure the geometry but the board was not promoted because the automatic layout JSON gate failed first.",
+    "No recording-only RRD, replacement RBL, Viewer invocation, or Rerun screenshot was reached, so the complete D381 visual contract cannot pass."
+  ],
+  "inspector_result": "PARTIAL_FAIL_STOP",
+  "pass": false
+}

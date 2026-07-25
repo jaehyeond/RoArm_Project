@@ -1,0 +1,31 @@
+{
+  "artifact": "D378_ATTEMPT5_MANUAL_VISUAL_INSPECTION_V1",
+  "checks": {
+    "D377_frozen_verdict_and_remaining_nulls_visible": true,
+    "all_text_inside_registered_containers": true,
+    "no_text_overlap_or_clipping": true,
+    "raw_fail_and_corrected_pass_separated": true,
+    "repaired_board_text_legible": true,
+    "reused_rerun_ascii_rows_still_readable": true
+  },
+  "inspected_sha256": {
+    "repaired_board": "e788c54e34b9f3f3adbb0e2ed7322432f38d3587cd079761a36c15fb30b96b32",
+    "reused_rerun_inspection": "267735d18052a01d9e514bc3510441c390f17711efc05ca2cfefaf16ec38333b"
+  },
+  "inspection_method": "functions.view_image detail=original for the exact 1920x1080 board and the reused 3840x2160 Rerun screenshot",
+  "observations": {
+    "repaired_board": [
+      "All title, body, and footer text is legible at original resolution.",
+      "The observed terminal outcomes body stays inside its blue container with visible clearance.",
+      "No title/body, box/box, outcome/footer, or clipping overlap is visible.",
+      "The frozen D377 FAIL_STOP, corrected D378 authority PASS, remaining NULL boundaries, and g0a_pass=false are visually distinct."
+    ],
+    "reused_rerun_inspection": [
+      "All five audit-order rows and all three verdict-and-limits rows remain readable.",
+      "The display text is ASCII with no missing-glyph squares.",
+      "The sandbox warning toast does not cover the audit rows or verdict rows."
+    ]
+  },
+  "pass": true,
+  "repair_evidence_sha256": "98b35c235505463d04ff64e2a4f78bb02f5bb4e6529c717845667890e9e6ec6b"
+}

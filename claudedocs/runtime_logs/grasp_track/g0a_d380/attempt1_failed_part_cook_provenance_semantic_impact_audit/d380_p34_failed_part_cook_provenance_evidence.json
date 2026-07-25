@@ -1,0 +1,4345 @@
+{
+  "all_part_control_summary": {
+    "all_containment_certificates": true,
+    "all_json_numeric_exact_vertex_subset": true,
+    "all_same_body_local_frame_bindings": true,
+    "max_authored_support_plane_violation_m": 1.3877787807814457e-17,
+    "max_authored_vertex_count": 44
+  },
+  "artifact": "D380_P34_FAILED_PART_COOK_PROVENANCE_EVIDENCE_V1",
+  "attempt": "attempt1_failed_part_cook_provenance_semantic_impact_audit",
+  "audit_pass": true,
+  "capacity_causal_boundary": {
+    "authored_hull_vertex_limit": 64,
+    "exact_internal_cook_algorithm_or_tolerance_cause": null,
+    "input_exceeded_hull_vertex_limit": false,
+    "max_authored_unique_vertices_per_part": 44,
+    "verdict": "64_VERTEX_CAP_NOT_TRIGGERED_BY_ANY_P34_PART"
+  },
+  "case": "g0a_d380",
+  "counts": {
+    "all34_containment_certificates": 34,
+    "all34_json_numeric_exact_vertex_subsets": 34,
+    "all_parts": 34,
+    "failed_authored_unique_vertices": 401,
+    "failed_by_body": {
+      "gripper_link": 13,
+      "link5": 4
+    },
+    "failed_gate_signature_counts": {
+      "bounds+surface+volume": 2,
+      "plane+surface+volume": 1,
+      "surface": 2,
+      "surface+volume": 12
+    },
+    "failed_introduced_or_moved_vertices": 0,
+    "failed_omitted_vertices": 223,
+    "failed_omitted_vertices_beyond_inherited_0_1mm_surface_limit": 181,
+    "failed_parts": 17,
+    "failed_retained_vertices": 178
+  },
+  "current_scope_counters": {
+    "actual_offline_worker_invocations": 1,
+    "asset_or_usd_reads": 0,
+    "asset_or_usd_writes": 0,
+    "automatic_decomposition_sweeps": 0,
+    "automatic_retries": 0,
+    "collider_materializations_or_regenerations": 0,
+    "contact_queries": 0,
+    "cylinder_creates_or_writes": 0,
+    "isaac_launches": 0,
+    "kit_launches": 0,
+    "material_mass_actuator_physics_setting_changes": 0,
+    "offline_audit_invocations": 1,
+    "physics_steps": 0,
+    "physx_calls": 0,
+    "public_forwards": 0,
+    "q5_commands": 0,
+    "q5_samples": 0,
+    "target_ik_path_pose_changes": 0
+  },
+  "failed_parts": [
+    {
+      "authored": {
+        "bounds_m": [
+          [
+            -0.010767397470772266,
+            -0.009999631904065609,
+            -0.010903562419116497
+          ],
+          [
+            0.023804156109690666,
+            0.0016436328878626227,
+            0.0007502218359149992
+          ]
+        ],
+        "closure": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 126
+        },
+        "supporting_plane_convexity": {
+          "all_triangle_planes_supporting": true,
+          "float64_roundoff_budget_m": 9.094947017729282e-13,
+          "max_supporting_plane_violation_m": 3.469446951953614e-18,
+          "nondegenerate_triangle_count": 84,
+          "triangle_count": 84
+        },
+        "topology_volume_m3": 1.6430956139871583e-06
+      },
+      "body": "gripper_link",
+      "classification": "AUTHORED_VERTEX_ELISION_WITH_INWARD_COOK",
+      "cooked": {
+        "bounds_m": [
+          [
+            -0.010767397470772266,
+            -0.00995420292019844,
+            -0.010903562419116497
+          ],
+          [
+            0.023804156109690666,
+            0.0016436328878626227,
+            0.0007502218359149992
+          ]
+        ],
+        "closure_recomputed_from_embedded_triangles": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 33
+        },
+        "d379_closure": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 33
+        },
+        "d379_structural": {
+          "checks": {
+            "gpu_polygons_le_64": true,
+            "gpu_vertices_4_to_64": true,
+            "indices_in_range": true,
+            "indices_shape_nonempty": true,
+            "polygon_count_exact_nonempty": true,
+            "polygon_planes_finite": true,
+            "polygon_spans_contiguous_exact": true,
+            "vertices_per_polygon_le_32": true,
+            "vertices_shape_finite": true
+          },
+          "pass": true
+        },
+        "max_polygon_plane_residual_m": 1.0621110171915582e-09,
+        "original_polygon_topology_volume_m3": 1.5703701211622834e-06,
+        "physx_property_volume_m3": 1.5703701592428843e-06,
+        "polygon_count": 17,
+        "triangle_count": 22
+      },
+      "d379_part_pass": false,
+      "difference": {
+        "bounds_max_abs_mm": 0.045428983867168427,
+        "d379_absolute_volume_relative_percent": 4.426126648125985,
+        "lower_bound_inward_shift_xyz_mm": [
+          0.0,
+          0.045428983867168427,
+          0.0
+        ],
+        "max_inward_axis_reduction_mm": 0.045428983867168427,
+        "max_outward_axis_expansion_mm": 0.0,
+        "signed_part_volume_loss_m3": 7.272549282487488e-08,
+        "signed_part_volume_loss_mm3": 72.72549282487488,
+        "signed_part_volume_loss_percent": 4.426126648125985,
+        "surface_authored_to_cooked_mm": 0.6451590728593832,
+        "surface_cooked_to_authored_mm": 0.0,
+        "surface_symmetric_mm": 0.6451590728593832,
+        "upper_bound_inward_shift_xyz_mm": [
+          -0.0,
+          -0.0,
+          -0.0
+        ]
+      },
+      "failed_gate_signature": [
+        "surface",
+        "volume"
+      ],
+      "name": "proximal_upper_arm_hull_a",
+      "prim_name": "p000_proximal_upper_arm_hull_a",
+      "role": "moving_support",
+      "semantic_scope": "moving_support",
+      "set_containment_certificate": {
+        "callback_convexity_authority": "inherited D379 approximation=convexHull and callback authority; D380 does not rerun NVIDIA runtime",
+        "cooked_subset_of_authored_convex_part": true,
+        "logic": "authored triangle mesh is closed and all authored triangle planes are supporting; cooked callback is the inherited convexHull result and every embedded cooked vertex is a JSON-numeric-exact authored vertex; D379 property binding places the collider at zero local translation and identity local rotation in the same rigid-body frame",
+        "same_body_local_frame_binding": {
+          "checks": {
+            "local_pos_zero": true,
+            "local_rot_identity": true,
+            "path_nonempty": true,
+            "positive_finite_volume": true,
+            "result_valid": true
+          },
+          "live_path": "/World/Robot/gripper_link/collisions/d373_p34_parts/p000_proximal_upper_arm_hull_a",
+          "pass": true
+        }
+      },
+      "vertex_provenance": {
+        "authored_unique_vertex_count": 44,
+        "authored_vertex_count": 44,
+        "authored_vertex_set_sha256": "79bfbcb95abf9e0820dad9c2dd83826386e9dcf3c714c498afe7c2c7a10867bd",
+        "cooked_unique_vertex_count": 13,
+        "cooked_vertex_count": 13,
+        "cooked_vertex_set_sha256": "d0464f6348d6b74b33c9348c8b3105000d8b6bcfa4f2213da9c2d7ba2182c529",
+        "introduced_or_moved_cooked_vertex_count": 0,
+        "introduced_or_moved_cooked_vertices_m": [],
+        "json_numeric_exact_vertex_subset": true,
+        "max_omitted_vertex_to_cooked_surface_distance_mm": 0.6451590728593832,
+        "omitted_authored_vertex_count": 31,
+        "omitted_authored_vertex_indices": [
+          1,
+          2,
+          4,
+          5,
+          6,
+          7,
+          9,
+          10,
+          11,
+          14,
+          15,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          24,
+          25,
+          28,
+          29,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          41,
+          43
+        ],
+        "omitted_authored_vertices_m": [
+          [
+            -0.010767397470772266,
+            -0.002613320015370846,
+            0.0007502218359149992
+          ],
+          [
+            -0.010721967555582523,
+            -0.0031905630603432655,
+            -0.0007497782353311777
+          ],
+          [
+            -0.010586795397102833,
+            -0.003753592725843191,
+            -0.0007497782353311777
+          ],
+          [
+            -0.010586795397102833,
+            -0.003753592725843191,
+            0.0007502218359149992
+          ],
+          [
+            -0.01036521140486002,
+            -0.004288544878363609,
+            -0.0007497782353311777
+          ],
+          [
+            -0.01036521140486002,
+            -0.004288544878363609,
+            0.0007502218359149992
+          ],
+          [
+            -0.010062670335173607,
+            -0.004782247822731733,
+            0.0007502218359149992
+          ],
+          [
+            -0.009686620905995369,
+            -0.005222544074058533,
+            0.0007502218359149992
+          ],
+          [
+            -0.009686620905995369,
+            -0.005222544074058533,
+            -0.0007497782353311777
+          ],
+          [
+            -0.0059903087094426155,
+            -0.00891885720193386,
+            -0.0007497782353311777
+          ],
+          [
+            -0.0059903087094426155,
+            -0.00891885720193386,
+            0.0007502218359149992
+          ],
+          [
+            -0.005550011992454529,
+            -0.00929490476846695,
+            0.0007502218359149992
+          ],
+          [
+            -0.005056309513747692,
+            -0.009597446769475937,
+            0.0007502218359149992
+          ],
+          [
+            -0.005056309513747692,
+            -0.009597446769475937,
+            -0.0007497782353311777
+          ],
+          [
+            -0.004521357361227274,
+            -0.009819031693041325,
+            -0.0007497782353311777
+          ],
+          [
+            -0.004521357361227274,
+            -0.009819031693041325,
+            0.0007502218359149992
+          ],
+          [
+            -0.003958327695727348,
+            -0.00995420292019844,
+            -0.0007497782353311777
+          ],
+          [
+            -0.003381084417924285,
+            -0.009999631904065609,
+            -0.0007497782353311777
+          ],
+          [
+            -0.003381084417924285,
+            -0.009999631904065609,
+            0.0007502218359149992
+          ],
+          [
+            0.01737370900809765,
+            -0.009999631904065609,
+            -0.0007497782353311777
+          ],
+          [
+            0.01737370900809765,
+            -0.009999631904065609,
+            0.0007502218359149992
+          ],
+          [
+            0.01795095205307007,
+            -0.00995420292019844,
+            -0.0007497782353311777
+          ],
+          [
+            0.018513981252908707,
+            -0.009819031693041325,
+            0.0007502218359149992
+          ],
+          [
+            0.018513981252908707,
+            -0.009819031693041325,
+            -0.0007497782353311777
+          ],
+          [
+            0.019048934802412987,
+            -0.009597446769475937,
+            -0.0007497782353311777
+          ],
+          [
+            0.019048934802412987,
+            -0.009597446769475937,
+            0.0007502218359149992
+          ],
+          [
+            0.01954263634979725,
+            -0.00929490476846695,
+            -0.0007497782353311777
+          ],
+          [
+            0.01954263634979725,
+            -0.00929490476846695,
+            0.0007502218359149992
+          ],
+          [
+            0.01998293213546276,
+            -0.00891885720193386,
+            0.0007502218359149992
+          ],
+          [
+            0.023804156109690666,
+            -0.005983415991067886,
+            -0.010135913267731667
+          ],
+          [
+            0.023804156109690666,
+            -0.004483415745198727,
+            -0.010135913267731667
+          ]
+        ],
+        "omitted_vertex_to_cooked_surface_distance_mm": [
+          0.4305357335719077,
+          0.1351714402017229,
+          0.1798719021219039,
+          0.27696806826440573,
+          0.13517110949305783,
+          0.47982292667771026,
+          0.6035691138724386,
+          0.6451584699796621,
+          0.0454294529596064,
+          0.045430920623683306,
+          0.6451590728593832,
+          0.6035682095528561,
+          0.47982315960124955,
+          0.2668120237744046,
+          0.45762563439176224,
+          0.2769686851318752,
+          0.5677419357138719,
+          0.5944493363618009,
+          0.045428983867168427,
+          0.5267836962712871,
+          0.045428983867168427,
+          0.4837823408526094,
+          0.2513308845929781,
+          0.35583437709542787,
+          0.33709934592117796,
+          0.418112596335043,
+          0.4152229826951295,
+          0.4962362331089945,
+          0.48378139548281124,
+          0.04145983331818055,
+          0.04980022765976765
+        ],
+        "omitted_vertices_beyond_inherited_0_1mm_surface_limit": 25,
+        "retained_vertex_count": 13
+      }
+    },
+    {
+      "authored": {
+        "bounds_m": [
+          [
+            -0.010767397470772266,
+            0.001921268180012703,
+            -0.0007497782353311777
+          ],
+          [
+            0.020320646464824677,
+            0.015240367501974106,
+            0.0007502218359149992
+          ]
+        ],
+        "closure": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 96
+        },
+        "supporting_plane_convexity": {
+          "all_triangle_planes_supporting": true,
+          "float64_roundoff_budget_m": 9.094947017729282e-13,
+          "max_supporting_plane_violation_m": 1.734723475976807e-18,
+          "nondegenerate_triangle_count": 64,
+          "triangle_count": 64
+        },
+        "topology_volume_m3": 3.9476015446413604e-07
+      },
+      "body": "gripper_link",
+      "classification": "AUTHORED_VERTEX_ELISION_WITH_INWARD_COOK",
+      "cooked": {
+        "bounds_m": [
+          [
+            -0.010767397470772266,
+            0.001921268180012703,
+            -0.0007497782353311777
+          ],
+          [
+            0.020320646464824677,
+            0.015194937586784363,
+            0.0007502218359149992
+          ]
+        ],
+        "closure_recomputed_from_embedded_triangles": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 33
+        },
+        "d379_closure": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 33
+        },
+        "d379_structural": {
+          "checks": {
+            "gpu_polygons_le_64": true,
+            "gpu_vertices_4_to_64": true,
+            "indices_in_range": true,
+            "indices_shape_nonempty": true,
+            "polygon_count_exact_nonempty": true,
+            "polygon_planes_finite": true,
+            "polygon_spans_contiguous_exact": true,
+            "vertices_per_polygon_le_32": true,
+            "vertices_shape_finite": true
+          },
+          "pass": true
+        },
+        "max_polygon_plane_residual_m": 1.166558849519106e-09,
+        "original_polygon_topology_volume_m3": 3.848013208757559e-07,
+        "physx_property_volume_m3": 3.848012966045644e-07,
+        "polygon_count": 12,
+        "triangle_count": 22
+      },
+      "d379_part_pass": false,
+      "difference": {
+        "bounds_max_abs_mm": 0.04542991518974304,
+        "d379_absolute_volume_relative_percent": 2.522755520221808,
+        "lower_bound_inward_shift_xyz_mm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max_inward_axis_reduction_mm": 0.04542991518974304,
+        "max_outward_axis_expansion_mm": 0.0,
+        "signed_part_volume_loss_m3": 9.958833588380127e-09,
+        "signed_part_volume_loss_mm3": 9.958833588380127,
+        "signed_part_volume_loss_percent": 2.522755520221808,
+        "surface_authored_to_cooked_mm": 0.53144836074346,
+        "surface_cooked_to_authored_mm": 0.0,
+        "surface_symmetric_mm": 0.53144836074346,
+        "upper_bound_inward_shift_xyz_mm": [
+          -0.0,
+          0.04542991518974304,
+          -0.0
+        ]
+      },
+      "failed_gate_signature": [
+        "surface",
+        "volume"
+      ],
+      "name": "proximal_upper_arm_hull_b",
+      "prim_name": "p001_proximal_upper_arm_hull_b",
+      "role": "moving_support",
+      "semantic_scope": "moving_support",
+      "set_containment_certificate": {
+        "callback_convexity_authority": "inherited D379 approximation=convexHull and callback authority; D380 does not rerun NVIDIA runtime",
+        "cooked_subset_of_authored_convex_part": true,
+        "logic": "authored triangle mesh is closed and all authored triangle planes are supporting; cooked callback is the inherited convexHull result and every embedded cooked vertex is a JSON-numeric-exact authored vertex; D379 property binding places the collider at zero local translation and identity local rotation in the same rigid-body frame",
+        "same_body_local_frame_binding": {
+          "checks": {
+            "local_pos_zero": true,
+            "local_rot_identity": true,
+            "path_nonempty": true,
+            "positive_finite_volume": true,
+            "result_valid": true
+          },
+          "live_path": "/World/Robot/gripper_link/collisions/d373_p34_parts/p001_proximal_upper_arm_hull_b",
+          "pass": true
+        }
+      },
+      "vertex_provenance": {
+        "authored_unique_vertex_count": 34,
+        "authored_vertex_count": 34,
+        "authored_vertex_set_sha256": "148c4d4578402c900dfb3c456462f625c35b7bbcd3a0c1148815bf3c1ddbdb24",
+        "cooked_unique_vertex_count": 13,
+        "cooked_vertex_count": 13,
+        "cooked_vertex_set_sha256": "0d6361d858101c75c8278754eb60bb0f3f2d740929b09f85c409e7d8b7e6919d",
+        "introduced_or_moved_cooked_vertex_count": 0,
+        "introduced_or_moved_cooked_vertices_m": [],
+        "json_numeric_exact_vertex_subset": true,
+        "max_omitted_vertex_to_cooked_surface_distance_mm": 0.53144836074346,
+        "omitted_authored_vertex_count": 21,
+        "omitted_authored_vertex_indices": [
+          2,
+          3,
+          5,
+          6,
+          7,
+          8,
+          10,
+          11,
+          12,
+          13,
+          15,
+          16,
+          17,
+          20,
+          21,
+          22,
+          23,
+          26,
+          27,
+          30,
+          31
+        ],
+        "omitted_authored_vertices_m": [
+          [
+            -0.010721967555582523,
+            0.003191298572346568,
+            -0.0007497782353311777
+          ],
+          [
+            -0.010721967555582523,
+            0.003191298572346568,
+            0.0007502218359149992
+          ],
+          [
+            -0.010586795397102833,
+            0.0037543282378464937,
+            0.0007502218359149992
+          ],
+          [
+            -0.01036521140486002,
+            0.0042892806231975555,
+            -0.0007497782353311777
+          ],
+          [
+            -0.01036521140486002,
+            0.0042892806231975555,
+            0.0007502218359149992
+          ],
+          [
+            -0.010062670335173607,
+            0.004782983101904392,
+            -0.0007497782353311777
+          ],
+          [
+            -0.009686620905995369,
+            0.005223279818892479,
+            -0.0007497782353311777
+          ],
+          [
+            -0.009686620905995369,
+            0.005223279818892479,
+            0.0007502218359149992
+          ],
+          [
+            -0.0059903087094426155,
+            0.008919592015445232,
+            -0.0007497782353311777
+          ],
+          [
+            -0.0059903087094426155,
+            0.008919592015445232,
+            0.0007502218359149992
+          ],
+          [
+            -0.005921050440520048,
+            0.001921268180012703,
+            0.0007502218359149992
+          ],
+          [
+            -0.005550011992454529,
+            0.00929564144462347,
+            -0.0007497782353311777
+          ],
+          [
+            -0.005550011992454529,
+            0.00929564144462347,
+            0.0007502218359149992
+          ],
+          [
+            -0.004521357361227274,
+            0.009819766506552696,
+            -0.0007497782353311777
+          ],
+          [
+            -0.004521357361227274,
+            0.009819766506552696,
+            0.0007502218359149992
+          ],
+          [
+            0.004386256914585829,
+            0.001921268180012703,
+            0.0007502218359149992
+          ],
+          [
+            0.004386256914585829,
+            0.001921268180012703,
+            -0.0007497782353311777
+          ],
+          [
+            0.015906648710370064,
+            0.015059765428304672,
+            -0.0007497782353311777
+          ],
+          [
+            0.015906648710370064,
+            0.015059765428304672,
+            0.0007502218359149992
+          ],
+          [
+            0.017046920955181122,
+            0.015240367501974106,
+            0.0007502218359149992
+          ],
+          [
+            0.017046920955181122,
+            0.015240367501974106,
+            -0.0007497782353311777
+          ]
+        ],
+        "omitted_vertex_to_cooked_surface_distance_mm": [
+          0.04543041488515319,
+          0.13420224080129659,
+          0.17930583573988376,
+          0.20204080496128993,
+          0.13420202005819712,
+          0.3189204070690357,
+          0.3477607372956831,
+          0.05665411837819994,
+          0.20709023576880667,
+          0.15837758131679588,
+          0.53144836074346,
+          0.14718223168391695,
+          0.12418951897738473,
+          0.07984194555735094,
+          0.07984194555735094,
+          0.28434063572725715,
+          0.059689015091059165,
+          0.010854507182659703,
+          0.010854507182659703,
+          0.5002690585786598,
+          0.5002690585786598
+        ],
+        "omitted_vertices_beyond_inherited_0_1mm_surface_limit": 14,
+        "retained_vertex_count": 13
+      }
+    },
+    {
+      "authored": {
+        "bounds_m": [
+          [
+            -0.010767397470772266,
+            -0.009999631904065609,
+            -0.038617346435785294
+          ],
+          [
+            0.023804156109690666,
+            0.0016436328878626227,
+            -0.02696356363594532
+          ]
+        ],
+        "closure": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 126
+        },
+        "supporting_plane_convexity": {
+          "all_triangle_planes_supporting": true,
+          "float64_roundoff_budget_m": 9.094947017729282e-13,
+          "max_supporting_plane_violation_m": 6.938893903907228e-18,
+          "nondegenerate_triangle_count": 84,
+          "triangle_count": 84
+        },
+        "topology_volume_m3": 1.6430954438270674e-06
+      },
+      "body": "gripper_link",
+      "classification": "AUTHORED_VERTEX_ELISION_WITH_INWARD_COOK",
+      "cooked": {
+        "bounds_m": [
+          [
+            -0.010767397470772266,
+            -0.00995420292019844,
+            -0.038617346435785294
+          ],
+          [
+            0.023804156109690666,
+            0.0016436328878626227,
+            -0.02696356363594532
+          ]
+        ],
+        "closure_recomputed_from_embedded_triangles": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 33
+        },
+        "d379_closure": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 33
+        },
+        "d379_structural": {
+          "checks": {
+            "gpu_polygons_le_64": true,
+            "gpu_vertices_4_to_64": true,
+            "indices_in_range": true,
+            "indices_shape_nonempty": true,
+            "polygon_count_exact_nonempty": true,
+            "polygon_planes_finite": true,
+            "polygon_spans_contiguous_exact": true,
+            "vertices_per_polygon_le_32": true,
+            "vertices_shape_finite": true
+          },
+          "pass": true
+        },
+        "max_polygon_plane_residual_m": 7.737191610970862e-05,
+        "original_polygon_topology_volume_m3": 1.5333748017720559e-06,
+        "physx_property_volume_m3": 1.5333748706325423e-06,
+        "polygon_count": 16,
+        "triangle_count": 22
+      },
+      "d379_part_pass": false,
+      "difference": {
+        "bounds_max_abs_mm": 0.045428983867168427,
+        "d379_absolute_volume_relative_percent": 6.677679161440082,
+        "lower_bound_inward_shift_xyz_mm": [
+          0.0,
+          0.045428983867168427,
+          0.0
+        ],
+        "max_inward_axis_reduction_mm": 0.045428983867168427,
+        "max_outward_axis_expansion_mm": 0.0,
+        "signed_part_volume_loss_m3": 1.0972064205501151e-07,
+        "signed_part_volume_loss_mm3": 109.72064205501151,
+        "signed_part_volume_loss_percent": 6.677679161440082,
+        "surface_authored_to_cooked_mm": 0.6833593163804792,
+        "surface_cooked_to_authored_mm": 0.0,
+        "surface_symmetric_mm": 0.6833593163804792,
+        "upper_bound_inward_shift_xyz_mm": [
+          -0.0,
+          -0.0,
+          -0.0
+        ]
+      },
+      "failed_gate_signature": [
+        "plane",
+        "surface",
+        "volume"
+      ],
+      "name": "proximal_lower_arm_hull_a",
+      "prim_name": "p002_proximal_lower_arm_hull_a",
+      "role": "moving_support",
+      "semantic_scope": "moving_support",
+      "set_containment_certificate": {
+        "callback_convexity_authority": "inherited D379 approximation=convexHull and callback authority; D380 does not rerun NVIDIA runtime",
+        "cooked_subset_of_authored_convex_part": true,
+        "logic": "authored triangle mesh is closed and all authored triangle planes are supporting; cooked callback is the inherited convexHull result and every embedded cooked vertex is a JSON-numeric-exact authored vertex; D379 property binding places the collider at zero local translation and identity local rotation in the same rigid-body frame",
+        "same_body_local_frame_binding": {
+          "checks": {
+            "local_pos_zero": true,
+            "local_rot_identity": true,
+            "path_nonempty": true,
+            "positive_finite_volume": true,
+            "result_valid": true
+          },
+          "live_path": "/World/Robot/gripper_link/collisions/d373_p34_parts/p002_proximal_lower_arm_hull_a",
+          "pass": true
+        }
+      },
+      "vertex_provenance": {
+        "authored_unique_vertex_count": 44,
+        "authored_vertex_count": 44,
+        "authored_vertex_set_sha256": "88e57aae5513b7cbb3b27d096b1e8accfea89fef69ab51bf977bbaba0d5ba2cc",
+        "cooked_unique_vertex_count": 13,
+        "cooked_vertex_count": 13,
+        "cooked_vertex_set_sha256": "7bde8e8fa41b46bc238b935b39d8134d425302159eb51a5546790bba4b403acb",
+        "introduced_or_moved_cooked_vertex_count": 0,
+        "introduced_or_moved_cooked_vertices_m": [],
+        "json_numeric_exact_vertex_subset": true,
+        "max_omitted_vertex_to_cooked_surface_distance_mm": 0.6833593163804792,
+        "omitted_authored_vertex_count": 31,
+        "omitted_authored_vertex_indices": [
+          1,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          10,
+          11,
+          14,
+          15,
+          16,
+          18,
+          19,
+          20,
+          21,
+          23,
+          24,
+          25,
+          28,
+          29,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          41,
+          43
+        ],
+        "omitted_authored_vertices_m": [
+          [
+            -0.010767397470772266,
+            -0.002613320015370846,
+            -0.038617346435785294
+          ],
+          [
+            -0.010721967555582523,
+            -0.0031905630603432655,
+            -0.03711734712123871
+          ],
+          [
+            -0.010586795397102833,
+            -0.003753592725843191,
+            -0.038617346435785294
+          ],
+          [
+            -0.010586795397102833,
+            -0.003753592725843191,
+            -0.03711734712123871
+          ],
+          [
+            -0.01036521140486002,
+            -0.004288544878363609,
+            -0.03711734712123871
+          ],
+          [
+            -0.01036521140486002,
+            -0.004288544878363609,
+            -0.038617346435785294
+          ],
+          [
+            -0.010062670335173607,
+            -0.004782247822731733,
+            -0.038617346435785294
+          ],
+          [
+            -0.009686620905995369,
+            -0.005222544074058533,
+            -0.03711734712123871
+          ],
+          [
+            -0.009686620905995369,
+            -0.005222544074058533,
+            -0.038617346435785294
+          ],
+          [
+            -0.0059903087094426155,
+            -0.00891885720193386,
+            -0.038617346435785294
+          ],
+          [
+            -0.0059903087094426155,
+            -0.00891885720193386,
+            -0.03711734712123871
+          ],
+          [
+            -0.005550011992454529,
+            -0.00929490476846695,
+            -0.038617346435785294
+          ],
+          [
+            -0.005056309513747692,
+            -0.009597446769475937,
+            -0.038617346435785294
+          ],
+          [
+            -0.005056309513747692,
+            -0.009597446769475937,
+            -0.03711734712123871
+          ],
+          [
+            -0.004521357361227274,
+            -0.009819031693041325,
+            -0.038617346435785294
+          ],
+          [
+            -0.004521357361227274,
+            -0.009819031693041325,
+            -0.03711734712123871
+          ],
+          [
+            -0.003958327695727348,
+            -0.00995420292019844,
+            -0.03711734712123871
+          ],
+          [
+            -0.003381084417924285,
+            -0.009999631904065609,
+            -0.038617346435785294
+          ],
+          [
+            -0.003381084417924285,
+            -0.009999631904065609,
+            -0.03711734712123871
+          ],
+          [
+            0.01737370900809765,
+            -0.009999631904065609,
+            -0.03711734712123871
+          ],
+          [
+            0.01737370900809765,
+            -0.009999631904065609,
+            -0.038617346435785294
+          ],
+          [
+            0.01795095205307007,
+            -0.00995420292019844,
+            -0.03711734712123871
+          ],
+          [
+            0.018513981252908707,
+            -0.009819031693041325,
+            -0.038617346435785294
+          ],
+          [
+            0.018513981252908707,
+            -0.009819031693041325,
+            -0.03711734712123871
+          ],
+          [
+            0.019048934802412987,
+            -0.009597446769475937,
+            -0.038617346435785294
+          ],
+          [
+            0.019048934802412987,
+            -0.009597446769475937,
+            -0.03711734712123871
+          ],
+          [
+            0.01954263634979725,
+            -0.00929490476846695,
+            -0.038617346435785294
+          ],
+          [
+            0.01954263634979725,
+            -0.00929490476846695,
+            -0.03711734712123871
+          ],
+          [
+            0.01998293213546276,
+            -0.00891885720193386,
+            -0.038617346435785294
+          ],
+          [
+            0.023804156109690666,
+            -0.005983415991067886,
+            -0.02696356363594532
+          ],
+          [
+            0.023804156109690666,
+            -0.004483415745198727,
+            -0.027731211856007576
+          ]
+        ],
+        "omitted_vertex_to_cooked_surface_distance_mm": [
+          0.43053571567913773,
+          0.1351714402017229,
+          0.27696804564226707,
+          0.17987190139098122,
+          0.13517110949305783,
+          0.4798228874868348,
+          0.6035690645742497,
+          0.0454294529596064,
+          0.6451584172845487,
+          0.645159020164218,
+          0.045430920623683306,
+          0.6035681602547418,
+          0.47982312023811974,
+          0.27696897207852306,
+          0.2769686625097598,
+          0.47982394197799566,
+          0.6035695234689669,
+          0.045428983867168427,
+          0.6451585224254728,
+          0.562229459670755,
+          0.045428983867168427,
+          0.5170852130472328,
+          0.2512773820104579,
+          0.3877620076779406,
+          0.41802358975025644,
+          0.3313160922944868,
+          0.4961305957932513,
+          0.4094230983374778,
+          0.4836784095164216,
+          0.6833593163804792,
+          0.049800173433749664
+        ],
+        "omitted_vertices_beyond_inherited_0_1mm_surface_limit": 26,
+        "retained_vertex_count": 13
+      }
+    },
+    {
+      "authored": {
+        "bounds_m": [
+          [
+            -0.010767397470772266,
+            0.001921268180012703,
+            -0.038617346435785294
+          ],
+          [
+            0.020320646464824677,
+            0.015240367501974106,
+            -0.03711734712123871
+          ]
+        ],
+        "closure": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 96
+        },
+        "supporting_plane_convexity": {
+          "all_triangle_planes_supporting": true,
+          "float64_roundoff_budget_m": 9.094947017729282e-13,
+          "max_supporting_plane_violation_m": 1.734723475976807e-18,
+          "nondegenerate_triangle_count": 64,
+          "triangle_count": 64
+        },
+        "topology_volume_m3": 3.9476015446413604e-07
+      },
+      "body": "gripper_link",
+      "classification": "AUTHORED_VERTEX_ELISION_WITH_INWARD_COOK",
+      "cooked": {
+        "bounds_m": [
+          [
+            -0.010767397470772266,
+            0.001921268180012703,
+            -0.038617346435785294
+          ],
+          [
+            0.020320646464824677,
+            0.015194937586784363,
+            -0.03711734712123871
+          ]
+        ],
+        "closure_recomputed_from_embedded_triangles": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 33
+        },
+        "d379_closure": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 33
+        },
+        "d379_structural": {
+          "checks": {
+            "gpu_polygons_le_64": true,
+            "gpu_vertices_4_to_64": true,
+            "indices_in_range": true,
+            "indices_shape_nonempty": true,
+            "polygon_count_exact_nonempty": true,
+            "polygon_planes_finite": true,
+            "polygon_spans_contiguous_exact": true,
+            "vertices_per_polygon_le_32": true,
+            "vertices_shape_finite": true
+          },
+          "pass": true
+        },
+        "max_polygon_plane_residual_m": 1.2566385414886083e-09,
+        "original_polygon_topology_volume_m3": 3.848011267564302e-07,
+        "physx_property_volume_m3": 3.8480112607430783e-07,
+        "polygon_count": 12,
+        "triangle_count": 22
+      },
+      "d379_part_pass": false,
+      "difference": {
+        "bounds_max_abs_mm": 0.04542991518974304,
+        "d379_absolute_volume_relative_percent": 2.522804694213543,
+        "lower_bound_inward_shift_xyz_mm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max_inward_axis_reduction_mm": 0.04542991518974304,
+        "max_outward_axis_expansion_mm": 0.0,
+        "signed_part_volume_loss_m3": 9.959027707705856e-09,
+        "signed_part_volume_loss_mm3": 9.959027707705856,
+        "signed_part_volume_loss_percent": 2.522804694213543,
+        "surface_authored_to_cooked_mm": 0.5314483270897324,
+        "surface_cooked_to_authored_mm": 0.0,
+        "surface_symmetric_mm": 0.5314483270897324,
+        "upper_bound_inward_shift_xyz_mm": [
+          -0.0,
+          0.04542991518974304,
+          -0.0
+        ]
+      },
+      "failed_gate_signature": [
+        "surface",
+        "volume"
+      ],
+      "name": "proximal_lower_arm_hull_b",
+      "prim_name": "p003_proximal_lower_arm_hull_b",
+      "role": "moving_support",
+      "semantic_scope": "moving_support",
+      "set_containment_certificate": {
+        "callback_convexity_authority": "inherited D379 approximation=convexHull and callback authority; D380 does not rerun NVIDIA runtime",
+        "cooked_subset_of_authored_convex_part": true,
+        "logic": "authored triangle mesh is closed and all authored triangle planes are supporting; cooked callback is the inherited convexHull result and every embedded cooked vertex is a JSON-numeric-exact authored vertex; D379 property binding places the collider at zero local translation and identity local rotation in the same rigid-body frame",
+        "same_body_local_frame_binding": {
+          "checks": {
+            "local_pos_zero": true,
+            "local_rot_identity": true,
+            "path_nonempty": true,
+            "positive_finite_volume": true,
+            "result_valid": true
+          },
+          "live_path": "/World/Robot/gripper_link/collisions/d373_p34_parts/p003_proximal_lower_arm_hull_b",
+          "pass": true
+        }
+      },
+      "vertex_provenance": {
+        "authored_unique_vertex_count": 34,
+        "authored_vertex_count": 34,
+        "authored_vertex_set_sha256": "5ac90bb3a7ee131c0977d296907bbbd897887e707513ceefbac8eda99e68f02a",
+        "cooked_unique_vertex_count": 13,
+        "cooked_vertex_count": 13,
+        "cooked_vertex_set_sha256": "e8ba379d0bb37e96abf33560481201c4fa441fb14fd6473c742203015f598a0c",
+        "introduced_or_moved_cooked_vertex_count": 0,
+        "introduced_or_moved_cooked_vertices_m": [],
+        "json_numeric_exact_vertex_subset": true,
+        "max_omitted_vertex_to_cooked_surface_distance_mm": 0.5314483270897324,
+        "omitted_authored_vertex_count": 21,
+        "omitted_authored_vertex_indices": [
+          2,
+          3,
+          4,
+          6,
+          7,
+          9,
+          10,
+          11,
+          12,
+          13,
+          15,
+          16,
+          17,
+          20,
+          21,
+          22,
+          23,
+          26,
+          27,
+          30,
+          31
+        ],
+        "omitted_authored_vertices_m": [
+          [
+            -0.010721967555582523,
+            0.003191298572346568,
+            -0.038617346435785294
+          ],
+          [
+            -0.010721967555582523,
+            0.003191298572346568,
+            -0.03711734712123871
+          ],
+          [
+            -0.010586795397102833,
+            0.0037543282378464937,
+            -0.038617346435785294
+          ],
+          [
+            -0.01036521140486002,
+            0.0042892806231975555,
+            -0.03711734712123871
+          ],
+          [
+            -0.01036521140486002,
+            0.0042892806231975555,
+            -0.038617346435785294
+          ],
+          [
+            -0.010062670335173607,
+            0.004782983101904392,
+            -0.03711734712123871
+          ],
+          [
+            -0.009686620905995369,
+            0.005223279818892479,
+            -0.03711734712123871
+          ],
+          [
+            -0.009686620905995369,
+            0.005223279818892479,
+            -0.038617346435785294
+          ],
+          [
+            -0.0059903087094426155,
+            0.008919592015445232,
+            -0.03711734712123871
+          ],
+          [
+            -0.0059903087094426155,
+            0.008919592015445232,
+            -0.038617346435785294
+          ],
+          [
+            -0.005921050440520048,
+            0.001921268180012703,
+            -0.038617346435785294
+          ],
+          [
+            -0.005550011992454529,
+            0.00929564144462347,
+            -0.038617346435785294
+          ],
+          [
+            -0.005550011992454529,
+            0.00929564144462347,
+            -0.03711734712123871
+          ],
+          [
+            -0.004521357361227274,
+            0.009819766506552696,
+            -0.038617346435785294
+          ],
+          [
+            -0.004521357361227274,
+            0.009819766506552696,
+            -0.03711734712123871
+          ],
+          [
+            0.004386256914585829,
+            0.001921268180012703,
+            -0.03711734712123871
+          ],
+          [
+            0.004386256914585829,
+            0.001921268180012703,
+            -0.038617346435785294
+          ],
+          [
+            0.015906648710370064,
+            0.015059765428304672,
+            -0.038617346435785294
+          ],
+          [
+            0.015906648710370064,
+            0.015059765428304672,
+            -0.03711734712123871
+          ],
+          [
+            0.017046920955181122,
+            0.015240367501974106,
+            -0.038617346435785294
+          ],
+          [
+            0.017046920955181122,
+            0.015240367501974106,
+            -0.03711734712123871
+          ]
+        ],
+        "omitted_vertex_to_cooked_surface_distance_mm": [
+          0.134202239833913,
+          0.04543041488515319,
+          0.17930583444737538,
+          0.20204080035391278,
+          0.13420201909081364,
+          0.31892039979631437,
+          0.3477607293652813,
+          0.05665411837819994,
+          0.20709023104628319,
+          0.15837758131679588,
+          0.5314483270897324,
+          0.12418951897738473,
+          0.14718222832754488,
+          0.07984194555735094,
+          0.07984194555735094,
+          0.059689015091059165,
+          0.2843406177215145,
+          0.010854507182659703,
+          0.010854507182659703,
+          0.5002690585786598,
+          0.5002690585786598
+        ],
+        "omitted_vertices_beyond_inherited_0_1mm_surface_limit": 14,
+        "retained_vertex_count": 13
+      }
+    },
+    {
+      "authored": {
+        "bounds_m": [
+          [
+            0.023929156363010406,
+            -0.005983415991067886,
+            -0.03698234632611275
+          ],
+          [
+            0.041679155081510544,
+            -0.004483415745198727,
+            -0.026732347905635834
+          ]
+        ],
+        "closure": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 36
+        },
+        "supporting_plane_convexity": {
+          "all_triangle_planes_supporting": true,
+          "float64_roundoff_budget_m": 9.094947017729282e-13,
+          "max_supporting_plane_violation_m": 3.469446951953614e-18,
+          "nondegenerate_triangle_count": 24,
+          "triangle_count": 24
+        },
+        "topology_volume_m3": 2.5626563717196453e-07
+      },
+      "body": "gripper_link",
+      "classification": "AUTHORED_VERTEX_ELISION_WITH_INWARD_COOK",
+      "cooked": {
+        "bounds_m": [
+          [
+            0.023929156363010406,
+            -0.005983415991067886,
+            -0.03698234632611275
+          ],
+          [
+            0.041679155081510544,
+            -0.004483415745198727,
+            -0.026732347905635834
+          ]
+        ],
+        "closure_recomputed_from_embedded_triangles": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 24
+        },
+        "d379_closure": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 24
+        },
+        "d379_structural": {
+          "checks": {
+            "gpu_polygons_le_64": true,
+            "gpu_vertices_4_to_64": true,
+            "indices_in_range": true,
+            "indices_shape_nonempty": true,
+            "polygon_count_exact_nonempty": true,
+            "polygon_planes_finite": true,
+            "polygon_spans_contiguous_exact": true,
+            "vertices_per_polygon_le_32": true,
+            "vertices_shape_finite": true
+          },
+          "pass": true
+        },
+        "max_polygon_plane_residual_m": 3.725290298461914e-09,
+        "original_polygon_topology_volume_m3": 2.546406069674928e-07,
+        "physx_property_volume_m3": 2.5464061081947875e-07,
+        "polygon_count": 9,
+        "triangle_count": 16
+      },
+      "d379_part_pass": false,
+      "difference": {
+        "bounds_max_abs_mm": 0.0,
+        "d379_absolute_volume_relative_percent": 0.6341194326343674,
+        "lower_bound_inward_shift_xyz_mm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max_inward_axis_reduction_mm": 0.0,
+        "max_outward_axis_expansion_mm": 0.0,
+        "signed_part_volume_loss_m3": 1.625030204471708e-09,
+        "signed_part_volume_loss_mm3": 1.625030204471708,
+        "signed_part_volume_loss_percent": 0.6341194326343674,
+        "surface_authored_to_cooked_mm": 0.3016607029074068,
+        "surface_cooked_to_authored_mm": 0.0,
+        "surface_symmetric_mm": 0.3016607029074068,
+        "upper_bound_inward_shift_xyz_mm": [
+          -0.0,
+          -0.0,
+          -0.0
+        ]
+      },
+      "failed_gate_signature": [
+        "surface",
+        "volume"
+      ],
+      "name": "moving_jaw_00_proximal_upper_rail",
+      "prim_name": "p004_moving_jaw_00_proximal_upper_rail",
+      "role": "moving_jaw",
+      "semantic_scope": "moving_jaw_system",
+      "set_containment_certificate": {
+        "callback_convexity_authority": "inherited D379 approximation=convexHull and callback authority; D380 does not rerun NVIDIA runtime",
+        "cooked_subset_of_authored_convex_part": true,
+        "logic": "authored triangle mesh is closed and all authored triangle planes are supporting; cooked callback is the inherited convexHull result and every embedded cooked vertex is a JSON-numeric-exact authored vertex; D379 property binding places the collider at zero local translation and identity local rotation in the same rigid-body frame",
+        "same_body_local_frame_binding": {
+          "checks": {
+            "local_pos_zero": true,
+            "local_rot_identity": true,
+            "path_nonempty": true,
+            "positive_finite_volume": true,
+            "result_valid": true
+          },
+          "live_path": "/World/Robot/gripper_link/collisions/d373_p34_parts/p004_moving_jaw_00_proximal_upper_rail",
+          "pass": true
+        }
+      },
+      "vertex_provenance": {
+        "authored_unique_vertex_count": 14,
+        "authored_vertex_count": 14,
+        "authored_vertex_set_sha256": "01dcd0d5726851e7ac2739e99cf56f97c42267b60229626a04348fbcd7a6e689",
+        "cooked_unique_vertex_count": 10,
+        "cooked_vertex_count": 10,
+        "cooked_vertex_set_sha256": "aee916bc4a05457a3d57aa37fd85479609ff100ba02528e0e72bdf9f9bd2bd9c",
+        "introduced_or_moved_cooked_vertex_count": 0,
+        "introduced_or_moved_cooked_vertices_m": [],
+        "json_numeric_exact_vertex_subset": true,
+        "max_omitted_vertex_to_cooked_surface_distance_mm": 0.3016607029074068,
+        "omitted_authored_vertex_count": 4,
+        "omitted_authored_vertex_indices": [
+          3,
+          4,
+          9,
+          11
+        ],
+        "omitted_authored_vertices_m": [
+          [
+            0.02767915651202202,
+            -0.005983415991067886,
+            -0.03673234581947327
+          ],
+          [
+            0.027429156005382538,
+            -0.005983415991067886,
+            -0.036482349038124084
+          ],
+          [
+            0.02817915566265583,
+            -0.004483415745198727,
+            -0.03698234632611275
+          ],
+          [
+            0.027429156005382538,
+            -0.004483415745198727,
+            -0.036482349038124084
+          ]
+        ],
+        "omitted_vertex_to_cooked_surface_distance_mm": [
+          0.24994538466008992,
+          0.3016607029074068,
+          0.23798064273163277,
+          0.06572479926589142
+        ],
+        "omitted_vertices_beyond_inherited_0_1mm_surface_limit": 3,
+        "retained_vertex_count": 10
+      }
+    },
+    {
+      "authored": {
+        "bounds_m": [
+          [
+            0.023929156363010406,
+            -0.005983415991067886,
+            -0.011232347227633
+          ],
+          [
+            0.041679155081510544,
+            -0.004483415745198727,
+            -0.0009823472937569022
+          ]
+        ],
+        "closure": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 36
+        },
+        "supporting_plane_convexity": {
+          "all_triangle_planes_supporting": true,
+          "float64_roundoff_budget_m": 9.094947017729282e-13,
+          "max_supporting_plane_violation_m": 3.469446951953614e-18,
+          "nondegenerate_triangle_count": 24,
+          "triangle_count": 24
+        },
+        "topology_volume_m3": 2.56640637189776e-07
+      },
+      "body": "gripper_link",
+      "classification": "AUTHORED_VERTEX_ELISION_WITH_INWARD_COOK",
+      "cooked": {
+        "bounds_m": [
+          [
+            0.023929156363010406,
+            -0.005983415991067886,
+            -0.011232347227633
+          ],
+          [
+            0.041679155081510544,
+            -0.004483415745198727,
+            -0.0009823472937569022
+          ]
+        ],
+        "closure_recomputed_from_embedded_triangles": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 24
+        },
+        "d379_closure": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 24
+        },
+        "d379_structural": {
+          "checks": {
+            "gpu_polygons_le_64": true,
+            "gpu_vertices_4_to_64": true,
+            "indices_in_range": true,
+            "indices_shape_nonempty": true,
+            "polygon_count_exact_nonempty": true,
+            "polygon_planes_finite": true,
+            "polygon_spans_contiguous_exact": true,
+            "vertices_per_polygon_le_32": true,
+            "vertices_shape_finite": true
+          },
+          "pass": true
+        },
+        "max_polygon_plane_residual_m": 5.625958379718021e-10,
+        "original_polygon_topology_volume_m3": 2.556562672314427e-07,
+        "physx_property_volume_m3": 2.5565626060597424e-07,
+        "polygon_count": 7,
+        "triangle_count": 16
+      },
+      "d379_part_pass": false,
+      "difference": {
+        "bounds_max_abs_mm": 0.0,
+        "d379_absolute_volume_relative_percent": 0.38355966113246637,
+        "lower_bound_inward_shift_xyz_mm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max_inward_axis_reduction_mm": 0.0,
+        "max_outward_axis_expansion_mm": 0.0,
+        "signed_part_volume_loss_m3": 9.843699583333074e-10,
+        "signed_part_volume_loss_mm3": 0.9843699583333074,
+        "signed_part_volume_loss_percent": 0.38355966113246637,
+        "surface_authored_to_cooked_mm": 0.12492109555694479,
+        "surface_cooked_to_authored_mm": 0.0,
+        "surface_symmetric_mm": 0.12492109555694479,
+        "upper_bound_inward_shift_xyz_mm": [
+          -0.0,
+          -0.0,
+          -0.0
+        ]
+      },
+      "failed_gate_signature": [
+        "surface"
+      ],
+      "name": "moving_jaw_01_proximal_lower_rail",
+      "prim_name": "p005_moving_jaw_01_proximal_lower_rail",
+      "role": "moving_jaw",
+      "semantic_scope": "moving_jaw_system",
+      "set_containment_certificate": {
+        "callback_convexity_authority": "inherited D379 approximation=convexHull and callback authority; D380 does not rerun NVIDIA runtime",
+        "cooked_subset_of_authored_convex_part": true,
+        "logic": "authored triangle mesh is closed and all authored triangle planes are supporting; cooked callback is the inherited convexHull result and every embedded cooked vertex is a JSON-numeric-exact authored vertex; D379 property binding places the collider at zero local translation and identity local rotation in the same rigid-body frame",
+        "same_body_local_frame_binding": {
+          "checks": {
+            "local_pos_zero": true,
+            "local_rot_identity": true,
+            "path_nonempty": true,
+            "positive_finite_volume": true,
+            "result_valid": true
+          },
+          "live_path": "/World/Robot/gripper_link/collisions/d373_p34_parts/p005_moving_jaw_01_proximal_lower_rail",
+          "pass": true
+        }
+      },
+      "vertex_provenance": {
+        "authored_unique_vertex_count": 14,
+        "authored_vertex_count": 14,
+        "authored_vertex_set_sha256": "7ab3ff37cfc4eb4bcc1d5fc921c88eb590ceaeadbc10fe56f7ddf93122be7c03",
+        "cooked_unique_vertex_count": 10,
+        "cooked_vertex_count": 10,
+        "cooked_vertex_set_sha256": "fb95e4dfefc91c1d72d486cbcb9bc0637eac63ea221bbdf649df45af0ec1ce5a",
+        "introduced_or_moved_cooked_vertex_count": 0,
+        "introduced_or_moved_cooked_vertices_m": [],
+        "json_numeric_exact_vertex_subset": true,
+        "max_omitted_vertex_to_cooked_surface_distance_mm": 0.12492109555694479,
+        "omitted_authored_vertex_count": 4,
+        "omitted_authored_vertex_indices": [
+          1,
+          2,
+          8,
+          9
+        ],
+        "omitted_authored_vertices_m": [
+          [
+            0.024179156869649887,
+            -0.005983415991067886,
+            -0.006232347339391708
+          ],
+          [
+            0.027429156005382538,
+            -0.005983415991067886,
+            -0.0014823473757132888
+          ],
+          [
+            0.024179156869649887,
+            -0.004483415745198727,
+            -0.006232347339391708
+          ],
+          [
+            0.027429156005382538,
+            -0.004483415745198727,
+            -0.0014823473757132888
+          ]
+        ],
+        "omitted_vertex_to_cooked_surface_distance_mm": [
+          0.08030561130725757,
+          0.12492109555694168,
+          0.08030561130725757,
+          0.12492109555694479
+        ],
+        "omitted_vertices_beyond_inherited_0_1mm_surface_limit": 2,
+        "retained_vertex_count": 10
+      }
+    },
+    {
+      "authored": {
+        "bounds_m": [
+          [
+            0.060429155826568604,
+            -0.005983415991067886,
+            -0.02898234687745571
+          ],
+          [
+            0.0669291540980339,
+            -0.004483415745198727,
+            -0.008982347324490547
+          ]
+        ],
+        "closure": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 42
+        },
+        "supporting_plane_convexity": {
+          "all_triangle_planes_supporting": true,
+          "float64_roundoff_budget_m": 9.094947017729282e-13,
+          "max_supporting_plane_violation_m": 0.0,
+          "nondegenerate_triangle_count": 28,
+          "triangle_count": 28
+        },
+        "topology_volume_m3": 1.3110938122736118e-07
+      },
+      "body": "gripper_link",
+      "classification": "AUTHORED_VERTEX_ELISION_WITH_INWARD_COOK",
+      "cooked": {
+        "bounds_m": [
+          [
+            0.060429155826568604,
+            -0.005983415991067886,
+            -0.02898234687745571
+          ],
+          [
+            0.0669291540980339,
+            -0.004483415745198727,
+            -0.008982347324490547
+          ]
+        ],
+        "closure_recomputed_from_embedded_triangles": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 18
+        },
+        "d379_closure": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 18
+        },
+        "d379_structural": {
+          "checks": {
+            "gpu_polygons_le_64": true,
+            "gpu_vertices_4_to_64": true,
+            "indices_in_range": true,
+            "indices_shape_nonempty": true,
+            "polygon_count_exact_nonempty": true,
+            "polygon_planes_finite": true,
+            "polygon_spans_contiguous_exact": true,
+            "vertices_per_polygon_le_32": true,
+            "vertices_shape_finite": true
+          },
+          "pass": true
+        },
+        "max_polygon_plane_residual_m": 7.343758712252679e-09,
+        "original_polygon_topology_volume_m3": 1.2706249286513408e-07,
+        "physx_property_volume_m3": 1.2706249208349618e-07,
+        "polygon_count": 9,
+        "triangle_count": 12
+      },
+      "d379_part_pass": false,
+      "difference": {
+        "bounds_max_abs_mm": 0.0,
+        "d379_absolute_volume_relative_percent": 3.0866504931552208,
+        "lower_bound_inward_shift_xyz_mm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max_inward_axis_reduction_mm": 0.0,
+        "max_outward_axis_expansion_mm": 0.0,
+        "signed_part_volume_loss_m3": 4.046888362227102e-09,
+        "signed_part_volume_loss_mm3": 4.046888362227103,
+        "signed_part_volume_loss_percent": 3.0866504931552208,
+        "surface_authored_to_cooked_mm": 0.4416586800734206,
+        "surface_cooked_to_authored_mm": 0.0,
+        "surface_symmetric_mm": 0.4416586800734206,
+        "upper_bound_inward_shift_xyz_mm": [
+          -0.0,
+          -0.0,
+          -0.0
+        ]
+      },
+      "failed_gate_signature": [
+        "surface",
+        "volume"
+      ],
+      "name": "moving_jaw_05_distal_nose_bridge",
+      "prim_name": "p009_moving_jaw_05_distal_nose_bridge",
+      "role": "moving_jaw",
+      "semantic_scope": "moving_jaw_system",
+      "set_containment_certificate": {
+        "callback_convexity_authority": "inherited D379 approximation=convexHull and callback authority; D380 does not rerun NVIDIA runtime",
+        "cooked_subset_of_authored_convex_part": true,
+        "logic": "authored triangle mesh is closed and all authored triangle planes are supporting; cooked callback is the inherited convexHull result and every embedded cooked vertex is a JSON-numeric-exact authored vertex; D379 property binding places the collider at zero local translation and identity local rotation in the same rigid-body frame",
+        "same_body_local_frame_binding": {
+          "checks": {
+            "local_pos_zero": true,
+            "local_rot_identity": true,
+            "path_nonempty": true,
+            "positive_finite_volume": true,
+            "result_valid": true
+          },
+          "live_path": "/World/Robot/gripper_link/collisions/d373_p34_parts/p009_moving_jaw_05_distal_nose_bridge",
+          "pass": true
+        }
+      },
+      "vertex_provenance": {
+        "authored_unique_vertex_count": 16,
+        "authored_vertex_count": 16,
+        "authored_vertex_set_sha256": "57881bf9e1af72e8a49d74e9b8f75f77f8d7bada8a2a88048629abb50a236edc",
+        "cooked_unique_vertex_count": 8,
+        "cooked_vertex_count": 8,
+        "cooked_vertex_set_sha256": "ab4c9d2accb38262356ac3a0de20564295ddf8af3a335c8f190c8712d36a7483",
+        "introduced_or_moved_cooked_vertex_count": 0,
+        "introduced_or_moved_cooked_vertices_m": [],
+        "json_numeric_exact_vertex_subset": true,
+        "max_omitted_vertex_to_cooked_surface_distance_mm": 0.4416586800734206,
+        "omitted_authored_vertex_count": 8,
+        "omitted_authored_vertex_indices": [
+          1,
+          2,
+          4,
+          5,
+          8,
+          9,
+          11,
+          13
+        ],
+        "omitted_authored_vertices_m": [
+          [
+            0.06667915731668472,
+            -0.005983415991067886,
+            -0.015482347458600998
+          ],
+          [
+            0.0669291540980339,
+            -0.005983415991067886,
+            -0.01623234711587429
+          ],
+          [
+            0.06667915731668472,
+            -0.005983415991067886,
+            -0.02248234674334526
+          ],
+          [
+            0.06617915630340576,
+            -0.005983415991067886,
+            -0.023232348263263702
+          ],
+          [
+            0.06642915308475494,
+            -0.004483415745198727,
+            -0.014982347376644611
+          ],
+          [
+            0.06667915731668472,
+            -0.004483415745198727,
+            -0.015482347458600998
+          ],
+          [
+            0.0669291540980339,
+            -0.004483415745198727,
+            -0.021732347086071968
+          ],
+          [
+            0.06617915630340576,
+            -0.004483415745198727,
+            -0.023232348263263702
+          ]
+        ],
+        "omitted_vertex_to_cooked_surface_distance_mm": [
+          0.2049982731135568,
+          0.39216377833020893,
+          0.307824476240809,
+          0.4334664394955347,
+          0.4416586800734206,
+          0.30057595915204705,
+          0.21749828639360494,
+          0.1594154243352629
+        ],
+        "omitted_vertices_beyond_inherited_0_1mm_surface_limit": 8,
+        "retained_vertex_count": 8
+      }
+    },
+    {
+      "authored": {
+        "bounds_m": [
+          [
+            0.045429155230522156,
+            -0.005983415991067886,
+            -0.032982345670461655
+          ],
+          [
+            0.04967915639281273,
+            -0.004483415745198727,
+            -0.020482346415519714
+          ]
+        ],
+        "closure": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 30
+        },
+        "supporting_plane_convexity": {
+          "all_triangle_planes_supporting": true,
+          "float64_roundoff_budget_m": 9.094947017729282e-13,
+          "max_supporting_plane_violation_m": 6.938893903907228e-18,
+          "nondegenerate_triangle_count": 20,
+          "triangle_count": 20
+        },
+        "topology_volume_m3": 6.614062814151116e-08
+      },
+      "body": "gripper_link",
+      "classification": "AUTHORED_VERTEX_ELISION_WITH_INWARD_COOK",
+      "cooked": {
+        "bounds_m": [
+          [
+            0.045429155230522156,
+            -0.005983415991067886,
+            -0.032982345670461655
+          ],
+          [
+            0.04967915639281273,
+            -0.004483415745198727,
+            -0.020482346415519714
+          ]
+        ],
+        "closure_recomputed_from_embedded_triangles": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 18
+        },
+        "d379_closure": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 18
+        },
+        "d379_structural": {
+          "checks": {
+            "gpu_polygons_le_64": true,
+            "gpu_vertices_4_to_64": true,
+            "indices_in_range": true,
+            "indices_shape_nonempty": true,
+            "polygon_count_exact_nonempty": true,
+            "polygon_planes_finite": true,
+            "polygon_spans_contiguous_exact": true,
+            "vertices_per_polygon_le_32": true,
+            "vertices_shape_finite": true
+          },
+          "pass": true
+        },
+        "max_polygon_plane_residual_m": 1.2414789196668607e-09,
+        "original_polygon_topology_volume_m3": 6.539064440759858e-08,
+        "physx_property_volume_m3": 6.539064401067662e-08,
+        "polygon_count": 6,
+        "triangle_count": 12
+      },
+      "d379_part_pass": false,
+      "difference": {
+        "bounds_max_abs_mm": 0.0,
+        "d379_absolute_volume_relative_percent": 1.1339229078803894,
+        "lower_bound_inward_shift_xyz_mm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max_inward_axis_reduction_mm": 0.0,
+        "max_outward_axis_expansion_mm": 0.0,
+        "signed_part_volume_loss_m3": 7.499837339125786e-10,
+        "signed_part_volume_loss_mm3": 0.7499837339125786,
+        "signed_part_volume_loss_percent": 1.1339229078803894,
+        "surface_authored_to_cooked_mm": 0.10709933097972608,
+        "surface_cooked_to_authored_mm": 0.0,
+        "surface_symmetric_mm": 0.10709933097972608,
+        "upper_bound_inward_shift_xyz_mm": [
+          -0.0,
+          -0.0,
+          -0.0
+        ]
+      },
+      "failed_gate_signature": [
+        "surface",
+        "volume"
+      ],
+      "name": "moving_jaw_06_moving_brace_01",
+      "prim_name": "p010_moving_jaw_06_moving_brace_01",
+      "role": "moving_jaw",
+      "semantic_scope": "moving_jaw_system",
+      "set_containment_certificate": {
+        "callback_convexity_authority": "inherited D379 approximation=convexHull and callback authority; D380 does not rerun NVIDIA runtime",
+        "cooked_subset_of_authored_convex_part": true,
+        "logic": "authored triangle mesh is closed and all authored triangle planes are supporting; cooked callback is the inherited convexHull result and every embedded cooked vertex is a JSON-numeric-exact authored vertex; D379 property binding places the collider at zero local translation and identity local rotation in the same rigid-body frame",
+        "same_body_local_frame_binding": {
+          "checks": {
+            "local_pos_zero": true,
+            "local_rot_identity": true,
+            "path_nonempty": true,
+            "positive_finite_volume": true,
+            "result_valid": true
+          },
+          "live_path": "/World/Robot/gripper_link/collisions/d373_p34_parts/p010_moving_jaw_06_moving_brace_01",
+          "pass": true
+        }
+      },
+      "vertex_provenance": {
+        "authored_unique_vertex_count": 12,
+        "authored_vertex_count": 12,
+        "authored_vertex_set_sha256": "4a2afc65e21fc0de239b6cc9165ca433dfb69d9168ebce354bb0840c9cf9bfd8",
+        "cooked_unique_vertex_count": 8,
+        "cooked_vertex_count": 8,
+        "cooked_vertex_set_sha256": "54d704b4fa4c58ba0994d0358b0f0c119a7c073e915493092b7c01536abe21bf",
+        "introduced_or_moved_cooked_vertex_count": 0,
+        "introduced_or_moved_cooked_vertices_m": [],
+        "json_numeric_exact_vertex_subset": true,
+        "max_omitted_vertex_to_cooked_surface_distance_mm": 0.10709933097972608,
+        "omitted_authored_vertex_count": 4,
+        "omitted_authored_vertex_indices": [
+          1,
+          3,
+          7,
+          9
+        ],
+        "omitted_authored_vertices_m": [
+          [
+            0.04917915537953377,
+            -0.005983415991067886,
+            -0.023982347920536995
+          ],
+          [
+            0.04967915639281273,
+            -0.005983415991067886,
+            -0.029232347384095192
+          ],
+          [
+            0.04917915537953377,
+            -0.004483415745198727,
+            -0.023982347920536995
+          ],
+          [
+            0.04967915639281273,
+            -0.004483415745198727,
+            -0.029232347384095192
+          ]
+        ],
+        "omitted_vertex_to_cooked_surface_distance_mm": [
+          0.011397704940947124,
+          0.10709933097972608,
+          0.011397704940947124,
+          0.10709933097972608
+        ],
+        "omitted_vertices_beyond_inherited_0_1mm_surface_limit": 2,
+        "retained_vertex_count": 8
+      }
+    },
+    {
+      "authored": {
+        "bounds_m": [
+          [
+            0.05092915520071983,
+            -0.005983415991067886,
+            -0.032982345670461655
+          ],
+          [
+            0.06017915531992912,
+            -0.004483415745198727,
+            -0.019732346758246422
+          ]
+        ],
+        "closure": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 42
+        },
+        "supporting_plane_convexity": {
+          "all_triangle_planes_supporting": true,
+          "float64_roundoff_budget_m": 9.094947017729282e-13,
+          "max_supporting_plane_violation_m": 6.938893903907228e-18,
+          "nondegenerate_triangle_count": 28,
+          "triangle_count": 28
+        },
+        "topology_volume_m3": 1.546875073472622e-07
+      },
+      "body": "gripper_link",
+      "classification": "AUTHORED_VERTEX_ELISION_WITH_INWARD_COOK",
+      "cooked": {
+        "bounds_m": [
+          [
+            0.05092915520071983,
+            -0.005983415991067886,
+            -0.032982345670461655
+          ],
+          [
+            0.06017915531992912,
+            -0.004483415745198727,
+            -0.019732346758246422
+          ]
+        ],
+        "closure_recomputed_from_embedded_triangles": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 30
+        },
+        "d379_closure": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 30
+        },
+        "d379_structural": {
+          "checks": {
+            "gpu_polygons_le_64": true,
+            "gpu_vertices_4_to_64": true,
+            "indices_in_range": true,
+            "indices_shape_nonempty": true,
+            "polygon_count_exact_nonempty": true,
+            "polygon_planes_finite": true,
+            "polygon_spans_contiguous_exact": true,
+            "vertices_per_polygon_le_32": true,
+            "vertices_shape_finite": true
+          },
+          "pass": true
+        },
+        "max_polygon_plane_residual_m": 2.984351543666719e-09,
+        "original_polygon_topology_volume_m3": 1.5393750410154267e-07,
+        "physx_property_volume_m3": 1.5393750629755232e-07,
+        "polygon_count": 8,
+        "triangle_count": 20
+      },
+      "d379_part_pass": false,
+      "difference": {
+        "bounds_max_abs_mm": 0.0,
+        "d379_absolute_volume_relative_percent": 0.4848505600622496,
+        "lower_bound_inward_shift_xyz_mm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max_inward_axis_reduction_mm": 0.0,
+        "max_outward_axis_expansion_mm": 0.0,
+        "signed_part_volume_loss_m3": 7.500032457195342e-10,
+        "signed_part_volume_loss_mm3": 0.7500032457195343,
+        "signed_part_volume_loss_percent": 0.4848505600622496,
+        "surface_authored_to_cooked_mm": 0.10709933097972608,
+        "surface_cooked_to_authored_mm": 0.0,
+        "surface_symmetric_mm": 0.10709933097972608,
+        "upper_bound_inward_shift_xyz_mm": [
+          -0.0,
+          -0.0,
+          -0.0
+        ]
+      },
+      "failed_gate_signature": [
+        "surface"
+      ],
+      "name": "moving_jaw_07_moving_brace_02",
+      "prim_name": "p011_moving_jaw_07_moving_brace_02",
+      "role": "moving_jaw",
+      "semantic_scope": "moving_jaw_system",
+      "set_containment_certificate": {
+        "callback_convexity_authority": "inherited D379 approximation=convexHull and callback authority; D380 does not rerun NVIDIA runtime",
+        "cooked_subset_of_authored_convex_part": true,
+        "logic": "authored triangle mesh is closed and all authored triangle planes are supporting; cooked callback is the inherited convexHull result and every embedded cooked vertex is a JSON-numeric-exact authored vertex; D379 property binding places the collider at zero local translation and identity local rotation in the same rigid-body frame",
+        "same_body_local_frame_binding": {
+          "checks": {
+            "local_pos_zero": true,
+            "local_rot_identity": true,
+            "path_nonempty": true,
+            "positive_finite_volume": true,
+            "result_valid": true
+          },
+          "live_path": "/World/Robot/gripper_link/collisions/d373_p34_parts/p011_moving_jaw_07_moving_brace_02",
+          "pass": true
+        }
+      },
+      "vertex_provenance": {
+        "authored_unique_vertex_count": 16,
+        "authored_vertex_count": 16,
+        "authored_vertex_set_sha256": "dd34ebadc579e6a87d3f0ee0f460bcf210b58afb6028e79a1a080d705ca8a41a",
+        "cooked_unique_vertex_count": 12,
+        "cooked_vertex_count": 12,
+        "cooked_vertex_set_sha256": "c3edb04ef362d5eb9506cb501eb3fa3fbd1d847f91a16b7258440a3b4849293f",
+        "introduced_or_moved_cooked_vertex_count": 0,
+        "introduced_or_moved_cooked_vertices_m": [],
+        "json_numeric_exact_vertex_subset": true,
+        "max_omitted_vertex_to_cooked_surface_distance_mm": 0.10709933097972608,
+        "omitted_authored_vertex_count": 4,
+        "omitted_authored_vertex_indices": [
+          2,
+          5,
+          10,
+          13
+        ],
+        "omitted_authored_vertices_m": [
+          [
+            0.05092915520071983,
+            -0.005983415991067886,
+            -0.029232347384095192
+          ],
+          [
+            0.05592915788292885,
+            -0.005983415991067886,
+            -0.019732346758246422
+          ],
+          [
+            0.05092915520071983,
+            -0.004483415745198727,
+            -0.029232347384095192
+          ],
+          [
+            0.05592915788292885,
+            -0.004483415745198727,
+            -0.019732346758246422
+          ]
+        ],
+        "omitted_vertex_to_cooked_surface_distance_mm": [
+          0.10709933097972608,
+          0.013867567343369042,
+          0.10709933097972608,
+          0.013867567343369042
+        ],
+        "omitted_vertices_beyond_inherited_0_1mm_surface_limit": 2,
+        "retained_vertex_count": 12
+      }
+    },
+    {
+      "authored": {
+        "bounds_m": [
+          [
+            0.05092915520071983,
+            -0.005983415991067886,
+            -0.017982346937060356
+          ],
+          [
+            0.06017915531992912,
+            -0.004483415745198727,
+            -0.004982347134500742
+          ]
+        ],
+        "closure": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 42
+        },
+        "supporting_plane_convexity": {
+          "all_triangle_planes_supporting": true,
+          "float64_roundoff_budget_m": 9.094947017729282e-13,
+          "max_supporting_plane_violation_m": 3.469446951953614e-18,
+          "nondegenerate_triangle_count": 28,
+          "triangle_count": 28
+        },
+        "topology_volume_m3": 1.523437572359403e-07
+      },
+      "body": "gripper_link",
+      "classification": "AUTHORED_VERTEX_ELISION_WITH_INWARD_COOK",
+      "cooked": {
+        "bounds_m": [
+          [
+            0.051179155707359314,
+            -0.005983415991067886,
+            -0.017982346937060356
+          ],
+          [
+            0.06017915531992912,
+            -0.004483415745198727,
+            -0.004982347134500742
+          ]
+        ],
+        "closure_recomputed_from_embedded_triangles": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 30
+        },
+        "d379_closure": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 30
+        },
+        "d379_structural": {
+          "checks": {
+            "gpu_polygons_le_64": true,
+            "gpu_vertices_4_to_64": true,
+            "indices_in_range": true,
+            "indices_shape_nonempty": true,
+            "polygon_count_exact_nonempty": true,
+            "polygon_planes_finite": true,
+            "polygon_spans_contiguous_exact": true,
+            "vertices_per_polygon_le_32": true,
+            "vertices_shape_finite": true
+          },
+          "pass": true
+        },
+        "max_polygon_plane_residual_m": 1.2162811313665145e-09,
+        "original_polygon_topology_volume_m3": 1.506093840133375e-07,
+        "physx_property_volume_m3": 1.5060938096667087e-07,
+        "polygon_count": 8,
+        "triangle_count": 20
+      },
+      "d379_part_pass": false,
+      "difference": {
+        "bounds_max_abs_mm": 0.2500005066394806,
+        "d379_absolute_volume_relative_percent": 1.1384603176858263,
+        "lower_bound_inward_shift_xyz_mm": [
+          0.2500005066394806,
+          0.0,
+          0.0
+        ],
+        "max_inward_axis_reduction_mm": 0.2500005066394806,
+        "max_outward_axis_expansion_mm": 0.0,
+        "signed_part_volume_loss_m3": 1.7343732226028102e-09,
+        "signed_part_volume_loss_mm3": 1.7343732226028101,
+        "signed_part_volume_loss_percent": 1.1384603176858263,
+        "surface_authored_to_cooked_mm": 0.2500005066394806,
+        "surface_cooked_to_authored_mm": 0.0,
+        "surface_symmetric_mm": 0.2500005066394806,
+        "upper_bound_inward_shift_xyz_mm": [
+          -0.0,
+          -0.0,
+          -0.0
+        ]
+      },
+      "failed_gate_signature": [
+        "bounds",
+        "surface",
+        "volume"
+      ],
+      "name": "moving_jaw_09_moving_brace_04",
+      "prim_name": "p013_moving_jaw_09_moving_brace_04",
+      "role": "moving_jaw",
+      "semantic_scope": "moving_jaw_system",
+      "set_containment_certificate": {
+        "callback_convexity_authority": "inherited D379 approximation=convexHull and callback authority; D380 does not rerun NVIDIA runtime",
+        "cooked_subset_of_authored_convex_part": true,
+        "logic": "authored triangle mesh is closed and all authored triangle planes are supporting; cooked callback is the inherited convexHull result and every embedded cooked vertex is a JSON-numeric-exact authored vertex; D379 property binding places the collider at zero local translation and identity local rotation in the same rigid-body frame",
+        "same_body_local_frame_binding": {
+          "checks": {
+            "local_pos_zero": true,
+            "local_rot_identity": true,
+            "path_nonempty": true,
+            "positive_finite_volume": true,
+            "result_valid": true
+          },
+          "live_path": "/World/Robot/gripper_link/collisions/d373_p34_parts/p013_moving_jaw_09_moving_brace_04",
+          "pass": true
+        }
+      },
+      "vertex_provenance": {
+        "authored_unique_vertex_count": 16,
+        "authored_vertex_count": 16,
+        "authored_vertex_set_sha256": "dffe37a4eb2af340ef991a8e79a1841c77e732f2cc64d08a28a3ec8561aaf3dc",
+        "cooked_unique_vertex_count": 12,
+        "cooked_vertex_count": 12,
+        "cooked_vertex_set_sha256": "f5fb37fc5458b5fb9a5c9e784506d3e356035f1fb32bfe1177a7e6d8cc262541",
+        "introduced_or_moved_cooked_vertex_count": 0,
+        "introduced_or_moved_cooked_vertices_m": [],
+        "json_numeric_exact_vertex_subset": true,
+        "max_omitted_vertex_to_cooked_surface_distance_mm": 0.2500005066394806,
+        "omitted_authored_vertex_count": 4,
+        "omitted_authored_vertex_indices": [
+          1,
+          2,
+          9,
+          10
+        ],
+        "omitted_authored_vertices_m": [
+          [
+            0.05092915520071983,
+            -0.005983415991067886,
+            -0.008732347749173641
+          ],
+          [
+            0.05092915520071983,
+            -0.005983415991067886,
+            -0.007982347160577774
+          ],
+          [
+            0.05092915520071983,
+            -0.004483415745198727,
+            -0.008732347749173641
+          ],
+          [
+            0.05092915520071983,
+            -0.004483415745198727,
+            -0.007982347160577774
+          ]
+        ],
+        "omitted_vertex_to_cooked_surface_distance_mm": [
+          0.2500005066394806,
+          0.2500005066394806,
+          0.2500005066394806,
+          0.2500005066394806
+        ],
+        "omitted_vertices_beyond_inherited_0_1mm_surface_limit": 4,
+        "retained_vertex_count": 12
+      }
+    },
+    {
+      "authored": {
+        "bounds_m": [
+          [
+            0.045429155230522156,
+            -0.005983415991067886,
+            -0.017232347279787064
+          ],
+          [
+            0.04967915639281273,
+            -0.004483415745198727,
+            -0.004982347134500742
+          ]
+        ],
+        "closure": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 36
+        },
+        "supporting_plane_convexity": {
+          "all_triangle_planes_supporting": true,
+          "float64_roundoff_budget_m": 9.094947017729282e-13,
+          "max_supporting_plane_violation_m": 6.938893903907228e-18,
+          "nondegenerate_triangle_count": 24,
+          "triangle_count": 24
+        },
+        "topology_volume_m3": 6.407812804354769e-08
+      },
+      "body": "gripper_link",
+      "classification": "AUTHORED_VERTEX_ELISION_WITH_INWARD_COOK",
+      "cooked": {
+        "bounds_m": [
+          [
+            0.045429155230522156,
+            -0.005983415991067886,
+            -0.017232347279787064
+          ],
+          [
+            0.04942915588617325,
+            -0.004483415745198727,
+            -0.004982347134500742
+          ]
+        ],
+        "closure_recomputed_from_embedded_triangles": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 18
+        },
+        "d379_closure": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 18
+        },
+        "d379_structural": {
+          "checks": {
+            "gpu_polygons_le_64": true,
+            "gpu_vertices_4_to_64": true,
+            "indices_in_range": true,
+            "indices_shape_nonempty": true,
+            "polygon_count_exact_nonempty": true,
+            "polygon_planes_finite": true,
+            "polygon_spans_contiguous_exact": true,
+            "vertices_per_polygon_le_32": true,
+            "vertices_shape_finite": true
+          },
+          "pass": true
+        },
+        "max_polygon_plane_residual_m": 5.53669998737405e-09,
+        "original_polygon_topology_volume_m3": 6.225002083182516e-08,
+        "physx_property_volume_m3": 6.225002380233491e-08,
+        "polygon_count": 6,
+        "triangle_count": 12
+      },
+      "d379_part_pass": false,
+      "difference": {
+        "bounds_max_abs_mm": 0.2500005066394806,
+        "d379_absolute_volume_relative_percent": 2.852934796222732,
+        "lower_bound_inward_shift_xyz_mm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max_inward_axis_reduction_mm": 0.2500005066394806,
+        "max_outward_axis_expansion_mm": 0.0,
+        "signed_part_volume_loss_m3": 1.8281072117225283e-09,
+        "signed_part_volume_loss_mm3": 1.8281072117225283,
+        "signed_part_volume_loss_percent": 2.852934796222732,
+        "surface_authored_to_cooked_mm": 0.2500005066394806,
+        "surface_cooked_to_authored_mm": 0.0,
+        "surface_symmetric_mm": 0.2500005066394806,
+        "upper_bound_inward_shift_xyz_mm": [
+          0.2500005066394806,
+          -0.0,
+          -0.0
+        ]
+      },
+      "failed_gate_signature": [
+        "bounds",
+        "surface",
+        "volume"
+      ],
+      "name": "moving_jaw_10_moving_brace_05",
+      "prim_name": "p014_moving_jaw_10_moving_brace_05",
+      "role": "moving_jaw",
+      "semantic_scope": "moving_jaw_system",
+      "set_containment_certificate": {
+        "callback_convexity_authority": "inherited D379 approximation=convexHull and callback authority; D380 does not rerun NVIDIA runtime",
+        "cooked_subset_of_authored_convex_part": true,
+        "logic": "authored triangle mesh is closed and all authored triangle planes are supporting; cooked callback is the inherited convexHull result and every embedded cooked vertex is a JSON-numeric-exact authored vertex; D379 property binding places the collider at zero local translation and identity local rotation in the same rigid-body frame",
+        "same_body_local_frame_binding": {
+          "checks": {
+            "local_pos_zero": true,
+            "local_rot_identity": true,
+            "path_nonempty": true,
+            "positive_finite_volume": true,
+            "result_valid": true
+          },
+          "live_path": "/World/Robot/gripper_link/collisions/d373_p34_parts/p014_moving_jaw_10_moving_brace_05",
+          "pass": true
+        }
+      },
+      "vertex_provenance": {
+        "authored_unique_vertex_count": 14,
+        "authored_vertex_count": 14,
+        "authored_vertex_set_sha256": "049ca8205ef673a5820b4810db9341fe89fcd0ba3902861c01c1d8f218415b4c",
+        "cooked_unique_vertex_count": 8,
+        "cooked_vertex_count": 8,
+        "cooked_vertex_set_sha256": "f4b09c5b60847b3c3ee6058ca90d518e0331ac31c78345ae1a9027ecc3a3f390",
+        "introduced_or_moved_cooked_vertex_count": 0,
+        "introduced_or_moved_cooked_vertices_m": [],
+        "json_numeric_exact_vertex_subset": true,
+        "max_omitted_vertex_to_cooked_surface_distance_mm": 0.2500005066394806,
+        "omitted_authored_vertex_count": 6,
+        "omitted_authored_vertex_indices": [
+          1,
+          2,
+          4,
+          8,
+          9,
+          11
+        ],
+        "omitted_authored_vertices_m": [
+          [
+            0.04967915639281273,
+            -0.005983415991067886,
+            -0.007982347160577774
+          ],
+          [
+            0.04967915639281273,
+            -0.005983415991067886,
+            -0.008732347749173641
+          ],
+          [
+            0.04892915487289429,
+            -0.005983415991067886,
+            -0.013982347212731838
+          ],
+          [
+            0.04967915639281273,
+            -0.004483415745198727,
+            -0.007982347160577774
+          ],
+          [
+            0.04967915639281273,
+            -0.004483415745198727,
+            -0.008732347749173641
+          ],
+          [
+            0.04892915487289429,
+            -0.004483415745198727,
+            -0.013982347212731838
+          ]
+        ],
+        "omitted_vertex_to_cooked_surface_distance_mm": [
+          0.2500005066394806,
+          0.2500005066394806,
+          0.02279744818541239,
+          0.2500005066394806,
+          0.2500005066394806,
+          0.02279744818541239
+        ],
+        "omitted_vertices_beyond_inherited_0_1mm_surface_limit": 4,
+        "retained_vertex_count": 8
+      }
+    },
+    {
+      "authored": {
+        "bounds_m": [
+          [
+            0.02644343301653862,
+            -0.004483415745198727,
+            -0.0007597782532684505
+          ],
+          [
+            0.052358824759721756,
+            0.015240367501974106,
+            0.0007502218359149992
+          ]
+        ],
+        "closure": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 54
+        },
+        "supporting_plane_convexity": {
+          "all_triangle_planes_supporting": true,
+          "float64_roundoff_budget_m": 9.094947017729282e-13,
+          "max_supporting_plane_violation_m": 8.673617379884035e-19,
+          "nondegenerate_triangle_count": 36,
+          "triangle_count": 36
+        },
+        "topology_volume_m3": 4.2040305180900226e-07
+      },
+      "body": "gripper_link",
+      "classification": "AUTHORED_VERTEX_ELISION_WITH_INWARD_COOK",
+      "cooked": {
+        "bounds_m": [
+          [
+            0.02644343301653862,
+            -0.004483415745198727,
+            -0.0007597782532684505
+          ],
+          [
+            0.052358824759721756,
+            0.015240367501974106,
+            0.0007502218359149992
+          ]
+        ],
+        "closure_recomputed_from_embedded_triangles": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 24
+        },
+        "d379_closure": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 24
+        },
+        "d379_structural": {
+          "checks": {
+            "gpu_polygons_le_64": true,
+            "gpu_vertices_4_to_64": true,
+            "indices_in_range": true,
+            "indices_shape_nonempty": true,
+            "polygon_count_exact_nonempty": true,
+            "polygon_planes_finite": true,
+            "polygon_spans_contiguous_exact": true,
+            "vertices_per_polygon_le_32": true,
+            "vertices_shape_finite": true
+          },
+          "pass": true
+        },
+        "max_polygon_plane_residual_m": 3.0014311506818686e-06,
+        "original_polygon_topology_volume_m3": 4.1702187067511106e-07,
+        "physx_property_volume_m3": 4.1702188013914565e-07,
+        "polygon_count": 8,
+        "triangle_count": 16
+      },
+      "d379_part_pass": false,
+      "difference": {
+        "bounds_max_abs_mm": 0.0,
+        "d379_absolute_volume_relative_percent": 0.8042713104345739,
+        "lower_bound_inward_shift_xyz_mm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max_inward_axis_reduction_mm": 0.0,
+        "max_outward_axis_expansion_mm": 0.0,
+        "signed_part_volume_loss_m3": 3.381181133891203e-09,
+        "signed_part_volume_loss_mm3": 3.3811811338912032,
+        "signed_part_volume_loss_percent": 0.8042713104345739,
+        "surface_authored_to_cooked_mm": 0.26950964014446493,
+        "surface_cooked_to_authored_mm": 0.0,
+        "surface_symmetric_mm": 0.26950964014446493,
+        "upper_bound_inward_shift_xyz_mm": [
+          -0.0,
+          -0.0,
+          -0.0
+        ]
+      },
+      "failed_gate_signature": [
+        "surface",
+        "volume"
+      ],
+      "name": "moving_upper_backbone",
+      "prim_name": "p016_moving_upper_backbone",
+      "role": "moving_jaw_backbone",
+      "semantic_scope": "moving_jaw_system",
+      "set_containment_certificate": {
+        "callback_convexity_authority": "inherited D379 approximation=convexHull and callback authority; D380 does not rerun NVIDIA runtime",
+        "cooked_subset_of_authored_convex_part": true,
+        "logic": "authored triangle mesh is closed and all authored triangle planes are supporting; cooked callback is the inherited convexHull result and every embedded cooked vertex is a JSON-numeric-exact authored vertex; D379 property binding places the collider at zero local translation and identity local rotation in the same rigid-body frame",
+        "same_body_local_frame_binding": {
+          "checks": {
+            "local_pos_zero": true,
+            "local_rot_identity": true,
+            "path_nonempty": true,
+            "positive_finite_volume": true,
+            "result_valid": true
+          },
+          "live_path": "/World/Robot/gripper_link/collisions/d373_p34_parts/p016_moving_upper_backbone",
+          "pass": true
+        }
+      },
+      "vertex_provenance": {
+        "authored_unique_vertex_count": 20,
+        "authored_vertex_count": 20,
+        "authored_vertex_set_sha256": "08aa6c259abd565a4e0f212d7d7b7e5a642061945a8db524ab2e30895f5c7142",
+        "cooked_unique_vertex_count": 10,
+        "cooked_vertex_count": 10,
+        "cooked_vertex_set_sha256": "5206a5da2d6e648d29e2ea0d5b17515c75263f402357746ec2b81cc000c7fa64",
+        "introduced_or_moved_cooked_vertex_count": 0,
+        "introduced_or_moved_cooked_vertices_m": [],
+        "json_numeric_exact_vertex_subset": true,
+        "max_omitted_vertex_to_cooked_surface_distance_mm": 0.26950964014446493,
+        "omitted_authored_vertex_count": 10,
+        "omitted_authored_vertex_indices": [
+          4,
+          5,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "omitted_authored_vertices_m": [
+          [
+            0.0280829556286335,
+            -0.004483415745198727,
+            -0.0007597782532684505
+          ],
+          [
+            0.0280829556286335,
+            -0.004473415669053793,
+            0.0007502218359149992
+          ],
+          [
+            0.030641401186585426,
+            0.015194937586784363,
+            0.0007502218359149992
+          ],
+          [
+            0.030641401186585426,
+            0.015194937586784363,
+            -0.0007497782353311777
+          ],
+          [
+            0.031204430386424065,
+            0.015059765428304672,
+            -0.0007497782353311777
+          ],
+          [
+            0.031204430386424065,
+            0.015059765428304672,
+            0.0007502218359149992
+          ],
+          [
+            0.031739383935928345,
+            0.014838181436061859,
+            0.0007502218359149992
+          ],
+          [
+            0.031739383935928345,
+            0.014838181436061859,
+            -0.0007497782353311777
+          ],
+          [
+            0.03223308548331261,
+            0.014535640366375446,
+            -0.0007497782353311777
+          ],
+          [
+            0.03223308548331261,
+            0.014535640366375446,
+            0.0007502218359149992
+          ]
+        ],
+        "omitted_vertex_to_cooked_surface_distance_mm": [
+          0.09223514647419727,
+          0.08215542637690582,
+          0.1789300493979876,
+          0.17893004939798626,
+          0.2695089517612569,
+          0.2695089517612569,
+          0.26950964014446493,
+          0.26950964014446493,
+          0.1789292870665918,
+          0.1789292870665918
+        ],
+        "omitted_vertices_beyond_inherited_0_1mm_surface_limit": 8,
+        "retained_vertex_count": 10
+      }
+    },
+    {
+      "authored": {
+        "bounds_m": [
+          [
+            0.02644343301653862,
+            -0.004483415745198727,
+            -0.038617346435785294
+          ],
+          [
+            0.052358824759721756,
+            0.015240367501974106,
+            -0.03710734844207764
+          ]
+        ],
+        "closure": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 54
+        },
+        "supporting_plane_convexity": {
+          "all_triangle_planes_supporting": true,
+          "float64_roundoff_budget_m": 9.094947017729282e-13,
+          "max_supporting_plane_violation_m": 6.938893903907228e-18,
+          "nondegenerate_triangle_count": 36,
+          "triangle_count": 36
+        },
+        "topology_volume_m3": 4.20402767079508e-07
+      },
+      "body": "gripper_link",
+      "classification": "AUTHORED_VERTEX_ELISION_WITH_INWARD_COOK",
+      "cooked": {
+        "bounds_m": [
+          [
+            0.02644343301653862,
+            -0.004483415745198727,
+            -0.038617346435785294
+          ],
+          [
+            0.052358824759721756,
+            0.015240367501974106,
+            -0.03710734844207764
+          ]
+        ],
+        "closure_recomputed_from_embedded_triangles": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 24
+        },
+        "d379_closure": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 24
+        },
+        "d379_structural": {
+          "checks": {
+            "gpu_polygons_le_64": true,
+            "gpu_vertices_4_to_64": true,
+            "indices_in_range": true,
+            "indices_shape_nonempty": true,
+            "polygon_count_exact_nonempty": true,
+            "polygon_planes_finite": true,
+            "polygon_spans_contiguous_exact": true,
+            "vertices_per_polygon_le_32": true,
+            "vertices_shape_finite": true
+          },
+          "pass": true
+        },
+        "max_polygon_plane_residual_m": 3.128146019777678e-06,
+        "original_polygon_topology_volume_m3": 4.1702155768591065e-07,
+        "physx_property_volume_m3": 4.170215675003419e-07,
+        "polygon_count": 8,
+        "triangle_count": 16
+      },
+      "d379_part_pass": false,
+      "difference": {
+        "bounds_max_abs_mm": 0.0,
+        "d379_absolute_volume_relative_percent": 0.8042785772049541,
+        "lower_bound_inward_shift_xyz_mm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max_inward_axis_reduction_mm": 0.0,
+        "max_outward_axis_expansion_mm": 0.0,
+        "signed_part_volume_loss_m3": 3.381209393597324e-09,
+        "signed_part_volume_loss_mm3": 3.3812093935973238,
+        "signed_part_volume_loss_percent": 0.8042785772049541,
+        "surface_authored_to_cooked_mm": 0.26950964014446493,
+        "surface_cooked_to_authored_mm": 0.0,
+        "surface_symmetric_mm": 0.26950964014446493,
+        "upper_bound_inward_shift_xyz_mm": [
+          -0.0,
+          -0.0,
+          -0.0
+        ]
+      },
+      "failed_gate_signature": [
+        "surface",
+        "volume"
+      ],
+      "name": "moving_lower_backbone",
+      "prim_name": "p017_moving_lower_backbone",
+      "role": "moving_jaw_backbone",
+      "semantic_scope": "moving_jaw_system",
+      "set_containment_certificate": {
+        "callback_convexity_authority": "inherited D379 approximation=convexHull and callback authority; D380 does not rerun NVIDIA runtime",
+        "cooked_subset_of_authored_convex_part": true,
+        "logic": "authored triangle mesh is closed and all authored triangle planes are supporting; cooked callback is the inherited convexHull result and every embedded cooked vertex is a JSON-numeric-exact authored vertex; D379 property binding places the collider at zero local translation and identity local rotation in the same rigid-body frame",
+        "same_body_local_frame_binding": {
+          "checks": {
+            "local_pos_zero": true,
+            "local_rot_identity": true,
+            "path_nonempty": true,
+            "positive_finite_volume": true,
+            "result_valid": true
+          },
+          "live_path": "/World/Robot/gripper_link/collisions/d373_p34_parts/p017_moving_lower_backbone",
+          "pass": true
+        }
+      },
+      "vertex_provenance": {
+        "authored_unique_vertex_count": 20,
+        "authored_vertex_count": 20,
+        "authored_vertex_set_sha256": "95372a1872c8fcac9221f232de6abec12fe96144c4a8551723e5b0e8b0938b11",
+        "cooked_unique_vertex_count": 10,
+        "cooked_vertex_count": 10,
+        "cooked_vertex_set_sha256": "fd2665c8c917914e8939966e0e2819cbc26bae08c9d3a60ff3cdbce00193966d",
+        "introduced_or_moved_cooked_vertex_count": 0,
+        "introduced_or_moved_cooked_vertices_m": [],
+        "json_numeric_exact_vertex_subset": true,
+        "max_omitted_vertex_to_cooked_surface_distance_mm": 0.26950964014446493,
+        "omitted_authored_vertex_count": 10,
+        "omitted_authored_vertex_indices": [
+          4,
+          5,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "omitted_authored_vertices_m": [
+          [
+            0.0280829556286335,
+            -0.004473415669053793,
+            -0.038617346435785294
+          ],
+          [
+            0.0280829556286335,
+            -0.004483415745198727,
+            -0.03710734844207764
+          ],
+          [
+            0.030641401186585426,
+            0.015194937586784363,
+            -0.038617346435785294
+          ],
+          [
+            0.030641401186585426,
+            0.015194937586784363,
+            -0.03711734712123871
+          ],
+          [
+            0.031204430386424065,
+            0.015059765428304672,
+            -0.03711734712123871
+          ],
+          [
+            0.031204430386424065,
+            0.015059765428304672,
+            -0.038617346435785294
+          ],
+          [
+            0.031739383935928345,
+            0.014838181436061859,
+            -0.038617346435785294
+          ],
+          [
+            0.031739383935928345,
+            0.014838181436061859,
+            -0.03711734712123871
+          ],
+          [
+            0.03223308548331261,
+            0.014535640366375446,
+            -0.03711734712123871
+          ],
+          [
+            0.03223308548331261,
+            0.014535640366375446,
+            -0.038617346435785294
+          ]
+        ],
+        "omitted_vertex_to_cooked_surface_distance_mm": [
+          0.08215542637690582,
+          0.09223501912241437,
+          0.17893004939798626,
+          0.17893004939798626,
+          0.2695089517612569,
+          0.2695089517612569,
+          0.26950964014446493,
+          0.26950964014446493,
+          0.1789292870665918,
+          0.1789292870665918
+        ],
+        "omitted_vertices_beyond_inherited_0_1mm_surface_limit": 8,
+        "retained_vertex_count": 10
+      }
+    },
+    {
+      "authored": {
+        "bounds_m": [
+          [
+            -0.011525849811732769,
+            -0.01611134596168995,
+            0.08016058802604675
+          ],
+          [
+            -0.01002584956586361,
+            0.015138654038310051,
+            0.08591058850288391
+          ]
+        ],
+        "closure": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 30
+        },
+        "supporting_plane_convexity": {
+          "all_triangle_planes_supporting": true,
+          "float64_roundoff_budget_m": 9.094947017729282e-13,
+          "max_supporting_plane_violation_m": 0.0,
+          "nondegenerate_triangle_count": 20,
+          "triangle_count": 20
+        },
+        "topology_volume_m3": 2.686875000000003e-07
+      },
+      "body": "link5",
+      "classification": "AUTHORED_VERTEX_ELISION_WITH_INWARD_COOK",
+      "cooked": {
+        "bounds_m": [
+          [
+            -0.011525849811732769,
+            -0.01611134596168995,
+            0.08016058802604675
+          ],
+          [
+            -0.01002584956586361,
+            0.015138654038310051,
+            0.08591058850288391
+          ]
+        ],
+        "closure_recomputed_from_embedded_triangles": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 18
+        },
+        "d379_closure": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 18
+        },
+        "d379_structural": {
+          "checks": {
+            "gpu_polygons_le_64": true,
+            "gpu_vertices_4_to_64": true,
+            "indices_in_range": true,
+            "indices_shape_nonempty": true,
+            "polygon_count_exact_nonempty": true,
+            "polygon_planes_finite": true,
+            "polygon_spans_contiguous_exact": true,
+            "vertices_per_polygon_le_32": true,
+            "vertices_shape_finite": true
+          },
+          "pass": true
+        },
+        "max_polygon_plane_residual_m": 3.109365015463439e-09,
+        "original_polygon_topology_volume_m3": 2.5935945870658144e-07,
+        "physx_property_volume_m3": 2.5935946723620873e-07,
+        "polygon_count": 8,
+        "triangle_count": 12
+      },
+      "d379_part_pass": false,
+      "difference": {
+        "bounds_max_abs_mm": 0.0,
+        "d379_absolute_volume_relative_percent": 3.47170645951853,
+        "lower_bound_inward_shift_xyz_mm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max_inward_axis_reduction_mm": 0.0,
+        "max_outward_axis_expansion_mm": 0.0,
+        "signed_part_volume_loss_m3": 9.328041293418863e-09,
+        "signed_part_volume_loss_mm3": 9.328041293418863,
+        "signed_part_volume_loss_percent": 3.47170645951853,
+        "surface_authored_to_cooked_mm": 0.6573645119397187,
+        "surface_cooked_to_authored_mm": 0.0,
+        "surface_symmetric_mm": 0.6573645119397187,
+        "upper_bound_inward_shift_xyz_mm": [
+          -0.0,
+          -0.0,
+          -0.0
+        ]
+      },
+      "failed_gate_signature": [
+        "surface",
+        "volume"
+      ],
+      "name": "fixed_jaw_00_lower_bridge",
+      "prim_name": "p003_fixed_jaw_00_lower_bridge",
+      "role": "fixed_jaw",
+      "semantic_scope": "fixed_jaw_system",
+      "set_containment_certificate": {
+        "callback_convexity_authority": "inherited D379 approximation=convexHull and callback authority; D380 does not rerun NVIDIA runtime",
+        "cooked_subset_of_authored_convex_part": true,
+        "logic": "authored triangle mesh is closed and all authored triangle planes are supporting; cooked callback is the inherited convexHull result and every embedded cooked vertex is a JSON-numeric-exact authored vertex; D379 property binding places the collider at zero local translation and identity local rotation in the same rigid-body frame",
+        "same_body_local_frame_binding": {
+          "checks": {
+            "local_pos_zero": true,
+            "local_rot_identity": true,
+            "path_nonempty": true,
+            "positive_finite_volume": true,
+            "result_valid": true
+          },
+          "live_path": "/World/Robot/link5/collisions/d373_p34_parts/p003_fixed_jaw_00_lower_bridge",
+          "pass": true
+        }
+      },
+      "vertex_provenance": {
+        "authored_unique_vertex_count": 12,
+        "authored_vertex_count": 12,
+        "authored_vertex_set_sha256": "b222a4ea55f01e2fbb55990cca01ddcfd50b73d800699219b9a0eb87e781d257",
+        "cooked_unique_vertex_count": 8,
+        "cooked_vertex_count": 8,
+        "cooked_vertex_set_sha256": "070d9ab5742e1a930da88797b08571042754edf4e7021a276271a0b7c6eef644",
+        "introduced_or_moved_cooked_vertex_count": 0,
+        "introduced_or_moved_cooked_vertices_m": [],
+        "json_numeric_exact_vertex_subset": true,
+        "max_omitted_vertex_to_cooked_surface_distance_mm": 0.6573645119397187,
+        "omitted_authored_vertex_count": 4,
+        "omitted_authored_vertex_indices": [
+          1,
+          3,
+          7,
+          10
+        ],
+        "omitted_authored_vertices_m": [
+          [
+            -0.011525849811732769,
+            -0.01611134596168995,
+            0.0809105858206749
+          ],
+          [
+            -0.011525849811732769,
+            0.014388654381036758,
+            0.08016058802604675
+          ],
+          [
+            -0.01002584956586361,
+            -0.01611134596168995,
+            0.0809105858206749
+          ],
+          [
+            -0.01002584956586361,
+            0.015138654038310051,
+            0.0809105858206749
+          ]
+        ],
+        "omitted_vertex_to_cooked_surface_distance_mm": [
+          0.6466959239449107,
+          0.6573645119397187,
+          0.6466959239449107,
+          0.5938557048982004
+        ],
+        "omitted_vertices_beyond_inherited_0_1mm_surface_limit": 4,
+        "retained_vertex_count": 8
+      }
+    },
+    {
+      "authored": {
+        "bounds_m": [
+          [
+            -0.011525849811732769,
+            -0.011361345648765564,
+            0.11241059005260468
+          ],
+          [
+            -0.01002584956586361,
+            0.010388653725385666,
+            0.11966058611869812
+          ]
+        ],
+        "closure": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 36
+        },
+        "supporting_plane_convexity": {
+          "all_triangle_planes_supporting": true,
+          "float64_roundoff_budget_m": 9.094947017729282e-13,
+          "max_supporting_plane_violation_m": 1.3877787807814457e-17,
+          "nondegenerate_triangle_count": 24,
+          "triangle_count": 24
+        },
+        "topology_volume_m3": 1.572656250000004e-07
+      },
+      "body": "link5",
+      "classification": "AUTHORED_VERTEX_ELISION_WITH_INWARD_COOK",
+      "cooked": {
+        "bounds_m": [
+          [
+            -0.011525849811732769,
+            -0.011361345648765564,
+            0.11241059005260468
+          ],
+          [
+            -0.01002584956586361,
+            0.010388653725385666,
+            0.11966058611869812
+          ]
+        ],
+        "closure_recomputed_from_embedded_triangles": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 18
+        },
+        "d379_closure": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 18
+        },
+        "d379_structural": {
+          "checks": {
+            "gpu_polygons_le_64": true,
+            "gpu_vertices_4_to_64": true,
+            "indices_in_range": true,
+            "indices_shape_nonempty": true,
+            "polygon_count_exact_nonempty": true,
+            "polygon_planes_finite": true,
+            "polygon_spans_contiguous_exact": true,
+            "vertices_per_polygon_le_32": true,
+            "vertices_shape_finite": true
+          },
+          "pass": true
+        },
+        "max_polygon_plane_residual_m": 3.04380845528307e-09,
+        "original_polygon_topology_volume_m3": 1.5243742443433531e-07,
+        "physx_property_volume_m3": 1.524374226846703e-07,
+        "polygon_count": 6,
+        "triangle_count": 12
+      },
+      "d379_part_pass": false,
+      "difference": {
+        "bounds_max_abs_mm": 0.0,
+        "d379_absolute_volume_relative_percent": 3.0700927590915437,
+        "lower_bound_inward_shift_xyz_mm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max_inward_axis_reduction_mm": 0.0,
+        "max_outward_axis_expansion_mm": 0.0,
+        "signed_part_volume_loss_m3": 4.8282005656650725e-09,
+        "signed_part_volume_loss_mm3": 4.828200565665073,
+        "signed_part_volume_loss_percent": 3.0700927590915437,
+        "surface_authored_to_cooked_mm": 0.4300139426206737,
+        "surface_cooked_to_authored_mm": 0.0,
+        "surface_symmetric_mm": 0.4300139426206737,
+        "upper_bound_inward_shift_xyz_mm": [
+          -0.0,
+          -0.0,
+          -0.0
+        ]
+      },
+      "failed_gate_signature": [
+        "surface",
+        "volume"
+      ],
+      "name": "fixed_jaw_06_roof_bridge",
+      "prim_name": "p009_fixed_jaw_06_roof_bridge",
+      "role": "fixed_jaw",
+      "semantic_scope": "fixed_jaw_system",
+      "set_containment_certificate": {
+        "callback_convexity_authority": "inherited D379 approximation=convexHull and callback authority; D380 does not rerun NVIDIA runtime",
+        "cooked_subset_of_authored_convex_part": true,
+        "logic": "authored triangle mesh is closed and all authored triangle planes are supporting; cooked callback is the inherited convexHull result and every embedded cooked vertex is a JSON-numeric-exact authored vertex; D379 property binding places the collider at zero local translation and identity local rotation in the same rigid-body frame",
+        "same_body_local_frame_binding": {
+          "checks": {
+            "local_pos_zero": true,
+            "local_rot_identity": true,
+            "path_nonempty": true,
+            "positive_finite_volume": true,
+            "result_valid": true
+          },
+          "live_path": "/World/Robot/link5/collisions/d373_p34_parts/p009_fixed_jaw_06_roof_bridge",
+          "pass": true
+        }
+      },
+      "vertex_provenance": {
+        "authored_unique_vertex_count": 14,
+        "authored_vertex_count": 14,
+        "authored_vertex_set_sha256": "8df2caadb3d928a60b434079900e8110341b838cc0fd20c18903695ccff67407",
+        "cooked_unique_vertex_count": 8,
+        "cooked_vertex_count": 8,
+        "cooked_vertex_set_sha256": "c0521c1a84eecf8d7a757b19ca34626e6bcfd7d226fbf29607a3fe9c7431b22f",
+        "introduced_or_moved_cooked_vertex_count": 0,
+        "introduced_or_moved_cooked_vertices_m": [],
+        "json_numeric_exact_vertex_subset": true,
+        "max_omitted_vertex_to_cooked_surface_distance_mm": 0.4300139426206737,
+        "omitted_authored_vertex_count": 6,
+        "omitted_authored_vertex_indices": [
+          2,
+          3,
+          5,
+          9,
+          10,
+          12
+        ],
+        "omitted_authored_vertices_m": [
+          [
+            -0.011525849811732769,
+            0.003888653824105859,
+            0.11891058832406998
+          ],
+          [
+            -0.011525849811732769,
+            0.0031386539340019226,
+            0.11941058933734894
+          ],
+          [
+            -0.011525849811732769,
+            -0.0036113460082560778,
+            0.11966058611869812
+          ],
+          [
+            -0.01002584956586361,
+            0.003888653824105859,
+            0.11891058832406998
+          ],
+          [
+            -0.01002584956586361,
+            0.0031386539340019226,
+            0.11941058933734894
+          ],
+          [
+            -0.01002584956586361,
+            -0.0036113460082560778,
+            0.11966058611869812
+          ]
+        ],
+        "omitted_vertex_to_cooked_surface_distance_mm": [
+          0.30624406807805443,
+          0.1590129767802892,
+          0.4300139426206737,
+          0.30624406807805443,
+          0.15901297678028947,
+          0.4300139426206737
+        ],
+        "omitted_vertices_beyond_inherited_0_1mm_surface_limit": 6,
+        "retained_vertex_count": 8
+      }
+    },
+    {
+      "authored": {
+        "bounds_m": [
+          [
+            -0.023249631747603416,
+            -0.017746346071362495,
+            0.016085634008049965
+          ],
+          [
+            -0.011525849811732769,
+            -0.01623634621500969,
+            0.10761182010173798
+          ]
+        ],
+        "closure": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 108
+        },
+        "supporting_plane_convexity": {
+          "all_triangle_planes_supporting": true,
+          "float64_roundoff_budget_m": 9.094947017729282e-13,
+          "max_supporting_plane_violation_m": 1.3877787807814457e-17,
+          "nondegenerate_triangle_count": 72,
+          "triangle_count": 72
+        },
+        "topology_volume_m3": 1.1425447553897428e-06
+      },
+      "body": "link5",
+      "classification": "AUTHORED_VERTEX_ELISION_WITH_INWARD_COOK",
+      "cooked": {
+        "bounds_m": [
+          [
+            -0.023249631747603416,
+            -0.017746346071362495,
+            0.016085634008049965
+          ],
+          [
+            -0.011525849811732769,
+            -0.01623634621500969,
+            0.10761182010173798
+          ]
+        ],
+        "closure_recomputed_from_embedded_triangles": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 27
+        },
+        "d379_closure": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 27
+        },
+        "d379_structural": {
+          "checks": {
+            "gpu_polygons_le_64": true,
+            "gpu_vertices_4_to_64": true,
+            "indices_in_range": true,
+            "indices_shape_nonempty": true,
+            "polygon_count_exact_nonempty": true,
+            "polygon_planes_finite": true,
+            "polygon_spans_contiguous_exact": true,
+            "vertices_per_polygon_le_32": true,
+            "vertices_shape_finite": true
+          },
+          "pass": true
+        },
+        "max_polygon_plane_residual_m": 8.444795049206838e-06,
+        "original_polygon_topology_volume_m3": 1.0896658825783694e-06,
+        "physx_property_volume_m3": 1.0896659432546585e-06,
+        "polygon_count": 10,
+        "triangle_count": 18
+      },
+      "d379_part_pass": false,
+      "difference": {
+        "bounds_max_abs_mm": 0.0,
+        "d379_absolute_volume_relative_percent": 4.628166429536103,
+        "lower_bound_inward_shift_xyz_mm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max_inward_axis_reduction_mm": 0.0,
+        "max_outward_axis_expansion_mm": 0.0,
+        "signed_part_volume_loss_m3": 5.287887281137346e-08,
+        "signed_part_volume_loss_mm3": 52.87887281137346,
+        "signed_part_volume_loss_percent": 4.628166429536103,
+        "surface_authored_to_cooked_mm": 0.6841502833349675,
+        "surface_cooked_to_authored_mm": 0.0,
+        "surface_symmetric_mm": 0.6841502833349675,
+        "upper_bound_inward_shift_xyz_mm": [
+          -0.0,
+          -0.0,
+          -0.0
+        ]
+      },
+      "failed_gate_signature": [
+        "surface",
+        "volume"
+      ],
+      "name": "fixed_backbone_left",
+      "prim_name": "p013_fixed_backbone_left",
+      "role": "fixed_jaw_backbone",
+      "semantic_scope": "fixed_jaw_system",
+      "set_containment_certificate": {
+        "callback_convexity_authority": "inherited D379 approximation=convexHull and callback authority; D380 does not rerun NVIDIA runtime",
+        "cooked_subset_of_authored_convex_part": true,
+        "logic": "authored triangle mesh is closed and all authored triangle planes are supporting; cooked callback is the inherited convexHull result and every embedded cooked vertex is a JSON-numeric-exact authored vertex; D379 property binding places the collider at zero local translation and identity local rotation in the same rigid-body frame",
+        "same_body_local_frame_binding": {
+          "checks": {
+            "local_pos_zero": true,
+            "local_rot_identity": true,
+            "path_nonempty": true,
+            "positive_finite_volume": true,
+            "result_valid": true
+          },
+          "live_path": "/World/Robot/link5/collisions/d373_p34_parts/p013_fixed_backbone_left",
+          "pass": true
+        }
+      },
+      "vertex_provenance": {
+        "authored_unique_vertex_count": 38,
+        "authored_vertex_count": 38,
+        "authored_vertex_set_sha256": "fd2342e59c254a5229c45af76b1cbfc504cc86907eaaa7dd55a3e3029223b749",
+        "cooked_unique_vertex_count": 11,
+        "cooked_vertex_count": 11,
+        "cooked_vertex_set_sha256": "34b84a560439d96375b7a8362cad0c108f3776e93613b28eacbae455746eb153",
+        "introduced_or_moved_cooked_vertex_count": 0,
+        "introduced_or_moved_cooked_vertices_m": [],
+        "json_numeric_exact_vertex_subset": true,
+        "max_omitted_vertex_to_cooked_surface_distance_mm": 0.6841502833349675,
+        "omitted_authored_vertex_count": 27,
+        "omitted_authored_vertex_indices": [
+          0,
+          1,
+          3,
+          4,
+          6,
+          8,
+          10,
+          11,
+          12,
+          13,
+          15,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          34,
+          37
+        ],
+        "omitted_authored_vertices_m": [
+          [
+            -0.023249631747603416,
+            -0.01624634675681591,
+            0.09331714361906052
+          ],
+          [
+            -0.023249631747603416,
+            -0.017746346071362495,
+            0.06505408138036728
+          ],
+          [
+            -0.023249631747603416,
+            -0.01624634675681591,
+            0.06505408138036728
+          ],
+          [
+            -0.023204201832413673,
+            -0.017746346071362495,
+            0.09389441460371017
+          ],
+          [
+            -0.023204201832413673,
+            -0.01624634675681591,
+            0.09389441460371017
+          ],
+          [
+            -0.023069029673933983,
+            -0.017746346071362495,
+            0.0944574624300003
+          ],
+          [
+            -0.02284744568169117,
+            -0.017746346071362495,
+            0.09499237686395645
+          ],
+          [
+            -0.02284744568169117,
+            -0.01624634675681591,
+            0.09499237686395645
+          ],
+          [
+            -0.022544903680682182,
+            -0.017746346071362495,
+            0.09548608958721161
+          ],
+          [
+            -0.022544903680682182,
+            -0.01624634675681591,
+            0.09548608958721161
+          ],
+          [
+            -0.022168854251503944,
+            -0.01624634675681591,
+            0.09592639654874802
+          ],
+          [
+            -0.017130987718701363,
+            -0.01624634675681591,
+            0.018828919157385826
+          ],
+          [
+            -0.017130987718701363,
+            -0.017746346071362495,
+            0.018828919157385826
+          ],
+          [
+            -0.016974816098809242,
+            -0.017746346071362495,
+            0.018536683171987534
+          ],
+          [
+            -0.016974816098809242,
+            -0.01624634675681591,
+            0.018536683171987534
+          ],
+          [
+            -0.016764642670750618,
+            -0.017746346071362495,
+            0.018280640244483948
+          ],
+          [
+            -0.016764642670750618,
+            -0.01624634675681591,
+            0.018280640244483948
+          ],
+          [
+            -0.015064622275531292,
+            -0.017746346071362495,
+            0.01658056676387787
+          ],
+          [
+            -0.015064622275531292,
+            -0.01624634675681591,
+            0.01658056676387787
+          ],
+          [
+            -0.014808525331318378,
+            -0.017746346071362495,
+            0.016370423138141632
+          ],
+          [
+            -0.014808525331318378,
+            -0.01624634675681591,
+            0.016370423138141632
+          ],
+          [
+            -0.014516348019242287,
+            -0.01624634675681591,
+            0.01621423475444317
+          ],
+          [
+            -0.014516348019242287,
+            -0.017746346071362495,
+            0.01621423475444317
+          ],
+          [
+            -0.014199314638972282,
+            -0.01624634675681591,
+            0.01611810363829136
+          ],
+          [
+            -0.014199314638972282,
+            -0.017746346071362495,
+            0.01611810363829136
+          ],
+          [
+            -0.01153585035353899,
+            -0.017746346071362495,
+            0.08088593184947968
+          ],
+          [
+            -0.011525849811732769,
+            -0.01623634621500969,
+            0.08088593184947968
+          ]
+        ],
+        "omitted_vertex_to_cooked_surface_distance_mm": [
+          0.17427080629664143,
+          0.04452053024390274,
+          0.0477068691857045,
+          0.1761179384760019,
+          0.13173405547816522,
+          0.2652744642276415,
+          0.2652587127010561,
+          0.18277186847579024,
+          0.17610778650601003,
+          0.27913729579970475,
+          0.28669362005404364,
+          0.1695108633176285,
+          0.1695108633176285,
+          0.28028948081860355,
+          0.28028948081860355,
+          0.32794160362641644,
+          0.32794160362641644,
+          0.43921282786706706,
+          0.43921282786706706,
+          0.42200673356819873,
+          0.42200673356819873,
+          0.3406192489326112,
+          0.3406192489326112,
+          0.1981016612081824,
+          0.19810166120818357,
+          0.662024361708522,
+          0.6841502833349675
+        ],
+        "omitted_vertices_beyond_inherited_0_1mm_surface_limit": 25,
+        "retained_vertex_count": 11
+      }
+    },
+    {
+      "authored": {
+        "bounds_m": [
+          [
+            -0.023249631747603416,
+            0.015211222693324089,
+            0.016085634008049965
+          ],
+          [
+            -0.011525305919349194,
+            0.016721220687031746,
+            0.10761182010173798
+          ]
+        ],
+        "closure": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 111
+        },
+        "supporting_plane_convexity": {
+          "all_triangle_planes_supporting": true,
+          "float64_roundoff_budget_m": 9.094947017729282e-13,
+          "max_supporting_plane_violation_m": 1.3877787807814457e-17,
+          "nondegenerate_triangle_count": 74,
+          "triangle_count": 74
+        },
+        "topology_volume_m3": 1.1425541154254574e-06
+      },
+      "body": "link5",
+      "classification": "AUTHORED_VERTEX_ELISION_WITH_INWARD_COOK",
+      "cooked": {
+        "bounds_m": [
+          [
+            -0.023249631747603416,
+            0.015211222693324089,
+            0.016085634008049965
+          ],
+          [
+            -0.011525849811732769,
+            0.016721220687031746,
+            0.10761182010173798
+          ]
+        ],
+        "closure_recomputed_from_embedded_triangles": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 27
+        },
+        "d379_closure": {
+          "all_edges_twice": true,
+          "opposite_winding": true,
+          "pass": true,
+          "undirected_edge_count": 27
+        },
+        "d379_structural": {
+          "checks": {
+            "gpu_polygons_le_64": true,
+            "gpu_vertices_4_to_64": true,
+            "indices_in_range": true,
+            "indices_shape_nonempty": true,
+            "polygon_count_exact_nonempty": true,
+            "polygon_planes_finite": true,
+            "polygon_spans_contiguous_exact": true,
+            "vertices_per_polygon_le_32": true,
+            "vertices_shape_finite": true
+          },
+          "pass": true
+        },
+        "max_polygon_plane_residual_m": 8.444421660785961e-06,
+        "original_polygon_topology_volume_m3": 1.0891924476107962e-06,
+        "physx_property_volume_m3": 1.089192437575548e-06,
+        "polygon_count": 10,
+        "triangle_count": 18
+      },
+      "d379_part_pass": false,
+      "difference": {
+        "bounds_max_abs_mm": 0.0005438923835754395,
+        "d379_absolute_volume_relative_percent": 4.670384281517442,
+        "lower_bound_inward_shift_xyz_mm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max_inward_axis_reduction_mm": 0.0005438923835754395,
+        "max_outward_axis_expansion_mm": 0.0,
+        "signed_part_volume_loss_m3": 5.336166781466121e-08,
+        "signed_part_volume_loss_mm3": 53.36166781466121,
+        "signed_part_volume_loss_percent": 4.670384281517442,
+        "surface_authored_to_cooked_mm": 0.684166832184637,
+        "surface_cooked_to_authored_mm": 0.0,
+        "surface_symmetric_mm": 0.684166832184637,
+        "upper_bound_inward_shift_xyz_mm": [
+          0.0005438923835754395,
+          -0.0,
+          -0.0
+        ]
+      },
+      "failed_gate_signature": [
+        "surface",
+        "volume"
+      ],
+      "name": "fixed_backbone_right",
+      "prim_name": "p014_fixed_backbone_right",
+      "role": "fixed_jaw_backbone",
+      "semantic_scope": "fixed_jaw_system",
+      "set_containment_certificate": {
+        "callback_convexity_authority": "inherited D379 approximation=convexHull and callback authority; D380 does not rerun NVIDIA runtime",
+        "cooked_subset_of_authored_convex_part": true,
+        "logic": "authored triangle mesh is closed and all authored triangle planes are supporting; cooked callback is the inherited convexHull result and every embedded cooked vertex is a JSON-numeric-exact authored vertex; D379 property binding places the collider at zero local translation and identity local rotation in the same rigid-body frame",
+        "same_body_local_frame_binding": {
+          "checks": {
+            "local_pos_zero": true,
+            "local_rot_identity": true,
+            "path_nonempty": true,
+            "positive_finite_volume": true,
+            "result_valid": true
+          },
+          "live_path": "/World/Robot/link5/collisions/d373_p34_parts/p014_fixed_backbone_right",
+          "pass": true
+        }
+      },
+      "vertex_provenance": {
+        "authored_unique_vertex_count": 39,
+        "authored_vertex_count": 39,
+        "authored_vertex_set_sha256": "1cd0f54687b42bca18b41cf86e458c71eebe27f200c357ebc44fcf345188e814",
+        "cooked_unique_vertex_count": 11,
+        "cooked_vertex_count": 11,
+        "cooked_vertex_set_sha256": "12e7212a66be9b961f443e3edf0914554edfdc529e36b05334205b38369d0081",
+        "introduced_or_moved_cooked_vertex_count": 0,
+        "introduced_or_moved_cooked_vertices_m": [],
+        "json_numeric_exact_vertex_subset": true,
+        "max_omitted_vertex_to_cooked_surface_distance_mm": 0.684166832184637,
+        "omitted_authored_vertex_count": 28,
+        "omitted_authored_vertex_indices": [
+          0,
+          1,
+          2,
+          6,
+          7,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          35,
+          37,
+          38
+        ],
+        "omitted_authored_vertices_m": [
+          [
+            -0.023249631747603416,
+            0.015221220441162586,
+            0.06505408138036728
+          ],
+          [
+            -0.023249631747603416,
+            0.015221220441162586,
+            0.09331714361906052
+          ],
+          [
+            -0.023249631747603416,
+            0.016721220687031746,
+            0.06505408138036728
+          ],
+          [
+            -0.023204201832413673,
+            0.015221220441162586,
+            0.09389441460371017
+          ],
+          [
+            -0.023204201832413673,
+            0.016721220687031746,
+            0.09389441460371017
+          ],
+          [
+            -0.023069029673933983,
+            0.016721220687031746,
+            0.0944574624300003
+          ],
+          [
+            -0.02284744568169117,
+            0.015221220441162586,
+            0.09499237686395645
+          ],
+          [
+            -0.02284744568169117,
+            0.016721220687031746,
+            0.09499237686395645
+          ],
+          [
+            -0.022544903680682182,
+            0.015221220441162586,
+            0.09548608958721161
+          ],
+          [
+            -0.022544903680682182,
+            0.016721220687031746,
+            0.09548608958721161
+          ],
+          [
+            -0.022168854251503944,
+            0.015221220441162586,
+            0.09592639654874802
+          ],
+          [
+            -0.017130987718701363,
+            0.015221220441162586,
+            0.018828919157385826
+          ],
+          [
+            -0.017130987718701363,
+            0.016721220687031746,
+            0.018828919157385826
+          ],
+          [
+            -0.016974816098809242,
+            0.015221220441162586,
+            0.018536683171987534
+          ],
+          [
+            -0.016974816098809242,
+            0.016721220687031746,
+            0.018536683171987534
+          ],
+          [
+            -0.016764642670750618,
+            0.015221220441162586,
+            0.018280640244483948
+          ],
+          [
+            -0.016764642670750618,
+            0.016721220687031746,
+            0.018280640244483948
+          ],
+          [
+            -0.015064622275531292,
+            0.015221220441162586,
+            0.01658056676387787
+          ],
+          [
+            -0.015064622275531292,
+            0.016721220687031746,
+            0.01658056676387787
+          ],
+          [
+            -0.014808525331318378,
+            0.015221220441162586,
+            0.016370423138141632
+          ],
+          [
+            -0.014808525331318378,
+            0.016721220687031746,
+            0.016370423138141632
+          ],
+          [
+            -0.014516348019242287,
+            0.016721220687031746,
+            0.01621423475444317
+          ],
+          [
+            -0.014516348019242287,
+            0.015221220441162586,
+            0.01621423475444317
+          ],
+          [
+            -0.014199314638972282,
+            0.016721220687031746,
+            0.01611810363829136
+          ],
+          [
+            -0.014199314638972282,
+            0.015221220441162586,
+            0.01611810363829136
+          ],
+          [
+            -0.01153585035353899,
+            0.016721220687031746,
+            0.08088593184947968
+          ],
+          [
+            -0.011525849811732769,
+            0.015211222693324089,
+            0.08088593184947968
+          ],
+          [
+            -0.011525305919349194,
+            0.015242956578731537,
+            0.0809859037399292
+          ]
+        ],
+        "omitted_vertex_to_cooked_surface_distance_mm": [
+          0.0477068695855128,
+          0.17427080775713819,
+          0.04452053024390274,
+          0.131734056582179,
+          0.1761179418959627,
+          0.265274469378897,
+          0.18277188816751994,
+          0.2652587178520051,
+          0.27913733447983397,
+          0.17610778992577056,
+          0.28669367655009015,
+          0.1695108633176285,
+          0.1695108633176285,
+          0.28028948081860355,
+          0.28028948081860355,
+          0.32794160362641644,
+          0.32794160362641644,
+          0.43921282786706706,
+          0.43921282786706706,
+          0.42200673356819873,
+          0.42200673356819873,
+          0.3406192489326112,
+          0.3406192489326112,
+          0.1981016612081824,
+          0.1981016612081824,
+          0.662024361708522,
+          0.684166832184637,
+          0.6821451283006962
+        ],
+        "omitted_vertices_beyond_inherited_0_1mm_surface_limit": 26,
+        "retained_vertex_count": 11
+      }
+    }
+  ],
+  "g0a_pass": false,
+  "inherited_d379_contract": {
+    "failed_part_count": 17,
+    "identity_pass": false,
+    "thresholds_unchanged": {
+      "authored_callback_topology_volume_relative": 0.005,
+      "authored_mass_state_atol": 1e-12,
+      "bounds_tolerance_m": 0.0001,
+      "callback_property_volume_relative": 0.05,
+      "polygon_plane_residual_tolerance_m": 1e-05,
+      "property_mass_state_atol": 1e-09,
+      "surface_tolerance_m": 0.0001
+    },
+    "verdict": "D379_P34_FULL_LIVE_IDENTITY_CLASSIFIER_RESUME_FAIL_STOP"
+  },
+  "measurement_authority": {
+    "callback_volume_semantics": "D379 original callback polygon topology volume remains authority; D380 does not construct a Qhull volume",
+    "json_coordinate_precision_boundary": "vertex equality is exact equality of JSON numeric coordinate triples, not a new raw-memory or dtype-bit attestation",
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d379/attempt2_d372_measurement_field_repair/d379_p34_full_live_identity_evidence.json",
+    "sha256": "8eacbad796e8532c3d856b865e90dc54481f0f2003a266c3ebfaa8e93de37af5",
+    "sole_measurement_input": true
+  },
+  "negative_controls": {
+    "controls": {
+      "body_name_swap_rejected_by_bijection": true,
+      "drop_one_failed_key_rejected": true,
+      "introduced_vertex_rejected_by_exact_subset": true,
+      "non_d379_measurement_input_rejected": true,
+      "nonpositive_loss_rejected": true,
+      "outward_0_2mm_vertex_rejected_by_exact_subset": true,
+      "tolerance_relaxation_detected": true
+    },
+    "pass": true,
+    "passed": 7,
+    "total": 7
+  },
+  "new_variables": [
+    "failed_part_cook_provenance_classifier_v1",
+    "body_local_semantic_monotonic_impact_contract_v1"
+  ],
+  "next_authorization_boundary": "Representation repair/live identity, 29x50 target rebase, and all physics/q5/contact work remain separately unapproved.",
+  "official_source_boundary": "NVIDIA documents that convexHull is a cooked collision approximation. NVIDIA does not state the D380 vertex-elision count or identify the internal heuristic that produced it; those remain local-evidence results and a null causal mechanism.",
+  "official_sources_inherited_from_d379": [
+    {
+      "applicable_version": "installed omni.physx 107.3.26",
+      "title": "Omni Physics 107.3 - Rigid Bodies",
+      "url": "https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/rigid_bodies_articulations/rigid_bodies.html",
+      "use": "one rigid body may own multiple child colliders"
+    },
+    {
+      "applicable_version": "installed omni.physx 107.3.26",
+      "title": "Omni Physics 107.3 - Query The Mass and Volume",
+      "url": "https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/mass_inertia_queries.html",
+      "use": "VALID-only frozen property-query authority"
+    },
+    {
+      "applicable_version": "installed omni.physx 107.3.26",
+      "title": "Omni Physics 107.3 - Colliders",
+      "url": "https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/rigid_bodies_articulations/collision.html",
+      "use": "convex collider and compound-collider semantics"
+    }
+  ],
+  "p34_authored_to_cooked_identity_pass": false,
+  "part_volume_sum_diagnostic": {
+    "failed_authored_sum_mm3": 8708.834857803575,
+    "failed_cooked_sum_mm3": 8367.592932676003,
+    "failed_signed_loss_percent": 3.91834189876502,
+    "failed_signed_loss_sum_mm3": 341.24192512757054,
+    "role_aggregates": {
+      "connector_support": {
+        "authored_part_volume_sum_mm3_not_union": 16515.515871325453,
+        "cooked_part_volume_sum_mm3_not_union": 16505.439415425575,
+        "failed_omitted_vertices_beyond_inherited_0_1mm_surface_limit": 0,
+        "failed_part_count": 0,
+        "max_failed_surface_inward_mm": 0.0,
+        "part_count": 3,
+        "signed_part_volume_sum_loss_mm3_not_union": 10.076455899880974,
+        "signed_part_volume_sum_loss_percent_not_union": 0.061012056652592385
+      },
+      "fixed_jaw": {
+        "authored_part_volume_sum_mm3_not_union": 1009.7343750000018,
+        "cooked_part_volume_sum_mm3_not_union": 995.5781791933335,
+        "failed_omitted_vertices_beyond_inherited_0_1mm_surface_limit": 10,
+        "failed_part_count": 2,
+        "max_failed_surface_inward_mm": 0.6573645119397187,
+        "part_count": 10,
+        "signed_part_volume_sum_loss_mm3_not_union": 14.156195806668258,
+        "signed_part_volume_sum_loss_percent_not_union": 1.401972256977805
+      },
+      "fixed_jaw_backbone": {
+        "authored_part_volume_sum_mm3_not_union": 2285.0988708152004,
+        "cooked_part_volume_sum_mm3_not_union": 2178.8583301891654,
+        "failed_omitted_vertices_beyond_inherited_0_1mm_surface_limit": 51,
+        "failed_part_count": 2,
+        "max_failed_surface_inward_mm": 0.684166832184637,
+        "part_count": 2,
+        "signed_part_volume_sum_loss_mm3_not_union": 106.24054062603489,
+        "signed_part_volume_sum_loss_percent_not_union": 4.649275441991443
+      },
+      "moving_jaw": {
+        "authored_part_volume_sum_mm3_not_union": 1398.9844414481945,
+        "cooked_part_volume_sum_mm3_not_union": 1387.2656742288168,
+        "failed_omitted_vertices_beyond_inherited_0_1mm_surface_limit": 25,
+        "failed_part_count": 7,
+        "max_failed_surface_inward_mm": 0.4416586800734206,
+        "part_count": 12,
+        "signed_part_volume_sum_loss_mm3_not_union": 11.718767219377538,
+        "signed_part_volume_sum_loss_percent_not_union": 0.8376624408522055
+      },
+      "moving_jaw_backbone": {
+        "authored_part_volume_sum_mm3_not_union": 840.8058188885102,
+        "cooked_part_volume_sum_mm3_not_union": 834.0434283610217,
+        "failed_omitted_vertices_beyond_inherited_0_1mm_surface_limit": 16,
+        "failed_part_count": 2,
+        "max_failed_surface_inward_mm": 0.26950964014446493,
+        "part_count": 2,
+        "signed_part_volume_sum_loss_mm3_not_union": 6.7623905274885265,
+        "signed_part_volume_sum_loss_percent_not_union": 0.8042749438185335
+      },
+      "moving_support": {
+        "authored_part_volume_sum_mm3_not_union": 4075.711366742498,
+        "cooked_part_volume_sum_mm3_not_union": 3873.3473705665256,
+        "failed_omitted_vertices_beyond_inherited_0_1mm_surface_limit": 79,
+        "failed_part_count": 4,
+        "max_failed_surface_inward_mm": 0.6833593163804792,
+        "part_count": 4,
+        "signed_part_volume_sum_loss_mm3_not_union": 202.36399617597218,
+        "signed_part_volume_sum_loss_percent_not_union": 4.965120882387486
+      },
+      "structural_body": {
+        "authored_part_volume_sum_mm3_not_union": 73181.5709305919,
+        "cooked_part_volume_sum_mm3_not_union": 73181.57037031648,
+        "failed_omitted_vertices_beyond_inherited_0_1mm_surface_limit": 0,
+        "failed_part_count": 0,
+        "max_failed_surface_inward_mm": 0.0,
+        "part_count": 1,
+        "signed_part_volume_sum_loss_mm3_not_union": 0.000560275418182328,
+        "signed_part_volume_sum_loss_percent_not_union": 7.655963257658324e-07
+      }
+    },
+    "warning": "These are sums of per-part original-topology volumes, not boolean union volume; compound parts may overlap."
+  },
+  "remaining_nulls": {
+    "29x50_target_geometry_or_pose": null,
+    "actual_open_jaw_clearance": null,
+    "cylinder_contact_or_tipping": null,
+    "exact_internal_physx_cook_heuristic": null,
+    "grasp_feasibility": null,
+    "q5_closure": null,
+    "target_ik_path_justification": null
+  },
+  "same_body_local_frame_authority": {
+    "all_p34_local_bindings_valid": true,
+    "binding_count": 34,
+    "per_body": {
+      "gripper_link": {
+        "all_p34_local_bindings_valid": true,
+        "count": 18,
+        "exact_p34_path_bijection": true
+      },
+      "link5": {
+        "all_p34_local_bindings_valid": true,
+        "count": 16,
+        "exact_p34_path_bijection": true
+      }
+    },
+    "property_audit_pass": true,
+    "required_local_fields": [
+      "local_pos_zero",
+      "local_rot_identity",
+      "path_nonempty",
+      "positive_finite_volume",
+      "result_valid"
+    ]
+  },
+  "semantic_impact": {
+    "actual_cross_body_open_clearance_mm": null,
+    "cylinder_facing_contact_patch_identity": null,
+    "cylinder_or_contact_result": null,
+    "full_body_separation_increase_upper_bound_mm": {
+      "gripper_link_one_sided_surface_mm": 0.6833593163804792,
+      "link5_one_sided_surface_mm": 0.684166832184637,
+      "observed_same_pose_separation_delta_mm": null,
+      "sum_bound_mm": 1.3675261485651162
+    },
+    "mouth_or_window_void_volume_change_mm3": null,
+    "named_window_core_status": [
+      {
+        "body": "gripper_link",
+        "d379_part_pass": true,
+        "name": "moving_jaw_02_center_bridge",
+        "surface_symmetric_mm": 0.0
+      },
+      {
+        "body": "gripper_link",
+        "d379_part_pass": true,
+        "name": "moving_jaw_03_window_upper_rail",
+        "surface_symmetric_mm": 0.0
+      },
+      {
+        "body": "gripper_link",
+        "d379_part_pass": true,
+        "name": "moving_jaw_04_window_lower_rail",
+        "surface_symmetric_mm": 0.0
+      },
+      {
+        "body": "link5",
+        "d379_part_pass": true,
+        "name": "fixed_jaw_01_lower_left_leg",
+        "surface_symmetric_mm": 0.0
+      },
+      {
+        "body": "link5",
+        "d379_part_pass": true,
+        "name": "fixed_jaw_02_lower_right_leg",
+        "surface_symmetric_mm": 0.0
+      },
+      {
+        "body": "link5",
+        "d379_part_pass": true,
+        "name": "fixed_jaw_03_middle_bridge",
+        "surface_symmetric_mm": 0.0
+      },
+      {
+        "body": "link5",
+        "d379_part_pass": true,
+        "name": "fixed_jaw_04_upper_left_leg",
+        "surface_symmetric_mm": 0.0
+      },
+      {
+        "body": "link5",
+        "d379_part_pass": true,
+        "name": "fixed_jaw_05_upper_right_leg",
+        "surface_symmetric_mm": 0.0
+      }
+    ],
+    "role_scoped_jaw_separation_increase_upper_bound_mm": {
+      "fixed_jaw_system_one_sided_surface_mm": 0.684166832184637,
+      "moving_jaw_system_one_sided_surface_mm": 0.4416586800734206,
+      "note": "Rigid-transform-invariant geometry bound, not an observed OPEN-pose clearance and not a cylinder clearance.",
+      "observed_open_clearance_delta_mm": null,
+      "sum_bound_mm": 1.1258255122580576
+    },
+    "same_transform_geometry_only": {
+      "authored_void_fill_by_cooked_geometry": "PROVEN_ABSENT",
+      "contact_surface_can_be_removed_or_contact_delayed": true,
+      "cooked_union_subset_of_authored_union": true,
+      "earlier_protruding_contact_can_be_created": false,
+      "geometric_clearance_can_decrease": false,
+      "geometric_clearance_direction": "same_or_larger",
+      "scope_note": "Set-distance statement only. It does not cover penetration depth, contactOffset/restOffset, CCD, solver timing, or contact reporting."
+    }
+  },
+  "verdict": "D380_FAILED_PART_PROVENANCE_AUDIT_PASS_REPAIR_REQUIRED",
+  "what_and_why": "Use only immutable D379 embedded authored/callback geometry to explain the 17 failed cooked parts and determine only the geometry-set direction of jaw, void, and clearance impact."
+}
