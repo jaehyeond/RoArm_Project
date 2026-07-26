@@ -1,9 +1,7 @@
 # START_HERE.md
 
-Last updated: 2026-07-25 KST. D386 is complete and frozen. The same D385
-partition has finite minimum vertex budgets for three first-observed failed
-layers, but one layer has no admissible path through 64 under the frozen
-polygon gate. No new budget was selected or applied.
+Last updated: 2026-07-26 KST. D388 attempt1 is frozen as an offline
+partition-contract FAIL_STOP. No case is currently approved.
 
 ## Current Truth
 
@@ -14,135 +12,152 @@ polygon gate. No new budget was selected or applied.
 - Actual product: nominal diameter/height `29/50mm`, zelkova or walnut; mass,
   tolerance, COM, inertia, friction, bottom flatness, and roundness unmeasured.
 - No `29x50mm` target has been authored, loaded, rendered, measured, or
-  simulated. Existing cylinder visuals are old `34x90mm`; D362 metrics do not
-  transfer.
-- D368 A64 (`64 link5 + 64 gripper_link = 128`) is the current 64-cap reference
+  simulated. D362 physics and old visuals do not transfer.
+- D368 A64 (`64 link5 + 64 gripper_link = 128`) is a 64-cap reference
   candidate, not an optimum or NVIDIA limit.
-- D372 P34 is manual: link5 `16` = body `1` + connector `3` + fixed jaw `10` +
-  backbone `2`; gripper_link `18` = support `4` + moving jaw `12` + backbone
-  `2`. Total `34` is a design choice, not a measured optimum.
-- D379 authored-to-cooked identity passed only `17/34`;
-  `p34_authored_to_cooked_identity_pass=false`.
-- D380 proved inward vertex elision in the failed `17/34`; exact internal cook
-  cause remains `null`.
+- D372 P34 is manual: link5 `16`, gripper_link `18`, total `34`. It is a design
+  choice, not an optimum. D379 authored-to-cooked identity passed `17/34`;
+  full P34 identity remains false.
+- D387 completed the 11-layer failure map:
+  upper `[28,null,12]`, lower `[12,null,28]`,
+  fixed-left `[12,30]`, fixed-right `[13,12,12]`.
 
-## Preserved D385 Baseline
+## Latest Case — D388
 
-- D385 froze the passing `17` parts and exact profile-repair `46` children,
-  then applied one registered thin-layer/profile-cell construction to the
-  failed source 3-D hulls.
-- Complete partitions existed for `4/8` source parents, with partial child
-  counts `4+4+6+6=20`.
-- Four parents stopped at their first no-cover layer under the project-authored
-  `12 vertices/child` gate. Therefore complete source-child and total-part
-  counts were `null`, not `83`.
-- D385 verdict:
-  `D385_SEMANTIC_THIN_LAYER_PROFILE_CELL_NO_ADMISSIBLE_CANDIDATE_FAIL_STOP`.
-- `12`, source `<=64`, and total `<128` are project design gates. Installed
-  PhysX schema defaults remain `hullVertexLimit=64`,
-  `maxConvexHulls=32`; UI ranges are `8..64`, `1..2048`.
+Case:
 
-## Latest Completed Case — D386
+`D388 [two_null_moving_support_midlayer_partition_repair_design]`
 
-- Case:
-  `D386 [d385_minimum_admissible_vertex_budget_localization]`, offline only.
-- 신규 변수:
-  `observed_no_cover_layer_exact_minimax_vertex_budget_localizer_v1`.
-- Exact scope was D385's four first-observed failed layers only. Seven
-  later/shadowed layers were inventoried but evaluated `0` times.
-- Each target used one complete fixed candidate graph plus one frozen-D385
-  `B=12` helper replay. Dynamic-programming minimax and independent exhaustive
-  path enumeration both stayed within `12..64`.
-- Frozen gates: fan group size `1..4`, polygon count `<=64`, face width `<=32`,
-  positive volume, surface `<=0.1mm`, topology-volume relative error `<=0.5%`,
-  and positive-volume child overlap `0`.
+이번 case의 신규 변수:
 
-Results:
+`null_middle_layer_first_blocked_triangle_reanchored_fan_graph_v1`
 
-- `fixed_backbone_left/y_layer_01`: `29` no-cover, minimum `30` cover,
-  `5` children.
-- `fixed_backbone_right/y_layer_00`: `12` no-cover, minimum `13` cover,
-  `6` children.
-- `proximal_upper_arm_hull_a/z_layer_00`: `27` no-cover, minimum `28` cover,
-  `6` children.
-- `proximal_lower_arm_hull_a/z_layer_01`: no cover at `12` or `64`;
-  minimum `null`. All `82` candidate geometries were constructed, `42` failed
-  the frozen `polygon_count<=64` gate, and the remaining `40` did not form a
-  complete path.
-- D385 `B=12` no-cover replay was exact `4/4`. Primary and independent
-  algorithms agreed for all four layers. All finite threshold witnesses passed
-  surface, volume, polygon, face-width, positive-volume, and overlap gates.
-- Three-layer finite maximum `30` is diagnostic only. Because the fourth value
-  is `null`, observed-four-layer maximum, selected budget, parent-wide budget,
-  complete-P34 budget, complete counts, and global semantic verdict are all
-  `null`; materializable candidate is false.
-- Scientific verdict:
-  `D386_OBSERVED_LAYER_VERTEX_BUDGET_NOT_LOCALIZABLE_FAIL_STOP`.
-- Worker/retry `1/0`, return `0`, elapsed `4.933896491071209s`; no timeout,
-  signal, or process residue. Completion/observability PASS records the
-  scientific FAIL correctly; it is not a collider-design PASS.
-- Exact `1920x1080` board, save-only RRD/RBL, one headless Viewer, strict
-  entity/component/timeline/footer checks, and manual checks `7/7` completed.
-  The Viewer native HiDPI PNG is `3840x2160`; its sandbox message-proxy warning
-  was recorded and did not override RRD/RBL validation.
-- Asset/USD/Isaac/Kit/PhysX/live callback/collider materialization,
-  alternate partition, overlap/tolerance relaxation, Warp/CUDA, `29x50mm`
-  cylinder, physics/q5/contact/grasp, target/IK/path, and physical settings were
-  all `0`.
-- `live_identity_pass=null`, `live_gpu_compatibility_pass=null`,
-  `physics_or_grasp_result=null`, `p34_authored_to_cooked_identity_pass=false`,
-  `g0a_pass=false`.
-- Canonical output:
-  `claudedocs/runtime_logs/grasp_track/g0a_d386/attempt1_observed_no_cover_layer_minimum_vertex_budget_localization/`.
-- Freeze D386 attempt1. Do not rerun or overwrite.
+What was changed:
+
+- Exact two D387 null middle layers only.
+- One shared rule rotated the same CCW profile so the new fan anchor was the
+  state after the frozen forward-reachable frontier.
+- Derived anchors: upper `11`, lower `10`; old anchor was `0`.
+- Other nine map entries and all polygon/face/surface/volume/no-overlap gates
+  were inherited unchanged.
+
+What was observed:
+
+- Both old null-through64 graphs became finite diagnostic graphs.
+- Upper: `B*=37`, `B36` no-cover, child `6`, cuts
+  `[0,3,7,11,12,16,20]`; DP/exhaustive agree.
+- Lower: `B*=35`, `B34` no-cover, child `7`; DP and exhaustive agree on
+  minimum35 and child count but disagree on canonical cuts:
+  `[0,2,5,9,10,14,18,22]` vs `[0,1,5,9,10,14,18,22]`.
+- Polygon/face/surface/volume/positive-child gates passed.
+- Registered Float32 overlap gate failed on every adjacent diagnostic seam:
+  upper `5/15`, lower `6/21`; calculation failures `0`.
+- Positive-volume sums: upper `1.0732770688656094e-14m^3`, lower
+  `3.0558646686052954e-13m^3`.
+- These are formal failures under the frozen 5nm halfspace-tolerance contract.
+  Whether they are real physical penetration or tolerance/Float32 seam effects
+  remains null.
+
+Exact verdict:
+
+`D388_REANCHOR_PARTITION_CONTRACT_FAIL_STOP`
+
+Operational verdict:
+
+`D388_ATTEMPT1_OFFLINE_WORKER_CLAIM_FAIL_STOP_NO_FINALIZE`
+
+Plain-language verdict:
+
+- The one-anchor change usefully converted both disconnected graphs to finite
+  paths.
+- It did not produce an admissible repair: neither target met B12, both
+  overlap witnesses failed, and the lower canonical path contract failed.
+- Do not call `37` or `35` selected/adopted budgets.
+
+Execution and observability:
+
+- prepare `23/23` PASS.
+- worker/retry `1/0`, elapsed `4.434133296832442s`, return `1`;
+  cooperative deadline exceeded=false, signal `0`, worker exited=true.
+- Return1 was an intentional fail-stop after evidence/visual writes, not a
+  crash or Isaac timeout.
+- Exact `1920x1080` board and strict save-only RRD/RBL validation PASS.
+- Manual visual inspection `8/9` FAIL: the board is readable, but Rerun
+  geometry is too small to map child `6/7` one-by-one and has Korean glyph,
+  proxy, and loading warnings.
+- No completion summary; do not finalize, rerun, or overwrite attempt1.
+
+Frozen nonclaims:
+
+- global/common, selected, adopted, complete-P34 budgets `null`
+- budget application `0`; complete counts `null`
+- `materializable_candidate=false`
+- live identity/GPU compatibility and physics/grasp `null`
+- `p34_authored_to_cooked_identity_pass=false`
+- `g0a_pass=false`
+- other-nine evaluation/mutation, asset/USD, Isaac/Kit/PhysX, Warp/CUDA,
+  cylinder, physics/q5/contact/grasp/target-IK-path/settings counters all `0`
+
+Canonical output:
+
+`claudedocs/runtime_logs/grasp_track/g0a_d388/attempt1_two_null_moving_support_midlayer_partition_repair_design/`
+
+## Next Candidate — Not Approved
+
+`D389 [d388_overlap_gate_numeric_provenance_and_canonical_tie_audit]`
+
+Offline-only, immutable D388 evidence:
+
+1. Reorder all lower B35 complete paths by the global canonical key and
+   localize the DP tie-pruning discrepancy.
+2. For the 11 adjacent seams compare pre/post-Float32 signed penetration,
+   epsilon `0` intersection, and frozen `5nm` intersection; retain nonadjacent
+   negative controls.
+
+This case must not rerun D388, change the partition, relax a tolerance/gate,
+select/apply a budget, or use USD/Isaac/PhysX/cylinder/physics/contact/grasp.
+It requires separate explicit user approval.
 
 ## Remaining Nulls
 
-- A complete low-count repaired P34 and live authored/callback identity.
-- Full fixed-graph status of the seven later/shadowed D385 layers.
-- A representation/partition repair for the polygon-gated lower support layer.
+- Whether the 11 positive seam volumes represent actual Float32 intrusion or
+  only the registered 5nm numerical band/rounding.
+- The globally canonical lower B35 partition.
+- A complete admissible low-count compound and live authored/callback identity.
 - Actual `29x50mm` geometry/readback/render and measured physical properties.
 - OPEN gap, void/contact-patch identity, middle-height pose, closure/contact/
   tipping, force closure, hold/lift, grasp, and target/IK/path justification.
 - `g0a_pass=false`.
 
-## Next Direction — Not Approved
-
-- Recommended minimum:
-  `D387 [d386_shadowed_layer_fixed_graph_completion_localization]`, offline
-  only. Apply the already frozen D386 graph/localizer to the seven inventoried
-  later layers, without changing a partition or gate, so repair design is not
-  based on an incomplete four-layer map.
-- Only after that result should a separate one-variable partition/
-  representation repair for polygon-gated layers be proposed.
-- Separate target case: radius/height `14.5/50mm`, Z axis, exact readback,
-  collision-cylinder approximation setting/actual representation, table
-  bottom/center/top, actual Isaac views, RRD/RBL; physical properties remain
-  unknown until measured.
-
 ## Authorization Boundary
 
-- D386 is complete. D387, budget selection/application, further-layer
-  evaluation, alternate partition, gate relaxation, asset/USD materialization,
-  Isaac/live identity, `29x50mm` target rebase, mass/pose, A64/P34 physics,
-  q5/contact, hold/lift, G0b, RL/PPO/VLA are not approved.
-- Do not call `30`, P34 `34`, D384 `268/558`, or A64 `128` an optimum.
+- No active approved case.
+- D388 attempt1 is consumed: no rerun, retry, overwrite, or finalize.
+- Budget selection/application, partition or gate change, asset/USD
+  materialization, Isaac/live identity, `29x50mm` target rebase, mass/pose,
+  A64/P34 physics, q5/contact, hold/lift, G0b, RL/PPO/VLA remain unapproved.
 - Do not modify `claudedocs/lab_meeting/20260715/d334_collision_table/`.
 - `HANDOFF.md` and `TASKS.md` are stale. No hardware, signal, dependency
   install, commit, or push is authorized.
 
 ## Must Read First
 
-1. `AGENTS.md`; this file; DECISIONS D385-D386; ledger tail
-2. `claudedocs/session_20260725_grasp_g0a_d386_minimum_admissible_vertex_budget_localization.md`
-3. D386 evidence, completion, CSV, board, Rerun validation, manual inspection
-4. D385 session/evidence; D384 repair design; D380 provenance; D379 identity
+1. `AGENTS.md`; this file; DECISIONS D388; ledger tail
+2. `claudedocs/session_20260726_grasp_g0a_d388_two_null_moving_support_midlayer_partition_repair_design.md`
+3. D388 evidence, supervisor, CSV, board, Rerun validation, manual inspection
+4. D387 session/evidence; D386; D385; D379 identity
 5. D362 only as historical `34x90mm` cylinder evidence
 
 ## Git
 
-- D386 approval and completion:
-  `HEAD == origin/master == 35f10e3079b19e51209ba4cf1dd66391a431b053`,
-  subject `D384`.
-- D385-D386 forward-only code/evidence/state files make the worktree dirty.
-  Commit/push was not authorized and was not performed.
+- D388 approval and attempt1 fail-stop recording:
+  `HEAD == origin/master == 930b41d98576a9c0bf1dce4f3eb1c0d93df8014b`,
+  subject `D385`.
+- D387 and D388 are expected uncommitted forward-only worktree additions and
+  state-doc modifications.
+- D388 execution script SHA-256:
+  `7f99f80c19b4ab7e8adbae6237ed675feb738f9e1c4418049c1fa2f166c743bf`.
+- D388 evidence/geometry SHA-256:
+  `582368f093ba08fec0207967e8e24ac24f0a44774dfa1a7b8c82ae2b6781caba`,
+  `c119ededf4400efbef55de4d89ccd6c1c8b4e33d4d3795710b6882d369f5e882`.
+- Commit/push is not authorized.

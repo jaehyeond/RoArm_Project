@@ -95,7 +95,8 @@ as the current Active Case.
   first-observed layer의 minimum은 `13/28/30`이지만 lower moving-support
   `z_layer_01`은 `B=64`에서도 no-cover다. `82` candidates 중 `42`가 frozen
   polygon-count gate를 넘고 나머지 `40`도 complete path를 만들지 못했다.
-  따라서 `30`을 전역 budget으로 선택/적용하는 방향은 폐기한다.
+  따라서 D386 단계에서 `30`을 즉시 전역 budget으로 선택·적용하는 것은
+  정당화되지 않았고 진행하지 않았다.
 - 2026-07-25 (D386 결과): 다음 최소 후보
   `d386_shadowed_layer_fixed_graph_completion_localization` — D386에서
   inventory만 한 later/shadowed `7` layers에 같은 fixed graph, `12..64`
@@ -108,3 +109,39 @@ as the current Active Case.
   partition/representation repair를 설계한다. polygon gate 제거, internal
   overlap, USD/live identity, actual `29x50mm` cylinder와 physics/grasp를
   결합하지 않는다. 사용자 승인 전 착수 금지.
+
+- 2026-07-26 (D387 결과): 위
+  `d386_shadowed_layer_fixed_graph_completion_localization`은 완료됐다.
+  전체 11개 지도는 upper `[28,null,12]`, lower `[12,null,28]`,
+  fixed-left `[12,30]`, fixed-right `[13,12,12]`이다. 두 proximal
+  moving-support 중앙 `z_layer_01`만 `B=64`까지 no-cover이며, finite
+  maximum `30`은 diagnostic only다. 전역/채택/선택/P34 budget과 완성
+  count는 null, application `0`, materializable=false다.
+- 2026-07-26 (D387 이후 조건부 최소 후보):
+  `two_null_moving_support_midlayer_partition_repair_design` — 최소 분할 변경
+  정책을 사용자가 선택할 때만, exact 두 null `z_layer_01`을 대상으로
+  offline one-variable representation/partition repair를 설계한다. 나머지
+  9개 지도 항목과 polygon/face/surface/volume/no-overlap gate는 동결한다.
+  `30` 또는 다른 budget 선택·적용, USD/PhysX, 실제 원통, 물리/접촉/파지는
+  포함하지 않는다. 사용자 승인 전 착수 금지.
+- 2026-07-26 (D387 이후 정책 분기):
+  `all_non_b12_layer_redesign` — 모든 source child에 `B=12`를 계속 하드
+  목표로 둘 경우 수리 대상은 두 null이 아니라 `13/28/28/30` 네 층까지
+  포함한 non-B12 6개다. 이는 최소 분할 변경 경로와 다른 설계 정책이므로
+  사용자 명시 선택과 별도 case 승인 전 착수 금지.
+
+- 2026-07-26 (D388 결과): 위
+  `two_null_moving_support_midlayer_partition_repair_design`은 등록한 한 번의
+  cyclic re-anchor로 두 old-graph null을 diagnostic `B=37/B=35` 유한
+  경로로 바꿨다. 그러나 둘 다 B12가 아니고, 등록된 5nm halfspace
+  tolerance overlap gate에서 인접 seam `5/6`쌍이 양의 부피로 판정됐으며,
+  하단은 DP와 전수열거의 최소값35는 같아도 canonical cuts가 달랐다.
+  따라서 budget/partition 채택은 `null`, materializable=false다.
+- 2026-07-26 (D388 이후 최소 후보):
+  `d388_overlap_gate_numeric_provenance_and_canonical_tie_audit` — immutable
+  D388 JSON/CSV/geometry만 읽는 offline-only case에서 (1) 하단 B35의
+  global canonical tie-break와 (2) 11개 인접 seam의 pre/post-Float32
+  signed penetration, epsilon0 대 frozen-5nm 교집합을 독립 감사한다.
+  D388 재실행, 새 partition, tolerance/overlap gate 완화, budget 선택,
+  USD/PhysX/Isaac, 실제 원통, physics/q5/contact/grasp는 사용자 별도 승인
+  전 착수 금지.

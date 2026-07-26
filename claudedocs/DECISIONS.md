@@ -22588,3 +22588,170 @@ Sources:
 - NVIDIA PhysX SDK 5.6.1 `GPU Simulation`
 - NVIDIA PhysX 107.3 `GuConvexMesh.cpp`
 - `START_HERE.md`
+
+## D387 — A complete failure map can PASS while the collider design remains unusable; two middle moving-support layers, not one global vertex cap, localize the next repair
+
+Date: 2026-07-26
+
+Decision:
+
+- D386에서 계산하지 않은 later/shadowed 7개 층만 동일한 D385
+  thin-layer/profile-fan graph와 동결 gate로 계산하고, D386의 4개 결과는
+  재계산 없이 exact hash로 상속한다.
+- `B=12` cover, `13..64`의 first finite threshold, `B=64`까지 no-cover를
+  서로 다른 유효 분류로 기록한다. 유효한 no-cover `null`도 지도 항목
+  완성에는 PASS지만 전역/채택/P34 예산을 만들지는 않는다.
+- raw minimax가 `12`보다 작더라도 D387 의사결정 범위 밖 참고값이다.
+  등록 분류는 `B=12 baseline cover`이고 sub-12 예산을 선택·적용하지 않는다.
+- map-completion PASS와 collider-design/live-identity/physics/grasp PASS를
+  분리한다.
+
+Evidence:
+
+- 새 7개 대상은 frozen D386 shadow inventory와 exact `7/7`; D386 상속 4개와
+  교집합 `0`, 합집합 `11`.
+- 새 7개 분류는 `B=12` 5개, `B=28` 1개,
+  `NO_COVER_THROUGH_64` 1개다.
+- 전체 11개 지도:
+  upper moving support `[28, null, 12]`,
+  lower moving support `[12, null, 28]`,
+  fixed-left `[12, 30]`,
+  fixed-right `[13, 12, 12]`.
+- 두 proximal moving-support 중앙 `z_layer_01`이 모두 null이다.
+  새 upper 중앙 층은 candidates `74`, `polygon_count>64` 거부 `37`,
+  남은 pass edge `37`에도 complete path가 없다. 상속 lower 중앙 층은
+  candidates `82`, 같은 거부 `42`, 남은 pass edge `40`에도 complete
+  path가 없다. polygon 거부와 남은 graph 단절을 함께 관찰했으며
+  polygon count 하나만을 단일 원인으로 확정하지 않는다.
+- 새 candidate CSV/constructed count `542/542`, non-vertex-pass `505`;
+  독립 전수 경로 합 `4,858,898`. D385 helper, bounded DP, exhaustive path,
+  reachability와 유한 witness geometry gate가 모두 일치했다.
+- 11개 중 finite `9`, null `2`. finite maximum `30`은 diagnostic only;
+  global/adopted/selected/complete-P34 budget은 모두 `null`, application
+  `0`, complete counts `null`, materializable=false.
+- worker/retry `1/0`, return `0`, elapsed `9.548573459964246s`, no
+  timeout/signal/residue. Phase `77`, prereg `23/23`, method `19/19`,
+  completion `32/32`, artifact hashes `14/14`, manual `8/8` PASS.
+- asset/USD/collider materialization, Isaac/Kit/PhysX/live, `29x50mm`
+  cylinder, physics/q5/contact/grasp/target-setting counters는 모두 `0`;
+  `p34_authored_to_cooked_identity_pass=false`, `g0a_pass=false`.
+- verdict:
+  `D387_SHADOWED_LAYER_FIXED_GRAPH_MAP_COMPLETION_PASS_GLOBAL_BUDGET_NULL`.
+
+Implication:
+
+- D387은 실패 위치 지도를 완성했지만 완성 충돌체 후보를 만들지 않았다.
+  `30`을 전역 예산으로 채택하거나 현 graph를 materialize하지 않는다.
+- 최소 분할 변경 경로는 별도 승인 offline one-variable case에서 정확히 두
+  null 중앙 층의 representation/partition만 수리하고 다른 9개 지도 항목과
+  모든 non-vertex/no-overlap gate를 동결하는 것이다.
+- 모든 source child에 `B=12`를 계속 하드 목표로 둘 경우 수리 대상은 두
+  null이 아니라 `13/28/28/30` 네 층을 포함한 non-B12 6개 층이다. 이는
+  다른 설계 정책이므로 사용자가 명시적으로 선택해야 한다.
+- 어느 경로도 budget 선택/적용, USD/PhysX materialization, actual-product
+  target, physics/q5/contact/grasp와 결합하지 않는다.
+- D387 attempt1을 동결하고 재실행하거나 덮어쓰지 않는다.
+
+Sources:
+
+- `claudedocs/session_20260726_grasp_g0a_d387_shadowed_layer_fixed_graph_completion_localization.md`
+- `sim_scripts/cyl34_top_view_d387_d386_shadowed_layer_fixed_graph_completion_localization.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d387/attempt1_shadowed_layer_fixed_graph_completion_localization/d387_preregistration.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d387/attempt1_shadowed_layer_fixed_graph_completion_localization/d387_shadowed_layer_fixed_graph_map_evidence.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d387/attempt1_shadowed_layer_fixed_graph_completion_localization/d387_new_layer_candidate_cell_metrics.csv`
+- `claudedocs/runtime_logs/grasp_track/g0a_d387/attempt1_shadowed_layer_fixed_graph_completion_localization/d387_fixed_graph_layer_map_1920x1080.png`
+- `claudedocs/runtime_logs/grasp_track/g0a_d387/attempt1_shadowed_layer_fixed_graph_completion_localization/d387_rerun_validation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d387/attempt1_shadowed_layer_fixed_graph_completion_localization/d387_manual_visual_inspection.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d387/attempt1_shadowed_layer_fixed_graph_completion_localization/d387_completion_summary.json`
+- NVIDIA Omni Physics 107.3 `Colliders`
+- NVIDIA PhysX SDK 5.6.1 `GPU Rigid Bodies`
+- NVIDIA PhysX 107.3 `GuConvexMesh::isGpuCompatible`
+- `START_HERE.md`
+
+## D388 — A cyclic re-anchor can turn a disconnected fixed graph finite without producing an admissible collider partition
+
+Date: 2026-07-26
+
+Decision:
+
+- D387의 exact 두 proximal moving-support 중앙 null 층에만, 기존
+  forward-reachable frontier의 다음 꼭짓점을 새 fan anchor로 삼는 한
+  규칙을 적용했다. 상단/하단 anchor `11/10`은 독립 튜닝값이 아니라 같은
+  규칙의 산출물이다.
+- 기존 polygon point set와 CCW orientation, fan group `1..4`, 검색 범위
+  `12..64`, polygon/face/surface/volume/positive-overlap gate와 다른 아홉
+  층 map을 동결했다. all-anchor sweep, 다른 partition, gate 완화, budget
+  선택은 하지 않았다.
+- graph의 유한 minimum과 채택 가능한 geometry witness를 분리한다.
+  `B=37/35`는 old null을 유한화한 진단값일 뿐, B12 repair PASS나 채택
+  budget이 아니다.
+- method contract가 실패하면 세 등록 science tier 중 하나를 억지로
+  선택하지 않는다. canonical verdict는
+  `D388_REANCHOR_PARTITION_CONTRACT_FAIL_STOP`이고 global/selected/
+  adopted/complete-P34 budgets는 null이다.
+
+Evidence:
+
+- 상단은 old anchor0의 null-through64에서 anchor11의 `B*=37`,
+  `B36` no-cover로 바뀌었다. DP와 exhaustive canonical cuts는
+  `[0,3,7,11,12,16,20]`, child `6`으로 일치했다.
+- 하단은 old anchor0의 null-through64에서 anchor10의 `B*=35`,
+  `B34` no-cover로 바뀌었다. 두 방법의 minimum35와 child7은 같지만
+  DP cuts `[0,2,5,9,10,14,18,22]`와 exhaustive cuts
+  `[0,1,5,9,10,14,18,22]`가 달랐다. 이는 minimum 오류가 아니라
+  중간-state pruning이 전역 lexicographic tie를 보존하지 못한
+  canonical-path 계약 실패다.
+- polygon/face/surface/volume/positive-child gates는 통과했지만 등록된
+  Float32 overlap 검사에서 상단 인접 `5/15`, 하단 인접 `6/21` pair가
+  positive volume이어서 두 geometry witness 모두 실패했다. 계산 실패는
+  `0`이다.
+- positive volume 합은 상단 `1.0732770688656094e-14m^3`, 하단
+  `3.0558646686052954e-13m^3`다. 현 frozen gate에서는 거부가 확정이지만,
+  별도 read-only 사후감사의 derived inference로, 관측 최대값은 parent
+  AABB 최대 면적×5nm의 거친
+  규모 비교값보다 작고 양성은 인접 seam에만 있었다. 5nm halfspace
+  tolerance band와 Float32 rounding 가설을 지지하지만 증명하지는
+  않으므로 실제 5nm 이상 물리 관통 여부는 null이다.
+- worker/retry `1/0`, elapsed `4.434133296832442s`, return1,
+  cooperative deadline exceeded=false, signal `0`, worker exited=true다.
+  return1은 evidence/visual 저장 뒤
+  worker-claim false를 검출한 의도적 FAIL_STOP이다.
+- exact 1920x1080 board와 save-only RRD/RBL strict validation은
+  PASS했다. 수동 육안검사는 `8/9` FAIL이다. Rerun geometry가 너무 작고
+  한국어 glyph box와 proxy/loading 경고가 있어 child `6/7`개를 정확히
+  대응할 수 없었다. completion summary와 finalize는 없다.
+- 다른 아홉 층 evaluation/mutation, asset/USD, Isaac/Kit/PhysX,
+  Warp/CUDA, cylinder, physics/q5/contact/grasp/target-IK-path/settings
+  counters는 모두 `0`; materializable=false, live/physics/grasp=null,
+  `p34_authored_to_cooked_identity_pass=false`, `g0a_pass=false`다.
+
+Implication:
+
+- “re-anchor가 무효”라고도, “collider repair 성공”이라고도 보고하지
+  않는다. 정확한 결론은 null 유한화에는 성공했으나 B12·무겹침·알고리즘
+  일치 설계에는 실패했다는 것이다.
+- `37`, `35`, D387 finite maximum `30` 중 어느 값도 전역/부모별 budget으로
+  선택·적용하지 않는다.
+- 다음 최소 후보는 별도 승인
+  `D389 [d388_overlap_gate_numeric_provenance_and_canonical_tie_audit]`다.
+  immutable D388 evidence만 읽어 하단 global canonical tie와 11개 seam의
+  epsilon0 대 frozen-5nm, pre/post-Float32 침투를 독립 감사한다.
+- D388 attempt1을 재실행·덮어쓰기·finalize하지 않는다. 이 감사 전에는
+  partition 변경, tolerance/gate 완화, USD/PhysX materialization,
+  actual-product cylinder, physics/contact/grasp로 진행하지 않는다.
+
+Sources:
+
+- `claudedocs/session_20260726_grasp_g0a_d388_two_null_moving_support_midlayer_partition_repair_design.md`
+- `sim_scripts/cyl34_top_view_d388_d387_two_null_moving_support_midlayer_partition_repair_design.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d388/attempt1_two_null_moving_support_midlayer_partition_repair_design/d388_preregistration.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d388/attempt1_two_null_moving_support_midlayer_partition_repair_design/d388_two_null_reanchor_design_evidence.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d388/attempt1_two_null_moving_support_midlayer_partition_repair_design/d388_two_null_reanchor_witness_geometry.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d388/attempt1_two_null_moving_support_midlayer_partition_repair_design/d388_reanchored_candidate_cell_metrics.csv`
+- `claudedocs/runtime_logs/grasp_track/g0a_d388/attempt1_two_null_moving_support_midlayer_partition_repair_design/d388_offline_worker_supervisor.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d388/attempt1_two_null_moving_support_midlayer_partition_repair_design/d388_rerun_validation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d388/attempt1_two_null_moving_support_midlayer_partition_repair_design/d388_manual_visual_inspection.json`
+- NVIDIA Omni Physics 107.3 `Colliders`
+- NVIDIA PhysX SDK 5.6.1 `GPU Rigid Bodies`
+- NVIDIA PhysX 107.3 `GuConvexMesh::isGpuCompatible`
+- `START_HERE.md`

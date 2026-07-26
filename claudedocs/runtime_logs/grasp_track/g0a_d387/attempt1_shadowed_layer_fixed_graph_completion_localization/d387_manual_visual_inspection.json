@@ -1,0 +1,34 @@
+{
+  "artifact": "D387_MANUAL_VISUAL_INSPECTION_V1",
+  "case": "g0a_d387",
+  "attempt": "attempt1_shadowed_layer_fixed_graph_completion_localization",
+  "inspected_at": "2026-07-26T00:52:49+09:00",
+  "inspector": "Codex primary agent using original-resolution local image inspection",
+  "artifact_hashes": {
+    "claudedocs/runtime_logs/grasp_track/g0a_d387/attempt1_shadowed_layer_fixed_graph_completion_localization/d387_fixed_graph_layer_map_1920x1080.png": "11df068251cc036165f65b0543f95b73f675317a79b4853f343eb28babbda439",
+    "claudedocs/runtime_logs/grasp_track/g0a_d387/attempt1_shadowed_layer_fixed_graph_completion_localization/d387_rerun_inspection.png": "d7b6b2f3b2041b4ccc443bb063bbe6055a095acadf7c06ae508da2a7a396ed75"
+  },
+  "checks": {
+    "board_exact_1920x1080_and_readable": true,
+    "all_eleven_layer_cells_and_four_parents_visible": true,
+    "d386_inherited_four_and_d387_new_seven_distinguishable": true,
+    "baseline_interior_null_classifications_unambiguous": true,
+    "parent_and_global_null_semantics_readable": true,
+    "rerun_geometry_and_human_decision_panel_readable": true,
+    "rerun_native_dimension_is_logical_1x_or_hidpi_2x_not_4x": true,
+    "no_budget_adoption_live_or_physics_claim": true
+  },
+  "observations": [
+    "The decision board is exactly 1920x1080. Its four parent rows and three layer columns show eleven populated cells plus one explicit N/A cell; no title, cell label, summary card, or footer text visibly overlaps.",
+    "Dashed borders identify the four inherited D386 cells and solid borders identify the seven newly evaluated D387 cells. Green finite cells, red NULL-through-64 cells, B=12 floor results, and B*-1 failure to B* cover transitions are visually distinct.",
+    "Both proximal support parents visibly retain a NULL z_layer_01, while fixed_backbone_left shows a diagnostic parent threshold 30 and fixed_backbone_right shows 13. The bottom banner clearly states map 11/11 complete, global budget NULL, selected/applied NULL/0, and no complete P34 candidate.",
+    "The Rerun screenshot is a native 3840x2160 HiDPI 2x capture of the requested 1920x1080 logical window. Shifted parent/witness geometry and the complete thirteen-line human decision panel are visible without text overlap.",
+    "The Rerun notification buffer visibly reports a sandbox message-proxy permission warning, and validation stderr records llvmpipe software rendering. These are presentation-environment warnings; the save-only RRD/RBL strict validation passed and the canonical JSON remains the numeric authority."
+  ],
+  "presentation_warnings": [
+    "Rerun headless rendering used llvmpipe software rasterization in the sandbox.",
+    "Rerun displayed a message-proxy Operation not permitted notification."
+  ],
+  "numeric_authority": "canonical D387 JSON/CSV and hashes, not the Float32 Rerun spatial copy",
+  "pass": true
+}
