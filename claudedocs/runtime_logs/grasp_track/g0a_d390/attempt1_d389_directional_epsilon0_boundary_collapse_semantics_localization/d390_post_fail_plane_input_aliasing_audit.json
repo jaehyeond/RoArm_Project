@@ -1,0 +1,43 @@
+{
+  "artifact": "D390_POST_FAIL_PLANE_INPUT_ALIASING_AUDIT_V1",
+  "audit_role": "read-only post-fail audit; not worker output, not a retry, not a repair, and not authorization to finalize",
+  "authority": "stored D390 terminal-candidate geometry arrays and their already recorded pre-call Float64 hashes",
+  "input": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d390/attempt1_d389_directional_epsilon0_boundary_collapse_semantics_localization/d390_terminal_candidate_geometry.json",
+    "sha256": "73fc986043b976bec26e1cc92643b8aab281a529f1c71c2918163ba7b98475c7"
+  },
+  "executed_script_sha256": "1ac467ee63d9847fc18ba9ca289a9bc257e0dafa64c3087622d65e79f0d5d936",
+  "hash_contract": {
+    "array_dtype": "float64",
+    "array_shape": [
+      1,
+      4
+    ],
+    "byte_order": "native stored Float64",
+    "layout": "C",
+    "prefix": "(1, 4)|float64|C|",
+    "implementation": "same shape/dtype/layout/byte contract as D390 _array_sha"
+  },
+  "result": {
+    "stored_plane_rows": 351,
+    "stored_array_hash_matches": 351,
+    "stored_array_hash_mismatches": 0,
+    "all_stored_real_trace_planes_match_pre_call_hash": true
+  },
+  "interpretation": {
+    "supported": "The caller-array aliasing defect is directly observed in the two non-unit synthetic fixtures, while no stored real-trace plane/hash divergence is observed in D390 attempt1.",
+    "not_supported": "This does not prove the helper is input-immutable or authorize reuse without a copy-before-normalize repair and pre/post input-hash gate."
+  },
+  "scope_counters": {
+    "d389_imports_or_executions": 0,
+    "d390_worker_retries": 0,
+    "d390_worker_finalizations": 0,
+    "geometry_or_plane_mutations": 0,
+    "isaac_kit_physx_warp_cuda_launches": 0,
+    "physics_steps": 0,
+    "q5_samples": 0,
+    "contact_queries": 0,
+    "grasp_trials": 0
+  },
+  "pass": true
+}

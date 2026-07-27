@@ -1,0 +1,169 @@
+{
+  "artifact": "D397_PREREGISTRATION_V1",
+  "attempt": "attempt1_shared_boundary_zero_volume_construction_design",
+  "case": "g0a_d397",
+  "checks": {
+    "d385_base_counts": true,
+    "d396_candidate_rejected": true,
+    "fonts": true,
+    "head_exact": true,
+    "hpp_fcl_2_4_4": true,
+    "inputs_exact": true,
+    "numpy_1_26_0": true,
+    "one_new_variable": true,
+    "openusd_runtime_directory": true,
+    "origin_exact": true,
+    "rerun_0_34_1": true,
+    "rerun_cli": true,
+    "scipy_1_15_3": true,
+    "script_exists": true,
+    "start_active_case_D397_approved": true,
+    "start_exact_forward_only_output": true,
+    "start_exact_new_variable": true,
+    "start_exists": true
+  },
+  "construction_rule": {
+    "candidate_planes": "Float32 midpoint of each adjacent unique coordinate pair on x/y/z of the current convex cell",
+    "immediate_progress_filter": "each selected split must strictly reduce the maximum child vertex count relative to its parent cell",
+    "maximum_leaves_per_parent": 128,
+    "maximum_tree_depth": 64,
+    "selection_key": [
+      "minimum maximum child vertex count",
+      "minimum normalized volume imbalance",
+      "minimum total child vertex count",
+      "axis index",
+      "Float32 cut bits"
+    ],
+    "shared_boundary": "edge intersections calculated once; seam convex polygon Float32 bits reused in both closed siblings",
+    "termination": "all source leaves have at most 12 vertices"
+  },
+  "execution_contract": {
+    "cooperative_deadline_seconds": 600.0,
+    "deadline_scope": "canonical offline computation only",
+    "offline_worker": 1,
+    "process_signals": 0,
+    "viewer_maximum": 1,
+    "viewer_retries": 0,
+    "viewer_subprocess_wall_clock_watchdog": null,
+    "viewer_watchdog_reason": "the no-signal authority forbids terminating a stalled Viewer; the Rerun command is one-shot but operationally unbounded",
+    "worker_retries": 0
+  },
+  "failure_capable_controls": [
+    "duplicate leaf",
+    "removed parent children",
+    "synthetic overlapping closed halfspaces",
+    "two frozen D396 rejected witnesses",
+    "source count 65",
+    "total count 128"
+  ],
+  "forbidden": {
+    "collider_materialization": 0,
+    "cylinder_create_or_write": 0,
+    "hardware_signal_commit_push": 0,
+    "isaac_kit_physx_warp_cuda": 0,
+    "physics_q5_contact": 0,
+    "target_ik_path_or_settings": 0,
+    "usd_or_asset_writes": 0
+  },
+  "forward_only_output": "claudedocs/runtime_logs/grasp_track/g0a_d397/attempt1_shared_boundary_zero_volume_construction_design",
+  "frozen_gates": {
+    "D372_P34_clearance_delta_mm_max": 0.1,
+    "bounds_mm_max": 0.1,
+    "frozen_open_clearance_mm_min": 0.1,
+    "frozen_open_raw_delta_mm_max": 0.5,
+    "jaw_projection_raster_step_mm": 0.25,
+    "new_internal_positive_volume_overlap_count": 0,
+    "polygons_max": 64,
+    "positive_volume_epsilon_m3": 1e-18,
+    "source_child_vertices_max": 12,
+    "source_children_max": 64,
+    "surface_mm_max": 0.1,
+    "total_parts_strictly_below": 128,
+    "vertices_per_polygon_max": 32,
+    "volume_relative_max": 0.005
+  },
+  "git": {
+    "head": "d354d46134fe002073642441a7d24c99fe579edd",
+    "origin_master": "d354d46134fe002073642441a7d24c99fe579edd",
+    "status_outside_output": [
+      "M START_HERE.md",
+      " M claudedocs/DECISIONS.md",
+      " M claudedocs/EXPERIMENT_LEDGER.md",
+      "?? claudedocs/runtime_logs/grasp_track/g0a_d389/",
+      "?? claudedocs/runtime_logs/grasp_track/g0a_d390/",
+      "?? claudedocs/runtime_logs/grasp_track/g0a_d391/",
+      "?? claudedocs/runtime_logs/grasp_track/g0a_d392/",
+      "?? claudedocs/runtime_logs/grasp_track/g0a_d393/",
+      "?? claudedocs/runtime_logs/grasp_track/g0a_d394/",
+      "?? claudedocs/runtime_logs/grasp_track/g0a_d395/",
+      "?? claudedocs/runtime_logs/grasp_track/g0a_d396/",
+      "?? claudedocs/session_20260726_grasp_g0a_d389_d388_overlap_gate_numeric_provenance_and_canonical_tie_audit.md",
+      "?? claudedocs/session_20260726_grasp_g0a_d390_d389_directional_epsilon0_boundary_collapse_semantics_localization.md",
+      "?? claudedocs/session_20260726_grasp_g0a_d391_d390_rank_basis_and_clip_input_immutability_repair.md",
+      "?? claudedocs/session_20260727_grasp_g0a_d392_d391_remaining35_frozen_rank_authority_coverage_audit.md",
+      "?? claudedocs/session_20260727_grasp_g0a_d393_call29_third_direction_provenance_localization.md",
+      "?? claudedocs/session_20260727_grasp_g0a_d394_stable_fullrank_volume_subthreshold_semantics.md",
+      "?? claudedocs/session_20260727_grasp_g0a_d395_all36_hybrid_gate_semantics.md",
+      "?? claudedocs/session_20260727_grasp_g0a_d396_direct_overlap_admissibility_decision.md",
+      "?? sim_scripts/cyl34_top_view_d389_attempt2_prereg_status_whitespace_repair.py",
+      "?? sim_scripts/cyl34_top_view_d389_d388_overlap_gate_numeric_provenance_and_canonical_tie_audit.py",
+      "?? sim_scripts/cyl34_top_view_d390_d389_directional_epsilon0_boundary_collapse_semantics_localization.py",
+      "?? sim_scripts/cyl34_top_view_d391_d390_rank_basis_and_clip_input_immutability_repair.py",
+      "?? sim_scripts/cyl34_top_view_d392_d391_remaining35_same_authority_coverage_audit.py",
+      "?? sim_scripts/cyl34_top_view_d393_call29_third_direction_provenance_localization.py",
+      "?? sim_scripts/cyl34_top_view_d394_attempt2_gate_numeric_null_semantics_repair.py",
+      "?? sim_scripts/cyl34_top_view_d394_attempt3_ascii_exponent_visual_repair.py",
+      "?? sim_scripts/cyl34_top_view_d394_stable_fullrank_terminal_volume_subthreshold_semantics.py",
+      "?? sim_scripts/cyl34_top_view_d395_all36_pair_144direction_gate_semantics_propagation.py",
+      "?? sim_scripts/cyl34_top_view_d395_attempt2_d389_prereg_threshold_path_repair.py",
+      "?? sim_scripts/cyl34_top_view_d396_d388_reanchor_direct_pre_float32_nonoverlap_admissibility_decision.py",
+      "?? sim_scripts/cyl34_top_view_d397_shared_boundary_zero_volume_construction_design.py"
+    ],
+    "status_outside_output_sha256": "83c46628f03cf652f5675e8b1470cc9f5c55f8f9d6ddaa92b25fbd81167555c1"
+  },
+  "input_hashes": {
+    "claudedocs/runtime_logs/grasp_track/g0a_d349/d349_frozen_target_distance_measurement.json": "5de6d14e37d6b74b202d1bb668120a6bb57221eac24ea5c751457ce9823b6300",
+    "claudedocs/runtime_logs/grasp_track/g0a_d368/d368_semantic_allocation_evidence.json": "be2a422b0c74e4781b76a640c5312070b84876b1cb9e661d47e705ccdf789cf5",
+    "claudedocs/runtime_logs/grasp_track/g0a_d372/attempt2_external_schema_path_repair/d372_professor_semantic_candidate_evidence.json": "d68f658089aaf838ff454e9d0b301ec3f602785a3a730b3c329aa7785010e984",
+    "claudedocs/runtime_logs/grasp_track/g0a_d372/attempt2_external_schema_path_repair/d372_professor_semantic_candidate_geometry.json": "12fd1f32c35dfb9ae36cbbb412f6a51536aa1cc07c2dc17d05a5d189f3ee83e4",
+    "claudedocs/runtime_logs/grasp_track/g0a_d379/attempt2_d372_measurement_field_repair/d379_p34_full_live_identity_evidence.json": "8eacbad796e8532c3d856b865e90dc54481f0f2003a266c3ebfaa8e93de37af5",
+    "claudedocs/runtime_logs/grasp_track/g0a_d380/attempt1_failed_part_cook_provenance_semantic_impact_audit/d380_p34_failed_part_cook_provenance_evidence.json": "4c64d08e117501dd15a5836ce56ef8b963d188044beac465e645e53a17710bd1",
+    "claudedocs/runtime_logs/grasp_track/g0a_d385/attempt2_precreate_git_status_capture_repair/d385_p34_semantic_low_count_candidate_geometry.json": "dc376e7fba6efd4c064644139f412029fe905844db91b5f17623f0ace7f7a862",
+    "claudedocs/runtime_logs/grasp_track/g0a_d396/attempt1_d388_reanchor_direct_pre_float32_nonoverlap_admissibility_decision/d396_direct_overlap_admissibility_evidence.json": "9cd315f69d4ce6a2b6b25addbfb589f2be0bdb3ea9e35b47069bea9be0580c1f",
+    "local_assets/roarm_m3/usd/roarm_m3.usd": "a4be58e87b1f9790f2a2ed600f0620c79d3cfb95c608b3c598308d52f5e46fff",
+    "roarm_rl/rerun_contract.py": "aaafcd93b9da3d8a97d61a53753ec9667bb98bec7391c91c98974f7ce9c66c1e",
+    "roarm_rl/viz_debug.py": "4b5f821ad43652f529dfaa2f92b2826d9cd4973635e34521cc2b3a93ab0193d0",
+    "sim_scripts/cyl34_top_view_d368_current_64cap_semantic_allocation_audit.py": "a760260129071a25ac40f3b7338ab0957714dde001c31cbafa6d319bc51971c9",
+    "sim_scripts/cyl34_top_view_d371_offline_collider_candidate_pareto_comparison.py": "a907d650da1a28f3302ea4c52e6a8356e32cb38239e27686a5e4478c99c20242",
+    "sim_scripts/cyl34_top_view_d372_professor_semantic_compound_collider_design_offline.py": "c546370d118e52b0d6d106f9e55a9e32ec3a3009296af094a906b322bdcb4bf7",
+    "sim_scripts/cyl34_top_view_d385_p34_source_hull_semantic_low_count_redesign.py": "ea1d76a8db9c78a3cae9de50a62e0a25283d5550346dad158e641a0da321c5ed"
+  },
+  "new_variables": [
+    "float32_canonical_shared_plane_balanced_bsp_v1"
+  ],
+  "overlap_scope": "zero-new-positive-overlap applies within children replacing one source parent. Pre-existing intersections between different semantic P34 parents are not redefined by D397.",
+  "pass": true,
+  "question": "Can a one-variable paired Float32 shared-plane construction replace all eight failed P34 source hulls while preserving the frozen surface, void, clearance, bounds, count, and zero-new-positive-overlap contracts?",
+  "read_only_inputs": {
+    "immutable_authoring_usd_reads": 1,
+    "purpose": "recreate the exact frozen D372 raw-surface sample family; OpenUSD parse only, no stage edit/save and no Isaac/Kit/PhysX"
+  },
+  "script": {
+    "path": "sim_scripts/cyl34_top_view_d397_shared_boundary_zero_volume_construction_design.py",
+    "sha256": "52745beab46bc695467dd8d676a06b30fa3ea873c7dcad685861e65cfecf4b36"
+  },
+  "start": {
+    "path": "START_HERE.md",
+    "sha256": "f55a389750b76b62a7098ac8381d10d0a54c132b7c6f1fe64537da0c24cc28ac"
+  },
+  "worker_openusd_environment": {
+    "LD_LIBRARY_PATH": "/home/cgxr/miniconda3/envs/isaaclab/lib:/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.libs-1.0.1+69cbf6ad.lx64.r.cp311/bin",
+    "PYTHONPATH": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.libs-1.0.1+69cbf6ad.lx64.r.cp311",
+    "expected_OpenUSD_version": [
+      0,
+      24,
+      5
+    ],
+    "purpose": "immutable source USD parse only"
+  }
+}

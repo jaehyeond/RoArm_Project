@@ -1,0 +1,123 @@
+{
+  "artifact": "D394_PREREGISTRATION_V1",
+  "attempt": "attempt2_gate_numeric_null_semantics_repair",
+  "authority_checks": {
+    "artifact_exact": true,
+    "case_attempt_exact": true,
+    "forward_path_exact": true,
+    "git_status_exact": true,
+    "inputs_exact": true,
+    "script_hash_exact": true,
+    "start_hash_exact": true,
+    "user_text_hash_exact": true,
+    "variables_exact": true
+  },
+  "authority_sha256": "f96f3987f3b57322cb7afc0f08d05d03beec85e0b4019807b6cf5117bee82dff",
+  "case": "D394",
+  "controls": [
+    "frozen FACE call2 exact zero",
+    "frozen LINE call31 exact zero",
+    "2^-20m and 2^-19m tetra threshold straddle",
+    "all point permutations for max-tetra and AABB invariance",
+    "exact dyadic translation",
+    "power-of-two scaling",
+    "single-bit hash mutation negative"
+  ],
+  "environment_checks": {
+    "font_exists": true,
+    "no_nvidia_module_imported": true,
+    "numpy_1_26_0": true,
+    "python_no_bytecode_requested": true,
+    "rerun_cli_exists": true,
+    "rerun_sdk_0_34_1": true
+  },
+  "exact_numeric_method": [
+    "Fraction.from_float exact dyadic coordinates",
+    "all 4-point determinants with lexicographic maximum witness",
+    "exact supporting facets and pyramid-sum convex-hull volume",
+    "translated power-of-two normalized Qhull topology reintegrated with Fractions",
+    "exact AABB and diameter-squared upper bounds"
+  ],
+  "execution_contract": {
+    "deadline_note": "No signal authority: the worker exits cooperatively; this is a post-exit elapsed audit, not a kill watchdog.",
+    "hard_watchdog_seconds": null,
+    "numeric_before_observability": true,
+    "offline_worker": 1,
+    "post_exit_elapsed_budget_seconds": 300.0,
+    "process_signals": 0,
+    "viewer_maximum": 1,
+    "viewer_retries": 0,
+    "worker_retries": 0
+  },
+  "forbidden": {
+    "all_41_or_36_pair_sweep": 0,
+    "call29_reclassification": 0,
+    "collider_asset_usd_isaac_physx_warp_cuda": 0,
+    "cylinder_physics_q5_contact_grasp": 0,
+    "gate_tolerance_qj_jitter_change": 0,
+    "pair_seam_geometry_update": 0,
+    "target_ik_path_hardware_signal_commit_push": 0
+  },
+  "forward_only_output": "claudedocs/runtime_logs/grasp_track/g0a_d394/attempt2_gate_numeric_null_semantics_repair",
+  "frozen_checks": {
+    "head_exact": true,
+    "input_cyl34_top_view_d394_stable_fullrank_terminal_volume_subthreshold_semantics.py_exact": true,
+    "input_d389_numeric_and_tie_audit_evidence.json_exact": true,
+    "input_d389_preregistration.json_exact": true,
+    "input_d389_reconstructed_seam_witness_geometry.json_exact": true,
+    "input_d389_seam_numeric_provenance.csv_exact": true,
+    "input_d390_boundary_collapse_localization_evidence.json_exact": true,
+    "input_d390_failed_directional_call_trace.csv_exact": true,
+    "input_d390_terminal_candidate_geometry.json_exact": true,
+    "input_d391_rank_and_plane_immutability_evidence.json_exact": true,
+    "input_d392_completion_summary.json_exact": true,
+    "input_d392_remaining35_rank_evidence.json_exact": true,
+    "input_d393_call29_lineage_geometry.json_exact": true,
+    "input_d393_call29_provenance_evidence.json_exact": true,
+    "input_d393_completion_summary.json_exact": true,
+    "input_d394_execution_authority.json_exact": true,
+    "input_d394_phase_markers.jsonl_exact": true,
+    "input_d394_pre_worker_semantic_review_stop.json_exact": true,
+    "input_d394_preregistration.json_exact": true,
+    "origin_master_exact": true,
+    "start_exact": true
+  },
+  "frozen_thresholds": {
+    "positive_volume_epsilon_m3": {
+      "denominator": "1000000000000000000",
+      "float": 1e-18,
+      "numerator": "1"
+    },
+    "strict_interior_radius_threshold_m": {
+      "denominator": "10000000000000",
+      "float": 1e-13,
+      "numerator": "1"
+    }
+  },
+  "manifest_call_indices": [
+    1,
+    6,
+    13,
+    14,
+    16,
+    21,
+    23,
+    26,
+    34,
+    39
+  ],
+  "new_variables": [
+    "stable_fullrank_terminal_exact_dyadic_volume_sandwich_v1",
+    "frozen_volume_gate_monotone_early_stop_semantics_v1"
+  ],
+  "outcome_policy": {
+    "call29_rank_class": null,
+    "failure": "D394_FULL10_VOLUME_SEMANTICS_INTEGRITY_FAIL_STOP",
+    "pair_or_seam_update": null,
+    "pass": "D394_FULL10_EXACT_POSITIVE_BUT_FROZEN_SUBTHRESHOLD_MONOTONIC_EARLY_STOP_PASS"
+  },
+  "pass_sandwich": "0 < max tetra <= exact convex hull <= exact AABB <= 1e-18 m^3",
+  "question": "Do the ten stable FULL terminals contain exact-dyadic positive micro-volume, and is each provably below both frozen gates so remaining clips may stop monotonically?",
+  "script_sha256": "13b28be7b94063daff3398561aacf7123afb03bb1258d40fdc075ed3fd8b9907",
+  "start_sha256": "4a6229369b7771131b66da9d5b1a79f20f9023bbeb167e0440dfbebdcff1fc00"
+}

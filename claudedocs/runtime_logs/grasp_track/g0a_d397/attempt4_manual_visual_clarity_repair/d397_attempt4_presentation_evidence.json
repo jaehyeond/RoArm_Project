@@ -1,0 +1,216 @@
+{
+  "artifact": "D397_ATTEMPT4_PRESENTATION_EVIDENCE_V1",
+  "attempt": "attempt4_manual_visual_clarity_repair",
+  "canonical_geometry": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d397/attempt2_phase_marker_payload_key_repair/d397_shared_boundary_candidate_geometry.json",
+    "sha256": "b9a44d430f647e45292fe71804bd17e6f53bf37eea28913389316beac60fa623"
+  },
+  "canonical_scientific_evidence": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d397/attempt2_phase_marker_payload_key_repair/d397_shared_boundary_design_evidence.json",
+    "sha256": "ea7fd61c38f12b9e03f4e7154536579b831c6f85703bfd4d14e34807cdf327b6"
+  },
+  "case": "g0a_d397",
+  "counts": {
+    "base_parts_exact_63": true,
+    "by_body": null,
+    "exact_profile_children": 46,
+    "source_children": null,
+    "source_children_le_64": false,
+    "total_parts": null,
+    "total_parts_below_128": false,
+    "unchanged_passing_parts": 17
+  },
+  "design_pass": false,
+  "display_translation_by_parent_m": {
+    "fixed_backbone_left": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "fixed_backbone_right": [
+      0.105,
+      0.0,
+      0.0
+    ],
+    "moving_lower_backbone": [
+      0.21,
+      0.115,
+      0.0
+    ],
+    "moving_upper_backbone": [
+      0.105,
+      0.115,
+      0.0
+    ],
+    "proximal_lower_arm_hull_a": [
+      0.21,
+      0.0,
+      0.0
+    ],
+    "proximal_lower_arm_hull_b": [
+      0.0,
+      0.115,
+      0.0
+    ],
+    "proximal_upper_arm_hull_a": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "proximal_upper_arm_hull_b": [
+      0.105,
+      0.0,
+      0.0
+    ]
+  },
+  "interpretation_boundary": {
+    "design_verdict_changed": false,
+    "display_geometry_is_scientific_authority": false,
+    "downstream_physics_authorized": false,
+    "g0a_pass": false,
+    "materializable_candidate": false
+  },
+  "scope_counters": {
+    "construction_evaluations": 0,
+    "isaac_kit_physx_warp_cuda": 0,
+    "physics_q5_contact_cylinder": 0,
+    "process_signals_sent": 0,
+    "science_worker_invocations": 0,
+    "viewer_invocations": null,
+    "viewer_maximum": 1,
+    "viewer_retries": 0
+  },
+  "source_parent_metrics": [
+    {
+      "body": "gripper_link",
+      "construction_complete": false,
+      "construction_error": "no_admissible_shared_plane_split",
+      "name": "proximal_upper_arm_hull_a",
+      "pass": false,
+      "role": "moving_support"
+    },
+    {
+      "body": "gripper_link",
+      "bounds_max_abs_delta_mm": 0.0,
+      "checks": {
+        "all_split_seams_bit_exact": true,
+        "bounds_le_0p1mm": true,
+        "construction_complete": true,
+        "coverage_le_0p1mm": true,
+        "each_child_polygons_le_64": true,
+        "each_child_positive_volume": true,
+        "each_child_vertices_le_12": true,
+        "each_child_vertices_per_polygon_le_32": true,
+        "outward_le_0p1mm": true,
+        "pairwise_shared_separator_nonoverlap": true,
+        "volume_relative_le_0p5percent": true
+      },
+      "child_count": 8,
+      "child_volume_sum_m3": 3.947601429362133e-07,
+      "construction_complete": true,
+      "maximum_child_polygon_count": 8,
+      "maximum_child_vertex_count": 12,
+      "maximum_vertices_per_child_polygon": 6,
+      "name": "proximal_upper_arm_hull_b",
+      "outward_halfspace_violation_mm": 5.183687541709947e-07,
+      "pairwise_nonoverlap": {
+        "certified_positive_volume_overlap_pair_count": 0,
+        "failures": [],
+        "method": "every distinct leaf pair must diverge at one registered sibling node whose closed halfspaces meet only at the exact Float32 plane",
+        "pair_count": 28,
+        "pair_record_sha256": "543d2bb1e6ba3c659a76104863362eecac907619f875a0d22cf8529ecfba1221",
+        "pass": true,
+        "unproven_separator_pair_count": 0
+      },
+      "parent_surface_coverage_violation_max_mm": 1.015403238921464e-07,
+      "parent_surface_coverage_violation_p95_mm": 2.8925308329097454e-08,
+      "parent_volume_m3": 3.9476013958809815e-07,
+      "pass": true,
+      "role": "moving_support",
+      "split_count": 7,
+      "volume_relative_error": 8.481391131044211e-09
+    },
+    {
+      "body": "gripper_link",
+      "construction_complete": false,
+      "construction_error": "no_admissible_shared_plane_split",
+      "name": "proximal_lower_arm_hull_a",
+      "pass": false,
+      "role": "moving_support"
+    },
+    {
+      "body": "gripper_link",
+      "bounds_max_abs_delta_mm": 0.0,
+      "checks": {
+        "all_split_seams_bit_exact": true,
+        "bounds_le_0p1mm": true,
+        "construction_complete": true,
+        "coverage_le_0p1mm": true,
+        "each_child_polygons_le_64": true,
+        "each_child_positive_volume": true,
+        "each_child_vertices_le_12": true,
+        "each_child_vertices_per_polygon_le_32": true,
+        "outward_le_0p1mm": true,
+        "pairwise_shared_separator_nonoverlap": true,
+        "volume_relative_le_0p5percent": true
+      },
+      "child_count": 8,
+      "child_volume_sum_m3": 3.9475994379299667e-07,
+      "construction_complete": true,
+      "maximum_child_polygon_count": 8,
+      "maximum_child_vertex_count": 12,
+      "maximum_vertices_per_child_polygon": 6,
+      "name": "proximal_lower_arm_hull_b",
+      "outward_halfspace_violation_mm": 5.183687541709947e-07,
+      "pairwise_nonoverlap": {
+        "certified_positive_volume_overlap_pair_count": 0,
+        "failures": [],
+        "method": "every distinct leaf pair must diverge at one registered sibling node whose closed halfspaces meet only at the exact Float32 plane",
+        "pair_count": 28,
+        "pair_record_sha256": "543d2bb1e6ba3c659a76104863362eecac907619f875a0d22cf8529ecfba1221",
+        "pass": true,
+        "unproven_separator_pair_count": 0
+      },
+      "parent_surface_coverage_violation_max_mm": 1.015403238921464e-07,
+      "parent_surface_coverage_violation_p95_mm": 2.892530659437398e-08,
+      "parent_volume_m3": 3.9475994044488305e-07,
+      "pass": true,
+      "role": "moving_support",
+      "split_count": 7,
+      "volume_relative_error": 8.481391520557598e-09
+    },
+    {
+      "body": "gripper_link",
+      "construction_complete": false,
+      "construction_error": "no_admissible_shared_plane_split",
+      "name": "moving_upper_backbone",
+      "pass": false,
+      "role": "moving_jaw_backbone"
+    },
+    {
+      "body": "gripper_link",
+      "construction_complete": false,
+      "construction_error": "no_admissible_shared_plane_split",
+      "name": "moving_lower_backbone",
+      "pass": false,
+      "role": "moving_jaw_backbone"
+    },
+    {
+      "body": "link5",
+      "construction_complete": false,
+      "construction_error": "no_admissible_shared_plane_split",
+      "name": "fixed_backbone_left",
+      "pass": false,
+      "role": "fixed_jaw_backbone"
+    },
+    {
+      "body": "link5",
+      "construction_complete": false,
+      "construction_error": "no_admissible_shared_plane_split",
+      "name": "fixed_backbone_right",
+      "pass": false,
+      "role": "fixed_jaw_backbone"
+    }
+  ],
+  "verdict": "D397_SHARED_BOUNDARY_ZERO_VOLUME_CONSTRUCTION_FAIL_STOP"
+}

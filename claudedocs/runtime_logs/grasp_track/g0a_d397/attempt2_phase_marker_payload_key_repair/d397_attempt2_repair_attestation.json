@@ -1,0 +1,40 @@
+{
+  "artifact": "D397_ATTEMPT2_PHASE_MARKER_PAYLOAD_KEY_REPAIR_V1",
+  "attempt": "attempt2_phase_marker_payload_key_repair",
+  "attempt1": {
+    "design_verdict": null,
+    "exception": "TypeError(\"_phase() got multiple values for argument 'name'\")",
+    "exception_type": "TypeError",
+    "geometry_evaluation_count": 0,
+    "preflight_pass": true,
+    "source_parent_end_markers": 0,
+    "source_parent_start_markers": 0,
+    "worker_invocations": 1
+  },
+  "case": "g0a_d397",
+  "checks": {
+    "attempt1_failure_exact": true,
+    "attempt1_no_source_parent_end": true,
+    "attempt1_no_source_parent_start": true,
+    "attempt1_preflight_pass": true,
+    "frozen_repair_inputs_exact": true,
+    "only_phase_parameter_renamed": true
+  },
+  "frozen_input_hashes": {
+    "claudedocs/runtime_logs/grasp_track/g0a_d397/attempt1_shared_boundary_zero_volume_construction_design/d397_offline_worker_invocation.json": "29d2f5127d3cad98acc5d60604bb865f6194146cd89bb35fc86748dfe3ea696f",
+    "claudedocs/runtime_logs/grasp_track/g0a_d397/attempt1_shared_boundary_zero_volume_construction_design/d397_phase_markers.jsonl": "3d8c54cd8abf5a6cadc66383a30d628195eec5218ef361d1fe055a8fb743a713",
+    "claudedocs/runtime_logs/grasp_track/g0a_d397/attempt1_shared_boundary_zero_volume_construction_design/d397_preregistration.json": "de3a1d2d2f13a5dd64123321e932cec64a0ce3b858e6cc0151c36e6f948f43cd",
+    "claudedocs/runtime_logs/grasp_track/g0a_d397/attempt1_shared_boundary_zero_volume_construction_design/d397_runtime_failure.json": "c29c8e1daef1394fad485c782aa6d3d0edefbec7e15c386940751e6cea47c98d",
+    "sim_scripts/cyl34_top_view_d397_shared_boundary_zero_volume_construction_design.py": "52745beab46bc695467dd8d676a06b30fa3ea873c7dcad685861e65cfecf4b36"
+  },
+  "pass": true,
+  "reactive_operational_repair": {
+    "call_site_payload": "name -> unchanged",
+    "from": "_phase(name: str, **fields)",
+    "geometry_partition_gate_budget_changes": 0,
+    "to": "_phase(phase_name: str, **fields)"
+  },
+  "scientific_new_variables": [
+    "float32_canonical_shared_plane_balanced_bsp_v1"
+  ]
+}

@@ -1,163 +1,154 @@
 # START_HERE.md
 
-Last updated: 2026-07-26 KST. D388 attempt1 is frozen as an offline
-partition-contract FAIL_STOP. No case is currently approved.
+Last updated: 2026-07-27 KST. D397 is complete and frozen. Its offline
+shared-boundary construction failed to produce a complete collider candidate;
+its failure visualization is complete. No experiment is currently approved.
 
 ## Current Truth
 
 - Pivot: RoArm cylinder grasp-track G0a.
 - `q5=0` is CLOSED; frozen OPEN is `1.5413rad`.
-- Historical D362 target only: radius/diameter/height `17/34/90mm`, mass
-  `0.72kg`. A64 moved and tipped it but did not grasp it.
-- Actual product: nominal diameter/height `29/50mm`, zelkova or walnut; mass,
-  tolerance, COM, inertia, friction, bottom flatness, and roundness unmeasured.
-- No `29x50mm` target has been authored, loaded, rendered, measured, or
-  simulated. D362 physics and old visuals do not transfer.
-- D368 A64 (`64 link5 + 64 gripper_link = 128`) is a 64-cap reference
-  candidate, not an optimum or NVIDIA limit.
-- D372 P34 is manual: link5 `16`, gripper_link `18`, total `34`. It is a design
-  choice, not an optimum. D379 authored-to-cooked identity passed `17/34`;
-  full P34 identity remains false.
-- D387 completed the 11-layer failure map:
-  upper `[28,null,12]`, lower `[12,null,28]`,
-  fixed-left `[12,30]`, fixed-right `[13,12,12]`.
+- D362's `34x90mm`, `0.72kg` cylinder is historical; A64 tipped it and did
+  not grasp it.
+- Actual product nominal is `29x50mm`; actual mass, tolerance, COM, inertia,
+  and jaw/table friction are unmeasured.
+- A64 (`64+64=128`) is a reference candidate, not an optimum/NVIDIA limit.
+- P34 (`link5 16 + gripper 18`) is a manual concept, not an optimum or a
+  live/cooked-identity PASS.
+- D396 rejected D388 because two completed pre-Float32 overlaps exceeded the
+  frozen `1e-18m^3` gate by about `6404x` and `2413x`.
+- D397's new Float32 shared-seam BSP completed only `2/8` source parents.
+- No complete/materializable collider exists. Final part count, void,
+  clearance, raw surface, seed, live identity, physics, contact, and grasp
+  are `null`.
+- D397 performed no USD/collider write, Isaac/Kit/PhysX/Warp-CUDA launch,
+  cylinder creation, physics step, q5 sample, or contact query.
+- `materializable_candidate=false`; `g0a_pass=false`.
 
-## Latest Case — D388
+## Latest Case — D397 Shared-Boundary Construction FAIL
 
-Case:
+`D397 [shared_boundary_zero_volume_construction_design]`
 
-`D388 [two_null_moving_support_midlayer_partition_repair_design]`
+Science variable:
+`float32_canonical_shared_plane_balanced_bsp_v1`
 
-이번 case의 신규 변수:
+Attempt1:
 
-`null_middle_layer_first_blocked_triangle_reanchored_fan_graph_v1`
+- preflight `10/10` PASS
+- stopped before geometry on
+  `_phase() got multiple values for argument 'name'`
+- source-parent start/end and geometry evaluation `0/0/0`
+- science verdict `null`
 
-What was changed:
+Attempt2, sole science authority:
 
-- Exact two D387 null middle layers only.
-- One shared rule rotated the same CCW profile so the new fan anchor was the
-  state after the frozen forward-reachable frontier.
-- Derived anchors: upper `11`, lower `10`; old anchor was `0`.
-- Other nine map entries and all polygon/face/surface/volume/no-overlap gates
-  were inherited unchanged.
+- worker/retry/signal `1/0/0`; elapsed `3.019634233787656s`
+- source constructions `8`
+- complete: `proximal_upper_arm_hull_b`,
+  `proximal_lower_arm_hull_b`
+- each children/splits/max vertices/max polygons/max face vertices
+  `8/7/12/8/6`
+- each 28 child pairs, certified positive-volume overlap `0`
+- failed: PUA, PLA, moving upper/lower backbone, fixed left/right
+- all six stopped at `no_admissible_shared_plane_split`
+- diagnostic source parents/leaves/seams `8/46/38`
+- verdict:
+  `D397_SHARED_BOUNDARY_ZERO_VOLUME_CONSTRUCTION_FAIL_STOP`
 
-What was observed:
+Failed terminal-leaf vertex ranges:
+PUA `26-31`, PLA `19-28`, MUB/MLB `16/16`, FBL `14-21`,
+FBR `15-22`; completed PUB/PLB `10-12`.
+This does not justify a global `12 -> 13` budget change.
 
-- Both old null-through64 graphs became finite diagnostic graphs.
-- Upper: `B*=37`, `B36` no-cover, child `6`, cuts
-  `[0,3,7,11,12,16,20]`; DP/exhaustive agree.
-- Lower: `B*=35`, `B34` no-cover, child `7`; DP and exhaustive agree on
-  minimum35 and child count but disagree on canonical cuts:
-  `[0,2,5,9,10,14,18,22]` vs `[0,1,5,9,10,14,18,22]`.
-- Polygon/face/surface/volume/positive-child gates passed.
-- Registered Float32 overlap gate failed on every adjacent diagnostic seam:
-  upper `5/15`, lower `6/21`; calculation failures `0`.
-- Positive-volume sums: upper `1.0732770688656094e-14m^3`, lower
-  `3.0558646686052954e-13m^3`.
-- These are formal failures under the frozen 5nm halfspace-tolerance contract.
-  Whether they are real physical penetration or tolerance/Float32 seam effects
-  remains null.
+Attempt3 presentation-only:
 
-Exact verdict:
+- automated board/RRD PASS; science worker `0`
+- manual FAIL: duplicate failure text overlapped axis text and Rerun geometry
+  was too small
+- `D397_ATTEMPT3_COMPLETION_INTEGRITY_FAIL_STOP`
 
-`D388_REANCHOR_PARTITION_CONTRACT_FAIL_STOP`
+Attempt4 presentation-only:
 
-Operational verdict:
+- science/Isaac/physics `0`
+- clean board exact `1920x1080`
+- strict RRD/RBL PASS; Viewer/retry `1/0`; manual `8/8` PASS
+- operational:
+  `D397_FAILURE_PRESENTATION_REPAIRED_COMPLETE`
+- scientific FAIL unchanged
 
-`D388_ATTEMPT1_OFFLINE_WORKER_CLAIM_FAIL_STOP_NO_FINALIZE`
+Final output:
+`claudedocs/runtime_logs/grasp_track/g0a_d397/attempt4_manual_visual_clarity_repair/`
 
-Plain-language verdict:
+Science evidence:
+`claudedocs/runtime_logs/grasp_track/g0a_d397/attempt2_phase_marker_payload_key_repair/d397_shared_boundary_design_evidence.json`
 
-- The one-anchor change usefully converted both disconnected graphs to finite
-  paths.
-- It did not produce an admissible repair: neither target met B12, both
-  overlap witnesses failed, and the lower canonical path contract failed.
-- Do not call `37` or `35` selected/adopted budgets.
+Session:
+`claudedocs/session_20260727_grasp_g0a_d397_shared_boundary_zero_volume_construction_design.md`
 
-Execution and observability:
+## Interpretation Boundary
 
-- prepare `23/23` PASS.
-- worker/retry `1/0`, elapsed `4.434133296832442s`, return `1`;
-  cooperative deadline exceeded=false, signal `0`, worker exited=true.
-- Return1 was an intentional fail-stop after evidence/visual writes, not a
-  crash or Isaac timeout.
-- Exact `1920x1080` board and strict save-only RRD/RBL validation PASS.
-- Manual visual inspection `8/9` FAIL: the board is readable, but Rerun
-  geometry is too small to map child `6/7` one-by-one and has Korean glyph,
-  proxy, and loading warnings.
-- No completion summary; do not finalize, rerun, or overwrite attempt1.
+- Shared seams worked for two completed trees; D397 does not prove the whole
+  method impossible.
+- Greedy choice, axis/midpoint planes, immediate vertex reduction, and max-12
+  jointly reached six dead ends. D397 did not isolate which caused each.
+- This is not an Isaac timeout, GPU failure, PhysX cook failure, or physical
+  grasp result; those stages did not run.
+- Automatic visualization PASS cannot replace manual inspection.
 
-Frozen nonclaims:
+## Recommended Next Candidate — Not Approved
 
-- global/common, selected, adopted, complete-P34 budgets `null`
-- budget application `0`; complete counts `null`
-- `materializable_candidate=false`
-- live identity/GPU compatibility and physics/grasp `null`
-- `p34_authored_to_cooked_identity_pass=false`
-- `g0a_pass=false`
-- other-nine evaluation/mutation, asset/USD, Isaac/Kit/PhysX, Warp/CUDA,
-  cylinder, physics/q5/contact/grasp/target-IK-path/settings counters all `0`
+`D398 [d397_six_failed_parent_greedy_bsp_dead_end_provenance_localization]`
 
-Canonical output:
+Proposed diagnostic variable:
+`six_failed_parent_axis_midpoint_option_rejection_provenance_v1`
 
-`claudedocs/runtime_logs/grasp_track/g0a_d388/attempt1_two_null_moving_support_midlayer_partition_repair_design/`
+Proposed scope:
 
-## Next Candidate — Not Approved
+- read immutable D397 attempt2 source/partial-tree geometry only
+- at each first stuck leaf, enumerate the frozen axis/midpoint candidates
+- count rejection at paired split creation, seam/volume validity, or strict
+  vertex-reduction filtering
+- record whether an ancestor had an unselected admissible option
+- do not select a branch or construct/adopt a candidate
 
-`D389 [d388_overlap_gate_numeric_provenance_and_canonical_tie_audit]`
+Frozen:
 
-Offline-only, immutable D388 evidence:
+- max-12, plane family, tolerance, count, overlap, and geometry gates
+- no backtracking/depth-2 search or non-axis plane
+- no USD/asset/collider, Isaac/Kit/PhysX/Warp-CUDA
+- no `29x50mm` cylinder, physics, q5, contact, target/IK/path, or settings
 
-1. Reorder all lower B35 complete paths by the global canonical key and
-   localize the DP tie-pruning discrepancy.
-2. For the 11 adjacent seams compare pre/post-Float32 signed penetration,
-   epsilon `0` intersection, and frozen `5nm` intersection; retain nonadjacent
-   negative controls.
+Only afterward choose one separate repair: greedy branch, backtracking,
+plane-family expansion, or vertex-budget review.
 
-This case must not rerun D388, change the partition, relax a tolerance/gate,
-select/apply a budget, or use USD/Isaac/PhysX/cylinder/physics/contact/grasp.
-It requires separate explicit user approval.
+## Physics-Entry Boundary
 
-## Remaining Nulls
-
-- Whether the 11 positive seam volumes represent actual Float32 intrusion or
-  only the registered 5nm numerical band/rounding.
-- The globally canonical lower B35 partition.
-- A complete admissible low-count compound and live authored/callback identity.
-- Actual `29x50mm` geometry/readback/render and measured physical properties.
-- OPEN gap, void/contact-patch identity, middle-height pose, closure/contact/
-  tipping, force closure, hold/lift, grasp, and target/IK/path justification.
-- `g0a_pass=false`.
-
-## Authorization Boundary
-
-- No active approved case.
-- D388 attempt1 is consumed: no rerun, retry, overwrite, or finalize.
-- Budget selection/application, partition or gate change, asset/USD
-  materialization, Isaac/live identity, `29x50mm` target rebase, mass/pose,
-  A64/P34 physics, q5/contact, hold/lift, G0b, RL/PPO/VLA remain unapproved.
-- Do not modify `claudedocs/lab_meeting/20260715/d334_collision_table/`.
-- `HANDOFF.md` and `TASKS.md` are stale. No hardware, signal, dependency
-  install, commit, or push is authorized.
+- D397 failed, so the approved sequence stops before USD/PhysX cook/readback.
+- Nominal-cylinder zero-step, measured product properties, center-height pose,
+  wrist, closure/contact, and tipping remain blocked behind a complete offline
+  collider and separate live-identity PASS.
+- Do not treat default mass, COM, inertia, or friction as product evidence.
 
 ## Must Read First
 
-1. `AGENTS.md`; this file; DECISIONS D388; ledger tail
-2. `claudedocs/session_20260726_grasp_g0a_d388_two_null_moving_support_midlayer_partition_repair_design.md`
-3. D388 evidence, supervisor, CSV, board, Rerun validation, manual inspection
-4. D387 session/evidence; D386; D385; D379 identity
-5. D362 only as historical `34x90mm` cylinder evidence
+1. `AGENTS.md`
+2. this file
+3. `claudedocs/DECISIONS.md` D397
+4. `claudedocs/EXPERIMENT_LEDGER.md` tail
+5. D397 session, attempt2 evidence, attempt4 completion/manual inspection
+
+## Authorization and Do-Not-Repeat
+
+- D389-D397 paths are frozen; never rerun or overwrite them.
+- D398 is not approved.
+- Do not materialize or physically test D397's incomplete diagnostic forest.
+- Do not change max-12, plane family, and greedy search together.
+- Do not modify `claudedocs/lab_meeting/20260715/d334_collision_table/`.
+- `HANDOFF.md` and `TASKS.md` are stale/current-state forbidden.
+- No hardware, process signal, dependency install, commit, or push authorized.
 
 ## Git
 
-- D388 approval and attempt1 fail-stop recording:
-  `HEAD == origin/master == 930b41d98576a9c0bf1dce4f3eb1c0d93df8014b`,
-  subject `D385`.
-- D387 and D388 are expected uncommitted forward-only worktree additions and
-  state-doc modifications.
-- D388 execution script SHA-256:
-  `7f99f80c19b4ab7e8adbae6237ed675feb738f9e1c4418049c1fa2f166c743bf`.
-- D388 evidence/geometry SHA-256:
-  `582368f093ba08fec0207967e8e24ac24f0a44774dfa1a7b8c82ae2b6781caba`,
-  `c119ededf4400efbef55de4d89ccd6c1c8b4e33d4d3795710b6882d369f5e882`.
-- Commit/push is not authorized.
+- `HEAD == origin/master ==
+  d354d46134fe002073642441a7d24c99fe579edd`, subject D388.
+- Worktree: user's frozen uncommitted D389-D397 code/evidence/state changes.

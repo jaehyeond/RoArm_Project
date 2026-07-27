@@ -1,0 +1,25 @@
+{
+  "artifact": "D397_ATTEMPT3_MANUAL_VISUAL_INSPECTION_V1",
+  "attempt": "attempt3_failure_visualization_repair",
+  "board_sha256": "926fe974523ec37182a33252bb4c6f65cf9d36aea67388f227cddc06c07c099f",
+  "case": "g0a_d397",
+  "checks": {
+    "all_eight_parent_panels_visible": true,
+    "board_exact_1920x1080": true,
+    "metrics_and_null_boundaries_readable": true,
+    "no_missing_glyphs": true,
+    "no_overlapping_geometry_labels": false,
+    "rerun_exploded_geometry_loaded": true,
+    "source_leaf_seam_layers_distinguishable": true,
+    "two_complete_and_six_failed_distinguishable": true
+  },
+  "manual_inspection_complete": true,
+  "observations": [
+    "The 1920x1080 board shows all eight source-parent panels and the right-side metric panel without missing Korean glyphs.",
+    "PUB and PLB are visibly marked COMPLETE while the remaining six panels are marked FAIL, and the metric panel preserves all downstream measurements as null.",
+    "The red 'no admissible next shared plane' annotations overlap x-axis ticks or labels in several failed-parent panels, so the no-overlap presentation check is false.",
+    "The Rerun screenshot contains the exploded source, diagnostic-leaf, and seam geometry with visible seam points and no seam text labels, but the geometry remains small and a proxy/loading toast is visible."
+  ],
+  "overall_pass": false,
+  "rerun_screenshot_sha256": "36ac42becc5d3ca87be68255f9fd7c1fbcd013493ca71613896e0702457c5ac9"
+}

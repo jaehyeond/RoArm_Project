@@ -1,0 +1,25 @@
+{
+  "artifact": "D397_MANUAL_VISUAL_INSPECTION_V1",
+  "attempt": "attempt2_phase_marker_payload_key_repair",
+  "board_sha256": "965d949a3f87e52911acbc1c80f7274163aee024617dedad22164bb3e96f895f",
+  "case": "g0a_d397",
+  "checks": {
+    "board_exact_1920x1080_and_readable": false,
+    "count_surface_void_clearance_metrics_readable": true,
+    "gripper_full_candidate_visible": true,
+    "link5_full_candidate_visible": true,
+    "no_text_overlap_or_clipping": false,
+    "rerun_geometry_loaded": true,
+    "shared_boundary_method_text_readable": true,
+    "source_children_visually_separable": false
+  },
+  "manual_inspection_complete": true,
+  "observations": [
+    "The board is exactly 1920x1080 and its numeric FAIL/null fields are readable, but Korean glyphs in the two upper geometry titles render as boxes.",
+    "The lower exploded panel contains all eight source parents, 46 diagnostic leaves, and 38 seam point sets, but the common scale makes individual failed-parent leaves too small for reliable inspection.",
+    "The Rerun screenshot visibly loads the source, diagnostic leaf, and seam geometry, but per-seam labels overlap heavily and obscure the shapes.",
+    "Rerun also shows a message-proxy permission warning and a loading toast; neither changes the canonical JSON verdict, but the screenshot is not presentation quality."
+  ],
+  "overall_pass": false,
+  "rerun_screenshot_sha256": "74b0a599655d3a117a0923bcf3c307460ba426200c83e3fb0e9a1182fc762708"
+}

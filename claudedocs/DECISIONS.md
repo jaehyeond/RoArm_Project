@@ -22668,6 +22668,7 @@ Sources:
 - NVIDIA PhysX 107.3 `GuConvexMesh::isGpuCompatible`
 - `START_HERE.md`
 
+
 ## D388 — A cyclic re-anchor can turn a disconnected fixed graph finite without producing an admissible collider partition
 
 Date: 2026-07-26
@@ -22754,4 +22755,660 @@ Sources:
 - NVIDIA Omni Physics 107.3 `Colliders`
 - NVIDIA PhysX SDK 5.6.1 `GPU Rigid Bodies`
 - NVIDIA PhysX 107.3 `GuConvexMesh::isGpuCompatible`
+- `START_HERE.md`
+
+## D389 — Whole-path canonical order and lower-dimensional intersection semantics must remain separate from local DP and 3-D hull completion
+
+Date: 2026-07-26
+
+Decision:
+
+- Git porcelain's leading status-column space is data. Exact worktree gates must
+  not call `.strip()` on the complete output. Preserve leading columns, remove
+  only `CR/LF`, and use `--porcelain=v1 --untracked-files=all` when exact
+  forward-only artifact paths matter.
+- A prefix-local dynamic-programming tie breaker is not a substitute for the
+  registered whole-path order. The canonical key is applied to complete paths;
+  a later bottleneck can erase an earlier prefix-maximum advantage.
+- When convex clipping terminates as a point, line, or face, failure to build a
+  3-D hull is neither positive overlap nor certified zero overlap. Provenance
+  remains indeterminate until terminal affine dimension and boundary semantics
+  are independently registered and verified. Do not conceal this with QJ
+  jitter, random perturbation, or tolerance relaxation.
+
+Evidence:
+
+- D389 attempt1 stopped in prepare because `.strip()` transformed
+  `" M START_HERE.md"` into `"M START_HERE.md"`. It produced only
+  preregistration and phase markers; invocation/worker/Viewer remained
+  `0/0/0`. The original script was restored at SHA
+  `c8f1e07c628ecbefe2dcf49e1a94231b9cbbf51f0b6727e3d5fb4a8083d74b6e`.
+- The forward-only attempt2 repair changed only status/continuity supervision.
+  Its preregistration passed, and the case aggregate remained worker/retry/
+  Viewer/signal `1/0/1/0`.
+- Exhaustive enumeration found `151,664` complete paths, including `22,464`
+  B35 paths and `10` minimum-child B35 paths. The global canonical cuts are
+  `[0,1,5,9,10,14,18,22]`; D388's local path
+  `[0,2,5,9,10,14,18,22]` ranks second. At state5 the local method discarded
+  prefix `[0,1,5]` (maximum16) for `[0,2,5]` (maximum15), although the later
+  shared 10→14 edge raises both complete paths to maximum35.
+- The strict halfspace method found adjacent pre/post positive counts `2/11`;
+  the separate frozen D388 directional 5nm replay found `11/11`. The two
+  determinate pre-Float32 positives are UPPER1-2 and LOWER2-3. Post-Float32
+  strict and directional methods both found `11/11` positive.
+- For the other nine adjacent seams, pre-Float32 strict evaluation completed as
+  zero-volume boundary, while directional clipping could not complete a 3-D
+  hull. Its adjacent failures were 12 `points are not three-dimensional`
+  directions plus one Qhull flat/coplanar direction. Therefore those nine are
+  Float32-induced candidates, not proven Float32-induced overlaps.
+- Frozen D388 5nm values replayed exactly; nonadjacent strict/frozen positives
+  were `0/25`. This procedure replay is not causal provenance proof.
+- Numeric evidence was committed before presentation. Worker return1 is
+  intentional `D389_AUDIT_CONTRACT_FAIL_STOP`, not timeout or Isaac/GPU
+  failure. Exact board/layout passed, strict RRD/RBL validation passed, but
+  manual inspection was `5/6` FAIL because Rerun geometry was tiny and seam
+  labels overlapped.
+
+Implication:
+
+- The lower global canonical path is resolved, but it is not substituted into
+  D388 geometry and does not select/adopt budget35.
+- Preserve D388 and D389 FAIL_STOP verdicts. Selected/adopted budgets remain
+  null, application0, materializable=false, physics/grasp=null, and
+  `g0a_pass=false`.
+- Freeze D389 attempts1-2. Do not rerun, overwrite, or finalize them.
+- The next minimum is a separately approved offline affine-rank/boundary
+  semantics localization over immutable D389 artifacts. It must not change
+  epsilon/5nm/tolerance/gate, partition/budget/geometry, or invoke asset/USD/
+  Isaac/PhysX/physics.
+
+Sources:
+
+- `claudedocs/session_20260726_grasp_g0a_d389_d388_overlap_gate_numeric_provenance_and_canonical_tie_audit.md`
+- `sim_scripts/cyl34_top_view_d389_d388_overlap_gate_numeric_provenance_and_canonical_tie_audit.py`
+- `sim_scripts/cyl34_top_view_d389_attempt2_prereg_status_whitespace_repair.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d389/attempt1_d388_overlap_gate_numeric_provenance_and_canonical_tie_audit/d389_preregistration.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d389/attempt2_prereg_status_whitespace_repair/d389_numeric_and_tie_audit_evidence.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d389/attempt2_prereg_status_whitespace_repair/d389_seam_numeric_provenance.csv`
+- `claudedocs/runtime_logs/grasp_track/g0a_d389/attempt2_prereg_status_whitespace_repair/d389_offline_worker_supervisor.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d389/attempt2_prereg_status_whitespace_repair/d389_rerun_validation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d389/attempt2_prereg_status_whitespace_repair/d389_manual_visual_inspection.json`
+- `START_HERE.md`
+
+## D390 — A reproduced clipping failure is not a trustworthy boundary class until affine rank is translation/order stable
+
+Date: 2026-07-26
+
+Decision:
+
+- Keep reconstruction identity, terminal geometry, affine-rank authority, and
+  presentation completion as separate contracts. Matching a recorded Qhull/
+  lower-dimensional failure does not by itself make the derived point/line/
+  face/full-dimensional label authoritative.
+- A mean-centered Float64 SVD and `numpy.linalg.matrix_rank` applied to the same
+  mean-centered array are not independent rank authorities. At `~1e-18m`
+  terminal scales, mean-subtraction residue can exceed a purely relative
+  `~1e-33m` threshold and violate the mathematical bound
+  `affine rank <= unique point count - 1`.
+- Geometry/control helpers must not mutate caller-owned plane arrays through a
+  NumPy view. Copy before in-place normalization and bind pre/post input hashes.
+- Printed RRD column order is not a schema. A validator must identify a metric
+  column by its header/name, and automatic layout checks do not replace manual
+  inspection for text overlap, active cursor, clipping, or legend readability.
+
+Evidence:
+
+- D390 reconstructed all 41 immutable D389 failed calls with matching error
+  family, clip count, skipped-plane count, fallback branch, finite candidate
+  coordinates, and stored strict-authority relation. The denominator remained
+  36 pairs, 144 calls, 103 successes, 41 failures, and 26 affected pairs.
+- Rank checks agreed for `35/41`. Six calls disagreed: three unique-point-3
+  cases reported mean/NumPy/anchor rank `3/3/2`; one unique-point-2 case
+  reported `2/2/1`; two unique-point-6 cases reported `3/3/2`. Their terminal
+  class aggregate is therefore not authoritative.
+- The stable 35-call subset was provisionally `FACE_LIKE 23`,
+  `FULL_DIMENSIONAL 10`, and `LINE 2`. The stored all-41 aggregate
+  `24/15/2` must not be promoted because it includes the six disputed calls.
+- All 41 stored strict relations remained
+  `STRICT_NONPOSITIVE_OR_SUBTHRESHOLD_WITHIN_SOLVER_BAND`; D390 did not
+  recompute the strict solver or frozen 5nm replay.
+- Synthetic classes and threshold controls passed. `LINE` and `POINT`
+  single-plane controls produced the correct class/rank/finite geometry, but
+  fixture integrity failed because `_clip_candidate` normalized a view of the
+  input equation in place. A read-only post-fail audit found the stored
+  real-trace plane arrays still matched their registered `(1,4)` Float64 hashes
+  `351/351`; the directly observed mutation failure is therefore confined to
+  the two non-unit synthetic fixtures in this attempt, while the unsafe helper
+  still requires repair.
+- The worker ran once with no retry or signal, returned1, and exited normally:
+  numeric `0.11435000598430634s`, worker `2.542525211116299s`, supervisor
+  `2.9062803348060697s`; the 300s cooperative deadline was not exceeded and no
+  hard watchdog was authorized. This was not timeout, Isaac, GPU, or crash.
+- The exact 1920x1080 board showed all 41 rows, but manual inspection found
+  overlapping text. RRD/RBL base structure passed, while the D390 parser read
+  `log_time` at a fixed printed index instead of the named
+  `failed_call_index` column. The screenshot cursor remained at `#0`, and
+  selected/nonclaim text plus the color legend were clipped. Manual inspection
+  was `5/10` FAIL.
+
+Implication:
+
+- Preserve numeric
+  `D390_TERMINAL_CLASSIFICATION_OR_TRACE_IDENTITY_FAIL_STOP` and operational
+  `D390_OFFLINE_WORKER_OR_OBSERVABILITY_INTEGRITY_FAIL_STOP`.
+- Freeze D390 attempt1. Do not rerun, overwrite, repair in place, or finalize
+  it. D389 and D390 remain FAIL_STOP.
+- The next numerical minimum is a separately approved offline repair over only
+  the immutable six disputed terminal point sets and frozen controls:
+  translation/order-stable affine-rank authority plus clip-input immutability.
+  Presentation parser/layout/cursor defects require an explicitly bounded
+  reactive observability repair and must not be hidden by the numeric result.
+- No budget, partition, collider, USD, Isaac/PhysX, `29x50mm` cylinder,
+  physics/q5/contact/grasp, or G0a advancement follows from D390.
+
+Sources:
+
+- `claudedocs/session_20260726_grasp_g0a_d390_d389_directional_epsilon0_boundary_collapse_semantics_localization.md`
+- `sim_scripts/cyl34_top_view_d390_d389_directional_epsilon0_boundary_collapse_semantics_localization.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d390/attempt1_d389_directional_epsilon0_boundary_collapse_semantics_localization/d390_preregistration.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d390/attempt1_d389_directional_epsilon0_boundary_collapse_semantics_localization/d390_boundary_collapse_localization_evidence.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d390/attempt1_d389_directional_epsilon0_boundary_collapse_semantics_localization/d390_terminal_candidate_geometry.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d390/attempt1_d389_directional_epsilon0_boundary_collapse_semantics_localization/d390_failed_directional_call_trace.csv`
+- `claudedocs/runtime_logs/grasp_track/g0a_d390/attempt1_d389_directional_epsilon0_boundary_collapse_semantics_localization/d390_post_fail_plane_input_aliasing_audit.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d390/attempt1_d389_directional_epsilon0_boundary_collapse_semantics_localization/d390_failure_attestation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d390/attempt1_d389_directional_epsilon0_boundary_collapse_semantics_localization/d390_offline_worker_supervisor.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d390/attempt1_d389_directional_epsilon0_boundary_collapse_semantics_localization/d390_rerun_validation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d390/attempt1_d389_directional_epsilon0_boundary_collapse_semantics_localization/d390_manual_visual_inspection.json`
+- `START_HERE.md`
+
+## D391 — Affine rank must be bounded by point count, tested across exact-difference bases, and allowed to remain ambiguous
+
+Date: 2026-07-26
+
+Decision:
+
+- For lower-dimensional terminal point sets, form point differences in exact
+  dyadic arithmetic before one Float64 SVD conversion. Test every point as an
+  anchor plus the all-unordered-pair basis, and enforce
+  `rank <= min(3, unique_point_count - 1)`.
+- A basis or registered threshold-band disagreement is not a license to select
+  the convenient rank. Preserve the result as explicitly numerically ambiguous
+  and keep its authoritative class `null`.
+- Translation, input order, and scale are separate invariance contracts.
+  Exhaustive point permutations, exact translations, and power-of-two scale
+  controls must retain the registered rank signature.
+- Never normalize a caller-owned NumPy plane view in place. Make a working copy,
+  normalize both the normal and offset on that copy, and bind caller pre/post
+  hashes.
+
+Evidence:
+
+- D391 read only the immutable D390 terminal-geometry JSON
+  `73fc986043b976bec26e1cc92643b8aab281a529f1c71c2918163ba7b98475c7`.
+  The frozen D390 22-file manifest remained exact.
+- Of six disputed calls, five became stable: four `FACE_LIKE` rank2 and one
+  `LINE` rank1. The three-point cases respected cap2 and the two-point case
+  cap1. No stable result required a hidden hard-cap correction.
+- `lower_01_02_pre_float32_lbr` remained
+  `NUMERICALLY_AMBIGUOUS_BASIS`: exact dyadic rank3, but registered bounded SVD
+  bases produced ranks `{2,3}` at the nominal threshold and rank2 at doubled
+  threshold. Its authoritative rank/class remain `null`.
+- All six passed exhaustive order controls (`1,460` total permutations), exact
+  translation controls, and four power-of-two scale controls.
+- Plane-input controls passed synthetic `5/5` and frozen real-trace `351/351`.
+  Regression `[2,0,0,-1]` normalized on a separate copy to
+  `[1,0,0,-0.5]` while caller SHA remained exact.
+- Worker/retry/Viewer/signal was `1/0/1/0`; return0, no failure attestation.
+  Numeric/worker/supervisor elapsed was
+  `1.8120580650866032/4.2507297589909285/4.562493240926415s`.
+- The exact 1920x1080 six-card board had zero text overlaps. Save-only RRD/RBL,
+  one headless Viewer, and original-resolution manual inspection passed `9/9`.
+  The sandbox proxy warning remained visible in a notification-only column and
+  obscured no decision subject.
+
+Implication:
+
+- D391 passes its rank and plane-input contracts, but it does not repair or
+  retroactively pass frozen D390.
+- D390's provisional stable35 plus D391's stable five provide mixed-contract
+  provisional coverage of 40 calls only. D391's stronger authority was not
+  applied to the other 35, so this is not an authoritative 40-call result.
+- Freeze D391 attempt1. Before call29 localization or D389 seam propagation,
+  apply the already frozen D391 rank authority to the other 35 point sets in a
+  separately approved offline evaluation-set case. Do not change tolerance or
+  force a class.
+- No partition, budget, collider, USD, Isaac/PhysX, actual-product cylinder,
+  physics/q5/contact/grasp, target/IK/path, or G0a advancement follows.
+  `g0a_pass=false`.
+
+Sources:
+
+- `claudedocs/session_20260726_grasp_g0a_d391_d390_rank_basis_and_clip_input_immutability_repair.md`
+- `sim_scripts/cyl34_top_view_d391_d390_rank_basis_and_clip_input_immutability_repair.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d391/attempt1_d390_rank_basis_and_clip_input_immutability_repair/d391_execution_authority.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d391/attempt1_d390_rank_basis_and_clip_input_immutability_repair/d391_rank_and_plane_immutability_evidence.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d391/attempt1_d390_rank_basis_and_clip_input_immutability_repair/d391_offline_worker_supervisor.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d391/attempt1_d390_rank_basis_and_clip_input_immutability_repair/d391_rerun_validation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d391/attempt1_d390_rank_basis_and_clip_input_immutability_repair/d391_manual_visual_inspection.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d391/attempt1_d390_rank_basis_and_clip_input_immutability_repair/d391_completion_summary.json`
+- `START_HERE.md`
+
+## D392 — Canonical-set factoring is the scalable order proof; do not call finite generators exhaustive n-factorial coverage
+
+Date: 2026-07-27
+
+Decision:
+
+- When a frozen rank core begins with an exact lexicographic
+  `sorted(set(Float64 row tuples))`, prove input-order invariance by binding that
+  source operation, independently reconstructing the canonical set, and
+  checking every downstream basis consumes it.
+- Reversal, rotations, and adjacent swaps are useful finite negative/smoke
+  controls. They are not a mathematical substitute for all `n!` permutations
+  and must not be reported as exhaustive.
+- Preserve exhaustive permutations for small sets where feasible. For larger
+  sets, state the structural proof and its assumptions explicitly.
+- A resolved subset does not justify an aggregate over a manifest that still
+  contains an explicit ambiguity. Keep the all-manifest aggregate `null` until
+  that call is separately localized.
+
+Evidence:
+
+- D392 applied the frozen D391 exact-difference rank core to exactly the other
+  35 D390 terminal point sets. All `35/35` were stable and none introduced a
+  new ambiguity.
+- Their classes were `FACE_LIKE 23`, `FULL_DIMENSIONAL 10`, and `LINE 2`.
+  Combining D391 and D392 yields stable authority for `40/41` calls:
+  `FACE_LIKE 27`, `FULL_DIMENSIONAL 10`, and `LINE 3`.
+- Call29 `lower_01_02_pre_float32_lbr`, point SHA-256
+  `dcd4590e77d929d5abd4edb15f594d5956a9472f9ee099724b39544a7fdfddc6`,
+  remains the sole explicit ambiguity; the authoritative all-41 aggregate is
+  therefore still `null`.
+- Order controls used exhaustive `n!` enumeration for 23 small sets and the
+  source-bound structural proof plus finite generator smoke for 12 larger sets.
+  All `3,636` registered transformed orders reconstructed the same canonical
+  points and rank signatures.
+- Worker/retry/Viewer/signal was `1/0/1/0`; return0; algorithm/worker/supervisor
+  elapsed was
+  `10.412405928131193/10.756219690898433/11.13938453909941s`.
+- The exact 1920x1080 board showed all 35 rows with zero text overlap. Strict
+  RRD/RBL validation passed, and actual inspection passed `10/10`; the visible
+  sandbox proxy warning and Korean UI glyph fallback obscured no decision
+  subject or authority/nonclaim metadata.
+
+Implication:
+
+- Freeze D392 attempt1. D389/D390 remain frozen FAIL_STOP; D392 does not
+  retroactively repair clipping or seams.
+- The next conditionally approved numerical minimum is call29-only frozen
+  provenance localization. It must distinguish a real pre-existing third
+  direction from intersection/deduplication/roundoff scale without changing the
+  D391 threshold or forcing a class.
+- Before updating D389 geometry, every stable full-rank failure needs explicit
+  volume/subthreshold semantics and the complete 36-pair/144-direction solver
+  contract must be re-audited. Do not update only the previously highlighted
+  nine seams.
+- No budget/collider/USD/Isaac/PhysX/actual-product cylinder/physics/q5/contact/
+  grasp advancement follows from D392. `g0a_pass=false`.
+
+Sources:
+
+- `claudedocs/session_20260727_grasp_g0a_d392_d391_remaining35_frozen_rank_authority_coverage_audit.md`
+- `sim_scripts/cyl34_top_view_d392_d391_remaining35_same_authority_coverage_audit.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d392/attempt1_d391_remaining35_same_authority_coverage_audit/d392_remaining35_rank_evidence.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d392/attempt1_d391_remaining35_same_authority_coverage_audit/d392_offline_worker_supervisor.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d392/attempt1_d391_remaining35_same_authority_coverage_audit/d392_rerun_validation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d392/attempt1_d391_remaining35_same_authority_coverage_audit/d392_manual_visual_inspection.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d392/attempt1_d391_remaining35_same_authority_coverage_audit/d392_completion_summary.json`
+- `START_HERE.md`
+
+## D393 — A microscopic Float64 witness can localize numerical provenance without authorizing a rank, seam, or physics verdict
+
+Date: 2026-07-27
+
+Decision:
+
+- For a terminal point set near an affine-rank threshold, separate the
+  question “where did this registered witness become defined?” from “what
+  authoritative rank/class should the whole set receive?” The former may be
+  localized while the latter remains `null`.
+- Bind a registered witness to a deterministic lineage rule. Here it is all
+  final-fan vertices in the terminal-max ancestry plus the canonical-first
+  exact-seam carried vertex. Do not describe that witness as unique, maximal,
+  or the earliest across every possible quartet unless those properties were
+  actually searched and proved.
+- At a `~1e-18m` branch boundary, record the exact contraction order used to
+  reproduce frozen evidence. A BLAS-backed matmul result with a different last
+  bit is a diagnostic, not authority to re-decide a frozen branch.
+- An exact-rational raw-plane shadow is a negative control for the complete
+  Float64 fan-clip numerical pipeline; it does not isolate interpolation alone
+  or establish physical manufacturing thickness.
+
+Evidence:
+
+- D393 reconstructed only the frozen call29 source/clipping children
+  (`17/24` points) and matched the 21-row trace plus active planes
+  `3/15/20` with candidate counts `18/18/6` and exact hashes.
+- Terminal maximum-tetra ancestry was `[0,1,2,3,4,6,16]`; final-fan vertices
+  `[3,4,6]` plus exact-seam candidates `[0,16]` deterministically yielded the
+  registered quartet `[0,3,4,6]`.
+- That stored quartet had determinant
+  `-2.208548787108009e-25m^3`, tetra volume
+  `3.6809146451800146e-26m^3`, and maximum normalized raw-seam residual
+  `1.7772201399509673e-18m`. Its exact-rational raw-plane shadow had exact
+  determinant/volume `0/0`.
+- Both D390 near pairs had distance `1.4846841437362876e-17m` and each was
+  exactly one intersection plus one carried point. Terminal maximum tetra
+  volume was `5.63726747190885e-26m^3`, only
+  `2.5377083708987954e-17` of source-child ConvexHull volume.
+- Worker/retry/Viewer/signal was `1/0/1/0`; worker return0 in
+  `0.7505593399982899s`. The exact 1920x1080 board had zero text overlap,
+  strict RRD/RBL validation passed, and manual inspection passed `10/10`.
+
+Implication:
+
+- Freeze D393 attempt1. The registered terminal-linked witness is already
+  present after D389's final fan clip; D390 is not required to create that
+  specific witness.
+- Call29 authoritative rank/class and the all-41 aggregate remain `null`.
+  D389/D390 remain frozen FAIL_STOP. Do not retroactively update a seam,
+  overlap, or geometry result from D393.
+- Before complete D389 propagation, separately establish volume/subthreshold
+  semantics for the ten stable FULL_DIMENSIONAL failures, then re-audit all
+  `36 pairs / 144 directions`. Do not advance only the highlighted nine seams.
+- No collider/USD/Isaac/PhysX/actual-product-cylinder/physics/q5/contact/grasp
+  advancement follows. `g0a_pass=false`.
+
+Sources:
+
+- `claudedocs/session_20260727_grasp_g0a_d393_call29_third_direction_provenance_localization.md`
+- `sim_scripts/cyl34_top_view_d393_call29_third_direction_provenance_localization.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d393/attempt1_call29_third_direction_provenance_localization/d393_call29_provenance_evidence.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d393/attempt1_call29_third_direction_provenance_localization/d393_offline_worker_supervisor.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d393/attempt1_call29_third_direction_provenance_localization/d393_rerun_validation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d393/attempt1_call29_third_direction_provenance_localization/d393_manual_visual_inspection.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d393/attempt1_call29_third_direction_provenance_localization/d393_completion_summary.json`
+- `START_HERE.md`
+
+## D394 — Exact positive micro-volume can still be a provable frozen-gate rejection; keep Boolean and numeric semantics separate
+
+Date: 2026-07-27
+
+Decision:
+
+- A stable affine-rank-3 terminal point set is not automatically a positive
+  result under the solver's registered volume threshold. Prove a lower/upper
+  sandwich and compare the upper bound with the frozen gate.
+- Preserve three distinct facts: the original numeric calculation failed, a
+  Boolean gate decision can be propagated, and the final numeric volume remains
+  unknown. Never serialize the third fact as `0.0` merely because the Boolean
+  result is false.
+- Once a terminal candidate has an exact volume upper bound below the frozen
+  gate, later half-space intersections cannot increase its volume. A monotonic
+  early stop is valid for that Boolean gate only.
+- A preregistered script may be stopped before its worker when static review
+  catches a semantic overclaim. Preserve that path and repair forward-only.
+- Missing mathematical glyphs are an observability failure. Use an ASCII
+  fallback when the installed font cannot display superscript notation.
+
+Evidence:
+
+- D394 evaluated exactly the ten stable `FULL_DIMENSIONAL` calls
+  `[1,6,13,14,16,21,23,26,34,39]`; all `10/10` passed
+  `0 < tetra <= exact hull <= exact AABB <= 1e-18m^3`.
+- Maximum exact hull/AABB bounds were
+  `7.636172300630593e-50 / 1.2462809509519742e-48m^3`. The minimum frozen
+  gate/AABB ratio was `8.023872941620009e29`.
+- Every record retains `original_calculation_pass=false`,
+  `propagated_gate_decision_available=true`,
+  `propagated_positive_volume=false`, and
+  `derived_gate_volume_m3=null`.
+- Attempt1 stopped before the worker over a prospective false `0.0` claim.
+  Attempt2 performed the only numeric worker (`1/0` worker/retry, return0,
+  `1.2048863130621612s`). Attempt3 performed zero numeric work and replaced
+  missing Unicode superscripts with ASCII.
+- Aggregate worker/retry/Viewer/signal was `1/0/1/0`. The repaired exact
+  1920x1080 board and strict RRD/RBL passed manual inspection `10/10`.
+
+Implication:
+
+- Freeze D394 attempts1-3. D389/D390 remain frozen FAIL_STOP and call29
+  rank/class remain `null`.
+- D394 authorizes a later all-36-pair/144-direction Boolean propagation audit;
+  it does not update a pair, seam, partition, budget, or geometry itself.
+- No collider/USD/Isaac/PhysX/actual-product-cylinder/physics/q5/contact/grasp
+  advancement follows directly. `g0a_pass=false`.
+
+Sources:
+
+- `claudedocs/session_20260727_grasp_g0a_d394_stable_fullrank_volume_subthreshold_semantics.md`
+- `sim_scripts/cyl34_top_view_d394_stable_fullrank_terminal_volume_subthreshold_semantics.py`
+- `sim_scripts/cyl34_top_view_d394_attempt2_gate_numeric_null_semantics_repair.py`
+- `sim_scripts/cyl34_top_view_d394_attempt3_ascii_exponent_visual_repair.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d394/attempt2_gate_numeric_null_semantics_repair/d394_full10_volume_semantics_evidence.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d394/attempt2_gate_numeric_null_semantics_repair/d394_offline_worker_supervisor.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d394/attempt3_ascii_exponent_visual_repair/d394_manual_visual_inspection.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d394/attempt3_ascii_exponent_visual_repair/d394_completion_summary.json`
+- `START_HERE.md`
+
+## D395 — Do not merge actual solver outputs and ideal subset certificates under one authority
+
+Date: 2026-07-27
+
+Decision:
+
+- When some directional calculations completed and others failed, preserve
+  their different authority. An inherited actual Float64/Qhull result is not an
+  exact-halfspace certificate; an ideal exact-halfspace certificate is not a
+  repaired actual solver result.
+- A combined table may be useful as a diagnostic only if every row names its
+  source and the table is explicitly mixed-authority and non-adopted.
+- For a finite point set, the sum of exact absolute volumes over all 4-point
+  tetrahedra upper-bounds its convex-hull volume. Together with ideal
+  half-space subset monotonicity this can certify a gate Boolean without
+  deciding affine rank or inventing a numeric final volume.
+- That proof does not establish bit-exact behavior of unexecuted Float64
+  clipping. Roundoff-induced point motion outside the current hull requires a
+  separate replay or error bound.
+- A prepare-stage schema error consumes the forward-only path but not a worker.
+  Preserve it and repair the exact JSON field path in a new attempt.
+
+Evidence:
+
+- Attempt1 stopped in prepare on the stale path
+  `frozen_contract.positive_volume_epsilon_m3`; worker/viewer/signal were
+  `0/0/0`.
+- Attempt2 bound the actual D389 path
+  `frozen_constants.positive_volume_epsilon_m3=1e-18` and performed one worker:
+  return0, `1.8573395209386945s`, retry/signal `0/0`.
+- D395 reconstructed `36/144` unique pair/direction records:
+  `103` immutable actual solver outputs plus `41` ideal exact-subset
+  certificates. The failed actual solver results and volumes remain null.
+- The 41 failed terminal sets contained `42,928` exact tetrahedron subsets;
+  upper bounds were positive for `23`, zero for `18`, and all below the gate.
+  The maximum was call35 at `1.4721648449531712e-20m^3`; call29 was
+  `1.8633477135066152e-25m^3`.
+- The non-adopted hybrid table was gate-positive/nonpositive `26/118`, with
+  pair patterns `2` pre+post, `9` post-only, and `25` nonpositive.
+- Exact 1920x1080 board, strict RRD/RBL with 41 terminal-cloud entities/307
+  points, one Viewer, and manual inspection `14/14` passed.
+
+Implication:
+
+- Freeze D395 attempts1-2. D389/D390 remain FAIL_STOP and the D395 hybrid table
+  is not solver repair, pair adoption, or physical authority.
+- Candidate admissibility may next be decided from D389 calculations that
+  actually completed, but not from the mixed table alone.
+- No collider/USD/Isaac/PhysX/actual-product-cylinder/physics/q5/contact/grasp
+  advancement follows directly. `g0a_pass=false`.
+
+Sources:
+
+- `claudedocs/session_20260727_grasp_g0a_d395_all36_hybrid_gate_semantics.md`
+- `sim_scripts/cyl34_top_view_d395_all36_pair_144direction_gate_semantics_propagation.py`
+- `sim_scripts/cyl34_top_view_d395_attempt2_d389_prereg_threshold_path_repair.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d395/attempt1_all36_pair_144direction_gate_semantics_propagation/d395_failure_attestation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d395/attempt2_d389_prereg_threshold_path_repair/d395_all36_gate_semantics_evidence.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d395/attempt2_d389_prereg_threshold_path_repair/d395_offline_worker_supervisor.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d395/attempt2_d389_prereg_threshold_path_repair/d395_rerun_validation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d395/attempt2_d389_prereg_threshold_path_repair/d395_manual_visual_inspection.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d395/attempt2_d389_prereg_threshold_path_repair/d395_completion_summary.json`
+- `START_HERE.md`
+
+## D396 — A completed direct overlap can reject a design candidate without becoming a physical-penetration claim
+
+Date: 2026-07-27
+
+Decision:
+
+- When a frozen candidate contract requires zero positive-volume child
+  overlap, one provenance-bound calculation that actually completed, passed
+  its residual checks, exceeded the registered volume gate, and agreed in both
+  clipping directions is sufficient to reject that candidate.
+- Missing, failed, or masked calculations cannot turn absence of authority
+  into an admissible PASS. If every direct witness is masked, the decision is
+  `null`, not `true`.
+- Use actual completed calculations as decision authority. A mixed-authority
+  table combining actual solver outputs and ideal certificates may remain
+  useful background, but it cannot replace direct authority.
+- Microscopic pre-Float32 representation overlap is an offline construction
+  contract result. It is not evidence of manufacturing penetration,
+  cooked/live PhysX overlap, contact, or grasp.
+
+Evidence:
+
+- D388 froze a zero-positive-overlap requirement with
+  `positive_volume_epsilon_m3=1e-18`.
+- D389 upper pair 1-2 had strict pre-Float32 volume
+  `6.4038856253626914e-15m^3`, or `6403.885625362691` times the gate.
+  Its two directional volumes were
+  `6.403885673976526e-15` and `6.403885506278743e-15m^3`.
+- D389 lower pair 2-3 had strict pre-Float32 volume
+  `2.4130456372851684e-15m^3`, or `2413.045637285168` times the gate.
+  Its two directional volumes were
+  `2.413045456355167e-15` and `2.413045613703222e-15m^3`.
+- Both strict witnesses and all four directional calculations passed, were
+  positive, and used no Qhull fallback. Either witness alone rejected the
+  candidate; masking both produced `null`.
+- Generic D395 PASS/FAIL backgrounds did not change the decision. The D395
+  hybrid table was not adopted.
+- Worker/retry/Viewer/signal was `1/0/1/0`; worker return0 and supervisor
+  elapsed was `0.4722126529086381s`.
+- The exact 1920x1080 comparison board passed layout validation. Strict
+  RRD/RBL validation passed, one Viewer invocation completed, and manual
+  inspection passed `11/11`. The Rerun display contains child point sets and
+  center markers only; marker size is not overlap-volume extent.
+
+Implication:
+
+- Freeze D396 attempt1. The D388 re-anchor candidate is explicitly
+  inadmissible under its registered offline non-overlap decision:
+  `d388_reanchor_candidate_nonoverlap_admissible=false`.
+- Preserve the original D388 verdict and D389's unresolved seam records. D396
+  does not retroactively edit either case. The remaining nine indeterminate
+  seams do not need to be resolved to rescue this already-rejected candidate.
+- Do not materialize or physically test this rejected construction. A new
+  offline design must construct shared boundaries that guarantee zero-volume
+  child overlap and pass the frozen surface, void, clearance, count, bounds,
+  and overlap gates before USD/live identity is considered.
+- Cooked/live PhysX overlap, physical penetration, contact, grasp, and actual
+  product behavior remain `null`; `materializable_candidate=false` and
+  `g0a_pass=false`.
+
+Sources:
+
+- `claudedocs/session_20260727_grasp_g0a_d396_direct_overlap_admissibility_decision.md`
+- `sim_scripts/cyl34_top_view_d396_d388_reanchor_direct_pre_float32_nonoverlap_admissibility_decision.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d396/attempt1_d388_reanchor_direct_pre_float32_nonoverlap_admissibility_decision/d396_direct_overlap_admissibility_evidence.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d396/attempt1_d388_reanchor_direct_pre_float32_nonoverlap_admissibility_decision/d396_offline_worker_supervisor.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d396/attempt1_d388_reanchor_direct_pre_float32_nonoverlap_admissibility_decision/d396_rerun_validation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d396/attempt1_d388_reanchor_direct_pre_float32_nonoverlap_admissibility_decision/d396_manual_visual_inspection.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d396/attempt1_d388_reanchor_direct_pre_float32_nonoverlap_admissibility_decision/d396_completion_summary.json`
+- `START_HERE.md`
+
+## D397 — A shared-boundary construction is not a collider candidate until every source parent terminates; all downstream gates remain null
+
+Date: 2026-07-27
+
+Decision:
+
+- Reusing one exact Float32 seam in two opposite closed sibling half-spaces is
+  a valid way to prevent new positive-volume overlap for a **completed sibling
+  tree**. It does not make a partial forest a materializable collider.
+- Keep the construction rule, greedy branch selection, the per-child vertex
+  budget, and the downstream geometry gates separate. Under the frozen D397
+  rule, candidates were ordered by maximum child vertices, volume imbalance,
+  total vertices, then axis/cut bits, and only the first candidate was followed
+  without backtracking. That deterministic greedy path failed to terminate six
+  of eight source parents; D397 did not reject every possible branch.
+- If any source parent is incomplete, do not invent final part counts or run
+  whole-candidate surface, bounds, void, clearance, seed, or raw-surface gates.
+  These values are `null`, not false and not zero.
+- An operational or observability PASS cannot override a geometry FAIL.
+  Automatic RRD/layout PASS also cannot replace actual visual inspection.
+- A helper-argument collision before the first scientific sample consumes its
+  path but leaves the scientific verdict `null`. Repair only that operational
+  variable in a new forward-only path.
+
+Evidence:
+
+- Attempt1 passed worker preflight `10/10` but stopped before the first source
+  parent on `TypeError("_phase() got multiple values for argument 'name'")`.
+  Source-parent start/end and geometry evaluation were `0/0/0`.
+- Attempt2 performed the only science worker: invocation/retry/signal `1/0/0`,
+  elapsed `3.019634233787656s`, source constructions `8`.
+- Only `proximal_upper_arm_hull_b` and
+  `proximal_lower_arm_hull_b` completed. Each produced 8 children from 7
+  splits, maximum child vertices/polygons/vertices-per-face `12/8/6`,
+  bounds delta `0mm`, outward error
+  `5.183687541709947e-7mm`, surface-coverage error
+  `1.015403238921464e-7mm`, and volume relative error about
+  `8.48139e-9`. Each certified 0 positive-volume overlap among 28 child pairs.
+- The other six parents stopped at
+  `no_admissible_shared_plane_split`. Diagnostic geometry preserved 8 source
+  parents, 46 partial leaves, and 38 seams.
+- Failed terminal-leaf vertex ranges were PUA `26-31`, PLA `19-28`,
+  MUB/MLB `16/16`, FBL `14-21`, and FBR `15-22`; completed PUB/PLB leaves
+  were `10-12`. This does not justify an arbitrary global `12 -> 13` budget
+  change.
+- Final source-child count, total count, body counts/bounds, void,
+  frozen-OPEN clearance, raw surface, and contact seed are all `null`.
+- Immutable USD read, USD/asset write, collider materialization,
+  Isaac/Kit/PhysX/Warp-CUDA launch, physics step, q5 sample, contact query,
+  cylinder creation, and target/IK/path/settings change were all `0`.
+- Attempt3 correctly failed manual presentation despite automated checks.
+  Attempt4 changed presentation only, produced an exact 1920x1080 clean board,
+  strict RRD/RBL PASS, one Viewer/no retry, and manual `8/8` PASS.
+  Its operational verdict is
+  `D397_FAILURE_PRESENTATION_REPAIRED_COMPLETE`; the scientific verdict remains
+  `D397_SHARED_BOUNDARY_ZERO_VOLUME_CONSTRUCTION_FAIL_STOP`.
+
+Implication:
+
+- Freeze all D397 attempts. There is no completed/materializable candidate.
+  Do not create a derivative USD, launch Isaac/PhysX cook/readback, create the
+  nominal `29x50mm` cylinder, or run physics/contact/grasp.
+- This failure is not an Isaac timeout, GPU failure, PhysX cook failure, or
+  evidence that the robot cannot grasp the product. Those stages were not
+  executed.
+- Before another design, localize the six blocked terminal leaves under the
+  frozen axis-plane family. Count where every axis/midpoint option is rejected
+  and whether an ancestor had an unselected admissible branch. Do not start
+  backtracking, change the plane family, or change the vertex budget in that
+  localization case.
+- `materializable_candidate=false`; live identity/physics/contact/grasp remain
+  `null`; `g0a_pass=false`.
+
+Sources:
+
+- `claudedocs/session_20260727_grasp_g0a_d397_shared_boundary_zero_volume_construction_design.md`
+- `sim_scripts/cyl34_top_view_d397_shared_boundary_zero_volume_construction_design.py`
+- `sim_scripts/cyl34_top_view_d397_attempt2_phase_marker_payload_key_repair.py`
+- `sim_scripts/cyl34_top_view_d397_attempt3_failure_visualization_repair.py`
+- `sim_scripts/cyl34_top_view_d397_attempt4_manual_visual_clarity_repair.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d397/attempt2_phase_marker_payload_key_repair/d397_shared_boundary_design_evidence.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d397/attempt2_phase_marker_payload_key_repair/d397_shared_boundary_candidate_geometry.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d397/attempt2_phase_marker_payload_key_repair/d397_offline_worker_claim.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d397/attempt4_manual_visual_clarity_repair/d397_attempt4_manual_visual_inspection.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d397/attempt4_manual_visual_clarity_repair/d397_attempt4_completion_summary.json`
 - `START_HERE.md`

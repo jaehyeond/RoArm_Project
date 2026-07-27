@@ -1,0 +1,23 @@
+{
+  "actual_worker_invocations": 0,
+  "artifact": "D394_ATTEMPT1_PRE_WORKER_SEMANTIC_REVIEW_STOP_V1",
+  "attempt": "attempt1_stable_fullrank_terminal_volume_subthreshold_semantics",
+  "case": "D394",
+  "completion_summary_created": false,
+  "diagnostic": {
+    "incorrect_field": "records[*].forward_only_gate_semantics.derived_gate_volume_m3",
+    "incorrect_value": 0.0,
+    "reason": "The exact terminal upper bound proves only propagated_positive_volume=false. It does not determine the final numeric intersection volume, which must remain null.",
+    "required_forward_repair": "Set derived_gate_volume_m3=null while preserving original_calculation_pass=false and exact_final_intersection_volume_m3=null."
+  },
+  "frozen_artifacts": {
+    "execution_authority_sha256": "7bbb98363c23f6a99629b729a6a15f7b9451fdf7de4844a8f8df50ee6ed2913f",
+    "script_sha256": "4595bee98e87a192c2e55a57f9f545e5a12548a40301ac0b897e3f2b2bbeeac7"
+  },
+  "numeric_evidence_created": false,
+  "operational_verdict": "D394_ATTEMPT1_PRE_WORKER_SEMANTIC_REVIEW_STOP",
+  "physics_or_grasp_result": null,
+  "process_signals_sent": 0,
+  "rerun_viewer_invocations": 0,
+  "worker_retries": 0
+}

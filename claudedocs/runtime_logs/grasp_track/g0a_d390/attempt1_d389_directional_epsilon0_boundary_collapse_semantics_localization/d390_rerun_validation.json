@@ -1,0 +1,1645 @@
+{
+  "artifact": "ROARM_RERUN_ARTIFACT_VALIDATION_V1",
+  "base_rerun_contract_pass": true,
+  "blueprint_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d390/attempt1_d389_directional_epsilon0_boundary_collapse_semantics_localization/d390_boundary_collapse_localization.rbl",
+  "blueprint_verify": {
+    "attempted": true,
+    "bytes": 72056,
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "verify",
+      "--check-footers",
+      "true",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d390/attempt1_d389_directional_epsilon0_boundary_collapse_semantics_localization/d390_boundary_collapse_localization.rbl"
+    ],
+    "ok": true,
+    "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d390/attempt1_d389_directional_epsilon0_boundary_collapse_semantics_localization/d390_boundary_collapse_localization.rbl",
+    "returncode": 0,
+    "sha256": "839b234e9b88409d355dffe4472d321da22ed117c4da118a6d67ab6cef413fb8",
+    "stderr": "2026-07-26T10:01:36.645975Z ERROR re_analytics: Failed to initialize analytics: Read-only file system (os error 30)\n1 file verified without error.\n",
+    "stdout": "",
+    "timeout_parameter_ignored_no_signal_authority": true
+  },
+  "bytes": 208727,
+  "component_contract": {
+    "checks": {
+      "/d390/geometry/clipping_edges": {
+        "observed": [
+          "Arrows3D:colors",
+          "Arrows3D:origins",
+          "Arrows3D:radii",
+          "Arrows3D:vectors",
+          "CoordinateFrame:frame"
+        ],
+        "pass": true,
+        "required": [
+          "Arrows3D:colors",
+          "Arrows3D:origins",
+          "Arrows3D:radii",
+          "Arrows3D:vectors",
+          "CoordinateFrame:frame"
+        ]
+      },
+      "/d390/geometry/clipping_vertices": {
+        "observed": [
+          "CoordinateFrame:frame",
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true,
+        "required": [
+          "CoordinateFrame:frame",
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ]
+      },
+      "/d390/geometry/collapse_plane_normal": {
+        "observed": [
+          "Arrows3D:colors",
+          "Arrows3D:origins",
+          "Arrows3D:radii",
+          "Arrows3D:vectors",
+          "CoordinateFrame:frame"
+        ],
+        "pass": true,
+        "required": [
+          "Arrows3D:colors",
+          "Arrows3D:origins",
+          "Arrows3D:radii",
+          "Arrows3D:vectors",
+          "CoordinateFrame:frame"
+        ]
+      },
+      "/d390/geometry/collapse_plane_outline": {
+        "observed": [
+          "Arrows3D:colors",
+          "Arrows3D:origins",
+          "Arrows3D:radii",
+          "Arrows3D:vectors",
+          "CoordinateFrame:frame"
+        ],
+        "pass": true,
+        "required": [
+          "Arrows3D:colors",
+          "Arrows3D:origins",
+          "Arrows3D:radii",
+          "Arrows3D:vectors",
+          "CoordinateFrame:frame"
+        ]
+      },
+      "/d390/geometry/source_edges": {
+        "observed": [
+          "Arrows3D:colors",
+          "Arrows3D:origins",
+          "Arrows3D:radii",
+          "Arrows3D:vectors",
+          "CoordinateFrame:frame"
+        ],
+        "pass": true,
+        "required": [
+          "Arrows3D:colors",
+          "Arrows3D:origins",
+          "Arrows3D:radii",
+          "Arrows3D:vectors",
+          "CoordinateFrame:frame"
+        ]
+      },
+      "/d390/geometry/source_vertices": {
+        "observed": [
+          "CoordinateFrame:frame",
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true,
+        "required": [
+          "CoordinateFrame:frame",
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ]
+      },
+      "/d390/geometry/terminal_points": {
+        "observed": [
+          "CoordinateFrame:frame",
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true,
+        "required": [
+          "CoordinateFrame:frame",
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ]
+      },
+      "/events/d390/nonclaims": {
+        "observed": [
+          "TextLog:level",
+          "TextLog:text"
+        ],
+        "pass": true,
+        "required": [
+          "TextLog:level",
+          "TextLog:text"
+        ]
+      },
+      "/events/d390/selected_call": {
+        "observed": [
+          "TextLog:level",
+          "TextLog:text"
+        ],
+        "pass": true,
+        "required": [
+          "TextLog:level",
+          "TextLog:text"
+        ]
+      },
+      "/metadata/run": {
+        "observed": [
+          "TextDocument:text"
+        ],
+        "pass": true,
+        "required": [
+          "TextDocument:text"
+        ]
+      },
+      "/metrics/d390/affine_rank": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/metrics/d390/sigma1_over_sigma0": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/metrics/d390/sigma2_over_sigma0": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/metrics/d390/unique_point_count": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      }
+    },
+    "pass": true
+  },
+  "d390_execution_contract": {
+    "collapse_plane_display_checks": [
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "lower_01_02_pre_float32_rbl",
+        "display_center_f64_m": [
+          0.012076921625534847,
+          -0.009662990844881104,
+          -0.036526349956196205
+        ],
+        "failed_call_index": 0,
+        "local_equation_f64_m": [
+          -0.009400610349565906,
+          0.999955813286295,
+          1.146832678498275e-15,
+          -1.734723475976807e-18
+        ],
+        "maximum_corner_equation_residual": 2.710505431213761e-20,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          2.5431258426700583e-19,
+          1.7371909302467818e-18,
+          -3.2025664171879502e-18
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "lower_03_04_pre_float32_lbr",
+        "display_center_f64_m": [
+          0.01406097817819011,
+          -0.006318717181388287,
+          -0.030741136567111364
+        ],
+        "failed_call_index": 1,
+        "local_equation_f64_m": [
+          0.18511235262618175,
+          -0.9827173636937531,
+          4.8610229287193906e-17,
+          0.0
+        ],
+        "maximum_corner_equation_residual": 0.0,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          -4.7090480001979465e-19,
+          -8.870332265930234e-20,
+          -1.8260247115545337e-18
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "lower_03_04_pre_float32_rbl",
+        "display_center_f64_m": [
+          0.014642948696442564,
+          -0.006209092648666219,
+          -0.029961101430420464
+        ],
+        "failed_call_index": 2,
+        "local_equation_f64_m": [
+          -0.18511235262618145,
+          0.9827173636937532,
+          -9.563831001823174e-16,
+          0.0
+        ],
+        "maximum_corner_equation_residual": 0.0,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          -7.662663304834992e-19,
+          -1.4433993782391323e-19,
+          -4.8572257327350596e-18
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "lower_04_05_pre_float32_lbr",
+        "display_center_f64_m": [
+          -0.0061464832631969455,
+          -0.007944213650868894,
+          -0.03691018714756296
+        ],
+        "failed_call_index": 3,
+        "local_equation_f64_m": [
+          0.7556325089236682,
+          0.6549958102596707,
+          9.727999243318602e-16,
+          0.0
+        ],
+        "maximum_corner_equation_residual": 1.734723475976807e-18,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          -1.5473293422549985e-18,
+          1.785068445790245e-18,
+          1.3010426069826051e-18
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "lower_04_05_pre_float32_rbl",
+        "display_center_f64_m": [
+          -0.008076396218018192,
+          -0.005717779610813385,
+          -0.03689259096960208
+        ],
+        "failed_call_index": 4,
+        "local_equation_f64_m": [
+          -0.7556325089236682,
+          -0.6549958102596707,
+          -9.727999243318602e-16,
+          -1.734723475976807e-18
+        ],
+        "maximum_corner_equation_residual": 1.734723475976807e-18,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          -2.2753128280346998e-18,
+          -2.354692182936374e-20,
+          5.128747668105342e-18
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "lower_05_06_pre_float32_rbl",
+        "display_center_f64_m": [
+          -0.006420896366165037,
+          -0.008092443163196789,
+          -0.03703241728668226
+        ],
+        "failed_call_index": 5,
+        "local_equation_f64_m": [
+          -0.6726162463615099,
+          -0.7399914763904735,
+          -1.229860945646638e-14,
+          0.0
+        ],
+        "maximum_corner_equation_residual": 4.336808689942018e-19,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          6.013394751333109e-19,
+          -5.465883235927083e-19,
+          -4.95635278850511e-19
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "upper_00_01_pre_float32_rbl",
+        "display_center_f64_m": [
+          0.008378407063253416,
+          -0.009879997302062148,
+          -0.0009698688933855333
+        ],
+        "failed_call_index": 6,
+        "local_equation_f64_m": [
+          -0.006014904042982869,
+          0.9999819103010583,
+          -2.376843711652405e-16,
+          0.0
+        ],
+        "maximum_corner_equation_residual": 2.710505431213761e-20,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          3.1349576523562885e-19,
+          1.8856810571764184e-21,
+          3.9425533544927357e-20
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "upper_02_03_pre_float32_rbl",
+        "display_center_f64_m": [
+          -0.007375589597893584,
+          -0.00627004042697957,
+          -0.0010133229041789822
+        ],
+        "failed_call_index": 7,
+        "local_equation_f64_m": [
+          -0.7331651092407263,
+          -0.680050676488182,
+          1.2235887443832455e-15,
+          0.0
+        ],
+        "maximum_corner_equation_residual": 3.469446951953614e-18,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          -7.227688753027776e-19,
+          7.792197548477356e-19,
+          1.7347234759768175e-19
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "upper_03_04_pre_float32_rbl",
+        "display_center_f64_m": [
+          -0.005696753751343033,
+          -0.008215776864582757,
+          -0.0010030154198351128
+        ],
+        "failed_call_index": 8,
+        "local_equation_f64_m": [
+          -0.7071067811865476,
+          -0.7071067811865475,
+          2.0048571420244554e-15,
+          1.734723475976807e-18
+        ],
+        "maximum_corner_equation_residual": 4.336808689942018e-19,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          1.2266347333466995e-18,
+          1.2266347333466993e-18,
+          7.228014483236485e-20
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "upper_04_05_pre_float32_lbr",
+        "display_center_f64_m": [
+          -0.005124138813578238,
+          -0.008991224894070251,
+          -0.0009159375308572851
+        ],
+        "failed_call_index": 9,
+        "local_equation_f64_m": [
+          0.6368486898939695,
+          0.770988810671293,
+          -2.8324166830466662e-15,
+          0.0
+        ],
+        "maximum_corner_equation_residual": 4.336808689942018e-19,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          -5.114644751102293e-19,
+          4.224775721682005e-19,
+          1.9240699614073054e-33
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "upper_04_05_pre_float32_rbl",
+        "display_center_f64_m": [
+          -0.005215278108098768,
+          -0.008915942426270591,
+          -0.000920713429378673
+        ],
+        "failed_call_index": 10,
+        "local_equation_f64_m": [
+          -0.6368486898939696,
+          -0.7709888106712929,
+          4.720694471744439e-16,
+          1.734723475976807e-18
+        ],
+        "maximum_corner_equation_residual": 4.336808689942018e-19,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          5.810981977292264e-19,
+          1.7700021468080872e-18,
+          -4.9281916931159315e-20
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "lower_00_03_post_float32_lbr",
+        "display_center_f64_m": [
+          -0.004521357361227269,
+          -0.009819031693041325,
+          -0.03711734712123871
+        ],
+        "failed_call_index": 11,
+        "local_equation_f64_m": [
+          0.1341873497410431,
+          -0.9909559804398321,
+          7.839465228329608e-08,
+          0.0
+        ],
+        "maximum_corner_equation_residual": 4.336808689942018e-19,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          2.0702370423247356e-19,
+          2.803349770611958e-20,
+          -4.79624643395541e-26
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "lower_00_03_pre_float32_lbr",
+        "display_center_f64_m": [
+          -0.004521357361227269,
+          -0.009819031693041325,
+          -0.03711734712123871
+        ],
+        "failed_call_index": 12,
+        "local_equation_f64_m": [
+          0.1341873497410431,
+          -0.9909559804398321,
+          7.839465228329608e-08,
+          0.0
+        ],
+        "maximum_corner_equation_residual": 4.336808689942018e-19,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          2.0702370423247356e-19,
+          2.803349770611958e-20,
+          -4.79624643395541e-26
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "lower_00_04_pre_float32_rbl",
+        "display_center_f64_m": [
+          -0.004521357361227271,
+          -0.009819031693041325,
+          -0.03711734712123871
+        ],
+        "failed_call_index": 13,
+        "local_equation_f64_m": [
+          0.008248162602475843,
+          0.9999659833282747,
+          1.2032150587015345e-15,
+          -1.734723475976807e-18
+        ],
+        "maximum_corner_equation_residual": 2.710505431213761e-20,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          -2.8433115824421197e-19,
+          1.737127776908288e-18,
+          6.986651270081336e-34
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "lower_00_05_pre_float32_rbl",
+        "display_center_f64_m": [
+          -0.004521357361227275,
+          -0.009819031693041325,
+          -0.03711734712123871
+        ],
+        "failed_call_index": 14,
+        "local_equation_f64_m": [
+          0.008248162602475843,
+          0.9999659833282747,
+          1.2032150587015345e-15,
+          -1.734723475976807e-18
+        ],
+        "maximum_corner_equation_residual": 0.0,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          7.154384010148369e-21,
+          1.734723474973153e-18,
+          1.0436582050601254e-33
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "lower_00_06_pre_float32_rbl",
+        "display_center_f64_m": [
+          -0.0045213573612272765,
+          -0.009819031693041323,
+          -0.03711734712123871
+        ],
+        "failed_call_index": 15,
+        "local_equation_f64_m": [
+          0.008248162602475843,
+          0.9999659833282747,
+          1.2032150587015345e-15,
+          0.0
+        ],
+        "maximum_corner_equation_residual": 5.421010862427522e-20,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          5.829710845087206e-19,
+          -4.808603870268876e-21,
+          6.8998615610398385e-34
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "lower_01_04_post_float32_lbr",
+        "display_center_f64_m": [
+          -0.004521357361227206,
+          -0.009819031693041325,
+          -0.037117347121238695
+        ],
+        "failed_call_index": 16,
+        "local_equation_f64_m": [
+          0.18511107871405316,
+          -0.982717603651128,
+          3.391777478047631e-06,
+          -3.469446951953614e-18
+        ],
+        "maximum_corner_equation_residual": 8.673617379884035e-19,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          6.422365531159654e-19,
+          -3.4095050973703154e-18,
+          -5.5511033554698895e-18
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "upper_00_03_post_float32_lbr",
+        "display_center_f64_m": [
+          -0.003958327695727346,
+          -0.00995420292019844,
+          -0.0007497782353311778
+        ],
+        "failed_call_index": 17,
+        "local_equation_f64_m": [
+          0.7331651092391344,
+          0.6800506764867053,
+          2.083959790478111e-06,
+          1.734723475976807e-18
+        ],
+        "maximum_corner_equation_residual": 1.734723475976807e-18,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          -1.6729665752313022e-18,
+          -7.472424800963954e-19,
+          -2.289863588259325e-24
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "upper_00_04_post_float32_lbr",
+        "display_center_f64_m": [
+          -0.003958327695727346,
+          -0.00995420292019844,
+          -0.0007497782353311778
+        ],
+        "failed_call_index": 18,
+        "local_equation_f64_m": [
+          0.7071067811844468,
+          0.7071067811844468,
+          2.437582680210203e-06,
+          0.0
+        ],
+        "maximum_corner_equation_residual": 1.734723475976807e-18,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          -4.336808689967786e-19,
+          4.3368086899162498e-19,
+          1.495011790470646e-24
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "upper_00_04_post_float32_rbl",
+        "display_center_f64_m": [
+          -0.00395832769572735,
+          -0.009954202920198439,
+          -0.0007497782353311784
+        ],
+        "failed_call_index": 19,
+        "local_equation_f64_m": [
+          -0.006014904042950353,
+          0.9999819102956526,
+          3.288090979321099e-06,
+          0.0
+        ],
+        "maximum_corner_equation_residual": 1.3552527156068805e-20,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          3.4484534133035714e-19,
+          2.074320456938538e-21,
+          -2.168289582267288e-20
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "upper_01_03_post_float32_lbr",
+        "display_center_f64_m": [
+          -0.003958327695727347,
+          -0.00995420292019844,
+          -0.0007497782353311779
+        ],
+        "failed_call_index": 20,
+        "local_equation_f64_m": [
+          0.7331651092391344,
+          0.6800506764867053,
+          2.083959790478111e-06,
+          0.0
+        ],
+        "maximum_corner_equation_residual": 1.734723475976807e-18,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "upper_01_04_post_float32_lbr",
+        "display_center_f64_m": [
+          -0.003958327695727347,
+          -0.00995420292019844,
+          -0.0007497782353311779
+        ],
+        "failed_call_index": 21,
+        "local_equation_f64_m": [
+          0.7071067811844468,
+          0.7071067811844468,
+          2.437582680210203e-06,
+          0.0
+        ],
+        "maximum_corner_equation_residual": 1.734723475976807e-18,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "upper_01_04_pre_float32_rbl",
+        "display_center_f64_m": [
+          -0.00395832769572735,
+          -0.009954202920198439,
+          -0.0007497782353311783
+        ],
+        "failed_call_index": 22,
+        "local_equation_f64_m": [
+          -0.1415862830685106,
+          0.9899259186660376,
+          -2.1223988266671286e-07,
+          0.0
+        ],
+        "maximum_corner_equation_residual": 4.336808689942018e-19,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          3.642023276849069e-19,
+          5.209082684090573e-20,
+          2.7104950162800995e-20
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "lower_01_03_post_float32_lbr",
+        "display_center_f64_m": [
+          -0.004521357361227265,
+          -0.009819031693041325,
+          -0.03711734712123871
+        ],
+        "failed_call_index": 23,
+        "local_equation_f64_m": [
+          0.1341873497410431,
+          -0.9909559804398321,
+          7.839465228329608e-08,
+          0.0
+        ],
+        "maximum_corner_equation_residual": 4.336808689942018e-19,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "lower_01_03_pre_float32_lbr",
+        "display_center_f64_m": [
+          -0.004521357361227265,
+          -0.009819031693041325,
+          -0.03711734712123871
+        ],
+        "failed_call_index": 24,
+        "local_equation_f64_m": [
+          0.1341873497410431,
+          -0.9909559804398321,
+          7.839465228329608e-08,
+          0.0
+        ],
+        "maximum_corner_equation_residual": 4.336808689942018e-19,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "lower_01_02_pre_float32_lbr",
+        "display_center_f64_m": [
+          -0.0030236813791979737,
+          -0.009804952002569112,
+          -0.0367748063298226
+        ],
+        "failed_call_index": 25,
+        "local_equation_f64_m": [
+          0.009400610349567112,
+          -0.999955813286295,
+          -9.336832593175165e-15,
+          0.0
+        ],
+        "maximum_corner_equation_residual": 2.710505431213761e-20,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          -8.153369444430242e-21,
+          -7.665003618269729e-23,
+          9.251858538542978e-18
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "lower_00_02_pre_float32_rbl",
+        "display_center_f64_m": [
+          -0.004521357361227231,
+          -0.009819031693041325,
+          -0.0371173471212387
+        ],
+        "failed_call_index": 26,
+        "local_equation_f64_m": [
+          0.008248162602475843,
+          0.9999659833282747,
+          1.2032150587015345e-15,
+          0.0
+        ],
+        "maximum_corner_equation_residual": 5.421010862427522e-20,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          6.823959479143678e-19,
+          -5.628704207449923e-21,
+          -1.3877787807814475e-18
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "lower_00_03_pre_float32_rbl",
+        "display_center_f64_m": [
+          -0.004521357361227265,
+          -0.009819031693041325,
+          -0.03711734712123871
+        ],
+        "failed_call_index": 27,
+        "local_equation_f64_m": [
+          0.008248162602475843,
+          0.9999659833282747,
+          1.2032150587015345e-15,
+          -1.734723475976807e-18
+        ],
+        "maximum_corner_equation_residual": 2.710505431213761e-20,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          -4.3007392937139214e-19,
+          1.7383299278758528e-18,
+          1.7347234759768075e-18
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "lower_00_04_post_float32_lbr",
+        "display_center_f64_m": [
+          -0.004521357361227218,
+          -0.009819031693041326,
+          -0.0371173471212387
+        ],
+        "failed_call_index": 28,
+        "local_equation_f64_m": [
+          0.18511107871405316,
+          -0.982717603651128,
+          3.391777478047631e-06,
+          -3.469446951953614e-18
+        ],
+        "maximum_corner_equation_residual": 8.673617379884035e-19,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          9.772893174157287e-19,
+          -3.3463732204794715e-18,
+          1.1549760867409249e-23
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "lower_02_04_post_float32_lbr",
+        "display_center_f64_m": [
+          -0.004521357361227096,
+          -0.009819031693041304,
+          -0.03711734712123867
+        ],
+        "failed_call_index": 29,
+        "local_equation_f64_m": [
+          0.18511107871405316,
+          -0.982717603651128,
+          3.391777478047631e-06,
+          -3.469446951953614e-18
+        ],
+        "maximum_corner_equation_residual": 8.673617379884035e-19,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          1.6013059761092742e-18,
+          -3.2288413590437803e-18,
+          -3.469438801480514e-18
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "lower_04_06_pre_float32_rbl",
+        "display_center_f64_m": [
+          -0.00452135736122728,
+          -0.00981903169304132,
+          -0.03711734712123871
+        ],
+        "failed_call_index": 30,
+        "local_equation_f64_m": [
+          -0.7556325089236682,
+          -0.6549958102596707,
+          -9.727999243318602e-16,
+          1.734723475976807e-18
+        ],
+        "maximum_corner_equation_residual": 1.734723475976807e-18,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          1.0031403453236731e-18,
+          1.491182088096269e-18,
+          1.7347234759768086e-18
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "upper_00_02_post_float32_rbl",
+        "display_center_f64_m": [
+          -0.003958327695727345,
+          -0.009954202920198439,
+          -0.0007497782353311789
+        ],
+        "failed_call_index": 31,
+        "local_equation_f64_m": [
+          -0.006014904042950353,
+          0.9999819102956526,
+          3.288090979321099e-06,
+          0.0
+        ],
+        "maximum_corner_equation_residual": 2.710505431213761e-20,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          -1.7389992960190594e-21,
+          -1.0757191231697245e-23,
+          9.035113167705364e-20
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "upper_00_03_post_float32_rbl",
+        "display_center_f64_m": [
+          -0.003958327695727349,
+          -0.009954202920198439,
+          -0.0007497782353311781
+        ],
+        "failed_call_index": 32,
+        "local_equation_f64_m": [
+          -0.006014904042950353,
+          0.9999819102956526,
+          3.288090979321099e-06,
+          0.0
+        ],
+        "maximum_corner_equation_residual": 1.3552527156068805e-20,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          -2.9258812138145194e-19,
+          -1.7599213169055184e-21,
+          1.8955570463187365e-24
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "upper_00_05_post_float32_rbl",
+        "display_center_f64_m": [
+          -0.003958327695727351,
+          -0.009954202920198439,
+          -0.000749778235331178
+        ],
+        "failed_call_index": 33,
+        "local_equation_f64_m": [
+          -0.006014904042950353,
+          0.9999819102956526,
+          3.288090979321099e-06,
+          0.0
+        ],
+        "maximum_corner_equation_residual": 0.0,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          1.7137927022985254e-19,
+          1.0308485093659727e-21,
+          1.1441959444462195e-24
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "upper_01_03_post_float32_rbl",
+        "display_center_f64_m": [
+          -0.003958327695727349,
+          -0.009954202920198439,
+          -0.000749778235331178
+        ],
+        "failed_call_index": 34,
+        "local_equation_f64_m": [
+          -0.1415862830685106,
+          0.9899259186660376,
+          -2.1223988266671286e-07,
+          0.0
+        ],
+        "maximum_corner_equation_residual": 0.0,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          -3.643709128878154e-19,
+          -5.211494103919799e-20,
+          -3.614018521752001e-20
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "upper_01_03_pre_float32_rbl",
+        "display_center_f64_m": [
+          -0.003958327695727349,
+          -0.009954202920198439,
+          -0.000749778235331178
+        ],
+        "failed_call_index": 35,
+        "local_equation_f64_m": [
+          -0.1415862830685106,
+          0.9899259186660376,
+          -2.1223988266671286e-07,
+          0.0
+        ],
+        "maximum_corner_equation_residual": 0.0,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          -3.643709128878154e-19,
+          -5.211494103919799e-20,
+          -3.614018521752001e-20
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "upper_01_04_post_float32_rbl",
+        "display_center_f64_m": [
+          -0.003958327695727349,
+          -0.009954202920198439,
+          -0.0007497782353311783
+        ],
+        "failed_call_index": 36,
+        "local_equation_f64_m": [
+          -0.1415862830685106,
+          0.9899259186660376,
+          -2.1223988266671286e-07,
+          0.0
+        ],
+        "maximum_corner_equation_residual": 4.336808689942018e-19,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          -6.071724652207625e-19,
+          -8.684215513658879e-20,
+          -3.614011578462975e-20
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "upper_01_05_post_float32_rbl",
+        "display_center_f64_m": [
+          -0.00395832769572735,
+          -0.009954202920198439,
+          -0.0007497782353311779
+        ],
+        "failed_call_index": 37,
+        "local_equation_f64_m": [
+          -0.1415862830685106,
+          0.9899259186660376,
+          -2.1223988266671286e-07,
+          0.0
+        ],
+        "maximum_corner_equation_residual": 4.336808689942018e-19,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          -2.186225470810782e-19,
+          -3.1268969179374584e-20,
+          -4.3368154580221124e-20
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "upper_01_05_pre_float32_rbl",
+        "display_center_f64_m": [
+          -0.00395832769572735,
+          -0.009954202920198439,
+          -0.0007497782353311779
+        ],
+        "failed_call_index": 38,
+        "local_equation_f64_m": [
+          -0.1415862830685106,
+          0.9899259186660376,
+          -2.1223988266671286e-07,
+          0.0
+        ],
+        "maximum_corner_equation_residual": 4.336808689942018e-19,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          -2.7327818466586156e-19,
+          -3.908620577939852e-20,
+          -2.710513891314001e-20
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "upper_02_04_post_float32_lbr",
+        "display_center_f64_m": [
+          -0.003958327695727363,
+          -0.009954202920198423,
+          -0.0007497782353311843
+        ],
+        "failed_call_index": 39,
+        "local_equation_f64_m": [
+          0.7071067811844468,
+          0.7071067811844468,
+          2.437582680210203e-06,
+          1.734723475976807e-18
+        ],
+        "maximum_corner_equation_residual": 3.469446951953614e-18,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          -1.4434751989875234e-18,
+          -1.0097943299933216e-18,
+          1.806655518197961e-20
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      },
+      {
+        "arbitrary_plane_drawn": false,
+        "call_id": "lower_00_01_pre_float32_rbl",
+        "display_center_f64_m": [
+          0.003342741351207977,
+          -0.009883898264488279,
+          -0.037001644294417546
+        ],
+        "failed_call_index": 40,
+        "local_equation_f64_m": [
+          0.008248162602475843,
+          0.9999659833282747,
+          1.2032150587015345e-15,
+          -1.734723475976807e-18
+        ],
+        "maximum_corner_equation_residual": 2.710505431213761e-20,
+        "pass": true,
+        "plane_present": true,
+        "projected_center_local_m": [
+          3.1799966267926065e-21,
+          1.7347562574816916e-18,
+          -3.08395284618099e-18
+        ],
+        "residual_gate": 1e-12,
+        "world_equation_present": true
+      }
+    ],
+    "collapse_plane_display_contract_pass": true,
+    "default_last_representative_call_id": "lower_00_01_pre_float32_rbl",
+    "failed_call_index_data_contract": {
+      "command": [
+        "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+        "rrd",
+        "print",
+        "-vvv",
+        "--entity",
+        "/metrics/d390/affine_rank",
+        "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d390/attempt1_d389_directional_epsilon0_boundary_collapse_semantics_localization/d390_boundary_collapse_localization.rrd"
+      ],
+      "entity": "/metrics/d390/affine_rank",
+      "exact_0_through_40": false,
+      "failed_call_index_values": [],
+      "parse_error": "ValueError: invalid literal for int() with base 10: '2026-07-26T10:01:36.166673594'",
+      "pass": false,
+      "returncode": 0,
+      "row_count": 41,
+      "stderr": "2026-07-26T10:01:38.116714Z ERROR re_analytics: Failed to initialize analytics: Read-only file system (os error 30)\n",
+      "stdout_sha256": "3fedfb06bec68cf13c7282566fbff43b920fcea157b10246bdc800d13ae555d6"
+    },
+    "headless_viewer_invocations": 1,
+    "presentation_order_call_ids": [
+      "lower_01_02_pre_float32_rbl",
+      "lower_03_04_pre_float32_lbr",
+      "lower_03_04_pre_float32_rbl",
+      "lower_04_05_pre_float32_lbr",
+      "lower_04_05_pre_float32_rbl",
+      "lower_05_06_pre_float32_rbl",
+      "upper_00_01_pre_float32_rbl",
+      "upper_02_03_pre_float32_rbl",
+      "upper_03_04_pre_float32_rbl",
+      "upper_04_05_pre_float32_lbr",
+      "upper_04_05_pre_float32_rbl",
+      "lower_00_03_post_float32_lbr",
+      "lower_00_03_pre_float32_lbr",
+      "lower_00_04_pre_float32_rbl",
+      "lower_00_05_pre_float32_rbl",
+      "lower_00_06_pre_float32_rbl",
+      "lower_01_04_post_float32_lbr",
+      "upper_00_03_post_float32_lbr",
+      "upper_00_04_post_float32_lbr",
+      "upper_00_04_post_float32_rbl",
+      "upper_01_03_post_float32_lbr",
+      "upper_01_04_post_float32_lbr",
+      "upper_01_04_pre_float32_rbl",
+      "lower_01_03_post_float32_lbr",
+      "lower_01_03_pre_float32_lbr",
+      "lower_01_02_pre_float32_lbr",
+      "lower_00_02_pre_float32_rbl",
+      "lower_00_03_pre_float32_rbl",
+      "lower_00_04_post_float32_lbr",
+      "lower_02_04_post_float32_lbr",
+      "lower_04_06_pre_float32_rbl",
+      "upper_00_02_post_float32_rbl",
+      "upper_00_03_post_float32_rbl",
+      "upper_00_05_post_float32_rbl",
+      "upper_01_03_post_float32_rbl",
+      "upper_01_03_pre_float32_rbl",
+      "upper_01_04_post_float32_rbl",
+      "upper_01_05_post_float32_rbl",
+      "upper_01_05_pre_float32_rbl",
+      "upper_02_04_post_float32_lbr",
+      "lower_00_01_pre_float32_rbl"
+    ],
+    "process_signals_sent": 0,
+    "subprocess_timeout_seconds": null,
+    "viewer_maximum": 1,
+    "viewer_retry": 0
+  },
+  "entity_path_contract": {
+    "checks": {
+      "/d390/geometry/clipping_edges": true,
+      "/d390/geometry/clipping_vertices": true,
+      "/d390/geometry/collapse_plane_normal": true,
+      "/d390/geometry/collapse_plane_outline": true,
+      "/d390/geometry/source_edges": true,
+      "/d390/geometry/source_vertices": true,
+      "/d390/geometry/terminal_points": true,
+      "/events/d390/nonclaims": true,
+      "/events/d390/selected_call": true,
+      "/metadata/run": true,
+      "/metrics/d390/affine_rank": true,
+      "/metrics/d390/sigma1_over_sigma0": true,
+      "/metrics/d390/sigma2_over_sigma0": true,
+      "/metrics/d390/unique_point_count": true
+    },
+    "exact_non_system_match": true,
+    "forbidden_fragment_absent": {
+      "/\\/": true
+    },
+    "missing_exact": [],
+    "observed_all": [
+      "/__properties",
+      "/blueprint_panel",
+      "/container/217958f9-79ef-4576-80e0-b12477d3f07e",
+      "/container/a6bc72cd-9faf-4a76-9a43-f667bbae583a",
+      "/container/e0c18007-376c-4b6d-80fd-15b8682f7179",
+      "/d390/geometry/clipping_edges",
+      "/d390/geometry/clipping_vertices",
+      "/d390/geometry/collapse_plane_normal",
+      "/d390/geometry/collapse_plane_outline",
+      "/d390/geometry/source_edges",
+      "/d390/geometry/source_vertices",
+      "/d390/geometry/terminal_points",
+      "/events/d390/nonclaims",
+      "/events/d390/selected_call",
+      "/metadata/run",
+      "/metrics/d390/affine_rank",
+      "/metrics/d390/sigma1_over_sigma0",
+      "/metrics/d390/sigma2_over_sigma0",
+      "/metrics/d390/unique_point_count",
+      "/selection_panel",
+      "/time_panel",
+      "/view/325ee884-d82d-4c16-9c18-0523ed34312d",
+      "/view/325ee884-d82d-4c16-9c18-0523ed34312d/SpatialInformation",
+      "/view/325ee884-d82d-4c16-9c18-0523ed34312d/ViewContents",
+      "/view/3b96864f-eec9-45f1-b587-dcbe6805f75e",
+      "/view/3b96864f-eec9-45f1-b587-dcbe6805f75e/ViewContents",
+      "/view/9eb576b3-8a20-4712-9a66-901685ada377",
+      "/view/9eb576b3-8a20-4712-9a66-901685ada377/ViewContents",
+      "/view/b9426329-48e2-4434-abe3-f6cd9da12ca6",
+      "/view/b9426329-48e2-4434-abe3-f6cd9da12ca6/EyeControls3D",
+      "/view/b9426329-48e2-4434-abe3-f6cd9da12ca6/SpatialInformation",
+      "/view/b9426329-48e2-4434-abe3-f6cd9da12ca6/ViewContents",
+      "/viewport"
+    ],
+    "observed_non_system": [
+      "/d390/geometry/clipping_edges",
+      "/d390/geometry/clipping_vertices",
+      "/d390/geometry/collapse_plane_normal",
+      "/d390/geometry/collapse_plane_outline",
+      "/d390/geometry/source_edges",
+      "/d390/geometry/source_vertices",
+      "/d390/geometry/terminal_points",
+      "/events/d390/nonclaims",
+      "/events/d390/selected_call",
+      "/metadata/run",
+      "/metrics/d390/affine_rank",
+      "/metrics/d390/sigma1_over_sigma0",
+      "/metrics/d390/sigma2_over_sigma0",
+      "/metrics/d390/unique_point_count"
+    ],
+    "pass": true,
+    "unexpected_non_system": []
+  },
+  "errors": [],
+  "exact_entity_paths": [
+    "/d390/geometry/clipping_edges",
+    "/d390/geometry/clipping_vertices",
+    "/d390/geometry/collapse_plane_normal",
+    "/d390/geometry/collapse_plane_outline",
+    "/d390/geometry/source_edges",
+    "/d390/geometry/source_vertices",
+    "/d390/geometry/terminal_points",
+    "/events/d390/nonclaims",
+    "/events/d390/selected_call",
+    "/metadata/run",
+    "/metrics/d390/affine_rank",
+    "/metrics/d390/sigma1_over_sigma0",
+    "/metrics/d390/sigma2_over_sigma0",
+    "/metrics/d390/unique_point_count"
+  ],
+  "exact_timeline_names": [
+    "blueprint",
+    "failed_call_index",
+    "log_time"
+  ],
+  "expected_entity_components": {
+    "/d390/geometry/clipping_edges": [
+      "Arrows3D:colors",
+      "Arrows3D:origins",
+      "Arrows3D:radii",
+      "Arrows3D:vectors",
+      "CoordinateFrame:frame"
+    ],
+    "/d390/geometry/clipping_vertices": [
+      "CoordinateFrame:frame",
+      "Points3D:colors",
+      "Points3D:positions",
+      "Points3D:radii"
+    ],
+    "/d390/geometry/collapse_plane_normal": [
+      "Arrows3D:colors",
+      "Arrows3D:origins",
+      "Arrows3D:radii",
+      "Arrows3D:vectors",
+      "CoordinateFrame:frame"
+    ],
+    "/d390/geometry/collapse_plane_outline": [
+      "Arrows3D:colors",
+      "Arrows3D:origins",
+      "Arrows3D:radii",
+      "Arrows3D:vectors",
+      "CoordinateFrame:frame"
+    ],
+    "/d390/geometry/source_edges": [
+      "Arrows3D:colors",
+      "Arrows3D:origins",
+      "Arrows3D:radii",
+      "Arrows3D:vectors",
+      "CoordinateFrame:frame"
+    ],
+    "/d390/geometry/source_vertices": [
+      "CoordinateFrame:frame",
+      "Points3D:colors",
+      "Points3D:positions",
+      "Points3D:radii"
+    ],
+    "/d390/geometry/terminal_points": [
+      "CoordinateFrame:frame",
+      "Points3D:colors",
+      "Points3D:positions",
+      "Points3D:radii"
+    ],
+    "/events/d390/nonclaims": [
+      "TextLog:level",
+      "TextLog:text"
+    ],
+    "/events/d390/selected_call": [
+      "TextLog:level",
+      "TextLog:text"
+    ],
+    "/metadata/run": [
+      "TextDocument:text"
+    ],
+    "/metrics/d390/affine_rank": [
+      "Scalars:scalars"
+    ],
+    "/metrics/d390/sigma1_over_sigma0": [
+      "Scalars:scalars"
+    ],
+    "/metrics/d390/sigma2_over_sigma0": [
+      "Scalars:scalars"
+    ],
+    "/metrics/d390/unique_point_count": [
+      "Scalars:scalars"
+    ]
+  },
+  "expected_entity_paths": [
+    "/d390/geometry/clipping_edges",
+    "/d390/geometry/clipping_vertices",
+    "/d390/geometry/collapse_plane_normal",
+    "/d390/geometry/collapse_plane_outline",
+    "/d390/geometry/source_edges",
+    "/d390/geometry/source_vertices",
+    "/d390/geometry/terminal_points",
+    "/events/d390/nonclaims",
+    "/events/d390/selected_call",
+    "/metadata/run",
+    "/metrics/d390/affine_rank",
+    "/metrics/d390/sigma1_over_sigma0",
+    "/metrics/d390/sigma2_over_sigma0",
+    "/metrics/d390/unique_point_count"
+  ],
+  "expected_rerun_version": "0.34.1",
+  "expected_timeline_names": [
+    "blueprint",
+    "failed_call_index",
+    "log_time"
+  ],
+  "external_rbl_role": "verified fixed-layout export; the 0.34.1 CLI does not guarantee that an external RBL overrides an already-active embedded blueprint",
+  "footer_manifest_present": true,
+  "forbidden_entity_fragments": [
+    "/\\/"
+  ],
+  "headless_render": {
+    "attempted": true,
+    "bytes": 6898203,
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "--headless",
+      "--port",
+      "auto",
+      "--window-size",
+      "1920x1080",
+      "--screenshot-to",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d390/attempt1_d389_directional_epsilon0_boundary_collapse_semantics_localization/d390_rerun_inspection.png",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d390/attempt1_d389_directional_epsilon0_boundary_collapse_semantics_localization/d390_boundary_collapse_localization.rrd"
+    ],
+    "file_nonzero": true,
+    "ok": true,
+    "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d390/attempt1_d389_directional_epsilon0_boundary_collapse_semantics_localization/d390_rerun_inspection.png",
+    "returncode": 0,
+    "sha256": "9d567472c52490a0630f6cbd31159662c5cd4f80ca42251d304d5e97a6514ad6",
+    "stderr": "2026-07-26T10:01:36.678632Z ERROR re_analytics: Failed to initialize analytics: Read-only file system (os error 30)\n2026-07-26T10:01:36.680694Z  INFO re_perf_telemetry::telemetry: Telemetry initialized enabled=false service=rerun trace_mode=\"off\" traces=off logs=off metrics=off tracy=false\n2026-07-26T10:01:36.762732Z  WARN egui_wgpu: Software rasterizer detected - loss of performance expected. backend: Vulkan, device_type: Cpu, name: \"llvmpipe (LLVM 15.0.7, 256 bits)\", driver: \"llvmpipe\", driver_info: \"Mesa 23.2.1-1ubuntu3.1~22.04.4 (LLVM 15.0.7)\", vendor: Mesa (0x10005), subgroup_size: 8..=8, transient_saves_memory: false\n2026-07-26T10:01:36.765467Z  WARN re_renderer::context: Software rasterizer detected - expect poor performance. See: https://www.rerun.io/docs/overview/installing-rerun/troubleshooting#graphics-issues\n2026-07-26T10:01:36.765475Z  INFO re_renderer::context: wgpu adapter backend: Vulkan, device_type: Cpu, name: \"llvmpipe (LLVM 15.0.7, 256 bits)\", driver: \"llvmpipe\", driver_info: \"Mesa 23.2.1-1ubuntu3.1~22.04.4 (LLVM 15.0.7)\"\n2026-07-26T10:01:36.867209Z ERROR re_grpc_server: message proxy server crashed: Operation not permitted (os error 1)\n2026-07-26T10:01:36.867507Z  INFO re_importer::import_file: Loading \"/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d390/attempt1_d389_directional_epsilon0_boundary_collapse_semantics_localization/d390_boundary_collapse_localization.rrd\"…\n2026-07-26T10:01:37.115341Z  INFO re_viewer::headless: Headless viewer running at 1920x1080.\n2026-07-26T10:01:38.053269Z  INFO re_viewer::screenshotter: Screenshot saved to \"/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d390/attempt1_d389_directional_epsilon0_boundary_collapse_semantics_localization/d390_rerun_inspection.png\"\n2026-07-26T10:01:38.062537Z  INFO re_viewer::screenshotter: Screenshot copied to clipboard\n2026-07-26T10:01:38.064750Z  INFO re_viewer::headless: Headless viewer received close request, shutting down.\n",
+    "stdout": "",
+    "timeout_parameter_ignored_no_signal_authority": true
+  },
+  "human_visual_inspection_required": true,
+  "pass": false,
+  "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d390/attempt1_d389_directional_epsilon0_boundary_collapse_semantics_localization/d390_boundary_collapse_localization.rrd",
+  "print_verbose": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "print",
+      "-v",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d390/attempt1_d389_directional_epsilon0_boundary_collapse_semantics_localization/d390_boundary_collapse_localization.rrd"
+    ],
+    "ok": true,
+    "returncode": 0,
+    "stderr": "2026-07-26T10:01:36.606492Z ERROR re_analytics: Failed to initialize analytics: Read-only file system (os error 30)\n",
+    "stdout": "Showing data after migration to latest Rerun version\nStoreInfo {\n    store_id: StoreId(\n        Recording,\n        \"roarm_g0a_d390_boundary_collapse_localization\",\n        \"g0a_d390_boundary_collapse_localization\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nStoreInfo {\n    store_id: StoreId(\n        Recording,\n        \"roarm_g0a_d390_boundary_collapse_localization\",\n        \"g0a_d390_boundary_collapse_localization\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nChunk(chunk_18C5CEB32564379C3622f9d457a3ece6) with 1 rows (632 B) - /__properties - data columns: [/__properties@RecordingInfo:start_time]\nStoreInfo {\n    store_id: StoreId(\n        Blueprint,\n        \"roarm_g0a_d390_boundary_collapse_localization\",\n        \"rec_472627e0cd7c4f949bae1fdb2b5fe070\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nStoreInfo {\n    store_id: StoreId(\n        Blueprint,\n        \"roarm_g0a_d390_boundary_collapse_localization\",\n        \"rec_472627e0cd7c4f949bae1fdb2b5fe070\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nChunk(chunk_18C5CEB3257EF67E2c1704457da4e6d6) with 1 rows (925 B) - /view/3b96864f-eec9-45f1-b587-dcbe6805f75e/ViewContents - data columns: [/view/3b96864f-eec9-45f1-b587-dcbe6805f75e/ViewContents@ViewContents:query]\nChunk(chunk_18C5CEB3257F4E502c1704457da4e6d7) with 1 rows (1.2 KiB) - /view/b9426329-48e2-4434-abe3-f6cd9da12ca6 - data columns: [/view/b9426329-48e2-4434-abe3-f6cd9da12ca6@ViewBlueprint:class_identifier /view/b9426329-48e2-4434-abe3-f6cd9da12ca6@ViewBlueprint:display_name /view/b9426329-48e2-4434-abe3-f6cd9da12ca6@ViewBlueprint:space_origin]\nChunk(chunk_18C5CEB3257F5E092c1704457da4e6d8) with 1 rows (1.2 KiB) - /view/9eb576b3-8a20-4712-9a66-901685ada377 - data columns: [/view/9eb576b3-8a20-4712-9a66-901685ada377@ViewBlueprint:class_identifier /view/9eb576b3-8a20-4712-9a66-901685ada377@ViewBlueprint:display_name /view/9eb576b3-8a20-4712-9a66-901685ada377@ViewBlueprint:space_origin]\nChunk(chunk_18C5CEB3257F7DB72c1704457da4e6d9) with 1 rows (1.4 KiB) - /view/b9426329-48e2-4434-abe3-f6cd9da12ca6/EyeControls3D - data columns: [/view/b9426329-48e2-4434-abe3-f6cd9da12ca6/EyeControls3D@EyeControls3D:eye_up /view/b9426329-48e2-4434-abe3-f6cd9da12ca6/EyeControls3D@EyeControls3D:kind /view/b9426329-48e2-4434-abe3-f6cd9da12ca6/EyeControls3D@EyeControls3D:look_target /view/b9426329-48e2-4434-abe3-f6cd9da12ca6/EyeControls3D@EyeControls3D:position]\nChunk(chunk_18C5CEB3257F9A782c1704457da4e6da) with 1 rows (1.2 KiB) - /viewport - data columns: [/viewport@ViewportBlueprint:auto_layout /viewport@ViewportBlueprint:auto_views /viewport@ViewportBlueprint:root_container]\nChunk(chunk_18C5CEB3257FA8A02c1704457da4e6db) with 1 rows (938 B) - /view/325ee884-d82d-4c16-9c18-0523ed34312d/ViewContents - data columns: [/view/325ee884-d82d-4c16-9c18-0523ed34312d/ViewContents@ViewContents:query]\nChunk(chunk_18C5CEB3257FC2F12c1704457da4e6dc) with 1 rows (926 B) - /view/9eb576b3-8a20-4712-9a66-901685ada377/ViewContents - data columns: [/view/9eb576b3-8a20-4712-9a66-901685ada377/ViewContents@ViewContents:query]\nChunk(chunk_18C5CEB3257FCC5E2c1704457da4e6dd) with 1 rows (1.2 KiB) - /container/a6bc72cd-9faf-4a76-9a43-f667bbae583a - data columns: [/container/a6bc72cd-9faf-4a76-9a43-f667bbae583a@ContainerBlueprint:col_shares /container/a6bc72cd-9faf-4a76-9a43-f667bbae583a@ContainerBlueprint:container_kind /container/a6bc72cd-9faf-4a76-9a43-f667bbae583a@ContainerBlueprint:contents]\nChunk(chunk_18C5CEB3257FDFD12c1704457da4e6de) with 1 rows (883 B) - /blueprint_panel - data columns: [/blueprint_panel@PanelBlueprint:state]\nChunk(chunk_18C5CEB3257FE89A2c1704457da4e6df) with 1 rows (1.2 KiB) - /container/217958f9-79ef-4576-80e0-b12477d3f07e - data columns: [/container/217958f9-79ef-4576-80e0-b12477d3f07e@ContainerBlueprint:container_kind /container/217958f9-79ef-4576-80e0-b12477d3f07e@ContainerBlueprint:contents /container/217958f9-79ef-4576-80e0-b12477d3f07e@ContainerBlueprint:row_shares]\nChunk(chunk_18C5CEB3257FFA8F2c1704457da4e6e0) with 1 rows (1.2 KiB) - /view/325ee884-d82d-4c16-9c18-0523ed34312d/SpatialInformation - data columns: [/view/325ee884-d82d-4c16-9c18-0523ed34312d/SpatialInformation@SpatialInformation:show_axes /view/325ee884-d82d-4c16-9c18-0523ed34312d/SpatialInformation@SpatialInformation:show_bounding_box /view/325ee884-d82d-4c16-9c18-0523ed34312d/SpatialInformation@SpatialInformation:target_frame]\nChunk(chunk_18C5CEB3258005EB2c1704457da4e6e1) with 1 rows (926 B) - /view/b9426329-48e2-4434-abe3-f6cd9da12ca6/ViewContents - data columns: [/view/b9426329-48e2-4434-abe3-f6cd9da12ca6/ViewContents@ViewContents:query]\nChunk(chunk_18C5CEB325800DF52c1704457da4e6e2) with 1 rows (1.2 KiB) - /view/b9426329-48e2-4434-abe3-f6cd9da12ca6/SpatialInformation - data columns: [/view/b9426329-48e2-4434-abe3-f6cd9da12ca6/SpatialInformation@SpatialInformation:show_axes /view/b9426329-48e2-4434-abe3-f6cd9da12ca6/SpatialInformation@SpatialInformation:show_bounding_box /view/b9426329-48e2-4434-abe3-f6cd9da12ca6/SpatialInformation@SpatialInformation:target_frame]\nChunk(chunk_18C5CEB3258025782c1704457da4e6e3) with 1 rows (1.2 KiB) - /view/325ee884-d82d-4c16-9c18-0523ed34312d - data columns: [/view/325ee884-d82d-4c16-9c18-0523ed34312d@ViewBlueprint:class_identifier /view/325ee884-d82d-4c16-9c18-0523ed34312d@ViewBlueprint:display_name /view/325ee884-d82d-4c16-9c18-0523ed34312d@ViewBlueprint:space_origin]\nChunk(chunk_18C5CEB32580404E2c1704457da4e6e4) with 1 rows (883 B) - /selection_panel - data columns: [/selection_panel@PanelBlueprint:state]\nChunk(chunk_18C5CEB3258047C62c1704457da4e6e5) with 1 rows (1.2 KiB) - /view/3b96864f-eec9-45f1-b587-dcbe6805f75e - data columns: [/view/3b96864f-eec9-45f1-b587-dcbe6805f75e@ViewBlueprint:class_identifier /view/3b96864f-eec9-45f1-b587-dcbe6805f75e@ViewBlueprint:display_name /view/3b96864f-eec9-45f1-b587-dcbe6805f75e@ViewBlueprint:space_origin]\nChunk(chunk_18C5CEB3258053762c1704457da4e6e6) with 1 rows (1.2 KiB) - /container/e0c18007-376c-4b6d-80fd-15b8682f7179 - data columns: [/container/e0c18007-376c-4b6d-80fd-15b8682f7179@ContainerBlueprint:col_shares /container/e0c18007-376c-4b6d-80fd-15b8682f7179@ContainerBlueprint:container_kind /container/e0c18007-376c-4b6d-80fd-15b8682f7179@ContainerBlueprint:contents]\nChunk(chunk_18C5CEB325806BFD2c1704457da4e6e7) with 1 rows (631 B) - /time_panel - data columns: [/time_panel@TimePanelBlueprint:play_state]\nChunk(chunk_18C5CEB325807B932c1704457da4e6e8) with 1 rows (1.2 KiB) - /time_panel - data columns: [/time_panel@TimePanelBlueprint:state /time_panel@TimePanelBlueprint:time_selection /time_panel@TimePanelBlueprint:timeline]\nBlueprintActivationCommand(StoreId(Blueprint, \"roarm_g0a_d390_boundary_collapse_localization\", \"rec_472627e0cd7c4f949bae1fdb2b5fe070\"), make_active: true, make_default: true)\nChunk(chunk_18C5CEB326FA7B041f06e079b77ba183) with 41 rows (39.8 KiB) - /d390/geometry/clipping_edges - data columns: [/d390/geometry/clipping_edges@Arrows3D:colors /d390/geometry/clipping_edges@Arrows3D:origins /d390/geometry/clipping_edges@Arrows3D:radii /d390/geometry/clipping_edges@Arrows3D:vectors /d390/geometry/clipping_edges@CoordinateFrame:frame]\nChunk(chunk_18C5CEB32703ABAF1f06e079b77ba184) with 41 rows (11.8 KiB) - /d390/geometry/source_vertices - data columns: [/d390/geometry/source_vertices@CoordinateFrame:frame /d390/geometry/source_vertices@Points3D:colors /d390/geometry/source_vertices@Points3D:positions /d390/geometry/source_vertices@Points3D:radii]\nChunk(chunk_18C5CEB327095B8E1f06e079b77ba185) with 41 rows (5.4 KiB) - /d390/geometry/terminal_points - data columns: [/d390/geometry/terminal_points@CoordinateFrame:frame /d390/geometry/terminal_points@Points3D:colors /d390/geometry/terminal_points@Points3D:positions /d390/geometry/terminal_points@Points3D:radii]\nChunk(chunk_18C5CEB3270D3BDE1f06e079b77ba186) with 41 rows (3.3 KiB) - /d390/geometry/collapse_plane_normal - data columns: [/d390/geometry/collapse_plane_normal@Arrows3D:colors /d390/geometry/collapse_plane_normal@Arrows3D:origins /d390/geometry/collapse_plane_normal@Arrows3D:radii /d390/geometry/collapse_plane_normal@Arrows3D:vectors /d390/geometry/collapse_plane_normal@CoordinateFrame:frame]\nChunk(chunk_18C5CEB3271122D11f06e079b77ba187) with 41 rows (1.7 KiB) - /metrics/d390/affine_rank - data columns: [/metrics/d390/affine_rank@Scalars:scalars]\nChunk(chunk_18C5CEB3271204621f06e079b77ba188) with 41 rows (1.7 KiB) - /metrics/d390/sigma2_over_sigma0 - data columns: [/metrics/d390/sigma2_over_sigma0@Scalars:scalars]\nChunk(chunk_18C5CEB32712C2F61f06e079b77ba189) with 41 rows (5.2 KiB) - /events/d390/nonclaims - data columns: [/events/d390/nonclaims@TextLog:level /events/d390/nonclaims@TextLog:text]\nChunk(chunk_18C5CEB32713A9E81f06e079b77ba18a) with 41 rows (1.7 KiB) - /metrics/d390/unique_point_count - data columns: [/metrics/d390/unique_point_count@Scalars:scalars]\nChunk(chunk_18C5CEB32714709E1f06e079b77ba18b) with 41 rows (1.7 KiB) - /metrics/d390/sigma1_over_sigma0 - data columns: [/metrics/d390/sigma1_over_sigma0@Scalars:scalars]\nChunk(chunk_18C5CEB327155F221f06e079b77ba18c) with 41 rows (12.1 KiB) - /d390/geometry/clipping_vertices - data columns: [/d390/geometry/clipping_vertices@CoordinateFrame:frame /d390/geometry/clipping_vertices@Points3D:colors /d390/geometry/clipping_vertices@Points3D:positions /d390/geometry/clipping_vertices@Points3D:radii]\nChunk(chunk_18C5CEB3271864481f06e079b77ba18d) with 41 rows (9.2 KiB) - /events/d390/selected_call - data columns: [/events/d390/selected_call@TextLog:level /events/d390/selected_call@TextLog:text]\nChunk(chunk_18C5CEB327192E701f06e079b77ba18e) with 41 rows (38.6 KiB) - /d390/geometry/source_edges - data columns: [/d390/geometry/source_edges@Arrows3D:colors /d390/geometry/source_edges@Arrows3D:origins /d390/geometry/source_edges@Arrows3D:radii /d390/geometry/source_edges@Arrows3D:vectors /d390/geometry/source_edges@CoordinateFrame:frame]\nChunk(chunk_18C5CEB3271D7ECF1f06e079b77ba18f) with 41 rows (5.0 KiB) - /d390/geometry/collapse_plane_outline - data columns: [/d390/geometry/collapse_plane_outline@Arrows3D:colors /d390/geometry/collapse_plane_outline@Arrows3D:origins /d390/geometry/collapse_plane_outline@Arrows3D:radii /d390/geometry/collapse_plane_outline@Arrows3D:vectors /d390/geometry/collapse_plane_outline@CoordinateFrame:frame]\nChunk(chunk_18C5CEB32721644D1f06e079b77ba190) with 1 rows (1.9 KiB) - /metadata/run - data columns: [/metadata/run@TextDocument:text]\n",
+    "timeout_parameter_ignored_no_signal_authority": true
+  },
+  "rendered_blueprint_source": "active blueprint embedded in the RRD",
+  "screenshot_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d390/attempt1_d389_directional_epsilon0_boundary_collapse_semantics_localization/d390_rerun_inspection.png",
+  "screenshot_port": "auto",
+  "screenshot_window_size": "1920x1080",
+  "sha256": "d6a078db496c92484d7234134832a1b272a7797063ec50ac72e6d5715000bdea",
+  "stats": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "stats",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d390/attempt1_d389_directional_epsilon0_boundary_collapse_semantics_localization/d390_boundary_collapse_localization.rrd"
+    ],
+    "ok": true,
+    "returncode": 0,
+    "stderr": "2026-07-26T10:01:36.555735Z ERROR re_analytics: Failed to initialize analytics: Read-only file system (os error 30)\n2026-07-26T10:01:36.559671Z  INFO rerun::commands::rrd::stats: processing input…\n2026-07-26T10:01:36.563749Z  INFO rerun::commands::rrd::stats: computing stats…\n",
+    "stdout": "Overview\n----------\nnum_chunks = 34\nnum_entity_paths = 33\nnum_chunks_without_components = 0 (0.000%)\nnum_rows = 554\nnum_rows_min = 1\nnum_rows_max = 41\nnum_rows_avg = 16.294\nnum_static = 3\nnum_indexes_min = 0\nnum_indexes_max = 2\nnum_indexes_avg = 1.824\nnum_components_min = 1\nnum_components_max = 5\nnum_components_avg = 2.529\n\nNum chunks per entity\n---------------------\n/__properties: 1\n/blueprint_panel: 1\n/container/217958f9-79ef-4576-80e0-b12477d3f07e: 1\n/container/a6bc72cd-9faf-4a76-9a43-f667bbae583a: 1\n/container/e0c18007-376c-4b6d-80fd-15b8682f7179: 1\n/d390/geometry/clipping_edges: 1\n/d390/geometry/clipping_vertices: 1\n/d390/geometry/collapse_plane_normal: 1\n/d390/geometry/collapse_plane_outline: 1\n/d390/geometry/source_edges: 1\n/d390/geometry/source_vertices: 1\n/d390/geometry/terminal_points: 1\n/events/d390/nonclaims: 1\n/events/d390/selected_call: 1\n/metadata/run: 1\n/metrics/d390/affine_rank: 1\n/metrics/d390/sigma1_over_sigma0: 1\n/metrics/d390/sigma2_over_sigma0: 1\n/metrics/d390/unique_point_count: 1\n/selection_panel: 1\n/time_panel: 2\n/view/325ee884-d82d-4c16-9c18-0523ed34312d: 1\n/view/325ee884-d82d-4c16-9c18-0523ed34312d/SpatialInformation: 1\n/view/325ee884-d82d-4c16-9c18-0523ed34312d/ViewContents: 1\n/view/3b96864f-eec9-45f1-b587-dcbe6805f75e: 1\n/view/3b96864f-eec9-45f1-b587-dcbe6805f75e/ViewContents: 1\n/view/9eb576b3-8a20-4712-9a66-901685ada377: 1\n/view/9eb576b3-8a20-4712-9a66-901685ada377/ViewContents: 1\n/view/b9426329-48e2-4434-abe3-f6cd9da12ca6: 1\n/view/b9426329-48e2-4434-abe3-f6cd9da12ca6/EyeControls3D: 1\n/view/b9426329-48e2-4434-abe3-f6cd9da12ca6/SpatialInformation: 1\n/view/b9426329-48e2-4434-abe3-f6cd9da12ca6/ViewContents: 1\n/viewport: 1\n\nNum chunks per index\n--------------------\nblueprint: 18\nfailed_call_index: 13\nlog_time: 31\n\nNum chunks per component\n------------------------\nArrows3D:colors: 4\nArrows3D:origins: 4\nArrows3D:radii: 4\nArrows3D:vectors: 4\nContainerBlueprint:col_shares: 2\nContainerBlueprint:container_kind: 3\nContainerBlueprint:contents: 3\nContainerBlueprint:row_shares: 1\nCoordinateFrame:frame: 7\nEyeControls3D:eye_up: 1\nEyeControls3D:kind: 1\nEyeControls3D:look_target: 1\nEyeControls3D:position: 1\nPanelBlueprint:state: 2\nPoints3D:colors: 3\nPoints3D:positions: 3\nPoints3D:radii: 3\nRecordingInfo:start_time: 1\nScalars:scalars: 4\nSpatialInformation:show_axes: 2\nSpatialInformation:show_bounding_box: 2\nSpatialInformation:target_frame: 2\nTextDocument:text: 1\nTextLog:level: 2\nTextLog:text: 2\nTimePanelBlueprint:play_state: 1\nTimePanelBlueprint:state: 1\nTimePanelBlueprint:time_selection: 1\nTimePanelBlueprint:timeline: 1\nViewBlueprint:class_identifier: 4\nViewBlueprint:display_name: 4\nViewBlueprint:space_origin: 4\nViewContents:query: 4\nViewportBlueprint:auto_layout: 1\nViewportBlueprint:auto_views: 1\nViewportBlueprint:root_container: 1\n\nSize (schema + data, compressed)\n--------------------------------\nipc_size_bytes_total = 127 KiB\nipc_size_bytes_min = 901 B\nipc_size_bytes_max = 23.5 KiB\nipc_size_bytes_avg = 3.7 KiB\nipc_size_bytes_p50 = 1.6 KiB\nipc_size_bytes_p90 = 9.4 KiB\nipc_size_bytes_p95 = 23.1 KiB\nipc_size_bytes_p99 = 23.5 KiB\nipc_size_bytes_p999 = 23.5 KiB\n\nSize (schema + data, uncompressed)\n----------------------------------\nipc_size_bytes_total = 374 KiB\nipc_size_bytes_min = 1.7 KiB\nipc_size_bytes_max = 84.9 KiB\nipc_size_bytes_avg = 11.0 KiB\nipc_size_bytes_p50 = 4.1 KiB\nipc_size_bytes_p90 = 25.8 KiB\nipc_size_bytes_p95 = 82.4 KiB\nipc_size_bytes_p99 = 84.9 KiB\nipc_size_bytes_p999 = 84.9 KiB\n\nSize (schema only, uncompressed)\n--------------------------------\nipc_size_bytes_total = 68.8 KiB\nipc_size_bytes_min = 1016 B\nipc_size_bytes_max = 3.0 KiB\nipc_size_bytes_avg = 2.0 KiB\nipc_size_bytes_p50 = 2.2 KiB\nipc_size_bytes_p90 = 2.9 KiB\nipc_size_bytes_p95 = 3.0 KiB\nipc_size_bytes_p99 = 3.0 KiB\nipc_size_bytes_p999 = 3.0 KiB\n\nSize (data only, uncompressed)\n------------------------------\nipc_size_bytes_total = 306 KiB\nipc_size_bytes_min = 656 B\nipc_size_bytes_max = 81.9 KiB\nipc_size_bytes_avg = 9.0 KiB\nipc_size_bytes_p50 = 1.9 KiB\nipc_size_bytes_p90 = 23.3 KiB\nipc_size_bytes_p95 = 79.5 KiB\nipc_size_bytes_p99 = 81.9 KiB\nipc_size_bytes_p999 = 81.9 KiB\n\nUnsorted timelines\n------------------\n(none — every timeline on every chunk is sorted)\n\nFooters\n-------\nnum_manifests = 2 (one per recording)\n\nFooter manifest for StoreId(Recording, \"roarm_g0a_d390_boundary_collapse_localization\", \"g0a_d390_boundary_collapse_localization\")\n  num_chunks_indexed = 15\n  num_static_chunks = 2\n  num_entity_paths = 15\n  manifest_num_columns = 90\n  sorbet_schema_num_fields = 45\n  sorbet_schema_sha256 = df4da71c66c52d3a2e47f03b605bded4042b6932868f604c7cdb11e27dbb080d\n  chunk_byte_size_total (native) = 101.8 KiB\n  chunk_byte_size_uncompressed_total = 307 KiB\n\nFooter manifest for StoreId(Blueprint, \"roarm_g0a_d390_boundary_collapse_localization\", \"rec_472627e0cd7c4f949bae1fdb2b5fe070\")\n  num_chunks_indexed = 19\n  num_static_chunks = 1\n  num_entity_paths = 18\n  manifest_num_columns = 166\n  sorbet_schema_num_fields = 47\n  sorbet_schema_sha256 = eef25535dc178421d0ab3b7bd9f6363db0b08337986ab657a00e02689308579e\n  chunk_byte_size_total (native) = 29.2 KiB\n  chunk_byte_size_uncompressed_total = 67.6 KiB\n",
+    "timeout_parameter_ignored_no_signal_authority": true
+  },
+  "timeline_contract": {
+    "checks": {
+      "blueprint": true,
+      "failed_call_index": true,
+      "log_time": true
+    },
+    "exact_match": true,
+    "observed": [
+      "blueprint",
+      "failed_call_index",
+      "log_time"
+    ],
+    "pass": true
+  },
+  "verify": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "verify",
+      "--check-footers",
+      "true",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d390/attempt1_d389_directional_epsilon0_boundary_collapse_semantics_localization/d390_boundary_collapse_localization.rrd"
+    ],
+    "ok": true,
+    "returncode": 0,
+    "stderr": "2026-07-26T10:01:36.504465Z ERROR re_analytics: Failed to initialize analytics: Read-only file system (os error 30)\n1 file verified without error.\n",
+    "stdout": "",
+    "timeout_parameter_ignored_no_signal_authority": true
+  },
+  "version": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "--version"
+    ],
+    "expected_version_match": true,
+    "ok": true,
+    "returncode": 0,
+    "stderr": "2026-07-26T10:01:36.474746Z ERROR re_analytics: Failed to initialize analytics: Read-only file system (os error 30)\n",
+    "stdout": "rerun-cli 0.34.1 (base lance map_view nasm native_viewer oss_server perf_telemetry re_server release_full release_no_web_viewer web_viewer) [rustc 1.92.0 (ded5c06cf 2025-12-08), LLVM 21.1.3] x86_64-unknown-linux-gnu prepare-release-0.34.1 4efb18f, built 2026-07-07T16:20:42.173372603Z\nVideo features: av1 ffmpeg nasm\n",
+    "timeout_parameter_ignored_no_signal_authority": true
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "artifact": "D391_MANUAL_VISUAL_INSPECTION_V1",
+  "artifact_hashes": {
+    "board_sha256": "a921a87412cc18915c9baf6bdb65a79f53541fadb51017cf8397ed6ce1d42e4a",
+    "rerun_screenshot_sha256": "c91f9587cd7c2a3f1e332bcebe827595da8dd7c551fe034a5e257e9108ec6ff2"
+  },
+  "attempt": "attempt1_d390_rank_basis_and_clip_input_immutability_repair",
+  "board_path": "claudedocs/runtime_logs/grasp_track/g0a_d391/attempt1_d390_rank_basis_and_clip_input_immutability_repair/d391_rank_basis_and_input_immutability_1920x1080.png",
+  "case": "D391",
+  "checks": {
+    "board_red_points_and_teal_pair_chords_visible": true,
+    "board_six_cards_visible": true,
+    "board_text_readable_no_overlap_or_clipping": true,
+    "d390_frozen_and_all_nonclaims_visible": true,
+    "rerun_legend_and_numeric_summary_readable": true,
+    "rerun_no_decision_subject_obscured": true,
+    "rerun_six_spatial_views_visible": true,
+    "rerun_time_panel_hidden_no_decision_cursor": true,
+    "stable_or_ambiguous_result_matches_canonical_json": true
+  },
+  "manual_inspection_complete": true,
+  "observations": [
+    "1920x1080 비교판에서 C0부터 C5까지 여섯 카드, 빨간 동결 점, 청록 점쌍 연결선이 모두 보였고 제목·결과·수치·하단 비주장이 서로 겹치거나 잘리지 않았다.",
+    "비교판과 Rerun의 판정 표시는 원 JSON의 안정 5개와 NUMERICALLY_AMBIGUOUS_BASIS 1개에 정확히 대응했으며, C5의 모호성을 임의의 평면 또는 입체 판정으로 바꾸지 않았다.",
+    "Rerun 캡처에서 여섯 공간 보기가 모두 보이고 아래 메타데이터의 stable=5, ambiguous=1, fixtures=5/5, real=351/351 및 g0a_pass=false가 읽혔으며 시간 패널과 판정 커서는 보이지 않았다.",
+    "Rerun 오른쪽 22% 알림 전용 칸에는 샌드박스의 message proxy server 권한 경고와 로딩 알림이 있었지만 여섯 점 집합, 각 보기 제목, 연결선 또는 아래 수치 요약을 가리지 않았다.",
+    "두 시각자료 모두 D390 소급수리, 41개 전체 합계, 충돌체·Isaac·물리·q5·접촉·파지 판정을 하지 않았다는 경계를 명시적으로 보존했다."
+  ],
+  "rerun_screenshot_path": "claudedocs/runtime_logs/grasp_track/g0a_d391/attempt1_d390_rank_basis_and_clip_input_immutability_repair/d391_rerun_inspection.png"
+}

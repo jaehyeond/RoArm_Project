@@ -1,0 +1,32 @@
+{
+  "artifact": "D390_MANUAL_VISUAL_INSPECTION_V1",
+  "inspection_role": "post-fail-stop visual audit only; does not authorize finalize or override numeric/operational failure",
+  "checks": {
+    "board_exact_1920x1080_and_title_footer_readable": true,
+    "board_all_41_rows_visible_in_21_20_split": true,
+    "board_no_text_overlap_or_clipping": false,
+    "board_dimension_legend_not_confused_with_grasp_verdict": false,
+    "rerun_source_clipping_terminal_and_plane_subject_visible": true,
+    "rerun_selected_call_metrics_and_nonclaims_readable": false,
+    "rerun_failed_call_index_timeline_paused_at_40": false,
+    "rerun_color_legend_matches_teal_orange_red_purple_geometry": false,
+    "rerun_no_decision_subject_obscured_by_warning_or_notification": true,
+    "no_budget_collider_physics_or_grasp_adoption_claim": true
+  },
+  "observations": [
+    "The professor board is exactly 1920x1080, and all 41 failed-call rows plus the fixed nonclaim footer are visible.",
+    "In panel 2, the last dimension-legend row and the red nonclaim sentence overlap, so the board presentation contract fails despite the automated layout report passing.",
+    "The Rerun screenshot visibly contains teal source geometry, orange clipper geometry, red terminal points, and a purple collapse-plane outline.",
+    "The Rerun time control is paused but visibly shows failed_call_index #0, not the registered representative index #40.",
+    "The selected-call and nonclaim event bodies are horizontally truncated, so the in-view color legend and complete nonclaim text are not readable.",
+    "The message-proxy and loading notices remain inside the dedicated right-side notification buffer and do not cover the decision geometry."
+  ],
+  "artifact_hashes": {
+    "claudedocs/runtime_logs/grasp_track/g0a_d390/attempt1_d389_directional_epsilon0_boundary_collapse_semantics_localization/d390_boundary_collapse_localization_1920x1080.png": "5248ad176bfb3892e506c4483a3b8e0af8bfb76c7ca65453101f303c008f1b99",
+    "claudedocs/runtime_logs/grasp_track/g0a_d390/attempt1_d389_directional_epsilon0_boundary_collapse_semantics_localization/d390_rerun_inspection.png": "9d567472c52490a0630f6cbd31159662c5cd4f80ca42251d304d5e97a6514ad6"
+  },
+  "worker_claim_pass": false,
+  "failure_attestation_present": true,
+  "completion_summary_present": false,
+  "pass": false
+}

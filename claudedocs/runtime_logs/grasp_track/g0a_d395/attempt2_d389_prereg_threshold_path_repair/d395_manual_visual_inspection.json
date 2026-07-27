@@ -1,0 +1,39 @@
+{
+  "artifact": "D395_MANUAL_VISUAL_INSPECTION_V1",
+  "case": "D395",
+  "attempt": "attempt2_d389_prereg_threshold_path_repair",
+  "board_path": "claudedocs/runtime_logs/grasp_track/g0a_d395/attempt2_d389_prereg_threshold_path_repair/d395_all36_gate_semantics_1920x1080.png",
+  "rerun_screenshot_path": "claudedocs/runtime_logs/grasp_track/g0a_d395/attempt2_d389_prereg_threshold_path_repair/d395_rerun_inspection.png",
+  "artifact_hashes": {
+    "board_sha256": "6e1c1a02137784d2d34e530ac3867adaae66d3cac760e1e3f02b79437c096f85",
+    "rerun_screenshot_sha256": "a899d92ad5c4d5b27cb7bba270663bf2d3c30d5cf42101f9ff8e3d35bce151c1"
+  },
+  "manual_template_sha256": "c5925ac665e9e755bba2460574de4f4dcd8ed57b538442df6b936777efdd0d6d",
+  "observability_claim_sha256": "b4bbe04bd89b38f153f6b2678f74dc1da708cc51ce6b9854e35a76d76315239b",
+  "inspector": "Codex original-resolution inspection of the exact board and HiDPI Rerun screenshot",
+  "checks": {
+    "board_exact_1920x1080": true,
+    "board_all_36_pairs_visible": true,
+    "board_11_adjacent_and_25_nonadjacent_visible": true,
+    "board_pre_post_classification_readable": true,
+    "board_failed41_upper_bound_semantics_readable": true,
+    "board_call29_null_nonclaim_readable": true,
+    "board_derived_volume_null_readable": true,
+    "board_float64_clip_rounding_not_replayed_readable": true,
+    "board_no_text_overlap_or_clipping": true,
+    "rerun_36_pair_entities_visible": true,
+    "rerun_failed41_terminal_cloud_entities_visible": true,
+    "rerun_terminal_clouds_are_normalized_inspection_copies": true,
+    "rerun_pair_grid_is_auxiliary": true,
+    "rerun_metadata_matches_canonical_json_and_notifications_obscure_nothing": true
+  },
+  "observations": [
+    "The 1920x1080 board shows all 36 pair cards in six rows; every card and the bottom three-line authority/nonclaim panel are readable without clipping or overlap.",
+    "The board clearly separates the mixed authority (103 actual solver outputs plus 41 ideal certificates), retains failed solver result/volume and call29 rank/class as null, and states that remaining Float64 clipping/roundoff was not replayed or bounded.",
+    "The 3840x2160 Rerun capture shows terminal-cloud entities C00 through C40; C29 is highlighted red and the other nonzero/zero upper-bound groups remain distinguishable by color.",
+    "The auxiliary p00-p35 labels are visually crowded with some terminal-cloud labels in the static screenshot, but the 36-pair decision table is provided by the clear canonical board and the replayable RRD remains rotatable for inspection.",
+    "The message-proxy warning stays inside the reserved notification column and does not cover the terminal-cloud atlas, auxiliary pair grid, or metadata authority panel."
+  ],
+  "manual_inspection_complete": true,
+  "pass": true
+}

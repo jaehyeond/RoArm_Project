@@ -1,0 +1,32 @@
+{
+  "artifact": "D394_MANUAL_VISUAL_INSPECTION_V1",
+  "artifact_hashes": {
+    "board_sha256": "0f9534e98336cb53e29228c6f7bd1c1d81f85d7f16d006b09336e2b92e3a0ef5",
+    "evidence_sha256": "7672f208cc704bd9c3a51bc0b60040e2a121335cf12dcfaa5fd851484dd089a1",
+    "rerun_screenshot_sha256": "221aae6acaa87f6c3db74cd2bd82fa5e59ad2368510256b31a5784e9528ad42d"
+  },
+  "attempt": "attempt2_gate_numeric_null_semantics_repair",
+  "board_path": "claudedocs/runtime_logs/grasp_track/g0a_d394/attempt2_gate_numeric_null_semantics_repair/d394_full10_volume_semantics_1920x1080.png",
+  "case": "D394",
+  "checks": {
+    "board_all_ten_calls_present": true,
+    "board_call29_and_seam_nonclaims_readable": true,
+    "board_exact_1920x1080": true,
+    "board_monotone_subset_semantics_readable": true,
+    "board_no_text_overlap_or_clipping": true,
+    "board_positive_witness_and_upper_bounds_readable": true,
+    "board_two_frozen_thresholds_distinguished": false,
+    "rerun_all_ten_magnified_clouds_visible": true,
+    "rerun_magnification_marked_inspection_only": true,
+    "rerun_screenshot_matches_canonical_counts_and_verdict": true
+  },
+  "inspector": "Codex visual inspection via original-resolution board and Rerun screenshot",
+  "observations": [
+    "The board contains all ten rows and the numeric columns are readable.",
+    "The Unicode superscript-minus exponents in 10^-18 and 10^-13 render as missing-glyph boxes, so the two frozen thresholds are not unambiguously readable.",
+    "The Rerun atlas visibly contains C01,C06,C13,C14,C16,C21,C23,C26,C34,C39. The message-proxy notice remains in the reserved notification panel and does not cover decision geometry.",
+    "Attempt2 numeric evidence remains valid, but its visualization completion contract fails and must not be finalized."
+  ],
+  "pass": false,
+  "rerun_screenshot_path": "claudedocs/runtime_logs/grasp_track/g0a_d394/attempt2_gate_numeric_null_semantics_repair/d394_rerun_inspection.png"
+}

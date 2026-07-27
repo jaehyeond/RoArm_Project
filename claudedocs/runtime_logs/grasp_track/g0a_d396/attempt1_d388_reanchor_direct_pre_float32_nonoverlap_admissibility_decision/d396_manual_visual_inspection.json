@@ -1,0 +1,34 @@
+{
+  "artifact": "D396_MANUAL_VISUAL_INSPECTION_V1",
+  "case": "D396",
+  "attempt": "attempt1_d388_reanchor_direct_pre_float32_nonoverlap_admissibility_decision",
+  "board_path": "claudedocs/runtime_logs/grasp_track/g0a_d396/attempt1_d388_reanchor_direct_pre_float32_nonoverlap_admissibility_decision/d396_direct_overlap_admissibility_1920x1080.png",
+  "rerun_screenshot_path": "claudedocs/runtime_logs/grasp_track/g0a_d396/attempt1_d388_reanchor_direct_pre_float32_nonoverlap_admissibility_decision/d396_rerun_inspection.png",
+  "artifact_hashes": {
+    "board_sha256": "d634b1ff328dd8016ee522cc9a1f464e9f3b231e73020dcd98e48ce28cd29618",
+    "rerun_screenshot_sha256": "799303904458038131e56f14ae9d28338815336415cf3cc9a96b2640ed5d7d26"
+  },
+  "manual_template_sha256": "f0db3a4173945e3c1372a2b77a75f0fdce9978d718cd1ce54d2b0d5cd86a3e8a",
+  "observability_claim_sha256": "08b959fdadcea694de87c27548e31a2330cd472dad52d696e4da17f2d3474253",
+  "checks": {
+    "board_exact_1920x1080": true,
+    "board_upper_direct_overlap_readable": true,
+    "board_lower_direct_overlap_readable": true,
+    "board_candidate_rejection_readable": true,
+    "board_masked_control_null_readable": true,
+    "board_physical_nonclaim_readable": true,
+    "board_no_text_overlap_or_clipping": true,
+    "rerun_upper_pair_children_visible": true,
+    "rerun_lower_pair_children_visible": true,
+    "rerun_centers_are_display_markers_not_overlap_extent": true,
+    "rerun_metadata_matches_canonical_evidence": true
+  },
+  "observations": [
+    "The exact 1920x1080 board shows the upper pair 5 and lower pair 26 strict and directional values in separate readable cards with no visible clipping or text collision.",
+    "The board clearly states candidate non-overlap admissible equals FALSE, the both-masked control remains NULL, and the microscopic values are not a manufacturing or live-PhysX penetration claim.",
+    "The Rerun screenshot visibly contains separate blue and orange child point sets for both translated pairs and red strict-center labels that explicitly say marker only.",
+    "The Rerun metadata panel visibly binds canonical evidence SHA 9cd315f69d4ce6a2b6b25addbfb589f2be0bdb3ea9e35b47069bea9be0580c1f and display-geometry SHA 576997d9259fd1ec11e8f866d6a0e4a1a9564503a620044f22ef76976f9e9e9b.",
+    "A message-proxy permission toast is present in the screenshot, but it does not obscure the loaded geometry or authority metadata and the recorded Viewer invocation returned successfully."
+  ],
+  "manual_inspection_complete": true
+}

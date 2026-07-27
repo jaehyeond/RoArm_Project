@@ -1,0 +1,2555 @@
+{
+  "aggregate_bounds": {
+    "maximum_diameter_cube_upper_m3_float64_diagnostic": 3.2811000933883083e-47,
+    "maximum_exact_aabb_upper_m3": {
+      "denominator": "47890485652059026823698344598447161988085597568237568",
+      "float": 1.2462809509519742e-48,
+      "numerator": "59685"
+    },
+    "maximum_exact_hull_volume_m3": {
+      "denominator": "47890485652059026823698344598447161988085597568237568",
+      "float": 7.636172300630593e-50,
+      "numerator": "3657"
+    },
+    "minimum_gate_over_aabb_upper_ratio": 8.023872941620009e+29,
+    "minimum_strict_radius_over_width_bound_ratio": 5012.702193942813
+  },
+  "algorithm_elapsed_seconds": 0.8413818541448563,
+  "all_41_aggregate_updated": false,
+  "artifact": "D394_FULL10_VOLUME_SEMANTICS_EVIDENCE_V1",
+  "attempt": "attempt2_gate_numeric_null_semantics_repair",
+  "call29_class": null,
+  "call29_rank": null,
+  "case": "D394",
+  "controls": {
+    "face_exact_zero": {
+      "call_id": "upper_00_03_post_float32_lbr",
+      "call_index": 2,
+      "expected_class": "FACE_LIKE",
+      "fewer_than_four_points": true,
+      "maximum_abs_tetra_det6": {
+        "denominator": "1",
+        "float": 0.0,
+        "numerator": "0"
+      },
+      "pass": true,
+      "points_sha256_exact": true,
+      "stored_class": "FACE_LIKE",
+      "unique_point_count": 3
+    },
+    "line_exact_zero": {
+      "call_id": "lower_01_03_pre_float32_lbr",
+      "call_index": 31,
+      "expected_class": "LINE",
+      "fewer_than_four_points": true,
+      "maximum_abs_tetra_det6": {
+        "denominator": "1",
+        "float": 0.0,
+        "numerator": "0"
+      },
+      "pass": true,
+      "points_sha256_exact": true,
+      "stored_class": "LINE",
+      "unique_point_count": 3
+    },
+    "pass": true,
+    "threshold_straddle": {
+      "above_pipeline_exact_hull_volume_m3": {
+        "denominator": "864691128455135232",
+        "float": 1.1564823173178713e-18,
+        "numerator": "1"
+      },
+      "above_side_m": {
+        "denominator": "524288",
+        "float": 1.9073486328125e-06,
+        "numerator": "1"
+      },
+      "above_volume_m3": {
+        "denominator": "864691128455135232",
+        "float": 1.1564823173178713e-18,
+        "numerator": "1"
+      },
+      "below_pipeline_exact_hull_volume_m3": {
+        "denominator": "6917529027641081856",
+        "float": 1.4456028966473392e-19,
+        "numerator": "1"
+      },
+      "below_side_m": {
+        "denominator": "1048576",
+        "float": 9.5367431640625e-07,
+        "numerator": "1"
+      },
+      "below_volume_m3": {
+        "denominator": "6917529027641081856",
+        "float": 1.4456028966473392e-19,
+        "numerator": "1"
+      },
+      "pass": true
+    }
+  },
+  "counts": {
+    "adjacent": 0,
+    "left_clipped_by_right": 3,
+    "lower": 5,
+    "nonadjacent": 10,
+    "passing": 10,
+    "post_float32": 6,
+    "pre_float32": 4,
+    "right_clipped_by_left": 7,
+    "stable_full_calls": 10,
+    "unique_pair_contexts": 9,
+    "upper": 5
+  },
+  "diagnostic_conclusion": "FULL_DIMENSIONAL_BUT_PROVABLY_SUBTHRESHOLD_TERMINAL_MICRO_VOLUME",
+  "frozen_thresholds": {
+    "positive_volume_epsilon_m3": {
+      "denominator": "1000000000000000000",
+      "float": 1e-18,
+      "numerator": "1"
+    },
+    "strict_interior_radius_threshold_m": {
+      "denominator": "10000000000000",
+      "float": 1e-13,
+      "numerator": "1"
+    },
+    "strict_interior_radius_threshold_nm": 0.0001
+  },
+  "g0a_pass": false,
+  "input_hashes": {
+    "claudedocs/runtime_logs/grasp_track/g0a_d389/attempt2_prereg_status_whitespace_repair/d389_numeric_and_tie_audit_evidence.json": "9423e870c0a218606781943abd2f5c48cb1e5d53cbbf9fb1212294b4ef5bb5dd",
+    "claudedocs/runtime_logs/grasp_track/g0a_d389/attempt2_prereg_status_whitespace_repair/d389_preregistration.json": "f4b38c4c5db311412c5700f792a66be805bbe06abf9be89b533002e1860ce780",
+    "claudedocs/runtime_logs/grasp_track/g0a_d389/attempt2_prereg_status_whitespace_repair/d389_reconstructed_seam_witness_geometry.json": "66042a93389cb8d0e6c867be87382566c753cd965ceda619e947e73de4a607be",
+    "claudedocs/runtime_logs/grasp_track/g0a_d389/attempt2_prereg_status_whitespace_repair/d389_seam_numeric_provenance.csv": "1fdbaac1c756983c8bd2d2d8e8eabed36a4530393b5f3e3491678335d778f66f",
+    "claudedocs/runtime_logs/grasp_track/g0a_d390/attempt1_d389_directional_epsilon0_boundary_collapse_semantics_localization/d390_boundary_collapse_localization_evidence.json": "3014610b7b2fd953740d239b91d9d9dce8aa917be67c6a1be15cf6ac052d9975",
+    "claudedocs/runtime_logs/grasp_track/g0a_d390/attempt1_d389_directional_epsilon0_boundary_collapse_semantics_localization/d390_failed_directional_call_trace.csv": "5a8295c85b62552459806c8a51a2ec485c20248365e8d1382857c19ebb527591",
+    "claudedocs/runtime_logs/grasp_track/g0a_d390/attempt1_d389_directional_epsilon0_boundary_collapse_semantics_localization/d390_terminal_candidate_geometry.json": "73fc986043b976bec26e1cc92643b8aab281a529f1c71c2918163ba7b98475c7",
+    "claudedocs/runtime_logs/grasp_track/g0a_d391/attempt1_d390_rank_basis_and_clip_input_immutability_repair/d391_rank_and_plane_immutability_evidence.json": "d76bbd88b2a6f188f9c46c382adc7292e56267e6e4a3beb8b9004b70e34b80cc",
+    "claudedocs/runtime_logs/grasp_track/g0a_d392/attempt1_d391_remaining35_same_authority_coverage_audit/d392_completion_summary.json": "01046290ca840960290198a4136cc7ed818cfbeccc7b745139a9e419dd421f70",
+    "claudedocs/runtime_logs/grasp_track/g0a_d392/attempt1_d391_remaining35_same_authority_coverage_audit/d392_remaining35_rank_evidence.json": "9ced175925c6c528d47bf94e5ae224e65bae1d4d6c88fc236952343de0c72102",
+    "claudedocs/runtime_logs/grasp_track/g0a_d393/attempt1_call29_third_direction_provenance_localization/d393_call29_lineage_geometry.json": "c674a43f3eca216b94bd4cc328f2f93cffd2bc558df1d3a44442da40244c9bed",
+    "claudedocs/runtime_logs/grasp_track/g0a_d393/attempt1_call29_third_direction_provenance_localization/d393_call29_provenance_evidence.json": "537537d89a2204987eebfa9bf668968801247e7cef70b7b694434b16b98883a9",
+    "claudedocs/runtime_logs/grasp_track/g0a_d393/attempt1_call29_third_direction_provenance_localization/d393_completion_summary.json": "cafac7a1f79b785592204300dc98c49ed1cd0ae0ba424d7091d641e7aa4cfab9",
+    "claudedocs/runtime_logs/grasp_track/g0a_d394/attempt1_stable_fullrank_terminal_volume_subthreshold_semantics/d394_execution_authority.json": "7bbb98363c23f6a99629b729a6a15f7b9451fdf7de4844a8f8df50ee6ed2913f",
+    "claudedocs/runtime_logs/grasp_track/g0a_d394/attempt1_stable_fullrank_terminal_volume_subthreshold_semantics/d394_phase_markers.jsonl": "1decb15f393e8f8b2d823b06ce8a193d63d7156ffd5ee5bf1e5d30deb494b9b8",
+    "claudedocs/runtime_logs/grasp_track/g0a_d394/attempt1_stable_fullrank_terminal_volume_subthreshold_semantics/d394_pre_worker_semantic_review_stop.json": "b20e2dd0290fc9f42c14772f1060e556488b0ab8e0e5c93d850a97500080e978",
+    "claudedocs/runtime_logs/grasp_track/g0a_d394/attempt1_stable_fullrank_terminal_volume_subthreshold_semantics/d394_preregistration.json": "f794cf2b6bdf2df405e776ee209a13e85f571824a93879c78dddcd7f947dd6f5",
+    "sim_scripts/cyl34_top_view_d394_stable_fullrank_terminal_volume_subthreshold_semantics.py": "4595bee98e87a192c2e55a57f9f545e5a12548a40301ac0b897e3f2b2bbeeac7"
+  },
+  "manifest_call_indices": [
+    1,
+    6,
+    13,
+    14,
+    16,
+    21,
+    23,
+    26,
+    34,
+    39
+  ],
+  "monotone_early_stop_proof": {
+    "applies_to_calls": [
+      1,
+      6,
+      13,
+      14,
+      16,
+      21,
+      23,
+      26,
+      34,
+      39
+    ],
+    "does_not_apply_to_call29_without_separate_bound": true,
+    "does_not_update_pair_or_seam_verdict_here": true,
+    "pass": true,
+    "precondition": "terminal exact hull volume <= frozen positive-volume epsilon",
+    "statement": "Every remaining frozen halfspace clip is an intersection with the current terminal candidate; the result is a subset and Lebesgue volume cannot increase."
+  },
+  "new_variables": [
+    "stable_fullrank_terminal_exact_dyadic_volume_sandwich_v1",
+    "frozen_volume_gate_monotone_early_stop_semantics_v1"
+  ],
+  "numeric_verdict": "D394_FULL10_EXACT_POSITIVE_BUT_FROZEN_SUBTHRESHOLD_MONOTONIC_EARLY_STOP_PASS",
+  "pair_or_seam_verdict_updated": false,
+  "pass": true,
+  "records": [
+    {
+      "adjacent": false,
+      "call_id": "upper_00_02_post_float32_rbl",
+      "call_index": 1,
+      "checks": {
+        "aabb_below_frozen_volume_gate": true,
+        "call_index_registered": true,
+        "d390_terminal_sha_exact": true,
+        "d392_points_sha_exact": true,
+        "d392_stable_full_rank3_exact": true,
+        "diameter_cube_below_frozen_volume_gate_exact_no_sqrt": true,
+        "diameter_radius_upper_below_strict_gate_exact_no_sqrt": true,
+        "exact_boundary_manifold": true,
+        "exact_euler_two": true,
+        "exact_hull_le_aabb": true,
+        "exact_hull_positive": true,
+        "exact_support_halfspaces": true,
+        "exact_translation_invariant": true,
+        "independent_qhull_topology_reintegration_exact": true,
+        "inradius_width_upper_below_strict_gate": true,
+        "max_tetra_and_aabb_point_order_exhaustive_invariant": true,
+        "positive_exact_tetra_witness": true,
+        "power_two_scale_restores_exact": true,
+        "single_bit_mutation_hash_negative": true,
+        "stored_strict_calculation_pass": true,
+        "stored_strict_gate_zero": true,
+        "stored_strict_positive_false": true,
+        "stored_strict_threshold_exact": true,
+        "witness_le_exact_hull": true
+      },
+      "clipping_child_index": 0,
+      "clipping_scale_diagnostic": {
+        "aabb_diagonal_m": 0.02247741087281905,
+        "aabb_volume_m3": 1.8000442136471827e-09,
+        "convex_hull_volume_m3_float64_diagnostic": 3.843994036457435e-10
+      },
+      "diameter_cube_upper_m3": 3.6984296384619843e-51,
+      "diameter_m": 1.5464615277296568e-17,
+      "diameter_squared_exact_m2": {
+        "denominator": "85070591730234615865843651857942052864",
+        "float": 2.391543256747944e-34,
+        "numerator": "20345"
+      },
+      "direction": "right_clipped_by_left",
+      "exact_aabb_volume_upper_m3": {
+        "denominator": "6129982163463555433433388108601236734474956488734408704",
+        "float": 1.1924993915267304e-52,
+        "numerator": "731"
+      },
+      "exact_convex_hull_volume_m3": {
+        "denominator": "36779892980781332600600328651607420406849738932406452224",
+        "float": 2.5421498656577587e-53,
+        "numerator": "935"
+      },
+      "exact_hull": {
+        "euler_characteristic": 2,
+        "euler_pass": true,
+        "facet_orders": [
+          [
+            3,
+            2,
+            0
+          ],
+          [
+            0,
+            2,
+            5,
+            4
+          ],
+          [
+            0,
+            4,
+            3
+          ],
+          [
+            2,
+            3,
+            5
+          ],
+          [
+            3,
+            4,
+            5
+          ]
+        ],
+        "facet_vertex_sets": [
+          [
+            0,
+            1,
+            2,
+            3
+          ],
+          [
+            0,
+            1,
+            2,
+            4,
+            5
+          ],
+          [
+            0,
+            3,
+            4
+          ],
+          [
+            2,
+            3,
+            5
+          ],
+          [
+            3,
+            4,
+            5
+          ]
+        ],
+        "support_halfspace_pass": true,
+        "triangles": [
+          [
+            3,
+            2,
+            0
+          ],
+          [
+            0,
+            2,
+            5
+          ],
+          [
+            0,
+            5,
+            4
+          ],
+          [
+            0,
+            4,
+            3
+          ],
+          [
+            2,
+            3,
+            5
+          ],
+          [
+            3,
+            4,
+            5
+          ]
+        ],
+        "triangulated_boundary_edge_twice_pass": true,
+        "volume": {
+          "denominator": "36779892980781332600600328651607420406849738932406452224",
+          "float": 2.5421498656577587e-53,
+          "numerator": "935"
+        }
+      },
+      "forward_only_gate_semantics": {
+        "derived_gate_volume_m3": null,
+        "exact_final_intersection_volume_m3": null,
+        "monotone_basis": "every remaining halfspace clipping result is a subset of this terminal candidate, so its volume cannot increase",
+        "numeric_volume_nonclaim": "The final intersection volume was not calculated; only the Boolean frozen-gate decision is proven by an upper bound.",
+        "original_calculation_pass": false,
+        "propagated_gate_decision_available": true,
+        "propagated_positive_volume": false,
+        "reason": "EXACT_POSITIVE_BUT_BELOW_FROZEN_VOLUME_GATE"
+      },
+      "frozen_positive_volume_epsilon_m3": {
+        "denominator": "1000000000000000000",
+        "float": 1e-18,
+        "numerator": "1"
+      },
+      "independent_normalized_qhull_topology": {
+        "power_of_two_scale_exponent": 63,
+        "qhull_float_volume_diagnostic_m3": 2.542149865657759e-53,
+        "qhull_options": "Qx Q12 Pp",
+        "qhull_simplices": [
+          [
+            0,
+            2,
+            3
+          ],
+          [
+            0,
+            2,
+            5
+          ],
+          [
+            0,
+            3,
+            4
+          ],
+          [
+            0,
+            4,
+            5
+          ],
+          [
+            2,
+            3,
+            5
+          ],
+          [
+            3,
+            4,
+            5
+          ]
+        ],
+        "reintegrated_exact_volume": {
+          "denominator": "36779892980781332600600328651607420406849738932406452224",
+          "float": 2.5421498656577587e-53,
+          "numerator": "935"
+        }
+      },
+      "inradius_coordinate_width_upper_m": {
+        "denominator": "1152921504606846976",
+        "float": 8.673617379884035e-19,
+        "numerator": "1"
+      },
+      "max_tetra_indices": [
+        0,
+        3,
+        4,
+        5
+      ],
+      "max_tetra_volume_m3": {
+        "denominator": "36779892980781332600600328651607420406849738932406452224",
+        "float": 1.9874989858778839e-53,
+        "numerator": "731"
+      },
+      "pass": true,
+      "point_count": 6,
+      "points_sha256": "37ad2597326d22cb6a3e4d8c87a5788a6b44069ac19d30caf0472ec7b889647e",
+      "registered_semantics": "FULL_DIMENSIONAL_BUT_PROVABLY_SUBTHRESHOLD_TERMINAL_MICRO_VOLUME",
+      "source_child_index": 2,
+      "source_scale_diagnostic": {
+        "aabb_diagonal_m": 0.03765370689910913,
+        "aabb_volume_m3": 3.763419668439111e-06,
+        "convex_hull_volume_m3_float64_diagnostic": 1.011408099312931e-06
+      },
+      "stage": "post_float32",
+      "strict_interior_radius_threshold_m": {
+        "denominator": "10000000000000",
+        "float": 1e-13,
+        "numerator": "1"
+      },
+      "strict_radius_over_width_bound_ratio": 115292.1504606847,
+      "target": "UPPER",
+      "terminal_exact_hull_to_source_aabb_volume_ratio_diagnostic": 6.754893393837532e-48,
+      "volume_gate_over_aabb_upper_ratio": 8.385748513630035e+33
+    },
+    {
+      "adjacent": false,
+      "call_id": "upper_00_05_post_float32_rbl",
+      "call_index": 6,
+      "checks": {
+        "aabb_below_frozen_volume_gate": true,
+        "call_index_registered": true,
+        "d390_terminal_sha_exact": true,
+        "d392_points_sha_exact": true,
+        "d392_stable_full_rank3_exact": true,
+        "diameter_cube_below_frozen_volume_gate_exact_no_sqrt": true,
+        "diameter_radius_upper_below_strict_gate_exact_no_sqrt": true,
+        "exact_boundary_manifold": true,
+        "exact_euler_two": true,
+        "exact_hull_le_aabb": true,
+        "exact_hull_positive": true,
+        "exact_support_halfspaces": true,
+        "exact_translation_invariant": true,
+        "independent_qhull_topology_reintegration_exact": true,
+        "inradius_width_upper_below_strict_gate": true,
+        "max_tetra_and_aabb_point_order_exhaustive_invariant": true,
+        "positive_exact_tetra_witness": true,
+        "power_two_scale_restores_exact": true,
+        "single_bit_mutation_hash_negative": true,
+        "stored_strict_calculation_pass": true,
+        "stored_strict_gate_zero": true,
+        "stored_strict_positive_false": true,
+        "stored_strict_threshold_exact": true,
+        "witness_le_exact_hull": true
+      },
+      "clipping_child_index": 0,
+      "clipping_scale_diagnostic": {
+        "aabb_diagonal_m": 0.02247741087281905,
+        "aabb_volume_m3": 1.8000442136471827e-09,
+        "convex_hull_volume_m3_float64_diagnostic": 3.843994036457435e-10
+      },
+      "diameter_cube_upper_m3": 3.6590146602786975e-52,
+      "diameter_m": 7.152448122690996e-18,
+      "diameter_squared_exact_m2": {
+        "denominator": "332306998946228968225951765070086144",
+        "float": 5.115751414778595e-35,
+        "numerator": "17"
+      },
+      "direction": "right_clipped_by_left",
+      "exact_aabb_volume_upper_m3": {
+        "denominator": "766247770432944429179173513575154591809369561091801088",
+        "float": 1.4355669829596754e-53,
+        "numerator": "11"
+      },
+      "exact_convex_hull_volume_m3": {
+        "denominator": "6129982163463555433433388108601236734474956488734408704",
+        "float": 1.7944587286995942e-54,
+        "numerator": "11"
+      },
+      "exact_hull": {
+        "euler_characteristic": 2,
+        "euler_pass": true,
+        "facet_orders": [
+          [
+            0,
+            3,
+            1
+          ],
+          [
+            0,
+            1,
+            4
+          ],
+          [
+            0,
+            4,
+            3
+          ],
+          [
+            4,
+            1,
+            3
+          ]
+        ],
+        "facet_vertex_sets": [
+          [
+            0,
+            1,
+            2,
+            3
+          ],
+          [
+            0,
+            1,
+            4
+          ],
+          [
+            0,
+            3,
+            4
+          ],
+          [
+            1,
+            2,
+            3,
+            4
+          ]
+        ],
+        "support_halfspace_pass": true,
+        "triangles": [
+          [
+            0,
+            3,
+            1
+          ],
+          [
+            0,
+            1,
+            4
+          ],
+          [
+            0,
+            4,
+            3
+          ],
+          [
+            4,
+            1,
+            3
+          ]
+        ],
+        "triangulated_boundary_edge_twice_pass": true,
+        "volume": {
+          "denominator": "6129982163463555433433388108601236734474956488734408704",
+          "float": 1.7944587286995942e-54,
+          "numerator": "11"
+        }
+      },
+      "forward_only_gate_semantics": {
+        "derived_gate_volume_m3": null,
+        "exact_final_intersection_volume_m3": null,
+        "monotone_basis": "every remaining halfspace clipping result is a subset of this terminal candidate, so its volume cannot increase",
+        "numeric_volume_nonclaim": "The final intersection volume was not calculated; only the Boolean frozen-gate decision is proven by an upper bound.",
+        "original_calculation_pass": false,
+        "propagated_gate_decision_available": true,
+        "propagated_positive_volume": false,
+        "reason": "EXACT_POSITIVE_BUT_BELOW_FROZEN_VOLUME_GATE"
+      },
+      "frozen_positive_volume_epsilon_m3": {
+        "denominator": "1000000000000000000",
+        "float": 1e-18,
+        "numerator": "1"
+      },
+      "independent_normalized_qhull_topology": {
+        "power_of_two_scale_exponent": 64,
+        "qhull_float_volume_diagnostic_m3": 1.7944587286995945e-54,
+        "qhull_options": "Qx Q12 Pp",
+        "qhull_simplices": [
+          [
+            0,
+            1,
+            3
+          ],
+          [
+            0,
+            1,
+            4
+          ],
+          [
+            0,
+            3,
+            4
+          ],
+          [
+            1,
+            3,
+            4
+          ]
+        ],
+        "reintegrated_exact_volume": {
+          "denominator": "6129982163463555433433388108601236734474956488734408704",
+          "float": 1.7944587286995942e-54,
+          "numerator": "11"
+        }
+      },
+      "inradius_coordinate_width_upper_m": {
+        "denominator": "18446744073709551616",
+        "float": 5.963111948670274e-19,
+        "numerator": "11"
+      },
+      "max_tetra_indices": [
+        0,
+        1,
+        3,
+        4
+      ],
+      "max_tetra_volume_m3": {
+        "denominator": "6129982163463555433433388108601236734474956488734408704",
+        "float": 1.7944587286995942e-54,
+        "numerator": "11"
+      },
+      "pass": true,
+      "point_count": 5,
+      "points_sha256": "8f2525226fb9ae81b19f83475531d33f099801de395b60b052a2e80169e65cff",
+      "registered_semantics": "FULL_DIMENSIONAL_BUT_PROVABLY_SUBTHRESHOLD_TERMINAL_MICRO_VOLUME",
+      "source_child_index": 5,
+      "source_scale_diagnostic": {
+        "aabb_diagonal_m": 0.007433724559991211,
+        "aabb_volume_m3": 6.54569802362486e-09,
+        "convex_hull_volume_m3_float64_diagnostic": 1.84123980665224e-10
+      },
+      "stage": "post_float32",
+      "strict_interior_radius_threshold_m": {
+        "denominator": "10000000000000",
+        "float": 1e-13,
+        "numerator": "1"
+      },
+      "strict_radius_over_width_bound_ratio": 167697.67339735955,
+      "target": "UPPER",
+      "terminal_exact_hull_to_source_aabb_volume_ratio_diagnostic": 2.741432192904407e-46,
+      "volume_gate_over_aabb_upper_ratio": 6.965888822117677e+34
+    },
+    {
+      "adjacent": false,
+      "call_id": "upper_01_05_pre_float32_rbl",
+      "call_index": 13,
+      "checks": {
+        "aabb_below_frozen_volume_gate": true,
+        "call_index_registered": true,
+        "d390_terminal_sha_exact": true,
+        "d392_points_sha_exact": true,
+        "d392_stable_full_rank3_exact": true,
+        "diameter_cube_below_frozen_volume_gate_exact_no_sqrt": true,
+        "diameter_radius_upper_below_strict_gate_exact_no_sqrt": true,
+        "exact_boundary_manifold": true,
+        "exact_euler_two": true,
+        "exact_hull_le_aabb": true,
+        "exact_hull_positive": true,
+        "exact_support_halfspaces": true,
+        "exact_translation_invariant": true,
+        "independent_qhull_topology_reintegration_exact": true,
+        "inradius_width_upper_below_strict_gate": true,
+        "max_tetra_and_aabb_point_order_exhaustive_invariant": true,
+        "positive_exact_tetra_witness": true,
+        "power_two_scale_restores_exact": true,
+        "single_bit_mutation_hash_negative": true,
+        "stored_strict_calculation_pass": true,
+        "stored_strict_gate_zero": true,
+        "stored_strict_positive_false": true,
+        "stored_strict_threshold_exact": true,
+        "witness_le_exact_hull": true
+      },
+      "clipping_child_index": 1,
+      "clipping_scale_diagnostic": {
+        "aabb_diagonal_m": 0.029574012016111498,
+        "aabb_volume_m3": 1.0347172745736169e-06,
+        "convex_hull_volume_m3_float64_diagnostic": 1.5164632813313124e-07
+      },
+      "diameter_cube_upper_m3": 1.0190553593301925e-52,
+      "diameter_m": 4.670885906470169e-18,
+      "diameter_squared_exact_m2": {
+        "denominator": "1329227995784915872903807060280344576",
+        "float": 2.1817175151261656e-35,
+        "numerator": "29"
+      },
+      "direction": "right_clipped_by_left",
+      "exact_aabb_volume_upper_m3": {
+        "denominator": "6129982163463555433433388108601236734474956488734408704",
+        "float": 7.34096752649834e-54,
+        "numerator": "45"
+      },
+      "exact_convex_hull_volume_m3": {
+        "denominator": "12259964326927110866866776217202473468949912977468817408",
+        "float": 7.34096752649834e-55,
+        "numerator": "9"
+      },
+      "exact_hull": {
+        "euler_characteristic": 2,
+        "euler_pass": true,
+        "facet_orders": [
+          [
+            0,
+            2,
+            1
+          ],
+          [
+            0,
+            1,
+            3
+          ],
+          [
+            0,
+            3,
+            2
+          ],
+          [
+            3,
+            1,
+            2
+          ]
+        ],
+        "facet_vertex_sets": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            3
+          ],
+          [
+            0,
+            2,
+            3
+          ],
+          [
+            1,
+            2,
+            3
+          ]
+        ],
+        "support_halfspace_pass": true,
+        "triangles": [
+          [
+            0,
+            2,
+            1
+          ],
+          [
+            0,
+            1,
+            3
+          ],
+          [
+            0,
+            3,
+            2
+          ],
+          [
+            3,
+            1,
+            2
+          ]
+        ],
+        "triangulated_boundary_edge_twice_pass": true,
+        "volume": {
+          "denominator": "12259964326927110866866776217202473468949912977468817408",
+          "float": 7.34096752649834e-55,
+          "numerator": "9"
+        }
+      },
+      "forward_only_gate_semantics": {
+        "derived_gate_volume_m3": null,
+        "exact_final_intersection_volume_m3": null,
+        "monotone_basis": "every remaining halfspace clipping result is a subset of this terminal candidate, so its volume cannot increase",
+        "numeric_volume_nonclaim": "The final intersection volume was not calculated; only the Boolean frozen-gate decision is proven by an upper bound.",
+        "original_calculation_pass": false,
+        "propagated_gate_decision_available": true,
+        "propagated_positive_volume": false,
+        "reason": "EXACT_POSITIVE_BUT_BELOW_FROZEN_VOLUME_GATE"
+      },
+      "frozen_positive_volume_epsilon_m3": {
+        "denominator": "1000000000000000000",
+        "float": 1e-18,
+        "numerator": "1"
+      },
+      "independent_normalized_qhull_topology": {
+        "power_of_two_scale_exponent": 65,
+        "qhull_float_volume_diagnostic_m3": 7.34096752649834e-55,
+        "qhull_options": "Qx Q12 Pp",
+        "qhull_simplices": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            3
+          ],
+          [
+            0,
+            2,
+            3
+          ],
+          [
+            1,
+            2,
+            3
+          ]
+        ],
+        "reintegrated_exact_volume": {
+          "denominator": "12259964326927110866866776217202473468949912977468817408",
+          "float": 7.34096752649834e-55,
+          "numerator": "9"
+        }
+      },
+      "inradius_coordinate_width_upper_m": {
+        "denominator": "18446744073709551616",
+        "float": 4.87890977618477e-19,
+        "numerator": "9"
+      },
+      "max_tetra_indices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "max_tetra_volume_m3": {
+        "denominator": "12259964326927110866866776217202473468949912977468817408",
+        "float": 7.34096752649834e-55,
+        "numerator": "9"
+      },
+      "pass": true,
+      "point_count": 4,
+      "points_sha256": "f23d3b52a862a1d89e6686203d10ab2849b3ae108f821897d6945310502ccb15",
+      "registered_semantics": "FULL_DIMENSIONAL_BUT_PROVABLY_SUBTHRESHOLD_TERMINAL_MICRO_VOLUME",
+      "source_child_index": 5,
+      "source_scale_diagnostic": {
+        "aabb_diagonal_m": 0.007433724558976395,
+        "aabb_volume_m3": 6.5456971769525054e-09,
+        "convex_hull_volume_m3_float64_diagnostic": 1.841237704273876e-10
+      },
+      "stage": "pre_float32",
+      "strict_interior_radius_threshold_m": {
+        "denominator": "10000000000000",
+        "float": 1e-13,
+        "numerator": "1"
+      },
+      "strict_radius_over_width_bound_ratio": 204963.82304121723,
+      "target": "UPPER",
+      "terminal_exact_hull_to_source_aabb_volume_ratio_diagnostic": 1.1214951330693991e-46,
+      "volume_gate_over_aabb_upper_ratio": 1.3622182585474568e+35
+    },
+    {
+      "adjacent": false,
+      "call_id": "upper_01_05_post_float32_rbl",
+      "call_index": 14,
+      "checks": {
+        "aabb_below_frozen_volume_gate": true,
+        "call_index_registered": true,
+        "d390_terminal_sha_exact": true,
+        "d392_points_sha_exact": true,
+        "d392_stable_full_rank3_exact": true,
+        "diameter_cube_below_frozen_volume_gate_exact_no_sqrt": true,
+        "diameter_radius_upper_below_strict_gate_exact_no_sqrt": true,
+        "exact_boundary_manifold": true,
+        "exact_euler_two": true,
+        "exact_hull_le_aabb": true,
+        "exact_hull_positive": true,
+        "exact_support_halfspaces": true,
+        "exact_translation_invariant": true,
+        "independent_qhull_topology_reintegration_exact": true,
+        "inradius_width_upper_below_strict_gate": true,
+        "max_tetra_and_aabb_point_order_exhaustive_invariant": true,
+        "positive_exact_tetra_witness": true,
+        "power_two_scale_restores_exact": true,
+        "single_bit_mutation_hash_negative": true,
+        "stored_strict_calculation_pass": true,
+        "stored_strict_gate_zero": true,
+        "stored_strict_positive_false": true,
+        "stored_strict_threshold_exact": true,
+        "witness_le_exact_hull": true
+      },
+      "clipping_child_index": 1,
+      "clipping_scale_diagnostic": {
+        "aabb_diagonal_m": 0.029574012016111498,
+        "aabb_volume_m3": 1.0347172745736169e-06,
+        "convex_hull_volume_m3_float64_diagnostic": 1.5164631507330926e-07
+      },
+      "diameter_cube_upper_m3": 1.0190553593301925e-52,
+      "diameter_m": 4.670885906470169e-18,
+      "diameter_squared_exact_m2": {
+        "denominator": "1329227995784915872903807060280344576",
+        "float": 2.1817175151261656e-35,
+        "numerator": "29"
+      },
+      "direction": "right_clipped_by_left",
+      "exact_aabb_volume_upper_m3": {
+        "denominator": "6129982163463555433433388108601236734474956488734408704",
+        "float": 7.34096752649834e-54,
+        "numerator": "45"
+      },
+      "exact_convex_hull_volume_m3": {
+        "denominator": "12259964326927110866866776217202473468949912977468817408",
+        "float": 7.34096752649834e-55,
+        "numerator": "9"
+      },
+      "exact_hull": {
+        "euler_characteristic": 2,
+        "euler_pass": true,
+        "facet_orders": [
+          [
+            0,
+            3,
+            1
+          ],
+          [
+            0,
+            1,
+            4
+          ],
+          [
+            0,
+            4,
+            3
+          ],
+          [
+            4,
+            1,
+            3
+          ]
+        ],
+        "facet_vertex_sets": [
+          [
+            0,
+            1,
+            2,
+            3
+          ],
+          [
+            0,
+            1,
+            4
+          ],
+          [
+            0,
+            3,
+            4
+          ],
+          [
+            1,
+            2,
+            3,
+            4
+          ]
+        ],
+        "support_halfspace_pass": true,
+        "triangles": [
+          [
+            0,
+            3,
+            1
+          ],
+          [
+            0,
+            1,
+            4
+          ],
+          [
+            0,
+            4,
+            3
+          ],
+          [
+            4,
+            1,
+            3
+          ]
+        ],
+        "triangulated_boundary_edge_twice_pass": true,
+        "volume": {
+          "denominator": "12259964326927110866866776217202473468949912977468817408",
+          "float": 7.34096752649834e-55,
+          "numerator": "9"
+        }
+      },
+      "forward_only_gate_semantics": {
+        "derived_gate_volume_m3": null,
+        "exact_final_intersection_volume_m3": null,
+        "monotone_basis": "every remaining halfspace clipping result is a subset of this terminal candidate, so its volume cannot increase",
+        "numeric_volume_nonclaim": "The final intersection volume was not calculated; only the Boolean frozen-gate decision is proven by an upper bound.",
+        "original_calculation_pass": false,
+        "propagated_gate_decision_available": true,
+        "propagated_positive_volume": false,
+        "reason": "EXACT_POSITIVE_BUT_BELOW_FROZEN_VOLUME_GATE"
+      },
+      "frozen_positive_volume_epsilon_m3": {
+        "denominator": "1000000000000000000",
+        "float": 1e-18,
+        "numerator": "1"
+      },
+      "independent_normalized_qhull_topology": {
+        "power_of_two_scale_exponent": 65,
+        "qhull_float_volume_diagnostic_m3": 7.34096752649834e-55,
+        "qhull_options": "Qx Q12 Pp",
+        "qhull_simplices": [
+          [
+            0,
+            1,
+            3
+          ],
+          [
+            0,
+            1,
+            4
+          ],
+          [
+            0,
+            3,
+            4
+          ],
+          [
+            1,
+            3,
+            4
+          ]
+        ],
+        "reintegrated_exact_volume": {
+          "denominator": "12259964326927110866866776217202473468949912977468817408",
+          "float": 7.34096752649834e-55,
+          "numerator": "9"
+        }
+      },
+      "inradius_coordinate_width_upper_m": {
+        "denominator": "18446744073709551616",
+        "float": 4.87890977618477e-19,
+        "numerator": "9"
+      },
+      "max_tetra_indices": [
+        0,
+        1,
+        3,
+        4
+      ],
+      "max_tetra_volume_m3": {
+        "denominator": "12259964326927110866866776217202473468949912977468817408",
+        "float": 7.34096752649834e-55,
+        "numerator": "9"
+      },
+      "pass": true,
+      "point_count": 5,
+      "points_sha256": "365b73c2967e1d2a00a4c4b0cb417c2336ea0f8248536e7cdb5a6fd391d0961a",
+      "registered_semantics": "FULL_DIMENSIONAL_BUT_PROVABLY_SUBTHRESHOLD_TERMINAL_MICRO_VOLUME",
+      "source_child_index": 5,
+      "source_scale_diagnostic": {
+        "aabb_diagonal_m": 0.007433724559991211,
+        "aabb_volume_m3": 6.54569802362486e-09,
+        "convex_hull_volume_m3_float64_diagnostic": 1.84123980665224e-10
+      },
+      "stage": "post_float32",
+      "strict_interior_radius_threshold_m": {
+        "denominator": "10000000000000",
+        "float": 1e-13,
+        "numerator": "1"
+      },
+      "strict_radius_over_width_bound_ratio": 204963.82304121723,
+      "target": "UPPER",
+      "terminal_exact_hull_to_source_aabb_volume_ratio_diagnostic": 1.1214949880063484e-46,
+      "volume_gate_over_aabb_upper_ratio": 1.3622182585474568e+35
+    },
+    {
+      "adjacent": false,
+      "call_id": "upper_02_04_post_float32_lbr",
+      "call_index": 16,
+      "checks": {
+        "aabb_below_frozen_volume_gate": true,
+        "call_index_registered": true,
+        "d390_terminal_sha_exact": true,
+        "d392_points_sha_exact": true,
+        "d392_stable_full_rank3_exact": true,
+        "diameter_cube_below_frozen_volume_gate_exact_no_sqrt": true,
+        "diameter_radius_upper_below_strict_gate_exact_no_sqrt": true,
+        "exact_boundary_manifold": true,
+        "exact_euler_two": true,
+        "exact_hull_le_aabb": true,
+        "exact_hull_positive": true,
+        "exact_support_halfspaces": true,
+        "exact_translation_invariant": true,
+        "independent_qhull_topology_reintegration_exact": true,
+        "inradius_width_upper_below_strict_gate": true,
+        "max_tetra_and_aabb_point_order_exhaustive_invariant": true,
+        "positive_exact_tetra_witness": true,
+        "power_two_scale_restores_exact": true,
+        "single_bit_mutation_hash_negative": true,
+        "stored_strict_calculation_pass": true,
+        "stored_strict_gate_zero": true,
+        "stored_strict_positive_false": true,
+        "stored_strict_threshold_exact": true,
+        "witness_le_exact_hull": true
+      },
+      "clipping_child_index": 4,
+      "clipping_scale_diagnostic": {
+        "aabb_diagonal_m": 0.009570226962254498,
+        "aabb_volume_m3": 1.4144264169476558e-08,
+        "convex_hull_volume_m3_float64_diagnostic": 6.309183825916041e-10
+      },
+      "diameter_cube_upper_m3": 1.5801099766966042e-49,
+      "diameter_m": 5.406245604746917e-17,
+      "diameter_squared_exact_m2": {
+        "denominator": "1329227995784915872903807060280344576",
+        "float": 2.9227491538845357e-33,
+        "numerator": "3885"
+      },
+      "direction": "left_clipped_by_right",
+      "exact_aabb_volume_upper_m3": {
+        "denominator": "191561942608236107294793378393788647952342390272950272",
+        "float": 2.9520477413225325e-50,
+        "numerator": "5655"
+      },
+      "exact_convex_hull_volume_m3": {
+        "denominator": "1149371655649416643768760270362731887714054341637701632",
+        "float": 3.1756481744259487e-52,
+        "numerator": "365"
+      },
+      "exact_hull": {
+        "euler_characteristic": 2,
+        "euler_pass": true,
+        "facet_orders": [
+          [
+            0,
+            2,
+            1
+          ],
+          [
+            3,
+            0,
+            1
+          ],
+          [
+            5,
+            2,
+            0
+          ],
+          [
+            0,
+            3,
+            5
+          ],
+          [
+            4,
+            1,
+            2,
+            5
+          ],
+          [
+            1,
+            4,
+            3
+          ],
+          [
+            3,
+            4,
+            5
+          ]
+        ],
+        "facet_vertex_sets": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            3
+          ],
+          [
+            0,
+            2,
+            5
+          ],
+          [
+            0,
+            3,
+            5
+          ],
+          [
+            1,
+            2,
+            4,
+            5
+          ],
+          [
+            1,
+            3,
+            4
+          ],
+          [
+            3,
+            4,
+            5
+          ]
+        ],
+        "support_halfspace_pass": true,
+        "triangles": [
+          [
+            0,
+            2,
+            1
+          ],
+          [
+            3,
+            0,
+            1
+          ],
+          [
+            5,
+            2,
+            0
+          ],
+          [
+            0,
+            3,
+            5
+          ],
+          [
+            4,
+            1,
+            2
+          ],
+          [
+            4,
+            2,
+            5
+          ],
+          [
+            1,
+            4,
+            3
+          ],
+          [
+            3,
+            4,
+            5
+          ]
+        ],
+        "triangulated_boundary_edge_twice_pass": true,
+        "volume": {
+          "denominator": "1149371655649416643768760270362731887714054341637701632",
+          "float": 3.1756481744259487e-52,
+          "numerator": "365"
+        }
+      },
+      "forward_only_gate_semantics": {
+        "derived_gate_volume_m3": null,
+        "exact_final_intersection_volume_m3": null,
+        "monotone_basis": "every remaining halfspace clipping result is a subset of this terminal candidate, so its volume cannot increase",
+        "numeric_volume_nonclaim": "The final intersection volume was not calculated; only the Boolean frozen-gate decision is proven by an upper bound.",
+        "original_calculation_pass": false,
+        "propagated_gate_decision_available": true,
+        "propagated_positive_volume": false,
+        "reason": "EXACT_POSITIVE_BUT_BELOW_FROZEN_VOLUME_GATE"
+      },
+      "frozen_positive_volume_epsilon_m3": {
+        "denominator": "1000000000000000000",
+        "float": 1e-18,
+        "numerator": "1"
+      },
+      "independent_normalized_qhull_topology": {
+        "power_of_two_scale_exponent": 62,
+        "qhull_float_volume_diagnostic_m3": 3.1756481744259476e-52,
+        "qhull_options": "Qx Q12 Pp",
+        "qhull_simplices": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            3
+          ],
+          [
+            0,
+            2,
+            5
+          ],
+          [
+            0,
+            3,
+            5
+          ],
+          [
+            1,
+            2,
+            4
+          ],
+          [
+            1,
+            3,
+            4
+          ],
+          [
+            2,
+            4,
+            5
+          ],
+          [
+            3,
+            4,
+            5
+          ]
+        ],
+        "reintegrated_exact_volume": {
+          "denominator": "1149371655649416643768760270362731887714054341637701632",
+          "float": 3.1756481744259487e-52,
+          "numerator": "365"
+        }
+      },
+      "inradius_coordinate_width_upper_m": {
+        "denominator": "2305843009213693952",
+        "float": 1.2576745200831851e-17,
+        "numerator": "29"
+      },
+      "max_tetra_indices": [
+        0,
+        1,
+        3,
+        5
+      ],
+      "max_tetra_volume_m3": {
+        "denominator": "574685827824708321884380135181365943857027170818850816",
+        "float": 2.5231177276260963e-52,
+        "numerator": "145"
+      },
+      "pass": true,
+      "point_count": 6,
+      "points_sha256": "c28fde814f9569dc95fe42d54c5a0e2d2bf667036a0ecd7b347a59e1ae799caa",
+      "registered_semantics": "FULL_DIMENSIONAL_BUT_PROVABLY_SUBTHRESHOLD_TERMINAL_MICRO_VOLUME",
+      "source_child_index": 2,
+      "source_scale_diagnostic": {
+        "aabb_diagonal_m": 0.03765370689910913,
+        "aabb_volume_m3": 3.763419668439111e-06,
+        "convex_hull_volume_m3_float64_diagnostic": 1.011408099312931e-06
+      },
+      "stage": "post_float32",
+      "strict_interior_radius_threshold_m": {
+        "denominator": "10000000000000",
+        "float": 1e-13,
+        "numerator": "1"
+      },
+      "strict_radius_over_width_bound_ratio": 7951.182790392048,
+      "target": "UPPER",
+      "terminal_exact_hull_to_source_aabb_volume_ratio_diagnostic": 8.438198378612019e-47,
+      "volume_gate_over_aabb_upper_ratio": 3.387479091215493e+31
+    },
+    {
+      "adjacent": false,
+      "call_id": "lower_00_02_pre_float32_rbl",
+      "call_index": 21,
+      "checks": {
+        "aabb_below_frozen_volume_gate": true,
+        "call_index_registered": true,
+        "d390_terminal_sha_exact": true,
+        "d392_points_sha_exact": true,
+        "d392_stable_full_rank3_exact": true,
+        "diameter_cube_below_frozen_volume_gate_exact_no_sqrt": true,
+        "diameter_radius_upper_below_strict_gate_exact_no_sqrt": true,
+        "exact_boundary_manifold": true,
+        "exact_euler_two": true,
+        "exact_hull_le_aabb": true,
+        "exact_hull_positive": true,
+        "exact_support_halfspaces": true,
+        "exact_translation_invariant": true,
+        "independent_qhull_topology_reintegration_exact": true,
+        "inradius_width_upper_below_strict_gate": true,
+        "max_tetra_and_aabb_point_order_exhaustive_invariant": true,
+        "positive_exact_tetra_witness": true,
+        "power_two_scale_restores_exact": true,
+        "single_bit_mutation_hash_negative": true,
+        "stored_strict_calculation_pass": true,
+        "stored_strict_gate_zero": true,
+        "stored_strict_positive_false": true,
+        "stored_strict_threshold_exact": true,
+        "witness_le_exact_hull": true
+      },
+      "clipping_child_index": 0,
+      "clipping_scale_diagnostic": {
+        "aabb_diagonal_m": 0.02189964811681162,
+        "aabb_volume_m3": 1.6209540713394788e-09,
+        "convex_hull_volume_m3_float64_diagnostic": 2.623199793384312e-10
+      },
+      "diameter_cube_upper_m3": 1.00640753589465e-48,
+      "diameter_m": 1.0021312996329922e-16,
+      "diameter_squared_exact_m2": {
+        "denominator": "1329227995784915872903807060280344576",
+        "float": 1.0042671417041098e-32,
+        "numerator": "13349"
+      },
+      "direction": "right_clipped_by_left",
+      "exact_aabb_volume_upper_m3": {
+        "denominator": "95780971304118053647396689196894323976171195136475136",
+        "float": 3.5393251434424e-51,
+        "numerator": "339"
+      },
+      "exact_convex_hull_volume_m3": {
+        "denominator": "47890485652059026823698344598447161988085597568237568",
+        "float": 6.890721518206442e-52,
+        "numerator": "33"
+      },
+      "exact_hull": {
+        "euler_characteristic": 2,
+        "euler_pass": true,
+        "facet_orders": [
+          [
+            0,
+            2,
+            1
+          ],
+          [
+            0,
+            1,
+            3
+          ],
+          [
+            0,
+            4,
+            2
+          ],
+          [
+            0,
+            3,
+            4
+          ],
+          [
+            1,
+            2,
+            4,
+            3
+          ]
+        ],
+        "facet_vertex_sets": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            3
+          ],
+          [
+            0,
+            2,
+            4
+          ],
+          [
+            0,
+            3,
+            4
+          ],
+          [
+            1,
+            2,
+            3,
+            4
+          ]
+        ],
+        "support_halfspace_pass": true,
+        "triangles": [
+          [
+            0,
+            2,
+            1
+          ],
+          [
+            0,
+            1,
+            3
+          ],
+          [
+            0,
+            4,
+            2
+          ],
+          [
+            0,
+            3,
+            4
+          ],
+          [
+            1,
+            2,
+            4
+          ],
+          [
+            1,
+            4,
+            3
+          ]
+        ],
+        "triangulated_boundary_edge_twice_pass": true,
+        "volume": {
+          "denominator": "47890485652059026823698344598447161988085597568237568",
+          "float": 6.890721518206442e-52,
+          "numerator": "33"
+        }
+      },
+      "forward_only_gate_semantics": {
+        "derived_gate_volume_m3": null,
+        "exact_final_intersection_volume_m3": null,
+        "monotone_basis": "every remaining halfspace clipping result is a subset of this terminal candidate, so its volume cannot increase",
+        "numeric_volume_nonclaim": "The final intersection volume was not calculated; only the Boolean frozen-gate decision is proven by an upper bound.",
+        "original_calculation_pass": false,
+        "propagated_gate_decision_available": true,
+        "propagated_positive_volume": false,
+        "reason": "EXACT_POSITIVE_BUT_BELOW_FROZEN_VOLUME_GATE"
+      },
+      "frozen_positive_volume_epsilon_m3": {
+        "denominator": "1000000000000000000",
+        "float": 1e-18,
+        "numerator": "1"
+      },
+      "independent_normalized_qhull_topology": {
+        "power_of_two_scale_exponent": 61,
+        "qhull_float_volume_diagnostic_m3": 6.890721518206442e-52,
+        "qhull_options": "Qx Q12 Pp",
+        "qhull_simplices": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            3
+          ],
+          [
+            0,
+            2,
+            4
+          ],
+          [
+            0,
+            3,
+            4
+          ],
+          [
+            1,
+            2,
+            3
+          ],
+          [
+            2,
+            3,
+            4
+          ]
+        ],
+        "reintegrated_exact_volume": {
+          "denominator": "47890485652059026823698344598447161988085597568237568",
+          "float": 6.890721518206442e-52,
+          "numerator": "33"
+        }
+      },
+      "inradius_coordinate_width_upper_m": {
+        "denominator": "1152921504606846976",
+        "float": 8.673617379884035e-19,
+        "numerator": "1"
+      },
+      "max_tetra_indices": [
+        0,
+        1,
+        3,
+        4
+      ],
+      "max_tetra_volume_m3": {
+        "denominator": "191561942608236107294793378393788647952342390272950272",
+        "float": 5.1680411386548314e-52,
+        "numerator": "99"
+      },
+      "pass": true,
+      "point_count": 5,
+      "points_sha256": "0da888920b36dfe3fa3a96b7dfe0773ea95d6a0609bf3e0eec29f64e9f4ad5df",
+      "registered_semantics": "FULL_DIMENSIONAL_BUT_PROVABLY_SUBTHRESHOLD_TERMINAL_MICRO_VOLUME",
+      "source_child_index": 2,
+      "source_scale_diagnostic": {
+        "aabb_diagonal_m": 0.03008564768160384,
+        "aabb_volume_m3": 1.0197640268316412e-06,
+        "convex_hull_volume_m3_float64_diagnostic": 1.596680739497603e-07
+      },
+      "stage": "pre_float32",
+      "strict_interior_radius_threshold_m": {
+        "denominator": "10000000000000",
+        "float": 1e-13,
+        "numerator": "1"
+      },
+      "strict_radius_over_width_bound_ratio": 115292.1504606847,
+      "target": "LOWER",
+      "terminal_exact_hull_to_source_aabb_volume_ratio_diagnostic": 6.757172578067486e-46,
+      "volume_gate_over_aabb_upper_ratio": 2.8253973836023025e+32
+    },
+    {
+      "adjacent": false,
+      "call_id": "lower_00_03_pre_float32_rbl",
+      "call_index": 23,
+      "checks": {
+        "aabb_below_frozen_volume_gate": true,
+        "call_index_registered": true,
+        "d390_terminal_sha_exact": true,
+        "d392_points_sha_exact": true,
+        "d392_stable_full_rank3_exact": true,
+        "diameter_cube_below_frozen_volume_gate_exact_no_sqrt": true,
+        "diameter_radius_upper_below_strict_gate_exact_no_sqrt": true,
+        "exact_boundary_manifold": true,
+        "exact_euler_two": true,
+        "exact_hull_le_aabb": true,
+        "exact_hull_positive": true,
+        "exact_support_halfspaces": true,
+        "exact_translation_invariant": true,
+        "independent_qhull_topology_reintegration_exact": true,
+        "inradius_width_upper_below_strict_gate": true,
+        "max_tetra_and_aabb_point_order_exhaustive_invariant": true,
+        "positive_exact_tetra_witness": true,
+        "power_two_scale_restores_exact": true,
+        "single_bit_mutation_hash_negative": true,
+        "stored_strict_calculation_pass": true,
+        "stored_strict_gate_zero": true,
+        "stored_strict_positive_false": true,
+        "stored_strict_threshold_exact": true,
+        "witness_le_exact_hull": true
+      },
+      "clipping_child_index": 0,
+      "clipping_scale_diagnostic": {
+        "aabb_diagonal_m": 0.02189964811681162,
+        "aabb_volume_m3": 1.6209540713394788e-09,
+        "convex_hull_volume_m3_float64_diagnostic": 2.623199793384312e-10
+      },
+      "diameter_cube_upper_m3": 2.799024312478028e-51,
+      "diameter_m": 1.4092960140259168e-17,
+      "diameter_squared_exact_m2": {
+        "denominator": "166153499473114484112975882535043072",
+        "float": 1.986115255149337e-34,
+        "numerator": "33"
+      },
+      "direction": "right_clipped_by_left",
+      "exact_aabb_volume_upper_m3": {
+        "denominator": "47890485652059026823698344598447161988085597568237568",
+        "float": 1.4616682008316695e-52,
+        "numerator": "7"
+      },
+      "exact_convex_hull_volume_m3": {
+        "denominator": "143671456956177080471095033795341485964256792704712704",
+        "float": 6.960324765865092e-54,
+        "numerator": "1"
+      },
+      "exact_hull": {
+        "euler_characteristic": 2,
+        "euler_pass": true,
+        "facet_orders": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            3,
+            1
+          ],
+          [
+            0,
+            2,
+            3
+          ],
+          [
+            1,
+            3,
+            2
+          ]
+        ],
+        "facet_vertex_sets": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            3
+          ],
+          [
+            0,
+            2,
+            3
+          ],
+          [
+            1,
+            2,
+            3
+          ]
+        ],
+        "support_halfspace_pass": true,
+        "triangles": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            3,
+            1
+          ],
+          [
+            0,
+            2,
+            3
+          ],
+          [
+            1,
+            3,
+            2
+          ]
+        ],
+        "triangulated_boundary_edge_twice_pass": true,
+        "volume": {
+          "denominator": "143671456956177080471095033795341485964256792704712704",
+          "float": 6.960324765865092e-54,
+          "numerator": "1"
+        }
+      },
+      "forward_only_gate_semantics": {
+        "derived_gate_volume_m3": null,
+        "exact_final_intersection_volume_m3": null,
+        "monotone_basis": "every remaining halfspace clipping result is a subset of this terminal candidate, so its volume cannot increase",
+        "numeric_volume_nonclaim": "The final intersection volume was not calculated; only the Boolean frozen-gate decision is proven by an upper bound.",
+        "original_calculation_pass": false,
+        "propagated_gate_decision_available": true,
+        "propagated_positive_volume": false,
+        "reason": "EXACT_POSITIVE_BUT_BELOW_FROZEN_VOLUME_GATE"
+      },
+      "frozen_positive_volume_epsilon_m3": {
+        "denominator": "1000000000000000000",
+        "float": 1e-18,
+        "numerator": "1"
+      },
+      "independent_normalized_qhull_topology": {
+        "power_of_two_scale_exponent": 64,
+        "qhull_float_volume_diagnostic_m3": 6.960324765865092e-54,
+        "qhull_options": "Qx Q12 Pp",
+        "qhull_simplices": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            3
+          ],
+          [
+            0,
+            2,
+            3
+          ],
+          [
+            1,
+            2,
+            3
+          ]
+        ],
+        "reintegrated_exact_volume": {
+          "denominator": "143671456956177080471095033795341485964256792704712704",
+          "float": 6.960324765865092e-54,
+          "numerator": "1"
+        }
+      },
+      "inradius_coordinate_width_upper_m": {
+        "denominator": "1152921504606846976",
+        "float": 8.673617379884035e-19,
+        "numerator": "1"
+      },
+      "max_tetra_indices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "max_tetra_volume_m3": {
+        "denominator": "143671456956177080471095033795341485964256792704712704",
+        "float": 6.960324765865092e-54,
+        "numerator": "1"
+      },
+      "pass": true,
+      "point_count": 4,
+      "points_sha256": "b7b2d845d67ef721a9608c2cd6186754a08524c105f5c3135f4ae363f038f8b1",
+      "registered_semantics": "FULL_DIMENSIONAL_BUT_PROVABLY_SUBTHRESHOLD_TERMINAL_MICRO_VOLUME",
+      "source_child_index": 3,
+      "source_scale_diagnostic": {
+        "aabb_diagonal_m": 0.030313413634086833,
+        "aabb_volume_m3": 1.4185647435429055e-06,
+        "convex_hull_volume_m3_float64_diagnostic": 1.4339468294640021e-07
+      },
+      "stage": "pre_float32",
+      "strict_interior_radius_threshold_m": {
+        "denominator": "10000000000000",
+        "float": 1e-13,
+        "numerator": "1"
+      },
+      "strict_radius_over_width_bound_ratio": 115292.1504606847,
+      "target": "LOWER",
+      "terminal_exact_hull_to_source_aabb_volume_ratio_diagnostic": 4.906596471925197e-48,
+      "volume_gate_over_aabb_upper_ratio": 6.841497950294147e+33
+    },
+    {
+      "adjacent": false,
+      "call_id": "lower_00_04_post_float32_lbr",
+      "call_index": 26,
+      "checks": {
+        "aabb_below_frozen_volume_gate": true,
+        "call_index_registered": true,
+        "d390_terminal_sha_exact": true,
+        "d392_points_sha_exact": true,
+        "d392_stable_full_rank3_exact": true,
+        "diameter_cube_below_frozen_volume_gate_exact_no_sqrt": true,
+        "diameter_radius_upper_below_strict_gate_exact_no_sqrt": true,
+        "exact_boundary_manifold": true,
+        "exact_euler_two": true,
+        "exact_hull_le_aabb": true,
+        "exact_hull_positive": true,
+        "exact_support_halfspaces": true,
+        "exact_translation_invariant": true,
+        "independent_qhull_topology_reintegration_exact": true,
+        "inradius_width_upper_below_strict_gate": true,
+        "max_tetra_and_aabb_point_order_exhaustive_invariant": true,
+        "positive_exact_tetra_witness": true,
+        "power_two_scale_restores_exact": true,
+        "single_bit_mutation_hash_negative": true,
+        "stored_strict_calculation_pass": true,
+        "stored_strict_gate_zero": true,
+        "stored_strict_positive_false": true,
+        "stored_strict_threshold_exact": true,
+        "witness_le_exact_hull": true
+      },
+      "clipping_child_index": 4,
+      "clipping_scale_diagnostic": {
+        "aabb_diagonal_m": 0.03761229229225925,
+        "aabb_volume_m3": 3.7195576071704527e-06,
+        "convex_hull_volume_m3_float64_diagnostic": 8.583547600328027e-07
+      },
+      "diameter_cube_upper_m3": 5.781630632700865e-49,
+      "diameter_m": 8.33073745070314e-17,
+      "diameter_squared_exact_m2": {
+        "denominator": "1329227995784915872903807060280344576",
+        "float": 6.940118647254785e-33,
+        "numerator": "9225"
+      },
+      "direction": "left_clipped_by_right",
+      "exact_aabb_volume_upper_m3": {
+        "denominator": "95780971304118053647396689196894323976171195136475136",
+        "float": 1.4564479572572707e-50,
+        "numerator": "1395"
+      },
+      "exact_convex_hull_volume_m3": {
+        "denominator": "191561942608236107294793378393788647952342390272950272",
+        "float": 2.427413262095451e-51,
+        "numerator": "465"
+      },
+      "exact_hull": {
+        "euler_characteristic": 2,
+        "euler_pass": true,
+        "facet_orders": [
+          [
+            0,
+            2,
+            1
+          ],
+          [
+            0,
+            1,
+            4
+          ],
+          [
+            0,
+            4,
+            2
+          ],
+          [
+            1,
+            2,
+            4
+          ]
+        ],
+        "facet_vertex_sets": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            4
+          ],
+          [
+            0,
+            2,
+            3,
+            4
+          ],
+          [
+            1,
+            2,
+            3,
+            4
+          ]
+        ],
+        "support_halfspace_pass": true,
+        "triangles": [
+          [
+            0,
+            2,
+            1
+          ],
+          [
+            0,
+            1,
+            4
+          ],
+          [
+            0,
+            4,
+            2
+          ],
+          [
+            1,
+            2,
+            4
+          ]
+        ],
+        "triangulated_boundary_edge_twice_pass": true,
+        "volume": {
+          "denominator": "191561942608236107294793378393788647952342390272950272",
+          "float": 2.427413262095451e-51,
+          "numerator": "465"
+        }
+      },
+      "forward_only_gate_semantics": {
+        "derived_gate_volume_m3": null,
+        "exact_final_intersection_volume_m3": null,
+        "monotone_basis": "every remaining halfspace clipping result is a subset of this terminal candidate, so its volume cannot increase",
+        "numeric_volume_nonclaim": "The final intersection volume was not calculated; only the Boolean frozen-gate decision is proven by an upper bound.",
+        "original_calculation_pass": false,
+        "propagated_gate_decision_available": true,
+        "propagated_positive_volume": false,
+        "reason": "EXACT_POSITIVE_BUT_BELOW_FROZEN_VOLUME_GATE"
+      },
+      "frozen_positive_volume_epsilon_m3": {
+        "denominator": "1000000000000000000",
+        "float": 1e-18,
+        "numerator": "1"
+      },
+      "independent_normalized_qhull_topology": {
+        "power_of_two_scale_exponent": 61,
+        "qhull_float_volume_diagnostic_m3": 2.4274132620954514e-51,
+        "qhull_options": "Qx Q12 Pp",
+        "qhull_simplices": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            4
+          ],
+          [
+            0,
+            2,
+            4
+          ],
+          [
+            1,
+            2,
+            4
+          ]
+        ],
+        "reintegrated_exact_volume": {
+          "denominator": "191561942608236107294793378393788647952342390272950272",
+          "float": 2.427413262095451e-51,
+          "numerator": "465"
+        }
+      },
+      "inradius_coordinate_width_upper_m": {
+        "denominator": "1152921504606846976",
+        "float": 4.336808689942018e-18,
+        "numerator": "5"
+      },
+      "max_tetra_indices": [
+        0,
+        1,
+        2,
+        4
+      ],
+      "max_tetra_volume_m3": {
+        "denominator": "191561942608236107294793378393788647952342390272950272",
+        "float": 2.427413262095451e-51,
+        "numerator": "465"
+      },
+      "pass": true,
+      "point_count": 5,
+      "points_sha256": "2b321bb126cf3f348c6c43054139e148804b8da7674d369f7ec9b477ea8db4ee",
+      "registered_semantics": "FULL_DIMENSIONAL_BUT_PROVABLY_SUBTHRESHOLD_TERMINAL_MICRO_VOLUME",
+      "source_child_index": 0,
+      "source_scale_diagnostic": {
+        "aabb_diagonal_m": 0.02189964812681627,
+        "aabb_volume_m3": 1.6209561848143046e-09,
+        "convex_hull_volume_m3_float64_diagnostic": 2.6232027012100333e-10
+      },
+      "stage": "post_float32",
+      "strict_interior_radius_threshold_m": {
+        "denominator": "10000000000000",
+        "float": 1e-13,
+        "numerator": "1"
+      },
+      "strict_radius_over_width_bound_ratio": 23058.43009213694,
+      "target": "LOWER",
+      "terminal_exact_hull_to_source_aabb_volume_ratio_diagnostic": 1.4975193560666995e-42,
+      "volume_gate_over_aabb_upper_ratio": 6.866019448323875e+31
+    },
+    {
+      "adjacent": false,
+      "call_id": "lower_02_04_post_float32_lbr",
+      "call_index": 34,
+      "checks": {
+        "aabb_below_frozen_volume_gate": true,
+        "call_index_registered": true,
+        "d390_terminal_sha_exact": true,
+        "d392_points_sha_exact": true,
+        "d392_stable_full_rank3_exact": true,
+        "diameter_cube_below_frozen_volume_gate_exact_no_sqrt": true,
+        "diameter_radius_upper_below_strict_gate_exact_no_sqrt": true,
+        "exact_boundary_manifold": true,
+        "exact_euler_two": true,
+        "exact_hull_le_aabb": true,
+        "exact_hull_positive": true,
+        "exact_support_halfspaces": true,
+        "exact_translation_invariant": true,
+        "independent_qhull_topology_reintegration_exact": true,
+        "inradius_width_upper_below_strict_gate": true,
+        "max_tetra_and_aabb_point_order_exhaustive_invariant": true,
+        "positive_exact_tetra_witness": true,
+        "power_two_scale_restores_exact": true,
+        "single_bit_mutation_hash_negative": true,
+        "stored_strict_calculation_pass": true,
+        "stored_strict_gate_zero": true,
+        "stored_strict_positive_false": true,
+        "stored_strict_threshold_exact": true,
+        "witness_le_exact_hull": true
+      },
+      "clipping_child_index": 4,
+      "clipping_scale_diagnostic": {
+        "aabb_diagonal_m": 0.03761229229225925,
+        "aabb_volume_m3": 3.7195576071704527e-06,
+        "convex_hull_volume_m3_float64_diagnostic": 8.583547600328027e-07
+      },
+      "diameter_cube_upper_m3": 3.2811000933883083e-47,
+      "diameter_m": 3.201399158130426e-16,
+      "diameter_squared_exact_m2": {
+        "denominator": "166153499473114484112975882535043072",
+        "float": 1.02489565696782e-31,
+        "numerator": "17029"
+      },
+      "direction": "left_clipped_by_right",
+      "exact_aabb_volume_upper_m3": {
+        "denominator": "47890485652059026823698344598447161988085597568237568",
+        "float": 1.2462809509519742e-48,
+        "numerator": "59685"
+      },
+      "exact_convex_hull_volume_m3": {
+        "denominator": "47890485652059026823698344598447161988085597568237568",
+        "float": 7.636172300630593e-50,
+        "numerator": "3657"
+      },
+      "exact_hull": {
+        "euler_characteristic": 2,
+        "euler_pass": true,
+        "facet_orders": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            4,
+            1
+          ],
+          [
+            0,
+            2,
+            3
+          ],
+          [
+            0,
+            3,
+            4
+          ],
+          [
+            1,
+            4,
+            5,
+            2
+          ],
+          [
+            2,
+            5,
+            3
+          ],
+          [
+            3,
+            5,
+            4
+          ]
+        ],
+        "facet_vertex_sets": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            4
+          ],
+          [
+            0,
+            2,
+            3
+          ],
+          [
+            0,
+            3,
+            4
+          ],
+          [
+            1,
+            2,
+            4,
+            5
+          ],
+          [
+            2,
+            3,
+            5
+          ],
+          [
+            3,
+            4,
+            5
+          ]
+        ],
+        "support_halfspace_pass": true,
+        "triangles": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            4,
+            1
+          ],
+          [
+            0,
+            2,
+            3
+          ],
+          [
+            0,
+            3,
+            4
+          ],
+          [
+            1,
+            4,
+            5
+          ],
+          [
+            1,
+            5,
+            2
+          ],
+          [
+            2,
+            5,
+            3
+          ],
+          [
+            3,
+            5,
+            4
+          ]
+        ],
+        "triangulated_boundary_edge_twice_pass": true,
+        "volume": {
+          "denominator": "47890485652059026823698344598447161988085597568237568",
+          "float": 7.636172300630593e-50,
+          "numerator": "3657"
+        }
+      },
+      "forward_only_gate_semantics": {
+        "derived_gate_volume_m3": null,
+        "exact_final_intersection_volume_m3": null,
+        "monotone_basis": "every remaining halfspace clipping result is a subset of this terminal candidate, so its volume cannot increase",
+        "numeric_volume_nonclaim": "The final intersection volume was not calculated; only the Boolean frozen-gate decision is proven by an upper bound.",
+        "original_calculation_pass": false,
+        "propagated_gate_decision_available": true,
+        "propagated_positive_volume": false,
+        "reason": "EXACT_POSITIVE_BUT_BELOW_FROZEN_VOLUME_GATE"
+      },
+      "frozen_positive_volume_epsilon_m3": {
+        "denominator": "1000000000000000000",
+        "float": 1e-18,
+        "numerator": "1"
+      },
+      "independent_normalized_qhull_topology": {
+        "power_of_two_scale_exponent": 59,
+        "qhull_float_volume_diagnostic_m3": 7.636172300630592e-50,
+        "qhull_options": "Qx Q12 Pp",
+        "qhull_simplices": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            4
+          ],
+          [
+            0,
+            2,
+            3
+          ],
+          [
+            0,
+            3,
+            4
+          ],
+          [
+            1,
+            2,
+            5
+          ],
+          [
+            1,
+            4,
+            5
+          ],
+          [
+            2,
+            3,
+            5
+          ],
+          [
+            3,
+            4,
+            5
+          ]
+        ],
+        "reintegrated_exact_volume": {
+          "denominator": "47890485652059026823698344598447161988085597568237568",
+          "float": 7.636172300630593e-50,
+          "numerator": "3657"
+        }
+      },
+      "inradius_coordinate_width_upper_m": {
+        "denominator": "1152921504606846976",
+        "float": 1.9949319973733282e-17,
+        "numerator": "23"
+      },
+      "max_tetra_indices": [
+        0,
+        2,
+        3,
+        4
+      ],
+      "max_tetra_volume_m3": {
+        "denominator": "95780971304118053647396689196894323976171195136475136",
+        "float": 6.171371953654285e-50,
+        "numerator": "5911"
+      },
+      "pass": true,
+      "point_count": 6,
+      "points_sha256": "c12fe0b5f5fad253b78bd94d5599851cc62625c4ff2bd9e82bfbb542796a5334",
+      "registered_semantics": "FULL_DIMENSIONAL_BUT_PROVABLY_SUBTHRESHOLD_TERMINAL_MICRO_VOLUME",
+      "source_child_index": 2,
+      "source_scale_diagnostic": {
+        "aabb_diagonal_m": 0.03008564768160384,
+        "aabb_volume_m3": 1.0197640268316412e-06,
+        "convex_hull_volume_m3_float64_diagnostic": 1.596681038798586e-07
+      },
+      "stage": "post_float32",
+      "strict_interior_radius_threshold_m": {
+        "denominator": "10000000000000",
+        "float": 1e-13,
+        "numerator": "1"
+      },
+      "strict_radius_over_width_bound_ratio": 5012.702193942813,
+      "target": "LOWER",
+      "terminal_exact_hull_to_source_aabb_volume_ratio_diagnostic": 7.488175793331151e-44,
+      "volume_gate_over_aabb_upper_ratio": 8.023872941620009e+29
+    },
+    {
+      "adjacent": false,
+      "call_id": "lower_04_06_pre_float32_rbl",
+      "call_index": 39,
+      "checks": {
+        "aabb_below_frozen_volume_gate": true,
+        "call_index_registered": true,
+        "d390_terminal_sha_exact": true,
+        "d392_points_sha_exact": true,
+        "d392_stable_full_rank3_exact": true,
+        "diameter_cube_below_frozen_volume_gate_exact_no_sqrt": true,
+        "diameter_radius_upper_below_strict_gate_exact_no_sqrt": true,
+        "exact_boundary_manifold": true,
+        "exact_euler_two": true,
+        "exact_hull_le_aabb": true,
+        "exact_hull_positive": true,
+        "exact_support_halfspaces": true,
+        "exact_translation_invariant": true,
+        "independent_qhull_topology_reintegration_exact": true,
+        "inradius_width_upper_below_strict_gate": true,
+        "max_tetra_and_aabb_point_order_exhaustive_invariant": true,
+        "positive_exact_tetra_witness": true,
+        "power_two_scale_restores_exact": true,
+        "single_bit_mutation_hash_negative": true,
+        "stored_strict_calculation_pass": true,
+        "stored_strict_gate_zero": true,
+        "stored_strict_positive_false": true,
+        "stored_strict_threshold_exact": true,
+        "witness_le_exact_hull": true
+      },
+      "clipping_child_index": 4,
+      "clipping_scale_diagnostic": {
+        "aabb_diagonal_m": 0.03761229229225925,
+        "aabb_volume_m3": 3.7195576071704527e-06,
+        "convex_hull_volume_m3_float64_diagnostic": 8.583546789492079e-07
+      },
+      "diameter_cube_upper_m3": 4.30937984073999e-51,
+      "diameter_m": 1.6273148661314594e-17,
+      "diameter_squared_exact_m2": {
+        "denominator": "41538374868278621028243970633760768",
+        "float": 2.6481536735324493e-34,
+        "numerator": "11"
+      },
+      "direction": "right_clipped_by_left",
+      "exact_aabb_volume_upper_m3": {
+        "denominator": "47890485652059026823698344598447161988085597568237568",
+        "float": 8.143579976062159e-52,
+        "numerator": "39"
+      },
+      "exact_convex_hull_volume_m3": {
+        "denominator": "574685827824708321884380135181365943857027170818850816",
+        "float": 1.9140893106129005e-53,
+        "numerator": "11"
+      },
+      "exact_hull": {
+        "euler_characteristic": 2,
+        "euler_pass": true,
+        "facet_orders": [
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            3
+          ],
+          [
+            0,
+            3,
+            2
+          ],
+          [
+            1,
+            2,
+            3
+          ]
+        ],
+        "facet_vertex_sets": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            3
+          ],
+          [
+            0,
+            2,
+            3
+          ],
+          [
+            1,
+            2,
+            3
+          ]
+        ],
+        "support_halfspace_pass": true,
+        "triangles": [
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            3
+          ],
+          [
+            0,
+            3,
+            2
+          ],
+          [
+            1,
+            2,
+            3
+          ]
+        ],
+        "triangulated_boundary_edge_twice_pass": true,
+        "volume": {
+          "denominator": "574685827824708321884380135181365943857027170818850816",
+          "float": 1.9140893106129005e-53,
+          "numerator": "11"
+        }
+      },
+      "forward_only_gate_semantics": {
+        "derived_gate_volume_m3": null,
+        "exact_final_intersection_volume_m3": null,
+        "monotone_basis": "every remaining halfspace clipping result is a subset of this terminal candidate, so its volume cannot increase",
+        "numeric_volume_nonclaim": "The final intersection volume was not calculated; only the Boolean frozen-gate decision is proven by an upper bound.",
+        "original_calculation_pass": false,
+        "propagated_gate_decision_available": true,
+        "propagated_positive_volume": false,
+        "reason": "EXACT_POSITIVE_BUT_BELOW_FROZEN_VOLUME_GATE"
+      },
+      "frozen_positive_volume_epsilon_m3": {
+        "denominator": "1000000000000000000",
+        "float": 1e-18,
+        "numerator": "1"
+      },
+      "independent_normalized_qhull_topology": {
+        "power_of_two_scale_exponent": 64,
+        "qhull_float_volume_diagnostic_m3": 1.9140893106129005e-53,
+        "qhull_options": "Qx Q12 Pp",
+        "qhull_simplices": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            3
+          ],
+          [
+            0,
+            2,
+            3
+          ],
+          [
+            1,
+            2,
+            3
+          ]
+        ],
+        "reintegrated_exact_volume": {
+          "denominator": "574685827824708321884380135181365943857027170818850816",
+          "float": 1.9140893106129005e-53,
+          "numerator": "11"
+        }
+      },
+      "inradius_coordinate_width_upper_m": {
+        "denominator": "288230376151711744",
+        "float": 3.469446951953614e-18,
+        "numerator": "1"
+      },
+      "max_tetra_indices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "max_tetra_volume_m3": {
+        "denominator": "574685827824708321884380135181365943857027170818850816",
+        "float": 1.9140893106129005e-53,
+        "numerator": "11"
+      },
+      "pass": true,
+      "point_count": 4,
+      "points_sha256": "187db2b10e8b122c3a0b435c655ca9a8c60ef256d8c5eaf600a2196bc79e02e7",
+      "registered_semantics": "FULL_DIMENSIONAL_BUT_PROVABLY_SUBTHRESHOLD_TERMINAL_MICRO_VOLUME",
+      "source_child_index": 6,
+      "source_scale_diagnostic": {
+        "aabb_diagonal_m": 0.007489792797771338,
+        "aabb_volume_m3": 4.107185408383731e-09,
+        "convex_hull_volume_m3_float64_diagnostic": 7.56467018749732e-11
+      },
+      "stage": "pre_float32",
+      "strict_interior_radius_threshold_m": {
+        "denominator": "10000000000000",
+        "float": 1e-13,
+        "numerator": "1"
+      },
+      "strict_radius_over_width_bound_ratio": 28823.037615171175,
+      "target": "LOWER",
+      "terminal_exact_hull_to_source_aabb_volume_ratio_diagnostic": 4.660343082408197e-45,
+      "volume_gate_over_aabb_upper_ratio": 1.2279611705656161e+33
+    }
+  ],
+  "scope_counters": {
+    "all_41_replay": 0,
+    "call29_reclassification": 0,
+    "calls_evaluated": 10,
+    "collider_asset_usd_isaac_physx_warp_cuda": 0,
+    "cylinder_physics_q5_contact_grasp": 0,
+    "pair_sweeps": 0,
+    "seam_updates": 0,
+    "target_ik_path_changes": 0
+  },
+  "what_and_why": "Distinguish exact binary64 rank-3 micro-volume from a physical or frozen-gate-positive overlap for D392's ten stable FULL terminals."
+}

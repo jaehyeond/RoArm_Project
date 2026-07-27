@@ -1,0 +1,54 @@
+{
+  "artifact": "D394_ATTEMPT3_OBSERVABILITY_REPAIR_PREREGISTRATION_V1",
+  "attempt": "attempt3_ascii_exponent_visual_repair",
+  "authority_checks": {
+    "artifact_exact": true,
+    "inputs_exact": true,
+    "output_exact": true,
+    "script_exact": true,
+    "start_exact": true,
+    "status_exact": true
+  },
+  "authority_sha256": "e72b4eef87e7e64aabc2948223f51f571d4519a176c18aa869ba369a8aaa2ca1",
+  "case": "D394",
+  "forbidden": {
+    "collider_usd_isaac_physx_cylinder_physics_q5_contact_grasp": 0,
+    "new_worker_or_viewer": 0,
+    "numeric_recompute": 0,
+    "pair_seam_call29_update": 0
+  },
+  "frozen_checks": {
+    "d394_board_layout_validation.json_9_exact": true,
+    "d394_execution_authority.json_0_exact": true,
+    "d394_full10_display_geometry.json_4_exact": true,
+    "d394_full10_volume_semantics.csv_5_exact": true,
+    "d394_full10_volume_semantics.rerun.rbl_11_exact": true,
+    "d394_full10_volume_semantics.rerun.rrd_10_exact": true,
+    "d394_full10_volume_semantics_1920x1080.png_8_exact": true,
+    "d394_full10_volume_semantics_evidence.json_3_exact": true,
+    "d394_manual_visual_inspection.json_14_exact": true,
+    "d394_observability_claim.json_15_exact": true,
+    "d394_offline_worker_claim.json_6_exact": true,
+    "d394_offline_worker_supervisor.json_7_exact": true,
+    "d394_phase_markers.jsonl_2_exact": true,
+    "d394_preregistration.json_1_exact": true,
+    "d394_rerun_inspection.png_13_exact": true,
+    "d394_rerun_validation.json_12_exact": true,
+    "d394_visual_contract_stop.json_16_exact": true,
+    "font_exists": true,
+    "head_exact": true,
+    "origin_exact": true,
+    "start_exact": true
+  },
+  "frozen_rerun_policy": {
+    "new_viewer_invocations": 0,
+    "numeric_worker_invocations": 0,
+    "rrd_rbl_screenshot_bit_exact_copy": true
+  },
+  "inherited_numeric_evidence_sha256": "7672f208cc704bd9c3a51bc0b60040e2a121335cf12dcfaa5fd851484dd089a1",
+  "observed_failure": "Attempt2 manual inspection found missing-glyph boxes for Unicode superscript-minus exponents.",
+  "pass_condition": "ASCII thresholds readable, exact 1920x1080, layout and manual 10/10, copied RRD/RBL/screenshot exact.",
+  "reactive_variable": "ascii_exponent_glyph_fallback_v1",
+  "script_sha256": "e236210387038e7838514655a7cccdf28cdbb6188016b67656e14846943d5e80",
+  "single_change": "Render 10^-18 and 10^-13 with ASCII characters."
+}

@@ -1,0 +1,25 @@
+{
+  "artifact": "D389_MANUAL_VISUAL_INSPECTION_V1",
+  "artifact_hashes": {
+    "claudedocs/runtime_logs/grasp_track/g0a_d389/attempt2_prereg_status_whitespace_repair/d389_numeric_provenance_and_tie_audit_1920x1080.png": "623f5d8499e9c6bde3f2296553a18044d05771376c454cea64cde44b9d1fb3fa",
+    "claudedocs/runtime_logs/grasp_track/g0a_d389/attempt2_prereg_status_whitespace_repair/d389_rerun_inspection.png": "68bfae93222bdb929ee00a69d521a3817a5f50ff8816be47cef485210c80f53e"
+  },
+  "checks": {
+    "all_11_adjacent_seam_rows_readable": true,
+    "board_exact_1920x1080_and_readable": true,
+    "global_vs_local_paths_and_state5_pruning_visible": true,
+    "no_budget_partition_asset_physics_or_grasp_claim": true,
+    "pre_post_float32_and_frozen5nm_columns_distinct": true,
+    "rerun_decision_subject_visible_and_readable": false
+  },
+  "observations": [
+    "The exact 1920x1080 board is readable: all 11 adjacent rows are visible, the three numeric representations are distinct, and no measured table text overlaps.",
+    "The global [0,1,5,...] path, D388 local [0,2,5,...] path, and the state-5 pruning explanation are visible on the board.",
+    "The Rerun screenshot is 3840x2160 for a requested 1920x1080 headless window; its spatial geometry is tiny and the seam labels overlap heavily, so the geometry-to-seam mapping is not readable.",
+    "The Rerun notification area shows a message-proxy crash and a loading message. The bottom text summary is readable, but it does not make the spatial decision subject visually inspectable.",
+    "Both artifacts keep budget selection, collider adoption, Isaac/physics, q5/contact, and grasp conclusions explicitly null or zero."
+  ],
+  "pass": false,
+  "review_scope": "post-run inspection of immutable D389 attempt2 artifacts; no rerun and no finalize",
+  "reviewed_at": "2026-07-26 KST"
+}

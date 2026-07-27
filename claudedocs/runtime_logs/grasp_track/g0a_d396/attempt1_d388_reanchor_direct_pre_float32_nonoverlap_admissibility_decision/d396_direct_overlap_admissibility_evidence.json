@@ -1,0 +1,152 @@
+{
+  "artifact": "D396_DIRECT_OVERLAP_ADMISSIBILITY_EVIDENCE_V1",
+  "attempt": "attempt1_d388_reanchor_direct_pre_float32_nonoverlap_admissibility_decision",
+  "case": "D396",
+  "checks": {
+    "absence_not_promoted_to_pass": true,
+    "both_authoritative": true,
+    "both_directions_above_gate": true,
+    "candidate_rejected": true,
+    "d388_already_nonmaterializable": true,
+    "d388_zero_positive_overlap_gate": true,
+    "d389_integrity_failure_blocks": true,
+    "d395_outcome_does_not_decide": true,
+    "either_witness_sufficient": true,
+    "no_qhull_fallback": true,
+    "strict_above_gate": true,
+    "two_witnesses": true
+  },
+  "controls": {
+    "both_enabled": false,
+    "both_masked": null,
+    "d389_integrity_failure": null,
+    "d395_generic_fail_background": false,
+    "d395_pass_background": false,
+    "lower_only": false,
+    "upper_only": false
+  },
+  "cooked_or_live_physx_overlap": null,
+  "d388_original_verdict": "D388_REANCHOR_PARTITION_CONTRACT_FAIL_STOP",
+  "d388_reanchor_candidate_nonoverlap_admissible": false,
+  "d388_verdict_modified": false,
+  "d389_unresolved_seam_records_modified": false,
+  "d395_hybrid_table_adopted": false,
+  "d395_predecessor_outcome_used_as_decision_authority": false,
+  "direct_witnesses": [
+    {
+      "adjacent": true,
+      "authority_pass": true,
+      "cooked_or_live_physx_claim": null,
+      "directional": {
+        "calculation_pass": true,
+        "left_clipped_by_right": {
+          "calculation_pass": true,
+          "positive_volume": true,
+          "qhull_fallback_used": false,
+          "volume_m3": 6.403885673976526e-15
+        },
+        "positive_volume": true,
+        "relative_difference": 2.618687967086985e-08,
+        "right_clipped_by_left": {
+          "calculation_pass": true,
+          "positive_volume": true,
+          "qhull_fallback_used": false,
+          "volume_m3": 6.403885506278743e-15
+        }
+      },
+      "identity_exact": true,
+      "left_index": 1,
+      "pair_index": 5,
+      "physical_or_manufacturing_penetration_claim": null,
+      "right_index": 2,
+      "strict": {
+        "calculation_pass": true,
+        "chebyshev_center_m": [
+          0.02179521137255261,
+          -0.006270749556701513,
+          -0.009456715166489299
+        ],
+        "inradius_to_threshold_ratio": 698.5495742125113,
+        "positive_volume": true,
+        "qhull_fallback_used": false,
+        "signed_inradius_nm": 0.06985495742125113,
+        "solver_residual_contract_pass": true,
+        "strict_interior_radius_threshold_nm": 0.0001,
+        "volume_m3": 6.4038856253626914e-15,
+        "volume_minus_gate_m3": 6.402885625362692e-15,
+        "volume_to_gate_ratio": 6403.885625362691
+      },
+      "target": "UPPER",
+      "witness_id": "upper_1_2"
+    },
+    {
+      "adjacent": true,
+      "authority_pass": true,
+      "cooked_or_live_physx_claim": null,
+      "directional": {
+        "calculation_pass": true,
+        "left_clipped_by_right": {
+          "calculation_pass": true,
+          "positive_volume": true,
+          "qhull_fallback_used": false,
+          "volume_m3": 2.413045456355167e-15
+        },
+        "positive_volume": true,
+        "relative_difference": 6.52072444103654e-08,
+        "right_clipped_by_left": {
+          "calculation_pass": true,
+          "positive_volume": true,
+          "qhull_fallback_used": false,
+          "volume_m3": 2.413045613703222e-15
+        }
+      },
+      "identity_exact": true,
+      "left_index": 2,
+      "pair_index": 26,
+      "physical_or_manufacturing_penetration_claim": null,
+      "right_index": 3,
+      "strict": {
+        "calculation_pass": true,
+        "chebyshev_center_m": [
+          0.021756202220201096,
+          -0.00626073358906767,
+          -0.028409835674726026
+        ],
+        "inradius_to_threshold_ratio": 258.0386262704909,
+        "positive_volume": true,
+        "qhull_fallback_used": false,
+        "signed_inradius_nm": 0.025803862627049094,
+        "solver_residual_contract_pass": true,
+        "strict_interior_radius_threshold_nm": 0.0001,
+        "volume_m3": 2.4130456372851684e-15,
+        "volume_minus_gate_m3": 2.4120456372851685e-15,
+        "volume_to_gate_ratio": 2413.045637285168
+      },
+      "target": "LOWER",
+      "witness_id": "lower_2_3"
+    }
+  ],
+  "frozen_positive_volume_gate_m3": 1e-18,
+  "frozen_required_positive_overlap_count": 0,
+  "g0a_pass": false,
+  "materializable_candidate": false,
+  "new_variables": [
+    "d388_direct_pre_float32_positive_pair_nonoverlap_admissibility_decision_v1"
+  ],
+  "numeric_verdict": "D396_D388_REANCHOR_DIRECT_PRE_FLOAT32_NONOVERLAP_INADMISSIBILITY_CERTIFICATE_PASS",
+  "pass": true,
+  "physical_or_manufacturing_penetration": null,
+  "scope_counters": {
+    "clipping_or_solver_replays": 0,
+    "collider_or_usd_operations": 0,
+    "contact_or_grasp_evaluations": 0,
+    "cylinder_operations": 0,
+    "hardware_operations": 0,
+    "isaac_physx_warp_cuda_operations": 0,
+    "pair_seam_partition_budget_geometry_changes": 0,
+    "physics_steps": 0,
+    "process_signals_sent": 0,
+    "q5_samples": 0,
+    "target_ik_path_settings_changes": 0
+  }
+}
