@@ -1,0 +1,1051 @@
+{
+  "artifact": "D400_GRIPPER_LINK_SDF_RES256_PREREGISTRATION_V2",
+  "case": "g0a_d400",
+  "attempt": "attempt1_gripper_link_sdf_res256_live_cook_articulation_preflight",
+  "attempt_name_guard": "The reserved forward-only folder name is retained for path continuity. Its words live_cook_articulation do not expand V2 authority beyond configuration, load admission, global cook-queue drain, and rigid-owner enumeration.",
+  "status": "PREREGISTERED_NOT_EXECUTED",
+  "date_kst": "2026-07-27",
+  "what_and_why": "Replace only the moving gripper_link A64 collision representation with one SDF input mesh at resolution 256, then test exact USD authorship, bounded PhysX configuration/load admission, global cook-queue drain, and rigid-link owner enumeration before any contact or product-cylinder work.",
+  "approval_interpretation": {
+    "consumed_now": "write and review this preregistration only",
+    "not_consumed": "future controller/worker implementation, reviewed-script attestation, proposed runtime hash tuple, derivative USD materialization, and actual Isaac/PhysX worker execution",
+    "reason": "The corrected ladder requires preregistration review, then a separately approved no-Isaac implementation/static-attestation step, then another separately approved one-worker runtime."
+  },
+  "approved_scope": "preregistration documentation only; no code, derivative USD, Isaac/Kit/PhysX launch, q5, contact, cylinder, target/IK/path, or physics execution in this turn",
+  "new_variables": [
+    "gripper_link_collision_representation_a64_to_sdf_res256_v1"
+  ],
+  "new_variable_count": 1,
+  "git_baseline": {
+    "head": "4c88865bdd4ac82f034253320cb3e46f9770a46d",
+    "origin_master": "4c88865bdd4ac82f034253320cb3e46f9770a46d",
+    "subject": "현재 D398분석",
+    "status_short_before_d400_preregistration": [
+      " M START_HERE.md",
+      " M claudedocs/BACKLOG.md",
+      " M claudedocs/DECISIONS.md",
+      " M claudedocs/EXPERIMENT_LEDGER.md",
+      "?? claudedocs/session_20260727_grasp_g0a_sdf_case_recon_option_a_briefing.md",
+      "?? claudedocs/session_20260727_grasp_g0a_vertex12_cylinder_d400_scope_review.md"
+    ],
+    "ownership_note": "All listed pre-existing dirty paths are user-owned continuity changes and must be preserved."
+  },
+  "pre_preregistration_provenance_snapshot": {
+    "START_HERE.md": "1c3ac0e70034f80f1ec152a74ca9795d4558e3a2e48be954f531a363be80ef9f",
+    "claudedocs/BACKLOG.md": "3cc0b96a7de2dedfe990543c0dd326382e246604e97f7ad332f6f01c555d91c5",
+    "claudedocs/DECISIONS.md": "05678eba3b09caf064fb85559cbeb4468ea996d230745afc89de61ecda092a7b",
+    "claudedocs/EXPERIMENT_LEDGER.md": "cc6d1628f8532706f991e6e09d82c26259bc1b0fe8fa69e90fa79a60667566fe",
+    "claudedocs/session_20260727_grasp_g0a_sdf_case_recon_option_a_briefing.md": "3838f528f771e9277478c80b4bdbcb57b15d36b56b63cf8f95242d98003ab219",
+    "claudedocs/session_20260727_grasp_g0a_vertex12_cylinder_d400_scope_review.md": "d63afc8da64b83e249097af527fa1391707e0c1030e8e354caeb82ec06d23360"
+  },
+  "installed_stack_expected_and_to_be_reprobed_at_runtime": {
+    "os": "Ubuntu 22.04",
+    "gpu": "NVIDIA GeForce RTX 4090 Laptop GPU; compute capability 8.9",
+    "isaac_sim": "5.1.0.0",
+    "isaac_lab": "2.3.0",
+    "omni_physx": "107.3.26",
+    "physx_schema": "107.3.26",
+    "physx_engine": "5.6.1 [INFERENCE from installed stack; runtime must record actual version evidence]",
+    "numpy_required": "1.26.0",
+    "psutil_required": "5.9.8",
+    "rerun_sdk_cli_required": "0.34.1"
+  },
+  "official_sources": [
+    {
+      "title": "Omni Physics 107.3 — Colliders",
+      "url": "https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/rigid_bodies_articulations/collision.html",
+      "applicable_version": "Omni Physics 107.3; installed schema 107.3.26",
+      "use": "SDF mesh authoring requires CollisionAPI, MeshCollisionAPI approximation=sdf, and PhysxSDFMeshCollisionAPI; SDF is documented for detailed non-convex dynamic or kinematic rigid bodies."
+    },
+    {
+      "title": "Omni Physics 107.3 — Collision Behavior Guide",
+      "url": "https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/guides/collision_guide.html",
+      "applicable_version": "Omni Physics 107.3; installed schema 107.3.26",
+      "use": "SDF resolution, thin-feature, non-watertight, memory, and contact-density cautions."
+    },
+    {
+      "title": "Omni Physics 107.3 — Rigid Bodies",
+      "url": "https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/rigid_bodies_articulations/rigid_bodies.html",
+      "applicable_version": "Omni Physics 107.3; installed schema 107.3.26",
+      "use": "A rigid body may own child colliders and articulation owners must be resolved explicitly."
+    },
+    {
+      "title": "Isaac Sim 5.1.0 — Physics Simulation Fundamentals",
+      "url": "https://docs.isaacsim.omniverse.nvidia.com/5.1.0/physics/simulation_fundamentals.html",
+      "applicable_version": "installed Isaac Sim 5.1.0.0",
+      "use": "installed-product collision and rigid-body context."
+    }
+  ],
+  "installed_primary_source_hashes": {
+    "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.schema.physx-107.3.26+107.3.3.lx64.r.cp311.u353/plugins/PhysxSchema/resources/schema.usda": "fe075bce4bde5ba7db69c6ccef0c4c26909336ab34c619129fc276f7cb4d7abc",
+    "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.schema.physx-107.3.26+107.3.3.lx64.r.cp311.u353/config/extension.toml": "595c2af276510d9584fafe952fa0ad09ec26869c5441a8c8a48ab1df514d7924",
+    "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.physx-107.3.26+107.3.3.lx64.r.cp311.u353/config/extension.toml": "6c9d9ed33d927e302334b7cae8ed0c81c4fba37bfbfac07053b72ccc16b7398f",
+    "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.physx-107.3.26+107.3.3.lx64.r.cp311.u353/omni/physx/bindings/_physx.pyi": "ff13abb83480dcc707ac2ad60062306aef7a33f885d32ed4c8ee6dfea2008e79",
+    "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.physx.cooking-107.3.26+107.3.3.lx64.r.cp311.u353/config/extension.toml": "89e9f38426bcf632b6cdfe2f89e29e4ed5d70810c55baef6b1b66860fa274b58",
+    "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.physx.tests-107.3.26+107.3.3.cp311.u353/omni/physxtests/tests/PhysxTriangleMeshCollisionAPI.py": "46dcafcf790db0b2f4f3333236c8db7e98a8510326370dc49e3fae0bb822f4d3",
+    "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/exts/isaacsim.core.prims/isaacsim/core/prims/impl/sdf_shape_prim.py": "8fe7751391b443e1583b505c585818f526a4feb8edc7adc65c941f3700e05de0"
+  },
+  "frozen_input_hashes": {
+    "local_assets/roarm_m3/urdf/roarm_m3.urdf": "64dc8d082cbce9a13a0697a11a0eaeaebbc54bbcd97e7aafaa40da483969dae2",
+    "local_assets/roarm_m3/urdf/meshes/gripper_link.stl": "7946a374e24a2f467a0581b4946e0ec41b1b86a92f070bc00aa9bced1bf65a56",
+    "local_assets/roarm_m3/urdf/meshes/link5.stl": "1d63f374a78c1419b21eec63fa8efeef40d0d42ca89c5de3ceb0d86476d9c7eb",
+    "local_assets/roarm_m3/urdf/meshes/gripper_link_collision_g2a.stl": "bd34df3187305c3a18d572ce5c4a37e3144684cce45ee1d03ee3435b37a6d40a",
+    "claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/roarm_m3.usd": "a4be58e87b1f9790f2a2ed600f0620c79d3cfb95c608b3c598308d52f5e46fff",
+    "claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/configuration/roarm_m3_physics.usd": "043a5d35aa425c2589c77a34fcf415401ce9f9e7155e84ed75f6737df79fb503",
+    "claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/d340_attempt3_asset_manifest.json": "52bc2e40f586cd8401aa0fcabf23e5e733776b9c373082bd49fbda01190c2bb5",
+    "claudedocs/runtime_logs/grasp_track/g0a_d368/d368_semantic_allocation_evidence.json": "be2a422b0c74e4781b76a640c5312070b84876b1cb9e661d47e705ccdf789cf5",
+    "claudedocs/runtime_logs/grasp_track/g0a_d375/attempt2_external_gpu_attestation_repair/d375_worker_raw_summary.json": "74f959b765860d06ca1d892823d47dc395cad3aea92d0250e21ff706263fc21e",
+    "claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_worker_raw_summary.json": "f14d2cf38cffc03a3121719a4dac0a62d612b46926a5ff6afcc10cd143717fb1",
+    "sim_scripts/cyl34_top_view_d375_p34_live_asset_identity_contract_repair_worker.py": "4b2bbef3cf445ef4c9c9a8de2bac8a01087180502ef134129f9bcfb444020fa4",
+    "roarm_rl/rerun_contract.py": "aaafcd93b9da3d8a97d61a53753ec9667bb98bec7391c91c98974f7ce9c66c1e",
+    "roarm_rl/viz_debug.py": "4b5f821ad43652f529dfaa2f92b2826d9cd4973635e34521cc2b3a93ab0193d0"
+  },
+  "source_geometry_contract": {
+    "authority": "Frozen D344 full-mesh USD stream cross-checked against D368 raw-source evidence; no P34 or D397 partial geometry may be used.",
+    "source_stl": "local_assets/roarm_m3/urdf/meshes/gripper_link.stl",
+    "source_usd_mesh_path": "/roarm_m3/gripper_link/collisions/gripper_link/node_STL_BINARY_/mesh",
+    "live_usd_mesh_path": "/World/Robot/gripper_link/collisions/gripper_link/node_STL_BINARY_/mesh",
+    "legacy_parent_collider_path": "/World/Robot/gripper_link/collisions/gripper_link/node_STL_BINARY_",
+    "vertex_count": 41094,
+    "triangle_count": 13698,
+    "face_count": 13698,
+    "native_usd_attribute_streams": {
+      "points": {
+        "usd_type": "point3f[]",
+        "serialization": "little-endian contiguous float32 values in authored order",
+        "sha256": "b89c67e99bd253ae710e6b0a2fcacd0b27263d6ede29fe6f6334ed70247895ed"
+      },
+      "face_vertex_counts": {
+        "usd_type": "int[]",
+        "serialization": "little-endian contiguous int32 values in authored order",
+        "sha256": "efbe0858156ea6b81fd25df456a53df63c700d0f8dd5ddc5b6c453f04d50185a"
+      },
+      "face_vertex_indices": {
+        "usd_type": "int[]",
+        "serialization": "little-endian contiguous int32 values in authored order",
+        "sha256": "c42fe919568d56e3ae85cebbef5b42cf04ca973c78db538359f587deda401d84"
+      },
+      "combined_points_counts_indices_sha256": "31aead25f7aa879a358a046bc01291ef2e260a2b367a990dacc255c17a2a5a31"
+    },
+    "d368_canonical_body_local_streams": {
+      "float64_meter_vertex_stream_sha256": "522a4f0fe91a04bf54c5c8be6492748c7490fc557fa8c0867200d97332dfa9db",
+      "face_counts_i64_sha256": "f17eac58b9b109f98f7a69efcc3b1e64b632d805ccca8cc8883cf0349e07cb6c",
+      "face_indices_i64_sha256": "205a08458b895d96c6eb9593d1f04a8815629f7f972a889cce683b86955f2545",
+      "authority_note": "These are D368 canonical transformed streams, not the native USD attribute byte layout."
+    },
+    "body_local_bounds_m": [
+      [
+        -0.010767397438303794,
+        -0.009999632356670897,
+        -0.0386173457368133
+      ],
+      [
+        0.06708260664084253,
+        0.015240367659608567,
+        0.0007502218245168529
+      ]
+    ],
+    "mesh_semantics_exact": {
+      "orientation": {
+        "authored": false,
+        "effective_value": "rightHanded"
+      },
+      "subdivisionScheme": {
+        "authored": true,
+        "effective_value": "none"
+      },
+      "holeIndices": {
+        "authored": false,
+        "effective_value": []
+      },
+      "usd_material_binding_relationship_count": 1,
+      "source_usd_material_binding_target": "/roarm_m3/gripper_link/collisions/gripper_link/node_STL_BINARY_/Looks/DefaultMaterial",
+      "live_usd_material_binding_target": "/World/Robot/gripper_link/collisions/gripper_link/node_STL_BINARY_/Looks/DefaultMaterial",
+      "material_authority_guard": "This is the preserved USD material:binding relationship; it is not by itself proof of a PhysX per-face material assignment."
+    },
+    "stream_rule": "Preserve the original Mesh points/counts/indices and all ancestor transforms exactly. Do not convert mm-to-m a second time, deduplicate vertices, reorder faces, repair holes, remesh, or reduce triangles.",
+    "typed_readback": "Native source -> derivative-authored -> live-stage point3f/int/int attribute values, types, orientation, subdivisionScheme, holeIndices state, material binding, and ancestor transforms must be exact, while the independently transformed D368 Float64-meter canonical stream must also reproduce exactly.",
+    "processed_trimesh_diagnostics_are_not_authority": true,
+    "p34_or_d397_geometry_use_count": 0
+  },
+  "derivative_asset_contract": {
+    "base": "D344 A64 derivative asset",
+    "output_root": "claudedocs/runtime_logs/grasp_track/g0a_d400/attempt1_gripper_link_sdf_res256_live_cook_articulation_preflight/collision_asset/roarm_m3_link5_a64_gripper_sdf_res256",
+    "forward_only_copy_once": true,
+    "whole_robot_live_reference_path": "/World/Robot",
+    "whole_robot_live_reference_instanceable": false,
+    "collision_scope_instanceability_repair": {
+      "mechanism": "author instanceable=false; do not use SetActive or prim deactivation",
+      "exact_source_paths": [
+        "/roarm_m3/link5/collisions",
+        "/roarm_m3/gripper_link/collisions"
+      ],
+      "write_count": 2,
+      "reason": "Make both frozen link5 reference parts and the gripper Mesh directly enumerable without changing geometry, transforms, or collision enable-state."
+    },
+    "gripper_a64_disable_contract": {
+      "mechanism": "author physics:collisionEnabled=false on every existing convex part; do not deactivate prims",
+      "exact_source_path_pattern": "/roarm_m3/gripper_link/collisions/d338_convex_parts/part_000 through part_063",
+      "write_count": 64,
+      "legacy_parent_xform_collision_enabled": false
+    },
+    "allowed_opinions": [
+      "author instanceable=false on exactly /roarm_m3/link5/collisions and /roarm_m3/gripper_link/collisions",
+      "author physics:collisionEnabled=false on exactly the 64 gripper_link d338_convex_parts part_000..part_063 prims",
+      "keep the legacy gripper parent Xform collider disabled",
+      "apply the registered SDF APIs, approximation=sdf, physics:collisionEnabled=true, and seven attributes to the existing full gripper Mesh leaf"
+    ],
+    "composed_semantic_diff_gate": "Outside the exact instanceable, collisionEnabled, API schema, approximation-token, and seven SDF-attribute allowlist above, the base-vs-derivative composed semantic diff count must be zero.",
+    "forbidden_opinions": [
+      "any link5 collision geometry or enable-state change",
+      "any point/count/index/transform change",
+      "any material, mass, actuator, joint, drive, or physics-scene setting change",
+      "any P34/D397 geometry",
+      "any canonical or historical asset overwrite"
+    ]
+  },
+  "representation_contract": {
+    "before": {
+      "link5_active_a64": 64,
+      "gripper_link_active_a64": 64,
+      "gripper_link_active_sdf": 0
+    },
+    "after": {
+      "link5_active_a64": 64,
+      "gripper_link_active_a64": 0,
+      "gripper_link_active_legacy_parent_collider": 0,
+      "gripper_link_active_sdf": 1
+    },
+    "sdf_prim_type": "UsdGeom.Mesh",
+    "sdf_owner": "/World/Robot/gripper_link",
+    "sdf_collision_enabled_exact": true,
+    "required_applied_apis": [
+      "PhysicsCollisionAPI",
+      "PhysicsMeshCollisionAPI",
+      "PhysxSDFMeshCollisionAPI"
+    ],
+    "required_approximation_token": "sdf",
+    "required_instance_state": {
+      "/World/Robot": "not instanceable, not instance, not instance proxy",
+      "/World/Robot/link5": "not instanceable, not instance, not instance proxy",
+      "/World/Robot/gripper_link": "not instanceable, not instance, not instance proxy",
+      "/World/Robot/gripper_link/collisions/gripper_link/node_STL_BINARY_/mesh": "not instanceable, not instance, not instance proxy"
+    },
+    "active_inventory_is_distinct_from_property_query_row_inventory": true
+  },
+  "sdf_parameter_contract": {
+    "all_seven_attributes_must_be_authored_not_merely_inherited": true,
+    "attributes": {
+      "physxSDFMeshCollision:sdfResolution": {
+        "usd_type": "int",
+        "value": 256,
+        "meaning_guard": "Grid spacing is the maximum mesh AABB extent divided by 256; this is not a vertex budget."
+      },
+      "physxSDFMeshCollision:sdfSubgridResolution": {
+        "usd_type": "int",
+        "value": 6,
+        "meaning_guard": "Sparse SDF subgrid resolution."
+      },
+      "physxSDFMeshCollision:sdfBitsPerSubgridPixel": {
+        "usd_type": "token",
+        "value": "BitsPerPixel16",
+        "meaning_guard": "Distance precision used for sparse SDF subgrids at the registered subgrid resolution."
+      },
+      "physxSDFMeshCollision:sdfNarrowBandThickness": {
+        "usd_type": "float",
+        "value_decimal": 0.01,
+        "expected_float32_bits_hex": "0x3c23d70a",
+        "meaning_guard": "Dimensionless fraction of the mesh bounding-box diagonal, not 0.01 meters."
+      },
+      "physxSDFMeshCollision:sdfMargin": {
+        "usd_type": "float",
+        "value_decimal": 0.01,
+        "expected_float32_bits_hex": "0x3c23d70a",
+        "meaning_guard": "The SDF domain boundary is enlarged in each direction by 1 percent of the mesh bounding-box diagonal; this is not a claim that the zero-isosurface or collision surface itself is inflated by 1 percent."
+      },
+      "physxSDFMeshCollision:sdfEnableRemeshing": {
+        "usd_type": "bool",
+        "value": false
+      },
+      "physxSDFMeshCollision:sdfTriangleCountReductionFactor": {
+        "usd_type": "float",
+        "value_decimal": 1.0,
+        "expected_float32_bits_hex": "0x3f800000"
+      }
+    },
+    "resolution_sweep_count": 0,
+    "resolution_512_count": 0,
+    "remeshing_count": 0,
+    "triangle_reduction_count": 0
+  },
+  "mass_com_inertia_invariance_contract": {
+    "authored_usd_gate": {
+      "comparison": "base D344 authored MassAPI versus derivative authored MassAPI, preserving USD value types and exact serialized values",
+      "must_be_exact": true,
+      "gripper_link": {
+        "mass_kg": 0.0028707999736070633,
+        "center_of_mass_m": [
+          0.027000000700354576,
+          0.0027000000700354576,
+          -0.018935000523924828
+        ],
+        "diagonal_inertia": [
+          5.232159878687526e-07,
+          1.8207100538347731e-06,
+          1.6023100215534214e-06
+        ],
+        "principal_axes_wxyz": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "link5": {
+        "mass_kg": 0.015392799861729145,
+        "center_of_mass_m": [
+          -0.007799999788403511,
+          0.0,
+          0.05949999764561653
+        ],
+        "diagonal_inertia": [
+          2.0286899598431773e-05,
+          2.144270001736004e-05,
+          4.3949498831352685e-06
+        ],
+        "principal_axes_wxyz": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "live_property_query_gate": {
+      "baseline": "frozen D375 attempt2 live rigid-body callbacks",
+      "comparison_tolerances": {
+        "mass_kg": {
+          "absolute": 1e-12,
+          "relative": 1e-7
+        },
+        "center_of_mass_m": {
+          "absolute": 1e-12,
+          "relative": 1e-7
+        },
+        "diagonal_inertia": {
+          "absolute": 5e-13,
+          "relative": 1e-7
+        },
+        "principal_axes_wxyz": {
+          "absolute": 1e-12,
+          "relative": 1e-7
+        }
+      },
+      "callback_quaternion_conversion": "PhysX callback principal_axes_xyzw -> comparison principal_axes_wxyz by [q3,q0,q1,q2], then canonicalize sign so the first component with absolute value above 1e-15 is nonnegative before component comparison; q and -q are rotation-equivalent.",
+      "gripper_link": {
+        "mass_kg": 0.0028707999736070633,
+        "center_of_mass_m": [
+          0.027000000700354576,
+          0.0027000000700354576,
+          -0.018935000523924828
+        ],
+        "diagonal_inertia": [
+          5.232159878687526e-07,
+          1.8207101675216109e-06,
+          1.6023100215534214e-06
+        ],
+        "principal_axes_wxyz": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "link5": {
+        "mass_kg": 0.015392799861729145,
+        "center_of_mass_m": [
+          -0.007799999788403511,
+          0.0,
+          0.05949999764561653
+        ],
+        "diagonal_inertia": [
+          2.0286899598431773e-05,
+          2.144270001736004e-05,
+          4.3949498831352685e-06
+        ],
+        "principal_axes_wxyz": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    }
+  },
+  "property_query_contract": {
+    "api_limit": "Rigid-body property query reports body/collider rows, poses, AABBs, volumes, and mass properties; it does not expose the internal SDF grid or prove collision participation.",
+    "status": "EXPECTED_FAIL_CAPABLE_RUNTIME_GATE_NOT_YET_OBSERVED_IN_D400",
+    "expectation_guard": "The 65/66 callback counts and path-set hashes below are preregistered expectations, not completed D400 observations. D375 directly supports enumeration of one disabled legacy collider but does not by itself prove that all 64 newly disabled A64 rows and the new SDF Mesh row will be returned; the one future worker must measure this.",
+    "link5": {
+      "rigid_body_path": "/World/Robot/link5",
+      "rigid_body_callback_count": 1,
+      "rigid_body_result": "VALID",
+      "collider_callback_count": 65,
+      "collider_paths": "disabled legacy parent plus d338_convex_parts/part_000..part_063",
+      "sorted_newline_terminated_path_set_sha256": "54dd23cb24d9c85d505fd9c44708248e8715b904f4ea4d275d7992ab21ef7a5a"
+    },
+    "gripper_link": {
+      "rigid_body_path": "/World/Robot/gripper_link",
+      "rigid_body_callback_count": 1,
+      "rigid_body_result": "VALID",
+      "collider_callback_count": 66,
+      "collider_paths": "64 disabled A64 parts, disabled legacy parent, and enabled SDF-authored Mesh leaf",
+      "sorted_newline_terminated_path_set_sha256": "7b23094e24a7f574e3d0cdc7057f6510817ba6cd47ccc3ba319b27dce4fe2821",
+      "required_enabled_sdf_path": "/World/Robot/gripper_link/collisions/gripper_link/node_STL_BINARY_/mesh",
+      "required_enabled_sdf_path_aabb": "all values finite",
+      "required_enabled_sdf_path_volume": "finite and greater than zero; sanity check only, not SDF geometry identity"
+    },
+    "all_collider_rows": "Preserve exact path, result enum, local pose, AABB, and volume for every callback row; every result must be VALID.",
+    "completed_callback": "exactly one completed callback per rigid-body query and result VALID",
+    "inventory_separation": "Authored/live active-collider inventory is a separate gate from property-query row count because disabled colliders may still be enumerated."
+  },
+  "authority_partition": {
+    "decision_authority": [
+      "frozen input hashes",
+      "typed USD authored/live readback",
+      "active collider owner/path/count inventory",
+      "non-instance/non-proxy owner structure",
+      "PhysX attach return as stage load-admission evidence",
+      "exact completed property-query callback rows/path sets for link5 and gripper_link",
+      "global cook-queue liveness/drain gate: baseline running zero, nonzero scheduled delta, drained completion, and exact Kit log audit; never per-prim SDF identity",
+      "authored and live mass/COM/inertia invariance",
+      "hash-bound pre-close sentinel plus external supervisor",
+      "Rerun completion contract"
+    ],
+    "diagnostic_only": [
+      "source/live USD bounds and source topology/void inspection",
+      "finite positive SDF-path property-query AABB and volume as sanity only",
+      "estimated SDF cell size from longest source bound divided by 256",
+      "global cooking cache hit/cache miss deltas",
+      "Rerun Float32 spatial copies"
+    ],
+    "must_remain_null_after_d400": [
+      "cooked SDF zero-isosurface error in mm",
+      "cooked SDF void preservation",
+      "cross-body frozen-OPEN clearance",
+      "actual SDF collision participation",
+      "contact point, force, friction, slip, tipping, grasp, or lift",
+      "product-cylinder feasibility",
+      "CPU/GPU collision-path attribution"
+    ],
+    "why_open_jaw_clearance_is_deferred": "D400 has no q5 sample and no common frozen world-pose authority. Cross-body clearance belongs to the later zero-step D402 pose case.",
+    "convex_callback_reuse_for_sdf_cooked_identity": false,
+    "convex_callback_topology_volume_gate_reuse": false,
+    "global_cooking_statistics_are_exact_sdf_identity_authority": false,
+    "property_query_validity_is_actual_collision_participation_authority": false
+  },
+  "planned_no_isaac_implementation_contract_for_separate_approval": {
+    "exact_outputs": [
+      "sim_scripts/cyl34_top_view_d400_gripper_link_sdf_res256_live_cook_articulation_preflight.py",
+      "sim_scripts/cyl34_top_view_d400_gripper_link_sdf_res256_live_cook_articulation_worker.py",
+      "claudedocs/runtime_logs/grasp_track/g0a_d400/attempt1_gripper_link_sdf_res256_live_cook_articulation_preflight/d400_reviewed_script_attestation.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d400/attempt1_gripper_link_sdf_res256_live_cook_articulation_preflight/d400_proposed_runtime_hash_tuple.json"
+    ],
+    "allowed_actions": "Write the two registered scripts, parse and statically inspect them without importing them, run fail-capable static contract fixtures, and record reviewed SHA-256 plus static-review results in the attestation.",
+    "required_attestation_fields": [
+      "preregistration_sha256",
+      "controller_script_path_and_sha256",
+      "worker_script_path_and_sha256",
+      "static_ast_parse_pass",
+      "top_level_runtime_side_effect_static_scan_pass",
+      "counter_key_alignment_pass",
+      "phase_order_and_owner_static_contract_pass",
+      "negative_static_fixture_results",
+      "implementation_static_attestation_pass"
+    ],
+    "proposed_runtime_hash_tuple_contract": {
+      "exact_fields": [
+        "preregistration_sha256",
+        "reviewed_script_attestation_sha256",
+        "controller_script_sha256",
+        "worker_script_sha256"
+      ],
+      "tuple_file_sha256_must_be_reported_to_user": true,
+      "future_runtime_approval_must_explicitly_cite_tuple_file_sha256": true,
+      "generic_case_name_only_approval_is_insufficient": true
+    },
+    "exact_zero_counters": {
+      "script_imports": 0,
+      "isaac_kit_physx_launches": 0,
+      "simulation_app_launches": 0,
+      "derivative_asset_materializations": 0,
+      "usd_stage_creations_or_writes": 0,
+      "gpu_runtime_jobs": 0,
+      "physics_steps": 0,
+      "q5_samples": 0,
+      "contact_queries": 0,
+      "cylinder_creates_or_writes": 0
+    },
+    "actual_worker_approval_consumed": false
+  },
+  "planned_runtime_contract_for_separate_approval": {
+    "future_controller_script": "sim_scripts/cyl34_top_view_d400_gripper_link_sdf_res256_live_cook_articulation_preflight.py",
+    "future_worker_script": "sim_scripts/cyl34_top_view_d400_gripper_link_sdf_res256_live_cook_articulation_worker.py",
+    "implementation_attestation_prerequisite": {
+      "requires_separate_approval_before_creation": true,
+      "scope": "Create and statically review only the two registered scripts, d400_reviewed_script_attestation.json, and d400_proposed_runtime_hash_tuple.json; do not import or launch Isaac/Kit/PhysX and do not materialize a derivative USD.",
+      "output": "d400_reviewed_script_attestation.json",
+      "actual_runtime_requires_another_separate_approval_after_hash_review": true
+    },
+    "actual_worker_invocations": 1,
+    "automatic_retries": 0,
+    "simulation_app_launches": 1,
+    "headless": true,
+    "start_new_session_process_group": true,
+    "total_watchdog_s": 300.0,
+    "inactivity_watchdog_s": 60.0,
+    "sigterm_grace_s": 20.0,
+    "sigkill_wait_s": 20.0,
+    "runtime_freeze_manifest": {
+      "output": "d400_runtime_freeze_manifest.json",
+      "created": "immediately before the one worker spawn",
+      "git_status_command": "git status --short --untracked-files=all",
+      "must_record": [
+        "exact HEAD and origin/master",
+        "exact uncollapsed git status --short --untracked-files=all path/status set",
+        "SHA-256 of every allowed dirty file that exists",
+        "SHA-256 of d400_preregistration.json",
+        "observed SHA-256 of both future D400 scripts and exact equality to the reviewed expected hashes in d400_reviewed_script_attestation.json",
+        "SHA-256 and PASS state of d400_reviewed_script_attestation.json",
+        "SHA-256 and exact four-field content of d400_proposed_runtime_hash_tuple.json",
+        "the controller --approved-tuple-sha256 argument copied from the user's explicit runtime approval",
+        "exact equality of current preregistration, attestation, controller, and worker hashes to the four fields in the approved tuple",
+        "exact output root and process command"
+      ],
+      "allowed_dirty_paths": [
+        "START_HERE.md",
+        "claudedocs/BACKLOG.md",
+        "claudedocs/DECISIONS.md",
+        "claudedocs/EXPERIMENT_LEDGER.md",
+        "claudedocs/session_20260727_grasp_g0a_sdf_case_recon_option_a_briefing.md",
+        "claudedocs/session_20260727_grasp_g0a_vertex12_cylinder_d400_scope_review.md",
+        "claudedocs/session_20260727_grasp_g0a_d400_gripper_sdf_live_cook_articulation_preregistration.md",
+        "claudedocs/runtime_logs/grasp_track/g0a_d400/attempt1_gripper_link_sdf_res256_live_cook_articulation_preflight/d400_preregistration.json",
+        "claudedocs/runtime_logs/grasp_track/g0a_d400/attempt1_gripper_link_sdf_res256_live_cook_articulation_preflight/d400_reviewed_script_attestation.json",
+        "claudedocs/runtime_logs/grasp_track/g0a_d400/attempt1_gripper_link_sdf_res256_live_cook_articulation_preflight/d400_proposed_runtime_hash_tuple.json",
+        "sim_scripts/cyl34_top_view_d400_gripper_link_sdf_res256_live_cook_articulation_preflight.py",
+        "sim_scripts/cyl34_top_view_d400_gripper_link_sdf_res256_live_cook_articulation_worker.py"
+      ],
+      "unexpected_dirty_path_policy": "fail before worker spawn; preserve and report, never delete or reset",
+      "reviewed_script_attestation_gate": "Both scripts must already exist from a separately reviewed no-Isaac implementation step, their expected hashes must be recorded in d400_reviewed_script_attestation.json, and observed hashes must match exactly. Recording an unreviewed current hash is insufficient.",
+      "user_approved_hash_tuple_gate": "The future controller command must receive --approved-tuple-sha256 equal to the d400_proposed_runtime_hash_tuple.json SHA-256 explicitly cited by the user in the runtime approval. The tuple's preregistration, attestation, controller, and worker hashes must each equal the current file hash. Missing, generic, or mismatched approval fails before worker spawn."
+    },
+    "existing_process_and_gpu_policy": {
+      "fail_only_if": "a pre-existing process command contains either registered D400 future script name or the exact D400 output root, or free VRAM is below 8192 MiB",
+      "unrelated_isaac_kit_gpu_processes": "record PID/command/GPU use but do not fail solely because they exist and never signal them",
+      "minimum_free_vram_mib": 8192,
+      "timeout_signal_scope": "only the process group created for this D400 worker"
+    },
+    "fresh_gpu_and_package_attestation_before_worker": true,
+    "physx_stage_attaches": 1,
+    "physx_stage_detaches": 1,
+    "physx_property_queries": 2,
+    "stagecache_erase_calls": 1,
+    "cooking_wait": {
+      "source": "process-wide counter formula adapted from the installed NVIDIA PhysxTriangleMeshCollisionAPI test; unlike that test, D400 deliberately does not release the process-global local mesh cache",
+      "interface_classification": "private, version-pinned, process-wide cooking diagnostics; not a public per-prim SDF identity API",
+      "formula": "running_tasks = total_scheduled_tasks - total_finished_tasks",
+      "baseline": "capture scheduled, finished, cache-hit, and cache-miss counters before attach; baseline running_tasks must equal 0",
+      "success": "after attach, scheduled_delta must be greater than 0, finished_delta must equal scheduled_delta, and final running_tasks must equal 0 within both watchdogs",
+      "cache_policy": "Do not clear process-global caches because cache mutation is outside this case. Record hit/miss deltas. This intentionally differs from the installed NVIDIA test setup, which releases the local mesh cache. If scheduled_delta is 0, fail as inconclusive rather than claiming an SDF cook.",
+      "kit_update_pumps": "bounded and counted; each pump is not a physics step; raw timeline remains STOP at time 0",
+      "authority_limit": "Passing this drain gate proves only that stage-wide scheduled cooking work occurred and drained. It does not identify an internal SDF object, cooked zero-isosurface, or collision participation."
+    },
+    "timeline_state_contract": {
+      "capture_points": [
+        "immediately before PhysX stage attach",
+        "immediately after all property queries and before cleanup"
+      ],
+      "expected_each": {
+        "is_playing": false,
+        "is_stopped": true,
+        "current_time_s": 0.0,
+        "start_time": 0.0,
+        "end_time": 1.6666666666666667,
+        "time_codes_per_seconds": 60.0
+      },
+      "pass_formula": "Both raw snapshots equal expected_each field-for-field; PAUSED (is_playing=false,is_stopped=false), PLAY, or any nonzero current_time_s fails."
+    },
+    "supervisor_counter_vector": {
+      "exact": {
+        "actual_worker_invocations": 1,
+        "automatic_retries": 0,
+        "simulation_app_launches": 1,
+        "derivative_asset_materializations": 1,
+        "collision_scope_instanceable_false_writes": 2,
+        "gripper_a64_collision_enable_changes": 64,
+        "gripper_sdf_mesh_collision_enable_true_writes": 1,
+        "gripper_sdf_api_apply_sets": 1,
+        "sdf_parameter_attr_writes": 7,
+        "physx_stage_attaches": 1,
+        "physx_stage_detaches": 1,
+        "physx_property_queries": 2,
+        "stagecache_erase_calls": 1,
+        "timeline_raw_stop_time_zero_checks": 2
+      },
+      "range": {
+        "simulation_app_update_pumps": [
+          1,
+          300000
+        ]
+      },
+      "zero_keys": [
+        "link5_collision_representation_changes",
+        "source_geometry_stream_changes",
+        "p34_or_d397_geometry_reads_for_materialization",
+        "automatic_decomposition_sweeps",
+        "sdf_resolution_sweeps",
+        "sdf_remesh_operations",
+        "simulation_context_constructions",
+        "resets",
+        "timeline_play_requests",
+        "timeline_commit_requests",
+        "controlled_physics_steps",
+        "public_forwards",
+        "q5_commands",
+        "q5_samples",
+        "contact_queries",
+        "cylinder_creates_or_writes",
+        "target_ik_path_pose_changes",
+        "unregistered_nonrepresentation_material_mass_actuator_scene_solver_setting_changes",
+        "physx_convex_callback_requests",
+        "sdf_tensor_or_distance_queries",
+        "isaac_hydra_renders"
+      ]
+    },
+    "cleanup_order": [
+      "cleanup_start",
+      "detach stage exactly once",
+      "erase the stage from StageCache exactly once and verify non-membership",
+      "mark safe_to_close_app only after successful detach and verified cache non-membership",
+      "write authoritative raw summary containing final counters and cleanup evidence",
+      "write pre-close sentinel containing raw-summary SHA, exact final counters, cache erase result, and safe_to_close_app",
+      "close_start",
+      "close SimulationApp",
+      "external supervisor reaps process and checks no case-owned residue"
+    ],
+    "counter_alignment_guard": "Every scalar key in planned_scope_counters must appear exactly once in supervisor_counter_vector as an exact value, bounded range, or zero key. The implementation/static-attestation step must reject any missing, duplicate, or conflicting key before runtime approval.",
+    "hash_bound_supervisor_formula": "returncode==0 AND worker_internal_pass AND preclose.worker_protocol_pass AND preclose.summary_sha256==sha256(raw_summary) AND all exact/range/zero entries equal supervisor_counter_vector AND planned_scope_counters align one-to-one with supervisor_counter_vector AND final authoritative Kit-log audit PASS AND no_timeout AND no_signal AND no_case_owned_residue",
+    "post_close_marker_required": false
+  },
+  "planned_scope_counters": {
+    "actual_worker_invocations": 1,
+    "automatic_retries": 0,
+    "simulation_app_launches": 1,
+    "derivative_asset_materializations": 1,
+    "collision_scope_instanceable_false_writes": 2,
+    "gripper_a64_collision_enable_changes": 64,
+    "gripper_sdf_mesh_collision_enable_true_writes": 1,
+    "gripper_sdf_api_apply_sets": 1,
+    "sdf_parameter_attr_writes": 7,
+    "link5_collision_representation_changes": 0,
+    "source_geometry_stream_changes": 0,
+    "p34_or_d397_geometry_reads_for_materialization": 0,
+    "automatic_decomposition_sweeps": 0,
+    "sdf_resolution_sweeps": 0,
+    "sdf_remesh_operations": 0,
+    "simulation_context_constructions": 0,
+    "resets": 0,
+    "timeline_play_requests": 0,
+    "timeline_commit_requests": 0,
+    "timeline_raw_stop_time_zero_checks": 2,
+    "physx_stage_attaches": 1,
+    "physx_stage_detaches": 1,
+    "physx_property_queries": 2,
+    "stagecache_erase_calls": 1,
+    "simulation_app_update_pumps": {
+      "minimum": 1,
+      "maximum": 300000,
+      "classification": "bounded Kit event pumps, not controlled physics steps"
+    },
+    "controlled_physics_steps": 0,
+    "public_forwards": 0,
+    "q5_commands": 0,
+    "q5_samples": 0,
+    "contact_queries": 0,
+    "cylinder_creates_or_writes": 0,
+    "target_ik_path_pose_changes": 0,
+    "unregistered_nonrepresentation_material_mass_actuator_scene_solver_setting_changes": 0,
+    "physx_convex_callback_requests": 0,
+    "sdf_tensor_or_distance_queries": 0,
+    "isaac_hydra_renders": 0
+  },
+  "registered_phase_order": [
+    "supervisor_preflight_start",
+    "runtime_freeze_manifest_gate_end",
+    "package_gpu_and_existing_process_gate_end",
+    "offline_negative_controls_end",
+    "worker_spawn_once",
+    "simulation_app_launch_start",
+    "simulation_app_launch_end",
+    "derivative_copy_start",
+    "derivative_sdf_opinion_write_end",
+    "typed_authored_readback_gate_end",
+    "live_stage_create_end",
+    "live_owner_inventory_gate_end",
+    "cooking_baseline_capture_start",
+    "cooking_baseline_capture_end",
+    "physx_stage_attach_start",
+    "physx_stage_attach_end",
+    "sdf_cooking_wait_start",
+    "sdf_cooking_wait_end",
+    "property_query_link5_end",
+    "property_query_gripper_link_end",
+    "mass_invariance_gate_end",
+    "cleanup_start",
+    "physx_stage_detach_start",
+    "physx_stage_detach_end",
+    "stagecache_erase_end",
+    "safe_to_close_app",
+    "worker_raw_summary_written",
+    "worker_preclose_sentinel_written",
+    "simulation_app_close_start",
+    "external_kit_log_audit_end",
+    "external_supervisor_end",
+    "technical_pass_branch_start",
+    "rerun_save_only_finalize_end_if_technical_pass",
+    "rerun_verify_and_visual_inspection_end_if_technical_pass",
+    "completion_summary_end"
+  ],
+  "optional_diagnostic_phase_markers": [
+    "simulation_app_close_returned"
+  ],
+  "phase_ownership": {
+    "controller_pre_spawn": [
+      "runtime freeze manifest",
+      "package/GPU/process checks",
+      "offline negative controls",
+      "single worker spawn"
+    ],
+    "controller_post_spawn_supervision": [
+      "total and inactivity watchdog enforcement",
+      "signals restricted to the case process group"
+    ],
+    "worker_after_spawn": [
+      "SimulationApp lifecycle",
+      "derivative copy and authored readback",
+      "stage creation, attach, global cooking diagnostics, property queries, cleanup, raw summary, and pre-close sentinel"
+    ],
+    "controller_post_worker_technical_gate": [
+      "authoritative Kit-log window audit",
+      "return code, hash, exact counter vector, timeout/signal, and residue supervisor attestation"
+    ],
+    "post_worker_controller_only_after_technical_pass": [
+      "Rerun save-only generation, verify, RBL export, static board, Viewer screenshot, and manual inspection"
+    ]
+  },
+  "failure_capable_controls": {
+    "prepare_offline_controls": [
+      "source mesh hash perturbation rejected",
+      "one point/index/count bit or ordering perturbation rejected",
+      "approximation convexHull instead of sdf rejected",
+      "one required API missing rejected",
+      "resolution 255, 257, or 512 rejected",
+      "remeshing true rejected",
+      "triangle reduction not 1.0 rejected",
+      "SDF API applied to Xform instead of Mesh rejected",
+      "instance proxy owner rejected",
+      "one gripper A64 collider still active rejected",
+      "SDF Mesh collisionEnabled false rejected",
+      "link5 active A64 count other than 64 rejected",
+      "property-query row count, exact path-set hash, completion callback, or SDF leaf path perturbation rejected",
+      "global cook queue 0-to-0 false-pass fixture rejected",
+      "mass, COM, or inertia perturbation rejected",
+      "runtime-only identifiers excluded from semantic digest while a semantic perturbation is rejected",
+      "worker internal FAIL with process return 0 rejected by supervisor",
+      "truncated RRD footer rejected"
+    ],
+    "runtime_fail_stop_conditions": [
+      "frozen hash drift",
+      "more than one worker or any retry",
+      "watchdog expiry or external signal",
+      "stage attach false",
+      "cooking baseline running_tasks nonzero, scheduled_delta not positive, finished_delta mismatch, or final running_tasks nonzero",
+      "SDF/parser/fallback/multi-material error or unregistered warning",
+      "property query callback incomplete, any result not VALID, row count/path-set mismatch, or enabled SDF path absent",
+      "active owner/path/count mismatch",
+      "typed API/token/attribute mismatch",
+      "mass/COM/inertia drift",
+      "either raw timeline snapshot differs from planned_runtime_contract_for_separate_approval.timeline_state_contract.expected_each field-for-field, or any forbidden counter becomes nonzero",
+      "raw/pre-close/supervisor hash mismatch",
+      "Rerun completion or manual inspection failure after worker technical PASS"
+    ],
+    "branching_rule": {
+      "worker_technical_fail": "Stop before Rerun. Preserve runtime manifest, phase markers, invocation/claim, Kit log, raw summary if available, pre-close sentinel if available, and supervisor attestation. Missing Rerun artifacts are NOT an observability failure on this branch.",
+      "worker_technical_pass_then_rerun_fail": "Scientific/physics verdict remains null; classify as D400_OBSERVABILITY_OR_COMPLETION_INTEGRITY_FAIL_STOP.",
+      "worker_technical_and_rerun_pass": "Only then emit the registered D400 preflight PASS."
+    }
+  },
+  "kit_log_contract": {
+    "full_log_path": "d400_kit_log.txt",
+    "authoritative_phase_window": "physx_stage_attach_start through worker_preclose_sentinel_written",
+    "phase_window_anchor": "Both boundary markers must be mirrored to d400_phase_markers.jsonl and worker stdout with matching sequence and monotonic timestamp; the post-worker controller audits the closed interval.",
+    "error_rule": "Any ERROR or FATAL line in the authoritative phase window fails.",
+    "warning_regex": "(?i)(sdf|cook(?:ing)?|collision|fallback|triangle.?mesh|rigid(?:body)?|articulation|material|/World/Robot/gripper_link|node_STL_BINARY_)",
+    "warning_rule": "Any WARN line matching warning_regex in the authoritative phase window fails.",
+    "case_path_and_prim_context_required": true,
+    "deny_categories": [
+      "SDF cooking failed or invalid",
+      "SDF fallback or TriangleMesh fallback",
+      "failed to parse the new gripper collider or its rigid owner",
+      "multiple materials unsupported for the SDF input",
+      "rigid-link collider parsing or owner-enumeration failure"
+    ],
+    "unregistered_matching_warning_policy": "fail stop and preserve the exact line plus surrounding context; do not silently allowlist post hoc"
+  },
+  "observability_contract": {
+    "rerun_required_only_after_worker_technical_pass": true,
+    "why_not_omitted_on_pass_branch": "The verdict depends on spatial input geometry and active collision ownership, not only file hashes.",
+    "file_sink_before_first_user_log": true,
+    "save_only": true,
+    "rrd": "d400_sdf_preflight.rrd",
+    "rbl": "d400_sdf_preflight.rbl",
+    "validation": "d400_rerun_validation.json",
+    "static_decision_board": "d400_decision_board_1920x1080.png",
+    "rerun_viewer_screenshot": "d400_rerun_viewer_1920x1080.png",
+    "rerun_render_receipt": "d400_rerun_render_receipt.json",
+    "exact_image_pixels": [
+      1920,
+      1080
+    ],
+    "headless_viewer_max": 1,
+    "manual_original_resolution_inspection": "d400_manual_visual_inspection.json",
+    "timeline_contract": {
+      "name": "preflight_phase",
+      "type": "Sequence",
+      "required_value_semantics": {
+        "0": "source_baseline",
+        "1": "live_configuration",
+        "2": "post_query_decision"
+      },
+      "exact_required_values": [0, 1, 2],
+      "phase_entity_value_contract": {
+        "/d400/phase/source_baseline": 0,
+        "/d400/phase/live_configuration": 1,
+        "/d400/phase/post_query_decision": 2
+      }
+    },
+    "exact_non_system_entity_count": 73,
+    "sorted_newline_terminated_non_system_entity_path_set_sha256": "7ce6480db2b6d337bba9b0c1ad681e5a43549e3ca14805f3cc0828a6054ea8a1",
+    "entity_component_contract": {
+      "/d400/phase/source_baseline": [
+        "TextDocument:text"
+      ],
+      "/d400/phase/live_configuration": [
+        "TextDocument:text"
+      ],
+      "/d400/phase/post_query_decision": [
+        "TextDocument:text"
+      ],
+      "/d400/inspection/source_gripper_mesh": [
+        "CoordinateFrame:frame",
+        "Mesh3D:albedo_factor",
+        "Mesh3D:triangle_indices",
+        "Mesh3D:vertex_positions",
+        "Transform3D:child_frame",
+        "Transform3D:parent_frame",
+        "Transform3D:quaternion",
+        "Transform3D:translation"
+      ],
+      "/d400/inspection/live_sdf_input_mesh": [
+        "CoordinateFrame:frame",
+        "Mesh3D:albedo_factor",
+        "Mesh3D:triangle_indices",
+        "Mesh3D:vertex_positions",
+        "Transform3D:child_frame",
+        "Transform3D:parent_frame",
+        "Transform3D:quaternion",
+        "Transform3D:translation"
+      ],
+      "/d400/status/api_token_attributes": [
+        "TextDocument:text"
+      ],
+      "/d400/status/inventory_owner_query": [
+        "TextDocument:text"
+      ],
+      "/d400/status/cook_queue": [
+        "Scalars:scalars",
+        "TextDocument:text"
+      ],
+      "/d400/status/mass_counters_instance_state": [
+        "TextDocument:text"
+      ]
+    },
+    "link5_a64_repeated_entity_family": {
+      "exact_generator": "/d400/inspection/link5_a64/part_{index:03d} for integer index 0 through 63 inclusive",
+      "exact_count": 64,
+      "sorted_newline_terminated_path_set_sha256": "2fdc7021f06850791892070188dfe54dcec14748598533855fbee96aa3019699",
+      "required_components_each": [
+        "CoordinateFrame:frame",
+        "Mesh3D:albedo_factor",
+        "Mesh3D:triangle_indices",
+        "Mesh3D:vertex_positions",
+        "Transform3D:child_frame",
+        "Transform3D:parent_frame",
+        "Transform3D:quaternion",
+        "Transform3D:translation"
+      ]
+    },
+    "entity_timeline_assignment_contract": {
+      "row_rule": "Every listed non-system entity must have exactly one data row at its assigned preflight_phase value, zero rows at the other two values, and zero timeless rows.",
+      "phase_0_source_baseline": {
+        "timeline_value": 0,
+        "singleton_entities": [
+          "/d400/phase/source_baseline",
+          "/d400/inspection/source_gripper_mesh"
+        ],
+        "repeated_families": [],
+        "exact_entity_count": 2
+      },
+      "phase_1_live_configuration": {
+        "timeline_value": 1,
+        "singleton_entities": [
+          "/d400/phase/live_configuration",
+          "/d400/inspection/live_sdf_input_mesh",
+          "/d400/status/api_token_attributes",
+          "/d400/status/inventory_owner_query"
+        ],
+        "repeated_families": [
+          {
+            "family": "/d400/inspection/link5_a64/part_{index:03d}",
+            "index_range_inclusive": [0, 63],
+            "exact_entity_count": 64
+          }
+        ],
+        "exact_entity_count": 68
+      },
+      "phase_2_post_query_decision": {
+        "timeline_value": 2,
+        "singleton_entities": [
+          "/d400/phase/post_query_decision",
+          "/d400/status/cook_queue",
+          "/d400/status/mass_counters_instance_state"
+        ],
+        "repeated_families": [],
+        "exact_entity_count": 3
+      },
+      "total_exact_entity_count": 73
+    },
+    "display_only_layout": {
+      "source_gripper_mesh_x_offset_m": -0.1,
+      "live_sdf_input_mesh_x_offset_m": 0.0,
+      "link5_a64_x_offset_m": 0.1,
+      "colors": "three distinct fixed colors",
+      "authority_guard": "Offsets and colors exist only in the Rerun inspection copy and must never enter hashes, USD, or physics."
+    },
+    "rrd_requirements": [
+      "SDK and CLI exact version 0.34.1",
+      "finalized footer-enabled rrd verify PASS",
+      "non-system entity/timeline/required-component contracts PASS",
+      "fixed embedded blueprint and verified RBL",
+      "actual visual inspection recorded"
+    ],
+    "required_visual_subjects": [
+      "Source gripper mesh",
+      "Live USD SDF input mesh",
+      "Frozen link5 A64",
+      "SDF API/token/attribute state",
+      "global cook-queue diagnostics and rigid-link owner/property-query status"
+    ],
+    "label_guard": "Never label the source or live USD input mesh as the cooked SDF surface.",
+    "image_role_guard": "The static decision board and the actual Rerun Viewer screenshot are separate required files; one may not stand in for the other.",
+    "rerun_float32_spatial_data_is_inspection_only": true,
+    "isaac_hydra_render_count": 0
+  },
+  "registered_pass_formula": "runtime freeze manifest exact with no unexpected dirty path AND all frozen hashes exact AND exactly one new variable AND source/authored/live stream plus mesh semantics exact AND exact allowlisted USD opinion diff AND active inventory link5_A64=64/gripper_A64=0/gripper_SDF=1 AND Mesh collisionEnabled=true plus three APIs+sdf token+seven typed attributes exact AND all required owners non-instance/non-proxy AND attach true AND global cooking baseline running=0, scheduled_delta>0, finished_delta=scheduled_delta, final running=0 AND exact completed property-query row/path-set contracts PASS AND no registered log failure AND authored/live mass/COM/inertia gates PASS AND timeline STOP/time0 plus every forbidden counter exact AND detach/cache erase/raw/pre-close/supervisor authority exact AND technical-pass-only Rerun completion contract PASS",
+  "result_branches": {
+    "pass": "D400_GRIPPER_LINK_SDF_RES256_CONFIGURATION_LOAD_ADMISSION_OWNER_ENUMERATION_PREFLIGHT_PASS_NO_PHYSICS",
+    "technical_fail": "D400_GRIPPER_LINK_SDF_RES256_PREFLIGHT_FAIL_STOP",
+    "observability_or_completion_fail": "D400_OBSERVABILITY_OR_COMPLETION_INTEGRITY_FAIL_STOP"
+  },
+  "interpretation_boundary": {
+    "d400_pass_means": "The registered SDF configuration is authored and read back exactly, the stage is admitted, nonzero stage-wide cooking work drains without a registered log failure, the exact enabled SDF Mesh path is enumerated under the intended rigid-link query, and frozen robot properties remain invariant.",
+    "d400_pass_does_not_mean": "A per-prim internal SDF cook object was directly identified, the SDF collision shape participated in articulation contact, the cooked SDF surface is geometrically exact, contacts are correct, tipping is avoided, or the product can be grasped.",
+    "next_authorization_boundary": "First approve no-Isaac implementation/static attestation for exactly the two registered scripts, d400_reviewed_script_attestation.json, and d400_proposed_runtime_hash_tuple.json. Review all four file hashes and report the tuple-file SHA. Only an afterward runtime approval that explicitly cites that tuple-file SHA may authorize the one-worker Isaac/PhysX preflight.",
+    "d401_requires_separate_approval": true,
+    "g0a_pass_after_any_d400_branch": false
+  },
+  "forward_only_outputs_for_future_runtime": {
+    "root": "claudedocs/runtime_logs/grasp_track/g0a_d400/attempt1_gripper_link_sdf_res256_live_cook_articulation_preflight",
+    "required_every_invocation": [
+      "d400_preregistration.json",
+      "d400_reviewed_script_attestation.json",
+      "d400_proposed_runtime_hash_tuple.json",
+      "d400_runtime_freeze_manifest.json",
+      "d400_phase_markers.jsonl",
+      "d400_worker_invocation.json",
+      "d400_worker_claim.json",
+      "d400_worker_supervisor.json",
+      "d400_kit_log.txt",
+      "d400_completion_summary.json"
+    ],
+    "required_if_worker_reaches_protocol_completion": [
+      "d400_worker_raw_summary.json",
+      "d400_worker_preclose_sentinel.json",
+      "d400_live_configuration_owner_evidence.json",
+      "collision_asset/roarm_m3_link5_a64_gripper_sdf_res256/"
+    ],
+    "required_only_after_worker_technical_pass": [
+      "d400_sdf_preflight.rrd",
+      "d400_sdf_preflight.rbl",
+      "d400_rerun_validation.json",
+      "d400_decision_board_1920x1080.png",
+      "d400_rerun_viewer_1920x1080.png",
+      "d400_rerun_render_receipt.json",
+      "d400_manual_visual_inspection.json"
+    ],
+    "technical_fail_output_rule": "Do not invoke Rerun after a worker technical failure; preserve all artifacts reached before failure. Their intentional absence is not an observability failure."
+  },
+  "d334_sidecar_before": {
+    "write_count_allowed": 0,
+    "file_count": 3,
+    "files": {
+      "claudedocs/lab_meeting/20260715/d334_collision_table/README.md": {
+        "bytes": 2935,
+        "sha256": "35e39f584737c888bcf7dfab6154c55c5d13d4154ee7f2042073e1c0a7e18783"
+      },
+      "claudedocs/lab_meeting/20260715/d334_collision_table/d334_collision_table_academic.html": {
+        "bytes": 12493,
+        "sha256": "6d38933f959eba916208ec04a329ba25e2bd753c90720576010c222a8bda679c"
+      },
+      "claudedocs/lab_meeting/20260715/d334_collision_table/d334_collision_table_academic.png": {
+        "bytes": 255289,
+        "sha256": "ddc9db2795f4d66b2564adf156829e6a143a599ceb72f6bb9fa28ab25e68a183"
+      }
+    }
+  },
+  "preregistration_checks": {
+    "one_new_variable": true,
+    "link5_a64_frozen": true,
+    "gripper_source_geometry_frozen": true,
+    "all_seven_sdf_attrs_explicit": true,
+    "sdf_resolution_256_only": true,
+    "convex_callback_not_misused_as_sdf_authority": true,
+    "cross_body_clearance_deferred": true,
+    "zero_contact_and_zero_physics": true,
+    "one_worker_no_retry": true,
+    "hash_bound_external_supervisor": true,
+    "runtime_freeze_manifest_required": true,
+    "exact_property_query_row_and_path_contract_required": true,
+    "global_cook_queue_false_pass_guard_required": true,
+    "rerun_required_only_after_worker_technical_pass": true,
+    "d334_sidecar_write_forbidden": true,
+    "implementation_static_attestation_separate_approval_required": true,
+    "runtime_after_attestation_separate_approval_required": true
+  },
+  "preregistration_document_review_pass": true,
+  "implementation_or_static_attestation_executed": false,
+  "runtime_executed": false,
+  "scientific_or_physics_verdict": null,
+  "g0a_pass": false
+}

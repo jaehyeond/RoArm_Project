@@ -1,0 +1,461 @@
+{
+  "artifact": "D400_NO_ISAAC_IMPLEMENTATION_STATIC_ATTESTATION_V1",
+  "case": "g0a_d400",
+  "stage": "NO_ISAAC_IMPLEMENTATION_STATIC_ATTESTATION",
+  "status": "STATIC_ATTESTATION_PASS_RUNTIME_NOT_APPROVED",
+  "date_kst": "2026-07-28",
+  "preregistration_path": "claudedocs/runtime_logs/grasp_track/g0a_d400/attempt1_gripper_link_sdf_res256_live_cook_articulation_preflight/d400_preregistration.json",
+  "preregistration_sha256": "fc689cb1afd6108a326a73f22b8117dfdefc0bb4d8caee5bcb7470c362e96c93",
+  "controller_script_path_and_sha256": {
+    "path": "sim_scripts/cyl34_top_view_d400_gripper_link_sdf_res256_live_cook_articulation_preflight.py",
+    "sha256": "6d1f5014535fdffa1e9e63973b1037c14fb1c228a4d22f6a23f980a961ab3b17"
+  },
+  "worker_script_path_and_sha256": {
+    "path": "sim_scripts/cyl34_top_view_d400_gripper_link_sdf_res256_live_cook_articulation_worker.py",
+    "sha256": "e5b4b764012258757a9086edb840af40bcc1637586bc05934fec2674ffbd0f0a"
+  },
+  "review_method": {
+    "target_script_imports": 0,
+    "target_script_executions": 0,
+    "method": "Read source text, parse both files with Python ast.parse, inspect their AST and literal contracts, compare those contracts with the frozen preregistration JSON, and run in-memory negative perturbations against an AST-derived normalized contract model.",
+    "controller": {
+      "line_count": 3498,
+      "byte_count": 122209,
+      "ast_node_count": 15964
+    },
+    "worker": {
+      "line_count": 2872,
+      "byte_count": 105859,
+      "ast_node_count": 14899
+    },
+    "fixture_harness_note": "The first temporary harness attempt raised KeyError on the intentionally missing counter key before it emitted a report. The temporary validator was corrected so malformed inputs are classified as rejected. An independent review then found and stopped a direct-worker approval bypass in the first draft. After that source repair, the complete 53-fixture suite was rerun from the repaired clean static baseline. Only that complete repaired-source rerun is attested below."
+  },
+  "static_ast_parse_pass": true,
+  "top_level_runtime_side_effect_static_scan_pass": true,
+  "counter_key_alignment_pass": true,
+  "phase_order_and_owner_static_contract_pass": true,
+  "static_review_checks": {
+    "controller_and_worker_top_level_imports_are_stdlib_only": true,
+    "controller_and_worker_main_calls_are_name_guarded": true,
+    "top_level_calls_are_limited_to_inert_path_regex_and_container_construction": true,
+    "worker_forbidden_step_forward_play_commit_simulation_context_contact_and_cylinder_calls_absent": true,
+    "controller_counter_keys_equal_worker_counter_keys": true,
+    "counter_keys_equal_preregistration_key_order": true,
+    "exact_range_zero_counter_partition_is_complete_and_disjoint": true,
+    "worker_pass_counter_literals_equal_preregistered_scalar_values": true,
+    "required_phase_order_equals_preregistration": true,
+    "optional_phase_list_equals_preregistration": true,
+    "phase_owner_sets_are_complete_and_disjoint": true,
+    "every_registered_phase_has_a_literal_emission_site": true,
+    "controller_literal_phase_calls_are_controller_owned": true,
+    "worker_literal_phase_calls_are_worker_owned": true,
+    "approved_tuple_sha_argument_is_required": true,
+    "controller_has_exactly_one_subprocess_popen_site": true,
+    "worker_has_zero_subprocess_spawn_sites": true,
+    "process_group_watchdog_cleanup_is_present": true,
+    "actual_rrd_reader_validation_is_present_before_viewer": true,
+    "controller_binds_parent_pid_tuple_manifest_nonce_and_invocation_digest": true,
+    "worker_prelaunch_authority_gate_precedes_isaaclab_app_import": true,
+    "worker_prelaunch_authority_gate_precedes_app_launcher_call": true,
+    "direct_worker_without_registered_controller_parent_is_fail_closed": true,
+    "invocation_digest_is_transported_after_exclusive_write_without_a_self_hash_cycle": true
+  },
+  "static_stage_zero_counters": {
+    "script_imports": 0,
+    "isaac_kit_physx_launches": 0,
+    "simulation_app_launches": 0,
+    "derivative_asset_materializations": 0,
+    "usd_stage_creations_or_writes": 0,
+    "gpu_runtime_jobs": 0,
+    "physics_steps": 0,
+    "q5_samples": 0,
+    "contact_queries": 0,
+    "cylinder_creates_or_writes": 0
+  },
+  "negative_static_fixture_results": {
+    "method": "In-memory perturbation of an AST-derived normalized static contract; the target modules were not imported or executed.",
+    "baseline_pass": true,
+    "passed": 53,
+    "total": 53,
+    "pass": true,
+    "fixtures": [
+      {
+        "id": "source_mesh_hash_perturbation_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "Frozen source combined digest changed."
+      },
+      {
+        "id": "source_stream_bit_or_order_perturbation_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "Index stream bit or ordering digest changed."
+      },
+      {
+        "id": "approximation_convex_hull_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "The sdf token was replaced by convexHull."
+      },
+      {
+        "id": "required_api_missing_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "One required applied API was removed."
+      },
+      {
+        "id": "resolution_255_257_512_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "The registered resolution 256 was changed; 255, 257, and 512 share the same equality gate."
+      },
+      {
+        "id": "remeshing_true_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "Remeshing changed from false to true."
+      },
+      {
+        "id": "triangle_reduction_not_one_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "Triangle reduction changed from 1.0."
+      },
+      {
+        "id": "sdf_api_on_xform_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "The SDF API owner type changed from Mesh to Xform."
+      },
+      {
+        "id": "instance_proxy_owner_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "A required live owner became an instance proxy."
+      },
+      {
+        "id": "one_gripper_a64_still_active_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "One A64 gripper collider remained enabled."
+      },
+      {
+        "id": "sdf_mesh_collision_disabled_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "The SDF Mesh collisionEnabled value changed to false."
+      },
+      {
+        "id": "link5_active_count_not_64_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "The frozen link5 active A64 count changed."
+      },
+      {
+        "id": "property_query_contract_perturbation_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "The registered gripper property-query callback count changed."
+      },
+      {
+        "id": "cook_zero_to_zero_false_pass_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "No newly scheduled cooking work was observed."
+      },
+      {
+        "id": "mass_com_or_inertia_perturbation_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "The inertia equality gate changed to false."
+      },
+      {
+        "id": "semantic_runtime_ids_excluded_but_semantic_change_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "A non-allowlisted semantic change escaped the digest."
+      },
+      {
+        "id": "worker_internal_fail_return_zero_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "A worker failure cannot pass merely because the process return code is zero."
+      },
+      {
+        "id": "truncated_rrd_footer_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "The RRD footer or manifest was absent."
+      },
+      {
+        "id": "property_query_path_hash_perturbation_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "The callback path-set digest changed."
+      },
+      {
+        "id": "property_query_completion_missing_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "A required completed callback was missing."
+      },
+      {
+        "id": "enabled_sdf_leaf_missing_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "The enabled SDF Mesh row was missing."
+      },
+      {
+        "id": "cook_baseline_busy_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "The pre-attach cooking queue was not drained."
+      },
+      {
+        "id": "cook_finished_delta_mismatch_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "Scheduled and finished cooking deltas differed."
+      },
+      {
+        "id": "cook_final_running_nonzero_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "The final cooking queue remained nonzero."
+      },
+      {
+        "id": "counter_missing_key_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "A required counter key was removed."
+      },
+      {
+        "id": "counter_extra_key_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "An unregistered counter key was added."
+      },
+      {
+        "id": "counter_bool_not_int_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "A Boolean value could not impersonate integer zero."
+      },
+      {
+        "id": "counter_physics_nonzero_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "The controlled physics-step counter became nonzero."
+      },
+      {
+        "id": "counter_pump_zero_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "The event-pump count fell below the registered lower bound."
+      },
+      {
+        "id": "counter_pump_overflow_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "The event-pump count exceeded the registered upper bound."
+      },
+      {
+        "id": "phase_missing_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "A required phase was removed."
+      },
+      {
+        "id": "phase_duplicate_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "A registered phase was duplicated."
+      },
+      {
+        "id": "phase_reordered_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "Two registered worker phases were exchanged."
+      },
+      {
+        "id": "phase_owner_mismatch_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "A worker-owned phase was attributed to the controller."
+      },
+      {
+        "id": "phase_ordinal_gap_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "Phase ordinals were no longer contiguous."
+      },
+      {
+        "id": "phase_monotonic_regression_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "A monotonic timestamp regressed."
+      },
+      {
+        "id": "tuple_field_reorder_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "The four hash-tuple fields were reordered."
+      },
+      {
+        "id": "tuple_member_hash_drift_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "A tuple member no longer matched the current file hash."
+      },
+      {
+        "id": "attestation_false_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "The static-attestation PASS bit was removed."
+      },
+      {
+        "id": "forbidden_top_level_import_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "A non-standard-library runtime import was added at module top level."
+      },
+      {
+        "id": "unguarded_main_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "Main execution escaped the __name__ guard."
+      },
+      {
+        "id": "second_popen_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "A second worker-spawn site was introduced."
+      },
+      {
+        "id": "worker_subprocess_spawn_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "The worker gained a nested subprocess-spawn site."
+      },
+      {
+        "id": "missing_approved_tuple_argument_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "Runtime no longer required the user-cited tuple SHA."
+      },
+      {
+        "id": "runtime_output_root_drift_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "The forward-only output root changed."
+      },
+      {
+        "id": "preregistration_hash_drift_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "The frozen preregistration digest changed."
+      },
+      {
+        "id": "direct_worker_without_controller_parent_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "The direct parent PID did not match the registered Controller PID."
+      },
+      {
+        "id": "controller_parent_cmdline_mismatch_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "The parent command line did not identify the exact Controller and approved tuple."
+      },
+      {
+        "id": "invocation_sha_environment_missing_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "The post-write invocation digest transport was absent."
+      },
+      {
+        "id": "invocation_sha_mismatch_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "The Controller-provided invocation digest did not match the exclusive invocation file."
+      },
+      {
+        "id": "one_shot_nonce_mismatch_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "The one-shot nonce did not match across command, manifest, and invocation."
+      },
+      {
+        "id": "manifest_command_mismatch_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "The manifest command did not match the exact worker command."
+      },
+      {
+        "id": "prelaunch_gate_after_isaac_import_rejected",
+        "expected": "reject",
+        "observed": "rejected",
+        "pass": true,
+        "detail": "The authority gate was moved after the Isaac Lab AppLauncher import boundary."
+      }
+    ]
+  },
+  "implementation_static_attestation_pass": true,
+  "actual_worker_approval_consumed": false,
+  "actual_worker_executed": false,
+  "derivative_usd_materialized": false,
+  "scientific_or_physics_verdict": null,
+  "g0a_pass": false
+}

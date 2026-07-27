@@ -151,10 +151,38 @@ as the current Active Case.
   구조적으로 우회하는 대안. 설치 `PhysxSchema 107.3.26`에
   `PhysxSDFMeshCollisionAPI`(`schema.usda:1043`, `sdfResolution=256`)와
   cone/cylinder 정확 `physxCollisionCustomGeometry` 토큰이 이미 존재하고,
-  버전일치 Omni Physics 107.3 Colliders 문서상 SDF가 "동적+오목 보존"을
-  동시에 만족하는 유일 옵션이다. 목표는 authored↔cooked 0.1mm identity 완성이
+  버전일치 Omni Physics 107.3 Colliders 문서상 SDF는 동적·kinematic
+  비볼록 형상을 보존하는 공식 옵션 중 하나다. 목표는 authored↔cooked 0.1mm identity 완성이
   아니라 D362 전도(밀어 쓰러뜨림)가 실제로 개선되는지 **물리로 처음 재측정**.
   단 SDF도 memory/perf·thin-feature 접촉·articulation-link 적용에 자체 검증
   필요(무비판 채택 금지). 신규 case 승인 + preregistration(신규 변수/gate/
   산출물 경로) 제시 전 착수 금지. 상세:
   `claudedocs/session_20260727_grasp_g0a_d398_resume_verification_and_sdf_reevaluation.md`.
+
+- 2026-07-27 후속 교정: 사용자는 SDF 방향과 D400 번호를 선택했고,
+  preregistration은 작성·검토 완료됐다. 다음 경계는 두 D400 script,
+  reviewed-script hash attestation, proposed runtime hash tuple만 만드는
+  no-Isaac 구현·정적검토다. actual runtime은 그 tuple 파일 SHA를 사용자가
+  명시해 승인한 뒤의 별도 단계다.
+  D400은 `gripper_link`만 A64→SDF(resolution 256)로 바꾸는
+  configuration/load-admission/global-cook-drain/rigid-owner-enumeration
+  preflight이며, `link5=A64`, product
+  cylinder/q5/contact/controlled physics=0으로 제한한다. 전역 cook queue와
+  property query는 per-prim SDF identity 또는 실제 articulation collision
+  participation 권위가 아니다. 65/66 property-query 행수도 아직 실측값이
+  아니라 미래 worker가 실패 가능하게 검증할 예상 계약이다. 이 권위 교정과
+  구현→runtime 승인 분리는 `DECISIONS.md` D400-P1/D400-P2가 담당한다.
+  D401은 non-product known-box contact-positive articulation response gate
+  (cylinder 사용 금지), nominal
+  `29x50mm`와 height/radial pose는 D402 zero-step, 실측 mass 뒤 A64 physics
+  baseline은 D403, 동일 계약의 gripper-only SDF 비교는 D404로 분리한다.
+  D362 cylinder는 analytic일 가능성이 높지만 runtime carb 값과 PhysX
+  geometry type 미기록으로 exact-confirmed가 아니다. 또한 위 154-156행의
+  “유일 옵션”은 너무 넓은 표현이고, D398 resume ledger의 “convex gate가
+  likely unsatisfiable”도 미입증이다. 안전한 권위는 SDF가 공식 호환표 안의
+  동적 오목형상 보존 경로 중 하나이며, D398은 선택된 greedy/max-12 계보의
+  dead end만 국소화했다는 것이다. D398의 “label repair first” 순서만
+  사용자 후속 선택으로 보류했으며 D398 verdict와 D399 예약은 유지한다
+  (`DECISIONS.md` D398-F1). 상세:
+  `claudedocs/session_20260727_grasp_g0a_vertex12_cylinder_d400_scope_review.md`,
+  `claudedocs/session_20260727_grasp_g0a_d400_gripper_sdf_live_cook_articulation_preregistration.md`.

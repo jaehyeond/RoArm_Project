@@ -23479,3 +23479,238 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d398/attempt1_six_failed_parent_greedy_bsp_dead_end_provenance_localization/d398_manual_visual_inspection.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d398/attempt1_six_failed_parent_greedy_bsp_dead_end_provenance_localization/d398_completion_summary.json`
 - `START_HERE.md`
+
+## D398-F1 — 사용자 선택으로 D398의 발표수리 선행 순서만 보류하며 수치 판정은 동결한다
+
+Date: 2026-07-27
+
+Decision:
+
+- D398의 “다음 최소 단계는 발표용 라벨 겹침 수리”는 당시의 권장 순서였다.
+  사용자는 이후 SDF 방향을 D400으로 선택하고, 라벨 수리는 D399 이름으로
+  예약하되 필수 선행 단계로 두지 않기로 결정했다.
+- 이 후속 결정은 D398의 **순서 권고만** 보류한다. D398의 수치 판정,
+  operational FAIL_STOP, frozen attempt1, 미완성 D397 geometry 금지는
+  변경하지 않는다.
+- D399는 완료·취소된 것이 아니다. 선택적으로 실행할 수 있는 미실행
+  presentation-only case로 계속 예약한다.
+
+Evidence:
+
+- D398의 수치 localization은 유지되지만 manual Rerun inspection은 label
+  overlap으로 실패했다.
+- 후속 검토에서 `max-12`가 NVIDIA 제한이 아닌 D385/D397 프로젝트 예산임을
+  재확인했고, 사용자는 nominal `29x50mm`, `D400=SDF`, `D399=label repair
+  reservation` 방향을 선택했다.
+- 새 사다리는 아직 제안 상태다: D400 SDF live/cook preflight, D401
+  non-cylinder known-box articulation contact positive control, D402 nominal
+  product zero-step pose/type localization, mass pin, D403 A64 product physics
+  baseline, D404 gripper-only SDF comparison.
+
+Implication:
+
+- 현재 active case는 없다. 다음 작업은 별도 승인이 필요한 D400
+  preregistration 작성이며, runtime은 그 검토 뒤 다시 별도 승인받는다.
+- D399를 건너뛰는 것은 D398 시각화가 PASS했다는 뜻이 아니다.
+- D400-D404는 D397/D398 partial geometry를 materialize하지 않으며,
+  `g0a_pass=false`와 과학/물리 미판정 상태를 그대로 상속한다.
+
+Sources:
+
+- `claudedocs/session_20260727_grasp_g0a_d398_greedy_bsp_dead_end_provenance_localization.md`
+- `claudedocs/session_20260727_grasp_g0a_vertex12_cylinder_d400_scope_review.md`
+- `claudedocs/BACKLOG.md`
+- `START_HERE.md`
+
+## D400-P0 — gripper_link SDF res256 preflight의 판정 범위와 별도 실행 경계를 사전등록한다
+
+Date: 2026-07-27
+
+Decision:
+
+- D400의 신규 변수는
+  `gripper_link_collision_representation_a64_to_sdf_res256_v1` 하나다.
+  `link5`는 A64 64개를 유지하고, `gripper_link`만 A64 64개를
+  비활성화한 뒤 원본 전체 Mesh 1개에 SDF resolution 256을 적용한다.
+- D400은 파생 USD 작성, typed readback, bounded SDF cook, non-instance
+  articulation owner/attachment, VALID property query, mass/COM/inertia
+  불변성까지만 판정한다.
+- convex collider의 callback polygon/topology-volume gate는 cooked SDF
+  권위로 재사용하지 않는다. D400의 source/live USD geometry는 확인할 수
+  있지만 cooked SDF zero-isosurface·void·접촉 반응은 확인할 수 없다.
+- D400은 q5와 공통 world pose를 읽지 않으므로 고정 턱과 움직이는 턱의
+  cross-body OPEN clearance도 판정하지 않고 D402로 이연한다.
+- 이번 승인은 preregistration 작성으로만 소비했다. 실제 Isaac/PhysX
+  worker 1회는 다시 별도 명시 승인을 받아야 한다.
+
+Evidence:
+
+- 설치 `PhysxSchema 107.3.26`은 SDF Mesh에
+  `CollisionAPI + MeshCollisionAPI(approximation=sdf) +
+  PhysxSDFMeshCollisionAPI`를 사용하며, schema 기본값은 resolution 256,
+  subgrid 6, 16-bit, narrow band 0.01, margin 0.01, remeshing false,
+  triangle-retention factor 1.0이다.
+- 동결 `gripper_link.stl` SHA-256은
+  `7946a374e24a2f467a0581b4946e0ec41b1b86a92f070bc00aa9bced1bf65a56`;
+  D368 원본 stream은 꼭짓점 41,094개와 삼각형 13,698개다.
+- D344의 collision scope는 instanceable이고 원본 Mesh가 instance
+  proxy이므로, D373 실패를 반복하지 않도록 geometry/transform을 보존한
+  non-instance derivative/live stage가 필요하다.
+- 사전등록 JSON은 one-worker/no-retry, 300초 전체/60초 무진행 watchdog,
+  hash-bound pre-close+external supervisor, strict RRD/RBL/1920x1080/manual
+  inspection을 고정했다.
+
+Implication:
+
+- D398-F1의 “현재 active case 없음, 다음은 D400 preregistration”라는 상태
+  문장은 이 항목으로 supersede된다. 현재는 D400이
+  `PREREGISTERED_NOT_EXECUTED`이고 다음 승인 경계가 actual worker 1회다.
+- 미래 D400 PASS는 SDF 구성·cook·부착 가능성만 의미한다. 실제 관절
+  collision response는 별도 D401 non-product box 양성대조 전까지 null이다.
+- D400 어느 분기에서도 product-cylinder grasp, physics, contact,
+  `g0a_pass`는 승격되지 않는다.
+
+Sources:
+
+- `claudedocs/runtime_logs/grasp_track/g0a_d400/attempt1_gripper_link_sdf_res256_live_cook_articulation_preflight/d400_preregistration.json`
+- `claudedocs/session_20260727_grasp_g0a_d400_gripper_sdf_live_cook_articulation_preregistration.md`
+- `claudedocs/runtime_logs/grasp_track/g0a_d368/d368_semantic_allocation_evidence.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/roarm_m3.usd`
+- installed `PhysxSchema/resources/schema.usda:1043-1141`
+- NVIDIA Omni Physics 107.3 Colliders / Collision Behavior Guide
+- `START_HERE.md`
+
+## D400-P1 — D400 preflight의 cook·property-query·owner 권위를 과대해석하지 않는다
+
+Date: 2026-07-27
+
+Decision:
+
+- D400-P0의 “bounded SDF cook”, “articulation attachment”, “VALID property
+  query”만으로 표현한 PASS 범위는 너무 넓으므로 이 항목이 해당 문구를
+  supersede한다.
+- 설치 NVIDIA test가 사용하는
+  `total_scheduled_tasks-total_finished_tasks`는 private/version-pinned
+  **process-wide 전역 cook queue 진단값**이지 특정 prim의 SDF cook
+  identity API가 아니다. attach 전 running `0`, attach 뒤
+  `scheduled_delta>0`, `finished_delta==scheduled_delta`, 최종 running
+  `0`을 모두 요구해 `0→0` 거짓 PASS를 막되, 내부 SDF 객체와 실제
+  collision participation은 `null`로 둔다.
+- property query는 단순 `VALID`가 아니라 completed callback, 모든 row의
+  result/path, exact path-set SHA를 판정한다. link5는 disabled legacy parent
+  + A64 64개 = `65`행, gripper는 disabled A64 64개 + disabled legacy
+  parent + enabled SDF Mesh = `66`행을 요구한다. 그래도 query의 AABB/volume은
+  sanity이며 cooked SDF surface 권위가 아니다.
+- A64 제거는 deactivate가 아니라 정확한 64개 part의
+  `physics:collisionEnabled=false`로 고정한다. 두 collision scope에만
+  `instanceable=false`를 쓰고, SDF Mesh는 `collisionEnabled=true`로 쓴다.
+  exact allowlist 밖 base→derivative semantic diff는 `0`이어야 한다.
+- worker는 cleanup 시 detach와 StageCache erase/non-membership을 먼저
+  완료한 뒤 raw summary와 pre-close sentinel을 쓴다. worker technical
+  FAIL이면 Rerun을 실행하지 않으며, Rerun artifact 부재를 별도
+  observability FAIL로 세지 않는다.
+- 미래 PASS 명칭은
+  `D400_GRIPPER_LINK_SDF_RES256_CONFIGURATION_LOAD_ADMISSION_OWNER_ENUMERATION_PREFLIGHT_PASS_NO_PHYSICS`
+  로 낮춘다.
+
+Evidence:
+
+- 세 독립 read-only 검토가 cook `0→0`, weak query, mutation ambiguity,
+  cleanup order, unconditional Rerun, quaternion order와 `g0a_pass`
+  null/false 모순을 재현했다.
+- 동결 D375 callback은 principal axes를 `xyzw`로 반환하므로 D400은
+  `[q3,q0,q1,q2]`로 `wxyz`에 변환해 비교한다.
+- 설치 PhysX schema의 일곱 SDF 값과 API 적용 Mesh leaf는 맞았으며,
+  수정 대상은 그 값이 아니라 **그 값을 보고 어디까지 증명했다고
+  말할지**였다.
+
+Implication:
+
+- D400 actual worker는 여전히 별도 승인 전 미실행이다.
+- 미래 D400 PASS도 정확한 SDF 입력 구성, stage load admission, 전역
+  cook queue drain, rigid-link owner/property-row enumeration까지만
+  증명한다.
+- cooked SDF surface/void, articulation contact participation, q5,
+  cylinder/contact/전도/파지와 scientific/physics verdict는 `null`;
+  프로젝트 `g0a_pass=false`는 유지한다.
+
+Sources:
+
+- `claudedocs/runtime_logs/grasp_track/g0a_d400/attempt1_gripper_link_sdf_res256_live_cook_articulation_preflight/d400_preregistration.json`
+- `claudedocs/session_20260727_grasp_g0a_d400_gripper_sdf_live_cook_articulation_preregistration.md`
+- `claudedocs/runtime_logs/grasp_track/g0a_d375/attempt2_external_gpu_attestation_repair/d375_worker_raw_summary.json`
+- installed `PhysxSchema/resources/schema.usda:1043-1141`
+- installed NVIDIA `PhysxTriangleMeshCollisionAPI.py`
+- NVIDIA Omni Physics 107.3 Colliders / Collision Behavior Guide
+- `START_HERE.md`
+
+## D400-P2 — 미관측 예상값과 실행 파일 권위를 분리하고 D400 승인을 3단계로 고정한다
+
+Date: 2026-07-27
+
+Decision:
+
+- D400-P0의 “다음 승인 경계가 actual worker 1회”와 D400-P1의 같은
+  운영 문구를 이 항목이 supersede한다. 순서는
+  **사전등록 검토 → no-Isaac 구현·정적 script-hash attestation →
+  actual one-worker runtime**의 세 단계다.
+- 다음 승인으로 만들 수 있는 것은 등록된 controller/worker script 두 개,
+  `d400_reviewed_script_attestation.json`,
+  `d400_proposed_runtime_hash_tuple.json`뿐이다. 이 단계에서는
+  Isaac/Kit/PhysX import·launch와 파생 USD materialization을 금지한다.
+  tuple은 사전등록·attestation·controller·worker 네 SHA-256을 고정한다.
+  그 tuple 파일 SHA를 사용자가 명시한 뒤에만 actual runtime을 다시 별도
+  승인할 수 있다.
+- property-query의 link5 `65`행과 gripper `66`행은 아직 D400 관찰 결과가
+  아니라 **실패 가능한 미래 예상 계약**이다. D375가 직접 증명한 것은
+  disabled legacy collider도 열거될 수 있다는 점까지이며, 새로 disabled가
+  되는 A64 64개와 새 SDF Mesh의 전체 행수는 worker가 처음 측정한다.
+- 전역 cooking 카운터는 설치 NVIDIA test의 계산식만 참고한다. 그 test와
+  달리 D400은 process-global local mesh cache를 지우지 않으므로,
+  `scheduled_delta=0`은 cache-hit PASS가 아니라 inconclusive FAIL_STOP이다.
+- D344 Mesh의 `material:binding`은 일반 USD/UsdShade 재질 관계이지 그
+  자체로 PhysX 물리 재질 증거가 아니다. `orientation=rightHanded`는
+  unauthored fallback, `subdivisionScheme=none`은 authored 값,
+  `holeIndices=[]`는 unauthored fallback으로 구분해 exact readback한다.
+- quaternion은 callback `xyzw`를 `wxyz`로 바꾼 뒤 `q`와 `-q`가 같은
+  회전이라는 부호 canonicalization을 적용한다.
+- Rerun은 `preflight_phase`의 exact `0/1/2` 의미, non-system entity
+  `73`개, link5 `part_000..063` exact path-set과 실제 component 이름을
+  검증한다. source는 phase0, live/configuration은 phase1, post-query
+  decision은 phase2에 정확히 귀속하며 timeless/타 phase row는 금지한다.
+  정적 decision board와 Viewer screenshot은 별도 1920×1080 파일로
+  유지한다.
+
+Evidence:
+
+- 설치 schema/API/test 및 frozen D344/D368/D375/D377 근거에 대한 독립
+  read-only 재검산에서 SDF 일곱 값, 원본 stream, 물성, callback quaternion
+  순서, 설치 파일 SHA는 일치했다.
+- 같은 감사가 일반 material binding의 오명, USD authoredness 누락,
+  `65/66`의 관측 전 확정 표현, NVIDIA test와 다른 cache 정책, q/-q
+  false-FAIL 가능성을 지적했다.
+- runtime manifest는 future script의 당시 hash를 단순 기록하는 것으로는
+  부족하다. 별도 정적 검토에서 고정된 expected hash와 실제 hash가 정확히
+  일치해야 한다. proposed tuple 파일 SHA를 사용자가 explicit runtime
+  approval에서 명시하고, controller argument·tuple·현재 네 hash를 다시
+  일치시켜야 code review 뒤 runtime이라는 승인 순서가 유지된다.
+
+Implication:
+
+- 현재 상태는 여전히 `PREREGISTERED_NOT_EXECUTED`이며 코드·파생 USD·
+  Isaac/PhysX 실행 결과가 없다.
+- 다음 최소 승인은 no-Isaac 구현·정적 attestation이다. 그 PASS 뒤에도
+  actual worker, D401 접촉 양성대조, 제품 원통은 각각 별도 승인이다.
+- D400 어느 분기에서도 physics/q5/contact/cylinder/scientific verdict는
+  `null`, 프로젝트 `g0a_pass=false`다.
+
+Sources:
+
+- `claudedocs/runtime_logs/grasp_track/g0a_d400/attempt1_gripper_link_sdf_res256_live_cook_articulation_preflight/d400_preregistration.json`
+- `claudedocs/session_20260727_grasp_g0a_d400_gripper_sdf_live_cook_articulation_preregistration.md`
+- `claudedocs/runtime_logs/grasp_track/g0a_d375/attempt2_external_gpu_attestation_repair/d375_worker_raw_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d377/attempt1_stagecache_erase_before_close_localization/d377_worker_raw_summary.json`
+- installed `PhysxSchema/resources/schema.usda:1043-1141`
+- installed NVIDIA `PhysxTriangleMeshCollisionAPI.py` and `_physx.pyi`
+- NVIDIA Omni Physics 107.3 Colliders / Collision Behavior Guide
+- `START_HERE.md`
