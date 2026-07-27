@@ -145,3 +145,16 @@ as the current Active Case.
   D388 재실행, 새 partition, tolerance/overlap gate 완화, budget 선택,
   USD/PhysX/Isaac, 실제 원통, physics/q5/contact/grasp는 사용자 별도 승인
   전 착수 금지.
+
+- 2026-07-27 (D398 resume 분석, 미승인): `sdf_collider_representation_reeval`
+  — D384–D398이 막힌 "적은 볼록조각으로 오목 그리퍼 정확 재현" 문제를
+  구조적으로 우회하는 대안. 설치 `PhysxSchema 107.3.26`에
+  `PhysxSDFMeshCollisionAPI`(`schema.usda:1043`, `sdfResolution=256`)와
+  cone/cylinder 정확 `physxCollisionCustomGeometry` 토큰이 이미 존재하고,
+  버전일치 Omni Physics 107.3 Colliders 문서상 SDF가 "동적+오목 보존"을
+  동시에 만족하는 유일 옵션이다. 목표는 authored↔cooked 0.1mm identity 완성이
+  아니라 D362 전도(밀어 쓰러뜨림)가 실제로 개선되는지 **물리로 처음 재측정**.
+  단 SDF도 memory/perf·thin-feature 접촉·articulation-link 적용에 자체 검증
+  필요(무비판 채택 금지). 신규 case 승인 + preregistration(신규 변수/gate/
+  산출물 경로) 제시 전 착수 금지. 상세:
+  `claudedocs/session_20260727_grasp_g0a_d398_resume_verification_and_sdf_reevaluation.md`.

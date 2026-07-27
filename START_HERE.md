@@ -94,6 +94,16 @@ Observability:
 
 ## Active Case — None; Awaiting Explicit Approval
 
+2026-07-27 read-only resume verified D372-D398 and the installed
+`PhysxSchema 107.3.26`. It surfaced an UNAPPROVED alternative direction: an SDF
+mesh collider (concave-preserving; per version-matched Omni Physics 107.3 the
+only dynamic+concave option; `schema.usda:1043`) plus a custom-geometry exact
+`29x50` cylinder target, aimed at re-measuring D362 tipping in physics rather
+than perfecting authored-to-cooked identity. Not a scope change; requires
+explicit approval. See
+`claudedocs/session_20260727_grasp_g0a_d398_resume_verification_and_sdf_reevaluation.md`
+and `claudedocs/BACKLOG.md`.
+
 Recommended minimum:
 
 `D399 [d398_rerun_label_deconfliction_observability_repair]`
