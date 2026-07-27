@@ -23412,3 +23412,70 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d397/attempt4_manual_visual_clarity_repair/d397_attempt4_manual_visual_inspection.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d397/attempt4_manual_visual_clarity_repair/d397_attempt4_completion_summary.json`
 - `START_HERE.md`
+
+## D398 — A frozen greedy dead end is not a global construction impossibility when every selected-lineage ancestor had another admissible option
+
+Date: 2026-07-27
+
+Decision:
+
+- Preserve three separate claims. A first stuck leaf can have no admissible
+  split under the frozen immediate rule; its selected ancestor choices can
+  still have been non-unique; neither fact proves that an alternative branch
+  completes the whole tree.
+- When localizing a frozen greedy failure, classify every raw option in the
+  original evaluation order and bind the replay to the frozen forest, leaf
+  payload, selected cut identities, and candidate-set parity.
+- An ancestor result may publicly state only whether an unselected admissible
+  option existed. Do not expose or adopt the alternative geometry in a
+  provenance-only case.
+- A manual visualization failure remains separate from a provenance result.
+  Automated RRD/layout PASS cannot override visible label overlap.
+
+Evidence:
+
+- D398 replayed exactly the six D397 failed final forests and their first stuck
+  leaf identities. Worker/retry/signal was `1/0/0`; calculation/supervisor
+  elapsed was `5.820609834045172/6.199380008969456s`.
+- Raw candidate counts by parent were `38/45/18/18/30/32`, total `181`.
+  Midpoint generation, paired split creation, and seam/volume validity rejected
+  `0/0/0`; strict vertex reduction rejected all `181`; admissible was `0`.
+- The selected path contained `14` ancestors. All `14/14` had at least one
+  unselected admissible option, spanning all six failed parents.
+- This establishes that the D397 greedy history was not locally forced.
+  Alternative-branch completion feasibility remains `null` because D398 chose
+  no new branch and performed no backtracking.
+- Ephemeral trace/parity/total split evaluations were `991/991/1982`;
+  replay cells were `30`; five actual mutation controls passed `5/5`.
+- New branch, backtracking, serialized/adopted child geometry, vertex-budget,
+  plane-family, tolerance/gate, USD/asset/collider, Isaac/Kit/PhysX/Warp-CUDA,
+  cylinder, physics, q5, contact, and target/IK/path/settings changes were all
+  `0`.
+- The exact `1920x1080` board was readable and the strict RRD/RBL automated
+  contract passed with Viewer/retry `1/0`. Manual inspection found overlapping
+  red Rerun labels, so `no_text_overlap_or_clipping=false` and final operational
+  verdict was `D398_COMPLETION_INTEGRITY_FAIL_STOP`.
+
+Implication:
+
+- Freeze D398 attempt1. Its numeric verdict
+  `D398_SIX_FAILED_PARENT_GREEDY_BSP_DEAD_END_PROVENANCE_LOCALIZED` stands;
+  its presentation completion does not.
+- Do not infer a global `12 -> 13` budget change, plane-family expansion, or
+  completed collider from this result.
+- The next minimum is a separately approved presentation-only label
+  deconfliction repair. A later alternative-branch completion test must be
+  separately approved and must keep max-12, the axis/midpoint plane family,
+  and all geometry gates frozen.
+- No materializable collider, live identity, nominal-cylinder physics, contact,
+  or grasp result exists; `g0a_pass=false`.
+
+Sources:
+
+- `claudedocs/session_20260727_grasp_g0a_d398_greedy_bsp_dead_end_provenance_localization.md`
+- `sim_scripts/cyl34_top_view_d398_d397_six_failed_parent_greedy_bsp_dead_end_provenance_localization.py`
+- `claudedocs/runtime_logs/grasp_track/g0a_d398/attempt1_six_failed_parent_greedy_bsp_dead_end_provenance_localization/d398_greedy_dead_end_provenance_evidence.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d398/attempt1_six_failed_parent_greedy_bsp_dead_end_provenance_localization/d398_offline_worker_supervisor.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d398/attempt1_six_failed_parent_greedy_bsp_dead_end_provenance_localization/d398_manual_visual_inspection.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d398/attempt1_six_failed_parent_greedy_bsp_dead_end_provenance_localization/d398_completion_summary.json`
+- `START_HERE.md`

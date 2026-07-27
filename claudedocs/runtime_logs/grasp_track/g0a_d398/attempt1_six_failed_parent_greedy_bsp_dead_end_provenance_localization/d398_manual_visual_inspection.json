@@ -1,0 +1,25 @@
+{
+  "artifact": "D398_MANUAL_VISUAL_INSPECTION_V1",
+  "case": "g0a_d398",
+  "attempt": "attempt1_six_failed_parent_greedy_bsp_dead_end_provenance_localization",
+  "manual_inspection_complete": true,
+  "board_sha256": "5aa90355983d5ae4041fa0994456f51b8a2db545ea21b0e4d23323f837a13724",
+  "rerun_screenshot_sha256": "48cdedce5505518eaa26b21e0ef23be581afab9031e739a032bda12947e9fe06",
+  "checks": {
+    "board_exact_1920x1080_and_readable": true,
+    "six_failed_parent_rows_visible": true,
+    "candidate_stage_counts_readable": true,
+    "ancestor_alternative_booleans_readable": true,
+    "frozen_parent_and_stuck_leaf_geometry_visible": true,
+    "no_alternative_candidate_geometry_shown": true,
+    "offline_scope_and_null_physics_boundary_readable": true,
+    "no_text_overlap_or_clipping": false
+  },
+  "observations": [
+    "1920x1080 비교판에서 실패 부모 6개, 후보 수, 탈락 단계 합계, 조상 대안 Boolean, null 경계를 글자 잘림 없이 읽을 수 있다.",
+    "Rerun 화면에서 동결 D397 원본 부모와 최초 막힌 leaf의 여섯 형상 쌍을 볼 수 있으며 새 대안 후보 형상은 표시되지 않았다.",
+    "Rerun 3D 화면의 fixed_backbone_left/right 및 일부 moving/proximal 빨간 이름표가 서로 겹쳐 no_text_overlap_or_clipping은 FAIL이다.",
+    "Rerun 우측 상단의 message proxy server 경고는 파일 로드 및 저장된 형상 표시를 막지는 않았지만 화면 관찰 제한으로 기록한다."
+  ],
+  "manual_verdict": "D398_NUMERIC_LOCALIZATION_VISIBLE_BUT_RERUN_LABEL_OVERLAP_FAIL"
+}

@@ -1,0 +1,124 @@
+{
+  "artifact": "D398_PREREGISTRATION_V1",
+  "attempt": "attempt1_six_failed_parent_greedy_bsp_dead_end_provenance_localization",
+  "authority": {
+    "bytes": 2709,
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d398/attempt1_six_failed_parent_greedy_bsp_dead_end_provenance_localization/d398_execution_authority.json",
+    "sha256": "3292de37581ae4745716d3baa72a1b0cfeb923dc00c5e6cd98053ce09f32fe34"
+  },
+  "case": "g0a_d398",
+  "checks": {
+    "d397_fail_stop": true,
+    "d397_no_isaac_physx": true,
+    "d397_worker_claim_pass": true,
+    "fonts": true,
+    "head_exact": true,
+    "inputs_exact": true,
+    "numpy_1_26_0": true,
+    "one_new_variable": true,
+    "origin_exact": true,
+    "rerun_0_34_1": true,
+    "rerun_cli": true,
+    "scipy_1_15_3": true,
+    "script_exists": true,
+    "start_active_case_D398": true,
+    "start_exact_output": true,
+    "start_exact_variable": true
+  },
+  "ephemeral_replay_boundary": {
+    "already_selected_D397_branches_may_be_replayed": true,
+    "alternative_geometry_serialized_or_adopted": false,
+    "completion_search": false,
+    "new_branch_selected": false,
+    "tentative_split_hulls_may_exist_in_memory_for_classification": true
+  },
+  "execution": {
+    "cooperative_deadline_seconds": 180.0,
+    "process_signal": 0,
+    "viewer_maximum": 1,
+    "viewer_retry": 0,
+    "worker": 1,
+    "worker_retry": 0
+  },
+  "first_rejection_order": [
+    "midpoint_candidate_generation",
+    "paired_split_creation",
+    "seam_volume_validity",
+    "strict_vertex_reduction",
+    "admissible"
+  ],
+  "forbidden": {
+    "USD_asset_collider_Isaac_Kit_PhysX_Warp_CUDA": 0,
+    "backtracking_or_depth2_search": 0,
+    "cylinder_physics_q5_contact": 0,
+    "geometry_adoption_or_candidate_serialization": 0,
+    "hardware_signal_commit_push": 0,
+    "new_branch_selection": 0,
+    "target_IK_path_or_settings": 0,
+    "vertex_budget_plane_family_tolerance_gate_changes": 0
+  },
+  "forward_only_output": "claudedocs/runtime_logs/grasp_track/g0a_d398/attempt1_six_failed_parent_greedy_bsp_dead_end_provenance_localization",
+  "frozen": {
+    "all_surface_void_clearance_count_bounds_overlap_gates": true,
+    "greedy_selection_key": [
+      "maximum child vertices",
+      "volume imbalance",
+      "total child vertices",
+      "axis",
+      "cut bits"
+    ],
+    "plane_family": "adjacent-level Float32 x/y/z midpoints",
+    "positive_volume_epsilon_m3": 1e-18,
+    "vertex_budget": 12,
+    "volume_relative_tolerance": 0.005
+  },
+  "git": {
+    "head": "7736c73910aa5756ef1560ee55640ba005faa012",
+    "origin_master": "7736c73910aa5756ef1560ee55640ba005faa012",
+    "status_outside_output": [
+      "M START_HERE.md",
+      "?? sim_scripts/cyl34_top_view_d398_d397_six_failed_parent_greedy_bsp_dead_end_provenance_localization.py"
+    ]
+  },
+  "input_authority": {
+    "allowed": [
+      "claudedocs/runtime_logs/grasp_track/g0a_d397/attempt2_phase_marker_payload_key_repair/d397_shared_boundary_design_evidence.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d397/attempt2_phase_marker_payload_key_repair/d397_shared_boundary_candidate_geometry.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d397/attempt2_phase_marker_payload_key_repair/d397_offline_worker_claim.json",
+      "sim_scripts/cyl34_top_view_d397_shared_boundary_zero_volume_construction_design.py",
+      "sim_scripts/cyl34_top_view_d397_attempt2_phase_marker_payload_key_repair.py"
+    ],
+    "other_science_inputs": 0
+  },
+  "input_hashes": {
+    "claudedocs/runtime_logs/grasp_track/g0a_d397/attempt2_phase_marker_payload_key_repair/d397_offline_worker_claim.json": "2bac06043e35e095660ed3a0562930f98425a9eba436dc5b72e58f313ed1ed79",
+    "claudedocs/runtime_logs/grasp_track/g0a_d397/attempt2_phase_marker_payload_key_repair/d397_shared_boundary_candidate_geometry.json": "b9a44d430f647e45292fe71804bd17e6f53bf37eea28913389316beac60fa623",
+    "claudedocs/runtime_logs/grasp_track/g0a_d397/attempt2_phase_marker_payload_key_repair/d397_shared_boundary_design_evidence.json": "ea7fd61c38f12b9e03f4e7154536579b831c6f85703bfd4d14e34807cdf327b6",
+    "roarm_rl/rerun_contract.py": "aaafcd93b9da3d8a97d61a53753ec9667bb98bec7391c91c98974f7ce9c66c1e",
+    "roarm_rl/viz_debug.py": "4b5f821ad43652f529dfaa2f92b2826d9cd4973635e34521cc2b3a93ab0193d0",
+    "sim_scripts/cyl34_top_view_d397_attempt2_phase_marker_payload_key_repair.py": "bd95aa1cadb21e4f192c3171596585cc01002dfd951537c68035afd88230286a",
+    "sim_scripts/cyl34_top_view_d397_shared_boundary_zero_volume_construction_design.py": "52745beab46bc695467dd8d676a06b30fa3ea873c7dcad685861e65cfecf4b36"
+  },
+  "negative_controls": [
+    "drop one candidate manifest row",
+    "promote one rejected row to admissible",
+    "mutate one final-leaf payload hash",
+    "flip one ancestor Boolean",
+    "bit-flip one frozen selected cut"
+  ],
+  "new_variables": [
+    "six_failed_parent_axis_midpoint_option_rejection_provenance_v1"
+  ],
+  "pass": true,
+  "question": "Classify the first rejection stage of every frozen raw axis/midpoint option at each of six D397 first stuck leaves, and record only whether each frozen ancestor had an unselected admissible option.",
+  "script": {
+    "bytes": 82107,
+    "path": "sim_scripts/cyl34_top_view_d398_d397_six_failed_parent_greedy_bsp_dead_end_provenance_localization.py",
+    "sha256": "cc92fa379cfbf299b0fd48a16fe137029951c9d17c2a83a14a751fffa8f6dba3"
+  },
+  "start": {
+    "bytes": 6296,
+    "path": "START_HERE.md",
+    "sha256": "f5d72ca9e84b64cfcac3dabe9156ef409cac9e2c6c5005bb2f1ea23728d434bb"
+  }
+}
