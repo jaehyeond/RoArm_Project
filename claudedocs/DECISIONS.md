@@ -23714,3 +23714,162 @@ Sources:
 - installed NVIDIA `PhysxTriangleMeshCollisionAPI.py` and `_physx.pyi`
 - NVIDIA Omni Physics 107.3 Colliders / Collision Behavior Guide
 - `START_HERE.md`
+
+## D401 — Git freeze는 자기 첫 출력보다 먼저 완료하고 캡처 파일의 후속 drift까지 fail-closed한다
+
+Date: 2026-07-28
+
+Decision:
+
+- D400 attempt1의
+  `D400_GRIPPER_LINK_SDF_RES256_PREFLIGHT_FAIL_STOP`은 Isaac/PhysX/SDF
+  실패가 아니다. Controller가 Worker spawn 전에 실행한 Git freeze
+  manifest에서 멈췄다. 기대 기준점 `4c88865...`와 실제
+  `HEAD==origin/master==e9fa300...`가 달랐고, Controller가 Git status보다
+  먼저 쓴 자기 phase 파일을 unexpected dirty path로 다시 읽었다.
+- 이후 runtime-freeze 권위는 `python -B` fail-closed 검사와 read-only
+  tuple/fresh-path 검증 뒤, `git status`, `HEAD`, `origin/master`, 모든
+  dirty regular file의 SHA-256/byte size를 메모리에 완전히 캡처해야 한다.
+  캡처 완료 단조 시각이 첫 output write보다 앞이어야 한다.
+- 첫 phase row를 쓴 뒤 manifest는 캡처된 immutable snapshot만 사용한다.
+  이 구간에서 live `git status`/`HEAD`/`origin/master`를 재조회하지 않는다.
+  대신 manifest 판정 직전에 캡처된 dirty regular file의 hash와 size를
+  다시 측정해 중간 drift를 거부한다. 동결 D400의 post-worker live Git
+  integrity 검사는 그대로 유지한다.
+- D400 attempt1 네 runtime evidence와 원본 D400
+  preregistration/controller/worker/attestation/tuple은 불변이다. 같은
+  경로 retry와 덮어쓰기를 금지한다.
+- D401은 control/provenance 변수 두 개만 바꾼다. SDF geometry, USD
+  mutation, owner/property/cook, watchdog, counter, Rerun 및 science
+  authority는 동결 D400 계약을 상속한다.
+- 과거 로드맵에서 D401로 제안했던 non-product articulation contact
+  positive control은 사용자 explicit D401 repair에 의해 번호만
+  supersede된다. 이 control은 실행 또는 자동 재번호하지 않으며, 필요하면
+  미래 별도 승인에서 새 번호를 정한다.
+- D401 static tuple은
+  `HEAD==origin/master==e9fa30088be7477ce5d6305aa5fdf68323e79adc`
+  에 묶인다. actual runtime 전에 commit/push로 HEAD가 바뀌면 현재 tuple을
+  사용하지 않고 새 forward-only baseline/tuple을 만든다.
+
+Evidence:
+
+- D400 runtime manifest는 `head_exact=false`,
+  `origin_master_exact=false`, `head_equals_origin_master=true`,
+  `no_unexpected_dirty_paths=false`를 기록했다. tuple/frozen inputs/
+  installed primary sources/D334 sidecar는 PASS였다.
+- D400 supervisor는 `failed_stage=runtime_freeze_manifest`,
+  `worker_spawn_request_recorded=false`, `worker_claim_observed=false`,
+  `actual_worker_invocations=null`을 기록했다. Completion summary의
+  scientific/physics verdict와 scope counters도 `null`이다.
+- D401 정적 감사에서 wrapper AST `2/2`, forbidden direct runtime import
+  `0`, failure-capable negative fixture `35/35`가 PASS했다.
+- 독립 역검토가 attestation 전에 bytecode pre-write, captured dirty-file
+  drift 미검사, snapshot completion timestamp 순서의 세 결함을 찾아
+  수리했다.
+- D401 four-hash tuple file SHA-256은
+  `7097134b350cf1641f2585c150cba45bc56ba0e9792d6549f0ae9c2f9e72cd2e`다.
+
+Implication:
+
+- D401은 실제 runtime PASS가 아니다.
+  `D401_RUNTIME_FREEZE_SNAPSHOT_ORDER_REPAIR_STATIC_ATTESTATION_PASS_RUNTIME_NOT_APPROVED`
+  이며 Controller/Worker/Isaac/PhysX/GPU/파생 USD/physics/q5/contact/
+  cylinder 실행은 모두 0이다.
+- D400 SDF configuration/load/cook/owner 질문은 여전히 미측정이다.
+  scientific/physics verdict는 `null`, `g0a_pass=false`다.
+- 다음 actual one-worker runtime은 위 tuple SHA를 사용자가 정확히 명시한
+  별도 승인 뒤에만 가능하다.
+
+Sources:
+
+- `claudedocs/session_20260728_grasp_g0a_d401_d400_runtime_freeze_snapshot_order_repair.md`
+- `claudedocs/runtime_logs/grasp_track/g0a_d400/attempt1_gripper_link_sdf_res256_live_cook_articulation_preflight/d400_runtime_freeze_manifest.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d400/attempt1_gripper_link_sdf_res256_live_cook_articulation_preflight/d400_worker_supervisor.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d400/attempt1_gripper_link_sdf_res256_live_cook_articulation_preflight/d400_completion_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d401/attempt1_d400_runtime_freeze_snapshot_order_repair/d401_preregistration.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d401/attempt1_d400_runtime_freeze_snapshot_order_repair/d401_reviewed_script_attestation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d401/attempt1_d400_runtime_freeze_snapshot_order_repair/d401_proposed_runtime_hash_tuple.json`
+- `sim_scripts/cyl34_top_view_d401_d400_runtime_freeze_snapshot_order_repair_controller.py`
+- `sim_scripts/cyl34_top_view_d401_d400_runtime_freeze_snapshot_order_repair_worker.py`
+- `START_HERE.md`
+
+## D401-R1 — Kit dictionary handle을 built-in dict로 가정하지 말고 serialized JSON key order를 schema authority로 쓰지 않는다
+
+Date: 2026-07-28
+
+Decision:
+
+- Isaac/Kit/PhysX runtime의 정상 launch와 harness의 provenance gate PASS를
+  분리한다. AppLauncher가 `cuda:0`과 RTX 4090에서 정상 시작한 뒤
+  provenance accessor가 실패했으면 이를 Isaac 또는 PhysX runtime
+  failure로 부르지 않는다.
+- 설치 Kit `107.3.3`의
+  `ExtensionManager.get_extension_dict()` 반환형은
+  `carb.dictionary._dictionary.Item`이다. built-in `dict` 전용
+  `isinstance(..., dict)` 분기는 정상 값을 `null`로 만들 수 있다. NVIDIA
+  Kit 107.3 예제처럼 Item indexing 또는 `get_dict()` 변환 뒤 필드와 타입을
+  검증한다.
+- JSON object의 물리적인 key 순서는 schema 의미가 아니다. 특히 writer가
+  `sort_keys=True`이면 registered insertion order는 소실된다. external
+  supervisor는 exact key set, exact integer values, registered-order
+  projection을 권위로 사용하고 serialized iteration order를 PASS 조건으로
+  쓰지 않는다.
+- Worker process return code `0`은 protocol PASS가 아니다. raw summary와
+  pre-close sentinel의 hash-bound protocol booleans 및 external supervisor
+  결과를 계속 최종 권위로 사용한다.
+- D401 actual attempt1은 불변 보존하며 같은 경로에서 retry하거나
+  덮어쓰지 않는다.
+
+Evidence:
+
+- D401 runtime-freeze manifest는 전체 PASS했고 음성 대조군은 `18/18`,
+  Worker/retry는 `1/0`이었다.
+- Kit log는 Isaac headless experience, `cuda:0`, RTX 4090, driver
+  `580.173.02`를 기록했고 ERROR/FATAL `0`이었다. watchdog/signal/process/
+  GPU PID residue도 `0`이었다.
+- runtime probe는 Isaac Sim/Isaac Lab/extension ID/root/native-plugin hash를
+  모두 PASS했지만 `omni_physx_extension_version=null` 하나만 실패했다.
+  설치 `extension.toml`에는 `version = "107.3.26"`이 존재한다.
+- Worker code는 `get_extension_dict()` 결과가 built-in dict일 때만
+  `package.version`을 읽는다. 설치 `_extensions.pyi`와 NVIDIA Kit 107.3
+  API는 반환형을 `carb.dictionary.Item`으로 명시한다.
+- Worker 내부 counter gate는 registered order=true였지만
+  `_write_json_x(... sort_keys=True)` 이후 supervisor의
+  `exact_36_keys_in_order=false`가 됐다.
+- asset/SDF writes/PhysX attach/property query/physics/forward/q5/contact/
+  cylinder는 모두 `0`; scientific/physics verdict `null`,
+  `g0a_pass=false`다.
+
+Implication:
+
+- 이번 canonical verdict
+  `D400_GRIPPER_LINK_SDF_RES256_PREFLIGHT_FAIL_STOP`은 SDF
+  load/cook/readback, collision participation, contact, tipping, 또는 grasp
+  결과가 아니다. descriptive root-cause label은
+  `D401_D400_RUNTIME_STACK_VERSION_PROBE_HARNESS_TYPE_CONTRACT_FAIL_STOP`이다.
+- 다음 최소 후보는 별도 승인
+  `D402 [d401_runtime_stack_item_and_counter_order_authority_repair]`다.
+  offline/static-only로 Item-compatible version accessor와 serialized
+  counter authority 두 변수만 수리하고 새 tuple을 만든다.
+- D402 static PASS 뒤에도 actual Controller/Worker/Isaac runtime은 새 tuple
+  SHA를 명시한 별도 승인이 필요하다.
+
+Sources:
+
+- `claudedocs/session_20260728_grasp_g0a_d401_actual_runtime_stack_probe_fail_stop.md`
+- `claudedocs/runtime_logs/grasp_track/g0a_d401/attempt1_d400_runtime_freeze_snapshot_order_repair/d400_runtime_freeze_manifest.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d401/attempt1_d400_runtime_freeze_snapshot_order_repair/d400_phase_markers.jsonl`
+- `claudedocs/runtime_logs/grasp_track/g0a_d401/attempt1_d400_runtime_freeze_snapshot_order_repair/d400_kit_log.txt`
+- `claudedocs/runtime_logs/grasp_track/g0a_d401/attempt1_d400_runtime_freeze_snapshot_order_repair/d400_worker_raw_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d401/attempt1_d400_runtime_freeze_snapshot_order_repair/d400_worker_preclose_sentinel.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d401/attempt1_d400_runtime_freeze_snapshot_order_repair/d400_worker_supervisor.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d401/attempt1_d400_runtime_freeze_snapshot_order_repair/d400_completion_summary.json`
+- `sim_scripts/cyl34_top_view_d400_gripper_link_sdf_res256_live_cook_articulation_worker.py:381-423`
+- `sim_scripts/cyl34_top_view_d400_gripper_link_sdf_res256_live_cook_articulation_worker.py:2230-2246`
+- `sim_scripts/cyl34_top_view_d400_gripper_link_sdf_res256_live_cook_articulation_preflight.py:986-1040`
+- installed Kit `_extensions.pyi:116`, `python_api.md:145`,
+  `help_menu.py:121-128`, and omni.physx `extension.toml:1-6`
+- NVIDIA Omniverse Kit 107.3.0 `Extensions in-depth`
+- NVIDIA Omniverse Kit 107.3.0 `ExtensionManager` Python API
+- NVIDIA Omniverse Kit `carb.dictionary.Item` API
+- `START_HERE.md`

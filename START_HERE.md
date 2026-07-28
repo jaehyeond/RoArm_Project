@@ -1,155 +1,144 @@
 # START_HERE.md
 
-Last updated: 2026-07-27 KST (5th update). D398 remains frozen FAIL_STOP.
-D400 preregistration V2 is reviewed but not executed. Documentation only: no code,
-derivative asset, USD/Isaac/PhysX, physics, commit, or push.
+Last updated: 2026-07-28 KST. D401 actual one-worker attempt is frozen.
+Isaac started normally, but the harness misread the PhysX extension version
+before any SDF asset was authored.
 
 ## Current Truth
 
-- Pivot: RoArm cylinder grasp-track G0a. `q5=0` CLOSED; frozen OPEN `1.5413rad`.
-- D362 (2026-07-17) is the last physics run: A64 collider pushed over the
-  34x90mm/0.72kg cylinder (final XY 60.619mm / tilt 89.998deg). Zero physics since.
-- Actual product nominal `29x50mm`; mass/tolerance/COM/inertia/friction
-  unmeasured; NO code constant implements 29x50 (docs only).
-- A64 (`64+64=128`) = reference candidate, not optimum/NVIDIA limit.
-  P34 (`16+18`) = manual concept, live/cooked identity FAIL.
-- D384-D398 low-count convex-partition existence under project gates ended in a
-  localized greedy dead end (D398); global impossibility unproven.
-- D385/D397 `12 vertices/child` is a project-authored budget for eight manually
-  split source parents, not a PhysX/NVIDIA default, optimum, or hard limit. It
-  does not apply to SDF.
-- The historical A64 reference is materialized, but no complete/materializable
-  **replacement** collider from P34/D397/SDF exists. `g0a_pass=false`.
+- Pivot: RoArm cylinder grasp-track G0a. `q5=0` CLOSED; frozen OPEN
+  `1.5413rad`.
+- D362 (2026-07-17) remains the last physics run. A64 pushed over the historical
+  34x90mm/0.72kg cylinder (final XY `60.619mm`, tilt `89.998deg`).
+- Actual product nominal dimensions are `29x50mm`; mass/tolerance/COM/inertia/
+  friction remain unmeasured. It has not been created or tested in physics.
+- A64 (`64+64=128`) is a reference candidate, not an optimum or NVIDIA limit.
+  P34/D397 did not produce a complete live/cooked replacement.
+- D385/D397 `12 vertices/child` is a project budget, not a PhysX/NVIDIA limit
+  and not an SDF setting.
+- D400/D401 only attempts `gripper_link A64 -> SDF resolution 256`; link5 A64
+  is frozen. No collision response, contact, tipping, or grasp evidence exists.
+- `scientific_or_physics_verdict=null`; `g0a_pass=false`.
 
-## Active Case — D400 preregistered; implementation/static attestation PENDING
+## D400 Attempt1 — Frozen Pre-Worker Failure
 
-User chose nominal `29x50mm`, D400 for SDF, and D399 reservation for the D398
-label repair. D400 preregistration was written under:
+D400 stopped before Worker spawn because its expected Git baseline was stale
+and it wrote its own phase file before taking Git status. It is not
+Isaac/PhysX/SDF evidence. Preserve its four runtime outputs; no overwrite or
+same-path retry.
 
-`claudedocs/runtime_logs/grasp_track/g0a_d400/attempt1_gripper_link_sdf_res256_live_cook_articulation_preflight/d400_preregistration.json`
+## Active Case — D401 Actual Runtime Frozen Fail-Stop
 
-Current result is `PREREGISTERED_NOT_EXECUTED`; three independent reviews
-removed the cook `0->0` false-pass, weak property-query, ambiguous A64-disable,
-cleanup-order, technical-fail/Rerun branch, non-exact Rerun entity, and
-unreviewed-script hash errors. The next approval is no-Isaac implementation and
-static hash attestation only; actual Isaac/PhysX worker requires a further
-separate approval after those hashes are reviewed. Latest detail:
-`claudedocs/session_20260727_grasp_g0a_d400_gripper_sdf_live_cook_articulation_preregistration.md`
+Case: `D401 [d400_runtime_freeze_snapshot_order_repair]`
 
-## SDF and cylinder facts
+Path:
+`claudedocs/runtime_logs/grasp_track/g0a_d401/attempt1_d400_runtime_freeze_snapshot_order_repair/`
 
-- Installed omni.physx 107.3.26 / Isaac Sim 5.1.0 / Isaac Lab 2.3.0 /
-  PhysX 5.6.1 `[INFERENCE]` provides `PhysxSDFMeshCollisionAPI`; schema default
-  resolution is 256. SDF is not GPU-only or yet validated on this articulation.
-- Isaac Lab `CylinderCfg` authors a real `UsdGeom.Cylinder`; the child path name
-  `/geometry/mesh` does not make it a mesh prim.
-- Installed 107.3 uses `/physics/collisionApproximateCylinders`; default-off
-  documentation strongly supports analytic collision. D362 did not log the
-  runtime value/type, so authority is `HIGH_CONFIDENCE_INFERENCE`, not exact
-  confirmation; working contact reports cannot distinguish analytic/convex.
-- A future cylinder case must log carb current/default values and PhysX geometry
-  type; legacy custom-geometry vs SDF may fall back to TriangleMesh collision.
+Approved tuple:
+`7097134b350cf1641f2585c150cba45bc56ba0e9792d6549f0ae9c2f9e72cd2e`
 
-## Corrected forward-only ladder
+Observable order:
 
-### D399 — reserved presentation repair
+1. Git snapshot was captured before the first output write.
+2. runtime-freeze manifest PASS.
+3. package/GPU/process gate PASS; free VRAM `15887MiB`, conflicts `0`.
+4. runtime negative controls `18/18 PASS`.
+5. one Worker spawned; retry `0`.
+6. Isaac `SimulationApp` launched on `cuda:0` and RTX 4090.
+7. runtime stack probe stopped before derivative asset authoring.
+8. cleanup/evidence/supervision completed without timeout, signal, or residue.
 
-`d398_rerun_label_deconfliction_observability_repair` remains optional. It is
-not a prerequisite for collider or physics work.
+## Exact Failure
 
-### D400 — preregistered SDF configuration/load/owner preflight only
+Runtime stack checks:
 
-One proposed variable: `gripper_link A64 -> SDF`, resolution `256`.
+- Isaac Sim `5.1.0.0`: PASS
+- Isaac Lab `2.3.0`: PASS
+- PhysX extension ID `omni.physx-107.3.26`: resolved
+- active extension root: exact
+- native plugin SHA: exact
+- observed `package.version`: `null`
+- expected `107.3.26`: FAIL
 
-- keep `link5=A64`; direct pxr API + exact `approximation="sdf"` readback
-- record active owner/path, exact property-query rows, stage-wide cook task
-  deltas, parser/fallback warnings, source/live USD inputs, and robot property
-  invariance
-- one worker/no retry/bounded watchdog; no product cylinder, target/IK/path
-  change, q5/contact/controlled physics
-- no `link5` SDF, resolution 512, remeshing, mesh repair, or sweep
+Installed Kit `107.3.3` returns
+`carb.dictionary._dictionary.Item` from `get_extension_dict()`. The frozen
+Worker accepts only built-in `dict`, so it discards the real value. Installed
+`extension.toml` contains `version = "107.3.26"`.
 
-Zero-contact D400 can prove exact SDF configuration, stage load admission,
-nonzero global cook-queue drain, and rigid-link owner enumeration. It cannot
-prove a per-prim internal SDF object or articulation collision participation.
-Cooked-SDF surface/void and cross-body OPEN clearance remain `null`; the latter
-belongs to D402 because D400 reads no q5/common world pose.
+Descriptive operational label:
+`D401_D400_RUNTIME_STACK_VERSION_PROBE_HARNESS_TYPE_CONTRACT_FAIL_STOP`
 
-### D401 — proposed SDF articulation collision-response positive control
+Canonical JSON verdict remains:
+`D400_GRIPPER_LINK_SDF_RES256_PREFLIGHT_FAIL_STOP`.
 
-Use one bounded non-product box probe to compare A64 versus frozen D400 SDF
-contact/response on the articulation. Keep q5 and target/IK/path frozen, record
-the exact owner pair, and do not use a cylinder. This is a representation
-plumbing check, not product-grasp evidence.
+This is a harness type-contract failure, not an Isaac launch, PhysX install,
+GPU, SDF geometry, collision, contact, or grasp failure.
 
-### D402 — proposed nominal-product zero-step pose localization
+## Scope Counters and Non-Results
 
-Two variables: nominal `29x50mm` geometry and deterministic height/radial pose;
-wrist frozen. Use one common pose for A64/SDF, log cylinder settings and actual
-geometry type, and run no closure physics/contact.
-Historical D362 contact samples were z `78.010/49.408mm`; the new nominal top is
-about `37.883mm`, strongly motivating but not proving a miss. Full-surface
-zero-step clearance is the decision authority.
+- Worker/SimulationApp/retry: `1/1/0`
+- derivative asset/SDF writes: `0/0`
+- PhysX attach/detach/property query: `0/0/0`
+- SimulationContext/reset: `0/0`
+- controlled physics/public forward: `0/0`
+- q5 command/sample: `0/0`
+- contact/cylinder: `0/0`
+- target/IK/path, source geometry, link5 representation changes: all `0`
+- RRD/RBL/board/manual inspection: absent because technical PASS was never
+  reached and no candidate geometry existed
 
-### Mass pin, then D403/D404 physics
+Worker OS return code was `0`, but raw/pre-close protocol was false. Supervisor
+correctly rejected it; OS return code alone is not success authority.
 
-- Measure product mass before dynamics; record any uniform COM/inertia
-  assumption and keep placeholder friction explicit.
-- D403: new `29x50` A64 physics baseline on the frozen D402 pose. Re-derive
-  contact capacity immediately before this first contact-generating case.
-- D404: inherit D403 bit-for-bit and change only
-  `gripper_link A64 -> frozen D400 SDF`.
+## Additional Latent Control Defect
 
-## Next authorization boundary
+Worker memory counter order was exact, but its JSON writer uses
+`sort_keys=True`. Supervisor rereads alphabetically ordered keys and incorrectly
+requires physical JSON key order to equal registered order, producing
+`exact_36_keys_in_order=false`. This was not the first failure but would cause a
+later false FAIL after the version probe is repaired.
 
-Separately approve D400 no-Isaac implementation/static attestation: create only
-the two registered controller/worker scripts and
-`d400_reviewed_script_attestation.json` plus
-`d400_proposed_runtime_hash_tuple.json`, statically verify them, and do not
-materialize a derivative USD or import/launch Isaac/Kit/PhysX. After that report,
-the actual one-worker approval must explicitly cite the proposed tuple-file SHA.
-D401 remains a later separate approval even if D400 passes.
+## Next Authorization Boundary
 
-## D400 runtime boundary; physics remains separately prohibited
+Unapproved candidate:
+`D402 [d401_runtime_stack_item_and_counter_order_authority_repair]`
 
-- Before separate D400 implementation approval: no D400 script or attestation
-  creation is authorized.
-- The implementation/static-attestation approval, if granted, still authorizes
-  no derivative USD/collider write or Isaac/Kit/PhysX/Warp launch.
-- Actual worker needs a further approval after reviewed script hashes are fixed.
-- Even if D400 runtime is approved: physics step, q5 sample, contact query, and
-  cylinder creation remain prohibited; those require their later named cases.
-- Do not treat default mass, COM, inertia, or friction as product evidence.
+Offline/static-only variables exactly `2`:
+
+1. Item-compatible extension-version accessor
+2. serialized counter exact-set/value/registered-projection authority
+
+D402 may write only new forward-only scripts/static attestation/tuple. No
+Controller runtime, Worker, Isaac/Kit/PhysX, USD, physics, q5, contact, cylinder,
+Rerun, target/IK/path, or settings changes. Actual runtime requires another
+approval citing the new tuple SHA.
 
 ## Must Read First
 
 1. `AGENTS.md`
 2. this file
-3. `claudedocs/session_20260727_grasp_g0a_d400_gripper_sdf_live_cook_articulation_preregistration.md`
-4. `claudedocs/session_20260727_grasp_g0a_vertex12_cylinder_d400_scope_review.md`
-5. `claudedocs/session_20260727_grasp_g0a_sdf_case_recon_option_a_briefing.md`
-6. `claudedocs/session_20260727_grasp_g0a_d398_resume_verification_and_sdf_reevaluation.md`
-7. `claudedocs/DECISIONS.md` (read fully; focus D385, D397-D398, D398-F1,
-   D400-P0 and its authority corrections D400-P1/D400-P2)
-8. `claudedocs/EXPERIMENT_LEDGER.md` (read fully; verify the latest rows)
+3. `claudedocs/session_20260728_grasp_g0a_d401_actual_runtime_stack_probe_fail_stop.md`
+4. D401 runtime manifest, phase markers, Kit log, raw, pre-close, supervisor,
+   and completion JSON
+5. `claudedocs/session_20260728_grasp_g0a_d401_d400_runtime_freeze_snapshot_order_repair.md`
+6. `claudedocs/DECISIONS.md` (D400-P0/P1/P2, D401, D401-R1)
+7. `claudedocs/EXPERIMENT_LEDGER.md` tail
 
 ## Authorization and Do-Not-Repeat
 
-- D389-D397 paths and D398 attempt1 are frozen; never rerun or overwrite them.
-- Do not materialize or physically test D397/D398 diagnostic geometry.
-- Do not change max-12, plane family, and greedy search together.
-- Do not carry max-12 into SDF or bundle product dimensions, pose, mass, and
-  collider representation into one variable.
-- Any future timeline PLAY case must inherit D367's explicit commit bridge and
-  supervisor/pre-close authority.
+- Freeze D400 attempt1, D401 actual attempt1, and all earlier frozen paths.
+- Do not retry or overwrite D401 actual attempt1.
+- Do not call D401 an Isaac/PhysX/SDF/GPU/collision/grasp failure.
+- Do not change science/geometry while repairing the two control defects.
 - Do not modify `claudedocs/lab_meeting/20260715/d334_collision_table/`.
-- `HANDOFF.md` and `TASKS.md` are stale; `/half-clone` forbidden (HARD RULE #11).
-- No hardware, process signal, dependency install, commit, or push authorized.
+- Preserve user-owned untracked `codex`; do not modify/delete/rename/stage it.
+- `HANDOFF.md`/`TASKS.md` are stale; `/half-clone` is forbidden.
+- No hardware, dependency install, signal, commit, or push is authorized.
 
 ## Git
 
-- `HEAD == origin/master == 4c88865bdd4ac82f034253320cb3e46f9770a46d`
-  (`현재 D398분석`).
-- Prior SDF-recon changes were already uncommitted; this update adds the latest
-  D400 preregistration/session/state continuity changes.
+- `HEAD == origin/master ==
+  e9fa30088be7477ce5d6305aa5fdf68323e79adc` (`D400 gpu승인전`).
+- Worktree is intentionally dirty with frozen D400/D401 evidence, state files,
+  scripts, and user-owned `codex`.
 - Commit/push is not authorized.
