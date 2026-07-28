@@ -1,0 +1,17 @@
+{
+  "actual_worker_invocation_authority": "unknown at controller exception boundary; request is not spawn proof",
+  "actual_worker_invocations": null,
+  "artifact": "D400_CONTROLLER_FAIL_STOP_SUPERVISOR_V1",
+  "failed_stage": "package_gpu_and_existing_process_gate",
+  "failure": {
+    "message": "D401 package/GPU/process gate failed: {'isaac_python_exact': True, 'rerun_cli_exact_path': True, 'ubuntu_22_04_exact': True, 'isaac_sim_pin': True, 'isaac_lab_pin': True, 'omni_physx_extension_pin': True, 'physx_schema_extension_pin': True, 'physx_native_plugin_hash_exact': True, 'physx_native_plugin_embeds_5_6_1': True, 'numpy_pin': True, 'psutil_pin': True, 'rerun_sdk_pin': True, 'rerun_cli_pin': True, 'no_preexisting_d400_process': True, 'minimum_free_vram': False, 'gpu_model_exact': False, 'gpu_compute_capability_exact': False}",
+    "traceback": "Traceback (most recent call last):\n  File \"/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/cyl34_top_view_d401_d400_runtime_freeze_snapshot_order_repair_controller.py\", line 524, in run_runtime\n    raise RuntimeError(\nRuntimeError: D401 package/GPU/process gate failed: {'isaac_python_exact': True, 'rerun_cli_exact_path': True, 'ubuntu_22_04_exact': True, 'isaac_sim_pin': True, 'isaac_lab_pin': True, 'omni_physx_extension_pin': True, 'physx_schema_extension_pin': True, 'physx_native_plugin_hash_exact': True, 'physx_native_plugin_embeds_5_6_1': True, 'numpy_pin': True, 'psutil_pin': True, 'rerun_sdk_pin': True, 'rerun_cli_pin': True, 'no_preexisting_d400_process': True, 'minimum_free_vram': False, 'gpu_model_exact': False, 'gpu_compute_capability_exact': False}\n",
+    "type": "RuntimeError"
+  },
+  "invocation": null,
+  "kit_log": null,
+  "technical_pass": false,
+  "unrelated_processes_signaled": 0,
+  "worker_claim_observed": false,
+  "worker_spawn_request_recorded": false
+}

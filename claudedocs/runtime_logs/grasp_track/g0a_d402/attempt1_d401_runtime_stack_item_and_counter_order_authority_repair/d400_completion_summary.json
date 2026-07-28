@@ -1,0 +1,88 @@
+{
+  "artifact": "D400_COMPLETION_SUMMARY_V1",
+  "authority_limit": "Configuration, stage-load admission, global cook-queue drain, and rigid-owner/property enumeration only. No per-prim SDF internal identity, collision participation, contact, tipping, or grasp claim.",
+  "board": null,
+  "g0a_pass": false,
+  "manual_inspection": null,
+  "observability_error": {
+    "message": "D401 package/GPU/process gate failed: {'isaac_python_exact': True, 'rerun_cli_exact_path': True, 'ubuntu_22_04_exact': True, 'isaac_sim_pin': True, 'isaac_lab_pin': True, 'omni_physx_extension_pin': True, 'physx_schema_extension_pin': True, 'physx_native_plugin_hash_exact': True, 'physx_native_plugin_embeds_5_6_1': True, 'numpy_pin': True, 'psutil_pin': True, 'rerun_sdk_pin': True, 'rerun_cli_pin': True, 'no_preexisting_d400_process': True, 'minimum_free_vram': False, 'gpu_model_exact': False, 'gpu_compute_capability_exact': False}",
+    "traceback": "Traceback (most recent call last):\n  File \"/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/cyl34_top_view_d401_d400_runtime_freeze_snapshot_order_repair_controller.py\", line 524, in run_runtime\n    raise RuntimeError(\nRuntimeError: D401 package/GPU/process gate failed: {'isaac_python_exact': True, 'rerun_cli_exact_path': True, 'ubuntu_22_04_exact': True, 'isaac_sim_pin': True, 'isaac_lab_pin': True, 'omni_physx_extension_pin': True, 'physx_schema_extension_pin': True, 'physx_native_plugin_hash_exact': True, 'physx_native_plugin_embeds_5_6_1': True, 'numpy_pin': True, 'psutil_pin': True, 'rerun_sdk_pin': True, 'rerun_cli_pin': True, 'no_preexisting_d400_process': True, 'minimum_free_vram': False, 'gpu_model_exact': False, 'gpu_compute_capability_exact': False}\n",
+    "type": "RuntimeError"
+  },
+  "observability_pass": false,
+  "pass": false,
+  "phase_audit_with_projected_completion_marker": {
+    "checks": {
+      "all_observed_owners_exact": true,
+      "all_observed_phases_at_most_once": true,
+      "all_observed_phases_in_registered_order": true,
+      "controller_pre_is_forward_prefix": true,
+      "monotonic_ns_strictly_increasing": true,
+      "no_unknown_phase": true,
+      "observability_cannot_pass_without_technical_pass": true,
+      "optional_close_return_requires_close_start": true,
+      "optional_max_once": true,
+      "ordinals_contiguous": true,
+      "required_exactly_once": true,
+      "required_owners_exact": true,
+      "rerun_markers_absent_on_technical_fail": true,
+      "rerun_markers_are_forward_prefix": true,
+      "rerun_markers_complete_on_observability_pass": true,
+      "row_scalar_types_exact": true,
+      "rows_are_objects": true,
+      "technical_fail_has_exact_controller_tail": true,
+      "technical_markers_match_branch": true,
+      "technical_pass_requires_full_pre_and_worker": true,
+      "worker_failure_phases_are_forward_subsequence": true,
+      "worker_phases_require_spawn": true
+    },
+    "names": [
+      "supervisor_preflight_start",
+      "runtime_freeze_manifest_gate_end",
+      "package_gpu_and_existing_process_gate_end",
+      "external_kit_log_audit_end",
+      "external_supervisor_end",
+      "completion_summary_end"
+    ],
+    "observability_pass": false,
+    "optional_counts": {
+      "simulation_app_close_returned": 0
+    },
+    "owner_checks": {
+      "completion_summary_end": true,
+      "external_kit_log_audit_end": true,
+      "external_supervisor_end": true,
+      "supervisor_preflight_start": true
+    },
+    "pass": true,
+    "required": [
+      "supervisor_preflight_start",
+      "external_kit_log_audit_end",
+      "external_supervisor_end",
+      "completion_summary_end"
+    ],
+    "required_counts": {
+      "completion_summary_end": 1,
+      "external_kit_log_audit_end": 1,
+      "external_supervisor_end": 1,
+      "supervisor_preflight_start": 1
+    },
+    "required_positions": [
+      0,
+      3,
+      4,
+      5
+    ],
+    "technical_pass_branch": false
+  },
+  "rerun": null,
+  "runtime_preflight_pass": false,
+  "scientific_or_physics_verdict": null,
+  "scope_counters": null,
+  "supervisor": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d402/attempt1_d401_runtime_stack_item_and_counter_order_authority_repair/d400_worker_supervisor.json",
+    "sha256": "96d1309df685be3e49b801e833267f7453d27cbf8bdaaff0d436a77c62a5e3ea"
+  },
+  "technical_pass": false,
+  "verdict": "D400_GRIPPER_LINK_SDF_RES256_PREFLIGHT_FAIL_STOP"
+}

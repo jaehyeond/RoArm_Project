@@ -1,0 +1,270 @@
+{
+  "artifact": "D402_D401_RUNTIME_STACK_ITEM_AND_COUNTER_ORDER_AUTHORITY_REPAIR_PREREGISTRATION_V1",
+  "case": "g0a_d402",
+  "attempt": "attempt1_d401_runtime_stack_item_and_counter_order_authority_repair",
+  "date_kst": "2026-07-28",
+  "status": "PREREGISTERED_NOT_EXECUTED",
+  "purpose": "Repair only the two harness defects observed in immutable D401 attempt1: Kit carb.dictionary.Item-compatible omni.physx package.version access and order-independent serialized counter authority.",
+  "new_variables": [
+    "carb_dictionary_item_compatible_extension_version_accessor_v1",
+    "serialized_counter_registered_projection_authority_v1"
+  ],
+  "new_variable_count": 2,
+  "authority": {
+    "approved_now": [
+      "offline preregistration",
+      "thin controller and worker wrapper implementation",
+      "AST and pure-helper static attestation",
+      "failure-capable offline negative controls",
+      "new four-hash proposed runtime tuple"
+    ],
+    "not_approved_now": [
+      "D402 controller runtime invocation",
+      "D402, D401, or D400 worker invocation",
+      "Isaac Sim, Kit, PhysX, Warp, CUDA, GPU, or Rerun launch",
+      "derivative USD or collision asset materialization",
+      "physics step, public forward, q5 command or sample, contact query, or cylinder creation",
+      "target, IK, path, pose, collider geometry, material, mass, actuator, joint, drive, solver, or physics-setting change"
+    ],
+    "actual_runtime_requires_new_explicit_approval": true,
+    "required_future_approval_binding": "The user must explicitly cite the SHA-256 of d402_proposed_runtime_hash_tuple.json after this static stage is reported."
+  },
+  "git_baseline": {
+    "head": "9dd14ebb32421d93e3b46e2912cd3e67e6daff20",
+    "origin_master": "9dd14ebb32421d93e3b46e2912cd3e67e6daff20",
+    "subject": "D401까지, D402는 미승인",
+    "required_head_equals_origin_master": true,
+    "required_head_exact": true,
+    "required_origin_master_exact": true,
+    "worktree_at_case_boot": "clean",
+    "commit_or_push_before_future_runtime_policy": "Any commit or push that changes HEAD after this static tuple is produced invalidates this baseline and requires a new forward-only tuple."
+  },
+  "immutable_d401_attempt1_failure": {
+    "verdict": "D400_GRIPPER_LINK_SDF_RES256_PREFLIGHT_FAIL_STOP",
+    "descriptive_root_cause": "D401_D400_RUNTIME_STACK_VERSION_PROBE_HARNESS_TYPE_CONTRACT_FAIL_STOP",
+    "same_path_retry_allowed": false,
+    "overwrite_allowed": false,
+    "worker_simulation_app_retry_counts": [
+      1,
+      1,
+      0
+    ],
+    "first_failed_check": "omni_physx_extension_version_exact",
+    "observed_runtime_version": null,
+    "expected_runtime_version": "107.3.26",
+    "worker_internal_registered_counter_order": true,
+    "supervisor_serialized_order_check": false,
+    "asset_or_sdf_writes": 0,
+    "physics_steps": 0,
+    "q5_samples": 0,
+    "contact_queries": 0,
+    "cylinder_creates_or_writes": 0,
+    "scientific_or_physics_verdict": null
+  },
+  "inherited_science_contract": {
+    "base_d400_preregistration": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d400/attempt1_gripper_link_sdf_res256_live_cook_articulation_preflight/d400_preregistration.json",
+      "sha256": "fc689cb1afd6108a326a73f22b8117dfdefc0bb4d8caee5bcb7470c362e96c93"
+    },
+    "base_d400_controller": {
+      "path": "sim_scripts/cyl34_top_view_d400_gripper_link_sdf_res256_live_cook_articulation_preflight.py",
+      "sha256": "6d1f5014535fdffa1e9e63973b1037c14fb1c228a4d22f6a23f980a961ab3b17"
+    },
+    "base_d400_worker": {
+      "path": "sim_scripts/cyl34_top_view_d400_gripper_link_sdf_res256_live_cook_articulation_worker.py",
+      "sha256": "e5b4b764012258757a9086edb840af40bcc1637586bc05934fec2674ffbd0f0a"
+    },
+    "d401_preregistration": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d401/attempt1_d400_runtime_freeze_snapshot_order_repair/d401_preregistration.json",
+      "sha256": "c010578e7307c21e305a3db499fa25204297ceb08192233dbc42023bfd5de5c8"
+    },
+    "d401_controller": {
+      "path": "sim_scripts/cyl34_top_view_d401_d400_runtime_freeze_snapshot_order_repair_controller.py",
+      "sha256": "2807353bb36f3309ed7592bdd3b24f4214ebde8b204ab3e253443f51bf63296e"
+    },
+    "d401_worker": {
+      "path": "sim_scripts/cyl34_top_view_d401_d400_runtime_freeze_snapshot_order_repair_worker.py",
+      "sha256": "fc019d0d74bc868a5f2cac928824f5de875e05783472f288873f01342775673d"
+    },
+    "d401_static_attestation": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d401/attempt1_d400_runtime_freeze_snapshot_order_repair/d401_reviewed_script_attestation.json",
+      "sha256": "8d44072ae389475b50c7be2f297108d35fadb0937089f29e564bf3f20b68c9bb"
+    },
+    "d401_runtime_tuple": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d401/attempt1_d400_runtime_freeze_snapshot_order_repair/d401_proposed_runtime_hash_tuple.json",
+      "sha256": "7097134b350cf1641f2585c150cba45bc56ba0e9792d6549f0ae9c2f9e72cd2e"
+    },
+    "base_runtime_behavior_changes_other_than_two_registered_repairs": 0,
+    "base_worker_science_logic_changes": 0
+  },
+  "repair_contracts": {
+    "item_compatible_extension_version_accessor": {
+      "runtime_source": "ExtensionManager.get_extension_dict(active omni.physx extension id)",
+      "required_access": "extension_config['package']['version']",
+      "required_final_type": "exact built-in str",
+      "required_exact_value": "107.3.26",
+      "allowed_container_protocol": "nested __getitem__; compatible with carb.dictionary.Item and built-in dict",
+      "forbidden_fallbacks": [
+        "extension id parsing",
+        "extension path parsing",
+        "extension.toml substitution for the runtime value",
+        "broad str coercion",
+        "broad exception swallowing"
+      ],
+      "unchanged_runtime_checks": [
+        "Isaac Sim distribution 5.1.0.0",
+        "Isaac Lab distribution 2.3.0",
+        "omni.physx extension id resolution",
+        "active extension root",
+        "active native plugin SHA-256"
+      ]
+    },
+    "serialized_counter_registered_projection_authority": {
+      "json_writer_sort_keys": "unchanged_true",
+      "serialized_iteration_order": "diagnostic_only_not_a_pass_condition",
+      "authoritative_checks": [
+        "mapping",
+        "exact 36-key set and length",
+        "registered COUNTER_KEYS projection complete and in registered order",
+        "every registered value has exact built-in int type; bool rejected",
+        "unchanged exact-14 values",
+        "unchanged zero-21 values",
+        "unchanged simulation_app_update_pumps range"
+      ],
+      "projection_digest": "SHA-256 of canonical JSON array [[registered_key, value], ...] in frozen COUNTER_KEYS order",
+      "worker_in_memory_counter_gate": "unchanged",
+      "worker_return_code_authority": "unchanged; OS return code alone is not protocol PASS"
+    }
+  },
+  "offline_negative_controls": {
+    "item_accessor": [
+      "non-dict nested FakeItem with __getitem__ and exact string passes",
+      "built-in dict and exact string passes",
+      "missing package fails",
+      "missing version fails",
+      "numeric, bool, and list version values fail",
+      "wrong string version fails exact gate",
+      "extension id containing the expected version cannot substitute for a missing runtime field",
+      "unexpected RuntimeError propagates instead of being swallowed",
+      "the frozen dict-only causal control returns null for FakeItem"
+    ],
+    "counter_authority": [
+      "registered-order baseline passes",
+      "sort_keys=True JSON roundtrip passes despite different iteration order",
+      "reverse insertion order passes with the same exact schema and values",
+      "missing, extra, and misspelled keys fail",
+      "bool, float, and string values fail",
+      "wrong exact value fails",
+      "nonzero frozen-zero counter fails",
+      "pump zero and overflow fail",
+      "controlled physics step one fails",
+      "non-mapping input fails",
+      "duplicate-key JSON is rejected by the static JSON loader",
+      "correct physical key order with a wrong value still fails"
+    ]
+  },
+  "runtime_overlay_contract": {
+    "base_preregistration_merge": "Reuse immutable D400 science and D401 pre-write Git snapshot behavior. Add only the two D402 function overrides and D402 provenance.",
+    "allowed_dirty_paths": [
+      "START_HERE.md",
+      "claudedocs/DECISIONS.md",
+      "claudedocs/EXPERIMENT_LEDGER.md",
+      "claudedocs/session_20260728_grasp_g0a_d402_runtime_stack_item_and_counter_order_authority_repair.md",
+      "claudedocs/runtime_logs/grasp_track/g0a_d402/attempt1_d401_runtime_stack_item_and_counter_order_authority_repair/d402_preregistration.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d402/attempt1_d401_runtime_stack_item_and_counter_order_authority_repair/d402_reviewed_script_attestation.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d402/attempt1_d401_runtime_stack_item_and_counter_order_authority_repair/d402_proposed_runtime_hash_tuple.json",
+      "sim_scripts/cyl34_top_view_d402_d401_runtime_stack_item_and_counter_order_authority_repair_controller.py",
+      "sim_scripts/cyl34_top_view_d402_d401_runtime_stack_item_and_counter_order_authority_repair_worker.py"
+    ],
+    "additional_frozen_repo_inputs": {
+      "claudedocs/runtime_logs/grasp_track/g0a_d401/attempt1_d400_runtime_freeze_snapshot_order_repair/d400_runtime_freeze_manifest.json": "89d94b119f0018cc20849a786a7cbb89a07a0ac0bb3d68566f6ea2a961bdb732",
+      "claudedocs/runtime_logs/grasp_track/g0a_d401/attempt1_d400_runtime_freeze_snapshot_order_repair/d400_phase_markers.jsonl": "77d73ff182d22f02b389df9fb52f9471e1a3f11b6e965156c74c343939f9a9ef",
+      "claudedocs/runtime_logs/grasp_track/g0a_d401/attempt1_d400_runtime_freeze_snapshot_order_repair/d400_worker_invocation.json": "387249746ce8117a21655955834f8e9acac350ae863b983225bb4babbe20937b",
+      "claudedocs/runtime_logs/grasp_track/g0a_d401/attempt1_d400_runtime_freeze_snapshot_order_repair/d400_worker_claim.json": "c25c53eed1d42e8932d3f2c72bef40f5888bf085bdcd9ee24fb1f366df8ba0d0",
+      "claudedocs/runtime_logs/grasp_track/g0a_d401/attempt1_d400_runtime_freeze_snapshot_order_repair/d400_kit_log.txt": "7acfd02ecbfea1301b8d4b8bdfc5f5d5fdbbaf9e8072e74aa41afbdb800470ae",
+      "claudedocs/runtime_logs/grasp_track/g0a_d401/attempt1_d400_runtime_freeze_snapshot_order_repair/d400_worker_raw_summary.json": "f07fa7b56ce9ee6e992fff9e9e6c6f2602510630316dfa14e37ff2405693c2e4",
+      "claudedocs/runtime_logs/grasp_track/g0a_d401/attempt1_d400_runtime_freeze_snapshot_order_repair/d400_worker_preclose_sentinel.json": "8f674cc27cf424dd3f087a034ebf1e44ef941100c925db13fb702a56a13085f6",
+      "claudedocs/runtime_logs/grasp_track/g0a_d401/attempt1_d400_runtime_freeze_snapshot_order_repair/d400_worker_supervisor.json": "f9c2bda41b9ded5f06f3ad65988f3b904a00c47fbdbfc531fd22a020955bd160",
+      "claudedocs/runtime_logs/grasp_track/g0a_d401/attempt1_d400_runtime_freeze_snapshot_order_repair/d400_completion_summary.json": "394ab4318d400b960b5d5e5c71fddeb55448329054a5fe7569d6162f5fb6068c"
+    },
+    "future_output_root": "claudedocs/runtime_logs/grasp_track/g0a_d402/attempt1_d401_runtime_stack_item_and_counter_order_authority_repair",
+    "future_runtime_files_are_forward_only": true,
+    "future_runtime_retry_budget": 0
+  },
+  "git_snapshot_contract": {
+    "inheritance": "D401 _capture_prewrite_git_snapshot and _runtime_freeze_manifest_from_snapshot are reused byte-for-byte through a hash-gated thin wrapper.",
+    "capture_before_first_runtime_write": true,
+    "runtime_writes_before_snapshot": 0,
+    "live_git_requery_after_first_phase_for_manifest": false
+  },
+  "installed_nvidia_primary_sources": {
+    "kit_extension_manager_stub": {
+      "path": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/kit/kernel/py/omni/ext/_extensions.pyi",
+      "sha256": "1b45a850fff65dc967f7fcfba840be61368d5521892dd956c6220a58a1db4f5f",
+      "evidence": "get_extension_dict returns carb.dictionary._dictionary.Item"
+    },
+    "kit_python_api": {
+      "path": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/kit/kernel/config/docs/python_api.md",
+      "sha256": "a27dce2ebb9f7c8bcf4374e44d94cfd51dfc0390103297ef26b6314aba0290e2"
+    },
+    "isaac_sim_help_menu": {
+      "path": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/exts/isaacsim.gui.menu/isaacsim/gui/menu/help_menu.py",
+      "sha256": "27ab56191e3f175394dc655336454fed8b2533a850038385b53492b74c5d5e10",
+      "evidence": "manager.get_extension_dict(ext_id)['package']['version']"
+    },
+    "omni_physx_extension_toml": {
+      "path": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.physx-107.3.26+107.3.3.lx64.r.cp311.u353/config/extension.toml",
+      "sha256": "6c9d9ed33d927e302334b7cae8ed0c81c4fba37bfbfac07053b72ccc16b7398f",
+      "expected_extension_version": "107.3.26"
+    },
+    "omni_physx_native_plugin": {
+      "path": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/extscache/omni.physx-107.3.26+107.3.3.lx64.r.cp311.u353/bin/libomni.physx.plugin.so",
+      "sha256": "03fbf17e6f0dc3f9006c8c00aa0ca572a72fd69498874df6dd900dac726c9909"
+    }
+  },
+  "official_nvidia_sources": [
+    {
+      "title": "Extensions in-depth",
+      "url": "https://docs.omniverse.nvidia.com/kit/docs/kit-manual/107.3.0/guide/extensions_advanced.html",
+      "applicable_version": "Kit 107.3.x",
+      "relevance": "ExtensionManager get_extension_dict and Item/get_dict usage"
+    },
+    {
+      "title": "omni.ext.ExtensionManager Python API",
+      "url": "https://docs.omniverse.nvidia.com/kit/docs/kit-manual/107.3.0/omni.ext/omni.ext.ExtensionManager.html",
+      "applicable_version": "Kit 107.3.x",
+      "relevance": "get_extension_dict return type is carb.dictionary.Item"
+    },
+    {
+      "title": "carb.dictionary.Item Python API",
+      "url": "https://docs.omniverse.nvidia.com/kit/docs/kit-manual/latest/carb.dictionary/carb.dictionary.Item.html",
+      "applicable_version": "latest page cross-checked against installed Kit 107.3.3 stubs",
+      "version_mismatch_note": "The URL is latest, so installed 107.3.3 stub and version-matched 107.3.0 ExtensionManager pages remain authoritative for this case."
+    }
+  ],
+  "planned_static_stage_counters": {
+    "controller_wrapper_files_created": 1,
+    "worker_wrapper_files_created": 1,
+    "reviewed_script_attestations_created": 1,
+    "proposed_runtime_tuples_created": 1,
+    "actual_controller_runtime_invocations": 0,
+    "actual_worker_invocations": 0,
+    "isaac_kit_physx_imports_or_launches": 0,
+    "gpu_runtime_jobs": 0,
+    "derivative_asset_or_usd_writes": 0,
+    "physics_steps": 0,
+    "public_forwards": 0,
+    "q5_commands_or_samples": 0,
+    "contact_queries": 0,
+    "cylinder_creates_or_writes": 0,
+    "target_ik_path_or_setting_changes": 0
+  },
+  "proposed_runtime_tuple_fields_in_exact_order": [
+    "preregistration_sha256",
+    "reviewed_script_attestation_sha256",
+    "controller_script_sha256",
+    "worker_script_sha256"
+  ],
+  "scientific_or_physics_verdict": null,
+  "g0a_pass": false
+}
