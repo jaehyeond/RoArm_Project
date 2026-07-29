@@ -1,0 +1,73 @@
+{
+  "ab_comparison_sheet_report": {
+    "bytes": 654008,
+    "dimensions": [
+      3840,
+      1080
+    ],
+    "expected_dimensions": [
+      3840,
+      1080
+    ],
+    "mode": "RGB",
+    "pass": true,
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d407/attempt1_sdf_physics_ab_d362_remeasure/d407_ab_comparison_sheet_ko.png",
+    "sha256": "df3d97156cc6ea373d8c3f40c231ea36714e32ef9cc557bbb03f2411ddd9c0d9"
+  },
+  "artifact": "D407_COMPLETION_SUMMARY_V1",
+  "case": "g0a_d407",
+  "controller_exception": null,
+  "controller_phase_contract": {
+    "checks": {
+      "last_marker_completion_about_to_write": true,
+      "monotonic_ns_nondecreasing": true,
+      "nonempty": true,
+      "parse_pass": true,
+      "sequence_exact": true
+    },
+    "parse_error": null,
+    "pass": true,
+    "row_count": 16,
+    "sha256": "21b93848e2c950485a3d2f04c8e67749f1010c7fff8a30d7ee4631030ae2512f"
+  },
+  "delta_summary_sha256": "4cb532236aaaf06118e54be870c25b26d1979b4aa59594ce02631ebece484948",
+  "emergency_process_group_cleanup": [],
+  "failure_classification": "manual_inspection",
+  "final_verdict": "D407_SDF_PHYSICS_AB_TIPPING_REMEASURE_FAIL_STOP",
+  "freeze_manifest_sha256": "be98eb5ec7b8fa1fa43e8384080c74726d57d10a2aeb017da28b24b5039bb464",
+  "g0a_pass": false,
+  "initial_failure_classification": "manual_inspection",
+  "manual_inspection": {
+    "checks": {},
+    "pass": false,
+    "read_error": null,
+    "received": false,
+    "timeout": true
+  },
+  "manual_inspection_sha256": null,
+  "must_remain_null": {
+    "cap_rim_or_barrel_order": null,
+    "collider_count_tipping_causality": null,
+    "exact_manifold_or_face": null,
+    "force_closure": null,
+    "grasp_feasibility": null,
+    "per_prim_cooked_sdf_internal_identity": null,
+    "sdf_general_superiority": null,
+    "stable_grasp": null,
+    "transfer_to_29x50_cylinders": null
+  },
+  "pass": false,
+  "per_leg_physical_sub_verdicts": {
+    "a": "D407_MOVING_JAW_CONTACT_AND_OBJECT_MOTION_OBSERVED",
+    "b": "D407_MOVING_JAW_CONTACT_AND_OBJECT_MOTION_OBSERVED"
+  },
+  "postrun_integrity_override": false,
+  "root_artifact_integrity": null,
+  "scientific_caveats": {
+    "f5_first_live_boundary": "leg B live ContactSensor binding, SDF shape inventory, and the property-to-sensor path are a first live observation with no prior guarantee; D406 evidence covers property enumeration only",
+    "s2_sdf_capacity_assumption": "the 256 contacts/pair capacity term for the SDF pair is a project assumption inherited from the installed PhysX 5.6.1 convex-pair evidence, not a documented engine limit; the contact overflow audit is the fail-capable verifier",
+    "s3_instanceable_link5_scope": "instanceable=false is authored on the link5 collision scope of the leg B derivative too, so link5-side B-minus-A deltas are not solely attributable to the gripper representation variable"
+  },
+  "supervisor_summary_sha256": "66a2af2e297794740a3caf03ae8258eb13405b3e8879cfb79c119511f991b7ff",
+  "utc": "2026-07-29T01:31:27.164136+00:00"
+}

@@ -23873,3 +23873,491 @@ Sources:
 - NVIDIA Omniverse Kit 107.3.0 `ExtensionManager` Python API
 - NVIDIA Omniverse Kit `carb.dictionary.Item` API
 - `START_HERE.md`
+
+## D402-R1 — 샌드박스 nvidia-smi 실패 ≠ 호스트 GPU 고장; GPU preflight는 호스트 경계에서만
+
+- **Evidence**: D402 attempt1(15:01)·read-only 진단(15:11)·최소 Isaac(15:18)의 GPU 실패 3건은 전부 Claude Code Bash 샌드박스 안 관측이었다. 실패 controller가 자기 pid를 `2`로 기록(`g0a_d402/attempt1_*/d400_phase_markers.jsonl`; 호스트 pid 2=kthreadd → 사설 PID namespace 확정), 호스트 `/dev/nvidia*`는 부팅 13:32:11 생성 후 재생성 0회, Xorg(2641)가 실패 구간 내내 nvidiactl open, 같은 부팅 14:13 D401 kit log는 cuda:0/580.173.02/RTX4090 정상, 15:33 호스트 최소 SimulationApp 재실행 torch CUDA True·Warp cuda:0·NVML 오류 0. 15:18 실행의 설치폴더 EROFS + 같은 파일시스템 프로젝트폴더 쓰기 성공 = bind-mount 샌드박스 서명. 4-agent 적대적 검증 반박 실패. 별건: 7/25 unattended-upgrade가 가동 중 nvidia userspace를 580.159.03→580.173.02로 교체해 7/28 04:02 재부팅까지 ~69h 실제 CUDA 불능(이것이 "요새 자꾸 터진" 실체).
+- **Implication**: ① GPU/Isaac 실행·진단은 GPU device node가 보이는 호스트 경계에서만 수행. ② 샌드박스 `nvidia-smi` 실패를 호스트 고장으로 기록 금지 — 판정 전 `/dev/nvidiactl` 존재와 자기 PID(한 자릿수=namespace)를 먼저 확인. ③ runtime harness에 host-boundary gate를 fail-closed로 내장(D403부터). ④ D402의 세 인프라 fail-stop 문서의 "호스트 복구 필요" 결론은 SUPERSEDED — 정정 문서 참조. ⑤ nvidia unattended-upgrade 후에는 재부팅 전까지 CUDA skew 가능성을 먼저 의심.
+- **Source**: `claudedocs/session_20260728_grasp_g0a_d402_sandbox_misdiagnosis_root_cause_correction.md`; 검증 journal `~/.claude/projects/-home-cgxr-Documents-Robotics-RoArm-Project/cfceb787-c5e1-46ac-bc3e-1a26fc41bc07/subagents/workflows/wf_528ea7fc-097/journal.jsonl`; `/var/log/apt/history.log` 2026-07-25 06:46; wtmp reboot 기록.
+
+## D403 — Typed-readback/semantic-diff 계약은 설치 스키마 선언과 float32 저장 의미론에서 도출해야 하며, 계약 코드의 첫 라이브 실행 자체가 실패 가능한 실험이다
+
+Date: 2026-07-28
+
+Decision:
+
+- USD float(32-bit) 속성의 등호 게이트는 double 리터럴 `==` 비교를 금지하고
+  **bit 패턴(또는 float32 왕복값)을 권위**로 쓴다. 0.01처럼 float32로
+  표현 불가능한 기대값의 `value == expected` 비교는 어떤 입력에서도 통과
+  불가능하다 (Set(0.01)→Get()=0.009999999776482582).
+- 속성 shape 기대(variability 등)는 가정하지 말고 **설치된 스키마 선언에서
+  도출**한다. `physics:collisionEnabled`는 설치 usdPhysics `schema.usda:285`가
+  uniform 키워드 없이 선언한 **varying** 속성이므로 uniform 요구는 스키마
+  모순이다 (반면 `uniform token physics:approximation`은 uniform이 맞다).
+- Composed semantic-diff normalizer의 allowlist는 (a) 값이 attr `default`
+  **metadata에 중복 저장**되는 것과 (b) API Apply가 composed prim definition에
+  **builtin 속성/relationship**(예: PhysicsCollisionAPI의
+  `rel physics:simulationOwner`, `schema.usda:293`)을 추가하는 것까지
+  모델링해야 한다. 값만 마스킹하면 동일 변경이 metadata 행으로 재유출된다.
+- 정적 fixture·다중 적대적 리뷰를 통과한 계약이라도 **첫 라이브 실행 전에는
+  검증된 것이 아니다**. D400 게이트는 D400(정적)→D401(freeze 정지)→D402(GPU
+  정지) 동안 한 번도 라이브로 돌지 않았고, 첫 실행(D403)에서 결함 4건이
+  일괄 노출됐다. 계약-수리 rung을 실험 사다리의 정상 단계로 취급한다.
+- 사후 진단은 재실행 없이 가능하다: 디스크의 derivative를 Kit 없이
+  `omni.usd.libs` pxr + `Plug.Registry().RegisterPlugins`(PhysxSchema
+  plugInfo)로 열어 동결 게이트 함수를 재적용한다. **plugInfo 미등록 상태의
+  `GetAppliedSchemas()`는 authored schema를 누락**시키므로(등록 후 정상)
+  registry 아티팩트를 계약 결함으로 오진하지 말 것.
+- D403 attempt1은 불변 보존, 같은 경로 retry/덮어쓰기 금지.
+
+Evidence:
+
+- Worker 예외(worker.py:1378): 13개 체크 중 `sdf_typed_readback_pass=false`
+  + `composed_semantic_diff_allowlist_exact=false`. registry-correct 오프라인
+  재적용에서 readback 실패는 정확히 2개 하위 체크(collisionEnabled uniform
+  기대, float 2속성 등호), semantic 불일치는 정확히 65행(64 A64 part의
+  default metadata + mesh의 simulationOwner builtin rel).
+- 실패한 두 float 속성의 자기 bits 체크는 PASS(`0x3c23d70a`) — 저장은
+  의도대로였고 비교식만 결함.
+- root layer listOp `Prepended [PhysicsCollisionAPI, PhysicsMeshCollisionAPI,
+  PhysxSDFMeshCollisionAPI]` — Apply/Save는 성공.
+- 인프라는 전부 PASS: host gate(worker pid 993256), runtime freeze +
+  post-worker binding 15체크 exact, Isaac headless 기동 5.3s, kit log 57행
+  오류 0, D402 수리 2건 최초 라이브 검증(omni.physx 107.3.26 Item-호환 접근,
+  counter registered-projection 권위). 총 실행 28.7s.
+
+Implication:
+
+- Canonical verdict `D400_GRIPPER_LINK_SDF_RES256_PREFLIGHT_FAIL_STOP`은
+  SDF/cook/PhysX 실패가 아니다. descriptive label =
+  `D403_D400_AUTHORED_DERIVATIVE_GATE_CONTRACT_FAIL_STOP`.
+- SDF load/cook/readback 과학 질문은 여전히 미측정,
+  `scientific_or_physics_verdict=null`, `g0a_pass=false`.
+- 다음 최소 후보 = `D404 [d403_authored_derivative_gate_contract_repair]`
+  (수리 4건을 D402 함수-교체 패턴으로, 동결 파일 수정 0, 새 tuple, 승인 대기).
+
+Sources:
+
+- `claudedocs/session_20260728_grasp_g0a_d403_actual_run_authored_derivative_gate_contract_fail_stop.md`
+- `claudedocs/runtime_logs/grasp_track/g0a_d403/attempt1_d402_host_boundary_git_repin_rerun/d400_worker_raw_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d403/attempt1_d402_host_boundary_git_repin_rerun/d400_worker_supervisor.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d403/attempt1_d402_host_boundary_git_repin_rerun/d400_phase_markers.jsonl`
+- `sim_scripts/cyl34_top_view_d400_gripper_link_sdf_res256_live_cook_articulation_worker.py:1378,1447-1460,1072-1086`
+- installed `omni.usd.libs-1.0.1+69cbf6ad.lx64.r.cp311/bin/usd/usdPhysics/resources/usdPhysics/schema.usda:285,293`
+- `START_HERE.md`
+
+## D404 — 관측성(Rerun) 층은 기술 체인과 독립된 첫-라이브-실행 실험이며, import 해석은 코드가 아니라 실행 구성(sys.path)의 함수다
+
+Date: 2026-07-28
+
+Decision:
+
+- 기술 체인(technical)과 관측성(observability)은 **독립 실패 도메인**이다.
+  D404 actual run은 기술 33 phase를 사상 최초로 전부 통과했으나
+  (`technical_pass=true`), 관측성 분기의 첫 라이브 실행에서
+  `ModuleNotFoundError: No module named 'roarm_rl'`로
+  `D400_OBSERVABILITY_OR_COMPLETION_INTEGRITY_FAIL_STOP`이 됐다.
+  이 FAIL을 Isaac/PhysX/SDF/기술 체인 실패로 부르지 말 것.
+- **import 해석은 실행 구성의 함수다**: `python -B sim_scripts/xxx.py`로
+  스크립트를 경로 실행하면 `sys.path[0]`은 `sim_scripts/`이고 cwd(repo 루트)는
+  경로에 없다. `roarm_rl`은 repo 루트에 실재하며 cwd 기준 import는 성공한다 —
+  즉 모듈 부재가 아니라 launch 구성 결함이다. 향후 정적 검증은 실제 launch
+  구성(interpreter, argv[0], cwd, sys.path)을 그대로 복제한 subprocess
+  fixture를 포함해야 한다.
+- D403 교훈("정적 검증 통과 ≠ 라이브 검증")은 층별로 반복 적용된다:
+  D400~D403 동안 관측성 분기는 라이브 실행 0회였다(전 케이스가 그 이전
+  단계에서 정지). 아직 라이브로 돌지 않은 분기는 동결 실물 evidence로
+  **오프라인 replay 가능한 한 replay를 정적 준비에 포함**한다 (D404 수리의
+  D403-derivative 실물 replay 패턴을 관측성 층에도 적용).
+- D404 attempt1은 불변 보존, 같은 경로 retry/덮어쓰기 금지.
+
+Evidence:
+
+- 수리 4건 라이브 성공: typed readback pass=true(체크 9/9, attr 7/7),
+  composed semantic diff pass=true(0 mismatch) —
+  `g0a_d404/attempt1_*/d400_worker_raw_summary.json` `derivative_asset`.
+- 기술 최초 완주: SDF cook 136/136(cache hit 135, miss 1), property query
+  link5 65·gripper_link 66 collider 전부 VALID, mass gate PASS, kit log 71행
+  오류 0, phase 감사 22/22, supervisor returncode 0, 총 32.9s
+  (`d400_completion_summary.json`, `d400_phase_markers.jsonl`).
+- 실패 traceback: D401 controller run_runtime(:581) → preflight.py:2779
+  `from roarm_rl.rerun_contract import validate_rerun_artifact` →
+  ModuleNotFoundError (`d400_completion_summary.json` `observability_error`).
+- 사후 read-only 진단: `roarm_rl/` repo 루트 실재, isaaclab python cwd import
+  성공; grep 결과 roarm_rl import 지점은 동결 체인에서 preflight.py:2779 단 1곳.
+
+Implication:
+
+- 다음 최소 rung = `D405 [d404_observability_import_path_repair]` — controller
+  wrapper에서 repo 루트를 sys.path에 등록(신규 변수 1)하고, 위임 전
+  fail-closed 사전 probe(roarm_rl.rerun_contract/rerun SDK 0.34.1 pin)로
+  잘못된 구성이면 쓰기 0에서 거부. 승인 근거 = 유저 2026-07-28 순차 지시
+  ("다음 최소 승인할테니 step-by-step으로 순차적으로 사고하면서 진행해") —
+  D405 attempt1 1회로 소진.
+- 관측성 층 정적 검증에 동결 D404 evidence(10.6MB owner evidence + raw
+  summary) 기반 `_write_rerun` 오프라인 replay(산출물은 scratchpad)와
+  headless screenshot smoke를 포함할 것.
+
+Sources:
+
+- `claudedocs/session_20260728_grasp_g0a_d404_actual_run_technical_pass_observability_import_fail_stop.md`
+- `claudedocs/runtime_logs/grasp_track/g0a_d404/attempt1_d403_authored_derivative_gate_contract_repair/d400_completion_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d404/attempt1_d403_authored_derivative_gate_contract_repair/d400_worker_raw_summary.json`
+- `sim_scripts/cyl34_top_view_d400_gripper_link_sdf_res256_live_cook_articulation_preflight.py:2779`
+- `sim_scripts/cyl34_top_view_d401_d400_runtime_freeze_snapshot_order_repair_controller.py:581`
+
+## D405 — Preregistration 파일은 그 자체가 동결 계약의 입력이다: 동결 소비자가 읽는 모든 리터럴은 동결 소스에서 도출하고, 순수(pure) admission 체크는 반드시 오프라인 replay하라
+
+Date: 2026-07-28
+
+Decision:
+
+- 새 case의 prereg/attestation/tuple 같은 **저작 아티팩트도 동결 체인의
+  입력**이며, 동결 코드가 그 아티팩트에서 읽는 **모든 필드·리터럴**은 저작
+  전에 소비자 코드를 grep으로 전수 열거하고 값을 동결 소스에서 그대로
+  도출한다. "더 서술적인" 문자열로 바꾸는 것은 계약 위반이다.
+- 동결 코드의 admission 체크가 **순수 함수(파일 sha + 필드 비교)**라면 정적
+  준비에서 반드시 오프라인 replay한다. D405는 관측성 분기의 무거운 replay
+  (rerun 렌더까지)는 수행했으나 worker.py:2514-2518의 **2행짜리** prereg
+  admission(sha 일치 + `status == "PREREGISTERED_NOT_EXECUTED"`)을 replay하지
+  않았고, 정확히 그 지점에서 attempt를 소진했다.
+- 동결 체인이 최상위 prereg 파일에 요구하는 전체 집합(이 세션 전수 감사):
+  ① sha == 각 wrapper 내장 EXPECTED_PREREG_SHA256, ② `status`
+  리터럴(worker.py:2517), ③ D401 merge 6키(git_baseline,
+  runtime_overlay_contract.{allowed_dirty_paths, additional_frozen_repo_inputs},
+  inherited_science_contract, new_variables, git_snapshot_contract). 나머지
+  preflight의 prereg 읽기는 merge된 base D400 prereg 값을 소비한다.
+- D405 attempt1은 불변 보존, 같은 경로 retry/덮어쓰기 금지.
+
+Evidence:
+
+- worker 예외: worker.py:2518 `RuntimeError("D400 preregistration status is
+  not frozen")`; D405 prereg `status="STATIC_PREP_PREREGISTERED_RUNTIME_
+  PENDING"` vs D403/D404 prereg `"PREREGISTERED_NOT_EXECUTED"`
+  (`g0a_d405/attempt1_*/d400_worker_raw_summary.json`).
+- 실패 시점: Isaac 기동 후, derivative 복사 전(phase names에
+  derivative_copy_start 부재) — D405 수리 R2/R3, SDF, 관측성 분기 전부 미도달.
+- 인프라·선행 게이트는 전부 PASS: D405 pre-delegation probe **라이브 통과**
+  (수리 R1 sys.path + roarm_rl 해석 라이브 실증), 실게이트 승인 검증, freeze
+  manifest dirty 47 완전 일치, 환경 게이트, kit log 71행급 오류 0, supervisor
+  잔존 signal 0 (worker rc -9는 close hang의 SIGTERM/SIGKILL 정리 — D402-R1
+  기지 패턴).
+- 정적 준비는 그 외 라이브 차단급 결함 2건(rerun 0.34.1 headless ppp 2.0의
+  logical/물리 크기, TextDocumentView 1문서 제약)을 실물 replay로 사전
+  적발·수리했다 — replay 범위에 든 결함은 잡혔고, 든 적 없는 순수 체크가
+  남아 실패했다.
+
+Implication:
+
+- 이 FAIL은 D405 prereg 저작 결함이며 Isaac/PhysX/체인/수리 R1-R3의 실패가
+  아니다 — descriptive label `D405_PREREGISTRATION_STATUS_LITERAL_FAIL_STOP`.
+- 다음 최소 rung = `D406 [d405_prereg_status_literal_repair]`: prereg의 status
+  리터럴만 동결 값으로 수정(신규 변수 0 — 계약 준수 수정) + wrapper 2종
+  EXPECTED_PREREG_SHA256 재내장 + 새 attestation/tuple. 정적 runner에 **동결
+  prereg-admission replay fixture**(동결 worker 모듈 로드 후 sha+status 검증을
+  D406 prereg에 그대로 적용: accept, 변조 status: reject)를 추가한다.
+- D405의 관측성 수리 3건은 라이브 미판정으로 D406에 그대로 이월된다 — 정적
+  replay 증거(수리본 1920×1080 receipt PASS·검증 계약 PASS)는 유효.
+- 유저 순차 지시는 D405 attempt1로 소진 — D406 runtime은 새 명시 승인 필요.
+
+Sources:
+
+- `claudedocs/session_20260728_grasp_g0a_d405_actual_run_prereg_status_literal_fail_stop.md`
+- `claudedocs/runtime_logs/grasp_track/g0a_d405/attempt1_d404_observability_import_path_repair/{d400_worker_raw_summary.json,d400_completion_summary.json,d400_worker_supervisor.json,d400_runtime_freeze_manifest.json}`
+- `sim_scripts/cyl34_top_view_d400_gripper_link_sdf_res256_live_cook_articulation_worker.py:2514-2518`
+- `claudedocs/session_20260728_grasp_g0a_d405_observability_import_path_repair_static_prep.md`
+
+## D406 — 순수 admission replay 의무는 실효한다: 소비자 리터럴 도출 + 동결 소스 verbatim replay + 원자적 육안검수 운영 계약으로 D400 게이트가 완주되었다
+
+Date: 2026-07-28
+
+Decision:
+
+- 저작 아티팩트의 모든 소비자 리터럴을 동결 소스에서 **프로그램적으로 도출**
+  (하드코딩 금지, 빌더가 추출·assert)하고, 순수 admission 체크를 정적
+  준비에서 **동결 소스 라인 verbatim exec으로 replay**(accept + 변조 reject +
+  직전 실패 실물 재현)하는 D405 의무는 실효한다 — D406은 그 의무를 최초로
+  완전 이행했고, D405를 죽인 바로 그 체크를 첫 라이브 시도에서 통과했다.
+- 라이브 육안검수 상호작용(300s, 0.25s 폴링, first-read-wins)의 운영 계약을
+  확립한다: ① 검수 JSON은 **사전 dry-run된 원자적 작성기**(출력 디렉토리 내
+  임시명 생성 → 같은 파일시스템 os.rename; 주제별 명시 assert로 정직성 강제)
+  로만 기록; ② 백그라운드 exit 대기 금지 — 발사 직후부터 argv-청정
+  감시(캡처된 stdout의 프롬프트 마커만; controller/worker 파일명·OUT_DIR
+  문자열 금지)로 능동 감지; ③ 프롬프트의 required_fields를 verbatim 복사하되
+  subjects_visible/overlap은 실물 관측으로만 채운다. 첫 라이브 traversal이
+  잔여 ~240s로 통과했다.
+- 전수 소비자 감사는 매 case 재수행한다: DECISIONS D405의 "6키" 열거는
+  불완전했고(D402 merge wrap의 `installed_nvidia_primary_sources` 누락 —
+  비어있으면 RuntimeError), 이번 grep 재감사가 복구했다. 문서화된 열거를
+  신뢰하지 말고 동결 소스를 다시 grep하라.
+- D400 게이트 완주 verdict의 권한 한계를 준수한다: configuration/stage-load
+  admission/global cook-drain/rigid-owner·property enumeration까지만. per-prim
+  SDF 내부 identity, collision participation, contact, tipping, grasp 주장
+  금지 (completion `authority_limit` 명문).
+- D406 attempt1은 불변 보존(PASS attempt도 동결), 같은 경로 재실행 금지.
+
+Evidence:
+
+- worker admission 수락: raw summary `exception: null`,
+  `preregistration_sha256 == c49801577f44...c4c7de`; D405는 같은 지점에서
+  RuntimeError("D400 preregistration status is not frozen")로 정지했었다.
+- 기술: SDF cook delta scheduled 136 == finished 136(cache hit 136/miss 0 —
+  D404 cook 캐시 재사용), checks 6/6; property query link5 65·gripper_link 66
+  전부 pass; mass/counter/protocol PASS; phase 감사 35 phase 전원 정확.
+- 관측성 최초 라이브 완주: RRD 1,214,078B footer verify PASS, 스크린샷 정확
+  1920×1080(sha 8b7308ee — D405 수리 R2 라이브 실증), 텍스트 패널 오류 배너
+  0(수리 R3 라이브 실증), 육안검수 8체크 전부 true(JSON sha 10e706a4).
+- 정적: 체크 47/47+양성 26/26+음성 56/56; stage K가 실물 D405 prereg로 라이브
+  실패 예외 문자열 bit-exact 재현; 4-lens 리뷰(wf_fc718cbc-23d) blocker 1
+  (300s 상호작용 미검증)을 작성기 dry-run으로 사전 해소; 게이트 복제 10/10;
+  실행 직전 dirty==allowlist 정확 64/64.
+
+Implication:
+
+- D400 게이트 체인(D400→D406, 수리 rung 6개)이 완결됐다. 과학 질문은 여전히
+  미측정: `scientific_or_physics_verdict=null`, `g0a_pass=false`.
+- 다음 최소 rung = `D407 [sdf_physics_ab_d362_remeasure]` (후보, **미승인** —
+  물리는 별도 명시 승인 필요): 동결 D362 계약(34×90mm/0.72kg) 그대로
+  gripper_link A64↔SDF 단일 변수 A/B 전도 재측정. D406 산출 derivative
+  (`g0a_d406/attempt1_*/collision_asset/`)가 입력 후보.
+
+Sources:
+
+- `claudedocs/session_20260728_grasp_g0a_d406_actual_run_full_pass.md`
+- `claudedocs/session_20260728_grasp_g0a_d406_prereg_status_literal_repair_static_prep.md`
+- `claudedocs/runtime_logs/grasp_track/g0a_d406/attempt1_d405_prereg_status_literal_repair/{d400_completion_summary.json,d400_worker_raw_summary.json,d400_manual_visual_inspection.json}`
+- `sim_scripts/cyl34_top_view_d406_d405_prereg_status_literal_repair_{controller,worker}.py`
+
+## D407 — 다중-leg prereg dirty 허용집합은 소비자에서 미래 산출물을 도출하고, 정적 tuple 게시까지 exact-dirty로 결박한다
+
+Date: 2026-07-29
+
+Decision:
+
+- 순차 worker A→B 구조에서는 leg A의 정상 실행 산출물이 leg B 시작 시점의
+  새 dirty 파일이 된다. 따라서 prereg의 `allowed_dirty_paths`는 현재 dirty와
+  정적 예정 파일만 나열해서는 안 되며, **실제 controller/worker 소비자
+  소스에서 모든 future runtime leaf와 directory sentinel을 프로그램적으로
+  도출**해 `live dirty + planned static + future runtime`의 고유 합집합으로
+  작성한다.
+- status 같은 admission 리터럴은 `!=` 정규식으로 추측하지 않고 실제
+  소비자의 `ast.Eq` 비교에서 도출한다.
+- reviewed attestation과 tuple은 candidate overwrite가 불가능한 원자적
+  게시로 만들고, 게시 전후 dirty exact equality, 최종 SHA, candidate 부재,
+  regular non-symlink, `st_nlink==1`을 모두 확인한다. crash resume는
+  attestation-only/both-exact만 허용하고 tuple-only·hash mismatch·symlink는
+  fail-closed한다.
+
+Evidence:
+
+- D407 builder가 controller `_runtime_output_paths()` 및 worker 소비
+  경로에서 future leaf 45개 + leg directory sentinel 2개를 도출했다.
+  frozen inputs 36, A/B asset 7+7, D334 sidecar 3을 함께 고정했고 최종
+  allowlist는 고유 138개다.
+- static stage A~M 13/13, checks 58/58, accept 10/10, reject 59/59 PASS.
+  M-late 실제 controller tuple validator는 accept 1/1, 고정 reject 15/15
+  PASS했다.
+- 최종 dirty 91은 allowlist 138의 부분집합이고 outside path는 0개다.
+  attestation/tuple은 regular non-symlink, `nlink=1`이며 실제 controller
+  post-publish gate도 PASS했다.
+- 모든 runtime counter 10종은 0이고
+  `runtime_executed=false`, `scientific_or_physics_verdict=null`,
+  `g0a_pass=false`다.
+
+Implication:
+
+- D407 정적 준비는 `STATIC_REVIEWED_RUNTIME_NOT_EXECUTED`로 완결되었다.
+  이 PASS는 물리 A/B 결과가 아니며 B의 SDF collision participation,
+  contact-point availability 또는 전도 개선을 주장하지 않는다.
+- 실제 A/B runtime은 proposed tuple-file SHA
+  `c7001b76fa0a6c3393d9df744bb1fc0fb419400d46d84fc69e531730400d4b99`
+  를 인용한 사용자 새 명시 승인 전에는 실행하지 않는다.
+- 첫 leg가 실패해도 정상 산출물을 dirty 오염으로 오판하지 않으면서,
+  allowlist 밖 외부 파일은 계속 fail-closed할 수 있다.
+
+Sources:
+
+- `claudedocs/session_20260729_grasp_g0a_d407_static_attestation_tuple.md`
+- `claudedocs/runtime_logs/grasp_track/g0a_d407/attempt1_sdf_physics_ab_d362_remeasure/{d407_preregistration.json,d407_static_fixture_results.json,d407_reviewed_script_attestation.json,d407_proposed_runtime_hash_tuple.json}`
+- `sim_scripts/cyl34_top_view_d407_sdf_physics_ab_d362_remeasure_{controller,worker}.py`
+
+## D407-R1 — 구조적 Rerun 검증과 사람이 읽을 수 있는 화면은 별도 게이트이며, forward-only 수동검수 timeout은 사후검사로 복구하지 않는다
+
+Date: 2026-07-29
+
+Decision:
+
+- RRD/RBL footer·schema·entity·timeline·component·물리 해상도 검증 PASS는
+  기록 구조와 재생 가능성을 증명할 뿐, 캡처 순간의 notification, hover
+  legend, force-arrow, text overlap이 실제 의사결정 주제를 가리지 않는다는
+  증명이 아니다. `interface_visibility`는 원본 해상도 사람이 별도로
+  판독해야 한다.
+- forward-only live manual gate에는 runtime 전에 완성·검토·dry-run한
+  atomic writer, 현재 controller PID/phase에 결박된 prompt handshake,
+  clean screenshot capture(UI 안정화와 overlay 제거), 최악 traversal
+  시간 예산을 admission prerequisite로 둔다. 런 중 writer를 새로 만들거나
+  수리하는 운영은 금지한다.
+- 지정 시간 안에 manual JSON이 원자 게시되지 않으면 attempt 전체는
+  fail-stop이다. 이후 같은 PNG를 사람이 보았더라도 소급 manual PASS,
+  completion 덮어쓰기, 같은 attempt 재실행은 금지한다. 완전한 물리 trace의
+  제한된 physical sub-verdict는 전체 observability verdict와 분리해 보존한다.
+- contact-observation horizon의 마지막 row가 settled state라는 보장은 없다.
+  최종 tilt가 더 작아도 마지막 force/velocity/gap과 effort saturation을
+  함께 검사하지 않으면 stable-grasp 또는 tipping 개선으로 해석하지 않는다.
+
+Evidence:
+
+- D407 A/B worker는 각 500 finite row, exit 0, operational/structural
+  observability PASS였고 A→5.0476s settle→B, retry 0을 지켰다.
+- live manual prompt 뒤 약 300.254s에 `received=false`, `timeout=true`;
+  `d407_manual_visual_inspection.json`은 부재하고 completion은
+  `D407_SDF_PHYSICS_AB_TIPPING_REMEASURE_FAIL_STOP`이다.
+- 양 Rerun PNG는 notification과 hover legend가 timeseries/log를 가렸다.
+  B beginner/A-B sheet는 464N급 force arrow가 일부 header/panel을
+  침범했다. 따라서 `timeseries_legible`/`no_text_overlap`을 true로
+  정직하게 게시할 수 없었다.
+- B step 500은 gripper/link5 force `415.498/165.253 N`, angular velocity
+  `[-13.853,3.591,-4.204] rad/s`, upward velocity `0.0805 m/s`, table gap
+  `8.542 mm`, q5 velocity `3.1403 rad/s`인 비정착 상태였다. q5 saturation
+  fraction도 A `0.31` 대 B `0.9167`이다.
+
+Implication:
+
+- D407 attempt1은 불변 FAIL-STOP으로 동결한다. physics worker의
+  `D407_MOVING_JAW_CONTACT_AND_OBJECT_MOTION_OBSERVED` 두 건은 보존하지만
+  `g0a_pass=false`; stable grasp, force closure, SDF 우월성 및 tipping
+  개선은 주장하지 않는다.
+- 다음 최소 후보는 새 D408 observability-only repair다. immutable D407
+  trace/RRD를 읽기 전용으로 사용해 clean capture, bounded force arrows,
+  pre-armed writer/handshake를 검증할 수 있으나 D407을 소급 PASS로 바꾸지
+  않는다. 설계·정적 준비도 별도 승인 필요하며 physics 재실행은 새
+  과학 case와 새 tuple 없이는 금지한다.
+
+Sources:
+
+- `claudedocs/session_20260729_grasp_g0a_d407_actual_runtime_manual_inspection_fail_stop.md`
+- `claudedocs/runtime_logs/grasp_track/g0a_d407/attempt1_sdf_physics_ab_d362_remeasure/d407_completion_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d407/attempt1_sdf_physics_ab_d362_remeasure/d407_controller_phase_markers.jsonl`
+- `claudedocs/runtime_logs/grasp_track/g0a_d407/attempt1_sdf_physics_ab_d362_remeasure/d407_ab_delta_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d407/attempt1_sdf_physics_ab_d362_remeasure/leg_{a_a64,b_sdf_res256}/d407_worker_summary.json`
+
+## D408 — 동결된 물리 결과의 관측성 수리는 engine 재실행과 분리하고, software renderer·수동 게시 경계까지 사전 결박한다
+
+Date: 2026-07-29
+
+Decision:
+
+- 이미 완결된 trace/RRD가 판정에 필요한 모든 물리 수치를 보존하고 있을
+  때 화면 가림·표시 스케일·수동 결과 전달만 수리하는 case는 원본을
+  읽기 전용으로 재생한다. 새 Isaac/Kit/PhysX step, contact query, q5
+  read/write 또는 cylinder spawn을 섞지 않고
+  `historical_trace_rows_read`와 `new_controlled_physics_steps`를 별도
+  counter로 보고한다.
+- 구조적으로 유효한 RRD를 사람이 읽을 수 있는 화면으로 바꾸는 경로는
+  source blueprint/force-display overlay를 제거한 recording-only
+  projection, retained semantic exact comparison, corrected RBL,
+  clean crop, 숫자 축이 있는 decision sheet를 모두 갖춰야 한다.
+  표시 화살표 길이 cap은 raw vector/norm N과 분리하고 cap 여부를 공개한다.
+- CPU software rendering은 Vulkan ICD 경로만 지정해서는 결정적이지 않다.
+  `WGPU_BACKEND=vulkan`, lavapipe ICD, low-power preference를 subprocess
+  환경과 출력 contract 양쪽에 고정하고 실제 로그의
+  `device_type: Cpu`와 `llvmpipe`를 모두 검사한다.
+- 수동 판정은 true-only 성공기가 아니라 false도 정직하게 게시하는
+  pre-armed production writer를 사용한다. controller/writer identity,
+  phase chain, nonce/HMAC, tuple SHA, source/screenshot manifest, 공통
+  monotonic deadline을 묶고 exclusive-create + no-replace + fsync로
+  first publication을 동결한다.
+
+Evidence:
+
+- D408 final static A~M 13/13, checks 73/73, 고의 변조 26/26 reject.
+  production AST 2/2, D407 44-file/2-directory manifest, A/B 500행씩과
+  RRD/RBL 4개 footer를 재검증했다.
+- recording-only semantic 비교는 A 12,995 rows/57,929 value cells,
+  B 13,118 rows/58,783 value cells exact PASS였다. raw force 4,000개와
+  text bbox 16,000개를 전수 검사했다.
+- 명시적 Vulkan 고정 뒤 Rerun viewer 2회 모두
+  `device_type: Cpu`, llvmpipe였고 hardware GPU job과 새 controlled
+  physics step은 0이었다. 다섯 static 화면을 사람이 직접 열어
+  notification 부재, jaw/cylinder 가시성, A/B 숫자와 독립 y축 경고를
+  확인했다.
+- prereg allowlist는 live dirty 127 + planned static + consumer-derived
+  future runtime의 합집합 161개다. runtime 직전 기대 dirty 131개,
+  future file 30개/directory 2개, D408 static tree 4 files/0 directories다.
+
+Implication:
+
+- D408 정적 준비만
+  `STATIC_PREPARED_RUNTIME_NOT_APPROVED`로 완결됐다. 이는 실제 replay,
+  실제 manual publication 또는 D407 과학 판정의 PASS가 아니다.
+- D407 final FAIL-STOP, `scientific_verdict=null`, `g0a_pass=false`,
+  SDF stability/force-closure/grasp-feasibility null claim은 그대로다.
+- 실제 read-only replay는 proposed tuple-file SHA
+  `97c7ca51f8116053fcdc59aa9572669231d4abeb66022ed4e59c9e61af28e1ff`
+  를 인용한 사용자 별도 승인 전 실행하지 않는다.
+
+Sources:
+
+- `claudedocs/session_20260729_grasp_g0a_d408_manual_observability_completion_repair_static_prep.md`
+- `claudedocs/runtime_logs/grasp_track/g0a_d408/attempt1_d407_manual_observability_completion_repair/d408_preregistration.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d408/attempt1_d407_manual_observability_completion_repair/d408_static_fixture_results.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d408/attempt1_d407_manual_observability_completion_repair/d408_reviewed_script_attestation.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d408/attempt1_d407_manual_observability_completion_repair/d408_proposed_runtime_hash_tuple.json`
+
+## D408-R1 — 관측성 수리 PASS는 동결 과학 verdict와 직교하며, source를 다시 계산하거나 소급 PASS하지 않고 완결할 수 있다
+
+Date: 2026-07-29
+
+Decision:
+
+- 동결 trace/RRD가 과학 수치와 timeline을 완전하게 보존한 경우,
+  clean presentation과 수동 publication의 결함은 새 physics step 없이
+  forward-only observability case로 고칠 수 있다. actual PASS의 권위는
+  화면 가시성, raw 수치 보존, authenticated atomic manual delivery에
+  한정한다.
+- observability repair의 성공은 source case verdict를 소급 변경하지
+  않는다. D408 terminal은 D407 FAIL, `d407_retroactive_pass=false`,
+  `scientific_verdict=null`, `g0a_pass=false`를 동시에 보존해야 한다.
+- pre-armed writer는 replay 전에 READY/HMAC/PID-start/phase binding을
+  끝내고, false도 유효한 11-field manual result를 no-replace+fsync로
+  게시한다. manual prompt 이후 즉석 writer 작성·retry·사후 덮어쓰기는
+  계속 금지한다.
+- D408 attempt1은 첫 terminal PASS로 동결한다. 같은 경로 재실행,
+  manual/completion 수정 또는 D407 manual JSON 사후 생성은 금지한다.
+
+Evidence:
+
+- user-approved tuple
+  `97c7ca51f8116053fcdc59aa9572669231d4abeb66022ed4e59c9e61af28e1ff`
+  로 controller 1회, production writer 1회, software Rerun viewer
+  A/B 각 1회, retry 0을 실행했다.
+- writer는 controller start 후 0.035207s에 pre-arm됐다. A/B replay는
+  7.219554/7.259030s였고 새 controlled physics step은 0이다.
+- 실제 5개 화면을 원본 해상도로 검사해 11/11 boolean true를 한 번
+  제출했다. manual은 prompt+72.654994s에 fsync되어 writer deadline보다
+  522.345006s 빨랐고 SHA는
+  `bf917eb4680d387ea01fe7be6997051005a28f5c05607069f62bea68ea10af18`다.
+- phase chain 10/10, D407 manifest checkpoint 5/5, screenshot-byte
+  checkpoint 4/4, 사후 D407 44/44 SHA, source copy 6/6 bit-exact PASS.
+  최종 physical tree는 32 files/2 dirs, pending/symlink/special/residual
+  process는 모두 0이다.
+- terminal status는
+  `D408_D407_MANUAL_OBSERVABILITY_COMPLETION_REPAIR_PASS`; terminal SHA는
+  `48626366c81c56c9bf2ae0f8c75b6a1291d7d5d3df7906010d93f0919a69dd37`다.
+
+Implication:
+
+- D407에서 이미 실행한 A64↔SDF 물리 데이터는 그대로 보존되고,
+  D408은 사람이 판단할 수 있는 전달 경로만 완주했다.
+- stable grasp, force closure, SDF stability/tipping improvement,
+  grasp feasibility는 여전히 미판정이다. 이를 측정하려면 새 과학 case,
+  새 tuple, 새 사용자 승인으로 분리해야 한다.
+
+Sources:
+
+- `claudedocs/session_20260729_grasp_g0a_d408_actual_read_only_replay_observability_pass.md`
+- `claudedocs/runtime_logs/grasp_track/g0a_d408/attempt1_d407_manual_observability_completion_repair/d408_terminal_summary.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d408/attempt1_d407_manual_observability_completion_repair/d408_manual_visual_inspection.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d408/attempt1_d407_manual_observability_completion_repair/d408_controller_phase_markers.jsonl`
+- `claudedocs/runtime_logs/grasp_track/g0a_d408/attempt1_d407_manual_observability_completion_repair/d408_source_immutability_checkpoints.json`
+- `claudedocs/runtime_logs/grasp_track/g0a_d408/attempt1_d407_manual_observability_completion_repair/d408_screenshot_integrity_checkpoints.json`

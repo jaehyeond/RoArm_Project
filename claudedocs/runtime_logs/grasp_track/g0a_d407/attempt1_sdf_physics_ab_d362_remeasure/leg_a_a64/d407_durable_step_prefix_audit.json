@@ -1,0 +1,136 @@
+{
+  "append_receipt_count": 1002,
+  "artifact": "D407_DURABLE_STEP_PREFIX_AUDIT_V1",
+  "audit": {
+    "artifact": "D361_PREFIX_AUDIT_V1",
+    "chain_integrity_pass": true,
+    "complete_pass": true,
+    "file_bytes": 2747134,
+    "file_sha256": "aadfaa7a6a4f45f1c42ebe0c679c0673c9390e29ccda4cdc1eb5652a54a9b065",
+    "integrity_error": null,
+    "last_observed_step": {
+      "global_step": 500,
+      "phase": "q5_close_observation",
+      "phase_step": 299
+    },
+    "last_record_sha256": "c9c60fb362480ac9eb8face25e165b66737c73aba8478f241b12baf958a709e1",
+    "last_valid_kind": "seal",
+    "observation_count": 500,
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d407/attempt1_sdf_physics_ab_d362_remeasure/leg_a_a64/d407_durable_step_prefix.jsonl",
+    "recoverable_prefix_pass": true,
+    "sealed": true,
+    "terminal_inflight_step": null,
+    "trailing_byte_count": 0,
+    "trailing_bytes_sha256": null,
+    "valid_prefix_byte_count": 2747134,
+    "valid_record_count": 1002,
+    "validated_header_payload": {
+      "body_labels": [
+        "support_table",
+        "link4",
+        "link5",
+        "gripper_link"
+      ],
+      "case": "g0a_d407",
+      "execution_contract": {
+        "legal_seals": {
+          "full_500_step_horizon_complete": [
+            500
+          ],
+          "open_baseline_hard_gate_fail_stop": [
+            200
+          ]
+        }
+      },
+      "filter_index_by_body": {
+        "gripper_link": 3,
+        "link4": 1,
+        "link5": 2,
+        "support_table": 0
+      },
+      "lineage": {
+        "actual_invocation_sha256": "dcf3b5d790aa9ece7932d523977f95deca5374334dba5e013e85e9e0a87902c5",
+        "harness_sha256": "2f6da11cc9d074d7fa626eaadfb9a638b3cc74e7acdb2ae99fe07780041101cc",
+        "inherited_d361_capacity_budget_sha256": "ca5edc818fee321dad257dcf3d1ba4574b6c446471a7ff7abc7c8ab790bf79f5",
+        "inherited_d361_protocol_contract_sha256": "dead1591fbf53f080bae0ca28643bb22147ee99a6b07f71a9285865e2c1d8e13",
+        "preregistration_sha256": "6deb6779a18619f547952de9119eee599ea5dd40ac466d57d6a813988afb1269",
+        "worker_preflight_sha256": "2c9807d70d8459b82ceb7821eff369340408c37e54af1e86b36705e61721a4fd"
+      },
+      "overwrite_allowed": false,
+      "profile": "D407_LEGA_ACTUAL_PHYSX_DURABLE_PREFIX_V1",
+      "registered_total_capacity": 33280,
+      "resolved_filter_paths": [
+        "/World/envs/env_0/TapTable",
+        "/World/envs/env_0/Robot/link4",
+        "/World/envs/env_0/Robot/link5",
+        "/World/envs/env_0/Robot/gripper_link"
+      ],
+      "resume_allowed": false,
+      "scenario": "actual_frozen_d360_contract_d407_single_invocation",
+      "sensor_body_names": [
+        "Sponge"
+      ],
+      "state_row_contract": {
+        "authority": "D360 _state_row exact top-level field contract",
+        "required_top_level_keys": [
+          "global_step",
+          "phase",
+          "phase_step",
+          "physics_time_s",
+          "simulation_clock",
+          "timeline_time_s",
+          "actual_joint_rad",
+          "actual_joint_vel_rad_s",
+          "target_joint_rad",
+          "q5_actual_rad",
+          "q5_velocity_rad_s",
+          "q5_target_rad",
+          "q5_error_rad",
+          "q0_q4_actual_minus_frozen_rad",
+          "q0_q4_max_abs_drift_rad",
+          "q5_torque",
+          "object_pos_w_m",
+          "object_quat_wxyz",
+          "object_lin_vel_w_mps",
+          "object_ang_vel_w_radps",
+          "object_disp_w_m",
+          "object_disp_xy_mm",
+          "object_z_delta_mm",
+          "object_tilt_deg",
+          "object_tilt_delta_from_reference_deg",
+          "object_bottom_table_gap_mm",
+          "robot_root_pos_w_m",
+          "robot_root_quat_wxyz",
+          "robot_root_position_drift_m",
+          "robot_root_rotation_drift_rad",
+          "link5_pos_w_m",
+          "link5_quat_wxyz",
+          "gripper_pos_w_m",
+          "gripper_quat_wxyz",
+          "contact",
+          "finite"
+        ]
+      },
+      "subject_kind": "actual_d407_leg_a_d362_inherited_physx_contact_motion_evidence"
+    }
+  },
+  "case": "g0a_d407",
+  "checks": {
+    "all_contact_ranges_within_capacity": true,
+    "append_receipts_all_fsync_reread": true,
+    "high_water_below_or_equal_capacity": true,
+    "no_terminal_inflight_step": true,
+    "no_trailing_bytes": true,
+    "observation_count_matches_trace": true,
+    "sealed": true,
+    "state_rows_reconcile_exact": true,
+    "wire_and_semantic_complete": true
+  },
+  "contact_point_high_water_mark": 22,
+  "inherited_protocol_sha256": "dead1591fbf53f080bae0ca28643bb22147ee99a6b07f71a9285865e2c1d8e13",
+  "pass": true,
+  "prefix_path": "claudedocs/runtime_logs/grasp_track/g0a_d407/attempt1_sdf_physics_ab_d362_remeasure/leg_a_a64/d407_durable_step_prefix.jsonl",
+  "prefix_sha256": "aadfaa7a6a4f45f1c42ebe0c679c0673c9390e29ccda4cdc1eb5652a54a9b065",
+  "reported_contact_point_count_max": 22,
+  "trace_state_reconciliation_first_difference": null
+}

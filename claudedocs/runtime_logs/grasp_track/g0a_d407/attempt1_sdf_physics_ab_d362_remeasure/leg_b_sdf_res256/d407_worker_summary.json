@@ -1,0 +1,731 @@
+{
+  "artifact": "D407_WORKER_SUMMARY_V1",
+  "baseline": {
+    "checks": {
+      "all_finite": true,
+      "exact_200_steps": true,
+      "first_step_abs_z_delta_le_0p5mm": true,
+      "frozen_open_target_every_step": true,
+      "last50_bottom_table_gap_abs_max_le_0p5mm": true,
+      "object_tilt_lt_1deg": true,
+      "object_xy_lt_0p5mm": true,
+      "q5_effort_authority_every_step": true,
+      "robot_filters_max_lt_0p1n": true,
+      "robot_root_position_drift_le_1e_6m": true,
+      "robot_root_rotation_drift_le_1e_6rad": true,
+      "stage_and_sensor_contracts_pass": true,
+      "support_table_fz_last50_median_gt_1n": true
+    },
+    "first_contact_step_by_filter": {
+      "gripper_link": -1,
+      "link4": -1,
+      "link5": -1
+    },
+    "first_object_motion_step": -1,
+    "first_step_object_z_delta_mm": 3.725290298461914e-06,
+    "last50_bottom_table_gap_abs_max_mm": 0.00013455373122292502,
+    "max_object_disp_xy_mm": 0.003773643762621384,
+    "max_object_tilt_deg": 0.003364520785190337,
+    "max_robot_root_position_drift_m": 0.0,
+    "max_robot_root_rotation_drift_rad": 0.0,
+    "pass": true,
+    "precommand_object_motion_confound": false,
+    "precommand_robot_contact_confound": false,
+    "q5_actual_final_rad": 1.5412912368774414,
+    "q5_actual_start_rad": 1.5412994623184204,
+    "robot_filter_max_n": {
+      "gripper_link": 0.0,
+      "link4": 0.0,
+      "link5": 0.0
+    },
+    "support_table_fz_last50_median_n": 7.063635349273682
+  },
+  "beginner_sheet": {
+    "dimensions": [
+      3840,
+      1720
+    ],
+    "pass": true,
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d407/attempt1_sdf_physics_ab_d362_remeasure/leg_b_sdf_res256/d407_beginner_result_sheet_ko.png",
+    "sha256": "174447d211d8666015b515e4497b69431131e81ffc2083f85b4aa36658f3d6b8",
+    "timeseries_panels": {
+      "contact_confirmation_markers": true,
+      "current_row_cursor": true,
+      "motion_confirmation_markers": true,
+      "object_motion": [
+        "xy_mm",
+        "tilt_delta_deg",
+        "z_delta_mm"
+      ],
+      "q5_actual_target": true,
+      "three_robot_body_forces": [
+        "link4",
+        "link5",
+        "gripper_link"
+      ]
+    }
+  },
+  "cap_rim_science": null,
+  "capture_event_metadata": {
+    "contact": {
+      "confirmation_phase_step": 22,
+      "onset_phase_step": 21,
+      "phase": "q5_close_observation",
+      "qualifying_body_labels": [
+        "gripper_link"
+      ]
+    },
+    "motion": {
+      "confirmation_phase_step": 24,
+      "onset_phase_step": 23,
+      "phase": "q5_close_observation"
+    }
+  },
+  "case": "g0a_d407",
+  "closure": {
+    "body_attribution_semantics": "gripper_link is moving jaw authority; link5 is fixed-jaw/other-body evidence only",
+    "cap_rim_or_barrel_order": null,
+    "d354_static_first_overlap_q5_reached_diagnostic": true,
+    "exact_face_or_manifold": null,
+    "final_q5_actual_rad": 0.0005273831193335354,
+    "first_contact_step_by_filter": {
+      "gripper_link": 21,
+      "link4": -1,
+      "link5": 25
+    },
+    "first_fixed_link5_contact_step": 25,
+    "first_jaw_contact_label": "gripper_link",
+    "first_jaw_contact_step": 21,
+    "first_moving_gripper_contact_step": 21,
+    "first_object_motion_step": 23,
+    "first_other_robot_body_contact_step": 25,
+    "first_q5_closed_direction_response_step": 0,
+    "fixed_base_root_contract_pass": true,
+    "force_closure_or_grasp": null,
+    "full_300_step_observation_horizon": true,
+    "g0a_pass": false,
+    "jaw_contact_point_finite": true,
+    "max_object_absolute_tilt_deg": 70.28771825777231,
+    "max_object_disp_xy_mm": 46.183877345250906,
+    "max_object_tilt_deg": 70.28629954626143,
+    "max_robot_root_position_drift_m": 0.0,
+    "max_robot_root_rotation_drift_rad": 0.0,
+    "minimum_q5_actual_rad": -2.1913114878202578e-08,
+    "moving_contact_point_label": "gripper_link",
+    "moving_gripper_link_contact_supported": true,
+    "object_motion_after_contact_supported": true,
+    "open_baseline_precommand_motion_confound": false,
+    "open_baseline_robot_contact_confound": false,
+    "peak_force_by_filter": {
+      "gripper_link": {
+        "force_norm_n": 464.00251143777814,
+        "phase_step": 38
+      },
+      "link4": {
+        "force_norm_n": 0.0,
+        "phase_step": 0
+      },
+      "link5": {
+        "force_norm_n": 357.17543828981536,
+        "phase_step": 157
+      }
+    },
+    "peak_robot_force": {
+      "force_norm_n": 464.00251143777814,
+      "label": "gripper_link",
+      "phase_step": 38
+    },
+    "physics_steps": 300,
+    "positive_body_level_contact_supported": true,
+    "q5_actual_precommand_rad": 1.5412912368774414,
+    "q5_applied_effort_saturated_any": true,
+    "q5_applied_effort_saturation_fraction": 0.9166666666666666,
+    "q5_closed_direction_response": true,
+    "qualifying_contact_point_finite_by_filter": {
+      "gripper_link": true,
+      "link4": null,
+      "link5": true
+    },
+    "static_bracket_is_not_positive_contact_requirement": true,
+    "verdict": "D407_MOVING_JAW_CONTACT_AND_OBJECT_MOTION_OBSERVED",
+    "zero_force_semantics": "absence of a positive filtered event does not prove no contact"
+  },
+  "controlled_physics_steps": 500,
+  "durable_prefix_audit": {
+    "append_receipt_count": 1002,
+    "artifact": "D407_DURABLE_STEP_PREFIX_AUDIT_V1",
+    "audit": {
+      "artifact": "D361_PREFIX_AUDIT_V1",
+      "chain_integrity_pass": true,
+      "complete_pass": true,
+      "file_bytes": 2834563,
+      "file_sha256": "a27140552a67a6db9aed35f47588c8eb4b40b1b42fd5b15c9588a88609a19c7c",
+      "integrity_error": null,
+      "last_observed_step": {
+        "global_step": 500,
+        "phase": "q5_close_observation",
+        "phase_step": 299
+      },
+      "last_record_sha256": "44c8984619f3acf3534b2595ab67d3921c59b667ddf766bb7ce09d7f40a0509c",
+      "last_valid_kind": "seal",
+      "observation_count": 500,
+      "path": "claudedocs/runtime_logs/grasp_track/g0a_d407/attempt1_sdf_physics_ab_d362_remeasure/leg_b_sdf_res256/d407_durable_step_prefix.jsonl",
+      "recoverable_prefix_pass": true,
+      "sealed": true,
+      "terminal_inflight_step": null,
+      "trailing_byte_count": 0,
+      "trailing_bytes_sha256": null,
+      "valid_prefix_byte_count": 2834563,
+      "valid_record_count": 1002,
+      "validated_header_payload": {
+        "body_labels": [
+          "support_table",
+          "link4",
+          "link5",
+          "gripper_link"
+        ],
+        "case": "g0a_d407",
+        "execution_contract": {
+          "legal_seals": {
+            "full_500_step_horizon_complete": [
+              500
+            ],
+            "open_baseline_hard_gate_fail_stop": [
+              200
+            ]
+          }
+        },
+        "filter_index_by_body": {
+          "gripper_link": 3,
+          "link4": 1,
+          "link5": 2,
+          "support_table": 0
+        },
+        "lineage": {
+          "actual_invocation_sha256": "580780935cbeaca0e1124a456d976d73175ff4647d15102b6580369023c8c15b",
+          "harness_sha256": "2f6da11cc9d074d7fa626eaadfb9a638b3cc74e7acdb2ae99fe07780041101cc",
+          "inherited_d361_capacity_budget_sha256": "ca5edc818fee321dad257dcf3d1ba4574b6c446471a7ff7abc7c8ab790bf79f5",
+          "inherited_d361_protocol_contract_sha256": "dead1591fbf53f080bae0ca28643bb22147ee99a6b07f71a9285865e2c1d8e13",
+          "preregistration_sha256": "6deb6779a18619f547952de9119eee599ea5dd40ac466d57d6a813988afb1269",
+          "worker_preflight_sha256": "01298dfd2259f81607bf478b42f51413401db9d1bbf1247ff3e4b63b6bc85a93"
+        },
+        "overwrite_allowed": false,
+        "profile": "D407_LEGB_ACTUAL_PHYSX_DURABLE_PREFIX_V1",
+        "registered_total_capacity": 17152,
+        "resolved_filter_paths": [
+          "/World/envs/env_0/TapTable",
+          "/World/envs/env_0/Robot/link4",
+          "/World/envs/env_0/Robot/link5",
+          "/World/envs/env_0/Robot/gripper_link"
+        ],
+        "resume_allowed": false,
+        "scenario": "actual_frozen_d360_contract_d407_single_invocation",
+        "sensor_body_names": [
+          "Sponge"
+        ],
+        "state_row_contract": {
+          "authority": "D360 _state_row exact top-level field contract",
+          "required_top_level_keys": [
+            "global_step",
+            "phase",
+            "phase_step",
+            "physics_time_s",
+            "simulation_clock",
+            "timeline_time_s",
+            "actual_joint_rad",
+            "actual_joint_vel_rad_s",
+            "target_joint_rad",
+            "q5_actual_rad",
+            "q5_velocity_rad_s",
+            "q5_target_rad",
+            "q5_error_rad",
+            "q0_q4_actual_minus_frozen_rad",
+            "q0_q4_max_abs_drift_rad",
+            "q5_torque",
+            "object_pos_w_m",
+            "object_quat_wxyz",
+            "object_lin_vel_w_mps",
+            "object_ang_vel_w_radps",
+            "object_disp_w_m",
+            "object_disp_xy_mm",
+            "object_z_delta_mm",
+            "object_tilt_deg",
+            "object_tilt_delta_from_reference_deg",
+            "object_bottom_table_gap_mm",
+            "robot_root_pos_w_m",
+            "robot_root_quat_wxyz",
+            "robot_root_position_drift_m",
+            "robot_root_rotation_drift_rad",
+            "link5_pos_w_m",
+            "link5_quat_wxyz",
+            "gripper_pos_w_m",
+            "gripper_quat_wxyz",
+            "contact",
+            "finite"
+          ]
+        },
+        "subject_kind": "actual_d407_leg_b_d362_inherited_physx_contact_motion_evidence"
+      }
+    },
+    "case": "g0a_d407",
+    "checks": {
+      "all_contact_ranges_within_capacity": true,
+      "append_receipts_all_fsync_reread": true,
+      "high_water_below_or_equal_capacity": true,
+      "no_terminal_inflight_step": true,
+      "no_trailing_bytes": true,
+      "observation_count_matches_trace": true,
+      "sealed": true,
+      "state_rows_reconcile_exact": true,
+      "wire_and_semantic_complete": true
+    },
+    "contact_point_high_water_mark": 73,
+    "inherited_protocol_sha256": "dead1591fbf53f080bae0ca28643bb22147ee99a6b07f71a9285865e2c1d8e13",
+    "pass": true,
+    "prefix_path": "claudedocs/runtime_logs/grasp_track/g0a_d407/attempt1_sdf_physics_ab_d362_remeasure/leg_b_sdf_res256/d407_durable_step_prefix.jsonl",
+    "prefix_sha256": "a27140552a67a6db9aed35f47588c8eb4b40b1b42fd5b15c9588a88609a19c7c",
+    "reported_contact_point_count_max": 73,
+    "trace_state_reconciliation_first_difference": null
+  },
+  "exact_manifold_or_face": null,
+  "force_closure_or_grasp": null,
+  "g0a_pass": false,
+  "gripper_collision_representation_changed": true,
+  "initial_state_checks": {
+    "counter_zero": true,
+    "full_q_float32_exact": true,
+    "joint_velocity_float32_zero_exact": true,
+    "object_angular_velocity_float32_zero_exact": true,
+    "object_linear_velocity_float32_zero_exact": true,
+    "object_position_float32_exact": true,
+    "object_quaternion_float32_exact": true,
+    "q0_q4_exact": true,
+    "q5_open_exact": true
+  },
+  "interface_visibility": null,
+  "interface_visibility_pending_manual_original_resolution_inspection": true,
+  "launcher": {
+    "checks": {
+      "cameras_disabled": true,
+      "device_zero": true,
+      "headless_experience": true,
+      "headless_true": true,
+      "livestream_zero": true,
+      "xr_disabled": true
+    },
+    "pass": true,
+    "values": {
+      "device_id": 0,
+      "enable_cameras": false,
+      "experience": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaaclab/apps/isaaclab.python.headless.kit",
+      "headless": true,
+      "livestream": 0,
+      "offscreen_render": false,
+      "xr": false
+    }
+  },
+  "leg": "b",
+  "material_mass_actuator_physics_changed": false,
+  "new_variables": [
+    "gripper_link_collision_representation_a64_to_sdf_res256_v1"
+  ],
+  "observability_artifact_pass": true,
+  "observability_checks": {
+    "all_qualifying_robot_force_points_finite_for_observability": true,
+    "beginner_sheet": true,
+    "durable_prefix_exact_reconciliation": true,
+    "rerun_rrd_rbl_verify_screenshot": true,
+    "screenshot_physical_1920x1080_exact": true
+  },
+  "operational_trace_checks": {
+    "all_trace_rows_finite": true,
+    "closure_horizon_exact": true,
+    "controlled_steps_exact": true,
+    "durable_prefix_contract": true,
+    "final_global_step_500_exact": true,
+    "frozen_open_baseline_hard_gate_pass": true,
+    "inputs_unchanged": true,
+    "q0_q4_target_float32_bits_frozen_every_step": true,
+    "q5_target_update_count": true,
+    "registered_q5_effort_limit_2p5_every_step": true,
+    "runtime_contact_capacity_contract": true,
+    "settings_restored": true,
+    "sidecar_unchanged": true,
+    "timeline_playing_not_stopped_and_nondecreasing_each_step": true,
+    "trace_exact_500_rows": true
+  },
+  "pass": true,
+  "q0_q4_actual_drift": {
+    "baseline_end": {
+      "actual_minus_frozen_rad": [
+        -1.6838312149047852e-06,
+        0.002167999744415283,
+        0.0013802051544189453,
+        2.6226043701171875e-05,
+        -1.1229501978959888e-05
+      ],
+      "global_step": 200,
+      "max_abs_drift_rad": 0.002167999744415283,
+      "phase": "frozen_open_baseline",
+      "phase_step": 199
+    },
+    "failure_threshold": null,
+    "final": {
+      "actual_minus_frozen_rad": [
+        0.005800195038318634,
+        0.0780266523361206,
+        0.03985118865966797,
+        0.005472496151924133,
+        0.001976153114810586
+      ],
+      "global_step": 500,
+      "max_abs_drift_rad": 0.0780266523361206,
+      "phase": "q5_close_observation",
+      "phase_step": 299
+    },
+    "first_any_robot_contact_onset": {
+      "actual_minus_frozen_rad": [
+        -0.0004945844411849976,
+        0.0038192272186279297,
+        0.0017849206924438477,
+        -0.00035649538040161133,
+        3.547190499375574e-05
+      ],
+      "global_step": 222,
+      "max_abs_drift_rad": 0.0038192272186279297,
+      "phase": "q5_close_observation",
+      "phase_step": 21
+    },
+    "first_object_motion_onset": {
+      "actual_minus_frozen_rad": [
+        0.001184862107038498,
+        0.018949568271636963,
+        0.005073904991149902,
+        -0.003798753023147583,
+        0.00011472206097096205
+      ],
+      "global_step": 224,
+      "max_abs_drift_rad": 0.018949568271636963,
+      "phase": "q5_close_observation",
+      "phase_step": 23
+    },
+    "initial_exact_state": {
+      "actual_minus_frozen_rad": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "max_abs_drift_rad": 0.0
+    },
+    "maximum_observed": {
+      "actual_minus_frozen_rad": [
+        -0.007633663713932037,
+        0.10602355003356934,
+        0.033277273178100586,
+        -0.012528404593467712,
+        -0.0015720230294391513
+      ],
+      "global_step": 330,
+      "max_abs_drift_rad": 0.10602355003356934,
+      "phase": "q5_close_observation",
+      "phase_step": 129
+    },
+    "moving_gripper_contact_onset": {
+      "actual_minus_frozen_rad": [
+        -0.0004945844411849976,
+        0.0038192272186279297,
+        0.0017849206924438477,
+        -0.00035649538040161133,
+        3.547190499375574e-05
+      ],
+      "global_step": 222,
+      "max_abs_drift_rad": 0.0038192272186279297,
+      "phase": "q5_close_observation",
+      "phase_step": 21
+    },
+    "semantics": "finite actual drift is reported, not failed; only target mutation or nonfinite state is operational failure"
+  },
+  "q5_target_update_count": 1,
+  "qualifying_robot_point_contract": {
+    "all_qualifying_robot_event_points_finite": true,
+    "by_filter": {
+      "gripper_link": {
+        "event_point_checks": [
+          {
+            "onset_global_row": 221,
+            "onset_phase_step": 21,
+            "phase": "q5_close_observation",
+            "two_event_points_finite": true
+          }
+        ],
+        "qualifying_onset_global_row": 221,
+        "qualifying_onset_global_rows": [
+          221
+        ],
+        "two_event_points_finite": true
+      },
+      "link4": {
+        "event_point_checks": [],
+        "qualifying_onset_global_row": null,
+        "qualifying_onset_global_rows": [],
+        "two_event_points_finite": null
+      },
+      "link5": {
+        "event_point_checks": [
+          {
+            "onset_global_row": 225,
+            "onset_phase_step": 25,
+            "phase": "q5_close_observation",
+            "two_event_points_finite": true
+          },
+          {
+            "onset_global_row": 443,
+            "onset_phase_step": 243,
+            "phase": "q5_close_observation",
+            "two_event_points_finite": true
+          },
+          {
+            "onset_global_row": 454,
+            "onset_phase_step": 254,
+            "phase": "q5_close_observation",
+            "two_event_points_finite": true
+          },
+          {
+            "onset_global_row": 482,
+            "onset_phase_step": 282,
+            "phase": "q5_close_observation",
+            "two_event_points_finite": true
+          }
+        ],
+        "qualifying_onset_global_row": 225,
+        "qualifying_onset_global_rows": [
+          225,
+          443,
+          454,
+          482
+        ],
+        "two_event_points_finite": true
+      }
+    },
+    "qualifying_event_count": 5
+  },
+  "rerun_validation_path": "claudedocs/runtime_logs/grasp_track/g0a_d407/attempt1_sdf_physics_ab_d362_remeasure/leg_b_sdf_res256/d407_rerun_validation.json",
+  "reset_internal_transition": {
+    "after": {
+      "custom_step_counter": 0,
+      "simulation_clock": {
+        "current_time": 0.009999999776482582,
+        "current_time_step_index": 2
+      },
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "timeline_time_s": 0.009999999776482582
+    },
+    "before": {
+      "custom_step_counter": 0,
+      "simulation_clock": {
+        "current_time": 0.009999999776482582,
+        "current_time_step_index": 2
+      },
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "timeline_time_s": 0.009999999776482582
+    },
+    "controlled_d407_sample_count": 0,
+    "semantics": "reset-internal work is reported separately and excluded from the 200+300 controlled rows"
+  },
+  "restore_checks": {
+    "physx_setting_restored": true,
+    "play_setting_restored": true,
+    "timeline_final_paused_not_stopped": true
+  },
+  "runtime_contact_capacity": {
+    "actual_shape_counts": {
+      "gripper_link": 1,
+      "link4": 1,
+      "link5": 64,
+      "sensor_cylinder": 1,
+      "support_table": 1
+    },
+    "authority": "project capacity assumption for the SDF pair; not a documented engine limit",
+    "backend_detailed_contact_buffer_shapes": [
+      [
+        17152,
+        1
+      ],
+      [
+        17152,
+        3
+      ],
+      [
+        17152,
+        3
+      ],
+      [
+        17152,
+        1
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        1,
+        4
+      ]
+    ],
+    "backend_max_contact_data_count": 17152,
+    "checks": {
+      "actual_shape_inventory_exact": true,
+      "backend_allocation_registered_exact": true,
+      "backend_detailed_buffer_shapes_exact": true,
+      "d361_capacity_hash_exact": true,
+      "d361_protocol_hash_exact": true,
+      "derived_capacity_registered_exact": true,
+      "environment_one": true,
+      "filter_count_four": true,
+      "live_topology_matches_stage_link5_gripper": true,
+      "paused_buffer_probe_added_zero_physics_steps": true,
+      "resolved_filter_index_exact": true,
+      "resolved_filter_paths_exact": true,
+      "sensor_body_one": true,
+      "sensor_cfg_registered_exact": true
+    },
+    "derived_total_capacity": 17152,
+    "enabled_collision_paths_by_label": {
+      "gripper_link": [
+        "/World/envs/env_0/Robot/gripper_link/collisions/gripper_link/node_STL_BINARY_/mesh"
+      ],
+      "link4": [
+        "/World/envs/env_0/Robot/link4/collisions/link4/node_STL_BINARY_"
+      ],
+      "link5": [
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_000",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_001",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_002",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_003",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_004",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_005",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_006",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_007",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_008",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_009",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_010",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_011",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_012",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_013",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_014",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_015",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_016",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_017",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_018",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_019",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_020",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_021",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_022",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_023",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_024",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_025",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_026",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_027",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_028",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_029",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_030",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_031",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_032",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_033",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_034",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_035",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_036",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_037",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_038",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_039",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_040",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_041",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_042",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_043",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_044",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_045",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_046",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_047",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_048",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_049",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_050",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_051",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_052",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_053",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_054",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_055",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_056",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_057",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_058",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_059",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_060",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_061",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_062",
+        "/World/envs/env_0/Robot/link5/collisions/d338_convex_parts/part_063"
+      ],
+      "sensor_cylinder": [
+        "/World/envs/env_0/Sponge/geometry/mesh"
+      ],
+      "support_table": [
+        "/World/envs/env_0/TapTable/geometry/mesh"
+      ]
+    },
+    "expected_backend_detailed_contact_buffer_shapes": [
+      [
+        17152,
+        1
+      ],
+      [
+        17152,
+        3
+      ],
+      [
+        17152,
+        3
+      ],
+      [
+        17152,
+        1
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        1,
+        4
+      ]
+    ],
+    "pass": true,
+    "paused_buffer_probe": {
+      "after": {
+        "custom_step_counter": 0,
+        "simulation_clock": {
+          "current_time": 0.009999999776482582,
+          "current_time_step_index": 2
+        }
+      },
+      "before": {
+        "custom_step_counter": 0,
+        "simulation_clock": {
+          "current_time": 0.009999999776482582,
+          "current_time_step_index": 2
+        }
+      }
+    },
+    "per_geometry_pair_contact_envelope": 256,
+    "sdf_pair_capacity_semantics": {
+      "classification": "project_assumption_for_sdf_pair",
+      "engine_limit": false,
+      "fail_capable_verifier": "post-worker Incomplete contact data/maxContactDataCount overflow warning audit"
+    },
+    "sensor_cfg_max_contact_data_count_per_prim": 17152
+  },
+  "runtime_prerequisites_path": "claudedocs/runtime_logs/grasp_track/g0a_d407/attempt1_sdf_physics_ab_d362_remeasure/leg_b_sdf_res256/d407_runtime_prerequisites.json",
+  "sdf_contact_point_reporting_status": "first_live_observation_no_prior_guarantee",
+  "target_ik_path_changed": false
+}

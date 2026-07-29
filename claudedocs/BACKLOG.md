@@ -186,3 +186,37 @@ as the current Active Case.
   (`DECISIONS.md` D398-F1). 상세:
   `claudedocs/session_20260727_grasp_g0a_vertex12_cylinder_d400_scope_review.md`,
   `claudedocs/session_20260727_grasp_g0a_d400_gripper_sdf_live_cook_articulation_preregistration.md`.
+
+- 2026-07-29 (D407 결과): approved A/B physics는 A64 control과 gripper
+  SDF res256 treatment 모두 500-step trace를 완주했고 두 leg에서
+  moving-jaw contact 뒤 object motion을 관측했다. 그러나 필수 live manual
+  JSON이 300초 안에 게시되지 않았고 Rerun capture의 notification/hover
+  overlay 및 B force-arrow 침범도 확인되어 전체 D407은
+  `manual_inspection` FAIL-STOP으로 동결됐다. B step 500은 아직 force와
+  velocity가 큰 비정착 상태이므로 더 작은 최종 tilt를 stability 개선으로
+  해석하지 않는다.
+- 2026-07-29 (D407 이후 조건부 최소 후보):
+  `d407_manual_observability_completion_repair` — immutable D407 trace/RRD만
+  읽는 observability-only case에서 overlay 없는 Rerun capture, bounded
+  force-arrow 표시, runtime 전 pre-armed atomic writer와 controller
+  PID/phase handshake를 검증한다. D407 completion/manual JSON 덮어쓰기,
+  D407 attempt 재실행, Isaac/PhysX physics step, q5/contact query, 새 물리
+  표본, stable-grasp/SDF-improvement 주장은 포함하지 않는다. 사용자 별도
+  승인 전 착수 금지.
+- 2026-07-29 (D408 승인): 위 후보를 D408 Active Case로 승격했다. 승인
+  범위는 설계·정적 준비·attestation·승인용 SHA tuple까지이며, actual
+  read-only replay/capture는 tuple-file SHA를 인용한 별도 승인 전 실행하지
+  않는다. 신규 과학 변수는 0, 운영·관측성 변수는
+  `d407_clean_view_capture_and_bounded_force_arrow_repair_v1`과
+  `prearmed_atomic_manual_writer_pid_phase_handshake_v1` 두 개다.
+- 2026-07-29 (D408 정적 준비 완료): A~M 13/13, checks 73/73,
+  negative fixture 26/26 PASS와 reviewed attestation을 거쳐 tuple-file
+  SHA `97c7ca51f8116053fcdc59aa9572669231d4abeb66022ed4e59c9e61af28e1ff`를
+  고정했다. 실제 read-only replay/capture는 이 SHA를 인용한 사용자
+  별도 승인 전 실행 금지다.
+- 2026-07-29 (D408 actual 완료): 위 tuple 승인으로 controller 1회,
+  software Rerun viewer A/B 각 1회, production writer 1회, retry 0을
+  실행했다. 실제 5개 화면의 11/11 수동 판독과 atomic publication이
+  완료되어 observability repair는 PASS했다. D407 FAIL, science null,
+  `g0a_pass=false`는 그대로이며 D408 attempt1은 동결한다. 새 물리 질문은
+  새 case·tuple·사용자 승인으로 분리한다.

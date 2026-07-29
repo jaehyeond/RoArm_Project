@@ -1,0 +1,931 @@
+{
+  "artifact": "D407_AB_DELTA_SUMMARY_V1",
+  "b_minus_a": {
+    "event_step_deltas": {
+      "gripper_link_contact": {
+        "delta_confirmation_step": -10,
+        "delta_onset_step": -10,
+        "present_pair": {
+          "a": true,
+          "b": true
+        }
+      },
+      "link4_contact": {
+        "delta_confirmation_step": null,
+        "delta_onset_step": null,
+        "present_pair": {
+          "a": false,
+          "b": false
+        }
+      },
+      "link5_contact": {
+        "delta_confirmation_step": -20,
+        "delta_onset_step": -20,
+        "present_pair": {
+          "a": true,
+          "b": true
+        }
+      },
+      "object_motion": {
+        "delta_confirmation_step": -18,
+        "delta_onset_step": -18,
+        "present_pair": {
+          "a": true,
+          "b": true
+        }
+      }
+    },
+    "final_disp_xy_mm": -14.435120444649037,
+    "final_tilt_delta_deg": -31.835572576926452,
+    "final_z_delta_mm": 29.721545055508614,
+    "peak_force_n_by_filter": {
+      "gripper_link": 420.1441715091964,
+      "link4": 0.0,
+      "link5": 333.9475730350918
+    }
+  },
+  "case": "g0a_d407",
+  "delta_definition": "each scalar delta = leg B value minus leg A value; event-step deltas only when both legs observed the event, else null with the presence flag pair",
+  "g0a_pass": false,
+  "leg_a_vs_frozen_d362_descriptive_only": {
+    "a_minus_d362_final": {
+      "disp_xy_mm": 0.0,
+      "tilt_delta_deg": 0.0,
+      "z_delta_mm": 0.0
+    },
+    "authority": "frozen D362 canonical trace/worker summary; differences are descriptive and do not decide D407 admission or verdict",
+    "d362_final_row": {
+      "disp_xy_mm": 60.61899778989994,
+      "final_global_step": 500,
+      "final_row_index_zero_based": 499,
+      "row_count": 500,
+      "tilt_delta_deg": 89.99777464743418,
+      "toppled_tilt_gt_45_descriptive": true,
+      "z_delta_mm": -28.000520542263985
+    },
+    "event_presence_and_a_minus_d362": {
+      "gripper_link_contact": {
+        "a_minus_d362_confirmation_step": 0,
+        "a_minus_d362_onset_step": 0,
+        "a_present": true,
+        "d362_present": true
+      },
+      "link4_contact": {
+        "a_minus_d362_confirmation_step": null,
+        "a_minus_d362_onset_step": null,
+        "a_present": false,
+        "d362_present": false
+      },
+      "link5_contact": {
+        "a_minus_d362_confirmation_step": 0,
+        "a_minus_d362_onset_step": 0,
+        "a_present": true,
+        "d362_present": true
+      },
+      "object_motion": {
+        "a_minus_d362_confirmation_step": 0,
+        "a_minus_d362_onset_step": 0,
+        "a_present": true,
+        "d362_present": true
+      }
+    },
+    "gate": false,
+    "physical_sub_verdicts": {
+      "d362": "D362_MOVING_JAW_CONTACT_AND_OBJECT_MOTION_OBSERVED",
+      "dxxx_normalized_equal": true,
+      "leg_a": "D407_MOVING_JAW_CONTACT_AND_OBJECT_MOTION_OBSERVED"
+    }
+  },
+  "per_leg": {
+    "a": {
+      "collision_representation": "a64_convex_64_plus_64",
+      "events": {
+        "gripper_link_contact": {
+          "confirmation_phase_step": 32,
+          "onset_phase_step": 31,
+          "present": true
+        },
+        "link4_contact": {
+          "confirmation_phase_step": null,
+          "onset_phase_step": null,
+          "present": false
+        },
+        "link5_contact": {
+          "confirmation_phase_step": 46,
+          "onset_phase_step": 45,
+          "present": true
+        },
+        "object_motion": {
+          "confirmation_phase_step": 42,
+          "onset_phase_step": 41,
+          "present": true
+        }
+      },
+      "final_row": {
+        "disp_xy_mm": 60.61899778989994,
+        "final_global_step": 500,
+        "final_row_index_zero_based": 499,
+        "row_count": 500,
+        "tilt_delta_deg": 89.99777464743418,
+        "toppled_tilt_gt_45_descriptive": true,
+        "z_delta_mm": -28.000520542263985
+      },
+      "peak_force_by_filter": {
+        "gripper_link": {
+          "force_norm_n": 43.85833992858175,
+          "phase_step": 54
+        },
+        "link4": {
+          "force_norm_n": 0.0,
+          "phase_step": 0
+        },
+        "link5": {
+          "force_norm_n": 23.227865254723564,
+          "phase_step": 55
+        }
+      },
+      "physical_sub_verdict": "D407_MOVING_JAW_CONTACT_AND_OBJECT_MOTION_OBSERVED",
+      "toppled_tilt_gt_45_descriptive": true
+    },
+    "b": {
+      "collision_representation": "link5_a64_64_plus_gripper_sdf_res256_mesh_1",
+      "events": {
+        "gripper_link_contact": {
+          "confirmation_phase_step": 22,
+          "onset_phase_step": 21,
+          "present": true
+        },
+        "link4_contact": {
+          "confirmation_phase_step": null,
+          "onset_phase_step": null,
+          "present": false
+        },
+        "link5_contact": {
+          "confirmation_phase_step": 26,
+          "onset_phase_step": 25,
+          "present": true
+        },
+        "object_motion": {
+          "confirmation_phase_step": 24,
+          "onset_phase_step": 23,
+          "present": true
+        }
+      },
+      "final_row": {
+        "disp_xy_mm": 46.183877345250906,
+        "final_global_step": 500,
+        "final_row_index_zero_based": 499,
+        "row_count": 500,
+        "tilt_delta_deg": 58.16220207050773,
+        "toppled_tilt_gt_45_descriptive": true,
+        "z_delta_mm": 1.721024513244629
+      },
+      "peak_force_by_filter": {
+        "gripper_link": {
+          "force_norm_n": 464.00251143777814,
+          "phase_step": 38
+        },
+        "link4": {
+          "force_norm_n": 0.0,
+          "phase_step": 0
+        },
+        "link5": {
+          "force_norm_n": 357.17543828981536,
+          "phase_step": 157
+        }
+      },
+      "physical_sub_verdict": "D407_MOVING_JAW_CONTACT_AND_OBJECT_MOTION_OBSERVED",
+      "toppled_tilt_gt_45_descriptive": true
+    }
+  },
+  "record_only_cross_leg_checks": {
+    "cylinder_runtime_geometry_equal": true,
+    "cylinder_runtime_geometry_payloads": {
+      "a": {
+        "authority": "read-only USD enumeration; record-only, never a gate",
+        "collider_prims": [
+          {
+            "applied_api_schemas": [
+              "PhysicsCollisionAPI",
+              "PhysxCollisionAPI",
+              "MaterialBindingAPI"
+            ],
+            "collision_enabled": true,
+            "has_collision_api": true,
+            "path": "/World/envs/env_0/Sponge/geometry/mesh",
+            "type_name": "Cylinder"
+          }
+        ],
+        "collider_type_names": [
+          "Cylinder"
+        ],
+        "prims": [
+          {
+            "applied_api_schemas": [
+              "PhysicsMassAPI",
+              "PhysicsRigidBodyAPI",
+              "PhysxRigidBodyAPI",
+              "PhysxContactReportAPI"
+            ],
+            "collision_enabled": null,
+            "has_collision_api": false,
+            "path": "/World/envs/env_0/Sponge",
+            "type_name": "Xform"
+          },
+          {
+            "applied_api_schemas": [],
+            "collision_enabled": null,
+            "has_collision_api": false,
+            "path": "/World/envs/env_0/Sponge/geometry",
+            "type_name": ""
+          },
+          {
+            "applied_api_schemas": [
+              "PhysicsCollisionAPI",
+              "PhysxCollisionAPI",
+              "MaterialBindingAPI"
+            ],
+            "collision_enabled": true,
+            "has_collision_api": true,
+            "path": "/World/envs/env_0/Sponge/geometry/mesh",
+            "type_name": "Cylinder"
+          },
+          {
+            "applied_api_schemas": [
+              "PhysicsMaterialAPI",
+              "PhysxMaterialAPI"
+            ],
+            "collision_enabled": null,
+            "has_collision_api": false,
+            "path": "/World/envs/env_0/Sponge/geometry/material",
+            "type_name": "Material"
+          },
+          {
+            "applied_api_schemas": [
+              "NodeDefAPI"
+            ],
+            "collision_enabled": null,
+            "has_collision_api": false,
+            "path": "/World/envs/env_0/Sponge/geometry/material/Shader",
+            "type_name": "Shader"
+          }
+        ],
+        "sponge_root": "/World/envs/env_0/Sponge"
+      },
+      "b": {
+        "authority": "read-only USD enumeration; record-only, never a gate",
+        "collider_prims": [
+          {
+            "applied_api_schemas": [
+              "PhysicsCollisionAPI",
+              "PhysxCollisionAPI",
+              "MaterialBindingAPI"
+            ],
+            "collision_enabled": true,
+            "has_collision_api": true,
+            "path": "/World/envs/env_0/Sponge/geometry/mesh",
+            "type_name": "Cylinder"
+          }
+        ],
+        "collider_type_names": [
+          "Cylinder"
+        ],
+        "prims": [
+          {
+            "applied_api_schemas": [
+              "PhysicsMassAPI",
+              "PhysicsRigidBodyAPI",
+              "PhysxRigidBodyAPI",
+              "PhysxContactReportAPI"
+            ],
+            "collision_enabled": null,
+            "has_collision_api": false,
+            "path": "/World/envs/env_0/Sponge",
+            "type_name": "Xform"
+          },
+          {
+            "applied_api_schemas": [],
+            "collision_enabled": null,
+            "has_collision_api": false,
+            "path": "/World/envs/env_0/Sponge/geometry",
+            "type_name": ""
+          },
+          {
+            "applied_api_schemas": [
+              "PhysicsCollisionAPI",
+              "PhysxCollisionAPI",
+              "MaterialBindingAPI"
+            ],
+            "collision_enabled": true,
+            "has_collision_api": true,
+            "path": "/World/envs/env_0/Sponge/geometry/mesh",
+            "type_name": "Cylinder"
+          },
+          {
+            "applied_api_schemas": [
+              "PhysicsMaterialAPI",
+              "PhysxMaterialAPI"
+            ],
+            "collision_enabled": null,
+            "has_collision_api": false,
+            "path": "/World/envs/env_0/Sponge/geometry/material",
+            "type_name": "Material"
+          },
+          {
+            "applied_api_schemas": [
+              "NodeDefAPI"
+            ],
+            "collision_enabled": null,
+            "has_collision_api": false,
+            "path": "/World/envs/env_0/Sponge/geometry/material/Shader",
+            "type_name": "Shader"
+          }
+        ],
+        "sponge_root": "/World/envs/env_0/Sponge"
+      }
+    },
+    "gate": false,
+    "runtime_physics_settings_equal": true,
+    "runtime_physics_settings_payloads": {
+      "a": {
+        "gravity_solver_contact_rest_offset_attributes": [
+          {
+            "authored": true,
+            "name": "physxRigidBody:disableGravity",
+            "path": "/World/envs/env_0/Robot/gripper_link",
+            "type": "bool",
+            "value": false
+          },
+          {
+            "authored": false,
+            "name": "physxRigidBody:solverPositionIterationCount",
+            "path": "/World/envs/env_0/Robot/gripper_link",
+            "type": "int",
+            "value": 16
+          },
+          {
+            "authored": false,
+            "name": "physxRigidBody:solverVelocityIterationCount",
+            "path": "/World/envs/env_0/Robot/gripper_link",
+            "type": "int",
+            "value": 1
+          },
+          {
+            "authored": true,
+            "name": "physxRigidBody:disableGravity",
+            "path": "/World/envs/env_0/Robot/link1",
+            "type": "bool",
+            "value": false
+          },
+          {
+            "authored": false,
+            "name": "physxRigidBody:solverPositionIterationCount",
+            "path": "/World/envs/env_0/Robot/link1",
+            "type": "int",
+            "value": 16
+          },
+          {
+            "authored": false,
+            "name": "physxRigidBody:solverVelocityIterationCount",
+            "path": "/World/envs/env_0/Robot/link1",
+            "type": "int",
+            "value": 1
+          },
+          {
+            "authored": true,
+            "name": "physxRigidBody:disableGravity",
+            "path": "/World/envs/env_0/Robot/link2",
+            "type": "bool",
+            "value": false
+          },
+          {
+            "authored": false,
+            "name": "physxRigidBody:solverPositionIterationCount",
+            "path": "/World/envs/env_0/Robot/link2",
+            "type": "int",
+            "value": 16
+          },
+          {
+            "authored": false,
+            "name": "physxRigidBody:solverVelocityIterationCount",
+            "path": "/World/envs/env_0/Robot/link2",
+            "type": "int",
+            "value": 1
+          },
+          {
+            "authored": true,
+            "name": "physxRigidBody:disableGravity",
+            "path": "/World/envs/env_0/Robot/link3",
+            "type": "bool",
+            "value": false
+          },
+          {
+            "authored": false,
+            "name": "physxRigidBody:solverPositionIterationCount",
+            "path": "/World/envs/env_0/Robot/link3",
+            "type": "int",
+            "value": 16
+          },
+          {
+            "authored": false,
+            "name": "physxRigidBody:solverVelocityIterationCount",
+            "path": "/World/envs/env_0/Robot/link3",
+            "type": "int",
+            "value": 1
+          },
+          {
+            "authored": true,
+            "name": "physxRigidBody:disableGravity",
+            "path": "/World/envs/env_0/Robot/link4",
+            "type": "bool",
+            "value": false
+          },
+          {
+            "authored": false,
+            "name": "physxRigidBody:solverPositionIterationCount",
+            "path": "/World/envs/env_0/Robot/link4",
+            "type": "int",
+            "value": 16
+          },
+          {
+            "authored": false,
+            "name": "physxRigidBody:solverVelocityIterationCount",
+            "path": "/World/envs/env_0/Robot/link4",
+            "type": "int",
+            "value": 1
+          },
+          {
+            "authored": true,
+            "name": "physxRigidBody:disableGravity",
+            "path": "/World/envs/env_0/Robot/link5",
+            "type": "bool",
+            "value": false
+          },
+          {
+            "authored": false,
+            "name": "physxRigidBody:solverPositionIterationCount",
+            "path": "/World/envs/env_0/Robot/link5",
+            "type": "int",
+            "value": 16
+          },
+          {
+            "authored": false,
+            "name": "physxRigidBody:solverVelocityIterationCount",
+            "path": "/World/envs/env_0/Robot/link5",
+            "type": "int",
+            "value": 1
+          },
+          {
+            "authored": true,
+            "name": "physxArticulation:solverPositionIterationCount",
+            "path": "/World/envs/env_0/Robot/root_joint",
+            "type": "int",
+            "value": 12
+          },
+          {
+            "authored": true,
+            "name": "physxArticulation:solverVelocityIterationCount",
+            "path": "/World/envs/env_0/Robot/root_joint",
+            "type": "int",
+            "value": 1
+          },
+          {
+            "authored": true,
+            "name": "physxRigidBody:disableGravity",
+            "path": "/World/envs/env_0/Robot/world",
+            "type": "bool",
+            "value": false
+          },
+          {
+            "authored": false,
+            "name": "physxRigidBody:solverPositionIterationCount",
+            "path": "/World/envs/env_0/Robot/world",
+            "type": "int",
+            "value": 16
+          },
+          {
+            "authored": false,
+            "name": "physxRigidBody:solverVelocityIterationCount",
+            "path": "/World/envs/env_0/Robot/world",
+            "type": "int",
+            "value": 1
+          },
+          {
+            "authored": true,
+            "name": "physxRigidBody:disableGravity",
+            "path": "/World/envs/env_0/Sponge",
+            "type": "bool",
+            "value": false
+          },
+          {
+            "authored": true,
+            "name": "physxRigidBody:solverPositionIterationCount",
+            "path": "/World/envs/env_0/Sponge",
+            "type": "int",
+            "value": 12
+          },
+          {
+            "authored": true,
+            "name": "physxRigidBody:solverVelocityIterationCount",
+            "path": "/World/envs/env_0/Sponge",
+            "type": "int",
+            "value": 2
+          },
+          {
+            "authored": false,
+            "name": "physxCollision:contactOffset",
+            "path": "/World/envs/env_0/Sponge/geometry/mesh",
+            "type": "float",
+            "value": -Infinity
+          },
+          {
+            "authored": false,
+            "name": "physxCollision:restOffset",
+            "path": "/World/envs/env_0/Sponge/geometry/mesh",
+            "type": "float",
+            "value": -Infinity
+          },
+          {
+            "authored": true,
+            "name": "physxRigidBody:disableGravity",
+            "path": "/World/envs/env_0/TapTable",
+            "type": "bool",
+            "value": true
+          },
+          {
+            "authored": false,
+            "name": "physxRigidBody:solverPositionIterationCount",
+            "path": "/World/envs/env_0/TapTable",
+            "type": "int",
+            "value": 16
+          },
+          {
+            "authored": false,
+            "name": "physxRigidBody:solverVelocityIterationCount",
+            "path": "/World/envs/env_0/TapTable",
+            "type": "int",
+            "value": 1
+          },
+          {
+            "authored": false,
+            "name": "physxCollision:contactOffset",
+            "path": "/World/envs/env_0/TapTable/geometry/mesh",
+            "type": "float",
+            "value": -Infinity
+          },
+          {
+            "authored": false,
+            "name": "physxCollision:restOffset",
+            "path": "/World/envs/env_0/TapTable/geometry/mesh",
+            "type": "float",
+            "value": -Infinity
+          },
+          {
+            "authored": true,
+            "name": "physics:gravityDirection",
+            "path": "/physicsScene",
+            "type": "vector3f",
+            "value": [
+              0.0,
+              0.0,
+              -1.0
+            ]
+          },
+          {
+            "authored": true,
+            "name": "physics:gravityMagnitude",
+            "path": "/physicsScene",
+            "type": "float",
+            "value": 9.8100004196167
+          },
+          {
+            "authored": true,
+            "name": "physxScene:solverType",
+            "path": "/physicsScene",
+            "type": "token",
+            "value": "TGS"
+          }
+        ],
+        "physics_scene_prims": [
+          {
+            "applied_api_schemas": [
+              "PhysxSceneAPI",
+              "MaterialBindingAPI"
+            ],
+            "gravity_direction": {
+              "authored": true,
+              "type": "vector3f",
+              "value": [
+                0.0,
+                0.0,
+                -1.0
+              ]
+            },
+            "gravity_magnitude": {
+              "authored": true,
+              "type": "float",
+              "value": 9.8100004196167
+            },
+            "path": "/physicsScene"
+          }
+        ]
+      },
+      "b": {
+        "gravity_solver_contact_rest_offset_attributes": [
+          {
+            "authored": true,
+            "name": "physxRigidBody:disableGravity",
+            "path": "/World/envs/env_0/Robot/gripper_link",
+            "type": "bool",
+            "value": false
+          },
+          {
+            "authored": false,
+            "name": "physxRigidBody:solverPositionIterationCount",
+            "path": "/World/envs/env_0/Robot/gripper_link",
+            "type": "int",
+            "value": 16
+          },
+          {
+            "authored": false,
+            "name": "physxRigidBody:solverVelocityIterationCount",
+            "path": "/World/envs/env_0/Robot/gripper_link",
+            "type": "int",
+            "value": 1
+          },
+          {
+            "authored": true,
+            "name": "physxRigidBody:disableGravity",
+            "path": "/World/envs/env_0/Robot/link1",
+            "type": "bool",
+            "value": false
+          },
+          {
+            "authored": false,
+            "name": "physxRigidBody:solverPositionIterationCount",
+            "path": "/World/envs/env_0/Robot/link1",
+            "type": "int",
+            "value": 16
+          },
+          {
+            "authored": false,
+            "name": "physxRigidBody:solverVelocityIterationCount",
+            "path": "/World/envs/env_0/Robot/link1",
+            "type": "int",
+            "value": 1
+          },
+          {
+            "authored": true,
+            "name": "physxRigidBody:disableGravity",
+            "path": "/World/envs/env_0/Robot/link2",
+            "type": "bool",
+            "value": false
+          },
+          {
+            "authored": false,
+            "name": "physxRigidBody:solverPositionIterationCount",
+            "path": "/World/envs/env_0/Robot/link2",
+            "type": "int",
+            "value": 16
+          },
+          {
+            "authored": false,
+            "name": "physxRigidBody:solverVelocityIterationCount",
+            "path": "/World/envs/env_0/Robot/link2",
+            "type": "int",
+            "value": 1
+          },
+          {
+            "authored": true,
+            "name": "physxRigidBody:disableGravity",
+            "path": "/World/envs/env_0/Robot/link3",
+            "type": "bool",
+            "value": false
+          },
+          {
+            "authored": false,
+            "name": "physxRigidBody:solverPositionIterationCount",
+            "path": "/World/envs/env_0/Robot/link3",
+            "type": "int",
+            "value": 16
+          },
+          {
+            "authored": false,
+            "name": "physxRigidBody:solverVelocityIterationCount",
+            "path": "/World/envs/env_0/Robot/link3",
+            "type": "int",
+            "value": 1
+          },
+          {
+            "authored": true,
+            "name": "physxRigidBody:disableGravity",
+            "path": "/World/envs/env_0/Robot/link4",
+            "type": "bool",
+            "value": false
+          },
+          {
+            "authored": false,
+            "name": "physxRigidBody:solverPositionIterationCount",
+            "path": "/World/envs/env_0/Robot/link4",
+            "type": "int",
+            "value": 16
+          },
+          {
+            "authored": false,
+            "name": "physxRigidBody:solverVelocityIterationCount",
+            "path": "/World/envs/env_0/Robot/link4",
+            "type": "int",
+            "value": 1
+          },
+          {
+            "authored": true,
+            "name": "physxRigidBody:disableGravity",
+            "path": "/World/envs/env_0/Robot/link5",
+            "type": "bool",
+            "value": false
+          },
+          {
+            "authored": false,
+            "name": "physxRigidBody:solverPositionIterationCount",
+            "path": "/World/envs/env_0/Robot/link5",
+            "type": "int",
+            "value": 16
+          },
+          {
+            "authored": false,
+            "name": "physxRigidBody:solverVelocityIterationCount",
+            "path": "/World/envs/env_0/Robot/link5",
+            "type": "int",
+            "value": 1
+          },
+          {
+            "authored": true,
+            "name": "physxArticulation:solverPositionIterationCount",
+            "path": "/World/envs/env_0/Robot/root_joint",
+            "type": "int",
+            "value": 12
+          },
+          {
+            "authored": true,
+            "name": "physxArticulation:solverVelocityIterationCount",
+            "path": "/World/envs/env_0/Robot/root_joint",
+            "type": "int",
+            "value": 1
+          },
+          {
+            "authored": true,
+            "name": "physxRigidBody:disableGravity",
+            "path": "/World/envs/env_0/Robot/world",
+            "type": "bool",
+            "value": false
+          },
+          {
+            "authored": false,
+            "name": "physxRigidBody:solverPositionIterationCount",
+            "path": "/World/envs/env_0/Robot/world",
+            "type": "int",
+            "value": 16
+          },
+          {
+            "authored": false,
+            "name": "physxRigidBody:solverVelocityIterationCount",
+            "path": "/World/envs/env_0/Robot/world",
+            "type": "int",
+            "value": 1
+          },
+          {
+            "authored": true,
+            "name": "physxRigidBody:disableGravity",
+            "path": "/World/envs/env_0/Sponge",
+            "type": "bool",
+            "value": false
+          },
+          {
+            "authored": true,
+            "name": "physxRigidBody:solverPositionIterationCount",
+            "path": "/World/envs/env_0/Sponge",
+            "type": "int",
+            "value": 12
+          },
+          {
+            "authored": true,
+            "name": "physxRigidBody:solverVelocityIterationCount",
+            "path": "/World/envs/env_0/Sponge",
+            "type": "int",
+            "value": 2
+          },
+          {
+            "authored": false,
+            "name": "physxCollision:contactOffset",
+            "path": "/World/envs/env_0/Sponge/geometry/mesh",
+            "type": "float",
+            "value": -Infinity
+          },
+          {
+            "authored": false,
+            "name": "physxCollision:restOffset",
+            "path": "/World/envs/env_0/Sponge/geometry/mesh",
+            "type": "float",
+            "value": -Infinity
+          },
+          {
+            "authored": true,
+            "name": "physxRigidBody:disableGravity",
+            "path": "/World/envs/env_0/TapTable",
+            "type": "bool",
+            "value": true
+          },
+          {
+            "authored": false,
+            "name": "physxRigidBody:solverPositionIterationCount",
+            "path": "/World/envs/env_0/TapTable",
+            "type": "int",
+            "value": 16
+          },
+          {
+            "authored": false,
+            "name": "physxRigidBody:solverVelocityIterationCount",
+            "path": "/World/envs/env_0/TapTable",
+            "type": "int",
+            "value": 1
+          },
+          {
+            "authored": false,
+            "name": "physxCollision:contactOffset",
+            "path": "/World/envs/env_0/TapTable/geometry/mesh",
+            "type": "float",
+            "value": -Infinity
+          },
+          {
+            "authored": false,
+            "name": "physxCollision:restOffset",
+            "path": "/World/envs/env_0/TapTable/geometry/mesh",
+            "type": "float",
+            "value": -Infinity
+          },
+          {
+            "authored": true,
+            "name": "physics:gravityDirection",
+            "path": "/physicsScene",
+            "type": "vector3f",
+            "value": [
+              0.0,
+              0.0,
+              -1.0
+            ]
+          },
+          {
+            "authored": true,
+            "name": "physics:gravityMagnitude",
+            "path": "/physicsScene",
+            "type": "float",
+            "value": 9.8100004196167
+          },
+          {
+            "authored": true,
+            "name": "physxScene:solverType",
+            "path": "/physicsScene",
+            "type": "token",
+            "value": "TGS"
+          }
+        ],
+        "physics_scene_prims": [
+          {
+            "applied_api_schemas": [
+              "PhysxSceneAPI",
+              "MaterialBindingAPI"
+            ],
+            "gravity_direction": {
+              "authored": true,
+              "type": "vector3f",
+              "value": [
+                0.0,
+                0.0,
+                -1.0
+              ]
+            },
+            "gravity_magnitude": {
+              "authored": true,
+              "type": "float",
+              "value": 9.8100004196167
+            },
+            "path": "/physicsScene"
+          }
+        ]
+      }
+    }
+  },
+  "science_null_boundary": {
+    "cap_rim_or_barrel_order": null,
+    "collider_count_tipping_causality": null,
+    "exact_manifold_or_face": null,
+    "force_closure": null,
+    "grasp_feasibility": null,
+    "per_prim_cooked_sdf_internal_identity": null,
+    "sdf_general_superiority": null,
+    "stable_grasp": null,
+    "transfer_to_29x50_cylinders": null
+  },
+  "toppled_definition_descriptive": "final tilt_delta_deg > 45.0 (not a gate)",
+  "utc": "2026-07-29T01:26:26.439609+00:00"
+}
