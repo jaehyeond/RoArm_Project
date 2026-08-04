@@ -24675,3 +24675,106 @@ Sources:
   워크플로우 `wf_6b025512-9a7` (journal:
   `~/.claude/projects/-home-cgxr-Documents-Robotics-RoArm-Project/96c7face-.../subagents/workflows/wf_6b025512-9a7/journal.jsonl`);
   동결 입력 = D409 attempt1 evidence/CSV + D410~D414 + `direction_20260708_grasp_pivot.md` + AGENTS.md 원문.
+
+## D416 — 외부 브리핑 문서는 repo보다 한 세대 뒤처진 상태를 정본처럼 서술한다: sim 원통은 이미 D29×H50이고, "sim-real 해결됨" 진단은 접촉 높이·판정식·인과 세 겹에서 무너지며, novelty 4건은 사실상 전부 선행연구다 (외부 문서 감사 + 정정 권위)
+
+Decision:
+
+- 사용자가 외부 AI 대화에서 받아온 "프리미너리 테스트 설계" 문서를 5-lens 적대 감사에 걸었다
+  (`wf_0a7d9914-851`, 10 agents = ground 5 + verify 5, 에러 0, 328 tool calls, 1150.9s).
+  **5/5 전부 `PARTIAL_ADOPT`** — 무조건 채택 0건. 적대 반박 58건이며 그중 감사 렌즈 자신의 조문
+  오인용 12건+·신규 수치 창작 6건+이 포함된다. 본 D416은 반박을 견딘 항목만 담는다.
+- ① **문서 §6 "치수 D34×H90 → D29×H50 변경안"은 이미 완료된 일의 재제안이다.**
+  `sim_scripts/cyld29h50_d409_zero_step_dual_jaw_contact_region_enumeration_worker.py:250-251`
+  `CYL_RADIUS_M = 0.0145` / `CYL_HEIGHT_M = 0.050`이고, 같은 파일 `:297-298`이 D34×H90을
+  `OLD_CYL_RADIUS_M = 0.017  # calibration-only (anchor gate), no D362 physics transfer`로 이미
+  강등했다(승인 = `direction:117-122`, 2026-08-03 사용자 결정). **실제 공백은 치수가 아니라 물리
+  실행용 질량·마찰 계약뿐이다.**
+- ② **문서 §5 "sim-real 불일치 — 해결됨"은 성립하지 않는다 (4겹).**
+  (a) 시뮬 접촉 높이 h=45mm("중간")가 틀렸다 — D362 실제 접촉점
+  `[0.2902432978153229,−0.013921898789703846,0.07778545469045639]m`
+  (`session_20260717_...d362....md:274`)은 `TABLE_Z_M=−0.012117` 기준 테이블 위 **89.90mm**로
+  원통 전체 높이 `CYLINDER_HEIGHT_M=0.090`(`d362 script:95`)과 사실상 같다. r/h = 17/89.9 =
+  **0.189**(lead 파생) = 이미 기록된 μ\*=0.19(`:24497`). 문서 0.378은 정확히 2배.
+  (b) `r/h vs μ`는 β=0 특수해이며 D414 ①이 `μ*=b/(h∓b·tanβ)`로 supersede했다(`:24530-24531`).
+  원통 조 면 법선 36.57~46.26°·부호 미기재 → 답은 "해결됨"이 아니라 **불확정**.
+  (c) 문서 자체 모순 — §1이 "스텝-0 임펄스 미지 = 최대 리스크"라 선언하고 §5는 임펄스를 뺀 준정적
+  식만으로 종결한다. 같은 유형의 모순 2: §5 "질량은 원인이 아니다" vs §6 질량 변경 요구.
+  (d) **D410과 정면 충돌** — top-first는 물체 높이가 아니라 닫힘 구조의 함수(`:24389`)이고
+  `moving_witness_top_margin_mm` 1239/1239 = 0.000이다. **마찰·형상비를 고쳐도 첫 접촉은 윗테두리**이므로
+  문서의 앵커 조건은 스펙 변경만으로 통과하지 않을 공산이 크다. 상관을 완결 인과로 승격한 서술이다.
+- ③ **문서 §3 novelty 4건은 사실상 전부 선행연구다** (문서 §3에 인용 0건·검색 흔적 0건 = HARD RULE #4
+  미이행). "기존은 전부 평행 조 + 6~7DOF" → Dex-Net 2.0은 **4-DOF 평면 파지**(arXiv:1703.09312),
+  ACRONYM/Contact-GraspNet은 팔이 없는 flying gripper(repo도 동일 인식 `direction:130-131`).
+  "비대칭 조 → antipodal 붕괴" → GET(arXiv:2604.26212, 2026-04)이 선점(단 GET은 1-DOF V형 +
+  UR5e 6-DoF라 "호 스윙 × sub-6-DOF" **연접** 명제까지는 반박 못 함). 캐스케이드 → ICINCO 2005
+  "Grasp Feasibility Computation Based on Cascading Filters"(SCARA + 비평행 3지, 21년 전).
+  "top-K 복원 시행 횟수가 **유일한** 정량 형태" → GraspGen-X(arXiv:2606.00998) + Eppner
+  (arXiv:1912.05604)로 "유일한" 즉시 철회, 그리고 이는 **D414 ④가 2세션 전 이미 반증한 주장의 재활용**이다.
+  **살아남는 좁은 형태(유일)**: "고정 조 + 단일 호(arc) 스윙 조 1-자유도 비대칭 그리퍼를, 손목 자세가
+  종속변수가 되는 sub-6-DOF 팔 위에서 다룬 후보 생성기를 검색 범위 내에서 미발견"(확신도 LOW-MEDIUM).
+- ④ **문서 §1 "확보된 것" 목록 4건은 지위가 역전돼 있다.** "8mm 오프셋 계약" → D350이 legacy proxy로
+  강등, actual witness와 차 `17.027401111623742mm`(`:19886-19910`). "cooked-hull 검증 완료" →
+  D348이 통과시킨 것은 callback면↔property 부피 일치이고 D379가 그 PASS로 authored↔cooked identity를
+  대체 못 한다고 못 박았으며 D379 자체가 identity FAIL(`:21989-21998`), 동일 자세 link5 cooked hull
+  `−6.2367mm` 겹침(`:18994`). "이미 검증된 자세 family" → D325 runtime 10/10 실패, D327/D328 0/10.
+  "(7,11)mm" → **정렬 standoff**이고 파지 flush는 `D/2−8`이며 `direction:74-77`이 혼동을 명시 금지 —
+  문서가 붙인 "물체를 조 끝단에 놓는다"는 해석은 **repo 근거 0건**이다.
+- ⑤ **물체 축 확정 = 단일 D29×H50, 접합 H100 폐기** (사용자 명시 "물체는 cylinder로 고정" = HARD
+  RULE #18로 커밋 `ceb6c98` 젠가 전환 철회). 근거는 **기하·절차만**: 동결 z에서 H100은 그리퍼를 열
+  수조차 없고(가동 판 7부품 4.73mm + `part_049` 1.84mm 침투, `9th doc:44-46`), barrel-strict 창이
+  dz 0~+70 전 구간 빈 집합이며 +23.8~+70은 D409 실패 기하의 정확히 +50mm 평행이동(`9th doc:43-48`,
+  단 "현행 strict 분류기 규약 하에서" 한정 — D415 ⑦의 경계 등호 위에 서 있다), D410 Implication ①이
+  "물체 수직 연장(접합)"을 신규 변수 case 제안 금지로 직접 열거(`:24403-24405`), 신규 변수 3~4개로
+  Ladder 상한 초과. **그리고 결정적으로 접합체 실측 43.74g ≠ 24.83g×2 = 49.66g**(교차검증 43.78g,
+  `9th doc:87-93`) — 즉 **그 접합체는 타깃 원통 2개가 아니므로 애초에 동일 물체 스펙으로 성립하지 않는다.**
+- ⑥ **접합 반대의 정량 논거 3건은 폐기한다(재인용 금지)**: "Δh 2.1배 악화" — 같은 H50 원통 Δh가
+  22.1 / 28.94 / 15.23mm **3값 공존·미조정**이라 baseline이 부호를 바꾼다. "전도각 30.114°→16.172°"
+  — 기하 verdict만 유효하고 "실패 모드가 전도로 되돌아간다"는 물리 verdict는 근거 0(D413 ⑤: 실물 전도
+  관측 0건, D362 전도는 저작 μ=1.5의 결과). "P_crit ≪ D362 실측 43.86N" — 43.86N은 실측이 아니라
+  sim 값이며 D413 ①이 표현 금지를 이미 처방했다.
+- ⑦ **lead 자체 정정 1건**: lead가 워크플로우 전 사용자에게 "§5 실물 행에 h=50mm를 넣으면 전도로
+  역전된다"고 제시했으나 **틀렸다**. D409의 h=50은 `worker:1187` `target[2]=Z_CENTER_M`으로 z를 한 번도
+  바꾸지 않은 동결 격자 값이고 14th doc:130-131이 "손으로 만든 자세는 이 격자 밖일 수밖에 없다"를 확정했다.
+  손 파일럿에 그 h를 대입하는 것은 lead가 문서를 비판한 바로 그 setup 간 전이다. **올바른 판정은 "역전"이
+  아니라 "접촉 높이 미기록 → 판정 불가"**이며 14th doc §8 확인 ④가 열려 있는 이유다.
+- ⑧ **"PhysX로 후보를 죽이는 것은 금지"는 조문 오독이다.** `direction:123-129`는 PhysX를 라벨 사다리
+  2단 **"상대 스크린 전용"**으로 편입했고 승인된 C안 순서에 "PhysX 스크린" 슬롯이 예약돼 있다. 금지되는
+  것은 (a) 절대 라벨화 (b) 기하 라벨 단독 학습 승격뿐이다. 따라서 문서 §8의 실제 위반은 캐스케이드가 아니라
+  **"실패 라벨이 붙은 전체 표 … 학습의 입력이 된다"는 한 문장**(`direction:125-126` + D409 Implication ④)
+  이며, 그 문장은 삭제해야 한다.
+- ⑨ **"물리 닫힘 코드 경로가 없다"는 과장이다.** D337이 이미 200스텝 sole-support settle에서 link5
+  **step-0 임펄스 38.861N**과 물체 교란 후 최종 변위 2.754mm 안착을 관측했고, D362가 500 controlled
+  step을 실행했다(접촉 31/32, 물체 이동 41/42, 최종 60.619mm 밀림 + 89.998° 전도). **없는 것은
+  "물리 닫힘"이 아니라 "들어올림 이후"다.** `roarm_rl`의 grasp는 전부 kinematic pose-write attach
+  (`roarm_pick_env.py:20-23`, `:469-497`)라 물리 파지 판정에 쓸 수 없으나, W2 골격
+  (`--hold_steps 30 / --lift_steps 80 / object_drift_gate / tilt_gate / min_lift_follow_m`)과
+  transport/release 커리큘럼(`roarm_stack_env.py:21`, `:299-303`)은 이미 존재한다.
+
+- **Implication**: ① 외부/과거 브리핑 문서를 인계 받을 때는 **repo 세대 대조를 먼저** 한다 — D412 ④의
+  "실행 전/후 구분" 규칙을 외부 문서에도 적용한다. ② "sim-real gap 해결" 주장은 **접촉 높이(h)의 출처**를
+  먼저 명시해야 하며, 서로 다른 setup(동결 격자 vs 손 파일럿)의 h를 교차 대입하지 않는다. ③ novelty 문구는
+  §③의 좁은 형태로만 쓰고 캐스케이드·밀림·쐐기·질량 소거는 **선행연구 재현으로 명시 인용**한다
+  (ICINCO 2005 / Brost 1988 / Dogar 2010·2011·2012 / GET 2026-04 / GraspGen-X / Eppner).
+  ④ 접합 H100은 폐기하되, 사용하려면 **같은 dowel 2개 재제작 + 재실측**이 선행 조건이다.
+  ⑤ 다음 최소 case는 문서 §8 전체가 아니라 **"단일 D29×H50 · 동결 자세 1개 · 닫힘→5cm 들어올림 1회"**
+  (신규 변수 1~2개)이며, 물리 경로 뼈대는 D407 worker, 열거·IK·서명거리·sha 게이트는 D409 harness S0~S2를
+  재사용한다. 변위 임계·5cm·성공 판정은 사전등록 대상(D354/D405)이다.
+  ⑥ **테이프 부착이 원통 실물 성공보다 앞섰다면** D414 ①의 "그리퍼·팔 변경 → 동결 D409 evidence +
+  d348(64+64) 전부 무효, G-ladder 재시작" 조항이 **지금 발동 중일 수 있다** — 확인 최우선.
+- **미해소 repo 내부 결함 3건(본 세션 신규 확인, 미수리)**: (a) 같은 H50 원통 Δh 3값 공존
+  (22.1 / 28.94 / 15.23mm), (b) "D362 실측 43.86N" 오기가 `:24400-24401`·`:24450`·11th doc:82에
+  잔존, (c) 개방각 매핑 3중 충돌(88.3° / 1.571rad / 1.5413rad / 86.6°).
+- 본 D416은 **외부 문서 감사·정정·물체 축 결정 권위이며 물리 verdict가 아니다.** `g0a_pass=false` 불변.
+  신규 runtime 수치 0, 동결 침범 0, Isaac/로봇/GPU/git 0.
+
+Evidence:
+
+- `claudedocs/session_20260804_grasp_g0a_external_prelim_design_audit_cylinder_target_lock.md` (15th doc)
+- `sim_scripts/cyld29h50_d409_zero_step_dual_jaw_contact_region_enumeration_worker.py:250-251`, `:297-298`
+- `sim_scripts/cyl34_top_view_d362_current_pose_capacity_prefix_integrated_physx_contact_motion.py:95-97`, `:103-110`
+- `claudedocs/session_20260717_grasp_g0a_d362_capacity_prefix_integrated_physx_contact_motion.md:274`, `:284-285`
+- `claudedocs/session_20260804_grasp_g0a_d409_followup_approach_h100_paper_analysis.md:43-48`, `:66`, `:87-93`
+- `claudedocs/direction_20260708_grasp_pivot.md:74-77`, `:117-131`
+- `claudedocs/DECISIONS.md:24389`, `:24403-24405`, `:24497`, `:24502-24503`, `:24530-24531`, `:24556-24558`
+- 워크플로우 `wf_0a7d9914-851` (transcript: `.../subagents/workflows/wf_0a7d9914-851/journal.jsonl`)
