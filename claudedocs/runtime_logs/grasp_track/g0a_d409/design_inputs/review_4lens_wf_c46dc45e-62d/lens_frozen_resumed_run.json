@@ -1,0 +1,50 @@
+{
+  "lens": "FROZEN/CONTRACT",
+  "blockers": [
+    {
+      "id": "B1",
+      "claim": "설계 §2.3의 A64 권위 pin(d339 cold1 canonical geometry 2파일)은 repo 증거와 모순 — 라이브 A64는 d348 계보이며, 설계 v1을 이대로 확정/정적 준비하면 inner-mask carrier 2개(part_035/048)를 포함한 13개 part에서 잘못된 기하로 채점하게 된다. 설계 자신의 fail-stop 조항(§2.3 '불일치 시 설계 무효')이 이미 발동된 상태다.",
+      "evidence": "독립 재검증: g0a_d339/collision_asset/attempt2/d339_gripper_link_cold1_canonical_geometry.json part_035 = 고유 정점 11개 vs g0a_d348/attempt2/d348_callback_topology_volume_evidence.json 동일 part instance.vertices_m = 10개, 집합 불일치(d339에만 여분 1개) — 세션 doc §5.0 M1(sweep_recovery_design_v1.md:300-309) 재현. part_035·part_048은 d368_semantic_allocation_evidence.json patch_allocation.gripper_inner.certified_surface_carrier_part_names(17개)에 포함됨을 직접 확인. 또한 D368의 input_hashes는 d348 evidence(83b8c7b16181d0f5…)와 d339 callback witness를 pin하며 d339 canonical geometry 파일은 pin하지 않음 — 마스크 계보가 d348/callback 측임을 지지. 부수 모순: §2.9-4는 'BVHModelOBBRSS(callback topology 삼각형)'를 요구하나 pin된 d339 canonical의 triangles는 Qhull 재구성(설계 doc:307-309 자인, d348 instance에는 topology_triangles/qhull_triangles 병존 확인).",
+      "proposed_fix": "§4 처분에서 §2.3 A64 권위를 d348_callback_topology_volume_evidence.json(sha256 83b8c7b16181d0f5c545cfbeaa992c8ebfd69e2310dd33bce2a64234a1deaab6, 본 리뷰 재계산 = D368 pin과 일치)로 교체하고, BVH 입력 삼각형을 rows[].instance.topology_triangles(callback 원본)로 명시. d339 canonical 2파일은 역사적 cook witness로 강등하되 hash pin은 계보 기록용으로만 유지. 정정 전 설계 확정·정적 준비 착수 금지."
+    },
+    {
+      "id": "B2",
+      "claim": "§2.5의 τ 도메인 상속 근거('조(jaw) 측 기하 유래 — 원통 반경 비결부')가 거짓: d335 전례의 tangent 도메인 [9,14]mm는 구 반경 17mm와 fixed-jaw face offset 8mm 양쪽에서 유도된 [0,5mm] fixed-jaw-gap family다. 신규 반경 14.5mm에서 같은 유도식은 τ∈[6.5,11.5]mm를 주므로, [9,14]mm를 그대로 상속하면 gap<2.5mm 대역(설계 자신의 (A) 조건 하한부 [0.1,2.5)mm 포함)이 격자에서 전면 누락되고 [11.5,14]mm 상단은 gap>5mm로 §2.8 admission에서 자동 탈락한다 — '전수 열거' 주장이 의도한 접촉 영역에 대해 성립하지 않는 잘못된 과학이 된다.",
+      "evidence": "claudedocs/session_20260712_grasp_g0a_d335_target_family_repair.md:61-63 — \"The tangent domain is the nominal [0,5mm] fixed-jaw-gap family derived from radius 17mm and the frozen fixed-jaw face offset 8mm\" (반경 결부 명시). 설계는 radial 상한/anti-retreat만 반경 결부로 인정해 14,500µm로 rebase(설계 doc:50-52)하면서 τ는 '원통 반경 비결부 (리뷰 확인 항목)'로 상속(설계 doc:107-109). 대조: d335 스크립트 TANGENT_MIN/MAX_UM=9_000/14_000, COARSE_STEP_UM=250 (cyl34_top_view_d335_grasp_g0a_target_family_repair.py:43-46), fixed-jaw proxy gap [0,5mm] 게이트(d335 doc:42).",
+      "proposed_fix": "τ 도메인을 d335 유도식 그대로 신규 반경으로 rebase: τ ∈ [R−8mm, R−8mm+5mm] = [6,500, 11,500]µm step 250 (21점 유지). radial과 동일하게 '차이 보고 D의 격자 전례 rebase 의무'를 τ에도 적용하고, §2.5의 '원통 반경 비결부' 문장을 철회. rebase 후 (A) 밴드 [0.1,5.0]mm가 격자로 커버되는지 정적 준비에서 재확인."
+    }
+  ],
+  "warnings": [
+    {
+      "id": "W1",
+      "claim": "part 수준에서 gripper_outer 16은 gripper_inner 17의 부분집합(차이는 part_035 단 1개)이므로, §2.7(B)의 '첫 교차 part ∈ gripper_inner 17'은 inner-face 접촉의 약한 proxy에 불과하고, outer 16을 '음성 대조 전용' 별도 집단처럼 서술한 §2.3은 오독을 유발한다.",
+      "evidence": "d368_semantic_allocation_evidence.json patch_allocation 직접 판독: gripper_inner 17 = {part_030,035,042,045,046,047,048,050,051,053,056,058,059,060,061,062,063}, gripper_outer 16 = 동일 집합에서 part_035만 제외 — 16개 part가 양쪽 마스크에 공통. D368 authority_note는 carrier가 'registered face contract 하에서' 권위라고 명시(face 수준 계약, part 수준 아님).",
+      "proposed_fix": "prereg와 결과 claim 문언에 'inner/outer 구분은 face 수준 계약이며 part 수준 첫-교차 판정은 inner-carrier 집합 소속의 필요조건 판정일 뿐 inner-face 접촉 증명이 아님'을 명시. §2.11 음성 대조 3(name-set 치환 FAIL)은 그대로 유효하나, outer를 공간적 대조군으로 쓰는 해석을 금지 문언으로 차단."
+    },
+    {
+      "id": "W2",
+      "claim": "설계 doc §5.0의 실측 항목 번호가 중복 — 'M3'가 두 번 사용되어(저장 자세 재현 + FK-유도 자세 질의 재현), START_HERE/§7이 참조하는 'M1~M3' 인덱스가 처분 단계에서 모호해질 수 있다.",
+      "evidence": "session_20260803_grasp_g0a_d409_sweep_recovery_design_v1.md:310('M3 — 저장 자세 재현')과 :324('M3 — FK-유도 자세 질의 재현') — 사이에 :316 'M2'가 있어 순서도 M1→M3→M2→M3. START_HERE.md:16은 '선행 실측 3건'으로 집계.",
+      "proposed_fix": "§4 처분 기록 시 두 번째 M3를 M4로 개번(또는 M3a/M3b)하고 START_HERE의 '3건'을 '4건'으로 정정 — 실측 파일(d409_anchor_gate_measurement.json)은 불변, 문서 라벨만 정정."
+    },
+    {
+      "id": "W3",
+      "claim": "§2.3 표의 'anchor 거리 원천(d371 evidence)' 행이 설계 시점에 sha 미pin('정적 준비에서 pin') — 5개 pin과 달리 이 입력만 hash 결박 없이 설계가 확정될 수 있는 창이 존재한다.",
+      "evidence": "설계 doc:65 — d371_offline_collider_comparison_evidence.json 행만 '정적 준비에서 pin'. 해당 파일의 저장 거리(link5 4.272736580324082mm :20507 / gripper 11.340262326338637mm :20472)는 §2.9-2 재현 게이트의 기준값으로 이미 설계 본문에 인용되어 있음.",
+      "proposed_fix": "설계 확정 시점(§4 처분)에 d371 evidence sha256을 즉시 재계산·pin해 표를 완결하고, prereg input_hashes에 포함 — 정적 준비까지 미루지 않는다."
+    }
+  ],
+  "confirmations": [
+    "§2.3 sha256 pin 5개 전수 재계산 일치: d339 gripper canonical dc258b27…, d339 link5 canonical c45bd056…, d368 evidence be2a422b…, d349 frozen measurement 5de6d14e…, roarm_m3.urdf 64dc8d08… — 모두 sha256sum 재계산과 bit-일치 (추가로 design_inputs의 FK 재도출 c0b13007…, anchor 실측 8cc61166…도 일치).",
+    "동결 경계 침범 없음: sim_scripts/에 cylr29h50* 또는 d409* 파일 부재 확인(신규 2파일 = 순수 신규 생성), D400~D408 attempt1 산출물·D362 33파일·D334 sidecar(START_HERE.md:83-87 Frozen 목록)에 대한 쓰기/수정/재실행을 설계가 요구하지 않음. 산출은 §2.13의 g0a_d409/attempt1_* 신규 폴더로만 — AGENTS.md Variable Ladder forward-only 규칙과 D407 전례(sim_scripts 신규 harness 2파일) 부합.",
+    "§2.10 allowed_dirty 도출 규칙은 D407 계약(DECISIONS.md:24131-24182)과 정합: 'live dirty + planned static + 소비자 소스에서 프로그램적으로 도출한 future runtime leaf/디렉토리 sentinel 합집합', 원자적 attestation/tuple 게시, crash resume fail-closed — D407 Decision 문언과 실질 동일함을 대조 확인.",
+    "D399 미사용 확인: 설계는 D409/g0a_d409만 사용, BACKLOG.md:190-191이 'D398 verdict와 D399 예약은 유지한다(DECISIONS.md D398-F1)'를 명시 — 설계 §2.14의 'D399 사용 금지'와 정합.",
+    "git 전제 확인: HEAD == origin/master == 40ec3ac (git rev-parse 재확인), 작업트리 dirty 집합(M 4건 + ?? 4건)이 START_HERE.md:100-104 Git 섹션 선언과 일치 — 미선언 dirty 없음.",
+    "파생 상수의 동결 계보 검증: object x/z [0.30000001192092896, 0, 0.03288299962878227]는 d362 worker:92·d407 worker:95·d351:131의 동결 float32 상수와 일치, z_center = (0.03288299962878227−0.045)+0.025 = 0.01288299962878227 산술 재계산 일치, OPEN 1.5413000583648682는 d349 JSON:12793에 실재, radial rebase '14.5mm−r'은 d335의 anti-retreat 원식 'cylinder_radius − r ≥ 0'(d335 script:339, d335 doc:56-59)의 반경 치환으로 형식 보존, 250µm step(d335:46)·33 anchor(D354, kickoff doc §4.2) 전례 상속 확인.",
+    "D379 준수 확인: DECISIONS.md D379 원문 — primitive cylinder 우선 규칙('실측 비원통 특징 증거 전 decomposition 금지')을 §2.2 analytic hppfcl.Cylinder가 준수하고, 전이 금지 조항은 '접촉순서/전도 결과' 한정이므로 §2.9-2의 구 원통 거리 질의 calibration-전용 사용은 문언상 위반 아님.",
+    "D368 마스크 4/17/16 part 이름 실측 일치: link5_fixed = [part_027, part_029, part_030, part_031], gripper_inner 17(part_035·part_048 포함), gripper_outer 16 — 설계 §2.3/kickoff §4.3 기재와 파일 내용 일치, part 명명 체계는 d339/d348 양쪽 모두 part_000~part_063 64개로 동일 인덱싱.",
+    "§2.4 URDF 리터럴 인용 정확: link5_to_gripper_link origin (0, 0.018821, 0.052035), rpy (−1.5708, −1.5708, 0), axis z — roarm_m3.urdf:225-229와 bit-일치.",
+    "Variable Ladder 신규 변수 1 선언(설계 doc:3) 자체는 성립: 실물 원통 기하 외 z_center/x/ε/step/anchor 수는 전부 동결 상수에서 유도됨을 개별 검증 — 단 τ 도메인 상속만은 B2대로 잘못된 유도(별도 신규 변수는 아니나 rebase 의무 위반)."
+  ],
+  "lens_key": "frozen"
+}

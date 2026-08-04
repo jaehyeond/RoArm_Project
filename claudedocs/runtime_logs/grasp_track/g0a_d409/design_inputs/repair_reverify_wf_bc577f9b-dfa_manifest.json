@@ -1,0 +1,16 @@
+{
+  "artifact": "d409_repair_reverify_recovery_manifest",
+  "as_repaired_sha256_at_reverify": {
+    "controller": "83e32acdc3a9515646122030c8ee00a5c83878e882390687c3ca4d9d222b8549",
+    "manual_writer": "7f04458f3e44042be297fefcdd71638f9e62f2ef35cf0114df59ea5c76ea7f01",
+    "worker": "fbf204179c6a3789aa0148220244448340867747008c30ca49f8c37dfa1170bb"
+  },
+  "files": {
+    "repair_reverify_wf_bc577f9b-dfa_journal.jsonl": "3a9a3f098870f08f5bdd9fe8a5bd24a8569f011f485b72efbd2299baeaebf569",
+    "repair_reverify_wf_bc577f9b-dfa_result_verbatim.json": "6d458f76c5a87c7d6ebac825440e72d2007e05c155fe1bd044728313e5dbce5c"
+  },
+  "note": "one docstring-only A12 wording fix (fallback description accuracy) landed in the worker WHILE the lenses ran: launch-time worker sha was 25ff6c15c92282bb4a5297c32b666ca25ccf57b0462051e85c88bb4bacfad1f9, post-fix (recorded above) fbf20417...; agents may have read either byte state. The fix touches no code path, so verification validity is unaffected; recorded honestly here.",
+  "purpose": "3-lens adversarial re-verification of the R1~R19 harness repairs (science-r1 / ops-interface / static-exec-safety); 3/3 complete, errors 0, blockers 0, warnings 9",
+  "run_id": "wf_bc577f9b-dfa",
+  "session": "2026-08-04 6th (da01d2f9-*)"
+}

@@ -24361,3 +24361,80 @@ Sources:
 - `claudedocs/runtime_logs/grasp_track/g0a_d408/attempt1_d407_manual_observability_completion_repair/d408_controller_phase_markers.jsonl`
 - `claudedocs/runtime_logs/grasp_track/g0a_d408/attempt1_d407_manual_observability_completion_repair/d408_source_immutability_checkpoints.json`
 - `claudedocs/runtime_logs/grasp_track/g0a_d408/attempt1_d407_manual_observability_completion_repair/d408_screenshot_integrity_checkpoints.json`
+
+## D409 — zero-step 이중-jaw 접촉영역 열거는 전 격자 A∧B 0셀을 확정했다: top-rim 기하가 지배하며, 결과 불변·재실행 금지·z 재설계는 새 case다
+
+- **Evidence**: attempt1 runtime 완주 (2026-08-04, exit 0, 완주 audit 9/9
+  true, run1/run2 bit-exact). POSES 1239 / ADMIT 1239 / A 665 / **B 0 /
+  A∧B 0** / PINCH 1146 / FULL 0 / REGIONS 1 (domain-censored 1, rep
+  (2500,9000), rho_R 2.750mm) / 질의 4,479,296 ≤ 7.0M. canonical evidence
+  `ccc8197b…f16750`, region CSV `d5a51cfa…f6cff7`, completion
+  `6ce9218c…d638a8`, tuple `de79bc78…efcc9a60`. 사전 3중 검증된 top-rim
+  예측(6th doc §5-3)과 일치 — witness/harness 결함 아님. manual 시각검사는
+  정직 FAIL (4/11 false: 토스트 오버랩·뷰 오류 배지·jaw/witness 식별 불가)
+  — D341 의미론상 과학 verdict와 직교.
+- **Implication**: ① attempt1 소모 — 동일 열거 재실행 절대 금지 (retry 0).
+  ② A∧B 0셀에서 tolerance 완화로 셀을 만드는 수리 금지 (D354). ③ TCP
+  z=z_center(12.9mm) vs 원통 top(37.9mm) 25mm 격차의 z 설계 재고는 신규
+  변수 선언을 동반한 **새 case + 별도 사용자 승인** 사안. ④ A 665는
+  admission+A-band 통과이지 grasp 후보 아님 — 기하 라벨 학습 승격 금지
+  유지. ⑤ 차기 관측성 저작 시 headless screenshot 토스트 억제·뷰 오류
+  배지 원인·witness 마커 가시성 선해결 (manual FAIL 재발 방지).
+- **Source**:
+  `claudedocs/session_20260804_grasp_g0a_d409_warning_disposition_static_fixture_attempt1_runtime_complete.md`;
+  `claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/`
+  (20파일: completion/evidence/region CSV/RRD/RBL/screenshot/decision
+  sheet/manual inspection/phase markers)
+
+## D410 — 스윙-조 top-first 실패는 TCP z·접근 기울기·물체 높이의 함수가 아니라 그리퍼 닫힘 구조의 함수다 (종이 분석 권위)
+
+- **Evidence**: 2026-08-04 9th 세션 종이 분석 2건 (워크플로우 적대 검증 포함,
+  H50 대조군이 동결 D409 evidence를 재현: witness z 37.883/r 14.5/q5* 오차 7e-4 rad).
+  ① D409 orientation은 스윕 변수가 아니었음 — 전 1239 pose가 position-only
+  5-DOF IK 부산물인 단일 자세 가족(도구축 수직에서 21.7~24.4°), FK 독립
+  재구현으로 검증(1.9e-13mm). ② 가동 판은 OPEN 시 손끝평면 뒤 59.9~63.0mm에
+  젖혀져 위에서 호를 그리며 닫힘 → 서 있는 원통에서 z 변경(dz −10~+28:
+  rim→cap, ≥+30: 미접촉), 완전 수직 자세(전 조합 rim-first), **H100 접합
+  (dz 0~+19.5 열림 상태 침투 / +19.5~23.8 cap / +23.8~+70 rim@87.88mm —
+  barrel-strict 창 빈 집합)** 모두 barrel-first를 만들지 못함. ③ 안정성은
+  H100에서 악화(전도각 16.2° vs 30.1°; pinch couple P_crit@Δh5mm=1.41N ≪
+  D362 실측 peak 43.86N). 출처:
+  `claudedocs/session_20260804_grasp_g0a_d409_followup_approach_h100_paper_analysis.md`.
+- **Implication**: ① "TCP z 재설계 단독", "수직 접근", "물체 수직 연장(접합)"
+  을 신규 변수로 하는 case 제안 금지 — 종이 수준에서 이미 무효 예측이며,
+  반증하려면 이 분석의 결함을 먼저 지적해야 한다. ② 메커니즘을 바꾸는
+  후보는 (i) 스윙축 수직 = 도구축 수평 옆 접근 (D323 도달성 리스크 —
+  case 개시 시 IK 도달성 프로브 선행), (ii) 물체 상태 변경(눕히기 —
+  미검증 가설) 뿐. ③ 본 결정은 종이 분석 권위 — runtime/물리 verdict가
+  아니며 g0a_pass 등 과학 게이트를 변경하지 않는다. ④ 질량 24.83g은
+  사용자 실측(2026-07-31)로 확정 기록 — "미실측 추정" 표기 금지
+  (HARD RULE #18; 저울 모델·일시 재기록은 P0 pending 유지).
+- **Source**: 위 9th 세션 doc; scratchpad 분석 원본은 /tmp 휘발 (수치
+  고정본 = 세션 doc); 동결 입력 = D409 attempt1 evidence + d348/d368/URDF.
+
+## D411 — 타깃을 직육면체로 바꿔도 top-first는 그대로다: 바뀌는 것은 실패의 결과(전도→밀림)와 판정식의 유효성이다 (종이 분석 권위)
+
+- **Evidence**: 2026-08-04 10th 세션 lead 단독 계산 (동결 D409 재현 게이트 선통과 —
+  TCP 3축/`fixed4_min 2.021359845 mm`/`q5* 0.6097505 rad`/top-rim witness 전부 일치).
+  신규 타깃 = 젠가형 목재 블록 75×25×15mm, **17.45g 사용자 실측**(Riwonas 500g/0.01g,
+  50g 분동 50.05g 교정, +50g 교차검증 67.55−50.05=17.50g), 밀도 0.620 g/cm³.
+  ① **납작 배치(15mm) 360셀 중 357셀 top-edge**(여유 0.000mm); 물체를 당겨 tool 기울기를
+  34.0°→**0.2°(완전 수직)** 까지 낮춰도 전부 top-edge → D410 구조적 결론이 평면 물체로 전이.
+  ② 그러나 지표는 크게 개선: 전도 임계 μ* 0.29→**0.83**, **Δh 15.2~28.9mm → 0.0~6.35mm**,
+  조 면 법선 off-horizontal 36.6~46.3°→**21.8~23.2°**.
+  ③ **세로 배치(25mm)에서 A∧B 통과 셀 최초 발생**(여유 2.014mm, rho=30mm, dfix 4.95mm,
+  테이블 여유 8.56mm) — 가능 원인은 막대 길이가 준 rho 여유(±14.5→±37.5mm)와 그로 인한
+  tool 기울기 22°→16~17° 하강. 단 법선 45~68°(눌러 찍기), 전도 임계 μ* 0.33.
+  ④ **yaw 허용 ≈ ±10°**(15°에서 고정 조 −0.42mm 관통) — 원통에 없던 신규 자유도.
+  출처: `claudedocs/session_20260804_grasp_g0a_rect_block_target_swap_paper_analysis.md`.
+- **Implication**: ① "물체를 직육면체로 바꾸면 top-first가 해결된다"는 명제는 **거짓** — 재제안 금지.
+  ② 그러나 물체 교체는 **실패 모드를 전도에서 밀림-포획으로 바꾸므로 채택 가치가 있다**; 단 배치면을
+  **납작(75×25 바닥)으로 명시 지정**해야 한다. 세로 세움(75mm)은 전도 임계 μ* 0.10으로 원통보다 나쁘다.
+  ③ **평면 물체에서는 D409의 `bottom < p_z < top` 엄격 판정이 축퇴한다** — 면-대-면 밀착(최선)과
+  모서리 찍기(최악)를 구분하지 못한다. 판정식 재설계는 D354(통과 목적 tolerance 완화 금지)와 **다른 사안**이며
+  새 case에서 분리 정의·승인 대상이다. ④ 다음 case에서 zero-step 기하 열거를 반복하는 것은 무가치하다
+  (답이 이미 top-edge로 확정) — 미지수는 닫힘 동역학이다. ⑤ **μ 미실측이 전 판정의 분기점**이므로
+  경사판 손측정이 최저비용 선행 항목이다. ⑥ 본 결정은 종이 분석 권위이며 runtime/물리 verdict가 아니다.
+  g0a_pass 등 과학 게이트 불변. 적대 검증 워크플로우는 context 한계로 미완(단일 계산자 권위).
+- **Source**: 위 10th 세션 doc; 동결 입력 = D409 attempt1 evidence + d348 + URDF;
+  scratchpad 원본은 /tmp 휘발 (수치 고정본 = 세션 doc).

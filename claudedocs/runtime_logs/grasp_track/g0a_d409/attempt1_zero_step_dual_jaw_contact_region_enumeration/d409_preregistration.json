@@ -1,0 +1,734 @@
+{
+  "a64_authority": {
+    "authority": "claudedocs/runtime_logs/grasp_track/g0a_d348/attempt2/d348_callback_topology_volume_evidence.json",
+    "d339_status": "historical cook witness only - demoted, never queried (P1)",
+    "per_part_integrity": "instance.payload_sha256 recorded verbatim; runtime re-verification basis = D409-canonical per-part geometry hash (S1)",
+    "query_geometry": "rows[].instance.vertices_m + rows[].instance.topology_triangles (callback original)"
+  },
+  "actual_execution_requires_separate_tuple_sha_approval": true,
+  "anchor_gate": {
+    "calibration_semantics": "old cylinder (0.017,0.090) at the stored D349 object pose is query-pipeline calibration only; no D362-era physics transfer (D379)",
+    "distance_channel_discrimination": "pi/2 gripper dist delta 0.0001777mm is below threshold - distance-channel discrimination is link5 only (section 4.2 pin)",
+    "policy": "4-channel ANY-reject: {link5 FK pos err, gripper FK pos err, link5 dist delta, gripper dist delta}; any channel > threshold -> reject",
+    "reference_gripper_mm_repr": "11.340262326338637",
+    "reference_link5_mm_repr": "4.272736580324082",
+    "rot_err": "diagnostic record only",
+    "threshold_mm": 0.0005
+  },
+  "artifact": "D409_PREREGISTRATION_V1",
+  "candidate_contract": {
+    "controller": {
+      "path": "sim_scripts/cyld29h50_d409_zero_step_dual_jaw_contact_region_enumeration_controller.py",
+      "sha256": "2af457ecfbd5df3d6a223de991fee4108e8ec7d243bcf74e37287d69f622eb1a"
+    },
+    "harness_file_count": 3,
+    "manual_writer": {
+      "path": "sim_scripts/cyld29h50_d409_zero_step_dual_jaw_contact_region_enumeration_manual_writer.py",
+      "sha256": "7f04458f3e44042be297fefcdd71638f9e62f2ef35cf0114df59ea5c76ea7f01"
+    },
+    "worker": {
+      "path": "sim_scripts/cyld29h50_d409_zero_step_dual_jaw_contact_region_enumeration_worker.py",
+      "sha256": "d82cee18b6282b857f0a762896bc43ee4a23a2a954a680b22735669dc6f827d9"
+    }
+  },
+  "case": "g0a_d409",
+  "created_utc": "2026-08-04T04:35:17.626666+00:00",
+  "determinism_manifest": {
+    "byte_compare_members": [
+      "d409_enumeration_evidence.json",
+      "d409_region_map.csv"
+    ],
+    "excluded": [
+      "d409_controller_phase_markers.jsonl",
+      "d409_decision_sheet.png",
+      "d409_manual_visual_inspection.json",
+      "d409_region_map.rrd",
+      "d409_region_map_blueprint.rbl",
+      "d409_region_map_screenshot.png",
+      "d409_worker_claim.json",
+      "d409_worker_phase_markers.jsonl",
+      "d409_worker_preclose_sentinel.json",
+      "d409_worker_stderr.log",
+      "d409_worker_stdout.log",
+      "d409_worker_summary.json",
+      "d409_worker_supervisor.json"
+    ],
+    "note": "canonical evidence JSON + region CSV bytes only (P4-4; OPS1-W1 merged)"
+  },
+  "determinism_run_contract": {
+    "automatic_retries": 0,
+    "byte_compare_manifest": [
+      "d409_enumeration_evidence.json",
+      "d409_region_map.csv"
+    ],
+    "per_run_out_dirs": [
+      "run1",
+      "run2"
+    ],
+    "run2_failure_semantics": "run2 failure or byte mismatch = attempt fail-closed, consumed (D408-R1)",
+    "run2_precondition": "run1_preclose_pass",
+    "run_timeout_s": 7200,
+    "worker_invocations_total": 2
+  },
+  "environment": {
+    "interpreter": "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+    "interpreter_matches_pin": true,
+    "interpreter_pin_realpath": "/home/cgxr/miniconda3/envs/isaaclab/bin/python3.11",
+    "interpreter_realpath": "/home/cgxr/miniconda3/envs/isaaclab/bin/python3.11",
+    "packages": {
+      "hpp-fcl": {
+        "expected": "2.4.4",
+        "observed": "2.4.4"
+      },
+      "numpy": {
+        "expected": "1.26.0",
+        "observed": "1.26.0"
+      },
+      "psutil": {
+        "expected": "5.9.8",
+        "observed": "5.9.8"
+      },
+      "rerun-sdk": {
+        "expected": "0.34.1",
+        "observed": "0.34.1"
+      },
+      "scipy": {
+        "expected": "1.15.3",
+        "observed": "1.15.3"
+      },
+      "trimesh": {
+        "expected": "4.5.1",
+        "observed": "4.5.1"
+      }
+    },
+    "python_version": "3.11.14",
+    "rerun_cli_path": "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+    "rerun_cli_sha256": "3fa8b5f7b46d026b457af63eb5c77d8687e3c4b4e67b2bb51186c7c1cfe22750",
+    "rerun_cli_version_line": "rerun-cli 0.34.1 (base lance map_view nasm native_viewer oss_server perf_telemetry re_server release_full release_no_web_viewer web_viewer) [rustc 1.92.0 (ded5c06cf 2025-12-08), LLVM 21.1.3] x86_64-unknown-linux-gnu prepare-release-0.34.1 4efb18f, built 2026-07-07T16:20:42.173372603Z",
+    "scope_guard_violations": []
+  },
+  "equivalence_fixture": {
+    "not_reconstructible": "live_exact_written_tcp_error_le_5mm (live-written alignment scalar not exported by the d335 CSV) - disclosed (C5)",
+    "selection": "coarse rows at deterministic quantile indices {0, n/4, n/2, 3n/4, n-1} plus the (7.0, 11.0) row",
+    "source_csv": "claudedocs/runtime_logs/grasp_track/g0a_d335/d335_candidate_scan.csv",
+    "tolerances": {
+      "anti_retreat_eps_mm": 1e-12,
+      "booleans": "exact",
+      "numeric_recompute_mm": 1e-09
+    }
+  },
+  "gates": {
+    "admission_checks": [
+      "ik_converged",
+      "commanded_tcp_error_le_5mm",
+      "jaw_tangent_le_15deg",
+      "link5_all64_noninterpenetration_ge_0p1mm",
+      "gripper_open_all64_noninterpenetration_ge_0p1mm",
+      "anti_retreat_14p5mm_minus_rho_nonnegative"
+    ],
+    "b_checks_core": [
+      "crossing_exists_in_open_interval",
+      "first_crossing_order_certified",
+      "first_contact_part_in_inner17",
+      "competitor_exclusion",
+      "cylinder_witness_barrel_interior_strict"
+    ],
+    "barrel_cap_classifier": {
+      "rule": "strict z order only; no new geometric success tolerance (D354 durable rule); R/H rebased 0.0145/0.050",
+      "strict": true
+    },
+    "fixed_jaw_band_mm": [
+      0.1,
+      5.0
+    ],
+    "fixed_jaw_band_reuse_disclosure": "5.0mm upper bound REUSES the old D330 planar-proxy gate constant; D330 metric = tangent-projected planar gap 0-5mm vs new metric = hppfcl 3D min over the link5 4-mask (~1.7mm apart at (7,11)-class poses); planar-gap equivalent recorded per pose as a diagnostic column (P3/W-SCI1)",
+    "order_certification": {
+      "neighborhood_cap_rad": 6.4e-05,
+      "new_eval_cap": 48,
+      "rule": "R1 (SCI-B1): D351 traverse semantics; certification criterion = max(d_hi, d_lo) > 2*Rmax*sin(|dq|/2) (declared A12 exclusion criterion, sharp sound form); terminal-width clear-clear intervals accepted only within the neighborhood cap above the bracket with per-part exclusion; fail-closed otherwise; precision disclosure (SCI-R1-W1): raw GJK distances (tolerance 1e-9 m), no additional numerical allowance — a certification margin below that tolerance would be unsound (observed margins are orders of magnitude larger)"
+    },
+    "pinch_core_names": [
+      "moving_and_fixed_inward_normals_opposed",
+      "jaw_surface_points_on_opposite_xy_sides_of_center",
+      "cylinder_center_projection_inside_contact_chord",
+      "q5_decrease_moves_contact_toward_fixed_surface"
+    ],
+    "pinch_core_selection_rationale": "opposition 1 + geometric placement 2 + closing direction 1 (W-SCI4); d351 formula-structure reuse, NOT a reuse of its pass=false result",
+    "pinch_diagnostic_names": [
+      "fixed_normal_faces_moving_surface",
+      "moving_normal_faces_fixed_surface",
+      "q5_decrease_moves_along_moving_inward_normal",
+      "cylinder_support_witnesses_on_opposite_xy_halfplanes"
+    ],
+    "q5_bisection": {
+      "bracket_rad": 1e-06,
+      "max_iter": 32,
+      "note": "numerical-resolution control, not a science tolerance (D351 lineage)"
+    },
+    "region_scoring": {
+      "historical_proxy": {
+        "standalone_gate": null
+      },
+      "historical_proxy_mm": 36.033,
+      "labels": {
+        "historical_proxy_36p033mm": "historical execution-error proxy (D34xH90-era, single target, non-replica mean) - label only, NOT a pass/fail gate",
+        "proximity_regime_7p881mm": "D330 proximity-regime upper bound - n=5 proximity-cluster sample max, 3D z-inclusive, single target, D34xH90-era historical proxy",
+        "stall_regime_70_81mm": "unreachable within the offset domain (max 18.5mm)",
+        "xy_projected_cluster_1p7_7p0mm": "xy-only projected proximity cluster - dimension-matched comparison (diagnostic)"
+      },
+      "no_standalone_36p033_gate": true,
+      "offset_space_limitation": "offset-space distance is a TCP displacement proxy (z excluded)",
+      "proximity_regime_mm": 7.881,
+      "region_definition": "4-connected components of admitted cells; representative = deepest interior cell (ties: lexicographic key)",
+      "stall_regime_mm": [
+        70.0,
+        81.0
+      ]
+    },
+    "top_15mm_rule": "demoted to non-gate diagnostic; witness top margins recorded per pose; rim-proximity cell fraction reported (band 7.5mm H50-proportional, NOT a gate) (W-LES1)"
+  },
+  "geometry": {
+    "cylinder_model": "hppfcl.Cylinder (analytic primitive, D379)",
+    "height_m_repr": "0.05",
+    "precision_note": "x = float32(0.3) as float64 literal; table_z/z_center = float64 operation sequence, no cast (W-SCI3)",
+    "radius_m_repr": "0.0145",
+    "table_z_m_repr": "-0.012117000371217726",
+    "x_m_repr": "0.30000001192092896",
+    "z_center_m_repr": "0.012882999628782275"
+  },
+  "grid": {
+    "anti_retreat": "14.5mm - rho >= 0 (P2 rebase of 17mm - r)",
+    "edge_touch_rule": "an admitted 4-connected component touching a rho/tau domain-edge cell gets rho_R flagged domain-censored (report-only, never gated); 'exhaustive' means exhaustive within the declared domain (P2)",
+    "pose_count": 1239,
+    "positive_control_key_um": [
+      7000,
+      11000
+    ],
+    "radial_um": {
+      "max": 14500,
+      "min": 0,
+      "step": 250
+    },
+    "tangent_um": {
+      "max": 11500,
+      "min": 6500,
+      "step": 250
+    },
+    "tau_derivation": "d335 formula with radius substitution (inherited): [R-8mm, R-8mm+5mm], R=14.5mm, 8mm=FIXED_JAW_FACE_LOCAL_M frozen literal (d323:38) - P2 honest label"
+  },
+  "head_pin": {
+    "git_dirty_live": [
+      "START_HERE.md",
+      "claudedocs/BACKLOG.md",
+      "claudedocs/EXPERIMENT_LEDGER.md",
+      "claudedocs/direction_20260708_grasp_pivot.md",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/",
+      "claudedocs/session_20260803_grasp_g0a_d409_design_kickoff.md",
+      "claudedocs/session_20260803_grasp_g0a_d409_harness_recovery_authoring_adversarial_review_launch.md",
+      "claudedocs/session_20260803_grasp_g0a_d409_review_disposition_design_v2_static_prep_kickoff.md",
+      "claudedocs/session_20260803_grasp_g0a_d409_sweep_recovery_design_v1.md",
+      "claudedocs/session_20260803_grasp_g0a_real_first_funnel_decisions_state_update.md",
+      "claudedocs/session_20260804_grasp_g0a_d409_review_disposition_repair_static_fixture.md",
+      "claudedocs/session_20260804_grasp_g0a_d409_warning_microrepair_diff_reverify_launch.md",
+      "sim_scripts/cyld29h50_d409_zero_step_dual_jaw_contact_region_enumeration_controller.py",
+      "sim_scripts/cyld29h50_d409_zero_step_dual_jaw_contact_region_enumeration_manual_writer.py",
+      "sim_scripts/cyld29h50_d409_zero_step_dual_jaw_contact_region_enumeration_worker.py"
+    ],
+    "git_head": "40ec3ac53558ad088ef71442f77b965f86f6efb7"
+  },
+  "input_hashes": {
+    "d339_gripper_cold1_canonical_lineage_only": "dc258b27cdef5d29e23f1b5ef3041c3afb26f50d8c8ad9b222002532e95f2e5e",
+    "d339_link5_cold1_canonical_lineage_only": "c45bd056b3487f92bc724474dbf850ea6da309fea90c4e0a90879ada7ba2b655",
+    "d348_callback_topology_volume_evidence": "83b8c7b16181d0f5c545cfbeaa992c8ebfd69e2310dd33bce2a64234a1deaab6",
+    "d349_frozen_target_distance_measurement": "5de6d14e37d6b74b202d1bb668120a6bb57221eac24ea5c751457ce9823b6300",
+    "d368_semantic_allocation_evidence": "be2a422b0c74e4781b76a640c5312070b84876b1cb9e661d47e705ccdf789cf5",
+    "d371_offline_collider_comparison_evidence": "e300063d37de44d895da3b96ea6ac95c0d108d217f6f74c458bab218d7bccdf5",
+    "d409_fk_tcp_scalar_rederivation": "c0b13007d36de91b6aa8f1190d6d14f8e45e39564325292a5b85d51a0655d5aa",
+    "d409_static_prep_s1s2s3": "f2aaadd13e6822ceebd6a5d565010c0f45c201d08d35b830d582e5ac36dfd63d",
+    "urdf_roarm_m3": "64dc8d082cbce9a13a0697a11a0eaeaebbc54bbcd97e7aafaa40da483969dae2"
+  },
+  "interpretation_boundary": [
+    "stable grasp / force closure / grasp feasibility / grasp success / push-over-absence guarantee / contact-order dynamics / SDF superiority / transfer to other cylinders or placements: all null claims (section 2.14)",
+    "A-and-B does NOT exclude the D362 push-over pose (d_fix 4.2727mm - inner-4-mask min measured); the ordering constraint is a pure geometric descriptor and its push-over screening power is unverified (null) (P3)",
+    "part-level masks cannot distinguish face-level inner/outer (outer 16 subset of inner 17, shared carrier 16; difference = part_035 alone); inner-17 membership is a necessary-condition judgment (W-FRZ1)",
+    "geometry-only labels must not be promoted to standalone training (direction decision 2)",
+    "mass 24.83g and friction are unused by this harness",
+    "g0a_pass=false unchanged; D399 remains reserved for D398-F1"
+  ],
+  "kinematics": {
+    "fk_accuracy_statement": "stated as measured residuals (anchor-gate channels), never bit-exact",
+    "fk_constant_series": "URDF XML literals only; pi/2-symbol chain (roarm_kinematics._CHAIN) banned (section 2.4)",
+    "ik_form": "d323 position-only 5-DOF DLS, HOME seed, max_iter 120, pos_tol 1mm, step clip 4deg, v6 soft-limit clip; deterministic, zero randomness"
+  },
+  "manual_contract": {
+    "false_publishable": true,
+    "inspections_per_attempt": 1,
+    "manual_timeout_ns": 600000000000,
+    "required_boolean_fields": [
+      "grid_all_cells_admission_layer_visible",
+      "region_components_distinguishable",
+      "region_representative_cells_marked",
+      "anchor_pose_both_jaws_visible",
+      "cylinder_d29h50_visible",
+      "q5_star_or_witness_markers_visible",
+      "decision_sheet_numeric_axes_legible",
+      "decision_sheet_scores_and_flags_legible",
+      "no_notification_or_text_overlap",
+      "no_error_banner_visible",
+      "region_map_and_decision_sheet_consistent"
+    ],
+    "screenshot_layout": {
+      "d409_decision_sheet.png": [
+        1920,
+        1080
+      ],
+      "d409_region_map_screenshot.png": [
+        1920,
+        1080
+      ]
+    },
+    "w_ops3_reject_surfaces": {
+      "common_monotonic_deadline": "manual_deadline==prompt+600s; writer_deadline==manual-5s; stale pre-arm hard deadline and expired writer deadline both raise",
+      "controller_writer_identity": "ppid==controller_pid; controller/worker/writer source SHA re-hash; controller /proc start-ticks binding",
+      "eleven_field_false_publishable_schema": "exact 11 boolean fields; pass=AND; all-false still publishes",
+      "exclusive_create_no_replace_fsync": "O_EXCL pending file; renameat2 RENAME_NOREPLACE; file+dir fsync; byte-exact readback; pre-existing manual/pending file raises",
+      "no_writer_creation_or_repair_during_run": "arm only at controller_started phase row; pre-arm hard deadline must be in the future; writer source SHA bound into tuple",
+      "nonce_hmac_envelope": "256-bit nonce via inherited socket; HMAC-SHA256 over canonical body; constant-time compare; unauthenticated ops rejected",
+      "source_screenshot_manifest": "manifest SHA + exact schema; PNG signature/IHDR/IEND + dims + bytes + sha per image; canonical evidence and region CSV SHA binding; determinism_bitexact_pass and rrd_verify_pass exact true",
+      "tuple_sha_binding": "tuple file bytes must hash to the user-approved SHA; tuple pins prereg/controller/worker/manual_writer SHAs",
+      "worst_case_traversal_budget": "every read bounded by an explicit byte limit; O_NOFOLLOW openat-only traversal; nlink==1 regular-file identity; identity re-stat after read"
+    },
+    "writer_deadline_lead_ns": 5000000000
+  },
+  "negative_controls": {
+    "audit_registered": [
+      {
+        "control": "tolerance introduced into barrel/cap classifier registration",
+        "expected": "strict-contract violation reject",
+        "id": "A1"
+      },
+      {
+        "control": "bisection bracket > 1e-6 rad",
+        "expected": "reject",
+        "id": "A2"
+      },
+      {
+        "control": "36.033 mean promoted to standalone gate",
+        "expected": "scoring-contract violation reject",
+        "id": "A3"
+      },
+      {
+        "control": "isaac-family import attempt",
+        "expected": "scope guard rejects the import itself",
+        "id": "A4"
+      }
+    ],
+    "prepare_time": [
+      {
+        "control": "cylinder radius tampered to 0.017",
+        "expected": "real-geometry pin check FAIL",
+        "id": "N1"
+      },
+      {
+        "control": "1-bit vertex-stream tamper + 1-byte file tamper",
+        "expected": "D409-canonical per-part hash FAIL vs S1 pin + d348 file sha FAIL (C3 re-anchor of P1)",
+        "id": "N2"
+      },
+      {
+        "control": "inner mask replaced by outer 16",
+        "expected": "mask name-set/count FAIL; decisive difference = part_035 (W-FRZ1 documented)",
+        "id": "N3"
+      },
+      {
+        "control": "FK constants replaced by pi/2-symbol series",
+        "expected": "anchor gate ANY-reject fires (discrimination measured; if it does not fire the control set must be redesigned)",
+        "id": "N4"
+      },
+      {
+        "control": "empty grid (0 poses)",
+        "expected": "worker static-pin admission FAIL (C4)",
+        "id": "N5"
+      }
+    ]
+  },
+  "new_variables": [
+    "real cylinder geometry D29xH50 (r=0.0145m, H=0.050m; user-measured 2026-08-03, HARD RULE #18; analytic hppfcl.Cylinder per D379)"
+  ],
+  "positive_controls": [
+    {
+      "control": "frozen (7,11) anchor reproduction (section 2.9-1/2)",
+      "expected": "4 channels <= 0.0005mm",
+      "id": "P1"
+    },
+    {
+      "control": "grid key (7000,11000) inclusion",
+      "expected": "present; meaning differs from the frozen candidate (new center, real cylinder)",
+      "id": "P2"
+    }
+  ],
+  "registered_budget": {
+    "basis_budget_check_true_both_runs": true,
+    "basis_extrapolation_4p5M_s": [
+      39.18262218746804,
+      33.94023152253567
+    ],
+    "basis_file": "claudedocs/runtime_logs/grasp_track/g0a_d409/design_inputs/d409_static_prep_s1s2s3.json",
+    "basis_file_sha256": "f2aaadd13e6822ceebd6a5d565010c0f45c201d08d35b830d582e5ac36dfd63d",
+    "basis_payload_sha256": "43a46e0552e7c23de936b6da59eeb9771b675651c0edbb301d0ed8e5d575b124",
+    "basis_us_per_query": [
+      8.707249374992898,
+      7.542273671674593
+    ],
+    "max_queries_per_pose": 5400,
+    "max_queries_per_run": 7000000,
+    "note": "budget cited from the persisted static-prep file only (W-OPS4); session-doc prose numbers are demoted to reference",
+    "r1_certification_amendment": {
+      "cert_new_eval_cap": 48,
+      "check_7p0M_lt_7200s_both_runs": true,
+      "extrapolation_7p0M_s": [
+        60.95074562495029,
+        52.79591570172215
+      ],
+      "reason": "SCI-B1 repair R1 adds the ordered chord-bound certification traversal (memoized midpoint evaluations, deterministic cap); registered budgets amended from 3,600/4.5M to the worker pins above (worst pose = 2,176 + cap x 64; disposition-recorded)"
+    },
+    "timeout_s": 7200
+  },
+  "registered_metrics": {
+    "aggregate_counts": [
+      "poses",
+      "ik_converged",
+      "admission_pass",
+      "a_band_pass",
+      "b_pass",
+      "order_ab_pass",
+      "pinch_core_pass",
+      "full_pass",
+      "order_certified",
+      "admission_regions",
+      "admission_regions_censored",
+      "full_pass_regions"
+    ],
+    "derivation": "consumer-derived (D405; OPS-B1 repair R2): per-pose metrics = worker CSV_COLUMNS verbatim (AST constant cross-checked vs the imported module); aggregate counts and region-entry metric names are AST-derived from the worker's counts/region_entries dict literals; region scoring thresholds/labels are registered under gates.region_scoring",
+    "per_pose_csv_columns": [
+      "rho_um",
+      "tau_um",
+      "ik_converged",
+      "ik_iterations",
+      "commanded_tcp_error_mm",
+      "jaw_tangent_error_deg",
+      "urdf_hard_limit_violation",
+      "planar_gap_d330_equiv_mm",
+      "anti_retreat_margin_mm",
+      "link5_min_mm",
+      "link5_min_part",
+      "link5_fixed4_min_mm",
+      "link5_fixed4_min_part",
+      "link5_witness_top_margin_mm",
+      "gripper_open_min_mm",
+      "gripper_open_min_part",
+      "admission_pass",
+      "admission_fail_reasons",
+      "a_band_pass",
+      "a_le_1mm",
+      "a_le_5mm",
+      "q5_star_rad",
+      "q5_star_bracket_width_rad",
+      "first_contact_part",
+      "first_contact_in_inner17",
+      "competitor_exclusion_pass",
+      "barrel_interior_strict",
+      "b_pass",
+      "order_ab_pass",
+      "pinch_core_pass",
+      "full_pass",
+      "moving_witness_top_margin_mm",
+      "rim_proximal_lt_7p5mm",
+      "transient_unexcluded_pairs",
+      "first_crossing_order_certified",
+      "cert_unresolved_intervals",
+      "cert_new_evals",
+      "admission_region_id",
+      "admission_region_representative",
+      "admission_depth_mm",
+      "full_region_id",
+      "full_depth_mm",
+      "queries_used"
+    ],
+    "region_entry_metrics": [
+      "region_id",
+      "layer",
+      "cell_count",
+      "cells_um",
+      "edge_cell_count",
+      "domain_censored",
+      "representative_um",
+      "rho_R_mm",
+      "depth_metric",
+      "rim_proximity_cell_fraction",
+      "rim_proximity_margin_null_count",
+      "score_triple"
+    ],
+    "region_scoring_reference": "gates.region_scoring"
+  },
+  "registered_worker_command": {
+    "note": "per-run argv differs only in the --out-dir argument (P4-1)",
+    "per_run": {
+      "run1": [
+        "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+        "-B",
+        "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/cyld29h50_d409_zero_step_dual_jaw_contact_region_enumeration_worker.py",
+        "--out-dir",
+        "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run1",
+        "--prereg",
+        "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_preregistration.json"
+      ],
+      "run2": [
+        "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+        "-B",
+        "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/cyld29h50_d409_zero_step_dual_jaw_contact_region_enumeration_worker.py",
+        "--out-dir",
+        "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run2",
+        "--prereg",
+        "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_preregistration.json"
+      ]
+    },
+    "template": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+      "-B",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/cyld29h50_d409_zero_step_dual_jaw_contact_region_enumeration_worker.py",
+      "--out-dir",
+      "<absolute run dir>",
+      "--prereg",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_preregistration.json"
+    ]
+  },
+  "runtime_overlay_contract": {
+    "allowed_dirty_paths": [
+      "START_HERE.md",
+      "claudedocs/BACKLOG.md",
+      "claudedocs/EXPERIMENT_LEDGER.md",
+      "claudedocs/direction_20260708_grasp_pivot.md",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/.d409_manual_visual_inspection.json.pending",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_canonical_promotion.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_completion_summary.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_controller_phase_markers.jsonl",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_decision_sheet.png",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_manual_visual_inspection.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_manual_writer_receipt.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_manual_writer_stderr.log",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_manual_writer_stdout.log",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_preregistration.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_prerun_inventory.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_proposed_runtime_hash_tuple.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_region_map.rrd",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_region_map_blueprint.rbl",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_region_map_screenshot.png",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_rerun_validation.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_reviewed_script_attestation.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_screenshot_manifest.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_static_fixture_results.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run1/",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run1/d409_enumeration_evidence.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run1/d409_region_map.csv",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run1/d409_worker_claim.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run1/d409_worker_phase_markers.jsonl",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run1/d409_worker_preclose_sentinel.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run1/d409_worker_stderr.log",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run1/d409_worker_stdout.log",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run1/d409_worker_summary.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run1/d409_worker_supervisor.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run2/",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run2/d409_enumeration_evidence.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run2/d409_region_map.csv",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run2/d409_worker_claim.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run2/d409_worker_phase_markers.jsonl",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run2/d409_worker_preclose_sentinel.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run2/d409_worker_stderr.log",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run2/d409_worker_stdout.log",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run2/d409_worker_summary.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run2/d409_worker_supervisor.json",
+      "claudedocs/session_20260803_grasp_g0a_d409_design_kickoff.md",
+      "claudedocs/session_20260803_grasp_g0a_d409_harness_recovery_authoring_adversarial_review_launch.md",
+      "claudedocs/session_20260803_grasp_g0a_d409_review_disposition_design_v2_static_prep_kickoff.md",
+      "claudedocs/session_20260803_grasp_g0a_d409_sweep_recovery_design_v1.md",
+      "claudedocs/session_20260803_grasp_g0a_real_first_funnel_decisions_state_update.md",
+      "claudedocs/session_20260804_grasp_g0a_d409_review_disposition_repair_static_fixture.md",
+      "claudedocs/session_20260804_grasp_g0a_d409_warning_microrepair_diff_reverify_launch.md",
+      "sim_scripts/cyld29h50_d409_zero_step_dual_jaw_contact_region_enumeration_controller.py",
+      "sim_scripts/cyld29h50_d409_zero_step_dual_jaw_contact_region_enumeration_manual_writer.py",
+      "sim_scripts/cyld29h50_d409_zero_step_dual_jaw_contact_region_enumeration_worker.py"
+    ],
+    "derivation": "programmatic union: worker-source *_NAME constants (ast) x run1/run2 + manual-writer --print-contract-json expected paths + controller module path constants (D405 consumer-derivation / D407 allowed-dirty lesson)",
+    "directory_sentinels": [
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run1/",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run2/"
+    ],
+    "future_runtime_leaves": [
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/.d409_manual_visual_inspection.json.pending",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_canonical_promotion.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_completion_summary.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_controller_phase_markers.jsonl",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_decision_sheet.png",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_manual_visual_inspection.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_manual_writer_receipt.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_manual_writer_stderr.log",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_manual_writer_stdout.log",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_prerun_inventory.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_region_map.rrd",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_region_map_blueprint.rbl",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_region_map_screenshot.png",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_rerun_validation.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_screenshot_manifest.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run1/d409_enumeration_evidence.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run1/d409_region_map.csv",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run1/d409_worker_claim.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run1/d409_worker_phase_markers.jsonl",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run1/d409_worker_preclose_sentinel.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run1/d409_worker_stderr.log",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run1/d409_worker_stdout.log",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run1/d409_worker_summary.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run1/d409_worker_supervisor.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run2/d409_enumeration_evidence.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run2/d409_region_map.csv",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run2/d409_worker_claim.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run2/d409_worker_phase_markers.jsonl",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run2/d409_worker_preclose_sentinel.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run2/d409_worker_stderr.log",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run2/d409_worker_stdout.log",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run2/d409_worker_summary.json",
+      "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/run2/d409_worker_supervisor.json"
+    ]
+  },
+  "scope_guards": {
+    "AppLauncher": 0,
+    "SimulationContext": 0,
+    "allowed": [
+      "frozen JSON evidence reads",
+      "hppfcl/numpy/trimesh offline queries",
+      "rerun-sdk import (save-only RRD authoring) (W-OPS2)",
+      "absolute-path rerun CLI subprocess (/home/cgxr/miniconda3/envs/isaaclab/bin/rerun) for verify/RBL/screenshot only (W-OPS2)",
+      "writes under claudedocs/runtime_logs/grasp_track/g0a_d409/ only"
+    ],
+    "asset_write": 0,
+    "cuda": 0,
+    "forbidden_import_roots": [
+      "carb",
+      "cuda",
+      "cupy",
+      "isaac",
+      "isaacgym",
+      "isaaclab",
+      "isaacsim",
+      "kit",
+      "lerobot",
+      "omni",
+      "physx",
+      "physxcooking",
+      "pxr",
+      "pycuda",
+      "pyk4a",
+      "roarm_sdk",
+      "serial",
+      "torch",
+      "usd",
+      "usdrt",
+      "warp"
+    ],
+    "gpu_compute": 0,
+    "isaac": 0,
+    "kit": 0,
+    "lerobot": 0,
+    "new_package_install": 0,
+    "physics_steps": 0,
+    "physx": 0,
+    "physx_cook_callbacks": 0,
+    "robot_hw_serial": 0,
+    "usd_read_write": 0,
+    "warp": 0
+  },
+  "session_spec": {
+    "doc": "claudedocs/session_20260803_grasp_g0a_d409_sweep_recovery_design_v1.md",
+    "sections": "section 2 (design v1) + section 4 (confirmed delta v2; section 4 wins)"
+  },
+  "visual_contract": {
+    "blueprint": "embedded (save default_blueprint) + standalone .rbl export; rerun CLI 'rrd verify --check-footers true' on both",
+    "decision_sheet": "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_decision_sheet.png",
+    "entities_required": [
+      "/metadata/run",
+      "/enum/prototype/cylinder",
+      "/enum/grid/admission",
+      "/enum/grid/full_pass",
+      "/enum/source/<body>/part_NNN (128)",
+      "/enum/instance/anchor_frozen/*",
+      "/enum/instance/rep_<rho>_<tau>/* (region representatives, capped detail subset)",
+      "/enum/candidate/**"
+    ],
+    "error_banner": "automated: decodability + non-blank check; authoritative judgment = manual 11-field schema (C7)",
+    "grid_full_layer": "all 1,239 cells logged (W-LES2); Float64 authority = evidence JSON; RRD Float32 copies are inspection-only, never hashed into a gate",
+    "phase_order": "canonical evidence + verdict sha256 published BEFORE any presentation artifact (W-LES3), enforced by phase markers",
+    "pixels_per_point": 2.0,
+    "rbl": "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_region_map_blueprint.rbl",
+    "region_map_screenshot": "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_region_map_screenshot.png",
+    "required_components": {
+      "/enum/grid/*": [
+        "Points2D:positions",
+        "Points2D:colors"
+      ],
+      "/enum/instance/**": [
+        "Mesh3D:vertex_positions",
+        "Mesh3D:triangle_indices"
+      ],
+      "/enum/source/**": [
+        "Mesh3D:vertex_positions",
+        "Mesh3D:triangle_indices"
+      ],
+      "/metadata/run": [
+        "TextDocument:text"
+      ]
+    },
+    "rerun_cli_exact_version": "rerun-cli 0.34.1",
+    "rrd": "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_region_map.rrd",
+    "screenshot_logical": "960x540",
+    "screenshot_physical": [
+      1920,
+      1080
+    ],
+    "timeline": "q5_arc",
+    "validation": "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_rerun_validation.json"
+  },
+  "worker_admission_rows": [
+    {
+      "path": "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/cyld29h50_d409_zero_step_dual_jaw_contact_region_enumeration_worker.py",
+      "row_id": "worker_source",
+      "sha256": "d82cee18b6282b857f0a762896bc43ee4a23a2a954a680b22735669dc6f827d9"
+    },
+    {
+      "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d409/design_inputs/d409_static_prep_s1s2s3.json",
+      "row_id": "static_prep_s1s2s3",
+      "sha256": "f2aaadd13e6822ceebd6a5d565010c0f45c201d08d35b830d582e5ac36dfd63d"
+    }
+  ],
+  "worker_interface_derived": {
+    "admission_row_status_literal": "PASS",
+    "artifact_basenames": [
+      "d409_worker_claim.json",
+      "d409_enumeration_evidence.json",
+      "d409_region_map.csv",
+      "d409_worker_summary.json",
+      "d409_worker_preclose_sentinel.json",
+      "d409_worker_phase_markers.jsonl"
+    ],
+    "derivation": "worker source AST (constants, ast.Eq/NotEq strings, dict 'status' values) cross-checked vs imported module (C2)",
+    "exit_codes": {
+      "claim_preexist": 73,
+      "contract_fail": 1,
+      "pass": 0
+    },
+    "preclose_status_literal": "PRECLOSE_PASS",
+    "verdict_complete": "D409_G0A_ZERO_STEP_DUAL_JAW_CONTACT_REGION_ENUMERATION_COMPLETE_STOP"
+  }
+}

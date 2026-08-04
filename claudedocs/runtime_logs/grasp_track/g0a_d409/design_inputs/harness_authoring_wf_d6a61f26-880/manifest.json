@@ -1,0 +1,46 @@
+{
+  "artifact": "d409_harness_authoring_preservation",
+  "case": "g0a_d409",
+  "date_kst": "2026-08-03",
+  "workflow_run_id": "wf_d6a61f26-880",
+  "provenance": {
+    "original_launch_session": "f261c48f-2ee3-41ec-a1e3-7bf0a140c455",
+    "original_launch_outcome": "interrupted 2026-08-03T10:13:12Z (KST 19:13) before any file was written; journal had 2 started rows, 0 results; sim_scripts/cyld29h50_* absent",
+    "resume_relaunch_session": "3e3bc901-1eb8-4777-8657-6e76a4337e8e",
+    "resume_relaunch_note": "cross-session resume = full re-run (no cache carryover, documented precedent 4th doc §2); 4/4 agents completed, 0 errors, duration_ms 3799810, subagent_tokens 996192",
+    "script_file": "/home/cgxr/.claude/projects/-home-cgxr-Documents-Robotics-RoArm-Project-claudedocs-runtime-logs-grasp-track-g0a-d409-design-inputs/f261c48f-2ee3-41ec-a1e3-7bf0a140c455/workflows/scripts/d409-harness-authoring-wf_d6a61f26-880.js"
+  },
+  "files": {
+    "authoring_result_verbatim.json": {
+      "sha256": "bbfd55806f7f36efaf831ce3e7d4495d2ee70fb99686fb0989e89eb9ce81a77e",
+      "note": "verbatim copy of the workflow task output (full 4-agent result JSON incl. worker/manual_writer/controller SPEC AMBIGUITIES and built-in consistency review)"
+    },
+    "authoring_journal_resume_run.jsonl": {
+      "sha256": "d76cbd5483ce8b81fcfc1a3d61eb109c4214fb1fdded5fb8f7e6698ac900f82f",
+      "note": "journal of the resume run (this session); per-agent result rows"
+    }
+  },
+  "harness_files_as_authored": {
+    "sim_scripts/cyld29h50_d409_zero_step_dual_jaw_contact_region_enumeration_worker.py": {
+      "sha256": "bd835c6f38f66a1aa2486c07dd81aa3be83b02ed9a3461770d75fbfecefb3564",
+      "line_count": 2094
+    },
+    "sim_scripts/cyld29h50_d409_zero_step_dual_jaw_contact_region_enumeration_controller.py": {
+      "sha256": "fb34238d03ee9132f7820f7b08c623de4211d1f6d4fa87331130bbfd8e5a9bbd",
+      "line_count": 3477,
+      "self_reported_sha_match": true
+    },
+    "sim_scripts/cyld29h50_d409_zero_step_dual_jaw_contact_region_enumeration_manual_writer.py": {
+      "sha256": "5675341a28022392c14fb4859948582ab2623d495ffa8f967e7d3a6b2e4a03c3",
+      "line_count": 1512,
+      "self_reported_sha_match": true
+    }
+  },
+  "status": "AUTHORED_NOT_ADOPTED — adversarial review (wf_f6ae07c8-819) pending; adoption only after review disposition + repair; SHAs above are as-authored and will change if repairs are applied (runtime tuple pins final SHAs)",
+  "known_gaps_from_builtin_consistency_review": [
+    "G1: W-OPS3 per-requirement tamper->reject fixture for manual_writer not implemented in static-prep fixtures",
+    "G2: N2/P1(i) payload_sha256 recomputation replaced by D409-canonical per-part hash + file-level sha (C3: stored payload_sha256 preimage opaque) — requires review accept/reject",
+    "G3: scope guard forbidden-root sets inconsistent across the 3 files (worker missing isaacgym; writer missing isaac/kit/physxcooking/cupy/torch)"
+  ],
+  "science_state": "unchanged — D407 FAIL-STOP, g0a_pass=false, no scientific verdict; no attempt1 artifacts created"
+}

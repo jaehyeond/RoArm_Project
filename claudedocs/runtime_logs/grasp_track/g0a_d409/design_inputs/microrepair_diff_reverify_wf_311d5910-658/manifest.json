@@ -1,0 +1,36 @@
+{
+  "artifact": "D409_MICROREPAIR_DIFF_REVERIFY_PRESERVATION_MANIFEST_V1",
+  "case": "g0a_d409",
+  "run_id": "wf_311d5910-658",
+  "created_by_session": "session_20260804_grasp_g0a_d409_warning_microrepair_diff_reverify_launch.md (7th)",
+  "preserved_utc_kst_note": "2026-08-04, preserved immediately on completion notification in the launching session",
+  "workflow": {
+    "name": "d409-warning-microrepair-diff-reverify",
+    "agents_done": 2,
+    "agents_error": 0,
+    "lenses": [
+      {"label": "verify:diff-correctness", "agent_id": "acd6c3f231973629d", "tokens": 164511, "tool_calls": 48},
+      {"label": "verify:static-exec-safety", "agent_id": "a6ca8bf5389ebca2b", "tokens": 155981, "tool_calls": 42}
+    ],
+    "total_tokens": 320492,
+    "total_tool_calls": 90,
+    "duration_ms": 691534
+  },
+  "files": {
+    "microrepair_diff_reverify_result_verbatim.json": "77927381a318643d191d209a988e1e513ba9f62d48b617ae8151f92dc8d7ed31",
+    "journal.jsonl": "f912919492c9e4ed05b49261f5508dd16584474a7133b5fbffe5d450dff5f612"
+  },
+  "reviewed_harness_sha256_bit_verified_by_both_lenses": {
+    "worker": "d82cee18b6282b857f0a762896bc43ee4a23a2a954a680b22735669dc6f827d9",
+    "controller": "2af457ecfbd5df3d6a223de991fee4108e8ec7d243bcf74e37287d69f622eb1a",
+    "manual_writer": "7f04458f3e44042be297fefcdd71638f9e62f2ef35cf0114df59ea5c76ea7f01"
+  },
+  "headline": {
+    "blockers": 0,
+    "warnings": ["A-W1-dead-code-bypass", "A-W2-1427-undetected", "A-W3-ops2w2-l3w1-interaction", "B-W1-serialization-evidence-loss", "B-W2-ast-presence-not-semantics", "B-W3-fixture-failure-consumes-namespace"],
+    "lens_b_prediction": "real static-prep on exactly these bytes completes D409_G0A_ZERO_STEP_STATIC_PREP_PASS_STOP exit 0",
+    "git_status_false_positive_resolved": "single new untracked 7th session doc, attributed to parent session end-of-session update, all probe writes scratchpad-only",
+    "operational_note": "static-prep bakes git-dirty snapshot into prereg; repo churn between static-prep and approved runtime trips runtime admission (pre-existing, out of diff scope)"
+  },
+  "disposition_status": "PENDING - headline is not a disposition; full verbatim must be read and independently re-verified before disposition (no-uncritical-acceptance rule)"
+}

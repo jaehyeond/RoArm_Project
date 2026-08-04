@@ -1,0 +1,334 @@
+{
+  "summary": "Adversarial 4-lens review (science/frozen/lessons/ops) of D409 design v1",
+  "agentCount": 4,
+  "logs": [
+    "lenses returned: 4/4; blockers total: 9"
+  ],
+  "result": {
+    "lenses": [
+      {
+        "lens": "SCIENCE",
+        "blockers": [
+          {
+            "id": "B1",
+            "claim": "The ordering-constraint band (A) d_fix ∈ [0.1mm, 5.0mm] ADMITS the D362 push-over exemplar (fixed jaw 4.27mm), directly contradicting the design's own justification sentence 'D362 밀어넘김은 A 위반 자세(fixed 4.27mm 이격)에서 발생 — 재정식화가 원 의도 보존'. 4.27mm lies inside [0.1, 5.0], so A∧B would score the only known push-over failure geometry as ordering-constraint PASS, giving the constraint zero demonstrated screening power while the doc claims the opposite.",
+            "evidence": "Design: claudedocs/session_20260803_grasp_g0a_d409_sweep_recovery_design_v1.md:131-140 (band [0.1,5.0] at :132-134; 'A 위반 자세(fixed 4.27mm)' at :138-139). The 4.27mm value is real and q5-invariant: claudedocs/runtime_logs/grasp_track/g0a_d354/d354_q5_closure_sweep.csv row 0 raw_link5_mm=4.2726455336106985 (single unique value across all 33 anchors, verified by column sort -u) and live_link5_mm=4.272736580324082 == D371 stored distance (claudedocs/runtime_logs/grasp_track/g0a_d371/d371_offline_collider_comparison_evidence.json, grep-verified). Kickoff source the design cites: claudedocs/session_20260803_grasp_g0a_d409_design_kickoff.md:170-178 formulated (A) as 'signed distance ≤ ε' with ε candidates 0.1mm (CLEAR_GATE/BORDERLINE) or 0~5mm — under ε=0.1 the 4.27mm pose violates A; the design chose the 5.0mm upper bound but copied the ε=0.1-only justification verbatim.",
+            "proposed_fix": "Before freeze, recompute d_fix at the frozen (7,11) pose under the design's exact metric (hppfcl min over link5 inner-mask 4 parts) and set the (A) gate upper bound strictly below that value (e.g., gate on the proximal band ≤1mm already defined in §2.7, keeping ≤5mm as a recorded diagnostic band only), OR keep [0.1,5.0] but delete/correct the intent-preservation sentence and state explicitly in prereg that A∧B does not exclude the D362 failure exemplar."
+          },
+          {
+            "id": "B2",
+            "claim": "The τ domain [9,000–14,000µm] is inherited unchanged on the claim '조(jaw) 측 기하 유래 — 원통 반경 비결부', but the fixed-jaw gap is provably radius-coupled with ∂gap/∂R = −1: the D330 gap formula subtracts obj_radius_m directly, so shrinking R from 17mm to 14.5mm shifts d_fix by +2.5mm at identical (ρ,τ). The A-satisfying τ band therefore shifts down by 2.5mm and the inherited window truncates most of it (planar estimate: band ≈[6.0,10.9]mm, covered only [9,10.9]; frozen-pose 4.27mm@τ=11 estimate: band ≈[4.3,9.2]mm, covered only [9,9.2]). An '전수' region map computed on this window systematically misses the majority of the fixed-jaw-proximal region, biasing the region components and ρ_R that are the case's primary deliverable.",
+            "evidence": "Design assertion: claudedocs/session_20260803_grasp_g0a_d409_sweep_recovery_design_v1.md:104-108. Radius coupling: sim_scripts/cyl34_top_view_d330_grasp_g0a_alignment_probe.py:230-231 (cylinder_side_plane = obj_center − tangent*obj_radius_m; signed_gap projects onto tangent). Jaw constant is ~8mm: sim_scripts/cube10cm_top_view_d323_grasp_g0a_frame_repair_probe.py:38 (FIXED_JAW_FACE_LOCAL_M=[-0.008,0,0]) with link5_x used as tangent reference at d330:226-228. Empirical anchor: g0a_d330_cyl_alignment_trials.csv near-cluster trials at τ=11mm/R=17mm give fixed_jaw_face_gap_mm 2.42–2.99 → effective constant ≈ −8.5mm; old domain [9,14] maps to old gap band [0.6,5.6]mm ≈ the old 0–5mm gate, confirming the old τ window was fitted to R=17. For barrel-adjacent witness the design's own hppfcl metric shifts exactly by −ΔR (distance = ||p−axis||_xy − R). Note the design DID rebase the radial axis for the same reason (17,000→14,500µm, '14.5mm−r', v1 doc :50-52) but declined for τ.",
+            "proposed_fix": "Rebase the τ domain with the radius change (shift by −2,500µm, e.g., τ ∈ {6,500,…,11,500}µm, or widen to {4,000,…,14,000}µm keeping 250µm pitch), derive the window from the jaw constant + new R in prereg, and add an edge-touch fail-flag: any admitted 4-connected component touching the τ (or ρ) domain boundary invalidates the 'exhaustive region' claim for that component."
+          },
+          {
+            "id": "B3",
+            "claim": "As written, §2.3 pins d339 cold1 canonical geometry as the A64 authority, but the design's own pre-measurements prove the live/frozen distances reproduce only with d348 geometry: 13 parts differ between d339 and d348 (up to 5.53mm vertex deviation, including gripper inner-mask carriers part_035/part_048), while d348 + D349 pose reproduces the D371 stored distances with delta 0.000000000mm. Running the enumeration and the §2.9-2 anchor gate on d339 geometry would compute all contact distances on non-live geometry; the doc's own fail-stop clause fires.",
+            "evidence": "Authority pin: claudedocs/session_20260803_grasp_g0a_d409_sweep_recovery_design_v1.md:60-61, 68-72 ('d339 cold1 canonical geometry 2파일 = 권위'; fail-stop on bit-inequality). Contradiction measured in the same doc: :300-315 (§5.0 M1: gripper 59/64, link5 56/64 set-equal only, 13 parts differ, d348 ⊂ d339, part_035/part_048 are inner carriers; M3: d348 + D349 pose → delta 0.0mm vs D371 stored 4.272736580mm/11.340262326mm, '라이브 A64 = d348 계보 실증 → d339 canonical 권위 결정은 d348 권위로 정정 필요'). part_035 membership in gripper_inner independently verified in claudedocs/runtime_logs/grasp_track/g0a_d368/d368_semantic_allocation_evidence.json patch_allocation.gripper_inner (17 names).",
+            "proposed_fix": "In the §4 disposition, repin the A64 authority to the d348 attempt2 instance geometry (d348_callback_topology_volume_evidence.json lineage) with its sha256 in input_hashes, demote d339 canonical to historical cook witness (recorded, not queried), and rewrite the §2.3 bit-identity static check as a d348-internal integrity check. Do not freeze the design or write the prereg with d339 as query geometry."
+          }
+        ],
+        "warnings": [
+          {
+            "id": "W1",
+            "claim": "The 5.0mm upper bound of (A) is inherited across incompatible metrics: D330's gate was a tangent-projected planar gap between a synthetic jaw-face reference point (TCP + link5_rot@[-0.008,0,0]) and the cylinder side plane, with lower bound 0.0 — not an hppfcl 3D min signed distance over the link5 inner-mask 4 parts. At comparable poses the two metrics disagree by ~1.7mm (planar ~2.6mm vs hppfcl 4.27mm at (7,11)-class poses), so '상한 5.0mm = D330 게이트 승계' transplants a number, not a meaning.",
+            "evidence": "sim_scripts/cyl34_top_view_d330_grasp_g0a_alignment_probe.py:59 (GAP_GATE_M=0.005), :229-231 (point-vs-plane tangent projection), :240 (0.0 <= gap <= GAP_GATE_M); design claim at session_20260803_grasp_g0a_d409_sweep_recovery_design_v1.md:132-134. Metric divergence: D330 CSV gaps 2.4-3.0mm at τ=11 vs D371 hppfcl link5 4.2727mm at the frozen (7,11) pose.",
+            "proposed_fix": "In prereg, label the 5.0mm as a re-used numeric constant under a new metric definition (hppfcl min over inner-mask parts), state the D330 metric difference explicitly, and record the planar-gap equivalent as a diagnostic column so the two metrics can be cross-checked on the new data."
+          },
+          {
+            "id": "W2",
+            "claim": "7.881mm as the 'D330 근접 regime 상한' is the sample maximum of n=5 observations from a single fixed target with jitter, and it is a 3D z-inclusive TCP execution error compared against ρ_R, a 2D z-excluded offset-space radius. The cluster boundary is under-determined (empty span 7.881→27.233mm, 3.5×), and near-cluster errors contain up to ~46% z components (trial 8: z err 3.64mm of 7.88mm total). Acceptable only because §2.8 uses it as 병기 (reporting), not a gate.",
+            "evidence": "claudedocs/runtime_logs/grasp_track/g0a_d330/g0a_d330_cyl_alignment_trials.csv rows 1-10: tcp_pose_error_mm = {1.884, 3.044, 6.004, 7.686, 7.881, 27.233, 70.303, 75.775, 79.989, 80.530} (verified exact match, mean 36.0327); trial 8 target z 0.032883 vs actual 0.029248. Design: session_20260803_grasp_g0a_d409_sweep_recovery_design_v1.md:160-166 (acknowledges z-exclusion of ρ_R but not the 3D-vs-2D mismatch of the 7.881 comparator or its n=5-max status).",
+            "proposed_fix": "Label 7.881 in prereg as 'n=5 near-cluster sample max, 3D z-inclusive, single-target D34×H90-era' with the same historical-proxy caveat as 36.033; optionally also report the xy-only projections of the D330 near-cluster errors (1.7–7.0mm) as the dimensionally consistent comparator."
+          },
+          {
+            "id": "W3",
+            "claim": "The §2.2 decimal literals for table_z (−0.01211700037121773) and z_center (0.01288299962878227) are each 1 ULP away from the actual float64 arithmetic results (−0.012117000371217726 and 0.012882999628782275); they were derived by decimal digit manipulation, not float64 ops. In this project's bit-exact pin/determinism culture, pinning these strings in prereg while the worker computes the values would cause a spurious pin failure or a silent prereg/code divergence.",
+            "evidence": "Verified numerically: (0.03288299962878227−0.045).hex() = -0x1.8d0cc428f5c28p-7 ≠ float('-0.01211700037121773').hex() = -0x1.8d0cc428f5c2ap-7; same 1-ULP mismatch for z_center. Source constant confirmed float32-exact at sim_scripts/cyl34_top_view_d362_current_pose_capacity_prefix_integrated_physx_contact_motion.py:92 (OBJECT_POS_F32=[0.30000001192092896, 0.0, 0.03288299962878227]). Design literals: session_20260803_grasp_g0a_d409_sweep_recovery_design_v1.md:45-48.",
+            "proposed_fix": "Pin the derivation as an operation sequence (z_center := float64(0.03288299962878227) − 0.045 + 0.025, or the equivalent single expression) plus the resulting hex/shortest-repr emitted by the tool itself; correct the two decimal literals in the confirmed design; also state whether z_center is cast to float32 for the placement (x is float32 but z as written is float64 — the mixed-precision convention should be explicit)."
+          },
+          {
+            "id": "W4",
+            "claim": "§2.8's four pinch gate predicates are Korean glosses that map ambiguously onto d351's eight named boolean checks: '법선 마주봄' matches any of three normal checks (moving_and_fixed_inward_normals_opposed, fixed_normal_faces_moving_surface, moving_normal_faces_fixed_surface) and '닫힘 속도 방향 정합' either of two velocity checks (q5_decrease_moves_contact_toward_fixed_surface, q5_decrease_moves_along_moving_inward_normal). Without exact predicate names pinned, gate selection is post-hoc-adjustable.",
+            "evidence": "sim_scripts/cyl34_top_view_d351_zero_step_closure_geometry.py:2568-2580 (pinch_checks dict with 8 named predicates); design gloss at session_20260803_grasp_g0a_d409_sweep_recovery_design_v1.md:153-157.",
+            "proposed_fix": "In the confirmed design and prereg, list the exact d351 predicate names of the 4 gates (e.g., moving_and_fixed_inward_normals_opposed, jaw_surface_points_on_opposite_xy_sides_of_center, cylinder_center_projection_inside_contact_chord, q5_decrease_moves_contact_toward_fixed_surface) and enumerate the remaining named checks as recorded diagnostics."
+          }
+        ],
+        "confirmations": [
+          "Kinematic premise of §2.7 verified: local_assets/roarm_m3/urdf/roarm_m3.urdf:225-231 shows link5_to_gripper_link with parent=link5, child=gripper_link, origin (0, 0.018821, 0.052035), rpy (-1.5708, -1.5708, 0), axis z, limits [0, 1.571] — link5 (fixed jaw) is the parent of q5, so a fixed-jaw 'first crossing q5 angle' is genuinely undefined; corroborated by d354_q5_closure_sweep.csv where raw_link5_mm has a single unique value (4.2726455336106985) across all anchors.",
+          "ε bound provenance verified: 0.1mm = CLEAR_GATE_MM (cyl34_top_view_d349_...distance_gate.py:181 imports d339.CLEAR_GATE_MM, :421 asserts ==0.1); 5.0mm = GAP_GATE_M=0.005 (d330 probe :59, gate at :240). Sources exist as claimed (metric caveat filed as W1).",
+          "D330 statistics verified from claudedocs/runtime_logs/grasp_track/g0a_d330/g0a_d330_cyl_alignment_trials.csv: the 10 tcp_pose_error_mm values match the design's claimed set exactly ({1.884, 3.044, 6.004, 7.686, 7.881, 27.233, 70.303, 75.775, 79.989, 80.530}); computed mean 36.0327 ≈ 36.033; no observation between 27.233 and 70.303, so the bimodality claim and the ban on a mean-36.033 sole gate (§2.8) are statistically supported.",
+          "D379 non-violation confirmed: DECISIONS.md:22000-22004 bans (a) convex decomposition before evidence of non-cylindrical contact-relevant features and (b) transferring D362 접촉순서/전도 physics results to D29×H50. §2.9-2 replays old (0.017,0.090) geometry solely to reproduce D371 stored distances as a query-pipeline reproduction gate, making no contact-order/tipping claim about the new object; the design's explicit calibration-vs-transfer distinction (v1 doc :175-178) is consistent with the D379 text.",
+          "Cylinder placement constants verified: 0.03288299962878227 and 0.30000001192092896 exist as the frozen object position at sim_scripts/cyl34_top_view_d362_...contact_motion.py:92 (OBJECT_POS_F32, float32 array; 0.032883 confirmed float32-exact); float32(0.3)=0.30000001192092896 confirmed; derived table_z −12.117mm is consistent with the −12.12mm table plane fit. Decimal-literal ULP issue filed as W3.",
+          "Classifier port check (§2.8): sim_scripts/cyl34_top_view_d351_zero_step_closure_geometry.py:910-939 — _feature_from_cylinder_witness depends only on the passed-in center plus d332.CYLINDER_RADIUS_M/CYLINDER_HEIGHT_M; R appears only in residual diagnostics explicitly marked radial_and_cap_residuals_verdict_authority=False (:938); the barrel/cap verdict uses strict z comparisons only (:922-925). R/H rebase is the complete port requirement; the implicit world-z-aligned-axis assumption is satisfied by the design's identity-quat placement.",
+          "Chord bound (§2.6) verified: d354_zero_step_closure_geometry_measurement.json contains bound_formula = '2*Rmax*sin(abs(delta_q)/2)' actually used in raw_contact_order, live_contact_order, and the pre-contact corridors (hausdorff_bound_mm ≈ 3.2436mm), confirming D354 실사용; mathematically valid displacement bound for a rigid polyhedron rotating about a fixed axis since distance-to-axis is convex, so the body max is attained at vertices (Rmax over vertices suffices), and |Δq| ≈ 0.048 rad ≪ π.",
+          "Mask contract verified: g0a_d368/d368_semantic_allocation_evidence.json patch_allocation gives link5_fixed = 4 parts [part_027, part_029, part_030, part_031], gripper_inner = 17, gripper_outer = 16 — matching §2.3 exactly.",
+          "Pinch/ordering structure (§2.6-§2.8) not a distortion of D354: q5* is bisected over all 64 gripper parts (§2.6 'arc sweep은 gripper 64 part만'), so requiring first-crossing part ∈ inner-17 with all non-inner parts clear at q5* implies competitor exclusion over the whole pre-contact bracket by definition of 'first', given the chord-bound anchor coverage — equivalent in ordering content to D354's full-bracket exclusion; the historically failing D354 check is not silently dropped. Gate-name ambiguity filed as W4.",
+          "Grid and budget arithmetic verified: ρ {0..14,500 step 250}µm = 59 points, τ {9,000..14,000 step 250}µm = 21 points, 59×21 = 1,239 poses; ~2,200 queries/pose → ≈2.7M/run consistent with the measured 8.2µs/query (≈22s/run) — far under the 7,200s timeout."
+        ],
+        "lens_key": "science"
+      },
+      {
+        "lens": "FROZEN/CONTRACT",
+        "blockers": [
+          {
+            "id": "B1",
+            "claim": "설계 §2.3의 A64 권위 pin(d339 cold1 canonical geometry 2파일)은 repo 증거와 모순 — 라이브 A64는 d348 계보이며, 설계 v1을 이대로 확정/정적 준비하면 inner-mask carrier 2개(part_035/048)를 포함한 13개 part에서 잘못된 기하로 채점하게 된다. 설계 자신의 fail-stop 조항(§2.3 '불일치 시 설계 무효')이 이미 발동된 상태다.",
+            "evidence": "독립 재검증: g0a_d339/collision_asset/attempt2/d339_gripper_link_cold1_canonical_geometry.json part_035 = 고유 정점 11개 vs g0a_d348/attempt2/d348_callback_topology_volume_evidence.json 동일 part instance.vertices_m = 10개, 집합 불일치(d339에만 여분 1개) — 세션 doc §5.0 M1(sweep_recovery_design_v1.md:300-309) 재현. part_035·part_048은 d368_semantic_allocation_evidence.json patch_allocation.gripper_inner.certified_surface_carrier_part_names(17개)에 포함됨을 직접 확인. 또한 D368의 input_hashes는 d348 evidence(83b8c7b16181d0f5…)와 d339 callback witness를 pin하며 d339 canonical geometry 파일은 pin하지 않음 — 마스크 계보가 d348/callback 측임을 지지. 부수 모순: §2.9-4는 'BVHModelOBBRSS(callback topology 삼각형)'를 요구하나 pin된 d339 canonical의 triangles는 Qhull 재구성(설계 doc:307-309 자인, d348 instance에는 topology_triangles/qhull_triangles 병존 확인).",
+            "proposed_fix": "§4 처분에서 §2.3 A64 권위를 d348_callback_topology_volume_evidence.json(sha256 83b8c7b16181d0f5c545cfbeaa992c8ebfd69e2310dd33bce2a64234a1deaab6, 본 리뷰 재계산 = D368 pin과 일치)로 교체하고, BVH 입력 삼각형을 rows[].instance.topology_triangles(callback 원본)로 명시. d339 canonical 2파일은 역사적 cook witness로 강등하되 hash pin은 계보 기록용으로만 유지. 정정 전 설계 확정·정적 준비 착수 금지."
+          },
+          {
+            "id": "B2",
+            "claim": "§2.5의 τ 도메인 상속 근거('조(jaw) 측 기하 유래 — 원통 반경 비결부')가 거짓: d335 전례의 tangent 도메인 [9,14]mm는 구 반경 17mm와 fixed-jaw face offset 8mm 양쪽에서 유도된 [0,5mm] fixed-jaw-gap family다. 신규 반경 14.5mm에서 같은 유도식은 τ∈[6.5,11.5]mm를 주므로, [9,14]mm를 그대로 상속하면 gap<2.5mm 대역(설계 자신의 (A) 조건 하한부 [0.1,2.5)mm 포함)이 격자에서 전면 누락되고 [11.5,14]mm 상단은 gap>5mm로 §2.8 admission에서 자동 탈락한다 — '전수 열거' 주장이 의도한 접촉 영역에 대해 성립하지 않는 잘못된 과학이 된다.",
+            "evidence": "claudedocs/session_20260712_grasp_g0a_d335_target_family_repair.md:61-63 — \"The tangent domain is the nominal [0,5mm] fixed-jaw-gap family derived from radius 17mm and the frozen fixed-jaw face offset 8mm\" (반경 결부 명시). 설계는 radial 상한/anti-retreat만 반경 결부로 인정해 14,500µm로 rebase(설계 doc:50-52)하면서 τ는 '원통 반경 비결부 (리뷰 확인 항목)'로 상속(설계 doc:107-109). 대조: d335 스크립트 TANGENT_MIN/MAX_UM=9_000/14_000, COARSE_STEP_UM=250 (cyl34_top_view_d335_grasp_g0a_target_family_repair.py:43-46), fixed-jaw proxy gap [0,5mm] 게이트(d335 doc:42).",
+            "proposed_fix": "τ 도메인을 d335 유도식 그대로 신규 반경으로 rebase: τ ∈ [R−8mm, R−8mm+5mm] = [6,500, 11,500]µm step 250 (21점 유지). radial과 동일하게 '차이 보고 D의 격자 전례 rebase 의무'를 τ에도 적용하고, §2.5의 '원통 반경 비결부' 문장을 철회. rebase 후 (A) 밴드 [0.1,5.0]mm가 격자로 커버되는지 정적 준비에서 재확인."
+          }
+        ],
+        "warnings": [
+          {
+            "id": "W1",
+            "claim": "part 수준에서 gripper_outer 16은 gripper_inner 17의 부분집합(차이는 part_035 단 1개)이므로, §2.7(B)의 '첫 교차 part ∈ gripper_inner 17'은 inner-face 접촉의 약한 proxy에 불과하고, outer 16을 '음성 대조 전용' 별도 집단처럼 서술한 §2.3은 오독을 유발한다.",
+            "evidence": "d368_semantic_allocation_evidence.json patch_allocation 직접 판독: gripper_inner 17 = {part_030,035,042,045,046,047,048,050,051,053,056,058,059,060,061,062,063}, gripper_outer 16 = 동일 집합에서 part_035만 제외 — 16개 part가 양쪽 마스크에 공통. D368 authority_note는 carrier가 'registered face contract 하에서' 권위라고 명시(face 수준 계약, part 수준 아님).",
+            "proposed_fix": "prereg와 결과 claim 문언에 'inner/outer 구분은 face 수준 계약이며 part 수준 첫-교차 판정은 inner-carrier 집합 소속의 필요조건 판정일 뿐 inner-face 접촉 증명이 아님'을 명시. §2.11 음성 대조 3(name-set 치환 FAIL)은 그대로 유효하나, outer를 공간적 대조군으로 쓰는 해석을 금지 문언으로 차단."
+          },
+          {
+            "id": "W2",
+            "claim": "설계 doc §5.0의 실측 항목 번호가 중복 — 'M3'가 두 번 사용되어(저장 자세 재현 + FK-유도 자세 질의 재현), START_HERE/§7이 참조하는 'M1~M3' 인덱스가 처분 단계에서 모호해질 수 있다.",
+            "evidence": "session_20260803_grasp_g0a_d409_sweep_recovery_design_v1.md:310('M3 — 저장 자세 재현')과 :324('M3 — FK-유도 자세 질의 재현') — 사이에 :316 'M2'가 있어 순서도 M1→M3→M2→M3. START_HERE.md:16은 '선행 실측 3건'으로 집계.",
+            "proposed_fix": "§4 처분 기록 시 두 번째 M3를 M4로 개번(또는 M3a/M3b)하고 START_HERE의 '3건'을 '4건'으로 정정 — 실측 파일(d409_anchor_gate_measurement.json)은 불변, 문서 라벨만 정정."
+          },
+          {
+            "id": "W3",
+            "claim": "§2.3 표의 'anchor 거리 원천(d371 evidence)' 행이 설계 시점에 sha 미pin('정적 준비에서 pin') — 5개 pin과 달리 이 입력만 hash 결박 없이 설계가 확정될 수 있는 창이 존재한다.",
+            "evidence": "설계 doc:65 — d371_offline_collider_comparison_evidence.json 행만 '정적 준비에서 pin'. 해당 파일의 저장 거리(link5 4.272736580324082mm :20507 / gripper 11.340262326338637mm :20472)는 §2.9-2 재현 게이트의 기준값으로 이미 설계 본문에 인용되어 있음.",
+            "proposed_fix": "설계 확정 시점(§4 처분)에 d371 evidence sha256을 즉시 재계산·pin해 표를 완결하고, prereg input_hashes에 포함 — 정적 준비까지 미루지 않는다."
+          }
+        ],
+        "confirmations": [
+          "§2.3 sha256 pin 5개 전수 재계산 일치: d339 gripper canonical dc258b27…, d339 link5 canonical c45bd056…, d368 evidence be2a422b…, d349 frozen measurement 5de6d14e…, roarm_m3.urdf 64dc8d08… — 모두 sha256sum 재계산과 bit-일치 (추가로 design_inputs의 FK 재도출 c0b13007…, anchor 실측 8cc61166…도 일치).",
+          "동결 경계 침범 없음: sim_scripts/에 cylr29h50* 또는 d409* 파일 부재 확인(신규 2파일 = 순수 신규 생성), D400~D408 attempt1 산출물·D362 33파일·D334 sidecar(START_HERE.md:83-87 Frozen 목록)에 대한 쓰기/수정/재실행을 설계가 요구하지 않음. 산출은 §2.13의 g0a_d409/attempt1_* 신규 폴더로만 — AGENTS.md Variable Ladder forward-only 규칙과 D407 전례(sim_scripts 신규 harness 2파일) 부합.",
+          "§2.10 allowed_dirty 도출 규칙은 D407 계약(DECISIONS.md:24131-24182)과 정합: 'live dirty + planned static + 소비자 소스에서 프로그램적으로 도출한 future runtime leaf/디렉토리 sentinel 합집합', 원자적 attestation/tuple 게시, crash resume fail-closed — D407 Decision 문언과 실질 동일함을 대조 확인.",
+          "D399 미사용 확인: 설계는 D409/g0a_d409만 사용, BACKLOG.md:190-191이 'D398 verdict와 D399 예약은 유지한다(DECISIONS.md D398-F1)'를 명시 — 설계 §2.14의 'D399 사용 금지'와 정합.",
+          "git 전제 확인: HEAD == origin/master == 40ec3ac (git rev-parse 재확인), 작업트리 dirty 집합(M 4건 + ?? 4건)이 START_HERE.md:100-104 Git 섹션 선언과 일치 — 미선언 dirty 없음.",
+          "파생 상수의 동결 계보 검증: object x/z [0.30000001192092896, 0, 0.03288299962878227]는 d362 worker:92·d407 worker:95·d351:131의 동결 float32 상수와 일치, z_center = (0.03288299962878227−0.045)+0.025 = 0.01288299962878227 산술 재계산 일치, OPEN 1.5413000583648682는 d349 JSON:12793에 실재, radial rebase '14.5mm−r'은 d335의 anti-retreat 원식 'cylinder_radius − r ≥ 0'(d335 script:339, d335 doc:56-59)의 반경 치환으로 형식 보존, 250µm step(d335:46)·33 anchor(D354, kickoff doc §4.2) 전례 상속 확인.",
+          "D379 준수 확인: DECISIONS.md D379 원문 — primitive cylinder 우선 규칙('실측 비원통 특징 증거 전 decomposition 금지')을 §2.2 analytic hppfcl.Cylinder가 준수하고, 전이 금지 조항은 '접촉순서/전도 결과' 한정이므로 §2.9-2의 구 원통 거리 질의 calibration-전용 사용은 문언상 위반 아님.",
+          "D368 마스크 4/17/16 part 이름 실측 일치: link5_fixed = [part_027, part_029, part_030, part_031], gripper_inner 17(part_035·part_048 포함), gripper_outer 16 — 설계 §2.3/kickoff §4.3 기재와 파일 내용 일치, part 명명 체계는 d339/d348 양쪽 모두 part_000~part_063 64개로 동일 인덱싱.",
+          "§2.4 URDF 리터럴 인용 정확: link5_to_gripper_link origin (0, 0.018821, 0.052035), rpy (−1.5708, −1.5708, 0), axis z — roarm_m3.urdf:225-229와 bit-일치.",
+          "Variable Ladder 신규 변수 1 선언(설계 doc:3) 자체는 성립: 실물 원통 기하 외 z_center/x/ε/step/anchor 수는 전부 동결 상수에서 유도됨을 개별 검증 — 단 τ 도메인 상속만은 B2대로 잘못된 유도(별도 신규 변수는 아니나 rebase 의무 위반)."
+        ],
+        "lens_key": "frozen"
+      },
+      {
+        "lens": "LESSONS",
+        "blockers": [
+          {
+            "id": "B1-a64-authority-d339-vs-d348",
+            "claim": "설계 §2.3이 A64 양측 조 기하의 권위를 d339 cold1 canonical 2파일로 pin했으나, 같은 세션의 선행 실측 M1/M3가 라이브 A64 = d348 계보임을 실증했고 (저장 자세 재현 delta 0.0mm), d339와 d348은 13개 part가 상이하며 그중 gripper part_035/part_048은 D368 inner mask carrier다. 설계 §2.3 자체의 fail-stop 조항('불일치 시 설계 무효')이 이미 발동된 상태로, §2 본문이 무정정 상태다. d339 triangles는 Qhull 재구성(재포장 외피)이라 D348 지속 규칙('콜백 꼭짓점을 다시 감싼 외피가 아니라 콜백의 실제 면 연결 구조와 비교')의 원칙과도 충돌한다.",
+            "evidence": "claudedocs/session_20260803_grasp_g0a_d409_sweep_recovery_design_v1.md:60-72 (d339 권위 pin + fail-stop 조항), :300-315 (§5.0 M1: 13 part 상이·d348⊂d339 최대 5.53mm 이탈·part_035/048 inner carrier; M3: d348+D349 자세 재현 delta 0.000000000mm). claudedocs/DECISIONS.md:19735 (D348 제목/규칙). D368 inner carrier 실측: g0a_d368/d368_semantic_allocation_evidence.json gripper_inner part_names에 part_035·part_048 포함 확인 (본 리뷰 직접 파싱). START_HERE.md:17-19도 동일 정정 필요를 기록.",
+            "proposed_fix": "§4 처분에서 설계 확정 전 필수: A64 권위를 g0a_d348/attempt2 instance 기하(topology_triangles = callback 원본)로 재-pin하고 sha256을 §2.3 표에 교체, d339는 역사적 cook witness로 강등 명기. 추가로 D368 마스크(4/17/16)가 d348 기하에 결박됨을 정적 준비에서 재확인(특히 상이 part_035/048의 face 계약 유효성). 이 정정 전 정적 준비/harness 저작 착수 금지."
+          },
+          {
+            "id": "B2-order-constraint-band-admits-d362-pose",
+            "claim": "§2.7의 (A) 밴드 [0.1mm, 5.0mm] 채택과 그 정당화 문장('D362 밀어넘김은 A 위반 자세(fixed 4.27mm 이격)에서 발생 — 재정식화가 원 의도 보존')이 상호 모순이다. D362/동결 자세의 link5 frozen-OPEN 거리 4.272736580324082mm는 [0.1, 5.0]mm 밴드 **안**이므로 설계 v1의 (A)를 통과한다. 즉 재정식화된 순서 제약은 밀어넘김-전도를 실제로 일으킨 바로 그 자세를 배제하지 못하는데, 설계 본문은 배제한다고 기술한다. 스윕 원문(2nd doc §4.2)의 (A)는 'distance ≤ ε' (ε 후보 0.1mm)였고 — 그 형식에서만 4.27mm가 위반이다. 설계가 상한 5.0mm를 D330 fixed_jaw gap 게이트에서 승계하며 ε 의미를 뒤집었는데 정당화 문장은 구 형식 그대로 남았다. 또한 5.0mm 상한의 출처인 D330/d335 게이트는 8mm proxy face gap 측정치(D350이 '실제 표면 중심선으로 판단' 규칙으로 사실상 대체한 측정)로, 4-mask A64 signed distance라는 다른 측정량에 상수만 이식한 것이다.",
+            "evidence": "claudedocs/session_20260803_grasp_g0a_d409_sweep_recovery_design_v1.md:131-140 (밴드 정의 + D362 'A 위반' 주장). claudedocs/DECISIONS.md:21420-21423 (D371: A64 link5 frozen-OPEN 4.2727365803mm), :20799-20802 (D362: moving 접촉 step 32 → 원통 이동 41/42 → link5 접촉 45/46), :19886 (D350 규칙 제목). g0a_d349/d349_frozen_target_distance_measurement.json distance_gate/per_body/link5/live_topology_exact_signed_distance_mm = 4.272736580324082 (본 리뷰 직접 파싱). sim_scripts/cyl34_top_view_d335_grasp_g0a_target_family_repair.py:335 (fixed_jaw_gap_0_to_5mm 게이트 원출처). session_20260803_grasp_g0a_d409_design_kickoff.md:170-178 (원 재정식화 'distance ≤ ε').",
+            "proposed_fix": "둘 중 하나를 확정 전에 선택·명기: (a) (A)의 상한 ε를 D362 자세가 위반하도록 재-pin (예: inner-4-mask d_fix ≤ 1mm 등 — 단 실측 근거로 pin하고 근접 밴드는 진단 유지), 또는 (b) 정당화 문장을 삭제·정정해 '설계 v1의 A∧B는 D362 자세를 배제하지 않으며 순서 제약은 순수 기하 서술자'임을 명시. 어느 쪽이든 4.27mm가 whole-body min이고 inner-4-mask min은 미측정임을 구분 기록하고, 5.0mm 상한이 구 proxy-gap 게이트 상수의 재사용임을 prereg에 공개."
+          }
+        ],
+        "warnings": [
+          {
+            "id": "W1-top15mm-demotion-justification-wrong",
+            "claim": "§2.8의 top −15mm 규칙 비게이트 강등 자체는 동결 계약 위반이 아니지만(원 출처 d335 legacy_checks는 case-local 게이트이며 durable rule 아님), 강등 근거 문장 'cap/rim 배제는 strict 분류기가 담당'은 사실과 다르다. d351 분류기는 bottom < z < top 순수 부등호만 검사해 top rim 0.1mm 아래 witness도 barrel_interior로 분류한다 — 즉 분류기는 cap 평면 경계만 배제하고 근접-rim 접촉의 높이 마진 기능은 전혀 대체하지 않는다. H50 원통에서 jaw가 상단 근처에 닿는 pose가 마진 0으로 admitted된다.",
+            "evidence": "sim_scripts/cyl34_top_view_d335_grasp_g0a_target_family_repair.py:337,375-377 (contact_at_least_15mm_below_top이 pass 게이트였음), sim_scripts/cyl34_top_view_d351_zero_step_closure_geometry.py:910-939 (특히 :921-924 strict z 부등호만), session_20260803_grasp_g0a_d409_sweep_recovery_design_v1.md:148-149.",
+            "proposed_fix": "강등은 유지하되 근거를 정정: '분류기가 담당'이 아니라 '근접-rim barrel 접촉은 admitted-by-design이며 top-마진(H rebase 진단치, 예: top−7.5mm)은 비게이트 진단으로 전 pose 기록'임을 prereg에 명시. 영역 채점 시 rim-근접 셀 비율을 별도 보고."
+          },
+          {
+            "id": "W2-d341-rrd-decision-subject-and-pins",
+            "claim": "§2.12 관측성 계약이 D341 체크리스트 대비 3개 항목이 불명시: (a) verdict가 1,239 pose 전수 admission/영역 지도에서 나오는데 RRD에는 대표 subset+영역 경계만 담는다 — D341 'RRD must contain the actual decision subject'(trajectory verdict에 trial-1-only row 불충분 유추)에 적대적으로 미달 소지; (b) rerun CLI의 '정확 버전' pin이 §2.12엔 없음(절대경로 pin만; SDK 0.34.1은 §2.10에 있으나 CLI 버전은 D341이 별도 요구); (c) required-component schema exact 계약과 RBL export의 verify가 'D404~D408 수리 패턴' 참조로만 존재하고 계약 항목으로 명기 안 됨.",
+            "evidence": "session_20260803_grasp_g0a_d409_sweep_recovery_design_v1.md:229-247 (§2.12), :201-203 (env pins), claudedocs/DECISIONS.md:19255-19264 (D341 완결 규칙: exact SDK/CLI pin·required component schemas·verified RBL·decision subject), AGENTS.md 'Rerun Observability Completion Contract (D341~)' 절.",
+            "proposed_fix": "(a) 전 1,239 셀을 admission/영역 채색 Points/Scalar 레이어로 RRD에 추가 (처리량 §5.0 실측상 비용 무시 가능; Float64 권위는 evidence JSON 유지) — 대표 subset pin은 카메라/상세 뷰 전용으로 한정. (b)(c) prereg visual_contract에 CLI exact version, per-entity required-component 목록, RBL verify PASS를 명시 항목으로 등재."
+          },
+          {
+            "id": "W3-measurement-before-presentation-omitted",
+            "claim": "D371 지속 규칙 및 스윕 회수 기록이 명시한 harness 골격 항목 '측정 verdict의 presentation-이전 hash-bound 커밋'이 설계 §2.10/§2.12의 phase 순서에 빠져 있다. 이 순서가 없으면 관측성 실패 시 측정 verdict 분리 보존(D371 전례)이 계약상 보장되지 않는다.",
+            "evidence": "claudedocs/DECISIONS.md:21409-21411 (D371 지속 규칙), session_20260803_grasp_g0a_d409_design_kickoff.md:133-135 (승계 골격 목록에 명시), session_20260803_grasp_g0a_d409_sweep_recovery_design_v1.md:186-210,229-247 (설계 본문 부재).",
+            "proposed_fix": "§2.10 phase 계약에 'evidence JSON + verdict sha256 게시 → 이후 RRD/screenshot/manual' 순서를 명문화하고 phase marker로 강제."
+          },
+          {
+            "id": "W4-fk-equivalent-redefinition-unbound",
+            "claim": "§2.8의 legacy_checks 'FK-등가 재정의'(특히 jaw tangent ≤15° 등가식)와 pinch predicate 13개 중 '핵심 4개'만 게이트 승격은 동결 소스 대비 comparator 변경이다. D342 지속 규칙(모든 runtime comparator는 동결 소스에 기계적 결박; comparator 변경은 파라미터 변경)과 D405(소비자 리터럴은 동결 소스에서 도출, pure admission은 오프라인 replay) 관점에서, §2.11 양성 대조 (7,11)는 거리 재현만 커버하고 재정의된 admission 수식의 등가성 replay는 없다. 4/13 선택 기준도 미기재라 사후 gate-shopping 오해 소지가 있다.",
+            "evidence": "session_20260803_grasp_g0a_d409_sweep_recovery_design_v1.md:143-157 (§2.8), :226-228 (§2.11 양성 대조 범위), claudedocs/DECISIONS.md:19352-19358 (D342 durable parameter-binding rule), :24009 (D405 제목), sim_scripts/cyl34_top_view_d335_grasp_g0a_target_family_repair.py:329-341 (원 수식 소스).",
+            "proposed_fix": "정적 준비에 등가성 fixture 추가: d335의 (7000,11000) 및 수 개 저장 row에 대해 재정의 admission 수식을 replay하고 원 legacy_checks 결과와 check-단위 일치(허용오차 pin)를 요구. pinch 4-core 선정 근거(부호/순서 predicate이며 D354 실패 항목과의 관계)를 prereg에 명기."
+          },
+          {
+            "id": "W5-tau-domain-provenance-unverified",
+            "claim": "§2.5의 'τ 도메인(9,000~14,000µm)은 조 측 기하 유래·원통 반경 비결부' 판단에 repo 내 도출 근거가 없다. d335는 상수만 선언하고(docstring은 'grasp-semantic offset domain'뿐) 유래를 기록하지 않았다. ρ는 반경 결부로 판단해 17→14.5mm rebase했으면서 τ는 무근거로 verbatim 상속 — 반경이 2.5mm 줄었으므로 τ에 반경 결합이 있으면 영역 지도가 도메인 가장자리에서 절단되고, ρ_R(비허용 경계까지 offset-공간 거리)이 '도메인 절단'과 '진짜 비허용'을 구분하지 못한다. 도메인 가장자리에 접한 영역의 ρ_R 처리도 미정의다.",
+            "evidence": "sim_scripts/cyl34_top_view_d335_grasp_g0a_target_family_repair.py:1-9,40-45 (도출 근거 없는 상수 선언), session_20260803_grasp_g0a_d409_sweep_recovery_design_v1.md:104-108 (§2.5), :158-166 (§2.8 ρ_R 정의).",
+            "proposed_fix": "prereg에 (i) τ-도메인 유래를 '미도출·전례 상속'으로 정직하게 라벨하고, (ii) admitted 영역이 τ(또는 ρ) 도메인 가장자리 셀을 포함하면 해당 영역 ρ_R을 'domain-censored'로 별도 플래그(게이트 불사용), (iii) 필요 시 후속 case에서 도메인 확장을 BACKLOG로 등재."
+          }
+        ],
+        "confirmations": [
+          "HARD RULE #18: 설계 §2.2가 사용자 실측 D29×H50을 r=0.0145/H=0.050으로 무재해석 사용, 질량 24.83g은 harness 미사용 명시 — §2 전수 스캔에서 임의 재해석 없음 확인 (design_v1.md:40-54, kickoff.md:16-29).",
+          "HARD RULE #5: JOINT_LIMITS 제거 없음. §2.4의 'v6 소프트 리밋 reachable 판정'은 sim_scripts/roarm_kinematics.py:29-36 실측상 하드웨어 리밋보다 좁은 clip이며(오프라인 전용, d335 전례 동일), 하드웨어 보호 축소가 아님. URDF 하드 리밋은 진단 기록으로 보존.",
+          "D354: barrel/cap 분류기 strict 부등호 유지 + 사후 tolerance 금지 준수 — d351:910-939 이식 + R/H rebase만 선언, §2.11 audit 음성 대조 1이 tolerance 도입 시도를 reject 항목으로 등재 (design_v1.md:151-153, 221-222).",
+          "D379: analytic hppfcl.Cylinder(0.0145,0.050) primitive-first 준수 (DECISIONS.md:22000-22002), §2.9-2 구 원통(0.017,0.090) 질의는 calibration 전용으로 명시 구분 — D379 전이 금지 조항(접촉순서/전도 결과, :22003-22004) 비위반 확인.",
+          "D407-R1/D408: §2.12 수동검수 = pre-armed atomic writer(runtime 전 완성·dry-run, PID/phase handshake, deadline, no-replace+fsync) — runtime 중 writer 생성 금지·timeout 사후복구 금지 요건 충족 (DECISIONS.md:24196-24203 대비 design_v1.md:244-247).",
+          "동결 입력 sha256 pin 5건 전부 재계산 일치 (d339 gripper dc258b27…, d339 link5 c45bd056…, d368 be2a422b…, d349 5de6d14e…, urdf 64dc8d08…) + d409 design_inputs 2파일(c0b13007…, 8cc61166…) 실재·해시 일치. D368 마스크 4/17/16 및 link5_fixed part_names [part_027,029,030,031] 직접 파싱 일치.",
+          "재도출 의무(1st doc §6.5 warning ④) 이행: 설계 §2 본문에 FK 0.0013mm·문헌 41건·17/17 MATCH 인용 0건. 4/17/16은 D368 evidence sha pin으로 대체 완료. §2.8의 36.033/7.881/70~81mm는 g0a_d330 trials CSV 재계산으로 실측 일치 (10값 = 1.884…80.530, 5번째 7.881; DECISIONS.md:18491 mean 36.033 일치). OPEN 1.5413000583648682 및 D371 4.272736580324082/11.340262326338637 원본 JSON 직접 확인.",
+          "D331 준수: §2.8 (iii)이 36.033을 '단일 목표·비-replica 평균·이봉' 라벨로만 사용하고 평균 단독 게이트를 금지 + audit 음성 대조 3으로 강제 (design_v1.md:161-166, 223-224).",
+          "기구학 계약 실측 정합: URDF link5_to_gripper_link 리터럴 (0,0.018821,0.052035)/rpy(−1.5708,−1.5708,0)/axis z = roarm_m3.urdf:225-229 일치, d332:1264 동일 패턴 확인, _CHAIN pi/2 계열 금지는 §5.0 M2 실측(리터럴 0.000137mm vs pi/2 0.001261mm, 9배 판별)으로 지지됨.",
+          "Session progress rule + HARD RULE #7/#11: 3rd 세션은 실패 가능 실측 M1~M3를 실행했고 M1이 실제 fail-stop 조항을 발동(설계 결함 발견 = 실패한 실험). context 129%에서 /half-clone 거부·end-of-session update 전환·HANDOFF 미생성 기록 확인 (design_v1.md:276-277, 337-339).",
+          "Variable Ladder(D322~): 신규 변수 1건('실물 원통 기하')을 doc 상단에 선언, 산출물은 g0a_d409/ 하위로만, ρ 도메인 17,000→14,500µm 및 anti-retreat 17→14.5mm rebase 이행 (d335:41-45 구 상수 대비 design_v1.md:50-52), forward-only 신규 스크립트/폴더 준수."
+        ],
+        "lens_key": "lessons"
+      },
+      {
+        "lens": "OPS (실행 가능성·harness 공학)",
+        "blockers": [
+          {
+            "id": "OPS-B1",
+            "claim": "설계 v1 §2.3이 pin한 A64 권위(d339 cold1 canonical 2파일)는 라이브 기하와 13개 part가 상이함이 같은 세션의 실측으로 이미 증명되어 있어, 이대로 harness를 지으면 비-라이브 기하(inner-mask carrier part_035/part_048 포함, 최대 5.53mm 이탈 정점)로 전수 열거를 수행하게 되고 §2.9-2 앵커 게이트(delta ≤0.0005mm 후보)와도 정합이 깨진다. 설계 자체의 fail-stop 조항(불일치 시 설계 무효)이 발동된 상태다.",
+            "evidence": "claudedocs/session_20260803_grasp_g0a_d409_sweep_recovery_design_v1.md:60-61(d339=권위), :70-72(불일치 시 fail-stop), :300-315(M1 13 part 상이 + M3 d348 delta 0.0 실증). 원 데이터: claudedocs/runtime_logs/grasp_track/g0a_d409/design_inputs/d409_anchor_gate_measurement.json — m1 gripper vertex_set_equal 59/64·link5 56/64, part_035 max_excess 5.5097mm(:36-40), m3 stored_pose(d348 기하) abs_delta_mm '0.0' 양 body(:195-209). sha 재검증: d339 2파일·d348(83b8c7b1…) 전부 본 리뷰에서 sha256sum 일치 확인.",
+            "proposed_fix": "§4 처분에서 권위를 d348 instance 스트림(rows[].instance.vertices_m + payload_sha256, 파일 sha 83b8c7b16181d0f5c545cfbeaa992c8ebfd69e2310dd33bce2a64234a1deaab6 — 이미 measurement JSON inputs_sha256에 실측 pin됨)으로 교체하고 d339는 cook witness로 강등. 연쇄 수정 필수: §2.3 표의 입력 행 교체, §2.11-2 음성 대조를 d339 전용 필드명 geometry_sha256에서 d348 필드명 payload_sha256/witness_sha256로 재정박, prereg input_hashes 갱신. 정정 전 설계 확정·정적 준비 착수 금지."
+          },
+          {
+            "id": "OPS-B2",
+            "claim": "worker 2회 호출(run1/run2 결정성) 확장이 §2.10이 준용을 명령한 D371 골격과 기계적으로 충돌한다: D371 골격의 모든 산출 기록은 exclusive-create(open('x'))이고 single_run_contract는 worker_invocations=1 전제라, 동일 attempt 폴더에 같은 파일명을 쓰는 2차 호출은 FileExistsError로 즉사한다. §2.13 폴더 목록에는 run별 하위 구조가 없고 권위 evidence JSON이 단수로만 등재되어 어느 run이 canonical인지 미정의 — retry 0·첫 terminal 동결 문화(D408-R1)에서 run2 크래시는 attempt1 전체를 FAIL-STOP으로 소모한다.",
+            "evidence": "sim_scripts/cyl34_top_view_d371_offline_collider_candidate_pareto_comparison.py:216-220(_write_json_x = path.open('x') exclusive create), :549-556(single_run_contract worker_invocations: 1, atomic_worker_claim_required), :414(output_empty_before_preregistration). 설계: session_20260803_grasp_g0a_d409_sweep_recovery_design_v1.md:192-194(worker 호출 2회 — prereg 명시만 요구, 메커니즘 무정의), :251-255(§2.13 출력 목록에 run 하위폴더·canonical 승격 규칙 부재), :179-181(§2.9-3 'canonical evidence bytes bit-exact'만 요구, 비교 대상 파일 집합 미열거).",
+            "proposed_fix": "prereg에 dual-run 계약을 명시적으로 정의: (1) worker 호출별 별도 --out-dir(attempt1_*/run1/, run2/)과 run별 원자적 claim sentinel, (2) run2는 run1 preclose sentinel PASS 후에만 발사(run당 retry 0 유지), (3) byte-비교 대상 파일 집합을 열거(canonical evidence JSON + 영역 CSV의 canonical 직렬화 bytes만; supervisor가 비교 후 canonical 승격 기록), (4) single_run_contract를 'per-run contract + worker_invocations_total=2'로 개명·확장해 D371과의 차이를 필드 수준으로 등록."
+          }
+        ],
+        "warnings": [
+          {
+            "id": "OPS-W1",
+            "claim": "§2.13 질의 예산의 근거 수치가 repo 어디에도 영속화돼 있지 않고(8.2µs/질의·BVH 3.1ms·10,240회 벤치마크는 세션 doc 서술뿐 — measurement tool에 타이밍 코드 자체가 없음), pose당 '≈2,200' 산정은 이분법 비용(≈16-21 반복 × 최대 64 part ≈ +1,000-1,350질의/pose)을 사실상 누락해 실제는 ~3.2-3.5k/pose ≈ 4.0-4.4M/run이다. 결론(7,200s 여유)은 불변이나, 이 프로젝트가 방금 스윕에서 집행한 '인계-전용 수치 인용 금지' 규율(kickoff §4.6)을 예산 근거가 스스로 위반한다.",
+            "evidence": "d409_anchor_gate_measurement.json에 벤치마크 섹션 부재(전문 판독 — m1/m2/m3만 존재); d409_anchor_gate_measurement_tool.py에 time/bench 코드 없음(grep 'bench|elapsed|time' 무히트, :29-32 입력 경로만). 본 리뷰 독립 재실측(isaaclab env, 실제 d339 A64 BVH 128개 vs Cylinder(0.0145,0.050), 질의마다 Transform3f/DistanceResult 신규 생성 = python 오버헤드 포함): 10.35µs/질의, 128-part BVH 빌드 3.7ms → 2.7M=28s, 4.4M=46s, 10M=104s ≪ 7,200s. 설계 산정: session_..._design_v1.md:256-258(64+64×33=2,176에 '+이분법'을 ≈24질의로 흡수).",
+            "proposed_fix": "정적 준비에서 처리량 벤치마크를 산출물 파일(도구+JSON, 2회 결정성)로 영속화해 prereg가 그 파일을 인용하게 하고, pose당 질의 수 상한(이분법 반복×질의 폭 포함, 예: ≤3,600/pose → ≤4.5M/run)을 prereg registered budget으로 명시. timeout 7,200s는 유지해도 충분(측정상 ≥70× 여유)."
+          },
+          {
+            "id": "OPS-W2",
+            "claim": "§2.12의 pre-armed manual writer 요건 4개(runtime 전 완성·dry-run, PID/phase handshake, deadline, no-replace+fsync)는 D408 실측 admission prerequisite의 부분집합이다. D408 원문은 controller/writer identity, nonce/HMAC envelope, tuple SHA binding, source/screenshot manifest, 공통 monotonic deadline, 'false도 정직 게시' 11-field manual result까지 요구하며, Dxxx 참조만으로 축약하면 harness 저작 시 누락될 수 있다.",
+            "evidence": "claudedocs/DECISIONS.md:24265-24269(identity·phase chain·nonce/HMAC·tuple SHA·manifest·monotonic deadline·exclusive-create+no-replace+fsync), :24321-24324(D408-R1: READY/HMAC/PID-start/phase binding + false도 유효한 11-field 게시, 즉석 writer/retry/사후 덮어쓰기 금지). 설계: session_..._design_v1.md:244-247(4개 항목 + 'D407-R1/D408 admission prerequisites' 참조 축약). 메커니즘 실재 확인: sim_scripts/cyl34_top_view_d408_d407_manual_observability_completion_repair_manual_writer.py:366(_hmac_hex), :737(O_EXCL), :1094-1103(256-bit nonce 검증).",
+            "proposed_fix": "prereg visual/manual contract에 D408 prerequisite 전 목록을 필드 단위로 열거(nonce/HMAC envelope 키, tuple SHA binding, source/screenshot manifest, 11-field false-publishable 스키마, identity binding)하고 정적 fixture에서 각 항목의 고의 변조 reject를 확인."
+          },
+          {
+            "id": "OPS-W3",
+            "claim": "'gripper_outer 16 = 음성 대조 전용(inner 아님)' 프레이밍이 집합적으로 거짓이다: D368 certified 기준 outer 16은 inner 17의 진부분집합(inner − {part_035})이다. §2.11-3 대조는 part_035 한 개 차이로만 name-set/sha FAIL이 나며(결정적이므로 구현은 가능하나 판별력이 1-part에 의존), §2.7(B)의 part-identity 기반 competitor exclusion은 공유 carrier 16개에 대해 inner면 접촉과 outer면 접촉을 원리적으로 구분하지 못한다.",
+            "evidence": "claudedocs/runtime_logs/grasp_track/g0a_d368/d368_semantic_allocation_evidence.json patch_allocation 실측(본 리뷰 판독): gripper_inner.carrier_budgets.certified.part_names 17개 = [030,035,042,045,046,047,048,050,051,053,056,058,059,060,061,062,063]; gripper_outer.certified.part_names 16개 = 동일 목록에서 part_035만 제외. 설계 표현: session_..._design_v1.md:74-76('gripper_outer 16(음성 대조 전용)'), kickoff doc session_20260803_grasp_g0a_d409_design_kickoff.md:196-203('16 parts = 음성 대조군(inner 마스크 아님)').",
+            "proposed_fix": "prereg에 outer⊂inner 중첩 사실을 명기하고, §2.11-3 대조의 판별 근거가 part_035 단일 차이임을 문서화(sha 비교라 결정적 FAIL은 유지). §2.7(B)에는 'part 단위 마스크는 면(face) 단위 inner/outer를 구분하지 못한다'는 한계를 interpretation boundary에 추가하거나, 첫 교차 witness 점의 면 소속(D368 certified face 계약) 진단 기록을 병기."
+          },
+          {
+            "id": "OPS-W4",
+            "claim": "신규 명명 cylr29h50_은 기존 규약이 지름을 인코딩(cyl34 = D34mm)하는 것과 달리 'r29'가 반경 29mm로 오독될 수 있다(실제 r=14.5mm, D=29mm). 파일 충돌·소유권 문제는 없으나, 접두가 노리는 목적 자체가 '상수 혼입 방지'라 이 오독은 정확히 그 실패 모드를 만든다.",
+            "evidence": "sim_scripts/ 전수 목록 실측: cylr29h50* 기존 파일 0건, 기존 규약 = cyl34_top_view_*(D34 지름 인코딩)·cube10cm_*. 설계: session_..._design_v1.md:188-191('cylr29h50_로 cyl34 계열과 상수 혼입 방지'), :40-41(r=0.0145m, 즉 D29). AGENTS.md File ownership은 sim_* prefix 규칙만 정의 — cyl34_* 130여 파일 전례상 비-sim_* 이름은 소유권 비저촉.",
+            "proposed_fix": "cyld29h50_*로 개명(지름 인코딩 규약 유지)하거나, 유지 시 prereg와 controller 모듈 docstring에 'cylr29h50 = real cylinder D29×H50 (r=14.5mm)' 명명 범례를 pin."
+          }
+        ],
+        "confirmations": [
+          "§2.13 예산 실행 가능성 독립 재검증 PASS: isaaclab env에서 실제 d339 A64 128 part BVHModelOBBRSS vs hppfcl.Cylinder(0.0145,0.050) distance 질의를 python 루프(질의당 Transform3f·DistanceResult 신규 생성 = 순수 python 오버헤드 포함)로 20,000회 실측 → 10.35µs/질의, BVH 128개 빌드 3.7ms. 외삽: 2.7M=28s, 4.4M=46s, 10M=104s — timeout 7,200s/run 대비 ≥70× 여유. D371 실측(378질의, 전체 ~196s)의 지배 비용은 cook/Isaac이지 distance 질의가 아님도 확인(§2.10 A-family-only 준용과 정합).",
+          "§2.10 env pin 전항 라이브 일치: /home/cgxr/miniconda3/envs/isaaclab/bin/python(3.11) 실재, hppfcl 2.4.4 import OK, numpy 1.26.0/psutil 5.9.8(D326 pin)/scipy 1.15.3/trimesh 4.5.1/rerun-sdk 0.34.1 전부 import 실측 일치, rerun CLI 절대경로 /home/cgxr/miniconda3/envs/isaaclab/bin/rerun 실재 + `--version` = rerun-cli 0.34.1.",
+          "§2.10 prereg 스키마 서술 = D371 골격 1:1 일치: cyl34_top_view_d371_offline_collider_candidate_pareto_comparison.py:449-577에서 artifact/case/new_variables/head pin/input_hashes/environment/candidate_contract/registered_metrics/gates/negative_controls 2계층(prepare :512 + audit_registered :513)/visual_contract/scope_guards/single_run_contract/interpretation_boundary/registered_worker_command 전 필드 실재 확인. CLEAR_GATE 0.1mm = 동 파일 :148 OPEN_CLEAR_GATE_MM=0.1과 일치. d371 worker 파일 실재.",
+          "§2.11-4(pi/2 FK 치환) 판별력 정량 확인: d409_anchor_gate_measurement.json 실측 기준 URDF-리터럴 pose err ≤0.000137mm vs pi/2 ≥0.0012197mm(≈9× 분리), 거리 delta 리터럴 ≤0.000120mm vs pi/2 link5 0.001191mm — 제안 임계 0.0005mm 기준 통과측 3.6×·거부측 2.4× 여유로 판별 가능. 단 pi/2의 gripper 거리 delta는 0.0001777mm로 임계 이하이므로 게이트는 '어느 한 수량이라도 초과 시 거부'(ANY-reject) 의미론으로 pin해야 함(거리 채널의 판별은 link5가 단독 수행).",
+          "§2.3 동결 입력 sha 전항 재현: d339 gripper(dc258b27…)/link5(c45bd056…), d368(be2a422b…), d349(5de6d14e…), urdf(64dc8d08…) 5건 sha256sum 일치 + d409_fk_tcp_scalar_rederivation.json(c0b13007…)에 0.001216972820130102 스칼라 실재 + d409_anchor_gate_measurement.json(8cc61166…) + manifest·journal_verbatim_copy(6429d7f9…703e) 일치. d339 canonical per-part geometry_sha256/vertices_m/triangles 필드 실재(64 parts) — §2.3 서술 정확.",
+          "§2.2/§2.5 산술 재현: float32(1.5413)=1.5413000583648682, float32(0.3)=0.30000001192092896 numpy 재계산 일치; table_z=0.032883−0.045=−0.012117, z_center=−0.012117+0.025=0.012883 일치; 격자 ρ 59점 × τ 21점 = 1,239 pose 일치.",
+          "음성 대조 #1/#2/#3/#5 구현 가능성 확인: #1 반경 pin 체크(상수 대조) 자명, #2 d339 per-part geometry_sha256 실재(d348 전환 시 payload_sha256로 재정박 필요 — OPS-B1 연쇄), #3 D368 patch_allocation part_names 목록 실재로 name-set/sha 비교 구현 가능(판별력 한계는 OPS-W3), #5 빈 격자 admission FAIL 자명. D408 writer 메커니즘(nonce/HMAC/O_EXCL)도 d408 manual_writer.py에 실재 확인.",
+          "명명·소유권·경로 등록 확인: sim_scripts/에 cylr29h50* 기존 파일 0건(충돌 없음), cyl34_*/cube10cm_* 130여 파일 전례상 AGENTS.md sim_* prefix 소유권 규칙 비저촉, START_HERE.md:35·:103에 g0a_d409 경로 등재(Variable Ladder forward-only 규칙 충족)."
+        ],
+        "lens_key": "ops"
+      }
+    ],
+    "missing": []
+  },
+  "workflowProgress": [
+    {
+      "type": "workflow_phase",
+      "index": 1,
+      "title": "Review"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 1,
+      "label": "lens:science",
+      "phaseIndex": 1,
+      "phaseTitle": "Review",
+      "agentId": "ad349d004bab79edd",
+      "model": "claude-fable-5",
+      "state": "done",
+      "startedAt": 1785749876027,
+      "queuedAt": 1785749872673,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "SCIENCE",
+      "promptPreview": "당신은 RoArm G0a grasp-track의 D409 설계 v1에 대한 적대적 리뷰어다.\n설계 문서를 정독하라: /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/session_20260803_grasp_g0a_d409_sweep_recovery_design_v1.md (§2 전체가 설계 본문).\n스윕 회수 기록(설계의 사실 기반): /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/session_20260803_grasp_g0a_d409_design_kickoff.md §4.\n목표: 설계를 **반박/파괴**하는 것이다. 통과시키는 것이 아니다. 각 주장은 반드시\nrepo의 실제 파일을 열어 확인한 file:…",
+      "lastProgressAt": 1785750526036,
+      "tokens": 125812,
+      "toolCalls": 27,
+      "durationMs": 650009,
+      "resultPreview": "{\"lens\":\"SCIENCE\",\"blockers\":[{\"id\":\"B1\",\"claim\":\"The ordering-constraint band (A) d_fix ∈ [0.1mm, 5.0mm] ADMITS the D362 push-over exemplar (fixed jaw 4.27mm), directly contradicting the design's own justification sentence 'D362 밀어넘김은 A 위반 자세(fixed 4.27mm 이격)에서 발생 — 재정식화가 원 의도 보존'. 4.27mm lies inside [0.1, 5.0], so A∧B would score the only known push-over failure geometry as ordering-constraint P…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 2,
+      "label": "lens:frozen",
+      "phaseIndex": 1,
+      "phaseTitle": "Review",
+      "agentId": "acebe060a21324901",
+      "model": "claude-fable-5",
+      "state": "done",
+      "startedAt": 1785749875454,
+      "queuedAt": 1785749872673,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "FROZEN/CONTRACT",
+      "promptPreview": "당신은 RoArm G0a grasp-track의 D409 설계 v1에 대한 적대적 리뷰어다.\n설계 문서를 정독하라: /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/session_20260803_grasp_g0a_d409_sweep_recovery_design_v1.md (§2 전체가 설계 본문).\n스윕 회수 기록(설계의 사실 기반): /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/session_20260803_grasp_g0a_d409_design_kickoff.md §4.\n목표: 설계를 **반박/파괴**하는 것이다. 통과시키는 것이 아니다. 각 주장은 반드시\nrepo의 실제 파일을 열어 확인한 file:…",
+      "lastProgressAt": 1785750453414,
+      "tokens": 126660,
+      "toolCalls": 27,
+      "durationMs": 577959,
+      "resultPreview": "{\"lens\":\"FROZEN/CONTRACT\",\"blockers\":[{\"id\":\"B1\",\"claim\":\"설계 §2.3의 A64 권위 pin(d339 cold1 canonical geometry 2파일)은 repo 증거와 모순 — 라이브 A64는 d348 계보이며, 설계 v1을 이대로 확정/정적 준비하면 inner-mask carrier 2개(part_035/048)를 포함한 13개 part에서 잘못된 기하로 채점하게 된다. 설계 자신의 fail-stop 조항(§2.3 '불일치 시 설계 무효')이 이미 발동된 상태다.\",\"evidence\":\"독립 재검증: g0a_d339/collision_asset/attempt2/d339_gripper_link_cold1_canonical_geometry.json part_…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 3,
+      "label": "lens:lessons",
+      "phaseIndex": 1,
+      "phaseTitle": "Review",
+      "agentId": "a159e513a172ff706",
+      "model": "claude-fable-5",
+      "state": "done",
+      "startedAt": 1785749874868,
+      "queuedAt": 1785749872673,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "LESSONS",
+      "promptPreview": "당신은 RoArm G0a grasp-track의 D409 설계 v1에 대한 적대적 리뷰어다.\n설계 문서를 정독하라: /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/session_20260803_grasp_g0a_d409_sweep_recovery_design_v1.md (§2 전체가 설계 본문).\n스윕 회수 기록(설계의 사실 기반): /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/session_20260803_grasp_g0a_d409_design_kickoff.md §4.\n목표: 설계를 **반박/파괴**하는 것이다. 통과시키는 것이 아니다. 각 주장은 반드시\nrepo의 실제 파일을 열어 확인한 file:…",
+      "lastProgressAt": 1785750553512,
+      "tokens": 168667,
+      "toolCalls": 28,
+      "durationMs": 678644,
+      "resultPreview": "{\"lens\":\"LESSONS\",\"blockers\":[{\"id\":\"B1-a64-authority-d339-vs-d348\",\"claim\":\"설계 §2.3이 A64 양측 조 기하의 권위를 d339 cold1 canonical 2파일로 pin했으나, 같은 세션의 선행 실측 M1/M3가 라이브 A64 = d348 계보임을 실증했고 (저장 자세 재현 delta 0.0mm), d339와 d348은 13개 part가 상이하며 그중 gripper part_035/part_048은 D368 inner mask carrier다. 설계 §2.3 자체의 fail-stop 조항('불일치 시 설계 무효')이 이미 발동된 상태로, §2 본문이 무정정 상태다. d339 triangles는 Qhull 재구성(재포장 외피)이라 D348 지…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 4,
+      "label": "lens:ops",
+      "phaseIndex": 1,
+      "phaseTitle": "Review",
+      "agentId": "a68a0ab819ae27631",
+      "model": "claude-fable-5",
+      "state": "done",
+      "startedAt": 1785749875153,
+      "queuedAt": 1785749872673,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "OPS (실행 가능성·harness 공학)",
+      "promptPreview": "당신은 RoArm G0a grasp-track의 D409 설계 v1에 대한 적대적 리뷰어다.\n설계 문서를 정독하라: /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/session_20260803_grasp_g0a_d409_sweep_recovery_design_v1.md (§2 전체가 설계 본문).\n스윕 회수 기록(설계의 사실 기반): /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/session_20260803_grasp_g0a_d409_design_kickoff.md §4.\n목표: 설계를 **반박/파괴**하는 것이다. 통과시키는 것이 아니다. 각 주장은 반드시\nrepo의 실제 파일을 열어 확인한 file:…",
+      "lastProgressAt": 1785750497749,
+      "tokens": 144558,
+      "toolCalls": 29,
+      "durationMs": 622596,
+      "resultPreview": "{\"lens\":\"OPS (실행 가능성·harness 공학)\",\"blockers\":[{\"id\":\"OPS-B1\",\"claim\":\"설계 v1 §2.3이 pin한 A64 권위(d339 cold1 canonical 2파일)는 라이브 기하와 13개 part가 상이함이 같은 세션의 실측으로 이미 증명되어 있어, 이대로 harness를 지으면 비-라이브 기하(inner-mask carrier part_035/part_048 포함, 최대 5.53mm 이탈 정점)로 전수 열거를 수행하게 되고 §2.9-2 앵커 게이트(delta ≤0.0005mm 후보)와도 정합이 깨진다. 설계 자체의 fail-stop 조항(불일치 시 설계 무효)이 발동된 상태다.\",\"evidence\":\"claudedocs/session_20260803_gra…"
+    }
+  ],
+  "totalTokens": 565697,
+  "totalToolCalls": 111
+}

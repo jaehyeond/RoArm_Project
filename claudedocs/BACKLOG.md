@@ -41,6 +41,11 @@ as the current Active Case.
   착수 금지, 기록만.
 
 - 2026-07-14 (사용자·교수님 방향 재확인): `sim_first_cylinder_material_contract`
+  — **[SUPERSEDED 2026-08-03: 사용자 결정으로 real-first 역전.** sim 사양 기준
+  실물 주문제작 경로 기각. 실물 원통(명목 D29×H50, 사용자 실측 24.83g)이
+  권위이며 sim 사양을 실물 실측에 rebase한다. 상세:
+  `claudedocs/session_20260803_grasp_g0a_real_first_funnel_decisions_state_update.md`
+  + `direction_20260708_grasp_pivot.md` 2026-08-03 섹션. 아래 원문은 보존.**]**
   — G0a에서 로봇 충돌 형상을 먼저 검증한 뒤, G0b 진입 전에 시뮬레이터의 원통
   사양을 제작 기준으로 명시적으로 동결한다. D34 x H90 치수, 질량 또는 밀도,
   원통-그리퍼와 원통-테이블의 표면 마찰, 반발계수와 필요한 경우 접촉 순응성을
@@ -220,3 +225,33 @@ as the current Active Case.
   완료되어 observability repair는 PASS했다. D407 FAIL, science null,
   `g0a_pass=false`는 그대로이며 D408 attempt1은 동결한다. 새 물리 질문은
   새 case·tuple·사용자 승인으로 분리한다.
+
+- 2026-08-03 (사용자 결정 ④ 이연): `isaac_grasping_sdg_grasp_editor_evaluation`
+  — NVIDIA 공식 grasp 라벨 도구(isaacsim.replicator.grasping Grasping SDG,
+  Grasp Editor, GraspGen/GraspDataGen) 채택 평가. flying-gripper 가정이라
+  5-DOF reachable family 필터(핵심 rung 1)를 대체 못 하고, 설치 Kit 107.3
+  에서의 확장 존재/버전 정합 미확인, isaaclab env 설치 시 D326 numpy/psutil
+  pin 리스크. 라벨 대량 생산이 필요해지는 G2(형태 다양화) 진입 시 재검토.
+  사용자 승인 전 착수 금지.
+- 2026-08-03 (장기 기록 항목 — 사용자 결정 4건에는 미포함, 세션 doc §6
+  참조): `closed_loop_grasp_deployment` —
+  배포 단계에서 열거-라벨 기반 open-loop 재생만으로는 취약하다는
+  GG-CNN/QT-Opt 계보 교훈. real-first 열거-라벨 funnel(D409~) 완성 후의
+  후순위 항목. 착수 금지, 기록만.
+
+- 2026-08-04 (사용자 제안 — 기록만, 착수 금지):
+  `object_agnostic_best_two_region_selection` — "물체마다 가장 잘 잡히는 두
+  접촉영역(A=고정 조 / B=가동 조)을 먼저 고르고, 그 영역을 기준으로
+  파지·hold·이송을 학습한다"는 일반화 구상. 계보 = Nguyen 1988 독립 접촉영역
+  / Ferrari-Canny 1992 / Dex-Net / GraspGen (2026-08-03 문헌 조사 41건,
+  `session_20260803_grasp_g0a_real_first_funnel_decisions_state_update.md` §1).
+  현재 착수 불가 사유 4건: ① 두 영역 판정식이 파지 성공을 예측한다는 증거가
+  0 — D409 attempt1은 FULL 0 / A∧B 0, 실물·sim 통틀어 성공 파지 1건 미확보
+  (`g0a_pass=false`). ② 판정식이 평면 물체에서 축퇴 — 면-대-면 밀착(최선)과
+  모서리 찍기(최악)가 둘 다 top-edge 여유 0.000mm (D411 ③). 재설계 선행 필요.
+  ③ 기하 라벨 단독 학습 승격 금지 (Kappler 2015 / Rubert; START_HERE
+  Open Risks P3). ④ 비대칭 그리퍼에서 A/B는 물체만의 함수가 아니라
+  (물체 × 가동 조 스윙 스윕)의 함수 (D410) → "물체에 고유한 좋은 두 영역"
+  라벨은 성립하지 않으며, 그리퍼가 바뀌면 라벨이 무효가 된다.
+  진입 시점 = 단일 물체 실물 파지 1건 성공 + 판정식 재설계 이후 G2(형태
+  다양화). 사용자 승인 전 착수 금지.

@@ -1,0 +1,57 @@
+{
+ "payload": {
+  "artifact": "d409_fk_tcp_scalar_rederivation",
+  "deltas_m": [
+   "1.7490506343253998e-07",
+   "1.198529391246983e-06",
+   "1.1814551213740199e-07"
+  ],
+  "distance_m": "1.216972820130102e-06",
+  "distance_mm": "0.001216972820130102",
+  "distance_mm_rounded_7": 0.001217,
+  "handover_claim_mm": 0.0013,
+  "handover_claim_repo_artifact": "absent (handover-only figure; do not cite)",
+  "inputs": {
+   "actual_joint_rad_float32": [
+    "0.03750238195061684",
+    "0.542945146560669",
+    "1.9687392711639404",
+    "0.18299327790737152",
+    "0.0",
+    "1.5413000583648682"
+   ],
+   "actual_tcp_m": [
+    "0.2924206852912903",
+    "0.010970424860715866",
+    "0.033459603786468506"
+   ],
+   "commanded_joint_rad_float32": [
+    "0.03750238195061684",
+    "0.542945146560669",
+    "1.9687392711639404",
+    "0.18299327790737152",
+    "0.0",
+    "1.5413000583648682"
+   ],
+   "commanded_tcp_m": [
+    "0.2924208601963537",
+    "0.010971623390107113",
+    "0.03345972193198064"
+   ]
+  },
+  "interpreter": "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+  "method": "euclidean distance between stored commanded_tcp_* and actual_tcp_* literals of frozen_candidate_alignment; pure stored-scalar recomputation, no FK re-execution",
+  "notes": "float64 joint vector is NOT stored in the D349 JSON (float32 only); this scalar is a stored-literal recomputation and does not claim FK re-execution reproduction. Any FK re-execution figure must be produced separately by the D409 harness with its own determinism check.",
+  "python_version": "3.11.14",
+  "source_file": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d349/d349_frozen_target_distance_measurement.json",
+  "source_sha256": "5de6d14e37d6b74b202d1bb668120a6bb57221eac24ea5c751457ce9823b6300"
+ },
+ "determinism_check": {
+  "runs": 2,
+  "payload_sha256_run1": "f403c5e5dd69e28ea8c960c7d9d2cec12856c5d419f7426a04c671002b73d645",
+  "payload_sha256_run2": "f403c5e5dd69e28ea8c960c7d9d2cec12856c5d419f7426a04c671002b73d645",
+  "bit_exact": true,
+  "tool": "d409_fk_tcp_scalar_rederivation_tool.py",
+  "tool_sha256": "f0251ea61268b5061924dd71e2b54d3e2dbad2febbdad9f7ef8c0099144932da"
+ }
+}

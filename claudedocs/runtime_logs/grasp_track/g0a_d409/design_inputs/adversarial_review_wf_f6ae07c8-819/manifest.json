@@ -1,0 +1,36 @@
+{
+  "artifact": "d409_harness_adversarial_review_preservation",
+  "case": "g0a_d409",
+  "date_kst": "2026-08-03",
+  "workflow_run_id": "wf_f6ae07c8-819",
+  "session": "3e3bc901-1eb8-4777-8657-6e76a4337e8e (5th, launch + completion same session)",
+  "structure": "4 lenses (science-math / frozen-inputs / ops-contract / writer-observability) -> per-blocker default-refute verifier (pipeline); 8/8 agents done, 0 errors, duration_ms 1594466, subagent_tokens 1497320",
+  "review_target_shas_as_reviewed": {
+    "sim_scripts/cyld29h50_d409_zero_step_dual_jaw_contact_region_enumeration_worker.py": "bd835c6f38f66a1aa2486c07dd81aa3be83b02ed9a3461770d75fbfecefb3564",
+    "sim_scripts/cyld29h50_d409_zero_step_dual_jaw_contact_region_enumeration_controller.py": "fb34238d03ee9132f7820f7b08c623de4211d1f6d4fa87331130bbfd8e5a9bbd",
+    "sim_scripts/cyld29h50_d409_zero_step_dual_jaw_contact_region_enumeration_manual_writer.py": "5675341a28022392c14fb4859948582ab2623d495ffa8f967e7d3a6b2e4a03c3"
+  },
+  "files": {
+    "adversarial_review_result_verbatim.json": {
+      "sha256": "d6077799753b5c5d08946ea504d9d95fb16c7f76eb1960e146f2c55ecda13832",
+      "note": "verbatim workflow task output — full lens findings, verifier verdicts with reproduction evidence, warnings, ambiguity adjudications, notes"
+    },
+    "adversarial_review_journal.jsonl": {
+      "sha256": "a310b825012a533d0c311ac904ffb7870b545bac52ca3415b7554897d364ca27",
+      "note": "per-agent result rows (4 lens + 4 verify)"
+    }
+  },
+  "headline": {
+    "blockers_confirmed": [
+      "SCI-B1 worker:1214 — pre-crossing chord-bound-unexcluded clear-clear anchor pair only counted as diagnostic; q5*/first_contact published uncertified and consumed by (B) scoring; D351 _certify_first_contact precedent requires recursive subdivision or fail-closed order_certified gate",
+      "OPS-B1 controller:1017 — prereg builder missing D371-lineage required field registered_metrics",
+      "OPS-B2 == WOBS-B1 controller:2824 — RecordingStream.flush(blocking=True) does not exist in rerun-sdk 0.34.1; observability phase would crash and consume the attempt (found independently by two lenses)"
+    ],
+    "blockers_refuted": 0,
+    "warnings": "12 total (SCI 2 / FRZ 2 / OPS 5 / WOBS 3)",
+    "ambiguity_repair_required": ["A11", "A12", "C11", "C12 (+writer C12-related finalization contract)"],
+    "frozen_inputs_lens": "0 blockers — sha pins, write-path audit, d339-query-absence all verified"
+  },
+  "status": "REVIEW_COMPLETE_DISPOSITION_PENDING — no disposition, no repair, no adoption performed this session; next session must read the verbatim file (this manifest headline is not a disposition basis)",
+  "science_state": "unchanged — D407 FAIL-STOP, g0a_pass=false, no attempt1 artifacts"
+}

@@ -1,0 +1,82 @@
+{
+  "artifact": "D409_RERUN_VALIDATION_V1",
+  "candidate_entities": [
+    "/enum/candidate/region_boundary",
+    "/enum/candidate/witness/rep_2500_9000"
+  ],
+  "case": "g0a_d409",
+  "checks": {
+    "candidate_entities_present": true,
+    "embedded_blueprint_store_count_one": true,
+    "grid_points2d_components": true,
+    "instance_entities_present": true,
+    "metadata_text_component": true,
+    "recording_store_count_one": true,
+    "required_static_entities_present": true,
+    "source_mesh_components": true,
+    "source_part_entity_count_128": true,
+    "timeline_q5_arc_present": true
+  },
+  "decision_sheet": {
+    "composer": "numpy + stdlib zlib/struct PNG + embedded 5x7 font (C6; PIL forbidden)",
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "path": "claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_decision_sheet.png",
+    "sha256": "c901ce258e19362599341eea66f0c0519d7a8b76edd2c45e49c446334a452e84"
+  },
+  "entity_count_nonsystem": 142,
+  "error_banner_note": "automated check = decodability + non-blank; authoritative judgment = manual 11-field no_error_banner_visible (C7)",
+  "float_authority_note": "Float64 authority = canonical evidence JSON; RRD Float32 copies are inspection-only and never hashed into a scientific gate (D341)",
+  "instance_entities": [
+    "/enum/instance/anchor_frozen/gripper_link",
+    "/enum/instance/anchor_frozen/link5",
+    "/enum/instance/anchor_frozen/q5_rad",
+    "/enum/instance/rep_2500_9000/gripper_link",
+    "/enum/instance/rep_2500_9000/link5",
+    "/enum/instance/rep_2500_9000/q5_rad"
+  ],
+  "pass": true,
+  "rbl_sha256": "c68a41ce8e1eb318e58c4df1d0390d6a09ec482215bd3fc9e0f2fac13596bd11",
+  "representative_keys_um": [
+    [
+      2500,
+      9000
+    ]
+  ],
+  "rrd_sha256": "026f491ffa5564826db2cc8157529920bd0aa814595da2209802779b181e7069",
+  "rrd_verify_command": [
+    "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+    "rrd",
+    "verify",
+    "--check-footers",
+    "true",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_region_map.rrd",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_region_map_blueprint.rbl"
+  ],
+  "rrd_verify_output": "2 files verified without error.",
+  "rrd_verify_pass": true,
+  "screenshot_command": [
+    "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+    "--headless",
+    "--hide-welcome-screen",
+    "--window-size",
+    "960x540",
+    "--screenshot-to",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_region_map_screenshot.png",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_region_map.rrd",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_zero_step_dual_jaw_contact_region_enumeration/d409_region_map_blueprint.rbl"
+  ],
+  "screenshot_dimensions": [
+    1920,
+    1080
+  ],
+  "screenshot_pixel_std": 78.56202668248888,
+  "screenshot_renderer_cpu_llvmpipe": true,
+  "screenshot_sha256": "905dcadea63860ba2b43040c916af995cd0306257dd0406595826e015b519b06",
+  "timelines": [
+    "log_time",
+    "q5_arc"
+  ]
+}

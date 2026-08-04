@@ -1,142 +1,93 @@
 # START_HERE.md
 
-Last updated: 2026-07-29 KST. **D408 승인된 read-only observability
-replay는 controller 1회, software Rerun viewer A/B 각 1회, manual writer
-1회, retry 0으로 PASS했다. D408 attempt1은 동결했다. 이 PASS는 화면·수동
-판정 전달 경계의 수리 성공이며, D407 물리 과학 verdict는 여전히
-FAIL-STOP이고 `g0a_pass=false`다.**
+Last updated: 2026-08-04 KST (10th session). **교수님 지시로 타깃 후보가 원통 →
+젠가형 직육면체(75×25×15mm, 17.45g 실측)로 제안됨. 종이 분석 결과 D411:
+직육면체로 바꿔도 top-first 실패는 그대로(납작 360셀 중 357 top-edge, 완전
+수직 접근에서도 동일). 바뀌는 것은 실패의 결과(전도→밀림-포획)와 판정식의
+유효성. 물체 교체 자체는 채택 가치 있으나 새 case = 사용자 승인 사안.
+g0a_pass=false 불변.**
 
 ## Current Truth
 
-- Pivot: RoArm cylinder grasp-track G0a. `q5=0` CLOSED, frozen OPEN
-  `1.5413 rad`.
-- D407은 frozen D362 500-step 계약으로 A64 control(A)과 gripper
-  SDF res256(B)을 실제 재측정했다.
-- controller final:
-  `D407_SDF_PHYSICS_AB_TIPPING_REMEASURE_FAIL_STOP`,
-  classification `manual_inspection`, `pass=false`, `g0a_pass=false`.
-- A/B physics worker는 각각 exit 0, 500 finite rows, operational PASS.
-  두 제한적 physical sub-verdict는
-  `D407_MOVING_JAW_CONTACT_AND_OBJECT_MOTION_OBSERVED`.
-- FAIL은 physics worker 실패가 아니라 필수 live manual JSON의 300초
-  timeout이다. 사후검사로 소급 PASS하지 않는다.
-- D408 `[d407_manual_observability_completion_repair]`는 D407의 44개
-  산출물을 불변 입력으로 replay했고, 11/11 사람이 확인한 항목과
-  원자적 manual JSON publication을 완료했다.
-- D408 terminal:
-  `D408_D407_MANUAL_OBSERVABILITY_COMPLETION_REPAIR_PASS`,
-  `observability_repair_pass=true`.
-- D408에서도 Isaac/Kit/PhysX/GPU physics runtime, physics step,
-  q5/contact/cylinder 실행은 모두 0이다.
-- D408 attempt1은 완료·동결됐고, 승인된 후속 runtime이나 새 과학 case는
-  현재 없다.
-- 최신 상세 세션:
-  `claudedocs/session_20260729_grasp_g0a_d408_actual_read_only_replay_observability_pass.md`.
+- Pivot: RoArm grasp-track G0a. `q5=0` CLOSED, frozen OPEN `1.5413 rad`.
+  Real-first funnel. D407 FAIL-STOP(`g0a_pass=false`), D408 동결 — 불변.
+- **D409 attempt1 완주·소모** (8th doc): A 665 / **B 0 / A∧B 0** / POSES 1239 /
+  PINCH 1146 / FULL 0. 전 격자 top-rim. **재실행 절대 금지 (DECISIONS D409)**.
+  evidence `ccc8197b…f16750` / completion `6ce9218c…d638a8` / tuple `de79bc78…efcc9a60`.
+  산출물 20파일 = `claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_.../`
+  harness 3파일 sha v2 동결. manual_pass=false (D341: 과학 권위=evidence JSON).
+- **D410** (9th doc, 종이): top-first는 TCP z·접근 기울기·물체 높이의 함수가
+  아니라 **가동(스윙) 조 구조의 함수**. z 단독 재설계·수직 접근·H100 접합 무효.
+- **D411** (10th doc, 종이, NEW): **타깃을 직육면체로 바꿔도 top-first 불변.**
+  납작 배치(15mm) 360셀 중 357 top-edge(여유 0.000mm); tool 기울기 34.0°→
+  **0.2°(완전 수직)** 에서도 전부 top-edge. 단 전도 임계 μ* 0.29→**0.83**,
+  **Δh 28.94/15.23mm → 0.00~6.35mm**, 조 면 법선 36.6~46.3°→**21.8~23.2°**
+  → 실패 모드가 전도에서 **밀림-포획**으로 전환. 세로 배치(25mm)에서 **A∧B
+  통과 셀 최초 발생**(여유 2.014mm, rho 30mm, dfix 4.95mm, 테이블 8.56mm)이나
+  법선 45~68°(눌러 찍기)·전도 임계 μ* 0.33. **yaw 허용 ±10°**(신규 비용).
+  lead 재구현은 동결 D409 수치 재현 게이트 선통과(TCP 3축/2.021359845mm/
+  0.6097505rad/top-rim witness 일치). **적대 검증 워크플로우는 context 한계로
+  미완 — 단일 계산자 권위.**
+- 최신 상세: 10th doc
+  `claudedocs/session_20260804_grasp_g0a_rect_block_target_swap_paper_analysis.md`
 
-## Completed Active Case — D408 [d407_manual_observability_completion_repair]
+## Active Case
 
-이번 case의 신규 과학 변수: 0.
+- **없음 (case 미개시).** D409 종결·소모. 신규 타깃(직육면체) 채택 여부와
+  후속 case는 **사용자 결정 대기**. Claude 단독 개시 금지.
 
-운영·관측성 변수: 2 —
-`d407_clean_view_capture_and_bounded_force_arrow_repair_v1`,
-`prearmed_atomic_manual_writer_pid_phase_handshake_v1`.
+## Next Concrete Action
 
-동결 산출 경로:
-`claudedocs/runtime_logs/grasp_track/g0a_d408/attempt1_d407_manual_observability_completion_repair/`
+1. **(사용자 결정)** 10th doc §9 메뉴: (a) 납작 블록 채택 + **닫힘 동역학**
+   case (zero-step 기하 열거 반복은 무가치 — 답이 top-edge로 확정),
+   (b) **선행 저비용 실측: 마찰 μ 경사판 손측정 + 캘리퍼 실측** (로봇 불필요,
+   전 판정의 분기점), (c) 세로 배치 A∧B 셀 기하 case화(전도 μ* 0.33 리스크),
+   (d) 정지.
+2. **(교수 확인 3건)** ① 배치면 지정 필요 — 지시에 없음, 세로 세움(75mm)은
+   원통보다 나쁨(μ* 0.10). ② yaw 랜덤화 포함 여부(±10° 제약). ③ 평면 물체용
+   판정식 재설계 승인(D354와 별건).
+3. (사용자 병행) 기울임/전도힘 손측정 — 2nd doc §2. 보고 시 기록만.
+4. 차기 attempt 저작 시에만: 관측성 수리 3건 (8th doc §5).
 
-- 실행 범위: controller 1회, software Rerun viewer leg A/B 각 1회,
-  manual writer 1회, retry 0.
-- 입력: frozen D407 attempt root의 44개 regular file. 시작·중간·종료마다
-  전체 manifest를 재해시했고 어떤 D407 파일도 쓰지 않았다.
-- 수행 내용: 기존 A/B RRD·trace의 읽기 전용 replay,
-  overlay-free spatial capture, 표시 전용 bounded force glyph, 정직한
-  수동 판정의 pre-armed atomic publication.
-- 수행하지 않은 내용: Isaac/Kit/PhysX/GPU physics runtime, physics
-  step, q5/contact/cylinder 재실행, D407 manual JSON 사후 생성.
+## D408 Frozen Static/Runtime Authority (요약)
 
-## D408 Frozen Static Authority
-
-- prereg `0c0f1c03…c8d0d`; static results `bfb0f057…2dab`;
-  attestation `fa5a3cf2…50dd`.
-- controller `00f4317c…fce`; manual writer `f69d4221…edf7`.
-- tuple-file:
-  `97c7ca51f8116053fcdc59aa9572669231d4abeb66022ed4e59c9e61af28e1ff`.
-- D407 input 44 files/2 dirs, A/B trace 500+500, RRD/RBL footer 4/4,
-  stages 13/13, checks 73/73, negative 26/26, allowed dirty 161.
-
-## D408 Actual Runtime Authority
-
-- manual 11/11 true, `pass=true`, SHA `bf917eb4…af18`; terminal SHA
-  `48626366…dd37`; phase exact 10/10, final-row SHA `ead440b5…b31`.
-- source checkpoint 5/5, screenshot checkpoint 4/4, D407 rehash 44/44 PASS.
-- D408 root 32 files/2 dirs; symlink/special/pending 0, nlink 전부 1,
-  terminal summary가 마지막 write다.
-- Rerun `0.34.1`, CPU Vulkan llvmpipe. A/B force sample 각 2,000,
-  bbox row 각 8,000; hardware GPU와 physics counter는 모두 0.
-- writer fsync prompt+72.655초, controller 수신 +72.798초,
-  deadline margin 522.345초.
-- controller exit 0, worker/viewer/writer 잔류 process 0, 새 repo
-  `__pycache__` 0.
-
-## Frozen Source — D407 [sdf_physics_ab_d362_remeasure]
-
-- 신규 변수 1: `gripper_link_collision_representation_a64_to_sdf_res256_v1`.
-- A는 link5/gripper A64 64+64, B는 link5 A64 64 + gripper SDF mesh 1;
-  seed 33201, dt 0.005, OPEN 200 + close 300, 각 500 step, retry 0.
-- A/B final XY `60.6190/46.1839mm`, tilt `89.9978/58.1622°`,
-  z `-28.0005/+1.7210mm`; peak gripper `43.8583/464.0025N`,
-  link5 `23.2279/357.1754N`.
-- B step 500은 q5 velocity `3.1403rad/s`, gap `8.542mm`인 비정착 상태다.
-  화면 overlay와 300.254초 manual timeout으로 overall FAIL-STOP이며,
-  D407 manual JSON은 없고 attempt 44파일은 동결됐다.
-
-## Next Concrete Action — Stop / New Authorization Boundary
-
-D408 승인 범위는 소진됐고 attempt1은 동결했다. 여기서 정지한다.
-새 과학 변수, 새 Isaac/PhysX 실행, D407/D408 retry는 승인되지 않았다.
-다음 case가 필요하면 먼저 별도의 설계·정적 준비·새 tuple을 만들고,
-그 tuple SHA를 인용한 사용자 승인 경계를 다시 세워야 한다.
+- prereg `0c0f1c03…c8d0d`; attestation `fa5a3cf2…50dd`; tuple-file
+  `97c7ca51…e1ff`; manual 11/11 true `bf917eb4…af18`; terminal
+  `48626366…dd37`. 동결: `claudedocs/runtime_logs/grasp_track/g0a_d408/`.
 
 ## Open Risks / Claim Limits
 
-- B step 500은 settled가 아니므로 SDF stability/tipping improvement 불명.
-- B derivative link5 scope도 `instanceable=false`; link5 B−A의 순수 인과
-  귀속 금지.
-- stable grasp, force closure, grasp feasibility, exact manifold/face,
-  cap/rim/barrel 순서, per-prim cooked SDF identity, SDF 일반 우월성,
-  다른 cylinder 전이는 null.
-- B live ContactSensor/SDF binding 경로는 이번이 첫 live 관측이다.
-- generic `Failed to clone in Fabric` 1행/leg은 보존하지만 이번 실패의
-  단일 원인으로 확정하지 않는다.
-- Rerun `RrdReader`는 experimental API이고 notification detector는
-  휴리스틱이다. D408은 실제 11개 boolean을 사람이 판정했지만,
-  이는 D407 과학 verdict를 바꾸지 않는다.
+- stable grasp / force closure / 밀어넘김 부재 보증 / 동역학 / SDF 우월성 /
+  타 물체·배치 전이: 전부 null. D362/D407 물리 증거는 D34×H90 전용 (D379).
+- **D411은 기하 계산 권위이며 물리 verdict 아님.** μ **미실측**(블록·테이블)
+  → 전도-미끄럼 판정 전부 μ 의존. 블록 치수는 제품 스펙 명목값(캘리퍼 미실측).
+- 상완 링크 메시 부재(d348 = link5+gripper_link 64+64) → 상완 충돌 미지.
+- 기하 라벨 단독 학습 승격 금지 (P3). part 마스크 face 수준 구분 불가 (W-FRZ1).
 
 ## Frozen — Do Not Retry or Overwrite
 
-- D400~D408 attempt1, D362 33파일, D334 sidecar 수정·재실행 금지.
-- D408 산출물 수정, manual 재작성, replay retry 금지.
-- target/IK/path, geometry, material/mass/actuator/physics, `isaaclab`
-  env와 numpy/psutil/rerun pin 변경 금지.
-- HANDOFF.md, TASKS.md, `/half-clone`, commit/push 금지.
+- **D409 attempt1 전체** (20파일 + harness 3파일 sha v2), D400~D408 attempt1,
+  D362 33파일, D334 sidecar 수정·재실행 금지.
+- target/IK/path, geometry, material/mass/actuator/physics, `isaaclab` env pin
+  변경 금지. HANDOFF.md, TASKS.md, `/half-clone`, commit/push 금지.
+- d339 canonical 2파일 = 역사적 cook witness (질의 사용 금지 — P1).
 
 ## Must Read First
 
 1. `AGENTS.md`
 2. this file
-3. `claudedocs/DECISIONS.md` D407, D407-R1, D408, D408-R1
-4. `claudedocs/EXPERIMENT_LEDGER.md` tail
-5. D408 actual session:
-   `claudedocs/session_20260729_grasp_g0a_d408_actual_read_only_replay_observability_pass.md`
-6. `claudedocs/session_20260729_grasp_g0a_d408_manual_observability_completion_repair_static_prep.md`
-7. `claudedocs/session_20260729_grasp_g0a_d407_actual_runtime_manual_inspection_fail_stop.md`
+3. `claudedocs/session_20260804_grasp_g0a_rect_block_target_swap_paper_analysis.md`
+   (10th — 신규 타깃 §1 / 대조군 §2 / 납작 §3 / 실패모드 전환 §4 / 세로 §5 /
+   yaw §6 / 판정식 축퇴 §7 / 한계 §8 / 메뉴 §9; D411 근거)
+4. `claudedocs/session_20260804_grasp_g0a_d409_followup_approach_h100_paper_analysis.md`
+   (9th — 접근방향 §1 / H100 §2 / 손측정 §5; D410 근거)
+5. `claudedocs/session_20260804_grasp_g0a_d409_warning_disposition_static_fixture_attempt1_runtime_complete.md`
+   (8th — runtime §3 / manual §4 / 다음 §5)
+6. `claudedocs/DECISIONS.md` D407~D411
+7. `claudedocs/EXPERIMENT_LEDGER.md` tail
 
 ## Git
 
-- `HEAD == origin/master ==
-  a69a96d36219268e4bc5e25065cc234da9d99674`.
-- runtime 직전 dirty 131은 prereg exact 기대와 일치했다. terminal 직후
-  dirty 151은 allowlist 161 안이었다.
-- 필수 사후 세션 문서 추가 뒤 dirty 152이며, prereg allowlist 밖 1개는
-  attempt root 밖의 새 actual-session 문서뿐이다.
-- commit/push하지 않았다.
+- HEAD == origin/master == `40ec3ac`. 미커밋: 기존 세션 변경분 + 9th/10th
+  세션 추가 (START_HERE, 10th doc 신규, LEDGER/DECISIONS append, attempt1 20파일).
+- commit/push는 사용자 요청 시에만.

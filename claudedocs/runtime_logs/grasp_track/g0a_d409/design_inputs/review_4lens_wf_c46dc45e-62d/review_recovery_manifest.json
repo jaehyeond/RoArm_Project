@@ -1,0 +1,45 @@
+{
+  "artifact": "d409_design_review_4lens_recovery",
+  "files_sha256": {
+    "journal_prior_session_verbatim.jsonl": "247be8ee0206037f01f58a2c9fa14b14fc5a51bde031c4e77c16cb84ebacd956",
+    "lens_frozen_resumed_run.json": "fb138381ec15c7c4fe3798ede335d3b6a265c34421aca9a8cafaa7d89accef5e",
+    "lens_lessons_resumed_run.json": "5e5365338adf0e1fe28959b2e3c89c25d7aba1d8744049ad46925123fe60a1e5",
+    "lens_ops_original_prior_session.json": "1ceaecfdf1782a8afb761f5cda908635b13ad9634d4588a4dfcdc1cfcba30334",
+    "lens_ops_resumed_run.json": "cfde8e9338308fdc74b2f435e5644d87e80af7ab810676d245a9673c7b87037b",
+    "lens_science_resumed_run.json": "4e75752d067f5466e9ab43442b8b05b53684b13ccdecc95f813bbced9340f7a2",
+    "resumed_run_full_output.json": "30e9d830aeb45abf8c58224c7285defd5b0bd281d5cfc9fe9695758445c78638"
+  },
+  "lens_counts": {
+    "frozen": {
+      "blockers": 2,
+      "confirmations": 10,
+      "warnings": 3
+    },
+    "lessons": {
+      "blockers": 2,
+      "confirmations": 9,
+      "warnings": 5
+    },
+    "ops_original_prior_session": {
+      "blockers": 1,
+      "confirmations": 8,
+      "warnings": 5
+    },
+    "ops_resumed": {
+      "blockers": 2,
+      "confirmations": 8,
+      "warnings": 4
+    },
+    "science": {
+      "blockers": 3,
+      "confirmations": 9,
+      "warnings": 4
+    }
+  },
+  "recovery_paths": {
+    "prior_session_journal": "1 result row (OPS lens) — first recovery path",
+    "prior_session_transcripts": "StructuredOutput tool_use extraction: OPS 1 call (bit-identical to journal), science/frozen/lessons 0 calls (interrupted mid-investigation)",
+    "resumed_run": "cross-session resume did NOT cache prior results; all 4 lenses re-ran fresh (agents ad349d00/acebe060/a159e513/a68a0ab8, 4/4 done, 0 errors). OPS therefore has two independent passes; both preserved, findings union used for disposition."
+  },
+  "workflow_run_id": "wf_c46dc45e-62d"
+}

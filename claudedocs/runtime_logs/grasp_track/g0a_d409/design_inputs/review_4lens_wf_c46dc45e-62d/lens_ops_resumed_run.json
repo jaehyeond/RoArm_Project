@@ -1,0 +1,54 @@
+{
+  "lens": "OPS (실행 가능성·harness 공학)",
+  "blockers": [
+    {
+      "id": "OPS-B1",
+      "claim": "설계 v1 §2.3이 pin한 A64 권위(d339 cold1 canonical 2파일)는 라이브 기하와 13개 part가 상이함이 같은 세션의 실측으로 이미 증명되어 있어, 이대로 harness를 지으면 비-라이브 기하(inner-mask carrier part_035/part_048 포함, 최대 5.53mm 이탈 정점)로 전수 열거를 수행하게 되고 §2.9-2 앵커 게이트(delta ≤0.0005mm 후보)와도 정합이 깨진다. 설계 자체의 fail-stop 조항(불일치 시 설계 무효)이 발동된 상태다.",
+      "evidence": "claudedocs/session_20260803_grasp_g0a_d409_sweep_recovery_design_v1.md:60-61(d339=권위), :70-72(불일치 시 fail-stop), :300-315(M1 13 part 상이 + M3 d348 delta 0.0 실증). 원 데이터: claudedocs/runtime_logs/grasp_track/g0a_d409/design_inputs/d409_anchor_gate_measurement.json — m1 gripper vertex_set_equal 59/64·link5 56/64, part_035 max_excess 5.5097mm(:36-40), m3 stored_pose(d348 기하) abs_delta_mm '0.0' 양 body(:195-209). sha 재검증: d339 2파일·d348(83b8c7b1…) 전부 본 리뷰에서 sha256sum 일치 확인.",
+      "proposed_fix": "§4 처분에서 권위를 d348 instance 스트림(rows[].instance.vertices_m + payload_sha256, 파일 sha 83b8c7b16181d0f5c545cfbeaa992c8ebfd69e2310dd33bce2a64234a1deaab6 — 이미 measurement JSON inputs_sha256에 실측 pin됨)으로 교체하고 d339는 cook witness로 강등. 연쇄 수정 필수: §2.3 표의 입력 행 교체, §2.11-2 음성 대조를 d339 전용 필드명 geometry_sha256에서 d348 필드명 payload_sha256/witness_sha256로 재정박, prereg input_hashes 갱신. 정정 전 설계 확정·정적 준비 착수 금지."
+    },
+    {
+      "id": "OPS-B2",
+      "claim": "worker 2회 호출(run1/run2 결정성) 확장이 §2.10이 준용을 명령한 D371 골격과 기계적으로 충돌한다: D371 골격의 모든 산출 기록은 exclusive-create(open('x'))이고 single_run_contract는 worker_invocations=1 전제라, 동일 attempt 폴더에 같은 파일명을 쓰는 2차 호출은 FileExistsError로 즉사한다. §2.13 폴더 목록에는 run별 하위 구조가 없고 권위 evidence JSON이 단수로만 등재되어 어느 run이 canonical인지 미정의 — retry 0·첫 terminal 동결 문화(D408-R1)에서 run2 크래시는 attempt1 전체를 FAIL-STOP으로 소모한다.",
+      "evidence": "sim_scripts/cyl34_top_view_d371_offline_collider_candidate_pareto_comparison.py:216-220(_write_json_x = path.open('x') exclusive create), :549-556(single_run_contract worker_invocations: 1, atomic_worker_claim_required), :414(output_empty_before_preregistration). 설계: session_20260803_grasp_g0a_d409_sweep_recovery_design_v1.md:192-194(worker 호출 2회 — prereg 명시만 요구, 메커니즘 무정의), :251-255(§2.13 출력 목록에 run 하위폴더·canonical 승격 규칙 부재), :179-181(§2.9-3 'canonical evidence bytes bit-exact'만 요구, 비교 대상 파일 집합 미열거).",
+      "proposed_fix": "prereg에 dual-run 계약을 명시적으로 정의: (1) worker 호출별 별도 --out-dir(attempt1_*/run1/, run2/)과 run별 원자적 claim sentinel, (2) run2는 run1 preclose sentinel PASS 후에만 발사(run당 retry 0 유지), (3) byte-비교 대상 파일 집합을 열거(canonical evidence JSON + 영역 CSV의 canonical 직렬화 bytes만; supervisor가 비교 후 canonical 승격 기록), (4) single_run_contract를 'per-run contract + worker_invocations_total=2'로 개명·확장해 D371과의 차이를 필드 수준으로 등록."
+    }
+  ],
+  "warnings": [
+    {
+      "id": "OPS-W1",
+      "claim": "§2.13 질의 예산의 근거 수치가 repo 어디에도 영속화돼 있지 않고(8.2µs/질의·BVH 3.1ms·10,240회 벤치마크는 세션 doc 서술뿐 — measurement tool에 타이밍 코드 자체가 없음), pose당 '≈2,200' 산정은 이분법 비용(≈16-21 반복 × 최대 64 part ≈ +1,000-1,350질의/pose)을 사실상 누락해 실제는 ~3.2-3.5k/pose ≈ 4.0-4.4M/run이다. 결론(7,200s 여유)은 불변이나, 이 프로젝트가 방금 스윕에서 집행한 '인계-전용 수치 인용 금지' 규율(kickoff §4.6)을 예산 근거가 스스로 위반한다.",
+      "evidence": "d409_anchor_gate_measurement.json에 벤치마크 섹션 부재(전문 판독 — m1/m2/m3만 존재); d409_anchor_gate_measurement_tool.py에 time/bench 코드 없음(grep 'bench|elapsed|time' 무히트, :29-32 입력 경로만). 본 리뷰 독립 재실측(isaaclab env, 실제 d339 A64 BVH 128개 vs Cylinder(0.0145,0.050), 질의마다 Transform3f/DistanceResult 신규 생성 = python 오버헤드 포함): 10.35µs/질의, 128-part BVH 빌드 3.7ms → 2.7M=28s, 4.4M=46s, 10M=104s ≪ 7,200s. 설계 산정: session_..._design_v1.md:256-258(64+64×33=2,176에 '+이분법'을 ≈24질의로 흡수).",
+      "proposed_fix": "정적 준비에서 처리량 벤치마크를 산출물 파일(도구+JSON, 2회 결정성)로 영속화해 prereg가 그 파일을 인용하게 하고, pose당 질의 수 상한(이분법 반복×질의 폭 포함, 예: ≤3,600/pose → ≤4.5M/run)을 prereg registered budget으로 명시. timeout 7,200s는 유지해도 충분(측정상 ≥70× 여유)."
+    },
+    {
+      "id": "OPS-W2",
+      "claim": "§2.12의 pre-armed manual writer 요건 4개(runtime 전 완성·dry-run, PID/phase handshake, deadline, no-replace+fsync)는 D408 실측 admission prerequisite의 부분집합이다. D408 원문은 controller/writer identity, nonce/HMAC envelope, tuple SHA binding, source/screenshot manifest, 공통 monotonic deadline, 'false도 정직 게시' 11-field manual result까지 요구하며, Dxxx 참조만으로 축약하면 harness 저작 시 누락될 수 있다.",
+      "evidence": "claudedocs/DECISIONS.md:24265-24269(identity·phase chain·nonce/HMAC·tuple SHA·manifest·monotonic deadline·exclusive-create+no-replace+fsync), :24321-24324(D408-R1: READY/HMAC/PID-start/phase binding + false도 유효한 11-field 게시, 즉석 writer/retry/사후 덮어쓰기 금지). 설계: session_..._design_v1.md:244-247(4개 항목 + 'D407-R1/D408 admission prerequisites' 참조 축약). 메커니즘 실재 확인: sim_scripts/cyl34_top_view_d408_d407_manual_observability_completion_repair_manual_writer.py:366(_hmac_hex), :737(O_EXCL), :1094-1103(256-bit nonce 검증).",
+      "proposed_fix": "prereg visual/manual contract에 D408 prerequisite 전 목록을 필드 단위로 열거(nonce/HMAC envelope 키, tuple SHA binding, source/screenshot manifest, 11-field false-publishable 스키마, identity binding)하고 정적 fixture에서 각 항목의 고의 변조 reject를 확인."
+    },
+    {
+      "id": "OPS-W3",
+      "claim": "'gripper_outer 16 = 음성 대조 전용(inner 아님)' 프레이밍이 집합적으로 거짓이다: D368 certified 기준 outer 16은 inner 17의 진부분집합(inner − {part_035})이다. §2.11-3 대조는 part_035 한 개 차이로만 name-set/sha FAIL이 나며(결정적이므로 구현은 가능하나 판별력이 1-part에 의존), §2.7(B)의 part-identity 기반 competitor exclusion은 공유 carrier 16개에 대해 inner면 접촉과 outer면 접촉을 원리적으로 구분하지 못한다.",
+      "evidence": "claudedocs/runtime_logs/grasp_track/g0a_d368/d368_semantic_allocation_evidence.json patch_allocation 실측(본 리뷰 판독): gripper_inner.carrier_budgets.certified.part_names 17개 = [030,035,042,045,046,047,048,050,051,053,056,058,059,060,061,062,063]; gripper_outer.certified.part_names 16개 = 동일 목록에서 part_035만 제외. 설계 표현: session_..._design_v1.md:74-76('gripper_outer 16(음성 대조 전용)'), kickoff doc session_20260803_grasp_g0a_d409_design_kickoff.md:196-203('16 parts = 음성 대조군(inner 마스크 아님)').",
+      "proposed_fix": "prereg에 outer⊂inner 중첩 사실을 명기하고, §2.11-3 대조의 판별 근거가 part_035 단일 차이임을 문서화(sha 비교라 결정적 FAIL은 유지). §2.7(B)에는 'part 단위 마스크는 면(face) 단위 inner/outer를 구분하지 못한다'는 한계를 interpretation boundary에 추가하거나, 첫 교차 witness 점의 면 소속(D368 certified face 계약) 진단 기록을 병기."
+    },
+    {
+      "id": "OPS-W4",
+      "claim": "신규 명명 cylr29h50_은 기존 규약이 지름을 인코딩(cyl34 = D34mm)하는 것과 달리 'r29'가 반경 29mm로 오독될 수 있다(실제 r=14.5mm, D=29mm). 파일 충돌·소유권 문제는 없으나, 접두가 노리는 목적 자체가 '상수 혼입 방지'라 이 오독은 정확히 그 실패 모드를 만든다.",
+      "evidence": "sim_scripts/ 전수 목록 실측: cylr29h50* 기존 파일 0건, 기존 규약 = cyl34_top_view_*(D34 지름 인코딩)·cube10cm_*. 설계: session_..._design_v1.md:188-191('cylr29h50_로 cyl34 계열과 상수 혼입 방지'), :40-41(r=0.0145m, 즉 D29). AGENTS.md File ownership은 sim_* prefix 규칙만 정의 — cyl34_* 130여 파일 전례상 비-sim_* 이름은 소유권 비저촉.",
+      "proposed_fix": "cyld29h50_*로 개명(지름 인코딩 규약 유지)하거나, 유지 시 prereg와 controller 모듈 docstring에 'cylr29h50 = real cylinder D29×H50 (r=14.5mm)' 명명 범례를 pin."
+    }
+  ],
+  "confirmations": [
+    "§2.13 예산 실행 가능성 독립 재검증 PASS: isaaclab env에서 실제 d339 A64 128 part BVHModelOBBRSS vs hppfcl.Cylinder(0.0145,0.050) distance 질의를 python 루프(질의당 Transform3f·DistanceResult 신규 생성 = 순수 python 오버헤드 포함)로 20,000회 실측 → 10.35µs/질의, BVH 128개 빌드 3.7ms. 외삽: 2.7M=28s, 4.4M=46s, 10M=104s — timeout 7,200s/run 대비 ≥70× 여유. D371 실측(378질의, 전체 ~196s)의 지배 비용은 cook/Isaac이지 distance 질의가 아님도 확인(§2.10 A-family-only 준용과 정합).",
+    "§2.10 env pin 전항 라이브 일치: /home/cgxr/miniconda3/envs/isaaclab/bin/python(3.11) 실재, hppfcl 2.4.4 import OK, numpy 1.26.0/psutil 5.9.8(D326 pin)/scipy 1.15.3/trimesh 4.5.1/rerun-sdk 0.34.1 전부 import 실측 일치, rerun CLI 절대경로 /home/cgxr/miniconda3/envs/isaaclab/bin/rerun 실재 + `--version` = rerun-cli 0.34.1.",
+    "§2.10 prereg 스키마 서술 = D371 골격 1:1 일치: cyl34_top_view_d371_offline_collider_candidate_pareto_comparison.py:449-577에서 artifact/case/new_variables/head pin/input_hashes/environment/candidate_contract/registered_metrics/gates/negative_controls 2계층(prepare :512 + audit_registered :513)/visual_contract/scope_guards/single_run_contract/interpretation_boundary/registered_worker_command 전 필드 실재 확인. CLEAR_GATE 0.1mm = 동 파일 :148 OPEN_CLEAR_GATE_MM=0.1과 일치. d371 worker 파일 실재.",
+    "§2.11-4(pi/2 FK 치환) 판별력 정량 확인: d409_anchor_gate_measurement.json 실측 기준 URDF-리터럴 pose err ≤0.000137mm vs pi/2 ≥0.0012197mm(≈9× 분리), 거리 delta 리터럴 ≤0.000120mm vs pi/2 link5 0.001191mm — 제안 임계 0.0005mm 기준 통과측 3.6×·거부측 2.4× 여유로 판별 가능. 단 pi/2의 gripper 거리 delta는 0.0001777mm로 임계 이하이므로 게이트는 '어느 한 수량이라도 초과 시 거부'(ANY-reject) 의미론으로 pin해야 함(거리 채널의 판별은 link5가 단독 수행).",
+    "§2.3 동결 입력 sha 전항 재현: d339 gripper(dc258b27…)/link5(c45bd056…), d368(be2a422b…), d349(5de6d14e…), urdf(64dc8d08…) 5건 sha256sum 일치 + d409_fk_tcp_scalar_rederivation.json(c0b13007…)에 0.001216972820130102 스칼라 실재 + d409_anchor_gate_measurement.json(8cc61166…) + manifest·journal_verbatim_copy(6429d7f9…703e) 일치. d339 canonical per-part geometry_sha256/vertices_m/triangles 필드 실재(64 parts) — §2.3 서술 정확.",
+    "§2.2/§2.5 산술 재현: float32(1.5413)=1.5413000583648682, float32(0.3)=0.30000001192092896 numpy 재계산 일치; table_z=0.032883−0.045=−0.012117, z_center=−0.012117+0.025=0.012883 일치; 격자 ρ 59점 × τ 21점 = 1,239 pose 일치.",
+    "음성 대조 #1/#2/#3/#5 구현 가능성 확인: #1 반경 pin 체크(상수 대조) 자명, #2 d339 per-part geometry_sha256 실재(d348 전환 시 payload_sha256로 재정박 필요 — OPS-B1 연쇄), #3 D368 patch_allocation part_names 목록 실재로 name-set/sha 비교 구현 가능(판별력 한계는 OPS-W3), #5 빈 격자 admission FAIL 자명. D408 writer 메커니즘(nonce/HMAC/O_EXCL)도 d408 manual_writer.py에 실재 확인.",
+    "명명·소유권·경로 등록 확인: sim_scripts/에 cylr29h50* 기존 파일 0건(충돌 없음), cyl34_*/cube10cm_* 130여 파일 전례상 AGENTS.md sim_* prefix 소유권 규칙 비저촉, START_HERE.md:35·:103에 g0a_d409 경로 등재(Variable Ladder forward-only 규칙 충족)."
+  ],
+  "lens_key": "ops"
+}

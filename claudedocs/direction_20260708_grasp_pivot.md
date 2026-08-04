@@ -111,3 +111,25 @@
 Tap track은 D321 결과를 최종 산출물로 동결한다. D321 결과는 1,920 accepted episodes, combined acceptance 96.0%다. 인수 가능한 자산은 DiffIK 접근, D256 reset, 검증기 + 물리성 게이트, conveyor, 평가 규약, script 0~999 대조군이다.
 
 이후 grasp track에서 tap track 조건을 계속 확장하지 않는다. 필요 아이디어는 `claudedocs/BACKLOG.md`에 적고 Active Case로 돌아온다.
+
+## 실물 우선 열거 funnel 채택 (2026-08-03, 사용자 결정 4건)
+
+1. **Real-first**: 실물 원통(명목 D29×H50, 사용자 실측 24.83g — HARD RULE
+   #18 권위)이 모든 계산·라벨의 기준이다. sim 사양 동결 후 실물 주문제작
+   경로(BACKLOG `sim_first_cylinder_material_contract`)는 SUPERSEDED. sim
+   원통을 실물 실측 사양으로 rebase한다(D379 primitive-cylinder 규칙 적용).
+   G0b 대상 사양도 "D34×H90"(본 문서 G-사다리 원문)에서 실물 실측 사양으로
+   rebase — 다음 교수님 보고 시 명시. 원문 라인은 forward-only로 보존.
+2. **라벨 사다리 3단**: 기하(zero-step 열거) → PhysX(**상대 스크린 전용** —
+   24.83g 전도 임계 ~0.09–0.14N ≈ 접촉등록 문턱 0.1N, 마찰 미실측이므로
+   절대 라벨 금지) → 실물 소량 캠페인(권위 라벨). 기하 라벨 단독 학습
+   승격 금지(Kappler/Rubert).
+3. **순서 = C안**: zero-step 열거 → 로봇 없는 실물 보정 파일럿(캘리퍼
+   실측·질량 provenance·기울임/전도힘 손측정) → PhysX 스크린 → 실물 본
+   캠페인.
+4. **자체 harness**: 공식 Grasping SDG/Grasp Editor는 flying-gripper
+   가정이라 5-DOF 도달성 필터 대체 불가 → 평가는 BACKLOG, G2 재검토.
+
+다음 case = D409(zero-step 실물 원통 양측 접촉영역 전수 열거, 신규 변수 1 =
+실물 원통 기하). D399는 D398-F1 예약 유지. 상세·검증·provenance:
+`claudedocs/session_20260803_grasp_g0a_real_first_funnel_decisions_state_update.md`.
