@@ -1,107 +1,109 @@
 # START_HERE.md
 
-Last updated: 2026-08-04 KST (11th session). **사용자 결정으로 타깃 물체 =
-젠가형 목재 블록(75×25×15mm, 17.45g) 확정** (커밋명 "젠가로 물체 변경",
-HARD RULE #18). **D412: 이 그리퍼의 "두 영역"은 물체 옆면 대향 패치가 아니라
-평행한 두 상단 모서리 쌍이며, 지배 변수는 Δh다. "밀림=실패"·"고정 조 먼저"
-제약은 전복된다.** case는 아직 미개시. g0a_pass=false 불변.
+Last updated: 2026-08-04 KST (14th session). **D415: 사용자 실물 사진 10장 + 관측 3건 수령. D341은 실물
+시행의 차단 요건이 아니었고(조문 오인용), 배치면 지정 문장은 여전히 2해로 갈리며, collider 64/64는
+유지가 정답이다. 적대 검증 4/4가 lead 1차 종합을 반박.** case 미개시. g0a_pass=false 불변.
 
 ## Current Truth
 
 - Pivot: RoArm grasp-track G0a. `q5=0` CLOSED, frozen OPEN `1.5413 rad`.
   Real-first funnel. D407 FAIL-STOP(`g0a_pass=false`), D408 동결 — 불변.
-- **D409 attempt1 완주·소모** (8th doc): A 665 / **B 0 / A∧B 0** / POSES 1239 /
-  PINCH 1146 / FULL 0. 전 격자 top-rim. **재실행 절대 금지 (DECISIONS D409)**.
-  evidence `ccc8197b…f16750` / completion `6ce9218c…d638a8` / tuple `de79bc78…efcc9a60`.
-  산출물 20파일 = `claudedocs/runtime_logs/grasp_track/g0a_d409/attempt1_.../`
-  harness 3파일 sha v2 동결. manual_pass=false (D341: 과학 권위=evidence JSON).
-- **D410** (9th doc, 종이): top-first는 TCP z·접근 기울기·물체 높이의 함수가
-  아니라 **가동(스윙) 조 구조의 함수**. z 단독 재설계·수직 접근·H100 접합 무효.
-- **D411** (10th doc, 종이): 직육면체로 바꿔도 top-first 불변(납작 360셀 중
-  357 top-edge, 완전 수직 접근에서도 동일). 단 전도 임계 μ\* 0.29→**0.83**,
-  **Δh 28.94/15.23mm → 0.00~6.35mm**, 법선 36.6~46.3°→**21.8~23.2°** →
-  실패 모드가 전도에서 **밀림-포획**으로 전환. yaw 허용 **±10°**.
-- **D412** (11th doc, 재해석, NEW): 두 영역의 정의를 스윙 조 운동학에 맞추면
-  **평행한 두 상단 모서리 쌍**이 답이다. Δh=0 → 회전 짝힘 0, μ\*=0.83 → 통상
-  목재 마찰(0.3~0.6)에서 전도 불가, 접촉선이 CoM보다 7.5mm 위 → 진자 안정.
-  **보유력은 병목 아님**: 필요 0.171~0.285N vs D362 실측 peak **43.86N**.
-  판정식 재설계 사유 2개(기하 축퇴 = D411 ③ / 밀림≠실패 = D412 ②).
-  **"36.033mm = 정확도 하한" 인용 금지** (D328 자유공간 1.512mm).
-- 최신 상세: 11th doc
-  `claudedocs/session_20260804_grasp_g0a_jenga_two_region_reframe_plan.md`
+- **D409 attempt1 완주·소모**: A 665 / **B 0 / A∧B 0** / POSES 1239 / PINCH 1146 /
+  FULL 0. 전 격자 top-rim. **재실행 절대 금지**. evidence `ccc8197b…f16750`.
+- **D410** top-first는 스윙 조 구조의 함수 / **D411** 직육면체도 top-first 불변 /
+  **D412** 두 영역 = 평행한 두 상단 모서리 / **D413** 지배 변수 = 조 면 법선 부호 /
+  **D414** 배치면 판정 보류 + 문헌(push-grasping = Dogar/Brost 기성, cross-embodiment = GraspGen-X 반증).
+- **D415** (14th, 사진+감사+정정, NEW):
+  ① **D341은 실물 파지의 차단 요건이 아니다** — `AGENTS.md:120-121`에 면제 문언이 실재하므로
+     "면제 경로 없음"은 조문 오인용이고, `:142-144` "contract fails **without overriding the
+     scientific verdict**" + D409 manual 4/11 정직 FAIL 선례(`DECISIONS.md:24373-24375`)로
+     **"시행 → 실패 정직 기록 → verdict 유지"** 제3 경로가 이미 존재한다.
+  ② **배치면은 여전히 2해** — A(높이15/radial75/조25 = 납작 yaw0) vs B(높이25/radial75/조15 = 세로 yaw0).
+     "1.5를 바닥으로"가 양쪽으로 읽히고 사용자는 둘 다 실패라 했다. **D414 ① 보류 미해소.**
+     "75mm radial = yaw 0"만 2경로 교차확인 확정. 필요한 답 = **높이 숫자 1개**.
+  ③ **collider 64/64 유지가 정답, 재분해는 해롭다** — 프로브가 d348 분해 파트를 BVHModelOBBRSS로 썼고
+     (`worker:1050-1058`,`:734-744`,`:1065-1069`) 재분해 시 `part_027/029/030/031`+inner17 동결 참조가 붕괴.
+     단 sha 통과 ≠ 실물 대표성(**false pass**). 경계: 실물 시연 진행 가능 / **mm 여유 주장은 t 실측 후**.
+  ④ **D414 ② "여유 전량 소모"는 과했다** — "측면 엄격 여유"는 수직량(`worker:909` z만).
+     `Δz = R(cosθ−cosθ′)` = **0.336~0.388mm** = 17~30% 소모·양수 생존. 신규 비용: **yaw 허용 ±10° → ±6~9°**.
+  ⑤ **테이프**: 24mm는 **폭** 확정(두께면 48mm > 개구 40~45mm로 안 닫힘). 두께 명목 **0.5mm(20 mil)** —
+     동급 5출처 수렴 **추정**(OKONG 미공표). 자기융착 = **접착제 없음**(부착 형태 확인 필요).
+  ⑥ **lead 정정 3**: `roarm_sdk/common.py` `tB~tR` **주석 처리**(힘 API 구조적 부재 아님) /
+     hold 판정은 **사람**이고 `drift_check`는 유효성 필터(극성 반대) /
+     `safety_p0_guards`에 **`gripper_angle_ctrl` 래퍼 없음 = G10 구멍**.
+  ⑦ **D409 정밀화**: `moving_witness_top_margin_mm` 1239/1239 = **0.000**(경계 등호),
+     barrel 분류기 1개만 빼면 **B=787 · A∧B=505**, `worker:1187`로 **z 고정** 2축 격자였다.
+- 최신 상세: 14th doc
+  `claudedocs/session_20260804_grasp_g0a_real_grasp_photos_placement_ambiguity_tape_collider.md`
 
 ## Active Case
 
-- **없음 (case 미개시).** D409 종결·소모. Claude 단독 개시 금지.
-- **확정 (사용자, 2026-08-04)**: 대상 물체 = 젠가형 목재 블록 75×25×15mm /
-  17.45g. 원통 D29×H50(24.83g)은 대조군·역사 증거로만 유지.
-- **미확정 (승인 대기)**: ① 배치면(납작 15mm 권고 vs 세로 25mm) ② yaw 랜덤화
-  여부 ③ 평면 물체용 판정식 재설계 ④ 후속 case 개시.
+- **없음 (case 미개시).** Claude 단독 개시 금지. 승인 획득 0건.
+- **사용자 관측 (2026-08-04, HARD RULE #18)**: ① 원통이 생각보다 잘 집힌다 ② 실리콘 부착 후 hold 개선
+  ③ 젠가 세로(2.5cm)·눕힘(1.5cm) 둘 다 실패 ④ 정면 배치 = "1.5를 바닥, 2.5×1.5 면이 로봇을 향해".
+- **사진 10장 판독**: 원통 barrel 파지 6장 / **빨간 직육면체 막대** 4장(정체·치수 미확인, 최소 2장은
+  손이 안 닿음 = 서보 유지 추정). **테이프 부착 여부·원통 기립 여부는 판별 불가.**
+- 대상 물체 = 젠가형 목재 블록 75×25×15mm / 17.45g (커밋 `ceb6c98`). 원통 D29×H50은
+  `direction:17`상 **G0b 트리거 물체** — `START_HERE` 과거 "대조군" 강등은 사다리와 충돌(D415 ⑦).
+- **사용자 지시**: "8/20에 매이지 말고 **더 빨리** 진행".
 
 ## Next Concrete Action
 
-1. **P1 — 로봇 없는 실물 파일럿 (사용자 손 작업, 승인 불필요, ~40분)**
-   - P1-a 캘리퍼 실측 75/25/15mm (3면 × 3회)
-   - P1-b 경사판 μ **2종**(블록↔테이블 / 블록↔조 표면) 각 5회. 납작 블록은
-     전도 임계 기울기 ≈59°라 미끄러짐 우세 → μ = tan(φ) 직독
-   - **P1-c 밀기-포획 모의시험 (최중요)**: 고정벽 + 카드를 ~22° 기울여 반대편
-     윗모서리 밀기, 초기 간격 3종 × 3회. 평행 미끄러짐(포획) vs 비틀림(yaw
-     위험) vs 타고 오름·튕김(실패) vs 압박 후 들어올림 유지
-2. **P2 — 자세 1개 선정 (case 개시 승인 필요; Isaac 0 / 로봇 0 / 코드 무변경)**
-   동결 D409 재현 게이트 선통과 후: ① **납작 배치 테이블 여유**(10th doc 누락,
-   실패 시 납작 무효 → 최우선) ② 접근 corridor 무충돌 ③ **조 면 법선 부호**
-   (10th doc 미기재) ④ 자세 (tau, rho, zo) + 예측
-   신규 변수 2 = [물체 교체 / 판정식 = 상단 모서리 쌍 대칭 포획]
-3. **P3 — 실물 로봇 close-lift-hold (HW 명시 승인 필요)**. 첫 "잡았다" 후보.
-4. **교수 확인 3건**: 배치면 지정 / yaw 랜덤화 / 판정식 재설계 승인.
+1. **확인 6건**(14th doc §8) — 최우선 2건:
+   ① **테이블에서 블록 윗면까지 높이가 15mm인가 25mm인가** (자로 1초, 배치면 확정)
+   ④ **원통 성공이 서 있었나 누웠나 / 로봇 자율인가 손 보조인가 / 테이프 전인가 후인가**
+      (전이면 D413 ② 쐐기 모델이 원통에 대해 내는 문턱 μ>0.74~1.05가 실물로 반증)
+   나머지: 실패 시 75mm 축 방향 / 실패 양상 / 빨간 막대 정체·치수 / 테이프 부착 형태.
+2. **승인 6건**(14th doc §9): ①노선 지정 ②실물 캠페인 C1 개시(HW 승인) ③그리퍼 속도 정책
+   (`speed=1000` vs G10 `200`) ④t 실측([C]→[B]) ⑤D341 처리 ⑥판정식 재설계 사전등록(**505셀 공개 필수**).
+3. 승인 1·2를 받으면 **오늘 착수 가능** — D341은 차단 요건이 아니다(D415 ①).
+   신규 스크립트는 `safety_p0_guards`를 뼈대로, `replay_sim_demo_real.py:219-320`에서 **루프 구조만** 이식
+   (두 안전 체계 혼용 금지). §10의 `gripper_angle_ctrl` 구멍을 먼저 막을 것.
 
-## D408 Frozen Static/Runtime Authority (요약)
+## 교수 확인 항목 (5건 유지 + 1건 신규)
 
-- prereg `0c0f1c03…c8d0d`; attestation `fa5a3cf2…50dd`; tuple-file
-  `97c7ca51…e1ff`; manual 11/11 true `bf917eb4…af18`; terminal
-  `48626366…dd37`. 동결: `claudedocs/runtime_logs/grasp_track/g0a_d408/`.
+배치면 지정 / yaw 랜덤화 / 판정식 재설계 / 젠가 채택이 G2 선취인지 / 테이프 개조가 지시 #8 위반인지
+/ **NEW: G0b 트리거를 손·서보 시연으로 인정하는가, 자율 명령 파지를 요구하는가**(`direction:17`은 자율성 미명시).
 
 ## Open Risks / Claim Limits
 
-- stable grasp / force closure / 밀어넘김 부재 보증 / 동역학 / SDF 우월성 /
-  타 물체·배치 전이: 전부 null. D362/D407 물리 증거는 D34×H90 전용 (D379).
-- **D411·D412는 기하·재해석 권위이며 물리 verdict 아님.** μ **미실측**(블록·
-  테이블·조 표면) → 전도-미끄럼 판정 전부 μ 의존. 블록 치수는 제품 명목값.
-- D412 §4 물체 클래스 술어는 **데이터점 2개 기반 가설** (Δh 임계 높이 미측정).
-  push-grasping 문헌 연결은 **미검색·미검증** — 인용 전 HARD RULE #4 절차 필수.
-- 상완 링크 메시 부재(d348 = link5+gripper_link 64+64) → 상완 충돌 미지.
-- 기하 라벨 단독 학습 승격 금지 (P3). part 마스크 face 수준 구분 불가 (W-FRZ1).
-- **D409 실행 이전 작성 브리핑 재사용 금지 without 실행 전/후 구분** (D412 ④).
+- stable grasp / force closure / 동역학 / SDF 우월성 / 타 물체·배치 전이: 전부 null.
+- **D410~D415는 기하·정정·재해석·감사 권위이며 물리 verdict 아님.**
+- **n=3(성공 1·실패 2)로 지배 변수 순위를 정하지 말 것** — 함께 단조 변하는 양이 최소 5개
+  (상단 높이 37.883/12.883/2.883mm · μ\* · Δh · 곡면vs평면 · 회전대칭)라 판별력 0.
+- **"실물 성공이 D409를 반증한다" 표현 금지** — D409의 B는 성공 판정식이 아니라 첫 접촉 위치 분류기다.
+- **판정식 재설계는 505셀 사전등록 없이 착수 금지**(`p_z<top` → `p_z<=top` 한 글자로 전 격자 반전 = D354 전형).
+- 코드 충돌 1건 미해소: `deploy_smolvla.py:685-689`(speed=1000) vs `safety_p0_guards.py:145-146`(>200 ValueError).
+  **추가 위험**: `safety_p0_guards`에 `gripper_angle_ctrl` 래퍼가 없어 직접 호출 시 G10 미발동.
+- 파지 성공 자동 판정기: **접촉 감지만 있음**(`trajectory_p0_gripper_sweep.py:73` gap), **hold 판정은 사람**.
+  실물 영상 녹화 코드 없음(1프레임 PNG 유틸 `capture_kinect_for_sponge_check.py`는 있으나 D341 스크린샷 대체 불가).
+- 납작 배치 **테이블 여유는 여전히 미계산**(11th doc:139 "최우선"). 세로 3셀 법선 **부호 미기재**.
+- 문헌 부재 주장(스윙 호 조용 데이터셋 / sub-6-DOF 도달성 1급 제약)은 확신도 **LOW-MEDIUM**, 인용 전 재검색.
+- 문서 결함 2건(미수리): "세로" 용어 충돌(75mm 세움 μ\*=0.10 vs 25mm 세로 0.326) /
+  "D362 실측" 오기가 `DECISIONS.md:24401`, 10th:65, 9th:53·59, `LEDGER:460`에 잔존.
 
 ## Frozen — Do Not Retry or Overwrite
 
 - **D409 attempt1 전체** (20파일 + harness 3파일 sha v2), D400~D408 attempt1,
-  D362 33파일, D334 sidecar 수정·재실행 금지.
-- target/IK/path, geometry, material/mass/actuator/physics, `isaaclab` env pin
-  변경 금지. HANDOFF.md, TASKS.md, `/half-clone`, commit/push 금지.
-- d339 canonical 2파일 = 역사적 cook witness (질의 사용 금지 — P1).
+  D362 33파일, D334 sidecar 수정·재실행 금지. tolerance 수리 금지(D354/D405).
+- **d348 재분해 금지** — 파트 번호 재배열이 D409 evidence 참조를 전부 무효화한다(D415 ③).
+- target/IK/path, geometry, material/mass/actuator/physics, `isaaclab` env pin 변경 금지.
+- HANDOFF.md, TASKS.md, `/half-clone`, commit/push 금지. d339 canonical 질의 금지.
 
 ## Must Read First
 
 1. `AGENTS.md`
 2. this file
-3. `claudedocs/session_20260804_grasp_g0a_jenga_two_region_reframe_plan.md`
-   (11th — 과거 브리핑 대조 §2 / 두 영역 재해석 §3 / 물체 클래스 술어 §4 /
-   판정식 전복 §5 / 36mm 정정 §6 / P1-P3 계획 §7; D412 근거)
-4. `claudedocs/session_20260804_grasp_g0a_rect_block_target_swap_paper_analysis.md`
-   (10th — 신규 타깃 §1 / 납작 §3 / 실패모드 전환 §4 / 세로 §5 / yaw §6 /
-   판정식 축퇴 §7; D411 근거)
-5. `claudedocs/session_20260804_grasp_g0a_d409_followup_approach_h100_paper_analysis.md`
-   (9th — 접근방향 §1 / H100 §2 / 손측정 §5; D410 근거)
-6. `claudedocs/session_20260804_grasp_g0a_d409_warning_disposition_static_fixture_attempt1_runtime_complete.md`
-   (8th — runtime §3 / manual §4)
-7. `claudedocs/DECISIONS.md` D407~D412
-8. `claudedocs/EXPERIMENT_LEDGER.md` tail
+3. `claudedocs/session_20260804_grasp_g0a_real_grasp_photos_placement_ambiguity_tape_collider.md` (14th — D415)
+4. `claudedocs/session_20260804_grasp_g0a_placement_audit_literature_verification_photo_pending.md` (13th — D414)
+5. `claudedocs/session_20260804_grasp_g0a_friction_deferral_normal_sign_placement_reexam.md` (12th — D413)
+6. `claudedocs/session_20260804_grasp_g0a_rect_block_target_swap_paper_analysis.md` (10th — 배치면 원수치)
+7. `claudedocs/DECISIONS.md` D407~**D415**
+8. `claudedocs/direction_20260708_grasp_pivot.md` (교수 지시 + G-사다리 원문)
 
 ## Git
 
-- HEAD == `ceb6c98` ("젠가로 물체변경", 사용자 커밋 2026-08-04) — 8th~10th 세션
-  산출물(10th doc, attempt1 20파일, sim_scripts 3종, BACKLOG append) 체크포인트됨.
-- 미커밋: 11th 세션 추가분 = `START_HERE.md`, `claudedocs/DECISIONS.md`(D412),
-  `claudedocs/EXPERIMENT_LEDGER.md`, 11th doc 신규.
+- HEAD == `149965e` ("검증후 수정", 사용자 커밋 2026-08-04 20:17 KST — 11th 세션분 포함).
+  (이전 START_HERE의 `ceb6c98` 표기는 오기였음 — 14th에서 정정.)
+- 미커밋: 12th·13th·**14th 세션분**(START_HERE 갱신, DECISIONS D415, LEDGER, 14th doc 신규).
 - commit/push는 사용자 요청 시에만 (Claude 실행 금지).
