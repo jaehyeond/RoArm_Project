@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """G0b T2 — vertical tool-axis IK reachability probe for the standing D29xH50 cylinder.
 
-Case g0b_d420 (T-ladder T2, D419). Numpy-only kinematics probe: NO Isaac launch,
+Case g0b_d420 (T-ladder T2 + T2b annex, D419). Numpy-only kinematics probe: NO Isaac launch,
 NO robot hardware, NO training, NO frozen-file modification. New outputs only under
 claudedocs/runtime_logs/grasp_track/g0b_d420/.
 
@@ -22,9 +22,14 @@ Solver: 5-task DLS (position 3 + axis x/y 2) over q0..q3 with q4 = 0 (wrist roll
 spins about the tool axis; affects neither position nor axis). Two joint-limit
 sets are evaluated: URDF literals (sim authority) and the v6-clip limits used by
 the p7 pipeline (v6 box is a strict subset of the URDF box).
+
+T2b annex (t3_conversion_design.md D-5): pass --z_offset_m 0.012117 --tag t2b to
+re-run the identical sweep at the real settled height (cylinder standing on the
+ground plane z=0 instead of TABLE_Z). Defaults reproduce T2 exactly.
 """
 from __future__ import annotations
 
+import argparse
 import csv
 import hashlib
 import json
@@ -83,12 +88,6 @@ NAMED_POSES = {
 }
 
 OUT_DIR = REPO / "claudedocs" / "runtime_logs" / "grasp_track" / "g0b_d420"
-RRD_PATH = OUT_DIR / "t2_ik_reachability.rrd"
-RBL_PATH = OUT_DIR / "t2_ik_reachability.rbl"
-PNG_PATH = OUT_DIR / "t2_ik_reachability_inspection.png"
-VALIDATION_PATH = OUT_DIR / "t2_ik_rerun_validation.json"
-RESULTS_PATH = OUT_DIR / "t2_ik_results.json"
-CSV_PATH = OUT_DIR / "t2_ik_grid.csv"
 RERUN_CLI = "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun"
 
 
@@ -218,17 +217,42 @@ def solve_cell(x: float, y: float, z: float, limits: dict[str, tuple[float, floa
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(description="G0b T2/T2b vertical tool-axis IK reachability probe")
+    parser.add_argument(
+        "--z_offset_m", type=float, default=0.0,
+        help="T2b annex: shift both target heights by this amount "
+             "(+0.012117 = cylinder standing on the ground plane z=0 instead of TABLE_Z)",
+    )
+    parser.add_argument("--tag", default="t2", help="artifact prefix / log tag (T2b annex uses t2b)")
+    args = parser.parse_args()
+    if args.z_offset_m != 0.0 and args.tag == "t2":
+        print("[g0b_t2_ik] ABORT nonzero --z_offset_m requires non-default --tag (protects T2 artifacts)", flush=True)
+        return 3
+    tag = args.tag
+    log = f"g0b_{tag}_ik"
+    vtag = tag.upper()
+    descend_z = DESCEND_Z + args.z_offset_m
+    approach_z = APPROACH_Z + args.z_offset_m
+    table_z_eff = TABLE_Z + args.z_offset_m
+    rrd_path = OUT_DIR / f"{tag}_ik_reachability.rrd"
+    rbl_path = OUT_DIR / f"{tag}_ik_reachability.rbl"
+    png_path = OUT_DIR / f"{tag}_ik_reachability_inspection.png"
+    validation_path = OUT_DIR / f"{tag}_ik_rerun_validation.json"
+    results_path = OUT_DIR / f"{tag}_ik_results.json"
+    csv_path = OUT_DIR / f"{tag}_ik_grid.csv"
+
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     import rerun as rr
 
     if str(rr.__version__) != RERUN_VERSION:
-        print(f"[g0b_t2_ik] RERUN_VERSION_MISMATCH have={rr.__version__} want={RERUN_VERSION}", flush=True)
+        print(f"[{log}] RERUN_VERSION_MISMATCH have={rr.__version__} want={RERUN_VERSION}", flush=True)
         return 3
 
-    print("[g0b_t2_ik] G0b T2 vertical tool-axis IK reachability probe (numpy-only, no Isaac)", flush=True)
+    print(f"[{log}] G0b {vtag} vertical tool-axis IK reachability probe (numpy-only, no Isaac)", flush=True)
     print(
-        f"[g0b_t2_ik] gates pos_gate_mm={POS_GATE_MM} tilt_primary_deg={TILT_GATE_PRIMARY_DEG} "
-        f"tilt_fallback_deg={TILT_GATE_FALLBACK_DEG} descend_z={DESCEND_Z:.6f} approach_z={APPROACH_Z:.6f} "
+        f"[{log}] gates pos_gate_mm={POS_GATE_MM} tilt_primary_deg={TILT_GATE_PRIMARY_DEG} "
+        f"tilt_fallback_deg={TILT_GATE_FALLBACK_DEG} z_offset_m={args.z_offset_m:+.6f} "
+        f"descend_z={descend_z:.6f} approach_z={approach_z:.6f} "
         f"grid_x=[{GRID_X[0]},{GRID_X[-1]}]x{len(GRID_X)} grid_y=[{GRID_Y[0]},{GRID_Y[-1]}]x{len(GRID_Y)}",
         flush=True,
     )
@@ -238,13 +262,13 @@ def main() -> int:
     sc_tilt_ok = SELF_CHECK_TILT_BAND_DEG[0] <= sc_tilt <= SELF_CHECK_TILT_BAND_DEG[1]
     sc_tcpz_ok = SELF_CHECK_TCPZ_BAND_M[0] <= float(sc_tcp[2]) <= SELF_CHECK_TCPZ_BAND_M[1]
     print(
-        f"[g0b_t2_ik] self_check q={list(SELF_CHECK_Q_DEG)} tilt_deg={sc_tilt:.4f} "
+        f"[{log}] self_check q={list(SELF_CHECK_Q_DEG)} tilt_deg={sc_tilt:.4f} "
         f"band={SELF_CHECK_TILT_BAND_DEG} tilt_ok={sc_tilt_ok} tcp_z={float(sc_tcp[2]):.6f} "
         f"band={SELF_CHECK_TCPZ_BAND_M} tcpz_ok={sc_tcpz_ok}",
         flush=True,
     )
     if not (sc_tilt_ok and sc_tcpz_ok):
-        print("[g0b_t2_ik] T2_VERTICAL_IK_VERDICT=SELF_CHECK_FAIL", flush=True)
+        print(f"[{log}] {vtag}_VERTICAL_IK_VERDICT=SELF_CHECK_FAIL", flush=True)
         return 3
 
     # ---- Grid sweep ----------------------------------------------------------
@@ -252,7 +276,7 @@ def main() -> int:
     n_done = 0
     for x in GRID_X:
         for y in GRID_Y:
-            for z_name, z in (("descend", DESCEND_Z), ("approach", APPROACH_Z)):
+            for z_name, z in (("descend", descend_z), ("approach", approach_z)):
                 r_urdf = solve_cell(float(x), float(y), z, URDF_LIMITS_DEG)
                 if r_urdf["pos_ok"]:
                     r_v6 = solve_cell(float(x), float(y), z, V6_LIMITS_DEG)
@@ -263,7 +287,7 @@ def main() -> int:
                              "urdf": r_urdf, "v6clip": r_v6})
             n_done += 1
             if n_done % 60 == 0:
-                print(f"[g0b_t2_ik] progress cells={n_done}/{len(GRID_X) * len(GRID_Y)}", flush=True)
+                print(f"[{log}] progress cells={n_done}/{len(GRID_X) * len(GRID_Y)}", flush=True)
 
     def cell_pass(x: float, y: float, key: str) -> bool:
         rs = [r for r in rows if r["x"] == x and r["y"] == y]
@@ -276,7 +300,7 @@ def main() -> int:
     named_results = {}
     for name, (nx, ny) in NAMED_POSES.items():
         rec = {}
-        for z_name, z in (("descend", DESCEND_Z), ("approach", APPROACH_Z)):
+        for z_name, z in (("descend", descend_z), ("approach", approach_z)):
             rec[z_name] = {
                 "urdf": solve_cell(nx, ny, z, URDF_LIMITS_DEG),
                 "v6clip": solve_cell(nx, ny, z, V6_LIMITS_DEG),
@@ -286,7 +310,7 @@ def main() -> int:
         rec["pass_both"] = rec["pass_urdf"] and rec["pass_v6clip"]
         named_results[name] = rec
         print(
-            f"[g0b_t2_ik] named pose={name} xy=({nx:+.4f},{ny:+.4f}) "
+            f"[{log}] named pose={name} xy=({nx:+.4f},{ny:+.4f}) "
             f"descend urdf pos_mm={rec['descend']['urdf']['pos_err_mm']} tilt={rec['descend']['urdf']['tilt_deg']} "
             f"approach urdf pos_mm={rec['approach']['urdf']['pos_err_mm']} tilt={rec['approach']['urdf']['tilt_deg']} "
             f"pass_urdf={rec['pass_urdf']} pass_v6clip={rec['pass_v6clip']}",
@@ -304,13 +328,13 @@ def main() -> int:
     )
 
     if named_pass_both:
-        verdict = "T2_PASS"
+        verdict = f"{vtag}_PASS"
     elif grid_pass_urdf:
-        verdict = "T2_PARTIAL"
+        verdict = f"{vtag}_PARTIAL"
     elif fallback_ok:
-        verdict = "T2_PARTIAL"
+        verdict = f"{vtag}_PARTIAL"
     else:
-        verdict = "T2_FAIL"
+        verdict = f"{vtag}_FAIL"
 
     # best named pose for T3 recommendation: prefer pass_both, min descend tilt
     def named_key(item):
@@ -322,12 +346,12 @@ def main() -> int:
     q_best = best_named["descend"]["urdf"]["q_deg"]
 
     print(
-        f"[g0b_t2_ik] aggregate grid_cells={len(GRID_X) * len(GRID_Y)} "
+        f"[{log}] aggregate grid_cells={len(GRID_X) * len(GRID_Y)} "
         f"pass_urdf_cells={len(grid_pass_urdf)} pass_v6clip_cells={len(grid_pass_v6)} "
         f"named_pass_both={named_pass_both} best_named={best_named_name}",
         flush=True,
     )
-    print(f"[g0b_t2_ik] T2_VERTICAL_IK_VERDICT={verdict}", flush=True)
+    print(f"[{log}] {vtag}_VERTICAL_IK_VERDICT={verdict}", flush=True)
 
     # ---- Artifacts: JSON + CSV ----------------------------------------------
     def sha256_file(path: Path) -> str:
@@ -337,7 +361,7 @@ def main() -> int:
                 h.update(block)
         return h.hexdigest()
 
-    with CSV_PATH.open("w", newline="") as f:
+    with csv_path.open("w", newline="") as f:
         w = csv.writer(f)
         w.writerow(["x", "y", "z_name", "limits", "pos_err_mm", "tilt_deg", "pos_ok", "vertical_ok",
                     "q0", "q1", "q2", "q3", "seed_idx", "iters"])
@@ -349,7 +373,7 @@ def main() -> int:
                             r["pos_ok"], r["vertical_ok"], q[0], q[1], q[2], q[3], r["seed_idx"], r["iters"]])
 
     results = {
-        "artifact": "G0B_T2_VERTICAL_TOOL_AXIS_IK_REACHABILITY_V1",
+        "artifact": f"G0B_{vtag}_VERTICAL_TOOL_AXIS_IK_REACHABILITY_V1",
         "case": "g0b_d420",
         "verdict": verdict,
         "self_check": {
@@ -364,8 +388,9 @@ def main() -> int:
             "pos_gate_mm": POS_GATE_MM,
             "tilt_primary_deg": TILT_GATE_PRIMARY_DEG,
             "tilt_fallback_deg": TILT_GATE_FALLBACK_DEG,
-            "descend_z_m": DESCEND_Z,
-            "approach_z_m": APPROACH_Z,
+            "z_offset_m": args.z_offset_m,
+            "descend_z_m": descend_z,
+            "approach_z_m": approach_z,
         },
         "limits": {"urdf_deg": URDF_LIMITS_DEG, "v6clip_deg": V6_LIMITS_DEG},
         "grid": {
@@ -378,7 +403,7 @@ def main() -> int:
         "best_named": best_named_name,
         "env": {"python": sys.version.split()[0], "numpy": np.__version__, "rerun_sdk": rr.__version__},
     }
-    RESULTS_PATH.write_text(json.dumps(results, indent=2, default=str) + "\n")
+    results_path.write_text(json.dumps(results, indent=2, default=str) + "\n")
 
     # ---- D341 Rerun artifact -------------------------------------------------
     import rerun.blueprint as rrb
@@ -405,7 +430,7 @@ def main() -> int:
     named_pts, named_cols, named_labels = [], [], []
     for name, (nx, ny) in NAMED_POSES.items():
         r = named_results[name]
-        named_pts.append([nx, ny, DESCEND_Z])
+        named_pts.append([nx, ny, descend_z])
         named_cols.append([60, 170, 255] if r["pass_both"] else [200, 60, 200])
         named_labels.append(
             f"{name}: both={'PASS' if r['pass_both'] else 'FAIL'} "
@@ -420,12 +445,13 @@ def main() -> int:
     circle = []
     for k in range(33):
         a = 2.0 * math.pi * k / 32
-        circle.append([bx + CYL_RADIUS_M * math.cos(a), by + CYL_RADIUS_M * math.sin(a), TABLE_Z + CYL_HEIGHT_M])
-    circle_bot = [[p[0], p[1], TABLE_Z] for p in circle]
+        circle.append([bx + CYL_RADIUS_M * math.cos(a), by + CYL_RADIUS_M * math.sin(a), table_z_eff + CYL_HEIGHT_M])
+    circle_bot = [[p[0], p[1], table_z_eff] for p in circle]
 
     summary_md = (
-        f"# G0b T2 vertical tool-axis IK reachability (case g0b_d420)\n\n"
+        f"# G0b {vtag} vertical tool-axis IK reachability (case g0b_d420)\n\n"
         f"- verdict: **{verdict}**\n"
+        f"- z_offset_m: {args.z_offset_m:+.6f} (descend {descend_z:.6f}, approach {approach_z:.6f})\n"
         f"- self-check: tilt {sc_tilt:.3f} deg in {SELF_CHECK_TILT_BAND_DEG}, tcp_z {float(sc_tcp[2]):.6f} in {SELF_CHECK_TCPZ_BAND_M}\n"
         f"- gates: pos<= {POS_GATE_MM} mm, vertical tilt <= {TILT_GATE_PRIMARY_DEG} deg (fallback report {TILT_GATE_FALLBACK_DEG} deg)\n"
         f"- grid pass (URDF limits): {len(grid_pass_urdf)} / {len(GRID_X) * len(GRID_Y)} cells; "
@@ -451,9 +477,9 @@ def main() -> int:
         collapse_panels=True,
     )
 
-    app_id = "roarm_g0b_t2_vertical_ik"
-    with rr.RecordingStream(app_id, recording_id="g0b_d420_t2_ik", make_default=False, send_properties=True) as rec:
-        rec.save(str(RRD_PATH), write_footer=True)
+    app_id = f"roarm_g0b_{tag}_vertical_ik"
+    with rr.RecordingStream(app_id, recording_id=f"g0b_d420_{tag}_ik", make_default=False, send_properties=True) as rec:
+        rec.save(str(rrd_path), write_footer=True)
         rec.send_blueprint(blueprint, make_active=True, make_default=True)
         rec.log("metadata/run", rr.TextDocument(summary_md, media_type=rr.MediaType.MARKDOWN), static=True)
         rec.log(
@@ -501,7 +527,7 @@ def main() -> int:
             static=True,
         )
         rec.flush(timeout_sec=30.0)
-    blueprint.save(app_id, str(RBL_PATH))
+    blueprint.save(app_id, str(rbl_path))
 
     expected_entities = [
         "metadata/run", "grid/descend", "grid/approach", "named/candidates",
@@ -518,29 +544,29 @@ def main() -> int:
         "events/summary": ["TextLog:level", "TextLog:text"],
     }
     validation = validate_rerun_artifact(
-        RRD_PATH,
+        rrd_path,
         expected_entity_paths=expected_entities,
         exact_entity_paths=expected_entities,
         exact_timeline_names=["blueprint", "log_time"],
         expected_entity_components=components,
-        blueprint_path=RBL_PATH,
-        screenshot_path=PNG_PATH,
+        blueprint_path=rbl_path,
+        screenshot_path=png_path,
         screenshot_window_size="2400x1400",
         expected_version=RERUN_VERSION,
         cli_path=RERUN_CLI,
         timeout_s=180.0,
     )
-    VALIDATION_PATH.write_text(json.dumps(validation, indent=2, default=str) + "\n")
+    validation_path.write_text(json.dumps(validation, indent=2, default=str) + "\n")
     print(
-        f"[g0b_t2_ik] rerun_validation pass={validation.get('pass')} errors={validation.get('errors')}",
+        f"[{log}] rerun_validation pass={validation.get('pass')} errors={validation.get('errors')}",
         flush=True,
     )
     print(
-        f"[g0b_t2_ik] artifacts rrd={RRD_PATH.name} sha={sha256_file(RRD_PATH)[:16]} "
-        f"results={RESULTS_PATH.name} csv={CSV_PATH.name}",
+        f"[{log}] artifacts rrd={rrd_path.name} sha={sha256_file(rrd_path)[:16]} "
+        f"results={results_path.name} csv={csv_path.name}",
         flush=True,
     )
-    return 0 if verdict in ("T2_PASS", "T2_PARTIAL") and validation.get("pass") else 2
+    return 0 if verdict in (f"{vtag}_PASS", f"{vtag}_PARTIAL") and validation.get("pass") else 2
 
 
 if __name__ == "__main__":

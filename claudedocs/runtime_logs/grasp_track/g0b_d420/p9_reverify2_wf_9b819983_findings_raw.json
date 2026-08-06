@@ -1,0 +1,92 @@
+{
+  "workflow": "wf_9b819983-97c",
+  "role": "round-2 repair adversarial verification (9 agents: R1-R7 repair skeptics + runtime/preflight-parity regression lenses)",
+  "result": {
+    "repairVerdicts": [
+      {
+        "finding_id": "R4-close-all-hardening",
+        "repair_effective": true,
+        "repair_verdict_reason": "수리 유효. (a) 이중 close 전 경로 재열거: _CLEANUP는 806줄(sim_app)·909줄(env)에서만 설정되고 _close_all(171-189줄)만 소비하며 close 전에 핸들을 먼저 None으로 클리어(177, 184줄)한다. 사전-Isaac 종료(737-761 ValueError, 777 tag-abort, 782 USD 누락, 790 sha 불일치)는 핸들 미설정이라 __main__ finally(1731줄)가 no-op; 버전 불일치(819줄)는 sim_app만 1회 close(env는 908줄 gym.make 이전이라 None); USD effective 가드(871줄)도 동일; stage audit 실패(920줄)와 정상 종료(1719줄)는 env→sim_app 각 1회 close 후 클리어되어 finally 재진입이 0회 close임을 isaaclab python 스크래치 재현으로 확인. (b) env.close() 예외는 181-182줄 개별 try/except가 print로 삼키고 183-189줄 sim_app 블록이 무조건 실행됨(스크래치 case1: close 순서 ['env','sim_app'] 확인). (c) LOG는 118줄에서 정의되어 _close_all 정의(171줄)·호출 시점 모두 사용 가능하고 1733줄 print도 해석됨. (d) raise SystemExit(_code)(1734줄)는 try/finally 밖: main() 정상 반환 시에만 도달하여 0/2/3 보존(스크래치 case3 exit=2 확인), main() 예외 시 finally가 양 핸들 close 후 원 예외가 1734줄을 지나쳐 전파되어 _code NameError 없이 비정상 종료코드 발생(스크래치 case4 확인). cleanup 예외는 181/188줄과 1730-1733줄에서 흡수되어 반환코드를 오염시키는 경로 없음.",
+        "residual_or_new_issues": []
+      },
+      {
+        "finding_id": "R5-tag-recording-identity",
+        "repair_effective": true,
+        "repair_verdict_reason": "수리 유효. (1) 수리 본체: p9:1066-1067에서 app_id=f\"roarm_g0b_{args.tag}\", recording_id=f\"g0b_d420_{args.tag}\"로 --tag 유도되고, p9:1546 blueprint.save(app_id, str(rbl_path))가 동일 변수를 소비 — 레그별 tag가 다르면 recording_id가 달라져 원 결함(다중 rrd 뷰어 병합)이 해소된다. 구 고정 리터럴 잔존 0건(grep: roarm_g0b/g0b_d420_ 은 1066-1067뿐). (2) 검증점 (a): roarm_rl/rerun_contract.py:114-352 전체 판독 — 게이트는 CLI 버전(:191-195)/footer verify(:197-201)/stats·print(:202-205)/entity(:209-248)/component(:249-260)/timeline(:261-267)/rbl 파일 footer verify(:273-276)/headless 렌더(:294-329)만 검사하며 app_id·recording_id 검사 항목이 전무 — identity 변경이 게이트 결과에 영향 불가. (3) (b): p9:760-761 fullmatch [A-Za-z0-9_]+ 이므로 파생 문자열은 word char만 포함; 설치 SDK 실측 0.34.1(p9:119 핀·:817 게이트 일치)의 RecordingStream.__init__는 application_id: str, recording_id: str|uuid.UUID|None으로 임의 문자열 수용, Blueprint.save는 path=None일 때만 app_id로 파일명 파생하는데 p9:1546은 항상 명시 경로 전달. (4) (c): 스크래치 재현(isaaclab python, tag=t3_grasp_leg_low_02) — RecordingStream 생성·rrd/rbl 저장 후 핀 CLI(rerun 0.34.1) `rrd verify --check-footers true` 양쪽 rc=0, rrd 내부에 tag-유도 identity 라운드트립 확인; rrd·rbl은 같은 app_id 변수(1066→1067·1546)를 쓰므로 run 내 항상 일치하고, 렌더 소스는 임베디드 활성 blueprint(p9:1544; rerun_contract.py:172-176 명시)라 tag 변경으로 rbl 로드가 깨지는 경로 없음. (5) (d): 기본 tag t3_grasp에서 app_id \"roarm_g0b_t3_grasp\"·recording_id \"g0b_d420_t3_grasp\"는 수리 전 고정 문자열(재검증 finding이 인용한 구 p9:958-959)과 정확히 동일해 기본 경로 동작 불변; 산출물 이름 p9:764-769 = t3_grasp_timeline.rrd/.rbl, t3_grasp_inspection.png, t3_grasp_rerun_validation.json, t3_grasp_results.json, t3_grasp_steps.csv 6종 유지 + 7번째 stdout 로그는 셸 리다이렉션 몫(폴더의 t2/t2b *_stdout.log 관례와 동일, 스크립트는 .log 미작성). t3_prereg.md는 미발행(폴더 실측)이므로 위반할 기존 이름 핀 없음 — 이후 prereg가 이 이름을 그대로 핀하면 된다.",
+        "residual_or_new_issues": []
+      },
+      {
+        "finding_id": "R3-transit-tcp-gate-scope",
+        "repair_effective": true,
+        "repair_verdict_reason": "수리 유효. (a) 게이트 선택(1207)은 정확히 phase==\"approach\"에만 반응하며, run_to_q에 도달하는 phase는 전수 5종뿐이다 — run_resampled_path(1321) 경유 \"approach\"(1344)/\"descend\"(1358)/\"lift\"(1419), 직접 호출 \"close\"(1369)/\"hold\"(1409); settle 루프(1095–1106)는 run_to_q 비경유·게이트 없음. (b) approach의 물체 보호는 불변: speed=object_speed_gate_mps(1200), drift=object_drift_gate_m(1201–1203), tilt(1211)/upright(1212)/done(1214)/nan_seen(1215) 전부 early_kill(1208–1216)에 유지되고 스코핑된 항은 tcp_step뿐. (c) settled replan(1118–1132)이 approach 전에 실행되어 approach_tcp=실측 상면+40mm(484–485, 673, 748 검증); repo FK 재계산으로 HOME TCP z=0.3437, approach z=0.090이고 직선 resample 경로(1264–1269)의 z는 단조 감소 — TCP가 원통 풋프린트(r=14.5mm)에 진입하는 지점 z=0.1057(상면+55.7mm), 도착점 상면+40.0mm이므로 명령 경로는 물체와 접촉 불가하며, 과도 응답 접촉도 불변 게이트가 즉시 검출. (d) tcp_step 원시값은 게이트와 무관하게 1181 계산→1186 max 누적→1251 StepResult→1426 aggregate→1442 stdout→JSON 1571/1656으로 정직하게 흐르고, _verdict(534–558)는 max_tcp_step_m 미소비. (e) waypoint 간격(1267)은 max_tcp_step_m×0.80=8mm로 transit 게이트와 비결합(1297 동일), argparse 가드(758–759)가 transit_tcp_step_gate_m ≥ max_tcp_step_m을 강제. 완화 폭 20mm는 명령 hop 8mm(trust region 12°, 1303–1310)와 결합해 진짜 폭주(>20mm/step)는 여전히 검출된다.",
+        "residual_or_new_issues": []
+      },
+      {
+        "finding_id": "R6-lift-path-ok-verdict",
+        "repair_effective": true,
+        "repair_verdict_reason": "수리 유효. (a) lift_path_ok는 1410에서 무조건 True로 초기화된 뒤 1435-1437의 유일한 _verdict 호출에 키워드로 전달되므로 모든 경로에서 정의됨; _verdict(534-558)는 556에서 소비하기 전에 REACH_FAIL(544)/APPROACH_FAIL(546-549)/LATCH_FAIL(550-551)/HOLD_FAIL(552-553)을 먼저 반환하고, lift 실행 게이트(1411)가 hold verdict 게이트(552)의 정확한 보수라 \"hold 통과인데 lift 미실행\" 경로가 없음. (b) 첫 waypoint IK 실패는 1319-1320에서 (None, seed, False) 반환(final_result 대입은 1321이라 아직 None) → 556의 lift is None 분기로 LIFT_FAIL; 중간 실패는 직전 reached 결과+False → not lift_path_ok로 LIFT_FAIL — 전 분기 안전. (c) path_ok=False∧lift.reached=True는 계획 lift 경로가 끝까지 명령되지 않은 경우뿐이므로 수리는 거짓 PASS를 올바른 FAIL로만 바꾸고 역방향 전환은 없음. 소스 상수 재계산(lift_delta 0.010@675, resample gap 0.008=0.010@684×0.80@700, min_lift_follow 0.006@708, target_error_gate 0.003@682·1217): 분기 조건은 절단 시점 누적 follow≥6mm → z-gap≥12mm이며 기본 구성 gap≤13mm(10mm+hold 종단 3mm 허용)이라 재검증의 \"gap>16mm에서만\"은 다소 좁은 서술(12-13mm 창이 기본 구성에서 원리상 존재)이나, 발동에는 사전비행 worst 명령 pe 0.49mm 대비 중간 lift 수직 IK 실패까지 필요해 실질 도달성은 극히 낮고 어느 divergent 입력에서도 라운드-2 판정이 옳은 쪽임. p7-parity 델타/prereg 등재는 사전등록 예정 사항(제외 대상)이며 summary_md 1504-1506에 \"lift path_ok in verdict\"로 이미 기록됨. (d)만 잔존 결함: 아래 참조.",
+        "residual_or_new_issues": [
+          {
+            "severity": "MINOR",
+            "title": "lift_path_ok가 results JSON에 미기록 — 절단-lift 도메인에서 JSON 단독 verdict 재계산 불가",
+            "claim": "_verdict는 556에서 lift_path_ok를 판정 입력으로 소비하지만 _step_result_dict(1562-1581)와 results_doc(1589-1670, phases 1646-1652·aggregate 1654-1668) 어디에도 lift_path_ok(또는 phase별 path_ok)가 직렬화되지 않는다. 수리가 판정을 실제로 바꾸는 바로 그 도메인 — lift 중간 waypoint IK 실패로 run_resampled_path가 (직전 reached=True 결과, False)를 반환(1319-1325)하고 누적 follow≥min_lift_follow_m(0.006@708)인 경우 — 에서 저장된 verdict는 LIFT_FAIL인데 JSON의 phases.lift(reached=true, early_kill=false, object_follow_delta_m≥0.006)와 gates만으로 재계산하면 GRASP_PASS가 나와 재현성 계약이 깨진다. 도달 조건은 lift z-gap≥12mm(기본 최대 ≈13mm=lift_delta 0.010@675+hold 종단 오차 3mm@682)+중간 lift 수직 IK 실패로 좁고, 거짓 PASS 저장은 아니며 stdout은 절단을 기록(path_waypoint ik_ok=NO, 1312-1320)하므로 증거 유실은 없음 — 수리안: results_doc phases 또는 aggregate에 lift_path_ok(가능하면 approach/descend path_ok 포함) 필드 추가."
+          }
+        ]
+      },
+      {
+        "finding_id": "R2-trust-region",
+        "repair_effective": true,
+        "repair_verdict_reason": "수리 유효. (a) clip 순서 안전: dls_vertical에서 seed_ref=clip4(시드)(:269), 매 iteration q=clip4(q+dq)(:296) 후 q=np.clip(q, seed_ref±dev)(:304) — q∈[lo,hi]이고 구간 중심 seed_ref∈[lo,hi]이므로 trust-clip은 q를 seed_ref 쪽으로만 당기며 경계값에 닿는 경우 그 경계값은 리밋 내부임을 논증했고, isaaclab python 스크래치 property test 400회(리밋 경계/±30° 초과 시드 × dev∈{0.5,2,12,500})에서 joint-limit 위반 0·dev 위반 0으로 실증. dev>0은 argparse 검증(:756-757)이 보장. (b) plan 3타깃 독립: _solve_q_vertical 호출부 전수 확인 — plan 솔브(:491-499)와 settled replan(:1120→_build_plan_from_center 동일 경로)은 max_dev_from_seed_deg 미전달→기본 None(:420)→:297 가드로 클립 미적용; trust region은 waypoint 솔브(:1309)만. (c) best 누수 없음: best 갱신(:277-278)은 루프 상단의 현재 q(=seed_ref 또는 직전 iteration의 clip4+trust-clip 결과)로만 수행되고 LinAlgError break(:291-292)·수렴 break(:279-280) 모두 갱신 후 — 반환 qb의 |qb-seed_ref|≤dev를 400회 전건 확인. (d) 앵커 = 직전 waypoint 해: run_resampled_path가 q_seed 전달(:1303-1309), q_seed=q_step 체인 갱신(:1323), waypoint 모드는 multi_seed_xy=None이라 후보가 체인 시드 1개뿐; phase 간 시드도 연속(approach=HOME :1335, descend=approach 반환 시드 :1352-1356, lift=q_hold :1413-1417). (e) 실질 상한 14°: 폴리시(:449-457)는 biased 해를 앵커로 dev=2.0이며 transit(require_tilt=False) waypoint에만 적용(최종 approach waypoint·descend/lift는 strict 12°); seed_dev_deg 로그(:1311)는 폴리시 이후 최종 q_step 대비 실측치라 정직 — 체인 재현에서 S1 12.023°/S2 12.044°(>12, 사전비행 12.05와 일치, <14) 확인, 이 값을 소비하는 게이트는 없음(헤더 :1505의 \"12deg\"는 플래그 명목치 표기일 뿐). 체인 전체 재현 결과 waypoint ik_ok 전건 True, worst 명령 pe 0.452/0.496mm(reached 게이트 3mm 대비 여유, 사전비행 0.468-0.492mm와 정합), 도착 tilt 0.197-0.198°(<5°) — trust region이 도달성을 깨지 않음.",
+        "residual_or_new_issues": []
+      },
+      {
+        "finding_id": "R1-transit-band-polish",
+        "repair_effective": true,
+        "repair_verdict_reason": "isaaclab python 스크래치로 대상 함수(p9 모듈 직접 import, 파일 미수정)를 정밀 재현해 5개 검증 항목 전부 PASS. (a) w_axis=0.0에서 _task_error 4,5행(243-254행 -w_axis*axis)이 정확히 0, 중앙차분 Jacobian 4,5행도 정확히 0이며 M=J@J.T+0.002^2*I(288행)는 cond=1.03e1로 정칙(damping이 null 행을 지배), dq(5행계) == dq(3행 위치전용계) 차이 0.0 — 폴리시는 순수 위치 스텝. (b) 4포즈 전체 approach 체인(40-46wp)에서 _solve_q_vertical(435-467행) 내부 로직을 waypoint별로 재현(실함수 대비 mismatch 0.0): 폴리시 채택 22-25/40-45 transit wp, 채택 시 tilt 악화 최대 +0.261° (456행 TRANSIT_POLISH_DEV_DEG=2.0 트러스트영역이 상계), transit tilt 궤적은 83.4°→0.2° 단조 수직화, 도착 wp pe 0.016mm/tilt 0.197-0.200° (게이트 3mm/5°) — 수직화 후퇴 없음. 수리 목표인 transit 명령 잔차는 최악 0.492mm(<0.5 밴드, 수리 전 2.52-2.55mm)로 3mm reached 게이트에 ≥2.5mm 마진 확보. (c) 0.003*1000.0은 IEEE에서 정확히 3.0이므로 band_mm=min(3.0, gate*1000)(435행)은 기본값에서 기존 IK_POS_KEY_MM=3.0과 비트 동치; 15개 plan-target 해(4포즈 settled + seed0_S1 planned)를 라운드-1 복제(고정 3.0 밴드·무폴리시·무클램프)와 비교해 q/pe/tl 최대 차이 0.0 — T2/D421 REACH 계약 불변. plan 호출(491-499행)은 max_dev_from_seed_deg 미전달(None)이고 폴리시는 445행 `not require_tilt` 조건으로 구조적 미도달. (d) multi_seed_xy는 492행 단일 호출부(require_tilt=True)뿐이라 폴리시-다중시드 상호작용은 현 호출부에서 공집합이며, 루프 내 순서도 폴리시(445-459)→key 갱신(460-462)→조기 break(463-464)로 올바름(가상 결합 호출도 pe/tl 일관 확인). (e) 전 waypoint(4포즈 × approach/descend/lift)에서 반환 q로 pe/tilt 재계산 시 반환값과 차이 0.0 — dls_vertical best 튜플(273-278, 305-306행)이 동일 iterate의 pe/tilt를 저장하고 459행이 폴리시 해의 tl_p를 그대로 대입하므로 스테일 없음. 사전비행 v2 수치(worst pe 0.468-0.492mm, 도착 tilt ≤0.213°)와 독립 재현이 일치.",
+        "residual_or_new_issues": []
+      },
+      {
+        "finding_id": "R7-docs-gates-consistency",
+        "repair_effective": true,
+        "repair_verdict_reason": "수리 유효. (a) docstring 수치 대조: \"0.5 mm position band\"(p9:49)=TRANSIT_POS_BAND_MM 0.5(p9:203); \"2.52-2.55 mm residuals / ~0.5 mm of the 3 mm gate\"(p9:50-51)=reverify findings_raw issues[2] \"wp003 pe=2.52mm(전 후보 2.52-2.55mm), 0.48mm 마진\"과 일치; \"~46 deg wrist/elbow hop at wp002 ... 9.90 mm vs the 10 mm gate\"(p9:52-54)=issues[1] \"dq=[-0.8,+10.2,-35.2,+46.0]°, seed0_S1=9.90mm\"과 일치; \"--transit_tcp_step_gate_m 20 mm ... approach phase only\"(p9:77)=default 0.020(p9:699)+phase-스코프 소비(p9:1207, approach만 20mm·descend/close/hold/lift는 max_tcp_step_m, drift/speed/tilt 게이트 불변 p9:1200-1213); D-8 recap \"10 -> 20 s in the design doc, superseded to 60 s (3rd supersession alongside D-4 spawn/D-6 asset root)\"(p9:35-37)=t3_conversion_design.md:103 \"10→20s 상향\" ↔ p9:716 default 60.0, D-4(설계 --object_xy 0.300 0.0 ↔ p9:671 seed0_S1)·D-6(설계 local_assets ↔ p9:794 attempt3 주입) supersession 병기 정확. T2 문단의 스코프 주장(3 plan 타깃+approach 도착점+descend/lift 회랑 tilt 게이트, transit pos-only)은 코드와 일치(_build_plan_from_center require_tilt 기본 True p9:491-499, vertical_scope=\"arrival\"→idx==len에서만 tilt p9:1302/1346, \"all\" p9:1360/1421, transit ok=pe≤3mm p9:435/467). (b) argparse 전수 대조(p9:666-732 33개 인자): 신규 CLI 인자 2건 waypoint_max_joint_dev_deg(p9:689→1628)·transit_tcp_step_gate_m(p9:699→1630) 및 상수 transit_pos_band_mm(p9:1629) 전부 gates JSON 수록, 누락 없음(나머지 미수록 인자는 plan 기하/실행 파라미터로 라운드-1 이전 기존 처분). (c) summary_md 신규 라인(p9:1504-1506) {TRANSIT_POS_BAND_MM}mm·{args.waypoint_max_joint_dev_deg:.0f}deg 모두 float에 유효 포맷, isaaclab python py_compile OK — 크래시 없음. (d) \"preregistered in t3_prereg.md\" 현재형 잔존 0건(grep: p9:61 미래형 \"to be pinned ... does not exist yet\"가 유일, 폴더 실사로 t3_prereg.md 부재 확인), transit 신규 의미론은 audit FATAL-2/reverify 귀속+미래형 표기로 정직. 교차 재현: preflight v2를 isaaclab python으로 재실행(PREFLIGHT_V2_PASS)해 프롬프트 수치 전건 재현(pe 0.468-0.492mm, dev 12.05°, slew 9.59/8.07mm, arrival tilt 0.213°, budget max 3735). 잔존은 MINOR 2건(예산 수치 3675 stale, trust region 12° 기록 vs 유효 14°·실측 12.05°)뿐이며 실행 실패나 크래시를 만들지 않는다.",
+        "residual_or_new_issues": [
+          {
+            "severity": "MINOR",
+            "title": "docstring/argparse 주석의 worst-case 예산 3675(approach 45wp)가 실측 최악 3735(seed0_S2 settled 46wp)와 불일치 — planned 높이 기본 포즈 값을 worst-case로 표기",
+            "claim": "p9:69 \"worst-case budget 3675 control steps < 6000\"과 p9:713-715 \"approach 45wp*60 ... = 3675\"는 FK 재계산 결과 planned 높이(TABLE_Z 기준) seed0_S1의 값(gap 354.79mm→45wp)이다. 실제 실행은 settle replan(+12.117mm, p9:1118-1120) 후 settled 높이 체인을 타며, 사전등록 4포즈의 settled 실측(preflight v2 재실행으로 재현)은 seed0_S1 44wp=3615, seed0_S2 46wp=3735(최악), R1c 43wp=3555, R2c 41wp=3435 — \"worst-case 3675\" 주장은 어느 포즈와도 일치하지 않고 진짜 최악 3735를 60step 과소보고한다. 3735<6000이라 episode 절단은 여전히 구조적으로 불가하여 런타임 실패는 없으나, R7이 정렬했어야 할 docstring 수치가 동일 리비전의 preflight v2 측정과 어긋난 채 남았다(문서 정합 수리의 불완전)."
+          },
+          {
+            "severity": "MINOR",
+            "title": "gates JSON waypoint_max_joint_dev_deg=12.0·summary_md \"joint trust region 12deg\" 기록이 유효 클램프(12+polish 2=14°)·실측 dev 12.05°와 자기모순 — TRANSIT_POLISH_DEV_DEG 미수록",
+            "claim": "transit polish(p9:445-459)는 바이어스 해를 seed_ref로 한 별도 dls_vertical 호출에 max_dev_from_seed_deg=TRANSIT_POLISH_DEV_DEG(2.0, p9:208)를 주므로 체인 시드 기준 유효 관절 편차 한계는 12+2=14°이고, preflight v2 실측 worst dev=12.05°>12.0(재실행 재현; preflight 자신도 DEV_GATE_DEG=12+2로 이를 인정, t3_preflight_ik_chain_v2.py:63-64). 그런데 R7이 추가한 gates JSON에는 waypoint_max_joint_dev_deg=12.0만 기록되고(p9:1628) polish 상수는 빠졌으며 summary_md도 \"joint trust region 12deg\"로 적는다(p9:1504-1505). 실행 시 산출되는 results JSON의 gates.waypoint_max_joint_dev_deg=12.0과 stdout path_waypoint의 seed_dev_deg(p9:1311-1317, 12.05°까지 관측 예상)가 같은 run 산출물 안에서 겉보기 계약 위반으로 충돌한다. p9는 seed_dev_deg를 게이트하지 않아(출력 전용) 런타임 실패는 없으나, 이 수리의 목적(문서·게이트 기록 정합) 기준으로는 미봉합 지점."
+          }
+        ]
+      }
+    ],
+    "notFixed": [],
+    "issues": [
+      {
+        "severity": "MINOR",
+        "title": "lift_path_ok가 results JSON에 미기록 — 절단-lift 도메인에서 JSON 단독 verdict 재계산 불가",
+        "claim": "_verdict는 556에서 lift_path_ok를 판정 입력으로 소비하지만 _step_result_dict(1562-1581)와 results_doc(1589-1670, phases 1646-1652·aggregate 1654-1668) 어디에도 lift_path_ok(또는 phase별 path_ok)가 직렬화되지 않는다. 수리가 판정을 실제로 바꾸는 바로 그 도메인 — lift 중간 waypoint IK 실패로 run_resampled_path가 (직전 reached=True 결과, False)를 반환(1319-1325)하고 누적 follow≥min_lift_follow_m(0.006@708)인 경우 — 에서 저장된 verdict는 LIFT_FAIL인데 JSON의 phases.lift(reached=true, early_kill=false, object_follow_delta_m≥0.006)와 gates만으로 재계산하면 GRASP_PASS가 나와 재현성 계약이 깨진다. 도달 조건은 lift z-gap≥12mm(기본 최대 ≈13mm=lift_delta 0.010@675+hold 종단 오차 3mm@682)+중간 lift 수직 IK 실패로 좁고, 거짓 PASS 저장은 아니며 stdout은 절단을 기록(path_waypoint ik_ok=NO, 1312-1320)하므로 증거 유실은 없음 — 수리안: results_doc phases 또는 aggregate에 lift_path_ok(가능하면 approach/descend path_ok 포함) 필드 추가.",
+        "source": "R6-lift-path-ok-verdict"
+      },
+      {
+        "severity": "MINOR",
+        "title": "docstring/argparse 주석의 worst-case 예산 3675(approach 45wp)가 실측 최악 3735(seed0_S2 settled 46wp)와 불일치 — planned 높이 기본 포즈 값을 worst-case로 표기",
+        "claim": "p9:69 \"worst-case budget 3675 control steps < 6000\"과 p9:713-715 \"approach 45wp*60 ... = 3675\"는 FK 재계산 결과 planned 높이(TABLE_Z 기준) seed0_S1의 값(gap 354.79mm→45wp)이다. 실제 실행은 settle replan(+12.117mm, p9:1118-1120) 후 settled 높이 체인을 타며, 사전등록 4포즈의 settled 실측(preflight v2 재실행으로 재현)은 seed0_S1 44wp=3615, seed0_S2 46wp=3735(최악), R1c 43wp=3555, R2c 41wp=3435 — \"worst-case 3675\" 주장은 어느 포즈와도 일치하지 않고 진짜 최악 3735를 60step 과소보고한다. 3735<6000이라 episode 절단은 여전히 구조적으로 불가하여 런타임 실패는 없으나, R7이 정렬했어야 할 docstring 수치가 동일 리비전의 preflight v2 측정과 어긋난 채 남았다(문서 정합 수리의 불완전).",
+        "source": "R7-docs-gates-consistency"
+      },
+      {
+        "severity": "MINOR",
+        "title": "gates JSON waypoint_max_joint_dev_deg=12.0·summary_md \"joint trust region 12deg\" 기록이 유효 클램프(12+polish 2=14°)·실측 dev 12.05°와 자기모순 — TRANSIT_POLISH_DEV_DEG 미수록",
+        "claim": "transit polish(p9:445-459)는 바이어스 해를 seed_ref로 한 별도 dls_vertical 호출에 max_dev_from_seed_deg=TRANSIT_POLISH_DEV_DEG(2.0, p9:208)를 주므로 체인 시드 기준 유효 관절 편차 한계는 12+2=14°이고, preflight v2 실측 worst dev=12.05°>12.0(재실행 재현; preflight 자신도 DEV_GATE_DEG=12+2로 이를 인정, t3_preflight_ik_chain_v2.py:63-64). 그런데 R7이 추가한 gates JSON에는 waypoint_max_joint_dev_deg=12.0만 기록되고(p9:1628) polish 상수는 빠졌으며 summary_md도 \"joint trust region 12deg\"로 적는다(p9:1504-1505). 실행 시 산출되는 results JSON의 gates.waypoint_max_joint_dev_deg=12.0과 stdout path_waypoint의 seed_dev_deg(p9:1311-1317, 12.05°까지 관측 예상)가 같은 run 산출물 안에서 겉보기 계약 위반으로 충돌한다. p9는 seed_dev_deg를 게이트하지 않아(출력 전용) 런타임 실패는 없으나, 이 수리의 목적(문서·게이트 기록 정합) 기준으로는 미봉합 지점.",
+        "source": "R7-docs-gates-consistency"
+      }
+    ],
+    "regression_lens_findings": {
+      "runtime": 0,
+      "preflight_parity": 0
+    }
+  }
+}

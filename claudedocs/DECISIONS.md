@@ -25243,3 +25243,142 @@ Evidence:
 - **Source**: `g0b_d420/` t2_ik_stdout.log / t2_ik_results.json / t2_ik_grid.csv /
   t2_ik_reachability.rrd(.rbl, sha `eb044cf0…`) / t2_ik_rerun_validation.json /
   t2_ik_reachability_inspection.png; 19th doc §4.
+
+## D422 — p9 저작: T3 계열 물리 프로브의 waypoint IK는 수직 제약 DLS여야 한다(p7 위치 전용 ik_dls 금지); T2b·감사 워크플로우는 미수령 상태로 세션 종료 (저작·발사 권위 — 물리 verdict 아님)
+
+- **Evidence**: 2026-08-05 20th 세션. ① p7 정독 결과 `_solve_q`(p7:154-164)는 위치 전용
+  `ik_dls` + `PICK_WRIST_R_DEG=90` — 수직 도구축 제약이 없어, 그대로 쓰면 동결 21.7~24.4°
+  기움 가족(위치 전용 IK의 선택, D421 Impl ③)으로 회귀해도 아무 게이트가 걸리지 않는다.
+  D419(수직 상부 접근)의 계약 침묵 위반. → p9는 p8의 5-task DLS(q0..q3, q4=0)를 승계하고
+  전 waypoint에 pos≤3mm ∧ tilt≤5° 게이트를 추가 (REACH/경로 실패로 명시화).
+  ② env 소스 추출(에이전트 실측): `_grasp_condition`(roarm_stack_env.py:1192-1195) =
+  dist<0.025 ∧ q5≥0.4rad, latch release = q5<0.4rad(:1184-1190) → 반전 규약에서 marker 패치
+  (dist<0.030 ∧ q5≤41.40°)와 최종 닫힘 24°(0.4189rad>0.4)가 release 오발동 없이 정합.
+  ③ 동결 자산 실측: attempt3 root 레이어는 local_assets와 bit-동일(`a4be58e8…46fff`)하고
+  **physics 레이어만 상이**(attempt3 `043a5d35…fb503` 33,705B 64-part vs local `1df07d38…`
+  4,242B convex_hull) — sublayer가 상대경로라 **attempt3 폴더의 roarm_m3.usd를 가리켜야**
+  64-part가 로드된다. ④ p9 저작 완료(py_compile OK), D-1~D-8 전부 반영, p7 verdict 로직
+  원형(latch.reached 포함) 승계. ⑤ T2b: p8 수정(신규 sha `bde79c01…7093b`, 기본값 회귀 없음
+  + T2 산출물 보호 가드) + `t2b_prereg.md` 발행 후 고정 CLI 실행 → **세션 말미 완주:
+  `T2B_VERTICAL_IK_VERDICT=T2B_PASS`** — 실높이(+12.117mm)에서 후보 4/4 유지(S1 0.366°/
+  S2 0.208°/R1c 0.525°/R2c 0.420° descend tilt), 외곽 4 FAIL(16.9~33.6°) 유지 = annulus
+  결론 불변, 격자 URDF 264/513·v6 250/513(T2 272/256 대비 외곽 경계 소폭 내측 이동),
+  rerun_validation pass=True. 사전 판독 계획(t2b_prereg 말미)에 따라 **스폰 권고 seed0_S1
+  유지**(best_named=S2는 기록만). ⑥ p9 6렌즈 적대감사 워크플로우 `wf_78b1adfd-20d` —
+  세션 말미 완주 회수(16/16, 에러 0): **confirmed 10(FATAL 2·refuted 0)** — FATAL ① lift
+  follow가 waypoint 구간별 측정이라 완벽 파지도 LIFT_FAIL(GRASP_PASS 구조적 도달 불가),
+  FATAL ② 수직 IK 게이트를 transit 구간까지 적용해 매 실행 APPROACH_FAIL. 전문 =
+  `g0b_d420/p9_audit_wf_78b1adfd_findings_raw.json` (상세 = 20th doc §5).
+- **Implication**: ① **[감사 FATAL ②로 적용 범위 정정] 수직 계약은 IK task에 명시돼야
+  하되, 그 범위는 approach 도착점 + descend/lift 수직 회랑뿐이다** — HOME→approach transit
+  경유점까지 수직 게이트를 걸면 기하학적 실행 불가(매 실행 APPROACH_FAIL). transit는 p7
+  위치 전용 ik_dls가 정답이고, "p7 ik_dls 재사용 금지"는 **수직 회랑 구간 한정** 규칙으로
+  읽는다. ② 감사 confirmed 10건(FATAL 2·MAJOR 5·refuted 0)을 **전부 반영·py_compile 후에만
+  p9 sha 확정 → ③ prereg 발행 → Isaac 실행**; 특히 lift follow는 phase 누적 측정으로 수리
+  (FATAL ①). T2b는 verdict 회수 완료이나 **육안검수(D341) 미수행 — 이월 완료 전까지
+  "검증기 PASS·육안 미검수" 층위로만 인용**. ③ p9는 감사 반영 → ③ prereg/hash/attestation 발행 후에만 Isaac 실행 (승인
+  "T2/T3 진행" 기수령 상태). ④ 본 결정은 저작·발사 권위 — 물리 verdict 아님.
+  `g0a_pass=false` 불변. /half-clone 거부 6회째(#11, stop-hook 지시 포함).
+- **Source**: `sim_scripts/p9_g0b_t3_cyld29h50_top_center_vertical_close_sweep_grasp_probe.py`;
+  `sim_scripts/p8_…_probe.py`(T2b 수정판); `g0b_d420/` t2b_prereg.md·t2b_ik_stdout.log;
+  `claudedocs/session_20260805_20th_g0b_t2b_p9_authoring_audit_launch.md`; 추출 에이전트 2건
+  보고(env·동결자산, 20th doc §2); 워크플로우 `wf_78b1adfd-20d`(미수령).
+
+## D423 — 수리도 저작이다: 감사 confirmed 수리판은 실행 전 동일 강도의 적대 재검증을 거치고, 재검증 미회수 sha는 prereg에 핀하지 않는다 (수리·검증 권위 — 물리 verdict 아님; T2b는 육안검수로 완전 종결)
+
+- **Evidence**: 2026-08-06 21st 세션. ① **T2b 육안검수(D341) 완료** — 검수 PNG 판독:
+  헤더(T2B_PASS / +0.012117 / 23.019° / 0.013521 / 264·250)가 stdout log와 전건 일치,
+  annulus 위상 시각 확인(PASS 4후보 green 내부, FAIL 4 외곽 red/orange), 수치-시각
+  불일치 0. `t2b_ik_results.json` 직접 파싱 교차검증 일치. 사소 1건: 뷰 탭 라벨이
+  blueprint 템플릿 "T2" 잔존(내용은 T2B 정확 — 표기 전용). ② p9에 감사
+  `wf_78b1adfd-20d` confirmed 10건(고유 7종) + minor 2건 반영(상세 매핑 = 21st doc §3):
+  FATAL ① = phase-누적 lift follow 앵커, FATAL ② = `vertical_scope`("arrival"/"all")로
+  수직 계약을 approach 도착점 + descend/lift 회랑에 한정(transit 위치 전용 수용),
+  MAJOR 5 = stall-aware reached(0.02°/step×5) / continue 플래그 기본 ON + grasped_seen
+  phase-any / episode 60s / `--tag` + 기존 산출물 abort / `_close_all` + `__main__`
+  finally. py_compile OK, 1,605줄. ③ **numpy 사전비행 PASS**(`g0b_d420/
+  t3_preflight_ik_chain.py`): plan 3타깃 양 높이 수직 OK, approach 44wp(transit 최악
+  82.24° 위치 수용, 도착점 0.200° 수직 PASS), descend 5wp·lift 2wp 전부 PASS, 최악 예산
+  3615 < 6000 — 원 감사 수치(wp001 82.24°)와 소수점 일치로 솔버 재현 검증.
+  ④ 수리판 적대 재검증 워크플로우 **`wf_3cea04db-7c2`**(9 agents: 수리 7건 반박 시도 +
+  회귀 2렌즈) 발사 — **세션 종료 시점 미수령**(agent 전사 갱신 중 확인).
+- **Implication**: ① 감사 수리는 새 결함을 만들 수 있는 저작 행위다 — 수리판도 실행 전
+  같은 강도의 적대 재검증을 발사하고, **회수 전 sha를 ③ prereg에 핀하지 않는다**(잠정
+  sha `1e7f1907…fa31`은 기록만). ② 다음 부트 최우선 = `wf_3cea04db-7c2` **회수**(17th
+  교훈 — journal mtime 확인이 재발사보다 먼저; resume은 `resumeFromRunId`로) → 생존
+  이슈 FATAL→MAJOR→MINOR 반영 → 사전비행 재실행 → 최종 sha → ③ prereg(21st doc §7의
+  등재 목록: supersession 2건 + p7-parity 의도적 델타 6건 + 접촉 화살표 생략 정당화 +
+  마찰 주 leg) → T3 Isaac. ③ T2b는 D341 전 항목 이행으로 완전 종결 — "검증기 PASS·
+  육안 미검수" 층위 한정 인용 조항 해제. ④ 본 결정은 수리·검증 권위 — 물리 verdict
+  아님. `g0a_pass=false` 불변. **/half-clone 거부 8회째(#11, stop-hook 지시 포함).**
+- **Source**: `claudedocs/session_20260806_21st_g0b_t2b_inspection_p9_audit_repairs_reverify_launch.md`;
+  p9 소스(잠정 sha 위); `g0b_d420/` t2b_ik_reachability_inspection.png ·
+  t2b_ik_results.json · t3_preflight_ik_chain.py · p9_audit_wf_78b1adfd_findings_raw.json;
+  워크플로우 `wf_3cea04db-7c2` journal(미수령).
+
+## D423-R1 — 재검증 세션 내 회수: 수리 7/7 유효 확정, 그러나 FATAL-2 수리가 신규 MAJOR 2종(transit min-tilt 랭킹의 칼끝 2건)을 만들었다 — 잠정 sha 폐기, pos-first 랭킹 수리 후 사전비행 재검증이 최종 sha의 전제 (회수·정정 권위 — 물리 verdict 아님)
+
+- **Evidence**: 21st 세션 말미, `wf_3cea04db-7c2` 완주 통지 도착(10/10 agents, 에러 0,
+  1,301,532 tok — 상태 봉인 직후 완주, 20th 패턴 재현). 전문 =
+  `g0b_d420/p9_reverify_wf_3cea04db_findings_raw.json` (65.6KB). **repairVerdicts 7/7
+  repair_effective=true, notFixed 0.** 신규/잔존 13건: **MAJOR 고유 2종** — ① wp002
+  관절 재구성 46° 점프(속도클램프 슬루 적분 시 스텝당 TCP 최대 9.90mm vs 게이트 10mm,
+  마진 1~6%, **권고 스폰 seed0_S1이 최악**), ② transit min-tilt-in-band 랭킹이 wp003서
+  pe 2.52mm 명령 선택(실측 3mm reached 게이트에 0.48mm 마진). 둘 다 동근원 = 수리가
+  ok 게이트만 조건화하고 **랭킹은 min-tilt 우선을 유지**한 것. MINOR 10(상세 = 21st
+  doc §8).
+- **Implication**: ① 잠정 sha `1e7f1907…fa31` **폐기** — D423 ①(회수 전 핀 금지) 적중.
+  ② 다음 세션 수리 = `require_tilt=False`(transit)일 때 솔버 랭킹을 **pos 우선**으로
+  전환(또는 내부 밴드 IK_POS_KEY_MM을 게이트보다 좁힘) + 저렴한 MINOR 동시 수리
+  (_close_all try/finally 순서·lift path_ok 소비·NaN 직렬화·D-8 20s→60s supersession
+  등재) → py_compile → **사전비행 재실행에 per-waypoint 관절 delta 검사 추가**(pos-first
+  전환이 도착점 재배향 부담을 키우는지 실측) → 최종 sha → ③ prereg → T3 Isaac.
+  ③ 교훈: 게이트를 조건화하는 수리는 **랭킹(선택 함수)까지 함께 검토**해야 한다 —
+  게이트만 열면 선택 함수가 게이트 여유를 소진하는 해를 고른다. ④ 물리 verdict 아님,
+  `g0a_pass=false` 불변.
+- **Source**: `g0b_d420/p9_reverify_wf_3cea04db_findings_raw.json`; 21st doc §8;
+  p9 소스 `_solve_q_vertical`/`dls_vertical`(IK_POS_KEY_MM) 랭킹 로직.
+
+## D424 — T3 물리 시행 4회 완주: 파지 실패의 원인은 제어·IK가 아니라 동결 attempt3 충돌 자산의 조 목구멍 폐색이다 — "충돌 자산은 파트 수 감사가 아니라 조 간극-깊이 검증을 통과해야 파지 probe에 쓸 수 있다" (물리 probe verdict + 자산 결함 실증 — 실물 파지력 주장 아님)
+
+- **Evidence**: 2026-08-06 22nd 세션. ① `wf_3cea04db-7c2` 완주 회수(10/10) → 라운드-2
+  수리(transit 선택 밴드 0.5mm + bias-free 폴리시[스윕 실증: 잔차 1.2~1.5mm는 trust
+  region 12~24° 무관 = 바이어스-위치 평형이 원인] / 관절 trust region 12° / TCP-step
+  게이트 approach 한정 20mm 스코핑[trust region은 hop 길이만 줄이고 순간 |J·q̇|은 못
+  줄임]) → 사전비행 v2(마진의 게이트화; 1차 FAIL이 폴리시 필요를 노출) PASS →
+  라운드-3 적대 재검증 `wf_9b819983-97c`(9 agents: **수리 7/7 유효·회귀 렌즈 발견 0·
+  생존 MINOR 3 전건 기계 수리**) → 최종 sha 확정 → **③ prereg 발행**(`g0b_d420/
+  t3_prereg.md`: supersession 3건[D-4 스폰→seed0_S1 / D-6→attempt3 / D-8 episode
+  20→60s] + p7-parity 델타 11건 + MINOR 처분 + 마찰 주 leg 0.40/0.30).
+  ② **Isaac 시행 4회** (전부 사전등록 tuple, 물체 보호 게이트 전 유지, attach 무력화
+  감시 하 posewrite 0, D341 육안검수 4회 완료):
+  attempt1(margin 0.5mm) = APPROACH_FAIL — descend가 **TCP z=0.05440에서 접촉 정지**
+  (상면 0.050 + 4.4mm; 물체 speed/tilt 지터 급증·drift 26μm = 개방 조 구조물의 상면
+  접촉). attempt2(margin 5.5mm, marker 0.035 인자화) = LIFT_FAIL — **close 88.31→24°
+  전 각도 무접촉**(stall=NO·drift 2μm), LIFT에서 물체 부동. attempt3(descend_open
+  45° 인자화 — D-1 부분 개정) = LIFT_FAIL 동일 시그니처. attempt4(45°, margin
+  **−7.5mm**) = APPROACH_FAIL — **정지 z=0.054394, attempt1과 동일** → 하강 한계는
+  개방각 무관.
+  ③ 종합: (a) TCP는 top+4.4mm 아래로 못 내려감(축 근방 고정 구조물) (b) 그 높이에서
+  닫힘 면은 어느 각도에서도 원통 미접촉 → **이 자산에서 top-down 상면 중심 파지는
+  기하 불가능**. T1 실물 rim 핀치(상면 0~12mm 물림, 사진 검증) 성공과 정면 모순 →
+  sim 조/목구멍 충돌 형상의 실물 불일치 실증. attempt3 자산의 채택 근거(D420-R1)는
+  64+64 파트 수+스테이지 감사였고 **조 간극-깊이 개방성은 검증된 적 없었다** — 이번
+  3연속 시행이 그 검증이었고 폐색 잔존이 판명됐다.
+  ④ 부수 관측: verdict FAIL인데 프로세스 exit 0(4회 전부) — Kit close가 return 도달
+  전 종료 추정. 증거 파일은 close 전 기록이라 무손상.
+- **Implication**: ① **충돌 자산 채택 게이트에 "조 간극-깊이(목구멍 개방성) 검증"을
+  추가한다** — 파트 수·스테이지 감사·sha 핀은 신원 검증이지 파지 기하 검증이 아니다.
+  ② 다음 = 조 충돌 형상 감사(읽기 전용 pxr 정점 덤프 + FK — 재분해 아님, D415 ③
+  저촉 없음) → **사용자 에스컬레이션**(재분해 금지 해제 vs 대안) — 자산 수리 없이는
+  T3 GRASP_PASS 불가가 실증됨. ③ exit code는 Isaac probe의 판정 채널로 쓰지 않는다
+  (권위 = stdout verdict 라인 + results JSON). ④ 비관 모델 마진은 사전비행에서
+  실패 가능 게이트로 수치화하라(사전비행 v2 패턴) — 실측(슬루 1.7mm)이 비관 모델
+  (9.9mm)의 1/6이어도, 게이트화가 설계 결함(폴리시 부재)을 실행 전에 노출했다.
+  ⑤ 시행 사다리 attempt1→4는 교수 지시 ②("collision으로 찾아라")의 이행 사례 —
+  각 실패가 다음 설계 파라미터를 실측으로 내놓았다(재시도가 아니라 판별 시퀀스).
+  ⑥ 물리 verdict이되 **실물 파지력 주장 아님** — `g0a_pass=false` 불변.
+- **Source**: `claudedocs/session_20260806_22nd_g0b_t3_reverify_repairs_prereg_isaac_attempts1to4.md`;
+  `g0b_d420/` t3_prereg.md · t3_grasp{,2,3,4}_* · p9_reverify2_wf_9b819983_findings_raw.json ·
+  t3_preflight_ik_chain_v2.py · t3_trust_region_dev_sweep_evidence.md;
+  p9 sha 계보 939a5bd0…/1ef8a411…/99c99c65….

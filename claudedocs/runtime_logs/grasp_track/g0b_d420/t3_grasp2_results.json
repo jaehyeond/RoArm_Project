@@ -1,0 +1,379 @@
+{
+  "artifact": "G0B_T3_CYLD29H50_TOP_CENTER_VERTICAL_GRASP_V1",
+  "case": "g0b_d420",
+  "tag": "t3_grasp2",
+  "verdict": "LIFT_FAIL",
+  "usd": {
+    "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/roarm_m3.usd",
+    "root_sha256": "a4be58e87b1f9790f2a2ed600f0620c79d3cfb95c608b3c598308d52f5e46fff",
+    "physics_sha256": "043a5d35aa425c2589c77a34fcf415401ce9f9e7155e84ed75f6737df79fb503",
+    "stage_audit_pass": true,
+    "body_checks": {
+      "link5": {
+        "enabled_total": 64,
+        "enabled_part_count": 64,
+        "part_count_64": true,
+        "enabled_only_parts": true,
+        "legacy_rows": 1,
+        "disabled_legacy_exact_one": true
+      },
+      "gripper_link": {
+        "enabled_total": 64,
+        "enabled_part_count": 64,
+        "part_count_64": true,
+        "enabled_only_parts": true,
+        "legacy_rows": 1,
+        "disabled_legacy_exact_one": true
+      }
+    }
+  },
+  "object": {
+    "shape": "cylinder",
+    "size_m": [
+      0.029,
+      0.029,
+      0.05
+    ],
+    "mass_kg": 0.02483,
+    "static_friction": 0.4,
+    "dynamic_friction": 0.3,
+    "restitution": 0.0,
+    "friction_provenance": "preregistered assumption (t3_mass_friction_contract.md), NOT measured"
+  },
+  "materials_runtime": [
+    {
+      "path": "/physicsScene/defaultMaterial",
+      "static_friction": 1.0,
+      "dynamic_friction": 1.0,
+      "restitution": 0.0,
+      "friction_combine_mode": "multiply",
+      "restitution_combine_mode": "multiply"
+    },
+    {
+      "path": "/World/envs/env_0/Sponge/geometry/material",
+      "static_friction": 0.4000000059604645,
+      "dynamic_friction": 0.30000001192092896,
+      "restitution": 0.0,
+      "friction_combine_mode": "average",
+      "restitution_combine_mode": "average"
+    },
+    {
+      "path": "/World/ground/terrain/physicsMaterial",
+      "static_friction": 1.0,
+      "dynamic_friction": 1.0,
+      "restitution": 0.0,
+      "friction_combine_mode": "multiply",
+      "restitution_combine_mode": "multiply"
+    }
+  ],
+  "plan": {
+    "label": "seed0_S1_settled_pose",
+    "center": [
+      0.21386313438415527,
+      -0.19572888314723969,
+      0.02499978616833687
+    ],
+    "world_grasp": [
+      0.21386313438415527,
+      -0.19572888314723969,
+      0.04999978616833687
+    ],
+    "approach_tcp": [
+      0.21386313438415527,
+      -0.19572888314723969,
+      0.08999978616833687
+    ],
+    "descend_tcp": [
+      0.21386313438415527,
+      -0.19572888314723969,
+      0.05549978616833687
+    ],
+    "lift_tcp": [
+      0.21386313438415527,
+      -0.19572888314723969,
+      0.06549978616833686
+    ],
+    "q_approach_deg": [
+      -42.46494578336366,
+      35.41693414663114,
+      69.95891055291595,
+      73.31592797431405,
+      0.0,
+      88.30998496351378
+    ],
+    "q_descend_deg": [
+      -42.46494578336365,
+      40.00661459689536,
+      74.3962586458322,
+      66.20538528656468,
+      0.0,
+      88.30998496351378
+    ],
+    "q_lift_deg": [
+      -42.46494578336366,
+      38.370125186834755,
+      73.76459236700858,
+      67.66549153218786,
+      0.0,
+      24.0
+    ],
+    "ik_err_mm": [
+      0.10504889653705439,
+      0.04660490668042741,
+      0.015457872343047168
+    ],
+    "ik_tilt_deg": [
+      1.3082273261389097,
+      0.6082585292928679,
+      0.19979091396908702
+    ]
+  },
+  "gates": {
+    "target_error_gate_m": 0.003,
+    "plan_tilt_gate_deg": 5.0,
+    "max_tcp_step_m": 0.01,
+    "waypoint_max_joint_dev_deg": 12.0,
+    "transit_polish_dev_deg": 2.0,
+    "transit_pos_band_mm": 0.5,
+    "transit_tcp_step_gate_m": 0.02,
+    "object_drift_gate_m": 0.006,
+    "object_speed_gate_mps": 0.08,
+    "lift_speed_gate_mps": 0.25,
+    "gripper_error_gate_deg": 0.75,
+    "tilt_gate_deg": 12.0,
+    "min_upright_z_gate": 0.95,
+    "min_lift_follow_m": 0.006,
+    "marker_dist_m": 0.035,
+    "marker_q5_max_deg": 41.4,
+    "close_deg": [
+      88.30998496351378,
+      60.0,
+      45.0,
+      41.4,
+      39.0,
+      37.0,
+      35.0,
+      33.0,
+      31.65,
+      28.0,
+      24.0
+    ],
+    "episode_length_s": 60.0,
+    "gripper_stall_rate_deg_per_step": 0.02,
+    "gripper_stall_min_steps": 5,
+    "continue_close_after_grasped_until_angles_done": true
+  },
+  "phases": {
+    "approach": {
+      "label": "approach_open_wp044",
+      "reached": true,
+      "gripper_stalled": false,
+      "steps": 7,
+      "final_target_error_m": 0.001956927109677096,
+      "max_tcp_step_m": 0.001725299438219682,
+      "max_object_drift_m": 2.144369773008488e-06,
+      "max_object_speed_mps": 0.0007396991469222383,
+      "max_tilt_deg": 0.002357151992429559,
+      "min_upright_z": 0.9999999991537476,
+      "object_follow_delta_m": -5.587935447692871e-09,
+      "grasped_seen": false,
+      "attach_calls": 0,
+      "posewrite_calls": 0,
+      "early_kill": false
+    },
+    "descend": {
+      "label": "descend_open_wp005",
+      "reached": true,
+      "gripper_stalled": false,
+      "steps": 6,
+      "final_target_error_m": 0.0020627377112649257,
+      "max_tcp_step_m": 0.001673964020933522,
+      "max_object_drift_m": 2.3854921950839643e-06,
+      "max_object_speed_mps": 0.0007674255443974844,
+      "max_tilt_deg": 0.0023332321660680137,
+      "min_upright_z": 0.9999999991708356,
+      "object_follow_delta_m": -1.862645149230957e-08,
+      "grasped_seen": false,
+      "attach_calls": 0,
+      "posewrite_calls": 0,
+      "early_kill": false
+    },
+    "latch": {
+      "label": "close_24.00deg",
+      "reached": true,
+      "gripper_stalled": false,
+      "steps": 11,
+      "final_target_error_m": 0.000971924516063577,
+      "max_tcp_step_m": 2.7127071813633818e-06,
+      "max_object_drift_m": 2.5579075880123668e-06,
+      "max_object_speed_mps": 0.000738662855469906,
+      "max_tilt_deg": 0.0023842585632189443,
+      "min_upright_z": 0.9999999991341724,
+      "object_follow_delta_m": 1.1175870895385742e-08,
+      "grasped_seen": true,
+      "attach_calls": 22,
+      "posewrite_calls": 0,
+      "early_kill": false
+    },
+    "hold": {
+      "label": "stationary_hold_closed",
+      "reached": true,
+      "gripper_stalled": false,
+      "steps": 2,
+      "final_target_error_m": 0.0009717571266143072,
+      "max_tcp_step_m": 2.1126042125758269e-07,
+      "max_object_drift_m": 2.306460171470929e-06,
+      "max_object_speed_mps": 0.0006088510170536709,
+      "max_tilt_deg": 0.0022979921573077888,
+      "min_upright_z": 0.999999999195693,
+      "object_follow_delta_m": 3.3527612686157227e-08,
+      "grasped_seen": true,
+      "attach_calls": 4,
+      "posewrite_calls": 0,
+      "early_kill": false
+    },
+    "lift": {
+      "label": "tiny_lift_closed_10mm_wp002",
+      "reached": true,
+      "gripper_stalled": false,
+      "steps": 7,
+      "final_target_error_m": 0.002621293604375335,
+      "max_tcp_step_m": 0.0011100711998314353,
+      "max_object_drift_m": 2.3009036210852557e-06,
+      "max_object_speed_mps": 0.000762634169395526,
+      "max_tilt_deg": 0.002354820239843583,
+      "min_upright_z": 0.999999999155421,
+      "object_follow_delta_m": -4.0978193283081055e-08,
+      "grasped_seen": true,
+      "attach_calls": 14,
+      "posewrite_calls": 0,
+      "early_kill": false
+    }
+  },
+  "path_ok": {
+    "approach": true,
+    "descend": true,
+    "lift": true
+  },
+  "close_records": [
+    {
+      "angle_deg": 88.30998496351378,
+      "reached": true,
+      "gripper_stalled": false,
+      "grasped_seen": false,
+      "early_kill": false,
+      "max_object_drift_m": 2.3618017318166194e-06,
+      "max_tilt_deg": 0.0022764626723304946
+    },
+    {
+      "angle_deg": 60.0,
+      "reached": true,
+      "gripper_stalled": false,
+      "grasped_seen": false,
+      "early_kill": false,
+      "max_object_drift_m": 2.455032021284448e-06,
+      "max_tilt_deg": 0.0023431919992081955
+    },
+    {
+      "angle_deg": 45.0,
+      "reached": true,
+      "gripper_stalled": false,
+      "grasped_seen": false,
+      "early_kill": false,
+      "max_object_drift_m": 2.2930485724851037e-06,
+      "max_tilt_deg": 0.0023728056227187086
+    },
+    {
+      "angle_deg": 41.4,
+      "reached": true,
+      "gripper_stalled": false,
+      "grasped_seen": false,
+      "early_kill": false,
+      "max_object_drift_m": 2.3435125897284453e-06,
+      "max_tilt_deg": 0.002373174389460062
+    },
+    {
+      "angle_deg": 39.0,
+      "reached": true,
+      "gripper_stalled": false,
+      "grasped_seen": true,
+      "early_kill": false,
+      "max_object_drift_m": 2.341279751686155e-06,
+      "max_tilt_deg": 0.0023330639262069902
+    },
+    {
+      "angle_deg": 37.0,
+      "reached": true,
+      "gripper_stalled": false,
+      "grasped_seen": true,
+      "early_kill": false,
+      "max_object_drift_m": 2.5296126986809137e-06,
+      "max_tilt_deg": 0.0023575607743708303
+    },
+    {
+      "angle_deg": 35.0,
+      "reached": true,
+      "gripper_stalled": false,
+      "grasped_seen": true,
+      "early_kill": false,
+      "max_object_drift_m": 2.444017577082511e-06,
+      "max_tilt_deg": 0.0023456243465567127
+    },
+    {
+      "angle_deg": 33.0,
+      "reached": true,
+      "gripper_stalled": false,
+      "grasped_seen": true,
+      "early_kill": false,
+      "max_object_drift_m": 2.306773030125357e-06,
+      "max_tilt_deg": 0.0023228695708826692
+    },
+    {
+      "angle_deg": 31.65,
+      "reached": true,
+      "gripper_stalled": false,
+      "grasped_seen": true,
+      "early_kill": false,
+      "max_object_drift_m": 2.1179454825351864e-06,
+      "max_tilt_deg": 0.0023676831918134785
+    },
+    {
+      "angle_deg": 28.0,
+      "reached": true,
+      "gripper_stalled": false,
+      "grasped_seen": true,
+      "early_kill": false,
+      "max_object_drift_m": 2.216351280252427e-06,
+      "max_tilt_deg": 0.002309091555800457
+    },
+    {
+      "angle_deg": 24.0,
+      "reached": true,
+      "gripper_stalled": false,
+      "grasped_seen": true,
+      "early_kill": false,
+      "max_object_drift_m": 2.5579075880123668e-06,
+      "max_tilt_deg": 0.0023842585632189443
+    }
+  ],
+  "aggregate": {
+    "max_target_error_m": 0.002621293604375335,
+    "max_tcp_step_m": 0.001725299438219682,
+    "max_object_drift_m": 2.5579075880123668e-06,
+    "max_object_speed_mps": 0.0007674255443974844,
+    "max_tilt_deg": 0.0023842585632189443,
+    "min_upright_z": 0.9999999991341724,
+    "lift_follow_delta_m": -4.0978193283081055e-08,
+    "attach_calls": 144,
+    "posewrite_calls": 0,
+    "hidden_kinematic_posewrite_artifact": false,
+    "episode_done": false,
+    "nan_seen": false,
+    "total_sim_steps": 508
+  },
+  "env": {
+    "python": "3.11.14",
+    "numpy": "1.26.0",
+    "rerun_sdk": "0.34.1"
+  }
+}

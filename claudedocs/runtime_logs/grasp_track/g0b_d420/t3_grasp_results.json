@@ -1,0 +1,231 @@
+{
+  "artifact": "G0B_T3_CYLD29H50_TOP_CENTER_VERTICAL_GRASP_V1",
+  "case": "g0b_d420",
+  "tag": "t3_grasp",
+  "verdict": "APPROACH_FAIL",
+  "usd": {
+    "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/roarm_m3.usd",
+    "root_sha256": "a4be58e87b1f9790f2a2ed600f0620c79d3cfb95c608b3c598308d52f5e46fff",
+    "physics_sha256": "043a5d35aa425c2589c77a34fcf415401ce9f9e7155e84ed75f6737df79fb503",
+    "stage_audit_pass": true,
+    "body_checks": {
+      "link5": {
+        "enabled_total": 64,
+        "enabled_part_count": 64,
+        "part_count_64": true,
+        "enabled_only_parts": true,
+        "legacy_rows": 1,
+        "disabled_legacy_exact_one": true
+      },
+      "gripper_link": {
+        "enabled_total": 64,
+        "enabled_part_count": 64,
+        "part_count_64": true,
+        "enabled_only_parts": true,
+        "legacy_rows": 1,
+        "disabled_legacy_exact_one": true
+      }
+    }
+  },
+  "object": {
+    "shape": "cylinder",
+    "size_m": [
+      0.029,
+      0.029,
+      0.05
+    ],
+    "mass_kg": 0.02483,
+    "static_friction": 0.4,
+    "dynamic_friction": 0.3,
+    "restitution": 0.0,
+    "friction_provenance": "preregistered assumption (t3_mass_friction_contract.md), NOT measured"
+  },
+  "materials_runtime": [
+    {
+      "path": "/physicsScene/defaultMaterial",
+      "static_friction": 1.0,
+      "dynamic_friction": 1.0,
+      "restitution": 0.0,
+      "friction_combine_mode": "multiply",
+      "restitution_combine_mode": "multiply"
+    },
+    {
+      "path": "/World/envs/env_0/Sponge/geometry/material",
+      "static_friction": 0.4000000059604645,
+      "dynamic_friction": 0.30000001192092896,
+      "restitution": 0.0,
+      "friction_combine_mode": "average",
+      "restitution_combine_mode": "average"
+    },
+    {
+      "path": "/World/ground/terrain/physicsMaterial",
+      "static_friction": 1.0,
+      "dynamic_friction": 1.0,
+      "restitution": 0.0,
+      "friction_combine_mode": "multiply",
+      "restitution_combine_mode": "multiply"
+    }
+  ],
+  "plan": {
+    "label": "seed0_S1_settled_pose",
+    "center": [
+      0.21386313438415527,
+      -0.19572888314723969,
+      0.02499978616833687
+    ],
+    "world_grasp": [
+      0.21386313438415527,
+      -0.19572888314723969,
+      0.04999978616833687
+    ],
+    "approach_tcp": [
+      0.21386313438415527,
+      -0.19572888314723969,
+      0.08999978616833687
+    ],
+    "descend_tcp": [
+      0.21386313438415527,
+      -0.19572888314723969,
+      0.05049978616833687
+    ],
+    "lift_tcp": [
+      0.21386313438415527,
+      -0.19572888314723969,
+      0.06049978616833687
+    ],
+    "q_approach_deg": [
+      -42.46494578336366,
+      35.41693414663114,
+      69.95891055291595,
+      73.31592797431405,
+      0.0,
+      88.30998496351378
+    ],
+    "q_descend_deg": [
+      -42.46494578336366,
+      40.63802184343342,
+      75.11645484338419,
+      64.9632151287508,
+      0.0,
+      88.30998496351378
+    ],
+    "q_lift_deg": [
+      -42.46494578336365,
+      38.87774169282993,
+      74.75503451128706,
+      66.16848274055484,
+      0.0,
+      24.0
+    ],
+    "ik_err_mm": [
+      0.10504889653705439,
+      0.054560725518939715,
+      0.01523216437483904
+    ],
+    "ik_tilt_deg": [
+      1.3082273261389097,
+      0.7176918155682475,
+      0.19874105532604222
+    ]
+  },
+  "gates": {
+    "target_error_gate_m": 0.003,
+    "plan_tilt_gate_deg": 5.0,
+    "max_tcp_step_m": 0.01,
+    "waypoint_max_joint_dev_deg": 12.0,
+    "transit_polish_dev_deg": 2.0,
+    "transit_pos_band_mm": 0.5,
+    "transit_tcp_step_gate_m": 0.02,
+    "object_drift_gate_m": 0.006,
+    "object_speed_gate_mps": 0.08,
+    "lift_speed_gate_mps": 0.25,
+    "gripper_error_gate_deg": 0.75,
+    "tilt_gate_deg": 12.0,
+    "min_upright_z_gate": 0.95,
+    "min_lift_follow_m": 0.006,
+    "marker_dist_m": 0.03,
+    "marker_q5_max_deg": 41.4,
+    "close_deg": [
+      88.30998496351378,
+      60.0,
+      45.0,
+      41.4,
+      39.0,
+      37.0,
+      35.0,
+      33.0,
+      31.65,
+      28.0,
+      24.0
+    ],
+    "episode_length_s": 60.0,
+    "gripper_stall_rate_deg_per_step": 0.02,
+    "gripper_stall_min_steps": 5,
+    "continue_close_after_grasped_until_angles_done": true
+  },
+  "phases": {
+    "approach": {
+      "label": "approach_open_wp044",
+      "reached": true,
+      "gripper_stalled": false,
+      "steps": 7,
+      "final_target_error_m": 0.001956927109677096,
+      "max_tcp_step_m": 0.001725299438219682,
+      "max_object_drift_m": 2.144369773008488e-06,
+      "max_object_speed_mps": 0.0007396991469222383,
+      "max_tilt_deg": 0.002357151992429559,
+      "min_upright_z": 0.9999999991537476,
+      "object_follow_delta_m": -5.587935447692871e-09,
+      "grasped_seen": false,
+      "attach_calls": 0,
+      "posewrite_calls": 0,
+      "early_kill": false
+    },
+    "descend": {
+      "label": "descend_open_wp006",
+      "reached": false,
+      "gripper_stalled": false,
+      "steps": 60,
+      "final_target_error_m": 0.003916534505486088,
+      "max_tcp_step_m": 0.001591467426338594,
+      "max_object_drift_m": 2.6001283778533133e-05,
+      "max_object_speed_mps": 0.018564511899579503,
+      "max_tilt_deg": 0.050064379406339406,
+      "min_upright_z": 0.9999996182470638,
+      "object_follow_delta_m": 7.409602403640747e-06,
+      "grasped_seen": false,
+      "attach_calls": 0,
+      "posewrite_calls": 0,
+      "early_kill": false
+    },
+    "latch": null,
+    "hold": null,
+    "lift": null
+  },
+  "path_ok": {
+    "approach": true,
+    "descend": false,
+    "lift": true
+  },
+  "close_records": [],
+  "aggregate": {
+    "max_target_error_m": 0.003916534505486088,
+    "max_tcp_step_m": 0.001725299438219682,
+    "max_object_drift_m": 2.6001283778533133e-05,
+    "max_object_speed_mps": 0.018564511899579503,
+    "max_tilt_deg": 0.050064379406339406,
+    "min_upright_z": 0.9999996182470638,
+    "lift_follow_delta_m": 0.0,
+    "attach_calls": 0,
+    "posewrite_calls": 0,
+    "hidden_kinematic_posewrite_artifact": false,
+    "episode_done": false,
+    "nan_seen": false,
+    "total_sim_steps": 439
+  },
+  "env": {
+    "python": "3.11.14",
+    "numpy": "1.26.0",
+    "rerun_sdk": "0.34.1"
+  }
+}

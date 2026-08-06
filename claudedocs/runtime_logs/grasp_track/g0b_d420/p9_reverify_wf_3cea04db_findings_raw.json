@@ -1,0 +1,422 @@
+{
+  "summary": "Adversarially verify that the p9 audit repairs actually fix each confirmed finding and hunt for regressions the repairs introduced",
+  "agentCount": 10,
+  "logs": [
+    "repairs not effective: 0; residual/new issues: 13"
+  ],
+  "result": {
+    "repairVerdicts": [
+      {
+        "finding_id": "FATAL-1-lift-follow",
+        "repair_effective": true,
+        "repair_verdict_reason": "수리 유효 확인. (1) 데이터 흐름: run_resampled_path가 :1180에서 phase_start_obj_z를 앵커, :1203에서 매 waypoint의 run_to_q 반환 직후 final_result.object_follow_delta_m을 (현재 물체 z − phase_start_obj_z) phase-누적값으로 덮어쓰며, 이 final_result가 :1293 lift_result → :1315 _verdict → :469 게이트(lift.object_follow_delta_m < min_lift_follow_m)로 흐른다. 집계 :1313/stdout :1322/JSON phases :1450/aggregate :1532도 동일 값 소비. 수치 재계산: lift_delta_m=0.010(:588), max_cmd_gap=0.010×0.80=0.008(:597-598) → count=2, 구간당 ~5mm로 원 결함(마지막 구간 5mm < 0.006(:606))이 상수로 재현되고, 수리 후 완벽 추종 시 최종값 ≈10mm ≥ 6mm로 통과. (2) 조기 반환: not-reached/early_kill 반환(:1205-1206)은 :1203 덮어쓰기 이후이고, IK 실패 반환(:1200-1201)은 직전 반복 :1203에서 이미 덮어쓴 result를 반환; 첫 waypoint IK 실패의 None은 :461/:463/:469 및 :1313이 처리. dls_vertical(:212-250)은 순수 numpy라 반환~덮어쓰기 사이 sim 전진 없음. (3) 드리프트 게이트는 run_to_q 호출별 start_object(:1031) 대비 :1074/:1101로 세그먼트 기준 유지 — 수리가 미접촉. object_follow_delta_m의 게이트 소비처는 :469(lift 전용)뿐이라 approach/descend 덮어쓰기는 정보성 JSON(:1450)만 변경. (4) StepResult는 :289-290 plain @dataclass(비frozen, :267 PosePlan만 frozen)로 :1203 변경 안전(:1285 grasped_seen 변경 선례 존재).",
+        "residual_or_new_issues": [
+          {
+            "severity": "MINOR",
+            "title": "lift path_ok 폐기로 IK-절단된 lift가 GRASP_PASS 가능 (수리 회귀 아님, 기본값에서는 수리 전후 동일 거동)",
+            "claim": ":1293에서 lift의 세 번째 반환값이 _lift_path_ok로 버려져 _verdict(:469)가 경로 완주 여부를 보지 못한다(approach/descend는 :1231/:1246에서 소비). lift 최종 waypoint에서 IK 실패(:1200-1201) 시 직전 waypoint result(reached=True, early_kill=False)가 lift_result가 되고, 그 시점 누적 follow가 이미 ≥6mm면 lift 목표(+10mm) 미도달인데도 GRASP_PASS가 반환된다. 단 기본값에서는 lift gap ≤ 13mm(target_error_gate 0.003(:595) 정착 + lift_delta 0.010) → count=ceil(gap/0.008) ≤ 2이므로 직전 waypoint=wp1이고 wp1의 세그먼트값==누적값이라 수리 전과 판정 동일 — 수리가 창을 넓히는 count≥3은 gap>16mm를 요구해 기본 게이트로 도달 불가. 물체가 실제로 ≥6mm 추종한 물리 증거 자체는 진실이므로 verdict 과대 표기(완주 주장)에 한정된 결함."
+          }
+        ]
+      },
+      {
+        "finding_id": "FATAL-2-transit-vertical-gate",
+        "repair_effective": true,
+        "repair_verdict_reason": "원 결함(HOME→approach transit 전 waypoint에 tilt≤5° 게이트 → z>0.153m에서 기하학적 불가 → 100% APPROACH_FAIL)은 실제로 해소됐다. 근거: (a) 세 호출부 인자 확인 — approach는 vertical_scope=\"arrival\"(p9:1227), descend=\"all\"(p9:1241), lift=\"all\"(p9:1301), 파라미터 검증 가드 존재(p9:1173-1174). (b) 도착점 산술 정확 — resampled_waypoints는 count=max(1,ceil(gap/8mm))개를 생성하고 마지막 원소가 정확히 end_tcp(i=count, p9:1156-1157); enumerate(start=1)(p9:1189)과 require_tilt = scope==\"all\" or idx==len(waypoints)(p9:1190)의 조합은 마지막(=도착) waypoint에서만 tilt를 요구하며, gap≤8mm 단일 waypoint 경계 케이스(count=1, idx=1==len=1 → require_tilt=True)와 gap=0 케이스 모두 수치 재현으로 확인. (c) require_tilt=False여도 위치 수렴 비저해 — p9 모듈 자체의 dls_vertical/_solve_q_vertical을 import한 numpy 재현(스크래치 스크립트)으로 4개 T2-PASS 후보(seed0_S1/S2, R1/R2_center) × planned/settled 8구성 전부에서 approach 체인 44/47/43/41 waypoint 완주, transit 최대 pos_err=2.55mm ≤ 3mm 게이트, ok 전부 True; best-key(p9:376, p9:228)는 밴드 내 min-tilt 우선이지만 위치 ok를 막은 사례 0. 도착 waypoint tilt=0.197~0.200° ≤ 5°(체인 시드만으로, 원 감사의 wp001 tilt 82.24° 수치와 자릿수 일치 교차검증). (d) plan 게이트 유지 — _build_plan_from_center의 3회 호출(p9:407-415)은 require_tilt 미전달 → 기본 True(p9:363), settled replan(p9:1012)도 동일 경로, plan 실패 시 REACH_FAIL 계약 불변(p9:459-460). (e) 도착 직전 관절 점프 없음 — wp004 이후 waypoint당 관절 delta < 3°, 도착 구간 연속(수직 소프트바이어스 w_axis=0.03이 z 하강에 따라 tilt를 82°→0.2°로 점진 감소시킴, seed0_S1 프로파일 wp1=82.1° wp15=30.7° wp30=7.5° wp35=0.8°). 단, 재구성이 wp001-003에 집중되어 아래 잔존 이슈 2건을 새로 만든다 — 도착점이 아닌 transit 초입 문제이므로 수리 자체의 유효성 판정은 유지.",
+        "residual_or_new_issues": [
+          {
+            "severity": "MAJOR",
+            "title": "wp002 관절 재구성(46°)의 스텝당 TCP 이동이 10mm early_kill 게이트에 0.1~0.6mm 마진 — 권고 스폰 seed0_S1이 최악(9.90mm)",
+            "claim": "수리로 transit이 실행 가능해지면서 수직 소프트바이어스(w_axis=0.03, p9:217)가 HOME(tilt 90°)→수직 재배향을 wp001-003에 집중시킨다. 체인 재현 결과 wp002 명령은 dq=[-0.8,+10.2,-35.2,+46.0]°의 단일 점프(FK 경로장 15.6mm, chord 9.0mm). env 계약상 velocity_limit_sim=3.14rad/s·control dt=0.01s(roarm_stack_env.py:108,115,180) → 스텝당 관절 이동 최대 1.8°이고, effort 2.5N·m·stiffness 80이면 오차 46°에서 토크 포화로 관절들이 수 스텝 내 속도클램프에 도달·동시 주행한다. 이 속도클램프 슬루를 FK로 적분하면 스텝당 TCP 이동 최대치가 seed0_S1=9.90mm, S2=9.60, R1c=9.71, R2c=9.37mm로 run_to_q의 tcp_step>max_tcp_step_m(0.010) early_kill(p9:1073,1096-1097)에 1~6% 마진. PhysX 적분 경로가 내 운동학 슬루 모델과 수 % 어긋나면 wp002에서 early_kill → return False(p9:1205-1206) → APPROACH_FAIL(p9:461-464). 승인된 1회성 T3 실행이 물리 파지에 도달하기 전 소모될 개연성이 실재하며, p9가 스폰 권고한 seed0_S1이 정확히 최악 케이스다."
+          },
+          {
+            "severity": "MAJOR",
+            "title": "transit min-tilt-in-band 랭킹이 wp003에서 pos_err 2.52mm 명령을 선택 — reached 3mm 게이트에 0.48mm 마진",
+            "claim": "수리는 ok 게이트(p9:383)만 조건화했고 best-key 랭킹(p9:376, dls_vertical 내부 p9:228)은 그대로라, require_tilt=False인 transit에서 밴드(IK_POS_KEY_MM=3.0mm) 내 최소-tilt 반복해를 선택하며 위치 정확도를 최대 3mm까지 희생한다. 재현 결과 wp002 pe=1.85mm, wp003 pe=2.52mm(tilt 51.7°, 전 후보 공통 ~2.52-2.55mm): 명령된 관절해의 모델 FK 자체가 waypoint에서 2.52mm 떨어져 있는데, run_to_q의 reached는 실측 sim TCP와 waypoint의 거리 ≤ target_error_gate_m 3mm를 요구한다(p9:1072,1105). PD 중력 처짐·모델 FK-sim 불일치가 0.48mm만 나쁜 방향으로 겹치면 wp003 not-reached → return(p9:1205-1206) → APPROACH_FAIL. p7 이력은 pe≈0 명령 기준의 통과 증거라 2.52mm 오프셋 명령의 통과를 보증하지 않는다. 랭킹을 transit에서 pos 우선으로 바꾸거나 밴드를 게이트보다 좁히면 제거되는 결함."
+          },
+          {
+            "severity": "MINOR",
+            "title": "--target_error_gate_m를 3mm보다 좁히면 솔버 내부 밴드 상수(3.0mm 고정)와 불일치 → 달성 가능한 해를 놓치는 거짓 ik_ok=False 가능",
+            "claim": "dls_vertical 내부 랭킹은 IK_POS_KEY_MM=3.0 고정(p9:163,228)이고 _solve_q_vertical의 ok는 args.target_error_gate_m 사용(p9:376,383). 예로 --target_error_gate_m 0.002를 주면 내부 best가 pe∈(2,3)mm·저tilt 반복해를 반환할 수 있어, 같은 실행에서 pe<2mm 반복해가 존재했음에도 ok=False가 된다. 기본값(3mm)에서는 두 상수가 일치해 발현하지 않음 — 노출된 CLI 노브로 좁힐 때만 실행에 실제 영향."
+          }
+        ]
+      },
+      {
+        "finding_id": "MAJOR-a-stall-aware",
+        "repair_effective": true,
+        "repair_verdict_reason": "원 결함(잔존 창 (39.75,41.40°] stall → 거짓 LATCH_FAIL + 41.40 float knife-edge)이 소스에서 해소됨을 재현했다. (1) stall 경로: p9:1067-1070이 |Δq5|<0.02°/step(기본값 p9:617) 연속 카운트, p9:1105-1113이 close 단계에서 err>0.75°(p9:603)이면서 stall_count>=5(p9:618)일 때 gripper_ok=True+gripper_stalled=True로 reached 인정 — 원 창의 시나리오(q5*∈(39.75,41.40], 명령 39.0에서 err 0.75~2.40°)가 이제 ~7스텝 내 stall-reached로 통과한다. (2)(a) 자유 폐쇄 오발동 불가: env dt=1/200·decimation=2(roarm_stack_env.py:108,115)→control_dt=0.01s(p9:807), stiffness 80/damping 4/effort 2.5(env:177-187)의 준정적 추종률 k/c=20s⁻¹로 스텝당 Δq5≈0.181×err — err=0.75°에서 Δq5≈0.136°/step(임계의 6.8배)이고 Δq5가 0.02°/step에 닿는 err≈0.11°에서는 이미 0.75° 게이트로 gripper_ok=True라 stall 분기 전제(not gripper_ok, p9:1108)가 성립하지 않는다. 과감쇠(ζ≫1)라 진동 경로도 없음. (b) 진성 stall에서는 Δq5≈0이 지속되어 stall_count가 단조 증가(리셋 조건 p9:1069-1070 미발동)→reached 연속 True→settle_count 1,2(p9:1114)→break(p9:1130): settle 2회 보장, 진동 경로 없음. (c) 자유 이동 과도구간 ~5-8스텝 + stall 5 + settle 2 ≈ 12-15스텝 < close_steps_per_angle 45(p9:609), 예산 3배 여유; 전 각도 45스텝 소진해도 MAJOR-c 예산(p9:611-613, 30+2700+300+495+30+120=3675<6000 재계산 일치) 내. (d) 45스텝 crawl 미검출 시 그 각도 reached=False가 되나 close 루프는 not-reached로 break하지 않고(break는 early_kill p9:1272-1273 또는 플래그 OFF grasped p9:1276-1277뿐) 밴드를 완주하며, verdict는 마지막 각도 결과(latch_result=마지막, p9:1271)에만 걸린다 — 원 결함(마커 발화 각도에서 무조건 break→즉시 거짓 LATCH_FAIL, close_records 절단)과 달리 최종 각도 24°의 45스텝 전체에서 0.02°/step 이상 비수렴 운동이 지속되는 병적 경로로 축소되고, 방향은 여전히 보수적(false-FAIL)이며 close_records의 gripper_stalled/reached 흔적(p9:1264)으로 진단 가능. (e) knife-edge: 플래그 default=True(p9:621-627)로 마커 발화 시 break가 사라져(p9:1276-1277) 41.40 명령에서의 발화 여부는 밴드 절단·verdict에 더 이상 영향 없고, grasped_seen은 전 각도 OR 집계(p9:1278-1285)로 verdict(p9:465)에 반영 — 무해화 확인. 영향 반경 점검: stall 분기는 phase==\"close\" 한정(p9:1106)이라 HOLD/LIFT의 reached(위치 전용) 불변, HOLD는 close_deg[-1]=24와 동일 명령(p9:1288-1289)이라 점프 없음, 물체 아닌 것에 stall해도 종단 증거 LIFT follow>=6mm(p9:469)가 남아 false-PASS 채널 없음.",
+        "residual_or_new_issues": [
+          {
+            "severity": "MINOR",
+            "title": "접촉 채터/저속 crawl에 의한 stall 검출 거부 — 최종 각도 한정 보수적 잔존 창",
+            "claim": "stall 검출은 |Δq5|<0.02°/step 5연속(p9:617-618, 1067-1070)이라는 임계 기반이라, 접촉 중 측정 q5가 0.02°/step(=0.035rad/s) 이상으로 계속 미세 운동(솔버 채터 또는 push-grasp 저속 항복)하면 카운터가 리셋(p9:1069-1070)되어 45스텝(p9:609) 내 5연속 quiet가 성립하지 않을 수 있다. 중간 각도에서는 루프가 not-reached로 break하지 않아(p9:1272-1277) 무해하지만, 최종 각도 24.0°에서 이 경로가 지속되면 reached=False→_verdict(p9:465) LATCH_FAIL — 물리적으로 파지가 성립 중이어도 거짓 FAIL이 된다. 단 방향이 보수적(false-FAIL)이고, close_records의 gripper_stalled=False+reached=False 흔적(p9:1264)과 CSV q5 궤적(p9:941)으로 원 결함의 1.65° 기하 창과 달리 즉시 진단 가능하며 HARD RULE #3 유형의 재판독 대상으로 남는다. 수리 차단 사유는 아님."
+          }
+        ]
+      },
+      {
+        "finding_id": "MAJOR-b-full-band-sweep",
+        "repair_effective": true,
+        "repair_verdict_reason": "수리는 원 결함 4개 메커니즘을 전부 해소한다. (1) 플래그 복원: p9:621-627 `--continue_close_after_grasped_until_angles_done` BooleanOptionalAction default=True — 실행 인터프리터(isaaclab env python 3.11.14)에서 실측: 무인자 True / `--no-...` False로 정상 동작(p7:302의 store_true 원형과 이름 동일, 기본값만 의도적으로 ON). (2) 전 밴드 완주: latch 루프(p9:1248-1277)의 탈출은 early_kill(1272-1273)과 grasped_seen∧flag-OFF(1276-1277)뿐이므로 기본값에서 11각 전부 명령되어 밴드 하부 dead code가 사라짐. (3) HOLD 점프 소멸: 마지막 close 명령 q_close[5]=close_deg[-1]=24.0(1249, 기본 11각 p9:593)과 q_hold[5]=args.close_deg[-1]=24.0(1288-1289)이 동일 — 41.4→24 점프 및 실조임 오귀속 제거. (4) phase-any grasped_seen(1278-1285)은 관대화가 아님: marker_now()(882-883)는 env 래치 _grasped를 읽고, 래치 해제 조건 q5<0.4rad=22.92°(roarm_stack_env.py:380, 1186-1187)는 p9:644-645의 close_deg[-1]>=23.0 강제로 스윕 중 발동 불가 → 마지막 각도 결과가 이미 래치를 상속하므로 any() 확장은 p7 동등(p7:532/563도 같은 래치를 읽음) 안전벨트. \"fire 후 밀려남\" funnel 검증: LATCH 통과해도 attach 무력화(842-852)+posewrite 감시(976-981) 하에서 LIFT의 phase-누적 follow(1180/1203) >= min_lift_follow_m 0.006(606, verdict 469) 요구로 거짓 GRASP_PASS 불가 → LIFT_FAIL로 낙착. (d) 예산 재계산: control_dt=(1/200)*2=0.01s(env cfg:108/115, p9:807), episode 60s(p9:614/777)=6000스텝 vs 최악 30+45*60+5*60+11*45+30+2*60=3675(주석 611-613 일치) — 완주 스텝 증가(495)는 구조적으로 수용되고, 절단 시에도 done→early_kill(1102)+명시 경고(1328-1335)로 fail-loud. (e) early_kill 즉각성 유지: run_to_q 내부 break(1130), waypoint 즉시 반환(1205-1206), latch 루프 break가 continue-flag 검사에 선행(1272-1273). 대상: /home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/p9_g0b_t3_cyld29h50_top_center_vertical_close_sweep_grasp_probe.py",
+        "residual_or_new_issues": [
+          {
+            "severity": "MINOR",
+            "title": "전 밴드 완주로 latch phase 누적 drift 사각지대 확대 (세그먼트-상대 drift 기준점)",
+            "claim": "drift는 각 run_to_q 세그먼트 시작의 start_object 기준(p9:1031, 1074)이고 early_kill 게이트는 세그먼트당 0.006m(p9:600, 1101)이므로, 수리 전 ~4-5 세그먼트(첫 fire 절단)에서 수리 후 11 세그먼트로 늘며 세그먼트당 <6mm의 점진적 밀림은 최대 ~66mm 누적까지 early_kill을 피한다(절대값 게이트인 tilt 12°/upright 0.95는 기울어짐만 잡고 수평 슬라이드는 못 잡음). 거짓 GRASP_PASS는 불가(LIFT follow 0.006m 권위, p9:469/1203)하지만, 실행 시 실제로 잘못되는 것: 밀려난 파지 실패가 LATCH_FAIL 대신 LIFT_FAIL로 귀속 이동하고, aggregate max_object_drift_m(p9:1307, 세그먼트별 max의 max)이 phase 실변위를 과소보고해 결과 JSON/stdout의 drift 수치가 오독 소지를 만든다. per-angle close_records(1260-1270)의 drift/tilt로 사후 재구성은 가능."
+          }
+        ]
+      },
+      {
+        "finding_id": "MAJOR-c-episode-budget",
+        "repair_effective": true,
+        "repair_verdict_reason": "(1) 예산 재계산: env 소스에서 control_dt = sim.dt(1/200, roarm_stack_env.py:115) × decimation(2, env:108) = 0.01 s(p9:807)이고 --episode_length_s 기본 60.0(p9:614) → max_episode_length = 6000, truncation은 buf >= 5999(env:1017). 최악 완주 예산을 개정판 상수로 재계산: settle 30(p9:608) + approach wp×60(substep_steps p9:599) + descend wp×60 + latch 11각(close_deg 기본 11개, p9:593)×45(p9:609) + hold 30(p9:610) + lift wp×60. waypoint 간격 = max_tcp_step_m 0.010 × command_resample_fraction 0.80 = 0.008 m(p9:597-598, 1155-1157). 리포지토리 FK(roarm_kinematics._CHAIN)로 HOME [0,0,90,0] TCP = (0.34367, 0, 0.34373) 재현; seed0_S1 approach_tcp까지 갭 = 0.35479 m(플랜, z=+0.077883) → 45 wp 또는 0.34580 m(settled 재플랜, z=+0.090) → 44 wp; descend 갭 0.0395 → 5 wp; lift 0.010 → 2 wp. 최악 합계 = 30+45×60+5×60+11×45+30+2×60 = 3675(또는 44wp 시 3615) — p9:611-613 주석의 3675와 일치하며, 3 mm 도달오차 슬랙을 얹어도(approach≤50wp, descend 6wp) 4035 < 6000. 여유 ≥ 2325 스텝으로 사전등록 기본 구성에서 truncation은 구조적으로 도달 불가. (2) 전파 경로 작동 확인: step_once가 (terminated|truncated).any() 반환(p9:855-861), env terminated는 상시 False(env:1016 'NEVER terminate on success')라 done ⇔ truncation; settle 루프 episode_done |= step_once()(p9:988), run_to_q는 nonlocal episode_done(p9:1028)로 매 스텝 OR(p9:1091)하고 done이 early_kill의 disjunct(p9:1096-1104) → break(p9:1130) → run_resampled_path 즉시 중단(p9:1205-1206) → 후속 phase 가드(p9:1231,1246,1272,1286,1291) 전부 스킵 → _verdict가 해당 phase *_FAIL 반환(p9:461-470); aggregate 라인에 episode_done 출력(p9:1324), verdict 출력(p9:1327) 직후 episode_done이면 'episode_truncated=YES … phase *_FAIL may be budget-, not physics-attributed' 경고(p9:1328-1335), JSON aggregate.episode_done에도 기록(p9:1536). terminated가 항상 False이므로 경고 명칭 'truncated'는 오탐 없이 정확. (3) 60 s 부작용 전수 확인: roarm_stack_env.py에서 episode_length_s/max_episode_length/episode_length_buf 소비처는 정확히 3곳 — cfg 기본값 2.0(env:109, p9:777이 덮어씀), episode_progress(env:905, reward_phase==7 전용 _p7_transport_release_tower 내부인데 probe는 reward_phase=6 설정 p9:769 → env:538-539의 _p6v6_replace_tower 경로라 미호출), truncation 자체(env:1017). 커리큘럼 플래그는 전부 spawn/상태 기반이며 probe가 명시적으로 off(p9:770-776); self.dt는 sim.dt×decimation(env:401)으로 episode_length_s와 무관. 20→60 s 상향으로 되살아나는 시간 의존 장치 없음. 원 감사가 요구한 완화(episode_length_s ≥ 40 또는 verdict에 truncation 반영)의 ≥40 s 옵션 + 경고 + JSON 기록이 모두 충족됨.",
+        "residual_or_new_issues": []
+      },
+      {
+        "finding_id": "MAJOR-d-tag-guard",
+        "repair_effective": true,
+        "repair_verdict_reason": "(a) 6개 산출 경로가 전부 tag-유도 로컬로 교체됨: p9:658-663에서 rrd/rbl/png/validation/results/csv 경로가 `OUT_DIR / f\"{args.tag}_...\"`로 파생되고, 쓰기·소비처 전부가 main()(577행~) 내 이 로컬만 참조 — rec.save(:960), blueprint.save(:1420), csv open(\"w\")(:1422), results write_text(:1542), validate_rerun_artifact 호출의 rrd/rbl/png(:1568-1579), validation write_text(:1580), 최종 아티팩트 로그(:1586-1587). 구 상수 RRD_PATH/RBL_PATH/PNG_PATH/VALIDATION_PATH/RESULTS_PATH/CSV_PATH는 grep 0건이고 모듈 레벨 경로 상수는 OUT_DIR(:141)뿐이며, sim_scripts/roarm_rl 어디에도 p9 모듈을 import하는 외부 참조 없음. (b) abort 가드(:664-671, return 3)는 tag regex 검증(:654-655) 직후·USD sha 계산(:677-678)·_build_plan(:694)·`from isaaclab.app import AppLauncher`(:696-698) 이전에 실행되고, 모듈 최상단 import(:74-93)는 stdlib+numpy+roarm_kinematics(numpy 전용, roarm_kinematics.py:6-11)뿐이라 Isaac 기동 비용 없이 멈춤. tag는 `[A-Za-z0-9_]+` fullmatch(:654)로 경로 이탈 불가. 원 결함의 exit-2 채널(rerun_contract.py:297-303 기존 PNG 거부 → :348-349 pass=False → p9:1591 exit 2)은 가드 통과 실행에서 png_path 선존재가 불가능하므로 구조적으로 폐쇄. (c) 스크립트 내 파일 쓰기 전수는 :476(sha 읽기)/:898(mkdir)/:960/:1420/:1422/:1542/:1580으로 .log 쓰기 없음 — stdout 로그(7번째)는 셸 리다이렉션 담당 유지, 스크립트 내 충돌 없음(단 가드는 stdout 로그를 보호하지 않으므로 실행 시 리다이렉트 파일명도 같은 fresh tag 사용 필요 — 운영 유의사항이며 스크립트 결함 아님). (d) t3_conversion_design.md에는 구체 산출 파일명 사전등록이 없고(D-7 §88-91은 산출물 종류만 명시, \"t3_grasp\" 문자열 0건) t3_prereg.md는 미발행(g0b_d420 폴더 실측: t2/t2b prereg만 존재) — 기본 tag \"t3_grasp\"는 감사 증거(findings_raw.json result.confirmed[7])에 인용된 수리 전 이름 t3_grasp_inspection.png를 정확히 재생성하고 t3_grasp_timeline.rrd/.rbl, t3_grasp_rerun_validation.json, t3_grasp_results.json, t3_grasp_steps.csv의 자기일관 세트를 이루므로 위반할 기존 이름 계약이 없으며, 이후 발행될 prereg가 이 이름을 핀하면 됨. (e) app_id \"roarm_g0b_t3_grasp\"(:958)·recording_id \"g0b_d420_t3_grasp\"(:959) 고정은 게이트 관점에서 수용 가능 — validate_rerun_artifact는 단일 파일 대상 CLI 검증(rerun_contract.py:197-205)과 단일 파일 headless 렌더(:294-311)만 수행해 tag와 무관. 다중 rrd 동시 로드 시 병합 혼동만 잔존(MINOR로 별도 보고).",
+        "residual_or_new_issues": [
+          {
+            "severity": "MINOR",
+            "title": "recording_id/app_id가 tag와 무관하게 고정 — 다중 leg rrd 동시 로드 시 단일 recording으로 병합되어 D341 육안검수 혼동 가능",
+            "claim": "p9:958-959가 app_id=\"roarm_g0b_t3_grasp\", recording_id=\"g0b_d420_t3_grasp\"를 tag와 무관하게 고정한다. 사전등록상 별도 실행이 예정된 감도 leg(t3_mass_friction_contract.md leg-low/leg-high, 원 감사 confirmed[7] reason에도 인용)들이 서로 다른 --tag로 각자 <tag>_timeline.rrd를 남기면, 두 파일을 한 Rerun 뷰어에 동시에 열 때 동일 recording_id 때문에 단일 recording으로 병합되어 동일 entity 경로(tcp/object/plots/*)에 두 run의 데이터가 physics_step/sim_time_s 타임라인 위에서 뒤섞인다 — D341이 요구하는 실제 육안검수가 leg 간 증거를 오귀속할 수 있다. 단 스크립트 자체 게이트는 무영향: validate_rerun_artifact는 파일 1개만 CLI로 검증·렌더하므로(rerun_contract.py:197-205, :294-311) verdict/exit code는 오염되지 않는다. 수리 자체를 무효화하지 않는 관찰층 한정 위험."
+          }
+        ]
+      },
+      {
+        "finding_id": "MAJOR-e-close-and-net",
+        "repair_effective": true,
+        "repair_verdict_reason": "원 결함의 결정적 경로가 소스에서 해소됨을 재현 확인. (1) RERUN_VERSION_MISMATCH 가드(:711-714)가 `_close_all()` 후 `return 3`으로 변경 — 원 감사가 지목한 close-누락 return이 사라짐. (2) post-launch 종료 경로 전수 열거 결과 4건 전부 _close_all 선행: :713-714(version mismatch), :765-766(USD effective 가드), :814-815(USD_AUDIT_FAIL), :1590-1591(정상 종료). pre-launch return 3건(:671, :676, :684)은 AppLauncher 기동(:698) 이전이라 close 불요. 나머지 return은 전부 중첩 closure 내부(:831-:1207, :1436-:1461 def 경계로 확인)로 main 종료 경로 아님. (3) 핸들 등록 공백 없음: sim_app은 기동 직후 :700, env는 gym.make(:802) 직후 :803. (4) 예외 안전망: `__main__` try/finally(:1595-1605)가 임의 예외 시 _close_all 실행. main()이 예외로 죽는 경로에서는 `_code = main()`(:1596) 대입이 일어나지 않지만 finally 완료 후 원 예외가 계속 전파되어 `raise SystemExit(_code)`(:1605)는 도달 불능 — NameError 경로 없음(정상 반환 경로에서만 :1605 실행, 그때 _code 항상 바인딩). (5) 이중 close 안전: _close_all(:148-154)이 성공 시 핸들을 None으로 클리어해 finally 재진입은 no-op이며, 기저 DirectRLEnv.close()는 _is_closed 가드(IsaacLab direct_rl_env.py:506,:530), gymnasium 1.2.0 Wrapper.close는 단순 전달(설치본 확인)이라 재호출도 무해. (6) Rerun 상호작용 안전: with RecordingStream 블록(:959, save :960)은 :1419 부근에서 끝나고(:1420 blueprint.save가 main-레벨) _close_all(:1590)은 블록 밖 + 블록 내부에 main-레벨 return 전무 — 예외 시에도 __exit__(flush)가 Kit close보다 먼저 실행되어 flush-전-close 경로 없음. 단 _close_all 자체의 예외 시 sim_app 미폐쇄 잔존 구멍 1건은 남음(residual 참조).",
+        "residual_or_new_issues": [
+          {
+            "severity": "MINOR",
+            "title": "_close_all 내 env.close() 예외 시 sim_app.close() 도달 불능 — 크래시-후-정리 시나리오 한정 Kit 행 잔존",
+            "claim": "_close_all(:148-154)은 env.close()(:150)와 sim_app.close()(:153)를 핸들별 try 없이 순차 실행한다. env.close()가 예외를 던지면 :151-154가 전부 건너뛰어져 sim_app이 닫히지 않고 env 핸들도 클리어되지 않는다. 이후 __main__ finally(:1602)가 _close_all을 재시도하지만, DirectRLEnv.close()가 _is_closed=True 설정(:530) 이전 지점(예: del self.scene :511, sim.clear_all_callbacks :523)에서 죽었다면 재호출은 teardown을 처음부터 재실행하다 다시 예외(예: 이미 del된 event_manager :510 AttributeError)를 내고, 이는 except Exception(:1603)에 삼켜져 cleanup_error 출력(:1604) 후 sim_app.close()는 어떤 호출에서도 실행되지 않는다 → Kit non-daemon 스레드 생존 → 원 결함과 동일한 프로세스 행. 발동 조건이 'env.close() 자체가 예외'(전형적으로 sim 크래시 후 정리 경로)로 좁고 결정적 트리거가 없어 MINOR. 수리안: _close_all에서 핸들별 try/except로 sim_app.close()를 무조건 시도."
+          }
+        ]
+      },
+      {
+        "finding_id": "MINOR-guards-json",
+        "repair_effective": true,
+        "repair_verdict_reason": "수리 1 (vacuous 가드 → effective-path 가드): 원 결함은 구 p9:613-614가 \"방금 대입한 env-var 문자열에 /NHNHOME 포함 여부\"를 검사하는 tautology였다는 것. 개정판은 주입부 p9:688(`os.environ[\"ROARM_M3_USD_PATH\"] = str(ATTEMPT3_USD)`)에서 자기-비교를 제거하고 주석으로 이관을 명시(p9:685-687)한 뒤, `cfg = RoArmStackEnvCfg()`(p9:755) 직후 p9:758-766에서 `effective_usd = str(cfg.robot.spawn.usd_path)`를 `str(ATTEMPT3_USD)` 불일치 OR \"/NHNHOME\" 포함으로 검사하고 USD_GUARD_FAIL 출력 + `_close_all()` + `return 3`한다. 발화 가능성 검증: (a) env 소스에서 USD_PATH는 모듈 import 시점 env-var 읽기(roarm_stack_env.py:97-100)이고 클래스 정의 시점에 `UsdFileCfg(usd_path=USD_PATH)`로 소비(env:146-149); 설치된 isaaclab configclass는 가변 클래스 기본값을 `field(default_factory=_return_f(value))`(configclass.py:378)+deepcopy(:399)로 감싸므로 인스턴스 값 = import 시점 값의 복사본 — 정상 흐름(주입 p9:688 → import roarm_rl p9:706; 주입 전 유일한 프로젝트 import roarm_kinematics(p9:93)는 numpy-전용)에선 attempt3 경로로 PASS, stale-module 시나리오에선 /NHNHOME이 구워진 값이 그대로 노출되어 가드가 실제 발화한다(원 감사가 요구한 정확히 그 시나리오). (b) cfg.robot(env:146)→.spawn(UsdFileCfg)→.usd_path 체인은 유효(AttributeError 없음; p9:778의 cfg.sponge.spawn 접근과 동일 패턴), 양변 문자열이 동일한 str(ATTEMPT3_USD)(REPO resolve 기반 p9:88,111-115)에서 유래해 거짓 양성 없음, 실패 시점에 _CLEANUP[\"env\"]=None·sim_app만 설정(p9:700)이라 _close_all(p9:148-154)이 Kit을 닫아 wedge 없음, 가드가 gym.make(p9:802) 이전에 실행되어 env가 소비할 실제 cfg 객체를 검사한다. 수리 2 (aggregate sanitize): `_finite_or_none`(p9:1457-1461)이 aggregate 6종(p9:1526-1531)에 적용됨. REACH_FAIL 경로(p9:1218 else → 전 phase None → results=[] p9:1304 → default inf p9:1305-1309 / nan p9:1310)에서 6종 전부 None→null 직렬화(로컬 실행으로 json.dumps에서 None→null, default=str 미개입 확인) — 원 결함(RFC 8259 비준수 Infinity/NaN 토큰) 해소. GRASP_PASS 경로는 각 phase 최소 1 step 실행으로 final_error 등 전부 유한(p9:1083, reached 조건 p9:1105)이라 수치 그대로 통과. stdout aggregate(p9:1317-1326)는 sanitize 이전 원시값을 :.6f로 포맷 — f\"{inf:.6f}\"→'inf', f\"{nan:.6f}\"→'nan' 무크래시를 실행으로 확인했고, sanitize된 None을 수치 포맷하는 경로는 없음(_finite_or_none 사용처는 p9:1526-1531 dict 리터럴뿐). REACH_FAIL 시 plan 섹션 원시 embed(p9:1495-1496)도 _solve_q_vertical이 float(pe), float(tl)(p9:384)로 유한값 반환이라 Infinity 누출 없음.",
+        "residual_or_new_issues": [
+          {
+            "severity": "MINOR",
+            "title": "물리 NaN 폭주 시 lift_follow_delta_m·phases·close_records는 여전히 NaN 토큰으로 직렬화",
+            "claim": "p9:1532 `\"lift_follow_delta_m\": lift_follow`는 _finite_or_none 미적용이고, phases dict(p9:1444-1450의 final_target_error_m/max_object_drift_m 등)와 close_records(p9:1267-1268)도 원시 float이다. 시뮬레이션 NaN 폭주(p9:1089-1090에서 nan_seen 설정, p9:1096-1103 early_kill) 시 `object_local()`이 NaN을 반환하면 p9:1203 `float(object_local()[2] - phase_start_obj_z)`가 NaN이 되어 lift_result.object_follow_delta_m→p9:1313 lift_follow로 전파되고, p9:1542 `json.dumps(results_doc, indent=2, default=str)`가 allow_nan 기본 True로 `NaN` 토큰을 기록한다(로컬 실행으로 json.dumps({'b': float('nan')})→NaN 토큰 확인) — 원 결함과 동일한 RFC 8259 비준수가 빈-results가 아닌 NaN-물리 경로에서 재현된다. 단 이 경로는 원 감사 finding이 명시적으로 제외한 트리거(원문: 'GRASP 성공/부분 진행 경로에서는 results가 비지 않아 발화하지 않고')이고, 해당 run은 aggregate.nan_seen=true로 이미 폐기 표지가 남으며 Python json.load는 NaN을 파싱하므로 수리 유효성을 부정하지 않는 잔존 결함이다.",
+            "severity_note": "MINOR"
+          }
+        ]
+      }
+    ],
+    "notFixed": [],
+    "issues": [
+      {
+        "severity": "MINOR",
+        "title": "lift path_ok 폐기로 IK-절단된 lift가 GRASP_PASS 가능 (수리 회귀 아님, 기본값에서는 수리 전후 동일 거동)",
+        "claim": ":1293에서 lift의 세 번째 반환값이 _lift_path_ok로 버려져 _verdict(:469)가 경로 완주 여부를 보지 못한다(approach/descend는 :1231/:1246에서 소비). lift 최종 waypoint에서 IK 실패(:1200-1201) 시 직전 waypoint result(reached=True, early_kill=False)가 lift_result가 되고, 그 시점 누적 follow가 이미 ≥6mm면 lift 목표(+10mm) 미도달인데도 GRASP_PASS가 반환된다. 단 기본값에서는 lift gap ≤ 13mm(target_error_gate 0.003(:595) 정착 + lift_delta 0.010) → count=ceil(gap/0.008) ≤ 2이므로 직전 waypoint=wp1이고 wp1의 세그먼트값==누적값이라 수리 전과 판정 동일 — 수리가 창을 넓히는 count≥3은 gap>16mm를 요구해 기본 게이트로 도달 불가. 물체가 실제로 ≥6mm 추종한 물리 증거 자체는 진실이므로 verdict 과대 표기(완주 주장)에 한정된 결함.",
+        "source": "FATAL-1-lift-follow"
+      },
+      {
+        "severity": "MAJOR",
+        "title": "wp002 관절 재구성(46°)의 스텝당 TCP 이동이 10mm early_kill 게이트에 0.1~0.6mm 마진 — 권고 스폰 seed0_S1이 최악(9.90mm)",
+        "claim": "수리로 transit이 실행 가능해지면서 수직 소프트바이어스(w_axis=0.03, p9:217)가 HOME(tilt 90°)→수직 재배향을 wp001-003에 집중시킨다. 체인 재현 결과 wp002 명령은 dq=[-0.8,+10.2,-35.2,+46.0]°의 단일 점프(FK 경로장 15.6mm, chord 9.0mm). env 계약상 velocity_limit_sim=3.14rad/s·control dt=0.01s(roarm_stack_env.py:108,115,180) → 스텝당 관절 이동 최대 1.8°이고, effort 2.5N·m·stiffness 80이면 오차 46°에서 토크 포화로 관절들이 수 스텝 내 속도클램프에 도달·동시 주행한다. 이 속도클램프 슬루를 FK로 적분하면 스텝당 TCP 이동 최대치가 seed0_S1=9.90mm, S2=9.60, R1c=9.71, R2c=9.37mm로 run_to_q의 tcp_step>max_tcp_step_m(0.010) early_kill(p9:1073,1096-1097)에 1~6% 마진. PhysX 적분 경로가 내 운동학 슬루 모델과 수 % 어긋나면 wp002에서 early_kill → return False(p9:1205-1206) → APPROACH_FAIL(p9:461-464). 승인된 1회성 T3 실행이 물리 파지에 도달하기 전 소모될 개연성이 실재하며, p9가 스폰 권고한 seed0_S1이 정확히 최악 케이스다.",
+        "source": "FATAL-2-transit-vertical-gate"
+      },
+      {
+        "severity": "MAJOR",
+        "title": "transit min-tilt-in-band 랭킹이 wp003에서 pos_err 2.52mm 명령을 선택 — reached 3mm 게이트에 0.48mm 마진",
+        "claim": "수리는 ok 게이트(p9:383)만 조건화했고 best-key 랭킹(p9:376, dls_vertical 내부 p9:228)은 그대로라, require_tilt=False인 transit에서 밴드(IK_POS_KEY_MM=3.0mm) 내 최소-tilt 반복해를 선택하며 위치 정확도를 최대 3mm까지 희생한다. 재현 결과 wp002 pe=1.85mm, wp003 pe=2.52mm(tilt 51.7°, 전 후보 공통 ~2.52-2.55mm): 명령된 관절해의 모델 FK 자체가 waypoint에서 2.52mm 떨어져 있는데, run_to_q의 reached는 실측 sim TCP와 waypoint의 거리 ≤ target_error_gate_m 3mm를 요구한다(p9:1072,1105). PD 중력 처짐·모델 FK-sim 불일치가 0.48mm만 나쁜 방향으로 겹치면 wp003 not-reached → return(p9:1205-1206) → APPROACH_FAIL. p7 이력은 pe≈0 명령 기준의 통과 증거라 2.52mm 오프셋 명령의 통과를 보증하지 않는다. 랭킹을 transit에서 pos 우선으로 바꾸거나 밴드를 게이트보다 좁히면 제거되는 결함.",
+        "source": "FATAL-2-transit-vertical-gate"
+      },
+      {
+        "severity": "MINOR",
+        "title": "--target_error_gate_m를 3mm보다 좁히면 솔버 내부 밴드 상수(3.0mm 고정)와 불일치 → 달성 가능한 해를 놓치는 거짓 ik_ok=False 가능",
+        "claim": "dls_vertical 내부 랭킹은 IK_POS_KEY_MM=3.0 고정(p9:163,228)이고 _solve_q_vertical의 ok는 args.target_error_gate_m 사용(p9:376,383). 예로 --target_error_gate_m 0.002를 주면 내부 best가 pe∈(2,3)mm·저tilt 반복해를 반환할 수 있어, 같은 실행에서 pe<2mm 반복해가 존재했음에도 ok=False가 된다. 기본값(3mm)에서는 두 상수가 일치해 발현하지 않음 — 노출된 CLI 노브로 좁힐 때만 실행에 실제 영향.",
+        "source": "FATAL-2-transit-vertical-gate"
+      },
+      {
+        "severity": "MINOR",
+        "title": "접촉 채터/저속 crawl에 의한 stall 검출 거부 — 최종 각도 한정 보수적 잔존 창",
+        "claim": "stall 검출은 |Δq5|<0.02°/step 5연속(p9:617-618, 1067-1070)이라는 임계 기반이라, 접촉 중 측정 q5가 0.02°/step(=0.035rad/s) 이상으로 계속 미세 운동(솔버 채터 또는 push-grasp 저속 항복)하면 카운터가 리셋(p9:1069-1070)되어 45스텝(p9:609) 내 5연속 quiet가 성립하지 않을 수 있다. 중간 각도에서는 루프가 not-reached로 break하지 않아(p9:1272-1277) 무해하지만, 최종 각도 24.0°에서 이 경로가 지속되면 reached=False→_verdict(p9:465) LATCH_FAIL — 물리적으로 파지가 성립 중이어도 거짓 FAIL이 된다. 단 방향이 보수적(false-FAIL)이고, close_records의 gripper_stalled=False+reached=False 흔적(p9:1264)과 CSV q5 궤적(p9:941)으로 원 결함의 1.65° 기하 창과 달리 즉시 진단 가능하며 HARD RULE #3 유형의 재판독 대상으로 남는다. 수리 차단 사유는 아님.",
+        "source": "MAJOR-a-stall-aware"
+      },
+      {
+        "severity": "MINOR",
+        "title": "전 밴드 완주로 latch phase 누적 drift 사각지대 확대 (세그먼트-상대 drift 기준점)",
+        "claim": "drift는 각 run_to_q 세그먼트 시작의 start_object 기준(p9:1031, 1074)이고 early_kill 게이트는 세그먼트당 0.006m(p9:600, 1101)이므로, 수리 전 ~4-5 세그먼트(첫 fire 절단)에서 수리 후 11 세그먼트로 늘며 세그먼트당 <6mm의 점진적 밀림은 최대 ~66mm 누적까지 early_kill을 피한다(절대값 게이트인 tilt 12°/upright 0.95는 기울어짐만 잡고 수평 슬라이드는 못 잡음). 거짓 GRASP_PASS는 불가(LIFT follow 0.006m 권위, p9:469/1203)하지만, 실행 시 실제로 잘못되는 것: 밀려난 파지 실패가 LATCH_FAIL 대신 LIFT_FAIL로 귀속 이동하고, aggregate max_object_drift_m(p9:1307, 세그먼트별 max의 max)이 phase 실변위를 과소보고해 결과 JSON/stdout의 drift 수치가 오독 소지를 만든다. per-angle close_records(1260-1270)의 drift/tilt로 사후 재구성은 가능.",
+        "source": "MAJOR-b-full-band-sweep"
+      },
+      {
+        "severity": "MINOR",
+        "title": "recording_id/app_id가 tag와 무관하게 고정 — 다중 leg rrd 동시 로드 시 단일 recording으로 병합되어 D341 육안검수 혼동 가능",
+        "claim": "p9:958-959가 app_id=\"roarm_g0b_t3_grasp\", recording_id=\"g0b_d420_t3_grasp\"를 tag와 무관하게 고정한다. 사전등록상 별도 실행이 예정된 감도 leg(t3_mass_friction_contract.md leg-low/leg-high, 원 감사 confirmed[7] reason에도 인용)들이 서로 다른 --tag로 각자 <tag>_timeline.rrd를 남기면, 두 파일을 한 Rerun 뷰어에 동시에 열 때 동일 recording_id 때문에 단일 recording으로 병합되어 동일 entity 경로(tcp/object/plots/*)에 두 run의 데이터가 physics_step/sim_time_s 타임라인 위에서 뒤섞인다 — D341이 요구하는 실제 육안검수가 leg 간 증거를 오귀속할 수 있다. 단 스크립트 자체 게이트는 무영향: validate_rerun_artifact는 파일 1개만 CLI로 검증·렌더하므로(rerun_contract.py:197-205, :294-311) verdict/exit code는 오염되지 않는다. 수리 자체를 무효화하지 않는 관찰층 한정 위험.",
+        "source": "MAJOR-d-tag-guard"
+      },
+      {
+        "severity": "MINOR",
+        "title": "_close_all 내 env.close() 예외 시 sim_app.close() 도달 불능 — 크래시-후-정리 시나리오 한정 Kit 행 잔존",
+        "claim": "_close_all(:148-154)은 env.close()(:150)와 sim_app.close()(:153)를 핸들별 try 없이 순차 실행한다. env.close()가 예외를 던지면 :151-154가 전부 건너뛰어져 sim_app이 닫히지 않고 env 핸들도 클리어되지 않는다. 이후 __main__ finally(:1602)가 _close_all을 재시도하지만, DirectRLEnv.close()가 _is_closed=True 설정(:530) 이전 지점(예: del self.scene :511, sim.clear_all_callbacks :523)에서 죽었다면 재호출은 teardown을 처음부터 재실행하다 다시 예외(예: 이미 del된 event_manager :510 AttributeError)를 내고, 이는 except Exception(:1603)에 삼켜져 cleanup_error 출력(:1604) 후 sim_app.close()는 어떤 호출에서도 실행되지 않는다 → Kit non-daemon 스레드 생존 → 원 결함과 동일한 프로세스 행. 발동 조건이 'env.close() 자체가 예외'(전형적으로 sim 크래시 후 정리 경로)로 좁고 결정적 트리거가 없어 MINOR. 수리안: _close_all에서 핸들별 try/except로 sim_app.close()를 무조건 시도.",
+        "source": "MAJOR-e-close-and-net"
+      },
+      {
+        "severity": "MINOR",
+        "title": "물리 NaN 폭주 시 lift_follow_delta_m·phases·close_records는 여전히 NaN 토큰으로 직렬화",
+        "claim": "p9:1532 `\"lift_follow_delta_m\": lift_follow`는 _finite_or_none 미적용이고, phases dict(p9:1444-1450의 final_target_error_m/max_object_drift_m 등)와 close_records(p9:1267-1268)도 원시 float이다. 시뮬레이션 NaN 폭주(p9:1089-1090에서 nan_seen 설정, p9:1096-1103 early_kill) 시 `object_local()`이 NaN을 반환하면 p9:1203 `float(object_local()[2] - phase_start_obj_z)`가 NaN이 되어 lift_result.object_follow_delta_m→p9:1313 lift_follow로 전파되고, p9:1542 `json.dumps(results_doc, indent=2, default=str)`가 allow_nan 기본 True로 `NaN` 토큰을 기록한다(로컬 실행으로 json.dumps({'b': float('nan')})→NaN 토큰 확인) — 원 결함과 동일한 RFC 8259 비준수가 빈-results가 아닌 NaN-물리 경로에서 재현된다. 단 이 경로는 원 감사 finding이 명시적으로 제외한 트리거(원문: 'GRASP 성공/부분 진행 경로에서는 results가 비지 않아 발화하지 않고')이고, 해당 run은 aggregate.nan_seen=true로 이미 폐기 표지가 남으며 Python json.load는 NaN을 파싱하므로 수리 유효성을 부정하지 않는 잔존 결함이다.",
+        "severity_note": "MINOR",
+        "source": "MINOR-guards-json"
+      },
+      {
+        "severity": "MAJOR",
+        "title": "FATAL-2 수리 불완전: transit waypoint IK가 여전히 tilt-우선 선택 — 하방 잔차 2.5mm + 중력 처짐 가산으로 3mm reached 게이트 칼끝, 46° 관절 점프로 tcp_step 게이트 9.90/10.00mm — APPROACH_FAIL 재발 채널 2개",
+        "line": 376,
+        "claim": "수리는 transit waypoint의 수용(acceptance)만 pos-only로 바꿨고(:369, :383 require_tilt=False, :1190) 솔버의 선택(selection)은 그대로다: _solve_q_vertical의 key(:376)와 dls_vertical의 best-key(:228)는 (pe>3mm, tilt, pe) 순서라 pos≤3mm 이내 iterate 중 '최소 틸트'를 선택 — 게이트되지도 않는 tilt를 좇느라 위치 예산을 소모한다. p9 자체 함수로 run_resampled_path의 체인 시딩을 그대로 재현한 수치 실측(isaaclab env python): 4개 사전등록 포즈(seed0_S1/S2, R1_center, R2_center) 전부에서 wp003 솔버 잔차 2.52~2.55mm(3mm의 84% 소진, arrival은 0.016mm로 정상), seed0_S1 wp003 잔차 벡터 = (−1.37, +0.05, −2.12)mm 즉 하방. run_to_q의 물리 reached 게이트(:1105)는 실제 TCP와 waypoint의 거리 ≤3mm를 요구하는데, 중력 처짐(URDF 원위 질량 합 ≈0.120kg, link2 0.0703+link3 0.0216+link4 0.0100+link5 0.0154+gripper 0.0029; stiffness 80 → 어깨 sag ≈2mrad → TCP 하방 ≈0.5~0.9mm)이 잔차와 같은 방향으로 가산되어 합성 정적 오차 ≈2.9~3.2mm — 게이트 3.00mm를 straddle한다. 넘으면 60스텝 소진 → reached=False → run_resampled_path가 (result, seed, False) 반환(:1205) → _verdict(:461-464) APPROACH_FAIL — 수리 대상이던 바로 그 종단 증상이 4포즈 공통 잔차라 포즈 교체로도 회피 불가. 독립 채널 2: 같은 선택 키가 wp001→wp002(9mm 간격)에서 wrist_p +45.98°/elbow −35.20°/shoulder +10.20°의 관절 재구성을 명령(wp002→wp003도 31.4°/28.8°) — TCP 호 길이 15.6mm(현 9.0mm) — velocity_limit_sim 3.14rad/s(env:180, =1.8°/control step) cap-slew 모델에서 피크 per-step TCP 변위 9.90mm vs max_tcp_step_m 10.00mm early-kill 게이트(:1096-1097), 마진 1%. 발화 시 early_kill → APPROACH_FAIL. docstring :44-48의 'the solver's soft vertical bias ... without a discontinuous reorientation' 주장은 실측(46° 단일 hop 점프)과 모순 — p7 위치전용 IK는 waypoint당 관절 delta ~2° 수준이라 이 채널이 없었다. 수리 방향: require_tilt=False일 때 선택 키를 (pe>gate, pe)로 바꾸거나(1줄) HOME→approach를 joint-space 이행으로 — 어느 쪽이든 ③ prereg에 명시 필요.",
+        "file": "sim_scripts/p9_g0b_t3_cyld29h50_top_center_vertical_close_sweep_grasp_probe.py",
+        "source": "regression"
+      },
+      {
+        "severity": "MINOR",
+        "title": "_close_all 순차 close 구멍: env.close() 예외 시 sim_app.close() 미도달 + __main__ net이 예외를 print로 삼킴 — MAJOR-e가 막으려던 Kit wedge 잔여 경로",
+        "line": 149,
+        "claim": "_close_all(:148-154)은 env.close()를 먼저 호출하고 그 다음에야 sim_app.close()를 호출하는 단일 순차 함수인데 내부에 try가 없다. 런타임 예외로 반쯤 깨진 env에서 env.close()가 예외를 던지면 sim_app.close()는 실행되지 않고, __main__ finally net(:1601-1604)은 _close_all에서 나온 그 예외를 'except Exception: print(cleanup_error=...)'로 삼킨 뒤 종료를 시도한다 — Kit의 non-daemon 스레드가 살아남아 headless 프로세스가 wedge되는, MAJOR-e 수리가 제거하려던 바로 그 결과의 잔여 경로다. 메커니즘은 소스에서 확정(순차 호출 + 무보호); 발동 조건(env.close()가 실제로 raise하는가)은 원 예외의 종류에 의존해 미확정이라 MINOR. 수리: _close_all 내부에서 env.close()를 try/except로 감싸 sim_app.close()가 항상 시도되게 하면 닫힌다.",
+        "file": "sim_scripts/p9_g0b_t3_cyld29h50_top_center_vertical_close_sweep_grasp_probe.py",
+        "source": "regression"
+      },
+      {
+        "severity": "MINOR",
+        "title": "D-8 episode_length_s 계약 문구(20s)가 수리 후 기본값 60s와 3중 불일치 — supersession 미등재",
+        "claim": "MAJOR-c 수리가 --episode_length_s 기본값을 60.0으로 변경했으나(sim_scripts/p9_g0b_t3_cyld29h50_top_center_vertical_close_sweep_grasp_probe.py:614) 같은 파일 docstring의 D-8 승계 계약 recap은 여전히 'episode_length_s 10 -> 20 s'를 명시하고(:35 — :60의 '20 -> 60 s' 수리 노트와 파일 내 상충), 사전등록 델타 원본인 claudedocs/runtime_logs/grasp_track/g0b_d420/t3_conversion_design.md:103도 '10→20s 상향(사전등록에 명기)'로 남아 있다. 결정적으로 ③ prereg 등재 계획(claudedocs/session_20260806_21st_g0b_t2b_inspection_p9_audit_repairs_reverify_launch.md:92-93)은 supersession을 D-4 스폰·D-6 자산 2건만 열거해 D-8 episode 예산 20s→60s 승격이 세 번째 supersession으로 등재되지 않았다 — 이 텍스트들에서 ③ prereg를 발행하면 계약 문구(20s)와 핀되는 코드(60s)가 어긋난 채 봉인된다. 수리 전에는 코드·계약 모두 20s로 일치했으므로 수리가 만든 NEW 불일치다. 런타임 동작에는 영향 없음(60s는 최악 예산 3675<6000을 커버).",
+        "line": 35,
+        "source": "regression"
+      },
+      {
+        "severity": "MINOR",
+        "title": "docstring이 존재하지 않는 t3_prereg.md에 '수리가 사전등록됨'을 현재형으로 주장",
+        "claim": "수리 개정판 docstring은 'Audit wf_78b1adfd-20d confirmed-finding repairs (this revision, preregistered in t3_prereg.md)'라고 주장하지만(sim_scripts/p9_g0b_t3_cyld29h50_top_center_vertical_close_sweep_grasp_probe.py:52-53) claudedocs/runtime_logs/grasp_track/g0b_d420/에는 t3_prereg.md가 존재하지 않는다(디렉토리 실측: t2_prereg.md·t2b_prereg.md만 존재; 21st doc §6 '③ prereg는 미발행'; D423 ① '재검증 미회수 sha는 prereg에 핀하지 않는다'). 확정된 실행 순서(21st doc §7: 재검증 회수 → 최종 sha 확정 → 그 후 ③ prereg 발행)상 sha가 핀되는 시점에도 이 참조 문서는 존재하지 않으므로, 봉인되는 산출물이 거짓 provenance 주장을 영구 보유하게 된다. 같은 docstring의 t2_prereg/t2b_prereg 참조(:159)는 실존 문서 참조이고 p8 자체 docstring에는 prereg 자기참조가 아예 없어(grep 0건) 기성 관례로도 정당화되지 않는다 — 수리 개정에서 새로 삽입된 문구다. 수리: 문구를 미래형('to be preregistered in t3_prereg.md')으로 고치거나 prereg 발행명을 docstring과 일치시킬 것. D417-R1 계열 '출처 주장 정확성' 규율 사안이며 런타임 무영향.",
+        "line": 53,
+        "source": "regression"
+      }
+    ]
+  },
+  "workflowProgress": [
+    {
+      "type": "workflow_phase",
+      "index": 1,
+      "title": "VerifyRepairs"
+    },
+    {
+      "type": "workflow_phase",
+      "index": 2,
+      "title": "Regression"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 1,
+      "label": "verify:FATAL-1-lift-follow",
+      "phaseIndex": 1,
+      "phaseTitle": "VerifyRepairs",
+      "agentId": "aa283577c4b166cd8",
+      "model": "claude-fable-5",
+      "state": "done",
+      "startedAt": 1785985501557,
+      "queuedAt": 1785985501546,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "FATAL-1-lift-follow",
+      "promptPreview": "당신은 RoArm 프로젝트(/home/cgxr/Documents/Robotics/RoArm_Project)의 수리-검증 렌즈다.\n감사 대상: sim_scripts/p9_g0b_t3_cyld29h50_top_center_vertical_close_sweep_grasp_probe.py — 직전 적대감사(wf_78b1adfd)의 confirmed 결함들에 대한 수리가 방금 적용된 개정판이다 (아직 실행 전).\n참조: claudedocs/runtime_logs/grasp_track/g0b_d420/p9_audit_wf_78b1adfd_findings_raw.json (원 감사 전문),\nclaudedocs/runtime_logs/grasp_track/g0b_d420/t3_conversion_design.md (D-1…",
+      "lastProgressAt": 1785985974132,
+      "tokens": 95572,
+      "toolCalls": 19,
+      "durationMs": 472575,
+      "resultPreview": "{\"finding_id\":\"FATAL-1-lift-follow\",\"repair_effective\":true,\"repair_verdict_reason\":\"수리 유효 확인. (1) 데이터 흐름: run_resampled_path가 :1180에서 phase_start_obj_z를 앵커, :1203에서 매 waypoint의 run_to_q 반환 직후 final_result.object_follow_delta_m을 (현재 물체 z − phase_start_obj_z) phase-누적값으로 덮어쓰며, 이 final_result가 :1293 lift_result → :1315 _verdict → :469 게이트(lift.object_follow_delta_m < min_lift_follow_m)로 흐른다. 집계 :131…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 2,
+      "label": "verify:FATAL-2-transit-vertical-gate",
+      "phaseIndex": 1,
+      "phaseTitle": "VerifyRepairs",
+      "agentId": "ac2975c5eff10a06e",
+      "model": "claude-fable-5",
+      "state": "done",
+      "startedAt": 1785985501558,
+      "queuedAt": 1785985501546,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "FATAL-2-transit-vertical-gate",
+      "promptPreview": "당신은 RoArm 프로젝트(/home/cgxr/Documents/Robotics/RoArm_Project)의 수리-검증 렌즈다.\n감사 대상: sim_scripts/p9_g0b_t3_cyld29h50_top_center_vertical_close_sweep_grasp_probe.py — 직전 적대감사(wf_78b1adfd)의 confirmed 결함들에 대한 수리가 방금 적용된 개정판이다 (아직 실행 전).\n참조: claudedocs/runtime_logs/grasp_track/g0b_d420/p9_audit_wf_78b1adfd_findings_raw.json (원 감사 전문),\nclaudedocs/runtime_logs/grasp_track/g0b_d420/t3_conversion_design.md (D-1…",
+      "lastProgressAt": 1785986179736,
+      "tokens": 130743,
+      "toolCalls": 25,
+      "durationMs": 678178,
+      "resultPreview": "{\"finding_id\":\"FATAL-2-transit-vertical-gate\",\"repair_effective\":true,\"repair_verdict_reason\":\"원 결함(HOME→approach transit 전 waypoint에 tilt≤5° 게이트 → z>0.153m에서 기하학적 불가 → 100% APPROACH_FAIL)은 실제로 해소됐다. 근거: (a) 세 호출부 인자 확인 — approach는 vertical_scope=\\\"arrival\\\"(p9:1227), descend=\\\"all\\\"(p9:1241), lift=\\\"all\\\"(p9:1301), 파라미터 검증 가드 존재(p9:1173-1174). (b) 도착점 산술 정확 — resampled_waypoints는 count=max(1,ceil…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 3,
+      "label": "verify:MAJOR-a-stall-aware",
+      "phaseIndex": 1,
+      "phaseTitle": "VerifyRepairs",
+      "agentId": "a040bd839e7a4819c",
+      "model": "claude-fable-5",
+      "state": "done",
+      "startedAt": 1785985501559,
+      "queuedAt": 1785985501546,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "MAJOR-a-stall-aware",
+      "promptPreview": "당신은 RoArm 프로젝트(/home/cgxr/Documents/Robotics/RoArm_Project)의 수리-검증 렌즈다.\n감사 대상: sim_scripts/p9_g0b_t3_cyld29h50_top_center_vertical_close_sweep_grasp_probe.py — 직전 적대감사(wf_78b1adfd)의 confirmed 결함들에 대한 수리가 방금 적용된 개정판이다 (아직 실행 전).\n참조: claudedocs/runtime_logs/grasp_track/g0b_d420/p9_audit_wf_78b1adfd_findings_raw.json (원 감사 전문),\nclaudedocs/runtime_logs/grasp_track/g0b_d420/t3_conversion_design.md (D-1…",
+      "lastProgressAt": 1785985818740,
+      "tokens": 123158,
+      "toolCalls": 11,
+      "durationMs": 317181,
+      "resultPreview": "{\"finding_id\":\"MAJOR-a-stall-aware\",\"repair_effective\":true,\"repair_verdict_reason\":\"원 결함(잔존 창 (39.75,41.40°] stall → 거짓 LATCH_FAIL + 41.40 float knife-edge)이 소스에서 해소됨을 재현했다. (1) stall 경로: p9:1067-1070이 |Δq5|<0.02°/step(기본값 p9:617) 연속 카운트, p9:1105-1113이 close 단계에서 err>0.75°(p9:603)이면서 stall_count>=5(p9:618)일 때 gripper_ok=True+gripper_stalled=True로 reached 인정 — 원 창의 시나리오(q5*∈(39.75,41.40], 명령 39.0에…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 4,
+      "label": "verify:MAJOR-b-full-band-sweep",
+      "phaseIndex": 1,
+      "phaseTitle": "VerifyRepairs",
+      "agentId": "a146bddf2c345bd74",
+      "model": "claude-fable-5",
+      "state": "done",
+      "startedAt": 1785985501560,
+      "queuedAt": 1785985501546,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "MAJOR-b-full-band-sweep",
+      "promptPreview": "당신은 RoArm 프로젝트(/home/cgxr/Documents/Robotics/RoArm_Project)의 수리-검증 렌즈다.\n감사 대상: sim_scripts/p9_g0b_t3_cyld29h50_top_center_vertical_close_sweep_grasp_probe.py — 직전 적대감사(wf_78b1adfd)의 confirmed 결함들에 대한 수리가 방금 적용된 개정판이다 (아직 실행 전).\n참조: claudedocs/runtime_logs/grasp_track/g0b_d420/p9_audit_wf_78b1adfd_findings_raw.json (원 감사 전문),\nclaudedocs/runtime_logs/grasp_track/g0b_d420/t3_conversion_design.md (D-1…",
+      "lastProgressAt": 1785985912072,
+      "tokens": 119457,
+      "toolCalls": 18,
+      "durationMs": 410512,
+      "resultPreview": "{\"finding_id\":\"MAJOR-b-full-band-sweep\",\"repair_effective\":true,\"repair_verdict_reason\":\"수리는 원 결함 4개 메커니즘을 전부 해소한다. (1) 플래그 복원: p9:621-627 `--continue_close_after_grasped_until_angles_done` BooleanOptionalAction default=True — 실행 인터프리터(isaaclab env python 3.11.14)에서 실측: 무인자 True / `--no-...` False로 정상 동작(p7:302의 store_true 원형과 이름 동일, 기본값만 의도적으로 ON). (2) 전 밴드 완주: latch 루프(p9:1248-1277)의 탈출은 early_k…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 5,
+      "label": "verify:MAJOR-c-episode-budget",
+      "phaseIndex": 1,
+      "phaseTitle": "VerifyRepairs",
+      "agentId": "a6e5135987d52d560",
+      "model": "claude-fable-5",
+      "state": "done",
+      "startedAt": 1785985501560,
+      "queuedAt": 1785985501546,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "MAJOR-c-episode-budget",
+      "promptPreview": "당신은 RoArm 프로젝트(/home/cgxr/Documents/Robotics/RoArm_Project)의 수리-검증 렌즈다.\n감사 대상: sim_scripts/p9_g0b_t3_cyld29h50_top_center_vertical_close_sweep_grasp_probe.py — 직전 적대감사(wf_78b1adfd)의 confirmed 결함들에 대한 수리가 방금 적용된 개정판이다 (아직 실행 전).\n참조: claudedocs/runtime_logs/grasp_track/g0b_d420/p9_audit_wf_78b1adfd_findings_raw.json (원 감사 전문),\nclaudedocs/runtime_logs/grasp_track/g0b_d420/t3_conversion_design.md (D-1…",
+      "lastProgressAt": 1785985765462,
+      "tokens": 119709,
+      "toolCalls": 17,
+      "durationMs": 263902,
+      "resultPreview": "{\"finding_id\":\"MAJOR-c-episode-budget\",\"repair_effective\":true,\"repair_verdict_reason\":\"(1) 예산 재계산: env 소스에서 control_dt = sim.dt(1/200, roarm_stack_env.py:115) × decimation(2, env:108) = 0.01 s(p9:807)이고 --episode_length_s 기본 60.0(p9:614) → max_episode_length = 6000, truncation은 buf >= 5999(env:1017). 최악 완주 예산을 개정판 상수로 재계산: settle 30(p9:608) + approach wp×60(substep_steps p9:599) + descend wp×60 +…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 6,
+      "label": "verify:MAJOR-d-tag-guard",
+      "phaseIndex": 1,
+      "phaseTitle": "VerifyRepairs",
+      "agentId": "a624eb59f3e68ba24",
+      "model": "claude-fable-5",
+      "state": "done",
+      "startedAt": 1785985501561,
+      "queuedAt": 1785985501546,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "MAJOR-d-tag-guard",
+      "promptPreview": "당신은 RoArm 프로젝트(/home/cgxr/Documents/Robotics/RoArm_Project)의 수리-검증 렌즈다.\n감사 대상: sim_scripts/p9_g0b_t3_cyld29h50_top_center_vertical_close_sweep_grasp_probe.py — 직전 적대감사(wf_78b1adfd)의 confirmed 결함들에 대한 수리가 방금 적용된 개정판이다 (아직 실행 전).\n참조: claudedocs/runtime_logs/grasp_track/g0b_d420/p9_audit_wf_78b1adfd_findings_raw.json (원 감사 전문),\nclaudedocs/runtime_logs/grasp_track/g0b_d420/t3_conversion_design.md (D-1…",
+      "lastProgressAt": 1785985786673,
+      "tokens": 99903,
+      "toolCalls": 24,
+      "durationMs": 285112,
+      "resultPreview": "{\"finding_id\":\"MAJOR-d-tag-guard\",\"repair_effective\":true,\"repair_verdict_reason\":\"(a) 6개 산출 경로가 전부 tag-유도 로컬로 교체됨: p9:658-663에서 rrd/rbl/png/validation/results/csv 경로가 `OUT_DIR / f\\\"{args.tag}_...\\\"`로 파생되고, 쓰기·소비처 전부가 main()(577행~) 내 이 로컬만 참조 — rec.save(:960), blueprint.save(:1420), csv open(\\\"w\\\")(:1422), results write_text(:1542), validate_rerun_artifact 호출의 rrd/rbl/png(:1568-1579), validation w…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 7,
+      "label": "verify:MAJOR-e-close-and-net",
+      "phaseIndex": 1,
+      "phaseTitle": "VerifyRepairs",
+      "agentId": "aa619c7227679de51",
+      "model": "claude-fable-5",
+      "state": "done",
+      "startedAt": 1785985501561,
+      "queuedAt": 1785985501546,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "MAJOR-e-close-and-net",
+      "promptPreview": "당신은 RoArm 프로젝트(/home/cgxr/Documents/Robotics/RoArm_Project)의 수리-검증 렌즈다.\n감사 대상: sim_scripts/p9_g0b_t3_cyld29h50_top_center_vertical_close_sweep_grasp_probe.py — 직전 적대감사(wf_78b1adfd)의 confirmed 결함들에 대한 수리가 방금 적용된 개정판이다 (아직 실행 전).\n참조: claudedocs/runtime_logs/grasp_track/g0b_d420/p9_audit_wf_78b1adfd_findings_raw.json (원 감사 전문),\nclaudedocs/runtime_logs/grasp_track/g0b_d420/t3_conversion_design.md (D-1…",
+      "lastProgressAt": 1785986050887,
+      "tokens": 96560,
+      "toolCalls": 24,
+      "durationMs": 549326,
+      "resultPreview": "{\"finding_id\":\"MAJOR-e-close-and-net\",\"repair_effective\":true,\"repair_verdict_reason\":\"원 결함의 결정적 경로가 소스에서 해소됨을 재현 확인. (1) RERUN_VERSION_MISMATCH 가드(:711-714)가 `_close_all()` 후 `return 3`으로 변경 — 원 감사가 지목한 close-누락 return이 사라짐. (2) post-launch 종료 경로 전수 열거 결과 4건 전부 _close_all 선행: :713-714(version mismatch), :765-766(USD effective 가드), :814-815(USD_AUDIT_FAIL), :1590-1591(정상 종료). pre-launch return 3건(…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 8,
+      "label": "verify:MINOR-guards-json",
+      "phaseIndex": 1,
+      "phaseTitle": "VerifyRepairs",
+      "agentId": "af2d9fc44a408f445",
+      "model": "claude-fable-5",
+      "state": "done",
+      "startedAt": 1785985501562,
+      "queuedAt": 1785985501547,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "MINOR-guards-json",
+      "promptPreview": "당신은 RoArm 프로젝트(/home/cgxr/Documents/Robotics/RoArm_Project)의 수리-검증 렌즈다.\n감사 대상: sim_scripts/p9_g0b_t3_cyld29h50_top_center_vertical_close_sweep_grasp_probe.py — 직전 적대감사(wf_78b1adfd)의 confirmed 결함들에 대한 수리가 방금 적용된 개정판이다 (아직 실행 전).\n참조: claudedocs/runtime_logs/grasp_track/g0b_d420/p9_audit_wf_78b1adfd_findings_raw.json (원 감사 전문),\nclaudedocs/runtime_logs/grasp_track/g0b_d420/t3_conversion_design.md (D-1…",
+      "lastProgressAt": 1785985820024,
+      "tokens": 114603,
+      "toolCalls": 28,
+      "durationMs": 318462,
+      "resultPreview": "{\"finding_id\":\"MINOR-guards-json\",\"repair_effective\":true,\"repair_verdict_reason\":\"수리 1 (vacuous 가드 → effective-path 가드): 원 결함은 구 p9:613-614가 \\\"방금 대입한 env-var 문자열에 /NHNHOME 포함 여부\\\"를 검사하는 tautology였다는 것. 개정판은 주입부 p9:688(`os.environ[\\\"ROARM_M3_USD_PATH\\\"] = str(ATTEMPT3_USD)`)에서 자기-비교를 제거하고 주석으로 이관을 명시(p9:685-687)한 뒤, `cfg = RoArmStackEnvCfg()`(p9:755) 직후 p9:758-766에서 `effective_usd = str(cfg.robot.…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 9,
+      "label": "regression:runtime",
+      "phaseIndex": 2,
+      "phaseTitle": "Regression",
+      "agentId": "a447a545bf8429439",
+      "model": "claude-fable-5",
+      "state": "done",
+      "startedAt": 1785986181846,
+      "queuedAt": 1785986179738,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "promptPreview": "당신은 RoArm 프로젝트(/home/cgxr/Documents/Robotics/RoArm_Project)의 수리-검증 렌즈다.\n감사 대상: sim_scripts/p9_g0b_t3_cyld29h50_top_center_vertical_close_sweep_grasp_probe.py — 직전 적대감사(wf_78b1adfd)의 confirmed 결함들에 대한 수리가 방금 적용된 개정판이다 (아직 실행 전).\n참조: claudedocs/runtime_logs/grasp_track/g0b_d420/p9_audit_wf_78b1adfd_findings_raw.json (원 감사 전문),\nclaudedocs/runtime_logs/grasp_track/g0b_d420/t3_conversion_design.md (D-1…",
+      "lastProgressAt": 1785987331350,
+      "tokens": 219986,
+      "toolCalls": 28,
+      "durationMs": 1149504,
+      "resultPreview": "{\"findings\":[{\"severity\":\"MAJOR\",\"title\":\"FATAL-2 수리 불완전: transit waypoint IK가 여전히 tilt-우선 선택 — 하방 잔차 2.5mm + 중력 처짐 가산으로 3mm reached 게이트 칼끝, 46° 관절 점프로 tcp_step 게이트 9.90/10.00mm — APPROACH_FAIL 재발 채널 2개\",\"line\":376,\"claim\":\"수리는 transit waypoint의 수용(acceptance)만 pos-only로 바꿨고(:369, :383 require_tilt=False, :1190) 솔버의 선택(selection)은 그대로다: _solve_q_vertical의 key(:376)와 dls_vertical의 best-key(:228)는 (…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 10,
+      "label": "regression:contract",
+      "phaseIndex": 2,
+      "phaseTitle": "Regression",
+      "agentId": "ae3f4facabd05e8f6",
+      "model": "claude-fable-5",
+      "state": "done",
+      "startedAt": 1785986182131,
+      "queuedAt": 1785986179738,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "promptPreview": "당신은 RoArm 프로젝트(/home/cgxr/Documents/Robotics/RoArm_Project)의 수리-검증 렌즈다.\n감사 대상: sim_scripts/p9_g0b_t3_cyld29h50_top_center_vertical_close_sweep_grasp_probe.py — 직전 적대감사(wf_78b1adfd)의 confirmed 결함들에 대한 수리가 방금 적용된 개정판이다 (아직 실행 전).\n참조: claudedocs/runtime_logs/grasp_track/g0b_d420/p9_audit_wf_78b1adfd_findings_raw.json (원 감사 전문),\nclaudedocs/runtime_logs/grasp_track/g0b_d420/t3_conversion_design.md (D-1…",
+      "lastProgressAt": 1785986805089,
+      "tokens": 181841,
+      "toolCalls": 19,
+      "durationMs": 622954,
+      "resultPreview": "{\"findings\":[{\"severity\":\"MINOR\",\"title\":\"D-8 episode_length_s 계약 문구(20s)가 수리 후 기본값 60s와 3중 불일치 — supersession 미등재\",\"claim\":\"MAJOR-c 수리가 --episode_length_s 기본값을 60.0으로 변경했으나(sim_scripts/p9_g0b_t3_cyld29h50_top_center_vertical_close_sweep_grasp_probe.py:614) 같은 파일 docstring의 D-8 승계 계약 recap은 여전히 'episode_length_s 10 -> 20 s'를 명시하고(:35 — :60의 '20 -> 60 s' 수리 노트와 파일 내 상충), 사전등록 델타 원본인 claudedocs/runt…"
+    }
+  ],
+  "totalTokens": 1301532,
+  "totalToolCalls": 213
+}
