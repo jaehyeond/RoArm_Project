@@ -25382,3 +25382,95 @@ Evidence:
   `g0b_d420/` t3_prereg.md · t3_grasp{,2,3,4}_* · p9_reverify2_wf_9b819983_findings_raw.json ·
   t3_preflight_ik_chain_v2.py · t3_trust_region_dev_sweep_evidence.md;
   p9 sha 계보 939a5bd0…/1ef8a411…/99c99c65….
+
+## D425 — T3 파지 불가의 기하 원인 특정: 동결 attempt3 조 충돌 형상 = 중앙 플러그(link5 part_029/030, TCP−4.46mm) + 조 원위부 부재(스윕 밴드에서 TCP 아래 ≤0.32mm) — "rerun validation PASS ≠ 육안검수"가 재실증됐고, 자산 신원 감사는 비감사 링크의 enabled legacy collider까지 봐야 한다 (읽기 전용 진단 verdict — 물리/실물 주장 아님)
+
+- **Evidence**: 2026-08-06 23rd 세션. D424 ② 지시의 읽기 전용 pxr 정점 감사
+  (`sim_scripts/g0b_t3_attempt3_jaw_throat_occlusion_readonly_vertex_audit.py`, 최종
+  sha `bca4f898023f63f21d540483a169499760038c582ce3a7919d7622e77946e1c3`, Kit 기동 0,
+  자산 sha/mtime 불변). 3-leg(t3_jaw_audit→2→3, 전건 보존): leg1 = 과학 CONSISTENT·
+  rerun 계약 FAIL(None 엔티티 미생성) / leg2 = 계약 수리·validation PASS·**PNG가
+  뷰어 로딩 중 캡처(결함)** — 27.9MB RRD가 헤드리스 스크린샷과 레이스 / leg3 = 뷰
+  데시메이션 1/16(4.3MB)·validation PASS·육안검수 완료(23rd doc §5). 결과: ① 바닥
+  파트 = `link5/collisions/d338_convex_parts/part_029+030`, 원통 축 r=11.77/12.03mm,
+  clearance 예측 −0.047/−0.048mm(실측 stop 대비), 각도 델타 0.003mm(실측 4μm) ② 이동
+  조(gripper_link) 최심점: 88.31°=TCP 위 53mm/45°=위 11.7mm/24°=아래 0.32mm/0°=아래
+  3.69mm — 0.02° 정밀 스윕 피크 +3.956mm(q5=5.10°)로 **전 각도·전 반경에서 TCP−4.458mm
+  아래 구조물 없음**(전역 여유 0.502mm) ③ a2 무접촉 재현: footprint 내 최저점이 top
+  위 +0.117mm(최악 실측 자세; mean 자세 +0.233mm). 적대검증 4-렌즈(수학/USD/방법론/
+  컴플라이언스) FATAL 0·verdict 4/4 생존, 강화 증거 = 부호 반전 시 자기-관통(기구
+  불성립)·비기하 원인 배제(a4 명령 1.09mm 차 vs 정지 4μm 차)·stall 중 물체 진동
+  20~30배(접촉 하중 채널). 정직 표기: 독립 판별 앵커는 1개(바닥 깊이, 게이트 ±0.95mm
+  수용창보다 20× 정밀한 0.047mm 실일치) — CB/ANGLE_INV는 재현 확인.
+- **Implication**: ① 에스컬레이션 데이터 확정 — 자산 수리 없이 T3 GRASP_PASS 불가
+  (D424)이며 수리 대상이 특정됨: **플러그 제거(part_029/030 비활성)만으로는 불충분**
+  (조 원위 손가락 형상 자체가 충돌 레이어에 부재). 재분해 해제(D415 ③)/증분 파트
+  추가/타깃 재유도 중 선택은 사용자 결정. ② **rerun validation PASS ≠ 검수**: 검증기
+  계약은 mid-load PNG를 감지 못한다 — D341 육안검수 불가결 재실증. 수 MB 초과 RRD는
+  헤드리스 스크린샷 레이스 위험 → 뷰 전용 데시메이션(분석 해상도 불변)으로 축소.
+  ③ **자산 신원 감사 확장**: attempt3의 world/link1~4에 legacy 전체-메시 convex hull
+  collider가 **enabled로 잔존**(link2 28,092점; T3 verdict에는 ≥120mm 이격으로 무영향
+  실증). "64+64 + legacy disabled"는 감사한 두 body에만 성립 — 향후 테이블/베이스
+  근접 접촉 추론 시 이 5개 collider를 명시 확인할 것. ④ **authority JSON 직렬화
+  함정**: np.bool_/np.float64가 json default=str로 "True"/"False" 문자열이 된다
+  ("False"도 truthy) — audit3 JSON의 gates.ANGLE_INV가 실례. 게이트 값은 native
+  bool/float 캐스팅 의무(소비자는 문자열 게이트를 신뢰 금지). ⑤ 진단 verdict 층위 —
+  실물 파지력·자율 재현성 주장 아님, `g0a_pass=false` 불변.
+- **Source**: `claudedocs/session_20260806_23rd_g0b_t3_jaw_occlusion_readonly_vertex_audit.md`;
+  `g0b_d420/` t3_jaw_audit{,2,3}_* 24파일; 스크립트 sha `bca4f898…1c3`;
+  적대검증 4 agents(accc8f75/ae768ec5/ad6e8154/a18cc1a3, 세션 전사).
+
+## D426 — 해금 발언·Arm-C 완전 제거·tie-break 조건부 D가 공식 발효된다: 3중 앵커(D415 ③ · D419 ⑦ · D420-R1) scoped-supersede — 재분해 해제는 Arm-A 파생 사본 한정이고, B/F/D는 "재분해 비해당" 성립 조건 3가지를 prereg 게이트로 진다 (사용자 승인 발효 권위 — HARD RULE #18, 물리 verdict 아님)
+
+- **Evidence**: 2026-08-06 28th 세션. 사용자 확인 발화(verbatim): **"대답 2번 동의, 3번 수령"**
+  — ②′(F-arm 신설 + tie-break 조건부 D 권고안·가드 5종) 동의 + ③(D426 통합 기록 진행) 수령.
+  이로써 24th doc §6 확인 3건 전부 해소: ①은 27th 사용자 결정 **"C는 강등 말고 완전 빼는거에
+  동의"**(27th doc §1)로 예비 강등이 아닌 **완전 제거**로 대체 확정 / ②는 ②′ 개정판으로 동의 /
+  ③ 수령. 통합 발효 대상 3건:
+  (a) **해금 발언**(24th doc §1 verbatim 보존): "(A),(B),(C),(D) 하나한 다해봐. 그럼 아니면
+  병렬로 해보던가. 그럼 문제를 찾는 변수가 늘어나나? 4개 다 해금해줄 수 있어. 그렇다면 어떻게
+  해야 환각이나 오버라이드 등 문제가 안생기게 제대로 이거 검증을 통한 결과를 도출 할 수 있을지
+  고민해봐. step-by-step으로 순차적으로 사고하면서 말이야." (2026-08-06, 24th 세션)
+  (b) **Arm-C 완전 제거**(27th doc §1) — 파급 고지 완료: Gate-0 실패 분기에서 C 폴백 소멸.
+  (c) **tie-break 개정**(27th doc §3, 적대 패널 `wf_29eb2529-df7` 양 렌즈 CONDITIONAL_D 수렴,
+  findings sha256 `1bb3c856…5fdd`): F∧D 동시 성공 시 기본 채택 = **D**, 가드 5종(G-a~G-e)
+  전부 부록 D 사전등록·통과 조건, 실패 시 F 폴백. 절차 적법성 = 부록 D 미발행 + Isaac 실행 전
+  **사전 개정**(24th §4-3 "F 기본"은 미비준 lead 제안이었음). 같은 턴 사용자 동반 발언:
+  "사전등록 자기구속이 결과 부재의 원인일 가능성도 감안하라"(요지) — 규칙 변경 아님(반응적
+  강화 원칙 유지), 인과 분석은 28th 세션 doc 귀속.
+- **Implication**:
+  ① Arm 집합 확정 = **B(음성 대조) / F(양조 원위 손가락 증분) / D(P+F)** + A(요인 해석 불산입
+  복제·전패-fallback leg, 조건부). **C는 소멸** — Gate-0(시각 메시 원위부 감사) 실패 시 분기 =
+  수제 저작 승인 or 정지·재상의 **둘뿐**이며, 실패 발생 시 사용자 재질의 의무.
+  ② tie-break 발효: F∧D 동시 성공 시 기본 채택 = D. 가드 5종 요지 — (G-a) B fail-consistent
+  ∧ F·D off-prediction 0(**B 예상외 성공 = 전면 정지, 채택 논의 무효**) (G-b) 잔여 커버리지
+  (027/031) 수치 게이트를 첫 Isaac 전 사전등록·통과(소급 변경 무효) (G-c) 동일 튜플 F-D 고정 조
+  접촉 일치 ±1.0mm·±1이산스텝 (G-d) F 자산 전량 보존(forward-only) + T4 고정 조 예측외 차이 시
+  F 대조 sim 재실행 1회 의무 (G-e) F 폴백 시 margin≥+4.5mm 불변식(물림 상한 x≤L−4.5mm 문서화)
+  + T6 진입 전 마개 제거 재검증 의무 게이트. 가드 원문 권위 = 27th doc §3.
+  ③ **scoped-supersede 3중 앵커**(하나라도 남으면 다음 boot이 미해제로 읽는 문제의 봉쇄):
+  - **D415 ③** "collider 재분해 금지" → **Arm-A 실행에 한하여 해제**. 조건: 변경할 분해
+    파라미터의 명시적 신규 변수 사전등록 + cook 재실행은 d339 수리판 witness 계약 경유(d338
+    attempt1 STOP 전례) + attempt3 **원본 절대 불변**(파생 사본·별도 경로만) + D409 evidence
+    참조(기존 파트 번호 체계)에 무접촉.
+  - **D419 ⑦** "격리 대상 재실행·재분해·이동 전부 금지" → **격리(QUARANTINE) 트랙 자산에는
+    그대로 유지**. 본 해제는 `g0b_d420` Arm-A 신규 파생 사본에만 적용된다.
+  - **D420-R1** "재분해/재쿡은 D415 ③에 따라 금지" → B/F/D 경로(동결 attempt3 재사용+증분)
+    에는 유지되고, **Arm-A 한정 예외 신설**로 읽는다.
+  ④ **B/F/D는 재분해 비해당**(24th §4 컴플라이언스 판정 — 해제가 필요한 것은 Arm-A뿐, B/F/D는
+  저작 승인으로 족함). 성립 조건 3가지를 prereg 게이트로 명문화 의무: 원본 무변경 / 기존 64+64
+  파트 명명·번호 verbatim 보존 감사 / 신규 파트 별도 네임스페이스. 하나라도 깨지면 그 자산은
+  "재분해"로 재분류 = 본 조항 A 한정 예외 밖 = 착수 금지.
+  ⑤ 실행 순서 발효(24th §5): Gate-0(읽기 전용, gripper_left_link.stl 사용 금지) → p9
+  파라미터화 + 게이트 v2 저작 → D423 동일 강도 적대검증 → sha 핀 → arm 자산 저작(B/F/D) +
+  manifest → 적대검증 → sha 핀 → 부록 D 일괄 발행(B/F/D 예측·허용오차·튜플 동결 + 가드 5종)
+  → Isaac 순차 B(a2)→B반복성→B(a4 판별)→F→D→[조건부 A] → 조합 표 판정 → T4.
+  **확인 대기 게이트 소멸 — 이후 블로커는 기술 게이트뿐.**
+  ⑥ 층위: 승인·발효 권위. 물리 verdict 아님. `g0a_pass=false` 불변, "T1이 파지력 증명" 표현
+  금지 불변, 서보 폐지력·자율 재현성 null 불변.
+- **Source**: 사용자 확인 발화 2026-08-06(28th 세션);
+  `claudedocs/session_20260806_24th_g0b_t3_repair_design_adversarial_review.md` §1/§4/§5/§6;
+  `claudedocs/session_20260806_27th_g0b_t3_tiebreak_c_removal_scorecard_verify.md` §1/§3;
+  `g0b_d420/t3r_design_review_wf_67ffd8b5_findings_raw.json` ·
+  `g0b_d420/t3r_tiebreak_scorecard_verify_wf_29eb2529_findings_raw.json`(sha256 `1bb3c856…5fdd`);
+  DECISIONS D415 ③ · D419 ⑦ · D420-R1(앵커 원문).

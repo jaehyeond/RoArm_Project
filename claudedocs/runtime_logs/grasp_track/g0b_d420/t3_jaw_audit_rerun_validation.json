@@ -1,0 +1,436 @@
+{
+  "artifact": "ROARM_RERUN_ARTIFACT_VALIDATION_V1",
+  "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3_jaw_audit_timeline.rrd",
+  "expected_rerun_version": "0.34.1",
+  "expected_entity_paths": [
+    "/metadata/run",
+    "/audit/link5_parts",
+    "/audit/gripper_parts",
+    "/audit/floor_parts",
+    "/audit/cylinder_a1",
+    "/audit/cylinder_a2",
+    "/audit/tcp",
+    "/audit/tool_axis",
+    "/plots/q5_deg",
+    "/plots/footprint_floor_depth_mm",
+    "/plots/min_horiz_clearance_mm",
+    "/plots/assembly_max_depth_mm",
+    "/events/gates"
+  ],
+  "expected_timeline_names": [],
+  "exact_entity_paths": [
+    "/audit/cylinder_a1",
+    "/audit/cylinder_a2",
+    "/audit/floor_parts",
+    "/audit/gripper_parts",
+    "/audit/link5_parts",
+    "/audit/tcp",
+    "/audit/tool_axis",
+    "/events/gates",
+    "/metadata/run",
+    "/plots/assembly_max_depth_mm",
+    "/plots/footprint_floor_depth_mm",
+    "/plots/min_horiz_clearance_mm",
+    "/plots/q5_deg"
+  ],
+  "exact_timeline_names": [
+    "band_index",
+    "blueprint",
+    "log_time"
+  ],
+  "expected_entity_components": {
+    "/metadata/run": [
+      "TextDocument:text"
+    ],
+    "/audit/link5_parts": [
+      "Points3D:colors",
+      "Points3D:positions",
+      "Points3D:radii"
+    ],
+    "/audit/gripper_parts": [
+      "Points3D:colors",
+      "Points3D:positions",
+      "Points3D:radii"
+    ],
+    "/audit/floor_parts": [
+      "Points3D:colors",
+      "Points3D:positions",
+      "Points3D:radii"
+    ],
+    "/audit/cylinder_a1": [
+      "LineStrips3D:colors",
+      "LineStrips3D:radii",
+      "LineStrips3D:strips"
+    ],
+    "/audit/cylinder_a2": [
+      "LineStrips3D:colors",
+      "LineStrips3D:radii",
+      "LineStrips3D:strips"
+    ],
+    "/audit/tcp": [
+      "Points3D:colors",
+      "Points3D:positions",
+      "Points3D:radii"
+    ],
+    "/audit/tool_axis": [
+      "LineStrips3D:colors",
+      "LineStrips3D:radii",
+      "LineStrips3D:strips"
+    ],
+    "/plots/q5_deg": [
+      "Scalars:scalars"
+    ],
+    "/plots/footprint_floor_depth_mm": [
+      "Scalars:scalars"
+    ],
+    "/plots/min_horiz_clearance_mm": [
+      "Scalars:scalars"
+    ],
+    "/plots/assembly_max_depth_mm": [
+      "Scalars:scalars"
+    ],
+    "/events/gates": [
+      "TextLog:level",
+      "TextLog:text"
+    ]
+  },
+  "forbidden_entity_fragments": [
+    "/\\/"
+  ],
+  "blueprint_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3_jaw_audit_timeline.rbl",
+  "rendered_blueprint_source": "active blueprint embedded in the RRD",
+  "external_rbl_role": "verified fixed-layout export; the 0.34.1 CLI does not guarantee that an external RBL overrides an already-active embedded blueprint",
+  "screenshot_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3_jaw_audit_inspection.png",
+  "screenshot_window_size": "2400x1400",
+  "screenshot_port": null,
+  "human_visual_inspection_required": true,
+  "bytes": 27882126,
+  "sha256": "d7e6609dd7835b0b04224eb98dbd971acd135e6644da3240f585215523eca9cb",
+  "version": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "--version"
+    ],
+    "returncode": 0,
+    "stdout": "rerun-cli 0.34.1 (base lance map_view nasm native_viewer oss_server perf_telemetry re_server release_full release_no_web_viewer web_viewer) [rustc 1.92.0 (ded5c06cf 2025-12-08), LLVM 21.1.3] x86_64-unknown-linux-gnu prepare-release-0.34.1 4efb18f, built 2026-07-07T16:20:42.173372603Z\nVideo features: av1 ffmpeg nasm\n",
+    "stderr": "",
+    "ok": true,
+    "expected_version_match": true
+  },
+  "verify": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "verify",
+      "--check-footers",
+      "true",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3_jaw_audit_timeline.rrd"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "1 file verified without error.\n",
+    "ok": true
+  },
+  "stats": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "stats",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3_jaw_audit_timeline.rrd"
+    ],
+    "returncode": 0,
+    "stdout": "Overview\n----------\nnum_chunks = 37\nnum_entity_paths = 30\nnum_chunks_without_components = 0 (0.000%)\nnum_rows = 103\nnum_rows_min = 1\nnum_rows_max = 14\nnum_rows_avg = 2.784\nnum_static = 7\nnum_indexes_min = 0\nnum_indexes_max = 2\nnum_indexes_avg = 1.595\nnum_components_min = 1\nnum_components_max = 3\nnum_components_avg = 2.270\n\nNum chunks per entity\n---------------------\n/__properties: 1\n/audit/cylinder_a1: 1\n/audit/cylinder_a2: 1\n/audit/floor_parts: 2\n/audit/gripper_parts: 7\n/audit/link5_parts: 1\n/audit/tcp: 1\n/audit/tool_axis: 1\n/blueprint_panel: 1\n/container/3c6cbf31-4f8e-479e-af46-4d99235512fc: 1\n/container/531f19a6-3f7d-49a2-abd3-24bf47fcbc21: 1\n/container/eac1b88b-0a53-493b-b2dc-e630a04629da: 1\n/events/gates: 1\n/metadata/run: 1\n/plots/assembly_max_depth_mm: 1\n/plots/footprint_floor_depth_mm: 1\n/plots/q5_deg: 1\n/selection_panel: 1\n/time_panel: 1\n/view/775a3aee-0418-4081-a532-d3667bd19598: 1\n/view/775a3aee-0418-4081-a532-d3667bd19598/ViewContents: 1\n/view/c870102d-3592-4356-bc22-43b280aff765: 1\n/view/c870102d-3592-4356-bc22-43b280aff765/ViewContents: 1\n/view/cd42ed5d-ba94-42ed-9096-19e5aeec8960: 1\n/view/cd42ed5d-ba94-42ed-9096-19e5aeec8960/ViewContents: 1\n/view/de3064b3-f063-436f-8cf0-bcee24d97d9e: 1\n/view/de3064b3-f063-436f-8cf0-bcee24d97d9e/ViewContents: 1\n/view/edafce5e-d7f5-473b-905c-cd79c26f5bff: 1\n/view/edafce5e-d7f5-473b-905c-cd79c26f5bff/ViewContents: 1\n/viewport: 1\n\nNum chunks per index\n--------------------\nband_index: 12\nblueprint: 17\nlog_time: 30\n\nNum chunks per component\n------------------------\nContainerBlueprint:col_shares: 1\nContainerBlueprint:container_kind: 3\nContainerBlueprint:contents: 3\nContainerBlueprint:row_shares: 1\nLineStrips3D:colors: 3\nLineStrips3D:radii: 3\nLineStrips3D:strips: 3\nPanelBlueprint:state: 2\nPoints3D:colors: 11\nPoints3D:positions: 11\nPoints3D:radii: 11\nRecordingInfo:start_time: 1\nScalars:scalars: 3\nTextDocument:media_type: 1\nTextDocument:text: 1\nTextLog:level: 1\nTextLog:text: 1\nTimePanelBlueprint:state: 1\nViewBlueprint:class_identifier: 5\nViewBlueprint:display_name: 5\nViewBlueprint:space_origin: 5\nViewContents:query: 5\nViewportBlueprint:auto_layout: 1\nViewportBlueprint:auto_views: 1\nViewportBlueprint:root_container: 1\n\nSize (schema + data, compressed)\n--------------------------------\nipc_size_bytes_total = 26.5 MiB\nipc_size_bytes_min = 913 B\nipc_size_bytes_max = 5.2 MiB\nipc_size_bytes_avg = 734 KiB\nipc_size_bytes_p50 = 1.6 KiB\nipc_size_bytes_p90 = 2.8 MiB\nipc_size_bytes_p95 = 2.8 MiB\nipc_size_bytes_p99 = 5.2 MiB\nipc_size_bytes_p999 = 5.2 MiB\n\nSize (schema + data, uncompressed)\n----------------------------------\nipc_size_bytes_total = 37.2 MiB\nipc_size_bytes_min = 1.7 KiB\nipc_size_bytes_max = 8.6 MiB\nipc_size_bytes_avg = 1.0 MiB\nipc_size_bytes_p50 = 4.1 KiB\nipc_size_bytes_p90 = 3.7 MiB\nipc_size_bytes_p95 = 3.7 MiB\nipc_size_bytes_p99 = 8.6 MiB\nipc_size_bytes_p999 = 8.6 MiB\n\nSize (schema only, uncompressed)\n--------------------------------\nipc_size_bytes_total = 68.9 KiB\nipc_size_bytes_min = 1.1 KiB\nipc_size_bytes_max = 2.4 KiB\nipc_size_bytes_avg = 1.9 KiB\nipc_size_bytes_p50 = 1.9 KiB\nipc_size_bytes_p90 = 2.2 KiB\nipc_size_bytes_p95 = 2.3 KiB\nipc_size_bytes_p99 = 2.4 KiB\nipc_size_bytes_p999 = 2.4 KiB\n\nSize (data only, uncompressed)\n------------------------------\nipc_size_bytes_total = 37.2 MiB\nipc_size_bytes_min = 656 B\nipc_size_bytes_max = 8.6 MiB\nipc_size_bytes_avg = 1.0 MiB\nipc_size_bytes_p50 = 1.8 KiB\nipc_size_bytes_p90 = 3.7 MiB\nipc_size_bytes_p95 = 3.7 MiB\nipc_size_bytes_p99 = 8.6 MiB\nipc_size_bytes_p999 = 8.6 MiB\n\nUnsorted timelines\n------------------\n(none \u2014 every timeline on every chunk is sorted)\n\nFooters\n-------\nnum_manifests = 2 (one per recording)\n\nFooter manifest for StoreId(Recording, \"roarm_g0b_t3_jaw_audit\", \"g0b_d420_t3_jaw_audit\")\n  num_chunks_indexed = 20\n  num_static_chunks = 7\n  num_entity_paths = 13\n  manifest_num_columns = 53\n  sorbet_schema_num_fields = 32\n  sorbet_schema_sha256 = 76b19be6dce31073bf6e00e167178dcf3400744fc832b9894a453be2ea6d2534\n  chunk_byte_size_total (native) = 26.5 MiB\n  chunk_byte_size_uncompressed_total = 37.2 MiB\n\nFooter manifest for StoreId(Blueprint, \"roarm_g0b_t3_jaw_audit\", \"rec_340e767e089b465993f158d58c89d6b5\")\n  num_chunks_indexed = 17\n  num_static_chunks = 0\n  num_entity_paths = 17\n  manifest_num_columns = 102\n  sorbet_schema_num_fields = 37\n  sorbet_schema_sha256 = cd0f45246d05787404e2d634f6623795a2bf7bcf7491804ab7586bf18f0a042e\n  chunk_byte_size_total (native) = 25.1 KiB\n  chunk_byte_size_uncompressed_total = 56.7 KiB\n",
+    "stderr": "\u001b[2m2026-08-06T05:20:39.606790Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mrerun::commands::rrd::stats\u001b[0m\u001b[2m:\u001b[0m processing input\u2026\n\u001b[2m2026-08-06T05:20:39.635277Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mrerun::commands::rrd::stats\u001b[0m\u001b[2m:\u001b[0m computing stats\u2026\n",
+    "ok": true
+  },
+  "print_verbose": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "print",
+      "-v",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3_jaw_audit_timeline.rrd"
+    ],
+    "returncode": 0,
+    "stdout": "Showing data after migration to latest Rerun version\nStoreInfo {\n    store_id: StoreId(\n        Recording,\n        \"roarm_g0b_t3_jaw_audit\",\n        \"g0b_d420_t3_jaw_audit\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nStoreInfo {\n    store_id: StoreId(\n        Recording,\n        \"roarm_g0b_t3_jaw_audit\",\n        \"g0b_d420_t3_jaw_audit\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nChunk(chunk_18C91FC09250E9DB134db7e80f5b853c) with 1 rows (632 B) - /__properties - data columns: [/__properties@RecordingInfo:start_time]\nChunk(chunk_18C91FC099A1B0120451930708f981e4) with 1 rows (4.1 MiB) - /audit/link5_parts - data columns: [/audit/link5_parts@Points3D:colors /audit/link5_parts@Points3D:positions /audit/link5_parts@Points3D:radii]\nChunk(chunk_18C91FC09AA7060C0451930708f981e5) with 2 rows (1.8 MiB) - /audit/gripper_parts - data columns: [/audit/gripper_parts@Points3D:colors /audit/gripper_parts@Points3D:positions /audit/gripper_parts@Points3D:radii]\nChunk(chunk_18C91FC09BB863210451930708f981e6) with 2 rows (1.8 MiB) - /audit/gripper_parts - data columns: [/audit/gripper_parts@Points3D:colors /audit/gripper_parts@Points3D:positions /audit/gripper_parts@Points3D:radii]\nChunk(chunk_18C91FC09CCCECFF0451930708f981e7) with 2 rows (1.8 MiB) - /audit/gripper_parts - data columns: [/audit/gripper_parts@Points3D:colors /audit/gripper_parts@Points3D:positions /audit/gripper_parts@Points3D:radii]\nChunk(chunk_18C91FC09DE542C70451930708f981e8) with 2 rows (1.8 MiB) - /audit/gripper_parts - data columns: [/audit/gripper_parts@Points3D:colors /audit/gripper_parts@Points3D:positions /audit/gripper_parts@Points3D:radii]\nChunk(chunk_18C91FC09EE6A5190451930708f981e9) with 2 rows (1.8 MiB) - /audit/gripper_parts - data columns: [/audit/gripper_parts@Points3D:colors /audit/gripper_parts@Points3D:positions /audit/gripper_parts@Points3D:radii]\nChunk(chunk_18C91FC09F0929900451930708f981ea) with 10 rows (1.0 MiB) - /audit/floor_parts - data columns: [/audit/floor_parts@Points3D:colors /audit/floor_parts@Points3D:positions /audit/floor_parts@Points3D:radii]\nChunk(chunk_18C91FC09FF543CB0451930708f981eb) with 2 rows (1.8 MiB) - /audit/gripper_parts - data columns: [/audit/gripper_parts@Points3D:colors /audit/gripper_parts@Points3D:positions /audit/gripper_parts@Points3D:radii]\nChunk(chunk_18C91FC0A0F8A0C80451930708f981ec) with 2 rows (1.8 MiB) - /audit/gripper_parts - data columns: [/audit/gripper_parts@Points3D:colors /audit/gripper_parts@Points3D:positions /audit/gripper_parts@Points3D:radii]\nStoreInfo {\n    store_id: StoreId(\n        Blueprint,\n        \"roarm_g0b_t3_jaw_audit\",\n        \"rec_340e767e089b465993f158d58c89d6b5\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nStoreInfo {\n    store_id: StoreId(\n        Blueprint,\n        \"roarm_g0b_t3_jaw_audit\",\n        \"rec_340e767e089b465993f158d58c89d6b5\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nChunk(chunk_18C91FC0A146AD182bb44ec91676b999) with 1 rows (951 B) - /view/cd42ed5d-ba94-42ed-9096-19e5aeec8960/ViewContents - data columns: [/view/cd42ed5d-ba94-42ed-9096-19e5aeec8960/ViewContents@ViewContents:query]\nChunk(chunk_18C91FC0A146F3432bb44ec91676b99a) with 1 rows (1.2 KiB) - /viewport - data columns: [/viewport@ViewportBlueprint:auto_layout /viewport@ViewportBlueprint:auto_views /viewport@ViewportBlueprint:root_container]\nChunk(chunk_18C91FC0A14711D92bb44ec91676b99b) with 1 rows (1.1 KiB) - /container/3c6cbf31-4f8e-479e-af46-4d99235512fc - data columns: [/container/3c6cbf31-4f8e-479e-af46-4d99235512fc@ContainerBlueprint:container_kind /container/3c6cbf31-4f8e-479e-af46-4d99235512fc@ContainerBlueprint:contents]\nChunk(chunk_18C91FC0A1471CA92bb44ec91676b99c) with 1 rows (1.3 KiB) - /container/531f19a6-3f7d-49a2-abd3-24bf47fcbc21 - data columns: [/container/531f19a6-3f7d-49a2-abd3-24bf47fcbc21@ContainerBlueprint:col_shares /container/531f19a6-3f7d-49a2-abd3-24bf47fcbc21@ContainerBlueprint:container_kind /container/531f19a6-3f7d-49a2-abd3-24bf47fcbc21@ContainerBlueprint:contents]\nChunk(chunk_18C91FC0A1472ADF2bb44ec91676b99d) with 1 rows (1.2 KiB) - /container/eac1b88b-0a53-493b-b2dc-e630a04629da - data columns: [/container/eac1b88b-0a53-493b-b2dc-e630a04629da@ContainerBlueprint:container_kind /container/eac1b88b-0a53-493b-b2dc-e630a04629da@ContainerBlueprint:contents /container/eac1b88b-0a53-493b-b2dc-e630a04629da@ContainerBlueprint:row_shares]\nChunk(chunk_18C91FC0A14736D32bb44ec91676b99e) with 1 rows (1.2 KiB) - /view/de3064b3-f063-436f-8cf0-bcee24d97d9e - data columns: [/view/de3064b3-f063-436f-8cf0-bcee24d97d9e@ViewBlueprint:class_identifier /view/de3064b3-f063-436f-8cf0-bcee24d97d9e@ViewBlueprint:display_name /view/de3064b3-f063-436f-8cf0-bcee24d97d9e@ViewBlueprint:space_origin]\nChunk(chunk_18C91FC0A14742722bb44ec91676b99f) with 1 rows (922 B) - /view/de3064b3-f063-436f-8cf0-bcee24d97d9e/ViewContents - data columns: [/view/de3064b3-f063-436f-8cf0-bcee24d97d9e/ViewContents@ViewContents:query]\nChunk(chunk_18C91FC0A1474A3B2bb44ec91676b9a0) with 1 rows (1.2 KiB) - /view/cd42ed5d-ba94-42ed-9096-19e5aeec8960 - data columns: [/view/cd42ed5d-ba94-42ed-9096-19e5aeec8960@ViewBlueprint:class_identifier /view/cd42ed5d-ba94-42ed-9096-19e5aeec8960@ViewBlueprint:display_name /view/cd42ed5d-ba94-42ed-9096-19e5aeec8960@ViewBlueprint:space_origin]\nChunk(chunk_18C91FC0A14757912bb44ec91676b9a1) with 1 rows (1.2 KiB) - /view/775a3aee-0418-4081-a532-d3667bd19598 - data columns: [/view/775a3aee-0418-4081-a532-d3667bd19598@ViewBlueprint:class_identifier /view/775a3aee-0418-4081-a532-d3667bd19598@ViewBlueprint:display_name /view/775a3aee-0418-4081-a532-d3667bd19598@ViewBlueprint:space_origin]\nChunk(chunk_18C91FC0A14762992bb44ec91676b9a2) with 1 rows (924 B) - /view/c870102d-3592-4356-bc22-43b280aff765/ViewContents - data columns: [/view/c870102d-3592-4356-bc22-43b280aff765/ViewContents@ViewContents:query]\nChunk(chunk_18C91FC0A14769EA2bb44ec91676b9a3) with 1 rows (1.2 KiB) - /view/edafce5e-d7f5-473b-905c-cd79c26f5bff - data columns: [/view/edafce5e-d7f5-473b-905c-cd79c26f5bff@ViewBlueprint:class_identifier /view/edafce5e-d7f5-473b-905c-cd79c26f5bff@ViewBlueprint:display_name /view/edafce5e-d7f5-473b-905c-cd79c26f5bff@ViewBlueprint:space_origin]\nChunk(chunk_18C91FC0A147756D2bb44ec91676b9a4) with 1 rows (1.2 KiB) - /view/c870102d-3592-4356-bc22-43b280aff765 - data columns: [/view/c870102d-3592-4356-bc22-43b280aff765@ViewBlueprint:class_identifier /view/c870102d-3592-4356-bc22-43b280aff765@ViewBlueprint:display_name /view/c870102d-3592-4356-bc22-43b280aff765@ViewBlueprint:space_origin]\nChunk(chunk_18C91FC0A14781AC2bb44ec91676b9a5) with 1 rows (883 B) - /blueprint_panel - data columns: [/blueprint_panel@PanelBlueprint:state]\nChunk(chunk_18C91FC0A14788C32bb44ec91676b9a6) with 1 rows (926 B) - /view/775a3aee-0418-4081-a532-d3667bd19598/ViewContents - data columns: [/view/775a3aee-0418-4081-a532-d3667bd19598/ViewContents@ViewContents:query]\nChunk(chunk_18C91FC0A14791142bb44ec91676b9a7) with 1 rows (945 B) - /view/edafce5e-d7f5-473b-905c-cd79c26f5bff/ViewContents - data columns: [/view/edafce5e-d7f5-473b-905c-cd79c26f5bff/ViewContents@ViewContents:query]\nChunk(chunk_18C91FC0A147987C2bb44ec91676b9a8) with 1 rows (883 B) - /selection_panel - data columns: [/selection_panel@PanelBlueprint:state]\nChunk(chunk_18C91FC0A1479FB02bb44ec91676b9a9) with 1 rows (885 B) - /time_panel - data columns: [/time_panel@TimePanelBlueprint:state]\nBlueprintActivationCommand(StoreId(Blueprint, \"roarm_g0b_t3_jaw_audit\", \"rec_340e767e089b465993f158d58c89d6b5\"), make_active: true, make_default: true)\nChunk(chunk_18C91FC0A176EEAA0451930708f981ed) with 1 rows (1.1 KiB) - /metadata/run - data columns: [/metadata/run@TextDocument:media_type /metadata/run@TextDocument:text]\nChunk(chunk_18C91FC0A177281A0451930708f981ee) with 1 rows (952 B) - /audit/tool_axis - data columns: [/audit/tool_axis@LineStrips3D:colors /audit/tool_axis@LineStrips3D:radii /audit/tool_axis@LineStrips3D:strips]\nChunk(chunk_18C91FC0A1773FAC0451930708f981ef) with 1 rows (1.5 KiB) - /audit/cylinder_a1 - data columns: [/audit/cylinder_a1@LineStrips3D:colors /audit/cylinder_a1@LineStrips3D:radii /audit/cylinder_a1@LineStrips3D:strips]\nChunk(chunk_18C91FC0A17787DB0451930708f981f0) with 14 rows (1.1 KiB) - /plots/assembly_max_depth_mm - data columns: [/plots/assembly_max_depth_mm@Scalars:scalars]\nChunk(chunk_18C91FC0A1781CC20451930708f981f1) with 14 rows (1.2 KiB) - /plots/footprint_floor_depth_mm - data columns: [/plots/footprint_floor_depth_mm@Scalars:scalars]\nChunk(chunk_18C91FC0A1786A230451930708f981f2) with 1 rows (1.5 KiB) - /audit/cylinder_a2 - data columns: [/audit/cylinder_a2@LineStrips3D:colors /audit/cylinder_a2@LineStrips3D:radii /audit/cylinder_a2@LineStrips3D:strips]\nChunk(chunk_18C91FC0A17884650451930708f981f3) with 4 rows (421 KiB) - /audit/floor_parts - data columns: [/audit/floor_parts@Points3D:colors /audit/floor_parts@Points3D:positions /audit/floor_parts@Points3D:radii]\nChunk(chunk_18C91FC0A17AD8B90451930708f981f4) with 1 rows (937 B) - /audit/tcp - data columns: [/audit/tcp@Points3D:colors /audit/tcp@Points3D:positions /audit/tcp@Points3D:radii]\nChunk(chunk_18C91FC0A17B02540451930708f981f5) with 14 rows (1.1 KiB) - /plots/q5_deg - data columns: [/plots/q5_deg@Scalars:scalars]\nChunk(chunk_18C91FC0A17B5E1A0451930708f981f6) with 9 rows (1.1 KiB) - /events/gates - data columns: [/events/gates@TextLog:level /events/gates@TextLog:text]\n",
+    "stderr": "",
+    "ok": true
+  },
+  "entity_path_contract": {
+    "observed_all": [
+      "/__properties",
+      "/audit/cylinder_a1",
+      "/audit/cylinder_a2",
+      "/audit/floor_parts",
+      "/audit/gripper_parts",
+      "/audit/link5_parts",
+      "/audit/tcp",
+      "/audit/tool_axis",
+      "/blueprint_panel",
+      "/container/3c6cbf31-4f8e-479e-af46-4d99235512fc",
+      "/container/531f19a6-3f7d-49a2-abd3-24bf47fcbc21",
+      "/container/eac1b88b-0a53-493b-b2dc-e630a04629da",
+      "/events/gates",
+      "/metadata/run",
+      "/plots/assembly_max_depth_mm",
+      "/plots/footprint_floor_depth_mm",
+      "/plots/q5_deg",
+      "/selection_panel",
+      "/time_panel",
+      "/view/775a3aee-0418-4081-a532-d3667bd19598",
+      "/view/775a3aee-0418-4081-a532-d3667bd19598/ViewContents",
+      "/view/c870102d-3592-4356-bc22-43b280aff765",
+      "/view/c870102d-3592-4356-bc22-43b280aff765/ViewContents",
+      "/view/cd42ed5d-ba94-42ed-9096-19e5aeec8960",
+      "/view/cd42ed5d-ba94-42ed-9096-19e5aeec8960/ViewContents",
+      "/view/de3064b3-f063-436f-8cf0-bcee24d97d9e",
+      "/view/de3064b3-f063-436f-8cf0-bcee24d97d9e/ViewContents",
+      "/view/edafce5e-d7f5-473b-905c-cd79c26f5bff",
+      "/view/edafce5e-d7f5-473b-905c-cd79c26f5bff/ViewContents",
+      "/viewport"
+    ],
+    "observed_non_system": [
+      "/audit/cylinder_a1",
+      "/audit/cylinder_a2",
+      "/audit/floor_parts",
+      "/audit/gripper_parts",
+      "/audit/link5_parts",
+      "/audit/tcp",
+      "/audit/tool_axis",
+      "/events/gates",
+      "/metadata/run",
+      "/plots/assembly_max_depth_mm",
+      "/plots/footprint_floor_depth_mm",
+      "/plots/q5_deg"
+    ],
+    "checks": {
+      "/metadata/run": true,
+      "/audit/link5_parts": true,
+      "/audit/gripper_parts": true,
+      "/audit/floor_parts": true,
+      "/audit/cylinder_a1": true,
+      "/audit/cylinder_a2": true,
+      "/audit/tcp": true,
+      "/audit/tool_axis": true,
+      "/plots/q5_deg": true,
+      "/plots/footprint_floor_depth_mm": true,
+      "/plots/min_horiz_clearance_mm": false,
+      "/plots/assembly_max_depth_mm": true,
+      "/events/gates": true
+    },
+    "forbidden_fragment_absent": {
+      "/\\/": true
+    },
+    "exact_non_system_match": false,
+    "missing_exact": [
+      "/plots/min_horiz_clearance_mm"
+    ],
+    "unexpected_non_system": [],
+    "pass": false
+  },
+  "component_contract": {
+    "checks": {
+      "/metadata/run": {
+        "required": [
+          "TextDocument:text"
+        ],
+        "observed": [
+          "TextDocument:media_type",
+          "TextDocument:text"
+        ],
+        "pass": true
+      },
+      "/audit/link5_parts": {
+        "required": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "observed": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true
+      },
+      "/audit/gripper_parts": {
+        "required": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "observed": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true
+      },
+      "/audit/floor_parts": {
+        "required": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "observed": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true
+      },
+      "/audit/cylinder_a1": {
+        "required": [
+          "LineStrips3D:colors",
+          "LineStrips3D:radii",
+          "LineStrips3D:strips"
+        ],
+        "observed": [
+          "LineStrips3D:colors",
+          "LineStrips3D:radii",
+          "LineStrips3D:strips"
+        ],
+        "pass": true
+      },
+      "/audit/cylinder_a2": {
+        "required": [
+          "LineStrips3D:colors",
+          "LineStrips3D:radii",
+          "LineStrips3D:strips"
+        ],
+        "observed": [
+          "LineStrips3D:colors",
+          "LineStrips3D:radii",
+          "LineStrips3D:strips"
+        ],
+        "pass": true
+      },
+      "/audit/tcp": {
+        "required": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "observed": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true
+      },
+      "/audit/tool_axis": {
+        "required": [
+          "LineStrips3D:colors",
+          "LineStrips3D:radii",
+          "LineStrips3D:strips"
+        ],
+        "observed": [
+          "LineStrips3D:colors",
+          "LineStrips3D:radii",
+          "LineStrips3D:strips"
+        ],
+        "pass": true
+      },
+      "/plots/q5_deg": {
+        "required": [
+          "Scalars:scalars"
+        ],
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true
+      },
+      "/plots/footprint_floor_depth_mm": {
+        "required": [
+          "Scalars:scalars"
+        ],
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true
+      },
+      "/plots/min_horiz_clearance_mm": {
+        "required": [
+          "Scalars:scalars"
+        ],
+        "observed": [],
+        "pass": false
+      },
+      "/plots/assembly_max_depth_mm": {
+        "required": [
+          "Scalars:scalars"
+        ],
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true
+      },
+      "/events/gates": {
+        "required": [
+          "TextLog:level",
+          "TextLog:text"
+        ],
+        "observed": [
+          "TextLog:level",
+          "TextLog:text"
+        ],
+        "pass": true
+      }
+    },
+    "pass": false
+  },
+  "timeline_contract": {
+    "observed": [
+      "band_index",
+      "blueprint",
+      "log_time"
+    ],
+    "checks": {},
+    "exact_match": true,
+    "pass": true
+  },
+  "footer_manifest_present": true,
+  "blueprint_verify": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "verify",
+      "--check-footers",
+      "true",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3_jaw_audit_timeline.rbl"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "1 file verified without error.\n",
+    "ok": true,
+    "attempted": true,
+    "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3_jaw_audit_timeline.rbl",
+    "bytes": 55706,
+    "sha256": "cf9d7fde93f695c5e25e1e7fa12cb715ace99a092c3f6a87726f8cde42b7d1ef"
+  },
+  "headless_render": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "--headless",
+      "--window-size",
+      "2400x1400",
+      "--screenshot-to",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3_jaw_audit_inspection.png",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3_jaw_audit_timeline.rrd"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "\u001b[2m2026-08-06T05:20:39.805140Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mre_perf_telemetry::telemetry\u001b[0m\u001b[2m:\u001b[0m Telemetry initialized \u001b[3menabled\u001b[0m\u001b[2m=\u001b[0mfalse \u001b[3mservice\u001b[0m\u001b[2m=\u001b[0mrerun \u001b[3mtrace_mode\u001b[0m\u001b[2m=\u001b[0m\"off\" \u001b[3mtraces\u001b[0m\u001b[2m=\u001b[0moff \u001b[3mlogs\u001b[0m\u001b[2m=\u001b[0moff \u001b[3mmetrics\u001b[0m\u001b[2m=\u001b[0moff \u001b[3mtracy\u001b[0m\u001b[2m=\u001b[0mfalse\n\u001b[2m2026-08-06T05:20:40.069054Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mre_grpc_server\u001b[0m\u001b[2m:\u001b[0m Listening for gRPC connections on 0.0.0.0:9876. Connect by running `rerun --connect rerun+http://127.0.0.1:9876/proxy`\n\u001b[2m2026-08-06T05:20:40.069271Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mre_importer::import_file\u001b[0m\u001b[2m:\u001b[0m Loading \"/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3_jaw_audit_timeline.rrd\"\u2026\n\u001b[2m2026-08-06T05:20:40.081443Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mre_viewer::headless\u001b[0m\u001b[2m:\u001b[0m Headless viewer running at 2400x1400.\n\u001b[2m2026-08-06T05:20:40.401412Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mre_viewer::screenshotter\u001b[0m\u001b[2m:\u001b[0m Screenshot saved to \"/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3_jaw_audit_inspection.png\"\n\u001b[2m2026-08-06T05:20:40.416565Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mre_viewer::screenshotter\u001b[0m\u001b[2m:\u001b[0m Screenshot copied to clipboard\n\u001b[2m2026-08-06T05:20:40.420261Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mre_viewer::headless\u001b[0m\u001b[2m:\u001b[0m Headless viewer received close request, shutting down.\n",
+    "ok": true,
+    "attempted": true,
+    "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3_jaw_audit_inspection.png",
+    "file_nonzero": true,
+    "bytes": 5040586,
+    "sha256": "47a5dfd1b7c5c881a46a695b69fb94b2076d6ef97378512fe56558c0086ac5df"
+  },
+  "errors": [
+    "RRD entity-path contract failed",
+    "RRD component contract failed"
+  ],
+  "pass": false
+}

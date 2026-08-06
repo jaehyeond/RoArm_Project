@@ -1,0 +1,608 @@
+{
+  "summary": "Cross-verify 25th AnyGrasp session briefing against arXiv 2212.08333 primary source + saved transcript/frames, and adversarially assess pipeline-order impact",
+  "agentCount": 7,
+  "logs": [],
+  "result": {
+    "paper_verify": {
+      "identity_benchmarks": {
+        "claims": [
+          {
+            "claim": "논문 정체: Fang et al., \"AnyGrasp: Robust and Efficient Grasp Perception in Spatial and Temporal Domains\", T-RO 2023, arXiv:2212.08333(v2)",
+            "verdict": "CONFIRMED",
+            "evidence": "p.1 표제·저자란 + arXiv 워터마크 \"arXiv:2212.08333v2 [cs.RO] 6 Jun 2023\", 헤더 \"IEEE TRANSACTIONS ON ROBOTICS\", arXiv comment \"Paper accepted to T-RO\"",
+            "paper_value": "저자 9인: Hao-Shu Fang, Chenxi Wang, Hongjie Fang, Minghao Gou, Jirong Liu, Hengxu Yan, Wenhai Liu, Yichen Xie, Cewu Lu (SJTU). v2=2023-06-07 컴파일"
+          },
+          {
+            "claim": "7-DoF grasp 정의 = rotation(3) + translation(3) + width(1)",
+            "verdict": "CONFIRMED",
+            "evidence": "Sec. III-A 식(1): \"G = [R t w]\" — \"R denotes the gripper orientation, t denotes the center of grasp, w denotes the minimum gripper width... referred to as the 7-DoF grasp configuration\"",
+            "paper_value": "R∈R^{3×3}(회전 3-DoF), t∈R^{3×1}, w∈R — 정확히 3+3+1=7"
+          },
+          {
+            "claim": "300+ unseen object bin clearing 성공률 93.3%, human 93.9% (attempt 기준)",
+            "verdict": "CONFIRMED",
+            "evidence": "Abstract: \"93.3% success rate when clearing bins with over 300 unseen objects, which is on par with human subjects\" + Sec. VI-A: \"93.3% on average... human subjects, which is 93.9% on average\" + Table I All행",
+            "paper_value": "Table I attempt-centric All: Any. 93.3 / Human 93.9. Sec. VI-A: \"over 300 objects are collected\""
+          },
+          {
+            "claim": "단일 팔 900+ MPPH; 기존 시스템은 팔 2개로 ~300 MPPH 대비",
+            "verdict": "CONFIRMED",
+            "evidence": "Abstract: \"Over 900 mean-picks-per-hour is reported on a single-arm system\" + Sec. VI-A(p.10): \"over 900 MPPH... compared to previous state-of-the-art [7], 300 MPPH achieved by a dual-arm system\"",
+            "paper_value": "[7]=Mahler et al. Dex-Net 4.0 (Science Robotics 2019)의 dual-arm 300 MPPH. 추가로 최대속도 시 1,500+ MPPH, 평균 1,000-1,200 MPPH도 기재"
+          },
+          {
+            "claim": "Attempt-centric All: DexNet 72.2 / AnyGrasp 93.3 / Human 93.9; Object-centric All: 98.9 / 99.8 / 100.0; Hardware 59.3/81.5/91.4, Snack 52.3/100.0/93.9",
+            "verdict": "CONFIRMED",
+            "evidence": "Table I (p.9) \"Success rates of different methods on our real test set\": All행 attempt 72.2/93.3/93.9, object 98.9/99.8/100.0; Hardware행 59.3/81.5/91.4; Snack행 52.3/100.0/93.9",
+            "paper_value": "12개 셀 전부 일치. \"Dex.\"=DexNet 4.0 (문서의 DexNet2.0 아님 — 단 문서도 표에서는 명칭 미지정, 적대적 세트만 DexNet2.0 물체 출처로 언급하므로 충돌 없음). 문서의 나머지 행(Ragdoll/Toy/Household)도 셀 단위 대조 완료 — 전부 일치"
+          },
+          {
+            "claim": "적대적 물체 62개 = DexNet2.0 13개 + EGAD 49개, 3D 프린트; 성공률 DexNet ~39% / AnyGrasp ~72% / Human ~88%",
+            "verdict": "CONFIRMED",
+            "evidence": "Sec. VI-A(p.10): \"the 13 adversarial objects used in DexNet2.0 [5] and the 49 evaluation objects from EGAD [47]\"; Appendix A: \"3D printed with poly-lactic acid material\"; 수치는 Fig. 8(b) 막대그래프",
+            "paper_value": "13+49=62 일치. 단 성공률은 본문에 숫자 없음 — Fig. 8(b) 막대 판독상 DexNet 4.0 ≈39%, AnyGrasp w.D435 ≈72% / w.D415 ≈71%, Human ≈88%로 문서의 근사치와 부합. 문서가 \"~\"로 표기한 것이 정확한 태도"
+          },
+          {
+            "claim": "동적 파지(물속 로봇 물고기) 평균 75.5% vs 최근접-추적 baseline 62.5%",
+            "verdict": "CONFIRMED",
+            "evidence": "Sec. VI-B(p.12): \"The average success rate achieves 75.5%\" + \"the heuristic method achieves an average success rate of 62.5%\"; baseline은 \"keeps tracking the nearest grasp pose across frames\"[26]",
+            "paper_value": "Fig. 10(b) 범례 \"Avg. (75.47%)\" — 5 trial: 80.0/100.0/53.33/72.73/88.89%. 문서의 \"abstract에 없음(본문 수치)\" 자기평가도 정확 — abstract는 성공률 미기재"
+          },
+          {
+            "claim": "추론 시간 < 0.2 s; 후처리 100 grasp / 80 ms (GPU 병렬)",
+            "verdict": "CONFIRMED",
+            "evidence": "Sec. IV-D(p.7): \"implemented on GPU with matrix computation and take 80 ms for 100 grasp poses\"; Sec. VI-A(p.9): \"overall grasp decision time (including collision detection and pose adjustment) is less than 200 ms\"",
+            "paper_value": "네트워크 예측 자체는 100ms(Intro: \"across space and time in 100ms\"), 충돌검사+자세조정 포함 총 결정시간 <200ms. 문서의 \"<0.2s\"는 후자에 해당 — 정합"
+          },
+          {
+            "claim": "실험 장비 Ubuntu 20.04 / i9-10900K / NVIDIA RTX 2060",
+            "verdict": "CONFIRMED",
+            "evidence": "Sec. V-A(p.7): \"a workstation with Ubuntu 20.04 system, Intel i9-10900K CPU, and Nvidia 2060 GPU\"; Sec. VI-B(p.12): \"run at 7 Hz on an Nvidia 2060 GPU\"",
+            "paper_value": "논문 표기는 \"Nvidia 2060\"(\"RTX\" 접두 생략)이나 동일 제품. 주의: 학습 GPU는 별도로 \"one Nvidia GTX 2080 Ti\"(Sec. IV-C) — 문서는 2060을 실험 장비로만 귀속시켜 정확"
+          },
+          {
+            "claim": "센서 강건성: RealSense D435(depth 편차 큼)/D415 양쪽 모두 성능 유지",
+            "verdict": "CONFIRMED",
+            "evidence": "Sec. VI-A(p.10): \"the depth given by the D435 camera presents a larger variance and can achieve up to ±5mm error. Even with this noise, our algorithm can still perform well\" + Fig. 7(a)(b)",
+            "paper_value": "Fig. 7(a) deviation map: D435 편차 > D415 (±5mm 스케일). Fig. 7(b): 두 카메라 성공률 전 카테고리 근접(All ~90%대). Abstract도 \"works robustly against large depth-sensing noise\""
+          }
+        ],
+        "notes": "클러스터 [논문 정체 + 대표 벤치마크 수치] 10개 주장 전건 CONFIRMED — MISMATCH 0건, VIDEO_ONLY 0건. 검증 소스 = arXiv 2212.08333v2 PDF 전문 16p 직접 판독(get_paper_details 메타데이터 + curl 다운로드; MCP download_paper_pdf는 301 redirect로 실패하여 우회). 적대적 교차확인 결과: (1) 문서 §5-1 표의 12개 인용 셀 전부 Table I(p.9)과 셀 단위 일치 — 문서가 표본 외로 실은 Ragdoll/Toy/Household 행까지 검사했고 편차 0. (2) 적대적 세트 성공률(~39/~72/~88%)은 논문 본문에 숫자 텍스트가 없고 Fig. 8(b) 막대그래프가 유일 출처 — 막대 판독상 문서 근사치와 부합하며, AnyGrasp는 D435 ≈72%/D415 ≈71% 두 막대로 분리 표기됨(문서는 ~72% 단일 표기 — 오류 아님, 근사 범위 내). (3) 함정 후보였던 GPU 혼동(학습=GTX 2080 Ti Sec. IV-C vs 실험=Nvidia 2060 Sec. V-A)을 문서가 정확히 구분함. (4) 문서 표기 \\\"RTX 2060\\\"은 논문의 \\\"Nvidia 2060\\\"에 RTX 접두를 보충한 것으로 실질 동일. (5) 비교 대상 표기: Table I의 \\\"Dex.\\\"는 DexNet 4.0(표 캡션 명시)이고 문서 §5-1 표는 \\\"Dex\\\"로만 표기해 충돌 없음 — 적대적 물체 출처의 \\\"DexNet2.0\\\"(13개 물체 출처, [5])과는 별개 개념인데 문서도 이를 혼동하지 않음. (6) 동적 75.5%는 Fig. 10(b) 정밀값 75.47%의 반올림으로 본문 수치 \\\"75.5%\\\"와 일치, baseline 62.5%도 본문 그대로. 판정 불가 항목 없음. PDF 로컬 경로: /tmp/claude-1000/-home-cgxr-Documents-Robotics-RoArm-Project/88de546f-64c9-413c-ba6b-9ef813d3f650/scratchpad/anygrasp.pdf"
+      },
+      "method": {
+        "claims": [
+          {
+            "claim": "이전 방법은 그리퍼 공간 내 cropped local point cloud만으로 grasp quality 판정; AnyGrasp는 장면 전체 point cloud 입력으로 dense 예측",
+            "verdict": "CONFIRMED",
+            "evidence": "Sec. III-B: \"sampling-based methods that classify the quality of a grasp solely based on the cropped local point cloud within the gripper space\"; \"estimates the grasp quality across the R^6 space\"",
+            "paper_value": "단, 논문은 이 대비를 sampling-based 방법([6],[7])에 한정해 서술. 입력은 'single-view point cloud of the scene'(monocular)"
+          },
+          {
+            "claim": "1(a) 그리퍼 진입 공간 없으면 품질 점수 0 강제 (장애물 인식)",
+            "verdict": "CONFIRMED",
+            "evidence": "Sec. III-B: \"if there is an obstacle around the grasp pose and leaves no space for gripper pre-shaping, the grasp quality score is directly set to zero\"",
+            "paper_value": "원문 그대로 일치"
+          },
+          {
+            "claim": "1(b) COG(무게중심) 인식은 로컬 크롭으로는 원리적으로 불가",
+            "verdict": "CONFIRMED",
+            "evidence": "Sec. III-B: \"By taking the whole scene as input, two extra advantages are witnessed. Firstly... COG... modeled by our neural network that directly perceives the whole scene\"",
+            "paper_value": "방향 일치하나 '원리적으로 불가(impossible in principle)'라는 명시 문장은 논문에 없음 — 전체 장면 입력의 이점으로 서술될 뿐. 발표자/문서의 해석적 강화"
+          },
+          {
+            "claim": "Stable score = gripper plane→물체 COG perpendicular distance를 그 물체의 최대값으로 나눠 0~1 정규화; 최종 점수 = grasp score × (1 − stable score)",
+            "verdict": "CONFIRMED",
+            "evidence": "Sec. IV-A: \"dividing them by the maximum distance among them\"; Sec. IV-B-1: \"we multiply the original grasp score by (1 − stable_score) as the new score\"",
+            "paper_value": "× (1 − stable_score)가 논문 원문 — 문서가 발표자 구두('× stable score')를 슬라이드 기준으로 정정한 판단이 논문과 일치. COG는 uniform-density solid rigid body 가정으로 계산·정규화는 [0,1] (Sec. IV-A/IV-B)"
+          },
+          {
+            "claim": "Temporal association: 매 프레임 dense 생성 후 correspondence matrix 매칭; feature C=256 = Seed+Grasp+Color Feature(RGB cylinder grouping K=16→MLP+Pooling) + Grasp Pose Parameter(회전행렬 9+translation 3=12); 모든 grasp pair에 cosine similarity",
+            "verdict": "CONFIRMED",
+            "evidence": "Sec. IV-B-2 + Eq.(6): \"color features, seed features, grasp features, and the grasp poses (M×12... rotation matrix (9) and translation (3))... feature vector with size C\"; \"(K is set to 16)\"; \"(C is set to 256)\"; \"scores for all (f1,f2) pairs... form the correspondence matrix\"",
+            "paper_value": "전 항목 일치. 이전 방법의 sparse disturbance-샘플링 비판도 Sec. III-C([39])에 존재"
+          },
+          {
+            "claim": "SE(3) 거리 식(4)(5): ΔR = arccos((trace(R1ᵀR2)−1)/2), Δt = ‖t1−t2‖, d = Δt/w_max + γ·ΔR/π, w_max = 0.01 m",
+            "verdict": "CONFIRMED",
+            "evidence": "Eq.(4)(5) + 직후 본문: \"In practice, we set w_max = 0.01m and γ = 0.1\"",
+            "paper_value": "식 번호·형태·w_max=0.01m 전부 일치. 병기 요청분: γ = 0.1로 논문에 명시됨 (문서에는 γ 값 누락). 추가로 \"distance between grasps on different objects is set to infinity\""
+          },
+          {
+            "claim": "추론 시 현재 프레임만 네트워크 통과, 직전 프레임 feature(temporal buffer)와 cosine 비교로 속도 확보",
+            "verdict": "CONFIRMED",
+            "evidence": "Sec. IV-B-2: \"During inference, only the point cloud at the current time is required to pass the network... those stored in the temporal buffer from the last frame\"",
+            "paper_value": "원문 일치"
+          },
+          {
+            "claim": "백본 = GSNet(Geometry Processing Module); voxel 0.005 m; seed M=1024(Graspable FPS); 시드당 view 후보 300; grasp 출력 48 = 12 in-plane 회전 × 4 approach depth",
+            "verdict": "CONFIRMED",
+            "evidence": "Sec. IV-B-1: \"based on GSNet [11]\", \"M is set to 1024\", \"300 view scores... (Graspable PVS)\", \"48 grasp poses composed of 12 in-plane rotations and 4 approach depths\"; Sec. IV-C: \"voxel size of 0.005m\"",
+            "paper_value": "수치 전부 일치. 출력층 개정: 12×4×2 → 12×5×2+12 (extra 12 = stable scores)"
+          },
+          {
+            "claim": "8-보조: 12 in-plane 회전이 '30° 간격'",
+            "verdict": "VIDEO_ONLY",
+            "evidence": "Sec. IV-B-1: \"The in-plane rotation is discretized, but a heuristic search [50] can also be used\" — 각도 간격은 논문 전문(pdftotext grep 포함)에 미기재",
+            "paper_value": "논문은 간격 미명시. 참고로 12×30°=360°인데 평행 그리퍼는 180° 대칭이므로 30° 간격 주장은 검증 필요한 영상 전용 수치 — GSNet 원논문[11] 확인 없이는 판정 불가"
+          },
+          {
+            "claim": "AnyGrasp가 approach depth 0.5cm/5cm를 추가해 5단계로 확장(소형 물체 대응)",
+            "verdict": "MISMATCH",
+            "evidence": "Sec. IV-A: \"four approach depths, i.e., 1, 2, 3, and 4 centimeters. In this paper, we add an extra depth of 0.5 centimeters to grasp small objects\"; Sec. IV-B-1: \"The change from 4 to 5\"",
+            "paper_value": "추가된 depth는 0.5cm 하나뿐 — 총 5단계 = {0.5,1,2,3,4}cm. '5cm 추가'는 논문에 없으며, 두 개 추가라면 4+2=6단계가 되어 '5단계' 주장과 내부 모순. '0.5cm 추가→5단계, 소형 물체 대응' 부분만 정확"
+          },
+          {
+            "claim": "Adam lr 0.001, poly scheduler power 0.9; geometry module from-scratch 학습 후 weight freeze → temporal module 학습; Loss = Softmax + smooth-L1; augmentation = random flip, XYZ 축 랜덤 이동, 일부 객체 제거",
+            "verdict": "CONFIRMED",
+            "evidence": "Sec. IV-C: \"Adam optimizer... initial learning rate of 0.001... 'poly' policy with power = 0.9\"; \"train the geometry processing module from scratch\"; \"we freeze its weights and train the temporal association module\"; Sec. IV-B-3: \"softmax loss for the objectness classification... smooth-l1 loss\"",
+            "paper_value": "일치. 보충: translation은 X/Y Uniform[−0.2,0.2]m, Z Uniform[−0.1,0.2]m; Z축 회전 Uniform[−30°,30°] augmentation은 문서에 누락(오류 아님); 객체 제거(p=0.2)는 temporal module 학습 단계 한정; temporal loss는 별도 contrastive (Eq.7, σ=τ=0.1); 학습 GPU는 GTX 2080 Ti"
+          },
+          {
+            "claim": "충돌 검사 시 그리퍼를 큐브 3개로 단순화; gripper centering = 양쪽 finger tip 동시 접촉하도록 이동시켜 물체 밀림 방지",
+            "verdict": "CONFIRMED",
+            "evidence": "Sec. IV-D: \"the gripper is simplified into three cubes\"; \"the earlier contact may push the object away and cause a failed grasp... translating the gripper... ensure the same moving distance from both fingertips\"",
+            "paper_value": "일치. 3-cube 단순화는 데이터 annotation 시 충돌검사(Sec. IV-A)와 추론 후처리(Sec. IV-D, top-100 대상) 양쪽에 등장. 후처리 GPU 80ms/100 grasps도 Sec. IV-D 원문 일치"
+          }
+        ],
+        "notes": "방법론/아키텍처 클러스터 8개 주장 전수 검증 완료. 1차 소스 = arXiv:2212.08333v2 PDF(16p, T-RO 2023) 직접 다운로드 후 pp.1-10 정독 + pdftotext 전문 grep 교차확인. 종합: CONFIRMED 9 / MISMATCH 1 / VIDEO_ONLY 1. (1) 유일한 실질 오류 = claim 6의 approach depth '0.5cm/5cm 추가': 논문은 0.5cm 하나만 추가(총 5단계 {0.5,1,2,3,4}cm)이며 5cm는 존재하지 않음 — 두 개 추가면 6단계가 되어 문서의 '5단계'와 내부 모순이므로 영상 청취/전사 오류로 추정. (2) '12 in-plane 회전 30° 간격'의 간격 수치는 논문 전문 미기재 → VIDEO_ONLY (평행 그리퍼 180° 대칭 고려 시 15° 간격일 가능성이 있어 인용 시 주의 권고 — 단 GSNet 원논문 미확인이라 오류 단정은 안 함). (3) 쟁점이던 stable score 곱셈은 논문 Sec. IV-B-1이 '× (1 − stable_score)'를 명시 — 문서가 발표자 구두 오류를 슬라이드 기준으로 정정한 판정이 논문과 정확히 일치. (4) 문서에 없던 보강 정보: γ = 0.1 (식 (5) 직후 명시, 병기 요청 이행), temporal module loss = supervised contrastive (Eq.7, σ=0.1, τ=0.1), 학습 GPU = GTX 2080 Ti(추론 워크스테이션 2060과 별개), gripper centering의 'contact points' 정의 = 그리퍼 공간 내 outermost points. (5) claim 1(b) 'COG 인식은 로컬 크롭으로 원리적으로 불가'는 논문의 'advantages of taking the whole scene as input' 프레이밍에서 논리적으로 도출되나 문자 그대로의 명시 문장은 아님 — 해석적 강화로 표기. PDF/추출 텍스트 경로: /tmp/claude-1000/-home-cgxr-Documents-Robotics-RoArm-Project/88de546f-64c9-413c-ba6b-9ef813d3f650/scratchpad/anygrasp.pdf(.txt). 판정 불가 항목 없음."
+      },
+      "data_setup": {
+        "claims": [
+          {
+            "claim": "학습 데이터 = GraspNet-1Billion + 신규 104개 물체 / 168개 extra scene; 총 144 물체 / 268 scene; 장면당 물체 ~10개 무작위; 256 viewpoint 촬영 (특히 '268'이 문서 작성자의 100+168 산술 추론인지 여부)",
+            "verdict": "CONFIRMED",
+            "evidence": "Sec. IV-A (p.4): \"collect 168 extra scenes composed of 104 new objects\"; \"randomly choose several objects (~10)\"; \"taken at 256 different viewpoints\"; \"In total, 268 scenes that consist of 144 objects are used to train our network.\"",
+            "paper_value": "268 scene / 144 물체는 논문이 명시적으로 총계를 밝힌 값 — 문서 작성자의 '산술 추론' 자백은 불필요했음(추론이 아니라 논문 원문 그대로). 산술(GraspNet-1B 학습 100 scene + 168 = 268)도 정합. 전 수치 일치."
+          },
+          {
+            "claim": "라벨링: 6D pose만 수동, grasp 라벨은 analytic antipodal score로 자동 생성",
+            "verdict": "CONFIRMED",
+            "evidence": "Sec. IV-A: \"calculate dense grasp poses using analytic antipodal scores [5],[6]\"; \"manually annotate the object 6D poses\"; \"all annotations except for the 6D poses are automatically labeled by the program.\"",
+            "paper_value": "논문 원문과 완전 일치 (3D 메시는 상용 3D 스캐너로 획득, 충돌 검사는 그리퍼를 큐브 3개로 단순화 — 문서 §4의 부속 서술도 Sec. IV-A와 일치)."
+          },
+          {
+            "claim": "Temporal 라벨: 원 데이터셋에 동적 장면 없음 → 동일 배치 256 viewpoint 촬영 데이터로 '같은 물체의 grasp pose는 matching 가능' 가정 하에 시간적 대응 라벨 생성",
+            "verdict": "CONFIRMED",
+            "evidence": "Sec. IV-A (p.5): \"the original dataset does not contain dynamic scenes with moving objects, it contains images captured from 256 different viewpoints\"; Eq.(4)(5) + \"distance between grasps on different objects is set to infinity.\"",
+            "paper_value": "일치. 세부 보강: 논문은 256개 전체가 아니라 '인접(adjacent) viewpoint 쌍'끼리 대응 라벨을 만들고, 같은 물체의 두 grasp를 object frame으로 변환해 SE(3) 거리 d≤σ(0.1)이면 같은 클래스로 취급."
+          },
+          {
+            "claim": "정적 실험 셋업: UR5 + 천장 RealSense D415/D435, 손끝 탁구채 고무(특수 부품 없음), ArUco extrinsic 캘리브, 물체 무작위 투하, grasp 선택 = 비폐색 + 안전구역 내 + 최고 점수",
+            "verdict": "CONFIRMED",
+            "evidence": "Sec. V-A: \"UR5 robot arm with an overhead camera. Intel RealSense D415 and D435\"; \"attach a soft table tennis rubber to the fingertips\"; Sec. V-B: \"Aruco marker detection\", \"randomly pour the objects onto the plate\"; p.8: \"grasp pose without occlusion, located within the workspace and with the highest grasp score is selected.\"",
+            "paper_value": "거의 전부 원문 일치. 미세 차이 2건: ① 투하 대상은 '통(bin)'이 아니라 plate(성공 시 target bin으로 옮김, Fig.4) ② 선택 기준은 '성공확률'이 아니라 'highest grasp score'. 탁구 고무 사유도 일치([7]의 커스텀 실리콘 핑거팁 미보유 → 공개 구매 가능품 사용)."
+          },
+          {
+            "claim": "정적 절차 중 '파지 후 10cm 뒤 안전점 경유'",
+            "verdict": "MISMATCH",
+            "evidence": "Sec. V-B (p.8): \"set a waypoint pose by translating the grasp pose 10 cm backward along its approach direction... The gripper will close after the robot reaches the target pose, grasp the object, lift it, and then move it to the target bin.\"",
+            "paper_value": "10cm 후방 waypoint는 '파지 후'가 아니라 파지 전 접근(approach) 경유점 — waypoint→grasp pose 순서로 이동한 뒤 그리퍼를 닫는다. 파지 후에는 waypoint 재경유 없이 lift→target bin. 목적도 '안전점'이 아니라 장면과의 충돌 없는 접근 궤적 확보."
+          },
+          {
+            "claim": "동적 실험 셋업: Flexiv Rizon + 손목 장착 L515(팔이 시야 가림 방지 + 근거리 인식) + 3D 프린트 연장 조",
+            "verdict": "CONFIRMED",
+            "evidence": "Sec. V-A: \"Flexiv Rizon arm since it can update the servo targets more smoothly\"; \"the overhead camera might be occluded by the robot during tracking\"; \"can work robustly when the object is close to the camera\"; \"two extra 3D-printed parallel jaws.\"",
+            "paper_value": "전부 일치. 보강: L515 선택 근거로 D415/D435는 15cm 미만 거리에서 depth 생성 불가를 명시, 연장 조 장착 사유는 'for safety reasons', 베이스 그리퍼는 Robotiq-85."
+          },
+          {
+            "claim": "동적 제어 로직: 과거 10프레임으로 속도·방향 예측 → 예측 위치 3.5cm 위 호버 → 거리 5.5cm/2cm 이내 + 각도 20° 이내 시 하강",
+            "verdict": "CONFIRMED",
+            "evidence": "Sec. V-B + Alg.1: \"temporary buffer of length 10 for future grasp pose prediction\"; \"d_pregrasp = 3.5cm backward... to avoid touching the moving fish\"; p.9: \"δt = 5.5cm... δ_txOy = 2cm... δR = 20°.\"",
+            "paper_value": "수치 3건(버퍼 10, 3.5cm, 5.5cm/2cm/20°) 전부 논문과 일치. 정확히는 buffer의 moving momentum을 마지막 grasp pose에 더해 미래 pose를 예측하고, gripper z축 후방 3.5cm 병진이 호버 위치(호버 사유 '물고기 접촉 방지'도 원문 일치)."
+          },
+          {
+            "claim": "동적 실험 조건: '10회 연속 grasp 미발견 시 실험 종료' + '인간 피험자 2명 동일 조건'",
+            "verdict": "MISMATCH",
+            "evidence": "Sec. V-B (p.8): \"Each trial... finished if the algorithm cannot estimate grasp poses for the scene ten times\" (parallel-jaw bin picking 단락); \"For the human bin-picking task, two volunteers are invited\"; \"For the dynamic fish-catching experiment, we conduct five independent trials.\"",
+            "paper_value": "두 항목 모두 논문에서는 '정적 bin-picking' 절차 소속이다. 동적 fish-catching은 5회 독립 trial × 물고기 8마리이며 종료 기준이 10-strike가 아니고(Alg.1은 grasp 미발견 시 ready pose 복귀 후 계속), 인간 비교도 없다(동적 비교군은 nearest-grasp 휴리스틱 62.5%, Sec. VI-B). 인간 2명(각 2회 plate 클리어, 동일 핑거 재질·개구폭·open-loop)은 정적 비교 조건 — 문서가 이를 '동적 제어 로직' 단락에 배치한 것은 귀속 오류."
+          },
+          {
+            "claim": "평가지표 2종: attempt-centric(더 엄격, 주 지표) vs object-centric — 논문이 실제로 이 2종을 이 명칭으로 정의·보고하는가",
+            "verdict": "CONFIRMED",
+            "evidence": "Sec. V-C Evaluation Metric: \"we refer to as the attempt-centric success rate\"; \"the object-centric success rate... is less strict than the attempt-centric success rate\"; \"we use the attempt-centric success rate in our work\"; Table I은 두 지표 병기.",
+            "paper_value": "명칭 그대로 'attempt-centric success rate' / 'object-centric success rate'로 정의. object-centric이 'less strict'(=attempt-centric이 더 엄격) 명시, 주 지표 = attempt-centric 명시, object-centric은 선행연구의 'completion rate'에 해당한다고 부기. 문서 §5-1 표의 수치도 Table I과 전 셀 일치(Hardware 59.3/81.5/91.4 ... All 72.2/93.3/93.9 | 98.9/99.8/100.0)."
+          }
+        ],
+        "notes": "검증 방법: arXiv:2212.08333v2 (T-RO 2023 accepted) PDF 16페이지 전문을 직접 정독(원본 경로: scratchpad/anygrasp.pdf). 확인 편향 방지를 위해 각 주장마다 반증(귀속 오류·수치 불일치)을 우선 탐색했다. 총평: 검증 대상 문서의 [학습 데이터 + 실험 셋업] 클러스터는 대체로 논문과 높은 정합성을 보이나, 절차 서술에서 귀속 오류 2건이 발견됐다. (1) '10cm 뒤 안전점'은 파지 후가 아니라 파지 전 접근 waypoint — 문서 §5-2 '정적 절차'의 화살표 순서가 이를 '파지 후'로 읽히게 배치. (2) '10회 grasp 미발견 종료'와 '인간 피험자 2명'은 논문상 정적 bin-picking 절차인데 문서는 '동적 제어 로직 (25:45)' 단락에 배치 — 동적 fish-catching은 5 trial × 8 fish이고 인간 비교가 없다. 이 2건은 발표영상 자체의 오류일 가능성도 있으나(영상 미확인) 논문 기준으로는 명백한 MISMATCH이므로 VIDEO_ONLY로 면책 불가 — 문서가 이를 논문 사실처럼 서술하고 있기 때문. 반대로 문서가 '작성자 추론'이라고 자백한 268 scene은 논문 Sec. IV-A가 총계를 명시(\"In total, 268 scenes that consist of 144 objects\")하므로 추론 딱지가 오히려 과잉 — 정정 가능. 부수 확인(내 클러스터 외): 동적 75.5%는 본문 Sec. VI-B p.12에 명시(\"The average success rate achieves 75.5%\") — 문서 §5-4의 '⚠️ 본문 미확인' 판정은 본문 확인으로 승격 가능. 900+ MPPH 단일팔(p.10, 기존 dual-arm 300 MPPH 대비), 93.3% vs human 93.9%, 휴리스틱 62.5%, 실패 파이차트(Slipping 46.1%/Fall behind 23.1%/Bad quality 15.4%/Correspondence switch 7.7%/Too front 7.7%, Fig.12), scene/50=2개 장면 시 수렴 실패(Sec. VII-C \"the model cannot converge\"), COG ablation 25회 중 16 vs 11 슬립(Sec. VII-B), 실험 워크스테이션 Nvidia 2060(Sec. V-A) 모두 논문과 일치. 판정 불가 사유 없음(전 7주장 논문 대조 완료)."
+      },
+      "ablations_limits": {
+        "claims": [
+          {
+            "claim": "Sim-to-real: PyRender 가상 렌더 학습 vs 실제 사진 학습 비교; depth Gaussian noise 혼합 옵션 실험; Top1~Top50 grasp을 force-closure로 판정해 AP 산출; AP 곡선 4종(All/Seen/Similar/Novel) 중 Novel에서 격차 최대; 실로봇 성공률 sim ~69% vs real ~93%; noise augmentation으로 gap 미해소",
+            "verdict": "CONFIRMED",
+            "evidence": "§VII-A + Fig.13 + Fig.14: \"rendering the scene in PyRender\", \"adds Gaussian noise to the depth images\", \"averaged AP for grasp poses ranging from Top-1 to Top-50\" (force-closure metric), \"performance gap widens... the novel test scenes\", \"still remains a large performance gap with directly trained on real data\"",
+            "paper_value": "전 항목 논문 일치. real 93.3%는 Table I/§VI-A 본문 수치, sim ~69%는 Fig.14 'All' 막대 판독값(본문에 정확 수치 없음, 막대 ~69-70%로 일치). 단 Fig.14 캡션상 배포된 sim 모델은 'simulated depth images with extra Gaussian noise' 학습본 — 즉 noise 증강을 하고도 ~69%였다는 뜻으로, 문서의 결론(증강으로 gap 미해소)을 오히려 강화"
+          },
+          {
+            "claim": "COG(stable score) ablation: 길고 무거운 물체(생수병), 각 방식 25회, 무게중심 무시 16회 미끄러짐 vs 고려 11회",
+            "verdict": "CONFIRMED",
+            "evidence": "§VII-B: \"we made 25 attempts... 16 in-hand slippages (including 3 failed grasps)... when the stable score was not considered, and 11 in-hand slippages (including 2 failed grasps)\"",
+            "paper_value": "25회/16 vs 11 정확 일치. 논문 본문은 물체를 'a long, heavy object from our test set'로만 지칭 — '생수병' 명명은 논문 텍스트에 없으나 Fig.15 사진이 페트병 형태로 시각적으로 부합(영상 유래 세부). 추가 정보: 16회 중 3회·11회 중 2회는 파지 실패 포함"
+          },
+          {
+            "claim": "Dense supervision ablation: pose/image/scene 세 축을 각각 1/10, 1/50 감소; pose 감소 ≈ image 감소(거의 동일 하락); scene 다양성 감소 시 하락 최대, 학습 장면 2개면 학습 자체 실패",
+            "verdict": "CONFIRMED",
+            "evidence": "§VII-C + Fig.16: \"uniformly downsampled by 10 times and 50 times\", \"degradation is similar to decreasing the number of training images\", \"larger degradation... When we downsample the scene by 50 times (namely 2 training scenes are used), the model cannot converge\"",
+            "paper_value": "전 항목 일치. '학습 자체 실패'의 논문 원표현은 'the model cannot converge'(수렴 불가). scene/50=2장면은 GraspNet-1Billion 학습 100 scene 기준"
+          },
+          {
+            "claim": "물체 전체 6D pose 추적 vs 잡을 지점만 추적: 변형 물체(봉지·천)와 가려진 물체에서 후자 유리 — 저자 결론 '잡을 지점만 추적이 더 유연·안정적'",
+            "verdict": "CONFIRMED",
+            "evidence": "§VII-D + Fig.17: \"6D pose tracking algorithm cannot handle deformable objects\", \"grasp tracking algorithm can work robustly... even though other parts of the object are heavily occluded\"",
+            "paper_value": "구조·결론 일치. 논문 예시 물체는 'a deformable, textureless tube'(Fig.17) — '봉지 과자·천' 예시는 영상 유래 세부. 논문은 6D 추적 약점으로 depth noise/incomplete point cloud 취약도 추가 언급"
+          },
+          {
+            "claim": "Closed-loop 한계(저자 자인): 그리퍼가 물체를 가리면(occlusion) 시각 인식 실패로 파지 실패; 향후 연구로 촉각 기반 미끄러짐 감지 제시",
+            "verdict": "CONFIRMED",
+            "evidence": "§VII-E: \"the gripper would occlude the grasp target. Thus, the visual perception would fail... A missing piece here is tactile perception. It aids grasp slip detection and enables in-hand adjustment\"",
+            "paper_value": "문서의 인용 블록이 §VII-E 원문 취지와 정확 일치 ('fragile to the occlusion induced by the robot', tactile = future work)"
+          },
+          {
+            "claim": "동적 실패 원인 분포: Slipping 46.1% / Fall behind 23.1% / Bad quality 15.4% / Correspondence switch 7.7% / Too front 7.7%",
+            "verdict": "CONFIRMED",
+            "evidence": "Fig.12 파이차트(p.12) 수치 5종 전부 일치 + §VI-B 본문: \"In nearly half of the failure cases, the fish slips away... mainly due to the small friction in the water\"",
+            "paper_value": "46.1/23.1/15.4/7.7/7.7 정확 일치. 문서의 해석('절반이 물리적 미끄러짐 → 촉각으로 향하는 근거')도 본문 서술과 정합"
+          },
+          {
+            "claim": "깨진 토기 파편 두께 3mm 미만 파지 성공 — 논문에 정량 통계 미제공(발표자 명시)의 사실 여부",
+            "verdict": "CONFIRMED",
+            "evidence": "§VI-A(p.10-11) + Fig.9: \"fragments are pretty thin, usually less than 3mm... Fig. 9 shows the snapshots... the video is given in Appendix B (Movie S9)\"",
+            "paper_value": "발표자 말이 맞다: 논문은 스냅샷(Fig.9)+영상(Movie S9)만 제시, 성공률 등 정량 통계 없음 — 전체 16쪽 재확인 결과 파편 태스크 수치 부재. 두께 표현은 'usually less than 3mm'로 문서와 일치. MISMATCH 아님"
+          },
+          {
+            "claim": "향후 연구: ① 시각+촉각 피드백 기반 파지 오류 복구, ② 2지 그리퍼 외 다양한 핸드(3지/5지) 확장",
+            "verdict": "CONFIRMED",
+            "evidence": "§VIII Conclusion: \"cannot adjust the grasp pose using visual or tactile feedback. This ability can help the robot to recover from previous errors\", \"transfer such ability to different robotic hands\"",
+            "paper_value": "①② 골자 일치. 단 괄호 세부 '(3지/5지)'는 논문에 없음 — 논문은 'different robotic hands'로만 표현. 손가락 수 열거는 영상 전용 부연(VIDEO_ONLY 성격)이나 주장 본체를 훼손하지 않음"
+          }
+        ],
+        "notes": "1차 소스 = arXiv:2212.08333v2 PDF 전문 16쪽 직접 판독(다운로드 경로: scratchpad/anygrasp.pdf; MCP PDF 도구는 301 리다이렉트로 실패해 curl로 대체). 적대적 검증 결과 내 클러스터 8건 전부 CONFIRMED, MISMATCH 0건. 반박 시도에서 살아남은 관찰: (a) 문서가 수치를 과장하거나 방향을 뒤집은 곳 없음 — 46.1/23.1/15.4/7.7/7.7, 25회/16 vs 11, 1/10·1/50, 2 scene 수렴 실패 모두 원문 정확 일치. (b) 유일한 판독값 의존 = sim ~69%(Fig.14 막대, 본문 무수치)이며 문서도 '~' 근사 표기로 정직 — 오히려 배포된 sim 모델이 Gaussian noise 증강본이라는 Fig.14 캡션 사실이 문서 결론을 강화. (c) 영상 유래 세부 3건('생수병' 명명, '봉지 과자·천' 예시, '3지/5지' 열거)은 논문 텍스트에 없으나 각각 Fig.15 이미지/deformable 범주/'different robotic hands'와 모순되지 않아 개별 VIDEO_ONLY 강등 대신 해당 claim의 paper_value에 명기. 판정 불가 항목 없음."
+      }
+    },
+    "transcript_verify": {
+      "claims": [
+        {
+          "claim": "영상 길이 40:11(2411s), 채널 딥러닝논문읽기모임, 한국어",
+          "verdict": "MATCHES_SOURCE",
+          "evidence": "vid_meta.json: duration=2411, duration_string='40:11', channel=uploader='딥러닝논문읽기모임', language='ko', upload_date=20260522, view_count=175, id=qFl59361Slg — 문서 §1·§2 기재값과 전부 일치"
+        },
+        {
+          "claim": "최종 점수 = grasp score × (1 − stable score)가 슬라이드에 있고, 발표자 구두로는 '곱한다'고만 언급",
+          "verdict": "MATCHES_SOURCE",
+          "evidence": "v28_18m50s 슬라이드 Reparameterize 절: '최종 점수 = grasp score x (1 - stable scroe)' (원문 오타 'scroe' 포함) 직접 확인. 전사 [00:19:12–00:19:20] '그래스프 스코어와 ... 스테이블 스코어를 곱해서 나온 것을 최종 점수로 선택' — (1−) 언급 없이 '곱해서'만. v27_15m20s는 GPM 파이프라인 슬라이드로 수식 없음; 수식은 v28에 있으며 해당 슬라이드 구간이 전사 16:04~19:35를 커버(M=1024, view 300, 48=12×4 동일 슬라이드)"
+        },
+        {
+          "claim": "적대적 물체: 슬라이드 62개(13+49), 발표자 구두 '60개'",
+          "verdict": "MATCHES_SOURCE",
+          "evidence": "v37_30m25s 슬라이드: '13개의 object(DexNet2.0) 및 49개의 object(EGAD)인 총 62개의 복잡하고 잡기 어려운 사물 - 3D 프린터로 뽑음' + 막대그래프 DexNet4.0 ~39 / AnyGrasp ~72·71 / Human ~88. 전사 [00:30:09–00:30:21] '13개의 덱슨의 2.0 ... 49개의 물체를 합쳐서 총 60이 물체를 직접 3D 물 프린터로'. 주의: 자동자막 '60이'는 '60'으로도 '육십이(62)' 왜곡으로도 읽힘 — 구두 '60개' 판정은 자막 기준 개연적이나 확정 불가. 슬라이드 62가 권위라는 문서 처리 자체는 정확"
+        },
+        {
+          "claim": "동적 평균 75.5% vs 62.5%",
+          "verdict": "MATCHES_SOURCE",
+          "evidence": "v39_32m05s 슬라이드: '평균 75.5%의 높은 성공률', '(75.5% vs 62.5%)' — 단순 최근접 추적 대비 문구까지 일치. 그래프 Avg (75.47%)도 표시. 전사 [00:31:58] '평균 75.5%의 ... 높은 성공률', [00:32:02] 단순 방식 비교 언급(수치는 자막에 없음, 슬라이드가 62.5% 출처)"
+        },
+        {
+          "claim": "동적 실패 파이차트: Slipping 46.1 / Fall behind 23.1 / Bad quality 15.4 / Correspondence switch 7.7 / Too front 7.7",
+          "verdict": "MATCHES_SOURCE",
+          "evidence": "v40_32m20s 파이차트: 46.1%(Slipping, 상단) / 23.1%(Fall behind, 좌) / 15.4%(Bad quality) / 7.7%(Correspondence switch) / 7.7%(Too front) 라벨·수치 전부 판독 일치. 하단 텍스트 '가장 큰 이유(약 50%): 잘 잡았지만 너무 미끄러워서 놓침'도 문서 해석(절반이 물리적 미끄러짐)과 부합"
+        },
+        {
+          "claim": "Sim-to-real: sim 학습 ~69% vs real 학습 ~93%, Novel에서 AP 격차 최대",
+          "verdict": "MATCHES_SOURCE",
+          "evidence": "v42_34m40s 막대그래프 'Ours w. sim. data' vs 'Ours w. real data' — All 그룹 녹색 ~69, 주황 ~93 판독. v41_34m15s AP 곡선 4패널(All/'Seen'/'Similar'/'Novel') 중 Novel(d)에서 real(~0.33)과 sim(~0.20) 격차 최대 + 슬라이드 텍스트 '한번도 보지 않은 경우에 성능 차이가 더 많이 남', 가우시안 노이즈 실험·TOP1~TOP50 force-closure AP 산출 문구도 일치. 전사 [00:34:27–00:34:33] 동일 취지"
+        },
+        {
+          "claim": "COG ablation: 생수병 25회, 16 vs 11 미끄러짐",
+          "verdict": "MATCHES_SOURCE",
+          "evidence": "v43_35m05s 슬라이드: '물건을 25번씩 집게 함', '무게 중심 무시 → 16번 미끄러짐', '무게 중심 고려 → 11번 미끄러짐' 일치. 전사 [00:35:08–00:35:22] '총 16번 미끄러졌고 ... 11번으로 ... 25번 짓게 했을 때' 일치. 단 슬라이드 문구는 '길고 무거운 물체'이며 '생수병'은 사진 4장(흰색 플라스틱 병) 판독에 근거한 문서 작성자 식별 — 병 형태 물체임은 프레임에서 확인됨"
+        },
+        {
+          "claim": "Dense supervision: pose/image 1/10·1/50 유사 하락, scene 2개면 학습 실패",
+          "verdict": "MATCHES_SOURCE",
+          "evidence": "v44_35m40s 범례: full, pose/10, image/10, scene/10, pose/50, image/50, scene/50 — 1/10·1/50 축소 확인. 슬라이드 텍스트 '결과 1: pose의 양을 줄이는 것은 이미지의 양을 줄이는 것과 거의 똑같이 성능을 떨어뜨림', '결과 2: 장면의 다양성을 줄였을 때 성능이 가장 크게 하락 (학습용 장면이 단 2개일 때는 아예 학습에 실패함)' — 문서 (c)항과 전부 일치. 전사 [00:36:01–00:36:43] 동일 취지(수치는 슬라이드만)"
+        },
+        {
+          "claim": "동적 제어: 10프레임 예측, 3.5cm 호버, 5.5cm/2cm + 20°, 10회 연속 미발견 종료, 인간 2명",
+          "verdict": "MATCHES_SOURCE",
+          "evidence": "v33_25m45s 슬라이드: '10번 연속으로 찾지 못하면 실험이 끝남' / '사람도 2명이 똑같은 조건으로' / '과거 10개 프레임을 분석' / '3.5cm 위에서 안전거리를 유지하며 물고기를 따라다님, 추적 중에 물고기를 건드려 움직임을 방해 X' / '거리 5.5cm, 2cm 이내, 각도가 잘 맞으면(20도 이내) 그 즉시 아래로 내려가' — 5개 요소 전부 판독 일치. 전사 [00:25:47–00:26:40]은 10프레임·호버링·10회 종료를 구두 확인(수치 3.5/5.5/2/20°·2명은 슬라이드가 출처)"
+        },
+        {
+          "claim": "충돌검사 그리퍼 큐브 3개 단순화 + 후처리 100 grasp/80ms + gripper centering",
+          "verdict": "MATCHES_SOURCE",
+          "evidence": "v30_22m05s 슬라이드 Detection Postprocessing: 'Collision Detection: 상위 100개의 grasp 후보에 대해 gripper를 세개의 큐브로 단순화해 충돌 여부 검사' / 'Gripper Centering: 양쪽 Finger tip이 동시 접촉하도록 gripper를 이동시켜 물체 밀림 현상 방지' / 'GPU상에서 병렬연산을 통해 100개의 grasp pose에 대해 80ms 소요'. 전사 [00:22:33–00:23:09] '100개 그래스프 후보 ... 세 개의 큐브로 단순화 ... 양쪽 핑거팁이 동시에 접촉 ... 80ms' 일치"
+        },
+        {
+          "claim": "장비: Ubuntu 20.04, i9-10900K, NVIDIA 2060, UR5+D415/D435 천장, Flexiv Rizon+L515 손목, 탁구채 고무",
+          "verdict": "MATCHES_SOURCE",
+          "evidence": "v32_24m50s 슬라이드: 'UR5 로봇 팔과 천장에 설치된 인텔 리얼센스 D415/D435 카메라' / '탁구채 고무를 로봇 손가락에 붙여 사용' / 'Flexiv Rizon 로봇 팔' / 'L515 카메라를 로봇 손목에 직접 부착' / 3D 프린트 집게 연장 / '우분투 20.04 운영체제, 인텔 i9-10900K CPU, Nvidia 2060 GPU ... 파이썬' — 전부 일치. 전사 [00:24:48–00:24:56]은 '우븐트 22 20.04 / i9 / 2060'으로 왜곡·부분 표기 — 정확한 형번(10900K, UR5, D415, L515)은 슬라이드가 출처"
+        },
+        {
+          "claim": "학습 데이터: 104 물체/168 scene 신규, 144 물체 총계, 256 viewpoint, antipodal 자동 라벨",
+          "verdict": "MATCHES_SOURCE",
+          "evidence": "v22_11m25s 슬라이드: 'GraspNet-1B 데이터셋에 추가로 104개의 새로운 물체로 구성된 168개의 Extra Scenes' + 'Analytics Antipodal Score를 이용해서 Dense한 Grasp Pose를 계산'. v24_13m25s 슬라이드: '144개 물체로 구성된 268개 장면 ... 각 장면에 10개 물체를 무작위로 배치하고, 256개 시점에서 이미지를 촬영 ... 수동으로 6D 물체 자세를 기록'. v23_12m00s는 antipodal grasp/friction cone 정의 슬라이드. 전사 [00:10:39–00:10:43] 104/168, [00:12:16] 144/268, [00:14:16–00:14:25] '256개 다른 뷰포인트'(단 [00:12:28] 자막은 '265개의 시점'으로 왜곡 — 슬라이드 256이 권위, 문서 값 정확)"
+        },
+        {
+          "claim": "approach depth 0.5cm/5cm 추가 → 5단계",
+          "verdict": "MATCHES_SOURCE",
+          "evidence": "전사 [00:13:04–00:13:13] '원래는 1cm 2cm 3cm 4cm만 있는데 이번에는 0.5cm로 5cm를 추가' + [00:18:46–00:18:49] '0.5cm를 5cm를 추가했기 때문에 5단으로 확장'. 슬라이드 근거: v28_18m50s 'Anygrasp- Approach Depth를 5단으로 확장했고', v24_13m25s 'Approach Depth: 0.5cm를 추가해 ... (원래는 1, 2, 3, 4 cm)만 포함'. 주의 2건: ① 지목된 v23_12m00s 프레임 자체는 antipodal 슬라이드로 approach depth 내용 없음(내용은 전사 12:54–13:13 + v24/v28에 있음) ② '0.5+5 두 개 추가인데 5단'이라는 산술 불일치는 소스(발표) 자체의 표현이며 문서는 소스를 충실 반영"
+        },
+        {
+          "claim": "슬라이드 카운터 '31 of 37'이 실제 프레임에 보임",
+          "verdict": "MATCHES_SOURCE",
+          "evidence": "v41_34m15s 좌하단 PDF 뷰어 컨트롤바에 '31 of 37' 판독됨. 추가로 v24_13m25s 좌하단에 '14 of 37'도 판독 — 총 37 슬라이드 덱이라는 문서 §2 step 9 주장을 이중 확인"
+        },
+        {
+          "claim": "closed-loop occlusion 한계 + 촉각 향후연구 + 다지 핸드 확장",
+          "verdict": "MATCHES_SOURCE",
+          "evidence": "v46_38m20s 슬라이드: 'AnyGrasp의 한계: ... 로봇 그리퍼가 물체를 가릴 때(occlusion), 시각 센서가 대상을 인식하지 못해 파지가 실패' / '향후 연구: 촉각 센서(tactile perception)를 이용한 미끄러짐 감지 및 파지 조정' / '향후 과제: 시각/촉각 피드백을 이용한 파지 오류 복구 / 두 손가락 그리퍼 외에 다양한 로봇 핸드로 기술을 확장'. 전사 [00:38:42–00:38:47] occlusion 실패, [00:38:52–00:39:02] 촉각 센서, [00:39:49–00:39:59] '두 손가락 그리퍼 외에도 다양한 형태 5G나 뭐 3G'(자막 왜곡 — 3지/5지로 읽은 문서 해석 타당). v47_40m05s는 'Thank you!' 종료 슬라이드"
+        }
+      ],
+      "notes": "15개 주장 전건을 전사 전문(917줄)과 지목 프레임(v21~v24, v27~v33, v37, v39~v44, v46~v47 — 총 19장 직접 판독)으로 대조한 결과 전부 MATCHES_SOURCE. MISMATCH·NOT_IN_SOURCE 0건. 문서가 주장한 '발표자 구두 오차 2건의 슬라이드 기준 정정'은 양쪽 다 슬라이드에서 실물 확인됨(v28 '(1 - stable scroe)', v37 '총 62개'). 경미한 유보 3건: ① 주장 3의 구두 '60개'는 자동자막 '총 60이 물체를'(30:18)에 근거하는데, '60이'는 '육십이(62)'의 자막 왜곡일 가능성도 있어 구두 오차 여부 자체는 자막만으로 확정 불가 — 다만 문서의 수치 처리(슬라이드 62 권위)는 정확. ② 주장 13의 지목 프레임 v23_12m00s에는 approach depth 내용이 없고 실제 근거는 전사 12:54–13:13 + v24('0.5cm 추가, 원래 1,2,3,4cm') + v28('5단으로 확장')임; '0.5+5cm 추가인데 5단'이라는 산술 긴장은 발표 소스 자체의 표현. ③ 주장 7의 '생수병'은 슬라이드 문구('길고 무거운 물체')가 아니라 슬라이드 내 병 사진 판독에 기반한 식별. 추가 확인: '31 of 37' 카운터는 v41 좌하단에서, '14 of 37'은 v24 좌하단에서 각각 판독되어 37-슬라이드 덱 주장이 이중 확인됨. arXiv abstract 교차검증(문서 §5-4)은 본 검증 범위 밖이라 미수행."
+    },
+    "impact": {
+      "change_advocate": {
+        "arguments": [
+          {
+            "point": "(a) AnyGrasp의 '그리퍼=큐브 3개 단순화'(T-RO 게재, unseen 93.3% 실증)가 Arm-F 손가락 파트를 단순 박스로 저작할 선례를 주며, Gate-0(시각 메시 감사)를 생략하고 박스 직행할 근거가 된다는 주장. 옹호 최강 형태: '조잡한 convex 근사로도 파지 판단이 성립함이 실기기에서 검증됐으니, 미검증 시각 메시 감사는 불필요한 단계다.'",
+            "strength": "REJECTED",
+            "evidence": "목적 계층 불일치: AnyGrasp의 3-큐브는 지각 파이프라인의 후보-충돌 필터(25th doc:100)이고, 우리 T3는 PhysX 접촉 물리에서 물림 깊이 x=L−m이 판정을 직접 결정하는 문제다(24th doc:42 — L∈(5.5,17.5]mm가 T1 정합 조건). Gate-0의 존재 이유는 표현 방식이 아니라 저작 소스 미검증(24th doc:45 — 'D368 정황상 원위 손가락 부재 리스크', 부재 시 분기 결정 필요)이며, '수제 저작' 분기는 이미 설계 v1에 존재하되 Gate-0 결과가 그 분기의 입력이다. 또한 D424 신설 게이트 '조 간극-깊이 검증'(DECISIONS.md:25370-25371)은 박스든 메시든 채택 자산 전건에 적용되므로 박스 직행이 검증을 생략시키지 못한다. 단순 convex 파트 자체는 이미 설계 v1 저작 계약(24th doc:57-59 'convex ≤64정점 cook-faithful')이 허용 — 즉 선례가 바꿀 것이 없다. 설계 v1은 4-렌즈 적대검증(wf_67ffd8b5)을 막 통과했고 재개방은 동일 강도 재검증 대상(D423, DECISIONS.md:25287+)."
+          },
+          {
+            "point": "(b) sim 학습 ~69% vs real 학습 ~93% + depth noise augmentation으로도 Novel gap 미해소(25th doc:168-172)라는 실증이 'sim 물리 probe로 T3를 검증하는 행위 자체'의 가치를 훼손하므로, T3 sim 검증을 축소하고 T4 실물로 직행해야 한다는 주장.",
+            "strength": "REJECTED",
+            "evidence": "범주 오류: AnyGrasp의 gap은 합성 depth 이미지로 '지각 모델을 학습'할 때의 도메인 gap이고, 우리 T3는 학습이 아니라 충돌 자산 기하의 파지 성립 여부를 찾는 탐색 probe다. 프로젝트는 이미 AnyGrasp보다 보수적으로 sim을 격하해 두었다: D419 ④ 'PhysX 절대 라벨 금지, 탐색 도구로만 승격 — 권위 라벨은 실물 시행'(DECISIONS.md:25127-25129), 전 verdict에 '물리 verdict 아님' 층위 표기, g0a_pass=false 불변(START_HERE.md:58). T3→T4 순서 자체가 교수 지시 ②('collision으로 찾아라', DECISIONS.md:25086-25088, 교수 권위=HARD RULE #18 계열)의 이행이며, T4 실물 대조는 이미 GRASP_PASS 직후로 등재돼 있다(START_HERE.md:45). T4 선행은 미해소 코드 충돌(START_HERE.md:66)과 로봇 HW 승인 제약도 위반. 25th doc §7-2도 이를 '기대치 하향 참고'로만 등재."
+          },
+          {
+            "point": "(c) 동적 실패의 46.1%=미끄러짐(물리)이고 촉각 없이는 한계(25th doc:150-152, 195-197)이므로, 마찰 0.40/0.30이 미실측 가정인 우리 sim의 GRASP_PASS는 실물 hold를 보증하지 못한다 — T4를 앞당기거나 T4에 slip 관측 설계를 지금 반영해야 한다는 주장.",
+            "strength": "WEAK",
+            "evidence": "전제는 프로젝트가 이미 자인한 사실(START_HERE.md:64 '마찰 0.40/0.30 미실측 가정', :58 '서보 폐지력 null')이라 신규 정보가 아니고, 맥락 격차가 크다: 46.1%는 수중 활어 동적 파지이고 우리 물체는 정적 24.83g 기립 원통(START_HERE.md:34)으로 slip 토크가 극소. T4 앞당김은 'GRASP_PASS 후 T4 실물 재현 대조'(START_HERE.md:45)의 대조 구조를 파괴하며, T4 설계에 slip/hold 지속 관측을 넣자는 부분은 미래 지향 아이디어 → BACKLOG 대상(AGENTS.md:93-95)이지 현 순서 변경 근거가 아니다. 참고 가치: T4 prereg 저작 시점에 hold-duration/slip 관측 항목 추가 후보로 유효."
+          },
+          {
+            "point": "(d) attempt-centric vs object-centric 지표 선택이 결론을 뒤집는다(93.3 vs 99.8, 25th doc:125-137)는 발견은 사전등록 문화를 가진 이 프로젝트에서 T4/T5 평가 지표를 '지금' prereg에 선동결해야 한다는 주장 — 사후 지표 쇼핑 방지.",
+            "strength": "WEAK",
+            "evidence": "방향은 프로젝트 ethos(허용오차 선고정·prereg, START_HERE.md:25-27)와 정합하나, T4/T5는 Active Case 범위 밖(START_HERE.md:32-36 — scope는 T3 수리 검증뿐)이고 Variable Ladder는 미래 아이디어의 즉시 구현을 금지·BACKLOG로 보낸다(AGENTS.md:93-96). 현 유일 블로커는 사용자 확인 3건(START_HERE.md:38-41)이라 지금 지표 설계는 어떤 현재 결정도 바꾸지 못한다(AGENTS.md:73 'Validation that cannot change a decision must not be run'의 정신). 참고 가치: T4 prereg 발행 시점에 attempt-centric(시도 중심, 더 엄격) 주 지표 채택을 BACKLOG 1줄로 등재할 가치는 실재."
+          },
+          {
+            "point": "(e) COG stable score(파지면-무게중심 수직거리 페널티, 최종점수=grasp×(1−stable), 25th doc:65-71)에 따르면 H50 기립 원통의 top rim 핀치(물림 0~12mm)는 COG(높이 25mm)에서 멀어 slip에 불리 — D419의 '상면 중심 top-down' 타깃을 측면 중간높이 파지로 재고해야 한다는 주장.",
+            "strength": "REJECTED",
+            "evidence": "규칙 정면 위반: D419는 교수 지시 권위(사용자 전달, HARD RULE #18 — DECISIONS.md:25083-25094, AGENTS.md:258)로 top-down을 고정했고, 선택 이유는 파지 품질 최적화가 아니라 태스크 적합성(장기말 — 주변 미간섭, D419 ④)이다. 물리적으로도 무관: COG ablation은 '길고 무거운 생수병' n=25에서 16 vs 11로 발표 문서 자체가 '경향성으로만 해석'을 명시(25th doc:174-176)했고, 24.83g에서 COG 오프셋 토크는 극소이며 T1 실물 rim 핀치가 이미 성공했다(D420 ②, DECISIONS.md:25193-25196). START_HERE.md:34 '파지 = 수직 상부 상면 중심(D419) 유지'가 scope 동결을 명시. Claude 단독 재해석에 의한 사용자/교수 확정 설계 변경 = HARD RULE #18의 전형적 위반 패턴."
+          },
+          {
+            "point": "(f) 'scene 다양성 감소가 pose/image 양 감소보다 타격 크고 장면 2개면 학습 실패'(25th doc:178-182)라는 ablation이 T6(위치 랜덤화)를 앞당기거나 향후 데이터 수집 설계를 지금 바꿔야 한다는 주장.",
+            "strength": "WEAK",
+            "evidence": "프로젝트에 이미 같은 방향의 규칙이 존재(HARD RULE #6 후단 '데이터셋 설계 시 다양성 확보', AGENTS.md:250)해 외부 보강 증거일 뿐 신규 규칙 불요 — 25th doc §7-3이 정확히 그렇게 등재. T6은 교수 승인 사다리에서 T3/T4/T5 후속(D419 ③, DECISIONS.md:25122-25126)이고, 현 T3는 스폰을 seed0_S1 단일 자세로 의도적으로 고정한 2×2 요인 설계(START_HERE.md:13-17)라 지금 다양화하면 통제를 파괴한다. 참고 가치: T6/T7·향후 수집 설계 시 다양성 우선 근거 문헌으로 유효."
+          },
+          {
+            "point": "(g) [자체 발굴] AnyGrasp 'gripper centering'(양 finger tip 동시 접촉으로 물체 밀림 방지, 25th doc:101)은 우리의 p7 LATCH_FAIL 'one_sided_push' 이력(D420 ④)과 직결 — 고정 조(link5)+이동 조 구조인 우리 그리퍼는 닫힘 시 물체를 고정 조 쪽으로 밀므로, TCP 횡방향 오프셋(센터링)을 T3 설계에 지금 넣어야 한다는 주장.",
+            "strength": "WEAK",
+            "evidence": "실질 연관은 가장 높은 자체 발굴 논거이나: ① 신규 변수 [P, F] 2개가 이미 동결됐고(START_HERE.md:35, 24th doc:3-5) 센터링 오프셋 추가 = 3번째 변수 = Variable Ladder 위반(AGENTS.md:91-93). ② p9 verdict 게이트에 object_drift 6mm가 이미 있어(D419 evidence, DECISIONS.md:25109) 횡밀림은 sim에서 검출 채널이 존재 — B/F/D 실행이 밀림을 실측으로 드러내면 그때 REACTIVE 대응이 규칙 정합(AGENTS.md:69-70 'Control-contract hardening is REACTIVE only'). ③ one_sided_push의 유력 원인은 q5 반전 규약(D420 ④, DECISIONS.md:25169-25175)으로 이미 p9에 수리 반영됨. 참고 가치: F/D arm에서 drift 게이트 위반이 관측될 경우의 1순위 해석 후보로 BACKLOG 등재 가치."
+          },
+          {
+            "point": "(h) [자체 발굴] AnyGrasp 자체가 dense grasp pose 열거 접근이며 RTX 2060에서도 구동(25th doc:104) — 우리 4090에서 AnyGrasp류 감지로 파지 타깃 선정을 대체하거나, '잡을 지점만 추적'(25th doc:184-191)을 T5 설계에 반영해야 한다는 주장.",
+            "strength": "REJECTED",
+            "evidence": "전반부는 격리된 트랙의 부활 시도와 동형: 교수님이 포인트 열거 노선을 명시 기각하고('왜 굳이 이 모든 포인트를 알아야 하냐' + '방식을 하나로 고정', D419 ①③, DECISIONS.md:25086-25089) 열거 트랙 전체를 DORMANT 격리·재개는 사용자 호출 시에만으로 못박았다(DECISIONS.md:25115-25118). AnyGrasp = dense 열거의 정점이므로 이 방향 채택 제안 자체가 D419 위반. 후반부(잡을 지점만 추적)는 T5 hold→move→place 설계 참고로는 성립하나 T5는 대기 단계(START_HERE.md:54)로 (c)/(d)와 동일한 BACKLOG 층위 — 순서 변경 근거 아님. 25th doc §9:283-284가 '§7 참고 3항은 경로를 수정하지 않는다'고 이미 선판정했고 본 감사가 이를 독립 재확인."
+          }
+        ],
+        "verdict": "NO_CHANGE",
+        "summary": "변경 옹호자 관점에서 후보 6건(a~f) + 자체 발굴 2건(g, h)을 최대 강도로 구축한 뒤 규칙 대조한 결과, STRONG 0 / WEAK 4 / REJECTED 4 — 파이프라인 순서(사용자 확인 3건 → D426 → Gate-0 → p9 파라미터화 → 부록 D → Isaac B/F/D → T4, START_HERE.md:38-45)를 바꿀 논거는 생존하지 못했다. 구조적 이유 3가지: (1) AnyGrasp는 지각-학습 계층의 증거이고 T3는 충돌 자산 기하 검증 계층이라 대부분의 전이가 범주 오류(25th doc §7-1이 occlusion에 대해 이미 명문화한 금지의 일반형). (2) 가장 강한 후보 (a)와 (e)는 각각 Gate-0의 존재 이유(소스 미검증, 24th doc:45)와 교수 권위(D419+HARD RULE #18)에 정면 충돌해 REJECTED. (3) WEAK 4건(c/d/f/g)은 전부 T4 이후 또는 REACTIVE 조건부의 미래 참고로, Variable Ladder(AGENTS.md:90-102)상 BACKLOG 층위이며 현재 유일 블로커(사용자 확인 3건)를 해소하지 못한다. 25th 세션 doc §9의 자체 판정('경로 수정 없음')이 본 독립 적대 감사에서도 유지됨. 부수 권고(순서 불변 전제): 사용자가 원하면 (d) attempt-centric 지표 선동결과 (g) 센터링-drift 해석 후보를 claudedocs/BACKLOG.md에 각 1줄 등재하는 것은 규칙 정합적이다."
+      },
+      "no_change_guard": {
+        "verdict": "NO_CHANGE",
+        "arguments": [
+          {
+            "point": "Q1. §7-1 'occlusion 전이 금지' 사유는 논리적으로 타당 — 원인 계층이 실제로 다르다. AnyGrasp의 occlusion은 실물 폐루프에서 그리퍼가 카메라 시야를 가려 '시각 인지 입력'이 소실되는 지각 실패(해법=촉각 센서)이고, T3의 폐색은 sim 충돌 자산의 저작 결함(중앙 플러그 part_029/030 TCP−4.458mm + 조 원위부 충돌 기하 부재)으로 조가 물리적으로 하강 불가한 모델링 아티팩트(해법=자산 수리)다. 도메인(실물 지각 vs sim 기하), 기전(정보 손실 vs 유령 기하 간섭), 해법(센서 추가 vs 자산 저작) 3축 전부 상이하며, T3 probe(p9)에는 시각 입력 자체가 없어 전이 시 범주 오류가 된다.",
+            "strength": "STRONG",
+            "evidence": "claudedocs/session_20260806_25th_anygrasp_tro2023_video_reference_briefing.md:193-197, :245-247 vs claudedocs/DECISIONS.md:25386-25398 (D425); MEMORY.md:110 경고문 동일 취지"
+          },
+          {
+            "point": "Q2. '§7-2/§7-3을 BACKLOG에 등재하지 않은 것이 Variable Ladder Protocol 위반'이라는 도전 — 기각. VLP의 BACKLOG 의무는 '즉시 구현 유혹이 있는 future-looking ideas'에만 걸리는데, §7-2(sim-to-real gap 기대치 하향)와 §7-3(scene 다양성>양)은 실행 항목이 아닌 증거 주석이다. §7-3은 기존 HARD RULE #6 후단('데이터셋 설계 시 다양성')의 외부 보강일 뿐이고, §7-2는 현재 비활성 경로(sim-demo co-training, B200-era retired)의 캘리브레이션이다. BACKLOG 선례 closed_loop_grasp_deployment는 구체 작업명+진입 트리거를 가진 항목이라 구별된다. 회수성은 MEMORY.md:110 READ WHEN (b)/(c)로 확보됨. 'Validation that cannot change a decision must not be run' 정신상 무의미 backlog row 추가가 오히려 노이즈.",
+            "strength": "REJECTED",
+            "evidence": "AGENTS.md:92-95 (VLP), :250 (HARD RULE #6); 25th doc:248-255; claudedocs/BACKLOG.md:237-239 (선례 대비); MEMORY.md:110"
+          },
+          {
+            "point": "Q3-(a). 숨은 결합: AnyGrasp의 '그리퍼 큐브 3개 충돌 단순화' ↔ Arm-F 손가락 파트 저작 — 실존하나 비차단. '단순 박스 프록시로 파지 충돌 추론이 충분하다'는 외부 방증으로 F축 원위 파트(convex ≤64정점 cook-faithful, x=L−m, L=9.5~13.5mm 권장) 형상 선택에 참고 가치가 있는데 25th doc §7이 이 연결을 누락했다. 다만 F 저작 레시피는 prereg 핀·Gate-0·D423 적대검증으로 결정론적으로 게이트되어 있어 참조 부재가 설계 v1이나 파이프라인 순서를 바꾸지 않는다. 다음 F 저작 세션에서 선택적 인용 후보일 뿐.",
+            "strength": "WEAK",
+            "evidence": "25th doc:100 ↔ claudedocs/session_20260806_24th_g0b_t3_repair_design_adversarial_review.md:42-43,45 (결함 1·2·4), :57-59 (신규 파트 저작 계약)"
+          },
+          {
+            "point": "Q3-(b). 숨은 결합 후보: gripper centering(양 팁 동시 접촉) ↔ 고정+이동 조 비대칭 — 기각. 우리 프로젝트는 비대칭 역학을 이미 자체 규칙화했다: D410('A/B는 물체×가동 조 스윙 스윕의 함수'), push-grasping funnel(첫 접촉→밀림→종단, D418 ③/D419), drift 6mm 게이트가 밀림을 계측. AnyGrasp centering은 대칭 평행 그리퍼 전제라 우리 HW에 부적용이며, 전이 시도 자체가 오류다. 25th doc의 미기재는 손실이 아니다.",
+            "strength": "REJECTED",
+            "evidence": "25th doc:101 ↔ claudedocs/BACKLOG.md:249-251 (D410 인용); claudedocs/EXPERIMENT_LEDGER.md 18th row (push-grasping funnel, D418 ③); t3_prereg 물리 게이트 6종(EXPERIMENT_LEDGER 19th 말미 row)"
+          },
+          {
+            "point": "Q3-(c). 숨은 결합: AnyGrasp = dense 후보 열거+랭킹 패러다임 그 자체 ↔ D419 단일 자세 고정 + 포인트 열거 트랙 격리 — 25th 문서의 최대 누락. MEMORY.md:110의 READ WHEN (a) 'grasp pose 후보 생성/랭킹 설계'는 정확히 격리(DORMANT)된 활동을 트리거 조건으로 명시하고 있어, 미래 세션이 AnyGrasp 브리핑을 열거 노선 부활 근거로 오독할 잠재 경로가 있다. §7은 occlusion 전이만 금지하고 이 패러다임 충돌은 명시하지 않았다. 단 격리 재개는 '사용자 호출 시에만'으로 이미 게이트되어 있고 §9가 '§7은 경로를 수정하지 않는다'고 봉인해 실경로 영향은 0 — 다음 정기 갱신 시 READ WHEN (a)에 격리 주의 1구절 병기가 이상적(비차단 개선).",
+            "strength": "WEAK",
+            "evidence": "MEMORY.md:110 READ WHEN (a) ↔ claudedocs/QUARANTINE_point_enumeration_track.md:1-12 (D419 격리, 사용자 호출 전 재개 금지); 25th doc:283-284 (봉인문)"
+          },
+          {
+            "point": "Q3-(d). 숨은 결합: 동적 실패 46.1% 슬립 + 촉각 제안 ↔ T4 실물 검증/실리콘 테이프 BACKLOG — 경미. AnyGrasp 슬립 증거는 T4 진입 시 테이프 부착 결정의 보강 증거가 될 수 있으나, 그 결정은 이미 자체 트리거(T4 진입)와 선행조건 2건(D414 ① 무효화 범위 검토 + 마찰 계약 재저작)과 함께 BACKLOG에 존재한다. cross-ref 부재는 nice-to-have 수준이고, T4는 T3 GRASP_PASS 이후라 현 블로커(확인 3건)와 무관.",
+            "strength": "WEAK",
+            "evidence": "25th doc:151-152 ↔ claudedocs/BACKLOG.md:259-269 (실리콘 테이프 T4 보류 항목)"
+          },
+          {
+            "point": "Q4-핵심. §6 상태 문서 미갱신 결정은 프로토콜 정합 — START_HERE 미변경은 동시 24th 세션이 이미 24th판으로 갱신한 상태에서(boot 미수행 세션의) overwrite가 24th 성과를 clobber하는 유일한 경로였으므로 미변경이 옳다. LEDGER는 'major run/result row' 대상 0건(실험 0, tail 확인 결과 25th row 부재로 문서 주장과 일치), DECISIONS는 durable lesson 0건으로 각각 정합. Session progress rule(AGENTS.md:63-66)의 '명시 정당화' 요건도 §6 말미가 충족(사용자 지정 외부 문헌 세션 + 실험 경로는 병렬 24th 담당).",
+            "strength": "STRONG",
+            "evidence": "25th doc:216-233; START_HERE.md:3 (24th판 확인); AGENTS.md:63-66; EXPERIMENT_LEDGER.md tail (25th row 부재 확인)"
+          },
+          {
+            "point": "Q4-잔여 갭. 25th doc은 repo 파일인데 어떤 repo 상태 문서도 이를 참조하지 않는다 — START_HERE.md Must Read(77-82)에 부재하므로 boot procedure 4단계('START_HERE가 참조하는 session_*.md만 읽기')상 MEMORY.md를 못 보는 도구(Codex/Cursor — MEMORY는 Claude 전용, AGENTS.md 파일 역할표)에서는 25th 세션이 상태 계층에서 불가시하다. 또 HARD RULE #8 문면('Topic Files 섹션은 불변')과 Topic Files 1줄 추가 사이에 문면상 긴장이 있으나, 역사적 관행(topic 항목 지속 추가: MEMORY.md:105-110 Research 섹션 성장)이 '불변=기존 항목 오버라이드 금지' 해석을 지지하고, Recent Sessions 미prepend는 회전 상한이 active case 개시 세션(08-05-19th, D420) 축출을 강제한다는 실질 논거로 방어 가능한 재량. 해소책 = 다음 정기 START_HERE 갱신 시 참고 문헌 포인터 1줄(비차단, 파이프라인 무영향).",
+            "strength": "WEAK",
+            "evidence": "START_HERE.md:77-82 (25th 부재); AGENTS.md 'Session boot procedure' 4단계 + 파일 역할표 (MEMORY.md=Claude 전용); MEMORY.md:8 (HARD RULE #8), :110 (추가된 줄); 25th doc:235-241"
+          },
+          {
+            "point": "Q5. §8 scratchpad 118MB 처리 — '사용자 승인 대상' 결론은 옳으나 인용 조문은 과잉 확장. AGENTS.md:99-101 forward-only 조항의 문면은 (i) 기존 파일/폴더 이동·개명 금지 (ii) 신규 grasp 출력의 지정 경로 강제이지, 참고자료용 신규 폴더 신설 일반을 승인제로 규정하지 않는다. 그러나 결론은 다른 근거로 독립 성립: 118MB 바이너리(영상 33MB+프레임) repo 유입은 저장 위생 + commit 사용자 전권(AGENTS.md Safety constraints) + 다운로드 영상 재배포성 문제가 걸린 실질 승인 사안. 미결(사용자 답변 대기) 유지도 옳다 — 손실 리스크 낮음: 추출 레시피 전체가 §2 표에 재현 가능하게 기록되고 핵심 수치는 §3~§5에 증류 완료라 scratchpad 휘발 시 재생산 비용이 낮으며, 현 블로커(확인 3건)와 완전 독립이라 비차단.",
+            "strength": "STRONG",
+            "evidence": "25th doc:257-270 (§8), :32-43 (§2 재현 레시피); AGENTS.md:99-101 (조문 범위) + 'Safety constraints' 절 (commit 사용자 요청 시에만)"
+          }
+        ],
+        "summary": "25th 세션 문서의 자체 판정(\"프로젝트 진행 경로에 아무 영향 없음\")은 적대 검증을 생존한다. 핵심 방어선 3개가 전부 STRONG: ① occlusion 전이 금지 사유는 원인 계층(실물 시각 지각 실패 vs sim 충돌 자산 저작 결함)이 실제로 달라 타당하고, ② 상태 문서 미갱신은 동시 24th 세션 clobber 회피라는 유일 안전 선택 + 실험 0건이라 LEDGER/DECISIONS 미갱신도 조문 정합이며, ③ scratchpad 118MB 승인 대기는 결론이 옳다(단 forward-only 조문 인용은 과잉 확장 — 실제 근거는 repo 위생+commit 전권). BACKLOG 미등재는 VLP 위반 아님(REJECTED — §7-2/3은 실행 항목 없는 증거 주석, 선례 closed_loop_grasp_deployment와 구별됨). 숨은 결합 사냥 결과: 실존하는 것은 3건이나 전부 비차단 — (c)가 최대 발견: AnyGrasp는 dense 열거+랭킹 패러다임 그 자체인데 MEMORY.md:110 READ WHEN (a)가 정확히 격리(D419/QUARANTINE)된 활동을 트리거로 명시해 미래 오독 경로가 있음(격리 게이트 '사용자 호출 시에만'이 차단 중). (a) 큐브 3개 충돌 단순화는 Arm-F 파트 저작의 선택적 참고, (d) 슬립 46.1%는 T4 테이프 결정의 보강 증거 — 둘 다 기존 prereg/BACKLOG 게이트에 이미 포섭. centering↔비대칭 결합은 D410/push-grasping funnel로 이미 내부 커버라 기각. 잔여 갭 1건: 25th doc이 repo 상태 문서 어디에서도 참조되지 않아 MEMORY.md(Claude 전용) 없는 도구에서 불가시 — 다음 정기 START_HERE 갱신 시 참고 문헌 포인터 1줄로 해소 가능. 종합: 현 파이프라인 순서(사용자 확인 3건 → D426 → Gate-0 → p9 파라미터화·게이트 v2 → 부록 D → Isaac B→F→D→[조건부 A])는 어떤 발견으로도 변경 불요 → NO_CHANGE. 권고 개선 3건은 전부 다음 세션 정기 갱신에 접을 수 있는 비차단 항목: START_HERE 포인터 1줄, READ WHEN (a)에 격리 주의 병기, §8 조문 인용 정정."
+      }
+    }
+  },
+  "workflowProgress": [
+    {
+      "type": "workflow_phase",
+      "index": 1,
+      "title": "Verify"
+    },
+    {
+      "type": "workflow_phase",
+      "index": 2,
+      "title": "Transcript"
+    },
+    {
+      "type": "workflow_phase",
+      "index": 3,
+      "title": "Impact"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 1,
+      "label": "verify:identity-benchmarks",
+      "phaseIndex": 1,
+      "phaseTitle": "Verify",
+      "agentId": "a4e2475f936490d0d",
+      "model": "claude-fable-5",
+      "state": "done",
+      "startedAt": 1786004422349,
+      "queuedAt": 1786004419786,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "클러스터 [논문 정체 + 대표 벤치마크 수치] 10개 주장 전건 CO…",
+      "promptPreview": "검증 대상 문서: /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/session_20260806_25th_anygrasp_tro2023_video_reference_briefing.md (전문 Read 필수).\n이 문서는 AnyGrasp 논문 발표영상(한국어, 40분)을 요약한 세션 기록이며, 지금 그 내용의 사실성을 적대적으로 교차 검증한다. 확인 편향 금지 — 문서를 반박할 증거를 먼저 찾아라.\n1차 소스 = AnyGrasp 논문 (arXiv:2212.08333, T-RO 2023). 접근 절차:\n(1) 먼저 ToolSearch로 \"select:WebFetch,mcp__arxiv-mcp__download_paper_pdf,mcp__arxiv-mcp__ge…",
+      "lastProgressAt": 1786004554355,
+      "tokens": 93658,
+      "toolCalls": 8,
+      "durationMs": 132006,
+      "resultPreview": "{\"claims\":[{\"claim\":\"논문 정체: Fang et al., \\\"AnyGrasp: Robust and Efficient Grasp Perception in Spatial and Temporal Domains\\\", T-RO 2023, arXiv:2212.08333(v2)\",\"verdict\":\"CONFIRMED\",\"evidence\":\"p.1 표제·저자란 + arXiv 워터마크 \\\"arXiv:2212.08333v2 [cs.RO] 6 Jun 2023\\\", 헤더 \\\"IEEE TRANSACTIONS ON ROBOTICS\\\", arXiv comment \\\"Paper accepted to T-RO\\\"\",\"paper_value\":\"저자 9인: Hao-Shu Fang, Chenxi Wang, Hongjie Fan…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 2,
+      "label": "verify:method",
+      "phaseIndex": 1,
+      "phaseTitle": "Verify",
+      "agentId": "af978c4e885b63367",
+      "model": "claude-fable-5",
+      "state": "done",
+      "startedAt": 1786004423307,
+      "queuedAt": 1786004419786,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "방법론/아키텍처 클러스터 8개 주장 전수 검증 완료. 1차 소스 …",
+      "promptPreview": "검증 대상 문서: /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/session_20260806_25th_anygrasp_tro2023_video_reference_briefing.md (전문 Read 필수).\n이 문서는 AnyGrasp 논문 발표영상(한국어, 40분)을 요약한 세션 기록이며, 지금 그 내용의 사실성을 적대적으로 교차 검증한다. 확인 편향 금지 — 문서를 반박할 증거를 먼저 찾아라.\n1차 소스 = AnyGrasp 논문 (arXiv:2212.08333, T-RO 2023). 접근 절차:\n(1) 먼저 ToolSearch로 \"select:WebFetch,mcp__arxiv-mcp__download_paper_pdf,mcp__arxiv-mcp__ge…",
+      "lastProgressAt": 1786004638009,
+      "tokens": 93617,
+      "toolCalls": 9,
+      "durationMs": 214702,
+      "resultPreview": "{\"claims\":[{\"claim\":\"이전 방법은 그리퍼 공간 내 cropped local point cloud만으로 grasp quality 판정; AnyGrasp는 장면 전체 point cloud 입력으로 dense 예측\",\"verdict\":\"CONFIRMED\",\"evidence\":\"Sec. III-B: \\\"sampling-based methods that classify the quality of a grasp solely based on the cropped local point cloud within the gripper space\\\"; \\\"estimates the grasp quality across the R^6 space\\\"\",\"paper_value\":\"단, 논문은 이 대비를 sampling-…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 3,
+      "label": "verify:data-setup",
+      "phaseIndex": 1,
+      "phaseTitle": "Verify",
+      "agentId": "a9a993c3c772f4089",
+      "model": "claude-fable-5",
+      "state": "done",
+      "startedAt": 1786004422907,
+      "queuedAt": 1786004419786,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "검증 방법: arXiv:2212.08333v2 (T-RO 2023 accepted) PDF 16페…",
+      "promptPreview": "검증 대상 문서: /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/session_20260806_25th_anygrasp_tro2023_video_reference_briefing.md (전문 Read 필수).\n이 문서는 AnyGrasp 논문 발표영상(한국어, 40분)을 요약한 세션 기록이며, 지금 그 내용의 사실성을 적대적으로 교차 검증한다. 확인 편향 금지 — 문서를 반박할 증거를 먼저 찾아라.\n1차 소스 = AnyGrasp 논문 (arXiv:2212.08333, T-RO 2023). 접근 절차:\n(1) 먼저 ToolSearch로 \"select:WebFetch,mcp__arxiv-mcp__download_paper_pdf,mcp__arxiv-mcp__ge…",
+      "lastProgressAt": 1786004663308,
+      "tokens": 99431,
+      "toolCalls": 9,
+      "durationMs": 240401,
+      "resultPreview": "{\"claims\":[{\"claim\":\"학습 데이터 = GraspNet-1Billion + 신규 104개 물체 / 168개 extra scene; 총 144 물체 / 268 scene; 장면당 물체 ~10개 무작위; 256 viewpoint 촬영 (특히 '268'이 문서 작성자의 100+168 산술 추론인지 여부)\",\"verdict\":\"CONFIRMED\",\"evidence\":\"Sec. IV-A (p.4): \\\"collect 168 extra scenes composed of 104 new objects\\\"; \\\"randomly choose several objects (~10)\\\"; \\\"taken at 256 different viewpoints\\\"; \\\"In total, 268 scenes that cons…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 4,
+      "label": "verify:ablations-limits",
+      "phaseIndex": 1,
+      "phaseTitle": "Verify",
+      "agentId": "abc0b1ab5e41df8ed",
+      "model": "claude-fable-5",
+      "state": "done",
+      "startedAt": 1786004423816,
+      "queuedAt": 1786004419786,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "1차 소스 = arXiv:2212.08333v2 PDF 전문 16쪽 직접 판독(다운…",
+      "promptPreview": "검증 대상 문서: /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/session_20260806_25th_anygrasp_tro2023_video_reference_briefing.md (전문 Read 필수).\n이 문서는 AnyGrasp 논문 발표영상(한국어, 40분)을 요약한 세션 기록이며, 지금 그 내용의 사실성을 적대적으로 교차 검증한다. 확인 편향 금지 — 문서를 반박할 증거를 먼저 찾아라.\n1차 소스 = AnyGrasp 논문 (arXiv:2212.08333, T-RO 2023). 접근 절차:\n(1) 먼저 ToolSearch로 \"select:WebFetch,mcp__arxiv-mcp__download_paper_pdf,mcp__arxiv-mcp__ge…",
+      "lastProgressAt": 1786004561199,
+      "tokens": 93827,
+      "toolCalls": 8,
+      "durationMs": 137383,
+      "resultPreview": "{\"claims\":[{\"claim\":\"Sim-to-real: PyRender 가상 렌더 학습 vs 실제 사진 학습 비교; depth Gaussian noise 혼합 옵션 실험; Top1~Top50 grasp을 force-closure로 판정해 AP 산출; AP 곡선 4종(All/Seen/Similar/Novel) 중 Novel에서 격차 최대; 실로봇 성공률 sim ~69% vs real ~93%; noise augmentation으로 gap 미해소\",\"verdict\":\"CONFIRMED\",\"evidence\":\"§VII-A + Fig.13 + Fig.14: \\\"rendering the scene in PyRender\\\", \\\"adds Gaussian noise to the depth images\\\", \\\"av…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 5,
+      "label": "verify:transcript-frames",
+      "phaseIndex": 2,
+      "phaseTitle": "Transcript",
+      "agentId": "a5d44b2983c3e0212",
+      "model": "claude-fable-5",
+      "state": "done",
+      "startedAt": 1786004423642,
+      "queuedAt": 1786004419786,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "15개 주장 전건을 전사 전문(917줄)과 지목 프레임(v21~v24, v2…",
+      "promptPreview": "검증 대상 문서: /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/session_20260806_25th_anygrasp_tro2023_video_reference_briefing.md (전문 Read 필수).\n이 문서가 원 소스(영상 전사 + 슬라이드 프레임)를 충실히 반영했는지 검증한다. 원 소스 위치:\n- 전사(한국어 자동자막, 916줄, 타임스탬프 포함): /tmp/claude-1000/-home-cgxr-Documents-Robotics-RoArm-Project/6e109ebc-f0d5-475b-a811-cbe6a89fe0bb/scratchpad/anygrasp_transcript.txt\n- 고유 슬라이드 프레임 47장: /tmp/claude-100…",
+      "lastProgressAt": 1786004752418,
+      "tokens": 126913,
+      "toolCalls": 30,
+      "durationMs": 328776,
+      "resultPreview": "{\"claims\":[{\"claim\":\"영상 길이 40:11(2411s), 채널 딥러닝논문읽기모임, 한국어\",\"verdict\":\"MATCHES_SOURCE\",\"evidence\":\"vid_meta.json: duration=2411, duration_string='40:11', channel=uploader='딥러닝논문읽기모임', language='ko', upload_date=20260522, view_count=175, id=qFl59361Slg — 문서 §1·§2 기재값과 전부 일치\"},{\"claim\":\"최종 점수 = grasp score × (1 − stable score)가 슬라이드에 있고, 발표자 구두로는 '곱한다'고만 언급\",\"verdict\":\"MATCHES_SOURCE\",\"evidence\":\"v2…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 6,
+      "label": "impact:change-advocate",
+      "phaseIndex": 3,
+      "phaseTitle": "Impact",
+      "agentId": "a298be22d4a91be57",
+      "model": "claude-fable-5",
+      "state": "done",
+      "startedAt": 1786004424425,
+      "queuedAt": 1786004419786,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "NO_CHANGE",
+      "promptPreview": "역할: 변경 옹호자(change advocate). RoArm 프로젝트의 현재 T3 파이프라인 순서를 AnyGrasp 논문 지식이 바꿔야 한다는 가장 강한 논거를 구축한 뒤, 프로젝트 규칙에 비춰 각 논거가 생존하는지 스스로 정직하게 판정하라.\n필독 파일:\n- /home/cgxr/Documents/Robotics/RoArm_Project/START_HERE.md (현재 파이프라인: 사용자 확인 3건 → D426 → Gate-0 → p9 파라미터화 → 부록 D → Isaac B/F/D 순차)\n- /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/session_20260806_24th_g0b_t3_repair_design_adversarial_review.md (…",
+      "lastProgressAt": 1786004639784,
+      "tokens": 106187,
+      "toolCalls": 8,
+      "durationMs": 215359,
+      "resultPreview": "{\"arguments\":[{\"point\":\"(a) AnyGrasp의 '그리퍼=큐브 3개 단순화'(T-RO 게재, unseen 93.3% 실증)가 Arm-F 손가락 파트를 단순 박스로 저작할 선례를 주며, Gate-0(시각 메시 감사)를 생략하고 박스 직행할 근거가 된다는 주장. 옹호 최강 형태: '조잡한 convex 근사로도 파지 판단이 성립함이 실기기에서 검증됐으니, 미검증 시각 메시 감사는 불필요한 단계다.'\",\"strength\":\"REJECTED\",\"evidence\":\"목적 계층 불일치: AnyGrasp의 3-큐브는 지각 파이프라인의 후보-충돌 필터(25th doc:100)이고, 우리 T3는 PhysX 접촉 물리에서 물림 깊이 x=L−m이 판정을 직접 결정하는 문제다(24th doc:42 — L∈(5.…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 7,
+      "label": "impact:no-change-guard",
+      "phaseIndex": 3,
+      "phaseTitle": "Impact",
+      "agentId": "a2cbf3b25e03cc6e1",
+      "model": "claude-fable-5",
+      "state": "done",
+      "startedAt": 1786004423331,
+      "queuedAt": 1786004419786,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "NO_CHANGE",
+      "promptPreview": "역할: 무변경 감시자(no-change guard). 25th 세션 문서가 \"본 세션은 프로젝트 진행 경로에 아무 영향을 주지 않는다\"고 자체 판정했다. 이 자체 판정이 옳은지 적대적으로 검증하되, 반대로 숨은 결합(hidden coupling)이 있는데 문서가 놓쳤을 가능성도 사냥하라.\n필독 파일:\n- /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/session_20260806_25th_anygrasp_tro2023_video_reference_briefing.md (특히 §7 3개 항목과 §9, 그리고 \"occlusion 전이 금지\" 사유)\n- /home/cgxr/Documents/Robotics/RoArm_Project/START_HERE.md\n- /…",
+      "lastProgressAt": 1786004730390,
+      "tokens": 111959,
+      "toolCalls": 11,
+      "durationMs": 307059,
+      "resultPreview": "{\"verdict\":\"NO_CHANGE\",\"arguments\":[{\"point\":\"Q1. §7-1 'occlusion 전이 금지' 사유는 논리적으로 타당 — 원인 계층이 실제로 다르다. AnyGrasp의 occlusion은 실물 폐루프에서 그리퍼가 카메라 시야를 가려 '시각 인지 입력'이 소실되는 지각 실패(해법=촉각 센서)이고, T3의 폐색은 sim 충돌 자산의 저작 결함(중앙 플러그 part_029/030 TCP−4.458mm + 조 원위부 충돌 기하 부재)으로 조가 물리적으로 하강 불가한 모델링 아티팩트(해법=자산 수리)다. 도메인(실물 지각 vs sim 기하), 기전(정보 손실 vs 유령 기하 간섭), 해법(센서 추가 vs 자산 저작) 3축 전부 상이하며, T3 probe(p9)에는 시각 입력 자체가…"
+    }
+  ],
+  "totalTokens": 725592,
+  "totalToolCalls": 83
+}
