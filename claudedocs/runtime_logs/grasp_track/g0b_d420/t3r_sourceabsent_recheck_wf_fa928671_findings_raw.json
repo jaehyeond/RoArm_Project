@@ -1,0 +1,654 @@
+{
+ "measured": [
+  {
+   "lens": "Blind photogrammetric measurement of a disassembled sheet-metal gripper jaw from 6 ruler-referenced photos. Scale established per photo by fitting a projective (Möbius) model x_px = (a·s+b)/(1+c·s) to the widest run of machine-detected 10 mm ruler ticks (residuals ≤0.5 px), then measuring the part by threshold segmentation + convex-hull diameter, row/column scans, and hand-verified zoom crops. No repo file was consulted for expected values.",
+   "findings": [
+    "Photo inventory and overview: all six files are 4000x3000. Downscaled overviews written to the scratchpad show three distinct rest poses: part lying flat beside a VERTICAL ruler (KakaoTalk_...194.jpg = 'p00', and ..._02.jpg = 'p02'); part standing ON a HORIZONTAL ruler (..._04.jpg, ..._05.jpg); and two oblique 3/4 views (..._01.jpg, ..._03.jpg).",
+    "Ruler scale, p04 (horizontal ruler): the deepest tick tips were found by column-wise max-depth scan. Ten 10 mm marks located at x = 920.0, 1102.5, 1281.5, 1459.5, 1635.0, 1808.0, 1979.5, 2149.5, 2318.0, 2484.5 px. Widest labelled pair used = 10 mm to 100 mm (1564.5 px / 90 mm). Projective fit residual max 0.51 px. Local scale falls 18.26 -> 16.53 px/mm across the ruler (9% perspective gradient).",
+    "Ruler scale, p00 (vertical ruler): 10 mm marks at y = 1319.9(70), 1514.4(60), 1710.0(50), 1907.7(40), 2107.3(30), 2308.4(20). Widest pair = 20 to 70 mm (988.5 px / 50 mm). Fit residual max 0.21 px. Local scale 19.34 -> 20.21 px/mm (3.4% gradient), i.e. nearly orthographic.",
+    "Ruler scale, p02 (vertical ruler): 5 mm marks at y = 822.2(50) ... 1728.7(5). Widest pair = 5 to 50 mm (906.5 px / 45 mm). Fit residual max 0.39 px. Local scale 20.06 -> 20.25 px/mm, only 1% gradient over the whole ruler — p02 is the closest to orthographic of all six photos and is my primary measurement view.",
+    "Ruler scale, p05 (horizontal ruler): 5 mm marks at x = 1281.1(5) ... 1893.3(40). Widest pair = 5 to 40 mm (612.2 px / 35 mm). Fit residual max 0.09 px. Local scale 17.80 -> 17.20 px/mm.",
+    "Part topology, as seen: a laser-cut plate carrying a servo-horn pattern (one ~10 mm central circle with lobed satellites, plus a 15.1 mm rectangular U-notch, two ~3.5-4 mm holes on 25.5 mm centres, two ~2 mm holes, and a castellated/notched bottom edge), plus TWO long tapered blades. Each blade has an elongated through-slot and a rounded tip with a small opening.",
+    "UNRESOLVED 3D detail (affects item f): in every view where the plate is face-on (p00, p02, p05) exactly ONE blade shows its full flat face — the through-slot lets background light through, proving we see through the sheet — while the OTHER blade shows only a ~1.5 mm dark edge. Both blades' long axes are parallel and equal length in those same views. Geometrically this means the two blades' planes are roughly 90 deg apart (one blade coplanar with the plate, one bent out of the plate plane), not the symmetric parallel-flange U-channel I first assumed. I could not rule out that the part is simply bent/damaged. I checked the alternative explanation (both blades perpendicular, apparent width caused by off-axis perspective): it fails quantitatively — an 800 px off-axis blade at the estimated 150-250 mm camera distance would project only ~30-40 px of depth, not the ~90-150 px face actually observed.",
+    "Plate is genuinely face-on in p00: the isolated mounting hole measures 62 px wide x 63 px tall (w/h = 1.0), and independently the plate's left/right edge midpoint (x = 1650) matches the two mounting holes' symmetry axis (x = 1652.6) to within 3 px. Both confirm no meaningful foreshortening of the plate in p00.",
+    "Overall extent, p00 (part flat, plate face-on, part and ruler in the same table plane): convex-hull diameter 1715 px between plate apex (1706,1169) and blade tip (1178,2801). Converting the y-component through the ruler model (77.84 mm -> -4.11 mm) gives 81.95 mm, plus 26.5 mm in x, => 86.1 mm corner-to-corner. Along the part's long axis alone: 82.2 mm.",
+    "Overall extent, p02 (near-orthographic): part bbox x 543 -> 2245 px = 1702 px at 20.25 px/mm = 84.0 mm along the long axis; convex-hull diameter 1787 px = 88.0 mm corner-to-corner. Threshold sensitivity at the blurred blade tip is +/-10 px (~0.5 mm); values at thresholds 70/80/90 spanned 87.2-88.5 mm.",
+    "Overall extent, p04 (part STANDING on the ruler): raw x-span 753 -> 2139 px reads 78.5 mm on the ruler-plane scale. This DISAGREES with p00/p02 by ~6 mm and is doubly biased — the blade sits ~40 mm above the ruler (nearer the camera, magnified) while the part is also rotated about its vertical axis (foreshortened). I therefore reject p04 as an absolute-length source and keep p00/p02.",
+    "Plate size: width (across the two arms) = 720 px between x 1290 and 2010 at y 1465 in p00 => 37.0 mm; independently 651 px at the ruler plane in p05 => 37.4 mm. Height (apex to lowest bottom tab) = y 1160 -> 2005 in p00 via the ruler model (78.30 -> 35.11 mm) => 43.2 mm; independently in p02, plate apex x 2245 to arm tips x ~1360 = 885 px => 43.8 mm.",
+    "Blade free length (from where it leaves the plate to its tip): p02 gives x 1360 (plate arm tip) -> 543 (blade tip) = 817 px = 40.3 mm for the lower blade, and 877 px = 43.3 mm if the arm tip is taken at x 1420 where the notch ends. p00 gives 852 px along the blade axis = 42.6 mm. Consistency check: plate height 43 + blade 41 = 84 mm, which matches the measured 84.0 mm overall long-axis extent.",
+    "Blade count = 2. Their separation is measured most safely in p05, where both blade bases sit ON the ruler surface (zero height bias): outer-face-to-outer-face span = 678 px at y 1740-1780 = 38.6 mm. Subtracting one sheet thickness per side gives an inner clear gap of ~35.5 mm. Note the same span reads 42-43 mm when measured 30 mm higher up — that inflation (+12% over 31 mm of height) is exactly the standing-part perspective error and is the reason I used the base measurement only.",
+    "Sheet thickness: minimum apparent width of a blade seen edge-on. p02 upper blade minimum 31 px at 20.2 px/mm = 1.54 mm (median along its length 47 px = 2.33 mm, inflated because the blade is not perfectly edge-on). p05 right blade minimum 28 px at 17.2 px/mm = 1.63 mm. Both are upper bounds since dark-edge blur widens the segment; nominal 1.5 mm stock is the most likely true value.",
+    "Perspective/height model, measured not assumed: in p05 the across-blade span grows 38.6 -> 43.3 mm over 31 mm of height above the ruler, i.e. ~0.4%/mm, implying a camera distance of roughly 150-260 mm. This is the magnitude of error that would corrupt any dimension read off the ruler for a feature standing above it, and is why all primary numbers come from the two flat-lying photos.",
+    "Depth perpendicular to the plate (item f) has NO direct measurement: none of the six photos shows the plate edge-on against the ruler. Indirect estimate only — modelling the p05 right blade's apparent 50 px band as w*cos(alpha) + t*sin(alpha) with t = 1.5 mm gives alpha ~ 77 deg, so a blade of face width 6.5 mm projects ~6.3 mm of out-of-plane depth. I report 6-8 mm at LOW confidence.",
+    "Scale sanity anchors (not used to derive anything, only to check plausibility): the two isolated plate holes measure 3.3 x 3.9 mm and 3.3 x 4.0 mm on 25.5 mm centres (consistent with M3/M4 clearance), the central servo circle is ~10.0 mm, and the U-notch is 15.1 mm wide. All land on sensible hardware values, which supports the px->mm calibration."
+   ],
+   "numbers": [
+    {
+     "quantity": "(a) Overall maximum extent, along the part's long axis (blade tip to far edge of plate)",
+     "value_mm": "84 (range 82-84)",
+     "source": "/home/cgxr/Downloads/KakaoTalk_20260806_210210194_02.jpg (primary, 84.0); /home/cgxr/Downloads/KakaoTalk_20260806_210210194.jpg (82.2)",
+     "derivation": "p02: part bbox x 543->2245 px = 1702 px; local scale from projective ruler fit = 20.25 px/mm => 84.0 mm. p00: plate apex y1167 -> blade tip y2805 mapped through the vertical-ruler projective model (77.94 -> -4.30 mm) => 82.2 mm. Both photos have part and ruler in the same table plane, so no standing-height magnification."
+    },
+    {
+     "quantity": "(a') Overall maximum extent, absolute corner-to-corner (convex hull diameter)",
+     "value_mm": "86-88",
+     "source": "/home/cgxr/Downloads/KakaoTalk_20260806_210210194.jpg (86.1); /home/cgxr/Downloads/KakaoTalk_20260806_210210194_02.jpg (88.0)",
+     "derivation": "Convex-hull diameter of the thresholded part mask. p00: 1715 px between (1706,1169) and (1178,2801); y-component converted via the ruler model (81.95 mm), x-component at 19.9 px/mm (26.5 mm), hypotenuse 86.1 mm. p02: 1787 px / 20.30 px/mm = 88.0 mm. The 2 mm spread is the honest uncertainty (different rest poses project the 3D diagonal differently)."
+    },
+    {
+     "quantity": "(b) Mounting-plate width (across the two arms)",
+     "value_mm": "37 (37.0-37.4)",
+     "source": "/home/cgxr/Downloads/KakaoTalk_20260806_210210194.jpg (37.0); /home/cgxr/Downloads/KakaoTalk_20260806_210210194_05.jpg (37.4)",
+     "derivation": "p00: plate edges x 1290 and 2010 at y 1465 = 720 px / 19.45 px/mm = 37.0 mm; edge midpoint 1650 agrees with the mounting-hole symmetry axis 1652.6, confirming no foreshortening. p05: 651 px at the ruler plane / 17.4 px/mm = 37.4 mm."
+    },
+    {
+     "quantity": "(b) Mounting-plate height (apex to lowest bottom tab)",
+     "value_mm": "43 (43.2-43.8)",
+     "source": "/home/cgxr/Downloads/KakaoTalk_20260806_210210194.jpg (43.2); /home/cgxr/Downloads/KakaoTalk_20260806_210210194_02.jpg (43.8)",
+     "derivation": "p00: apex y1160 -> lowest castellation y2005, mapped through the vertical-ruler projective model (78.30 - 35.11 mm). p02: plate apex x2245 -> arm tips x~1360 = 885 px / 20.2 px/mm."
+    },
+    {
+     "quantity": "(c) Blade free length, plate exit to tip",
+     "value_mm": "41 (40-43)",
+     "source": "/home/cgxr/Downloads/KakaoTalk_20260806_210210194_02.jpg (40.3-43.3); /home/cgxr/Downloads/KakaoTalk_20260806_210210194.jpg (42.6)",
+     "derivation": "p02 column scan: the plate's arm segments vanish between x 1340 and 1380, so the exit is x~1360; blade tip x 543 => 817 px / 20.27 px/mm = 40.3 mm. Taking the exit at the end of the notch (x 1420) gives 43.3 mm; the 3 mm spread is the ambiguity of 'where it leaves the plate'. p00 diagonal root-to-tip 852 px / 20.0 = 42.6 mm. Cross-check: 43 (plate) + 41 (blade) = 84 = measured overall long-axis extent."
+    },
+    {
+     "quantity": "(d) Number of blades",
+     "value_mm": "2 (count, not mm)",
+     "source": "/home/cgxr/Downloads/KakaoTalk_20260806_210210194_02.jpg, _05.jpg, _03.jpg",
+     "derivation": "Two separate long members visible simultaneously in p02 (one at y 1370-1440, one at y 2170-2310, both running from x~545 to the plate), in p05 (x 1157-1300 and x 1873-1945, both rising to y~660-690), and in p03. Equal length, parallel long axes."
+    },
+    {
+     "quantity": "(d) Gap between the two blades, outer face to outer face",
+     "value_mm": "38.6",
+     "source": "/home/cgxr/Downloads/KakaoTalk_20260806_210210194_05.jpg",
+     "derivation": "Row scan at y 1740-1780, i.e. where both blades physically touch the ruler surface, so the feature is in the ruler's own plane and carries no standing-height magnification: 678 px / 17.55 px/mm = 38.6 mm. Measured 30 mm higher the same span reads 43.3 mm — that +12% is pure perspective and was discarded."
+    },
+    {
+     "quantity": "(d) Gap between the two blades, inner clear gap",
+     "value_mm": "~35.5",
+     "source": "derived from _05.jpg outer span minus 2x thickness",
+     "derivation": "38.6 mm outer span minus 2 x 1.55 mm sheet thickness. Not measured directly because the plate occupies the space between the blade bases in every view."
+    },
+    {
+     "quantity": "(e) Sheet thickness",
+     "value_mm": "1.5-1.6 (nominal 1.5 likely)",
+     "source": "/home/cgxr/Downloads/KakaoTalk_20260806_210210194_02.jpg (1.54); /home/cgxr/Downloads/KakaoTalk_20260806_210210194_05.jpg (1.63)",
+     "derivation": "Minimum apparent width of a blade seen edge-on, scanned along its whole length. p02 upper blade min 31 px / 20.2 px/mm; p05 right blade min 28 px / 17.2 px/mm. Both are upper bounds (dark-edge blur widens the thresholded segment), and both blades are a few degrees off true edge-on, so the true stock is at or just under 1.5 mm."
+    },
+    {
+     "quantity": "(f) Extent perpendicular to the plate face (depth / bend offset)",
+     "value_mm": "6-8 (LOW confidence; no direct measurement exists in these photos)",
+     "source": "indirect, from /home/cgxr/Downloads/KakaoTalk_20260806_210210194_05.jpg",
+     "derivation": "No photo shows the plate edge-on against the ruler, so this cannot be read off a scale. Indirect: the p05 right blade's apparent 50 px band fits w*cos(alpha)+t*sin(alpha) with w=6.5 mm face width and t=1.5 mm at alpha~77 deg from the plate plane; its out-of-plane projection is then w*sin(alpha) ~ 6.3 mm, plus the plate's own thickness. Treat as an estimate, not a measurement."
+    },
+    {
+     "quantity": "Blade face width (tapered, root -> tip)",
+     "value_mm": "7.6 -> 5.1",
+     "source": "/home/cgxr/Downloads/KakaoTalk_20260806_210210194.jpg (face-on blade)",
+     "derivation": "Hand-verified widths on the native-resolution zoom crop: 153 px at y2200, 133 px at y2500, 103 px at y2750, each divided by the local ruler scale ~20.0-20.6 px/mm. Threshold segmentation alone was unreliable here because the blade face is specular grey, not black."
+    },
+    {
+     "quantity": "Central servo-horn circle diameter",
+     "value_mm": "~10.0",
+     "source": "/home/cgxr/Downloads/KakaoTalk_20260806_210210194.jpg",
+     "derivation": "Row scan of the bright hole at y1460: 194 px / 19.45 px/mm. Rows above/below read 220 px because they cut through the lobed satellites, so the 194 px circular section was used."
+    },
+    {
+     "quantity": "Two isolated plate holes: diameter / centre-to-centre",
+     "value_mm": "3.3-4.0 dia / 25.5 c-to-c",
+     "source": "/home/cgxr/Downloads/KakaoTalk_20260806_210210194.jpg",
+     "derivation": "Blob extraction at threshold 55 inside boxes (1330,1800)-(1450,1930) and (1830,1790)-(1950,1930): 70x78 px and 65x80 px; centres x 1400.0 and 1905.2 => 505 px / 19.8 px/mm. Diameter spread is caused by one-sided shading inside the hole. Included only as a plausibility anchor (M3/M4 clearance)."
+    },
+    {
+     "quantity": "Rectangular U-notch cutout width in the plate",
+     "value_mm": "15.1",
+     "source": "/home/cgxr/Downloads/KakaoTalk_20260806_210210194.jpg",
+     "derivation": "Row scans at y 1700/1800/1900 of the bright cutout: 296-299 px consistently, / 19.7-19.9 px/mm."
+    }
+   ],
+   "confidence": "medium",
+   "caveats": [
+    "I could NOT fully resolve the part's 3D topology. In all three views where the mounting plate is face-on (p00, p02, p05), one blade shows its full flat face (the through-slot passes light) while the other shows only a ~1.5 mm edge, even though both blades' long axes are parallel and equal in length. That means the two blades' planes are ~90 deg apart, not parallel as a U-channel bracket would be. I tested and quantitatively rejected the perspective explanation. I cannot tell from photos alone whether this is the design or whether the part is bent/damaged. This is the single biggest open question and it is what makes item (f) an estimate rather than a measurement.",
+    "Item (f) — depth perpendicular to the plate — is NOT directly measured. No photo places the plate edge-on next to the ruler. The 6-8 mm figure is inferred from a tilt model of one blade and should be treated as UNKNOWN-with-an-estimate.",
+    "Photos _04 and _05 have the part STANDING ON the ruler. I measured the resulting bias empirically in _05: the across-blade span grows from 38.6 mm at the ruler surface to 43.3 mm about 31 mm higher, i.e. roughly +0.4% per mm of height (camera distance ~150-260 mm). Any dimension of an elevated feature read directly off that ruler is therefore inflated by up to ~12-15%. I used _05 only for the base-plane span, and I rejected _04's 78.5 mm length outright — it disagrees with the two flat-lying photos by ~6 mm because it is both elevation-magnified and rotation-foreshortened.",
+    "Photos p00 and p02 have vertical rulers but the part's long axis is measured partly across the ruler direction, so those numbers assume isotropic image scale. I bounded that assumption from the ruler's own perspective gradient: 0.6% across the whole ruler in p02 and 3.4% in p00. p02 is therefore the better source; p00 may carry up to ~2-3% systematic error on cross-ruler distances.",
+    "The plate's far edge touches or overlaps the ruler in the image in both p00 and p02, so its exact outer boundary is uncertain by roughly +/-10 px (~0.5 mm).",
+    "Blade tips are thin and motion/focus blurred. Varying the segmentation threshold (70/80/90) moved the overall extent by 1.3 mm in p02 and by up to 4 mm in p00 (at threshold 70 the p00 tip was cut off entirely). I report the mid-threshold values and the spread.",
+    "Every dimension is a projection of a 3D object onto one image plane. Where the two endpoints of a measurement are at different depths, the projected length underestimates the true 3D distance. This applies most to the corner-to-corner figure in (a').",
+    "The camera focal length / distance was never measured; the perspective estimates (150-260 mm) come from the ruler's own scale gradient and are rough.",
+    "I did not read any project file, CAD, URDF, USD, STL or prior measurement before producing these numbers, per the blind-measurement instruction. I have not compared them against any expected value. Nothing in the repository was created, modified or accessed; all crops were written under the session scratchpad."
+   ]
+  },
+  {
+   "lens": "Blind photogrammetric read of a single disassembled flat plate against a steel mm rule. Only photo `KakaoTalk_20260806_210148446.jpg` (call it P00) has the part lying directly ON the rule blade, so it is the sole scale-bearing view; the other three are used for shape/topology confirmation and one independent ratio cross-check. Headline finding: the photographed part is a ONE-PIECE FLAT PLATE (base flange + triangular yoke arm + pivot eye). It has no fork, no pair of blades, and no through-thickness slot — so the premise \"number of blades / gap between them / interleaved beak\" does not have a positive answer for this object.",
+   "findings": [
+    "Scale established in P00 only. The part rests directly on the rule blade there; in the other three photos the part is held above the table or lies on a different plane from the rule, so their absolute scale is not trustworthy and I did not use it for mm values.",
+    "px->mm anchor: the long cm tick under the '10' label sits at x=770.4 px, the long cm tick under '130' at x=2938.6 px (both verified by overlaying the detected tick on an 8x crop and reading the printed label — /tmp/.../crops/p00_label10.png, p00_label130.png). That is the widest confidently-readable labelled pair: 120 mm over 2168.2 px.",
+    "Because of perspective the pitch is NOT constant: it runs 17.55 px/mm at the left of the rule to 18.55 px/mm at the right. I fit a 1-D projective model x=(A*u+B)/(C*u+1) to 16 cm/half-cm ticks (A=17.3668, B=595.438, C=-2.23762e-4); RMS residual 0.53 px = 0.03 mm. Local horizontal scale across the part is 18.02 -> 18.35 px/mm.",
+    "Vertical scale differs from horizontal (the plate is not perfectly fronto-parallel). I recovered it from the aspect ratio of four circular holes read on 8x grids: dia_y/dia_x = 1.058, 1.081, 1.108, 1.083 (mean 1.083, sd 0.021). So S_y = 1.083 * S_x ~= 19.5-19.9 px/mm. All 'across' dimensions use this.",
+    "Part topology confirmed across all four photos: ONE flat plate. Decisive evidence — in P00 the rule's printed graduations and the words 'AL', '80', '90', 'NGLE' are clearly visible THROUGH both the large rectangular window and the triangular window (/tmp/.../crops/p00_grid.png, z_tri.png). If a second, parallel plate existed behind, those windows would be blocked. Nothing is behind.",
+    "Shape, from the mounting end to the far end: (1) a parallel-sided base flange carrying a large rounded-corner rectangular window, four ~3 mm corner holes, and an obround (slotted) cut-out at the extreme mounting end; (2) a shoulder where both long edges turn inward at roughly 40 deg; (3) a triangular yoke — the arm is split by a triangular through-window into two COPLANAR legs; (4) the legs converge on a rounded lobe carrying a single ~2.9 mm through-bore (a pivot eye).",
+    "The four ~3 mm holes are not a square pattern: 19.75 mm along the part axis by 23.49 mm across it. Both pairs straddle the rectangular window, which sits between them.",
+    "The obround slot is only visible in photo _03 (in P00 it is hidden behind the loose bolt/bearing hardware). Scaled by the hole-diameter ratio it is roughly 15.5 x 5.3 mm, lying across the axis at the extreme mounting end.",
+    "Independent cross-check between two photos with independent scales: plate across-width divided by mounting-hole diameter = 550/57.0 = 9.65 in P00, and 461/48.1 = 9.58 in photo _03 (where the hole images as a 48.1 x 38.9 px ellipse, giving that photo its own foreshortening correction). Those agree to 0.7%, i.e. 28.1 mm vs 28.3 mm. This is the strongest confidence anchor in the whole read.",
+    "Tip profile: a smooth CONVEX rounded lobe, essentially a semicircular clevis eye. No chisel bevel, no hook, no notch, no serration, no flat gripping pad, no rubber/pad seat, no counterbore. The bore centre sits 3.65 mm back from the extreme tip. The whole surface is uniformly coarse and granular (cast/sintered or heavily bead-blasted), which would add friction but is a finish, not a gripping geometry.",
+    "Sheet thickness could not be measured properly. Nothing in these four photos shows the plate edge-on against a scale. My only handle is the apparent 'overhang' band along the tip and lower edges in P00 (6-8 px), which is the parallax of the raised top face over the rule beneath. Converting that needs the camera focal length, which I have to assume (~2850-3200 px for a 4000 px phone frame). That yields 2.2-3.0 mm. Photo _01 shows a bright band along a tilted edge that, if it is the side face, would imply ~1.3 mm — I could not confirm whether that band is the side face or a lit chamfer, so the two estimates disagree and I am reporting thickness as weakly constrained.",
+    "There is no interleaving capability visible. The two 'legs' of the yoke are cut from the same single sheet and lie in the same plane; the gap between them (the triangular window, 15.3 mm across x 9.65 mm deep) opens sideways within the plate, not through its thickness. A mating jaw blade could only enter that opening by travelling normal to the sheet, which is not the direction a jaw closes. So: no interleaved-beak geometry on this part.",
+    "Honest mismatch flag: this object does not read as a gripping jaw. Four M3-class holes on a 19.75 x 23.49 mm rectangle, a big rectangular clearance window, an obround slot, and a lightened yoke ending in a single 2.9 mm pivot eye is the signature of a mounting flange / linkage plate. I found no gripping face anywhere on it. Either the fixed jaw is a different piece, or 'fixed jaw' here means the rigid frame plate that the moving jaw pivots on (the tip bore would then be the hinge-pin seat).",
+    "The bolt/bearing hardware in the frame is a separate loose item, not attached to the plate in any of the four views (in P00 it lies flat on the rule beside the plate, its axis in the image plane while the plate face is toward the camera — geometrically impossible if it passed through the plate). It is a threaded shank of about 10 mm OD and about 17 mm thread length, a bright hex nut about 15 mm across flats, a stack of black rings, a white nylon-insert nut, and a chromed spherical/dome end. These figures are inflated by the cylinder standing proud of the rule and are low precision."
+   ],
+   "numbers": [
+    {
+     "quantity": "(a) Overall maximum extent (base-flange corner to tip of lobe, longest point-to-point)",
+     "value_mm": "42.0 (+/- 1.5)",
+     "source": "/home/cgxr/Downloads/KakaoTalk_20260806_210148446.jpg ; crops /tmp/claude-1000/-home-cgxr-Documents-Robotics-RoArm-Project/e84a79b2-5dad-45ab-a2c7-314bd1420343/scratchpad/crops/p00_grid.png, z_leftedge.png, z_tip.png",
+     "derivation": "Corner (1752,1347) px to lobe tip (2466,1640) px. Along-axis leg via projective model: u(2466)-u(1752) = 104.39-65.13 = 39.27 mm. Across leg: (1640-1347)/19.53 = 15.00 mm. hypot = 42.02 mm."
+    },
+    {
+     "quantity": "(a) Overall bounding box, along the part axis",
+     "value_mm": "39.3 (+/- 0.7)",
+     "source": "same as above (P00)",
+     "derivation": "Left edge at rule reading u=65.13 mm (x=1752 px), lobe tip at u=104.39 mm (x=2466 px). Difference 39.27 mm. Independently sanity-checked: the left edge lies between the 60 and 70 labelled ticks and the tip just left of the 105 tick."
+    },
+    {
+     "quantity": "(a) Overall bounding box, across the part axis (= base-plate height)",
+     "value_mm": "28.1 (+/- 1.0)",
+     "source": "P00 crops z_topedge2.png, z_botedge.png, z_bot2.png ; cross-checked in /home/cgxr/Downloads/KakaoTalk_20260806_210148446_03.jpg (crop p03_plate_edges.png)",
+     "derivation": "Top outer edge y=1347 px, bottom outer edge y=1897 px -> 550 px; S_y = 18.09*1.083 = 19.59 px/mm -> 28.08 mm. Cross-check: width/hole-dia = 9.65 (P00) vs 9.58 (photo _03) -> 28.1 vs 28.3 mm."
+    },
+    {
+     "quantity": "(b) Base-plate width (parallel-sided section, along the axis, mounting end to shoulder)",
+     "value_mm": "25.5 (+/- 1.2)",
+     "source": "P00 crops p00_grid.png, p00_head.png",
+     "derivation": "Left edge u=65.13 mm; shoulder (where both long edges turn inward) at x=2215 px -> u=90.67 mm. Difference 25.54 mm. Shoulder location read to +/-20 px = +/-1.1 mm."
+    },
+    {
+     "quantity": "(b) Base-plate height (across the axis) — same as overall across-extent, the flange is full width",
+     "value_mm": "28.1 (+/- 1.0)",
+     "source": "P00 + photo _03 ratio cross-check",
+     "derivation": "See overall across-extent row; the plate does not widen or narrow before the shoulder."
+    },
+    {
+     "quantity": "(c) Finger/arm length, shoulder to tip (the tapered yoke beyond the base flange)",
+     "value_mm": "13.7 (+/- 1.5)",
+     "source": "P00 crops p00_head.png, z_tip.png, z_tri.png",
+     "derivation": "u(2466) - u(2215) = 104.39 - 90.67 = 13.72 mm."
+    },
+    {
+     "quantity": "(c) Alternative reading — mounting end (far edge of base plate) to tip",
+     "value_mm": "39.3 (+/- 0.7)",
+     "source": "P00",
+     "derivation": "Same as the along-axis bounding box; quoted because 'from the base plate' is ambiguous between the shoulder and the flange's far edge."
+    },
+    {
+     "quantity": "(d) Number of blades",
+     "value_mm": "1 (count, not mm) — a single coplanar blade; the yoke's triangular window splits it into 2 COPLANAR legs, not 2 stacked blades",
+     "source": "P00 p00_grid.png / z_tri.png (rule graduations visible through both windows), photo _02 crop p02_grid.png, photo _03 crop p03_plate_edges.png",
+     "derivation": "Direct observation in 4 views. Decisive: printed rule text is legible through both the rectangular and triangular windows in P00, proving nothing lies behind the sheet."
+    },
+    {
+     "quantity": "(d) Clear gap between blades (through-thickness)",
+     "value_mm": "UNKNOWN / not applicable — no such gap exists on this part",
+     "source": "all four photos",
+     "derivation": "There is only one sheet. No fork, no slot, no parallel second blade anywhere in the four views."
+    },
+    {
+     "quantity": "(d) In-plane opening between the two yoke legs (triangular through-window) — width across the axis",
+     "value_mm": "15.3 (+/- 0.8)",
+     "source": "P00 crop z_tri.png",
+     "derivation": "Left edge of triangle spans y=1480..1782 px = 302 px; S_y = 18.20*1.083 = 19.71 px/mm -> 15.32 mm."
+    },
+    {
+     "quantity": "(d) In-plane opening between the two yoke legs — depth along the axis (base to apex)",
+     "value_mm": "9.65 (+/- 0.6)",
+     "source": "P00 crop z_tri.png",
+     "derivation": "u(2320) - u(2144) = 96.42 - 86.77 = 9.65 mm."
+    },
+    {
+     "quantity": "(e) Sheet thickness",
+     "value_mm": "2.2-3.0 (low confidence); a competing read from photo _01 suggests ~1.3",
+     "source": "P00 crops z_tip.png, z_bot2.png (parallax overhang); /home/cgxr/Downloads/KakaoTalk_20260806_210148446_01.jpg crop p01_edgeface.png (competing read)",
+     "derivation": "Overhang band of the raised top face over the rule = t*tan(theta)*S. At the tip: 6-8 px, theta=atan(466/f); at the bottom edge: ~7 px, theta=atan(400/f). With f=2856-3200 px this gives t=2.2-3.0 mm. No edge-on view against a scale exists in these photos, so this is model-dependent."
+    },
+    {
+     "quantity": "(f) Tip pivot bore diameter",
+     "value_mm": "2.9 (+/- 0.2)",
+     "source": "P00 crop z_bore.png",
+     "derivation": "Dark disc 51.9 px wide at S_x=18.32 -> 2.83 mm; 57.5 px tall at S_y=19.83 -> 2.90 mm. A bright chamfer highlight on the right rim may make the true bore up to ~3.1 mm."
+    },
+    {
+     "quantity": "(f) Tip bore centre set-back from the extreme tip",
+     "value_mm": "3.65 (+/- 0.4)",
+     "source": "P00 crops z_bore.png, z_tip.png",
+     "derivation": "u(2466) - u(2399) = 104.39 - 100.74 = 3.65 mm. Wall beyond the bore ~= 3.65 - 1.45 = 2.2 mm."
+    },
+    {
+     "quantity": "Mounting-hole diameter (4 off)",
+     "value_mm": "2.95 (+/- 0.15) — i.e. nominal 3 mm / M3 clearance",
+     "source": "P00 crops z_TLhole.png, z_TRhole.png, z_BLhole.png",
+     "derivation": "Horizontal dark-disc widths 53.8 / 53.75 / 53.1 px at local S_x 18.05 / 18.21 / 18.05 -> 2.98 / 2.95 / 2.94 mm."
+    },
+    {
+     "quantity": "Mounting-hole pattern, along the part axis",
+     "value_mm": "19.75 (+/- 0.4)",
+     "source": "P00 crops z_TLhole.png, z_TRhole.png",
+     "derivation": "Hole centres x=1812.5 and x=2170.6 px -> u = 68.48 and 88.23 mm."
+    },
+    {
+     "quantity": "Mounting-hole pattern, across the part axis",
+     "value_mm": "23.5 (+/- 0.8)",
+     "source": "P00 crops z_TLhole.png, z_BLhole.png",
+     "derivation": "Hole centres y=1392.2 and y=1851.2 px -> 459 px / S_y 19.54 = 23.49 mm. (Photo _03 gives ~22.4 mm by the hole-diameter ratio method; that view is strongly tilted, so I weight P00.)"
+    },
+    {
+     "quantity": "Central rectangular window, along the axis",
+     "value_mm": "12.5 (+/- 1.0)",
+     "source": "P00 crop z_win_top.png ; cross-check photo _03 crop p03_plate_edges.png",
+     "derivation": "u(2084) - u(1857) = 83.47 - 70.94 = 12.53 mm. Photo _03 ratio method gives 13.9 mm."
+    },
+    {
+     "quantity": "Central rectangular window, across the axis",
+     "value_mm": "21.2 (+/- 1.0)",
+     "source": "P00 crops p00_grid.png, z_win_top.png ; cross-check photo _03",
+     "derivation": "y = 1426..1841 px = 415 px / S_y 19.61 = 21.16 mm. Photo _03 ratio method gives 21.6 mm."
+    },
+    {
+     "quantity": "Obround slot at the extreme mounting end (length x width)",
+     "value_mm": "~15.5 x ~5.3 (+/- 1.5)",
+     "source": "/home/cgxr/Downloads/KakaoTalk_20260806_210148446_03.jpg crop p03_plate_edges.png (hidden behind the bolt in P00)",
+     "derivation": "Slot 253 px wide and 70 px tall in photo _03, scaled by that photo's own elliptical hole calibration (48.1 px = 2.95 mm horizontally, 38.9 px = 2.95 mm vertically)."
+    },
+    {
+     "quantity": "Loose bolt hardware: thread OD / thread length (separate item, not part of the plate)",
+     "value_mm": "~10 / ~17 (low precision)",
+     "source": "P00 crop z_bolt.png",
+     "derivation": "Thread silhouette 200 px tall at S_y 19.32 -> 10.35 mm; threaded run u(1600)-u(1290) = 56.68-39.34 = 17.3 mm. Inflated by the cylinder standing proud of the rule."
+    }
+   ],
+   "confidence": "medium",
+   "caveats": [
+    "PREMISE MISMATCH — read this first. The task described 'the FIXED jaw ... blades ... gap between them ... interleaved beak'. The object in these four photographs has none of that. It is a single flat plate: a parallel-sided mounting flange (4x ~3 mm holes on a 19.75 x 23.49 mm rectangle, a ~12.5 x 21.2 mm rectangular window, a ~15.5 x 5.3 mm obround slot) that tapers at a shoulder into a triangular yoke ending in one rounded lobe with a single ~2.9 mm through-bore. There is no gripping face, no fork, no tine pair. Either this is not the jaw, or 'fixed jaw' is being used to mean the rigid frame plate that the moving jaw hinges on. I did not assume either — I measured what is in frame.",
+    "Answer to the interleaving question: NO, not as photographed. Interleaving requires two blades separated in the thickness direction with a slot between them. This is one sheet ~2-3 mm thick. Its only openings are through-holes in the plane of the sheet; a mating blade could enter them only by moving normal to the sheet, which is not a jaw-closing direction. If the real gripper does interleave, the mating geometry is on a part not shown here.",
+    "Only photo `KakaoTalk_20260806_210148446.jpg` carries a valid scale. In it the part lies flat on the rule blade. In _01 and _02 the part is held above the table, closer to the camera than the rule (measured rule pitch there is 12.5-13.5 px/mm while the part images at roughly 17 px/mm), so any mm value taken from those photos would be ~25% too small. In _03 the part and the rule are on the same table but the part is strongly tilted (a circular hole images as a 48.1 x 38.9 px ellipse) and the rule is far from it; I used _03 only for a scale-free ratio cross-check, never for an absolute number.",
+    "Systematic bias not corrected: the plate sits ON TOP of the rule, so its top face is one sheet-thickness (~2-3 mm) closer to the camera than the graduations. At a plausible 300-400 mm camera distance this inflates every in-plane dimension by roughly 0.6-1.0%, i.e. about +0.3 mm on the 39 mm length. All quoted values are therefore very slightly large.",
+    "The vertical (across-axis) scale rests on assuming the four mounting holes and the tip bore are truly circular. Four independent holes gave dia_y/dia_x = 1.058-1.108 (mean 1.083, sd 0.021), so I used S_y = 1.083*S_x. If any hole is actually slotted or the plate has out-of-plane curvature, every 'across' number (28.1 mm height, 23.5 mm hole pitch, 21.2 mm window, 15.3 mm yoke opening) shifts proportionally. That +/-2% is already folded into the quoted tolerances.",
+    "Thickness is the weakest number in this report and I would not build anything on it. There is no edge-on view against a scale in any of the four photos. The 2.2-3.0 mm figure comes from a parallax-overhang model that needs an assumed camera focal length (I used 2856-3200 px). A bright band along a tilted edge in photo _01 would imply ~1.3 mm instead, and I could not determine whether that band is the true side face or a lit chamfer. Treat thickness as 'somewhere between about 1.5 and 3.5 mm, most likely near 2.5-3'.",
+    "Two features could not be measured in the well-calibrated photo: the fourth (lower-right) mounting hole and the obround slot are both occluded — by the photographer's finger and by the loose bolt/bearing assembly respectively. The obround slot value comes from photo _03 via the ratio method and carries about +/-1.5 mm.",
+    "The exact along-axis extent of the 'base plate' depends on where you declare the shoulder. I placed it at x=2215 px, where both long edges begin turning inward, read to about +/-20 px (+/-1.1 mm). That uncertainty transfers directly and oppositely between the 25.5 mm base length and the 13.7 mm arm length; their sum, 39.3 mm, is the well-determined quantity.",
+    "Photo _03 disagrees with P00 on the hole pattern: _03's ratio method makes both pitches about equal (~22.2 x 22.4 mm) whereas P00 gives 19.75 x 23.49 mm. _03 is strongly tilted with likely oblique (sheared) foreshortening that my axis-aligned correction cannot model, so I weighted P00. If the true pattern matters, re-shoot the plate flat and square-on with the rule touching it.",
+    "I did not touch the frozen repository. No project file was read, written, hashed, executed or parsed; no Isaac/Omniverse/rerun/lerobot/hardware command was run; the banned STL was not accessed. Everything produced lives under the session scratchpad at /tmp/claude-1000/-home-cgxr-Documents-Robotics-RoArm-Project/e84a79b2-5dad-45ab-a2c7-314bd1420343/scratchpad/crops/ (image crops of the four Downloads photos only).",
+    "This measurement is completely independent of the repository's Gate-0 / T3R evidence chain. I had no access to any expected value and made no comparison to one, so it can serve as an unbiased external check — but a ~2 mm-scale mismatch between it and any CAD/URDF figure could equally come from my unmeasured thickness and shoulder-placement uncertainty as from the model."
+   ]
+  },
+  {
+   "lens": "Pure visual SHAPE audit of the sealed Rerun screenshot `t3r_gate0_vismesh_inspection.png` — silhouette reading of the BLUE (gripper_link.stl visual) and GREY (link5.stl visual) point clouds in Panel 2, plus verbatim transcription of Panel 1. All measurements are image-space pixel measurements taken from PIL crops/masks written to scratchpad; no project geometry asset was opened, nothing in the repo was written, and no session markdown was consulted before the visual reading was written down.",
+   "findings": [
+    "SETUP: Read the 4800x2800 RGBA PNG with PIL, convert('RGB'), and wrote JPEG/PNG crops only into /tmp/claude-1000/-home-cgxr-Documents-Robotics-RoArm-Project/e84a79b2-5dad-45ab-a2c7-314bd1420343/scratchpad/crops/ . Nothing in the repo was created or modified. Panel 2 (3D view) occupies full-image pixels approx x=1344..3600, y=58..1600. All 'sub' coordinates below = full-image coords minus (1344,58).",
+    "Q1 ANSWER (what I SEE): The BLUE cloud is NOT only a flat mounting plate. It is a single flat plate-shaped part with (a) a rounded 'hub/root' end carrying the mounting-hole pattern, and (b) a distinctly longer, progressively narrower ARM/BLADE extending away from that hub. Silhouette from the hole pattern outward: a large round central bore surrounded by four small circular lobes/counterbores at ~45-degree spacing (a servo-horn / 4-bolt hub pattern, with GREY link5 points visible through the bore); the plate around that bore is a rounded D-shape; the body then runs outward at roughly constant height (~226-254 px tall) to a clear SHOULDER STEP at sub x~1190-1210 where the lower edge jumps up (bottom edge goes 697 px -> 640 px); past that step the arm continues as a narrowing blade with a large open triangular lightening window and a single diagonal internal rib (background is visible straight through the window, so it is a webbed/ribbed plate, not solid); the blade's upper edge then descends at ~45 deg from sub (1330, y=440) to (1450, y=579) while the lower rail stays nearly flat at y~636-641; the last stretch (sub x=1450..1490) is a thin near-parallel-sided rail only ~56 px thick; it ends at sub x~1516 in a BLUNT, slightly chamfered/stepped wedge tip — no needle point, no knife edge.",
+    "Q1 GEOMETRIC ORIENTATION (important): the blade lies roughly PERPENDICULAR to the green tool axis in this frame. The green axis is vertical in the image and passes essentially through the blue hub bore (green axis x-center sub~959; hub bore center sub~965 — a green speck is visible through the bore). The blade extends laterally to the right, its tip ~557 px out from the axis, and the whole blue body stays well ABOVE the TCP. So the blue jaw's long dimension contributes almost nothing to depth measured along the tool axis in this pose.",
+    "Q2 ANSWER (ratios, image-space): BLUE bbox = 698 px wide x 300 px tall (sub x 818-1516, y 400-700), i.e. overall aspect ~2.3:1. Hub/root plate: outward length ~355 px (sub x 855 -> shoulder 1210), height ~226-254 px, hub-bore ~82 px across (~127 px including the four lobes). Distal blade (shoulder step -> tip) ~306 px long, tapering from ~225 px to ~56 px thick. Therefore: blade length / plate height ~= 306/230 ~= 1.3; blade length / plate outward length ~= 306/355 ~= 0.86; measured instead from the hub-bore CENTRE to the far tip (551 px) / plate height (230 px) ~= 2.4. Blade tip thickness / plate height ~= 56/230 ~= 1/4. Summary: the blade is roughly as long as the plate body itself and about 2.4 plate-diameters from bore centre to tip, while being only about a quarter as thick at its far end.",
+    "Q3 ANSWER (GREY link5 bottom): It does NOT end in a slender downward blade or spike. Above, link5 is a wide box housing (~390 px wide, sub x 745-1136) which continues down as a thin flat wall/rib seen nearly edge-on with a stepped side lobe; the descending wall then converges and the very terminus is a BLUNT BOSS / PLUG: measured row widths go 190 px (y=900) -> 113 px (y=1060) -> 45 px (y=1110) -> 39 px (y=1130) -> 25 px (y=1160), then the cloud stops abruptly at y~1171. Crucially the last ~60 px are near-parallel-sided (right edge holds at x~899 -> 887 while the left edge only creeps 854 -> 865), and the bottom is a flat, slightly slanted/rounded cut face. In the 5x crop it reads unambiguously as a stubby flat-ended plug, not a taper-to-a-point. This is consistent with Panel 1's own wording 'plug-dominated', which I read only AFTER writing this observation.",
+    "Q3 CONTEXT: the grey plug's blunt end sits offset to the LEFT of the green tool axis (sub x~868-899 vs axis 959, i.e. ~88 px out) and terminates right about at the red/orange L_MIN ring plane. It visually occludes part of the orange ring where they cross, so it is in front of that arc. I cannot tell by eye whether the plug bottom is a millimetre above or below the L_MIN plane — the ellipse perspective makes that unresolvable visually. UNKNOWN.",
+    "Q4 ANSWER (GREEN TCP vs BLUE cloud): the green TCP sphere is well BELOW the blue cloud and essentially directly beneath the blue hub bore. TCP sphere centre sub (959, 1100), diameter ~34 px; blue cloud's lowest pixel y=700, hub-bore centre y=580. So TCP is ~400 px below the blue cloud's bottom edge and ~520 px below the hub-bore centre. In plate-size units: ~1.7 plate-heights below the blue bottom edge, ~2.3 plate-heights below the hub centre, or ~0.57 x the blue cloud's overall length. Horizontally the TCP is within ~6 px of the hub bore's x-centre, i.e. beside nothing — it is straight underneath the pivot, NOT underneath the blade tip (the tip is ~557 px off-axis to the right).",
+    "Q5 ANSWER — Panel 1 verbatim. TITLE: 'G0b T3R Gate-0 visual-mesh distal depth audit (case g0b_d420)'. BULLET 1: 'verdict: GATE0_SOURCE_ABSENT (authoring-source layer — not physics, not real-gripper, not visual-matches-real)'. BULLET 2: 'fixed jaw link5.stl (1d63f374a78c): L_vis=4.458 mm → FAIL'. BULLET 3: 'moving jaw gripper_link.stl (7946a374e24a): L_vis peak=3.956 mm @ q5=5.10 deg → FAIL'. BULLET 4: 'gate: L_MIN=5.5 mm (from x=L-m, 24th §4-1), indet half-width 0.5 mm, finger window r<=30 mm'.",
+    "Q5 (cont.) BULLET 5: 'collision cross-ref: assembly max depth 4.458 mm (plug-dominated), rim band empty 14/14 angles; visual-minus-collision: fixed -0.00 mm, moving -0.50 mm'. BULLET 6: 'peak localization (panel M2/M3, report-only): fixed r_at_l_vis=10.12 mm az=172 deg; moving(peak) r_at_l_vis=0.11 mm az=-88 deg; l_vis_wall fixed=3.517823669433595 / moving=2.7951933806909803 mm, moving grasp-range(q5<=45)=3.9558267017595905 mm (r<12.5 mm = near-axis non-wall structure → manual review rule)'.",
+    "Q5 (cont.) BULLET 7: 'scene: grey=link5 visual, blue=gripper visual (anchor + coarse-peak poses), green=TCP+axis, orange=cylinder D29 at hover margin 4.5 mm (reference only), red rings=L_MIN plane at wall annulus radii 12.5/20.0 mm'. BULLET 8: 'sampling: raw-triangle surface 0.50 mm pitch (no hulling — visual mesh is non-convex); view decimated 1/16 (inspection-only); authority = stdout + results JSON'.",
+    "SCALE CALIBRATION derived from the render itself (used for the mm columns): the outer RED ring is labelled r=20.0 mm and its image ellipse spans sub x 786..1135 = 349 px across => 349 px / 40 mm = 8.73 px/mm horizontally at the L_MIN plane. Independent cross-check: the ORANGE 'cylinder D29' rim spans sub x 834..1088 = 254 px => 254/29 = 8.76 px/mm. Agreement to <0.5%. Vertical (along tool axis) scale: the red ring ellipse centre sits at sub y~1154 while the TCP sphere centre is at y~1100, a 54 px offset that should equal L_MIN=5.5 mm => ~9.8 px/mm vertically. Both scales are only strictly valid at the L_MIN plane depth.",
+    "CAUTION I want on record: Panel 1 bullet 7 states the blue is drawn at TWO poses ('anchor + coarse-peak poses'). I could not visually separate two silhouettes — the blue reads as one coherent arm with one tip and one bore. If the two poses differ by only a few degrees of q5 they would nearly coincide, and the doubled outline I half-suspect near the 45-degree upper edge and at the tip step could be either a second pose or genuine chamfer/rib geometry. UNKNOWN which."
+   ],
+   "numbers": [
+    {
+     "quantity": "image scale, horizontal, at the L_MIN ring plane",
+     "value_mm": "0.1146 mm/px (8.73 px/mm)",
+     "source": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3r_gate0_vismesh_inspection.png (Panel 2); crop scratchpad/crops/grey_bottom.jpg",
+     "derivation": "Red-pixel mask over sub-panel rows 1040-1280 gives the outer red ring spanning sub x 786..1135 = 349 px. Panel-1 text labels that ring r=20.0 mm => 349 px / 40 mm. Cross-checked against the orange 'cylinder D29' rim spanning 834..1088 = 254 px => 254/29 = 8.76 px/mm."
+    },
+    {
+     "quantity": "image scale, vertical (along tool axis), near the TCP",
+     "value_mm": "0.102 mm/px (9.8 px/mm)",
+     "source": "same PNG, Panel 2",
+     "derivation": "Green TCP sphere centre at sub y=1100 (green row-width peak of 31 px at y=1100); red ring ellipse vertical extent 1061..1248 => centre y~1154. 54 px offset assumed = the stated L_MIN 5.5 mm."
+    },
+    {
+     "quantity": "BLUE cloud overall length (bounding box width)",
+     "value_mm": "~80 mm (698 px)",
+     "source": "blue-pixel mask of Panel 2; crop scratchpad/crops/blue_mask.jpg",
+     "derivation": "Blue mask (B>110, B-R>40, B-G>25) bbox sub x 818..1516 = 698 px; 698 x 0.1146 mm/px. Depth-dependent, see caveats."
+    },
+    {
+     "quantity": "BLUE hub/root plate height (short dimension near the bore)",
+     "value_mm": "~26 mm (226-254 px)",
+     "source": "blue-pixel column profile of Panel 2",
+     "derivation": "Per-column blue extent: x=950 -> 445..699 (254 px); x=970 -> 471..697 (226 px). Taken as ~230 px x 0.1146."
+    },
+    {
+     "quantity": "BLUE hub/root plate outward length (left edge to shoulder step)",
+     "value_mm": "~41 mm (355 px)",
+     "source": "blue mask column profile",
+     "derivation": "Left edge sub x~855 to the shoulder step at x~1210 where the bottom edge jumps 697 -> 640 px."
+    },
+    {
+     "quantity": "BLUE distal blade length (shoulder step to tip)",
+     "value_mm": "~35 mm (306 px)",
+     "source": "blue mask column profile; crop scratchpad/crops/blue_tip.jpg",
+     "derivation": "Shoulder at sub x~1210, tip at sub x~1516 => 306 px x 0.1146."
+    },
+    {
+     "quantity": "BLUE hub-bore centre to blade tip",
+     "value_mm": "~63 mm (551 px)",
+     "source": "blue mask; crop scratchpad/crops/blue_hub.jpg",
+     "derivation": "Bore centre sub x~965, tip sub x~1516 => 551 px x 0.1146."
+    },
+    {
+     "quantity": "BLUE blade thickness at the thin distal rail",
+     "value_mm": "~6.4 mm (56 px)",
+     "source": "blue mask column profile",
+     "derivation": "x=1450 -> 577..636 (59 px); x=1470 -> 579..635 (56 px). Taken as 56 px x 0.1146."
+    },
+    {
+     "quantity": "BLUE bore diameter (central hole) / with 4 lobes",
+     "value_mm": "~9.4 mm / ~14.6 mm (82 px / 127 px)",
+     "source": "crop scratchpad/crops/blue_hub.jpg",
+     "derivation": "Hole edge-to-edge measured on the 3x hub crop, divided back by 3, x 0.1146. Coarse — the point cloud edge is fuzzy."
+    },
+    {
+     "quantity": "Ratio blade length : plate height (image space)",
+     "value_mm": "~1.3 (dimensionless)",
+     "source": "derived from the two rows above",
+     "derivation": "306 px blade / 230 px plate height."
+    },
+    {
+     "quantity": "Ratio bore-centre-to-tip : plate height (image space)",
+     "value_mm": "~2.4 (dimensionless)",
+     "source": "derived",
+     "derivation": "551 px / 230 px."
+    },
+    {
+     "quantity": "GREY link5 housing width (upper box)",
+     "value_mm": "~45 mm (390 px)",
+     "source": "grey-pixel row profile of Panel 2; crop scratchpad/crops/grey_column.jpg",
+     "derivation": "Grey mask row y=210 spans sub x 736..1136 = 400 px; y=60 spans 745..1136 = 391 px. Taken as ~390 px x 0.1146."
+    },
+    {
+     "quantity": "GREY terminal plug width, 5 px above the end",
+     "value_mm": "~2.6 mm (23 px)",
+     "source": "grey mask fine row scan; crops grey_tip.jpg, grey_tip_mask.jpg",
+     "derivation": "Row y=1165 spans sub x 865..887 = 23 px. Widths above: y=1110 -> 45 px, y=1130 -> 39 px, y=1150 -> 31 px. Cloud stops at y~1171."
+    },
+    {
+     "quantity": "GREY plug lateral offset from the green tool axis",
+     "value_mm": "~10 mm (88 px)",
+     "source": "grey mask + green mask",
+     "derivation": "Plug centre sub x~871 vs green axis centre sub x~959 => 88 px x 0.1146 = 10.1 mm. (Independently matches Panel 1's stated fixed r_at_l_vis=10.12 mm, read after measuring.)"
+    },
+    {
+     "quantity": "GREEN TCP below the BLUE cloud's lowest point",
+     "value_mm": "~41 mm vertical (400 px)",
+     "source": "green + blue masks of Panel 2; crop scratchpad/crops/blue_vs_tcp.jpg",
+     "derivation": "TCP sphere centre sub y=1100; blue lowest pixel y=700 => 400 px x 0.102 mm/px (vertical scale)."
+    },
+    {
+     "quantity": "GREEN TCP below the BLUE hub-bore centre",
+     "value_mm": "~53 mm vertical (520 px)",
+     "source": "green + blue masks",
+     "derivation": "1100 - 580 = 520 px x 0.102 mm/px."
+    },
+    {
+     "quantity": "GREEN TCP horizontal offset from the BLUE hub bore",
+     "value_mm": "~0.7 mm (6 px) — effectively coincident",
+     "source": "green + blue masks",
+     "derivation": "Green axis line centre sub x~959; hub bore centre sub x~965."
+    },
+    {
+     "quantity": "GREEN TCP sphere rendered diameter",
+     "value_mm": "~3.9 mm (34 px)",
+     "source": "green mask row-width scan",
+     "derivation": "Peak green row width 31 px at y=1100, 27 px at y=1110, 20 px at y=1090 => ~34 px full extent. Marker size only; not a geometric quantity."
+    }
+   ],
+   "confidence": "medium",
+   "caveats": [
+    "All lengths are IMAGE-SPACE measurements under a perspective projection with an unknown camera. Foreshortening is not corrected, so the mm values are order-of-magnitude only. The mm/px scale was calibrated at the L_MIN ring plane; the BLUE cloud sits well above that plane at a different depth, so BLUE mm values in particular could be off by a substantial factor. The dimensionless ratios (Q2) are also image-space and would only equal the true 3D ratios if the plate and blade lie in a plane parallel to the image plane.",
+    "Panel 1 states the blue is drawn at TWO poses ('anchor + coarse-peak poses'). I could not visually separate them; the reported silhouette is the UNION. If the two poses differ appreciably in q5, my 'blade' outline may be an envelope of two overlapping fingers rather than one finger's true profile. UNKNOWN.",
+    "The render is a decimated point cloud (Panel 1: 'view decimated 1/16', 0.50 mm surface sampling pitch) drawn as spheres, so every silhouette edge is fuzzy by roughly one sphere radius; I estimate +/-5 to +/-10 px on each edge measurement, and the 23 px plug-tip width is near that noise floor.",
+    "Colour masks used fixed RGB thresholds. Dim/shaded blue or grey points at silhouette edges may be missed, and grey-mask rows were manually windowed to x 200-1800 (or 600-1100) to exclude the ground grid lines and the panel header text. Bounding boxes could therefore be slightly conservative.",
+    "Whether the GREY plug's blunt end is above or below the L_MIN ring plane in 3D is NOT visually resolvable — the rings are perspective ellipses and the plug is off-axis. I report only that it terminates at approximately that plane and occludes part of the orange arc.",
+    "In the render's font, lowercase 'l' and uppercase 'I' are near-identical. In bullet 6 I transcribed 'r_at_l_vis' and 'l_vis_wall' with lowercase L by analogy with 'L_vis' elsewhere, but the glyph is ambiguous.",
+    "I did not open, hash, or parse any STL/USD/OBJ asset, did not touch gripper_left_link.stl, did not re-run or overwrite the audit script or any t3r_gate0_vismesh_* artifact, ran no Isaac/Omniverse/rerun/lerobot command, and wrote nothing into the repository. Only the PNG was read; all crops went to the scratchpad.",
+    "Per the task instruction, I wrote the visual reading before consulting the session markdown, and in fact never opened any session markdown at all. The only text I read is Panel 1 inside the image itself — which is why the 'plug-dominated' and 'r_at_l_vis=10.12 mm' agreements noted in the findings are genuine independent confirmations of my pixel measurements, not inputs to them."
+   ]
+  },
+  {
+   "lens": "METRIC-SEMANTICS audit of the sealed G0b T3R Gate-0 visual-mesh audit: what l_vis operationally is in the script, what the JSON fields do and do not measure, and whether the measured facts entail the \"source contains no distal jaw finger\" proposition asserted in the 31st session doc and D427. Read-only; no re-run, no asset parsing, no writes to the repo.",
+   "findings": [
+    "Q1 — l_vis operational definition, from source only (sim_scripts/g0b_t3r_gate0_visual_mesh_distal_depth_readonly_audit.py). POINT SET: `sample_triangles()` (L232-250) returns the raw STL triangle SOUP vertices (`tris_m.reshape(-1,3)`) PLUS a uniform barycentric lattice per triangle with subdivision n = ceil(max_edge / 0.0005 m) — i.e. SURFACE samples at <=0.5 mm pitch. No hulling, no interior, no volume. Sources are exactly two hardcoded files in `VIS_PINS` (L122-125): gripper_link.stl, link5.stl. FRAME: `depth_r_mm()` (L253-259) operates on points expressed in the link5 URDF frame; for link5 the STL sits at identity (GV2 gates visual origin xyz=0/rpy=0/scale=0.001, L442-448), for gripper_link the points are pushed through `gripper_T_l5(joint,q5) = T0 @ Rz(q5) @ inv(T1)` (L347-350) from the frozen attempt3 USD joint. REFERENCE PLANE: the plane z = TCP_LOCAL[2] = 0.115428 m in the link5 frame (L144), i.e. a plane NORMAL TO THE LINK5 +Z AXIS through the URDF `link5_to_hand_tcp` origin — not a point, not a sphere. SIGN: `depth = (z - 0.115428)*1000`, so POSITIVE = further along link5 +z = 'below TCP toward the object'; material above the TCP returns negative depth. WINDOW: `l_vis_mm()` (L262-264) masks `r <= 30.0 mm` where `r = hypot(x,y)*1000` about the link5 z-axis through x=y=0. The window is an INFINITE cylinder: it is unbounded in depth in BOTH directions and has no azimuthal or axial restriction. MAXIMISATION: `depth[m].max()` — a single scalar = the depth of the single deepest sampled point inside that cylinder (ties resolved by numpy argmax first-index, which is exactly the near-axis tie-break degeneracy the 31st doc §3 note flags). For the fixed body it is evaluated once (pose-free, L505-506). For the moving body it is additionally maximised over q5: coarse grid `[88.3100] + arange(88.0, -0.001, -0.25)` (L522), then a refine grid `arange(argmax-1.0, argmax+1.0, 0.02)` (L531-533), and the REFINED argmax is what the gate consumes (L540). Verdict rule `tri_state()` (L322-327): PASS if l_vis > 6.0, FAIL if l_vis < 5.0, else INDETERMINATE; any FAIL -> GATE0_SOURCE_ABSENT (L609-614). So l_vis is, in one sentence: the maximum signed protrusion of surface samples past one authored plane, inside one radial cylinder, maximised over one joint angle.",
+    "Q2 — `moving_gripper_link.peak_point.body_frame_m` = [0.06708260, -0.00598342, -0.01893356] m. MEANING: `peak_point(d_pk, r_pk, pts_pk, grip_pts_g)` (L547) passes `grip_pts_g` as the fourth argument, and `grip_pts_g` is the UNTRANSFORMED sampled mesh (L521: `meshes['gripper_link']['pts']` = binary STL coords x 0.001). So body_frame_m is the same physical point expressed in gripper_link's OWN mesh/link frame (identical to the URDF link frame because GV2 gated the visual origin to identity). It is NOT a tool-frame coordinate and NOT comparable to the depth/r numbers. The companion `tool_frame_m` = [3.215e-06, -1.1257e-04, 0.11938392] m reproduces depth = (0.11938392-0.115428)*1000 = 3.9559 mm and r = 0.1126 mm exactly. DISTANCE FROM BODY ORIGIN: |(67.083, -5.983, -18.934) mm| = 69.96 mm. COMPARISON TO mesh_stats.gripper_link.bbox_mm = [77.850, 25.240, 39.368]: the bbox DIAGONAL is 90.816 mm (the same 90.8 mm the script itself quotes in `depth_error_bound_derivation`), so the peak point sits at 77.0% of the body's full diagonal extent from its own origin, and its x-coordinate alone is 86.2% of the body's longest extent (77.850 mm). CONSEQUENCE: the point that produced the verdict-driving peak depth is a far-field, distal-end feature of the moving jaw mesh — NOT a near-origin artefact. The metric did in fact latch onto the tip of the jaw lever. What it reports is that this tip, at its best sweep pose (q5=5.10 deg, near-closed), lands 0.113 mm from the tool axis and only 3.956 mm past the TCP plane. Caveat: mesh_stats records EXTENTS only, not min/max coordinates, so the point cannot be pinned to a specific bbox face from the JSON alone.",
+    "Q3 — Shape/extent fields in the JSON: essentially none that bear on the verdict. Exhaustive sweep of the JSON: (a) `mesh_stats.<body>.bbox_mm` is the ONLY true extent measurement — an axis-aligned whole-body bbox in the body's own frame. It is computed inside the GV3 units-sanity gate (script L467-468: `ok = all(bbox > 0.005) and all(bbox < 0.4)`) and reused only for the angular error bound; it never enters `tri_state`, it is whole-body (cannot isolate a finger), and it is not tool-frame. (b) `peak_point.{r_mm, azimuth_deg, tool_frame_m, body_frame_m}` and `r_at_l_vis_mm` localise ONE point — position, not extent or silhouette. (c) `max_depth_in_footprint_mm` (r<=14.5), `max_depth_in_wall_annulus_mm` (12.5<=r<=20) and `l_vis_mm` (r<=30) form a 3-band radial decomposition — the closest thing to shape in the JSON — but each band still reports a MAX DEPTH RELATIVE TO THE TCP PLANE. (d) `n_pts_in_rim_band` / `min_r_mm_in_rim_band`: note `rim = (depth>=5.0)&(depth<=15.0)` in `body_metrics()` (L271) has NO radius restriction, so `n_pts_in_rim_band=0` is an all-radii statement — but it is still a depth-band occupancy count, not an extent. VERDICT ON Q3: every field that can move the verdict is a max-depth-relative-to-the-TCP-plane statistic. No field measures span, silhouette, projected area, finger width, protrusion direction, or thickness. The sibling artifact `t3r_gate0_vismesh_bands.csv` (70 rows x 8 poses) does carry a partial radial PROFILE (per 0.5 mm depth band: n_pts, min_r, max_r inside r<=30), which is the nearest thing to a silhouette anywhere in the run — but it too is indexed by depth relative to the TCP plane, and it is clipped to depth in [-5, +30] mm and r <= 30 mm, so it cannot see the body above -5 mm depth either.",
+    "Q4 — STRICT LOGIC: the measured facts entail P2, not P1. P2 as actually established: 'Among <=0.5 mm-pitch surface samples of the two URDF-pinned visual STLs, expressed in the link5 frame, no sample lies more than 4.4576 mm (link5, static) or 3.9559 mm (gripper_link, over q5 in [0, 88.31] deg) past the plane z=115.428 mm within r<=30 mm of the link5 z-axis.' P1 as asserted: 'the authoring source STL contains no distal jaw finger geometry.' THE GAP, in five separable pieces. (i) THRESHOLD vs PRESENCE. L_MIN=5.5 mm is a VIABILITY floor, derived in the script header (L22-27) as x = L - m with m = 5.5 mm margin and T1-real grip depth x in (0,12] mm. FAIL therefore means 'this material cannot yield an operationally usable grip depth', not 'this material does not exist'. The script itself states the correct proposition at L26-27 — 'Source geometry shallower than this cannot yield an in-range L' — which presupposes that geometry EXISTS and is merely shallow. The prose escalates 'shallow' to 'absent'. (ii) The escalation is not academic: the fixed body's 4.4576 mm is only 0.0424 mm below the alternative D426 G-e floor of 4.5 mm that the gate_contract text explicitly names and declines to use. Against that floor the fixed body is inside the preregistered sweep error bound (0.198 mm) of the boundary. The 'ABSENT' label is a function of which of two documented floors was pinned. (iii) MAX-OF-A-SCALAR DISCARDS SHAPE. l_vis cannot distinguish a 0.5 mm pimple from a 14 mm-wide finger face at the same depth, and it returns a large NEGATIVE number for a fully-formed finger that happens to sit above the plane. Deriving P1 from P2 requires the unmeasured auxiliary premise 'any distal jaw finger, if present, must place material >=5.5 mm past THIS TCP plane within r<=30 mm at some q5 in [0,88.31] deg'. That premise is a definition of what a finger must look like, not an observation. (iv) THE PLANE IS AN ASSUMPTION. GV2 (L452) only checks that the hardcoded TCP constant equals the URDF's own `link5_to_hand_tcp` origin — a self-consistency check against the same file. Nothing in the audit independently establishes that the URDF TCP is at the physically correct height. A +0.55 mm error in that one constant lifts the fixed body out of FAIL; +1.55 mm makes it PASS. The entire verdict rides on an authored scalar that was gated only against itself. (v) SCOPE OF 'THE SOURCE'. P2 is about two files. `sources.dead_asset` records gripper_left_link.stl with `used: false` — excluded by policy, not by measurement. `parse_urdf()` (L356-368) iterates links but `continue`s on any link not in the hardcoded VIS_PINS, so the artifact structurally CANNOT evidence that these two meshes are the complete jaw visual set. 'The authoring source' as a corpus is therefore unaudited beyond two files. CONCLUSION: P2 is established (subject to Q6). P1 is a re-description, not an entailment. The defensible bridge statement is P2': 'no material in either pinned visual mesh is positioned to act as a finger under the assumed TCP plane, the r<=30 mm window and the 5.5 mm viability floor.'",
+    "Q4-supporting, from the sealed evidence itself: the record contains positive evidence that distal jaw material EXISTS, which is what makes the P1 wording load-bearing rather than pedantic. (a) bands.csv, link5 static: every 0.5 mm depth band from -5.0 up to the terminal 4.0-4.5 band is occupied (390-814 pts per band), with min_r pinned at ~10.03-10.15 mm and max_r tapering monotonically 17.51 -> 12.26 mm as depth increases. That is a tapering downward prong, not an absence. (b) I cropped and viewed the sealed decision screenshot (t3r_gate0_vismesh_inspection.png, 4800x2800) read-only into the scratchpad: the 3D panel shows the grey link5 cloud terminating in a narrow, tapering vertical TAB that descends to just about the red L_MIN ring plane. Visually there IS a fixed-jaw prong; it simply stops ~1 mm short of the red rings. (c) bands.csv, gripper_link at peak_5.1000: material tapers from max_r 12.36 mm at depth -5 to max_r 3.78 mm at depth 3.5-4.0, with min_r reaching 0.10 mm — i.e. the moving jaw tip converges onto the tool axis and dips ~3.96 mm below the plane. (d) `visual_minus_collision_max_depth_mm.fixed_link5 = -3.3e-06 mm` proves the collision cook reproduced that prong to micrometres. Therefore D427's inference '(소스에 쿡할 기하가 없음)' — 'there is no geometry in the source to cook' — is contradicted by the run's own numbers: re-decomposition would faithfully reproduce a 4.458 mm prong. The accurate statement is 'would reproduce a prong 1.04 mm short of the preregistered viability floor', which is a quantitatively different claim and one that does not by itself force the 'hand-authoring only' branch.",
+    "Q5 — Verbatim assertions of P1. 31st session doc (claudedocs/session_20260806_31st_g0b_t3r_gate0_single_run_source_absent_verdict.md): L91-92 (§4, PNG inspection) '**핵심 관찰: L_MIN 깊이의 벽 환형 대역에 도달하는 메시 재질이 전무** — link5는 축 근방 플러그 영역만 아래로 돌출, 이동 조는 수평 플레이트 형상으로 원위 손가락 부재가 시각적으로 명백.' | L94-95 'fixed 피크 r=10.12mm(<12.5) = 플러그 아날로그, moving 피크 r=0.11mm = 근축 구조물 — **어느 쪽도 조(jaw) 벽면 재질이 아님**을 명시 확인.' | L105-106 (§5-1) '**D368 정황 → 실증 승격**: 시각 메시(저작 소스) 자체에 조 원위부 기하가 없다.' | L111-113 (§5-3) '**[추론 표기]** 같은 소스를 재분해하는 Arm-A 경로도 원위 손가락을 만들어낼 수 없다(소스에 쿡할 기하가 없음)' | L114-116 (§5-4) '**실물 그리퍼에는 있는 원위 손가락이 자산(시각+충돌)에는 없다**'. DECISIONS.md: L25478 (D427 header) '시각 메시(저작 소스) 자체에 조 원위부 기하 부재' | L25494-25496 (Implication ①) '① D368 정황 → 실증 승격: 저작 소스(시각 STL) 자체에 원위 손가락이 없다 — Arm-F/D 증분 저작은 시각 메시에서 파생 불가, **수제 저작만 가능**.' | L25496-25498 (Implication ②) '② ... [추론 표기] 같은 소스를 재분해하는 Arm-A도 원위 손가락을 복원할 수 없다(소스에 쿡할 기하가 없음)'. WORDING COMPARISON: every one of these says '없다 / 부재 / 전무' (does not exist / absent / none whatsoever) — a shape-existence predicate. What was measured is '<5.0 mm past one authored plane inside r<=30 mm'. Two mitigating notes in fairness: (a) §5-3 and D427-② are explicitly tagged '[추론 표기]' (marked as inference), and (b) the only P1-shaped evidence anywhere in the record is the human PNG reading at 31st doc L91-92 — a qualitative look at a 1/16-decimated cloud from one frozen camera — not a JSON field. The D427 header, by contrast, carries no inference tag and states absence as the verdict itself.",
+    "Q6 — Mechanisms in the script that could hide a genuinely present finger, most to least material. (1) TCP CONSTANT, GATED ONLY AGAINST ITSELF (L144, L452): the reference plane is one authored scalar; GV2 compares it to the URDF value it was copied from. A physically mis-placed `link5_to_hand_tcp` shifts every depth uniformly. Sensitivity: +0.55 mm clears the fixed body of FAIL, +1.55 mm makes it PASS. This is the single largest unverified lever, and nothing in this audit or in D427 constrains it. (2) URDF COVERAGE IS HARDCODED, NOT DISCOVERED: `parse_urdf()` (L356-368) skips every link not in VIS_PINS, and reads `link.find('visual')` — the FIRST `<visual>` child only. URDF permits multiple `<visual>` elements per link; a finger authored as a second visual on link5 or gripper_link would be neither loaded nor flagged, and GV2 would still pass on the first. Whether the URDF actually has extra visuals or extra jaw links is UNKNOWN — I did not open it (not in the allowed read set), and critically the sealed JSON cannot answer it either, because it only records the two pinned entries. (3) DEAD-ASSET EXCLUSION BY POLICY: gripper_left_link.stl is sha-recorded with `used:false`. If finger geometry lives there, the audit is blind to it by construction, not by evidence. This is exactly the 32nd-session lead. (4) WINDOW RADIUS CLIPPING (r<=30 mm): the JSON shows the clip is ACTIVE at mid-sweep — `anchors['60.0000'].r_at_l_vis_mm = 29.995` and `anchors['45.0000'].r_at_l_vis_mm = 29.982`, i.e. at those poses the argmax sits flush against the window wall, so deeper material just outside r=30 mm would be invisible. At the verdict poses (r_at = 10.12 and 0.11 mm) the clip is not binding, which limits the damage — but the metric is structurally blind beyond 30 mm at every pose. (5) SWEEP RANGE INCOMPLETE AT THE OPEN END: the grid runs [0, 88.3100] deg while the USD limits recorded in `frames.joint_limits_deg` are [0, 90.0117] — 1.70 deg of the authored range is never sampled. `coarse_l_vis_mm` is monotone decreasing toward the open end (-52.885 at 88.31), so the global max is almost certainly not there, but strictly it is unswept. (6) SINGLE ARTICULATION: only `link5_to_gripper_link` is swept. Any other DOF, and any second moving finger not modelled as this one body, is outside the experiment. (7) MAX-ONLY AGGREGATION: one scalar per pose; a finger whose material is entirely above the plane returns a negative l_vis and is indistinguishable from no material at all. (8) TASK-DIRECTION FRAMING: depth is measured only along +z. A jaw feature designed to engage laterally (side-approach) contributes nothing to l_vis no matter how large. (9) MINOR / PROPERLY HANDLED: 0.5 mm surface pitch bounds in-triangle miss to <~0.3 mm; coarse/refine angular understatement is preregistered at 0.198 / 0.0159 mm and both FAIL margins (0.542 / 1.044 mm) exceed it, so the tri-state is not boundary-adjacent under its own error model; `load_binary_stl` would abort rather than silently truncate; float32 STL precision is ~1e-3 mm at this scale. (10) REPORTING NUANCE, NOT A BLIND SPOT: for the fixed body `peak_point()` is called with the link5 point array as BOTH tool and body argument (L510), so `fixed_link5.peak_point.body_frame_m` is a duplicate of `tool_frame_m` and carries no independent information — visible in the JSON where the two arrays are byte-identical.",
+    "Cross-check on a prose claim that the JSON does not fully support: 31st doc L52-53 and D427 L25486-25487 both say the rim band (depth 5-15 mm) was empty '양 body 전 포즈' / 'all poses'. `n_pts_in_rim_band` is only computed inside `body_metrics()`, which runs at 8 poses total (link5 static, moving refined peak, and the 6 anchors) — the 354-pose coarse loop (L523-528) computes only l_vis and the wall max. Within r<=30 mm the all-pose claim IS entailed transitively (rim needs depth>=5 and l_vis<5 everywhere), but the rim mask has no radius restriction, so the ALL-RADII reading of that sentence is verified at 8 poses, not 354. Minor, but it is the kind of over-generalisation this audit is meant to catch."
+   ],
+   "numbers": [
+    {
+     "quantity": "l_vis, fixed jaw (link5) — verdict driver",
+     "value_mm": "4.4576",
+     "source": "t3r_gate0_vismesh_results.json fixed_link5.l_vis_mm = 4.457620117187505",
+     "derivation": "max over surface samples with r<=30 mm of (z - 0.115428)*1000, link5 frame, single pose (script L262-264, L505-506)"
+    },
+    {
+     "quantity": "l_vis, moving jaw (gripper_link) peak over sweep",
+     "value_mm": "3.9559",
+     "source": "results.json moving_gripper_link.peak.l_vis_mm = 3.9559235407753275 @ q5 = 5.0999999999999766 deg",
+     "derivation": "same metric, maximised over the 0.02 deg refine grid centred on the coarse argmax (script L533-540)"
+    },
+    {
+     "quantity": "L_MIN viability floor / FAIL boundary / PASS boundary",
+     "value_mm": "5.5 / 5.0 / 6.0",
+     "source": "results.json gate_contract.l_min_mm, indet_half_mm; script L150-151, tri_state() L322-327",
+     "derivation": "preregistered; L_MIN from x = L - m with m = 5.5 mm margin and T1-real grip depth x in (0,12] mm"
+    },
+    {
+     "quantity": "FAIL margin below the 5.0 mm boundary — fixed / moving",
+     "value_mm": "0.5424 / 1.0441",
+     "source": "computed from results.json l_vis values",
+     "derivation": "5.0 - 4.457620117187505 and 5.0 - 3.9559235407753275"
+    },
+    {
+     "quantity": "Fixed-jaw shortfall against the ALTERNATIVE floor named in the same contract (D426 G-e = 4.5 mm)",
+     "value_mm": "0.0424",
+     "source": "results.json gate_contract.derivation (text explicitly names the 4.5 mm G-e floor and declines it)",
+     "derivation": "4.5 - 4.4576 = 0.0424 mm — smaller than the preregistered sweep error bound 0.198 mm; the ABSENT label is sensitive to which documented floor was pinned"
+    },
+    {
+     "quantity": "TCP reference plane height in the link5 frame",
+     "value_mm": "115.428",
+     "source": "results.json frames.tcp_local_m = [0,0,0.115428]; script TCP_LOCAL L144",
+     "derivation": "read from URDF joint link5_to_hand_tcp; GV2 (L452) only checks the constant equals that same URDF value — no independent verification"
+    },
+    {
+     "quantity": "TCP-plane error that would flip the fixed body out of FAIL / to PASS",
+     "value_mm": "+0.5424 / +1.5424",
+     "source": "derived from l_vis 4.4576 vs boundaries 5.0 / 6.0",
+     "derivation": "depth is a uniform offset of the TCP z, so a mis-placed TCP shifts every depth one-for-one"
+    },
+    {
+     "quantity": "Finger search window radius (cylindrical, unbounded in depth)",
+     "value_mm": "30.0",
+     "source": "results.json gate_contract.finger_window_r_mm; script FINGER_WINDOW_R_MM L152",
+     "derivation": "mask r = hypot(x,y)*1000 <= 30.0 about the link5 z-axis (script L263, L272)"
+    },
+    {
+     "quantity": "Moving-jaw peak point, gripper_link body-frame coordinates",
+     "value_mm": "(67.083, -5.983, -18.934)",
+     "source": "results.json moving_gripper_link.peak_point.body_frame_m = [0.06708260345458986, -0.005983415603637695, -0.01893356132507324]",
+     "derivation": "script L547 passes the untransformed sampled mesh grip_pts_g as pts_body; x1000 to mm"
+    },
+    {
+     "quantity": "Distance of that peak point from the gripper_link body origin",
+     "value_mm": "69.96",
+     "source": "computed from body_frame_m above",
+     "derivation": "sqrt(67.0826^2 + 5.9834^2 + 18.9336^2)"
+    },
+    {
+     "quantity": "gripper_link bbox extents and diagonal (body frame)",
+     "value_mm": "77.850 x 25.240 x 39.368; diagonal 90.816",
+     "source": "results.json mesh_stats.gripper_link.bbox_mm; diagonal corroborated by gates.depth_error_bound_derivation ('bbox diagonal 90.8 mm')",
+     "derivation": "AABB extents from GV3 units gate (script L467); diagonal = norm of the extents"
+    },
+    {
+     "quantity": "Peak point as a fraction of body extent (shows it is a distal-end feature, not a near-origin artefact)",
+     "value_mm": "0.770 of the 90.816 mm diagonal; |x| = 0.862 of the 77.850 mm longest extent (ratios, unitless)",
+     "source": "computed from the two rows above",
+     "derivation": "69.96/90.816 and 67.083/77.850; note bbox records EXTENTS only, so the point cannot be pinned to a specific bbox face from the JSON"
+    },
+    {
+     "quantity": "Fixed jaw: max depth inside the D29 footprint (r<=14.5) vs inside the graspable wall annulus (12.5<=r<=20)",
+     "value_mm": "4.4576 vs 3.5178",
+     "source": "results.json fixed_link5.max_depth_in_footprint_mm, .max_depth_in_wall_annulus_mm",
+     "derivation": "footprint value is IDENTICAL to l_vis, i.e. the deepest link5 material lies inside the cylinder footprint radius, not at a graspable radius"
+    },
+    {
+     "quantity": "Moving jaw at the peak pose: max depth in the wall annulus",
+     "value_mm": "-5.1346 (negative = ABOVE the TCP plane)",
+     "source": "results.json moving_gripper_link.peak_metrics.max_depth_in_wall_annulus_mm = -5.134597754082343",
+     "derivation": "no moving-jaw material at 12.5-20 mm radius reaches the TCP plane at all at the verdict pose; at q5=0 it is -4.038"
+    },
+    {
+     "quantity": "Radial span of the deepest link5 material (depth band 4.0-4.5 mm) — the tapering fixed-jaw prong",
+     "value_mm": "r from 10.03 to 12.26, 600 samples",
+     "source": "t3r_gate0_vismesh_bands.csv row 'link5,static,4.0,4.5,600,10.03,12.26'",
+     "derivation": "read directly; min_r stays ~10.03 across all bands while max_r tapers 17.51 -> 12.26 with increasing depth"
+    },
+    {
+     "quantity": "Radial span of the deepest moving-jaw material at the peak pose (depth band 3.5-4.0 mm)",
+     "value_mm": "r from 0.10 to 3.78, 544 samples",
+     "source": "bands.csv row 'gripper_link,peak_5.1000,3.5,4.0,544,0.10,3.78'",
+     "derivation": "read directly; the jaw tip converges onto the tool axis as it closes — max_r shrinks 12.36 -> 3.78 from depth -5 to +4"
+    },
+    {
+     "quantity": "Preregistered angular understatement bounds (sweep / refine)",
+     "value_mm": "0.1981 / 0.01585",
+     "source": "results.json gates.sweep_depth_error_bound_mm, .refine_depth_error_bound_mm",
+     "derivation": "bbox diagonal 90.8 mm x sin(step/2); both are far smaller than the FAIL margins, so the tri-state is not boundary-adjacent under its own error model"
+    },
+    {
+     "quantity": "Unswept portion of the authored joint range at the open end",
+     "value_mm": "1.702 deg (angle, not a length): sweep tops out at 88.3100 deg vs USD limit 90.0117 deg",
+     "source": "results.json frames.joint_limits_deg = [0.0, 90.01166534423828]; moving_gripper_link.coarse_grid_deg[0] = 88.30998496351378",
+     "derivation": "script Q5_OPEN_DEG = degrees(1.5413) (L145) and grid construction L522; l_vis is monotone decreasing toward open, so the global max is very unlikely to lie there — but it is unsampled"
+    },
+    {
+     "quantity": "visual-minus-collision max depth, fixed body (cook fidelity)",
+     "value_mm": "-0.0000033 (-3.3e-06)",
+     "source": "results.json collision_cross_reference.visual_minus_collision_max_depth_mm.fixed_link5",
+     "derivation": "l_vis 4.457620 vs frozen audit3 collision assembly max depth 4.457623 — proves the collision cook reproduced the source prong to micrometres, i.e. there IS source geometry there to cook"
+    },
+    {
+     "quantity": "Surface sampling pitch",
+     "value_mm": "0.5",
+     "source": "results.json gates.sample_spacing_mm; script SAMPLE_SPACING_M L155",
+     "derivation": "barycentric lattice with n = ceil(max_edge/0.0005 m) per triangle (script L232-250); bounds in-triangle miss to well under 0.5 mm"
+    }
+   ],
+   "confidence": "high",
+   "caveats": [
+    "I did NOT open the URDF (local_assets/roarm_m3/urdf/roarm_m3.urdf) — it is outside the allowed read set for this session. So whether extra jaw links or extra <visual> elements exist is UNKNOWN. My finding on that point is script-level and stands regardless: parse_urdf() skips non-VIS_PINS links and reads only the first <visual> per link, so the sealed artifact structurally cannot evidence completeness.",
+    "I did NOT open, hash, or parse any STL. All geometry statements come from the sealed JSON, the sealed bands.csv, and a read-only crop of the sealed inspection PNG. No repo file was created, modified or re-run.",
+    "The PNG observations (tapering fixed-jaw tab reaching to about the L_MIN ring plane) come from a single frozen camera pose of a 1/16-decimated point cloud (VIEW_STRIDE=16, script L165). They are qualitative corroboration of the bands.csv profile, not an independent measurement, and I cannot tell which q5 anchor the blue cloud is displaying.",
+    "The P1/P2 analysis is a logical claim about entailment, not a claim that the Gate-0 numbers are wrong. Every number I checked reproduces exactly, GV1-GV4 all pass, the FAIL margins genuinely exceed the preregistered error bounds, and the run is internally consistent. The defect I am reporting is in the WORDING of the conclusion, not in the measurement.",
+    "I take no position on whether hand-authoring is the right branch. I only establish that the specific stated justification for it ('there is no geometry in the source to cook') is not what the run measured, and that at least one alternative lever (the TCP plane constant, and the choice between the 5.5 mm and 4.5 mm floors documented in the same contract) was never examined.",
+    "The 0.0424 mm gap between the fixed-jaw l_vis and the D426 G-e floor of 4.5 mm is a real feature of the gate_contract text, but the choice of 5.5 mm was legitimately preregistered before any mesh was profiled. I flag it as a sensitivity of the LABEL, not as a preregistration violation.",
+    "n_pts_in_rim_band = 0 is verified at 8 poses only (fixed static + 6 anchors + refined peak); the coarse 354-pose loop does not compute it. Within r<=30 mm the all-pose claim follows transitively from l_vis < 5 mm; the all-radii reading does not."
+   ]
+  }
+ ],
+ "refuted_votes": 1,
+ "total_refute_lenses": 3,
+ "verdicts": [
+  {
+   "lens": "GEOMETRY AND COORDINATES — re-derivation of the Gate-0 anchors/peak/bbox from the sealed t3r_gate0_vismesh_results.json plus the URDF joint numbers, testing whether they are consistent with a long distal blade or equally producible by a plate-only mesh",
+   "refuted": false,
+   "strongest_counterevidence": "I never opened gripper_link.stl (banned), so \"the mesh contains a blade\" is an inference from (a) one sampled surface point's body-frame coordinate, (b) the recorded bbox extents, (c) a decimated rendered point cloud, and (d) the collision-layer part CSV — not from the triangle soup itself. Three honest weak points: (1) I cannot recover the mesh bbox MIN/MAX (only extents are recorded), so I cannot prove no material has rho > 68.893 mm hidden in the permanently-window-excluded lateral band (body-axial z > +11.18 mm) — though that would only strengthen the claim, never weaken it. (2) If one reads \"원위 손가락\" in D427 as a term of art meaning \"a finger that reaches operational grip depth\", the wording becomes defensible and the claim's premise-check is moot; I judge that reading unavailable because §5-4 explicitly contrasts real-vs-asset EXISTENCE (\"실물 그리퍼에는 있는 원위 손가락이 자산(시각+충돌)에는 없다\") and because implication ① derives \"시각 메시에서 파생 불가, 수제 저작만 가능\" from it, which only follows on the unqualified reading. (3) The claim's closing rhetoric (\"would fabricate geometry rather than repair it\") overreaches: a new collision part still has to be authored regardless, because the existing blade is 1.544 mm short of L_MIN and 5.544–9.544 mm short of the recommended L band. The claim's operative point survives; its last clause is too strong.",
+   "reasoning": [
+    "FRAME RECONSTRUCTION VERIFIED FIRST. From URDF joint `link5_to_gripper_link` (origin xyz=0, 0.018821, 0.052035; rpy=-1.5708,-1.5708,0; axis=0 0 1) and `link5_to_hand_tcp` (z=0.115428) I rebuilt the gripper->link5 transform and reproduced the sealed JSON's moving peak point to 6e-9 m residual. Joint axis in link5 frame = (4e-6, 1, 0), i.e. perpendicular to the tool axis; joint origin x = 0 EXACTLY, so the tool axis lies inside the jaw's rotation plane. Everything below follows from that verified model, not from assumption.",
+    "CLOSED-FORM DEPTH LAW. For any material point at pivot-radius rho and body azimuth delta: depth(q5) = -63.393 mm + rho*cos(q5 - delta). Therefore the maximum depth a point can EVER reach, at any closing angle, is (rho - 63.393) mm. Reaching the TCP plane at all requires rho >= 63.393 mm; reaching L_MIN = 5.5 mm requires rho >= 68.893 mm. This converts the whole gate into a single question about pivot-radius.",
+    "MEASURED EXTREME = 67.349 mm, NOT A PLATE. The verdict-driving peak point's recorded body_frame_m = (67.083, -5.983, -18.934) mm gives rho = 67.349 mm, delta = 5.097 deg, and predicts max depth 3.9559 mm at q5 = 5.097 deg — matching the sealed refined peak (3.9559 mm @ q5=5.10) to four decimals. A mesh whose material were confined to rho <= 30 mm (a mounting plate) would yield l_vis <= -33.393 mm at EVERY q5. The observed +3.956 mm exceeds that plate-only ceiling by 37.3 mm. Plate-only is excluded by a 37 mm margin, not by a judgement call.",
+    "THE ANCHORS TRACE A SINGLE BLADE-TIP ARC. For all 125 coarse-sweep samples with q5 <= 31 deg, the measured l_vis(q5) equals the single rigid point at (rho=67.349, delta=5.097) with max |residual| = 0.000108 mm. One vertex being the support-function maximizer over a >=31 deg direction fan means a pointed/rounded tip with a wide normal cone — a tip, not a face. At q5 ~= 5 deg that tip lands at r = 0.11 mm, i.e. ON the tool axis, 3.956 mm past the TCP: the closing contact point of a jaw. A bracket or linkage does not close onto the tool axis.",
+    "THE r <= 30 mm WINDOW IS CLIPPING AT THE OPEN ANCHORS, AND THAT INVERTS THEIR MEANING. r_tip(q5) crosses 30 mm at q5 = 31.55 deg; above that the tip is outside the window and the reported argmax slides proximally along the blade. This is visible in the sealed JSON as boundary saturation: r_at_l_vis = 29.982 mm at q5=45 and 29.995 mm at q5=60. Inverting those pins gives the winning point's pivot-radius: 31.8 / 34.4 / 38.2 / 44.5 / 48.5 / 53.9 / 61.1 / 66.3 mm at q5 = 88.31 / 70 / 60 / 50 / 45 / 40 / 35 / 32 deg, with azimuth converging monotonically onto the tip's 5.1 deg. That is a continuous slender radial member running from ~32 mm to 67 mm from the pivot. Read correctly, the open anchors are positive evidence FOR a long blade.",
+    "BUT THE CLIPPING DOES NOT CHANGE THE VERDICT. At the verdict pose (q5=5.10) the argmax sits at r = 0.11 mm, 29.9 mm inside the window boundary — unclipped. Independent unwindowed confirmation: `t3_jaw_audit3_parts.csv` applies no r window, and its part_060 reproduces my tip model to <= 0.0005 mm at all four sampled angles INCLUDING r = 43.21 mm (q5=45) and r = 66.88 mm (q5=88.31); its unwindowed max depth over 64 parts x 4 angles is 3.690 mm. The only material the window can permanently hide is that with body-axial z > +11.18 mm, which lies >= 30 mm laterally from the tool axis and cannot contact a D29 (r=14.5 mm) cylinder. So the narrower operational fact the claim states — no jaw material reaches >= 5.5 mm below the TCP plane within r <= 30 mm at any closing angle — is exactly and robustly what Gate-0 established. The numeric verdict FAIL is correct; the margin (1.544 mm of pivot-radius) is far above the preregistered error bounds.",
+    "THE COLLISION LAYER HAS THE BLADE TOO. parts 060/061/063 in the sealed audit3 CSV all track the same tip trajectory. So 31st §5-4's stronger sentence — '실물 그리퍼에는 있는 원위 손가락이 자산(시각+충돌)에는 없다' — is contradicted at BOTH layers by the project's own sealed artifacts.",
+    "THE '시각적으로 명백' STEP IS A VIEWPOINT ARTIFACT. `gate0/gripper_vis` is logged non-static at 6 sweep_index values, so a Rerun 3D view can display at most ONE pose at a time. I measured the sealed inspection PNG's time cursor two independent ways — cursor x-fraction 0.0761 of the plot data range -> index 26.9, and the q5 curve height at the cursor -> 81.5 deg — both giving sweep_index ~= 27. The last gripper log at or before index 27 is index 0 = q5 = 88.31 deg = FULLY OPEN (next anchor is index 113). Confirmation by pixel geometry: the lowest blue pixel in the 3D panel corresponds to 52.75 mm ABOVE the TCP versus l_vis(88.31) = 52.885 mm above — a 1-pixel match; rightmost blue = 73.1 mm lateral versus the tip's predicted 66.9 mm (x1.09 perspective magnification, object nearer camera). Zero blue pixels exist anywhere below y=758, i.e. nowhere near the L_MIN rings — necessarily so, because in the fully-open pose the jaw is swung 88 deg away by construction. That frame has zero discriminating power on finger presence/absence. And the '수평 플레이트 형상' that was described IS the blade: my native-resolution crop of the blue cloud shows a servo-horn plate (central circle with lobed satellites) plus a long tapered arm with an elongated through-slot and a rounded tip, lying horizontal because it is fully open.",
+    "INDEPENDENT CORROBORATION FROM THE PHOTOGRAMMETRY LENS. That lens measured plate height 43 mm, blade free length 41 mm, servo-horn circle near the plate centre (=> pivot-to-tip ~62-68 mm), blade outer span 38.6 mm, sheet 1.5 mm. The sealed asset gives rho_tip = 67.349 mm and an along-pivot-axis bbox extent of 39.37 mm. Both bracket/match. The rotation-plane bbox is 77.85 x 25.24 mm (aspect 3.08) — a 67 mm reach inside a 25 mm-wide band is a blade by any definition.",
+    "WHAT THE WORDING SHOULD HAVE SAID. Both jaws DO have material below the TCP plane: moving 3.956 mm, fixed 4.458 mm. Nothing is 'absent'. The honest statement is a radial shortfall: the moving jaw's distal blade tip sits at rho = 67.349 mm, which is 1.544 mm short of the 68.893 mm needed for L_MIN = 5.5 mm, and 5.544 / 9.544 mm short of the 72.893 / 76.893 mm needed for the recommended L band [9.5, 13.5] mm. That reframes the 수제 저작 branch from 'author a finger the source does not have' to 'lengthen an existing 67.3 mm blade by ~1.5 mm (gate) or ~5.5-9.5 mm (recommended band)' — and it reopens the question D427 implication ② closed off, namely why the collision cook/decomposition yields an occluded jaw when the blade is demonstrably present in both layers. So the claim's core assertion — that the wording is not literally supported and the branch premise must be re-checked before approval — holds.",
+    "VERDICT: NOT REFUTED. The claim's two substantive parts are both confirmed by re-derivation from the sealed artifacts alone: (i) the visual authoring source does contain the moving jaw's long distal blade (rho = 67.349 mm, verified to 1e-4 mm across 125 sweep samples and to 5e-4 mm across 4 collision angles), and (ii) what Gate-0 measured is the narrower depth/window fact, correctly stated. Only the claim's final rhetorical clause overreaches."
+   ],
+   "what_would_settle_it": [
+    "DECISIVE, ALREADY DONE, ANYONE CAN REDO IT ON 9 NUMBERS: take moving_gripper_link.peak_point.body_frame_m = (0.06708260, -0.00598342, -0.01893356) m from the sealed t3r_gate0_vismesh_results.json plus the URDF joint `link5_to_gripper_link` axis (0,0,1) — pivot-radius rho = hypot(x,y) = 67.349 mm. Compare to the 68.893 mm required for L_MIN. No asset access, no re-run, no Isaac. If rho > ~40 mm the 'plate-only / no distal finger' wording cannot stand.",
+    "Re-do the D341 §4 visual inspection on the SEALED t3r_gate0_vismesh_timeline.rrd by moving the viewer's sweep_index cursor from 27 to 333 (q5 = 5.00 deg) and 353 (q5 = 0.00 deg) — the closed poses — instead of the open pose the screenshot froze. Viewer navigation on an existing file, no re-run and no new artifact, but it needs explicit user approval because the current freeze bans rerun. This is the single check that would either confirm or overturn my 'viewpoint artifact' finding by eye.",
+    "Pure JSON/CSV reads that are permitted right now: apply the same radial-ladder inversion to t3_jaw_audit_results.json, t3_jaw_audit2_parts.csv and t3_grasp{,2,3,4}_results.json. If part_060/061/063 show the same 32->67 mm ladder there, the 'asset (visual+collision) has no distal finger' sentence in 31st §5-4 fails across every sealed run, not just audit3.",
+    "Re-read D424 and D425 to determine whether the upstream 'jaw occlusion / rim band empty' diagnosis was itself taken from an r<=30-windowed metric or an open-pose render. The same failure mode (window boundary saturation read as absence) may be upstream of Gate-0, in which case D427 implication ② ('Arm-A cannot restore the distal finger') also needs re-checking.",
+    "If the user later authorizes ONE read-only measurement on gripper_link.stl, the single decisive quantity is the body-frame bbox MIN/MAX (the sealed JSON records only extents 77.85 x 25.24 x 39.37) plus a count of triangles with rho > 60 mm. That pins rho_max exactly, closes the one UNKNOWN in my analysis (material hidden in the body-axial z > +11.18 mm lateral band), and fixes the exact blade extension needed to hit the [9.5, 13.5] mm L band.",
+    "Physical check on the real disassembled jaw already photographed by the other lens: measure servo-horn centre to blade tip. My asset-derived prediction is 67.3 mm; the photogrammetry lens independently brackets 62-68 mm. Agreement would also settle whether the asset-vs-real mismatch claimed in 31st §5-4 exists at all (that is T4 layer, currently unasserted).",
+    "Before approving the 수제 저작 branch, require the dimension basis to be restated as a radial delta on the existing blade (rho 67.349 -> 68.893 for the gate, -> 72.893/76.893 for the recommended band) rather than as a from-scratch finger. If the branch still looks right under that framing, approve it; if the justification only worked under 'the finger is missing', it needs re-derivation."
+   ]
+  },
+  {
+   "lens": "TERMINOLOGY AND PRIOR CONTEXT — is \"원위 손가락 / 조 원위부\" a pre-registered term of art with a narrower operational meaning, and did earlier docs already record that the jaw has a blade?",
+   "refuted": true,
+   "strongest_counterevidence": "One sentence really does overreach beyond the operational definition, and the claim would be CORRECT if it had targeted that sentence. `claudedocs/session_20260806_31st_g0b_t3r_gate0_single_run_source_absent_verdict.md:92` (§4 D341 inspection note) says: \"link5는 축 근방 플러그 영역만 아래로 돌출, 이동 조는 **수평 플레이트 형상**으로 원위 손가락 부재가 시각적으로 명백.\" That is a MORPHOLOGICAL claim about the mesh silhouette (\"the moving jaw is a horizontal-plate shape\"), not a depth-below-TCP claim, and nothing in the pre-registered gate licenses it. It is contradicted inside the same document at line 39 (GV3 logs the gripper_link bbox as 77.9 x 25.2 x 39.4 mm and passes it as \"plausible\") and by `claudedocs/DECISIONS.md:21213-21215` (D368: the moving jaw carries certified **inner** 40 faces/17 parts and **outer** 36 faces/16 parts, with 16 parts spanning \"jaw 두께\" — i.e. a thin two-faced blade, not a featureless plate). A second, weaker instance is 31st §5-4 (line 115): \"실물 그리퍼에는 있는 원위 손가락이 자산(시각+충돌)에는 없다\", an asset-vs-real identity statement (partly self-limited by the following clause that defers 정합 판정 to T4). So the claim's diagnosis is right about the PNG-inspection prose; it is wrong about D427 ① and §5-1, which are the sentences it actually quotes.",
+   "reasoning": [
+    "THE TERM IS A TERM OF ART, AND IT WAS DEFINED FUNCTIONALLY AT FIRST USE. The first appearance of '조 원위 손가락' in the repo is `claudedocs/session_20260806_23rd_g0b_t3_jaw_occlusion_readonly_vertex_audit.md:89`: '실물 rim 핀치(상면 0~12mm 물림, T1)에 필요한 **조 원위 손가락 형상이 충돌 레이어에 부재**(스윕 밴드에서 TCP 아래 ≤0.32mm)'. Note the structure: the term is introduced as 'the jaw distal-finger shape REQUIRED FOR the real rim pinch', and it is immediately cashed out as a depth-below-TCP number inside a sweep band. It was never introduced as a morphological name for 'the blade'.",
+    "THE OPERATIONAL RELATION IS EXPLICIT AND PRE-DATES GATE-0. `claudedocs/session_20260806_24th_g0b_t3_repair_design_adversarial_review.md:42` fixes the relation **x(물림) = L(손가락 길이) − m(margin)**, with m = 5.5 mm (attempt2 hover-margin precedent) and T1 real bite x in (0,12] mm giving L in (5.5, 17.5] mm, recommended L = 9.5–13.5 mm. Because m is the TCP hover height above the cylinder top face, L is by construction measured DOWNWARD FROM THE TCP PLANE. In this project's vocabulary '손가락 길이 L' IS depth-below-TCP. Therefore '원위 손가락이 없다' decodes to 'L <= L_MIN', not to 'no blade exists in the mesh'.",
+    "THE SAME 24th DOC SPELLS OUT MY LENS'S HYPOTHESIS ALMOST VERBATIM. Line 43: '[MAJOR] 대향면 누락 — link5 고정 조도 **TCP 아래 벽 반경 구조물 전무**(part_026/027/031이 TCP 위 1.6~11.7mm 절단)' with the repair axis '양쪽 body 원위부 저작, **body별 L>=m+x 각각 게이트**'. 'TCP 아래 벽 반경 구조물' = material at the cylinder-wall radius below the TCP plane. That is exactly the narrow reading the claim says was never intended.",
+    "THE GATE OPERATIONALIZED THAT DEFINITION, NO-PEEKING, BEFORE THE RUN. `claudedocs/session_20260806_29th_g0b_t3r_gate0_authoring_panel_launch.md:41-44`: L_MIN = 5.5 mm derived explicitly from 'x=L−m, m=5.5 선례', indeterminate half-width ±0.5 mm, **finger search window r <= 30 mm about the tool axis**, wall annulus 12.5–20 mm (report-only), rim band = depth 5–15 mm. The wall annulus brackets the D29 cylinder wall radius 14.5 mm, and the rim band encodes the T1 real bite 0–12 mm. So the gate's quantity l_vis IS the L of the 24th-doc relation. GATE0_SOURCE_ABSENT therefore literally means 'L < L_MIN in every pose', which is the project's own definition of 'no distal finger'.",
+    "THE WINDOW WAS DELIBERATELY GENEROUS, AND THE PANEL WAS ORDERED TO HUNT BOTH ERROR DIRECTIONS. 29th doc line 64 records the prereg-methodology lens mandate as covering 'false-PASS(비손가락 구조물 r<=30 오인)' AND 'false-FAIL(r>30 손가락 누락)'. The three MAJORs that came back (29th doc lines 76-84) pushed the gate to be MORE finger-specific (adding l_vis_wall_mm restricted to 12.5<=r<=20, peak azimuth, l_vis_grasp_range_mm for q5 in [0,45]) — i.e. the adversarial process moved toward the narrow wall-radius reading, never away from it. r <= 30 mm is far wider than the 14.5 mm cylinder radius, so a blade dipping below TCP anywhere plausible would have been caught.",
+    "THE 'BLADE EXISTS' FACT IS NOT NEW — IT IS IN THE REPO RECORD, INCLUDING IN THE 31st RUN ITSELF, SO THE SESSIONS WERE NOT ASSERTING A BARE STUB. (a) `claudedocs/DECISIONS.md:12618` (D224): 'gripper_link closed z max is about 119.12mm ... hand_tcp is 115.43mm' — the moving jaw's closed distal extent was already known to sit 3.69 mm past TCP. (b) `claudedocs/DECISIONS.md:13259` (D231): gripper VISUAL bbox = [0.07785, 0.02524, 0.03937] m = 77.85 x 25.24 x 39.37 mm, and line 13267 explicitly says the 4 mm g2a proxy 'is not the full **fingertip** or tool contact surface' — i.e. D231 presumed a fingertip lives in the full geometry. (c) D368 inner/outer certified faces (line 21213-21215). (d) `g0b_d420/t3_prereg.md:194, 250-251, 300` repeatedly reasons about jaw '팁' with an estimated '팁 간극 반경 ~18mm > r=14.5mm'. (e) The Gate-0 run itself logged bbox (77.9, 25.2, 39.4) mm as GV3 'plausible' (31st doc line 39). The sessions knew the mesh is ~78 mm long and still said '원위 손가락 없음' — which is only coherent under the depth-based definition.",
+    "THE TWO SENTENCES THE CLAIM ACTUALLY QUOTES ARE SELF-QUALIFYING AT THE POINT OF USE. 31st §5-1 (line 105) reads in full: '시각 메시(저작 소스) 자체에 조 원위부 기하가 없다. **벽 환형 대역 최대 깊이 3.5/2.8mm, rim band 완전 공백, L_MIN 5.5mm 미달**.' The numeric basis is in the same two-sentence unit. D427's headline (`claudedocs/DECISIONS.md:25478`) and its Evidence block (25482-25489) both state L_MIN=5.5 / indet ±0.5 / r<=30 before the Implication paragraph. So the alleged 'unsupported literal wording' is, in both quoted places, a labelled shorthand for the pre-registered predicate. The claim's charge lands only if you read D427 ① in isolation from its own headline and evidence block.",
+    "THE LOAD-BEARING CONSEQUENCE SURVIVES EVEN IF A BLADE EXISTS, SO THE '수제 저작' PREMISE IS NOT DAMAGED BY THIS ARGUMENT. D427 ① states the operative inference: 'Arm-F/D 증분 저작은 시각 메시에서 파생 불가, 수제 저작만 가능.' Deriving an F-arm collision part from the visual mesh reproduces the visual mesh; the visual peak is 3.9559 mm (moving) / 4.4576 mm (fixed), and the cook is already faithful to it (visual − collision fixed = −3.3e-06 mm; the moving visual peak equals D425's collision precision-sweep peak +3.956 @ q5=5.10°). So a derived part yields L ≈ 4.0/4.5 mm < m = 5.5 mm and x = L − m <= 0 — zero bite at the pre-registered hover margin. Hand-authoring would ADD depth below the TCP plane, i.e. supply a quantity the source demonstrably lacks; it would not duplicate an existing blade. Under the project's own vocabulary that is repair, not fabrication.",
+    "WHAT THE CLAIM IS RIGHT ABOUT IS A DIFFERENT ARGUMENT WEARING TERMINOLOGY CLOTHES. The genuinely strong reason to re-check branch 1 is NOT that the word '손가락' was misused; it is the 33rd-session closed-form identity (R_tip 67.3489 − R_TCP 63.3930 = 3.9559 mm, residual −0.00000 mm, `session_20260806_33rd_...md` §4c) plus the beak-type 135° sweep topology, which together attack the VALIDITY OF THE MODEL x = L − m (a parallel-jaw model) and the TCP definition. That is a modelling/kinematics objection, not a terminology objection, and it belongs to another lens. Judged strictly on terminology and prior usage, the earlier statement is correct under the definition that was pre-registered before the gate ran.",
+    "HONEST RESIDUE (does not change the verdict): the phrase drifted between documents. 23rd/24th/29th/32nd and 31st §5-1 all use the depth-anchored form ('조 원위부 기하', '벽 반경 구조물', with numbers attached). D427 ① and 31st §4/§5-4 use the bare morphological form ('원위 손가락이 없다', '수평 플레이트 형상'). The bare form is the one that propagated to START_HERE and MEMORY, so it is the one a fresh session would misread — a real documentation-hygiene defect, but a labelling defect, not a measurement defect."
+   ],
+   "what_would_settle_it": [
+    "Read-only text audit of every occurrence of '원위'/'손가락'/'distal'/'finger' across claudedocs to classify each use as (i) depth-anchored (states L_MIN / r-window / TCP-relative number in the same sentence) or (ii) bare morphological. Known set to start from: DECISIONS.md:25407 (D425), 25478/25494-25497 (D427); session 23rd:89, 136-137; 24th:42,43,45,50; 29th:41-44,64; 31st:92,105,111,115,135,142; 32nd:24; START_HERE:23,48-49. If (ii) is a small minority confined to prose narration, the fix is a wording erratum (a D428 clarification note), not a supersede of D427.",
+    "Grep `sim_scripts/g0b_t3r_gate0_visual_mesh_distal_depth_readonly_audit.py` (read-only, do NOT run) for the literal gate constants and the docstring/verdict-string definitions of L_MIN, the r<=30 window, the wall annulus, the rim band, and the verdict-class semantics. Confirm the script's own text defines GATE0_SOURCE_ABSENT as 'no material at depth >= L_MIN within r <= 30 mm' and NOT as 'mesh contains no blade'. The script is the pre-registered authority for what the label means.",
+    "Read `g0b_d420/t3r_gate0_vismesh_results.json` field-by-field (read-only, already sealed) for the `manual_review_rule` string and any `verdict_definition` / prereg block. If the JSON itself carries the operational definition, then D427's shorthand is traceable to a machine-readable definition and the wording charge collapses entirely.",
+    "Read `g0b_d420/t3r_gate0_script_review_wf_f6c65ef4_findings_raw.json` (Lens 3, prereg-methodology) for its false-FAIL analysis. If that lens already asked 'could a real finger exist outside the r<=30 window or above the TCP plane and still be functional?' and answered it, then the interpretive objection was pre-adjudicated before the run and needs no re-litigation.",
+    "Read `g0b_d420/t3r_gate0_vismesh_bands.csv` (sealed, read-only) column-wise for the per-radius depth profile at the peak pose. If depth is non-trivial (say > 1 mm) out to large r, that is textual confirmation that a long blade is present in the mesh but oriented so it never descends below the TCP plane — which would simultaneously confirm the claim's factual half and confirm that the gate's label meant the narrow thing.",
+    "Text-only cross-check of the parallel-jaw assumption: re-read 24th doc line 42 in context to see whether 'x = L − m' was stated as a modelling assumption with a declared validity condition. If it was stated unconditionally, the correct corrective action is a new decision record about MODEL VALIDITY for beak-type jaws (and about whether the D419 top-center vertical target is achievable at all), which is a larger and more consequential finding than the wording issue and should be routed to the user as such."
+   ]
+  },
+  {
+   "lens": "MEASUREMENT VALIDITY — independent re-measurement of the ruler photos, quantification of the perspective/parallax error budget, and challenge to the part-identity assumption",
+   "refuted": false,
+   "strongest_counterevidence": "The strongest case AGAINST the claim is semantic-plus-empirical, and it does not come from the photos at all. In `t3r_gate0_vismesh_bands.csv` (sealed, read-only) the moving jaw has ZERO sampled points in the rim band (depth 5–15 mm) at every pose, and `t3r_gate0_vismesh_results.json` gives max_depth_in_wall_annulus (12.5–20 mm) = 2.795 mm. At the closed poses the only moving-jaw material below the TCP plane is confined to r <= 13.40 mm (q5=0) / 12.36 mm (q5=5.1 deg) — i.e. near-axis, plug-analog, not a jaw wall. So whatever tine geometry gripper_link.stl contains, none of it presents a usable finger wall anywhere near the L_MIN plane. If this project uses \"원위 손가락 / distal jaw finger\" as a functional term of art meaning \"jaw wall material reaching the L_MIN band\", then D427 implication (1) is internally consistent and the claim reduces to a wording quibble rather than a substantive error. A second, weaker counterpoint: I never opened gripper_link.stl (banned), so my statement that the mesh contains long tines rests on two derived project artifacts — the bbox 77.85 x 25.24 x 39.37 mm recorded in the results JSON, and the blue point cloud in t3r_gate0_vismesh_inspection.png — not on the STL itself.",
+   "reasoning": [
+    "EXIF is decisive and was not used by the photogrammetric lens. All six frames: Samsung SM-S906N, FocalLength 5.4 mm, FocalLengthIn35mmFilm 23 mm, f/1.8, DigitalZoomRatio 1.0, raw 4000x3000 with EXIF orientation 8. That pins f_px = 2658 px (diagonal convention) or 2700 px (2.0 um binned pitch of the ISOCELL GN5) — adopt 2660 +/- 2%.",
+    "Object distance is therefore D = f_px / scale, i.e. VERY close: p02 D=132 mm, p00 D=134 mm, p04 D=145 mm (left end) to 157 mm (right end). These are hand-held macro-range shots, at or just beyond the phone's minimum focus. The worst-case parallax gradient is 1/D = 0.64–0.76 %/mm of out-of-plane relief — roughly TWICE the 0.4 %/mm the photogrammetric lens estimated, and its 0.4 %/mm was itself derived from an assumption (that the two tines are parallel) that I show below is false.",
+    "I re-derived every scale myself. p02: 76 clean 1 mm ticks, median pitch 20.11 px, sub-pixel; segment autocorrelation gives 20.000 px/mm at y=400 rising to 20.169 at y=1450 (2.2% gradient). p00 (tilted ruler, band x 2060–2140): 19.58 px/mm at y=1550 to 20.02 at y=2150. p04: 18.024 / 17.432 / 16.827 / 16.320 / 15.766 px/mm at x = 1075 / 1625 / 2225 / 2825 / 3425 — a MONOTONE 14.3% gradient across the ruler. sqrt(1/s) is linear in x to better than 0.3%, confirming the 1-D projective model, so I could integrate the scale rather than pick one.",
+    "The '~78 mm' number is a scale-choice artifact. In p04 the part silhouette (T=90, largest component) spans x = 741..2139 = 1398 px. Over that span the ruler's own local scale runs 18.382 -> 16.944 px/mm (8.5%). The SAME 1398 px reads: 77.56 mm (scale at the left end), 79.26 mm (properly integrated — my best value), 81.87 mm (whole-ruler median 17.076), 83.08 mm (scale at the right end). The mesh bbox X = 77.85 mm sits INSIDE that interval. Reporting 78.5 mm and calling it a match to 77.85 mm is choosing the scale that lands on the answer.",
+    "Cross-photo dispersion confirms it. My own long-axis values: p04 79.26 mm, p00 82.15 mm (dy 82.15 + dx 26.88 -> hull 86.44), p02 84.42 mm (x-span 1706 px at 20.21 px/mm; hull diameter 91.29 mm). Mean 81.94, sd 2.59 mm = 3.2%, on the same part, same rule, same method. The claimed agreement is 0.15 mm = 0.19% — about 17x tighter than the method's own 1-sigma, before any bias term.",
+    "I demonstrated the coincidence directly by finding a SECOND, mutually incompatible 'match' in the same dataset: p02 convex-hull diameter 91.29 mm vs the mesh bbox diagonal 90.82 mm — a 0.5% agreement, just as impressive as 78 vs 77.85, but implying a different correspondence. When a method with 7% spread yields two contradictory sub-1% 'agreements', both are noise.",
+    "Out-of-plane relief is the dominant, unbounded bias and the photo set cannot constrain it. In p04 the two silhouette endpoints are at 385 px and 668 px above the ruler line — neither is in the ruler plane. I tried three independent ways to pin the camera elevation and got mutually inconsistent answers: (a) tick-line vanishing point — slopes sd 0.074 over a 66 px baseline, pure noise, unusable; (b) the two-tine tip differential (lower tine tip x=2120 at the ruler, upper tine tip x=2138 elevated) implies only ~1.3% magnification difference, i.e. elevation ~3 deg; (c) ruler-face foreshortening (apparent width 600 px / 16.3 px/mm = 36.8 mm in p04 vs 37.3 mm in p02) implies almost no foreshortening at all. These cannot all be true. THAT INCONSISTENCY IS THE FINDING: the six photos do not contain enough constraint to certify the parallax bias small. At D=140 mm the worst case is +7.7% for 10 mm of relief, +21.7% for 25 mm, +38.6% for 39 mm — i.e. up to +17 to +31 mm on an 80 mm span, one-signed (always inflating).",
+    "Error scaling behaves exactly as a perspective-gradient error should, which validates the diagnosis. I measured the SAME manufactured feature — the servo-horn central bore, via largest-inscribed-circle on a common threshold — in three photos: 163.1 px (p00), 170.8 px (p02), 153.9 px (p04), which with each photo's local scale give 8.35 / 8.45 / 8.53 mm, a 2.2% spread. Small features (160 px) are reproducible; long spans (1400–1700 px) disperse by 7%. Error proportional to span length = scale-gradient error, not random noise.",
+    "The part is measurably deformed or non-symmetric, which independently forbids CAD-to-photo dimensional comparison. In p05 the left tine's apparent width is ~5.9 mm and the right tine's ~2.2 mm. Their offsets from the principal point are -760 px and -85 px, i.e. viewing-ray obliquities of 16.0 deg and 1.8 deg — perspective can explain at most 14.2 deg of angular difference. Solving apparent = w*sin(a)+t*cos(a) with t=1.5 mm and w=6.5–7.6 mm needs a_left ~ 36–43 deg. That is 20–30 deg more non-parallelism than the camera geometry allows. Either the jaw is bent (very plausible for 1.5 mm sheet after disassembly) or the tines are splayed by design. Either way the as-photographed shape is not the as-authored shape.",
+    "PART IDENTITY: I challenged it and it SURVIVES — but on shape signature, not on length. I compared the photos against the repo's own sealed render t3r_gate0_vismesh_inspection.png (panel 2, blue = gripper visual per the panel-1 legend). The blue point cloud shows the identical distinctive signature: a chevron plate carrying a servo-horn bore pattern (central circle plus four lobed satellites in a cross), and two long tapered tines each with an elongated through-slot and a rounded tip. Every one of those features is present in p00/p02/p04/p05. The measured across-tine width 37.0–38.6 mm is also close to the mesh's 39.37 mm bbox dimension. Residual caveats, honestly: (i) no photo shows the part mounted on the robot; (ii) a photo cannot distinguish a left/right mirror pair, and the repo does contain a banned dead asset gripper_left_link.stl; (iii) the out-of-plane depth the photogrammetric lens could only estimate (6–8 mm, LOW confidence) does not match the mesh's 25.24 mm middle bbox dimension, and that discrepancy is UNRESOLVED — no photo shows the plate edge-on against the rule.",
+    "NET EFFECT ON THE CLAIM: the photo half of the claim is invalid and must be struck — 'physical ~78 mm vs mesh 77.85 mm' is not evidence of anything. But the claim does not depend on it. Its core assertion is checkable entirely from frozen, non-photographic evidence that I read directly: gripper_link.stl's recorded bbox is 77.85 x 25.24 x 39.37 mm (a plate-only part would be ~43 mm long), and the sealed render visibly shows two long tines. Meanwhile the gate measured exactly what the claim says it measured: l_vis = max depth BELOW the TCP plane within r <= 30 mm, peak 3.9559 mm at q5=5.10 deg for the moving jaw and 4.4576 mm for fixed link5, against L_MIN=5.5 mm. D427's Evidence block is careful ('L_MIN 벽 환형 대역에 도달하는 메시 재질 전무'), but its Implication (1) generalises that to '저작 소스(시각 STL) 자체에 원위 손가락이 없다', which is a strictly broader statement than the measurement supports.",
+    "Two further scope facts I found while reading the JSON, which strengthen the claim's wording critique: (a) the TCP is at 0.115428 m along link5 whose bbox is 120.635 mm — i.e. the TCP is placed within ~5 mm of link5's own far end, so 'material below the TCP plane' is nearly zero almost by construction of where the TCP was put (fixed link5's l_vis is 4.4576 mm, consistent with the TCP sitting essentially at the jaw tip plane); (b) at the open anchors the r<=30 mm window is a BINDING constraint — r_at_l_vis = 29.982 mm at q5=45 deg and 29.995 mm at q5=60 deg, the classic signature of an argmax pinned to a window edge, meaning jaw material exists at r > 30 mm and was excluded by preregistration. Neither fact overturns the FAIL verdict, but both show the measurement is narrower than 'the source has no finger'."
+   ],
+   "what_would_settle_it": [
+    "Read `t3_jaw_audit2_parts.csv` and `t3_jaw_audit3_results.json` (both frozen, already in g0b_d420/) and tabulate the per-part decomposition of gripper_link: if a part row exists with a ~40 mm long, ~1.5–2 mm thick, ~6–8 mm wide extent, the 'the STL contains a distal blade' premise is settled from frozen evidence with no new run and no STL access.",
+    "Re-read `t3r_gate0_vismesh_bands.csv` over the NEGATIVE-depth bands (above the TCP plane) for gripper_link at q5=0 and q5=5.1 deg. If tine material appears at r in 12.5–30 mm at negative depth, that proves the finger geometry exists in the source and is merely positioned above the L_MIN plane — which is precisely the distinction the claim is drawing. The file already contains 490 moving-jaw rows; only 65 have data, so the occupancy map is there.",
+    "Quantify how much the r<=30 mm window truncates the jaw: the results JSON already shows r_at_l_vis = 29.982 / 29.995 mm at q5=45/60 deg (window edge binding). Recomputing nothing, just reporting the fraction of the 574,831 sampled moving-jaw points that fall outside r=30 mm would bound how much of the jaw Gate-0 never looked at.",
+    "Settle the 6–8 mm vs 25.24 mm out-of-plane discrepancy with ONE new user-taken photo (user action, not an agent run): the plate EDGE-ON against the rule, part and rule coplanar. This is the single missing view and it is the only dimension where photo and mesh currently disagree by 3x.",
+    "Fix the photogrammetry protocol before any future physical measurement is quoted: (a) measure the steel rule's blade width once with a caliper so it can serve as a second in-plane reference; (b) shoot from >= 400 mm (crop in afterwards) instead of 130–160 mm — that alone drops the parallax gradient from ~0.7 %/mm to < 0.25 %/mm; (c) put the rule in the SAME plane as the feature being measured and shim the part so the measured endpoints are coplanar with it; (d) include two rules at right angles so the camera pose is recoverable; (e) report the integrated (position-dependent) scale, never a single px/mm.",
+    "Ask the user directly: which arm and which jaw was disassembled, and has the part ever been bent or dropped? The ~20–30 deg tine non-parallelism I measured in p05 is either damage or a design feature, and only the user can say. If it is damage, no photograph of this specimen can be compared to CAD dimensions at all.",
+    "Ask the user to fix the terminology in D427: state explicitly whether '원위 손가락' means (i) any distal tine geometry present in the mesh, or (ii) jaw-wall material reaching the L_MIN band at r in 12.5–20 mm. Under (ii) D427 stands as written; under (i) implication (1) should be narrowed to match its own Evidence block, and the '수제 저작' branch should be re-scoped from 'author a finger that does not exist' to 'author/reposition finger material that reaches L_MIN'."
+   ]
+  }
+ ],
+ "synthesis": "모든 load-bearing 수치를 봉인 아티팩트에서 직접 재검증했습니다. 최종 종합입니다.\n\n---\n\n# G0b T3R Gate-0 — 적대 검토 최종 판정 (읽기 전용, 저작 0, 실행 0)\n\n## 0. 내가 독립 검증한 것 (재현 명령 전부 read-only)\n\n| # | 검증 항목 | 결과 | 출처 |\n|---|---|---|---|\n| V1 | 닫힌 형태 깊이 법칙 `depth_max = ρ_tip − 63.3930` | ρ=**67.34892mm** → 3.955919 vs 봉인값 3.955924, **잔차 4 nm** | `roarm_m3.urdf:225-239` + `t3r_gate0_vismesh_results.json` |\n| V2 | 단일 강체점이 스윕을 설명하는가 | 창(r≤30) 안 **127/127 샘플, 최대 잔차 0.11 µm**. 팁이 r=30 통과 = q5 31.55° | 동 JSON `coarse_l_vis_mm` |\n| V3 | 충돌 레이어에도 블레이드가 있는가 | **part_060**이 시각 팁 모델을 q5=24/45/88.31에서 깊이 0.001mm·r 0.01mm로 재현, q5=88.31에서 **r=66.88mm** 도달 | `t3_jaw_audit3_parts.csv` |\n| V4 | 고정측(link5) TCP 아래 재질의 형상 | 전 밴드에서 **r ∈ [10.03, 14.77]**, 내반경 10.03 상수 / 외반경 14.14→12.26 테이퍼, 깊이 4.5mm 아래 **0점** | `t3r_gate0_vismesh_bands.csv` |\n| V5 | 이동 조 피크 포즈 TCP 아래 재질 | **r ∈ [0.10, 7.47]**, 깊이 3.5–4.0mm 밴드에서 r ≤ 3.78 → 축으로 수렴하는 **부리 끝** | 동 bands.csv |\n| V6 | 죽은 자산 규모 | `gripper_left_link.stl` **956,384 B = 로봇 전체 최대 메시** (link5 704,684 / gripper_link 684,984), URDF 참조 **0회** (열지 않음 — 디렉터리 메타데이터만) | `local_assets/roarm_m3/urdf/` |\n\n---\n\n## 1. 판정: **PARTIAL**\n\n주장의 **핵심은 살아남고, 범위·수치·함의는 틀렸다.**\n\n- **살아남는 부분**: D427 ①·31st §5-1의 넓은 문언 P1(\"저작 소스에 원위 손가락이 없다\")은 `gripper_link.stl`에 대해 **거짓**이다. ρ_tip=67.349mm 항등식이 4 nm로 맞고(V1), 127샘플 아크가 0.11 µm로 맞고(V2), 충돌 파트 part_060이 r=66.88mm까지 따라간다(V3). 손끝이 없으면 이 셋이 동시에 성립할 수 없다.\n- **무너지는 부분 (반증 렌즈도 놓친 것)**: 주장·D427·33rd 모두 \"소스\"를 **한 덩어리로** 다뤘다. **body별로 갈라야 한다.** 아래 §2.\n- **결정에 미치는 영향 = 0**: 어느 독법이든 D29 원통 top-down 중심 파지의 순 물림 = **−2.081 mm**(불가). 이 수치는 블레이드 존재 여부와 **무관**하다.\n\n---\n\n## 2. Gate-0 증거가 실제로 세운 명제 (가장 방어 가능한 한 문장)\n\n> **세움**: 봉인 스윕 전 구간에서, 공구축 r ≤ 30 mm 창 안에 TCP 평면보다 5.5 mm 아래로 내려가는 메시 재질은 양 body 모두 없다. 이동 조의 창 내 최심점은 **축 위(r=0.11mm)의 부리 끝 3.9559mm**, 고정측 최심점은 **r=10.12–11.50mm의 근축 구조 4.4576mm**이다. (= 33rd가 명명한 **P2**)\n>\n> **세우지 않음**: \"소스에 원위 손가락이 없다\"(**P1**). 측정된 3.9559mm는 재질 부재의 산물이 아니라 **ρ_tip 67.349 − R_TCP 63.393의 산술 결과**다. 부재였다면 이 항등식이 소수 5자리로 맞을 수 없다.\n\n### 그리고 아무도 명시하지 않은, 결정을 실제로 지배하는 사실\n\n깊이 지표를 **근축**이 아니라 **원통 벽면(r=14.5mm)**에서 읽으면:\n\n```\n이동 조 팁이 r=14.5 에 올 때 깊이           = +2.376 mm  (q5 ≈ 17.5°)\n고정측 최심 구조 (r=10.12–11.50, 원통 footprint 안) = +4.458 mm\n──────────────────────────────────────────────────────\n순 측벽 물림 = 2.376 − 4.458                =  −2.081 mm\n```\n\n즉 **하강하면 고정측 근축 구조가 원통 상면에 먼저 닿고, 그 시점에 이동 조 팁은 상면보다 2.08 mm 위에 있다.** 조가 측벽에 닿는 q5는 존재하지 않는다.\n\n이 예측은 **물리 런과 독립적으로 일치**한다 — D424 attempt1/4 정지 z = top + **4.4 mm** ↔ 내가 기하로 계산한 4.458 mm. 3중 삼각측량(URDF 상수 / 봉인 bands / 물리 정지 높이).\n\n**함의**: L_MIN 게이트를 통과시켜도(블레이드 +1.544mm) 그 argmax는 **r=0.11mm 축 위**라 원통 상면 위 허공이다. **게이트 통과 ≠ 파지 가능.** 봉인 JSON의 `manual_review_rule`(\"r_at_l_vis < 12.5mm는 plug-analog, 수동 검토 필요\")이 이미 이 함정을 예고했고, 양 body 피크가 **둘 다** 그 조건에 걸린다.\n\n---\n\n## 3. '수제 저작' 분기 전제: **손상됨 (destroyed 아님) — 단, 33rd가 말한 이유와 다른 이유로**\n\n| 층위 | 판정 | 근거 |\n|---|---|---|\n| **이동 조 `gripper_link.stl`** | 전제 **파괴** | 블레이드가 **시각·충돌 양 레이어에 실재**(V1·V2·V3). 새로 만들면 중복 저작 → sim-real 괴리 확대. 33rd §5 결론 지지. |\n| **고정측 `link5.stl`** | 전제 **부분 생존** | TCP 아래 재질이 r ∈ [10.03, 14.77]에만 존재. 이동 부리 끝(r ≤ 7.47)과 **반경상 2.56 mm 떨어져 전혀 겹치지 않는다** → 닫힘점에 **대향면이 없다**. 실물 고정 조는 블레이드 2개(사진 `…148446_03.jpg`)인데 자산에는 대응물 없음. |\n| **필요한 저작량** | 게이트 수치와 **다름** | 손익분기 **+2.034 mm**(ρ ≥ 69.383), 5 mm 물림 **+6.931 mm**(ρ ≥ 74.280), 권장 밴드 하한 9.5 mm는 **+11.349 mm**. 반증 렌즈가 든 1.544 mm는 게이트용 숫자이지 **결정용 숫자가 아니다**. |\n\n⚠️ **UNKNOWN (정직하게 미해결)**: link5의 TCP 아래 구조가 (A) 축과 동심인 **환형 보스/베어링**인지, (B) r≈11.5에 있는 **고정 블레이드 팁 2개**인지 — bands CSV의 min_r/max_r만으로는 구별 불가. 충돌 파트 **029/030이 깊이 4.458·r 11.50으로 완전 대칭 쌍**이라 (B)도 배제 안 된다. **어느 쪽이든 순 물림 −2.081 mm는 불변**이므로 결정은 바뀌지 않지만, 문언 확정 전에는 반드시 UNKNOWN으로 병기할 것.\n\n**결론**: 분기 1을 \"없는 손가락 만들기\"로 승인하면 **틀린 문제를 푼다.** 실제 문제는 (i) 고정측 대향면 부재 + (ii) 근축 구조가 원통 상면에 먼저 착지 + (iii) TCP가 조 끝보다 3.96 mm 안쪽에 정의됨 — 즉 **분기 2(정지·재상의, 주제 = TCP 정의 + 파지 타깃 기하)가 33rd 시점보다 더 강해졌다.**\n\n---\n\n## 4. 남은 모호성을 해소할 최저비용 read-only 체크 (결정력/비용 순)\n\n| 순위 | 체크 | 파일 | 결정할 숫자 | 비용 |\n|---|---|---|---|---|\n| **C1** | 봉인 PNG를 원해상도 확대해 **link5 점구름의 TCP 아래 단면**을 본다 (link5는 static이라 개방 앵커 프레임에서도 그대로 보임 — 31st의 판별력 문제 없음) | `claudedocs/runtime_logs/grasp_track/g0b_d420/t3r_gate0_vismesh_inspection.png` | 닫힌 **고리 1개**(→보스) vs **분리된 탭 2개**(→고정 블레이드). §3의 UNKNOWN을 직접 해소 | 크롭 1회, 재실행 0 (START_HERE:83 \"확대 열람 허용\") |\n| **C2** | 실물 이동 조 **서보혼 중심 → 블레이드 팁** 거리를 2뷰로 재측정 | `/home/cgxr/Downloads/KakaoTalk_20260806_210210194_02.jpg`, `..._00.jpg` | **ρ_real**. 67±1 → 자산 충실(저작 = 순수 창작). **71–72 → 자산이 ~4 mm 짧음** = 손익분기 +2.03 mm를 이미 넘김 → \"수리\"가 정당화됨. 내 1차 측정 **71.5 mm**(±2–3) 로 **판정 보류** | PIL 크롭, 자산 파싱 0 |\n| **C3** | 미회수 적대 패널 회수 | `wf_fa928671-635` (33rd doc §6에 전사 경로) | 반증 렌즈 2(용어·선행맥락)의 생존 여부 → §5-a를 \"오류\" vs \"문언 정밀화\"로 확정 | 0 (START_HERE:38이 이미 1순위로 지정) |\n| **C4** | **옵션 A** — `gripper_left_link.stl` 내용 검사 | `local_assets/roarm_m3/urdf/meshes/gripper_left_link.stl` | 삼각형 수 / bbox / TCP 아래 도달 깊이. 이것이 **고정 조**면 \"죽은 자산 배선\"이 저작을 완전히 대체 | ⚠️ **금지 목록 — 명시 승인 필수.** 가치는 33rd 평가보다 더 상승: 로봇 **전체 최대 메시**(956KB > link5 705KB)가 참조 0회 |\n\nC1·C2·C3은 지금 동결 하에서 즉시 가능. C4만 승인 필요.\n\n---\n\n## 5. 과장/오류로 판정한 문언과 정정안\n\n| 위치 | 현재 문언 | 판정 | 정정안 |\n|---|---|---|---|\n| **D427 ①**, 31st §5-1 | \"저작 소스(시각 STL) 자체에 원위 손가락이 없다\" | **부정확 — 오류는 아님**. 측정은 옳고 **일반화가 과했다** | \"r ≤ 30 mm 창 안에서 TCP 평면보다 5.5 mm 아래에 도달하는 재질이 양 body 모두 없다. 이동 조 블레이드는 ρ=67.349 mm로 **실재**하며, 3.9559 mm는 ρ−R_TCP 산술의 귀결이다.\" |\n| **31st §5-1** | \"이동 조는 수평 플레이트 형상으로 원위 손가락 부재가 **시각적으로 명백**\" | **오류** | 해당 프레임은 sweep #0 = q5 88.31° **완전 개방 앵커**라 손끝 유무에 대한 **판별력이 0**. (33rd §4-b가 이미 자인 — D427 본문에 반영 필요) |\n| **D427 ② [추론]** | \"같은 소스를 재분해하는 Arm-A도 원위 손가락을 복원할 수 없다\" | **반증됨** | 충돌 레이어 **part_060이 이미 블레이드**(q5=88.31에서 r=66.88 mm). 복원할 것이 남아있지 않은 게 아니라 **이미 들어있다**. |\n| **33rd §4-c** | \"link5.stl이 TCP보다 4.4576 mm 더 뻗어 있고 **그것이 고정 블레이드 끝**이다\" | **미지지** | D425의 \"중앙 플러그(part_029/030)\" 독법을 새 증거 없이 뒤집었다. bands CSV는 내반경 10.03 상수 + 외반경 테이퍼만 보여주며 **보스/블레이드 구별 불가 → UNKNOWN**. |\n| **START_HERE:16**, 33rd §4-a | \"bbox 77.85 ≈ **실물 78 mm**\" | **취약** | 그 78 mm는 `…194_04.jpg`(부품이 자 위에 **서 있는** 사진)에서 나왔고, 별도 측광 렌즈는 같은 사진을 원근 편의로 **기각**하고 평치 2장에서 **84 mm**를 얻었다. **6 mm 불일치 미해소** — 이 근사 일치를 자산 충실성 근거로 쓰지 말 것. |\n| **반증 렌즈 결론부** | \"기존 67.3 mm 블레이드를 **1.5 mm**(게이트) / 5.5–9.5 mm(권장) 늘리는 문제\" | **틀린 목표 수치** | 1.544 mm는 **근축** 지표. 작동상 손익분기는 **+2.034 mm**, 5 mm 물림은 **+6.931 mm**. 그리고 블레이드만 늘려도 **고정측 대향면 부재**는 해결되지 않는다. |\n| **측광 렌즈 caveat** | 두 블레이드 면이 ~90° 어긋남 → \"굽었거나 **파손**됐을 가능성 배제 못 함\" | **과경보** | `…194_02.jpg`/`_03.jpg` 육안 확인 결과 **정상적인 절곡 판금 브래킷**(서보혼 웹 + 평행 블레이드 2개). 파손 징후 없음. 단 항목 (f) 6–8 mm가 **직접 측정이 아님**(LOW)이라는 자기 표기는 **정당**하며 유지할 것. |\n\n---\n\n## 6. 한 줄 권고\n\n**분기 1(수제 저작) 승인하지 말 것.** 게이트 숫자는 옳지만 그 숫자가 가리키는 결함은 이동 조 손끝이 아니다. **C1·C2·C3(전부 비용 0, 동결 호환)을 먼저 돌리고, 재상의 주제를 \"손가락 치수\"가 아니라 \"TCP 정의 + 파지 타깃 기하\"로 옮긴 뒤** 결정할 것. `D419` 상면 중심 수직 파지 자체가 이 그리퍼 기하와 양립하지 않는다는 신호가 3중으로 일치하며(bands / 아크 모델 / attempt1·4 정지 높이 4.4 mm), 이는 **HARD RULE #18에 따라 교수님·사용자 결정 사안**이지 Claude 단독 변경 대상이 아니다.\n\n**동결 준수 확인**: repo 파일 생성·수정·삭제 0 / Isaac·rerun·하드웨어 0 / `gripper_left_link.stl` 미접근(디렉터리 메타데이터만) / STL·USD·OBJ 파서 작성 0 / git 변경 0. 임시 파일은 전부 `/tmp/claude-1000/-home-cgxr-Documents-Robotics-RoArm-Project/e84a79b2-5dad-45ab-a2c7-314bd1420343/scratchpad/`."
+}

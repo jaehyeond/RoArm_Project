@@ -1,0 +1,2800 @@
+{
+ "tag": "t3r_n5_hypcd",
+ "question": "사용자 가설 C(체결 하드웨어 포함 측정) / D(부품 오식별) 검정",
+ "read_only": true,
+ "rerun_omission_justification_D341": "신규 실행·물리 판정 0. 자산 읽기 전용 파싱 + 2D 실루엣 진단만. 34th/35th/36th 선례 동일.",
+ "assets": {
+  "gripper_link.stl": "7946a374e24a2f467a0581b4946e0ec41b1b86a92f070bc00aa9bced1bf65a56",
+  "link5.stl": "1d63f374a78c1419b21eec63fa8efeef40d0d42ca89c5de3ceb0d86476d9c7eb",
+  "gripper_left_link.stl": "NOT ACCESSED (금지 자산, 승인 대기)"
+ },
+ "stage1": {
+  "tool": "t3r_n5_hypcd_link5_hull_readonly",
+  "read_only": true,
+  "gripper_link": {
+   "path": "/home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/urdf/meshes/gripper_link.stl",
+   "sha256": "7946a374e24a2f467a0581b4946e0ec41b1b86a92f070bc00aa9bced1bf65a56",
+   "triangles": 13698,
+   "unique_vertices_after_merge": 6831,
+   "watertight_after_merge": true,
+   "n_connected_components": 1,
+   "aabb_extent": [
+    77.85,
+    25.24,
+    39.3676
+   ],
+   "hull_diameter": 81.4065,
+   "hull_endpoint_A": [
+    66.902,
+    -5.9834,
+    -21.9954
+   ],
+   "hull_endpoint_B": [
+    -10.722,
+    3.1913,
+    0.7502
+   ],
+   "reproduces_36th_81_4065": true,
+   "direction_width": {
+    "median": 58.6944,
+    "p99": 81.0139,
+    "max_sampled": 81.4014,
+    "frac_over_81": 0.0102
+   }
+  },
+  "link5": {
+   "path": "/home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/urdf/meshes/link5.stl",
+   "sha256": "1d63f374a78c1419b21eec63fa8efeef40d0d42ca89c5de3ceb0d86476d9c7eb",
+   "triangles": 14092,
+   "unique_vertices_after_merge": 6926,
+   "watertight_after_merge": false,
+   "aabb_min": [
+    -30.9981,
+    -17.7463,
+    -0.7495
+   ],
+   "aabb_max": [
+    15.4979,
+    17.7737,
+    119.8856
+   ],
+   "aabb_extent": [
+    46.496,
+    35.52,
+    120.6351
+   ],
+   "hull_diameter_WHOLE": 124.0379,
+   "hull_endpoint_A": [
+    -11.5258,
+    -3.0114,
+    119.8401
+   ],
+   "hull_endpoint_B": [
+    15.4979,
+    12.435,
+    -0.2287
+   ],
+   "whole_exceeds_86_4": true,
+   "direction_width": {
+    "median": 81.8517,
+    "p99": 123.4525,
+    "max_sampled": 124.0366,
+    "frac_over_81": 0.51
+   },
+   "component_report": {
+    "n_components": 114,
+    "components": [
+     {
+      "component": 0,
+      "triangles": 288,
+      "vertices": 140,
+      "watertight": true,
+      "volume_mm3": 1039.995,
+      "aabb_min": [
+       -14.0,
+       -16.2495,
+       -0.7495
+      ],
+      "aabb_max": [
+       14.0,
+       10.0005,
+       11.2505
+      ],
+      "aabb_extent": [
+       28.0,
+       26.25,
+       12.0
+      ],
+      "hull_diameter": 34.5552,
+      "hull_endpoint_A": [
+       -5.0,
+       10.0005,
+       -0.7495
+      ],
+      "hull_endpoint_B": [
+       14.0,
+       -16.2495,
+       11.2505
+      ],
+      "exceeds_86_4": false,
+      "direction_width": {
+       "median": 28.1438,
+       "p99": 34.3792,
+       "max_sampled": 34.5547,
+       "frac_over_81": 0.0
+      }
+     },
+     {
+      "component": 1,
+      "triangles": 348,
+      "vertices": 202,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -28.7812,
+       -7.2956,
+       64.7518
+      ],
+      "aabb_max": [
+       -15.2381,
+       6.2704,
+       80.5518
+      ],
+      "aabb_extent": [
+       13.5431,
+       13.566,
+       15.8
+      ],
+      "hull_diameter": 19.7099,
+      "hull_endpoint_A": [
+       -22.0096,
+       -5.5126,
+       64.7518
+      ],
+      "hull_endpoint_B": [
+       -22.0096,
+       6.2704,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": {
+       "median": 17.9256,
+       "p99": 19.7051,
+       "max_sampled": 19.7098,
+       "frac_over_81": 0.0
+      }
+     },
+     {
+      "component": 2,
+      "triangles": 564,
+      "vertices": 313,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -30.9981,
+       -9.5126,
+       80.5518
+      ],
+      "aabb_max": [
+       -13.0212,
+       8.4874,
+       87.7518
+      ],
+      "aabb_extent": [
+       17.9769,
+       18.0,
+       7.2
+      ],
+      "hull_diameter": 18.881,
+      "hull_endpoint_A": [
+       -22.0096,
+       8.4874,
+       86.2518
+      ],
+      "hull_endpoint_B": [
+       -22.0096,
+       -9.5126,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": {
+       "median": 18.2102,
+       "p99": 18.8778,
+       "max_sampled": 18.8809,
+       "frac_over_81": 0.0
+      }
+     },
+     {
+      "component": 15,
+      "triangles": 2,
+      "vertices": 4,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -27.872,
+       -7.8994,
+       80.5518
+      ],
+      "aabb_max": [
+       -25.737,
+       -5.7086,
+       80.5518
+      ],
+      "aabb_extent": [
+       2.135,
+       2.1908,
+       0.0
+      ],
+      "hull_diameter": 2.4306,
+      "hull_endpoint_A": [
+       -25.737,
+       -6.1797,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -27.872,
+       -7.3414,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": {
+       "median": 1.5849,
+       "p99": 2.4056,
+       "max_sampled": 2.4306,
+       "frac_over_81": 0.0
+      }
+     },
+     {
+      "component": 16,
+      "triangles": 2,
+      "vertices": 4,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -28.5328,
+       -7.3414,
+       80.5518
+      ],
+      "aabb_max": [
+       -26.3697,
+       -5.1673,
+       80.5518
+      ],
+      "aabb_extent": [
+       2.1631,
+       2.174,
+       0.0
+      ],
+      "hull_diameter": 2.385,
+      "hull_endpoint_A": [
+       -26.3697,
+       -5.7086,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -28.5328,
+       -6.7133,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": {
+       "median": 1.5858,
+       "p99": 2.362,
+       "max_sampled": 2.385,
+       "frac_over_81": 0.0
+      }
+     },
+     {
+      "component": 30,
+      "triangles": 2,
+      "vertices": 4,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -30.9981,
+       -0.9684,
+       80.5518
+      ],
+      "aabb_max": [
+       -28.7812,
+       -0.0567,
+       80.5518
+      ],
+      "aabb_extent": [
+       2.2169,
+       0.9117,
+       0.0
+      ],
+      "hull_diameter": 2.3744,
+      "hull_endpoint_A": [
+       -28.7812,
+       -0.1182,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -30.9981,
+       -0.9684,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": {
+       "median": 1.5882,
+       "p99": 2.3622,
+       "max_sampled": 2.3743,
+       "frac_over_81": 0.0
+      }
+     },
+     {
+      "component": 3,
+      "triangles": 1,
+      "vertices": 3,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -22.9201,
+       6.2704,
+       80.5518
+      ],
+      "aabb_max": [
+       -22.0096,
+       8.4874,
+       80.5518
+      ],
+      "aabb_extent": [
+       0.9105,
+       2.217,
+       0.0
+      ],
+      "hull_diameter": 2.354,
+      "hull_endpoint_A": [
+       -22.0096,
+       6.2704,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -22.9201,
+       8.4413,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": null
+     },
+     {
+      "component": 4,
+      "triangles": 1,
+      "vertices": 3,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -22.9201,
+       -9.5126,
+       80.5518
+      ],
+      "aabb_max": [
+       -22.0096,
+       -7.2956,
+       80.5518
+      ],
+      "aabb_extent": [
+       0.9105,
+       2.217,
+       0.0
+      ],
+      "hull_diameter": 2.354,
+      "hull_endpoint_A": [
+       -22.0096,
+       -7.2956,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -22.9201,
+       -9.4664,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": null
+     },
+     {
+      "component": 5,
+      "triangles": 1,
+      "vertices": 3,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -22.9201,
+       -9.4664,
+       80.5518
+      ],
+      "aabb_max": [
+       -22.0096,
+       -7.2497,
+       80.5518
+      ],
+      "aabb_extent": [
+       0.9105,
+       2.2167,
+       0.0
+      ],
+      "hull_diameter": 2.354,
+      "hull_endpoint_A": [
+       -22.0096,
+       -7.2956,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -22.9201,
+       -9.4664,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": null
+     },
+     {
+      "component": 17,
+      "triangles": 1,
+      "vertices": 3,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -29.1266,
+       -6.7133,
+       80.5518
+      ],
+      "aabb_max": [
+       -26.9434,
+       -5.1673,
+       80.5518
+      ],
+      "aabb_extent": [
+       2.1832,
+       1.5459,
+       0.0
+      ],
+      "hull_diameter": 2.3444,
+      "hull_endpoint_A": [
+       -26.9434,
+       -5.1673,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -29.1266,
+       -6.0215,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": null
+     },
+     {
+      "component": 18,
+      "triangles": 1,
+      "vertices": 3,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -29.1266,
+       -6.0215,
+       80.5518
+      ],
+      "aabb_max": [
+       -26.9434,
+       -4.5631,
+       80.5518
+      ],
+      "aabb_extent": [
+       2.1832,
+       1.4584,
+       0.0
+      ],
+      "hull_diameter": 2.3444,
+      "hull_endpoint_A": [
+       -26.9434,
+       -5.1673,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -29.1266,
+       -6.0215,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": null
+     },
+     {
+      "component": 28,
+      "triangles": 1,
+      "vertices": 3,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -30.9058,
+       -1.8754,
+       80.5518
+      ],
+      "aabb_max": [
+       -28.6896,
+       -0.907,
+       80.5518
+      ],
+      "aabb_extent": [
+       2.2163,
+       0.9685,
+       0.0
+      ],
+      "hull_diameter": 2.335,
+      "hull_endpoint_A": [
+       -28.7812,
+       -0.907,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -30.9058,
+       -1.8754,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": null
+     },
+     {
+      "component": 29,
+      "triangles": 1,
+      "vertices": 3,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -30.9981,
+       -1.8754,
+       80.5518
+      ],
+      "aabb_max": [
+       -28.7812,
+       -0.907,
+       80.5518
+      ],
+      "aabb_extent": [
+       2.2169,
+       0.9685,
+       0.0
+      ],
+      "hull_diameter": 2.335,
+      "hull_endpoint_A": [
+       -28.7812,
+       -0.907,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -30.9058,
+       -1.8754,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": null
+     },
+     {
+      "component": 31,
+      "triangles": 1,
+      "vertices": 3,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -30.9981,
+       -0.1182,
+       80.5518
+      ],
+      "aabb_max": [
+       -28.7812,
+       0.8503,
+       80.5518
+      ],
+      "aabb_extent": [
+       2.2169,
+       0.9685,
+       0.0
+      ],
+      "hull_diameter": 2.335,
+      "hull_endpoint_A": [
+       -28.7812,
+       -0.1182,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -30.9058,
+       0.8503,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": null
+     },
+     {
+      "component": 32,
+      "triangles": 1,
+      "vertices": 3,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -30.9058,
+       -0.1182,
+       80.5518
+      ],
+      "aabb_max": [
+       -28.6896,
+       0.8503,
+       80.5518
+      ],
+      "aabb_extent": [
+       2.2163,
+       0.9685,
+       0.0
+      ],
+      "hull_diameter": 2.335,
+      "hull_endpoint_A": [
+       -28.7812,
+       -0.1182,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -30.9058,
+       0.8503,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": null
+     },
+     {
+      "component": 6,
+      "triangles": 1,
+      "vertices": 3,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -23.8213,
+       -9.4664,
+       80.5518
+      ],
+      "aabb_max": [
+       -22.7971,
+       -7.2497,
+       80.5518
+      ],
+      "aabb_extent": [
+       1.0242,
+       2.2167,
+       0.0
+      ],
+      "hull_diameter": 2.3173,
+      "hull_endpoint_A": [
+       -22.7971,
+       -7.2497,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -23.8213,
+       -9.3283,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": null
+     },
+     {
+      "component": 7,
+      "triangles": 1,
+      "vertices": 3,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -23.8213,
+       -9.3283,
+       80.5518
+      ],
+      "aabb_max": [
+       -22.7971,
+       -7.1127,
+       80.5518
+      ],
+      "aabb_extent": [
+       1.0242,
+       2.2156,
+       0.0
+      ],
+      "hull_diameter": 2.3173,
+      "hull_endpoint_A": [
+       -22.7971,
+       -7.2497,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -23.8213,
+       -9.3283,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": null
+     },
+     {
+      "component": 19,
+      "triangles": 1,
+      "vertices": 3,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -29.6474,
+       -6.0215,
+       80.5518
+      ],
+      "aabb_max": [
+       -27.4504,
+       -4.5631,
+       80.5518
+      ],
+      "aabb_extent": [
+       2.197,
+       1.4584,
+       0.0
+      ],
+      "hull_diameter": 2.3089,
+      "hull_endpoint_A": [
+       -27.4504,
+       -4.5631,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -29.6474,
+       -5.2732,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": null
+     },
+     {
+      "component": 20,
+      "triangles": 1,
+      "vertices": 3,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -29.6474,
+       -5.2732,
+       80.5518
+      ],
+      "aabb_max": [
+       -27.4504,
+       -3.9041,
+       80.5518
+      ],
+      "aabb_extent": [
+       2.197,
+       1.3692,
+       0.0
+      ],
+      "hull_diameter": 2.3089,
+      "hull_endpoint_A": [
+       -27.4504,
+       -4.5631,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -29.6474,
+       -5.2732,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": null
+     },
+     {
+      "component": 26,
+      "triangles": 1,
+      "vertices": 3,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -30.7223,
+       -2.7684,
+       80.5518
+      ],
+      "aabb_max": [
+       -28.5077,
+       -1.6904,
+       80.5518
+      ],
+      "aabb_extent": [
+       2.2146,
+       1.078,
+       0.0
+      ],
+      "hull_diameter": 2.3009,
+      "hull_endpoint_A": [
+       -28.6896,
+       -1.6904,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -30.7223,
+       -2.7684,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": null
+     },
+     {
+      "component": 27,
+      "triangles": 1,
+      "vertices": 3,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -30.9058,
+       -2.7684,
+       80.5518
+      ],
+      "aabb_max": [
+       -28.6896,
+       -1.6904,
+       80.5518
+      ],
+      "aabb_extent": [
+       2.2163,
+       1.078,
+       0.0
+      ],
+      "hull_diameter": 2.3009,
+      "hull_endpoint_A": [
+       -28.6896,
+       -1.6904,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -30.7223,
+       -2.7684,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": null
+     },
+     {
+      "component": 33,
+      "triangles": 1,
+      "vertices": 3,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -30.9058,
+       0.6653,
+       80.5518
+      ],
+      "aabb_max": [
+       -28.6896,
+       1.7433,
+       80.5518
+      ],
+      "aabb_extent": [
+       2.2163,
+       1.078,
+       0.0
+      ],
+      "hull_diameter": 2.3009,
+      "hull_endpoint_A": [
+       -28.6896,
+       0.6653,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -30.7223,
+       1.7433,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": null
+     },
+     {
+      "component": 34,
+      "triangles": 1,
+      "vertices": 3,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -30.7223,
+       0.6653,
+       80.5518
+      ],
+      "aabb_max": [
+       -28.5077,
+       1.7433,
+       80.5518
+      ],
+      "aabb_extent": [
+       2.2146,
+       1.078,
+       0.0
+      ],
+      "hull_diameter": 2.3009,
+      "hull_endpoint_A": [
+       -28.6896,
+       0.6653,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -30.7223,
+       1.7433,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": null
+     },
+     {
+      "component": 13,
+      "triangles": 1,
+      "vertices": 3,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -26.3773,
+       -8.3817,
+       80.5518
+      ],
+      "aabb_max": [
+       -25.0538,
+       -6.1797,
+       80.5518
+      ],
+      "aabb_extent": [
+       1.3235,
+       2.202,
+       0.0
+      ],
+      "hull_diameter": 2.2932,
+      "hull_endpoint_A": [
+       -25.737,
+       -6.1797,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -26.3773,
+       -8.3817,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": null
+     },
+     {
+      "component": 14,
+      "triangles": 1,
+      "vertices": 3,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -27.151,
+       -8.3817,
+       80.5518
+      ],
+      "aabb_max": [
+       -25.737,
+       -6.1797,
+       80.5518
+      ],
+      "aabb_extent": [
+       1.4141,
+       2.202,
+       0.0
+      ],
+      "hull_diameter": 2.2932,
+      "hull_endpoint_A": [
+       -25.737,
+       -6.1797,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -26.3773,
+       -8.3817,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": null
+     },
+     {
+      "component": 8,
+      "triangles": 1,
+      "vertices": 3,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -24.7039,
+       -9.3283,
+       80.5518
+      ],
+      "aabb_max": [
+       -23.5739,
+       -7.1127,
+       80.5518
+      ],
+      "aabb_extent": [
+       1.13,
+       2.2156,
+       0.0
+      ],
+      "hull_diameter": 2.2859,
+      "hull_endpoint_A": [
+       -23.5739,
+       -7.1127,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -24.7039,
+       -9.0998,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": null
+     },
+     {
+      "component": 9,
+      "triangles": 1,
+      "vertices": 3,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -24.7039,
+       -9.0998,
+       80.5518
+      ],
+      "aabb_max": [
+       -23.5739,
+       -6.8865,
+       80.5518
+      ],
+      "aabb_extent": [
+       1.13,
+       2.2133,
+       0.0
+      ],
+      "hull_diameter": 2.2859,
+      "hull_endpoint_A": [
+       -23.5739,
+       -7.1127,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -24.7039,
+       -9.0998,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": null
+     },
+     {
+      "component": 21,
+      "triangles": 1,
+      "vertices": 3,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -30.0899,
+       -5.2732,
+       80.5518
+      ],
+      "aabb_max": [
+       -27.8839,
+       -3.9041,
+       80.5518
+      ],
+      "aabb_extent": [
+       2.206,
+       1.3692,
+       0.0
+      ],
+      "hull_diameter": 2.279,
+      "hull_endpoint_A": [
+       -27.8839,
+       -3.9041,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -30.0899,
+       -4.4761,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": null
+     },
+     {
+      "component": 22,
+      "triangles": 1,
+      "vertices": 3,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -30.0899,
+       -4.4761,
+       80.5518
+      ],
+      "aabb_max": [
+       -27.8839,
+       -3.1992,
+       80.5518
+      ],
+      "aabb_extent": [
+       2.206,
+       1.2769,
+       0.0
+      ],
+      "hull_diameter": 2.279,
+      "hull_endpoint_A": [
+       -27.8839,
+       -3.9041,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -30.0899,
+       -4.4761,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": null
+     },
+     {
+      "component": 38,
+      "triangles": 1,
+      "vertices": 3,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -30.0899,
+       2.174,
+       80.5518
+      ],
+      "aabb_max": [
+       -27.8839,
+       3.451,
+       80.5518
+      ],
+      "aabb_extent": [
+       2.206,
+       1.2769,
+       0.0
+      ],
+      "hull_diameter": 2.279,
+      "hull_endpoint_A": [
+       -27.8839,
+       2.8789,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -30.0899,
+       3.451,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": null
+     },
+     {
+      "component": 39,
+      "triangles": 1,
+      "vertices": 3,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -30.0899,
+       2.8789,
+       80.5518
+      ],
+      "aabb_max": [
+       -27.8839,
+       4.2481,
+       80.5518
+      ],
+      "aabb_extent": [
+       2.206,
+       1.3692,
+       0.0
+      ],
+      "hull_diameter": 2.279,
+      "hull_endpoint_A": [
+       -27.8839,
+       2.8789,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -30.0899,
+       3.451,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": null
+     },
+     {
+      "component": 24,
+      "triangles": 1,
+      "vertices": 3,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -30.4494,
+       -3.6383,
+       80.5518
+      ],
+      "aabb_max": [
+       -28.2379,
+       -2.4579,
+       80.5518
+      ],
+      "aabb_extent": [
+       2.2115,
+       1.1804,
+       0.0
+      ],
+      "hull_diameter": 2.2723,
+      "hull_endpoint_A": [
+       -28.5077,
+       -2.4579,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -30.4494,
+       -3.6383,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": null
+     },
+     {
+      "component": 25,
+      "triangles": 1,
+      "vertices": 3,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -30.7223,
+       -3.6383,
+       80.5518
+      ],
+      "aabb_max": [
+       -28.5077,
+       -2.4579,
+       80.5518
+      ],
+      "aabb_extent": [
+       2.2146,
+       1.1804,
+       0.0
+      ],
+      "hull_diameter": 2.2723,
+      "hull_endpoint_A": [
+       -28.5077,
+       -2.4579,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -30.4494,
+       -3.6383,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": null
+     },
+     {
+      "component": 35,
+      "triangles": 1,
+      "vertices": 3,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -30.7223,
+       1.4328,
+       80.5518
+      ],
+      "aabb_max": [
+       -28.5077,
+       2.6132,
+       80.5518
+      ],
+      "aabb_extent": [
+       2.2146,
+       1.1804,
+       0.0
+      ],
+      "hull_diameter": 2.2723,
+      "hull_endpoint_A": [
+       -28.5077,
+       1.4328,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -30.4494,
+       2.6132,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": null
+     },
+     {
+      "component": 36,
+      "triangles": 1,
+      "vertices": 3,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -30.4494,
+       1.4328,
+       80.5518
+      ],
+      "aabb_max": [
+       -28.2379,
+       2.6132,
+       80.5518
+      ],
+      "aabb_extent": [
+       2.2115,
+       1.1804,
+       0.0
+      ],
+      "hull_diameter": 2.2723,
+      "hull_endpoint_A": [
+       -28.5077,
+       1.4328,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -30.4494,
+       2.6132,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": null
+     },
+     {
+      "component": 11,
+      "triangles": 1,
+      "vertices": 3,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -25.5588,
+       -8.7832,
+       80.5518
+      ],
+      "aabb_max": [
+       -24.3296,
+       -6.5741,
+       80.5518
+      ],
+      "aabb_extent": [
+       1.2293,
+       2.2091,
+       0.0
+      ],
+      "hull_diameter": 2.2661,
+      "hull_endpoint_A": [
+       -25.0538,
+       -6.5741,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -25.5588,
+       -8.7832,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": null
+     },
+     {
+      "component": 12,
+      "triangles": 1,
+      "vertices": 3,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -26.3773,
+       -8.7832,
+       80.5518
+      ],
+      "aabb_max": [
+       -25.0538,
+       -6.5741,
+       80.5518
+      ],
+      "aabb_extent": [
+       1.3235,
+       2.2091,
+       0.0
+      ],
+      "hull_diameter": 2.2661,
+      "hull_endpoint_A": [
+       -25.0538,
+       -6.5741,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -25.5588,
+       -8.7832,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": null
+     },
+     {
+      "component": 10,
+      "triangles": 1,
+      "vertices": 3,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -25.5588,
+       -9.0998,
+       80.5518
+      ],
+      "aabb_max": [
+       -24.3296,
+       -6.8865,
+       80.5518
+      ],
+      "aabb_extent": [
+       1.2293,
+       2.2133,
+       0.0
+      ],
+      "hull_diameter": 2.2602,
+      "hull_endpoint_A": [
+       -24.3296,
+       -6.8865,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -25.5588,
+       -8.7832,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": null
+     },
+     {
+      "component": 23,
+      "triangles": 1,
+      "vertices": 3,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -30.4494,
+       -4.4761,
+       80.5518
+      ],
+      "aabb_max": [
+       -28.2379,
+       -3.1992,
+       80.5518
+      ],
+      "aabb_extent": [
+       2.2115,
+       1.2769,
+       0.0
+      ],
+      "hull_diameter": 2.2547,
+      "hull_endpoint_A": [
+       -28.2379,
+       -3.1992,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -30.4494,
+       -3.6383,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": null
+     },
+     {
+      "component": 37,
+      "triangles": 1,
+      "vertices": 3,
+      "watertight": false,
+      "volume_mm3": null,
+      "aabb_min": [
+       -30.4494,
+       2.174,
+       80.5518
+      ],
+      "aabb_max": [
+       -28.2379,
+       3.451,
+       80.5518
+      ],
+      "aabb_extent": [
+       2.2115,
+       1.2769,
+       0.0
+      ],
+      "hull_diameter": 2.2547,
+      "hull_endpoint_A": [
+       -28.2379,
+       2.174,
+       80.5518
+      ],
+      "hull_endpoint_B": [
+       -30.4494,
+       2.6132,
+       80.5518
+      ],
+      "exceeds_86_4": false,
+      "direction_width": null
+     }
+    ]
+   }
+  },
+  "hypothesis_D": {
+   "question": "link5 계열 부품 하나로 86.4 캘리퍼 판독이 가능한가",
+   "whole_link5_hull_diameter": 124.0379,
+   "whole_link5_can_reach_86_4": true,
+   "components_with_hull_ge_80": [],
+   "n_components_ge_86_4": 0
+  },
+  "hypothesis_C": {
+   "question": "체결 하드웨어(스터드+너트)가 붙은 채로 재면 86.4가 나올 수 있는가",
+   "target": 86.4,
+   "gripper_link": {
+    "baseline_hull_diameter": 81.4065,
+    "deficit_to_86_4": 4.9935,
+    "plate_normal_plus_z": {
+     "h_min": 13.9975,
+     "anchor": [
+      -10.722,
+      3.1913,
+      0.7502
+     ],
+     "far_contact": [
+      66.6804,
+      -5.9834,
+      -22.5303
+     ]
+    },
+    "plate_normal_minus_z": {
+     "h_min": 13.9975,
+     "anchor": [
+      66.6804,
+      -5.9834,
+      -22.5303
+     ],
+     "far_contact": [
+      -10.722,
+      3.1913,
+      0.7502
+     ]
+    },
+    "web_normal_plus_y": {
+     "h_min": 20.9719,
+     "anchor": [
+      -10.5868,
+      3.7543,
+      0.7502
+     ],
+     "far_contact": [
+      66.902,
+      -5.9834,
+      -21.9954
+     ]
+    },
+    "web_normal_minus_y": {
+     "h_min": 20.9719,
+     "anchor": [
+      66.902,
+      -5.9834,
+      -21.9954
+     ],
+     "far_contact": [
+      -10.5868,
+      3.7543,
+      0.7502
+     ]
+    },
+    "unconstrained_best_axis": {
+     "h_min": 4.9935,
+     "anchor": [
+      -10.722,
+      3.1913,
+      0.7502
+     ],
+     "far_contact": [
+      66.902,
+      -5.9834,
+      -21.9954
+     ]
+    }
+   },
+   "hardware_reference_mm": {
+    "M3_hex_nut_across_flats": 5.5,
+    "M3_hex_nut_across_corners": 6.35,
+    "M3_hex_nut_thickness": 2.4,
+    "M2_hex_nut_across_flats": 4.0,
+    "M2_hex_nut_across_corners": 4.62,
+    "M2_hex_nut_thickness": 1.6,
+    "note": "ISO 4032 공칭. 실제 부품 미확인 — 사용자 확인 필요."
+   }
+  },
+  "holes": {
+   "gripper_link_axis_y_web": [
+    {
+     "diameter": 3.2,
+     "center": [
+      30.9226,
+      -5.2334,
+      -31.4936
+     ],
+     "axial_span": 1.5,
+     "n_faces": 48,
+     "max_radial_residual": 0.0,
+     "kind": "hole"
+    },
+    {
+     "diameter": 3.2,
+     "center": [
+      30.9226,
+      -5.2334,
+      -6.3736
+     ],
+     "axial_span": 1.5,
+     "n_faces": 48,
+     "max_radial_residual": 0.0,
+     "kind": "hole"
+    },
+    {
+     "diameter": 3.2,
+     "center": [
+      63.3926,
+      -5.2334,
+      -18.9336
+     ],
+     "axial_span": 1.5,
+     "n_faces": 48,
+     "max_radial_residual": 0.0,
+     "kind": "hole"
+    },
+    {
+     "diameter": 2.2,
+     "center": [
+      38.3042,
+      -5.2334,
+      -8.4336
+     ],
+     "axial_span": 1.5,
+     "n_faces": 48,
+     "max_radial_residual": 0.0,
+     "kind": "hole"
+    },
+    {
+     "diameter": 2.2,
+     "center": [
+      38.3042,
+      -5.2334,
+      -29.4336
+     ],
+     "axial_span": 1.5,
+     "n_faces": 48,
+     "max_radial_residual": 0.0,
+     "kind": "hole"
+    }
+   ],
+   "gripper_link_axis_z_plate": [],
+   "link5_axis_x": [
+    {
+     "diameter": 3.2,
+     "center": [
+      -10.7758,
+      12.0474,
+      83.7256
+     ],
+     "axial_span": 1.5,
+     "n_faces": 54,
+     "max_radial_residual": 2e-05,
+     "kind": "hole"
+    },
+    {
+     "diameter": 3.2,
+     "center": [
+      -10.7758,
+      -13.0726,
+      103.1071
+     ],
+     "axial_span": 1.5,
+     "n_faces": 54,
+     "max_radial_residual": 2e-05,
+     "kind": "hole"
+    },
+    {
+     "diameter": 3.2,
+     "center": [
+      -10.7758,
+      12.0474,
+      103.1071
+     ],
+     "axial_span": 1.5,
+     "n_faces": 54,
+     "max_radial_residual": 2e-05,
+     "kind": "hole"
+    },
+    {
+     "diameter": 3.2,
+     "center": [
+      -10.7758,
+      -0.5126,
+      116.1956
+     ],
+     "axial_span": 1.5,
+     "n_faces": 54,
+     "max_radial_residual": 2e-05,
+     "kind": "hole"
+    },
+    {
+     "diameter": 3.2,
+     "center": [
+      -10.7758,
+      -13.0726,
+      83.7256
+     ],
+     "axial_span": 1.5,
+     "n_faces": 54,
+     "max_radial_residual": 2e-05,
+     "kind": "hole"
+    },
+    {
+     "diameter": 3.0,
+     "center": [
+      14.7479,
+      -10.9863,
+      8.2425
+     ],
+     "axial_span": 1.5,
+     "n_faces": 52,
+     "max_radial_residual": 3e-05,
+     "kind": "hole"
+    },
+    {
+     "diameter": 3.0,
+     "center": [
+      14.7479,
+      11.0137,
+      8.2425
+     ],
+     "axial_span": 1.5,
+     "n_faces": 52,
+     "max_radial_residual": 3e-05,
+     "kind": "hole"
+    }
+   ],
+   "link5_axis_y": [
+    {
+     "diameter": 3.0,
+     "center": [
+      -11.0096,
+      -16.9963,
+      8.2425
+     ],
+     "axial_span": 1.5,
+     "n_faces": 52,
+     "max_radial_residual": 3e-05,
+     "kind": "hole"
+    },
+    {
+     "diameter": 3.0,
+     "center": [
+      -11.0,
+      -15.4995,
+      8.2505
+     ],
+     "axial_span": 1.5,
+     "n_faces": 52,
+     "max_radial_residual": 3e-05,
+     "kind": "hole"
+    },
+    {
+     "diameter": 3.0,
+     "center": [
+      10.9904,
+      -16.9963,
+      8.2425
+     ],
+     "axial_span": 1.5,
+     "n_faces": 52,
+     "max_radial_residual": 3e-05,
+     "kind": "hole"
+    },
+    {
+     "diameter": 3.0,
+     "center": [
+      11.0,
+      -15.4995,
+      8.2505
+     ],
+     "axial_span": 1.5,
+     "n_faces": 52,
+     "max_radial_residual": 3e-05,
+     "kind": "hole"
+    },
+    {
+     "diameter": 2.0,
+     "center": [
+      -10.2596,
+      15.9712,
+      23.0356
+     ],
+     "axial_span": 1.5,
+     "n_faces": 42,
+     "max_radial_residual": 3e-05,
+     "kind": "hole"
+    },
+    {
+     "diameter": 2.0,
+     "center": [
+      -10.2596,
+      -16.9963,
+      43.7356
+     ],
+     "axial_span": 1.5,
+     "n_faces": 42,
+     "max_radial_residual": 2e-05,
+     "kind": "hole"
+    },
+    {
+     "diameter": 2.0,
+     "center": [
+      -10.2596,
+      -16.9963,
+      19.2856
+     ],
+     "axial_span": 1.5,
+     "n_faces": 42,
+     "max_radial_residual": 3e-05,
+     "kind": "hole"
+    },
+    {
+     "diameter": 2.0,
+     "center": [
+      -10.2596,
+      15.9712,
+      43.7356
+     ],
+     "axial_span": 1.5,
+     "n_faces": 42,
+     "max_radial_residual": 2e-05,
+     "kind": "hole"
+    },
+    {
+     "diameter": 2.0,
+     "center": [
+      10.2404,
+      16.5237,
+      43.7356
+     ],
+     "axial_span": 0.5,
+     "n_faces": 42,
+     "max_radial_residual": 2e-05,
+     "kind": "hole"
+    },
+    {
+     "diameter": 2.0,
+     "center": [
+      10.2404,
+      -16.4963,
+      43.7356
+     ],
+     "axial_span": 0.5,
+     "n_faces": 42,
+     "max_radial_residual": 2e-05,
+     "kind": "hole"
+    },
+    {
+     "diameter": 2.0,
+     "center": [
+      10.2404,
+      -16.9963,
+      19.2856
+     ],
+     "axial_span": 1.5,
+     "n_faces": 42,
+     "max_radial_residual": 3e-05,
+     "kind": "hole"
+    },
+    {
+     "diameter": 2.0,
+     "center": [
+      10.2404,
+      17.0237,
+      23.0356
+     ],
+     "axial_span": 1.5,
+     "n_faces": 42,
+     "max_radial_residual": 3e-05,
+     "kind": "hole"
+    }
+   ],
+   "link5_axis_z": [
+    {
+     "diameter": 18.0,
+     "center": [
+      -22.0096,
+      -0.5126,
+      83.4018
+     ],
+     "axial_span": 5.7,
+     "n_faces": 124,
+     "max_radial_residual": 0.0,
+     "kind": "boss"
+    },
+    {
+     "diameter": 13.566,
+     "center": [
+      -22.0096,
+      -0.5126,
+      78.1518
+     ],
+     "axial_span": 4.8,
+     "n_faces": 108,
+     "max_radial_residual": 0.0,
+     "kind": "boss"
+    },
+    {
+     "diameter": 13.566,
+     "center": [
+      -22.0096,
+      -0.5126,
+      79.8018
+     ],
+     "axial_span": 1.5,
+     "n_faces": 108,
+     "max_radial_residual": 0.0,
+     "kind": "hole"
+    },
+    {
+     "diameter": 12.5,
+     "center": [
+      -22.0096,
+      -0.5126,
+      87.2518
+     ],
+     "axial_span": 1.0,
+     "n_faces": 104,
+     "max_radial_residual": 0.0,
+     "kind": "hole"
+    },
+    {
+     "diameter": 11.0,
+     "center": [
+      -22.0096,
+      -0.5126,
+      86.8018
+     ],
+     "axial_span": 0.1,
+     "n_faces": 98,
+     "max_radial_residual": 0.0,
+     "kind": "boss"
+    },
+    {
+     "diameter": 10.0,
+     "center": [
+      -22.0096,
+      -0.5126,
+      70.2518
+     ],
+     "axial_span": 11.0,
+     "n_faces": 94,
+     "max_radial_residual": 0.0,
+     "kind": "boss"
+    }
+   ]
+  }
+ },
+ "stage2": {
+  "tool": "t3r_n5b_fixedjaw_span",
+  "read_only": true,
+  "joint5_check": {
+   "axis_in_link5": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "gripper_x_axis_in_link5": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "gripper_link_aabb_in_link5_min": [
+    -9.9996,
+    -19.7963,
+    41.2676
+   ],
+   "gripper_link_aabb_in_link5_max": [
+    15.2404,
+    19.5712,
+    119.1176
+   ],
+   "link5_aabb_min": [
+    -30.9981,
+    -17.7463,
+    -0.7495
+   ],
+   "link5_aabb_max": [
+    15.4979,
+    17.7737,
+    119.8856
+   ],
+   "note": "moving jaw tip z vs link5 z_max 가 맞아떨어지면 고정측 조가 link5.stl 안에 있다"
+  },
+  "link5_components_sorted_by_triangles": {
+   "n_components": 114,
+   "n_components_ge_100_tri": 7,
+   "top15": [
+    {
+     "component": 56,
+     "triangles": 6222,
+     "vertices": 3118,
+     "watertight": false,
+     "volume_mm3": null,
+     "aabb_min": [
+      -30.9981,
+      -17.7463,
+      16.0856
+     ],
+     "aabb_extent": [
+      23.9384,
+      34.4676,
+      103.8
+     ],
+     "hull_diameter": 105.6842
+    },
+    {
+     "component": 111,
+     "triangles": 5276,
+     "vertices": 2624,
+     "watertight": true,
+     "volume_mm3": 3735.268,
+     "aabb_min": [
+      -17.2596,
+      -17.7463,
+      -0.2575
+     ],
+     "aabb_extent": [
+      32.7576,
+      35.52,
+      46.89
+     ],
+     "hull_diameter": 65.2708
+    },
+    {
+     "component": 112,
+     "triangles": 1054,
+     "vertices": 529,
+     "watertight": true,
+     "volume_mm3": 246.762,
+     "aabb_min": [
+      -27.9642,
+      -6.4699,
+      86.6518
+     ],
+     "aabb_extent": [
+      11.909,
+      11.9034,
+      3.9
+     ],
+     "hull_diameter": 11.909
+    },
+    {
+     "component": 2,
+     "triangles": 564,
+     "vertices": 313,
+     "watertight": false,
+     "volume_mm3": null,
+     "aabb_min": [
+      -30.9981,
+      -9.5126,
+      80.5518
+     ],
+     "aabb_extent": [
+      17.9769,
+      18.0,
+      7.2
+     ],
+     "hull_diameter": 18.881
+    },
+    {
+     "component": 1,
+     "triangles": 348,
+     "vertices": 202,
+     "watertight": false,
+     "volume_mm3": null,
+     "aabb_min": [
+      -28.7812,
+      -7.2956,
+      64.7518
+     ],
+     "aabb_extent": [
+      13.5431,
+      13.566,
+      15.8
+     ],
+     "hull_diameter": 19.7099
+    },
+    {
+     "component": 0,
+     "triangles": 288,
+     "vertices": 140,
+     "watertight": true,
+     "volume_mm3": 1039.995,
+     "aabb_min": [
+      -14.0,
+      -16.2495,
+      -0.7495
+     ],
+     "aabb_extent": [
+      28.0,
+      26.25,
+      12.0
+     ],
+     "hull_diameter": 34.5552
+    },
+    {
+     "component": 113,
+     "triangles": 192,
+     "vertices": 98,
+     "watertight": true,
+     "volume_mm3": 9.475,
+     "aabb_min": [
+      -27.5068,
+      -6.0013,
+      86.7518
+     ],
+     "aabb_extent": [
+      10.9943,
+      10.9887,
+      0.1
+     ],
+     "hull_diameter": 10.9948
+    },
+    {
+     "component": 110,
+     "triangles": 32,
+     "vertices": 16,
+     "watertight": true,
+     "volume_mm3": 35258.856,
+     "aabb_min": [
+      -12.3696,
+      -16.7463,
+      16.9256
+     ],
+     "aabb_extent": [
+      24.72,
+      32.0,
+      45.22
+     ],
+     "hull_diameter": 60.6624
+    },
+    {
+     "component": 15,
+     "triangles": 2,
+     "vertices": 4,
+     "watertight": false,
+     "volume_mm3": null,
+     "aabb_min": [
+      -27.872,
+      -7.8994,
+      80.5518
+     ],
+     "aabb_extent": [
+      2.135,
+      2.1908,
+      0.0
+     ],
+     "hull_diameter": 2.4306
+    },
+    {
+     "component": 16,
+     "triangles": 2,
+     "vertices": 4,
+     "watertight": false,
+     "volume_mm3": null,
+     "aabb_min": [
+      -28.5328,
+      -7.3414,
+      80.5518
+     ],
+     "aabb_extent": [
+      2.1631,
+      2.174,
+      0.0
+     ],
+     "hull_diameter": 2.385
+    },
+    {
+     "component": 30,
+     "triangles": 2,
+     "vertices": 4,
+     "watertight": false,
+     "volume_mm3": null,
+     "aabb_min": [
+      -30.9981,
+      -0.9684,
+      80.5518
+     ],
+     "aabb_extent": [
+      2.2169,
+      0.9117,
+      0.0
+     ],
+     "hull_diameter": 2.3744
+    },
+    {
+     "component": 44,
+     "triangles": 2,
+     "vertices": 4,
+     "watertight": false,
+     "volume_mm3": null,
+     "aabb_min": [
+      -28.5328,
+      4.1422,
+      80.5518
+     ],
+     "aabb_extent": [
+      2.1631,
+      2.174,
+      0.0
+     ],
+     "hull_diameter": 2.385
+    },
+    {
+     "component": 45,
+     "triangles": 2,
+     "vertices": 4,
+     "watertight": false,
+     "volume_mm3": null,
+     "aabb_min": [
+      -27.872,
+      4.6835,
+      80.5518
+     ],
+     "aabb_extent": [
+      2.135,
+      2.1908,
+      0.0
+     ],
+     "hull_diameter": 2.4306
+    },
+    {
+     "component": 68,
+     "triangles": 2,
+     "vertices": 4,
+     "watertight": false,
+     "volume_mm3": null,
+     "aabb_min": [
+      -27.872,
+      4.6835,
+      80.5518
+     ],
+     "aabb_extent": [
+      2.135,
+      2.1908,
+      0.0
+     ],
+     "hull_diameter": 2.4306
+    },
+    {
+     "component": 69,
+     "triangles": 2,
+     "vertices": 4,
+     "watertight": false,
+     "volume_mm3": null,
+     "aabb_min": [
+      -28.5328,
+      4.1422,
+      80.5518
+     ],
+     "aabb_extent": [
+      2.1631,
+      2.174,
+      0.0
+     ],
+     "hull_diameter": 2.385
+    }
+   ],
+   "degenerate_1_2_tri_count": 106
+  },
+  "link5_distal_zcut_sweep": [
+   {
+    "z_cut": 0.0,
+    "n_vertices": 6878,
+    "hull_diameter": 123.7388
+   },
+   {
+    "z_cut": 2.0,
+    "n_vertices": 6858,
+    "hull_diameter": 122.0203
+   },
+   {
+    "z_cut": 4.0,
+    "n_vertices": 6614,
+    "hull_diameter": 120.5217
+   },
+   {
+    "z_cut": 6.0,
+    "n_vertices": 6396,
+    "hull_diameter": 118.1977
+   },
+   {
+    "z_cut": 8.0,
+    "n_vertices": 6188,
+    "hull_diameter": 116.2511
+   },
+   {
+    "z_cut": 10.0,
+    "n_vertices": 5934,
+    "hull_diameter": 114.3775
+   },
+   {
+    "z_cut": 12.0,
+    "n_vertices": 5854,
+    "hull_diameter": 112.4738
+   },
+   {
+    "z_cut": 14.0,
+    "n_vertices": 5776,
+    "hull_diameter": 110.5355
+   },
+   {
+    "z_cut": 16.0,
+    "n_vertices": 5690,
+    "hull_diameter": 108.6003
+   },
+   {
+    "z_cut": 18.0,
+    "n_vertices": 5516,
+    "hull_diameter": 106.6683
+   },
+   {
+    "z_cut": 20.0,
+    "n_vertices": 5360,
+    "hull_diameter": 104.7398
+   },
+   {
+    "z_cut": 22.0,
+    "n_vertices": 5238,
+    "hull_diameter": 102.9218
+   },
+   {
+    "z_cut": 24.0,
+    "n_vertices": 5080,
+    "hull_diameter": 101.0006
+   },
+   {
+    "z_cut": 26.0,
+    "n_vertices": 4992,
+    "hull_diameter": 99.0835
+   },
+   {
+    "z_cut": 28.0,
+    "n_vertices": 4920,
+    "hull_diameter": 97.1706
+   },
+   {
+    "z_cut": 30.0,
+    "n_vertices": 4848,
+    "hull_diameter": 95.2623
+   },
+   {
+    "z_cut": 32.0,
+    "n_vertices": 4774,
+    "hull_diameter": 93.8482
+   },
+   {
+    "z_cut": 34.0,
+    "n_vertices": 4696,
+    "hull_diameter": 91.5659
+   },
+   {
+    "z_cut": 36.0,
+    "n_vertices": 4584,
+    "hull_diameter": 89.6728
+   },
+   {
+    "z_cut": 38.0,
+    "n_vertices": 4512,
+    "hull_diameter": 87.7855
+   },
+   {
+    "z_cut": 40.0,
+    "n_vertices": 4430,
+    "hull_diameter": 86.0115
+   },
+   {
+    "z_cut": 42.0,
+    "n_vertices": 4314,
+    "hull_diameter": 84.1399
+   },
+   {
+    "z_cut": 44.0,
+    "n_vertices": 4090,
+    "hull_diameter": 82.2755
+   },
+   {
+    "z_cut": 46.0,
+    "n_vertices": 3900,
+    "hull_diameter": 80.5231
+   },
+   {
+    "z_cut": 48.0,
+    "n_vertices": 3824,
+    "hull_diameter": 74.274
+   },
+   {
+    "z_cut": 50.0,
+    "n_vertices": 3820,
+    "hull_diameter": 73.5448
+   },
+   {
+    "z_cut": 52.0,
+    "n_vertices": 3816,
+    "hull_diameter": 69.7673
+   },
+   {
+    "z_cut": 54.0,
+    "n_vertices": 3816,
+    "hull_diameter": 69.7673
+   },
+   {
+    "z_cut": 56.0,
+    "n_vertices": 3812,
+    "hull_diameter": 67.2433
+   },
+   {
+    "z_cut": 58.0,
+    "n_vertices": 3796,
+    "hull_diameter": 65.2744
+   },
+   {
+    "z_cut": 60.0,
+    "n_vertices": 3788,
+    "hull_diameter": 65.234
+   },
+   {
+    "z_cut": 62.0,
+    "n_vertices": 3788,
+    "hull_diameter": 65.234
+   },
+   {
+    "z_cut": 64.0,
+    "n_vertices": 3768,
+    "hull_diameter": 60.2971
+   },
+   {
+    "z_cut": 66.0,
+    "n_vertices": 3713,
+    "hull_diameter": 48.018
+   },
+   {
+    "z_cut": 68.0,
+    "n_vertices": 3713,
+    "hull_diameter": 48.018
+   },
+   {
+    "z_cut": 70.0,
+    "n_vertices": 3713,
+    "hull_diameter": 48.018
+   },
+   {
+    "z_cut": 72.0,
+    "n_vertices": 3713,
+    "hull_diameter": 48.018
+   },
+   {
+    "z_cut": 74.0,
+    "n_vertices": 3713,
+    "hull_diameter": 48.018
+   },
+   {
+    "z_cut": 76.0,
+    "n_vertices": 3612,
+    "hull_diameter": 45.9903
+   },
+   {
+    "z_cut": 78.0,
+    "n_vertices": 3612,
+    "hull_diameter": 45.9903
+   },
+   {
+    "z_cut": 80.0,
+    "n_vertices": 3416,
+    "hull_diameter": 44.6601
+   },
+   {
+    "z_cut": 82.0,
+    "n_vertices": 2450,
+    "hull_diameter": 42.1927
+   },
+   {
+    "z_cut": 84.0,
+    "n_vertices": 2322,
+    "hull_diameter": 40.4081
+   },
+   {
+    "z_cut": 86.0,
+    "n_vertices": 2198,
+    "hull_diameter": 39.7382
+   },
+   {
+    "z_cut": 88.0,
+    "n_vertices": 1604,
+    "hull_diameter": 38.911
+   },
+   {
+    "z_cut": 90.0,
+    "n_vertices": 1320,
+    "hull_diameter": 38.911
+   },
+   {
+    "z_cut": 92.0,
+    "n_vertices": 1092,
+    "hull_diameter": 38.911
+   },
+   {
+    "z_cut": 94.0,
+    "n_vertices": 1012,
+    "hull_diameter": 38.4677
+   },
+   {
+    "z_cut": 96.0,
+    "n_vertices": 912,
+    "hull_diameter": 34.8884
+   },
+   {
+    "z_cut": 98.0,
+    "n_vertices": 824,
+    "hull_diameter": 34.8884
+   },
+   {
+    "z_cut": 100.0,
+    "n_vertices": 736,
+    "hull_diameter": 34.8884
+   },
+   {
+    "z_cut": 102.0,
+    "n_vertices": 628,
+    "hull_diameter": 34.4676
+   },
+   {
+    "z_cut": 104.0,
+    "n_vertices": 480,
+    "hull_diameter": 34.4676
+   },
+   {
+    "z_cut": 106.0,
+    "n_vertices": 356,
+    "hull_diameter": 34.4676
+   },
+   {
+    "z_cut": 108.0,
+    "n_vertices": 94,
+    "hull_diameter": 9.2787
+   },
+   {
+    "z_cut": 110.0,
+    "n_vertices": 94,
+    "hull_diameter": 9.2787
+   }
+  ],
+  "hypothesis_D_quant": {
+   "z_cut_giving_86_4": 39.5507,
+   "joint5_origin_z": 52.035,
+   "link5_z_max": 119.8856,
+   "distal_piece_length_if_86_4": 80.3349,
+   "hull_diameter_at_that_cut": 86.4283,
+   "endpoints": [
+    [
+     -11.5258,
+     -3.5744,
+     119.705
+    ],
+    [
+     13.9966,
+     16.2687,
+     39.5507
+    ]
+   ],
+   "hull_d_distal_of_joint5": 69.7673,
+   "hull_d_distal_of_z40": 86.0115,
+   "hull_d_distal_of_z30": 95.2623
+  },
+  "gripper_link_web_section": {
+   "method": "face-group radial profile (no shapely)",
+   "groups": [
+    {
+     "n_faces": 548,
+     "n_boundary_pts": 526,
+     "center_xz": [
+      5.862,
+      -37.8673
+     ],
+     "r_min": 0.7556,
+     "r_max": 45.4506,
+     "r_ratio": 60.1541,
+     "inscribed_diameter": 1.5111,
+     "estimated_lobes": 2,
+     "is_round_hole": false
+    },
+    {
+     "n_faces": 548,
+     "n_boundary_pts": 526,
+     "center_xz": [
+      5.862,
+      0.0002
+     ],
+     "r_min": 0.7556,
+     "r_max": 45.4506,
+     "r_ratio": 60.1541,
+     "inscribed_diameter": 1.5111,
+     "estimated_lobes": 2,
+     "is_round_hole": false
+    },
+    {
+     "n_faces": 34,
+     "n_boundary_pts": 36,
+     "center_xz": [
+      61.8857,
+      -19.951
+     ],
+     "r_min": 5.2749,
+     "r_max": 21.7387,
+     "r_ratio": 4.1211,
+     "inscribed_diameter": 10.5499,
+     "estimated_lobes": 1,
+     "is_round_hole": false
+    },
+    {
+     "n_faces": 266,
+     "n_boundary_pts": 267,
+     "center_xz": [
+      27.4531,
+      -18.726
+     ],
+     "r_min": 7.7872,
+     "r_max": 19.0315,
+     "r_ratio": 2.4439,
+     "inscribed_diameter": 15.5745,
+     "estimated_lobes": 3,
+     "is_round_hole": false
+    },
+    {
+     "n_faces": 458,
+     "n_boundary_pts": 458,
+     "center_xz": [
+      51.5301,
+      -18.9336
+     ],
+     "r_min": 3.9243,
+     "r_max": 14.2191,
+     "r_ratio": 3.6234,
+     "inscribed_diameter": 7.8485,
+     "estimated_lobes": 27,
+     "is_round_hole": false
+    },
+    {
+     "n_faces": 48,
+     "n_boundary_pts": 48,
+     "center_xz": [
+      63.3926,
+      -18.9336
+     ],
+     "r_min": 1.6,
+     "r_max": 1.6,
+     "r_ratio": 1.0,
+     "inscribed_diameter": 3.2,
+     "estimated_lobes": 9,
+     "is_round_hole": true
+    },
+    {
+     "n_faces": 48,
+     "n_boundary_pts": 48,
+     "center_xz": [
+      30.9226,
+      -31.4936
+     ],
+     "r_min": 1.6,
+     "r_max": 1.6,
+     "r_ratio": 1.0,
+     "inscribed_diameter": 3.2,
+     "estimated_lobes": 8,
+     "is_round_hole": true
+    },
+    {
+     "n_faces": 48,
+     "n_boundary_pts": 48,
+     "center_xz": [
+      30.9226,
+      -6.3736
+     ],
+     "r_min": 1.6,
+     "r_max": 1.6,
+     "r_ratio": 1.0,
+     "inscribed_diameter": 3.2,
+     "estimated_lobes": 8,
+     "is_round_hole": true
+    },
+    {
+     "n_faces": 48,
+     "n_boundary_pts": 48,
+     "center_xz": [
+      38.3042,
+      -8.4336
+     ],
+     "r_min": 1.1,
+     "r_max": 1.1,
+     "r_ratio": 1.0,
+     "inscribed_diameter": 2.2,
+     "estimated_lobes": 6,
+     "is_round_hole": true
+    },
+    {
+     "n_faces": 48,
+     "n_boundary_pts": 48,
+     "center_xz": [
+      38.3042,
+      -29.4336
+     ],
+     "r_min": 1.1,
+     "r_max": 1.1,
+     "r_ratio": 1.0,
+     "inscribed_diameter": 2.2,
+     "estimated_lobes": 4,
+     "is_round_hole": true
+    },
+    {
+     "n_faces": 53,
+     "n_boundary_pts": 44,
+     "center_xz": [
+      28.2287,
+      -37.5203
+     ],
+     "r_min": 0.0052,
+     "r_max": 0.9179,
+     "r_ratio": 174.9911,
+     "inscribed_diameter": 0.0105,
+     "estimated_lobes": 3,
+     "is_round_hole": false
+    },
+    {
+     "n_faces": 48,
+     "n_boundary_pts": 37,
+     "center_xz": [
+      28.2288,
+      -0.2598
+     ],
+     "r_min": 0.0057,
+     "r_max": 0.8702,
+     "r_ratio": 153.5344,
+     "inscribed_diameter": 0.0113,
+     "estimated_lobes": 5,
+     "is_round_hole": false
+    }
+   ]
+  },
+  "hypothesis_C_at_real_holes": {
+   "axis": "+/-y (웹 법선) — gripper_link 에는 ±z(판면) 관통구멍이 0개",
+   "target": 86.4,
+   "rows": [
+    {
+     "hole": "B1_D3.2",
+     "required_protrusion_mm": 56.7981
+    },
+    {
+     "hole": "B3_D3.2",
+     "required_protrusion_mm": 56.7982
+    },
+    {
+     "hole": "B2_D3.2_near_tip",
+     "required_protrusion_mm": 30.9408
+    },
+    {
+     "hole": "S1h_D2.2",
+     "required_protrusion_mm": 53.5203
+    },
+    {
+     "hole": "S2h_D2.2",
+     "required_protrusion_mm": 53.5202
+    }
+   ],
+   "best_case_anchor_anywhere_y": 20.9719,
+   "M3_nut_thickness_ref": 2.4
+  }
+ }
+}

@@ -1,0 +1,358 @@
+#!/usr/bin/env python3
+"""
+t3r_n5_hypcd_link5_hull_readonly.py  (READ-ONLY)
+
+36th 세션 종료 후 사용자가 제기한 두 가설을 정량 검정한다.
+
+  가설 D (부품 오식별): 사용자가 캘리퍼로 잰 실물이 gripper_link(이동측 조)가 아니라
+     link5(고정측/피벗 스터드형)일 수 있다. 그렇다면 86.4를 gripper_link 볼록껍질
+     상한 81.4065와 비교한 것 자체가 범주 오류다.
+     -> link5.stl 전체 및 연결성분별 볼록껍질 지름을 산출해 86.4와 대조.
+
+  가설 C (체결 하드웨어 포함 측정): STL은 판금만 모델링하므로, 나사산 스터드 +
+     육각 너트가 붙은 상태로 재면 81.4065를 넘는 것이 정상일 수 있다.
+     -> "86.4를 만들려면 어느 방향으로 얼마나 튀어나와야 하는가"를 최적 앵커에서
+        정량화. 판면 수직(±z), 웹 수직(±y), 무제약 세 경우.
+
+읽기 전용: 어떤 자산도 수정하지 않는다. gripper_left_link.stl 은 열지 않는다.
+"""
+import json
+import hashlib
+import sys
+import numpy as np
+import trimesh
+from scipy.spatial import ConvexHull
+
+MESH_DIR = "/home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/urdf/meshes"
+URDF_SCALE = 1.0  # STL 단위가 이미 mm (URDF scale 0.001 은 m 변환용). mm 로 다룬다.
+CALIPER = 86.4
+GRIPPER_HULL_D = 81.4065  # 36th 확정값 (재현 검증 대상)
+
+out = {"tool": "t3r_n5_hypcd_link5_hull_readonly", "read_only": True}
+
+
+def sha256(p):
+    h = hashlib.sha256()
+    with open(p, "rb") as f:
+        for c in iter(lambda: f.read(1 << 20), b""):
+            h.update(c)
+    return h.hexdigest()
+
+
+def hull_diameter(pts):
+    """점집합의 정확한 지름(최대 정점쌍 거리)과 그 끝점."""
+    pts = np.asarray(pts, dtype=np.float64)
+    if len(pts) > 3:
+        try:
+            hv = pts[ConvexHull(pts).vertices]
+        except Exception:
+            hv = pts
+    else:
+        hv = pts
+    d2 = ((hv[:, None, :] - hv[None, :, :]) ** 2).sum(-1)
+    i, j = np.unravel_index(np.argmax(d2), d2.shape)
+    return float(np.sqrt(d2[i, j])), hv[i].tolist(), hv[j].tolist(), hv
+
+
+def load(name):
+    """
+    STL 은 정점 공유 정보가 없다. process=False 로 읽으면 face_adjacency 가 비어
+    split()/구멍검출이 전부 깨진다(첫 실행에서 성분이 삼각형당 1개로 나왔던 원인).
+    merge_vertices 후 watertight 여부로 병합 성공을 검증한다.
+    """
+    p = f"{MESH_DIR}/{name}"
+    m = trimesh.load(p, process=False, force="mesh")
+    raw_v = np.asarray(m.vertices, dtype=np.float64).copy()
+    m.merge_vertices()
+    return p, m, raw_v
+
+
+def component_report(mesh, max_components=40):
+    """연결성분별 기하 요약 (병합된 메시 전제)."""
+    comps = mesh.split(only_watertight=False)
+    rows = []
+    for k, c in enumerate(comps[:max_components]):
+        V = np.asarray(c.vertices, dtype=np.float64)
+        d, a, b, hv = hull_diameter(V)
+        lo, hi = V.min(0), V.max(0)
+        rows.append({
+            "component": k,
+            "triangles": int(len(c.faces)),
+            "vertices": int(len(V)),
+            "watertight": bool(c.is_watertight),
+            "volume_mm3": round(float(abs(c.volume)), 3) if c.is_watertight else None,
+            "aabb_min": [round(float(x), 4) for x in lo],
+            "aabb_max": [round(float(x), 4) for x in hi],
+            "aabb_extent": [round(float(x), 4) for x in (hi - lo)],
+            "hull_diameter": round(d, 4),
+            "hull_endpoint_A": [round(float(x), 4) for x in a],
+            "hull_endpoint_B": [round(float(x), 4) for x in b],
+            "exceeds_86_4": bool(d >= CALIPER),
+            "direction_width": direction_width_stats(hv) if len(hv) > 3 else None,
+        })
+    rows.sort(key=lambda r: -r["hull_diameter"])
+    return {"n_components": int(len(comps)), "components": rows}
+
+
+def width_along(hull_pts, direction):
+    d = np.asarray(direction, dtype=np.float64)
+    d = d / np.linalg.norm(d)
+    proj = hull_pts @ d
+    return float(proj.max() - proj.min())
+
+
+def direction_width_stats(hull_pts, n=20000, seed=0):
+    """무작위 방향 폭 분포 (캘리퍼 자세 사냥 난이도 추정)."""
+    rng = np.random.default_rng(seed)
+    d = rng.normal(size=(n, 3))
+    d /= np.linalg.norm(d, axis=1, keepdims=True)
+    proj = hull_pts @ d.T
+    w = proj.max(0) - proj.min(0)
+    return {
+        "median": round(float(np.median(w)), 4),
+        "p99": round(float(np.percentile(w, 99)), 4),
+        "max_sampled": round(float(w.max()), 4),
+        "frac_over_81": round(float((w > 81.0).mean()), 5),
+    }
+
+
+def min_protrusion_for_target(hull_pts, axis, target=CALIPER):
+    """
+    가설 C 정량화.
+    표면(볼록껍질 정점)의 어떤 앵커 p 에서 방향 axis 로 h 만큼 튀어나온 점 q=p+h*axis 를
+    추가했을 때, 새 지름 max_r |q-r| 가 target 이 되게 하는 최소 h.
+
+    각 앵커 p 에 대해 f(h) = max_r |p + h*u - r| 는 h 의 단조증가 볼록함수이므로
+    이분법으로 h 를 구하고, 앵커 전체에서 최소값을 취한다. (= 가장 유리한 스터드 위치)
+    """
+    u = np.asarray(axis, dtype=np.float64)
+    u = u / np.linalg.norm(u)
+    P = hull_pts
+
+    def fmax(p, h):
+        q = p + h * u
+        return np.sqrt(((P - q) ** 2).sum(1)).max()
+
+    best = (np.inf, None, None)
+    for p in P:
+        if fmax(p, 0.0) > target:
+            return {"h_min": 0.0, "note": "이미 target 초과"}
+        lo, hi = 0.0, 1.0
+        while fmax(p, hi) < target:
+            hi *= 2.0
+            if hi > 1e4:
+                break
+        for _ in range(80):
+            mid = 0.5 * (lo + hi)
+            if fmax(p, mid) < target:
+                lo = mid
+            else:
+                hi = mid
+        h = 0.5 * (lo + hi)
+        if h < best[0]:
+            qq = p + h * u
+            far = P[np.argmax(np.sqrt(((P - qq) ** 2).sum(1)))]
+            best = (h, p.tolist(), far.tolist())
+    return {
+        "h_min": round(float(best[0]), 4),
+        "anchor": [round(float(x), 4) for x in best[1]],
+        "far_contact": [round(float(x), 4) for x in best[2]],
+    }
+
+
+def detect_round_features(mesh, axis, tol_normal=0.06, min_faces=12,
+                          r_range=(0.5, 12.0), resid_tol=0.06):
+    """축 방향 axis 에 평행한 원통면(관통 구멍 / 보스) 검출."""
+    a = np.asarray(axis, dtype=np.float64)
+    a = a / np.linalg.norm(a)
+    N = mesh.face_normals
+    sel = np.abs(N @ a) < tol_normal
+    idx = np.where(sel)[0]
+    if len(idx) == 0:
+        return []
+    adj = mesh.face_adjacency
+    keep = sel[adj[:, 0]] & sel[adj[:, 1]]
+    import collections
+    parent = {int(i): int(i) for i in idx}
+
+    def find(x):
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+
+    for e in adj[keep]:
+        ra, rb = find(int(e[0])), find(int(e[1]))
+        if ra != rb:
+            parent[rb] = ra
+    groups = collections.defaultdict(list)
+    for i in idx:
+        groups[find(int(i))].append(int(i))
+
+    e1 = np.array([1.0, 0, 0])
+    if abs(e1 @ a) > 0.9:
+        e1 = np.array([0, 1.0, 0])
+    u1 = np.cross(a, e1)
+    u1 /= np.linalg.norm(u1)
+    u2 = np.cross(a, u1)
+
+    feats = []
+    for g, faces in groups.items():
+        if len(faces) < min_faces:
+            continue
+        V = mesh.vertices[np.unique(mesh.faces[faces].ravel())]
+        x, y = V @ u1, V @ u2
+        A = np.c_[2 * x, 2 * y, np.ones(len(x))]
+        b = x ** 2 + y ** 2
+        try:
+            sol, *_ = np.linalg.lstsq(A, b, rcond=None)
+        except Exception:
+            continue
+        cx, cy, c = sol
+        r2 = c + cx ** 2 + cy ** 2
+        if r2 <= 0:
+            continue
+        r = float(np.sqrt(r2))
+        if not (r_range[0] <= r <= r_range[1]):
+            continue
+        resid = float(np.abs(np.sqrt((x - cx) ** 2 + (y - cy) ** 2) - r).max())
+        if resid > resid_tol:
+            continue
+        ax_coord = V @ a
+        center3 = cx * u1 + cy * u2 + float(ax_coord.mean()) * a
+        # 법선이 축을 향하면 구멍, 반대면 보스
+        cen2 = cx * u1 + cy * u2
+        fc = mesh.triangles_center[faces]
+        radial = fc - (fc @ a)[:, None] * a - cen2
+        radial /= (np.linalg.norm(radial, axis=1, keepdims=True) + 1e-12)
+        inward = float((np.einsum("ij,ij->i", N[faces], radial) < 0).mean())
+        feats.append({
+            "diameter": round(2 * r, 4),
+            "center": [round(float(v), 4) for v in center3],
+            "axial_span": round(float(ax_coord.max() - ax_coord.min()), 4),
+            "n_faces": len(faces),
+            "max_radial_residual": round(resid, 5),
+            "kind": "hole" if inward > 0.5 else "boss",
+        })
+    feats.sort(key=lambda f: (-f["diameter"], f["center"][0]))
+    return feats
+
+
+# ---------------------------------------------------------------- gripper_link
+p_g, mg, Vg_raw = load("gripper_link.stl")
+Vg = np.asarray(mg.vertices, dtype=np.float64)
+dg, ag, bg, hullg = hull_diameter(Vg)
+out["gripper_link"] = {
+    "path": p_g,
+    "sha256": sha256(p_g),
+    "triangles": int(len(mg.faces)),
+    "unique_vertices_after_merge": int(len(Vg)),
+    "watertight_after_merge": bool(mg.is_watertight),
+    "n_connected_components": int(len(mg.split(only_watertight=False))),
+    "aabb_extent": [round(float(x), 4) for x in (Vg.max(0) - Vg.min(0))],
+    "hull_diameter": round(dg, 4),
+    "hull_endpoint_A": [round(float(x), 4) for x in ag],
+    "hull_endpoint_B": [round(float(x), 4) for x in bg],
+    "reproduces_36th_81_4065": bool(abs(dg - GRIPPER_HULL_D) < 5e-4),
+    "direction_width": direction_width_stats(hullg),
+}
+
+# ---------------------------------------------------------------- link5 (가설 D)
+p_l, ml, Vl_raw = load("link5.stl")
+Vl = np.asarray(ml.vertices, dtype=np.float64)
+dl, al, bl, hulll = hull_diameter(Vl)
+out["link5"] = {
+    "path": p_l,
+    "sha256": sha256(p_l),
+    "triangles": int(len(ml.faces)),
+    "unique_vertices_after_merge": int(len(Vl)),
+    "watertight_after_merge": bool(ml.is_watertight),
+    "aabb_min": [round(float(x), 4) for x in Vl.min(0)],
+    "aabb_max": [round(float(x), 4) for x in Vl.max(0)],
+    "aabb_extent": [round(float(x), 4) for x in (Vl.max(0) - Vl.min(0))],
+    "hull_diameter_WHOLE": round(dl, 4),
+    "hull_endpoint_A": [round(float(x), 4) for x in al],
+    "hull_endpoint_B": [round(float(x), 4) for x in bl],
+    "whole_exceeds_86_4": bool(dl >= CALIPER),
+    "direction_width": direction_width_stats(hulll),
+}
+out["link5"]["component_report"] = component_report(ml)
+
+# 각 성분에 대해 가설 C(수직 돌출)도 계산 — 어떤 성분이든 86.4 도달 난이도를 본다
+for c in out["link5"]["component_report"]["components"]:
+    if c["hull_diameter"] >= 60.0:
+        sub = [x for x in ml.split(only_watertight=False)
+               if len(x.faces) == c["triangles"]][0]
+        _, _, _, hv = hull_diameter(np.asarray(sub.vertices, dtype=np.float64))
+        c["hyp_C_min_protrusion"] = {
+            ax: min_protrusion_for_target(hv, v)["h_min"]
+            for ax, v in {"+x": [1, 0, 0], "+y": [0, 1, 0], "+z": [0, 0, 1]}.items()
+        }
+
+# 가설 D 판정 보조: 86.4 를 낼 수 있는 성분이 있는가
+cands = [c for c in out["link5"]["component_report"]["components"]
+         if c["hull_diameter"] >= 80.0]
+out["hypothesis_D"] = {
+    "question": "link5 계열 부품 하나로 86.4 캘리퍼 판독이 가능한가",
+    "whole_link5_hull_diameter": round(dl, 4),
+    "whole_link5_can_reach_86_4": bool(dl >= CALIPER),
+    "components_with_hull_ge_80": cands,
+    "n_components_ge_86_4": int(sum(c["exceeds_86_4"] for c in
+                                    out["link5"]["component_report"]["components"])),
+}
+
+# ---------------------------------------------------------------- 가설 C
+out["hypothesis_C"] = {
+    "question": "체결 하드웨어(스터드+너트)가 붙은 채로 재면 86.4가 나올 수 있는가",
+    "target": CALIPER,
+    "gripper_link": {
+        "baseline_hull_diameter": round(dg, 4),
+        "deficit_to_86_4": round(CALIPER - dg, 4),
+        "plate_normal_plus_z": min_protrusion_for_target(hullg, [0, 0, 1]),
+        "plate_normal_minus_z": min_protrusion_for_target(hullg, [0, 0, -1]),
+        "web_normal_plus_y": min_protrusion_for_target(hullg, [0, 1, 0]),
+        "web_normal_minus_y": min_protrusion_for_target(hullg, [0, -1, 0]),
+        "unconstrained_best_axis": min_protrusion_for_target(
+            hullg, np.array(bg) - np.array(ag)),
+    },
+    "hardware_reference_mm": {
+        "M3_hex_nut_across_flats": 5.5,
+        "M3_hex_nut_across_corners": 6.35,
+        "M3_hex_nut_thickness": 2.4,
+        "M2_hex_nut_across_flats": 4.0,
+        "M2_hex_nut_across_corners": 4.62,
+        "M2_hex_nut_thickness": 1.6,
+        "note": "ISO 4032 공칭. 실제 부품 미확인 — 사용자 확인 필요.",
+    },
+}
+
+# 구멍 지문 (부품 신원 판별용, P7 대조표)
+out["holes"] = {
+    "gripper_link_axis_y_web": detect_round_features(mg, [0, 1, 0]),
+    "gripper_link_axis_z_plate": detect_round_features(mg, [0, 0, 1]),
+    "link5_axis_x": detect_round_features(ml, [1, 0, 0]),
+    "link5_axis_y": detect_round_features(ml, [0, 1, 0]),
+    "link5_axis_z": detect_round_features(ml, [0, 0, 1]),
+}
+
+json.dump(out, open(sys.argv[1], "w"), ensure_ascii=False, indent=1)
+print("=== gripper_link ===")
+print(json.dumps(out["gripper_link"], ensure_ascii=False, indent=1))
+print("\n=== link5 summary ===")
+print(json.dumps({kk: vv for kk, vv in out["link5"].items()
+                  if kk != "component_report"}, ensure_ascii=False, indent=1))
+print("\n=== link5 n_components =",
+      out["link5"]["component_report"]["n_components"], "===")
+for c in out["link5"]["component_report"]["components"]:
+    print(json.dumps({k: v for k, v in c.items()
+                      if k not in ("hull_endpoint_A", "hull_endpoint_B")},
+                     ensure_ascii=False))
+print("\n=== hypothesis_C ===")
+print(json.dumps(out["hypothesis_C"], ensure_ascii=False, indent=1))
+print("\n=== hypothesis_D ===")
+print(json.dumps(out["hypothesis_D"], ensure_ascii=False, indent=1))
+print("\n=== holes ===")
+for k, v in out["holes"].items():
+    print(f"-- {k}: {len(v)}")
+    for f in v:
+        print("   ", json.dumps(f, ensure_ascii=False))

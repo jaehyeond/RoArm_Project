@@ -1,0 +1,116 @@
+#!/usr/bin/env python3
+"""
+t3r_n5c_jaw_silhouettes.py  (READ-ONLY, D324 시각 진단)
+
+두 조(jaw)를 같은 mm 축척으로 나란히 그려 사용자가 손에 든 실물이 어느 쪽인지
+사진과 대조할 수 있게 한다.
+
+ Panel A: gripper_link.stl — 웹 평면(y축 방향으로 투영). 서보혼 flower 컷아웃과
+          관통구멍 5개가 흰 구멍으로 보인다. = 사용자가 말한 "OpenJaw(서보혼 보스형)".
+ Panel B: link5.stl 원위 구간 — 원위 판 법선(x축 방향으로 투영). = 고정측 조
+          ("피벗 스터드형")가 묻혀 있는 구간.
+
+투영 방향으로 뚫린 구멍은 삼각형이 없으므로 흰색으로 남는다(= 실물 구멍 배치와 직접 대조 가능).
+"""
+import sys
+import numpy as np
+import trimesh
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+from matplotlib.collections import PolyCollection
+from matplotlib import font_manager
+
+# 한글 글리프 (DejaVu Sans 에는 한글이 없다)
+_KO = "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc"
+try:
+    font_manager.fontManager.addfont(_KO)
+    plt.rcParams["font.family"] = font_manager.FontProperties(fname=_KO).get_name()
+except Exception as e:
+    print("WARN korean font:", e)
+plt.rcParams["axes.unicode_minus"] = False
+
+MESH = "/home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/urdf/meshes"
+
+
+def load(n):
+    m = trimesh.load(f"{MESH}/{n}", process=False, force="mesh")
+    m.merge_vertices()
+    return m
+
+
+def silhouette(ax, mesh, drop_axis, keep, title, sub):
+    """drop_axis 방향으로 투영. keep = 남길 두 축 인덱스."""
+    tris = mesh.vertices[mesh.faces]                 # (F,3,3)
+    n = mesh.face_normals
+    # 투영축과 거의 평행한 면(=구멍 벽)은 빼면 구멍이 더 선명하다
+    keep_face = np.abs(n[:, drop_axis]) > 0.02
+    polys = tris[keep_face][:, :, keep]
+    ax.add_collection(PolyCollection(polys, facecolors="0.15",
+                                     edgecolors="none", antialiased=False))
+    V = mesh.vertices[:, keep]
+    lo, hi = V.min(0), V.max(0)
+    pad = 0.06 * max(hi - lo)
+    ax.set_xlim(lo[0] - pad, hi[0] + pad)
+    ax.set_ylim(lo[1] - pad, hi[1] + pad)
+    ax.set_aspect("equal")
+    ax.set_title(title, fontsize=11, weight="bold")
+    ax.set_xlabel(sub, fontsize=8)
+    ax.grid(alpha=0.25, lw=0.4)
+    return lo, hi
+
+
+mg, ml = load("gripper_link.stl"), load("link5.stl")
+
+# link5 원위 구간만 남긴다 (z >= 39.5507: 볼록껍질 지름이 86.4가 되는 절단면)
+Z_CUT = 39.5507
+fmask = (ml.vertices[ml.faces][:, :, 2] >= Z_CUT).all(axis=1)
+distal = trimesh.Trimesh(vertices=ml.vertices, faces=ml.faces[fmask], process=False)
+distal.remove_unreferenced_vertices()
+
+fig, axes = plt.subplots(1, 2, figsize=(15, 7.2))
+
+# Panel A — gripper_link, 웹 평면 (y로 투영) -> (x, z)
+loA, hiA = silhouette(
+    axes[0], mg, 1, [0, 2],
+    "A. gripper_link.stl  =  움직이는 조 (서보혼형 / 사용자 표현 \"OpenJaw\")",
+    "x [mm]  (아래축)   ·   z [mm] (세로축)   ·   웹 평면 투영")
+axes[0].plot([66.902, -10.722], [-21.9954, 0.7502], "r-", lw=1.6,
+             label="볼록껍질 지름 81.4065 mm (캘리퍼 절대 상한)")
+axes[0].plot([66.902, -10.722], [-21.9954, 0.7502], "r.", ms=9)
+for (hx, hz, d) in [(30.9226, -31.4936, 3.2), (30.9226, -6.3736, 3.2),
+                    (63.3926, -18.9336, 3.2), (38.3042, -8.4336, 2.2),
+                    (38.3042, -29.4336, 2.2)]:
+    axes[0].add_patch(plt.Circle((hx, hz), d / 2, fill=False, color="deepskyblue", lw=1.3))
+axes[0].annotate("서보혼 flower 컷아웃\n(실물 사진의 로브형 구멍)", xy=(51.5, -18.9),
+                 xytext=(20, -40), fontsize=9, color="darkorange",
+                 arrowprops=dict(arrowstyle="->", color="darkorange"))
+axes[0].annotate(f"전장 {hiA[0]-loA[0]:.2f} mm", xy=(0.5, 0.04),
+                 xycoords="axes fraction", ha="center", fontsize=10)
+axes[0].legend(loc="upper right", fontsize=8)
+
+# Panel B — link5 원위 구간, 원위 판 법선 (x로 투영) -> (y, z)
+loB, hiB = silhouette(
+    axes[1], distal, 0, [1, 2],
+    f"B. link5.stl 원위 구간 (z ≥ {Z_CUT:.2f})  =  고정 조 (피벗 스터드형)",
+    "y [mm] (아래축)   ·   z [mm] (세로축)   ·   원위 판 평면 투영")
+for (hy, hz) in [(12.0474, 83.7256), (-13.0726, 103.1071), (12.0474, 103.1071),
+                 (-0.5126, 116.1956), (-13.0726, 83.7256)]:
+    axes[1].add_patch(plt.Circle((hy, hz), 1.6, fill=False, color="deepskyblue", lw=1.3))
+axes[1].axhline(52.035, color="green", ls="--", lw=1.2)
+axes[1].annotate("joint5 회전축 station (z=52.035)", xy=(hiB[0], 52.035),
+                 xytext=(hiB[0] - 2, 56), fontsize=8, color="green", ha="right")
+axes[1].annotate(f"이 구간 길이 {hiB[1]-loB[1]:.2f} mm\n볼록껍질 지름 86.43 mm",
+                 xy=(0.5, 0.04), xycoords="axes fraction", ha="center", fontsize=10)
+
+fig.suptitle("G0b T3R / N-5 — 두 조의 실측 대조용 실루엣 (동일 mm 축척, 읽기 전용 자산 투영)",
+             fontsize=13, weight="bold")
+fig.text(0.5, 0.005,
+         "파란 원 = 관통구멍(투영 방향). 실물을 사진처럼 평평하게 놓고 구멍 개수·배치를 "
+         "이 그림과 대조하면 어느 쪽을 재었는지 판별됩니다.",
+         ha="center", fontsize=9)
+fig.tight_layout(rect=[0, 0.03, 1, 0.96])
+fig.savefig(sys.argv[1], dpi=155)
+print("saved", sys.argv[1])
+print("A extent (x,z):", np.round(hiA - loA, 4), " B extent (y,z):", np.round(hiB - loB, 4))
+print("distal faces kept:", len(distal.faces))

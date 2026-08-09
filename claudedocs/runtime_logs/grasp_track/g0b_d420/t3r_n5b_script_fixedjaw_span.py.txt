@@ -1,0 +1,248 @@
+#!/usr/bin/env python3
+"""
+t3r_n5b_fixedjaw_span.py  (READ-ONLY)
+
+N-5 2단계. 1단계에서 link5.stl 전체 볼록껍질 지름 = 124.0379 (86.4 초과) 로 나왔으므로,
+가설 D 의 실질 질문은 "사람이 실제로 떼어낼 수 있는 link5 하위 부품 중 최대폭 86.4 를
+낼 수 있는 것이 있는가" 로 바뀐다. 이를 위해:
+
+ (a) link5 연결성분을 전부 정렬해 실제 큰 덩어리를 본다 (1단계는 상위 40개만 자르고
+     정렬해서 본체를 놓쳤다).
+ (b) joint5 변환으로 gripper_link 를 link5 좌표계에 놓고, 고정측 조가 link5.stl 의
+     어느 구간인지 확인한다.
+ (c) z_cut 스윕: link5 의 원위 구간(z >= z_cut)만 남겼을 때의 볼록껍질 지름 곡선.
+     86.4 를 주는 z_cut 을 역산한다.
+ (d) gripper_link 웹의 flower 컷아웃 로브 수 — 서보혼 스플라인인지(사용자 가설 D 의
+     "OpenJaw = 서보혼 보스형") 판정 재료.
+ (e) 가설 C 를 '실제 구멍 위치'에서 재계산 (1단계의 최적 앵커는 하한일 뿐이다).
+"""
+import json
+import sys
+import numpy as np
+import trimesh
+from scipy.spatial import ConvexHull
+
+MESH = "/home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/urdf/meshes"
+CALIPER = 86.4
+J5_XYZ = np.array([0.0, 18.821, 52.035])       # mm, link5 frame
+J5_R = np.array([[0., 1., 0.], [0., 0., 1.], [1., 0., 0.]])  # rpy(-pi/2,-pi/2,0)
+
+out = {"tool": "t3r_n5b_fixedjaw_span", "read_only": True}
+
+
+def load(name):
+    m = trimesh.load(f"{MESH}/{name}", process=False, force="mesh")
+    m.merge_vertices()
+    return m
+
+
+def hull_pts(V):
+    V = np.asarray(V, dtype=np.float64)
+    if len(V) < 4:
+        return V
+    try:
+        return V[ConvexHull(V).vertices]
+    except Exception:
+        return V
+
+
+def diameter(V):
+    hv = hull_pts(V)
+    if len(hv) < 2:
+        return 0.0, None, None
+    d2 = ((hv[:, None] - hv[None]) ** 2).sum(-1)
+    i, j = np.unravel_index(np.argmax(d2), d2.shape)
+    return float(np.sqrt(d2[i, j])), hv[i].tolist(), hv[j].tolist()
+
+
+mg, ml = load("gripper_link.stl"), load("link5.stl")
+Vg = np.asarray(mg.vertices, np.float64)
+Vl = np.asarray(ml.vertices, np.float64)
+
+# --- (b) joint5 변환 검증 -------------------------------------------------
+Vg_in5 = (J5_R @ Vg.T).T + J5_XYZ
+out["joint5_check"] = {
+    "axis_in_link5": (J5_R @ np.array([0, 0, 1.0])).round(6).tolist(),
+    "gripper_x_axis_in_link5": (J5_R @ np.array([1.0, 0, 0])).round(6).tolist(),
+    "gripper_link_aabb_in_link5_min": np.round(Vg_in5.min(0), 4).tolist(),
+    "gripper_link_aabb_in_link5_max": np.round(Vg_in5.max(0), 4).tolist(),
+    "link5_aabb_min": np.round(Vl.min(0), 4).tolist(),
+    "link5_aabb_max": np.round(Vl.max(0), 4).tolist(),
+    "note": "moving jaw tip z vs link5 z_max 가 맞아떨어지면 고정측 조가 link5.stl 안에 있다",
+}
+
+# --- (a) 전체 성분 정렬 ---------------------------------------------------
+comps = ml.split(only_watertight=False)
+rows = []
+for k, c in enumerate(comps):
+    V = np.asarray(c.vertices, np.float64)
+    d, _, _ = diameter(V)
+    rows.append({
+        "component": k, "triangles": int(len(c.faces)), "vertices": int(len(V)),
+        "watertight": bool(c.is_watertight),
+        "volume_mm3": round(float(abs(c.volume)), 3) if c.is_watertight else None,
+        "aabb_min": np.round(V.min(0), 4).tolist(),
+        "aabb_extent": np.round(V.max(0) - V.min(0), 4).tolist(),
+        "hull_diameter": round(d, 4),
+    })
+rows.sort(key=lambda r: -r["triangles"])
+out["link5_components_sorted_by_triangles"] = {
+    "n_components": len(comps),
+    "n_components_ge_100_tri": int(sum(r["triangles"] >= 100 for r in rows)),
+    "top15": rows[:15],
+    "degenerate_1_2_tri_count": int(sum(r["triangles"] <= 2 for r in rows)),
+}
+
+# --- (c) z_cut 스윕 -------------------------------------------------------
+sweep = []
+for zc in np.arange(0.0, 110.01, 2.0):
+    sel = Vl[Vl[:, 2] >= zc]
+    if len(sel) < 4:
+        break
+    d, a, b = diameter(sel)
+    sweep.append({"z_cut": round(float(zc), 2), "n_vertices": int(len(sel)),
+                  "hull_diameter": round(d, 4)})
+out["link5_distal_zcut_sweep"] = sweep
+
+# 86.4 를 주는 z_cut 이분탐색
+lo, hi = 0.0, 110.0
+zc_86 = None
+if sweep and sweep[0]["hull_diameter"] >= CALIPER:
+    for _ in range(60):
+        mid = 0.5 * (lo + hi)
+        sel = Vl[Vl[:, 2] >= mid]
+        if len(sel) < 4:
+            hi = mid
+            continue
+        d, _, _ = diameter(sel)
+        if d >= CALIPER:
+            lo = mid
+        else:
+            hi = mid
+    zc_86 = 0.5 * (lo + hi)
+sel = Vl[Vl[:, 2] >= zc_86] if zc_86 is not None else Vl
+d86, a86, b86 = diameter(sel)
+out["hypothesis_D_quant"] = {
+    "z_cut_giving_86_4": None if zc_86 is None else round(float(zc_86), 4),
+    "joint5_origin_z": 52.035,
+    "link5_z_max": round(float(Vl[:, 2].max()), 4),
+    "distal_piece_length_if_86_4": None if zc_86 is None
+    else round(float(Vl[:, 2].max() - zc_86), 4),
+    "hull_diameter_at_that_cut": round(d86, 4),
+    "endpoints": [np.round(a86, 4).tolist(), np.round(b86, 4).tolist()],
+    "hull_d_distal_of_joint5": round(diameter(Vl[Vl[:, 2] >= 52.035])[0], 4),
+    "hull_d_distal_of_z40": round(diameter(Vl[Vl[:, 2] >= 40.0])[0], 4),
+    "hull_d_distal_of_z30": round(diameter(Vl[Vl[:, 2] >= 30.0])[0], 4),
+}
+
+# --- (d) flower 로브 수 (shapely 없이 face-group 방식) ----------------------
+# 웹은 y-법선(두께 1.5). 웹을 관통하는 벽면 = 법선이 y 에 수직인 면들.
+# 원형 구멍은 1단계에서 이미 원적합으로 잡혔으므로, 여기서는 원적합에 실패하는
+# 로브형(flower) 그룹을 찾아 반경 프로파일로 로브 수를 센다.
+def wall_groups(mesh, axis, tol=0.06, min_faces=20):
+    a = np.asarray(axis, float)
+    a /= np.linalg.norm(a)
+    N = mesh.face_normals
+    sel = np.abs(N @ a) < tol
+    idx = np.where(sel)[0]
+    adj = mesh.face_adjacency
+    keep = sel[adj[:, 0]] & sel[adj[:, 1]]
+    parent = {int(i): int(i) for i in idx}
+
+    def find(x):
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+
+    for e in adj[keep]:
+        ra, rb = find(int(e[0])), find(int(e[1]))
+        if ra != rb:
+            parent[rb] = ra
+    import collections
+    g = collections.defaultdict(list)
+    for i in idx:
+        g[find(int(i))].append(int(i))
+    return [v for v in g.values() if len(v) >= min_faces]
+
+
+flower = {"method": "face-group radial profile (no shapely)"}
+try:
+    ents = []
+    for faces in wall_groups(mg, [0, 1, 0]):
+        V = mg.vertices[np.unique(mg.faces[faces].ravel())]
+        xz = V[:, [0, 2]]
+        ctr = xz.mean(0)
+        r = np.linalg.norm(xz - ctr, axis=1)
+        ang = np.arctan2(xz[:, 1] - ctr[1], xz[:, 0] - ctr[0])
+        o = np.argsort(ang)
+        rs = r[o]
+        rn = rs - rs.mean()
+        sgn = np.sign(rn)
+        sgn[sgn == 0] = 1
+        crossings = int(np.sum(sgn != np.roll(sgn, 1)))
+        ents.append({
+            "n_faces": len(faces), "n_boundary_pts": int(len(V)),
+            "center_xz": np.round(ctr, 4).tolist(),
+            "r_min": round(float(r.min()), 4), "r_max": round(float(r.max()), 4),
+            "r_ratio": round(float(r.max() / max(r.min(), 1e-9)), 4),
+            "inscribed_diameter": round(float(2 * r.min()), 4),
+            "estimated_lobes": crossings // 2,
+            "is_round_hole": bool((r.max() - r.min()) < 0.05),
+        })
+    ents.sort(key=lambda e: -e["r_max"])
+    flower["groups"] = ents
+except Exception as e:  # 진단이 죽어도 주 결론은 살린다
+    flower["error"] = f"{type(e).__name__}: {e}"
+out["gripper_link_web_section"] = flower
+
+# --- (e) 가설 C: 실제 구멍 위치에서 필요한 돌출량 --------------------------
+holes_g = [
+    ("B1_D3.2", [30.9226, -5.2334, -31.4936]),
+    ("B3_D3.2", [30.9226, -5.2334, -6.3736]),
+    ("B2_D3.2_near_tip", [63.3926, -5.2334, -18.9336]),
+    ("S1h_D2.2", [38.3042, -5.2334, -8.4336]),
+    ("S2h_D2.2", [38.3042, -5.2334, -29.4336]),
+]
+H = hull_pts(Vg)
+rows_c = []
+for nm, p in holes_g:
+    p = np.array(p, float)
+    best = None
+    for u in ([0, 1, 0], [0, -1, 0]):
+        u = np.array(u, float)
+        lo_, hi_ = 0.0, 1.0
+        f = lambda h: np.linalg.norm(H - (p + h * u), axis=1).max()
+        while f(hi_) < CALIPER and hi_ < 1e4:
+            hi_ *= 2
+        for _ in range(70):
+            m_ = 0.5 * (lo_ + hi_)
+            if f(m_) < CALIPER:
+                lo_ = m_
+            else:
+                hi_ = m_
+        h = 0.5 * (lo_ + hi_)
+        best = h if best is None else min(best, h)
+    rows_c.append({"hole": nm, "required_protrusion_mm": round(float(best), 4)})
+out["hypothesis_C_at_real_holes"] = {
+    "axis": "+/-y (웹 법선) — gripper_link 에는 ±z(판면) 관통구멍이 0개",
+    "target": CALIPER,
+    "rows": rows_c,
+    "best_case_anchor_anywhere_y": 20.9719,
+    "M3_nut_thickness_ref": 2.4,
+}
+
+json.dump(out, open(sys.argv[1], "w"), ensure_ascii=False, indent=1)
+for k in ["joint5_check", "hypothesis_D_quant", "hypothesis_C_at_real_holes",
+          "gripper_link_web_section"]:
+    print(f"=== {k} ===")
+    print(json.dumps(out[k], ensure_ascii=False, indent=1))
+print("=== link5 top components ===")
+for r in out["link5_components_sorted_by_triangles"]["top15"]:
+    print(json.dumps(r, ensure_ascii=False))
+print("n_components", out["link5_components_sorted_by_triangles"]["n_components"],
+      "| >=100tri", out["link5_components_sorted_by_triangles"]["n_components_ge_100_tri"],
+      "| <=2tri", out["link5_components_sorted_by_triangles"]["degenerate_1_2_tri_count"])
+print("=== zcut sweep (every 10mm) ===")
+for s in out["link5_distal_zcut_sweep"][::5]:
+    print(s)

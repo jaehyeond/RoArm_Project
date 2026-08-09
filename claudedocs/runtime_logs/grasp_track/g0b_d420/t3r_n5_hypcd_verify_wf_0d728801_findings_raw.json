@@ -1,0 +1,334 @@
+{
+  "summary": "Adversarially verify hypotheses C (fastener-included) and D (part misidentification) for the 86.4mm caliper anomaly",
+  "agentCount": 5,
+  "logs": [
+    "[lens:jaw] failed: API Error: Connection closed mid-response. The response above may be incomplete.",
+    "[lens:geom] failed: API Error: Unable to connect to API (ENOTIMP)",
+    "[lens:identity] failed: API Error: Unable to connect to API (ENOTIMP)",
+    "[lens:hardware] failed: API Error: Unable to connect to API (ENOTIMP)",
+    "lenses returned: 0/4"
+  ],
+  "result": {
+    "synthesis": {
+      "settled": [
+        "gripper_link.stl sha256 = 7946a374e24a2f467a0581b4946e0ec41b1b86a92f070bc00aa9bced1bf65a56 (byte-verified). 13698 triangles, 6831 unique vertices after merge_vertices(), watertight=True, winding_consistent=True, exactly 1 face-connected component. Lead claim (1) CONFIRMED in full.",
+        "gripper_link.stl AABB extents 77.8500 x 25.2400 x 39.3676 mm; AABB min (-10.767397, -9.999632, -38.617344), max (67.082603, 15.240367, 0.750222). Convex-hull diameter 81.4065 mm, realised between (66.902, -5.983416, -21.995386) and (-10.721967, 3.191298, 0.750222). Lead claim (1) CONFIRMED.",
+        "NEW (lead did not report): gripper_link.stl volume 3659.0241 mm^3; oriented-bounding-box extents 25.1867 x 39.3676 x 77.4476 mm (long axis 77.4476, shorter than the AABB x-extent 77.8500).",
+        "gripper_link.stl has exactly 5 CIRCULAR bores, all axis +-y, all 1.5000 mm long (= web sheet thickness): 3x D3.2000 at (30.9226,-5.2334,-31.4936), (30.9226,-5.2334,-6.3736), (63.3926,-5.2334,-18.9336) and 2x D2.2000 at (38.3042,-5.2334,-8.4336), (38.3042,-5.2334,-29.4336). Confirmed twice: axis-restricted wall clustering AND an axis-AGNOSTIC cylinder census (SVD axis fit, max fit residual 0.0000 mm). Lead claim (2) first half CONFIRMED.",
+        "Hole pitches measured independently of the lead: D3.2 pair pitch 25.1200 mm in z; D2.2 pair pitch 21.0000 mm in z. D3.2 = ISO 273 M3 clearance, D2.2 = M2 clearance (catalogue, not measured here).",
+        "5-vs-6 hole discrepancy RESOLVED and BOTH prior records are correct under their own definition. The y-normal web carries SIX through-openings: the 5 circular bores PLUS one large non-circular window 15.1866 x 28.2949 mm centred at (x=51.5301, z=-18.9336), 458 wall faces. 'Exactly 5' is true of circular bores; 'six in the web' is true of through-openings.",
+        "Independent topological confirmation: gripper_link.stl Euler number = -18 (V 6831 - E 20547 + F 13698), so genus = 10 = exactly 10 through-openings = 6 web openings + 4 fork-plate openings. The two counts close exactly with no residue.",
+        "Hypothesis-C protrusion numbers, all four lead values reproduced to the digit: along +-y 20.9719 mm at the most favourable hull anchor; along +-z 13.9975 mm; unconstrained best direction 4.9935 mm (= 86.4 - 81.4065, an identity not a measurement); at the actual hole axes the minima are 30.9408 mm (D3.2 @63.3926), 53.5202/53.5203 mm (D2.2 pair), 56.7981/56.7982 mm (D3.2 pair). Lead claim (3) arithmetic CONFIRMED.",
+        "NEW and decisive (lead never computed it): along +-x, the part's long axis and exactly the axis the user described ('back end to fingertip'), the required protrusion is only 5.2218 mm at anchor (66.902,-5.9834,-21.9954). To make the AXIAL length itself read 86.4 requires 8.5500 mm (= 86.4 - 77.8500).",
+        "NEW: an M3 clearance bore (D3.2000) sits 3.6900 mm behind the fingertip end face (tip face at x = 67.0826). The fingertip end face is only 1.5000 x 3.8431 mm; over the last 5 mm the blade is 1.5000 x 9.0616 mm. This is a finger-pad / tip-attachment mounting point.",
+        "link5.stl sha256 = 1d63f374a78c1419b21eec63fa8efeef40d0d42ca89c5de3ceb0d86476d9c7eb (byte-verified). 14092 triangles, 6926 vertices, whole-mesh convex-hull diameter 124.0379, AABB 46.4960 x 35.5200 x 120.6351, z range [-0.749511, 119.885620]. Lead claim (4) CONFIRMED.",
+        "link5.stl split(only_watertight=False) = 114 components; 106 are 1-2 triangle fragments lying at exactly z = 80.551819 (face areas 0.870-1.014 mm^2, xy bbox x[-30.9981,-22.0096] y[-9.5126,8.4874]); 7 components have >=100 triangles. Lead claim (7) CONFIRMED.",
+        "6-vs-114 component discrepancy RESOLVED and again BOTH records are correct. trimesh Trimesh.body_count counts VERTEX-connected groups and returns 6; Trimesh.split() counts FACE-connected groups and returns 114. trimesh's own body_count docstring states the two legitimately differ. Also: 8 components have >=3 triangles, 7 have >=100, 5 are watertight.",
+        "NEW: link5.stl is NOT watertight and is an 8-body assembly, face-component sizes 6222 / 5276 / 1054 / 564 / 348 / 288 / 192 / 32 triangles. Its reported mesh volume 47378.6727 mm^3 is meaningless because bodies overlap (the 32-triangle box body alone reports 35258.856 mm^3 in a 24.720 x 32.000 x 45.220 AABB).",
+        "joint5 rotation re-derived from rpy (-1.5708,-1.5708,0): R = Rz@Ry@Rx = [[0,1,0],[0,0,1],[1,0,0]]. Gripper +x -> link5 +z and joint axis z -> link5 +y, matching the stated established facts. At q5=0 gripper_link occupies link5 z in [41.2676, 119.1176]. Lead claim (5) numbers CONFIRMED.",
+        "Cut-plane numbers all reproduced: hull_d(z>=39.5507) = 86.4283, hull_d(z>=40) = 86.0115, hull_d(z>=30) = 95.2623, hull_d(z>=52.035) = 69.7673. The exact root giving 86.4000 is zc = 39.550720.",
+        "NEW: the long distal body of link5 (component 0, 6222 tri) spans z [16.0856, 119.8856], hull diameter 105.6842, OBB extents 22.5307 x 34.4676 x 103.8299. Cut at the actual joint axis z = 52.035 it gives hull diameter 67.2433 over a 63.8785 mm span.",
+        "NEW: the moving jaw distal of the same joint plane gives hull diameter 71.1952 over a 66.6816 mm span. The two jaws are near-mirror partners distal of the pivot: lengths 66.6816 (moving) vs 63.8785 (fixed), difference 2.8031 mm; both terminate in an IDENTICAL 1.5000 mm blade with the same 9.0616 mm last-5-mm cross-section and the same 3.6900 mm tip-face-to-nearest-bore distance.",
+        "NEW: the fixed-side blade in link5 carries five D3.2000 bores (axis x, at link5 z = 83.7256 x2, 103.1071 x2, 116.1956 x1, y-pitch 25.1200) and ZERO D2.2 bores, whereas the moving jaw carries 3x D3.2 + 2x D2.2. This is a clean, cheap part-identity fingerprint."
+      ],
+      "disputed": [
+        "PROCESS DISPUTE, stated first because it conditions everything else: the panel delivered no lens reports to me. The REPORTS block was literally empty ('[]'), so there were no refuter corrections to adjudicate. Everything here is my own first-hand re-derivation from the two STL files, not a consolidation of four lenses.",
+        "Lead claim (2) 'ZERO through-holes with axis +-z' — I measure FOUR z-pierced through-openings and I take my measurement over the lead's claim. Two are large lobed (non-circular) openings, inscribed D 11.0000 / circumscribed D 17.1781, radial spread 3.0891 mm, coaxial at (x=-0.7674, y=+0.0004), one through each fork plate; two are slots 23.7703 x 9.0400 mm centred at (24.0326, 4.4310). The claim is defensible only with the word 'circular' inserted.",
+        "'Plate face' in hypothesis C is ambiguous and the lead resolved it silently. gripper_link is a channel with TWO z-normal 1.5000 mm fork plates AND one y-normal 1.5000 mm web. The 20.9719 mm figure is the web normal; the fork-plate normal figure is 13.9975 mm. Both were computed, but the lead's prose treats only the web as 'the plate'.",
+        "Whether the lobed z-axis opening is the joint-5 pivot seat. The joint-5 axis in the gripper frame is the line x=0, y=0 along z, but the opening centre is (-0.7674, +0.0004) — a 0.7674 mm offset. Either the URDF joint origin is offset from the physical pivot bore, or that opening is not the pivot seat. Unresolved.",
+        "Lead claim (5) 'both jaws terminate at the same distal station'. Measured they differ by 0.7680 mm (119.1176 vs 119.8856) at q5=0, and sweeping q5 the moving jaw's maximum distal station is 119.1375 mm near q5 ~ +10 deg, so it never reaches link5's 119.8856. 'Same station' is an approximation good to ~0.77 mm, not an identity.",
+        "Any prior 'inner channel 36.688 mm' figure. I measure the channel as outer 39.3676 (AABB z) with 1.5000 mm plates, giving inner 36.3676 by subtraction, but the plate assignment is inferred from AABB faces rather than independently segmented. So 36.3676 is inferred and 36.688 is neither confirmed nor refuted here."
+      ],
+      "models_not_measurements": [
+        "Any conversion of asset millimetres to real millimetres via the photo-derived scale s = 0.985 +- 0.012 (35th session). I did NOT re-derive s. Every '(x s)' prediction in my measurement table inherits that uncertainty plus its unmodelled systematics.",
+        "The assumption that the real robot's fixed jaw is a discrete, separable part with a boundary somewhere inside link5 component 0. The asset has NO such boundary — component 0 is one continuous shell from z 16.0856 to 119.8856. Where the real part starts and stops is an assumption, and hypothesis D lives or dies on it.",
+        "The assumption that these URDF meshes are the revision of hardware actually on the bench. Unverified; no serial or revision evidence was checked.",
+        "Every 'in link5 frame' number depends on the authored URDF joint origin xyz (0, 0.018821, 0.052035) and rpy (-1.5708, -1.5708, 0). Those are authored CAD values, not measurements of the assembled robot. The link5-to-world mounting transform is entirely unmeasured, so nothing here constrains real-world pose.",
+        "ISO 4032 hex-nut thickness (M3 = 2.40 mm, M2 = 1.60 mm) and ISO 273 clearance diameters (M3 = 3.2, M2 = 2.2) are catalogue facts used only to judge plausibility. They are not measurements of this robot's hardware.",
+        "Calling the 106 one-to-two-triangle fragments 'CAD/boolean artifacts' is an inference. The measured facts are only: 106 fragments, 116 triangles total, face areas 0.870-1.014 mm^2, all vertices at exactly z = 80.551819.",
+        "q5 = 0 being the 'closed' or 'aligned' pose is an assumption; the URDF zero is an authoring convention. My q5 sweep treats it only as a parameter.",
+        "'Only the detached part was in hand' is user testimony from the 36th session, not a measurement. Hypothesis C is precisely the claim that this testimony under-describes what was between the caliper jaws.",
+        "The 76.4-transcription cross-check (76.4/77.8500 = 0.981374, i.e. -0.30 sigma against s = 0.985 +- 0.012) is arithmetic on top of a model I did not re-derive. The arithmetic is mine and correct; the sigma it is compared against is inherited."
+      ],
+      "hypothesis_C_verdict": {
+        "verdict": "WOUNDED",
+        "decisive_number": "20.9719 mm (perpendicular form: DEAD) vs 5.2218 mm (longitudinal form: ALIVE)",
+        "reasoning": "The hypothesis must be split, because the lead's test and the user's words point at different axes. (a) C EXACTLY AS STATED — threaded stud plus hex nut assembled PERPENDICULAR to the plate face — is DEAD. Lifting any caliper pose to 86.4 by adding material along the web normal costs 20.9719 mm at the single most favourable anchor anywhere on the convex hull, and 30.9408 mm minimum if the hardware is actually fitted through one of the five real holes (the other four cost 53.5202, 53.5203, 56.7981, 56.7982 mm). Along the fork-plate normal it is 13.9975 mm. An ISO 4032 M3 nut is 2.40 mm thick; a realistic stud-plus-nut stack on 1.5000 mm sheet protrudes single-digit millimetres. The requirement is off by an order of magnitude, and it also contradicts the user's own description, which is a longitudinal reading. I reproduced every one of the lead's numbers here to the digit. (b) BUT the lead never tested the axis the user actually named. Along +-x — back end to fingertip — the requirement collapses to 5.2218 mm to make some caliper pose read 86.4, or 8.5500 mm to make the axial length itself read 86.4. That is ordinary hardware. And the asset supplies a motive: an M3 clearance bore sits 3.6900 mm behind a fingertip whose end face is only 1.5000 x 3.8431 mm, a textbook finger-pad mounting point. A screwed-on or slipped-on tip pad 5-9 mm deep reproduces 86.4 with no new physics. So the family 'the measured object carried non-modelled attached material' survives, in a longitudinal form the lead did not evaluate. Net: WOUNDED, not dead, and the lead's blanket conclusion 'hypothesis C is quantitatively dead for gripper_link' must be withdrawn as stated."
+      },
+      "hypothesis_D_verdict": {
+        "verdict": "WOUNDED",
+        "decisive_number": "67.2433 mm (link5-side jaw distal of the real joint axis) — a 19.1567 mm deficit against 86.4",
+        "reasoning": "The lead's supporting number is worthless, and the lead was right to flag it but understated the problem: this is not 'possibly circular', it is exactly circular and carries literally zero information. hull_d(z >= zc) on link5 is continuous and falls at about -0.93 mm per mm of cut height, spanning [65.2340, 123.7388] over zc in [0, 60]. By the intermediate value theorem SOME cut returns 86.4 for any part of that size whatever its shape; the exact root is zc = 39.550720, which is simply where 86.4283 came from. Worse, z = 39.5507 is not a part boundary — it slices three overlapping bodies at once (component 0 starting at z 16.0856, component 1 ending at z 46.6325, and the 32-triangle box spanning z 16.9256-62.1456), so the resulting 'distal piece' is not a physical object. Now the non-circular test. Cut at the ONE plane that is physically defined, the joint-5 axis z = 52.035: the link5-side body reaches hull diameter 67.2433 over a 63.8785 mm span, and the moving jaw reaches 71.1952 over 66.6816 mm. Both fall far short of 86.4 — deficits 19.1567 and 15.2048 mm. To reach 86.4 the 'Link5-side jaw' would have to swallow 16.8244 mm of wrist structure below the joint axis (cut at z = 35.2106). Additionally the two jaws are near-mirror partners, not a long-and-short pair: identical 1.5000 mm terminal blade, identical 9.0616 mm last-5-mm cross-section, identical 3.6900 mm tip-face-to-nearest-bore spacing, distal lengths differing by only 2.8031 mm. The only body in link5.stl whose hull even ADMITS 86.4 is component 0 at 105.6842 — but that is the whole wrist fork, its natural back-to-tip reading is 103.8299 not 86.4, and it is not a jaw. So D survives as 'the two jaws are different part numbers' (almost certainly true; the proximal ends genuinely differ — the moving jaw has a lobed pivot opening, the link5 side has D18 / D13.566 / D10 bosses). D does NOT survive as an explanation of 86.4. WOUNDED, one measurement short of dead. It cannot be closed from allowed assets: the natural asset-side test is gripper_left_link.stl, which is access-forbidden pending explicit user approval, so I stop there."
+      },
+      "protocol_impact": "Honest answer: NO — neither C nor D removes the need to measure, and C if anything raises the stakes. But they do not leave P1-P10 as the right protocol either. They REPLACE it with a shorter, cheaper one, and they re-order it. Three points. (1) Both C and D are claims about the physical object, so both are decidable only by touching the physical object. C says the thing between the caliper jaws was not bare metal; D says it was not the part we compared against. Neither can be settled by more mesh analysis, and neither can be settled by re-reading 86.4 more carefully — repeating the same reading on the same (possibly wrong, possibly dressed) part reproduces the same number and teaches nothing. (2) The 36th session's protocol already opens with a part-identity gate (G0). C and D make that gate the whole ball game and everything downstream conditional. Concretely, three measurements dominate all ten of P1-P10. G0a: does the part in hand have any ~2.2 mm holes? (moving jaw: exactly two, at 21.0000 mm pitch; link5-side blade: zero, all five of its bores are 3.2) — one minute with a 2.5 mm drill shank. G0b: does the web have a large ~15 x 28 mm window? (moving jaw yes, centred 51.5301 mm from the back datum; link5 side no) — ten seconds by eye. P-bare: strip every pad, screw, nut, tape and heat-shrink and re-read back-end-to-fingertip on BARE metal. If G0a/G0b say 'moving jaw' and P-bare returns anything at or below 81.4065, hypothesis C is confirmed and 86.4 is explained with no new physics; if P-bare returns 86.4 again on verified bare metal, the asset itself is wrong and the whole scale chain must be rebuilt. Either way you finish in under ten minutes instead of ten measurements. (3) The uncomfortable part, which no version of this protocol fixes: none of it touches D427. D427's subject is the distal SHAPE of the fixed-side jaw, and that geometry is fused into link5.stl and cannot be detached or caliper-measured without disassembly; a caliper reads extents, not shape. The 36th session already recorded that no branch of the caliper protocol resolves D427, and C and D do not change that — they only explain the 86.4 anomaly. So the correct framing is: the caliper work shrinks from ten numbers to three, its purpose narrows from 'resolve D427' to 'explain the 86.4 outlier and re-anchor the scale', and D427 still needs a different instrument. Finally, the cheapest decisive act is not a caliper at all — photograph the caliper display while it is still closed on the part. The transcription-error explanation (76.4 read as 86.4) sits at -0.30 sigma against the independent photo-derived scale, whereas a genuine 86.4 demands s = 1.1098 axially (+10.4 sigma) or 1.0613 diagonally (+6.4 sigma). That one photograph outranks every geometric argument in this report.",
+      "lead_corrections": [
+        {
+          "n": 1,
+          "target": "Claim (3) conclusion: 'hypothesis C is quantitatively dead for gripper_link'",
+          "correction": "WITHDRAW as stated. The lead evaluated +-y (20.9719 mm), +-z (13.9975 mm) and the unconstrained optimum (4.9935 mm) but never evaluated +-x — the part's long axis and precisely the axis the user described ('full length of ONE jaw, back end to fingertip'). Measured: along +-x the required protrusion is 5.2218 mm at anchor (66.902,-5.9834,-21.9954), and 8.5500 mm makes the axial length itself read 86.4. Both are ordinary hardware sizes. The asset even supplies the mounting point: a D3.2000 M3 clearance bore 3.6900 mm behind a fingertip whose end face is only 1.5000 x 3.8431 mm. C is dead only in its perpendicular form; the longitudinal form is alive and untested. This changes the verdict.",
+          "severity": "FATAL"
+        },
+        {
+          "n": 2,
+          "target": "Claim (6) and its self-flag 'POSSIBLY CIRCULAR'",
+          "correction": "Not 'possibly' — exactly circular, with zero information content, and the lead understated it. hull_d(z >= zc) is continuous, decreasing at about -0.93 mm/mm, and spans [65.2340, 123.7388] over zc in [0,60]; by the intermediate value theorem a cut returning 86.4 exists for ANY part of this size regardless of shape. Exact root zc = 39.550720. Compounding it, z = 39.5507 is not a part boundary: it cuts three overlapping bodies at once (comp0 z>=16.0856, comp1 z<=46.6325, the 32-tri box z 16.9256-62.1456), so the '80.3349 mm distal piece' is not a physical object and its 86.4283 is not a property of anything. Sensitivity: +-0.5 mm of cut error moves the answer by -0.49/+0.86 mm, so even granting the method it cannot land on 86.4 +- 0.05 without a physical justification for the plane.",
+          "severity": "FATAL"
+        },
+        {
+          "n": 3,
+          "target": "Claim (2): 'ZERO through-holes with axis +-z (plate normal)'",
+          "correction": "FALSE as written. gripper_link.stl has FOUR through-openings pierced along +-z: two large lobed (non-circular) openings, inscribed D 11.0000 / circumscribed D 17.1781, radial spread 3.0891 mm, coaxial at (x = -0.7674, y = +0.0004), one through each 1.5000 mm fork plate — and the joint-5 axis in the gripper frame IS +-z, so this is the pivot region, the single largest opening in the part — plus two slots 23.7703 x 9.0400 mm centred at (24.0326, 4.4310). The claim is true only if 'circular' is inserted. It does not rescue hypothesis C (13.9975 mm is still an order of magnitude too much) but it invalidates the reasoning that no hardware anchor exists on that axis.",
+          "severity": "MAJOR"
+        },
+        {
+          "n": 4,
+          "target": "Claim (2): the 5-vs-6 discrepancy framed as an error to be resolved",
+          "correction": "There is no error and nothing to adjudicate: both records are right under their own definition. The y-normal web carries SIX through-openings — the 5 circular bores plus one 15.1866 x 28.2949 mm non-circular window centred at (51.5301, -18.9336), 458 wall faces. 'Exactly 5' is true of circular bores; the prior session's 'six in the web' is true of openings. Independent confirmation: Euler number -18 (V 6831 - E 20547 + F 13698) gives genus 10 = 6 web openings + 4 fork-plate openings, closing exactly with no residue.",
+          "severity": "MAJOR"
+        },
+        {
+          "n": 5,
+          "target": "Claim (7): the 6-vs-114 component discrepancy framed as an error to be resolved",
+          "correction": "Again no error. trimesh Trimesh.body_count counts VERTEX-connected groups and returns exactly 6 on link5.stl; Trimesh.split(only_watertight=False) counts FACE-connected groups and returns 114. trimesh's own body_count docstring states the two numbers legitimately differ. The prior session's 6 and the lead's 114 are both correct. For completeness: 8 components have >=3 triangles, 7 have >=100, 5 are watertight.",
+          "severity": "MAJOR"
+        },
+        {
+          "n": 6,
+          "target": "Claim (6) used as SUPPORT for hypothesis D",
+          "correction": "The physically anchored version of the same test defeats D instead of supporting it. Cut at the one plane that is actually defined — the joint-5 axis z = 52.035 — the link5-side body reaches hull diameter only 67.2433 over a 63.8785 mm span (deficit 19.1567 mm vs 86.4), and the moving jaw reaches 71.1952 over 66.6816 mm. Reaching 86.4 requires swallowing 16.8244 mm of wrist structure below the joint axis (cut at z = 35.2106). The two jaws are also near-mirror partners, not a long/short pair: identical 1.5000 mm terminal blade, identical 9.0616 mm last-5-mm cross-section, identical 3.6900 mm tip-to-bore spacing, distal lengths differing by 2.8031 mm.",
+          "severity": "MAJOR"
+        },
+        {
+          "n": 7,
+          "target": "Claims (4) and (7): treating link5.stl as a single mesh with meaningful whole-mesh properties",
+          "correction": "link5.stl is NOT watertight and is an 8-body assembly (6222/5276/1054/564/348/288/192/32 triangles). Its reported volume 47378.6727 mm^3 is meaningless because bodies overlap — the 32-triangle body alone reports 35258.856 mm^3 filling a 24.720 x 32.000 x 45.220 box. The whole-mesh hull diameter 124.0379 is correct but must be read as an ASSEMBLY bound, never as a part property. Claim (4) presents it without that qualifier.",
+          "severity": "MINOR"
+        },
+        {
+          "n": 8,
+          "target": "Claim (5): 'both jaws terminate at the same distal station'",
+          "correction": "Approximation, not identity. At q5 = 0 they differ by 0.7680 mm (moving jaw 119.1176, link5 119.8856). Sweeping the joint, the moving jaw's maximum distal station is 119.1375 mm near q5 ~ +10 deg, so it never reaches 119.8856 at any joint angle. The transformed z-span [41.2676, 119.1176] and the rotation R = [[0,1,0],[0,0,1],[1,0,0]] both reproduce exactly.",
+          "severity": "MINOR"
+        },
+        {
+          "n": 9,
+          "target": "Claim (6) precision reporting",
+          "correction": "'hull_d(z>=39.5507) = 86.4283' is quoted to four decimals, but the cut height was itself solved backwards from the target, so those decimals are an artifact of the search rather than of a measurement. The exact root is 39.550720 and the local band is hull_d(zc-0.5) = 87.1386 / hull_d(zc+0.5) = 85.9073. Quoting the number without the band invites false confidence.",
+          "severity": "MINOR"
+        }
+      ],
+      "unresolved": [
+        "PROCESS: no lens reports were delivered to me (the REPORTS block was empty). There were no refuter corrections to adjudicate, so nothing here is a four-lens consensus — it is one independent audit. If the four lenses ran and their output was lost, re-run the merge before treating this as the panel's verdict.",
+        "The 0.7674 mm offset between the URDF joint-5 axis in the gripper frame (the line x=0, y=0) and the centre of the lobed z-axis pivot opening at (-0.7674, +0.0004). Either the authored joint origin is off by 0.7674 mm or that opening is not the pivot seat. Not resolvable from these two files alone.",
+        "Whether the shipped fixed jaw is a discrete part at all, and where its boundary lies inside link5 component 0. The asset gives one continuous shell from z 16.0856 to 119.8856 with no seam. Hypothesis D's entire survival depends on this and the asset is silent.",
+        "The direct asset-side test of hypothesis D is a comparison against gripper_left_link.stl. That file is access-forbidden pending explicit user approval. I did not open, read, parse, hash or stat it, and I STOP here on that line of reasoning.",
+        "The photo-derived scale s = 0.985 +- 0.012 was not re-derived by me. Every asset-mm to real-mm prediction in the measurement table inherits it untested.",
+        "Which of the three live explanations actually produced 86.4 — transcription/parallax error (76.4), a fingertip attachment, or the wrong part in hand. n = 1, no photograph of the caliper display, no witness. Not decidable from records.",
+        "CANNOT BE RESOLVED BY ANY CALIPER MEASUREMENT (a): D427 itself. Its subject is the distal SHAPE of the fixed-side jaw, which is fused into link5.stl and cannot be detached or measured without disassembly; and a caliper reads extents, not shape.",
+        "CANNOT BE RESOLVED BY ANY CALIPER MEASUREMENT (b): whether the asset revision matches the hardware revision on the bench — that needs a part number or serial, not a dimension.",
+        "CANNOT BE RESOLVED BY ANY CALIPER MEASUREMENT (c): left-vs-right jaw identity. A prior session measured the part as practically achiral (max mirror deviation 0.1696 mm), so no external dimension can distinguish a left jaw from a right one.",
+        "CANNOT BE RESOLVED BY ANY CALIPER MEASUREMENT (d): the link5-to-world mounting transform, which no jaw-only reading constrains — and (e) whether the original 86.4 was a misread, which only a photograph of the display at read time settles, never a re-measurement."
+      ],
+      "discriminating_measurements": [
+        {
+          "measure": "G0a IDENTITY GATE — count holes of about 2.2 mm in the flat web of the part in hand (try a 2.5 mm drill shank: it enters a 3.2 hole, refuses a 2.2)",
+          "pred_gripper_link": "exactly TWO D2.2000 holes, 21.0000 mm apart, plus three D3.2000 holes 25.1200 mm apart",
+          "pred_link5_jaw": "ZERO 2.2 mm holes — all five bores in the link5-side blade are D3.2000, y-pitch 25.1200",
+          "separation_mm": "1.0 mm in bore diameter; count 2 vs 0 (binary)",
+          "effort": "1 min, drill shank or caliper jaw tips. Run this FIRST — every other number is meaningless until it passes."
+        },
+        {
+          "measure": "G0b IDENTITY GATE — is there a large non-circular window in the web?",
+          "pred_gripper_link": "YES, 15.1866 x 28.2949 mm, centred 51.5301 mm from the back datum",
+          "pred_link5_jaw": "NO such window",
+          "separation_mm": "binary; the feature is 15+ mm across",
+          "effort": "10 s, by eye. Free confirmation of G0a."
+        },
+        {
+          "measure": "P-BARE — strip every pad, screw, nut, tape and heat-shrink, then read back-end-to-fingertip on bare metal",
+          "pred_gripper_link": "77.8500 asset mm -> about 76.7 real mm at s = 0.985; HARD CEILING of 81.4065 asset mm in any pose",
+          "pred_link5_jaw": "63.8785 asset mm distal of the pivot (about 62.9 real), or 103.8299 (about 102.3 real) for the whole wrist fork",
+          "separation_mm": "8.55 below 86.4 for the moving jaw; 22.5 or 17.4 away for the two link5 candidates",
+          "effort": "1 min once stripped. THE decisive test for hypothesis C."
+        },
+        {
+          "measure": "Maximum caliper reading anywhere on the BARE part, searching poses",
+          "pred_gripper_link": "81.4065 asset mm and not one micron more — rigid-body upper bound, no pose can exceed it",
+          "pred_link5_jaw": "105.6842 for the whole fork body; 67.2433 for the piece distal of the joint axis",
+          "separation_mm": "24.28 between the two hypothesis-D carriers; 4.99 between the moving jaw's ceiling and 86.4",
+          "effort": "3 min. If this exceeds 81.5 on verified bare metal, the ASSET is wrong and the scale chain must be rebuilt."
+        },
+        {
+          "measure": "Overhang of non-metal material past the sheet-metal outline, measured at the fingertip along the long axis",
+          "pred_gripper_link": "C-longitudinal needs >= 5.2218 mm of pad (8.5500 mm for an axial read) — plausible for a tip pad screwed to the M3 bore 3.6900 mm behind the tip",
+          "pred_link5_jaw": "C-perpendicular needs >= 20.9719 mm sideways, or >= 30.9408 mm if anchored in any real hole — implausible (ISO 4032 M3 nut = 2.40 mm)",
+          "separation_mm": "15.75 between the two forms of hypothesis C",
+          "effort": "1 min with a straightedge across the tip. Settles WHICH form of C, if any."
+        },
+        {
+          "measure": "PHOTOGRAPH the caliper display while the jaws are still closed on the part",
+          "pred_gripper_link": "a 76.4 misread gives 76.4/77.8500 = 0.981374 = -0.30 sigma against the independent photo scale s = 0.985 +- 0.012",
+          "pred_link5_jaw": "a genuine 86.4 demands s = 1.1098 axially (+10.4 sigma) or 1.0613 diagonally (+6.4 sigma)",
+          "separation_mm": "10.0 mm (86.4 vs 76.4)",
+          "effort": "0 extra — do it during any re-measure. Cheapest and highest-yield action in the whole protocol."
+        },
+        {
+          "measure": "TRAP, DO NOT USE AS AN IDENTITY TEST — blade thickness and end-face width at the fingertip",
+          "pred_gripper_link": "1.5000 mm thick, 3.8431 mm end face, 9.0616 mm across the last 5 mm",
+          "pred_link5_jaw": "IDENTICAL: 1.5000 / 3.8431 / 9.0616",
+          "separation_mm": "0.0",
+          "effort": "1 min. Zero discriminating power between the jaws — but it IS a clean scale check for s, so record it for that purpose only."
+        },
+        {
+          "measure": "TRAP, DO NOT USE — distance from the fingertip face to the nearest hole centre",
+          "pred_gripper_link": "3.6900 mm (tip face x = 67.0826, bore at 63.3926)",
+          "pred_link5_jaw": "3.6900 mm (tip z = 119.8856, bore at 116.1956) — identical by design",
+          "separation_mm": "0.0",
+          "effort": "1 min. Listed only to stop anyone spending it as an identity test."
+        }
+      ],
+      "user_briefing_korean": [
+        "먼저 절차 문제부터 정직하게 말씀드립니다. 저에게 전달된 4개 렌즈 보고서가 비어 있었습니다(빈 목록). 그래서 이 문서는 '4개 렌즈 합의'가 아니라, 제가 STL 파일 두 개에서 직접 다시 계산한 단독 감사입니다. 렌즈들이 실제로 돌았는데 출력이 유실된 것이라면 병합을 다시 돌려야 합니다.",
+        "리드의 숫자는 대부분 정확했습니다. gripper_link.stl의 삼각형 13698개, 볼록껍질 지름(convex hull diameter = 부품을 고무줄로 감쌌을 때 나올 수 있는 가장 긴 직선거리, 곧 캘리퍼가 어떤 자세로도 넘을 수 없는 물리적 상한) 81.4065mm, 구멍 5개의 위치와 지름, 돌출량 20.9719 / 13.9975 / 4.9935mm — 전부 자릿수까지 재현했습니다. 두 파일의 sha256 해시(파일 내용 지문)도 일치합니다.",
+        "그런데 리드가 가장 중요한 축을 빼먹었습니다. 리드는 판면에 '수직'인 ±y(20.9719mm)와 ±z(13.9975mm)만 계산했는데, 사용자가 말한 측정은 '조 하나의 뒤끝에서 손끝까지', 즉 부품의 길이 방향(±x)입니다. 그 방향으로는 필요한 추가 길이가 겨우 5.2218mm이고, 축 길이 자체를 86.4로 만들어도 8.5500mm면 됩니다.",
+        "게다가 자산이 그 근거를 제공합니다. 손끝 끝면에서 뒤로 3.6900mm 지점에 M3 볼트 통과용 구멍(지름 3.2000mm)이 있습니다. 손끝 끝면은 1.5000 x 3.8431mm짜리 칼날입니다. 즉 '손끝 패드를 나사로 붙이는 자리'가 실제로 존재합니다. 패드가 5~9mm만 붙어 있어도 86.4가 나옵니다.",
+        "그래서 가설 C 판정은 WOUNDED(부상)입니다. 명시된 형태 — 판면에 수직으로 볼트+너트 — 는 DEAD입니다. 최소 20.9719mm가 필요하고 실제 구멍에 끼우면 30.9408mm 이상이 필요한데, ISO 4032 규격 M3 너트 두께는 2.40mm뿐입니다. 반면 '길이 방향 부착물' 형태는 살아 있고, 리드는 이 형태를 아예 검사하지 않았습니다.",
+        "가설 D를 뒷받침한다던 리드의 근거는 완전히 무효입니다. link5를 z>=39.5507에서 자르면 86.4283이 나온다는 계산은, 자르는 높이를 86.4가 나오도록 역산한 것입니다. 절단 높이가 1mm 올라갈 때 값이 약 0.93mm씩 연속으로 줄면서 [65.2340, 123.7388] 구간을 훑기 때문에, 부품이 어떻게 생겼든 86.4를 주는 절단면은 반드시 존재합니다(중간값 정리). 정보량이 정확히 0입니다.",
+        "더 나쁜 점은 z=39.5507이 부품 경계가 아니라는 것입니다. 그 평면은 서로 겹쳐 있는 세 개의 바디를 동시에 관통합니다. 따라서 '길이 80.3349mm의 원위 조각'은 물리적으로 존재하는 물체가 아닙니다.",
+        "물리적으로 정당한 유일한 절단면인 실제 관절축(z=52.035)에서 자르면, link5 쪽 조는 볼록껍질 지름 67.2433mm에 그칩니다. 86.4까지 19.1567mm 모자랍니다. 움직이는 조도 같은 평면에서 71.1952mm입니다. 86.4에 닿으려면 관절축 아래 손목 구조를 16.8244mm나 삼켜야 하는데 그건 더 이상 '조'가 아닙니다. 그래서 D도 WOUNDED입니다.",
+        "두 조는 '긴 것과 짧은 것' 쌍이 아니라 거의 거울쌍입니다. 끝단 칼날 두께 1.5000mm 동일, 마지막 5mm 단면 9.0616mm 동일, 손끝에서 가장 가까운 구멍까지 3.6900mm 동일, 관절축 기준 원위 길이는 66.6816 대 63.8785로 2.8031mm 차이뿐입니다.",
+        "숙제로 남아 있던 불일치 두 건은 둘 다 '아무도 틀리지 않았다'로 해소됩니다. 첫째, 구멍 5개 대 6개: 원형 구멍은 정확히 5개이고 여기에 15.1866 x 28.2949mm짜리 비원형 창이 하나 더 있어 웹 관통 개구는 6개입니다. 오일러 표수(꼭짓점-모서리+면 값으로 구멍 개수를 세는 위상수학 지표)로 독립 검증하니 부품 전체 관통 개구가 정확히 10개 = 웹 6 + 포크판 4로 딱 맞았습니다.",
+        "둘째, 연결성분 6개 대 114개: trimesh의 body_count는 꼭짓점 기준으로 세어 6, split은 면 기준으로 세어 114이며, trimesh 공식 문서가 두 값이 다를 수 있다고 명시합니다. 이전 세션 기록과 오늘 리드 기록이 둘 다 맞습니다.",
+        "리드의 '±z 축 관통 구멍 0개'는 사실이 아닙니다. ±z로 뚫린 관통 개구가 4개 있고, 그중 둘은 내접 지름 11.0000 / 외접 지름 17.1781mm짜리 큰 꽃잎형 개구로 두 포크판을 관통합니다. 관절5 축이 바로 이 ±z 방향이므로, 부품에서 가장 큰 개구가 하필 그 축에 있습니다. 다만 ±z로도 13.9975mm가 필요해서 가설 C를 살려주지는 못합니다.",
+        "운영 질문에 대한 정직한 답: C나 D가 참이어도 재측정은 없어지지 않습니다. 다만 P1~P10 열 개가 세 개로 줄어듭니다. ① 신원 게이트 — 손에 든 부품에 약 2.2mm 구멍이 있는가(움직이는 조는 정확히 2개, link5 쪽 날은 0개로 전부 3.2mm). 2.5mm 드릴 섕크 하나로 1분. ② 웹에 15x28mm 창이 있는가(눈으로 10초). ③ 패드·나사·테이프·수축튜브를 전부 떼고 맨 금속 상태로 뒤끝에서 손끝까지 재측정. 세 번이면 끝납니다.",
+        "가장 값싸고 강력한 조치는 캘리퍼가 아닙니다. 재측정할 때 캘리퍼 표시창을 물린 채로 사진 찍는 것입니다. '76.4를 86.4로 잘못 옮겨 적었다' 가설은 76.4/77.8500 = 0.981374로 독립 사진 축척 추정치 대비 -0.30시그마에 정확히 앉는 반면, 진짜 86.4라면 축척이 축 방향 1.1098(+10.4시그마) 또는 대각 1.0613(+6.4시그마)이어야 합니다. 사진 한 장이 이 보고서의 모든 기하 논증보다 강합니다. 그리고 반드시 알아두실 것: 이 재측정은 D427을 해결하지 못합니다. D427의 대상은 고정측 조의 원위 '형상'인데 그 기하는 link5.stl에 융합되어 있어 분해 없이는 캘리퍼로 잴 수 없고, 캘리퍼는 치수만 재지 형상을 재지 못합니다. 가설 D의 정면 자산 검증인 gripper_left_link.stl 비교는 승인 대기 접근 금지 자산이라 열지도 해시하지도 않았고 그 추론선에서 멈췄습니다."
+      ]
+    },
+    "lens_count": 0,
+    "raw": []
+  },
+  "workflowProgress": [
+    {
+      "type": "workflow_phase",
+      "index": 1,
+      "title": "Lenses"
+    },
+    {
+      "type": "workflow_phase",
+      "index": 2,
+      "title": "Refute"
+    },
+    {
+      "type": "workflow_phase",
+      "index": 3,
+      "title": "Synthesize"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 1,
+      "label": "lens:geom",
+      "phaseIndex": 1,
+      "phaseTitle": "Lenses",
+      "agentId": "a076915660cfd2ec3",
+      "model": "claude-opus-5[1m]",
+      "state": "error",
+      "startedAt": 1786104871683,
+      "queuedAt": 1786104865422,
+      "attempt": 1,
+      "lastToolName": "Bash",
+      "lastToolSummary": "cd /home/cgxr/Documents/Robotics/RoArm_Project/local_assets…",
+      "promptPreview": "You are one lens of an adversarial geometry panel on the RoArm-M3 project.\nWorking dir: /home/cgxr/Documents/Robotics/RoArm_Project. Meshes: /home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/urdf/meshes\n\nCONTEXT — the open question:\nThe user once read **86.4 mm** on a caliper, measuring (their words) \"the full length of ONE jaw,\nback end to fingertip\", with \"only the detached part …",
+      "lastProgressAt": 1786105329947,
+      "error": "API Error: Unable to connect to API (ENOTIMP)",
+      "tokens": 77704,
+      "toolCalls": 10,
+      "durationMs": 458264
+    },
+    {
+      "type": "workflow_agent",
+      "index": 2,
+      "label": "lens:jaw",
+      "phaseIndex": 1,
+      "phaseTitle": "Lenses",
+      "agentId": "aec522f9af957e491",
+      "model": "claude-opus-5[1m]",
+      "state": "error",
+      "startedAt": 1786104873108,
+      "queuedAt": 1786104865422,
+      "attempt": 1,
+      "lastToolName": "Bash",
+      "lastToolSummary": "cat > /tmp/lens2/s06_frag.py <<'EOF' import numpy as np, tr…",
+      "promptPreview": "You are one lens of an adversarial geometry panel on the RoArm-M3 project.\nWorking dir: /home/cgxr/Documents/Robotics/RoArm_Project. Meshes: /home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/urdf/meshes\n\nCONTEXT — the open question:\nThe user once read **86.4 mm** on a caliper, measuring (their words) \"the full length of ONE jaw,\nback end to fingertip\", with \"only the detached part …",
+      "lastProgressAt": 1786105153060,
+      "error": "API Error: Connection closed mid-response. The response above may be incomplete.",
+      "tokens": 80893,
+      "toolCalls": 8,
+      "durationMs": 279952
+    },
+    {
+      "type": "workflow_agent",
+      "index": 3,
+      "label": "lens:hardware",
+      "phaseIndex": 1,
+      "phaseTitle": "Lenses",
+      "agentId": "ab59fbbfd56593ca0",
+      "model": "claude-opus-5[1m]",
+      "state": "error",
+      "startedAt": 1786104872569,
+      "queuedAt": 1786104865422,
+      "attempt": 1,
+      "lastToolName": "Bash",
+      "lastToolSummary": "cat > /tmp/lens3/s5_loops.py <<'EOF' import numpy as np, tr…",
+      "promptPreview": "You are one lens of an adversarial geometry panel on the RoArm-M3 project.\nWorking dir: /home/cgxr/Documents/Robotics/RoArm_Project. Meshes: /home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/urdf/meshes\n\nCONTEXT — the open question:\nThe user once read **86.4 mm** on a caliper, measuring (their words) \"the full length of ONE jaw,\nback end to fingertip\", with \"only the detached part …",
+      "lastProgressAt": 1786105336675,
+      "error": "API Error: Unable to connect to API (ENOTIMP)",
+      "tokens": 77678,
+      "toolCalls": 8,
+      "durationMs": 464106
+    },
+    {
+      "type": "workflow_agent",
+      "index": 4,
+      "label": "lens:identity",
+      "phaseIndex": 1,
+      "phaseTitle": "Lenses",
+      "agentId": "a532e0f62bb5a652d",
+      "model": "claude-opus-5[1m]",
+      "state": "error",
+      "startedAt": 1786104872203,
+      "queuedAt": 1786104865422,
+      "attempt": 1,
+      "lastToolName": "Bash",
+      "lastToolSummary": "cd /tmp/lens4 && cat > s4_faceloops.py <<'EOF' import numpy…",
+      "promptPreview": "You are one lens of an adversarial geometry panel on the RoArm-M3 project.\nWorking dir: /home/cgxr/Documents/Robotics/RoArm_Project. Meshes: /home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/urdf/meshes\n\nCONTEXT — the open question:\nThe user once read **86.4 mm** on a caliper, measuring (their words) \"the full length of ONE jaw,\nback end to fingertip\", with \"only the detached part …",
+      "lastProgressAt": 1786105332952,
+      "error": "API Error: Unable to connect to API (ENOTIMP)",
+      "tokens": 73732,
+      "toolCalls": 7,
+      "durationMs": 460749
+    },
+    {
+      "type": "workflow_agent",
+      "index": 5,
+      "label": "synthesis",
+      "phaseIndex": 3,
+      "phaseTitle": "Synthesize",
+      "agentId": "a9c5b028ce6284d73",
+      "model": "claude-opus-5[1m]",
+      "state": "done",
+      "startedAt": 1786105343249,
+      "queuedAt": 1786105336677,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "Honest answer: NO — neither C nor D removes the need to mea…",
+      "promptPreview": "You are one lens of an adversarial geometry panel on the RoArm-M3 project.\nWorking dir: /home/cgxr/Documents/Robotics/RoArm_Project. Meshes: /home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/urdf/meshes\n\nCONTEXT — the open question:\nThe user once read **86.4 mm** on a caliper, measuring (their words) \"the full length of ONE jaw,\nback end to fingertip\", with \"only the detached part …",
+      "lastProgressAt": 1786106567458,
+      "tokens": 152529,
+      "toolCalls": 24,
+      "durationMs": 1224208,
+      "resultPreview": "{\"settled\":[\"gripper_link.stl sha256 = 7946a374e24a2f467a0581b4946e0ec41b1b86a92f070bc00aa9bced1bf65a56 (byte-verified). 13698 triangles, 6831 unique vertices after merge_vertices(), watertight=True, winding_consistent=True, exactly 1 face-connected component. Lead claim (1) CONFIRMED in full.\",\"gripper_link.stl AABB extents 77.8500 x 25.2400 x 39.3676 mm; AABB min (-10.767397, -9.999632, -38.6173…"
+    }
+  ],
+  "totalTokens": 462536,
+  "totalToolCalls": 57
+}

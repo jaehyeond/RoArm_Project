@@ -1,0 +1,183 @@
+### TEXT
+I'll start by verifying the environment and independently loading the meshes.
+
+### TOOL_USE Bash
+{"command": "cd /home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/urdf/meshes && ls -la && echo \"---\" && sha256sum gripper_link.stl link5.stl", "description": "List meshes and hash the two target STLs"}
+
+### TOOL_RESULT
+total 2840
+drwxr-xr-x 2 cgxr cgxr   4096 May 14 18:41 .
+drwxr-xr-x 3 cgxr cgxr   4096 May 13 01:17 ..
+-rw-r--r-- 1 cgxr cgxr   3284 May 13 01:17 base_link.stl
+-rw-r--r-- 1 cgxr cgxr 956384 May 13 01:17 gripper_left_link.stl
+-rw-rw-r-- 1 cgxr cgxr   1521 May 14 18:41 gripper_link_collision_g2a.stl
+-rw-r--r-- 1 cgxr cgxr 684984 May 13 01:17 gripper_link.stl
+-rw-r--r-- 1 cgxr cgxr  12784 May 13 01:17 link1.stl
+-rw-r--r-- 1 cgxr cgxr 468284 May 13 01:17 link2.stl
+-rw-r--r-- 1 cgxr cgxr  34484 May 13 01:17 link3.stl
+-rw-r--r-- 1 cgxr cgxr   9284 May 13 01:17 link4.stl
+-rw-r--r-- 1 cgxr cgxr 704684 May 13 01:17 link5.stl
+---
+7946a374e24a2f467a0581b4946e0ec41b1b86a92f070bc00aa9bced1bf65a56  gripper_link.stl
+1d63f374a78c1419b21eec63fa8efeef40d0d42ca89c5de3ceb0d86476d9c7eb  link5.stl
+
+### TOOL_USE Bash
+{"command": "python -c \"import trimesh,scipy,numpy;print(trimesh.__version__,scipy.__version__,numpy.__version__)\"", "description": "Check library versions"}
+
+### TOOL_RESULT
+4.11.5 1.17.1 2.4.2
+
+### THINKING
+
+
+### TEXT
+Now let me independently load and characterize the mesh.
+
+### TOOL_USE Bash
+{"command": "mkdir -p /tmp/lens3 && cat > /tmp/lens3/s1_basic.py <<'EOF'\nimport numpy as np, trimesh, hashlib\nP=\"/home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/urdf/meshes/gripper_link.stl\"\nraw=open(P,'rb').read()\nprint(\"sha256\", hashlib.sha256(raw).hexdigest())\nprint(\"bytes\", len(raw))\n# binary STL: 84 header + n*50\nn_hdr=int(np.frombuffer(raw[80:84],dtype='<u4')[0])\nprint(\"header tri count\", n_hdr, \"implied bytes\", 84+50*n_hdr)\n\nm=trimesh.load(P, process=False)\nprint(\"loaded tri\", len(m.faces), \"verts(raw)\", len(m.vertices))\nm.merge_vertices()\nprint(\"after merge: tri\", len(m.faces), \"unique verts\", len(m.vertices))\nprint(\"watertight\", m.is_watertight, \"winding_consistent\", m.is_winding_consistent, \"euler\", m.euler_number)\ncomps=m.split(only_watertight=False)\nprint(\"connected components\", len(comps), [len(c.faces) for c in comps][:20])\nb=m.bounds\nprint(\"AABB min\", np.array2string(b[0],precision=4,floatmode='fixed'))\nprint(\"AABB max\", np.array2string(b[1],precision=4,floatmode='fixed'))\nprint(\"AABB extent\", np.array2string(b[1]-b[0],precision=4,floatmode='fixed'))\nprint(\"volume\", m.volume, \"area\", m.area)\n\nhull=m.convex_hull\nhv=np.asarray(hull.vertices)\nprint(\"hull verts\", len(hv), \"hull tris\", len(hull.faces))\nfrom scipy.spatial.distance import cdist\nD=cdist(hv,hv)\ni,j=np.unravel_index(np.argmax(D),D.shape)\nprint(\"hull diameter %.6f\"%D[i,j])\nprint(\"  endpoint A\", np.array2string(hv[i],precision=4,floatmode='fixed'))\nprint(\"  endpoint B\", np.array2string(hv[j],precision=4,floatmode='fixed'))\nprint(\"  delta\", np.array2string(hv[j]-hv[i],precision=4,floatmode='fixed'))\nnp.save(\"/tmp/lens3/hullv.npy\",hv)\nnp.save(\"/tmp/lens3/meshv.npy\",np.asarray(m.vertices))\nEOF\npython /tmp/lens3/s1_basic.py", "description": "Independently load gripper_link.stl and compute basic metrics"}
+
+### TOOL_RESULT
+sha256 7946a374e24a2f467a0581b4946e0ec41b1b86a92f070bc00aa9bced1bf65a56
+bytes 684984
+header tri count 13698 implied bytes 684984
+loaded tri 13698 verts(raw) 41094
+after merge: tri 13698 unique verts 6831
+watertight True winding_consistent True euler -18
+connected components 1 [13698]
+AABB min [-10.7674  -9.9996 -38.6173]
+AABB max [67.0826 15.2404  0.7502]
+AABB extent [77.8500 25.2400 39.3676]
+volume 3659.0240757027677 area 5991.617941799016
+hull verts 108 hull tris 212
+hull diameter 81.406501
+  endpoint A [ 66.9020  -5.9834 -21.9954]
+  endpoint B [-10.7220   3.1913   0.7502]
+  delta [-77.6240   9.1747  22.7456]
+
+### THINKING
+
+
+### TEXT
+Euler number is **-18** → genus 10, i.e. **10 topological tunnels**, not 5. Let me detect every hole systematically.
+
+### TOOL_USE Bash
+{"command": "cat > /tmp/lens3/s2_holes.py <<'EOF'\nimport numpy as np, trimesh\nfrom scipy.sparse.csgraph import connected_components\nfrom scipy.sparse import coo_matrix\nP=\"/home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/urdf/meshes/gripper_link.stl\"\nm=trimesh.load(P, process=False); m.merge_vertices()\nV=len(m.vertices); F=len(m.faces); E=len(m.edges_unique)\nprint(\"V %d E %d F %d  euler=%d  genus=%.1f\"%(V,E,F,V-E+F,(2-(V-E+F))/2))\n\nfn=m.face_normals\nadj=m.face_adjacency\nang=m.face_adjacency_angles\n# smooth patches: dihedral angle < 40 deg\nsel=ang<np.deg2rad(40)\na=adj[sel]\ng=coo_matrix((np.ones(len(a)),(a[:,0],a[:,1])),shape=(F,F))\nnc,lab=connected_components(g,directed=False)\nprint(\"smooth patches:\",nc)\ntri=m.triangles\ncent=tri.mean(axis=1)\nres=[]\nfor k in range(nc):\n    idx=np.where(lab==k)[0]\n    if len(idx)<8: continue\n    N=fn[idx]\n    # axis = eigenvector of smallest eigenvalue of N^T N\n    w,vv=np.linalg.eigh(N.T@N)\n    axis=vv[:,0]; lam=w[0]/len(idx)\n    if lam>2e-3: continue           # normals must be ~coplanar-perp to axis\n    # normals must sweep a large angular range (a full/partial cylinder)\n    e1=vv[:,1]; e2=vv[:,2]\n    th=np.arctan2(N@e2,N@e1)\n    sweep=np.ptp(np.unwrap(np.sort(th)))\n    # fit circle to vertices projected perpendicular to axis\n    pts=m.vertices[np.unique(m.faces[idx])]\n    pp=np.c_[pts@e1,pts@e2]\n    A=np.c_[2*pp,np.ones(len(pp))]; b=(pp**2).sum(1)\n    sol,*_=np.linalg.lstsq(A,b,rcond=None)\n    cx,cy=sol[0],sol[1]; r=np.sqrt(sol[2]+cx*cx+cy*cy)\n    rr=np.linalg.norm(pp-[cx,cy],axis=1)\n    if rr.std()>0.06: continue\n    axl=pts@axis\n    center=cx*e1+cy*e2+axl.mean()*axis\n    # concave (hole) vs convex (boss): does face normal point toward axis?\n    toax=(center - (cent[idx]@axis)*axis) - (cent[idx]-(cent[idx]@axis)*axis)\n    inward=np.mean(np.einsum('ij,ij->i',fn[idx],toax/np.linalg.norm(toax,axis=1,keepdims=True)))\n    res.append(dict(k=k,nf=len(idx),axis=axis*np.sign(axis[np.argmax(abs(axis))]),D=2*r,\n                    center=center,axlen=np.ptp(axl),sweep=np.degrees(sweep),inward=inward,rstd=rr.std()))\nres.sort(key=lambda d:(-d['D'],d['nf']))\nprint(\"\\n%-4s %-5s %-22s %-8s %-30s %-8s %-7s %-6s\"%(\"id\",\"nf\",\"axis\",\"D(mm)\",\"center(x,y,z)\",\"axlen\",\"sweep\",\"inw\"))\nfor d in res:\n    print(\"%-4d %-5d %-22s %-8.4f %-30s %-8.4f %-7.1f %-6.2f\"%(\n        d['k'],d['nf'],np.array2string(d['axis'],precision=3,floatmode='fixed'),d['D'],\n        np.array2string(d['center'],precision=4,floatmode='fixed'),d['axlen'],d['sweep'],d['inward']))\nEOF\npython /tmp/lens3/s2_holes.py", "description": "Detect all cylindrical features (any axis) in gripper_link.stl"}
+
+### TOOL_RESULT
+Exit code 1
+V 6831 E 20547 F 13698  euler=-18  genus=10.0
+smooth patches: 13
+Traceback (most recent call last):
+  File "/tmp/lens3/s2_holes.py", line 44, in <module>
+    toax=(center - (cent[idx]@axis)*axis) - (cent[idx]-(cent[idx]@axis)*axis)
+                   ~~~~~~~~~~~~~~~~^~~~~
+ValueError: operands could not be broadcast together with shapes (48,) (3,)
+
+### THINKING
+
+
+### TOOL_USE Bash
+{"command": "cat > /tmp/lens3/s2b.py <<'EOF'\nimport numpy as np, trimesh\nfrom scipy.sparse.csgraph import connected_components\nfrom scipy.sparse import coo_matrix\nP=\"/home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/urdf/meshes/gripper_link.stl\"\nm=trimesh.load(P, process=False); m.merge_vertices()\nF=len(m.faces); fn=m.face_normals; adj=m.face_adjacency; ang=m.face_adjacency_angles\nfor thr in (5,10,20,30,40):\n    sel=ang<np.deg2rad(thr); a=adj[sel]\n    g=coo_matrix((np.ones(len(a)),(a[:,0],a[:,1])),shape=(F,F))\n    nc,lab=connected_components(g,directed=False)\n    sizes=np.bincount(lab)\n    print(\"thr %2d deg -> %4d patches, top sizes %s\"%(thr,nc,np.sort(sizes)[::-1][:12]))\nEOF\npython /tmp/lens3/s2b.py", "description": "Sweep dihedral threshold for smooth-patch segmentation"}
+
+### TOOL_RESULT
+thr  5 deg -> 1412 patches, top sizes [1696 1696  850  850  832  832  498  493  427  427  415  415]
+thr 10 deg ->  770 patches, top sizes [3380 3380 1347 1095  680  680  354  286  169  169  102  101]
+thr 20 deg ->   25 patches, top sizes [9467 1645 1095  458  320  320   68   68   48   48   48   48]
+thr 30 deg ->   20 patches, top sizes [9467 1650 1095  458  320  320   68   68   48   48   48   48]
+thr 40 deg ->   13 patches, top sizes [9477 1652 1095  458  320  320   68   68   48   48   48   48]
+
+### THINKING
+
+
+### TOOL_USE Bash
+{"command": "cat > /tmp/lens3/s3_cyl.py <<'EOF'\nimport numpy as np, trimesh\nfrom scipy.sparse.csgraph import connected_components\nfrom scipy.sparse import coo_matrix\nP=\"/home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/urdf/meshes/gripper_link.stl\"\nm=trimesh.load(P, process=False); m.merge_vertices()\nF=len(m.faces); fn=m.face_normals; adj=m.face_adjacency\ncent=m.triangles.mean(axis=1)\naxes={'x':np.array([1.,0,0]),'y':np.array([0,1.,0]),'z':np.array([0,0,1.])}\ntot=[]\nfor name,u in axes.items():\n    e1,e2=[v for k,v in axes.items() if k!=name]\n    mask=np.abs(fn@u)<0.02\n    fid=np.where(mask)[0]\n    keep=mask[adj[:,0]]&mask[adj[:,1]]\n    a=adj[keep]\n    g=coo_matrix((np.ones(len(a)),(a[:,0],a[:,1])),shape=(F,F))\n    nc,lab=connected_components(g,directed=False)\n    labs=np.unique(lab[fid])\n    print(\"\\n=== axis %s : %d perpendicular faces, %d components ===\"%(name,len(fid),len(labs)))\n    for L in labs:\n        idx=np.intersect1d(np.where(lab==L)[0],fid)\n        if len(idx)<6: continue\n        pts=m.vertices[np.unique(m.faces[idx])]\n        pp=np.c_[pts@e1,pts@e2]\n        A=np.c_[2*pp,np.ones(len(pp))]; b=(pp**2).sum(1)\n        sol,*_=np.linalg.lstsq(A,b,rcond=None)\n        c2=sol[:2]; r=np.sqrt(sol[2]+c2@c2)\n        rr=np.linalg.norm(pp-c2,axis=1)\n        if rr.std()>0.05:\n            print(\"  [non-circular patch] nf=%d rstd=%.4f\"%(len(idx),rr.std())); continue\n        axl=pts@u\n        C=c2[0]*e1+c2[1]*e2+0.5*(axl.min()+axl.max())*u\n        radial=cent[idx]-((cent[idx]@u)[:,None])*u - (c2[0]*e1+c2[1]*e2)\n        radial/=np.linalg.norm(radial,axis=1,keepdims=True)\n        inward=np.mean(np.einsum('ij,ij->i',fn[idx],-radial))\n        ang=np.arctan2((pts-C)@e2,(pts-C)@e1)\n        s=np.sort(ang); gap=np.max(np.diff(np.r_[s,s[0]+2*np.pi]))\n        sweep=360-np.degrees(gap)\n        kind=\"HOLE\" if inward>0.9 else (\"BOSS\" if inward<-0.9 else \"?\")\n        print(\"  nf=%-4d D=%8.4f  center=%-32s  %s-extent=[%9.4f,%9.4f] len=%7.4f sweep=%6.1f  %s\"%(\n            len(idx),2*r,np.array2string(C,precision=4,floatmode='fixed'),name,axl.min(),axl.max(),np.ptp(axl),sweep,kind))\n        tot.append((name,2*r,C,axl.min(),axl.max(),kind,sweep,len(idx)))\nprint(\"\\nTotal circular cylindrical patches found:\",len(tot))\nEOF\npython /tmp/lens3/s3_cyl.py", "description": "Find all axis-aligned cylindrical features per axis"}
+
+### TOOL_RESULT
+=== axis x : 10644 perpendicular faces, 5 components ===
+  [non-circular patch] nf=10634 rstd=2.6544
+
+=== axis y : 2110 perpendicular faces, 15 components ===
+  [non-circular patch] nf=544 rstd=6.2683
+  [non-circular patch] nf=256 rstd=2.7522
+  nf=19   D= 94.4775  center=[-19.0056  -5.1037 -37.5689]      y-extent=[  -5.6595,  -4.5479] len= 1.1117 sweep=   1.4  HOLE
+  [non-circular patch] nf=32 rstd=0.1939
+  [non-circular patch] nf=544 rstd=6.2683
+  nf=13   D= 53.3804  center=[ 1.5428 -5.1942 -0.1391]         y-extent=[  -5.6594,  -4.7291] len= 0.9303 sweep=   2.0  HOLE
+  nf=48   D=  3.2000  center=[ 63.3926  -5.2334 -18.9336]      y-extent=[  -5.9834,  -4.4834] len= 1.5000 sweep= 345.0  HOLE
+  nf=48   D=  2.2000  center=[38.3042 -5.2334 -8.4336]         y-extent=[  -5.9834,  -4.4834] len= 1.5000 sweep= 345.0  HOLE
+  nf=48   D=  3.2000  center=[ 30.9226  -5.2334 -31.4936]      y-extent=[  -5.9834,  -4.4834] len= 1.5000 sweep= 345.0  HOLE
+  nf=48   D=  3.2000  center=[30.9226 -5.2334 -6.3736]         y-extent=[  -5.9834,  -4.4834] len= 1.5000 sweep= 345.0  HOLE
+  nf=48   D=  2.2000  center=[ 38.3042  -5.2334 -29.4336]      y-extent=[  -5.9834,  -4.4834] len= 1.5000 sweep= 345.0  HOLE
+  [non-circular patch] nf=458 rstd=2.8982
+
+=== axis z : 2108 perpendicular faces, 11 components ===
+  [non-circular patch] nf=148 rstd=6.0604
+  nf=20   D= 49.6549  center=[  3.4065  -4.9705 -37.7365]      z-extent=[ -38.2933, -37.1796] len= 1.1137 sweep=   2.6  HOLE
+  [non-circular patch] nf=1000 rstd=5.6936
+  [non-circular patch] nf=148 rstd=6.0557
+  nf=13   D= 56.3660  center=[ 0.0500 -5.0851 -0.0306]         z-extent=[  -0.4875,   0.4263] len= 0.9138 sweep=   1.9  HOLE
+  [non-circular patch] nf=68 rstd=0.5775
+  [non-circular patch] nf=320 rstd=1.1203
+  [non-circular patch] nf=320 rstd=1.1203
+  [non-circular patch] nf=68 rstd=0.5775
+
+Total circular cylindrical patches found: 9
+
+### THINKING
+
+
+### TEXT
+5 circular through-holes confirmed exactly — but genus 10 means 5 more tunnels. Let me find the non-circular through-features.
+
+### TOOL_USE Bash
+{"command": "cat > /tmp/lens3/s4_slots.py <<'EOF'\nimport numpy as np, trimesh\nfrom scipy.sparse.csgraph import connected_components\nfrom scipy.sparse import coo_matrix\nP=\"/home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/urdf/meshes/gripper_link.stl\"\nm=trimesh.load(P, process=False); m.merge_vertices()\nF=len(m.faces); fn=m.face_normals; adj=m.face_adjacency\naxes={'x':np.array([1.,0,0]),'y':np.array([0,1.,0]),'z':np.array([0,0,1.])}\nfor name,u in axes.items():\n    e1,e2=[v for k,v in axes.items() if k!=name]\n    mask=np.abs(fn@u)<0.02\n    keep=mask[adj[:,0]]&mask[adj[:,1]]; a=adj[keep]\n    g=coo_matrix((np.ones(len(a)),(a[:,0],a[:,1])),shape=(F,F))\n    nc,lab=connected_components(g,directed=False)\n    print(\"\\n### axis\",name)\n    for L in np.unique(lab[np.where(mask)[0]]):\n        idx=np.intersect1d(np.where(lab==L)[0],np.where(mask)[0])\n        if len(idx)<6: continue\n        pts=m.vertices[np.unique(m.faces[idx])]\n        lo,hi=pts.min(0),pts.max(0)\n        # is this patch a closed tube (inward facing) -> convex hull area of projection\n        proj=np.c_[pts@e1,pts@e2]\n        c=proj.mean(0)\n        cen=m.triangles.mean(axis=1)[idx]\n        rad=np.c_[cen@e1,cen@e2]-c; rad/= np.linalg.norm(rad,axis=1,keepdims=True)\n        nml=np.c_[fn[idx]@e1,fn[idx]@e2]\n        inward=np.mean(np.einsum('ij,ij->i',nml,-rad))\n        print(\" patch nf=%-5d  proj-extent(%s,%s)=%.4f x %.4f   %s-extent=[%.4f,%.4f] len=%.4f  inward=%+.2f  nverts=%d\"%(\n            len(idx),[k for k in axes if not (axes[k]==e1).all()][0] if False else \"a\",\"b\",\n            np.ptp(proj[:,0]),np.ptp(proj[:,1]),name,pts@u and (pts@u).min() or (pts@u).min(),(pts@u).max(),np.ptp(pts@u),inward,len(pts)))\nEOF\npython /tmp/lens3/s4_slots.py 2>/dev/null | head -60", "description": "Analyze non-circular perpendicular patches"}
+
+### TOOL_RESULT
+### axis x
+
+### THINKING
+
+
+### TOOL_USE Bash
+{"command": "cat > /tmp/lens3/s5_loops.py <<'EOF'\nimport numpy as np, trimesh, collections\nfrom scipy.sparse.csgraph import connected_components\nfrom scipy.sparse import coo_matrix\nP=\"/home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/urdf/meshes/gripper_link.stl\"\nm=trimesh.load(P, process=False); m.merge_vertices()\nF=len(m.faces); fn=m.face_normals; adj=m.face_adjacency; V=m.vertices\nd=np.einsum('ij,ij->i',fn,m.triangles.mean(1))\nkey=np.round(np.c_[fn,d],4)\n# planar patches: adjacent faces with (near) identical plane\nsame=(np.abs(np.einsum('ij,ij->i',fn[adj[:,0]],fn[adj[:,1]]))>0.99999)&(np.abs(d[adj[:,0]]-d[adj[:,1]])<1e-4)\na=adj[same]\ng=coo_matrix((np.ones(len(a)),(a[:,0],a[:,1])),shape=(F,F))\nnc,lab=connected_components(g,directed=False)\nsizes=np.bincount(lab,minlength=nc)\ntot_inner=0\nprint(\"planar patches with >=1 inner loop:\")\nfor L in np.argsort(sizes)[::-1]:\n    if sizes[L]<3: continue\n    idx=np.where(lab==L)[0]\n    ec=collections.Counter()\n    for f in m.faces[idx]:\n        for e in ((f[0],f[1]),(f[1],f[2]),(f[2],f[0])):\n            ec[tuple(sorted(e))]+=1\n    bnd=[e for e,c in ec.items() if c==1]\n    if not bnd: continue\n    nb=len(set([v for e in bnd for v in e]))\n    gg=coo_matrix((np.ones(len(bnd)),([e[0] for e in bnd],[e[1] for e in bnd])),shape=(len(V),len(V)))\n    n2,l2=connected_components(gg,directed=False)\n    used=np.unique([v for e in bnd for v in e])\n    nloops=len(np.unique(l2[used]))\n    if nloops>1:\n        tot_inner+=nloops-1\n        print(\"  patch nf=%-5d normal=%-24s offset=%9.4f  loops=%d (inner=%d)\"%(\n            sizes[L],np.array2string(fn[idx[0]],precision=3,floatmode='fixed'),d[idx[0]],nloops,nloops-1))\n        # describe each loop\n        for lv in np.unique(l2[used]):\n            vs=used[l2[used]==lv]; p=V[vs]\n            print(\"       loop nv=%-4d bbox=%s .. %s\"%(len(vs),\n                np.array2string(p.min(0),precision=3,floatmode='fixed'),\n                np.array2string(p.max(0),precision=3,floatmode='fixed')))\nprint(\"\\nTOTAL inner loops (openings) =\",tot_inner, \" => implies\", tot_inner/2, \"simple through-tunnels\")\nprint(\"genus from euler =\", (2-(len(V)-len(m.edges_unique)+F))//2)\nEOF\npython /tmp/lens3/s5_loops.py", "description": "Count inner boundary loops on planar patches to locate all openings"}
+
+### TOOL_RESULT
+planar patches with >=1 inner loop:
+  patch nf=493   normal=[-0.000  1.000  0.000]   offset=  -4.4834  loops=7 (inner=6)
+       loop nv=134  bbox=[ 23.804  -4.483 -37.107] .. [67.083 -4.483 -0.760]
+       loop nv=24   bbox=[ 61.793  -4.483 -20.534] .. [ 64.993  -4.483 -17.334]
+       loop nv=24   bbox=[37.204 -4.483 -9.534] .. [39.404 -4.483 -7.334]
+       loop nv=24   bbox=[ 29.323  -4.483 -33.094] .. [ 32.523  -4.483 -29.894]
+       loop nv=24   bbox=[29.323 -4.483 -7.974] .. [32.523 -4.483 -4.774]
+       loop nv=24   bbox=[ 37.204  -4.483 -30.534] .. [ 39.404  -4.483 -28.334]
+       loop nv=229  bbox=[ 45.204  -4.483 -33.081] .. [60.391 -4.483 -4.786]
+  patch nf=493   normal=[-0.000 -1.000  0.000]   offset=   5.9834  loops=7 (inner=6)
+       loop nv=134  bbox=[ 23.804  -5.983 -37.107] .. [67.083 -5.983 -0.760]
+       loop nv=24   bbox=[ 29.323  -5.983 -33.094] .. [ 32.523  -5.983 -29.894]
+       loop nv=229  bbox=[ 45.204  -5.983 -33.081] .. [60.391 -5.983 -4.786]
+       loop nv=24   bbox=[ 61.793  -5.983 -20.534] .. [ 64.993  -5.983 -17.334]
+       loop nv=24   bbox=[29.323 -5.983 -7.974] .. [32.523 -5.983 -4.774]
+       loop nv=24   bbox=[37.204 -5.983 -9.534] .. [39.404 -5.983 -7.334]
+       loop nv=24   bbox=[ 37.204  -5.983 -30.534] .. [ 39.404  -5.983 -28.334]
+  patch nf=265   normal=[-0.000  0.000  1.000]   offset=   0.7502  loops=3 (inner=2)
+       loop nv=69   bbox=[-10.767 -10.000   0.750] .. [51.306 15.240  0.750]
+       loop nv=34   bbox=[12.147  0.600  0.750] .. [35.918  9.640  0.750]
+       loop nv=160  bbox=[-7.305 -6.537  0.750] .. [5.770 6.538 0.750]
+  patch nf=265   normal=[ 0.000  0.000 -1.000]   offset=   0.7498  loops=3 (inner=2)
+       loop nv=69   bbox=[-10.767 -10.000  -0.750] .. [51.306 15.240 -0.750]
+       loop nv=34   bbox=[12.147  0.600 -0.750] .. [35.918  9.640 -0.750]
+       loop nv=160  bbox=[-7.305 -6.537 -0.750] .. [ 5.770  6.538 -0.750]
+  patch nf=265   normal=[ 0.000  0.000 -1.000]   offset=  38.6173  loops=3 (inner=2)
+       loop nv=69   bbox=[-10.767 -10.000 -38.617] .. [ 51.306  15.240 -38.617]
+       loop nv=34   bbox=[ 12.147   0.600 -38.617] .. [ 35.918   9.640 -38.617]
+       loop nv=160  bbox=[ -7.305  -6.537 -38.617] .. [  5.770   6.538 -38.617]
+  patch nf=265   normal=[-0.000  0.000  1.000]   offset= -37.1173  loops=3 (inner=2)
+       loop nv=69   bbox=[-10.767 -10.000 -37.117] .. [ 51.306  15.240 -37.117]
+       loop nv=34   bbox=[ 12.147   0.600 -37.117] .. [ 35.918   9.640 -37.117]
+       loop nv=160  bbox=[ -7.305  -6.537 -37.117] .. [  5.770   6.538 -37.117]
+
+TOTAL inner loops (openings) = 20  => implies 10.0 simple through-tunnels
+genus from euler = 10
+
+### TEXT
+API Error: Unable to connect to API (ENOTIMP)

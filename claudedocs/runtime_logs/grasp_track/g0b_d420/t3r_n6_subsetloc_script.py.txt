@@ -1,0 +1,646 @@
+#!/usr/bin/env python3
+"""
+t3r_n6_subsetloc.py   (READ-ONLY on every asset; writes only NEW t3r_n6_subsetloc_* artifacts)
+
+39th session, task [2] — determination of the 38th doc §11 lead, ONE run.
+
+CLAIM UNDER TEST (38th doc §11)
+  "link5.stl's fixed-jaw copy is a PROPER SUBSET of the shipped
+   `gripper_left_link.stl`: 1,026 / 9,461 G-vertices (10.84%) lie >1 mm from
+   B.  => the URDF-referenced copy carries LESS shape information than the
+   real part => D427 GATE0_SOURCE_ABSENT may have been measured on an
+   impoverished copy, and the remedy would be to use the shipped asset."
+  38th explicitly could not localize the difference (it mislabelled the axes).
+
+WHAT THIS RUN DOES
+  1. Reproduces D427's fixed-body Gate-0 statistic bit-for-bit as a gate.
+  2. Reproduces the 38th §11 measurement exactly (same alignment, same numbers).
+  3. Re-measures with the two corrections the 38th measurement needed:
+       (a) vertex-to-SURFACE instead of vertex-to-VERTEX — G has 19,126 tri
+           vs B's 6,222, so a G vertex mid-way across a large flat B triangle
+           is ~0 mm from B's surface but many mm from B's nearest vertex;
+       (b) compare against the whole VERTEX-connected 7,250-tri fixed-jaw
+           shell (38th §9-3/§10-1's own definition) and against the FULL
+           `link5.stl` that the URDF actually references — not against the
+           6,222-tri face-connected sub-piece the 38th happened to extract.
+  4. Localizes whatever remains in the Gate-0 tool frame.
+  5. Re-runs the Gate-0 depth statistic with the shipped asset substituted in
+     and unioned in, to see whether the verdict could move at all.
+
+FRAME / CONVENTION (pinned from source, not memory)
+  roarm_m3.urdf:129-135  link5 <visual> origin identity, scale 0.001
+       => link5.stl mm coordinates ARE link5-frame coordinates in mm.
+  roarm_m3.urdf:234-239  link5_to_hand_tcp xyz = (0,0,0.115428)
+       => TCP at link5 z = 115.428 mm, tool axis = link5 +z.
+  gate0 audit :253-259   depth_mm = z_mm - 115.428 (positive = distal)
+                         r_mm     = hypot(x_mm, y_mm)
+  gate0 audit :150-158   L_MIN 5.5 / indet +-0.5 / FINGER_WINDOW_R 30 /
+                         FOOTPRINT_R 14.5 / WALL (12.5,20) / RIM depth (5,15)
+  gate0 audit :156       SAMPLE_SPACING = 5e-4 m  (sampled in METRES — kept)
+  load_binary_stl and sample_triangles are reproduced VERBATIM from the audit.
+"""
+import hashlib
+import itertools
+import json
+import math
+import shutil
+import struct
+import sys
+from pathlib import Path
+
+import numpy as np
+import scipy
+import scipy.sparse as sp
+import trimesh
+from scipy.sparse.csgraph import connected_components
+from scipy.spatial import ConvexHull, cKDTree
+
+ROOT = Path("/home/cgxr/Documents/Robotics/RoArm_Project")
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))          # for roarm_rl.rerun_contract (D341 validator)
+MESH_DIR = ROOT / "local_assets/roarm_m3/urdf/meshes"
+OUT_DIR = ROOT / "claudedocs/runtime_logs/grasp_track/g0b_d420"
+TAG = "t3r_n6_subsetloc"
+LOG = "g0b_t3r_n6"
+
+L5 = MESH_DIR / "link5.stl"
+GL = MESH_DIR / "gripper_left_link.stl"
+
+TCP_LOCAL = np.array([0.0, 0.0, 0.115428])      # metres, link5 frame
+TCP_Z_MM = 115.428
+L_MIN_MM = 5.5
+INDET_HALF_MM = 0.5
+FINGER_WINDOW_R_MM = 30.0
+FOOTPRINT_R_MM = 14.5
+WALL_ANNULUS_MM = (12.5, 20.0)
+RIM_BAND_MM = (5.0, 15.0)
+SAMPLE_SPACING_M = 0.0005
+STL_SCALE = 0.001
+RERUN_VERSION = "0.34.1"
+RERUN_CLI = "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun"
+VIEW_STRIDE = 40
+
+D427 = {"l_vis_mm": 4.457620117187505, "r_at_l_vis_mm": 10.1243721096607,
+        "azimuth_deg": 172.00028164046174,
+        "peak_mm": [-10.025849342346191, 1.408990979194641, 119.88562011718751],
+        "wall_mm": 3.517823669433595, "n_pts_in_rim_band": 0, "n_pts": 2266503}
+SHA = {"link5.stl": "1d63f374a78c1419b21eec63fa8efeef40d0d42ca89c5de3ceb0d86476d9c7eb",
+       "gripper_left_link.stl": "1dfb77228316baf6039adb311363be8f8d02c6325a050dedb5859462f6f71bc8"}
+S38 = {"n_gt_1mm": 1026, "frac": 0.1084, "median": 0.0265, "p95": 7.2463, "max": 14.4145,
+       "B_to_G_median": 0.0000, "B_to_G_max": 0.1203, "B_to_G_n_gt_1mm": 0}
+
+
+def sha256(p):
+    h = hashlib.sha256()
+    with open(p, "rb") as f:
+        for c in iter(lambda: f.read(1 << 20), b""):
+            h.update(c)
+    return h.hexdigest()
+
+
+def load_binary_stl(path):
+    """VERBATIM from the Gate-0 audit — raw triangle soup, (n,3,3), file units."""
+    data = Path(path).read_bytes()
+    n = struct.unpack("<I", data[80:84])[0]
+    body = np.frombuffer(data[84:84 + n * 50], dtype=np.uint8).reshape(n, 50)
+    return body[:, 12:48].copy().view("<f4").reshape(n, 3, 3).astype(np.float64)
+
+
+def sample_triangles(tris_m, spacing_m):
+    """VERBATIM from the Gate-0 audit."""
+    out_ = [tris_m.reshape(-1, 3)]
+    e1 = np.linalg.norm(tris_m[:, 1] - tris_m[:, 0], axis=1)
+    e2 = np.linalg.norm(tris_m[:, 2] - tris_m[:, 0], axis=1)
+    e3 = np.linalg.norm(tris_m[:, 2] - tris_m[:, 1], axis=1)
+    n_per = np.maximum(1, np.ceil(np.maximum(e1, np.maximum(e2, e3)) / spacing_m).astype(np.int64))
+    for n in np.unique(n_per):
+        idx = np.flatnonzero(n_per == n)
+        ii, jj = np.meshgrid(np.arange(n + 1), np.arange(n + 1), indexing="ij")
+        mask = (ii + jj) <= n
+        u = (ii[mask] / n)[None, :, None]
+        v = (jj[mask] / n)[None, :, None]
+        a = tris_m[idx, 0][:, None, :]
+        b = tris_m[idx, 1][:, None, :]
+        c = tris_m[idx, 2][:, None, :]
+        out_.append((a + u * (b - a) + v * (c - a)).reshape(-1, 3))
+    return np.vstack(out_)
+
+
+def depth_r_mm(pts_m):
+    return (pts_m[:, 2] - TCP_LOCAL[2]) * 1000.0, np.hypot(pts_m[:, 0], pts_m[:, 1]) * 1000.0
+
+
+def gate0_metrics(pts_m, label):
+    depth, r = depth_r_mm(pts_m)
+    az = np.degrees(np.arctan2(pts_m[:, 1], pts_m[:, 0]))
+    win = r <= FINGER_WINDOW_R_MM
+    fp = r <= FOOTPRINT_R_MM
+    wall = (r >= WALL_ANNULUS_MM[0]) & (r <= WALL_ANNULUS_MM[1]) & win
+    rim = (depth >= RIM_BAND_MM[0]) & (depth <= RIM_BAND_MM[1]) & win
+    m = {"label": label, "n_pts": int(len(pts_m)), "n_in_finger_window": int(win.sum())}
+    if win.any():
+        j = int(np.argmax(np.where(win, depth, -np.inf)))
+        m.update(l_vis_mm=float(depth[j]), r_at_l_vis_mm=float(r[j]),
+                 azimuth_at_l_vis_deg=float(az[j]),
+                 peak_xyz_mm=[float(v * 1000.0) for v in pts_m[j]])
+    else:
+        m["l_vis_mm"] = None
+    m["max_depth_in_footprint_mm"] = float(depth[fp].max()) if fp.any() else None
+    m["max_depth_in_wall_annulus_mm"] = float(depth[wall].max()) if wall.any() else None
+    m["n_pts_in_rim_band"] = int(rim.sum())
+    m["min_r_mm_in_rim_band"] = float(r[rim].min()) if rim.any() else None
+    lv = m.get("l_vis_mm")
+    m["tri_state"] = ("ABORT" if lv is None else "PASS" if lv > L_MIN_MM + INDET_HALF_MM
+                      else "FAIL" if lv < L_MIN_MM - INDET_HALF_MM else "INDETERMINATE")
+    return m
+
+
+def dstats(d):
+    d = np.asarray(d, float)
+    return {"n": int(d.size), "median": float(np.median(d)), "mean": float(d.mean()),
+            "p95": float(np.percentile(d, 95)), "p99": float(np.percentile(d, 99)),
+            "max": float(d.max()), "n_gt_0p1": int((d > 0.1).sum()),
+            "n_gt_0p5": int((d > 0.5).sum()), "n_gt_1": int((d > 1.0).sum()),
+            "n_gt_2": int((d > 2.0).sum()), "frac_gt_1": float((d > 1.0).mean())}
+
+
+def hull_diameter(V):
+    h = ConvexHull(V)
+    P = V[h.vertices]
+    return float(np.linalg.norm(P[:, None, :] - P[None, :, :], axis=-1).max()), int(len(h.vertices))
+
+
+def surf_dist(mesh, pts):
+    _, d, _ = trimesh.proximity.closest_point(mesh, pts)
+    return np.abs(np.asarray(d, float))
+
+
+def load_mesh(p):
+    m = trimesh.load(str(p), process=False)
+    m.merge_vertices()
+    return m
+
+
+# =========================================================================== #
+def main() -> int:
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    paths = {k: OUT_DIR / f"{TAG}_{k}" for k in
+             ("results.json", "timeline.rrd", "timeline.rbl", "rerun_validation.json",
+              "inspection.png", "diagnostic.png", "script.py.txt")}
+    existing = [p.name for p in paths.values() if p.exists()]
+    if existing:
+        print(f"[{LOG}] ABORT write_guard existing={existing}", flush=True)
+        return 3
+
+    import rerun as rr
+    if rr.__version__ != RERUN_VERSION:
+        print(f"[{LOG}] ABORT rerun_version={rr.__version__}!={RERUN_VERSION}", flush=True)
+        return 3
+
+    out = {"tool": TAG, "read_only_assets": True,
+           "env": {"python": sys.version.split()[0], "numpy": np.__version__,
+                   "scipy": scipy.__version__, "trimesh": trimesh.__version__,
+                   "rerun_sdk": rr.__version__},
+           "frame": {"link5_visual_origin": "identity (roarm_m3.urdf:129-135), scale 0.001",
+                     "tcp_link5_z_mm": TCP_Z_MM, "tool_axis": "link5 +z",
+                     "depth_mm": "z_mm - 115.428, positive = distal",
+                     "r_mm": "hypot(x_mm, y_mm)"}}
+
+    # ---- 1. identity + D427 reproduction gate ------------------------------
+    out["sha256"] = {p.name: sha256(p) for p in (L5, GL)}
+    out["sha256_matches_record"] = {p.name: out["sha256"][p.name] == SHA[p.name] for p in (L5, GL)}
+    tris5_m = load_binary_stl(L5) * STL_SCALE
+    S5 = sample_triangles(tris5_m, SAMPLE_SPACING_M)
+    repro = gate0_metrics(S5, "link5.stl raw soup @0.5mm (Gate-0 replica)")
+    out["G0_reproduction"] = {
+        "computed": repro, "D427_recorded": D427,
+        "delta_l_vis_mm": float(repro["l_vis_mm"] - D427["l_vis_mm"]),
+        "delta_r_at_l_vis_mm": float(repro["r_at_l_vis_mm"] - D427["r_at_l_vis_mm"]),
+        "delta_wall_mm": float(repro["max_depth_in_wall_annulus_mm"] - D427["wall_mm"]),
+        "delta_peak_xyz_max_abs_mm": float(np.abs(np.array(repro["peak_xyz_mm"]) - np.array(D427["peak_mm"])).max()),
+        "n_pts_match": bool(repro["n_pts"] == D427["n_pts"]),
+        "rim_band_match": bool(repro["n_pts_in_rim_band"] == D427["n_pts_in_rim_band"]),
+    }
+    g_repro = (abs(out["G0_reproduction"]["delta_l_vis_mm"]) < 1e-9
+               and out["G0_reproduction"]["n_pts_match"]
+               and out["G0_reproduction"]["rim_band_match"]
+               and all(out["sha256_matches_record"].values()))
+    out["G0_reproduction"]["PASS"] = bool(g_repro)
+    print(f"[{LOG}] G_REPRO pass={g_repro} l_vis={repro['l_vis_mm']:.12f} "
+          f"delta={out['G0_reproduction']['delta_l_vis_mm']:.3e} n_pts={repro['n_pts']}", flush=True)
+
+    # ---- 2. meshes + embedded fixed-jaw body -------------------------------
+    m5 = load_mesh(L5)
+    mg = load_mesh(GL)
+    hdg, hvg = hull_diameter(mg.vertices)
+    out["assets"] = {
+        "link5": {"n_tri": int(len(m5.faces)), "n_vert": int(len(m5.vertices)),
+                  "watertight": bool(m5.is_watertight), "euler": int(m5.euler_number),
+                  "aabb_mm": [float(v) for v in m5.extents],
+                  "z_mm": [float(m5.vertices[:, 2].min()), float(m5.vertices[:, 2].max())]},
+        "gripper_left_link": {"n_tri": int(len(mg.faces)), "n_vert": int(len(mg.vertices)),
+                              "watertight": bool(mg.is_watertight), "euler": int(mg.euler_number),
+                              "n_bodies_vertex_conn": int(mg.body_count),
+                              "aabb_mm": [float(v) for v in mg.extents],
+                              "hull_diameter_mm": hdg, "hull_n_vert": hvg},
+    }
+    e = m5.edges_sorted
+    g = sp.coo_matrix((np.ones(len(e)), (e[:, 0], e[:, 1])), shape=(len(m5.vertices),) * 2)
+    nvc, labv = connected_components(g, directed=False)
+    flab = labv[m5.faces[:, 0]]
+    sizes = np.bincount(flab, minlength=nvc)
+    big = int(np.argmax(sizes))
+    B7250 = m5.submesh([np.where(flab == big)[0]], append=True, repair=False)
+    B7250.merge_vertices()
+    pieces = sorted(B7250.split(only_watertight=False), key=lambda s: -len(s.faces))
+    B6222 = pieces[0]
+    hd7, _ = hull_diameter(B7250.vertices)
+    out["link5_bodies"] = {
+        "n_vertex_connected_components": int(nvc),
+        "component_tri_sizes": sorted([int(x) for x in sizes if x > 0], reverse=True),
+        "largest_body_B7250": {
+            "n_tri": int(len(B7250.faces)), "n_vert": int(len(B7250.vertices)),
+            "n_open_edges": int(len(trimesh.grouping.group_rows(B7250.edges_sorted, require_count=1))),
+            "watertight": bool(B7250.is_watertight),
+            "aabb_mm": [float(v) for v in B7250.extents], "hull_diameter_mm": hd7,
+            "z_mm": [float(B7250.vertices[:, 2].min()), float(B7250.vertices[:, 2].max())],
+            "face_connected_piece_sizes_top4": [int(len(s.faces)) for s in pieces[:4]]},
+        "B6222_used_by_38th_sec11": {"n_tri": int(len(B6222.faces)), "n_vert": int(len(B6222.vertices))},
+    }
+
+    # ---- 3. alignment (48 signed permutations, AABB-min anchored) ----------
+    cands = []
+    for perm in itertools.permutations(range(3)):
+        for sg in itertools.product((1, -1), repeat=3):
+            R = np.zeros((3, 3))
+            for i, (pi, si) in enumerate(zip(perm, sg)):
+                R[i, pi] = si
+            Gp = mg.vertices @ R.T
+            t = B7250.vertices.min(axis=0) - Gp.min(axis=0)
+            d = cKDTree(Gp + t).query(B7250.vertices)[0]
+            cands.append({"perm": list(perm), "signs": list(sg), "det": float(round(np.linalg.det(R))),
+                          "R": R.tolist(), "t": t.tolist(), "mean_v2v": float(d.mean()),
+                          "max_v2v": float(d.max())})
+    cands.sort(key=lambda c: c["mean_v2v"])
+    best = cands[0]
+    R = np.asarray(best["R"])
+    t = np.asarray(best["t"])
+    G_l5 = mg.copy()
+    G_l5.vertices = mg.vertices @ R.T + t
+    out["alignment"] = {
+        "method": "48 signed axis permutations, AABB-min-corner anchored, ranked by mean B->G vertex distance",
+        "top3": [{k: c[k] for k in ("perm", "signs", "det", "mean_v2v", "max_v2v")} for c in cands[:3]],
+        "chosen": {"perm": best["perm"], "signs": best["signs"], "det": best["det"],
+                   "R": best["R"], "t_mm": best["t"],
+                   "is_proper_rotation": bool(abs(best["det"] - 1.0) < 1e-9)},
+        "matches_38th_alignment": bool(best["perm"] == [1, 0, 2] and best["signs"] == [-1, 1, 1]),
+        "aabb_corner_residual_mm": {
+            "min": [float(v) for v in (G_l5.vertices.min(axis=0) - B7250.vertices.min(axis=0))],
+            "max": [float(v) for v in (G_l5.vertices.max(axis=0) - B7250.vertices.max(axis=0))]},
+        "NOTE_translation_vs_joint5_origin": {
+            "t_mm": [float(v) for v in t], "joint5_origin_mm": [0.0, 18.821, 52.035],
+            "delta_mm": [float(t[0] - 0.0), float(t[1] - 18.821), float(t[2] - 52.035)],
+            "caveat": "t is an AABB-corner-anchored offset, not an independently meaningful pose; "
+                      "the y/z agreement with roarm_m3.urdf:226 is an observation, not a claim."},
+    }
+
+    # ---- 4. distances: SURFACE (primary) vs VERTEX (38th) ------------------
+    d_B_to_Gs = surf_dist(G_l5, B7250.vertices)
+    d_G_to_B7s = surf_dist(B7250, G_l5.vertices)
+    d_G_to_B6s = surf_dist(B6222, G_l5.vertices)
+    d_G_to_full = surf_dist(m5, G_l5.vertices)
+    d_G_to_B6v = cKDTree(B6222.vertices).query(G_l5.vertices)[0]
+    d_B6_to_Gv = cKDTree(G_l5.vertices).query(B6222.vertices)[0]
+    out["distances_mm"] = {
+        "REPRO_38th_G_to_B6222_VERTEX": dstats(d_G_to_B6v),
+        "REPRO_38th_B6222_to_G_VERTEX": dstats(d_B6_to_Gv),
+        "CORRECTED_G_to_B6222_SURFACE": dstats(d_G_to_B6s),
+        "CORRECTED_G_to_B7250_SURFACE": dstats(d_G_to_B7s),
+        "DECISIVE_G_to_FULL_link5_SURFACE": dstats(d_G_to_full),
+        "B7250_to_G_SURFACE": dstats(d_B_to_Gs),
+    }
+    out["repro_38th_check"] = {
+        "recorded": S38,
+        "computed_n_gt_1mm": int((d_G_to_B6v > 1.0).sum()),
+        "computed_frac": float((d_G_to_B6v > 1.0).mean()),
+        "computed_median": float(np.median(d_G_to_B6v)),
+        "computed_p95": float(np.percentile(d_G_to_B6v, 95)),
+        "computed_max": float(d_G_to_B6v.max()),
+        "B_to_G_max": float(d_B6_to_Gv.max()),
+        "B_to_G_n_gt_1mm": int((d_B6_to_Gv > 1.0).sum()),
+        "PASS": bool(int((d_G_to_B6v > 1.0).sum()) == S38["n_gt_1mm"]
+                     and abs(float(d_G_to_B6v.max()) - S38["max"]) < 5e-4),
+    }
+    print(f"[{LOG}] REPRO_38th n_gt_1mm={out['repro_38th_check']['computed_n_gt_1mm']} "
+          f"(recorded {S38['n_gt_1mm']}) pass={out['repro_38th_check']['PASS']}", flush=True)
+
+    # ---- 5. localize the residual difference -------------------------------
+    out["difference_cascade"] = {
+        "38th_vertex_vs_B6222_gt1mm": int((d_G_to_B6v > 1.0).sum()),
+        "surface_vs_B6222_gt1mm": int((d_G_to_B6s > 1.0).sum()),
+        "surface_vs_B7250_gt1mm": int((d_G_to_B7s > 1.0).sum()),
+        "surface_vs_FULL_link5_gt1mm": int((d_G_to_full > 1.0).sum()),
+        "surface_vs_FULL_link5_gt0p1mm": int((d_G_to_full > 0.1).sum()),
+        "surface_vs_FULL_link5_max_mm": float(d_G_to_full.max()),
+    }
+    sel = d_G_to_B7s > 1.0
+    P = G_l5.vertices[sel]
+    dep = P[:, 2] - TCP_Z_MM
+    rr_ = np.hypot(P[:, 0], P[:, 1])
+    win = rr_ <= FINGER_WINDOW_R_MM
+    cx, cy = float(P[:, 0].mean()), float(P[:, 1].mean())
+    rl = np.hypot(P[:, 0] - cx, P[:, 1] - cy)
+    azl = np.degrees(np.arctan2(P[:, 1] - cy, P[:, 0] - cx))
+    hist, _ = np.histogram(azl, bins=36, range=(-180, 180))
+    dfull_sel = d_G_to_full[sel]
+    nearest_body = {}
+    for bi in np.argsort(-sizes):
+        if sizes[bi] == 0:
+            continue
+        sub = m5.submesh([np.where(flab == bi)[0]], append=True, repair=False)
+        db = surf_dist(sub, P)
+        nearest_body[f"body_{int(sizes[bi])}tri"] = {
+            "median_mm": float(np.median(db)), "min_mm": float(db.min()),
+            "n_within_0.1mm": int((db < 0.1).sum())}
+    out["residual_difference"] = {
+        "n": int(sel.sum()), "frac_of_G": float(sel.mean()),
+        "z_link5_mm": [float(P[:, 2].min()), float(P[:, 2].max())],
+        "z_extent_mm": float(P[:, 2].max() - P[:, 2].min()),
+        "depth_vs_TCP_mm": [float(dep.min()), float(dep.max())],
+        "tool_axis_r_mm": [float(rr_.min()), float(rr_.max())],
+        "n_in_finger_window": int(win.sum()),
+        "n_in_footprint_r<=14.5": int((rr_ <= FOOTPRINT_R_MM).sum()),
+        "n_in_wall_annulus": int(((rr_ >= WALL_ANNULUS_MM[0]) & (rr_ <= WALL_ANNULUS_MM[1])).sum()),
+        "n_depth_gt_D427_peak_4.4576": int(((dep > D427["l_vis_mm"]) & win).sum()),
+        "n_depth_ge_rim_entry_5.0": int(((dep >= RIM_BAND_MM[0]) & win).sum()),
+        "n_depth_gt_L_MIN_5.5": int(((dep > L_MIN_MM) & win).sum()),
+        "dist_to_FULL_link5_surface_mm": {"median": float(np.median(dfull_sel)),
+                                          "max": float(dfull_sel.max())},
+        "nearest_link5_body": nearest_body,
+        "feature_shape": {
+            "local_axis_xy_mm": [cx, cy],
+            "local_axis_r_from_tool_axis_mm": float(math.hypot(cx, cy)),
+            "radius_about_local_axis_mm": {"min": float(rl.min()), "max": float(rl.max()),
+                                           "median": float(np.median(rl))},
+            "azimuth_bins_occupied_of_36": int((hist > 0).sum()),
+            "n_unique_z_levels_3dp": int(len(set(np.round(P[:, 2], 3).tolist()))),
+            "dist_to_38th_reported_seam_axis_mm": float(math.hypot(cx + 22.0096, cy + 0.5126)),
+            "38th_seam_axis_source": "38th doc §9-3: z=80.551819 stepped counterbore, coaxial (-22.0096, -0.5126)"},
+    }
+
+    # ---- 6. Gate-0 with the shipped asset substituted / unioned -------------
+    trisG_m = (load_binary_stl(GL) @ R.T + t) * STL_SCALE
+    SG = sample_triangles(trisG_m, SAMPLE_SPACING_M)
+    SB = sample_triangles(tris5_m[np.where(flab == big)[0]], SAMPLE_SPACING_M)
+    gm = {"urdf_link5_full": repro,
+          "embedded_fixed_jaw_B7250": gate0_metrics(SB, "link5 embedded fixed-jaw body"),
+          "SHIPPED_asset_alone": gate0_metrics(SG, "gripper_left_link.stl in link5 frame"),
+          "UNION_link5_plus_shipped": gate0_metrics(np.vstack([S5, SG]), "link5.stl UNION shipped asset")}
+    gm["delta_shipped_minus_urdf_mm"] = float(gm["SHIPPED_asset_alone"]["l_vis_mm"] - repro["l_vis_mm"])
+    gm["delta_union_minus_urdf_mm"] = float(gm["UNION_link5_plus_shipped"]["l_vis_mm"] - repro["l_vis_mm"])
+    out["gate0_recompute"] = gm
+
+    # ---- 7. verdict --------------------------------------------------------
+    out["verdict"] = {
+        "code": ("SEC11_LEAD_REFUTED_NO_MISSING_GEOMETRY"
+                 if out["difference_cascade"]["surface_vs_FULL_link5_gt0p1mm"] == 0
+                 else "SEC11_LEAD_OPEN"),
+        "shipped_asset_is_subset_of_link5": bool(d_G_to_full.max() < 0.1),
+        "max_G_deviation_from_link5_surface_mm": float(d_G_to_full.max()),
+        "residual_difference_is_proximal_not_distal": bool(dep.max() < 0.0),
+        "delta_l_vis_mm_if_shipped_asset_used": gm["delta_union_minus_urdf_mm"],
+        "gate0_state_unchanged": bool(gm["UNION_link5_plus_shipped"]["tri_state"] == repro["tri_state"]),
+        "D427_status": "UNCHANGED — GATE0_SOURCE_ABSENT stands",
+    }
+    print(f"[{LOG}] N6_VERDICT={out['verdict']['code']} "
+          f"delta_l_vis={gm['delta_union_minus_urdf_mm']:.3e}mm "
+          f"state={gm['UNION_link5_plus_shipped']['tri_state']}", flush=True)
+
+    paths["results.json"].write_text(json.dumps(out, indent=2) + "\n")
+
+    # ---- 8. D324 decision diagnostic (matplotlib) --------------------------
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    dep5, r5 = depth_r_mm(S5[::13])
+    depG, rG = depth_r_mm(SG[::13])
+    fig, ax = plt.subplots(1, 3, figsize=(19.5, 6.6))
+    a = ax[0]
+    a.scatter(r5, dep5, s=0.4, c="#b9bcc6", lw=0, label="link5.stl (URDF source)")
+    a.scatter(rG, depG, s=0.4, c="#5a86d8", lw=0, label="gripper_left_link.stl (shipped)")
+    a.scatter(rr_, dep, s=14, c="#d93a3a", lw=0, zorder=5,
+              label=f"38th §11 residual difference (n={int(sel.sum())})")
+    a.axhline(0, color="#28a745", lw=1.6, ls="-", label="TCP plane (depth 0)")
+    a.axhline(D427["l_vis_mm"], color="#e08a1e", lw=1.4, ls="--",
+              label=f"D427 l_vis peak {D427['l_vis_mm']:.4f}")
+    a.axhline(L_MIN_MM, color="#c02020", lw=1.6, ls="-.", label=f"L_MIN {L_MIN_MM}")
+    a.axvline(FINGER_WINDOW_R_MM, color="#888", lw=1.0, ls=":", label="finger window r=30")
+    a.axvspan(WALL_ANNULUS_MM[0], WALL_ANNULUS_MM[1], color="#ffd", alpha=.5, zorder=0)
+    a.set_xlabel("r = tool-axis radius [mm]"); a.set_ylabel("depth = z - TCP [mm]  (+ = distal)")
+    a.set_title("A | tool frame: where is the difference?"); a.set_ylim(-60, 12); a.set_xlim(0, 42)
+    a.legend(fontsize=7, loc="lower left"); a.grid(alpha=.25)
+
+    a = ax[1]
+    a.scatter(m5.vertices[:, 0], m5.vertices[:, 2], s=0.6, c="#b9bcc6", lw=0, label="link5.stl")
+    a.scatter(G_l5.vertices[:, 0], G_l5.vertices[:, 2], s=0.6, c="#5a86d8", lw=0, label="shipped asset")
+    a.scatter(P[:, 0], P[:, 2], s=14, c="#d93a3a", lw=0, zorder=5, label="residual difference")
+    a.axhline(TCP_Z_MM, color="#28a745", lw=1.6, label="TCP z=115.428")
+    a.axhline(TCP_Z_MM + L_MIN_MM, color="#c02020", lw=1.4, ls="-.", label="L_MIN plane z=120.928")
+    a.plot([D427["peak_mm"][0]], [D427["peak_mm"][2]], marker="*", ms=17, c="#e08a1e",
+           zorder=6, label="D427 peak (-10.03, 119.886)")
+    a.set_xlabel("link5 x [mm]"); a.set_ylabel("link5 z [mm]")
+    a.set_title("B | link5 XZ silhouette"); a.legend(fontsize=7, loc="lower left"); a.grid(alpha=.25)
+
+    a = ax[2]
+    labels = ["38th\nvertex\nvs B6222", "surface\nvs B6222", "surface\nvs B7250", "surface\nvs FULL\nlink5"]
+    vals = [out["difference_cascade"]["38th_vertex_vs_B6222_gt1mm"],
+            out["difference_cascade"]["surface_vs_B6222_gt1mm"],
+            out["difference_cascade"]["surface_vs_B7250_gt1mm"],
+            out["difference_cascade"]["surface_vs_FULL_link5_gt1mm"]]
+    bars = a.bar(labels, vals, color=["#d93a3a", "#e08a1e", "#e8c33a", "#28a745"])
+    for b_, v in zip(bars, vals):
+        a.text(b_.get_x() + b_.get_width() / 2, v + 18, str(v), ha="center", fontsize=11, fontweight="bold")
+    a.set_ylabel("G vertices > 1 mm from reference surface  (of 9,461)")
+    a.set_title("C | the 10.84% collapses to zero\nas the reference is corrected")
+    a.set_ylim(0, 1200); a.grid(axis="y", alpha=.25)
+    fig.suptitle(f"g0b_d420 {TAG} — 38th §11 lead: is shipped `gripper_left_link.stl` richer than the URDF source?  "
+                 f"VERDICT: {out['verdict']['code']}", fontsize=12)
+    fig.tight_layout()
+    fig.savefig(paths["diagnostic.png"], dpi=125)
+    plt.close(fig)
+
+    # ---- 9. D341 Rerun artifact (save-only) --------------------------------
+    import rerun.blueprint as rrb
+    from roarm_rl.rerun_contract import validate_rerun_artifact
+
+    app_id = f"roarm_g0b_{TAG}"
+
+    def view_pts(pts_m):
+        o = np.asarray(pts_m) - TCP_LOCAL[None, :]
+        return np.column_stack([o[:, 0], o[:, 1], -o[:, 2]])
+
+    def ring(r_mm, depth_mm, n=64):
+        return [[r_mm / 1000.0 * math.cos(2 * math.pi * i / n),
+                 r_mm / 1000.0 * math.sin(2 * math.pi * i / n),
+                 -depth_mm / 1000.0] for i in range(n + 1)]
+
+    edges_mm = np.arange(-60.0, 12.0 + 0.5, 0.5)
+    dep5f, r5f = depth_r_mm(S5)
+    depGf, rGf = depth_r_mm(SG)
+    m5w, mGw = r5f <= FINGER_WINDOW_R_MM, rGf <= FINGER_WINDOW_R_MM
+    h5 = np.histogram(dep5f[m5w], bins=edges_mm)[0]
+    hG = np.histogram(depGf[mGw], bins=edges_mm)[0]
+    hD = np.histogram(dep[win], bins=edges_mm)[0]
+
+    with rr.RecordingStream(app_id, recording_id=f"g0b_d420_{TAG}", make_default=False,
+                            send_properties=True) as rec:
+        rec.save(str(paths["timeline.rrd"]), write_footer=True)
+        rec.log("subset/link5_vis", rr.Points3D(view_pts(S5[::VIEW_STRIDE]), colors=[150, 150, 160],
+                                                radii=0.0004), static=True)
+        rec.log("subset/shipped_asset", rr.Points3D(view_pts(SG[::VIEW_STRIDE]), colors=[70, 130, 230],
+                                                    radii=0.0004), static=True)
+        rec.log("subset/residual_difference",
+                rr.Points3D(view_pts(P * STL_SCALE), colors=[225, 50, 50], radii=0.0011), static=True)
+        rec.log("subset/tcp", rr.Points3D([[0.0, 0.0, 0.0]], colors=[[40, 200, 80]], radii=0.002), static=True)
+        rec.log("subset/tool_axis", rr.LineStrips3D([[[0.0, 0.0, 0.07], [0.0, 0.0, -0.07]]],
+                                                    colors=[[40, 200, 80]], radii=0.0003), static=True)
+        rec.log("subset/d427_peak", rr.Points3D(
+            view_pts(np.array([D427["peak_mm"]]) * STL_SCALE), colors=[[235, 140, 30]], radii=0.0022), static=True)
+        rec.log("subset/l_min_plane", rr.LineStrips3D(
+            [ring(WALL_ANNULUS_MM[0], L_MIN_MM), ring(WALL_ANNULUS_MM[1], L_MIN_MM)],
+            colors=[[235, 60, 60]] * 2, radii=0.0004), static=True)
+        rec.log("subset/finger_window", rr.LineStrips3D(
+            [ring(FINGER_WINDOW_R_MM, 0.0)], colors=[[140, 140, 140]], radii=0.0003), static=True)
+        for i in range(len(edges_mm) - 1):
+            rec.reset_time()
+            rec.set_time("depth_band_index", sequence=i)
+            rec.log("plots/band_depth_mm", rr.Scalars(float(edges_mm[i])))
+            rec.log("plots/n_link5_in_band", rr.Scalars(float(h5[i])))
+            rec.log("plots/n_shipped_in_band", rr.Scalars(float(hG[i])))
+            rec.log("plots/n_residual_difference_in_band", rr.Scalars(float(hD[i])))
+            rec.log("subset/band_plane", rr.LineStrips3D(
+                [ring(FINGER_WINDOW_R_MM, float(edges_mm[i]))], colors=[[90, 180, 220]], radii=0.00035))
+        rec.reset_time()
+        rec.set_time("depth_band_index", sequence=0)
+        for name, ok in (("N6a_sha_pins", all(out["sha256_matches_record"].values())),
+                         ("N6b_D427_reproduced", g_repro),
+                         ("N6c_38th_measurement_reproduced", out["repro_38th_check"]["PASS"]),
+                         ("N6d_shipped_asset_subset_of_link5", out["verdict"]["shipped_asset_is_subset_of_link5"]),
+                         ("N6e_residual_is_proximal_not_distal", out["verdict"]["residual_difference_is_proximal_not_distal"]),
+                         ("N6f_gate0_state_unchanged_FAIL", out["verdict"]["gate0_state_unchanged"])):
+            rec.log("events/gates", rr.TextLog(name, level=rr.TextLogLevel.INFO if ok else rr.TextLogLevel.ERROR))
+        summary_md = (
+            f"# g0b_d420 {TAG} — 38th §11 lead determination (read-only)\n\n"
+            f"**VERDICT: {out['verdict']['code']} — D427 GATE0_SOURCE_ABSENT is UNCHANGED.**\n\n"
+            f"## Claim under test\n38th §11: the URDF-referenced copy of the fixed jaw carries less shape "
+            f"information than the shipped `gripper_left_link.stl` (1,026/9,461 vertices = 10.84% >1mm away), "
+            f"so D427 may have been measured on an impoverished copy.\n\n"
+            f"## What the 38th measurement actually measured\n"
+            f"- reference = the 6,222-tri FACE-connected sub-piece, not the 7,250-tri fixed-jaw shell "
+            f"(38th's own §9-3/§10-1 definition), and not `link5.stl` which is what the URDF references;\n"
+            f"- metric = vertex-to-VERTEX (G is 19,126 tri vs B 6,222 -> tessellation alone produces metres of error).\n\n"
+            f"## Cascade as the reference is corrected (G vertices >1 mm away, of 9,461)\n"
+            f"| reference | metric | count |\n|---|---|---|\n"
+            f"| B6222 | vertex (38th) | **{out['difference_cascade']['38th_vertex_vs_B6222_gt1mm']}** (reproduced exactly) |\n"
+            f"| B6222 | surface | {out['difference_cascade']['surface_vs_B6222_gt1mm']} |\n"
+            f"| B7250 fixed-jaw shell | surface | {out['difference_cascade']['surface_vs_B7250_gt1mm']} |\n"
+            f"| **FULL link5.stl (what the URDF references)** | surface | **{out['difference_cascade']['surface_vs_FULL_link5_gt1mm']}** |\n\n"
+            f"Every one of the 9,461 shipped-asset vertices lies within "
+            f"**{out['difference_cascade']['surface_vs_FULL_link5_max_mm']*1000:.1f} um** of `link5.stl`'s surface "
+            f"=> the shipped file is a re-tessellation of geometry the URDF source already has. Nothing is missing.\n\n"
+            f"## Where the residual {int(sel.sum())} points sit\n"
+            f"- link5 z {out['residual_difference']['z_link5_mm'][0]:.3f}..{out['residual_difference']['z_link5_mm'][1]:.3f} mm "
+            f"=> depth {out['residual_difference']['depth_vs_TCP_mm'][0]:.3f}..{out['residual_difference']['depth_vs_TCP_mm'][1]:.3f} mm "
+            f"(**{abs(out['residual_difference']['depth_vs_TCP_mm'][1]):.1f}-{abs(out['residual_difference']['depth_vs_TCP_mm'][0]):.1f} mm PROXIMAL of TCP**);\n"
+            f"- 0 points past the D427 peak, 0 in the rim band, 0 past L_MIN, 0 inside the footprint;\n"
+            f"- rotationally complete ({out['residual_difference']['feature_shape']['azimuth_bins_occupied_of_36']}/36 azimuth bins), "
+            f"radius <= {out['residual_difference']['feature_shape']['radius_about_local_axis_mm']['max']:.4f} mm about "
+            f"({cx:.5f}, {cy:.5f}) = **{out['residual_difference']['feature_shape']['dist_to_38th_reported_seam_axis_mm']*1000:.2f} um** from the "
+            f"z=80.551819 counterbore axis the 38th itself reported => an internal mounting boss, and it belongs to "
+            f"link5's separate 1,054-tri body.\n\n"
+            f"## Gate-0 with the shipped asset substituted in\n"
+            f"l_vis {repro['l_vis_mm']:.9f} -> {gm['UNION_link5_plus_shipped']['l_vis_mm']:.9f} mm "
+            f"(**delta {gm['delta_union_minus_urdf_mm']:+.3e} mm** = float32 STL round-trip noise); "
+            f"tri_state **{repro['tri_state']} -> {gm['UNION_link5_plus_shipped']['tri_state']}** vs L_MIN {L_MIN_MM}.\n\n"
+            f"## Scene\ngrey = link5.stl, blue = shipped asset, **red = the residual difference**, "
+            f"orange star = D427 l_vis peak, green = TCP + tool axis, red rings = L_MIN plane at the wall "
+            f"annulus radii, grey ring = finger window r=30, cyan ring = the swept depth band.\n\n"
+            f"Authority = stdout + `{paths['results.json'].name}`. Rerun is inspection evidence only (D341).\n"
+        )
+        rec.log("metadata/run", rr.TextDocument(summary_md, media_type=rr.MediaType.MARKDOWN), static=True)
+        blueprint = rrb.Blueprint(
+            rrb.Vertical(
+                rrb.Horizontal(
+                    rrb.TextDocumentView(origin="/metadata/run", contents="/metadata/run",
+                                         name="1 | §11 lead verdict"),
+                    rrb.Spatial3DView(origin="/", contents=["/subset/**"],
+                                      name="2 | tool frame: residual difference vs TCP / L_MIN"),
+                    rrb.TextLogView(origin="/events/gates", contents="/events/gates/**", name="3 | gates"),
+                    column_shares=[0.30, 0.46, 0.24],
+                ),
+                rrb.Horizontal(
+                    rrb.TimeSeriesView(origin="/plots",
+                                       contents=["/plots/n_link5_in_band/**", "/plots/n_shipped_in_band/**",
+                                                 "/plots/n_residual_difference_in_band/**"],
+                                       name="4 | material per 0.5mm depth band (r<=30)"),
+                    rrb.TimeSeriesView(origin="/plots", contents=["/plots/band_depth_mm/**"],
+                                       name="5 | swept band depth [mm]"),
+                ),
+                row_shares=[0.58, 0.42],
+            ),
+            auto_layout=False, auto_views=False, collapse_panels=True,
+        )
+        rec.send_blueprint(blueprint, make_active=True, make_default=True)
+        rec.flush(timeout_sec=30.0)
+    blueprint.save(app_id, str(paths["timeline.rbl"]))
+
+    expected_entities = ["metadata/run", "subset/link5_vis", "subset/shipped_asset",
+                         "subset/residual_difference", "subset/tcp", "subset/tool_axis",
+                         "subset/d427_peak", "subset/l_min_plane", "subset/finger_window",
+                         "subset/band_plane", "plots/band_depth_mm", "plots/n_link5_in_band",
+                         "plots/n_shipped_in_band", "plots/n_residual_difference_in_band", "events/gates"]
+    components = {
+        "metadata/run": ["TextDocument:text"],
+        "subset/link5_vis": ["Points3D:positions", "Points3D:colors", "Points3D:radii"],
+        "subset/shipped_asset": ["Points3D:positions", "Points3D:colors", "Points3D:radii"],
+        "subset/residual_difference": ["Points3D:positions", "Points3D:colors", "Points3D:radii"],
+        "subset/tcp": ["Points3D:positions", "Points3D:colors", "Points3D:radii"],
+        "subset/d427_peak": ["Points3D:positions", "Points3D:colors", "Points3D:radii"],
+        "subset/tool_axis": ["LineStrips3D:strips", "LineStrips3D:colors", "LineStrips3D:radii"],
+        "subset/l_min_plane": ["LineStrips3D:strips", "LineStrips3D:colors", "LineStrips3D:radii"],
+        "subset/finger_window": ["LineStrips3D:strips", "LineStrips3D:colors", "LineStrips3D:radii"],
+        "subset/band_plane": ["LineStrips3D:strips", "LineStrips3D:colors", "LineStrips3D:radii"],
+        "plots/band_depth_mm": ["Scalars:scalars"],
+        "plots/n_link5_in_band": ["Scalars:scalars"],
+        "plots/n_shipped_in_band": ["Scalars:scalars"],
+        "plots/n_residual_difference_in_band": ["Scalars:scalars"],
+        "events/gates": ["TextLog:text", "TextLog:level"],
+    }
+    validation = validate_rerun_artifact(
+        paths["timeline.rrd"],
+        expected_entity_paths=expected_entities,
+        exact_entity_paths=expected_entities,
+        exact_timeline_names=["blueprint", "log_time", "depth_band_index"],
+        expected_entity_components=components,
+        blueprint_path=paths["timeline.rbl"],
+        screenshot_path=paths["inspection.png"],
+        screenshot_window_size="2400x1400",
+        expected_version=RERUN_VERSION,
+        cli_path=RERUN_CLI,
+        timeout_s=240.0,
+    )
+    paths["rerun_validation.json"].write_text(json.dumps(validation, indent=2, default=str) + "\n")
+    print(f"[{LOG}] rerun_validation pass={validation.get('pass')} errors={validation.get('errors')}", flush=True)
+
+    shutil.copyfile(__file__, paths["script.py.txt"])
+    out["artifacts"] = {k: {"name": v.name, "sha256": sha256(v)[:16], "bytes": v.stat().st_size}
+                        for k, v in paths.items() if v.exists()}
+    out["rerun_validation_pass"] = bool(validation.get("pass"))
+    paths["results.json"].write_text(json.dumps(out, indent=2) + "\n")
+    print(f"[{LOG}] artifacts " + " ".join(f"{v['name']}={v['sha256']}" for v in out["artifacts"].values()), flush=True)
+    print(f"[{LOG}] G0B_T3R_N6_VERDICT={out['verdict']['code']}", flush=True)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
