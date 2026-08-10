@@ -1,0 +1,123 @@
+"""EXPLORATORY (scratchpad, no verdict, no artifact): at the *executed* descend depth,
+what is the clearance between each jaw and the D29 cylinder as q5 closes?
+
+The static admission engine (n8/n10 `scan`) recomputes delta = deepest_delta(q5) for EVERY
+q5. The physics does NOT: it fixes delta once at descend and then only closes q5. So the two
+are not the same experiment. This script asks the physics question:
+
+    with delta held at the value the controller actually achieved, what is
+    min distance( jaw sample points , cylinder solid ) as a function of q5 ?
+
+Engine (axis_dir / prep) imported verbatim from the frozen n8 audit. Visual STL is used;
+n10 gate N10g established visual vs consumed-collision agreement to +3.338e-06 mm.
+"""
+import importlib.util
+import math
+import sys
+from pathlib import Path
+
+import numpy as np
+
+ROOT = Path("/home/cgxr/Documents/Robotics/RoArm_Project")
+sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "sim_scripts"))
+
+spec = importlib.util.spec_from_file_location(
+    "n8", ROOT / "sim_scripts/g0b_t3r_n8_tilt_admission_readonly_audit.py")
+m = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(m)
+
+THETA_DEG = 29.0
+PHI_DEG = 0.0                       # phi* recorded in t3t_grasp3_results.json tilt_preflight
+R_M = m.CYL_R_MM / 1000.0
+H_M = m.CYL_H_MM / 1000.0
+DELTA_CMD_M = -0.0010997959         # tilt_preflight.descend_delta_m_from_artifact
+DELTA_ACT_M = +0.00068830           # re-derived this session from cap vs measured TCP
+LATERAL_ACT_MM = 0.8795             # re-derived this session (model assumes 0)
+
+Q5 = [88.31, 86.0, 85.0, 84.7, 84.0, 82.9, 80.0, 75.0, 70.0, 65.0, 60.0, 55.0, 50.0,
+      45.0, 41.4, 35.0, 30.0, 25.0, 24.5, 22.0, 21.0, 20.5, 20.0, 19.5, 19.0, 18.5,
+      18.0, 17.5, 17.0]
+
+print("loading + sampling frozen visual meshes ...", flush=True)
+S5 = m.sample_triangles(m.load_binary_stl(m.L5) * m.STL_SCALE, m.SAMPLE_SPACING_M)
+SG = m.sample_triangles(m.load_binary_stl(m.GJ) * m.STL_SCALE, m.SAMPLE_SPACING_M)
+z5 = S5[:, 2] * 1000.0
+r5 = np.hypot(S5[:, 0], S5[:, 1]) * 1000.0
+l_vis = float((z5 - m.TCP_Z_MM)[r5 <= 30.0].max())
+assert abs(l_vis - m.D427_L_VIS_MM) < 1e-9 and len(S5) == m.D427_N_PTS, "D427 gate failed"
+print(f"  D427 gate OK  l_vis={l_vis:.12f}  n_pts={len(S5)}", flush=True)
+
+u_ = m.parse_urdf(m.URDF)
+j5 = u_["joints"]["link5_to_gripper_link"]
+R_j5 = m.rpy_matrix(*j5["rpy"])
+t_j5 = np.array(j5["xyz"])
+
+
+def mov(q5_deg):
+    c, s = math.cos(math.radians(q5_deg)), math.sin(math.radians(q5_deg))
+    Rq = np.array([[c, -s, 0.0], [s, c, 0.0], [0.0, 0.0, 1.0]])
+    R = R_j5 @ Rq
+    return SG @ R.T + t_j5
+
+
+chat = m.axis_dir(math.radians(THETA_DEG), math.radians(PHI_DEG))
+c0 = np.array([0.0, 0.0, m.TCP_Z_MM / 1000.0])
+cz = chat[2]
+
+
+def clearance(P, delta):
+    """min distance (mm) from sample points to the FINITE cylinder solid.
+    negative => deepest penetration depth (mm)."""
+    u0, rho0_sq, b = m.prep(P, chat, c0)
+    a = 1.0 - cz * cz
+    u = u0 - delta * cz                       # depth below top face, + = below
+    rho = np.sqrt(np.maximum(rho0_sq + 2.0 * delta * b + delta * delta * a, 0.0))
+    keep = (u > -0.060) & (u < H_M + 0.060) & (rho < R_M + 0.060)
+    if not keep.any():
+        return math.inf, 0
+    u, rho = u[keep], rho[keep]
+    dr = rho - R_M                            # + outside wall
+    du_top = -u                               # + above top face
+    du_bot = u - H_M                          # + below bottom face
+    inside = (dr <= 0.0) & (du_top <= 0.0) & (du_bot <= 0.0)
+    d = np.empty_like(u)
+    # outside: euclidean distance to the solid
+    dr_p = np.maximum(dr, 0.0)
+    dz_p = np.maximum(np.maximum(du_top, du_bot), 0.0)
+    d = np.sqrt(dr_p * dr_p + dz_p * dz_p)
+    # inside: negative = -(distance to nearest face)
+    if inside.any():
+        pen = np.minimum(np.minimum(-dr[inside], -du_top[inside]), -du_bot[inside])
+        d[inside] = -pen
+    return float(d.min()) * 1000.0, int(inside.sum())
+
+
+print(f"\n{'q5':>7} | {'FIXED jaw (link5)':>34} | {'MOVING jaw (gripper_link)':>34}")
+print(f"{'[deg]':>7} | {'cmd d':>10} {'act d':>10} {'in_act':>10} | "
+      f"{'cmd d':>10} {'act d':>10} {'in_act':>10}")
+print("-" * 96)
+cf_cmd, cf_act, nf = clearance(S5, DELTA_CMD_M), None, None
+cf_act = clearance(S5, DELTA_ACT_M)
+rows = []
+for q in Q5:
+    P = mov(q)
+    cm_cmd = clearance(P, DELTA_CMD_M)
+    cm_act = clearance(P, DELTA_ACT_M)
+    rows.append((q, cm_cmd, cm_act))
+    print(f"{q:7.2f} | {cf_cmd[0]:+10.4f} {cf_act[0]:+10.4f} {cf_act[1]:10d} | "
+          f"{cm_cmd[0]:+10.4f} {cm_act[0]:+10.4f} {cm_act[1]:10d}")
+
+print("\n--- summary -------------------------------------------------------------")
+print(f"fixed  jaw clearance at ACHIEVED delta (+{DELTA_ACT_M*1000:.4f} mm): "
+      f"{cf_act[0]:+.4f} mm   (inside pts {cf_act[1]})")
+best = min(rows, key=lambda r: r[2][0])
+print(f"moving jaw minimum over the q5 ladder at ACHIEVED delta: "
+      f"{best[2][0]:+.4f} mm at q5={best[0]:.2f} deg")
+first_touch = [r for r in rows if r[2][0] <= 0.0]
+print("moving-jaw q5 with NON-POSITIVE clearance at achieved delta: "
+      + (", ".join(f"{r[0]:.2f}" for r in first_touch) if first_touch else "NONE"))
+print(f"\nlateral TCP offset re-derived this session = {LATERAL_ACT_MM:.4f} mm "
+      f"(the static engine assumes the cylinder axis passes exactly through TCP).")
+print("=> any jaw whose clearance above is below that number could be in contact in the "
+      "physics while the static model reports none.")
