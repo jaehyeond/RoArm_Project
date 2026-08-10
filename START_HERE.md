@@ -1,6 +1,32 @@
 # START_HERE.md
 
-Last updated: 2026-08-10 KST (**39th 세션**). **G0b case `g0b_d420` 계속.**
+Last updated: 2026-08-10 KST (**40th 세션**). **G0b case `g0b_d420` 계속.**
+
+> ★★ **40th (사용자 지시 "조립 대조") = 트랙의 지형이 바뀌었다 — `ASSEMBLY_CONTRADICTS_REAL_RIM_PINCH`**
+> **URDF 조립은 틀리지 않았다.** 오히려 물리 시행을 독립 재현한다: 도달 가능 최심 상면
+> **+4.4576mm** ↔ attempt1 실측 정지 **top+4.4mm**(Δ 0.058mm) / 이동 조가 상면보다 깊은 점
+> **전 q5에서 0개** ↔ attempt2/3 **전 각도 무접촉**. bite는 **전 q5 스윕에서 한 번도 0을 넘지 않는다**
+> (최대 **−2.1137mm**, 88.31°에서 **−4.9284mm**).
+> ★ **물체 지름 계단**: D **9~20mm → bite +57.74mm**(깊게 물림) / D **21mm↑ → ≤0** /
+> D29 **−4.93mm** / D30 −5.83mm. 경계를 만드는 것은 **r=10.1244mm·z=119.8856mm 팁 중앙 돌기 =
+> D427 `l_vis` peak 그 자체** ⇒ **그 peak는 "손가락"이 아니라 정지 돌기다.**
+> ★ **경계 정밀화 (41st 감사 F2 — 동결값에 대한 산술, 신규 측정 아님)**: 막힘 구간
+> `z_top_min` **119.88562011718751** = D427 peak z **119.885620** **동일점** ⇒ 막는 특징이
+> 좌표로 확정된다(추론 아님). 참 경계 **D ∈ (20.0, 20.2487] mm**(하한 = D20 통과 실측,
+> 상한 = 2 × r_boss 10.1243721096607). ⚠️ **D20은 반경 여유 0.1244mm의 칼끝** — 모델은
+> 물체축·공구축 완전 일치를 가정하므로 중심 오차 0.124mm에 막힘으로 뒤집힌다. sim 재시행 시
+> **D ≤ 16mm(여유 2.12mm)** 권고. bite=0 고원은 **D21~23**(41st **F4**: 40th §4-4 표는 D23 누락).
+> ★ **모델 실물 교차검증 = 2/3 강함 + 1건 적용범위 밖** (41st 감사 **F1**, 사용자 승인 반영):
+> attempt1 정지 · attempt2/3 무접촉 = **동일 자산 · 동일 사전등록 수직 자세 · 실제 물리 실행**
+> ⇒ 이 둘이 판정을 지탱한다. **v6 스펀지 20mm는 확증이 아니다** — 40th 모델은 원형
+> footprint(`r ≤ R`) 판정인데 스펀지 상면은 **20 × 125 mm 직사각형**(`memory/
+> project_hardware_inventory.md:27` `CuboidCfg(0.020,0.047,0.125)`)이고 **내접원 D20(삼킴)
+> vs 외접원 D126.6(스캔 최대 D60에서 이미 −32.73mm 막힘)** 이 결론 전체를 걸친다 ⇒ 방위(azimuth)
+> 분해 없이는 모델 적용 범위 밖이다. **"교차검증 3/3" 인용 금지.**
+> ⇒ **병목은 자산이 아니라 과제 사양(물체 지름 D29 + 완전 수직 구속)이다.** (A) 수제 저작은
+> "실물에 없는 손가락 5~9mm 추가 = 사용자 실측 80/105mm와 불일치 = T4 실물 재현 구조적 불가"로
+> 정량 규정된다. 상세: `claudedocs/session_20260810_40th_g0b_t3r_n7_assembly_admission.md` **§4·§8**.
+> ⚠️ 정적 진입 검사이지 파지 성공 예측 아님 · 시각 메시 기준 · **적대 재검증 0회** · D427/D429 불변.
 31st = Gate-0 verdict `GATE0_SOURCE_ABSENT`(D427) → 정지·사용자 결정 대기(D426 ①).
 32nd 죽은 자산 단서 → 33rd 실물 사진 → 34th-b C1 CONFIRMED/C2 REFUTED →
 35th-b C5 크기 축 SETTLED → 36th 캘리퍼 프로토콜 → 37th/37th-b 가설 C·D → 38th/38th-b 적대 패널.
@@ -79,6 +105,13 @@ Last updated: 2026-08-10 KST (**39th 세션**). **G0b case `g0b_d420` 계속.**
    ⇒ 재실행은 **결정을 바꿀 수 없는 검증**(AGENTS.md 금지) + `t2_*`는 Frozen.
    ⚠️ 새 격자가 필요해지는 유일한 조건 = **스폰이 `seed0_S1`에서 바뀔 때**.
 
+**🔵 1-b. 40th가 연 자산-저작 불필요 경로 3가지 (전부 사용자/교수님 사안)**
+   ① **물체 지름 D29 → D≤20mm** (모델 +57.74mm 물림 예측, v6 스펀지 20mm 실물 성공과 정합,
+   동결 자산 그대로 sim 물리 재시행 가능 — ⚠️ HARD RULE #18)
+   ② **접근 기움 허용** (T1이 실제로 한 것 = 도구축 기움 **0~35° 프레임별 가변**, D420 ②;
+   T2/T3는 완전 수직을 사전등록했다 — ⚠️ D419 "수직 상부 접근"은 교수님 지시)
+   ③ **40th 판정의 적대 재검증** 후 ①·② 진행 (D423 / D428 #25)
+
 **🔴 2. 사용자 결정 대기 — D426 ① 분기가 이 트랙의 유일한 열린 결정이다**
    D424(조 목구멍 폐색) → D425(기하 원인) → **D427(원인은 cook이 아니라 저작 소스 자체)**
    ⇒ 분기는 **둘뿐**: **(A) 원위 조 기하 수제 저작 승인**(Arm-F "양조 원위 손가락 증분";
@@ -106,6 +139,25 @@ Last updated: 2026-08-10 KST (**39th 세션**). **G0b case `g0b_d420` 계속.**
 
 ## Open Risks / Claim Limits
 
+- **40th은 정적 진입(admission) 검사다** — `bite>0`은 닫힘 접촉의 **필요조건**이지 충분조건이
+  아니다. **적대 재검증 0회**(D423/D428 #25 미이행). 시각 메시 기준(T3가 쓴 것은 attempt3 충돌
+  USD; D427의 visual−collision −3.3e-06mm로 근사 정당화하나 동일성 주장 아님).
+  "beside" 환대 [R, R+6]은 저자 규약(폭 변경 시 절대값 변동, D29 부호는 여유 −4.93mm로 불변).
+- **41st 감사 4건 (사용자 승인 반영, 판정 본체는 불변)** — 40th의 `gates`/`verdict`/
+  `radius_scan`은 디스크 원본에서 전건 재확인됐고 sha `7dadc10baaed8c72`/48,665 B도 일치한다.
+  바뀐 것은 판정을 둘러싼 주장 3건이다: **F1** 교차검증 3/3 → 2/3 + 1건 적용범위 밖(위 ★ 참조) /
+  **F2** D 경계 (20.0, 20.2487]·D20 여유 0.1244mm(위 ★ 참조) / **F3** 40th doc §4-5 3번의
+  인용 `AGENTS.md:616-618`은 **오류** — `AGENTS.md` 713줄에 "125" 문자열이 **0 hit**이고
+  HARD RULE #19(`AGENTS.md:259`)도 "edge-stand 47mm tall"까지만 말한다. 치수 정본 =
+  `memory/project_hardware_inventory.md:27`, v6 파지 성공 사실만 `AGENTS.md:617` /
+  **F4** §4-4 표의 bite=0 고원 "21~22"는 열거 누락, 실제 **D21~23**(D428 ⑥ 집계 규율).
+- **40th §5 기움 가설은 미검정** — T1 도구축 기움 0~35°(D420 ②) vs T2/T3 완전 수직 사전등록.
+  확인 전 근거 사용 금지(#18: D419 "수직 상부 접근"은 교수님 지시).
+- **로컬 URDF는 파지 물리에 사용 불가 (40th §3, 신규 기록)** — `roarm_m3.urdf:161` 이동 조
+  `<collision>` = `gripper_link_collision_g2a.stl` = **4.0×4.0×4.0mm 정육면체 12 facet 스텁**
+  (sha `bd34df31…`, 시각 메시 길이의 5.1%) + `usd/config.yaml` `collider_type: convex_hull` ·
+  `collision_from_visuals: false`. ⚠️ **D420 ⑥의 "convex_hull 1개/링크"는 이동 조에 대해 부정확** —
+  입력 자체가 4mm 큐브다. T3는 supersession S-2로 이 경로를 이미 폐기했으므로 T3 실패 원인 아님.
 - **D427 자체는 살아 있다** — 시각 소스에 조 원위부 기하 부재. 분기 = **수제 저작 승인 or
   정지·재상의 둘뿐**(D426 ①, C 소멸). 39th는 이 분기를 **바꾸지 않았다**.
 - 39th 잔여 425점을 "마운팅 보스"로 부른 것은 **기하 기술 기반 분류**(완전 회전체·이산 z
@@ -135,6 +187,8 @@ Last updated: 2026-08-10 KST (**39th 세션**). **G0b case `g0b_d420` 계속.**
 - T2·T2b·t3_grasp{,2,3,4}_*·t3_jaw_audit{,2,3}_*·t3r_* 산출물 덮어쓰기 금지
   (**t3r_gate0_vismesh_* 6종 = 완결 증거, 재실행 금지** — 확대 열람은 허용).
   **`t3r_n6_subsetloc_*` 7종 추가 (39th 완결 증거, 재실행 금지).**
+  **`t3r_n7_assembly_*` 9종 추가 (40th 완결 증거 — 재실행 금지. 단 §5 기움 파라미터 검정은
+  `sim_scripts/g0b_t3r_n7_assembly_cylinder_admission_readonly_audit.py`의 신규 태그 파생만 허용).**
 - ✅ **`gripper_left_link.stl` = 금지 해제** (Q3 승인 + 38th 열람 + 39th 정점 대조 완료).
   "죽은 자산" 규정은 오분류였다. 단 **URDF 배선 변경은 별건이며 승인 없이 금지.**
 - **`58.419`·`48.3706`·`33.2843` C5 기준선 재사용 금지.**
@@ -151,19 +205,25 @@ Last updated: 2026-08-10 KST (**39th 세션**). **G0b case `g0b_d420` 계속.**
 
 ## Must Read First
 
-1. `AGENTS.md` → 2. **`claudedocs/session_20260810_39th_g0b_t3r_n6_subset_locate.md`**
-   (**§5(판별)·§7(집행)·§10(다음 순서)** 먼저)
+1. `AGENTS.md` → 2. **`claudedocs/session_20260810_40th_g0b_t3r_n7_assembly_admission.md`**
+   (**§4(판정)·§8(다음)·§7(한계)** 먼저) → `claudedocs/session_20260810_39th_g0b_t3r_n6_subset_locate.md`
+   (**§5(판별)·§7(집행)·§10** 먼저)
 3. this file → 4. `claudedocs/DECISIONS.md` **D429 → D428 → D427** → D426 → D425(⚠️ "중앙 플러그"
    반증됨) → D424 → D421
 5. `claudedocs/session_20260809_38th_*.md` **§9(적대 패널)·§10(사용자 실측)**
    — ⚠️ **§11은 D429로 반증됨, 인용 금지**
-6. `g0b_d420/t3r_n6_subsetloc_results.json`(sha `819e624ea5f10f76`) ·
-   `t3r_gate0_vismesh_results.json`(sha `d7d2ce6a…b310`)
+6. `g0b_d420/t3r_n6_subsetloc_results.json`(sha **`9fc4bf122989856d`** / 14,511 B — **D429-R1 정정**.
+   문서·D429·LEDGER의 `819e624ea5f10f76`/13,494 B는 **자기-매니페스트 덧붙이기 전 중간 해시**이며
+   판정·수치는 불변. 나머지 6종 및 타 세션 핀은 전수 비트 일치) ·
+   `t3r_gate0_vismesh_results.json`(sha `d7d2ce6a…b310` ✅ 실물 재확인) ·
+   **`t3r_n7_assembly_results.json`(sha `7dadc10baaed8c72` / 48,665 B — 40th 조립 판정)**
 7. 필요 시: 37th doc §12 → 36th §2·§4-1 → 35th §11 → 34th §11 → 31st §3~§7
 8. `local_assets/roarm_m3/urdf/roarm_m3.urdf:129-135,225-231,234-239` · 24th doc §4-1 · 27th doc §3
 
 ## Git
 
-- HEAD == `79df2b3` "8월 6일자 변경". **29th~39th분 미커밋** (수정 3 + 신규 34, 39th 시작 시점).
-  39th에서 신규 9건(`t3r_n6_subsetloc_*` 7 + 39th session doc + 로그 2) 추가.
-- commit/push는 **사용자 요청 시에만**. DECISIONS는 39th에서 **D428·D429 2건 append**.
+- **HEAD == `4805000` "확인완료" == `origin/master` (2026-08-10 사용자 직접 commit + push).**
+  29th~39th분 43개 파일(수정 3 + 신규 40, +16,737 −61) 전량 커밋됨 — **작업 트리 clean**.
+  ⚠️ PNG·로그 4건(`*_diagnostic.png`·`*_inspection.png`·`*_run_std{out,err}.log`)은
+  `.gitignore:105,110`으로 **커밋 대상 밖** — 로컬에만 존재하므로 원격 클론에서 부재.
+- commit/push는 **사용자 요청 시에만**. DECISIONS는 39th에서 D428·D429, 40th에서 **D429-R1** append.

@@ -25656,3 +25656,37 @@ Evidence:
   `local_assets/roarm_m3/urdf/roarm_m3.urdf:129-135,226,234-239`;
   `sim_scripts/g0b_t3r_gate0_visual_mesh_distal_depth_readonly_audit.py:150-158,253-259,465-466,507-517`;
   반증 대상 원문 = `claudedocs/session_20260809_38th_g0b_t3r_interrupt_recovery_lens_salvage.md` §11.
+
+## D429-R1 — D429 Evidence의 `t3r_n6_subsetloc_results.json` sha 핀 정정: 기록된 `819e624e…`는 자기-매니페스트 덧붙이기 **전** 중간 해시였다 — 디스크 실물은 `9fc4bf12…`/14,511 B이며 판정·수치는 불변 (기록 무결성 정정 — 과학적 verdict 변경 아님)
+
+- **Evidence**: 2026-08-10 40th 세션 부트 6단계 중 산출물 sha 실물 재계산에서 발견.
+  D429 Evidence·39th doc §6 표·`START_HERE.md`·LEDGER 39th 행이 공통으로 핀한 값은
+  `819e624ea5f10f76` / 13,494 B이나, 디스크 실물은 **`9fc4bf122989856d` / 14,511 B**(+1,017 B).
+  **원인 특정 완료**: 해당 JSON 내부 `/artifacts/results.json` 블록이 **자기 자신의 sha를
+  `819e624ea5f10f76` / 13,494 B로 기록**하고 있다 — 즉 해시를 먼저 계산한 뒤 아티팩트
+  매니페스트를 덧붙여 파일을 다시 썼고, 문서들은 **덧붙이기 전 중간 해시**를 핀했다.
+  mtime도 이와 일관된다(`results.json` 01:33:55.836 = 그룹 내 최종 기록,
+  `rerun_validation.json` .830 / `inspection.png` .721).
+  **범위는 이 1건으로 격리된다** — 같은 세션 산출물 6종은 전부 비트 일치:
+  `timeline.rrd` `555a50521a10a9c5` / `timeline.rbl` `97b24a9491a47fd0` /
+  `rerun_validation.json` `aa263ab5f5861b67` / `inspection.png` `9f2ac255c6f158b7` /
+  `diagnostic.png` `abc8bd096f6dc162` / `script.py.txt` `9f5ac08eb8f5f0f2`.
+  타 세션 핀도 전수 재계산 결과 이상 없음: `t3r_gate0_vismesh_results.json` `d7d2ce6a49b5ed02` ·
+  `t3r_gate0_vismesh_timeline.rrd` `29a0c9018f0c0b6c` · `t3r_n5_hypcd_results.json` `9e1680aa58f5a0b1` ·
+  `t3r_n5b_salvage_reverify_…json` `8c4469e6348854c0` · `t3r_n1_caliper_protocol_…json` `5851631c19fdad7b` ·
+  `t3r_c5_webscale_…json` `74885d11b59efe17`.
+- **Implication**: ① **D429의 과학적 verdict는 불변이다** — 파일 내 `/verdict` 필드
+  (`SEC11_LEAD_REFUTED_NO_MISSING_GEOMETRY`, `max_G_deviation_from_link5_surface_mm`
+  0.03408285620398358, `delta_l_vis_mm_if_shipped_asset_used` 7.629394518815502e-06,
+  `gate0_state_unchanged` true)가 문서 기재와 일치한다. 재실행·재판별 사유 아님.
+  ② **인용 규약**: 이후 이 파일을 핀할 때는 **`9fc4bf122989856d` / 14,511 B**를 쓴다.
+  `819e624ea5f10f76`는 "파일 내부 매니페스트가 자기 기록한 중간값"으로만 인용한다.
+  ③ **D428 ⑥(집계 규율)의 해시 판(版) 확장**: 자기 자신을 목록에 포함하는 매니페스트를
+  산출물에 쓸 경우, 자기 항목은 원리적으로 최종 해시가 될 수 없다. 앞으로 매니페스트는
+  **자기 항목을 제외**하거나, 최종 해시를 **파일 밖(세션 doc·results 외부 sidecar)**에
+  기록한다. 산출 직후 `sha256sum`으로 **디스크 실물을 다시 읽어** 핀하는 것을 기본으로 한다.
+  ④ 층위: 기록 무결성 정정. 물리 verdict 아님, D427·D429 판정 불변, `g0a_pass=false` 불변.
+- **Source**: `claudedocs/runtime_logs/grasp_track/g0b_d420/t3r_n6_subsetloc_results.json`
+  (`/artifacts/results.json`, `/verdict`); 정정 대상 = 본 파일 D429 Evidence ·
+  `claudedocs/session_20260810_39th_g0b_t3r_n6_subset_locate.md` §6 표 ·
+  `START_HERE.md` Must Read First 6번 · `claudedocs/EXPERIMENT_LEDGER.md` 2026-08-10 39th 행.

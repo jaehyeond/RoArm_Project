@@ -1,0 +1,458 @@
+{
+  "artifact": "ROARM_RERUN_ARTIFACT_VALIDATION_V1",
+  "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3r_n7_assembly_timeline.rrd",
+  "expected_rerun_version": "0.34.1",
+  "expected_entity_paths": [
+    "/metadata/run",
+    "/assembly/link5_fixed_jaw",
+    "/assembly/gripper_link_moving_jaw",
+    "/assembly/moving_jaw_pose",
+    "/assembly/tcp",
+    "/assembly/tool_axis",
+    "/object/cylinder_D29",
+    "/object/topface_plane",
+    "/object/footprint_ring",
+    "/plots/q5_deg",
+    "/plots/bite_mm",
+    "/plots/depth_top_min_mm",
+    "/plots/moving_jaw_bite_mm",
+    "/events/gates"
+  ],
+  "expected_timeline_names": [],
+  "exact_entity_paths": [
+    "/assembly/gripper_link_moving_jaw",
+    "/assembly/link5_fixed_jaw",
+    "/assembly/moving_jaw_pose",
+    "/assembly/tcp",
+    "/assembly/tool_axis",
+    "/events/gates",
+    "/metadata/run",
+    "/object/cylinder_D29",
+    "/object/footprint_ring",
+    "/object/topface_plane",
+    "/plots/bite_mm",
+    "/plots/depth_top_min_mm",
+    "/plots/moving_jaw_bite_mm",
+    "/plots/q5_deg"
+  ],
+  "exact_timeline_names": [
+    "blueprint",
+    "log_time",
+    "q5_index"
+  ],
+  "expected_entity_components": {
+    "/metadata/run": [
+      "TextDocument:text"
+    ],
+    "/assembly/link5_fixed_jaw": [
+      "Points3D:colors",
+      "Points3D:positions",
+      "Points3D:radii"
+    ],
+    "/assembly/gripper_link_moving_jaw": [
+      "Points3D:colors",
+      "Points3D:positions",
+      "Points3D:radii"
+    ],
+    "/assembly/moving_jaw_pose": [
+      "Points3D:colors",
+      "Points3D:positions",
+      "Points3D:radii"
+    ],
+    "/assembly/tcp": [
+      "Points3D:colors",
+      "Points3D:positions",
+      "Points3D:radii"
+    ],
+    "/assembly/tool_axis": [
+      "LineStrips3D:colors",
+      "LineStrips3D:radii",
+      "LineStrips3D:strips"
+    ],
+    "/object/cylinder_D29": [
+      "LineStrips3D:colors",
+      "LineStrips3D:radii",
+      "LineStrips3D:strips"
+    ],
+    "/object/topface_plane": [
+      "LineStrips3D:colors",
+      "LineStrips3D:radii",
+      "LineStrips3D:strips"
+    ],
+    "/object/footprint_ring": [
+      "LineStrips3D:colors",
+      "LineStrips3D:radii",
+      "LineStrips3D:strips"
+    ],
+    "/plots/q5_deg": [
+      "Scalars:scalars"
+    ],
+    "/plots/bite_mm": [
+      "Scalars:scalars"
+    ],
+    "/plots/depth_top_min_mm": [
+      "Scalars:scalars"
+    ],
+    "/plots/moving_jaw_bite_mm": [
+      "Scalars:scalars"
+    ],
+    "/events/gates": [
+      "TextLog:level",
+      "TextLog:text"
+    ]
+  },
+  "forbidden_entity_fragments": [
+    "/\\/"
+  ],
+  "blueprint_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3r_n7_assembly_timeline.rbl",
+  "rendered_blueprint_source": "active blueprint embedded in the RRD",
+  "external_rbl_role": "verified fixed-layout export; the 0.34.1 CLI does not guarantee that an external RBL overrides an already-active embedded blueprint",
+  "screenshot_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3r_n7_assembly_inspection.png",
+  "screenshot_window_size": "2400x1400",
+  "screenshot_port": null,
+  "human_visual_inspection_required": true,
+  "bytes": 1733367,
+  "sha256": "89b8c236544b067594570fbadceb3216cdfed120b1f3f601a913621848064b88",
+  "version": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "--version"
+    ],
+    "returncode": 0,
+    "stdout": "rerun-cli 0.34.1 (base lance map_view nasm native_viewer oss_server perf_telemetry re_server release_full release_no_web_viewer web_viewer) [rustc 1.92.0 (ded5c06cf 2025-12-08), LLVM 21.1.3] x86_64-unknown-linux-gnu prepare-release-0.34.1 4efb18f, built 2026-07-07T16:20:42.173372603Z\nVideo features: av1 ffmpeg nasm\n",
+    "stderr": "",
+    "ok": true,
+    "expected_version_match": true
+  },
+  "verify": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "verify",
+      "--check-footers",
+      "true",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3r_n7_assembly_timeline.rrd"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "1 file verified without error.\n",
+    "ok": true
+  },
+  "stats": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "stats",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3r_n7_assembly_timeline.rrd"
+    ],
+    "returncode": 0,
+    "stdout": "Overview\n----------\nnum_chunks = 32\nnum_entity_paths = 32\nnum_chunks_without_components = 0 (0.000%)\nnum_rows = 202\nnum_rows_min = 1\nnum_rows_max = 34\nnum_rows_avg = 6.312\nnum_static = 9\nnum_indexes_min = 0\nnum_indexes_max = 2\nnum_indexes_avg = 1.438\nnum_components_min = 1\nnum_components_max = 3\nnum_components_avg = 2.094\n\nNum chunks per entity\n---------------------\n/__properties: 1\n/assembly/gripper_link_moving_jaw: 1\n/assembly/link5_fixed_jaw: 1\n/assembly/moving_jaw_pose: 1\n/assembly/tcp: 1\n/assembly/tool_axis: 1\n/blueprint_panel: 1\n/container/4f0419a9-4b12-4dab-9148-c46d018cd7ea: 1\n/container/b01b0468-e28f-42f9-a707-0cec6931c61f: 1\n/container/ed2d16c7-1a97-47e5-9b6f-0a04ea409399: 1\n/events/gates: 1\n/metadata/run: 1\n/object/cylinder_D29: 1\n/object/footprint_ring: 1\n/object/topface_plane: 1\n/plots/bite_mm: 1\n/plots/depth_top_min_mm: 1\n/plots/moving_jaw_bite_mm: 1\n/plots/q5_deg: 1\n/selection_panel: 1\n/time_panel: 1\n/view/6cbd4293-b271-4b2a-a74f-5df92e896a17: 1\n/view/6cbd4293-b271-4b2a-a74f-5df92e896a17/ViewContents: 1\n/view/b61dd65f-6e66-495e-824a-20cbb398b2ce: 1\n/view/b61dd65f-6e66-495e-824a-20cbb398b2ce/ViewContents: 1\n/view/d9c6e169-d8c5-4359-a989-430726a209cf: 1\n/view/d9c6e169-d8c5-4359-a989-430726a209cf/ViewContents: 1\n/view/f4a00f15-d862-42b2-8236-254d178e981e: 1\n/view/f4a00f15-d862-42b2-8236-254d178e981e/ViewContents: 1\n/view/fed647b3-78bc-45d8-b10d-a3004b1605f0: 1\n/view/fed647b3-78bc-45d8-b10d-a3004b1605f0/ViewContents: 1\n/viewport: 1\n\nNum chunks per index\n--------------------\nblueprint: 17\nlog_time: 23\nq5_index: 6\n\nNum chunks per component\n------------------------\nContainerBlueprint:col_shares: 1\nContainerBlueprint:container_kind: 3\nContainerBlueprint:contents: 3\nContainerBlueprint:row_shares: 1\nLineStrips3D:colors: 4\nLineStrips3D:radii: 4\nLineStrips3D:strips: 4\nPanelBlueprint:state: 2\nPoints3D:colors: 4\nPoints3D:positions: 4\nPoints3D:radii: 4\nRecordingInfo:start_time: 1\nScalars:scalars: 4\nTextDocument:media_type: 1\nTextDocument:text: 1\nTextLog:level: 1\nTextLog:text: 1\nTimePanelBlueprint:state: 1\nViewBlueprint:class_identifier: 5\nViewBlueprint:display_name: 5\nViewBlueprint:space_origin: 5\nViewContents:query: 5\nViewportBlueprint:auto_layout: 1\nViewportBlueprint:auto_views: 1\nViewportBlueprint:root_container: 1\n\nSize (schema + data, compressed)\n--------------------------------\nipc_size_bytes_total = 1.6 MiB\nipc_size_bytes_min = 913 B\nipc_size_bytes_max = 948 KiB\nipc_size_bytes_avg = 51.1 KiB\nipc_size_bytes_p50 = 1.6 KiB\nipc_size_bytes_p90 = 5.4 KiB\nipc_size_bytes_p95 = 476 KiB\nipc_size_bytes_p99 = 948 KiB\nipc_size_bytes_p999 = 948 KiB\n\nSize (schema + data, uncompressed)\n----------------------------------\nipc_size_bytes_total = 1.9 MiB\nipc_size_bytes_min = 1.7 KiB\nipc_size_bytes_max = 1000 KiB\nipc_size_bytes_avg = 61.9 KiB\nipc_size_bytes_p50 = 3.8 KiB\nipc_size_bytes_p90 = 10.0 KiB\nipc_size_bytes_p95 = 695 KiB\nipc_size_bytes_p99 = 1000 KiB\nipc_size_bytes_p999 = 1000 KiB\n\nSize (schema only, uncompressed)\n--------------------------------\nipc_size_bytes_total = 56.7 KiB\nipc_size_bytes_min = 1.1 KiB\nipc_size_bytes_max = 2.4 KiB\nipc_size_bytes_avg = 1.8 KiB\nipc_size_bytes_p50 = 1.7 KiB\nipc_size_bytes_p90 = 2.2 KiB\nipc_size_bytes_p95 = 2.3 KiB\nipc_size_bytes_p99 = 2.4 KiB\nipc_size_bytes_p999 = 2.4 KiB\n\nSize (data only, uncompressed)\n------------------------------\nipc_size_bytes_total = 1.9 MiB\nipc_size_bytes_min = 656 B\nipc_size_bytes_max = 998 KiB\nipc_size_bytes_avg = 60.1 KiB\nipc_size_bytes_p50 = 1.9 KiB\nipc_size_bytes_p90 = 8.1 KiB\nipc_size_bytes_p95 = 693 KiB\nipc_size_bytes_p99 = 998 KiB\nipc_size_bytes_p999 = 998 KiB\n\nUnsorted timelines\n------------------\n(none \u2014 every timeline on every chunk is sorted)\n\nFooters\n-------\nnum_manifests = 2 (one per recording)\n\nFooter manifest for StoreId(Blueprint, \"roarm_g0b_t3r_n7_assembly\", \"rec_004c923d0eeb4379a8f94582f4ed08c0\")\n  num_chunks_indexed = 17\n  num_static_chunks = 0\n  num_entity_paths = 17\n  manifest_num_columns = 102\n  sorbet_schema_num_fields = 37\n  sorbet_schema_sha256 = 8897b78674a296d1137c78a458786d062c02beda9b0d2af6927c0da49ee64009\n  chunk_byte_size_total (native) = 25.1 KiB\n  chunk_byte_size_uncompressed_total = 56.8 KiB\n\nFooter manifest for StoreId(Recording, \"roarm_g0b_t3r_n7_assembly\", \"g0b_d420_t3r_n7_assembly\")\n  num_chunks_indexed = 15\n  num_static_chunks = 9\n  num_entity_paths = 15\n  manifest_num_columns = 59\n  sorbet_schema_num_fields = 36\n  sorbet_schema_sha256 = 69ddb9e32f04f7f2debe1a4e7e3ec173977dfed09b43d26e4b259350e94c1b39\n  chunk_byte_size_total (native) = 1.6 MiB\n  chunk_byte_size_uncompressed_total = 1.9 MiB\n",
+    "stderr": "\u001b[2m2026-08-10T01:33:13.986380Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mrerun::commands::rrd::stats\u001b[0m\u001b[2m:\u001b[0m processing input\u2026\n\u001b[2m2026-08-10T01:33:13.989262Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mrerun::commands::rrd::stats\u001b[0m\u001b[2m:\u001b[0m computing stats\u2026\n",
+    "ok": true
+  },
+  "print_verbose": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "print",
+      "-v",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3r_n7_assembly_timeline.rrd"
+    ],
+    "returncode": 0,
+    "stdout": "Showing data after migration to latest Rerun version\nStoreInfo {\n    store_id: StoreId(\n        Recording,\n        \"roarm_g0b_t3r_n7_assembly\",\n        \"g0b_d420_t3r_n7_assembly\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nStoreInfo {\n    store_id: StoreId(\n        Recording,\n        \"roarm_g0b_t3r_n7_assembly\",\n        \"g0b_d420_t3r_n7_assembly\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nChunk(chunk_18CA4DA9BB1963605c963b1badb06041) with 1 rows (632 B) - /__properties - data columns: [/__properties@RecordingInfo:start_time]\nStoreInfo {\n    store_id: StoreId(\n        Blueprint,\n        \"roarm_g0b_t3r_n7_assembly\",\n        \"rec_004c923d0eeb4379a8f94582f4ed08c0\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nStoreInfo {\n    store_id: StoreId(\n        Blueprint,\n        \"roarm_g0b_t3r_n7_assembly\",\n        \"rec_004c923d0eeb4379a8f94582f4ed08c0\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nChunk(chunk_18CA4DA9CC3B2EE167db51acb54c6f7c) with 1 rows (926 B) - /view/fed647b3-78bc-45d8-b10d-a3004b1605f0/ViewContents - data columns: [/view/fed647b3-78bc-45d8-b10d-a3004b1605f0/ViewContents@ViewContents:query]\nChunk(chunk_18CA4DA9CC3BF15C67db51acb54c6f7d) with 1 rows (926 B) - /view/f4a00f15-d862-42b2-8236-254d178e981e/ViewContents - data columns: [/view/f4a00f15-d862-42b2-8236-254d178e981e/ViewContents@ViewContents:query]\nChunk(chunk_18CA4DA9CC3BFCB367db51acb54c6f7e) with 1 rows (1.1 KiB) - /container/ed2d16c7-1a97-47e5-9b6f-0a04ea409399 - data columns: [/container/ed2d16c7-1a97-47e5-9b6f-0a04ea409399@ContainerBlueprint:container_kind /container/ed2d16c7-1a97-47e5-9b6f-0a04ea409399@ContainerBlueprint:contents]\nChunk(chunk_18CA4DA9CC3C0E3367db51acb54c6f7f) with 1 rows (1.2 KiB) - /viewport - data columns: [/viewport@ViewportBlueprint:auto_layout /viewport@ViewportBlueprint:auto_views /viewport@ViewportBlueprint:root_container]\nChunk(chunk_18CA4DA9CC3C3EE167db51acb54c6f80) with 1 rows (1.2 KiB) - /view/b61dd65f-6e66-495e-824a-20cbb398b2ce - data columns: [/view/b61dd65f-6e66-495e-824a-20cbb398b2ce@ViewBlueprint:class_identifier /view/b61dd65f-6e66-495e-824a-20cbb398b2ce@ViewBlueprint:display_name /view/b61dd65f-6e66-495e-824a-20cbb398b2ce@ViewBlueprint:space_origin]\nChunk(chunk_18CA4DA9CC3C5B1167db51acb54c6f81) with 1 rows (1.2 KiB) - /view/d9c6e169-d8c5-4359-a989-430726a209cf - data columns: [/view/d9c6e169-d8c5-4359-a989-430726a209cf@ViewBlueprint:class_identifier /view/d9c6e169-d8c5-4359-a989-430726a209cf@ViewBlueprint:display_name /view/d9c6e169-d8c5-4359-a989-430726a209cf@ViewBlueprint:space_origin]\nChunk(chunk_18CA4DA9CC3C6B9167db51acb54c6f82) with 1 rows (1.2 KiB) - /view/f4a00f15-d862-42b2-8236-254d178e981e - data columns: [/view/f4a00f15-d862-42b2-8236-254d178e981e@ViewBlueprint:class_identifier /view/f4a00f15-d862-42b2-8236-254d178e981e@ViewBlueprint:display_name /view/f4a00f15-d862-42b2-8236-254d178e981e@ViewBlueprint:space_origin]\nChunk(chunk_18CA4DA9CC3C7C4D67db51acb54c6f83) with 1 rows (1.2 KiB) - /view/6cbd4293-b271-4b2a-a74f-5df92e896a17 - data columns: [/view/6cbd4293-b271-4b2a-a74f-5df92e896a17@ViewBlueprint:class_identifier /view/6cbd4293-b271-4b2a-a74f-5df92e896a17@ViewBlueprint:display_name /view/6cbd4293-b271-4b2a-a74f-5df92e896a17@ViewBlueprint:space_origin]\nChunk(chunk_18CA4DA9CC3C915B67db51acb54c6f84) with 1 rows (1.2 KiB) - /container/4f0419a9-4b12-4dab-9148-c46d018cd7ea - data columns: [/container/4f0419a9-4b12-4dab-9148-c46d018cd7ea@ContainerBlueprint:container_kind /container/4f0419a9-4b12-4dab-9148-c46d018cd7ea@ContainerBlueprint:contents /container/4f0419a9-4b12-4dab-9148-c46d018cd7ea@ContainerBlueprint:row_shares]\nChunk(chunk_18CA4DA9CC3CA3FB67db51acb54c6f85) with 1 rows (1.3 KiB) - /container/b01b0468-e28f-42f9-a707-0cec6931c61f - data columns: [/container/b01b0468-e28f-42f9-a707-0cec6931c61f@ContainerBlueprint:col_shares /container/b01b0468-e28f-42f9-a707-0cec6931c61f@ContainerBlueprint:container_kind /container/b01b0468-e28f-42f9-a707-0cec6931c61f@ContainerBlueprint:contents]\nChunk(chunk_18CA4DA9CC3CAF3967db51acb54c6f86) with 1 rows (1.2 KiB) - /view/fed647b3-78bc-45d8-b10d-a3004b1605f0 - data columns: [/view/fed647b3-78bc-45d8-b10d-a3004b1605f0@ViewBlueprint:class_identifier /view/fed647b3-78bc-45d8-b10d-a3004b1605f0@ViewBlueprint:display_name /view/fed647b3-78bc-45d8-b10d-a3004b1605f0@ViewBlueprint:space_origin]\nChunk(chunk_18CA4DA9CC3CBBAA67db51acb54c6f87) with 1 rows (883 B) - /blueprint_panel - data columns: [/blueprint_panel@PanelBlueprint:state]\nChunk(chunk_18CA4DA9CC3CC95867db51acb54c6f88) with 1 rows (931 B) - /view/d9c6e169-d8c5-4359-a989-430726a209cf/ViewContents - data columns: [/view/d9c6e169-d8c5-4359-a989-430726a209cf/ViewContents@ViewContents:query]\nChunk(chunk_18CA4DA9CC3CDB3767db51acb54c6f89) with 1 rows (883 B) - /selection_panel - data columns: [/selection_panel@PanelBlueprint:state]\nChunk(chunk_18CA4DA9CC3CE25967db51acb54c6f8a) with 1 rows (957 B) - /view/b61dd65f-6e66-495e-824a-20cbb398b2ce/ViewContents - data columns: [/view/b61dd65f-6e66-495e-824a-20cbb398b2ce/ViewContents@ViewContents:query]\nChunk(chunk_18CA4DA9CC3CEF4C67db51acb54c6f8b) with 1 rows (885 B) - /time_panel - data columns: [/time_panel@TimePanelBlueprint:state]\nChunk(chunk_18CA4DA9CC3CF6BC67db51acb54c6f8c) with 1 rows (924 B) - /view/6cbd4293-b271-4b2a-a74f-5df92e896a17/ViewContents - data columns: [/view/6cbd4293-b271-4b2a-a74f-5df92e896a17/ViewContents@ViewContents:query]\nBlueprintActivationCommand(StoreId(Blueprint, \"roarm_g0b_t3r_n7_assembly\", \"rec_004c923d0eeb4379a8f94582f4ed08c0\"), make_active: true, make_default: true)\nChunk(chunk_18CA4DA9CC40CF73066a3c3f89a4c374) with 34 rows (1.6 KiB) - /plots/bite_mm - data columns: [/plots/bite_mm@Scalars:scalars]\nChunk(chunk_18CA4DA9CC42C97E066a3c3f89a4c375) with 1 rows (1.7 KiB) - /metadata/run - data columns: [/metadata/run@TextDocument:media_type /metadata/run@TextDocument:text]\nChunk(chunk_18CA4DA9CC42E1F9066a3c3f89a4c376) with 1 rows (960 B) - /assembly/tool_axis - data columns: [/assembly/tool_axis@LineStrips3D:colors /assembly/tool_axis@LineStrips3D:radii /assembly/tool_axis@LineStrips3D:strips]\nChunk(chunk_18CA4DA9CC42FC49066a3c3f89a4c377) with 1 rows (85.1 KiB) - /assembly/gripper_link_moving_jaw - data columns: [/assembly/gripper_link_moving_jaw@Points3D:colors /assembly/gripper_link_moving_jaw@Points3D:positions /assembly/gripper_link_moving_jaw@Points3D:radii]\nChunk(chunk_18CA4DA9CC430D97066a3c3f89a4c378) with 1 rows (937 B) - /assembly/tcp - data columns: [/assembly/tcp@Points3D:colors /assembly/tcp@Points3D:positions /assembly/tcp@Points3D:radii]\nChunk(chunk_18CA4DA9CC432C4E066a3c3f89a4c379) with 1 rows (1.5 KiB) - /object/topface_plane - data columns: [/object/topface_plane@LineStrips3D:colors /object/topface_plane@LineStrips3D:radii /object/topface_plane@LineStrips3D:strips]\nChunk(chunk_18CA4DA9CC43891B066a3c3f89a4c37a) with 34 rows (1.6 KiB) - /plots/depth_top_min_mm - data columns: [/plots/depth_top_min_mm@Scalars:scalars]\nChunk(chunk_18CA4DA9CC4489DE066a3c3f89a4c37b) with 1 rows (333 KiB) - /assembly/link5_fixed_jaw - data columns: [/assembly/link5_fixed_jaw@Points3D:colors /assembly/link5_fixed_jaw@Points3D:positions /assembly/link5_fixed_jaw@Points3D:radii]\nChunk(chunk_18CA4DA9CC449AB8066a3c3f89a4c37c) with 1 rows (4.2 KiB) - /object/cylinder_D29 - data columns: [/object/cylinder_D29@LineStrips3D:colors /object/cylinder_D29@LineStrips3D:radii /object/cylinder_D29@LineStrips3D:strips]\nChunk(chunk_18CA4DA9CC44E722066a3c3f89a4c37d) with 34 rows (1.6 KiB) - /plots/q5_deg - data columns: [/plots/q5_deg@Scalars:scalars]\nChunk(chunk_18CA4DA9CC461E71066a3c3f89a4c37e) with 34 rows (1.6 KiB) - /plots/moving_jaw_bite_mm - data columns: [/plots/moving_jaw_bite_mm@Scalars:scalars]\nChunk(chunk_18CA4DA9CC471540066a3c3f89a4c37f) with 6 rows (1.2 KiB) - /events/gates - data columns: [/events/gates@TextLog:level /events/gates@TextLog:text]\nChunk(chunk_18CA4DA9CC47BCDC066a3c3f89a4c380) with 34 rows (479 KiB) - /assembly/moving_jaw_pose - data columns: [/assembly/moving_jaw_pose@Points3D:colors /assembly/moving_jaw_pose@Points3D:positions /assembly/moving_jaw_pose@Points3D:radii]\nChunk(chunk_18CA4DA9CC518824066a3c3f89a4c381) with 1 rows (1.5 KiB) - /object/footprint_ring - data columns: [/object/footprint_ring@LineStrips3D:colors /object/footprint_ring@LineStrips3D:radii /object/footprint_ring@LineStrips3D:strips]\n",
+    "stderr": "",
+    "ok": true
+  },
+  "entity_path_contract": {
+    "observed_all": [
+      "/__properties",
+      "/assembly/gripper_link_moving_jaw",
+      "/assembly/link5_fixed_jaw",
+      "/assembly/moving_jaw_pose",
+      "/assembly/tcp",
+      "/assembly/tool_axis",
+      "/blueprint_panel",
+      "/container/4f0419a9-4b12-4dab-9148-c46d018cd7ea",
+      "/container/b01b0468-e28f-42f9-a707-0cec6931c61f",
+      "/container/ed2d16c7-1a97-47e5-9b6f-0a04ea409399",
+      "/events/gates",
+      "/metadata/run",
+      "/object/cylinder_D29",
+      "/object/footprint_ring",
+      "/object/topface_plane",
+      "/plots/bite_mm",
+      "/plots/depth_top_min_mm",
+      "/plots/moving_jaw_bite_mm",
+      "/plots/q5_deg",
+      "/selection_panel",
+      "/time_panel",
+      "/view/6cbd4293-b271-4b2a-a74f-5df92e896a17",
+      "/view/6cbd4293-b271-4b2a-a74f-5df92e896a17/ViewContents",
+      "/view/b61dd65f-6e66-495e-824a-20cbb398b2ce",
+      "/view/b61dd65f-6e66-495e-824a-20cbb398b2ce/ViewContents",
+      "/view/d9c6e169-d8c5-4359-a989-430726a209cf",
+      "/view/d9c6e169-d8c5-4359-a989-430726a209cf/ViewContents",
+      "/view/f4a00f15-d862-42b2-8236-254d178e981e",
+      "/view/f4a00f15-d862-42b2-8236-254d178e981e/ViewContents",
+      "/view/fed647b3-78bc-45d8-b10d-a3004b1605f0",
+      "/view/fed647b3-78bc-45d8-b10d-a3004b1605f0/ViewContents",
+      "/viewport"
+    ],
+    "observed_non_system": [
+      "/assembly/gripper_link_moving_jaw",
+      "/assembly/link5_fixed_jaw",
+      "/assembly/moving_jaw_pose",
+      "/assembly/tcp",
+      "/assembly/tool_axis",
+      "/events/gates",
+      "/metadata/run",
+      "/object/cylinder_D29",
+      "/object/footprint_ring",
+      "/object/topface_plane",
+      "/plots/bite_mm",
+      "/plots/depth_top_min_mm",
+      "/plots/moving_jaw_bite_mm",
+      "/plots/q5_deg"
+    ],
+    "checks": {
+      "/metadata/run": true,
+      "/assembly/link5_fixed_jaw": true,
+      "/assembly/gripper_link_moving_jaw": true,
+      "/assembly/moving_jaw_pose": true,
+      "/assembly/tcp": true,
+      "/assembly/tool_axis": true,
+      "/object/cylinder_D29": true,
+      "/object/topface_plane": true,
+      "/object/footprint_ring": true,
+      "/plots/q5_deg": true,
+      "/plots/bite_mm": true,
+      "/plots/depth_top_min_mm": true,
+      "/plots/moving_jaw_bite_mm": true,
+      "/events/gates": true
+    },
+    "forbidden_fragment_absent": {
+      "/\\/": true
+    },
+    "exact_non_system_match": true,
+    "missing_exact": [],
+    "unexpected_non_system": [],
+    "pass": true
+  },
+  "component_contract": {
+    "checks": {
+      "/metadata/run": {
+        "required": [
+          "TextDocument:text"
+        ],
+        "observed": [
+          "TextDocument:media_type",
+          "TextDocument:text"
+        ],
+        "pass": true
+      },
+      "/assembly/link5_fixed_jaw": {
+        "required": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "observed": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true
+      },
+      "/assembly/gripper_link_moving_jaw": {
+        "required": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "observed": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true
+      },
+      "/assembly/moving_jaw_pose": {
+        "required": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "observed": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true
+      },
+      "/assembly/tcp": {
+        "required": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "observed": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true
+      },
+      "/assembly/tool_axis": {
+        "required": [
+          "LineStrips3D:colors",
+          "LineStrips3D:radii",
+          "LineStrips3D:strips"
+        ],
+        "observed": [
+          "LineStrips3D:colors",
+          "LineStrips3D:radii",
+          "LineStrips3D:strips"
+        ],
+        "pass": true
+      },
+      "/object/cylinder_D29": {
+        "required": [
+          "LineStrips3D:colors",
+          "LineStrips3D:radii",
+          "LineStrips3D:strips"
+        ],
+        "observed": [
+          "LineStrips3D:colors",
+          "LineStrips3D:radii",
+          "LineStrips3D:strips"
+        ],
+        "pass": true
+      },
+      "/object/topface_plane": {
+        "required": [
+          "LineStrips3D:colors",
+          "LineStrips3D:radii",
+          "LineStrips3D:strips"
+        ],
+        "observed": [
+          "LineStrips3D:colors",
+          "LineStrips3D:radii",
+          "LineStrips3D:strips"
+        ],
+        "pass": true
+      },
+      "/object/footprint_ring": {
+        "required": [
+          "LineStrips3D:colors",
+          "LineStrips3D:radii",
+          "LineStrips3D:strips"
+        ],
+        "observed": [
+          "LineStrips3D:colors",
+          "LineStrips3D:radii",
+          "LineStrips3D:strips"
+        ],
+        "pass": true
+      },
+      "/plots/q5_deg": {
+        "required": [
+          "Scalars:scalars"
+        ],
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true
+      },
+      "/plots/bite_mm": {
+        "required": [
+          "Scalars:scalars"
+        ],
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true
+      },
+      "/plots/depth_top_min_mm": {
+        "required": [
+          "Scalars:scalars"
+        ],
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true
+      },
+      "/plots/moving_jaw_bite_mm": {
+        "required": [
+          "Scalars:scalars"
+        ],
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true
+      },
+      "/events/gates": {
+        "required": [
+          "TextLog:level",
+          "TextLog:text"
+        ],
+        "observed": [
+          "TextLog:level",
+          "TextLog:text"
+        ],
+        "pass": true
+      }
+    },
+    "pass": true
+  },
+  "timeline_contract": {
+    "observed": [
+      "blueprint",
+      "log_time",
+      "q5_index"
+    ],
+    "checks": {},
+    "exact_match": true,
+    "pass": true
+  },
+  "footer_manifest_present": true,
+  "blueprint_verify": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "verify",
+      "--check-footers",
+      "true",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3r_n7_assembly_timeline.rbl"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "1 file verified without error.\n",
+    "ok": true,
+    "attempted": true,
+    "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3r_n7_assembly_timeline.rbl",
+    "bytes": 55768,
+    "sha256": "613e8a3a81a5aa105b9074e56ac89c1d0822cc8aae5da49979c4d498f9186b62"
+  },
+  "headless_render": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "--headless",
+      "--window-size",
+      "2400x1400",
+      "--screenshot-to",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3r_n7_assembly_inspection.png",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3r_n7_assembly_timeline.rrd"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "\u001b[2m2026-08-10T01:33:14.102724Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mre_perf_telemetry::telemetry\u001b[0m\u001b[2m:\u001b[0m Telemetry initialized \u001b[3menabled\u001b[0m\u001b[2m=\u001b[0mfalse \u001b[3mservice\u001b[0m\u001b[2m=\u001b[0mrerun \u001b[3mtrace_mode\u001b[0m\u001b[2m=\u001b[0m\"off\" \u001b[3mtraces\u001b[0m\u001b[2m=\u001b[0moff \u001b[3mlogs\u001b[0m\u001b[2m=\u001b[0moff \u001b[3mmetrics\u001b[0m\u001b[2m=\u001b[0moff \u001b[3mtracy\u001b[0m\u001b[2m=\u001b[0mfalse\n\u001b[2m2026-08-10T01:33:14.361018Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mre_grpc_server\u001b[0m\u001b[2m:\u001b[0m Listening for gRPC connections on 0.0.0.0:9876. Connect by running `rerun --connect rerun+http://127.0.0.1:9876/proxy`\n\u001b[2m2026-08-10T01:33:14.361179Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mre_importer::import_file\u001b[0m\u001b[2m:\u001b[0m Loading \"/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3r_n7_assembly_timeline.rrd\"\u2026\n\u001b[2m2026-08-10T01:33:14.457381Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mre_viewer::headless\u001b[0m\u001b[2m:\u001b[0m Headless viewer running at 2400x1400.\n\u001b[2m2026-08-10T01:33:14.690212Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mre_viewer::screenshotter\u001b[0m\u001b[2m:\u001b[0m Screenshot saved to \"/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3r_n7_assembly_inspection.png\"\n\u001b[2m2026-08-10T01:33:14.704533Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mre_viewer::screenshotter\u001b[0m\u001b[2m:\u001b[0m Screenshot copied to clipboard\n\u001b[2m2026-08-10T01:33:14.707399Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mre_viewer::headless\u001b[0m\u001b[2m:\u001b[0m Headless viewer received close request, shutting down.\n",
+    "ok": true,
+    "attempted": true,
+    "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3r_n7_assembly_inspection.png",
+    "file_nonzero": true,
+    "bytes": 5391203,
+    "sha256": "c169b0520b5e52c8dc3968e98cc1a7b5fa78bb3b9f96eb954d209aeea9d8f6a8"
+  },
+  "errors": [],
+  "pass": true
+}
