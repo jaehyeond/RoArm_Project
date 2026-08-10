@@ -25826,3 +25826,170 @@ Evidence:
   `sim_scripts/g0b_t3r_n8b_tiltmin_readonly_audit.py`;
   기움 실측 원문 = DECISIONS **D420** Implication ②; 완전 수직 사전등록 = **D421** ·
   `g0b_d420/t3_prereg.md`; 물리 시행 = **D424** Evidence ②; 조립 판정 = **D430**.
+
+## D432 — 기운 접근은 기구학적으로 도달 가능하다, 단 기움 방향은 팔의 수직 평면 하나로 붕괴한다: D431이 비워 둔 `tilted_pose_ik_reachability`를 채우고 41st의 "테이블 미모델" 한계를 이 자세 집합에 한해 해소한다 (읽기 전용 기구학 verdict — 물리/force-closure/파지 성공 주장 아님)
+
+- **Evidence**: 2026-08-10 42nd 세션, 읽기 전용 실행 1회
+  (`g0b_d420/t3r_n9_tiltik_results.json`, 디스크 실물 sha **`fcd46e8658c8e9fc`** / 941,461 B;
+  wall 1845.2 s; **게이트 9/9 PASS**, stderr **0 B**, exit 0). Isaac 0 / 로봇 0 / 설치 0 /
+  Gate-0 재실행 0 / T2·T2b 재실행 0 / 덮어쓰기 0 / 동결 스크립트 수정 0 / 신규 패널 0 / git 0.
+  검정 대상 = D431 산출물 자신이 명시한 빈칸 `"tilted_pose_ik_reachability": "NOT ESTABLISHED
+  - T2/T2b tested the vertical axis only"` + 41st §7 "테이블 미모델".
+  기구학은 동결 T2 프로브에서, 메시·URDF 파싱은 동결 41st 스크립트에서 **verbatim import**
+  (재도출 0건).
+  (1) **재현 게이트 6/6, 전건 정확히 0**: N9b 전체회전 FK vs 동결 `fk_points` d_tcp/d_link5
+  **0.000e+00 m** · **N9c theta=0이 동결 `t2`(`T2_PASS`)와 `t2b`(`T2B_PASS`) 둘 다 재현**
+  (8 named pose x 2 z x 2 참조, max|dpos| **0.000e+00 mm** / max|daxis| **0.000e+00 deg**) ·
+  N9d 이동 조 z **[41.2676, 119.1176] mm**(40th N8d) · N9e theta=0에서 psi 불변 **0.000e+00** ·
+  **N9f 손목 롤 닫힌 형식 잔차 0.000e+00 deg**. 새 수식이 theta=0에서 옛 수식과 동일 코드 경로임의 증명.
+  (2) **verdict `TILTED_IK_REACHABLE`**: 핀 스폰 `seed0_S1`(+0.213696, -0.195719)에서 theta 사다리
+  **10/10 전부 통과**(하강+접근 동시, URDF 한계, q4 범위 내, 지면 간섭 없음). 최소 축오차는
+  theta=0의 0.4457도에서 theta=35의 **1.9551도**까지로 5도 게이트에 한참 못 미친다.
+  (3) ★★ **방향 붕괴 — 이 세션의 실제 발견**: 통과 방위 수가 theta=0/3에서 **24/24** -> theta=6 **13/24**
+  -> theta=10 **5** -> theta=15 **3** -> theta=17/20 **2** -> **theta=24/29/35에서 1/24**로 붕괴하고, 끝까지 남는
+  방위는 **psi=315도** = 핀 자신의 방위 **317.5142도**의 최근접 격자점이다. 원인은 5-DOF 구조 —
+  베이스 회전 q0가 팔의 수직 평면을 정하고 이후 3 관절은 그 평면 안에서만 도구축을 움직인다.
+  theta=10까지 살아 있던 반대편 psi=135도는 theta>=15에서 소멸.
+  (4) **손목 롤은 D431의 phi*를 정확히 만든다**(N9f 잔차 0) — 필요 q4 값 집합은
+  **{-90.0, -75.0, +90.0, +105.0}** 뿐이고 통과행 **71/76이 정확히 +-90.0도**.
+  URDF 한계 +-180도(`roarm_m3.urdf:221`) 안이라 sim 권위로는 여유롭지만 **v6-clip +-90도
+  (`sim_scripts/roarm_kinematics.py:34`) 경계 위**이고 **theta=10의 105도는 v6-clip 밖**이다.
+  => 안전 문제가 아니라 **분포 이탈 경고**(v6 실물이 가 본 적 없는 손목 각도).
+  (5) **지지면 간섭 없음**: 157개 평가 자세 전부 조 최저점이 지지면 위, **최소 여유 35.0071 mm**
+  (theta=35), theta=0의 50.064 mm에서 단조 감소하되 0에 접근하지 않는다.
+  세계 규약은 **T2b/T3 규약**(지지면 z=0, 상면 z=0.050)을 `t3_prereg.md:176-179`에서 재고정 —
+  T2의 `TABLE_Z=-0.012117`을 썼으면 12.117 mm 틀렸을 자리다.
+  (6) **테이블 격자 theta=17도**: 기움 통과 **369/513** vs 수직 T2b 참조 **264/513**,
+  양쪽 통과 264, **기움 전용 105**, **수직 전용 0**.
+  (7) D341 `validate_rerun_artifact` **pass=True errors=[]**(rerun 0.34.1 핀, footer `rrd verify`,
+  exact entity 15 · timeline 3(`theta_index`) · component 계약, blueprint + `.rbl`,
+  headless 2400x1400) + **실제 육안 검수 2건** — 관측/한계는 42nd doc 6-1.
+- **Implication**: (1) **D431의 마지막 기구학 공백이 닫혔다** — 기운 접근은 실행 가능하고,
+  START_HERE 3-(1)("기움 승인 시 필수 선행")은 **완료**다. 다음 미결은 (2)(q5 24도 근방 세밀화)와
+  (3)(T3 물리 재개)이며 **(3)부터 Isaac + 사용자 승인이 필요**하다.
+  (2) ★ **교수님께 드릴 요청의 형태가 바뀐다** — "기움을 허용해 주십시오"가 아니라
+  **"기울이되 방향은 로봇이 물체를 바라보는 반경 방향(팔의 수직 평면) 안으로 자동 제한됩니다"**.
+  이는 추가 제약이 아니라 **사양이 저절로 좁아진 것**이고 T1 실물 자세(0~35도 가변, D420 (2))와
+  모순되지 않는다. **D419 변경은 여전히 교수님 사안**(HARD RULE #18).
+  (3) **T3 재개 시 접근 자세 사양**: `psi = 셀 방위(반경 바깥)`, `theta in [15, 29]`,
+  닫힘 목표 **~14~22도**(D431 (6)). theta=17에서 지면 여유 44.735 mm, 축오차 0.807도.
+  (4) **(A) 수제 저작(Arm-F) 기각 권고가 강화된다** — 저작 없이 되는 경로가 이제
+  **기하(D431) + 기구학(D432) 양쪽**에서 확인됐다. D426 (1) 두 분기 밖 제3 경로는 유지.
+  (5) **한계(주장하지 않는 것)**: 기구학 + 강체 간섭만 — **접촉 물리/마찰/서보 토크 없음**,
+  **파지 성공 예측 아님** / **force closure 미증명**(D431 양수 물림은 이동 조 한쪽뿐) /
+  **시각 메시 기준**(attempt3 충돌 USD 아님, 40th/41st와 동일 근사) / **psi 격자 15도**라
+  통과 창의 참 경계 +-15도 미결정 / **테이블은 무한 평면 z=0**(두께/모서리 없음), **자기 충돌과
+  팔 링크 vs 원통 간섭 미검사**(조 2개만) / 격자는 **theta 하나 x psi 오프셋 2개**(declared) /
+  **(6)의 T2b 비교는 게이트가 달라 지시적**(하강 타깃 delta 1.9 mm 차 + 축 게이트 기준축 상이 +
+  q4/여유 조건 추가) => 안전한 진술은 **"수직 전용 셀 0개"**까지이고 "기움이 작업공간을 늘린다"는
+  **동일 게이트 재측정 필요**(D428 #29 계열) / **적대 재검증 0회**(D423/D428 #25 — 이제
+  40th/41st/42nd 세 판정 모두).
+  (6) **D427 · D429 · D430 · D431 불변** — 재실행 0, 재판정 0. `g0a_pass=false` 불변,
+  "T1이 파지력 증명" 표현 금지 불변. 실물 로봇 파지는 프로포절 일정 밖(T4~T7 대기).
+- **Source**: `claudedocs/session_20260810_42nd_g0b_t3r_n9_tilted_ik.md`;
+  `g0b_d420/t3r_n9_tiltik_{results.json(fcd46e8658c8e9fc, 941461 B),timeline.rrd
+  (8654474deaf273f3),timeline.rbl(06f446bac268b319),rerun_validation.json(ab0c80d566d2bf16),
+  inspection.png(192e2e34532479e4),diagnostic.png(486eddf678ee3ef6),script.py.txt
+  (c04f7adf00dd0684),grid.csv(5d470840a48e9e90),run_std{out,err}.log}`;
+  `sim_scripts/g0b_t3r_n9_tilted_axis_ik_reachability_readonly_probe.py`;
+  verbatim import 원본 = `sim_scripts/p8_g0b_t2_cyld29h50_vertical_tool_axis_ik_reachability_probe.py`
+  (`:4` "NO Isaac launch") · `sim_scripts/g0b_t3r_n8_tilt_admission_readonly_audit.py`;
+  세계 규약 = `g0b_d420/t3_prereg.md:176-179`; 기움 실측 = **D420** Impl.(2);
+  수직 도달성 = **D421**(`t2_ik_results.json`) + T2b(`t2b_ik_results.json`);
+  기움 진입 기하 = **D431**; 조립 대조 = **D430**;
+  `local_assets/roarm_m3/urdf/roarm_m3.urdf:221`; `sim_scripts/roarm_kinematics.py:34`.
+
+## D433 — 기움은 접근 문제를 실제로 풀었다(하강 도달), 그러나 닫으면 이 그리퍼는 D29 원통을 집는 게 아니라 넘어뜨린다: 병목이 접근 각도에서 **접촉 위상**으로 이동한다 (물리 probe verdict 3 leg + 읽기 전용 사전 점검 — 실물 파지력 주장 아님)
+
+- **Evidence**: 2026-08-10 43rd 세션. 교수님이 접근 기움을 허용(사용자 전달) ⇒ START_HERE 42nd판
+  `:90`의 유일한 열린 결정이 닫혔고 D419의 **파지점은 불변, 각도만 완화**(HARD RULE #18 준수).
+  실행 = 읽기 전용 1회 + **Isaac 물리 3 leg**. Gate-0 재실행 0 / T2·T2b 재실행 0 / 덮어쓰기 0 /
+  동결 소스 수정 0 / 재분해 0 / 신규 패널 0 / git 0 / 로봇 0.
+  (1) **읽기 전용 사전 점검 `t3r_n10_ctq5`**(sha `236243d4cfaa58ae` / 1,437,511 B, wall 465.3 s,
+  게이트 **9/9 PASS**). 검정 대상 = ⓐ 41st 5-2가 남긴 닫힘 목표 미결정, ⓑ **모든 기움 수치가
+  시각 메시에서 나왔는데 T3가 로드하는 것은 동결 attempt3 충돌 USD**라는 공백(D428 #29).
+  재현: D427 `l_vis` **4.457620117188**/n_pts **2,266,503** · θ=0 vs 40th Δ **1.066e-14 mm** ·
+  n8 헤드라인 Δ **0.000e+00** · **41st 사다리 9행 전건 Δ 0.000e+00** · URDF 관절 == USD 관절
+  max **6.854e-08** · **충돌 자산 고정조 첨두 − 시각 `l_vis` = +3.338e-06 mm**(= D427이 기록한
+  cook 충실도의 독립 재현) · 64+64 enabled convexHull이고 **legacy collider는 양쪽 다
+  `collisionEnabled=False`**(제외가 곧 물리와 동일; D425 (3)의 legacy 잔존은 world/link1~4 건).
+  ⇒ **verdict `COLLISION_ASSET_ADMITS_TILTED_BITE`**: θ=29에서 시각 **+12.161073603025956** vs
+  충돌 **+12.161076571092284**, 차 **+2.968e-06 mm** ⇒ **두 자산이 사실상 동일**하므로 D431/D432의
+  기움 결론은 소비 기하에서도 성립한다.
+  0.1° 세밀화로 41st 5-2 해소: 양수 물림 창 상단은 22.50이 아니라 θ에 따라 **20.50~27.70**이고,
+  q5=24.00은 **θ 6/10/15/17에서 창 밖 · θ 20/24/29/35에서 창 안**이다. **θ=0에서는 창 자체가
+  없다** ⇒ T3가 놓친 것은 닫힘 각도가 아니라 **기움**(D431 재확인). ★ 물림은 창 상단에서
+  **계단으로 끊긴다**(θ=29: q5 26.0° **−7.0669** → 25.8° **+12.1611 mm**) ⇒ 최댓값을 닫힘 목표로
+  잡으면 안 된다.
+  (2) **물리 3 leg**(`p10_g0b_t3t_...py` = 동결 p9 sha `99c99c65da75d5b7`의 신규 파일 파생,
+  델타 T-1~T-9 사전등록, 하네스·가드·게이트·D341 계약 verbatim 승계). 실행 전 게이트:
+  **T3T-a θ=0에서 p9와 문자 그대로 동일(차이 0.0/0.0)** · T3T-b n10 산출물 일치 ·
+  **T3T-c 손목 롤 +90.000°, 잔차 0.0**.
+  ★★ **3 leg 전부 approach 44wp 완주 + descend wp006 도달**(잔차 **1.993 mm**, 게이트 3 mm).
+  D424/attempt1은 **같은 wp006**에서 3.917 mm 포화 정지했고 prereg가 "descend 목표 자체가 기하
+  위반"으로 결론지었다 ⇒ **기움이 그 위반을 물리 층에서 제거했다.**
+  그러나 **3 leg 전부 `LIFT_FAIL`**: 닫힘 종점 24.50°/19.50°/17.00°, lift_follow
+  **−0.373 / −0.356 / −0.264 mm**(게이트 +6), early_kill 0, **`posewrite_calls=0`**, 게이트 완화 0.
+  (3) ★ **leg 1 원인**: 실행 깊이에서 이동 조가 벽에 처음 간섭하는 각도 **q5 20.6°**인데 24.50°에서
+  멈춤 ⇒ **접촉까지 3.9° 부족**, `gripper_stalled` 전건 false가 독립 확증. **애초에 닿지 않았다.**
+  (4) ★★ **leg 3이 접촉 개시를 물리에서 실측**: q5 21.0~19.5에서 변위 ≤0.0008 mm·기움 1.502~1.504°
+  (무반응) → **19.0°에서 변위 0.0685 mm로 첫 반응** → 18.5/18.0/17.5/**17.0**에서 변위
+  0.1493/0.1834/0.2340/**0.2823 mm**, 기움 1.665/2.033/2.506/**3.075°**.
+  **정적 모델은 접촉 개시를 20.6°(지령 깊이)/≈19.85°(실제 도달 깊이)로 예측** ⇒ **모델이 물리보다
+  0.85~1.6° 낙관적**(조 이동 약 1~2 mm). 깊이도 실측: 지령 δ **−1.0998 mm** vs 실제 도달 δ
+  **+0.6885 mm** ⇒ **컨트롤러 잔차 1.788 mm가 전부 축방향**.
+  (5) ★★ **핵심 관측**: 접촉 후 **물체 기움이 닫을수록 단조 증가**(1.478 → 3.075°)하는데 변위는
+  0.28 mm에 그치고, 조는 **8.457 mm 간섭을 지령받고도 끝내 stall하지 않으며**, LIFT에서 물체는
+  따라오지 않는다 ⇒ **닫는 동작이 물체를 집는 게 아니라 밀어 넘어뜨린다.** D431 (5)-1이 기술한
+  "이동 조 한쪽만 무는 후크"와 정확히 일치하고, 반작용을 받을 상대면이 없어 원통이 눌리는 대신
+  회전한다. **힘 닫힘 부재가 3 leg · 닫힘 각도 39 표본 · 게이트 완화 0으로 실증됐다.**
+  (6) D341 4개 실행 전부 `validate_rerun_artifact` **pass=True errors=[]** + **실제 육안 검수 3건**
+  (관측/한계는 43rd doc 4). ★ 42nd 6-1 한계 2(스크린샷이 θ=0)를 blueprint 절대 시퀀스 고정으로
+  해소 — 패널 2가 "PINNED to the decision tilt theta=29 deg"이고 기운 원통이 실제로 보인다.
+- **Implication**: (1) ★ **병목이 이동했다.** D424→D430→D431→D432가 좁혀 온 "접근" 문제는
+  **해결됐다**(하강 도달이 물리로 증명). 남은 것은 **접촉 위상** — 이 그리퍼는 D29 원통에 한쪽
+  접촉만 만들 수 있다. **이것은 자세 문제가 아니라 기하/과제 사양 문제다.**
+  (2) **저작 없이 가능한 경로 3(전부 사용자/교수님 사안, 단독 진행 금지)**: ⓐ **물체 D ≤ 16 mm**
+  (D430 F2가 이미 권고; 동결 자산 그대로 즉시 재시행 가능, HARD RULE #18) ⓑ **옆면 양측 파지로
+  전환**(D419가 상면 중심을 지정했으므로 교수님 사안) ⓒ **모델-물리 편차 ≈1~2 mm 규명 후 재시도**.
+  (3) **(A) 수제 저작(Arm-F) 기각 권고가 다시 강화된다** — 손가락을 붙여 고칠 대상은 접근인데,
+  접근은 이미 된다.
+  (4) **T3 재개 시 실무 수치**: 접촉 개시 **q5 ≈ 19.0°**(모델값 아님, 실측) / 하강 목표는 컨트롤러
+  잔차 **1.788 mm**를 보정해 더 깊게 / 닫힘 목표를 **물림 최댓값에 두지 말 것**(창 상단이 계단).
+  (5) **환경 상수 함정(신규 기록)**: `roarm_stack_env.py:380,1185-1186`의
+  `grasp_gripper_thresh = 0.4 rad`는 env 자신의 **cube 시대 규약(LARGE = CLOSED)** 하에서 저작됐다.
+  동결 grasp-track 규약은 **LARGE = OPEN**(D-1)이므로 이 상수는 **조가 드디어 물체에 닿는 각도에서
+  `_grasped`를 지우는 바닥**으로 작동하고, `_verdict`가 `latch.grasped_seen`를 요구하므로
+  **물리적으로 물고 있어도 `LATCH_FAIL`이 난다** — 물리 실패가 아니라 **계측 인공물**이다.
+  probe가 자기 `cfg` 인스턴스에만 0.20 rad로 설정했고 **env 기본값 파일은 수정하지 않았다**.
+  (6) **한계(주장하지 않는 것)**: **실물 주장 아님**(`g0a_pass=false` 불변, T4~T7 대기) /
+  **마찰 0.40/0.30은 사전등록 가정이고 미측정** — 감도 분석 미실시 / **모델-물리 편차의 원인 미규명**
+  (후보 = scipy 껍질 vs PhysX cook, 원통 프리미티브 다면체 근사, 도구축 각오차 0.37° 레버,
+  닫힘 `reached` 밴드 0.75°; 전부 [가설]) / **θ=29 단일 값·스폰 `seed0_S1` 1점**만 물리 시행 /
+  **적대 재검증 0회**(D423/D428 #25 — 40th·41st·42nd·43rd 네 판정 모두) /
+  **D427·D429·D430·D431·D432 불변**(재실행 0, 재판정 0).
+  (7) **자진 신고 2건**: ⓐ 부트 중 LEDGER `tail -6`으로 거대 행 6개 전문을 읽어 42nd가 자진 신고한
+  실패를 반복 ⓑ leg 2 1차 실행이 **내 사전 게이트 T3T-b에 막혔다**(`PREFLIGHT_FAIL`, Isaac 기동 전,
+  산출물 0) — leg 2가 의도적으로 지령하는 간섭을 tuple이 선언하지 않았기 때문. **게이트가 옳았고**,
+  델타 T-8 `--allow_closing_interference`로 명시 선언을 요구하도록 고쳤다. leg 1 생산 소스는
+  편집 전에 `t3t_grasp_script.py.txt`(sha `6861c35f94ed6427`)로 동결.
+  (8) **문서 무결성 관찰(정정 아님)**: `/half-clone` 거부 카운터가 START_HERE 42nd판/42nd doc = **45**,
+  LEDGER 42nd 행 = **44**로 갈린다. 42nd doc 말미 산술("43+1=44")과 같은 문단 서술("2회 요구, 2회
+  거부")이 불일치. **41st말 43 + 42nd 2회 = 45가 정합**이고 LEDGER 행이 이탈치. LEDGER는
+  append-only이므로 행을 고치지 않고 여기와 43rd doc 5에 기록만 남긴다. 43rd는 세션 말미(context 234%) stop-hook 요구 **1회 · 거부 1회** ⇒ **46**.
+- **Source**: `claudedocs/session_20260810_43rd_g0b_t3t_tilted_grasp_physics.md`(**2-4·3-5·3-6·6** 먼저);
+  `g0b_d420/t3r_n10_ctq5_{results.json(236243d4cfaa58ae, 1437511 B),timeline.rrd,timeline.rbl,
+  rerun_validation.json,inspection.png,diagnostic.png,script.py.txt(deef75a028b8948c),curves.csv,
+  run_std{out,err}.log}`; `g0b_d420/t3t_prereg.md`(76c9a80435cf574a);
+  `g0b_d420/t3t_grasp_{results.json(06ddff578b565e3a),timeline.rrd(5c6e713f07f05a19),script.py.txt
+  (6861c35f94ed6427)}` · `t3t_grasp2_{results.json(a03d1bc8b6559a6a),timeline.rrd(071d040658d85901)}` ·
+  `t3t_grasp3_{results.json(f6ca15ae8dd9f662),timeline.rrd(ae65dd657dd10d31),timeline.rbl
+  (616fa470cba88129),rerun_validation.json(11517a5625dc7026),inspection.png(b37ee216fb10235e),
+  steps.csv(20286054c90ac286)}`;
+  `sim_scripts/g0b_t3r_n10_collision_asset_tilt_and_q5_refine_readonly_audit.py`;
+  `sim_scripts/p10_g0b_t3t_cyld29h50_tilted_close_sweep_grasp_probe.py`(63c6b2127d969e32);
+  verbatim import 원본 = `sim_scripts/g0b_t3r_n8_tilt_admission_readonly_audit.py` ·
+  `sim_scripts/g0b_t3_attempt3_jaw_throat_occlusion_readonly_vertex_audit.py` ·
+  `sim_scripts/g0b_t3r_n9_tilted_axis_ik_reachability_readonly_probe.py:118-125,200-212,365-371` ·
+  `sim_scripts/p9_g0b_t3_cyld29h50_top_center_vertical_close_sweep_grasp_probe.py`(99c99c65da75d5b7);
+  `roarm_rl/roarm_stack_env.py:380,1185-1186`; 이전 판정 = D424 · D430 · D431 · D432.

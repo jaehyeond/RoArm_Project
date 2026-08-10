@@ -1,0 +1,475 @@
+{
+  "artifact": "G0B_T3_CYLD29H50_TOP_CENTER_VERTICAL_GRASP_V1",
+  "case": "g0b_d420",
+  "tag": "t3t_grasp2",
+  "verdict": "LIFT_FAIL",
+  "usd": {
+    "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/roarm_m3.usd",
+    "root_sha256": "a4be58e87b1f9790f2a2ed600f0620c79d3cfb95c608b3c598308d52f5e46fff",
+    "physics_sha256": "043a5d35aa425c2589c77a34fcf415401ce9f9e7155e84ed75f6737df79fb503",
+    "stage_audit_pass": true,
+    "body_checks": {
+      "link5": {
+        "enabled_total": 64,
+        "enabled_part_count": 64,
+        "part_count_64": true,
+        "enabled_only_parts": true,
+        "legacy_rows": 1,
+        "disabled_legacy_exact_one": true
+      },
+      "gripper_link": {
+        "enabled_total": 64,
+        "enabled_part_count": 64,
+        "part_count_64": true,
+        "enabled_only_parts": true,
+        "legacy_rows": 1,
+        "disabled_legacy_exact_one": true
+      }
+    }
+  },
+  "object": {
+    "shape": "cylinder",
+    "size_m": [
+      0.029,
+      0.029,
+      0.05
+    ],
+    "mass_kg": 0.02483,
+    "static_friction": 0.4,
+    "dynamic_friction": 0.3,
+    "restitution": 0.0,
+    "friction_provenance": "preregistered assumption (t3_mass_friction_contract.md), NOT measured"
+  },
+  "materials_runtime": [
+    {
+      "path": "/physicsScene/defaultMaterial",
+      "static_friction": 1.0,
+      "dynamic_friction": 1.0,
+      "restitution": 0.0,
+      "friction_combine_mode": "multiply",
+      "restitution_combine_mode": "multiply"
+    },
+    {
+      "path": "/World/envs/env_0/Sponge/geometry/material",
+      "static_friction": 0.4000000059604645,
+      "dynamic_friction": 0.30000001192092896,
+      "restitution": 0.0,
+      "friction_combine_mode": "average",
+      "restitution_combine_mode": "average"
+    },
+    {
+      "path": "/World/ground/terrain/physicsMaterial",
+      "static_friction": 1.0,
+      "dynamic_friction": 1.0,
+      "restitution": 0.0,
+      "friction_combine_mode": "multiply",
+      "restitution_combine_mode": "multiply"
+    }
+  ],
+  "tilt_preflight": {
+    "T3T_a_reduces_to_p9_at_theta0": {
+      "pass": true,
+      "max_dev": 0.0
+    },
+    "T3T_b_matches_n10_collision_measurement": {
+      "pass": true,
+      "n10_results": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3r_n10_ctq5_results.json",
+      "n10_verdict": "COLLISION_ASSET_ADMITS_TILTED_BITE",
+      "phi_star_deg_from_artifact": 0.0,
+      "phi_star_deg_commanded": 0.0,
+      "descend_delta_m_from_artifact": -0.0010997959999999999,
+      "descend_delta_m_commanded": -0.0010997957078144082,
+      "bite_at_terminal_close_mm": 8.642904,
+      "bite_at_descend_opening_mm": -7.066895,
+      "positive_window_deg": [
+        {
+          "q5_lo_deg": 14.7,
+          "q5_hi_deg": 25.8,
+          "grid_step_deg": 0.1,
+          "edge_uncertainty_deg": 0.1
+        }
+      ],
+      "terminal_close_inside_window": true,
+      "descend_depth_invariant_over_sweep_mm": [
+        -1.099796,
+        -1.099796,
+        -1.099796,
+        -1.099796,
+        -1.099796,
+        -1.099796,
+        -1.099796,
+        -1.099796,
+        -1.099796,
+        -0.825297,
+        0.351758,
+        1.526236
+      ],
+      "commanded_interference_mm_by_close_angle": {
+        "88.31": 0.0,
+        "60.0": 0.0,
+        "45.0": 0.0,
+        "41.4": 0.0,
+        "35.0": 0.0,
+        "30.0": 0.0,
+        "25.0": 0.0,
+        "22.0": 0.0,
+        "21.0": 0.0,
+        "20.5": 0.27449900000000005,
+        "20.0": 1.451554,
+        "19.5": 2.626032
+      },
+      "max_commanded_interference_mm": 2.626032,
+      "close_angles_that_command_contact": [
+        20.5,
+        20.0,
+        19.5
+      ],
+      "allow_closing_interference": true
+    },
+    "T3T_c_wrist_roll_delivers_phi_star": {
+      "pass": true,
+      "roll_deg": 90.0,
+      "residual_deg": 0.0,
+      "inside_v6_clip": true,
+      "urdf_limit_deg": 180.0
+    },
+    "tilt": {
+      "theta_deg": 29.0,
+      "psi_deg": 317.5141789665032,
+      "psi_source": "auto_radial_from_spawn(D432)",
+      "psi_auto_deg": 317.5141789665032,
+      "phi_star_deg": 0.0,
+      "target_axis_world": [
+        0.35752018911512096,
+        -0.3274441666276645,
+        -0.8746197071393957
+      ],
+      "achieved_world_tilt_from_vertical_deg": 28.630476138739404
+    }
+  },
+  "derived_from": {
+    "p9": "p9_g0b_t3_cyld29h50_top_center_vertical_close_sweep_grasp_probe.py",
+    "p9_sha256_16": "99c99c65da75d5b7",
+    "deltas": "T-1..T-5, see module docstring"
+  },
+  "plan": {
+    "label": "seed0_S1_settled_pose",
+    "center": [
+      0.21386313438415527,
+      -0.19572888314723969,
+      0.02499978616833687
+    ],
+    "world_grasp": [
+      0.21386313438415527,
+      -0.19572888314723969,
+      0.04999978616833687
+    ],
+    "approach_tcp": [
+      0.19995552598899624,
+      -0.18299123817113908,
+      0.0840226714540309
+    ],
+    "descend_tcp": [
+      0.21425633355360107,
+      -0.19608900483624567,
+      0.04903788316845507
+    ],
+    "lift_tcp": [
+      0.21425633355360107,
+      -0.19608900483624567,
+      0.05903788316845507
+    ],
+    "q_approach_deg": [
+      -42.46355782943011,
+      17.027943043621615,
+      117.12176678639553,
+      16.651459445325315,
+      90.0,
+      88.30998496351378
+    ],
+    "q_descend_deg": [
+      -42.46503566381761,
+      27.070793264208664,
+      115.35887447723425,
+      8.906808555013786,
+      90.0,
+      88.30998496351378
+    ],
+    "q_lift_deg": [
+      -42.46503655643618,
+      25.008846646826782,
+      114.50825100221832,
+      11.284928803199685,
+      90.0,
+      19.5
+    ],
+    "ik_err_mm": [
+      0.012892687991988689,
+      0.02095071992661216,
+      0.012397637006054592
+    ],
+    "ik_tilt_deg": [
+      0.19912529661444126,
+      0.3366255574943616,
+      0.19823141596708896
+    ]
+  },
+  "gates": {
+    "target_error_gate_m": 0.003,
+    "plan_tilt_gate_deg": 5.0,
+    "max_tcp_step_m": 0.01,
+    "waypoint_max_joint_dev_deg": 12.0,
+    "transit_polish_dev_deg": 2.0,
+    "transit_pos_band_mm": 0.5,
+    "transit_tcp_step_gate_m": 0.02,
+    "object_drift_gate_m": 0.006,
+    "object_speed_gate_mps": 0.08,
+    "lift_speed_gate_mps": 0.25,
+    "gripper_error_gate_deg": 0.75,
+    "tilt_gate_deg": 12.0,
+    "min_upright_z_gate": 0.95,
+    "min_lift_follow_m": 0.006,
+    "marker_dist_m": 0.03,
+    "marker_q5_max_deg": 41.4,
+    "close_deg": [
+      88.3096,
+      60.0,
+      45.0,
+      41.4,
+      35.0,
+      30.0,
+      25.0,
+      22.0,
+      21.0,
+      20.5,
+      20.0,
+      19.5
+    ],
+    "episode_length_s": 60.0,
+    "gripper_stall_rate_deg_per_step": 0.02,
+    "gripper_stall_min_steps": 5,
+    "continue_close_after_grasped_until_angles_done": true
+  },
+  "phases": {
+    "approach": {
+      "label": "approach_open_wp044",
+      "reached": true,
+      "gripper_stalled": false,
+      "steps": 7,
+      "final_target_error_m": 0.002118706725386859,
+      "max_tcp_step_m": 0.001769898070337557,
+      "max_object_drift_m": 2.4353285764626084e-06,
+      "max_object_speed_mps": 0.0007638532782715121,
+      "max_tilt_deg": 0.002357151992429559,
+      "min_upright_z": 0.9999999991537476,
+      "object_follow_delta_m": 1.6763806343078613e-08,
+      "grasped_seen": false,
+      "attach_calls": 0,
+      "posewrite_calls": 0,
+      "early_kill": false
+    },
+    "descend": {
+      "label": "descend_open_wp006",
+      "reached": true,
+      "gripper_stalled": false,
+      "steps": 7,
+      "final_target_error_m": 0.0019926310989311843,
+      "max_tcp_step_m": 0.0015579824820435367,
+      "max_object_drift_m": 2.45757375578274e-06,
+      "max_object_speed_mps": 0.0007623787701118152,
+      "max_tilt_deg": 0.0022985514762955093,
+      "min_upright_z": 0.9999999991953015,
+      "object_follow_delta_m": -1.862645149230957e-09,
+      "grasped_seen": false,
+      "attach_calls": 0,
+      "posewrite_calls": 0,
+      "early_kill": false
+    },
+    "latch": {
+      "label": "close_19.50deg",
+      "reached": true,
+      "gripper_stalled": false,
+      "steps": 3,
+      "final_target_error_m": 0.000382783855348624,
+      "max_tcp_step_m": 6.875557896530227e-07,
+      "max_object_drift_m": 3.9796144846301204e-07,
+      "max_object_speed_mps": 0.003747987273419867,
+      "max_tilt_deg": 1.5023515334613127,
+      "min_upright_z": 0.9996562497792749,
+      "object_follow_delta_m": -1.564621925354004e-07,
+      "grasped_seen": true,
+      "attach_calls": 6,
+      "posewrite_calls": 0,
+      "early_kill": false
+    },
+    "hold": {
+      "label": "stationary_hold_closed",
+      "reached": true,
+      "gripper_stalled": false,
+      "steps": 2,
+      "final_target_error_m": 0.00031712325964894925,
+      "max_tcp_step_m": 6.26470513830767e-05,
+      "max_object_drift_m": 3.1207853730381746e-05,
+      "max_object_speed_mps": 0.014363624319077131,
+      "max_tilt_deg": 1.5012004989370415,
+      "min_upright_z": 0.9996567762794509,
+      "object_follow_delta_m": -1.584552228450775e-05,
+      "grasped_seen": true,
+      "attach_calls": 4,
+      "posewrite_calls": 0,
+      "early_kill": false
+    },
+    "lift": {
+      "label": "tiny_lift_closed_10mm_wp002",
+      "reached": true,
+      "gripper_stalled": false,
+      "steps": 8,
+      "final_target_error_m": 0.0024499659066456593,
+      "max_tcp_step_m": 0.0010265711108140472,
+      "max_object_drift_m": 3.104488612673259e-06,
+      "max_object_speed_mps": 0.0007092582159559809,
+      "max_tilt_deg": 0.0038307286044086198,
+      "min_upright_z": 0.9999999977649486,
+      "object_follow_delta_m": -0.0003559030592441559,
+      "grasped_seen": true,
+      "attach_calls": 16,
+      "posewrite_calls": 0,
+      "early_kill": false
+    }
+  },
+  "path_ok": {
+    "approach": true,
+    "descend": true,
+    "lift": true
+  },
+  "close_records": [
+    {
+      "angle_deg": 88.3096,
+      "reached": true,
+      "gripper_stalled": false,
+      "grasped_seen": false,
+      "early_kill": false,
+      "max_object_drift_m": 2.0889812398850402e-06,
+      "max_tilt_deg": 0.0023295257355735767
+    },
+    {
+      "angle_deg": 60.0,
+      "reached": true,
+      "gripper_stalled": false,
+      "grasped_seen": false,
+      "early_kill": false,
+      "max_object_drift_m": 0.0007585198075871569,
+      "max_tilt_deg": 1.510354392955202
+    },
+    {
+      "angle_deg": 45.0,
+      "reached": true,
+      "gripper_stalled": false,
+      "grasped_seen": false,
+      "early_kill": false,
+      "max_object_drift_m": 5.743257230646174e-06,
+      "max_tilt_deg": 1.5218204554363386
+    },
+    {
+      "angle_deg": 41.4,
+      "reached": true,
+      "gripper_stalled": false,
+      "grasped_seen": false,
+      "early_kill": false,
+      "max_object_drift_m": 2.7574497126147337e-06,
+      "max_tilt_deg": 1.5171683529942381
+    },
+    {
+      "angle_deg": 35.0,
+      "reached": true,
+      "gripper_stalled": false,
+      "grasped_seen": true,
+      "early_kill": false,
+      "max_object_drift_m": 4.608450990298646e-06,
+      "max_tilt_deg": 1.5148988814642557
+    },
+    {
+      "angle_deg": 30.0,
+      "reached": true,
+      "gripper_stalled": false,
+      "grasped_seen": true,
+      "early_kill": false,
+      "max_object_drift_m": 3.7113282890204338e-06,
+      "max_tilt_deg": 1.5111970035894913
+    },
+    {
+      "angle_deg": 25.0,
+      "reached": true,
+      "gripper_stalled": false,
+      "grasped_seen": true,
+      "early_kill": false,
+      "max_object_drift_m": 3.6833425169393642e-06,
+      "max_tilt_deg": 1.5084960227645448
+    },
+    {
+      "angle_deg": 22.0,
+      "reached": true,
+      "gripper_stalled": false,
+      "grasped_seen": true,
+      "early_kill": false,
+      "max_object_drift_m": 2.1573290887151327e-06,
+      "max_tilt_deg": 1.5057627534140086
+    },
+    {
+      "angle_deg": 21.0,
+      "reached": true,
+      "gripper_stalled": false,
+      "grasped_seen": true,
+      "early_kill": false,
+      "max_object_drift_m": 8.315328614892784e-07,
+      "max_tilt_deg": 1.5040445609115067
+    },
+    {
+      "angle_deg": 20.5,
+      "reached": true,
+      "gripper_stalled": false,
+      "grasped_seen": true,
+      "early_kill": false,
+      "max_object_drift_m": 3.778737338776049e-07,
+      "max_tilt_deg": 1.5032242266434515
+    },
+    {
+      "angle_deg": 20.0,
+      "reached": true,
+      "gripper_stalled": false,
+      "grasped_seen": true,
+      "early_kill": false,
+      "max_object_drift_m": 2.5783342111988353e-07,
+      "max_tilt_deg": 1.502872278940685
+    },
+    {
+      "angle_deg": 19.5,
+      "reached": true,
+      "gripper_stalled": false,
+      "grasped_seen": true,
+      "early_kill": false,
+      "max_object_drift_m": 3.9796144846301204e-07,
+      "max_tilt_deg": 1.5023515334613127
+    }
+  ],
+  "aggregate": {
+    "max_target_error_m": 0.0024499659066456593,
+    "max_tcp_step_m": 0.001769898070337557,
+    "max_object_drift_m": 3.1207853730381746e-05,
+    "max_object_speed_mps": 0.014363624319077131,
+    "max_tilt_deg": 1.5023515334613127,
+    "min_upright_z": 0.9996562497792749,
+    "lift_follow_delta_m": -0.0003559030592441559,
+    "attach_calls": 150,
+    "posewrite_calls": 0,
+    "hidden_kinematic_posewrite_artifact": false,
+    "episode_done": false,
+    "nan_seen": false,
+    "total_sim_steps": 517
+  },
+  "env": {
+    "python": "3.11.14",
+    "numpy": "1.26.0",
+    "rerun_sdk": "0.34.1"
+  }
+}
