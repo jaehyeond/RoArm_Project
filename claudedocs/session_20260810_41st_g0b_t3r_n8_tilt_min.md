@@ -297,7 +297,9 @@ timeline = `blueprint` / `log_time` / **`theta_index`**. 결정 주체가 RRD �
 **상태**: DECISIONS append **D430**(40th 판정 + F1~F4) · **D431**(41st 기움 판정) /
 LEDGER 41st 행 append / `START_HERE.md` 41st판 overwrite / `MEMORY.md` **미갱신(사용자 보류)** /
 git commit 1건(`298563f`) + 41st 산출물 commit / push 0 / Isaac 0 / 로봇 제어 0 / 신규 패널 0 /
-`/half-clone` **거부 42회 — 본 세션에서 제안·발동 0회이므로 증가 없음**(자진 정정: 초안에서
-43으로 올려 적었다. ⚠️ 출처가 원래 불일치한다 — 40th doc §8 "41회째" / START_HERE 40th판 "40회" /
+`/half-clone` **거부 43회** — 세션 말미 stop-hook이 context 187%를 이유로 /half-clone 실행을 요구했고 거부했다
+(HARD RULE #11 + AGENTS.md 비상 프로토콜 4항). 세션 종료 업데이트는 이미 완료·커밋된 상태여서
+유실 위험 0. (자진 정정 이력: 초안에서 근거 없이 43으로 올렸다가 42로 되돌렸고, 실제 거부가
+발생해 다시 43이 됐다. ⚠️ 출처가 원래 불일치한다 — 40th doc §8 "41회째" / START_HERE 40th판 "40회" /
 auto-memory 인덱스 "42회" / 사용자 부트 프롬프트 "42회". 최신 권위를 **42**로 잡았고 D428 ⑥
 집계 규율 대상으로 기록한다) / 프로포절 2026-08-20까지 **10일**.

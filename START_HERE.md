@@ -177,8 +177,8 @@ Last updated: 2026-08-10 KST (**41st 세션**). **G0b case `g0b_d420` 계속.**
 - **39th 금지(D428 #29/#30)**: 정점-대-정점 거리로 기하 결손 주장 금지 / 비교 기준은
   **파이프라인이 실제 소비하는 객체**여야 함.
 - "bbox 77.85 ≈ 실물 78mm" 인용 금지 / marker=접촉 증거 금지 / exit code 판정 채널 금지.
-- HANDOFF.md·TASKS.md 불신 / `/half-clone`·`/handoff` 금지(#11, **거부 42회 — 41st에서 제안·발동
-  0회이므로 증가 없음.** ⚠️ 출처 불일치 기록: 40th doc §8 "41회째" vs START_HERE 40th판 "40회"
+- HANDOFF.md·TASKS.md 불신 / `/half-clone`·`/handoff` 금지(#11, **거부 43회 — 41st 말미 stop-hook이 /half-clone을 요구해
+  거부(+1).** ⚠️ 출처 불일치 기록: 40th doc §8 "41회째" vs START_HERE 40th판 "40회"
   vs auto-memory 인덱스 "42회". 최신 권위 = 사용자 부트 프롬프트 **42회**. D428 ⑥ 대상) /
   commit·push는 사용자 요청 시에만. `isaaclab` env pin(rerun 0.34.1 / numpy 1.26.0 /
   psutil 5.9.8 — 41st에서 재확인), D326 절차.
