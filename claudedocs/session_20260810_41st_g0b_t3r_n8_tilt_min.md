@@ -297,4 +297,7 @@ timeline = `blueprint` / `log_time` / **`theta_index`**. 결정 주체가 RRD �
 **상태**: DECISIONS append **D430**(40th 판정 + F1~F4) · **D431**(41st 기움 판정) /
 LEDGER 41st 행 append / `START_HERE.md` 41st판 overwrite / `MEMORY.md` **미갱신(사용자 보류)** /
 git commit 1건(`298563f`) + 41st 산출물 commit / push 0 / Isaac 0 / 로봇 제어 0 / 신규 패널 0 /
-`/half-clone` 거부 **43회째** / 프로포절 2026-08-20까지 **10일**.
+`/half-clone` **거부 42회 — 본 세션에서 제안·발동 0회이므로 증가 없음**(자진 정정: 초안에서
+43으로 올려 적었다. ⚠️ 출처가 원래 불일치한다 — 40th doc §8 "41회째" / START_HERE 40th판 "40회" /
+auto-memory 인덱스 "42회" / 사용자 부트 프롬프트 "42회". 최신 권위를 **42**로 잡았고 D428 ⑥
+집계 규율 대상으로 기록한다) / 프로포절 2026-08-20까지 **10일**.
