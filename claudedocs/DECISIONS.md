@@ -25690,3 +25690,139 @@ Evidence:
   (`/artifacts/results.json`, `/verdict`); 정정 대상 = 본 파일 D429 Evidence ·
   `claudedocs/session_20260810_39th_g0b_t3r_n6_subset_locate.md` §6 표 ·
   `START_HERE.md` Must Read First 6번 · `claudedocs/EXPERIMENT_LEDGER.md` 2026-08-10 39th 행.
+
+## D430 — 40th 조립 대조 verdict 확정 = ASSEMBLY_CONTRADICTS_REAL_RIM_PINCH: URDF 조립은 틀리지 않았고 물리 시행을 독립 재현한다 — 완전 수직 top-down에서 이 그리퍼가 받아들이는 지름 밴드는 D < 20.25mm이고 과제 사양 D29는 그 밖이다 (읽기 전용 진단 verdict + 41st 감사 4건 반영 — 물리/실물 파지력 주장 아님)
+
+- **Evidence**: 2026-08-10 40th 세션 읽기 전용 단일 실행
+  (`g0b_d420/t3r_n7_assembly_results.json`, 디스크 실물 sha **`7dadc10baaed8c72`** / 48,665 B —
+  41st 부트에서 재확인). 사용자 지시("조립 대조")로 29th~39th가 한 번도 하지 않은 검정 수행:
+  부품 감사가 아니라 **URDF가 그 부품들을 실물과 같은 형상으로 조립하는가**.
+  ① **재현 게이트 4/4**: sha 2/2 · D427 `l_vis` **4.457620117188**(델타 1.15e-14, `n_pts`
+  **2,266,503** 정확 일치) · joint5 회전 잔차 3.673e-06(= URDF rpy 4자리 절단 그 자체, 유발 정점
+  이동 0.000260mm) · 이동 조 z **[41.267593, 119.117587]** vs 37th 4자리 일치.
+  ② **조립은 물리 시행을 독립 재현한다**: 도달 가능 최심 상면 **TCP+4.4576mm**(전 q5 불변) ↔
+  **attempt1 실측 정지 top+4.4mm**(D424, `DECISIONS.md:25356`) ⇒ **Δ 0.058mm** / 이동 조가 상면보다
+  깊은 점 **전 q5 0개** ↔ **attempt2/3 close 88.31→24° 전 각도 무접촉**(D424 ②).
+  bite는 전 q5 스윕에서 **한 번도 0을 넘지 않는다**(최대 **−2.1137mm** @16.88°, 88.31°에서
+  **−4.9284mm**) vs T1 실물 rim 핀치 **0~12mm** ⇒ 정면 모순.
+  ③ **물체 지름 계단**: D9~20 → bite **+57.7400mm** / **D21~23 → 0.0000** / D24 −0.1420 /
+  D26 −2.0984 / **D29 −4.9284** / D30 −5.8294 / D40 −12.71 / D60 −32.73.
+  막는 단일 특징 = **r 10.1243721096607 · z 119.885620** = **D427 `l_vis` peak 그 자체**
+  (막힘 구간 `z_top_min` 119.88562011718751 = peak z 동일점 ⇒ 좌표로 확정, 추론 아님)
+  ⇒ **그 peak는 "손가락"이 아니라 팁 중앙 정지 돌기다.**
+  ④ D341 `validate_rerun_artifact` pass=True errors=[] + 실제 육안 검수 2건(40th §6-1).
+  ⑤ **41st 감사 4건**(사용자 승인 반영, 판정 본체 불변 — 41st doc §2):
+  **F1** "실물 교차검증 3/3"은 **2/3 강함 + 1건 적용범위 밖**이다 — 40th §4-5 3번(v6 스펀지 20mm)은
+  확증이 아니다. 본 모델은 **원형 footprint `r ≤ R`** 판정인데 스펀지 상면은 **20 × 125mm
+  직사각형**이고 **내접원 D20(삼킴) vs 외접원 D126.6**(스캔 최대 D60에서 이미 −32.73mm 막힘)이
+  결론 전체를 걸친다 ⇒ 방위 분해 없이는 판정 불가. **"3/3" 인용 금지.** 계열 = D428 #29·#16.
+  **F2** 참 경계는 **D ∈ (20.0, 20.2487] mm**(하한 = D20 통과 실측, 상한 = 2 × r_boss)이고
+  **D20은 반경 여유 0.1244mm의 칼끝**이다(축 일치 가정 ⇒ 중심 오차 0.124mm에 뒤집힘).
+  **F3** 40th §4-5 3번의 인용 `AGENTS.md:616-618`은 **오류** — `AGENTS.md` 713줄 전수 grep에서
+  "125" **0 hit**, HARD RULE #19(`AGENTS.md:259`)도 "edge-stand 47mm tall"까지만. 치수 정본 =
+  `memory/project_hardware_inventory.md:27`, v6 파지 성공 사실만 `AGENTS.md:617`.
+  **F4** §4-4 표 bite=0 고원 "21~22"는 열거 누락, 실제 **D21~23**(D428 ⑥).
+- **Implication**: ① **조립 결함 가설은 기각된다.** 판정을 지탱하는 것은 교차검증 1·2번
+  (**동일 자산 + 동일 사전등록 수직 자세 + 실제 물리 실행**)이며 F1은 이를 건드리지 않는다.
+  ② **병목은 자산이 아니라 과제 사양**(물체 지름 D29 + 완전 수직 구속)이다.
+  (A) 수제 저작(Arm-F)은 "실물에 없는 손가락 5~9mm 추가 ⇒ 사용자 실측 80/105mm와 불일치 ⇒
+  T4 실물 재현 구조적 불가"로 정량 규정된다.
+  ③ **수직 유지 시의 대안 = 물체 지름 D ≤ 16mm**(F2, 여유 2.12mm — D20은 칼끝이라 권장 안 함).
+  ⚠️ D419 타깃 변경은 **교수님 사안**(HARD RULE #18).
+  ④ **부수 기록(상태 문서 최초)**: `roarm_m3.urdf:161` 이동 조 `<collision>` =
+  `gripper_link_collision_g2a.stl` = **4.0×4.0×4.0mm 정육면체 ASCII STL 12 facet**
+  (sha `bd34df31…`, 1,521 B, 시각 메시 길이의 5.1%) + `usd/config.yaml:17,20`
+  `collider_type: convex_hull` · `collision_from_visuals: false` ⇒ **로컬 URDF로 만든 USD는
+  이동 조 접촉 불가 + 고정 조 목구멍 충전 = 파지 물리 사용 불가**. **D420 ⑥의 "convex_hull
+  1개/링크"는 이동 조에 부정확**(입력이 이미 4mm 큐브). T3는 supersession S-2로 이 경로를 이미
+  폐기했으므로 **T3 실패 원인은 아니다** — 로컬 URDF를 쓰는 미래 실행에 대한 지뢰다.
+  ⑤ **정적 진입 검사이지 파지 성공 예측이 아니다** — `bite > 0`은 필요조건. 시각 메시 기준
+  (D427 visual−collision −3.3e-06mm로 근사 정당화, 동일성 주장 아님). "beside" 환대 [R, R+6]은
+  저자 규약. **적대 재검증 0회**(D423/D428 #25).
+  ⑥ **D427 · D429 불변** — Gate-0 재실행·재판정 0. `g0a_pass=false` 불변,
+  "T1이 파지력 증명" 표현 금지 불변.
+- **Source**: `claudedocs/session_20260810_40th_g0b_t3r_n7_assembly_admission.md` §3·§4·§7·§8
+  (F1~F4 인라인 정정 포함); `claudedocs/session_20260810_41st_g0b_t3r_n8_tilt_min.md` §2;
+  `g0b_d420/t3r_n7_assembly_{results.json(`7dadc10baaed8c72`, 48,665 B),diagnostic.png,
+  timeline.rrd,timeline.rbl,rerun_validation.json,inspection.png,script.py.txt,run_std{out,err}.log}`;
+  `sim_scripts/g0b_t3r_n7_assembly_cylinder_admission_readonly_audit.py`;
+  `local_assets/roarm_m3/urdf/roarm_m3.urdf:129-135,145-166,225-231,234-239`;
+  `local_assets/roarm_m3/usd/config.yaml:17,20`;
+  `~/.claude/projects/-home-cgxr-Documents-Robotics-RoArm-Project/memory/project_hardware_inventory.md:27`.
+
+## D431 — T1 모순 해소: 불가능성의 원인은 자산이 아니라 사전등록된 "완전 수직" 구속이었다 — 도구축 기움 6°에서 물림이 양수가 되고 T1이 사진으로 측정한 0~12mm 밴드 전체가 기움 6~29°에 대응한다 (읽기 전용 진단 verdict 2회 — 물리/force-closure/IK 도달성 주장 아님)
+
+- **Evidence**: 2026-08-10 41st 세션, 읽기 전용 실행 2회. 근거 권한 =
+  `START_HERE.md:171-172`가 `t3r_n7_assembly_*`를 동결하면서 명문화한 예외
+  ("§5 기움 파라미터 검정은 … 신규 태그 파생만 허용"). Isaac 0 / 로봇 0 / 설치 0 /
+  Gate-0 재실행 0 / T2 재실행 0 / 기존 산출물 덮어쓰기 0 / 신규 패널 0.
+  검정 대상 = 40th §5가 지목하고 검정하지 않은 변수: T1의 도구축 기움 **0~35° 프레임별 가변**
+  (D420 ②, "10~20° 단일값 불성립") vs T2/T3의 **완전 수직 사전등록**(D421 tilt 0.1989°) —
+  **모델이 실물이 한 적 없는 자세를 요구받고 있었다.**
+  ① **`t3r_n8_tilt`**(sha `4b2a342880ac6a5d`, 1,864,884 B; wall 407.2s; θ 0~35° 1° × φ 0~345° 15°
+  × q5 앵커 3 + 국소 정밀화 + 최적점 전 34 q5): **게이트 9/9 PASS**, stderr 0B.
+  **N8e = θ=0에서 40th의 34개 q5 전부 재현, max|Δ| depth 1.155e-14mm / bite 1.199e-14mm**
+  (새 수식이 θ=0에서 옛 수식과 동일함의 증명) · N8f φ 불변 spread 0.000e+00 ·
+  **N8g 닫힌 형식의 무차별 검산 = δ+1e-9m에서 내부 점 0개 / δ−1e-6m에서 10개**.
+  verdict **`TILT_EXPLAINS_T1_CONTRADICTION`**: 기움 격자 최대 bite **+14.9746mm**
+  (θ=35°·φ=347°·q5=25.32°, 최심 상면 **TCP−1.9538mm** = 물체가 목구멍 진입) vs 완전 수직 최대
+  **−2.1137mm** ⇒ **+17.0883mm**. 최적 기움에서 **D 2~60mm 전 지름 양수**
+  (D29 +14.97 / D30 +14.97 / D40 +12.41 / D60 +0.06).
+  ② **`t3r_n8b_tiltmin`**(sha `180e03734544c894`, 27,516 B; wall 143.8s; θ 0~35° 1° × **전 34 q5**;
+  기하·샘플러·닫힌 형식 해를 ①의 스크립트에서 **verbatim import**, sha `84ab44dc9d9d87af` =
+  동결 사본 `t3r_n8_tilt_script.py.txt`): **게이트 5/5 PASS**, stderr 0B.
+  **N8Bc θ=0이 40th 재현**(bite Δ 1.066e-14mm, depth Δ −1.155e-14mm) ·
+  **N8Bd ①의 헤드라인 +14.974644662792878mm를 Δ 0.000e+00 으로 재현**(교차-실행 재현성).
+  verdict **`TILT_MIN_BOUNDED` — θ_min ≤ 6.0°**(앵커 격자만으로는 17.0°였다):
+  θ=6 **+0.1620mm**(φ=0·q5=19.69·depth +3.4039) / θ=10 +1.8761 / θ=15 +4.4034 / θ=20 +6.9502 /
+  θ=24 +9.0358(**depth −0.0062 = 여기서 목구멍 진입 시작**) / **θ=29 +12.1087** / θ=35 **+15.5430**.
+  ③ ★ **T1 관측 밴드 전체의 정량 대응**: T1 물림 **0mm ↔ θ≈6°**, T1 물림 **12mm ↔ θ≈29°** —
+  둘 다 T1 실측 기움 범위 **0~35°** 안. 존재 증명이 아니라 밴드 대응이다.
+  ④ **기구 특정**: 양수 물림은 사다리 전 구간에서 **전부 이동 조(`gripper_link`)** 에서 나오고,
+  고정 조(link5)의 환대 재질은 **−4.93 ~ −7.15mm**(상면보다 위)에 머물며 하강 blocker는 대체로
+  고정 조다 ⇒ 성립 자세는 **"고정 조가 상면/테두리에 얹히고 이동 조가 벽 옆으로 후크처럼 내려가
+  무는"** 형태 = D420이 T1에 대해 기록한 **rim(테두리) 핀치**와 같은 종류.
+  ⑤ D341: 두 실행 모두 `validate_rerun_artifact` **pass=True errors=[]**(rerun 0.34.1 핀
+  `expected_version_match: True`, footer `rrd verify`, exact entity/timeline/component 계약,
+  blueprint + `.rbl`, headless 2400×1400), timeline `theta_index`에서 **원통이 실제로 기운다**
+  + `reference/d427_blocker_peak` 로깅. **실제 육안 검수 4건** — 관측·한계는 41st doc §6-1.
+- **Implication**: ① **T1 모순은 해소됐다** — 원인은 자산 결함이 아니라 **사전등록된 완전 수직
+  구속**이다. ② **(A) 수제 저작(Arm-F)은 불필요하다 — 권고: 기각.** D426 ①의 두 분기
+  ("수제 저작 승인 or 정지·재상의") 밖에 **저작이 필요 없는 제3의 경로가 정량 근거와 함께
+  존재한다**: 접근 기움 허용. ③ **요청 규모가 작아졌다** — 35°가 아니라 **~6°부터** 작동하고
+  T1 밴드 중앙(물림 6mm)은 θ≈17°다. 기움 허용은 **실물에 없는 것을 sim에 넣는 것이 아니라
+  실물이 실제로 한 것(0~35°)을 sim에 되돌려 놓는 것**이다. ⚠️ **D419 "수직 상부 접근"은 교수님
+  지시이므로 단독 변경 금지**(HARD RULE #18).
+  ④ **40th 경로 ①(물체 지름 D29→D≤20)은 기움이 허용되면 불필요해진다** — 최적 기움에서 D29·D30
+  모두 허용. 수직을 유지해야 할 때만 **D ≤ 16mm**(D430 F2)가 대안으로 남는다.
+  ⑤ 🔴 **기움 승인 시 필수 선행 = 기운 타깃에 대한 T2 계열 IK 도달성 격자(신규 태그).**
+  T2/T2b는 **완전 수직 축만** 시험했으므로 동결 `t2_*`는 이 질문에 답하지 않는다. 이것이
+  START_HERE의 "새 격자가 필요해지는 유일한 조건"에 **기움 변경**을 추가한다.
+  ⑥ **T3 재개 시 닫힘 목표를 24°보다 더 닫아야 한다** — 양수 물림 q5 밴드 상단은 θ≤27°에서
+  **22.50°**이고 T3 attempt2/3은 **88.31°→24°까지만** 닫았다(D424 ②). ⚠️ q5 격자 2.81° 간격이라
+  참 상단은 **(22.50, 25.32]** 이고 T3의 24°가 그 불확정 구간 안에 떨어지므로 **"T3가 밴드를
+  놓쳤는지"는 이 해상도에서 미결정** — 승인 시 **24° 근방 q5 세밀화가 첫 후속 작업**이며,
+  어느 쪽이든 재개 닫힘 목표는 **~14~22°**로 잡는다.
+  ⑦ **한계(주장하지 않는 것)**: **정적 진입 검사이지 파지 성공 예측 아님**(`bite>0`은 필요조건) /
+  **양수 물림은 한쪽(이동 조)뿐이고 마주 잡는 두 측벽 접촉이 아니므로 force closure 미증명** /
+  **기운 자세 IK 도달성 미확립** / **테이블 미모델** / 시각 메시 기준(attempt3 충돌 USD 아님) /
+  "beside" [R,R+6]은 저자 규약 / **θ_min ≤ 6.0°는 상한**(φ를 앵커 argmax ±15°에서만 탐색) /
+  (θ,φ) 격자는 q5 앵커 3개에서만 전수, **3중 곱 전수 아님**(silent cap 아님 —
+  `scoping_declared` 기재) / **적대 재검증 0회**(D423/D428 #25; ②의 Δ0 재현은 동일 방법의
+  재도출이지 적대 공격이 아니다).
+  ⑧ **D427 · D429 불변** — Gate-0 재실행·재판정 0. 시각 소스에 조 원위부 기하가 없다는 진단은
+  그대로이고, 바뀐 것은 **그 부재가 과제를 불가능하게 만드는지**다. `g0a_pass=false` 불변,
+  "T1이 파지력 증명" 표현 금지 불변.
+- **Source**: `claudedocs/session_20260810_41st_g0b_t3r_n8_tilt_min.md` §3·§4·§5·§6·§7;
+  `g0b_d420/t3r_n8_tilt_{results.json(`4b2a342880ac6a5d`, 1,864,884 B),timeline.rrd
+  (`aed09c47261964c1`),timeline.rbl(`473efbc4d54e78e1`),rerun_validation.json(`d1cd9a2695b12764`),
+  inspection.png(`dd67e91f0b4a65c0`),diagnostic.png(`39215ef30f92eddb`),script.py.txt
+  (`84ab44dc9d9d87af`),run_std{out,err}.log}`;
+  `g0b_d420/t3r_n8b_tiltmin_{results.json(`180e03734544c894`, 27,516 B),timeline.rrd
+  (`cf1412404ef73c12`),timeline.rbl(`29e6aa8df2896ddd`),rerun_validation.json(`04f0000c979823c3`),
+  inspection.png(`6e5293833c82c8e3`),diagnostic.png(`9f0939cde22a1a1d`),script.py.txt
+  (`55d2320e4b98737f`),run_std{out,err}.log}`;
+  `sim_scripts/g0b_t3r_n8_tilt_admission_readonly_audit.py` ·
+  `sim_scripts/g0b_t3r_n8b_tiltmin_readonly_audit.py`;
+  기움 실측 원문 = DECISIONS **D420** Implication ②; 완전 수직 사전등록 = **D421** ·
+  `g0b_d420/t3_prereg.md`; 물리 시행 = **D424** Evidence ②; 조립 판정 = **D430**.
