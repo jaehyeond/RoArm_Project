@@ -1,0 +1,205 @@
+{
+  "tool": "p11_g0b_t3p_randomized_parallel_grasp_sweep",
+  "case": "g0b_d420",
+  "tag": "t3p",
+  "argv": [
+    "sim_scripts/p11_g0b_t3p_cyld29h50_randomized_parallel_grasp_sweep.py",
+    "--num_envs",
+    "8",
+    "--pool_multiplier",
+    "3",
+    "--run_label",
+    "preflight3",
+    "--skip_rerun",
+    "--plan_workers",
+    "8"
+  ],
+  "seed": 20260811,
+  "env": {
+    "numpy": "1.26.0",
+    "python": "3.11.14"
+  },
+  "asset": {
+    "attempt3_usd": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/roarm_m3.usd",
+    "sha256_16": "a4be58e87b1f9790"
+  },
+  "gates": {
+    "lift_gate_mm": 6.0,
+    "tip_half_angle_deg": 30.113733150982437,
+    "contact_eps_n": 1e-06
+  },
+  "ik_feasibility": {
+    "measured_window": {
+      "pool": 12,
+      "feasible": 12,
+      "feasible_rate": 1.0,
+      "fail_reasons": {},
+      "median_ik_err_mm": [
+        0.05228800238267552,
+        0.04740137613513272,
+        0.04055537025183322
+      ],
+      "median_ik_tilt_deg": [
+        1.823383935888884,
+        1.728776231944489,
+        1.6671881052272584
+      ]
+    },
+    "high_tilt": {
+      "pool": 12,
+      "feasible": 9,
+      "feasible_rate": 0.75,
+      "fail_reasons": {
+        "ik_gate:approach": 2,
+        "ik_gate:approach,descend,lift": 1
+      },
+      "median_ik_err_mm": [
+        0.18374600298997962,
+        0.12670509792052553,
+        0.1221493571051138
+      ],
+      "median_ik_tilt_deg": [
+        4.418855229768532,
+        3.409010160529693,
+        3.3216265070280615
+      ]
+    }
+  },
+  "n_envs": 8,
+  "wall_physics_s": 4.0,
+  "total_steps": 540,
+  "schedule": [
+    {
+      "phase": "settle",
+      "steps": 60
+    },
+    {
+      "phase": "approach",
+      "steps": 120
+    },
+    {
+      "phase": "descend",
+      "steps": 100
+    },
+    {
+      "phase": "close",
+      "steps": 100
+    },
+    {
+      "phase": "hold",
+      "steps": 40
+    },
+    {
+      "phase": "lift",
+      "steps": 120
+    }
+  ],
+  "kinematic_attach_disabled": true,
+  "kinematic_attach_calls": 0,
+  "spawn_arm_report": {
+    "count": 1,
+    "thresholds": [
+      0.0
+    ]
+  },
+  "filter_map": {
+    "support_plane": 0,
+    "link5": 1,
+    "gripper_link": 2
+  },
+  "resolved_filter_paths": {
+    "support_plane": "/World/ground/terrain/GroundPlane/CollisionPlane",
+    "filter_paths": [
+      "/World/ground/terrain/GroundPlane/CollisionPlane",
+      "/World/envs/env_.*/Robot/link5",
+      "/World/envs/env_.*/Robot/gripper_link"
+    ]
+  },
+  "positive_control": {
+    "window": "settle (object at rest on the ground)",
+    "expected_fz_n": 0.24358230000000003,
+    "band_n": [
+      0.158328495,
+      0.32883610500000005
+    ],
+    "median_fz_n": 0.24357201159000397,
+    "envs_in_band": 8,
+    "envs_total": 8,
+    "pass": true
+  },
+  "summary": {
+    "all": {
+      "n": 8,
+      "success": 0,
+      "success_rate": 0.0,
+      "contact_nonzero": 5,
+      "lift_corrected_mm": {
+        "median": -7.450580596923828e-06,
+        "p90": 0.0005269423127174377,
+        "max": 0.0007003545761108398
+      },
+      "raw_rise_mm_median": -7.450580596923828e-06,
+      "tilt_final_deg_median": 0.0,
+      "close_f_moving_max_n_median": 0.0,
+      "close_f_fixed_max_n_median": 0.4295762777328491,
+      "lift_f_moving_max_n_median": 0.006080979015678167
+    },
+    "measured_window": {
+      "n": 4,
+      "success": 0,
+      "success_rate": 0.0,
+      "contact_nonzero": 4,
+      "lift_corrected_mm": {
+        "median": -7.450580596923828e-06,
+        "p90": 0.00031851232051849376,
+        "max": 0.00045262277126312256
+      },
+      "raw_rise_mm_median": -7.450580596923828e-06,
+      "tilt_final_deg_median": 0.0,
+      "close_f_moving_max_n_median": 0.17885930836200714,
+      "close_f_fixed_max_n_median": 1.3256422281265259,
+      "lift_f_moving_max_n_median": 0.17916546761989594
+    },
+    "high_tilt": {
+      "n": 4,
+      "success": 0,
+      "success_rate": 0.0,
+      "contact_nonzero": 1,
+      "lift_corrected_mm": {
+        "median": 7.450580596923828e-06,
+        "p90": 0.0005008652806282045,
+        "max": 0.0007003545761108398
+      },
+      "raw_rise_mm_median": 7.450580596923828e-06,
+      "tilt_final_deg_median": 0.0,
+      "close_f_moving_max_n_median": 0.0,
+      "close_f_fixed_max_n_median": 0.0,
+      "lift_f_moving_max_n_median": 0.0
+    }
+  },
+  "n_success": 0,
+  "verdict": "CONTACT_BUT_NO_LIFT",
+  "wall_seconds": 48.8,
+  "artifacts": {
+    "plan.json": {
+      "name": "t3p_preflight3_plan.json",
+      "sha256_16": "53a60ff0b8dd5138",
+      "bytes": 26255
+    },
+    "trace.npz": {
+      "name": "t3p_preflight3_trace.npz",
+      "sha256_16": "7ff707e7740a2038",
+      "bytes": 14803
+    },
+    "script.py.txt": {
+      "name": "t3p_preflight3_script.py.txt",
+      "sha256_16": "ad21147297a6d83c",
+      "bytes": 62495
+    },
+    "argv.txt": {
+      "name": "t3p_preflight3_argv.txt",
+      "sha256_16": "fda513d7ead1584b",
+      "bytes": 155
+    }
+  }
+}

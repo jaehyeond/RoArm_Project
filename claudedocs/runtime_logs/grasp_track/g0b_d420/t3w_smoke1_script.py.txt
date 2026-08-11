@@ -1,0 +1,910 @@
+#!/usr/bin/env python3
+"""p12 / t3w — reach-boundary sweep over RADIUS and APPROACH AZIMUTH (case g0b_d420).
+
+WHY THIS SCRIPT EXISTS
+----------------------
+The 52nd session (D439) measured how far the tool axis can tilt away from vertical
+before the plan stops being IK-feasible, and used the answer to retire the
+"side-face grasp" option: max feasible theta = 45 deg under the v6 distribution
+clip, 50 deg under the (mislabelled -- see below) hardware row, with 43.14 deg of
+residual tilt still left at theta = 90 deg.
+
+It measured that at exactly ONE workspace point and said so
+(`t3p_prereg.md:131-133`, 52nd doc :176-180): "It does not prove side grasps are
+impossible at other radii".  `START_HERE.md:414-415` calls the radius sweep the only
+unresolved limitation of the side-grasp-infeasible claim.  This script is that sweep.
+
+    Question, stated so it can fail:
+      is theta_max ~ 45 deg a property of THIS POSE, or of THE ARM + its joint clip?
+
+PROVENANCE / ANTI-DRIFT
+  * The FK chain, the tilted-axis frame, the DLS IK, the wrist-roll solve and the
+    pose planner are IMPORTED VERBATIM from the frozen p10 probe.  p10 is never
+    modified and never executed as a program.  (D428 #29: compare against the object
+    the pipeline actually consumes.)
+  * The three joint-limit sets are DERIVED AT RUNTIME -- the v6 clip from
+    `sim_scripts/roarm_kinematics.py`, the true hardware envelope by PARSING
+    `local_assets/roarm_m3/urdf/roarm_m3.urdf`.  Only `claudemd_table`, which exists
+    solely to reproduce the 52nd row bit-for-bit, is a literal.
+  * Gate R0 refuses to run the sweep unless it first reproduces the 52nd
+    `reachability_scan` anchors exactly.  An extension that cannot reproduce its own
+    baseline is not an extension.
+
+WHAT THIS SCRIPT DOES NOT DO
+  * No physics, no Isaac, no robot.  It is pure numpy kinematics.  `g0a_pass` stays
+    false.
+  * It does not re-run Gate-0 and touches no t3r_/t3t_/t3d_/t3p_ artifact.
+  * It does not re-adjudicate D427..D439.  Reachability of a PLAN is not grasp
+    success; D439's force result is untouched either way.
+  * It varies the POSE, not the SOLVER.  The 52nd limitation had two halves; this
+    closes the pose half only.
+  * `JOINT_LIMITS` is never removed and no hardware is commanded (HARD RULE #5).
+    Widening a DISTRIBUTION clip inside a read-only offline probe is the same device
+    the 52nd used, and exists only to attribute cause.
+
+Preregistration: `claudedocs/runtime_logs/grasp_track/g0b_d420/t3w_prereg.md`
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import importlib.util
+import json
+import math
+import shutil
+import sys
+import time
+import xml.etree.ElementTree as ET
+from pathlib import Path
+from typing import Any
+
+import numpy as np
+
+REPO = Path(__file__).resolve().parents[1]
+if str(REPO) not in sys.path:
+    sys.path.insert(0, str(REPO))
+if str(REPO / "sim_scripts") not in sys.path:
+    sys.path.insert(0, str(REPO / "sim_scripts"))
+
+LOG = "p12_t3w"
+TAG = "t3w"
+CASE_DIR = REPO / "claudedocs/runtime_logs/grasp_track/g0b_d420"
+
+RERUN_VERSION = "0.34.1"
+RERUN_CLI = "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun"
+NUMPY_PIN = "1.26.0"
+
+P10_PATH = REPO / "sim_scripts/p10_g0b_t3t_cyld29h50_tilted_close_sweep_grasp_probe.py"
+URDF_PATH = REPO / "local_assets/roarm_m3/urdf/roarm_m3.urdf"
+
+# ---- object under test (HARD RULE #18: frozen, never a swept axis) -----------
+OBJ_DIAM_M = 0.029
+OBJ_HEIGHT_M = 0.050
+# ---- world convention (t3p §, p11:116-121 -- DO NOT use p10's TABLE_Z) -------
+SUPPORT_Z_M = 0.0
+
+JOINT_ORDER = ("base", "shoulder", "elbow", "wrist_p")
+# URDF joint name -> the planner's joint label.  Ordering cross-checked against
+# roarm_kinematics._CHAIN (qi = 0..3).
+URDF_JOINT_MAP = {
+    "base_link_to_link1": "base",
+    "link1_to_link2": "shoulder",
+    "link2_to_link3": "elbow",
+    "link3_to_link4": "wrist_p",
+}
+# The 52nd "urdf_hardware" row, VERBATIM from p11:267-268.  Kept as a literal on
+# purpose: its only job is to reproduce that row.  It is NOT the URDF (see
+# `limit_audit` in the results) -- it is the CLAUDE.md hardware table, and it is
+# wider than the URDF on shoulder and elbow.
+CLAUDEMD_TABLE_DEG = {"base": (-90.0, 90.0), "shoulder": (-110.0, 110.0),
+                      "elbow": (-70.0, 190.0), "wrist_p": (-110.0, 110.0)}
+
+# ---- 52nd anchors that gate R0 must reproduce (52nd doc :156-170, t3p_prereg
+#      :118-125, and the frozen t3p_sweep1024_plan.json /reachability_scan) -----
+ANCHOR_RADIUS_M = 0.28977932314129784
+ANCHOR_PSI_RADIAL_DEG = 317.5141789665032
+ANCHOR_THETA_LIST = (6.0, 29.0, 35.0, 40.0, 45.0, 50.0, 60.0, 70.0, 80.0, 90.0)
+ANCHOR_MAX_THETA = {"v6_clip": 45.0, "claudemd_table": 50.0}
+ANCHOR_TILT_AT_90 = {"v6_clip": 43.1438, "claudemd_table": 14.67}
+ANCHOR_TILT_TOL = {"v6_clip": 0.001, "claudemd_table": 0.005}
+ANCHOR_OK_PATTERN = {                      # theta -> feasible, from the 52nd table
+    "v6_clip": (True, True, True, True, True, False, False, False, False, False),
+}
+
+# ---- preregistered verdict thresholds (t3w_prereg.md §5) ---------------------
+SIDE_GRASP_THETA_DEG = 75.0
+POSE_DEPENDENT_THETA_DEG = 60.0
+
+SAT_TOL_DEG = 1.0e-6
+
+
+def sha256_file(path: str | Path) -> str:
+    digest = hashlib.sha256()
+    with Path(path).open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1 << 20), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _import_p10() -> Any:
+    """Load the frozen p10 probe as a LIBRARY.  Its module level is Isaac-free
+    (AppLauncher only appears inside its main(), p10:1153), so this import executes
+    no simulation and mutates nothing."""
+    spec = importlib.util.spec_from_file_location("p10_frozen", P10_PATH)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules["p10_frozen"] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+# =============================================================================
+# Joint-limit sets
+# =============================================================================
+def urdf_limits_deg() -> dict[str, tuple[float, float]]:
+    """Parse the ACTUAL hardware envelope out of the URDF (radians -> degrees)."""
+    root = ET.parse(URDF_PATH).getroot()
+    found: dict[str, tuple[float, float]] = {}
+    for joint in root.iter("joint"):
+        label = URDF_JOINT_MAP.get(joint.get("name", ""))
+        if label is None:
+            continue
+        limit = joint.find("limit")
+        if limit is None:
+            raise RuntimeError(f"URDF joint {joint.get('name')!r} has no <limit>")
+        found[label] = (math.degrees(float(limit.get("lower"))),
+                        math.degrees(float(limit.get("upper"))))
+    missing = [name for name in JOINT_ORDER if name not in found]
+    if missing:
+        raise RuntimeError(f"URDF is missing joints {missing}")
+    return found
+
+
+def limit_sets(p10: Any) -> dict[str, dict[str, tuple[float, float]]]:
+    v6 = {k: tuple(float(v) for v in p10.V6_LIMITS_DEG[k]) for k in JOINT_ORDER}
+    return {
+        "v6_clip": v6,
+        "claudemd_table": {k: tuple(CLAUDEMD_TABLE_DEG[k]) for k in JOINT_ORDER},
+        "urdf_true": urdf_limits_deg(),
+    }
+
+
+# =============================================================================
+# One IK evaluation (the 52nd definition of "reachable", unchanged)
+# =============================================================================
+class _PlanArgs:
+    """Minimal stand-in for p10's argparse.Namespace, carrying only the fields its
+    frozen planner/IK actually read."""
+
+    def __init__(self, **kw: Any) -> None:
+        self.__dict__.update(kw)
+
+
+_W: dict[str, Any] = {}
+
+
+def _plan_kw(args: argparse.Namespace) -> dict[str, Any]:
+    return {
+        "object_size_m": np.array([OBJ_DIAM_M, OBJ_DIAM_M, OBJ_HEIGHT_M], dtype=np.float64),
+        "grasp_surface_margin_m": args.grasp_surface_margin_m,
+        "approach_clearance_m": args.approach_clearance_m,
+        "lift_delta_m": args.lift_delta_m,
+        "descend_open_deg": args.descend_open_deg,
+        "close_deg": [args.descend_open_deg, args.close_target_deg],
+        "target_error_gate_m": args.target_error_gate_m,
+        "plan_tilt_gate_deg": args.plan_tilt_gate_deg,
+    }
+
+
+def _worker_init(plan_kw: dict[str, Any]) -> None:
+    _W["p10"] = _import_p10()
+    _W["plan_kw"] = plan_kw
+    _W["p10"].PHI_STAR_DEG = 0.0
+
+
+def _saturated(q4_deg: list[float], limits: dict[str, tuple[float, float]]) -> list[str]:
+    out: list[str] = []
+    for i, name in enumerate(JOINT_ORDER):
+        lo, hi = limits[name]
+        if q4_deg[i] <= lo + SAT_TOL_DEG:
+            out.append(f"{name}@lo")
+        elif q4_deg[i] >= hi - SAT_TOL_DEG:
+            out.append(f"{name}@hi")
+    return out
+
+
+def _evaluate(p10: Any, plan_kw: dict[str, Any], center: np.ndarray, theta_deg: float,
+              psi_axis_deg: float, limits: dict[str, tuple[float, float]]) -> dict[str, Any]:
+    """One (position, tool-axis) plan.  Feasible == the 52nd definition:
+    approach AND descend AND lift all pass their IK gates."""
+    p10.V6_LIMITS_DEG = {k: tuple(v) for k, v in limits.items()}
+    p10.set_target_axis(float(theta_deg), float(psi_axis_deg))
+    try:
+        plan = p10._build_plan_from_center(_PlanArgs(**plan_kw), center, "t3w")
+    except Exception as exc:  # noqa: BLE001
+        return {"theta_deg": float(theta_deg), "ok": False, "error": f"planner:{exc}"}
+    ok = bool(plan.approach_ik_ok and plan.descend_ik_ok and plan.lift_ik_ok)
+    fails = [name for name, good in (("approach", plan.approach_ik_ok),
+                                     ("descend", plan.descend_ik_ok),
+                                     ("lift", plan.lift_ik_ok)) if not good]
+    q_descend = [float(v) for v in plan.q_descend_deg]
+    return {
+        "theta_deg": float(theta_deg),
+        "ok": ok,
+        "fail_phases": fails,
+        "descend_err_mm": float(plan.descend_ik_err_mm),
+        "descend_tilt_deg": float(plan.descend_tilt_deg),
+        "approach_err_mm": float(plan.approach_ik_err_mm),
+        "approach_tilt_deg": float(plan.approach_tilt_deg),
+        "lift_err_mm": float(plan.lift_ik_err_mm),
+        "lift_tilt_deg": float(plan.lift_tilt_deg),
+        "q_descend_deg": q_descend,
+        "q_approach_deg": [float(v) for v in plan.q_approach_deg],
+        "saturated_descend": _saturated(q_descend, limits),
+        "saturated_approach": _saturated([float(v) for v in plan.q_approach_deg], limits),
+    }
+
+
+def _center_of(r_m: float, psi_pos_deg: float) -> np.ndarray:
+    ang = math.radians(psi_pos_deg)
+    return np.array([r_m * math.cos(ang), r_m * math.sin(ang),
+                     SUPPORT_Z_M + OBJ_HEIGHT_M / 2.0], dtype=np.float64)
+
+
+def _worker_cell(job: dict[str, Any]) -> dict[str, Any]:
+    """Scan theta for one (limit set, radius, approach azimuth) cell.
+
+    Coarse grid first, IN FULL -- monotonicity in theta is checked, never assumed --
+    then bisect the top bracket [last feasible, first infeasible above it].
+    """
+    p10 = _W["p10"]
+    kw = _W["plan_kw"]
+    limits = {k: tuple(v) for k, v in job["limits"].items()}
+    center = _center_of(job["r_m"], job["psi_pos_deg"])
+    psi_axis = (job["psi_pos_deg"] + job["dpsi_deg"]) % 360.0
+
+    grid = [float(t) for t in job["theta_grid"]]
+    rows = [_evaluate(p10, kw, center, t, psi_axis, limits) for t in grid]
+    oks = [bool(row["ok"]) for row in rows]
+
+    first_fail = next((i for i, good in enumerate(oks) if not good), None)
+    nonmonotonic = bool(first_fail is not None and any(oks[first_fail:]))
+    last_ok = max((i for i, good in enumerate(oks) if good), default=None)
+
+    bisect_rows: list[dict[str, Any]] = []
+    if last_ok is None:
+        theta_max = None
+    elif last_ok == len(grid) - 1:
+        theta_max = grid[last_ok]
+    else:
+        lo, hi = grid[last_ok], grid[last_ok + 1]
+        tol = float(job["bisect_tol_deg"])
+        while hi - lo > tol:
+            mid = 0.5 * (lo + hi)
+            row = _evaluate(p10, kw, center, mid, psi_axis, limits)
+            bisect_rows.append(row)
+            if row["ok"]:
+                lo = mid
+            else:
+                hi = mid
+        theta_max = lo
+
+    at_90 = rows[-1] if grid and abs(grid[-1] - 90.0) < 1e-9 else None
+    boundary = None
+    if last_ok is not None:
+        cands = [row for row in bisect_rows if row["ok"]] or [rows[last_ok]]
+        boundary = max(cands, key=lambda row: row["theta_deg"])
+
+    return {
+        "cell_id": job["cell_id"],
+        "limit_set": job["limit_set"],
+        "r_m": float(job["r_m"]),
+        "dpsi_deg": float(job["dpsi_deg"]),
+        "psi_pos_deg": float(job["psi_pos_deg"]),
+        "psi_axis_deg": float(psi_axis),
+        "theta_max_deg": theta_max,
+        "theta0_ok": bool(oks[0]) if oks else False,
+        "nonmonotonic": nonmonotonic,
+        "n_evals": len(rows) + len(bisect_rows),
+        "residual_tilt_at_90_deg": (float(at_90["descend_tilt_deg"]) if at_90 else None),
+        "fail_phases_at_90": (list(at_90["fail_phases"]) if at_90 else None),
+        "saturated_at_boundary": (list(boundary["saturated_descend"]) if boundary else None),
+        "q_descend_at_boundary": (list(boundary["q_descend_deg"]) if boundary else None),
+        "coarse": rows if job.get("keep_rows") else None,
+        "bisect": bisect_rows if job.get("keep_rows") else None,
+    }
+
+
+# =============================================================================
+# Stages
+# =============================================================================
+def _run_jobs(jobs: list[dict[str, Any]], plan_kw: dict[str, Any],
+              workers: int, label: str) -> list[dict[str, Any]]:
+    import multiprocessing as mp
+
+    if not jobs:
+        return []
+    t0 = time.time()
+    ctx = mp.get_context("fork")
+    with ctx.Pool(processes=max(1, int(workers)), initializer=_worker_init,
+                  initargs=(plan_kw,)) as pool:
+        out = pool.map(_worker_cell, jobs, chunksize=1)
+    evals = sum(row["n_evals"] for row in out)
+    print(f"[{LOG}] stage={label} cells={len(out)} ik_evals={evals} "
+          f"wall={time.time() - t0:.1f}s", flush=True)
+    return out
+
+
+def gate_r0(args: argparse.Namespace, p10: Any, sets: dict[str, Any],
+            plan_kw: dict[str, Any]) -> dict[str, Any]:
+    """Reproduce the 52nd `reachability_scan` anchors before extending them."""
+    base_xy = p10._workspace_xy_from_label(args.pose_label)
+    radius = float(math.hypot(base_xy[0], base_xy[1]))
+    psi = math.degrees(math.atan2(base_xy[1], base_xy[0])) % 360.0
+    center = np.array([base_xy[0], base_xy[1], SUPPORT_Z_M + OBJ_HEIGHT_M / 2.0])
+
+    rows: dict[str, list[dict[str, Any]]] = {}
+    for name in ("v6_clip", "claudemd_table"):
+        rows[name] = [_evaluate(p10, plan_kw, center, t, psi, sets[name])
+                      for t in ANCHOR_THETA_LIST]
+    p10.V6_LIMITS_DEG = {k: tuple(v) for k, v in sets["v6_clip"].items()}
+
+    checks: dict[str, Any] = {
+        "radius_m": {"expected": ANCHOR_RADIUS_M, "observed": radius,
+                     "pass": abs(radius - ANCHOR_RADIUS_M) < 1e-12},
+        "psi_radial_deg": {"expected": ANCHOR_PSI_RADIAL_DEG, "observed": psi,
+                           "pass": abs(psi - ANCHOR_PSI_RADIAL_DEG) < 1e-9},
+    }
+    for name in ("v6_clip", "claudemd_table"):
+        oks = [bool(row["ok"]) for row in rows[name]]
+        feasible = [t for t, good in zip(ANCHOR_THETA_LIST, oks) if good]
+        observed_max = max(feasible) if feasible else None
+        checks[f"max_theta[{name}]"] = {
+            "expected": ANCHOR_MAX_THETA[name], "observed": observed_max,
+            "pass": observed_max == ANCHOR_MAX_THETA[name]}
+        tilt90 = float(rows[name][-1]["descend_tilt_deg"])
+        checks[f"tilt_at_90[{name}]"] = {
+            "expected": ANCHOR_TILT_AT_90[name], "observed": tilt90,
+            "tol": ANCHOR_TILT_TOL[name],
+            "pass": abs(tilt90 - ANCHOR_TILT_AT_90[name]) <= ANCHOR_TILT_TOL[name]}
+        if name in ANCHOR_OK_PATTERN:
+            checks[f"ok_pattern[{name}]"] = {
+                "expected": list(ANCHOR_OK_PATTERN[name]), "observed": oks,
+                "pass": tuple(oks) == ANCHOR_OK_PATTERN[name]}
+
+    return {
+        "theta_list": list(ANCHOR_THETA_LIST),
+        "rows": {name: [{k: row[k] for k in
+                         ("theta_deg", "ok", "fail_phases", "descend_err_mm",
+                          "descend_tilt_deg", "q_descend_deg", "saturated_descend")}
+                        for row in rows[name]] for name in rows},
+        "checks": checks,
+        "pass": all(bool(entry["pass"]) for entry in checks.values()),
+    }
+
+
+def limit_audit(sets: dict[str, dict[str, tuple[float, float]]]) -> dict[str, Any]:
+    """The 52nd row labelled 'URDF hardware envelope' is not the URDF.  Say so with
+    numbers instead of adjectives."""
+    diffs: list[dict[str, Any]] = []
+    for name in JOINT_ORDER:
+        table = sets["claudemd_table"][name]
+        urdf = sets["urdf_true"][name]
+        if abs(table[0] - urdf[0]) > 1e-6 or abs(table[1] - urdf[1]) > 1e-6:
+            diffs.append({
+                "joint": name,
+                "claudemd_table_deg": list(table),
+                "urdf_true_deg": list(urdf),
+                "claudemd_wider_lo": bool(table[0] < urdf[0] - 1e-6),
+                "claudemd_wider_hi": bool(table[1] > urdf[1] + 1e-6),
+            })
+    return {
+        "sets": {name: {k: list(v) for k, v in limits.items()}
+                 for name, limits in sets.items()},
+        "urdf_path": str(URDF_PATH),
+        "urdf_sha256_16": sha256_file(URDF_PATH)[:16],
+        "claudemd_table_vs_urdf_disagreements": diffs,
+        "note": ("p11:267-268 labels its second row 'urdf_hardware' but its values are "
+                 "the CLAUDE.md hardware table; where it is WIDER than the URDF the "
+                 "52nd theta_max for that row is optimistic."),
+    }
+
+
+def _cell_jobs(sets: dict[str, Any], radii: list[float], dpsis: list[float],
+               psi_pos: float, theta_grid: list[float], tol: float,
+               limit_names: list[str], prefix: str) -> list[dict[str, Any]]:
+    jobs: list[dict[str, Any]] = []
+    for name in limit_names:
+        for r_m in radii:
+            for dpsi in dpsis:
+                jobs.append({
+                    "cell_id": f"{prefix}:{name}:r{r_m:.4f}:d{dpsi:.1f}",
+                    "limit_set": name, "limits": sets[name], "r_m": float(r_m),
+                    "dpsi_deg": float(dpsi), "psi_pos_deg": float(psi_pos),
+                    "theta_grid": theta_grid, "bisect_tol_deg": tol,
+                    "keep_rows": False,
+                })
+    return jobs
+
+
+def _verdict_for(theta_star: float | None) -> str:
+    if theta_star is None:
+        return "NO_FEASIBLE_CELL"
+    if theta_star >= SIDE_GRASP_THETA_DEG:
+        return "SIDE_GRASP_REACHABLE_AT_OTHER_POSES"
+    if theta_star >= POSE_DEPENDENT_THETA_DEG:
+        return "TILT_CEILING_IS_POSE_DEPENDENT_BUT_NOT_SIDE"
+    return "TILT_CEILING_IS_ARM_PROPERTY"
+
+
+# =============================================================================
+# D341 Rerun
+# =============================================================================
+def _cylinder_strips(center: np.ndarray, radius: float, height: float,
+                     n: int = 48) -> list[np.ndarray]:
+    ang = np.linspace(0.0, 2.0 * math.pi, n, endpoint=True)
+    circle = np.stack([radius * np.cos(ang), radius * np.sin(ang), np.zeros(n)], axis=1)
+    bottom = circle + np.array([center[0], center[1], SUPPORT_Z_M])
+    top = circle + np.array([center[0], center[1], SUPPORT_Z_M + height])
+    strips = [bottom.astype(np.float32), top.astype(np.float32)]
+    for k in range(0, n - 1, n // 4):
+        strips.append(np.stack([bottom[k], top[k]]).astype(np.float32))
+    return strips
+
+
+def _emit_rerun(paths: dict[str, Path], out: dict[str, Any], focus: dict[str, Any],
+                p10: Any, args: argparse.Namespace) -> dict[str, Any]:
+    """D341: this verdict depends on pose, frames and geometry, so a replayable RRD
+    is mandatory.  Save-only sink attached before the first user log; finalized by the
+    RecordingStream context exit.
+
+    The decision subject is logged, not a generic robot: every sampled object position
+    coloured by its measured theta_max, plus the arm scrubbing through theta at the
+    two focus poses with target-vs-achieved tool axes side by side.
+    """
+    import rerun as rr
+    import rerun.blueprint as rrb
+
+    from roarm_rl.rerun_contract import validate_rerun_artifact
+
+    if rr.__version__ != RERUN_VERSION or np.__version__ != NUMPY_PIN:
+        raise RuntimeError(f"pin mismatch rerun={rr.__version__} numpy={np.__version__}")
+
+    app_id = f"roarm_g0b_{TAG}"
+    limit_names = list(out["limit_audit"]["sets"].keys())
+    arm_keys = [key for key in ("s1_v6_clip", "best_v6_clip") if key in focus]
+    theta_grid = list(out["focus"]["theta_grid_deg"])
+
+    entity_names = ["metadata/run", "events/gate_r0", "events/limit_audit",
+                    "events/verdict", "world/support_plane", "world/object_s1"]
+    entity_names += [f"world/reach/{name}" for name in limit_names]
+    for key in arm_keys:
+        entity_names += [f"world/arm/{key}/{leaf}" for leaf in
+                         ("links", "tcp", "axis_target", "axis_achieved")]
+    plot_keys = list(focus.keys())
+    for key in plot_keys:
+        entity_names += [f"plots/{key}/{leaf}" for leaf in
+                         ("feasible", "residual_tilt_deg", "descend_err_mm",
+                          "q_elbow_deg", "q_wrist_p_deg")]
+
+    palette = {"v6_clip": (66, 135, 245), "claudemd_table": (245, 166, 66),
+               "urdf_true": (66, 200, 120)}
+    arm_colour = {"s1_v6_clip": (66, 135, 245), "best_v6_clip": (220, 60, 160)}
+
+    audit = out["limit_audit"]["claudemd_table_vs_urdf_disagreements"]
+    summary_md = (
+        f"# p12 / t3w reach-boundary sweep (radius x approach azimuth)\n\n"
+        f"**verdict (v6_clip)**: `{out['verdict']}`  \n"
+        f"**theta\\*** = max feasible tool tilt over all cells: "
+        f"{json.dumps(out['theta_star_deg'])}  \n"
+        f"**52nd single-pose value**: 45 deg (v6_clip) / 50 deg (claudemd_table)  \n\n"
+        f"## question\n"
+        f"Is the 45 deg tilt ceiling a property of the POSE or of the ARM?\n"
+        f"Gate thresholds (preregistered): >= {SIDE_GRASP_THETA_DEG} deg = side grasp "
+        f"reachable elsewhere; >= {POSE_DEPENDENT_THETA_DEG} deg = pose-dependent.\n\n"
+        f"## grid\n"
+        f"{out['grid']['n_cells']} cells = {len(limit_names)} limit sets x "
+        f"{len(out['grid']['radii_m'])} radii x {len(out['grid']['dpsi_deg'])} azimuths; "
+        f"{out['grid']['ik_evals']} IK plan evaluations.\n\n"
+        f"## gate R0 (52nd anchor reproduction)\n```\n"
+        f"{json.dumps(out['gate_r0']['checks'], indent=2)}\n```\n"
+        f"## limit-set audit\n```\n{json.dumps(audit, indent=2)}\n```\n"
+        f"## per-limit-set argmax\n```\n{json.dumps(out['argmax'], indent=2)}\n```\n"
+    )
+
+    with rr.RecordingStream(app_id, recording_id=f"g0b_d420_{TAG}", make_default=False,
+                            send_properties=True) as rec:
+        rec.save(str(paths["timeline.rrd"]), write_footer=True)
+        rec.log("metadata/run", rr.TextDocument(summary_md, media_type=rr.MediaType.MARKDOWN),
+                static=True)
+        rec.log("events/gate_r0",
+                rr.TextLog(f"gate_r0 pass={out['gate_r0']['pass']} "
+                           f"(52nd anchors reproduced: r, psi, max_theta, tilt@90, ok pattern)",
+                           level=rr.TextLogLevel.INFO if out["gate_r0"]["pass"]
+                           else rr.TextLogLevel.ERROR))
+        rec.log("events/limit_audit",
+                rr.TextLog(f"claudemd_table vs URDF disagreements: "
+                           f"{[d['joint'] for d in audit]}",
+                           level=rr.TextLogLevel.WARN if audit else rr.TextLogLevel.INFO))
+        rec.log("events/verdict",
+                rr.TextLog(f"verdict={out['verdict']} theta_star={out['theta_star_deg']}",
+                           level=rr.TextLogLevel.INFO))
+
+        span = max(out["grid"]["radii_m"]) * 1.1
+        plane = np.array([[-span, -span, SUPPORT_Z_M], [span, -span, SUPPORT_Z_M],
+                          [span, span, SUPPORT_Z_M], [-span, span, SUPPORT_Z_M],
+                          [-span, -span, SUPPORT_Z_M]], dtype=np.float32)
+        rec.log("world/support_plane",
+                rr.LineStrips3D([plane], colors=[[110, 110, 110]], radii=[0.0015]),
+                static=True)
+        s1_center = _center_of(out["gate_r0"]["checks"]["radius_m"]["observed"],
+                               out["gate_r0"]["checks"]["psi_radial_deg"]["observed"])
+        rec.log("world/object_s1",
+                rr.LineStrips3D(_cylinder_strips(s1_center, OBJ_DIAM_M / 2.0, OBJ_HEIGHT_M),
+                                colors=[[235, 235, 120]], radii=[0.0008]),
+                static=True)
+
+        # --- the decision subject: sampled positions coloured by measured theta_max
+        theta_lo, theta_hi = 0.0, 90.0
+        for name in limit_names:
+            cells = [c for c in out["cells"] if c["limit_set"] == name]
+            pts, cols, radii_v = [], [], []
+            for cell in cells:
+                ang = math.radians(cell["psi_pos_deg"] + cell["dpsi_deg"])
+                # the marker sits at the object position, nudged along the approach
+                # azimuth so the 12 azimuth cells of one radius are distinguishable
+                base = _center_of(cell["r_m"], cell["psi_pos_deg"])
+                pts.append([base[0] + 0.012 * math.cos(ang),
+                            base[1] + 0.012 * math.sin(ang), base[2]])
+                tmax = cell["theta_max_deg"]
+                if tmax is None:
+                    cols.append([70, 70, 70])
+                    radii_v.append(0.003)
+                else:
+                    frac = (tmax - theta_lo) / (theta_hi - theta_lo)
+                    cols.append([int(40 + 215 * frac), int(60 + 60 * (1.0 - frac)),
+                                 int(235 - 195 * frac)])
+                    radii_v.append(0.004 + 0.006 * frac)
+            rec.log(f"world/reach/{name}",
+                    rr.Points3D(np.asarray(pts, dtype=np.float32),
+                                colors=np.asarray(cols, dtype=np.uint8),
+                                radii=np.asarray(radii_v, dtype=np.float32)),
+                    static=True)
+
+        # --- theta timeline at the focus poses
+        for k, theta in enumerate(theta_grid):
+            rec.reset_time()
+            rec.set_time("theta_tenth_deg", sequence=int(round(theta * 10.0)))
+            for key, rec_focus in focus.items():
+                row = rec_focus["rows"][k]
+                pre = f"plots/{key}"
+                rec.log(f"{pre}/feasible", rr.Scalars(1.0 if row["ok"] else 0.0))
+                rec.log(f"{pre}/residual_tilt_deg", rr.Scalars(float(row["descend_tilt_deg"])))
+                rec.log(f"{pre}/descend_err_mm", rr.Scalars(float(row["descend_err_mm"])))
+                rec.log(f"{pre}/q_elbow_deg", rr.Scalars(float(row["q_descend_deg"][2])))
+                rec.log(f"{pre}/q_wrist_p_deg", rr.Scalars(float(row["q_descend_deg"][3])))
+            for key in arm_keys:
+                rec_focus = focus[key]
+                row = rec_focus["rows"][k]
+                q4 = np.array(row["q_descend_deg"][:4], dtype=np.float64)
+                tcp, link5, origins = p10.fk_points(q4)
+                chain = np.asarray([o for o in origins], dtype=np.float32)
+                colour = arm_colour[key]
+                rec.log(f"world/arm/{key}/links",
+                        rr.LineStrips3D([chain], colors=[list(colour)], radii=[0.004]))
+                rec.log(f"world/arm/{key}/tcp",
+                        rr.Points3D(np.asarray([tcp], dtype=np.float32),
+                                    colors=np.asarray([colour], dtype=np.uint8),
+                                    radii=np.asarray([0.006], dtype=np.float32)))
+                d_target, _u, _v = p10.axis_frame(float(theta), rec_focus["psi_axis_deg"])
+                rec.log(f"world/arm/{key}/axis_target",
+                        rr.Arrows3D(origins=np.asarray([tcp], dtype=np.float32),
+                                    vectors=np.asarray([0.06 * d_target], dtype=np.float32),
+                                    colors=np.asarray([[240, 240, 240]], dtype=np.uint8),
+                                    radii=np.asarray([0.002], dtype=np.float32)))
+                achieved = tcp - link5
+                achieved = achieved / float(np.linalg.norm(achieved))
+                rec.log(f"world/arm/{key}/axis_achieved",
+                        rr.Arrows3D(origins=np.asarray([link5], dtype=np.float32),
+                                    vectors=np.asarray([0.06 * achieved], dtype=np.float32),
+                                    colors=np.asarray([list(colour)], dtype=np.uint8),
+                                    radii=np.asarray([0.002], dtype=np.float32)))
+
+        blueprint = rrb.Blueprint(
+            rrb.Vertical(
+                rrb.Horizontal(
+                    rrb.Spatial3DView(origin="/world", contents="/world/**",
+                                      name="1 | reach boundary: positions coloured by theta_max "
+                                           "+ arm scrubbing through theta"),
+                    rrb.Vertical(
+                        rrb.TextDocumentView(origin="/metadata/run", contents="/metadata/run",
+                                             name="2 | run summary + gate R0 + limit audit"),
+                        rrb.TextLogView(origin="/events", contents="/events/**",
+                                        name="3 | gate, audit, verdict"),
+                        row_shares=[0.72, 0.28]),
+                    column_shares=[0.56, 0.44]),
+                rrb.Horizontal(
+                    rrb.TimeSeriesView(origin="/plots",
+                                       contents=[f"/plots/{key}/feasible/**" for key in plot_keys]
+                                       + [f"/plots/{key}/residual_tilt_deg/**" for key in plot_keys],
+                                       name="4 | feasibility and residual tool-axis tilt vs theta"),
+                    rrb.TimeSeriesView(origin="/plots",
+                                       contents=[f"/plots/{key}/q_elbow_deg/**" for key in plot_keys]
+                                       + [f"/plots/{key}/q_wrist_p_deg/**" for key in plot_keys]
+                                       + [f"/plots/{key}/descend_err_mm/**" for key in plot_keys],
+                                       name="5 | saturating joints (elbow, wrist pitch) vs theta")),
+                row_shares=[0.62, 0.38]),
+            auto_layout=False, auto_views=False, collapse_panels=True)
+        rec.send_blueprint(blueprint, make_active=True, make_default=True)
+        rec.flush(timeout_sec=180.0)
+    blueprint.save(app_id, str(paths["timeline.rbl"]))
+
+    components: dict[str, list[str]] = {"metadata/run": ["TextDocument:text"]}
+    for name in entity_names:
+        if name.startswith("events/"):
+            components[name] = ["TextLog:text", "TextLog:level"]
+        elif name.startswith("plots/"):
+            components[name] = ["Scalars:scalars"]
+        elif name.endswith("/links") or name in ("world/support_plane", "world/object_s1"):
+            components[name] = ["LineStrips3D:strips"]
+        elif name.endswith("/tcp") or name.startswith("world/reach/"):
+            components[name] = ["Points3D:positions"]
+        elif name.endswith("/axis_target") or name.endswith("/axis_achieved"):
+            components[name] = ["Arrows3D:origins", "Arrows3D:vectors"]
+
+    validation = validate_rerun_artifact(
+        paths["timeline.rrd"],
+        expected_entity_paths=entity_names,
+        exact_entity_paths=entity_names,
+        exact_timeline_names=["blueprint", "log_time", "theta_tenth_deg"],
+        expected_entity_components=components,
+        blueprint_path=paths["timeline.rbl"],
+        screenshot_path=paths["inspection.png"],
+        screenshot_window_size="2400x1400",
+        expected_version=RERUN_VERSION,
+        cli_path=RERUN_CLI,
+        timeout_s=600.0,
+    )
+    paths["rerun_validation.json"].write_text(
+        json.dumps(validation, indent=2, default=str) + "\n")
+    print(f"[{LOG}] rerun_validation pass={validation.get('pass')} "
+          f"errors={validation.get('errors')}", flush=True)
+    return {"pass": bool(validation.get("pass")), "errors": validation.get("errors", [])}
+
+
+# =============================================================================
+def build_argparser() -> argparse.ArgumentParser:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--run_label", type=str, default="reach",
+                    help="output prefix t3w_<label>_*; a new label never overwrites")
+    ap.add_argument("--pose_label", type=str, default="seed0_S1")
+    ap.add_argument("--workers", type=int, default=28)
+    # swept axis 1
+    ap.add_argument("--r_lo", type=float, default=0.100)
+    ap.add_argument("--r_hi", type=float, default=0.550)
+    ap.add_argument("--r_step", type=float, default=0.025)
+    # swept axis 2
+    ap.add_argument("--dpsi_step", type=float, default=30.0)
+    # theta scan
+    ap.add_argument("--theta_hi", type=float, default=90.0)
+    ap.add_argument("--theta_coarse_step", type=float, default=5.0)
+    ap.add_argument("--bisect_tol_deg", type=float, default=0.25)
+    ap.add_argument("--focus_theta_step", type=float, default=1.0)
+    # planner constants (52nd values; changing one makes this incomparable)
+    ap.add_argument("--grasp_surface_margin_m", type=float,
+                    default=-0.0010997957078144082)
+    ap.add_argument("--approach_clearance_m", type=float, default=0.040)
+    ap.add_argument("--lift_delta_m", type=float, default=0.025)
+    ap.add_argument("--descend_open_deg", type=float, default=88.30998496351378)
+    ap.add_argument("--close_target_deg", type=float, default=24.0)
+    ap.add_argument("--target_error_gate_m", type=float, default=0.003)
+    ap.add_argument("--plan_tilt_gate_deg", type=float, default=5.0)
+    ap.add_argument("--skip_rerun", action="store_true")
+    return ap
+
+
+def main() -> int:
+    t_start = time.time()
+    args = build_argparser().parse_args()
+
+    prefix = f"{TAG}_{args.run_label}"
+    paths = {k: CASE_DIR / f"{prefix}_{k}" for k in
+             ("results.json", "grid.npz", "timeline.rrd", "timeline.rbl",
+              "rerun_validation.json", "inspection.png", "script.py.txt", "argv.txt")}
+    existing = [str(p) for p in paths.values() if p.exists()]
+    if existing:
+        print(f"[{LOG}] G0B_T3W_REACH_VERDICT=ARTIFACT_EXISTS_ABORT existing={existing}",
+              flush=True)
+        return 3
+
+    p10 = _import_p10()
+    p10.PHI_STAR_DEG = 0.0
+    sets = limit_sets(p10)
+    plan_kw = _plan_kw(args)
+
+    audit = limit_audit(sets)
+    print(f"[{LOG}] limit_audit disagreements="
+          f"{[d['joint'] for d in audit['claudemd_table_vs_urdf_disagreements']]}", flush=True)
+
+    # ---- R0 blocking gate ---------------------------------------------------
+    r0 = gate_r0(args, p10, sets, plan_kw)
+    print(f"[{LOG}] gate_r0 pass={r0['pass']} "
+          f"{json.dumps({k: v['observed'] for k, v in r0['checks'].items()})}", flush=True)
+    if not r0["pass"]:
+        failed = [k for k, v in r0["checks"].items() if not v["pass"]]
+        print(f"[{LOG}] G0B_T3W_REACH_VERDICT=ANCHOR_REPRODUCTION_FAIL failed={failed}",
+              flush=True)
+        paths["results.json"].write_text(json.dumps(
+            {"tool": "p12_g0b_t3w_reach_boundary_sweep", "gate_r0": r0,
+             "limit_audit": audit, "verdict": "ANCHOR_REPRODUCTION_FAIL"},
+            indent=2, default=float) + "\n")
+        return 3
+
+    psi_pos = float(r0["checks"]["psi_radial_deg"]["observed"])
+    coarse_grid = [float(t) for t in
+                   np.round(np.arange(0.0, args.theta_hi + 1e-9, args.theta_coarse_step), 6)]
+    radii = sorted({round(float(r), 6) for r in
+                    np.arange(args.r_lo, args.r_hi + 1e-9, args.r_step)}
+                   | {round(ANCHOR_RADIUS_M, 12)})
+    dpsis = [float(d) for d in np.arange(0.0, 360.0 - 1e-9, args.dpsi_step)]
+    limit_names = list(sets.keys())
+
+    # ---- R2 sweep -----------------------------------------------------------
+    jobs = _cell_jobs(sets, radii, dpsis, psi_pos, coarse_grid, args.bisect_tol_deg,
+                      limit_names, "R2")
+    print(f"[{LOG}] stage=R2 cells={len(jobs)} radii={len(radii)} dpsi={len(dpsis)} "
+          f"limit_sets={len(limit_names)} theta_grid={len(coarse_grid)}", flush=True)
+    cells = _run_jobs(jobs, plan_kw, args.workers, "R2")
+
+    def _best(rows: list[dict[str, Any]]) -> dict[str, Any] | None:
+        feasible = [c for c in rows if c["theta_max_deg"] is not None]
+        if not feasible:
+            return None
+        return max(feasible, key=lambda c: (c["theta_max_deg"], -c["r_m"]))
+
+    argmax = {name: _best([c for c in cells if c["limit_set"] == name])
+              for name in limit_names}
+    theta_star = {name: (row["theta_max_deg"] if row else None)
+                  for name, row in argmax.items()}
+    verdict = _verdict_for(theta_star["v6_clip"])
+    print(f"[{LOG}] theta_star={json.dumps(theta_star)} verdict={verdict}", flush=True)
+
+    # ---- R3 focus cells (dense theta; feeds the RRD) ------------------------
+    focus_grid = [float(t) for t in
+                  np.round(np.arange(0.0, args.theta_hi + 1e-9, args.focus_theta_step), 6)]
+    focus_specs: list[dict[str, Any]] = [
+        {"key": f"s1_{name}", "limit_set": name, "r_m": ANCHOR_RADIUS_M, "dpsi_deg": 0.0}
+        for name in limit_names]
+    best_v6 = argmax["v6_clip"]
+    if best_v6 is not None:
+        focus_specs.append({"key": "best_v6_clip", "limit_set": "v6_clip",
+                            "r_m": best_v6["r_m"], "dpsi_deg": best_v6["dpsi_deg"]})
+    focus_jobs = [{
+        "cell_id": f"R3:{spec['key']}", "limit_set": spec["limit_set"],
+        "limits": sets[spec["limit_set"]], "r_m": spec["r_m"],
+        "dpsi_deg": spec["dpsi_deg"], "psi_pos_deg": psi_pos,
+        "theta_grid": focus_grid, "bisect_tol_deg": args.bisect_tol_deg,
+        "keep_rows": True,
+    } for spec in focus_specs]
+    focus_rows = _run_jobs(focus_jobs, plan_kw, args.workers, "R3")
+    focus = {spec["key"]: {
+        "limit_set": spec["limit_set"], "r_m": float(spec["r_m"]),
+        "dpsi_deg": float(spec["dpsi_deg"]),
+        "psi_axis_deg": float((psi_pos + spec["dpsi_deg"]) % 360.0),
+        "theta_max_deg": row["theta_max_deg"], "nonmonotonic": row["nonmonotonic"],
+        "rows": row["coarse"],
+    } for spec, row in zip(focus_specs, focus_rows)}
+
+    # ---- R4 single-joint release ablation -----------------------------------
+    ablation_sets: dict[str, Any] = {}
+    for joint in JOINT_ORDER:
+        merged = dict(sets["v6_clip"])
+        merged[joint] = sets["urdf_true"][joint]
+        ablation_sets[f"release_{joint}"] = merged
+    ablation_sets["release_all"] = sets["urdf_true"]
+    abl_radii = [ANCHOR_RADIUS_M] + ([best_v6["r_m"]] if best_v6 else [])
+    abl_dpsis = sorted({0.0} | ({best_v6["dpsi_deg"]} if best_v6 else set()))
+    abl_jobs = _cell_jobs(ablation_sets, abl_radii, abl_dpsis, psi_pos, coarse_grid,
+                          args.bisect_tol_deg, list(ablation_sets.keys()), "R4")
+    ablation = _run_jobs(abl_jobs, plan_kw, args.workers, "R4")
+
+    # ---- R5 psi_pos null control --------------------------------------------
+    null_jobs = [{
+        "cell_id": f"R5:psi{psi:.1f}", "limit_set": "v6_clip", "limits": sets["v6_clip"],
+        "r_m": ANCHOR_RADIUS_M, "dpsi_deg": 0.0, "psi_pos_deg": float(psi),
+        "theta_grid": coarse_grid, "bisect_tol_deg": args.bisect_tol_deg,
+        "keep_rows": False,
+    } for psi in (psi_pos, 0.0, 45.0, 280.0, 85.0)]
+    null_rows = _run_jobs(null_jobs, plan_kw, args.workers, "R5")
+    null_values = {row["cell_id"]: row["theta_max_deg"] for row in null_rows}
+    null_pass = len({json.dumps(v) for v in null_values.values()}) == 1
+
+    ik_evals = (sum(c["n_evals"] for c in cells) + sum(r["n_evals"] for r in focus_rows)
+                + sum(r["n_evals"] for r in ablation) + sum(r["n_evals"] for r in null_rows)
+                + 2 * len(ANCHOR_THETA_LIST))
+
+    np.savez_compressed(
+        paths["grid.npz"],
+        limit_set=np.array([c["limit_set"] for c in cells]),
+        r_m=np.array([c["r_m"] for c in cells], dtype=np.float64),
+        dpsi_deg=np.array([c["dpsi_deg"] for c in cells], dtype=np.float64),
+        theta_max_deg=np.array([np.nan if c["theta_max_deg"] is None
+                                else c["theta_max_deg"] for c in cells], dtype=np.float64),
+        theta0_ok=np.array([c["theta0_ok"] for c in cells], dtype=bool),
+        nonmonotonic=np.array([c["nonmonotonic"] for c in cells], dtype=bool),
+        residual_tilt_at_90_deg=np.array([np.nan if c["residual_tilt_at_90_deg"] is None
+                                          else c["residual_tilt_at_90_deg"]
+                                          for c in cells], dtype=np.float64),
+        focus_theta_grid_deg=np.array(focus_grid, dtype=np.float64),
+        **{f"focus_{key}_ok": np.array([r["ok"] for r in val["rows"]], dtype=bool)
+           for key, val in focus.items()},
+        **{f"focus_{key}_tilt_deg": np.array([r["descend_tilt_deg"] for r in val["rows"]],
+                                             dtype=np.float64)
+           for key, val in focus.items()},
+        **{f"focus_{key}_q_descend_deg": np.array([r["q_descend_deg"] for r in val["rows"]],
+                                                  dtype=np.float64)
+           for key, val in focus.items()},
+    )
+
+    out: dict[str, Any] = {
+        "tool": "p12_g0b_t3w_reach_boundary_radius_azimuth_sweep",
+        "case": "g0b_d420",
+        "tag": TAG,
+        "prereg": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3w_prereg.md",
+        "argv": sys.argv,
+        "env": {"python": sys.version.split()[0], "numpy": np.__version__},
+        "provenance": {
+            "p10_path": str(P10_PATH), "p10_sha256_16": sha256_file(P10_PATH)[:16],
+            "kinematics_path": str(REPO / "sim_scripts/roarm_kinematics.py"),
+            "kinematics_sha256_16": sha256_file(REPO / "sim_scripts/roarm_kinematics.py")[:16],
+            "urdf_sha256_16": sha256_file(URDF_PATH)[:16],
+            "isaac_used": False, "physics_used": False, "robot_used": False,
+            "rng_draws": 0,
+        },
+        "planner_constants": {k: (v.tolist() if isinstance(v, np.ndarray) else v)
+                              for k, v in plan_kw.items()},
+        "gate_r0": r0,
+        "limit_audit": audit,
+        "grid": {
+            "radii_m": radii, "dpsi_deg": dpsis, "limit_sets": limit_names,
+            "psi_pos_deg": psi_pos, "theta_coarse_grid_deg": coarse_grid,
+            "bisect_tol_deg": args.bisect_tol_deg,
+            "n_cells": len(cells), "ik_evals": ik_evals,
+        },
+        "thresholds": {"side_grasp_theta_deg": SIDE_GRASP_THETA_DEG,
+                       "pose_dependent_theta_deg": POSE_DEPENDENT_THETA_DEG},
+        "cells": cells,
+        "argmax": argmax,
+        "theta_star_deg": theta_star,
+        "verdict_per_limit_set": {name: _verdict_for(val) for name, val in theta_star.items()},
+        "verdict": verdict,
+        "nonmonotonic_cells": [c["cell_id"] for c in cells if c["nonmonotonic"]],
+        "focus": {"theta_grid_deg": focus_grid,
+                  "cells": {key: {k: v for k, v in val.items() if k != "rows"}
+                            for key, val in focus.items()}},
+        "ablation_release_one_joint": ablation,
+        "null_control_psi_pos": {"values": null_values, "pass": null_pass},
+    }
+
+    paths["argv.txt"].write_text(" ".join(sys.argv) + "\n")
+    shutil.copyfile(__file__, paths["script.py.txt"])
+
+    if not args.skip_rerun:
+        try:
+            out["rerun"] = _emit_rerun(paths, out, focus, p10, args)
+        except Exception as exc:  # noqa: BLE001
+            out["rerun"] = {"pass": False, "errors": [f"rerun stage raised: {exc!r}"]}
+            print(f"[{LOG}] rerun_stage_error {exc!r}", flush=True)
+
+    out["wall_seconds"] = round(time.time() - t_start, 1)
+    out["artifacts"] = {k: {"name": v.name, "sha256_16": sha256_file(v)[:16],
+                            "bytes": v.stat().st_size}
+                        for k, v in paths.items() if v.exists() and k != "results.json"}
+    paths["results.json"].write_text(json.dumps(out, indent=2, default=float) + "\n")
+    print(f"[{LOG}] G0B_T3W_REACH_VERDICT={verdict} theta_star={json.dumps(theta_star)} "
+          f"null_control_pass={null_pass} wall={out['wall_seconds']}s", flush=True)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

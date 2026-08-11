@@ -1,0 +1,1850 @@
+{
+  "tool": "p12_g0b_t3w_reach_boundary_radius_azimuth_sweep",
+  "case": "g0b_d420",
+  "tag": "t3w",
+  "prereg": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3w_prereg.md",
+  "argv": [
+    "sim_scripts/p12_g0b_t3w_reach_boundary_radius_azimuth_sweep.py",
+    "--run_label",
+    "smoke1",
+    "--r_lo",
+    "0.25",
+    "--r_hi",
+    "0.30",
+    "--r_step",
+    "0.025",
+    "--dpsi_step",
+    "180",
+    "--theta_coarse_step",
+    "15",
+    "--focus_theta_step",
+    "10",
+    "--workers",
+    "8"
+  ],
+  "env": {
+    "python": "3.11.14",
+    "numpy": "1.26.0"
+  },
+  "provenance": {
+    "p10_path": "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/p10_g0b_t3t_cyld29h50_tilted_close_sweep_grasp_probe.py",
+    "p10_sha256_16": "63c6b2127d969e32",
+    "kinematics_path": "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/roarm_kinematics.py",
+    "kinematics_sha256_16": "af4cc2d3c124ba4a",
+    "urdf_sha256_16": "64dc8d082cbce9a1",
+    "isaac_used": false,
+    "physics_used": false,
+    "robot_used": false,
+    "rng_draws": 0
+  },
+  "planner_constants": {
+    "object_size_m": [
+      0.029,
+      0.029,
+      0.05
+    ],
+    "grasp_surface_margin_m": -0.0010997957078144082,
+    "approach_clearance_m": 0.04,
+    "lift_delta_m": 0.025,
+    "descend_open_deg": 88.30998496351378,
+    "close_deg": [
+      88.30998496351378,
+      24.0
+    ],
+    "target_error_gate_m": 0.003,
+    "plan_tilt_gate_deg": 5.0
+  },
+  "gate_r0": {
+    "theta_list": [
+      6.0,
+      29.0,
+      35.0,
+      40.0,
+      45.0,
+      50.0,
+      60.0,
+      70.0,
+      80.0,
+      90.0
+    ],
+    "rows": {
+      "v6_clip": [
+        {
+          "theta_deg": 6.0,
+          "ok": true,
+          "fail_phases": [],
+          "descend_err_mm": 0.05300324833372636,
+          "descend_tilt_deg": 0.7412623823182114,
+          "q_descend_deg": [
+            -42.485821033496784,
+            36.81037062438222,
+            84.43409497149038,
+            53.49679678644575,
+            90.0,
+            88.30998496351378
+          ],
+          "saturated_descend": []
+        },
+        {
+          "theta_deg": 29.0,
+          "ok": true,
+          "fail_phases": [],
+          "descend_err_mm": 0.020992066628645202,
+          "descend_tilt_deg": 0.3371384867452515,
+          "q_descend_deg": [
+            -42.485821033496784,
+            27.050898492852987,
+            115.40844993143311,
+            8.877790062458702,
+            90.0,
+            88.30998496351378
+          ],
+          "saturated_descend": []
+        },
+        {
+          "theta_deg": 35.0,
+          "ok": true,
+          "fail_phases": [],
+          "descend_err_mm": 0.029846274455384614,
+          "descend_tilt_deg": 0.4847694232260986,
+          "q_descend_deg": [
+            -42.48582103349678,
+            26.437703054012278,
+            122.4053086482073,
+            -3.358242278993848,
+            90.0,
+            88.30998496351378
+          ],
+          "saturated_descend": []
+        },
+        {
+          "theta_deg": 40.0,
+          "ok": true,
+          "fail_phases": [],
+          "descend_err_mm": 0.04101193719545374,
+          "descend_tilt_deg": 0.6671308422124254,
+          "q_descend_deg": [
+            -42.485821033496784,
+            26.671739559418047,
+            127.95722711818568,
+            -13.961835835391774,
+            90.0,
+            88.30998496351378
+          ],
+          "saturated_descend": []
+        },
+        {
+          "theta_deg": 45.0,
+          "ok": true,
+          "fail_phases": [],
+          "descend_err_mm": 0.06774000954663659,
+          "descend_tilt_deg": 1.0964273929529385,
+          "q_descend_deg": [
+            -42.48582103349677,
+            27.60760977858614,
+            133.02941125989528,
+            -24.540593645528663,
+            90.0,
+            88.30998496351378
+          ],
+          "saturated_descend": []
+        },
+        {
+          "theta_deg": 50.0,
+          "ok": false,
+          "fail_phases": [
+            "approach"
+          ],
+          "descend_err_mm": 1.7195969189253222,
+          "descend_tilt_deg": 3.6516357459384543,
+          "q_descend_deg": [
+            -42.48582103349678,
+            28.335803554936994,
+            135.0,
+            -29.684167808998506,
+            90.0,
+            88.30998496351378
+          ],
+          "saturated_descend": [
+            "elbow@hi"
+          ]
+        },
+        {
+          "theta_deg": 60.0,
+          "ok": false,
+          "fail_phases": [
+            "approach",
+            "descend",
+            "lift"
+          ],
+          "descend_err_mm": 2.4935647402036842,
+          "descend_tilt_deg": 13.326944328806487,
+          "q_descend_deg": [
+            -42.48582103349677,
+            28.326944328806526,
+            135.0,
+            -30.0,
+            90.0,
+            88.30998496351378
+          ],
+          "saturated_descend": [
+            "elbow@hi",
+            "wrist_p@lo"
+          ]
+        },
+        {
+          "theta_deg": 70.0,
+          "ok": false,
+          "fail_phases": [
+            "approach",
+            "descend",
+            "lift"
+          ],
+          "descend_err_mm": 2.7606168011054626,
+          "descend_tilt_deg": 23.21645914767561,
+          "q_descend_deg": [
+            -42.48582103349677,
+            28.216459147675614,
+            135.0,
+            -30.0,
+            90.0,
+            88.30998496351378
+          ],
+          "saturated_descend": [
+            "elbow@hi",
+            "wrist_p@lo"
+          ]
+        },
+        {
+          "theta_deg": 80.0,
+          "ok": false,
+          "fail_phases": [
+            "approach",
+            "descend",
+            "lift"
+          ],
+          "descend_err_mm": 2.9372262997415683,
+          "descend_tilt_deg": 33.1369820255271,
+          "q_descend_deg": [
+            -42.48582103349678,
+            28.136982025527118,
+            135.0,
+            -30.0,
+            90.0,
+            88.30998496351378
+          ],
+          "saturated_descend": [
+            "elbow@hi",
+            "wrist_p@lo"
+          ]
+        },
+        {
+          "theta_deg": 90.0,
+          "ok": false,
+          "fail_phases": [
+            "approach",
+            "descend",
+            "lift"
+          ],
+          "descend_err_mm": 2.77625680115513,
+          "descend_tilt_deg": 43.14381171104314,
+          "q_descend_deg": [
+            -42.48582103349679,
+            28.143811711043142,
+            135.0,
+            -30.0,
+            90.0,
+            88.30998496351378
+          ],
+          "saturated_descend": [
+            "elbow@hi",
+            "wrist_p@lo"
+          ]
+        }
+      ],
+      "claudemd_table": [
+        {
+          "theta_deg": 6.0,
+          "ok": true,
+          "fail_phases": [],
+          "descend_err_mm": 0.05300324833372636,
+          "descend_tilt_deg": 0.7412623823182114,
+          "q_descend_deg": [
+            -42.485821033496784,
+            36.81037062438222,
+            84.43409497149038,
+            53.49679678644575,
+            90.0,
+            88.30998496351378
+          ],
+          "saturated_descend": []
+        },
+        {
+          "theta_deg": 29.0,
+          "ok": true,
+          "fail_phases": [],
+          "descend_err_mm": 0.020992066628645202,
+          "descend_tilt_deg": 0.3371384867452515,
+          "q_descend_deg": [
+            -42.485821033496784,
+            27.050898492852987,
+            115.40844993143311,
+            8.877790062458702,
+            90.0,
+            88.30998496351378
+          ],
+          "saturated_descend": []
+        },
+        {
+          "theta_deg": 35.0,
+          "ok": true,
+          "fail_phases": [],
+          "descend_err_mm": 0.029846274455384614,
+          "descend_tilt_deg": 0.4847694232260986,
+          "q_descend_deg": [
+            -42.48582103349678,
+            26.437703054012278,
+            122.4053086482073,
+            -3.358242278993848,
+            90.0,
+            88.30998496351378
+          ],
+          "saturated_descend": []
+        },
+        {
+          "theta_deg": 40.0,
+          "ok": true,
+          "fail_phases": [],
+          "descend_err_mm": 0.04101193719545374,
+          "descend_tilt_deg": 0.6671308422124254,
+          "q_descend_deg": [
+            -42.485821033496784,
+            26.671739559418047,
+            127.95722711818568,
+            -13.961835835391774,
+            90.0,
+            88.30998496351378
+          ],
+          "saturated_descend": []
+        },
+        {
+          "theta_deg": 45.0,
+          "ok": true,
+          "fail_phases": [],
+          "descend_err_mm": 0.0578121873369438,
+          "descend_tilt_deg": 0.9353839351982612,
+          "q_descend_deg": [
+            -42.48582103349678,
+            27.656483477325036,
+            133.2094111317443,
+            -24.93051067387063,
+            90.0,
+            88.30998496351378
+          ],
+          "saturated_descend": []
+        },
+        {
+          "theta_deg": 50.0,
+          "ok": true,
+          "fail_phases": [],
+          "descend_err_mm": 0.08280208998549289,
+          "descend_tilt_deg": 1.3240049328895283,
+          "q_descend_deg": [
+            -42.485821033496784,
+            29.435707124438224,
+            138.1068260761852,
+            -36.21852826773398,
+            90.0,
+            88.30998496351378
+          ],
+          "saturated_descend": []
+        },
+        {
+          "theta_deg": 60.0,
+          "ok": false,
+          "fail_phases": [
+            "approach"
+          ],
+          "descend_err_mm": 0.16956145510831167,
+          "descend_tilt_deg": 2.5968111383827557,
+          "q_descend_deg": [
+            -42.48582103349678,
+            35.32421237721205,
+            146.59666166000594,
+            -59.32406289883525,
+            90.0,
+            88.30998496351378
+          ],
+          "saturated_descend": []
+        },
+        {
+          "theta_deg": 70.0,
+          "ok": false,
+          "fail_phases": [
+            "approach"
+          ],
+          "descend_err_mm": 0.32677587576298867,
+          "descend_tilt_deg": 4.6355936176666805,
+          "q_descend_deg": [
+            -42.48582103349677,
+            43.69422103426515,
+            153.02988397272068,
+            -82.0885113893191,
+            90.0,
+            88.30998496351378
+          ],
+          "saturated_descend": []
+        },
+        {
+          "theta_deg": 80.0,
+          "ok": false,
+          "fail_phases": [
+            "approach",
+            "descend"
+          ],
+          "descend_err_mm": 0.5783411926690475,
+          "descend_tilt_deg": 7.266957336026767,
+          "q_descend_deg": [
+            -42.48582103349677,
+            53.38010387400131,
+            157.21460214243203,
+            -103.32774868040659,
+            90.0,
+            88.30998496351378
+          ],
+          "saturated_descend": []
+        },
+        {
+          "theta_deg": 90.0,
+          "ok": false,
+          "fail_phases": [
+            "approach",
+            "descend",
+            "lift"
+          ],
+          "descend_err_mm": 1.169449712671186,
+          "descend_tilt_deg": 14.673298364005463,
+          "q_descend_deg": [
+            -42.485821033496784,
+            56.70412932265489,
+            157.9691690413506,
+            -110.0,
+            90.0,
+            88.30998496351378
+          ],
+          "saturated_descend": [
+            "wrist_p@lo"
+          ]
+        }
+      ]
+    },
+    "checks": {
+      "radius_m": {
+        "expected": 0.28977932314129784,
+        "observed": 0.28977932314129784,
+        "pass": true
+      },
+      "psi_radial_deg": {
+        "expected": 317.5141789665032,
+        "observed": 317.5141789665032,
+        "pass": true
+      },
+      "max_theta[v6_clip]": {
+        "expected": 45.0,
+        "observed": 45.0,
+        "pass": true
+      },
+      "tilt_at_90[v6_clip]": {
+        "expected": 43.1438,
+        "observed": 43.14381171104314,
+        "tol": 0.001,
+        "pass": true
+      },
+      "ok_pattern[v6_clip]": {
+        "expected": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "observed": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "pass": true
+      },
+      "max_theta[claudemd_table]": {
+        "expected": 50.0,
+        "observed": 50.0,
+        "pass": true
+      },
+      "tilt_at_90[claudemd_table]": {
+        "expected": 14.67,
+        "observed": 14.673298364005463,
+        "tol": 0.005,
+        "pass": true
+      }
+    },
+    "pass": true
+  },
+  "limit_audit": {
+    "sets": {
+      "v6_clip": {
+        "base": [
+          -90.0,
+          90.0
+        ],
+        "shoulder": [
+          -30.0,
+          75.0
+        ],
+        "elbow": [
+          5.0,
+          135.0
+        ],
+        "wrist_p": [
+          -30.0,
+          90.0
+        ]
+      },
+      "claudemd_table": {
+        "base": [
+          -90.0,
+          90.0
+        ],
+        "shoulder": [
+          -110.0,
+          110.0
+        ],
+        "elbow": [
+          -70.0,
+          190.0
+        ],
+        "wrist_p": [
+          -110.0,
+          110.0
+        ]
+      },
+      "urdf_true": {
+        "base": [
+          -180.00042091829943,
+          180.00042091829943
+        ],
+        "shoulder": [
+          -90.00021045914971,
+          90.00021045914971
+        ],
+        "elbow": [
+          -57.29577951308232,
+          169.02254956359286
+        ],
+        "wrist_p": [
+          -110.00789666511805,
+          110.00789666511805
+        ]
+      }
+    },
+    "urdf_path": "/home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/urdf/roarm_m3.urdf",
+    "urdf_sha256_16": "64dc8d082cbce9a1",
+    "claudemd_table_vs_urdf_disagreements": [
+      {
+        "joint": "base",
+        "claudemd_table_deg": [
+          -90.0,
+          90.0
+        ],
+        "urdf_true_deg": [
+          -180.00042091829943,
+          180.00042091829943
+        ],
+        "claudemd_wider_lo": false,
+        "claudemd_wider_hi": false
+      },
+      {
+        "joint": "shoulder",
+        "claudemd_table_deg": [
+          -110.0,
+          110.0
+        ],
+        "urdf_true_deg": [
+          -90.00021045914971,
+          90.00021045914971
+        ],
+        "claudemd_wider_lo": true,
+        "claudemd_wider_hi": true
+      },
+      {
+        "joint": "elbow",
+        "claudemd_table_deg": [
+          -70.0,
+          190.0
+        ],
+        "urdf_true_deg": [
+          -57.29577951308232,
+          169.02254956359286
+        ],
+        "claudemd_wider_lo": true,
+        "claudemd_wider_hi": true
+      },
+      {
+        "joint": "wrist_p",
+        "claudemd_table_deg": [
+          -110.0,
+          110.0
+        ],
+        "urdf_true_deg": [
+          -110.00789666511805,
+          110.00789666511805
+        ],
+        "claudemd_wider_lo": false,
+        "claudemd_wider_hi": false
+      }
+    ],
+    "note": "p11:267-268 labels its second row 'urdf_hardware' but its values are the CLAUDE.md hardware table; where it is WIDER than the URDF the 52nd theta_max for that row is optimistic."
+  },
+  "grid": {
+    "radii_m": [
+      0.25,
+      0.275,
+      0.289779323141,
+      0.3
+    ],
+    "dpsi_deg": [
+      0.0,
+      180.0
+    ],
+    "limit_sets": [
+      "v6_clip",
+      "claudemd_table",
+      "urdf_true"
+    ],
+    "psi_pos_deg": 317.5141789665032,
+    "theta_coarse_grid_deg": [
+      0.0,
+      15.0,
+      30.0,
+      45.0,
+      60.0,
+      75.0,
+      90.0
+    ],
+    "bisect_tol_deg": 0.25,
+    "n_cells": 24,
+    "ik_evals": 591
+  },
+  "thresholds": {
+    "side_grasp_theta_deg": 75.0,
+    "pose_dependent_theta_deg": 60.0
+  },
+  "cells": [
+    {
+      "cell_id": "R2:v6_clip:r0.2500:d0.0",
+      "limit_set": "v6_clip",
+      "r_m": 0.25,
+      "dpsi_deg": 0.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 317.5141789665032,
+      "theta_max_deg": 36.796875,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 56.575958254761225,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [
+        "elbow@hi"
+      ],
+      "q_descend_at_boundary": [
+        -42.48582103349679,
+        21.26568468161742,
+        135.0,
+        -9.507111224232805,
+        90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    },
+    {
+      "cell_id": "R2:v6_clip:r0.2500:d180.0",
+      "limit_set": "v6_clip",
+      "r_m": 0.25,
+      "dpsi_deg": 180.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 137.5141789665032,
+      "theta_max_deg": 18.75,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 66.15734284788988,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [],
+      "q_descend_at_boundary": [
+        -42.48582103349679,
+        45.439892820493576,
+        70.50881960564372,
+        83.32362627133898,
+        -90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    },
+    {
+      "cell_id": "R2:v6_clip:r0.2750:d0.0",
+      "limit_set": "v6_clip",
+      "r_m": 0.275,
+      "dpsi_deg": 0.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 317.5141789665032,
+      "theta_max_deg": 42.421875,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 48.61004433856859,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [
+        "elbow@hi"
+      ],
+      "q_descend_at_boundary": [
+        -42.4858210334968,
+        25.304654670193965,
+        135.0,
+        -21.206113642353603,
+        90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    },
+    {
+      "cell_id": "R2:v6_clip:r0.2750:d180.0",
+      "limit_set": "v6_clip",
+      "r_m": 0.275,
+      "dpsi_deg": 180.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 137.5141789665032,
+      "theta_max_deg": 14.0625,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 76.25114310433052,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [],
+      "q_descend_at_boundary": [
+        -42.48582103349679,
+        48.093852201060805,
+        61.805962495790205,
+        84.76396052590296,
+        -90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    },
+    {
+      "cell_id": "R2:v6_clip:r0.2898:d0.0",
+      "limit_set": "v6_clip",
+      "r_m": 0.289779323141,
+      "dpsi_deg": 0.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 317.5141789665032,
+      "theta_max_deg": 45.9375,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 43.143811710993134,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [],
+      "q_descend_at_boundary": [
+        -42.4858210334968,
+        27.824922783301325,
+        133.81226999056418,
+        -26.266415748882874,
+        90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    },
+    {
+      "cell_id": "R2:v6_clip:r0.2898:d180.0",
+      "limit_set": "v6_clip",
+      "r_m": 0.289779323141,
+      "dpsi_deg": 180.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 137.5141789665032,
+      "theta_max_deg": 10.78125,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 91.64178061313761,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [],
+      "q_descend_at_boundary": [
+        -42.48582103349679,
+        49.340206424278534,
+        57.47685281068288,
+        84.4817271342571,
+        -90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    },
+    {
+      "cell_id": "R2:v6_clip:r0.3000:d0.0",
+      "limit_set": "v6_clip",
+      "r_m": 0.3,
+      "dpsi_deg": 0.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 317.5141789665032,
+      "theta_max_deg": 48.515625,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 42.216402322710806,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [],
+      "q_descend_at_boundary": [
+        -42.4858210334968,
+        29.66975663443428,
+        132.7838659273699,
+        -29.755906938102967,
+        90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    },
+    {
+      "cell_id": "R2:v6_clip:r0.3000:d180.0",
+      "limit_set": "v6_clip",
+      "r_m": 0.3,
+      "dpsi_deg": 180.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 137.5141789665032,
+      "theta_max_deg": 7.734375,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 94.37796041718808,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [],
+      "q_descend_at_boundary": [
+        -42.48582103349679,
+        49.454439729773995,
+        56.20178079688689,
+        82.43592558949359,
+        -90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    },
+    {
+      "cell_id": "R2:claudemd_table:r0.2500:d0.0",
+      "limit_set": "claudemd_table",
+      "r_m": 0.25,
+      "dpsi_deg": 0.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 317.5141789665032,
+      "theta_max_deg": 45.9375,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 25.087242609479716,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [],
+      "q_descend_at_boundary": [
+        -42.4858210334968,
+        24.48378092530225,
+        147.84235427503387,
+        -36.135474942587905,
+        90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    },
+    {
+      "cell_id": "R2:claudemd_table:r0.2500:d180.0",
+      "limit_set": "claudemd_table",
+      "r_m": 0.25,
+      "dpsi_deg": 180.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 137.5141789665032,
+      "theta_max_deg": 24.375,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 54.05711209683388,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [],
+      "q_descend_at_boundary": [
+        -42.4858210334968,
+        50.3548973299158,
+        61.80523157345243,
+        93.06981546400284,
+        -90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    },
+    {
+      "cell_id": "R2:claudemd_table:r0.2750:d0.0",
+      "limit_set": "claudemd_table",
+      "r_m": 0.275,
+      "dpsi_deg": 0.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 317.5141789665032,
+      "theta_max_deg": 48.515625,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 18.572568099681252,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [],
+      "q_descend_at_boundary": [
+        -42.4858210334968,
+        27.587904199249458,
+        141.8534458662111,
+        -36.352770372424516,
+        90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    },
+    {
+      "cell_id": "R2:claudemd_table:r0.2750:d180.0",
+      "limit_set": "claudemd_table",
+      "r_m": 0.275,
+      "dpsi_deg": 180.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 137.5141789665032,
+      "theta_max_deg": 15.46875,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 76.25114310433052,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [],
+      "q_descend_at_boundary": [
+        -42.4858210334968,
+        49.42177518714034,
+        59.205229896344925,
+        87.54028952938438,
+        -90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    },
+    {
+      "cell_id": "R2:claudemd_table:r0.2898:d0.0",
+      "limit_set": "claudemd_table",
+      "r_m": 0.289779323141,
+      "dpsi_deg": 0.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 317.5141789665032,
+      "theta_max_deg": 50.15625,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 14.673298364057498,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [],
+      "q_descend_at_boundary": [
+        -42.4858210334968,
+        29.504251591798283,
+        138.25347645825266,
+        -36.57548283877353,
+        90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    },
+    {
+      "cell_id": "R2:claudemd_table:r0.2898:d180.0",
+      "limit_set": "claudemd_table",
+      "r_m": 0.289779323141,
+      "dpsi_deg": 180.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 137.5141789665032,
+      "theta_max_deg": 10.78125,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 91.64178061313761,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [],
+      "q_descend_at_boundary": [
+        -42.48582103349679,
+        49.340206424278534,
+        57.47685281068288,
+        84.4817271342571,
+        -90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    },
+    {
+      "cell_id": "R2:claudemd_table:r0.3000:d0.0",
+      "limit_set": "claudemd_table",
+      "r_m": 0.3,
+      "dpsi_deg": 0.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 317.5141789665032,
+      "theta_max_deg": 51.328125,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 12.015075015012108,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [],
+      "q_descend_at_boundary": [
+        -42.48582103349679,
+        30.860220315541042,
+        135.71833045681083,
+        -36.737134270661656,
+        90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    },
+    {
+      "cell_id": "R2:claudemd_table:r0.3000:d180.0",
+      "limit_set": "claudemd_table",
+      "r_m": 0.3,
+      "dpsi_deg": 180.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 137.5141789665032,
+      "theta_max_deg": 7.734375,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 94.37796041718808,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [],
+      "q_descend_at_boundary": [
+        -42.48582103349679,
+        49.454439729773995,
+        56.20178079688689,
+        82.43592558949359,
+        -90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    },
+    {
+      "cell_id": "R2:urdf_true:r0.2500:d0.0",
+      "limit_set": "urdf_true",
+      "r_m": 0.25,
+      "dpsi_deg": 0.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 317.5141789665032,
+      "theta_max_deg": 45.9375,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 26.66693738228165,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [],
+      "q_descend_at_boundary": [
+        -42.4858210334968,
+        24.48378092530225,
+        147.84235427503387,
+        -36.135474942587905,
+        90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    },
+    {
+      "cell_id": "R2:urdf_true:r0.2500:d180.0",
+      "limit_set": "urdf_true",
+      "r_m": 0.25,
+      "dpsi_deg": 180.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 137.5141789665032,
+      "theta_max_deg": 24.375,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 54.0500461730788,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [],
+      "q_descend_at_boundary": [
+        -42.4858210334968,
+        50.3548973299158,
+        61.80523157345243,
+        93.06981546400284,
+        -90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    },
+    {
+      "cell_id": "R2:urdf_true:r0.2750:d0.0",
+      "limit_set": "urdf_true",
+      "r_m": 0.275,
+      "dpsi_deg": 0.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 317.5141789665032,
+      "theta_max_deg": 48.515625,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 18.56467143456321,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [],
+      "q_descend_at_boundary": [
+        -42.4858210334968,
+        27.587904199249458,
+        141.8534458662111,
+        -36.352770372424516,
+        90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    },
+    {
+      "cell_id": "R2:urdf_true:r0.2750:d180.0",
+      "limit_set": "urdf_true",
+      "r_m": 0.275,
+      "dpsi_deg": 180.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 137.5141789665032,
+      "theta_max_deg": 15.46875,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 76.25114310433052,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [],
+      "q_descend_at_boundary": [
+        -42.4858210334968,
+        49.42177518714034,
+        59.205229896344925,
+        87.54028952938438,
+        -90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    },
+    {
+      "cell_id": "R2:urdf_true:r0.2898:d0.0",
+      "limit_set": "urdf_true",
+      "r_m": 0.289779323141,
+      "dpsi_deg": 0.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 317.5141789665032,
+      "theta_max_deg": 50.15625,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 14.665401698939485,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [],
+      "q_descend_at_boundary": [
+        -42.4858210334968,
+        29.504251591798283,
+        138.25347645825266,
+        -36.57548283877353,
+        90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    },
+    {
+      "cell_id": "R2:urdf_true:r0.2898:d180.0",
+      "limit_set": "urdf_true",
+      "r_m": 0.289779323141,
+      "dpsi_deg": 180.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 137.5141789665032,
+      "theta_max_deg": 10.78125,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 91.64178061313761,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [],
+      "q_descend_at_boundary": [
+        -42.48582103349679,
+        49.340206424278534,
+        57.47685281068288,
+        84.4817271342571,
+        -90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    },
+    {
+      "cell_id": "R2:urdf_true:r0.3000:d0.0",
+      "limit_set": "urdf_true",
+      "r_m": 0.3,
+      "dpsi_deg": 0.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 317.5141789665032,
+      "theta_max_deg": 51.328125,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 12.015075015012108,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [],
+      "q_descend_at_boundary": [
+        -42.48582103349679,
+        30.860220315541042,
+        135.71833045681083,
+        -36.737134270661656,
+        90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    },
+    {
+      "cell_id": "R2:urdf_true:r0.3000:d180.0",
+      "limit_set": "urdf_true",
+      "r_m": 0.3,
+      "dpsi_deg": 180.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 137.5141789665032,
+      "theta_max_deg": 7.734375,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 94.37796041718808,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [],
+      "q_descend_at_boundary": [
+        -42.48582103349679,
+        49.454439729773995,
+        56.20178079688689,
+        82.43592558949359,
+        -90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    }
+  ],
+  "argmax": {
+    "v6_clip": {
+      "cell_id": "R2:v6_clip:r0.3000:d0.0",
+      "limit_set": "v6_clip",
+      "r_m": 0.3,
+      "dpsi_deg": 0.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 317.5141789665032,
+      "theta_max_deg": 48.515625,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 42.216402322710806,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [],
+      "q_descend_at_boundary": [
+        -42.4858210334968,
+        29.66975663443428,
+        132.7838659273699,
+        -29.755906938102967,
+        90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    },
+    "claudemd_table": {
+      "cell_id": "R2:claudemd_table:r0.3000:d0.0",
+      "limit_set": "claudemd_table",
+      "r_m": 0.3,
+      "dpsi_deg": 0.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 317.5141789665032,
+      "theta_max_deg": 51.328125,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 12.015075015012108,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [],
+      "q_descend_at_boundary": [
+        -42.48582103349679,
+        30.860220315541042,
+        135.71833045681083,
+        -36.737134270661656,
+        90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    },
+    "urdf_true": {
+      "cell_id": "R2:urdf_true:r0.3000:d0.0",
+      "limit_set": "urdf_true",
+      "r_m": 0.3,
+      "dpsi_deg": 0.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 317.5141789665032,
+      "theta_max_deg": 51.328125,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 12.015075015012108,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [],
+      "q_descend_at_boundary": [
+        -42.48582103349679,
+        30.860220315541042,
+        135.71833045681083,
+        -36.737134270661656,
+        90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    }
+  },
+  "theta_star_deg": {
+    "v6_clip": 48.515625,
+    "claudemd_table": 51.328125,
+    "urdf_true": 51.328125
+  },
+  "verdict_per_limit_set": {
+    "v6_clip": "TILT_CEILING_IS_ARM_PROPERTY",
+    "claudemd_table": "TILT_CEILING_IS_ARM_PROPERTY",
+    "urdf_true": "TILT_CEILING_IS_ARM_PROPERTY"
+  },
+  "verdict": "TILT_CEILING_IS_ARM_PROPERTY",
+  "nonmonotonic_cells": [],
+  "focus": {
+    "theta_grid_deg": [
+      0.0,
+      10.0,
+      20.0,
+      30.0,
+      40.0,
+      50.0,
+      60.0,
+      70.0,
+      80.0,
+      90.0
+    ],
+    "cells": {
+      "s1_v6_clip": {
+        "limit_set": "v6_clip",
+        "r_m": 0.28977932314129784,
+        "dpsi_deg": 0.0,
+        "psi_axis_deg": 317.5141789665032,
+        "theta_max_deg": 45.9375,
+        "nonmonotonic": false
+      },
+      "s1_claudemd_table": {
+        "limit_set": "claudemd_table",
+        "r_m": 0.28977932314129784,
+        "dpsi_deg": 0.0,
+        "psi_axis_deg": 317.5141789665032,
+        "theta_max_deg": 50.15625,
+        "nonmonotonic": false
+      },
+      "s1_urdf_true": {
+        "limit_set": "urdf_true",
+        "r_m": 0.28977932314129784,
+        "dpsi_deg": 0.0,
+        "psi_axis_deg": 317.5141789665032,
+        "theta_max_deg": 50.15625,
+        "nonmonotonic": false
+      },
+      "best_v6_clip": {
+        "limit_set": "v6_clip",
+        "r_m": 0.3,
+        "dpsi_deg": 0.0,
+        "psi_axis_deg": 317.5141789665032,
+        "theta_max_deg": 48.59375,
+        "nonmonotonic": false
+      }
+    }
+  },
+  "ablation_release_one_joint": [
+    {
+      "cell_id": "R4:release_base:r0.2898:d0.0",
+      "limit_set": "release_base",
+      "r_m": 0.28977932314129784,
+      "dpsi_deg": 0.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 317.5141789665032,
+      "theta_max_deg": 45.9375,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 43.14381171104283,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [],
+      "q_descend_at_boundary": [
+        -42.4858210334968,
+        27.82492278333579,
+        133.81226999047334,
+        -26.26641574884594,
+        90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    },
+    {
+      "cell_id": "R4:release_base:r0.3000:d0.0",
+      "limit_set": "release_base",
+      "r_m": 0.3,
+      "dpsi_deg": 0.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 317.5141789665032,
+      "theta_max_deg": 48.515625,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 42.216402322710806,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [],
+      "q_descend_at_boundary": [
+        -42.4858210334968,
+        29.66975663443428,
+        132.7838659273699,
+        -29.755906938102967,
+        90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    },
+    {
+      "cell_id": "R4:release_shoulder:r0.2898:d0.0",
+      "limit_set": "release_shoulder",
+      "r_m": 0.28977932314129784,
+      "dpsi_deg": 0.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 317.5141789665032,
+      "theta_max_deg": 45.9375,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 43.14381171104283,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [],
+      "q_descend_at_boundary": [
+        -42.4858210334968,
+        27.82492278333579,
+        133.81226999047334,
+        -26.26641574884594,
+        90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    },
+    {
+      "cell_id": "R4:release_shoulder:r0.3000:d0.0",
+      "limit_set": "release_shoulder",
+      "r_m": 0.3,
+      "dpsi_deg": 0.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 317.5141789665032,
+      "theta_max_deg": 48.515625,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 42.216402322710806,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [],
+      "q_descend_at_boundary": [
+        -42.4858210334968,
+        29.66975663443428,
+        132.7838659273699,
+        -29.755906938102967,
+        90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    },
+    {
+      "cell_id": "R4:release_elbow:r0.2898:d0.0",
+      "limit_set": "release_elbow",
+      "r_m": 0.28977932314129784,
+      "dpsi_deg": 0.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 317.5141789665032,
+      "theta_max_deg": 50.15625,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 43.82595909687622,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [],
+      "q_descend_at_boundary": [
+        -42.48582103349679,
+        28.336749421329024,
+        135.43116559227497,
+        -29.970334403684166,
+        90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    },
+    {
+      "cell_id": "R4:release_elbow:r0.3000:d0.0",
+      "limit_set": "release_elbow",
+      "r_m": 0.3,
+      "dpsi_deg": 0.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 317.5141789665032,
+      "theta_max_deg": 51.328125,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 42.61387462184103,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [
+        "wrist_p@lo"
+      ],
+      "q_descend_at_boundary": [
+        -42.4858210334968,
+        29.694657453591883,
+        132.87525540364686,
+        -30.0,
+        90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    },
+    {
+      "cell_id": "R4:release_wrist_p:r0.2898:d0.0",
+      "limit_set": "release_wrist_p",
+      "r_m": 0.28977932314129784,
+      "dpsi_deg": 0.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 317.5141789665032,
+      "theta_max_deg": 45.9375,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 43.335693159633934,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [],
+      "q_descend_at_boundary": [
+        -42.4858210334968,
+        27.82492278333579,
+        133.81226999047334,
+        -26.26641574884594,
+        90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    },
+    {
+      "cell_id": "R4:release_wrist_p:r0.3000:d0.0",
+      "limit_set": "release_wrist_p",
+      "r_m": 0.3,
+      "dpsi_deg": 0.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 317.5141789665032,
+      "theta_max_deg": 48.515625,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 39.75458965264263,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [],
+      "q_descend_at_boundary": [
+        -42.4858210334968,
+        29.66975663443428,
+        132.7838659273699,
+        -29.755906938102967,
+        90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    },
+    {
+      "cell_id": "R4:release_all:r0.2898:d0.0",
+      "limit_set": "release_all",
+      "r_m": 0.28977932314129784,
+      "dpsi_deg": 0.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 317.5141789665032,
+      "theta_max_deg": 50.15625,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 14.665401698887349,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [],
+      "q_descend_at_boundary": [
+        -42.4858210334968,
+        29.504251591822594,
+        138.25347645814784,
+        -36.57548283870137,
+        90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    },
+    {
+      "cell_id": "R4:release_all:r0.3000:d0.0",
+      "limit_set": "release_all",
+      "r_m": 0.3,
+      "dpsi_deg": 0.0,
+      "psi_pos_deg": 317.5141789665032,
+      "psi_axis_deg": 317.5141789665032,
+      "theta_max_deg": 51.328125,
+      "theta0_ok": true,
+      "nonmonotonic": false,
+      "n_evals": 13,
+      "residual_tilt_at_90_deg": 12.015075015012108,
+      "fail_phases_at_90": [
+        "approach",
+        "descend",
+        "lift"
+      ],
+      "saturated_at_boundary": [],
+      "q_descend_at_boundary": [
+        -42.48582103349679,
+        30.860220315541042,
+        135.71833045681083,
+        -36.737134270661656,
+        90.0,
+        88.30998496351378
+      ],
+      "coarse": null,
+      "bisect": null
+    }
+  ],
+  "null_control_psi_pos": {
+    "values": {
+      "R5:psi317.5": 45.9375,
+      "R5:psi0.0": 45.9375,
+      "R5:psi45.0": 45.9375,
+      "R5:psi280.0": 45.9375,
+      "R5:psi85.0": 45.9375
+    },
+    "pass": true
+  },
+  "rerun": {
+    "pass": true,
+    "errors": []
+  },
+  "wall_seconds": 163.1,
+  "artifacts": {
+    "grid.npz": {
+      "name": "t3w_smoke1_grid.npz",
+      "sha256_16": "2abf083bcd8657a3",
+      "bytes": 6167
+    },
+    "timeline.rrd": {
+      "name": "t3w_smoke1_timeline.rrd",
+      "sha256_16": "0c6775fa7a59a732",
+      "bytes": 172483
+    },
+    "timeline.rbl": {
+      "name": "t3w_smoke1_timeline.rbl",
+      "sha256_16": "a4257e12b9af4ca8",
+      "bytes": 59402
+    },
+    "rerun_validation.json": {
+      "name": "t3w_smoke1_rerun_validation.json",
+      "sha256_16": "b839a0fecb4af48e",
+      "bytes": 46627
+    },
+    "inspection.png": {
+      "name": "t3w_smoke1_inspection.png",
+      "sha256_16": "307d178e46fd6735",
+      "bytes": 6064494
+    },
+    "script.py.txt": {
+      "name": "t3w_smoke1_script.py.txt",
+      "sha256_16": "6dc188a21bce0326",
+      "bytes": 44699
+    },
+    "argv.txt": {
+      "name": "t3w_smoke1_argv.txt",
+      "sha256_16": "5ec4966fd4c20fd9",
+      "bytes": 194
+    }
+  }
+}

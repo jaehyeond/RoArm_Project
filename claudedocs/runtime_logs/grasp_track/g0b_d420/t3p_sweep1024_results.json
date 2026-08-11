@@ -1,0 +1,244 @@
+{
+  "tool": "p11_g0b_t3p_randomized_parallel_grasp_sweep",
+  "case": "g0b_d420",
+  "tag": "t3p",
+  "argv": [
+    "sim_scripts/p11_g0b_t3p_cyld29h50_randomized_parallel_grasp_sweep.py",
+    "--num_envs",
+    "1024",
+    "--pool_multiplier",
+    "2",
+    "--run_label",
+    "sweep1024",
+    "--plan_workers",
+    "28"
+  ],
+  "seed": 20260811,
+  "env": {
+    "numpy": "1.26.0",
+    "python": "3.11.14"
+  },
+  "asset": {
+    "attempt3_usd": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/roarm_m3.usd",
+    "sha256_16": "a4be58e87b1f9790"
+  },
+  "gates": {
+    "lift_gate_mm": 6.0,
+    "tip_half_angle_deg": 30.113733150982437,
+    "contact_eps_n": 1e-06
+  },
+  "ik_feasibility": {
+    "measured_window": {
+      "pool": 1024,
+      "feasible": 1024,
+      "feasible_rate": 1.0,
+      "fail_reasons": {},
+      "median_ik_err_mm": [
+        0.03670567478302125,
+        0.04059352707758741,
+        0.03667445221833027
+      ],
+      "median_ik_tilt_deg": [
+        1.3175627873932747,
+        1.2974419877429213,
+        1.308388450635086
+      ]
+    },
+    "high_tilt": {
+      "pool": 1024,
+      "feasible": 801,
+      "feasible_rate": 0.7822265625,
+      "fail_reasons": {
+        "ik_gate:approach": 179,
+        "ik_gate:approach,descend,lift": 35,
+        "ik_gate:approach,descend": 9
+      },
+      "median_ik_err_mm": [
+        0.16603305020849873,
+        0.09834432876020752,
+        0.09737784458035117
+      ],
+      "median_ik_tilt_deg": [
+        3.6583202693576773,
+        2.693301799305578,
+        2.5603647409104124
+      ]
+    }
+  },
+  "n_envs": 1024,
+  "wall_physics_s": 11.4,
+  "total_steps": 920,
+  "schedule": [
+    {
+      "phase": "settle",
+      "steps": 60
+    },
+    {
+      "phase": "approach",
+      "steps": 150
+    },
+    {
+      "phase": "descend",
+      "steps": 250
+    },
+    {
+      "phase": "close",
+      "steps": 150
+    },
+    {
+      "phase": "hold",
+      "steps": 60
+    },
+    {
+      "phase": "lift",
+      "steps": 250
+    }
+  ],
+  "kinematic_attach_disabled": true,
+  "kinematic_attach_calls": 0,
+  "spawn_arm_report": {
+    "count": 1,
+    "thresholds": [
+      0.0
+    ]
+  },
+  "filter_map": {
+    "support_plane": 0,
+    "link5": 1,
+    "gripper_link": 2
+  },
+  "resolved_filter_paths": {
+    "support_plane": "/World/ground/terrain/GroundPlane/CollisionPlane",
+    "filter_paths": [
+      "/World/ground/terrain/GroundPlane/CollisionPlane",
+      "/World/envs/env_.*/Robot/link5",
+      "/World/envs/env_.*/Robot/gripper_link"
+    ]
+  },
+  "positive_control": {
+    "window": "settle (object at rest on the ground)",
+    "expected_fz_n": 0.24358230000000003,
+    "band_n": [
+      0.158328495,
+      0.32883610500000005
+    ],
+    "median_fz_n": 0.24356785416603088,
+    "envs_in_band": 1024,
+    "envs_total": 1024,
+    "pass": true
+  },
+  "summary": {
+    "all": {
+      "n": 1024,
+      "success": 0,
+      "success_rate": 0.0,
+      "contact_nonzero": 752,
+      "lift_corrected_mm": {
+        "median": 0.0,
+        "p90": 3.91155481338501e-05,
+        "max": 0.00013783574104309082
+      },
+      "raw_rise_mm_median": 0.0,
+      "tilt_final_deg_median": 0.0,
+      "max_tilt_deg_median": 1.0472633838653564,
+      "descend_arrival_mm_median": 1.3130401372909546,
+      "close_q5_err_deg_median": 0.006752495653927326,
+      "lift_tcp_rise_mm_median": 23.04138946533203,
+      "both_jaws_loaded": 229,
+      "close_f_moving_max_n_median": 0.0,
+      "close_f_fixed_max_n_median": 0.4497731328010559,
+      "lift_f_moving_max_n_median": 0.0
+    },
+    "measured_window": {
+      "n": 512,
+      "success": 0,
+      "success_rate": 0.0,
+      "contact_nonzero": 480,
+      "lift_corrected_mm": {
+        "median": -1.862645149230957e-06,
+        "p90": 4.265457391738898e-05,
+        "max": 0.00012107193470001221
+      },
+      "raw_rise_mm_median": -1.862645149230957e-06,
+      "tilt_final_deg_median": 0.0,
+      "max_tilt_deg_median": 3.5413551330566406,
+      "descend_arrival_mm_median": 2.007040500640869,
+      "close_q5_err_deg_median": 0.012232014909386635,
+      "lift_tcp_rise_mm_median": 21.679916381835938,
+      "both_jaws_loaded": 146,
+      "close_f_moving_max_n_median": 0.0,
+      "close_f_fixed_max_n_median": 1.431337594985962,
+      "lift_f_moving_max_n_median": 0.0
+    },
+    "high_tilt": {
+      "n": 512,
+      "success": 0,
+      "success_rate": 0.0,
+      "contact_nonzero": 272,
+      "lift_corrected_mm": {
+        "median": 1.862645149230957e-06,
+        "p90": 3.91155481338501e-05,
+        "max": 0.00013783574104309082
+      },
+      "raw_rise_mm_median": 1.862645149230957e-06,
+      "tilt_final_deg_median": 0.0,
+      "max_tilt_deg_median": 0.0,
+      "descend_arrival_mm_median": 1.0515754222869873,
+      "close_q5_err_deg_median": 0.004802050068974495,
+      "lift_tcp_rise_mm_median": 23.65777587890625,
+      "both_jaws_loaded": 83,
+      "close_f_moving_max_n_median": 0.0,
+      "close_f_fixed_max_n_median": 0.0,
+      "lift_f_moving_max_n_median": 0.0
+    }
+  },
+  "n_success": 0,
+  "verdict": "CONTACT_BUT_NO_LIFT",
+  "rerun": {
+    "pass": true,
+    "errors": []
+  },
+  "wall_seconds": 355.6,
+  "artifacts": {
+    "plan.json": {
+      "name": "t3p_sweep1024_plan.json",
+      "sha256_16": "ef4c0a4d1894ea93",
+      "bytes": 1832803
+    },
+    "trace.npz": {
+      "name": "t3p_sweep1024_trace.npz",
+      "sha256_16": "df13e6162d018c5c",
+      "bytes": 2086306
+    },
+    "timeline.rrd": {
+      "name": "t3p_sweep1024_timeline.rrd",
+      "sha256_16": "8f9d9447a6b4e75f",
+      "bytes": 194364
+    },
+    "timeline.rbl": {
+      "name": "t3p_sweep1024_timeline.rbl",
+      "sha256_16": "0cbe99d665de327b",
+      "bytes": 55697
+    },
+    "rerun_validation.json": {
+      "name": "t3p_sweep1024_rerun_validation.json",
+      "sha256_16": "c1ab47ee780e7da2",
+      "bytes": 32633
+    },
+    "inspection.png": {
+      "name": "t3p_sweep1024_inspection.png",
+      "sha256_16": "7f5c754da9d90079",
+      "bytes": 994379
+    },
+    "script.py.txt": {
+      "name": "t3p_sweep1024_script.py.txt",
+      "sha256_16": "02286630b434bb1a",
+      "bytes": 64567
+    },
+    "argv.txt": {
+      "name": "t3p_sweep1024_argv.txt",
+      "sha256_16": "f78d3ea49be6a582",
+      "bytes": 145
+    }
+  }
+}

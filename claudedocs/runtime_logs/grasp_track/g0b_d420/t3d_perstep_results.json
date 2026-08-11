@@ -1,0 +1,474 @@
+{
+  "tool": "t3d_perstep",
+  "session": "46th",
+  "prereg": "t3d_prereg.md",
+  "prereg_sha256_16": "71184e4670471090",
+  "read_only_assets": true,
+  "isaac_launched": false,
+  "physics_rerun": false,
+  "question": "at every logged physics step, what is the signed clearance between each jaw and the D29 cylinder, on the CONSUMED collision asset at the MEASURED pose",
+  "imported_verbatim_from": {
+    "admission_engine": {
+      "path": "sim_scripts/g0b_t3r_n8_tilt_admission_readonly_audit.py",
+      "sha256_16": "84ab44dc9d9d87af"
+    },
+    "collision_asset_reader": {
+      "path": "sim_scripts/g0b_t3_attempt3_jaw_throat_occlusion_readonly_vertex_audit.py",
+      "sha256_16": "bca4f898023f63f2"
+    },
+    "kinematics": {
+      "path": "sim_scripts/roarm_kinematics.py",
+      "sha256_16": "af4cc2d3c124ba4a"
+    }
+  },
+  "env": {
+    "numpy": "1.26.0",
+    "rerun_sdk": "0.34.1",
+    "python": "3.11.14"
+  },
+  "asset": {
+    "usd": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/attempt3/roarm_m3_fullmesh_fixed_point_parts/roarm_m3.usd",
+    "usd_root_sha256": "a4be58e87b1f9790f2a2ed600f0620c79d3cfb95c608b3c598308d52f5e46fff",
+    "usd_physics_sha256": "043a5d35aa425c2589c77a34fcf415401ce9f9e7155e84ed75f6737df79fb503",
+    "enabled_convexhull_parts": {
+      "link5": 64,
+      "gripper_link": 64
+    },
+    "legacy_all_disabled": true,
+    "non_convexhull_approximation": {
+      "link5": [],
+      "gripper_link": []
+    },
+    "collision_link5_samples": 736206,
+    "collision_gripper_samples": 153197,
+    "visual_link5_samples": 2266503,
+    "visual_gripper_samples": 574831,
+    "hull_sample_spacing_m": 0.0005,
+    "l_vis_mm": 4.457620117187517,
+    "l_col_mm": 4.45762345504761,
+    "l_col_minus_l_vis_mm": 3.3378600932110203e-06
+  },
+  "inputs_bitpinned": {
+    "cap_world_grasp_m": [
+      0.21386313438415527,
+      -0.19572888314723969,
+      0.04999978616833687
+    ],
+    "cap_hex": [
+      "0x1.b5fde00000000p-3",
+      "-0x1.90da4e0000000p-3",
+      "0x1.999926ccccccdp-5"
+    ],
+    "target_axis_world": [
+      0.35752018911512096,
+      -0.3274441666276645,
+      -0.8746197071393957
+    ],
+    "d_hex": [
+      "0x1.6e19c5bfa3000p-2",
+      "-0x1.4f4d860bba282p-2",
+      "-0x1.bfce277d339c6p-1"
+    ],
+    "d_norm_minus_1": 0.0,
+    "q_descend_deg": [
+      -42.46503566381761,
+      27.070793264208664,
+      115.35887447723425,
+      8.906808555013786,
+      90.0,
+      88.30998496351378
+    ],
+    "cylinder_radius_m": 0.0145,
+    "cylinder_height_m": 0.05,
+    "note": "read from t3t_grasp3_results.json, never transcribed. D435 (4)'s +0.0002 mm was cap rounding (0.050 vs 0.04999978616833687), not d normalisation."
+  },
+  "G4_fk_chain": {
+    "pass": true,
+    "rows": [
+      {
+        "key": "approach_tcp",
+        "fk_err_mm": 0.012892687991988689,
+        "artifact_ik_err_mm": 0.012892687991988689,
+        "d_err": 0.0,
+        "fk_tilt_deg": 0.1991252966162716,
+        "artifact_ik_tilt_deg": 0.19912529661444126,
+        "d_tilt": 1.8303414339726487e-12
+      },
+      {
+        "key": "descend_tcp",
+        "fk_err_mm": 0.02095071992661216,
+        "artifact_ik_err_mm": 0.02095071992661216,
+        "d_err": 0.0,
+        "fk_tilt_deg": 0.3366255574943616,
+        "artifact_ik_tilt_deg": 0.3366255574943616,
+        "d_tilt": 0.0
+      },
+      {
+        "key": "lift_tcp",
+        "fk_err_mm": 0.012397637006054592,
+        "artifact_ik_err_mm": 0.012397637006054592,
+        "d_err": 0.0,
+        "fk_tilt_deg": 0.19823141596525037,
+        "artifact_ik_tilt_deg": 0.19823141596708896,
+        "d_tilt": 1.8385848399304905e-12
+      }
+    ],
+    "tol": 1e-09,
+    "meaning": "sim world == URDF world and the transform chain is the probe's"
+  },
+  "G5_clearance_crosscheck": {
+    "pass": true,
+    "rows": [
+      {
+        "case": "fixed_cmd",
+        "world_form_mm": 2.810994825797053e-06,
+        "frozen_prep_form_mm": 2.810994827857037e-06,
+        "delta_mm": 2.0599841277224584e-15,
+        "frozen_44th_log_mm": 0.0,
+        "delta_vs_44th_log_mm": 2.810994825797053e-06,
+        "n_inside": 0
+      },
+      {
+        "case": "fixed_act",
+        "world_form_mm": 1.564111205797296,
+        "frozen_prep_form_mm": 1.5641112057972948,
+        "delta_mm": 1.1102230246251565e-15,
+        "frozen_44th_log_mm": 1.5639,
+        "delta_vs_44th_log_mm": 0.00021120579729583255,
+        "n_inside": 0
+      },
+      {
+        "case": "moving_act_q5_19.50",
+        "world_form_mm": -0.40577408539084653,
+        "frozen_prep_form_mm": -0.40577408539084653,
+        "delta_mm": 0.0,
+        "frozen_44th_log_mm": -0.4059,
+        "delta_vs_44th_log_mm": 0.00012591460915345465,
+        "n_inside": 487
+      }
+    ],
+    "tol_mm": 1e-09,
+    "tol_vs_log_mm": 0.0005,
+    "delta_act_mm_step385": 0.6885339879778012
+  },
+  "gates": {
+    "G1_D427_visual": true,
+    "G2_N10g_peak": true,
+    "G3_N10h_identity": true,
+    "G4_fk_chain": true,
+    "G5_clearance_crosscheck": true,
+    "G6_env_pins": true
+  },
+  "per_leg": {
+    "1": {
+      "n_steps": 116,
+      "step_range": [
+        386,
+        501
+      ],
+      "fixed_min_mm": -0.034772869351138574,
+      "fixed_min_at_step": 428,
+      "fixed_argmin_part_at_min": "part_029",
+      "fixed_steps_nonpositive": 98,
+      "fixed_contact_parts": [
+        "part_029"
+      ],
+      "moving_min_mm": 4.825005747576156,
+      "moving_min_at_step": 491,
+      "moving_argmin_part_at_min": "part_063",
+      "moving_steps_nonpositive": 0,
+      "moving_contact_parts": [],
+      "max_abs_MA_minus_MB_fixed_mm": 0.1968880366628385,
+      "max_abs_MA_minus_MB_moving_mm": 0.19872962210256873,
+      "max_abs_collision_minus_visual_fixed_mm": 0.0002190263803381054,
+      "max_abs_collision_minus_visual_moving_mm": 0.32912695881783094
+    },
+    "2": {
+      "n_steps": 131,
+      "step_range": [
+        386,
+        516
+      ],
+      "fixed_min_mm": -0.034743248817078326,
+      "fixed_min_at_step": 428,
+      "fixed_argmin_part_at_min": "part_029",
+      "fixed_steps_nonpositive": 111,
+      "fixed_contact_parts": [
+        "part_029"
+      ],
+      "moving_min_mm": -0.06770428072149816,
+      "moving_min_at_step": 502,
+      "moving_argmin_part_at_min": "part_063",
+      "moving_steps_nonpositive": 8,
+      "moving_contact_parts": [
+        "part_063"
+      ],
+      "max_abs_MA_minus_MB_fixed_mm": 0.18837030285641365,
+      "max_abs_MA_minus_MB_moving_mm": 0.1685344894323641,
+      "max_abs_collision_minus_visual_fixed_mm": 0.0006383783451995306,
+      "max_abs_collision_minus_visual_moving_mm": 0.32912934033276997
+    },
+    "3": {
+      "n_steps": 149,
+      "step_range": [
+        386,
+        534
+      ],
+      "fixed_min_mm": -0.034743248817078326,
+      "fixed_min_at_step": 428,
+      "fixed_argmin_part_at_min": "part_029",
+      "fixed_steps_nonpositive": 114,
+      "fixed_contact_parts": [
+        "part_029"
+      ],
+      "moving_min_mm": -0.3804841270698377,
+      "moving_min_at_step": 518,
+      "moving_argmin_part_at_min": "part_063",
+      "moving_steps_nonpositive": 33,
+      "moving_contact_parts": [
+        "part_063"
+      ],
+      "max_abs_MA_minus_MB_fixed_mm": 0.17275968997044266,
+      "max_abs_MA_minus_MB_moving_mm": 0.1482739202724806,
+      "max_abs_collision_minus_visual_fixed_mm": 0.0008627070230068923,
+      "max_abs_collision_minus_visual_moving_mm": 0.32912934033276997
+    }
+  },
+  "preregistered_predictions": [
+    {
+      "name": "P-a",
+      "leg": 3,
+      "quantity": "fixed",
+      "direction": "enter",
+      "predicted_pair": [
+        388,
+        389
+      ],
+      "observed_pair_MA": [
+        391,
+        392
+      ],
+      "observed_pair_MB": [
+        388,
+        389
+      ],
+      "offset_steps": 3,
+      "orientation_sensitive": true,
+      "step_tolerance": 3,
+      "code": "WEAK_PASS"
+    },
+    {
+      "name": "P-b",
+      "leg": 1,
+      "quantity": "fixed",
+      "direction": "exit",
+      "predicted_pair": [
+        490,
+        491
+      ],
+      "observed_pair_MA": [
+        489,
+        490
+      ],
+      "observed_pair_MB": [
+        489,
+        490
+      ],
+      "offset_steps": -1,
+      "orientation_sensitive": false,
+      "step_tolerance": 3,
+      "code": "WEAK_PASS"
+    },
+    {
+      "name": "P-c",
+      "leg": 3,
+      "quantity": "moving",
+      "direction": "enter",
+      "predicted_pair": [
+        500,
+        501
+      ],
+      "observed_pair_MA": [
+        500,
+        501
+      ],
+      "observed_pair_MB": [
+        500,
+        501
+      ],
+      "offset_steps": 0,
+      "orientation_sensitive": false,
+      "step_tolerance": 3,
+      "code": "STRICT_PASS"
+    }
+  ],
+  "verdict": {
+    "code": "PERSTEP_CLEARANCE_PARTIALLY_CONFIRMS_ATTRIBUTION",
+    "strict_pass_count": 1,
+    "meaning": "clearance < 0 is a NECESSARY condition for closing contact, never sufficient. No force closure, no friction, no contact force. g0a_pass unchanged (false)."
+  },
+  "tail_after_517": {
+    "why": "prereg A-3: the 44th range 386..517 truncated leg 3, whose last 17 steps carry D435 (6)",
+    "leg3_steps_518_534": [
+      {
+        "step": 518,
+        "fixed_mm": 0.061189,
+        "moving_mm": -0.380484,
+        "tilt_deg": 3.0878,
+        "phase": "hold"
+      },
+      {
+        "step": 519,
+        "fixed_mm": 0.064737,
+        "moving_mm": -0.372782,
+        "tilt_deg": 3.1918,
+        "phase": "hold"
+      },
+      {
+        "step": 520,
+        "fixed_mm": 0.538478,
+        "moving_mm": 0.00905,
+        "tilt_deg": 3.3237,
+        "phase": "lift"
+      },
+      {
+        "step": 521,
+        "fixed_mm": 1.162306,
+        "moving_mm": -0.075824,
+        "tilt_deg": 2.9117,
+        "phase": "lift"
+      },
+      {
+        "step": 522,
+        "fixed_mm": 1.620888,
+        "moving_mm": -0.061774,
+        "tilt_deg": 2.7046,
+        "phase": "lift"
+      },
+      {
+        "step": 523,
+        "fixed_mm": 1.995519,
+        "moving_mm": -0.051672,
+        "tilt_deg": 2.5431,
+        "phase": "lift"
+      },
+      {
+        "step": 524,
+        "fixed_mm": 2.300614,
+        "moving_mm": -0.04302,
+        "tilt_deg": 2.4246,
+        "phase": "lift"
+      },
+      {
+        "step": 525,
+        "fixed_mm": 2.54903,
+        "moving_mm": -0.036062,
+        "tilt_deg": 2.3344,
+        "phase": "lift"
+      },
+      {
+        "step": 526,
+        "fixed_mm": 3.482349,
+        "moving_mm": -0.045738,
+        "tilt_deg": 2.1813,
+        "phase": "lift"
+      },
+      {
+        "step": 527,
+        "fixed_mm": 4.374752,
+        "moving_mm": -0.032243,
+        "tilt_deg": 2.2096,
+        "phase": "lift"
+      },
+      {
+        "step": 528,
+        "fixed_mm": 5.123319,
+        "moving_mm": -0.02566,
+        "tilt_deg": 2.1861,
+        "phase": "lift"
+      },
+      {
+        "step": 529,
+        "fixed_mm": 5.739067,
+        "moving_mm": -0.019746,
+        "tilt_deg": 2.1493,
+        "phase": "lift"
+      },
+      {
+        "step": 530,
+        "fixed_mm": 6.242702,
+        "moving_mm": -0.017173,
+        "tilt_deg": 2.1109,
+        "phase": "lift"
+      },
+      {
+        "step": 531,
+        "fixed_mm": 6.648511,
+        "moving_mm": -0.009599,
+        "tilt_deg": 2.0889,
+        "phase": "lift"
+      },
+      {
+        "step": 532,
+        "fixed_mm": 6.982714,
+        "moving_mm": -0.012463,
+        "tilt_deg": 2.0676,
+        "phase": "lift"
+      },
+      {
+        "step": 533,
+        "fixed_mm": 7.251577,
+        "moving_mm": -0.010272,
+        "tilt_deg": 2.0601,
+        "phase": "lift"
+      },
+      {
+        "step": 534,
+        "fixed_mm": 7.466762,
+        "moving_mm": -0.008787,
+        "tilt_deg": 2.0476,
+        "phase": "lift"
+      }
+    ]
+  },
+  "rerun_validation_pass": true,
+  "artifacts": {
+    "curves.csv": {
+      "name": "t3d_perstep_curves.csv",
+      "sha256_16": "cf0aef5b84c22fcd",
+      "bytes": 47497
+    },
+    "timeline.rrd": {
+      "name": "t3d_perstep_timeline.rrd",
+      "sha256_16": "e53cfb1d8c1b756f",
+      "bytes": 6890361
+    },
+    "timeline.rbl": {
+      "name": "t3d_perstep_timeline.rbl",
+      "sha256_16": "86dd9620f67c7ad6",
+      "bytes": 59595
+    },
+    "rerun_validation.json": {
+      "name": "t3d_perstep_rerun_validation.json",
+      "sha256_16": "6b421e497150934e",
+      "bytes": 28725
+    },
+    "inspection.png": {
+      "name": "t3d_perstep_inspection.png",
+      "sha256_16": "e70bf4a55ba7c270",
+      "bytes": 5521619
+    },
+    "diagnostic.png": {
+      "name": "t3d_perstep_diagnostic.png",
+      "sha256_16": "fa169711b5ce5c63",
+      "bytes": 328399
+    },
+    "script.py.txt": {
+      "name": "t3d_perstep_script.py.txt",
+      "sha256_16": "707f54372985e585",
+      "bytes": 45180
+    }
+  },
+  "artifacts_note": "results.json is deliberately absent from this manifest (D429-R1).",
+  "wall_seconds": 88.9
+}

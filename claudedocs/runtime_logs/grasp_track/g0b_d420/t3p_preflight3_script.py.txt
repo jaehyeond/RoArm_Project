@@ -1,0 +1,1294 @@
+#!/usr/bin/env python3
+"""p11 / t3p — randomized PARALLEL grasp sweep for case g0b_d420 (cylinder D29 x H50).
+
+WHY THIS SCRIPT EXISTS
+----------------------
+Every physics trial this project has ever run (43rd, 3 "legs") was a single
+deterministic rollout: RNG count 0, spawn 1 point, theta 29 deg, wrist roll
++90.000, one friction set, one closing gain set.  leg3 was a strict prefix of
+leg2 (D437-R1 (12) / D438 (6)), so the effective replicate count was n=1 -- and
+D438 later showed the interesting close band existed only in leg3, i.e. n=0.
+A point estimate in a >=6-dimensional space was then reported as "it does not
+work".  Meanwhile the environment has been tensorized for 4096 envs since it was
+written (`roarm_rl/roarm_stack_env.py:126-128`).
+
+p11 is the first randomized trial.  It samples 8 axes, solves IK per sample on
+the CPU, and runs every feasible sample as its own env in ONE Isaac process.
+
+AXES (the prereg is `g0b_d420/t3p_prereg.md`)
+  1 contact phase      top_down | side              (50/50 among FEASIBLE samples)
+  2 tool tilt theta    top_down U[6,29] deg (D431/D432 verified band)
+                       side     U[60,90] deg (reachability UNVERIFIED -- measured here)
+  3 approach azimuth   top_down: radial, forced by the 5-DOF chain (D432)
+                       side:     radial + U[-30,+30] deg (freedom UNVERIFIED -- measured here)
+  4 descend depth      clearance-0 + U[-3,+3] mm
+  5 close target q5    top_down: inside the frozen per-theta POSITIVE BITE window,
+                                 sampled at fraction U[0.15,0.75] of the window so the
+                                 window top (a STEP discontinuity, D433) is never used
+                       side:     U[5,60] deg -- band unmeasured a priori, mapped here
+  6 friction           static U[0.30,0.55], dynamic = static * U[0.60,0.90], per-env
+  7 closing speed+gain effective close ramp U[0.25,1.00] of the budget;
+                       arm/gripper stiffness U[40,140], damping U[2,8]
+  8 spawn              xy jitter U[-15,+15] mm, yaw U[0,360) deg
+
+PROVENANCE / ANTI-DRIFT
+  * The IK, the FK chain, the tilted-axis frame, the wrist-roll solve and the
+    pose planner are IMPORTED VERBATIM from the frozen p10 probe -- not
+    transcribed.  p10 is never modified and never executed as a program.
+    (D428 #29: compare against the object the pipeline actually consumes.)
+  * The per-theta positive-bite windows are READ AT RUNTIME from the frozen
+    artifact `t3r_n10_ctq5_results.json`, not hardcoded.
+  * Asset is attempt3 (64+64-part collision USD).  The local URDF is BANNED for
+    grasp physics: its moving jaw <collision> is a 4 mm cube stub (D430 (4)).
+
+CONTACT-FORCE INSTRUMENTATION -- the 9 items of D438-R1 Implication (2)
+  (1) ContactSensor is registered inside a `_setup_scene` OVERRIDE, before PLAY,
+      into `self.scene.sensors[...]`   (valid precedent d332:544-559, d362:1178-1191)
+  (2) NOTHING depends on `cfg.robot.spawn.activate_contact_sensors`; that flag was
+      measured to be neither necessary nor sufficient (D437-R1 (1)).  It is left
+      at its file default and the sensor is armed at runtime instead.
+  (3) The Sponge spawn is wrapped so `activate_contact_sensors(prim, threshold=0.0)`
+      runs at spawn time, and the threshold is READ BACK and asserted == 0.
+      (Isaac Lab 0.47.2 passes a bool into the threshold slot -> schema fallback
+      1.0 N, which is 4.11x the object weight and would silently eat every contact.)
+  (4) A POSITIVE CONTROL is preregistered on a window where contact MUST exist:
+      during `settle` the object rests on the ground, so the ground-filter force
+      must be ~= m*g = 0.2436 N.  Without it, an all-zero force column cannot be
+      distinguished between "no contact" and "no measurement".
+  (5) NO Kit-log "ContactReport" check -- it reads identically in runs that did and
+      did not obtain contact data, so its discriminative power is 0.
+  (6) Every contact number carries a phase label and its denominator window.
+  (7) Object drift is recomputed over the WHOLE close phase, not from phase-end
+      records only (the 5-record aggregate was a 308.6x artifact in leg1).
+  (8) The primary lift metric is TILT-CORRECTED lift-off, never raw obj_z: a rigid
+      cylinder that merely tips raises its centre without leaving the ground
+      (D438-R1 F11 -- the "+0.0330 mm rise" was a 3.3237 deg tilt).
+  (9) The executed script and argv are frozen next to the results.
+
+WHAT THIS SCRIPT DOES NOT DO
+  * It does not re-run Gate-0, and it does not touch any t3r_/t3t_/t3d_ artifact.
+  * It does not re-run the fully vertical top-down case (D430: geometrically
+    impossible for D29; admissible only for D < 20.25 mm).
+  * It makes no claim about the real robot.  `g0a_pass` stays false.
+  * The kinematic grasp attach of the RL env is DISABLED, so a "lift" here is
+    friction and geometry, never a pin.
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import importlib.util
+import json
+import math
+import os
+import shutil
+import sys
+import time
+from pathlib import Path
+from typing import Any
+
+import numpy as np
+
+REPO = Path(__file__).resolve().parents[1]
+if str(REPO) not in sys.path:
+    sys.path.insert(0, str(REPO))
+if str(REPO / "sim_scripts") not in sys.path:
+    sys.path.insert(0, str(REPO / "sim_scripts"))
+
+LOG = "p11_t3p"
+TAG = "t3p"
+CASE_DIR = REPO / "claudedocs/runtime_logs/grasp_track/g0b_d420"
+
+RERUN_VERSION = "0.34.1"
+RERUN_CLI = "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun"
+NUMPY_PIN = "1.26.0"
+
+P10_PATH = REPO / "sim_scripts/p10_g0b_t3t_cyld29h50_tilted_close_sweep_grasp_probe.py"
+N10_PATH = CASE_DIR / "t3r_n10_ctq5_results.json"
+
+# ---- object under test (HARD RULE #18: frozen, not a swept axis) -------------
+OBJ_DIAM_M = 0.029
+OBJ_HEIGHT_M = 0.050
+OBJ_MASS_KG = 0.02483
+GRAVITY = 9.81
+
+# ---- world convention (42nd / t3_prereg.md:176-179 -- DO NOT use TABLE_Z) ----
+# T3-family geometry is referenced to the SUPPORT PLANE AT z = 0 (top face at
+# z = +0.050).  p10 inherits TABLE_Z = -0.012117 from the T2 era; using it here
+# would place every plan 12.117 mm off and would additionally spawn the object
+# inside the ground collider.
+SUPPORT_Z_M = 0.0
+# A standing cylinder tips once its axis passes atan(D/H); beyond this the object
+# is falling over, not being lifted.
+TIP_HALF_ANGLE_DEG = math.degrees(math.atan(OBJ_DIAM_M / OBJ_HEIGHT_M))  # 30.1109...
+
+# ---- success gate (preregistered) -------------------------------------------
+LIFT_GATE_MM = 6.000
+CONTACT_EPS_N = 1.0e-6
+
+# ---- positive control (preregistered) ---------------------------------------
+SETTLE_SUPPORT_FZ_N = OBJ_MASS_KG * GRAVITY          # 0.24358...
+SETTLE_SUPPORT_TOL = 0.35                             # +-35 % band
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with Path(path).open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1 << 20), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _import_p10() -> Any:
+    """Load the frozen p10 probe as a LIBRARY.  Its module level is Isaac-free
+    (AppLauncher only appears inside its main(), p10:1153), so this import
+    executes no simulation and mutates nothing."""
+    spec = importlib.util.spec_from_file_location("p10_frozen", P10_PATH)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules["p10_frozen"] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+# =============================================================================
+# Stage A -- sampling and IK planning (pure numpy; no Isaac)
+# =============================================================================
+def _load_bite_windows() -> list[dict[str, float]]:
+    """Frozen per-theta POSITIVE bite windows from the n10 artifact."""
+    data = json.loads(N10_PATH.read_text())
+    rows: list[dict[str, float]] = []
+    for entry in data["per_theta"]:
+        windows = entry["collision"]["positive_windows_deg"]
+        if not windows:
+            continue  # theta = 0 has no admissible window at all (D430)
+        win = windows[0]
+        rows.append(
+            {
+                "theta_deg": float(entry["theta_deg"]),
+                "q5_lo_deg": float(win["q5_lo_deg"]),
+                "q5_hi_deg": float(win["q5_hi_deg"]),
+                "max_bite_mm": float(entry["collision"]["max_bite_mm"]),
+                "phi_deg": float(entry["phi_deg"]),
+            }
+        )
+    rows.sort(key=lambda r: r["theta_deg"])
+    return rows
+
+
+def _interp_window(theta_deg: float, table: list[dict[str, float]]) -> tuple[float, float, float]:
+    """Linear interpolation of (q5_lo, q5_hi, max_bite) between measured thetas.
+
+    DECLARED APPROXIMATION: the artifact measures 7 discrete thetas in [6, 29].
+    Interpolating between them is not itself measured.  It is used ONLY to place
+    the close target strictly inside the window with margin, never to claim a
+    bite value.  Sampled theta is always recorded so any row can be re-derived.
+    """
+    thetas = [r["theta_deg"] for r in table]
+    lo = np.interp(theta_deg, thetas, [r["q5_lo_deg"] for r in table])
+    hi = np.interp(theta_deg, thetas, [r["q5_hi_deg"] for r in table])
+    bite = np.interp(theta_deg, thetas, [r["max_bite_mm"] for r in table])
+    return float(lo), float(hi), float(bite)
+
+
+class _PlanArgs:
+    """Minimal stand-in for p10's argparse.Namespace, carrying only the fields
+    its frozen planner/IK actually read."""
+
+    def __init__(self, **kw: Any) -> None:
+        self.__dict__.update(kw)
+
+
+# --- worker-process globals (the frozen solver keeps its frame in module state,
+#     so each worker owns its own copy; that is why this runs in PROCESSES) ----
+_W: dict[str, Any] = {}
+
+
+def _worker_init(plan_kw: dict[str, Any]) -> None:
+    _W["p10"] = _import_p10()
+    _W["plan_kw"] = plan_kw
+
+
+def _worker_plan(job: dict[str, Any]) -> dict[str, Any]:
+    """Solve one sample's three IK targets with the frozen p10 planner."""
+    p10 = _W["p10"]
+    kw = dict(_W["plan_kw"])
+    kw["grasp_surface_margin_m"] = kw["grasp_surface_margin_m"] - job["delta_mm"] / 1000.0
+    kw["close_deg"] = [kw["descend_open_deg"], job["q5_close_deg"]]
+    center = np.array(job["center_m"], dtype=np.float64)
+
+    p10.set_target_axis(job["theta_deg"], job["psi_deg"])
+    p10.PHI_STAR_DEG = 0.0
+    try:
+        plan = p10._build_plan_from_center(_PlanArgs(**kw), center, f"{job['group']}_{job['idx']:05d}")
+    except Exception as exc:
+        out = dict(job)
+        out.update({"feasible": False, "reason": f"planner_error:{exc}"})
+        return out
+
+    feasible = bool(plan.approach_ik_ok and plan.descend_ik_ok and plan.lift_ik_ok)
+    reason = "" if feasible else "ik_gate:" + ",".join(
+        name for name, ok in (("approach", plan.approach_ik_ok),
+                              ("descend", plan.descend_ik_ok),
+                              ("lift", plan.lift_ik_ok)) if not ok)
+    out = dict(job)
+    out.update({
+        "feasible": feasible,
+        "reason": reason,
+        "ik_err_mm": [plan.approach_ik_err_mm, plan.descend_ik_err_mm, plan.lift_ik_err_mm],
+        "ik_tilt_deg": [plan.approach_tilt_deg, plan.descend_tilt_deg, plan.lift_tilt_deg],
+        "q_approach_deg": plan.q_approach_deg.tolist(),
+        "q_descend_deg": plan.q_descend_deg.tolist(),
+        "q_lift_deg": plan.q_lift_deg.tolist(),
+        "descend_tcp_m": plan.descend_tcp.tolist(),
+    })
+    return out
+
+
+def reachability_scan(args: argparse.Namespace) -> dict[str, Any]:
+    """How far from vertical can the tool axis actually go at this pose?
+
+    This is the measurement that decides whether a SIDE grasp (tool axis near
+    horizontal, theta ~ 90 deg) is even a candidate.  It has never been run:
+    D432 established reachability only for the 6-29 deg band.
+    """
+    p10 = _import_p10()
+    base_xy = p10._workspace_xy_from_label(args.pose_label)
+    center = np.array([base_xy[0], base_xy[1], SUPPORT_Z_M + OBJ_HEIGHT_M / 2.0])
+    psi = math.degrees(math.atan2(base_xy[1], base_xy[0])) % 360.0
+    kw = _plan_kw(args)
+    kw["close_deg"] = [args.descend_open_deg, 24.0]
+    p10.PHI_STAR_DEG = 0.0
+
+    v6_clip = dict(p10.V6_LIMITS_DEG)
+    # The URDF hardware envelope (CLAUDE.md "RoArm M3 Hardware / Joint Specs").
+    # JOINT_LIMITS itself is never removed (HARD RULE #5) -- this widens the v6
+    # DISTRIBUTION clip to the hardware bound to separate the two causes.
+    hardware = {"base": (-90.0, 90.0), "shoulder": (-110.0, 110.0),
+                "elbow": (-70.0, 190.0), "wrist_p": (-110.0, 110.0)}
+
+    rows: list[dict[str, Any]] = []
+    for label, limits in (("v6_clip", v6_clip), ("urdf_hardware", hardware)):
+        p10.V6_LIMITS_DEG = limits
+        for theta in args.reach_scan_theta:
+            p10.set_target_axis(float(theta), psi)
+            plan = p10._build_plan_from_center(_PlanArgs(**kw), center, "reach")
+            rows.append({
+                "limits": label,
+                "theta_deg": float(theta),
+                "ok": bool(plan.approach_ik_ok and plan.descend_ik_ok and plan.lift_ik_ok),
+                "descend_err_mm": plan.descend_ik_err_mm,
+                "descend_tilt_deg": plan.descend_tilt_deg,
+                "q_descend_deg": [round(v, 4) for v in plan.q_descend_deg.tolist()],
+            })
+    p10.V6_LIMITS_DEG = v6_clip
+
+    def _boundary(label: str) -> float | None:
+        ok = [r["theta_deg"] for r in rows if r["limits"] == label and r["ok"]]
+        return max(ok) if ok else None
+
+    return {
+        "pose_label": args.pose_label,
+        "psi_radial_deg": psi,
+        "radius_m": float(math.hypot(base_xy[0], base_xy[1])),
+        "rows": rows,
+        "max_feasible_theta_deg": {"v6_clip": _boundary("v6_clip"),
+                                   "urdf_hardware": _boundary("urdf_hardware")},
+        "note": ("theta is the angle of the tool axis away from vertical; a true side "
+                 "grasp needs ~90 deg. JOINT_LIMITS is never removed (HARD RULE #5); "
+                 "the 'urdf_hardware' row only widens the v6 DISTRIBUTION clip."),
+    }
+
+
+def _plan_kw(args: argparse.Namespace) -> dict[str, Any]:
+    return {
+        "object_size_m": np.array([OBJ_DIAM_M, OBJ_DIAM_M, OBJ_HEIGHT_M], dtype=np.float64),
+        "grasp_surface_margin_m": args.grasp_surface_margin_m,
+        "approach_clearance_m": args.approach_clearance_m,
+        "lift_delta_m": args.lift_delta_m,
+        "descend_open_deg": args.descend_open_deg,
+        "close_deg": [args.descend_open_deg, 24.0],
+        "target_error_gate_m": args.target_error_gate_m,
+        "plan_tilt_gate_deg": args.plan_tilt_gate_deg,
+    }
+
+
+def build_samples(args: argparse.Namespace) -> dict[str, Any]:
+    """Sample the 8 axes, solve IK for each (in parallel), return feasible plans.
+
+    GROUPS replace the originally-specified top_down/side split.  The side arm was
+    dropped because `reachability_scan` measures it to be kinematically out of
+    reach at this pose, not because it is uninteresting -- see results.json
+    /reachability_scan.  The budget goes instead to the whole REACHABLE tilt
+    continuum, whose upper half (29-45 deg) has never been executed:
+      * `measured_window` : theta in [6, 35], close target inside the frozen
+                            per-theta positive-bite window (t3r_n10_ctq5).
+      * `high_tilt`       : theta in (35, theta_max], close target sampled broadly
+                            because no bite window has ever been measured there.
+    """
+    import multiprocessing as mp
+
+    p10 = _import_p10()
+    table = _load_bite_windows()
+    rng = np.random.default_rng(args.seed)
+    base_xy = p10._workspace_xy_from_label(args.pose_label)
+
+    n_pool = int(args.pool_multiplier * args.num_envs)
+    jobs: list[dict[str, Any]] = []
+
+    for idx in range(n_pool):
+        group = "measured_window" if (idx % 2 == 0) else "high_tilt"
+
+        # --- axis 8: spawn -------------------------------------------------
+        dx, dy = rng.uniform(-args.spawn_jitter_mm, args.spawn_jitter_mm, size=2) / 1000.0
+        yaw_deg = float(rng.uniform(0.0, 360.0))
+        cx, cy = base_xy[0] + float(dx), base_xy[1] + float(dy)
+        center = [cx, cy, SUPPORT_Z_M + OBJ_HEIGHT_M / 2.0]
+
+        # --- axis 3: approach azimuth --------------------------------------
+        # D432: on a 5-DOF chain the tilt azimuth is forced to the robot->object
+        # radial direction.  It is perturbed here so the claim is re-measured
+        # rather than assumed, and the perturbation is recorded per env.
+        psi_radial = math.degrees(math.atan2(cy, cx)) % 360.0
+        psi_off = float(rng.uniform(-args.psi_span_deg, args.psi_span_deg))
+        psi_deg = (psi_radial + psi_off) % 360.0
+
+        # --- axis 2: tool tilt ---------------------------------------------
+        if group == "measured_window":
+            theta_deg = float(rng.uniform(args.theta_lo, args.theta_measured_hi))
+        else:
+            theta_deg = float(rng.uniform(args.theta_measured_hi, args.theta_hi))
+
+        # --- axis 5: close target ------------------------------------------
+        if group == "measured_window":
+            q5_lo, q5_hi, bite_ref = _interp_window(theta_deg, table)
+            frac = float(rng.uniform(args.q5_frac_lo, args.q5_frac_hi))
+            q5_close_deg = q5_lo + frac * (q5_hi - q5_lo)
+            window = [q5_lo, q5_hi]
+        else:
+            q5_close_deg = float(rng.uniform(args.q5_broad_lo, args.q5_broad_hi))
+            bite_ref = float("nan")
+            frac = float("nan")
+            window = [args.q5_broad_lo, args.q5_broad_hi]
+
+        jobs.append({
+            "idx": idx,
+            "group": group,
+            "theta_deg": theta_deg,
+            "psi_deg": psi_deg,
+            "psi_offset_deg": psi_off,
+            "delta_mm": float(rng.uniform(-args.delta_span_mm, args.delta_span_mm)),
+            "q5_close_deg": q5_close_deg,
+            "q5_window_deg": window,
+            "q5_window_frac": frac,
+            "bite_ref_mm": bite_ref,
+            "mu_static": (mu_s := float(rng.uniform(args.mu_static_lo, args.mu_static_hi))),
+            "mu_dynamic": mu_s * float(rng.uniform(args.mu_ratio_lo, args.mu_ratio_hi)),
+            "close_rate": float(rng.uniform(args.close_rate_lo, args.close_rate_hi)),
+            "stiffness": float(rng.uniform(args.stiffness_lo, args.stiffness_hi)),
+            "damping": float(rng.uniform(args.damping_lo, args.damping_hi)),
+            "spawn_xy_m": [cx, cy],
+            "spawn_yaw_deg": yaw_deg,
+            "center_m": center,
+        })
+
+    plan_kw = _plan_kw(args)
+    workers = max(1, min(args.plan_workers, len(jobs)))
+    ctx = mp.get_context("spawn")
+    with ctx.Pool(workers, initializer=_worker_init, initargs=(plan_kw,)) as pool:
+        samples = pool.map(_worker_plan, jobs, chunksize=8)
+
+    feas = [s for s in samples if s.get("feasible")]
+    half = args.num_envs // 2
+    a = [s for s in feas if s["group"] == "measured_window"][:half]
+    b = [s for s in feas if s["group"] == "high_tilt"][: args.num_envs - half]
+    chosen = a + b
+    if len(chosen) < args.num_envs:  # backfill so no env slot is wasted
+        used = {s["idx"] for s in chosen}
+        chosen += [s for s in feas if s["idx"] not in used][: args.num_envs - len(chosen)]
+
+    def _rate(phase: str) -> dict[str, Any]:
+        pool = [s for s in samples if s["group"] == phase]
+        ok = [s for s in pool if s.get("feasible")]
+        reasons: dict[str, int] = {}
+        for s in pool:
+            if not s.get("feasible"):
+                reasons[s.get("reason", "?")] = reasons.get(s.get("reason", "?"), 0) + 1
+        errs = [s["ik_err_mm"] for s in pool if "ik_err_mm" in s]
+        tilts = [s["ik_tilt_deg"] for s in pool if "ik_tilt_deg" in s]
+        return {
+            "pool": len(pool),
+            "feasible": len(ok),
+            "feasible_rate": (len(ok) / len(pool)) if pool else None,
+            "fail_reasons": reasons,
+            "median_ik_err_mm": (np.median(np.array(errs), axis=0).tolist() if errs else None),
+            "median_ik_tilt_deg": (np.median(np.array(tilts), axis=0).tolist() if tilts else None),
+        }
+
+    return {
+        "samples": chosen,
+        "n_pool": n_pool,
+        "n_feasible": len(feas),
+        "ik_feasibility": {"measured_window": _rate("measured_window"),
+                           "high_tilt": _rate("high_tilt")},
+        "bite_window_table": table,
+        "seed": int(args.seed),
+    }
+
+
+# =============================================================================
+# Stage B -- Isaac rollout (tensorized over envs)
+# =============================================================================
+def _make_env(args: argparse.Namespace, samples: list[dict[str, Any]], p10: Any) -> Any:
+    """Build the env with the contact sensor registered BEFORE play."""
+    import isaaclab.sim as sim_utils
+    from isaaclab.sensors import ContactSensor, ContactSensorCfg
+    from pxr import PhysxSchema
+
+    from roarm_rl.roarm_stack_env import RoArmStackEnv, RoArmStackEnvCfg
+
+    cfg = RoArmStackEnvCfg()
+
+    # D-6 style guard: the attempt3 injection must have reached the composed cfg.
+    effective_usd = str(cfg.robot.spawn.usd_path)
+    if effective_usd != str(p10.ATTEMPT3_USD) or "/NHNHOME" in effective_usd:
+        raise RuntimeError(f"USD_GUARD_FAIL effective usd_path={effective_usd}")
+
+    cfg.scene.num_envs = len(samples)
+    cfg.episode_length_s = args.episode_length_s
+    # ContactSensor resolves its bodies through USD (`find_matching_prims`), so
+    # fabric-only clones are invisible to it and `_initialize_impl` dies with
+    # "Failed to initialize contact reporter for specified bodies" at N > 1.
+    # The IsaacLab default is False (interactive_scene_cfg.py:114); this project
+    # opted into True, which is why no prior run could have seen this.
+    cfg.scene.clone_in_fabric = bool(args.clone_in_fabric)
+    # The attempt3 robot is a 64+64-part convex decomposition; at 1024 envs the
+    # IsaacLab default GPU pair/stack capacities overflow silently into dropped
+    # contacts.  Size them explicitly instead of discovering it at run time.
+    cfg.sim.physx = sim_utils.PhysxCfg(
+        gpu_found_lost_pairs_capacity=int(args.gpu_found_lost_pairs_capacity),
+        gpu_total_aggregate_pairs_capacity=int(args.gpu_total_aggregate_pairs_capacity),
+        gpu_collision_stack_size=int(args.gpu_collision_stack_size),
+        gpu_max_rigid_contact_count=int(args.gpu_max_rigid_contact_count),
+    )
+    cfg.reward_phase = 6
+    cfg.curriculum_pregrasp = False
+    cfg.curriculum_pregrasp_hover = False
+    cfg.curriculum_attached_transport_release = False
+    cfg.curriculum_post_grasp_cap = False
+    cfg.curriculum_disable_nearzone_cap = False
+    cfg.curriculum_spawn_min_r = 0.0
+    cfg.curriculum_spawn_max_r = 0.0
+
+    # Object: cylinder D29 x H50.  Friction here is only the SPAWN default; the
+    # per-env values of axis 6 are written to the physx view after play.
+    cfg.sponge.spawn = sim_utils.CylinderCfg(
+        radius=OBJ_DIAM_M / 2.0,
+        height=OBJ_HEIGHT_M,
+        axis="Z",
+        rigid_props=sim_utils.RigidBodyPropertiesCfg(
+            solver_position_iteration_count=8,
+            solver_velocity_iteration_count=1,
+            max_angular_velocity=10.0,
+            max_linear_velocity=10.0,
+            max_depenetration_velocity=5.0,
+            disable_gravity=False,
+        ),
+        mass_props=sim_utils.MassPropertiesCfg(mass=OBJ_MASS_KG),
+        collision_props=sim_utils.CollisionPropertiesCfg(),
+        physics_material=sim_utils.RigidBodyMaterialCfg(
+            static_friction=0.40, dynamic_friction=0.30, restitution=0.0
+        ),
+        visual_material=sim_utils.PreviewSurfaceCfg(diffuse_color=(0.80, 0.62, 0.38)),
+    )
+    cfg.sponge.init_state.pos = (float(samples[0]["center_m"][0]),
+                                 float(samples[0]["center_m"][1]),
+                                 float(samples[0]["center_m"][2]))
+    cfg.sponge.init_state.rot = (1.0, 0.0, 0.0, 0.0)
+
+    # --- checklist (3): arm the reporter at SPAWN time with an explicit 0.0
+    #     threshold, then read the authored value back.  Never trust the cfg flag.
+    base_spawn = cfg.sponge.spawn.func
+    armed = {"count": 0, "thresholds": []}
+
+    def _spawn_with_zero_threshold_reporter(prim_path, spawn_cfg, translation=None,
+                                            orientation=None, **kwargs):
+        prim = base_spawn(prim_path, spawn_cfg, translation=translation,
+                          orientation=orientation, **kwargs)
+        sim_utils.activate_contact_sensors(prim.GetPath().pathString, threshold=0.0)
+        api = PhysxSchema.PhysxContactReportAPI.Get(prim.GetStage(), prim.GetPath())
+        threshold = api.GetThresholdAttr().Get()
+        if threshold is None or abs(float(threshold)) > 1.0e-12:
+            raise RuntimeError(f"contact reporter threshold readback failed: {threshold}")
+        armed["count"] += 1
+        armed["thresholds"].append(float(threshold))
+        return prim
+
+    cfg.sponge.spawn.func = _spawn_with_zero_threshold_reporter
+
+    filter_labels = ("support_plane", "link5", "gripper_link")
+    resolved: dict[str, Any] = {}
+
+    def _find_ground_collider(stage: Any) -> str:
+        """d332's positive control FAILED because it filtered on '/World/ground',
+        the terrain ROOT, which carries no collider.  Resolve the actual collision
+        prim instead of guessing a path."""
+        from pxr import Usd, UsdPhysics
+
+        root = stage.GetPrimAtPath("/World/ground")
+        if not root.IsValid():
+            raise RuntimeError("terrain root /World/ground not found")
+        hits = [p.GetPath().pathString
+                for p in Usd.PrimRange(root)
+                if p.HasAPI(UsdPhysics.CollisionAPI)]
+        if not hits:
+            raise RuntimeError("no UsdPhysics.CollisionAPI prim under /World/ground")
+        # deepest-first keeps the leaf collider rather than an ancestor scope
+        hits.sort(key=lambda s: (-s.count("/"), s))
+        return hits[0]
+
+    class P11SweepEnv(RoArmStackEnv):
+        def _setup_scene(self) -> None:
+            # super() first: RoArmStackEnv._setup_scene:476 is where
+            # clone_environments() runs, so the sensor must be built after it.
+            super()._setup_scene()
+            ground_path = _find_ground_collider(self.scene.stage)
+            resolved["support_plane"] = ground_path
+            filter_paths = (ground_path,
+                            "/World/envs/env_.*/Robot/link5",
+                            "/World/envs/env_.*/Robot/gripper_link")
+            resolved["filter_paths"] = list(filter_paths)
+            # checklist (1): registered before the timeline plays.
+            sensor_cfg = ContactSensorCfg(
+                prim_path="/World/envs/env_.*/Sponge",
+                filter_prim_paths_expr=list(filter_paths),
+                update_period=0.0,
+                history_length=1,
+                # contact POINTS are not used by any gate here and their per-step
+                # index_add_ is sized by the whole buffer -- off at 1024 envs.
+                track_pose=False,
+                track_contact_points=False,
+                max_contact_data_count_per_prim=int(args.contact_capacity),
+                force_threshold=0.0,
+                debug_vis=False,
+            )
+            sensor = ContactSensor(sensor_cfg)
+            self.scene.sensors["t3p_object_contact"] = sensor
+            self._t3p_contact_sensor = sensor
+
+        # The RL kinematic attach teleports the object onto the TCP whenever
+        # `_grasped` fires; a lift measured under it would be a pin, not physics.
+        # Overriding the whole method also removes two GPU->CPU syncs per substep
+        # (`self._grasped.any()`, `torch.where(...)`) which dominate at 1024 envs.
+        def _apply_action(self) -> None:
+            self._robot.set_joint_position_target(self.robot_dof_targets)
+
+        # This sweep scores geometry and contact, not reward.  The stock versions
+        # mutate latch/bonus state and run ~30 reductions per step.
+        def _get_rewards(self):
+            import torch
+
+            return torch.zeros(self.num_envs, device=self.device)
+
+        # No auto-reset: the phase schedule owns the trial boundary.
+        def _get_dones(self):
+            import torch
+
+            z = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
+            return z, z.clone()
+
+    env = P11SweepEnv(cfg=cfg)
+    env._t3p_spawn_arm_report = armed
+    env._t3p_filter_labels = filter_labels
+    env._t3p_resolved = resolved
+    return env
+
+
+def _resolve_filter_map(sensor: Any, labels: tuple[str, ...]) -> dict[str, int]:
+    """Map each filter label to its column in `force_matrix_w`.
+
+    No precedent in this repo has ever run a ContactSensor at num_envs > 1, so
+    the shape of `filter_paths` at N envs is NOT assumed: it may come back flat,
+    nested, or expanded per env.  The mapping is derived from the actual filter
+    column count reported by `force_matrix_w` and cross-checked against the
+    resolved path strings.
+    """
+    outer = list(sensor.contact_physx_view.filter_paths)
+    # At N envs this comes back NESTED: one inner list per env, each holding the
+    # filters in cfg order.  At N=1 (every prior precedent) it is flat, which is
+    # why no existing helper handles this shape.
+    if outer and not isinstance(outer[0], (str, bytes)):
+        raw = [str(item) for item in list(outer[0])]
+    else:
+        raw = [str(item) for item in outer]
+
+    n_cols = int(sensor.data.force_matrix_w.shape[2])
+    if n_cols != len(labels):
+        raise RuntimeError(
+            f"force_matrix_w has {n_cols} filter columns but {len(labels)} labels "
+            f"were requested; resolved filter paths = {raw}"
+        )
+
+    def _label_of(path: str) -> str | None:
+        if path.endswith("/Robot/link5"):
+            return "link5"
+        if path.endswith("/Robot/gripper_link"):
+            return "gripper_link"
+        if "/ground" in path:
+            return "support_plane"
+        return None
+
+    # Take the first n_cols distinct resolved paths; per-env expansion repeats
+    # the same filter order, so the first block defines the column order.
+    mapping: dict[str, int] = {}
+    for i, path in enumerate(raw[:n_cols]):
+        label = _label_of(path)
+        if label is None:
+            raise RuntimeError(f"unrecognised resolved filter path: {path!r} (all={raw[:n_cols]})")
+        if label in mapping:
+            raise RuntimeError(f"duplicate filter label {label}: {raw[:n_cols]}")
+        mapping[label] = i
+    if set(mapping) != set(labels):
+        raise RuntimeError(f"filter mapping failed: paths={raw[:n_cols]} mapping={mapping}")
+    return mapping
+
+
+def run_rollout(args: argparse.Namespace, samples: list[dict[str, Any]], p10: Any) -> dict[str, Any]:
+    import torch
+
+    env = _make_env(args, samples, p10)
+    device = env.device
+    n = len(samples)
+
+    sensor = env._t3p_contact_sensor
+    filter_map = _resolve_filter_map(sensor, env._t3p_filter_labels)
+
+    # ---- joint order is asserted, never assumed -----------------------------
+    expected_joints = ["base_link_to_link1", "link1_to_link2", "link2_to_link3",
+                       "link3_to_link4", "link4_to_link5", "link5_to_gripper_link"]
+    if list(env._robot.joint_names) != expected_joints:
+        raise RuntimeError(f"joint order mismatch: {list(env._robot.joint_names)}")
+    if int(env.gripper_joint_idx) != 5:
+        raise RuntimeError(f"gripper_joint_idx={env.gripper_joint_idx}, expected 5")
+
+    # The kinematic attach is disabled structurally: P11SweepEnv._apply_action
+    # never calls _update_grasp_attach.  This counter proves it stayed unused.
+    attach_calls = {"n": 0}
+
+    def _no_attach() -> None:
+        attach_calls["n"] += 1
+
+    env._update_grasp_attach = _no_attach
+
+    def t(x: Any, dtype=torch.float32) -> Any:
+        return torch.as_tensor(np.asarray(x), dtype=dtype, device=device)
+
+    q_app = t([s["q_approach_deg"] for s in samples]) * math.pi / 180.0
+    q_des = t([s["q_descend_deg"] for s in samples]) * math.pi / 180.0
+    q_lft = t([s["q_lift_deg"] for s in samples]) * math.pi / 180.0
+    q5_close = t([s["q5_close_deg"] for s in samples]) * math.pi / 180.0
+    q5_open = float(args.descend_open_deg) * math.pi / 180.0
+    close_rate = t([s["close_rate"] for s in samples])
+
+    q_home = t([[0.0, 0.0, math.pi / 2.0, 0.0, 0.0, q5_open]] * n)
+
+    # close/hold/lift keyframes carry the per-env closed gripper angle
+    q_des_closed = q_des.clone()
+    q_des_closed[:, 5] = q5_close
+    q_lft_closed = q_lft.clone()
+    q_lft_closed[:, 5] = q5_close
+
+    env.reset()
+
+    # ---- per-env spawn (axis 8) --------------------------------------------
+    origins = env.scene.env_origins
+    spawn_pos = t([s["center_m"] for s in samples]) + origins
+    yaw = t([s["spawn_yaw_deg"] for s in samples]) * math.pi / 180.0
+    quat = torch.stack(
+        [torch.cos(yaw / 2), torch.zeros_like(yaw), torch.zeros_like(yaw), torch.sin(yaw / 2)],
+        dim=-1,
+    )
+    env._sponge.write_root_pose_to_sim(torch.cat([spawn_pos, quat], dim=-1))
+    env._sponge.write_root_velocity_to_sim(torch.zeros((n, 6), device=device))
+    env._robot.write_joint_state_to_sim(q_home, torch.zeros_like(q_home))
+    # d332:601 -- force history from the pre-teleport configuration must not leak
+    # into the first post-teleport reading.
+    sensor.reset()
+
+    # ---- per-env friction (axis 6) -----------------------------------------
+    mats = env._sponge.root_physx_view.get_material_properties().clone()
+    mu_s = t([s["mu_static"] for s in samples]).cpu()
+    mu_d = t([s["mu_dynamic"] for s in samples]).cpu()
+    mats[:, :, 0] = mu_s[:, None]
+    mats[:, :, 1] = mu_d[:, None]
+    mats[:, :, 2] = 0.0
+    env._sponge.root_physx_view.set_material_properties(
+        mats, torch.arange(n, dtype=torch.int32)
+    )
+
+    # ---- per-env gains (axis 7) --------------------------------------------
+    stiff = t([s["stiffness"] for s in samples])[:, None].expand(n, 6).clone()
+    damp = t([s["damping"] for s in samples])[:, None].expand(n, 6).clone()
+    env._robot.write_joint_stiffness_to_sim(stiff)
+    env._robot.write_joint_damping_to_sim(damp)
+
+    # ---- phase schedule -----------------------------------------------------
+    sched = [
+        ("settle", args.settle_steps, q_home, q_home),
+        ("approach", args.approach_steps, q_home, q_app),
+        ("descend", args.descend_steps, q_app, q_des),
+        ("close", args.close_steps, q_des, q_des_closed),
+        ("hold", args.hold_steps, q_des_closed, q_des_closed),
+        ("lift", args.lift_steps, q_des_closed, q_lft_closed),
+    ]
+    total_steps = sum(s[1] for s in sched)
+
+    null_action = torch.zeros((n, 6), device=device, dtype=torch.float32)
+    tcp_local = env._tcp_local
+    from roarm_rl.roarm_stack_env import _quat_rotate
+
+    rows: list[dict[str, Any]] = []
+    trace: dict[str, list] = {k: [] for k in
+                              ("phase_id", "obj_z", "tilt_deg", "f_fixed", "f_moving",
+                               "f_ground", "q5_deg", "tcp_z")}
+
+    # per-phase accumulators (checklist (6)/(7): explicit windows)
+    acc = {
+        "settle_support_fz": [],
+        "close_f_fixed_max": torch.zeros(n, device=device),
+        "close_f_moving_max": torch.zeros(n, device=device),
+        "close_obj_drift_max": torch.zeros(n, device=device),
+        "lift_f_fixed_max": torch.zeros(n, device=device),
+        "lift_f_moving_max": torch.zeros(n, device=device),
+        "any_contact_steps": torch.zeros(n, device=device),
+        "max_tilt_deg": torch.zeros(n, device=device),
+    }
+
+    obj_ref = None
+    step_global = 0
+    t_phys = time.time()
+
+    for phase_id, (name, nsteps, q_from, q_to) in enumerate(sched):
+        for k in range(nsteps):
+            frac = (k + 1) / float(nsteps)
+            if name == "close":
+                # axis 7: per-env closing speed inside a fixed step budget
+                f = torch.clamp(frac / torch.clamp(close_rate, min=1e-6), max=1.0)[:, None]
+            else:
+                f = torch.full((n, 1), frac, device=device)
+            target = q_from + (q_to - q_from) * f
+            env.robot_dof_targets[:] = target
+            env.step(null_action)
+            step_global += 1
+
+            # ---- read state -------------------------------------------------
+            obj_pos = env._sponge.data.root_pos_w - origins
+            obj_quat = env._sponge.data.root_quat_w
+            w, x, y, z = obj_quat.unbind(-1)
+            r22 = 1.0 - 2.0 * (x * x + y * y)
+            tilt = torch.rad2deg(torch.acos(torch.clamp(r22, -1.0, 1.0)))
+            q5_now = torch.rad2deg(env._robot.data.joint_pos[:, env.gripper_joint_idx])
+            link5_pos = env._robot.data.body_pos_w[:, env.link5_idx]
+            link5_quat = env._robot.data.body_quat_w[:, env.link5_idx]
+            tcp = link5_pos + _quat_rotate(link5_quat, tcp_local.expand(n, 3)) - origins
+
+            fm = sensor.data.force_matrix_w[:, 0]           # (n, n_filter, 3)
+            f_ground = fm[:, filter_map["support_plane"]].norm(dim=-1)
+            f_fixed = fm[:, filter_map["link5"]].norm(dim=-1)
+            f_moving = fm[:, filter_map["gripper_link"]].norm(dim=-1)
+            fz_ground = fm[:, filter_map["support_plane"], 2]
+
+            if name == "settle":
+                acc["settle_support_fz"].append(fz_ground.clone())
+            if name == "close":
+                if obj_ref is None:
+                    obj_ref = obj_pos.clone()
+                acc["close_f_fixed_max"] = torch.maximum(acc["close_f_fixed_max"], f_fixed)
+                acc["close_f_moving_max"] = torch.maximum(acc["close_f_moving_max"], f_moving)
+                drift = (obj_pos - obj_ref).norm(dim=-1)
+                acc["close_obj_drift_max"] = torch.maximum(acc["close_obj_drift_max"], drift)
+            if name == "lift":
+                acc["lift_f_fixed_max"] = torch.maximum(acc["lift_f_fixed_max"], f_fixed)
+                acc["lift_f_moving_max"] = torch.maximum(acc["lift_f_moving_max"], f_moving)
+            acc["any_contact_steps"] += ((f_fixed + f_moving) > CONTACT_EPS_N).float()
+            acc["max_tilt_deg"] = torch.maximum(acc["max_tilt_deg"], tilt)
+
+            if step_global % args.trace_stride == 0:
+                trace["phase_id"].append(phase_id)
+                trace["obj_z"].append(obj_pos[:, 2].detach().cpu().numpy())
+                trace["tilt_deg"].append(tilt.detach().cpu().numpy())
+                trace["f_fixed"].append(f_fixed.detach().cpu().numpy())
+                trace["f_moving"].append(f_moving.detach().cpu().numpy())
+                trace["f_ground"].append(f_ground.detach().cpu().numpy())
+                trace["q5_deg"].append(q5_now.detach().cpu().numpy())
+                trace["tcp_z"].append(tcp[:, 2].detach().cpu().numpy())
+
+            if name == "settle" and k == nsteps - 1:
+                obj_rest_z = obj_pos[:, 2].clone()
+                obj_rest_tilt = tilt.clone()
+
+    wall_phys = time.time() - t_phys
+
+    # ---- final state --------------------------------------------------------
+    obj_pos = env._sponge.data.root_pos_w - origins
+    obj_quat = env._sponge.data.root_quat_w
+    w, x, y, z = obj_quat.unbind(-1)
+    tilt_final = torch.rad2deg(torch.acos(torch.clamp(1.0 - 2.0 * (x * x + y * y), -1.0, 1.0)))
+
+    # ---- checklist (8): TILT-CORRECTED lift-off ------------------------------
+    # The lowest point of a tilted cylinder sits at  z_c - ((H/2)cos t + R sin t).
+    # Lift-off is how far that lowest point rose above its settled value; a pure
+    # tip-over raises z_c without raising the object off the ground at all.
+    def _lowest(z_c: Any, tilt_deg: Any) -> Any:
+        tr = torch.deg2rad(tilt_deg)
+        return z_c - ((OBJ_HEIGHT_M / 2.0) * torch.cos(tr) + (OBJ_DIAM_M / 2.0) * torch.sin(tr))
+
+    lift_mm = (_lowest(obj_pos[:, 2], tilt_final) - _lowest(obj_rest_z, obj_rest_tilt)) * 1000.0
+    raw_rise_mm = (obj_pos[:, 2] - obj_rest_z) * 1000.0
+
+    settle_fz = torch.stack(acc["settle_support_fz"][-args.settle_stat_tail:], dim=0)
+    settle_fz_med = settle_fz.median(dim=0).values
+
+    contact_nonzero = (acc["close_f_fixed_max"] + acc["close_f_moving_max"]
+                       + acc["lift_f_fixed_max"] + acc["lift_f_moving_max"]) > CONTACT_EPS_N
+    success = (lift_mm > LIFT_GATE_MM) & (tilt_final < TIP_HALF_ANGLE_DEG) & contact_nonzero
+
+    out = {
+        "n_envs": n,
+        "total_steps": total_steps,
+        "wall_physics_s": round(wall_phys, 1),
+        "schedule": [{"phase": s[0], "steps": s[1]} for s in sched],
+        "kinematic_attach_calls": attach_calls["n"],
+        "spawn_arm_report": env._t3p_spawn_arm_report,
+        "filter_map": filter_map,
+        "resolved": env._t3p_resolved,
+        "per_env": {
+            "lift_corrected_mm": lift_mm.detach().cpu().numpy(),
+            "raw_rise_mm": raw_rise_mm.detach().cpu().numpy(),
+            "tilt_final_deg": tilt_final.detach().cpu().numpy(),
+            "max_tilt_deg": acc["max_tilt_deg"].detach().cpu().numpy(),
+            "close_f_fixed_max_n": acc["close_f_fixed_max"].detach().cpu().numpy(),
+            "close_f_moving_max_n": acc["close_f_moving_max"].detach().cpu().numpy(),
+            "lift_f_fixed_max_n": acc["lift_f_fixed_max"].detach().cpu().numpy(),
+            "lift_f_moving_max_n": acc["lift_f_moving_max"].detach().cpu().numpy(),
+            "close_obj_drift_max_mm": (acc["close_obj_drift_max"] * 1000.0).detach().cpu().numpy(),
+            "contact_steps": acc["any_contact_steps"].detach().cpu().numpy(),
+            "settle_support_fz_n": settle_fz_med.detach().cpu().numpy(),
+            "contact_nonzero": contact_nonzero.detach().cpu().numpy(),
+            "success": success.detach().cpu().numpy(),
+        },
+        "trace": {k: (np.asarray(v) if k != "phase_id" else np.asarray(v)) for k, v in trace.items()},
+    }
+    env.close()
+    return out
+
+
+# =============================================================================
+# main
+# =============================================================================
+def build_argparser() -> argparse.ArgumentParser:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--num_envs", type=int, default=1024)
+    ap.add_argument("--pool_multiplier", type=float, default=3.0)
+    ap.add_argument("--seed", type=int, default=20260811)
+    ap.add_argument("--pose_label", type=str, default="seed0_S1")
+    ap.add_argument("--out_subdir", type=str, default="")
+    ap.add_argument("--run_label", type=str, default="sweep",
+                    help="artifact basename discriminator, e.g. preflight / sweep")
+
+    # axis ranges
+    ap.add_argument("--theta_lo", type=float, default=6.0)
+    ap.add_argument("--theta_measured_hi", type=float, default=35.0,
+                    help="upper theta with a MEASURED bite window (t3r_n10_ctq5)")
+    ap.add_argument("--theta_hi", type=float, default=45.0,
+                    help="upper theta that is still IK-reachable under the v6 clip")
+    ap.add_argument("--psi_span_deg", type=float, default=8.0)
+    ap.add_argument("--delta_span_mm", type=float, default=3.0)
+    ap.add_argument("--q5_frac_lo", type=float, default=0.15)
+    ap.add_argument("--q5_frac_hi", type=float, default=0.75)
+    ap.add_argument("--q5_broad_lo", type=float, default=12.0)
+    ap.add_argument("--q5_broad_hi", type=float, default=40.0)
+    ap.add_argument("--plan_workers", type=int, default=24)
+    ap.add_argument("--reach_scan_theta", type=float, nargs="+",
+                    default=[0, 6, 15, 29, 35, 40, 45, 48, 50, 55, 60, 70, 80, 90])
+    ap.add_argument("--mu_static_lo", type=float, default=0.30)
+    ap.add_argument("--mu_static_hi", type=float, default=0.55)
+    ap.add_argument("--mu_ratio_lo", type=float, default=0.60)
+    ap.add_argument("--mu_ratio_hi", type=float, default=0.90)
+    ap.add_argument("--close_rate_lo", type=float, default=0.25)
+    ap.add_argument("--close_rate_hi", type=float, default=1.00)
+    ap.add_argument("--stiffness_lo", type=float, default=40.0)
+    ap.add_argument("--stiffness_hi", type=float, default=140.0)
+    ap.add_argument("--damping_lo", type=float, default=2.0)
+    ap.add_argument("--damping_hi", type=float, default=8.0)
+    ap.add_argument("--spawn_jitter_mm", type=float, default=15.0)
+
+    # pose planning -- these are p10's frozen defaults, not new choices.
+    # grasp_surface_margin_m is the D434-R1 (3) clearance-0 depth: the TCP sits
+    # 1.099796 mm PAST the cap, inside the throat.  Axis 4 jitters around it.
+    ap.add_argument("--descend_open_deg", type=float, default=88.30998496351378)
+    ap.add_argument("--grasp_surface_margin_m", type=float,
+                    default=-0.0010997957078144082)
+    ap.add_argument("--approach_clearance_m", type=float, default=0.040)
+    # lift travel must clear the 6.000 mm success gate with margin
+    ap.add_argument("--lift_delta_m", type=float, default=0.010)
+    ap.add_argument("--target_error_gate_m", type=float, default=0.003)
+    ap.add_argument("--plan_tilt_gate_deg", type=float, default=5.0)
+
+    # rollout schedule
+    ap.add_argument("--settle_steps", type=int, default=60)
+    ap.add_argument("--approach_steps", type=int, default=120)
+    ap.add_argument("--descend_steps", type=int, default=100)
+    ap.add_argument("--close_steps", type=int, default=100)
+    ap.add_argument("--hold_steps", type=int, default=40)
+    ap.add_argument("--lift_steps", type=int, default=120)
+    ap.add_argument("--settle_stat_tail", type=int, default=30)
+    ap.add_argument("--episode_length_s", type=float, default=120.0)
+    ap.add_argument("--trace_stride", type=int, default=5)
+    ap.add_argument("--contact_capacity", type=int, default=16)
+    ap.add_argument("--clone_in_fabric", type=int, default=0,
+                    help="0 = USD clones (required by ContactSensor at N>1)")
+
+    # PhysX GPU capacities (see _make_env)
+    ap.add_argument("--gpu_found_lost_pairs_capacity", type=int, default=2 ** 23)
+    ap.add_argument("--gpu_total_aggregate_pairs_capacity", type=int, default=2 ** 23)
+    ap.add_argument("--gpu_collision_stack_size", type=int, default=2 ** 28)
+    ap.add_argument("--gpu_max_rigid_contact_count", type=int, default=2 ** 23)
+
+    ap.add_argument("--plan_only", action="store_true",
+                    help="sample + IK only; no Isaac, no physics")
+    ap.add_argument("--skip_rerun", action="store_true")
+    return ap
+
+
+def main() -> int:
+    t_start = time.time()
+    args = build_argparser().parse_args()
+
+    out_dir = CASE_DIR if not args.out_subdir else CASE_DIR / args.out_subdir
+    out_dir.mkdir(parents=True, exist_ok=True)
+    prefix = f"{TAG}_{args.run_label}"
+    paths = {k: out_dir / f"{prefix}_{k}" for k in
+             ("results.json", "plan.json", "trace.npz", "timeline.rrd", "timeline.rbl",
+              "rerun_validation.json", "inspection.png", "script.py.txt", "argv.txt")}
+
+    # ---- G0 overwrite guard --------------------------------------------------
+    # The frozen-artifact rule forbids clobbering, and rerun_contract.py:298-303
+    # additionally REFUSES to overwrite an existing inspection PNG (that refusal
+    # would surface as a contract error rather than as the real cause).
+    existing = [str(p) for p in paths.values() if p.exists()]
+    if existing:
+        print(f"[{LOG}] G0B_T3P_SWEEP_VERDICT=ARTIFACT_EXISTS_ABORT "
+              f"existing={existing}", flush=True)
+        return 3
+
+    reach = reachability_scan(args)
+    print(f"[{LOG}] reachability max_feasible_theta_deg="
+          f"{json.dumps(reach['max_feasible_theta_deg'])} "
+          f"radius_m={reach['radius_m']:.6f} psi_radial={reach['psi_radial_deg']:.4f}", flush=True)
+
+    print(f"[{LOG}] stage=plan num_envs={args.num_envs} pool={int(args.pool_multiplier*args.num_envs)} "
+          f"seed={args.seed}", flush=True)
+    plan = build_samples(args)
+    plan["reachability_scan"] = reach
+    print(f"[{LOG}] ik_feasibility {json.dumps(plan['ik_feasibility'])}", flush=True)
+    print(f"[{LOG}] chosen={len(plan['samples'])} "
+          f"measured_window={sum(1 for s in plan['samples'] if s['group']=='measured_window')} "
+          f"high_tilt={sum(1 for s in plan['samples'] if s['group']=='high_tilt')}", flush=True)
+
+    paths["plan.json"].write_text(json.dumps(plan, indent=2, default=float) + "\n")
+
+    if args.plan_only:
+        print(f"[{LOG}] G0B_T3P_SWEEP_VERDICT=PLAN_ONLY wall={time.time()-t_start:.1f}s", flush=True)
+        return 0
+
+    if not plan["samples"]:
+        print(f"[{LOG}] G0B_T3P_SWEEP_VERDICT=NO_FEASIBLE_SAMPLE", flush=True)
+        return 3
+
+    # ---- Isaac -------------------------------------------------------------
+    p10 = _import_p10()
+    if not p10.ATTEMPT3_USD.exists():
+        raise RuntimeError(f"attempt3 asset missing: {p10.ATTEMPT3_USD}")
+    os.environ["ROARM_M3_USD_PATH"] = str(p10.ATTEMPT3_USD)
+    print(f"[{LOG}] usd_guard PASS path={p10.ATTEMPT3_USD} "
+          f"sha={sha256_file(p10.ATTEMPT3_USD)[:16]}", flush=True)
+
+    from isaaclab.app import AppLauncher
+
+    app_launcher = AppLauncher(headless=True, enable_cameras=False)
+    simulation_app = app_launcher.app
+    try:
+        roll = run_rollout(args, plan["samples"], p10)
+    finally:
+        pass
+
+    per = roll["per_env"]
+    n = roll["n_envs"]
+
+    # ---- checklist (4): the positive control decides whether the zeros mean
+    #      "no contact" or "no measurement".
+    fz = per["settle_support_fz_n"]
+    pc_lo = SETTLE_SUPPORT_FZ_N * (1.0 - SETTLE_SUPPORT_TOL)
+    pc_hi = SETTLE_SUPPORT_FZ_N * (1.0 + SETTLE_SUPPORT_TOL)
+    pc_ok = int(np.sum((fz >= pc_lo) & (fz <= pc_hi)))
+    positive_control = {
+        "window": "settle (object at rest on the ground)",
+        "expected_fz_n": SETTLE_SUPPORT_FZ_N,
+        "band_n": [pc_lo, pc_hi],
+        "median_fz_n": float(np.median(fz)),
+        "envs_in_band": pc_ok,
+        "envs_total": n,
+        "pass": bool(pc_ok >= 0.90 * n),
+    }
+    print(f"[{LOG}] positive_control {json.dumps(positive_control)}", flush=True)
+
+    groups = np.array([s["group"] for s in plan["samples"]])
+
+    def _group(mask: np.ndarray) -> dict[str, Any]:
+        if mask.sum() == 0:
+            return {"n": 0}
+        return {
+            "n": int(mask.sum()),
+            "success": int(per["success"][mask].sum()),
+            "success_rate": float(per["success"][mask].mean()),
+            "contact_nonzero": int(per["contact_nonzero"][mask].sum()),
+            "lift_corrected_mm": {
+                "median": float(np.median(per["lift_corrected_mm"][mask])),
+                "p90": float(np.percentile(per["lift_corrected_mm"][mask], 90)),
+                "max": float(per["lift_corrected_mm"][mask].max()),
+            },
+            "raw_rise_mm_median": float(np.median(per["raw_rise_mm"][mask])),
+            "tilt_final_deg_median": float(np.median(per["tilt_final_deg"][mask])),
+            "close_f_moving_max_n_median": float(np.median(per["close_f_moving_max_n"][mask])),
+            "close_f_fixed_max_n_median": float(np.median(per["close_f_fixed_max_n"][mask])),
+            "lift_f_moving_max_n_median": float(np.median(per["lift_f_moving_max_n"][mask])),
+        }
+
+    summary = {
+        "all": _group(np.ones(n, dtype=bool)),
+        "measured_window": _group(groups == "measured_window"),
+        "high_tilt": _group(groups == "high_tilt"),
+    }
+    print(f"[{LOG}] summary {json.dumps(summary)}", flush=True)
+
+    n_success = int(per["success"].sum())
+    if not positive_control["pass"]:
+        verdict = "MEASUREMENT_INVALID_POSITIVE_CONTROL_FAIL"
+    elif n_success > 0:
+        verdict = "LIFT_SUCCESS_OBSERVED"
+    elif int(per["contact_nonzero"].sum()) == 0:
+        verdict = "NO_CONTACT_ANYWHERE"
+    else:
+        verdict = "CONTACT_BUT_NO_LIFT"
+
+    np.savez_compressed(paths["trace.npz"],
+                        **{k: v for k, v in roll["trace"].items()},
+                        **{f"env_{k}": v for k, v in per.items()},
+                        group=np.array([s["group"] for s in plan["samples"]]))
+
+    out: dict[str, Any] = {
+        "tool": "p11_g0b_t3p_randomized_parallel_grasp_sweep",
+        "case": "g0b_d420",
+        "tag": TAG,
+        "argv": sys.argv,
+        "seed": int(args.seed),
+        "env": {"numpy": np.__version__, "python": sys.version.split()[0]},
+        "asset": {"attempt3_usd": str(p10.ATTEMPT3_USD),
+                  "sha256_16": sha256_file(p10.ATTEMPT3_USD)[:16]},
+        "gates": {
+            "lift_gate_mm": LIFT_GATE_MM,
+            "tip_half_angle_deg": TIP_HALF_ANGLE_DEG,
+            "contact_eps_n": CONTACT_EPS_N,
+        },
+        "ik_feasibility": plan["ik_feasibility"],
+        "n_envs": n,
+        "wall_physics_s": roll["wall_physics_s"],
+        "total_steps": roll["total_steps"],
+        "schedule": roll["schedule"],
+        "kinematic_attach_disabled": True,
+        "kinematic_attach_calls": roll["kinematic_attach_calls"],
+        "spawn_arm_report": roll["spawn_arm_report"],
+        "filter_map": roll["filter_map"],
+        "resolved_filter_paths": roll["resolved"],
+        "positive_control": positive_control,
+        "summary": summary,
+        "n_success": n_success,
+        "verdict": verdict,
+    }
+
+    paths["argv.txt"].write_text(" ".join(sys.argv) + "\n")
+    shutil.copyfile(__file__, paths["script.py.txt"])
+
+    if not args.skip_rerun:
+        try:
+            out["rerun"] = _emit_rerun(paths, plan, roll, summary, positive_control, verdict, args)
+        except Exception as exc:
+            out["rerun"] = {"pass": False, "errors": [f"rerun stage raised: {exc}"]}
+            print(f"[{LOG}] rerun_stage_error {exc}", flush=True)
+
+    out["wall_seconds"] = round(time.time() - t_start, 1)
+    out["artifacts"] = {k: {"name": v.name, "sha256_16": sha256_file(v)[:16],
+                            "bytes": v.stat().st_size}
+                        for k, v in paths.items() if v.exists() and k != "results.json"}
+    paths["results.json"].write_text(json.dumps(out, indent=2, default=float) + "\n")
+    print(f"[{LOG}] G0B_T3P_SWEEP_VERDICT={verdict} n_success={n_success}/{n} "
+          f"wall={out['wall_seconds']}s", flush=True)
+    simulation_app.close()
+    return 0
+
+
+def _emit_rerun(paths: dict[str, Path], plan: dict[str, Any], roll: dict[str, Any],
+                summary: dict[str, Any], positive_control: dict[str, Any],
+                verdict: str, args: argparse.Namespace) -> dict[str, Any]:
+    """D341: the verdict depends on trajectory, contact and pose, so an RRD is
+    mandatory.  Save-only sink attached before the first log; finalized by the
+    RecordingStream context exit."""
+    import rerun as rr
+    import rerun.blueprint as rrb
+
+    from roarm_rl.rerun_contract import validate_rerun_artifact
+
+    if rr.__version__ != RERUN_VERSION or np.__version__ != NUMPY_PIN:
+        raise RuntimeError(f"pin mismatch rerun={rr.__version__} numpy={np.__version__}")
+
+    app_id = f"roarm_g0b_{TAG}"
+    tr = roll["trace"]
+    per = roll["per_env"]
+    groups = np.array([s["group"] for s in plan["samples"]])
+    n_frames = len(tr["phase_id"])
+
+    # Pick one representative env per phase: the best tilt-corrected lift-off.
+    reps: list[tuple[str, int]] = []
+    for name in ("measured_window", "high_tilt"):
+        mask = groups == name
+        if mask.sum():
+            idx = int(np.arange(len(groups))[mask][np.argmax(per["lift_corrected_mm"][mask])])
+            reps.append((name, idx))
+
+    summary_md = (
+        f"# p11 / t3p randomized parallel grasp sweep\n\n"
+        f"**verdict**: `{verdict}`  \n"
+        f"**envs**: {roll['n_envs']}  **steps/env**: {roll['total_steps']}  "
+        f"**physics wall**: {roll['wall_physics_s']} s  \n"
+        f"**seed**: {args.seed}  \n\n"
+        f"## success gate\n"
+        f"tilt-corrected lift-off > {LIFT_GATE_MM} mm AND final tilt < "
+        f"{TIP_HALF_ANGLE_DEG:.4f} deg AND contact force > {CONTACT_EPS_N} N\n\n"
+        f"## positive control ({'PASS' if positive_control['pass'] else 'FAIL'})\n"
+        f"settle-window ground reaction median = {positive_control['median_fz_n']:.6f} N "
+        f"vs expected m*g = {SETTLE_SUPPORT_FZ_N:.6f} N; "
+        f"{positive_control['envs_in_band']}/{positive_control['envs_total']} envs in band\n\n"
+        f"## by contact phase\n```\n{json.dumps(summary, indent=2)}\n```\n"
+        f"## IK feasibility\n```\n{json.dumps(plan['ik_feasibility'], indent=2)}\n```\n"
+    )
+
+    with rr.RecordingStream(app_id, recording_id=f"g0b_d420_{TAG}", make_default=False,
+                            send_properties=True) as rec:
+        rec.save(str(paths["timeline.rrd"]), write_footer=True)
+        rec.log("metadata/run", rr.TextDocument(summary_md, media_type=rr.MediaType.MARKDOWN),
+                static=True)
+        for name, idx in reps:
+            rec.log(f"events/representative",
+                    rr.TextLog(f"{name}: env {idx}, lift_corrected="
+                               f"{per['lift_corrected_mm'][idx]:.4f} mm, tilt="
+                               f"{per['tilt_final_deg'][idx]:.4f} deg",
+                               level=rr.TextLogLevel.INFO))
+        rec.log("events/verdict",
+                rr.TextLog(f"verdict={verdict}", level=rr.TextLogLevel.INFO
+                           if verdict == "LIFT_SUCCESS_OBSERVED" else rr.TextLogLevel.WARN))
+        rec.log("events/positive_control",
+                rr.TextLog(f"positive_control pass={positive_control['pass']} "
+                           f"median_fz={positive_control['median_fz_n']:.6f} N",
+                           level=rr.TextLogLevel.INFO if positive_control["pass"]
+                           else rr.TextLogLevel.ERROR))
+
+        for k in range(n_frames):
+            rec.reset_time()
+            rec.set_time("frame", sequence=k)
+            rec.log("plots/phase_id", rr.Scalars(float(tr["phase_id"][k])))
+            for name, idx in reps:
+                pre = f"plots/{name}"
+                rec.log(f"{pre}/obj_z_mm", rr.Scalars(float(tr["obj_z"][k][idx] * 1000.0)))
+                rec.log(f"{pre}/tcp_z_mm", rr.Scalars(float(tr["tcp_z"][k][idx] * 1000.0)))
+                rec.log(f"{pre}/tilt_deg", rr.Scalars(float(tr["tilt_deg"][k][idx])))
+                rec.log(f"{pre}/q5_deg", rr.Scalars(float(tr["q5_deg"][k][idx])))
+                rec.log(f"{pre}/f_fixed_n", rr.Scalars(float(tr["f_fixed"][k][idx])))
+                rec.log(f"{pre}/f_moving_n", rr.Scalars(float(tr["f_moving"][k][idx])))
+                rec.log(f"{pre}/f_ground_n", rr.Scalars(float(tr["f_ground"][k][idx])))
+            # population view: contact-force distribution across all envs
+            rec.log("plots/pop/f_moving_median_n",
+                    rr.Scalars(float(np.median(tr["f_moving"][k]))))
+            rec.log("plots/pop/f_fixed_median_n",
+                    rr.Scalars(float(np.median(tr["f_fixed"][k]))))
+            rec.log("plots/pop/tilt_p90_deg",
+                    rr.Scalars(float(np.percentile(tr["tilt_deg"][k], 90))))
+
+        entity_names = ["metadata/run", "events/representative", "events/verdict",
+                        "events/positive_control", "plots/phase_id",
+                        "plots/pop/f_moving_median_n", "plots/pop/f_fixed_median_n",
+                        "plots/pop/tilt_p90_deg"]
+        for name, _idx in reps:
+            entity_names += [f"plots/{name}/{s}" for s in
+                             ("obj_z_mm", "tcp_z_mm", "tilt_deg", "q5_deg",
+                              "f_fixed_n", "f_moving_n", "f_ground_n")]
+
+        blueprint = rrb.Blueprint(
+            rrb.Vertical(
+                rrb.Horizontal(
+                    rrb.TextDocumentView(origin="/metadata/run", contents="/metadata/run",
+                                         name="1 | run summary"),
+                    rrb.TextLogView(origin="/events", contents="/events/**",
+                                    name="2 | verdict + positive control"),
+                    column_shares=[0.6, 0.4]),
+                rrb.Horizontal(
+                    rrb.TimeSeriesView(origin="/plots",
+                                       contents=[f"/plots/{r[0]}/f_fixed_n/**" for r in reps]
+                                       + [f"/plots/{r[0]}/f_moving_n/**" for r in reps]
+                                       + [f"/plots/{r[0]}/f_ground_n/**" for r in reps],
+                                       name="3 | contact force by jaw (representative envs)"),
+                    rrb.TimeSeriesView(origin="/plots",
+                                       contents=[f"/plots/{r[0]}/obj_z_mm/**" for r in reps]
+                                       + [f"/plots/{r[0]}/tilt_deg/**" for r in reps]
+                                       + [f"/plots/{r[0]}/q5_deg/**" for r in reps],
+                                       name="4 | object height, tilt, closing angle"),
+                    rrb.TimeSeriesView(origin="/plots",
+                                       contents=["/plots/pop/**", "/plots/phase_id/**"],
+                                       name="5 | population medians + phase")),
+                row_shares=[0.34, 0.66]),
+            auto_layout=False, auto_views=False, collapse_panels=True)
+        rec.send_blueprint(blueprint, make_active=True, make_default=True)
+        rec.flush(timeout_sec=120.0)
+    blueprint.save(app_id, str(paths["timeline.rbl"]))
+
+    sca = ["Scalars:scalars"]
+    tlog = ["TextLog:text", "TextLog:level"]
+    components: dict[str, list[str]] = {"metadata/run": ["TextDocument:text"]}
+    for name in entity_names:
+        if name.startswith("events/"):
+            components[name] = tlog
+        elif name.startswith("plots/"):
+            components[name] = sca
+
+    validation = validate_rerun_artifact(
+        paths["timeline.rrd"],
+        expected_entity_paths=entity_names,
+        exact_entity_paths=entity_names,
+        exact_timeline_names=["blueprint", "log_time", "frame"],
+        expected_entity_components=components,
+        blueprint_path=paths["timeline.rbl"],
+        screenshot_path=paths["inspection.png"],
+        screenshot_window_size="2400x1400",
+        expected_version=RERUN_VERSION,
+        cli_path=RERUN_CLI,
+        timeout_s=600.0,
+    )
+    paths["rerun_validation.json"].write_text(
+        json.dumps(validation, indent=2, default=str) + "\n")
+    print(f"[{LOG}] rerun_validation pass={validation.get('pass')} "
+          f"errors={validation.get('errors')}", flush=True)
+    return {"pass": bool(validation.get("pass")), "errors": validation.get("errors", [])}
+
+
+if __name__ == "__main__":
+    sys.exit(main())
