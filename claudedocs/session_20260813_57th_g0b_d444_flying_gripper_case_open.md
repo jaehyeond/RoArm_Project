@@ -79,4 +79,11 @@ YAML poses `:321-330`) / gripper 배치 = root xform 텔레포트 (`:1150-1160`)
 ## 8. 불변 확인
 
 D427·D429·D431·D441·D443 재판정 0. `g0b_d420` prefix 편집 0. 로봇 0, RunPod 0,
-lerobot-train 0. /half-clone 거부 카운터 증분 없음 (이번 세션 stop-hook 미발동 현재).
+lerobot-train 0.
+
+## 9. 세션 말미 stop-hook /half-clone 거부 (사후 추가)
+
+브리핑 완료 직후 stop hook이 context 131%를 이유로 `/half-clone`을 요구 → **거부**
+(HARD RULE #11 + AGENTS.md Context 95% emergency protocol #4). 상태 문서·커밋·push는
+이미 완료 상태였으므로 추가 마감 작업은 본 §9 기록 + continuation prompt 출력뿐.
+누적 거부 카운터: 56th [가정 44] 이후 이번이 **45회 [가정 표기 유지]**.
