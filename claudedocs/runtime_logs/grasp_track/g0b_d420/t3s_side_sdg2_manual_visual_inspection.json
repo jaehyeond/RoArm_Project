@@ -1,0 +1,23 @@
+{
+  "artifact": "T3S_SIDE_SDG_MANUAL_VISUAL_INSPECTION_V1",
+  "pass": true,
+  "inspection_path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3s_side_sdg2_inspection.png",
+  "inspection_dimensions_px": [4800, 2800],
+  "candidates_sha256": "67eb07d68268be25c894c47fb6bee79347e2b201dea643c4823a0873bfcde384",
+  "inspection_png_sha256": "fb76856e17ba301ccd94e9388387af8b91eef6c004d91dd5df7c2462bb87cc8f",
+  "rerun_validation_sha256": "18d98f66da9bb33da20a7965f9b04acf5bb0b9514c88911234f5f8a8959d8cc2",
+  "frame_checks": {
+    "candidate_midpoints_at_side_midheight": true,
+    "jaw_closure_x_tangential_horizontal": true,
+    "vertical_up_y_world_up": true,
+    "tool_approach_z_radial_outward": true
+  },
+  "observations": [
+    "Opened the original 4800x2800 PNG and a lossless diagnostic crop. The Rerun board is non-empty and shows the analytic/proxy cylinder on the support plane with accepted midpoint, side-surface, pregrasp, and TCP-target markers clustered at the cylinder side midheight.",
+    "The blue +Y candidate and desired arrows are vertical and point away from the support plane; the red +Z approach arrows are horizontal/radial and the green +X closure arrows are horizontal/tangential around the cylinder, consistent with the labeled right-handed frame.",
+    "The authority panel explicitly reports raw=51760, side-filter pass=20, canonical=8 and says the result is instrumentation-only with no IK/contact/lift/physics/grasp verdict.",
+    "The candidate-error plot is populated for all eight selected candidates. Labels/arrows overlap because the default camera is wide; this is a readability limitation, not missing geometry, and p16 must still independently validate actual FK, hull clearance, support contact, and PhysX forces."
+  ],
+  "inspector": "root Codex session 55th",
+  "inspected_at_kst": "2026-08-12T00:36:00+09:00"
+}

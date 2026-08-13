@@ -1,0 +1,23 @@
+[g0b_t2_ik] G0b T2 vertical tool-axis IK reachability probe (numpy-only, no Isaac)
+[g0b_t2_ik] gates pos_gate_mm=3.0 tilt_primary_deg=5.0 tilt_fallback_deg=10.0 descend_z=0.038383 approach_z=0.078383 grid_x=[0.1,0.46]x19 grid_y=[-0.26,0.26]x27
+[g0b_t2_ik] self_check q=[1.773, 35.6563, 111.8334, 9.4908] tilt_deg=23.0195 band=(21.7, 24.4) tilt_ok=True tcp_z=0.013521 band=(0.013486, 0.013628) tcpz_ok=True
+[g0b_t2_ik] progress cells=60/513
+[g0b_t2_ik] progress cells=120/513
+[g0b_t2_ik] progress cells=180/513
+[g0b_t2_ik] progress cells=240/513
+[g0b_t2_ik] progress cells=300/513
+[g0b_t2_ik] progress cells=360/513
+[g0b_t2_ik] progress cells=420/513
+[g0b_t2_ik] progress cells=480/513
+[g0b_t2_ik] named pose=seed0_S1 xy=(+0.2137,-0.1957) descend urdf pos_mm=0.0147 tilt=0.1989 approach urdf pos_mm=0.0777 tilt=0.9881 pass_urdf=True pass_v6clip=True
+[g0b_t2_ik] named pose=seed0_S2 xy=(+0.1517,+0.1757) descend urdf pos_mm=0.0143 tilt=0.1996 approach urdf pos_mm=0.0153 tilt=0.1985 pass_urdf=True pass_v6clip=True
+[g0b_t2_ik] named pose=seed0_S3 xy=(+0.3907,-0.1325) descend urdf pos_mm=1.5213 tilt=19.3672 approach urdf pos_mm=1.7355 tilt=22.4435 pass_urdf=False pass_v6clip=False
+[g0b_t2_ik] named pose=seed0_S4 xy=(+0.4235,+0.1724) descend urdf pos_mm=2.4135 tilt=32.7703 approach urdf pos_mm=2.4931 tilt=35.7986 pass_urdf=False pass_v6clip=False
+[g0b_t2_ik] named pose=R1_center xy=(+0.2000,-0.1750) descend urdf pos_mm=0.026 tilt=0.3612 approach urdf pos_mm=0.0155 tilt=0.1996 pass_urdf=True pass_v6clip=True
+[g0b_t2_ik] named pose=R2_center xy=(+0.2000,+0.1350) descend urdf pos_mm=0.0192 tilt=0.2685 approach urdf pos_mm=0.0204 tilt=0.2649 pass_urdf=True pass_v6clip=True
+[g0b_t2_ik] named pose=R3_center xy=(+0.3800,-0.1600) descend urdf pos_mm=1.5173 tilt=19.3133 approach urdf pos_mm=1.7319 tilt=22.3884 pass_urdf=False pass_v6clip=False
+[g0b_t2_ik] named pose=R4_center xy=(+0.3800,+0.1250) descend urdf pos_mm=1.2742 tilt=16.0882 approach urdf pos_mm=1.5039 tilt=19.0642 pass_urdf=False pass_v6clip=False
+[g0b_t2_ik] aggregate grid_cells=513 pass_urdf_cells=272 pass_v6clip_cells=256 named_pass_both=['seed0_S1', 'seed0_S2', 'R1_center', 'R2_center'] best_named=seed0_S1
+[g0b_t2_ik] T2_VERTICAL_IK_VERDICT=T2_PASS
+[g0b_t2_ik] rerun_validation pass=True errors=[]
+[g0b_t2_ik] artifacts rrd=t2_ik_reachability.rrd sha=eb044cf0ea1ccadf results=t2_ik_results.json csv=t2_ik_grid.csv

@@ -1,0 +1,201 @@
+{
+  "argv": [
+    "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/p16_g0b_t3u_detached_physics_render_supervisor.py",
+    "--profile",
+    "side_preflight1",
+    "--candidates_sha256",
+    "67eb07d68268be25c894c47fb6bee79347e2b201dea643c4823a0873bfcde384"
+  ],
+  "artifact": "T3U_DETACHED_SUPERVISOR_OUTCOME_V2",
+  "attempts": {
+    "automatic_retry_count": 0,
+    "physics": 1,
+    "render": 1
+  },
+  "bindings": {
+    "argv.txt": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight1_argv.txt",
+      "sha256": "81d1d63af989fd7c3f92425ee39bead7f9310ff6aa23ba65ad4c1f1be85ea6e8"
+    },
+    "exit_status.txt": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight1_exit_status.txt",
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    "failure.json": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight1_failure.json",
+      "sha256": "ebbb6a6109a587d1547bdba02e0d1ed28eb2af16bbaf15239ee7275009e6179f"
+    },
+    "nvidia_smi_before.csv": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight1_nvidia_smi_before.csv",
+      "sha256": "4861bdfb03fa4e34a2d4dc6fa065e73e9a77e4f3d9535f9d54e86f8ddd8ff3a0"
+    },
+    "nvidia_smi_supervisor_end.csv": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight1_nvidia_smi_supervisor_end.csv",
+      "sha256": "4861bdfb03fa4e34a2d4dc6fa065e73e9a77e4f3d9535f9d54e86f8ddd8ff3a0"
+    },
+    "pgid.txt": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight1_pgid.txt",
+      "sha256": "c3e254fe3de154b12a20ae5c40c1d5b8200cffda0aa3dddfca4c285cb738b394"
+    },
+    "phase.jsonl": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight1_phase.jsonl",
+      "sha256": "65d6d31d5d213b21eb61bbe03f3febc47eba97fc992d6c0fdf673a810fa5158a"
+    },
+    "physics_python_pid.txt": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight1_physics_python_pid.txt",
+      "sha256": "66c7723d8ef73725c09eb8139995627e76147045dad8d77d2e9a4b52fcdcaaa8"
+    },
+    "render_python_pid.txt": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight1_render_python_pid.txt",
+      "sha256": "22f914b0ae3e39d2999d9d8d6a32008a28ee615f050fbd710b1a9be354a4b7a6"
+    },
+    "script.py.txt": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight1_script.py.txt",
+      "sha256": "0f253207dd5b77073cd504b8e344118575f2d6cc082eec6ae5c679ee180e31bf"
+    },
+    "stdout.log": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight1_stdout.log",
+      "sha256": "b5fc25a122371be83a9df448230fda477e66fd39f33188a6c6fad872ccab5203"
+    },
+    "supervisor_contract.json": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight1_supervisor_contract.json",
+      "sha256": "ae74afdbf97b5d310d3826f86b8ccb5d52d056b29cfb91ee2ed950521c976fa2"
+    },
+    "supervisor_launcher.log": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight1_supervisor_launcher.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "supervisor_pid.txt": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight1_supervisor_pid.txt",
+      "sha256": "c3e254fe3de154b12a20ae5c40c1d5b8200cffda0aa3dddfca4c285cb738b394"
+    }
+  },
+  "candidates_sha256": "67eb07d68268be25c894c47fb6bee79347e2b201dea643c4823a0873bfcde384",
+  "combined_exit_status": 1,
+  "contract": {
+    "artifact": "T3U_DETACHED_PHYSICS_THEN_RENDER_SUPERVISOR_V2",
+    "automatic_retry_count": 0,
+    "bounded_waitpid_only": true,
+    "child_parent_death_signal": "SIGTERM",
+    "child_preexec_signal_state": "SIGTERM_SIGINT_SIGHUP_SIG_DFL__empty_mask__expected_parent_pid_recheck",
+    "detached": true,
+    "kill_after_seconds": 20,
+    "physics_then_render_only_on_zero": true,
+    "physics_timeout_seconds": 7200,
+    "raw_waitpid_status_authority": true,
+    "render_timeout_seconds": 7200,
+    "supervisor_signal_cleanup": "SIGTERM_SIGINT__active_child_pgid_TERM_20s_then_KILL_20s",
+    "term_signal": "TERM"
+  },
+  "elapsed_seconds": 20.428247893985827,
+  "end_time_unix": 1786480952.47365,
+  "gpu": {
+    "before_pids": [
+      1154683,
+      1278769
+    ],
+    "fresh_pid_delta": [],
+    "no_fresh_pid_delta": true,
+    "supervisor_end_pids": [
+      1154683,
+      1278769
+    ]
+  },
+  "p16_source_sha256": "0f253207dd5b77073cd504b8e344118575f2d6cc082eec6ae5c679ee180e31bf",
+  "pass": false,
+  "physics": {
+    "attempt_count": 1,
+    "attempt_index": 0,
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/p16_g0b_t3u_cyld29h50_side_midpoint_parallel_physics.py",
+      "--run_label",
+      "side_preflight1",
+      "--candidates_sha256",
+      "67eb07d68268be25c894c47fb6bee79347e2b201dea643c4823a0873bfcde384"
+    ],
+    "core_dumped": false,
+    "elapsed_seconds": 20.13014393602498,
+    "end_time_unix": 1786480952.175567,
+    "exit_code": 0,
+    "group_members_after_reap": [],
+    "group_reaped": true,
+    "label": "physics",
+    "normalized_returncode": 0,
+    "pgid": 1496043,
+    "pid": 1496043,
+    "raw_wait_status": 0,
+    "sid": 1496031,
+    "signal_actions": [],
+    "signal_name": null,
+    "signal_number": null,
+    "start_time_unix": 1786480932.045426,
+    "supervisor_signal": null,
+    "timed_out": false,
+    "timeout_seconds": 7200.0,
+    "tty": {
+      "stderr": false,
+      "stdin": false,
+      "stdout": false
+    },
+    "wifexited": true,
+    "wifsignaled": false
+  },
+  "profile": "side_preflight1",
+  "render": {
+    "attempt_count": 1,
+    "attempt_index": 0,
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/p16_g0b_t3u_cyld29h50_side_midpoint_parallel_physics.py",
+      "--render_trace",
+      "side_preflight1"
+    ],
+    "core_dumped": false,
+    "elapsed_seconds": 0.18379433697555214,
+    "end_time_unix": 1786480952.3814695,
+    "exit_code": 1,
+    "group_members_after_reap": [],
+    "group_reaped": true,
+    "label": "render",
+    "normalized_returncode": 1,
+    "pgid": 1496715,
+    "pid": 1496715,
+    "raw_wait_status": 256,
+    "sid": 1496031,
+    "signal_actions": [],
+    "signal_name": null,
+    "signal_number": null,
+    "start_time_unix": 1786480952.1976793,
+    "supervisor_signal": null,
+    "timed_out": false,
+    "timeout_seconds": 7200.0,
+    "tty": {
+      "stderr": false,
+      "stdin": false,
+      "stdout": false
+    },
+    "wifexited": true,
+    "wifsignaled": false
+  },
+  "render_started_iff_physics_success": true,
+  "start_time_unix": 1786480932.0454016,
+  "supervisor": {
+    "active_child_at_exit": null,
+    "cleanup_actions": [],
+    "group_members_before_exit": [
+      1496031
+    ],
+    "pgid": 1496031,
+    "pid": 1496031,
+    "self_only_before_exit": true,
+    "sid": 1496031,
+    "signal_received": null,
+    "tty": {
+      "stderr": false,
+      "stdin": false,
+      "stdout": false
+    }
+  },
+  "supervisor_source_sha256": "9a1c51dad74831272b7e2dddbe152077a0b787619019a8b3a9242706ea7ba933"
+}

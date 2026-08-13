@@ -1,0 +1,18 @@
+{
+  "active_child_after_finally": {},
+  "argv": [
+    "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/p16_g0b_t3u_detached_physics_render_supervisor_v6.py",
+    "--profile",
+    "side_preflight4",
+    "--candidates_sha256",
+    "67eb07d68268be25c894c47fb6bee79347e2b201dea643c4823a0873bfcde384"
+  ],
+  "artifact": "T3U_DETACHED_SUPERVISOR_FAILURE_V1",
+  "cleanup_actions": [],
+  "last_child_outcome": null,
+  "message": "[Errno 13] Permission denied: '/proc/1/ns/pid'",
+  "supervisor_signal": null,
+  "time_unix": 1786510054.8072057,
+  "traceback": "Traceback (most recent call last):\n  File \"/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/p16_g0b_t3u_detached_physics_render_supervisor_v6.py\", line 1534, in <module>\n    _exit_code = main()\n                 ^^^^^^\n  File \"/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/p16_g0b_t3u_detached_physics_render_supervisor_v6.py\", line 1336, in main\n    host_launch_context = _host_launch_context()\n                          ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/p16_g0b_t3u_detached_physics_render_supervisor_v6.py\", line 205, in _host_launch_context\n    pid1_ns_inode = int(os.stat(\"/proc/1/ns/pid\").st_ino)\n                        ^^^^^^^^^^^^^^^^^^^^^^^^^\nPermissionError: [Errno 13] Permission denied: '/proc/1/ns/pid'\n",
+  "type": "PermissionError"
+}

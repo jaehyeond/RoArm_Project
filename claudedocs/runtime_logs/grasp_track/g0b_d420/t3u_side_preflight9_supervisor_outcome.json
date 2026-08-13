@@ -1,0 +1,349 @@
+{
+  "argv": [
+    "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/p16_g0b_t3u_detached_physics_render_supervisor_v11.py",
+    "--profile",
+    "side_preflight9",
+    "--candidates_sha256",
+    "67eb07d68268be25c894c47fb6bee79347e2b201dea643c4823a0873bfcde384"
+  ],
+  "artifact": "T3U_DETACHED_SUPERVISOR_OUTCOME_V11",
+  "attempts": {
+    "automatic_retry_count": 0,
+    "physics": 1,
+    "render": 0
+  },
+  "bindings": {
+    "argv.txt": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight9_argv.txt",
+      "sha256": "90f467bf9de385b5abace70bd76bd45e5dcbbe1c24de92cce1a9c17e0a69dcb2"
+    },
+    "exit_status.txt": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight9_exit_status.txt",
+      "sha256": "a5e45837a2959db847f7e67a915d0ecaddd47f943af2af5fa6453be497faabca"
+    },
+    "failure.json": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight9_failure.json",
+      "sha256": "6eccef7427294c413243f3b15025d24baae6c52bc0726269c14536e5656a4a4e"
+    },
+    "nvidia_smi_before.csv": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight9_nvidia_smi_before.csv",
+      "sha256": "4861bdfb03fa4e34a2d4dc6fa065e73e9a77e4f3d9535f9d54e86f8ddd8ff3a0"
+    },
+    "nvidia_smi_supervisor_end.csv": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight9_nvidia_smi_supervisor_end.csv",
+      "sha256": "4861bdfb03fa4e34a2d4dc6fa065e73e9a77e4f3d9535f9d54e86f8ddd8ff3a0"
+    },
+    "pgid.txt": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight9_pgid.txt",
+      "sha256": "d1dc327519ebea4eb0bb3d11c8771051cde7db9788e76efa170fd55fe8941bff"
+    },
+    "phase.jsonl": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight9_phase.jsonl",
+      "sha256": "9f3b4ec81e392b0e8ca13fa1bf846352bd543ef74e55e345de6be4af256cecf8"
+    },
+    "physics_python_pid.txt": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight9_physics_python_pid.txt",
+      "sha256": "fbc513f834845dfe78cacbd0548ab734d9763d9262dc7612f903ff1f1586cacf"
+    },
+    "plan.json": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight9_plan.json",
+      "sha256": "1cb380e86a7ce5685d8a14c576319bd95d34c82dede3c44030c541889971cf32"
+    },
+    "script.py.txt": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight9_script.py.txt",
+      "sha256": "56717ca98c4e1d1b19b026fb9d3b658b2a2dac6465f4c8318638251fb3eab2f1"
+    },
+    "stdout.log": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight9_stdout.log",
+      "sha256": "2bce27ac87e462666cf7994192ec6bb1b85976e33eba51b6654c4929cdc0605c"
+    },
+    "supervisor_contract.json": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight9_supervisor_contract.json",
+      "sha256": "23b7ecc6cf0fb36cfdcfc5c7e227bb88e893210788ddaa68696da98162a32e7a"
+    },
+    "supervisor_launcher.log": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight9_supervisor_launcher.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "supervisor_pid.txt": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight9_supervisor_pid.txt",
+      "sha256": "d1dc327519ebea4eb0bb3d11c8771051cde7db9788e76efa170fd55fe8941bff"
+    }
+  },
+  "candidates_sha256": "67eb07d68268be25c894c47fb6bee79347e2b201dea643c4823a0873bfcde384",
+  "combined_exit_status": 125,
+  "contract": {
+    "artifact": "T3U_DETACHED_PHYSICS_THEN_RENDER_SUPERVISOR_V11",
+    "automatic_retry_count": 0,
+    "bounded_waitpid_only": true,
+    "child_parent_death_signal": "SIGTERM",
+    "child_preexec_signal_state": "SIGTERM_SIGINT_SIGHUP_SIG_DFL__empty_mask__expected_parent_pid_recheck",
+    "detached": true,
+    "forbidden_sandbox_ancestor_gate": true,
+    "host_launch_boundary": "require_escalated_exec_command__outside_bwrap_die_with_parent",
+    "host_launch_context": {
+      "artifact": "T3U_HOST_LAUNCH_CONTEXT_V2",
+      "authorization_boundary": "require_escalated_exec_command",
+      "boot_id": "2a13e189-c87e-4777-a8d4-3dedfef85633",
+      "forbidden_matches": [],
+      "forbidden_tokens": [
+        "bwrap",
+        "--die-with-parent",
+        "codex-linux-sandbox"
+      ],
+      "namespace_consistency_is_not_pid1_or_host_proof": true,
+      "own_pid_namespace_device": 4,
+      "own_pid_namespace_inode": 4026531836,
+      "own_pid_namespace_path": "/proc/2249583/ns/pid",
+      "own_pid_namespace_readlink": "pid:[4026531836]",
+      "pass": true,
+      "pid1_cmdline": "/lib/systemd/systemd --system --deserialize 260 splash ",
+      "pid1_cmdline_hex": "2f6c69622f73797374656d642f73797374656d64002d2d73797374656d002d2d646573657269616c697a65003236300073706c61736800",
+      "pid1_cmdline_sha256": "3575f135d9bfb433792c3a8ded23c352814220057e759a343cf37e4f707af9ac",
+      "pid_namespace_evidence_scope": "supervisor_self_and_own_pid_alias_only__not_pid1_namespace_comparison",
+      "sandbox_rejection_authority": "pid1_cmdline_plus_complete_visible_ancestry_forbidden_token_gate",
+      "self_pid_namespace_device": 4,
+      "self_pid_namespace_inode": 4026531836,
+      "self_pid_namespace_path": "/proc/self/ns/pid",
+      "self_pid_namespace_readlink": "pid:[4026531836]",
+      "supervisor_pid": 2249583,
+      "supervisor_self_namespace_consistent": true
+    },
+    "kill_after_seconds": 20,
+    "physics_semantic_gate_artifact": "T3U_PHYSICS_PRECLOSE_SEMANTIC_GATE_V1",
+    "physics_then_render_only_on_raw_zero_and_preclose_semantic_gate": true,
+    "physics_timeout_seconds": 7200,
+    "raw_waitpid_status_authority": true,
+    "render_semantic_gate_artifact": "T3U_RENDER_POSTHOC_SEMANTIC_GATE_V1",
+    "render_success_requires_raw_zero_and_posthoc_semantic_gate": true,
+    "render_timeout_seconds": 7200,
+    "semantic_gate_failure_exit_status": 125,
+    "supervisor_signal_cleanup": "SIGTERM_SIGINT__active_child_pgid_TERM_20s_then_KILL_20s",
+    "term_signal": "TERM"
+  },
+  "elapsed_seconds": 58.181718292005826,
+  "end_time_unix": 1786528246.2312284,
+  "gpu": {
+    "before_pids": [
+      1154683,
+      1278769
+    ],
+    "fresh_pid_delta": [],
+    "no_fresh_pid_delta": true,
+    "supervisor_end_pids": [
+      1154683,
+      1278769
+    ]
+  },
+  "host_launch_context": {
+    "artifact": "T3U_HOST_LAUNCH_CONTEXT_V2",
+    "authorization_boundary": "require_escalated_exec_command",
+    "boot_id": "2a13e189-c87e-4777-a8d4-3dedfef85633",
+    "forbidden_matches": [],
+    "forbidden_tokens": [
+      "bwrap",
+      "--die-with-parent",
+      "codex-linux-sandbox"
+    ],
+    "namespace_consistency_is_not_pid1_or_host_proof": true,
+    "own_pid_namespace_device": 4,
+    "own_pid_namespace_inode": 4026531836,
+    "own_pid_namespace_path": "/proc/2249583/ns/pid",
+    "own_pid_namespace_readlink": "pid:[4026531836]",
+    "pass": true,
+    "pid1_cmdline": "/lib/systemd/systemd --system --deserialize 260 splash ",
+    "pid1_cmdline_hex": "2f6c69622f73797374656d642f73797374656d64002d2d73797374656d002d2d646573657269616c697a65003236300073706c61736800",
+    "pid1_cmdline_sha256": "3575f135d9bfb433792c3a8ded23c352814220057e759a343cf37e4f707af9ac",
+    "pid_namespace_evidence_scope": "supervisor_self_and_own_pid_alias_only__not_pid1_namespace_comparison",
+    "sandbox_rejection_authority": "pid1_cmdline_plus_complete_visible_ancestry_forbidden_token_gate",
+    "self_pid_namespace_device": 4,
+    "self_pid_namespace_inode": 4026531836,
+    "self_pid_namespace_path": "/proc/self/ns/pid",
+    "self_pid_namespace_readlink": "pid:[4026531836]",
+    "supervisor_pid": 2249583,
+    "supervisor_self_namespace_consistent": true
+  },
+  "p16_source_sha256": "56717ca98c4e1d1b19b026fb9d3b658b2a2dac6465f4c8318638251fb3eab2f1",
+  "pass": false,
+  "physics": {
+    "attempt_count": 1,
+    "attempt_index": 0,
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/p16_g0b_t3u_cyld29h50_side_midpoint_parallel_physics_v8.py",
+      "--run_label",
+      "side_preflight9",
+      "--candidates_sha256",
+      "67eb07d68268be25c894c47fb6bee79347e2b201dea643c4823a0873bfcde384"
+    ],
+    "core_dumped": false,
+    "elapsed_seconds": 58.10374757903628,
+    "end_time_unix": 1786528246.1533022,
+    "exit_code": 0,
+    "group_members_after_reap": [],
+    "group_reaped": true,
+    "label": "physics",
+    "normalized_returncode": 0,
+    "pgid": 2249596,
+    "pid": 2249596,
+    "raw_wait_status": 0,
+    "sid": 2249583,
+    "signal_actions": [],
+    "signal_name": null,
+    "signal_number": null,
+    "start_time_unix": 1786528188.04956,
+    "supervisor_signal": null,
+    "timed_out": false,
+    "timeout_seconds": 7200.0,
+    "tty": {
+      "stderr": false,
+      "stdin": false,
+      "stdout": false
+    },
+    "wifexited": true,
+    "wifsignaled": false
+  },
+  "physics_artifact_gate": {
+    "artifact": "T3U_PHYSICS_PRECLOSE_SEMANTIC_GATE_V1",
+    "failure_marker": {
+      "exists": true,
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight9_failure.json",
+      "sha256": "6eccef7427294c413243f3b15025d24baae6c52bc0726269c14536e5656a4a4e"
+    },
+    "missing_or_empty": [
+      "results.json",
+      "trace.npz",
+      "timeline.rrd",
+      "timeline.rbl",
+      "rerun_validation.json",
+      "decision_snapshot.png",
+      "inspection.png",
+      "preclose_sentinel.json"
+    ],
+    "parse_error": null,
+    "parsed_bindings": {},
+    "pass": false,
+    "profile": "side_preflight9",
+    "raw_child_success": true,
+    "required_files": {
+      "argv.txt": {
+        "exists": true,
+        "nonempty": true,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight9_argv.txt",
+        "sha256": "90f467bf9de385b5abace70bd76bd45e5dcbbe1c24de92cce1a9c17e0a69dcb2",
+        "size_bytes": 228
+      },
+      "decision_snapshot.png": {
+        "exists": false,
+        "nonempty": false,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight9_decision_snapshot.png",
+        "sha256": null,
+        "size_bytes": null
+      },
+      "inspection.png": {
+        "exists": false,
+        "nonempty": false,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight9_inspection.png",
+        "sha256": null,
+        "size_bytes": null
+      },
+      "phase.jsonl": {
+        "exists": true,
+        "nonempty": true,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight9_phase.jsonl",
+        "sha256": "9f3b4ec81e392b0e8ca13fa1bf846352bd543ef74e55e345de6be4af256cecf8",
+        "size_bytes": 2057
+      },
+      "plan.json": {
+        "exists": true,
+        "nonempty": true,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight9_plan.json",
+        "sha256": "1cb380e86a7ce5685d8a14c576319bd95d34c82dede3c44030c541889971cf32",
+        "size_bytes": 519553
+      },
+      "preclose_sentinel.json": {
+        "exists": false,
+        "nonempty": false,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight9_preclose_sentinel.json",
+        "sha256": null,
+        "size_bytes": null
+      },
+      "rerun_validation.json": {
+        "exists": false,
+        "nonempty": false,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight9_rerun_validation.json",
+        "sha256": null,
+        "size_bytes": null
+      },
+      "results.json": {
+        "exists": false,
+        "nonempty": false,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight9_results.json",
+        "sha256": null,
+        "size_bytes": null
+      },
+      "script.py.txt": {
+        "exists": true,
+        "nonempty": true,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight9_script.py.txt",
+        "sha256": "56717ca98c4e1d1b19b026fb9d3b658b2a2dac6465f4c8318638251fb3eab2f1",
+        "size_bytes": 610541
+      },
+      "timeline.rbl": {
+        "exists": false,
+        "nonempty": false,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight9_timeline.rbl",
+        "sha256": null,
+        "size_bytes": null
+      },
+      "timeline.rrd": {
+        "exists": false,
+        "nonempty": false,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight9_timeline.rrd",
+        "sha256": null,
+        "size_bytes": null
+      },
+      "trace.npz": {
+        "exists": false,
+        "nonempty": false,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight9_trace.npz",
+        "sha256": null,
+        "size_bytes": null
+      }
+    },
+    "required_phase_sequence": [
+      "run_claim",
+      "results_durable",
+      "preclose_sentinel_durable",
+      "simulation_app_close_start"
+    ],
+    "semantic_checks": {
+      "all_required_preclose_files_nonempty": false,
+      "failure_marker_absent": false,
+      "preclose_documents_parse_without_error": false
+    }
+  },
+  "profile": "side_preflight9",
+  "render": null,
+  "render_artifact_gate": null,
+  "render_started_iff_physics_success": true,
+  "start_time_unix": 1786528188.04951,
+  "supervisor": {
+    "active_child_at_exit": null,
+    "cleanup_actions": [],
+    "group_members_before_exit": [
+      2249583
+    ],
+    "pgid": 2249583,
+    "pid": 2249583,
+    "self_only_before_exit": true,
+    "sid": 2249583,
+    "signal_received": null,
+    "tty": {
+      "stderr": false,
+      "stdin": false,
+      "stdout": false
+    }
+  },
+  "supervisor_source_sha256": "bf36d2acbe9cb7fb6cb6721e8dca90ce4f7623fab5813449f459893131fae29b"
+}

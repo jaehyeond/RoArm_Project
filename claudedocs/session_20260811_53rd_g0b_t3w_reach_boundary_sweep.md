@@ -318,7 +318,8 @@ r = 0.550을 1° 재스캔해도 **없음**(θ=80에서 descend 위치오차 23.
 
 ## §10 `/half-clone` 사건 기록
 
-53rd 세션 종단: stop-hook이 `/half-clone` 실행을 **1회 요구**(context **193 %**) → **거부**.
+53rd 세션 종단: stop-hook이 `/half-clone` 실행을 **2회 요구**(context **193 %**, **199 %**)
+→ **2회 모두 거부**.
 근거 = HARD RULE #11(auto-memory) + `AGENTS.md` Context 95% emergency protocol 4항.
 대체 조치는 **요구가 오기 전에 이미 완료**되어 있었다 — 상태 문서 4종 갱신
 (본 문서 · `START_HERE.md` 53rd판 · `DECISIONS.md` D440 · `EXPERIMENT_LEDGER.md` 53rd 행)

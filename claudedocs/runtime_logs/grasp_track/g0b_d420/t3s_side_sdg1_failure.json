@@ -1,0 +1,18 @@
+{
+  "artifact": "G0B_T3S_SIDE_SDG1_FAILURE_V1",
+  "run_label": "side_sdg1",
+  "status": "ABORTED_INVALID_NO_CANDIDATE_ARTIFACTS",
+  "physics_steps": 0,
+  "pid": 1185701,
+  "process_residue_after_exit": 0,
+  "executed_source_sha256": "8fefc670d483f740b956649791db9650770e973263207fec52eb184370471935",
+  "prereg_sha256": "83b3af3af1d49d67f299cdd0dbfce46c5b547e66542ce90cf589879fb0cbad13",
+  "stdout_sha256": "8752695c83c5810d4655b15f77d608a70669fda82281b73468c0d4c49ef9aef9",
+  "kit_log_path": "/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/kit/logs/Kit/Isaac-Sim/5.1/kit_20260811_233446.log",
+  "kit_log_sha256": "55b708ee30ea3dbce7b49ec64d7366fbcdc37e65f0662826c1cfcab986da02d0",
+  "observed": "The process opened the pinned Grasping SDG extension and five attempt3 USD layers, then terminated before writing any guarded candidate/Rerun artifact.",
+  "reproduced_exception": "SIDE_FILTER_TOO_FEW expected_at_least=8 actual=6",
+  "reproduction_scope": "Same frozen source, protocol, seed, mesh, package pins, and sampler under a /tmp-only diagnostic wrapper that intercepted terminal SimulationApp.close so the pending exception could be printed.",
+  "interpretation": "The 1-degree vertical safety filter was retained. The run failed its preregistered candidate-count gate; it is not a grasp or physics result.",
+  "next_forward_only_tag": "side_sdg2"
+}

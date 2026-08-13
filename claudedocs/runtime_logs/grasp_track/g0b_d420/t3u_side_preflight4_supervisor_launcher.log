@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/p16_g0b_t3u_detached_physics_render_supervisor_v6.py", line 1534, in <module>
+    _exit_code = main()
+                 ^^^^^^
+  File "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/p16_g0b_t3u_detached_physics_render_supervisor_v6.py", line 1336, in main
+    host_launch_context = _host_launch_context()
+                          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/p16_g0b_t3u_detached_physics_render_supervisor_v6.py", line 205, in _host_launch_context
+    pid1_ns_inode = int(os.stat("/proc/1/ns/pid").st_ino)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: '/proc/1/ns/pid'

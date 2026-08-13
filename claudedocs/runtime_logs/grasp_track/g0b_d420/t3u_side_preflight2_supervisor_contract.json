@@ -1,0 +1,19 @@
+{
+  "artifact": "T3U_DETACHED_PHYSICS_THEN_RENDER_SUPERVISOR_V4",
+  "automatic_retry_count": 0,
+  "bounded_waitpid_only": true,
+  "child_parent_death_signal": "SIGTERM",
+  "child_preexec_signal_state": "SIGTERM_SIGINT_SIGHUP_SIG_DFL__empty_mask__expected_parent_pid_recheck",
+  "detached": true,
+  "kill_after_seconds": 20,
+  "physics_semantic_gate_artifact": "T3U_PHYSICS_PRECLOSE_SEMANTIC_GATE_V1",
+  "physics_then_render_only_on_raw_zero_and_preclose_semantic_gate": true,
+  "physics_timeout_seconds": 7200,
+  "raw_waitpid_status_authority": true,
+  "render_semantic_gate_artifact": "T3U_RENDER_POSTHOC_SEMANTIC_GATE_V1",
+  "render_success_requires_raw_zero_and_posthoc_semantic_gate": true,
+  "render_timeout_seconds": 7200,
+  "semantic_gate_failure_exit_status": 125,
+  "supervisor_signal_cleanup": "SIGTERM_SIGINT__active_child_pgid_TERM_20s_then_KILL_20s",
+  "term_signal": "TERM"
+}

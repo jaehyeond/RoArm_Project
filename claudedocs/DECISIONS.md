@@ -27466,3 +27466,149 @@ Evidence:
   `sim_scripts/roarm_kinematics.py:19-23,29-36`;
   `local_assets/roarm_m3/urdf/roarm_m3.urdf:185,194,203,212`;
   이전 판정 = D439 · D438-R1 · D437-R1 · D436-R4 · D433 · D432 · D431 · D430 · D427 · D426 · D419.
+
+---
+
+## D441 — 54th, t3x+t3y: 위치는 가능한 접근 form을 바꾸지만, 현재 **상면 중심** 규약에서는 광역 PhysX 3,476개도 유효 파지 0 — 정적 물림 창은 실제 접촉 predictor가 아니며, split convex-hull 64+64를 실제 쓴 결과다
+
+- **Evidence**:
+  - 사용자 승인 ⓒ에 따라 `p13_g0b_t3x_cyld29h50_ik_conditioned_bite_window_audit.py`를
+    신규 저작·실행했다. CPU wall **1,135.4 s**, `run_valid=true`, 입력/환경/asset/n10 회귀/
+    phase·wrist/finite object+table/source-freeze X1~X6 PASS. results SHA256 =
+    `d1460c9d80e5f65f4ab9d85a7851b29876ef7ae0ca9e28d34bd93ddb91f0170a`.
+  - p13의 이상적 local scan은 θ46 bilateral max **−0.0573 mm**에서 θ47 **+5.4027 mm**로
+    첫 양수 창을 만들고, θ60 **+4.4366 mm**, θ69 **+6.6822 mm**, θ81 **+9.9586 mm**를
+    냈다. 그러나 실제 pose/table gate는 S3/S4/r=.45의 지지면 여유를 각각
+    **−7.471/−9.529/−9.148 mm**로 측정했고 r=.525/θ81은 스폰 밖+final IK fail이다.
+    ⇒ p13 verdict `NO_BILATERAL_WINDOW_IN_SPAWN_ENVELOPE`.
+  - 사용자의 후속 "Isaac 물리를 적극 사용하고 위치마다 IK/form을 시험" 지시에 따라 p13을
+    소비하는 신규 p14/t3y를 실행했다. **4 영역×8×8=256 위치 × θ {6,15,24,35,60,69} ×
+    q5 4 = 6,144 독립 IK**, 그중 **3,476 feasible**를 RTX 4090에서
+    **1,024+1,024+1,024+404 env**로 PhysX 실행했다. 물리 wall 합 **62.542 s**, 전체 wall
+    **980.335 s**. 2,668은 IK gate fail, wrist-roll V6 fail 0.
+  - **측정 유효 3,476/3,476, success 0/3,476**. 같은 physics step의
+    `max_t min(F_fixed,F_moving)>0.01N` 기준으로 close bilateral **0**, lift-only bilateral
+    **7**. task-clear corrected lift max **0.000106171 mm** vs 성공 gate **>6.000 mm**.
+  - 실패 전건 분류 = `PRECLOSE_COLLISION 1,217` + `ONE_JAW_ONLY 1,025` +
+    `NO_JAW_CONTACT 1,082` + `JAW_SUPPORT_CONTACT_FAIL 139` + `ARRIVAL_FAIL 13` = 3,476.
+    조-지지면 접촉은 계측 무효가 아니라 유효한 task failure이며 bilateral과 동반된 행 0.
+  - ★ **위치 의존성은 확인**: 가까운 R1/R2(r 약 .175~.325)는 θ6/15가 주로 IK 가능하고,
+    먼 R3/R4(r 약 .341~.474)는 near-top-down이 대부분 불가하며 θ60/69가 가능해진다.
+    그러나 **near-top-down θ6+15 feasible 1,188개도 success 0**. θ=0은 미시험이므로
+    "모든 수직 접근 실패"로 확대 금지.
+  - ★★ **lift-only 7건 반증**: 모두 close 때 `ONE_JAW_ONLY`, θ15/q5=18.8 R2 2건 +
+    θ24/q5=19.9 R1 1건/R2 4건. corrected rise **−0.0000447~+0.0000522 mm**.
+    대표 `trial_001540`은 close bilateral 0 N, lift bilateral-min peak **0.294822 N**가
+    10 step 발생하지만 TCP가 약 23.39 mm 오를 때 원통은 z≈25 mm에 남는다.
+    ⇒ 들어 올린 파지가 아니라 빠지는 조가 원통을 순간적으로 양쪽에서 스친 사건.
+  - ★★ **p13 local admission 반증**: p13 low-θ는 moving-jaw unilateral positive를 예측했지만,
+    실제 `ONE_JAW_ONLY` **1,025/1,025 전부 fixed-jaw only**, moving-only 0. 또한 p13 θ60/69
+    local bilateral 창에서 실제 close bilateral 0. ⇒ 정적 물림 창은 force/contact predictor가
+    아니고, 유한 물체·테이블·pose를 합친 전역 제외만 생존한다.
+  - **split jaw 사용 증명**: p11은 attempt3 root path+SHA16을 주입/guard했지만 sublayer
+    실행시점 바이트와 64+64 inventory는 결과에 없었다. p14는 composed USD 5개 full SHA+
+    recursive exact-set을 시작/종료에 검사하고 runtime stage에서 `link5=64`,
+    `gripper_link=64` 활성 convex hull, 각 legacy 1개 disabled, cloned reporter
+    **2,048/2,048**, hull fallback 0을 확인했다. `kinematic_attach_calls=0`.
+  - external terminal attestation PASS(exit 0, timeout/signal/failure marker/residue 0,
+    result↔sentinel↔phase↔artifact SHA exact). D341 technical PASS(Rerun 0.34.1, footer/entity/
+    component/timeline/RBL) + root 실제 PNG 육안 검수 PASS + 두 독립 원본 재집계 불일치 0.
+    `results.json`의 `scientific_verdict=null`은 pre-close 동결을 보존했고, 별도 terminal+
+    visual+audit를 합쳐 `BILATERAL_CONTACT_ONLY_DURING_LIFT_NO_VALID_GRASP`로 승격했다.
+
+- **Implication**:
+  1. 사용자의 "물체 위치에 따라 IK와 좋은 top-view form이 다르다"는 직관은 **맞다**.
+     그러나 위치/θ를 넓히는 것만으로 현재 상면 중심 parallel-jaw grasp가 생기지는 않았다.
+  2. ⛔ **범위** = 256 이산 위치, θ 6개, yaw=0, p13-derived q5/depth. θ=0, 측면 중점,
+     연속 workspace 전체, 실제 하드웨어, force closure는 미판정.
+  3. 같은 r×θ 격자의 무작정 조밀화는 낮은 가치다. 다음 최소 결정 실험은 **θ6/15 + descend
+     깊이 perturbation을 R1/R2에서 PhysX로 실행**해 fixed-only 704건이 close bilateral로
+     바뀌는지, preclose만 증가하는지 묻는 것. 이것도 0이면 상면 중심 blind sweep을 멈춘다.
+  4. 그 뒤의 진짜 side grasp는 **D419 상면 중심→측면 중점 변경**, 또는 Arm-F 조 형상 변경이며
+     둘 다 사용자·교수님 설계 결정이다. 자동 착수 금지.
+  5. 물리는 병목이 아니다. 3,476 rollout은 62.5 s였고 병목은 독립 IK+관측 산출물이다.
+     로컬 4090으로 충분한 규모에는 RunPod가 불필요하고, 수만~수십만 DOE에서 동일 image/
+     5-layer asset hash를 원격에 보장할 때 사용한다.
+  6. cylinder에 저작한 static/dynamic 0.40/0.30은 유효 jaw-object/support pair friction이 아니다.
+     jaw/support material·combine mode를 별도 측정하지 않았으므로 마찰 결론 금지.
+
+- **Source**: `claudedocs/session_20260811_54th_g0b_t3x_t3y_workspace_physics.md`;
+  `g0b_d420/t3x_bite81_{prereg.md,results.json,timeline.rrd,rerun_validation.json}`;
+  `g0b_d420/t3y_workspace1_{prereg.md,plan.json,trace.npz,results.json,timeline.rrd,
+  rerun_validation.json,inspection.png,decision_snapshot.png,terminal_attestation.json,
+  manual_visual_inspection.json,script.py.txt,argv.txt}`;
+  `sim_scripts/p13_g0b_t3x_cyld29h50_ik_conditioned_bite_window_audit.py`;
+  `sim_scripts/p14_g0b_t3y_cyld29h50_workspace_parallel_physics_sweep.py`;
+  이전 판정 = D440 · D439 · D433 · D432 · D431 · D430 · D427 · D419.
+
+---
+
+## D442 — 54th reactive harness lesson: `OmniPBR.mdl` built-in을 누락 USD로 오분류하지 말고, Isaac Sim 5.1 `SimulationApp.close()` 뒤 내부 PASS를 기대하지 말 것
+
+- **Evidence**:
+  - `t3y_workspace_preflight1`은 384 plan/215 feasible 뒤 **물리 0 step**에서 멈췄다.
+    5개 pinned local USD는 모두 열렸지만 OpenUSD `ComputeAllDependencies`가 exact
+    `OmniPBR.mdl`을 unresolved로 반환했고 p14 초기 gate가 일반 누락 파일로 오분류했다.
+    해당 태그는 ABORTED/INVALID로 동결, 덮어쓰기·동일 태그 retry 0.
+  - NVIDIA 공식 **MDL Resolution Changes**와 **MDL Search Path**는 OmniPBR 같은 built-in
+    MDL을 referencing USD 상대 파일이 아니라 renderer/client search path가 처리한다고 설명한다.
+    설치 Isaac Sim 5.1의 `omni.usd.config-1.0.6 extension.py:99,166`은
+    `OMNI_USD_RESOLVER_MDL_BUILTIN_BYPASS=1`과 built-in module 목록을 저작하며,
+    `omni.usd-1.13.10 test_usd_bootstrap.py:26,29`는 `OmniPBR.mdl` membership을 검사한다.
+  - reactive repair는 blanket `.mdl` ignore가 아니다. exact allowset `{OmniPBR.mdl}`만,
+    5 layer의 sublayer/reference/payload가 아님 + 8개 Shader의 exact
+    `info:mdl:sourceAsset` + runtime built-in membership/bypass를 모두 gate했다. 다른 unresolved,
+    path-qualified MDL, missing USD, 5-layer set/hash drift는 fatal 유지.
+  - 설치 `isaacsim.simulation_app/simulation_app.py:763,793,838`에서 `close()`는
+    `shutdown_and_release_framework()`를 호출한다. preflight1도 이 release 경계에서 종료가
+    불분명해졌고, 정상 성공 경로에서 close 뒤 Python 내부 marker를 요구하는 설계가 부적합했다.
+  - reactive lifecycle은 `env.close()` return을 먼저 gate하고 모든 results/RRD/RBL/PNG/manifest를
+    fsync한 pre-close sentinel을 만든 뒤 `SimulationApp.close()`를 마지막 terminal call로 둔다.
+    별도 hash-bound supervisor/attestor가 exit 0, timeout/signal 없음, failure marker 없음,
+    PID/PGID/GPU residue 0, sentinel/result/phase hash를 판정한다. preflight2와 canonical 모두 PASS.
+
+- **Implication**:
+  1. `ComputeAllDependencies.unresolved`를 무조건 "로컬 파일 누락"으로 해석하지 않는다.
+     composition arc와 renderer built-in identifier를 version-matched NVIDIA 문서·설치 source·
+     stage authored use로 분류한 뒤, exact 좁은 allowlist만 허용한다.
+  2. blanket `.mdl` ignore, MDL 옆 복사, search path 임의 변경, 5-layer SHA gate 완화는 금지.
+  3. Isaac Sim 5.1에서 `SimulationApp.close()` **이후** 내부 성공 기록을 authoritative gate로
+     삼지 않는다. pre-close durable evidence + 외부 terminal/no-residue attestation을 사용하고,
+     `skip_cleanup=True`로 성공 경로를 우회하지 않는다.
+  4. 이 수리는 실제 preflight failure에 대한 반응이므로 AGENTS.md의 reactive hardening 규칙을
+     충족한다. 사전 추측성 control 확장이 아니다.
+
+- **Source**: `g0b_d420/t3y_workspace_preflight1_{plan.json,stdout.log}`;
+  `g0b_d420/t3y_workspace_preflight2_{prereg.md,results.json,terminal_attestation.json,
+  manual_visual_inspection.json}`; `g0b_d420/t3y_workspace1_terminal_attestation.json`;
+  `sim_scripts/p14_g0b_t3y_cyld29h50_workspace_parallel_physics_sweep.py`;
+  NVIDIA **MDL Resolution Changes**
+  <https://docs.omniverse.nvidia.com/materials-and-rendering/latest/materials_release-notes/MDL_resolution_changes.html>;
+  NVIDIA **MDL Search Path**
+  <https://docs.omniverse.nvidia.com/materials-and-rendering/latest/mdl_search_path.html>;
+  installed `omni.usd.config-1.0.6/omni/usd_config/extension.py:99,166` ·
+  `omni.usd-1.13.10/omni/usd/tests/test_usd_bootstrap.py:26,29` ·
+  `isaacsim.simulation_app/isaacsim/simulation_app/simulation_app.py:763,793,838`.
+## D443 — CUDA compute PASS와 RTX/Vulkan render capability는 별개다; cloud Pod는 전송·설치 전에 graphics-device smoke gate를 통과해야 한다
+
+**Evidence.** 2026-08-13 RunPod RTX PRO 6000 Blackwell Server Edition Pod
+`aoyagwoz7blwiv`에서 driver 580.126.16, `cuInit=0`, PyTorch CUDA true와 96 GB GPU를
+확인했다. Isaac Lab 2.3/Isaac Sim 5.1 설치 및 P13 30/30 semantic input gate도 통과했다.
+그러나 native Replicator와 `simulation_app.update()` 두 경로 모두 PNG 0개였고 Kit는
+`no suitable CUDA GPU` / `no valid foundation interface`를 기록했다. `vulkaninfo`는
+instance 생성에 실패했고 컨테이너에는 CUDA device `/dev/nvidia3`은 있었지만
+`/dev/nvidia-modeset`이 없었다. GLU와 exact 580.126.16 userspace GL을 공급해도 결과는
+불변이었다. Raw evidence SHA = `5469c2fcf6eaed522c6a670ebc1731e8b0da360b15972237cf288d80e91e0610`.
+
+**Implication.** GPU SKU에 RT Core가 있거나 `torch.cuda.is_available()`가 true인 것은
+Isaac RTX renderer가 작동한다는 증거가 아니다. 앞으로 cloud Isaac RTX 작업은 이미지
+설치·대형 payload 전송 전에 반드시 (1) `/dev/nvidia-modeset` 존재, (2)
+`vulkaninfo --summary`에서 NVIDIA GPU 인식, (3) 1-frame Kit capture를 순서대로 통과해야
+한다. 일반 PyTorch Pod를 `NVIDIA_DRIVER_CAPABILITIES=all`만으로 RTX-ready라 간주하지
+않는다. 또 exact retirement validator를 이식할 때는 SHA뿐 아니라 nanosecond mtime과
+절대 repo 경로도 계약 일부이므로, 초 단위 `/workspace` volume이나 다른 repo root는
+false abort를 만든다.
+
+**Source.** `claudedocs/session_20260813_55th_g0b_t3u_side_midpoint_p13_runpod_render.md`;
+`g0b_d420/t3u_side_rendercloud1_runpod_evidence.tar.gz`; NVIDIA Isaac Sim 5.1 System
+Requirements and Container Installation docs linked in the session document.

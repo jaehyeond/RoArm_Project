@@ -1,0 +1,288 @@
+{
+  "argv": [
+    "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/p16_g0b_t3u_detached_physics_render_supervisor.py",
+    "--profile",
+    "side_preflight2",
+    "--candidates_sha256",
+    "67eb07d68268be25c894c47fb6bee79347e2b201dea643c4823a0873bfcde384"
+  ],
+  "artifact": "T3U_DETACHED_SUPERVISOR_OUTCOME_V4",
+  "attempts": {
+    "automatic_retry_count": 0,
+    "physics": 1,
+    "render": 0
+  },
+  "bindings": {
+    "argv.txt": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_argv.txt",
+      "sha256": "450841fe0bad6e435febfd72825edc502125d4d73076dc25217963ea590dfa1a"
+    },
+    "exit_status.txt": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_exit_status.txt",
+      "sha256": "a5e45837a2959db847f7e67a915d0ecaddd47f943af2af5fa6453be497faabca"
+    },
+    "failure.json": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_failure.json",
+      "sha256": "f17e0c3a3f48c9a52ffea572b52957164b8e0adb54af1d2c9cbfe766ce88c4a3"
+    },
+    "nvidia_smi_before.csv": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_nvidia_smi_before.csv",
+      "sha256": "4861bdfb03fa4e34a2d4dc6fa065e73e9a77e4f3d9535f9d54e86f8ddd8ff3a0"
+    },
+    "nvidia_smi_supervisor_end.csv": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_nvidia_smi_supervisor_end.csv",
+      "sha256": "4861bdfb03fa4e34a2d4dc6fa065e73e9a77e4f3d9535f9d54e86f8ddd8ff3a0"
+    },
+    "pgid.txt": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_pgid.txt",
+      "sha256": "7f0442955a60ffe9f1b62cfa1ea1ab46a2b2810e768baf528f3ad7449111abc8"
+    },
+    "phase.jsonl": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_phase.jsonl",
+      "sha256": "010ae83487eb2cac6fc496ed9070cbe90242a3a8dd6f5079e90c93eb18e20ccb"
+    },
+    "physics_python_pid.txt": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_physics_python_pid.txt",
+      "sha256": "8e843234617846db63561695f3f78065274168426951fe72d1b4c0e6befaccd9"
+    },
+    "script.py.txt": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_script.py.txt",
+      "sha256": "5c6132b68651549b2c54c9216a09ecfb4210e9b74ee1c3ba9ddf96f667dcf789"
+    },
+    "stdout.log": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_stdout.log",
+      "sha256": "82ee85d9d85a8145f643b06ba4603ae29814fefca0d265839866bd008d65990d"
+    },
+    "supervisor_contract.json": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_supervisor_contract.json",
+      "sha256": "8be8f473351936a81c40f01ab705bab5d7a08af5b72c7bd4f73d5748b065dc56"
+    },
+    "supervisor_launcher.log": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_supervisor_launcher.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "supervisor_pid.txt": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_supervisor_pid.txt",
+      "sha256": "7f0442955a60ffe9f1b62cfa1ea1ab46a2b2810e768baf528f3ad7449111abc8"
+    }
+  },
+  "candidates_sha256": "67eb07d68268be25c894c47fb6bee79347e2b201dea643c4823a0873bfcde384",
+  "combined_exit_status": 125,
+  "contract": {
+    "artifact": "T3U_DETACHED_PHYSICS_THEN_RENDER_SUPERVISOR_V4",
+    "automatic_retry_count": 0,
+    "bounded_waitpid_only": true,
+    "child_parent_death_signal": "SIGTERM",
+    "child_preexec_signal_state": "SIGTERM_SIGINT_SIGHUP_SIG_DFL__empty_mask__expected_parent_pid_recheck",
+    "detached": true,
+    "kill_after_seconds": 20,
+    "physics_semantic_gate_artifact": "T3U_PHYSICS_PRECLOSE_SEMANTIC_GATE_V1",
+    "physics_then_render_only_on_raw_zero_and_preclose_semantic_gate": true,
+    "physics_timeout_seconds": 7200,
+    "raw_waitpid_status_authority": true,
+    "render_semantic_gate_artifact": "T3U_RENDER_POSTHOC_SEMANTIC_GATE_V1",
+    "render_success_requires_raw_zero_and_posthoc_semantic_gate": true,
+    "render_timeout_seconds": 7200,
+    "semantic_gate_failure_exit_status": 125,
+    "supervisor_signal_cleanup": "SIGTERM_SIGINT__active_child_pgid_TERM_20s_then_KILL_20s",
+    "term_signal": "TERM"
+  },
+  "elapsed_seconds": 20.38160310400417,
+  "end_time_unix": 1786502936.7030015,
+  "gpu": {
+    "before_pids": [
+      1154683,
+      1278769
+    ],
+    "fresh_pid_delta": [],
+    "no_fresh_pid_delta": true,
+    "supervisor_end_pids": [
+      1154683,
+      1278769
+    ]
+  },
+  "p16_source_sha256": "5c6132b68651549b2c54c9216a09ecfb4210e9b74ee1c3ba9ddf96f667dcf789",
+  "pass": false,
+  "physics": {
+    "attempt_count": 1,
+    "attempt_index": 0,
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/p16_g0b_t3u_cyld29h50_side_midpoint_parallel_physics.py",
+      "--run_label",
+      "side_preflight2",
+      "--candidates_sha256",
+      "67eb07d68268be25c894c47fb6bee79347e2b201dea643c4823a0873bfcde384"
+    ],
+    "core_dumped": false,
+    "elapsed_seconds": 20.289107506978326,
+    "end_time_unix": 1786502936.6105201,
+    "exit_code": 0,
+    "group_members_after_reap": [],
+    "group_reaped": true,
+    "label": "physics",
+    "normalized_returncode": 0,
+    "pgid": 1802082,
+    "pid": 1802082,
+    "raw_wait_status": 0,
+    "sid": 1802072,
+    "signal_actions": [],
+    "signal_name": null,
+    "signal_number": null,
+    "start_time_unix": 1786502916.3214173,
+    "supervisor_signal": null,
+    "timed_out": false,
+    "timeout_seconds": 7200.0,
+    "tty": {
+      "stderr": false,
+      "stdin": false,
+      "stdout": false
+    },
+    "wifexited": true,
+    "wifsignaled": false
+  },
+  "physics_artifact_gate": {
+    "artifact": "T3U_PHYSICS_PRECLOSE_SEMANTIC_GATE_V1",
+    "failure_marker": {
+      "exists": true,
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_failure.json",
+      "sha256": "f17e0c3a3f48c9a52ffea572b52957164b8e0adb54af1d2c9cbfe766ce88c4a3"
+    },
+    "missing_or_empty": [
+      "results.json",
+      "plan.json",
+      "trace.npz",
+      "timeline.rrd",
+      "timeline.rbl",
+      "rerun_validation.json",
+      "decision_snapshot.png",
+      "inspection.png",
+      "preclose_sentinel.json"
+    ],
+    "parse_error": null,
+    "parsed_bindings": {},
+    "pass": false,
+    "profile": "side_preflight2",
+    "raw_child_success": true,
+    "required_files": {
+      "argv.txt": {
+        "exists": true,
+        "nonempty": true,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_argv.txt",
+        "sha256": "450841fe0bad6e435febfd72825edc502125d4d73076dc25217963ea590dfa1a",
+        "size_bytes": 225
+      },
+      "decision_snapshot.png": {
+        "exists": false,
+        "nonempty": false,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_decision_snapshot.png",
+        "sha256": null,
+        "size_bytes": null
+      },
+      "inspection.png": {
+        "exists": false,
+        "nonempty": false,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_inspection.png",
+        "sha256": null,
+        "size_bytes": null
+      },
+      "phase.jsonl": {
+        "exists": true,
+        "nonempty": true,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_phase.jsonl",
+        "sha256": "010ae83487eb2cac6fc496ed9070cbe90242a3a8dd6f5079e90c93eb18e20ccb",
+        "size_bytes": 1011
+      },
+      "plan.json": {
+        "exists": false,
+        "nonempty": false,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_plan.json",
+        "sha256": null,
+        "size_bytes": null
+      },
+      "preclose_sentinel.json": {
+        "exists": false,
+        "nonempty": false,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_preclose_sentinel.json",
+        "sha256": null,
+        "size_bytes": null
+      },
+      "rerun_validation.json": {
+        "exists": false,
+        "nonempty": false,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_rerun_validation.json",
+        "sha256": null,
+        "size_bytes": null
+      },
+      "results.json": {
+        "exists": false,
+        "nonempty": false,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_results.json",
+        "sha256": null,
+        "size_bytes": null
+      },
+      "script.py.txt": {
+        "exists": true,
+        "nonempty": true,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_script.py.txt",
+        "sha256": "5c6132b68651549b2c54c9216a09ecfb4210e9b74ee1c3ba9ddf96f667dcf789",
+        "size_bytes": 381751
+      },
+      "timeline.rbl": {
+        "exists": false,
+        "nonempty": false,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_timeline.rbl",
+        "sha256": null,
+        "size_bytes": null
+      },
+      "timeline.rrd": {
+        "exists": false,
+        "nonempty": false,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_timeline.rrd",
+        "sha256": null,
+        "size_bytes": null
+      },
+      "trace.npz": {
+        "exists": false,
+        "nonempty": false,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_trace.npz",
+        "sha256": null,
+        "size_bytes": null
+      }
+    },
+    "required_phase_sequence": [
+      "run_claim",
+      "results_durable",
+      "preclose_sentinel_durable",
+      "simulation_app_close_start"
+    ],
+    "semantic_checks": {
+      "all_required_preclose_files_nonempty": false,
+      "failure_marker_absent": false,
+      "preclose_documents_parse_without_error": false
+    }
+  },
+  "profile": "side_preflight2",
+  "render": null,
+  "render_artifact_gate": null,
+  "render_started_iff_physics_success": true,
+  "start_time_unix": 1786502916.3213985,
+  "supervisor": {
+    "active_child_at_exit": null,
+    "cleanup_actions": [],
+    "group_members_before_exit": [
+      1802072
+    ],
+    "pgid": 1802072,
+    "pid": 1802072,
+    "self_only_before_exit": true,
+    "sid": 1802072,
+    "signal_received": null,
+    "tty": {
+      "stderr": false,
+      "stdin": false,
+      "stdout": false
+    }
+  },
+  "supervisor_source_sha256": "527b06e5b9a090f4207c5f9ac5feb539c4b26f4c23f48ac59e4d802a153fa365"
+}

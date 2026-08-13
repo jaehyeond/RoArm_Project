@@ -1,818 +1,120 @@
 # START_HERE.md
 
-Last updated: 2026-08-11 KST (**53rd판**). **G0b case `g0b_d420` 계속.**
+Last updated: 2026-08-13 KST — 56th Claude 재인수 부트 검증 완료 (55th 핀 전부 재확인,
+불일치 0, 실험 0, 사용자 A/B/C 결정 대기).
 
-> ★★★ **53rd = 1-NEXT ⓐ(반경별 도달 경계 스윕) 실행·완료. 52nd가 스스로 적어 둔 유일한
-> 미해소 한계를 닫았고, 답은 "45°는 팔의 성질이 아니라 포즈의 성질"이다 (D440).**
-> 물리 **0** · Isaac **0** · 로봇 **0** · GPU **0** (순수 CPU numpy 기구학) ·
-> 신규 스크립트 `p12_*` 1 · 신규 태그 `t3w_*` · 덮어쓰기 0 · git write 0.
-> **1,440 셀 = 3 관절제한 × 20 반경 × 24 방위 / 31,967 IK 평가 / wall 5,013 s.**
-> ✅ **Gate R0(블로킹) 통과 — 반박 전에 상대를 자리수까지 재현했다**: 52nd 앵커 20행
-> 전건 재현(r `0.28977932314129784` · ψ `317.5141789665032` · max θ **45/50** ·
-> θ=90 잔차 tilt **43.14381171104314 / 14.673298364005463**), 사후 추가로 **동결
-> `t3p_sweep1024_plan.json`의 28행 전부 비트 동일**(Δ = 0.00e+00). ⚠️ 게이트가 검증한 것은
-> **20행**이고 나머지 8행(θ ∈ {0,15,48,55})은 **사후 재도출·산출물 미영속화**.
-> ★★ **헤드라인**: θ\*(v6 클립) = **81.25° @ r = 0.525 m, Δψ = 0** ⇒ 사전등록 라벨
-> **`SIDE_GRASP_REACHABLE_AT_OTHER_POSES`**(≥75° 가지). 하드웨어 두 집합은 r ≥ 0.45에서
-> **θ = 90.0°(완전 수평) 통과**. 52nd 포즈 자신의 천장은 **46.0°**(참 구간
-> 46.0 ≤ θ_max < 46.09375; 52nd의 "45"는 격자 해상도였다).
-> ⛔⛔ **그런데 이 라벨을 그대로 인용하면 과잉주장이다 — 이유 셋**:
-> ① ≥75°는 **480 v6 셀 중 2셀**(r = 0.500·0.525, 둘 다 Δψ = 0 **단일 방위**; r ≥ 0.35에서는
-> 24 방위 중 1~3개만 가능; 1,440셀 중 **658셀은 θ_max 미정의**) ② r = 0.525는 **모든 스폰
-> 영역 밖**(S4 **0.457245** / `SOURCE_REGIONS` 코너 **0.483011** < 0.525) ③ 그 포즈에서
-> **descend 개방 자세의 이동 조가 지면 아래 −8.068 mm**, **닫힘 목표에서 물체에 19,176 샘플
-> 관통**(적대 패널 측정 — 본 세션 독립 재도출 아님; 대조로 T3가 실제 돌린 θ=29는 침투 0).
-> ⛔⛔ **그리고 파지점은 D419대로 상면 중심 고정 — 이 스윕은 옆면을 문 적이 없다.**
-> 수평 도구 축으로 **상면 중심**에 들어가는 것은 원통 옆면을 무는 것이 아니다.
-> 라벨의 *GRASP* / *side-face*는 **이 스윕이 번 것이 아니다.**
-> ★ **포즈 의존성 자체는 어떤 제한에서도 생존한다**: θ\* = 45.9(52nd 포즈) → 55.0(r ≤ 0.325,
-> Δψ=0) → **69.2**(r ≤ 0.4572 = 가장 먼 데이터셋 스폰 포즈 S4) → 72.7(r ≤ 0.4831) →
-> 81.25(제한 없음). **r ≈ 0.45에서 θ ≈ 69°가 "쓸 수 있으면서 52nd보다 23° 더 기운" 유일한 구석**
-> (단 거기서는 top-down이 **불가**하고 물림 창이 **미측정**).
-> ★ **구조**: Δψ=0 고정 시 θ_max(r)는 **엄격 단조 증가**(6.875 @0.150 → 81.25 @0.525) —
-> ⛔ 내가 처음 쓰려던 **"U자 곡선"은 오독**이었다(그것은 *방위 최댓값의 포락선*이고 좌측 팔은
-> 전부 사전등록이 미시험으로 표시한 **Δψ = 180°**). **top-down 가능 영역과 고-θ 영역은 배타적**:
-> `theta0_ok` 24/24는 **r ∈ [0.150, 0.325]뿐**, θ\* 셀 밴드 **[60°,81°]** vs 52nd 포즈 **[0°,46°]**.
-> ★ **병목 관절이 반경에 따라 바뀐다**(R4 단일관절 해제): r = 0.2898 **elbow 상한 단독**
-> (해제 시 45.94 → 50.16, 다른 셋은 0.00), r = 0.525 **wrist_p 하한 단독**(해제 시 81.25 → **89.06**).
-> ⛔ **자진 정정**: 산출물의 `saturated_just_over: []`("아무 관절도 포화 안 함")는 **틀렸다** —
-> 내가 이번에 추가한 그 필드가 **진짜 경계보다 3.75° 위 격자점**을 읽어 17개 반경 중 **5곳**에서
-> 틀린 원인을 기록했다. 진짜 경계에서 approach 해는 wrist_p 하한 **−30.000000에 물려 있다.**
-> ★ **경계는 "도달"이 아니라 5° 방향 게이트 크로싱**: 가능한 17개 반경 **전부** tilt로 실패,
-> 위치 게이트(3 mm)는 **0/17**(진짜 경계 81.40625에서 위치오차 **0.391030 mm** PASS /
-> tilt **5.104300°** FAIL). ⇒ "reach boundary"는 부정확, **plan-feasibility boundary**가 맞다.
-> 게이트 4/5/6/10°에서 θ\* 80.3/81.25/82.2/85.9 — **75° 문턱은 게이트 인공물이 아니다.**
-> ★ **81.25는 시드 의존 하한** — 4,000회 재시작이 81.40625에서 해를 찾는다(참 경계 ∈
-> (81.40625, 82.0)) ⇒ **"≈81.5 ± 0.5°"로 인용**. θ=90은 시드 문제 아님(제약 최적 tilt 13.67°).
-> ✅ **D341 pass=True errors=[]**(entity **37/37 exact** · timeline exact · footer verify rc 0 ·
-> `.rbl` · 2400×1400) **+ 실제 육안 검수 수행** — **52nd 렌더 결함 1(TextLog 공백)이 이번에
-> 고쳐진 것을 눈으로 확인**, 신규 결함 4건 기록.
-> ✅ 적대 패널 **2회 발사·2회 회수**: 방법 감사 `wf_11d30261-508`(17 agents, 생존 3/반증 8/
-> minor 19) · 결과 공격 `wf_c1897d8b-4aa`(15 agents, 생존 6/반증 4/caveat 14).
-> **위 정정 2건은 전부 패널이 잡았고 내가 산출물에서 재확인했다.**
-> ⚠️ **D427~D439 헤드라인 재판정 0**, Gate-0·완전 수직 재실행 0, `g0a_pass=false` 불변,
-> **Arm-F 조 자산 저작 착수 0**. **D439의 힘 결론 불변** — 기운 접근이 "조 접촉 법선이
-> 수직 하중을 못 받는다"를 고치는지는 **미측정**.
-> ⚠️ 사전등록 자기 결함 **8건**(C-1~C-8, `t3w_prereg.md` 말미) 자진 신고 — 그중 C-1(60° 문턱
-> 근거)은 **동결 산출물 대신 52nd 요약 표를 인용**해서 생겼다. 판정에는 무영향(81.25는 75° 가지).
-> 상세 = `session_20260811_53rd_...md`(**§5 → §3 → §7**), **D440**.
+## Active Case — single source of truth
 
-> ★★★ **52nd = 물리를 실제로 돌렸다. 8세션 만의 첫 실험이고, 이 프로젝트 최초의
-> 접촉력 측정이다 (D439).** 물리 **O** · Isaac **O** · 로봇 0 · 신규 스크립트 `p11_*` 1 ·
-> 신규 태그 `t3p_*` · 덮어쓰기 0 · git write 0.
-> **1024 env × 920 step, 물리 wall 11.4 s** (총 wall 355.6 s). **RNG 8축 × 2048 pool —
-> 기존 물리 이력의 RNG 총계는 0이었다.**
-> ★★ **양성 대조 PASS 1024/1024**: settle 지면 반력 median **0.243568 N** vs `m·g`
-> **0.243582 N**(4자리 일치) ⇒ 이제 0이 "접촉 없음"인지 "측정 없음"인지 **구분 가능**하다.
-> ★★ **접촉은 일어나고 두 조가 다 문다**: 접촉 **752/1024(73.4 %)**, **양 조 동시 물림
-> 229/1024(22.4 %)**, 양 조 부분집합 `f_fixed` median **1.5661 N** / `f_moving`
-> **0.7321 N**(비 **0.5813**), 최대 **6.8599 / 5.0142 N** ⇒ **"이동 조가 대항하지
-> 않는다"는 거짓**이고 물체 무게 0.244 N의 **한 자릿수 위** 힘이 실제로 걸린다.
-> ⛔⛔ **그런데 1024개 중 0개가 들린다** — 기울기 보정 lift-off **최대 0.000138 mm**
-> (게이트 6.000 mm; >0.1 mm도 **0**). 도달 진단 정상(descend 도착 **1.313 mm** ·
-> q5 오차 **0.0068°** · **TCP는 median 23.04 mm 실제 상승**) ⇒ **"팔이 못 갔다" 인공물 아님.**
-> ★★★ **메커니즘이 추론이 아니라 측정으로 확정됐다 — 기구는 물체를 쥐는 게 아니라
-> 바닥에 눌러 박고 있었다**: close 중 지면 반력이 settle 대비 전체 median **2.59 × m·g**,
-> 양 조 env median **6.93 × m·g**, **최대 6.2955 N = 25.85 × m·g**, **54.8 %가 2 × m·g 초과**.
-> lift 시작 **~30 step 만에 접촉이 0으로 붕괴**하고, TCP가 14 mm 더 오르는 동안 물체는
-> 정지해 있다가 낙하한다 ⇒ **조 접촉 법선이 수직 하중을 지지하지 못한다. 지면 반력을
-> 치우면 파지가 사라진다.** D427/D430의 기하 결론(고정측 접촉면 = 원위 peak)에 **처음으로
-> 힘 데이터가 붙었다.**
-> ★★ **옆면 파지(구 🔴 1 선택지 ②)는 이 포즈에서 기구학적으로 도달 불가**(신규 측정):
-> v6 클립 최대 θ **45°** / URDF 하드웨어 **50°**, θ=90° 잔차 **43.14° / 14.67°**,
-> θ≥60°에서 **elbow 135.0° · wrist_p −30.0° 동시 포화** ⇒ 구속 주체는 **v6 분포 클립**
-> (`JOINT_LIMITS` 제거 0, HARD RULE #5 준수). ⇒ **8세션간 "결정 대기"였던 항목에 팔이
-> 물리적으로 수행할 수 없는 선택지가 들어 있었다.** ⚠️ 워크스페이스 **1점 · IK 1종** 한정.
-> ★ **high_tilt(θ 35~45°, 최초 실행)는 오히려 나쁘다**(접촉 53.1 % vs 93.8 %,
-> `f_fixed` median **0.0000 N** vs 1.4313 N) ⇒ **더 기울여도 안 된다.**
-> ⛔ **잠복 차단기 발견**: `roarm_stack_env.py:130 clone_in_fabric=True`면 **N>1에서
-> ContactSensor 초기화가 죽는다**(센서는 USD로 바디 해소, fabric 클론 불가시;
-> IsaacLab 기본은 **False**). 기존 접촉 선례 d332/d333/d362는 **전부 num_envs=1**이라
-> 불가시였다 ⇒ **향후 모든 병렬 접촉 작업이 여기서 막혔을 것.** ⚠️ p11이 False를
-> 강제하므로 **43rd leg와 비트 비교 불가**.
-> ★ **비용 사실**: 물리는 병목이 아니다 — **1024 env × 920 step = 11.4 s**. 병목은 IK
-> 계획(2048 샘플 ~5 분). **"물리가 비싸서 못 돌린다"는 근거는 소멸했다.**
-> ✅ **D341 pass=True errors=[]** + **실제 육안 검수 수행**(렌더 결함 3건 기록).
-> ✅ 무결성: 문턱 **0.0 저작+되읽기** · `kinematic_attach_calls = 0`(리프트가 핀일 수 없다) ·
-> 지면 필터 런타임 해소(**d332 양성 대조 실패 원인이 정확히 루트 경로 지정이었다**).
-> ⚠️ **D427~D438-R1 헤드라인 재판정 0**, Gate-0·완전 수직 재실행 0, `g0a_pass=false` 불변.
-> ⚠️ **D433 재판정 아님** — 단 랜덤화 하에서 `max_tilt` median **1.047°**(최대 22.906°,
-> 전도 반각 30.1137° 미만)이라 **전복은 지배적 실패 모드가 아니다.**
-> 상세 = `session_20260811_52nd_...md`(**§2-4 → §3 → §4-1 → §5**), **D439**.
+- Case: `g0b_d420`, fixed-base RoArm-M3, D29×H50 mm / 24.83 g cylinder.
+- 이번 case의 신규 변수: `[파지점=side midpoint, SDG candidate pose]`.
+- Active run folder: `claudedocs/runtime_logs/grasp_track/g0b_d420/`.
+- Detailed current session:
+  `claudedocs/session_20260813_55th_g0b_t3u_side_midpoint_p13_runpod_render.md`.
+- 56th boot re-verification (Codex→Claude handoff, 실험 0, 불일치 0, RunPod Pod 0 실측):
+  `claudedocs/session_20260813_56th_g0b_boot_reverify_claude_handoff.md`.
+- Robot hardware 0. P13 local Isaac physics completed once. Cloud physics rerun 0.
+- Current scientific direction is not advanced beyond this failed-grasp observation.
+  Any change to target/depth/trajectory/gripper/candidate requires a new approved case.
 
-> ★★★ **51st = N-1 프록시를 실제로 재도출했다 — 앵커는 정확히 재현되고, 프레이밍은 틀렸고,
-> 진실은 더 강하며, 복제는 1개가 아니라 0개다 (D438).** 신규 실험 0 · Isaac 0 · 물리 0 ·
-> 로봇 0 · 신규 스크립트 0 · 덮어쓰기 0 · git write 0. **신규 패널 1(발사, 미회수).**
-> ✅ **핀 재해시 11/11 정확 일치** · `HEAD`==`origin/master`==**`332daab`** · git dirty **23**(51st 부트 시점).
-> ★★ **N-1 앵커 정확 재현**: close 종단 수렴률 `r=|Δq5|/err_prev` = 19.50° **0.180591** /
-> 17.00° **0.170435** (D437-R1 (11) 기재와 6자리 일치). `0.7483×(1−0.174663)=0.6175996771`이
-> **무엇인지도 확정** — 19.00° 단이 지령보다 **0.6176° 열린 채** 끝난 값 그 자체다.
-> ⛔⛔ **[51st-b 패널이 이 문장을 무너뜨렸다 — D438-R1 (2)]** "단조 저하는 틀렸다"는 **내 오류**다:
-> 원문이 괄호로 명시한 **자기 창 [19.50°, 17.00°] 6단은 엄격 단조**이고 내가 든 위반값
-> ≤8.77e-05는 **데이터 양자화 1.34~1.62e-04 아래**다(**D428 #62 위반** — 원본 규약으로 먼저
-> 재계산하지 않고 왼쪽 끝점을 뺐다). ★ **대체 소견은 생존한다**: 41.40°~19.50°가 평탄
-> (0.180558~0.180673)이라 **r(19.50°)=0.180591이 무간섭 밴드 안에 있고**, 진짜 이탈의 시작은
-> **19.00° 단(지령 간섭 3.797844 mm)** ⇒ **파지 서명이 N-1 헤드라인보다 늦게 시작하고 약하다.**
-> ★★ **방어 가능한 문장은 더 강하다**: **제어기 1차 수렴 상수 0.18060이 12단 유지되다가
-> 19.00°단에서 이탈해 그 뒤로는 단 *내부*에서도 계속 감쇠한다**
-> (19.00° 0.176063→0.174663 · 18.50° 0.175684→0.174641→0.173108 · 17.00° 0.173651→0.172043→0.170435;
-> 총 **−5.63%**). **단 내부 감쇠**가 "종단 표본점이 달라서 그렇게 보인다"는 최유력 반박을 배제한다.
-> ⚠️ **압축 인용이 분모 창을 잃었다** — 50th판 `:38-40`·부트 프롬프트의 "단조 저하"는
-> **D437-R1 자신이 저작한 D428 #63 위반**이다. 인용 시 **창 [19.50°, 17.00°]를 병기**할 것.
-> ⛔⛔ **프록시의 한계가 기존 기재보다 훨씬 좁다** — 꺾임 단 19.00°는 **물체가 움직이기 시작한
-> 바로 그 단**이다(drift 3.9796e-07 → **6.8506e-05 = ×172.1**, tilt 1.50235 → 이후 3.07504까지 상승).
-> ⇒ **r 이탈과 전복 개시가 같은 사건**이라 이 프록시는 **"닿았다"와 "밀어 넘긴다"를 원리적으로
-> 구분하지 못한다.** D437-R1의 "위상 3선택지 미판별"에 **메커니즘이 붙었다.**
-> ★★★ **n=1이 아니라 n=0**: 신호가 사는 19.00~17.00° **5개 단은 leg3에만 있다.**
-> leg1 사다리는 **24.5°**, leg2는 **19.5°**에서 끝난다(leg2 = leg3의 엄밀 접두 12단).
-> ⇒ **어떤 복제도 그 구간에 발을 들이지 않았다.**
-> ★ **부수 확증**: leg2·leg3 평탄 통계가 **완전 동일**(n=91, mean 0.180464, sd 0.000983,
-> min 0.172969, max 0.180673) ⇒ **N-2 비트 동일성이 독립 경로로 재확인**. 3 leg 전부 `LIFT_FAIL`.
-> ⛔ **신규 문서 결함 4건(§ 아래 "51st 정정")** — 그중 **#55가 다섯 번째로 깨졌다**
-> (`:16` 505 기재 vs **507 실측**) 그리고 **같은 측정값이 라이브 문서에서 467/466/462 세 값으로 갈린다.**
-> ⚠️ **물리 미실행 7세션째** — D437 Impl.(4)가 "7세션째 연장 불가"라 못박은 지점에 도달했다.
-> 상세 = `session_20260811_51st_...md`, **D438**.
+## Current verified truth
 
-> ★★★ **50th = 부트 전건 정합, 무너진 것 0 — 적대 패널은 50th-b에서 회수됨 (D437 → D437-R1).**
-> 신규 실험 0 · Isaac 0 · 물리 0 · 신규 산출물 0 · 덮어쓰기 0 · git 0.
-> ✅ **핀 재해시 10/10 정확 일치**(sha256 앞 16자 + 바이트 수) · `HEAD`==`origin/master`==**`332daab`**.
-> ✅ **git dirty = 수정 3 + 미추적 17 = 20**으로 부트 프롬프트 기대치 **정확 일치** — 늘어난 4건이
-> 정확히 49th 자신의 산출(`t3d_panel_wf7fd00a4d_*` 3 + 49th doc 1)이라 **16+4=20**
-> ⇒ **D436-R4 (16)이 네 번째 판(13→15→16→20)으로 자기 확증**. 불일치 아님.
-> ★ **신규 결함 1건 — 49th도 자기 편집 전을 쟀다**: 이 파일은 49th 발표 **383줄이 아니라 429줄**
-> (편집 후 `wc -l` 실측, 규약 ~120 대비 **3.6배**, 발표치보다 **46줄 더 악화**)
-> ⇒ **48th(344)→49th(383)→50th(429) 세 세션 연속 동일 계열**이며 git dirty와 **같은 실패 유형**
-> (측정 시점이 자기 편집 전). D428 후보 **#55**.
-> ⚠️⚠️ **그리고 50th도 즉시 재발시켰다 — 자진 신고**: 위 **429는 49th판 최종값**(50th 부트 시점)이고,
-> **50th-b판 기재 = 505줄** — ⛔ **51st 부트 실측은 507줄**(`wc -l`) ⇒ **#55 다섯 번째 파손**
-> (50th-b도 라벨을 붙인 채로 편집 전을 쟀다). 계열 = 344 → 383 → 429 → 467 → 505(기재)/**507(실측)**.
-> ⇒ **#55는 "다음 세션이 지킬 규칙"이
-> 아니라 그것을 쓴 세션에서 이미 깨졌다.** 이후 줄 수 인용은 **반드시 "N판 종료 시점" 라벨과 함께**
-> 쓸 것. 규약 ~120줄 대비 **3.88배** ⇒ 압축(아래 🔵)이 **관측적으로 점점 나빠지는 중**이다.
-> **git dirty도 같은 규약으로**: 50th 부트 **20** → 50th 종료 **21** → **50th-b 종료 = 23**
-> (패널 영속화 2건 추가). ⛔ **이 수는 상태 문서의 판정 대상이 아니다.**
-> ★★★ **적대 패널 `wf_84c6e3b4-92a` 회수 = 13/13 · 에러 0 · 1.88M tok · 542 calls · 2,022 s
-> (D437-R1).** 6축 × (검증 → 반증). **D436-R4의 물리·수치 결론은 전부 살아남고, 그 결론을
-> 받친다던 근거·범위·선례가 무너졌다.**
-> ⛔⛔ **[FATAL] `roarm_stack_env.py:150 activate_contact_sensors=False`는 43rd 접촉 데이터
-> 부재의 원인이 아니다** — `d332:477`이 그 플래그를 **False로 명시 재확인**한 상태에서
-> `:503-524`가 spawn 래퍼로 **런타임에** `activate_contact_sensors(prim, threshold=0.0)`를 걸어
-> `d362`가 **실제 접촉 데이터를 얻었다**(`{gripper_link: 31, link5: 45}`, contact point max 22).
-> ⇒ **`:150=False`는 필요조건도 충분조건도 아니다.** 실제 원인 = ⓐ `ContactSensor` 0건 **+**
-> ⓑ 런타임 적용 0건. **"`:150=False` ⇒ 접촉 불가" 문장 전부 폐기**(48th §4-2 · 49th §4-1 · D436-R3 (8)).
-> ⛔ **1.0 N 문턱은 43rd에서 한 번도 발화하지 않았다**(반사실) — 단 결함은 실재하고 **NVIDIA
-> CHANGELOG 0.48.0:444,450-451이 명시 인정**, 실행 확장 0.47.2 = 수정 이전. ★ **부수 해소**:
-> attempt3 crate **288 prim spec 전수 스캔 `PhysxContactReportAPI` 0건** ⇒ "선재 여부 미확인" **부재 확정**.
-> ⛔ **d330은 선례가 아니라 실패 선례**(리포터 4/4 `ok:false`, 320스텝 **0.0 N**, 자산도 다름) ·
-> **"선례 3/3" → 2/3**(d328은 `scene.sensors` 등록 0 = 반례) · **4번째 메커니즘(런타임 적용)이 문서에 0회 등장**.
-> ⛔ **`/half-clone` 카운터는 57도 58도 아니다 — append-only 원장에서 복원 불가**(LEDGER
-> `:503`/`:505`·`:505`/`:506`·`:508`/`:509` 3중 모순). 이후 **`UNRECOVERABLE`로 표기**할 것.
-> ★★ **신규 major 2건**: **N-1** 접촉 하중의 **간접 관측치가 동결 로그에 이미 있다** — close 종단
-> 수렴률이 지령 간섭과 함께 단조 저하(19.50° 0.180591 @2.626 mm → 17.00° 0.170435 @8.457 mm),
-> `0.7483 × (1 − 0.174663) = 0.6176` 정확 재현. **재실행 없이 지금 읽을 수 있다**(단 프록시·n=1·위상 미판별).
-> **N-2** **"P-a는 n=1"이 동결 config로 증명**됨(스크립트에 RNG **0건**, leg3 사다리는 leg2의 **엄밀 접두**).
-> ★ **N-3** q5 부호 확정(**큰 q5 = 열림**) ⇒ "0.50~0.62° 열린 채 종료"는 **옳다**.
-> ★ **N-5** 유효 1.0/1.0·`multiply`는 **NVIDIA 기본값이 아니라 이 프로젝트 저작**
-> (`:114-124`; 라이브러리 기본 0.5/0.5·`average`) — `average`였다면 **0.70/0.65 (+75%/+117%)**.
-> ⇒ 0.40/0.30은 **불변이나 한 줄에 매달려 있다.** ⚠️ 원 문서 "UsdShade 21건"은 **15개**(21은 binding 수).
-> 상세 = **D437-R1**, 50th doc **§3-4**.
-> ⚠️ **50th는 D436 수치를 독립 재도출하지 않았다** — `curves.csv`/`steps.csv` 재계산을 패널 축
-> `bitident`에 위임했고 그 패널이 미회수다. **50th 단독 "재현했다" 주장 없음**(48th·49th 기록은 유효).
-> ⚠️ **물리 미실행 6세션째**(44th~50th). 상세 = `session_20260810_50th_...md` **§2 → §3 → §1-2**.
+### P13 physics/grasp
 
-> ★★★ **49th = 48th의 인과는 살아남되 이유의 절반이 다시 쓰인다 (D436-R4).** 적대 패널
-> `wf_7fd00a4d-284`(14 에이전트 = 검증 7 + 반증 7, 에러 0, 1.99M tok, 1,793 s) — **반증 단계에서
-> 10건 붕괴**. 신규 실험 0 · Isaac 0 · 물리 0. **D436 수치 재현 100%**(11개 수치군, 불일치 0).
-> ✅ **인과 핵심 CONFIRMED**: `p10:1214 RoArmStackEnvCfg()` → `:1265 gym.make` →
-> `roarm_stack_env.py:466-470 Articulation(cfg.robot)` ⇒ **`:150`은 43rd 경로에 확실히 있었다.**
-> ★★★ **그러나 켜기만 해서는 원하는 값이 안 나온다** — IsaacLab 소스 결함 2건:
-> ① `sim/utils.py:290-291`이 bool을 threshold 자리에 넘겨 **켜면 문턱이 0이 아니라 1.0 N**
-> (물체 0.02483 kg ≈ **0.244 N**의 4배 ⇒ **접촉이 통째로 미보고될 수 있다**; pip 2.3.0/ext 0.47.2
-> 한정, 2.3.2는 이미 0.0) ② `schemas.py:516-527` sleepThreshold 0이 `child_prim`이 아니라
-> **루트 prim**에 `Get`으로 저작(2.3.2도 미수정).
-> ★★ **소비 버전 `ContactSensor`는 마찰력·관통깊이를 안 준다** — 법선력·접촉점 평균·air/contact
-> time만. 마찰은 `get_friction_data(dt)` 또는 2.3.2 `track_friction_forces`, separation은 두 버전
-> 모두 `get_contact_data` 직접 호출. ⇒ **경로 ⓔ 난이도 재상향, 재실행 항목 4 → 6.**
-> ★ **비침습 대안 2종 존재**(`body_incoming_joint_wrench_b` `articulation_data.py:706-719` ·
-> `body_acc_w`) ⇒ **"접촉 보고 없이는 아무것도 못 잰다"는 전제는 틀렸다.**
-> ★ **env 파일 직접 수정 불필요**(`cyl34_...d330_..._probe.py:331` cfg-side 선례), 단
-> **재현성 기준선 선결은 유지**(플래그 ON 자체가 API Apply + sleepThreshold 0 저작).
-> ⚠️ **정정 4건**: 물체 spawn은 `:194 CuboidCfg`가 아니라 **`p10:1241 CylinderCfg` override**
-> (실행되지 않은 코드 인용) / 플래그 False = **필요조건**, `ContactSensor` 0건 = **충분조건** /
-> "값이 어디에도 없었다"는 **과장** / "켜면 마찰력·관통깊이"는 **부정확**.
-> ★★ **마찰 `[미확인]` 철회** — 답은 이미 핀된 `t3t_grasp3_results.json /materials_runtime`에
-> 있었다: 물체 **0.40/0.30**(average), 로봇은 material **없음**(pxr 순회로 USD 확증) ⇒
-> default 1.0/1.0 상속, PhysX 쌍 결합 max(multiply,average)=multiply ⇒ **유효 0.40/0.30**.
-> ★★ **leg2·leg3는 step 0~500이 비트 동일** ⇒ **"P-a는 n=1"이 물리 로그 층에서 확정.**
-> ★ **신규 계통 오차**: 조가 **모든** close 각도에서 지령보다 **0.50~0.62° 열린 채** 종료
-> ⇒ **`close_records[*].angle_deg`는 지령값이지 실제 관절각이 아니다.**
-> ⛔ 인용 정정: **`:915` → `:927-928`**, **"309배"는 leg 1 값**(leg3는 2.28).
-> ✅ **계측 결함 4종 중 D433 전복 가능한 것 0건.** ⚠️ **물리 미실행 5세션째**(44th~49th) —
-> 다만 이번엔 처음으로 **게이트 열 준비**에 기여했다. 상세 = `session_20260810_49th_...md`
-> **§4 → §5 → §3-1 → §8**.
+- Frozen P13 completed 2 diagnostic + 2,340 task callbacks; task physics wall 74.140 s.
+- Result semantics: 30/30 PASS; numeric and measurement validity: 5/5 true.
+- Grasp success: **0/5**.
+- Population verdict: **`NO_BILATERAL_SIDE_CONTACT`**.
+- Rows: `c05_o00=premature_jaw_contact`; `c05_o01..o04=no_bilateral_close`.
+- Arrival error: 1.525311–1.525837 mm, all five PASS.
+- Close fixed/moving/bilateral force: 0/0/0 N for every row.
+- Corrected object lift: −0.0002366 to +0.0007916 mm; required gate is >6 mm.
+- TCP rose 24.0486–24.1584 mm while the cylinder stayed on the support.
+- Authority: `t3u_side_preflight13_results.json`, SHA
+  `8324ed7a9682ccb297985dd733c9e91c480bed9ce65bb02672d5b40226eea6d5`.
+- Trace: `t3u_side_preflight13_trace.npz`, SHA
+  `ee67d3516a1c7871e5f48d455b420c3f5985ae889bceb097536904548e8134ee`.
+- This is valid preflight failure evidence, not a canonical scientific promotion.
 
-> ★★★ **48th = 접촉력이 없는 이유가 계측 한계가 아니라 설정이었다 (D436-R3).**
-> 신규 실험 0 · Isaac 0 · 물리 0 · 신규 패널 0. **D436 계열 판정은 재도출로 100% 재현**된다.
-> ★★ **그러나 사용자 질문("왜 sim을 안 돌리고 결론을 내리나")에 코드로 답하니 전제가 뒤집혔다** —
-> `roarm_rl/roarm_stack_env.py:150` **`activate_contact_sensors=False`**, 물체 spawn(`:194`)엔
-> 플래그 자체가 없고(기본 False), env 전체에 **`ContactSensor` 0건**. ⇒ **PhysX는 접촉 구속을
-> 내부적으로 계산했지만**(고정 조가 −0.033 mm 평형에서 멈춘 것이 그 증거) **contact report
-> 버퍼를 채우지 않아 밖으로 내주지 않았다.** Isaac Lab에서 접촉력은 **opt-in**이다.
-> ⛔⛔ **[D437-R1 (1)로 폐기 — 51st가 미적용을 적발]** 위 `:150=False ⇒ 접촉 불가` 인과 문장은
-> **전부 폐기됐다.** `d332:477`이 그 플래그를 False로 명시 재확인한 상태에서 `:503-524`가 spawn
-> 래퍼로 런타임 `activate_contact_sensors(prim, threshold=0.0)`를 걸어 `d362`가 **실제 접촉
-> 데이터를 얻었다** ⇒ **필요조건도 충분조건도 아니다.** 방어 가능한 것은 "그 줄이 실행 경로에
-> 있었다"뿐. 실제 원인 = ⓐ `ContactSensor` 0건 **+** ⓑ 런타임 적용 0건.
-> (옛 문장: "접촉력 0은 한계가 아니라 끄고 돌린 결과 — 경로 ⓔ 난이도 하향" = **인용 금지**.)
-> ★ **누락 2종은 성격이 다르다**: **A-4**는 `p10:1328`이 `body_quat_w`를 **읽고 회전만 버린**
-> 스키마 결함(`t3t_grasp3_steps.csv` 헤더 실측 — `quat_*`는 **물체** 자세), **접촉력**은
-> **설정** 결함. **둘 다 물리 재실행이 필요하다.** 비용은 병목 아님(**leg당 3분**).
-> ★★ **결정 순서가 바뀐다 — 🔴 1(접촉 위상)이 물리 재실행보다 먼저다**(아래 다음 §1).
-> ⚠️ **전사 결함 6건 정정 확정**(D436-R3) · ⚠️ **44th~47th 자진 비판**(4세션이 게이트 뒤라고
-> 정당화하면서 게이트 열 준비도 안 했다). 상세 = `session_20260810_48th_...md` **§4 → §3**.
+### Visual evidence
 
-> ★★ **47th = 46th 패널 종합 1건 회수·서술 이전으로 13/13 완결(D436-R2).** 신규 실험 0 ·
-> Isaac 0 · 물리 0 · 신규 패널 0. **D436 헤드라인 (3)(4)(5)는 종합에서도 살아남는다**
-> (재서술 조건부). ★★ **그러나 종합이 12/13에 없던 major 하나를 더 냈다 — 측정 자세
-> 변환을 검사하는 게이트가 0개다**: G5는 명목 자세 × **시각 샘플**에서 돌고
-> (`t3d_perstep_script.py.txt:340-344,351-354`) 정작 측정은 **충돌 hull** ×
-> `t_w = tcp − R_tool@TCP_LOCAL` × `quat_to_R`로 돈다(`:432-450`) ⇒ **`R_tool` 전치·
-> `TCP_LOCAL` 부호·쿼터니언 순서 오류 중 무엇이 있어도 G1~G6은 전부 PASS.**
-> ★★ **"가장 싼 다음 실험"의 순위가 바뀐다** — **널 공간 포락 스윕**(동결 로그 재사용,
-> **Isaac 0 · 물리 0 · 수 분 CPU**)이 PhysX contact-report보다 **앞선다**. 상세 = 46th doc
-> **§8-7**, D436-R2.
+- Local native RTX original and bounded render1 repair both reached capture but emitted
+  zero frames and timed out. They are consumed prefixes and must not be retried.
+- Meeting fallback exists and is verified:
+  `t3u_side_meeting1_trace_video.mp4`, H.264/yuv420p 1280×720, 20 fps,
+  234 frames / 11.7 s, full decode PASS, SHA
+  `14a9b6d9ef6dee9fae0210c7f7eda524692548d3d62e3a3608972f10b51f8414`.
+- The meeting MP4 is an exact-trace CPU schematic, not an Isaac RTX camera view and not
+  independent scientific authority. It must be shown as failed-grasp diagnostics only.
+- Current delivery bundle: `t3u_side_meeting1_lab_bundle_v3.zip`, 4,172,534 bytes,
+  9/9 members verified, SHA
+  `2bcdc926e60b1848026cf4c6bcd62610e04f1047bedabe355f92cb953ce67ac1`.
 
-> ★★ **46th = 접촉 귀속을 처음으로 측정했다.** D434/D434-R1은 "어느 조가 언제 물체를
-> 건드렸는가"를 **δ(TCP 깊이) 하나를 대리 변수로 삼아 추론**했다. 이번에 **소비 충돌 자산 ×
-> 실측 per-step 자세**로 직접 재니 그 추론은 **실체로 확인되지만 스텝 정밀도는 없다.**
-> `PERSTEP_CLEARANCE_PARTIALLY_CONFIRMS_ATTRIBUTION` (D436) — 회수된 적대 패널(D436-R1)이
-> **P-a를 판정 철회**시켜 최종 = **STRICT 1 / WEAK 1 / UNRESOLVED 1 / FAIL 0**.
-> ★★ **철회 이유가 중요하다**: `roarm_kinematics.py:77-87`의 야코비안은 3×5 위치 전용이라
-> 랭크 3 · 영공간 2차원이고 한 기저가 **정확히 손목 롤(e4)** — 즉 **TCP가 joint-4 축 위에
-> 정확히 놓여 있어 로그된 TCP가 공구 회전을 전혀 구속하지 않는다.** 0.17° 이내의
-> TCP-불변 회전만으로 P-a의 **네 판정 등급이 전부 도달 가능**하다.
-> ★ **고정측 접촉 부품 = `part_029` = D427이 지목한 원위 peak 그 자체**(차순위는 6.04 mm 뒤).
-> ★ **고정 조는 −0.033 mm에서 상시 접촉**(비양수 98/116 · 111/131 · 114/149).
-> ★★★ **44th 범위(386~517)가 잘랐던 517~534에 헤드라인이 있다** — 리프트에서 고정 조는
-> 완전히 떨어지는데(**+0.54 → +7.47 mm**) **이동 조는 15 스텝 중 14 스텝 음수**이고
-> 그런데도 `lift_follow` **−0.264 mm** ⇒ **조가 놓친 적이 없는데 물체가 안 따라온다.**
-> ★ **leg 2도 같은 패턴**(이동 조 비양수 8 스텝, 그중 **7개가 `lift`**) ⇒ 표본 **2 leg**.
-> ★ **A-4(공구 자세 미로그)는 물리적 한계가 아니라 로깅 누락**이다 — probe가 이미 읽는
-> `link5_quat_w`를 CSV에 안 썼을 뿐. **다음 실행에 컬럼 4개면 해소**(§6-2).
-> 상세: `claudedocs/session_20260810_46th_g0b_t3d_perstep_jaw_clearance.md`
-> **§5-2·§5-4·§5-4b·§5-5·§6-1·§6-2**.
+### RunPod RTX PRO 6000 A/B
 
-> ⚠️ **46th가 주장하지 않는 것** — **접촉력 0**(모든 접촉 판정은 기하다; "힘 닫힘이 없다"를
-> 주장하지 않는다) / **깊이 33 µm의 물리적 의미 미확정**(PhysX contact/rest offset vs hull
-> 표본 0.5 mm vs 솔버 허용오차 **분리 불가**) / **`part_029` vs `part_030` 미분해**(볼록
-> 분해는 저작 산물 ⇒ "부품 = 물리적 부위"는 [추론]) / **G5는 개념 오류를 못 잡는다**(같은
-> 저자·같은 공식의 두 대수 형식) / **θ=0 대조 여전히 미실시**(별건 승인 필요) /
-> **θ=29 단일·스폰 `seed0_S1` 1점** / 마찰 0.40·0.30 미측정 / **실물 주장 아님**
-> (`g0a_pass=false` 불변) / **D427·D429·D430·D431·D432·D433·D434·D434-R1 헤드라인 불변**
-> (재실행 0, 재판정 0) / **"T1이 파지력 증명" 표현 금지** 불변.
+- Prior A100 Pod was deleted. Secure RTX PRO 6000 Blackwell Server Edition 96 GB Pod
+  `aoyagwoz7blwiv` was created in US-NE-1 at $2.09/h and later permanently deleted.
+- Driver 580.126.16, `cuInit=0`, PyTorch CUDA, Isaac Lab 2.3.0, Isaac Sim 5.1.0.0,
+  `numpy==1.26.0`, and `psutil==5.9.8` all passed.
+- Exact input recovery required the original absolute repo path and nanosecond mtimes.
+  After restoration the P13 30/30 semantic and 245/245 dependency gates passed.
+- Exact render1 still reached capture and produced zero PNGs before its 90 s no-progress
+  deadline.
+- Root infrastructure boundary: the Pod exposed `/dev/nvidia3`, `/dev/nvidiactl`, and
+  `/dev/nvidia-uvm`, but not `/dev/nvidia-modeset`; `vulkaninfo` could not create an
+  instance even after matching userspace GL libraries were supplied. CUDA compute was
+  available, but the selected Pod runtime was not a usable Vulkan/RTX graphics runtime.
+- Raw cloud evidence: `t3u_side_rendercloud1_runpod_evidence.tar.gz`, 59 entries,
+  73,679 bytes, SHA
+  `5469c2fcf6eaed522c6a670ebc1731e8b0da360b15972237cf288d80e91e0610`.
+- RunPod account was rechecked after deletion: active Pods = 0.
 
-31st Gate-0(D427) → 34th~39th 자산 감사(D428/D429) → 40th 조립 대조(D430) →
-41st 기움 검정(D431) → 42nd 기운 IK(D432) → 43rd 기움 물리 3 leg(D433) →
-44th 재감사(D434) + 44th-b 적대 패널(D434-R1) → 45th 부트 재검증(D435) →
-**46th per-step 접촉 측정(D436).**
+## Active pivot and reserve pivots
 
-## ⚡ 현재 진실
+- Active pivot: present the truthful 0/5 failure and identify why bilateral close never
+  occurred. Do not tune the grasp within `g0b_d420`.
+- Immediate non-scientific attachment: use the verified CPU trace MP4/contact sheet.
+- Reserve infrastructure pivot: a future cloud RTX replay must use an official/prepared
+  Isaac Sim 5.1 graphics runtime and pass `/dev/nvidia-modeset` + `vulkaninfo` + one-frame
+  smoke gates before environment installation or project transfer.
+- Reserve science pivot: a new approved case may change one or two variables such as
+  side-depth/trajectory or gripper geometry; record it in `claudedocs/BACKLOG.md` first.
 
-- **Gate-0 수치 불변·재실행 금지 (31st, D427)**: fixed link5 `l_vis` **4.4576mm**(peak
-  r=10.12mm, link5 좌표 (−10.0258, 1.4090, **119.8856**)) / moving 피크 **3.9559mm** @ q5=5.10°.
-  L_MIN **5.5** ⇒ 둘 다 FAIL. 권위 = `g0b_d420/t3r_gate0_vismesh_results.json`(sha `d7d2ce6a…`).
-  **39th·40th·41st·43rd·44th·46th가 6회 독립 재현**(델타 ≤1.2e-14, n_pts 2,266,503 정확).
-- ★★ **접촉 바디 신원 (46th, D436 (3))**: 3 leg 전부, 여유가 비양수인 **모든** 스텝에서
-  고정측 argmin 부품 = **`part_029`**. link5 충돌 64부품 원위 극값 =
-  **part_029 +4.457623 / part_030 +4.457623 / part_031 −1.584738 / part_026 −3.040902 mm**
-  ⇒ **접촉면은 D427 peak 소유 쌍 {029, 030}**이고 차순위는 **6.04 mm 뒤**.
-  이동측 = **`part_063`** — ⛔ **접촉(비양수) 스텝 한정 100%**이며(D436-R3 ⑥, 49th 재확인:
-  leg2 M-A 8/8·M-B 16/16, leg3 33/33 양 모델), **396행 전체로는 10종**이다
-  (`part_063` 156 / `part_045` 108 / `part_059` 36 / `part_025` 27 / `part_061` 24 / `part_042` 15 /
-  `part_060` 12 / `part_011` 9 / `part_030` 6 / `part_046` 3). **"접촉 시" 한정어 없이 인용 금지**
-  — 고정측 `part_029` 396/396 단일과 **대칭이 아니다**. (정점 8개.) ⚠️ 029/030 분해는 안 했다 — 두 hull은 **y=0.943604에서
-  맞닿고 top-z 정점 2개를 공유**하므로 라벨은 `np.argmin` 타이브레이크다(D436-R2 (5)).
-  ⛔ **단수 `part_029`는 기계 필드에 아직 남아 있다** — `t3d_perstep_results.json`
-  `/per_leg/{1,2,3}/fixed_argmin_part_at_min`·`/fixed_contact_parts[0]` **6곳**,
-  `curves.csv` `fixed_argmin_part` **396행 전부**. **헤드라인 인용은 {029,030}으로.**
-- ★ **고정 조는 상시 접촉 (46th, D436 (4))** — ⚠️ **주장은 "접촉의 유무"까지다**(D436-R1 §8-4):
-  0.20°의 공구 자세 오차면 −0.033 mm 평탄의 **부호가 뒤집힌다**(레버 10.99 mm)이나
-  데이터로 구속되는 `angle(M-A,M-B)`는 **0.0589~0.0780°**로 2.6배 작고, **M-B에서도 평탄은
-  음수**(leg3 **119/149**, M-A는 114) ⇒ **두 모델이 접촉 유무에는 일치**. 깊이 값은 미주장.
-  ⛔ **개수 정정 (D436-R2 (2))**: **98/116 · 111/131 · 114/149는 "비양수 스텝" 수**이고
-  인용된 **`[−0.035,−0.033]` 평탄 밴드 안은 69 / 72 / 72**다. **두 수를 합쳐 인용 금지.**
-  비양수 **98/116 · 111/131 · 114/149**(M-B는 101 / 114 / 119),
-  최소 **−0.034773 / −0.034743 / −0.034743 mm**(전부 step **428**), step ~400부터 해제까지
-  **−0.033 mm 평탄**(3 leg 6자리 동일). ⇒ **접촉 구속이 평형에 있다** = D434-R1 (2)의
-  "모델보다 0.57~0.77 mm 얕게 문다"의 정체.
-- ★★★ **놓치지 않았는데 못 든다 (46th, D436 (5))**: leg 3 리프트 520~534에서 고정 조
-  **+0.54 → +7.47 mm**(완전 이탈) vs 이동 조 **step 520(+0.0090) 한 스텝 빼고 14/15 음수**
-  (−0.3805 @518 최심 → −0.0088 @534), **M-B에서는 더 깊다**(**−0.1571** @534 — ⛔ 46th doc §5-4
-  표의 M-B 열은 CSV에서 재현 불가, **D436-R3 (1)로 정정**; 최대 Δ 0.0126 @521, 부호 주장 불변).
-  같은 구간 `lift_follow_delta_m` **−0.264 mm**(43rd 확정치).
-  ★ **leg 2에도 같은 패턴**: 이동 조 비양수 **8 스텝** = **502(hold) · 503~508 · 510**(전부 lift),
-  ⛔ **step 509는 +0.03764로 양수**(D436-R3 (2) 정정 — 옛 표기 "503~510 전부"는 1+8=9로 자기
-  개수와 모순). 최소 **−0.0677 @502** ⇒ 헤드라인 표본 **1 leg → 2 leg**. leg 1은 **0 스텝**(최소 +4.8250).
-  ⚠️ D434-R1 (5)ⓓ "이동 조가 문 leg는 1개"는 **`close_records` 관절각 기준**에서 참이고,
-  **per-step 기하 기준으로는 leg 2·3 둘 다**다(복제 수 논지는 불변).
-- ★ **사전등록 결과 (46th, D436 (2) + D436-R1 정정)**: P-a(leg3 고정 개시 388→389) →
-  M-A **391→392** / M-B **388→389** ⇒ ⛔ **판정 철회 `UNRESOLVED_ORIENTATION_UNCONSTRAINED`**
-  (D436-R1 (1)) / P-b(**leg1** 고정 해제 490→491) → **489→490** = WEAK_PASS /
-  P-c(leg3 이동 개시 500→501) → **500→501** = STRICT_PASS, ⚠️ 단 **"첫 교차" 타이브레이크는
-  사전등록에 없다**(leg3 moving은 (500,501)과 **(520,521)** 두 개) ⇒ 정확한 진술 =
-  "예측한 쌍에서 **첫** 교차가 일어났다"(D436-R1 (6)).
-  ★ 고정 조 여유는 step **389에서 이미 +0.0120 mm**이고 같은 step에서 `tilt_deg`가
-  0.0020 → **0.0190**으로 처음 움직인다 ⇒ **실체 확인, 스텝은 분해능 아래.**
-- ★ **A-4 = 이 측정의 정밀도 상한 (46th)**: `steps.csv`에 **공구 자세가 없다**(TCP 위치만).
-  ⛔ **M-A/M-B 폭 0.148~0.199 mm를 "불확실성 폭"으로 인용 금지**(D436-R1 (2)) — 로그 TCP와
-  정합하는 자세는 **회전 방향으로 무계인 2-파라미터 족**이고 M-B는 그중 임의의 한 원소다.
-  로그와 정합하는 **최소** 공구 회전은 step 388에서 **0.0047°**뿐이다.
-  ★★ **그런데 이건 물리적 미지수가 아니라 로깅 누락이다 (46th §6-2)**:
-  `p10_...probe.py:1326-1331`이 매 스텝 **`link5_quat_w`를 이미 읽어** TCP를 만들고
-  **회전만 버린다**. ⇒ **다음 물리 실행에 컬럼 4개(`l5_q{w,x,y,z}`)만 추가하면 M-A/M-B가
-  통째로 불필요해지고 P-a가 판정 가능**해진다. 비용 = 코드 2줄.
-- ★ **월드 프레임 증명 (46th §6-2 3)**: `roarm_rl/roarm_stack_env.py:161,170-171`
-  로봇 `init_state` = `pos=(0,0,0)` · `rot=(1,0,0,0)` ⇒ **로그의 env-상대 좌표 == URDF 월드**.
-  `_tcp_local` = `:87` `TCP_LOCAL_OFFSET_M = (0,0,0.115428)` = 감사가 쓴 상수와 동일.
-- ★ **자산 일치 범위 (46th, D436 (6) + D436-R1 (7) 정정)**: 실측 자세에서 \|충돌 − 시각\|
-  최대 = 고정 조 **0.000219~0.000863 mm** vs 이동 조 **0.329127 mm**.
-  ⛔ **단 0.329는 원거리 수치다** — 최대는 step **391(clr_moving = +45.99 mm)**에서 나오고
-  **P-c가 결정되는 step 500·501에서는 0.000164 mm**다. \|차\|>0.01 mm인 66 스텝 전부가
-  clr_moving ≥ 12.08 mm. **"0.33 mm 밴드"를 결정 오차로 인용 금지.**
-- ⚠️ **충돌 분해는 시각 메시를 mm 수준으로 덜 덮는다 (D436-R1 (4))**: Qhull 반공간 검사 —
-  link5 표면의 **9.86%가 0.10 mm 초과 · 최대 1.0980 mm** 바깥, 이동 조 6.42% · 최대 0.7805 mm.
-  ⇒ **"cook이 소스를 μm 수준으로 반영"은 첨두 한정**이다(D427 판정 자체는 불변).
-- **소비 자산 = 시각 메시 (43rd, D433 (1))**: θ=29 물림 시각 **+12.161073603025956** vs
-  충돌 **+12.161076571092284**, 차 **+2.968e-06 mm**. ⚠️ 범위 한정 = 위 항목 + D435 (7).
-  권위 = `g0b_d420/t3r_n10_ctq5_results.json`(sha **`236243d4cfaa58ae`** / 1,437,511 B).
-- ★★ **descend 목표 = 설계상 고정 조 여유-0 깊이 (D434-R1 (3), 45th 확증)**:
-  n10 collision `curve` 903행 중 **696행에서 −1.099796 평탄**(q5 ∈ [20.7, 90.0117]),
-  `blocker_at_star="fixed"`, 지령↔산출물 9자리 일치. `d_f`는 q5 무관 상수
-  (`…n10_…audit.py:330-346`). ⇒ **"descend reached" ≠ "여유 존재".**
-- ★★ **아무것도 들리지 않았다 (44th-b/45th)**: 전복 항등식 `(H/2)cos t + R sin t` 잔차 =
-  원통 최저점이 지지면 위로 뜬 최대량 = leg1 **0.0039** / leg2 **0.0028** / leg3 **0.0078 mm**
-  (전 로그 스텝)인데 lift에서 TCP는 **+7.327~+7.579 mm** 상승.
-- ★ **잔차 직교 분해**: 축 **1.7881** + 횡 **0.8795**, `hypot` **1.9927** =
-  로그 `final_target_error_m` **0.0019926310989311843**(3 leg 동일). **"전부 축방향"은 거짓.**
-- ★ **위상은 안 바뀐다**: `bite_fixed_mm_at_star` = **−7.066895 mm** ⇒ 고정 조는 벽 옆에
-  재료가 아예 없다. **46th가 여기에 실측을 더한다** — 상면 접근에서 고정측이 만들 수 있는
-  접촉면은 **D427 peak 하나뿐**이다.
-- ★ **δ 브래킷 정정 (46th, D436 (0))**: D435 (4)의 +0.0002 mm는 **`cap` 전사 반올림 100%**
-  (`0.050` vs `0.04999978616833687` ⇒ **+0.00019680 mm**), `d` 비단위벡터 기여 **1.29e-09 mm**.
-  **주체가 반대다** — 44th 문서값(−0.3289/−0.5349)이 **정확한 cap** 쪽, 45th 재도출값
-  (−0.3291/−0.5351)이 **반올림된 cap** 쪽. 교훈 #38은 불변.
-- **닫힘 목표 (43rd, D433)**: 양수 물림 창 상단은 θ별 **20.50~27.70**, **θ=0은 창 자체가 없다.**
-  물림은 창 상단에서 **계단으로 끊긴다** ⇒ **최댓값을 닫힘 목표로 잡지 말 것.**
-- **좌표 규약 (39th)**: `roarm_m3.urdf:129-135` link5 visual origin **항등** + scale 0.001 ⇒
-  **`link5.stl` mm 좌표 = link5 프레임**. TCP = link5 **z 115.428mm**(`:234-239`), 공구축 = **+z**.
-- **월드 규약 (42nd — 기억 금지)**: T3/T2b는 **지지면 z=0, 상면 z=0.050**.
-  출처 `g0b_d420/t3_prereg.md:176-179`. **T2의 `TABLE_Z=−0.012117`을 쓰면 12.117mm 틀린다.**
-- **기움 방향은 선택지가 아니다 (D432)**: 5-DOF라 ψ = **로봇→물체 반경 방향**
-  (`seed0_S1` = **317.5142°**). 손목 롤 **+90.000°** = v6-clip 경계 = 분포 이탈 경고.
-- ★ **환경 상수 함정 (D433 ⑤)**: `roarm_stack_env.py:380,1185-1186` `grasp_gripper_thresh
-  = 0.4 rad`는 env의 **cube 시대 규약(LARGE = CLOSED)** 산물 ⇒ **계측 인공물**.
-- **로컬 URDF는 파지 물리에 사용 불가 (D430 ④)** — `roarm_m3.urdf:161` 이동 조 `<collision>` =
-  **4.0mm 정육면체 12 facet 스텁**. T3는 S-2로 폐기했으므로 실패 원인은 아님.
-- **D419 파지점(상면 중심)은 불변** — 완화된 것은 **각도뿐**(교수님 결정, HARD RULE #18).
+## Open risks / do-not-repeat
 
-## Active Case — `g0b_d420` (범위 불변)
+- RT-capable GPU model does not prove the container exposes a Vulkan/RTX graphics device.
+  CUDA PASS is insufficient. See DECISIONS D443.
+- Do not use A100/H100 for Isaac RTX rendering; they lack RT cores.
+- Do not retry the deleted RunPod setup or the two consumed local render prefixes.
+- Do not claim successful grasp, bilateral close, or >6 mm lift from lift-phase forces.
+- Do not use `decision_snapshot.png` separation as TCP error; target and actual markers use
+  different origins there.
+- Do not call the CPU meeting MP4 an RTX viewport render.
+- Preserve `numpy==1.26.0` and `psutil==5.9.8` in every Isaac Lab environment.
+- Do not edit old output prefixes; all future folders/tags are forward-only.
+- Single-copy risk (56th 관측): `t3u_side_preflight13_trace.npz`는 `.gitignore`(`*.npz`)
+  대상이고 bundle v3에도 없음 — 이 디스크 단일 사본. `*.mp4/*.png/*.log/*.csv`도 g0b
+  whitelist 없음(커밋해도 repo 밖).
 
-- 물체 = 원통 D29×H50 / 24.83g 기립(#18). 파지 = 상면 중심(D419), **접근 각도는 허용됨**.
-- 이번 case의 신규 변수: **① 소비 충돌 자산 ② 실측 per-step 자세**(46th, 사다리 전진 0)
-  → **52nd에서 사용자 지시로 Variable Ladder(D322) override**: 8축 동시 랜덤화
-  (위상·θ·ψ·δ·q5·마찰·닫힘속도/게인·스폰). 근거 = 사다리를 지키다 7세션을 잃었다.
-- 출력: `g0b_d420/`. 태그 `t3r_*` · `t3t_*` · `t3d_*` · **`t3p_*`(52nd 신규)**.
-  52nd 신규: `t3p_prereg.md` · `t3p_sweep1024_{results.json, plan.json(`ef4c0a4d1894ea93`),
-  trace.npz(`df13e6162d018c5c`), timeline.rrd(`8f9d9447a6b4e75f`),
-  timeline.rbl(`0cbe99d665de327b`), rerun_validation.json(`c1ab47ee780e7da2`),
-  inspection.png(`7f5c754da9d90079`), script.py.txt(`02286630b434bb1a`), argv.txt}`
-  · `t3p_preflight256b_*`(per-step 메커니즘 대조) · `t3p_preflight{1,2,3,4}_*` ·
-  `t3p_planprobe{,2,3}_*`(계획 단계 진단, 물리 없음).
-  신규 소스: **`sim_scripts/p11_g0b_t3p_cyld29h50_randomized_parallel_grasp_sweep.py`**.
-  **53rd 신규 태그 `t3w_*`**: `t3w_prereg.md`(+ POST-RUN CORRECTIONS C-1~C-8) ·
-  `t3w_reach1_{results.json(`a618681153700795`), grid.npz(`b2a41d0aed4deba7`),
-  timeline.rrd(`81972b4e73ab246e`), timeline.rbl(`7108ab802f2ec317`),
-  rerun_validation.json(`00e9f8af1fa5a81e`), inspection.png(`d2dfd857e83bfd1b`),
-  script.py.txt(`f8703fa2ee1db16c`), argv.txt(`472c136e677e20f6`)}` ·
-  `t3w_panel_wf11d30261_{findings_raw.json(`1654b3985a68205f`), journal.jsonl}` ·
-  `t3w_panel_wfc1897d8b_{findings_raw.json(`ef4c5fefed44c782`), journal.jsonl}` ·
-  ⛔ `t3w_smoke1_*` 8건 = **파일럿, 폐기·인용 금지**.
-  신규 소스: **`sim_scripts/p12_g0b_t3w_reach_boundary_radius_azimuth_sweep.py`**.
-  53rd 신규 변수 = **① 반경 r ② 접근 방위 Δψ** (그 외 3 제한집합·R5 ψ_pos·R4 해제는
-  변수가 아니라 대조군/귀인 채널 — D440, 세션 doc 머리말).
-  46th 신규: `t3d_prereg.md` · `t3d_perstep_*` 10건 · `t3d_perstep_contactband*` 2건.
-  49th 신규: `t3d_panel_wf7fd00a4d_{findings_raw.json(`eb90e1444e7a7d71`, 260,659 B),
-  refutations.txt(`8c53bedd3d6d1c06`, 76,810 B), journal.jsonl(`b9f60b465e27de5d`, 223,804 B)}`.
+## Next concrete action / authorization boundary
 
-## 다음 — 순서 고정 (전부 사용자 결정 대기, Claude 단독 진행 금지)
+1. For the lab meeting, deliver `t3u_side_meeting1_lab_bundle_v3.zip` and state 0/5.
+2. If the user approves a new grasp case, preregister only one or two changed variables and
+   run a failure-capable physics perturbation; do not silently tune the current case.
+3. If the user approves another RTX cloud attempt, first provision a graphics-ready Isaac
+   container and run only the device/Vulkan/one-frame smoke gate. Transfer the 300 MiB
+   dependency payload only after that gate passes.
 
-**✅ 0-a. 51st 적대 패널 `wf_46941a6d-04e` — 회수 완료 (13/13 · 에러 0 · 2.19M tok · 633 calls ·
-   2,551 s, **D438-R1**).** 영속화 3건 = `g0b_d420/t3d_panel_wf46941a6d_{final_result.txt`
-   (**`10bf5fc77a5a45b9`**, 436,083 B)`, findings_raw.json`(**`ac25515d6eb6f219`**, 404,217 B)`,
-   journal.jsonl`(**`1cd4373a270cfa9d`**, 395,239 B)`}`.
-   ⛔⛔ **[FATAL 자책] 51st가 감사 도중 이 파일을 덮어썼다** — `docint` 감사자는 507줄/47,841 B,
-   반증자는 567줄/54,578 B를 봤다 ⇒ **줄 수 판정 D6·D7이 `UNVERIFIABLE`이 됐고 사유는 내가
-   만들었다.** ⇒ **"#55 다섯 번째 파손" 주장은 판정 보류.** 살아남은 것은 **50th doc `:66`(467)
-   vs `:69`(466)** 모순뿐(D8 CONFIRMED). **신규 교훈 #69: 감사가 도는 동안 감사 대상을 고치지 말 것.**
-   ⛔ **51st 재도출 8건 붕괴**(N2 · C10 · P4 · P8 · T3분모 · D4 · D5, 상세 D438-R1 (2)(9)) ·
-   ⛔ **[N14] D437-R1 (13) N-3 근거 붕괴**(q5 최소거리는 엄격증가 아님 — 전역최소 1.2928@5.53°,
-   최대 56.9548@83.67°; **부호 결론 자체는 생존**) · ⛔ **[F11] "leg3 +0.0330 mm 상승"은 상승이
-   아니라 3.3237° 기울기** · ★ **[F10] D433 강화** — 기울기 보정 lift-off **0.0039/0.0028/0.0078 mm**
-   vs 게이트 **6.000 mm**(~100배 타이트) · ★ **[N6/N7] `commanded_interference_mm` 출처 해소** =
-   `t3r_n10_ctq5_results.json .per_theta[7].collision.curve`(⚠️ 20.00° 단만 5.8배 오류) ·
-   ✅ **D437-R1 핵심 대량 생존**, 특히 **C2(`:150=False` 불필요)가 [추론] → [MEASURED]로 격상**
-   (반증자가 **d330:331 플래그 `True`인데도 4/4 `ok:false`**를 찾았다).
+## Must read first
 
-**(구) 🟡 0-a 발사 기록 — 보존**
-   13 에이전트 = 6축 × (재도출 → 적대 반증) + 종합 1. 축 = `causal`(FATAL C-1 재도출) ·
-   `precedent`(d330 실패 선례·d328 반례) · `threshold`(NVIDIA 공식 출처 규칙) ·
-   `n1n2`(N-1/N-2/N-3) · `friction_lift`(N-5 + `LIFT_FAIL` ×3) · `docint`(문서 무결성).
-   전 에이전트 읽기 전용 강제. **회수 경로**:
-   전사 `~/.claude/projects/-home-cgxr-Documents-Robotics-RoArm-Project/20b9f942-1194-4b0d-8e28-2748c26446f8/subagents/workflows/wf_46941a6d-04e/`
-   (완주 전 종료 시 `agent-*.jsonl` 전사에 부분 산출이 남는다 — D428 #52 "완주분 0 ≠ 증거 0");
-   스크립트 `~/.claude/projects/.../20b9f942-.../workflows/scripts/g0b-51st-boot-rederive-50thb-headlines-wf_46941a6d-04e.js`.
-   회수 시 영속화 = `g0b_d420/t3d_panel_wf46941a6d_{findings_raw.json,journal.jsonl,final_result.txt}`
-   (**신규 파일만 — `t3d_*` 기존 산출물 덮어쓰기 금지 불변**).
-   ⛔ **결과를 추측해 인용 금지.** 회수 전까지 **51st의 N-1 재도출(§51st판 블록)은 적대 검증
-   미이행**이다 — 단 그 수치 자체는 51st가 동결 로그에서 직접 계산했고 재현 절차가 D438에 있다.
+1. `AGENTS.md`
+2. `claudedocs/session_20260813_55th_g0b_t3u_side_midpoint_p13_runpod_render.md`
+3. `claudedocs/DECISIONS.md` tail, especially D441–D443
+4. `claudedocs/EXPERIMENT_LEDGER.md` latest row
+5. `claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_meeting1_brief.md`
 
-**✅ 0. 적대 패널 `wf_84c6e3b4-92a` — 회수 완료 (13/13, D437-R1).** 영속화 2건 =
-   `g0b_d420/t3d_panel_wf84c6e3b4_final_result.txt`(**`9d5f0b40fa7c3f20`**, 402,810 B) ·
-   `_journal.jsonl`(**`b603269423ab1100`**, 365,224 B). ⚠️ `_findings_raw.json`은 **없다**
-   (본 스크립트는 축 산출을 종합자에 직접 전달 — 축 원문은 journal에 있다).
+## Do not trust as current
 
-**🔴 0b. ★ 경로 ⓔ 재실행 체크리스트를 다시 써야 한다 (D437-R1 Impl.(2)) — 기존 6항목은 무효**
-   ⛔ **삭제 2**: ① "플래그를 True로 뒤집는다"(유일 선례 d330이 4/4 실패) ② "2.3.2 업그레이드"
-   (`get_friction_data` `api.py:5961` / `get_contact_data` `:5900-5906`으로 현 트리에서 도달 가능).
-   ★ **신규 필수 4**: ③ **런타임 적용** = spawn 래퍼 `activate_contact_sensors(prim, threshold=0.0)`
-   + 되읽기 검증(`d332:503-524,519,520-523`) ④ **threshold 명시 0.0 저작**(스키마 fallback이 **1.0**,
-   `generatedSchema.usda:504`) ⑤ `ContactSensor`를 **`self.scene.sensors[...]`에 반드시 등록**
-   (`d362:1141-1142,1178-1190,1191`) ⑥ **수용 기준 = "생성 성공"이 아니라 "비영 측정값"**,
-   양성 대조군 = d362 `{gripper_link:31, link5:45}` · point max 22.
-   **하향 1**: ⑦ Defect 2(sleepThreshold)는 단일 강체에 **완전 no-op**(`shapes.py:311`).
-   **선행 차단 1**: ⑧ `body_incoming_joint_wrench_b`는 **프레임 규약 충돌 미해소**
-   (IsaacLab `articulation_data.py:707` "parent body" vs 벤더 `api.py:2380,2386` "child joint")
-   — 해소 전 방향성 해석 금지. **신규 1**: ⑨ leg별 스크립트 사본 동결 + argv 기록.
-
-**🔵 0c. ★ N-1 프록시 분석 = 재실행 없이 지금 가능한 유일한 신규 산출 (D437-R1 (11))**
-   close 종단 수렴률 `r = |Δq5|/err_prev` vs `commanded_interference_mm` 단조 관계.
-   Isaac 0 · 물리 0 · 동결 로그만. ⚠️ **프록시이지 힘이 아니고 n=1이며 위상 3선택지를 판별하지 못한다**
-   — 신규 파생 태그 + 사전등록 + **사용자 승인** 필요.
-
-> ★★ **48th 순서 권고 (D436-R3 (4))**: **1이 물리 재실행보다 먼저다.** 위상이 바뀌면 재실행
-> 대상이 바뀐다 — 상면 파지에서 힘을 재면 "왜 상면이 안 되나"는 얻지만 교수님 경로가
-> ②(옆면)면 **폐기되는 위상의 증거**가 된다. ⇒ **준비(ⓕ+ⓔ 저작·사전등록)는 지금,
-> 실행은 위상 결정 후.** ⚠️ `roarm_stack_env.py`의 `activate_contact_sensors` 토글은
-> **43rd 로그와의 비트 비교를 깰 수 있다** — 재현성 기준선을 먼저 정할 것.
-
-**✅ 1-NEW — 완료 (52nd, D439).** `p11_*` 병렬 sweep 실행됨. 결과 = 위 52nd 블록.
-   핵심 3줄: ① **접촉력 최초 측정, 양성 대조 1024/1024 PASS** ② **양 조 물림 22.4 %인데
-   lift 0/1024**(최대 0.000138 mm vs 게이트 6.000 mm) ③ **메커니즘 = 바닥에 눌러 박기**
-   (지면 반력 최대 **25.85 × m·g**), 리프트 시작과 동시에 접촉 붕괴 ⇒ **조 접촉 법선이
-   수직 하중을 못 받는다.** 그리고 **선택지 ②(옆면)는 도달 불가로 측정**(θ_max 45°/50°).
-   ⇒ **다음 결정은 "접촉 위상"이 아니라 "조 기하"다**(아래 1-NEXT).
-
-**✅ 1-NEXT ⓐ — 완료 (53rd, D440).** 반경별 도달 경계 스윕 실행됨. 결과 = 위 53rd 블록.
-   핵심 3줄: ① **52nd의 "옆면 도달 불가"는 포즈의 성질이었다** — θ_max 46.0°(r=0.2898) →
-   **81.25°**(r=0.525), 하드웨어 제한에서는 r ≥ 0.45에서 **θ=90° 통과** ② **그러나 ≥75°
-   가지는 쓸 수 없다** — 480셀 중 2셀 · 스폰 영역 밖 · 그리퍼가 지면 −8.07 mm 아래 ·
-   닫으면 물체 관통 ③ **파지점은 상면 중심 그대로였다** ⇒ 이 스윕은 "옆면 파지"를 잰 적이
-   없고, 옆면을 실제로 보려면 필요한 것은 **반경이 아니라 파지점 변경 = D419 변경 =
-   사용자·교수님 승인 사안**이다. ⇒ **결정 구조는 바뀌지 않았다**(아래 1-NEXT 그대로).
-   ★ 새로 생긴 유일한 실무 구석: **r ≈ 0.45(S4 근처)에서 θ ≈ 69.2°** — 스폰 영역 안이고
-   52nd보다 23° 더 기울지만 **top-down 불가 + 물림 창 미측정**이라 ⓒ 선행 필요.
-
-**🔴🔴 1-NEXT. ★ 결론이 D426 ① 분기로 수렴했다 — 단 이번엔 기하가 아니라 힘 데이터가 근거다.**
-   실패 원인이 마찰도 전복도 아니고 **조 접촉 법선이 수직 하중을 지지하지 못함**으로
-   측정됐다. 이것은 **조 기하 진술**이고, D426 ① 분기 A(Arm-F 수제 저작)가 겨냥하던 바로
-   그 지점이다. ⛔ **여전히 사용자 결정 사항이며 착수 0.**
-   ★ **결정 전에 값싸게 닫을 수 있는 것 3가지**(전부 승인 필요):
-   ⓐ ~~**반경별 도달 경계 스윕**~~ — ✅ **53rd 완료(D440)**. 위 "1-NEXT ⓐ 완료" 참조.
-     한계는 닫혔고 **결정 구조는 바뀌지 않았다**.
-   ⓑ **θ ≤ 20 + 더 깊은 descend** — 고정 조 접촉점을 원위 peak에서 이탈시킬 수 있는
-     **유일한 미시험 구석**. 같은 스크립트, 범위만 변경. **미실행.**
-   ⓒ **물림 창 오프라인 측정**(n10 방식) — ⚠️ **53rd로 범위가 (35,45]에서 (35,81]로 확대**.
-     물림 창은 여전히 **θ ≤ 35°에서만** 존재하고, 53rd가 연 θ∈[60,81] 밴드와
-     r ≈ 0.45의 θ ≈ 69° 구석 둘 다 **물림 데이터 0**이다. **미실행.**
-   ⓓ **(53rd 신규, 사용자·교수님 사안)** 파지점을 **상면 중심 → 원통 측면 중점**으로 옮기는
-     것 = **D419 변경**. 옆면 파지를 진짜로 평가하려면 이것 없이는 불가능하다(D440 (3)).
-     **Claude 단독 제안까지만, 착수 금지.**
-
-**(구) 🔴🔴 1-NEW 원문 — 보존**
-   ⛔ **자기비판**: 44th~51st **8세션**을 "접촉 위상 사용자 결정 대기"로 묶어 뒀는데,
-   sim에서는 **top-down과 옆면을 같은 실행에 넣고 데이터가 순위를 매기게 하면 되는
-   값싼 실험**이다. 결정으로 대체 가능한 것을 결정으로 만들어 세션을 소모했다.
-   ★ **결정적 사실 2개**: ⓐ 지금까지의 물리 시행은 **3 leg = 사실상 결정론적 롤아웃 1개**
-   (RNG **0건**, leg3 = leg2 엄밀 접두; D437-R1 (12)) — 6축 이상 공간에서 **점 하나**를 찍고
-   "안 된다"고 판정했다 ⓑ 환경은 **처음부터 병렬**이었다 — `roarm_stack_env.py:126-128`
-   `InteractiveSceneCfg(num_envs=**4096**, env_spacing=2.0)`, `DirectRLEnvCfg` 완전 텐서화.
-   ⇒ **인프라를 안 쓰고 단일 env 궤적 프로브 3회로 2달을 보냈다.**
-   ★ **"top-down 불가"는 부정확한 요약이었다** — 정확히는 **완전 수직**만 D<20.25mm로 막히고
-   (D430), **기운 6~29°는 물림 양수**(D431)·**도달 가능**(D432)이며 D433의 실패는
-   **"기운 top-down에서 닫을 때 전복, n=1"**이다.
-   ⛔ **병렬이 못 고치는 것 1개**: 자산에 없는 기하는 파라미터로 안 생긴다(D427) — 단
-   **기운 접근에는 비해당**이므로 이 sweep의 blocker가 **아니다**.
-   ⛔ **동시 필수**: 접촉력 계측 9항(D437-R1 Impl.(2) → D438-R1 Impl.(2)). 안 고치고 돌리면
-   "몇 개가 넘어졌나"만 알고 **왜 못 쥐는지는 또 모른다**.
-   ★ **sweep 설계(8축)**: 접촉 위상(top-down / **옆면 양측** 반반) · 기움 θ 6~29° ·
-   접근 방위 ψ(top-down은 반경 붕괴 D432, **옆면은 자유 — 확인 필요**) · 하강 깊이 δ(여유-0 ±3mm) ·
-   닫힘 목표 q5(θ별 창 20.50~27.70°, **창 상단=계단이므로 최댓값 금지**, D433) ·
-   **마찰 0.40/0.30 ±랜덤화**(미측정, `:118` 한 줄 의존) · 닫힘 속도·게인 · **스폰 위치/방위**
-   (지금까지 **1점**). ⇒ **이 프로젝트의 진짜 결함 = 랜덤화가 0이었다는 것.**
-   ★ **성공 판정**: **기울기 보정 lift-off > 6.000 mm**(raw `obj_z` 금지 — D438-R1 F11)
-   AND tilt < 전도 반각 30.11° AND **접촉력 비영**.
-   ★ **비용**: 500 step × dt 1/200 = sim 5초. 4090 Laptop 15.6GB ⇒ **1024~2048부터**(4096은 VRAM 확인).
-   ⚠️ **사용자 승인 3건 대기**: ① **Variable Ladder(D322) override**(8축 = case당 1~2개 위반) —
-   Claude 의견 = **override 찬성** ② **물체 D를 축에 넣는가**(HARD RULE #18 완화) vs D29 고정
-   ③ env 수 1024 시작 vs 4096. **미응답 시 기본값 = override 승인 / D29 고정 / 1024 시작.**
-   ⚠️ `p10_*` 동결 ⇒ **신규 `p11_*` 저작 + 사전등록 필수**, 자산은 **attempt3**
-   (로컬 URDF는 이동 조 collision이 4mm 큐브 스텁 — D430 ④로 파지 물리 사용 불가).
-
-**(구) 🔴 1. 접촉 위상 결정 — ⛔ 1-NEW로 대체됨(결정 → 실험). 보존용.**
-   - ★ **② 옆면 양측 파지 = 근거 강화**(교수님 사안, D419가 상면 중심을 지정). 정적
-     `bite_fixed = −7.0669`에 더해 **상면 접근의 고정측 접촉면 = D427 peak 하나뿐**이 실측됐다.
-   - ⚠️ **ⓓ descend 깊이 재타깃 = 기대치 추가 하향**. 46th가 **접촉을 유지한 채로도
-     실패**함을 보였다 ⇒ 사전 기움을 없애도 힘 닫힘이 생길 근거가 없다.
-   - ⚠️ **① 물체 D ≤ 16 mm는 전복을 악화**(전도 반각 30.11°→17.74°, 사용자 사안, #18).
-
-**🔵 2. ★ 널 공간 포락 스윕 = 가장 싼 다음 실험 (47th/D436-R2 (3) — 순위가 바뀌었다)**
-   동결 로그 3 CSV × `jacobian_numerical(q_descend[:5])`의 **2차원 영공간**
-   (n0 = (0, 0.07580, −0.51293, 0.85508, 0) @ 0.417952 °/° · **n1 = e4 @ 1.000000 °/° 이면서
-   TCP 변화 정확히 0 mm**)을 로그가 보여 주는 min-norm |dq|(0.3288° @388 · 0.0746° @428)로
-   경계 지어 스윕 ⇒ ① **P-a 판정 등급을 집합으로** + 등급별 회전 임계 ② P-b/P-c 생존 밴드
-   ③ 고정 조 평탄 **부호의 회전 의존** ④ argmin 부품·정점 불변성.
-   **Isaac 0 · 물리 0 · 로봇 0 · 수 분 CPU**, `t3d_perstep_script.py.txt`의 `crossing_step`·
-   여유 코드 재사용. ⇒ **"개시 스텝은 결정되는가"를 동결 데이터만으로 종결.**
-   ⚠️ **A-4를 없애지는 못한다**(그건 로깅만 가능) · **신규 파생 태그 + 사전등록 + 사용자
-   승인 필요**(`t3d_*` 덮어쓰기 금지 불변).
-
-**🔵 2b. 경로 ⓔ PhysX contact-report = 최고가치 *물리* 실험 (스윕 다음)**
-   46th의 "놓치지 않았는데 못 든다"의 다음 질문(접촉력·마찰 여유)은 **기하로 원리적으로
-   답할 수 없다.** ⚠️ **경로 ⓕ(계측 결함 4종 수정)가 선행 조건**이고, 같은 델타에
-   **`link5_quat_w` 4컬럼 로깅**(A-4 해소, 코드 2줄)이 함께 들어가야 한다 — 이것은
-   **물리 실행에 한해 blocking**이며 위 2의 선행 조건은 **아니다**(D436-R2 (3)).
-   ★ **그리고 게이트를 하나 더 넣어야 한다** — 측정이 실제로 쓰는 변환
-   (`R_tool`/`TCP_LOCAL`/`quat_to_R`)을 검사하는 **독립 구현 대조 1건**(D436-R2 (2)).
-   ⇒ 다음 Isaac 실행은 `p10_*`가 동결이므로 **신규 파생 `p11_*` + 사전등록**이 필요하다.
-   Isaac 자체 비용은 병목이 아니다 — 43rd 3 leg가 **15:09:40 → 15:19:14**(≈ **leg당 3분**).
-
-**🔵 3. T3 재개 시 실무 수치 (44th+R1 정정판 — 46th 재확인, 변경 없음)**
-   - 접촉 개시는 **실측 관절각**: `q5_deg` **≈ 19.91~20.11**(43rd의 "19.0"은 명령값 라벨)
-   - **고정 조는 q5와 무관** — δ로만 결정. 모델보다 **0.57~0.77 mm 얕게** 문다(46th: −0.033 mm 평형)
-   - ⛔ **"하강을 잔차 1.788 mm만큼 더 깊게"는 폐기** — 이미 0.072~0.077 mm 초과 도달 중
-   - 닫힘 목표를 **물림 최댓값에 두지 말 것**(창 상단이 계단) · `ψ = 셀 방위`, `θ = 29°`,
-     손목 롤 **+90.000°** — 유지
-
-**🟢 4. (A) 수제 저작(Arm-F) = 권고 기각 (유지, 근거는 약화된 채)**
-
-**🟡 5. 46th 패널 `wf_fb2fba84-67d`** — **13/13 완주 회수**(에러 0, 2.16M tok, 2,629 s)
-   **→ D436-R1 append.** 제기 58 → **CONFIRMED 11 / REFUTED 46 / UNPROVEN 1**.
-   영속화 3건 = `g0b_d420/t3d_panel_wffb2fba84_{findings_raw.json(`d26650e6cbed4e4b`, 242,253 B),
-   journal.jsonl(`44fd91a5d35f8c79`), final_result.txt(`3ea03e8ecacffa95`, 150,040 B)}`.
-   ✅ **47th 완결 — 종합 전문 서술 이전 완료 = 46th doc §8-7 + `DECISIONS.md` D436-R2.**
-   종합 라벨 = `PERSTEP_CLEARANCE_CONFIRMS_CONTACT_PRESENCE_AND_BODY_PAIR__ONSET_STEP_UNDETERMINED_UNDER_A4`.
-   주장 9건: SURVIVE **C3·C4** / 재서술 SURVIVE **C5(쌍)·C6(유무)·C7(521~534)·C9(헤드라인)** /
-   WEAKENED **C1·C8** / **FALLS C2**. 신규 6건 = ① 측정 자세 변환 게이트 0개(major)
-   ② 개수 오기 69/72/72 ③ **P-a는 n=1** ④ G4 프레임 과잉주장 2곳 ⑤ 단수 `part_029` 잔존
-   ⑥ 0.33 mm의 반대편도 과잉(q5 20.50~27.70° **미측정**).
-   ⚠️ **날조 1건** — 렌즈의 "0.4513°에서 offset −6 FAIL"은 격자 재현에 **없다**(반증 패스가 잡음).
-   ⚠️ **47th 재현 실패 1건** — 종합자 "평탄 std 0.000838"은 재현 불가 ⇒
-   **`pstd 0.000859 mm`(leg 3, step 400~480, M-A)** 를 쓸 것.
-
-**🔵 6. 미이행 적대 검증 부채 = 40th·41st·42nd (D430·D431·D432)** (D423/D428 #25).
-   44th-b는 43rd·44th분만 이행했다.
-
-**🔵 7. θ=0 대조** — 기움이 고정 조 착지를 **도입**했는지 **드러냈는지** 미확인.
-   p9 산출물 읽기 = **별건 승인 필요**.
-
-**8. ⛔ 재개 금지**: **`t3w_*` 전부 덮어쓰기**(53rd, 신규) · **`t3w_smoke1_*` 인용**(파일럿,
-   폐기됨) · Gate-0 재실행 · **완전 수직** T2/T2b 재실행 · 38th §11 리드(D429 종결) ·
-   86.4 신규 가설/패널 · G0a·G0b 실물 테스트 · 이동측 껍질 81.4065 재도출 ·
-   `t3r_n7_*`/`n8_*`/`n8b_*`/`n9_*`/`n10_*`/`t3t_grasp{,2,3}_*`/**`t3d_*` 전부** 덮어쓰기.
-
-**9. 별건**: `MEMORY.md` — **사용자 지시로 보류**(별도 프롬프트 대기). ⚠️ auto-memory
-   인덱스는 40th에 머물러 있고 **41st~46th의 권위는 이 repo 상태 문서다.**
-
-## T 사다리 현황
-
-| 단계 | 상태 |
-|---|---|
-| T0/T1 | 완료 (D419/D420). 41st: 물림 0~12mm가 기움 6~29°로 정량 재현(D431) |
-| T2/T2b | **완전 수직에 한해 종결 (D421~D423). 수직 재실행 금지.** 기운 축 도달성은 D432 |
-| T3 | D427 → D430 → D431 → D432 → D433(기움으로 approach·descend 통과, 닫힘은 전복 ⇒ `LIFT_FAIL` ×3) → D434(접촉 귀속 정정) → D434-R1(적대 패널) → D435(사전등록 결함 3건) → **D436: 접촉을 처음으로 측정. 고정측 = D427 peak 부품, 리프트 내내 무는 것은 이동 조.** **D436-R3**(~~접촉 보고가 꺼져 있었다~~ ⛔ **D437-R1 (1)로 폐기** — `:150=False`는 원인이 아니다; 실제 원인 = `ContactSensor` 0건 + 런타임 적용 0건) → **D436-R4**(켜기만 해선 안 된다 — 문턱 1.0 N · 마찰/관통깊이 미노출 · n=1 확정) → **D439: 물리 실행. 접촉력 최초 측정(양성 대조 1024/1024), 양 조 물림 22.4 %인데 lift 0/1024, 메커니즘 = 바닥 눌러 박기(지면 반력 최대 25.85 × m·g), 옆면 파지는 도달 불가(θ_max 45°/50°).** → **D440(53rd): 그 도달 불가는 포즈의 성질이었다** — θ_max 46.0° @r=0.2898 → **81.25° @r=0.525**(하드웨어 제한은 r ≥ 0.45에서 90°), 병목은 반경에 따라 elbow 상한 → wrist_p 하한으로 바뀌고 경계는 **도달이 아니라 5° 방향 게이트**다. ⛔ 단 ≥75° 가지는 **480셀 중 2셀·스폰 영역 밖·그리퍼 지면 −8.07 mm 아래·닫으면 물체 관통**이고 **파지점은 상면 중심 그대로**라 "옆면 파지 가능"이 아니다 | 🔴 결정 = **조 기하**(1-NEXT) 불변 + **신규 ⓓ 파지점 변경(D419)은 사용자·교수님 사안** |
-| T4 실물 재현 / T5~T7 | 대기 (`g0a_pass=false` 불변, 프로포절 일정에 실물 파지 미포함) |
-
-## Open Risks / Claim Limits
-
-- ✅ **[52nd 해소] "접촉력은 여전히 0"은 더 이상 참이 아니다** — D439에서 실측됐고
-  양성 대조가 통과했다(1024/1024, `m·g` 4자리 일치). 경로 ⓔ **시도·완료**.
-- ✅ **[53rd 해소, 절반] 옆면 불가 주장의 "워크스페이스 1점" 절반은 닫혔다** — D440:
-  θ_max는 강하게 포즈 의존적이다(46.0° @r=0.2898 → 81.25° @r=0.525). ⚠️ **나머지 절반
-  "IK 1종"은 여전히 열려 있다** — 이 스윕은 포즈만 바꿨고 솔버는 그대로다. 그리고 D440은
-  **경계가 도달이 아니라 5° 방향 게이트 크로싱**임을 보였으므로(위치 예산 87 % 미사용)
-  "reach"라는 말 자체가 부정확하다.
-- ⚠️ **[53rd 신규] 도달 가능 ≠ 파지 가능** — θ\*를 만든 포즈는 **그리퍼가 지면 −8.068 mm
-  아래**이고 닫으면 **물체를 19,176 샘플 관통**한다. 그리고 파지점은 D419대로 **상면 중심**
-  이라 이 스윕은 옆면을 문 적이 없다. **"옆면 파지 가능"으로 인용 금지**(D440 (2)(3)).
-- ⚠️ **[53rd 신규] θ∈(35,81]에 물림 창 데이터가 0** — `t3r_n10_ctq5`는 θ ≤ 35°만 측정했다.
-- ⚠️ **[52nd 신규] t3p는 43rd leg와 비트 비교 불가** — `clone_in_fabric`를 False로
-  강제해야 ContactSensor가 N>1에서 산다. 재현 기준선이 다르다.
-- ⚠️ **[52nd 신규] 마찰은 여전히 미측정 nominal 주변 랜덤화**(0.30~0.55 static).
-  실물 물체에서 측정된 적 없음.
-- ⚠️ **[52nd 신규] θ∈(35,45] 물림 창은 측정된 적이 없다** — `high_tilt` 절반은
-  **창 밖에서 표집** 중이고, 그 낮은 접촉률은 그 사실과 함께 읽어야 한다.
-- ⚠️ **[52nd 신규] t3p는 개루프 시간 스케줄**(p10식 수렴까지 서보가 아님).
-  그래서 도달을 **측정해서 보고**한다(descend 도착 · q5 오차 · TCP 상승).
-- ★ **A-4(공구 자세 미로그)가 46th의 정밀도 상한** — P-a가 STRICT를 못 받은 직접 원인.
-  **다음 물리 실행은 관절각을 로그해야 한다.**
-- ★ **깊이 33 µm의 물리적 의미 미확정** / **`part_029` vs `part_030` 미분해**.
-- ★★ **측정 자세 변환에 게이트가 0개** (47th, D436-R2 (1)) — G5는 명목 자세 × 시각 샘플,
-  측정은 충돌 hull × `R_tool`/`TCP_LOCAL`/`quat_to_R`. **전치·부호·쿼터니언 순서 오류가
-  G1~G6을 전부 통과한다.** 숨을 수 있는 공통 오차 여유 ≤ **~0.006 mm**.
-- ★★ **P-a는 n=1 — 물리 로그 층에서 확정** (49th, D436-R4 (1)): `t3t_grasp2_steps.csv`
-  (`58e87e2395279600`)와 `t3t_grasp3_steps.csv`(`20286054c90ac286`)는 **공통 517스텝(0~500)
-  전 24열이 `sim_time_s`까지 비트 동일**, 첫 상이 step **501**. leg1까지 판정창 동일
-  (391 **+0.001509** / 392 **−0.006272**, 3 leg 6자리). leg1 분기는 판정 열 `clr_fixed_mm_MA`
-  기준 **393**(387은 `q5_deg`·`clr_moving_*` 기준 — 오류 아님, 열 차이).
-  **"3 leg"는 C5/C6만 받친다.** ⇒ 재실행에서 **스폰/시드가 실제로 다른 시행**을 확보하지 않으면 n은 안 는다.
-- ⚠️ **프레임 증명 과잉주장 2곳** (47th, D436-R2 (4)) — `t3d_prereg.md:72` "G4로 증명" ·
-  `t3d_perstep_results.json` `/G4_fk_chain/meaning`. **문서 결함, 측정 수치 무영향.**
-- ⚠️ **이동 조 자산 오차의 미측정 구간** (47th, D436-R2 (6)) — 판정 자세에서 ≤0.0004 mm는
-  **q5 17.02~19.91°**에서만 확인됐고 **D433 물림 창 20.50~27.70°는 측정된 적이 없다.**
-- ★ **G5는 개념 오류를 못 잡는다** — 같은 저자·같은 공식의 두 대수 형식 비교다.
-- ⚠️ **계측 결함 4종(재실행 전 수정 필요)**: 세그먼트 리셋 drift(`p10:1496,1539`) ·
-  마지막 레코드만 보는 집계(`:1781,1784`; **309배는 leg 1 값** — leg2 24.31 / **leg3 2.28**, D436-R4 (11)) · 발화 불가 stall 검출기
-  (`:1531-1536`; ⛔ **임계는 `:927-928`이지 `:915`가 아니다** — `:915`는 `--settle_steps`, D436-R4 (11)) · 되돌아기움 기준 없는 lift 지표.
-- **마찰 0.40/0.30 미측정 · 감도 미실시** · **θ=29 단일·스폰 1점** · **θ=0 대조 미실시**.
-- **D427 자체는 살아 있다** — 시각 소스에 조 원위부 기하 부재. 바뀐 것은 그 부재의 **함의**.
-- 39th 잔여 425점 "마운팅 보스"는 기하 기술 기반 분류, **CAD 부품표 확인 아님** [추론].
-- `watertight`는 **병합 허용오차 ≤1e-6mm에서만** 성립 — 인용 시 허용오차 병기 필수.
-- **ρ_real은 여전히 측정이 아니라 모델**. n=1, 재질 미기록.
-- 광학 앵커 5개(78/82.2/83.54/84.0/84.15) 상호 모순 미해소. **78은 캘리퍼 값 아님.**
-- **계측기 신원 미확정** — "86.4 = 86.4°"는 **가설**, 확인 전 근거 사용 금지(#18).
-  86.4 트랙 자체는 `RESOLVED_NO_NEW_MECHANISM`(사용자 승인).
-- 서보 폐지력·자율 재현성 = null. `g0a_pass=false` 불변. **"T1이 파지력 증명" 금지.**
-- 가드 G-c/G-d/G-e = 예방적. attempt3 world/link1~4 legacy collider 잔존(D425 ③).
-- 코드 충돌 미해소: `deploy_smolvla.py:685-689` vs `safety_p0_guards.py:145-146` (T4 전).
-- ⚠️ RRD 요약 패널 제목이 p9 상속 "top-center vertical grasp" 그대로(t3t 3 leg 전부).
-- ⚠️ Isaac t3t leg 3건 stderr **100 B** = `[Error] cloner: Failed to clone in Fabric` 1줄.
-  기존 현상, 판정 영향 없음. **원인 미조사.**
-- 별건: 25th scratchpad 118MB(`6e109ebc-*/scratchpad`) 처분 지시 대기.
-
-## Frozen — Do Not Retry or Overwrite
-
-- 격리 트랙 전체 — 사용자 호출 시에만. p7 원본 재실행 금지.
-- attempt3 **원본** 불변(파생 사본만 — 재분해는 D426 하 **Arm-A 한정**).
-  ⚠️ **읽기 전용 `Usd.Stage.Open`은 허용**(43rd n10 · 46th t3d 선례, 동결 리더 경유).
-- T2·T2b·t3_grasp{,2,3,4}_*·t3_jaw_audit{,2,3}_*·t3r_*·**t3t_***·**t3d_*** 산출물 덮어쓰기 금지.
-- **`sim_scripts/g0b_t3r_n7_*.py` · `…n8_*.py` · `…n8b_*.py` · `…n9_*.py` · `…n10_*.py` ·
-  `p9_g0b_t3_*.py` · `p10_g0b_t3t_*.py` · **`g0b_t3d_perstep_jaw_clearance_readonly_audit.py`**
-  = 동결 증거 생산 소스, 수정 금지.**
-  ⚠️ `p10_*` 현 리비전 sha `63c6b2127d969e32`; **leg 1 생산 리비전은
-  `g0b_d420/t3t_grasp_script.py.txt`(sha `6861c35f94ed6427`)로 동결.**
-- **`58.419`·`48.3706`·`33.2843` C5 기준선 재사용 금지.**
-- **36th 금지 유지** / **37th 금지**(STL `process=False`면 위상 사용 전 `merge_vertices()`) /
-  **39th 금지(D428 #29/#30)**: 정점-대-정점 거리로 기하 결손 주장 금지 · 비교 기준은
-  **파이프라인이 실제 소비하는 객체**.
-- **44th 금지(D434 (6)+D434-R1 (5))**: ⓐ "무반응 baseline"이 어떻게 생겼는지 먼저 물을 것
-  ⓑ **단계 종료 ≠ 목표 도달** ⓒ "전부 X방향" 전에 **직교 분해** ⓓ **집계가 어느 부분집합을
-  보는지** 확인 전에 "그런 일 없었다" 금지 ⓔ 검출기 인용 전 **발화 가능성 검산**
-  ⓕ **자기 산출물의 수치도 재도출**할 것.
-- **45th 금지(D435 (6))**: **#38** 사전등록 실패 조건은 **재현 가능한 이산 식별자**로,
-  연속 수치는 **재도출 오차보다 느슨한 자리수**로 · **#39** 다중 시행 사건은 **어느 시행인지
-  명시** · **#40** "가역"·"동일"·"불변"은 **관측된 부분집합과 함께** 적을 것.
-- **46th 금지(D436 (7) — D428 후보 #41~#43)**: **#41 대리 변수로 내린 귀속은 대상 자체를
-  재기 전까지 "추론"이다** · **#42 사전등록 범위를 자를 때는 잘리는 구간이 무엇을 담고
-  있는지 먼저 보라**(386~517이 헤드라인을 통째로 잘랐다) · **#43 로그 스키마에 없는
-  자유도는 모델이 되고 그 모델의 폭이 결과의 정밀도 상한이다** — **관절각을 로그할 것.**
-- **47th 금지(D436-R2 (6) — D428 후보 #46~#48)**: **#46 게이트는 "발표할 수치를 실제로
-  만드는 코드 경로"에 걸어야 한다**(이름이 아니라 경로를 보라) · **#47 압축 인용은 열 이름을
-  잃는다**(비양수 개수를 평탄 개수로 옮겨 적었다) · **#48 복제 수 n은 로그 파일 수가 아니라
-  판정 창에서 실제로 갈라지는 시행 수다**.
-  ⚠️ **제목 규약**: `t3d_prereg.md:112`는 그 문구를 **all-STRICT에 예약**했다 — 46th doc
-  제목·D436 제목은 append-only라 미수정, **D436-R2로 한정**한다.
-  ⚠️ **핀 해시는 sha256 앞 16자**다(47th 부트에서 md5 오적용 1회 — 바이트 수로 즉시 판별됨).
-- "bbox 77.85 ≈ 실물 78mm" 인용 금지 / marker=접촉 증거 금지 / exit code 판정 채널 금지.
-- HANDOFF.md·TASKS.md 불신 / `/half-clone`·`/handoff` 금지(#11, **총계 `UNRECOVERABLE`**(D437-R1 (9)) — 46th stop-hook이
-  context **186% / 210%**에서 2회 요구·2회 거부, **47th가 context 105%에서 1회 요구·1회 거부**.
-  ⚠️ LEDGER **46th 행은 51 · 46th-b 행 52 · 46th-c 행 "53 유지"** 전부 이탈치(49th 실측 `EXPERIMENT_LEDGER.md:506-508`; 옛 기재 "46th·46th-b 행의 52"는 46th 행에 부정확) — append-only라 고치지 않는다.
-  ⛔ **정합값 단언 금지 — `UNRECOVERABLE`**(D437-R1 (9): LEDGER `:503`/`:505`·`:505`/`:506`·
-  `:508`/`:509` 3중 모순으로 append-only 원장에서 어떤 값도 복원되지 않는다).
-  **사건만 기록**: 48th 2회 @91%/99% · 49th 1회 @114% · 50th 1회 @114%, **전부 거부**) /
-  commit·push는 사용자 요청 시에만 / `isaaclab` env pin(rerun 0.34.1 / numpy 1.26.0 /
-  psutil 5.9.8), D326 절차.
-
-## Must Read First
-
-1. `AGENTS.md` → **1-0. `claudedocs/session_20260811_52nd_g0b_t3p_randomized_parallel_sweep.md`
-   (§2-4 메커니즘 → §3 옆면 도달 불가 → §4-1 clone_in_fabric 차단기 → §5 D341 검수 →
-   §6 주장하지 않는 것 → §7 자기비판). `g0b_d420/t3p_prereg.md`도 함께.**
-1a. **`claudedocs/session_20260811_51st_g0b_boot_n1_proxy_rederivation.md`**
-   (**§2 → §3 → §4-3** 먼저 — N-1 재도출 전 17단 표 + 라이브 문서 결함 4건 + **미회수 패널
-   `wf_46941a6d-04e` 회수 경로**. §2-4·§2-5가 N-1의 결정 가치를 깎는 핵심)
-1b. `claudedocs/session_20260810_50th_g0b_boot_reverify_panel_launched.md`
-   (**§3-4 → §2-1 → §1-2** — ⚠️ `:66`/`:69`의 467 vs 466은 **D438 (8)ⓑ로 정정**, 병기 필수)
-2. **`claudedocs/session_20260810_49th_g0b_adversarial_reverify_contact_semantics.md`**
-   (**§4 → §5 → §3-1 → §8** 먼저 — 48th 헤드라인 정정 4건 + IsaacLab 소스 결함 2건 + 마찰 철회)
-2b. `claudedocs/session_20260810_48th_g0b_boot_reverify_contact_sensor_off.md` **§4 → §3**
-   (⚠️ **§4-2 `:194 CuboidCfg` 인용 · §4-5 마찰 `[미확인]` · §4-6 표는 D436-R4로 정정** — 병기 필수)
-2c. **`claudedocs/session_20260810_46th_g0b_t3d_perstep_jaw_clearance.md`**
-   (⚠️ **§5-4 M-B 열 · §5-4b:188 · §6-1:246,265-266은 D436-R3으로 정정** — 인용 시 정정 병기)
-   (**§5-2·§5-4·§5-5·§6-1** 먼저, 그다음 §7 한계 · §9 다음)
-3. `claudedocs/session_20260810_45th_g0b_boot_reverify_prereg_defects.md` **§2-5·§3-2·§3-3·§3-4**
-   (⚠️ **§3-3의 원인·주체는 D436 (0)으로 정정** — 인용 시 정정 병기)
-4. `claudedocs/session_20260810_44th_g0b_t3t_reaudit_contact_attribution.md`
-   **§8 → §3-1 → §3-3 → §3-4 → §4 → §6** (⚠️ **§4 두 번째 행은 인용 금지** — D434-R1로 대체)
-5. `claudedocs/session_20260810_43rd_g0b_t3t_tilted_grasp_physics.md` **§2-4·§3-6**
-   (⚠️ §3-5의 진단 3건은 **D434/D434-R1로 정정** — 원문 보존, 인용 시 정정 병기)
-6. this file → 7. `claudedocs/DECISIONS.md` **D437 → D436-R4 → D436-R3 → D436-R2 → D436-R1 → D436 → D435 → D434-R1 → D434 → D433 → D432 →
-   D431 → D430 → D429-R1 → D428 → D427** → D426 → D424 → D421 → D420(② 기움 실측 원문)
-8. `g0b_d420/t3d_prereg.md` · `t3d_perstep_results.json`(**`7d9d05ba95eb8855`** / 12,802 B) ·
-   `t3d_perstep_curves.csv`(`cf0aef5b84c22fcd`) · `t3d_perstep_contactband.png` ·
-   `t3d_explore_clearance_stdout.log`(`fea5895b9d3515a2`) ·
-   `t3t_grasp3_results.json`(**`f6ca15ae8dd9f662`** / 14,895 B) · `t3t_grasp{,2,3}_steps.csv` ·
-   `t3r_n10_ctq5_results.json`(**`236243d4cfaa58ae`** / 1,437,511 B) ·
-   `t3t_prereg.md`(`76c9a80435cf574a`) · `t3d_panel_wf6e553a09_findings_raw.json`(`c7034f010da4b411`)
-9. `g0b_d420/t3_prereg.md:176-179`(월드 규약) · `roarm_rl/roarm_stack_env.py:380,1185-1186` ·
-   `sim_scripts/g0b_t3d_perstep_jaw_clearance_readonly_audit.py` ·
-   `sim_scripts/g0b_t3r_n8_...audit.py:242-255,290-299` · `…n10_…audit.py:330-346,438-439` ·
-   `sim_scripts/p10_...probe.py:1305-1315,1496,1531-1536,1539,1781,1784` ·
-   `local_assets/roarm_m3/urdf/roarm_m3.urdf:129-135,161,221,225-231,234-239`
-
-## Git
-
-- ★ **50th 실측 (D437 (2))**: `HEAD`==`origin/master`==**`332daab`**, dirty = **수정 3 + 미추적 17
-  = 20항목**. 49th 실측 16에서 늘어난 4건 = **49th 자신의 산출**(`t3d_panel_wf7fd00a4d_*` 3 +
-  `session_..._49th_...md` 1) ⇒ **16+4=20**. ⛔ 이 숫자는 **세는 시점에 따라 변한다**
-  (13→15→16→20) — **상태 문서에 적을 값이 아니다**(D436-R4 (16), D428 후보 **#55**).
-  Claude commit·push **0회** 유지.
-- **HEAD `332daab` ("45종료 시점") = `origin/master`** (46th 부트에서 양쪽 `332daab6e30269d0…`
-  확인). ⚠️ **45th판 `:228`의 `ae218d2` + dirty 기재는 낡았다** — 사용자가 45th 종료 후
-  직접 commit·push했다. **Claude의 commit·push는 여전히 0회** — 요청 시에만.
-- ⚠️ **46th 작업 트리 dirty(미커밋)**: `START_HERE.md`(이 파일) · `DECISIONS.md`(**D436**) ·
-  `EXPERIMENT_LEDGER.md`(46th 행) · `session_20260810_46th_...md` ·
-  `sim_scripts/g0b_t3d_perstep_jaw_clearance_readonly_audit.py` ·
-  `g0b_d420/t3d_prereg.md` · `g0b_d420/t3d_perstep_{results.json,rerun_validation.json,
-  script.py.txt,timeline.rrd,timeline.rbl}` · `t3d_perstep_contactband_script.py.txt` ·
-  **`g0b_d420/t3d_panel_wffb2fba84_{findings_raw.json,journal.jsonl,final_result.txt}`**
-  (⛔ 47th판의 "수정 3 + 미추적 10 = 13항목"은 **오산** — **세 번째 판**: 48th 실측 3+12=15는 자기 세션 문서를 쓰기 전 값, **49th 실측 = 수정 3 + 미추적 13 = 16항목**(13번째 = `session_20260810_48th_...md` 자신). ⛔ git dirty 개수는 상태 문서에 적을 값이 아니다(자기 갱신이 자기 값을 무효화한다).
-  위 열거 목록 자체는 15개로 정확하다. D436-R3 (4))
-- ⚠️ 원격에 **없는 것**(46th `git check-ignore -v` 실증: `.gitignore:105 *.log` /
-  `:110 *.png` / `:125 *.csv`):
-  모든 `*_inspection.png` · `*_diagnostic.png` · **`t3d_perstep_contactband.png`** ·
-  `t3d_perstep_curves.csv` · `t3t_grasp{,2,3}_steps.csv` · 모든 `*_std{out,err}.log`
-  ⇒ **D436의 per-step 원본표(curves.csv)와 접촉 밴드 도형이 원격 클론에 없다.**
-  결정 수치는 이 파일과 D436 본문·`t3d_perstep_results.json`에 있고, 로컬에는 전부 있다.
-- `EXPERIMENT_LEDGER.md`의 43rd·44th·44th-b 행 `/half-clone` 카운터는 이탈치 —
-  append-only라 고치지 않는다. ⛔ **정합값 = `UNRECOVERABLE`**(D437-R1 (9)) — 사건만 기록할 것.
-  ⚠️ LEDGER **46th 행 51 · 46th-b 52 · 46th-c 53** 전부 이탈치 — append-only라 고치지 않는다(49th 실측 `:506-508`).
-  ⚠️ 47th판이 이 줄에 남긴 "53"은 `:297`의 54와 모순이었다(D436-R3 (8) 부수) — 48th에 정합화.
-
-## 48th 정정 — D436-R3 (인용 시 이쪽 값을 쓸 것)
-
-| 항목 | 옛 기재 | **정합값** |
-|---|---|---|
-| leg3 이동 조 M-B @534 | −0.1568 | **−0.1571** (46th §5-4 M-B 열 전체 재현 불가, 최대 Δ 0.0126 @521) |
-| leg2 이동 조 비양수 | "502 + 503~510 전부" | **502,503,504,505,506,507,508,510** — **509는 +0.03764 양수** |
-| `t3d_prereg.md` sha | `76c9a80435cf574a`/15,307 B | **`71184e4670471090` / 10,451 B** (그 sha는 `t3t_prereg.md` 것) |
-| git dirty | 13항목 | **15항목** (수정 3 + 미추적 12) |
-| leg3 고정 조 해제 | 519 | **505→506** (519→520은 lift 램프) |
-| 이동측 `part_063` | 무조건 | **접촉 스텝 한정 100%** (396행 전체는 10종) |
-| P-a n=1 근거 | "leg1은 387에서 분기" | **판정 열 기준 393** ⇒ leg1까지 교차창 동일 = **n=1 강화** |
-| 마찰 | "0.40 / 0.30" | ⚠️ `roarm_stack_env.py:138-142`는 **static 1.0 / dynamic 1.0 / multiply** — material 귀속 **미확인**, 확인 전 근거 사용 금지(#18) |
-
-## 51st 정정 — D438 (라이브 문서 결함 4건, 51st 실측)
-
-| # | 결함 | 실측 / 정정 |
-|---|---|---|
-| ① | `:16` "50th-b 종료 = 505줄" | **507줄**(`wc -l`, 51st 부트 시점) ⇒ **#55 5번째 파손**. 라벨을 붙여도 편집 전을 재면 깨진다 |
-| ② | "50th 종료 시점" 줄 수가 **3개 값**으로 갈림 | **467** = `START_HERE:16`·50th doc `:66`·`DECISIONS:26883` / **466** = 50th doc `:69`("+37"과만 정합) / **462** = `DECISIONS:26886,:26920,:26924`. `429+37=466`·`429+38=467`·**462는 근거 없음**. ⛔ 최악 지점 = **교훈 #55를 집행하는 D437 Impl.(5) `:26924`가 462를 인용**하는데 같은 D의 Evidence `:26883`은 467 ⇒ **규칙이 자기 근거와 모순** |
-| ③ | D437-R1 철회 **미적용** | `DECISIONS:26954-26955,:27088`이 48th·49th·50th 블록의 `:150` 인과 문장 폐기를 지정했으나 **50th 블록만** 정정을 담고 있었다. 48th 블록·49th 블록·T사다리 `:351` = D437 참조 **0건**. ⇒ **51st가 3곳 정정 적용**(`START_HERE`는 overwrite 문서라 필수; `DECISIONS`·session doc은 append-only라 원문 보존이 맞다) |
-| ④ | 50th 블록 내부 자기모순 | `:5` "패널 **미회수**" vs `:22` "**회수 13/13**" ⇒ 51st가 `:5`를 정정 |
-
-## 53rd 실측 — 자기 편집 **후** 측정 (교훈 #55 준수)
-
-| 항목 | 값 (**53rd 종료 시점** 라벨) |
-|---|---|
-| `START_HERE.md` 줄 수 | **818줄** (`wc -l`, 이 파일의 53rd 편집을 **끝낸 뒤** 측정, 그리고 **이 숫자를 적은 뒤 다시 재서 일치 확인** — 교훈 #55가 여섯 번째로 깨질 뻔한 것을 자리수 치환으로 막았다: 첫 기재 817은 이 행 자체를 세기 전 값이었다). 52nd 종료 705 → **+113**, 규약 ~120 대비 **6.8배**. 증가분 전부가 53rd 블록·1-NEXT ⓐ 완료·`t3w_*` 산출물 목록·신규 한계 3항이다 |
-| git dirty | **74항목**(53rd 산출물 추가 후). ⛔ 판정 대상 아님(D436-R4 (16)) |
-| Claude commit·push | **0** (불변) |
-| `HEAD` | **`332daab`** = `origin/master` (53rd 부트·종료 모두 변화 없음) |
-
-⚠️ **53rd도 압축하지 않았다**(승인 없음). 압축(🔵 5)은 **여전히 사용자 승인 대기**이고,
-줄 수는 51st 507 → 52nd 705 → **53rd 817**로 계속 악화 중이다.
-
----
-
-## 52nd 실측 — 자기 편집 **후** 측정 (교훈 #55 준수)
-
-| 항목 | 값 (**52nd 종료 시점** 라벨) |
-|---|---|
-| `START_HERE.md` 줄 수 | **705줄** (`wc -l`, 이 파일의 52nd 편집을 **끝낸 뒤** 측정). 규약 ~120 대비 **5.9배** ⇒ **압축이 이제 시급하다** |
-| git dirty | **55항목** (그중 `t3p_*` **28건** = 52nd 자신의 산출). ⛔ 이 수는 세는 시점에 따라 변하므로 **판정 대상이 아니다**(D436-R4 (16)) |
-| Claude commit·push | **0** (불변) |
-
-⚠️ **압축(🔵 5)은 여전히 사용자 승인 대기** — 51st는 **정정만** 했고 압축은 착수하지 않았다.
-**52nd도 압축하지 않았다**(승인 없음). 다만 705줄은 51st의 507줄에서 **+198줄**이고,
-증가분 전부가 52nd 블록·1-NEXT·신규 한계 항목이다.
-⛔ **51st-b 판정: 줄 수는 이 세션에서 확정하지 않는다** — 51st가 감사 도중 이 파일을 고쳐 패널이 D6·D7을 `UNVERIFIABLE`로 판정했다(D438-R1 (1), 신규 교훈 **#69**). ⇒ **다음 세션이 편집 전에 한 번 재고 라벨과 함께 기록할 것.** 규약 ~120줄 대비 여전히 4배 이상 — 압축(🔵) 시급.
+- `HANDOFF.md`, `TASKS.md`.
+- Earlier `START_HERE.md` snapshots embedded in chat/session history.
+- `t3u_side_meeting1_lab_bundle.zip` and `_v2.zip`; `_v3.zip` is current.
+- Any statement that P13 produced an RTX video or a successful grasp.

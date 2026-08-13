@@ -1,0 +1,50 @@
+{
+  "artifact": "T3Y_MANUAL_VISUAL_INSPECTION_V1",
+  "tag": "t3y_workspace1",
+  "inspected_at": "2026-08-11T20:04:27+09:00",
+  "inspector": "Codex root agent",
+  "scope": "CANONICAL_SCIENTIFIC_WORKSPACE",
+  "scientific_authoritative": true,
+  "inspection_png": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3y_workspace1_inspection.png",
+    "sha256": "3726ba737608ead1fa5c8133efb71a524fc0849ef2dd155a14e37a0f2478e457",
+    "physical_dimensions_px": [
+      4800,
+      2800
+    ],
+    "logical_window_px": [
+      2400,
+      1400
+    ]
+  },
+  "decision_snapshot_png": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3y_workspace1_decision_snapshot.png",
+    "sha256": "3e1c3da721de0b5caa0b5b2cf49ff397671afc073ba033c22c9e9cde7829010f",
+    "dimensions_px": [
+      1960,
+      1400
+    ]
+  },
+  "observations": [
+    "The Rerun board is non-empty and explicitly labels the scope as CANONICAL_SCIENTIFIC_WORKSPACE, scientific_authoritative=true, 3476/3476 valid population trials, zero valid successes, and six representative replays.",
+    "At the captured 0.921667 s replay time, the D29 x H50 cylinders, support plane, target/actual TCP markers, tool axes, and distinct fixed/moving 64-part convex-hull jaw surface clouds are visible.",
+    "The force, jaw-support-force, raw-count, object-height/tilt, and q5 curves are populated, and phase transition events are visible.",
+    "The separate decision snapshot shows the six final representative target-vs-actual frames distributed across near-top-down, oblique, and high-tilt poses.",
+    "Some labels and jaw clouds overlap because six representative replays share one board, but no required decision subject is blank, corrupted, or missing; the overlap is a presentation caveat, not an observability failure.",
+    "The PNGs alone do not establish the lift-only mechanism. The native trace independently shows that representative trial_001540 has simultaneous two-jaw force only during lift while object z stays near 25 mm, so the visual evidence is used only as inspection support."
+  ],
+  "visual_contract_pass": true,
+  "verdict": "CANONICAL_VISUAL_PASS_PRELIMINARY_VERDICT_PROMOTABLE",
+  "promoted_scientific_verdict": "BILATERAL_CONTACT_ONLY_DURING_LIFT_NO_VALID_GRASP",
+  "promotion_requires": [
+    "terminal attestation PASS",
+    "native NPZ/JSON adversarial recount PASS",
+    "no unresolved independent audit blocker"
+  ],
+  "claims_not_made": [
+    "No force-closure or hardware-grasp claim is made.",
+    "No exact theta=0 top-down claim is made because theta=0 was not sampled.",
+    "No side-grasp claim is made because the grasp point remains the cylinder top centre.",
+    "The visual copies do not replace the NPZ/JSON numerical authority."
+  ]
+}

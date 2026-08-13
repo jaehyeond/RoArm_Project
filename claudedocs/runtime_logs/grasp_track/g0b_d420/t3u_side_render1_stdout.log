@@ -1,0 +1,60 @@
+[t3u_render1] input_gate_durable {'input_gate_sha256': '22ca237d1efd06ed297b28a5fd0257ba698097ce8e435765dc73f6913aefffc6', 'source_sha256': '7dbc54821e789550f20e10526f7f2d278043378db95b447d0fc2c8d0e727130f', 'prereg_sha256': '59c67cf1e2b3f0bf1071bac0ea7607ced69dcbaae2477d83d525381cda39455e'}
+[t3u_render1] frame_directory_durable {'path': 'claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_render1_rgb_frames'}
+Loading user config located at: '/home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/user.config.json'
+[Info] [carb] Logging to file: /home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaacsim/kit/logs/Kit/Isaac-Sim/5.1/kit_20260813_121225.log
+2026-08-13T03:12:26Z [464ms] [Warning] [gpu.foundation.plugin] Skipping unsupported non-NVIDIA GPU: Intel(R) Graphics (RPL-S)
+2026-08-13T03:12:26Z [464ms] [Warning] [gpu.foundation.plugin] Skipping unsupported non-NVIDIA GPU: Intel(R) Graphics (RPL-S)
+
+|---------------------------------------------------------------------------------------------|
+| Driver Version: 580.173.02    | Graphics API: Vulkan
+|=============================================================================================|
+| GPU | Name                             | Active | LDA | GPU Memory | Vendor-ID | LUID       |
+|     |                                  |        |     |            | Device-ID | UUID       |
+|     |                                  |        |     |            | Bus-ID    |            |
+|---------------------------------------------------------------------------------------------|
+| 0   | NVIDIA GeForce RTX 4090 Laptop.. | Yes: 0 |     | 16376   MB | 10de      | 0          |
+|     |                                  |        |     |            | 2757      | 05b1a3f8.. |
+|     |                                  |        |     |            | 1         |            |
+|---------------------------------------------------------------------------------------------|
+| 1   | Intel(R) Graphics (RPL-S)        |        |     | 48015   MB | 8086      | 0          |
+|     |                                  |        |     |            | a788      | 868088a7.. |
+|     |                                  |        |     |            | 0         |            |
+|=============================================================================================|
+| OS: 22.04.5 LTS (Jammy Jellyfish) ubuntu, Version: 22.04.5, Kernel: 6.8.0-136-generic
+| XServer Vendor: The X.Org Foundation, XServer Version: 12101004 (1.21.1.4)
+| Processor: Intel(R) Core(TM) i9-14900HX
+| Bare Metal Cores: 24 | Bare Metal Logical Cores: 48
+| Available Cores:  32 
+|---------------------------------------------------------------------------------------------|
+| Total Memory (MB): 64020 | Free Memory: 39807
+| Total Page/Swap (MB): 0 | Free Page/Swap: 0
+|---------------------------------------------------------------------------------------------|
+2026-08-13T03:12:26Z [725ms] [Warning] [gpu.foundation.plugin] CPU performance profile is set to powersave. This profile sets the CPU to the lowest frequency reducing performance.
+2026-08-13T03:12:26Z [734ms] [Warning] [gpu.foundation.plugin] IOMMU is enabled.
+2026-08-13T03:12:26Z [734ms] [Warning] [gpu.foundation.plugin] Detected IOMMU is enabled. Running CUDA peer-to-peer bandwidth and latency validation.
+Unidirectional P2P=Enabled Bandwidth (P2P Writes) Matrix (GB/s)
+   D\D     0 
+     0 395.77 
+P2P=Enabled Latency (P2P Writes) Matrix (us)
+   GPU     0 
+     0   1.81 
+
+   CPU     0 
+     0   1.47 
+2026-08-13T03:12:27Z [1,588ms] [Warning] [omni.log] Source: omni.hydra was already registered.
+2026-08-13T03:12:27Z [1,773ms] [Warning] [carb] Acquiring non optional plugin interface which is not listed as dependency: [omni::physx::IPhysxBenchmarks v1.0] (plugin: <default plugin>), by client: omni.physics.physx.plugin. Add it to CARB_PLUGIN_IMPL_DEPS() macro of a client.
+2026-08-13T03:12:27Z [1,785ms] [Warning] [omni.isaac.dynamic_control] omni.isaac.dynamic_control is deprecated as of Isaac Sim 4.5. No action is needed from end-users.
+2026-08-13T03:12:28Z [3,034ms] [Warning] [pxr.Semantics] pxr.Semantics is deprecated - please use Semantics instead
+2026-08-13T03:12:28Z [3,170ms] [Warning] [omni.graph.core.plugin] Found duplicate of category 'Replicator' - was 'Annotators', adding 'Fabric Reader'
+2026-08-13T03:12:28Z [3,170ms] [Warning] [omni.graph.core.plugin] Category 'Replicator' not accepted on node type 'omni.replicator.core.FabricReader' in extension 'omni.replicator.core'
+[INFO][AppLauncher]: Using device: cuda:0
+[INFO][AppLauncher]: Loading experience file: /home/cgxr/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaaclab/apps/isaaclab.python.headless.rendering.kit
+[t3u_render1] kit_started {}
+[t3u_render1] asset_load_complete {'audited_updates': 6, 'elapsed_seconds': 0.5838779830373824, 'final_status': ['', 0, 0]}
+[t3u_render1] capture_started {'warmup_captures': 6, 'written_captures': 234, 'api': 'rep.orchestrator.step(rt_subframes=1,pause_timeline=True,delta_time=0.0,wait_for_render=True)'}
+2026-08-13T03:12:28Z [3,171ms] [Warning] [omni.replicator.core.scripts.extension] No material configuration file, adding configuration to material settings directly.
+2026-08-13T03:12:33Z [7,792ms] [Warning] [omni.fabric.plugin] Warning: attribute viewportHandle not found for bucket id 7
+
+2026-08-13T03:12:33Z [8,273ms] [Warning] [omni.fabric.plugin] getAttributeCount called on non-existent path /World/Robot/world/visuals/base_link/node_STL_BINARY_
+2026-08-13T03:12:33Z [8,273ms] [Warning] [omni.fabric.plugin] getTypes called on non-existent path /World/Robot/world/visuals/base_link/node_STL_BINARY_
+2026-08-13T03:12:34Z [8,947ms] [Warning] [omni.syntheticdata.plugin] OgnSdPostRenderVarToHost : rendervar copy from texture directly to host buffer is counter-performant. Please use copy from texture to device buffer first.

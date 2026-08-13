@@ -1,0 +1,27 @@
+[g0b_t3r_gate0] env python=3.11.14 numpy=1.26.0 rerun_sdk=0.34.1 sample_spacing_mm=0.50 l_min_mm=5.5 indet_half_mm=0.5 finger_window_r_mm=30.0
+[g0b_t3r_gate0] readonly_declaration=stl_read+UsdStageOpen_only no_save_no_export no_kit (authoring-source audit; runs BEFORE any authoring; D415-3 untouched)
+[g0b_t3r_gate0] GV1_sha body=gripper_link file=gripper_link.stl sha=7946a374e24a2f46 pin_match=True
+[g0b_t3r_gate0] GV1_sha body=link5 file=link5.stl sha=1d63f374a78c1419 pin_match=True
+[g0b_t3r_gate0] GV1_sha usd_root=a4be58e87b1f9790 usd_physics=043a5d35aa425c25 urdf_sha=64dc8d082cbce9a1 (recorded) dead_asset_sha=1dfb77228316baf6 (recorded, NOT used) pass=True
+[g0b_t3r_gate0] GV2_urdf body=gripper_link visual=meshes/gripper_link.stl origin_identity_and_scale_ok=True
+[g0b_t3r_gate0] GV2_urdf body=link5 visual=meshes/link5.stl origin_identity_and_scale_ok=True
+[g0b_t3r_gate0] GV2_urdf tcp_origin=[0.0, 0.0, 0.115428] tcp_match=True dead_asset_referenced=False (must be False) pass=True
+[g0b_t3r_gate0] GV3_units body=gripper_link n_tri=13698 n_samples=574831 bbox_mm=(77.9,25.2,39.4) plausible=True
+[g0b_t3r_gate0] GV3_units body=link5 n_tri=14092 n_samples=2266503 bbox_mm=(46.5,35.5,120.6) plausible=True
+[g0b_t3r_gate0] GV4_joint_witness pass=True urdf_vs_usd_max_abs_diff=6.854e-08 axis=Z urdf_axis=[0.0, 0.0, 1.0] urdf_axis_gate=True usd_limits=[0.000,90.012]deg placement_frame=USD (audit3-anchored); urdf agreement gated
+[g0b_t3r_gate0] fixed_jaw link5 l_vis_mm=4.458 r_at_l_vis_mm=10.12 fp_max_depth_mm=4.457620117187505 wall_max_depth_mm=3.517823669433595 rim_min_r_mm=None state=FAIL
+[g0b_t3r_gate0] fixed_peak_point r_mm=10.12 azimuth_deg=172.0 body_frame_m=[-0.010026, 0.001409, 0.119886] l_vis_wall_mm=3.517823669433595
+[g0b_t3r_gate0] moving_jaw gripper_link coarse_peak q5=5.00deg l_vis=3.956mm | refined_peak q5=5.10deg l_vis=3.956mm state=FAIL
+[g0b_t3r_gate0] moving_peak_metrics q5=5.10deg l_vis_mm=3.956 r_at_l_vis_mm=0.11 azimuth_deg=-88.4 fp_max_depth_mm=3.9559235407753275 wall_max_depth_mm=-5.134597754082343 rim_min_r_mm=None
+[g0b_t3r_gate0] moving_secondary l_vis_wall_mm=2.7951933806909803 l_vis_grasp_range_mm=3.9558267017595905
+[g0b_t3r_gate0] moving_anchor q5= 88.310deg l_vis_mm=-52.885 fp_max_depth_mm=None wall_max_depth_mm=-53.14763016343593 rim_min_r_mm=None
+[g0b_t3r_gate0] moving_anchor q5= 60.000deg l_vis_mm=-39.746 fp_max_depth_mm=None wall_max_depth_mm=-45.7413103554008 rim_min_r_mm=None
+[g0b_t3r_gate0] moving_anchor q5= 45.000deg l_vis_mm=-25.302 fp_max_depth_mm=None wall_max_depth_mm=-36.36492129765344 rim_min_r_mm=None
+[g0b_t3r_gate0] moving_anchor q5= 24.000deg l_vis_mm=0.324 fp_max_depth_mm=-17.55541361916435 wall_max_depth_mm=-3.853742113339012 rim_min_r_mm=None
+[g0b_t3r_gate0] moving_anchor q5=  5.000deg l_vis_mm=3.956 fp_max_depth_mm=3.9558267017595905 wall_max_depth_mm=-5.136096687138714 rim_min_r_mm=None
+[g0b_t3r_gate0] moving_anchor q5=  0.000deg l_vis_mm=3.690 fp_max_depth_mm=3.6895913270861973 wall_max_depth_mm=-4.0377790188228655 rim_min_r_mm=None
+[g0b_t3r_gate0] cross_ref collision_assembly_max_depth_mm=4.458 collision_rim_band_empty=14/14 visual_minus_collision fixed=-0.000mm moving=-0.502mm
+[g0b_t3r_gate0] G0B_T3R_GATE0_VERDICT=GATE0_SOURCE_ABSENT authority_json=t3r_gate0_vismesh_results.json (early print — final verdict line repeats after the observability layer)
+[g0b_t3r_gate0] rerun_validation pass=True errors=[]
+[g0b_t3r_gate0] artifacts rrd=t3r_gate0_vismesh_timeline.rrd sha=29a0c9018f0c0b6c results=t3r_gate0_vismesh_results.json bands_csv=t3r_gate0_vismesh_bands.csv
+[g0b_t3r_gate0] G0B_T3R_GATE0_VERDICT=GATE0_SOURCE_ABSENT

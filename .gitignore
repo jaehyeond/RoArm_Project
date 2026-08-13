@@ -54,6 +54,10 @@ claudedocs/runtime_logs/**/training_smoke_preflight_*
 claudedocs/runtime_logs/**/ppo_data_prior_*_logs/**/events.out.tfevents.*
 claudedocs/runtime_logs/**/ppo_data_prior_*_logs/**/model_*.pt
 
+# ---- g0b oversized raw evidence (208.9MB > GitHub 100MB hard limit) ----
+# filtered t3s_side_sdg2_candidates.json stays tracked; raw stays on disk only
+claudedocs/runtime_logs/grasp_track/g0b_d420/t3s_side_sdg2_raw_candidates.json
+
 # ---- Sim artifacts (regenerable from sim_scripts/) ----
 sim_demos_v*/
 sim_renders_v*/
@@ -152,3 +156,13 @@ docs/
 
 # ---- SSH NUL leftover (Windows->Linux config 잔재 방지) ----
 NUL
+
+# ---- g0b_d420 evidence whitelist (57th: single-copy traces/D341 artifacts -> push = offsite backup) ----
+!claudedocs/runtime_logs/grasp_track/g0b_d420/*.npz
+!claudedocs/runtime_logs/grasp_track/g0b_d420/*.png
+!claudedocs/runtime_logs/grasp_track/g0b_d420/*.mp4
+!claudedocs/runtime_logs/grasp_track/g0b_d420/*.log
+!claudedocs/runtime_logs/grasp_track/g0b_d420/*.csv
+
+# ---- frozen attempt3 5-layer USD asset (pinned authority of all g0b physics runs) ----
+!claudedocs/runtime_logs/grasp_track/g0a_d344/collision_asset/**

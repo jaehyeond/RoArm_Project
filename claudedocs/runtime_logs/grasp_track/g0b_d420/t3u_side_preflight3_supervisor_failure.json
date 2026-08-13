@@ -1,0 +1,18 @@
+{
+  "active_child_after_finally": {},
+  "argv": [
+    "sim_scripts/p16_g0b_t3u_detached_physics_render_supervisor_v6.py",
+    "--profile",
+    "side_preflight3",
+    "--candidates_sha256",
+    "67eb07d68268be25c894c47fb6bee79347e2b201dea643c4823a0873bfcde384"
+  ],
+  "artifact": "T3U_DETACHED_SUPERVISOR_FAILURE_V1",
+  "cleanup_actions": [],
+  "last_child_outcome": null,
+  "message": "2",
+  "supervisor_signal": null,
+  "time_unix": 1786507847.538827,
+  "traceback": "Traceback (most recent call last):\n  File \"/home/cgxr/miniconda3/lib/python3.13/argparse.py\", line 1937, in _parse_known_args2\n    namespace, args = self._parse_known_args(args, namespace, intermixed)\n                      ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/cgxr/miniconda3/lib/python3.13/argparse.py\", line 2188, in _parse_known_args\n    start_index = consume_optional(start_index)\n  File \"/home/cgxr/miniconda3/lib/python3.13/argparse.py\", line 2112, in consume_optional\n    take_action(action, args, option_string)\n    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/cgxr/miniconda3/lib/python3.13/argparse.py\", line 1998, in take_action\n    argument_values = self._get_values(action, argument_strings)\n  File \"/home/cgxr/miniconda3/lib/python3.13/argparse.py\", line 2519, in _get_values\n    self._check_value(action, value)\n    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^\n  File \"/home/cgxr/miniconda3/lib/python3.13/argparse.py\", line 2578, in _check_value\n    raise ArgumentError(action, msg % args)\nargparse.ArgumentError: argument --profile: invalid choice: 'side_preflight3' (choose from side_preflight4, side_phys1)\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/p16_g0b_t3u_detached_physics_render_supervisor_v6.py\", line 1534, in <module>\n    _exit_code = main()\n  File \"/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/p16_g0b_t3u_detached_physics_render_supervisor_v6.py\", line 1317, in main\n    args = build_argparser().parse_args()\n  File \"/home/cgxr/miniconda3/lib/python3.13/argparse.py\", line 1898, in parse_args\n    args, argv = self.parse_known_args(args, namespace)\n                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/home/cgxr/miniconda3/lib/python3.13/argparse.py\", line 1908, in parse_known_args\n    return self._parse_known_args2(args, namespace, intermixed=False)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/cgxr/miniconda3/lib/python3.13/argparse.py\", line 1939, in _parse_known_args2\n    self.error(str(err))\n    ~~~~~~~~~~^^^^^^^^^^\n  File \"/home/cgxr/miniconda3/lib/python3.13/argparse.py\", line 2658, in error\n    self.exit(2, _('%(prog)s: error: %(message)s\\n') % args)\n    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/cgxr/miniconda3/lib/python3.13/argparse.py\", line 2645, in exit\n    _sys.exit(status)\n    ~~~~~~~~~^^^^^^^^\nSystemExit: 2\n",
+  "type": "SystemExit"
+}

@@ -1,0 +1,16 @@
+[g0b_t3d_perstep] G1 l_vis=4.457620117188 n_pts=2266503 pass=True
+[g0b_t3d_perstep] G2 l_col=4.457623 d=+3.3379e-06 pass=True | G3 parts={'link5': 64, 'gripper_link': 64} legacy_disabled=True pass=True
+[g0b_t3d_perstep] G4 fk max_dev=1.839e-12 pass=True
+[g0b_t3d_perstep] G5 fixed_cmd            world=+0.000003 frozen=+0.000003 d=2.06e-15 vs44th=+0.0000 d=2.81e-06
+[g0b_t3d_perstep] G5 fixed_act            world=+1.564111 frozen=+1.564111 d=1.11e-15 vs44th=+1.5639 d=2.11e-04
+[g0b_t3d_perstep] G5 moving_act_q5_19.50  world=-0.405774 frozen=-0.405774 d=0.00e+00 vs44th=-0.4059 d=1.26e-04
+[g0b_t3d_perstep] leg 1: 116 steps [386..501] fixed min -0.0348 max +7.4863 | moving min +4.8250 | 22s
+[g0b_t3d_perstep] leg 2: 131 steps [386..516] fixed min -0.0347 max +7.6351 | moving min -0.0677 | 30s
+[g0b_t3d_perstep] leg 3: 149 steps [386..534] fixed min -0.0347 max +7.4668 | moving min -0.3805 | 34s
+[g0b_t3d_perstep] P-a leg3 fixed/enter predicted=388->389 observed_MA=(391, 392) observed_MB=(388, 389) => WEAK_PASS
+[g0b_t3d_perstep] P-b leg1 fixed/exit predicted=490->491 observed_MA=(489, 490) observed_MB=(489, 490) => WEAK_PASS
+[g0b_t3d_perstep] P-c leg3 moving/enter predicted=500->501 observed_MA=(500, 501) observed_MB=(500, 501) => STRICT_PASS
+[g0b_t3d_perstep] rerun_validation pass=True errors=[]
+[g0b_t3d_perstep] artifacts t3d_perstep_curves.csv=cf0aef5b84c22fcd t3d_perstep_timeline.rrd=e53cfb1d8c1b756f t3d_perstep_timeline.rbl=86dd9620f67c7ad6 t3d_perstep_rerun_validation.json=6b421e497150934e t3d_perstep_inspection.png=e70bf4a55ba7c270 t3d_perstep_diagnostic.png=fa169711b5ce5c63 t3d_perstep_script.py.txt=707f54372985e585
+[g0b_t3d_perstep] results.json=7d9d05ba95eb8855 bytes=12802
+[g0b_t3d_perstep] G0B_T3D_PERSTEP_VERDICT=PERSTEP_CLEARANCE_PARTIALLY_CONFIRMS_ATTRIBUTION

@@ -1,0 +1,47 @@
+[g0b_t3_jaw_audit] env python=3.11.14 numpy=1.26.0 scipy=1.15.3 rerun_sdk=0.34.1 sample_spacing_mm=0.50
+[g0b_t3_jaw_audit] readonly_declaration=UsdStageOpen_only no_save_no_export (diagnosis, not re-decomposition; D415-3 untouched)
+[g0b_t3_jaw_audit] G1_sha_pin pass=True root=a4be58e87b1f9790 physics=043a5d35aa425c25
+[g0b_t3_jaw_audit] G2_structure body=link5 parts=64/64 legacy_disabled_exact_one=True approx_bad=0 hull_fallback=0 samples=736206 pass=True
+[g0b_t3_jaw_audit] G2_structure body=gripper_link parts=64/64 legacy_disabled_exact_one=True approx_bad=0 hull_fallback=0 samples=153197 pass=True
+[g0b_t3_jaw_audit] G3_joint_frame pass=True axis=Z limits=[0.000,90.012]deg authored_theta0_residual=1.23e-07 sign_basis=usd_limits_0_to_90_with_authored_closed
+[g0b_t3_jaw_audit] G4_fk_split pass=True residual_m=0.000e+00
+[g0b_t3_jaw_audit] G5_env_tcp pass=True env_value=[0.0, 0.0, 0.115428]
+[g0b_t3_jaw_audit] input a1 tag=t3_grasp verdict=APPROACH_FAIL q5_pose=88.31deg tcp_meas=(+0.213817,-0.195358,+0.054398) source=t3_grasp_steps.csv:descend:last(n=89)
+[g0b_t3_jaw_audit] input a4 tag=t3_grasp4 verdict=APPROACH_FAIL q5_pose=45.00deg tcp_meas=(+0.214000,-0.195175,+0.054394) source=t3_grasp4_steps.csv:descend:last(n=89)
+[g0b_t3_jaw_audit] input a2 tag=t3_grasp2 verdict=LIFT_FAIL q5_pose=45.53deg tcp_meas=(+0.213663,-0.195541,+0.054680) source=t3_grasp2_steps.csv:close:mean(n=114)
+[g0b_t3_jaw_audit] floor a1 q5=88.31deg floor_z=+0.049953 cyl_top=+0.050000 clearance_mm=-0.047 d_floor_mm=4.445 gate(|c|<= 1.0)=True
+[g0b_t3_jaw_audit] floor_part a1 body=link5 part=part_029 min_z=+0.049953 r_mm=11.77
+[g0b_t3_jaw_audit] floor_part a1 body=link5 part=part_030 min_z=+0.049953 r_mm=11.77
+[g0b_t3_jaw_audit] floor a4 q5=45.00deg floor_z=+0.049952 cyl_top=+0.050000 clearance_mm=-0.048 d_floor_mm=4.442 gate(|c|<= 1.0)=True
+[g0b_t3_jaw_audit] floor_part a4 body=link5 part=part_029 min_z=+0.049952 r_mm=12.03
+[g0b_t3_jaw_audit] floor_part a4 body=link5 part=part_030 min_z=+0.049952 r_mm=12.03
+[g0b_t3_jaw_audit] angle_invariance |d_floor(a1)-d_floor(a4)|=0.003mm gate(<= 0.5)=True
+[g0b_t3_jaw_audit] sweep q5= 88.310deg contact=False min_horiz_clearance_mm=None vertical_gap_mm=+0.233 min_struct_z=+0.050232
+[g0b_t3_jaw_audit] sweep q5= 60.000deg contact=False min_horiz_clearance_mm=None vertical_gap_mm=+0.233 min_struct_z=+0.050232
+[g0b_t3_jaw_audit] sweep q5= 45.000deg contact=False min_horiz_clearance_mm=None vertical_gap_mm=+0.233 min_struct_z=+0.050232
+[g0b_t3_jaw_audit] sweep q5= 41.400deg contact=False min_horiz_clearance_mm=None vertical_gap_mm=+0.233 min_struct_z=+0.050232
+[g0b_t3_jaw_audit] sweep q5= 39.000deg contact=False min_horiz_clearance_mm=None vertical_gap_mm=+0.233 min_struct_z=+0.050232
+[g0b_t3_jaw_audit] sweep q5= 37.000deg contact=False min_horiz_clearance_mm=None vertical_gap_mm=+0.233 min_struct_z=+0.050232
+[g0b_t3_jaw_audit] sweep q5= 35.000deg contact=False min_horiz_clearance_mm=None vertical_gap_mm=+0.233 min_struct_z=+0.050232
+[g0b_t3_jaw_audit] sweep q5= 33.000deg contact=False min_horiz_clearance_mm=None vertical_gap_mm=+0.233 min_struct_z=+0.050232
+[g0b_t3_jaw_audit] sweep q5= 31.650deg contact=False min_horiz_clearance_mm=None vertical_gap_mm=+0.233 min_struct_z=+0.050232
+[g0b_t3_jaw_audit] sweep q5= 28.000deg contact=False min_horiz_clearance_mm=None vertical_gap_mm=+0.233 min_struct_z=+0.050232
+[g0b_t3_jaw_audit] sweep q5= 24.000deg contact=False min_horiz_clearance_mm=None vertical_gap_mm=+0.233 min_struct_z=+0.050232
+[g0b_t3_jaw_audit] CB_no_contact_across_band pass=True
+[g0b_t3_jaw_audit] profile q5= 88.310deg max_depth_in_footprint_mm=4.458 assembly_max_depth_mm=4.458 min_r_mm_in_rim_band(5-15mm)=None
+[g0b_t3_jaw_audit] profile q5= 60.000deg max_depth_in_footprint_mm=4.458 assembly_max_depth_mm=4.458 min_r_mm_in_rim_band(5-15mm)=None
+[g0b_t3_jaw_audit] profile q5= 45.000deg max_depth_in_footprint_mm=4.458 assembly_max_depth_mm=4.458 min_r_mm_in_rim_band(5-15mm)=None
+[g0b_t3_jaw_audit] profile q5= 41.400deg max_depth_in_footprint_mm=4.458 assembly_max_depth_mm=4.458 min_r_mm_in_rim_band(5-15mm)=None
+[g0b_t3_jaw_audit] profile q5= 39.000deg max_depth_in_footprint_mm=4.458 assembly_max_depth_mm=4.458 min_r_mm_in_rim_band(5-15mm)=None
+[g0b_t3_jaw_audit] profile q5= 37.000deg max_depth_in_footprint_mm=4.458 assembly_max_depth_mm=4.458 min_r_mm_in_rim_band(5-15mm)=None
+[g0b_t3_jaw_audit] profile q5= 35.000deg max_depth_in_footprint_mm=4.458 assembly_max_depth_mm=4.458 min_r_mm_in_rim_band(5-15mm)=None
+[g0b_t3_jaw_audit] profile q5= 33.000deg max_depth_in_footprint_mm=4.458 assembly_max_depth_mm=4.458 min_r_mm_in_rim_band(5-15mm)=None
+[g0b_t3_jaw_audit] profile q5= 31.650deg max_depth_in_footprint_mm=4.458 assembly_max_depth_mm=4.458 min_r_mm_in_rim_band(5-15mm)=None
+[g0b_t3_jaw_audit] profile q5= 28.000deg max_depth_in_footprint_mm=4.458 assembly_max_depth_mm=4.458 min_r_mm_in_rim_band(5-15mm)=None
+[g0b_t3_jaw_audit] profile q5= 24.000deg max_depth_in_footprint_mm=4.458 assembly_max_depth_mm=4.458 min_r_mm_in_rim_band(5-15mm)=None
+[g0b_t3_jaw_audit] profile q5= 16.000deg max_depth_in_footprint_mm=4.458 assembly_max_depth_mm=4.458 min_r_mm_in_rim_band(5-15mm)=None
+[g0b_t3_jaw_audit] profile q5=  8.000deg max_depth_in_footprint_mm=4.458 assembly_max_depth_mm=4.458 min_r_mm_in_rim_band(5-15mm)=None
+[g0b_t3_jaw_audit] profile q5=  0.000deg max_depth_in_footprint_mm=4.458 assembly_max_depth_mm=4.458 min_r_mm_in_rim_band(5-15mm)=None
+[g0b_t3_jaw_audit] rerun_validation pass=True errors=[]
+[g0b_t3_jaw_audit] artifacts rrd=t3_jaw_audit3_timeline.rrd sha=3e0b834440cae8a5 results=t3_jaw_audit3_results.json parts_csv=t3_jaw_audit3_parts.csv
+[g0b_t3_jaw_audit] G0B_T3_JAW_AUDIT_VERDICT=JAW_AUDIT_CONSISTENT

@@ -1,0 +1,33 @@
+{
+  "artifact": "T3Y_MANUAL_VISUAL_INSPECTION_V1",
+  "tag": "t3y_workspace_preflight2",
+  "inspected_at": "2026-08-11T19:33:14+09:00",
+  "inspector": "Codex root agent",
+  "scope": "INSTRUMENTATION_PREFLIGHT_ONLY",
+  "scientific_authoritative": false,
+  "inspection_png": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3y_workspace_preflight2_inspection.png",
+    "sha256": "8ba6b706153fe398057f2eb431dd64506a8516024e3416e76ced3fa4290a961e",
+    "physical_dimensions_px": [4800, 2800],
+    "logical_window_px": [2400, 1400]
+  },
+  "decision_snapshot_png": {
+    "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3y_workspace_preflight2_decision_snapshot.png",
+    "sha256": "baf31fa96c83489830197e1f189c620ea4f835f79b384b0e8d849c968ff95d0b",
+    "dimensions_px": [1960, 1400]
+  },
+  "observations": [
+    "The Rerun board is non-empty and explicitly labels the scope as INSTRUMENTATION_PREFLIGHT_ONLY with scientific_authoritative=false.",
+    "At the captured 0.921667 s replay time, the D29 x H50 cylinders, support plane, target/actual TCP markers, tool axes, and distinct fixed/moving jaw collision surface clouds are visible.",
+    "The force, jaw-support-force, raw-count, object-height/tilt, and q5 curves are populated, and phase transition events are visible.",
+    "The separate decision snapshot shows five representative final target-vs-actual frames distributed across the sampled workspace.",
+    "Some labels overlap because five representative replays share one board, but no required subject is blank, corrupted, or missing; the overlap is a presentation caveat, not an instrumentation failure."
+  ],
+  "visual_contract_pass": true,
+  "verdict": "INSTRUMENTATION_PREFLIGHT_VISUAL_PASS_CANONICAL_TECHNICAL_GO",
+  "claims_not_made": [
+    "No workspace grasp-feasibility claim is made from the shortened preflight population.",
+    "No force-closure, hardware-grasp, or side-grasp claim is made.",
+    "The visual copies do not replace the NPZ/JSON numerical authority."
+  ]
+}

@@ -1,0 +1,243 @@
+{
+  "argv": [
+    "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/p16_g0b_t3u_cyld29h50_side_midpoint_parallel_physics.py",
+    "--terminal_attest",
+    "side_preflight2"
+  ],
+  "artifact": "T3U_EXTERNAL_TERMINAL_ABORT_ATTESTATION_V2",
+  "attestation_valid": true,
+  "bindings": {
+    "argv": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_argv.txt",
+      "sha256": "450841fe0bad6e435febfd72825edc502125d4d73076dc25217963ea590dfa1a"
+    },
+    "exit_status": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_exit_status.txt",
+      "sha256": "a5e45837a2959db847f7e67a915d0ecaddd47f943af2af5fa6453be497faabca"
+    },
+    "failure": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_failure.json",
+      "sha256": "f17e0c3a3f48c9a52ffea572b52957164b8e0adb54af1d2c9cbfe766ce88c4a3"
+    },
+    "gpu_after": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_nvidia_smi_after.csv",
+      "sha256": "4861bdfb03fa4e34a2d4dc6fa065e73e9a77e4f3d9535f9d54e86f8ddd8ff3a0"
+    },
+    "gpu_before": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_nvidia_smi_before.csv",
+      "sha256": "4861bdfb03fa4e34a2d4dc6fa065e73e9a77e4f3d9535f9d54e86f8ddd8ff3a0"
+    },
+    "gpu_supervisor_end": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_nvidia_smi_supervisor_end.csv",
+      "sha256": "4861bdfb03fa4e34a2d4dc6fa065e73e9a77e4f3d9535f9d54e86f8ddd8ff3a0"
+    },
+    "pgid": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_pgid.txt",
+      "sha256": "7f0442955a60ffe9f1b62cfa1ea1ab46a2b2810e768baf528f3ad7449111abc8"
+    },
+    "phase": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_phase.jsonl",
+      "sha256": "010ae83487eb2cac6fc496ed9070cbe90242a3a8dd6f5079e90c93eb18e20ccb"
+    },
+    "physics_python_pid": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_physics_python_pid.txt",
+      "sha256": "8e843234617846db63561695f3f78065274168426951fe72d1b4c0e6befaccd9"
+    },
+    "script": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_script.py.txt",
+      "sha256": "5c6132b68651549b2c54c9216a09ecfb4210e9b74ee1c3ba9ddf96f667dcf789"
+    },
+    "stdout": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_stdout.log",
+      "sha256": "82ee85d9d85a8145f643b06ba4603ae29814fefca0d265839866bd008d65990d"
+    },
+    "supervisor_contract": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_supervisor_contract.json",
+      "sha256": "8be8f473351936a81c40f01ab705bab5d7a08af5b72c7bd4f73d5748b065dc56"
+    },
+    "supervisor_launcher": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_supervisor_launcher.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "supervisor_outcome": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_supervisor_outcome.json",
+      "sha256": "443dd6a18ef7a0074a0ca04c64a3a6bcf55711991f403d4dea4ef9e733b56210"
+    },
+    "supervisor_pid": {
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_supervisor_pid.txt",
+      "sha256": "7f0442955a60ffe9f1b62cfa1ea1ab46a2b2810e768baf528f3ad7449111abc8"
+    }
+  },
+  "dependency_pins": {
+    "p16_source_sha256": "5c6132b68651549b2c54c9216a09ecfb4210e9b74ee1c3ba9ddf96f667dcf789",
+    "preflight1_failure_sha256": "ebbb6a6109a587d1547bdba02e0d1ed28eb2af16bbaf15239ee7275009e6179f",
+    "selected_prereg_sha256": "e02b927edc493f4912ad9dbc5c9bd5713e4181c4e6512f0d61e50c62328bf329",
+    "supervisor_source_sha256": "527b06e5b9a090f4207c5f9ac5feb539c4b26f4c23f48ac59e4d802a153fa365"
+  },
+  "evidence_checks": {
+    "frozen_source_and_argv_bound": true,
+    "gpu_no_fresh_process": true,
+    "no_supervisor_failure_marker": true,
+    "outcome_file_bindings_exact": true,
+    "phase_is_aborted_before_preclose": true,
+    "physics_child_raw_lifecycle_valid": true,
+    "render_not_started_after_semantic_failure": true,
+    "reserved_combined_exit_bound": true,
+    "semantic_gate_recomputed_failed_exact": true,
+    "supervisor_and_child_reaped": true,
+    "supervisor_identity_and_timestamps_exact": true,
+    "supervisor_schema_identity_and_contract_exact": true,
+    "upstream_failure_marker_bound": true
+  },
+  "gpu": {
+    "after_pids": [
+      1154683,
+      1278769
+    ],
+    "before_pids": [
+      1154683,
+      1278769
+    ],
+    "supervisor_end_pids": [
+      1154683,
+      1278769
+    ]
+  },
+  "pass": false,
+  "physics_artifact_gate": {
+    "artifact": "T3U_PHYSICS_PRECLOSE_SEMANTIC_GATE_V1",
+    "failure_marker": {
+      "exists": true,
+      "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_failure.json",
+      "sha256": "f17e0c3a3f48c9a52ffea572b52957164b8e0adb54af1d2c9cbfe766ce88c4a3"
+    },
+    "missing_or_empty": [
+      "results.json",
+      "plan.json",
+      "trace.npz",
+      "timeline.rrd",
+      "timeline.rbl",
+      "rerun_validation.json",
+      "decision_snapshot.png",
+      "inspection.png",
+      "preclose_sentinel.json"
+    ],
+    "parse_error": null,
+    "parsed_bindings": {},
+    "pass": false,
+    "profile": "side_preflight2",
+    "raw_child_success": true,
+    "required_files": {
+      "argv.txt": {
+        "exists": true,
+        "nonempty": true,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_argv.txt",
+        "sha256": "450841fe0bad6e435febfd72825edc502125d4d73076dc25217963ea590dfa1a",
+        "size_bytes": 225
+      },
+      "decision_snapshot.png": {
+        "exists": false,
+        "nonempty": false,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_decision_snapshot.png",
+        "sha256": null,
+        "size_bytes": null
+      },
+      "inspection.png": {
+        "exists": false,
+        "nonempty": false,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_inspection.png",
+        "sha256": null,
+        "size_bytes": null
+      },
+      "phase.jsonl": {
+        "exists": true,
+        "nonempty": true,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_phase.jsonl",
+        "sha256": "010ae83487eb2cac6fc496ed9070cbe90242a3a8dd6f5079e90c93eb18e20ccb",
+        "size_bytes": 1011
+      },
+      "plan.json": {
+        "exists": false,
+        "nonempty": false,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_plan.json",
+        "sha256": null,
+        "size_bytes": null
+      },
+      "preclose_sentinel.json": {
+        "exists": false,
+        "nonempty": false,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_preclose_sentinel.json",
+        "sha256": null,
+        "size_bytes": null
+      },
+      "rerun_validation.json": {
+        "exists": false,
+        "nonempty": false,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_rerun_validation.json",
+        "sha256": null,
+        "size_bytes": null
+      },
+      "results.json": {
+        "exists": false,
+        "nonempty": false,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_results.json",
+        "sha256": null,
+        "size_bytes": null
+      },
+      "script.py.txt": {
+        "exists": true,
+        "nonempty": true,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_script.py.txt",
+        "sha256": "5c6132b68651549b2c54c9216a09ecfb4210e9b74ee1c3ba9ddf96f667dcf789",
+        "size_bytes": 381751
+      },
+      "timeline.rbl": {
+        "exists": false,
+        "nonempty": false,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_timeline.rbl",
+        "sha256": null,
+        "size_bytes": null
+      },
+      "timeline.rrd": {
+        "exists": false,
+        "nonempty": false,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_timeline.rrd",
+        "sha256": null,
+        "size_bytes": null
+      },
+      "trace.npz": {
+        "exists": false,
+        "nonempty": false,
+        "path": "claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_preflight2_trace.npz",
+        "sha256": null,
+        "size_bytes": null
+      }
+    },
+    "required_phase_sequence": [
+      "run_claim",
+      "results_durable",
+      "preclose_sentinel_durable",
+      "simulation_app_close_start"
+    ],
+    "semantic_checks": {
+      "all_required_preclose_files_nonempty": false,
+      "failure_marker_absent": false,
+      "preclose_documents_parse_without_error": false
+    }
+  },
+  "physics_step_count_authority": "absent_on_aborted_run__no_step_count_claim",
+  "physics_steps_claimed": null,
+  "processes": {
+    "pgid": 1802072,
+    "physics_pid": 1802082,
+    "render_pid": null,
+    "supervisor_pid": 1802072
+  },
+  "profile": "side_preflight2",
+  "promotion_allowed": false,
+  "scientific_artifacts_complete": false,
+  "supervisor_combined_exit_status": 125,
+  "upstream_failure_message": "SELF_COLLISION_READBACK_FAIL [{'path': '/World/envs/env_0/Robot', 'value': None}, {'path': '/World/envs/env_1/Robot', 'value': None}, {'path': '/World/envs/env_2/Robot', 'value': None}, {'path': '/World/envs/env_3/Robot', 'value': None}, {'path': '/World/envs/env_4/Robot', 'value': None}, {'path': '/World/envs/env_5/Robot', 'value': None}, {'path': '/World/envs/env_6/Robot', 'value': None}, {'path': '/World/envs/env_7/Robot', 'value': None}]",
+  "upstream_failure_type": "RuntimeError",
+  "verdict": "ATTESTED_UPSTREAM_ABORT_BEFORE_SCIENCE__NO_PROMOTION"
+}

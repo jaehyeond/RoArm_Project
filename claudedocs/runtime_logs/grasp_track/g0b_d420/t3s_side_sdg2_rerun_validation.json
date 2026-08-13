@@ -1,0 +1,670 @@
+{
+  "artifact": "ROARM_RERUN_ARTIFACT_VALIDATION_V1",
+  "blueprint_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3s_side_sdg2_timeline.rbl",
+  "blueprint_verify": {
+    "attempted": true,
+    "bytes": 47282,
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "verify",
+      "--check-footers",
+      "true",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3s_side_sdg2_timeline.rbl"
+    ],
+    "ok": true,
+    "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3s_side_sdg2_timeline.rbl",
+    "returncode": 0,
+    "sha256": "0a5bfbc72959fe0cfea84ab65615e224a139367157812a2a7a01638742862127",
+    "stderr": "1 file verified without error.\n",
+    "stdout": ""
+  },
+  "bytes": 169644,
+  "component_contract": {
+    "checks": {
+      "/events/filter": {
+        "observed": [
+          "TextLog:level",
+          "TextLog:text"
+        ],
+        "pass": true,
+        "required": [
+          "TextLog:level",
+          "TextLog:text"
+        ]
+      },
+      "/events/verdict": {
+        "observed": [
+          "TextLog:level",
+          "TextLog:text"
+        ],
+        "pass": true,
+        "required": [
+          "TextLog:level",
+          "TextLog:text"
+        ]
+      },
+      "/metadata/run": {
+        "observed": [
+          "TextDocument:media_type",
+          "TextDocument:text"
+        ],
+        "pass": true,
+        "required": [
+          "TextDocument:text"
+        ]
+      },
+      "/plots/approach_radial_error_deg": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/plots/closure_tangent_error_deg": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/plots/filter_pass": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/plots/midheight_error_mm": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/world/accepted/closure_axes": {
+        "observed": [
+          "Arrows3D:colors",
+          "Arrows3D:origins",
+          "Arrows3D:radii",
+          "Arrows3D:vectors"
+        ],
+        "pass": true,
+        "required": [
+          "Arrows3D:origins",
+          "Arrows3D:vectors"
+        ]
+      },
+      "/world/accepted/midpoints": {
+        "observed": [
+          "Points3D:colors",
+          "Points3D:labels",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true,
+        "required": [
+          "Points3D:positions"
+        ]
+      },
+      "/world/accepted/pregrasp": {
+        "observed": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true,
+        "required": [
+          "Points3D:positions"
+        ]
+      },
+      "/world/accepted/side_surface": {
+        "observed": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true,
+        "required": [
+          "Points3D:positions"
+        ]
+      },
+      "/world/accepted/tcp_targets": {
+        "observed": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true,
+        "required": [
+          "Points3D:positions"
+        ]
+      },
+      "/world/accepted/tool_axes": {
+        "observed": [
+          "Arrows3D:colors",
+          "Arrows3D:origins",
+          "Arrows3D:radii",
+          "Arrows3D:vectors"
+        ],
+        "pass": true,
+        "required": [
+          "Arrows3D:origins",
+          "Arrows3D:vectors"
+        ]
+      },
+      "/world/accepted/up_axes": {
+        "observed": [
+          "Arrows3D:colors",
+          "Arrows3D:origins",
+          "Arrows3D:radii",
+          "Arrows3D:vectors"
+        ],
+        "pass": true,
+        "required": [
+          "Arrows3D:origins",
+          "Arrows3D:vectors"
+        ]
+      },
+      "/world/analytic_cylinder": {
+        "observed": [
+          "LineStrips3D:colors",
+          "LineStrips3D:radii",
+          "LineStrips3D:strips"
+        ],
+        "pass": true,
+        "required": [
+          "LineStrips3D:strips"
+        ]
+      },
+      "/world/desired/down": {
+        "observed": [
+          "Arrows3D:colors",
+          "Arrows3D:labels",
+          "Arrows3D:origins",
+          "Arrows3D:radii",
+          "Arrows3D:vectors"
+        ],
+        "pass": true,
+        "required": [
+          "Arrows3D:origins",
+          "Arrows3D:vectors"
+        ]
+      },
+      "/world/desired/radial": {
+        "observed": [
+          "Arrows3D:colors",
+          "Arrows3D:labels",
+          "Arrows3D:origins",
+          "Arrows3D:radii",
+          "Arrows3D:vectors"
+        ],
+        "pass": true,
+        "required": [
+          "Arrows3D:origins",
+          "Arrows3D:vectors"
+        ]
+      },
+      "/world/desired/tangent": {
+        "observed": [
+          "Arrows3D:colors",
+          "Arrows3D:labels",
+          "Arrows3D:origins",
+          "Arrows3D:radii",
+          "Arrows3D:vectors"
+        ],
+        "pass": true,
+        "required": [
+          "Arrows3D:origins",
+          "Arrows3D:vectors"
+        ]
+      },
+      "/world/desired/up": {
+        "observed": [
+          "Arrows3D:colors",
+          "Arrows3D:labels",
+          "Arrows3D:origins",
+          "Arrows3D:radii",
+          "Arrows3D:vectors"
+        ],
+        "pass": true,
+        "required": [
+          "Arrows3D:origins",
+          "Arrows3D:vectors"
+        ]
+      },
+      "/world/proxy_mesh": {
+        "observed": [
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true,
+        "required": [
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ]
+      },
+      "/world/raw/closure_axes": {
+        "observed": [
+          "Arrows3D:colors",
+          "Arrows3D:origins",
+          "Arrows3D:radii",
+          "Arrows3D:vectors"
+        ],
+        "pass": true,
+        "required": [
+          "Arrows3D:origins",
+          "Arrows3D:vectors"
+        ]
+      },
+      "/world/raw/gripper_origins": {
+        "observed": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true,
+        "required": [
+          "Points3D:positions"
+        ]
+      },
+      "/world/raw/tool_axes": {
+        "observed": [
+          "Arrows3D:colors",
+          "Arrows3D:origins",
+          "Arrows3D:radii",
+          "Arrows3D:vectors"
+        ],
+        "pass": true,
+        "required": [
+          "Arrows3D:origins",
+          "Arrows3D:vectors"
+        ]
+      },
+      "/world/raw/up_axes": {
+        "observed": [
+          "Arrows3D:colors",
+          "Arrows3D:origins",
+          "Arrows3D:radii",
+          "Arrows3D:vectors"
+        ],
+        "pass": true,
+        "required": [
+          "Arrows3D:origins",
+          "Arrows3D:vectors"
+        ]
+      },
+      "/world/support_plane": {
+        "observed": [
+          "LineStrips3D:colors",
+          "LineStrips3D:radii",
+          "LineStrips3D:strips"
+        ],
+        "pass": true,
+        "required": [
+          "LineStrips3D:strips"
+        ]
+      }
+    },
+    "pass": true
+  },
+  "entity_path_contract": {
+    "checks": {
+      "/events/filter": true,
+      "/events/verdict": true,
+      "/metadata/run": true,
+      "/plots/approach_radial_error_deg": true,
+      "/plots/closure_tangent_error_deg": true,
+      "/plots/filter_pass": true,
+      "/plots/midheight_error_mm": true,
+      "/world/accepted/closure_axes": true,
+      "/world/accepted/midpoints": true,
+      "/world/accepted/pregrasp": true,
+      "/world/accepted/side_surface": true,
+      "/world/accepted/tcp_targets": true,
+      "/world/accepted/tool_axes": true,
+      "/world/accepted/up_axes": true,
+      "/world/analytic_cylinder": true,
+      "/world/desired/down": true,
+      "/world/desired/radial": true,
+      "/world/desired/tangent": true,
+      "/world/desired/up": true,
+      "/world/proxy_mesh": true,
+      "/world/raw/closure_axes": true,
+      "/world/raw/gripper_origins": true,
+      "/world/raw/tool_axes": true,
+      "/world/raw/up_axes": true,
+      "/world/support_plane": true
+    },
+    "exact_non_system_match": true,
+    "forbidden_fragment_absent": {
+      "/\\/": true
+    },
+    "missing_exact": [],
+    "observed_all": [
+      "/__properties",
+      "/blueprint_panel",
+      "/container/403420c5-6022-4bd6-ae4e-b53377983152",
+      "/container/4fafec11-8e8c-4f4b-8734-962ac6539e92",
+      "/events/filter",
+      "/events/verdict",
+      "/metadata/run",
+      "/plots/approach_radial_error_deg",
+      "/plots/closure_tangent_error_deg",
+      "/plots/filter_pass",
+      "/plots/midheight_error_mm",
+      "/selection_panel",
+      "/time_panel",
+      "/view/1e947003-aa0b-4dd2-b878-b32c5a9b1f04",
+      "/view/1e947003-aa0b-4dd2-b878-b32c5a9b1f04/ViewContents",
+      "/view/3e1d561a-5eaf-471b-b72f-7f23a2f78242",
+      "/view/3e1d561a-5eaf-471b-b72f-7f23a2f78242/ViewContents",
+      "/view/c2bcdae0-3e42-4d0d-abdf-775848b4a915",
+      "/view/c2bcdae0-3e42-4d0d-abdf-775848b4a915/ViewContents",
+      "/view/e42bda0b-80c5-46b8-a592-a3de4c33cca5",
+      "/view/e42bda0b-80c5-46b8-a592-a3de4c33cca5/ViewContents",
+      "/viewport",
+      "/world/accepted/closure_axes",
+      "/world/accepted/midpoints",
+      "/world/accepted/pregrasp",
+      "/world/accepted/side_surface",
+      "/world/accepted/tcp_targets",
+      "/world/accepted/tool_axes",
+      "/world/accepted/up_axes",
+      "/world/analytic_cylinder",
+      "/world/desired/down",
+      "/world/desired/radial",
+      "/world/desired/tangent",
+      "/world/desired/up",
+      "/world/proxy_mesh",
+      "/world/raw/closure_axes",
+      "/world/raw/gripper_origins",
+      "/world/raw/tool_axes",
+      "/world/raw/up_axes",
+      "/world/support_plane"
+    ],
+    "observed_non_system": [
+      "/events/filter",
+      "/events/verdict",
+      "/metadata/run",
+      "/plots/approach_radial_error_deg",
+      "/plots/closure_tangent_error_deg",
+      "/plots/filter_pass",
+      "/plots/midheight_error_mm",
+      "/world/accepted/closure_axes",
+      "/world/accepted/midpoints",
+      "/world/accepted/pregrasp",
+      "/world/accepted/side_surface",
+      "/world/accepted/tcp_targets",
+      "/world/accepted/tool_axes",
+      "/world/accepted/up_axes",
+      "/world/analytic_cylinder",
+      "/world/desired/down",
+      "/world/desired/radial",
+      "/world/desired/tangent",
+      "/world/desired/up",
+      "/world/proxy_mesh",
+      "/world/raw/closure_axes",
+      "/world/raw/gripper_origins",
+      "/world/raw/tool_axes",
+      "/world/raw/up_axes",
+      "/world/support_plane"
+    ],
+    "pass": true,
+    "unexpected_non_system": []
+  },
+  "errors": [],
+  "exact_entity_paths": [
+    "/events/filter",
+    "/events/verdict",
+    "/metadata/run",
+    "/plots/approach_radial_error_deg",
+    "/plots/closure_tangent_error_deg",
+    "/plots/filter_pass",
+    "/plots/midheight_error_mm",
+    "/world/accepted/closure_axes",
+    "/world/accepted/midpoints",
+    "/world/accepted/pregrasp",
+    "/world/accepted/side_surface",
+    "/world/accepted/tcp_targets",
+    "/world/accepted/tool_axes",
+    "/world/accepted/up_axes",
+    "/world/analytic_cylinder",
+    "/world/desired/down",
+    "/world/desired/radial",
+    "/world/desired/tangent",
+    "/world/desired/up",
+    "/world/proxy_mesh",
+    "/world/raw/closure_axes",
+    "/world/raw/gripper_origins",
+    "/world/raw/tool_axes",
+    "/world/raw/up_axes",
+    "/world/support_plane"
+  ],
+  "exact_timeline_names": [
+    "blueprint",
+    "candidate_index",
+    "log_time"
+  ],
+  "expected_entity_components": {
+    "/events/filter": [
+      "TextLog:level",
+      "TextLog:text"
+    ],
+    "/events/verdict": [
+      "TextLog:level",
+      "TextLog:text"
+    ],
+    "/metadata/run": [
+      "TextDocument:text"
+    ],
+    "/plots/approach_radial_error_deg": [
+      "Scalars:scalars"
+    ],
+    "/plots/closure_tangent_error_deg": [
+      "Scalars:scalars"
+    ],
+    "/plots/filter_pass": [
+      "Scalars:scalars"
+    ],
+    "/plots/midheight_error_mm": [
+      "Scalars:scalars"
+    ],
+    "/world/accepted/closure_axes": [
+      "Arrows3D:origins",
+      "Arrows3D:vectors"
+    ],
+    "/world/accepted/midpoints": [
+      "Points3D:positions"
+    ],
+    "/world/accepted/pregrasp": [
+      "Points3D:positions"
+    ],
+    "/world/accepted/side_surface": [
+      "Points3D:positions"
+    ],
+    "/world/accepted/tcp_targets": [
+      "Points3D:positions"
+    ],
+    "/world/accepted/tool_axes": [
+      "Arrows3D:origins",
+      "Arrows3D:vectors"
+    ],
+    "/world/accepted/up_axes": [
+      "Arrows3D:origins",
+      "Arrows3D:vectors"
+    ],
+    "/world/analytic_cylinder": [
+      "LineStrips3D:strips"
+    ],
+    "/world/desired/down": [
+      "Arrows3D:origins",
+      "Arrows3D:vectors"
+    ],
+    "/world/desired/radial": [
+      "Arrows3D:origins",
+      "Arrows3D:vectors"
+    ],
+    "/world/desired/tangent": [
+      "Arrows3D:origins",
+      "Arrows3D:vectors"
+    ],
+    "/world/desired/up": [
+      "Arrows3D:origins",
+      "Arrows3D:vectors"
+    ],
+    "/world/proxy_mesh": [
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/world/raw/closure_axes": [
+      "Arrows3D:origins",
+      "Arrows3D:vectors"
+    ],
+    "/world/raw/gripper_origins": [
+      "Points3D:positions"
+    ],
+    "/world/raw/tool_axes": [
+      "Arrows3D:origins",
+      "Arrows3D:vectors"
+    ],
+    "/world/raw/up_axes": [
+      "Arrows3D:origins",
+      "Arrows3D:vectors"
+    ],
+    "/world/support_plane": [
+      "LineStrips3D:strips"
+    ]
+  },
+  "expected_entity_paths": [
+    "/metadata/run",
+    "/events/filter",
+    "/events/verdict",
+    "/world/support_plane",
+    "/world/analytic_cylinder",
+    "/world/proxy_mesh",
+    "/world/desired/radial",
+    "/world/desired/tangent",
+    "/world/desired/up",
+    "/world/desired/down",
+    "/world/raw/gripper_origins",
+    "/world/raw/tool_axes",
+    "/world/raw/closure_axes",
+    "/world/raw/up_axes",
+    "/world/accepted/midpoints",
+    "/world/accepted/side_surface",
+    "/world/accepted/pregrasp",
+    "/world/accepted/tcp_targets",
+    "/world/accepted/tool_axes",
+    "/world/accepted/closure_axes",
+    "/world/accepted/up_axes",
+    "/plots/filter_pass",
+    "/plots/midheight_error_mm",
+    "/plots/closure_tangent_error_deg",
+    "/plots/approach_radial_error_deg"
+  ],
+  "expected_rerun_version": "0.34.1",
+  "expected_timeline_names": [],
+  "external_rbl_role": "verified fixed-layout export; the 0.34.1 CLI does not guarantee that an external RBL overrides an already-active embedded blueprint",
+  "footer_manifest_present": true,
+  "forbidden_entity_fragments": [
+    "/\\/"
+  ],
+  "headless_render": {
+    "attempted": true,
+    "bytes": 10143442,
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "--headless",
+      "--window-size",
+      "2400x1400",
+      "--screenshot-to",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3s_side_sdg2_inspection.png",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3s_side_sdg2_timeline.rrd"
+    ],
+    "file_nonzero": true,
+    "ok": true,
+    "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3s_side_sdg2_inspection.png",
+    "returncode": 0,
+    "sha256": "fb76856e17ba301ccd94e9388387af8b91eef6c004d91dd5df7c2462bb87cc8f",
+    "stderr": "2026-08-11T15:33:58.613425Z  INFO re_perf_telemetry::telemetry: Telemetry initialized enabled=false service=rerun trace_mode=\"off\" traces=off logs=off metrics=off tracy=false\n2026-08-11T15:33:58.824760Z  INFO re_grpc_server: Listening for gRPC connections on 0.0.0.0:9876. Connect by running `rerun --connect rerun+http://127.0.0.1:9876/proxy`\n2026-08-11T15:33:58.825099Z  INFO re_importer::import_file: Loading \"/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3s_side_sdg2_timeline.rrd\"\u2026\n2026-08-11T15:33:58.967062Z  INFO re_viewer::headless: Headless viewer running at 2400x1400.\n2026-08-11T15:33:59.261505Z  INFO re_viewer::screenshotter: Screenshot saved to \"/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3s_side_sdg2_inspection.png\"\n2026-08-11T15:33:59.279011Z  INFO re_viewer::screenshotter: Screenshot copied to clipboard\n2026-08-11T15:33:59.284536Z  INFO re_viewer::headless: Headless viewer received close request, shutting down.\n",
+    "stdout": ""
+  },
+  "human_visual_inspection_required": true,
+  "pass": true,
+  "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3s_side_sdg2_timeline.rrd",
+  "print_verbose": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "print",
+      "-v",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3s_side_sdg2_timeline.rrd"
+    ],
+    "ok": true,
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "Showing data after migration to latest Rerun version\nStoreInfo {\n    store_id: StoreId(\n        Recording,\n        \"roarm_g0b_t3s_side_sdg2\",\n        \"g0b_d420_t3s_side_sdg2\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nStoreInfo {\n    store_id: StoreId(\n        Recording,\n        \"roarm_g0b_t3s_side_sdg2\",\n        \"g0b_d420_t3s_side_sdg2\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nChunk(chunk_18CACA1F5F1D5D5C0bd65bb0f20decb4) with 1 rows (632 B) - /__properties - data columns: [/__properties@RecordingInfo:start_time]\nStoreInfo {\n    store_id: StoreId(\n        Blueprint,\n        \"roarm_g0b_t3s_side_sdg2\",\n        \"rec_7900f2543a5544a5bd7ec1a1edb69ec6\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nStoreInfo {\n    store_id: StoreId(\n        Blueprint,\n        \"roarm_g0b_t3s_side_sdg2\",\n        \"rec_7900f2543a5544a5bd7ec1a1edb69ec6\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nChunk(chunk_18CACA1F667B7B066f70012568fcab25) with 1 rows (922 B) - /view/e42bda0b-80c5-46b8-a592-a3de4c33cca5/ViewContents - data columns: [/view/e42bda0b-80c5-46b8-a592-a3de4c33cca5/ViewContents@ViewContents:query]\nChunk(chunk_18CACA1F667BF3E26f70012568fcab26) with 1 rows (923 B) - /view/3e1d561a-5eaf-471b-b72f-7f23a2f78242/ViewContents - data columns: [/view/3e1d561a-5eaf-471b-b72f-7f23a2f78242/ViewContents@ViewContents:query]\nChunk(chunk_18CACA1F667BFEF26f70012568fcab27) with 1 rows (924 B) - /view/c2bcdae0-3e42-4d0d-abdf-775848b4a915/ViewContents - data columns: [/view/c2bcdae0-3e42-4d0d-abdf-775848b4a915/ViewContents@ViewContents:query]\nChunk(chunk_18CACA1F667C08176f70012568fcab28) with 1 rows (1.2 KiB) - /view/e42bda0b-80c5-46b8-a592-a3de4c33cca5 - data columns: [/view/e42bda0b-80c5-46b8-a592-a3de4c33cca5@ViewBlueprint:class_identifier /view/e42bda0b-80c5-46b8-a592-a3de4c33cca5@ViewBlueprint:display_name /view/e42bda0b-80c5-46b8-a592-a3de4c33cca5@ViewBlueprint:space_origin]\nChunk(chunk_18CACA1F667C22C66f70012568fcab29) with 1 rows (922 B) - /view/1e947003-aa0b-4dd2-b878-b32c5a9b1f04/ViewContents - data columns: [/view/1e947003-aa0b-4dd2-b878-b32c5a9b1f04/ViewContents@ViewContents:query]\nChunk(chunk_18CACA1F667C3CF56f70012568fcab2a) with 1 rows (1.2 KiB) - /view/c2bcdae0-3e42-4d0d-abdf-775848b4a915 - data columns: [/view/c2bcdae0-3e42-4d0d-abdf-775848b4a915@ViewBlueprint:class_identifier /view/c2bcdae0-3e42-4d0d-abdf-775848b4a915@ViewBlueprint:display_name /view/c2bcdae0-3e42-4d0d-abdf-775848b4a915@ViewBlueprint:space_origin]\nChunk(chunk_18CACA1F667C50896f70012568fcab2b) with 1 rows (1.1 KiB) - /container/403420c5-6022-4bd6-ae4e-b53377983152 - data columns: [/container/403420c5-6022-4bd6-ae4e-b53377983152@ContainerBlueprint:container_kind /container/403420c5-6022-4bd6-ae4e-b53377983152@ContainerBlueprint:contents]\nChunk(chunk_18CACA1F667C5FAA6f70012568fcab2c) with 1 rows (1.2 KiB) - /viewport - data columns: [/viewport@ViewportBlueprint:auto_layout /viewport@ViewportBlueprint:auto_views /viewport@ViewportBlueprint:root_container]\nChunk(chunk_18CACA1F667C77CA6f70012568fcab2d) with 1 rows (883 B) - /blueprint_panel - data columns: [/blueprint_panel@PanelBlueprint:state]\nChunk(chunk_18CACA1F667C886B6f70012568fcab2e) with 1 rows (885 B) - /time_panel - data columns: [/time_panel@TimePanelBlueprint:state]\nChunk(chunk_18CACA1F667C98ED6f70012568fcab2f) with 1 rows (1.2 KiB) - /container/4fafec11-8e8c-4f4b-8734-962ac6539e92 - data columns: [/container/4fafec11-8e8c-4f4b-8734-962ac6539e92@ContainerBlueprint:col_shares /container/4fafec11-8e8c-4f4b-8734-962ac6539e92@ContainerBlueprint:container_kind /container/4fafec11-8e8c-4f4b-8734-962ac6539e92@ContainerBlueprint:contents]\nChunk(chunk_18CACA1F667CA5166f70012568fcab30) with 1 rows (883 B) - /selection_panel - data columns: [/selection_panel@PanelBlueprint:state]\nChunk(chunk_18CACA1F667CAD766f70012568fcab31) with 1 rows (1.2 KiB) - /view/1e947003-aa0b-4dd2-b878-b32c5a9b1f04 - data columns: [/view/1e947003-aa0b-4dd2-b878-b32c5a9b1f04@ViewBlueprint:class_identifier /view/1e947003-aa0b-4dd2-b878-b32c5a9b1f04@ViewBlueprint:display_name /view/1e947003-aa0b-4dd2-b878-b32c5a9b1f04@ViewBlueprint:space_origin]\nChunk(chunk_18CACA1F667CC2106f70012568fcab32) with 1 rows (1.2 KiB) - /view/3e1d561a-5eaf-471b-b72f-7f23a2f78242 - data columns: [/view/3e1d561a-5eaf-471b-b72f-7f23a2f78242@ViewBlueprint:class_identifier /view/3e1d561a-5eaf-471b-b72f-7f23a2f78242@ViewBlueprint:display_name /view/3e1d561a-5eaf-471b-b72f-7f23a2f78242@ViewBlueprint:space_origin]\nBlueprintActivationCommand(StoreId(Blueprint, \"roarm_g0b_t3s_side_sdg2\", \"rec_7900f2543a5544a5bd7ec1a1edb69ec6\"), make_active: true, make_default: true)\nChunk(chunk_18CACA1F6682779B4416cade01b65da8) with 1 rows (972 B) - /world/support_plane - data columns: [/world/support_plane@LineStrips3D:colors /world/support_plane@LineStrips3D:radii /world/support_plane@LineStrips3D:strips]\nChunk(chunk_18CACA1F6682FA4B4416cade01b65da9) with 1 rows (1.2 KiB) - /world/accepted/midpoints - data columns: [/world/accepted/midpoints@Points3D:colors /world/accepted/midpoints@Points3D:labels /world/accepted/midpoints@Points3D:positions /world/accepted/midpoints@Points3D:radii]\nChunk(chunk_18CACA1F668319A64416cade01b65daa) with 1 rows (1.2 KiB) - /world/desired/radial - data columns: [/world/desired/radial@Arrows3D:colors /world/desired/radial@Arrows3D:labels /world/desired/radial@Arrows3D:origins /world/desired/radial@Arrows3D:radii /world/desired/radial@Arrows3D:vectors]\nChunk(chunk_18CACA1F66832E4E4416cade01b65dab) with 1 rows (823 B) - /events/verdict - data columns: [/events/verdict@TextLog:level /events/verdict@TextLog:text]\nChunk(chunk_18CACA1F66833B054416cade01b65dac) with 1 rows (1.2 KiB) - /world/desired/down - data columns: [/world/desired/down@Arrows3D:colors /world/desired/down@Arrows3D:labels /world/desired/down@Arrows3D:origins /world/desired/down@Arrows3D:radii /world/desired/down@Arrows3D:vectors]\nChunk(chunk_18CACA1F668391384416cade01b65dad) with 1 rows (4.7 KiB) - /world/raw/closure_axes - data columns: [/world/raw/closure_axes@Arrows3D:colors /world/raw/closure_axes@Arrows3D:origins /world/raw/closure_axes@Arrows3D:radii /world/raw/closure_axes@Arrows3D:vectors]\nChunk(chunk_18CACA1F6683B6274416cade01b65dae) with 8 rows (1.0 KiB) - /plots/filter_pass - data columns: [/plots/filter_pass@Scalars:scalars]\nChunk(chunk_18CACA1F668486B14416cade01b65daf) with 1 rows (9.9 KiB) - /world/proxy_mesh - data columns: [/world/proxy_mesh@Mesh3D:albedo_factor /world/proxy_mesh@Mesh3D:triangle_indices /world/proxy_mesh@Mesh3D:vertex_positions]\nChunk(chunk_18CACA1F668497544416cade01b65db0) with 1 rows (3.0 KiB) - /world/raw/gripper_origins - data columns: [/world/raw/gripper_origins@Points3D:colors /world/raw/gripper_origins@Points3D:positions /world/raw/gripper_origins@Points3D:radii]\nChunk(chunk_18CACA1F6684AE734416cade01b65db1) with 1 rows (1.2 KiB) - /world/accepted/closure_axes - data columns: [/world/accepted/closure_axes@Arrows3D:colors /world/accepted/closure_axes@Arrows3D:origins /world/accepted/closure_axes@Arrows3D:radii /world/accepted/closure_axes@Arrows3D:vectors]\nChunk(chunk_18CACA1F6684C9B54416cade01b65db2) with 1 rows (1.2 KiB) - /world/desired/tangent - data columns: [/world/desired/tangent@Arrows3D:colors /world/desired/tangent@Arrows3D:labels /world/desired/tangent@Arrows3D:origins /world/desired/tangent@Arrows3D:radii /world/desired/tangent@Arrows3D:vectors]\nChunk(chunk_18CACA1F6684E37B4416cade01b65db3) with 8 rows (1.0 KiB) - /plots/closure_tangent_error_deg - data columns: [/plots/closure_tangent_error_deg@Scalars:scalars]\nChunk(chunk_18CACA1F668530EB4416cade01b65db4) with 1 rows (971 B) - /metadata/run - data columns: [/metadata/run@TextDocument:media_type /metadata/run@TextDocument:text]\nChunk(chunk_18CACA1F66853E114416cade01b65db5) with 1 rows (2.6 KiB) - /world/analytic_cylinder - data columns: [/world/analytic_cylinder@LineStrips3D:colors /world/analytic_cylinder@LineStrips3D:radii /world/analytic_cylinder@LineStrips3D:strips]\nChunk(chunk_18CACA1F668559BE4416cade01b65db6) with 1 rows (987 B) - /world/accepted/tcp_targets - data columns: [/world/accepted/tcp_targets@Points3D:colors /world/accepted/tcp_targets@Points3D:positions /world/accepted/tcp_targets@Points3D:radii]\nChunk(chunk_18CACA1F66856EF84416cade01b65db7) with 1 rows (4.7 KiB) - /world/raw/up_axes - data columns: [/world/raw/up_axes@Arrows3D:colors /world/raw/up_axes@Arrows3D:origins /world/raw/up_axes@Arrows3D:radii /world/raw/up_axes@Arrows3D:vectors]\nChunk(chunk_18CACA1F6685945E4416cade01b65db8) with 1 rows (1.2 KiB) - /world/accepted/up_axes - data columns: [/world/accepted/up_axes@Arrows3D:colors /world/accepted/up_axes@Arrows3D:origins /world/accepted/up_axes@Arrows3D:radii /world/accepted/up_axes@Arrows3D:vectors]\nChunk(chunk_18CACA1F6685B0514416cade01b65db9) with 8 rows (1.0 KiB) - /plots/approach_radial_error_deg - data columns: [/plots/approach_radial_error_deg@Scalars:scalars]\nChunk(chunk_18CACA1F6685E24B4416cade01b65dba) with 1 rows (864 B) - /events/filter - data columns: [/events/filter@TextLog:level /events/filter@TextLog:text]\nChunk(chunk_18CACA1F6685F7374416cade01b65dbb) with 1 rows (4.7 KiB) - /world/raw/tool_axes - data columns: [/world/raw/tool_axes@Arrows3D:colors /world/raw/tool_axes@Arrows3D:origins /world/raw/tool_axes@Arrows3D:radii /world/raw/tool_axes@Arrows3D:vectors]\nChunk(chunk_18CACA1F668606BB4416cade01b65dbc) with 1 rows (987 B) - /world/accepted/side_surface - data columns: [/world/accepted/side_surface@Points3D:colors /world/accepted/side_surface@Points3D:positions /world/accepted/side_surface@Points3D:radii]\nChunk(chunk_18CACA1F66861B714416cade01b65dbd) with 1 rows (1.2 KiB) - /world/desired/up - data columns: [/world/desired/up@Arrows3D:colors /world/desired/up@Arrows3D:labels /world/desired/up@Arrows3D:origins /world/desired/up@Arrows3D:radii /world/desired/up@Arrows3D:vectors]\nChunk(chunk_18CACA1F66862DE14416cade01b65dbe) with 1 rows (987 B) - /world/accepted/pregrasp - data columns: [/world/accepted/pregrasp@Points3D:colors /world/accepted/pregrasp@Points3D:positions /world/accepted/pregrasp@Points3D:radii]\nChunk(chunk_18CACA1F66864A524416cade01b65dbf) with 1 rows (1.2 KiB) - /world/accepted/tool_axes - data columns: [/world/accepted/tool_axes@Arrows3D:colors /world/accepted/tool_axes@Arrows3D:origins /world/accepted/tool_axes@Arrows3D:radii /world/accepted/tool_axes@Arrows3D:vectors]\nChunk(chunk_18CACA1F668660684416cade01b65dc0) with 8 rows (1.0 KiB) - /plots/midheight_error_mm - data columns: [/plots/midheight_error_mm@Scalars:scalars]\n"
+  },
+  "rendered_blueprint_source": "active blueprint embedded in the RRD",
+  "screenshot_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3s_side_sdg2_inspection.png",
+  "screenshot_port": null,
+  "screenshot_window_size": "2400x1400",
+  "sha256": "6525f0351024f6a589dbe713b728471b96f9a594356cb4e83e28ac516c80fb15",
+  "stats": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "stats",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3s_side_sdg2_timeline.rrd"
+    ],
+    "ok": true,
+    "returncode": 0,
+    "stderr": "2026-08-11T15:33:58.512258Z  INFO rerun::commands::rrd::stats: processing input\u2026\n2026-08-11T15:33:58.515092Z  INFO rerun::commands::rrd::stats: computing stats\u2026\n",
+    "stdout": "Overview\n----------\nnum_chunks = 40\nnum_entity_paths = 40\nnum_chunks_without_components = 0 (0.000%)\nnum_rows = 68\nnum_rows_min = 1\nnum_rows_max = 8\nnum_rows_avg = 1.700\nnum_static = 22\nnum_indexes_min = 0\nnum_indexes_max = 2\nnum_indexes_avg = 0.900\nnum_components_min = 1\nnum_components_max = 5\nnum_components_avg = 2.675\n\nNum chunks per entity\n---------------------\n/__properties: 1\n/blueprint_panel: 1\n/container/403420c5-6022-4bd6-ae4e-b53377983152: 1\n/container/4fafec11-8e8c-4f4b-8734-962ac6539e92: 1\n/events/filter: 1\n/events/verdict: 1\n/metadata/run: 1\n/plots/approach_radial_error_deg: 1\n/plots/closure_tangent_error_deg: 1\n/plots/filter_pass: 1\n/plots/midheight_error_mm: 1\n/selection_panel: 1\n/time_panel: 1\n/view/1e947003-aa0b-4dd2-b878-b32c5a9b1f04: 1\n/view/1e947003-aa0b-4dd2-b878-b32c5a9b1f04/ViewContents: 1\n/view/3e1d561a-5eaf-471b-b72f-7f23a2f78242: 1\n/view/3e1d561a-5eaf-471b-b72f-7f23a2f78242/ViewContents: 1\n/view/c2bcdae0-3e42-4d0d-abdf-775848b4a915: 1\n/view/c2bcdae0-3e42-4d0d-abdf-775848b4a915/ViewContents: 1\n/view/e42bda0b-80c5-46b8-a592-a3de4c33cca5: 1\n/view/e42bda0b-80c5-46b8-a592-a3de4c33cca5/ViewContents: 1\n/viewport: 1\n/world/accepted/closure_axes: 1\n/world/accepted/midpoints: 1\n/world/accepted/pregrasp: 1\n/world/accepted/side_surface: 1\n/world/accepted/tcp_targets: 1\n/world/accepted/tool_axes: 1\n/world/accepted/up_axes: 1\n/world/analytic_cylinder: 1\n/world/desired/down: 1\n/world/desired/radial: 1\n/world/desired/tangent: 1\n/world/desired/up: 1\n/world/proxy_mesh: 1\n/world/raw/closure_axes: 1\n/world/raw/gripper_origins: 1\n/world/raw/tool_axes: 1\n/world/raw/up_axes: 1\n/world/support_plane: 1\n\nNum chunks per index\n--------------------\nblueprint: 14\ncandidate_index: 4\nlog_time: 18\n\nNum chunks per component\n------------------------\nArrows3D:colors: 10\nArrows3D:labels: 4\nArrows3D:origins: 10\nArrows3D:radii: 10\nArrows3D:vectors: 10\nContainerBlueprint:col_shares: 1\nContainerBlueprint:container_kind: 2\nContainerBlueprint:contents: 2\nLineStrips3D:colors: 2\nLineStrips3D:radii: 2\nLineStrips3D:strips: 2\nMesh3D:albedo_factor: 1\nMesh3D:triangle_indices: 1\nMesh3D:vertex_positions: 1\nPanelBlueprint:state: 2\nPoints3D:colors: 5\nPoints3D:labels: 1\nPoints3D:positions: 5\nPoints3D:radii: 5\nRecordingInfo:start_time: 1\nScalars:scalars: 4\nTextDocument:media_type: 1\nTextDocument:text: 1\nTextLog:level: 2\nTextLog:text: 2\nTimePanelBlueprint:state: 1\nViewBlueprint:class_identifier: 4\nViewBlueprint:display_name: 4\nViewBlueprint:space_origin: 4\nViewContents:query: 4\nViewportBlueprint:auto_layout: 1\nViewportBlueprint:auto_views: 1\nViewportBlueprint:root_container: 1\n\nSize (schema + data, compressed)\n--------------------------------\nipc_size_bytes_total = 89.6 KiB\nipc_size_bytes_min = 913 B\nipc_size_bytes_max = 13.1 KiB\nipc_size_bytes_avg = 2.2 KiB\nipc_size_bytes_p50 = 1.5 KiB\nipc_size_bytes_p90 = 6.5 KiB\nipc_size_bytes_p95 = 7.0 KiB\nipc_size_bytes_p99 = 13.1 KiB\nipc_size_bytes_p999 = 13.1 KiB\n\nSize (schema + data, uncompressed)\n----------------------------------\nipc_size_bytes_total = 184 KiB\nipc_size_bytes_min = 1.7 KiB\nipc_size_bytes_max = 21.9 KiB\nipc_size_bytes_avg = 4.6 KiB\nipc_size_bytes_p50 = 4.1 KiB\nipc_size_bytes_p90 = 11.3 KiB\nipc_size_bytes_p95 = 11.3 KiB\nipc_size_bytes_p99 = 21.9 KiB\nipc_size_bytes_p999 = 21.9 KiB\n\nSize (schema only, uncompressed)\n--------------------------------\nipc_size_bytes_total = 74.4 KiB\nipc_size_bytes_min = 1.1 KiB\nipc_size_bytes_max = 2.5 KiB\nipc_size_bytes_avg = 1.9 KiB\nipc_size_bytes_p50 = 1.9 KiB\nipc_size_bytes_p90 = 2.5 KiB\nipc_size_bytes_p95 = 2.5 KiB\nipc_size_bytes_p99 = 2.5 KiB\nipc_size_bytes_p999 = 2.5 KiB\n\nSize (data only, uncompressed)\n------------------------------\nipc_size_bytes_total = 110 KiB\nipc_size_bytes_min = 656 B\nipc_size_bytes_max = 20.1 KiB\nipc_size_bytes_avg = 2.8 KiB\nipc_size_bytes_p50 = 1.8 KiB\nipc_size_bytes_p90 = 9.1 KiB\nipc_size_bytes_p95 = 9.1 KiB\nipc_size_bytes_p99 = 20.1 KiB\nipc_size_bytes_p999 = 20.1 KiB\n\nUnsorted timelines\n------------------\n(none \u2014 every timeline on every chunk is sorted)\n\nFooters\n-------\nnum_manifests = 2 (one per recording)\n\nFooter manifest for StoreId(Recording, \"roarm_g0b_t3s_side_sdg2\", \"g0b_d420_t3s_side_sdg2\")\n  num_chunks_indexed = 26\n  num_static_chunks = 22\n  num_entity_paths = 26\n  manifest_num_columns = 38\n  sorbet_schema_num_fields = 83\n  sorbet_schema_sha256 = c37fe86561a805bef927b2067091ff970593195aba30378391808507dec48cc1\n  chunk_byte_size_total (native) = 72.9 KiB\n  chunk_byte_size_uncompressed_total = 139 KiB\n\nFooter manifest for StoreId(Blueprint, \"roarm_g0b_t3s_side_sdg2\", \"rec_7900f2543a5544a5bd7ec1a1edb69ec6\")\n  num_chunks_indexed = 14\n  num_static_chunks = 0\n  num_entity_paths = 14\n  manifest_num_columns = 95\n  sorbet_schema_num_fields = 30\n  sorbet_schema_sha256 = f716671b53132a8c5ed17a5bce98c77016f69d0b1cbe4b373e397d103be63a4a\n  chunk_byte_size_total (native) = 20.3 KiB\n  chunk_byte_size_uncompressed_total = 45.9 KiB\n"
+  },
+  "timeline_contract": {
+    "checks": {},
+    "exact_match": true,
+    "observed": [
+      "blueprint",
+      "candidate_index",
+      "log_time"
+    ],
+    "pass": true
+  },
+  "verify": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "verify",
+      "--check-footers",
+      "true",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0b_d420/t3s_side_sdg2_timeline.rrd"
+    ],
+    "ok": true,
+    "returncode": 0,
+    "stderr": "1 file verified without error.\n",
+    "stdout": ""
+  },
+  "version": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "--version"
+    ],
+    "expected_version_match": true,
+    "ok": true,
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "rerun-cli 0.34.1 (base lance map_view nasm native_viewer oss_server perf_telemetry re_server release_full release_no_web_viewer web_viewer) [rustc 1.92.0 (ded5c06cf 2025-12-08), LLVM 21.1.3] x86_64-unknown-linux-gnu prepare-release-0.34.1 4efb18f, built 2026-07-07T16:20:42.173372603Z\nVideo features: av1 ffmpeg nasm\n"
+  }
+}
