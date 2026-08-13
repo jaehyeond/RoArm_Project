@@ -267,3 +267,16 @@ as the current Active Case.
   `t3_mass_friction_contract.md` §2 전면 재저작(맨 그리퍼 기준 마찰 계약 무효).
 - sim 트랙(T2/T3)은 맨 그리퍼 기준 유지 — 테이프 기하 비용은 원통 기준 미계산
   (D417-R1 ② 재인용 금지 조건 유지).
+
+- 2026-08-13 (57th, D444): `rim_pinch_tilt_case` — **교수님 기움 허용 컨펌 대기,
+  컨펌 전 착수 금지.** 변수 2개: ① 접근 기움 θ∈[6°,35°] (방향은 D432의 팔 수직 평면,
+  φ/depth는 동결 n8/n9 산출물 핀), ② 닫힘 목표 q5 14~22° + 24° 근방 세밀화 (D431 ⑥).
+  근거: D431 (θ 6°부터 bite 양수, T1 실물 물림 0~12 mm 밴드 ↔ θ 6~29° 정량 대응,
+  최적 θ35°에서 +14.97 mm) + D432 (기운 자세 IK 도달 가능). D419 "수직 상부 접근"이
+  교수님 지시라 HARD RULE #18상 단독 변경 불가 — 설득 논거는 D431 ③ ("실물이 실제로
+  한 0~35° 기움을 sim에 되돌려 놓는 것") + `g0b_d444` fg1 결과.
+- 2026-08-13 (57th, 상태 갱신): 2026-08-03 항목
+  `isaac_grasping_sdg_grasp_editor_evaluation`은 부분 해소 — 확장 존재/버전 정합은
+  `isaacsim.replicator.grasping 1.0.9`로 확인 완료(D326 pin 무손상), antipodal sampler는
+  `g0b_d420/t3s_side_sdg1·sdg2`에서 실사용, flying-gripper 물리 평가는 `g0b_d444`
+  active case로 승격 (D444). 잔존 부분 = "라벨 대량 생산" 용도 평가(G2 진입 시 재검토).

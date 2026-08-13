@@ -27612,3 +27612,34 @@ false abort를 만든다.
 **Source.** `claudedocs/session_20260813_55th_g0b_t3u_side_midpoint_p13_runpod_render.md`;
 `g0b_d420/t3u_side_rendercloud1_runpod_evidence.tar.gz`; NVIDIA Isaac Sim 5.1 System
 Requirements and Container Installation docs linked in the session document.
+
+## D444 — 57th: case `g0b_d444` 개시 (flying-gripper 병목 격리) + 설치 Grasping SDG 1.0.9 소스 사실 3건 + 증거 push 백업 완료 (개시 권위 — 물리 verdict 아님)
+
+**Evidence.** 2026-08-13 57th 세션. 사용자 승인 3건: ① flying-gripper 판별 실험 착수
+("승인할게"), ② git 백업/ignore/push ("git도 승인 백업하고 … git push해"). 실행 결과:
+`.gitignore`에 208.9 MB `t3s_side_sdg2_raw_candidates.json` 제외 + `g0b_d420`
+npz/png/mp4/log/csv whitelist + attempt3 collision_asset whitelist를 추가하고 470파일
+342.0 MiB를 commit `b9020fd`로 push (`25ee2e2..b9020fd`, working tree clean 0). 이로써
+디스크 단일 사본이던 `t3u_side_preflight13_trace.npz` 등 트레이스/D341 PNG/MP4/동결
+attempt3 5-layer USD가 GitHub 오프사이트 백업됨. 설치 소스 감사
+(`isaacsim.replicator.grasping` 1.0.9, 57th 직접 열람): (1) 외부 grasp pose 주입은 공식
+지원 — `GraspingManager.evaluate_grasp_poses` (`grasping_manager.py:978`) + YAML `poses`
+component (`:321-330`); (2) gripper 배치는 root prim xform 텔레포트 (`:1150-1160`) ⇒
+**그리퍼 단독 fixed-root articulation 자산이 필수** (풀-암 articulation 내부 서브트리
+지정 불가); (3) `object_simulation_phases`는 선언만 (`:78,:109`) — 1.0.9에 안정성 검사
+미구현 ⇒ hold 판정은 자체 hang-test 게이트 필요. `render=False` 직접 물리 + 격리 임시
+씬 지원 (`:666-806`) ⇒ RTX 렌더 없이 로컬 4090으로 실행 가능.
+
+**Implication.** ① 신규 case `g0b_d444` (신규 변수 1 = 팔 제거), prereg =
+`claudedocs/runtime_logs/grasp_track/g0b_d444/fg1_prereg.md`. 13 pose (sdg2 side 8 +
+n8 rim-tilt 5) probe. 분기: 전패 → 그리퍼 기하 병목 확정 / 1+ 성공 → 팔·포즈·궤적 병목.
+② antipodal 샘플러는 rim 핀치(상면 테두리+옆벽, 비대향 법선)를 원리적으로 제안하지
+못하므로 rim pose는 동결 n8 산출물에서 온다 — SDG와 n8은 상보 관계. ③ rim-pinch 기움
+case는 D419(교수 지시) 대상이라 교수님 기움 허용 컨펌 전 착수 금지 — `BACKLOG.md` 등재.
+④ 이 개시 결정은 물리 verdict가 아니며 D427·D429·D431·D441 불변.
+
+**Source.** `claudedocs/session_20260813_57th_g0b_d444_flying_gripper_case_open.md`;
+`claudedocs/runtime_logs/grasp_track/g0b_d444/fg1_prereg.md`; installed
+`isaacsim/exts/isaacsim.replicator.grasping/isaacsim/replicator/grasping/grasping_manager.py`;
+git commit `b9020fd`; NVIDIA Grasping SDG tutorial (Isaac Sim 5.1) —
+<https://docs.isaacsim.omniverse.nvidia.com/5.1.0/synthetic_data_generation/tutorial_replicator_grasping_sdg.html>.

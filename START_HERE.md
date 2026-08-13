@@ -1,13 +1,21 @@
 # START_HERE.md
 
-Last updated: 2026-08-13 KST — 56th Claude 재인수 부트 검증 완료 (55th 핀 전부 재확인,
-불일치 0, 실험 0, 사용자 A/B/C 결정 대기).
+Last updated: 2026-08-13 KST — 57th: 사용자 승인으로 (1) 증거 git push 백업 완료
+(commit `b9020fd`, 470파일 342 MiB, tree clean), (2) 신규 case `g0b_d444`
+(flying-gripper 병목 격리) 개시 — prereg 저작 완료, 물리 실행은 다음 세션.
 
 ## Active Case — single source of truth
 
-- Case: `g0b_d420`, fixed-base RoArm-M3, D29×H50 mm / 24.83 g cylinder.
-- 이번 case의 신규 변수: `[파지점=side midpoint, SDG candidate pose]`.
-- Active run folder: `claudedocs/runtime_logs/grasp_track/g0b_d420/`.
+- **Active: `g0b_d444`** — flying-gripper 병목 격리 (D444 개시, 사용자 승인).
+  - 신규 변수: `[팔 제거 = 그리퍼 단독 fixed-root articulation]` (1개).
+  - Run folder: `claudedocs/runtime_logs/grasp_track/g0b_d444/`.
+  - Prereg 완료: `g0b_d444/fg1_prereg.md` (13 pose = sdg2 side 8 + n8 rim-tilt 5;
+    gates = close bilateral >0.01 N AND hang 낙하 <6 mm).
+  - 다음 단계 = `fg1_gripper_only.usd` 추출 + `fg1` 스크립트 저작 + 로컬 4090 실행
+    (render=False, RTX 불필요). 실행 전 prereg §3 자산 게이트 필수.
+- Frozen: `g0b_d420`, fixed-base RoArm-M3, D29×H50 mm / 24.83 g cylinder.
+  - 신규 변수였던 것: `[파지점=side midpoint, SDG candidate pose]`. 결과 0/5로 동결.
+  - Run folder: `claudedocs/runtime_logs/grasp_track/g0b_d420/` (편집 금지).
 - Detailed current session:
   `claudedocs/session_20260813_55th_g0b_t3u_side_midpoint_p13_runpod_render.md`.
 - 56th boot re-verification (Codex→Claude handoff, 실험 0, 불일치 0, RunPod Pod 0 실측):
@@ -91,26 +99,27 @@ Last updated: 2026-08-13 KST — 56th Claude 재인수 부트 검증 완료 (55t
 - Do not call the CPU meeting MP4 an RTX viewport render.
 - Preserve `numpy==1.26.0` and `psutil==5.9.8` in every Isaac Lab environment.
 - Do not edit old output prefixes; all future folders/tags are forward-only.
-- Single-copy risk (56th 관측): `t3u_side_preflight13_trace.npz`는 `.gitignore`(`*.npz`)
-  대상이고 bundle v3에도 없음 — 이 디스크 단일 사본. `*.mp4/*.png/*.log/*.csv`도 g0b
-  whitelist 없음(커밋해도 repo 밖).
+- ~~Single-copy risk~~ **57th 해소**: `.gitignore`에 g0b_d420 npz/png/mp4/log/csv +
+  attempt3 collision_asset whitelist 추가 후 commit `b9020fd` push — trace/PNG/MP4/USD
+  전부 GitHub 오프사이트 백업 완료. 208.9 MB `t3s_side_sdg2_raw_candidates.json`만
+  의도적으로 ignore 유지 (디스크 원본 보존, 필터본 candidates.json은 커밋됨).
 
 ## Next concrete action / authorization boundary
 
-1. For the lab meeting, deliver `t3u_side_meeting1_lab_bundle_v3.zip` and state 0/5.
-2. If the user approves a new grasp case, preregister only one or two changed variables and
-   run a failure-capable physics perturbation; do not silently tune the current case.
-3. If the user approves another RTX cloud attempt, first provision a graphics-ready Isaac
-   container and run only the device/Vulkan/one-frame smoke gate. Transfer the 300 MiB
-   dependency payload only after that gate passes.
+1. **`g0b_d444` fg1 실행** (승인 완료): gripper-only USD 추출 → prereg §3 게이트 →
+   13 pose 물리 + hang test → D341 완주. 로컬 4090, RTX 렌더 불필요.
+2. Rim-pinch 기움 case (θ 6~35°, close 14~22°)는 **교수님 기움 허용 컨펌 후에만** —
+   `claudedocs/BACKLOG.md` 등재, D419/HARD RULE #18.
+3. For the lab meeting, deliver `t3u_side_meeting1_lab_bundle_v3.zip` and state 0/5.
+4. RTX cloud 재시도는 별도 승인 시 D443 3-게이트 선행 (변경 없음).
 
 ## Must read first
 
 1. `AGENTS.md`
-2. `claudedocs/session_20260813_55th_g0b_t3u_side_midpoint_p13_runpod_render.md`
-3. `claudedocs/DECISIONS.md` tail, especially D441–D443
-4. `claudedocs/EXPERIMENT_LEDGER.md` latest row
-5. `claudedocs/runtime_logs/grasp_track/g0b_d420/t3u_side_meeting1_brief.md`
+2. `claudedocs/runtime_logs/grasp_track/g0b_d444/fg1_prereg.md` (active case 계약)
+3. `claudedocs/session_20260813_57th_g0b_d444_flying_gripper_case_open.md`
+4. `claudedocs/DECISIONS.md` tail, especially **D444**·D443–D441·D431
+5. `claudedocs/session_20260813_55th_g0b_t3u_side_midpoint_p13_runpod_render.md`
 
 ## Do not trust as current
 
