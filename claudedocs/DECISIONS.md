@@ -27643,3 +27643,341 @@ case는 D419(교수 지시) 대상이라 교수님 기움 허용 컨펌 전 착�
 `isaacsim/exts/isaacsim.replicator.grasping/isaacsim/replicator/grasping/grasping_manager.py`;
 git commit `b9020fd`; NVIDIA Grasping SDG tutorial (Isaac Sim 5.1) —
 <https://docs.isaacsim.omniverse.nvidia.com/5.1.0/synthetic_data_generation/tutorial_replicator_grasping_sdg.html>.
+
+## D445 — 58th, fg1: 팔을 제거해도 0/13 — side는 "물었다가 배출"(양측 5.5~6.6 N 후 측방 이탈 15.8~77.3 mm), rim은 닫힘 스윕에서 접촉 소멸 ⇒ 그리퍼 기하 병목 분기 SUPPORTED, 병목 층위가 "접촉 불가"(팔 포함)에서 "유지 불가"(그리퍼 단독)로 이동 (물리 실행 O, Isaac O, 로봇 0, D427~D444 재판정 0)
+
+**Evidence.** 2026-08-13 58th 세션, case `g0b_d444` fg1 (57th prereg, 사용자 승인).
+`sim_scripts/p17_g0b_fg1_cyld29h50_flying_gripper_grasp_probe.py` — 동결 attempt3
+서브트리를 참조+최소 오버라이드로 추출한 `fg1_gripper_only.usd`(sha `0e9fc601…`,
+추출 게이트 64+64 hull / q5 15속성 bit-일치 / inline 메쉬 132종 SHA 일치 전부 PASS)를
+fixed-root articulation으로 스폰, 13 pose(sdg2 side 8 verbatim + n8b rim-tilt 5) ×
+(PREGRASP 60 → CLOSE 120 → HANG 240 step, dt 1/60). 게이트 = 같은 step 양측
+>0.01 N AND hang 낙하 <6 mm. 결과 **0/13 SUCCESS**, 측정 유효 13/13, wall 25.5 s,
+verdict `FG1_ALL_13_FAIL_GRIPPER_GEOMETRY_BOTTLENECK_SUPPORTED`.
+① **side 8/8 `BILATERAL_NO_HOLD`**: close 중 10~16 step 양측 동시 5.508~6.613 N —
+55th P13(팔 포함, 동일 sdg2 계열)의 0/0/0 N과 대조되는 **최초의 양측 close 접촉**.
+그러나 조가 물체 폭 대응각(~17-22°)을 지나 목표 14.0°까지 완전히 닫히며 원통을
+측방 배출(post-close 물체는 지지면 위 xy 15.8~77.3 mm 이탈, hang은 자유낙하 ~35 m).
+② **rim 5**: θ15만 close 중 0.250 N 순간 접촉(16 step), θ6/24/29/35는 close 중 조-물체
+접촉 **0 step**(PREGRASP 개방 정착 중 0.014~0.052 N 스침만 → PRECLOSE_COLLISION 분류),
+물체 이탈 ≤0.2 mm — n8b 정적 양수 bite 행이 88.31°→목표 닫힘 스윕의 동적 실행에서
+파지 기회로 전환되지 않음. ③ 계측 캘리브레이션: 정지 지지 접촉력 median 0.24358586 N
+vs m·g 0.24358230 N(4자리, D439 양성 대조 재현). ④ prereg 이탈 4건 전량 기록(DEV-1
+rim 소스 erratum: prereg 인용 `t3r_n8_tilt_results.json`의 θ=6/15 argmax는 음수 bite로
+D431 ② 기술과 모순 → `t3r_n8b_tiltmin_results.json` 소비 / DEV-2 격리 모드 결함 /
+DEV-3 side close 14.0° / DEV-4 hang 30×8 청크). D341 `validate_rerun_artifact`
+pass=True errors=[] + 실제 육안 검수(한계 2건: 3D 패널 프레이밍 미흡·토스트 가림 기록).
+
+**Implication.** ① **분기 (i) SUPPORTED**: 팔·IK·궤적을 제거하고 기하적 이상 배치를
+부여해도 동결 attempt3 조 형상은 D29×H50 강체 원통을 유지하지 못한다. 55th까지와
+결합하면 팔 층위(접촉 형성 실패)와 그리퍼 층위(접촉 후 유지 실패)가 **모두** 결함 —
+상위 병목은 그리퍼 기하. 하드웨어 개조/물체 변경 논의의 정량 근거. ② **한계(주장하지
+않는 것)**: side 배출은 (조 수렴 형상 × 관통 닫힘 목표 14°)의 합작 — **폭-정지 닫힘
+정책(17~20° 목표 + 힘 평형)은 미시험**이므로 "어떤 닫힘 정책으로도 불가"가 아니다;
+실물 파지·마찰 현실성·D419 재판정 주장 없음; rim 실패는 기움 자체 vs phase 규약의
+분리 불가. ③ **방법 사실 3건**: (a) `GraspingManager` 1.0.9 격리 모드
+(`isolate_simulation=True`)는 정적 collider를 temp scene에 넣지 않고(지지면 소실 →
+물체 자유낙하) scene 마이그레이션이 reset 초기상태 스냅샷을 오염시킨다(spawn 미복원)
+— 소수 actor 전용 스테이지는 default scene 모드가 옳다. (b) attempt3 `root_joint`
+규약(FixedJoint body0=[] + **프레임 미저작**)은 root xform 텔레포트 후 reparse에서
+현재 자세에 재앵커된다(drift 0.0, 60 step) — flying-gripper 자산 저작의 재사용 가능
+패턴. (c) PhysX 접촉 임펄스/dt 환산은 m·g 4자리 재현 — threshold 0 명시 저작 필수
+(50th-b N-4 재확인). ④ D427·D429~D444 재판정 0, `g0a_pass=false` 불변, `g0b_d420`
+동결 유지. 후속(fg2 닫힘 정책 / D≤20 물체 / 교수님 보고 / rim 기움 case)은 전부
+사용자 결정 경계.
+
+**Source.** `claudedocs/session_20260813_58th_g0b_d444_fg1_flying_gripper_run.md`
+§2~§9; `g0b_d444/fg1_results.json`(sha `f3c2f2e24263a817`, 45,416 B) ·
+`fg1_trace.npz`(`ad61b8995d6616c9`) · `fg1_timeline.rrd`(`93564fba7909c50f`) ·
+`fg1_gripper_only.usd`(`0e9fc601df9379fa`) · `fg1_prereg.md`;
+`sim_scripts/p17_g0b_fg1_cyld29h50_flying_gripper_grasp_probe.py`(= `fg1_script.py.txt`);
+스모크 증거 = 58th doc §3; 대조 = 55th `t3u_side_preflight13_results.json`(D443) ·
+D431 ② · D439 · D441.
+
+## D446 — 59th, bg1: reBot B601 평행 그리퍼는 동일 flying-gripper 프로토콜에서 D29×H50 원통을 **13/13 전승으로 쥐고 유지**한다(완전 수직 top-down 포함) — 단, 벤더 공식 USD의 1-hull 충돌 근사 그대로는 0/13이고(교차 마운트 hull-fill 쐐기), 병목은 실기하가 아니라 자산 표현이다 (물리 실행 O, Isaac O, 로봇 0, D427~D445 재판정 0)
+
+**Evidence.** 2026-08-13 59th 세션, case `g0c_d446` bg1 (사용자 승인 "1번 진행해.
+승인할게" — B601 하드웨어 교체 전 sim 판별; 교수님 보고 패키지는 사용자 보류).
+자산 = Seeed-Projects/reBot-Isaacsim 커밋 `cb824be1…`의 공식 `usd/reBot_B601_DM/`
+9파일 verbatim 핀(`b601_asset/UPSTREAM.md`, CERN-OHL-W/Apache-2.0). 추출 자산 2종:
+A `bg1_gripper_only.usd`(`0189d9bd…`, 공식 충돌 verbatim = 핑거당 convex hull 1개) /
+B `bg1_gripper_split2.usd`(`dbd86576…`, 동일 공식 점군을 x_glf=-0.050에서
+blade/mount 2조각 hull로 분해, blade 내측면 극값 bit-보존, 원본 hull은
+disabled 보존). 13 해석적 pose(side 방위각 8 + top 기움 θ{0,6,15,24,35}°) ×
+PREGRASP 60 → CLOSE 120(전폐 목표, maxForce 100 N 공식값 포화) → HANG 240 step,
+게이트 = fg1 동일(같은 step 양측 >0.01 N AND hang 낙하 <6 mm). 결과: 측정 유효
+26/26, wall 45.5 s, **A 0/13 전패**(13/13 `BILATERAL_NO_HOLD` — 양측 3.5~78 N 접촉
+후 배출, hang 자유낙하) vs **B 13/13 SUCCESS**(side 양측 38.7~39.2 N·낙하 ≤0.10 mm,
+top 56.3 N·낙하 ≤0.39 mm), verdict **`BG1_REAL_GEOM_HOLDS_USD_COLLISION_BLOCKS`**.
+A의 실패 기전은 사전 LP 단면 실측으로 예측됨: 핑거 1-hull이 교차형 마운트(+58.6 mm
+반대편 돌출)와 블레이드 팁을 이어 블레이드 스테이션에서 실효 충돌면이 실제 패드면
+대비 +7.1~+27.7 mm 돌출(쐐기각 ~35°, tan 0.71 > μ_eff~0.45). D341
+`validate_rerun_artifact` pass=True errors=[] + 실제 육안 검수(패널 4의 A 스파이크
+-후-0 vs B 플래토, 패널 5의 hang 40 m→0 mm 전환 판독; 한계 2건 기록 — 3D 프레이밍
+미흡·토스트 가림).
+
+**Implication.** ① **fg1 대조 완성**: RoArm attempt3(fg1 0/13)은 **저작 기하 자체가
+수렴 쐐기**, B601은 **기하가 평행 패드고 벤더 USD 표현만 쐐기** — 하드웨어 교체
+논거의 sim 필요조건이 충족됐다(D430이 원리적 불가로 판정한 완전 수직 top-down
+θ=0에서도 B는 유지 성공). ② **비주장**: 실물 B601 파지·팔 기구학/IK·마찰 현실성·
+D419/fg1 재판정 없음 — sim 성공은 구매 판단의 필요조건이지 실기 보장이 아님.
+③ **벤더 자산 사실**: reBot-Isaacsim USD는 URDF USD Converter v0.1.3 산출물로
+핑거당 1-hull — parallel-jaw 파지를 구조적으로 불가능하게 하며, 같은 repo의 MJCF는
+8-piece 분해를 갖고 있다(upstream issue 제보 후보). 파지 물리에 이 USD를 쓸 때는
+충돌 분해 수리가 필수. ④ **방법 사실 4건(재사용 가치)**: (a) URDF-변환 중첩
+rigid-body 계층은 physicsschema 에러로 미시뮬 — flat 형제 재배치 필요(R1);
+(b) 프레임 미저작 root_joint의 텔레포트 재앵커는 **ArticulationRootAPI가 root_joint
+프림 위에 있을 때만** 성립 — root body에 붙이면 identity로 스냅(R2 실증), articulation
+제거 시 JointStateAPI 초기화/판독 상실(R3 실증); (c) interlock형 평행 그리퍼의
+좌우 핑거 hull 상호충돌은 자산 아티팩트 — FilteredPairs 1쌍으로 제외(R4);
+(d) 정지 물체 sleep이 contact report를 소실시킴 — sleepThreshold 0 명시 저작
+(threshold 0 계열 하네스 설정). ⑤ D427~D445 재판정 0, `g0a_pass=false`·`g0b_*` 동결
+불변. 후속(구매/교수님 보고/벤더 제보/full-arm sim)은 전부 사용자 결정 경계.
+
+**Source.** `claudedocs/session_20260813_59th_g0c_d446_bg1_b601_flying_gripper_run.md`
+§0~§9; `g0c_d446/bg1_results.json`(`cb88c549dc459272`, 88,723 B) ·
+`bg1_trace.npz`(`f9dc41b797fc5fd2`) · `bg1_timeline.rrd`(`b56ad9d1beb6ee9f`) ·
+`bg1_prereg.md`(R1~R4 포함) · `bg1_asset_audit.json` · `bg1_split2_audit.json` ·
+`b601_asset/UPSTREAM.md`;
+`sim_scripts/p18_g0c_bg1_cyld29h50_b601_flying_gripper_grasp_probe.py`(= script.py.txt);
+대조 = 58th fg1(D445) · D430 · D441; B601 사양 출처 = CNX Software 2026-04-17 ·
+seeedstudio.com · GitHub Seeed-Projects (59th doc §1).
+
+## D447 — 60th, bg1v: Isaac 시각화/스크립트 하네스 결함 3종 실증 — `SimulationApp.close()`는 예외를 삼키고 exit 0으로 종료한다(실패 캡처 없는 스크립트는 침묵 사망), 참조 rig의 world-pose 오버라이드는 `SetXformOpOrder([op], resetXformStack=True)` 필수, Replicator 캡처는 `rep.orchestrator.step()` 없이는 빈 배열 (물리 0, 재판정 0)
+
+**Evidence.** 2026-08-13 60th, p19 상태-복원 렌더 5회 시행 중 실패 3회가 각각 실증:
+try1/2 = exit 0·stderr 공백·산출물 0 (BaseException 캡처 + rc stdout 마커 추가 후
+실제 오류 표면화 — Isaac Sim 5.1 `app.close()`가 프로세스 종료를 가로챔);
+try3 = `POSE_RESTORE_GATE dev=1.0000073` (`AddTransformOp`+`SetResetXformStack`만으로는
+참조된 rig의 원본 xform op가 잔존 합성 — `SetXformOpOrder([내 op], resetXformStack=True)`로
+해결, 이후 편차 0.0); try4 = `IMAGE_SHAPE (0,)` (`app.update()` 80회로도 annotator 빈
+배열 — `rep.orchestrator.step(rt_subframes=32)` 추가로 해결). try5 성공: 복원 편차 0.0,
+렌더 2장, wall 10.3 s, 종료 핀 재검증 PASS.
+
+**Implication.** ① 모든 Isaac 스크립트는 p18/p19 패턴(BaseException 캡처 + rc stdout
+마커) 필수 — **exit code로 성공 판정 금지**, 성공은 산출물+마커로만 판정. ② 기록된
+world pose의 정적 복원 렌더 하네스는 재사용 가능(`bg1v_script.py.txt`) — 물리 재실행
+없이 판정 완료된 상태를 그림으로 재투영하는 D324 단일 프레임 경로. ③ 이 경로는 새
+판정을 만들지 않으므로 D341 RRD 의무 없음(정당화는 세션 doc에 기록).
+
+**Source.** `sim_scripts/p19_g0c_bg1v_b601_grasp_render_snapshot.py`;
+`claudedocs/runtime_logs/grasp_track/g0c_d446/bg1v_render_meta.json`;
+`claudedocs/session_20260813_60th_g0c_bg1v_b601_grasp_render_snapshots.md` §2.
+
+## D448 — 61st, ba1: B601 **팔 전체(고정 base) + IK 궤적 실행**이 D29×H50 원통을 side 파지로 잡아 **80 mm 들어올려 유지**한다 (TCP 0.43 mm·양측 23 N·슬립 0.13 mm) — 파지 sim 필요조건이 그리퍼 단독에서 팔 층위로 확장 충족 + 전 과정 RTX mp4 확보; 벤더 USD 결함 2호(중첩 계층 미시뮬)와 하네스 교훈 3종 실증 (물리 실행 O, Isaac O, RTX 렌더 O, 로봇 0, D427~D447 재판정 0)
+
+**Evidence.** 2026-08-13 61st, 신규 case `g0d_d448` ba1 (사용자 요청 "arm 전체로
+base에 붙여 물체 잡는 걸 mp4로" + AskUserQuestion 승인 "승인 — side 파지 먼저"
+= D324 궤적 영상 금지의 명시 해제). `sim_scripts/p20_g0d_ba1_b601_full_arm_side_
+grasp_probe.py` — 공식 `reBot_B601_DM.usda` full 로봇 참조 + bg1 변형 B split2
+충돌 bit-copy 이식(census 핑거당 2+1, blade 극값 dev<1e-9) + 오프라인 수치
+IK(physics.usda 조인트 테이블 전사, FK-vs-USD 실측 0.321 mm) waypoint 3개
+(φ=225 side, C=(0.34,0,0.12), standoff 0.05 m) + min-jerk PD 궤적, SETTLE 30/
+APPROACH 120/SETTLE2 30/CLOSE 120/LIFT 120/HOLD 120 @dt 1/60. 결과: TCP 도달
+0.43 mm → G1 양측 same-step peak 23.09 N(HOLD 끝 23.47 N 유지) → G2 glf
++79.56 mm vs 물체 +79.69 mm 동반 상승 → G3 상대 슬립 0.127 mm, 팔 의도치 않은
+접촉 0.0 N, measurement_valid true, wall 97.5 s, verdict
+**`BA1_FULL_ARM_SIDE_GRASP_LIFT_SUCCESS`**. 시각 산출 = `ba1_side_grasp.mp4`
+(1920×1080/30 fps/9.00 s, 물리 2 step당 1 프레임) + 키프레임 6장(hold = 원통
+공중·받침대 빈 상태 육안 확인). D341 `validate_rerun_artifact` pass=True
+errors=[] + 육안(패널 5의 obj/glf z 완전 겹침 상승 판독; 한계 3건 기록 — 3D
+프레이밍·토스트·**RRD 제목 "phi=135" 오기**(실제 φ=225, 권위 수치는 전부 정확)).
+try 1~3 자진 신고(파지 데이터 소비 0): 게이트 float32 허용오차/instance-proxy
+저작 거부/기하 REV-1(접근축 부호+팜 간섭 공식 오류 → SETTLE 게이트가 물체
+2.86 m 발사로 발각, prereg §4에 정정 기록).
+
+**Implication.** ① **구매 판단 sim 증거 체인 완성**: fg1(RoArm 그리퍼 단독
+0/13) vs bg1(B601 그리퍼 13/13) vs **ba1(B601 팔 전체 1/1 파지+리프트)** —
+"접촉 형성→유지→팔 궤적 실행" 세 층위가 전부 sim에서 성립. mp4가 사용자 요청
+시각 증거(캡션에 G1~G3 수치 의무, 그림 단독 제시 금지). ② **벤더 자산 결함
+2호**: 공식 full-arm USD는 9개 중첩 RigidBodyAPI 링크에 xformstack reset
+미저작 → omni.physicsschema가 전 링크 거부 + 전 조인트 no-bodies = **그대로는
+로봇이 아예 시뮬레이션되지 않음**. 수리 = 링크별 world 행렬 bake +
+`SetXformOpOrder([op], resetXformStack=True)` (bake 편차 0.0; D446 ③ 충돌
+결함과 함께 upstream 제보 후보 2건). ③ **하네스 교훈 3종(재사용 가치)**:
+(a) PhysX 조인트 드라이브의 정적 유지 오차는 τ/k가 아니라 **≈ C·(damping/
+stiffness)** — k·d를 같은 비율로 올리면 오차 불변(스윕 실증; 팔 게인 1e5/500
+채택, maxForce는 공식 verbatim), (b) `omni.replicator.core`와
+`isaacsim.replicator.grasping`을 `app.update()` 펌프 없이 연속 enable하면
+데드락(16분 futex 침묵 — p19 순서 + 펌프 3회로 해소), (c) instanceable 지오메트리
+참조 아래 충돌 프림은 instance proxy라 저작 불가 — 해당 instance root만
+`SetInstanceable(False)` (합성 불변). ④ **비주장**: 실물 B601 파지/제어 현실성
+(게인은 하네스 저작), top-down full-arm 도달성(side 1 pose만; j5 ±90° 제약으로
+standoff 0.10은 전 방위 도달 불가였음 — 도달성 여유가 좁다는 신호), 타
+방위/배치 일반화, 마찰 현실성. ⑤ D445~D447 재판정 0, `g0a_pass=false`·
+`g0b_*`·`g0c_*` 동결 불변. 후속(구매 품의/교수님 보고/벤더 제보/ba2 확장)은
+전부 사용자 결정 경계.
+
+**Source.** `claudedocs/session_20260813_61st_g0d_d448_ba1_full_arm_side_grasp_mp4.md`
+§0~§10; `g0d_d448/ba1_results.json`(`fbab9ff5a518a59a`, 18,605 B) ·
+`ba1_trace.npz`(`b7240b03156829fb`) · `ba1_timeline.rrd`(`0e8eda8911ef950a`) ·
+`ba1_side_grasp.mp4`(`f5d0e6d38fba3fba`) · `ba1_prereg.md`(REV-1·ADD-1·ADD-2) ·
+`ba1_key_*.png`×6; 스모크 = 61st doc §2 (scratchpad `ba1_smoke_probe.py`/
+`ba1_gain_sweep.py`); 대조 = D445(fg1)·D446(bg1)·D447(p19 하네스).
+
+## D449 — 62nd, ba2: B601 full-arm place probe는 **`BA2_TCP_TRACK_FAIL`** — 물리 게이트(G1~G7)는 전부 통과했으나 release 전 TCP 오차 19.82 mm(>10 게이트)로 분류 실패; 병목은 place가 아니라 **다중 지지물 장면에서 손목 후행 체적이 이웃 pedestal A에 얹힌 것**(60.4 N 지속) — "클리어런스는 파지 직하 지지물만 검사"라는 설계 사각지대 실증 (물리 실행 O, Isaac O, 로봇 0, D427~D448 재판정 0)
+
+**Evidence.** 2026-08-14 62nd, 신규 case `g0d_d449` ba2 (사용자 승인 "ba2 place
+진행해 — side 파지 먼저. b601구매는 보류."). `sim_scripts/p21_g0d_ba2_b601_full_
+arm_side_place_probe.py` — ba1 자산/수리/게인 verbatim 상속 + pedestal B=(0.40,
+0.08) 오프라인 스캔 선정(feasible 13곳 중 최대 IK 여유 12.49°) + 11 phase 1020
+step(dt 1/60, wall 23.9 s). 결과: G-track-A 0.43 mm PASS(ba1 재현) → DESCEND
+t=684부터 **link6·팜·양 핑거 ↔ pedestal A 지속 접촉**(peak 60.37 N, SETTLE4에도
+48.7 N) → TCP가 place 목표 위 +19.66 mm(z)에서 스톨(G-track-B 19.82 mm FAIL),
+j4 −4.94°(maxForce 7 N·m 포화). 물리 게이트 기록: G1 23.09 N/G2 +79.69 vs
++79.56 mm/G4 슬립 2.15 mm/G5 xy 7.42 mm/G6 0.0004°/G7 0 N, supportB median
+0.2436 N = m·g. 육안: preplace 키프레임에서 손목 하우징이 A 위에 얹힌 것 판독,
+inspection 패널 5에서 DESCEND 곡선 0.14 m 평탄 스톨. D341 pass=True errors=[].
+
+**Implication.** ① **다중 지지물 클리어런스 규칙 (place/stacking 설계 의무)**:
+접근·하강 클리어런스 검사는 파지 직하 지지물만이 아니라 **장면의 모든
+지지물 × 팜/손목 후행 체적**에 대해 수행해야 한다. φ=225에서 손목 후방 축은
+B로부터 (−0.707,−0.707) 방향으로 뻗고, A는 그 축에서 수직 이격 14 mm(< A 반폭
+대각 35.4 mm)라 관통이 기하적으로 필연이었다. ② **손목 최저점 실측 하한**:
+접촉 평형(glf z 0.1417, A 상면 0.095)에서 손목/팜 집합 최저점 = glf 원점 아래
+**≥46.7 mm** (ba1 REV-1 팜 밴드 38.5 mm보다 깊음 — link6 하우징 기여, j4 −4.94°
+자세 포함). place 높이(glf z 0.122)에서 최저점 z≈0.075 < pedestal 상면 0.095 ⇒
+후행 축이 지지물 풋프린트+여유를 지나는 배치는 구조적으로 차단된다. ③ **러너
+계측 결함 2건 (차기 태그 수정 의무)**: (a) measurement_valid의 base 부동 항이
+수치 미영속화로 False 원인을 사후 감사 불가(소거법으로 특정 — 나머지 항은 개별
+수치 PASS; 전 항 수치 영속화 의무), (b) 60 N 환경 충돌이 게이트 없이 완주 —
+DESCEND~SETTLE3 finger/palm↔환경 접촉 게이트 검토. ④ **종속 긍정 기록** (주장
+아님): pick 층위는 ba1 완전 재현(0.43 mm/23.09 N), carry 슬립 2.15 mm, ~22 mm
+낙하 release도 xy 7.42 mm·직립 안착 — place 동역학 자체는 강건 신호. 단
+verdict는 prereg 분기 그대로 track-fail이며 "place 성공" 승격 금지. ⑤ ba2 태그
+소비(forward-only) — 재시도는 ba3(B 재배치 + 전 지지물 스윕 클리어런스 + 계측
+수정), 착수는 사용자 승인 경계. D445~D448 재판정 0, 동결 불변.
+
+**Source.** `claudedocs/session_20260814_62nd_g0d_d449_ba2_full_arm_side_place_probe.md`
+§1~§10; `g0d_d449/ba2_results.json`(`d4a396b4f0496fa0`, 25,526 B) ·
+`ba2_trace.npz`(`f20447fb9e89a70a`) · `ba2_timeline.rrd`(`39116f26d3de6992`) ·
+`ba2_inspection.png`(`87273175c0e36168`) · `ba2_key_*.png`×9 · `ba2_prereg.md`;
+설계 스캔 = 62nd doc §1 (scratchpad `ba2_design_scan.py`); 대조 = D448(ba1).
+
+## D450 — 63rd, 포스코 야드 pivot: 갭 주장은 **3-결합(재형성 더미 × 완주 총 동작수 × pick+place 양쪽 선택 학습) 한정으로만 생존** — Spinelli et al. 2025(arXiv 2508.09003, ETH)가 heightmap→파지점 PPO + 총 사이클 최소화로 pick측 future work를 이미 채웠고, Schenck 2017은 scoop+dump 위치를 둘 다 선택했으며, 야드 도메인 동일 결정 문제는 Lu & Myo가 정수계획으로 선점 (조사 전용, 물리 0, D427~D449 재판정 0)
+
+**Evidence.** 2026-08-16 63rd. 교수님 지시로 B601 구매 기각·RoArm-M3-Pro 확정·
+그리퍼 커스텀 승인, 신규 주제 = 포스코 원료야드 순차 결정층 연구. 반증 우선
+재검증(agent, 28질의 × 일반 웹 3종+arXiv API, IEEE/ScienceDirect/Springer/MDPI
+경유): ① **Spinelli et al. 2025 (arXiv 2508.09003, ETH Hutter 그룹, IEEE T-FR)**
+— 40t 머티리얼 핸들러 실기, PPO attack-point planner, heightmap→3D 파지점 연속
+선택, 보상 = 버킷 충전 최대화(= 총 스쿱 수 최소화). 단 **place는 사용자 지정
+고정 좌표(미학습)**, 버킷 스쿱(이산 물체 집기 아님), 야드 아닌 핸들러 도메인.
+② Lu & Myo (Adelaide, 2010-2018) — 원료야드 BWR "어느 voxel을 퍼낼지+이동
+최소화"를 binary integer programming으로(비학습, 동일 결정 문제). ③ Schenck
+et al. 2017 (CoRL) — heightmap 상태에서 **scoop 위치+dump 위치 파라미터를 모두
+선택**(학습 예측모델+MPC, RL 아님, 목적 = 형상). ④ Three Springs 2019 — 실물
+야드 리클레이머 제어층 RL(DDPG) 상용 실증. ⑤ 원료야드 도메인 결정층("어디서
+집고 어디에 놓을지") 학습 사례는 28질의 범위 미발견(확신도 MEDIUM-HIGH; 하향
+사유 = 포스코DX 세부 비공개·Semantic Scholar 429 미조회). 도메인 조사(별도
+agent): 포스코DX 피지컬 AI = 리클레이머+GTSU 무인화(2026 하반기 상용화 목표,
+**Isaac Sim Sim2Real 사용**), 공개 AI 역할 = 인지+제어 계층; ABB 야드 자동화 =
+불출/적치 **규칙 라이브러리**. 영상 실증(watch, 4/5): GTSU 사이클 = 이산
+pick-and-dump·투하는 **고정 호퍼**, RIST 영상 t=00:53 선창 높이맵 계측, 스태커
+적치 = 중력 투하(놓기 선택이 실재하는 층).
+
+**Implication.** ① **프로포절 금지 문장**: "ETH의 RL 계획층 future work가
+비어 있다"·"놓기 선택 학습은 최초"·"야드에 학습 적용 없음" — 셋 다 즉시 반격
+가능(각각 Spinelli/Schenck/Three Springs). ② novelty 서술은 **3-결합 + 한정어**
+("우리 조사 범위 내")로만: 재형성 더미 × 완주 총 동작수 목적 × pick·place 양쪽
+선택 학습(+ 선택적으로 야드 도메인·이산 물체 집기). ③ 필수 인용 세트: 기확보
+3편(ETH 2308.11478/Baidu 2201.11292/CMU 2311.01697) + Spinelli 2508.09003 +
+Schenck 2017 + Lu & Myo + Backman 2021 + AGPNet + Three Springs. ④ 시나리오
+매핑 규칙: pick측 = GTSU(어디서 집나), place측 = 스태커(어디에 놓나) — "GTSU
+단독 축소판" 서술 금지(GTSU 투하는 고정 호퍼라 놓기 선택 없음). 물질 명칭 =
+철광석 fines·원료탄 등 bulk material/stockpile(모래·철근·철골 아님). "높이
+우선"은 실조업 목적이 아니라 대리 휴리스틱임을 명기. ⑤ 파일럿 수치(`E:\posco-
+pilot`, 66 vs 80회 등)는 repo 밖 미검증 — 이관/재현 전 인용 금지, 그리고 그것은
+규칙 vs 규칙 증거이지 "RL이 이긴다" 증거가 아님(Baidu 선례와 함께 정직 프레임
+유지). ⑥ 그리퍼 커스텀의 정량 근거 = D445(수렴 쐐기 0/13); 고무링 단독은
+대조군(쐐기각>마찰각이면 악력 무관 배출), 1차 수리 = 접촉면 기하(슬리브) +
+폭-정지 닫힘(D445 ② 분기); 검증 = p17 13-pose 프로토콜 재사용("순정 0/13 vs
+커스텀 X/13"). D427~D449 재판정 0, grasp track 동결 불변, B601 트랙 종료.
+
+**Source.** `claudedocs/session_20260816_63rd_posco_yard_pivot_domain_recon.md`
+§2~§7; agent 조사 2건(도메인 15회+/갭 28질의 — 질의·URL 목록은 세션 대화 및
+63rd doc 요지); 영상 = youtube Y1mnN8gQHfQ(RIST)·k528KIyzAiU(SMH GTSU)·
+ole7xolXZtU(reclaim)·wmRohETwrbM(stack); 대조 = D445(fg1)·D446(1-hull)·
+D440(t3w top-down 영역)·HARD RULE #4(갭 검증 프로토콜).
+
+## D451 — 64th, fg2: 순정 RoArm 조도 **폭-정지(21°) position-hold로는 D29 원통을 8/8 유지**한다 — D445 ②의 미시험 분기가 "SW 정책으로 sim 유지 가능"(분기 ii)으로 해소; 단 성공 창이 ~2°로 좁고(21° 전승·19° 반반·23° 무접촉·≤17° 전패) 조일수록 배출이 커져(1.8 N 유지 vs 4.6 N+ 배출) 쐐기 기전의 힘-의존성이 정량화됨 (물리 실행 O, Isaac O, 로봇 0, D427~D450 재판정 0)
+
+**Evidence.** 2026-08-16 64th, case `g0e_d451` fg2 (prereg 동결 후 1회 실행, rc=0,
+wall 80.9 s). 프로토콜 = fg1 verbatim(동일 stage·flying-gripper·PREGRASP 60→
+CLOSE 120→HANG 240·게이트 양측 >0.01 N AND 낙하 <6 mm), 신규 변수 정확히 1개 =
+side CLOSE 목표각 14.0°→폭-정지 {23,21,19,17,15}°. side 8 pose × 5 = 40 평가,
+rim 제외(기전 무관 — prereg SS2). 결과: **12/40 SUCCESS**, 층별 = 23° 0/8
+(NO_JAW_CONTACT 8/8 — 접촉각 미달) / **21° 8/8 SUCCESS**(양측 1.70~1.97 N,
+낙하 ≤0.103 mm, post-close q5 21.06±0.01°) / 19° 4/8(실패 4 = 3.66~3.94 N 후
+11.5~17.7 m 배출) / 17° 0/8(4.61~5.60 N) / 15° 0/8(5.18~5.94 N). 접촉각은
+(21.07°, 23°) 구간으로 괄호. measurement_valid 40/40, 자산 게이트 a/b/c PASS
+(hull 64+1, q5 15속성 bit-일치, inline mesh SHA 일치), harness selfcheck PASS,
+rerun_validation pass=True errors=[](0.34.1 핀·footer verify·entity/timeline/
+component exact·blueprint+rbl·inspection.png), 육안 검수 완료(힘 계단·낙하
+패턴 정합; 3D 패널 프레이밍 미흡+토스트 가림 = fg1/ba1 기지 한계).
+
+**Implication.** ① D445 ②("폭-정지 미시험 — '어떤 정책으로도 불가' 아님")
+해소: 순정 조의 병목은 **완전 닫힘 정책과 결합된 기하**이며, 접촉각 직후
+정지·유지하는 SW 정책만으로 sim 유지 성립. ② 그러나 성공 창 ~2°(21° 전승,
+19°부터 배출 시작, 23° 무접촉)는 **물체 폭을 알아야 하는 고정각 정책이 실기
+캘리브 오차(jaw≈0.75 mm/° fit은 0~30°만 검증)와 폭 분포(O-step 22~35 mm)에
+취약**함을 뜻함 → G-step 설계 입력: (a) 슬리브(평행 패드+요람)로 유지 창
+자체를 넓히는 기하 수리가 여전히 1차, (b) 실기 폭-정지는 고정각이 아니라
+접촉/서보 전류 감지 기반으로 구현. ③ "조일수록 배출"(양측 힘 단조 증가 ↔
+유지율 단조 감소)로 D445 수렴 쐐기 기전의 힘-의존성 정량 확증 — 고무링(마찰
+보강) 단독안이 대조군에 그치는 이유 강화. ④ 비주장: 실로봇 파지·마찰
+현실성(0.40/0.30 sim 값)·서보 전류 거동·rim 일반화·슬리브 설계 수치.
+D427~D450 재판정 0, grasp track 동결 불변.
+
+**Source.** `claudedocs/session_20260816_64th_g0e_d451_fg2_width_stop_probe.md`;
+`claudedocs/runtime_logs/grasp_track/g0e_d451/fg2_{prereg.md,results.json,
+trace.npz,timeline.rrd,timeline.rbl,rerun_validation.json,inspection.png,
+script.py.txt,argv.txt,stdout.log,exit_status.txt}`;
+`sim_scripts/p22_g0e_fg2_cyld29h50_width_stop_close_probe.py`; 대조 = D445(fg1
+완전 닫힘 0/13)·D431(6)(14~22° 대역)·63rd doc §6(그리퍼 커스텀 방향).
+
+## D452 — 65th, g0f_d452 gs1+gs2: 3D 프린트 조 슬리브(평행 패드+10° V-요람, 분해 충돌)는 **힘-성공 기울기의 부호를 반전**시킨다 — 순정은 조일수록 배출(1.8 N 유지→4.6 N+ 전패, D451)인 반면 슬리브는 조일수록 유지(0.4 N 슬립→3.5~6.3 N에서 stop29° **8/8 전승**); 단 완전 닫힘 명령(접촉+23.5° over-close)은 슬리브로도 0/13 — 강체 쌍 과명령은 기하 무관 압출이므로 실기 정책은 전류-제한 stall 닫힘이어야 한다 (물리 실행 O ×2, Isaac O, 로봇 0, D427~D451 재판정 0)
+
+**Evidence.** 2026-08-16 65th, case `g0f_d452` (p23 설계+p24 gs1+p25 gs2).
+설계(p23, `gs1_design.json` `9178bc65…`): 입력 = 동결 fg1 USD + fg2 stop21
+rows (SHA 핀), 게이트 = G-kin(fg2 8행 moving-jaw 재현 t_err 0.0/R_err≤7e-7)·
+G-contact(순정 D29 접촉각 22.762° ∈ fg2 괄호 (21.07,23.0), **순정 쐐기각
+실측 23.53°** > atan(0.4)=21.8° — D445 기전의 기하 원인 확정)·G-design
+(t=3.5 mm/조·α=10°·θ_design 36.55°·sleeved 접촉 예측 37.47°)·G-interference
+(완전닫힘 슬리브 간 2.06 mm)·gate_burial(REV-1 스트립 매몰) 전부 PASS.
+REV-1 = 릿지-앵커 배치+매몰 분석(이동면 23.5° 기울기로 간극-대수 배치 실패
+1.03 mm; 1차 p23 침묵 사망 = **D447 결함 재확인**, 실패 캡처 후 노출).
+REV-2 = sdg2가 순정 고정면을 물체에 0.00 mm 플러시 배치함을 검산으로 발견 →
+13 pose 전원점 −(R·x̂)·t_f 평행이동(standoff-보존, 편차≤1e-17). gs1(p24,
+p17 verbatim+shift): **0/13**, 전 행 BILATERAL_NO_HOLD(side 5.0~8.0 N·rim
+4.2~21.8 N — rim 첫 양측 접촉), 접촉 step 16 후 힘 상승과 함께 world xy
+30.6~132.9 mm 측방 압출, 측정 유효 13/13, wall 32.0 s. gs2(p25, fg2 구조
+verbatim+슬리브, prereg SS3b 사전 선언): 56 평가 **27/56** — 39° 0/8(접촉
+전, 예측 37.47° 괄호 확증)/37° 1/8(0.35~0.49 N 슬립)/36° 3/8/35° 1/8/33°
+7/8/31° 7/8/**29° 8/8**(3.5~6.3 N, 낙하 ≤0.03 mm), 측정 유효 56/56, wall
+149.1 s. 두 run 모두 자산 게이트(census 66+1/조·q5 bit-일치·순정 mesh SHA
+전량 일치+초과분=슬리브 4 prim 정확)·D341(footer verify·exact 계약·
+blueprint+rbl·inspection·육안 기록) PASS.
+
+**Implication.** ① G-step sim 필요조건 충족: "순정 0/13(D445) vs 커스텀
+8/8(stop29°)" 대조 확보 — 단 커스텀의 성립 조건은 완전 닫힘이 아니라
+**폭-정지 결합**. ② 실기 처방: 슬리브 + **전류-제한 stall 닫힘**(깊게 조일
+수록 안전하므로 정밀 각도/폭 지식 불요) — D451 ②의 "고정각 ±2° 창" 취약성
+해소 경로. O-step 다중 폭(22~35 mm)도 같은 정책으로 커버 예상(비주장:
+비원통 형상 성능). ③ 프린트 시 장착부는 비접촉면에만 추가 — 접촉 관여
+기하는 STL=USD 동일 유지(D446 적용 범위). ④ 잔여 미해결: rim 0/5(오버행
+사전충돌·단일 조 ~120 N 잼— 근수직 top-down 주 모드는 별도 검증 필요),
+29°~14° 미측정 구간(어딘가에서 압출 전환), 35~37° 한계영역 비단조(노이즈
+밴드). ⑤ sdg2 pose 계열을 쓰는 미래 probe는 REV-2 standoff-보존 사상을
+동반해야 함(플러시 배치 전제). ⑥ 비주장: 실물 프린트 공차·장착 강성·서보
+전류 거동·마찰 현실성·실로봇 파지. D427~D451 재판정 0.
+
+**Source.** `claudedocs/session_20260816_65th_g0f_d452_gs1_gs2_sleeve_design_probes.md`;
+`claudedocs/runtime_logs/grasp_track/g0f_d452/` — `gs1_prereg.md`(SS0~SS4+
+REV-1/REV-2/SS3b), `gs1_design.json`, `gs1_gripper_sleeved.usd`(`27fd0665…`),
+`gs1_sleeve_{link5,gripper}.stl`, `gs1_{results.json(`0b97d0cc…`),trace.npz,
+timeline.rrd,timeline.rbl,rerun_validation.json,inspection.png,…}`,
+`gs2_{results.json(`ebdfdb93…`),trace.npz,timeline.rrd,…}`;
+`sim_scripts/p23_g0f_gs1_sleeve_design_author.py`(REV-1)·`p24_g0f_gs1_…py`·
+`p25_g0f_gs2_…py`; 대조 = D445(순정 0/13)·D451(fg2 폭-정지 창)·D446(분해
+충돌)·D447(침묵 사망)·63rd §6.

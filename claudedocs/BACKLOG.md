@@ -280,3 +280,39 @@ as the current Active Case.
   `isaacsim.replicator.grasping 1.0.9`로 확인 완료(D326 pin 무손상), antipodal sampler는
   `g0b_d420/t3s_side_sdg1·sdg2`에서 실사용, flying-gripper 물리 평가는 `g0b_d444`
   active case로 승격 (D444). 잔존 부분 = "라벨 대량 생산" 용도 평가(G2 진입 시 재검토).
+
+- 2026-08-13 (61st 종료 후 재개 세션): `isaaclab_parallel_grasp_env` — ba1의
+  SETTLE→APPROACH→CLOSE→LIFT→HOLD 파지 시퀀스를 Isaac Lab 병렬 env(RL 학습 또는
+  대량 demo 생성)로 확장하는 아이디어 (사용자 질문에서 발생, Variable Ladder상
+  즉시 구현 금지 → 등재만). 성립 전제: ① B601 수리본 USD 1회 저작(현재 p20의
+  런타임 수리 — world-bake+resetXformStack + split2 convex 충돌 이식 — 를 자산
+  파일로 굳힘), ② GPU PhysX 파이프라인 semantics 검증(해석적 Cylinder collider,
+  Isaac Lab ContactSensor vs CPU contact report 이벤트 — NVIDIA 공식 문서 버전
+  대조 필수), ③ env별 물체 pose 랜덤화 시 offline IK 1개로 불가 → env별
+  differential IK 또는 RL policy로 재설계(j5 ±90° 도달성 여유 좁음 — standoff
+  0.10 전 방위 불가, D448), ④ 4090 Laptop 15.6GB VRAM에서 env 수 실측(state 기반
+  RL 수백~수천 env 예상, 비전 병렬은 급격히 무거움; B200 반납 — HARD RULE #27),
+  ⑤ 3월 Isaac Lab 포기 원인 재독(critical_analysis_isaaclab_vla_scaling_20260326.md).
+  RoArm 그리퍼 병렬화는 무의미(fg1 0/13 — 기하 병목, 시도 횟수 문제 아님) —
+  B601 자산 전제 = 사실상 구매 결정과 연동. **사용자 승인 전 착수 금지.**
+
+- 2026-08-13 (61st 종료 후 재개 세션, 추가): `b601_stacking_long_horizon_ladder` —
+  원통 여러 개를 집어 위로 쌓는 장기(long-horizon) task 사다리 (사용자 질문에서
+  발생, 등재만). 전제 = B601 자산(fg1 0/13로 RoArm 그리퍼는 사다리 자체 불성립)
+  + 물체=원통 유지(스펀지 # tower로 전환 시 HARD RULE #19/#20 원문 재독 의무).
+  사다리: Step A `ba2` place+release(신규 변수: place phase/목표 지점 — 사전 해석
+  필수: side 파지 시 블레이드 하단 클리어런스) → Step B `ba3` 2단 쌓기(물체 2개/
+  스택 위 place — 동심 오차·전도·도달성 재스캔, j5 ±90 여유 좁음) → Step C N≥3
+  체인 — **여기까지 전부 Isaac Sim 단일 env 스크립트로 가능, Isaac Lab 불필요** →
+  Step D 자율화(여기서부터 Isaac Lab 필수): D-RL(병렬 RL — 장기 sparse reward
+  최난도, sub-skill 분해/커리큘럼 전제) vs D-Demo(스크립트 expert 병렬 랜덤화 →
+  demo 대량 생성 → VLA 학습 — HARD RULE #2 파이프라인 접속, 이력상 더 현실적)
+  → Step E 실기 전이(비주장 영역, D448 ④). [[isaaclab_parallel_grasp_env]] 전제
+  ①~⑤ 공유. **사용자 승인 전 착수 금지, case당 신규 변수 1~2개 유지.**
+
+- 2026-08-14 (62nd, 상태 갱신): `b601_stacking_long_horizon_ladder` Step A는
+  `g0d_d449` `ba2`로 실행됨 — verdict `BA2_TCP_TRACK_FAIL`(D449): 물리 게이트
+  전부 PASS(안착 실재)였으나 손목 후행 체적이 이웃 pedestal A에 얹혀(60.4 N)
+  release 전 TCP 19.82 mm. Step A 재시도 = **ba3**(B 재배치 + 전 지지물 × 손목
+  후행 체적 클리어런스 스윕 + D449 ③ 계측 수정) — **사용자 승인 대기**. Step B
+  (원통 위 원통)는 ba3 성공 전 진입 금지.

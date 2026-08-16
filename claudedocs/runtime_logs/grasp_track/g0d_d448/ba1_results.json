@@ -1,0 +1,701 @@
+{
+  "tool": "ba1",
+  "case": "g0d_d448",
+  "prereg": "ba1_prereg.md",
+  "plan": {
+    "R_target": [
+      [
+        0.7071067811865477,
+        -0.7071067811865475,
+        0.0
+      ],
+      [
+        0.7071067811865475,
+        0.7071067811865477,
+        -0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "targets": {
+      "standoff": [
+        0.32195463494411936,
+        -0.018045365055880697,
+        0.12
+      ],
+      "grasp": [
+        0.3573099740034467,
+        0.01730997400344668,
+        0.12
+      ],
+      "lift": [
+        0.3573099740034467,
+        0.01730997400344668,
+        0.2
+      ]
+    },
+    "approach_dir": [
+      0.7071067811865477,
+      0.7071067811865475,
+      0.0
+    ],
+    "ik": {
+      "standoff": {
+        "q_deg": [
+          -37.52463916441598,
+          -119.2375801126596,
+          -20.19479253171161,
+          -99.04604768892128,
+          -82.52463915549,
+          0.0028670807161452153
+        ],
+        "pos_err_m": 5.362383584175204e-10,
+        "ori_err": 9.5486924362041e-10,
+        "limit_margin_deg": 7.4297408445100075,
+        "dev_from_design_deg": 0.0
+      },
+      "grasp": {
+        "q_deg": [
+          -26.26634238106853,
+          -119.59484634978143,
+          -22.855328532667208,
+          -96.74077941377394,
+          -71.26634237621056,
+          0.0009111873687887888
+        ],
+        "pos_err_m": 5.078892021218089e-10,
+        "ori_err": 3.7741605828019437e-10,
+        "limit_margin_deg": 10.40232558622607,
+        "dev_from_design_deg": 0.0
+      },
+      "lift": {
+        "q_deg": [
+          -26.266409776048516,
+          -92.18325927288676,
+          -25.461539058766494,
+          -66.72298182564933,
+          -71.2664097735052,
+          0.0009112015934386221
+        ],
+        "pos_err_m": 5.462113347679843e-10,
+        "ori_err": 4.32878482370086e-10,
+        "limit_margin_deg": 18.687970226494798,
+        "dev_from_design_deg": 0.0
+      }
+    },
+    "clearance": {
+      "blade_lo_z_m": 0.10039999999999999,
+      "palm_clear_m": 0.013164660940672611
+    },
+    "pins": {
+      "b601_asset/reBot_B601_DM.usda": {
+        "sha256": "6b9d39de1200732c581c91e895bee412844e101006fb0c3df54259d81ee28e84",
+        "match": true
+      },
+      "b601_asset/payloads/base.usda": {
+        "sha256": "e8a217cb3cfe56129b25e00c8f2171e9ba0f5c6145651f4340dba5707999bdc9",
+        "match": true
+      },
+      "b601_asset/payloads/geometries.usd": {
+        "sha256": "4ead3b7d29627101085634014893b680ad148c7e87b33325bc8a525ba836ace6",
+        "match": true
+      },
+      "b601_asset/payloads/instances.usda": {
+        "sha256": "b2209f637eec1831a59e95e862768313aaeae77ba460eabf2ec9ddb3143833d6",
+        "match": true
+      },
+      "b601_asset/payloads/materials.usda": {
+        "sha256": "0f5b1bb484ce696b4dc987321bf267c8e5b484417ba53344df912f55fe537b05",
+        "match": true
+      },
+      "b601_asset/payloads/robot.usda": {
+        "sha256": "497e66972d6f4bdfca9dc3592601d9843a125de8d654f646c97c38b0f298102b",
+        "match": true
+      },
+      "b601_asset/payloads/Physics/mujoco.usda": {
+        "sha256": "ecff1ef3aa0e7daa7e8402bfecec7bd21fd7601b53351eee971e64a57ebaf134",
+        "match": true
+      },
+      "b601_asset/payloads/Physics/physics.usda": {
+        "sha256": "131e9e667403adf10bfdd641ebbb66ab49af55befa0d598f6efeefcfec8af4a2",
+        "match": true
+      },
+      "b601_asset/payloads/Physics/physx.usda": {
+        "sha256": "58038daab9219f0a7809a868fe3ce3f491f0387f9e41272ab6fa6f8211e4048f",
+        "match": true
+      },
+      "bg1_gripper_split2.usd": {
+        "sha256": "dbd86576070f5db57d1f179074350bd67ad20aa9aa2e43df7b3f5121e92086b1",
+        "match": true
+      }
+    },
+    "blade_extreme_pins": {
+      "gripper_left": 2.7377429400208267e-05,
+      "gripper_right": -2.7377429400189995e-05
+    },
+    "env": {
+      "numpy": "1.26.0",
+      "psutil": "5.9.8",
+      "python": "3.11.14"
+    },
+    "q_cmd_note": "per-step command table in trace.npz q_cmd"
+  },
+  "split_port_source": {
+    "gripper_left/blade": "b3b0a5d9041719e4e84832de8968095915c37519d8eb3b77bfbd634449974ba1",
+    "gripper_left/mount": "b112923d8b39c875636df4400d61d6ef8c01c49eb1b9920273035c56c6e0f50e",
+    "gripper_right/blade": "fa179762fae4a1f2373c6178d4b532f3c999c4a8ff76f69aee128edde0969c8c",
+    "gripper_right/mount": "efd2701dd4ace37ed1a565b0f653beaa4ad8c94b5f6c97f14c6ca68e6c11e73c"
+  },
+  "hierarchy_repair": {
+    "n_links_baked": 9,
+    "reset_dev": 0.0
+  },
+  "joint_model_gate": {
+    "joint1": {
+      "pass": true
+    },
+    "joint2": {
+      "pass": true
+    },
+    "joint3": {
+      "pass": true
+    },
+    "joint4": {
+      "pass": true
+    },
+    "joint5": {
+      "pass": true
+    },
+    "joint6": {
+      "pass": true
+    }
+  },
+  "split_port_gate": {
+    "gripper_left": {
+      "disabled": [
+        "/World/ba1_robot/Geometry/base_link/link1/link2/link3/link4/link5/link6/gripper_link/gripper_left/gripper_left/gripper_left"
+      ],
+      "census": [
+        2,
+        1
+      ],
+      "blade_extreme_glf_m": 2.737742940020827e-05,
+      "extreme_dev_m": 3.3881317890172014e-21
+    },
+    "gripper_right": {
+      "disabled": [
+        "/World/ba1_robot/Geometry/base_link/link1/link2/link3/link4/link5/link6/gripper_link/gripper_right/gripper_right/gripper_right"
+      ],
+      "census": [
+        2,
+        1
+      ],
+      "blade_extreme_glf_m": -2.7377429400190002e-05,
+      "extreme_dev_m": 6.776263578034403e-21
+    }
+  },
+  "deinstanced_roots": [
+    "/World/ba1_robot/Geometry/base_link/link1/link2/link3/link4/link5/link6/gripper_link/gripper_left/gripper_left",
+    "/World/ba1_robot/Geometry/base_link/link1/link2/link3/link4/link5/link6/gripper_link/gripper_right/gripper_right"
+  ],
+  "settle_gates": {
+    "obj_drift_m": 5.1771762264980775e-06,
+    "arm_track_err_deg": 0.005527522189211709,
+    "fk_vs_usd_m": 0.00032068549158145623,
+    "support_calib_n": 0.24357746188821963,
+    "mg_n": 0.24358230000000003
+  },
+  "track_gate": {
+    "tcp_err_m": 0.00043034705651009747,
+    "arm_q_err_deg": 0.0049822077535282006
+  },
+  "verdict": {
+    "code": "BA1_FULL_ARM_SIDE_GRASP_LIFT_SUCCESS",
+    "success": true,
+    "G1_close_bilateral": true,
+    "G1_peak_bilateral_n": 23.09019992758308,
+    "close_left_peak_n": 24.462401051082452,
+    "close_right_peak_n": 25.369427222142733,
+    "G2_lift_follow": true,
+    "glf_rise_m": 0.07956454902887344,
+    "obj_rise_m": 0.07969172298908234,
+    "G3_hold_slip": true,
+    "slip_m": 0.00012717396020889282,
+    "G_track_tcp_err_m": 0.00043034705651009747,
+    "track_ok": true,
+    "hold_end_bilateral_n": 23.467692301220104,
+    "arm_unintended_contact_peak_n": 0.0,
+    "measurement_valid": true,
+    "gates": {
+      "bilateral_n": 0.01,
+      "follow_m": 0.006,
+      "slip_m": 0.006,
+      "track_m": 0.01,
+      "glf_lift_min_m": 0.06
+    },
+    "non_claims": "no claim about real-robot B601 grasping/control realism, top-down full-arm reachability, other azimuths, or any re-judgment of D446/D445 (prereg SS1)"
+  },
+  "keyframes": {
+    "settle": {
+      "t": 29,
+      "q_deg": [
+        -37.5267333984375,
+        -119.23428344726562,
+        -20.197214126586914,
+        -99.04519653320312,
+        -82.51911163330078,
+        0.00288065685890615,
+        0.07150000333786011,
+        0.07150000333786011
+      ],
+      "obj_pos": [
+        0.3400040566921234,
+        2.5865442694339436e-06,
+        0.1200019121170044
+      ],
+      "obj_quat_wxyz": [
+        0.9999999952515025,
+        -4.703758516816736e-05,
+        8.450736613975973e-05,
+        -1.195682212531487e-05
+      ],
+      "glf_pos": [
+        0.3221050202846527,
+        -0.018118664622306824,
+        0.11972713470458984
+      ],
+      "glf_quat_wxyz": [
+        0.9239112138748169,
+        0.00018346314481914645,
+        0.00035829851504031655,
+        0.38260672607758867
+      ],
+      "left_pose": [
+        [
+          0.3428681790828705,
+          -0.09842469543218613,
+          0.11969222873449326
+        ],
+        [
+          0.9238470792770387,
+          -0.00012365320025670726,
+          0.0003830377680817631,
+          -0.382761560378311
+        ]
+      ],
+      "right_pose": [
+        [
+          0.24180595576763153,
+          0.002671174705028534,
+          0.1198059469461441
+        ],
+        [
+          0.38275840878486633,
+          0.00038307346172508134,
+          0.0001236158415668567,
+          0.92384838500607
+        ]
+      ]
+    },
+    "approach": {
+      "t": 149,
+      "q_deg": [
+        -26.26789665222168,
+        -119.59613800048828,
+        -22.85740089416504,
+        -96.74002838134766,
+        -71.26138305664062,
+        0.0009244708344340324,
+        0.07150000333786011,
+        0.07150000333786011
+      ],
+      "obj_pos": [
+        0.34000012278556824,
+        3.678040911836433e-07,
+        0.12000000476837158
+      ],
+      "obj_quat_wxyz": [
+        0.9999999999930662,
+        -3.3931452505837486e-06,
+        1.018457758818985e-06,
+        -1.1475551655071683e-06
+      ],
+      "glf_pos": [
+        0.3574862480163574,
+        0.017261892557144165,
+        0.11961047351360321
+      ],
+      "glf_quat_wxyz": [
+        0.923906683921814,
+        0.00020979337038327795,
+        0.00048620980767355475,
+        0.3826175100428129
+      ],
+      "left_pose": [
+        [
+          0.37825122475624084,
+          -0.06304355710744858,
+          0.11957420408725739
+        ],
+        [
+          0.9238514900207518,
+          -0.00019547438287081782,
+          0.0004921238615240896,
+          -0.3827507596208101
+        ]
+      ],
+      "right_pose": [
+        [
+          0.27718687057495117,
+          0.03804963454604149,
+          0.11970887333154678
+        ],
+        [
+          0.3827474117279052,
+          0.0004921536660920861,
+          0.00019544641498359165,
+          0.9238528770324078
+        ]
+      ]
+    },
+    "pregrasp": {
+      "t": 179,
+      "q_deg": [
+        -26.267898559570312,
+        -119.59614562988281,
+        -22.857398986816406,
+        -96.74002838134766,
+        -71.26136016845703,
+        0.0009244290413334966,
+        0.07150000333786011,
+        0.07150000333786011
+      ],
+      "obj_pos": [
+        0.33999988436698914,
+        6.76516538078431e-06,
+        0.12000241130590439
+      ],
+      "obj_quat_wxyz": [
+        0.9999999912502764,
+        -0.0001308158548296445,
+        8.558338410762631e-07,
+        -1.9645020277179437e-05
+      ],
+      "glf_pos": [
+        0.35748618841171265,
+        0.017261773347854614,
+        0.11961035430431366
+      ],
+      "glf_quat_wxyz": [
+        0.923906683921814,
+        0.00021015112871150941,
+        0.00048656773777330483,
+        0.38261750939147704
+      ],
+      "left_pose": [
+        [
+          0.37825116515159607,
+          -0.06304366141557693,
+          0.11957404017448425
+        ],
+        [
+          0.9238514304161074,
+          -0.00019548857924206825,
+          0.0004926098126683206,
+          -0.38275090285706725
+        ]
+      ],
+      "right_pose": [
+        [
+          0.2771868407726288,
+          0.0380496047437191,
+          0.1197088435292244
+        ],
+        [
+          0.3827475905418393,
+          0.000492664054760902,
+          0.0001954305919899605,
+          0.9238528026820232
+        ]
+      ]
+    },
+    "close": {
+      "t": 299,
+      "q_deg": [
+        -26.266620635986328,
+        -119.5903549194336,
+        -22.85664939880371,
+        -96.73888397216797,
+        -71.27291870117188,
+        -0.06344200670719147,
+        0.004775490146130323,
+        0.01226408127695322
+      ],
+      "obj_pos": [
+        0.3373931050300598,
+        0.00217645987868309,
+        0.12030698359012604
+      ],
+      "obj_quat_wxyz": [
+        0.9998946560264687,
+        0.00886905439899912,
+        0.007887975952146027,
+        -0.008354433502990746
+      ],
+      "glf_pos": [
+        0.35735949873924255,
+        0.017223045229911804,
+        0.11990409344434738
+      ],
+      "glf_quat_wxyz": [
+        0.9239091873168945,
+        -0.0005033164943350895,
+        -7.851421407027229e-05,
+        0.38261149237766
+      ],
+      "left_pose": [
+        [
+          0.3309487998485565,
+          -0.015893038362264633,
+          0.11990586668252945
+        ],
+        [
+          0.9238489866256714,
+          -0.0003003560991693235,
+          -0.00041143766428861073,
+          -0.38275682935250444
+        ]
+      ],
+      "right_pose": [
+        [
+          0.31894078850746155,
+          -0.0038812877610325813,
+          0.11991512030363083
+        ],
+        [
+          0.38275355100631714,
+          -0.00041138380202514473,
+          0.000300366893022373,
+          0.923850344880139
+        ]
+      ]
+    },
+    "lift": {
+      "t": 419,
+      "q_deg": [
+        -26.268159866333008,
+        -92.19971466064453,
+        -25.4611873626709,
+        -66.72220611572266,
+        -71.25672912597656,
+        -0.06373444199562073,
+        0.004824510775506496,
+        0.012200609780848026
+      ],
+      "obj_pos": [
+        0.33780309557914734,
+        0.0020479480735957623,
+        0.19999872148036957
+      ],
+      "obj_quat_wxyz": [
+        0.9999465818186298,
+        0.003139357400129707,
+        0.0037222952223192256,
+        -0.009117152111837678
+      ],
+      "glf_pos": [
+        0.35762226581573486,
+        0.017201505601406097,
+        0.19946852326393127
+      ],
+      "glf_quat_wxyz": [
+        0.9239505529403687,
+        -0.0001769214478792417,
+        0.00045199682291931583,
+        0.3825116208938761
+      ],
+      "left_pose": [
+        [
+          0.33123907446861267,
+          -0.01594354398548603,
+          0.19949623942375183
+        ],
+        [
+          0.9238075613975527,
+          -0.0004446852897220991,
+          0.00019449187214898905,
+          -0.3828568321613337
+        ]
+      ],
+      "right_pose": [
+        [
+          0.3192439079284668,
+          -0.00393941905349493,
+          0.19952262938022614
+        ],
+        [
+          0.3828533589839934,
+          0.00019453463615065573,
+          0.00044469064378170977,
+          0.9238090007794793
+        ]
+      ]
+    },
+    "hold": {
+      "t": 539,
+      "q_deg": [
+        -26.26816177368164,
+        -92.19973754882812,
+        -25.461191177368164,
+        -66.7221908569336,
+        -71.2567367553711,
+        -0.06373445689678192,
+        0.004824522417038679,
+        0.012200594879686832
+      ],
+      "obj_pos": [
+        0.3378031253814697,
+        0.0020480069797486067,
+        0.19999870657920837
+      ],
+      "obj_quat_wxyz": [
+        0.9999465860336377,
+        0.0031393257219405574,
+        0.003722426057455593,
+        -0.00911664729662587
+      ],
+      "glf_pos": [
+        0.35762226581573486,
+        0.017201893031597137,
+        0.19946864247322083
+      ],
+      "glf_quat_wxyz": [
+        0.9239503145217896,
+        -0.0001766085006394394,
+        0.0004518626538466386,
+        0.38251219709267537
+      ],
+      "left_pose": [
+        [
+          0.33123910427093506,
+          -0.01594320498406887,
+          0.199496328830719
+        ],
+        [
+          0.9238079190254211,
+          -0.0004443934180022175,
+          0.00019462025917034684,
+          -0.38285596950206446
+        ]
+      ],
+      "right_pose": [
+        [
+          0.3192439079284668,
+          -0.0039390986785292625,
+          0.1995227336883545
+        ],
+        [
+          0.382852703332901,
+          0.00019465572767530693,
+          0.0004443610003827162,
+          0.9238092726332306
+        ]
+      ]
+    }
+  },
+  "raw_contact_stats": {
+    "n_total": 1590,
+    "n_unknown": 0,
+    "pairs_seen": [
+      "('/World/ba1_robot/Geometry/base_link/link1/link2/link3/link4/link5/link6/gripper_link/gripper_left', '/World/object')",
+      "('/World/ba1_robot/Geometry/base_link/link1/link2/link3/link4/link5/link6/gripper_link/gripper_left', '/World/pedestal')",
+      "('/World/ba1_robot/Geometry/base_link/link1/link2/link3/link4/link5/link6/gripper_link/gripper_right', '/World/object')",
+      "('/World/ba1_robot/Geometry/base_link/link1/link2/link3/link4/link5/link6/gripper_link/gripper_right', '/World/pedestal')",
+      "('/World/object', '/World/pedestal')"
+    ]
+  },
+  "video": {
+    "file": "ba1_side_grasp.mp4",
+    "frames": 270,
+    "fps": 30,
+    "duration_s": 9.0,
+    "ffmpeg_cmd": "/home/cgxr/.local/bin/ffmpeg -n -framerate 30 -i /tmp/claude-1000/-home-cgxr-Documents-Robotics-RoArm-Project/cee00159-bcaf-4005-98c9-8f519c5473ce/scratchpad/ba1_frames/%04d.png -c:v libx264 -pix_fmt yuv420p -crf 18 -preset medium /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0d_d448/ba1_side_grasp.mp4",
+    "caption_obligation": "always present with G1-G3 numbers; authority is results/trace (prereg SS7)"
+  },
+  "rerun_validation_pass": true,
+  "end_pin_recheck": {
+    "reBot_B601_DM.usda": true,
+    "base.usda": true,
+    "geometries.usd": true,
+    "instances.usda": true,
+    "materials.usda": true,
+    "robot.usda": true,
+    "mujoco.usda": true,
+    "physics.usda": true,
+    "physx.usda": true,
+    "bg1_gripper_split2.usd": true
+  },
+  "wall_seconds": 97.5,
+  "physics_backend_note": "explicit scene-int stepping (PhysxSceneAPI update Disabled, simulate_scene/fetch_results_scene), CPU PhysX",
+  "artifacts": {
+    "ba1_trace.npz": {
+      "sha256_16": "b7240b03156829fb",
+      "bytes": 206268
+    },
+    "ba1_timeline.rrd": {
+      "sha256_16": "0e8eda8911ef950a",
+      "bytes": 451967
+    },
+    "ba1_timeline.rbl": {
+      "sha256_16": "8969cf6fc81c2fd5",
+      "bytes": 60844
+    },
+    "ba1_rerun_validation.json": {
+      "sha256_16": "59eb66ca963544fe",
+      "bytes": 30682
+    },
+    "ba1_inspection.png": {
+      "sha256_16": "1b492008b879c235",
+      "bytes": 4619049
+    },
+    "ba1_side_grasp.mp4": {
+      "sha256_16": "f5d0e6d38fba3fba",
+      "bytes": 1415244
+    },
+    "ba1_script.py.txt": {
+      "sha256_16": "b17c908f98e7a8f9",
+      "bytes": 58037
+    },
+    "ba1_argv.txt": {
+      "sha256_16": "f36b1bdf567904b2",
+      "bytes": 105
+    },
+    "ba1_key_settle.png": {
+      "sha256_16": "b4cd92fac8ba0439",
+      "bytes": 539098
+    },
+    "ba1_key_approach.png": {
+      "sha256_16": "fb082968d11f7ae1",
+      "bytes": 565977
+    },
+    "ba1_key_pregrasp.png": {
+      "sha256_16": "8a01b8e6e4c20444",
+      "bytes": 570585
+    },
+    "ba1_key_close.png": {
+      "sha256_16": "1caec7a5808bba5c",
+      "bytes": 547258
+    },
+    "ba1_key_lift.png": {
+      "sha256_16": "ec76feb82e831ee3",
+      "bytes": 558216
+    },
+    "ba1_key_hold.png": {
+      "sha256_16": "07bfbf9f4f35edc5",
+      "bytes": 559789
+    }
+  }
+}

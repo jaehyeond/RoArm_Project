@@ -1,0 +1,341 @@
+{
+  "tool": "bg1_extract_audit",
+  "case": "g0c_d446",
+  "source_pins": {
+    "reBot_B601_DM.usda": "6b9d39de1200732c581c91e895bee412844e101006fb0c3df54259d81ee28e84",
+    "payloads/base.usda": "e8a217cb3cfe56129b25e00c8f2171e9ba0f5c6145651f4340dba5707999bdc9",
+    "payloads/geometries.usd": "4ead3b7d29627101085634014893b680ad148c7e87b33325bc8a525ba836ace6",
+    "payloads/instances.usda": "b2209f637eec1831a59e95e862768313aaeae77ba460eabf2ec9ddb3143833d6",
+    "payloads/materials.usda": "0f5b1bb484ce696b4dc987321bf267c8e5b484417ba53344df912f55fe537b05",
+    "payloads/robot.usda": "497e66972d6f4bdfca9dc3592601d9843a125de8d654f646c97c38b0f298102b",
+    "payloads/Physics/mujoco.usda": "ecff1ef3aa0e7daa7e8402bfecec7bd21fd7601b53351eee971e64a57ebaf134",
+    "payloads/Physics/physics.usda": "131e9e667403adf10bfdd641ebbb66ab49af55befa0d598f6efeefcfec8af4a2",
+    "payloads/Physics/physx.usda": "58038daab9219f0a7809a868fe3ce3f491f0387f9e41272ab6fa6f8211e4048f"
+  },
+  "upstream_commit": "cb824be157fdd5db7d6153b644b9b8ce85775bef",
+  "physics_variant": "physx",
+  "stage_meta": {
+    "metersPerUnit": 1.0,
+    "upAxis": "Z"
+  },
+  "n_deinstanced": 66,
+  "source": {
+    "census": {
+      "gripper_link": {
+        "enabled": 1,
+        "disabled": 0,
+        "approximation_hist": {
+          "convexHull": 1
+        }
+      },
+      "gripper_left": {
+        "enabled": 1,
+        "disabled": 0,
+        "approximation_hist": {
+          "convexHull": 1
+        }
+      },
+      "gripper_right": {
+        "enabled": 1,
+        "disabled": 0,
+        "approximation_hist": {
+          "convexHull": 1
+        }
+      }
+    },
+    "mass": {
+      "gripper_link": {
+        "physics:mass": "0.18180015683174133",
+        "physics:centerOfMass": "Gf.Vec3f(-0.11400455981492996, 7.30809333617799e-05, -8.098237458398216e-08)",
+        "physics:diagonalInertia": "Gf.Vec3f(5.8508143411017954e-05, 0.00020521353872027248, 0.000232386271818541)",
+        "physics:principalAxes": "Gf.Quatf(-0.49962615966796875, Gf.Vec3f(0.49957531690597534, 0.5004128813743591, 0.500385046005249))"
+      },
+      "gripper_left": {
+        "physics:mass": "0.042327895760536194",
+        "physics:centerOfMass": "Gf.Vec3f(0.009371546097099781, -0.018351441249251366, -0.002130508190020919)",
+        "physics:diagonalInertia": "Gf.Vec3f(8.556453394703567e-06, 1.0831226063601207e-05, 1.1383922355889808e-05)",
+        "physics:principalAxes": "Gf.Quatf(0.9206008911132812, Gf.Vec3f(-0.08919470012187958, 0.022860858589410782, 0.37949392199516296))"
+      },
+      "gripper_right": {
+        "physics:mass": "0.042327895760536194",
+        "physics:centerOfMass": "Gf.Vec3f(0.009371546097099781, 0.018351441249251366, 0.002130508190020919)",
+        "physics:diagonalInertia": "Gf.Vec3f(8.556453394703567e-06, 1.0831226063601207e-05, 1.1383922355889808e-05)",
+        "physics:principalAxes": "Gf.Quatf(0.9206008911132812, Gf.Vec3f(-0.08919467777013779, -0.022860845550894737, -0.37949395179748535))"
+      }
+    },
+    "joints": {
+      "gripper_joint1": {
+        "physics:axis": "'X'",
+        "physics:lowerLimit": "0.0",
+        "physics:upperLimit": "0.07150000333786011",
+        "physics:localPos0": "Gf.Vec3f(-0.0420910008251667, 2.7530999432201497e-05, -1.3030999980401248e-05)",
+        "physics:localRot0": "Gf.Quatf(-0.7071054577827454, Gf.Vec3f(2.8129923390629585e-10, 4.6353518246000647e-10, 0.7071080803871155))",
+        "physics:localPos1": "Gf.Vec3f(0.0, 0.0, 0.0)",
+        "physics:localRot1": "Gf.Quatf(1.0, Gf.Vec3f(0.0, 0.0, 0.0))",
+        "drive:linear:physics:maxForce": "100.0",
+        "drive:linear:physics:targetPosition": "0.0",
+        "drive:linear:physics:targetVelocity": "0.0",
+        "physxJoint:maxJointVelocity": "859.4367065429688",
+        "urdf:limit:effort": "100.0",
+        "urdf:limit:velocity": "15.0",
+        "physics:body0": [
+          "/reBot_B601_DM/Geometry/base_link/link1/link2/link3/link4/link5/link6/gripper_link"
+        ],
+        "physics:body1": [
+          "/reBot_B601_DM/Geometry/base_link/link1/link2/link3/link4/link5/link6/gripper_link/gripper_left"
+        ]
+      },
+      "gripper_joint2": {
+        "physics:axis": "'X'",
+        "physics:lowerLimit": "0.0",
+        "physics:upperLimit": "0.07150000333786011",
+        "physics:localPos0": "Gf.Vec3f(-0.0420910008251667, -2.7530999432201497e-05, 1.3030999980401248e-05)",
+        "physics:localRot0": "Gf.Quatf(0.7071054577827454, Gf.Vec3f(-4.6353409999255746e-10, 2.813009269964084e-10, 0.7071080803871155))",
+        "physics:localPos1": "Gf.Vec3f(0.0, 0.0, 0.0)",
+        "physics:localRot1": "Gf.Quatf(1.0, Gf.Vec3f(0.0, 0.0, 0.0))",
+        "drive:linear:physics:maxForce": "100.0",
+        "drive:linear:physics:targetPosition": "0.0",
+        "drive:linear:physics:targetVelocity": "0.0",
+        "physxJoint:maxJointVelocity": "859.4367065429688",
+        "urdf:limit:effort": "100.0",
+        "urdf:limit:velocity": "15.0",
+        "physics:body0": [
+          "/reBot_B601_DM/Geometry/base_link/link1/link2/link3/link4/link5/link6/gripper_link"
+        ],
+        "physics:body1": [
+          "/reBot_B601_DM/Geometry/base_link/link1/link2/link3/link4/link5/link6/gripper_link/gripper_right"
+        ]
+      }
+    },
+    "mesh_counts": {
+      "gripper_link": 5,
+      "gripper_left": 3,
+      "gripper_right": 3
+    }
+  },
+  "pad_geometry_glf": {
+    "travel_dir_glf_left": [
+      -3.6746975027313056e-06,
+      -0.9999999657680192,
+      1.0533544373872766e-09
+    ],
+    "travel_dir_glf_right": [
+      -3.6746975027313056e-06,
+      0.9999999657680192,
+      -1.053356256796425e-09
+    ],
+    "aabb_left_glf_q0": {
+      "min": [
+        -0.08860934267323559,
+        -0.03424989337857431,
+        -0.019619999387961357
+      ],
+      "max": [
+        9.768242119345683e-08,
+        0.05864950656012487,
+        0.01959393738796142
+      ],
+      "n_points": 19481
+    },
+    "aabb_right_glf_q0": {
+      "min": [
+        -0.08860934267323559,
+        -0.05864950656012489,
+        -0.019593937387961363
+      ],
+      "max": [
+        9.76824212212124e-08,
+        0.03424989337857429,
+        0.019619999387961412
+      ],
+      "n_points": 19481
+    },
+    "aabb_palm_glf_q0": {
+      "min": [
+        -0.15070933103561404,
+        -0.0920347571372986,
+        -0.038499999791383716
+      ],
+      "max": [
+        -0.07320932298898698,
+        0.0920347571372986,
+        0.03849999979138377
+      ],
+      "n_points": 24619
+    },
+    "inner_face_y_q0": {
+      "left_max_y": 0.05864950656012487,
+      "right_min_y": -0.05864950656012489,
+      "gap_q0_m": -0.11729901312024976
+    },
+    "aperture_model": {
+      "formula": "aperture(qL,qR) = gap_q0 - dir_l_y*qL + dir_r_y*qR",
+      "dir_l_y": -0.9999999657680192,
+      "dir_r_y": 0.9999999657680192,
+      "aperture_at_full_open_m": 0.02570098198457696
+    },
+    "x_extents": {
+      "palm": [
+        -0.15070933103561404,
+        -0.07320932298898698
+      ],
+      "left": [
+        -0.08860934267323559,
+        9.768242119345683e-08
+      ],
+      "right": [
+        -0.08860934267323559,
+        9.76824212212124e-08
+      ]
+    },
+    "z_extents": {
+      "left": [
+        -0.019619999387961357,
+        0.01959393738796142
+      ],
+      "right": [
+        -0.019593937387961363,
+        0.019619999387961412
+      ]
+    }
+  },
+  "extraction": {
+    "out_usd": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/g0c_d446/bg1_gripper_only.usd",
+    "sha256": "0189d9bd0117686f8caddc0052736b9c6e6cefa35c06d36c4b68620838eb7220",
+    "bytes": 4351120,
+    "add1_drive_gains": {
+      "stiffness_n_per_m": 5000.0,
+      "damping_ns_per_m": 200.0
+    },
+    "root_joint": "PhysicsFixedJoint body0=[] body1=gripper_link, frames unauthored (D445 (3)(b))"
+  },
+  "gates": {
+    "a_census": {
+      "src": {
+        "gripper_link": {
+          "enabled": 1,
+          "disabled": 0,
+          "approximation_hist": {
+            "convexHull": 1
+          }
+        },
+        "gripper_left": {
+          "enabled": 1,
+          "disabled": 0,
+          "approximation_hist": {
+            "convexHull": 1
+          }
+        },
+        "gripper_right": {
+          "enabled": 1,
+          "disabled": 0,
+          "approximation_hist": {
+            "convexHull": 1
+          }
+        }
+      },
+      "dst": {
+        "gripper_link": {
+          "enabled": 1,
+          "disabled": 0,
+          "approximation_hist": {
+            "convexHull": 1
+          }
+        },
+        "gripper_left": {
+          "enabled": 1,
+          "disabled": 0,
+          "approximation_hist": {
+            "convexHull": 1
+          }
+        },
+        "gripper_right": {
+          "enabled": 1,
+          "disabled": 0,
+          "approximation_hist": {
+            "convexHull": 1
+          }
+        }
+      },
+      "pass": true
+    },
+    "b_joint_attrs": {
+      "diffs": {},
+      "pass": true,
+      "dst_joints": {
+        "gripper_joint1": {
+          "physics:axis": "'X'",
+          "physics:lowerLimit": "0.0",
+          "physics:upperLimit": "0.07150000333786011",
+          "physics:localPos0": "Gf.Vec3f(-0.0420910008251667, 2.7530999432201497e-05, -1.3030999980401248e-05)",
+          "physics:localRot0": "Gf.Quatf(-0.7071054577827454, Gf.Vec3f(2.8129923390629585e-10, 4.6353518246000647e-10, 0.7071080803871155))",
+          "physics:localPos1": "Gf.Vec3f(0.0, 0.0, 0.0)",
+          "physics:localRot1": "Gf.Quatf(1.0, Gf.Vec3f(0.0, 0.0, 0.0))",
+          "drive:linear:physics:maxForce": "100.0",
+          "drive:linear:physics:targetPosition": "0.0",
+          "drive:linear:physics:targetVelocity": "0.0",
+          "physxJoint:maxJointVelocity": "859.4367065429688",
+          "urdf:limit:effort": "100.0",
+          "urdf:limit:velocity": "15.0",
+          "physics:body0": [
+            "/bg1_gripper/gripper_link"
+          ],
+          "physics:body1": [
+            "/bg1_gripper/gripper_left"
+          ]
+        },
+        "gripper_joint2": {
+          "physics:axis": "'X'",
+          "physics:lowerLimit": "0.0",
+          "physics:upperLimit": "0.07150000333786011",
+          "physics:localPos0": "Gf.Vec3f(-0.0420910008251667, -2.7530999432201497e-05, 1.3030999980401248e-05)",
+          "physics:localRot0": "Gf.Quatf(0.7071054577827454, Gf.Vec3f(-4.6353409999255746e-10, 2.813009269964084e-10, 0.7071080803871155))",
+          "physics:localPos1": "Gf.Vec3f(0.0, 0.0, 0.0)",
+          "physics:localRot1": "Gf.Quatf(1.0, Gf.Vec3f(0.0, 0.0, 0.0))",
+          "drive:linear:physics:maxForce": "100.0",
+          "drive:linear:physics:targetPosition": "0.0",
+          "drive:linear:physics:targetVelocity": "0.0",
+          "physxJoint:maxJointVelocity": "859.4367065429688",
+          "urdf:limit:effort": "100.0",
+          "urdf:limit:velocity": "15.0",
+          "physics:body0": [
+            "/bg1_gripper/gripper_link"
+          ],
+          "physics:body1": [
+            "/bg1_gripper/gripper_right"
+          ]
+        }
+      }
+    },
+    "c_mesh_sha": {
+      "counts": {
+        "gripper_link": [
+          5,
+          5
+        ],
+        "gripper_left": [
+          3,
+          3
+        ],
+        "gripper_right": [
+          3,
+          3
+        ]
+      },
+      "n_diffs": 0,
+      "diffs": {},
+      "pass": true
+    },
+    "d_mass": {
+      "diffs": {},
+      "pass": true
+    },
+    "e_pad_geometry": {
+      "max_sorted_point_dev_m": 3.122502256758253e-17,
+      "pass": true
+    }
+  },
+  "all_gates_pass": true,
+  "wall_seconds": 7.3,
+  "source_pins_recheck": "9/9 unchanged"
+}
