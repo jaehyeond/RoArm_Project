@@ -1,0 +1,449 @@
+{
+  "artifact": "ROARM_RERUN_ARTIFACT_VALIDATION_V1",
+  "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/yard_track/y2_d454/yp1_timeline.rrd",
+  "expected_rerun_version": "0.34.1",
+  "expected_entity_paths": [
+    "/metadata/run",
+    "/scene/tray_src",
+    "/scene/tray_bin",
+    "/rocks/final_hulls",
+    "/rocks/centers",
+    "/heightmap/src_final",
+    "/heightmap/bin_final",
+    "/plots/max_speed_mps",
+    "/plots/dispersion_mm",
+    "/plots/reshape_cells",
+    "/plots/bin_hmax_mm",
+    "/plots/hmax_violation_cells",
+    "/events/phase",
+    "/events/verdict"
+  ],
+  "expected_timeline_names": [],
+  "exact_entity_paths": [
+    "/events/phase",
+    "/events/verdict",
+    "/heightmap/bin_final",
+    "/heightmap/src_final",
+    "/metadata/run",
+    "/plots/bin_hmax_mm",
+    "/plots/dispersion_mm",
+    "/plots/hmax_violation_cells",
+    "/plots/max_speed_mps",
+    "/plots/reshape_cells",
+    "/rocks/centers",
+    "/rocks/final_hulls",
+    "/scene/tray_bin",
+    "/scene/tray_src"
+  ],
+  "exact_timeline_names": [
+    "blueprint",
+    "cycle",
+    "log_time",
+    "settle_step"
+  ],
+  "expected_entity_components": {
+    "/metadata/run": [
+      "TextDocument:text"
+    ],
+    "/scene/tray_src": [
+      "LineStrips3D:colors",
+      "LineStrips3D:radii",
+      "LineStrips3D:strips"
+    ],
+    "/scene/tray_bin": [
+      "LineStrips3D:colors",
+      "LineStrips3D:radii",
+      "LineStrips3D:strips"
+    ],
+    "/rocks/final_hulls": [
+      "LineStrips3D:colors",
+      "LineStrips3D:radii",
+      "LineStrips3D:strips"
+    ],
+    "/rocks/centers": [
+      "Points3D:colors",
+      "Points3D:positions",
+      "Points3D:radii"
+    ],
+    "/heightmap/src_final": [
+      "Points3D:colors",
+      "Points3D:positions",
+      "Points3D:radii"
+    ],
+    "/heightmap/bin_final": [
+      "Points3D:colors",
+      "Points3D:positions",
+      "Points3D:radii"
+    ],
+    "/plots/max_speed_mps": [
+      "Scalars:scalars"
+    ],
+    "/plots/dispersion_mm": [
+      "Scalars:scalars"
+    ],
+    "/plots/reshape_cells": [
+      "Scalars:scalars"
+    ],
+    "/plots/bin_hmax_mm": [
+      "Scalars:scalars"
+    ],
+    "/plots/hmax_violation_cells": [
+      "Scalars:scalars"
+    ],
+    "/events/phase": [
+      "TextLog:level",
+      "TextLog:text"
+    ],
+    "/events/verdict": [
+      "TextLog:level",
+      "TextLog:text"
+    ]
+  },
+  "forbidden_entity_fragments": [
+    "/\\/"
+  ],
+  "blueprint_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/yard_track/y2_d454/yp1_timeline.rbl",
+  "rendered_blueprint_source": "active blueprint embedded in the RRD",
+  "external_rbl_role": "verified fixed-layout export; the 0.34.1 CLI does not guarantee that an external RBL overrides an already-active embedded blueprint",
+  "screenshot_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/yard_track/y2_d454/yp1_inspection.png",
+  "screenshot_window_size": "2400x1400",
+  "screenshot_port": null,
+  "human_visual_inspection_required": true,
+  "bytes": 677253,
+  "sha256": "e29bd15ad3efa3c29acbfff3e0c8c30882edfe875df78300a4608cbc9c7816b7",
+  "version": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "--version"
+    ],
+    "returncode": 0,
+    "stdout": "rerun-cli 0.34.1 (base lance map_view nasm native_viewer oss_server perf_telemetry re_server release_full release_no_web_viewer web_viewer) [rustc 1.92.0 (ded5c06cf 2025-12-08), LLVM 21.1.3] x86_64-unknown-linux-gnu prepare-release-0.34.1 4efb18f, built 2026-07-07T16:20:42.173372603Z\nVideo features: av1 ffmpeg nasm\n",
+    "stderr": "",
+    "ok": true,
+    "expected_version_match": true
+  },
+  "verify": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "verify",
+      "--check-footers",
+      "true",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/yard_track/y2_d454/yp1_timeline.rrd"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "1 file verified without error.\n",
+    "ok": true
+  },
+  "stats": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "stats",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/yard_track/y2_d454/yp1_timeline.rrd"
+    ],
+    "returncode": 0,
+    "stdout": "Overview\n----------\nnum_chunks = 33\nnum_entity_paths = 30\nnum_chunks_without_components = 0 (0.000%)\nnum_rows = 5\u2009400\nnum_rows_min = 1\nnum_rows_max = 1\u2009683\nnum_rows_avg = 163.636\nnum_static = 7\nnum_indexes_min = 0\nnum_indexes_max = 3\nnum_indexes_avg = 1.758\nnum_components_min = 1\nnum_components_max = 3\nnum_components_avg = 2.030\n\nNum chunks per entity\n---------------------\n/__properties: 1\n/blueprint_panel: 1\n/container/28c4c494-8cdd-4353-8c47-2c780b30d080: 1\n/container/ae27f2ae-7764-4827-bdd5-77b8f49bb760: 1\n/container/d8f400be-215c-46c1-abe1-c3e45bfdd1ac: 1\n/events/phase: 1\n/events/verdict: 1\n/heightmap/bin_final: 1\n/heightmap/src_final: 1\n/metadata/run: 1\n/plots/bin_hmax_mm: 1\n/plots/dispersion_mm: 1\n/plots/hmax_violation_cells: 1\n/plots/max_speed_mps: 2\n/plots/reshape_cells: 1\n/rocks/centers: 3\n/rocks/final_hulls: 1\n/scene/tray_bin: 1\n/scene/tray_src: 1\n/selection_panel: 1\n/time_panel: 1\n/view/320bfa26-a194-4eec-9cdf-1469330b308b: 1\n/view/320bfa26-a194-4eec-9cdf-1469330b308b/ViewContents: 1\n/view/c1fd7c5d-b4c1-49a8-b54e-0ea8c0864c33: 1\n/view/c1fd7c5d-b4c1-49a8-b54e-0ea8c0864c33/ViewContents: 1\n/view/cdd74e96-3966-46c8-aded-f078f0fdf0c9: 1\n/view/cdd74e96-3966-46c8-aded-f078f0fdf0c9/ViewContents: 1\n/view/d05d3d37-e0d3-4167-947b-55bb8ef61a03: 1\n/view/d05d3d37-e0d3-4167-947b-55bb8ef61a03/ViewContents: 1\n/viewport: 1\n\nNum chunks per index\n--------------------\nblueprint: 15\ncycle: 6\nlog_time: 26\nsettle_step: 11\n\nNum chunks per component\n------------------------\nContainerBlueprint:col_shares: 1\nContainerBlueprint:container_kind: 3\nContainerBlueprint:contents: 3\nContainerBlueprint:row_shares: 1\nLineStrips3D:colors: 3\nLineStrips3D:radii: 3\nLineStrips3D:strips: 3\nPanelBlueprint:state: 2\nPoints3D:colors: 5\nPoints3D:positions: 5\nPoints3D:radii: 5\nRecordingInfo:start_time: 1\nScalars:scalars: 6\nTextDocument:media_type: 1\nTextDocument:text: 1\nTextLog:level: 2\nTextLog:text: 2\nTimePanelBlueprint:state: 1\nViewBlueprint:class_identifier: 4\nViewBlueprint:display_name: 4\nViewBlueprint:space_origin: 4\nViewContents:query: 4\nViewportBlueprint:auto_layout: 1\nViewportBlueprint:auto_views: 1\nViewportBlueprint:root_container: 1\n\nSize (schema + data, compressed)\n--------------------------------\nipc_size_bytes_total = 607 KiB\nipc_size_bytes_min = 913 B\nipc_size_bytes_max = 209 KiB\nipc_size_bytes_avg = 18.4 KiB\nipc_size_bytes_p50 = 1.6 KiB\nipc_size_bytes_p90 = 45.9 KiB\nipc_size_bytes_p95 = 166 KiB\nipc_size_bytes_p99 = 209 KiB\nipc_size_bytes_p999 = 209 KiB\n\nSize (schema + data, uncompressed)\n----------------------------------\nipc_size_bytes_total = 1.4 MiB\nipc_size_bytes_min = 1.7 KiB\nipc_size_bytes_max = 544 KiB\nipc_size_bytes_avg = 42.1 KiB\nipc_size_bytes_p50 = 4.1 KiB\nipc_size_bytes_p90 = 75.6 KiB\nipc_size_bytes_p95 = 350 KiB\nipc_size_bytes_p99 = 544 KiB\nipc_size_bytes_p999 = 544 KiB\n\nSize (schema only, uncompressed)\n--------------------------------\nipc_size_bytes_total = 59.3 KiB\nipc_size_bytes_min = 1.1 KiB\nipc_size_bytes_max = 2.4 KiB\nipc_size_bytes_avg = 1.8 KiB\nipc_size_bytes_p50 = 1.7 KiB\nipc_size_bytes_p90 = 2.2 KiB\nipc_size_bytes_p95 = 2.3 KiB\nipc_size_bytes_p99 = 2.4 KiB\nipc_size_bytes_p999 = 2.4 KiB\n\nSize (data only, uncompressed)\n------------------------------\nipc_size_bytes_total = 1.3 MiB\nipc_size_bytes_min = 656 B\nipc_size_bytes_max = 542 KiB\nipc_size_bytes_avg = 40.3 KiB\nipc_size_bytes_p50 = 1.9 KiB\nipc_size_bytes_p90 = 74.1 KiB\nipc_size_bytes_p95 = 348 KiB\nipc_size_bytes_p99 = 542 KiB\nipc_size_bytes_p999 = 542 KiB\n\nUnsorted timelines\n------------------\n(none \u2014 every timeline on every chunk is sorted)\n\nFooters\n-------\nnum_manifests = 2 (one per recording)\n\nFooter manifest for StoreId(Blueprint, \"roarm_y2_d454_yp1\", \"rec_cfddaa01ad424b148fc55ef02ec725d2\")\n  num_chunks_indexed = 15\n  num_static_chunks = 0\n  num_entity_paths = 15\n  manifest_num_columns = 102\n  sorbet_schema_num_fields = 33\n  sorbet_schema_sha256 = 93f4a75df0b02354a47e4b0b15e186d48da28bedd671b14ed799e4dc12da2589\n  chunk_byte_size_total (native) = 21.9 KiB\n  chunk_byte_size_uncompressed_total = 49.9 KiB\n\nFooter manifest for StoreId(Recording, \"roarm_y2_d454_yp1\", \"y2_d454_yp1\")\n  num_chunks_indexed = 18\n  num_static_chunks = 7\n  num_entity_paths = 15\n  manifest_num_columns = 70\n  sorbet_schema_num_fields = 34\n  sorbet_schema_sha256 = a479120217f9089c10a42fc420ab79c76e8666b116a2fa60d16fc52e8ad73660\n  chunk_byte_size_total (native) = 587 KiB\n  chunk_byte_size_uncompressed_total = 1.3 MiB\n",
+    "stderr": "\u001b[2m2026-08-16T07:49:14.275653Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mrerun::commands::rrd::stats\u001b[0m\u001b[2m:\u001b[0m processing input\u2026\n\u001b[2m2026-08-16T07:49:14.280279Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mrerun::commands::rrd::stats\u001b[0m\u001b[2m:\u001b[0m computing stats\u2026\n",
+    "ok": true
+  },
+  "print_verbose": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "print",
+      "-v",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/yard_track/y2_d454/yp1_timeline.rrd"
+    ],
+    "returncode": 0,
+    "stdout": "Showing data after migration to latest Rerun version\nStoreInfo {\n    store_id: StoreId(\n        Recording,\n        \"roarm_y2_d454_yp1\",\n        \"y2_d454_yp1\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nStoreInfo {\n    store_id: StoreId(\n        Recording,\n        \"roarm_y2_d454_yp1\",\n        \"y2_d454_yp1\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nChunk(chunk_18CC39A9CB0688E123ae2c07058ed569) with 1 rows (632 B) - /__properties - data columns: [/__properties@RecordingInfo:start_time]\nChunk(chunk_18CC39A9E2E42F4A0f87331115895ddf) with 1 rows (1.0 KiB) - /scene/tray_bin - data columns: [/scene/tray_bin@LineStrips3D:colors /scene/tray_bin@LineStrips3D:radii /scene/tray_bin@LineStrips3D:strips]\nChunk(chunk_18CC39A9E2ECB23E0f87331115895de0) with 924 rows (168 KiB) - /rocks/centers - data columns: [/rocks/centers@Points3D:colors /rocks/centers@Points3D:positions /rocks/centers@Points3D:radii]\nChunk(chunk_18CC39A9E9DC76F50f87331115895de1) with 922 rows (20.7 KiB) - /plots/max_speed_mps - data columns: [/plots/max_speed_mps@Scalars:scalars]\nChunk(chunk_18CC39A9EBFDB0690f87331115895de2) with 1 rows (1.0 KiB) - /scene/tray_src - data columns: [/scene/tray_src@LineStrips3D:colors /scene/tray_src@LineStrips3D:radii /scene/tray_src@LineStrips3D:strips]\nChunk(chunk_18CC39A9EBFDEA3E0f87331115895de3) with 1 rows (32.8 KiB) - /rocks/final_hulls - data columns: [/rocks/final_hulls@LineStrips3D:colors /rocks/final_hulls@LineStrips3D:radii /rocks/final_hulls@LineStrips3D:strips]\nChunk(chunk_18CC39A9EBFDFF120f87331115895de4) with 1 rows (1.9 KiB) - /heightmap/src_final - data columns: [/heightmap/src_final@Points3D:colors /heightmap/src_final@Points3D:positions /heightmap/src_final@Points3D:radii]\nChunk(chunk_18CC39A9EBFE13FD0f87331115895de5) with 1 rows (1.9 KiB) - /heightmap/bin_final - data columns: [/heightmap/bin_final@Points3D:colors /heightmap/bin_final@Points3D:positions /heightmap/bin_final@Points3D:radii]\nStoreInfo {\n    store_id: StoreId(\n        Blueprint,\n        \"roarm_y2_d454_yp1\",\n        \"rec_cfddaa01ad424b148fc55ef02ec725d2\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nStoreInfo {\n    store_id: StoreId(\n        Blueprint,\n        \"roarm_y2_d454_yp1\",\n        \"rec_cfddaa01ad424b148fc55ef02ec725d2\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nChunk(chunk_18CC39A9ED6A4CE7364fe24e61a11349) with 1 rows (924 B) - /view/c1fd7c5d-b4c1-49a8-b54e-0ea8c0864c33/ViewContents - data columns: [/view/c1fd7c5d-b4c1-49a8-b54e-0ea8c0864c33/ViewContents@ViewContents:query]\nChunk(chunk_18CC39A9ED6A91E4364fe24e61a1134a) with 1 rows (1.2 KiB) - /view/cdd74e96-3966-46c8-aded-f078f0fdf0c9 - data columns: [/view/cdd74e96-3966-46c8-aded-f078f0fdf0c9@ViewBlueprint:class_identifier /view/cdd74e96-3966-46c8-aded-f078f0fdf0c9@ViewBlueprint:display_name /view/cdd74e96-3966-46c8-aded-f078f0fdf0c9@ViewBlueprint:space_origin]\nChunk(chunk_18CC39A9ED6AA2BB364fe24e61a1134b) with 1 rows (1.2 KiB) - /view/320bfa26-a194-4eec-9cdf-1469330b308b - data columns: [/view/320bfa26-a194-4eec-9cdf-1469330b308b@ViewBlueprint:class_identifier /view/320bfa26-a194-4eec-9cdf-1469330b308b@ViewBlueprint:display_name /view/320bfa26-a194-4eec-9cdf-1469330b308b@ViewBlueprint:space_origin]\nChunk(chunk_18CC39A9ED6AAFC4364fe24e61a1134c) with 1 rows (1.2 KiB) - /view/d05d3d37-e0d3-4167-947b-55bb8ef61a03 - data columns: [/view/d05d3d37-e0d3-4167-947b-55bb8ef61a03@ViewBlueprint:class_identifier /view/d05d3d37-e0d3-4167-947b-55bb8ef61a03@ViewBlueprint:display_name /view/d05d3d37-e0d3-4167-947b-55bb8ef61a03@ViewBlueprint:space_origin]\nChunk(chunk_18CC39A9ED6ACB19364fe24e61a1134d) with 1 rows (1.2 KiB) - /container/d8f400be-215c-46c1-abe1-c3e45bfdd1ac - data columns: [/container/d8f400be-215c-46c1-abe1-c3e45bfdd1ac@ContainerBlueprint:container_kind /container/d8f400be-215c-46c1-abe1-c3e45bfdd1ac@ContainerBlueprint:contents /container/d8f400be-215c-46c1-abe1-c3e45bfdd1ac@ContainerBlueprint:row_shares]\nChunk(chunk_18CC39A9ED6ADEEE364fe24e61a1134e) with 1 rows (1.2 KiB) - /viewport - data columns: [/viewport@ViewportBlueprint:auto_layout /viewport@ViewportBlueprint:auto_views /viewport@ViewportBlueprint:root_container]\nChunk(chunk_18CC39A9ED6AF18B364fe24e61a1134f) with 1 rows (1.3 KiB) - /container/28c4c494-8cdd-4353-8c47-2c780b30d080 - data columns: [/container/28c4c494-8cdd-4353-8c47-2c780b30d080@ContainerBlueprint:col_shares /container/28c4c494-8cdd-4353-8c47-2c780b30d080@ContainerBlueprint:container_kind /container/28c4c494-8cdd-4353-8c47-2c780b30d080@ContainerBlueprint:contents]\nChunk(chunk_18CC39A9ED6AFED2364fe24e61a11350) with 1 rows (1.1 KiB) - /container/ae27f2ae-7764-4827-bdd5-77b8f49bb760 - data columns: [/container/ae27f2ae-7764-4827-bdd5-77b8f49bb760@ContainerBlueprint:container_kind /container/ae27f2ae-7764-4827-bdd5-77b8f49bb760@ContainerBlueprint:contents]\nChunk(chunk_18CC39A9ED6B097C364fe24e61a11351) with 1 rows (923 B) - /view/320bfa26-a194-4eec-9cdf-1469330b308b/ViewContents - data columns: [/view/320bfa26-a194-4eec-9cdf-1469330b308b/ViewContents@ViewContents:query]\nChunk(chunk_18CC39A9ED6B144B364fe24e61a11352) with 1 rows (922 B) - /view/d05d3d37-e0d3-4167-947b-55bb8ef61a03/ViewContents - data columns: [/view/d05d3d37-e0d3-4167-947b-55bb8ef61a03/ViewContents@ViewContents:query]\nChunk(chunk_18CC39A9ED6B1E25364fe24e61a11353) with 1 rows (883 B) - /blueprint_panel - data columns: [/blueprint_panel@PanelBlueprint:state]\nChunk(chunk_18CC39A9ED6B276B364fe24e61a11354) with 1 rows (937 B) - /view/cdd74e96-3966-46c8-aded-f078f0fdf0c9/ViewContents - data columns: [/view/cdd74e96-3966-46c8-aded-f078f0fdf0c9/ViewContents@ViewContents:query]\nChunk(chunk_18CC39A9ED6B3197364fe24e61a11355) with 1 rows (883 B) - /selection_panel - data columns: [/selection_panel@PanelBlueprint:state]\nChunk(chunk_18CC39A9ED6B3B26364fe24e61a11356) with 1 rows (885 B) - /time_panel - data columns: [/time_panel@TimePanelBlueprint:state]\nChunk(chunk_18CC39A9ED6B4467364fe24e61a11357) with 1 rows (1.2 KiB) - /view/c1fd7c5d-b4c1-49a8-b54e-0ea8c0864c33 - data columns: [/view/c1fd7c5d-b4c1-49a8-b54e-0ea8c0864c33@ViewBlueprint:class_identifier /view/c1fd7c5d-b4c1-49a8-b54e-0ea8c0864c33@ViewBlueprint:display_name /view/c1fd7c5d-b4c1-49a8-b54e-0ea8c0864c33@ViewBlueprint:space_origin]\nBlueprintActivationCommand(StoreId(Blueprint, \"roarm_y2_d454_yp1\", \"rec_cfddaa01ad424b148fc55ef02ec725d2\"), make_active: true, make_default: true)\nChunk(chunk_18CC39A9EC1449120f87331115895de6) with 1223 rows (262 KiB) - /rocks/centers - data columns: [/rocks/centers@Points3D:colors /rocks/centers@Points3D:positions /rocks/centers@Points3D:radii]\nChunk(chunk_18CC39A9ED83EA2D0f87331115895de7) with 32 rows (1.8 KiB) - /plots/reshape_cells - data columns: [/plots/reshape_cells@Scalars:scalars]\nChunk(chunk_18CC39A9ED8450940f87331115895de8) with 1 rows (1.0 KiB) - /metadata/run - data columns: [/metadata/run@TextDocument:media_type /metadata/run@TextDocument:text]\nChunk(chunk_18CC39A9ED8467890f87331115895de9) with 6 rows (1.4 KiB) - /events/verdict - data columns: [/events/verdict@TextLog:level /events/verdict@TextLog:text]\nChunk(chunk_18CC39A9ED8A961E0f87331115895dea) with 1683 rows (37.0 KiB) - /plots/max_speed_mps - data columns: [/plots/max_speed_mps@Scalars:scalars]\nChunk(chunk_18CC39A9ED9E43DF0f87331115895deb) with 33 rows (3.4 KiB) - /events/phase - data columns: [/events/phase@TextLog:level /events/phase@TextLog:text]\nChunk(chunk_18CC39A9EDA00AAE0f87331115895dec) with 459 rows (98.9 KiB) - /rocks/centers - data columns: [/rocks/centers@Points3D:colors /rocks/centers@Points3D:positions /rocks/centers@Points3D:radii]\nChunk(chunk_18CC39A9EDB03E510f87331115895ded) with 32 rows (1.8 KiB) - /plots/dispersion_mm - data columns: [/plots/dispersion_mm@Scalars:scalars]\nChunk(chunk_18CC39A9EDB0A9BF0f87331115895dee) with 32 rows (1.8 KiB) - /plots/bin_hmax_mm - data columns: [/plots/bin_hmax_mm@Scalars:scalars]\nChunk(chunk_18CC39A9EDB10DED0f87331115895def) with 32 rows (1.8 KiB) - /plots/hmax_violation_cells - data columns: [/plots/hmax_violation_cells@Scalars:scalars]\n",
+    "stderr": "",
+    "ok": true
+  },
+  "entity_path_contract": {
+    "observed_all": [
+      "/__properties",
+      "/blueprint_panel",
+      "/container/28c4c494-8cdd-4353-8c47-2c780b30d080",
+      "/container/ae27f2ae-7764-4827-bdd5-77b8f49bb760",
+      "/container/d8f400be-215c-46c1-abe1-c3e45bfdd1ac",
+      "/events/phase",
+      "/events/verdict",
+      "/heightmap/bin_final",
+      "/heightmap/src_final",
+      "/metadata/run",
+      "/plots/bin_hmax_mm",
+      "/plots/dispersion_mm",
+      "/plots/hmax_violation_cells",
+      "/plots/max_speed_mps",
+      "/plots/reshape_cells",
+      "/rocks/centers",
+      "/rocks/final_hulls",
+      "/scene/tray_bin",
+      "/scene/tray_src",
+      "/selection_panel",
+      "/time_panel",
+      "/view/320bfa26-a194-4eec-9cdf-1469330b308b",
+      "/view/320bfa26-a194-4eec-9cdf-1469330b308b/ViewContents",
+      "/view/c1fd7c5d-b4c1-49a8-b54e-0ea8c0864c33",
+      "/view/c1fd7c5d-b4c1-49a8-b54e-0ea8c0864c33/ViewContents",
+      "/view/cdd74e96-3966-46c8-aded-f078f0fdf0c9",
+      "/view/cdd74e96-3966-46c8-aded-f078f0fdf0c9/ViewContents",
+      "/view/d05d3d37-e0d3-4167-947b-55bb8ef61a03",
+      "/view/d05d3d37-e0d3-4167-947b-55bb8ef61a03/ViewContents",
+      "/viewport"
+    ],
+    "observed_non_system": [
+      "/events/phase",
+      "/events/verdict",
+      "/heightmap/bin_final",
+      "/heightmap/src_final",
+      "/metadata/run",
+      "/plots/bin_hmax_mm",
+      "/plots/dispersion_mm",
+      "/plots/hmax_violation_cells",
+      "/plots/max_speed_mps",
+      "/plots/reshape_cells",
+      "/rocks/centers",
+      "/rocks/final_hulls",
+      "/scene/tray_bin",
+      "/scene/tray_src"
+    ],
+    "checks": {
+      "/metadata/run": true,
+      "/scene/tray_src": true,
+      "/scene/tray_bin": true,
+      "/rocks/final_hulls": true,
+      "/rocks/centers": true,
+      "/heightmap/src_final": true,
+      "/heightmap/bin_final": true,
+      "/plots/max_speed_mps": true,
+      "/plots/dispersion_mm": true,
+      "/plots/reshape_cells": true,
+      "/plots/bin_hmax_mm": true,
+      "/plots/hmax_violation_cells": true,
+      "/events/phase": true,
+      "/events/verdict": true
+    },
+    "forbidden_fragment_absent": {
+      "/\\/": true
+    },
+    "exact_non_system_match": true,
+    "missing_exact": [],
+    "unexpected_non_system": [],
+    "pass": true
+  },
+  "component_contract": {
+    "checks": {
+      "/metadata/run": {
+        "required": [
+          "TextDocument:text"
+        ],
+        "observed": [
+          "TextDocument:media_type",
+          "TextDocument:text"
+        ],
+        "pass": true
+      },
+      "/scene/tray_src": {
+        "required": [
+          "LineStrips3D:colors",
+          "LineStrips3D:radii",
+          "LineStrips3D:strips"
+        ],
+        "observed": [
+          "LineStrips3D:colors",
+          "LineStrips3D:radii",
+          "LineStrips3D:strips"
+        ],
+        "pass": true
+      },
+      "/scene/tray_bin": {
+        "required": [
+          "LineStrips3D:colors",
+          "LineStrips3D:radii",
+          "LineStrips3D:strips"
+        ],
+        "observed": [
+          "LineStrips3D:colors",
+          "LineStrips3D:radii",
+          "LineStrips3D:strips"
+        ],
+        "pass": true
+      },
+      "/rocks/final_hulls": {
+        "required": [
+          "LineStrips3D:colors",
+          "LineStrips3D:radii",
+          "LineStrips3D:strips"
+        ],
+        "observed": [
+          "LineStrips3D:colors",
+          "LineStrips3D:radii",
+          "LineStrips3D:strips"
+        ],
+        "pass": true
+      },
+      "/rocks/centers": {
+        "required": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "observed": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true
+      },
+      "/heightmap/src_final": {
+        "required": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "observed": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true
+      },
+      "/heightmap/bin_final": {
+        "required": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "observed": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true
+      },
+      "/plots/max_speed_mps": {
+        "required": [
+          "Scalars:scalars"
+        ],
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true
+      },
+      "/plots/dispersion_mm": {
+        "required": [
+          "Scalars:scalars"
+        ],
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true
+      },
+      "/plots/reshape_cells": {
+        "required": [
+          "Scalars:scalars"
+        ],
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true
+      },
+      "/plots/bin_hmax_mm": {
+        "required": [
+          "Scalars:scalars"
+        ],
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true
+      },
+      "/plots/hmax_violation_cells": {
+        "required": [
+          "Scalars:scalars"
+        ],
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true
+      },
+      "/events/phase": {
+        "required": [
+          "TextLog:level",
+          "TextLog:text"
+        ],
+        "observed": [
+          "TextLog:level",
+          "TextLog:text"
+        ],
+        "pass": true
+      },
+      "/events/verdict": {
+        "required": [
+          "TextLog:level",
+          "TextLog:text"
+        ],
+        "observed": [
+          "TextLog:level",
+          "TextLog:text"
+        ],
+        "pass": true
+      }
+    },
+    "pass": true
+  },
+  "timeline_contract": {
+    "observed": [
+      "blueprint",
+      "cycle",
+      "log_time",
+      "settle_step"
+    ],
+    "checks": {},
+    "exact_match": true,
+    "pass": true
+  },
+  "footer_manifest_present": true,
+  "blueprint_verify": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "verify",
+      "--check-footers",
+      "true",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/yard_track/y2_d454/yp1_timeline.rbl"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "1 file verified without error.\n",
+    "ok": true,
+    "attempted": true,
+    "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/yard_track/y2_d454/yp1_timeline.rbl",
+    "bytes": 51333,
+    "sha256": "dd48446c016ae554f1ae59c5fd67dae9585f940652700fa4f2b62d0e258e7148"
+  },
+  "headless_render": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "--headless",
+      "--window-size",
+      "2400x1400",
+      "--screenshot-to",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/yard_track/y2_d454/yp1_inspection.png",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/yard_track/y2_d454/yp1_timeline.rrd"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "\u001b[2m2026-08-16T07:49:14.395369Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mre_perf_telemetry::telemetry\u001b[0m\u001b[2m:\u001b[0m Telemetry initialized \u001b[3menabled\u001b[0m\u001b[2m=\u001b[0mfalse \u001b[3mservice\u001b[0m\u001b[2m=\u001b[0mrerun \u001b[3mtrace_mode\u001b[0m\u001b[2m=\u001b[0m\"off\" \u001b[3mtraces\u001b[0m\u001b[2m=\u001b[0moff \u001b[3mlogs\u001b[0m\u001b[2m=\u001b[0moff \u001b[3mmetrics\u001b[0m\u001b[2m=\u001b[0moff \u001b[3mtracy\u001b[0m\u001b[2m=\u001b[0mfalse\n\u001b[2m2026-08-16T07:49:14.572707Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mre_grpc_server\u001b[0m\u001b[2m:\u001b[0m Listening for gRPC connections on 0.0.0.0:9876. Connect by running `rerun --connect rerun+http://127.0.0.1:9876/proxy`\n\u001b[2m2026-08-16T07:49:14.572927Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mre_importer::import_file\u001b[0m\u001b[2m:\u001b[0m Loading \"/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/yard_track/y2_d454/yp1_timeline.rrd\"\u2026\n\u001b[2m2026-08-16T07:49:14.664770Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mre_viewer::headless\u001b[0m\u001b[2m:\u001b[0m Headless viewer running at 2400x1400.\n\u001b[2m2026-08-16T07:49:14.918786Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mre_viewer::screenshotter\u001b[0m\u001b[2m:\u001b[0m Screenshot saved to \"/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/yard_track/y2_d454/yp1_inspection.png\"\n\u001b[2m2026-08-16T07:49:14.934418Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mre_viewer::screenshotter\u001b[0m\u001b[2m:\u001b[0m Screenshot copied to clipboard\n\u001b[2m2026-08-16T07:49:14.938259Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mre_viewer::headless\u001b[0m\u001b[2m:\u001b[0m Headless viewer received close request, shutting down.\n",
+    "ok": true,
+    "attempted": true,
+    "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/yard_track/y2_d454/yp1_inspection.png",
+    "file_nonzero": true,
+    "bytes": 5566726,
+    "sha256": "fd661da32122d8fd00b0e7ef16d95cc495e74ba6216044a6e63755d3fcdc591f"
+  },
+  "errors": [],
+  "pass": true
+}

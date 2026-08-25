@@ -1,0 +1,52 @@
+{
+  "tool": "p30_y2_contrast_summary",
+  "inputs": {
+    "yp1_results_sha16": "f208e37b1e17a3b2",
+    "yp2_results_sha16": "52cdf0a70bc5fad3"
+  },
+  "pick_side_identical": {
+    "pick_sequence_equal": true,
+    "reshape_sequence_equal": true,
+    "reading": "pick측(greedy argmax)·source 재형성이 place 패턴과 무관하게 동일 — 트레이 간 물리 독립 + 결정론의 내적 일관성 검증"
+  },
+  "contrast": {
+    "hmax_violation_cells_final": {
+      "yp1_spread": 1,
+      "yp2_stack": 11
+    },
+    "hmax_violation_cells_any": {
+      "yp1_spread": 3,
+      "yp2_stack": 18
+    },
+    "n_cycles_with_violation": {
+      "yp1_spread": 10,
+      "yp2_stack": 15
+    },
+    "bin_hmax_final_mm": {
+      "yp1_spread": 80.79317957162857,
+      "yp2_stack": 94.94660794734955
+    },
+    "dispersion_mm": {
+      "yp1_spread": {
+        "mean": 19.451958140144598,
+        "p95": 43.08954817703184,
+        "max": 72.47922068161975
+      },
+      "yp2_stack": {
+        "mean": 38.1774018757041,
+        "p95": 62.56354154151658,
+        "max": 71.17791574033893
+      }
+    },
+    "escapes_out": {
+      "yp1_spread": 0,
+      "yp2_stack": 0
+    }
+  },
+  "readings": [
+    "동일 pick 정책·동일 초기 더미에서 place 셀 선택만 바꾸면 H_max 위반 셀 1→11(최종)·3→18(any), bin 최대 높이 80.8→94.9mm — place 선택이 상태·제약 위반을 실측 가능하게 바꾼다 (프로포절 §5 프레임의 sim 실증)",
+    "재형성(footprint 밖 |ΔH|>2mm)은 평균 2.9셀·최대 17셀, 더미가 높은 전반부에 집중 — '매 pick마다 재형성' 전제 실증 (RQ2 성립 근거)",
+    "착지 분산 p95 43mm(spread)~63mm(stack) ≫ 셀 10mm — drop_z≈0.20m 프리미티브 기준의 상한이며, place 행동 해상도(셀 vs 존)와 release 높이 설계의 입력. 실기 release 높이는 더 낮으므로 과대추정 가능 (비주장: 실기 분산)"
+  ],
+  "non_claims": "정책 최적성 비교 아님(greedy 하나 고정); H_max는 회계만(강제 없음); 파지 물리·실기 분산·Kinect 충실도 비주장"
+}

@@ -1,0 +1,150 @@
+{
+  "tool": "p26_y1_testbed_design_author",
+  "case": "y1_d453",
+  "manifest_sha16": "a1127acca8854a77",
+  "constants": {
+    "cell_m": 0.01,
+    "annulus_m": [
+      0.15,
+      0.325
+    ],
+    "margin_m": 0.005,
+    "az_src_deg": 25.0,
+    "az_bin_deg": -25.0,
+    "wall_t_m": 0.005,
+    "phi": 0.55,
+    "phi_range": [
+      0.5,
+      0.6
+    ],
+    "rho_min_at_phi_lo": 1.1,
+    "rho_max_at_phi_nom": 1.6
+  },
+  "source": {
+    "n_cells": 13,
+    "r_center": 0.23500000000000004,
+    "center": [
+      0.21298232995361277,
+      0.09931529150906439
+    ],
+    "L_int": 0.13,
+    "r_cell_min": 0.15795342802382845,
+    "r_cell_max": 0.31607074299201005,
+    "wall_h_m": 0.08,
+    "role": "선창 축소판 — 초기 더미 영역"
+  },
+  "bin": {
+    "n_cells": 13,
+    "r_center": 0.23500000000000004,
+    "center": [
+      0.21298232995361277,
+      -0.09931529150906439
+    ],
+    "L_int": 0.13,
+    "r_cell_min": 0.15795342802382845,
+    "r_cell_max": 0.31607074299201005,
+    "wall_h_m": 0.08,
+    "h_max_m": 0.08,
+    "role": "목적지 bin — H_max 상한이 place 선택을 유효화"
+  },
+  "episode": {
+    "n_ep": 32,
+    "per_class": 8,
+    "h_max": 0.08,
+    "v_solid_cm3": 554.8282838994521,
+    "rho": 1.3402344861978195,
+    "rho_phi050": 1.2183949874525632,
+    "rho_phi060": 1.462073984943076,
+    "subset_names": [
+      "rock_22_00",
+      "rock_22_01",
+      "rock_22_02",
+      "rock_22_03",
+      "rock_22_04",
+      "rock_22_05",
+      "rock_22_06",
+      "rock_22_07",
+      "rock_26_00",
+      "rock_26_01",
+      "rock_26_02",
+      "rock_26_03",
+      "rock_26_04",
+      "rock_26_05",
+      "rock_26_06",
+      "rock_26_07",
+      "rock_30_00",
+      "rock_30_01",
+      "rock_30_02",
+      "rock_30_03",
+      "rock_30_04",
+      "rock_30_05",
+      "rock_30_06",
+      "rock_30_07",
+      "rock_34_00",
+      "rock_34_01",
+      "rock_34_02",
+      "rock_34_03",
+      "rock_34_04",
+      "rock_34_05",
+      "rock_34_06",
+      "rock_34_07"
+    ],
+    "subset_sha16": [
+      "d02bbc0fe9358869",
+      "c9107cd7b01b3f7f",
+      "02856ef0d00bac50",
+      "8604cda54f32379b",
+      "74ea73f77e5f7c2d",
+      "135198eb57a11a27",
+      "515d30c6a112065c",
+      "3a37be14b857f382",
+      "e553904c4f9e1591",
+      "a74400397438dd74",
+      "6bd76bc14d896161",
+      "0b474feffe4904b9",
+      "babfea75adcce45d",
+      "6762e8ffba41df2a",
+      "5aede8147e1303b6",
+      "68453e9128957036",
+      "a4f685a420f24ba6",
+      "3a3a705069e29b7a",
+      "c743de3d888f4a8b",
+      "e915d1c60e4d4ca3",
+      "c2cbc8b7a16bc3f8",
+      "27d13098fc366437",
+      "dc3be260120a4dbe",
+      "edbf203733917d8a",
+      "78d74e9764830ea0",
+      "1ff69af9c72ac558",
+      "bd3a1e4087b29269",
+      "8a0073c4a3439622",
+      "cb44d0b34e87fb1b",
+      "a69cfef05365373a",
+      "5e261cb0958b74e1",
+      "5c6f8733a5277d37"
+    ],
+    "mass_max_g": 15.661569951776805,
+    "mass_sum_g": 275.19482881412824,
+    "grasp_w_max_mm": 34.00000000000001,
+    "extent_max_mm": 49.59783324487389
+  },
+  "pile_estimate": {
+    "v_bulk_l": 1.0087786979990037,
+    "pile_h_avg_m": 0.059691047218875956,
+    "note": "phi 가정 기반 참고치 — 게이트 아님, yt1 실측이 권위"
+  },
+  "tray_gap_m": 0.05863058301812877,
+  "gates": {
+    "g_reach_src": true,
+    "g_reach_bin": true,
+    "g_capacity": true,
+    "g_payload": true,
+    "g_grasp_open": true,
+    "g_no_overlap": true
+  },
+  "assumptions": [
+    "phi=0.55는 가정(실측 아님) — rho는 phi 0.50/0.60 감도 병기",
+    "질량은 manifest 15% infill 추정치 — 실측 전 sim 질량 주장 금지(o1 규약)",
+    "annulus는 D440/t3w sim 결과 — 실기 재검증 전 실기 주장 금지"
+  ]
+}

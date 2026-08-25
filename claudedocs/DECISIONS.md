@@ -27981,3 +27981,117 @@ timeline.rrd,timeline.rbl,rerun_validation.json,inspection.png,…}`,
 `sim_scripts/p23_g0f_gs1_sleeve_design_author.py`(REV-1)·`p24_g0f_gs1_…py`·
 `p25_g0f_gs2_…py`; 대조 = D445(순정 0/13)·D451(fg2 폭-정지 창)·D446(분해
 충돌)·D447(침묵 사망)·63rd §6.
+
+## D453 — 67th, y1_d453 yt1/yt3: 야드 테스트베드 v1 성립 — **웨이브 스폰(2×2×8, z=0.20)이 격자 일괄 낙하의 이탈(3/32, 벽-상단 8.4mm 조기 착지+오버행)을 해소**해 32/32 유지·420 step 정착·cold-start bit-정확 재현(Δ=0.0)을 달성; 레이캐스트 높이맵은 평탄 셀에서 raw-메쉬 GT와 bit-일치하나 **가파른 면에서 cooked convex 수평 ~1.2mm가 tan(θ) 증폭**(79.5° 셀 6.4mm, 게이트 FAIL 보존) — sim 관측의 권위 표면 = 충돌과 동일한 cooked hull (물리 실행 O ×2+rep, Isaac O, 로봇 0, D427~D452 재판정 0)
+
+**Evidence.** 2026-08-16 67th, case `y1_d453` (신규 yard_track, 사용자 (b) 승인,
+bin-제약 place 프레임). 설계 p26 게이트 6/6(`y1_design.json` `a045c414`):
+source/bin 13×13셀@10mm annulus 내, **bin H_max=80mm·ρ=1.34, ρ(φ=0.50)≥1.10
+완주-안전 기준**(1차 탐색의 ρ_lo=1.066은 완주 불가 위험으로 기각). prereg
+`8d8ec12f`+REV-1(스폰 z, max|vertex 좌표| 27.18mm 실측)+REV-2/2a. yt1(3×3×4
+일괄 낙하) = `Y1_FAIL_G_CONTAIN` 3/32 이탈; yt3(2×2 격자 ±27.5mm — 벽 밴드
+미오버행 — 8웨이브×4개 dynamic 신규 저작) = 32/32 유지·settle 420·침투
+−0.28mm·pile h_avg 52.5mm(설계 φ-추정 −12%). G-hmap: 0.5mm 초과 4/169셀의
+GT 면 기울기 38~80°(p28 `yt3_hmap_slope_analysis.json` `207320de`), 2mm 위반은
+79.5° 1셀뿐·인접 셀 bit-일치. rep2(별도 프로세스) max_dh=0.0mm·pose Δ=0.0.
+D341 완주 2 run(rerun 0.34.1 pass=True, 육안 기록 67th doc §4). 하네스 판명
+3건: `simulate_physics_async(1,dt)`=정확 1 step(진단1 자유낙하 이론치 일치) /
+kinematic translate 텔레포트는 물리 미반영(min_dz=−797mm) / 런타임 dynamic
+저작은 즉시 시뮬. attempt 오진 2회(비동기 활성화→step 미보장)는 진단
+스크립트로 기각 후 진짜 원인(벽-상단 착지 경로를 무시한 가드 임계) 확정.
+
+**Implication.** ① 에피소드 초기 더미 생성 규약 = yt3 웨이브 스폰(시드 =
+통제된 초기상태, RQ2 "같은 초기 더미에서 정책 비교" 전제 sim 성립). ② 높이맵
+관측 파이프라인 검증 완료 — 단 **관측의 권위 표면은 cooked convex hull**(충돌
+동일)이고 raw 메쉬 GT는 교차검증층; 경사면 tan(θ) 증폭은 max-게이트 설계 시
+반드시 반영(경사-인지 허용오차 또는 셀 분류). ③ 스폰/가드 임계는 기하 경로
+(벽-상단 조기 착지 8.4mm) 검산 후 설정 — "자유낙하 기대치" 단독 금지. ④
+kinematic 파크+텔레포트 패턴 금지(물리 미반영) — 런타임 저작으로 대체. ⑤
+비주장: 실물 질량(15% infill 추정)·마찰/반발 현실성·Kinect 관측 충실도·bin
+투하 물리·안식각 현실 대응·트레이 코너 실기 도달성. D427~D452 재판정 0.
+
+**Source.** `claudedocs/session_20260816_67th_y1_d453_testbed_pile_heightmap.md`;
+`claudedocs/runtime_logs/yard_track/y1_d453/` — `y1_{design.json,layout.png,
+prereg.md}`, `yt1_{results.json,trace.npz,timeline.rrd/.rbl,rerun_validation.json,
+inspection.png,attempt{1,2}_*}`, `yt3_{results.json(`FAIL_G_HMAP` 보존),trace.npz,
+timeline.rrd/.rbl,rerun_validation.json,inspection.png,attempt1_*,
+hmap_slope_analysis.json,rep2_results.json,repeat_compare.json}`,
+`yt2_heightmap_compare{,_yt3}.png`; `sim_scripts/p2{6,7,8}_y1_*.py`; 대조 =
+D440(t3w annulus)·D446(표현 갭 계보)·D447(실패 캡처)·D450 ⑥·D322(변수 사다리).
+
+## D454 — 68th, y2_d454 yp1/yp2: **pick-place 전이층 성립 — 32-cycle 전량 이송 에피소드가 cold-start bit-정확 재현**(2605 step, Δ=0.0)되고, 세 연구 전제가 sim에서 정량 실증됨 — ① 재형성(pick당 footprint 밖 평균 2.9·최대 17셀, 더미 높을 때 집중) ② 착지 분산 p95 43~63mm ≫ 셀 10mm(drop_z 0.2m 조건부 상한) ③ **place 셀 선택 단독 변경이 H_max 위반 1→11셀·bin 최대 높이 80.8→94.9mm로 상태·제약을 바꿈**(동일 pick 시퀀스 bit-일치 통제 하) (물리 실행 O ×3, Isaac O, 로봇 0, D427~D453 재판정 0)
+
+**Evidence.** 2026-08-16 68th, case `y2_d454` (사용자 (b2) 승인). prereg
+`3963212a`. 프리미티브: pick = source 높이맵 argmax 셀 수직 레이 hit 물체
+RemovePrim(파지 물리 추상화·closed-loop 관측) / place = 목표 bin 셀 상공
+dynamic 신규 저작(pick 자세 유지, 낙하 z = max(0.20, h_bin+r_bound+8mm) —
+관측의 결정론 함수) / 합동 정착(streak 30, cap 400). yp1(9지점 라스터) =
+전 게이트 PASS: 초기 정착 420(yt3 bit-동일), 전량 이송 src0/bin32/out0,
+G-final-hmap 99.1%≤0.5mm(p95 게이트 — max 절대 게이트는 D453 ② 반영 제외).
+yp2(중앙 고정) = 게이트 PASS + 이탈 0(벽 80mm가 적층 봉쇄, 마운드 94.9mm는
+림 상회). 대조(p30 `288535e5`): pick·재형성 수열이 두 probe에서 bit-동일 —
+트레이 간 물리 독립+결정론의 내적 일관성 통제 성립. rep2(cold-start):
+max_dh 0.0·분산 Δ0.0·총 step 동일. D341 완주 3 run + 육안(68th doc §3;
+yt3 RRD 오기의 f-string 수리 유효 확인). 부수 관찰: greedy-최고점이 대형
+클래스(34mm)를 선행 소진 — 크기-결정 결합.
+
+**Implication.** ① RQ1 데모(greedy 완주)가 sim에서 이미 성립 — RQ2 본실험
+(정책 비교)의 기계·통제 조건(동일 초기 더미·bit-재현) 완비. ② 놓기 선택은
+실측 가능한 결정층(H_max 위반 11배) — 놓기-강등 금지 프레임의 실증 근거로
+프로포절·발표에 인용 가능(수치 출처 = yp{1,2}_results). ③ 착지 분산은
+drop 높이의 함수 — place 행동 해상도(10mm 셀 vs ~40mm 존)와 release 높이를
+정책 case 설계 전에 결정해야 함; 실기 분산은 비주장. ④ 재형성은 더미
+높이에 비례 — 에피소드 전반부가 순서 결정의 유효 구간임을 시사(정책 비교
+분석 축). ⑤ H_max는 본 case에서 회계만 — 강제(행동 무효·재시도 비용)는
+정책 case 변수로 이월. ⑥ 비주장: 파지 물리·정책 최적성·실기 분산·Kinect
+충실도·실물 질량. D427~D453 재판정 0.
+
+**Source.** `claudedocs/session_20260816_68th_y2_d454_pick_place_transfer.md`;
+`claudedocs/runtime_logs/yard_track/y2_d454/` — `y2_prereg.md`,
+`yp1_{results.json,trace.npz,timeline.rrd/.rbl,rerun_validation.json,
+inspection.png,final_heightmap.png}`, `yp1_rep2_results.json`,
+`yp1_repeat_compare.json`, `yp2_{동일 세트}`, `y2_contrast_summary.json`;
+`sim_scripts/p29_y2_yp_transfer_probe.py`·`p30_y2_contrast_summary.py`;
+대조 = D453(테스트베드·스폰·관측)·D450 ④(놓기-강등 금지)·D322.
+
+## D455 — 69th, y3_d455 a1~a8: 정책 비교층 v1 성립 — 동일 초기 더미(yt3 시드)에서 규칙 정책 8종 완주 에피소드 8/8 전 게이트 PASS + a1 cold-start bit-재현; ① **관측 제거만으로 완주 동작수 32→242 (7.56×**, blind의 물리 부분수열은 scan과 완전 동일 — 차이는 순수 관측 유무) ② **release 높이는 정밀도-다짐 트레이드오프**(0.20m→벽-하한: 분산 p95 33.9→21.7mm 개선이지만 H_max 위반 0→5·bin 최대 78.1→91.6mm 악화, pick 수열 bit-동일 통제) ③ **pick 순서가 재형성·place 위반까지 결정**(greedy_high 92셀 ≪ greedy_low 346셀 3.8×; 소형-우선은 대형을 만재 후반에 밀어 위반 19) ④ place 정책 단독으로 위반 5→0 (masked_argmin) (물리 실행 O ×9, Isaac O, 로봇 0, D427~D454 재판정 0)
+
+**Evidence.** 2026-08-16 69th, case `y3_d455` (사용자 (b4) 위임: "H_max 강제/
+해상도/release 높이는 너가 권장안 제시하고 시작해"). prereg 동결 `37c11131`.
+사전 결정 3건(D454 ③⑤ 요구 해소): H_max = 관측-마스크(pred = voronoi max +
+class_mm, 전무효→argmin 폴백+카운트) / place 해상도 = 3×3 존 40mm(= yp1
+9지점 좌표, 분산 p95 43mm ≫ 셀 10mm의 허위 정밀도 제거) / release =
+`max(80mm, bin_max)+r+8mm`(0.20 floor 교체 — D449 벽·후행 체적 클리어런스
+하한 근거) + **a8 브리지**(y2 release 유지 동일-정책 대조). arms: a1
+greedy_high/masked_raster(주축) · a2 scan · a3 greedy_low · a4 random(rng
+45301) · a5 blind(no-op=동작 1 소모·물리 0) · a6 argmin · a7 stack ·
+a8=a1+y2rel. 결과: 8/8 `Y3_A*_ALL_GATES_PASS`(G-initial 420 step yt3
+bit-동일 5회째·G-action-contract·G-cycle-settle·G-complete 전 arm src0/
+bin32/out0·G-final-hmap 99.1%) + a1 rep2 `i_repeatable`(max_dh 0.0·step
+2302 동일). 예측 4건 사전 기재 → 1·3 확증, **2 반증**(a7 최종 위반 4 >
+예측 ≤2 — 추정자 소진 7~14사이클·pred_err mean 9~17mm 과대 후 폴백이 원인;
+비마스크 yp2 11/18 대비 감소는 유지되나 release 비통제라 방향성 증거로만),
+4 탐색 기록(92/190/238/346). D341 8 run + 육안 3건(a1/a5/a8 — Authority
+f-string 정상, 브리지 pick 수열 시각 확인). wall 29~32s/arm.
+
+**Implication.** ① RQ2 지표 기계 완비 + 첫 정량: "어디를 볼 수 있는가"가
+완주 동작수의 지배 변수(7.56×) — 프로포절 "depth 높이맵 관측 가치" 인용
+가능. ② 정직 한계: 파지 추상화(항상 성공)에선 관측-게이트 정책 간 동작수
+전부 32 동일 — **규칙 vs RL 동작수 비교(RQ2 본실험)는 파지 실패/재시도
+모델 등 분화 채널 도입이 선행 조건**(y4 후보). ③ release 높이는 단일
+최적이 아니라 트레이드오프 축(정밀도 vs 다짐) — 실기 release 설계와 RL
+행동 공간에 release 높이 포함 여부가 설계 변수로 승격. ④ pick·place
+결정 결합(소진 순서→위반)은 "pick+place 양쪽 선택 학습" 3-결합 novelty의
+sim 근거 — 프로포절 인용 가능. ⑤ 마스크 추정자(클래스 공칭)는 보수 편향
+— 개선(관측-기반 증분 학습)은 RL의 암묵 학습 대상 후보로 이월. ⑥ 비주장:
+파지 물리·실기 분산 절대값·RL 우월성·다중 시드 일반화·Kinect 충실도·실물
+질량. D427~D454 재판정 0.
+
+**Source.** `claudedocs/session_20260816_69th_y3_d455_policy_compare.md`;
+`claudedocs/runtime_logs/yard_track/y3_d455/` — `y3_prereg.md`(`37c11131`),
+`a{1..8}_{results.json,trace.npz,timeline.rrd/.rbl,rerun_validation.json,
+inspection.png,final_heightmap.png,script.py.txt,…}`, `a1_rep2_results.json`,
+`a1_repeat_compare.json`, `y3_policy_summary.{json(`822d4e4a`),png}`;
+`sim_scripts/p31_y3_policy_compare_probe.py`·`p32_y3_policy_summary.py`;
+대조 = D454(y2 프리미티브·분산 상한)·D453(스폰·관측 권위)·D449(클리어런스
+하한 근거)·D450 ④(놓기-강등 금지)·D322(변수 사다리).

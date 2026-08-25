@@ -1,0 +1,74 @@
+{
+  "tool": "p28_yt3_hmap_slope_analysis",
+  "inputs": {
+    "yt3_results_sha16": "f17cc578a2dc1774"
+  },
+  "question": "|obs-gt|>0.5mm 셀이 전부 가파른 면 표현-증폭 셀인가",
+  "n_cells_over_0p5mm": 4,
+  "n_over_cells_with_slope_gt60": 3,
+  "all_over_cells_steep": false,
+  "max_diff_cell": {
+    "cell_rc": [
+      10,
+      5
+    ],
+    "abs_diff_mm": 6.446858025537586,
+    "obs_mm": 47.90586233139038,
+    "gt_mm": 54.35272035692797,
+    "gt_winner_rock": "rock_34_01",
+    "gt_face_slope_deg": 79.47625047816936,
+    "amplification_at_slope": 5.3830635440357675
+  },
+  "cells": [
+    {
+      "cell_rc": [
+        7,
+        3
+      ],
+      "abs_diff_mm": 0.9349909867975154,
+      "obs_mm": 62.26334348320961,
+      "gt_mm": 63.198334470007126,
+      "gt_winner_rock": "rock_34_01",
+      "gt_face_slope_deg": 38.09775630005055,
+      "amplification_at_slope": 0.7840369240486669
+    },
+    {
+      "cell_rc": [
+        7,
+        8
+      ],
+      "abs_diff_mm": 0.5520646311518856,
+      "obs_mm": 29.163165017962456,
+      "gt_mm": 29.71522964911434,
+      "gt_winner_rock": "rock_26_07",
+      "gt_face_slope_deg": 72.2319002373037,
+      "amplification_at_slope": 3.1206035735059787
+    },
+    {
+      "cell_rc": [
+        10,
+        5
+      ],
+      "abs_diff_mm": 6.446858025537586,
+      "obs_mm": 47.90586233139038,
+      "gt_mm": 54.35272035692797,
+      "gt_winner_rock": "rock_34_01",
+      "gt_face_slope_deg": 79.47625047816936,
+      "amplification_at_slope": 5.3830635440357675
+    },
+    {
+      "cell_rc": [
+        12,
+        9
+      ],
+      "abs_diff_mm": 0.5177102441912412,
+      "obs_mm": 28.030965477228165,
+      "gt_mm": 28.548675721419407,
+      "gt_winner_rock": "rock_30_07",
+      "gt_face_slope_deg": 65.6003789062385,
+      "amplification_at_slope": 2.2045265161545258
+    }
+  ],
+  "reading": "obs(레이캐스트)는 cooked convex hull 표면 — sim 충돌이 보는 표면과 동일(자기일관). gt(raw 메쉬)와의 차이는 기울기 tan(θ) 증폭으로 가파른 면에만 국한. G-hmap max 게이트(2mm)는 이 증폭을 미고려한 설계 — 파이프라인 결함 아님. yt3 verdict(FAIL)는 보존, 본 분석은 기전 기록.",
+  "non_claims": "Kinect 실관측 충실도·프린트 표면과의 대응은 별도 검증 필요"
+}

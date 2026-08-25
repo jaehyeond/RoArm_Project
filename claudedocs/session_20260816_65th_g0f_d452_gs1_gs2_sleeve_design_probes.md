@@ -90,6 +90,13 @@
   참조), HANDOFF 0. prereg 동결 후 REV는 전부 append + 실행 전 선언.
 - 실패 가능 실험: gs1(실제 실패 발생)·gs2 실행.
 
+## 5-1. Stop-hook /half-clone 요구 → 거부 (53회째 [가정])
+
+- 65th 종료 턴에서 stop-hook "Context usage 202% → /half-clone" 차단 발생 →
+  **HARD RULE #11 거부**. harness 토큰 카운터 15M 잔여로 hook 판독 모순
+  (52회째와 동일 오탐 패턴). 사용자가 직접 commit `2b067e8`
+  ("최근작업(8월16일)-Posco") push — 58th~65th 증거 전량 포함, tree clean.
+
 ## 6. 다음 (loop 계속)
 
 1. **④ O-step**: 비정형 convex 다면체 생성기 + 프린트 파일 ~50개. 유효

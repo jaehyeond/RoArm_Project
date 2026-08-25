@@ -1,0 +1,945 @@
+#!/usr/bin/env python3
+"""p27 / yt1+yt2 — y1_d453 야드 테스트베드 v1: 더미 정착 + 높이맵 관측 probe.
+
+Contract: claudedocs/runtime_logs/yard_track/y1_d453/y1_prereg.md (동결
+8d8ec12f...) + REV-1 (스폰 z {0.115,0.175,0.235,0.295}, centroid-proxy).
+설계 권위 = y1_design.json (p26, 게이트 6/6).
+
+yt1: o1 32개(클래스당 8) → source 트레이 낙하·정착.
+     G-settle / G-contain / G-penetration + 재현성(rep2, 분기 판정).
+yt2: settled 상태 위 PhysX 레이캐스트 13x13x2 높이맵 vs 독립 numpy
+     삼각형-교차 GT.  G-hmap + bin 음성 대조.
+
+--rep 1 : 본 실행 (RRD/D341/PNG 포함, 권위 산출물)
+--rep 2 : cold-start 재현성 실행 (물리 동일, Δ 비교만)
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import math
+import os
+import shutil
+import sys
+import time
+from pathlib import Path
+
+import numpy as np
+
+REPO = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(REPO))
+
+CASE_DIR = REPO / "claudedocs/runtime_logs/yard_track/y1_d453"
+MANIFEST = REPO / "sim_assets/posco_rocks_o1/manifest.json"
+TAG = "yt1"
+LOG = "y1_yt1"
+
+PINS = {
+    MANIFEST: "a1127acca8854a773e7c31f2855a3d753398473dea1d8fde4f69667c7a22008c",
+    CASE_DIR / "y1_design.json":
+        "a045c414bfeb381e60f84c39a71331d149ea0d06efeb7057542dbafbfb7f1f10",
+}
+PREREG = CASE_DIR / "y1_prereg.md"  # REV append 허용 — sha는 기록만, 게이트 아님
+NUMPY_PIN = "1.26.0"
+PSUTIL_PIN = "5.9.8"
+RERUN_VERSION = "0.34.1"
+RERUN_CLI = "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun"
+
+SEED = 45300
+CLASSES = (22, 26, 30, 34)
+PER_CLASS = 8
+N_ROCKS = 32
+GRID3 = 0.055           # yt1 스폰 격자 수평 간격 [m]
+LAYER_Z = (0.115, 0.175, 0.235, 0.295)   # REV-1 (yt1)
+# REV-2 (yt3): 2x2 웨이브 격자 ±27.5mm, 8웨이브 x 4개, 파크 z=1.0
+WAVE_OFF = 0.0275
+WAVE_Z = 0.20
+WAVE_GAP_STEPS = 45
+N_WAVES = 8
+PARK_Z = 1.0
+PARK_PITCH = 0.06
+GRAVITY = 9.81
+DT = 1.0 / 60.0
+T_MAX = 1200
+STREAK_NEED = 60
+V_EPS = 0.005           # [m/s]
+W_EPS = 0.1             # [rad/s]
+FALL_GUARD_STEP = 10
+# attempt1/2 교훈: 1층 가장자리 물체는 벽 상단(낙하 8.4mm)에 조기 착지 가능.
+# 가드 목적 = 비시뮬 감지이므로 임계값은 벽-착지 경로(8.4mm − 바운스)보다 작게.
+FALL_GUARD_MIN_DZ = 0.005
+CONTAIN_GATE = "hull centroid XY in tray interior"
+PEN_GATE_M = 0.002
+HMAP_TOL_M = 0.0005
+HMAP_MAX_M = 0.002
+HMAP_P95 = 0.95
+STATIC_FRICTION = 0.40
+DYNAMIC_FRICTION = 0.30
+ROCK_RESTITUTION = 0.1
+SUPPORT_FRICTION = 1.0
+ROCKS_ROOT = "/World/rocks"
+GROUND_PRIM = "/World/ground"
+
+
+def out_files(rep: int) -> dict:
+    if rep == 1:
+        keys = ("results.json", "trace.npz", "timeline.rrd", "timeline.rbl",
+                "rerun_validation.json", "inspection.png", "stdout.log",
+                "stderr.log", "exit_status.txt", "script.py.txt", "argv.txt",
+                "failure.json")
+        png = ("yt2_heightmap_compare.png" if TAG == "yt1"
+               else f"yt2_heightmap_compare_{TAG}.png")
+        return {k: CASE_DIR / f"{TAG}_{k}" for k in keys} | {
+            "hmap_png": CASE_DIR / png}
+    keys = ("results.json", "stdout.log", "stderr.log", "exit_status.txt",
+            "argv.txt", "failure.json")
+    return {k: CASE_DIR / f"{TAG}_rep2_{k}" for k in keys} | {
+        "compare": CASE_DIR / f"{TAG}_repeat_compare.json"}
+
+
+def sha256(path: Path) -> str:
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def fsync_write(path: Path, text: str) -> None:
+    with open(path, "w") as f:
+        f.write(text)
+        f.flush()
+        os.fsync(f.fileno())
+
+
+def quat_to_R(q: np.ndarray) -> np.ndarray:
+    w, x, y, z = q
+    return np.array([
+        [1 - 2 * (y * y + z * z), 2 * (x * y - w * z), 2 * (x * z + w * y)],
+        [2 * (x * y + w * z), 1 - 2 * (x * x + z * z), 2 * (y * z - w * x)],
+        [2 * (x * z - w * y), 2 * (y * z + w * x), 1 - 2 * (x * x + y * y)]])
+
+
+def load_design() -> dict:
+    d = json.loads((CASE_DIR / "y1_design.json").read_text())
+    for reg in ("source", "bin"):
+        r = d[reg]
+        if r["n_cells"] != 13 or abs(r["L_int"] - 0.13) > 1e-12:
+            raise RuntimeError(f"DESIGN_MISMATCH {reg}")
+    return d
+
+
+def region_cells(center, n=13, cell=0.010) -> np.ndarray:
+    half = n * cell / 2.0
+    xs = center[0] - half + cell * (np.arange(n) + 0.5)
+    ys = center[1] - half + cell * (np.arange(n) + 0.5)
+    gx, gy = np.meshgrid(xs, ys, indexing="xy")
+    return np.stack([gx, gy], axis=-1)  # (13,13,2) [row=y, col=x]
+
+
+def build_plan(design: dict, probe: str) -> dict:
+    m = json.loads(MANIFEST.read_text())
+    by = {(o["class_mm"], o["index"]): o for o in m["objects"]}
+    rocks = []
+    for k in range(PER_CLASS):
+        for c in CLASSES:
+            o = by[(c, k)]
+            v = np.array(o["vertices_m"], dtype=np.float64)
+            rocks.append({
+                "name": o["name"], "class_mm": c, "index": k,
+                "verts": v, "faces": np.array(o["faces"], dtype=np.int64),
+                "mass_kg": o["mass_est_15infill_g"] / 1000.0,
+                "r_bound_m": float(np.linalg.norm(v, axis=1).max()),
+                "stl_sha16": o["stl_sha256_16"]})
+    if len(rocks) != N_ROCKS:
+        raise RuntimeError("SUBSET_COUNT")
+
+    rng = np.random.default_rng(SEED)
+    slot_perm = rng.permutation(36 if probe == "yt1" else N_ROCKS)
+    quats = rng.normal(size=(N_ROCKS, 4))
+    quats /= np.linalg.norm(quats, axis=1, keepdims=True)
+    quats[quats[:, 0] < 0] *= -1.0
+
+    sc = design["source"]["center"]
+    rb = np.array([r["r_bound_m"] for r in rocks])
+    top2 = np.sort(rb)[-2:]
+    wall_h = design["source"]["wall_h_m"]
+
+    if probe == "yt1":
+        spawn = []
+        for i, rk in enumerate(rocks):
+            s = int(slot_perm[i])
+            layer, row, col = s // 9, (s % 9) // 3, s % 3
+            pos = np.array([sc[0] + (col - 1) * GRID3, sc[1] + (row - 1) * GRID3,
+                            LAYER_Z[layer]])
+            spawn.append({"slot": s, "pos": pos, "quat": quats[i]})
+        min_bottom = min(sp["pos"][2] - rocks[i]["r_bound_m"]
+                         for i, sp in enumerate(spawn))
+        margins = {
+            "wall_clear_m": float(min_bottom - wall_h),
+            "horiz_worst_m": float(GRID3 - top2.sum()),
+            "vert_worst_m": float((LAYER_Z[1] - LAYER_Z[0]) - top2.sum())}
+        waves = None
+        park = None
+    else:  # yt3 (REV-2, 텔레포트 폐기): 웨이브마다 4개를 z=0.20에 신규 저작
+        order = [int(x) for x in slot_perm]           # rock -> 웨이브 슬롯
+        wave_xy = [(sc[0] + sx * WAVE_OFF, sc[1] + sy * WAVE_OFF)
+                   for sx, sy in ((-1, -1), (1, -1), (-1, 1), (1, 1))]
+        waves = []
+        spawn = [None] * N_ROCKS
+        for w in range(N_WAVES):
+            members = []
+            for j in range(4):
+                ri = order[w * 4 + j]
+                pos = np.array([wave_xy[j][0], wave_xy[j][1], WAVE_Z])
+                members.append({"rock_idx": ri, "pos": pos.tolist()})
+                spawn[ri] = {"slot": w * 4 + j, "pos": pos, "quat": quats[ri]}
+            waves.append(members)
+        # 여유 검산: 웨이브 xy 도달 vs 벽 내면 / 웨이브 내 수평 / 스폰 바닥
+        reach = WAVE_OFF + float(rb.max())
+        margins = {
+            "wall_band_clear_m": float(design["source"]["L_int"] / 2 - reach),
+            "wave_horiz_worst_m": float(2 * WAVE_OFF - top2.sum()),
+            "wave_bottom_clear_m": float(WAVE_Z - rb.max() - wall_h)}
+    if min(margins.values()) <= 0:
+        raise RuntimeError(f"SPAWN_CLEARANCE_FAIL {margins}")
+
+    # 설계 교차검증: annulus 셀 반경 재계산 vs design json
+    for reg in ("source", "bin"):
+        cells = region_cells(design[reg]["center"])
+        rr_ = np.hypot(cells[..., 0], cells[..., 1])
+        if (abs(float(rr_.min()) - design[reg]["r_cell_min"]) > 1e-12
+                or abs(float(rr_.max()) - design[reg]["r_cell_max"]) > 1e-12):
+            raise RuntimeError(f"DESIGN_CELL_RADIUS_MISMATCH {reg}")
+
+    return {"rocks": rocks, "spawn": spawn, "margins": margins,
+            "slot_perm": slot_perm.tolist(), "probe": probe, "waves": waves,
+            "quats": quats.tolist()}
+
+
+def preflight(rep: int, probe: str) -> tuple:
+    import numpy
+    import psutil
+    if numpy.__version__ != NUMPY_PIN or psutil.__version__ != PSUTIL_PIN:
+        raise RuntimeError(f"ENV_PIN numpy={numpy.__version__} psutil={psutil.__version__}")
+    pins = {}
+    for path, want in PINS.items():
+        got = sha256(path)
+        pins[path.name] = {"sha256": got, "match": got == want}
+        if got != want:
+            raise RuntimeError(f"SHA_DRIFT {path}")
+    pins["y1_prereg.md"] = {"sha256": sha256(PREREG), "match": "recorded-only"}
+
+    out = out_files(rep)
+    guard_exempt = ("script.py.txt", "argv.txt", "stdout.log", "stderr.log")
+    existing = [p.name for k, p in out.items()
+                if p.exists() and k not in guard_exempt]
+    if existing:
+        raise RuntimeError(f"WRITE_GUARD existing={existing}")
+    if rep == 2 and not (CASE_DIR / f"{TAG}_results.json").exists():
+        raise RuntimeError("REP2_REQUIRES_REP1_RESULTS")
+
+    design = load_design()
+    plan = build_plan(design, probe)
+    plan["pins"] = pins
+    plan["env"] = {"numpy": numpy.__version__, "psutil": psutil.__version__,
+                   "python": sys.version.split()[0]}
+    return design, plan, out
+
+
+# --------------------------------------------------------------------------- #
+def gt_heightmap(cells: np.ndarray, world_verts: list, faces_list: list) -> np.ndarray:
+    """독립 GT: 셀 중심 (x,y) 수직선과 삼각형의 교차 z 최댓값 (바닥=0)."""
+    flat = cells.reshape(-1, 2)
+    h = np.zeros(flat.shape[0])
+    for verts, faces in zip(world_verts, faces_list):
+        tri = verts[faces]                      # (F,3,3)
+        a, b, c = tri[:, 0], tri[:, 1], tri[:, 2]
+        d0 = b[:, :2] - a[:, :2]
+        d1 = c[:, :2] - a[:, :2]
+        den = d0[:, 0] * d1[:, 1] - d0[:, 1] * d1[:, 0]
+        ok = np.abs(den) > 1e-14                # xy-수직 facet 제외 (측도 0)
+        for f in np.nonzero(ok)[0]:
+            p = flat - a[f, :2]
+            u = (p[:, 0] * d1[f, 1] - p[:, 1] * d1[f, 0]) / den[f]
+            v = (d0[f, 0] * p[:, 1] - d0[f, 1] * p[:, 0]) / den[f]
+            inside = (u >= -1e-12) & (v >= -1e-12) & (u + v <= 1 + 1e-12)
+            if inside.any():
+                z = a[f, 2] + u[inside] * (b[f, 2] - a[f, 2]) + v[inside] * (c[f, 2] - a[f, 2])
+                np.maximum.at(h, np.nonzero(inside)[0], z)
+    return h.reshape(cells.shape[:2])
+
+
+def run(rep: int, design: dict, plan: dict, out_paths: dict) -> int:
+    t_start = time.time()
+    from isaacsim import SimulationApp
+    app = SimulationApp({"headless": True})
+    rc = 1
+    try:
+        rc = run_inner(rep, design, plan, out_paths, t_start)
+    except BaseException as exc:  # noqa: BLE001  (D447: 침묵 사망 금지)
+        import traceback
+        fsync_write(out_paths["failure.json"], json.dumps(
+            {"tag": TAG, "rep": rep, "error": repr(exc),
+             "traceback": traceback.format_exc(),
+             "wall_seconds": round(time.time() - t_start, 1)}, indent=1))
+        rc = 3
+    finally:
+        sentinel = (f"PRE_CLOSE_SENTINEL rc={rc} tag={TAG} rep={rep} "
+                    f"wall={time.time() - t_start:.1f}s\n")
+        fsync_write(out_paths["exit_status.txt"], sentinel)
+        print(f"[{LOG}] {sentinel.strip()}", flush=True)
+        sys.stdout.flush()
+        app.close()
+    return rc
+
+
+def run_inner(rep: int, design: dict, plan: dict, OUT: dict, t_start: float) -> int:
+    import asyncio
+    import carb
+    import omni.kit.app
+    import omni.physx
+    import omni.usd
+    from pxr import Gf, PhysicsSchemaTools, PhysxSchema, Usd, UsdGeom, UsdPhysics, UsdShade
+    from isaacsim.core.utils.extensions import enable_extension
+
+    enable_extension("isaacsim.replicator.grasping")
+    import isaacsim.replicator.grasping.grasping_utils as grasping_utils
+
+    out: dict = {"tool": f"{TAG}+hmap", "rep": rep, "case": "y1_d453",
+                 "prereg": "y1_prereg.md (8d8ec12f) + REV-1",
+                 "attempt_history": "attempt1/2 rc=3 = 가드 설계 오류(오탐): 1층"
+                                    " 가장자리 물체가 벽 상단에 8.4mm 조기 착지"
+                                    " → min_dz 0.0233 < 구 임계 0.05. 물리 정상"
+                                    " (진단2: 32/32 step1부터 정확 자유낙하)."
+                                    " 수리 = 가드 임계 0.005 + kinematic 일괄"
+                                    " release 유지 (증거 yt1_attempt{1,2}_*,"
+                                    " scratchpad diag)",
+                 "plan": {"margins": plan["margins"], "pins": plan["pins"],
+                          "env": plan["env"], "seed": SEED,
+                          "slot_perm": plan["slot_perm"]}}
+
+    ctx = omni.usd.get_context()
+    ctx.new_stage()
+    stage = ctx.get_stage()
+    UsdGeom.SetStageUpAxis(stage, UsdGeom.Tokens.z)
+    UsdGeom.SetStageMetersPerUnit(stage, 1.0)
+    stage.SetDefaultPrim(stage.DefinePrim("/World", "Xform"))
+
+    scene = UsdPhysics.Scene.Define(stage, "/World/physicsScene")
+    scene.CreateGravityDirectionAttr().Set(Gf.Vec3f(0, 0, -1))
+    scene.CreateGravityMagnitudeAttr().Set(GRAVITY)
+
+    def bind_material(prim, path, sf, df, rest):
+        mat = UsdShade.Material.Define(stage, path)
+        pm = UsdPhysics.MaterialAPI.Apply(mat.GetPrim())
+        pm.CreateStaticFrictionAttr().Set(sf)
+        pm.CreateDynamicFrictionAttr().Set(df)
+        pm.CreateRestitutionAttr().Set(rest)
+        UsdShade.MaterialBindingAPI.Apply(prim).Bind(
+            mat, UsdShade.Tokens.weakerThanDescendants, "physics")
+
+    def static_box(path, center, half):
+        cube = UsdGeom.Cube.Define(stage, path)
+        cube.CreateSizeAttr().Set(1.0)
+        cube.AddTranslateOp().Set(Gf.Vec3d(*center))
+        cube.AddScaleOp().Set(Gf.Vec3f(half[0] * 2, half[1] * 2, half[2] * 2))
+        UsdPhysics.CollisionAPI.Apply(cube.GetPrim())
+        bind_material(cube.GetPrim(), "/World/materials/static_mat",
+                      SUPPORT_FRICTION, SUPPORT_FRICTION, 0.0)
+        return cube.GetPrim()
+
+    static_box(GROUND_PRIM, (0.2, 0.0, -0.05), (0.5, 0.5, 0.05))
+    wall_paths = []
+    for reg, tagr in (("source", "src"), ("bin", "bin")):
+        r = design[reg]
+        cx, cy = r["center"]
+        hl = r["L_int"] / 2
+        t = 0.005
+        h = r["wall_h_m"]
+        for wname, c, half in (
+                ("n", (cx, cy + hl + t / 2, h / 2), (hl + t, t / 2, h / 2)),
+                ("s", (cx, cy - hl - t / 2, h / 2), (hl + t, t / 2, h / 2)),
+                ("e", (cx + hl + t / 2, cy, h / 2), (t / 2, hl, h / 2)),
+                ("w", (cx - hl - t / 2, cy, h / 2), (t / 2, hl, h / 2))):
+            p = f"/World/tray_{tagr}/wall_{wname}"
+            static_box(p, c, half)
+            wall_paths.append(p)
+
+    physx_iface = omni.physx.get_physx_interface()
+    physx_sim = omni.physx.get_physx_simulation_interface()
+    sq = omni.physx.get_physx_scene_query_interface()
+
+    ctxst = {"step": -1}
+    step_counter = {"n": 0}
+
+    def on_step(dt):
+        ctxst["step"] += 1
+        step_counter["n"] += 1
+
+    step_sub = physx_iface.subscribe_physics_step_events(on_step)  # noqa: F841
+
+    min_sep_by_step: dict = {}
+    pair_kinds = {"rock_rock": 0, "rock_wall": 0, "rock_ground": 0, "other": 0}
+
+    def on_contact(headers, data):
+        st = ctxst["step"]
+        for h in headers:
+            a0 = str(PhysicsSchemaTools.intToSdfPath(h.actor0))
+            a1 = str(PhysicsSchemaTools.intToSdfPath(h.actor1))
+            is_r0, is_r1 = a0.startswith(ROCKS_ROOT), a1.startswith(ROCKS_ROOT)
+            if not (is_r0 or is_r1):
+                pair_kinds["other"] += 1
+                continue
+            if is_r0 and is_r1:
+                pair_kinds["rock_rock"] += 1
+            elif GROUND_PRIM in (a0, a1):
+                pair_kinds["rock_ground"] += 1
+            else:
+                pair_kinds["rock_wall"] += 1
+            for i in range(h.contact_data_offset,
+                           h.contact_data_offset + h.num_contact_data):
+                s = float(data[i].separation)
+                if st not in min_sep_by_step or s < min_sep_by_step[st]:
+                    min_sep_by_step[st] = s
+
+    contact_sub = physx_sim.subscribe_contact_report_events(on_contact)  # noqa: F841
+
+    def raycast_cell(x, y):
+        hit = sq.raycast_closest(carb.Float3(x, y, 0.5), carb.Float3(0, 0, -1), 1.0)
+        if not hit["hit"]:
+            raise RuntimeError(f"RAYCAST_MISS {x} {y}")
+        return float(hit["position"][2]), str(hit["collision"])
+
+    src_cells = region_cells(design["source"]["center"])
+    bin_cells = region_cells(design["bin"]["center"])
+
+    pred = Usd.TraverseInstanceProxies(Usd.PrimAllPrimsPredicate)
+
+    def world_pose(path):
+        prim = stage.GetPrimAtPath(path)
+        xf = UsdGeom.Xformable(prim).ComputeLocalToWorldTransform(Usd.TimeCode.Default())
+        tr = xf.ExtractTranslation()
+        q = xf.ExtractRotationQuat()
+        return (np.array([tr[0], tr[1], tr[2]]),
+                np.array([q.GetReal(), *q.GetImaginary()]))
+
+    rock_paths = [f"{ROCKS_ROOT}/{r['name']}" for r in plan["rocks"]]
+
+    # -------- 궤적 버퍼 -------- #
+    pos_tr = np.full((T_MAX + 1, N_ROCKS, 3), np.nan)
+    quat_tr = np.full((T_MAX + 1, N_ROCKS, 4), np.nan)
+    max_speed = np.full(T_MAX + 1, np.nan)
+    max_angspeed = np.full(T_MAX + 1, np.nan)
+    min_sep_tr = np.full(T_MAX + 1, np.nan)
+
+    def sample(t):
+        for i, p in enumerate(rock_paths):
+            if spawned[i]:
+                pos_tr[t, i], quat_tr[t, i] = world_pose(p)
+
+    result = {"settled": False, "settle_step": None, "steps_run": 0}
+
+    # -- 물체 저작 헬퍼: yt1 = 전체 kinematic 선저작 + 일괄 release,
+    #    yt3 = 웨이브마다 dynamic 신규 저작(런타임 저작 즉시 시뮬 확인:
+    #    attempt1 낙하 프로파일 + diag2) -- #
+    spawned = np.zeros(N_ROCKS, dtype=bool)
+    rock_rb_apis: dict = {}
+
+    def author_rock(i: int, kinematic: bool):
+        rk, sp = plan["rocks"][i], plan["spawn"][i]
+        path = f"{ROCKS_ROOT}/{rk['name']}"
+        mesh = UsdGeom.Mesh.Define(stage, path)
+        mesh.CreatePointsAttr().Set([Gf.Vec3f(*v) for v in rk["verts"]])
+        mesh.CreateFaceVertexCountsAttr().Set([3] * len(rk["faces"]))
+        mesh.CreateFaceVertexIndicesAttr().Set(
+            [int(x) for f in rk["faces"] for x in f])
+        b = rk["r_bound_m"]
+        mesh.CreateExtentAttr().Set([(-b, -b, -b), (b, b, b)])
+        mesh.AddTranslateOp().Set(Gf.Vec3d(*sp["pos"]))
+        q = sp["quat"]
+        mesh.AddOrientOp(UsdGeom.XformOp.PrecisionDouble).Set(
+            Gf.Quatd(float(q[0]), Gf.Vec3d(float(q[1]), float(q[2]), float(q[3]))))
+        prim = mesh.GetPrim()
+        rb = UsdPhysics.RigidBodyAPI.Apply(prim)
+        if kinematic:
+            rb.CreateKinematicEnabledAttr(True)
+        rock_rb_apis[i] = rb
+        UsdPhysics.CollisionAPI.Apply(prim)
+        UsdPhysics.MeshCollisionAPI.Apply(prim).CreateApproximationAttr().Set(
+            UsdPhysics.Tokens.convexHull)
+        UsdPhysics.MassAPI.Apply(prim).CreateMassAttr().Set(rk["mass_kg"])
+        prb = PhysxSchema.PhysxRigidBodyAPI.Apply(prim)
+        prb.CreateSolverPositionIterationCountAttr().Set(8)
+        prb.CreateSolverVelocityIterationCountAttr().Set(1)
+        prb.CreateMaxAngularVelocityAttr().Set(10.0)
+        prb.CreateMaxLinearVelocityAttr().Set(10.0)
+        prb.CreateMaxDepenetrationVelocityAttr().Set(5.0)
+        PhysxSchema.PhysxContactReportAPI.Apply(prim).CreateThresholdAttr().Set(0.0)
+        bind_material(prim, "/World/materials/rock_mat",
+                      STATIC_FRICTION, DYNAMIC_FRICTION, ROCK_RESTITUTION)
+        spawned[i] = True
+
+    if plan["probe"] == "yt1":
+        for i in range(N_ROCKS):
+            author_rock(i, kinematic=True)
+
+    async def orchestrate():
+        # -- selfcheck: 레이캐스트 + step 카운터 (물체는 kinematic 부동) -- #
+        step_counter["n"] = 0
+        await grasping_utils.simulate_physics_async(5, DT, None, render=False)
+        bc = design["bin"]["center"]
+        z_floor, hit_floor = raycast_cell(bc[0], bc[1])
+        z_open, _ = raycast_cell(0.2, 0.0)  # 트레이 사이 개활지 (source 바닥은
+        #                                     물체가 상공에 떠 있어 대체, doc 기록)
+        wall_y = bc[1] - design["bin"]["L_int"] / 2 - 0.0025
+        z_wall, hit_wall = raycast_cell(bc[0], wall_y)
+        kin_dev = (0.0 if not spawned.any() else float(np.abs(np.array(
+            [world_pose(p)[0] for i, p in enumerate(rock_paths) if spawned[i]])
+            - np.array([sp["pos"] for i, sp in enumerate(plan["spawn"])
+                        if spawned[i]])).max()))
+        ok = (step_counter["n"] == 5 and abs(z_floor) < 5e-4 and abs(z_open) < 5e-4
+              and abs(z_wall - design["bin"]["wall_h_m"]) < 1e-3
+              and hit_wall.startswith("/World/tray_bin") and kin_dev < 1e-9)
+        out["harness_selfcheck"] = {
+            "step_events": step_counter["n"], "floor_z_m": z_floor,
+            "open_ground_z_m": z_open, "wall_top_z_m": z_wall,
+            "wall_hit_prim": hit_wall, "floor_hit_prim": hit_floor,
+            "kinematic_hold_dev_m": kin_dev, "pass": bool(ok)}
+        if not ok:
+            raise RuntimeError(f"HARNESS_SELFCHECK_FAIL {out['harness_selfcheck']}")
+        print(f"[{LOG}] selfcheck PASS (floor 0, wall {z_wall:.4f}, "
+              f"kin_dev {kin_dev:.2e})", flush=True)
+
+        sample(0)
+        if plan["probe"] == "yt1":
+            spawn_dev = float(np.abs(pos_tr[0] - np.array(
+                [sp["pos"] for sp in plan["spawn"]])).max())
+            if spawn_dev > 1e-9:
+                raise RuntimeError(f"SPAWN_POSE_DEV {spawn_dev}")
+
+        ctxst["step"] = -1
+        tcur = {"t": 0}
+
+        async def sim_one():
+            t = tcur["t"] + 1
+            tcur["t"] = t
+            await grasping_utils.simulate_physics_async(1, DT, None, render=False)
+            sample(t)
+            both = (np.isfinite(pos_tr[t]).all(axis=1)
+                    & np.isfinite(pos_tr[t - 1]).all(axis=1))
+            if not both.any():
+                raise RuntimeError(f"NO_TRACKED_BODIES t={t}")
+            dpos = np.linalg.norm((pos_tr[t] - pos_tr[t - 1])[both], axis=1)
+            dots = np.clip(np.abs((quat_tr[t] * quat_tr[t - 1])[both].sum(axis=1)),
+                           0, 1)
+            dang = 2.0 * np.arccos(dots)
+            max_speed[t] = float(dpos.max() / DT)
+            max_angspeed[t] = float(dang.max() / DT)
+            min_sep_tr[t] = min_sep_by_step.get(ctxst["step"], np.nan)
+            result["steps_run"] = t
+            return t
+
+        if plan["probe"] == "yt1":
+            # -- 일괄 release: kinematic -> dynamic (동시 활성화) -- #
+            for rb in rock_rb_apis.values():
+                rb.GetKinematicEnabledAttr().Set(False)
+            result["settle_count_from"] = 0
+        else:
+            # -- REV-2(수정): 웨이브마다 4개를 z=0.20에 dynamic 신규 저작 -- #
+            result["wave_release_steps"] = []
+            for w, members in enumerate(plan["waves"]):
+                for mm in members:
+                    author_rock(mm["rock_idx"], kinematic=False)
+                    p0, _ = world_pose(rock_paths[mm["rock_idx"]])
+                    if float(np.abs(p0 - np.array(mm["pos"])).max()) > 1e-9:
+                        raise RuntimeError(f"WAVE_SPAWN_POSE_DEV w={w}")
+                    pos_tr[tcur["t"], mm["rock_idx"]] = p0
+                    quat_tr[tcur["t"], mm["rock_idx"]] = \
+                        plan["spawn"][mm["rock_idx"]]["quat"]
+                result["wave_release_steps"].append([w, tcur["t"]])
+                for k in range(WAVE_GAP_STEPS):
+                    t = await sim_one()
+                    if k == 0:
+                        dz1 = min(float(mm["pos"][2] - pos_tr[t, mm["rock_idx"], 2])
+                                  for mm in members)
+                        if dz1 < 0.0005:
+                            raise RuntimeError(
+                                f"ROCKS_NOT_ACTIVATED_WAVE{w} min_dz={dz1 * 1000:.3f}mm")
+            result["settle_count_from"] = tcur["t"]
+
+        streak = 0
+        while tcur["t"] < T_MAX:
+            t = await sim_one()
+            if plan["probe"] == "yt1":
+                if t == 1:
+                    dz1 = pos_tr[0, :, 2] - pos_tr[1, :, 2]
+                    if float(dz1.min()) < 0.0005:
+                        raise RuntimeError(
+                            f"ROCKS_NOT_ACTIVATED_STEP1 min_dz={dz1.min() * 1000:.3f}mm")
+                if t == FALL_GUARD_STEP:
+                    dz = pos_tr[0, :, 2] - pos_tr[t, :, 2]
+                    if float(dz.min()) < FALL_GUARD_MIN_DZ:
+                        raise RuntimeError(f"ROCKS_NOT_SIMULATED min_dz={dz.min():.4f}")
+            if max_speed[t] < V_EPS and max_angspeed[t] < W_EPS:
+                streak += 1
+            else:
+                streak = 0
+            if streak >= STREAK_NEED:
+                result["settled"] = True
+                result["settle_step"] = t
+                break
+
+    task = asyncio.ensure_future(orchestrate())
+    kit = omni.kit.app.get_app()
+    guard = 0
+    while not task.done():
+        kit.update()
+        guard += 1
+        if guard > 1600000:
+            raise RuntimeError("EVENT_LOOP_GUARD")
+    if task.exception() is not None:
+        raise task.exception()
+
+    T = result["steps_run"]
+    g_settle = bool(result["settled"])
+
+    # -------- 최종 상태 기하 (numpy 권위) -------- #
+    world_verts = []
+    centroids = []
+    for i, rk in enumerate(plan["rocks"]):
+        R = quat_to_R(quat_tr[T, i])
+        wv = rk["verts"] @ R.T + pos_tr[T, i]
+        world_verts.append(wv)
+        centroids.append(wv.mean(axis=0))
+    centroids = np.array(centroids)
+    floor_min_z = float(min(wv[:, 2].min() for wv in world_verts))
+
+    sc = design["source"]["center"]
+    hl = design["source"]["L_int"] / 2
+    inside = ((np.abs(centroids[:, 0] - sc[0]) <= hl)
+              & (np.abs(centroids[:, 1] - sc[1]) <= hl))
+    escaped = [plan["rocks"][i]["name"] for i in np.nonzero(~inside)[0]]
+    g_contain = len(escaped) == 0
+
+    lo = max(1, T - STREAK_NEED + 1)
+    window_sep = min_sep_tr[lo:T + 1]
+    finite = window_sep[np.isfinite(window_sep)]
+    min_sep_settled = float(finite.min()) if finite.size else None
+    g_pen = bool(floor_min_z >= -PEN_GATE_M
+                 and (min_sep_settled is None or min_sep_settled >= -PEN_GATE_M))
+
+    # -------- yt2: 관측 vs GT -------- #
+    faces_list = [rk["faces"] for rk in plan["rocks"]]
+    hmap = {}
+    for reg, cells in (("source", src_cells), ("bin", bin_cells)):
+        obs = np.zeros((13, 13))
+        for r_ in range(13):
+            for c_ in range(13):
+                obs[r_, c_], _ = raycast_cell(cells[r_, c_, 0], cells[r_, c_, 1])
+        gt = gt_heightmap(cells, world_verts, faces_list)
+        diff = obs - gt
+        hmap[reg] = {"obs": obs, "gt": gt, "diff": diff}
+    all_diff = np.abs(np.concatenate(
+        [hmap["source"]["diff"].ravel(), hmap["bin"]["diff"].ravel()]))
+    frac_tol = float((all_diff <= HMAP_TOL_M).mean())
+    g_hmap = bool(frac_tol >= HMAP_P95 and float(all_diff.max()) <= HMAP_MAX_M)
+    bin_abs = np.abs(hmap["bin"]["obs"])
+    g_bin_neg = bool(float(bin_abs.max()) <= HMAP_TOL_M)
+
+    src_h = hmap["source"]["gt"]
+    pile = {"h_avg_m": float(src_h.mean()), "h_max_m": float(src_h.max()),
+            "design_est_h_avg_m": design["pile_estimate"]["pile_h_avg_m"],
+            "n_cells_ge_5mm": int((src_h > 0.005).sum())}
+
+    gates = {"g_settle": g_settle, "g_contain": g_contain,
+             "g_penetration": g_pen, "g_hmap": g_hmap, "g_bin_negative": g_bin_neg}
+    fails = [k for k, v in gates.items() if not v]
+    code = (f"Y1_{TAG.upper()}_HMAP_ALL_GATES_PASS" if not fails
+            else "Y1_FAIL_" + "_".join(sorted(fails)).upper())
+
+    out["settle"] = {
+        "settled": g_settle, "settle_step": result["settle_step"],
+        "steps_run": T, "t_max": T_MAX,
+        "final_max_speed_mps": float(max_speed[T]),
+        "final_max_angspeed_radps": float(max_angspeed[T]),
+        "criteria": {"v_eps_mps": V_EPS, "w_eps_radps": W_EPS,
+                     "streak": STREAK_NEED}}
+    out["contain"] = {"gate": CONTAIN_GATE, "escaped": escaped,
+                      "n_inside": int(inside.sum())}
+    out["penetration"] = {"floor_min_vertex_z_m": floor_min_z,
+                          "min_separation_settled_m": min_sep_settled,
+                          "gate_m": PEN_GATE_M}
+    out["heightmap"] = {
+        "frac_cells_within_0p5mm": frac_tol, "max_abs_diff_m": float(all_diff.max()),
+        "gate": {"tol_m": HMAP_TOL_M, "p95": HMAP_P95, "max_m": HMAP_MAX_M},
+        "bin_negative_max_abs_m": float(bin_abs.max()),
+        "source_obs_minmax_m": [float(hmap["source"]["obs"].min()),
+                                float(hmap["source"]["obs"].max())]}
+    out["pile"] = pile
+    out["contact_pair_kinds"] = pair_kinds
+    out["final_poses"] = [
+        {"name": plan["rocks"][i]["name"], "pos": pos_tr[T, i].tolist(),
+         "quat_wxyz": quat_tr[T, i].tolist(),
+         "centroid": centroids[i].tolist()} for i in range(N_ROCKS)]
+    out["gates"] = gates
+    out["verdict"] = {
+        "code": code,
+        "non_claims": "no claim about real masses (15% infill estimates), "
+                      "friction/restitution realism, Kinect observation fidelity, "
+                      "bin drop dynamics, robot reachability of corner rocks, "
+                      "or angle-of-repose realism"}
+    out["wall_seconds"] = round(time.time() - t_start, 1)
+
+    if rep == 2:
+        fsync_write(OUT["results.json"], json.dumps(out, indent=2, default=str) + "\n")
+        rep1 = json.loads((CASE_DIR / f"{TAG}_results.json").read_text())
+        r1_pos = np.array([r["pos"] for r in rep1["final_poses"]])
+        dh_src = np.abs(np.array(rep1["_hmap_src_obs"]) - hmap["source"]["obs"])
+        dpos = np.linalg.norm(r1_pos - pos_tr[T, :, :], axis=1)
+        branch = "i_repeatable" if float(dh_src.max()) <= 0.002 else "ii_record_initial_state"
+        cmp_ = {
+            "max_dh_source_mm": float(dh_src.max() * 1000),
+            "mean_dh_source_mm": float(dh_src.mean() * 1000),
+            "max_final_pos_diff_mm": float(dpos.max() * 1000),
+            "rep1_settle_step": rep1["settle"]["settle_step"],
+            "rep2_settle_step": result["settle_step"],
+            "branch": branch,
+            "note": "cold-start 별도 프로세스 재실행 — prereg SS2 분기"}
+        fsync_write(OUT["compare"], json.dumps(cmp_, indent=2) + "\n")
+        print(f"[{LOG}] REPEAT max_dh={cmp_['max_dh_source_mm']:.3f}mm "
+              f"branch={branch}", flush=True)
+        print(f"[{LOG}] Y1_REP2_VERDICT={code} gates={gates}", flush=True)
+        return 0
+
+    out["_hmap_src_obs"] = hmap["source"]["obs"].tolist()  # rep2 비교용
+    np.savez(OUT["trace.npz"], pos=pos_tr[:T + 1], quat=quat_tr[:T + 1],
+             max_speed=max_speed[:T + 1], max_angspeed=max_angspeed[:T + 1],
+             min_sep=min_sep_tr[:T + 1],
+             hmap_src_obs=hmap["source"]["obs"], hmap_src_gt=hmap["source"]["gt"],
+             hmap_bin_obs=hmap["bin"]["obs"], hmap_bin_gt=hmap["bin"]["gt"],
+             src_cells=src_cells, bin_cells=bin_cells,
+             names=np.array([r["name"] for r in plan["rocks"]]))
+    with open(OUT["trace.npz"], "rb") as f:
+        os.fsync(f.fileno())
+
+    # -------- yt2 비교 PNG (D324) -------- #
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    fig, axes = plt.subplots(2, 3, figsize=(13, 8))
+    for row, reg in enumerate(("source", "bin")):
+        vmax = max(0.01, hmap[reg]["obs"].max())
+        for col, key in enumerate(("obs", "gt", "diff")):
+            a = axes[row, col]
+            arr = hmap[reg][key] * 1000
+            vm = (2.0 if key == "diff" else vmax * 1000)
+            im = a.imshow(arr, origin="lower", cmap="coolwarm" if key == "diff" else "viridis",
+                          vmin=(-vm if key == "diff" else 0), vmax=vm)
+            a.set_title(f"{reg} {key} [mm]" + (
+                f" (max|d|={np.abs(arr).max():.3f})" if key == "diff" else
+                f" (max={arr.max():.1f})"))
+            fig.colorbar(im, ax=a, shrink=0.8)
+    fig.suptitle(f"yt2 heightmap obs(PhysX raycast) vs gt(numpy tri) — {code}")
+    fig.tight_layout()
+    fig.savefig(OUT["hmap_png"], dpi=140)
+    plt.close(fig)
+
+    # -------- rerun (D341, save-only) -------- #
+    import rerun as rr
+    if rr.__version__ != RERUN_VERSION:
+        raise RuntimeError(f"RERUN_VERSION {rr.__version__} != {RERUN_VERSION}")
+    import rerun.blueprint as rrb
+    from roarm_rl.rerun_contract import validate_rerun_artifact
+
+    app_id = f"roarm_y1_d453_{TAG}"
+
+    def tray_wire(reg):
+        r = design[reg]
+        cx, cy = r["center"]
+        hl2 = r["L_int"] / 2
+        h = r["wall_h_m"]
+        pts = [(cx - hl2, cy - hl2), (cx + hl2, cy - hl2), (cx + hl2, cy + hl2),
+               (cx - hl2, cy + hl2), (cx - hl2, cy - hl2)]
+        strips = [[[x, y, 0.0] for x, y in pts], [[x, y, h] for x, y in pts]]
+        strips += [[[x, y, 0.0], [x, y, h]] for x, y in pts[:4]]
+        return strips
+
+    def hull_edges_world():
+        strips = []
+        for wv, rk in zip(world_verts, plan["rocks"]):
+            seen = set()
+            for f in rk["faces"]:
+                for a_, b_ in ((f[0], f[1]), (f[1], f[2]), (f[2], f[0])):
+                    e = (min(a_, b_), max(a_, b_))
+                    if e not in seen:
+                        seen.add(e)
+                        strips.append([wv[e[0]].tolist(), wv[e[1]].tolist()])
+        return strips
+
+    with rr.RecordingStream(app_id, recording_id=f"y1_d453_{TAG}", make_default=False,
+                            send_properties=True) as rec:
+        rec.save(str(OUT["timeline.rrd"]), write_footer=True)
+        rec.log("scene/tray_src", rr.LineStrips3D(
+            tray_wire("source"), colors=[[70, 130, 230]], radii=0.0008), static=True)
+        rec.log("scene/tray_bin", rr.LineStrips3D(
+            tray_wire("bin"), colors=[[240, 150, 30]], radii=0.0008), static=True)
+        rec.log("rocks/final_hulls", rr.LineStrips3D(
+            hull_edges_world(), colors=[[150, 150, 160]], radii=0.0004), static=True)
+        rec.log("heightmap/obs", rr.Points3D(
+            np.concatenate([
+                np.column_stack([src_cells.reshape(-1, 2), hmap["source"]["obs"].ravel()]),
+                np.column_stack([bin_cells.reshape(-1, 2), hmap["bin"]["obs"].ravel()])]),
+            colors=[60, 200, 90], radii=0.0012), static=True)
+        rec.log("heightmap/gt", rr.Points3D(
+            np.concatenate([
+                np.column_stack([src_cells.reshape(-1, 2), hmap["source"]["gt"].ravel()]),
+                np.column_stack([bin_cells.reshape(-1, 2), hmap["bin"]["gt"].ravel()])]),
+            colors=[230, 70, 70], radii=0.0008), static=True)
+
+        rec.reset_time()
+        rec.set_time("settle_step", sequence=0)
+        rec.log("events/phase", rr.TextLog(
+            f"SPAWN 32 rocks probe={TAG} (seed {SEED}, "
+            + (f"layers {LAYER_Z}" if TAG == "yt1"
+               else f"{N_WAVES} waves x4 @z={WAVE_Z}") + ")",
+            level=rr.TextLogLevel.INFO))
+        for w, ws in result.get("wave_release_steps", []):
+            rec.reset_time()
+            rec.set_time("settle_step", sequence=ws)
+            rec.log("events/phase", rr.TextLog(
+                f"WAVE {w} release at step {ws}", level=rr.TextLogLevel.INFO))
+        for t in range(0, T + 1):
+            rec.reset_time()
+            rec.set_time("settle_step", sequence=t)
+            fin = np.isfinite(pos_tr[t]).all(axis=1)
+            rec.log("rocks/centers", rr.Points3D(
+                pos_tr[t][fin], colors=[200, 200, 90], radii=0.004))
+            if t >= 1:
+                rec.log("plots/max_speed_mps", rr.Scalars(float(max_speed[t])))
+                rec.log("plots/max_angspeed_radps", rr.Scalars(float(max_angspeed[t])))
+                if np.isfinite(min_sep_tr[t]):
+                    rec.log("plots/min_separation_mm",
+                            rr.Scalars(float(min_sep_tr[t] * 1000)))
+        rec.reset_time()
+        rec.set_time("settle_step", sequence=T)
+        rec.log("events/phase", rr.TextLog(
+            f"SETTLED={g_settle} step={result['settle_step']}",
+            level=rr.TextLogLevel.INFO if g_settle else rr.TextLogLevel.WARN))
+        for k, v in gates.items():
+            rec.log("events/verdict", rr.TextLog(
+                f"{k}={v}", level=rr.TextLogLevel.INFO if v else rr.TextLogLevel.WARN))
+        rec.log("events/verdict", rr.TextLog(
+            f"VERDICT {code} | pile h_avg={pile['h_avg_m'] * 1000:.1f}mm "
+            f"h_max={pile['h_max_m'] * 1000:.1f}mm | hmap max|d|="
+            f"{float(all_diff.max()) * 1000:.3f}mm",
+            level=rr.TextLogLevel.INFO if not fails else rr.TextLogLevel.WARN))
+
+        summary_md = (
+            f"# y1_d453 {TAG}+hmap — pile settle + heightmap probe\n\n"
+            f"**VERDICT: {code}**\n\n"
+            f"32 o1 rocks (8/class) dropped into the source tray "
+            f"(130x130mm, wall 80mm).  settled={g_settle} at step "
+            f"{result['settle_step']} / {T_MAX}; escapes={len(escaped)}; "
+            f"floor_min_z={floor_min_z * 1000:.2f}mm; "
+            f"min_sep={0.0 if min_sep_settled is None else min_sep_settled * 1000:.2f}mm.\n\n"
+            f"yt2: raycast-vs-numpy heightmap max|d|={float(all_diff.max()) * 1000:.3f}mm, "
+            f"{frac_tol * 100:.1f}% cells within 0.5mm; bin negative control "
+            f"max={float(bin_abs.max()) * 1000:.3f}mm.\n\n"
+            f"pile h_avg={pile['h_avg_m'] * 1000:.1f}mm (design phi-est "
+            f"{pile['design_est_h_avg_m'] * 1000:.1f}mm), h_max={pile['h_max_m'] * 1000:.1f}mm.\n\n"
+            f"Authority = yt1_results.json + yt1_trace.npz; Rerun is inspection "
+            f"evidence only (D341).  Masses are 15%-infill estimates (no real-mass claim).")
+        rec.log("metadata/run", rr.TextDocument(summary_md, media_type=rr.MediaType.MARKDOWN),
+                static=True)
+        blueprint = rrb.Blueprint(
+            rrb.Vertical(
+                rrb.Horizontal(
+                    rrb.TextDocumentView(origin="/metadata/run", contents="/metadata/run",
+                                         name="1 | verdict"),
+                    rrb.Spatial3DView(origin="/", contents=["/scene/**", "/rocks/**",
+                                                            "/heightmap/**"],
+                                      name="2 | trays + settle + heightmap"),
+                    rrb.TextLogView(origin="/events", contents="/events/**",
+                                    name="3 | phases + gates"),
+                    column_shares=[0.26, 0.48, 0.26]),
+                rrb.Horizontal(
+                    rrb.TimeSeriesView(origin="/plots", contents="/plots/**",
+                                       name="4 | settle scalars")),
+                row_shares=[0.6, 0.4]),
+            auto_layout=False, auto_views=False, collapse_panels=True)
+        rec.send_blueprint(blueprint, make_active=True, make_default=True)
+        rec.flush(timeout_sec=30.0)
+    blueprint.save(app_id, str(OUT["timeline.rbl"]))
+
+    expected_entities = [
+        "metadata/run", "scene/tray_src", "scene/tray_bin", "rocks/final_hulls",
+        "rocks/centers", "heightmap/obs", "heightmap/gt",
+        "plots/max_speed_mps", "plots/max_angspeed_radps", "plots/min_separation_mm",
+        "events/phase", "events/verdict"]
+    pts3 = ["Points3D:positions", "Points3D:colors", "Points3D:radii"]
+    lin3 = ["LineStrips3D:strips", "LineStrips3D:colors", "LineStrips3D:radii"]
+    components = {
+        "metadata/run": ["TextDocument:text"],
+        "scene/tray_src": lin3, "scene/tray_bin": lin3, "rocks/final_hulls": lin3,
+        "rocks/centers": pts3, "heightmap/obs": pts3, "heightmap/gt": pts3,
+        "plots/max_speed_mps": ["Scalars:scalars"],
+        "plots/max_angspeed_radps": ["Scalars:scalars"],
+        "plots/min_separation_mm": ["Scalars:scalars"],
+        "events/phase": ["TextLog:text", "TextLog:level"],
+        "events/verdict": ["TextLog:text", "TextLog:level"]}
+    validation = validate_rerun_artifact(
+        OUT["timeline.rrd"],
+        expected_entity_paths=expected_entities,
+        exact_entity_paths=expected_entities,
+        exact_timeline_names=["blueprint", "log_time", "settle_step"],
+        expected_entity_components=components,
+        blueprint_path=OUT["timeline.rbl"],
+        screenshot_path=OUT["inspection.png"],
+        screenshot_window_size="2400x1400",
+        expected_version=RERUN_VERSION,
+        cli_path=RERUN_CLI,
+        timeout_s=240.0)
+    fsync_write(OUT["rerun_validation.json"],
+                json.dumps(validation, indent=2, default=str) + "\n")
+    out["rerun_validation_pass"] = bool(validation.get("pass"))
+    print(f"[{LOG}] rerun_validation pass={validation.get('pass')} "
+          f"errors={validation.get('errors')}", flush=True)
+
+    out["artifacts"] = {p.name: {"sha256_16": sha256(p)[:16], "bytes": p.stat().st_size}
+                        for k, p in OUT.items()
+                        if p.exists() and k not in ("results.json", "failure.json")}
+    fsync_write(OUT["results.json"], json.dumps(out, indent=2, default=str) + "\n")
+    print(f"[{LOG}] results.json={sha256(OUT['results.json'])[:16]} "
+          f"bytes={OUT['results.json'].stat().st_size}", flush=True)
+    print(f"[{LOG}] Y1_{TAG.upper()}_VERDICT={code} gates={gates} "
+          f"settle_step={result['settle_step']} pile_avg={pile['h_avg_m'] * 1000:.1f}mm",
+          flush=True)
+    return 0
+
+
+def main() -> int:
+    global TAG, LOG
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--rep", type=int, choices=(1, 2), required=True)
+    ap.add_argument("--probe", choices=("yt1", "yt3"), required=True)
+    ap.add_argument("--preflight-only", action="store_true")
+    args = ap.parse_args()
+    TAG = args.probe
+    LOG = f"y1_{args.probe}"
+    design, plan, out_paths = preflight(args.rep, args.probe)
+    if args.rep == 1:
+        fsync_write(out_paths["argv.txt"], " ".join([sys.executable, *sys.argv]) + "\n")
+        shutil.copyfile(__file__, out_paths["script.py.txt"])
+    else:
+        fsync_write(out_paths["argv.txt"], " ".join([sys.executable, *sys.argv]) + "\n")
+    print(f"[{LOG}] preflight OK rep={args.rep}: 32 rocks, margins={plan['margins']}, "
+          f"pins verified", flush=True)
+    if args.preflight_only:
+        return 0
+    return run(args.rep, design, plan, out_paths)
+
+
+if __name__ == "__main__":
+    sys.exit(main())
