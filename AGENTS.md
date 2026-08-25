@@ -269,6 +269,17 @@ If active chat context approaches 95%:
 - `rm -rf` 금지. `JOINT_LIMITS` 코드 제거 금지 (HARD RULE #5).
 - git commit/push는 사용자가 요청할 때만.
 
+## i4h 스킬 규칙 (2026-08-25~)
+
+- 이 repo 세션에는 NVIDIA `i4h-*` 스킬 13개가 심링크로 노출되어 있다
+  (정본: `/media/cgxr/ROBOT_DEV/i4h-workflows/.agents/skills/`,
+  셋업/이식 문서: `/media/cgxr/ROBOT_DEV/AGENT_SKILLS_SETUP.md`).
+- **사용자가 스킬 이름으로 명시 요청할 때만 호출한다.** teleop/mimic/convert/finetune 등
+  RoArm 작업 어휘와 트리거 키워드가 겹치므로 자동 발동 금지
+  (Claude는 `.claude/settings.local.json`의 `skillOverrides`로도 차단됨).
+- i4h 파이프라인 본 실행(teleop 녹화, finetune 등)은 이 repo가 아니라
+  `/media/cgxr/ROBOT_DEV/i4h-workflows`에서 세션을 열어 수행한다.
+
 ## File ownership (요약 — 상세 표는 CLAUDE.md Agent Team)
 
 파일 prefix별 소유 규칙: `data_*`/`collect_data_manual.py`(data), `train_*`/`run_official_train.py`(pipeline),
