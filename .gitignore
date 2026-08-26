@@ -141,7 +141,11 @@ convert_log.txt
 .claude/scheduled_tasks.lock
 
 # ---- Docs folder (PDFs, local docs) ----
-docs/
+# 2026-08-25: AGENTS.md 분리로 docs/reference·docs/archive는 추적 대상 (AGENTS.md가 참조).
+# 나머지 직속 파일(PDF 등)은 계속 무시.
+docs/*
+!docs/reference/
+!docs/archive/
 
 # ---- Sensitive ----
 .env

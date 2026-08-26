@@ -2,15 +2,18 @@
 
 # CLAUDE.md — Claude Code 전용
 
-도구 중립 프로젝트 지침 전부(부트 절차, HARD RULES, 안전 제약, 하드웨어/파이프라인
-레퍼런스)는 `AGENTS.md`가 단일 소스이며, 위 `@AGENTS.md` 임포트로 자동 인라인 로드된다.
+도구 중립 프로젝트 규칙 전부(부트 절차, HARD RULES, 안전 제약)는 `AGENTS.md`가 단일 소스이며,
+위 `@AGENTS.md` 임포트로 자동 인라인 로드된다. 하드웨어/파이프라인/명령어/세션 프롬프트
+레퍼런스는 2026-08-25에 `docs/reference/`로 분리됐다 (자동 로드 아님 — `AGENTS.md`의 참조 표 참고).
 이 파일에는 Claude Code 전용 내용만 남긴다: 12-agent 팀, 스킬/auto-memory 워크플로우.
 규칙 추가·수정은 `AGENTS.md`에서 한다 (상태는 `START_HERE.md` 계열 — 상태 ≠ 규칙).
 
 ## Session Workflow (Claude 전용 세션 운영 규칙)
 
-> Authoritative end-of-session procedure lives in `AGENTS.md ## Current-State
-> Protocol`. This section retains the Claude-specific rules and clarifies
+> Authoritative end-of-session procedure lives in
+> `docs/reference/session_protocol.md` (2026-08-25 `AGENTS.md`에서 분리, 원문 그대로).
+> `AGENTS.md ## Current-State Protocol`은 부트 6단계와 파일 역할을 계속 보유한다.
+> This section retains the Claude-specific rules and clarifies
 > the relationship between project-state docs and auto-memory.
 
 | Rule | Why |
@@ -18,11 +21,11 @@
 | **HANDOFF.md / `/handoff` 자동 생성/발동 금지** | /handoff 스킬은 이 프로젝트 워크플로우가 아님. `START_HERE.md` overwrite + new `session_*.md`로 대체. |
 | **/half-clone 절대 사용/제안 금지** | 유저 반복 지시 (auto-memory HARD RULE #11). Context 95% → end-of-session update + new session boot, NOT /half-clone. |
 | **context 차면 project-state + MEMORY.md 둘 다 업데이트** | Project-state (`START_HERE.md`, `EXPERIMENT_LEDGER.md`, new `session_*.md`, `DECISIONS.md` if durable) = repo continuity. Auto-memory (`MEMORY.md`) = user-level habits, HARD RULES, recent session index. 둘은 보완 관계. |
-| **다음 세션용 continuation prompt 제공** | Project-state file-based boot이 1차. Continuation prompt는 유저가 즉시 새 세션 시작 시 보조 진입점. `AGENTS.md ## Current-State Protocol`의 "Session boot prompt" 텍스트 사용. |
+| **다음 세션용 continuation prompt 제공** | Project-state file-based boot이 1차. Continuation prompt는 유저가 즉시 새 세션 시작 시 보조 진입점. `docs/reference/session_protocol.md`의 "Session boot prompt" 텍스트 사용. |
 | **중요 결과는 claudedocs/ 파일로 저장** | 파일 기반 상태 보존. Detail은 `session_*.md`, summary table은 `EXPERIMENT_LEDGER.md`, durable lesson은 `DECISIONS.md`. |
 
 ```
-세션 종료 프로세스 (Current-State Protocol "End-of-session update prompt"의 단축형):
+세션 종료 프로세스 (docs/reference/session_protocol.md "End-of-session update prompt"의 단축형):
 1. START_HERE.md → 현재 truth + active pivot + next step으로 overwrite
 2. EXPERIMENT_LEDGER.md → 주요 run/result row append
 3. DECISIONS.md → durable lesson만 append (Dxxx 번호)

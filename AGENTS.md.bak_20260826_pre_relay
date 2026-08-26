@@ -13,9 +13,6 @@
 `START_HERE.md` → `claudedocs/DECISIONS.md` → `claudedocs/session_*.md`로만 한다.
 **같은 프로젝트에서 Claude와 Codex(또는 Cursor) 편집 세션 동시 실행 금지** — 한 도구의
 세션이 state doc 갱신으로 끝난 뒤 다른 도구를 시작한다.
-세션을 닫는 도구는 `claudedocs/relay/from_<자기 도구>.md`를 **덮어써** 다음 도구에 인계한다
-(Claude→`from_claude.md`, Codex/Cursor→`from_codex.md`). 상태 정본은 `START_HERE.md`이며
-relay에는 베끼지 않는다 — 만진 파일·건드리지 말 것·함정·승인 대기만 (규약은 파일 §0).
 
 ## 참조 문서 (자동 로드 아님 — 해당 작업 착수 전에 읽을 것)
 
@@ -51,13 +48,10 @@ Before answering current project-state questions or making edits:
    전체 `claudedocs/EXPERIMENT_LEDGER.md`(531줄이지만 줄당 평균 2 KB)는 통째로 읽지 말고,
    앵커가 가리키는 줄만 on-demand read. 원장 자신의 경고대로, 수치 인용 전에는
    원장이 아니라 링크된 session/data 파일까지 내려가 확인한다.
-4. Read `claudedocs/relay/from_<직전 도구>.md` — Claude 세션이면 `from_codex.md`,
-   Codex/Cursor 세션이면 `from_claude.md`. 직전 도구가 남긴 미커밋 변경·함정·승인 대기 항목.
-   상태 정본이 아니다 — `START_HERE.md`와 어긋나면 `START_HERE.md`가 이긴다.
-5. Read only the `claudedocs/session_*.md` files referenced by `START_HERE.md`
+4. Read only the `claudedocs/session_*.md` files referenced by `START_HERE.md`
    unless more evidence is needed.
-6. Run `git status --short`.
-7. Verify any metric from the referenced log/data file before citing it.
+5. Run `git status --short`.
+6. Verify any metric from the referenced log/data file before citing it.
 
 ### Context 95% emergency protocol
 
