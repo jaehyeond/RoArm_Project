@@ -70,14 +70,11 @@ RQ3 sim2real).
   축(D455 ③) — 실기 설계 시 양방향 고려.
 - ba2 물리 PASS "place 성공" 승격 금지(D449 ④) 등 grasp track 규율 유지.
 - `numpy==1.26.0`, `psutil==5.9.8`, rerun 0.34.1 핀 (D326).
-- git: **미커밋 0 · 워킹 트리 깨끗 · HEAD `0606201`** (2026-08-26 `git status
-  --short` 실측). 66th `sim_assets/`(54파일) + 67th~69th
-  `claudedocs/runtime_logs/yard_track/`(115파일) + `sim_scripts/p26~p32`(7) +
-  `ARCHIVE_INDEX.md` + 70th doc은 **`4a38896`로 이미 커밋**됐고 `.gitignore`는
-  `0606201`. whitelist 추가도 불필요 — 두 경로를 막는 `.gitignore` 규칙이 없고
-  `git ls-files`로 169파일 추적 확인. ⚠️ 이 절의 08-17판 "미커밋 = …" 서술은
-  **거짓이었다**: 70th 갱신 뒤 커밋 2건(`4a38896`·`0606201`)이 났는데 상태
-  문서가 따라가지 못했다 (2026-08-26 정정).
+- git: 58th~65th push `2b067e8` 완료. **미커밋 = 66th o1(`sim_assets/`) +
+  67th~69th y1·y2·y3(`yard_track/`+p26~p32+상태 docs) + 70th 이관분
+  (`ARCHIVE_INDEX.md`+`.gitignore`+70th doc)** — whitelist에
+  `sim_assets/`+`claudedocs/runtime_logs/yard_track/` 추가 필요. 커밋은
+  사용자 지시 시에만.
 - 스토리지: 이관분(T1/T2 14폴더)은 외장 **사본 1개**(백업 아님) — 외장
   분실 = 데이터 손실 조건으로 사용자 승인됨. T3 45G는 유일 사본 내장 유지.
 - yt3 RRD 요약 "yt1_results" 하드코딩 오기(판정 미사용) — y2/y3에서 수리
@@ -92,8 +89,7 @@ RQ3 sim2real).
 (a) 실물 제작(슬리브+물체 52+트레이/bin 내부 130·벽 80mm), (c) 파일럿
 E:\ 전달 후 이관/재현, (d) rim·29~14° 잔여, (e) 프로포절 v2 검토/교수님
 보고 — D454 place-대조 + **D455 관측 7.56×·결합·place 5→0** 인용 가능,
-(f) ~~git 커밋~~ = **2026-08-26 완료·후보에서 제외**(`4a38896`·`0606201`,
-미커밋 0), (g) **T3 2사본화 방식**(45G 유일 사본
+(f) git 커밋(whitelist 갱신 포함), (g) **T3 2사본화 방식**(45G 유일 사본
 — 70th doc §5).
 
 ## Must read first
