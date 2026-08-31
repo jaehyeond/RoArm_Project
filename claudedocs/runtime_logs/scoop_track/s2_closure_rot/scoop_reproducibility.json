@@ -1,0 +1,67 @@
+{
+  "artifact": "DEME_SCOOP_REPRODUCIBILITY_V1",
+  "left": "scoop_rep1.npz",
+  "right": "scoop_rep2.npz",
+  "raw_final_bit_exact": false,
+  "raw_final_bit_exact_verdict": "FAIL_ENGINE_LIMITATION",
+  "heightmap_cell_m": 0.005,
+  "metrics": {
+    "n_left": 18796,
+    "n_right": 18796,
+    "rms_m": 0.0022162941769221117,
+    "mean_abs_m": 0.00024757218799344844,
+    "p95_abs_m": 0.0008819724433124096,
+    "max_abs_m": 0.05104232579469681,
+    "cells_over_max_threshold": 13,
+    "exact_cell_fraction": 0.007617728531855956
+  },
+  "thresholds": {
+    "rms_m": 0.0020800000000000003,
+    "p95_abs_m": 0.0041600000000000005,
+    "max_abs_m": 0.008320000000000001
+  },
+  "checks": {
+    "rms": false,
+    "p95": true,
+    "max": false
+  },
+  "verdict": "FAIL_HEIGHTMAP_TOLERANCE",
+  "remaining_pile_only": {
+    "metrics": {
+      "n_left": 18605,
+      "n_right": 18599,
+      "rms_m": 0.0005826171654117444,
+      "mean_abs_m": 0.0001388549231640334,
+      "p95_abs_m": 0.0008819724433124096,
+      "max_abs_m": 0.0070811305195093155,
+      "cells_over_max_threshold": 0,
+      "exact_cell_fraction": 0.007617728531855956
+    },
+    "thresholds": {
+      "rms_m": 0.0020800000000000003,
+      "p95_abs_m": 0.0041600000000000005,
+      "max_abs_m": 0.008320000000000001
+    },
+    "checks": {
+      "rms": true,
+      "p95": true,
+      "max": true
+    },
+    "verdict": "REPRODUCIBLE_WITHIN_HEIGHTMAP_TOLERANCE",
+    "definition": "z <= 0.039232 m 인 입자만 (그랩에 담겨 들려 올라간 것 제외)"
+  },
+  "run_to_run_spread": {
+    "captured_particles": [
+      191,
+      197
+    ],
+    "captured_rel_diff": 0.0305,
+    "close_peak_lip_equiv_N": [
+      4.11,
+      2.645
+    ],
+    "close_peak_rel_diff": 0.3564,
+    "note": "🔴 담긴 입자 수와 폐합 최대 반력은 설정이 같아도 실행마다 다르다. 1회 실행의 반력 수치를 단독으로 인용하면 안 되고 반복 평균이 필요하다."
+  },
+  "note": "DEME 2.4.0 은 접촉쌍 리덕션 순서를 결정론적으로 노출하지 않는다. sim_deme_pile.py 와 같은 기준을 그대로 쓴다: 시드·설정 동일 + 5 mm heightmap 이 반지름 RMS / 지름 p95 / 지름x2 최대 안에서 일치. 게이트는 통과시키려고 고치지 않았다."
+}
