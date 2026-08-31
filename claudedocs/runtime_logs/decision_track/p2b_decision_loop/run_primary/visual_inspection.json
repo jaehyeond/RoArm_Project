@@ -1,0 +1,23 @@
+{
+  "schema": "p39-visual-inspection-v1",
+  "inspection_performed": true,
+  "screenshot_path": "claudedocs/runtime_logs/decision_track/p2b_decision_loop/run_primary/inspection.png",
+  "screenshot_sha256": "4642cfab3e4cf10c27b3a14e9ecb4e1d05dba4e0de6be4025f972d86859f581c",
+  "decision_snapshot_path": "claudedocs/runtime_logs/decision_track/p2b_decision_loop/run_primary/decision_snapshot.png",
+  "decision_snapshot_sha256": "d73136e5fa8e28568e03e3d7d804a7ebaf961249eee99feea4c23995e83aab55",
+  "observations": [
+    {
+      "category": "pile_evolution",
+      "observation": "Rerun 3D heightmap shows a remaining asymmetric ridge with local depressions; the step-4 diagnostic shows the selected crest lower and spread after execution. The headless viewer also displays a message-proxy warning, but the geometry, plots, and event rows are visibly rendered."
+    },
+    {
+      "category": "selected_action",
+      "observation": "The red selected-action marker and cyan removed-volume centroid are both visible and nearly coincident at the inspected step, while the orange direction arrow identifies the commanded yaw."
+    },
+    {
+      "category": "cumulative_metrics",
+      "observation": "The lower time-series panel visibly contains cumulative time, mass, distance, failure count, and scoop count, with resets at policy boundaries; the adjacent decision log lists the matching per-step actions."
+    }
+  ],
+  "scope": "visual replay evidence; summary.json remains the numeric authority"
+}
