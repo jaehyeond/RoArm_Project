@@ -8,6 +8,19 @@ Last updated: 2026-08-31 KST — 74th: **`scoop_v0` 그랩 기구 전환 확정 
 **사용자 결정(08-27 유효): 프로포절은 현 상태로 발표한다. 12월 디펜스는 실제 수행 결과로 승부한다.**
 → 문헌 정비가 아니라 **개발 속도**가 우선이다.
 
+## 🖨 출력 대기 중 (2026-09-01)
+
+1차 출력 실패(160/295 층 스파게티, 원인=베드 55°C + 브림 꺼짐 — `docs/reference/printing.md` §1).
+재슬라이스 완료 = `claudedocs/runtime_logs/grab_track/g4_flat/` (베드 65°C, 브림 outer_only 8mm,
+부품 눕힘, 높이 59.5→52.9mm, 106분/39.7g, 게이트 7/7 PASS).
+
+**전송이 막혀 있다 — 프린터 상태 `FAILED`.** 사용자가 프린터 화면에서 에러를 해제해
+`IDLE` 이 되면 아래 한 줄로 전송된다:
+```bash
+~/miniconda3/bin/python send_print_job.py claudedocs/runtime_logs/grab_track/g4_flat/print_job.json --yes
+```
+출력 후 실측할 것: 피벗 보스 6.0mm · 브래킷 볼트 사각 25.19×19.44mm · 1.5mm 판재 처짐.
+
 ## Active Case — single source of truth
 
 - **Active: `scoop_v0` (73rd~ — 축소 실물 스쿱 장치 구축).**
