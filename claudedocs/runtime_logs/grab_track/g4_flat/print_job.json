@@ -4,7 +4,7 @@
   "rev": "",
   "purpose": "roarm_grab_v1_flat 부품 출력",
   "v0_result": "",
-  "assembly_png": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g3_linkage/ASSEMBLY.png",
+  "assembly_png": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g4_flat/ASSEMBLY.png",
   "decision_refs": [
     "D457:28196 §12",
     "D458:28407 §7",
@@ -13,16 +13,16 @@
   ],
   "source": {
     "stl": [
-      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g3_linkage/shell_L_ALL.stl",
-      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g3_linkage/shell_R_ALL.stl",
-      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g3_linkage/bracket_ALL.stl",
-      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g3_linkage/linkage_ALL.stl"
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g4_flat/shell_L_ALL.stl",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g4_flat/shell_R_ALL.stl",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g4_flat/bracket_ALL.stl",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g4_flat/linkage_ALL.stl"
     ],
     "sha256_16": {
-      "shell_L_ALL.stl": "151c2819882c3dbc",
-      "shell_R_ALL.stl": "d170def1f8f1310b",
-      "bracket_ALL.stl": "61fe8480ccd704f8",
-      "linkage_ALL.stl": "79f0e6238a07a901"
+      "shell_L_ALL.stl": "395adf1820da8e8e",
+      "shell_R_ALL.stl": "72ab370054dd6ad7",
+      "bracket_ALL.stl": "9c8d1c6639fffaca",
+      "linkage_ALL.stl": "19398277b681169f"
     },
     "generator": "scoop_shell_design.py (파라메트릭 — 재생성 가능)"
   },
@@ -44,8 +44,8 @@
   },
   "artifact": {
     "path": "/home/cgxr/Documents/DK/DTR/bamboo-3dprinter/output/roarm_grab_v1_flat.3mf",
-    "sha256_16": "7a9c2587de70f193",
-    "bytes": 1047836,
+    "sha256_16": "6120261e0aa07b58",
+    "bytes": 576086,
     "remote_name": "roarm_grab_v1_flat.3mf"
   },
   "printer": {
@@ -62,8 +62,8 @@
   },
   "print_params": {
     "plate_id": 1,
-    "est_seconds": 6915,
-    "est_grams": 39.53,
+    "est_seconds": 6336,
+    "est_grams": 39.68,
     "bed_temp_c": [
       65
     ],
@@ -74,16 +74,16 @@
     "filament": "PLA (Bambu Basic, GFA00)",
     "bbox_mm": {
       "x": [
-        93.08,
-        184.37
+        113.9,
+        143.5
       ],
       "y": [
-        79.25,
-        166.32
+        67.85,
+        183.61
       ],
       "z": [
         0.0,
-        60.7
+        52.9
       ]
     },
     "bed_size_mm": [
@@ -101,7 +101,7 @@
   "gates": {
     "inside_bed_with_brim": {
       "pass": true,
-      "detail": "브림 5.0mm 포함 X 88.1~189.4 Y 74.3~171.3 / 베드 256x256"
+      "detail": "브림 5.0mm 포함 X 108.9~148.5 Y 62.8~188.6 / 베드 256x256"
     },
     "slicer_outside_flag_false": {
       "pass": true,
@@ -113,18 +113,23 @@
     },
     "gcode_has_toolpath": {
       "pass": true,
-      "detail": "gcode 7931065 B"
+      "detail": "gcode 3458608 B"
     },
-    "bed_temp_at_filament_spec": {
-      "pass": false,
-      "detail": "M140=[65] — Bambu PLA Basic + 텍스처 PEI 제조사 스펙 55°C. 프로필 기본 65°C는 연화점(45°C) 초과폭이 커 엘리펀트 풋으로 슬롯 폭을 좁힌다"
+    "bed_temp_vs_part_height": {
+      "pass": true,
+      "detail": "M140=[65], 부품 높이 52.9 mm. PLA 최소 55°C(DTR README:227). 높이 20 mm 초과 부품은 냉각 수축으로 모서리가 들리므로 **60°C 이상** 필요. 20 mm 이하 납작한 부품만 55°C 허용",
+      "lesson": "쿠폰 설정을 세로로 긴 부품에 재사용하지 말 것 (09-01 스파게티 실패)"
+    },
+    "brim_enabled": {
+      "pass": true,
+      "detail": "brim_type='outer_only', brim_width=8. 🔴 실패판은 brim_type=None 이라 brim_width=5 가 무의미했다. 이전 게이트는 '브림 폭 포함 베드 안'만 보고 **브림이 켜져 있는지는 안 봤다**"
     },
     "nozzle_print_temp_in_range": {
       "pass": true,
       "detail": "출력 온도 = max 220°C (필라멘트 허용 200~240). 과도값 [75, 140] = 오징방지/레벨링 루틴"
     }
   },
-  "all_gates_pass": false,
+  "all_gates_pass": true,
   "send_plan": [
     {
       "step": 1,
@@ -158,5 +163,5 @@
     "DTR 원본 프로필·config.json 무수정 — 사본으로만 오버라이드",
     "필라멘트 적재 여부는 기계적 사실이므로 전송 전 사용자 확인 필요"
   ],
-  "bed_layout_png": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g3_linkage/BED_LAYOUT.png"
+  "bed_layout_png": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g4_flat/BED_LAYOUT.png"
 }

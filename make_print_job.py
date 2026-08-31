@@ -42,6 +42,9 @@ x0, y0, x1, y1 = plate["bbox_all"]
 beds = sorted({int(v) for v in re.findall(r"M140 S(\d+)", gcode)} - {0})
 nozz = sorted({int(v) for v in re.findall(r"M104 S(\d+)", gcode)} - {0})
 warns = re.findall(r'<warning msg="([^"]+)"', si)
+_proc = json.loads((DTR / "profiles/process_nosupport_roarm.json").read_text())
+brim_type = _proc.get("brim_type")
+brim_width = _proc.get("brim_width")
 _zs = [float(v) for v in re.findall(r"^G[01] .*?Z([0-9.]+)", gcode, re.M)]
 max_z = max(_zs) if _zs else 0.0
 
@@ -60,10 +63,23 @@ gates = {
                   "형상을 베드에 평평히 눕혀 오버행 자체를 제거함 (구멍은 수직 관통)"},
     "gcode_has_toolpath": {
         "pass": "G1" in gcode and len(gcode) > 10000, "detail": f"gcode {len(gcode)} B"},
-    "bed_temp_at_filament_spec": {
-        "pass": beds == [55],
-        "detail": f"M140={beds} — Bambu PLA Basic + 텍스처 PEI 제조사 스펙 55°C. "
-                  f"프로필 기본 65°C는 연화점(45°C) 초과폭이 커 엘리펀트 풋으로 슬롯 폭을 좁힌다"},
+    # 🔴 2026-09-01 정정. 이전 판은 `beds == [55]` 로 **55 를 유일 정답으로 못 박고** 있었다.
+    #    그 값은 5.1 mm 납작한 칼라 쿠폰의 엘리펀트 풋을 막으려던 것인데, 높이 59.5 mm 부품에
+    #    그대로 적용해 **160/295 층에서 탈락 스파게티**를 냈다. DTR README:192·227 에 이미
+    #    "베드 접착 실패 -> PLA 는 55°C 이상 필요" 가 기록돼 있었고 그것을 답습한 것이다.
+    #    -> 단일값이 아니라 **부품 높이에 따른 대역**으로 판정한다.
+    "bed_temp_vs_part_height": {
+        "pass": (all(55 <= b <= 70 for b in beds) and
+                 (max_z < 20.0 or all(b >= 60 for b in beds))),
+        "detail": (f"M140={beds}, 부품 높이 {max_z:.1f} mm. "
+                   f"PLA 최소 55°C(DTR README:227). 높이 20 mm 초과 부품은 냉각 수축으로 "
+                   f"모서리가 들리므로 **60°C 이상** 필요. 20 mm 이하 납작한 부품만 55°C 허용"),
+        "lesson": "쿠폰 설정을 세로로 긴 부품에 재사용하지 말 것 (09-01 스파게티 실패)"},
+    "brim_enabled": {
+        "pass": brim_type not in (None, "no_brim", "none"),
+        "detail": (f"brim_type={brim_type!r}, brim_width={brim_width}. "
+                   f"🔴 실패판은 brim_type=None 이라 brim_width=5 가 무의미했다. "
+                   f"이전 게이트는 '브림 폭 포함 베드 안'만 보고 **브림이 켜져 있는지는 안 봤다**")},
     # 출력 온도는 gcode의 **최고** 노즐 온도다. S75(오징 방지)·S140(베드 레벨링 중 노즐 닦기)은
     # Bambu 시작 루틴의 과도값이며 gcode 주석이 그렇게 명시한다 — 출력 온도로 세면 안 된다.
     "nozzle_print_temp_in_range": {
