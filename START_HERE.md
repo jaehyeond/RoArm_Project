@@ -240,6 +240,7 @@ Kinect  더미 촬영  → P2 `--live` 로 프레임·출력폴더명만 교체 
 
 ## Must read first
 
+0. **출력 작업이면 `docs/reference/printing.md` 먼저** — DK 폴더 교훈 + 09-01 스파게티 원인.
 1. `AGENTS.md` — 규칙 단일 소스. `:14~` 원장 소유권은 **배타적**(동시 실행 전면 금지 아님).
 2. `claudedocs/session_20260827_73rd_scoop_v0_jaw80_p1s_mount_v1_shell_v2.md` — **`scoop_v0` 서사 정본.**
    D457~D461 + 08-31 쿠폰 결과 + 이월 9건.
