@@ -1,0 +1,105 @@
+{
+  "artifact": "DEME_SCOOP_CLOSURE_V2_ROTATION",
+  "rep": "rep2",
+  "smoke": false,
+  "params": {
+    "pivot_gap_mm": 26.0,
+    "shell_travel_deg": 44.5,
+    "lip_depth_mm": 36.06,
+    "lip_pivot_radius_mm": 38.332,
+    "shell_mass_kg": 0.0263,
+    "approach_gap_mm": 10.0,
+    "insert_depth_mm": 8.0,
+    "close_end_deg": 6.0,
+    "descend_steps": 70,
+    "close_steps": 100,
+    "lift_steps": 100,
+    "lift_height_mm": 40.0,
+    "settle_steps": 5,
+    "dt_sync_s": 0.004,
+    "timestep_s": 1e-05,
+    "E_pa": 5000000.0,
+    "nu": 0.3,
+    "CoR": 0.3,
+    "mu": 0.5,
+    "Crr": 0.05,
+    "particle_density_kg_m3": 950.0,
+    "error_out_vel": 20.0,
+    "cd_update_freq": 20,
+    "domain_top_m": 0.2,
+    "jaw_force_band_N": [
+      1.8,
+      6.3
+    ],
+    "seed": 460
+  },
+  "trajectory": {
+    "T_settle_s": 0.02,
+    "T_descend_s": 0.30000000000000004,
+    "T_close_s": 0.7000000000000001,
+    "T_lift_s": 1.1,
+    "z_pivot_start_m": 0.08051156894268113,
+    "z_pivot_insert_m": 0.06251156894268112,
+    "vz_descend_m_s": -0.06428571428571433,
+    "omega_close_rad_s": 1.6798794050445423,
+    "vz_lift_m_s": 0.09999999999999999,
+    "phi_open_deg": 44.5
+  },
+  "steps": {
+    "descend": 70,
+    "close": 100,
+    "lift": 100
+  },
+  "engine": {
+    "DEME": "2.4.0",
+    "force_model": "UseFrictionalHertzianModel"
+  },
+  "pile": {
+    "n": 18796,
+    "radius_m": 0.0020800000000000003,
+    "top_z_m": 0.03423216938972473,
+    "source": "/home/cgxr/orca/workspaces/RoArm_Project/deme-force/claudedocs/runtime_logs/sim_deme/pile_practical_targetridge_d4p16_n18796_seed460.npz",
+    "sha256": "662b308cc4f4ba92b24f57bf0e5c855131a9aaca9712782969cac4a0287430f7"
+  },
+  "shells": {
+    "L_sha256": "4d4302c58f444d23f4a7ada9d939ad770074402b50d2a4935ea1c495b8911242",
+    "R_sha256": "f4dadbd3b47a7bf40c863f6fbbf10a2a5cce62c5c13d73fc46436b99f64d189b",
+    "owner_ids": {
+      "-1": 18797,
+      "1": 18798
+    }
+  },
+  "contacts": {
+    "close_first": 6,
+    "close_max": 151,
+    "monotone_increase_first_half": true
+  },
+  "diverged": false,
+  "steps_completed": {
+    "descend": 70,
+    "close": 100,
+    "lift": 100
+  },
+  "forces_N": {
+    "descend_peak_total": 0.058,
+    "close_peak_total": 2.708,
+    "close_peak_lip_equiv": 2.645,
+    "close_peak_single_contact": 0.392,
+    "jaw_band_measured": [
+      1.8,
+      6.3
+    ]
+  },
+  "verdict_closure": "WITHIN_MEASURED_JAW_FORCE",
+  "captured_particles": 197,
+  "captured_mass_g": 7.055,
+  "wall_seconds": 137.92,
+  "budget_3000_hours": 114.94,
+  "non_claims": [
+    "강성 E=5e6 Pa 는 수치 안정용 임시값이며 펠릿 실측이 아니다. 밀도 950 kg/m3 · mu 0.50 · CoR 0.30 · Crr 0.05 도 전부 미실측 임시값이다. **따라서 이 파일의 반력 수치는 어떤 판정에도 인용할 수 없다.** PP 펠릿 실측(밀도·안식각)이 들어오면 숫자가 통째로 바뀐다.",
+    "이 실행이 주장하는 것은 오직 **경로가 성립한다**는 것이다: 셸 2매가 진짜로 피벗 둘레를 회전해 닫히고, 그 동안 접촉 수와 반력이 0 이 아닌 값으로 읽힌다.",
+    "더미 npz 는 E=1.0e7 Pa · dt=2.0e-5 로 정착시킨 것이고 본 실행은 E=5.0e6 Pa · dt=1.0e-5 다. 강성이 다르므로 t=0 직후 더미가 미세하게 다시 앉는다. 실측 물성을 넣을 때 더미도 같은 물성으로 재정착시켜야 한다.",
+    "실측 조 힘 1.8~6.3 N (D451/D452) 은 **슬리브 그리퍼(D452)** 값이다. 그랩 v1 은 다른 기구이므로 이 대역은 참고선이지 합격선이 아니다.",
+    "D341 Rerun 완결 계약(rrd verify · 블루프린트 .rbl · 헤드리스 스크린샷 · 육안 검수)은 본 실행에서 **미이행**이다. RRD 는 기록하되 검증 게이트는 돌리지 않았다."
+  ]
+}
