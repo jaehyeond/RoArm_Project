@@ -1,0 +1,305 @@
+{
+  "artifact": "ROARM_RERUN_ARTIFACT_VALIDATION_V1",
+  "path": "/home/cgxr/orca/workspaces/RoArm_Project/kinect-hm/claudedocs/runtime_logs/heightmap_track/hm5_real_depth_pp_ready_c1/hm5_timeline_c1.rrd",
+  "expected_rerun_version": "0.34.1",
+  "expected_entity_paths": [
+    "/input/depth_raw",
+    "/input/masks",
+    "/geometry/pointcloud_base",
+    "/heightmap/valid_cells",
+    "/heightmap/unseen_cells",
+    "/frames/camera_origin",
+    "/frames/camera_axes",
+    "/frames/grid_origin",
+    "/frames/grid_axes"
+  ],
+  "expected_timeline_names": [
+    "blueprint",
+    "frame_idx",
+    "log_time"
+  ],
+  "exact_entity_paths": [
+    "/frames/camera_axes",
+    "/frames/camera_origin",
+    "/frames/grid_axes",
+    "/frames/grid_origin",
+    "/geometry/pointcloud_base",
+    "/heightmap/unseen_cells",
+    "/heightmap/valid_cells",
+    "/input/depth_raw",
+    "/input/masks"
+  ],
+  "exact_timeline_names": [
+    "blueprint",
+    "frame_idx",
+    "log_time"
+  ],
+  "expected_entity_components": {
+    "/input/depth_raw": [
+      "DepthImage:buffer",
+      "DepthImage:format",
+      "DepthImage:meter"
+    ],
+    "/input/masks": [
+      "Image:buffer",
+      "Image:format"
+    ],
+    "/geometry/pointcloud_base": [
+      "Points3D:colors",
+      "Points3D:positions",
+      "Points3D:radii"
+    ],
+    "/heightmap/valid_cells": [
+      "Points3D:colors",
+      "Points3D:positions",
+      "Points3D:radii"
+    ],
+    "/heightmap/unseen_cells": [
+      "Points3D:colors",
+      "Points3D:positions",
+      "Points3D:radii"
+    ]
+  },
+  "forbidden_entity_fragments": [
+    "/\\/"
+  ],
+  "blueprint_path": "/home/cgxr/orca/workspaces/RoArm_Project/kinect-hm/claudedocs/runtime_logs/heightmap_track/hm5_real_depth_pp_ready_c1/hm5_timeline_c1.rbl",
+  "rendered_blueprint_source": "active blueprint embedded in the RRD",
+  "external_rbl_role": "verified fixed-layout export; the 0.34.1 CLI does not guarantee that an external RBL overrides an already-active embedded blueprint",
+  "screenshot_path": "/home/cgxr/orca/workspaces/RoArm_Project/kinect-hm/claudedocs/runtime_logs/heightmap_track/hm5_real_depth_pp_ready_c1/hm5_rerun_inspection_c1.png",
+  "screenshot_window_size": "2400x1400",
+  "screenshot_port": null,
+  "human_visual_inspection_required": true,
+  "bytes": 4198718,
+  "sha256": "e4d5340f07c56e29e89f6771afab17d45706eaa4c04327a5240959b2937b364b",
+  "version": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "--version"
+    ],
+    "returncode": 0,
+    "stdout": "rerun-cli 0.34.1 (base lance map_view nasm native_viewer oss_server perf_telemetry re_server release_full release_no_web_viewer web_viewer) [rustc 1.92.0 (ded5c06cf 2025-12-08), LLVM 21.1.3] x86_64-unknown-linux-gnu prepare-release-0.34.1 4efb18f, built 2026-07-07T16:20:42.173372603Z\nVideo features: av1 ffmpeg nasm\n",
+    "stderr": "2026-08-31T23:04:43.773139Z ERROR re_analytics: Failed to initialize analytics: Read-only file system (os error 30)\n",
+    "ok": true,
+    "expected_version_match": true
+  },
+  "verify": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "verify",
+      "--check-footers",
+      "true",
+      "/home/cgxr/orca/workspaces/RoArm_Project/kinect-hm/claudedocs/runtime_logs/heightmap_track/hm5_real_depth_pp_ready_c1/hm5_timeline_c1.rrd"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "2026-08-31T23:04:43.800442Z ERROR re_analytics: Failed to initialize analytics: Read-only file system (os error 30)\n1 file verified without error.\n",
+    "ok": true
+  },
+  "stats": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "stats",
+      "/home/cgxr/orca/workspaces/RoArm_Project/kinect-hm/claudedocs/runtime_logs/heightmap_track/hm5_real_depth_pp_ready_c1/hm5_timeline_c1.rrd"
+    ],
+    "returncode": 0,
+    "stdout": "Overview\n----------\nnum_chunks = 23\nnum_entity_paths = 23\nnum_chunks_without_components = 0 (0.000%)\nnum_rows = 23\nnum_rows_min = 1\nnum_rows_max = 1\nnum_rows_avg = 1.000\nnum_static = 1\nnum_indexes_min = 0\nnum_indexes_max = 2\nnum_indexes_avg = 1.913\nnum_components_min = 1\nnum_components_max = 4\nnum_components_avg = 2.435\n\nNum chunks per entity\n---------------------\n/__properties: 1\n/blueprint_panel: 1\n/container/e7b4faef-d3e6-48b5-9518-02a5ac6c9a70: 1\n/frames/camera_axes: 1\n/frames/camera_origin: 1\n/frames/grid_axes: 1\n/frames/grid_origin: 1\n/geometry/pointcloud_base: 1\n/heightmap/unseen_cells: 1\n/heightmap/valid_cells: 1\n/input/depth_raw: 1\n/input/masks: 1\n/selection_panel: 1\n/time_panel: 1\n/view/6785a1a2-3ad6-4e7d-9fb5-3f6327066d48: 1\n/view/6785a1a2-3ad6-4e7d-9fb5-3f6327066d48/ViewContents: 1\n/view/b48256a8-3979-4185-8b42-8b36a786128b: 1\n/view/b48256a8-3979-4185-8b42-8b36a786128b/ViewContents: 1\n/view/ed256702-939d-4b3f-ad1a-7eb29c7900b0: 1\n/view/ed256702-939d-4b3f-ad1a-7eb29c7900b0/ViewContents: 1\n/view/f227fa1c-64c9-44de-a19e-285cbf29551a: 1\n/view/f227fa1c-64c9-44de-a19e-285cbf29551a/ViewContents: 1\n/viewport: 1\n\nNum chunks per index\n--------------------\nblueprint: 13\nframe_idx: 9\nlog_time: 22\n\nNum chunks per component\n------------------------\nArrows3D:colors: 2\nArrows3D:origins: 2\nArrows3D:radii: 2\nArrows3D:vectors: 2\nContainerBlueprint:container_kind: 1\nContainerBlueprint:contents: 1\nContainerBlueprint:display_name: 1\nContainerBlueprint:grid_columns: 1\nDepthImage:buffer: 1\nDepthImage:depth_range: 1\nDepthImage:format: 1\nDepthImage:meter: 1\nImage:buffer: 1\nImage:format: 1\nPanelBlueprint:state: 2\nPoints3D:colors: 5\nPoints3D:positions: 5\nPoints3D:radii: 5\nRecordingInfo:start_time: 1\nTimePanelBlueprint:state: 1\nViewBlueprint:class_identifier: 4\nViewBlueprint:display_name: 4\nViewBlueprint:space_origin: 4\nViewContents:query: 4\nViewportBlueprint:auto_layout: 1\nViewportBlueprint:auto_views: 1\nViewportBlueprint:root_container: 1\n\nSize (schema + data, compressed)\n--------------------------------\nipc_size_bytes_total = 4.0 MiB\nipc_size_bytes_min = 915 B\nipc_size_bytes_max = 3.5 MiB\nipc_size_bytes_avg = 176 KiB\nipc_size_bytes_p50 = 1.6 KiB\nipc_size_bytes_p90 = 25.9 KiB\nipc_size_bytes_p95 = 355 KiB\nipc_size_bytes_p99 = 3.5 MiB\nipc_size_bytes_p999 = 3.5 MiB\n\nSize (schema + data, uncompressed)\n----------------------------------\nipc_size_bytes_total = 7.4 MiB\nipc_size_bytes_min = 1.7 KiB\nipc_size_bytes_max = 4.0 MiB\nipc_size_bytes_avg = 329 KiB\nipc_size_bytes_p50 = 4.1 KiB\nipc_size_bytes_p90 = 371 KiB\nipc_size_bytes_p95 = 3.0 MiB\nipc_size_bytes_p99 = 4.0 MiB\nipc_size_bytes_p999 = 4.0 MiB\n\nSize (schema only, uncompressed)\n--------------------------------\nipc_size_bytes_total = 46.3 KiB\nipc_size_bytes_min = 1.1 KiB\nipc_size_bytes_max = 2.9 KiB\nipc_size_bytes_avg = 2.0 KiB\nipc_size_bytes_p50 = 2.2 KiB\nipc_size_bytes_p90 = 2.6 KiB\nipc_size_bytes_p95 = 2.7 KiB\nipc_size_bytes_p99 = 2.9 KiB\nipc_size_bytes_p999 = 2.9 KiB\n\nSize (data only, uncompressed)\n------------------------------\nipc_size_bytes_total = 7.4 MiB\nipc_size_bytes_min = 656 B\nipc_size_bytes_max = 4.0 MiB\nipc_size_bytes_avg = 327 KiB\nipc_size_bytes_p50 = 1.9 KiB\nipc_size_bytes_p90 = 368 KiB\nipc_size_bytes_p95 = 3.0 MiB\nipc_size_bytes_p99 = 4.0 MiB\nipc_size_bytes_p999 = 4.0 MiB\n\nUnsorted timelines\n------------------\n(none — every timeline on every chunk is sorted)\n\nFooters\n-------\nnum_manifests = 2 (one per recording)\n\nFooter manifest for StoreId(Blueprint, \"roarm_hm5_real_depth\", \"rec_961eed080c17487a928351187dc0ef1a\")\n  num_chunks_indexed = 13\n  num_static_chunks = 0\n  num_entity_paths = 13\n  manifest_num_columns = 102\n  sorbet_schema_num_fields = 29\n  sorbet_schema_sha256 = df9d241af4e12f1eae351fe0a23885ba151d13cccdf7a94d557bc82bc6eba660\n  chunk_byte_size_total (native) = 19.0 KiB\n  chunk_byte_size_uncompressed_total = 43.4 KiB\n\nFooter manifest for StoreId(Recording, \"roarm_hm5_real_depth\", \"hm5_real_depth_pp_ready_c1\")\n  num_chunks_indexed = 10\n  num_static_chunks = 1\n  num_entity_paths = 10\n  manifest_num_columns = 103\n  sorbet_schema_num_fields = 33\n  sorbet_schema_sha256 = 522f25c1eff9d63191da462365f16e156b79090dfb3b6f2b96c044e2a5660a09\n  chunk_byte_size_total (native) = 3.9 MiB\n  chunk_byte_size_uncompressed_total = 7.4 MiB\n",
+    "stderr": "2026-08-31T23:04:43.849958Z ERROR re_analytics: Failed to initialize analytics: Read-only file system (os error 30)\n2026-08-31T23:04:43.852761Z  INFO rerun::commands::rrd::stats: processing input…\n2026-08-31T23:04:43.863053Z  INFO rerun::commands::rrd::stats: computing stats…\n",
+    "ok": true
+  },
+  "print_verbose": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "print",
+      "-v",
+      "/home/cgxr/orca/workspaces/RoArm_Project/kinect-hm/claudedocs/runtime_logs/heightmap_track/hm5_real_depth_pp_ready_c1/hm5_timeline_c1.rrd"
+    ],
+    "returncode": 0,
+    "stdout": "Showing data after migration to latest Rerun version\nStoreInfo {\n    store_id: StoreId(\n        Recording,\n        \"roarm_hm5_real_depth\",\n        \"hm5_real_depth_pp_ready_c1\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nStoreInfo {\n    store_id: StoreId(\n        Recording,\n        \"roarm_hm5_real_depth\",\n        \"hm5_real_depth_pp_ready_c1\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nChunk(chunk_18D10653B3EC535B0e3c06774f00e40e) with 1 rows (632 B) - /__properties - data columns: [/__properties@RecordingInfo:start_time]\nStoreInfo {\n    store_id: StoreId(\n        Blueprint,\n        \"roarm_hm5_real_depth\",\n        \"rec_961eed080c17487a928351187dc0ef1a\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nStoreInfo {\n    store_id: StoreId(\n        Blueprint,\n        \"roarm_hm5_real_depth\",\n        \"rec_961eed080c17487a928351187dc0ef1a\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nChunk(chunk_18D10653BA9C6F573003a088aeaba725) with 1 rows (1.2 KiB) - /view/6785a1a2-3ad6-4e7d-9fb5-3f6327066d48 - data columns: [/view/6785a1a2-3ad6-4e7d-9fb5-3f6327066d48@ViewBlueprint:class_identifier /view/6785a1a2-3ad6-4e7d-9fb5-3f6327066d48@ViewBlueprint:display_name /view/6785a1a2-3ad6-4e7d-9fb5-3f6327066d48@ViewBlueprint:space_origin]\nChunk(chunk_18D10653BA9CE65C3003a088aeaba726) with 1 rows (885 B) - /time_panel - data columns: [/time_panel@TimePanelBlueprint:state]\nChunk(chunk_18D10653BA9CF58F3003a088aeaba727) with 1 rows (933 B) - /view/b48256a8-3979-4185-8b42-8b36a786128b/ViewContents - data columns: [/view/b48256a8-3979-4185-8b42-8b36a786128b/ViewContents@ViewContents:query]\nChunk(chunk_18D10653BA9CFFD83003a088aeaba728) with 1 rows (1.2 KiB) - /view/f227fa1c-64c9-44de-a19e-285cbf29551a - data columns: [/view/f227fa1c-64c9-44de-a19e-285cbf29551a@ViewBlueprint:class_identifier /view/f227fa1c-64c9-44de-a19e-285cbf29551a@ViewBlueprint:display_name /view/f227fa1c-64c9-44de-a19e-285cbf29551a@ViewBlueprint:space_origin]\nChunk(chunk_18D10653BA9D224B3003a088aeaba729) with 1 rows (1.2 KiB) - /view/b48256a8-3979-4185-8b42-8b36a786128b - data columns: [/view/b48256a8-3979-4185-8b42-8b36a786128b@ViewBlueprint:class_identifier /view/b48256a8-3979-4185-8b42-8b36a786128b@ViewBlueprint:display_name /view/b48256a8-3979-4185-8b42-8b36a786128b@ViewBlueprint:space_origin]\nChunk(chunk_18D10653BA9D38A63003a088aeaba72a) with 1 rows (1.2 KiB) - /viewport - data columns: [/viewport@ViewportBlueprint:auto_layout /viewport@ViewportBlueprint:auto_views /viewport@ViewportBlueprint:root_container]\nChunk(chunk_18D10653BA9D51923003a088aeaba72b) with 1 rows (883 B) - /blueprint_panel - data columns: [/blueprint_panel@PanelBlueprint:state]\nChunk(chunk_18D10653BA9D632C3003a088aeaba72c) with 1 rows (1.4 KiB) - /container/e7b4faef-d3e6-48b5-9518-02a5ac6c9a70 - data columns: [/container/e7b4faef-d3e6-48b5-9518-02a5ac6c9a70@ContainerBlueprint:container_kind /container/e7b4faef-d3e6-48b5-9518-02a5ac6c9a70@ContainerBlueprint:contents /container/e7b4faef-d3e6-48b5-9518-02a5ac6c9a70@ContainerBlueprint:display_name /container/e7b4faef-d3e6-48b5-9518-02a5ac6c9a70@ContainerBlueprint:grid_columns]\nChunk(chunk_18D10653BA9D80853003a088aeaba72d) with 1 rows (883 B) - /selection_panel - data columns: [/selection_panel@PanelBlueprint:state]\nChunk(chunk_18D10653BA9D89F33003a088aeaba72e) with 1 rows (931 B) - /view/ed256702-939d-4b3f-ad1a-7eb29c7900b0/ViewContents - data columns: [/view/ed256702-939d-4b3f-ad1a-7eb29c7900b0/ViewContents@ViewContents:query]\nChunk(chunk_18D10653BA9D9D543003a088aeaba72f) with 1 rows (926 B) - /view/f227fa1c-64c9-44de-a19e-285cbf29551a/ViewContents - data columns: [/view/f227fa1c-64c9-44de-a19e-285cbf29551a/ViewContents@ViewContents:query]\nChunk(chunk_18D10653BA9DA6EB3003a088aeaba730) with 1 rows (1.2 KiB) - /view/ed256702-939d-4b3f-ad1a-7eb29c7900b0 - data columns: [/view/ed256702-939d-4b3f-ad1a-7eb29c7900b0@ViewBlueprint:class_identifier /view/ed256702-939d-4b3f-ad1a-7eb29c7900b0@ViewBlueprint:display_name /view/ed256702-939d-4b3f-ad1a-7eb29c7900b0@ViewBlueprint:space_origin]\nChunk(chunk_18D10653BA9DB25D3003a088aeaba731) with 1 rows (924 B) - /view/6785a1a2-3ad6-4e7d-9fb5-3f6327066d48/ViewContents - data columns: [/view/6785a1a2-3ad6-4e7d-9fb5-3f6327066d48/ViewContents@ViewContents:query]\nBlueprintActivationCommand(StoreId(Blueprint, \"roarm_hm5_real_depth\", \"rec_961eed080c17487a928351187dc0ef1a\"), make_active: true, make_default: true)\nChunk(chunk_18D10653BABE7AD93b740261a2e8bcfe) with 1 rows (1.8 MiB) - /input/depth_raw - data columns: [/input/depth_raw@DepthImage:buffer /input/depth_raw@DepthImage:depth_range /input/depth_raw@DepthImage:format /input/depth_raw@DepthImage:meter]\nChunk(chunk_18D10653BACF1BE43b740261a2e8bcff) with 1 rows (1.3 MiB) - /input/masks - data columns: [/input/masks@Image:buffer /input/masks@Image:format]\nChunk(chunk_18D10653BAD7AC493b740261a2e8bd00) with 1 rows (177 KiB) - /geometry/pointcloud_base - data columns: [/geometry/pointcloud_base@Points3D:colors /geometry/pointcloud_base@Points3D:positions /geometry/pointcloud_base@Points3D:radii]\nChunk(chunk_18D10653BAD7D1B43b740261a2e8bd01) with 1 rows (1.9 KiB) - /heightmap/unseen_cells - data columns: [/heightmap/unseen_cells@Points3D:colors /heightmap/unseen_cells@Points3D:positions /heightmap/unseen_cells@Points3D:radii]\nChunk(chunk_18D10653BAD7E5763b740261a2e8bd02) with 1 rows (1.3 KiB) - /frames/grid_axes - data columns: [/frames/grid_axes@Arrows3D:colors /frames/grid_axes@Arrows3D:origins /frames/grid_axes@Arrows3D:radii /frames/grid_axes@Arrows3D:vectors]\nChunk(chunk_18D10653BAD801953b740261a2e8bd03) with 1 rows (1.2 KiB) - /frames/camera_origin - data columns: [/frames/camera_origin@Points3D:colors /frames/camera_origin@Points3D:positions /frames/camera_origin@Points3D:radii]\nChunk(chunk_18D10653BAD813553b740261a2e8bd04) with 1 rows (1.4 KiB) - /frames/camera_axes - data columns: [/frames/camera_axes@Arrows3D:colors /frames/camera_axes@Arrows3D:origins /frames/camera_axes@Arrows3D:radii /frames/camera_axes@Arrows3D:vectors]\nChunk(chunk_18D10653BAD8360E3b740261a2e8bd05) with 1 rows (1.2 KiB) - /frames/grid_origin - data columns: [/frames/grid_origin@Points3D:colors /frames/grid_origin@Points3D:positions /frames/grid_origin@Points3D:radii]\nChunk(chunk_18D10653BAD844E43b740261a2e8bd06) with 1 rows (17.4 KiB) - /heightmap/valid_cells - data columns: [/heightmap/valid_cells@Points3D:colors /heightmap/valid_cells@Points3D:positions /heightmap/valid_cells@Points3D:radii]\n",
+    "stderr": "2026-08-31T23:04:43.892868Z ERROR re_analytics: Failed to initialize analytics: Read-only file system (os error 30)\n",
+    "ok": true
+  },
+  "entity_path_contract": {
+    "observed_all": [
+      "/__properties",
+      "/blueprint_panel",
+      "/container/e7b4faef-d3e6-48b5-9518-02a5ac6c9a70",
+      "/frames/camera_axes",
+      "/frames/camera_origin",
+      "/frames/grid_axes",
+      "/frames/grid_origin",
+      "/geometry/pointcloud_base",
+      "/heightmap/unseen_cells",
+      "/heightmap/valid_cells",
+      "/input/depth_raw",
+      "/input/masks",
+      "/selection_panel",
+      "/time_panel",
+      "/view/6785a1a2-3ad6-4e7d-9fb5-3f6327066d48",
+      "/view/6785a1a2-3ad6-4e7d-9fb5-3f6327066d48/ViewContents",
+      "/view/b48256a8-3979-4185-8b42-8b36a786128b",
+      "/view/b48256a8-3979-4185-8b42-8b36a786128b/ViewContents",
+      "/view/ed256702-939d-4b3f-ad1a-7eb29c7900b0",
+      "/view/ed256702-939d-4b3f-ad1a-7eb29c7900b0/ViewContents",
+      "/view/f227fa1c-64c9-44de-a19e-285cbf29551a",
+      "/view/f227fa1c-64c9-44de-a19e-285cbf29551a/ViewContents",
+      "/viewport"
+    ],
+    "observed_non_system": [
+      "/frames/camera_axes",
+      "/frames/camera_origin",
+      "/frames/grid_axes",
+      "/frames/grid_origin",
+      "/geometry/pointcloud_base",
+      "/heightmap/unseen_cells",
+      "/heightmap/valid_cells",
+      "/input/depth_raw",
+      "/input/masks"
+    ],
+    "checks": {
+      "/input/depth_raw": true,
+      "/input/masks": true,
+      "/geometry/pointcloud_base": true,
+      "/heightmap/valid_cells": true,
+      "/heightmap/unseen_cells": true,
+      "/frames/camera_origin": true,
+      "/frames/camera_axes": true,
+      "/frames/grid_origin": true,
+      "/frames/grid_axes": true
+    },
+    "forbidden_fragment_absent": {
+      "/\\/": true
+    },
+    "exact_non_system_match": true,
+    "missing_exact": [],
+    "unexpected_non_system": [],
+    "pass": true
+  },
+  "component_contract": {
+    "checks": {
+      "/input/depth_raw": {
+        "required": [
+          "DepthImage:buffer",
+          "DepthImage:format",
+          "DepthImage:meter"
+        ],
+        "observed": [
+          "DepthImage:buffer",
+          "DepthImage:depth_range",
+          "DepthImage:format",
+          "DepthImage:meter"
+        ],
+        "pass": true
+      },
+      "/input/masks": {
+        "required": [
+          "Image:buffer",
+          "Image:format"
+        ],
+        "observed": [
+          "Image:buffer",
+          "Image:format"
+        ],
+        "pass": true
+      },
+      "/geometry/pointcloud_base": {
+        "required": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "observed": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true
+      },
+      "/heightmap/valid_cells": {
+        "required": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "observed": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true
+      },
+      "/heightmap/unseen_cells": {
+        "required": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "observed": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true
+      }
+    },
+    "pass": true
+  },
+  "timeline_contract": {
+    "observed": [
+      "blueprint",
+      "frame_idx",
+      "log_time"
+    ],
+    "checks": {
+      "blueprint": true,
+      "frame_idx": true,
+      "log_time": true
+    },
+    "exact_match": true,
+    "pass": true
+  },
+  "footer_manifest_present": true,
+  "blueprint_verify": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "verify",
+      "--check-footers",
+      "true",
+      "/home/cgxr/orca/workspaces/RoArm_Project/kinect-hm/claudedocs/runtime_logs/heightmap_track/hm5_real_depth_pp_ready_c1/hm5_timeline_c1.rbl"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "2026-08-31T23:04:43.936630Z ERROR re_analytics: Failed to initialize analytics: Read-only file system (os error 30)\n1 file verified without error.\n",
+    "ok": true,
+    "attempted": true,
+    "path": "/home/cgxr/orca/workspaces/RoArm_Project/kinect-hm/claudedocs/runtime_logs/heightmap_track/hm5_real_depth_pp_ready_c1/hm5_timeline_c1.rbl",
+    "bytes": 45720,
+    "sha256": "1770b63fdb14124769ae85484d0eaeef9d375fdf5bc1730ffb4dce33fbb2b05c"
+  },
+  "headless_render": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "--headless",
+      "--window-size",
+      "2400x1400",
+      "--screenshot-to",
+      "/home/cgxr/orca/workspaces/RoArm_Project/kinect-hm/claudedocs/runtime_logs/heightmap_track/hm5_real_depth_pp_ready_c1/hm5_rerun_inspection_c1.png",
+      "/home/cgxr/orca/workspaces/RoArm_Project/kinect-hm/claudedocs/runtime_logs/heightmap_track/hm5_real_depth_pp_ready_c1/hm5_timeline_c1.rrd"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "2026-08-31T23:04:43.968176Z ERROR re_analytics: Failed to initialize analytics: Read-only file system (os error 30)\n2026-08-31T23:04:43.970066Z  INFO re_perf_telemetry::telemetry: Telemetry initialized enabled=false service=rerun trace_mode=\"off\" traces=off logs=off metrics=off tracy=false\n2026-08-31T23:04:44.057807Z  WARN egui_wgpu: Software rasterizer detected - loss of performance expected. backend: Vulkan, device_type: Cpu, name: \"llvmpipe (LLVM 15.0.7, 256 bits)\", driver: \"llvmpipe\", driver_info: \"Mesa 23.2.1-1ubuntu3.1~22.04.4 (LLVM 15.0.7)\", vendor: Mesa (0x10005), subgroup_size: 8..=8, transient_saves_memory: false\n2026-08-31T23:04:44.060509Z  WARN re_renderer::context: Software rasterizer detected - expect poor performance. See: https://www.rerun.io/docs/overview/installing-rerun/troubleshooting#graphics-issues\n2026-08-31T23:04:44.060517Z  INFO re_renderer::context: wgpu adapter backend: Vulkan, device_type: Cpu, name: \"llvmpipe (LLVM 15.0.7, 256 bits)\", driver: \"llvmpipe\", driver_info: \"Mesa 23.2.1-1ubuntu3.1~22.04.4 (LLVM 15.0.7)\"\n2026-08-31T23:04:44.173763Z ERROR re_grpc_server: message proxy server crashed: Operation not permitted (os error 1)\n2026-08-31T23:04:44.174022Z  INFO re_importer::import_file: Loading \"/home/cgxr/orca/workspaces/RoArm_Project/kinect-hm/claudedocs/runtime_logs/heightmap_track/hm5_real_depth_pp_ready_c1/hm5_timeline_c1.rrd\"…\n2026-08-31T23:04:44.528903Z  INFO re_viewer::headless: Headless viewer running at 2400x1400.\n2026-08-31T23:04:46.390175Z  INFO re_viewer::screenshotter: Screenshot saved to \"/home/cgxr/orca/workspaces/RoArm_Project/kinect-hm/claudedocs/runtime_logs/heightmap_track/hm5_real_depth_pp_ready_c1/hm5_rerun_inspection_c1.png\"\n2026-08-31T23:04:46.406543Z  INFO re_viewer::screenshotter: Screenshot copied to clipboard\n2026-08-31T23:04:46.409828Z  INFO re_viewer::headless: Headless viewer received close request, shutting down.\n",
+    "ok": true,
+    "attempted": true,
+    "path": "/home/cgxr/orca/workspaces/RoArm_Project/kinect-hm/claudedocs/runtime_logs/heightmap_track/hm5_real_depth_pp_ready_c1/hm5_rerun_inspection_c1.png",
+    "file_nonzero": true,
+    "bytes": 7830745,
+    "sha256": "a495b39bedbfd2caaeb9ade5cb9ef8c1047d36cc096c9539415406c29d3fe003"
+  },
+  "errors": [],
+  "pass": true
+}

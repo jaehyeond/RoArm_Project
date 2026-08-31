@@ -1,0 +1,44 @@
+{
+  "audit": "HM5_KINECT_RUNTIME_AUDIT_V1",
+  "date": "2026-09-01",
+  "host": "Ubuntu 22.04",
+  "python": {
+    "executable": "/home/cgxr/miniconda3/envs/roarm/bin/python",
+    "version": "3.11.14"
+  },
+  "pyk4a": {
+    "installed": true,
+    "version": "1.5.0",
+    "module_path": "/home/cgxr/miniconda3/envs/roarm/lib/python3.11/site-packages/pyk4a/__init__.py"
+  },
+  "libk4a": {
+    "installed": true,
+    "version": "1.4.2",
+    "packages": [
+      "libk4a1.4 1.4.2 install ok installed",
+      "libk4a1.4-dev 1.4.2 install ok installed"
+    ],
+    "ldconfig": [
+      "/lib/x86_64-linux-gnu/libk4a.so.1.4",
+      "/lib/x86_64-linux-gnu/libk4arecord.so.1.4"
+    ]
+  },
+  "k4a_tools": {
+    "installed": false,
+    "missing_commands": ["k4aviewer", "k4arecorder"],
+    "impact": "not required by the pyk4a one-frame path"
+  },
+  "physical_device": {
+    "status": "not_connected",
+    "connected_device_count": 0,
+    "azure_kinect_usb_id_present": false,
+    "host_lsusb_observation": "No Microsoft/Azure Kinect USB device; only root hubs, laptop camera, Bluetooth, keyboard, and ITE device were enumerated.",
+    "decision": "Do not chase hardware. Continue with a synthetic saved-frame positive control and leave --live ready for PP arrival."
+  },
+  "commands_observed": [
+    "/home/cgxr/miniconda3/envs/roarm/bin/python -c 'import pyk4a; print(pyk4a.connected_device_count())'",
+    "dpkg-query -W libk4a1.4 libk4a1.4-dev",
+    "ldconfig -p",
+    "lsusb"
+  ]
+}

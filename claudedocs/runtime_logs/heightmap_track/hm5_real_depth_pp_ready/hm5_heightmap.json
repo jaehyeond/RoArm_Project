@@ -1,0 +1,85 @@
+{
+  "spec_version": "roarm-heightmap-v1",
+  "frame": "roarm_base",
+  "cell_m": 0.005,
+  "cell_mm": 5.0,
+  "origin_xy_m": [
+    0.125,
+    -0.19
+  ],
+  "origin_is": "lower-left corner of cell [0, 0]",
+  "shape": [
+    76,
+    38
+  ],
+  "indexing": "height[row, col]; row -> +y, col -> +x",
+  "cell_center_formula": "x = origin_x + (col + 0.5) * cell_m ; y = origin_y + (row + 0.5) * cell_m",
+  "z_datum_m": 0.0,
+  "height_unit": "m",
+  "height_dtype": "float32",
+  "height_is": "surface z in `frame` minus z_datum_m (z_datum_m = z of the support plane)",
+  "valid_dtype": "bool",
+  "counts_dtype": "int32",
+  "counts_is": "number of surface samples reduced into the cell",
+  "empty_cell": {
+    "rule": "valid=False  =>  height = height_fill_m",
+    "height_fill_m": 0.0,
+    "consumer_note": "use `valid`; the fill value is padding, not a measurement.  `counts` is sample support only — on the particle path counts==0 is a valid floor reading, not a hole"
+  },
+  "height_fill_m": 0.0,
+  "source": "depth",
+  "agg": "max",
+  "agg_rule": "nearest-rank percentile within the cell footprint",
+  "n_points_in": 836216,
+  "n_points_used": 29775,
+  "z_range_m": [
+    -0.02,
+    0.2
+  ],
+  "camera": "azure_kinect_dk",
+  "extrinsics_convention": "p_base = R @ p_cam + t",
+  "intrinsics": {
+    "fx": 608.33,
+    "fy": 608.28,
+    "cx": 638.31,
+    "cy": 365.26
+  },
+  "stride": 1,
+  "depth_valid_range_m": [
+    0.3,
+    2.0
+  ],
+  "real_depth_filter": {
+    "filter": "kinect-tof-invalid-edge-flight-v1",
+    "unit_in": "mm",
+    "shape": [
+      720,
+      1280
+    ],
+    "valid_range_m": [
+      0.3,
+      2.0
+    ],
+    "edge_jump_m": 0.03,
+    "outlier_delta_m": 0.015,
+    "min_valid_neighbors": 3,
+    "n_pixels": 921600,
+    "input_nonfinite_pixels": 22,
+    "input_zero_or_negative_pixels": 21,
+    "input_out_of_range_pixels": 80843,
+    "raw_valid_pixels": 840714,
+    "edge_rejected_pixels": 4346,
+    "outlier_rejected_pixels": 1556,
+    "valid_pixels": 836216,
+    "valid_fraction": 0.9073524305555556,
+    "policy": "reject only; never inpaint. Pixel valid_mask is preserved, and grid cells with no surviving samples remain Heightmap.valid=False"
+  },
+  "pixel_valid_mask_preserved": true,
+  "occlusion_policy": "no inpainting; cells receiving no surviving point are valid=False with height_fill_m padding",
+  "input_alignment": "pyk4a capture.transformed_depth -> colour intrinsics",
+  "calibration_path": "sim_scripts/kinect_calib.yaml",
+  "calibration_sha256": "5f93309e88dd6dc4b2c5906aa9b46a63b067f06da7ba53e48e91ceede850f9ba",
+  "calibration_rmse_mm": 10.13,
+  "fk_rotation_convention": "fixed-axis Rz(yaw) @ Ry(pitch) @ Rx(roll)",
+  "source_kind": "synthetic_positive_control"
+}

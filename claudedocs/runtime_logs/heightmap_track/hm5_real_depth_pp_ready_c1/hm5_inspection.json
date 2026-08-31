@@ -1,0 +1,19 @@
+{
+  "inspection": "HM5_D341_VISUAL_INSPECTION_V1",
+  "status": "complete",
+  "date": "2026-09-01",
+  "inspector": "Codex dispatched worker term_d38d44ba-7e2c-49c8-ad38-8454195804d6",
+  "screenshot": "hm5_rerun_inspection_c1.png",
+  "screenshot_sha256": "a495b39bedbfd2caaeb9ade5cb9ef8c1047d36cc096c9539415406c29d3fe003",
+  "diagnostic": "hm5_diagnostic.png",
+  "diagnostic_sha256": "06d45c3d5430e217242c04401bcfb41b8bd2600b1712658c4b0c5973e74c2f81",
+  "inspection_detail": "original resolution",
+  "observations": [
+    "Rerun panel 1 shows a continuous oblique floor-depth gradient with the conical pellet control at centre and only the injected no-return pixels black; the raw depth image is present as its own entity.",
+    "Rerun panel 2 is predominantly green valid data, with orange/magenta rejection concentrated on the pile silhouette and internal depth discontinuities rather than spread across the floor; this matches the intended flying-pixel guard.",
+    "Rerun panel 3 shows the floor-plus-cone point cloud in roarm_base and a separate calibrated camera origin with RGB axes above it; the camera and grid frames are not conflated.",
+    "Rerun panel 4 shows the green heightmap surface and red unseen cells separately. Red cells cluster behind/within the oblique-view pile shadow, consistent with the 123-cell numeric occlusion count.",
+    "The standalone diagnostic confirms that numeric zero height occupies both measured floor cells and invalid padding, while the adjacent cell-valid mask alone distinguishes the 123 unseen cells."
+  ],
+  "display_note": "The headless viewer notification says its message proxy could not open an operation-not-permitted socket. This is a viewer-side notification only: the screenshot rendered all four fixed panels, and footer/entity/timeline/RBL validation passed."
+}

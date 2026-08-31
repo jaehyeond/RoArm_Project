@@ -287,6 +287,153 @@ class Heightmap:
                          spec=GridSpec.from_header(hdr), meta=meta)
 
 
+@dataclass(frozen=True)
+class KinectDepthFilterResult:
+    """Pixel-domain evidence produced before Kinect depth deprojection.
+
+    ``valid_mask`` is deliberately separate from the numeric ``depth_m``
+    array.  Invalid/no-return pixels remain NaN padding and are never silently
+    turned into a zero-height surface.  ``edge_rejected_mask`` is a one-pixel
+    ambiguity band around depth discontinuities, where Azure Kinect time-of-
+    flight multipath/flying pixels are most likely.  No inpainting is done:
+    keeping those pixels absent is what lets the downstream cell-level
+    :attr:`Heightmap.valid` mask expose camera shadows and occlusion.
+    """
+
+    depth_m: np.ndarray
+    raw_valid_mask: np.ndarray
+    valid_mask: np.ndarray
+    input_invalid_mask: np.ndarray
+    edge_rejected_mask: np.ndarray
+    outlier_rejected_mask: np.ndarray
+    diagnostics: dict
+
+    def __post_init__(self) -> None:
+        shape = self.depth_m.shape
+        if self.depth_m.ndim != 2 or self.depth_m.dtype != np.float32:
+            raise TypeError("depth_m must be a 2-D float32 array")
+        for name in ("raw_valid_mask", "valid_mask", "input_invalid_mask",
+                     "edge_rejected_mask", "outlier_rejected_mask"):
+            arr = getattr(self, name)
+            if arr.shape != shape or arr.dtype != np.bool_:
+                raise TypeError(f"{name} must be bool with shape {shape}")
+
+
+def _shift_2d(array: np.ndarray, dy: int, dx: int, fill) -> np.ndarray:
+    """Return ``array`` shifted without wraparound (small filtering helper)."""
+    out = np.full(array.shape, fill, dtype=array.dtype)
+    h, w = array.shape
+    src_y0, src_y1 = max(0, -dy), min(h, h - dy)
+    src_x0, src_x1 = max(0, -dx), min(w, w - dx)
+    dst_y0, dst_y1 = max(0, dy), min(h, h + dy)
+    dst_x0, dst_x1 = max(0, dx), min(w, w + dx)
+    if src_y0 < src_y1 and src_x0 < src_x1:
+        out[dst_y0:dst_y1, dst_x0:dst_x1] = array[src_y0:src_y1, src_x0:src_x1]
+    return out
+
+
+def filter_kinect_depth(depth, *, unit: str = "mm",
+                        valid_range_m: tuple[float, float] = (0.30, 2.00),
+                        edge_jump_m: float = 0.030,
+                        outlier_delta_m: float = 0.015,
+                        min_valid_neighbors: int = 3) -> KinectDepthFilterResult:
+    """Reject invalid returns and high-risk ToF edge pixels without inpainting.
+
+    Parameters are intentionally pixel-domain sensor guards, not heightmap
+    contract parameters.  The frozen grid and ``agg=max`` operator are applied
+    later by :func:`heightmap_from_kinect_depth`.
+
+    The filter handles the real-depth cases absent from the original synthetic
+    probe:
+
+    * 0/negative/NaN/Inf/out-of-range returns are invalid input pixels;
+    * a local 3x3 depth span above ``edge_jump_m`` creates a conservative
+      one-pixel ambiguity band for multipath/flying pixels;
+    * an isolated centre return farther than ``outlier_delta_m`` from the
+      valid-neighbour median is rejected as a ToF spike;
+    * rejected pixels are not filled.  Consequently an occluded grid cell that
+      receives no surviving 3-D sample remains ``Heightmap.valid == False``.
+    """
+    raw = np.asarray(depth)
+    if raw.ndim != 2:
+        raise ValueError(f"depth must be (H, W), got {raw.shape}")
+    if unit not in {"mm", "m"}:
+        raise ValueError(f"unit must be 'mm' or 'm', got {unit!r}")
+    lo, hi = (float(valid_range_m[0]), float(valid_range_m[1]))
+    if not (0.0 < lo < hi):
+        raise ValueError(f"invalid valid_range_m={valid_range_m}")
+    if edge_jump_m <= 0.0 or outlier_delta_m <= 0.0:
+        raise ValueError("edge_jump_m and outlier_delta_m must be positive")
+    if min_valid_neighbors < 1 or min_valid_neighbors > 8:
+        raise ValueError("min_valid_neighbors must be in [1, 8]")
+
+    depth_m = raw.astype(np.float64) * (0.001 if unit == "mm" else 1.0)
+    finite = np.isfinite(depth_m)
+    positive = depth_m > 0.0
+    raw_valid = finite & positive & (depth_m >= lo) & (depth_m <= hi)
+    input_invalid = ~raw_valid
+
+    sample = np.where(raw_valid, depth_m, np.nan).astype(np.float32)
+    neighbours = [
+        _shift_2d(sample, dy, dx, np.float32(np.nan))
+        for dy in (-1, 0, 1) for dx in (-1, 0, 1)
+        if not (dy == 0 and dx == 0)
+    ]
+    stack = np.stack(neighbours, axis=0)
+    n_neigh = np.isfinite(stack).sum(axis=0)
+
+    local_min = sample.copy()
+    local_max = sample.copy()
+    for neighbour in neighbours:
+        local_min = np.fmin(local_min, neighbour)
+        local_max = np.fmax(local_max, neighbour)
+    edge_rejected = (raw_valid & (n_neigh >= min_valid_neighbors)
+                     & ((local_max - local_min) > float(edge_jump_m)))
+
+    # np.nanmedian emits an all-NaN warning on fully invalid neighbourhoods;
+    # those pixels are already excluded by raw_valid/n_neigh and need no log.
+    import warnings
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", category=RuntimeWarning)
+        neighbour_median = np.nanmedian(stack, axis=0)
+    outlier_rejected = (raw_valid & (n_neigh >= min_valid_neighbors)
+                        & (np.abs(sample - neighbour_median)
+                           > float(outlier_delta_m)))
+    valid = raw_valid & ~edge_rejected & ~outlier_rejected
+    filtered = np.where(valid, sample, np.nan).astype(np.float32)
+
+    n_pixels = int(raw.size)
+    diagnostics = {
+        "filter": "kinect-tof-invalid-edge-flight-v1",
+        "unit_in": unit,
+        "shape": [int(raw.shape[0]), int(raw.shape[1])],
+        "valid_range_m": [lo, hi],
+        "edge_jump_m": float(edge_jump_m),
+        "outlier_delta_m": float(outlier_delta_m),
+        "min_valid_neighbors": int(min_valid_neighbors),
+        "n_pixels": n_pixels,
+        "input_nonfinite_pixels": int((~finite).sum()),
+        "input_zero_or_negative_pixels": int((finite & ~positive).sum()),
+        "input_out_of_range_pixels": int((finite & positive & ~raw_valid).sum()),
+        "raw_valid_pixels": int(raw_valid.sum()),
+        "edge_rejected_pixels": int(edge_rejected.sum()),
+        "outlier_rejected_pixels": int(outlier_rejected.sum()),
+        "valid_pixels": int(valid.sum()),
+        "valid_fraction": float(valid.mean()),
+        "policy": ("reject only; never inpaint. Pixel valid_mask is preserved, and "
+                   "grid cells with no surviving samples remain Heightmap.valid=False"),
+    }
+    return KinectDepthFilterResult(
+        depth_m=np.ascontiguousarray(filtered, dtype=np.float32),
+        raw_valid_mask=np.ascontiguousarray(raw_valid, dtype=np.bool_),
+        valid_mask=np.ascontiguousarray(valid, dtype=np.bool_),
+        input_invalid_mask=np.ascontiguousarray(input_invalid, dtype=np.bool_),
+        edge_rejected_mask=np.ascontiguousarray(edge_rejected, dtype=np.bool_),
+        outlier_rejected_mask=np.ascontiguousarray(outlier_rejected, dtype=np.bool_),
+        diagnostics=diagnostics,
+    )
+
+
 def _finalize(z: np.ndarray, counts: np.ndarray, spec: GridSpec, meta: dict,
               fill_m: float, valid: np.ndarray | None = None) -> Heightmap:
     """float64 accumulator -> the frozen float32 contract.
@@ -526,6 +673,63 @@ def heightmap_from_depth(depth_m, intr: dict, R_cam_to_base, t_cam_to_base,
             **(extra_meta or {})}
     return heightmap_from_points(pb, spec, agg=agg, z_range_m=z_range_m,
                                  fill_m=fill_m, extra_meta=meta)
+
+
+def heightmap_from_kinect_depth(depth, intr: dict, R_cam_to_base,
+                                t_cam_to_base, spec: GridSpec, *,
+                                unit: str = "mm", stride: int = 1,
+                                depth_valid_range_m: tuple[float, float] = (0.30, 2.00),
+                                z_range_m: tuple[float, float] | None = None,
+                                edge_jump_m: float = 0.030,
+                                outlier_delta_m: float = 0.015,
+                                min_valid_neighbors: int = 3,
+                                fill_m: float = DEFAULT_FILL_M,
+                                extra_meta: dict | None = None,
+                                ) -> tuple[Heightmap, KinectDepthFilterResult]:
+    """Real Azure Kinect frame -> fixed-operator heightmap plus pixel masks.
+
+    ``depth`` is normally ``capture.transformed_depth`` from pyk4a: a depth
+    image aligned to the 1280x720 colour intrinsics stored in
+    ``sim_scripts/kinect_calib.yaml``.  The hand-eye transform is the frozen
+    ``p_base = R @ p_cam + t`` convention; this function performs no
+    recalibration and no robot control.
+
+    The public real-frame path intentionally fixes ``agg='max'`` to preserve
+    ``roarm-heightmap-v1``.  Suspect time-of-flight edge returns are removed in
+    the pixel domain rather than changing the aggregation operator.  Both the
+    pixel-level :class:`KinectDepthFilterResult.valid_mask` and the cell-level
+    :attr:`Heightmap.valid` mask are returned, so zero height can never be
+    mistaken for a dropped return or camera shadow.
+    """
+    filtered = filter_kinect_depth(
+        depth,
+        unit=unit,
+        valid_range_m=depth_valid_range_m,
+        edge_jump_m=edge_jump_m,
+        outlier_delta_m=outlier_delta_m,
+        min_valid_neighbors=min_valid_neighbors,
+    )
+    meta = {
+        "real_depth_filter": filtered.diagnostics,
+        "pixel_valid_mask_preserved": True,
+        "occlusion_policy": ("no inpainting; cells receiving no surviving point "
+                             "are valid=False with height_fill_m padding"),
+        **(extra_meta or {}),
+    }
+    hm = heightmap_from_depth(
+        filtered.depth_m,
+        intr,
+        R_cam_to_base,
+        t_cam_to_base,
+        spec,
+        agg="max",
+        stride=stride,
+        depth_valid_range_m=depth_valid_range_m,
+        z_range_m=z_range_m,
+        fill_m=fill_m,
+        extra_meta=meta,
+    )
+    return hm, filtered
 
 
 # --------------------------------------------------------------------------- #
