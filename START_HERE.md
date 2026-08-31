@@ -145,6 +145,37 @@ Last updated: 2026-08-31 KST — 74th: **`scoop_v0` 그랩 기구 전환 확정 
 - `numpy==1.26.0`, `psutil==5.9.8`, rerun 0.34.1 핀 (D326).
 - 스토리지: 이관분(T1/T2 14폴더)은 외장 **사본 1개**(백업 아님). **T3 45G는 유일 사본 내장 유지.**
 
+## 진행 중 (74th 종료 시점, 2026-09-01)
+
+🖨️ **출력 중** — 그랩 v1 4부품(셸 L/R + 브래킷 + 링크), P1S `192.168.0.96`.
+   상태 조회: `cd ~/Documents/DK/DTR/bamboo-3dprinter && ~/miniconda3/bin/python -c "import printer;c=printer.load_config();c['printer']['ip']='192.168.0.96';p=printer.P1SPrinter(config=c);p.mqtt_connect();p.mqtt_pushall(wait=8);print(p.mqtt_status(wait=6))"`
+   완료 후 조립 확인 4가지: ① M3 볼트가 피벗(보스 6.0·벽 1.5)에 들어가나
+   ② 기어 26T↔26T 대칭 회전 ③ 🔴 **링크가 사점 없이 도나**(시뮬 여유 8.67°) ④ 두 립이 닫혔을 때 맞닿나
+
+🤖 **워커 3갈래 (run `run_f9ebfee2cd95`)** — 전부 **PP 물성과 무관한 준비 작업**:
+
+| 트랙 | worktree | 담당 | 상태 |
+|---|---|---|---|
+| P1 | `~/orca/workspaces/RoArm_Project/deme-force` | DEME 반력 경로 뚫기 (메시 2매+Track 코어덤프 해결) | 진행 중 |
+| P2b | `~/orca/workspaces/RoArm_Project/kinect-hm` | 순차 결정 루프 골격 (관측→결정→스쿱→재관측) | 진행 중 |
+| P3 | `~/orca/workspaces/RoArm_Project/pellet-model` | 펠릿 클럼프 + 안식각 하네스 | 진행 중 |
+
+⚠️ 워커 결과는 **곧이곧대로 믿지 말 것**. 이번 세션에서 워커가 "9/9 PASS"라 보고했으나
+실제 `design.json`은 9/10(1 FAIL)이었다. 성공 기준을 직접 재확인하라:
+- P1: 폐합 반력이 **0이 아닌 값**으로 읽히나 + 물성이 임시값임을 `non_claims`에 적었나
+- P2b: **정책에 따라 총 횟수가 실제로 달라지나** (안 달라지면 루프/실행기가 틀린 것)
+- P3: **안식각이 형상에 따라 달라지나** (구 < clump2 < clump3 경향이 나와야 정상)
+
+## 🔴 PP 도착 시 — 측정 4개가 4트랙을 다 푼다
+
+```
+저울    밀도      → 그랩 v1 마지막 게이트 판정. 1.216~1.486 g/cm³ 면 현 형상 통과
+경사    안식각     → P3 fit_to_measured_repose() 에 대입 → 시뮬 파라미터 확정
+자       치수      → P3 클럼프 형상 확정
+Kinect  더미 촬영  → P2 `--live` 로 프레임·출력폴더명만 교체 (재캘리브 불필요, 카메라 이동 금지)
+                    → 그다음 P1 경로로 폐합 반력 측정
+```
+
 ## Next concrete action
 
 **우선순위 1 — 그랩 v1 (앞부분 교체, D462) — 사용자 실측 대기 없음**
