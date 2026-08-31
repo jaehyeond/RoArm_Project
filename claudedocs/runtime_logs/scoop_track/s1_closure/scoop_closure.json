@@ -1,0 +1,56 @@
+{
+  "artifact": "DEME_SCOOP_CLOSURE_V1",
+  "params": {
+    "pivot_gap_mm": 26.0,
+    "shell_travel_deg": 44.5,
+    "lip_depth_mm": 36.06,
+    "insert_depth_mm": 18.0,
+    "descend_steps": 90,
+    "close_steps": 120,
+    "lift_steps": 40,
+    "dt_sync_s": 0.004,
+    "timestep_s": 1e-05,
+    "E_pa": 5000000.0,
+    "nu": 0.3,
+    "CoR": 0.3,
+    "mu": 0.5,
+    "Crr": 0.05,
+    "error_out_vel": 20.0,
+    "cd_update_freq": 20,
+    "jaw_force_band_N": [
+      1.8,
+      6.3
+    ],
+    "seed": 460
+  },
+  "pile": {
+    "n": 1500,
+    "radius_m": 0.0020800000000000003,
+    "top_z_m": 0.03418911248445511,
+    "source": "/home/cgxr/Documents/Robotics/RoArm_Project/.claude/worktrees/pellet-sim/claudedocs/runtime_logs/sim_deme/pile_practical_targetridge_d4p16_n18796_seed460.npz"
+  },
+  "forces_N": {
+    "descend_peak": 0.0,
+    "close_peak": 0.0,
+    "jaw_band_measured": [
+      1.8,
+      6.3
+    ]
+  },
+  "verdict_closure": "WITHIN_MEASURED_JAW_FORCE",
+  "captured_particles": 0,
+  "captured_mass_g": 0.0,
+  "wall_seconds": 170.47,
+  "budget_3000_hours": 142.06,
+  "trajectory": {
+    "T_settle": 0.02,
+    "T_desc": 0.38,
+    "T_close": 0.86,
+    "T_lift": 1.02,
+    "vz_desc": -0.07777777777777779,
+    "dx_close_m": 0.029002532231648264,
+    "vx_close": 0.060421942149267216,
+    "vz_lift": 0.25
+  },
+  "non_claims": "강성 E=5e6 Pa 는 수치 안정용 임시값이며 펠릿 실측이 아니다. 폐합 회전을 피벗 둘레 평행이동으로 근사했다(메시 자체는 회전시키지 않았다). 물성 실측 후 반력은 바뀐다. 벽시계는 이 근사 기준이다."
+}
