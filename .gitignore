@@ -198,3 +198,18 @@ NUL
 # ⚠️ scoop_shell_v0/ 의 조각들은 이미 커밋돼 있다 — forward-only 규칙상 지우지 않는다.
 claudedocs/runtime_logs/scoop_grab_*/*.stl
 !claudedocs/runtime_logs/scoop_grab_*/*_ALL.stl
+
+# ---- sim_deme evidence whitelist (74th / D463 §5-3, 사용자 승인 2026-08-31) ----
+# 전역 `*.npz` 무시 때문에 DEME 더미 데이터가 git 추적 0개였다. 아래 3개만 예외로 둔다.
+# 근거 2가지:
+#   (1) GATES.md 의 G2/G3/G4 CHECK 명령이 이 파일들을 인자로 받는다.
+#       저장소에 없으면 클론 후 게이트가 실행 자체를 못 한다.
+#   (2) DEME 는 bit-재현이 안 된다 (D463 §3: 결정성 제어 5종 전부 실패).
+#       같은 시드로 다시 돌려도 sha256 이 달라지므로, 잃으면 reproducibility.json 의
+#       해시는 영구히 검증 불가가 된다. 재생성으로 대체할 수 없는 증거다.
+# 선례 = 위 g0b_d420 화이트리스트("single-copy traces -> push = offsite backup").
+# 합계 1.83 MB (pack 793 MB 의 0.23%).
+# ⚠️ 학습 데이터(3,000 시행)는 여기 넣지 마라 — 2.73 GB 다. heightmap(76x38 f32, 69 MB)으로 저장한다.
+!claudedocs/runtime_logs/sim_deme/pile_targetridge_smoke_d4p16_n512_seed460.npz
+!claudedocs/runtime_logs/sim_deme/pile_practical_targetridge_d4p16_n18796_seed460.npz
+!claudedocs/runtime_logs/sim_deme/pile_practical_targetridge_d4p16_n18796_seed460_rep2.npz
