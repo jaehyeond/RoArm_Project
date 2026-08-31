@@ -1,0 +1,2577 @@
+{
+  "schema": "p39-decision-loop-v1",
+  "deterministic_payload": {
+    "schema": "p39-decision-loop-v1",
+    "heightmap_contract": {
+      "version": "roarm-heightmap-v1",
+      "shape": [
+        76,
+        38
+      ],
+      "cell_m": 0.005,
+      "origin_xy_m": [
+        0.125,
+        -0.19
+      ],
+      "frame": "roarm_base",
+      "agg": "max",
+      "empty_fill_m": 0.0
+    },
+    "action_fields": [
+      "x_m",
+      "y_m",
+      "dir_x",
+      "dir_y"
+    ],
+    "seed": 457,
+    "target_fraction": 0.65,
+    "initial_mass_kg": 0.1421244100570948,
+    "executor": {
+      "interface": "ScoopExecutor.reset/observe/execute",
+      "implementation": "AnalyticExecutor",
+      "config": {
+        "footprint_depth_m": 0.06,
+        "footprint_width_m": 0.058,
+        "cut_depth_m": 0.01,
+        "angle_of_repose_deg": 32.0,
+        "relaxation_iterations": 4,
+        "relaxation_fraction": 0.35,
+        "synthetic_bulk_density_kg_m3": 550.0,
+        "fixed_cycle_time_s": 5.0,
+        "travel_speed_m_s": 0.25,
+        "fixed_transfer_distance_m": 0.4,
+        "min_removed_volume_m3": 1e-10,
+        "initial_tool_xy_m": [
+          0.125,
+          0.0
+        ]
+      }
+    },
+    "bounded_loop": {
+      "max_attempts": 240,
+      "max_consecutive_failures": 5,
+      "max_total_failures": 20,
+      "terminal_reasons": [
+        "consecutive_failure_limit",
+        "executor_error",
+        "invalid_action",
+        "material_exhausted",
+        "max_attempts",
+        "observation_contract_error",
+        "policy_error",
+        "target_reached",
+        "total_failure_limit"
+      ]
+    },
+    "uncertainty_slot": {
+      "policy_context_field": "DecisionContext.predictions",
+      "variance_field": "DecisionPredictions.variances",
+      "risk_score_field": "DecisionPredictions.risk_adjusted_scores",
+      "predictor_slot": "DecisionContext.predictor",
+      "future_adapter_interface": "ModelPolicySlot"
+    },
+    "policies": [
+      {
+        "policy": "greedy_high",
+        "seed": 457,
+        "episode_config": {
+          "max_attempts": 240,
+          "max_consecutive_failures": 5,
+          "max_total_failures": 20,
+          "actionable_height_m": 0.0005,
+          "target_mass_kg": 0.09238086653711162
+        },
+        "target_mass_kg": 0.09238086653711162,
+        "target_reached": true,
+        "terminal_reason": "target_reached",
+        "terminal_detail": null,
+        "metrics": {
+          "total_time_s": 89.29138422012329,
+          "total_scoops": 13,
+          "failure_rate": 0.0,
+          "total_distance_m": 6.0728460252285,
+          "total_loaded_mass_kg": 0.0943942191654962
+        },
+        "initial_height_sha256": "c90b9aea29c373d36cdf37de911a88affb9acf858dcaf3eff7fc25c7268c6f5e",
+        "final_height_sha256": "7f8676188d10b8ca4889d53fe9fdfdd6d175174796d4b576452eb9dfcdec733b",
+        "steps": [
+          {
+            "attempt": 0,
+            "action": {
+              "x_m": 0.2175,
+              "y_m": 0.007500000000000007,
+              "dir_x": 0.31622776601683794,
+              "dir_y": -0.9486832980505139
+            },
+            "scooped_mass_kg": 0.00750971446029859,
+            "elapsed_time_s": 6.971214223865411,
+            "failed": false,
+            "travel_distance_m": 0.49280355596635295,
+            "removed_volume_m3": 1.3654026291451982e-05,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.21749999999999997,
+              0.007500000000000008
+            ],
+            "cumulative_mass_kg": 0.00750971446029859,
+            "cumulative_time_s": 6.971214223865411,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 0.49280355596635295,
+            "pre_height_sha256": "c90b9aea29c373d36cdf37de911a88affb9acf858dcaf3eff7fc25c7268c6f5e",
+            "post_height_sha256": "0352469401cc13e9899327830dc539591c54f3773dd94922b265c11026d59b4c"
+          },
+          {
+            "attempt": 1,
+            "action": {
+              "x_m": 0.2175,
+              "y_m": 0.037500000000000006,
+              "dir_x": 0.06651901052377399,
+              "dir_y": -0.997785157856609
+            },
+            "scooped_mass_kg": 0.007507628980050208,
+            "elapsed_time_s": 6.720000000000001,
+            "failed": false,
+            "travel_distance_m": 0.43000000000000005,
+            "removed_volume_m3": 1.3650234509182198e-05,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.21750000000000003,
+              0.03750000000000003
+            ],
+            "cumulative_mass_kg": 0.015017343440348798,
+            "cumulative_time_s": 13.691214223865412,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 0.922803555966353,
+            "pre_height_sha256": "0352469401cc13e9899327830dc539591c54f3773dd94922b265c11026d59b4c",
+            "post_height_sha256": "7b06513ad8ca02008284e46af1ed02c247eb9909dc824c818794e8379b995e25"
+          },
+          {
+            "attempt": 2,
+            "action": {
+              "x_m": 0.2175,
+              "y_m": -0.022499999999999992,
+              "dir_x": 0.11043152607484669,
+              "dir_y": 0.9938837346736189
+            },
+            "scooped_mass_kg": 0.00750762898005021,
+            "elapsed_time_s": 6.84,
+            "failed": false,
+            "travel_distance_m": 0.46,
+            "removed_volume_m3": 1.36502345091822e-05,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.2175,
+              -0.02249999999999997
+            ],
+            "cumulative_mass_kg": 0.022524972420399008,
+            "cumulative_time_s": 20.531214223865412,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 1.382803555966353,
+            "pre_height_sha256": "7b06513ad8ca02008284e46af1ed02c247eb9909dc824c818794e8379b995e25",
+            "post_height_sha256": "d671f099fba41db1696dc97a0b586c891225db911b81812030946d0776971baf"
+          },
+          {
+            "attempt": 3,
+            "action": {
+              "x_m": 0.2175,
+              "y_m": -0.05249999999999999,
+              "dir_x": 0.047565149415449454,
+              "dir_y": 0.9988681377244375
+            },
+            "scooped_mass_kg": 0.00750762898005021,
+            "elapsed_time_s": 6.720000000000001,
+            "failed": false,
+            "travel_distance_m": 0.43000000000000005,
+            "removed_volume_m3": 1.36502345091822e-05,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.21749999999999994,
+              -0.05249999999999997
+            ],
+            "cumulative_mass_kg": 0.030032601400449218,
+            "cumulative_time_s": 27.25121422386541,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 1.8128035559663531,
+            "pre_height_sha256": "d671f099fba41db1696dc97a0b586c891225db911b81812030946d0776971baf",
+            "post_height_sha256": "54aefd48d8ca2f707365f466bf2b601ec0d7f59dc7c215426509dafd14d40947"
+          },
+          {
+            "attempt": 4,
+            "action": {
+              "x_m": 0.2175,
+              "y_m": 0.0675,
+              "dir_x": 0.03701166050988029,
+              "dir_y": -0.9993148337667671
+            },
+            "scooped_mass_kg": 0.007507628980050205,
+            "elapsed_time_s": 7.08,
+            "failed": false,
+            "travel_distance_m": 0.52,
+            "removed_volume_m3": 1.365023450918219e-05,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.2175000000000001,
+              0.06750000000000003
+            ],
+            "cumulative_mass_kg": 0.037540230380499424,
+            "cumulative_time_s": 34.33121422386541,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 2.332803555966353,
+            "pre_height_sha256": "54aefd48d8ca2f707365f466bf2b601ec0d7f59dc7c215426509dafd14d40947",
+            "post_height_sha256": "ca95807d464fc447369530e141f114441dbf83c0d0f515b60d56c1c7f03bfdb9"
+          },
+          {
+            "attempt": 5,
+            "action": {
+              "x_m": 0.2175,
+              "y_m": 0.007500000000000007,
+              "dir_x": 0.31622776601683794,
+              "dir_y": -0.9486832980505139
+            },
+            "scooped_mass_kg": 0.00750971446029859,
+            "elapsed_time_s": 6.84,
+            "failed": false,
+            "travel_distance_m": 0.46,
+            "removed_volume_m3": 1.3654026291451982e-05,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.21749999999999997,
+              0.007500000000000008
+            ],
+            "cumulative_mass_kg": 0.045049944840798016,
+            "cumulative_time_s": 41.171214223865405,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 2.792803555966353,
+            "pre_height_sha256": "ca95807d464fc447369530e141f114441dbf83c0d0f515b60d56c1c7f03bfdb9",
+            "post_height_sha256": "41c31a35dcc8aace2d73b8bbabbf39923f14768c69dda2e74ccabbc14115db7e"
+          },
+          {
+            "attempt": 6,
+            "action": {
+              "x_m": 0.2225,
+              "y_m": 0.037500000000000006,
+              "dir_x": -0.06651901052377399,
+              "dir_y": -0.997785157856609
+            },
+            "scooped_mass_kg": 0.0074045168406470544,
+            "elapsed_time_s": 6.721655250605965,
+            "failed": false,
+            "travel_distance_m": 0.43041381265149115,
+            "removed_volume_m3": 1.3462757892085554e-05,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.2225876544550639,
+              0.03770805393001961
+            ],
+            "cumulative_mass_kg": 0.05245446168144507,
+            "cumulative_time_s": 47.89286947447137,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 3.2232173686178442,
+            "pre_height_sha256": "41c31a35dcc8aace2d73b8bbabbf39923f14768c69dda2e74ccabbc14115db7e",
+            "post_height_sha256": "ce9a534d481f585f594bd20fb3967d0b088072fd791837ee5035d9d3f0b523b2"
+          },
+          {
+            "attempt": 7,
+            "action": {
+              "x_m": 0.2225,
+              "y_m": -0.022499999999999992,
+              "dir_x": -0.11043152607484669,
+              "dir_y": 0.9938837346736189
+            },
+            "scooped_mass_kg": 0.00740078436395237,
+            "elapsed_time_s": 6.84,
+            "failed": false,
+            "travel_distance_m": 0.46,
+            "removed_volume_m3": 1.345597157082249e-05,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.22258286854787773,
+              -0.02271793211245852
+            ],
+            "cumulative_mass_kg": 0.05985524604539744,
+            "cumulative_time_s": 54.73286947447137,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 3.683217368617844,
+            "pre_height_sha256": "ce9a534d481f585f594bd20fb3967d0b088072fd791837ee5035d9d3f0b523b2",
+            "post_height_sha256": "c1026b21e7f1ecd1927d22d804fa495f25c62dd1c07cff706fc3b6f0045c7e9a"
+          },
+          {
+            "attempt": 8,
+            "action": {
+              "x_m": 0.2475,
+              "y_m": 0.007500000000000007,
+              "dir_x": -0.9647638212377321,
+              "dir_y": -0.263117405792109
+            },
+            "scooped_mass_kg": 0.006884213563114635,
+            "elapsed_time_s": 6.756204993518133,
+            "failed": false,
+            "travel_distance_m": 0.4390512483795333,
+            "removed_volume_m3": 1.25167519329357e-05,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.24787971932686287,
+              0.007608192804448909
+            ],
+            "cumulative_mass_kg": 0.06673945960851208,
+            "cumulative_time_s": 61.489074467989504,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 4.122268616997378,
+            "pre_height_sha256": "c1026b21e7f1ecd1927d22d804fa495f25c62dd1c07cff706fc3b6f0045c7e9a",
+            "post_height_sha256": "3c1ba03ca1588a318c3455e60934f67bdf9d9a8200d53e9eec463988014d581c"
+          },
+          {
+            "attempt": 9,
+            "action": {
+              "x_m": 0.2175,
+              "y_m": -0.0825,
+              "dir_x": 0.03028912664076916,
+              "dir_y": 0.9995411791453814
+            },
+            "scooped_mass_kg": 0.007492441636398661,
+            "elapsed_time_s": 6.979473319220205,
+            "failed": false,
+            "travel_distance_m": 0.4948683298050514,
+            "removed_volume_m3": 1.3622621157088475e-05,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.21751427996263673,
+              -0.0824721553480859
+            ],
+            "cumulative_mass_kg": 0.07423190124491073,
+            "cumulative_time_s": 68.46854778720972,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 4.617136946802429,
+            "pre_height_sha256": "3c1ba03ca1588a318c3455e60934f67bdf9d9a8200d53e9eec463988014d581c",
+            "post_height_sha256": "d76f8ca1ead9fc209acbb3bba4e6d4b51de016dd1818a8b30fb967c1af823066"
+          },
+          {
+            "attempt": 10,
+            "action": {
+              "x_m": 0.1925,
+              "y_m": 0.05249999999999999,
+              "dir_x": 0.4640069946705576,
+              "dir_y": -0.8858315352801553
+            },
+            "scooped_mass_kg": 0.006896967379531616,
+            "elapsed_time_s": 7.149181208709839,
+            "failed": false,
+            "travel_distance_m": 0.5372953021774598,
+            "removed_volume_m3": 1.2539940690057484e-05,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.19205127920144843,
+              0.052583438791738435
+            ],
+            "cumulative_mass_kg": 0.08112886862444235,
+            "cumulative_time_s": 75.61772899591955,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 5.154432248979889,
+            "pre_height_sha256": "d76f8ca1ead9fc209acbb3bba4e6d4b51de016dd1818a8b30fb967c1af823066",
+            "post_height_sha256": "bb3c1835f23dd26a98b7e7809c55f4ec3cf3959202dd41a817c84f8a8c5e181c"
+          },
+          {
+            "attempt": 11,
+            "action": {
+              "x_m": 0.1875,
+              "y_m": 0.012500000000000011,
+              "dir_x": 0.9333456062030594,
+              "dir_y": -0.3589790793088693
+            },
+            "scooped_mass_kg": 0.006428343297081579,
+            "elapsed_time_s": 6.761245154965971,
+            "failed": false,
+            "travel_distance_m": 0.4403112887414927,
+            "removed_volume_m3": 1.168789690378469e-05,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.18861404791796474,
+              0.012215785148621127
+            ],
+            "cumulative_mass_kg": 0.08755721192152394,
+            "cumulative_time_s": 82.37897415088553,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 5.594743537721381,
+            "pre_height_sha256": "bb3c1835f23dd26a98b7e7809c55f4ec3cf3959202dd41a817c84f8a8c5e181c",
+            "post_height_sha256": "fa01ce37a10c0f271a9cc0779a66597d580321dd874ea2841d72079223f0e57f"
+          },
+          {
+            "attempt": 12,
+            "action": {
+              "x_m": 0.2475,
+              "y_m": -0.037500000000000006,
+              "dir_x": -0.5913636636275172,
+              "dir_y": 0.8064049958557056
+            },
+            "scooped_mass_kg": 0.006837007243972258,
+            "elapsed_time_s": 6.912409987036266,
+            "failed": false,
+            "travel_distance_m": 0.4781024967590666,
+            "removed_volume_m3": 1.2430922261767741e-05,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.24735643092881454,
+              -0.03756920458290199
+            ],
+            "cumulative_mass_kg": 0.0943942191654962,
+            "cumulative_time_s": 89.2913841379218,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 6.072846034480448,
+            "pre_height_sha256": "fa01ce37a10c0f271a9cc0779a66597d580321dd874ea2841d72079223f0e57f",
+            "post_height_sha256": "7f8676188d10b8ca4889d53fe9fdfdd6d175174796d4b576452eb9dfcdec733b"
+          }
+        ]
+      },
+      {
+        "policy": "greedy_low",
+        "seed": 1466,
+        "episode_config": {
+          "max_attempts": 240,
+          "max_consecutive_failures": 5,
+          "max_total_failures": 20,
+          "actionable_height_m": 0.0005,
+          "target_mass_kg": 0.09238086653711162
+        },
+        "target_mass_kg": 0.09238086653711162,
+        "target_reached": true,
+        "terminal_reason": "target_reached",
+        "terminal_detail": null,
+        "metrics": {
+          "total_time_s": 254.5261516571045,
+          "total_scoops": 37,
+          "failure_rate": 0.0,
+          "total_distance_m": 17.381537348031998,
+          "total_loaded_mass_kg": 0.0930565241006662
+        },
+        "initial_height_sha256": "c90b9aea29c373d36cdf37de911a88affb9acf858dcaf3eff7fc25c7268c6f5e",
+        "final_height_sha256": "df83b28d8f6d3f8add9332defcd50f3be1581d13a397757019a7d4418084c3f6",
+        "steps": [
+          {
+            "attempt": 0,
+            "action": {
+              "x_m": 0.1675,
+              "y_m": -0.0925,
+              "dir_x": 0.4936055194583818,
+              "dir_y": 0.8696859152361966
+            },
+            "scooped_mass_kg": 0.0014077157793076394,
+            "elapsed_time_s": 7.007185461430047,
+            "failed": false,
+            "travel_distance_m": 0.5017963653575117,
+            "removed_volume_m3": 2.559483235104799e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.18153742571649287,
+              -0.0869487841531053
+            ],
+            "cumulative_mass_kg": 0.0014077157793076394,
+            "cumulative_time_s": 7.007185461430047,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 0.5017963653575117,
+            "pre_height_sha256": "c90b9aea29c373d36cdf37de911a88affb9acf858dcaf3eff7fc25c7268c6f5e",
+            "post_height_sha256": "764b1711836d531df9e5889dfe8bb1a2e5d651c93c0268a711c31d9a9f65e7f4"
+          },
+          {
+            "attempt": 1,
+            "action": {
+              "x_m": 0.2675,
+              "y_m": -0.1075,
+              "dir_x": -0.4041638483209413,
+              "dir_y": 0.9146866040947615
+            },
+            "scooped_mass_kg": 0.0010209316852580945,
+            "elapsed_time_s": 7.004474968323134,
+            "failed": false,
+            "travel_distance_m": 0.5011187420807834,
+            "removed_volume_m3": 1.85623942774199e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.255113323898836,
+              -0.0963109545313164
+            ],
+            "cumulative_mass_kg": 0.002428647464565734,
+            "cumulative_time_s": 14.011660429753181,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 1.0029151074382952,
+            "pre_height_sha256": "764b1711836d531df9e5889dfe8bb1a2e5d651c93c0268a711c31d9a9f65e7f4",
+            "post_height_sha256": "d9217cb036852aeacdaf695efeabaf3ba91c001fc84f8b1abd5e28dfb42fe7e1"
+          },
+          {
+            "attempt": 2,
+            "action": {
+              "x_m": 0.1675,
+              "y_m": 0.10249999999999998,
+              "dir_x": 0.45587586980565775,
+              "dir_y": -0.8900433648586651
+            },
+            "scooped_mass_kg": 0.0014392361457084425,
+            "elapsed_time_s": 7.530376267969041,
+            "failed": false,
+            "travel_distance_m": 0.6325940669922602,
+            "removed_volume_m3": 2.616792992197168e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.18131943108556686,
+              0.09586139634622791
+            ],
+            "cumulative_mass_kg": 0.0038678836102741766,
+            "cumulative_time_s": 21.542036697722224,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 1.6355091744305552,
+            "pre_height_sha256": "d9217cb036852aeacdaf695efeabaf3ba91c001fc84f8b1abd5e28dfb42fe7e1",
+            "post_height_sha256": "ea746cf05fb25ec6ede742c08cd8d853fa2b2879af41af7b7edd5205faad9f8c"
+          },
+          {
+            "attempt": 3,
+            "action": {
+              "x_m": 0.27249999999999996,
+              "y_m": -0.0775,
+              "dir_x": -0.5608481451695149,
+              "dir_y": 0.8279186904883321
+            },
+            "scooped_mass_kg": 0.001421833915430257,
+            "elapsed_time_s": 7.4335466393669885,
+            "failed": false,
+            "travel_distance_m": 0.6083866598417471,
+            "removed_volume_m3": 2.585152573509558e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.25821171455360376,
+              -0.06945228998271755
+            ],
+            "cumulative_mass_kg": 0.005289717525704433,
+            "cumulative_time_s": 28.975583337089212,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 2.243895834272302,
+            "pre_height_sha256": "ea746cf05fb25ec6ede742c08cd8d853fa2b2879af41af7b7edd5205faad9f8c",
+            "post_height_sha256": "be3c04d6593b63c363f1a9feceac025bc38b5d0831f40b7d3e5d6cfc8fa9be2e"
+          },
+          {
+            "attempt": 4,
+            "action": {
+              "x_m": 0.27249999999999996,
+              "y_m": 0.08750000000000002,
+              "dir_x": -0.5144957554275261,
+              "dir_y": -0.8574929257125444
+            },
+            "scooped_mass_kg": 0.0018937957799418312,
+            "elapsed_time_s": 7.26,
+            "failed": false,
+            "travel_distance_m": 0.5650000000000001,
+            "removed_volume_m3": 3.443265054439693e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.2588705054318851,
+              0.0846218027532994
+            ],
+            "cumulative_mass_kg": 0.007183513305646264,
+            "cumulative_time_s": 36.23558333708921,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 2.808895834272302,
+            "pre_height_sha256": "be3c04d6593b63c363f1a9feceac025bc38b5d0831f40b7d3e5d6cfc8fa9be2e",
+            "post_height_sha256": "6535a094a925aeb0ab52125a3dc27524ab0c162a49f0c26a8feab775918e2ef1"
+          },
+          {
+            "attempt": 5,
+            "action": {
+              "x_m": 0.2625,
+              "y_m": 0.1175,
+              "dir_x": -0.34013608165443815,
+              "dir_y": -0.9403762257505053
+            },
+            "scooped_mass_kg": 0.000639405513044738,
+            "elapsed_time_s": 6.726491106406735,
+            "failed": false,
+            "travel_distance_m": 0.4316227766016838,
+            "removed_volume_m3": 1.16255547826316e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.24664215148518626,
+              0.10802234412225745
+            ],
+            "cumulative_mass_kg": 0.007822918818691002,
+            "cumulative_time_s": 42.96207444349594,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 3.240518610873986,
+            "pre_height_sha256": "6535a094a925aeb0ab52125a3dc27524ab0c162a49f0c26a8feab775918e2ef1",
+            "post_height_sha256": "5ca3c2d4137c189c03b2a6c14dc0f656b7f37567ce7553068df9781d01709837"
+          },
+          {
+            "attempt": 6,
+            "action": {
+              "x_m": 0.1875,
+              "y_m": 0.09750000000000003,
+              "dir_x": 0.31622776601683783,
+              "dir_y": -0.9486832980505138
+            },
+            "scooped_mass_kg": 0.002953737138755253,
+            "elapsed_time_s": 6.9104834939252004,
+            "failed": false,
+            "travel_distance_m": 0.4776208734813001,
+            "removed_volume_m3": 5.370431161373188e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.19760543945187392,
+              0.09171610719595508
+            ],
+            "cumulative_mass_kg": 0.010776655957446256,
+            "cumulative_time_s": 49.87255793742114,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 3.718139484355286,
+            "pre_height_sha256": "5ca3c2d4137c189c03b2a6c14dc0f656b7f37567ce7553068df9781d01709837",
+            "post_height_sha256": "874f3ec569a9d195ffd377aa03f7869a256a7b7003cb9ff98ae9b073c44f11fc"
+          },
+          {
+            "attempt": 7,
+            "action": {
+              "x_m": 0.2625,
+              "y_m": -0.057499999999999996,
+              "dir_x": -0.5943910610838059,
+              "dir_y": 0.8041761414663254
+            },
+            "scooped_mass_kg": 0.002949440886763204,
+            "elapsed_time_s": 7.2887670143089025,
+            "failed": false,
+            "travel_distance_m": 0.5721917535772256,
+            "removed_volume_m3": 5.362619794114916e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.2520978747091319,
+              -0.051808741434812115
+            ],
+            "cumulative_mass_kg": 0.01372609684420946,
+            "cumulative_time_s": 57.161324951730045,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 4.290331237932511,
+            "pre_height_sha256": "874f3ec569a9d195ffd377aa03f7869a256a7b7003cb9ff98ae9b073c44f11fc",
+            "post_height_sha256": "c10f01f55103dec7d4c4c839d5902be458852facf7578a151759168a74d76fe3"
+          },
+          {
+            "attempt": 8,
+            "action": {
+              "x_m": 0.2525,
+              "y_m": 0.09250000000000003,
+              "dir_x": -0.33148599501255976,
+              "dir_y": -0.9434601396511318
+            },
+            "scooped_mass_kg": 0.002534861858762912,
+            "elapsed_time_s": 7.201331855134916,
+            "failed": false,
+            "travel_distance_m": 0.5503329637837291,
+            "removed_volume_m3": 4.608839743205295e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.24094502077256352,
+              0.0862683451725378
+            ],
+            "cumulative_mass_kg": 0.01626095870297237,
+            "cumulative_time_s": 64.36265680686496,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 4.8406642017162405,
+            "pre_height_sha256": "c10f01f55103dec7d4c4c839d5902be458852facf7578a151759168a74d76fe3",
+            "post_height_sha256": "f01794cf8c8173340fe8b6e05fbb4d9a78296d7adefd048afa7ed4384383a392"
+          },
+          {
+            "attempt": 9,
+            "action": {
+              "x_m": 0.2475,
+              "y_m": 0.07750000000000001,
+              "dir_x": -0.3344098451707648,
+              "dir_y": -0.9424277454812465
+            },
+            "scooped_mass_kg": 0.0033524533317868584,
+            "elapsed_time_s": 6.663245553203367,
+            "failed": false,
+            "travel_distance_m": 0.4158113883008419,
+            "removed_volume_m3": 6.095369694157925e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.23946643148561902,
+              0.07036795711936866
+            ],
+            "cumulative_mass_kg": 0.019613412034759227,
+            "cumulative_time_s": 71.02590236006833,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 5.256475590017082,
+            "pre_height_sha256": "f01794cf8c8173340fe8b6e05fbb4d9a78296d7adefd048afa7ed4384383a392",
+            "post_height_sha256": "ff4349adee8a8caafad577b1cbf9d5a5a3d92c4e2764f6f771ad1915506df538"
+          },
+          {
+            "attempt": 10,
+            "action": {
+              "x_m": 0.2525,
+              "y_m": -0.057499999999999996,
+              "dir_x": -0.49205725666790195,
+              "dir_y": 0.8705628387201342
+            },
+            "scooped_mass_kg": 0.0030727006435966437,
+            "elapsed_time_s": 7.140370243444252,
+            "failed": false,
+            "travel_distance_m": 0.535092560861063,
+            "removed_volume_m3": 5.586728442902989e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.24164817261333305,
+              -0.05443031238814853
+            ],
+            "cumulative_mass_kg": 0.02268611267835587,
+            "cumulative_time_s": 78.16627260351258,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 5.791568150878145,
+            "pre_height_sha256": "ff4349adee8a8caafad577b1cbf9d5a5a3d92c4e2764f6f771ad1915506df538",
+            "post_height_sha256": "8f41d52799f7097694a5f8751ca546b2e7b990f016d06ab3abde0329f7a25c7d"
+          },
+          {
+            "attempt": 11,
+            "action": {
+              "x_m": 0.2425,
+              "y_m": -0.0625,
+              "dir_x": -0.3387194682727415,
+              "dir_y": 0.9408874118687268
+            },
+            "scooped_mass_kg": 0.003433307710376307,
+            "elapsed_time_s": 6.644721359549996,
+            "failed": false,
+            "travel_distance_m": 0.41118033988749897,
+            "removed_volume_m3": 6.242377655229649e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.2325218165409194,
+              -0.06202944766595656
+            ],
+            "cumulative_mass_kg": 0.026119420388732176,
+            "cumulative_time_s": 84.81099396306257,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 6.202748490765645,
+            "pre_height_sha256": "8f41d52799f7097694a5f8751ca546b2e7b990f016d06ab3abde0329f7a25c7d",
+            "post_height_sha256": "c108f5075a1bd06a6334b1b05122ba5b2032131f65ca9b7fc3684ed38ef17d5d"
+          },
+          {
+            "attempt": 12,
+            "action": {
+              "x_m": 0.2375,
+              "y_m": -0.05249999999999999,
+              "dir_x": -0.3162277660168378,
+              "dir_y": 0.9486832980505139
+            },
+            "scooped_mass_kg": 0.003607752600724233,
+            "elapsed_time_s": 6.644721359549996,
+            "failed": false,
+            "travel_distance_m": 0.41118033988749897,
+            "removed_volume_m3": 6.559550183134969e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.22904464685601422,
+              -0.04772715405625938
+            ],
+            "cumulative_mass_kg": 0.02972717298945641,
+            "cumulative_time_s": 91.45571532261256,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 6.613928830653144,
+            "pre_height_sha256": "c108f5075a1bd06a6334b1b05122ba5b2032131f65ca9b7fc3684ed38ef17d5d",
+            "post_height_sha256": "90a2424a35882e9da466cdbc386fbe0f660373e1da67ca2e862a606c6dda4a45"
+          },
+          {
+            "attempt": 13,
+            "action": {
+              "x_m": 0.2475,
+              "y_m": -0.0875,
+              "dir_x": -0.2998265967403946,
+              "dir_y": 0.9539937169012555
+            },
+            "scooped_mass_kg": 0.001689645469316742,
+            "elapsed_time_s": 6.74560219778561,
+            "failed": false,
+            "travel_distance_m": 0.4364005494464026,
+            "removed_volume_m3": 3.0720826714849854e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.23298898474234322,
+              -0.0911601733995871
+            ],
+            "cumulative_mass_kg": 0.03141681845877315,
+            "cumulative_time_s": 98.20131752039818,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 7.050329380099547,
+            "pre_height_sha256": "90a2424a35882e9da466cdbc386fbe0f660373e1da67ca2e862a606c6dda4a45",
+            "post_height_sha256": "ce168919969215643adc2babc4dbe163e3e7fa18ec45053f2128e1e11f3c64f5"
+          },
+          {
+            "attempt": 14,
+            "action": {
+              "x_m": 0.23249999999999998,
+              "y_m": -0.0925,
+              "dir_x": -0.13391789600139486,
+              "dir_y": 0.9909924304103234
+            },
+            "scooped_mass_kg": 0.0024133934080375567,
+            "elapsed_time_s": 6.663245553203367,
+            "failed": false,
+            "travel_distance_m": 0.4158113883008419,
+            "removed_volume_m3": 4.387988014613739e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.21963600236803416,
+              -0.09065652838581185
+            ],
+            "cumulative_mass_kg": 0.033830211866810705,
+            "cumulative_time_s": 104.86456307360154,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 7.466140768400389,
+            "pre_height_sha256": "ce168919969215643adc2babc4dbe163e3e7fa18ec45053f2128e1e11f3c64f5",
+            "post_height_sha256": "872ef6cc5cca08c8a36f1bbd7d6629153aa433b42167bd7b9292c8cc3798cccd"
+          },
+          {
+            "attempt": 15,
+            "action": {
+              "x_m": 0.2175,
+              "y_m": -0.0975,
+              "dir_x": 0.025632600792550825,
+              "dir_y": 0.9996714309094813
+            },
+            "scooped_mass_kg": 0.0021858421766455713,
+            "elapsed_time_s": 6.663245553203367,
+            "failed": false,
+            "travel_distance_m": 0.4158113883008419,
+            "removed_volume_m3": 3.974258502991948e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.2070304636364277,
+              -0.08943663824523067
+            ],
+            "cumulative_mass_kg": 0.03601605404345628,
+            "cumulative_time_s": 111.52780862680491,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 7.881952156701231,
+            "pre_height_sha256": "872ef6cc5cca08c8a36f1bbd7d6629153aa433b42167bd7b9292c8cc3798cccd",
+            "post_height_sha256": "62483183d2fefd95ddcedc77d6b5fdd0bfd2aa247a07aab75d4c59369eb64f05"
+          },
+          {
+            "attempt": 16,
+            "action": {
+              "x_m": 0.1975,
+              "y_m": -0.0925,
+              "dir_x": 0.23635157914750055,
+              "dir_y": 0.971667603161947
+            },
+            "scooped_mass_kg": 0.0014930276679966836,
+            "elapsed_time_s": 6.682462112512353,
+            "failed": false,
+            "travel_distance_m": 0.42061552812808833,
+            "removed_volume_m3": 2.71459575999397e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.19925141670373517,
+              -0.076909432485463
+            ],
+            "cumulative_mass_kg": 0.037509081711452966,
+            "cumulative_time_s": 118.21027073931727,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 8.302567684829318,
+            "pre_height_sha256": "62483183d2fefd95ddcedc77d6b5fdd0bfd2aa247a07aab75d4c59369eb64f05",
+            "post_height_sha256": "686ea1afb11029da801e2074f97c6847d0e48997012a259aa83dd2383beed9eb"
+          },
+          {
+            "attempt": 17,
+            "action": {
+              "x_m": 0.2475,
+              "y_m": 0.0675,
+              "dir_x": -0.37729688731351935,
+              "dir_y": -0.9260923597695477
+            },
+            "scooped_mass_kg": 0.003443433419341788,
+            "elapsed_time_s": 7.270522184569609,
+            "failed": false,
+            "travel_distance_m": 0.5676305461424022,
+            "removed_volume_m3": 6.260788035166887e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.2405443070035589,
+              0.05999531040792791
+            ],
+            "cumulative_mass_kg": 0.04095251513079475,
+            "cumulative_time_s": 125.48079292388688,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 8.87019823097172,
+            "pre_height_sha256": "686ea1afb11029da801e2074f97c6847d0e48997012a259aa83dd2383beed9eb",
+            "post_height_sha256": "92c5b2d7666858f24269a2cf01960b60104d00a03437f41f14075a1b07b4ab2d"
+          },
+          {
+            "attempt": 18,
+            "action": {
+              "x_m": 0.2675,
+              "y_m": 0.05249999999999999,
+              "dir_x": -0.6709133239691264,
+              "dir_y": -0.741535779123771
+            },
+            "scooped_mass_kg": 0.0015579822799487522,
+            "elapsed_time_s": 6.7,
+            "failed": false,
+            "travel_distance_m": 0.42500000000000004,
+            "removed_volume_m3": 2.8326950544522767e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.25705925110463007,
+              0.04057025273386539
+            ],
+            "cumulative_mass_kg": 0.0425104974107435,
+            "cumulative_time_s": 132.18079292388688,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 9.295198230971721,
+            "pre_height_sha256": "92c5b2d7666858f24269a2cf01960b60104d00a03437f41f14075a1b07b4ab2d",
+            "post_height_sha256": "66dd2cbce9b67135467a41fd32a108ced165289466d6f03e5ff959b624e50514"
+          },
+          {
+            "attempt": 19,
+            "action": {
+              "x_m": 0.2375,
+              "y_m": -0.04749999999999999,
+              "dir_x": -0.34570535882735626,
+              "dir_y": 0.9383431168171101
+            },
+            "scooped_mass_kg": 0.003413482793480862,
+            "elapsed_time_s": 7.017612260356422,
+            "failed": false,
+            "travel_distance_m": 0.5044030650891055,
+            "removed_volume_m3": 6.2063323517833855e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.22996066760828116,
+              -0.04032660936046147
+            ],
+            "cumulative_mass_kg": 0.04592398020422436,
+            "cumulative_time_s": 139.1984051842433,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 9.799601296060827,
+            "pre_height_sha256": "66dd2cbce9b67135467a41fd32a108ced165289466d6f03e5ff959b624e50514",
+            "post_height_sha256": "30cc086ddc2f1b47aab450dd0abcae3d7e70ea9d9d42c7554bda2f871b893930"
+          },
+          {
+            "attempt": 20,
+            "action": {
+              "x_m": 0.2675,
+              "y_m": 0.027499999999999997,
+              "dir_x": -0.8654262854811263,
+              "dir_y": -0.5010362705417045
+            },
+            "scooped_mass_kg": 0.0025801265656874,
+            "elapsed_time_s": 6.923109888428071,
+            "failed": false,
+            "travel_distance_m": 0.4807774721070176,
+            "removed_volume_m3": 4.691139210340727e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.2557901097889025,
+              0.021678711748589003
+            ],
+            "cumulative_mass_kg": 0.048504106769911765,
+            "cumulative_time_s": 146.12151507267137,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 10.280378768167845,
+            "pre_height_sha256": "30cc086ddc2f1b47aab450dd0abcae3d7e70ea9d9d42c7554bda2f871b893930",
+            "post_height_sha256": "d2afd8fa1008f7981a132d023885779d318ac194cad826bcae5c27097586ba17"
+          },
+          {
+            "attempt": 21,
+            "action": {
+              "x_m": 0.2375,
+              "y_m": 0.07250000000000001,
+              "dir_x": -0.23464053310389665,
+              "dir_y": -0.972082208573287
+            },
+            "scooped_mass_kg": 0.0032277491952572433,
+            "elapsed_time_s": 6.816333076527839,
+            "failed": false,
+            "travel_distance_m": 0.4540832691319599,
+            "removed_volume_m3": 5.8686349004677155e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.22737474505416672,
+              0.0688563655894637
+            ],
+            "cumulative_mass_kg": 0.05173185596516901,
+            "cumulative_time_s": 152.9378481491992,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 10.734462037299805,
+            "pre_height_sha256": "d2afd8fa1008f7981a132d023885779d318ac194cad826bcae5c27097586ba17",
+            "post_height_sha256": "0be971de64fae50a73cd4f06f4321a5d382eb052e14a65d3496bad598b46e0f3"
+          },
+          {
+            "attempt": 22,
+            "action": {
+              "x_m": 0.2675,
+              "y_m": -0.0325,
+              "dir_x": -0.8253072612498319,
+              "dir_y": 0.56468391559199
+            },
+            "scooped_mass_kg": 0.0016655079851699034,
+            "elapsed_time_s": 7.036806593356831,
+            "failed": false,
+            "travel_distance_m": 0.5092016483392078,
+            "removed_volume_m3": 3.0281963366725517e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.2574924720334256,
+              -0.020913288872504408
+            ],
+            "cumulative_mass_kg": 0.05339736395033891,
+            "cumulative_time_s": 159.97465474255603,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 11.243663685639012,
+            "pre_height_sha256": "0be971de64fae50a73cd4f06f4321a5d382eb052e14a65d3496bad598b46e0f3",
+            "post_height_sha256": "c5ea99e5c2635e09b1cfcc7f388b6a9efe734660cf3d3186d23ff67c50b46ec8"
+          },
+          {
+            "attempt": 23,
+            "action": {
+              "x_m": 0.2625,
+              "y_m": 0.012500000000000011,
+              "dir_x": -0.9593655015712705,
+              "dir_y": -0.28216632399155034
+            },
+            "scooped_mass_kg": 0.0029673520693107858,
+            "elapsed_time_s": 6.781107702762748,
+            "failed": false,
+            "travel_distance_m": 0.4452769256906871,
+            "removed_volume_m3": 5.395185580565065e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.2511811317904632,
+              0.008996050002805546
+            ],
+            "cumulative_mass_kg": 0.056364716019649694,
+            "cumulative_time_s": 166.75576244531877,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 11.688940611329699,
+            "pre_height_sha256": "c5ea99e5c2635e09b1cfcc7f388b6a9efe734660cf3d3186d23ff67c50b46ec8",
+            "post_height_sha256": "52392ab63580c9dd49870a7263fdca65edf1de47c30cad323ffe0ecc61ec8100"
+          },
+          {
+            "attempt": 24,
+            "action": {
+              "x_m": 0.2525,
+              "y_m": 0.017500000000000016,
+              "dir_x": -0.8804710999221751,
+              "dir_y": -0.4740998230350178
+            },
+            "scooped_mass_kg": 0.003313581423769641,
+            "elapsed_time_s": 6.644721359549996,
+            "failed": false,
+            "travel_distance_m": 0.41118033988749897,
+            "removed_volume_m3": 6.024693497762983e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.24175562812777396,
+              0.016204711465530878
+            ],
+            "cumulative_mass_kg": 0.059678297443419334,
+            "cumulative_time_s": 173.40048380486877,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 12.100120951217198,
+            "pre_height_sha256": "52392ab63580c9dd49870a7263fdca65edf1de47c30cad323ffe0ecc61ec8100",
+            "post_height_sha256": "41a91ea415128bbe75b83859ffab83dca990bcce126ca6c9473a2ae89e629e65"
+          },
+          {
+            "attempt": 25,
+            "action": {
+              "x_m": 0.2275,
+              "y_m": -0.0625,
+              "dir_x": -0.11914522061843075,
+              "dir_y": 0.9928768384869221
+            },
+            "scooped_mass_kg": 0.002434877404995438,
+            "elapsed_time_s": 6.935261092284804,
+            "failed": false,
+            "travel_distance_m": 0.4838152730712011,
+            "removed_volume_m3": 4.427049827264432e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.21578170203256752,
+              -0.05668295430068005
+            ],
+            "cumulative_mass_kg": 0.06211317484841477,
+            "cumulative_time_s": 180.33574489715357,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 12.583936224288399,
+            "pre_height_sha256": "41a91ea415128bbe75b83859ffab83dca990bcce126ca6c9473a2ae89e629e65",
+            "post_height_sha256": "4a69f64c9e0600daad70e7ea0accb1bca50458e68254690cda24b39a40a56951"
+          },
+          {
+            "attempt": 26,
+            "action": {
+              "x_m": 0.2475,
+              "y_m": 0.017500000000000016,
+              "dir_x": -0.8436614877321071,
+              "dir_y": -0.5368754921931596
+            },
+            "scooped_mass_kg": 0.003381721034909183,
+            "elapsed_time_s": 6.929848450049413,
+            "failed": false,
+            "travel_distance_m": 0.48246211251235327,
+            "removed_volume_m3": 6.148583699834878e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.23706821438768935,
+              0.016414810681966464
+            ],
+            "cumulative_mass_kg": 0.06549489588332395,
+            "cumulative_time_s": 187.26559334720298,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 13.066398336800752,
+            "pre_height_sha256": "4a69f64c9e0600daad70e7ea0accb1bca50458e68254690cda24b39a40a56951",
+            "post_height_sha256": "c3370f7e0b684ad4b5044a89f91bf78f1901b0c49baba1daed5cb05c75d3caa0"
+          },
+          {
+            "attempt": 27,
+            "action": {
+              "x_m": 0.23249999999999998,
+              "y_m": 0.0675,
+              "dir_x": -0.1820892601823072,
+              "dir_y": -0.9832820049844603
+            },
+            "scooped_mass_kg": 0.003423933911656206,
+            "elapsed_time_s": 6.808806130178211,
+            "failed": false,
+            "travel_distance_m": 0.45220153254455275,
+            "removed_volume_m3": 6.225334384829465e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.2237153334719155,
+              0.06244644343983592
+            ],
+            "cumulative_mass_kg": 0.06891882979498015,
+            "cumulative_time_s": 194.07439947738118,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 13.518599869345305,
+            "pre_height_sha256": "c3370f7e0b684ad4b5044a89f91bf78f1901b0c49baba1daed5cb05c75d3caa0",
+            "post_height_sha256": "342b43ba553bbc1e03ade4860bbee339959f8160164106c3b1087b6068c1a57a"
+          },
+          {
+            "attempt": 28,
+            "action": {
+              "x_m": 0.2225,
+              "y_m": 0.0675,
+              "dir_x": -0.03701166050988029,
+              "dir_y": -0.9993148337667671
+            },
+            "scooped_mass_kg": 0.003767245959136187,
+            "elapsed_time_s": 6.640000000000001,
+            "failed": false,
+            "travel_distance_m": 0.41000000000000003,
+            "removed_volume_m3": 6.84953810752034e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.21425589713858753,
+              0.06401308715970765
+            ],
+            "cumulative_mass_kg": 0.07268607575411634,
+            "cumulative_time_s": 200.71439947738116,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 13.928599869345305,
+            "pre_height_sha256": "342b43ba553bbc1e03ade4860bbee339959f8160164106c3b1087b6068c1a57a",
+            "post_height_sha256": "506d408e776d5c350e9a6f37458baa214feb762ab52c06ef4fc0fa407930f826"
+          },
+          {
+            "attempt": 29,
+            "action": {
+              "x_m": 0.23249999999999998,
+              "y_m": 0.05249999999999999,
+              "dir_x": -0.23162052730603946,
+              "dir_y": -0.9728062146853669
+            },
+            "scooped_mass_kg": 0.0029619888589331625,
+            "elapsed_time_s": 6.67211102550928,
+            "failed": false,
+            "travel_distance_m": 0.41802775637732,
+            "removed_volume_m3": 5.385434288969386e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.22542096275829018,
+              0.042912301772562854
+            ],
+            "cumulative_mass_kg": 0.0756480646130495,
+            "cumulative_time_s": 207.38651050289045,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 14.346627625722626,
+            "pre_height_sha256": "506d408e776d5c350e9a6f37458baa214feb762ab52c06ef4fc0fa407930f826",
+            "post_height_sha256": "0a868e1335d34dcc8530432acf749e5039b30b2d7763834d2c7d0fe71438502d"
+          },
+          {
+            "attempt": 30,
+            "action": {
+              "x_m": 0.2625,
+              "y_m": -0.012500000000000011,
+              "dir_x": -0.9593655015712705,
+              "dir_y": 0.28216632399155034
+            },
+            "scooped_mass_kg": 0.0015118355065446747,
+            "elapsed_time_s": 6.8863564212655275,
+            "failed": false,
+            "travel_distance_m": 0.4715891053163818,
+            "removed_volume_m3": 2.7487918300812267e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.24660926113757614,
+              -0.012875611477450309
+            ],
+            "cumulative_mass_kg": 0.07715990011959417,
+            "cumulative_time_s": 214.27286692415598,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 14.818216731039007,
+            "pre_height_sha256": "0a868e1335d34dcc8530432acf749e5039b30b2d7763834d2c7d0fe71438502d",
+            "post_height_sha256": "4b74fa2a76801df2fe029d71bb16d6c2cb507bda2f15186344e374cc37d5be40"
+          },
+          {
+            "attempt": 31,
+            "action": {
+              "x_m": 0.2525,
+              "y_m": -0.012500000000000011,
+              "dir_x": -0.9333456062030594,
+              "dir_y": 0.3589790793088693
+            },
+            "scooped_mass_kg": 0.0021194866723265107,
+            "elapsed_time_s": 6.640000000000001,
+            "failed": false,
+            "travel_distance_m": 0.41000000000000003,
+            "removed_volume_m3": 3.853612131502747e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.237998301246356,
+              -0.011810026832500596
+            ],
+            "cumulative_mass_kg": 0.07927938679192068,
+            "cumulative_time_s": 220.912866924156,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 15.228216731039007,
+            "pre_height_sha256": "4b74fa2a76801df2fe029d71bb16d6c2cb507bda2f15186344e374cc37d5be40",
+            "post_height_sha256": "17eb1b9fbd2742c70f8943217520c07ba3c61f6aea6b9b1c7de3289d3cd99b17"
+          },
+          {
+            "attempt": 32,
+            "action": {
+              "x_m": 0.2275,
+              "y_m": -0.04749999999999999,
+              "dir_x": -0.15596257347301107,
+              "dir_y": 0.987762965329069
+            },
+            "scooped_mass_kg": 0.003019484447266715,
+            "elapsed_time_s": 6.772046505340852,
+            "failed": false,
+            "travel_distance_m": 0.4430116263352131,
+            "removed_volume_m3": 5.489971722303119e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.2189291881782339,
+              -0.03958726964005326
+            ],
+            "cumulative_mass_kg": 0.08229887123918739,
+            "cumulative_time_s": 227.68491342949685,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 15.67122835737422,
+            "pre_height_sha256": "17eb1b9fbd2742c70f8943217520c07ba3c61f6aea6b9b1c7de3289d3cd99b17",
+            "post_height_sha256": "821d7c2d061e69313aa24e15f8b3b6a104163e125c2a47e532d183c64043e76c"
+          },
+          {
+            "attempt": 33,
+            "action": {
+              "x_m": 0.2425,
+              "y_m": -0.022499999999999992,
+              "dir_x": -0.7071067811865475,
+              "dir_y": 0.7071067811865475
+            },
+            "scooped_mass_kg": 0.002367988017420404,
+            "elapsed_time_s": 6.716619037896906,
+            "failed": false,
+            "travel_distance_m": 0.4291547594742265,
+            "removed_volume_m3": 4.305432758946189e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.23034645445274027,
+              -0.01592829123024535
+            ],
+            "cumulative_mass_kg": 0.08466685925660779,
+            "cumulative_time_s": 234.40153246739376,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 16.100383116848448,
+            "pre_height_sha256": "821d7c2d061e69313aa24e15f8b3b6a104163e125c2a47e532d183c64043e76c",
+            "post_height_sha256": "59b1935bdad5666c81469e0b51c09a3216bfabaa9e8c66ab8ca42e9ef61e1969"
+          },
+          {
+            "attempt": 34,
+            "action": {
+              "x_m": 0.21250000000000002,
+              "y_m": -0.0675,
+              "dir_x": 0.11043152607484623,
+              "dir_y": 0.9938837346736189
+            },
+            "scooped_mass_kg": 0.0019979621453940447,
+            "elapsed_time_s": 6.816333076527839,
+            "failed": false,
+            "travel_distance_m": 0.45408326913195984,
+            "removed_volume_m3": 3.6326584461709903e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.2010745660587762,
+              -0.05947515480939706
+            ],
+            "cumulative_mass_kg": 0.08666482140200184,
+            "cumulative_time_s": 241.2178655439216,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 16.554466385980408,
+            "pre_height_sha256": "59b1935bdad5666c81469e0b51c09a3216bfabaa9e8c66ab8ca42e9ef61e1969",
+            "post_height_sha256": "0b461c0ad2ad1de49fb79799ef3051636045b833f067cf0eab523a7181e53411"
+          },
+          {
+            "attempt": 35,
+            "action": {
+              "x_m": 0.21250000000000002,
+              "y_m": -0.04749999999999999,
+              "dir_x": 0.1559625734730105,
+              "dir_y": 0.987762965329069
+            },
+            "scooped_mass_kg": 0.0031694849971805363,
+            "elapsed_time_s": 6.68,
+            "failed": false,
+            "travel_distance_m": 0.42000000000000004,
+            "removed_volume_m3": 5.762699994873702e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.20477743933534653,
+              -0.0393123978456763
+            ],
+            "cumulative_mass_kg": 0.08983430639918237,
+            "cumulative_time_s": 247.8978655439216,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 16.97446638598041,
+            "pre_height_sha256": "0b461c0ad2ad1de49fb79799ef3051636045b833f067cf0eab523a7181e53411",
+            "post_height_sha256": "67163fb5d0fde9df775362276078770f726bd7f6850b7a6a7c6897e307fa6c5c"
+          },
+          {
+            "attempt": 36,
+            "action": {
+              "x_m": 0.20750000000000002,
+              "y_m": -0.04250000000000001,
+              "dir_x": 0.28216632399154973,
+              "dir_y": 0.9593655015712707
+            },
+            "scooped_mass_kg": 0.003222217701483826,
+            "elapsed_time_s": 6.628284271247462,
+            "failed": false,
+            "travel_distance_m": 0.4070710678118655,
+            "removed_volume_m3": 5.858577639061502e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.2007394754912407,
+              -0.033896508608567986
+            ],
+            "cumulative_mass_kg": 0.0930565241006662,
+            "cumulative_time_s": 254.52614981516905,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 17.381537453792276,
+            "pre_height_sha256": "67163fb5d0fde9df775362276078770f726bd7f6850b7a6a7c6897e307fa6c5c",
+            "post_height_sha256": "df83b28d8f6d3f8add9332defcd50f3be1581d13a397757019a7d4418084c3f6"
+          }
+        ]
+      },
+      {
+        "policy": "center_out",
+        "seed": 2475,
+        "episode_config": {
+          "max_attempts": 240,
+          "max_consecutive_failures": 5,
+          "max_total_failures": 20,
+          "actionable_height_m": 0.0005,
+          "target_mass_kg": 0.09238086653711162
+        },
+        "target_mass_kg": 0.09238086653711162,
+        "target_reached": true,
+        "terminal_reason": "target_reached",
+        "terminal_detail": null,
+        "metrics": {
+          "total_time_s": 182.9600796699524,
+          "total_scoops": 27,
+          "failure_rate": 0.0,
+          "total_distance_m": 11.990020155906677,
+          "total_loaded_mass_kg": 0.09448384742239946
+        },
+        "initial_height_sha256": "c90b9aea29c373d36cdf37de911a88affb9acf858dcaf3eff7fc25c7268c6f5e",
+        "final_height_sha256": "7f7beef67622924de8c5e1432052a713a339f1926fa2d359757ce55db4e28211",
+        "steps": [
+          {
+            "attempt": 0,
+            "action": {
+              "x_m": 0.2175,
+              "y_m": -0.0025000000000000022,
+              "dir_x": -0.7071067811865476,
+              "dir_y": -0.7071067811865476
+            },
+            "scooped_mass_kg": 0.007511371218126572,
+            "elapsed_time_s": 6.970135110466435,
+            "failed": false,
+            "travel_distance_m": 0.49253377761660877,
+            "removed_volume_m3": 1.365703857841195e-05,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.21750000000000003,
+              -0.002500000000000005
+            ],
+            "cumulative_mass_kg": 0.007511371218126572,
+            "cumulative_time_s": 6.970135110466435,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 0.49253377761660877,
+            "pre_height_sha256": "c90b9aea29c373d36cdf37de911a88affb9acf858dcaf3eff7fc25c7268c6f5e",
+            "post_height_sha256": "fa4b4d8b2d1d91f83208bf7442ee54c0ce07ac6e2728b7fbc7f67228c0917693"
+          },
+          {
+            "attempt": 1,
+            "action": {
+              "x_m": 0.2175,
+              "y_m": -0.0025000000000000022,
+              "dir_x": -0.7071067811865476,
+              "dir_y": -0.7071067811865476
+            },
+            "scooped_mass_kg": 0.007511371218126572,
+            "elapsed_time_s": 6.6,
+            "failed": false,
+            "travel_distance_m": 0.4,
+            "removed_volume_m3": 1.365703857841195e-05,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.21750000000000003,
+              -0.002500000000000005
+            ],
+            "cumulative_mass_kg": 0.015022742436253143,
+            "cumulative_time_s": 13.570135110466435,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 0.8925337776166088,
+            "pre_height_sha256": "fa4b4d8b2d1d91f83208bf7442ee54c0ce07ac6e2728b7fbc7f67228c0917693",
+            "post_height_sha256": "8b5229c500b2460dcfcd7fadd2c53090a0f7f40ee5ede40db2731ba029745431"
+          },
+          {
+            "attempt": 2,
+            "action": {
+              "x_m": 0.2175,
+              "y_m": -0.0025000000000000022,
+              "dir_x": -0.7071067811865476,
+              "dir_y": -0.7071067811865476
+            },
+            "scooped_mass_kg": 0.0071507828053647485,
+            "elapsed_time_s": 6.6,
+            "failed": false,
+            "travel_distance_m": 0.4,
+            "removed_volume_m3": 1.3001423282481361e-05,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.21780064041688046,
+              -0.0024503586078521394
+            ],
+            "cumulative_mass_kg": 0.022173525241617892,
+            "cumulative_time_s": 20.170135110466433,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 1.2925337776166088,
+            "pre_height_sha256": "8b5229c500b2460dcfcd7fadd2c53090a0f7f40ee5ede40db2731ba029745431",
+            "post_height_sha256": "f9fc80f38da50f61a944cc3bd9dbf7c1c36a1acd1dd2076d7e9132eed9a39c6d"
+          },
+          {
+            "attempt": 3,
+            "action": {
+              "x_m": 0.2175,
+              "y_m": 0.007500000000000007,
+              "dir_x": -0.31622776601683794,
+              "dir_y": 0.9486832980505139
+            },
+            "scooped_mass_kg": 0.004499550460662197,
+            "elapsed_time_s": 6.640000000000001,
+            "failed": false,
+            "travel_distance_m": 0.41000000000000003,
+            "removed_volume_m3": 8.181000837567632e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.21808533783537262,
+              0.012817796576894946
+            ],
+            "cumulative_mass_kg": 0.02667307570228009,
+            "cumulative_time_s": 26.810135110466433,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 1.7025337776166087,
+            "pre_height_sha256": "f9fc80f38da50f61a944cc3bd9dbf7c1c36a1acd1dd2076d7e9132eed9a39c6d",
+            "post_height_sha256": "73f57afeb3e927407a95821f84e94fbafc784b42c5810e8a69ef9dafa910506b"
+          },
+          {
+            "attempt": 4,
+            "action": {
+              "x_m": 0.2175,
+              "y_m": -0.012500000000000011,
+              "dir_x": -0.19611613513818402,
+              "dir_y": -0.9805806756909201
+            },
+            "scooped_mass_kg": 0.0037123294473925487,
+            "elapsed_time_s": 6.68,
+            "failed": false,
+            "travel_distance_m": 0.42000000000000004,
+            "removed_volume_m3": 6.749689904350089e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.21818613318914407,
+              -0.02081009722531061
+            ],
+            "cumulative_mass_kg": 0.03038540514967264,
+            "cumulative_time_s": 33.49013511046643,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 2.1225337776166087,
+            "pre_height_sha256": "73f57afeb3e927407a95821f84e94fbafc784b42c5810e8a69ef9dafa910506b",
+            "post_height_sha256": "6f13710fe0394aeaa4816ad6b631f04b6a80fa6662038d7523862ffa2bf00f3b"
+          },
+          {
+            "attempt": 5,
+            "action": {
+              "x_m": 0.2175,
+              "y_m": 0.012500000000000011,
+              "dir_x": -0.19611613513818402,
+              "dir_y": 0.9805806756909201
+            },
+            "scooped_mass_kg": 0.003801253520968305,
+            "elapsed_time_s": 6.7,
+            "failed": false,
+            "travel_distance_m": 0.42500000000000004,
+            "removed_volume_m3": 6.911370038124191e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.2177022441897073,
+              0.02140929984546617
+            ],
+            "cumulative_mass_kg": 0.03418665867064095,
+            "cumulative_time_s": 40.190135110466436,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 2.547533777616609,
+            "pre_height_sha256": "6f13710fe0394aeaa4816ad6b631f04b6a80fa6662038d7523862ffa2bf00f3b",
+            "post_height_sha256": "9140ae9fd960ec11320dd3ee750b243a8a10d4611223f51bf5cb6c3ebe10708e"
+          },
+          {
+            "attempt": 6,
+            "action": {
+              "x_m": 0.2175,
+              "y_m": -0.017499999999999988,
+              "dir_x": -0.14142135623730973,
+              "dir_y": -0.9899494936611665
+            },
+            "scooped_mass_kg": 0.0035387788121135017,
+            "elapsed_time_s": 6.720000000000001,
+            "failed": false,
+            "travel_distance_m": 0.43000000000000005,
+            "removed_volume_m3": 6.434143294751821e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.2182576968068102,
+              -0.026940355609184667
+            ],
+            "cumulative_mass_kg": 0.03772543748275445,
+            "cumulative_time_s": 46.910135110466435,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 2.977533777616609,
+            "pre_height_sha256": "9140ae9fd960ec11320dd3ee750b243a8a10d4611223f51bf5cb6c3ebe10708e",
+            "post_height_sha256": "e7234f168c6e55ed0c6c9b12a0e6e545d6fc1911a529482a08f364167ea32482"
+          },
+          {
+            "attempt": 7,
+            "action": {
+              "x_m": 0.2375,
+              "y_m": -0.0025000000000000022,
+              "dir_x": 0.9899494936611665,
+              "dir_y": -0.14142135623730973
+            },
+            "scooped_mass_kg": 0.0036507721784512642,
+            "elapsed_time_s": 6.7,
+            "failed": false,
+            "travel_distance_m": 0.425,
+            "removed_volume_m3": 6.6377675971841165e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.24681053456372165,
+              -0.002081145229026896
+            ],
+            "cumulative_mass_kg": 0.04137620966120571,
+            "cumulative_time_s": 53.61013511046644,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 3.402533777616609,
+            "pre_height_sha256": "e7234f168c6e55ed0c6c9b12a0e6e545d6fc1911a529482a08f364167ea32482",
+            "post_height_sha256": "e95592e84939e4e875b41823db0b01d3c4600ec8d8f9dbca33a61db6fdf5df53"
+          },
+          {
+            "attempt": 8,
+            "action": {
+              "x_m": 0.2175,
+              "y_m": 0.017500000000000016,
+              "dir_x": -0.1414213562373095,
+              "dir_y": 0.9899494936611665
+            },
+            "scooped_mass_kg": 0.0035275325669367683,
+            "elapsed_time_s": 6.713137084989848,
+            "failed": false,
+            "travel_distance_m": 0.42828427124746193,
+            "removed_volume_m3": 6.4136955762486695e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.2164382810850596,
+              0.027397663759572404
+            ],
+            "cumulative_mass_kg": 0.04490374222814248,
+            "cumulative_time_s": 60.32327219545628,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 3.830818048864071,
+            "pre_height_sha256": "e95592e84939e4e875b41823db0b01d3c4600ec8d8f9dbca33a61db6fdf5df53",
+            "post_height_sha256": "bcbe9303c40287e354820fa5878fe218d5556e25f44b7ceb5d239033a823c794"
+          },
+          {
+            "attempt": 9,
+            "action": {
+              "x_m": 0.2175,
+              "y_m": -0.022499999999999992,
+              "dir_x": -0.11043152607484669,
+              "dir_y": -0.9938837346736189
+            },
+            "scooped_mass_kg": 0.0031850910896443103,
+            "elapsed_time_s": 6.76,
+            "failed": false,
+            "travel_distance_m": 0.44000000000000006,
+            "removed_volume_m3": 5.791074708444201e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.2171309528263023,
+              -0.03317790986389052
+            ],
+            "cumulative_mass_kg": 0.048088833317786794,
+            "cumulative_time_s": 67.08327219545629,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 4.270818048864071,
+            "pre_height_sha256": "bcbe9303c40287e354820fa5878fe218d5556e25f44b7ceb5d239033a823c794",
+            "post_height_sha256": "54af7c162bd8e1e2f81824b6065ec923707618652645db410504e8483a289b01"
+          },
+          {
+            "attempt": 10,
+            "action": {
+              "x_m": 0.1975,
+              "y_m": 0.0025000000000000022,
+              "dir_x": -0.9938837346736189,
+              "dir_y": 0.11043152607484669
+            },
+            "scooped_mass_kg": 0.0030673059538006255,
+            "elapsed_time_s": 6.728062484748657,
+            "failed": false,
+            "travel_distance_m": 0.43201562118716424,
+            "removed_volume_m3": 5.576919916001137e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.18638060705991513,
+              0.004623013273051244
+            ],
+            "cumulative_mass_kg": 0.05115613927158742,
+            "cumulative_time_s": 73.81133468020495,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 4.702833670051236,
+            "pre_height_sha256": "54af7c162bd8e1e2f81824b6065ec923707618652645db410504e8483a289b01",
+            "post_height_sha256": "6cf6104c29460141178d49815c5116ac69511e65093377d43485f743a10ec9ba"
+          },
+          {
+            "attempt": 11,
+            "action": {
+              "x_m": 0.2175,
+              "y_m": 0.022499999999999992,
+              "dir_x": -0.11043152607484669,
+              "dir_y": 0.9938837346736189
+            },
+            "scooped_mass_kg": 0.0032614692571102553,
+            "elapsed_time_s": 6.713137084989848,
+            "failed": false,
+            "travel_distance_m": 0.42828427124746193,
+            "removed_volume_m3": 5.929944103836828e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.21858729186260523,
+              0.03332840897614241
+            ],
+            "cumulative_mass_kg": 0.054417608528697675,
+            "cumulative_time_s": 80.5244717651948,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 5.131117941298697,
+            "pre_height_sha256": "6cf6104c29460141178d49815c5116ac69511e65093377d43485f743a10ec9ba",
+            "post_height_sha256": "409abd74bf0e3a595d188e3be9e32e21c9155344de1053fe17c29c0ec971b94b"
+          },
+          {
+            "attempt": 12,
+            "action": {
+              "x_m": 0.2425,
+              "y_m": 0.012500000000000011,
+              "dir_x": 0.8741572761215375,
+              "dir_y": 0.48564293117863255
+            },
+            "scooped_mass_kg": 0.0031926625251705695,
+            "elapsed_time_s": 6.70770329614269,
+            "failed": false,
+            "travel_distance_m": 0.42692582403567253,
+            "removed_volume_m3": 5.804840954855581e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.2515271625405664,
+              0.01842808938057007
+            ],
+            "cumulative_mass_kg": 0.05761027105386825,
+            "cumulative_time_s": 87.2321750613375,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 5.55804376533437,
+            "pre_height_sha256": "409abd74bf0e3a595d188e3be9e32e21c9155344de1053fe17c29c0ec971b94b",
+            "post_height_sha256": "d59fb7c4dd5ccec3c8ba6352b761cb7d83ee19bcb3ecbb3fbb487bb0bf257aa4"
+          },
+          {
+            "attempt": 13,
+            "action": {
+              "x_m": 0.2375,
+              "y_m": -0.022499999999999992,
+              "dir_x": 0.6139406135149204,
+              "dir_y": -0.7893522173763264
+            },
+            "scooped_mass_kg": 0.003431405039628775,
+            "elapsed_time_s": 6.74142135623731,
+            "failed": false,
+            "travel_distance_m": 0.4353553390593274,
+            "removed_volume_m3": 6.2389182538705e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.24334616838928488,
+              -0.03137980941496083
+            ],
+            "cumulative_mass_kg": 0.061041676093497026,
+            "cumulative_time_s": 93.97359641757481,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 5.993399104393697,
+            "pre_height_sha256": "d59fb7c4dd5ccec3c8ba6352b761cb7d83ee19bcb3ecbb3fbb487bb0bf257aa4",
+            "post_height_sha256": "6d65cb39f58aa167fb7b087c4fef8e8ecab0ffc74447d842f286620d7faf5045"
+          },
+          {
+            "attempt": 14,
+            "action": {
+              "x_m": 0.23249999999999998,
+              "y_m": 0.027499999999999997,
+              "dir_x": 0.4138029443011836,
+              "dir_y": 0.9103664774626049
+            },
+            "scooped_mass_kg": 0.003292549383171562,
+            "elapsed_time_s": 6.800997512422418,
+            "failed": false,
+            "travel_distance_m": 0.45024937810560445,
+            "removed_volume_m3": 5.986453423948294e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.23532124861634726,
+              0.038133606907640165
+            ],
+            "cumulative_mass_kg": 0.06433422547666859,
+            "cumulative_time_s": 100.77459392999722,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 6.4436484824993014,
+            "pre_height_sha256": "6d65cb39f58aa167fb7b087c4fef8e8ecab0ffc74447d842f286620d7faf5045",
+            "post_height_sha256": "9f539d773fdfec2f157969e11d3f7aa095415a12c9de5c680948707530607595"
+          },
+          {
+            "attempt": 15,
+            "action": {
+              "x_m": 0.1975,
+              "y_m": -0.022499999999999992,
+              "dir_x": -0.7071067811865475,
+              "dir_y": -0.7071067811865475
+            },
+            "scooped_mass_kg": 0.003339629312935966,
+            "elapsed_time_s": 6.844131112314674,
+            "failed": false,
+            "travel_distance_m": 0.4610327780786685,
+            "removed_volume_m3": 6.072053296247211e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.1906392860105936,
+              -0.030726039581734466
+            ],
+            "cumulative_mass_kg": 0.06767385478960455,
+            "cumulative_time_s": 107.6187250423119,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 6.90468126057797,
+            "pre_height_sha256": "9f539d773fdfec2f157969e11d3f7aa095415a12c9de5c680948707530607595",
+            "post_height_sha256": "1067272679959867c8470a2ac1b3ec6d9615de4a6195fd90b6f2c9d861ddb610"
+          },
+          {
+            "attempt": 16,
+            "action": {
+              "x_m": 0.1975,
+              "y_m": 0.022499999999999992,
+              "dir_x": -0.7071067811865475,
+              "dir_y": 0.7071067811865475
+            },
+            "scooped_mass_kg": 0.003235125269362413,
+            "elapsed_time_s": 6.78,
+            "failed": false,
+            "travel_distance_m": 0.445,
+            "removed_volume_m3": 5.882045944295296e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.19065734757620117,
+              0.031184880360220133
+            ],
+            "cumulative_mass_kg": 0.07090898005896697,
+            "cumulative_time_s": 114.3987250423119,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 7.34968126057797,
+            "pre_height_sha256": "1067272679959867c8470a2ac1b3ec6d9615de4a6195fd90b6f2c9d861ddb610",
+            "post_height_sha256": "727475a3b2fa2908a92cce453b562d244b1f0dc1d410c5878de8fa4200e19c70"
+          },
+          {
+            "attempt": 17,
+            "action": {
+              "x_m": 0.2175,
+              "y_m": -0.0325,
+              "dir_x": -0.0766964988847371,
+              "dir_y": -0.9970544855015815
+            },
+            "scooped_mass_kg": 0.002873500215726107,
+            "elapsed_time_s": 6.834093998214392,
+            "failed": false,
+            "travel_distance_m": 0.45852349955359817,
+            "removed_volume_m3": 5.22454584677474e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.21830448607867636,
+              -0.044641013478736384
+            ],
+            "cumulative_mass_kg": 0.07378248027469307,
+            "cumulative_time_s": 121.2328190405263,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 7.808204760131568,
+            "pre_height_sha256": "727475a3b2fa2908a92cce453b562d244b1f0dc1d410c5878de8fa4200e19c70",
+            "post_height_sha256": "a183ddf6c2fe3ab85dc3ef4c48ccf2e37a6c3202cde5c4378f28ff1e392eb931"
+          },
+          {
+            "attempt": 18,
+            "action": {
+              "x_m": 0.2175,
+              "y_m": 0.0325,
+              "dir_x": -0.0766964988847371,
+              "dir_y": 0.9970544855015815
+            },
+            "scooped_mass_kg": 0.002805943445482359,
+            "elapsed_time_s": 6.86,
+            "failed": false,
+            "travel_distance_m": 0.465,
+            "removed_volume_m3": 5.101715355422471e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.21705810553126878,
+              0.044975568913549244
+            ],
+            "cumulative_mass_kg": 0.07658842372017544,
+            "cumulative_time_s": 128.0928190405263,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 8.273204760131568,
+            "pre_height_sha256": "a183ddf6c2fe3ab85dc3ef4c48ccf2e37a6c3202cde5c4378f28ff1e392eb931",
+            "post_height_sha256": "b9db6639dd6627a3ed3858a96ccb5cf399d24da02bab9e02fa92c85dec0c0fd3"
+          },
+          {
+            "attempt": 19,
+            "action": {
+              "x_m": 0.2475,
+              "y_m": -0.027499999999999997,
+              "dir_x": 0.7071067811865476,
+              "dir_y": -0.7071067811865476
+            },
+            "scooped_mass_kg": 0.0025727390706876845,
+            "elapsed_time_s": 6.868328157299975,
+            "failed": false,
+            "travel_distance_m": 0.4670820393249937,
+            "removed_volume_m3": 4.677707401250336e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.25358222923638957,
+              -0.03692682376435543
+            ],
+            "cumulative_mass_kg": 0.07916116279086312,
+            "cumulative_time_s": 134.96114719782628,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 8.740286799456563,
+            "pre_height_sha256": "b9db6639dd6627a3ed3858a96ccb5cf399d24da02bab9e02fa92c85dec0c0fd3",
+            "post_height_sha256": "415a5c1e10e5870aafbe703aca531e8893d47e1f6cf07a4ed8d8df512b167d49"
+          },
+          {
+            "attempt": 20,
+            "action": {
+              "x_m": 0.1875,
+              "y_m": -0.027499999999999997,
+              "dir_x": -0.7633862853691147,
+              "dir_y": -0.6459422414661738
+            },
+            "scooped_mass_kg": 0.0017237190788314206,
+            "elapsed_time_s": 6.84,
+            "failed": false,
+            "travel_distance_m": 0.46,
+            "removed_volume_m3": 3.1340346887844012e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.1834065112266078,
+              -0.038849681545899954
+            ],
+            "cumulative_mass_kg": 0.08088488186969454,
+            "cumulative_time_s": 141.80114719782628,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 9.200286799456563,
+            "pre_height_sha256": "415a5c1e10e5870aafbe703aca531e8893d47e1f6cf07a4ed8d8df512b167d49",
+            "post_height_sha256": "a1f8c158f6ede7188084cdc46aab60cc30c70af2cf6e66398cb1cc3a2b1ccef5"
+          },
+          {
+            "attempt": 21,
+            "action": {
+              "x_m": 0.2025,
+              "y_m": 0.037500000000000006,
+              "dir_x": -0.4228854653311236,
+              "dir_y": 0.9061831399952656
+            },
+            "scooped_mass_kg": 0.0032372116998837393,
+            "elapsed_time_s": 6.866833281282527,
+            "failed": false,
+            "travel_distance_m": 0.4667083203206317,
+            "removed_volume_m3": 5.885839454334071e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.19907879796506003,
+              0.047882800535110286
+            ],
+            "cumulative_mass_kg": 0.08412209356957828,
+            "cumulative_time_s": 148.66798047910882,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 9.666995119777194,
+            "pre_height_sha256": "a1f8c158f6ede7188084cdc46aab60cc30c70af2cf6e66398cb1cc3a2b1ccef5",
+            "post_height_sha256": "10a152b564a15c68496e0f5d48450a41e7a73ea296b05f1c3afe263e0ac6afd3"
+          },
+          {
+            "attempt": 22,
+            "action": {
+              "x_m": 0.2375,
+              "y_m": 0.037500000000000006,
+              "dir_x": 0.4228854653311236,
+              "dir_y": 0.9061831399952656
+            },
+            "scooped_mass_kg": 0.0030438903604376503,
+            "elapsed_time_s": 6.74,
+            "failed": false,
+            "travel_distance_m": 0.435,
+            "removed_volume_m3": 5.534346109886637e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.24210070778159168,
+              0.04830709650633083
+            ],
+            "cumulative_mass_kg": 0.08716598393001593,
+            "cumulative_time_s": 155.40798047910883,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 10.101995119777195,
+            "pre_height_sha256": "10a152b564a15c68496e0f5d48450a41e7a73ea296b05f1c3afe263e0ac6afd3",
+            "post_height_sha256": "2892196d8e0e6346fb05a3829930ffbd22d6b4afab8dd1a410ff2cdb93f976de"
+          },
+          {
+            "attempt": 23,
+            "action": {
+              "x_m": 0.2175,
+              "y_m": -0.04250000000000001,
+              "dir_x": -0.05872202195147039,
+              "dir_y": -0.9982743731749959
+            },
+            "scooped_mass_kg": 0.0033030296012867898,
+            "elapsed_time_s": 6.929848450049413,
+            "failed": false,
+            "travel_distance_m": 0.48246211251235327,
+            "removed_volume_m3": 6.005508365975981e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.21806935557502113,
+              -0.053483928012620606
+            ],
+            "cumulative_mass_kg": 0.09046901353130271,
+            "cumulative_time_s": 162.33782892915823,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 10.584457232289548,
+            "pre_height_sha256": "2892196d8e0e6346fb05a3829930ffbd22d6b4afab8dd1a410ff2cdb93f976de",
+            "post_height_sha256": "431734d078f8142d9c6779ca25480fea720c522e12993282a4238af108a7b728"
+          },
+          {
+            "attempt": 24,
+            "action": {
+              "x_m": 0.2625,
+              "y_m": -0.0025000000000000022,
+              "dir_x": 0.9982743731749959,
+              "dir_y": -0.05872202195147039
+            },
+            "scooped_mass_kg": 0.0003602266698145067,
+            "elapsed_time_s": 6.840831891575846,
+            "failed": false,
+            "travel_distance_m": 0.46020797289396154,
+            "removed_volume_m3": 6.549575814809213e-07,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.2683186280353503,
+              0.004887223970710533
+            ],
+            "cumulative_mass_kg": 0.09082924020111721,
+            "cumulative_time_s": 169.17866082073408,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 11.04466520518351,
+            "pre_height_sha256": "431734d078f8142d9c6779ca25480fea720c522e12993282a4238af108a7b728",
+            "post_height_sha256": "6a5777b58088ccad12baa5fd7c46b9fe12ada97ef2671a588fd2067c4fbf5afe"
+          },
+          {
+            "attempt": 25,
+            "action": {
+              "x_m": 0.1775,
+              "y_m": 0.0025000000000000022,
+              "dir_x": -0.9982743731749959,
+              "dir_y": 0.05872202195147039
+            },
+            "scooped_mass_kg": 0.00031995703165543945,
+            "elapsed_time_s": 6.940587727318528,
+            "failed": false,
+            "travel_distance_m": 0.48514693182963203,
+            "removed_volume_m3": 5.817400575553445e-07,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.17033109091681004,
+              0.011859887686953893
+            ],
+            "cumulative_mass_kg": 0.09114919723277265,
+            "cumulative_time_s": 176.1192485480526,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 11.529812137013142,
+            "pre_height_sha256": "6a5777b58088ccad12baa5fd7c46b9fe12ada97ef2671a588fd2067c4fbf5afe",
+            "post_height_sha256": "1574b0293e1edacbe0f32cffdfc1a20020a7f4d562a4c313101f7b0819edce0d"
+          },
+          {
+            "attempt": 26,
+            "action": {
+              "x_m": 0.2175,
+              "y_m": 0.047500000000000014,
+              "dir_x": -0.052558833122763694,
+              "dir_y": 0.9986178293325096
+            },
+            "scooped_mass_kg": 0.003334650189626803,
+            "elapsed_time_s": 6.840831891575846,
+            "failed": false,
+            "travel_distance_m": 0.46020797289396154,
+            "removed_volume_m3": 6.063000344776006e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.21730506413602899,
+              0.05843000698149984
+            ],
+            "cumulative_mass_kg": 0.09448384742239946,
+            "cumulative_time_s": 182.96008043962846,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 11.990020109907103,
+            "pre_height_sha256": "1574b0293e1edacbe0f32cffdfc1a20020a7f4d562a4c313101f7b0819edce0d",
+            "post_height_sha256": "7f7beef67622924de8c5e1432052a713a339f1926fa2d359757ce55db4e28211"
+          }
+        ]
+      },
+      {
+        "policy": "random",
+        "seed": 3484,
+        "episode_config": {
+          "max_attempts": 240,
+          "max_consecutive_failures": 5,
+          "max_total_failures": 20,
+          "actionable_height_m": 0.0005,
+          "target_mass_kg": 0.09238086653711162
+        },
+        "target_mass_kg": 0.09238086653711162,
+        "target_reached": true,
+        "terminal_reason": "target_reached",
+        "terminal_detail": null,
+        "metrics": {
+          "total_time_s": 118.31195831298828,
+          "total_scoops": 17,
+          "failure_rate": 0.0,
+          "total_distance_m": 8.32798945903778,
+          "total_loaded_mass_kg": 0.09303433149903893
+        },
+        "initial_height_sha256": "c90b9aea29c373d36cdf37de911a88affb9acf858dcaf3eff7fc25c7268c6f5e",
+        "final_height_sha256": "6a81cd04a39e66da1377bc00853610c2139d9ef7408726760e9b251336b715c4",
+        "steps": [
+          {
+            "attempt": 0,
+            "action": {
+              "x_m": 0.2225,
+              "y_m": 0.027499999999999997,
+              "dir_x": -0.9596023705736165,
+              "dir_y": 0.28135971706961804
+            },
+            "scooped_mass_kg": 0.007509410705586102,
+            "elapsed_time_s": 7.005215991787097,
+            "failed": false,
+            "travel_distance_m": 0.501303997946774,
+            "removed_volume_m3": 1.365347401015655e-05,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.22249999999999995,
+              0.027500000000000007
+            ],
+            "cumulative_mass_kg": 0.007509410705586102,
+            "cumulative_time_s": 7.005215991787097,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 0.501303997946774,
+            "pre_height_sha256": "c90b9aea29c373d36cdf37de911a88affb9acf858dcaf3eff7fc25c7268c6f5e",
+            "post_height_sha256": "3cfc7b6cee37aaca1373453e546d7e478676f53906e432d42a0936cbbf775c96"
+          },
+          {
+            "attempt": 1,
+            "action": {
+              "x_m": 0.1825,
+              "y_m": -0.0825,
+              "dir_x": 0.9789194541308398,
+              "dir_y": 0.20424667028908589
+            },
+            "scooped_mass_kg": 0.003966159700541629,
+            "elapsed_time_s": 7.068187996428785,
+            "failed": false,
+            "travel_distance_m": 0.5170469991071963,
+            "removed_volume_m3": 7.211199455530236e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.18955803812571556,
+              -0.07996117423882666
+            ],
+            "cumulative_mass_kg": 0.011475570406127731,
+            "cumulative_time_s": 14.073403988215881,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 1.0183509970539704,
+            "pre_height_sha256": "3cfc7b6cee37aaca1373453e546d7e478676f53906e432d42a0936cbbf775c96",
+            "post_height_sha256": "886d98a1280fb16fb960f990bc3717a3363040e84caea8d6fd14e82257bf809b"
+          },
+          {
+            "attempt": 2,
+            "action": {
+              "x_m": 0.1975,
+              "y_m": 0.0025000000000000022,
+              "dir_x": -0.2296547051154302,
+              "dir_y": -0.9732721697543524
+            },
+            "scooped_mass_kg": 0.007508890046085643,
+            "elapsed_time_s": 6.945253530032641,
+            "failed": false,
+            "travel_distance_m": 0.48631338250816036,
+            "removed_volume_m3": 1.3652527356519351e-05,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.19749999999999995,
+              0.0024999999999999996
+            ],
+            "cumulative_mass_kg": 0.018984460452213373,
+            "cumulative_time_s": 21.018657518248524,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 1.5046643795621306,
+            "pre_height_sha256": "886d98a1280fb16fb960f990bc3717a3363040e84caea8d6fd14e82257bf809b",
+            "post_height_sha256": "c5b56bb287bb1229a26721b873c02b2128d5845a5cbbda7646450055fc3c4561"
+          },
+          {
+            "attempt": 3,
+            "action": {
+              "x_m": 0.23249999999999998,
+              "y_m": -0.037500000000000006,
+              "dir_x": -0.012054115821831109,
+              "dir_y": 0.999927346506612
+            },
+            "scooped_mass_kg": 0.0075076289800502065,
+            "elapsed_time_s": 6.8126029162546935,
+            "failed": false,
+            "travel_distance_m": 0.45315072906367326,
+            "removed_volume_m3": 1.3650234509182194e-05,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.23249999999999985,
+              -0.03750000000000001
+            ],
+            "cumulative_mass_kg": 0.02649208943226358,
+            "cumulative_time_s": 27.831260434503218,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 1.957815108625804,
+            "pre_height_sha256": "c5b56bb287bb1229a26721b873c02b2128d5845a5cbbda7646450055fc3c4561",
+            "post_height_sha256": "3005ff748442fe773cd14bae26df6cf59aa39c2cc7122d52aa970899ab2f8c51"
+          },
+          {
+            "attempt": 4,
+            "action": {
+              "x_m": 0.23249999999999998,
+              "y_m": 0.037500000000000006,
+              "dir_x": 0.3759846341187696,
+              "dir_y": -0.9266258980335996
+            },
+            "scooped_mass_kg": 0.007510137867555408,
+            "elapsed_time_s": 6.9,
+            "failed": false,
+            "travel_distance_m": 0.47500000000000003,
+            "removed_volume_m3": 1.3654796122828015e-05,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.23250000000000004,
+              0.03749999999999999
+            ],
+            "cumulative_mass_kg": 0.034002227299818985,
+            "cumulative_time_s": 34.73126043450322,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 2.432815108625804,
+            "pre_height_sha256": "3005ff748442fe773cd14bae26df6cf59aa39c2cc7122d52aa970899ab2f8c51",
+            "post_height_sha256": "022ff55095835f5ee5c5bcfe6682db8444e36633dea58d7046aee1760b5e6dc5"
+          },
+          {
+            "attempt": 5,
+            "action": {
+              "x_m": 0.20750000000000002,
+              "y_m": 0.04250000000000001,
+              "dir_x": 0.7177724481672031,
+              "dir_y": 0.6962777553908065
+            },
+            "scooped_mass_kg": 0.007511363790159874,
+            "elapsed_time_s": 6.7019803902718555,
+            "failed": false,
+            "travel_distance_m": 0.4254950975679639,
+            "removed_volume_m3": 1.3657025073017953e-05,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.20749999999999996,
+              0.042499999999999996
+            ],
+            "cumulative_mass_kg": 0.04151359108997886,
+            "cumulative_time_s": 41.433240824775076,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 2.858310206193768,
+            "pre_height_sha256": "022ff55095835f5ee5c5bcfe6682db8444e36633dea58d7046aee1760b5e6dc5",
+            "post_height_sha256": "643aba3616e86f4600537311d6fd890a969cd455fe039e3ef53bac8b09fd0e1f"
+          },
+          {
+            "attempt": 6,
+            "action": {
+              "x_m": 0.21250000000000002,
+              "y_m": -0.0725,
+              "dir_x": 0.9990254341912846,
+              "dir_y": -0.04413821291030301
+            },
+            "scooped_mass_kg": 0.006543977829754177,
+            "elapsed_time_s": 7.060434577328854,
+            "failed": false,
+            "travel_distance_m": 0.5151086443322134,
+            "removed_volume_m3": 1.1898141508643958e-05,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.21494188657676458,
+              -0.07143717056878453
+            ],
+            "cumulative_mass_kg": 0.048057568919733035,
+            "cumulative_time_s": 48.49367540210393,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 3.3734188505259817,
+            "pre_height_sha256": "643aba3616e86f4600537311d6fd890a969cd455fe039e3ef53bac8b09fd0e1f",
+            "post_height_sha256": "39bb2b6504316236719cde426ea0832cca4033681f30e9c268bdd75a16016f26"
+          },
+          {
+            "attempt": 7,
+            "action": {
+              "x_m": 0.20750000000000002,
+              "y_m": 0.017500000000000016,
+              "dir_x": -0.6480074460797741,
+              "dir_y": 0.7616339999141114
+            },
+            "scooped_mass_kg": 0.006717630672155152,
+            "elapsed_time_s": 6.9605551275463995,
+            "failed": false,
+            "travel_distance_m": 0.49013878188659976,
+            "removed_volume_m3": 1.2213873949373004e-05,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.20747280949440977,
+              0.01634725816911191
+            ],
+            "cumulative_mass_kg": 0.05477519959188819,
+            "cumulative_time_s": 55.45423052965033,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 3.8635576324125815,
+            "pre_height_sha256": "39bb2b6504316236719cde426ea0832cca4033681f30e9c268bdd75a16016f26",
+            "post_height_sha256": "d7127019227228ce8bdf933ffe6138a0ca754fdb18a9ae17ae5d4e7deb088000"
+          },
+          {
+            "attempt": 8,
+            "action": {
+              "x_m": 0.2675,
+              "y_m": -0.0325,
+              "dir_x": 0.2644460236809812,
+              "dir_y": 0.9644004876395066
+            },
+            "scooped_mass_kg": 0.003299302942699414,
+            "elapsed_time_s": 6.912409987036266,
+            "failed": false,
+            "travel_distance_m": 0.4781024967590666,
+            "removed_volume_m3": 5.998732623089843e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.25787548561374796,
+              -0.03207990844630806
+            ],
+            "cumulative_mass_kg": 0.0580745025345876,
+            "cumulative_time_s": 62.3666405166866,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 4.341660129171649,
+            "pre_height_sha256": "d7127019227228ce8bdf933ffe6138a0ca754fdb18a9ae17ae5d4e7deb088000",
+            "post_height_sha256": "de17254880cc38901a4eba03c21ce3608cd45fb42f4ec5a605f99210a308885d"
+          },
+          {
+            "attempt": 9,
+            "action": {
+              "x_m": 0.1975,
+              "y_m": 0.057499999999999996,
+              "dir_x": 0.440172349536024,
+              "dir_y": 0.8979133046702985
+            },
+            "scooped_mass_kg": 0.006781834643372987,
+            "elapsed_time_s": 7.056070170039655,
+            "failed": false,
+            "travel_distance_m": 0.5140175425099138,
+            "removed_volume_m3": 1.2330608442496341e-05,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.1971351773280719,
+              0.0590959259570737
+            ],
+            "cumulative_mass_kg": 0.06485633717796059,
+            "cumulative_time_s": 69.42271068672626,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 4.855677671681562,
+            "pre_height_sha256": "de17254880cc38901a4eba03c21ce3608cd45fb42f4ec5a605f99210a308885d",
+            "post_height_sha256": "e8a95e2cf55d9aa2620aeef81fa44c43cc2aa905ad5ab6f1c82ced68e612bf5e"
+          },
+          {
+            "attempt": 10,
+            "action": {
+              "x_m": 0.2225,
+              "y_m": -0.0825,
+              "dir_x": -0.37516483498865116,
+              "dir_y": 0.9269581147969622
+            },
+            "scooped_mass_kg": 0.005073787579066272,
+            "elapsed_time_s": 7.168858506133116,
+            "failed": false,
+            "travel_distance_m": 0.542214626533279,
+            "removed_volume_m3": 9.22506832557504e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.22678315574231708,
+              -0.08214439086513373
+            ],
+            "cumulative_mass_kg": 0.06993012475702687,
+            "cumulative_time_s": 76.59156919285938,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 5.397892298214841,
+            "pre_height_sha256": "e8a95e2cf55d9aa2620aeef81fa44c43cc2aa905ad5ab6f1c82ced68e612bf5e",
+            "post_height_sha256": "b6147f449f88457dd873010b93093ca6fb0efb5c51342d09c61026725689e704"
+          },
+          {
+            "attempt": 11,
+            "action": {
+              "x_m": 0.1875,
+              "y_m": 0.0625,
+              "dir_x": -0.5720799742423396,
+              "dir_y": -0.8201978438589582
+            },
+            "scooped_mass_kg": 0.0026002251038797085,
+            "elapsed_time_s": 7.196657355607052,
+            "failed": false,
+            "travel_distance_m": 0.5491643389017631,
+            "removed_volume_m3": 4.727682007054015e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.1902581078977837,
+              0.06982583337528464
+            ],
+            "cumulative_mass_kg": 0.07253034986090658,
+            "cumulative_time_s": 83.78822654846644,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 5.947056637116604,
+            "pre_height_sha256": "b6147f449f88457dd873010b93093ca6fb0efb5c51342d09c61026725689e704",
+            "post_height_sha256": "1977a5dcfce34958faab0cb36268d2fdda222c17f4a472e70c8f2eb12fb96e0f"
+          },
+          {
+            "attempt": 12,
+            "action": {
+              "x_m": 0.2225,
+              "y_m": 0.10249999999999998,
+              "dir_x": -0.760360777578563,
+              "dir_y": 0.6495009529786103
+            },
+            "scooped_mass_kg": 0.005843677657516898,
+            "elapsed_time_s": 6.8126029162546935,
+            "failed": false,
+            "travel_distance_m": 0.45315072906367326,
+            "removed_volume_m3": 1.0624868468212542e-05,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.22236380556893878,
+              0.09850927057545932
+            ],
+            "cumulative_mass_kg": 0.07837402751842347,
+            "cumulative_time_s": 90.60082946472113,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 6.400207366180277,
+            "pre_height_sha256": "1977a5dcfce34958faab0cb36268d2fdda222c17f4a472e70c8f2eb12fb96e0f",
+            "post_height_sha256": "e76e291d4021f65fb3008a4f4e47ce7ed8ad9c9498f2783a3415df355e077ad6"
+          },
+          {
+            "attempt": 13,
+            "action": {
+              "x_m": 0.2175,
+              "y_m": -0.05249999999999999,
+              "dir_x": -0.9897056721976686,
+              "dir_y": -0.14311772224207964
+            },
+            "scooped_mass_kg": 0.005872364015348188,
+            "elapsed_time_s": 7.220322496770833,
+            "failed": false,
+            "travel_distance_m": 0.5550806241927082,
+            "removed_volume_m3": 1.067702548245125e-05,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.21768046347573364,
+              -0.048347542645208276
+            ],
+            "cumulative_mass_kg": 0.08424639153377166,
+            "cumulative_time_s": 97.82115196149196,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 6.955287990372986,
+            "pre_height_sha256": "e76e291d4021f65fb3008a4f4e47ce7ed8ad9c9498f2783a3415df355e077ad6",
+            "post_height_sha256": "c177050f73ed5076ef908c02811fc43d3e102677c8c66ce83da0e60760edcef3"
+          },
+          {
+            "attempt": 14,
+            "action": {
+              "x_m": 0.2425,
+              "y_m": -0.0625,
+              "dir_x": 0.31413829202361576,
+              "dir_y": -0.9493772345514113
+            },
+            "scooped_mass_kg": 0.0033003377797700666,
+            "elapsed_time_s": 6.70770329614269,
+            "failed": false,
+            "travel_distance_m": 0.42692582403567253,
+            "removed_volume_m3": 6.000614145036485e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.24801857359132173,
+              -0.06374808220672218
+            ],
+            "cumulative_mass_kg": 0.08754672931354172,
+            "cumulative_time_s": 104.52885525763466,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 7.382213814408658,
+            "pre_height_sha256": "c177050f73ed5076ef908c02811fc43d3e102677c8c66ce83da0e60760edcef3",
+            "post_height_sha256": "894421387b9d062dbc689793dc94ac2a172eb6b192be2e6b7b04cda198798e89"
+          },
+          {
+            "attempt": 15,
+            "action": {
+              "x_m": 0.23249999999999998,
+              "y_m": 0.037500000000000006,
+              "dir_x": 0.6700018118724163,
+              "dir_y": -0.7423594628531918
+            },
+            "scooped_mass_kg": 0.004086907146694169,
+            "elapsed_time_s": 7.0019950248448355,
+            "failed": false,
+            "travel_distance_m": 0.5004987562112089,
+            "removed_volume_m3": 7.430740266716671e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.23734566600431295,
+              0.03889202407965622
+            ],
+            "cumulative_mass_kg": 0.0916336364602359,
+            "cumulative_time_s": 111.53085028247949,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 7.882712570619867,
+            "pre_height_sha256": "894421387b9d062dbc689793dc94ac2a172eb6b192be2e6b7b04cda198798e89",
+            "post_height_sha256": "41b044a2732622e969023bcf32bc078b052b594972986e5023d32775ce8b2f95"
+          },
+          {
+            "attempt": 16,
+            "action": {
+              "x_m": 0.1875,
+              "y_m": 0.0325,
+              "dir_x": -0.1083735078946111,
+              "dir_y": -0.9941102467969117
+            },
+            "scooped_mass_kg": 0.0014006950388030337,
+            "elapsed_time_s": 6.781107702762748,
+            "failed": false,
+            "travel_distance_m": 0.4452769256906871,
+            "removed_volume_m3": 2.546718252369152e-06,
+            "failure_reason": null,
+            "actual_removed_centroid_xy_m": [
+              0.1781944623531288,
+              0.025346692548046765
+            ],
+            "cumulative_mass_kg": 0.09303433149903893,
+            "cumulative_time_s": 118.31195798524224,
+            "cumulative_failures": 0,
+            "cumulative_distance_m": 8.327989496310554,
+            "pre_height_sha256": "41b044a2732622e969023bcf32bc078b052b594972986e5023d32775ce8b2f95",
+            "post_height_sha256": "6a81cd04a39e66da1377bc00853610c2139d9ef7408726760e9b251336b715c4"
+          }
+        ]
+      }
+    ],
+    "comparison": [
+      {
+        "policy": "greedy_high",
+        "terminal_reason": "target_reached",
+        "target_reached": true,
+        "total_scoops": 13,
+        "total_time_s": 89.29138422012329,
+        "failure_rate": 0.0,
+        "total_distance_m": 6.0728460252285,
+        "total_loaded_mass_kg": 0.0943942191654962
+      },
+      {
+        "policy": "greedy_low",
+        "terminal_reason": "target_reached",
+        "target_reached": true,
+        "total_scoops": 37,
+        "total_time_s": 254.5261516571045,
+        "failure_rate": 0.0,
+        "total_distance_m": 17.381537348031998,
+        "total_loaded_mass_kg": 0.0930565241006662
+      },
+      {
+        "policy": "center_out",
+        "terminal_reason": "target_reached",
+        "target_reached": true,
+        "total_scoops": 27,
+        "total_time_s": 182.9600796699524,
+        "failure_rate": 0.0,
+        "total_distance_m": 11.990020155906677,
+        "total_loaded_mass_kg": 0.09448384742239946
+      },
+      {
+        "policy": "random",
+        "terminal_reason": "target_reached",
+        "target_reached": true,
+        "total_scoops": 17,
+        "total_time_s": 118.31195831298828,
+        "failure_rate": 0.0,
+        "total_distance_m": 8.32798945903778,
+        "total_loaded_mass_kg": 0.09303433149903893
+      }
+    ],
+    "all_bounded_terminal": true,
+    "all_target_reached": true,
+    "distinct_scoop_counts": true
+  },
+  "deterministic_sha256": "19a5e1bee4d074806508444652c6718cd8780eca34de2fa698329c1bd73a82ac",
+  "artifacts": {}
+}
