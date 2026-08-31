@@ -1,0 +1,153 @@
+{
+  "params": {
+    "mouth_open_mm": 58.0,
+    "mouth_closed_mm": 46.0,
+    "bowl_inner_r_mm": 21.0,
+    "shell_width_mm": 40.0,
+    "wall_mm": 2.0,
+    "lip_land_mm": 0.8,
+    "side_overlap_mm": 1.2,
+    "blade_thk_mm": 1.5,
+    "rail_bottom_z": [
+      -38.62,
+      -33.08
+    ],
+    "rail_top_z": [
+      -7.88,
+      -4.79
+    ],
+    "moving_holes_xz": [
+      [
+        50.0,
+        -6.6
+      ],
+      [
+        50.2,
+        -27.2
+      ],
+      [
+        50.0,
+        -31.6
+      ]
+    ],
+    "moving_hole_d": [
+      2.56,
+      3.75,
+      2.68
+    ],
+    "fixed_holes_zy": [
+      [
+        102.9,
+        -13.2
+      ],
+      [
+        102.9,
+        12.0
+      ],
+      [
+        116.1,
+        -0.6
+      ]
+    ],
+    "fixed_hole_d": [
+      2.71,
+      2.71,
+      2.68
+    ],
+    "bolt_span_mm": 25.0,
+    "bolt_clear_d_mm": 3.4,
+    "plate_thk_mm": 3.0,
+    "plate_len_mm": 14.0,
+    "wedge_deg": 15.0,
+    "density_g_cm3": 1.27,
+    "seg_n": 20,
+    "tool_mass_target_g": 35.0,
+    "tool_mass_max_g": 50.0,
+    "fill_factor": 0.7,
+    "bulk_density_g_cm3": 0.55,
+    "pellet_d_max_mm": 5.0,
+    "jaw_max_open_mm": 80.0,
+    "jaw_max_angle_deg": 89.0,
+    "closed_plate_gap_mm": 4.05
+  },
+  "shells": {
+    "fixed": {
+      "pieces": 31,
+      "volume_mm3": 10209.1,
+      "mass_g": 12.97,
+      "bbox_mm": [
+        46.0,
+        24.0,
+        43.0
+      ]
+    },
+    "moving": {
+      "pieces": 31,
+      "volume_mm3": 10209.1,
+      "mass_g": 12.97,
+      "bbox_mm": [
+        46.0,
+        24.0,
+        43.0
+      ]
+    }
+  },
+  "gates": {
+    "all_pieces_convex": {
+      "pass": true,
+      "violations": []
+    },
+    "tool_mass_under_max": {
+      "pass": true,
+      "value_g": 25.93,
+      "limit_g": 50.0
+    },
+    "open_close_ratio_in_real_band": {
+      "pass": true,
+      "value": 1.261,
+      "band": [
+        1.22,
+        1.31
+      ]
+    },
+    "particle_ratio_min10": {
+      "pass": true,
+      "value": 11.6
+    },
+    "fits_in_measured_jaw_stroke": {
+      "pass": true,
+      "headroom_mm": 22.0
+    }
+  },
+  "derived": {
+    "bowl_geometric_cm3": 27.71,
+    "load_per_scoop_cm3": 19.4,
+    "load_per_scoop_g": 10.67,
+    "tool_mass_g": 25.93,
+    "open_close_ratio": 1.261,
+    "particle_ratio_W_over_d": 11.6,
+    "jaw_headroom_mm": 22.0
+  },
+  "measure_pending": [
+    "wedge_deg",
+    "bulk_density_g_cm3"
+  ],
+  "measure_confirmed": {
+    "blade_thk_mm": "2026-08-27 실물 자 측정 = CAD 1.5 일치"
+  },
+  "collar_coupon": {
+    "rev": "v1 (볼트 체결)",
+    "bolt_span_mm": 25.0,
+    "bolt_clear_d_mm": 3.4,
+    "plate_thk_mm": 3.0,
+    "plate_len_mm": 14.0,
+    "mass_g": 1.89,
+    "bbox_mm": [
+      14.0,
+      37.0,
+      3.0
+    ],
+    "purpose": "기존 M2.5 구멍 25mm 스팬 적합성 + 1.5mm 판재 볼트 체결 시 변형·유격 검증",
+    "v0_result": "들어가나 헐겁고 미끄러짐 — 원인: 조가 통판이 아니라 프레임(실물 물림면 높이 5.54mm 레일 1개 = 가정의 1/6), 그리고 쿠폰에 볼트 구멍 부재로 마찰만 시험됨"
+  }
+}

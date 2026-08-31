@@ -11,8 +11,12 @@
 
 **상태 ≠ 규칙**: 이 파일에는 규칙만 둔다. 진행 상태·실험 결과의 인계는
 `START_HERE.md` → `claudedocs/DECISIONS.md` → `claudedocs/session_*.md`로만 한다.
-**같은 프로젝트에서 Claude와 Codex(또는 Cursor) 편집 세션 동시 실행 금지** — 한 도구의
-세션이 state doc 갱신으로 끝난 뒤 다른 도구를 시작한다.
+**상태 원장 소유권은 배타적이다** — `START_HERE.md`, `claudedocs/{DECISIONS.md,
+DECISIONS_ACTIVE.md, EXPERIMENT_LEDGER.md, session_*.md, relay/}`를 쓰는 세션은 한 번에 하나뿐이다.
+소유 세션이 state doc 갱신 + relay 인계로 끝난 뒤 다음 세션이 원장을 넘겨받는다.
+worktree가 분리된 코드 편집·분석·읽기 전용 작업은 도구가 달라도 동시 실행해도 된다
+(원장은 worktree로 격리되지 않는다 — `DECISIONS.md`는 Dxxx 순번 append, `START_HERE.md`는
+통째 overwrite라 사본이 갈라지면 머지가 아니라 유실이 된다).
 세션을 닫는 도구는 `claudedocs/relay/from_<자기 도구>.md`를 **덮어써** 다음 도구에 인계한다
 (Claude→`from_claude.md`, Codex/Cursor→`from_codex.md`). 상태 정본은 `START_HERE.md`이며
 relay에는 베끼지 않는다 — 만진 파일·건드리지 말 것·함정·승인 대기만 (규약은 파일 §0).
