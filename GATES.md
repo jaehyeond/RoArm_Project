@@ -1,6 +1,6 @@
 # Gates: DEME pellet pile settling environment
 
-OWNS: sim_deme_pile.py, GATES.md, claudedocs/runtime_logs/sim_deme/pile_*
+OWNS: sim_deme_pile.py, sim_deme_scoop.py, GATES.md, claudedocs/runtime_logs/sim_deme/pile_*, claudedocs/runtime_logs/sim_deme/scoop_v0_fixed_path_v1_*, claudedocs/runtime_logs/sim_deme/sim_deme_npz_storage_policy_audit.json
 
 Scope: Build and verify a seeded, parameterized DEME pellet-pile settling environment with exact inputs, pellet-scale repeat agreement, and reusable SI-unit output.
 
@@ -38,3 +38,38 @@ Scope: Build and verify a seeded, parameterized DEME pellet-pile settling enviro
   CHECK: /home/cgxr/miniconda3/envs/isaaclab/bin/python sim_deme_pile.py --validate-rerun-contract claudedocs/runtime_logs/sim_deme/pile_practical_targetridge_d4p16_n18796_seed460_rerun_validation.json claudedocs/runtime_logs/sim_deme/pile_practical_targetridge_d4p16_n18796_seed460_inspection.json
   EXPECT: RERUN_OBSERVABILITY_OK visual_inspection=complete
   EVIDENCE: exit=0; shell=/bin/sh; cwd=/home/cgxr/Documents/Robotics/RoArm_Project; path=7a43578904ba/37 entries; EXPECT=matched; output-sha256=3763b87826ebb82c08f0805f15e87aabdc5f0dad5b6cb1cf6621fc323841d2f6; output-bytes=50
+
+- [ ] G7: the fixed-path scoop contract validates both source shell meshes and documents SI arrays, phases, and reaction-force definitions
+  CHECK: /home/cgxr/miniconda3/envs/roarm/bin/python sim_deme_scoop.py --validate-assets --describe-format
+  EXPECT: SCOOP_FORMAT_AND_ASSETS_OK
+  EVIDENCE: pending
+
+- [ ] G8: a 512-particle end-to-end scoop smoke artifact has finite states, complete phases, contact samples, and a post-scoop roarm-heightmap-v1 output
+  CHECK: /home/cgxr/miniconda3/envs/roarm/bin/python sim_deme_scoop.py --validate-output claudedocs/runtime_logs/sim_deme/scoop_v0_fixed_path_v1_smoke_n512_seed460.npz --expected-n 512
+  EXPECT: SCOOP_OUTPUT_VALIDATION_OK count=1
+  EVIDENCE: pending
+
+- [ ] G9: the practical 18,796-particle scoop reports retained count and mass, measured closure resistance, contract-compliant heightmap, and measured wall-clock cost
+  CHECK: /home/cgxr/miniconda3/envs/roarm/bin/python sim_deme_scoop.py --validate-output claudedocs/runtime_logs/sim_deme/scoop_v0_fixed_path_v1_practical_n18796_seed460.npz --expected-n 18796 --require-practical
+  EXPECT: PRACTICAL_SCOOP_OK n=18796
+  EVIDENCE: pending
+
+- [ ] G10: the 3,000-trial budget is recomputed from the measured mesh-plus-trajectory wall clock without small-N linear extrapolation
+  CHECK: /home/cgxr/miniconda3/envs/roarm/bin/python sim_deme_scoop.py --validate-budget claudedocs/runtime_logs/sim_deme/scoop_v0_fixed_path_v1_practical_n18796_seed460.timing.json
+  EXPECT: SCOOP_BUDGET_OK trials=3000 method=measured_practical_run
+  EVIDENCE: pending
+
+- [ ] G11: the scoop implementation compiles while protected pile, Track-A, state-ledger, relay, and gitignore files remain untouched
+  CHECK: /home/cgxr/miniconda3/envs/roarm/bin/python -m py_compile sim_deme_scoop.py && git diff --exit-code -- .gitignore scoop_grab_v1_design.py sim_scripts/p37_g2_grab_v1_attach_probe.py START_HERE.md claudedocs/DECISIONS.md claudedocs/DECISIONS_ACTIVE.md claudedocs/EXPERIMENT_LEDGER.md claudedocs/LEDGER_RECENT.md claudedocs/relay/from_claude.md sim_deme_pile.py && printf 'SCOOP_PROTECTED_FILES_OK\n'
+  EXPECT: SCOOP_PROTECTED_FILES_OK
+  EVIDENCE: pending
+
+- [ ] G12: the practical scoop has a footer-verified full-trajectory RRD, fixed RBL, exact entities and timelines, headless screenshot, and recorded visual inspection
+  CHECK: /home/cgxr/miniconda3/envs/isaaclab/bin/python sim_deme_scoop.py --validate-rerun-contract claudedocs/runtime_logs/sim_deme/scoop_v0_fixed_path_v1_practical_n18796_seed460_rerun_validation.json claudedocs/runtime_logs/sim_deme/scoop_v0_fixed_path_v1_practical_n18796_seed460_inspection.json
+  EXPECT: SCOOP_RERUN_OBSERVABILITY_OK visual_inspection=complete
+  EVIDENCE: pending
+
+- [ ] G13: the NPZ storage audit measures all 14 current DEME artifacts and records a narrow git-exception proposal without modifying gitignore
+  CHECK: /home/cgxr/miniconda3/envs/roarm/bin/python sim_deme_scoop.py --validate-storage-audit claudedocs/runtime_logs/sim_deme/sim_deme_npz_storage_policy_audit.json
+  EXPECT: NPZ_STORAGE_AUDIT_OK current_count=14 recommendation=narrow_git_exception_pending_approval
+  EVIDENCE: pending
