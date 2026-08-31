@@ -40,6 +40,31 @@ D462(기구 전환)·D463(구동 전환)을 냈다. 물리 0, 로봇 0, 펠릿 0
 - `.claude/settings.local.json.bak_20260831_pre_orca_allow` — 되돌리기 경로. 커밋 대상 아님.
 - 원장(`START_HERE`·`DECISIONS*`·`session_*`·이 파일) — 코디네이터 배타 소유.
 
+**🔴 진행 중인 worktree 3개 — 다음 세션이 이어받아야 한다**
+
+Orca 로 만들었다(`orca-ide worktree create`). `git worktree add` 를 쓰면 Orca 사이드바에
+안 뜬다(74th 실측). 경로가 **repo 밖**이라 master 작업 트리는 깨끗하다.
+
+| 트랙 | 경로 | 브랜치 | 담당 | run/dispatch |
+|---|---|---|---|---|
+| P1 | `~/orca/workspaces/RoArm_Project/deme-force` | `jaehyeond/deme-force` | DEME 반력 경로 (메시 2매+Track 코어덤프 해결) | `run_f9ebfee2cd95` / `ctx_4ac4f9ed55dc` |
+| P2b | `~/orca/workspaces/RoArm_Project/kinect-hm` | `jaehyeond/kinect-hm` | 순차 결정 루프 (관측→결정→스쿱→재관측) | `ctx_4c6051990efa` |
+| P3 | `~/orca/workspaces/RoArm_Project/pellet-model` | `jaehyeond/pellet-model` | 펠릿 클럼프 + 안식각 하네스 | `ctx_2899b8cd0cd1` |
+
+이어받는 절차:
+```
+orca-ide worktree list --json                                   # 4개 보여야 정상
+orca-ide orchestration run-use --id run_f9ebfee2cd95 --from <내 터미널 handle>
+orca-ide orchestration worker-list --json                       # 상태 확인
+orca-ide orchestration check --terminal <handle> --peek --json  # 미확인 보고
+# 결과 수령 후: 각 worktree 에서 커밋 -> master 에서 merge <브랜치>
+```
+⚠️ **워커 보고를 곧이곧대로 믿지 마라.** 74th 에서 "9/9 PASS" 보고가 실제 `design.json` 은
+9/10(1 FAIL) 이었다. 각 트랙 성공 기준을 직접 재확인할 것:
+- P1: 폐합 반력이 **0 이 아닌 값**으로 읽히나 + 물성 임시값을 `non_claims` 에 적었나
+- P2b: **정책에 따라 총 횟수가 실제로 달라지나** (안 달라지면 루프/실행기가 틀린 것)
+- P3: **안식각이 형상에 따라 달라지나** (구 < clump2 < clump3 경향)
+
 **함정** (전부 이번 세션 실측)
 
 1. 🔴 **`orca-ide worktree create` 를 쓸 것. `git worktree add` 를 쓰면 Orca 사이드바에 안 뜬다.**
