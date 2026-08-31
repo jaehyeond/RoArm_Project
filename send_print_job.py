@@ -48,27 +48,41 @@ print(f"  [{'OK ' if ok2 else 'X  '}] 2. 아티팩트 무결성  {art.name} ({jo
 cfg = bp.load_config(); cfg["printer"]["ip"] = job["printer"]["ip"]
 p = bp.P1SPrinter(config=cfg)
 state = None
+live = {}
 try:
     p.mqtt_connect()
-    p.mqtt_pushall(wait=6)
+    msgs = p.mqtt_pushall(wait=6)
     st = p.mqtt_status(wait=5) or {}
     state = st.get("state")
+    # mqtt_status 는 gcode_state 만 준다. 현재 가동 여부는 원시 필드에 있다.
+    for m in msgs:
+        pr = m.get("print", {})
+        for k in ("print_type", "hms", "print_error", "stg_cur"):
+            if k in pr:
+                live[k] = pr[k]
     ok3 = True
 except Exception as e:
     ok3 = False
     fail.append(f"MQTT 접속 실패: {e}")
 print(f"  [{'OK ' if ok3 else 'X  '}] 3. 프린터 도달")
 
-# 덮어쓰면 안 되는 상태를 **열거**한다. FINISH는 직전 출력이 끝난 터미널 상태라 안전하고,
-# FAILED는 원인 확인 전 새 출력을 걸면 안 되므로 차단한다.
-SAFE_STATES = {"IDLE", "FINISH"}
+# 🔴 `gcode_state` 는 **지난 작업의 결말**이지 현재 상태가 아니다. 새 작업이 들어오기 전까지
+# FAILED/FINISH 가 계속 걸려 있다. 2026-09-01: 프린터가 실제로 대기 중인데 FAILED 가 남아
+# 있어 전송이 잘못 차단됐다. 현재 가동 여부는 print_type/hms/print_error 로 판정한다.
 BUSY_STATES = {"RUNNING", "PAUSE", "PREPARE", "SLICING"}
-ok4 = state in SAFE_STATES
+busy = (state in BUSY_STATES) or (str(live.get("print_type", "")).lower() == "printing")
+hms = live.get("hms", [])
+err = live.get("print_error", 0)
+ok4 = ok3 and not busy and not hms and not err
 if ok3 and not ok4:
-    why = ("진행 중 작업을 덮어쓰지 않는다" if state in BUSY_STATES
-           else f"알 수 없거나 실패 상태 — 원인 확인 전 새 출력 금지")
-    fail.append(f"프린터 상태 {state} 는 전송 불가 — {why} (허용: {sorted(SAFE_STATES)})")
-print(f"  [{'OK ' if ok4 else 'X  '}] 4. 프린터 전송 가능 상태  (state={state})")
+    if busy:
+        fail.append(f"프린터 가동 중 (state={state}, print_type={live.get('print_type')}) — 진행 중 작업을 덮어쓰지 않는다")
+    if hms:
+        fail.append(f"프린터 알림 {len(hms)}건 미해제 (hms={hms}) — 해제 전 새 출력 금지")
+    if err:
+        fail.append(f"print_error={err} — 원인 확인 전 새 출력 금지")
+print(f"  [{'OK ' if ok4 else 'X  '}] 4. 프린터 전송 가능 상태  "
+      f"(직전결말={state} · 현재={live.get('print_type')} · hms={len(hms)} · err={err})")
 
 # 5) 사용자 승인
 print(f"  [{'OK ' if a.yes else '-  '}] 5. 사용자 시작 신호 (--yes)")
