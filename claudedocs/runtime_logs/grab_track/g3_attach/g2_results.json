@@ -1,0 +1,293 @@
+{
+  "probe": "p37_g2_grab_v1_attach",
+  "gates": {
+    "G1_hinge_parallel_to_servo_axis": {
+      "pass": true,
+      "abs_dot": 1.0,
+      "hinge_in_link5": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "servo_axis": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "why": "스퍼 기어는 축이 평행해야 물린다. 어긋나면 구동이 성립하지 않는다"
+    },
+    "G2_bracket_bolt_axis_through_blade": {
+      "pass": true,
+      "abs_dot_with_link5_X": 1.0,
+      "bolt_axis_in_link5": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "blade_normal": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "why": "볼트는 두께 1.51 mm 블레이드를 관통해야 한다. 구멍 축이 블레이드 법선과 어긋나면 볼트가 판재를 뚫고 지나갈 수 없다",
+      "root_cause_if_fail": "build_bracket 이 plate_with_holes 로 구멍을 **로컬 Z**(= 힌지축)에 뚫는다. 힌지축과 볼트축은 90도 달라야 한다"
+    },
+    "G3_bracket_holes_match_blade": {
+      "pass": true,
+      "max_err_mm": 0.0,
+      "blade_holes_yz": [
+        [
+          -13.34,
+          83.46
+        ],
+        [
+          -13.34,
+          102.9
+        ],
+        [
+          11.85,
+          83.46
+        ],
+        [
+          11.85,
+          102.9
+        ]
+      ],
+      "bracket_holes_yz": [
+        [
+          -13.34,
+          83.46
+        ],
+        [
+          -13.34,
+          102.9
+        ],
+        [
+          11.85,
+          83.46
+        ],
+        [
+          11.85,
+          102.9
+        ]
+      ]
+    },
+    "G4_no_arm_collision_through_sweep": {
+      "pass": true,
+      "first_collision_deg": null,
+      "min_clearance_mm": 0.024,
+      "min_at_deg": 7.74,
+      "closest_piece": "R:hub_05",
+      "measurement": "1 mm 복셀 하한이 1 mm 밑이면 link5 표면점구름으로 정확히 다시 잰다 — 하한을 값으로 읽으면 안 된다",
+      "angles_deg": [
+        0.0,
+        1.93,
+        3.87,
+        5.8,
+        7.74,
+        9.67,
+        11.61,
+        13.54,
+        15.48,
+        17.41,
+        19.35,
+        21.28,
+        23.22,
+        25.15,
+        27.09,
+        29.02,
+        30.96,
+        32.89,
+        34.83,
+        36.76,
+        38.7,
+        40.63,
+        42.57,
+        44.5
+      ],
+      "clearance_mm": [
+        0.981,
+        0.838,
+        0.7,
+        0.567,
+        0.024,
+        0.131,
+        0.201,
+        0.091,
+        0.486,
+        0.616,
+        0.75,
+        0.89,
+        0.927,
+        0.786,
+        0.65,
+        0.519,
+        0.063,
+        0.172,
+        0.16,
+        0.051,
+        0.533,
+        0.665,
+        0.802,
+        0.944
+      ]
+    },
+    "G6_bracket_drive_clear_of_arm": {
+      "pass": true,
+      "min_clearance_mm": 0.5,
+      "closest_piece": "bracket:spine_cross",
+      "fastening_face_pieces": [
+        {
+          "piece": "bracket:bolt_plate_0",
+          "max_link5_x_mm": -11.54,
+          "blade_outer_face_x_mm": -11.54,
+          "penetration_mm": 0.0
+        },
+        {
+          "piece": "bracket:bolt_plate_1",
+          "max_link5_x_mm": -11.54,
+          "blade_outer_face_x_mm": -11.54,
+          "penetration_mm": 0.0
+        },
+        {
+          "piece": "bracket:bolt_plate_2",
+          "max_link5_x_mm": -11.54,
+          "blade_outer_face_x_mm": -11.54,
+          "penetration_mm": 0.0
+        },
+        {
+          "piece": "bracket:bolt_plate_3",
+          "max_link5_x_mm": -11.54,
+          "blade_outer_face_x_mm": -11.54,
+          "penetration_mm": 0.0
+        },
+        {
+          "piece": "bracket:bolt_plate_4",
+          "max_link5_x_mm": -11.54,
+          "blade_outer_face_x_mm": -11.54,
+          "penetration_mm": 0.0
+        },
+        {
+          "piece": "bracket:bolt_plate_5",
+          "max_link5_x_mm": -11.54,
+          "blade_outer_face_x_mm": -11.54,
+          "penetration_mm": 0.0
+        },
+        {
+          "piece": "bracket:bolt_plate_6",
+          "max_link5_x_mm": -11.54,
+          "blade_outer_face_x_mm": -11.54,
+          "penetration_mm": 0.0
+        }
+      ],
+      "fastening_max_penetration_mm": 0.0,
+      "fastening_rule": "접촉 허용 / 관통 금지 (허용 0.02 mm)",
+      "why": "볼트판은 블레이드에 닿아야 정상이다. 접촉을 충돌로 세면 안 되지만 판재를 뚫고 지나가서도 안 된다. 스파인/보스/링크는 종전대로 여유 >= 0",
+      "measurement": "1 mm 복셀은 보수적 하한(편향 0.866 mm)이므로 음수가 나온 조각만 link5 표면점구름(정점 + 균일샘플 20만)으로 정확히 다시 잰다. 조각이 볼록·watertight 라 signed_distance 가 정확하다",
+      "definition_change": "D463 — 이전 판은 접촉을 FAIL 로 셌다(-0.787 mm). 복셀 피치 1.0 의 반대각선이 0.866 이므로 그 값은 '표면에 닿음'을 뜻했지 관통이 아니었다"
+    },
+    "G7_linkage_reaches_and_clears": {
+      "pass": true,
+      "servo_axis_consistent": true,
+      "servo_axis_max_err_mm": 0.0,
+      "axis_distance_mm": 77.8111,
+      "linkage_ground_len_mm": 77.8111,
+      "ground_len_err_mm": 3e-05,
+      "servo_deg_range": [
+        0.0,
+        89.0
+      ],
+      "shell_deg_range": [
+        0.0,
+        44.5
+      ],
+      "mouth_mm_range": [
+        0.0,
+        58.0051
+      ],
+      "crank_servo_r_mm": 21.0,
+      "rod_len_mm": 50.178,
+      "crank_shell_r_mm": 39.9581,
+      "trans_angle_out_deg": [
+        77.334,
+        129.466
+      ],
+      "trans_angle_in_deg": [
+        49.966,
+        131.334
+      ],
+      "sweep_min_clearance_to_link5_mm": 0.964,
+      "sweep_closest_piece": "servocrank_plate_02",
+      "sweep_closest_at_servo_deg": 44.5,
+      "why": "기어 직결은 축간거리 19.5 mm 를 요구해 58.3 mm 부족했다(D463). 링크는 거리 제약이 없으므로 검사할 것은 '77.81 mm 를 실제로 건너 셸을 0~44.5도 돌리는가' 와 '그 사이 팔에 안 닿는가' 다",
+      "supersedes": "G7_drive_gear_meshes_on_servo_axis (기어 축간거리 검사)"
+    },
+    "G8_clear_of_link4": {
+      "pass": true,
+      "min_clearance_mm": 14.326,
+      "closest_piece": "linkage:servocrank_plate_00",
+      "why": "link5 만이 아니라 바로 앞 링크와도 안 닿아야 손목 롤이 자유롭다"
+    },
+    "G9_clear_of_stock_jaw": {
+      "pass": true,
+      "min_clearance_mm": 0.081,
+      "closest_piece": "shellR:hub_02",
+      "closest_at_servo_deg": 6.9222,
+      "excluded": "servocrank_* / pin1 (순정 조에 볼트로 체결되는 부품)",
+      "why": "D462 §5·§7 대로 순정 가동 조는 볼트 분리만 가능한 상태로 남고 서보 인출점으로 쓴다. 조가 남아 도는 이상 그 스윕을 검사해야 한다"
+    },
+    "G5_sweep_volume_below_enclosed": {
+      "pass": true,
+      "sweep_cm3": 57.06,
+      "enclosed_cm3": 70.34,
+      "why": "닫는 동안 립이 쓸고 가는 부피. 담을 부피보다 지나치게 크면 재료를 밀어내기만 한다"
+    }
+  },
+  "evidence": {
+    "link5_voxel_pitch_mm": 1.0,
+    "link5_solid_fraction_of_hull": 0.386,
+    "link5_surface_cloud_points": 206926,
+    "stock_jaw_kept": true,
+    "stock_jaw_bolt_holes_yz": [
+      [
+        -12.66,
+        82.98
+      ],
+      [
+        12.45,
+        82.98
+      ]
+    ],
+    "stock_jaw_blade_inner_x_mm": -6.0,
+    "lip_sweep_volume_cm3": 57.06,
+    "enclosed_volume_cm3": 70.34,
+    "placement_T_link5": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        -13.54
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        -0.745
+      ],
+      [
+        0.0,
+        -1.0,
+        0.0,
+        125.18
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ]
+  },
+  "all_gates_pass": true,
+  "verdict": "G2_ATTACH_OK"
+}

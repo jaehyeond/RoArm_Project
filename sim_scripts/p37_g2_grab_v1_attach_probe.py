@@ -1,13 +1,26 @@
-"""p37 / g2 — 그랩 v1 을 RoArm-M3 link5 에 실제로 붙여 폐합 스윕 검증 (D462).
+"""p37 / g2 — 그랩 v1 을 RoArm-M3 link5 에 실제로 붙여 폐합 스윕 검증 (D462·D463).
 
 무엇을 답하나
     1. 배치: 그랩 로컬 프레임 -> link5 프레임 변환이 물리 제약 3개를 만족하는가
-         (a) 스퍼 기어는 축이 평행해야 물린다
-         (b) 구동 기어는 순정 조 스텁에 붙으므로 축 = 서보축 = link5 Y (0,1,0)
+         (a) 셸 기어쌍은 축이 평행해야 물린다
+         (b) 구동 인출은 순정 가동 조이므로 축 = 서보축 = link5 Y (0,1,0)
          (c) 브래킷 볼트는 고정 조 블레이드(x -11.5~-10, t=1.5)를 관통 -> 축 = link5 X
     2. 브래킷 볼트 구멍이 블레이드의 기존 4구멍(D462 §1)과 실제로 정렬하는가
     3. 셸 0 -> 44.5도 스윕 중 팔(link5)과 충돌하는가. 처음 닿는 각은?
     4. 립이 쓸고 가는 부피 = 닫을 때 밀어내야 할 펠릿 양
+
+D463 개정 (74th, 기어 직결 -> 4절 링크)
+---------------------------------------
+G6 **게이트 정의 정정**: 브래킷 볼트판은 고정 조 블레이드에 **닿는 것이 정상**이다
+   (볼트로 물리는 면이다). 이전 판은 접촉(-0.787 mm, 복셀 반대각선 0.866 안쪽)을
+   충돌로 세어 FAIL 을 냈다 — 형상 결함이 아니라 게이트 오탐이었다.
+   정정: 체결면 조각은 **접촉 허용 / 관통 금지**(블레이드 바깥면을 넘지 않을 것),
+   나머지 조각은 종전대로 여유 >= 0.
+G7 **검사 대상 교체**: 더 이상 기어 축간거리를 보지 않는다 (D463 이 기어 직결을 기각).
+   대신 **링크 도달성** — 설계가 쓴 서보축이 link5 실측 축과 같은가, 서보 0~89도가
+   셸 0~44.5도를 내는가, 링크 몸체가 스윕 전 구간에서 팔과 안 닿는가.
+G9 **신규**: 서보 크랭크를 순정 가동 조에 볼트로 물리므로 **조는 떼지 않고 남는다**.
+   그 조가 0~89도 도는 동안 셸·브래킷·로드·셸크랭크와 안 닿아야 한다.
 
 입자 물리는 쓰지 않는다. 순수 기하다.
 사용:  python sim_scripts/p37_g2_grab_v1_attach_probe.py [출력디렉터리]
@@ -20,7 +33,7 @@ import trimesh
 
 REPO = Path(__file__).resolve().parent.parent
 OUT = Path(sys.argv[1] if len(sys.argv) > 1
-           else REPO / "claudedocs/runtime_logs/grab_track/g2_attach")
+           else REPO / "claudedocs/runtime_logs/grab_track/g3_attach")
 URDF_MESH = REPO / "local_assets/roarm_m3/urdf/meshes"
 
 spec = importlib.util.spec_from_file_location("gv1", REPO / "scoop_grab_v1_design.py")
@@ -36,6 +49,8 @@ BLADE_HOLES_YZ = [(-13.34, 83.46), (11.85, 83.46),
                   (-13.34, 102.90), (11.85, 102.90)]     # 4볼트 사각형
 GRIPPER_AXIS = np.array([0.0, 1.0, 0.0])                 # 서보 개폐축 (link5 프레임)
 GRIPPER_ORIGIN = np.array([0.0, 18.821, 52.035])
+# link5_to_gripper_link 조인트 원점 (URDF 원문: xyz 0 0.018821 0.052035, rpy -1.5708 -1.5708 0)
+GRIPPER_JOINT_RPY = (-1.5708, -1.5708, 0.0)
 
 
 def load_mm(name):
@@ -122,6 +137,73 @@ def sample_mesh(m, n=220):
         return np.asarray(m.vertices, float)
 
 
+def rpy_mat(r, p, y):
+    """고정축 Rz@Ry@Rx (URDF 규약)."""
+    Rx = np.array([[1, 0, 0], [0, math.cos(r), -math.sin(r)], [0, math.sin(r), math.cos(r)]])
+    Ry = np.array([[math.cos(p), 0, math.sin(p)], [0, 1, 0], [-math.sin(p), 0, math.cos(p)]])
+    Rz = np.array([[math.cos(y), -math.sin(y), 0], [math.sin(y), math.cos(y), 0], [0, 0, 1]])
+    return Rz @ Ry @ Rx
+
+
+def jaw_in_link5():
+    """순정 가동 조(gripper_link)를 서보각 0 에서 link5 프레임에 놓은 메쉬."""
+    m = load_mm("gripper_link.stl")
+    T = np.eye(4)
+    T[:3, :3] = rpy_mat(*GRIPPER_JOINT_RPY)
+    T[:3, 3] = GRIPPER_ORIGIN
+    m.apply_transform(T)
+    return m
+
+
+def surface_cloud(mesh, n=200000):
+    """메쉬 표면을 조밀하게 점으로 깐다 (정점 + 균일 표면 샘플). 간격 ~0.3 mm."""
+    s, _ = trimesh.sample.sample_surface(mesh, n)
+    return np.vstack([np.asarray(mesh.vertices, float), s])
+
+
+def exact_clearance(piece, cloud):
+    """볼록 조각 <-> 팔 표면점구름의 **정확한** 여유(mm). 음수면 관통 깊이.
+
+    ⚠️ 왜 필요한가: 1 mm 복셀 점유는 편향이 pitch*sqrt(3)/2 = 0.866 mm 인
+       **보수적 하한**이다. 표면에 정확히 닿아 있어도 -0.866 까지 내려간다. 즉
+       음수 = "간섭한다" 가 아니라 "이 해상도로는 판정 못 한다" 는 뜻이다.
+       D463 이 정정한 G6 의 -0.787 도, 스파인 수정 후의 -0.637 도 이 편향이었다.
+       조각은 볼록·watertight 이므로 `contains`/`signed_distance` 가 정확하다.
+    """
+    lo, hi = piece.bounds
+    m = 3.0
+    sel = cloud[np.all((cloud >= lo - m) & (cloud <= hi + m), axis=1)]
+    if len(sel) == 0:
+        return float(np.linalg.norm(np.clip(lo - cloud, 0, None)
+                                    + np.clip(cloud - hi, 0, None), axis=1).min())
+    # signed_distance: 내부 양수 / 외부 음수. -max 가 곧 (여유 or -관통깊이) 다.
+    return float(-piece.nearest.signed_distance(sel).max())
+
+
+def clearance_to(mesh_parts, tree, pitch, lo, hi, cloud=None):
+    """조각 리스트 -> (최소 여유, 가장 가까운 조각 이름).
+
+    1단계 = AABB 분리거리(정확) / 복셀 하한(보수적, 편향 최대 pitch*sqrt(3)/2).
+    2단계 = 하한이 편향폭 안(< 1 mm)인 조각만 표면점구름으로 **정확히** 다시 잰다.
+            하한이 양수여도 다시 재는 이유: 편향 때문에 실제 여유가 최대 0.87 mm
+            더 클 수 있어, 그대로 보고하면 여유를 과소평가한다.
+    """
+    worst, who = np.inf, None
+    refine_below = 1.0
+    for m, nm in mesh_parts:
+        mlo, mhi = m.bounds
+        sep = max((lo - mhi).max(), (mlo - hi).max())
+        if sep >= 0:
+            val = sep
+        else:
+            val = penetration(sample_mesh(m), tree, pitch)
+            if val < refine_below and cloud is not None:
+                val = exact_clearance(m, cloud)
+        if val < worst:
+            worst, who = val, nm
+    return float(worst), who
+
+
 # ─────────────────────────────────────────────────────────────────────────
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
@@ -132,7 +214,7 @@ def main():
     sL, nL = G.build_shell(P, -1)
     sR, nR = G.build_shell(P, +1)
     br, nB = G.build_bracket(P)
-    dr, nD, cd = G.build_drive(P)
+    dr, nD, lk = G.build_linkage(P)
 
     def place(parts):
         out = []
@@ -180,67 +262,128 @@ def main():
     # G4 스윕: 셸이 link5(팔)과 충돌하는가
     body_idx = [i for i, n in enumerate(nL) if not n.startswith("gear")]
     tree, pitch = link5_occupancy(link5, 1.0)
+    l5_cloud = surface_cloud(link5)          # 복셀 하한이 음수/미세할 때 정확히 다시 잰다
     ev["link5_voxel_pitch_mm"] = pitch
     ev["link5_solid_fraction_of_hull"] = round(float(link5.volume / link5.convex_hull.volume), 3)
     angles = np.linspace(0.0, P["shell_travel_deg"], 24)
-    clearances, first_hit = [], None
+    clearances, first_hit, whos = [], None, []
     l5_lo, l5_hi = link5.bounds
     for phi in angles:
-        worst = np.inf
+        probe4 = []
         for parts, names, side in ((sL, nL, -1), (sR, nR, +1)):
             px, py = (side * K["g"] / 2.0, 0.0)
             piv = T[:3, :3] @ np.array([px, py, 0.0]) + T[:3, 3]
             Rj = rot_about(piv, hinge_world, math.radians(side * phi))
             for i in body_idx:
                 m = parts[i].copy(); m.apply_transform(T); m.apply_transform(Rj)
-                lo, hi = m.bounds
-                sep = max((l5_lo - hi).max(), (lo - l5_hi).max())
-                if sep >= 0:
-                    worst = min(worst, sep)          # AABB 부터 떨어져 있으면 그걸로 충분
-                else:
-                    worst = min(worst, penetration(sample_mesh(m), tree, pitch))
+                probe4.append((m, f"{'LR'[side > 0]}:{names[i]}"))
+        worst, w4 = clearance_to(probe4, tree, pitch, l5_lo, l5_hi, l5_cloud)
         clearances.append(round(float(worst), 3))
+        whos.append(w4)
         if worst < 0 and first_hit is None:
             first_hit = float(phi)
     gates["G4_no_arm_collision_through_sweep"] = {
         "pass": first_hit is None, "first_collision_deg": first_hit,
         "min_clearance_mm": round(float(min(clearances)), 3),
+        "min_at_deg": round(float(angles[int(np.argmin(clearances))]), 2),
+        "closest_piece": whos[int(np.argmin(clearances))],
+        "measurement": ("1 mm 복셀 하한이 1 mm 밑이면 link5 표면점구름으로 정확히 "
+                        "다시 잰다 — 하한을 값으로 읽으면 안 된다"),
         "angles_deg": [round(float(a), 2) for a in angles],
         "clearance_mm": clearances}
 
-    # G6 브래킷 + 구동부 자체가 팔과 닿는가 (지금까지는 셸만 검사했다)
+    # G6 브래킷 + 링크 정적부가 팔과 닿는가
+    #   ⚠️ **게이트 정의 정정 (D463)**: `bolt_plate_*` 는 고정 조 블레이드에 **볼트로
+    #      물리는 면**이라 닿는 것이 정상이다. 이전 판은 그 접촉(-0.787 mm, 복셀 반
+    #      대각선 0.866 안쪽)을 충돌로 세어 FAIL 을 냈다 — 형상이 아니라 판정이 틀렸다.
+    #      정정된 규칙: 체결면 조각은 **접촉 허용, 관통 금지**. 관통은 복셀이 아니라
+    #      "블레이드 바깥면(link5 X = -11.54)을 넘었는가" 로 정확히 잰다.
+    FASTEN_FACE = ("bolt_plate",)
+    blade_outer_x = BLADE_X[0]
+    ev["link5_surface_cloud_points"] = int(len(l5_cloud))
     worst6, who6 = np.inf, None
-    for parts, names, tag in ((br, nB, "bracket"), (dr, nD, "drive")):
+    fasten, others = [], []
+    for parts, names, tag in ((br, nB, "bracket"), (dr, nD, "linkage")):
         for m0, nm in zip(parts, names):
             m = m0.copy(); m.apply_transform(T)
-            lo, hi = m.bounds
-            sep = max((l5_lo - hi).max(), (lo - l5_hi).max())
-            val = sep if sep >= 0 else penetration(sample_mesh(m), tree, pitch)
-            if val < worst6:
-                worst6, who6 = val, f"{tag}:{nm}"
+            if any(nm.startswith(f) for f in FASTEN_FACE):
+                pen = float(m.bounds[1][0] - blade_outer_x)   # 양수면 블레이드를 파고들었다
+                fasten.append({"piece": f"{tag}:{nm}",
+                               "max_link5_x_mm": round(float(m.bounds[1][0]), 4),
+                               "blade_outer_face_x_mm": blade_outer_x,
+                               "penetration_mm": round(pen, 4)})
+                continue
+            others.append((m, f"{tag}:{nm}"))
+    worst6, who6 = clearance_to(others, tree, pitch, l5_lo, l5_hi, l5_cloud)
+    max_pen = max([f["penetration_mm"] for f in fasten], default=0.0)
     gates["G6_bracket_drive_clear_of_arm"] = {
-        "pass": worst6 >= 0.0, "min_clearance_mm": round(float(worst6), 3),
-        "closest_piece": who6,
-        "why": "볼트판은 블레이드에 닿아야 하지만 스파인/보스/구동부는 팔을 파고들면 안 된다"}
+        "pass": bool(worst6 >= 0.0 and max_pen <= 0.02),
+        "min_clearance_mm": round(float(worst6), 3), "closest_piece": who6,
+        "fastening_face_pieces": fasten,
+        "fastening_max_penetration_mm": round(float(max_pen), 4),
+        "fastening_rule": "접촉 허용 / 관통 금지 (허용 0.02 mm)",
+        "why": ("볼트판은 블레이드에 닿아야 정상이다. 접촉을 충돌로 세면 안 되지만 "
+                "판재를 뚫고 지나가서도 안 된다. 스파인/보스/링크는 종전대로 여유 >= 0"),
+        "measurement": ("1 mm 복셀은 보수적 하한(편향 0.866 mm)이므로 음수가 나온 "
+                        "조각만 link5 표면점구름(정점 + 균일샘플 20만)으로 정확히 "
+                        "다시 잰다. 조각이 볼록·watertight 라 signed_distance 가 정확하다"),
+        "definition_change": ("D463 — 이전 판은 접촉을 FAIL 로 셌다(-0.787 mm). "
+                              "복셀 피치 1.0 의 반대각선이 0.866 이므로 그 값은 "
+                              "'표면에 닿음'을 뜻했지 관통이 아니었다")}
 
-    # G7 구동 기어 축이 **서보축 그 자체**이고 피벗과 축간거리가 맞는가
-    #    구동 기어는 순정 조 스텁에 볼트로 붙으므로 서보축을 그대로 돈다.
-    #    스퍼 기어가 물리려면 두 평행축 사이 거리 = r_drive + r_shell 이어야 한다.
+    # G7 **링크 도달성** — 기어 축간거리 검사를 대체한다 (D463 이 기어 직결을 기각)
+    #    (a) 설계가 쓴 서보축이 link5 실측 축과 같은가 (두 파일의 상수 일치)
+    #    (b) 서보축 <-> 피벗 L 수직거리가 링크 지지대(ground) 길이와 같은가
+    #    (c) 서보 0~89도가 셸 0~44.5도(개구 0~58 mm)를 실제로 내는가
+    #    (d) 링크 몸체(로드·크랭크·핀)가 스윕 전 구간에서 팔과 안 닿는가
     piv_pt = T[:3, :3] @ np.array([K["pivot_L"][0], K["pivot_L"][1], 0.0]) + T[:3, 3]
     ax = GRIPPER_AXIS / np.linalg.norm(GRIPPER_AXIS)
     dvec = piv_pt - GRIPPER_ORIGIN
-    perp = dvec - np.dot(dvec, ax) * ax
-    axis_dist = float(np.linalg.norm(perp))
-    need = cd
-    gates["G7_drive_gear_meshes_on_servo_axis"] = {
-        "pass": abs(axis_dist - need) < 0.5,
-        "axis_distance_mm": round(axis_dist, 3), "required_center_distance_mm": round(need, 3),
-        "error_mm": round(axis_dist - need, 3),
-        "pivot_L_in_link5": np.round(piv_pt, 3).tolist(),
-        "servo_axis_point": GRIPPER_ORIGIN.tolist(),
-        "why": ("구동 기어는 서보축을 돈다. 피벗 L 축과의 수직거리가 r_drive+r_shell 과"
-                " 다르면 이가 안 물리거나 뿌리까지 박힌다"),
-        "fix_if_fail": "bracket_standoff_mm 로 피벗 위치를 조절해 축간거리를 맞춘다"}
+    axis_dist = float(np.linalg.norm(dvec - np.dot(dvec, ax) * ax))
+    axis_design = G.to_local(P, GRIPPER_ORIGIN)
+    axis_probe = T[:3, :3].T @ (GRIPPER_ORIGIN - T[:3, 3])
+    axis_err = float(np.max(np.abs(axis_design - axis_probe)))
+    rows = lk["rows"]
+    reach_ok = (abs(rows[0]["shell_deg"]) < 1e-6
+                and abs(rows[-1]["shell_deg"] - P["shell_travel_deg"]) < 0.02
+                and abs(rows[-1]["mouth_mm"] - P["mouth_open_mm"]) < 0.25
+                and abs(rows[-1]["servo_deg"] - P["servo_travel_deg"]) < 1e-6)
+    ground_err = abs(axis_dist - lk["ground_len_mm"])
+
+    idx7 = np.linspace(0, len(rows) - 1, 13).astype(int)
+    worst7, who7, at7 = np.inf, None, None
+    for i in idx7:
+        Ts, Tr, Tk = G.linkage_pose(P, lk, int(i))
+        Tsw = {"servocrank": Ts, "rod": Tr, "shellcrank": Tk}
+        parts7 = []
+        for m0, nm in zip(dr, nD):
+            m = m0.copy()
+            m.apply_transform(T @ Tsw[G.linkage_group(nm)])
+            parts7.append((m, nm))
+        v, w = clearance_to(parts7, tree, pitch, l5_lo, l5_hi, l5_cloud)
+        if v < worst7:
+            worst7, who7, at7 = v, w, float(rows[int(i)]["servo_deg"])
+    gates["G7_linkage_reaches_and_clears"] = {
+        "pass": bool(axis_err < 1e-6 and ground_err < 1e-3 and reach_ok and worst7 >= 0.0),
+        "servo_axis_consistent": bool(axis_err < 1e-6),
+        "servo_axis_max_err_mm": round(axis_err, 9),
+        "axis_distance_mm": round(axis_dist, 4),
+        "linkage_ground_len_mm": lk["ground_len_mm"],
+        "ground_len_err_mm": round(ground_err, 6),
+        "servo_deg_range": [rows[0]["servo_deg"], rows[-1]["servo_deg"]],
+        "shell_deg_range": [rows[0]["shell_deg"], rows[-1]["shell_deg"]],
+        "mouth_mm_range": [rows[0]["mouth_mm"], rows[-1]["mouth_mm"]],
+        "crank_servo_r_mm": lk["crank_servo_r_mm"],
+        "rod_len_mm": lk["rod_len_mm"],
+        "crank_shell_r_mm": lk["crank_shell_r_mm"],
+        "trans_angle_out_deg": [lk["trans_angle_out_min_deg"], lk["trans_angle_out_max_deg"]],
+        "trans_angle_in_deg": [lk["trans_angle_in_min_deg"], lk["trans_angle_in_max_deg"]],
+        "sweep_min_clearance_to_link5_mm": round(float(worst7), 3),
+        "sweep_closest_piece": who7, "sweep_closest_at_servo_deg": at7,
+        "why": ("기어 직결은 축간거리 19.5 mm 를 요구해 58.3 mm 부족했다(D463). 링크는 "
+                "거리 제약이 없으므로 검사할 것은 '77.81 mm 를 실제로 건너 셸을 "
+                "0~44.5도 돌리는가' 와 '그 사이 팔에 안 닿는가' 다"),
+        "supersedes": "G7_drive_gear_meshes_on_servo_axis (기어 축간거리 검사)"}
 
     # G8 팔의 다음 링크(link4)와 손목 롤 전 구간에서 닿는가
     link4 = load_mm("link4.stl")
@@ -252,23 +395,64 @@ def main():
     T54 = np.linalg.inv(T45)
     l4 = link4.copy(); l4.apply_transform(T54)          # link4 를 link5 프레임으로
     tree4, _ = link5_occupancy(l4, 1.0)
+    l4_cloud = surface_cloud(l4)
     l4_lo, l4_hi = l4.bounds
-    worst8 = np.inf
+    probe8 = []
     for parts, names, side in ((sL, nL, -1), (sR, nR, +1)):
         for i in body_idx:
             m = parts[i].copy(); m.apply_transform(T)
-            lo, hi = m.bounds
-            sep = max((l4_lo - hi).max(), (lo - l4_hi).max())
-            worst8 = min(worst8, sep if sep >= 0 else penetration(sample_mesh(m), tree4, pitch))
-    for parts, names in ((br, nB), (dr, nD)):
-        for m0 in parts:
+            probe8.append((m, f"{'LR'[side > 0]}:{names[i]}"))
+    for parts, names, tag in ((br, nB, "bracket"), (dr, nD, "linkage")):
+        for m0, nm in zip(parts, names):
             m = m0.copy(); m.apply_transform(T)
-            lo, hi = m.bounds
-            sep = max((l4_lo - hi).max(), (lo - l4_hi).max())
-            worst8 = min(worst8, sep if sep >= 0 else penetration(sample_mesh(m), tree4, pitch))
+            probe8.append((m, f"{tag}:{nm}"))
+    worst8, who8 = clearance_to(probe8, tree4, pitch, l4_lo, l4_hi, l4_cloud)
     gates["G8_clear_of_link4"] = {
         "pass": worst8 >= 0.0, "min_clearance_mm": round(float(worst8), 3),
+        "closest_piece": who8,
         "why": "link5 만이 아니라 바로 앞 링크와도 안 닿아야 손목 롤이 자유롭다"}
+
+    # G9 순정 가동 조는 **떼지 않는다** — 서보 크랭크가 그 조의 볼트 구멍에 물린다.
+    #    따라서 조가 0~89도 도는 동안 셸·브래킷·로드·셸크랭크와 안 닿아야 한다.
+    #    (서보 크랭크 자신은 조에 볼트로 붙는 부품이므로 제외 — 닿는 것이 설계다)
+    jaw = jaw_in_link5()
+    ev["stock_jaw_kept"] = True
+    ev["stock_jaw_bolt_holes_yz"] = P["jaw_bolt_yz_mm"]
+    ev["stock_jaw_blade_inner_x_mm"] = P["jaw_blade_inner_x_mm"]
+    worst9, who9, at9 = np.inf, None, None
+    for i in idx7:
+        row = rows[int(i)]
+        Tj = rot_about(GRIPPER_ORIGIN, GRIPPER_AXIS, math.radians(row["servo_deg"]))
+        jw = jaw.copy(); jw.apply_transform(Tj)
+        tj, _ = link5_occupancy(jw, 1.0)
+        jaw_cloud = surface_cloud(jw, 120000)
+        j_lo, j_hi = jw.bounds
+        Ts, Tr, Tk = G.linkage_pose(P, lk, int(i))
+        probe9 = []
+        for m0, nm in zip(dr, nD):
+            grp = G.linkage_group(nm)
+            if grp == "servocrank":
+                continue                      # 조에 볼트로 물리는 부품
+            m = m0.copy(); m.apply_transform(T @ {"rod": Tr, "shellcrank": Tk}[grp])
+            probe9.append((m, f"linkage:{nm}"))
+        for m0, nm in zip(br, nB):
+            m = m0.copy(); m.apply_transform(T)
+            probe9.append((m, f"bracket:{nm}"))
+        for parts, names, side, tag in ((sL, nL, -1, "shellL"), (sR, nR, +1, "shellR")):
+            Rj = rot_about(T[:3, :3] @ np.array([side * K["g"] / 2.0, 0.0, 0.0]) + T[:3, 3],
+                           hinge_world, math.radians(side * row["shell_deg"]))
+            for m0, nm in zip(parts, names):
+                m = m0.copy(); m.apply_transform(Rj @ T)
+                probe9.append((m, f"{tag}:{nm}"))
+        v, w = clearance_to(probe9, tj, pitch, j_lo, j_hi, jaw_cloud)
+        if v < worst9:
+            worst9, who9, at9 = v, w, float(row["servo_deg"])
+    gates["G9_clear_of_stock_jaw"] = {
+        "pass": worst9 >= 0.0, "min_clearance_mm": round(float(worst9), 3),
+        "closest_piece": who9, "closest_at_servo_deg": at9,
+        "excluded": "servocrank_* / pin1 (순정 조에 볼트로 체결되는 부품)",
+        "why": ("D462 §5·§7 대로 순정 가동 조는 볼트 분리만 가능한 상태로 남고 "
+                "서보 인출점으로 쓴다. 조가 남아 도는 이상 그 스윕을 검사해야 한다")}
 
     # G5 립 스윕 체적 = 닫을 때 밀어내야 할 펠릿 양
     sweep_area = 0.0

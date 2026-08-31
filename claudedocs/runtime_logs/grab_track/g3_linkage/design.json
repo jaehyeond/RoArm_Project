@@ -1,0 +1,1158 @@
+{
+  "params": {
+    "pivot_gap_mm": 26.0,
+    "lip_depth_mm": 36.06,
+    "mouth_open_mm": 58.0,
+    "shell_travel_deg": 44.5,
+    "servo_travel_deg": 89.0,
+    "gear_ratio": 2.0,
+    "bulge_frac": 0.45,
+    "shell_width_mm": 50.0,
+    "wall_mm": 2.0,
+    "side_plate_thk_mm": 1.5,
+    "lip_land_mm": 0.8,
+    "seg_n": 20,
+    "gear_module_mm": 1.0,
+    "shell_gear_teeth": 26,
+    "gear_width_mm": 6.0,
+    "gear_backlash_mm": 0.15,
+    "bracket_bolt_dy_mm": 25.19,
+    "bracket_bolt_dz_mm": 19.44,
+    "bolt_clear_d_mm": 3.4,
+    "bracket_thk_mm": 4.0,
+    "bracket_standoff_mm": 32.0,
+    "pivot_shaft_d_mm": 3.0,
+    "pivot_boss_d_mm": 8.0,
+    "pivot_bore_clear_mm": 0.6,
+    "hub_wall_mm": 1.5,
+    "link5_blade_x_mm": [
+      -11.54,
+      -10.03
+    ],
+    "link5_blade_tip_z_mm": 119.886,
+    "link5_blade_hole_c_yz": [
+      -0.745,
+      93.18
+    ],
+    "servo_axis_link5": [
+      0.0,
+      18.821,
+      52.035
+    ],
+    "jaw_blade_inner_x_mm": -6.0,
+    "jaw_bolt_yz_mm": [
+      [
+        -12.66,
+        82.98
+      ],
+      [
+        12.45,
+        82.98
+      ]
+    ],
+    "jaw_mount_thk_mm": 3.0,
+    "jaw_mount_len_y_mm": 11.0,
+    "jaw_mount_z_mm": [
+      -18.5,
+      16.5
+    ],
+    "crank_servo_r_mm": 21.0,
+    "crank_servo_a0_deg": -106.0,
+    "crank_shell_a0_deg": 128.0,
+    "trans_angle_band_deg": [
+      40.0,
+      140.0
+    ],
+    "crank_plane_z_mm": -29.0,
+    "crank_thk_mm": 4.0,
+    "crank_servo_w_mm": 12.0,
+    "crank_shell_w_mm": 14.0,
+    "rod_plane_z_mm": -33.5,
+    "rod_thk_mm": 4.0,
+    "rod_width_mm": 9.0,
+    "rod_rail_w_mm": 2.5,
+    "crank_tip_w_mm": 9.0,
+    "pin_d_mm": 3.0,
+    "pin_eye_d_mm": 9.0,
+    "pin_boss_d_mm": 8.0,
+    "density_g_cm3": 1.24,
+    "material": "PLA",
+    "tool_mass_max_g": 50.0,
+    "fill_factor": 0.7,
+    "bulk_density_g_cm3": 0.55,
+    "bulk_density_src": "ASSUMED",
+    "pellet_d_max_mm": 5.0,
+    "pile_width_mm": 377.5,
+    "servo_torque_nm": 1.91,
+    "self_load_ratio_band": [
+      0.72,
+      0.88
+    ]
+  },
+  "gates": {
+    "all_pieces_convex": {
+      "pass": true,
+      "violations_nonconvex": [],
+      "violations_zero_volume": [],
+      "n_pieces": 345,
+      "n_zero_volume": 0,
+      "note": "부피 0 조각도 위반이다. 볼록 판정식 |V - V_hull|/V_hull 은 V=0 에서 0/0 이라 무의미하므로 예전엔 건너뛰었고, 그 결과 퇴화 조각을 놓쳤다"
+    },
+    "pieces_have_positive_volume": {
+      "pass": true,
+      "n_zero_volume": 0,
+      "zero_volume_pieces": [],
+      "n_pieces": 345,
+      "min_piece_volume_mm3": 3.87467,
+      "why": "부피 0 = 인쇄하면 아무것도 안 나오는 조각. arc_segment 에 a0=0/a1=2pi (또는 0/pi)를 주면 정점이 4개뿐이라 납작해지고, 환형은 애초에 볼록이 아니라 한 조각으로 표현할 수 없다. 전체원·환형·원반은 ring() 으로 쐐기 분해할 것"
+    },
+    "shells_meet_not_overlap": {
+      "pass": true,
+      "x_overlap_mm": 0.0,
+      "band_mm": [
+        -1.5,
+        0.3
+      ],
+      "note": "0 근처 = 립이 맞닿음. 크게 양수면 서로 파고든 것"
+    },
+    "shells_are_mirror_symmetric": {
+      "pass": true,
+      "max_bound_diff_mm": 0.0
+    },
+    "shell_gears_mesh": {
+      "pass": true,
+      "sum_pitch_r_mm": 26.0,
+      "pivot_gap_mm": 26.0
+    },
+    "gear_tip_root_clearance": {
+      "pass": true,
+      "value_mm": 0.25,
+      "band_mm": [
+        0.05,
+        1.0
+      ],
+      "tip_overlap_mm": 2.0,
+      "note": "이끝원 겹침 2.0 mm 는 맞물림의 정의다. 여기서 보는 것은 이뿌리 여유"
+    },
+    "drive_ratio_matches": {
+      "pass": true,
+      "ratio": 2.0,
+      "target": 2.0,
+      "basis": "linkage_end_to_end_travel",
+      "servo_travel_deg": 89.0,
+      "shell_travel_deg": 44.5,
+      "ground_len_mm": 77.8111,
+      "note": "기어 직결 시절엔 26/13 잇수비였다. 링크에서는 순간비가 각도마다 다르므로 총행정비로 잰다 (순간비 표 = linkage.table 의 dshell_dservo)"
+    },
+    "mouth_open_at_travel": {
+      "pass": true,
+      "value_mm": 58.005,
+      "target_mm": 58.0,
+      "closed_mm": 0.0
+    },
+    "linkage_no_dead_center": {
+      "pass": true,
+      "band_deg": [
+        40.0,
+        140.0
+      ],
+      "worst_margin_deg": 8.666,
+      "out_min_deg": 77.334,
+      "out_max_deg": 129.466,
+      "out_min_at_servo_deg": 0.0,
+      "out_max_at_servo_deg": 89.0,
+      "in_min_deg": 49.966,
+      "in_max_deg": 131.334,
+      "in_min_at_servo_deg": 89.0,
+      "in_max_at_servo_deg": 0.0,
+      "why": "**두 각을 다 본다.** 출력측 전달각(로드 <-> 셸 크랭크)이 0/180도면 셸이 로드를 못 밀고, 입력측 각(서보 크랭크 <-> 로드)이 0/180도면 입력 사점(토글)이라 서보가 아무리 돌아도 셸이 안 움직인다(자기잠김). 출력측만 보면 입력 사점을 놓친다 — 첫 후보가 실제로 그랬다(servo 0도에서 크랭크와 로드가 0.1도 차이로 일직선, dshell/dservo = 0.007)"
+    },
+    "linkage_reaches_full_travel": {
+      "pass": true,
+      "servo_deg_range": [
+        0.0,
+        89.0
+      ],
+      "shell_deg_range": [
+        0.0,
+        44.5
+      ],
+      "shell_target_deg": 44.5,
+      "mouth_mm_range": [
+        0.0,
+        58.0051
+      ],
+      "monotonic": true,
+      "min_step_deg": 0.404,
+      "dshell_dservo_range": [
+        0.4085,
+        0.5262
+      ],
+      "why": "서보 0~89도가 셸 0~44.5도(개구 0~58 mm)를 실제로 내는가. 끝점은 폐합 방정식이 보장하지만 사이 구간의 단조성은 보장하지 않는다"
+    },
+    "linkage_rod_clears_shells": {
+      "pass": true,
+      "min_clearance_mm": 0.5,
+      "limit_mm": 0.5,
+      "closest_pair": "shellcrank_hub_00 <-> bracket:pivot_boss_L_00",
+      "closest_at_servo_deg": 0.0,
+      "why": "로드·크랭크는 힌지축 방향으로 셸 바깥면(-26.5)보다 밖에 층을 이루지만 브래킷 피벗 보스는 -29.5 까지 나오므로 실제로 스윕해서 재야 한다"
+    },
+    "tool_mass_under_max": {
+      "pass": false,
+      "value_g": 52.67,
+      "limit_g": 50.0,
+      "material": "PLA"
+    },
+    "self_load_ratio_in_real_band": {
+      "pass": false,
+      "value_with_assumed_density": 1.945,
+      "band": [
+        0.72,
+        0.88
+      ],
+      "v0_was": 3.3,
+      "blocked_on": "bulk_density_g_cm3 실측 (펠릿 미조달)",
+      "bulk_density_used": 0.55,
+      "bulk_density_src": "ASSUMED",
+      "density_range_that_would_pass_g_cm3": [
+        1.216,
+        1.486
+      ],
+      "note": "실물 그랩은 자기 무게만으로 관입한다(D457 §12). v0는 팔이 눌러야 했다. 분모가 추측이므로 이 게이트는 실측 전까지 FAIL 을 유지한다 — 형상 튜닝으로 통과시키지 말 것"
+    },
+    "particle_ratio_min10": {
+      "pass": true,
+      "value": 11.6
+    },
+    "grab_to_pile_width": {
+      "pass": true,
+      "value": 0.1548,
+      "industrial_band": [
+        0.05,
+        0.1
+      ],
+      "v0_was": 0.53
+    }
+  },
+  "derived": {
+    "inner_volume_cm3": 70.34,
+    "load_per_scoop_g": 27.08,
+    "tool_mass_g": 52.67,
+    "self_load_ratio": 1.945,
+    "lip_pivot_radius_mm": 38.332,
+    "shell_gear_center_distance_mm": 26.0,
+    "outer_width_mm": 58.45,
+    "linkage_mass_g": 8.07,
+    "degenerate_repair_mass_g": 18.43,
+    "tool_z_extent_mm": [
+      -36.0,
+      32.5
+    ],
+    "servo_axis_local_mm": [
+      13.54,
+      73.145,
+      19.566
+    ],
+    "servo_to_pivotL_perp_mm": 77.8111,
+    "linkage_structure": {
+      "servo_stall_torque_Nmm": 1910.0,
+      "rod_axial_force_N_at_stall": 118.8,
+      "rod_section_mm": [
+        5.0,
+        4.0
+      ],
+      "rod_I_weak_mm4": 26.67,
+      "rod_euler_Pcr_N": 365.9,
+      "rod_buckling_SF": 3.08,
+      "pin_bearing_MPa": 9.9,
+      "pin_double_shear_MPa": 8.4,
+      "shell_crank_root_bending_MPa": 35.8,
+      "servo_crank_root_bending_MPa": 13.5,
+      "PLA_yield_MPa_ref": 50.0,
+      "note": "로드는 압축·인장을 받는다. 약축 좌굴이 지배하므로 두께(힌지축 방향)는 유지하고 폭 가운데만 비웠다(쌍레일). 크랭크는 뿌리에서 끝으로 모멘트가 선형 감소하므로 폭을 테이퍼했고 **뿌리 단면은 그대로**다"
+    }
+  },
+  "all_gates_pass": false,
+  "linkage": {
+    "servo_axis_xy": [
+      13.54,
+      73.145
+    ],
+    "pivot_L_xy": [
+      -13.0,
+      0.0
+    ],
+    "jaw_mount_xy": [
+      6.04,
+      42.2
+    ],
+    "jaw_mount_z_mm": 0.64,
+    "ground_len_mm": 77.8111,
+    "crank_servo_r_mm": 21.0,
+    "crank_shell_r_mm": 39.9581,
+    "rod_len_mm": 50.178,
+    "crank_servo_a0_deg": -106.0,
+    "crank_shell_a0_deg": 128.0,
+    "trans_angle_out_min_deg": 77.334,
+    "trans_angle_out_max_deg": 129.466,
+    "trans_angle_in_min_deg": 49.966,
+    "trans_angle_in_max_deg": 131.334,
+    "table_columns": [
+      "servo_deg",
+      "shell_deg",
+      "mouth_mm",
+      "trans_angle_deg",
+      "trans_angle_in_deg",
+      "dshell_dservo",
+      "torque_gain"
+    ],
+    "table": [
+      {
+        "servo_deg": 0.0,
+        "shell_deg": 0.0,
+        "mouth_mm": 0.0,
+        "trans_angle_deg": 77.334,
+        "trans_angle_in_deg": 131.334,
+        "dshell_dservo": 0.4085,
+        "torque_gain": 2.448
+      },
+      {
+        "servo_deg": 0.9889,
+        "shell_deg": 0.404,
+        "mouth_mm": 0.5091,
+        "trans_angle_deg": 77.398,
+        "trans_angle_in_deg": 130.005,
+        "dshell_dservo": 0.4124,
+        "torque_gain": 2.425
+      },
+      {
+        "servo_deg": 1.9778,
+        "shell_deg": 0.8157,
+        "mouth_mm": 1.0294,
+        "trans_angle_deg": 77.476,
+        "trans_angle_in_deg": 128.683,
+        "dshell_dservo": 0.4202,
+        "torque_gain": 2.38
+      },
+      {
+        "servo_deg": 2.9667,
+        "shell_deg": 1.235,
+        "mouth_mm": 1.5605,
+        "trans_angle_deg": 77.568,
+        "trans_angle_in_deg": 127.367,
+        "dshell_dservo": 0.4277,
+        "torque_gain": 2.338
+      },
+      {
+        "servo_deg": 3.9556,
+        "shell_deg": 1.6616,
+        "mouth_mm": 2.1021,
+        "trans_angle_deg": 77.675,
+        "trans_angle_in_deg": 126.058,
+        "dshell_dservo": 0.4349,
+        "torque_gain": 2.299
+      },
+      {
+        "servo_deg": 4.9444,
+        "shell_deg": 2.0951,
+        "mouth_mm": 2.6539,
+        "trans_angle_deg": 77.795,
+        "trans_angle_in_deg": 124.756,
+        "dshell_dservo": 0.4417,
+        "torque_gain": 2.264
+      },
+      {
+        "servo_deg": 5.9333,
+        "shell_deg": 2.5352,
+        "mouth_mm": 3.2156,
+        "trans_angle_deg": 77.93,
+        "trans_angle_in_deg": 123.461,
+        "dshell_dservo": 0.4483,
+        "torque_gain": 2.231
+      },
+      {
+        "servo_deg": 6.9222,
+        "shell_deg": 2.9817,
+        "mouth_mm": 3.7867,
+        "trans_angle_deg": 78.078,
+        "trans_angle_in_deg": 122.174,
+        "dshell_dservo": 0.4546,
+        "torque_gain": 2.2
+      },
+      {
+        "servo_deg": 7.9111,
+        "shell_deg": 3.4343,
+        "mouth_mm": 4.367,
+        "trans_angle_deg": 78.24,
+        "trans_angle_in_deg": 120.895,
+        "dshell_dservo": 0.4606,
+        "torque_gain": 2.171
+      },
+      {
+        "servo_deg": 8.9,
+        "shell_deg": 3.8927,
+        "mouth_mm": 4.9561,
+        "trans_angle_deg": 78.416,
+        "trans_angle_in_deg": 119.623,
+        "dshell_dservo": 0.4663,
+        "torque_gain": 2.144
+      },
+      {
+        "servo_deg": 9.8889,
+        "shell_deg": 4.3566,
+        "mouth_mm": 5.5536,
+        "trans_angle_deg": 78.606,
+        "trans_angle_in_deg": 118.36,
+        "dshell_dservo": 0.4717,
+        "torque_gain": 2.12
+      },
+      {
+        "servo_deg": 10.8778,
+        "shell_deg": 4.8257,
+        "mouth_mm": 6.1592,
+        "trans_angle_deg": 78.809,
+        "trans_angle_in_deg": 117.106,
+        "dshell_dservo": 0.4768,
+        "torque_gain": 2.097
+      },
+      {
+        "servo_deg": 11.8667,
+        "shell_deg": 5.2997,
+        "mouth_mm": 6.7725,
+        "trans_angle_deg": 79.026,
+        "trans_angle_in_deg": 115.86,
+        "dshell_dservo": 0.4816,
+        "torque_gain": 2.076
+      },
+      {
+        "servo_deg": 12.8556,
+        "shell_deg": 5.7783,
+        "mouth_mm": 7.3931,
+        "trans_angle_deg": 79.256,
+        "trans_angle_in_deg": 114.623,
+        "dshell_dservo": 0.4862,
+        "torque_gain": 2.057
+      },
+      {
+        "servo_deg": 13.8444,
+        "shell_deg": 6.2613,
+        "mouth_mm": 8.0208,
+        "trans_angle_deg": 79.5,
+        "trans_angle_in_deg": 113.394,
+        "dshell_dservo": 0.4906,
+        "torque_gain": 2.038
+      },
+      {
+        "servo_deg": 14.8333,
+        "shell_deg": 6.7485,
+        "mouth_mm": 8.655,
+        "trans_angle_deg": 79.757,
+        "trans_angle_in_deg": 112.175,
+        "dshell_dservo": 0.4945,
+        "torque_gain": 2.022
+      },
+      {
+        "servo_deg": 15.8222,
+        "shell_deg": 7.2394,
+        "mouth_mm": 9.2955,
+        "trans_angle_deg": 80.027,
+        "trans_angle_in_deg": 110.966,
+        "dshell_dservo": 0.4982,
+        "torque_gain": 2.007
+      },
+      {
+        "servo_deg": 16.8111,
+        "shell_deg": 7.7339,
+        "mouth_mm": 9.9418,
+        "trans_angle_deg": 80.311,
+        "trans_angle_in_deg": 109.766,
+        "dshell_dservo": 0.5017,
+        "torque_gain": 1.993
+      },
+      {
+        "servo_deg": 17.8,
+        "shell_deg": 8.2316,
+        "mouth_mm": 10.5937,
+        "trans_angle_deg": 80.607,
+        "trans_angle_in_deg": 108.575,
+        "dshell_dservo": 0.5049,
+        "torque_gain": 1.981
+      },
+      {
+        "servo_deg": 18.7889,
+        "shell_deg": 8.7325,
+        "mouth_mm": 11.2507,
+        "trans_angle_deg": 80.916,
+        "trans_angle_in_deg": 107.394,
+        "dshell_dservo": 0.5078,
+        "torque_gain": 1.969
+      },
+      {
+        "servo_deg": 19.7778,
+        "shell_deg": 9.236,
+        "mouth_mm": 11.9125,
+        "trans_angle_deg": 81.237,
+        "trans_angle_in_deg": 106.224,
+        "dshell_dservo": 0.5105,
+        "torque_gain": 1.959
+      },
+      {
+        "servo_deg": 20.7667,
+        "shell_deg": 9.7422,
+        "mouth_mm": 12.5787,
+        "trans_angle_deg": 81.572,
+        "trans_angle_in_deg": 105.063,
+        "dshell_dservo": 0.513,
+        "torque_gain": 1.949
+      },
+      {
+        "servo_deg": 21.7556,
+        "shell_deg": 10.2506,
+        "mouth_mm": 13.2491,
+        "trans_angle_deg": 81.918,
+        "trans_angle_in_deg": 103.912,
+        "dshell_dservo": 0.5152,
+        "torque_gain": 1.941
+      },
+      {
+        "servo_deg": 22.7444,
+        "shell_deg": 10.7612,
+        "mouth_mm": 13.9232,
+        "trans_angle_deg": 82.278,
+        "trans_angle_in_deg": 102.772,
+        "dshell_dservo": 0.5172,
+        "torque_gain": 1.933
+      },
+      {
+        "servo_deg": 23.7333,
+        "shell_deg": 11.2735,
+        "mouth_mm": 14.6007,
+        "trans_angle_deg": 82.649,
+        "trans_angle_in_deg": 101.642,
+        "dshell_dservo": 0.519,
+        "torque_gain": 1.927
+      },
+      {
+        "servo_deg": 24.7222,
+        "shell_deg": 11.7876,
+        "mouth_mm": 15.2812,
+        "trans_angle_deg": 83.032,
+        "trans_angle_in_deg": 100.523,
+        "dshell_dservo": 0.5205,
+        "torque_gain": 1.921
+      },
+      {
+        "servo_deg": 25.7111,
+        "shell_deg": 12.303,
+        "mouth_mm": 15.9646,
+        "trans_angle_deg": 83.428,
+        "trans_angle_in_deg": 99.414,
+        "dshell_dservo": 0.5218,
+        "torque_gain": 1.916
+      },
+      {
+        "servo_deg": 26.7,
+        "shell_deg": 12.8197,
+        "mouth_mm": 16.6504,
+        "trans_angle_deg": 83.835,
+        "trans_angle_in_deg": 98.315,
+        "dshell_dservo": 0.523,
+        "torque_gain": 1.912
+      },
+      {
+        "servo_deg": 27.6889,
+        "shell_deg": 13.3374,
+        "mouth_mm": 17.3383,
+        "trans_angle_deg": 84.254,
+        "trans_angle_in_deg": 97.228,
+        "dshell_dservo": 0.524,
+        "torque_gain": 1.909
+      },
+      {
+        "servo_deg": 28.6778,
+        "shell_deg": 13.856,
+        "mouth_mm": 18.0281,
+        "trans_angle_deg": 84.685,
+        "trans_angle_in_deg": 96.151,
+        "dshell_dservo": 0.5248,
+        "torque_gain": 1.906
+      },
+      {
+        "servo_deg": 29.6667,
+        "shell_deg": 14.3753,
+        "mouth_mm": 18.7194,
+        "trans_angle_deg": 85.127,
+        "trans_angle_in_deg": 95.085,
+        "dshell_dservo": 0.5254,
+        "torque_gain": 1.903
+      },
+      {
+        "servo_deg": 30.6556,
+        "shell_deg": 14.8951,
+        "mouth_mm": 19.4121,
+        "trans_angle_deg": 85.58,
+        "trans_angle_in_deg": 94.029,
+        "dshell_dservo": 0.5258,
+        "torque_gain": 1.902
+      },
+      {
+        "servo_deg": 31.6444,
+        "shell_deg": 15.4152,
+        "mouth_mm": 20.1057,
+        "trans_angle_deg": 86.045,
+        "trans_angle_in_deg": 92.985,
+        "dshell_dservo": 0.5261,
+        "torque_gain": 1.901
+      },
+      {
+        "servo_deg": 32.6333,
+        "shell_deg": 15.9355,
+        "mouth_mm": 20.8001,
+        "trans_angle_deg": 86.52,
+        "trans_angle_in_deg": 91.951,
+        "dshell_dservo": 0.5262,
+        "torque_gain": 1.9
+      },
+      {
+        "servo_deg": 33.6222,
+        "shell_deg": 16.4559,
+        "mouth_mm": 21.4949,
+        "trans_angle_deg": 87.007,
+        "trans_angle_in_deg": 90.929,
+        "dshell_dservo": 0.5262,
+        "torque_gain": 1.9
+      },
+      {
+        "servo_deg": 34.6111,
+        "shell_deg": 16.9762,
+        "mouth_mm": 22.1901,
+        "trans_angle_deg": 87.504,
+        "trans_angle_in_deg": 89.917,
+        "dshell_dservo": 0.526,
+        "torque_gain": 1.901
+      },
+      {
+        "servo_deg": 35.6,
+        "shell_deg": 17.4962,
+        "mouth_mm": 22.8852,
+        "trans_angle_deg": 88.012,
+        "trans_angle_in_deg": 88.916,
+        "dshell_dservo": 0.5257,
+        "torque_gain": 1.902
+      },
+      {
+        "servo_deg": 36.5889,
+        "shell_deg": 18.016,
+        "mouth_mm": 23.5802,
+        "trans_angle_deg": 88.531,
+        "trans_angle_in_deg": 87.926,
+        "dshell_dservo": 0.5254,
+        "torque_gain": 1.903
+      },
+      {
+        "servo_deg": 37.5778,
+        "shell_deg": 18.5353,
+        "mouth_mm": 24.2748,
+        "trans_angle_deg": 89.06,
+        "trans_angle_in_deg": 86.947,
+        "dshell_dservo": 0.5248,
+        "torque_gain": 1.905
+      },
+      {
+        "servo_deg": 38.5667,
+        "shell_deg": 19.054,
+        "mouth_mm": 24.9688,
+        "trans_angle_deg": 89.6,
+        "trans_angle_in_deg": 85.979,
+        "dshell_dservo": 0.5242,
+        "torque_gain": 1.908
+      },
+      {
+        "servo_deg": 39.5556,
+        "shell_deg": 19.5721,
+        "mouth_mm": 25.662,
+        "trans_angle_deg": 90.149,
+        "trans_angle_in_deg": 85.022,
+        "dshell_dservo": 0.5236,
+        "torque_gain": 1.91
+      },
+      {
+        "servo_deg": 40.5444,
+        "shell_deg": 20.0895,
+        "mouth_mm": 26.3543,
+        "trans_angle_deg": 90.709,
+        "trans_angle_in_deg": 84.075,
+        "dshell_dservo": 0.5228,
+        "torque_gain": 1.913
+      },
+      {
+        "servo_deg": 41.5333,
+        "shell_deg": 20.6061,
+        "mouth_mm": 27.0454,
+        "trans_angle_deg": 91.279,
+        "trans_angle_in_deg": 83.139,
+        "dshell_dservo": 0.5219,
+        "torque_gain": 1.916
+      },
+      {
+        "servo_deg": 42.5222,
+        "shell_deg": 21.1217,
+        "mouth_mm": 27.7353,
+        "trans_angle_deg": 91.858,
+        "trans_angle_in_deg": 82.215,
+        "dshell_dservo": 0.5209,
+        "torque_gain": 1.92
+      },
+      {
+        "servo_deg": 43.5111,
+        "shell_deg": 21.6364,
+        "mouth_mm": 28.4237,
+        "trans_angle_deg": 92.448,
+        "trans_angle_in_deg": 81.3,
+        "dshell_dservo": 0.52,
+        "torque_gain": 1.923
+      },
+      {
+        "servo_deg": 44.5,
+        "shell_deg": 22.1501,
+        "mouth_mm": 29.1106,
+        "trans_angle_deg": 93.047,
+        "trans_angle_in_deg": 80.397,
+        "dshell_dservo": 0.5189,
+        "torque_gain": 1.927
+      },
+      {
+        "servo_deg": 45.4889,
+        "shell_deg": 22.6627,
+        "mouth_mm": 29.7957,
+        "trans_angle_deg": 93.656,
+        "trans_angle_in_deg": 79.504,
+        "dshell_dservo": 0.5178,
+        "torque_gain": 1.931
+      },
+      {
+        "servo_deg": 46.4778,
+        "shell_deg": 23.1742,
+        "mouth_mm": 30.4791,
+        "trans_angle_deg": 94.274,
+        "trans_angle_in_deg": 78.622,
+        "dshell_dservo": 0.5167,
+        "torque_gain": 1.935
+      },
+      {
+        "servo_deg": 47.4667,
+        "shell_deg": 23.6846,
+        "mouth_mm": 31.1606,
+        "trans_angle_deg": 94.901,
+        "trans_angle_in_deg": 77.75,
+        "dshell_dservo": 0.5155,
+        "torque_gain": 1.94
+      },
+      {
+        "servo_deg": 48.4556,
+        "shell_deg": 24.1937,
+        "mouth_mm": 31.8401,
+        "trans_angle_deg": 95.538,
+        "trans_angle_in_deg": 76.889,
+        "dshell_dservo": 0.5142,
+        "torque_gain": 1.945
+      },
+      {
+        "servo_deg": 49.4444,
+        "shell_deg": 24.7016,
+        "mouth_mm": 32.5175,
+        "trans_angle_deg": 96.184,
+        "trans_angle_in_deg": 76.038,
+        "dshell_dservo": 0.513,
+        "torque_gain": 1.949
+      },
+      {
+        "servo_deg": 50.4333,
+        "shell_deg": 25.2083,
+        "mouth_mm": 33.1928,
+        "trans_angle_deg": 96.84,
+        "trans_angle_in_deg": 75.198,
+        "dshell_dservo": 0.5118,
+        "torque_gain": 1.954
+      },
+      {
+        "servo_deg": 51.4222,
+        "shell_deg": 25.7138,
+        "mouth_mm": 33.8658,
+        "trans_angle_deg": 97.504,
+        "trans_angle_in_deg": 74.368,
+        "dshell_dservo": 0.5105,
+        "torque_gain": 1.959
+      },
+      {
+        "servo_deg": 52.4111,
+        "shell_deg": 26.2179,
+        "mouth_mm": 34.5365,
+        "trans_angle_deg": 98.177,
+        "trans_angle_in_deg": 73.548,
+        "dshell_dservo": 0.5092,
+        "torque_gain": 1.964
+      },
+      {
+        "servo_deg": 53.4,
+        "shell_deg": 26.7209,
+        "mouth_mm": 35.2049,
+        "trans_angle_deg": 98.86,
+        "trans_angle_in_deg": 72.739,
+        "dshell_dservo": 0.5079,
+        "torque_gain": 1.969
+      },
+      {
+        "servo_deg": 54.3889,
+        "shell_deg": 27.2225,
+        "mouth_mm": 35.871,
+        "trans_angle_deg": 99.551,
+        "trans_angle_in_deg": 71.939,
+        "dshell_dservo": 0.5067,
+        "torque_gain": 1.974
+      },
+      {
+        "servo_deg": 55.3778,
+        "shell_deg": 27.723,
+        "mouth_mm": 36.5346,
+        "trans_angle_deg": 100.251,
+        "trans_angle_in_deg": 71.15,
+        "dshell_dservo": 0.5055,
+        "torque_gain": 1.978
+      },
+      {
+        "servo_deg": 56.3667,
+        "shell_deg": 28.2222,
+        "mouth_mm": 37.1958,
+        "trans_angle_deg": 100.959,
+        "trans_angle_in_deg": 70.371,
+        "dshell_dservo": 0.5042,
+        "torque_gain": 1.983
+      },
+      {
+        "servo_deg": 57.3556,
+        "shell_deg": 28.7202,
+        "mouth_mm": 37.8546,
+        "trans_angle_deg": 101.677,
+        "trans_angle_in_deg": 69.601,
+        "dshell_dservo": 0.503,
+        "torque_gain": 1.988
+      },
+      {
+        "servo_deg": 58.3444,
+        "shell_deg": 29.217,
+        "mouth_mm": 38.5109,
+        "trans_angle_deg": 102.403,
+        "trans_angle_in_deg": 68.842,
+        "dshell_dservo": 0.5018,
+        "torque_gain": 1.993
+      },
+      {
+        "servo_deg": 59.3333,
+        "shell_deg": 29.7127,
+        "mouth_mm": 39.1648,
+        "trans_angle_deg": 103.138,
+        "trans_angle_in_deg": 68.092,
+        "dshell_dservo": 0.5007,
+        "torque_gain": 1.997
+      },
+      {
+        "servo_deg": 60.3222,
+        "shell_deg": 30.2073,
+        "mouth_mm": 39.8163,
+        "trans_angle_deg": 103.881,
+        "trans_angle_in_deg": 67.352,
+        "dshell_dservo": 0.4996,
+        "torque_gain": 2.001
+      },
+      {
+        "servo_deg": 61.3111,
+        "shell_deg": 30.7009,
+        "mouth_mm": 40.4653,
+        "trans_angle_deg": 104.634,
+        "trans_angle_in_deg": 66.622,
+        "dshell_dservo": 0.4986,
+        "torque_gain": 2.006
+      },
+      {
+        "servo_deg": 62.3,
+        "shell_deg": 31.1934,
+        "mouth_mm": 41.112,
+        "trans_angle_deg": 105.394,
+        "trans_angle_in_deg": 65.901,
+        "dshell_dservo": 0.4976,
+        "torque_gain": 2.01
+      },
+      {
+        "servo_deg": 63.2889,
+        "shell_deg": 31.685,
+        "mouth_mm": 41.7563,
+        "trans_angle_deg": 106.164,
+        "trans_angle_in_deg": 65.19,
+        "dshell_dservo": 0.4967,
+        "torque_gain": 2.013
+      },
+      {
+        "servo_deg": 64.2778,
+        "shell_deg": 32.1757,
+        "mouth_mm": 42.3983,
+        "trans_angle_deg": 106.942,
+        "trans_angle_in_deg": 64.488,
+        "dshell_dservo": 0.4959,
+        "torque_gain": 2.017
+      },
+      {
+        "servo_deg": 65.2667,
+        "shell_deg": 32.6657,
+        "mouth_mm": 43.0381,
+        "trans_angle_deg": 107.728,
+        "trans_angle_in_deg": 63.796,
+        "dshell_dservo": 0.4951,
+        "torque_gain": 2.02
+      },
+      {
+        "servo_deg": 66.2556,
+        "shell_deg": 33.1549,
+        "mouth_mm": 43.6756,
+        "trans_angle_deg": 108.524,
+        "trans_angle_in_deg": 63.113,
+        "dshell_dservo": 0.4944,
+        "torque_gain": 2.023
+      },
+      {
+        "servo_deg": 67.2444,
+        "shell_deg": 33.6434,
+        "mouth_mm": 44.3111,
+        "trans_angle_deg": 109.328,
+        "trans_angle_in_deg": 62.44,
+        "dshell_dservo": 0.4938,
+        "torque_gain": 2.025
+      },
+      {
+        "servo_deg": 68.2333,
+        "shell_deg": 34.1314,
+        "mouth_mm": 44.9444,
+        "trans_angle_deg": 110.141,
+        "trans_angle_in_deg": 61.776,
+        "dshell_dservo": 0.4932,
+        "torque_gain": 2.027
+      },
+      {
+        "servo_deg": 69.2222,
+        "shell_deg": 34.6189,
+        "mouth_mm": 45.5758,
+        "trans_angle_deg": 110.962,
+        "trans_angle_in_deg": 61.121,
+        "dshell_dservo": 0.4928,
+        "torque_gain": 2.029
+      },
+      {
+        "servo_deg": 70.2111,
+        "shell_deg": 35.1061,
+        "mouth_mm": 46.2054,
+        "trans_angle_deg": 111.793,
+        "trans_angle_in_deg": 60.475,
+        "dshell_dservo": 0.4925,
+        "torque_gain": 2.03
+      },
+      {
+        "servo_deg": 71.2,
+        "shell_deg": 35.593,
+        "mouth_mm": 46.8331,
+        "trans_angle_deg": 112.632,
+        "trans_angle_in_deg": 59.839,
+        "dshell_dservo": 0.4923,
+        "torque_gain": 2.031
+      },
+      {
+        "servo_deg": 72.1889,
+        "shell_deg": 36.0798,
+        "mouth_mm": 47.4592,
+        "trans_angle_deg": 113.481,
+        "trans_angle_in_deg": 59.212,
+        "dshell_dservo": 0.4923,
+        "torque_gain": 2.031
+      },
+      {
+        "servo_deg": 73.1778,
+        "shell_deg": 36.5666,
+        "mouth_mm": 48.0837,
+        "trans_angle_deg": 114.338,
+        "trans_angle_in_deg": 58.594,
+        "dshell_dservo": 0.4924,
+        "torque_gain": 2.031
+      },
+      {
+        "servo_deg": 74.1667,
+        "shell_deg": 37.0536,
+        "mouth_mm": 48.7068,
+        "trans_angle_deg": 115.205,
+        "trans_angle_in_deg": 57.985,
+        "dshell_dservo": 0.4926,
+        "torque_gain": 2.03
+      },
+      {
+        "servo_deg": 75.1556,
+        "shell_deg": 37.5408,
+        "mouth_mm": 49.3286,
+        "trans_angle_deg": 116.082,
+        "trans_angle_in_deg": 57.385,
+        "dshell_dservo": 0.4929,
+        "torque_gain": 2.029
+      },
+      {
+        "servo_deg": 76.1444,
+        "shell_deg": 38.0284,
+        "mouth_mm": 49.9493,
+        "trans_angle_deg": 116.968,
+        "trans_angle_in_deg": 56.795,
+        "dshell_dservo": 0.4934,
+        "torque_gain": 2.027
+      },
+      {
+        "servo_deg": 77.1333,
+        "shell_deg": 38.5166,
+        "mouth_mm": 50.569,
+        "trans_angle_deg": 117.863,
+        "trans_angle_in_deg": 56.213,
+        "dshell_dservo": 0.4941,
+        "torque_gain": 2.024
+      },
+      {
+        "servo_deg": 78.1222,
+        "shell_deg": 39.0056,
+        "mouth_mm": 51.1879,
+        "trans_angle_deg": 118.769,
+        "trans_angle_in_deg": 55.641,
+        "dshell_dservo": 0.495,
+        "torque_gain": 2.02
+      },
+      {
+        "servo_deg": 79.1111,
+        "shell_deg": 39.4956,
+        "mouth_mm": 51.8061,
+        "trans_angle_deg": 119.684,
+        "trans_angle_in_deg": 55.078,
+        "dshell_dservo": 0.4961,
+        "torque_gain": 2.016
+      },
+      {
+        "servo_deg": 80.1,
+        "shell_deg": 39.9867,
+        "mouth_mm": 52.424,
+        "trans_angle_deg": 120.61,
+        "trans_angle_in_deg": 54.524,
+        "dshell_dservo": 0.4973,
+        "torque_gain": 2.011
+      },
+      {
+        "servo_deg": 81.0889,
+        "shell_deg": 40.4792,
+        "mouth_mm": 53.0416,
+        "trans_angle_deg": 121.547,
+        "trans_angle_in_deg": 53.979,
+        "dshell_dservo": 0.4988,
+        "torque_gain": 2.005
+      },
+      {
+        "servo_deg": 82.0778,
+        "shell_deg": 40.9732,
+        "mouth_mm": 53.6591,
+        "trans_angle_deg": 122.495,
+        "trans_angle_in_deg": 53.444,
+        "dshell_dservo": 0.5006,
+        "torque_gain": 1.998
+      },
+      {
+        "servo_deg": 83.0667,
+        "shell_deg": 41.4692,
+        "mouth_mm": 54.277,
+        "trans_angle_deg": 123.454,
+        "trans_angle_in_deg": 52.918,
+        "dshell_dservo": 0.5026,
+        "torque_gain": 1.99
+      },
+      {
+        "servo_deg": 84.0556,
+        "shell_deg": 41.9672,
+        "mouth_mm": 54.8953,
+        "trans_angle_deg": 124.424,
+        "trans_angle_in_deg": 52.401,
+        "dshell_dservo": 0.5049,
+        "torque_gain": 1.981
+      },
+      {
+        "servo_deg": 85.0444,
+        "shell_deg": 42.4677,
+        "mouth_mm": 55.5144,
+        "trans_angle_deg": 125.407,
+        "trans_angle_in_deg": 51.895,
+        "dshell_dservo": 0.5075,
+        "torque_gain": 1.971
+      },
+      {
+        "servo_deg": 86.0333,
+        "shell_deg": 42.9708,
+        "mouth_mm": 56.1346,
+        "trans_angle_deg": 126.402,
+        "trans_angle_in_deg": 51.398,
+        "dshell_dservo": 0.5103,
+        "torque_gain": 1.96
+      },
+      {
+        "servo_deg": 87.0222,
+        "shell_deg": 43.477,
+        "mouth_mm": 56.7562,
+        "trans_angle_deg": 127.409,
+        "trans_angle_in_deg": 50.91,
+        "dshell_dservo": 0.5136,
+        "torque_gain": 1.947
+      },
+      {
+        "servo_deg": 88.0111,
+        "shell_deg": 43.9866,
+        "mouth_mm": 57.3796,
+        "trans_angle_deg": 128.431,
+        "trans_angle_in_deg": 50.433,
+        "dshell_dservo": 0.5172,
+        "torque_gain": 1.933
+      },
+      {
+        "servo_deg": 89.0,
+        "shell_deg": 44.5,
+        "mouth_mm": 58.0051,
+        "trans_angle_deg": 129.466,
+        "trans_angle_in_deg": 49.966,
+        "dshell_dservo": 0.5192,
+        "torque_gain": 1.926
+      }
+    ],
+    "note": "개구는 서보각에 비례하지 않는다 (D463). torque_gain = 1/dshell_dservo — 1 보다 크면 그 구간에서 서보 토크가 증폭된다"
+  },
+  "piece_counts": {
+    "shell_L": 82,
+    "shell_R": 82,
+    "bracket": 41,
+    "linkage": 140
+  },
+  "measure_pending": [
+    "bulk_density_g_cm3"
+  ],
+  "degenerate_geometry_repair": {
+    "what": "부피 0 으로 퇴화했던 조각 8개를 쐐기 분해로 실체화",
+    "was": [
+      "hub",
+      "gear_00",
+      "gear_01",
+      "(셸 L·R 각각)",
+      "pivot_boss_L",
+      "pivot_boss_R"
+    ],
+    "cause": "arc_segment(...,0,2*pi,...) 는 두 끝각의 좌표가 같아 정점이 4개뿐이고, (0,pi)/(pi,2*pi) 는 4점이 한 평면에 놓인다. 게다가 환형은 정의상 볼록이 아니라 한 조각으로 표현 불가",
+    "fix": "ring() 으로 쐐기 16 개 분해 (보울 seg_n 분해와 같은 방식)",
+    "gate": "all_pieces_convex 가 부피 0 을 위반으로 세도록 정정 + pieces_have_positive_volume 게이트 신설",
+    "mass_effect_g": 18.43
+  },
+  "supersedes": "scoop_shell_design.py (v0 오버레이, D462) / 기어 직결 구동 (D462 §7 -> D463 이 링크로 대체)"
+}

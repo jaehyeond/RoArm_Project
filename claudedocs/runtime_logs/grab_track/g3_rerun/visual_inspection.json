@@ -1,0 +1,34 @@
+{
+  "artifact": "ROARM_RERUN_MANUAL_VISUAL_INSPECTION_V1",
+  "subject": "p38 g3 grab v1 four-bar linkage sweep (D463)",
+  "contract": "D341 — 생성/로드/스크린샷 성공만으로는 '검수'가 아니다. 실제로 본 것을 적는다.",
+  "inspected_by": "Claude Code (dispatched worker, task_858550b682b4)",
+  "inspected_file": "claudedocs/runtime_logs/grab_track/g3_rerun/g3_inspection.png",
+  "inspected_sha256": "90c686481fa9a3ba8a77063ad3022c6057f93984e712ce78b98cda6f64a1d035",
+  "rrd_sha256": "4f870fa1b1aa29c42dba98ad8fbc3b2427c1cd5c2e3e5005459ccfc56f0ae7c9",
+  "rbl_sha256": "9d555f61cecb0d133cbaef49f279f1d1f4cb2aab7a819f2e431ee334b084113e",
+  "viewer_frame_shown": "servo_step #27 (servo ~26.7 deg)",
+  "observations": [
+    "패널1: 링크 치수 4개(지지대 77.8111 / r2 21.0 / r3 50.178 / r4 39.9581)와 전달각 대역이 판독 가능하게 렌더된다. 링크 합성 결과는 정정 전후 동일하다.",
+    "패널2(3D): **셸 L 허브 둘레에 이빨 달린 기어 원반이 실체로 보인다** — 정정 전에는 뿌리 원반이 부피 0 이라 이빨만 공중에 떠 있었다. 쐐기 분해가 실제로 반영됐음을 눈으로 확인.",
+    "패널2: 셸 R 쪽에 **회색 원통(브래킷 피벗 보스 ⌀8 x 59)이 셸을 관통해 튀어나온 것이 보인다** — 이것도 정정 전에는 부피 0 이라 안 보였다. 보스가 셸 너비를 가로지르는 축이라는 배치가 시각적으로 확인된다.",
+    "패널2: 회색 link5 손목, 주황 순정 가동 조(약 27도), 파랑 셸L·초록 셸R, 빨강 서보 크랭크, 노랑 로드(쌍레일이라 가운데가 비어 보인다), 보라 셸 크랭크가 각각 별도 엔티티로 색 구분된다.",
+    "패널2: 노랑 로드가 두 크랭크를 잇고 양 끝 흰 핀이 보인다. 로드·크랭크가 회색 팔을 파고드는 모습은 없다.",
+    "패널3: 설계 게이트 15개(13 PASS + tool_mass_under_max·self_load_ratio 2건 WARN/FAIL)와 p37 게이트 9개 전부 PASS 가 줄 단위로 판독된다.",
+    "패널4: trans_angle_out 77->129 단조 증가, trans_angle_in 131->50 단조 감소, shell_deg 0->44.5, mouth_mm 0->58. 어느 곡선도 0/180도에 접근하지 않는다(사점 없음).",
+    "패널5: linkage_clearance_mm 최소 ~0.5 mm(스텝 #55 부근) -> #90 에서 ~9.5 mm. design.json 의 linkage_rod_clears_shells = 0.5 mm 와 일치한다 — 독립 교차확인.",
+    "패널5: dshell_dservo 0.41~0.52 로 거의 평평. 토글 구간 없음."
+  ],
+  "defects_found_and_fixed": [
+    "1차 렌더에서 한글 뷰 제목·요약이 전부 네모(두부)로 렌더돼 판독 불가 (Rerun 내장 폰트에 한글 글리프 없음, D384 attempt6 전례). -> Rerun 가시 문자열을 전부 ASCII 영문으로.",
+    "1차 렌더에서 순간비·여유(0~9)가 각도·개구(0~135)와 같은 축에 눌려 판독 불가. -> TimeSeriesView 2분할.",
+    "코디네이터 지적(수정1) 반영 후 재렌더: 기어 뿌리 원반과 피벗 보스가 실체로 나타나는 것을 눈으로 확인했다."
+  ],
+  "residual_limitations": [
+    "3D 뷰 자동 카메라가 조립체 전체를 담지 못해 셸 보울 상단이 뷰포트 위로 잘린다. 판정 대상(로드·크랭크·핀·팔)은 전부 보이지만 셸 끝단은 안 보인다. rerun 0.34 블루프린트에 3D 카메라 지정 수단이 없어 뷰 비율 조정(행 0.80)까지만 했다.",
+    "Rerun 은 Float32 공간 사본이다. 수치 권위는 design.json / g2_results.json (D341)."
+  ],
+  "render_determinism": "헤드리스 렌더는 바이트 재현이 안 된다(같은 RRD·블루프린트로 다시 렌더하면 md5 가 달라진다 — GPU 안티에일리어싱). ASCII 정정 후 렌더 3장을 모두 직접 열어 봤고 패널 구성·수치·색·곡선이 전부 동일했다. 위 sha256 은 최종 배포본(마지막으로 열어 본 것)이다.",
+  "n_renders_inspected": 4,
+  "revision": "퇴화 기하 정정(쐐기 분해) + 링크 경량화 반영본"
+}
