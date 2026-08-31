@@ -4,15 +4,26 @@
 프린터에 어떤 검증을 통과한 상태로 보냈는지가 남지 않는다. 이 파일이 전송의 단일 소스이며
 `send_print_job.py`가 이것만 읽고 실행한다 — 매니페스트에 없는 것은 보내지 않는다.
 
-사용:  python make_print_job.py
+사용:  python make_print_job.py [3mf경로] [출력디렉터리] [부품이름] [STL...]
+       인자를 안 주면 기존 칼라 쿠폰 기본값을 쓴다 (하위호환).
 """
-import json, hashlib, re, zipfile, subprocess
+import json, hashlib, re, zipfile, subprocess, sys
 from pathlib import Path
 
 DTR = Path("/home/cgxr/Documents/DK/DTR/bamboo-3dprinter")
-OUT = Path("/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/scoop_shell_v0")
-THREEMF = DTR / "output/roarm_collar_coupon.3mf"
-STL     = OUT / "collar_test_coupon.stl"
+_a = sys.argv[1:]
+if _a:
+    THREEMF = Path(_a[0])
+    OUT     = Path(_a[1])
+    PARTNAME = _a[2]
+    STLS    = [Path(x) for x in _a[3:]]
+    STL     = STLS[0]
+else:
+    OUT = Path("/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/scoop_shell_v0")
+    THREEMF = DTR / "output/roarm_collar_coupon.3mf"
+    STL     = OUT / "collar_test_coupon.stl"
+    STLS    = [STL]
+    PARTNAME = "roarm_collar_coupon"
 
 BED_X = BED_Y = 256.0
 BED_Z = 250.0
@@ -61,7 +72,7 @@ gates = {
 
 job = {
     "schema": "roarm.print_job/1",
-    "name": "roarm_collar_coupon",
+    "name": PARTNAME,
     "rev": "v1 — 볼트 체결",
     "purpose": "조에 이미 뚫려 있는 M2.5 구멍 25mm 스팬에 마운트 플레이트가 맞는지 검증. "
                "(a) 스팬 적합 (b) 볼트 조임 시 1.5mm 판재 변형 (c) 조인 뒤 회전 유격 3종",
@@ -72,7 +83,7 @@ job = {
     "decision_refs": ["D457:28196 §12", "D458:28407 §7", "D459:28476 §8", "63rd :120 비가역 개조 0"],
 
     "source": {
-        "stl": str(STL), "sha256_16": sha(STL),
+        "stl": [str(x) for x in STLS], "sha256_16": {x.name: sha(x) for x in STLS},
         "generator": "scoop_shell_design.py (파라메트릭 — 재생성 가능)"},
 
     "slicing": {
@@ -89,7 +100,7 @@ job = {
     "artifact": {
         "path": str(THREEMF), "sha256_16": sha(THREEMF),
         "bytes": THREEMF.stat().st_size,
-        "remote_name": "roarm_collar_coupon.3mf"},
+        "remote_name": THREEMF.name},
 
     "printer": {
         "model": "Bambu Lab P1S (BBL-P003)",
@@ -119,8 +130,8 @@ job = {
 
     "send_plan": [
         {"step": 1, "op": "ftp_upload", "args": {"local": str(THREEMF),
-                                                 "remote": "roarm_collar_coupon.3mf"}},
-        {"step": 2, "op": "mqtt_print", "args": {"filename": "roarm_collar_coupon.3mf",
+                                                 "remote": THREEMF.name}},
+        {"step": 2, "op": "mqtt_print", "args": {"filename": THREEMF.name,
                                                  "plate_id": 1, "use_ams": False,
                                                  "bed_leveling": True}},
         {"step": 3, "op": "monitor", "args": {"poll_s": 30}}],

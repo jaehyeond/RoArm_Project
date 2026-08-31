@@ -1,0 +1,162 @@
+{
+  "schema": "roarm.print_job/1",
+  "name": "roarm_grab_v1",
+  "rev": "v1 — 볼트 체결",
+  "purpose": "조에 이미 뚫려 있는 M2.5 구멍 25mm 스팬에 마운트 플레이트가 맞는지 검증. (a) 스팬 적합 (b) 볼트 조임 시 1.5mm 판재 변형 (c) 조인 뒤 회전 유격 3종",
+  "v0_result": "v0(C-채널 클램프)는 실물 시험에서 '들어가나 헐겁고 미끄러짐'. 원인 = 조를 통판으로 가정했으나 실제는 프레임 구조(물림면이 가정의 1/6)이고, 쿠폰에 볼트 구멍이 없어 마찰만 시험된 것. v1은 마찰에 의존하지 않는다",
+  "assembly_png": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g3_linkage/ASSEMBLY.png",
+  "decision_refs": [
+    "D457:28196 §12",
+    "D458:28407 §7",
+    "D459:28476 §8",
+    "63rd :120 비가역 개조 0"
+  ],
+  "source": {
+    "stl": [
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g3_linkage/shell_L_ALL.stl",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g3_linkage/shell_R_ALL.stl",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g3_linkage/bracket_ALL.stl",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g3_linkage/linkage_ALL.stl"
+    ],
+    "sha256_16": {
+      "shell_L_ALL.stl": "151c2819882c3dbc",
+      "shell_R_ALL.stl": "d170def1f8f1310b",
+      "bracket_ALL.stl": "61fe8480ccd704f8",
+      "linkage_ALL.stl": "79f0e6238a07a901"
+    },
+    "generator": "scoop_shell_design.py (파라메트릭 — 재생성 가능)"
+  },
+  "slicing": {
+    "slicer": "BambuStudio.AppImage 02.05.00.66",
+    "headless": "xvfb-run -a 필수 — CLI 모드도 GL 컨텍스트를 요구해 그냥 실행하면 glfwInit 실패",
+    "profiles": {
+      "machine": "profiles/machine_full.json (원본)",
+      "process": "profiles/process_nosupport_roarm.json (사본: enable_support 1→0, curr_bed_type 추가='Textured PEI Plate')",
+      "filament": "profiles/filament_nosupport_roarm.json (사본: textured_plate_temp 65→55)"
+    },
+    "flags": [
+      "--orient 0 (설계 배향 유지)",
+      "--ensure-on-bed",
+      "--arrange 1",
+      "--slice 0"
+    ],
+    "originals_untouched": true
+  },
+  "artifact": {
+    "path": "/home/cgxr/Documents/DK/DTR/bamboo-3dprinter/output/roarm_grab_v1.3mf",
+    "sha256_16": "ecd7158db350409e",
+    "bytes": 1140090,
+    "remote_name": "roarm_grab_v1.3mf"
+  },
+  "printer": {
+    "model": "Bambu Lab P1S (BBL-P003)",
+    "ip": "192.168.0.96",
+    "ip_note": "config.json의 192.168.0.144는 낡음. DHCP 재할당됨. MAC 20:6E:F1:8E:4B:D8로 ARP 스윕해 확정 (2026-08-27)",
+    "ports_verified": {
+      "mqtt": 8883,
+      "ftps": 990,
+      "camera": 6000
+    },
+    "state_at_manifest": "IDLE / 작업 없음 / 노즐 25.2°C 베드 24.6°C",
+    "bed_plate_physical": "Textured PEI (사용자 육안 확인: 까끌한 회색)"
+  },
+  "print_params": {
+    "plate_id": 1,
+    "est_seconds": 7145,
+    "est_grams": 39.91,
+    "bed_temp_c": [
+      55
+    ],
+    "nozzle_temp_c": [
+      220
+    ],
+    "layer_height_mm": 0.2,
+    "filament": "PLA (Bambu Basic, GFA00)",
+    "bbox_mm": {
+      "x": [
+        72.84,
+        187.36
+      ],
+      "y": [
+        73.2,
+        171.49
+      ],
+      "z": [
+        0.0,
+        5.1
+      ]
+    },
+    "bed_size_mm": [
+      256.0,
+      256.0,
+      250.0
+    ]
+  },
+  "slicer_warnings": [
+    {
+      "msg": "bed_temperature_too_high_than_filament",
+      "verdict": "무해 — PLA 연화점 45°C보다 높은 어떤 실용 베드 온도에서도 뜬다. 55°C는 제조사 스펙이므로 조치 불요"
+    }
+  ],
+  "gates": {
+    "inside_bed_with_brim": {
+      "pass": true,
+      "detail": "브림 5.0mm 포함 X 67.8~192.4 Y 68.2~176.5 / 베드 256x256"
+    },
+    "slicer_outside_flag_false": {
+      "pass": true,
+      "detail": "slice_info outside=false"
+    },
+    "no_support": {
+      "pass": true,
+      "detail": "볼트 구멍 안 서포트 잔사가 체결 공차를 오염시키므로 서포트는 금지. 형상을 베드에 평평히 눕혀 오버행 자체를 제거함 (구멍은 수직 관통)"
+    },
+    "gcode_has_toolpath": {
+      "pass": true,
+      "detail": "gcode 8765682 B"
+    },
+    "bed_temp_at_filament_spec": {
+      "pass": true,
+      "detail": "M140=[55] — Bambu PLA Basic + 텍스처 PEI 제조사 스펙 55°C. 프로필 기본 65°C는 연화점(45°C) 초과폭이 커 엘리펀트 풋으로 슬롯 폭을 좁힌다"
+    },
+    "nozzle_print_temp_in_range": {
+      "pass": true,
+      "detail": "출력 온도 = max 220°C (필라멘트 허용 200~240). 과도값 [75, 140] = 오징방지/레벨링 루틴"
+    }
+  },
+  "all_gates_pass": true,
+  "send_plan": [
+    {
+      "step": 1,
+      "op": "ftp_upload",
+      "args": {
+        "local": "/home/cgxr/Documents/DK/DTR/bamboo-3dprinter/output/roarm_grab_v1.3mf",
+        "remote": "roarm_grab_v1.3mf"
+      }
+    },
+    {
+      "step": 2,
+      "op": "mqtt_print",
+      "args": {
+        "filename": "roarm_grab_v1.3mf",
+        "plate_id": 1,
+        "use_ams": false,
+        "bed_leveling": true
+      }
+    },
+    {
+      "step": 3,
+      "op": "monitor",
+      "args": {
+        "poll_s": 30
+      }
+    }
+  ],
+  "safety": [
+    "docs/print.md 원칙: 연속 출력 금지 — 매 출력 사용자 시작 신호 필요",
+    "mqtt_print()는 항상 0층부터 시작한다. 중단된 작업 재개는 mqtt_resume() (현재 대기 작업 없음)",
+    "DTR 원본 프로필·config.json 무수정 — 사본으로만 오버라이드",
+    "필라멘트 적재 여부는 기계적 사실이므로 전송 전 사용자 확인 필요"
+  ],
+  "bed_layout_png": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g3_linkage/BED_LAYOUT.png"
+}
