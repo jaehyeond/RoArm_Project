@@ -19,100 +19,73 @@
 ## §1 템플릿 (§2를 덮어쓸 때 이 골격을 쓴다)
 
 ```
-## §2 <YYYY-MM-DD> Claude → Codex
+## §2 2026-08-31 Claude → Codex (74th 세션)
 
-**한 일 (repo에 남은 변경)**: 파일 단위로. 없으면 "repo 무수정".
-**만지지 말 것**: 진행 중이거나 사용자 승인 대기라 다음 도구가 건드리면 안 되는 경로.
-**함정**: 문서가 사실과 어긋나는 지점 + 실측 근거(명령/커밋 해시/줄번호).
-**승인 대기**: 사용자 결정 없이는 못 하는 항목.
-**검증 방법**: 다음 도구가 위 주장을 스스로 재확인할 명령.
-```
+세션 성격 = **실물 그랩 설계 + 시뮬 검증**. 73rd 산출물(D457~D461)을 이어받아
+D462(기구 전환)·D463(구동 전환)을 냈다. 물리 0, 로봇 0, 펠릿 0 — 전부 기하·문서.
 
----
+**한 일 (repo에 남은 변경)** — HEAD `9664f91`, 미커밋 1건(내 설정 백업)뿐.
 
-## §2 2026-08-27 Claude → Codex (73rd 세션)
-
-세션 목적은 연구가 아니라 **도구 아키텍처 정비**(Orca 도입 · 교차도구 규칙 · 메모리 구조 · 후크 버그).
-연구 산출물 0, 물리 0, Isaac 0, 로봇 0.
-
-⚠️ **먼저 읽을 것**: 이 §2는 **72nd 세션이 relay를 쓰지 않고 닫힌 뒤 73rd가 사후 작성**한 것이다
-(함정 ①). 72nd의 인계 내용은 여기 없으며
-`claudedocs/session_20260826_72nd_paper_readthrough_codega_owlat_aoshima_d450_reverdict.md`가 유일 권위다.
-
-**한 일 (repo에 남은 변경)** — RoArm repo 안은 **`AGENTS.md` 한 파일뿐**(`+6 −2`).
-
-| 변경 | 내용 |
+| 커밋 | 내용 |
 |---|---|
-| `AGENTS.md` `:14~` | **규칙 범위 축소.** "같은 프로젝트에서 Claude와 Codex 편집 세션 **동시 실행 금지**" → "**상태 원장 소유권은 배타적이다**". worktree가 분리된 코드 편집·분석·읽기 전용은 도구가 달라도 동시 실행 허용. relay 인계 문장은 불변 |
-| repo 밖 · `~/.claude/CLAUDE.md` | 전역에도 같은 취지로 교체 (`Never run Claude and Codex edit sessions concurrently` → state-ledger 배타 소유) |
-| repo 밖 · `~/.claude/scripts/check-context.sh` | **버그 수리 2줄** — 창 크기 폴백 `200000`→`1000000`, 발동 조건에 `&& $pct -le 100` 가드. 백업 `check-context.sh.bak_20260827_pre_window_fix` |
-| repo 밖 · auto-memory `MEMORY.md` | **26,411 B → 12,786 B 압축 + 현행 방향으로 재조준.** 원문 verbatim 전문 = `MEMORY_archive_20260827.md`(HARD RULE #8 보존 조항 준수) |
-| repo 밖 · `~/.agents/skills/orchestration` | Orca 오케스트레이션 스킬 신규 설치(심링크 = `~/.claude/skills/orchestration`). Codex는 `.agents/skills` 네이티브 탐색으로 자동 인식 |
+| `d1f4e32` | 계약 웨이브 — 형상 게이트·heightmap 계약·DEME 입자 시뮬·예측 모델 골격 (워커 4개 산출) |
+| `7b4ae74` | 그랩 v1 설계(`scoop_grab_v1_design.py`) + 부착 프로브(`sim_scripts/p37_*`) + 조각 STL gitignore |
+| `9664f91` | D463 기어→링크 전환 + 감사 6건 |
 
 **만지지 말 것**
 
-- **git commit 금지.** 미커밋 9건 전부 사용자 명시 지시 시에만 커밋한다.
-- `claudedocs/DECISIONS.md` · `DECISIONS_ACTIVE.md` — **72nd(D456) 산출물이며 73rd는 무수정.**
-  73rd는 원장 소유권이 비어 있는 동안에도 이 두 파일을 열지 않았다.
-- `*.bak_20260826_pre_d456` / `_pre_71st` / `_pre_gitfix`, `MEMORY_archive_20260827.md`,
-  `check-context.sh.bak_20260827_pre_window_fix` — 전부 되돌리기 경로. 커밋·삭제 대상 아님.
-- `docs/reference/session_protocol.md` 본문 `:9-86` — 분리 전 `AGENTS_full:155-232`와 바이트 동일
-  (md5 `983c186d…`). 낡았지만 **의도적으로 안 고친 상태 유지**(71st 결정).
+- `scoop_shell_design.py`(v0) 와 `claudedocs/runtime_logs/scoop_shell_v0/` — **동결**. forward-only.
+- `.claude/worktrees/grab-v1` (브랜치 `track/grab-v1`) — **트랙 A 워커 작업 중**
+- `.claude/worktrees/pellet-sim` (브랜치 `track/pellet-sim`) — **트랙 B 워커 작업 중**
+- `.claude/settings.local.json.bak_20260831_pre_orca_allow` — 되돌리기 경로. 커밋 대상 아님.
+- 원장(`START_HERE`·`DECISIONS*`·`session_*`·이 파일) — 코디네이터 배타 소유.
 
 **함정** (전부 이번 세션 실측)
 
-1. **72nd가 relay 없이 닫혔다.** `from_claude.md`가 `08-26 20:25`에 멈춰 있었고 D456 작업분이 반영되지
-   않았다. 이 §2가 그 공백을 사후에 메운 것이라 **72nd 내부 사정은 담고 있지 않다.**
-2. 🔴 **`START_HERE.md`가 낡았다 — 가장 위험한 항목.** 여전히 `y3_d455`를 Active Case로 가리키는데,
-   2026-08-27 확정된 프로포절 최종본(`/home/cgxr/Downloads/박재현 프로포절_직전 랩미팅.pptx`, 18슬라이드)이
-   방향을 바꿨다: **이산 물체 → 연속 입자**, **놓기 학습 → 배출 위치 고정**.
-   그 결과 `yard_track`의 **place 결정층(3×3 존 40mm·벽-하한 release)은 폐기**됐다.
-   `START_HERE.md` 갱신은 **사용자 승인 대기**(아래) — 그전까지 이 파일을 현행으로 읽지 말 것.
-3. 🔴 **D455 "관측 제거 = 완주 동작수 32→242 (7.56×)"는 이산 물체 결과다.**
-   연속 입자 실험의 근거로 그대로 인용하면 안 된다. yard_track에서 살아남는 것은
-   **관측→순차결정 골격과 heightmap 파이프라인**뿐.
-4. **실물 경로 전체가 하드웨어에서 막혀 있다.** 프로포절은 입자 **퍼내기(scoop/그랩)**를 요구하는데
-   인벤토리에는 2-jaw 클램프뿐이고 **스쿱·그랩 없음, 입자 재료 없음, 배출 용기 없음**
-   (`project_hardware_inventory.md`). D452 슬리브 그리퍼도 이 방향에는 못 쓴다.
-   시뮬·모델·결정층은 하드웨어 없이 병렬 진행 가능.
-5. **stop-hook "Context usage is at N%" 오탐의 원인이 밝혀지고 수리됐다.**
-   `check-context.sh`가 컨텍스트 창을 못 받으면 `200000`으로 가정해 실제의 약 5배를 보고했다
-   (그래서 150%·135% 같은 불가능한 값이 나왔다). 69회 거부 기록의 원인이 이것이다.
-   ⚠️ 다만 이전 세션들이 근거로 쓴 *"harness 카운터 14.70M/15M 잔여 = 2.0%"* 대조는 **부적절한 비교**다 —
-   그건 세션 **총 토큰 예산**이고 후크가 재는 것은 **컨텍스트 창 점유율**이라 서로 무관한 양이다.
-   결론(오탐)은 맞지만 근거는 *"100%를 넘는 백분율은 정의상 불가능"* 쪽을 쓸 것.
-6. **동시 실행 규칙이 완화됐다** (위 `AGENTS.md` 변경). Codex/Cursor 세션은 이제 Claude 세션과
-   **동시에 열려도 된다** — 단 `START_HERE.md`·`DECISIONS*.md`·`EXPERIMENT_LEDGER.md`·`relay/`를
-   **쓰는 쪽은 언제나 하나**여야 한다. 원장은 worktree로 격리되지 않는다
-   (`DECISIONS.md`는 Dxxx 순번 append, `START_HERE.md`는 통째 overwrite).
-7. **RoArm 후크 3건은 여전히 Claude에만 걸린다** (71st 결론 불변).
-   #7(`HANDOFF.md`)·#5(`JOINT_LIMITS`)·#28(`outputs/` 삭제)는 `~/.claude/settings.json` PreToolUse 경로다.
-   Codex 세션에서는 산문 규칙일 뿐이니 `AGENTS.md` HARD RULES를 스스로 지켜야 한다.
-8. **`outputs/`·`logs/`·`collected_data*` 등 14경로는 심링크다** (70th 콜드 아카이브 이관).
-   외장 `ROBOT_DEV` 미마운트 시 전부 끊긴다 → `ARCHIVE_INDEX.md`의 새경로 열 참조.
-   **이관분은 사본 1개이며 백업이 아니다.**
+1. 🔴 **`orca-ide worktree create` 를 쓸 것. `git worktree add` 를 쓰면 Orca 사이드바에 안 뜬다.**
+   74th 는 `git worktree add` 로 만들었고 그 결과 `git worktree list` 3개 / Orca 등록부 1개가 됐다.
+   **격리·워커 배치는 정상 작동**하지만(`worker-start --worktree <절대경로>` 로 해결) 사용자가
+   UI 에서 탭을 못 찾아 승인 프롬프트 처리가 번거로워진다.
+   **사용자 결정(08-31): 현행 2개는 그대로 두고, 다음 웨이브부터 Orca 방식.**
+2. 🔴 **`orca orchestration check` 는 `--from` 을 받지 않는다.** 유효 플래그는 `--terminal` / `--run`.
+   그리고 호출 전에 `run-use --id <run> --from <handle>` 로 재바인딩하지 않으면 `consumer_fenced` 가 난다.
+   동작 순서: `run-use --from <handle>` → `check --terminal <handle>`.
+3. 🔴 **워커가 권한 프롬프트에서 멈춘다. 코디네이터가 대신 못 누른다** (`agent_prompt_blocked` — 의도된 설계).
+   지금까지 걸린 것: `orca orchestration send` → `orca-ide orchestration inbox` →
+   `python sim_deme_pile.py` → `cd` (경로 우회 방지). **사람이 눌러야 진행된다.**
+   근본 해결 = `.claude/settings.local.json` 의 `permissions.allow` 에
+   `Bash(orca orchestration:*)` · `Bash(orca-ide orchestration:*)` 추가 (사용자 승인 사안, 미실행).
+4. 🔴 **충돌 검사에 `mesh.convex_hull` 을 쓰지 마라.** `link5` 실부피/볼록껍질 = **0.386**.
+   속 빈 프레임을 통짜로 만들어 −52.9 mm 를 과대보고했다. `fcl` 부재 + non-watertight 이므로
+   **1 mm 복셀 점유**를 쓴다 (`p37` 의 `link5_occupancy()`). D453 과 같은 계열의 오류다.
+5. ⚠️ **여유가 조절 파라미터에 거의 반응하지 않으면 그 파라미터는 원인이 아니다.**
+   스탠드오프를 32→38 mm(+6) 키웠는데 여유가 −0.834→−0.744(+0.09) 였다. 진짜 원인은
+   배치 변환의 깊이 **부호**였다. 무작정 그 축을 키웠으면 그랩만 멀어졌다.
+6. ⚠️ **numpy 스칼라는 JSON 직렬화가 안 된다.** `np.bool_` 에서 두 번 죽었다. `default=` 핸들러 필수.
+7. ⚠️ **생성기가 출력 폴더를 비우지 않는다.** `scoop_grab_v1/` 에 구버전 조각
+   (`bracket_base_z{m,p}_*` 14개)이 잔류한다. 디스크에서 슬라이스하면 구 조각을 집을 수 있다.
+8. ⚠️ **조각 STL 은 `.gitignore` 로 제외했다** (`claudedocs/runtime_logs/scoop_grab_*/*.stl`,
+   `_ALL.stl` 만 예외). 미커밋 179 → 28 로 줄었다. 생성기로 결정론적 재생성 가능하다.
 
 **승인 대기** (사용자 결정 없이는 착수 금지)
 
-- 미커밋 9건의 **git 커밋**.
-- 🔴 **`START_HERE.md`를 프로포절 최종본 기준으로 갱신** — 함정 ②. 폐기 자산 판정을 포함해야 한다.
-- 🔴 **스쿱/그랩 엔드이펙터 설계 방향** — 슬라이드 16의 크레인 확장을 고려하면 단순 삽이 아니라
-  **조개형 그랩(clamshell)** 축소판이어야 전이된다(슬라이드 3: 그랩 = "퍼 올리는 **집게** 장치").
-  3D프린터 보유. 함께 정해야 할 것: **입자 재료**(모래/쌀/펠릿 — 입자 크기·마찰이 물성 조건 축이라
-  실험 설계에 직결) · **배출 용기** 규격.
-- **프로포절 v2 수정 7건 + LEDGER 등재** — 72nd 미실행분.
-- 이월: T3 45G 2사본화 / Kinect depth 비교 / 파일럿 `E:\` 이관.
+- 🔴 **`.npz` 저장 정책** (D463 §5-3). 전역 `*.npz` 무시로 DEME 더미 데이터가 git 추적 **0개**다.
+  `GATES.md` 의 G2/G3/G4 CHECK 명령이 그 파일을 인자로 받으므로 **클론하면 게이트가 안 돈다**.
+  DEME 는 bit-재현이 안 되므로(D463 §3) 잃으면 sha256 검증이 영구 불가.
+  코디네이터 권장 = 게이트가 쓰는 **3개만 화이트리스트(1.83 MB)**, `g0b_d420` 선례와 같은 폴더 단위 패턴.
+  학습 데이터는 npz 대신 heightmap 으로(2.73 GB → 69 MB). **D232 대상이라 승인 필요.**
+- `permissions.allow` 에 orchestration 명령 추가 (함정 ③).
+- 미커밋 백업 파일 처리.
+- 펠릿 조달(진행 중) · 배출 용기 규격.
 
-**검증 방법** (이 파일을 믿지 말고 직접 확인)
+**검증 방법**
 
 ```
-git status --short --untracked-files=all              # 미커밋 9건 실제 목록
-git diff --stat AGENTS.md                             # 73rd repo 변경 = 이 한 파일 (+6 −2)
-sed -n '12,20p' AGENTS.md                             # 함정 ⑥ 원장 배타 소유 규칙 원문
-grep -n 'Active:' START_HERE.md                       # 함정 ② → 아직 y3_d455를 가리키면 낡은 것
-md5sum claudedocs/DECISIONS.md claudedocs/DECISIONS_ACTIVE.md   # 73rd 무수정 확인용 기준값 확보
-grep -n 'max_context=\|pct -ge 85' ~/.claude/scripts/check-context.sh   # 함정 ⑤ → 1000000 / -le 100
-wc -c ~/.claude/projects/-home-cgxr-Documents-Robotics-RoArm-Project/memory/MEMORY*.md
-ls -l outputs logs collected_data                     # 함정 ⑧ → 심링크 여부
-ls ~/.agents/skills/                                  # orchestration 설치 확인
+git worktree list                                    # 3개, Orca 등록부는 1개 (함정 ①)
+orca-ide worktree list --json                        # 1개만 나온다
+git log --oneline -3                                 # 9664f91 / 7b4ae74 / d1f4e32
+python sim_scripts/p37_g2_grab_v1_attach_probe.py    # G1~G8 재현
+git ls-files claudedocs/runtime_logs/sim_deme/ | grep -c npz   # 0 (승인 대기 §npz)
+python -c "import trimesh;m=trimesh.load('local_assets/roarm_m3/urdf/meshes/link5.stl');\
+m.apply_scale(1000);print(m.volume/m.convex_hull.volume)"      # 0.386 (함정 ④)
 ```
