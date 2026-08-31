@@ -42,6 +42,8 @@ x0, y0, x1, y1 = plate["bbox_all"]
 beds = sorted({int(v) for v in re.findall(r"M140 S(\d+)", gcode)} - {0})
 nozz = sorted({int(v) for v in re.findall(r"M104 S(\d+)", gcode)} - {0})
 warns = re.findall(r'<warning msg="([^"]+)"', si)
+_zs = [float(v) for v in re.findall(r"^G[01] .*?Z([0-9.]+)", gcode, re.M)]
+max_z = max(_zs) if _zs else 0.0
 
 # ── 검증 게이트 ───────────────────────────────────────────────────────────
 gates = {
@@ -73,12 +75,14 @@ gates = {
 job = {
     "schema": "roarm.print_job/1",
     "name": PARTNAME,
-    "rev": "v1 — 볼트 체결",
-    "purpose": "조에 이미 뚫려 있는 M2.5 구멍 25mm 스팬에 마운트 플레이트가 맞는지 검증. "
-               "(a) 스팬 적합 (b) 볼트 조임 시 1.5mm 판재 변형 (c) 조인 뒤 회전 유격 3종",
-    "v0_result": "v0(C-채널 클램프)는 실물 시험에서 '들어가나 헐겁고 미끄러짐'. 원인 = "
-                 "조를 통판으로 가정했으나 실제는 프레임 구조(물림면이 가정의 1/6)이고, "
-                 "쿠폰에 볼트 구멍이 없어 마찰만 시험된 것. v1은 마찰에 의존하지 않는다",
+    "rev": ("" if _a else "v1 — 볼트 체결"),
+    "purpose": (f"{PARTNAME} 부품 출력" if _a else
+                "조에 이미 뚫려 있는 M2.5 구멍 25mm 스팬에 마운트 플레이트가 맞는지 검증. "
+                "(a) 스팬 적합 (b) 볼트 조임 시 1.5mm 판재 변형 (c) 조인 뒤 회전 유격 3종"),
+    "v0_result": ("" if _a else
+                  "v0(C-채널 클램프)는 실물 시험에서 '들어가나 헐겁고 미끄러짐'. "
+                  "조를 통판으로 가정했으나 실제는 프레임 구조(물림면이 가정의 1/6)이고, "
+                  "쿠폰에 볼트 구멍이 없어 마찰만 시험된 것. v1은 마찰에 의존하지 않는다"),
     "assembly_png": str(OUT / "ASSEMBLY.png"),
     "decision_refs": ["D457:28196 §12", "D458:28407 §7", "D459:28476 §8", "63rd :120 비가역 개조 0"],
 
@@ -117,7 +121,10 @@ job = {
         "bed_temp_c": beds, "nozzle_temp_c": [n for n in nozz if 190 <= n <= 250],
         "layer_height_mm": 0.2, "filament": "PLA (Bambu Basic, GFA00)",
         "bbox_mm": {"x": [round(x0, 2), round(x1, 2)], "y": [round(y0, 2), round(y1, 2)],
-                    "z": [0.0, 5.1]},
+                    # 🔴 이전 판은 z 를 [0.0, 5.1] 로 **하드코딩**했다 (칼라 쿠폰 값).
+                    #    부품이 바뀌어도 그대로 나와 검증에 쓸 수 없었다. gcode 의
+                    #    실제 Z 이동에서 읽는다.
+                    "z": [0.0, round(max_z, 2)]},
         "bed_size_mm": [BED_X, BED_Y, BED_Z]},
 
     "slicer_warnings": [
