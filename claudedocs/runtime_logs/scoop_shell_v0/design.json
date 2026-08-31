@@ -7,6 +7,7 @@
     "wall_mm": 2.0,
     "lip_land_mm": 0.8,
     "side_overlap_mm": 1.2,
+    "side_plate_thk_mm": 1.5,
     "blade_thk_mm": 1.5,
     "rail_bottom_z": [
       -38.62,
@@ -68,7 +69,8 @@
     "pellet_d_max_mm": 5.0,
     "jaw_max_open_mm": 80.0,
     "jaw_max_angle_deg": 89.0,
-    "closed_plate_gap_mm": 4.05
+    "closed_plate_gap_mm": 4.05,
+    "closed_plate_gap_src": "CAD_URDF"
   },
   "shells": {
     "fixed": {
@@ -117,6 +119,76 @@
     "fits_in_measured_jaw_stroke": {
       "pass": true,
       "headroom_mm": 22.0
+    },
+    "shells_do_not_interpenetrate": {
+      "pass": true,
+      "y_overlap_mm": -0.05,
+      "design_intent_mm": -0.05,
+      "band_mm": [
+        -5.0,
+        0.05
+      ],
+      "moving_y_mm": [
+        0.02,
+        24.02
+      ],
+      "fixed_y_mm": [
+        -24.02,
+        -0.02
+      ]
+    },
+    "shell_axis_convention": {
+      "pass": true,
+      "violations": [],
+      "urdf_hinge_axis": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "extents_xyz_mm": [
+        46.0,
+        24.0,
+        43.0
+      ],
+      "expected_x_mm": 46.0,
+      "expected_z_mm": 43.0
+    },
+    "lip_radius_matches_kinematics": {
+      "pass": true,
+      "violations": [],
+      "R_kinematic_mm": 41.375,
+      "R_measured_mm": {
+        "fixed": 41.375,
+        "moving": 41.375
+      },
+      "lip_gap_at_theta_max_mm": {
+        "fixed": 58.0,
+        "moving": 58.0
+      },
+      "formula": "R = mouth_open / (2*sin(theta_max/2))"
+    },
+    "bolt_hole_absorbs_fdm_shrink": {
+      "pass": true,
+      "value_mm": 3.4,
+      "band_mm": [
+        3.4,
+        4.0
+      ],
+      "basis": "ISO 273 M2.5 close 2.9 / normal 3.4 / coarse 4.0 + FDM 수축 0.1~0.3 mm"
+    },
+    "closed_gap_measured_on_hardware": {
+      "pass": false,
+      "violations": [
+        "closed_plate_gap_mm=4.05 출처가 'CAD_URDF' = 실측이 아니다. 닫힘 상태에서 두 조 판재 안쪽 면 간격을 실측하고 closed_plate_gap_src 를 'MEASURED_YYYY-MM-DD' 로 교체할 것"
+      ],
+      "value_mm": 4.05,
+      "source": "CAD_URDF",
+      "measured": false,
+      "lip_closure_band_mm": [
+        4.0,
+        9.0
+      ],
+      "margin_to_collision_mm": 0.05
     }
   },
   "derived": {
@@ -129,11 +201,14 @@
     "jaw_headroom_mm": 22.0
   },
   "measure_pending": [
+    "closed_plate_gap_mm",
     "wedge_deg",
     "bulk_density_g_cm3"
   ],
   "measure_confirmed": {
-    "blade_thk_mm": "2026-08-27 실물 자 측정 = CAD 1.5 일치"
+    "blade_thk_mm": "2026-08-27 실물 자 측정 = CAD 1.5 일치",
+    "bolt_span_mm": "2026-08-31 v1 쿠폰 실물 대조 = 조의 기존 M2.5 구멍과 25 mm 스팬 일치 (D460 §4 '구멍 좌표는 래스터 근사' 유보 해소)",
+    "bolt_clear_d_mm": "2026-08-31 v1 쿠폰 실물 = M2.5 볼트가 3.4 mm 구멍 통과"
   },
   "collar_coupon": {
     "rev": "v1 (볼트 체결)",
@@ -148,6 +223,15 @@
       3.0
     ],
     "purpose": "기존 M2.5 구멍 25mm 스팬 적합성 + 1.5mm 판재 볼트 체결 시 변형·유격 검증",
-    "v0_result": "들어가나 헐겁고 미끄러짐 — 원인: 조가 통판이 아니라 프레임(실물 물림면 높이 5.54mm 레일 1개 = 가정의 1/6), 그리고 쿠폰에 볼트 구멍 부재로 마찰만 시험됨"
+    "v0_result": "들어가나 헐겁고 미끄러짐 — 원인: 조가 통판이 아니라 프레임(실물 물림면 높이 5.54mm 레일 1개 = 가정의 1/6), 그리고 쿠폰에 볼트 구멍 부재로 마찰만 시험됨",
+    "v1_result": {
+      "date": "2026-08-31",
+      "source": "사용자 실물 시험 보고",
+      "a_bolt_through_hole": "PASS — M2.5 볼트가 3.4mm 구멍을 통과 (2.8mm는 안 들어갔었다)",
+      "b_span_matches_jaw_holes": "PASS — 스팬 25mm가 조의 기존 M2.5 구멍과 일치",
+      "c_plate_no_deflection": "PASS — 조여도 1.5mm 판재가 휘지 않음",
+      "verdict": "3/3 PASS",
+      "resolves": "D460 §4 유보 해소 — 구멍 좌표는 메쉬 래스터(0.35mm 격자) 근사였고 실물 대조가 필요했다. (b)가 그 대조이며 일치했다."
+    }
   }
 }

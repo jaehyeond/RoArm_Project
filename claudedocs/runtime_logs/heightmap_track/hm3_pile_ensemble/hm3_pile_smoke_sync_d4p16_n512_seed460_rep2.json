@@ -1,0 +1,43 @@
+{
+  "spec_version": "roarm-heightmap-v1",
+  "frame": "deme_container_floor_center",
+  "cell_m": 0.005,
+  "cell_mm": 5.0,
+  "origin_xy_m": [
+    -0.04749942630529404,
+    -0.07750018998980522
+  ],
+  "origin_is": "lower-left corner of cell [0, 0]",
+  "shape": [
+    31,
+    19
+  ],
+  "indexing": "height[row, col]; row -> +y, col -> +x",
+  "cell_center_formula": "x = origin_x + (col + 0.5) * cell_m ; y = origin_y + (row + 0.5) * cell_m",
+  "z_datum_m": 0.0,
+  "height_unit": "m",
+  "height_dtype": "float32",
+  "height_is": "surface z in `frame` minus z_datum_m (z_datum_m = z of the support plane)",
+  "valid_dtype": "bool",
+  "counts_dtype": "int32",
+  "counts_is": "number of surface samples reduced into the cell",
+  "empty_cell": {
+    "rule": "valid=False  =>  height = height_fill_m",
+    "height_fill_m": 0.0,
+    "consumer_note": "use `valid`; the fill value is padding, not a measurement.  `counts` is sample support only — on the particle path counts==0 is a valid floor reading, not a hole"
+  },
+  "height_fill_m": 0.0,
+  "source": "particles",
+  "agg": "max",
+  "agg_rule": "exact closed-form maximum over the cell footprint",
+  "n_particles": 512,
+  "polydisperse": false,
+  "particle_radius_min_m": 0.0020800000000000003,
+  "particle_radius_max_m": 0.0020800000000000003,
+  "particle_radius_mean_m": 0.0020799999999999994,
+  "floor_z_m": 0.0,
+  "note": "cells no sphere overhangs report floor_z_m and stay valid; counts is the number of spheres reaching the cell rectangle",
+  "scene": "s1_deme_settled_pile",
+  "source_npz": "pile_smoke_sync_d4p16_n512_seed460_rep2.npz",
+  "particle_radius_m": 0.0020800000000000003
+}

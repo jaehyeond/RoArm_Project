@@ -1,0 +1,325 @@
+{
+  "tool": "p35_hm3_pile_ensemble_compare",
+  "case": "hm3_pile_ensemble",
+  "question": "s1 이 낸 정착 pile 들 사이의 차이가 heightmap 에서 몇 mm 인가 — s3 예측 모델의 바닥 잡음",
+  "spec_version": "roarm-heightmap-v1",
+  "module": {
+    "path": "roarm_rl/heightmap.py",
+    "sha16": "992a89151a4b5498"
+  },
+  "env": {
+    "python": "3.13.11",
+    "numpy": "2.4.2"
+  },
+  "common_grid": {
+    "frame": "deme_container_floor_center",
+    "cell_m": 0.005,
+    "cell_mm": 5.0,
+    "origin_xy_m": [
+      -0.04749942630529404,
+      -0.07750018998980522
+    ],
+    "origin_is": "lower-left corner of cell [0, 0]",
+    "shape": [
+      31,
+      19
+    ],
+    "indexing": "height[row, col]; row -> +y, col -> +x",
+    "cell_center_formula": "x = origin_x + (col + 0.5) * cell_m ; y = origin_y + (row + 0.5) * cell_m",
+    "z_datum_m": 0.0
+  },
+  "n_piles": 5,
+  "comparable_population": true,
+  "peak_recovery_all_piles_exact": true,
+  "per_pile": [
+    {
+      "npz": "pile_smoke_d4p16_n512_seed460.npz",
+      "sha256_16": "7df31ecb9d4f43d6",
+      "variant": "base",
+      "label": "base",
+      "n_particles": 512,
+      "diameter_median_mm": 4.16,
+      "polydisperse": false,
+      "seed": 460,
+      "settled_sim_time_s": 0.9503799759913818,
+      "s1_surface_max_mm": 12.442250730395317,
+      "heightmap_peak_mm": 12.442250736057758,
+      "peak_err_vs_s1_mm": 5.662441002196594e-09,
+      "occupied_cells": 371,
+      "volume_cm3": 52.34845245140605,
+      "phi_eff_at_5mm": 0.3686758818869535,
+      "centroid_xy_mm": [
+        0.19410900144123389,
+        -0.27518905456247467
+      ]
+    },
+    {
+      "npz": "pile_smoke_sorted_d4p16_n512_seed460.npz",
+      "sha256_16": "28ffcf85d98cf520",
+      "variant": "sorted",
+      "label": "sorted",
+      "n_particles": 512,
+      "diameter_median_mm": 4.16,
+      "polydisperse": false,
+      "seed": 460,
+      "settled_sim_time_s": 0.9503799759913818,
+      "s1_surface_max_mm": 11.446672486066818,
+      "heightmap_peak_mm": 11.44667249172926,
+      "peak_err_vs_s1_mm": 5.662441002196594e-09,
+      "occupied_cells": 372,
+      "volume_cm3": 53.13583464012481,
+      "phi_eff_at_5mm": 0.36321273588060915,
+      "centroid_xy_mm": [
+        0.31587222804319026,
+        -0.32562776581812614
+      ]
+    },
+    {
+      "npz": "pile_smoke_sorted_d4p16_n512_seed460_rep2.npz",
+      "sha256_16": "026cba7f4e137bc6",
+      "variant": "sorted",
+      "label": "sorted_rep2",
+      "n_particles": 512,
+      "diameter_median_mm": 4.16,
+      "polydisperse": false,
+      "seed": 460,
+      "settled_sim_time_s": 1.0003999747277703,
+      "s1_surface_max_mm": 12.016763904988766,
+      "heightmap_peak_mm": 12.016763910651207,
+      "peak_err_vs_s1_mm": 5.662441002196594e-09,
+      "occupied_cells": 373,
+      "volume_cm3": 53.17339912289754,
+      "phi_eff_at_5mm": 0.36295614332145587,
+      "centroid_xy_mm": [
+        0.14438990911003202,
+        -0.34546024619341864
+      ]
+    },
+    {
+      "npz": "pile_smoke_sync_d4p16_n512_seed460.npz",
+      "sha256_16": "02f22ae3c3839885",
+      "variant": "sync",
+      "label": "sync",
+      "n_particles": 512,
+      "diameter_median_mm": 4.16,
+      "polydisperse": false,
+      "seed": 460,
+      "settled_sim_time_s": 0.9503799759913818,
+      "s1_surface_max_mm": 12.020826334059239,
+      "heightmap_peak_mm": 12.02082633972168,
+      "peak_err_vs_s1_mm": 5.662441002196594e-09,
+      "occupied_cells": 377,
+      "volume_cm3": 52.27191927842796,
+      "phi_eff_at_5mm": 0.36921567333580024,
+      "centroid_xy_mm": [
+        0.1110772994863396,
+        -0.19621554174520384
+      ]
+    },
+    {
+      "npz": "pile_smoke_sync_d4p16_n512_seed460_rep2.npz",
+      "sha256_16": "3563fc759046b57d",
+      "variant": "sync",
+      "label": "sync_rep2",
+      "n_particles": 512,
+      "diameter_median_mm": 4.16,
+      "polydisperse": false,
+      "seed": 460,
+      "settled_sim_time_s": 0.9503799759913818,
+      "s1_surface_max_mm": 11.697072530090809,
+      "heightmap_peak_mm": 11.69707253575325,
+      "peak_err_vs_s1_mm": 5.662441002196594e-09,
+      "occupied_cells": 367,
+      "volume_cm3": 52.168159396387644,
+      "phi_eff_at_5mm": 0.36995002500080093,
+      "centroid_xy_mm": [
+        0.22392489253775238,
+        0.005169763475976197
+      ]
+    }
+  ],
+  "spread": {
+    "peak_mm": {
+      "min": 11.44667249172926,
+      "max": 12.442250736057758,
+      "range": 0.9955782443284988,
+      "std": 0.37613141350127494
+    },
+    "volume_cm3": {
+      "min": 52.168159396387644,
+      "max": 53.17339912289754,
+      "range": 1.005239726509899,
+      "std": 0.4927963973546081,
+      "range_pct_of_mean": 1.9103919923703527
+    }
+  },
+  "pairwise": [
+    {
+      "a": "pile_smoke_d4p16_n512_seed460.npz",
+      "b": "pile_smoke_sorted_d4p16_n512_seed460.npz",
+      "same_variant": false,
+      "diff_over_union_footprint": {
+        "max_abs_mm": 4.158965777605772,
+        "rms_mm": 1.6308417253785898,
+        "mean_mm": -0.08014068078562503,
+        "p95_abs_mm": 4.138599708676338
+      },
+      "volume_diff_cm3": -0.7873821887187672
+    },
+    {
+      "a": "pile_smoke_d4p16_n512_seed460.npz",
+      "b": "pile_smoke_sorted_d4p16_n512_seed460_rep2.npz",
+      "same_variant": false,
+      "diff_over_union_footprint": {
+        "max_abs_mm": 7.349810097366571,
+        "rms_mm": 1.715511628089867,
+        "mean_mm": -0.08417823178484579,
+        "p95_abs_mm": 4.158965777605772
+      },
+      "volume_diff_cm3": -0.8249466714914934
+    },
+    {
+      "a": "pile_smoke_d4p16_n512_seed460.npz",
+      "b": "pile_smoke_sync_d4p16_n512_seed460.npz",
+      "same_variant": false,
+      "diff_over_union_footprint": {
+        "max_abs_mm": 4.158965777605772,
+        "rms_mm": 1.5600060748006235,
+        "mean_mm": 0.007849556202880846,
+        "p95_abs_mm": 3.9546509040519573
+      },
+      "volume_diff_cm3": 0.07653317297808893
+    },
+    {
+      "a": "pile_smoke_d4p16_n512_seed460.npz",
+      "b": "pile_smoke_sync_d4p16_n512_seed460_rep2.npz",
+      "same_variant": false,
+      "diff_over_union_footprint": {
+        "max_abs_mm": 4.158966243267059,
+        "rms_mm": 1.5694063000518033,
+        "mean_mm": 0.018586912888495885,
+        "p95_abs_mm": 4.158287355676293
+      },
+      "volume_diff_cm3": 0.18029305501840487
+    },
+    {
+      "a": "pile_smoke_sorted_d4p16_n512_seed460.npz",
+      "b": "pile_smoke_sorted_d4p16_n512_seed460_rep2.npz",
+      "same_variant": true,
+      "diff_over_union_footprint": {
+        "max_abs_mm": 4.158965777605772,
+        "rms_mm": 1.6344115312919116,
+        "mean_mm": -0.003823357025213521,
+        "p95_abs_mm": 4.152935370802879
+      },
+      "volume_diff_cm3": -0.037564482772726115
+    },
+    {
+      "a": "pile_smoke_sorted_d4p16_n512_seed460.npz",
+      "b": "pile_smoke_sync_d4p16_n512_seed460.npz",
+      "same_variant": false,
+      "diff_over_union_footprint": {
+        "max_abs_mm": 4.158965777605772,
+        "rms_mm": 1.6102309912288648,
+        "mean_mm": 0.08770714331947758,
+        "p95_abs_mm": 4.014338739216325
+      },
+      "volume_diff_cm3": 0.8639153616968561
+    },
+    {
+      "a": "pile_smoke_sorted_d4p16_n512_seed460.npz",
+      "b": "pile_smoke_sync_d4p16_n512_seed460_rep2.npz",
+      "same_variant": false,
+      "diff_over_union_footprint": {
+        "max_abs_mm": 4.158966243267059,
+        "rms_mm": 1.5733265262611176,
+        "mean_mm": 0.0995038811040798,
+        "p95_abs_mm": 4.0907746180891955
+      },
+      "volume_diff_cm3": 0.9676752437371721
+    },
+    {
+      "a": "pile_smoke_sorted_d4p16_n512_seed460_rep2.npz",
+      "b": "pile_smoke_sync_d4p16_n512_seed460.npz",
+      "same_variant": false,
+      "diff_over_union_footprint": {
+        "max_abs_mm": 4.230947233736515,
+        "rms_mm": 1.6721276137061505,
+        "mean_mm": 0.09175367373736154,
+        "p95_abs_mm": 4.14675734937191
+      },
+      "volume_diff_cm3": 0.9014798444695823
+    },
+    {
+      "a": "pile_smoke_sorted_d4p16_n512_seed460_rep2.npz",
+      "b": "pile_smoke_sync_d4p16_n512_seed460_rep2.npz",
+      "same_variant": false,
+      "diff_over_union_footprint": {
+        "max_abs_mm": 7.349810097366571,
+        "rms_mm": 1.5750466906377054,
+        "mean_mm": 0.10390074692608774,
+        "p95_abs_mm": 4.14156261831522
+      },
+      "volume_diff_cm3": 1.0052397265098982
+    },
+    {
+      "a": "pile_smoke_sync_d4p16_n512_seed460.npz",
+      "b": "pile_smoke_sync_d4p16_n512_seed460_rep2.npz",
+      "same_variant": true,
+      "diff_over_union_footprint": {
+        "max_abs_mm": 4.158965777605772,
+        "rms_mm": 1.5824754951174544,
+        "mean_mm": 0.010642039183622751,
+        "p95_abs_mm": 4.071619245223701
+      },
+      "volume_diff_cm3": 0.10375988204031593
+    }
+  ],
+  "pairwise_summary": {
+    "same_variant_rms_mm": {
+      "n_pairs": 2,
+      "min": 1.5824754951174544,
+      "mean": 1.608443513204683,
+      "max": 1.6344115312919116
+    },
+    "cross_variant_rms_mm": {
+      "n_pairs": 8,
+      "min": 1.5600060748006235,
+      "mean": 1.6133121937693402,
+      "max": 1.715511628089867
+    },
+    "same_variant_max_mm": {
+      "n_pairs": 2,
+      "min": 4.158965777605772,
+      "mean": 4.158965777605772,
+      "max": 4.158965777605772
+    },
+    "cross_variant_max_mm": {
+      "n_pairs": 8,
+      "min": 4.158965777605772,
+      "mean": 4.965674655977637,
+      "max": 7.349810097366571
+    }
+  },
+  "reference_scales_mm": {
+    "hm2_pathA_vs_pathB_rms": 0.904,
+    "hm2_pathA_vs_pathB_max": 3.929,
+    "pellet_radius": 2.08,
+    "pellet_diameter": 4.16,
+    "cell_m_mm": 5.0,
+    "note": "pile 간 차이를 이 값들과 비교하라. 관측 경로 차이(0.9 mm)나 펠릿 반지름(2.08 mm)보다 크면, 관측 파이프라인이 아니라 pile 생성이 s3 오차 예산을 지배한다는 뜻이다."
+  },
+  "interpretation_boundary": "이 probe 는 pile 들이 **왜** 다른지 주장하지 않는다 (DEME 결정성·정렬·동기화는 s1 의 판정 영역). 여기서 재는 것은 오직 그 차이의 관측층 크기다. 또한 이 pile 들이 '같아야 하는지'도 주장하지 않는다 — 변형 라벨(sorted/sync/rep2)의 의미는 s1 이 정의한다.",
+  "non_claims": "s1 재료값 provisional 미측정. DEME 결정성 판정 없음. 실제 Kinect 미사용. RoArm base 프레임 배치 미확정.",
+  "pngs": [
+    "hm3_ensemble.png"
+  ],
+  "wall_seconds": 0.9,
+  "gates": {
+    "G_peak_recovery_all_piles": true,
+    "G_comparable_population": true
+  },
+  "verdict": {
+    "code": "HM3_OK"
+  }
+}

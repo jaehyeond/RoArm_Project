@@ -1,0 +1,51 @@
+{
+  "spec_version": "roarm-heightmap-v1",
+  "frame": "deme_container_floor_center",
+  "cell_m": 0.005,
+  "cell_mm": 5.0,
+  "origin_xy_m": [
+    -0.0474997653067112,
+    -0.07750616163015366
+  ],
+  "origin_is": "lower-left corner of cell [0, 0]",
+  "shape": [
+    31,
+    19
+  ],
+  "indexing": "height[row, col]; row -> +y, col -> +x",
+  "cell_center_formula": "x = origin_x + (col + 0.5) * cell_m ; y = origin_y + (row + 0.5) * cell_m",
+  "z_datum_m": 0.0,
+  "height_unit": "m",
+  "height_dtype": "float32",
+  "height_is": "surface z in `frame` minus z_datum_m (z_datum_m = z of the support plane)",
+  "valid_dtype": "bool",
+  "counts_dtype": "int32",
+  "counts_is": "number of surface samples reduced into the cell",
+  "empty_cell": {
+    "rule": "valid=False  =>  height = height_fill_m",
+    "height_fill_m": 0.0,
+    "consumer_note": "use `valid`; the fill value is padding, not a measurement.  `counts` is sample support only — on the particle path counts==0 is a valid floor reading, not a hole"
+  },
+  "height_fill_m": 0.0,
+  "source": "depth",
+  "agg": "max",
+  "agg_rule": "nearest-rank percentile within the cell footprint",
+  "n_points_in": 840749,
+  "n_points_used": 6544,
+  "z_range_m": null,
+  "camera": "azure_kinect_dk",
+  "extrinsics_convention": "p_base = R @ p_cam + t",
+  "intrinsics": {
+    "fx": 608.33,
+    "fy": 608.28,
+    "cx": 638.31,
+    "cy": 365.26
+  },
+  "stride": 1,
+  "depth_valid_range_m": [
+    0.3,
+    2.0
+  ],
+  "scene": "s1_deme_settled_pile",
+  "camera_pose": "kinect_calib_rotation_recentred_on_pile"
+}

@@ -1,0 +1,512 @@
+{
+  "tool": "p34_hm2_deme_pile_heightmap",
+  "case": "hm2_s1pile",
+  "spec_version": "roarm-heightmap-v1",
+  "module": {
+    "path": "roarm_rl/heightmap.py",
+    "sha16": "992a89151a4b5498"
+  },
+  "source": {
+    "npz": "claudedocs/runtime_logs/sim_deme/pile_smoke_d4p16_n512_seed460.npz",
+    "sha256": "7df31ecb9d4f43d60a992a7df0c5e4f5b1a45be71a988e88ff7b8a5ba1d2f0ac",
+    "artifact": "DEME_PELLET_PILE_V1",
+    "schema_version": 1,
+    "DEME": "2.4.0",
+    "config_name": "smoke",
+    "seed": 460,
+    "n_particles": 512,
+    "diameter_median_mm": 4.16,
+    "diameter_min_max_mm": [
+      4.16,
+      4.16
+    ],
+    "polydisperse": false,
+    "settled_sim_time_s": 0.9503799759913818,
+    "frame": "deme_container_floor_center  (origin=container floor center, z up, floor z=0)",
+    "material_status": "provisional"
+  },
+  "calib": {
+    "path": "sim_scripts/kinect_calib.yaml",
+    "sha16": "5f93309e88dd6dc4",
+    "rmse_mm": 10.13
+  },
+  "env": {
+    "python": "3.13.11",
+    "numpy": "2.4.2"
+  },
+  "H1_pathA_on_real_pile": {
+    "gate": "H1_pathA_on_real_pile",
+    "pass": true,
+    "grid": {
+      "frame": "deme_container_floor_center",
+      "cell_m": 0.005,
+      "cell_mm": 5.0,
+      "origin_xy_m": [
+        -0.0474997653067112,
+        -0.07750616163015366
+      ],
+      "origin_is": "lower-left corner of cell [0, 0]",
+      "shape": [
+        31,
+        19
+      ],
+      "indexing": "height[row, col]; row -> +y, col -> +x",
+      "cell_center_formula": "x = origin_x + (col + 0.5) * cell_m ; y = origin_y + (row + 0.5) * cell_m",
+      "z_datum_m": 0.0
+    },
+    "n_particles": 512,
+    "pellet_radius_m": {
+      "uniform": true,
+      "min": 0.0020800000000000003,
+      "median": 0.0020800000000000003,
+      "max": 0.0020800000000000003,
+      "mean": 0.0020799999999999994
+    },
+    "pellet_diameter_median_mm": 4.16,
+    "pellet_diameter_max_mm": 4.16,
+    "cell_per_pellet_diameter_median": 1.2019230769230769,
+    "cell_per_pellet_diameter_max": 1.2019230769230769,
+    "peak": {
+      "heightmap_max_mm": 12.442250736057758,
+      "s1_surface_max_z_mm": 12.442250730395317,
+      "err_mm": 5.662441002196594e-09,
+      "tol_mm": 9.999999999999999e-05,
+      "reading": "풋프린트-max 연산자는 셀 중심이 아니라 셀 안 최고점을 재므로 pile 전체 최고점을 정확히 복원해야 한다 — s1 이 독립 계산한 값과 대조"
+    },
+    "footprint": {
+      "x_min_m": -37.499765306711204,
+      "x_max_m": 37.50023469328881,
+      "y_min_m": -67.50616163015366,
+      "y_max_m": 67.49383836984636,
+      "covers_s1_surface_bounds": true,
+      "within_one_cell": true
+    },
+    "occupied_cells": 371,
+    "total_cells": 589,
+    "all_valid": true,
+    "counts": {
+      "max": 12,
+      "mean_over_occupied": 4.2803234501347704
+    },
+    "volume_raw_m3": 5.2348903910024095e-05,
+    "packing_fraction_raw": 0.3686727024143817
+  },
+  "H2_cell_sweep": {
+    "gate": "H2_cell_sweep",
+    "pass": true,
+    "rows": [
+      {
+        "cell_mm": 0.5,
+        "cell_per_pellet_diameter": 0.12019230769230768,
+        "shape": [
+          303,
+          188
+        ],
+        "n_cells": 56964,
+        "cells_across_pile_width": 147.16681463241576,
+        "peak_mm": 12.442250736057758,
+        "occupied_cells": 26515,
+        "volume_raw_cm3": 32.051611230068374,
+        "volume_debiased_cm3": 29.636208901449972,
+        "volume_bias_pct": 8.150173109692929,
+        "mean_removed_bias_mm": 0.3643947273813963,
+        "packing_fraction_raw": 0.6021417062126959,
+        "packing_fraction_debiased": 0.6512172976346893,
+        "volume_vs_ref_pct": 0.0,
+        "excess_cm3": 0.0,
+        "excess_pred_area_times_radius_cm3": 13.787799999999997,
+        "excess_pred_ratio": null
+      },
+      {
+        "cell_mm": 1.0,
+        "cell_per_pellet_diameter": 0.24038461538461536,
+        "shape": [
+          152,
+          94
+        ],
+        "n_cells": 14288,
+        "cells_across_pile_width": 73.58340731620788,
+        "peak_mm": 12.442250736057758,
+        "occupied_cells": 7220,
+        "volume_raw_cm3": 36.1053311000578,
+        "volume_debiased_cm3": 32.692279624527934,
+        "volume_bias_pct": 10.43993112358298,
+        "mean_removed_bias_mm": 0.472721811015218,
+        "packing_fraction_raw": 0.5345363492015858,
+        "packing_fraction_debiased": 0.5903415758887464,
+        "volume_vs_ref_pct": 12.64747610000504,
+        "excess_cm3": 4.053719869989429,
+        "excess_pred_area_times_radius_cm3": 15.017599999999998,
+        "excess_pred_ratio": 3.7046467150279825
+      },
+      {
+        "cell_mm": 2.0,
+        "cell_per_pellet_diameter": 0.4807692307692307,
+        "shape": [
+          76,
+          47
+        ],
+        "n_cells": 3572,
+        "cells_across_pile_width": 36.79170365810394,
+        "peak_mm": 12.442250736057758,
+        "occupied_cells": 1997,
+        "volume_raw_cm3": 41.96139110065996,
+        "volume_debiased_cm3": 37.726077791259314,
+        "volume_bias_pct": 11.226487240032998,
+        "mean_removed_bias_mm": 0.5302094778919189,
+        "packing_fraction_raw": 0.45993737020400727,
+        "packing_fraction_debiased": 0.5115721803821035,
+        "volume_vs_ref_pct": 30.91819565468517,
+        "excess_cm3": 9.909779870591585,
+        "excess_pred_area_times_radius_cm3": 16.615039999999997,
+        "excess_pred_ratio": 1.6766305828151689
+      },
+      {
+        "cell_mm": 3.0,
+        "cell_per_pellet_diameter": 0.721153846153846,
+        "shape": [
+          51,
+          32
+        ],
+        "n_cells": 1632,
+        "cells_across_pile_width": 24.52780243873596,
+        "peak_mm": 12.442250736057758,
+        "occupied_cells": 980,
+        "volume_raw_cm3": 46.9642015141435,
+        "volume_debiased_cm3": 42.03273396610619,
+        "volume_bias_pct": 11.73244536511443,
+        "mean_removed_bias_mm": 0.5591233047661346,
+        "packing_fraction_raw": 0.4109430428009556,
+        "packing_fraction_debiased": 0.4591567107793165,
+        "volume_vs_ref_pct": 46.52680383844563,
+        "excess_cm3": 14.912590284075122,
+        "excess_pred_area_times_radius_cm3": 18.345599999999997,
+        "excess_pred_ratio": 1.230208813527917
+      },
+      {
+        "cell_mm": 4.159999999999999,
+        "cell_per_pellet_diameter": 0.9999999999999998,
+        "shape": [
+          37,
+          23
+        ],
+        "n_cells": 851,
+        "cells_across_pile_width": 17.688319066396126,
+        "peak_mm": 12.442250736057758,
+        "occupied_cells": 547,
+        "volume_raw_cm3": 51.239455157279956,
+        "volume_debiased_cm3": 45.60411844274565,
+        "volume_bias_pct": 12.357078498533564,
+        "mean_removed_bias_mm": 0.5953137079375838,
+        "packing_fraction_raw": 0.37665529060953223,
+        "packing_fraction_debiased": 0.4231988805390318,
+        "volume_vs_ref_pct": 59.86545821200717,
+        "excess_cm3": 19.18784392721158,
+        "excess_pred_area_times_radius_cm3": 19.68961945599999,
+        "excess_pred_ratio": 1.0261506988847666
+      },
+      {
+        "cell_mm": 5.0,
+        "cell_per_pellet_diameter": 1.2019230769230769,
+        "shape": [
+          31,
+          19
+        ],
+        "n_cells": 589,
+        "cells_across_pile_width": 14.716681463241576,
+        "peak_mm": 12.442250736057758,
+        "occupied_cells": 371,
+        "volume_raw_cm3": 52.34890391002409,
+        "volume_debiased_cm3": 46.0067340865827,
+        "volume_bias_pct": 13.785307628021796,
+        "mean_removed_bias_mm": 0.6837918947106618,
+        "packing_fraction_raw": 0.3686727024143817,
+        "packing_fraction_debiased": 0.41949536858274555,
+        "volume_vs_ref_pct": 63.32690277022438,
+        "excess_cm3": 20.297292679955717,
+        "excess_pred_area_times_radius_cm3": 19.291999999999994,
+        "excess_pred_ratio": 0.9504715877232
+      },
+      {
+        "cell_mm": 6.0,
+        "cell_per_pellet_diameter": 1.442307692307692,
+        "shape": [
+          26,
+          16
+        ],
+        "n_cells": 416,
+        "cells_across_pile_width": 12.26390121936798,
+        "peak_mm": 12.442250736057758,
+        "occupied_cells": 279,
+        "volume_raw_cm3": 55.82935225311667,
+        "volume_debiased_cm3": 48.87692627953175,
+        "volume_bias_pct": 14.224351862519615,
+        "mean_removed_bias_mm": 0.6921969308626962,
+        "packing_fraction_raw": 0.3456893389240778,
+        "packing_fraction_debiased": 0.3948614068438567,
+        "volume_vs_ref_pct": 74.18579007579447,
+        "excess_cm3": 23.777741023048293,
+        "excess_pred_area_times_radius_cm3": 20.89152,
+        "excess_pred_ratio": 0.8786166852330247
+      },
+      {
+        "cell_mm": 8.0,
+        "cell_per_pellet_diameter": 1.923076923076923,
+        "shape": [
+          19,
+          12
+        ],
+        "n_cells": 228,
+        "cells_across_pile_width": 9.197925914525985,
+        "peak_mm": 12.442250736057758,
+        "occupied_cells": 163,
+        "volume_raw_cm3": 59.92993874847889,
+        "volume_debiased_cm3": 51.339682846313075,
+        "volume_bias_pct": 16.732195108958912,
+        "mean_removed_bias_mm": 0.8234524446094528,
+        "packing_fraction_raw": 0.32203623557731786,
+        "packing_fraction_debiased": 0.3759199668356612,
+        "volume_vs_ref_pct": 86.97948854520361,
+        "excess_cm3": 27.878327518410515,
+        "excess_pred_area_times_radius_cm3": 21.698559999999997,
+        "excess_pred_ratio": 0.7783307655622643
+      },
+      {
+        "cell_mm": 10.0,
+        "cell_per_pellet_diameter": 2.4038461538461537,
+        "shape": [
+          16,
+          10
+        ],
+        "n_cells": 160,
+        "cells_across_pile_width": 7.358340731620788,
+        "peak_mm": 12.442250736057758,
+        "occupied_cells": 108,
+        "volume_raw_cm3": 63.845031801611185,
+        "volume_debiased_cm3": 53.25134150354938,
+        "volume_bias_pct": 19.893752906404625,
+        "mean_removed_bias_mm": 0.9808972498205374,
+        "packing_fraction_raw": 0.30228839000206015,
+        "packing_fraction_debiased": 0.3624248953738188,
+        "volume_vs_ref_pct": 99.19445341866823,
+        "excess_cm3": 31.79342057154281,
+        "excess_pred_area_times_radius_cm3": 22.46399999999999,
+        "excess_pred_ratio": 0.7065612820567895
+      },
+      {
+        "cell_mm": 15.0,
+        "cell_per_pellet_diameter": 3.6057692307692304,
+        "shape": [
+          11,
+          7
+        ],
+        "n_cells": 77,
+        "cells_across_pile_width": 4.905560487747192,
+        "peak_mm": 12.442250736057758,
+        "occupied_cells": 45,
+        "volume_raw_cm3": 66.15266455337405,
+        "volume_debiased_cm3": 50.668742893438704,
+        "volume_bias_pct": 30.5591194407557,
+        "mean_removed_bias_mm": 1.529276213326948,
+        "packing_fraction_raw": 0.2917435299581598,
+        "packing_fraction_debiased": 0.38089778373875066,
+        "volume_vs_ref_pct": 106.39419366011364,
+        "excess_cm3": 34.10105332330568,
+        "excess_pred_area_times_radius_cm3": 21.059999999999995,
+        "excess_pred_ratio": 0.617576231453442
+      }
+    ],
+    "v_solid_cm3": 19.299611872939376,
+    "envelope_reference": {
+      "cell_mm": 0.5,
+      "volume_cm3": 32.051611230068374,
+      "packing_fraction": 0.6021417062126959,
+      "meaning": "풋프린트-max 는 cell->0 에서 구 합집합의 진짜 상단 포락면으로 수렴한다. 이 값이 다른 셀 크기의 기준선이다."
+    },
+    "excess_mechanism": "셀 >= 펠릿 지름이면 셀마다 pellet crown 을 잡으므로 heightmap 이 평균 표면보다 약 펠릿 반지름(2.08 mm)만큼 떠오른다. 초과부피 예측 = 점유면적 x r 이며, excess_pred_ratio 가 1 에 가까울수록 그 기전이 지배적이라는 뜻이다. 계약 셀(5 mm) 근처에서 가장 잘 맞고, 셀이 펠릿보다 작아지면(모든 셀이 crown 을 잡지는 않음) 과대예측, 훨씬 커지면(pile 사면 tan(theta) 항이 커짐) 과소예측한다.",
+    "note": "① peak 는 전 셀 크기에서 동일하다 — max 연산자가 셀 안 최고점을 재기 때문에 구조적으로 그렇게 되며, **셀 크기 선택의 근거가 아니다**. ② 진짜 판별자는 부피 편향과 pile 폭을 가로지르는 셀 수(형상 해상도). ③ debiased 열은 pile 사면 (c/2)tan(theta) 항만 제거하고 펠릿 crown r-오프셋은 못 없앤다 — 이 얕은 pile 에서는 후자가 지배적이라 63% 중 20%p 만 줄어든다. 미세 셀에서는 측정 기울기가 pile 사면이 아니라 펠릿 곡률이라 과보정된다."
+  },
+  "H5_parity_on_real_pile": {
+    "gate": "H5_parity_on_real_pile",
+    "pass": true,
+    "contract_identical": true,
+    "contract_diff": {},
+    "A_valid_frac": 1.0,
+    "B_nadir_valid_frac": 1.0,
+    "B_kinectpose_valid_frac": 1.0,
+    "B_kinectpose_invalid_cells": 0,
+    "B_kinectpose_invalid_cells_over_pile": 0,
+    "kinect_pose_elevation_deg": 42.642095248525386,
+    "AB_diff_all": {
+      "max_abs_mm": 3.9289058186113834,
+      "rms_mm": 0.7175905146044258,
+      "mean_mm": 0.2922739470709615,
+      "p95_abs_mm": 1.5520204789936558
+    },
+    "AB_diff_over_pile": {
+      "max_abs_mm": 3.9289058186113834,
+      "rms_mm": 0.9041643554183878,
+      "mean_mm": 0.46401443349001703,
+      "p95_abs_mm": 2.610285533592105
+    },
+    "AB_diff_by_slope_band": {
+      "0-10deg": {
+        "max_abs_mm": 3.0887890607118607,
+        "rms_mm": 0.6595091051537029,
+        "mean_mm": 0.33102958549221023,
+        "p95_abs_mm": 1.3594021089375006
+      },
+      "10-20deg": {
+        "max_abs_mm": 3.3066386822611094,
+        "rms_mm": 0.7125190537477151,
+        "mean_mm": 0.4072534053998648,
+        "p95_abs_mm": 1.5065276762470592
+      },
+      "20-30deg": {
+        "max_abs_mm": 3.9289058186113834,
+        "rms_mm": 1.2537825698445426,
+        "mean_mm": 0.6848197871087385,
+        "p95_abs_mm": 3.2966376165859397
+      },
+      "30-45deg": {
+        "max_abs_mm": 3.4676764626055956,
+        "rms_mm": 0.8673066352160483,
+        "mean_mm": 0.35400569645894897,
+        "p95_abs_mm": 1.447262137662616
+      },
+      "45-90deg": null
+    },
+    "hm_b_median": "hm2_pathB_depth_nadir_median.npz",
+    "note": "Kinect 포즈 렌더는 kinect_calib.yaml 의 회전을 그대로 쓰고 카메라를 pile 위로 rigid 평행이동한 것이다. pile 의 base 프레임 배치가 확정되면 그 배치로 다시 재야 한다 — 현재 값은 '같은 앙각에서의 그림자 비용' 추정치다."
+  },
+  "H3_volume_bias": {
+    "gate": "H3_volume_bias",
+    "pass": true,
+    "envelope_reference_cm3": 32.051611230068374,
+    "envelope_reference_note": "path A at cell=0.5 mm — 풋프린트-max 의 cell->0 극한 = 구 합집합의 상단 포락면",
+    "v_solid_cm3": 19.299611872939376,
+    "estimators_cm3": {
+      "pathA_footprint_max_5mm": 52.34890391002409,
+      "pathA_slope_debiased_5mm": 46.0067340865827,
+      "pathB_nadir_max_5mm": 48.045170039404184,
+      "pathB_nadir_median_5mm": 28.415795543696735
+    },
+    "vs_envelope_reference_pct": {
+      "pathA_footprint_max_5mm": 63.3269027702244,
+      "pathA_slope_debiased_5mm": 43.53953614482477,
+      "pathB_nadir_max_5mm": 49.89939099951356,
+      "pathB_nadir_median_5mm": -11.34362843812605
+    },
+    "pathA_mean_removed_bias_mm": 0.6837918947106618,
+    "median_is_not_an_envelope_estimator": {
+      "pile_cells_A_gt_0": 371,
+      "of_those_median_reads_exactly_zero": 117,
+      "frac": 0.31536388140161725,
+      "mean_depth_samples_per_cell": 11.46900269541779,
+      "reading": "성긴 펠릿 표면에서는 셀 안 깊이 픽셀의 절반 이상이 펠릿 사이 **바닥**을 본다. 그러면 median 이 0 이 된다 — hm1 의 연속 평면 테스트에서 median 이 무편향이었던 것은 표면이 연속이었기 때문이고, 이산 입자 표면에는 그 결론이 전이되지 않는다. **부피 라벨에 median 집계를 쓰면 안 된다.**"
+    },
+    "packing_fraction": {
+      "envelope_reference": 0.6021417062126959,
+      "pathA_footprint_max_5mm": 0.3686727024143817,
+      "bulk_random_packing_range": [
+        0.55,
+        0.64
+      ],
+      "note": "phi 는 판정 게이트가 아니라 타당성 지표다. 이 pile 은 최고 12.4 mm = 펠릿 지름 3개 높이의 얕은 ridge 라, 상단 구들의 crown 이 포락면에는 전부 들어가고 부피는 절반만 기여한다. 벌크 random packing 값보다 낮게 나오는 것이 정상이며, 깊은 더미에서는 올라갈 것이다."
+    },
+    "reading": "s3 의 '퍼낸 양' 라벨은 heightmap 부피 차분이다. 여기 숫자가 그 라벨의 연산자 의존성이다. 실용 결론: **같은 연산자를 퍼내기 전후에 일관되게** 쓰고, 고체부피 환산 계수 phi 는 그 연산자에 맞춰 보정할 것. 연산자를 바꾸면 phi 도 다시 보정해야 한다."
+  },
+  "H4_real_slope_error_budget": {
+    "gate": "H4_real_slope_error_budget",
+    "pass": true,
+    "target_repose_angle_deg": 28.0,
+    "target_role": "target envelope sizing only; not a DEM force input",
+    "measured_slope_deg": {
+      "p50": 16.05793269068726,
+      "p75": 22.582204285032816,
+      "p90": 23.87419928358313,
+      "p95": 29.951958698718073,
+      "p99": 33.443496683477505,
+      "p100": 35.95917064428366
+    },
+    "mean_slope_deg": 14.915949176079348,
+    "bands": {
+      "0-10deg": {
+        "cell_frac": 0.32075471698113206,
+        "calib_rmse_amp_mm": 0.8862601615176102
+      },
+      "10-20deg": {
+        "cell_frac": 0.3288409703504043,
+        "calib_rmse_amp_mm": 2.714325319327273
+      },
+      "20-30deg": {
+        "cell_frac": 0.3018867924528302,
+        "calib_rmse_amp_mm": 4.723696577110136
+      },
+      "30-45deg": {
+        "cell_frac": 0.04851752021563342,
+        "calib_rmse_amp_mm": 7.7730223882268685
+      },
+      "45-90deg": {
+        "cell_frac": 0.0,
+        "calib_rmse_amp_mm": 23.864784465794617
+      }
+    },
+    "error_budget_at_measured_slopes_mm": {
+      "p50": {
+        "slope_deg": 16.05793269068726,
+        "cell_footprint_bias": 0.7195998915083723,
+        "calib_rmse_10p13mm": 2.915818760391925,
+        "slope_aware_tol": 4.135418651900298
+      },
+      "p75": {
+        "slope_deg": 22.582204285032816,
+        "cell_footprint_bias": 1.0397386504336916,
+        "calib_rmse_10p13mm": 4.213021011557318,
+        "slope_aware_tol": 5.752759661991011
+      },
+      "p90": {
+        "slope_deg": 23.87419928358313,
+        "cell_footprint_bias": 1.1065009394073033,
+        "calib_rmse_10p13mm": 4.483541806478393,
+        "slope_aware_tol": 6.090042745885697
+      },
+      "p95": {
+        "slope_deg": 29.951958698718073,
+        "cell_footprint_bias": 1.4405820950649368,
+        "calib_rmse_10p13mm": 5.837238649203123,
+        "slope_aware_tol": 7.77782074426806
+      },
+      "p99": {
+        "slope_deg": 33.443496683477505,
+        "cell_footprint_bias": 1.651170709313585,
+        "calib_rmse_10p13mm": 6.690543714138646,
+        "slope_aware_tol": 8.841714423452233
+      },
+      "p100": {
+        "slope_deg": 35.95917064428366,
+        "cell_footprint_bias": 1.8136358127210075,
+        "calib_rmse_10p13mm": 7.348852313145523,
+        "slope_aware_tol": 9.66248812586653
+      }
+    },
+    "reading": "hm1 은 D453 을 따라 79.5° 같은 극단각까지 표를 만들었지만, 이 실제 pile 의 사면은 훨씬 완만하다. 실물 오차 예산은 이 측정된 각도에서 읽어야 한다.",
+    "caveat": "셀 기울기는 heightmap 자체의 중앙차분이라 셀 크기에 의존하고, 펠릿 crown 요철이 사면각을 부풀린다. 안식각 물리 주장이 아니라 관측면 기울기다."
+  },
+  "pngs": [
+    "hm2_pile_maps.png",
+    "hm2_cell_sweep.png"
+  ],
+  "gates": {
+    "H1_pathA_on_real_pile": true,
+    "H2_cell_sweep": true,
+    "H3_volume_bias": true,
+    "H4_real_slope_error_budget": true,
+    "H5_parity_on_real_pile": true
+  },
+  "verdict": {
+    "code": "HM2_ALL_GATES_PASS",
+    "non_claims": "s1 재료값은 provisional 미측정(펠릿 미구매) — 안식각/밀도/마찰 현실성 미주장. 실제 Kinect 프레임 미사용(합성 깊이 렌더). pile 의 RoArm base 프레임 배치 미확정 — 좌표계는 s1 의 container-floor-center 그대로다. 스쿱 물리·퍼내기 동작 미주장."
+  },
+  "wall_seconds": 1.1
+}

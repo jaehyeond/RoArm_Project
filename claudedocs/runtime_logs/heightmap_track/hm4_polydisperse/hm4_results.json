@@ -1,0 +1,210 @@
+{
+  "tool": "p36_hm4_polydisperse_contract",
+  "case": "hm4_polydisperse",
+  "spec_version": "roarm-heightmap-v1",
+  "seed": 36001,
+  "subject": "roarm_rl.heightmap.heightmap_from_particles — polydisperse radii",
+  "module": {
+    "path": "roarm_rl/heightmap.py",
+    "sha16": "992a89151a4b5498"
+  },
+  "source_pile": {
+    "npz": "claudedocs/runtime_logs/sim_deme/pile_smoke_d4p16_n512_seed460.npz",
+    "sha256_16": "7df31ecb9d4f43d6"
+  },
+  "env": {
+    "python": "3.13.11",
+    "numpy": "2.4.2"
+  },
+  "P1_backcompat": {
+    "gate": "P1_backcompat_uniform_array_equals_scalar",
+    "pass": true,
+    "arrays_bit_identical": true,
+    "headers_identical": true,
+    "polydisperse_flag": [
+      false,
+      false
+    ],
+    "particle_radius_m_key_present": [
+      true,
+      true
+    ],
+    "reading": "균일 배열을 넘겨도 스칼라와 완전히 같은 결과·헤더를 낸다. 기존 호출자(monodisperse)는 이 확장에 영향을 받지 않는다."
+  },
+  "P2_bruteforce": {
+    "gate": "P2_vs_independent_bruteforce",
+    "tol_m": 1e-07,
+    "pass": true,
+    "rows": [
+      {
+        "case": "narrow_1_1p5mm",
+        "n": 400,
+        "radius_min_mm": 1.002881682897085,
+        "radius_max_mm": 1.4998399277050867,
+        "max_abs_diff_m": 1.8177149715969954e-09,
+        "max_abs_diff_mm": 1.8177149715969954e-06,
+        "polydisperse_flag": true
+      },
+      {
+        "case": "wide_1_8mm",
+        "n": 400,
+        "radius_min_mm": 1.002641254725938,
+        "radius_max_mm": 7.989096621794919,
+        "max_abs_diff_m": 1.8552850158948253e-09,
+        "max_abs_diff_mm": 1.8552850158948253e-06,
+        "polydisperse_flag": true
+      },
+      {
+        "case": "bimodal_1_and_7mm",
+        "n": 400,
+        "radius_min_mm": 1.0,
+        "radius_max_mm": 7.0,
+        "max_abs_diff_m": 1.8462821479992009e-09,
+        "max_abs_diff_mm": 1.8462821479992009e-06,
+        "polydisperse_flag": true
+      }
+    ],
+    "reading": "셀마다 전 구를 순회하는 독립 구현과 일치한다. 창 버킷팅과 벡터화 스캐터가 결과를 바꾸지 않았다는 뜻이다."
+  },
+  "P3_analytic": {
+    "gate": "P3_analytic_two_sphere",
+    "tol_m": 1e-07,
+    "pass": true,
+    "expected_mm": [
+      6.0,
+      5.454356057317858
+    ],
+    "got_mm": [
+      6.000000052154064,
+      5.454355850815773
+    ],
+    "err_m": [
+      5.2154064053566707e-11,
+      2.0650208452932528e-10
+    ],
+    "counts": [
+      [
+        1,
+        2
+      ]
+    ],
+    "reading": "셀[0,1] 안에 작은 구(꼭대기 5.000 mm)가 있는데도 이웃 셀의 큰 구가 5.454 mm 로 이긴다. 반지름이 균일하면 생길 수 없는 상황이며, 창 크기를 r_max 가 아니라 입자별로 잡아도 이 교차 기여를 놓치지 않음을 보인다."
+  },
+  "P4_superposition": {
+    "gate": "P4_superposition_over_radius_groups",
+    "tol_m": 1e-07,
+    "pass": true,
+    "radius_levels_mm": [
+      1.2,
+      3.0,
+      6.5
+    ],
+    "max_abs_diff_m": 0.0,
+    "counts_match": true,
+    "reading": "다분산 heightmap 이 반지름 그룹별 heightmap 의 원소별 max 와 같다. max 연산자의 구조적 불변식이고, 구현이 그룹을 어떻게 버킷팅하든 결과가 같아야 함을 강제한다."
+  },
+  "P5_window_bucketing_cost": {
+    "gate": "P5_window_bucketing_cost",
+    "pass": true,
+    "rows": [
+      {
+        "case": "s1_like_uniform_r2p08",
+        "cell_mm": 5.0,
+        "n": 2000,
+        "k_min": 2,
+        "k_max": 2,
+        "n_buckets": 1,
+        "candidate_pairs_bucketed": 50000,
+        "candidate_pairs_naive_rmax": 50000,
+        "work_ratio_naive_over_bucketed": 1.0
+      },
+      {
+        "case": "moderate_1_to_4mm",
+        "cell_mm": 5.0,
+        "n": 2000,
+        "k_min": 2,
+        "k_max": 2,
+        "n_buckets": 1,
+        "candidate_pairs_bucketed": 50000,
+        "candidate_pairs_naive_rmax": 50000,
+        "work_ratio_naive_over_bucketed": 1.0
+      },
+      {
+        "case": "wide_0p5_to_10mm",
+        "cell_mm": 1.0,
+        "n": 2000,
+        "k_min": 2,
+        "k_max": 11,
+        "n_buckets": 10,
+        "candidate_pairs_bucketed": 481664,
+        "candidate_pairs_naive_rmax": 1058000,
+        "work_ratio_naive_over_bucketed": 2.196551953228807
+      },
+      {
+        "case": "bimodal_0p5_and_10mm",
+        "cell_mm": 1.0,
+        "n": 2000,
+        "k_min": 2,
+        "k_max": 11,
+        "n_buckets": 2,
+        "candidate_pairs_bucketed": 156344,
+        "candidate_pairs_naive_rmax": 1058000,
+        "work_ratio_naive_over_bucketed": 6.767128895256613
+      }
+    ],
+    "reading": "균일 분포에서는 두 방식이 같다(비 1.0) — 확장이 기존 경로에 비용을 얹지 않는다. 크기 폭이 넓어질수록 버킷팅 이득이 커진다.",
+    "caveat": "후보쌍 수는 결정적 상한 지표이고 실제 벽시계 시간은 아니다. 버킷 수만큼 파이썬 루프가 늘어나므로 아주 좁은 분포에서는 이득이 상수 오버헤드에 묻힐 수 있다."
+  },
+  "P6_real_pile_with_size_distribution": {
+    "gate": "P6_real_pile_with_size_distribution",
+    "pass": true,
+    "contract_identical": true,
+    "contract_diff": {},
+    "n_particles": 512,
+    "radius_mm": {
+      "min": 0.8320000000000002,
+      "max": 2.08,
+      "median": 1.5015010351726223,
+      "mean": 1.5352371916656296,
+      "original_uniform": 2.08
+    },
+    "peak_vs_independent_max_pz_plus_r": {
+      "expected_mm": 11.987286253307195,
+      "got_mm": 11.987286619842052,
+      "err_m": 3.6653485802062846e-10
+    },
+    "shrink_only_monotone_vs_uniform": true,
+    "poly_minus_uniform_mm": {
+      "max_abs_mm": 2.7536514680832624,
+      "rms_mm": 0.6989493349088894,
+      "mean_mm": -0.5624739789507456,
+      "p95_abs_mm": 1.1719246627762914
+    },
+    "AB_diff_over_pile_mm": {
+      "max_abs_mm": 5.497215781360865,
+      "rms_mm": 1.185183753336625,
+      "mean_mm": 0.6624636266173588,
+      "p95_abs_mm": 3.1192642520181852
+    },
+    "A_valid_frac": 1.0,
+    "B_valid_frac": 1.0,
+    "reading": "반지름을 줄이기만 했으므로 (i) 새 겹침이 생기지 않고 (ii) 다분산 heightmap 은 균일 참조보다 결코 높을 수 없다 — 둘 다 검사한다. (A)/(B) 계약도 다분산에서 그대로 성립한다.",
+    "non_claim": "이 배치는 s1 의 정착 좌표에 크기 분포를 **사후에** 입힌 기하 스트레스 테스트다. 다분산 입자가 실제로 저렇게 정착한다는 물리 주장이 아니다 — 진짜 다분산 pile 은 s1 이 DEME 로 생성해야 한다."
+  },
+  "pngs": [
+    "hm4_polydisperse.png"
+  ],
+  "gates": {
+    "P1_backcompat": true,
+    "P2_bruteforce": true,
+    "P3_analytic": true,
+    "P4_superposition": true,
+    "P5_window_bucketing_cost": true,
+    "P6_real_pile_with_size_distribution": true
+  },
+  "verdict": {
+    "code": "HM4_ALL_GATES_PASS",
+    "non_claims": "진짜 다분산 DEME pile 미수신 — P6 는 s1 정착 좌표에 크기 분포를 사후에 입힌 기하 스트레스 테스트다. 다분산 입자의 정착 물리·안식각·패킹률 전부 미주장. 실제 Kinect 미사용."
+  },
+  "wall_seconds": 0.6
+}

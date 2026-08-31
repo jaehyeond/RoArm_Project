@@ -1,0 +1,400 @@
+{
+  "artifact": "ROARM_RERUN_ARTIFACT_VALIDATION_V1",
+  "blueprint_path": "claudedocs/runtime_logs/sim_deme/pile_practical_fast_d4p16_n18796_seed460.rbl",
+  "blueprint_verify": {
+    "attempted": true,
+    "bytes": 43339,
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "verify",
+      "--check-footers",
+      "true",
+      "claudedocs/runtime_logs/sim_deme/pile_practical_fast_d4p16_n18796_seed460.rbl"
+    ],
+    "ok": true,
+    "path": "claudedocs/runtime_logs/sim_deme/pile_practical_fast_d4p16_n18796_seed460.rbl",
+    "returncode": 0,
+    "sha256": "cefef37daa9a889c2fe13952d3c92af3d901ac1ab97bde842529ea1474e96be6",
+    "stderr": "1 file verified without error.\n",
+    "stdout": ""
+  },
+  "bytes": 545994,
+  "component_contract": {
+    "checks": {
+      "/events/settlement": {
+        "observed": [
+          "TextLog:level",
+          "TextLog:text"
+        ],
+        "pass": true,
+        "required": [
+          "TextLog:level",
+          "TextLog:text"
+        ]
+      },
+      "/geometry/container": {
+        "observed": [
+          "CoordinateFrame:frame",
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true,
+        "required": [
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ]
+      },
+      "/geometry/pile/particles": {
+        "observed": [
+          "CoordinateFrame:frame",
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true,
+        "required": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ]
+      },
+      "/geometry/target_envelope": {
+        "observed": [
+          "CoordinateFrame:frame",
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true,
+        "required": [
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ]
+      },
+      "/metadata/run": {
+        "observed": [
+          "TextDocument:text"
+        ],
+        "pass": true,
+        "required": [
+          "TextDocument:text"
+        ]
+      },
+      "/metrics/kinetic_energy_j": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/metrics/max_speed_m_s": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/metrics/num_contacts": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/metrics/p99_speed_m_s": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/metrics/rms_speed_m_s": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      }
+    },
+    "pass": true
+  },
+  "entity_path_contract": {
+    "checks": {
+      "/coordinate_frames/world_m": true,
+      "/events/settlement": true,
+      "/geometry/container": true,
+      "/geometry/pile/particles": true,
+      "/geometry/target_envelope": true,
+      "/metadata/meshes/geometry__container": true,
+      "/metadata/meshes/geometry__target_envelope": true,
+      "/metadata/run": true,
+      "/metrics/kinetic_energy_j": true,
+      "/metrics/max_speed_m_s": true,
+      "/metrics/num_contacts": true,
+      "/metrics/p99_speed_m_s": true,
+      "/metrics/rms_speed_m_s": true
+    },
+    "exact_non_system_match": true,
+    "forbidden_fragment_absent": {
+      "/\\/": true
+    },
+    "missing_exact": [],
+    "observed_all": [
+      "/__properties",
+      "/blueprint_panel",
+      "/container/26ab0e15-8511-47fe-89a0-42f47e73fe7c",
+      "/container/d98090e8-5543-4769-bbf6-5ab1ce25529e",
+      "/coordinate_frames/world_m",
+      "/events/settlement",
+      "/geometry/container",
+      "/geometry/pile/particles",
+      "/geometry/target_envelope",
+      "/metadata/meshes/geometry__container",
+      "/metadata/meshes/geometry__target_envelope",
+      "/metadata/run",
+      "/metrics/kinetic_energy_j",
+      "/metrics/max_speed_m_s",
+      "/metrics/num_contacts",
+      "/metrics/p99_speed_m_s",
+      "/metrics/rms_speed_m_s",
+      "/selection_panel",
+      "/time_panel",
+      "/view/4855ffec-6741-4b52-bc12-54931ad93688",
+      "/view/4855ffec-6741-4b52-bc12-54931ad93688/ViewContents",
+      "/view/70ef4f83-c93d-47dc-b41f-7e9d57d24828",
+      "/view/70ef4f83-c93d-47dc-b41f-7e9d57d24828/ViewContents",
+      "/view/96f4ea60-b0e9-4ad6-8a83-fac1b507ff22",
+      "/view/96f4ea60-b0e9-4ad6-8a83-fac1b507ff22/ViewContents",
+      "/viewport"
+    ],
+    "observed_non_system": [
+      "/coordinate_frames/world_m",
+      "/events/settlement",
+      "/geometry/container",
+      "/geometry/pile/particles",
+      "/geometry/target_envelope",
+      "/metadata/meshes/geometry__container",
+      "/metadata/meshes/geometry__target_envelope",
+      "/metadata/run",
+      "/metrics/kinetic_energy_j",
+      "/metrics/max_speed_m_s",
+      "/metrics/num_contacts",
+      "/metrics/p99_speed_m_s",
+      "/metrics/rms_speed_m_s"
+    ],
+    "pass": true,
+    "unexpected_non_system": []
+  },
+  "errors": [
+    "RRD timeline contract failed"
+  ],
+  "exact_entity_paths": [
+    "/coordinate_frames/world_m",
+    "/events/settlement",
+    "/geometry/container",
+    "/geometry/pile/particles",
+    "/geometry/target_envelope",
+    "/metadata/meshes/geometry__container",
+    "/metadata/meshes/geometry__target_envelope",
+    "/metadata/run",
+    "/metrics/kinetic_energy_j",
+    "/metrics/max_speed_m_s",
+    "/metrics/num_contacts",
+    "/metrics/p99_speed_m_s",
+    "/metrics/rms_speed_m_s"
+  ],
+  "exact_timeline_names": [
+    "sample",
+    "settle_phase",
+    "sim_time_s"
+  ],
+  "expected_entity_components": {
+    "/events/settlement": [
+      "TextLog:level",
+      "TextLog:text"
+    ],
+    "/geometry/container": [
+      "Mesh3D:albedo_factor",
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/geometry/pile/particles": [
+      "Points3D:colors",
+      "Points3D:positions",
+      "Points3D:radii"
+    ],
+    "/geometry/target_envelope": [
+      "Mesh3D:albedo_factor",
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/metadata/run": [
+      "TextDocument:text"
+    ],
+    "/metrics/kinetic_energy_j": [
+      "Scalars:scalars"
+    ],
+    "/metrics/max_speed_m_s": [
+      "Scalars:scalars"
+    ],
+    "/metrics/num_contacts": [
+      "Scalars:scalars"
+    ],
+    "/metrics/p99_speed_m_s": [
+      "Scalars:scalars"
+    ],
+    "/metrics/rms_speed_m_s": [
+      "Scalars:scalars"
+    ]
+  },
+  "expected_entity_paths": [
+    "/coordinate_frames/world_m",
+    "/events/settlement",
+    "/geometry/container",
+    "/geometry/pile/particles",
+    "/geometry/target_envelope",
+    "/metadata/meshes/geometry__container",
+    "/metadata/meshes/geometry__target_envelope",
+    "/metadata/run",
+    "/metrics/kinetic_energy_j",
+    "/metrics/max_speed_m_s",
+    "/metrics/num_contacts",
+    "/metrics/p99_speed_m_s",
+    "/metrics/rms_speed_m_s"
+  ],
+  "expected_rerun_version": "0.34.1",
+  "expected_timeline_names": [
+    "sample",
+    "settle_phase",
+    "sim_time_s"
+  ],
+  "external_rbl_role": "verified fixed-layout export; the 0.34.1 CLI does not guarantee that an external RBL overrides an already-active embedded blueprint",
+  "footer_manifest_present": true,
+  "forbidden_entity_fragments": [
+    "/\\/"
+  ],
+  "headless_render": {
+    "attempted": true,
+    "bytes": 8912082,
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "--headless",
+      "--window-size",
+      "2400x1400",
+      "--screenshot-to",
+      "claudedocs/runtime_logs/sim_deme/pile_practical_fast_d4p16_n18796_seed460_inspection.png",
+      "claudedocs/runtime_logs/sim_deme/pile_practical_fast_d4p16_n18796_seed460.rrd"
+    ],
+    "file_nonzero": true,
+    "ok": true,
+    "path": "claudedocs/runtime_logs/sim_deme/pile_practical_fast_d4p16_n18796_seed460_inspection.png",
+    "returncode": 0,
+    "sha256": "35e70c178776c1bf8a869338b833d69f7db7d876d8e590013f5bef61c6a158f9",
+    "stderr": "2026-08-31T07:37:56.998682Z  INFO re_perf_telemetry::telemetry: Telemetry initialized enabled=false service=rerun trace_mode=\"off\" traces=off logs=off metrics=off tracy=false\n2026-08-31T07:37:57.196357Z  INFO re_grpc_server: Listening for gRPC connections on 0.0.0.0:9876. Connect by running `rerun --connect rerun+http://127.0.0.1:9876/proxy`\n2026-08-31T07:37:57.196509Z  INFO re_importer::import_file: Loading \"claudedocs/runtime_logs/sim_deme/pile_practical_fast_d4p16_n18796_seed460.rrd\"…\n2026-08-31T07:37:57.316593Z  INFO re_viewer::headless: Headless viewer running at 2400x1400.\n2026-08-31T07:37:57.567487Z  INFO re_viewer::screenshotter: Screenshot saved to \"claudedocs/runtime_logs/sim_deme/pile_practical_fast_d4p16_n18796_seed460_inspection.png\"\n2026-08-31T07:37:57.581893Z  INFO re_viewer::screenshotter: Screenshot copied to clipboard\n2026-08-31T07:37:57.585791Z  INFO re_viewer::headless: Headless viewer received close request, shutting down.\n",
+    "stdout": ""
+  },
+  "human_visual_inspection_required": true,
+  "log_status_summary": {
+    "blueprint_status": {
+      "attempted": true,
+      "mode": "robot_geometry",
+      "ok": true,
+      "path": "claudedocs/runtime_logs/sim_deme/pile_practical_fast_d4p16_n18796_seed460.rbl"
+    },
+    "bytes": 545994,
+    "flush_ok": true,
+    "ok": true,
+    "rerun_sdk_version": "0.34.1",
+    "sink_attached_before_logging": true,
+    "sink_finalized": true
+  },
+  "pass": false,
+  "path": "claudedocs/runtime_logs/sim_deme/pile_practical_fast_d4p16_n18796_seed460.rrd",
+  "print_verbose": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "print",
+      "-v",
+      "claudedocs/runtime_logs/sim_deme/pile_practical_fast_d4p16_n18796_seed460.rrd"
+    ],
+    "ok": true,
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "Showing data after migration to latest Rerun version\nStoreInfo {\n    store_id: StoreId(\n        Recording,\n        \"roarm_deme_pile\",\n        \"deme_pile_n18796_seed460\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nStoreInfo {\n    store_id: StoreId(\n        Recording,\n        \"roarm_deme_pile\",\n        \"deme_pile_n18796_seed460\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nChunk(chunk_18D0D3C0A6164ED46800add156f25161) with 1 rows (632 B) - /__properties - data columns: [/__properties@RecordingInfo:start_time]\nStoreInfo {\n    store_id: StoreId(\n        Blueprint,\n        \"roarm_deme_pile\",\n        \"rec_72b3206b5bb248f583bf519e504690ec\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nStoreInfo {\n    store_id: StoreId(\n        Blueprint,\n        \"roarm_deme_pile\",\n        \"rec_72b3206b5bb248f583bf519e504690ec\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nChunk(chunk_18D0D3C0AB4139A32bc1c848b63d95fc) with 1 rows (1.2 KiB) - /view/4855ffec-6741-4b52-bc12-54931ad93688 - data columns: [/view/4855ffec-6741-4b52-bc12-54931ad93688@ViewBlueprint:class_identifier /view/4855ffec-6741-4b52-bc12-54931ad93688@ViewBlueprint:display_name /view/4855ffec-6741-4b52-bc12-54931ad93688@ViewBlueprint:space_origin]\nChunk(chunk_18D0D3C0AB41B3462bc1c848b63d95fd) with 1 rows (1.2 KiB) - /view/70ef4f83-c93d-47dc-b41f-7e9d57d24828 - data columns: [/view/70ef4f83-c93d-47dc-b41f-7e9d57d24828@ViewBlueprint:class_identifier /view/70ef4f83-c93d-47dc-b41f-7e9d57d24828@ViewBlueprint:display_name /view/70ef4f83-c93d-47dc-b41f-7e9d57d24828@ViewBlueprint:space_origin]\nChunk(chunk_18D0D3C0AB41C49C2bc1c848b63d95fe) with 1 rows (1.2 KiB) - /viewport - data columns: [/viewport@ViewportBlueprint:auto_layout /viewport@ViewportBlueprint:auto_views /viewport@ViewportBlueprint:root_container]\nChunk(chunk_18D0D3C0AB41DC9B2bc1c848b63d95ff) with 1 rows (883 B) - /blueprint_panel - data columns: [/blueprint_panel@PanelBlueprint:state]\nChunk(chunk_18D0D3C0AB41F35A2bc1c848b63d9600) with 1 rows (923 B) - /view/4855ffec-6741-4b52-bc12-54931ad93688/ViewContents - data columns: [/view/4855ffec-6741-4b52-bc12-54931ad93688/ViewContents@ViewContents:query]\nChunk(chunk_18D0D3C0AB4203A42bc1c848b63d9601) with 1 rows (1.2 KiB) - /container/d98090e8-5543-4769-bbf6-5ab1ce25529e - data columns: [/container/d98090e8-5543-4769-bbf6-5ab1ce25529e@ContainerBlueprint:col_shares /container/d98090e8-5543-4769-bbf6-5ab1ce25529e@ContainerBlueprint:container_kind /container/d98090e8-5543-4769-bbf6-5ab1ce25529e@ContainerBlueprint:contents]\nChunk(chunk_18D0D3C0AB421B542bc1c848b63d9602) with 1 rows (966 B) - /view/96f4ea60-b0e9-4ad6-8a83-fac1b507ff22/ViewContents - data columns: [/view/96f4ea60-b0e9-4ad6-8a83-fac1b507ff22/ViewContents@ViewContents:query]\nChunk(chunk_18D0D3C0AB422A7F2bc1c848b63d9603) with 1 rows (883 B) - /selection_panel - data columns: [/selection_panel@PanelBlueprint:state]\nChunk(chunk_18D0D3C0AB4233012bc1c848b63d9604) with 1 rows (1.2 KiB) - /container/26ab0e15-8511-47fe-89a0-42f47e73fe7c - data columns: [/container/26ab0e15-8511-47fe-89a0-42f47e73fe7c@ContainerBlueprint:container_kind /container/26ab0e15-8511-47fe-89a0-42f47e73fe7c@ContainerBlueprint:contents /container/26ab0e15-8511-47fe-89a0-42f47e73fe7c@ContainerBlueprint:row_shares]\nChunk(chunk_18D0D3C0AB424C4B2bc1c848b63d9605) with 1 rows (923 B) - /view/70ef4f83-c93d-47dc-b41f-7e9d57d24828/ViewContents - data columns: [/view/70ef4f83-c93d-47dc-b41f-7e9d57d24828/ViewContents@ViewContents:query]\nChunk(chunk_18D0D3C0AB42545E2bc1c848b63d9606) with 1 rows (1.2 KiB) - /view/96f4ea60-b0e9-4ad6-8a83-fac1b507ff22 - data columns: [/view/96f4ea60-b0e9-4ad6-8a83-fac1b507ff22@ViewBlueprint:class_identifier /view/96f4ea60-b0e9-4ad6-8a83-fac1b507ff22@ViewBlueprint:display_name /view/96f4ea60-b0e9-4ad6-8a83-fac1b507ff22@ViewBlueprint:space_origin]\nChunk(chunk_18D0D3C0AB425FE42bc1c848b63d9607) with 1 rows (885 B) - /time_panel - data columns: [/time_panel@TimePanelBlueprint:state]\nBlueprintActivationCommand(StoreId(Blueprint, \"roarm_deme_pile\", \"rec_72b3206b5bb248f583bf519e504690ec\"), make_active: true, make_default: true)\nChunk(chunk_18D0D3C0AB72111E3a5dc7afffb680e0) with 1 rows (1.2 KiB) - /geometry/container - data columns: [/geometry/container@CoordinateFrame:frame /geometry/container@Mesh3D:albedo_factor /geometry/container@Mesh3D:triangle_indices /geometry/container@Mesh3D:vertex_positions]\nChunk(chunk_18D0D3C0AB727E8A3a5dc7afffb680e1) with 1 rows (1.1 KiB) - /coordinate_frames/world_m - data columns: [/coordinate_frames/world_m@Transform3D:child_frame /coordinate_frames/world_m@Transform3D:parent_frame /coordinate_frames/world_m@Transform3D:quaternion /coordinate_frames/world_m@Transform3D:translation]\nChunk(chunk_18D0D3C0AB72C2EF3a5dc7afffb680e2) with 20 rows (1.5 KiB) - /metrics/num_contacts - data columns: [/metrics/num_contacts@Scalars:scalars]\nChunk(chunk_18D0D3C0AB7395A93a5dc7afffb680e3) with 20 rows (1.5 KiB) - /metrics/rms_speed_m_s - data columns: [/metrics/rms_speed_m_s@Scalars:scalars]\nChunk(chunk_18D0D3C0AB73F7383a5dc7afffb680e4) with 20 rows (1.5 KiB) - /metrics/kinetic_energy_j - data columns: [/metrics/kinetic_energy_j@Scalars:scalars]\nChunk(chunk_18D0D3C0AB7440DD3a5dc7afffb680e5) with 1 rows (1.0 KiB) - /events/settlement - data columns: [/events/settlement@TextLog:level /events/settlement@TextLog:text]\nChunk(chunk_18D0D3C0AB7455EB3a5dc7afffb680e6) with 1 rows (713 B) - /metadata/meshes/geometry__target_envelope - data columns: [/metadata/meshes/geometry__target_envelope@TextDocument:text]\nChunk(chunk_18D0D3C0AB7473283a5dc7afffb680e7) with 20 rows (1.5 KiB) - /metrics/max_speed_m_s - data columns: [/metrics/max_speed_m_s@Scalars:scalars]\nChunk(chunk_18D0D3C0AB74D1113a5dc7afffb680e8) with 1 rows (1.2 KiB) - /geometry/target_envelope - data columns: [/geometry/target_envelope@CoordinateFrame:frame /geometry/target_envelope@Mesh3D:albedo_factor /geometry/target_envelope@Mesh3D:triangle_indices /geometry/target_envelope@Mesh3D:vertex_positions]\nChunk(chunk_18D0D3C0AB7505BA3a5dc7afffb680e9) with 2 rows (368 KiB) - /geometry/pile/particles - data columns: [/geometry/pile/particles@CoordinateFrame:frame /geometry/pile/particles@Points3D:colors /geometry/pile/particles@Points3D:positions /geometry/pile/particles@Points3D:radii]\nChunk(chunk_18D0D3C0AB816B703a5dc7afffb680ea) with 1 rows (710 B) - /metadata/meshes/geometry__container - data columns: [/metadata/meshes/geometry__container@TextDocument:text]\nChunk(chunk_18D0D3C0AB818F583a5dc7afffb680eb) with 20 rows (1.5 KiB) - /metrics/p99_speed_m_s - data columns: [/metrics/p99_speed_m_s@Scalars:scalars]\nChunk(chunk_18D0D3C0AB81DB0A3a5dc7afffb680ec) with 1 rows (1011 B) - /metadata/run - data columns: [/metadata/run@TextDocument:text]\n"
+  },
+  "rendered_blueprint_source": "active blueprint embedded in the RRD",
+  "screenshot_path": "claudedocs/runtime_logs/sim_deme/pile_practical_fast_d4p16_n18796_seed460_inspection.png",
+  "screenshot_port": null,
+  "screenshot_window_size": "2400x1400",
+  "sha256": "36107bfafe917b8ce9d1208cd5c9d719a85b245d3d91c2122c5a43d53206f867",
+  "source_npz": "claudedocs/runtime_logs/sim_deme/pile_practical_fast_d4p16_n18796_seed460.npz",
+  "source_npz_sha256": "e26b214f336a4e97d08b6e2ecf876a568524b17e81b58e2cd4476731d5e40a1b",
+  "stats": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "stats",
+      "claudedocs/runtime_logs/sim_deme/pile_practical_fast_d4p16_n18796_seed460.rrd"
+    ],
+    "ok": true,
+    "returncode": 0,
+    "stderr": "2026-08-31T07:37:56.866811Z  INFO rerun::commands::rrd::stats: processing input…\n2026-08-31T07:37:56.870028Z  INFO rerun::commands::rrd::stats: computing stats…\n",
+    "stdout": "Overview\n----------\nnum_chunks = 26\nnum_entity_paths = 26\nnum_chunks_without_components = 0 (0.000%)\nnum_rows = 122\nnum_rows_min = 1\nnum_rows_max = 20\nnum_rows_avg = 4.692\nnum_static = 7\nnum_indexes_min = 0\nnum_indexes_max = 3\nnum_indexes_avg = 1.654\nnum_components_min = 1\nnum_components_max = 4\nnum_components_avg = 1.962\n\nNum chunks per entity\n---------------------\n/__properties: 1\n/blueprint_panel: 1\n/container/26ab0e15-8511-47fe-89a0-42f47e73fe7c: 1\n/container/d98090e8-5543-4769-bbf6-5ab1ce25529e: 1\n/coordinate_frames/world_m: 1\n/events/settlement: 1\n/geometry/container: 1\n/geometry/pile/particles: 1\n/geometry/target_envelope: 1\n/metadata/meshes/geometry__container: 1\n/metadata/meshes/geometry__target_envelope: 1\n/metadata/run: 1\n/metrics/kinetic_energy_j: 1\n/metrics/max_speed_m_s: 1\n/metrics/num_contacts: 1\n/metrics/p99_speed_m_s: 1\n/metrics/rms_speed_m_s: 1\n/selection_panel: 1\n/time_panel: 1\n/view/4855ffec-6741-4b52-bc12-54931ad93688: 1\n/view/4855ffec-6741-4b52-bc12-54931ad93688/ViewContents: 1\n/view/70ef4f83-c93d-47dc-b41f-7e9d57d24828: 1\n/view/70ef4f83-c93d-47dc-b41f-7e9d57d24828/ViewContents: 1\n/view/96f4ea60-b0e9-4ad6-8a83-fac1b507ff22: 1\n/view/96f4ea60-b0e9-4ad6-8a83-fac1b507ff22/ViewContents: 1\n/viewport: 1\n\nNum chunks per index\n--------------------\nblueprint: 12\nlog_time: 19\nsample: 5\nsettle_phase: 2\nsim_time_s: 5\n\nNum chunks per component\n------------------------\nContainerBlueprint:col_shares: 1\nContainerBlueprint:container_kind: 2\nContainerBlueprint:contents: 2\nContainerBlueprint:row_shares: 1\nCoordinateFrame:frame: 3\nMesh3D:albedo_factor: 2\nMesh3D:triangle_indices: 2\nMesh3D:vertex_positions: 2\nPanelBlueprint:state: 2\nPoints3D:colors: 1\nPoints3D:positions: 1\nPoints3D:radii: 1\nRecordingInfo:start_time: 1\nScalars:scalars: 5\nTextDocument:text: 3\nTextLog:level: 1\nTextLog:text: 1\nTimePanelBlueprint:state: 1\nTransform3D:child_frame: 1\nTransform3D:parent_frame: 1\nTransform3D:quaternion: 1\nTransform3D:translation: 1\nViewBlueprint:class_identifier: 3\nViewBlueprint:display_name: 3\nViewBlueprint:space_origin: 3\nViewContents:query: 3\nViewportBlueprint:auto_layout: 1\nViewportBlueprint:auto_views: 1\nViewportBlueprint:root_container: 1\n\nSize (schema + data, compressed)\n--------------------------------\nipc_size_bytes_total = 482 KiB\nipc_size_bytes_min = 913 B\nipc_size_bytes_max = 446 KiB\nipc_size_bytes_avg = 18.6 KiB\nipc_size_bytes_p50 = 1.6 KiB\nipc_size_bytes_p90 = 1.9 KiB\nipc_size_bytes_p95 = 1.9 KiB\nipc_size_bytes_p99 = 446 KiB\nipc_size_bytes_p999 = 446 KiB\n\nSize (schema + data, uncompressed)\n----------------------------------\nipc_size_bytes_total = 848 KiB\nipc_size_bytes_min = 1.7 KiB\nipc_size_bytes_max = 766 KiB\nipc_size_bytes_avg = 32.6 KiB\nipc_size_bytes_p50 = 3.6 KiB\nipc_size_bytes_p90 = 4.3 KiB\nipc_size_bytes_p95 = 4.3 KiB\nipc_size_bytes_p99 = 766 KiB\nipc_size_bytes_p999 = 766 KiB\n\nSize (schema only, uncompressed)\n--------------------------------\nipc_size_bytes_total = 45.7 KiB\nipc_size_bytes_min = 1016 B\nipc_size_bytes_max = 2.6 KiB\nipc_size_bytes_avg = 1.8 KiB\nipc_size_bytes_p50 = 1.6 KiB\nipc_size_bytes_p90 = 2.3 KiB\nipc_size_bytes_p95 = 2.4 KiB\nipc_size_bytes_p99 = 2.6 KiB\nipc_size_bytes_p999 = 2.6 KiB\n\nSize (data only, uncompressed)\n------------------------------\nipc_size_bytes_total = 802 KiB\nipc_size_bytes_min = 656 B\nipc_size_bytes_max = 764 KiB\nipc_size_bytes_avg = 30.9 KiB\nipc_size_bytes_p50 = 1.8 KiB\nipc_size_bytes_p90 = 2.1 KiB\nipc_size_bytes_p95 = 2.1 KiB\nipc_size_bytes_p99 = 764 KiB\nipc_size_bytes_p999 = 764 KiB\n\nUnsorted timelines\n------------------\n(none — every timeline on every chunk is sorted)\n\nFooters\n-------\nnum_manifests = 2 (one per recording)\n\nFooter manifest for StoreId(Blueprint, \"roarm_deme_pile\", \"rec_72b3206b5bb248f583bf519e504690ec\")\n  num_chunks_indexed = 12\n  num_static_chunks = 0\n  num_entity_paths = 12\n  manifest_num_columns = 102\n  sorbet_schema_num_fields = 27\n  sorbet_schema_sha256 = ce6bf481635704b731c306a8f3ba0ecb7d5da5dbab21124b30bafaef9b9d90f0\n  chunk_byte_size_total (native) = 17.4 KiB\n  chunk_byte_size_uncompressed_total = 40.0 KiB\n\nFooter manifest for StoreId(Recording, \"roarm_deme_pile\", \"deme_pile_n18796_seed460\")\n  num_chunks_indexed = 14\n  num_static_chunks = 7\n  num_entity_paths = 14\n  manifest_num_columns = 76\n  sorbet_schema_num_fields = 32\n  sorbet_schema_sha256 = 3b89aac065c489f88696a2ca42cf60312fc19d24519f8c939168bc6a9d30d23c\n  chunk_byte_size_total (native) = 467 KiB\n  chunk_byte_size_uncompressed_total = 808 KiB\n"
+  },
+  "timeline_contract": {
+    "checks": {
+      "sample": true,
+      "settle_phase": true,
+      "sim_time_s": true
+    },
+    "exact_match": false,
+    "observed": [
+      "blueprint",
+      "log_time",
+      "sample",
+      "settle_phase",
+      "sim_time_s"
+    ],
+    "pass": false
+  },
+  "verify": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "verify",
+      "--check-footers",
+      "true",
+      "claudedocs/runtime_logs/sim_deme/pile_practical_fast_d4p16_n18796_seed460.rrd"
+    ],
+    "ok": true,
+    "returncode": 0,
+    "stderr": "1 file verified without error.\n",
+    "stdout": ""
+  },
+  "version": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "--version"
+    ],
+    "expected_version_match": true,
+    "ok": true,
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "rerun-cli 0.34.1 (base lance map_view nasm native_viewer oss_server perf_telemetry re_server release_full release_no_web_viewer web_viewer) [rustc 1.92.0 (ded5c06cf 2025-12-08), LLVM 21.1.3] x86_64-unknown-linux-gnu prepare-release-0.34.1 4efb18f, built 2026-07-07T16:20:42.173372603Z\nVideo features: av1 ffmpeg nasm\n"
+  }
+}
