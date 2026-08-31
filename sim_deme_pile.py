@@ -113,7 +113,11 @@ class PileConfig:
     cd_update_freq: int = 20
     spacing_factor: float = 1.10
     jitter_fraction_diameter: float = 0.015
-    release_footprint_fraction: float = 0.72
+    initialization_mode: str = "target_fcc"
+    # For a ridge, this is the narrow cross-slope rain footprint.  A compact
+    # release must fall and spread instead of preserving a rectangular slab.
+    release_footprint_fraction: float = 0.22
+    ridge_release_length_fraction: float = 0.85
     drop_height_mm: float | None = None
     check_interval_s: float = 0.05
     min_sim_time_s: float = 0.40
@@ -245,6 +249,8 @@ def _validate_config(config: PileConfig) -> None:
         raise ValueError(f"unsupported target_shape: {config.target_shape}")
     if config.material_status not in {"provisional", "measured"}:
         raise ValueError("material_status must be provisional or measured")
+    if config.initialization_mode not in {"target_fcc", "rain_box"}:
+        raise ValueError("initialization_mode must be target_fcc or rain_box")
     if not (0.0 <= config.poisson_ratio < 0.5):
         raise ValueError("poisson_ratio must be in [0, 0.5)")
     if config.spacing_factor <= 1.0 + 2.0 * config.jitter_fraction_diameter:
@@ -254,6 +260,8 @@ def _validate_config(config: PileConfig) -> None:
         )
     if not (0.0 < config.release_footprint_fraction <= 1.0):
         raise ValueError("release_footprint_fraction must be in (0, 1]")
+    if not (0.0 < config.ridge_release_length_fraction <= 1.0):
+        raise ValueError("ridge_release_length_fraction must be in (0, 1]")
     if config.min_sim_time_s > config.max_sim_time_s:
         raise ValueError("min_sim_time_s cannot exceed max_sim_time_s")
     if config.stable_checks * config.check_interval_s > config.max_sim_time_s:
@@ -327,8 +335,13 @@ def derive_geometry(config: PileConfig) -> dict[str, Any]:
         config.release_footprint_fraction * target_width_m,
         box_width_m - 4.0 * radius_m,
     )
+    release_length_fraction = (
+        config.ridge_release_length_fraction
+        if config.target_shape == "ridge"
+        else config.release_footprint_fraction
+    )
     release_length_m = min(
-        config.release_footprint_fraction * target_length_m,
+        release_length_fraction * target_length_m,
         box_length_m - 4.0 * radius_m,
     )
     spacing_m = config.spacing_factor * diameter_m
@@ -341,12 +354,16 @@ def derive_geometry(config: PileConfig) -> dict[str, Any]:
         raise ValueError("initial x lattice does not fit inside the box")
     if release_length_used_m > box_length_m - 2.0 * radius_m + 1.0e-12:
         raise ValueError("initial y lattice does not fit inside the box")
-    drop_height_m = (
-        config.drop_height_mm * 1.0e-3
-        if config.drop_height_mm is not None
+    drop_height_m = config.drop_height_mm * 1.0e-3 if config.drop_height_mm is not None else (
+        0.25 * diameter_m
+        if config.initialization_mode == "target_fcc"
         else max(3.0 * diameter_m, 0.20 * target_height_m)
     )
-    initial_top_m = drop_height_m + radius_m + (nz - 1) * spacing_m
+    initial_top_m = (
+        drop_height_m + target_height_m + radius_m
+        if config.initialization_mode == "target_fcc"
+        else drop_height_m + radius_m + (nz - 1) * spacing_m
+    )
     box_height_m = max(
         initial_top_m + 5.0 * diameter_m,
         target_height_m + 6.0 * diameter_m,
@@ -376,6 +393,7 @@ def derive_geometry(config: PileConfig) -> dict[str, Any]:
         "margin_m": margin_m,
         "release_width_m": release_width_m,
         "release_length_m": release_length_m,
+        "release_length_fraction": release_length_fraction,
         "spacing_m": spacing_m,
         "lattice_nx": nx,
         "lattice_ny": ny,
@@ -385,7 +403,7 @@ def derive_geometry(config: PileConfig) -> dict[str, Any]:
     }
 
 
-def generate_initial_positions(config: PileConfig, geometry: dict[str, Any]) -> np.ndarray:
+def _generate_rain_box_positions(config: PileConfig, geometry: dict[str, Any]) -> np.ndarray:
     rng = np.random.default_rng(config.seed)
     nx = int(geometry["lattice_nx"])
     ny = int(geometry["lattice_ny"])
@@ -425,6 +443,89 @@ def generate_initial_positions(config: PileConfig, geometry: dict[str, Any]) -> 
     if np.max(result[:, 2]) + radius > geometry["box_height_m"]:
         raise AssertionError("seeded initial z positions exceed diagnostic extent")
     return result
+
+
+def _generate_target_fcc_positions(
+    config: PileConfig,
+    geometry: dict[str, Any],
+) -> np.ndarray:
+    """Seed a non-overlapping FCC sample inside the requested bulk envelope.
+
+    Sampling a seeded subset of a face-centred cubic lattice gives the target
+    provisional bulk fraction without an initially interpenetrating block.
+    Particle centres may extend by one radius beyond the ideal continuum
+    envelope so the *sphere surfaces*, not merely centres, approximate it.
+    """
+    rng = np.random.default_rng(config.seed)
+    radius = float(geometry["radius_m"])
+    diameter = float(geometry["diameter_m"])
+    nearest = float(geometry["spacing_m"])
+    cell = math.sqrt(2.0) * nearest
+    half_width = 0.5 * float(geometry["target_width_m"])
+    half_length = 0.5 * float(geometry["target_length_m"])
+    height = float(geometry["target_height_m"])
+    clearance = float(geometry["drop_height_m"])
+    nx = int(math.ceil((half_width + radius) / cell)) + 2
+    ny = int(math.ceil((half_length + radius) / cell)) + 2
+    nz = int(math.ceil((height + 2.0 * radius) / cell)) + 2
+    basis = np.asarray(
+        [[0.0, 0.0, 0.0], [0.0, 0.5, 0.5], [0.5, 0.0, 0.5], [0.5, 0.5, 0.0]],
+        dtype=np.float64,
+    )
+    candidates: list[np.ndarray] = []
+    for bx, by, bz in basis:
+        ix = np.arange(-nx, nx + 1, dtype=np.float64) + bx
+        iy = np.arange(-ny, ny + 1, dtype=np.float64) + by
+        iz = np.arange(0, nz + 1, dtype=np.float64) + bz
+        xx, yy, zz = np.meshgrid(ix * cell, iy * cell, iz * cell, indexing="ij")
+        z_local = radius + zz.ravel()
+        x = xx.ravel()
+        y = yy.ravel()
+        z_fraction = np.clip((z_local - radius) / height, 0.0, 1.0)
+        if config.target_shape == "ridge":
+            inside = (
+                (np.abs(y) <= half_length + radius)
+                & (np.abs(x) <= half_width * (1.0 - z_fraction) + radius)
+                & (z_local <= height + radius)
+            )
+        elif config.target_shape == "cone":
+            allowed_radius = half_width * (1.0 - z_fraction) + radius
+            inside = (
+                (np.hypot(x, y) <= allowed_radius)
+                & (z_local <= height + radius)
+            )
+        else:
+            inside = (
+                (np.abs(x) <= half_width + radius)
+                & (np.abs(y) <= half_length + radius)
+                & (z_local <= height + radius)
+            )
+        candidates.append(np.column_stack([x[inside], y[inside], z_local[inside] + clearance]))
+    pool = np.concatenate(candidates, axis=0)
+    if pool.shape[0] < config.n_particles:
+        raise ValueError(
+            "target FCC envelope contains too few non-overlapping sites: "
+            f"{pool.shape[0]} < {config.n_particles}; reduce spacing_factor or increase target volume"
+        )
+    selected = pool[rng.choice(pool.shape[0], size=config.n_particles, replace=False)].copy()
+    jitter_amp = config.jitter_fraction_diameter * diameter
+    selected += rng.uniform(-jitter_amp, jitter_amp, size=selected.shape)
+    selected[:, 2] = np.maximum(selected[:, 2], radius + 0.5 * clearance)
+    if np.max(np.abs(selected[:, 0])) + radius > 0.5 * geometry["box_width_m"]:
+        raise AssertionError("seeded target FCC x positions exceed box")
+    if np.max(np.abs(selected[:, 1])) + radius > 0.5 * geometry["box_length_m"]:
+        raise AssertionError("seeded target FCC y positions exceed box")
+    if np.max(selected[:, 2]) + radius > geometry["box_height_m"]:
+        raise AssertionError("seeded target FCC z positions exceed diagnostic extent")
+    geometry["target_fcc_candidate_count"] = int(pool.shape[0])
+    geometry["target_fcc_selected_fraction"] = config.n_particles / float(pool.shape[0])
+    return selected
+
+
+def generate_initial_positions(config: PileConfig, geometry: dict[str, Any]) -> np.ndarray:
+    if config.initialization_mode == "target_fcc":
+        return _generate_target_fcc_positions(config, geometry)
+    return _generate_rain_box_positions(config, geometry)
 
 
 def minimum_surface_gap_m(positions: np.ndarray, diameter_m: float) -> float:
@@ -1483,7 +1584,13 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--cd-update-freq", type=int, default=20)
     parser.add_argument("--spacing-factor", type=float, default=1.10)
     parser.add_argument("--jitter-fraction-diameter", type=float, default=0.015)
-    parser.add_argument("--release-footprint-fraction", type=float, default=0.72)
+    parser.add_argument(
+        "--initialization-mode",
+        choices=("target_fcc", "rain_box"),
+        default="target_fcc",
+    )
+    parser.add_argument("--release-footprint-fraction", type=float, default=0.22)
+    parser.add_argument("--ridge-release-length-fraction", type=float, default=0.85)
     parser.add_argument("--drop-height-mm", type=float)
     parser.add_argument("--check-interval-s", type=float, default=0.05)
     parser.add_argument("--min-sim-time-s", type=float, default=0.40)
@@ -1521,7 +1628,9 @@ def config_from_args(args: argparse.Namespace) -> PileConfig:
         cd_update_freq=args.cd_update_freq,
         spacing_factor=args.spacing_factor,
         jitter_fraction_diameter=args.jitter_fraction_diameter,
+        initialization_mode=args.initialization_mode,
         release_footprint_fraction=args.release_footprint_fraction,
+        ridge_release_length_fraction=args.ridge_release_length_fraction,
         drop_height_mm=args.drop_height_mm,
         check_interval_s=args.check_interval_s,
         min_sim_time_s=args.min_sim_time_s,

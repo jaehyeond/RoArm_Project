@@ -1,0 +1,145 @@
+{
+  "params": {
+    "pivot_gap_mm": 26.0,
+    "lip_depth_mm": 36.06,
+    "mouth_open_mm": 58.0,
+    "shell_travel_deg": 44.5,
+    "gear_ratio": 2.0,
+    "bulge_frac": 0.45,
+    "shell_width_mm": 50.0,
+    "wall_mm": 2.0,
+    "side_plate_thk_mm": 1.5,
+    "lip_land_mm": 0.8,
+    "seg_n": 20,
+    "gear_module_mm": 1.0,
+    "shell_gear_teeth": 26,
+    "drive_gear_teeth": 13,
+    "gear_width_mm": 6.0,
+    "gear_backlash_mm": 0.15,
+    "bracket_bolt_dy_mm": 25.19,
+    "bracket_bolt_dz_mm": 19.44,
+    "bolt_clear_d_mm": 3.4,
+    "bracket_thk_mm": 4.0,
+    "bracket_standoff_mm": 32.0,
+    "pivot_shaft_d_mm": 3.0,
+    "pivot_boss_d_mm": 8.0,
+    "drive_bolt_span_mm": 25.0,
+    "drive_arm_thk_mm": 3.0,
+    "density_g_cm3": 1.24,
+    "material": "PLA",
+    "tool_mass_max_g": 50.0,
+    "fill_factor": 0.7,
+    "bulk_density_g_cm3": 0.55,
+    "bulk_density_src": "ASSUMED",
+    "pellet_d_max_mm": 5.0,
+    "pile_width_mm": 377.5,
+    "servo_torque_nm": 1.91,
+    "self_load_ratio_band": [
+      0.72,
+      0.88
+    ]
+  },
+  "gates": {
+    "all_pieces_convex": {
+      "pass": true,
+      "violations": [],
+      "n_pieces": 138
+    },
+    "shells_meet_not_overlap": {
+      "pass": true,
+      "x_overlap_mm": 0.0,
+      "band_mm": [
+        -1.5,
+        0.3
+      ],
+      "note": "0 근처 = 립이 맞닿음. 크게 양수면 서로 파고든 것"
+    },
+    "shells_are_mirror_symmetric": {
+      "pass": true,
+      "max_bound_diff_mm": 0.0
+    },
+    "shell_gears_mesh": {
+      "pass": true,
+      "sum_pitch_r_mm": 26.0,
+      "pivot_gap_mm": 26.0
+    },
+    "gear_tip_root_clearance": {
+      "pass": true,
+      "value_mm": 0.25,
+      "band_mm": [
+        0.05,
+        1.0
+      ],
+      "tip_overlap_mm": 2.0,
+      "note": "이끝원 겹침 2.0 mm 는 맞물림의 정의다. 여기서 보는 것은 이뿌리 여유"
+    },
+    "drive_ratio_matches": {
+      "pass": true,
+      "ratio": 2.0,
+      "target": 2.0,
+      "center_distance_mm": 19.5
+    },
+    "mouth_open_at_travel": {
+      "pass": true,
+      "value_mm": 58.005,
+      "target_mm": 58.0,
+      "closed_mm": 0.0
+    },
+    "tool_mass_under_max": {
+      "pass": true,
+      "value_g": 29.34,
+      "limit_g": 50.0,
+      "material": "PLA"
+    },
+    "self_load_ratio_in_real_band": {
+      "pass": false,
+      "value_with_assumed_density": 1.083,
+      "band": [
+        0.72,
+        0.88
+      ],
+      "v0_was": 3.3,
+      "blocked_on": "bulk_density_g_cm3 실측 (펠릿 미조달)",
+      "bulk_density_used": 0.55,
+      "bulk_density_src": "ASSUMED",
+      "density_range_that_would_pass_g_cm3": [
+        0.677,
+        0.828
+      ],
+      "note": "실물 그랩은 자기 무게만으로 관입한다(D457 §12). v0는 팔이 눌러야 했다. 분모가 추측이므로 이 게이트는 실측 전까지 FAIL 을 유지한다 — 형상 튜닝으로 통과시키지 말 것"
+    },
+    "particle_ratio_min10": {
+      "pass": true,
+      "value": 11.6
+    },
+    "grab_to_pile_width": {
+      "pass": true,
+      "value": 0.1548,
+      "industrial_band": [
+        0.05,
+        0.1
+      ],
+      "v0_was": 0.53
+    }
+  },
+  "derived": {
+    "inner_volume_cm3": 70.34,
+    "load_per_scoop_g": 27.08,
+    "tool_mass_g": 29.34,
+    "self_load_ratio": 1.083,
+    "lip_pivot_radius_mm": 38.332,
+    "gear_center_distance_mm": 19.5,
+    "outer_width_mm": 58.45
+  },
+  "all_gates_pass": false,
+  "piece_counts": {
+    "shell_L": 53,
+    "shell_R": 53,
+    "bracket": 10,
+    "drive": 22
+  },
+  "measure_pending": [
+    "bulk_density_g_cm3"
+  ],
+  "supersedes": "scoop_shell_design.py (v0 오버레이 방식, D462로 전환)"
+}

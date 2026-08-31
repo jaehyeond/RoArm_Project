@@ -191,3 +191,10 @@ NUL
 # unlazy skill working files
 .unlazy/
 .unlazy-hook-state.json
+
+# ---- 그랩 부품 조각 STL (D462~) ----
+# 생성기(scoop_grab_v1_design.py) + design.json 파라미터로 **결정론적 재생성** 가능하다.
+# 조각 하나가 파일 하나라 커밋하면 수백 개씩 쌓인다. 조립본(_ALL)과 design.json 만 남긴다.
+# ⚠️ scoop_shell_v0/ 의 조각들은 이미 커밋돼 있다 — forward-only 규칙상 지우지 않는다.
+claudedocs/runtime_logs/scoop_grab_*/*.stl
+!claudedocs/runtime_logs/scoop_grab_*/*_ALL.stl

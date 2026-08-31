@@ -20,11 +20,15 @@ Observation
 The producer contract is ``roarm-heightmap-v1`` from
 ``roarm_rl.heightmap`` (the concurrent s2 heightmap work):
 
-* ``height_m``: ``[B, 1, 30, 30]`` ``torch.float32``, metres, expected range
+* ``height_m``: ``[B, 1, 76, 38]`` ``torch.float32``, metres, expected range
   ``[0, +inf)``.  Values are surface z in ``roarm_base`` minus the support-plane
   datum.  Row indexes +y, column indexes +x.  Cell size is 0.005 m and the
-  lower-left corner of cell [0, 0] is (0.125, -0.075) m.
-* ``valid_mask``: ``[B, 1, 30, 30]`` ``torch.bool``.  False means the height
+  lower-left corner of cell [0, 0] is (0.125, -0.190) m.  The grid spans
+  0.190 m in x and 0.380 m in y, matching the s1 DEME pile box
+  (186.6 x 377.5 mm, ridge ratio 2.18:1).  Chosen 2026-08-31 by the user:
+  it puts mouth-width / pile-width at 58/377.5 = 0.154, near the 0.05-0.1 of
+  real industrial grabs, instead of the 0.53 the earlier 150 mm window gave.
+* ``valid_mask``: ``[B, 1, 76, 38]`` ``torch.bool``.  False means the height
   value is padding, not a measurement.  The mask is a separate CNN channel.
 * The model-v1 header requires ``agg="max"``: each height is the highest
   surface point in the cell's square footprint, and an invalid cell is filled
@@ -40,9 +44,16 @@ Action
 ``[x_m, y_m, dir_x, dir_y]``:
 
 * ``x_m`` is the scoop-mouth centre in ``roarm_base`` x, half-open range
-  ``[0.125, 0.275)`` m for this grid.
+  ``[0.125, 0.315)`` m for this grid.
 * ``y_m`` is the scoop-mouth centre in ``roarm_base`` y, half-open range
-  ``[-0.075, 0.075)`` m for this grid.
+  ``[-0.190, 0.190)`` m for this grid.
+
+  .. warning::
+     The placement of this box in ``roarm_base`` is NOT yet reach-verified.
+     x starts at 0.125 m to match the earlier window, and y is centred on the
+     base, but nobody has checked that the arm can reach x=0.315 m or
+     y=+-0.190 m with the scoop pose.  Verify against JOINT_LIMITS and the
+     fixed path before any real-robot or reach-dependent use.
 * ``(dir_x, dir_y)`` is a unit vector in the base XY plane, each component in
   ``[-1, 1]``.  It represents yaw without an angle-wrap discontinuity;
   ``yaw = atan2(dir_y, dir_x)`` and has range ``[-pi, pi)`` radians.
@@ -61,7 +72,7 @@ All continuous targets are ``torch.float32``:
 * ``scooped_mass_kg``: ``[B, 1]``, kg, range ``[0, +inf)``.
 * ``elapsed_time_s``: ``[B, 1]``, seconds, range ``[0, +inf)``.  This is the
   measured time for the full fixed path, including a failed attempt.
-* ``next_height_m``: ``[B, 1, 30, 30]``, metres, range ``[0, +inf)``; required
+* ``next_height_m``: ``[B, 1, 76, 38]``, metres, range ``[0, +inf)``; required
   only in ``amount_and_shape`` mode.  ``next_valid_mask`` has the same shape
   and dtype ``torch.bool`` and masks unavailable supervision cells.
 * ``failed``: ``[B, 1]`` ``torch.bool``.  The concrete failure predicate must
@@ -75,7 +86,7 @@ Prediction and uncertainty
 * time mean ``[B, 1]`` s and variance ``[B, 1]`` s^2;
 * failure probability ``[B, 1]`` in ``[0, 1]`` and Bernoulli variance
   ``p(1-p)`` ``[B, 1]`` (dimensionless);
-* next-height mean ``[B, 1, 30, 30]`` m and variance of the same shape in m^2
+* next-height mean ``[B, 1, 76, 38]`` m and variance of the same shape in m^2
   in ``amount_and_shape`` mode.  Both fields are ``None`` in ``amount_only``
   mode, while the enclosing return type and forward signature stay identical.
 
@@ -117,9 +128,9 @@ class HeightmapGridContract:
 
     spec_version: str = HEIGHTMAP_CONTRACT_VERSION
     frame: str = "roarm_base"
-    shape: tuple[int, int] = (30, 30)
+    shape: tuple[int, int] = (76, 38)
     cell_m: float = 0.005
-    origin_xy_m: tuple[float, float] = (0.125, -0.075)
+    origin_xy_m: tuple[float, float] = (0.125, -0.190)
     z_datum_m: float = 0.0
     aggregation: str = "max"
     empty_fill_m: float = 0.0
@@ -679,7 +690,7 @@ def run_dummy_forward_check() -> None:
         validate_targets(target, mode, contract)
         print(
             f"{mode.value}: scalar=(3, 1), "
-            f"next_height={'(3, 1, 30, 30)' if prediction.next_height_mean_m is not None else 'None'}, "
+            f"next_height={'(3, 1, 76, 38)' if prediction.next_height_mean_m is not None else 'None'}, "
             f"variance=PASS, selected={selected}"
         )
 

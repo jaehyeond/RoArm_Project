@@ -1,0 +1,54 @@
+{
+  "artifact": "DEME_PELLET_PILE_REPRODUCIBILITY_V1",
+  "attempted_determinism_controls": [
+    "SetSortContactPairs(true)",
+    "UseCubForceCollection(true)",
+    "DisableAdaptiveUpdateFreq()",
+    "DisableAdaptiveBinSize()",
+    "diagnostic SetCDUpdateFreq(1) (also non-bit-exact)"
+  ],
+  "engine": "DEME 2.4.0 GPU",
+  "exact_seeded_input_checks": {
+    "box_bounds_m": true,
+    "config": true,
+    "initial_positions_m": true,
+    "particle_ids": true,
+    "radii_m": true
+  },
+  "heightmap_contract": {
+    "cell_m": 0.005,
+    "checks": {
+      "max": true,
+      "p95": true,
+      "rms": true
+    },
+    "metrics": {
+      "exact_cell_fraction": 0.0,
+      "max_abs_m": 0.007074616849422455,
+      "mean_abs_m": 0.0011498757395854637,
+      "p95_abs_m": 0.002941522793844343,
+      "rms_m": 0.0014638975266155821
+    },
+    "operator": "exact highest sphere surface over each cell footprint",
+    "producer": "roarm_rl.heightmap.heightmap_from_particles",
+    "shape": [
+      76,
+      38
+    ],
+    "thresholds": {
+      "max_abs_m": 0.008320000000000001,
+      "p95_abs_m": 0.0041600000000000005,
+      "rms_m": 0.0020800000000000003
+    }
+  },
+  "interpretation": "seeded input/config are bit-exact; raw final GPU floats are explicitly not bit-exact; the downstream 5 mm pile geometry agrees within pellet-scale tolerances",
+  "left": "claudedocs/runtime_logs/sim_deme/pile_practical_ridge_d4p16_n18796_seed460.npz",
+  "left_sha256": "193b154032fbe276b51f7acfb5a23b4329636be4fb7999ae9306915f1e77f70e",
+  "n_particles": 18796,
+  "pass": true,
+  "raw_final_bit_exact": false,
+  "raw_final_bit_exact_verdict": "FAIL_ENGINE_LIMITATION",
+  "right": "claudedocs/runtime_logs/sim_deme/pile_practical_ridge_d4p16_n18796_seed460_rep2.npz",
+  "right_sha256": "eb031d88b8a5d16bdd92731b5eefeb7f8d2a4fdecfb8a4a98d9e7d3771c3d4b5",
+  "seed": 460
+}

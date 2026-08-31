@@ -1,0 +1,202 @@
+{
+  "probe": "p37_g2_grab_v1_attach",
+  "gates": {
+    "G1_hinge_parallel_to_servo_axis": {
+      "pass": true,
+      "abs_dot": 1.0,
+      "hinge_in_link5": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "servo_axis": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "why": "스퍼 기어는 축이 평행해야 물린다. 어긋나면 구동이 성립하지 않는다"
+    },
+    "G2_bracket_bolt_axis_through_blade": {
+      "pass": true,
+      "abs_dot_with_link5_X": 1.0,
+      "bolt_axis_in_link5": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "blade_normal": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "why": "볼트는 두께 1.51 mm 블레이드를 관통해야 한다. 구멍 축이 블레이드 법선과 어긋나면 볼트가 판재를 뚫고 지나갈 수 없다",
+      "root_cause_if_fail": "build_bracket 이 plate_with_holes 로 구멍을 **로컬 Z**(= 힌지축)에 뚫는다. 힌지축과 볼트축은 90도 달라야 한다"
+    },
+    "G3_bracket_holes_match_blade": {
+      "pass": true,
+      "max_err_mm": 0.0,
+      "blade_holes_yz": [
+        [
+          -13.34,
+          83.46
+        ],
+        [
+          -13.34,
+          102.9
+        ],
+        [
+          11.85,
+          83.46
+        ],
+        [
+          11.85,
+          102.9
+        ]
+      ],
+      "bracket_holes_yz": [
+        [
+          -13.34,
+          83.46
+        ],
+        [
+          -13.34,
+          102.9
+        ],
+        [
+          11.85,
+          83.46
+        ],
+        [
+          11.85,
+          102.9
+        ]
+      ]
+    },
+    "G4_no_arm_collision_through_sweep": {
+      "pass": true,
+      "first_collision_deg": null,
+      "min_clearance_mm": 2.491,
+      "angles_deg": [
+        0.0,
+        1.93,
+        3.87,
+        5.8,
+        7.74,
+        9.67,
+        11.61,
+        13.54,
+        15.48,
+        17.41,
+        19.35,
+        21.28,
+        23.22,
+        25.15,
+        27.09,
+        29.02,
+        30.96,
+        32.89,
+        34.83,
+        36.76,
+        38.7,
+        40.63,
+        42.57,
+        44.5
+      ],
+      "clearance_mm": [
+        3.551,
+        3.518,
+        3.488,
+        3.46,
+        3.435,
+        3.411,
+        3.389,
+        3.37,
+        3.352,
+        3.337,
+        3.325,
+        3.314,
+        3.306,
+        3.3,
+        3.296,
+        3.294,
+        3.237,
+        3.122,
+        3.01,
+        2.9,
+        2.794,
+        2.69,
+        2.589,
+        2.491
+      ]
+    },
+    "G6_bracket_drive_clear_of_arm": {
+      "pass": false,
+      "min_clearance_mm": -0.787,
+      "closest_piece": "bracket:bolt_plate_4",
+      "why": "볼트판은 블레이드에 닿아야 하지만 스파인/보스/구동부는 팔을 파고들면 안 된다"
+    },
+    "G7_drive_gear_meshes_on_servo_axis": {
+      "pass": false,
+      "axis_distance_mm": 77.811,
+      "required_center_distance_mm": 19.5,
+      "error_mm": 58.311,
+      "pivot_L_in_link5": [
+        -26.54,
+        -0.745,
+        125.18
+      ],
+      "servo_axis_point": [
+        0.0,
+        18.821,
+        52.035
+      ],
+      "why": "구동 기어는 서보축을 돈다. 피벗 L 축과의 수직거리가 r_drive+r_shell 과 다르면 이가 안 물리거나 뿌리까지 박힌다",
+      "fix_if_fail": "bracket_standoff_mm 로 피벗 위치를 조절해 축간거리를 맞춘다"
+    },
+    "G8_clear_of_link4": {
+      "pass": true,
+      "min_clearance_mm": 15.306,
+      "why": "link5 만이 아니라 바로 앞 링크와도 안 닿아야 손목 롤이 자유롭다"
+    },
+    "G5_sweep_volume_below_enclosed": {
+      "pass": true,
+      "sweep_cm3": 57.06,
+      "enclosed_cm3": 70.34,
+      "why": "닫는 동안 립이 쓸고 가는 부피. 담을 부피보다 지나치게 크면 재료를 밀어내기만 한다"
+    }
+  },
+  "evidence": {
+    "link5_voxel_pitch_mm": 1.0,
+    "link5_solid_fraction_of_hull": 0.386,
+    "lip_sweep_volume_cm3": 57.06,
+    "enclosed_volume_cm3": 70.34,
+    "placement_T_link5": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        -13.54
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        -0.745
+      ],
+      [
+        0.0,
+        -1.0,
+        0.0,
+        125.18
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ]
+  },
+  "all_gates_pass": false,
+  "verdict": "G2_ATTACH_BLOCKED"
+}
