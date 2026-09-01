@@ -88,6 +88,43 @@ def first_layer_contact_mm2(gc):
 
 contact_mm2, first_layer_e = first_layer_contact_mm2(gcode)
 
+
+def first_layer_by_feature(gc):
+    """1층 압출을 feature 별로 갈라 mm² 로 환산한다.
+
+    🔴 `first_layer_contact_mm2` 는 **서포트까지 접지로 센다.** 서포트는 부품을 베드에
+    붙잡지 않는다 — g9 실패판은 접지 2040 mm² 중 312 mm² 가 서포트였다.
+    부품을 실제로 잡는 것은 **부품 1층 + 브림** 뿐이다.
+    """
+    lines = gc.splitlines()
+    try:
+        s = next(i for i, l in enumerate(lines) if "layer num/total_layer_count: 1/" in l)
+    except StopIteration:
+        return {}
+    e = next((i for i, l in enumerate(lines[s + 1:], s + 1)
+              if l.startswith("; CHANGE_LAYER")), len(lines))
+    h = float((re.search(r"^; LAYER_HEIGHT: ([0-9.]+)", "\n".join(lines[:s]), re.M)
+               or [None, "0.2"])[1])
+    per, feat = {}, None
+    for l in lines[s:e]:
+        if l.startswith("; FEATURE:"):
+            feat = l.split(":", 1)[1].strip()
+        elif l.startswith("G1"):
+            m = re.search(r"\bE(-?[0-9.]+)", l)
+            if m and float(m.group(1)) > 0:
+                per[feat] = per.get(feat, 0.0) + float(m.group(1))
+    return {k: v * FIL_AREA_MM2 / h for k, v in per.items()}
+
+
+_fl = first_layer_by_feature(gcode)
+brim_mm2 = _fl.get("Brim", 0.0)
+support_mm2 = sum(v for k, v in _fl.items() if k and "Support" in k)
+part_mm2 = sum(v for k, v in _fl.items() if k and "Support" not in k and k != "Brim")
+hold_mm2 = part_mm2 + brim_mm2          # 부품을 실제로 붙잡는 면적
+_m = re.search(r"^; total filament weight \[g\]\s*:\s*([0-9.]+)", gcode, re.M)
+part_grams = float(_m.group(1)) if _m else 0.0
+contact_per_gram = hold_mm2 / part_grams if part_grams else 0.0
+
 # 🔴 서포트·오버행·기능축. 전부 **결과**에서 읽는다.
 support_used = (meta("support_used") == "true") or ("; FEATURE: Support" in gcode)
 on_plate_only = str(_used.get("support_on_build_plate_only", "0")) in ("1", "true")
@@ -191,6 +228,15 @@ except Exception:
 #    실패판 = 138 mm² / 높이 52.9 mm = 2.6 mm²/mm -> 첫 층부터 전량 탈락.
 #    첫 성공이 나오면 그 값으로 다시 교정할 것. 지금은 안전측으로 10 을 쓴다.
 CONTACT_PER_MM = 10.0
+# 🔴 2026-09-01 g9. 높이 기준만으로는 이 실패를 못 잡는다 — g8(완주)과 g9(실패)는 높이가
+# 59.5 mm 로 **같아서** 임계가 595 mm² 로 고정됐고 둘 다 3~4배 여유로 PASS 했다.
+# 실제로 갈린 것은 **무게당 접지**다. 부품이 22% 무거워졌는데(13.99 → 17.05 g) 부품 1층은
+# 오히려 24% 줄었다(911 → 697 mm², D466 이 보울 벽을 2.0 → 1.6 mm 로 얇게 해서).
+#   g8 완주 130.0 mm²/g   ·   g9 실패 101.3 mm²/g   (둘 다 서포트 제외, 브림 포함)
+# 임계는 이 **성공/실패 쌍**에서 잡았다. 유일한 성공값 바로 아래에 붙인다.
+# ⚠️ 표본이 1대1이다. 성공 사례가 쌓이면 다시 잡아라 — 실패에서만 잡은 값이 아니라는 점만
+#    기존 임계들(10 mm²/mm · 300 mm² · 130 mm/s)보다 낫다.
+CONTACT_PER_GRAM = 125.0
 contact_need = CONTACT_PER_MM * max_z
 
 # ── 검증 게이트 ───────────────────────────────────────────────────────────
@@ -266,7 +312,22 @@ gates = {
                    f"vs 필요 {contact_need:.0f} mm² = {CONTACT_PER_MM:.0f} × 높이 {max_z:.1f} mm. "
                    f"실패판은 {138} mm² / 52.9 mm = 2.6 mm²/mm 였다"),
         "blind_spot": ("임계 10 mm²/mm 는 **실패 1건에서만** 잡은 잠정값이고 성공 사례가 "
-                       "아직 없다. 접지가 넓어도 베드 오염·Z 오프셋·필라멘트 습기는 못 본다")},
+                       "아직 없다. 접지가 넓어도 베드 오염·Z 오프셋·필라멘트 습기는 못 본다. "
+                       "🔴 그리고 **높이만 보므로 무게 증가를 못 본다** — g9 실패가 그 구멍으로 "
+                       "빠져나갔다(높이 동일, 임계 불변, 3.4배 여유 PASS). "
+                       "first_layer_contact_per_gram 이 그 축을 본다. 또 이 값은 **서포트를 "
+                       "접지로 함께 센다**(g9 은 2040 중 312 이 서포트)")},
+    # 🔴 g9 실패가 만든 게이트. 높이 기준이 못 보는 축 = **무게**, 그리고 서포트 제외.
+    "first_layer_contact_per_gram": {
+        "pass": contact_per_gram >= CONTACT_PER_GRAM,
+        "detail": (f"부품을 붙잡는 1층 면적 {hold_mm2:.0f} mm² "
+                   f"(부품 {part_mm2:.0f} + 브림 {brim_mm2:.0f}, 서포트 {support_mm2:.0f} 제외) "
+                   f"÷ 무게 {part_grams:.2f} g = **{contact_per_gram:.1f} mm²/g** "
+                   f"vs 임계 {CONTACT_PER_GRAM:.0f}. "
+                   f"실측 앵커: g8 완주 130.0 · g9 실패 101.3"),
+        "blind_spot": ("표본이 성공 1 · 실패 1 뿐이다. 그리고 브림과 부품 접지를 **같은 무게로** "
+                       "더하는데 실제로는 브림이 먼저 뜯긴다 — 브림으로만 채운 값은 부품 접지로 "
+                       "채운 같은 값보다 약하다. 베드 오염·Z 오프셋은 여기서도 안 보인다")},
     # 출력 온도는 gcode의 **최고** 노즐 온도다. S75(오징 방지)·S140(베드 레벨링 중 노즐 닦기)은
     # Bambu 시작 루틴의 과도값이며 gcode 주석이 그렇게 명시한다 — 출력 온도로 세면 안 된다.
     # 🔴 2026-09-01 2차 실패. 접지만 최대화한 배향이 기어축을 90° 눕혀 이빨을 층으로
@@ -315,6 +376,18 @@ job = {
     "slicing": {
         "slicer": "BambuStudio.AppImage 02.05.00.66",
         "headless": "xvfb-run -a 필수 — CLI 모드도 GL 컨텍스트를 요구해 그냥 실행하면 glfwInit 실패",
+        # 🔴 2026-09-01 g9. 아래 profiles 블록은 **하드코딩이라 거짓이었다** — g9 은
+        # support 켜고 베드 65°C 로 슬라이스됐는데 "nosupport / 65→55" 라고 적혀 있었다.
+        # 3mf 에서 프로필 **파일명**은 복구할 수 없으므로, 파일명 대신 **실제로 적용된 값**을
+        # 기록한다. 판정에 쓰이는 것은 파일명이 아니라 값이다.
+        "settings_actually_applied": {k: _used.get(k) for k in (
+            "brim_type", "brim_width", "brim_object_gap", "initial_layer_line_width",
+            "wall_loops", "bottom_shell_layers", "sparse_infill_density",
+            "enable_support", "support_type", "support_style",
+            "outer_wall_speed", "inner_wall_speed", "default_acceleration",
+            "nozzle_temperature", "hot_plate_temp", "curr_bed_type")},
+        "profiles_note": ("3mf 는 프로필 파일명을 보존하지 않는다. 아래 문자열은 참고용이며 "
+                          "**검증된 값이 아니다** — 대조는 settings_actually_applied 로 하라"),
         "profiles": {
             "machine": "profiles/machine_full.json (원본)",
             "process": "profiles/process_nosupport_roarm.json (사본: enable_support 1→0, "
