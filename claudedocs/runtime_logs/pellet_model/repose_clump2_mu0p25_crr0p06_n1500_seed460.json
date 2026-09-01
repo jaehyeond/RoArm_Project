@@ -1,0 +1,33 @@
+{
+  "artifact": "PELLET_REPOSE_V1_SUMMARY",
+  "aspect": 1.5,
+  "dynamics_wall_s": 14.840833114009001,
+  "fit_r_squared": 0.996965800582786,
+  "initialization_wall_s": 0.8332066510047298,
+  "measurement_pass": true,
+  "n_particles": 1500,
+  "n_spheres": 2,
+  "non_claims": [
+    "MEASURE: pellet_dia_mm / pellet_len_mm are nominal placeholders; no pellet has been measured",
+    "MEASURE: particle_density_kg_m3 is a generic PP solid-density placeholder, not weighed",
+    "MEASURE: mu / wall_mu / rolling_friction (Crr) / restitution are unmeasured sweep axes",
+    "NUMERICAL: young_modulus_pa=5e6 is a time-step stability value from D464 sec.4, not a measured stiffness",
+    "SIZING_ONLY: packing_fraction_for_sizing and sizing_repose_angle_deg only size the domain; they are not results",
+    "NOT_A_RESULT: every repose angle produced here is the angle of the SIMULATED material at the stated parameters, not a prediction of the real pellet angle until fit_to_measured_repose is given a measured value"
+  ],
+  "npz": "claudedocs/runtime_logs/pellet_model/repose_clump2_mu0p25_crr0p06_n1500_seed460.npz",
+  "npz_sha256": "47dcd3565f6b521f9f1fc7f0f5a9933edb690977bcd7564fc095f3b64b0d3c23",
+  "particle_mu": 0.25,
+  "penetration_pass": true,
+  "quadrant_spread_deg": 1.4479126865641945,
+  "repose_angle_deg": 25.743531694183883,
+  "repose_angle_secondary_deg": 25.247600745851408,
+  "repose_definition": "sidewall_regression",
+  "restitution": 0.3,
+  "rolling_friction": 0.06,
+  "run_started_utc": "2026-09-01T01:52:16.563063+00:00",
+  "settled_sim_time_s": 2.9087999265175313,
+  "shape": "clump2",
+  "sphere_count": 3000,
+  "total_wall_s": 15.997268908002297
+}
