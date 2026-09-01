@@ -385,9 +385,13 @@ GPU              NVIDIA GeForce RTX 4090 Laptop GPU, 16376 MiB, driver 580.173.0
 2. **D457의 근거 문장은 정정이 필요하다.** "readback 불가"는 사실이 아니었다. 결론(Isaac PBD
    기각)은 유지되지만 이유는 "실용 타임스텝에서 더미가 서지 않고, 등방성 구만 가능해 구조적으로
    30°에 못 미친다"로 바꿔 기록해야 다음 세션이 같은 오진을 반복하지 않는다.
-3. **깊이 렌더 관측 경로는 DEME 쪽에도 이식할 가치가 있다.** sim/real 관측 방식을 맞추면
-   GP 잔차가 물리 차이만 담는다. 구현은 `sim_pbd_pellet_probe.depth_to_height_field`가
-   그대로 재사용 가능하다(P3 격자 규약과 동일).
+3. **깊이 렌더 관측 경로를 DEME 쪽에 이식하라 — 정량 근거까지 확보했다 (P4b).**
+   `sim_depth_observation_probe.py`로 P3의 27개 더미(8.90~41.77°)를 같은 깊이 카메라로
+   다시 관측한 결과, **카메라 자체의 높이 편향은 평균 −0.019 mm · 최대 0.038 mm**로
+   사실상 0이고 각도는 **최대 0.34°** 안에서 일치했다. 겉보기 +1.44 mm / 최대 +3.26°는
+   전부 **격자 샘플링 규약 차이**(P3는 셀 중심값, 카메라는 셀 최댓값)였다.
+   → 지금 구조에서는 물리가 완벽해도 그 규약 차이가 GP 잔차에 계통 오차로 남는다.
+   상세: `claudedocs/runtime_logs/pbd_probe/depth_on_deme/REPORT_depth_on_deme.md`.
 4. **`heap_is_conical` 검사를 P3에도 넣을지 검토**할 것. 지금 P3의 27셀은 전부 통과하므로
    과거 판정은 바뀌지 않지만, 향후 평평한 더미가 나왔을 때 절벽을 각도로 오독하는 것을 막는다.
 5. **원장(START_HERE / DECISIONS / EXPERIMENT_LEDGER / session_* / relay)은 건드리지 않았다.**
