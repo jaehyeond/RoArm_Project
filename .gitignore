@@ -255,3 +255,24 @@ claudedocs/runtime_logs/grab_track/*/*.stl
 !claudedocs/runtime_logs/pellet_model/repose_clump2_mu0p45_crr0p06_n1500_seed460.npz
 !claudedocs/runtime_logs/pellet_model/repose_clump3_mu0p45_crr0p06_n1500_seed460.npz
 !claudedocs/runtime_logs/pellet_model/repose_clump3_mu0p45_crr0p06_n1500_seed460_inspection.png
+
+# ── P4 PBD 프로브 (75th, D467·D468) ─────────────────────────────────────────
+# 기준은 P3 와 동일하다: **판정이 소비하고 && 재생성 불가**일 때만 넣는다.
+# 🔴 pbd_probe npz 38개(9.4 MB) 중 34개는 **넣지 않는다** — PBD 는 bit-재현된다.
+#    실측: cell_ctrl_solid_ref.npz 와 cell_f1_fric0p60.npz 는 height_depth_m /
+#    positions_settled_m / radial_profile_depth 등 **과학 배열이 전부 비트 동일**하고
+#    sha256 이 갈린 것은 metadata_json(라벨 문자열) 하나 때문이다.
+#    재생성: sim_pbd_pellet_probe.py --cells <cells.json>  (isaacsim 5.1.0.0 / isaaclab 2.3.0)
+# 아래 4개만 넣는다 — D467 ④ 관측시간 교락의 원자료이고, 이 발견은 어느 워커 보고서에도
+# 없는 코디네이터 고유 판정이라 재도출 근거가 repo 안에 있어야 한다.
+# (dt_960hz 는 20 s, ls_* 는 40 s. config 61개 중 셋만 달라 각도가 20.76 -> 16.66° 로 갈린다.)
+!claudedocs/runtime_logs/pbd_probe/cell_dt_960hz.npz
+!claudedocs/runtime_logs/pbd_probe/cell_ls_960hz_damp0.npz
+!claudedocs/runtime_logs/pbd_probe/cell_ls_960hz_damp0p5.npz
+!claudedocs/runtime_logs/pbd_probe/cell_ls_960hz_damp5.npz
+# D324/D341 육안 검수 증거 — REPORT_pbd_probe.md §10-b 가 이름으로 참조하는 3장.
+# 계약상 스냅샷 경로가 문서에 남아야 하고, 위 방침대로 npz 를 안 넣으므로 렌더는
+# 재생성 경로가 끊긴다(sim_pbd_pellet_render.py 가 npz 를 입력으로 쓴다). 그래서 넣는다.
+!claudedocs/runtime_logs/pbd_probe/render_ctrl_solid_ref_side.png
+!claudedocs/runtime_logs/pbd_probe/render_dt_1920hz_side.png
+!claudedocs/runtime_logs/pbd_probe/render_f3_adh0p001_oblique.png
