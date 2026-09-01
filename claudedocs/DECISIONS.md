@@ -29262,3 +29262,86 @@ PBD 스쿱도 5회 전부 포획 0개(G5).
 - 두 워커 브랜치(`jaehyeond/decision-oracle` · `jaehyeond/pellet-model`)는
   **master 에 미머지**다. 본 판정의 증거 경로는 그 브랜치 안에 있다.
 - 본 세션 신규 물리 실행 0건. 셸 L(g9) 출력은 전송만 했고 **실물 결과는 미확인**이다.
+
+## D468 — 75th 종료, **출력 1회가 조용히 유실됐다: `mqtt_print` 는 qos=1 비동기 publish 직후 곧바로 `disconnect()+loop_stop()` 을 만나 명령이 나가기 전에 끊긴다. 로그의 `Print started` 는 결과가 아니라 의도였고, D465·D466 이 12번 잡은 같은 패턴의 13번째 재발이다** (실물 출력 1회 — 로봇 0, 펠릿 0)
+
+**① 증상 — 성공처럼 보이는 실패**
+
+셸 L(g9) 전송이 게이트 5종을 전부 통과하고 아래를 출력했다:
+
+```
+FTP connected: 220 BBL-P003 FTP Server
+  Uploading: 69%  Uploading: 100%
+Uploaded: roarm_shell_L_g9_free.3mf -> /roarm_shell_L_g9_free.3mf
+  [1] 업로드 완료 → /roarm_shell_L_g9_free.3mf
+Print started: roarm_shell_L_g9_free.3mf
+  [2] 출력 명령 전송 (plate_id=1)
+예상 5382초 / 17.05g
+```
+
+**코디네이터는 이것을 "출력 시작됨"으로 사용자에게 보고했다.** 10분 뒤 상태를 조회하니:
+
+```
+gcode_state = FINISH        subtask_name = roarm_shell_L_g8      <- 직전 작업
+print_type  = idle          mc_percent = 100    layer 295/295
+nozzle_temper = 29.34 C     bed_temper = 26.41 C                 <- 식어 있다
+```
+
+→ **프린터는 식은 채 idle 이었고 g9 는 존재하지 않았다.**
+
+**② 근본 원인 — 비동기 발행 직후의 끊김**
+
+```
+printer.py:196  mqtt_publish()  -> client.publish(topic, ..., qos=1)   # 비동기
+printer.py:321  mqtt_print()    -> print("Print started: ...")          # 결과 확인 0
+send_print_job.py:118            p.mqtt_disconnect()                    # 바로 다음 줄
+printer.py:338  mqtt_disconnect()-> client.disconnect(); client.loop_stop()
+```
+
+`publish()` 는 큐에 넣고 즉시 반환한다. QoS 1 의 PUBACK 왕복은커녕 PUBLISH 가 소켓으로
+나가기 전에 `disconnect()` 가 DISCONNECT 를 보내고 `loop_stop()` 이 네트워크 루프를 죽인다.
+**FTP 업로드가 성공한 것이 오히려 오진을 도왔다** — FTP 는 응답을 받는 동기 프로토콜이라
+진짜 성공이었고, 그래서 "파일이 갔으니 출력도 갔겠지" 로 읽혔다.
+실제로 재시도 시 프린터 파일 목록에 `roarm_shell_L_g9_free.3mf` 가 **그대로 있었다** —
+유실된 것은 업로드가 아니라 **출력 명령 하나**다.
+
+★ **같은 코드로 g8 이 오늘 성공한 것은 타이밍 운이다.** 이건 결정론적 버그가 아니라
+**레이스**이며, 그래서 4회 출력 중 3회는 통과하고 1회만 조용히 죽었다. **간헐적 성공이
+가장 위험하다 — 코드가 옳다는 증거로 오독된다.**
+
+**③ 처방 — 전송 후 게이트 6번 (`send_print_job.py`, 커밋 `6b835df`)**
+
+발행 후 **연결을 유지한 채** 3초 플러시하고, `subtask_name` + `gcode_state` 를 최대 150초
+폴링해 대조한다. 미확인이면 **종료코드 2 로 죽는다.**
+
+```
+if sub == subtask and gs in {"RUNNING", "PREPARE", "SLICING"}:  -> 시작 확인
+아니면 -> "[X] 6. 출력 시작 확인 실패 … 이 상태를 '출력 시작됨'으로 기록하지 말 것" + exit 2
+```
+
+재발행 실측: `PREPARE → RUNNING`, `subtask=roarm_shell_L_g9_free`, 노즐 29 → 168 °C,
+베드 26 → 64 °C, 295층, 잔여 89분, `print_error=0`. **이번엔 결과로 확인했다.**
+DK 원본(`printer.py`)과 매니페스트 JSON 은 **무수정** — 확인 로직은 호출부에만 넣었다.
+
+**④ 일반형 — 이것이 13번째다**
+
+D465 가 8건, D466 이 4건을 잡았고 전부 같은 문장으로 요약됐다:
+**"의도를 검사하고 결과를 검사하지 않았다."** 그때는 슬라이서 설정 대 gcode 툴패스였고,
+이번엔 **MQTT 발행 대 프린터 상태**다. 층위만 다르고 형태는 같다.
+
+→ 🔴 **규칙: 부작용을 내는 원격 명령은 발행 성공을 성공으로 세지 않는다.**
+명령이 바꾸려던 **상태를 다시 읽어** 바뀌었는지 확인할 때까지 그 작업은 "미확인"이다.
+로그 문구(`Print started`)는 코드가 자기 의도를 적은 것이지 상대의 응답이 아니다.
+같은 검사가 필요한 곳: 로봇 관절 명령(이미 `joints_angle_get()` 폴링으로 처방됨 — D458 의
+관측자 효과와 **같은 병**이다), MQTT pause/resume/stop, 원격 파일 삭제.
+
+**⑤ 이 판정이 주장하지 않는 것**
+
+- **근본 원인은 코드 경로로 특정했으나 패킷 수준으로 계측하지 않았다.** `wait_for_publish()`
+  반환값이나 PUBACK 을 직접 관측한 것이 아니라, ⓐ 업로드는 남아 있고 ⓑ 출력만 안 됐으며
+  ⓒ 플러시를 넣으니 됐다는 **정황 3건**으로 확정했다. 프린터측 거부(예: 큐 정책) 가능성은
+  완전히 배제되지 않았다.
+- **오늘 MQTT/FTPS 가 TLS 핸드셰이크 단계에서 두 번 먹통이 됐던 것**(양 포트 동시)은
+  별개 현상이며 원인 미규명이다. 전원 상태와 무관하게 재발했고 스스로 복구됐다.
+  프린터 IP DHCP 예약 미설정(D459)과 함께 남는다.
+- **g9 출력물의 실물 품질은 미확인이다.** 본 판정은 "작업이 시작됐다"까지만 확인했다.
