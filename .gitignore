@@ -241,3 +241,17 @@ claudedocs/runtime_logs/grab_track/*/*.stl
 # 파일명 대신 패턴을 쓴다: rep4/rep5 가 같은 실험의 나머지이고, 낱개로 적으면
 # 새 반복이 나올 때마다 같은 사고를 반복한다. 1개 약 1.4 MB.
 !claudedocs/runtime_logs/scoop_track/s2_closure_rot/scoop_rep*.npz
+
+# ---- P3 안식각 게이트 입력 whitelist (75th, 사용자 승인 2026-09-01) ----
+# 기준은 P1/P2b 와 동일: **게이트 CHECK 가 인자로 받거나 해시로 대조하는 파일만.**
+#   GATES_pellet_model.md P4  --validate-runs <sphere|clump2|clump3 npz 3개>
+#   GATES_pellet_model.md P8  --validate-rerun-contract  -> inspection.json 의
+#                             screenshot_sha256 을 실 png 와 대조
+# DEME 는 bit-재현이 안 되므로(D463 §3) 잃으면 P4/P8 판정이 영구 검증 불가다.
+# ⚠️ 나머지 24개 npz(23 MB)는 어떤 CHECK 도 참조하지 않으므로 **넣지 않는다.**
+#    스윕 판정은 repose_sweep.json + 셀별 json(추적됨)만으로 재생성된다.
+# ⚠️ 합계 약 19 MB (clump3 npz 7.4 + 검수 png 11). 크기를 알고 넣는다.
+!claudedocs/runtime_logs/pellet_model/repose_sphere_mu0p45_crr0p06_n1500_seed460.npz
+!claudedocs/runtime_logs/pellet_model/repose_clump2_mu0p45_crr0p06_n1500_seed460.npz
+!claudedocs/runtime_logs/pellet_model/repose_clump3_mu0p45_crr0p06_n1500_seed460.npz
+!claudedocs/runtime_logs/pellet_model/repose_clump3_mu0p45_crr0p06_n1500_seed460_inspection.png
