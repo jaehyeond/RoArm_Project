@@ -1,0 +1,231 @@
+{
+ "artifact": "PBD_PELLET_PROBE_GATES",
+ "verdicts": {
+  "G1": {
+   "name": "angle of repose reaches the 30 +/- 3 deg target",
+   "pass": false,
+   "cells_evaluated": 25,
+   "cells_settled_and_valid": 0,
+   "max_angle_any_cell_deg": 37.258298828138706,
+   "max_angle_settled_valid_deg": NaN,
+   "on_target_cells": [],
+   "distinct_seeds_for_best_family": 0,
+   "reachable_27deg": false,
+   "deme_sphere_range_deg": [
+    8.9,
+    25.64
+   ],
+   "excluded_from_this_gate": {
+    "labels": [
+     "dt_120hz",
+     "dt_1920hz",
+     "dt_240hz",
+     "dt_480hz",
+     "dt_960hz",
+     "g5_seed461",
+     "g5_seed462",
+     "g5_seed463",
+     "g5_seed464",
+     "g5_seed465"
+    ],
+    "why": "g5_* are scoop-repeat trials of an already-evaluated parameter set, and dt_* are the G4 time-step convergence study - a NUMERICAL axis, not a material one. They are excluded so G1 cannot be passed by choosing a time step. Nothing is hidden: the best dt_* angle is reported below and is discussed in the report.",
+    "best_dt_cell_angle_deg": 32.273809080431406,
+    "best_dt_cell_settled": false
+   },
+   "blind_spot": "30 deg is a placeholder, so PASS would mean 'PBD can be dialled near 30 deg', not 'PBD matches polypropylene'. One scalar also fixes no flow rule: two materials with the same repose angle can respond completely differently to a scoop, and a poured free surface is a different boundary condition from a cut scoop face."
+  },
+  "G2": {
+   "name": "the heap settles and then stops moving",
+   "pass": false,
+   "cells_total": 35,
+   "cells_that_settled": 5,
+   "cells_that_settled_labels": [
+    "f3_adh0p001",
+    "f3_adh0p010",
+    "f3_adh0p100",
+    "f3_adh1p000",
+    "f5_iter255"
+   ],
+   "cells_that_also_survived_the_creep_watch": [],
+   "creep_detail": {
+    "f3_adh0p001": {
+     "angle_drift_deg": 0.3337532383525179,
+     "toe_drift_mm": 6.000000000000005,
+     "apex_drift_mm": 0.0
+    },
+    "f3_adh0p010": {
+     "angle_drift_deg": 0.3337532383525179,
+     "toe_drift_mm": 6.000000000000005,
+     "apex_drift_mm": 0.0
+    },
+    "f3_adh0p100": {
+     "angle_drift_deg": 0.3337532383525179,
+     "toe_drift_mm": 6.000000000000005,
+     "apex_drift_mm": 0.0
+    },
+    "f3_adh1p000": {
+     "angle_drift_deg": 0.3337532383525179,
+     "toe_drift_mm": 6.000000000000005,
+     "apex_drift_mm": 0.0
+    },
+    "f5_iter255": {
+     "angle_drift_deg": NaN,
+     "toe_drift_mm": 0.0,
+     "apex_drift_mm": 0.0
+    }
+   },
+   "blind_spot": "10 s of simulated watching. A creep slower than ~0.1 mm/s is invisible here and would still ruin a minutes-long scooping episode. The pile is also never perturbed, so a metastable heap passes."
+  },
+  "G3": {
+   "name": "scoop entry does not blow the pile up",
+   "pass": false,
+   "cells": {
+    "g3_scoop_seed460": {
+     "tool_speed_m_s": 0.1416666666666667,
+     "max_particle_speed_m_s": 0.23461443991375644,
+     "speed_ratio": 1.6561019288029863,
+     "speed_ratio_limit": 10.0,
+     "max_height_during_entry_m": 0.03200691193342209,
+     "height_limit_m": 0.02181021245593883,
+     "radial_growth_mm": 0.7962767073519117,
+     "radial_growth_limit_mm": 8.37771872824006,
+     "pass": false
+    },
+    "g5_seed461": {
+     "tool_speed_m_s": 0.1416666666666667,
+     "max_particle_speed_m_s": 0.24478147702803846,
+     "speed_ratio": 1.727869249609683,
+     "speed_ratio_limit": 10.0,
+     "max_height_during_entry_m": 0.02989215962588787,
+     "height_limit_m": 0.021620296657441286,
+     "radial_growth_mm": 0.0,
+     "radial_growth_limit_mm": 8.37771872824006,
+     "pass": false
+    },
+    "g5_seed462": {
+     "tool_speed_m_s": 0.1416666666666667,
+     "max_particle_speed_m_s": 0.22527447582374724,
+     "speed_ratio": 1.5901727705205684,
+     "speed_ratio_limit": 10.0,
+     "max_height_during_entry_m": 0.0316675640642643,
+     "height_limit_m": 0.021709757626963585,
+     "radial_growth_mm": 0.1387813350513245,
+     "radial_growth_limit_mm": 8.37771872824006,
+     "pass": false
+    },
+    "g5_seed463": {
+     "tool_speed_m_s": 0.1416666666666667,
+     "max_particle_speed_m_s": 0.26635537011717,
+     "speed_ratio": 1.8801555537682584,
+     "speed_ratio_limit": 10.0,
+     "max_height_during_entry_m": 0.030381545424461365,
+     "height_limit_m": 0.021902513211177504,
+     "radial_growth_mm": 0.3139248626284341,
+     "radial_growth_limit_mm": 8.37771872824006,
+     "pass": false
+    },
+    "g5_seed464": {
+     "tool_speed_m_s": 0.1416666666666667,
+     "max_particle_speed_m_s": 0.2417364553582702,
+     "speed_ratio": 1.7063749789995541,
+     "speed_ratio_limit": 10.0,
+     "max_height_during_entry_m": 0.03140123933553696,
+     "height_limit_m": 0.02187663664428245,
+     "radial_growth_mm": 0.1868943153466307,
+     "radial_growth_limit_mm": 8.37771872824006,
+     "pass": false
+    },
+    "g5_seed465": {
+     "tool_speed_m_s": 0.1416666666666667,
+     "max_particle_speed_m_s": 0.29435097141348726,
+     "speed_ratio": 2.077771562918733,
+     "speed_ratio_limit": 10.0,
+     "max_height_during_entry_m": 0.030461831018328667,
+     "height_limit_m": 0.022305485644479643,
+     "radial_growth_mm": 0.1439450650674856,
+     "radial_growth_limit_mm": 8.37771872824006,
+     "pass": false
+    }
+   },
+   "blind_spot": "one scoop geometry, one entry point, one speed, one pile. A slow plunge is the easy case; a fast or rotating grab is not covered."
+  },
+  "G4": {
+   "rates_run": [
+    60,
+    120,
+    240,
+    480,
+    960,
+    1920
+   ],
+   "angles_deg": {
+    "120": 7.128357773138185,
+    "240": 11.017167509813259,
+    "480": 16.579468015355502,
+    "960": 20.7597681651814,
+    "1920": 32.273809080431406,
+    "60": 8.740533083676983
+   },
+   "measurement_pass": {
+    "120": false,
+    "240": true,
+    "480": true,
+    "960": true,
+    "1920": true,
+    "60": false
+   },
+   "settled": {
+    "120": false,
+    "240": false,
+    "480": false,
+    "960": false,
+    "1920": false,
+    "60": false
+   },
+   "note_60hz": "60 Hz point taken from ctrl_solid_ref (same config, base rate)",
+   "delta_60_vs_240_deg": 2.276634426136276,
+   "pass": false,
+   "angle_change_over_last_halving_deg": 11.514040915250007,
+   "converged": false,
+   "smallest_step_run_s": 0.0005208333333333333,
+   "trend": "angle still increasing with smaller step; NOT converged",
+   "name": "no absurdly small time step is needed",
+   "blind_spot": "convergence of a STATIC settled heap says nothing about the step a moving scoop needs."
+  },
+  "G5": {
+   "name": "scooped amount repeats across pours",
+   "pass": false,
+   "not_evaluable": true,
+   "not_evaluable_reason": "the tool caught [0, 0, 0, 0, 0] particles and the net removed volume is -11.69 cm^3 (negative = the pile GREW). Nothing was scooped, so the coefficient of variation below is the scatter of an unsettled pile drifting between the before and after frames, not the scatter of a scooped amount. Reported, not passed.",
+   "marginal": false,
+   "n_trials": 5,
+   "removed_volume_m3": [
+    5.4981056679237226e-05,
+    5.624103783463273e-05,
+    5.419365882873535e-05,
+    5.631794306322436e-05,
+    5.617755317687988e-05
+   ],
+   "removed_volume_cov": 0.017113671770697846,
+   "net_removed_volume_m3": [
+    -9.906566154014725e-06,
+    -1.1509669791710038e-05,
+    -1.334228748554159e-05,
+    -1.1493555534828061e-05,
+    -1.2180904854286055e-05
+   ],
+   "particles_in_bucket": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "particles_in_bucket_cov": NaN,
+   "deme_reference": "lip-equivalent reaction CoV 1.012; captured particles 191-204",
+   "blind_spot": "fixed trajectory, piles differ only through the pour seed. This is pour-to-pour scatter, not sensitivity to scoop placement, which is the variable the proposal actually wants to learn."
+  }
+ },
+ "verdict": "KEEP_DEME",
+ "verdict_rule": "Isaac PBD replaces DEME only if G1..G5 all pass; any FAIL keeps DEME"
+}
