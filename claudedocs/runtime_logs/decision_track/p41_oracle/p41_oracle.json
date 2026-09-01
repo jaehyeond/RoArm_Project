@@ -1,0 +1,182 @@
+{
+  "artifact": "P41_ORACLE_LOOKAHEAD_V1",
+  "question": "예측(커닝)이 greedy 대비 가져갈 수 있는 상한은?",
+  "policies": {
+    "greedy_high": "현재 높이 최대 (교수님 안). 실패셀 회피 규칙 포함",
+    "oracle_1": "방법① — 양만 예측. 실패 안 하면서 최다 적재",
+    "oracle_2": "방법② — 양 + 퍼낸 뒤 형상. 다음에 팔 곳이 남는지까지 본다"
+  },
+  "rows": [
+    {
+      "policy": "greedy_high",
+      "total_scoops": 21,
+      "total_time_s": 142.4,
+      "failures": 7,
+      "failure_rate": 0.333,
+      "total_mass_kg": 0.10256,
+      "target_reached": true,
+      "terminal_reason": "target_reached",
+      "seed": 457
+    },
+    {
+      "policy": "oracle_1",
+      "total_scoops": 14,
+      "total_time_s": 96.6,
+      "failures": 0,
+      "failure_rate": 0.0,
+      "total_mass_kg": 0.10366,
+      "target_reached": true,
+      "terminal_reason": "target_reached",
+      "seed": 457
+    },
+    {
+      "policy": "oracle_2",
+      "total_scoops": 14,
+      "total_time_s": 96.2,
+      "failures": 0,
+      "failure_rate": 0.0,
+      "total_mass_kg": 0.10349,
+      "target_reached": true,
+      "terminal_reason": "target_reached",
+      "seed": 457
+    },
+    {
+      "policy": "greedy_high",
+      "total_scoops": 20,
+      "total_time_s": 136.1,
+      "failures": 6,
+      "failure_rate": 0.3,
+      "total_mass_kg": 0.10218,
+      "target_reached": true,
+      "terminal_reason": "target_reached",
+      "seed": 458
+    },
+    {
+      "policy": "oracle_1",
+      "total_scoops": 17,
+      "total_time_s": 116.0,
+      "failures": 5,
+      "failure_rate": 0.294,
+      "total_mass_kg": 0.09011,
+      "target_reached": false,
+      "terminal_reason": "consecutive_failure_limit",
+      "seed": 458
+    },
+    {
+      "policy": "oracle_2",
+      "total_scoops": 14,
+      "total_time_s": 96.8,
+      "failures": 0,
+      "failure_rate": 0.0,
+      "total_mass_kg": 0.1037,
+      "target_reached": true,
+      "terminal_reason": "target_reached",
+      "seed": 458
+    },
+    {
+      "policy": "greedy_high",
+      "total_scoops": 19,
+      "total_time_s": 129.9,
+      "failures": 5,
+      "failure_rate": 0.263,
+      "total_mass_kg": 0.10185,
+      "target_reached": true,
+      "terminal_reason": "target_reached",
+      "seed": 459
+    },
+    {
+      "policy": "oracle_1",
+      "total_scoops": 14,
+      "total_time_s": 96.4,
+      "failures": 0,
+      "failure_rate": 0.0,
+      "total_mass_kg": 0.10322,
+      "target_reached": true,
+      "terminal_reason": "target_reached",
+      "seed": 459
+    },
+    {
+      "policy": "oracle_2",
+      "total_scoops": 14,
+      "total_time_s": 96.8,
+      "failures": 0,
+      "failure_rate": 0.0,
+      "total_mass_kg": 0.10241,
+      "target_reached": true,
+      "terminal_reason": "target_reached",
+      "seed": 459
+    },
+    {
+      "policy": "greedy_high",
+      "total_scoops": 11,
+      "total_time_s": 74.2,
+      "failures": 5,
+      "failure_rate": 0.455,
+      "total_mass_kg": 0.04505,
+      "target_reached": false,
+      "terminal_reason": "consecutive_failure_limit",
+      "seed": 460
+    },
+    {
+      "policy": "oracle_1",
+      "total_scoops": 14,
+      "total_time_s": 96.4,
+      "failures": 0,
+      "failure_rate": 0.0,
+      "total_mass_kg": 0.10404,
+      "target_reached": true,
+      "terminal_reason": "target_reached",
+      "seed": 460
+    },
+    {
+      "policy": "oracle_2",
+      "total_scoops": 14,
+      "total_time_s": 96.0,
+      "failures": 0,
+      "failure_rate": 0.0,
+      "total_mass_kg": 0.10146,
+      "target_reached": true,
+      "terminal_reason": "target_reached",
+      "seed": 460
+    },
+    {
+      "policy": "greedy_high",
+      "total_scoops": 20,
+      "total_time_s": 136.5,
+      "failures": 6,
+      "failure_rate": 0.3,
+      "total_mass_kg": 0.10186,
+      "target_reached": true,
+      "terminal_reason": "target_reached",
+      "seed": 461
+    },
+    {
+      "policy": "oracle_1",
+      "total_scoops": 14,
+      "total_time_s": 96.4,
+      "failures": 0,
+      "failure_rate": 0.0,
+      "total_mass_kg": 0.10308,
+      "target_reached": true,
+      "terminal_reason": "target_reached",
+      "seed": 461
+    },
+    {
+      "policy": "oracle_2",
+      "total_scoops": 14,
+      "total_time_s": 96.2,
+      "failures": 0,
+      "failure_rate": 0.0,
+      "total_mass_kg": 0.10187,
+      "target_reached": true,
+      "terminal_reason": "target_reached",
+      "seed": 461
+    }
+  ],
+  "non_claims": [
+    "오라클은 학습이 아니라 **커닝**이다. 실제 학습 정책은 이보다 나쁘다.",
+    "후보를 높이 상위 24개로 잘랐다 -> 진짜 상한은 이보다 높을 수 있다.",
+    "대리모델(AnalyticExecutor)의 붕괴 처리는 진짜 입자 물리가 아니다. 최종 확인은 DEME 이 해야 한다.",
+    "PP 물성 미실측. angle_of_repose 32도는 임시값이다."
+  ]
+}

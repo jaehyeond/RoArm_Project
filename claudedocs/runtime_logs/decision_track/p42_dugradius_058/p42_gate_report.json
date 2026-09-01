@@ -1,0 +1,60 @@
+{
+  "artifact": "P42_GATES_V1",
+  "source_p42": "claudedocs/runtime_logs/decision_track/p42_dugradius_058/p42_observation_budget.json",
+  "source_p41": "claudedocs/runtime_logs/decision_track/p41_oracle_n30/p41_oracle.json",
+  "source_p41b_stats": null,
+  "gates": [
+    {
+      "gate": "G1_k1_reproduces_p41",
+      "kind": "validity",
+      "status": "PASS",
+      "detail": "k=1 행 90건 대조, 불일치 0건. 전건 일치",
+      "blind_spot": "P41 자체가 틀렸다면 둘이 같이 틀린 채로 PASS 한다. 대리모델 물리의 정확성은 이 게이트가 보지 못한다. 또 bias≠0 로 돌린 산출물에는 애초에 적용되지 않는다."
+    },
+    {
+      "gate": "G2_shape_gain_significant_k1",
+      "kind": "claim",
+      "status": "FAIL",
+      "detail": "승4 패0 무26 n_eff=4 p=0.0625. n_eff<5 면 전승이어도 0.05 를 넘길 수 없다(최소 가능 p=0.0625).",
+      "blind_spot": "대리모델 안에서의 유의성이다. 실물 재현을 보증하지 않는다. 시드는 같은 능선 생성기의 미세 변형이라 장면 다양성을 재지 못하고, 무승부가 많으면 표본이 아니라 검정력이 먼저 죽는다."
+    },
+    {
+      "gate": "G2_shape_gain_significant_kinf",
+      "kind": "claim",
+      "status": "PASS",
+      "detail": "승30 패0 무0 n_eff=30 p=9.313225746154785e-10. n_eff<5 면 전승이어도 0.05 를 넘길 수 없다(최소 가능 p=9.313225746154785e-10).",
+      "blind_spot": "대리모델 안에서의 유의성이다. 실물 재현을 보증하지 않는다. 시드는 같은 능선 생성기의 미세 변형이라 장면 다양성을 재지 못하고, 무승부가 많으면 표본이 아니라 검정력이 먼저 죽는다."
+    },
+    {
+      "gate": "G3_policies_are_distinct",
+      "kind": "validity",
+      "status": "PASS",
+      "detail": "동일 (k,seed) 격자 60칸 중 세 정책의 스쿱 수가 완전히 같은 칸 0칸. 전 칸이 같으면 같은 정책을 세 번 돌린 것이다.",
+      "blind_spot": "스쿱 수만 본다. 서로 다른 자리를 골랐지만 우연히 스쿱 수가 같은 경우와 정말 같은 정책인 경우를 구분하지 못한다. 행동 궤적을 비교하지 않는다."
+    },
+    {
+      "gate": "G4_observation_budget_respected",
+      "kind": "validity",
+      "status": "PASS",
+      "detail": "전 180행 중 관측 횟수 != ceil(스쿱/k) 인 행 0건. 전건 일치",
+      "blind_spot": "**횟수만** 센다. belief 배열이 어떤 경로로 진짜 상태와 같아졌는지는 못 본다. bias=0 이면 oracle_2 의 belief 는 언제나 진짜 상태와 일치하지만 관측 카운트는 정상이므로 이 게이트는 PASS 한다."
+    },
+    {
+      "gate": "G5_comparison_is_symmetric",
+      "kind": "validity",
+      "status": "PASS",
+      "detail": "정책별 목표질량 집합 {'greedy_high': {0.1}, 'oracle_1': {0.1}, 'oracle_2': {0.1}}. 값이 하나가 아니면 한 정책에만 다른 목표를 준 것이다.",
+      "blind_spot": "목표질량만 본다. 실패 모델 파라미터·초기 더미·top_k 처럼 정책마다 따로 줄 수 있는 다른 축은 이 게이트가 검사하지 않는다. 또 '공정한 설정'이 '현실적인 설정'을 뜻하지도 않는다."
+    },
+    {
+      "gate": "G8_no_policy_error_rows",
+      "kind": "validity",
+      "status": "FAIL",
+      "detail": "전 180행 중 policy_error 로 끝난 행 60건 (정책별 {'greedy_high': 30, 'oracle_1': 30}). 후보 셀이 0개가 되어 정책이 예외로 죽은 것이며, 이 행의 미완주는 물리가 아니라 마스킹 아티팩트다.",
+      "blind_spot": "policy_error 만 센다. 마스킹이 지도를 **거의** 다 덮어 정책이 억지로 나쁜 칸을 고른 경우(예외는 안 남)는 잡지 못한다. 즉 PASS 라도 dug 반경이 결과를 왜곡하지 않았다는 보증은 아니다 — 반경 민감도는 따로 돌려 봐야 한다."
+    }
+  ],
+  "validity_all_pass": false,
+  "claim_pass_count": 1,
+  "claim_total": 2
+}

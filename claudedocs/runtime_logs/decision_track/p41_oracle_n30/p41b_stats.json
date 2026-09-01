@@ -1,0 +1,272 @@
+{
+  "artifact": "P41B_ORACLE_STATS_V1",
+  "question": "oracle_2 > oracle_1 이 우연인가? (n=30)",
+  "source": "claudedocs/runtime_logs/decision_track/p41_oracle_n30/p41_oracle.json",
+  "seeds": [
+    457,
+    458,
+    459,
+    460,
+    461,
+    462,
+    463,
+    464,
+    465,
+    466,
+    467,
+    468,
+    469,
+    470,
+    471,
+    472,
+    473,
+    474,
+    475,
+    476,
+    477,
+    478,
+    479,
+    480,
+    481,
+    482,
+    483,
+    484,
+    485,
+    486
+  ],
+  "subsample": 0,
+  "per_policy": {
+    "greedy_high": {
+      "n_seeds": 30,
+      "n_completed": 24,
+      "completion_rate": 0.8,
+      "scoops_completed_only": {
+        "mean": 20.1667,
+        "std": 1.3726,
+        "n": 24
+      },
+      "scoops_all_runs": {
+        "mean": 18.3333,
+        "std": 3.9246,
+        "n": 30
+      },
+      "failure_rate": {
+        "mean": 0.3332,
+        "std": 0.0733,
+        "n": 30
+      },
+      "terminal_reasons": {
+        "consecutive_failure_limit": 6,
+        "target_reached": 24
+      }
+    },
+    "oracle_1": {
+      "n_seeds": 30,
+      "n_completed": 26,
+      "completion_rate": 0.8667,
+      "scoops_completed_only": {
+        "mean": 14.0,
+        "std": 0.0,
+        "n": 26
+      },
+      "scoops_all_runs": {
+        "mean": 14.5,
+        "std": 1.3065,
+        "n": 30
+      },
+      "failure_rate": {
+        "mean": 0.0376,
+        "std": 0.0975,
+        "n": 30
+      },
+      "terminal_reasons": {
+        "consecutive_failure_limit": 4,
+        "target_reached": 26
+      }
+    },
+    "oracle_2": {
+      "n_seeds": 30,
+      "n_completed": 30,
+      "completion_rate": 1.0,
+      "scoops_completed_only": {
+        "mean": 14.0,
+        "std": 0.0,
+        "n": 30
+      },
+      "scoops_all_runs": {
+        "mean": 14.0,
+        "std": 0.0,
+        "n": 30
+      },
+      "failure_rate": {
+        "mean": 0.0,
+        "std": 0.0,
+        "n": 30
+      },
+      "terminal_reasons": {
+        "target_reached": 30
+      }
+    }
+  },
+  "sign_tests": [
+    {
+      "a": "oracle_2",
+      "b": "oracle_1",
+      "n_seeds": 30,
+      "wins_a": 4,
+      "wins_b": 0,
+      "ties": 26,
+      "n_effective": 4,
+      "test": "exact binomial sign test (H0: P(a 승)=0.5)",
+      "p_one_sided": 0.0625,
+      "p_two_sided": 0.125,
+      "significant_at_0.05": false,
+      "best_possible_p_at_this_n_effective": 0.0625,
+      "n_effective_needed_for_p05_if_all_wins": 5,
+      "seeds_needed_at_observed_discordance_rate": 38,
+      "win_seeds": [
+        458,
+        463,
+        467,
+        473
+      ],
+      "loss_seeds": []
+    },
+    {
+      "a": "oracle_2",
+      "b": "greedy_high",
+      "n_seeds": 30,
+      "wins_a": 30,
+      "wins_b": 0,
+      "ties": 0,
+      "n_effective": 30,
+      "test": "exact binomial sign test (H0: P(a 승)=0.5)",
+      "p_one_sided": 9.313225746154785e-10,
+      "p_two_sided": 1.862645149230957e-09,
+      "significant_at_0.05": true,
+      "best_possible_p_at_this_n_effective": 9.313225746154785e-10,
+      "n_effective_needed_for_p05_if_all_wins": 5,
+      "seeds_needed_at_observed_discordance_rate": 5,
+      "win_seeds": [
+        457,
+        458,
+        459,
+        460,
+        461,
+        462,
+        463,
+        464,
+        465,
+        466,
+        467,
+        468,
+        469,
+        470,
+        471,
+        472,
+        473,
+        474,
+        475,
+        476,
+        477,
+        478,
+        479,
+        480,
+        481,
+        482,
+        483,
+        484,
+        485,
+        486
+      ],
+      "loss_seeds": []
+    },
+    {
+      "a": "oracle_1",
+      "b": "greedy_high",
+      "n_seeds": 30,
+      "wins_a": 26,
+      "wins_b": 4,
+      "ties": 0,
+      "n_effective": 30,
+      "test": "exact binomial sign test (H0: P(a 승)=0.5)",
+      "p_one_sided": 2.9738061130046848e-05,
+      "p_two_sided": 5.9476122260093696e-05,
+      "significant_at_0.05": true,
+      "best_possible_p_at_this_n_effective": 9.313225746154785e-10,
+      "n_effective_needed_for_p05_if_all_wins": 5,
+      "seeds_needed_at_observed_discordance_rate": 5,
+      "win_seeds": [
+        457,
+        459,
+        460,
+        461,
+        462,
+        464,
+        465,
+        466,
+        468,
+        469,
+        470,
+        471,
+        472,
+        474,
+        475,
+        476,
+        477,
+        478,
+        479,
+        480,
+        481,
+        482,
+        483,
+        484,
+        485,
+        486
+      ],
+      "loss_seeds": [
+        458,
+        463,
+        467,
+        473
+      ]
+    }
+  ],
+  "mcnemar_completion": [
+    {
+      "a": "oracle_2",
+      "b": "oracle_1",
+      "a_only_completed": 4,
+      "b_only_completed": 0,
+      "test": "McNemar exact (완주 여부만)",
+      "p_one_sided": 0.0625,
+      "significant_at_0.05": false
+    },
+    {
+      "a": "oracle_2",
+      "b": "greedy_high",
+      "a_only_completed": 6,
+      "b_only_completed": 0,
+      "test": "McNemar exact (완주 여부만)",
+      "p_one_sided": 0.015625,
+      "significant_at_0.05": true
+    },
+    {
+      "a": "oracle_1",
+      "b": "greedy_high",
+      "a_only_completed": 6,
+      "b_only_completed": 4,
+      "test": "McNemar exact (완주 여부만)",
+      "p_one_sided": 0.376953125,
+      "significant_at_0.05": false
+    }
+  ],
+  "non_claims": [
+    "오라클은 학습이 아니라 **커닝**이다. 정책에 실행기의 정답을 미리 보여준다. 따라서 이 수치는 '학습이 이렇게 된다'가 아니라 **학습이 도달할 수 있는 상한**이다. 실제 학습 정책은 반드시 이보다 나쁘다.",
+    "대리모델(AnalyticExecutor/FailingExecutor)의 붕괴 처리는 진짜 입자 물리가 아니다. 안식각 초과 셀을 기하로 판정하고 이웃과 높이를 나눠 가지는 완화 규칙일 뿐이다. 최종 확인은 DEME 과 실물 스쿱이 한다.",
+    "PP 물성 미실측. angle_of_repose 32도는 임시값이며 어떤 수치도 폴리프로필렌 값으로 인용해서는 안 된다.",
+    "시드 30개는 같은 능선 생성기(synthetic_pile)의 미세 변형이다. 장면 다양성(더미 개수, 형상 종류, 용기 위치)을 재는 표본이 아니다. 따라서 p 값은 '이 더미 계열 안에서의 유의성'이다.",
+    "후보를 높이 상위 top_k 개로 잘라서 평가한다 -> 진짜 상한은 이보다 높을 수 있다.",
+    "시드 수는 실행 **전에** 30개(457~486)로 고정했다. p 값이 0.05 를 넘겼다고 시드를 더 늘려 다시 계산하면 그것은 p-해킹이다. 표본을 늘리려면 목표 n 을 먼저 선언하고 전량을 새로 돌려 그 결과만 보고해야 한다."
+  ]
+}

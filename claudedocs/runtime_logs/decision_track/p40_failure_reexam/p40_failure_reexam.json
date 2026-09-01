@@ -1,0 +1,358 @@
+{
+  "artifact": "P40_FAILURE_GREEDY_REEXAM_V1",
+  "question": "실패가 있으면 greedy_high(제일 높은 곳)가 여전히 이기나?",
+  "failure_model": {
+    "avalanche": "목표 셀 국소 경사 > 안식각 + margin -> 흘러내려 미포획",
+    "empty_grab": "발자국 평균 깊이 < cut_depth x 0.55 -> 바닥 긁음",
+    "cost": "실패 시 재료 제거 0, 사이클+이송 시간은 소모",
+    "min_fill_fraction": 0.55,
+    "avoid_failed": true,
+    "avoid_radius_m": 0.008,
+    "avalanche_margin_deg": 0.0
+  },
+  "comparison": [
+    {
+      "policy": "greedy_high",
+      "total_scoops": 21,
+      "total_time_s": 142.4,
+      "failure_rate": 0.333,
+      "failures": 7,
+      "total_distance_m": 9.34,
+      "target_reached": true,
+      "terminal_reason": "target_reached"
+    },
+    {
+      "policy": "greedy_low",
+      "total_scoops": 5,
+      "total_time_s": 33.0,
+      "failure_rate": 1.0,
+      "failures": 5,
+      "total_distance_m": 2.0,
+      "target_reached": false,
+      "terminal_reason": "consecutive_failure_limit"
+    },
+    {
+      "policy": "center_out",
+      "total_scoops": 8,
+      "total_time_s": 53.2,
+      "failure_rate": 0.625,
+      "failures": 5,
+      "total_distance_m": 3.29,
+      "target_reached": false,
+      "terminal_reason": "consecutive_failure_limit"
+    },
+    {
+      "policy": "random",
+      "total_scoops": 29,
+      "total_time_s": 195.7,
+      "failure_rate": 0.517,
+      "failures": 15,
+      "total_distance_m": 12.67,
+      "target_reached": false,
+      "terminal_reason": "consecutive_failure_limit"
+    }
+  ],
+  "failure_detail": {
+    "greedy_high": [
+      {
+        "reason": "avalanche",
+        "x_m": 0.2225,
+        "y_m": 0.037500000000000006,
+        "local_slope_deg": 35.06,
+        "repose_limit_deg": 32.0,
+        "footprint_mean_depth_m": 0.01028,
+        "required_depth_m": 0.0055
+      },
+      {
+        "reason": "avalanche",
+        "x_m": 0.2225,
+        "y_m": -0.022499999999999992,
+        "local_slope_deg": 36.26,
+        "repose_limit_deg": 32.0,
+        "footprint_mean_depth_m": 0.01025,
+        "required_depth_m": 0.0055
+      },
+      {
+        "reason": "avalanche",
+        "x_m": 0.2425,
+        "y_m": 0.022499999999999992,
+        "local_slope_deg": 36.11,
+        "repose_limit_deg": 32.0,
+        "footprint_mean_depth_m": 0.00994,
+        "required_depth_m": 0.0055
+      },
+      {
+        "reason": "avalanche",
+        "x_m": 0.2425,
+        "y_m": -0.007500000000000007,
+        "local_slope_deg": 36.0,
+        "repose_limit_deg": 32.0,
+        "footprint_mean_depth_m": 0.00997,
+        "required_depth_m": 0.0055
+      },
+      {
+        "reason": "avalanche",
+        "x_m": 0.21250000000000002,
+        "y_m": 0.037500000000000006,
+        "local_slope_deg": 32.26,
+        "repose_limit_deg": 32.0,
+        "footprint_mean_depth_m": 0.00804,
+        "required_depth_m": 0.0055
+      },
+      {
+        "reason": "avalanche",
+        "x_m": 0.21250000000000002,
+        "y_m": -0.022499999999999992,
+        "local_slope_deg": 32.3,
+        "repose_limit_deg": 32.0,
+        "footprint_mean_depth_m": 0.00787,
+        "required_depth_m": 0.0055
+      },
+      {
+        "reason": "avalanche",
+        "x_m": 0.1925,
+        "y_m": -0.007500000000000007,
+        "local_slope_deg": 32.16,
+        "repose_limit_deg": 32.0,
+        "footprint_mean_depth_m": 0.00711,
+        "required_depth_m": 0.0055
+      }
+    ],
+    "greedy_low": [
+      {
+        "reason": "empty_grab",
+        "x_m": 0.1675,
+        "y_m": -0.0925,
+        "local_slope_deg": 9.67,
+        "repose_limit_deg": 32.0,
+        "footprint_mean_depth_m": 0.00258,
+        "required_depth_m": 0.0055
+      },
+      {
+        "reason": "empty_grab",
+        "x_m": 0.2675,
+        "y_m": -0.1075,
+        "local_slope_deg": 4.34,
+        "repose_limit_deg": 32.0,
+        "footprint_mean_depth_m": 0.00217,
+        "required_depth_m": 0.0055
+      },
+      {
+        "reason": "empty_grab",
+        "x_m": 0.1675,
+        "y_m": 0.10249999999999998,
+        "local_slope_deg": 10.44,
+        "repose_limit_deg": 32.0,
+        "footprint_mean_depth_m": 0.00279,
+        "required_depth_m": 0.0055
+      },
+      {
+        "reason": "empty_grab",
+        "x_m": 0.27249999999999996,
+        "y_m": -0.0775,
+        "local_slope_deg": 15.46,
+        "repose_limit_deg": 32.0,
+        "footprint_mean_depth_m": 0.00362,
+        "required_depth_m": 0.0055
+      },
+      {
+        "reason": "empty_grab",
+        "x_m": 0.27249999999999996,
+        "y_m": 0.08750000000000002,
+        "local_slope_deg": 15.51,
+        "repose_limit_deg": 32.0,
+        "footprint_mean_depth_m": 0.00359,
+        "required_depth_m": 0.0055
+      }
+    ],
+    "center_out": [
+      {
+        "reason": "avalanche",
+        "x_m": 0.2175,
+        "y_m": 0.007500000000000007,
+        "local_slope_deg": 43.06,
+        "repose_limit_deg": 32.0,
+        "footprint_mean_depth_m": 0.01097,
+        "required_depth_m": 0.0055
+      },
+      {
+        "reason": "avalanche",
+        "x_m": 0.2275,
+        "y_m": 0.007500000000000007,
+        "local_slope_deg": 41.87,
+        "repose_limit_deg": 32.0,
+        "footprint_mean_depth_m": 0.01138,
+        "required_depth_m": 0.0055
+      },
+      {
+        "reason": "avalanche",
+        "x_m": 0.23249999999999998,
+        "y_m": -0.0025000000000000022,
+        "local_slope_deg": 37.43,
+        "repose_limit_deg": 32.0,
+        "footprint_mean_depth_m": 0.01011,
+        "required_depth_m": 0.0055
+      },
+      {
+        "reason": "avalanche",
+        "x_m": 0.2175,
+        "y_m": -0.012500000000000011,
+        "local_slope_deg": 39.13,
+        "repose_limit_deg": 32.0,
+        "footprint_mean_depth_m": 0.01015,
+        "required_depth_m": 0.0055
+      },
+      {
+        "reason": "avalanche",
+        "x_m": 0.20750000000000002,
+        "y_m": 0.007500000000000007,
+        "local_slope_deg": 42.59,
+        "repose_limit_deg": 32.0,
+        "footprint_mean_depth_m": 0.01057,
+        "required_depth_m": 0.0055
+      }
+    ],
+    "random": [
+      {
+        "reason": "avalanche",
+        "x_m": 0.1875,
+        "y_m": -0.0025000000000000022,
+        "local_slope_deg": 38.36,
+        "repose_limit_deg": 32.0,
+        "footprint_mean_depth_m": 0.01274,
+        "required_depth_m": 0.0055
+      },
+      {
+        "reason": "avalanche",
+        "x_m": 0.2225,
+        "y_m": -0.017499999999999988,
+        "local_slope_deg": 32.03,
+        "repose_limit_deg": 32.0,
+        "footprint_mean_depth_m": 0.01899,
+        "required_depth_m": 0.0055
+      },
+      {
+        "reason": "empty_grab",
+        "x_m": 0.2625,
+        "y_m": 0.05249999999999999,
+        "local_slope_deg": 19.61,
+        "repose_limit_deg": 32.0,
+        "footprint_mean_depth_m": 0.00513,
+        "required_depth_m": 0.0055
+      },
+      {
+        "reason": "empty_grab",
+        "x_m": 0.2375,
+        "y_m": -0.0925,
+        "local_slope_deg": 24.45,
+        "repose_limit_deg": 32.0,
+        "footprint_mean_depth_m": 0.00481,
+        "required_depth_m": 0.0055
+      },
+      {
+        "reason": "empty_grab",
+        "x_m": 0.1775,
+        "y_m": -0.05249999999999999,
+        "local_slope_deg": 25.6,
+        "repose_limit_deg": 32.0,
+        "footprint_mean_depth_m": 0.00549,
+        "required_depth_m": 0.0055
+      },
+      {
+        "reason": "empty_grab",
+        "x_m": 0.1875,
+        "y_m": 0.1175,
+        "local_slope_deg": 12.51,
+        "repose_limit_deg": 32.0,
+        "footprint_mean_depth_m": 0.00308,
+        "required_depth_m": 0.0055
+      },
+      {
+        "reason": "avalanche",
+        "x_m": 0.1875,
+        "y_m": 0.027499999999999997,
+        "local_slope_deg": 39.42,
+        "repose_limit_deg": 32.0,
+        "footprint_mean_depth_m": 0.01108,
+        "required_depth_m": 0.0055
+      },
+      {
+        "reason": "empty_grab",
+        "x_m": 0.2675,
+        "y_m": 0.017500000000000016,
+        "local_slope_deg": 25.69,
+        "repose_limit_deg": 32.0,
+        "footprint_mean_depth_m": 0.00441,
+        "required_depth_m": 0.0055
+      },
+      {
+        "reason": "empty_grab",
+        "x_m": 0.1725,
+        "y_m": -0.0775,
+        "local_slope_deg": 14.59,
+        "repose_limit_deg": 32.0,
+        "footprint_mean_depth_m": 0.00426,
+        "required_depth_m": 0.0055
+      },
+      {
+        "reason": "avalanche",
+        "x_m": 0.1875,
+        "y_m": 0.007500000000000007,
+        "local_slope_deg": 34.26,
+        "repose_limit_deg": 32.0,
+        "footprint_mean_depth_m": 0.01094,
+        "required_depth_m": 0.0055
+      },
+      {
+        "reason": "empty_grab",
+        "x_m": 0.2475,
+        "y_m": 0.09750000000000003,
+        "local_slope_deg": 25.86,
+        "repose_limit_deg": 32.0,
+        "footprint_mean_depth_m": 0.00385,
+        "required_depth_m": 0.0055
+      },
+      {
+        "reason": "empty_grab",
+        "x_m": 0.2275,
+        "y_m": -0.1125,
+        "local_slope_deg": 19.27,
+        "repose_limit_deg": 32.0,
+        "footprint_mean_depth_m": 0.00226,
+        "required_depth_m": 0.0055
+      },
+      {
+        "reason": "empty_grab",
+        "x_m": 0.1975,
+        "y_m": -0.057499999999999996,
+        "local_slope_deg": 29.78,
+        "repose_limit_deg": 32.0,
+        "footprint_mean_depth_m": 0.00535,
+        "required_depth_m": 0.0055
+      },
+      {
+        "reason": "empty_grab",
+        "x_m": 0.2575,
+        "y_m": 0.10249999999999998,
+        "local_slope_deg": 18.39,
+        "repose_limit_deg": 32.0,
+        "footprint_mean_depth_m": 0.00295,
+        "required_depth_m": 0.0055
+      },
+      {
+        "reason": "empty_grab",
+        "x_m": 0.2025,
+        "y_m": -0.1125,
+        "local_slope_deg": 15.31,
+        "repose_limit_deg": 32.0,
+        "footprint_mean_depth_m": 0.00202,
+        "required_depth_m": 0.0055
+      }
+    ]
+  },
+  "non_claims": [
+    "실패 모델은 heightmap 기하만 쓴다. 실물 실패(도구 충돌, 입자 끼임, 서보 스톨)는 포함되지 않는다.",
+    "AnalyticExecutor 의 나머지 가정(고정 발자국·고정 사이클 시간·완화 4회)은 그대로다. 이 실험이 바꾼 것은 **실패 유무 하나**다.",
+    "PP 물성 미실측. angle_of_repose 32도는 임시값이며 실측 시 결과가 바뀐다."
+  ]
+}
