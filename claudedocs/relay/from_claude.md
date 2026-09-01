@@ -19,98 +19,79 @@
 ## §1 템플릿 (§2를 덮어쓸 때 이 골격을 쓴다)
 
 ```
-## §2 2026-08-31 Claude → Codex (74th 세션)
+## §2 <날짜> Claude → Codex (<n>th 세션)
+세션 성격 / 한 일(커밋 표) / 만지지 말 것 / 함정 / 승인 대기 / 검증 방법
+```
 
-세션 성격 = **실물 그랩 설계 + 시뮬 검증**. 73rd 산출물(D457~D461)을 이어받아
-D462(기구 전환)·D463(구동 전환)을 냈다. 물리 0, 로봇 0, 펠릿 0 — 전부 기하·문서.
+## §2 2026-09-01 Claude → Codex (75th 세션)
 
-**한 일 (repo에 남은 변경)** — HEAD `9664f91`, 미커밋 1건(내 설정 백업)뿐.
+세션 성격 = **실물 3D 출력 3연속 실패 종결 + 워커 2트랙 회수 + 게이트 정비.**
+실물 출력 4회(3실패 1성공) · DEME 시뮬 5회. **로봇 0 · 펠릿 0.**
+
+**한 일** — HEAD 는 아래 커밋 뒤 원장 커밋 1건이 더 붙는다. 미커밋은 설정 백업 1건뿐.
 
 | 커밋 | 내용 |
 |---|---|
-| `d1f4e32` | 계약 웨이브 — 형상 게이트·heightmap 계약·DEME 입자 시뮬·예측 모델 골격 (워커 4개 산출) |
-| `7b4ae74` | 그랩 v1 설계(`scoop_grab_v1_design.py`) + 부착 프로브(`sim_scripts/p37_*`) + 조각 STL gitignore |
-| `9664f91` | D463 기어→링크 전환 + 감사 6건 |
+| `478a100`/`e63b940` | P1 deme-force 회수 + merge |
+| `c7c052f`/`a575129` | P2b kinect-hm 회수 + merge |
+| `c415594` | P2b D341 검수 png 화이트리스트 |
+| `38d5880` | P1 n=3 + 설정 동일성 게이트 + npz 화이트리스트 |
+| `1445e69` | 출력 파이프라인 정정 2회 + 게이트 3종 + P1 n=5 + 조립 뷰어 |
 
 **만지지 말 것**
 
-- `scoop_shell_design.py`(v0) 와 `claudedocs/runtime_logs/scoop_shell_v0/` — **동결**. forward-only.
-- `.claude/worktrees/grab-v1` (브랜치 `track/grab-v1`) — **트랙 A 워커 작업 중**
-- `.claude/worktrees/pellet-sim` (브랜치 `track/pellet-sim`) — **트랙 B 워커 작업 중**
-- `.claude/settings.local.json.bak_20260831_pre_orca_allow` — 되돌리기 경로. 커밋 대상 아님.
+- `claudedocs/runtime_logs/grab_track/g3_linkage/` — **설계 좌표계 STL 정본.**
+  `g4_flat`·`g5_oriented`·`g7_oriented` 는 **출력용으로 눕힌 좌표**라 조립 변환을 걸면 틀린다.
+- `scoop_shell_design.py`(v0)·`scoop_shell_v0/` — 동결. forward-only.
+- `~/Documents/DK/DTR/bamboo-3dprinter/profiles/*_full.json`·`print_cli.py` — **DK 원본, 무수정.**
+  사본만 고친다(`process_nosupport_roarm.json`·`process_support_roarm.json`).
 - 원장(`START_HERE`·`DECISIONS*`·`session_*`·이 파일) — 코디네이터 배타 소유.
+- `.claude/settings.local.json.bak_20260831_pre_orca_allow` — 되돌리기 경로. 커밋 대상 아님.
 
-**🔴 진행 중인 worktree 3개 — 다음 세션이 이어받아야 한다**
+**🔴 함정 (전부 이번 세션 실측)**
 
-Orca 로 만들었다(`orca-ide worktree create`). `git worktree add` 를 쓰면 Orca 사이드바에
-안 뜬다(74th 실측). 경로가 **repo 밖**이라 master 작업 트리는 깨끗하다.
+1. 🔴 **BambuStudio 프로필 JSON 은 값이 전부 문자열이어야 한다.** `brim_width` 만 정수 `8` 로
+   적혀 있어 슬라이서가 **오류 없이 무시하고 0** 으로 떨어뜨렸다 → 브림 0 인 gcode 로 출력해
+   부품 4개가 전량 탈락했다. 프로필을 고칠 때는 **전 키 타입 검사**를 돌릴 것.
+2. 🔴 **게이트는 "슬라이서가 실제로 쓴 값"을 봐야 한다.** 프로필을 읽으면 내가 넣으려던 값을
+   보게 된다. 3mf 안 `Metadata/project_settings.config` 가 실제 값이고, 그것도 부족해서
+   **gcode 툴패스**(`; FEATURE: Brim` / `Support`)까지 세야 한다.
+3. 🔴 **배향을 접지 하나로 최적화하면 안 된다.** 기어축이 90° 눕고(이빨이 층으로 쌓임)
+   오버행이 5.8배가 됐다. 힌지축(설계 Z)에 기어·피벗보스·핀·로드아이·셸크랭크허브가
+   **전부 동축**이므로 그 축을 수직으로 세우는 제약을 먼저 건다.
+   ⚠️ **원통의 축은 bbox 최소축이 아니다** — 원판은 최소축, 긴 축은 최대축이다.
+   **나머지 둘(=지름)과 다른 축**이 맞다. 첫 판정이 이걸로 틀렸다.
+4. 🔴 **`support_on_build_plate_only=1` 은 모델 위 오버행을 못 받친다.** 볼트 구멍 오염은
+   막지만 서포트가 z=7.40 mm 에서 끊겼다(오버행 최고 57.5 mm, 무방비 243 mm²).
+5. 🔴 **스크립트 하드코딩 기본값이 아티팩트의 `params` 와 다를 수 있다.**
+   `sim_deme_scoop.py` 기본값(`close_end_deg=0`·`insert_depth_mm=18`)이 rep1/rep2 를 만든
+   값(6·8)과 달랐고, `close_end_deg=0` 은 **이미 발산한다고 문서화된 값**이었다.
+   재실행 전 `params` 를 26개 전수 대조할 것. `force_stats()` 가 이제 강제한다.
+6. ⚠️ **`--orient 1`(슬라이서 자동 배향)을 믿지 마라.** 09-01 실측에서 높이를 59.5→60.7 로 키웠다.
+7. ⚠️ **`make_print_job.py` 지역 변수는 모듈 상단 이름과 겹치면 안 된다.** `_a`(argv)를
+   면적 배열로 덮어써서 죽었다.
+8. ⚠️ **Bambu MQTT 는 바뀐 필드만 보낸다.** 매번 새 dict 로 덮어쓰면 `UNKNOWN`·`베드 0.0` 이
+   나온다. **누적 병합**해야 한다.
+9. ⚠️ **파이프 뒤 종료코드는 마지막 명령의 것이다.** `python ... | tail -1` 로 만든
+   `until` 루프가 조기 탈출했다.
+10. ⚠️ 워커 산출물의 **`.npz`/`.png` 는 머지로 따라오지 않는다**(gitignore). worktree 에서
+    복사해야 하고, 게이트·판정의 **입력**이면 화이트리스트해야 한다.
 
-| 트랙 | 경로 | 브랜치 | 담당 | run/dispatch |
-|---|---|---|---|---|
-| P1 | `~/orca/workspaces/RoArm_Project/deme-force` | `jaehyeond/deme-force` | DEME 반력 경로 (메시 2매+Track 코어덤프 해결) | `run_f9ebfee2cd95` / `ctx_4ac4f9ed55dc` |
-| P2b | `~/orca/workspaces/RoArm_Project/kinect-hm` | `jaehyeond/kinect-hm` | 순차 결정 루프 (관측→결정→스쿱→재관측) | `ctx_4c6051990efa` |
-| P3 | `~/orca/workspaces/RoArm_Project/pellet-model` | `jaehyeond/pellet-model` | 펠릿 클럼프 + 안식각 하네스 | `ctx_2899b8cd0cd1` |
+**승인 대기 / 사용자 결정 필요**
 
-이어받는 절차:
-```
-orca-ide worktree list --json                                   # 4개 보여야 정상
-orca-ide orchestration run-use --id run_f9ebfee2cd95 --from <내 터미널 handle>
-orca-ide orchestration worker-list --json                       # 상태 확인
-orca-ide orchestration check --terminal <handle> --peek --json  # 미확인 보고
-# 결과 수령 후: 각 worktree 에서 커밋 -> master 에서 merge <브랜치>
-```
-⚠️ **워커 보고를 곧이곧대로 믿지 마라.** 74th 에서 "9/9 PASS" 보고가 실제 `design.json` 은
-9/10(1 FAIL) 이었다. 각 트랙 성공 기준을 직접 재확인할 것:
-- P1: 폐합 반력이 **0 이 아닌 값**으로 읽히나 + 물성 임시값을 `non_claims` 에 적었나
-- P2b: **정책에 따라 총 횟수가 실제로 달라지나** (안 달라지면 루프/실행기가 틀린 것)
-- P3: **안식각이 형상에 따라 달라지나** (구 < clump2 < clump3 경향)
-
-**함정** (전부 이번 세션 실측)
-
-1. 🔴 **`orca-ide worktree create` 를 쓸 것. `git worktree add` 를 쓰면 Orca 사이드바에 안 뜬다.**
-   74th 는 `git worktree add` 로 만들었고 그 결과 `git worktree list` 3개 / Orca 등록부 1개가 됐다.
-   **격리·워커 배치는 정상 작동**하지만(`worker-start --worktree <절대경로>` 로 해결) 사용자가
-   UI 에서 탭을 못 찾아 승인 프롬프트 처리가 번거로워진다.
-   **사용자 결정(08-31): 현행 2개는 그대로 두고, 다음 웨이브부터 Orca 방식.**
-2. 🔴 **`orca orchestration check` 는 `--from` 을 받지 않는다.** 유효 플래그는 `--terminal` / `--run`.
-   그리고 호출 전에 `run-use --id <run> --from <handle>` 로 재바인딩하지 않으면 `consumer_fenced` 가 난다.
-   동작 순서: `run-use --from <handle>` → `check --terminal <handle>`.
-3. 🔴 **워커가 권한 프롬프트에서 멈춘다. 코디네이터가 대신 못 누른다** (`agent_prompt_blocked` — 의도된 설계).
-   지금까지 걸린 것: `orca orchestration send` → `orca-ide orchestration inbox` →
-   `python sim_deme_pile.py` → `cd` (경로 우회 방지). **사람이 눌러야 진행된다.**
-   근본 해결 = `.claude/settings.local.json` 의 `permissions.allow` 에
-   `Bash(orca orchestration:*)` · `Bash(orca-ide orchestration:*)` 추가 (사용자 승인 사안, 미실행).
-4. 🔴 **충돌 검사에 `mesh.convex_hull` 을 쓰지 마라.** `link5` 실부피/볼록껍질 = **0.386**.
-   속 빈 프레임을 통짜로 만들어 −52.9 mm 를 과대보고했다. `fcl` 부재 + non-watertight 이므로
-   **1 mm 복셀 점유**를 쓴다 (`p37` 의 `link5_occupancy()`). D453 과 같은 계열의 오류다.
-5. ⚠️ **여유가 조절 파라미터에 거의 반응하지 않으면 그 파라미터는 원인이 아니다.**
-   스탠드오프를 32→38 mm(+6) 키웠는데 여유가 −0.834→−0.744(+0.09) 였다. 진짜 원인은
-   배치 변환의 깊이 **부호**였다. 무작정 그 축을 키웠으면 그랩만 멀어졌다.
-6. ⚠️ **numpy 스칼라는 JSON 직렬화가 안 된다.** `np.bool_` 에서 두 번 죽었다. `default=` 핸들러 필수.
-7. ⚠️ **생성기가 출력 폴더를 비우지 않는다.** `scoop_grab_v1/` 에 구버전 조각
-   (`bracket_base_z{m,p}_*` 14개)이 잔류한다. 디스크에서 슬라이스하면 구 조각을 집을 수 있다.
-8. ⚠️ **조각 STL 은 `.gitignore` 로 제외했다** (`claudedocs/runtime_logs/scoop_grab_*/*.stl`,
-   `_ALL.stl` 만 예외). 미커밋 179 → 28 로 줄었다. 생성기로 결정론적 재생성 가능하다.
-
-**승인 대기** (사용자 결정 없이는 착수 금지)
-
-- 🔴 **`.npz` 저장 정책** (D463 §5-3). 전역 `*.npz` 무시로 DEME 더미 데이터가 git 추적 **0개**다.
-  `GATES.md` 의 G2/G3/G4 CHECK 명령이 그 파일을 인자로 받으므로 **클론하면 게이트가 안 돈다**.
-  DEME 는 bit-재현이 안 되므로(D463 §3) 잃으면 sha256 검증이 영구 불가.
-  코디네이터 권장 = 게이트가 쓰는 **3개만 화이트리스트(1.83 MB)**, `g0b_d420` 선례와 같은 폴더 단위 패턴.
-  학습 데이터는 npz 대신 heightmap 으로(2.73 GB → 69 MB). **D232 대상이라 승인 필요.**
-- `permissions.allow` 에 orchestration 명령 추가 (함정 ③).
-- 미커밋 백업 파일 처리.
-- 펠릿 조달(진행 중) · 배출 용기 규격.
+- 🔴 **브래킷 출력 방법 미정.** 기능축을 세우면 접지 **41 mm²**(높이 59 mm)로 1차 실패 수준이다.
+  배향으로 못 푼다 — 브림 확대·러프트·형상 분할 중 결정 필요.
+- 🔴 **임계값 2개가 근거 없다**: 1층 접지 10 mm²/mm · 무방비 오버행 300 mm².
+  **실패 사례에서만** 잡았다. g7 실물(무방비 243 mm²)이 첫 교정 데이터 — 사용자 실물 검수 대기 중.
+- P1 **D341 미이행 3건**(`.rbl`·헤드리스 스크린샷·육안검수). 루트 `GATES.md` **G7~G13 전부 미완**.
+- 안전 후크 2건 미배선(D458 §6) · 프린터 IP DHCP 예약 · 펠릿 조달 · 배출 용기 규격.
 
 **검증 방법**
 
-```
-git worktree list                                    # 3개, Orca 등록부는 1개 (함정 ①)
-orca-ide worktree list --json                        # 1개만 나온다
-git log --oneline -3                                 # 9664f91 / 7b4ae74 / d1f4e32
-python sim_scripts/p37_g2_grab_v1_attach_probe.py    # G1~G8 재현
-git ls-files claudedocs/runtime_logs/sim_deme/ | grep -c npz   # 0 (승인 대기 §npz)
-python -c "import trimesh;m=trimesh.load('local_assets/roarm_m3/urdf/meshes/link5.stl');\
-m.apply_scale(1000);print(m.volume/m.convex_hull.volume)"      # 0.386 (함정 ④)
+```bash
+git log --oneline -6
+python make_print_job.py <3mf> <dir> <name> <STL>     # 게이트 11종
+python sim_deme_scoop_report.py                       # n=5 통계 + 설정 동일성 게이트
+head -n 28958 claudedocs/DECISIONS.md | md5sum        # f48770d7... (D465 append 전 불변)
+grep -n '^## Schema errata' claudedocs/EXPERIMENT_LEDGER.md   # 536 = 표 블록 끝 +2
 ```
