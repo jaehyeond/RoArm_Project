@@ -1,0 +1,167 @@
+{
+ "artifact": "NEWTON_SCOOP_PROBE_B1",
+ "capture": {
+  "captured_bulk_volume_cm3": 0.0,
+  "captured_pellet_equivalents": 0.0,
+  "carried_sample_points": 0,
+  "closure": "rotate",
+  "gate_pass": false,
+  "gate_pellets": 100.0,
+  "insert_depth_mm": 18.0
+ },
+ "config": {
+  "approach_clearance_mm": 10.0,
+  "capture_margin_mm": 30.0,
+  "close_s": 0.7,
+  "closure": "rotate",
+  "collider_margin_mm": 0.0,
+  "column_radius_m": 0.03,
+  "descend_s": 0.5,
+  "fps": 60.0,
+  "friction": 0.68,
+  "half_extent_m": 0.12,
+  "insert_depth_mm": 18.0,
+  "label": "v2_rot_d18",
+  "lift_height_mm": 60.0,
+  "lift_s": 0.6,
+  "lip_pivot_radius_mm": 38.332,
+  "max_iterations": 250,
+  "mesh_is_solid": false,
+  "n_pellets_equivalent": 1500,
+  "pivot_gap_mm": 26.0,
+  "profile_cell_mm": 2.0,
+  "seed": 460,
+  "settle_after_s": 0.5,
+  "settle_s": 3.0,
+  "shell_friction": 0.5,
+  "shell_travel_deg": 44.5,
+  "substeps": 1,
+  "voxel_size_m": 0.005
+ },
+ "derived": {
+  "capture_threshold_z_m": 0.04930011995136738,
+  "hinge_axis": "Y (horizontal)",
+  "n_mpm_particles": 21420,
+  "particle_spacing_m": 0.0016666666666666668,
+  "pellets_per_sample_point": 0.0721875721875722,
+  "pile_angle_deg": 20.98441838850627,
+  "pile_apex_m": 0.019300119951367378,
+  "shell_z_lo_local_closed_m": -0.03606025823534824,
+  "shell_z_lo_local_open_m": -0.03483181581887597,
+  "translate_chord_m": 0.029002532231648264,
+  "z_insert_body_m": 0.036131935770243345,
+  "z_start_body_m": 0.06413193577024334
+ },
+ "environment": {
+  "newton": "1.5.1",
+  "numpy": "2.4.6",
+  "warp": "1.17.0"
+ },
+ "label": "v2_rot_d18",
+ "measurement_before": {
+  "apex_height_m": 0.018109144643848746,
+  "azimuthal_uncertainty_deg": 0.5239840760744681,
+  "checks": {
+   "angle_finite": true,
+   "angle_physical": true,
+   "fit_r_squared_ok": true,
+   "heap_holds_the_bulk_volume": true,
+   "heap_is_conical": true,
+   "not_lopsided": true,
+   "wall_clearance_ok": true
+  },
+  "domain_half_extent_m": 0.12,
+  "fit_band_m": [
+   0.01754324871366319,
+   0.046937812385423355
+  ],
+  "fit_points": 14,
+  "fit_r_squared": 0.9978149021163326,
+  "heap_axis_xy_m": [
+   0.00016750088026895252,
+   -7.211063525497841e-05
+  ],
+  "integrated_material_volume_m3": 7.271012511061958e-05,
+  "material_volume_fraction_within_1p15_toe": 0.999396171947358,
+  "measurement_pass": true,
+  "plateau_over_toe_ratio": 0.09564013365042866,
+  "plateau_radius_m": 0.004877646816171866,
+  "primary_definition": "sidewall_regression",
+  "primary_definition_band": [
+   0.8,
+   0.2
+  ],
+  "primary_definition_detail": "area-weighted least-squares line fitted to the annulus-mean height profile h(r) of the settled heap, over the band where h falls from 80% to 20% of the apex height; angle = atan(-slope). The apex plateau and the toe are excluded because that is where the classical definitions disagree most.",
+  "profile_cell_m": 0.0020000000000000018,
+  "quadrant_angles_deg": [
+   20.93569611395816,
+   20.777808520030526,
+   20.833306363994836,
+   19.887727961809222
+  ],
+  "quadrant_spread_deg": 1.0479681521489361,
+  "repose_angle_deg": 20.98441838850627,
+  "repose_angle_secondary_deg": 21.436595828836904,
+  "toe_radius_m": 0.051000000000000045,
+  "wall_gate_radius_m": 0.108
+ },
+ "measurement_remaining": {
+  "apex_height_m": 0.015238923788957874,
+  "azimuthal_uncertainty_deg": 4.410664907496288,
+  "checks": {
+   "angle_finite": true,
+   "angle_physical": true,
+   "fit_r_squared_ok": true,
+   "heap_holds_the_bulk_volume": true,
+   "heap_is_conical": true,
+   "not_lopsided": true,
+   "wall_clearance_ok": true
+  },
+  "domain_half_extent_m": 0.12,
+  "fit_band_m": [
+   0.00470523075611737,
+   0.05017683408838449
+  ],
+  "fit_points": 23,
+  "fit_r_squared": 0.9644187301433926,
+  "heap_axis_xy_m": [
+   0.0004948060948873029,
+   -0.0013589075312083953
+  ],
+  "integrated_material_volume_m3": 6.477942845011493e-05,
+  "material_volume_fraction_within_1p15_toe": 1.0,
+  "measurement_pass": true,
+  "plateau_over_toe_ratio": 0.03825440917626722,
+  "plateau_radius_m": 0.0020274836863421646,
+  "primary_definition": "sidewall_regression",
+  "primary_definition_band": [
+   0.8,
+   0.2
+  ],
+  "primary_definition_detail": "area-weighted least-squares line fitted to the annulus-mean height profile h(r) of the settled heap, over the band where h falls from 80% to 20% of the apex height; angle = atan(-slope). The apex plateau and the toe are excluded because that is where the classical definitions disagree most.",
+  "profile_cell_m": 0.0020000000000000018,
+  "quadrant_angles_deg": [
+   17.74030815323089,
+   16.529550730746706,
+   13.739310377664351,
+   8.918978338238317
+  ],
+  "quadrant_spread_deg": 8.821329814992575,
+  "repose_angle_deg": 14.287730311332917,
+  "repose_angle_secondary_deg": 16.644747116461897,
+  "toe_radius_m": 0.05300000000000005,
+  "wall_gate_radius_m": 0.108
+ },
+ "non_claims": [
+  "MEASURE: no pellet has been procured, calipered or weighed. Every physical value is a placeholder inherited from track P3.",
+  "SOLVER_COEFFICIENT: `friction` is the Drucker-Prager friction coefficient of the simulated CONTINUUM. It is not a measured polypropylene property.",
+  "CONTINUUM: MPM has no individual grains. At our pellet size (4.19 mm) a grid cell that holds enough grains for a continuum (>=100 grains needs ~20 mm) cannot also resolve a 60 mm scoop (needs <=10 mm). This probe does not settle that tension; it only asks whether the material behaves like a material.",
+  "PROTOCOL: this is a released-column (lifted-cylinder) repose test, not P3's batch pour. The two protocols are not interchangeable and absolute angles must not be cross-quoted without the matched-protocol comparison.",
+  "TRAJECTORY_ONLY: captured volumes compare trajectories with each other. The MPM continuum is not calibrated to any measured pellet, so no captured mass here predicts a real capture.",
+  "GEOMETRY: the shells are the track-A grab v1 STLs, but the pivot is taken as the (+/- pivot_gap/2, 0) vertical axis that sim_deme_scoop.py uses. If the real linkage pivots elsewhere the closing arc differs."
+ ],
+ "run_started_utc": "2026-09-01T10:19:17.313980+00:00",
+ "timing": {
+  "total_wall_s": 4.771560430526733
+ }
+}

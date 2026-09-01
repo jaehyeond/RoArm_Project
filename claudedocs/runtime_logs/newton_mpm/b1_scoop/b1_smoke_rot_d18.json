@@ -1,0 +1,162 @@
+{
+ "artifact": "NEWTON_SCOOP_PROBE_B1",
+ "capture": {
+  "captured_bulk_volume_cm3": 0.0,
+  "captured_pellet_equivalents": 0.0,
+  "carried_sample_points": 0,
+  "closure": "rotate",
+  "gate_pass": false,
+  "gate_pellets": 100.0,
+  "insert_depth_mm": 18.0
+ },
+ "config": {
+  "approach_clearance_mm": 10.0,
+  "capture_margin_mm": 30.0,
+  "close_s": 0.7,
+  "closure": "rotate",
+  "column_radius_m": 0.03,
+  "descend_s": 0.5,
+  "fps": 60.0,
+  "friction": 0.68,
+  "half_extent_m": 0.12,
+  "insert_depth_mm": 18.0,
+  "label": "smoke_rot_d18",
+  "lift_height_mm": 60.0,
+  "lift_s": 0.6,
+  "max_iterations": 250,
+  "n_pellets_equivalent": 1500,
+  "pivot_gap_mm": 26.0,
+  "profile_cell_mm": 2.0,
+  "seed": 460,
+  "settle_after_s": 0.5,
+  "settle_s": 2.0,
+  "shell_friction": 0.5,
+  "shell_travel_deg": 44.5,
+  "substeps": 1,
+  "voxel_size_m": 0.005
+ },
+ "derived": {
+  "capture_threshold_z_m": 0.04930166967213154,
+  "n_mpm_particles": 21420,
+  "particle_spacing_m": 0.0016666666666666668,
+  "pellets_per_sample_point": 0.0721875721875722,
+  "pile_angle_deg": 20.96234375989238,
+  "pile_apex_m": 0.01930166967213154,
+  "shell_z_lo_local_m": -0.0265,
+  "translate_chord_m": 0.029002532231648264,
+  "z_insert_body_m": 0.027801669672131536,
+  "z_start_body_m": 0.05580166967213154
+ },
+ "environment": {
+  "newton": "1.5.1",
+  "numpy": "2.4.6",
+  "warp": "1.17.0"
+ },
+ "label": "smoke_rot_d18",
+ "measurement_before": {
+  "apex_height_m": 0.018108579148949963,
+  "azimuthal_uncertainty_deg": 0.5446437749760928,
+  "checks": {
+   "angle_finite": true,
+   "angle_physical": true,
+   "fit_r_squared_ok": true,
+   "heap_holds_the_bulk_volume": true,
+   "heap_is_conical": true,
+   "not_lopsided": true,
+   "wall_clearance_ok": true
+  },
+  "domain_half_extent_m": 0.12,
+  "fit_band_m": [
+   0.017544699046131266,
+   0.04693815159435558
+  ],
+  "fit_points": 14,
+  "fit_r_squared": 0.997676855788585,
+  "heap_axis_xy_m": [
+   0.00016967872692940657,
+   -7.625292627017871e-05
+  ],
+  "integrated_material_volume_m3": 7.269784327346044e-05,
+  "material_volume_fraction_within_1p15_toe": 0.9993960647086451,
+  "measurement_pass": true,
+  "plateau_over_toe_ratio": 0.09564318206081157,
+  "plateau_radius_m": 0.004877802285101394,
+  "primary_definition": "sidewall_regression",
+  "primary_definition_band": [
+   0.8,
+   0.2
+  ],
+  "primary_definition_detail": "area-weighted least-squares line fitted to the annulus-mean height profile h(r) of the settled heap, over the band where h falls from 80% to 20% of the apex height; angle = atan(-slope). The apex plateau and the toe are excluded because that is where the classical definitions disagree most.",
+  "profile_cell_m": 0.0020000000000000018,
+  "quadrant_angles_deg": [
+   20.935964806496496,
+   20.777887590211588,
+   20.82131210086329,
+   19.84667725654431
+  ],
+  "quadrant_spread_deg": 1.0892875499521857,
+  "repose_angle_deg": 20.96234375989238,
+  "repose_angle_secondary_deg": 21.436052867971135,
+  "toe_radius_m": 0.051000000000000045,
+  "wall_gate_radius_m": 0.108
+ },
+ "measurement_remaining": {
+  "apex_height_m": 0.014863939737528923,
+  "azimuthal_uncertainty_deg": 5.287152445053997,
+  "checks": {
+   "angle_finite": true,
+   "angle_physical": true,
+   "fit_r_squared_ok": false,
+   "heap_holds_the_bulk_volume": true,
+   "heap_is_conical": true,
+   "not_lopsided": true,
+   "wall_clearance_ok": true
+  },
+  "domain_half_extent_m": 0.12,
+  "fit_band_m": [
+   0.002980491047945169,
+   0.05084704298509833
+  ],
+  "fit_points": 24,
+  "fit_r_squared": 0.8731228510268043,
+  "heap_axis_xy_m": [
+   0.00015172075674532717,
+   -0.0011261043476576266
+  ],
+  "integrated_material_volume_m3": 6.629695421767291e-05,
+  "material_volume_fraction_within_1p15_toe": 1.0,
+  "measurement_pass": false,
+  "plateau_over_toe_ratio": 0.028209863433703627,
+  "plateau_radius_m": 0.0014951227619862935,
+  "primary_definition": "sidewall_regression",
+  "primary_definition_band": [
+   0.8,
+   0.2
+  ],
+  "primary_definition_detail": "area-weighted least-squares line fitted to the annulus-mean height profile h(r) of the settled heap, over the band where h falls from 80% to 20% of the apex height; angle = atan(-slope). The apex plateau and the toe are excluded because that is where the classical definitions disagree most.",
+  "profile_cell_m": 0.0020000000000000018,
+  "quadrant_angles_deg": [
+   19.099081456075776,
+   16.395328372316325,
+   10.746216248327643,
+   8.524776565967782
+  ],
+  "quadrant_spread_deg": 10.574304890107994,
+  "repose_angle_deg": 13.673943867467834,
+  "repose_angle_secondary_deg": 16.09776219301766,
+  "toe_radius_m": 0.05300000000000005,
+  "wall_gate_radius_m": 0.108
+ },
+ "non_claims": [
+  "MEASURE: no pellet has been procured, calipered or weighed. Every physical value is a placeholder inherited from track P3.",
+  "SOLVER_COEFFICIENT: `friction` is the Drucker-Prager friction coefficient of the simulated CONTINUUM. It is not a measured polypropylene property.",
+  "CONTINUUM: MPM has no individual grains. At our pellet size (4.19 mm) a grid cell that holds enough grains for a continuum (>=100 grains needs ~20 mm) cannot also resolve a 60 mm scoop (needs <=10 mm). This probe does not settle that tension; it only asks whether the material behaves like a material.",
+  "PROTOCOL: this is a released-column (lifted-cylinder) repose test, not P3's batch pour. The two protocols are not interchangeable and absolute angles must not be cross-quoted without the matched-protocol comparison.",
+  "TRAJECTORY_ONLY: captured volumes compare trajectories with each other. The MPM continuum is not calibrated to any measured pellet, so no captured mass here predicts a real capture.",
+  "GEOMETRY: the shells are the track-A grab v1 STLs, but the pivot is taken as the (+/- pivot_gap/2, 0) vertical axis that sim_deme_scoop.py uses. If the real linkage pivots elsewhere the closing arc differs."
+ ],
+ "run_started_utc": "2026-09-01T10:12:20.251141+00:00",
+ "timing": {
+  "total_wall_s": 5.196443557739258
+ }
+}
