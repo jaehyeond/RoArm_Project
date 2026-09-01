@@ -215,3 +215,18 @@ claudedocs/runtime_logs/grab_track/*/*.stl
 !claudedocs/runtime_logs/sim_deme/pile_targetridge_smoke_d4p16_n512_seed460.npz
 !claudedocs/runtime_logs/sim_deme/pile_practical_targetridge_d4p16_n18796_seed460.npz
 !claudedocs/runtime_logs/sim_deme/pile_practical_targetridge_d4p16_n18796_seed460_rep2.npz
+
+# ---- P2b D341 검수 증거 whitelist (75th, 사용자 승인 2026-09-01) ----
+# 전역 `*.png` 무시가 D341 완결 계약의 필수 산출물을 빼먹고 있었다.
+# 이 둘은 "있으면 좋은 그림"이 아니라 게이트가 sha256 으로 대조하는 인자다:
+#   GATES.md P6  --validate-rerun-contract  -> rerun_validation.json 의
+#                screenshot_path / decision_snapshot.sha256 을 실파일과 대조
+#   GATES.md P7  --validate-inspection      -> visual_inspection.json 의
+#                screenshot_sha256 / decision_snapshot_sha256 을 실파일과 대조
+# 없으면 클론 후 P6/P7 이 실행 자체를 못 한다 (npz 화이트리스트와 같은 사유 (1)).
+# ⚠️ inspection.png 는 11 MB 다 (2400x1400 헤드리스 캡처). 크기를 알고 넣는다.
+# 기준: **게이트 CHECK 명령이 인자로 받거나 해시로 대조하는 파일만** 예외로 둔다.
+#   -> P1(scoop_track/s2_closure_rot) 의 scoop_rep*.npz / scoop_curves_*.png 는
+#      어떤 CHECK 도 참조하지 않으므로 화이트리스트하지 않는다.
+!claudedocs/runtime_logs/decision_track/p2b_decision_loop/run_primary/inspection.png
+!claudedocs/runtime_logs/decision_track/p2b_decision_loop/run_primary/decision_snapshot.png
