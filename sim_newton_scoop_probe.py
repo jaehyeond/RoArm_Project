@@ -100,6 +100,7 @@ class ScoopConfig:
     pivot_gap_mm: float = 26.0
     shell_travel_deg: float = 44.5
     lip_pivot_radius_mm: float = 38.332   # design.json derived
+    shell_dir: str = ""   # 비우면 원본 STL. 지정하면 shell_{L,R}_wt.stl 을 쓴다
     shell_friction: float = 0.5
     mesh_is_solid: bool = False
     collider_margin_mm: float = 0.0
@@ -167,7 +168,12 @@ def run_cell(cfg: ScoopConfig, out_json: Path) -> dict[str, Any]:
     # design.json `lip_pivot_radius_mm` = 38.332 = hypot(pivot_gap/2, lip_depth).
     r_lip_design = cfg.lip_pivot_radius_mm * 1.0e-3
     shells = {}
-    for side, path in ((-1, SHELL_L), (+1, SHELL_R)):
+    if cfg.shell_dir:
+        _sd = Path(cfg.shell_dir)
+        _paths = ((-1, _sd / "shell_L_wt.stl"), (+1, _sd / "shell_R_wt.stl"))
+    else:
+        _paths = ((-1, SHELL_L), (+1, SHELL_R))
+    for side, path in _paths:
         v, idx = load_stl_mm(path)
         z_pivot = math.sqrt(max(r_lip_design**2 - (gap / 2.0) ** 2, 0.0)) + float(v[:, 2].min())
         pivot = np.array([side * gap / 2.0, 0.0, z_pivot])
