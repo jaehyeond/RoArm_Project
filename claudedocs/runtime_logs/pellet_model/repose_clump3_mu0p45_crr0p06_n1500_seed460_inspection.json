@@ -1,0 +1,43 @@
+{
+  "artifact": "PELLET_REPOSE_V1_VISUAL_INSPECTION",
+  "source_npz": "claudedocs/runtime_logs/pellet_model/repose_clump3_mu0p45_crr0p06_n1500_seed460.npz",
+  "rrd": "claudedocs/runtime_logs/pellet_model/repose_clump3_mu0p45_crr0p06_n1500_seed460.rrd",
+  "rbl": "claudedocs/runtime_logs/pellet_model/repose_clump3_mu0p45_crr0p06_n1500_seed460.rbl",
+  "screenshot_path": "claudedocs/runtime_logs/pellet_model/repose_clump3_mu0p45_crr0p06_n1500_seed460_inspection.png",
+  "screenshot_sha256": "30165baadd3ab3ed023d8cbe1345af51c83fee1d335e611f308c95899117ec90",
+  "rerun_sdk_version": "0.34.1",
+  "rerun_cli_version": "0.34.1",
+  "run_under_inspection": {
+    "shape": "clump3",
+    "aspect": 2.2,
+    "particle_mu": 0.45,
+    "rolling_friction": 0.06,
+    "repose_angle_deg": 35.91452907303405,
+    "fit_r_squared": 0.993223412757137,
+    "quadrant_spread_deg": 4.72388278534951,
+    "measurement_pass": true
+  },
+  "inspected_by": "P3 worker session, 2026-09-01",
+  "inspection_method": "headless-rendered blueprint screenshot opened and read panel by panel; every observation below is something visible in the image, not an inference from the JSON",
+  "visual_inspection_complete": true,
+  "completion_contract_pass": true,
+  "observations": [
+    "Panel 'settled heap - the measured subject' shows one conical heap on the floor with visibly STRAIGHT flanks from apex to toe and no secondary lobe or shoulder. Height colouring runs blue at the base to red at the apex so the flank profile is directly readable; its straightness matches the recorded sidewall-regression r_squared of 0.9932. This is the geometry the 35.915 deg verdict was read from.",
+    "Individual particles render as three-sphere rods rather than spheres, confirming the clump3 template actually reached the solver instead of silently falling back to LoadSphereType. Rod axes point in many directions throughout the heap, confirming the seeded random orientations survived and the pellets interlock rather than sitting lattice-aligned.",
+    "Panel 'pour + settle timeline' at cursor +0.937 s shows a partly built heap with one discrete batch still airborne above it. This is direct confirmation that the release protocol is a sequential pour onto a growing heap rather than a single column drop, and that only poured material is logged (no parked staging batches are visible).",
+    "Panel 'contact points and force chains' shows the contact cloud occupying the same conical envelope as the particles, so the contacts belong to the heap and are not concentrated against a wall or the floor edge.",
+    "Left metric panel shows a clean sawtooth in max_speed_m_s: each batch release spikes it to about 0.8 m/s and it decays before the next release. The spikes stop around 2.6 s (pour complete) after which all three speed traces decay monotonically toward zero, and heap_top_z_m and max_radial_extent_m rise and then flatten. The settle gate therefore fired on a genuinely quiescent heap, not mid-pour.",
+    "Right metric panel shows num_contacts rising monotonically to about 62,000 and then flat. This is the CORRECTED behaviour after setting the contact-detection cadence to 6: the same run family at cadence 20 peaked near 620,000 potential contacts for the same 4,500 spheres and then collapsed once the material quieted, which is the contact-margin inflation that made those runs about six times slower. The flat, order-of-magnitude-lower trace here is the visual signature of the fix.",
+    "Bottom panel 'full simulation domain' shows the true box: a tall narrow column whose lower tip holds the heap. That headroom is where the un-poured batches are parked, and it is why the container mesh is deliberately excluded from the two heap views - included, it makes the camera frame empty headroom and shrink the heap to a speck.",
+    "The verdict text log entry is present and legible at sim_time 3.070 s, carrying shape, aspect, mu, Crr, angle, definition name and r_squared."
+  ],
+  "limitations_seen_in_the_image": [
+    "The contact force arrows are present but not legible at this camera distance: DEME reports every potential pair, so the near-zero-force majority dominates the colour map and the load-bearing chains do not stand out. The contact POINT cloud is informative; the force-chain rendering is not, and no force conclusion is drawn from it.",
+    "The headless renderer parks the time cursor at +0.937 s, i.e. mid-pour. The settled-heap and contact panels are logged as STATIC entities precisely so the decision-time geometry is visible wherever the cursor lands; the timeline panel correspondingly shows a mid-pour frame by design."
+  ],
+  "non_claims": [
+    "MEASURE: 35.915 deg is the angle of the SIMULATED material at mu=0.45, Crr=0.06 with the provisional pellet geometry. No polypropylene pellet has been measured, so this is not a prediction of the real angle of repose.",
+    "NUMERICAL: young_modulus_pa=5e6 is a time-step stability value, not a measured stiffness.",
+    "The quadrant spread of 4.72 deg is reported as the azimuthal uncertainty of this angle at N=1500, not as a precision guarantee."
+  ]
+}

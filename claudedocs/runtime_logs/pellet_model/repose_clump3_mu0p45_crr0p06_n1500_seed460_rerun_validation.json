@@ -1,0 +1,521 @@
+{
+  "artifact": "ROARM_RERUN_ARTIFACT_VALIDATION_V1",
+  "blueprint_path": "claudedocs/runtime_logs/pellet_model/repose_clump3_mu0p45_crr0p06_n1500_seed460.rbl",
+  "blueprint_verify": {
+    "attempted": true,
+    "bytes": 67129,
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "verify",
+      "--check-footers",
+      "true",
+      "claudedocs/runtime_logs/pellet_model/repose_clump3_mu0p45_crr0p06_n1500_seed460.rbl"
+    ],
+    "ok": true,
+    "path": "claudedocs/runtime_logs/pellet_model/repose_clump3_mu0p45_crr0p06_n1500_seed460.rbl",
+    "returncode": 0,
+    "sha256": "859087f73c353b8445a40bf2e26cef04ed524dc8f7ae1e9bf636aeca689a0f56",
+    "stderr": "1 file verified without error.\n",
+    "stdout": ""
+  },
+  "bytes": 7005931,
+  "component_contract": {
+    "checks": {
+      "/events/repose": {
+        "observed": [
+          "TextLog:level",
+          "TextLog:text"
+        ],
+        "pass": true,
+        "required": [
+          "TextLog:level",
+          "TextLog:text"
+        ]
+      },
+      "/geometry/contacts/forces": {
+        "observed": [
+          "Arrows3D:colors",
+          "Arrows3D:origins",
+          "Arrows3D:vectors",
+          "CoordinateFrame:frame"
+        ],
+        "pass": true,
+        "required": [
+          "Arrows3D:colors",
+          "Arrows3D:origins",
+          "Arrows3D:vectors"
+        ]
+      },
+      "/geometry/contacts/points": {
+        "observed": [
+          "CoordinateFrame:frame",
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true,
+        "required": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ]
+      },
+      "/geometry/container": {
+        "observed": [
+          "CoordinateFrame:frame",
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true,
+        "required": [
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ]
+      },
+      "/geometry/heap/settled": {
+        "observed": [
+          "CoordinateFrame:frame",
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true,
+        "required": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ]
+      },
+      "/geometry/heap/spheres": {
+        "observed": [
+          "CoordinateFrame:frame",
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true,
+        "required": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ]
+      },
+      "/metadata/run": {
+        "observed": [
+          "TextDocument:text"
+        ],
+        "pass": true,
+        "required": [
+          "TextDocument:text"
+        ]
+      },
+      "/metrics/fit_r_squared": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/metrics/heap_top_z_m": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/metrics/kinetic_energy_j": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/metrics/max_radial_extent_m": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/metrics/max_speed_m_s": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/metrics/num_contacts": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/metrics/p99_speed_m_s": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/metrics/repose_angle_deg": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      },
+      "/metrics/rms_speed_m_s": {
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true,
+        "required": [
+          "Scalars:scalars"
+        ]
+      }
+    },
+    "pass": true
+  },
+  "entity_path_contract": {
+    "checks": {
+      "/coordinate_frames/world_m": true,
+      "/events/repose": true,
+      "/geometry/contacts/forces": true,
+      "/geometry/contacts/points": true,
+      "/geometry/container": true,
+      "/geometry/heap/settled": true,
+      "/geometry/heap/spheres": true,
+      "/metadata/meshes/geometry__container": true,
+      "/metadata/run": true,
+      "/metrics/fit_r_squared": true,
+      "/metrics/heap_top_z_m": true,
+      "/metrics/kinetic_energy_j": true,
+      "/metrics/max_radial_extent_m": true,
+      "/metrics/max_speed_m_s": true,
+      "/metrics/num_contacts": true,
+      "/metrics/p99_speed_m_s": true,
+      "/metrics/repose_angle_deg": true,
+      "/metrics/rms_speed_m_s": true
+    },
+    "exact_non_system_match": true,
+    "forbidden_fragment_absent": {
+      "/\\/": true
+    },
+    "missing_exact": [],
+    "observed_all": [
+      "/__properties",
+      "/blueprint_panel",
+      "/container/67d4c22b-14e9-40ab-b1e7-e6a12226c871",
+      "/container/7b00edb4-2370-42c1-b0ac-154b54e388cd",
+      "/container/9f503a05-38cc-4fa0-9a1a-9606711d3577",
+      "/coordinate_frames/world_m",
+      "/events/repose",
+      "/geometry/contacts/forces",
+      "/geometry/contacts/points",
+      "/geometry/container",
+      "/geometry/heap/settled",
+      "/geometry/heap/spheres",
+      "/metadata/meshes/geometry__container",
+      "/metadata/run",
+      "/metrics/fit_r_squared",
+      "/metrics/heap_top_z_m",
+      "/metrics/kinetic_energy_j",
+      "/metrics/max_radial_extent_m",
+      "/metrics/max_speed_m_s",
+      "/metrics/num_contacts",
+      "/metrics/p99_speed_m_s",
+      "/metrics/repose_angle_deg",
+      "/metrics/rms_speed_m_s",
+      "/selection_panel",
+      "/time_panel",
+      "/view/3358c255-8d5f-42ce-8563-07084f1ae9eb",
+      "/view/3358c255-8d5f-42ce-8563-07084f1ae9eb/ViewContents",
+      "/view/8f993ec3-a2f0-4a3a-80e9-ecf5e19f4467",
+      "/view/8f993ec3-a2f0-4a3a-80e9-ecf5e19f4467/ViewContents",
+      "/view/b5e3787e-46ec-4ea9-b24f-081e0ffa2cb5",
+      "/view/b5e3787e-46ec-4ea9-b24f-081e0ffa2cb5/ViewContents",
+      "/view/c35eb18c-5d96-49be-a39d-a3d1e2b6280f",
+      "/view/c35eb18c-5d96-49be-a39d-a3d1e2b6280f/ViewContents",
+      "/view/d27bb737-a1af-4b17-9d70-67fa4cb9c96b",
+      "/view/d27bb737-a1af-4b17-9d70-67fa4cb9c96b/ViewContents",
+      "/view/e2cedc3a-1620-4289-bcbf-288cc40864b1",
+      "/view/e2cedc3a-1620-4289-bcbf-288cc40864b1/ViewContents",
+      "/view/f39e020c-61e3-4dd8-9911-77c47fc05f06",
+      "/view/f39e020c-61e3-4dd8-9911-77c47fc05f06/ViewContents",
+      "/viewport"
+    ],
+    "observed_non_system": [
+      "/coordinate_frames/world_m",
+      "/events/repose",
+      "/geometry/contacts/forces",
+      "/geometry/contacts/points",
+      "/geometry/container",
+      "/geometry/heap/settled",
+      "/geometry/heap/spheres",
+      "/metadata/meshes/geometry__container",
+      "/metadata/run",
+      "/metrics/fit_r_squared",
+      "/metrics/heap_top_z_m",
+      "/metrics/kinetic_energy_j",
+      "/metrics/max_radial_extent_m",
+      "/metrics/max_speed_m_s",
+      "/metrics/num_contacts",
+      "/metrics/p99_speed_m_s",
+      "/metrics/repose_angle_deg",
+      "/metrics/rms_speed_m_s"
+    ],
+    "pass": true,
+    "unexpected_non_system": []
+  },
+  "errors": [],
+  "exact_entity_paths": [
+    "/coordinate_frames/world_m",
+    "/events/repose",
+    "/geometry/contacts/forces",
+    "/geometry/contacts/points",
+    "/geometry/container",
+    "/geometry/heap/settled",
+    "/geometry/heap/spheres",
+    "/metadata/meshes/geometry__container",
+    "/metadata/run",
+    "/metrics/fit_r_squared",
+    "/metrics/heap_top_z_m",
+    "/metrics/kinetic_energy_j",
+    "/metrics/max_radial_extent_m",
+    "/metrics/max_speed_m_s",
+    "/metrics/num_contacts",
+    "/metrics/p99_speed_m_s",
+    "/metrics/repose_angle_deg",
+    "/metrics/rms_speed_m_s"
+  ],
+  "exact_timeline_names": [
+    "blueprint",
+    "log_time",
+    "sample",
+    "sim_time_s"
+  ],
+  "expected_entity_components": {
+    "/events/repose": [
+      "TextLog:level",
+      "TextLog:text"
+    ],
+    "/geometry/contacts/forces": [
+      "Arrows3D:colors",
+      "Arrows3D:origins",
+      "Arrows3D:vectors"
+    ],
+    "/geometry/contacts/points": [
+      "Points3D:colors",
+      "Points3D:positions",
+      "Points3D:radii"
+    ],
+    "/geometry/container": [
+      "Mesh3D:albedo_factor",
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/geometry/heap/settled": [
+      "Points3D:colors",
+      "Points3D:positions",
+      "Points3D:radii"
+    ],
+    "/geometry/heap/spheres": [
+      "Points3D:colors",
+      "Points3D:positions",
+      "Points3D:radii"
+    ],
+    "/metadata/run": [
+      "TextDocument:text"
+    ],
+    "/metrics/fit_r_squared": [
+      "Scalars:scalars"
+    ],
+    "/metrics/heap_top_z_m": [
+      "Scalars:scalars"
+    ],
+    "/metrics/kinetic_energy_j": [
+      "Scalars:scalars"
+    ],
+    "/metrics/max_radial_extent_m": [
+      "Scalars:scalars"
+    ],
+    "/metrics/max_speed_m_s": [
+      "Scalars:scalars"
+    ],
+    "/metrics/num_contacts": [
+      "Scalars:scalars"
+    ],
+    "/metrics/p99_speed_m_s": [
+      "Scalars:scalars"
+    ],
+    "/metrics/repose_angle_deg": [
+      "Scalars:scalars"
+    ],
+    "/metrics/rms_speed_m_s": [
+      "Scalars:scalars"
+    ]
+  },
+  "expected_entity_paths": [
+    "/coordinate_frames/world_m",
+    "/events/repose",
+    "/geometry/contacts/forces",
+    "/geometry/contacts/points",
+    "/geometry/container",
+    "/geometry/heap/settled",
+    "/geometry/heap/spheres",
+    "/metadata/meshes/geometry__container",
+    "/metadata/run",
+    "/metrics/fit_r_squared",
+    "/metrics/heap_top_z_m",
+    "/metrics/kinetic_energy_j",
+    "/metrics/max_radial_extent_m",
+    "/metrics/max_speed_m_s",
+    "/metrics/num_contacts",
+    "/metrics/p99_speed_m_s",
+    "/metrics/repose_angle_deg",
+    "/metrics/rms_speed_m_s"
+  ],
+  "expected_rerun_version": "0.34.1",
+  "expected_timeline_names": [
+    "blueprint",
+    "log_time",
+    "sample",
+    "sim_time_s"
+  ],
+  "external_rbl_role": "verified fixed-layout export; the 0.34.1 CLI does not guarantee that an external RBL overrides an already-active embedded blueprint",
+  "footer_manifest_present": true,
+  "forbidden_entity_fragments": [
+    "/\\/"
+  ],
+  "headless_render": {
+    "attempted": true,
+    "bytes": 10861042,
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "--headless",
+      "--window-size",
+      "2400x1400",
+      "--screenshot-to",
+      "claudedocs/runtime_logs/pellet_model/repose_clump3_mu0p45_crr0p06_n1500_seed460_inspection.png",
+      "claudedocs/runtime_logs/pellet_model/repose_clump3_mu0p45_crr0p06_n1500_seed460.rrd"
+    ],
+    "file_nonzero": true,
+    "ok": true,
+    "path": "claudedocs/runtime_logs/pellet_model/repose_clump3_mu0p45_crr0p06_n1500_seed460_inspection.png",
+    "returncode": 0,
+    "sha256": "30165baadd3ab3ed023d8cbe1345af51c83fee1d335e611f308c95899117ec90",
+    "stderr": "\u001b[2m2026-09-01T02:19:42.904921Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mre_perf_telemetry::telemetry\u001b[0m\u001b[2m:\u001b[0m Telemetry initialized \u001b[3menabled\u001b[0m\u001b[2m=\u001b[0mfalse \u001b[3mservice\u001b[0m\u001b[2m=\u001b[0mrerun \u001b[3mtrace_mode\u001b[0m\u001b[2m=\u001b[0m\"off\" \u001b[3mtraces\u001b[0m\u001b[2m=\u001b[0moff \u001b[3mlogs\u001b[0m\u001b[2m=\u001b[0moff \u001b[3mmetrics\u001b[0m\u001b[2m=\u001b[0moff \u001b[3mtracy\u001b[0m\u001b[2m=\u001b[0mfalse\n\u001b[2m2026-09-01T02:19:43.116104Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mre_grpc_server\u001b[0m\u001b[2m:\u001b[0m Listening for gRPC connections on 0.0.0.0:9876. Connect by running `rerun --connect rerun+http://127.0.0.1:9876/proxy`\n\u001b[2m2026-09-01T02:19:43.116415Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mre_importer::import_file\u001b[0m\u001b[2m:\u001b[0m Loading \"claudedocs/runtime_logs/pellet_model/repose_clump3_mu0p45_crr0p06_n1500_seed460.rrd\"…\n\u001b[2m2026-09-01T02:19:43.253551Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mre_viewer::headless\u001b[0m\u001b[2m:\u001b[0m Headless viewer running at 2400x1400.\n\u001b[2m2026-09-01T02:19:43.540199Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mre_viewer::screenshotter\u001b[0m\u001b[2m:\u001b[0m Screenshot saved to \"claudedocs/runtime_logs/pellet_model/repose_clump3_mu0p45_crr0p06_n1500_seed460_inspection.png\"\n\u001b[2m2026-09-01T02:19:43.554093Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mre_viewer::screenshotter\u001b[0m\u001b[2m:\u001b[0m Screenshot copied to clipboard\n\u001b[2m2026-09-01T02:19:43.557405Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mre_viewer::headless\u001b[0m\u001b[2m:\u001b[0m Headless viewer received close request, shutting down.\n",
+    "stdout": ""
+  },
+  "human_visual_inspection_required": true,
+  "log_status_summary": {
+    "blueprint_status": {
+      "attempted": true,
+      "mode": "pellet_repose",
+      "ok": true,
+      "path": "claudedocs/runtime_logs/pellet_model/repose_clump3_mu0p45_crr0p06_n1500_seed460.rbl"
+    },
+    "bytes": 7005931,
+    "flush_ok": true,
+    "ok": true,
+    "rerun_sdk_version": "0.34.1",
+    "sink_attached_before_logging": true,
+    "sink_finalized": true
+  },
+  "pass": true,
+  "path": "claudedocs/runtime_logs/pellet_model/repose_clump3_mu0p45_crr0p06_n1500_seed460.rrd",
+  "print_verbose": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "print",
+      "-v",
+      "claudedocs/runtime_logs/pellet_model/repose_clump3_mu0p45_crr0p06_n1500_seed460.rrd"
+    ],
+    "ok": true,
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "Showing data after migration to latest Rerun version\nStoreInfo {\n    store_id: StoreId(\n        Recording,\n        \"roarm_pellet_repose\",\n        \"pellet_repose_clump3_seed460\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nStoreInfo {\n    store_id: StoreId(\n        Recording,\n        \"roarm_pellet_repose\",\n        \"pellet_repose_clump3_seed460\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nChunk(chunk_18D110F7819CDDE536d9e176cf3456a3) with 1 rows (632 B) - /__properties - data columns: [/__properties@RecordingInfo:start_time]\nStoreInfo {\n    store_id: StoreId(\n        Blueprint,\n        \"roarm_pellet_repose\",\n        \"rec_9f6df44239354ea8a6a50df4735e7802\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nStoreInfo {\n    store_id: StoreId(\n        Blueprint,\n        \"roarm_pellet_repose\",\n        \"rec_9f6df44239354ea8a6a50df4735e7802\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nChunk(chunk_18D110F7865A808148e85b0d06a7718d) with 1 rows (1.2 KiB) - /view/b5e3787e-46ec-4ea9-b24f-081e0ffa2cb5 - data columns: [/view/b5e3787e-46ec-4ea9-b24f-081e0ffa2cb5@ViewBlueprint:class_identifier /view/b5e3787e-46ec-4ea9-b24f-081e0ffa2cb5@ViewBlueprint:display_name /view/b5e3787e-46ec-4ea9-b24f-081e0ffa2cb5@ViewBlueprint:space_origin]\nChunk(chunk_18D110F7865AF07D48e85b0d06a7718e) with 1 rows (1.2 KiB) - /view/e2cedc3a-1620-4289-bcbf-288cc40864b1 - data columns: [/view/e2cedc3a-1620-4289-bcbf-288cc40864b1@ViewBlueprint:class_identifier /view/e2cedc3a-1620-4289-bcbf-288cc40864b1@ViewBlueprint:display_name /view/e2cedc3a-1620-4289-bcbf-288cc40864b1@ViewBlueprint:space_origin]\nChunk(chunk_18D110F7865AFE8E48e85b0d06a7718f) with 1 rows (1.2 KiB) - /view/c35eb18c-5d96-49be-a39d-a3d1e2b6280f - data columns: [/view/c35eb18c-5d96-49be-a39d-a3d1e2b6280f@ViewBlueprint:class_identifier /view/c35eb18c-5d96-49be-a39d-a3d1e2b6280f@ViewBlueprint:display_name /view/c35eb18c-5d96-49be-a39d-a3d1e2b6280f@ViewBlueprint:space_origin]\nChunk(chunk_18D110F7865B11B948e85b0d06a77190) with 1 rows (1.3 KiB) - /container/67d4c22b-14e9-40ab-b1e7-e6a12226c871 - data columns: [/container/67d4c22b-14e9-40ab-b1e7-e6a12226c871@ContainerBlueprint:col_shares /container/67d4c22b-14e9-40ab-b1e7-e6a12226c871@ContainerBlueprint:container_kind /container/67d4c22b-14e9-40ab-b1e7-e6a12226c871@ContainerBlueprint:contents]\nChunk(chunk_18D110F7865B43BC48e85b0d06a77191) with 1 rows (1.2 KiB) - /viewport - data columns: [/viewport@ViewportBlueprint:auto_layout /viewport@ViewportBlueprint:auto_views /viewport@ViewportBlueprint:root_container]\nChunk(chunk_18D110F7865B5C4D48e85b0d06a77192) with 1 rows (883 B) - /selection_panel - data columns: [/selection_panel@PanelBlueprint:state]\nChunk(chunk_18D110F7865B740148e85b0d06a77193) with 1 rows (885 B) - /time_panel - data columns: [/time_panel@TimePanelBlueprint:state]\nChunk(chunk_18D110F7865B7C6E48e85b0d06a77194) with 1 rows (1.2 KiB) - /view/8f993ec3-a2f0-4a3a-80e9-ecf5e19f4467 - data columns: [/view/8f993ec3-a2f0-4a3a-80e9-ecf5e19f4467@ViewBlueprint:class_identifier /view/8f993ec3-a2f0-4a3a-80e9-ecf5e19f4467@ViewBlueprint:display_name /view/8f993ec3-a2f0-4a3a-80e9-ecf5e19f4467@ViewBlueprint:space_origin]\nChunk(chunk_18D110F7865B911848e85b0d06a77195) with 1 rows (1.2 KiB) - /view/3358c255-8d5f-42ce-8563-07084f1ae9eb - data columns: [/view/3358c255-8d5f-42ce-8563-07084f1ae9eb@ViewBlueprint:class_identifier /view/3358c255-8d5f-42ce-8563-07084f1ae9eb@ViewBlueprint:display_name /view/3358c255-8d5f-42ce-8563-07084f1ae9eb@ViewBlueprint:space_origin]\nChunk(chunk_18D110F7865BA42348e85b0d06a77196) with 1 rows (1.3 KiB) - /container/7b00edb4-2370-42c1-b0ac-154b54e388cd - data columns: [/container/7b00edb4-2370-42c1-b0ac-154b54e388cd@ContainerBlueprint:container_kind /container/7b00edb4-2370-42c1-b0ac-154b54e388cd@ContainerBlueprint:contents /container/7b00edb4-2370-42c1-b0ac-154b54e388cd@ContainerBlueprint:row_shares]\nChunk(chunk_18D110F7865BAF8248e85b0d06a77197) with 1 rows (1.3 KiB) - /container/9f503a05-38cc-4fa0-9a1a-9606711d3577 - data columns: [/container/9f503a05-38cc-4fa0-9a1a-9606711d3577@ContainerBlueprint:col_shares /container/9f503a05-38cc-4fa0-9a1a-9606711d3577@ContainerBlueprint:container_kind /container/9f503a05-38cc-4fa0-9a1a-9606711d3577@ContainerBlueprint:contents]\nChunk(chunk_18D110F7865BBC3E48e85b0d06a77198) with 1 rows (1.2 KiB) - /view/f39e020c-61e3-4dd8-9911-77c47fc05f06 - data columns: [/view/f39e020c-61e3-4dd8-9911-77c47fc05f06@ViewBlueprint:class_identifier /view/f39e020c-61e3-4dd8-9911-77c47fc05f06@ViewBlueprint:display_name /view/f39e020c-61e3-4dd8-9911-77c47fc05f06@ViewBlueprint:space_origin]\nChunk(chunk_18D110F7865BD47F48e85b0d06a77199) with 1 rows (883 B) - /blueprint_panel - data columns: [/blueprint_panel@PanelBlueprint:state]\nChunk(chunk_18D110F7865BE52A48e85b0d06a7719a) with 1 rows (1.2 KiB) - /view/d27bb737-a1af-4b17-9d70-67fa4cb9c96b - data columns: [/view/d27bb737-a1af-4b17-9d70-67fa4cb9c96b@ViewBlueprint:class_identifier /view/d27bb737-a1af-4b17-9d70-67fa4cb9c96b@ViewBlueprint:display_name /view/d27bb737-a1af-4b17-9d70-67fa4cb9c96b@ViewBlueprint:space_origin]\nChunk(chunk_18D110F7865BF7FA48e85b0d06a7719b) with 1 rows (929 B) - /view/c35eb18c-5d96-49be-a39d-a3d1e2b6280f/ViewContents - data columns: [/view/c35eb18c-5d96-49be-a39d-a3d1e2b6280f/ViewContents@ViewContents:query]\nChunk(chunk_18D110F7865BFFE048e85b0d06a7719c) with 1 rows (970 B) - /view/d27bb737-a1af-4b17-9d70-67fa4cb9c96b/ViewContents - data columns: [/view/d27bb737-a1af-4b17-9d70-67fa4cb9c96b/ViewContents@ViewContents:query]\nChunk(chunk_18D110F7865C07BB48e85b0d06a7719d) with 1 rows (923 B) - /view/b5e3787e-46ec-4ea9-b24f-081e0ffa2cb5/ViewContents - data columns: [/view/b5e3787e-46ec-4ea9-b24f-081e0ffa2cb5/ViewContents@ViewContents:query]\nChunk(chunk_18D110F7865C23FB48e85b0d06a7719e) with 1 rows (983 B) - /view/8f993ec3-a2f0-4a3a-80e9-ecf5e19f4467/ViewContents - data columns: [/view/8f993ec3-a2f0-4a3a-80e9-ecf5e19f4467/ViewContents@ViewContents:query]\nChunk(chunk_18D110F7865C2C8848e85b0d06a7719f) with 1 rows (940 B) - /view/3358c255-8d5f-42ce-8563-07084f1ae9eb/ViewContents - data columns: [/view/3358c255-8d5f-42ce-8563-07084f1ae9eb/ViewContents@ViewContents:query]\nChunk(chunk_18D110F7865C33CB48e85b0d06a771a0) with 1 rows (945 B) - /view/f39e020c-61e3-4dd8-9911-77c47fc05f06/ViewContents - data columns: [/view/f39e020c-61e3-4dd8-9911-77c47fc05f06/ViewContents@ViewContents:query]\nChunk(chunk_18D110F7865C42D848e85b0d06a771a1) with 1 rows (929 B) - /view/e2cedc3a-1620-4289-bcbf-288cc40864b1/ViewContents - data columns: [/view/e2cedc3a-1620-4289-bcbf-288cc40864b1/ViewContents@ViewContents:query]\nBlueprintActivationCommand(StoreId(Blueprint, \"roarm_pellet_repose\", \"rec_9f6df44239354ea8a6a50df4735e7802\"), make_active: true, make_default: true)\nChunk(chunk_18D110F786CF177456e5a6b68156b58e) with 70 rows (976 KiB) - /geometry/heap/spheres - data columns: [/geometry/heap/spheres@CoordinateFrame:frame /geometry/heap/spheres@Points3D:colors /geometry/heap/spheres@Points3D:positions /geometry/heap/spheres@Points3D:radii]\nChunk(chunk_18D110F786FE928656e5a6b68156b58f) with 32 rows (1021 KiB) - /geometry/heap/spheres - data columns: [/geometry/heap/spheres@CoordinateFrame:frame /geometry/heap/spheres@Points3D:colors /geometry/heap/spheres@Points3D:positions /geometry/heap/spheres@Points3D:radii]\nChunk(chunk_18D110F78725030A56e5a6b68156b590) with 25 rows (1.0 MiB) - /geometry/heap/spheres - data columns: [/geometry/heap/spheres@CoordinateFrame:frame /geometry/heap/spheres@Points3D:colors /geometry/heap/spheres@Points3D:positions /geometry/heap/spheres@Points3D:radii]\nChunk(chunk_18D110F7874AE45156e5a6b68156b591) with 23 rows (1013 KiB) - /geometry/heap/spheres - data columns: [/geometry/heap/spheres@CoordinateFrame:frame /geometry/heap/spheres@Points3D:colors /geometry/heap/spheres@Points3D:positions /geometry/heap/spheres@Points3D:radii]\nChunk(chunk_18D110F7885A6C1156e5a6b68156b592) with 1 rows (1.2 KiB) - /geometry/container - data columns: [/geometry/container@CoordinateFrame:frame /geometry/container@Mesh3D:albedo_factor /geometry/container@Mesh3D:triangle_indices /geometry/container@Mesh3D:vertex_positions]\nChunk(chunk_18D110F7885AB1B356e5a6b68156b593) with 1 rows (1.1 KiB) - /coordinate_frames/world_m - data columns: [/coordinate_frames/world_m@Transform3D:child_frame /coordinate_frames/world_m@Transform3D:parent_frame /coordinate_frames/world_m@Transform3D:quaternion /coordinate_frames/world_m@Transform3D:translation]\nChunk(chunk_18D110F7885B340556e5a6b68156b594) with 152 rows (4.8 KiB) - /metrics/max_radial_extent_m - data columns: [/metrics/max_radial_extent_m@Scalars:scalars]\nChunk(chunk_18D110F7885D070B56e5a6b68156b595) with 2 rows (1.0 KiB) - /metrics/fit_r_squared - data columns: [/metrics/fit_r_squared@Scalars:scalars]\nChunk(chunk_18D110F7885D644F56e5a6b68156b596) with 152 rows (4.8 KiB) - /metrics/rms_speed_m_s - data columns: [/metrics/rms_speed_m_s@Scalars:scalars]\nChunk(chunk_18D110F7885EE2C256e5a6b68156b597) with 1 rows (612 KiB) - /geometry/contacts/points - data columns: [/geometry/contacts/points@CoordinateFrame:frame /geometry/contacts/points@Points3D:colors /geometry/contacts/points@Points3D:positions /geometry/contacts/points@Points3D:radii]\nChunk(chunk_18D110F7885F3F2056e5a6b68156b598) with 152 rows (4.8 KiB) - /metrics/kinetic_energy_j - data columns: [/metrics/kinetic_energy_j@Scalars:scalars]\nChunk(chunk_18D110F78860AF3756e5a6b68156b599) with 2 rows (1.0 KiB) - /metrics/repose_angle_deg - data columns: [/metrics/repose_angle_deg@Scalars:scalars]\nChunk(chunk_18D110F7886115A656e5a6b68156b59a) with 152 rows (4.8 KiB) - /metrics/max_speed_m_s - data columns: [/metrics/max_speed_m_s@Scalars:scalars]\nChunk(chunk_18D110F7886275DE56e5a6b68156b59b) with 2 rows (89.4 KiB) - /geometry/heap/spheres - data columns: [/geometry/heap/spheres@CoordinateFrame:frame /geometry/heap/spheres@Points3D:colors /geometry/heap/spheres@Points3D:positions /geometry/heap/spheres@Points3D:radii]\nChunk(chunk_18D110F78863ACFE56e5a6b68156b59c) with 1 rows (45.0 KiB) - /geometry/heap/settled - data columns: [/geometry/heap/settled@CoordinateFrame:frame /geometry/heap/settled@Points3D:colors /geometry/heap/settled@Points3D:positions /geometry/heap/settled@Points3D:radii]\nChunk(chunk_18D110F78863B83356e5a6b68156b59d) with 1 rows (710 B) - /metadata/meshes/geometry__container - data columns: [/metadata/meshes/geometry__container@TextDocument:text]\nChunk(chunk_18D110F78863C29756e5a6b68156b59e) with 1 rows (1.4 KiB) - /metadata/run - data columns: [/metadata/run@TextDocument:text]\nChunk(chunk_18D110F78863C78556e5a6b68156b59f) with 1 rows (1.2 KiB) - /events/repose - data columns: [/events/repose@TextLog:level /events/repose@TextLog:text]\nChunk(chunk_18D110F788643CE956e5a6b68156b5a0) with 152 rows (4.8 KiB) - /metrics/heap_top_z_m - data columns: [/metrics/heap_top_z_m@Scalars:scalars]\nChunk(chunk_18D110F78865F1C656e5a6b68156b5a1) with 152 rows (4.8 KiB) - /metrics/num_contacts - data columns: [/metrics/num_contacts@Scalars:scalars]\nChunk(chunk_18D110F78867745A56e5a6b68156b5a2) with 152 rows (4.8 KiB) - /metrics/p99_speed_m_s - data columns: [/metrics/p99_speed_m_s@Scalars:scalars]\nChunk(chunk_18D110F78869005656e5a6b68156b5a3) with 1 rows (69.3 KiB) - /geometry/contacts/forces - data columns: [/geometry/contacts/forces@Arrows3D:colors /geometry/contacts/forces@Arrows3D:origins /geometry/contacts/forces@Arrows3D:vectors /geometry/contacts/forces@CoordinateFrame:frame]\n"
+  },
+  "rendered_blueprint_source": "active blueprint embedded in the RRD",
+  "samples_logged": 152,
+  "screenshot_path": "claudedocs/runtime_logs/pellet_model/repose_clump3_mu0p45_crr0p06_n1500_seed460_inspection.png",
+  "screenshot_port": null,
+  "screenshot_window_size": "2400x1400",
+  "sha256": "8f9480caded479b458f202b40ff2b107ea73ae3881b74927c243afb6930c728b",
+  "source_npz": "claudedocs/runtime_logs/pellet_model/repose_clump3_mu0p45_crr0p06_n1500_seed460.npz",
+  "source_npz_sha256": "edcbe03af06a2b97b997acae5f0a386d48c4588a77efc3a4a8678c3332c65c34",
+  "stats": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "stats",
+      "claudedocs/runtime_logs/pellet_model/repose_clump3_mu0p45_crr0p06_n1500_seed460.rrd"
+    ],
+    "ok": true,
+    "returncode": 0,
+    "stderr": "\u001b[2m2026-09-01T02:19:42.772840Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mrerun::commands::rrd::stats\u001b[0m\u001b[2m:\u001b[0m processing input…\n\u001b[2m2026-09-01T02:19:42.784208Z\u001b[0m \u001b[32m INFO\u001b[0m \u001b[2mrerun::commands::rrd::stats\u001b[0m\u001b[2m:\u001b[0m computing stats…\n",
+    "stdout": "Overview\n----------\nnum_chunks = 44\nnum_entity_paths = 40\nnum_chunks_without_components = 0 (0.000%)\nnum_rows = 1 250\nnum_rows_min = 1\nnum_rows_max = 152\nnum_rows_avg = 28.409\nnum_static = 8\nnum_indexes_min = 0\nnum_indexes_max = 3\nnum_indexes_avg = 1.977\nnum_components_min = 1\nnum_components_max = 4\nnum_components_avg = 2.205\n\nNum chunks per entity\n---------------------\n/__properties: 1\n/blueprint_panel: 1\n/container/67d4c22b-14e9-40ab-b1e7-e6a12226c871: 1\n/container/7b00edb4-2370-42c1-b0ac-154b54e388cd: 1\n/container/9f503a05-38cc-4fa0-9a1a-9606711d3577: 1\n/coordinate_frames/world_m: 1\n/events/repose: 1\n/geometry/contacts/forces: 1\n/geometry/contacts/points: 1\n/geometry/container: 1\n/geometry/heap/settled: 1\n/geometry/heap/spheres: 5\n/metadata/meshes/geometry__container: 1\n/metadata/run: 1\n/metrics/fit_r_squared: 1\n/metrics/heap_top_z_m: 1\n/metrics/kinetic_energy_j: 1\n/metrics/max_radial_extent_m: 1\n/metrics/max_speed_m_s: 1\n/metrics/num_contacts: 1\n/metrics/p99_speed_m_s: 1\n/metrics/repose_angle_deg: 1\n/metrics/rms_speed_m_s: 1\n/selection_panel: 1\n/time_panel: 1\n/view/3358c255-8d5f-42ce-8563-07084f1ae9eb: 1\n/view/3358c255-8d5f-42ce-8563-07084f1ae9eb/ViewContents: 1\n/view/8f993ec3-a2f0-4a3a-80e9-ecf5e19f4467: 1\n/view/8f993ec3-a2f0-4a3a-80e9-ecf5e19f4467/ViewContents: 1\n/view/b5e3787e-46ec-4ea9-b24f-081e0ffa2cb5: 1\n/view/b5e3787e-46ec-4ea9-b24f-081e0ffa2cb5/ViewContents: 1\n/view/c35eb18c-5d96-49be-a39d-a3d1e2b6280f: 1\n/view/c35eb18c-5d96-49be-a39d-a3d1e2b6280f/ViewContents: 1\n/view/d27bb737-a1af-4b17-9d70-67fa4cb9c96b: 1\n/view/d27bb737-a1af-4b17-9d70-67fa4cb9c96b/ViewContents: 1\n/view/e2cedc3a-1620-4289-bcbf-288cc40864b1: 1\n/view/e2cedc3a-1620-4289-bcbf-288cc40864b1/ViewContents: 1\n/view/f39e020c-61e3-4dd8-9911-77c47fc05f06: 1\n/view/f39e020c-61e3-4dd8-9911-77c47fc05f06/ViewContents: 1\n/viewport: 1\n\nNum chunks per index\n--------------------\nblueprint: 21\nlog_time: 36\nsample: 15\nsim_time_s: 15\n\nNum chunks per component\n------------------------\nArrows3D:colors: 1\nArrows3D:origins: 1\nArrows3D:vectors: 1\nContainerBlueprint:col_shares: 2\nContainerBlueprint:container_kind: 3\nContainerBlueprint:contents: 3\nContainerBlueprint:row_shares: 1\nCoordinateFrame:frame: 9\nMesh3D:albedo_factor: 1\nMesh3D:triangle_indices: 1\nMesh3D:vertex_positions: 1\nPanelBlueprint:state: 2\nPoints3D:colors: 7\nPoints3D:positions: 7\nPoints3D:radii: 7\nRecordingInfo:start_time: 1\nScalars:scalars: 9\nTextDocument:text: 2\nTextLog:level: 1\nTextLog:text: 1\nTimePanelBlueprint:state: 1\nTransform3D:child_frame: 1\nTransform3D:parent_frame: 1\nTransform3D:quaternion: 1\nTransform3D:translation: 1\nViewBlueprint:class_identifier: 7\nViewBlueprint:display_name: 7\nViewBlueprint:space_origin: 7\nViewContents:query: 7\nViewportBlueprint:auto_layout: 1\nViewportBlueprint:auto_views: 1\nViewportBlueprint:root_container: 1\n\nSize (schema + data, compressed)\n--------------------------------\nipc_size_bytes_total = 6.6 MiB\nipc_size_bytes_min = 913 B\nipc_size_bytes_max = 1.4 MiB\nipc_size_bytes_avg = 154 KiB\nipc_size_bytes_p50 = 1.6 KiB\nipc_size_bytes_p90 = 764 KiB\nipc_size_bytes_p95 = 1.3 MiB\nipc_size_bytes_p99 = 1.4 MiB\nipc_size_bytes_p999 = 1.4 MiB\n\nSize (schema + data, uncompressed)\n----------------------------------\nipc_size_bytes_total = 10.0 MiB\nipc_size_bytes_min = 1.7 KiB\nipc_size_bytes_max = 2.1 MiB\nipc_size_bytes_avg = 234 KiB\nipc_size_bytes_p50 = 4.1 KiB\nipc_size_bytes_p90 = 1.2 MiB\nipc_size_bytes_p95 = 2.1 MiB\nipc_size_bytes_p99 = 2.1 MiB\nipc_size_bytes_p999 = 2.1 MiB\n\nSize (schema only, uncompressed)\n--------------------------------\nipc_size_bytes_total = 83.9 KiB\nipc_size_bytes_min = 1016 B\nipc_size_bytes_max = 2.7 KiB\nipc_size_bytes_avg = 1.9 KiB\nipc_size_bytes_p50 = 1.9 KiB\nipc_size_bytes_p90 = 2.7 KiB\nipc_size_bytes_p95 = 2.7 KiB\nipc_size_bytes_p99 = 2.7 KiB\nipc_size_bytes_p999 = 2.7 KiB\n\nSize (data only, uncompressed)\n------------------------------\nipc_size_bytes_total = 10.0 MiB\nipc_size_bytes_min = 656 B\nipc_size_bytes_max = 2.1 MiB\nipc_size_bytes_avg = 232 KiB\nipc_size_bytes_p50 = 1.9 KiB\nipc_size_bytes_p90 = 1.2 MiB\nipc_size_bytes_p95 = 2.1 MiB\nipc_size_bytes_p99 = 2.1 MiB\nipc_size_bytes_p999 = 2.1 MiB\n\nUnsorted timelines\n------------------\n(none — every timeline on every chunk is sorted)\n\nFooters\n-------\nnum_manifests = 2 (one per recording)\n\nFooter manifest for StoreId(Recording, \"roarm_pellet_repose\", \"pellet_repose_clump3_seed460\")\n  num_chunks_indexed = 23\n  num_static_chunks = 8\n  num_entity_paths = 19\n  manifest_num_columns = 95\n  sorbet_schema_num_fields = 42\n  sorbet_schema_sha256 = 9942f7c16d021e906a54961a9f006810df13e22814221b5101bd309972231384\n  chunk_byte_size_total (native) = 6.6 MiB\n  chunk_byte_size_uncompressed_total = 10.0 MiB\n\nFooter manifest for StoreId(Blueprint, \"roarm_pellet_repose\", \"rec_9f6df44239354ea8a6a50df4735e7802\")\n  num_chunks_indexed = 21\n  num_static_chunks = 0\n  num_entity_paths = 21\n  manifest_num_columns = 102\n  sorbet_schema_num_fields = 46\n  sorbet_schema_sha256 = 9f01a86d0ff0d3e86a026d285bc4ce3c0fb68601a8ee1303dd6858d82df4daca\n  chunk_byte_size_total (native) = 31.2 KiB\n  chunk_byte_size_uncompressed_total = 71.0 KiB\n"
+  },
+  "timeline_contract": {
+    "checks": {
+      "blueprint": true,
+      "log_time": true,
+      "sample": true,
+      "sim_time_s": true
+    },
+    "exact_match": true,
+    "observed": [
+      "blueprint",
+      "log_time",
+      "sample",
+      "sim_time_s"
+    ],
+    "pass": true
+  },
+  "verify": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "verify",
+      "--check-footers",
+      "true",
+      "claudedocs/runtime_logs/pellet_model/repose_clump3_mu0p45_crr0p06_n1500_seed460.rrd"
+    ],
+    "ok": true,
+    "returncode": 0,
+    "stderr": "1 file verified without error.\n",
+    "stdout": ""
+  },
+  "version": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "--version"
+    ],
+    "expected_version_match": true,
+    "ok": true,
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "rerun-cli 0.34.1 (base lance map_view nasm native_viewer oss_server perf_telemetry re_server release_full release_no_web_viewer web_viewer) [rustc 1.92.0 (ded5c06cf 2025-12-08), LLVM 21.1.3] x86_64-unknown-linux-gnu prepare-release-0.34.1 4efb18f, built 2026-07-07T16:20:42.173372603Z\nVideo features: av1 ffmpeg nasm\n"
+  }
+}
