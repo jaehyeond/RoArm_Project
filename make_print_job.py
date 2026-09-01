@@ -7,7 +7,7 @@
 사용:  python make_print_job.py [3mf경로] [출력디렉터리] [부품이름] [STL...]
        인자를 안 주면 기존 칼라 쿠폰 기본값을 쓴다 (하위호환).
 """
-import json, hashlib, re, zipfile, subprocess, sys
+import json, hashlib, math, re, zipfile, subprocess, sys
 from pathlib import Path
 
 DTR = Path("/home/cgxr/Documents/DK/DTR/bamboo-3dprinter")
@@ -42,11 +42,102 @@ x0, y0, x1, y1 = plate["bbox_all"]
 beds = sorted({int(v) for v in re.findall(r"M140 S(\d+)", gcode)} - {0})
 nozz = sorted({int(v) for v in re.findall(r"M104 S(\d+)", gcode)} - {0})
 warns = re.findall(r'<warning msg="([^"]+)"', si)
+# 🔴 2026-09-01. 게이트는 **내가 넣으려던 값이 아니라 슬라이서가 실제로 쓴 값**을 봐야 한다.
+#    이전 판은 프로필(`process_nosupport_roarm.json`)에서 brim_width 를 읽어 8 이라고
+#    보고했는데, 3mf 안 project_settings.config 의 실제 값은 **0** 이었다.
+#    원인: 프로필 JSON 은 모든 값이 문자열인데 brim_width 만 정수 `8` 로 적혀 있어
+#    BambuStudio 가 조용히 무시하고 기본값 0 으로 떨어뜨렸다 (오류 메시지 없음).
+#    결과: 브림 0개인 gcode 로 부품 4개를 접지 1.4 cm² 에 세워 출력 -> 전량 탈락.
 _proc = json.loads((DTR / "profiles/process_nosupport_roarm.json").read_text())
-brim_type = _proc.get("brim_type")
-brim_width = _proc.get("brim_width")
+_used = json.loads(z.read("Metadata/project_settings.config").decode())
+brim_type = _used.get("brim_type")
+brim_width = float(_used.get("brim_width") or 0)
+brim_intended = _proc.get("brim_width")
 _zs = [float(v) for v in re.findall(r"^G[01] .*?Z([0-9.]+)", gcode, re.M)]
 max_z = max(_zs) if _zs else 0.0
+
+# 브림이 설정에만 있고 툴패스에 없을 수 있다 -> gcode 에서 직접 센다.
+brim_moves = len(re.findall(r"^; FEATURE: Brim\s*$", gcode, re.M))
+
+FIL_AREA_MM2 = 3.14159265 * (1.75 / 2) ** 2   # 1.75 mm 필라멘트 단면
+
+
+def first_layer_contact_mm2(gc):
+    """1층이 베드에 실제로 깔아 놓는 면적 (mm²). 브림 포함 — 브림도 부품을 잡아 준다.
+
+    압출 필라멘트 부피 / 층 높이 = 바닥에 닿는 면적. 설정이 아니라 **툴패스**를 적분한다.
+    """
+    lines = gc.splitlines()
+    try:
+        s = next(i for i, l in enumerate(lines) if "layer num/total_layer_count: 1/" in l)
+    except StopIteration:
+        return 0.0, 0.0
+    e = next((i for i, l in enumerate(lines[s + 1:], s + 1)
+              if l.startswith("; CHANGE_LAYER")), len(lines))
+    h = float((re.search(r"^; LAYER_HEIGHT: ([0-9.]+)", "\n".join(lines[:s]), re.M)
+               or [None, "0.2"])[1])
+    tot = 0.0
+    for l in lines[s:e]:
+        if not l.startswith("G1"):
+            continue
+        m = re.search(r"\bE(-?[0-9.]+)", l)
+        if m and float(m.group(1)) > 0:
+            tot += float(m.group(1))
+    return tot * FIL_AREA_MM2 / h, tot
+
+
+contact_mm2, first_layer_e = first_layer_contact_mm2(gcode)
+
+# 🔴 서포트·오버행·기능축. 전부 **결과**에서 읽는다.
+support_used = (meta("support_used") == "true") or ("; FEATURE: Support" in gcode)
+on_plate_only = str(_used.get("support_on_build_plate_only", "0")) in ("1", "true")
+OVERHANG_FREE_MM2 = 300.0     # 이 아래면 서포트 없이도 실물이 버틴다(잠정 — 성공 사례로 교정할 것)
+
+# 오버행·기능축은 슬라이스가 아니라 **출력 배향 STL** 에서 잰다.
+# orient_for_print.py 가 같은 정의로 계산해 orientation.json 에 적어 둔다.
+overhang_mm2, func_tilt = float("nan"), float("nan")
+for _s in STLS:
+    _o = _s.parent / "orientation.json"
+    if _o.exists():
+        for _r in json.loads(_o.read_text())["parts"]:
+            if _r["stl"] == _s.name:
+                overhang_mm2 = _r["after"]["overhang"]
+                func_tilt = _r["after"]["func_tilt_deg"]
+FUNC_TILT_MAX = 10.0
+
+
+def _support_top_z(gc):
+    """서포트가 실제로 도달한 최고 높이 (mm). 설정이 아니라 툴패스에서 읽는다."""
+    z, top = 0.0, 0.0
+    for l in gc.splitlines():
+        m = re.match(r"^; Z_HEIGHT: ([0-9.]+)", l)
+        if m:
+            z = float(m.group(1))
+        elif l.startswith("; FEATURE: Support"):
+            top = z
+    return top
+
+
+support_top_z = _support_top_z(gcode)
+# 서포트가 못 미치는 높이에 남은 오버행 면적 — STL 에서 직접 잰다
+unsupported_mm2, overhang_top_z = overhang_mm2, float("nan")
+try:
+    # ⚠️ 이 블록의 지역 변수는 모듈 상단 이름과 겹치면 안 된다.
+    #    `_a` 를 면적 배열로 쓴 첫 판이 argv(`_a`)를 덮어써서 죽었다.
+    import trimesh as _tm
+    _mesh = _tm.load(STLS[0])
+    _nrm, _cen, _area = _mesh.face_normals, _mesh.triangles.mean(axis=1), _mesh.area_faces
+    _ov = _nrm[:, 2] < -math.cos(math.radians(45.0))
+    if _ov.any():
+        overhang_top_z = float(_cen[_ov][:, 2].max())
+        unsupported_mm2 = float(_area[_ov & (_cen[:, 2] > support_top_z)].sum())
+except Exception:
+    pass
+# 🔴 잠정 임계. 근거는 **실패 1건뿐**이고 성공 사례가 아직 없다 (09-01 기준).
+#    실패판 = 138 mm² / 높이 52.9 mm = 2.6 mm²/mm -> 첫 층부터 전량 탈락.
+#    첫 성공이 나오면 그 값으로 다시 교정할 것. 지금은 안전측으로 10 을 쓴다.
+CONTACT_PER_MM = 10.0
+contact_need = CONTACT_PER_MM * max_z
 
 # ── 검증 게이트 ───────────────────────────────────────────────────────────
 gates = {
@@ -57,10 +148,29 @@ gates = {
                   f"Y {y0-BRIM_MM:.1f}~{y1+BRIM_MM:.1f} / 베드 {BED_X:.0f}x{BED_Y:.0f}"},
     "slicer_outside_flag_false": {
         "pass": meta("outside") == "false", "detail": f"slice_info outside={meta('outside')}"},
-    "no_support": {
-        "pass": meta("support_used") == "false",
-        "detail": "볼트 구멍 안 서포트 잔사가 체결 공차를 오염시키므로 서포트는 금지. "
-                  "형상을 베드에 평평히 눕혀 오버행 자체를 제거함 (구멍은 수직 관통)"},
+    # 🔴 2026-09-01 2차 실패로 교체. 이전 게이트는 `support_used == false` 만 봤다.
+    #    서포트를 꺼 두면 **항상 통과한다** — 그 형상이 서포트 없이 뽑을 수 있는지는
+    #    묻지 않았다. 그래서 오버행 4,892 mm² 를 서포트 0 으로 뽑아 전부 늘어뜨렸다.
+    #    이제 묻는 것은 "서포트를 안 썼나"가 아니라 **"늘어질 면이 받쳐졌나"** 다.
+    # 🔴 2026-09-01 재정정. 첫 판은 `support_used` 만 봤고 그래서 **통과했다** —
+    #    서포트는 z=7.40 mm 에서 끊겼는데 오버행은 57.5 mm 까지 있었다(29% 무방비).
+    #    `support_on_build_plate_only=1` 은 모델 위에서 자라지 않으므로 당연한 결과였다.
+    #    "서포트가 쓰였나"가 아니라 **"오버행 높이까지 덮나"** 를 묻는다.
+    "overhang_supported": {
+        "pass": (overhang_mm2 <= OVERHANG_FREE_MM2)
+                or (unsupported_mm2 <= OVERHANG_FREE_MM2),
+        "detail": (f"45° 초과 오버행 {overhang_mm2:.0f} mm². "
+                   f"서포트 도달 높이 {support_top_z:.2f} mm · 오버행 최고 {overhang_top_z:.1f} mm "
+                   f"→ 무방비 {unsupported_mm2:.0f} mm² (허용 {OVERHANG_FREE_MM2:.0f}). "
+                   f"1차 실패판 4892 mm² 무방비 / g7 판 243 mm² 무방비"),
+        "blind_spot": ("높이로만 판정한다. 서포트가 그 높이에서 **평면상 그 자리에** "
+                       "있는지는 안 본다. 그리고 임계 300 mm² 는 아직 성공 사례가 "
+                       "없는 잠정값이다 — g7 실물(243 mm² 무방비)이 첫 교정 데이터다")},
+    "support_stays_off_model": {
+        "pass": (not support_used) or on_plate_only,
+        "detail": (f"support_on_build_plate_only={_used.get('support_on_build_plate_only')!r}. "
+                   f"모델 위에서 자라면 볼트 구멍·기어 사이에 잔사가 남아 "
+                   f"체결 공차를 오염시킨다 — no_support 금지의 **원래 이유**가 그것이었다")},
     "gcode_has_toolpath": {
         "pass": "G1" in gcode and len(gcode) > 10000, "detail": f"gcode {len(gcode)} B"},
     # 🔴 2026-09-01 정정. 이전 판은 `beds == [55]` 로 **55 를 유일 정답으로 못 박고** 있었다.
@@ -76,12 +186,38 @@ gates = {
                    f"모서리가 들리므로 **60°C 이상** 필요. 20 mm 이하 납작한 부품만 55°C 허용"),
         "lesson": "쿠폰 설정을 세로로 긴 부품에 재사용하지 말 것 (09-01 스파게티 실패)"},
     "brim_enabled": {
-        "pass": brim_type not in (None, "no_brim", "none"),
-        "detail": (f"brim_type={brim_type!r}, brim_width={brim_width}. "
-                   f"🔴 실패판은 brim_type=None 이라 brim_width=5 가 무의미했다. "
-                   f"이전 게이트는 '브림 폭 포함 베드 안'만 보고 **브림이 켜져 있는지는 안 봤다**")},
+        "pass": brim_type not in (None, "no_brim", "none") and brim_width > 0,
+        "detail": (f"슬라이스에 실제 적용된 값: brim_type={brim_type!r} brim_width={brim_width} "
+                   f"(프로필이 넣으려던 값 {brim_intended!r}). "
+                   f"🔴 두 번 뚫렸다 — 1차는 brim_type=None 인데 width=5(타입이 꺼져 폭이 무의미), "
+                   f"2차는 type=outer_only 인데 width=0(폭이 0). **둘 다 봐야 한다.**"),
+        "blind_spot": "설정값만 본다. 툴패스 존재는 brim_in_gcode 가 본다"},
+    # 🔴 설정이 맞아도 슬라이서가 브림을 안 뽑을 수 있다. 결과를 직접 센다.
+    "brim_in_gcode": {
+        "pass": brim_moves > 0,
+        "detail": f"gcode 안 '; FEATURE: Brim' 구간 {brim_moves}개. "
+                  f"2차 실패판은 brim_type=outer_only 인데 이 값이 **0** 이었다 — "
+                  f"설정 게이트는 통과시켰고 부품은 전량 떨어졌다.",
+        "blind_spot": "존재만 본다. 브림이 충분히 넓은지는 first_layer_contact_area 가 본다"},
+    # 🔴 이번 실패를 유일하게 예측할 수 있었던 수치. 설정이 아니라 1층 툴패스를 적분한다.
+    "first_layer_contact_area": {
+        "pass": contact_mm2 >= contact_need,
+        "detail": (f"1층 접지 {contact_mm2:.0f} mm² (압출 {first_layer_e:.1f} mm, 브림 포함) "
+                   f"vs 필요 {contact_need:.0f} mm² = {CONTACT_PER_MM:.0f} × 높이 {max_z:.1f} mm. "
+                   f"실패판은 {138} mm² / 52.9 mm = 2.6 mm²/mm 였다"),
+        "blind_spot": ("임계 10 mm²/mm 는 **실패 1건에서만** 잡은 잠정값이고 성공 사례가 "
+                       "아직 없다. 접지가 넓어도 베드 오염·Z 오프셋·필라멘트 습기는 못 본다")},
     # 출력 온도는 gcode의 **최고** 노즐 온도다. S75(오징 방지)·S140(베드 레벨링 중 노즐 닦기)은
     # Bambu 시작 루틴의 과도값이며 gcode 주석이 그렇게 명시한다 — 출력 온도로 세면 안 된다.
+    # 🔴 2026-09-01 2차 실패. 접지만 최대화한 배향이 기어축을 90° 눕혀 이빨을 층으로
+    #    쌓았다. 형상도 강도도 무너진다(층간 접착 방향으로 부러짐). 힌지축에는 기어·
+    #    피벗보스·핀·로드아이·셸크랭크허브가 전부 동축이라, 이 축 하나로 다 걸린다.
+    "functional_axis_vertical": {
+        "pass": (func_tilt != func_tilt) or func_tilt <= FUNC_TILT_MAX,   # NaN = 해당없음
+        "detail": (f"힌지축 기울기 {func_tilt:.1f}° (허용 {FUNC_TILT_MAX:.0f}°). "
+                   f"0° = 이빨이 면내로 찍히고 모든 보어가 진원. "
+                   f"2차 실패판은 90° 였다 — 접지만 보고 골라서 그렇게 됐다"),
+        "blind_spot": "축 방향만 본다. 이빨 모듈·백래시가 실물에서 맞물리는지는 조립해야 안다"},
     "nozzle_print_temp_in_range": {
         "pass": bool(nozz and 200 <= max(nozz) <= 240),
         "detail": f"출력 온도 = max {max(nozz) if nozz else '-'}°C (필라멘트 허용 200~240). "

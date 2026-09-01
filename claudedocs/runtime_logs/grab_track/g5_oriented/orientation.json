@@ -1,0 +1,94 @@
+{
+  "rule": {
+    "tol_mm": 0.3,
+    "nz_down": -0.7,
+    "area_keep": 0.8,
+    "height_win": 0.8
+  },
+  "parts": [
+    {
+      "stl": "shell_L_ALL.stl",
+      "before": {
+        "area": 9.2,
+        "height": 28.0
+      },
+      "after": {
+        "area": 467.0,
+        "height": 28.1,
+        "normal_to_bed": [
+          0.0,
+          -0.128,
+          0.992
+        ]
+      },
+      "max_area_option": {
+        "area": 521.6,
+        "height": 59.0
+      },
+      "gain": 50.9
+    },
+    {
+      "stl": "shell_R_ALL.stl",
+      "before": {
+        "area": 9.2,
+        "height": 28.0
+      },
+      "after": {
+        "area": 467.0,
+        "height": 28.1,
+        "normal_to_bed": [
+          0.0,
+          -0.128,
+          -0.992
+        ]
+      },
+      "max_area_option": {
+        "area": 521.6,
+        "height": 59.0
+      },
+      "gain": 50.9
+    },
+    {
+      "stl": "bracket_ALL.stl",
+      "before": {
+        "area": 157.3,
+        "height": 32.0
+      },
+      "after": {
+        "area": 285.3,
+        "height": 32.0,
+        "normal_to_bed": [
+          -0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "max_area_option": {
+        "area": 285.3,
+        "height": 32.0
+      },
+      "gain": 1.8
+    },
+    {
+      "stl": "linkage_ALL.stl",
+      "before": {
+        "area": 13.8,
+        "height": 52.5
+      },
+      "after": {
+        "area": 161.7,
+        "height": 60.3,
+        "normal_to_bed": [
+          -0.825,
+          -0.566,
+          -0.0
+        ]
+      },
+      "max_area_option": {
+        "area": 168.8,
+        "height": 60.4
+      },
+      "gain": 11.7
+    }
+  ]
+}
