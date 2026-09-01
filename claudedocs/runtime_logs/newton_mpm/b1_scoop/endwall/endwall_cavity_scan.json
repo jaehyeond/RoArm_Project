@@ -1,0 +1,85 @@
+{
+ "artifact": "GRAB_V1_ENDWALL_VARIANT_CAVITY",
+ "method": "셸 X–Z 투영 볼록껍질을 y 로 wall_mm 밀어낸 끝벽을 붙이고, 삼각형당 435점 0.5mm 격자 래스터화 + 바깥 flood fill 로 밀폐 공동을 센다",
+ "design_claim_inner_volume_cm3": 70.34,
+ "design_claim_is": "단면 1407mm^2 x 폭 50mm 각기둥 추정",
+ "rows": [
+  {
+   "variant": "none",
+   "shell_angle_deg": 0.0,
+   "cavity_cm3": 0.363,
+   "cavity_z_lo_mm": 27.0,
+   "cavity_z_hi_mm": 32.0,
+   "endwall_mm": 2.0
+  },
+  {
+   "variant": "none",
+   "shell_angle_deg": 22.25,
+   "cavity_cm3": 0.34925000000000006,
+   "cavity_z_lo_mm": 27.0,
+   "cavity_z_hi_mm": 32.0,
+   "endwall_mm": 2.0
+  },
+  {
+   "variant": "none",
+   "shell_angle_deg": 44.5,
+   "cavity_cm3": 0.339625,
+   "cavity_z_lo_mm": 27.0,
+   "cavity_z_hi_mm": 32.0,
+   "endwall_mm": 2.0
+  },
+  {
+   "variant": "floor",
+   "shell_angle_deg": 0.0,
+   "cavity_cm3": 0.363,
+   "cavity_z_lo_mm": 27.000000000000004,
+   "cavity_z_hi_mm": 32.0,
+   "endwall_mm": 2.0
+  },
+  {
+   "variant": "floor",
+   "shell_angle_deg": 22.25,
+   "cavity_cm3": 0.35600000000000004,
+   "cavity_z_lo_mm": -28.0,
+   "cavity_z_hi_mm": 32.0,
+   "endwall_mm": 2.0
+  },
+  {
+   "variant": "floor",
+   "shell_angle_deg": 44.5,
+   "cavity_cm3": 0.34637500000000004,
+   "cavity_z_lo_mm": -28.0,
+   "cavity_z_hi_mm": 32.0,
+   "endwall_mm": 2.0
+  },
+  {
+   "variant": "both",
+   "shell_angle_deg": 0.0,
+   "cavity_cm3": 0.363,
+   "cavity_z_lo_mm": 27.000000000000004,
+   "cavity_z_hi_mm": 32.0,
+   "endwall_mm": 2.0
+  },
+  {
+   "variant": "both",
+   "shell_angle_deg": 22.25,
+   "cavity_cm3": 0.36612500000000003,
+   "cavity_z_lo_mm": -28.0,
+   "cavity_z_hi_mm": 34.0,
+   "endwall_mm": 2.0
+  },
+  {
+   "variant": "both",
+   "shell_angle_deg": 44.5,
+   "cavity_cm3": 0.3565,
+   "cavity_z_lo_mm": -28.0,
+   "cavity_z_hi_mm": 34.0,
+   "endwall_mm": 2.0
+  }
+ ],
+ "non_claims": [
+  "타당성 시험용 변형본이지 승인된 설계가 아니다. 채택 판단은 그랩 트랙 몫.",
+  "+y 끝벽은 bracket(y 0~46.7)·drive(y 2~37)와 간섭할 수 있다. 여기서는 간섭을 보지 않았다.",
+  "0.5mm flood fill 은 미세 틈에서 공동을 과소평가할 수 있다(과대는 아님)."
+ ]
+}
