@@ -34,7 +34,7 @@ D446 준수: 보울·기어·판 전부 **볼록 조각으로 분해**한다. 1-
 
 사용:  python scoop_grab_v1_design.py [출력디렉터리]
 """
-import sys, json, math
+import os, sys, json, math
 from pathlib import Path
 import numpy as np
 import trimesh
@@ -157,6 +157,17 @@ def arc_segment(cx, cy, r_in, r_out, a0, a1, width):
 
     축 규약(D461 §3): 호는 회전 평면 X-Y 에, 너비는 힌지축 Z 를 따라.
     """
+    # 🔴 2026-09-01. 이 함수는 **끝각 두 개만 샘플링하는 쐐기**다. 호를 따라가지 않는다.
+    #    sweep 이 크면 호가 아니라 **현을 가로지르는 판**이 되고, 그래도 볼록이라
+    #    all_pieces_convex 는 통과한다. 오늘 두 번 물렸다:
+    #      D464  a0=0,a1=2pi -> 부피 0 조각 8개 (실체화 시 +18.43 g)
+    #      오늘   측판 160도 1회 호출 -> 옆면 개구 875 mm2 (펠릿 2.2배가 샌다)
+    #    호출 지점에서 터뜨린다. 큰 각은 반드시 seg_n 으로 나눠 부를 것.
+    _sweep = abs(a1 - a0)
+    if _sweep >= math.pi / 2:
+        raise ValueError(
+            f"arc_segment sweep={math.degrees(_sweep):.1f}deg >= 90deg — "
+            f"현으로 근사되어 호를 못 덮는다. seg_n 분할로 나눠 호출할 것.")
     pts = []
     for a in (a0, a1):
         c, s = math.cos(a), math.sin(a)
@@ -326,6 +337,17 @@ def gear_teeth(cx, cy, n_teeth, module, width, backlash=0.0, a_start=0.0, a_span
 # ─────────────────────────────────────────────────────────────────────────
 # 3. 기구학
 # ─────────────────────────────────────────────────────────────────────────
+# 🔴 감량 스윕용 오버라이드. **기본값은 위 P 그대로**이고 환경변수를 준 항목만 바뀐다.
+# 재현성: 모든 산출물의 design.json 이 실제 사용된 params 를 기록하므로
+# 무엇으로 돌렸는지는 아티팩트에서 확인된다 (오늘 sim_deme_scoop 기본값 사고의 처방).
+for _k in ("wall_mm", "side_plate_thk_mm", "gear_width_mm", "hub_wall_mm",
+           "shell_width_mm", "tool_mass_max_g"):
+    _v = os.environ.get("GRAB_" + _k.upper())
+    if _v is not None:
+        P[_k] = float(_v)
+        print(f"  [override] {_k} = {P[_k]}")
+
+
 def kin(P):
     """피벗/립/호 중심을 푼다. 좌표계: X=분리 방향, Y=깊이(-가 아래), Z=힌지축."""
     g, d = P["pivot_gap_mm"], P["lip_depth_mm"]
@@ -516,12 +538,23 @@ def build_shell(P, side):
         names.append(f"bowl_{i:02d}")
 
     # 측판: 보울 호를 덮는 부채꼴 판을 Z 양끝에
+    #
+    # 🔴 2026-09-01 정정 (실물 지적 + 기하 실측). 이전 판은 arc_segment 를 **한 번**만
+    #    불렀다. arc_segment 는 시작각·끝각 **두 점**만으로 볼록껍질을 만들므로
+    #    160도 스팬에서는 호가 아니라 **현을 가로지르는 삼각판**이 된다.
+    #    결과: 측판이 x -14.0 까지만 오고 보울(x -24.9)의 바깥 10.9 mm 가 뚫렸다.
+    #    -> 한쪽 옆면 개구 437 mm2, 양쪽 875 mm2. 펠릿 5 mm 의 2.2 배라 그대로 샌다.
+    #    D464 가 같은 함수의 같은 성질을 "부피 0"으로 잡았을 때 각 스팬은 안 봤다.
+    #    보울과 **같은 분할(seg_n)** 로 부채꼴을 펴서 만든다.
     st = P["side_plate_thk_mm"]
     for sgn, tag in ((+1, "a"), (-1, "b")):
         z = sgn * (w / 2 + st / 2)
-        sp = arc_segment(cx, cy, 0.0, r + wall, min(a1, a2), max(a1, a2), st)
-        sp.apply_translation((0, 0, z))
-        parts.append(sp); names.append(f"side_{tag}")
+        for i in range(n):
+            t0 = a1 + (a2 - a1) * i / n
+            t1 = a1 + (a2 - a1) * (i + 1) / n
+            sp = arc_segment(cx, cy, 0.0, r + wall, min(t0, t1), max(t0, t1), st)
+            sp.apply_translation((0, 0, z))
+            parts.append(sp); names.append(f"side_{tag}_{i:02d}")
 
     # 립: 닫힘 시 맞닿는 평탄 랜드
     lx, ly = k["lip_closed"]
@@ -538,8 +571,16 @@ def build_shell(P, side):
     #    보스가 고정 축(부시)이고 셸이 그 위를 도는 것이 맞으므로, 허브를 보스 바깥의
     #    **보어 랜드**로 옮긴다. 셸 크랭크 슬리브가 쓰는 반지름 규약과 같다.
     r_bore_in = P["pivot_boss_d_mm"] / 2.0 + P["pivot_bore_clear_mm"]
+    # 🔴 2026-09-01 정정. 이전 판은 허브가 z -w/2 ~ +w/2 에서 끝나고 기어는
+    #    z w/2+st ~ 에 있어, 그 사이 **측판 1.5 mm 두 장만** 힘을 전달했다.
+    #    단면이 최대 648 -> 104 mm2 (16%) 로 떨어지는 급소가 생겼고
+    #    실물이 **두 번 연속 그 자리에서 부러졌다**(베드 탈거 1회, 서포트 제거 1회).
+    #    허브는 피벗 축 둘레 = 토크의 자연 경로이므로 기어 바깥면까지 관통시킨다.
+    #    이러면 기어와 허브가 **동축으로 직결**되어 측판을 우회하지 않는다.
+    gw_ = P["gear_width_mm"]
+    hub_z_hi = w / 2.0 + st + gw_          # 기어 바깥면
     for j, hp in enumerate(ring(px, py, r_bore_in, r_bore_in + P["hub_wall_mm"],
-                                -w / 2.0, w / 2.0)):
+                                -w / 2.0 - st, hub_z_hi)):
         parts.append(hp); names.append(f"hub_{j:02d}")
     for j, gp in enumerate(gear_teeth(px, py, P["shell_gear_teeth"], P["gear_module_mm"],
                                       gw, P["gear_backlash_mm"])):

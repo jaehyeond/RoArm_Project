@@ -119,6 +119,52 @@ def _support_top_z(gc):
 
 
 support_top_z = _support_top_z(gcode)
+
+def _support_in_zone(gc, z_lo):
+    """z_lo 위(=기능면 높이)에 실제로 들어간 서포트 압출 점 수.
+
+    설정이 아니라 툴패스를 센다. 같은 설정이라도 배향에 따라 결과가 정반대다.
+    """
+    n, z, feat = 0, 0.0, ""
+    for l in gc.splitlines():
+        m = re.match(r"^; Z_HEIGHT: ([0-9.]+)", l)
+        if m:
+            z = float(m.group(1)); continue
+        m2 = re.match(r"^; FEATURE: (.+)$", l)
+        if m2:
+            feat = m2.group(1).strip(); continue
+        if feat.startswith("Support") and l.startswith("G1") and z > z_lo:
+            if re.search(r"\bE([0-9.]+)", l):
+                n += 1
+    return n
+
+
+# 🔴 2026-09-01 4차. 게이트를 8개 만들면서 **속도는 한 번도 안 봤다.**
+#    DK 원본은 Bambu 고속 프로필(내벽 400 mm/s · 가속 10,000 mm/s²)이고 큰 단순
+#    부품용이다. 작은 정밀 부품에서는 ① 실 무더기 ② 원형 피처가 다각형 ③ 층간
+#    접착 저하(최소 단면 104 mm² 급소가 손으로 부러졌다)로 전부 나타났다.
+#    설정이 아니라 **gcode 의 실제 압출 이송속도**를 읽는다.
+def _max_extrude_feed(gc):
+    """압출을 동반한 이동의 최대 이송속도 (mm/s). F 는 mm/min 이다."""
+    best, cur = 0.0, 0.0
+    for l in gc.splitlines():
+        if not l.startswith("G1"):
+            continue
+        mf = re.search(r"\bF([0-9.]+)", l)
+        if mf:
+            cur = float(mf.group(1))
+        me = re.search(r"\bE(-?[0-9.]+)", l)
+        if me and float(me.group(1)) > 0 and re.search(r"\b[XY]", l):
+            best = max(best, cur)
+    return best / 60.0
+
+
+max_feed_mm_s = _max_extrude_feed(gcode)
+FEED_MAX_MM_S = 130.0   # 잠정. 400 mm/s 판이 실패했고 90 mm/s 판이 첫 대조군이다
+
+# 기능면(기어) 높이 위에 서포트가 실제로 들어갔는지 — 설정이 아니라 툴패스로.
+# 같은 설정이라도 배향에 따라 정반대다: 기어가 바닥이면 1,122점, 꼭대기면 0점.
+support_in_gear_zone = _support_in_zone(gcode, support_top_z) if support_used else 0
 # 서포트가 못 미치는 높이에 남은 오버행 면적 — STL 에서 직접 잰다
 unsupported_mm2, overhang_top_z = overhang_mm2, float("nan")
 try:
@@ -130,7 +176,15 @@ try:
     _ov = _nrm[:, 2] < -math.cos(math.radians(45.0))
     if _ov.any():
         overhang_top_z = float(_cen[_ov][:, 2].max())
-        unsupported_mm2 = float(_area[_ov & (_cen[:, 2] > support_top_z)].sum())
+        # 🔴 2026-09-01 재정정 (3번째). 정상적으로 받쳐진 오버행은 **항상**
+        #    서포트 최고점보다 위에 있다 — 슬라이서가 support_top_z_distance 만큼
+        #    일부러 띄워 놓기 때문이다(떼기 쉽게). 그 간격을 허용하지 않으면
+        #    **서포트가 잘 붙을수록 FAIL 을 내는** 게이트가 된다.
+        #    실제로 g9 에서 오버행 53.0 · 서포트 52.8 = 정확히 0.2 mm 간격인데
+        #    522 mm2 를 무방비로 오판했다.
+        _zgap = float(_used.get("support_top_z_distance", 0.2) or 0.2)
+        unsupported_mm2 = float(
+            _area[_ov & (_cen[:, 2] > support_top_z + _zgap + 1e-6)].sum())
 except Exception:
     pass
 # 🔴 잠정 임계. 근거는 **실패 1건뿐**이고 성공 사례가 아직 없다 (09-01 기준).
@@ -166,9 +220,15 @@ gates = {
         "blind_spot": ("높이로만 판정한다. 서포트가 그 높이에서 **평면상 그 자리에** "
                        "있는지는 안 본다. 그리고 임계 300 mm² 는 아직 성공 사례가 "
                        "없는 잠정값이다 — g7 실물(243 mm² 무방비)이 첫 교정 데이터다")},
+    # 🔴 2026-09-01 정정 (사용자 승인). 이전 판은 `on_build_plate_only` **설정값**만
+    #    봤다. 그러나 오염 위험은 설정이 아니라 **서포트가 기능면 높이에 실제로
+    #    들어갔는가**로 정해진다. 기어가 바닥이던 배향에서는 z<6 mm 에 1,122점이
+    #    들어갔지만, 기어가 꼭대기인 g9 배향에서는 이빨 구간 **0점**이다.
+    #    -> 설정이 아니라 **결과**를 본다. 오늘 아홉 번 반복된 그 교훈이다.
     "support_stays_off_model": {
-        "pass": (not support_used) or on_plate_only,
-        "detail": (f"support_on_build_plate_only={_used.get('support_on_build_plate_only')!r}. "
+        "pass": (not support_used) or on_plate_only or (support_in_gear_zone == 0),
+        "detail": (f"support_on_build_plate_only={_used.get('support_on_build_plate_only')!r} · "
+                   f"기능면(기어) 구간 서포트 {support_in_gear_zone}점. "
                    f"모델 위에서 자라면 볼트 구멍·기어 사이에 잔사가 남아 "
                    f"체결 공차를 오염시킨다 — no_support 금지의 **원래 이유**가 그것이었다")},
     "gcode_has_toolpath": {
@@ -218,6 +278,16 @@ gates = {
                    f"0° = 이빨이 면내로 찍히고 모든 보어가 진원. "
                    f"2차 실패판은 90° 였다 — 접지만 보고 골라서 그렇게 됐다"),
         "blind_spot": "축 방향만 본다. 이빨 모듈·백래시가 실물에서 맞물리는지는 조립해야 안다"},
+    # 🔴 작은 정밀 부품(기어 이빨 모듈 1.0 · 보어 ⌀3 · 최소 단면 104 mm²)에 고속
+    #    프로필을 쓰면 실·다각형·층간 약화가 한꺼번에 온다. 실물 3판에서 전부 났다.
+    "speed_for_precision": {
+        "pass": max_feed_mm_s <= FEED_MAX_MM_S,
+        "detail": (f"gcode 최대 압출 이송 {max_feed_mm_s:.0f} mm/s (허용 {FEED_MAX_MM_S:.0f}). "
+                   f"DK 원본 고속 프로필은 내벽 400 · 가속 10,000 이라 "
+                   f"실 무더기 · 원형 피처 다각형 · 층간 접착 저하를 동시에 낸다"),
+        "blind_spot": ("최고 속도만 본다. 가속도·저크·리트랙션은 안 본다 — "
+                       "실 무더기의 직접 원인은 리트랙션 설정일 수도 있다. "
+                       "그리고 130 mm/s 임계는 아직 성공 사례가 없는 잠정값이다")},
     "nozzle_print_temp_in_range": {
         "pass": bool(nozz and 200 <= max(nozz) <= 240),
         "detail": f"출력 온도 = max {max(nozz) if nozz else '-'}°C (필라멘트 허용 200~240). "
