@@ -1,0 +1,124 @@
+{
+  "artifact": "DEME_SCOOP_FORCE_STATS_V1",
+  "runs": [
+    "rep1",
+    "rep2",
+    "rep3"
+  ],
+  "n": 3,
+  "config_verified_identical": true,
+  "params": {
+    "pivot_gap_mm": 26.0,
+    "shell_travel_deg": 44.5,
+    "lip_depth_mm": 36.06,
+    "lip_pivot_radius_mm": 38.332,
+    "shell_mass_kg": 0.0263,
+    "approach_gap_mm": 10.0,
+    "insert_depth_mm": 8.0,
+    "close_end_deg": 6.0,
+    "descend_steps": 70,
+    "close_steps": 100,
+    "lift_steps": 100,
+    "lift_height_mm": 40.0,
+    "settle_steps": 5,
+    "dt_sync_s": 0.004,
+    "timestep_s": 1e-05,
+    "E_pa": 5000000.0,
+    "nu": 0.3,
+    "CoR": 0.3,
+    "mu": 0.5,
+    "Crr": 0.05,
+    "particle_density_kg_m3": 950.0,
+    "error_out_vel": 20.0,
+    "cd_update_freq": 20,
+    "domain_top_m": 0.2,
+    "jaw_force_band_N": [
+      1.8,
+      6.3
+    ],
+    "seed": 460
+  },
+  "pile_sha256": "662b308cc4f4ba92b24f57bf0e5c855131a9aaca9712782969cac4a0287430f7",
+  "shells": {
+    "L_sha256": "4d4302c58f444d23f4a7ada9d939ad770074402b50d2a4935ea1c495b8911242",
+    "R_sha256": "f4dadbd3b47a7bf40c863f6fbbf10a2a5cce62c5c13d73fc46436b99f64d189b",
+    "owner_ids": {
+      "-1": 18797,
+      "1": 18798
+    }
+  },
+  "close_peak_total": {
+    "n": 3,
+    "mean": 3.259,
+    "sd": 0.902,
+    "sem": 0.5208,
+    "min": 2.708,
+    "max": 4.3,
+    "cv": 0.2768,
+    "values": [
+      4.3,
+      2.708,
+      2.769
+    ]
+  },
+  "close_peak_lip_equiv": {
+    "n": 3,
+    "mean": 3.171,
+    "sd": 0.8152,
+    "sem": 0.4706,
+    "min": 2.645,
+    "max": 4.11,
+    "cv": 0.2571,
+    "values": [
+      4.11,
+      2.645,
+      2.758
+    ]
+  },
+  "close_peak_single_contact": {
+    "n": 3,
+    "mean": 0.4473,
+    "sd": 0.0984,
+    "sem": 0.0568,
+    "min": 0.389,
+    "max": 0.561,
+    "cv": 0.2201,
+    "values": [
+      0.561,
+      0.392,
+      0.389
+    ]
+  },
+  "captured_particles": {
+    "n": 3,
+    "mean": 185.3333,
+    "sd": 15.308,
+    "sem": 8.838,
+    "min": 168.0,
+    "max": 197.0,
+    "cv": 0.0826,
+    "values": [
+      191.0,
+      197.0,
+      168.0
+    ]
+  },
+  "captured_mass_g": {
+    "n": 3,
+    "mean": 6.637,
+    "sd": 0.5484,
+    "sem": 0.3166,
+    "min": 6.016,
+    "max": 7.055,
+    "cv": 0.0826,
+    "values": [
+      6.84,
+      7.055,
+      6.016
+    ]
+  },
+  "non_claims": [
+    "물성이 전부 임시값이므로 평균을 내도 **폴리프로필렌의 폐합력이 아니다.** 평균이 고치는 것은 '1 회 값을 대표값으로 쓰는 오류'뿐이고, 물성 미실측은 그대로다.",
+    "이 통계에는 **산출물을 남긴 실행만** 들어간다. 발산해서 죽은 시도는 `scoop_rep_attempts.jsonl` 에 별도로 센다 — 생존자만 평균 내면 편향된다."
+  ]
+}

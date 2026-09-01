@@ -188,7 +188,79 @@ def full_closure_stall():
     return out
 
 
-def markdown(tags, rep):
+def agg(vals):
+    n = len(vals)
+    m = sum(vals) / n
+    sd = math.sqrt(sum((v - m) ** 2 for v in vals) / (n - 1)) if n > 1 else 0.0
+    return {"n": n, "mean": round(m, 4), "sd": round(sd, 4),
+            "sem": round(sd / math.sqrt(n), 4),
+            "min": round(min(vals), 4), "max": round(max(vals), 4),
+            "cv": round(sd / m, 4) if m else None,
+            "values": [round(v, 4) for v in vals]}
+
+
+def force_stats(tags):
+    """N 회 반복의 반력 통계.
+
+    repro() 가 낸 결론("1 회 실행의 반력 수치를 단독 인용하면 안 되고 반복 평균이
+    필요하다")에 대한 답이다. 반복 수를 늘려도 DEME 비결정성 자체는 사라지지 않는다 —
+    사라지는 것은 1 회 값을 대표값으로 착각하는 것뿐이다.
+    """
+    runs = [json.load(open(OUT / f"scoop_closure_{t}.json")) for t in tags]
+
+    # 🔴 설정이 다른 실행을 평균 내면 안 된다. 2026-09-01 에 이걸로 당했다:
+    # 스크립트 하드코딩 기본값(close_end_deg=0 · insert_depth_mm=18)이 rep1/rep2 를
+    # 만든 값(6 · 8)과 달랐는데, 아티팩트는 params 를 성실히 기록하고도 **대조하는
+    # 절차가 없어서** 재실행이 다른 실험이 된 것을 아무도 못 잡았다.
+    # 기록만 하고 검증하지 않는 필드는 없는 것과 같다.
+    def cfg_key(r):
+        return json.dumps({"params": r["params"],
+                           "pile": r["pile"]["sha256"],
+                           "shells": r["shells"]}, sort_keys=True)
+    groups = {}
+    for t, r in zip(tags, runs):
+        groups.setdefault(cfg_key(r), []).append(t)
+    if len(groups) > 1:
+        base = json.loads(next(iter(groups)))["params"]
+        diff = sorted({k for g in groups for k in json.loads(g)["params"]
+                       if json.loads(g)["params"][k] != base.get(k)})
+        raise SystemExit(
+            f"설정이 다른 실행이 섞여 있다 — 평균 낼 수 없다.\n"
+            f"  묶음: {list(groups.values())}\n"
+            f"  다른 파라미터: {diff}\n"
+            f"  같은 설정끼리만 골라서 다시 부를 것.")
+
+    st = {"artifact": "DEME_SCOOP_FORCE_STATS_V1", "runs": tags, "n": len(tags),
+          "config_verified_identical": True,
+          "params": runs[0]["params"],
+          "pile_sha256": runs[0]["pile"]["sha256"],
+          "shells": runs[0]["shells"]}
+    for k in ("close_peak_total", "close_peak_lip_equiv", "close_peak_single_contact"):
+        st[k] = agg([r["forces_N"][k] for r in runs])
+    st["captured_particles"] = agg([float(r["captured_particles"]) for r in runs])
+    st["captured_mass_g"] = agg([r["captured_mass_g"] for r in runs])
+    st["non_claims"] = [
+        "물성이 전부 임시값이므로 평균을 내도 **폴리프로필렌의 폐합력이 아니다.** "
+        "평균이 고치는 것은 '1 회 값을 대표값으로 쓰는 오류'뿐이고, 물성 미실측은 그대로다.",
+        "이 통계에는 **산출물을 남긴 실행만** 들어간다. 발산해서 죽은 시도는 "
+        "`scoop_rep_attempts.jsonl` 에 별도로 센다 — 생존자만 평균 내면 편향된다.",
+    ]
+    led = OUT / "scoop_rep_attempts.jsonl"
+    if led.exists():
+        rows = [json.loads(x) for x in led.read_text().splitlines() if x.strip()]
+        div = sum(1 for r in rows if r.get("diverged"))
+        st["attempts"] = {
+            "total": len(rows), "diverged": div,
+            "shared_gpu_at_end": sum(1 for r in rows if r.get("other_deme_at_end")),
+            "note": ("발산은 설정 오류가 아니라 같은 설정의 실행별 편차다. "
+                     "빈도를 적어 두지 않으면 통계가 생존자 편향이 된다."),
+        }
+    json.dump(st, open(OUT / "scoop_force_stats.json", "w"),
+              ensure_ascii=False, indent=2)
+    return st
+
+
+def markdown(tags, rep, stats=None):
     """사람이 읽는 요약. 수치는 전부 JSON 에서 읽어온다 (손으로 옮겨 적지 않는다)."""
     L = ["# DEME 스쿱 폐합 — 트랙 P1 결과", "",
          "> ⚠️ **물성 미실측.** 아래 반력은 어떤 판정에도 인용할 수 없다.",
@@ -224,6 +296,26 @@ def markdown(tags, rep):
           "⚠️ 위쪽 값은 다른 워커의 DEME 잡과 GPU 를 나눠 쓴 실행이다. GPU 를 독점하면 "
           f"**{min(hrs)} 시간** 쪽이 맞다. 같은 GPU 에 DEME 프로세스가 둘 뜨면 서로 "
           "교착해 둘 다 멈추므로(본 세션 실측) 병렬화는 GPU 를 나눠야 가능하다.", ""]
+    if stats:
+        L += ["## 반복 평균 (1 회 값 단독 인용 금지에 대한 답)", "",
+              f"n = **{stats['n']}** ({', '.join(stats['runs'])})", "",
+              "| 양 | 평균 | 표준편차 | 표준오차 | 최소 | 최대 | 변동계수 |",
+              "|---|---|---|---|---|---|---|"]
+        for k, label in (("close_peak_total", "폐합 합력 최대 (N)"),
+                         ("close_peak_lip_equiv", "폐합 립등가 최대 (N)"),
+                         ("close_peak_single_contact", "단일접촉 최대 (N)"),
+                         ("captured_particles", "담긴 입자 수"),
+                         ("captured_mass_g", "담긴 질량 (g)")):
+            s = stats[k]
+            L.append(f"| {label} | **{s['mean']}** | {s['sd']} | {s['sem']} "
+                     f"| {s['min']} | {s['max']} | {s['cv']} |")
+        at = stats.get("attempts")
+        if at:
+            L += ["", f"시도 {at['total']} 회 중 **발산 {at['diverged']} 회** "
+                  f"(실행 중 다른 DEME 잡과 GPU 공유 {at['shared_gpu_at_end']} 회).",
+                  "발산한 시도는 산출물을 남기지 않으므로 위 표에 **없다.** "
+                  "빈도를 따로 적는 이유가 이것이다 — 생존자만 평균 내면 편향된다.", ""]
+        L += [""] + [f"- {s}" for s in stats["non_claims"]] + [""]
     if rep:
         def tbl(block, title):
             m, th, ck = block["metrics"], block["thresholds"], block["checks"]
@@ -324,7 +416,15 @@ def main():
         print(f"  p95 {rep['metrics']['p95_abs_m']*1000:.3f} mm (<= {rep['thresholds']['p95_abs_m']*1000:.2f})")
         print(f"  max {rep['metrics']['max_abs_m']*1000:.3f} mm (<= {rep['thresholds']['max_abs_m']*1000:.2f})")
         print(f"  bit-exact {rep['raw_final_bit_exact']} ({rep['raw_final_bit_exact_verdict']})")
-    markdown(tags, rep)
+    stats = force_stats(tags) if len(tags) >= 2 else None
+    if stats:
+        f = stats["close_peak_lip_equiv"]
+        print(f"\n반복 평균 n={stats['n']}  립등가 최대 {f['mean']} ± {f['sd']} N "
+              f"(범위 {f['min']}~{f['max']} · 변동계수 {f['cv']})")
+        if "attempts" in stats:
+            print(f"  시도 {stats['attempts']['total']} · "
+                  f"발산 {stats['attempts']['diverged']}")
+    markdown(tags, rep, stats)
 
 
 if __name__ == "__main__":
