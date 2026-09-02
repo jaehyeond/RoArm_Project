@@ -97,6 +97,25 @@ P = {
     "pivot_bore_clear_mm": 0.6,   # 보스 OD <-> 회전체 보어 틈 (FDM 러닝핏. 0.25 는
                                   # 인쇄 공차로 뻑뻑하고 게이트 0.5 mm 하한도 못 넘는다
                                   # — 09-02 실제로 돌려 보니 그대로였다, D472 ⑦)
+
+    # ── 요크 프레임 (Phase 1, D473 — 방식 A 양단지지, 사용자 결정) ────────────
+    #    D472 ③: 59 mm 보스가 스파인에 4 mm 만 붙은 외팔보 + 축방향 이탈 무제.
+    #    §2 판단: 기어 이끝 겹침 2.0 mm 뿐이고 1.20 mm 흔들림이 이미 맞물림을 깼으므로
+    #    (D472 ⑦), 두 셸의 역회전이 외팔보 휨으로 기어 중심거리 26.0 을 흔들면 안 된다.
+    #    → 상판(기어 위) + 하판(크랭크 아래) 으로 보스를 양단지지하고 셸 축이탈을 캡한다.
+    #    🔴 기어 디스크 반경 14 가 피벗 둘레를 막는다: 백 지지는 y>=post_y0(기어 밖)에 두고
+    #       상·하판이 앞으로 뻗어 피벗을 덮는다(판은 Z 로 기어를 비켜간다). 링크는 셸 L 만
+    #       구동하므로(좌측만 혼잡) 백포스트는 중앙 x≈0 에 세워 좌우 기어·좌측 링크를 동시에 피한다.
+    "yoke_plate_thk_mm":  1.6,        # 상·하판 두께 (셸 벽 1.6 과 동일 8겹 — 축방향 유지엔 충분, 자중 65 맞춤)
+    "yoke_gap_mm":        0.8,        # 판 <-> 기어/크랭크 축방향 여유 (0.5 는 스윕 게이트 0.5 하한에 딱 걸려 노이즈로 FAIL)
+    "yoke_pad_r_mm":      4.5,        # 피벗 둘레 좌면 반경 (M3 머리 5.5 = 반경 2.75 앉음, 여유 충분)
+    "yoke_head_clear_d_mm": 3.4,      # 판의 M3 관통 (머리 좌면, ISO 273 normal)
+    "yoke_post_hx_mm":    1.75,       # 중앙 백포스트 반폭(X). 기어 반경 14 밖 유지 위해 좁힘
+    "yoke_post_cx_mm":   -1.0,        # 백포스트 중심 X 오프셋. 0 이면 +x 모서리가 link5 블레이드에
+                                      # 0.263 mm 로 붙는다(p37 G6). -1.0 이면 블레이드서 멀어져 여유 확보,
+                                      # 기어 여유는 gear L (-2.75,11)->hypot 15.0>14 로 유지(허용대역 cx∈(-2.59,2.59)).
+    "yoke_post_y_mm":    [11.0, 18.0],  # 백포스트 Y 구간 (앞 y11: hypot(13,11)=17>14 · 뒤 y18: 마운트판 y17.3 에 물림)
+    "yoke_axial_play_max_mm": 1.0,    # 상판이 셸 허브를 캡하는 최대 간격 (리테이너 게이트 ⑯ 한계)
     "hub_wall_mm":         1.5,   # 셸 보어 랜드 벽두께
     # 이 side 의 기어만 반치 돌려 거울 위상을 깬다. -1 = 셸 L (이미 뽑은 R 을 살린다)
     "gear_half_pitch_side": -1,
@@ -157,8 +176,11 @@ P = {
     "hardware_bom_src":   "UNCONFIRMED",
     "hardware_bom": [
         # name,                 qty, g_each,  note
-        ["M3x70_pivot_bolt",      2,   4.00, "피벗 축 관통 (보스 59 mm) — Phase 1 에서 재검토"],
-        ["M3_nut",                2,   0.40, "피벗 축 반대편"],
+        # 🔴 D473: 피벗 볼트 = 요크 상판~하판 관통(~70 mm). **알루미늄**(사용자 결정) —
+        #    강철 4.0 g -> 1.5 g, 2개로 -5.0 g. 피벗은 셸 15 g 이중전단이라 저하중,
+        #    알루미늄 전단강도로 과충분. 대가 = 조달(알루 M3x75 는 강철보다 덜 흔함).
+        ["M3x75_alu_pivot_bolt",  2,   1.50, "요크 양단지지 피벗 축 (상판 머리 + 하판 너트, ~70mm)"],
+        ["M3_nut",                2,   0.40, "피벗 축 하판 좌면 (나일론록 권장)"],
         ["M3_washer",             4,   0.10, "피벗 축 양단"],
         ["M2.5x10_mount_bolt",    4,   0.65, "브래킷 -> link5 4볼트 사각형 25.19x19.44"],
         ["M2.5_nut",              4,   0.25, "브래킷 체결 반대편"],
@@ -644,13 +666,51 @@ def build_bracket(P):
                                             [-dz / 2, +dz / 2], hd,
                                             center=(0, so, 0), hole_axis="x")):
         parts.append(pc); names.append(f"bolt_plate_{i}")
-    # 피벗 보스 2개 (셸이 도는 축)
+    # 피벗 보스 2개 (셸이 도는 중간 베어링)
     # 피벗 보스(환형): 이전에는 arc_segment(0, 2*pi) 한 조각이라 **부피 0** 이었다.
-    bw = P["shell_width_mm"] + 2 * P["side_plate_thk_mm"] + 6
+    # 🔴 D473: 보스는 원래 길이(z±29.5)를 유지한다 — **연장하지 않는다.**
+    #    양단지지는 M3 축을 요크 상·하판이 잡아서 준다(보스는 중간 베어링 = 3점 지지).
+    #    보스를 하판까지 늘리면 축 위에서 도는 shellcrank_hub(z[-31,-30])와 겹친다
+    #    (충돌 스윕이 -0.469 mm 로 잡았다). 그래서 안 늘린다.
+    bw = P["shell_width_mm"] + 2 * P["side_plate_thk_mm"] + 6                            # 59 -> z±29.5
+    z_hub_top = P["shell_width_mm"] / 2.0 + P["side_plate_thk_mm"] + P["gear_width_mm"]  # +32.5
+    z_crank_bot = P["crank_plane_z_mm"] - P["crank_thk_mm"] / 2.0                        # -31.0
+    gp, tp = P["yoke_gap_mm"], P["yoke_plate_thk_mm"]
+    z_top0 = z_hub_top + gp                      # 상판 아랫면 +33 (셸 허브 +32.5 를 0.5 여유로 캡)
+    z_top1 = z_top0 + tp                          # 상판 윗면 +36
+    z_bot1 = z_crank_bot - gp                     # 하판 윗면 -31.5 (크랭크 -31 아래 0.5)
+    z_bot0 = z_bot1 - tp                          # 하판 아랫면 -34.5
     for tag, (px, py) in (("L", k["pivot_L"]), ("R", k["pivot_R"])):
         for j, bp in enumerate(ring(px, py, P["pivot_shaft_d_mm"] / 2,
                                     P["pivot_boss_d_mm"] / 2, -bw / 2.0, bw / 2.0)):
             parts.append(bp); names.append(f"pivot_boss_{tag}_{j:02d}")
+
+    # 🔴 요크 상·하판 (D473): 각 판 = 피벗 좌면 링 2개(M3 관통) + 뒤로 잇는 바 + 백포스트로 가는 바.
+    #    판은 z 로 기어(z<=32.5)·크랭크(z>=-31)를 비켜가므로 XY 로는 피벗을 덮어도 충돌 안 함.
+    hd = P["yoke_head_clear_d_mm"]
+    pr = P["yoke_pad_r_mm"]
+    py0, py1 = P["yoke_post_y_mm"]
+    hx = P["yoke_post_hx_mm"]
+    xL, xR = k["pivot_L"][0], k["pivot_R"][0]
+    for face, (zp0, zp1) in (("top", (z_top0, z_top1)), ("bot", (z_bot0, z_bot1))):
+        # 피벗 좌면 링 (M3 관통 hd, 머리/너트 좌면 반경 pr)
+        for tag, (px, py) in (("L", k["pivot_L"]), ("R", k["pivot_R"])):
+            for j, pc in enumerate(ring(px, py, hd / 2.0, pr, zp0, zp1)):
+                parts.append(pc); names.append(f"yoke_{face}_pad_{tag}_{j:02d}")
+        # 두 좌면 뒤(+Y)를 잇는 가로바 — 피벗 구멍(y0)을 덮지 않도록 y[3, py0]
+        parts.append(box(xR - xL + 2 * pr, py0 - 3.0, zp1 - zp0,
+                         center=(0.0, (3.0 + py0) / 2.0, (zp0 + zp1) / 2.0)))
+        names.append(f"yoke_{face}_crossbar")
+        # 중앙 백포스트까지 잇는 바 (x 좁게 — 기어 밖). 포스트와 같은 x 오프셋.
+        parts.append(box(2 * hx, py1 - py0, zp1 - zp0,
+                         center=(P["yoke_post_cx_mm"], (py0 + py1) / 2.0, (zp0 + zp1) / 2.0)))
+        names.append(f"yoke_{face}_stub")
+    # 중앙 백포스트: 상·하판을 Z 로 잇는 기둥. x≈post_cx·y[11,18] 라 좌우 기어(반경14)·좌측 링크를
+    # 피하고, 뒤끝(y18)이 마운트판(y17.3~)에 물려 프레임이 한 몸이 된다.
+    # cx=-1.0 은 +x 모서리를 link5 블레이드에서 떼기 위함(p37 G6 0.263 -> 여유 확보).
+    parts.append(box(2 * hx, py1 - py0, z_top1 - z_bot0,
+                     center=(P["yoke_post_cx_mm"], (py0 + py1) / 2.0, (z_bot0 + z_top1) / 2.0)))
+    names.append("yoke_backpost")
     # 스파인: 볼트판(로컬 +Y=standoff)에서 피벗선(로컬 Y=0)까지 뻗는 연장 팔.
     # 🔴 D463 정정: **통짜 판이면 고정 조 블레이드와 순정 가동 조를 뚫고 지나간다.**
     #    p37 G6 이 -0.383 mm(블레이드), G9 가 -0.597 mm(순정 조)로 잡았다. 이전 판정에서는
@@ -1090,6 +1150,69 @@ def run_gates(P, shellL, shellR, bracket, link, lk, nmL, nmR, nmB, nmK):
         "closest_pair": who, "closest_at_servo_deg": at_deg,
         "why": ("로드·크랭크는 힌지축 방향으로 셸 바깥면(-26.5)보다 밖에 층을 이루지만 "
                 "브래킷 피벗 보스는 -29.5 까지 나오므로 실제로 스윕해서 재야 한다")}
+
+    # ── 요크 조립 게이트 ⑮~⑰ (D473 — Phase 1 방식 A 양단지지) ─────────────────
+    #    D466 ④: 게이트는 **결과**를 검사하고, **못 보는 것**을 같이 적는다.
+    z_hub_top = P["shell_width_mm"] / 2.0 + P["side_plate_thk_mm"] + P["gear_width_mm"]
+    z_crank_bot = P["crank_plane_z_mm"] - P["crank_thk_mm"] / 2.0
+
+    def _yoke_bounds(prefix):
+        bs = [m.bounds for m, n in zip(bracket, nmB) if n.startswith(prefix)]
+        if not bs:
+            return None
+        b = np.array(bs)
+        return b[:, 0, :].min(axis=0), b[:, 1, :].max(axis=0)
+
+    # ⑮ 축 양단지지: 각 피벗의 M3 축이 **셸 위 상판 + 크랭크 아래 하판** 양쪽에서 물리는가.
+    both_ok, both_det = True, {}
+    for tag, (px, py) in (("L", k["pivot_L"]), ("R", k["pivot_R"])):
+        top = _yoke_bounds(f"yoke_top_pad_{tag}")
+        bot = _yoke_bounds(f"yoke_bot_pad_{tag}")
+        top_ok = top is not None and top[0][2] >= z_hub_top - 1e-6      # 상판이 셸 허브 위
+        bot_ok = bot is not None and bot[1][2] <= z_crank_bot + 1e-6    # 하판이 크랭크 아래
+        onax = (top is not None and abs((top[0][0] + top[1][0]) / 2 - px) < P["yoke_pad_r_mm"]
+                and bot is not None and abs((bot[0][0] + bot[1][0]) / 2 - px) < P["yoke_pad_r_mm"])
+        ok = bool(top_ok and bot_ok and onax)
+        both_ok = both_ok and ok
+        both_det[tag] = {"top_above_hub": bool(top_ok), "bot_below_crank": bool(bot_ok),
+                         "on_axis": bool(onax),
+                         "top_z0": round(float(top[0][2]), 2) if top is not None else None,
+                         "bot_z1": round(float(bot[1][2]), 2) if bot is not None else None}
+    g["pivot_shaft_supported_both_ends"] = {
+        "pass": bool(both_ok), "per_pivot": both_det,
+        "z_hub_top_mm": z_hub_top, "z_crank_bot_mm": z_crank_bot,
+        "why": ("옛 보스는 스파인에 4 mm 만 붙은 59 mm 외팔보였다(D472 ③). 이제 M3 축을 셸 위 "
+                "상판 + 크랭크 아래 하판이 잡아 양단지지(+보스 중간 = 3점). 기어 이끝 겹침이 2.0 mm "
+                "뿐이라 외팔보 휨이 중심거리 26.0 을 흔들면 맞물림이 깨진다(D472 ⑦)"),
+        "blind_spot": ("판의 **존재와 z 브래킷팅**만 본다 — 볼트 예압·프레임 강성·M3 길이 정합은 "
+                       "안 본다. 판이 있어도 헐거우면 여전히 흔들린다(실물 백래시 측정 대상, Phase 4)")}
+
+    # ⑯ 축방향 리테이너: 셸 허브 상단이 상판에 작은 간격으로 캡되어 축으로 못 빠지는가.
+    top_all = _yoke_bounds("yoke_top_pad")
+    cap_gap = float(top_all[0][2] - z_hub_top) if top_all is not None else 1e9
+    retain_ok = top_all is not None and 0.0 <= cap_gap <= P["yoke_axial_play_max_mm"]
+    g["axial_retainer_present"] = {
+        "pass": bool(retain_ok), "cap_gap_mm": round(cap_gap, 3),
+        "play_limit_mm": P["yoke_axial_play_max_mm"], "shell_hub_top_z_mm": z_hub_top,
+        "top_plate_bottom_z_mm": round(float(top_all[0][2]), 2) if top_all is not None else None,
+        "why": ("옛 설계는 셸 허브가 보스보다 3 mm 위로 튀어나와 축으로 빠졌다(D472 ③·B). "
+                "상판이 허브 상단을 작은 간격으로 캡한다. 하단은 shellcrank 스러스트가 이미 잡는다"),
+        "blind_spot": ("기하 간격만 본다 — 마찰·예압은 안 본다. 헐거운 끼워맞춤도 '캡'은 되지만 "
+                       "간격만큼 축 유격이 남는다(실물 측정 대상, Phase 4)")}
+
+    # ⑰ 체결 좌면: 각 피벗에 M3 머리/너트 좌면(관통 보어 + 머리 앉을 환형)이 있는가.
+    _hd = P["yoke_head_clear_d_mm"]; _pr = P["yoke_pad_r_mm"]; _head_r = 2.75  # M3 머리 5.5 across
+    seat_ok = (_hd / 2.0 >= P["pivot_shaft_d_mm"] / 2.0        # 보어가 M3 축 통과
+               and _pr >= _head_r + 0.5)                       # 환형이 머리를 받침
+    mount_ok = _yoke_bounds("bolt_plate") is not None          # 마운트 M2.5 좌면(기존)
+    g["fastener_seat_present"] = {
+        "pass": bool(seat_ok and mount_ok),
+        "pivot_bore_d_mm": _hd, "pivot_seat_outer_r_mm": _pr, "m3_head_r_mm": _head_r,
+        "mount_plate_present": bool(mount_ok),
+        "why": ("옛 보스는 나사산·너트자리·머리자리 0 개의 매끈한 관통 구멍이었다(D472 ③). "
+                "요크 좌면 링이 M3 관통(3.4) + 머리/너트 앉을 환형(r4.5)을 준다. 마운트는 기존 M2.5 4볼트"),
+        "blind_spot": ("좌면 **기하**만 본다 — 나사산은 없다(너트 의존). 머리/너트가 이웃 부품과 "
+                       "간섭하는지, 렌치 접근이 되는지, **팔과의 여유**는 여기서 안 본다(그건 p37 G6)")}
 
     # 수치 ⑥~⑨
     vol_mm3 = sum(p.volume for p in allp)
