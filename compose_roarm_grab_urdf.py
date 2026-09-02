@@ -34,9 +34,14 @@ def main():
     att = meta["link5_attach_fixed_joint"]
     xyz = att["origin_xyz_m"]; rpy = att["origin_rpy_rad"]
 
-    # 1) 그랩 메시 복사
+    # 1) 그랩 메시 복사 (visual _ALL 3개 + collision 조각 전량)
     for dst, src in SRC_MESH.items():
         shutil.copy(src, ROBOT_DIR / dst)
+    col_src = GRAB_DIR / "meshes/collision"
+    col_dst = ROBOT_MESH / "collision"
+    if col_dst.exists():
+        shutil.rmtree(col_dst)
+    shutil.copytree(col_src, col_dst)      # meshes/collision/<piece>.stl 경로 그대로 유지
 
     # 2) grab_v1.urdf 에서 링크/조인트 추출 + 메시명 재작성
     groot = ET.parse(GRAB_DIR / "grab_v1.urdf").getroot()

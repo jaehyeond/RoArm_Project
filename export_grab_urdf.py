@@ -94,6 +94,19 @@ def main():
         shutil.copy(SRC / fn, MESH_OUT / fn)
         shas[fn] = sha16(SRC / fn)
 
+    # 2b) collision = **볼록 조각별 STL** 복사 (정밀 collision). 접두사로 링크 매핑:
+    #     bracket_* -> grab_base · shell_L_* -> grab_shell_L · shell_R_* -> grab_shell_R.
+    #     _ALL 은 제외(그건 visual 용 병합본). 각 조각은 all_pieces_convex 통과 = 볼록.
+    COL_OUT = MESH_OUT / "collision"
+    COL_OUT.mkdir(parents=True, exist_ok=True)
+    prefix = {"grab_base": "bracket_", "grab_shell_L": "shell_L_", "grab_shell_R": "shell_R_"}
+    col_pieces = {}
+    for link, pre in prefix.items():
+        files = sorted(p for p in SRC.glob(f"{pre}*.stl") if not p.name.endswith("_ALL.stl"))
+        col_pieces[link] = [p.name for p in files]
+        for p in files:
+            shutil.copy(p, COL_OUT / p.name)
+
     # 3) placement (grab-local -> link5) = 마운트 고정 조인트 origin
     src37 = open(REPO / "sim_scripts/p37_g2_grab_v1_attach_probe.py").read().split("def main()")[0]
     ns = {"__file__": str(REPO / "sim_scripts/p37_g2_grab_v1_attach_probe.py")}
@@ -112,17 +125,21 @@ def main():
                 f'iyy="{I[1,1]:.7E}" iyz="{I[1,2]:.7E}" izz="{I[2,2]:.7E}"/>\n'
                 f'{indent}</inertial>\n')
 
-    def link_xml(name, mesh_fn, vis_org):
+    def link_xml(name, mesh_fn, vis_org, col_pieces):
+        # visual = 병합 _ALL 하나 · collision = **볼록 조각별**(각 조각이 볼록 -> convexHull=자기 자신,
+        # union = 정확한 오목 공동). D446 함정(단일 hull 이 공동을 채움)을 근본 회피.
         b = bodies[name]
         o = f'{vis_org[0]:.6f} {vis_org[1]:.6f} {vis_org[2]:.6f}'
+        cols = "".join(
+            f'    <collision>\n      <origin xyz="{o}" rpy="0 0 0"/>\n'
+            f'      <geometry><mesh filename="meshes/collision/{p}" scale="0.001 0.001 0.001"/></geometry>\n'
+            f'    </collision>\n' for p in col_pieces)
         return (f'  <link name="{name}">\n'
                 + inertial_xml(b, "    ")
                 + f'    <visual>\n      <origin xyz="{o}" rpy="0 0 0"/>\n'
                 f'      <geometry><mesh filename="meshes/{mesh_fn}" scale="0.001 0.001 0.001"/></geometry>\n'
                 f'      <material name="grab_orange"/>\n    </visual>\n'
-                f'    <collision>\n      <origin xyz="{o}" rpy="0 0 0"/>\n'
-                f'      <geometry><mesh filename="meshes/{mesh_fn}" scale="0.001 0.001 0.001"/></geometry>\n'
-                f'    </collision>\n  </link>\n')
+                + cols + f'  </link>\n')
 
     vis_L = (-pivL) / 1000.0
     vis_R = (-pivR) / 1000.0
@@ -136,9 +153,9 @@ def main():
 <robot name="grab_v1">
   <material name="grab_orange"><color rgba="0.90 0.55 0.10 1"/></material>
 
-{link_xml("grab_base", "bracket_ALL.stl", (0.0, 0.0, 0.0))}
-{link_xml("grab_shell_L", "shell_L_ALL.stl", vis_L)}
-{link_xml("grab_shell_R", "shell_R_ALL.stl", vis_R)}
+{link_xml("grab_base", "bracket_ALL.stl", (0.0, 0.0, 0.0), col_pieces["grab_base"])}
+{link_xml("grab_shell_L", "shell_L_ALL.stl", vis_L, col_pieces["grab_shell_L"])}
+{link_xml("grab_shell_R", "shell_R_ALL.stl", vis_R, col_pieces["grab_shell_R"])}
   <!-- 구동 1축: 셸 L. 셸은 -phi 로 벌어지므로 축 = 힌지 -Z. 한계 = 셸 물리각 0~44.5°. -->
   <joint name="grab_shell_L_joint" type="revolute">
     <origin xyz="{pL[0]:.6f} {pL[1]:.6f} {pL[2]:.6f}" rpy="0 0 0"/>
@@ -183,7 +200,8 @@ def main():
                                   "collider": "servocrank(링크 선재), 요크 아님. URDF 관절 한계로는 못 건다 — 제어/시뮬이 이 표를 읽어 강제."},
         "non_claims": [
             "관절=셸 물리각(정확). **서보 토크·기어 전동·백래시·유격은 표현 안 함**(Phase 4 측정 대상).",
-            "collision = visual _ALL 메시(볼록 분해 안 됨). 시뮬 임포트가 분해해야 정확한 접촉.",
+            "collision = **볼록 조각별 STL**(shell 120·bracket 110). 각 조각이 볼록이라 convexHull=자기 자신, "
+            "union = 정확한 오목 공동 → D446(단일 hull 이 공동 채움) 근본 회피. 임포트 시 collider_type=convex_hull.",
             "관성 = **3 몸체(브래킷+셸2)의 출력물(PLA)만**. 🔴 4절 링크(약 8 g)는 폐루프라 생략 → "
             "URDF 총질량 45.6 g < 설계 출력물 53.6 g(차이 = 링크). 알루 볼트 등 하드웨어 7.8 g 도 미포함.",
             "mimic 태그는 파서마다 처리 다름(Isaac/MuJoCo 확인 필요). 폐루프 강성은 없음.",

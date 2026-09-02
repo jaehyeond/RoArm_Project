@@ -17,6 +17,10 @@ parser.add_argument("input", type=str)
 parser.add_argument("output", type=str)
 parser.add_argument("--merge-joints", action="store_true", default=False)
 parser.add_argument("--fix-base", action="store_true", default=False)
+parser.add_argument("--collider", default="convex_decomposition",
+                    choices=["convex_hull", "convex_decomposition"],
+                    help="convex_hull = collision 이 이미 볼록 조각별일 때(조각=자기 hull=정확). "
+                         "convex_decomposition = 단일 _ALL 오목 메시일 때(VHACD 로 공동 근사).")
 AppLauncher.add_app_launcher_args(parser)
 args_cli = parser.parse_args()
 
@@ -39,7 +43,7 @@ def main():
         fix_base=args_cli.fix_base,
         merge_fixed_joints=args_cli.merge_joints,
         force_usd_conversion=True,
-        collider_type="convex_decomposition",     # 🔴 스쿱 공동 보존 (D446)
+        collider_type=args_cli.collider,           # 🔴 스쿱 공동 보존 (D446)
         joint_drive=UrdfConverterCfg.JointDriveCfg(
             gains=UrdfConverterCfg.JointDriveCfg.PDGainsCfg(stiffness=100.0, damping=1.0),
             target_type="position",
@@ -47,7 +51,7 @@ def main():
     )
     conv = UrdfConverter(cfg)
     print(f"[convert] usd_path = {conv.usd_path}")
-    print(f"[convert] collider_type = convex_decomposition")
+    print(f"[convert] collider_type = {args_cli.collider}")
     return conv.usd_path
 
 
