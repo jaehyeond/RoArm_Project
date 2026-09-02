@@ -20,9 +20,10 @@ Phase 0b  서보 사양 확정        🟡 부분완료 — 시리얼로 모델�
 Phase 0c  보스 6.7→6.0 되돌리기  ✅ 완료 (D473 ②, 커밋 bcde1df)
 Phase 1   조립 정의            ✅ 완료 — 방식 A 요크 양단지지 (D473 ③, 커밋 541cda3)
 Phase 2   장착 검증            🟡 부분완료 — 실물 로봇 간섭 G2_ATTACH_OK(D473 ④). **서보 출력 인출 미검증**(팔 필요)
-Phase 3   URDF/USD 자산        🟡 URDF 1축 + 로봇 합성 완료 — `g17_yoke_alu/urdf/grab_v1.urdf`(standalone) +
-          `local_assets/roarm_m3/urdf/roarm_m3_with_grab.urdf`(link5 부착 고정 조인트, 벤더 무수정).
-          FK 검증: 그랩 회전 bbox 0.0000mm·mouth 0→58 · 합성 전체트리 FK 정상(그랩이 팔 따라 이동). **USD 미생성**
+Phase 3   URDF/USD 자산        🟢 URDF 1축 + 로봇 합성 + **Isaac USD 임포트 완료**.
+          URDF: `g17_yoke_alu/urdf/grab_v1.urdf`(standalone) + `local_assets/roarm_m3/urdf/roarm_m3_with_grab.urdf`(link5 부착, 벤더 무수정).
+          USD: `local_assets/roarm_m3/usd/roarm_m3_with_grab.usd`(Isaac 5.1, gitignore). 🔴 **collider = convex_decomposition**
+          (기본 convex_hull 은 스쿱 공동을 채운다 — D446 함정). 검증: 링크 6/6·조인트 11·그랩 기하(visuals+collisions) 존재.
 
 Phase 4   sim-real 갭 항목 등록  ⏸ 유격·백래시·휨·전동 비선형을 측정 대상으로
 Phase 5   출력 → 조립 → 실측
