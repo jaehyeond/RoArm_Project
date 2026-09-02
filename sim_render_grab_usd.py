@@ -31,23 +31,21 @@ key = UsdLux.DistantLight.Define(stage, "/World/KeyLight"); key.CreateIntensityA
 UsdGeom.XformCommonAPI(key).SetRotate(Gf.Vec3f(-35, 20, 0))
 world.get_physics_context().set_gravity(0.0)
 
-# 더미(펠릿 파일) 프록시 — 그랩 입 아래 바닥
-pile = UsdGeom.Cone.Define(stage, "/World/pile")
-pile.CreateHeightAttr(0.06); pile.CreateRadiusAttr(0.09); pile.CreateAxisAttr("Z")
-UsdGeom.XformCommonAPI(pile).SetTranslate(Gf.Vec3d(0.25, 0.0, 0.03))
-pile.CreateDisplayColorAttr([(0.82, 0.80, 0.74)])
+# 순정 조 숨김 (커스텀 클램셸만 보이게)
+gp = stage.GetPrimAtPath("/World/roarm/gripper_link")
+if gp and gp.IsValid(): UsdGeom.Imageable(gp).MakeInvisible()
 
 art = SingleArticulation(prim_path="/World/roarm", name="roarm")
 world.reset(); art.initialize()
 names = list(art.dof_names)
 print("DOF:", names)
 
-# 스쿱 자세: 그랩 입이 아래(-Z) → 더미 위로 내려 닫아 퍼냄
-base_pose = {"link1_to_link2": 0.39, "link2_to_link3": 1.39, "link3_to_link4": 1.34}
+# HOME 자세: 그랩 입이 위(+Z). 위에서 내려다보면 두 오목 보울이 벌어지는 게 보인다.
+base_pose = {}
 
-# 카메라: 작동 검증된 3/4 뷰(앞-오른쪽-위). 팔 끝 + 그랩이 함께 보이고 셸 개폐 차이가 드러난다.
+# 카메라: HOME 그랩(0.04,0.01,0.68) 위에서 내려다봄 → 입이 위라 열린 두 보울이 보인다.
 import glob, shutil
-cam = rep.create.camera(position=(0.78, -0.60, 0.52), look_at=(0.26, 0.0, 0.15))
+cam = rep.create.camera(position=(0.46, -0.10, 1.24), look_at=(0.05, 0.01, 0.66))
 rp = rep.create.render_product(cam, (1280, 800))
 
 def shot(open_val, out, tag):
