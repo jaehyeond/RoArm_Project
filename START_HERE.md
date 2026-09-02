@@ -1,7 +1,9 @@
 # START_HERE.md
 
-Last updated: 2026-09-02 심야 — 76th 연장: **D472 가 세운 순서를 실제로 밟아 Phase 1(조립 정의)을 끝내고,
-사용자 지적으로 실물 로봇 장착까지 검증했다(D473).** 그랩 v1 은 이제 **방식 A 요크로 양단지지되고,
+Last updated: 2026-09-03 새벽 — 76th 연장: **Phase 3 자산 실체화 완료(D474)** — 구동 1축 URDF → 로봇 합성 →
+Isaac 5.1 USD 임포트 → 렌더. 🔴 **정정: 커스텀 그랩은 순정 그리퍼를 "교체"가 아니라 "추가"** — 브래킷은 순정
+고정 조에·서보 크랭크는 순정 가동 조에 볼트로 물려 **순정 서보로 구동**(D462). 순정 조 2개는 남는다. 그 전:
+**D472 가 세운 순서로 Phase 1(조립 정의) 완료 + 실물 로봇 장착 검증(D473).** 그랩 v1 은 이제 **방식 A 요크로 양단지지되고,
 RoArm-M3-Pro 에 장착 가능(`G2_ATTACH_OK`)하며, 자중 61.41 g < 65** 다. 손목 롤 × 개폐 간섭이라는
 선재 제약을 발견해 게이트+문서로 봉합했다. 서사 정본 = **D473 `:29764`** +
 `claudedocs/PHASE1_ASSEMBLY_DEFINITION.md`. 커밋 = `bcde1df` · `541cda3` · `d58f6b6`.
@@ -20,10 +22,10 @@ Phase 0b  서보 사양 확정        🟡 부분완료 — 시리얼로 모델�
 Phase 0c  보스 6.7→6.0 되돌리기  ✅ 완료 (D473 ②, 커밋 bcde1df)
 Phase 1   조립 정의            ✅ 완료 — 방식 A 요크 양단지지 (D473 ③, 커밋 541cda3)
 Phase 2   장착 검증            🟡 부분완료 — 실물 로봇 간섭 G2_ATTACH_OK(D473 ④). **서보 출력 인출 미검증**(팔 필요)
-Phase 3   URDF/USD 자산        🟢 URDF 1축 + 로봇 합성 + **Isaac USD 임포트 완료**.
-          URDF: `g17_yoke_alu/urdf/grab_v1.urdf`(standalone) + `local_assets/roarm_m3/urdf/roarm_m3_with_grab.urdf`(link5 부착, 벤더 무수정).
-          USD: `local_assets/roarm_m3/usd/roarm_m3_with_grab.usd`(Isaac 5.1, gitignore). 🔴 **collider = convex_decomposition**
-          (기본 convex_hull 은 스쿱 공동을 채운다 — D446 함정). 검증: 링크 6/6·조인트 11·그랩 기하(visuals+collisions) 존재.
+Phase 3   URDF/USD 자산        🟢 **완료 (D474)**. URDF 1축 + 로봇 합성 + Isaac 5.1 USD 임포트 + 렌더.
+          URDF: `g17_yoke_alu/urdf/grab_v1.urdf` + `local_assets/roarm_m3/urdf/roarm_m3_with_grab.urdf`(link5 부착, 벤더 무수정).
+          USD: `local_assets/roarm_m3/usd/roarm_m3_with_grab.usd`(gitignore). 🔴 collider=**조각별 볼록 350개**(convex_hull=정확, D446 회피)
+          · **mimic→독립 조인트**(Isaac 이 mimic 구동 못 함). 검증: 링크6/조인트11·bbox 0.0000. 렌더 = `robot_full.png` 등.
 
 Phase 4   sim-real 갭 항목 등록  ⏸ 유격·백래시·휨·전동 비선형을 측정 대상으로
 Phase 5   출력 → 조립 → 실측
@@ -119,8 +121,10 @@ g9_sidefix (형상 골격)   보울 3.97 cm³ / B1 요구 6.41 대비 62%   ← 
 - (c) **펠릿 조달**(3–5 mm 불투명 백색, 최소 2종) · **배출 용기** 규격.
 - ⚠️ 셸/요크 실물 검증은 g17 을 뽑은 뒤에 한다(반치 맞물림·백래시 미실측).
 
-**우선순위 2 — Phase 3 URDF (하드웨어 없이 진행 가능)**
-- 1축(gripper_joint: 셸_L + 셸_R mimic, 폐루프 생략) + **개구-비선형 후처리**(D463) + **손목 롤 제약 인코딩**(개구>44→|롤| 제한).
+**우선순위 2 — Phase 3 완료(D474). 다음 = 구동 인출 검증 / DEME 연결 (설계·시뮬)**
+- 🔴 **구동 인출 실물 성립 확인**(Phase 2 잔여): 순정 가동 조 볼트(스팬 25 mm)→서보 크랭크→4절→셸. 3D 로 먼저, 실물은 팔 필요.
+- **USD↔DEME 연결**(브리핑만, 미구현): 그랩 메시+FK 자세를 DEME 경계로. 최대 관문 = 관절형 그랩의 DEME 표현(D464 크래시). 위상 분해(강체 개방 그랩 1매 SetPos)부터.
+- 손목 롤 제약(개구>44→|롤| 제한)을 시뮬/제어가 읽어 강제(현재 meta JSON 표만).
 
 **우선순위 3 — 설계 잔여**
 - BOM src 를 SPEC 로 확정 · **CoG 거리 게이트**(어깨 처짐, D472 ⑥·D473 ⑦ 사각지대) 신설.

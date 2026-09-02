@@ -29844,3 +29844,34 @@ import 이라 요크 자동 포함) 실행 → **verdict G2_ATTACH_OK**(G1~G9 �
 - **URDF·USD 는 여전히 0** — Phase 3 미착수. g17 은 STL 산출물이지 관절 자산이 아니다(D472 ④ 유지).
 - **BOM src UNCONFIRMED**, CoG 거리 게이트(어깨 처짐, D472 ⑥ 사각지대) 미신설, self_load_ratio 는 펠릿 밀도 대기 FAIL 유지.
 - 중간 반복본 `g16~g16e` 는 디스크 로컬 유지·미커밋(forward-only). 정본은 `g17_yoke_alu/`.
+
+## D474 — 76th 연장 (09-03 새벽), **Phase 3 자산 실체화: 구동 1축 URDF → 로봇 합성 → Isaac 5.1 USD 임포트, 그리고 "커스텀 그랩은 순정 그리퍼를 떼는 게 아니라 그 위에 얹는다"는 정정.** 렌더로 사용자와 여러 번 오해를 풀었다 (설계·검증·자산화 — 로봇 0, 물리 시뮬 0)
+
+D473 순서의 Phase 3 을 실제로 만들었다. 정본 자산 = `local_assets/roarm_m3/`, 그랩 URDF = `grab_track/g17_yoke_alu/urdf/`.
+커밋 = `c6a64d3`(URDF) · `bf7e581`(합성) · `2585eb2`(USD convex_decomp) · `27ee884`(조각별 collision) · `043d226`·`3d63b36`·`3d63b36`후속(렌더). 스크립트: `export_grab_urdf.py`·`compose_roarm_grab_urdf.py`·`sim_urdf_to_usd.py`·`sim_render_*.py`.
+
+**① 구동 1축 URDF (D473 결정 이행)**
+`grab_v1.urdf`: `grab_base → shell_L(revolute,-Z,pivotL) + shell_R(revolute,+Z,pivotR, mimic ×1)`. 폐루프(기어쌍·4절) 생략(D472 ④, URDF 트리 표현 불가). 관절 = 셸 물리각(0~44.5°); 서보→셸→개구 비선형(D463)·손목 롤 제약(D473 ⑥)은 `grab_v1_meta.json` 표로. 검증: XML 되읽어 표준 FK → 설계 `_rotz` 회전과 **bbox 0.0000 mm 일치**, mouth 0→58.
+
+**② 로봇 합성 (link5 부착 고정 조인트)**
+`compose_roarm_grab_urdf.py` → `roarm_m3_with_grab.urdf`. 벤더 `roarm_m3.urdf` **무수정**(텍스트 통째 보존 + `</robot>` 앞 주입, 부분열 assert). `link5_to_grab_base` 고정 + 셸 2조인트. 순정 `gripper_link` **유지**(③). 전체 트리 FK: 그랩이 link5 따라 이동.
+
+**③ 🔴 정정: 커스텀 그랩은 순정 그리퍼를 "교체"하지 않는다 — "추가"한다 (사용자 오해 해소)**
+D462 대로: 그랩 **브래킷**은 순정 **고정 조**(link5)에 M2.5 4볼트, 그랩 **서보 크랭크**는 순정 **가동 조**(gripper_link)에 볼트로 물려 **순정 그리퍼 서보로 구동**된다. → 순정 조 2개는 마운트+구동 인터페이스로 **남는다**. 렌더에선 시각 클러터라 숨겼을 뿐 실물엔 존재. **기능적 교체(집게→클램셸)지 기계적 제거가 아니다.** 비가역 개조 0(볼트만)이 이 방식의 이유.
+🔴 **미검증(Phase 2 잔여)**: 순정 가동 조 볼트 구멍(스팬 25 mm)→서보 크랭크→4절→셸 의 **구동 인출이 실물에서 성립하는가**. 팔 필요.
+
+**④ Isaac Sim 5.1 USD 임포트 + D446 재발 방지**
+Isaac Sim **5.1.0.0** / IsaacLab **2.3.0** (numpy 1.26.0·psutil 5.9.8 핀 정상). `UrdfConverter` 로 URDF→USD.
+🔴 **기본 `convex_hull` collider 는 오목 스쿱 보울을 채운다 = D446 함정**(벤더 USD 1-hull 이 실기하 가려 13/13↔0/13). → 셸이 볼록 조각들이므로 **조각별 collision**(shell 120·bracket 110 = 350) + `convex_hull`(조각=자기 hull=정확). USD 검증(pxr): 링크 6/6·조인트 11·ArticulationRoot=/roarm_m3/world·그랩 collision 350·근사 convexHull.
+🔴 **mimic→독립 조인트 변환**(`convert_mimic_joints_to_normal_joints=True`) — Isaac articulation 이 mimic 을 `set_joint_positions` 로 구동 못 해 셸이 안 열렸다. 독립 DOF 로 양쪽 직접 구동.
+⚠️ D447: `close()` 는 예외 삼켜 exit 0 → 산출 USD 를 pxr 로 별도 검증. config.yaml 은 도구가 덮어쓰는 공유 파일 → 매번 추적본 복구. USD·PNG·조각 collision 는 gitignore(regenerable).
+
+**⑤ 렌더 교훈 (사용자와 여러 번 오해)**
+- 🔴 그랩 입(보울 방향) = 그랩 로컬 -Y = link5 +Z. **스쿱은 입이 아래(-Z)** 여야 한다(어깨0.39·팔꿈치1.39·손목1.34 → 입 z=-1.00). 내가 처음 고른 자세는 입이 위-앞([+0.93,0,+0.36])이라 **못 펐다**(사용자 지적).
+- 🔴 **Isaac 카메라가 너무 가까우면(~0.5 m) 대상을 놓친다**(빈 프레임). 작동 범위 ~0.85 m+. 전체 로봇은 **AABB(대각 0.81) 계산 → 거리 1.14 m** 로 프레이밍해야 잡힌다.
+- 🔴 스쿱 자세에선 50 mm 높이 셸을 옆에서 봐 **얇은 날로 짜부라져** 보울로 안 읽힌다. 격리 3D(matplotlib, 카메라 직접 제어)가 클램셸을 명확히 보였다(`grab_bowl_3d.png`).
+- ★ 교훈: **RTX 렌더 프레이밍/자세를 얕보지 말 것. 전체를 보이려면 AABB 로 카메라를 자동 배치하라.**
+
+**⑥ 이 판정이 주장하지 않는 것**
+- **물리 시뮬 0** — USD 는 자산·운동학·시각화용. 펠릿 접촉은 DEME(Isaac PBD 기각 D469). USD↔DEME 연결(단방향, 그랩 메시+FK 자세를 DEME 경계로)은 **브리핑만**, 미구현. 관절형 그랩의 DEME 표현(D464 크래시)이 최대 관문.
+- 구동 인출 실물 미검증(③) · 손목 롤 제약 시뮬 강제 미구현 · self_load_ratio 펠릿 대기 · 출력 0.

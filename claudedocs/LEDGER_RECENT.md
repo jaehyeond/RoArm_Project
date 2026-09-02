@@ -90,6 +90,12 @@ AGENTS.md에서 걷어낸 결함 B(죽은 상태가 규칙/참조 파일에 상�
 
 ### 현행 피벗 — 포스코 야드 (63rd~)
 
+- **`:537` · 76th 연장** (09-03 새벽) **Phase 3 자산화**: 구동 1축 URDF → 로봇 합성(link5 부착) → Isaac 5.1 USD → RTX 렌더
+  → **`PHASE3_URDF_USD_MATERIALIZED__PER_PIECE_CONVEX_COLLISION_D446_AVOIDED__MIMIC_TO_NORMAL__CUSTOM_GRAB_ADDED_NOT_REPLACING_STOCK_GRIPPER`**
+  (**D474** `:29848`) · `local_assets/roarm_m3/`
+  ※ 🔴 **정정: 커스텀 그랩은 순정 그리퍼 "교체"가 아니라 "추가"**(브래킷=순정 고정 조, 서보크랭크=순정 가동 조에 볼트, 순정 서보로 구동).
+  ※ 🔴 collider=조각별 볼록350(D446 회피) · mimic→독립(Isaac 구동) · 카메라 AABB→1.14m(근접이면 프레임 놓침).
+  ※ ⚠️ **물리 시뮬 0**(펠릿=DEME 별개, USD↔DEME 브리핑만) · 구동 인출 실물 미검증(Phase 2 잔여).
 - **`:536` · 76th 연장** (09-02 심야) Phase 1 요크 양단지지 구현 + **실물 로봇 장착검증** + 손목롤 제약
   → **`PHASE1_YOKE_BOTH_END_SUPPORT__G2_ATTACH_OK_ON_REAL_ROBOT__MASS_61G_ALU_BOLTS__WRIST_ROLL_X_OPEN_LINK4_CONSTRAINT_DOCUMENTED`**
   (**D473** `:29764`) · `PHASE1_ASSEMBLY_DEFINITION.md` · `runtime_logs/grab_track/g17_yoke_alu/`
