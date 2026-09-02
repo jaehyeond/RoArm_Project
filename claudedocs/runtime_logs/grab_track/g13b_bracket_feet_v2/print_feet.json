@@ -1,0 +1,56 @@
+{
+ "artifact": "print_feet/2",
+ "source_stl": "claudedocs/runtime_logs/grab_track/g9_oriented/bracket_ALL.stl",
+ "source_sha256_16": "36e23b27f73a8f99",
+ "output_stl": "claudedocs/runtime_logs/grab_track/g13b_bracket_feet_v2/bracket_feet_ALL.stl",
+ "output_sha256_16": "a915ded4426cc7b8",
+ "z_shift_applied_mm": -0.0,
+ "rotation_applied": "없음 (배향 불변)",
+ "foot_height_mm": 0.6,
+ "pad_half_mm": 10.0,
+ "contact_definition": "orient_for_print.py 와 동일 (중심 z < zmin+0.3, 법선 z < -0.7)",
+ "original_contact_mm2": 40.8,
+ "clusters_found": [
+  {
+   "centroid": [
+    -13.0,
+    0.0
+   ],
+   "area_mm2": 20.39
+  },
+  {
+   "centroid": [
+    13.0,
+    0.0
+   ],
+   "area_mm2": 20.39
+  }
+ ],
+ "pads": [
+  {
+   "tag": "pad_0@[-13.0, 0.0]",
+   "area_mm2": 400.0
+  },
+  {
+   "tag": "pad_1@[13.0, 0.0]",
+   "area_mm2": 400.0
+  },
+  {
+   "tag": "bridge_0_1",
+   "area_mm2": 156.0
+  }
+ ],
+ "bridges": [
+  "0-1: 길이 26.0 x 6.0 mm 연결 (경로 최저 z=1000000000.00)"
+ ],
+ "added_footprint_mm2": 956.0,
+ "added_volume_mm3": 573.6,
+ "added_mass_g_pla_1p24": 0.711,
+ "non_claims": [
+  "발은 **출력 보조물**이며 잘라낸다. 설계 자중·간섭 게이트에 넣지 말 것.",
+  "겹친 솔리드를 슬라이서가 합치는 것에 의존한다 — 불리언 union 을 하지 않았다(D446).",
+  "여기 적힌 면적은 **계획값**이다. 실제 1층 접지는 gcode 를 적분한 값으로 확인할 것.",
+  "발을 떼어낸 자국이 바닥면에 남는다. 바닥이 기능 정합면이면 이 방식을 쓰지 말 것.",
+  "다리 충돌 검사는 두 중심을 잇는 **사각 영역의 최저 z** 만 본다. 그 안의 실제 형상을 보지 않는다."
+ ]
+}

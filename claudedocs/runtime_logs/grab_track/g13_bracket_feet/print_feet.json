@@ -1,0 +1,91 @@
+{
+ "artifact": "print_feet/1",
+ "source_stl": "claudedocs/runtime_logs/grab_track/g9_oriented/bracket_ALL.stl",
+ "source_sha256_16": "36e23b27f73a8f99",
+ "output_stl": "claudedocs/runtime_logs/grab_track/g13_bracket_feet/bracket_feet_ALL.stl",
+ "output_sha256_16": "a7ec662d8fb0260a",
+ "foot_height_mm": 0.6,
+ "original_bottom_contact_mm2": 40.8,
+ "legs_found": [
+  {
+   "x": [
+    -16.0,
+    -10.0
+   ],
+   "y": [
+    -3.0,
+    3.0
+   ]
+  },
+  {
+   "x": [
+    10.0,
+    16.0
+   ],
+   "y": [
+    -3.0,
+    3.0
+   ]
+  }
+ ],
+ "pads": [
+  {
+   "tag": "leg_pad_0",
+   "x": [
+    -17.5,
+    -8.5
+   ],
+   "y": [
+    -12.0,
+    12.0
+   ],
+   "z": [
+    0.0,
+    0.6
+   ],
+   "area_mm2": 216.0
+  },
+  {
+   "tag": "leg_pad_1",
+   "x": [
+    8.5,
+    17.5
+   ],
+   "y": [
+    -12.0,
+    12.0
+   ],
+   "z": [
+    0.0,
+    0.6
+   ],
+   "area_mm2": 216.0
+  },
+  {
+   "tag": "bridge",
+   "x": [
+    -11.5,
+    11.5
+   ],
+   "y": [
+    -4.0,
+    4.0
+   ],
+   "z": [
+    0.0,
+    0.6
+   ],
+   "area_mm2": 184.0
+  }
+ ],
+ "added_footprint_mm2": 616.0,
+ "bridge_note": "가운데 최저 z=11.91 mm > 발 0.6 mm — 다리 연결 놓음",
+ "added_volume_mm3": 369.6,
+ "added_mass_g_pla_1p24": 0.458,
+ "non_claims": [
+  "발은 **출력 보조물**이며 잘라낸다. 설계 자중·간섭 게이트에 넣지 말 것.",
+  "겹친 솔리드를 슬라이서가 합치는 것에 의존한다 — 불리언 union 을 하지 않았다(D446).",
+  "실제 1층 접지는 이 숫자가 아니라 **gcode 를 적분한 값**으로 확인해야 한다.",
+  "발을 떼어낸 자국이 바닥면에 남는다. 바닥이 기능 정합면이면 이 방식을 쓰지 말 것."
+ ]
+}
