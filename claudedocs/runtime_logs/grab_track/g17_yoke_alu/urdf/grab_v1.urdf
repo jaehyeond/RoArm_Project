@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!-- 그랩 v1 Phase 3 구동 1축 URDF (D473). 자동 생성: export_grab_urdf.py
+     source = grab_track/g17_yoke_alu/ · 폐루프(기어쌍·4절) 생략 · 관절 = 셸 물리각(선형)
+     🔴 서보→셸→개구 비선형 + 손목 롤 제약은 grab_v1_meta.json 참조.
+     link5 부착(고정 조인트) origin: xyz(m) [-0.01354, -0.0007450000000000001, 0.12518] rpy [-1.5708, -0.0, 0.0]
+       parent=link5(순정)  child=grab_base  — 로봇과 합성 시 이 조인트를 추가한다. -->
+<robot name="grab_v1">
+  <material name="grab_orange"><color rgba="0.90 0.55 0.10 1"/></material>
+
+  <link name="grab_base">
+    <inertial>
+      <origin xyz="-0.001463 0.016153 0.000182" rpy="0 0 0"/>
+      <mass value="0.0152484"/>
+      <inertia ixx="7.0354742E-06" ixy="-6.6651254E-09" ixz="-2.4333739E-09" iyy="4.9782133E-06" iyz="1.5395192E-08" izz="3.9760059E-06"/>
+    </inertial>
+    <visual>
+      <origin xyz="0.000000 0.000000 0.000000" rpy="0 0 0"/>
+      <geometry><mesh filename="meshes/bracket_ALL.stl" scale="0.001 0.001 0.001"/></geometry>
+      <material name="grab_orange"/>
+    </visual>
+    <collision>
+      <origin xyz="0.000000 0.000000 0.000000" rpy="0 0 0"/>
+      <geometry><mesh filename="meshes/bracket_ALL.stl" scale="0.001 0.001 0.001"/></geometry>
+    </collision>
+  </link>
+
+  <link name="grab_shell_L">
+    <inertial>
+      <origin xyz="-0.001183 -0.011524 0.008101" rpy="0 0 0"/>
+      <mass value="0.0151709"/>
+      <inertia ixx="9.0379535E-06" ixy="1.1797079E-07" ixz="-1.4539807E-07" iyy="6.6456472E-06" iyz="-1.4161720E-06" izz="3.5970943E-06"/>
+    </inertial>
+    <visual>
+      <origin xyz="0.013000 -0.000000 -0.000000" rpy="0 0 0"/>
+      <geometry><mesh filename="meshes/shell_L_ALL.stl" scale="0.001 0.001 0.001"/></geometry>
+      <material name="grab_orange"/>
+    </visual>
+    <collision>
+      <origin xyz="0.013000 -0.000000 -0.000000" rpy="0 0 0"/>
+      <geometry><mesh filename="meshes/shell_L_ALL.stl" scale="0.001 0.001 0.001"/></geometry>
+    </collision>
+  </link>
+
+  <link name="grab_shell_R">
+    <inertial>
+      <origin xyz="0.001183 -0.011524 0.008101" rpy="0 0 0"/>
+      <mass value="0.0151709"/>
+      <inertia ixx="9.0379535E-06" ixy="-1.1797079E-07" ixz="1.4539807E-07" iyy="6.6456472E-06" iyz="-1.4161720E-06" izz="3.5970943E-06"/>
+    </inertial>
+    <visual>
+      <origin xyz="-0.013000 -0.000000 -0.000000" rpy="0 0 0"/>
+      <geometry><mesh filename="meshes/shell_R_ALL.stl" scale="0.001 0.001 0.001"/></geometry>
+      <material name="grab_orange"/>
+    </visual>
+    <collision>
+      <origin xyz="-0.013000 -0.000000 -0.000000" rpy="0 0 0"/>
+      <geometry><mesh filename="meshes/shell_R_ALL.stl" scale="0.001 0.001 0.001"/></geometry>
+    </collision>
+  </link>
+
+  <!-- 구동 1축: 셸 L. 셸은 -phi 로 벌어지므로 축 = 힌지 -Z. 한계 = 셸 물리각 0~44.5°. -->
+  <joint name="grab_shell_L_joint" type="revolute">
+    <origin xyz="-0.013000 0.000000 0.000000" rpy="0 0 0"/>
+    <parent link="grab_base"/>
+    <child link="grab_shell_L"/>
+    <axis xyz="0 0 -1"/>
+    <limit lower="0.0" upper="0.77667" effort="2.94" velocity="3.14"/>
+  </joint>
+  <!-- 셸 R = 셸 L 의 거울. 축 = 힌지 +Z, mimic ×1(같은 크기 반대 방향). -->
+  <joint name="grab_shell_R_joint" type="revolute">
+    <origin xyz="0.013000 0.000000 0.000000" rpy="0 0 0"/>
+    <parent link="grab_base"/>
+    <child link="grab_shell_R"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="0.0" upper="0.77667" effort="2.94" velocity="3.14"/>
+    <mimic joint="grab_shell_L_joint" multiplier="1" offset="0"/>
+  </joint>
+</robot>

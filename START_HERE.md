@@ -20,7 +20,8 @@ Phase 0b  서보 사양 확정        🟡 부분완료 — 시리얼로 모델�
 Phase 0c  보스 6.7→6.0 되돌리기  ✅ 완료 (D473 ②, 커밋 bcde1df)
 Phase 1   조립 정의            ✅ 완료 — 방식 A 요크 양단지지 (D473 ③, 커밋 541cda3)
 Phase 2   장착 검증            🟡 부분완료 — 실물 로봇 간섭 G2_ATTACH_OK(D473 ④). **서보 출력 인출 미검증**(팔 필요)
-Phase 3   URDF/USD 자산        ⏸ 미착수 — 1축(gripper_joint + 셸_R mimic, 폐루프 생략) + 롤 제약 인코딩
+Phase 3   URDF/USD 자산        🟡 URDF 1축 완료 — `g17_yoke_alu/urdf/grab_v1.urdf`(셸_L 구동 + 셸_R mimic ×1, 폐루프 생략). FK 검증 = 설계 회전과 bbox 0.0000mm 일치, mouth 0→58mm. 롤 제약·비선형 맵은 `grab_v1_meta.json`. **USD 미생성**
+
 Phase 4   sim-real 갭 항목 등록  ⏸ 유격·백래시·휨·전동 비선형을 측정 대상으로
 Phase 5   출력 → 조립 → 실측
 ```
