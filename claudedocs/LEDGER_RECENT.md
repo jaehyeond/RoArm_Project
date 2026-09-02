@@ -1,10 +1,10 @@
 # LEDGER_RECENT.md — 최근 실험 20건 요약 (부팅 read)
 
-Last updated: 2026-08-26 — 현재 원본 `EXPERIMENT_LEDGER.md` = 564줄 / 1,071,997 B / 표 블록 511행
+Last updated: 2026-09-02 (76th) — 현재 원본 `EXPERIMENT_LEDGER.md` = 566줄 / 1,071,997 B / 표 블록 511행
 (`:9-90` 82행 + `:105-533` 429행. 줄당 평균 약 2 KB, 최근 행은 5~9 KB — **단일 Read로 열면 토큰 초과**).
 
 **2026-08-26 변경 (사용자 승인, append만 — 원본 삭제·수정 0건)**: 소급 등재 2행(`:532` 57th · `:533` 70th)
-\+ 표 밖 `## Schema errata` 절(`:535~`) append. 앞 1,062,466 B는 **바이트 불변**(md5 `0a6d7071…` 대조 PASS).
+\+ 표 밖 `## Schema errata` 절 append (2026-09-02 기준 `:537~`). 앞 1,062,466 B는 **바이트 불변**(md5 `0a6d7071…` 대조 PASS).
 
 ## 0. 이 파일의 권위와 사용법
 
@@ -26,10 +26,10 @@ Last updated: 2026-08-26 — 현재 원본 `EXPERIMENT_LEDGER.md` = 564줄 / 1,0
 
 ## 1. 선정 기준 (재현 가능 — 기억으로 판단하지 말 것)
 
-원장 **표 블록의 마지막 20행 = `:514`~`:533`**, 정렬은 append 순. 재확인 명령:
+원장 **표 블록의 마지막 20행 = `:516`~`:535`**, 정렬은 append 순. ⚠️ 75th·76th 가 2행을 더해 앵커가 2칸 밀렸다. 재확인 명령:
 ```bash
-grep -n '^## Schema errata' claudedocs/EXPERIMENT_LEDGER.md   # 535 → 표 블록 끝 = :533
-sed -n '514,533p' claudedocs/EXPERIMENT_LEDGER.md | awk -F'|' '{print NR+513": "substr($2,1,120)}'
+grep -n '^## Schema errata' claudedocs/EXPERIMENT_LEDGER.md   # 537 → 표 블록 끝 = :535
+sed -n '516,535p' claudedocs/EXPERIMENT_LEDGER.md | awk -F'|' '{print NR+515": "substr($2,1,120)}'
 ```
 ⚠️ **2026-08-26부터 append 순 ≠ 시간 순이다.** 소급 등재로 `:532`(57th, 08-13)가 `:531`(69th, 08-16)보다
 뒤에 있다. 시간순이 필요하면 앵커가 아니라 각 행의 Date 셀을 봐야 한다.
@@ -65,7 +65,7 @@ sed -n '514,533p' claudedocs/EXPERIMENT_LEDGER.md | awk -F'|' '{print NR+513": "
 (전체 분포: 6열 494행 / 4열 3행 / 나머지는 셀 안 `|` 때문에 필드 수 7·9~14)
 
 **✅ 2026-08-26 보정 (원행 무수정).** append-only라 `:529`~`:531` 자체는 고칠 수 없으므로, 원장 **표 밖**에
-`## Schema errata`(`:535~`) 절을 신설해 세 행의 누락된 `Run/Path`·`Goal`과 **소급 판정 토큰**을 보정 기재했다.
+`## Schema errata`(2026-09-02 기준 `:537~`) 절을 신설해 세 행의 누락된 `Run/Path`·`Goal`과 **소급 판정 토큰**을 보정 기재했다.
 표 블록이 아니므로 마크다운 렌더에 영향 0. ⚠️ 소급 토큰은 검색·기계 판독용 보조 표기일 뿐이고
 **판정의 정본은 언제나 `DECISIONS.md` D453~D455 원문**이다(어긋나면 원문이 이긴다).
 신규 행 `:532`·`:533`은 **6열 스키마 준수**(필드 8 = 6열) — `awk -F'|' 'NR>=532&&NR<=533{print NF}'`로 확인 가능.
@@ -88,6 +88,16 @@ AGENTS.md에서 걷어낸 결함 B(죽은 상태가 규칙/참조 파일에 상�
 > 아래는 **시간순**으로 배열했다.
 
 ### 현행 피벗 — 포스코 야드 (63rd~)
+
+- **`:535` · 76th** (09-02) 셸 L·R 실물 완주 2건 + 워커 P4 트랙 코디네이터 독립 검증
+  → **`G10_G11_ADHESION_CAUSE_CONFIRMED_BY_CONTROLLED_SLICE_ONLY_CHANGE__CONTACT_PER_GRAM_GATE_CALIBRATED_ON_REAL_SUCCESS_FAILURE_PAIR__D_D_RECOMPUTED_ON_CURRENT_SHELL_6PCT_TO_62PCT`**
+  (**D469** `:29349` · **D470** `:29477` · **D471** `:29548`) · `session_20260902_76th_g10_g11_print_and_worker_adjudication.md`
+  ※ 형상 무수정으로 슬라이스만 바꿔 완주 = **통제 대조**. 임계 125 mm²/g 는 **성공 1·실패 1** 표본이다.
+  ※ 🔴 워커의 그랩 포획 판정이 **낡은 셸**(08-31)로 계산돼 있었다 — 수정본은 **6% 가 아니라 62%**.
+  ※ ⚠️ Newton "38배·VRAM 424 MiB" 는 **미검증**(입력이 산출물에 없음). 인용 금지.
+- **`:534` · 75th** (09-01) 출력 파이프라인 수리 + P1 n=5 + 게이트 정비 (실물 출력 4회: 3실패 1완주)
+  → **`PRINT_PIPELINE_REPAIRED__GATE_BLINDSPOTS_8_ALL_INTENT_NOT_RESULT`** (**D465** `:28960` · **D466** `:29050`)
+  · `session_20260901_75th_print_pipeline_repair_p1_n5.md`
 
 - **`:533` · 70th** (08-17) 콜드 아카이브 T1/T2 이관 — git 비추적 대형 14폴더 ≈176GB를 외장으로 검증-사본 후
   move-only (**연구 실험 0 · 물리 0 · 로봇 0**, 스토리지 인프라 전용). ⚠️ **2026-08-26 소급 등재**
@@ -147,8 +157,7 @@ AGENTS.md에서 걷어낸 결함 B(죽은 상태가 규칙/참조 파일에 상�
 - **`:516` · 53rd** (08-11) 반경별 도달 경계 스윕 (사용자 승인 1-NEXT ⓐ)
   → **`REACH_CEILING_IS_POSE_SPECIFIC__BUT_THE_75DEG_BRANCH_IS_UNUSABLE`** (**D440**) · `session_20260811_53rd_g0b_t3w_reach_boundary_sweep.md`
   ※ ≥75° 가지 = 480셀 중 2셀 · 모든 스폰 영역 밖.
-- **`:515` · 52nd** (08-11) `t3p` 랜덤화 병렬 **접촉력 계측** 물리 시행 (물리 O, Isaac O)
-  → **`CONTACT_MEASURED_FIRST_TIME__BOTH_JAWS_LOAD__ZERO_LIFT_IN_1024__MECHANISM_IS_PRESS_INTO_TABLE_NOT_PINCH`** (**D439**) · `session_20260811_52nd_g0b_t3p_randomized_parallel_sweep.md`
+- **`:515` · 52nd** (08-11) `t3p` 접촉력 계측 물리 시행 → **`..._ZERO_LIFT_IN_1024__MECHANISM_IS_PRESS_INTO_TABLE_NOT_PINCH`** (**D439**) · `session_20260811_52nd_g0b_t3p_randomized_parallel_sweep.md`
 
 ### 감사·패널 (물리 재실행 0 — 문서 무결성 축)
 

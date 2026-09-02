@@ -19,79 +19,59 @@
 ## §1 템플릿 (§2를 덮어쓸 때 이 골격을 쓴다)
 
 ```
-## §2 <날짜> Claude → Codex (<n>th 세션)
-세션 성격 / 한 일(커밋 표) / 만지지 말 것 / 함정 / 승인 대기 / 검증 방법
-```
+## §2 2026-09-02 Claude → Codex (76th 세션)
 
-## §2 2026-09-01 Claude → Codex (75th 세션)
+세션 성격 = **실물 출력 2건 완주 + 워커 P4 트랙 판정.** 로봇 0 · 펠릿 0 · 신규 물리 시뮬 0.
+원장은 코디네이터가 갱신 완료(D469~D471). 상태 정본은 `START_HERE.md`.
 
-세션 성격 = **실물 3D 출력 3연속 실패 종결 + 워커 2트랙 회수 + 게이트 정비.**
-실물 출력 4회(3실패 1성공) · DEME 시뮬 5회. **로봇 0 · 펠릿 0.**
-
-**한 일** — HEAD 는 아래 커밋 뒤 원장 커밋 1건이 더 붙는다. 미커밋은 설정 백업 1건뿐.
+**한 일** (master `d9fc96a` 이후 원장 커밋 1건 더 붙는다)
 
 | 커밋 | 내용 |
 |---|---|
-| `478a100`/`e63b940` | P1 deme-force 회수 + merge |
-| `c7c052f`/`a575129` | P2b kinect-hm 회수 + merge |
-| `c415594` | P2b D341 검수 png 화이트리스트 |
-| `38d5880` | P1 n=3 + 설정 동일성 게이트 + npz 화이트리스트 |
-| `1445e69` | 출력 파이프라인 정정 2회 + 게이트 3종 + P1 n=5 + 조립 뷰어 |
+| `6b835df` | 전송 게이트 6번 — 발행 후 프린터가 실제로 잡았는지 확인 |
+| `b26aa89`/`7630aa5`/`ae8a38a` | 워커 3트랙 머지 (decision-oracle · P4/P4b/P4c · N1/B1) |
+| `a69901d`/`71487a1` | g10 접착 수정 + 무게 게이트 · 희생 발 + 링크 축 0° |
+| `5e26b90`/`4bb7674`/`d9fc96a` | 원장 D467·D468 · D469~D471 |
 
 **만지지 말 것**
 
-- `claudedocs/runtime_logs/grab_track/g3_linkage/` — **설계 좌표계 STL 정본.**
-  `g4_flat`·`g5_oriented`·`g7_oriented` 는 **출력용으로 눕힌 좌표**라 조립 변환을 걸면 틀린다.
-- `scoop_shell_design.py`(v0)·`scoop_shell_v0/` — 동결. forward-only.
-- `~/Documents/DK/DTR/bamboo-3dprinter/profiles/*_full.json`·`print_cli.py` — **DK 원본, 무수정.**
-  사본만 고친다(`process_nosupport_roarm.json`·`process_support_roarm.json`).
-- 원장(`START_HERE`·`DECISIONS*`·`session_*`·이 파일) — 코디네이터 배타 소유.
-- `.claude/settings.local.json.bak_20260831_pre_orca_allow` — 되돌리기 경로. 커밋 대상 아님.
+- 🔴 **`claudedocs/runtime_logs/scoop_grab_v1/`(08-31)은 낡은 형상이다.** 읽지도 말 것.
+  현재 형상 = `grab_track/g9_sidefix/`. 이걸 혼동한 것이 D470 사고다.
+- `grab_track/g3_linkage/` — 설계 좌표계 STL 정본. `g9_oriented`·`g1*` 는 **출력용 좌표**라
+  조립 변환을 걸면 틀린다.
+- `scoop_shell_design.py`(v0)·`scoop_shell_v0/` — 동결. `scoop_grab_v1_design.py` 는 **워커 보호 파일**.
+- `~/Documents/DK/DTR/bamboo-3dprinter/profiles/*_full.json`·`printer.py` — **DK 원본, 무수정.**
+  사본만 고친다(`process_adh_roarm.json` 이 현행).
+- 원장(`START_HERE`·`DECISIONS*`·`EXPERIMENT_LEDGER`·`session_*`·이 파일) — 코디네이터 배타 소유.
 
 **🔴 함정 (전부 이번 세션 실측)**
 
-1. 🔴 **BambuStudio 프로필 JSON 은 값이 전부 문자열이어야 한다.** `brim_width` 만 정수 `8` 로
-   적혀 있어 슬라이서가 **오류 없이 무시하고 0** 으로 떨어뜨렸다 → 브림 0 인 gcode 로 출력해
-   부품 4개가 전량 탈락했다. 프로필을 고칠 때는 **전 키 타입 검사**를 돌릴 것.
-2. 🔴 **게이트는 "슬라이서가 실제로 쓴 값"을 봐야 한다.** 프로필을 읽으면 내가 넣으려던 값을
-   보게 된다. 3mf 안 `Metadata/project_settings.config` 가 실제 값이고, 그것도 부족해서
-   **gcode 툴패스**(`; FEATURE: Brim` / `Support`)까지 세야 한다.
-3. 🔴 **배향을 접지 하나로 최적화하면 안 된다.** 기어축이 90° 눕고(이빨이 층으로 쌓임)
-   오버행이 5.8배가 됐다. 힌지축(설계 Z)에 기어·피벗보스·핀·로드아이·셸크랭크허브가
-   **전부 동축**이므로 그 축을 수직으로 세우는 제약을 먼저 건다.
-   ⚠️ **원통의 축은 bbox 최소축이 아니다** — 원판은 최소축, 긴 축은 최대축이다.
-   **나머지 둘(=지름)과 다른 축**이 맞다. 첫 판정이 이걸로 틀렸다.
-4. 🔴 **`support_on_build_plate_only=1` 은 모델 위 오버행을 못 받친다.** 볼트 구멍 오염은
-   막지만 서포트가 z=7.40 mm 에서 끊겼다(오버행 최고 57.5 mm, 무방비 243 mm²).
-5. 🔴 **스크립트 하드코딩 기본값이 아티팩트의 `params` 와 다를 수 있다.**
-   `sim_deme_scoop.py` 기본값(`close_end_deg=0`·`insert_depth_mm=18`)이 rep1/rep2 를 만든
-   값(6·8)과 달랐고, `close_end_deg=0` 은 **이미 발산한다고 문서화된 값**이었다.
-   재실행 전 `params` 를 26개 전수 대조할 것. `force_stats()` 가 이제 강제한다.
-6. ⚠️ **`--orient 1`(슬라이서 자동 배향)을 믿지 마라.** 09-01 실측에서 높이를 59.5→60.7 로 키웠다.
-7. ⚠️ **`make_print_job.py` 지역 변수는 모듈 상단 이름과 겹치면 안 된다.** `_a`(argv)를
-   면적 배열로 덮어써서 죽었다.
-8. ⚠️ **Bambu MQTT 는 바뀐 필드만 보낸다.** 매번 새 dict 로 덮어쓰면 `UNKNOWN`·`베드 0.0` 이
-   나온다. **누적 병합**해야 한다.
-9. ⚠️ **파이프 뒤 종료코드는 마지막 명령의 것이다.** `python ... | tail -1` 로 만든
-   `until` 루프가 조기 탈출했다.
-10. ⚠️ 워커 산출물의 **`.npz`/`.png` 는 머지로 따라오지 않는다**(gitignore). worktree 에서
-    복사해야 하고, 게이트·판정의 **입력**이면 화이트리스트해야 한다.
+1. 🔴 **하드코딩 경로가 낡은 설계를 조용히 읽는다.** `forward-only` 규칙이 옛 경로를 절대
+   안 깨뜨리므로 **깨져서 발각될 기회가 없다.** 산출 JSON 에 `source_sha256_16` 을 남길 것.
+2. 🔴 **`design.json` 의 `supersedes` 는 뒤만 가리킨다.** 그 폴더 안에서는 자기가 낡았는지 알 수 없다.
+3. 🔴 **모니터 실행 중 별도 MQTT 조회 금지.** P1S 가 동시 클라이언트를 제한해 한쪽이 리셋된다 —
+   오늘 "MQTT 먹통" 의 상당수가 이것이었다. 카메라(6000)는 영향 없다.
+4. 🔴 **카메라는 접속 직후 버퍼된 옛 프레임을 준다.** 첫 장 버리고 둘째를 쓸 것.
+   판을 치운 뒤인데 치우기 전 프레임이 나와 오보할 뻔했다.
+5. 🔴 **복구 가능한 정지를 자동 중단하지 마라.** `print_error != 0` 이 뜬 단 한 번이 필라멘트
+   소진(0x0300_8004)이었고 중단했다면 27층을 날렸다. 살아 있는 PAUSE 에는 `mqtt_resume()` 이 작동한다.
+6. ⚠️ **`overhang` 지표는 베드에 닿는 아래 면까지 센다.** 희생 발을 붙이면 그만큼 늘어나는데
+   실제 늘어질 면이 생긴 게 아니다.
+7. ⚠️ **`trimesh` 단면(`section().to_2D()`)은 `shapely` 없으면 죽는다.** 바닥면 삼각형 직접 선별로 우회.
+8. ⚠️ BambuStudio glfw 에러는 **무해**하다. CLI 슬라이싱은 정상 완료된다.
 
 **승인 대기 / 사용자 결정 필요**
 
-- 🔴 **브래킷 출력 방법 미정.** 기능축을 세우면 접지 **41 mm²**(높이 59 mm)로 1차 실패 수준이다.
-  배향으로 못 푼다 — 브림 확대·러프트·형상 분할 중 결정 필요.
-- 🔴 **임계값 2개가 근거 없다**: 1층 접지 10 mm²/mm · 무방비 오버행 300 mm².
-  **실패 사례에서만** 잡았다. g7 실물(무방비 243 mm²)이 첫 교정 데이터 — 사용자 실물 검수 대기 중.
-- P1 **D341 미이행 3건**(`.rbl`·헤드리스 스크린샷·육안검수). 루트 `GATES.md` **G7~G13 전부 미완**.
-- 안전 후크 2건 미배선(D458 §6) · 프린터 IP DHCP 예약 · 펠릿 조달 · 배출 용기 규격.
+- 🔴 **브래킷·링크 바닥이 기능 정합면인가** — 희생 발 자국이 남는다. 출력 전 확인 필요.
+- 🔴 **그랩 v2 착수 여부** — B1 까지 2.4 cm³ 부족, 보울 체적 확대 필요(바닥판으로는 안 됨).
+- `orient_for_print.py` 에 "축 정확히 정렬" 후보 추가 여부(기존 성공 배향에 영향 가능).
+- D470 처방 3건 구현 · 안전 후크 2건 배선 · 프린터 IP DHCP 예약 · 펠릿 조달.
 
 **검증 방법**
 
 ```bash
-git log --oneline -6
-python make_print_job.py <3mf> <dir> <name> <STL>     # 게이트 11종
-python sim_deme_scoop_report.py                       # n=5 통계 + 설정 동일성 게이트
-head -n 28958 claudedocs/DECISIONS.md | md5sum        # f48770d7... (D465 append 전 불변)
-grep -n '^## Schema errata' claudedocs/EXPERIMENT_LEDGER.md   # 536 = 표 블록 끝 +2
+git log --oneline -8
+head -n 29347 claudedocs/DECISIONS.md | md5sum        # 956fcfe6... (D469 append 전 불변)
+grep -n '^## Schema errata' claudedocs/EXPERIMENT_LEDGER.md   # 537 = 표 블록 끝 +2
+python make_print_job.py <3mf> <dir> <name> <STL>     # 게이트 13종
 ```
