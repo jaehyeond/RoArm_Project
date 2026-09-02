@@ -44,6 +44,9 @@ def main():
         merge_fixed_joints=args_cli.merge_joints,
         force_usd_conversion=True,
         collider_type=args_cli.collider,           # 🔴 스쿱 공동 보존 (D446)
+        # mimic 조인트(셸_R)를 독립 조인트로 변환 — Isaac articulation 에서 mimic 은 구동이
+        # 불안정(set_joint_positions 로 안 열림). 독립 DOF 로 만들어 양쪽을 직접 구동한다.
+        convert_mimic_joints_to_normal_joints=True,
         joint_drive=UrdfConverterCfg.JointDriveCfg(
             gains=UrdfConverterCfg.JointDriveCfg.PDGainsCfg(stiffness=100.0, damping=1.0),
             target_type="position",
