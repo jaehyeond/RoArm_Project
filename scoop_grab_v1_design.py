@@ -81,15 +81,25 @@ P = {
     #    -> 최소 26.7 mm. 여유 5 mm 를 더해 32 로 잡는다.
     "bracket_standoff_mm": 32.0,
     "pivot_shaft_d_mm":    3.0,   # M3 볼트 축
-    "pivot_boss_d_mm":     6.0,   # 브래킷 피벗 부시 바깥지름. 셸/셸크랭크가 이 위를 돈다.
+    # 🔴 2026-09-02: 6.0 -> 6.7. **셸은 한 톨도 안 바뀐다.** 셸 보어와 슬리브 보어는
+    # boss_d/2 + bore_clear 의 **합**으로만 정해지므로(573·666행), 합 3.6 을 유지한 채
+    # boss_d 만 키우면 회전측 형상은 그대로이고 **고정측(브래킷 보스)만 굵어진다.**
+    # 목적: 피벗 반경 여유 0.60 -> 0.25 mm. 실물에서 지름 방향 흔들림이 1.20 mm 였고,
+    # 그 값이 **기어 중심거리 26.0 을 직접 흔들었다**(이끝 겹침이 2.0 뿐이라 물렸다 빠졌다 한다).
+    "pivot_boss_d_mm":     6.7,   # 브래킷 피벗 부시 바깥지름. 셸/셸크랭크가 이 위를 돈다.
                                   # 8.0 -> 6.0 (2026-09-01): 퇴화 정정으로 허브가 실체를 갖자
                                   # 팔 여유가 G4 0.024 / G9 0.081 mm 로 소진됐다. 허브 바깥반지름은
                                   # boss_d/2 + bore_clear + hub_wall 이라 boss_d 를 줄이면 그대로 따라 준다.
                                   # 실측: G4 0.024->0.194, G9 0.081->0.325, 자중 52.67->48.27 g (상한 50 통과).
                                   # 5.0 이면 여유 0.694 로 더 좋으나 M3(3mm) 위 벽이 1.0mm 뿐이라 채택 안 함.
-    "pivot_bore_clear_mm": 0.6,   # 보스 OD <-> 회전체 보어 틈 (FDM 러닝핏. 0.25 는
-                                  # 인쇄 공차로 뻑뻑하고 게이트 0.5 mm 하한도 못 넘는다)
+    # 🔴 2026-09-02: 0.6 -> 0.25. 위 boss_d 6.0->6.7 과 **짝으로만** 의미가 있다(합 3.6 불변).
+    # ⚠️ 앞선 주석은 "0.25 는 게이트 0.5 mm 하한도 못 넘는다" 였는데, 그 게이트는
+    #    보어 끼워맞춤이 아니라 `linkage_rod_clears_shells`(로드 ↔ 셸·브래킷 보스 여유)다.
+    #    이번 변경은 회전측을 안 건드리고 **보스만** 키우므로 그 게이트를 다시 돌려서 판정한다.
+    "pivot_bore_clear_mm": 0.25,  # 보스 OD <-> 회전체 보어 틈 (FDM 러닝핏)
     "hub_wall_mm":         1.5,   # 셸 보어 랜드 벽두께
+    # 이 side 의 기어만 반치 돌려 거울 위상을 깬다. -1 = 셸 L (이미 뽑은 R 을 살린다)
+    "gear_half_pitch_side": -1,
 
     # ── link5 실측 상수 (배치를 푸는 데 필요. p37 placement() 와 같은 출처) ──
     #    이 값들이 있어야 서보축을 그랩 로컬 좌표로 옮길 수 있다. 링크는 서보축과
@@ -132,7 +142,27 @@ P = {
     # ── 재료 · 검증 기준 ────────────────────────────────────────────────
     "density_g_cm3":       1.24,  # ⚠️ 프린터에 물린 것은 PLA(1.24)다. PETG면 1.27
     "material":           "PLA",  # 파이프라인 실측(filament_full.json = ['PLA'])
-    "tool_mass_max_g":    50.0,
+    # 🔴 2026-09-02: 50.0 -> 65.0, 그리고 **기준을 출력물에서 실물 총량으로 바꿨다.**
+    # 옛 50.0 은 근거 주석이 0줄인 임의 목표치였고, 게이트는 **출력물만** 셌다.
+    # 그래서 M3 볼트(개당 약 4 g)를 아무리 넣어도 게이트가 몰랐다 — 조립하는 순간
+    # 무의미해지는 게이트였다. 실측 근거: RoArm-M3-Pro 페이로드 **200 g @0.5 m**
+    # (D463 `:28761`), D457 §12 "페이로드는 병목이 아니다(여유 13배)".
+    # 65 g = 출력물 49.91 + 하드웨어 약 8 g 을 담고도 페이로드의 33% → 3배 여유.
+    # ⚠️ 어깨 중력 처짐(D458 §5, +1.3° 자력 복구 불가)은 실측된 문제이고 무게에 비례해
+    #    악화된다. 그래서 200 g 까지 풀지 않고 65 로 묶는다.
+    "tool_mass_max_g":    65.0,   # **출력물 + 체결 하드웨어** 합계 상한
+    # 체결 하드웨어 명세. 게이트가 이 표를 더해서 실물 총량을 만든다.
+    # ⚠️ src 가 "UNCONFIRMED" 인 동안 게이트는 PASS 해도 **미확정 표시를 달고 나간다**
+    #    (`bulk_density_src` 와 같은 규약). 조립 정의가 끝나면 "SPEC_YYYY-MM-DD" 로 교체.
+    "hardware_bom_src":   "UNCONFIRMED",
+    "hardware_bom": [
+        # name,                 qty, g_each,  note
+        ["M3x70_pivot_bolt",      2,   4.00, "피벗 축 관통 (보스 59 mm) — Phase 1 에서 재검토"],
+        ["M3_nut",                2,   0.40, "피벗 축 반대편"],
+        ["M3_washer",             4,   0.10, "피벗 축 양단"],
+        ["M2.5x10_mount_bolt",    4,   0.65, "브래킷 -> link5 4볼트 사각형 25.19x19.44"],
+        ["M2.5_nut",              4,   0.25, "브래킷 체결 반대편"],
+    ],
     "fill_factor":         0.70,
     "bulk_density_g_cm3":  0.55,  # ⚠️MEASURE 펠릿 도착 후 250 ml 계량컵 칭량
     "bulk_density_src":   "ASSUMED",   # 실측하면 "MEASURED_YYYY-MM-DD" 로 교체.
@@ -582,8 +612,15 @@ def build_shell(P, side):
     for j, hp in enumerate(ring(px, py, r_bore_in, r_bore_in + P["hub_wall_mm"],
                                 -w / 2.0 - st, hub_z_hi)):
         parts.append(hp); names.append(f"hub_{j:02d}")
+    # 🔴 2026-09-02 결함 수정. 두 셸은 X 거울상이고 **기어 위상까지 거울이 되어 있었다.**
+    # 거울면은 y 를 보존하고 x 만 뒤집으므로, 한쪽이 어떤 높이에 이빨을 두면 반대쪽도
+    # **같은 높이**에 이빨을 둔다 → 골에 들어갈 자리가 없다. 실측: 두 이빨이 **5.969 mm²**
+    # 서로 관통. 실물에서 겉만 닿고 겉돌았다(사용자 지적, 사진 확인).
+    # 처방: 한쪽 기어만 **반치**(pi/n = 6.923°) 돌린다. 보울은 안 움직인다.
+    # 실측 결과: 관통 5.969 -> 0.063 mm², 맞물림 면적 5.783 -> 19.176 mm².
+    a0 = (math.pi / P["shell_gear_teeth"]) if side == P["gear_half_pitch_side"] else 0.0
     for j, gp in enumerate(gear_teeth(px, py, P["shell_gear_teeth"], P["gear_module_mm"],
-                                      gw, P["gear_backlash_mm"])):
+                                      gw, P["gear_backlash_mm"], a_start=a0)):
         gp.apply_translation((0, 0, w / 2 + st + gw / 2))
         parts.append(gp); names.append(f"gear_{j:02d}")
 
@@ -922,6 +959,46 @@ def run_gates(P, shellL, shellR, bracket, link, lk, nmL, nmR, nmB, nmK):
     r_s = P["gear_module_mm"] * P["shell_gear_teeth"] / 2.0
     g["shell_gears_mesh"] = {"pass": abs(2 * r_s - k["g"]) < 1e-6,
                              "sum_pitch_r_mm": 2 * r_s, "pivot_gap_mm": k["g"]}
+    # 🔴 형상 ③-a (2026-09-02 신설): **이빨이 정말 교대로 지나가는가.**
+    #    위 ③ 은 중심거리만 본다(13+13=26). 위 ① 은 "맞물리는 기어는 이끝원이 반드시
+    #    겹친다"며 기어를 충돌 검사에서 **뺐다** — 그 예외가 옳으려면 "교대로 지나간다"가
+    #    참이어야 하는데 **아무도 그걸 검사하지 않았다.** 그래서 두 기어가 거울 위상이라
+    #    이빨끼리 5.969 mm² 관통하는 상태가 전 게이트를 통과했다(실물에서 발각).
+    #    여기서는 겹침 렌즈를 실제로 채워서 **관통 면적**과 **한쪽만 있는 면적**을 잰다.
+    _gL = [p for p, n in zip(shellL, nmL) if n.startswith("gear")]
+    _gR = [p for p, n in zip(shellR, nmR) if n.startswith("gear")]
+    _ra = r_s + P["gear_module_mm"]
+    _hy = math.sqrt(max(_ra ** 2 - (k["g"] / 2.0) ** 2, 1e-9))   # 렌즈 반높이
+    _xs = np.arange(-(_ra - k["g"] / 2.0), _ra - k["g"] / 2.0, 0.02)
+    _ys = np.arange(-_hy, _hy, 0.02)
+    _X, _Y = np.meshgrid(_xs, _ys, indexing="ij")
+    _z = float(np.mean([p.bounds[:, 2].mean() for p in _gL]))
+    _G = np.stack([_X.ravel(), _Y.ravel(), np.full(_X.size, _z)], axis=1)
+
+    def _inside(pieces, q):
+        hit = np.zeros(len(q), bool)
+        for _m in pieces:                       # 조각이 전부 볼록이라 반공간 검사로 충분
+            _n, _o = _m.face_normals, _m.triangles[:, 0, :]
+            hit |= (np.einsum("pfk,fk->pf", q[:, None, :] - _o[None, :, :], _n) <= 1e-6).all(axis=1)
+        return hit
+
+    _iL, _iR = _inside(_gL, _G), _inside(_gR, _G)
+    _cell = 0.02 * 0.02
+    _pen = float((_iL & _iR).sum() * _cell)      # 서로 파고든 면적
+    _alt = float((_iL ^ _iR).sum() * _cell)      # 한쪽만 = 교대로 지나가는 면적
+    g["shell_gear_teeth_interlock"] = {
+        "pass": _pen <= 0.50 and _alt >= 10.0,
+        "penetration_mm2": round(_pen, 3), "penetration_limit_mm2": 0.50,
+        "alternating_mm2": round(_alt, 3), "alternating_min_mm2": 10.0,
+        "lens_half_height_mm": round(_hy, 3),
+        "calibration": ("실물 쌍으로 잡았다 — 거울 위상(결함, 실물에서 겉돌았다) 관통 5.969 / "
+                        "교대 5.783 · 반치 오프셋(수정) 관통 0.063 / 교대 19.176 mm². "
+                        "임계는 그 사이."),
+        "blind_spot": ("한 z 평면만 본다(기어는 z 방향 등단면이라 충분하나 기어가 아닌 "
+                       "부품이 렌즈에 들어오면 못 본다). 그리고 **정지 상태 한 자세**만 본다 — "
+                       "회전 전 구간의 간섭·백래시는 보지 않는다. 치형이 사다리꼴 근사라 "
+                       "실제 인볼류트 전동 오차도 이 게이트 밖이다.")}
+
     # 형상 ③-b: 기어 이가 실제로 물리되 뿌리까지 박히지는 않는가
     mod = P["gear_module_mm"]
     r_a = r_s + mod                      # 이끝원
@@ -1017,8 +1094,22 @@ def run_gates(P, shellL, shellR, bracket, link, lk, nmL, nmR, nmB, nmK):
     # 수치 ⑥~⑨
     vol_mm3 = sum(p.volume for p in allp)
     mass = vol_mm3 * P["density_g_cm3"] / 1000.0
-    g["tool_mass_under_max"] = {"pass": mass <= P["tool_mass_max_g"],
-                                "value_g": round(mass, 2), "limit_g": P["tool_mass_max_g"],
+    # 🔴 2026-09-02: 실물 총량 = 출력물 + 체결 하드웨어. 옛 판은 출력물만 셌다.
+    hw = [(r[0], r[1], r[2]) for r in P["hardware_bom"]]   # 4열째는 note
+    hw_g = sum(q * e for _, q, e in hw)
+    total_g = mass + hw_g
+    g["tool_mass_under_max"] = {"pass": total_g <= P["tool_mass_max_g"],
+                                "value_g": round(total_g, 2), "limit_g": P["tool_mass_max_g"],
+                                "printed_g": round(mass, 2), "hardware_g": round(hw_g, 2),
+                                "hardware_bom_src": P["hardware_bom_src"],
+                                "bom": [[n, q, e, round(q * e, 2)] for n, q, e in hw],
+                                "why": ("옛 게이트는 출력물만 셌다. 볼트를 아무리 넣어도 몰랐고, "
+                                        "조립하는 순간 무의미해졌다. 상한 50->65 는 페이로드 "
+                                        "200 g @0.5 m 대비 3배 여유이며, 어깨 처짐(D458 §5) 때문에 "
+                                        "200 까지 풀지 않는다"),
+                                "blind_spot": ("BOM 이 UNCONFIRMED 인 동안 하드웨어 질량은 **추정**이다. "
+                                               "그리고 질량만 본다 — **무게중심 거리**가 어깨 처짐을 "
+                                               "결정하는데 이 게이트는 그것을 보지 않는다"),
                                 "material": P["material"]}
     # 닫힘 내부 체적 = 두 보울 안쪽 폴리곤 면적 x 너비
     from math import cos, sin
