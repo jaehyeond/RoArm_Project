@@ -1,0 +1,75 @@
+{
+ "artifact": "NEWTON_MPM_COLLIDER_CONTAINMENT_V1",
+ "question": "can Newton implicit-MPM contain granular material inside the grab v1 shell?",
+ "method": "closed grab (or a 6 mm-walled box control) held static 30 mm above the floor, filled with MPM material placed >=3 mm from every shell vertex, 2 s of settling, count what falls below the vessel floor",
+ "shell_wall_thickness_mm": 1.03,
+ "rows": [
+  {
+   "collider": "grab_v1_shell",
+   "voxel_mm": 5.0,
+   "n_particles": 1800,
+   "max_speed_after_1_step_m_s": 0.21,
+   "leaked": 1787,
+   "leak_pct": 99.3
+  },
+  {
+   "collider": "grab_v1_shell",
+   "voxel_mm": 2.5,
+   "n_particles": 13920,
+   "max_speed_after_1_step_m_s": 0.16,
+   "leaked": 13915,
+   "leak_pct": 100.0
+  },
+  {
+   "collider": "box_wall_6mm",
+   "voxel_mm": 5.0,
+   "n_particles": 1800,
+   "max_speed_after_1_step_m_s": 0.16,
+   "leaked": 0,
+   "leak_pct": 0.0
+  },
+  {
+   "collider": "box_wall_6mm",
+   "voxel_mm": 2.5,
+   "n_particles": 13920,
+   "max_speed_after_1_step_m_s": 0.16,
+   "leaked": 0,
+   "leak_pct": 0.0
+  }
+ ],
+ "verdict": "INCONCLUSIVE_COLLIDER_MARGIN_WAS_ZERO",
+ "reason": "a 1.03 mm shell wall is transparent to a grid-based solver whose finest practical voxel is 2.5 mm; the 6 mm-walled control holds 100% at the same voxels, and the identical first-step speeds rule out an ejection artifact",
+ "non_claims": [
+  "this bounds Newton MPM's collider fidelity for THIS tool, not MPM in general",
+  "DEM collides particles against triangles directly and has no such resolution limit"
+ ],
+ "retraction_2026_09_01": "초판 verdict 는 MPM_CANNOT_REPRESENT_THIS_TOOL 이었다. 철회한다. 이 표의 셸은 ShapeConfig.margin 기본값 0.0 때문에 collider thickness 0 으로 들어갔고, sdf = d - thickness 이므로 두께 0 인 면이었다. 마진을 켜면 잔류가 0.2% -> 19.1% 로 단조 증가한다(별도 pour 실험). 완전 포획 설정은 미발견이며 '불가능'은 증명되지 않았다.",
+ "margin_sweep_pour_into_closed_grab": [
+  {
+   "voxel_mm": 5.0,
+   "margin_mm": 0.0,
+   "retained_pct": 0.2
+  },
+  {
+   "voxel_mm": 5.0,
+   "margin_mm": 1.5,
+   "retained_pct": 7.3
+  },
+  {
+   "voxel_mm": 5.0,
+   "margin_mm": 3.0,
+   "retained_pct": 19.1
+  },
+  {
+   "voxel_mm": 2.5,
+   "margin_mm": 0.0,
+   "retained_pct": 0.1
+  },
+  {
+   "voxel_mm": 2.5,
+   "margin_mm": 3.0,
+   "retained_pct": 18.2
+  }
+ ],
+ "nvidia_example_collider_to_voxel": "example_mpm_granular voxel 0.1m + box 0.5x2.0x0.8m; twoway_coupling voxel 0.05m + box; anymal = robot shank links. 전부 부피 충돌체이고 복셀의 5~20배. 얇은 셸 예제는 패키지에 없음."
+}
