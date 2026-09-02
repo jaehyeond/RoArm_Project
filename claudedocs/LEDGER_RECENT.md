@@ -1,7 +1,8 @@
 # LEDGER_RECENT.md — 최근 실험 20건 요약 (부팅 read)
 
-Last updated: 2026-09-02 (76th) — 현재 원본 `EXPERIMENT_LEDGER.md` = 566줄 / 1,071,997 B / 표 블록 511행
-(`:9-90` 82행 + `:105-533` 429행. 줄당 평균 약 2 KB, 최근 행은 5~9 KB — **단일 Read로 열면 토큰 초과**).
+Last updated: 2026-09-02 (76th 연장) — 현재 원본 `EXPERIMENT_LEDGER.md` = 567줄 / 표 블록 512행
+(`:9-90` 82행 + `:105-536` 430행. 줄당 평균 약 2 KB, 최근 행은 5~9 KB — **단일 Read로 열면 토큰 초과**).
+표 블록 끝 = `:536`(76th 연장 행 추가), `## Schema errata` = `:538`.
 
 **2026-08-26 변경 (사용자 승인, append만 — 원본 삭제·수정 0건)**: 소급 등재 2행(`:532` 57th · `:533` 70th)
 \+ 표 밖 `## Schema errata` 절 append (2026-09-02 기준 `:537~`). 앞 1,062,466 B는 **바이트 불변**(md5 `0a6d7071…` 대조 PASS).
@@ -89,6 +90,13 @@ AGENTS.md에서 걷어낸 결함 B(죽은 상태가 규칙/참조 파일에 상�
 
 ### 현행 피벗 — 포스코 야드 (63rd~)
 
+- **`:536` · 76th 연장** (09-02 심야) Phase 1 요크 양단지지 구현 + **실물 로봇 장착검증** + 손목롤 제약
+  → **`PHASE1_YOKE_BOTH_END_SUPPORT__G2_ATTACH_OK_ON_REAL_ROBOT__MASS_61G_ALU_BOLTS__WRIST_ROLL_X_OPEN_LINK4_CONSTRAINT_DOCUMENTED`**
+  (**D473** `:29764`) · `PHASE1_ASSEMBLY_DEFINITION.md` · `runtime_logs/grab_track/g17_yoke_alu/`
+  ※ 정본 형상 = `g17_yoke_alu/`(g9_sidefix·g16* 낡음). 커밋 `bcde1df`·`541cda3`·`d58f6b6`.
+  ※ 🔴 **실물 로봇 장착을 사용자가 지적** — p37 `G2_ATTACH_OK`, 백포스트 0.263→x-shift로 기존값 복귀(요크 무악화).
+  ※ 🔴 **손목롤×개폐 link4 간섭** = servocrank(링크 선재)가 완전개방+롤±14°밖서 침범. 요크 무관. 문서화+G8b.
+  ※ ⚠️ **출력 0 · URDF·USD 0(Phase 3 미착수) · 서보 인출 미검증(Phase 2 잔여)**. 반치·백래시·유격 미실측.
 - **`:535` · 76th** (09-02) 셸 L·R 실물 완주 2건 + 워커 P4 트랙 코디네이터 독립 검증
   → **`G10_G11_ADHESION_CAUSE_CONFIRMED_BY_CONTROLLED_SLICE_ONLY_CHANGE__CONTACT_PER_GRAM_GATE_CALIBRATED_ON_REAL_SUCCESS_FAILURE_PAIR__D_D_RECOMPUTED_ON_CURRENT_SHELL_6PCT_TO_62PCT`**
   (**D469** `:29349` · **D470** `:29477` · **D471** `:29548`) · `session_20260902_76th_g10_g11_print_and_worker_adjudication.md`
