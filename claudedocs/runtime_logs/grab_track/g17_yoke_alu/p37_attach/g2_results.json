@@ -226,7 +226,62 @@
       "pass": true,
       "min_clearance_mm": 14.326,
       "closest_piece": "linkage:servocrank_plate_00",
-      "why": "link5 만이 아니라 바로 앞 링크와도 안 닿아야 손목 롤이 자유롭다"
+      "why": "바로 앞 링크와 안 닿아야 한다. ⚠️ 이 게이트는 **손목 롤 0도 한 자세**만 본다 — 롤 전 범위는 G8b 가 본다(D473: 단일 자세가 개방+대롤 servocrank 충돌을 놓쳤다)"
+    },
+    "G8b_link4_clear_through_wrist_roll": {
+      "pass": true,
+      "closed_state_min_clear_mm": 4.411,
+      "closed_state_closest": "linkage:servocrank_arm",
+      "yoke_min_clear_mm": 44.026,
+      "yoke_min_at": {
+        "servo_deg": 0.0,
+        "roll_deg": -180
+      },
+      "safe_roll_vs_opening": [
+        {
+          "mouth_mm": 0.0,
+          "servo_deg": 0.0,
+          "safe_roll_abs_deg": 180,
+          "min_clear_mm": 4.411,
+          "min_at_roll_deg": -180,
+          "closest": "linkage:servocrank_arm"
+        },
+        {
+          "mouth_mm": 29.1,
+          "servo_deg": 44.5,
+          "safe_roll_abs_deg": 180,
+          "min_clear_mm": 1.468,
+          "min_at_roll_deg": -180,
+          "closest": "linkage:servocrank_arm"
+        },
+        {
+          "mouth_mm": 44.3,
+          "servo_deg": 67.2,
+          "safe_roll_abs_deg": 100,
+          "min_clear_mm": 0.062,
+          "min_at_roll_deg": 120,
+          "closest": "linkage:rod_eye1_06"
+        },
+        {
+          "mouth_mm": 52.4,
+          "servo_deg": 80.1,
+          "safe_roll_abs_deg": 0,
+          "min_clear_mm": -0.72,
+          "min_at_roll_deg": 20,
+          "closest": "linkage:servocrank_plate_04"
+        },
+        {
+          "mouth_mm": 58.0,
+          "servo_deg": 89.0,
+          "safe_roll_abs_deg": 0,
+          "min_clear_mm": -1.499,
+          "min_at_roll_deg": 140,
+          "closest": "linkage:servocrank_plate_03"
+        }
+      ],
+      "documented_constraint": "개구>44 mm 이면 손목 롤을 제한해야 한다(완전개방 |롤|≤14도). 충돌부 = servocrank(링크, D463/D464 선재), 요크 아님. 이송은 닫힘이라 롤 전 범위 자유 → operational 무해, 구성 의존 한계로 등재",
+      "why": "G8 은 롤 0 한 자세만 봤다. 그랩+link5 가 롤축(link5 z) 둘레로 돌면 개폐 상태에 따라 servocrank 가 link4 에 다가간다. 닫힘 안전 + 요크 무침범이면 PASS, 나머지는 등재 제약",
+      "blind_spot": "롤 20도·개폐 5점 격자다(경계는 그 사이에서 ±20도·한 칸 오차). 손목 pitch 는 link4-link5 상대자세를 안 바꾸므로 무관하나, **link3 이하 상류 링크와의 충돌은 안 본다**(link4 까지만). 정적 자세만 — 동적 관성/처짐 아님"
     },
     "G9_clear_of_stock_jaw": {
       "pass": true,

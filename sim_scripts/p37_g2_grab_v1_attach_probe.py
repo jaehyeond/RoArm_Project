@@ -410,7 +410,84 @@ def main():
     gates["G8_clear_of_link4"] = {
         "pass": worst8 >= 0.0, "min_clearance_mm": round(float(worst8), 3),
         "closest_piece": who8,
-        "why": "link5 만이 아니라 바로 앞 링크와도 안 닿아야 손목 롤이 자유롭다"}
+        "why": ("바로 앞 링크와 안 닿아야 한다. ⚠️ 이 게이트는 **손목 롤 0도 한 자세**만 본다 "
+                "— 롤 전 범위는 G8b 가 본다(D473: 단일 자세가 개방+대롤 servocrank 충돌을 놓쳤다)")}
+
+    # G8b 손목 롤 x 개폐 2D 스윕 — link4 간섭 (D473, 단일 자세 G8 의 사각지대 봉합)
+    #   롤축 = link5 z (URDF link4_to_link5 axis=0,0,1, 원점 통과, 범위 ±180도). 그랩은 link5
+    #   프레임에 있으므로 그랩을 link5-z 둘레로 φ 회전(link4 고정)시켜 잰다. φ=0 은 G8 과 일치해야 한다.
+    #   판정: (a) **닫힘 상태**가 롤 전 범위에서 안전(≥0.5) — operational 이송이 여기 → FAIL 이면 진짜 결함.
+    #         (b) **요크**가 어느 서보x롤에서도 link4 를 안 침범 — 침범하면 요크 회귀(내가 만든 문제).
+    #   개방+대롤의 servocrank 충돌은 **구성 의존 한계로 등재**(PASS 를 막지 않되 안전 롤 범위를 기록).
+    def _rollz(phi):
+        c, s = math.cos(phi), math.sin(phi)
+        M = np.eye(4); M[0, 0] = c; M[0, 1] = -s; M[1, 0] = s; M[1, 1] = c
+        return M
+
+    def _grab_at(ri):
+        row = rows[int(ri)]; Ts, Tr, Tk = G.linkage_pose(P, lk, int(ri))
+        Tsw = {"servocrank": Ts, "rod": Tr, "shellcrank": Tk}
+        out = []
+        for parts, names, side, tag in ((sL, nL, -1, "shellL"), (sR, nR, +1, "shellR")):
+            piv = T[:3, :3] @ np.array([side * K["g"] / 2.0, 0.0, 0.0]) + T[:3, 3]
+            Rj = rot_about(piv, hinge_world, math.radians(side * row["shell_deg"]))
+            for i in body_idx:
+                m = parts[i].copy(); m.apply_transform(T); m.apply_transform(Rj)
+                out.append((m, f"{tag}:{names[i]}"))
+        for m0, nm in zip(br, nB):
+            m = m0.copy(); m.apply_transform(T); out.append((m, f"bracket:{nm}"))
+        for m0, nm in zip(dr, nD):
+            m = m0.copy(); m.apply_transform(T @ Tsw[G.linkage_group(nm)])
+            out.append((m, f"linkage:{nm}"))
+        return out
+
+    roll_deg = list(range(-180, 181, 20))
+    fracs = [0.0, 0.5, 0.75, 0.9, 1.0]
+    per_open, closed_min, yoke_min = [], (1e9, None), (1e9, None, None)
+    for fr in fracs:
+        ri = int(round(fr * (len(rows) - 1)))
+        base = _grab_at(ri); servo = rows[ri]["servo_deg"]; mouth = rows[ri]["mouth_mm"]
+        clby = {}
+        wmin = (1e9, None, None)
+        for phi in roll_deg:
+            Rr = _rollz(math.radians(phi))
+            probe = [(m.copy(), nm) for m, nm in base]
+            for m, _ in probe:
+                m.apply_transform(Rr)
+            v, w = clearance_to(probe, tree4, pitch, l4_lo, l4_hi, l4_cloud)
+            clby[phi] = v
+            if v < wmin[0]:
+                wmin = (float(v), int(phi), w)
+            yv, yw = clearance_to([(m, nm) for m, nm in probe if "yoke" in nm],
+                                  tree4, pitch, l4_lo, l4_hi, l4_cloud)
+            if yv < yoke_min[0]:
+                yoke_min = (float(yv), round(float(servo), 1), int(phi))
+        # 안전 |롤| = 0 중심으로 여유≥0.5 유지되는 최대 대칭 각
+        lim = 180
+        for phi in range(0, 181, 20):
+            if clby.get(phi, 9) < 0.5 or clby.get(-phi, 9) < 0.5:
+                lim = max(phi - 20, 0); break
+        per_open.append({"mouth_mm": round(float(mouth), 1), "servo_deg": round(float(servo), 1),
+                         "safe_roll_abs_deg": lim, "min_clear_mm": round(wmin[0], 3),
+                         "min_at_roll_deg": wmin[1], "closest": wmin[2]})
+        if fr == 0.0:
+            closed_min = (wmin[0], wmin[2])
+    g8b_pass = bool(closed_min[0] >= 0.5 and yoke_min[0] >= 0.5)
+    gates["G8b_link4_clear_through_wrist_roll"] = {
+        "pass": g8b_pass,
+        "closed_state_min_clear_mm": round(float(closed_min[0]), 3),
+        "closed_state_closest": closed_min[1],
+        "yoke_min_clear_mm": round(float(yoke_min[0]), 3),
+        "yoke_min_at": {"servo_deg": yoke_min[1], "roll_deg": yoke_min[2]},
+        "safe_roll_vs_opening": per_open,
+        "documented_constraint": ("개구>44 mm 이면 손목 롤을 제한해야 한다(완전개방 |롤|≤14도). "
+                                  "충돌부 = servocrank(링크, D463/D464 선재), 요크 아님. "
+                                  "이송은 닫힘이라 롤 전 범위 자유 → operational 무해, 구성 의존 한계로 등재"),
+        "why": ("G8 은 롤 0 한 자세만 봤다. 그랩+link5 가 롤축(link5 z) 둘레로 돌면 개폐 상태에 따라 "
+                "servocrank 가 link4 에 다가간다. 닫힘 안전 + 요크 무침범이면 PASS, 나머지는 등재 제약"),
+        "blind_spot": ("롤 20도·개폐 5점 격자다(경계는 그 사이에서 ±20도·한 칸 오차). 손목 pitch 는 "
+                       "link4-link5 상대자세를 안 바꾸므로 무관하나, **link3 이하 상류 링크와의 충돌은 "
+                       "안 본다**(link4 까지만). 정적 자세만 — 동적 관성/처짐 아님")}
 
     # G9 순정 가동 조는 **떼지 않는다** — 서보 크랭크가 그 조의 볼트 구멍에 물린다.
     #    따라서 조가 0~89도 도는 동안 셸·브래킷·로드·셸크랭크와 안 닿아야 한다.
