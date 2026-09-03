@@ -1,8 +1,8 @@
 # LEDGER_RECENT.md — 최근 실험 20건 요약 (부팅 read)
 
-Last updated: 2026-09-02 (76th 연장) — 현재 원본 `EXPERIMENT_LEDGER.md` = 567줄 / 표 블록 512행
-(`:9-90` 82행 + `:105-536` 430행. 줄당 평균 약 2 KB, 최근 행은 5~9 KB — **단일 Read로 열면 토큰 초과**).
-표 블록 끝 = `:536`(76th 연장 행 추가), `## Schema errata` = `:538`.
+Last updated: 2026-09-03 (77th 후반 3) — 현재 원본 `EXPERIMENT_LEDGER.md` = 573줄 / 표 블록 519행
+(`:9-90` 82행 + `:105-541` 437행. 줄당 평균 약 2 KB, 최근 행은 5~9 KB — **단일 Read로 열면 토큰 초과**).
+표 블록 끝 = `:541`(77th 4행 추가), `## Schema errata` = `:543`.
 
 **2026-08-26 변경 (사용자 승인, append만 — 원본 삭제·수정 0건)**: 소급 등재 2행(`:532` 57th · `:533` 70th)
 \+ 표 밖 `## Schema errata` 절 append (2026-09-02 기준 `:537~`). 앞 1,062,466 B는 **바이트 불변**(md5 `0a6d7071…` 대조 PASS).
@@ -27,10 +27,10 @@ Last updated: 2026-09-02 (76th 연장) — 현재 원본 `EXPERIMENT_LEDGER.md` 
 
 ## 1. 선정 기준 (재현 가능 — 기억으로 판단하지 말 것)
 
-원장 **표 블록의 마지막 20행 = `:516`~`:535`**, 정렬은 append 순. ⚠️ 75th·76th 가 2행을 더해 앵커가 2칸 밀렸다. 재확인 명령:
+원장 **표 블록의 마지막 20행 = `:522`~`:541`**, 정렬은 append 순. ⚠️ 75th·76th·76th 연장×2·77th×4 가 행을 더해 앵커가 밀렸다. 재확인 명령:
 ```bash
-grep -n '^## Schema errata' claudedocs/EXPERIMENT_LEDGER.md   # 537 → 표 블록 끝 = :535
-sed -n '516,535p' claudedocs/EXPERIMENT_LEDGER.md | awk -F'|' '{print NR+515": "substr($2,1,120)}'
+grep -n '^## Schema errata' claudedocs/EXPERIMENT_LEDGER.md   # 543 → 표 블록 끝 = :541
+sed -n '522,541p' claudedocs/EXPERIMENT_LEDGER.md | awk -F'|' '{print NR+521": "substr($2,1,120)}'
 ```
 ⚠️ **2026-08-26부터 append 순 ≠ 시간 순이다.** 소급 등재로 `:532`(57th, 08-13)가 `:531`(69th, 08-16)보다
 뒤에 있다. 시간순이 필요하면 앵커가 아니라 각 행의 Date 셀을 봐야 한다.
@@ -90,34 +90,36 @@ AGENTS.md에서 걷어낸 결함 B(죽은 상태가 규칙/참조 파일에 상�
 
 ### 현행 피벗 — 포스코 야드 (63rd~)
 
+- **`:541` · 77th 후반 3** (09-03) **Isaac Lab 구 파지 시행**: 로봇+g18 그랩이 ⌀30 mm 구를 바닥에서 집어 올림(3차 ok, 1차 토크 상한·2차 배 바닥 박힘 실패) + 영상
+  → **`ISAACLAB_SPHERE_GRASP_OK_RUN3__ACTUATOR_EFFORT_LIMIT_FROM_USD_MAXFORCE__SHELL_SWEEP_BOTTOM_3P7MM_BELOW_LIP__DEMO_TORQUE_8NM_NONPHYSICAL`**
+  (**D478** `:30046`) · `g18_nut_trap/isaaclab_grasp_sphere/` (mp4·strip·JSON). ⚠️ 입자 0·토크 8.0 비물리·단일 시행.
+- **`:540` · 77th 후반 2** (09-03) **시각·시뮬 3층 검증**: matplotlib 실메쉬 · Isaac RTX 전체+근접 8장(관절 읽기값) · **Isaac Lab 512/64 env 병렬 스텝**
+  → **`ISAACLAB_PARALLEL_512_OK__SHELL_R_MIMIC_FLAG_INVERTED_FIXED_TO_FALSE__RTX_CLOSEUP_8_WITH_JOINT_READBACK__WRITER_RUNAWAY_AND_CLOSE_HANG_CONTAINED`**
+  (**D477** `:29992`) · `g18_nut_trap/{viz/, isaaclab_smoke/}` · `usd/g18_closeup_v3/`
+  ※ 🔴 `convert_mimic_joints_to_normal_joints=True` = PhysX mimic 생성(반대) → 셸 R 상한 고착 → False 로 재생성 후 OK. 스텝 5.55 ms/512 env.
+  ※ ⚠️ 비주장: 입자 물리 0 · 게인 임의 · 4,096 env 외삽. 사고: BasicWriter 32 GB 폭주 · close() 행 8.7 h.
+- **`:539` · 77th 후반** (09-03) **Phase 2 BLOCKED 해소 = `g18_nut_trap`**: 사용자 권고 (나)+(다) → 브래킷 3점(쌍 = 바깥 볼트·안쪽 너트 / 팁 = 레일 슬롯 너트) + 크랭크판 포켓 너트 → p37·p38 PASS → URDF·USD 재생성
+  → **`PHASE2_FASTENING_RESOLVED_G18__3PT_MIXED_DIRECTION_NUT_TRAPS__P37_G2_ATTACH_OK__P38_G2_DRIVE_EXTRACTION_OK__URDF_USD_REGENERATED__LATENT_G3_G6_DEFECTS_FOUND`**
+  (**D476** `:29936`) · `session_20260903_77th_drive_extraction_fastener_probe_p38.md` §7~ · `g18_nut_trap/`
+- **`:538` · 77th** (09-03) **구동 인출부 체결구 3D 검증**: 순정 가동 조 볼트 → 서보 크랭크판을 체결구(머리·너트·꼬리)까지 모델, p38 G10~G13
+  → **`G2_DRIVE_EXTRACTION_BLOCKED__CRANK_HOLES_MATCH_0.02MM__PLATE_SEATS_0.016MM__FASTENER_ENVELOPE_FAIL_Z83_PAIR_RESIDUAL_1.03MM__BOM_M2.5x10_TOO_LONG_ALL_4__CRANK_BOLTS_NOT_IN_BOM`**
+  (**D475** `:29879`) · `session_20260903_77th_drive_extraction_fastener_probe_p38.md` · `g17_yoke_alu/p38_drive/`
 - **`:537` · 76th 연장** (09-03 새벽) **Phase 3 자산화**: 구동 1축 URDF → 로봇 합성(link5 부착) → Isaac 5.1 USD → RTX 렌더
   → **`PHASE3_URDF_USD_MATERIALIZED__PER_PIECE_CONVEX_COLLISION_D446_AVOIDED__MIMIC_TO_NORMAL__CUSTOM_GRAB_ADDED_NOT_REPLACING_STOCK_GRIPPER`**
   (**D474** `:29848`) · `local_assets/roarm_m3/`
-  ※ 🔴 **정정: 커스텀 그랩은 순정 그리퍼 "교체"가 아니라 "추가"**(브래킷=순정 고정 조, 서보크랭크=순정 가동 조에 볼트, 순정 서보로 구동).
-  ※ 🔴 collider=조각별 볼록350(D446 회피) · mimic→독립(Isaac 구동) · 카메라 AABB→1.14m(근접이면 프레임 놓침).
-  ※ ⚠️ **물리 시뮬 0**(펠릿=DEME 별개, USD↔DEME 브리핑만) · 구동 인출 실물 미검증(Phase 2 잔여).
 - **`:536` · 76th 연장** (09-02 심야) Phase 1 요크 양단지지 구현 + **실물 로봇 장착검증** + 손목롤 제약
   → **`PHASE1_YOKE_BOTH_END_SUPPORT__G2_ATTACH_OK_ON_REAL_ROBOT__MASS_61G_ALU_BOLTS__WRIST_ROLL_X_OPEN_LINK4_CONSTRAINT_DOCUMENTED`**
   (**D473** `:29764`) · `PHASE1_ASSEMBLY_DEFINITION.md` · `runtime_logs/grab_track/g17_yoke_alu/`
-  ※ 정본 형상 = `g17_yoke_alu/`(g9_sidefix·g16* 낡음). 커밋 `bcde1df`·`541cda3`·`d58f6b6`.
-  ※ 🔴 **실물 로봇 장착을 사용자가 지적** — p37 `G2_ATTACH_OK`, 백포스트 0.263→x-shift로 기존값 복귀(요크 무악화).
-  ※ 🔴 **손목롤×개폐 link4 간섭** = servocrank(링크 선재)가 완전개방+롤±14°밖서 침범. 요크 무관. 문서화+G8b.
-  ※ ⚠️ **출력 0 · URDF·USD 0(Phase 3 미착수) · 서보 인출 미검증(Phase 2 잔여)**. 반치·백래시·유격 미실측.
 - **`:535` · 76th** (09-02) 셸 L·R 실물 완주 2건 + 워커 P4 트랙 코디네이터 독립 검증
   → **`G10_G11_ADHESION_CAUSE_CONFIRMED_BY_CONTROLLED_SLICE_ONLY_CHANGE__CONTACT_PER_GRAM_GATE_CALIBRATED_ON_REAL_SUCCESS_FAILURE_PAIR__D_D_RECOMPUTED_ON_CURRENT_SHELL_6PCT_TO_62PCT`**
   (**D469** `:29349` · **D470** `:29477` · **D471** `:29548`) · `session_20260902_76th_g10_g11_print_and_worker_adjudication.md`
-  ※ 형상 무수정으로 슬라이스만 바꿔 완주 = **통제 대조**. 임계 125 mm²/g 는 **성공 1·실패 1** 표본이다.
-  ※ 🔴 워커의 그랩 포획 판정이 **낡은 셸**(08-31)로 계산돼 있었다 — 수정본은 **6% 가 아니라 62%**.
-  ※ ⚠️ Newton "38배·VRAM 424 MiB" 는 **미검증**(입력이 산출물에 없음). 인용 금지.
 - **`:534` · 75th** (09-01) 출력 파이프라인 수리 + P1 n=5 + 게이트 정비 (실물 출력 4회: 3실패 1완주)
   → **`PRINT_PIPELINE_REPAIRED__GATE_BLINDSPOTS_8_ALL_INTENT_NOT_RESULT`** (**D465** `:28960` · **D466** `:29050`)
   · `session_20260901_75th_print_pipeline_repair_p1_n5.md`
-
 - **`:533` · 70th** (08-17) 콜드 아카이브 T1/T2 이관 — git 비추적 대형 14폴더 ≈176GB를 외장으로 검증-사본 후
   move-only (**연구 실험 0 · 물리 0 · 로봇 0**, 스토리지 인프라 전용). ⚠️ **2026-08-26 소급 등재**
   → **`T1_T2_COLD_ARCHIVE_MIGRATED__SHA256_ALL_MATCH__SINGLE_COPY_NOT_BACKUP__T3_PENDING`**
   (판정 토큰 소급 부여 · DECISIONS 신규 0) · `session_20260817_70th_cold_archive_t1_t2_migration.md` · `ARCHIVE_INDEX.md`
-  ※ 이관분은 **사본 1개 = 백업 아님**(외장 분실 = 데이터 손실). **외장 미마운트 시 심링크 14개 끊김.**
   **T3 45G(`b200_backup_*` 2종 + `openvla_oft_b200_pulls`)는 유일 사본으로 내장 유지 — 2사본화 결정 대기.**
 - **`:531` · 69th** (08-16) `y3_d455` 정책 비교층 v1 — 규칙 정책 8종 완주 에피소드 + a1 rep2 (물리 O ×9)
   → **D455** · `session_20260816_69th_y3_d455_policy_compare.md` · `runtime_logs/yard_track/y3_d455/`
@@ -127,13 +129,10 @@ AGENTS.md에서 걷어낸 결함 B(죽은 상태가 규칙/참조 파일에 상�
   → **D453** · `session_20260816_67th_y1_d453_testbed_pile_heightmap.md` · `runtime_logs/yard_track/y1_d453/`
 - **`:528` · 66th** (08-16) `o1` O-step 물체 생성기 — **저작 전용**(물리 0, Isaac 0)
   → **`O1_ROCK_SET_52_AUTHORED`** (DECISIONS 신규 0) · `session_20260816_66th_o1_posco_rock_generator.md` · `sim_assets/posco_rocks_o1/`
-  ※ **질량은 실측 기록 전 sim 주장 금지**(manifest 규약). 파일럿 이관은 `E:\posco-pilot` 미마운트로 blocked.
 - **`:527` · 65th** (08-16) `g0f_d452` 조 슬리브 설계 + gs1 완전닫힘 13pose + gs2 폭-정지 창 56평가 (물리 O ×2)
   → **`GS2_SLEEVE_WIDTH_STOP_WINDOW_MEASURED`** (**D452**) · `session_20260816_65th_g0f_d452_gs1_gs2_sleeve_design_probes.md`
-  ※ 실기 처방 = 슬리브 + **전류-제한 stall 닫힘**. 잔여: rim 0/5 · 29~14° 미측정.
 - **`:526` · 64th** (08-16) `fg2` 폭-정지 닫힘 정책 40 평가 (물리 O)
   → **`FG2_WIDTH_STOP_SOME_HOLD_SW_POLICY_VIABLE_SIM`** (**D451**) · `session_20260816_64th_g0e_d451_fg2_width_stop_probe.md`
-  ※ 성공 창 ~2° → 고정각 정책은 폭 지식·캘리브 오차에 취약. 비주장: 실로봇·마찰 현실성.
 - **`:525` · 63rd** (08-16) 포스코 야드 pivot recon — **조사 전용**(물리 0). 실험 부재 사유 = 교수님 기각발 pivot 재설계
   → **`PIVOT_RECON_COMPLETE__GAP_NARROWED_TO_3_COMBO__GTSU_ANCHOR_CONFIRMED`** (**D450**) · `session_20260816_63rd_posco_yard_pivot_domain_recon.md`
 
@@ -141,50 +140,35 @@ AGENTS.md에서 걷어낸 결함 B(죽은 상태가 규칙/참조 파일에 상�
 
 - **`:524` · 62nd** (08-14) `ba2` B601 full-arm side pick→carry→place+release probe (물리 O, RTX 키프레임 9장)
   → **`BA2_TCP_TRACK_FAIL`** (**D449**) · `session_20260814_62nd_g0d_d449_ba2_full_arm_side_place_probe.md`
-  ※ **place 실패가 아니라 다중 지지물 장면의 손목 후행 체적 클리어런스 설계 실패.** ba3 재시도는 사용자 승인 대기.
 - **`:523` · 61st** (08-13) `ba1` B601 full-arm side 파지+리프트 + RTX mp4 (물리 O, RTX O)
   → **`BA1_FULL_ARM_SIDE_GRASP_LIFT_SUCCESS`** (**D448**) · `session_20260813_61st_g0d_d448_ba1_full_arm_side_grasp_mp4.md`
-  ※ 벤더 자산 결함 2호(중첩 계층 미시뮬). 비주장: 실물 파지/게인 현실성.
 - **`:522` · 60th** (08-13) `bg1v` 시각화 전용 상태-복원 렌더 (물리 0, 렌더만)
   → **`VIZ_ONLY_OK`** (판정 신규 0) · `session_20260813_60th_g0c_bg1v_b601_grasp_render_snapshots.md`
-  ※ **"쥐고 유지" 증명은 렌더가 아니라 hang 수치 캡션이 한다.** 권위 = `bg1_results.json`.
 - **`:521` · 59th** (08-13) `bg1` B601 flying-gripper 2변형 판별 (물리 O)
   → **`BG1_REAL_GEOM_HOLDS_USD_COLLISION_BLOCKS`** (**D446**) · `session_20260813_59th_g0c_d446_bg1_b601_flying_gripper_run.md`
-  ※ 병목은 실기하가 아니라 벤더 USD 1-hull 근사. 비주장: 실물 파지. **B601 트랙은 이후 교수님 기각으로 종료.**
 - **`:532` · 57th** (08-13) `g0b_d444` case 개시 — prereg 13 pose 동결 + Grasping SDG 1.0.9 소스 감사
   (**물리 0 · Isaac 0**, git commit/push `b9020fd`). ⚠️ **2026-08-26 소급 등재** (원 세션은 "LEDGER append 0"을
   명시 결정했으나 그 결과 case 개시가 원장에서 소실)
   → **`G0B_D444_CASE_OPENED__PREREG_FROZEN__NO_PHYSICS`** (**D444** `:27616`, 판정 토큰 소급 부여) ·
   `session_20260813_57th_g0b_d444_flying_gripper_case_open.md`
-  ※ **D444는 개시 선언이지 물리 verdict가 아니다.** 이 case의 물리 판정은 바로 아래 58th `fg1`(D445).
 - **`:520` · 58th** (08-13) `fg1` flying-gripper 13 pose 물리 판별 (물리 O)
   → **`FG1_ALL_13_FAIL_GRIPPER_GEOMETRY_BOTTLENECK_SUPPORTED`** (**D445**) · `session_20260813_58th_g0b_d444_fg1_flying_gripper_run.md`
-  ※ 병목 층위가 "접촉 불가"→"유지 불가"로 이동. ⚠️ 폭-정지 정책 미시험 = **"어떤 정책으로도 불가" 아님** (→ 64th가 해소).
 - **`:519` · 55th** (08-13) `t3u` P13 side-midpoint physics + local/cloud render A/B
   → **`GRASP_FAIL_0_OF_5__CPU_MEETING_VIDEO_VALID_NONRTX__RUNPOD_COMPUTE_ONLY_VULKAN_UNAVAILABLE`** (**D443**) · `session_20260813_55th_g0b_t3u_side_midpoint_p13_runpod_render.md`
 - **`:518` · 54th-b** (08-11) `t3y_workspace1` 광역 workspace 병렬 PhysX (Isaac O, GPU O)
   → **`BILATERAL_CONTACT_ONLY_DURING_LIFT_NO_VALID_GRASP`** (**D441**) · `session_20260811_54th_g0b_t3x_t3y_workspace_physics.md`
-  ※ 확대 금지 목록 명시: θ0 · 측면 중점 · 연속 workspace · 하드웨어 · force closure.
 - **`:517` · 54th-a** (08-11) `t3x_bite81` IK-conditioned finite-cylinder bite audit (CPU)
   → **`NO_BILATERAL_WINDOW_IN_SPAWN_ENVELOPE`** (**D441**) · 같은 세션문서
-  ※ **정적 물림은 force closure/lift가 아니다.**
 - **`:516` · 53rd** (08-11) 반경별 도달 경계 스윕 (사용자 승인 1-NEXT ⓐ)
   → **`REACH_CEILING_IS_POSE_SPECIFIC__BUT_THE_75DEG_BRANCH_IS_UNUSABLE`** (**D440**) · `session_20260811_53rd_g0b_t3w_reach_boundary_sweep.md`
-  ※ ≥75° 가지 = 480셀 중 2셀 · 모든 스폰 영역 밖.
 - **`:515` · 52nd** (08-11) `t3p` 접촉력 계측 물리 시행 → **`..._ZERO_LIFT_IN_1024__MECHANISM_IS_PRESS_INTO_TABLE_NOT_PINCH`** (**D439**) · `session_20260811_52nd_g0b_t3p_randomized_parallel_sweep.md`
 
 ### 감사·패널 (물리 재실행 0 — 문서 무결성 축)
 
 - **`:514` · 51st-b** (08-11) 적대 패널 `wf_46941a6d-04e` 회수 13/13 (2,185,034 tok · 633 calls)
   → **`PANEL_CONFIRMS_D437R1_CORE__REFUTES_8_OF_51ST_OWN_REDERIVATIONS__DOCINT_SELF_INVALIDATED`** (**D438-R1**)
-  ※ **⛔ 진행 승인 아님.** 12 패스에서 신규 물리 측정 0건. **세션문서 없음** — 근거는 `DECISIONS.md` D438-R1 + `g0b_d420/t3d_panel_wf46941a6d_*`.
-> **회전 이탈 2건 (2026-08-26, 소급 등재 2행이 들어오면서 20건 상한 밖으로 밀림 — 앵커는 계속 유효):**
-> **`:513` · 51st** (08-11) 부트 재검증 + N-1 프록시 재도출 → **D438** ·
-> `session_20260811_51st_g0b_boot_n1_proxy_rederivation.md` /
-> **`:512` · 50th-b** (08-10) 적대 패널 `wf_84c6e3b4-92a` 13/13 → **D437-R1**(D427~D437 헤드라인 전부 불변,
-> D433 `LIFT_FAIL`×3 전건 재현) · `session_20260810_50th_g0b_boot_reverify_panel_launched.md`.
-> 이 둘의 교훈 원문은 `DECISIONS_ACTIVE.md` §8(D437-R1 `:26932` · D438-R1 `:27181`)이 계속 보유한다 —
-> **"무너진 것은 물리 결론이 아니라 그 결론을 받친다던 근거·범위·선례다."**
+> **회전 이탈 (앵커는 계속 유효):** `:513` 51st(D438) · `:512` 50th-b(D437-R1) — 2026-08-26 소급 등재로 창 밖.
+> 2026-09-03 77th 4행 추가로 창(`:522`~`:541`) 밖 = `:515`~`:521`(52nd~59th, 헤더만 유지). 교훈 원문은 `DECISIONS_ACTIVE.md` §8.
 
 ## 4. 원장 항해 인덱스 (통째 read 금지)
 
@@ -194,11 +178,11 @@ AGENTS.md에서 걷어낸 결함 B(죽은 상태가 규칙/참조 파일에 상�
 :9-90    표 블록 1 — 82행 (~2026-05-21)
 :92-103  ⚠️ 죽은 상태 "Current Next Experiment Candidate" (2026-05-21) — 원본 append-only라 삭제 안 함.
          부트 3단계가 이 파일을 대신 읽으므로 **자동 주입은 멎었다.**
-:105-533 표 블록 2 — 429행 (헤더 없음 → 표로 렌더 안 됨)
-:514-533 ← 이 파일이 요약한 최근 20행
+:105-541 표 블록 2 — 437행 (헤더 없음 → 표로 렌더 안 됨)
+:522-541 ← 이 파일이 요약한 최근 20행
 :532-533 ← 2026-08-26 소급 등재 (57th · 70th, 6열 준수). **시간순 아님**
-:535-552 🆕 ## Schema errata — :529~:531의 누락 열 + 소급 판정 토큰 (표 밖, 렌더 영향 0)
-:553-564 🆕 ### 등재 관행 메모 — 물리 0 세션의 등재 기준
+:543-560 ## Schema errata — :529~:531의 누락 열 + 소급 판정 토큰 (표 밖, 렌더 영향 0)
+:561~    ### 등재 관행 메모 — 물리 0 세션의 등재 기준
 ```
 - 특정 세션 행 찾기: `grep -n '(<번호>th,' claudedocs/EXPERIMENT_LEDGER.md`
 - 행 1개만 읽기: `sed -n '<줄>p' claudedocs/EXPERIMENT_LEDGER.md` (한 행이 최대 9 KB)

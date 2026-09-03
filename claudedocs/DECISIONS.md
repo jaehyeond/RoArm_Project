@@ -29875,3 +29875,208 @@ Isaac Sim **5.1.0.0** / IsaacLab **2.3.0** (numpy 1.26.0·psutil 5.9.8 핀 정�
 **⑥ 이 판정이 주장하지 않는 것**
 - **물리 시뮬 0** — USD 는 자산·운동학·시각화용. 펠릿 접촉은 DEME(Isaac PBD 기각 D469). USD↔DEME 연결(단방향, 그랩 메시+FK 자세를 DEME 경계로)은 **브리핑만**, 미구현. 관절형 그랩의 DEME 표현(D464 크래시)이 최대 관문.
 - 구동 인출 실물 미검증(③) · 손목 롤 제약 시뮬 강제 미구현 · self_load_ratio 펠릿 대기 · 출력 0.
+
+## D475 — 77th (09-03), **구동 인출부(순정 가동 조 볼트 → 서보 크랭크판)를 체결구까지 모델해 3D 로 검증하니 `G2_DRIVE_EXTRACTION_BLOCKED`** — 구멍은 0.02 mm 로 맞고 판은 0.016 mm 로 밀착하지만, 두 조 사이 간극 4.05 mm 를 크랭크판 3.0 이 쓰고 남은 **1.03 mm** 에 브래킷 볼트의 너트(2.0)와 크랭크 볼트의 머리(최소 1.35)가 **같은 자리**(고정 조 Z 83.46 쌍 ↔ 가동 조 Z 82.98 쌍, ΔZ 0.48)에 동시에 와야 해서 어떤 표준 체결로도 성립하지 않는다. BOM 의 M2.5×10 은 브래킷 판 4.0 + 블레이드 1.51 을 빼면 **4.49 mm 가 안으로 나와 4구멍 전부** 가동 조 블레이드(4.05)에 닿고, 크랭크 볼트는 BOM 에 **항목 자체가 없다.** D474 ③이 "팔 필요"라고 미뤄둔 Phase 2 잔여의 절반은 팔 없이 3D 로 판정됐다 — p37 몸체 게이트 9종 PASS 가 체결구 0 모델링을 가렸다(`fastener_seat_present` 가 스스로 적어 둔 사각지대가 실제로 물렸다) (기하 검증 전용 — 로봇 0, 출력 0, 물리 0, 펠릿 0)
+
+**Evidence.** 2026-09-03 77th. 프로브 = `sim_scripts/p38_g2_drive_extraction_probe.py`(p37 배치·조 변환 재사용, 서보 0° = 닫힘, link5 프레임 mm).
+결과 = `claudedocs/runtime_logs/grab_track/g17_yoke_alu/p38_drive/{p38_results.json, p38_fastener_sections.png}`.
+입력 = `g17_yoke_alu/design.json`(sha256_16 `67144ad0248103b5`) + 벤더 `gripper_link.stl`·`link5.stl`. 체결구 치수는 **ISO 공칭치**(실물 대조 전).
+
+**1. 🟢 구멍·좌면은 맞는다 (G10·G11 PASS)**
+```
+가동 조 구멍(메쉬 래스터 0.25)   (Y −12.66, Z 82.96) ⌀3.18 · (Y 12.45, Z 82.97) ⌀3.19   ↔ 설계 jaw_bolt_yz 오차 0.02 mm
+크랭크판 +x 면 ↔ 블레이드 안쪽면   0.016 mm(접촉)    웨브 0.087 · 암/아이/핀 7.95 (조 몸체 무관통)
+가동 조 블레이드                   x[−5.98, −4.47] = 1.51 (고정 조 1.51 과 동일)
+```
+가동 조 **바깥면**(x > −4.47)은 구멍 반경 3 mm 원통으로 12 mm 까지 재료 0 → 크랭크 볼트의 머리/너트 자리는 바깥에 있다.
+
+**2. 🔴 같은 자리를 두 체결이 나눠 써야 한다 (G12·G13 FAIL)**
+```
+고정 조 안쪽면 x −10.03  ↔  가동 조 안쪽면 x −5.98          간극 4.046
+크랭크판 x[−9.0, −6.0] (3.0, 가동 조 안쪽면에 밀착)           잔여 1.03 (고정 조 안쪽면 ↔ 판 −x 면)
+고정 조 구멍쌍 (Y −13.34/11.85, Z 83.46) ↔ 가동 조 구멍쌍 (Y −12.66/12.45, Z 82.98)   ΔY −0.68/−0.60 · ΔZ 0.48
+```
+| 브래킷 체결 방식 | 안쪽 돌출 | Z 83.46 쌍 (잔여 1.03) | Z 102.9 쌍 (가동 조까지 4.05) |
+|---|---|---|---|
+| A BOM 그대로: M2.5×10 바깥에서 + 안쪽 너트 | 4.49 (너트 2.0 + 꼬리 2.49) | ❌ | ❌ 블레이드에 닿음 |
+| B 안쪽에서 버튼머리(1.35) + 바깥 너트/인서트 | 1.35 | ❌ (1.65 필요) | ✅ |
+| C 바깥에서 길이 맞춘 ×8 + 안쪽 너트 | 2.5 | ❌ (2.8 필요) | ✅ |
+
+크랭크 볼트(G12): 판 −x 면 밖으로 나올 수 있는 높이 = 1.03 − 0.3 = **0.73 mm** < 표준 최소 1.35(버튼) → 볼트는 바깥에서 넣고 **판 안에서 끝나야**(포켓 너트 2.0 / 히트셋 인서트 L3.0) 하는데 현 설계는 ⌀3.4 관통뿐이고 BOM 항목이 0 이다.
+여유 기준 0.3 mm(FDM ±0.2 + 조립). 정적 한 자세(닫힘)가 최악이다 — 판은 열리면 +x 로 물러난다. 단면 그림 = `p38_fastener_sections.png`(XY@Z 83.2 · XZ@Y −13).
+
+**3. 대안 — 실측 사실만 (결정은 사용자)**
+- (가) **크랭크판을 가동 조 바깥면으로**: 바깥 x(−4.47, 8)×|Y|<17.5×Z 78–88 은 재료 0(실측). 그러면 간극엔 브래킷 너트만 남아 4구멍 전부 성립(4.05−2.0−0.3 = 1.75 여유). 대가 = 웨브가 크랭크 평면(link5 Y −29.7)으로 가려면 측벽(|Y| 18.3–19.8, x −5.98–0.7, Z 41–87)을 넘어야 한다 → 창(Y −19 에서 Z 66–86: x 0.7–9.7 / Z 84: 0.7–7.0 / Z 86: 0.7–5.0) 통과 또는 림(x > 15.3) 우회. 링크 G7·G8·G8b·G9 스윕 전부 재실행.
+- (나) **브래킷 Z 83.46 쌍 포기 → Z 102.9 쌍 + 팁 구멍(Y −0.75, Z 115.91) 3점**: 팁 구멍 안쪽 여유 4.05(실측), 고정 조 팁 폭 Y[−7.94, 6.91]. 대가 = 회전 구속 레버 19.44 → 12.99 mm(−33%), 팁 "얇음"(D462 §1), 볼트판 Z 78.5–107.9 → 118+ 연장(자중 ↑). 링크 무수정.
+- (다) **크랭크 체결 종단** — (가)(나) 어느 쪽이든 필요: 바깥에서 볼트 → 블레이드 1.51 → 판 안 히트셋 인서트(L3.0 = 판 두께, 구멍 ⌀3.2) 또는 포켓 너트(2.0, 잔여 1.0, 볼록 재분해 D446). BOM 에 크랭크 볼트 2 + 종단 2 추가(≈ +1.8 g → 자중 61.41 → ≈63.2 < 65).
+- (라) 순정 블레이드 접시가공(카운터싱크) — **비가역 개조**(63rd `:120`) ✗. (마) 크랭크판 박판화 ≤2.35 — 종단 불가 ✗.
+
+**4. ★ 교훈**
+- **"팔 필요"라고 미뤄둔 검증도 체결구까지 모델하면 3D 로 절반은 끝난다.** D474 ③은 구동 인출을 통째로 실물 항목으로 넘겼다. 실물이 답할 것은 나사산 유무·실측 ⌀·전압뿐이었다.
+- **몸체 게이트는 체결구를 못 본다.** p37 9종 PASS + 설계 게이트 19종 중 18 PASS 가 "머리/너트가 이웃 부품과 간섭하는지는 안 본다"(`fastener_seat_present` blind_spot)를 가렸다. 게이트가 스스로 적은 사각지대는 **다음 세션이 메워야 할 목록**이지 면책 조항이 아니다(D461 §6·D464 ②·D466 ④ 계열).
+- **BOM 의 볼트 길이는 부재 두께가 아니라 반대편 여유와 대조한다.** M2.5×10 은 4.0+1.51 을 관통하고 4.49 가 남는데 반대편은 4.05 다.
+- **마주보는 두 판재의 순정 구멍쌍이 같은 자리면 그 자리는 하나의 체결만 받는다.** 순정 구멍 재사용(D460 §4·D462 §5)이 준 "비가역 개조 0" 의 대가다.
+
+**미해결 (이 판정이 주장하지 않는 것)**
+- 실물 미확인: 순정 구멍 **나사산 유무**(탭이면 너트 불필요 → §2 표가 바뀐다)·실측 ⌀(래스터 ±0.3)·재질 · 서보 0° 실물 닫힘각 · 그리퍼 서보 전압(Phase 0b).
+- 체결구 치수는 ISO 공칭(버튼 1.35 / 소켓캡 2.5 / 너트 2.0 / 얇은너트 1.6 / 인서트 L3.0 벤더 의존). 렌치 접근성·인서트 열삽입 강도 미검토.
+- 서보 토크 대 폐합 부하 미계산(펠릿 물성 대기, D464 §5). Rerun RRD 미기록(정적 단면 2장이 판정 근거 — p37 계열 선례와 같은 계약 미충족, 세션문서에 명시).
+- 대안 (가)(나)(다)는 **미구현·미검증** — 사용자 결정 후 p37/p38 재실행이 관문. D473 ④ `G2_ATTACH_OK` 는 **몸체** 판정으로 계속 유효하다(체결구를 포함하지 않는다).
+
+**검증 방법**
+```
+~/miniconda3/envs/3dgrut/bin/python sim_scripts/p38_g2_drive_extraction_probe.py      # G10·G11 PASS / G12·G13 FAIL 재현
+jq '.gates.G13_bracket_fastener_envelope.summary' claudedocs/runtime_logs/grab_track/g17_yoke_alu/p38_drive/p38_results.json
+jq '[.. | objects | select(has("hardware_bom")) | .hardware_bom][0]' claudedocs/runtime_logs/grab_track/g17_yoke_alu/design.json   # 크랭크 볼트 항목 0 · M2.5x10
+```
+대조 = **D474** `:29848` ③(구동 인출 "팔 필요" — 본 항목이 3D 판정으로 절반 해소) · **D473** `:29764` ④(G2_ATTACH_OK = 몸체 판정, 유효) ·
+**D462** `:28711` §1·§5(4볼트 사각형·순정 구멍 인출 — 본 항목이 그 구멍쌍 겹침의 대가를 실측) · **D460** `:28541` §4(구멍 래스터) ·
+D461 §6·D464 ②·D466 ④(게이트 사각지대 계열) · 63rd `:120`(비가역 개조 0 — (라) 기각 근거).
+
+## D476 — 77th 후반 (09-03), **Phase 2 BLOCKED 해소: 사용자 권고 (나)+(다) 채택 → `g18_nut_trap` = 3점 체결 + 너트 트랩·포켓 종단 → p37 `G2_ATTACH_OK` · p38 `G2_DRIVE_EXTRACTION_OK`, URDF·USD 재생성.** 고치는 과정에서 g17 까지 잠복해 있던 결함 2건이 드러났다 — ① 브래킷 볼트판의 구멍이 4볼트 사각형이 아니라 **중앙선(Y −0.745)에 2개** 뚫려 있었고 p37 G3 는 파라미터끼리 비교해 0.00 mm 거짓 PASS 를 냈다(D463 이후 줄곧), ② link5 는 고정 블레이드 바깥면 뒤 Z ≤ 106.4 에서 **양 옆 플랜지**(Y ≤ −16.25 / ≥ 15.22, x 로 45° 벌어짐)를 갖는데 옛 판(Y −18.34~16.85 · Z 78~108)이 그것을 관통(link5 표면점 12,854개 포함)하고 있었고 G6 의 체결면 예외(x 관통만 검사)가 가렸다. 부수로 G7 의 "0.964"·"0.007" 은 여유가 아니라 **AABB 분리거리 하한**이었다(실제 11 mm+) (설계·검증·자산화 — 로봇 0, 출력 0, 물리 0, 펠릿 0)
+
+**Evidence.** 2026-09-03 77th 후반. 정본 형상 = `claudedocs/runtime_logs/grab_track/g18_nut_trap/`(design.json sha256_16 `1e1cf09073719b3c` · bracket_ALL `456039256d059308`).
+검증 = `g18_nut_trap/p37_attach/g2_results.json`(p37, G3·G6 정정판) · `g18_nut_trap/p38_drive/{p38_results.json,p38_fastener_sections.png}`(p38 v2) · `bracket_3view.png`.
+자산 = `g18_nut_trap/urdf/`(grab_v1.urdf + meta) → `local_assets/roarm_m3/urdf/roarm_m3_with_grab.urdf` → `local_assets/roarm_m3/usd/roarm_m3_with_grab.usd`(Isaac 5.1, gitignore).
+코드 = `scoop_grab_v1_design.py`(백업 `.bak_20260903_pre_nuttrap`) · `sim_scripts/p37_*.py` · `sim_scripts/p38_*.py`(백업 `.bak_20260903_pre_nuttrap`) · `export_grab_urdf.py`·`compose_roarm_grab_urdf.py`(소스 폴더 인자화).
+**이번 case 신규 변수 2건**: ① 브래킷 체결 패턴(3점 + 방향 혼합 + 판 폭) ② 크랭크 체결 종단(포켓 너트). 부수 조정 = 백포스트 y 11→12(x 불변).
+
+**1. 설계 변경 (D475 §3 (나)+(다) 구체화 — 사용자 "권고대로 진행해")**
+| 항목 | g17 (D473) | g18 (본 항목) |
+|---|---|---|
+| 브래킷 체결 | 4볼트 사각형(Z 83.46·102.9), M2.5×10 + 안쪽 너트 | **3점**: Z 102.9 쌍 + 팁(Y −0.75, Z 115.91). M2.5×8 버튼 ×3 |
+| 쌍 구멍 방향 | — | **바깥에서**(머리 1.35 판 바깥면) → 블레이드 → **안쪽 너트**(2.0 + 꼬리 0.49 = 2.49 < 간극 4.05) |
+| 팁 구멍 방향 | — | **안쪽에서**(머리 간극 안) → 판 → **스파인 레일 뿌리 너트 슬롯**(깊이 2.9·폭 5.2, ±Y 삽입, 레일 3조각) |
+| 판 폭 (link5 Y) | −18.34~16.85 (플랜지 관통) | **−15.95~14.92** = 플랜지 안쪽 −0.3. 쌍 구멍 랜드 0.86/1.35(얇음, 순정 구멍 위치 고정) |
+| 크랭크판 → 가동 조 | ⌀3.4 관통뿐, BOM 0 | 2층: 바닥 1.0(관통 3.4) + **−x 면 직사각 포켓**(5.2×6.0, 깊이 2.0). M2.5×4 버튼 조 바깥면에서, 물림 1.49, 간극 돌출 0 |
+| 판 생성기 | `plate_with_holes(hole_axis="x")` — 구멍을 밴드 중앙 z=0 에 | 신설 `plate_holes_x()` — (y,z) 임의 위치 사각 구멍, 직사각 포켓 겸용(볼록 분해 D446) |
+| 자중 | 61.41 g (크랭크 체결구 미포함) | **58.53 g** = 출력물 51.26 + 하드웨어 7.27 (BOM 7종, src UNCONFIRMED) |
+쌍 구멍에 바깥 너트 트랩(1차 시도)을 붙였더니 link5 플랜지에 0.895 mm 관통 → 방향을 뒤집었다(2차). 바깥 머리·육각 렌치 경로(x −40~−15.54, r 2.5)·안쪽 너트 자리 전부 실측 무점유.
+
+**2. 🔴 잠복 결함 2건 + 보고 함정 2건**
+- ① **옛 볼트판 구멍 = 중앙선.** g17 조각 실측: `bolt_plate_1/2` Y[−18.34,−2.44]·[0.95,16.85] → 구멍이 Y −2.44~0.95(중앙), Z 81.76~85.16·101.2~104.6 에만 있었다. 블레이드 구멍(Y −13.34/11.85)과 무관 → **볼트가 들어갈 수 없는 판**이었다. p37 G3 는 `dy/dz` 파라미터로 "있어야 할 자리"를 계산해 그것끼리 대조 → 0.00 PASS. 정정 = 판 조각을 판 중앙면에서 0.1 mm 래스터해 실제 구멍을 검출·대조(3구멍 오차 0.022).
+- ② **옛 판이 link5 플랜지를 관통.** 플랜지 = Z 96~106.4 에서 |Y| 바깥쪽이 x −11.7 → −22.5(Z 96)까지 45° 로 벌어짐. 옛 판 상자(x<−11.7 부분)에 link5 표면점 **12,854개**. G6 는 체결면 조각을 "블레이드 바깥면 x 를 넘었는가"로만 봤다. 정정 = 블레이드 면 점(x ≥ −11.7)을 뺀 표면점구름에 대한 정확한 여유 ≥ −0.02 요구(g18: 0.296).
+- ③ **G7 "여유" = AABB 하한.** `clearance_to` 가 AABB 분리거리 ≥ 0 이면 그 값을 그대로 보고했다 — 조각 경계상자가 link5 경계상자 밖으로 0.007 나가면 실제 거리 11 mm 여도 0.007. g17 의 0.964 도 같은 것. 정정 = 1 mm 미만이면 정확 재측정(g18 G7 1.026 = 크랭크판 −x 면 ↔ 고정 블레이드, 서보 0°).
+- ④ **G3 래스터 격자선-경계 정합 오탐**: 격자가 조각 경계면(Z 101.2)에 정확히 겹쳐 경계선이 비고 구멍이 바깥과 이어져 "구멍 0". 반 피치 오프셋 + 1픽셀 closing.
+
+**3. 판정 수치**
+```
+설계 게이트  19/20 PASS (FAIL = self_load_ratio, 펠릿 밀도 대기 — 불변)   fastener_stack_terminates 신설 PASS
+p37  G1 G2 PASS · G3 0.022 PASS(3/3 실측) · G4 1.001 · G6 0.5 / 플랜지 0.296 · G7 1.026 · G8 14.326 · G8b 4.411/44.0 · G9 1.023 · G5   → G2_ATTACH_OK
+p38  G10 0.02 · G11 0.016 · G12 포켓/바닥/물림 1.49/돌출 0 · G13 쌍 안쪽 4.05≥2.79 · 바깥 머리 vs link5 0.59/1.06 · 팁 4.05≥1.65 · 간극 요소 스윕 1.56   → G2_DRIVE_EXTRACTION_OK
+```
+**4. 자산 재생성 (Phase 3 갱신)**: `export_grab_urdf.py g18_nut_trap` → grab_base 12.99 g·셸 15.17 ×2 · 합성 12링크/11조인트/collision 360(벤더 7 + 조각 353) · `sim_urdf_to_usd.py --collider convex_hull` (isaaclab numpy 1.26.0·psutil 5.9.8 확인) → pxr 검증: 프록시 포함 2,275 prim · 그랩 collision **353 convexHull** · 조인트 11(셸 R 독립 revolute) · ArticulationRoot `/roarm_m3/world` · `config.yaml` 추적본 복구. ⚠️ `world`/`hand_tcp` visuals 미해결 참조 경고 = 메시 없는 링크(무해, 종전 동일).
+
+**5. ★ 교훈**
+- **게이트는 자기가 만든 기하를 봐야 한다** — G3 는 파라미터를, G6 는 x 한 축만 봤다. D465 "의도가 아니라 결과" 의 세 번째 재판.
+- **접촉 허용 예외는 다른 축의 관통을 가린다** — 체결면을 예외로 둘 때는 접촉면 점만 빼고 나머지는 그대로 검사한다.
+- **하한을 값으로 보고하지 마라** — AABB 분리거리·복셀 하한은 "이 이상"이지 "이만큼"이 아니다.
+- **커스텀 EOAT 는 붙는 면 뒤(바깥)도 본다** — 블레이드 바깥면 뒤에 플랜지가 있었다(D473 ④ "본체 간섭" 의 연장).
+- **격자 검사는 격자를 경계에서 비켜 놓아라.**
+
+**미해결 (이 판정이 주장하지 않는 것)**
+- 실물 미확인: 순정 구멍 나사산 유무·실측 ⌀(래스터 ±0.3)·재질 · 어댑터 전압. 체결구 = ISO 공칭.
+- 강도·조립성 미검증: 너트 물림 1.49 mm(3.3 산) · 쌍 구멍 랜드 0.86/1.35 · 팁 블레이드 · 간극 안 너트를 잡는 손놀림(조 연 상태) · PLA 포켓 바닥 1.0 압축.
+- 토크·펠릿 물리 0 · 출력 0 · Rerun RRD 미기록(정적 단면 + 3면도가 근거).
+
+**검증 방법**
+```
+~/miniconda3/envs/3dgrut/bin/python scoop_grab_v1_design.py claudedocs/runtime_logs/grab_track/g18_nut_trap   # 19/20
+~/miniconda3/envs/3dgrut/bin/python sim_scripts/p37_g2_grab_v1_attach_probe.py claudedocs/runtime_logs/grab_track/g18_nut_trap/p37_attach   # G2_ATTACH_OK
+~/miniconda3/envs/3dgrut/bin/python sim_scripts/p38_g2_drive_extraction_probe.py    # G2_DRIVE_EXTRACTION_OK
+git diff --stat scoop_grab_v1_design.py.bak_20260903_pre_nuttrap scoop_grab_v1_design.py
+```
+대조 = **D475** `:29879`(BLOCKED 판정·대안 — 본 항목이 (나)+(다) 이행) · **D474** `:29848` ④(Phase 3 자산 — 재생성) · **D473** `:29764` ④(G2_ATTACH_OK — 그 판이 ①②를 안고 있었다) ·
+**D463** `:28786`(G6 접촉 예외 정의·G3 hole_axis 정정 — ①②의 기원) · **D465** `:28960`(의도≠결과) · D446(볼록 조각) · 63rd `:120`(비가역 개조 0 유지).
+
+## D477 — 77th 후반 (09-03), **시각·시뮬 3층 검증에서 자산 결함 1건 + 렌더 결함 1건 + 파이프라인 사고 3건이 잡혔다.** ① IsaacLab `UrdfConverterCfg.convert_mimic_joints_to_normal_joints=True` 는 이름과 **반대**로 PhysX mimic 조인트를 만든다(`urdf_converter.py:130` 이 값을 그대로 `set_parse_mimic()` 에 넘기고, 임포터 테스트 `test_urdf.py:475~491` 이 parse_mimic=True ⇒ `PhysxMimicJointAPI` 를 단언한다) — 그래서 D474 USD 의 셸 R 은 드라이브 없는 mimic(gearing −1·25 Hz·ζ 0.005·한계 −8.9°~53.4°)이었고, 512 환경 병렬 스텝에서 **R 이 상한 0.931 rad 에 고착**(L 은 0.036)했다. False 로 재생성하니 R 이 L 과 같은 드라이브·한계(0~44.5°)를 갖고 512·64 환경 전부 추종(L/R 0.0365/0.0365, 편차 2.6e-8). ② `sim_render_grab_usd.py` 는 카메라 거리 0.72 m 로 **D474 때부터** 프레임을 놓쳐 닫힘/열림 두 장이 동일했다(옛 `bowl_*.png` 도 같은 그림) → grab_base 자동 조준·1.0 m·초점 70 mm 의 `sim_render_grab_closeup.py` 로 8장(관절 읽기값 JSON 동반). ③ Isaac Lab 앱에서 Replicator `BasicWriter` 가 매 프레임 기록을 멈추지 않아 **32 GB/23,646 파일** 폭주, `SimulationApp.close()` 가 결과 기록 후 **무한 대기**(1,100 s·8.7 h), `timeout` 의 SIGTERM 무시 → 결과 JSON 선기록·annotator 캡처·`os._exit` 워치독·`timeout -k` 로 봉합 (자산·렌더·병렬 스모크 — 로봇 0, 출력 0, 입자 물리 0)
+
+**Evidence.** 2026-09-03 77th 후반(사용자: "시각적으로도 확인하면서 해 … isaac lab 에서 병렬로 수천·수만 번 돌려야 하는데 제대로 되어야").
+산출 = `claudedocs/runtime_logs/grab_track/g18_nut_trap/{viz/, isaaclab_smoke/}` · `local_assets/roarm_m3/usd/{g18_robot_full.png, g18_closeup_v3/}`.
+코드 = `sim_viz_grab_assembly.py`(신규) · `sim_render_grab_closeup.py`(신규) · `sim_isaaclab_parallel_smoke.py`(신규) · `sim_urdf_to_usd.py`(플래그 False + 근거 주석).
+
+**1. 3층 검증 결과**
+| 층 | 무엇 | 결과 | 근거 |
+|---|---|---|---|
+| ① matplotlib 실메쉬 | 닫힘/개방 × 등각·앞·옆·위 + 체결부 근접 | 순정 조가 89° 눕고 크랭크판·4절이 따라가며 셸이 44.5° 씩 벌어짐. 판 아래 가장자리(Z 98.7)가 link5 플랜지 위 | `viz/assembly_4view.png`, `viz/assembly_fastening_closeup.png` |
+| ② Isaac RTX 전체 | 로봇 AABB 프레이밍 1.14 m | 팔 끝에 g18 클램셸(개방) 정상 | `usd/g18_robot_full.png` |
+| ② Isaac RTX 근접 | HOME/스쿱 × 닫힘/개방 × 입 정면/옆 = 8장 | 8/8 생성, 관절 읽기값 = 목표(0 / 0.7767, 스쿱 팔 0.39·1.39·1.34) | `usd/g18_closeup_v3/{*.png, closeup_poses.json}`, 대조표 `viz/isaac_closeup_sheet_v3.png` |
+| ③ Isaac Lab 512 env | 8 관절·12 몸체, 셸 0→0.777→0 사인 구동 240 스텝 | **ok** — NaN 0, 추종 오차 max 0.112(사인 지연)/last 0.036, 환경 편차 2.6e-8, 팔 처짐 0.0195 rad, **스텝 5.55 ms**(max 7.86) | `isaaclab_smoke/smoke_512.json` |
+| ③ Isaac Lab 64 env + 카메라 | 동일 + RTX | **ok** — 스텝 8.76 ms(max 882 = 초기 튐), 격자 스냅샷은 orchestrator 행으로 미생성 | `isaaclab_smoke/smoke_64.json` |
+스텝당 환경당 ≈ 11 µs(512 env) → **4,096 env 외삽 ≈ 45 ms/스텝(선형 가정, 미측정)**. RTX 4090 Laptop 16 GB, 스모크 중 10.9 GB. 충돌체 = 환경당 353 볼록 조각(convexHull) + 벤더 7.
+
+**2. 🔴 자산 결함 — mimic 플래그 반전 (재생성 전/후)**
+```
+전(D474, True → parse_mimic=True):  shell_R  드라이브 없음 · physxMimicJoint gearing −1 · 25 Hz · ζ 0.005 · 한계 −8.9°~53.4°
+                                    512 env 스텝: L 0.036 / R 0.931 rad(상한 고착), 편차 1.9e-8 (전 환경 동일 = 결정론적 결함)
+후(False → parse_mimic=False):      shell_R  드라이브 = L 과 동일(강성 1.745·감쇠 0.0175·maxForce 2.94) · 한계 0~44.5° · mimic 속성 0
+                                    512 env: L 0.0365 / R 0.0365, 64 env 동일
+```
+D474 ④ "mimic→독립 조인트 변환(True)" 은 **오독**이었다 — 렌더가 `set_joint_positions`(순간이동)라 mimic 이어도 열려 보였을 뿐, 드라이브 스텝은 한 번도 돌리지 않았다. ★ **순간이동 렌더는 드라이브 결함을 못 잡는다. 스텝을 돌려라.**
+독립 구동 2관절은 실물 기어 커플링의 **근사**다(입자 없는 시뮬에선 무해). 기어를 mimic 으로 모델하려면 gearing 부호·연성(25 Hz)·한계 확장(±20%)을 따로 검증해야 한다 — 미실행.
+
+**3. 🔴 렌더 결함 — 근접 카메라**
+`sim_render_grab_usd.py` 카메라 (0.46,−0.10,1.24)→(0.05,0.01,0.66) = 0.72 m < D474 자기 경고 0.85 m. 로봇이 프레임 아래로 잘려 `bowl_closed/open.png`(D474)와 `g18_bowl_*.png` 넷 다 동일 그림. → `sim_render_grab_closeup.py`: grab_base 월드 위치 자동 조준, 거리 1.0 m, 초점 70 mm, 바닥 없음(스쿱 입 아래), 관절 읽기값 JSON. ⚠️ 스쿱 옆면의 검정 삼각형 = 벤더 link5 얇은 판의 뒷면(backface) — HOME 시점에선 흰색. 무해.
+
+**4. 🔴 파이프라인 사고 3건 (D447·D468 계열)**
+- **BasicWriter 폭주**: Isaac Lab 앱(`AppLauncher`)에서 `rep.WriterRegistry BasicWriter.attach` 후 `orchestrator.step()`×8 + `wait_until_complete()` 가 끝나지 않고 **매 프레임 PNG 를 계속 기록** → 14 분에 32 GB/23,646 파일. 결과 JSON 이 스냅샷 **뒤**에 있어 64 env 1차 수치 유실. → JSON 선기록 + annotator(`get_data`) 1장 직접 저장.
+- **`close()` 무한 대기**: 512 env 가 23 s 만에 결과를 쓰고 `simulation_app.close()` 에서 1,108 s(1차)·64 env 가 8.7 h(2차, `timeout 900` 의 SIGTERM 무시) 멈춤. → `os._exit(0)` 20 s 워치독(결과 기록 후) + `timeout -k 30`.
+- **stdout 유실**: 파일 리다이렉트 시 Python 버퍼가 종료 경로에서 안 비워져 `[pose]` 증거가 사라짐 → `python -u` + JSON 직접 기록.
+★ **원격·장기 작업은 결과를 먼저 파일에 쓰고, 종료는 감시하며, 증거는 stdout 이 아니라 파일로 남긴다**(D468 "발행 ≠ 결과" 의 종료 쪽 대응물).
+
+**5. ★ 교훈**
+- **플래그 이름을 믿지 말고 소스 한 줄까지 내려가라** — `convert_mimic_joints_to_normal_joints` 는 `set_parse_mimic` 의 별명이었다.
+- **순간이동(set_joint_positions) 렌더 ≠ 구동 검증** — 병렬 스텝에서만 드러나는 결함이 있다.
+- **근접 카메라는 대상 위치를 읽어 자동 조준**(D474 ⑤ 의 AABB 교훈을 근접에도).
+- **Isaac Lab 앱에서 Replicator writer 를 붙이지 마라** — annotator 로 픽셀만 받아라.
+
+**미해결 (이 판정이 주장하지 않는 것)**
+- 입자 물리 0(펠릿 = DEME 별개). 드라이브 게인 300/30 은 스모크용 임의값, 실 서보 토크·전동 비선형 미반영. 64 env 격자 스냅샷 미생성(orchestrator 행). 4,096 env 는 외삽.
+- 셸 R 독립 구동 = 기어 커플링 근사. 실물 확인 항목(나사산·⌀·전압)은 D476 그대로.
+
+**검증 방법**
+```
+~/miniconda3/envs/3dgrut/bin/python sim_viz_grab_assembly.py                                   # viz/assembly_*.png
+OMNI_KIT_ACCEPT_EULA=YES timeout -k 30 600 ~/miniconda3/envs/isaaclab/bin/python -u sim_render_grab_closeup.py local_assets/roarm_m3/usd/roarm_m3_with_grab.usd local_assets/roarm_m3/usd/g18_closeup_v3
+OMNI_KIT_ACCEPT_EULA=YES timeout -k 30 600 ~/miniconda3/envs/isaaclab/bin/python sim_isaaclab_parallel_smoke.py --headless --num_envs 512   # smoke_512.json ok
+jq '.gates' /dev/null 2>/dev/null; grep -n 'set_parse_mimic' ~/miniconda3/envs/isaaclab/lib/python3.11/site-packages/isaaclab/source/isaaclab/isaaclab/sim/converters/urdf_converter.py   # :130
+```
+대조 = **D476** `:29936`(g18 자산 — 본 항목이 시뮬에서 검증) · **D474** `:29848` ④(mimic 주장 — **정정**)·⑤(카메라 교훈 — 근접에 확장) · **D447** `:27746`(close() 예외 삼킴 — 무한 대기 추가) · **D468** `:29266`(발행 ≠ 결과) · D446(볼록 조각 collision 353 유지).
+
+## D478 — 77th 후반 3 (09-03), **Isaac Lab(PhysX)에서 g18 그랩이 ⌀30 mm 구(10 g)를 바닥에서 집어 올렸다(3차 런 `ok`, 구 z 0.015→0.151 m, grab_base 중심 0.8 mm) — 실패 2회가 준 사실 2건**: ① Isaac Lab 액추에이터는 USD `maxForce`(= URDF effort 1.9 N·m, 7.4 V 값)를 토크 상한으로 써서 어깨가 중력에 포화·처졌다(접근 목표 z 0.100 → 실제 0.042, 들어올림 0.418 → 0.946 rad) → 처진 그랩이 접근 중 구를 밀어내고 빈 채로 닫혔다(1차) ② 셸이 닫히는 **도중** 보울 배(불룩부, bulge 0.45)가 립보다 **3.7 mm 아래**(피벗선 −39.80 mm @22°, 립 −36.06)까지 내려간다 — 립 기준으로 바닥 2 mm 위에 내리면 배가 바닥에 박혀 셸이 못 닫히고, 팔이 뜰 때 닫혀 운으로 잡았다(2차) → 하강 높이 = 스윕 최저점 + 여유 + 처짐 = 43.8 mm 로 고쳐 닫힘 구간 안에서 폐합(3차) (Isaac Lab 단일 환경 물리 시행 — 로봇 0, 출력 0, 펠릿 0)
+
+**Evidence.** 2026-09-03. 스크립트 `sim_isaaclab_grasp_sphere.py`(numpy FK/IK + Isaac Lab 1 env + `Camera` 센서 20 fps).
+산출 = `claudedocs/runtime_logs/grab_track/g18_nut_trap/isaaclab_grasp_sphere/{grasp_result.json, grasp_log.json, keyframes.json, grasp_sphere_run3.mp4, strip_run3.png, grasp_sphere_run2.mp4, strip_run2.png}`.
+FK 검증: 벤더 URDF 체인 + 그랩 부착으로 스쿱 자세(0, 0.39, 1.39, 1.34, 0) → grab_base **(0.2487, 0.0135, 0.1206)** = 시뮬 실측과 일치. 키프레임 IK 오차 ≤ 0.21 mm, 입 방향 (0,0,−1)(q1+q2+q3 = π 구속).
+
+**1. 시퀀스와 3차 런 수치**
+```
+구  r 15 mm · 10 g · μ 1.0 · (0.25, 0.0135) 바닥      팔 게인 400/40 · 팔 토크 상한 8.0(데모) · 셸 300/30 · 2.94
+HOME → high(피벗 0.22) 2 s → pre(0.10) 1.5 s → 개방 1 s → down(0.0438) 2 s → 폐합 2.5 s → 유지 1 s → lift(0.18) 2 s → 유지 1.5 s   (13.5 s, 270 프레임)
+ down 도달 피벗 z  0.039 (계획 0.0438, 처짐 −4.8 mm)      폐합 끝 셸 L 0.012 / R 0.325 (R 이 구에 걸림 — 독립 구동이라 비대칭)
+ lift 끝        grab_base 0.1725 · 구 0.1512 · xy 거리 0.0008 · 셸 0.000/0.005 · NaN 0   → ok
+```
+2차 런(운): 폐합 구간 내내 셸 0.776(못 닫힘) → lift 중 닫힘 → 구 0.1515 잡힘. 1차 런: 구 z 0.015 유지, 78 mm 밀려남, 셸 0/0(빈 폐합).
+
+**2. ★ 사실 ① — 액추에이터 토크 상한은 USD 에서 온다**
+`ImplicitActuatorCfg` 에 `effort_limit_sim` 을 안 주면 USD `drive:angular:physics:maxForce`(변환기가 URDF `effort` 1.9 로 씀)가 상한이다. 팔 링크 질량(URDF 0.256/0.073/0.070/0.022/0.010 kg)+그랩 46 g 을 뻗은 자세에서 어깨 중력 모멘트가 이를 넘어 0.25~0.53 rad 처졌다.
+데모는 8.0 N·m(**비물리**)로 풀었다. 실물 ST3235 12 V = 2.94 N·m — 전압·토크 실측 전엔 어느 값도 인용 금지. RL/데이터 생성 전에 **실 토크 상한 + 처짐**을 넣고 같은 시퀀스를 다시 볼 것.
+
+**3. ★ 사실 ② — 닫히는 도중 배가 립보다 깊다 (그랩 v1 기하)**
+```
+셸 각   0°(닫힘) 최저 −37.97   22.25°(중간) 최저 −39.80   44.5°(개방) 최저 −35.99   (피벗선 기준 mm, 립 닫힘 −36.06)
+```
+평평한 바닥에서 립을 2 mm 띄우면 폐합 도중 배가 1.7 mm 파고든다 → 강체 바닥이면 회전이 막힌다. 펠릿 더미라면 이 "파고듦"이 오히려 퍼올림에 유리할 수 있으나 **미검증**(DEME). 스쿱 궤적·DEME 경계 설정 시 **립이 아니라 스윕 최저점(−39.8)** 을 바닥 여유의 기준으로 쓸 것. `grab_v1_meta.json` 에 없는 값 — 다음 URDF 내보내기 때 meta 에 넣을 항목.
+
+**4. 비대칭 폐합**: 두 셸이 독립 드라이브(D477)라 R 이 구에 걸려 0.325 에 멈추고 L 만 닫혔다. 실물은 1:1 기어라 대칭. 시뮬에서 기어를 흉내내려면 PhysX mimic(gearing 부호·연성 검증) 또는 두 관절 오차 동기 제어가 필요 — 미실행.
+
+**미해결 (이 판정이 주장하지 않는 것)**
+- 구 1개 ≠ 입자 더미(펠릿 = DEME 별개). 마찰 1.0·질량 10 g 가정. 단일 시행(반복·섭동 0). 토크 상한 8.0 비물리. 카메라 센서 프레임은 `Camera`(writer 아님)라 안정.
+
+**검증 방법**
+```
+~/miniconda3/envs/3dgrut/bin/python sim_isaaclab_grasp_sphere.py --solve-only                      # FK 일치 + 키프레임
+OMNI_KIT_ACCEPT_EULA=YES timeout -k 30 900 ~/miniconda3/envs/isaaclab/bin/python -u sim_isaaclab_grasp_sphere.py --headless --enable_cameras   # grasp_result.json ok
+ffmpeg -framerate 20 -i .../frames/f_%04d.png -c:v libx264 -pix_fmt yuv420p grasp_sphere_run3.mp4
+```
+대조 = **D477** `:29992`(병렬 자산 OK·독립 셸 근사 — 본 항목이 물리 시행으로 확장) · **D476** `:29936`(g18 형상) · **D469** `:29349` §5(B1 포획 체적 62% — 구 1개는 그 판정과 무관) · D464 §5(DEME 57.97 N 인용 금지 유지).
