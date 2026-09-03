@@ -33,12 +33,14 @@ Phase 4   sim-real 갭 항목 등록  ⏸ 유격·백래시·휨·전동 비선�
 Phase 5   출력 → 조립 → 실측     ⏸ **사용자 승인 대기** — 출력 착수 시 `docs/reference/printing.md` 필독, g18 STL 만 사용
 ```
 
-## 🔴 미커밋 상태 (77th 산출물 전부 — 사용자 커밋 요청 없음)
+## 커밋 상태 (77th — 사용자 요청으로 3커밋: `9f4241d`(설계·프로브·자산) · `84ffa46`(시뮬 스크립트·검증 JSON) · `a2201c2`(원장·상태 문서))
+
+⚠️ 아래 목록은 위 3커밋에 들어갔다. **PNG·mp4·조각 STL·USD 는 .gitignore 정책(*.png *.mp4 *.usd)대로 로컬만** — `g18_nut_trap/viz/`·`isaaclab_grasp_sphere/*.mp4`·`usd/g18_closeup_v3/*.png`.
 
 코드 `scoop_grab_v1_design.py`·`sim_scripts/p37_*.py`·`sim_scripts/p38_*.py`(신규)·`export_grab_urdf.py`·`compose_roarm_grab_urdf.py`·
 `sim_urdf_to_usd.py`(플래그 False)·`sim_viz_grab_assembly.py`·`sim_render_grab_closeup.py`·`sim_isaaclab_parallel_smoke.py`(신규 3종) ·
 형상 `g18_nut_trap/` · 자산 `local_assets/roarm_m3/urdf/{roarm_m3_with_grab.urdf, meshes/grab_base.stl, meshes/collision/*}` ·
-원장 append(D475 `:29879`·D476 `:29936`, LEDGER `:538`·`:539`) · 상태 문서 일체 · `claudedocs/session_20260903_77th_*.md`.
+원장 append(D475~D478, LEDGER `:538`~`:541`) · 상태 문서 일체 · `claudedocs/session_20260903_77th_*.md`.
 백업 `DECISIONS.md.bak_20260903_pre_d475/_pre_d476` · `EXPERIMENT_LEDGER.md.bak_20260903_pre_77th` · `*.bak_20260903_pre_nuttrap`.
 
 ## 🔬 77th 가 번 것 (D475 → D476 → D477 → D478)

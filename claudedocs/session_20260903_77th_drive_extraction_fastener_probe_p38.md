@@ -248,3 +248,5 @@ D475 §3 의 권고 (나)(브래킷 Z 83.46 쌍 포기 → Z 102.9 쌍 + 팁 3�
 
 - 코드: `sim_isaaclab_grasp_sphere.py`(신규). 산출: `isaaclab_grasp_sphere/{grasp_result.json, grasp_log.json, keyframes.json, grasp_sphere_run3.mp4, strip_run3.png, grasp_sphere_run2.mp4, strip_run2.png}` (프레임 PNG 는 삭제, mp4 로 대체).
 - 원장: D478 `:30046` · LEDGER `:541`. 백업 `DECISIONS.md.bak_20260903_pre_d478`. **전부 미커밋.**
+
+> **커밋 (사용자 요청, 세션 말미)**: `9f4241d`(설계·프로브·자산) · `84ffa46`(시뮬 스크립트·검증 JSON) · `a2201c2`(원장·상태 문서). 렌더 PNG·영상 mp4·조각 STL·USD 는 .gitignore 정책대로 미추적(로컬 보관).

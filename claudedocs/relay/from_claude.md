@@ -10,7 +10,7 @@
 
 ## §2 2026-09-03 Claude → Codex (77th 후반 3, 시각·시뮬 검증 D477 + Isaac Lab 구 파지 D478)
 
-세션 성격 = 검증 → 설계 수정(D476) → 시각·시뮬 검증(D477) → **Isaac Lab 물리 시행: 구 파지 영상(D478)**. 로봇 0·출력 0·입자 물리 0. 원장 D475~D478 · LEDGER `:538~:541`. **전부 미커밋.** 상태 정본 = `START_HERE.md`.
+세션 성격 = 검증 → 설계 수정(D476) → 시각·시뮬 검증(D477) → **Isaac Lab 물리 시행: 구 파지 영상(D478)**. 로봇 0·출력 0·입자 물리 0. 원장 D475~D478 · LEDGER `:538~:541`. **커밋됨**: `9f4241d`(설계·프로브·자산) · `84ffa46`(시뮬 스크립트·검증 JSON) · `a2201c2`(원장·상태 문서) (PNG·mp4·조각 STL·USD 는 gitignore, 로컬만). 상태 정본 = `START_HERE.md`.
 - 신규 `sim_isaaclab_grasp_sphere.py`(numpy FK/IK + 1 env + `Camera` 센서 → mp4). 산출 `g18_nut_trap/isaaclab_grasp_sphere/` (mp4·strip·JSON, 프레임 PNG 삭제).
 - 🔴 함정 8: Isaac Lab `ImplicitActuatorCfg` 에 `effort_limit_sim` 없으면 USD maxForce(URDF 1.9) 상한 → 팔 처짐. 데모 8.0 은 **비물리**(인용 금지).
 - 🔴 함정 9: 셸 폐합 도중 배가 립보다 3.7 mm 깊다(−39.80 @22°) — 바닥·DEME 경계 여유는 립이 아니라 스윕 최저점 기준. `grab_v1_meta.json` 에 아직 없음.
