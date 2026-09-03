@@ -14,7 +14,7 @@ URDF 트리 (폐루프 = 기어쌍·4절 링크는 생략, D472 ④: 닫힌 루�
 - 🔴 손목 롤 제약(D473 ⑥): 개구>44 mm → |롤| 제한. URDF 관절 한계로는 못 거는 **구성 의존** 제약이라
   companion JSON 에 표로 남긴다(제어/시뮬이 읽어 강제).
 
-출력: claudedocs/runtime_logs/grab_track/g17_yoke_alu/urdf/{grab_v1.urdf, meshes/*.stl, grab_v1_meta.json}
+출력: <소스 폴더>/urdf/{grab_v1.urdf, meshes/*.stl, grab_v1_meta.json}  (소스 = argv[1], 기본 g18_nut_trap — D476)
 """
 import sys, json, math, shutil, hashlib
 from pathlib import Path
@@ -22,11 +22,12 @@ import numpy as np
 import trimesh
 
 REPO = Path(__file__).resolve().parent
+_SRC_ARG = sys.argv[1] if len(sys.argv) > 1 else None      # 소스 형상 폴더 (기본 = 정본, D476: g18)
 sys.argv = ["x"]
 sys.path.insert(0, str(REPO)); sys.path.insert(0, str(REPO / "sim_scripts"))
 import scoop_grab_v1_design as G
 
-SRC = REPO / "claudedocs/runtime_logs/grab_track/g17_yoke_alu"
+SRC = Path(_SRC_ARG).resolve() if _SRC_ARG else REPO / "claudedocs/runtime_logs/grab_track/g18_nut_trap"
 OUT = SRC / "urdf"
 MESH_OUT = OUT / "meshes"
 P, K = G.P, G.kin(G.P)
@@ -146,7 +147,7 @@ def main():
     pL = pivL / 1000.0; pR = pivR / 1000.0
     urdf = f'''<?xml version="1.0"?>
 <!-- 그랩 v1 Phase 3 구동 1축 URDF (D473). 자동 생성: export_grab_urdf.py
-     source = grab_track/g17_yoke_alu/ · 폐루프(기어쌍·4절) 생략 · 관절 = 셸 물리각(선형)
+     source = {SRC.relative_to(REPO)} · 폐루프(기어쌍·4절) 생략 · 관절 = 셸 물리각(선형)
      🔴 서보→셸→개구 비선형 + 손목 롤 제약은 grab_v1_meta.json 참조.
      link5 부착(고정 조인트) origin: xyz(m) {mount_xyz} rpy {[round(roll,5),round(pitch,5),round(yaw,5)]}
        parent=link5(순정)  child=grab_base  — 로봇과 합성 시 이 조인트를 추가한다. -->

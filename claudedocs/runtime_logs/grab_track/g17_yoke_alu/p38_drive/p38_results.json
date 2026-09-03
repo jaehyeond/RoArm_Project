@@ -1,0 +1,519 @@
+{
+  "probe": "p38_g2_drive_extraction",
+  "source_dir": "claudedocs/runtime_logs/grab_track/g17_yoke_alu",
+  "design_json_sha256_16": "67144ad0248103b5",
+  "gates": {
+    "G10_crank_holes_match_stock_jaw": {
+      "pass": true,
+      "max_err_mm": 0.02,
+      "matches": [
+        {
+          "design_yz": [
+            -12.66,
+            82.98
+          ],
+          "mesh_hole": {
+            "y": -12.66,
+            "z": 82.96,
+            "eq_d_mm": 3.18,
+            "area_mm2": 7.94,
+            "plate_leaves_hole": true
+          },
+          "err_mm": 0.02
+        },
+        {
+          "design_yz": [
+            12.45,
+            82.98
+          ],
+          "mesh_hole": {
+            "y": 12.45,
+            "z": 82.97,
+            "eq_d_mm": 3.19,
+            "area_mm2": 8.0,
+            "plate_leaves_hole": true
+          },
+          "err_mm": 0.01
+        }
+      ],
+      "all_mesh_holes_in_blade": [
+        {
+          "y": -12.66,
+          "z": 82.96,
+          "eq_d_mm": 3.18,
+          "area_mm2": 7.94,
+          "plate_leaves_hole": true
+        },
+        {
+          "y": -0.11,
+          "z": 103.15,
+          "eq_d_mm": 13.54,
+          "area_mm2": 143.94
+        },
+        {
+          "y": -10.61,
+          "z": 90.33,
+          "eq_d_mm": 2.13,
+          "area_mm2": 3.56
+        },
+        {
+          "y": -0.11,
+          "z": 115.44,
+          "eq_d_mm": 3.17,
+          "area_mm2": 7.88
+        },
+        {
+          "y": 10.39,
+          "z": 90.33,
+          "eq_d_mm": 2.13,
+          "area_mm2": 3.56
+        },
+        {
+          "y": 12.45,
+          "z": 82.97,
+          "eq_d_mm": 3.19,
+          "area_mm2": 8.0,
+          "plate_leaves_hole": true
+        }
+      ],
+      "fixed_vs_movable_pair_offset_yz_mm": {
+        "dY": [
+          -0.68,
+          -0.6
+        ],
+        "dZ": [
+          0.48,
+          0.48
+        ],
+        "note": "고정 조 Z83.46 쌍과 가동 조 Z82.98 쌍은 같은 자리다 — 간극 4.05 를 두 체결이 나눠 써야 한다"
+      },
+      "why": "크랭크판은 순정 가동 조의 기존 구멍(스팬 25.11)으로 물린다(D462 §5). 구멍이 안 맞으면 인출 자체가 없다",
+      "blind_spot": "래스터 0.25 mm 근사 — 지름은 ±0.3 오차. 나사산 유무는 메쉬로 못 본다(실물 확인 항목)"
+    },
+    "G11_crank_plate_seats_on_jaw": {
+      "pass": true,
+      "seat_gap_mm": 0.016,
+      "seat_rule": "판은 블레이드에 닿아야 한다: -0.05(관통 허용치) ~ +0.1",
+      "worst_piece": {
+        "piece": "servocrank_plate_00",
+        "clearance_mm": 0.016
+      },
+      "per_piece": [
+        {
+          "piece": "servocrank_plate_00",
+          "clearance_mm": 0.016
+        },
+        {
+          "piece": "servocrank_plate_01",
+          "clearance_mm": 0.016
+        },
+        {
+          "piece": "servocrank_plate_02",
+          "clearance_mm": 0.016
+        },
+        {
+          "piece": "servocrank_plate_03",
+          "clearance_mm": 0.016
+        },
+        {
+          "piece": "servocrank_plate_04",
+          "clearance_mm": 0.016
+        },
+        {
+          "piece": "servocrank_plate_05",
+          "clearance_mm": 0.016
+        },
+        {
+          "piece": "servocrank_plate_06",
+          "clearance_mm": 0.016
+        },
+        {
+          "piece": "servocrank_web",
+          "clearance_mm": 0.087
+        },
+        {
+          "piece": "servocrank_arm",
+          "clearance_mm": 7.949
+        },
+        {
+          "piece": "servocrank_eye_00",
+          "clearance_mm": 7.949
+        },
+        {
+          "piece": "servocrank_eye_01",
+          "clearance_mm": 7.949
+        },
+        {
+          "piece": "servocrank_eye_02",
+          "clearance_mm": 7.949
+        },
+        {
+          "piece": "servocrank_eye_03",
+          "clearance_mm": 7.949
+        },
+        {
+          "piece": "servocrank_eye_04",
+          "clearance_mm": 7.949
+        },
+        {
+          "piece": "servocrank_eye_05",
+          "clearance_mm": 7.949
+        },
+        {
+          "piece": "servocrank_eye_06",
+          "clearance_mm": 7.949
+        },
+        {
+          "piece": "servocrank_eye_07",
+          "clearance_mm": 7.949
+        },
+        {
+          "piece": "servocrank_eye_08",
+          "clearance_mm": 7.949
+        },
+        {
+          "piece": "servocrank_eye_09",
+          "clearance_mm": 7.949
+        },
+        {
+          "piece": "servocrank_eye_10",
+          "clearance_mm": 7.949
+        },
+        {
+          "piece": "servocrank_eye_11",
+          "clearance_mm": 7.949
+        },
+        {
+          "piece": "servocrank_eye_12",
+          "clearance_mm": 7.949
+        },
+        {
+          "piece": "servocrank_eye_13",
+          "clearance_mm": 7.949
+        },
+        {
+          "piece": "servocrank_eye_14",
+          "clearance_mm": 7.949
+        },
+        {
+          "piece": "servocrank_eye_15",
+          "clearance_mm": 7.949
+        },
+        {
+          "piece": "pin1_00",
+          "clearance_mm": 7.949
+        },
+        {
+          "piece": "pin1_01",
+          "clearance_mm": 7.949
+        },
+        {
+          "piece": "pin1_02",
+          "clearance_mm": 7.949
+        },
+        {
+          "piece": "pin1_03",
+          "clearance_mm": 7.949
+        },
+        {
+          "piece": "pin1_04",
+          "clearance_mm": 7.949
+        },
+        {
+          "piece": "pin1_05",
+          "clearance_mm": 7.949
+        },
+        {
+          "piece": "pin1_06",
+          "clearance_mm": 7.949
+        },
+        {
+          "piece": "pin1_07",
+          "clearance_mm": 7.949
+        },
+        {
+          "piece": "pin1_08",
+          "clearance_mm": 7.949
+        },
+        {
+          "piece": "pin1_09",
+          "clearance_mm": 7.949
+        },
+        {
+          "piece": "pin1_10",
+          "clearance_mm": 7.949
+        },
+        {
+          "piece": "pin1_11",
+          "clearance_mm": 7.949
+        },
+        {
+          "piece": "pin1_12",
+          "clearance_mm": 7.949
+        },
+        {
+          "piece": "pin1_13",
+          "clearance_mm": 7.949
+        },
+        {
+          "piece": "pin1_14",
+          "clearance_mm": 7.949
+        },
+        {
+          "piece": "pin1_15",
+          "clearance_mm": 7.949
+        }
+      ],
+      "plate_footprint_backed_by_jaw_material": 0.51,
+      "why": "판이 블레이드 면에 밀착해야 볼트 체결이 성립한다. 웨브·암은 조 몸체(측벽·칼라)를 뚫으면 안 된다",
+      "blind_spot": "발자국 비율은 조가 **프레임(레일+개방부)** 이라 1.0 이 못 된다 — 구멍 둘레 랜드가 재료 위에 있는지가 핵심(G10 의 구멍 검출이 그것)"
+    },
+    "G12_crank_fastener_envelope": {
+      "pass": false,
+      "per_hole": [
+        {
+          "hole_yz": [
+            -12.66,
+            82.98
+          ],
+          "outboard_free_depth_mm": 12.0,
+          "inboard_free_depth_mm": 1.05,
+          "nut_fits_outboard": true,
+          "any_std_head_or_nut_fits_inboard": false
+        },
+        {
+          "hole_yz": [
+            12.45,
+            82.98
+          ],
+          "outboard_free_depth_mm": 12.0,
+          "inboard_free_depth_mm": 1.05,
+          "nut_fits_outboard": true,
+          "any_std_head_or_nut_fits_inboard": false
+        }
+      ],
+      "plate_thk_mm": 3.0,
+      "outboard_ok_for_head_or_nut": true,
+      "inboard_ok_for_any_std_element": false,
+      "required": "볼트는 조 바깥면에서 넣고(머리 바깥, 자유) 판 **안에서** 끝나야 한다 — 포켓 너트(2.0) 또는 히트셋 인서트(len 3.0 = 판 두께). 판 -x 면 밖으로 나오는 요소는 잔여 간극 1.03 - 0.3 = 0.73 mm 이하여야 하는데 표준 요소 최소가 1.35 다",
+      "current_design": "판 구멍 = ⌀3.4 관통(plate_holes_along_z), 포켓·인서트 0, hardware_bom 에 크랭크 볼트 항목 0",
+      "why": "구동 인출은 이 두 볼트가 전부다. 머리/너트가 들어갈 자리가 없으면 크랭크가 조에 안 붙는다",
+      "blind_spot": "인서트 치수는 벤더 의존. PLA 3.0 판에 인서트 열삽입 강도는 실물 시험 대상"
+    },
+    "G13_bracket_fastener_envelope": {
+      "pass": false,
+      "bracket_plate_thk_mm": 4.0,
+      "per_hole": [
+        {
+          "hole_yz": [
+            -13.34,
+            83.46
+          ],
+          "inboard_free_depth_mm": 1.05,
+          "inboard_limited_by": "crank_plate",
+          "outboard_free_depth_mm": 12.0,
+          "schemes": {
+            "A_bom_as_written__bolt_x10_from_outside_nut_inside": {
+              "inward_mm": 4.49,
+              "need_mm": 4.79,
+              "pass": false
+            },
+            "B_bolt_from_inside_button_head__nut_or_insert_outside": {
+              "inward_mm": 1.35,
+              "need_mm": 1.65,
+              "outward_need_mm": 2.3,
+              "pass": false
+            },
+            "C_bolt_from_outside_len_matched__nut_inside": {
+              "bolt_len_mm": 8.01,
+              "inward_mm": 2.5,
+              "need_mm": 2.8,
+              "pass": false
+            }
+          }
+        },
+        {
+          "hole_yz": [
+            11.85,
+            83.46
+          ],
+          "inboard_free_depth_mm": 1.05,
+          "inboard_limited_by": "crank_plate",
+          "outboard_free_depth_mm": 12.0,
+          "schemes": {
+            "A_bom_as_written__bolt_x10_from_outside_nut_inside": {
+              "inward_mm": 4.49,
+              "need_mm": 4.79,
+              "pass": false
+            },
+            "B_bolt_from_inside_button_head__nut_or_insert_outside": {
+              "inward_mm": 1.35,
+              "need_mm": 1.65,
+              "outward_need_mm": 2.3,
+              "pass": false
+            },
+            "C_bolt_from_outside_len_matched__nut_inside": {
+              "bolt_len_mm": 8.01,
+              "inward_mm": 2.5,
+              "need_mm": 2.8,
+              "pass": false
+            }
+          }
+        },
+        {
+          "hole_yz": [
+            -13.34,
+            102.9
+          ],
+          "inboard_free_depth_mm": 4.05,
+          "inboard_limited_by": "movable_jaw",
+          "outboard_free_depth_mm": 12.0,
+          "schemes": {
+            "A_bom_as_written__bolt_x10_from_outside_nut_inside": {
+              "inward_mm": 4.49,
+              "need_mm": 4.79,
+              "pass": false
+            },
+            "B_bolt_from_inside_button_head__nut_or_insert_outside": {
+              "inward_mm": 1.35,
+              "need_mm": 1.65,
+              "outward_need_mm": 2.3,
+              "pass": true
+            },
+            "C_bolt_from_outside_len_matched__nut_inside": {
+              "bolt_len_mm": 8.01,
+              "inward_mm": 2.5,
+              "need_mm": 2.8,
+              "pass": true
+            }
+          }
+        },
+        {
+          "hole_yz": [
+            11.85,
+            102.9
+          ],
+          "inboard_free_depth_mm": 4.05,
+          "inboard_limited_by": "movable_jaw",
+          "outboard_free_depth_mm": 12.0,
+          "schemes": {
+            "A_bom_as_written__bolt_x10_from_outside_nut_inside": {
+              "inward_mm": 4.49,
+              "need_mm": 4.79,
+              "pass": false
+            },
+            "B_bolt_from_inside_button_head__nut_or_insert_outside": {
+              "inward_mm": 1.35,
+              "need_mm": 1.65,
+              "outward_need_mm": 2.3,
+              "pass": true
+            },
+            "C_bolt_from_outside_len_matched__nut_inside": {
+              "bolt_len_mm": 8.01,
+              "inward_mm": 2.5,
+              "need_mm": 2.8,
+              "pass": true
+            }
+          }
+        }
+      ],
+      "summary": {
+        "A_bom_as_written__bolt_x10_from_outside_nut_inside": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "B_bolt_from_inside_button_head__nut_or_insert_outside": [
+          false,
+          false,
+          true,
+          true
+        ],
+        "C_bolt_from_outside_len_matched__nut_inside": [
+          false,
+          false,
+          true,
+          true
+        ]
+      },
+      "why": "브래킷은 고정 조 블레이드(1.51)를 4볼트로 관통한다. 반대편(안쪽면)은 두 조 사이 간극이고, Z 83.46 쌍 자리엔 서보 0° 에서 크랭크판이 와 있다. 어떤 체결 방식으로도 4구멍 전부 성립해야 PASS",
+      "blind_spot": "서보 0° 정적 한 자세. 크랭크판은 열리면 +x 로 물러나므로 닫힘이 최악이다. 렌치 접근성은 안 본다"
+    }
+  },
+  "evidence": {
+    "frames": "link5 프레임, mm, 서보 0°(닫힘). 체결구 = ISO 공칭치(FASTENERS), 실물 대조 필요",
+    "fixed_blade_x": [
+      -11.54,
+      -10.03
+    ],
+    "movable_blade_x": [
+      -5.98,
+      -4.47
+    ],
+    "movable_blade_outer_x_per_hole": [
+      -4.47,
+      -4.47
+    ],
+    "free_depth_step_mm": 0.05,
+    "gap_between_blades_mm": 4.046,
+    "crank_plate_bounds": [
+      [
+        -9.0,
+        -19.24,
+        77.48
+      ],
+      [
+        -6.0,
+        15.76,
+        88.48
+      ]
+    ],
+    "bracket_bolt_plate_bounds": [
+      [
+        -15.54,
+        -18.34,
+        78.46
+      ],
+      [
+        -11.54,
+        16.85,
+        107.9
+      ]
+    ],
+    "gap_residual_fixed_blade_to_crank_plate_mm": 1.03,
+    "fasteners_nominal": {
+      "M2.5_socket_cap_ISO4762": {
+        "k": 2.5,
+        "dk": 4.5
+      },
+      "M2.5_button_ISO7380": {
+        "k": 1.35,
+        "dk": 4.7
+      },
+      "M2.5_csk_flat_ISO10642": {
+        "k": 1.5,
+        "dk": 4.7,
+        "needs_countersink_in_member": true
+      },
+      "M2.5_nut_ISO4032": {
+        "m": 2.0,
+        "s": 5.0,
+        "corner_d": 5.77
+      },
+      "M2.5_thin_nut_DIN439": {
+        "m": 1.6,
+        "s": 5.0,
+        "corner_d": 5.77
+      },
+      "M2.5_heatset_insert_typ": {
+        "od": 3.5,
+        "len": 3.0,
+        "hole_d": 3.2,
+        "src": "벤더 의존 근사"
+      }
+    }
+  },
+  "all_gates_pass": false,
+  "verdict": "G2_DRIVE_EXTRACTION_BLOCKED"
+}

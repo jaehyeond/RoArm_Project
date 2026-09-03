@@ -17,7 +17,8 @@ REPO = Path(__file__).resolve().parent
 ROBOT_DIR = REPO / "local_assets/roarm_m3/urdf"
 ROBOT_URDF = ROBOT_DIR / "roarm_m3.urdf"
 ROBOT_MESH = ROBOT_DIR / "meshes"
-GRAB_DIR = REPO / "claudedocs/runtime_logs/grab_track/g17_yoke_alu/urdf"
+GRAB_DIR = (Path(sys.argv[1]).resolve() if len(sys.argv) > 1
+            else REPO / "claudedocs/runtime_logs/grab_track/g18_nut_trap/urdf")   # D476: 정본 g18
 OUT = ROBOT_DIR / "roarm_m3_with_grab.urdf"
 
 # 그랩 메시 → 로봇 meshes 폴더로 (grab_ 접두사 = 우리 자산 표시, 벤더와 구분)

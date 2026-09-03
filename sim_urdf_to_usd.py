@@ -44,9 +44,12 @@ def main():
         merge_fixed_joints=args_cli.merge_joints,
         force_usd_conversion=True,
         collider_type=args_cli.collider,           # 🔴 스쿱 공동 보존 (D446)
-        # mimic 조인트(셸_R)를 독립 조인트로 변환 — Isaac articulation 에서 mimic 은 구동이
-        # 불안정(set_joint_positions 로 안 열림). 독립 DOF 로 만들어 양쪽을 직접 구동한다.
-        convert_mimic_joints_to_normal_joints=True,
+        # 🔴 D477 (09-03): 이 플래그는 이름과 **반대**로 동작한다 — IsaacLab urdf_converter.py:130 이
+        #    값을 그대로 `import_config.set_parse_mimic()` 에 넘기고, 임포터 테스트(test_urdf.py:475~491)가
+        #    parse_mimic=True ⇒ PhysxMimicJointAPI 생성임을 증명한다. True 로 두면 셸_R 이 드라이브 없는
+        #    PhysX mimic(gearing −1, 25 Hz, ζ 0.005, 한계 −8.9°~53.4°)이 되어 병렬 스텝에서 상한(0.931 rad)에 걸렸다.
+        #    독립 구동 관절(드라이브 + URDF 한계)을 원하면 **False**.
+        convert_mimic_joints_to_normal_joints=False,
         joint_drive=UrdfConverterCfg.JointDriveCfg(
             gains=UrdfConverterCfg.JointDriveCfg.PDGainsCfg(stiffness=100.0, damping=1.0),
             target_type="position",

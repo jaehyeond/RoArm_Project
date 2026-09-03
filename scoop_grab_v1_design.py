@@ -74,10 +74,36 @@ P = {
     "gear_backlash_mm":    0.15,  # FDM 인쇄 여유. 0 이면 물려서 안 돈다
 
     # ── 브래킷 (D462 §1 실측 — 고정 조 블레이드의 기존 구멍) ─────────────
-    "bracket_bolt_dy_mm": 25.19,  # Y span  (−13.34 ↔ +11.85)
-    "bracket_bolt_dz_mm": 19.44,  # Z span  ( 83.46 ↔ 102.90)
+    # 🔴 2026-09-03 D475/D476: 4볼트 사각형 → **3점(Z 102.9 쌍 + 팁 구멍)**.
+    #    Z 83.46 쌍은 순정 가동 조 구멍쌍(Z 82.98)과 같은 자리라, 두 조 사이 간극 4.05 에
+    #    크랭크판 3.0 이 들어가면 잔여 1.03 뿐 → 어떤 표준 체결구도 못 들어간다(p38 G13).
+    #    또 옛 판 생성기(plate_with_holes hole_axis="x")는 구멍을 밴드 중앙(z=0)에 냈다 —
+    #    실제 판 구멍이 Y −0.745 중앙선에 있었고 p37 G3 는 파라미터만 비교해 거짓 PASS(D476).
+    "link5_mount_holes_yz":  [[-13.34, 102.90], [11.85, 102.90], [-0.75, 115.91]],
+    "mount_plate_land_mm":   2.5,    # 구멍 가장자리 ~ 판 가장자리
     "bolt_clear_d_mm":     3.4,   # ISO 273 M2.5 normal. D461 §1: 2.8은 FDM 수축으로 안 들어갔다
     "bracket_thk_mm":      4.0,
+    # 체결 종단 = **너트 트랩**(D475 (다), 사용자 결정 09-03: 인서트 대신 기존 M2.5 너트).
+    #   브래킷: 볼트를 **안쪽(두 조 사이 간극)에서** 넣는다 — 머리(버튼 1.35) + 여유 0.3 < 간극 4.05.
+    #           너트는 판 바깥면의 터널(쌍 구멍) / 스파인 레일 뿌리 슬롯(팁 구멍)에 ±z 로 밀어 넣는다.
+    #   크랭크: 판 -x 면(간극 쪽)에 직사각 포켓(바닥 1.0) — 너트가 판 안에서 끝나 간극 돌출 0.
+    "m25_nut":             {"af_mm": 5.0, "corner_mm": 5.77, "h_mm": 2.0, "src": "ISO 4032 공칭"},
+    "m25_button_head":     {"k_mm": 1.35, "dk_mm": 4.7, "src": "ISO 7380-1 공칭"},
+    "nut_trap_clear_mm":   0.2,      # 너트 대변/두께 + 이 값 = 포켓/슬롯 치수
+    "rail_slot_depth_mm":  2.9,      # 팁 구멍 너트 슬롯 깊이(x, 레일 뿌리): 너트 2.0 + 볼트 꼬리 0.49 + 여유
+    "mount_bolt_len_mm":   8.0,      # M2.5x8 버튼: 블레이드 1.51 + 판 4.0 + 너트 2.0 = 7.51 → 꼬리 0.49
+    # 🔴 09-03 2차(D476): link5 는 고정 블레이드 바깥면 뒤 Z<=106.4 에서 **양 옆 플랜지**(Y<=-16.25 / Y>=15.22)가
+    #    x 로 45° 벌어져 있다(실측: Z 96 에서 x -22.5 까지). 판·머리·너트 어느 것도 거기 못 간다.
+    #    → 쌍 구멍(Z 102.9)은 바깥면에 너트 트랩을 붙일 폭이 없어 **바깥에서 볼트(머리 바깥) + 안쪽(간극) 너트**,
+    #      팁 구멍(Z 115.9, 플랜지 밖)만 **안쪽 볼트 + 레일 슬롯 너트**. 판 Y 폭은 플랜지 안쪽 - 여유로 다듬는다.
+    #    옛 g17 판(Y -18.34~16.85, Z 78~108)은 이 플랜지를 관통하고 있었다 — p37 G6 체결면 예외(x 만 검사)가 가렸다.
+    "link5_flange_y_edges":  [-16.25, 15.22],   # 플랜지 안쪽 가장자리 (link5 Y), 실측 09-03
+    "link5_flange_z_max":    106.4,             # 이 Z 아래에만 플랜지 존재
+    "mount_bolt_scheme":     {"pair_z102.9": "outside_in: 머리 바깥(판 위) + 너트 안쪽(두 조 사이 간극)",
+                              "tip_z115.9":  "inside_out: 머리 안쪽(간극) + 너트 레일 슬롯"},
+    "crank_pocket_depth_mm": 2.0,    # 크랭크판 -x 면 포켓 (판 3.0 - 2.0 = 바닥 1.0)
+    "crank_bolt_len_mm":   4.0,      # M2.5x4 버튼(조 바깥면에서): 4 - 1.51 - 1.0 = 너트 물림 1.49 (3.3 산)
+    "fastener_clear_mm":   0.3,      # 체결구 ↔ 이웃 부품 최소 여유 (FDM ±0.2 + 조립)
     # ⚠️ g2 프로브(p37) 가 잡은 결함: 피벗을 볼트 사각형 중심에 두면 그랩이
     #    link5 몸통(Z -0.75~119.89) 안에 박힌다(관통 -67.8 mm). 블레이드 끝 너머로
     #    피벗을 빼내는 스탠드오프가 필요하다. 볼트 중심 Z=93.18, 블레이드 끝 Z=119.89
@@ -114,7 +140,8 @@ P = {
     "yoke_post_cx_mm":   -1.0,        # 백포스트 중심 X 오프셋. 0 이면 +x 모서리가 link5 블레이드에
                                       # 0.263 mm 로 붙는다(p37 G6). -1.0 이면 블레이드서 멀어져 여유 확보,
                                       # 기어 여유는 gear L (-2.75,11)->hypot 15.0>14 로 유지(허용대역 cx∈(-2.59,2.59)).
-    "yoke_post_y_mm":    [11.0, 18.0],  # 백포스트 Y 구간 (앞 y11: hypot(13,11)=17>14 · 뒤 y18: 마운트판 y17.3 에 물림)
+    "yoke_post_y_mm":    [12.0, 18.0],  # 백포스트 Y 구간 (앞 y12: hypot(13,12)=17.7>14 · 뒤 y18: 마운트판에 물림)
+                                      # 🔴 09-03: 11→12. 팁 구멍 너트 슬롯(y 6.67~11.87)과 0.87 겹쳐서 밀었다(D476). x 불변.
     "yoke_axial_play_max_mm": 1.0,    # 상판이 셸 허브를 캡하는 최대 간격 (리테이너 게이트 ⑯ 한계)
     "hub_wall_mm":         1.5,   # 셸 보어 랜드 벽두께
     # 이 side 의 기어만 반치 돌려 거울 위상을 깬다. -1 = 셸 L (이미 뽑은 R 을 살린다)
@@ -182,8 +209,12 @@ P = {
         ["M3x75_alu_pivot_bolt",  2,   1.50, "요크 양단지지 피벗 축 (상판 머리 + 하판 너트, ~70mm)"],
         ["M3_nut",                2,   0.40, "피벗 축 하판 좌면 (나일론록 권장)"],
         ["M3_washer",             4,   0.10, "피벗 축 양단"],
-        ["M2.5x10_mount_bolt",    4,   0.65, "브래킷 -> link5 4볼트 사각형 25.19x19.44"],
-        ["M2.5_nut",              4,   0.25, "브래킷 체결 반대편"],
+        # 🔴 D475/D476 (09-03): 옛 M2.5x10 ×4 + 안쪽 너트는 4구멍 전부 반대편 가동 조에 닿았고
+        #    크랭크 볼트는 항목 자체가 없었다. 아래가 너트 트랩 설계의 실물 총량.
+        ["M2.5x8_button_mount_bolt", 3, 0.42, "브래킷 -> 고정 조 3점(Z102.9 쌍 + 팁). 안쪽(간극)에서, 머리 1.35"],
+        ["M2.5_nut_mount",           3, 0.25, "브래킷 너트 트랩(터널 2 + 레일 슬롯 1)"],
+        ["M2.5x4_button_crank_bolt", 2, 0.28, "크랭크판 -> 순정 가동 조. 조 바깥면에서, 판 포켓 너트에 종단"],
+        ["M2.5_nut_crank",           2, 0.25, "크랭크판 -x 면 포켓"],
     ],
     "fill_factor":         0.70,
     "bulk_density_g_cm3":  0.55,  # ⚠️MEASURE 펠릿 도착 후 250 ml 계량컵 칭량
@@ -360,6 +391,34 @@ def plate_holes_along_z(thk, cx, cy, y_len, z_lo, z_hi, hole_zs, hd):
                                center=(cx, cy + sgn * (hd + side) / 2.0, zm)))
         else:
             out.append(box(thk, y_len, b - a, center=(cx, cy, zm)))
+    return out
+
+
+def plate_holes_x(thk, cx, y_lo, y_hi, z_lo, z_hi, holes_yz, hd_y, hd_z=None):
+    """구멍 축 = 로컬 X 인 평판. 구멍 (y,z) 위치가 자유롭다(같은 y 밴드에 여러 개 가능).
+
+    🔴 D476: `plate_with_holes(hole_axis="x")` 는 구멍을 밴드 **중앙(z=0)** 에만 냈다 — 4볼트
+       사각형(z=±12.6)을 요구한 브래킷이 실제로는 중앙선 구멍 2개짜리 판이었다. 이 함수는
+       로컬 Y 로 밴드를 가르고 밴드 안에서 Z 로 다시 갈라 **정확한 자리에 사각 구멍**을 남긴다.
+       hd_y/hd_z 를 다르게 주면 너트 포켓(직사각)도 된다. 전 조각 = 박스(볼록, D446).
+    """
+    hd_z = hd_y if hd_z is None else hd_z
+    out = []
+    edges = sorted({y_lo, y_hi} | {hy - hd_y / 2 for hy, _ in holes_yz}
+                   | {hy + hd_y / 2 for hy, _ in holes_yz})
+    for y0, y1 in zip(edges[:-1], edges[1:]):
+        if y1 - y0 < 1e-6:
+            continue
+        ym = (y0 + y1) / 2
+        band = [hz for hy, hz in holes_yz if abs(ym - hy) < hd_y / 2]
+        zedges = [z_lo] + sorted(e for hz in band for e in (hz - hd_z / 2, hz + hd_z / 2)) + [z_hi]
+        for z0, z1 in zip(zedges[:-1], zedges[1:]):
+            if z1 - z0 < 1e-6:
+                continue
+            zm = (z0 + z1) / 2
+            if any(abs(zm - hz) < hd_z / 2 for hz in band):
+                continue                                    # 구멍/포켓
+            out.append(box(thk, y1 - y0, z1 - z0, center=(cx, ym, zm)))
     return out
 
 
@@ -657,15 +716,31 @@ def build_bracket(P):
     """고정 조 블레이드의 기존 4볼트 사각형에 물리는 브래킷 + 피벗 보스 2개."""
     k = kin(P)
     t, hd = P["bracket_thk_mm"], P["bolt_clear_d_mm"]
-    dy, dz = P["bracket_bolt_dy_mm"], P["bracket_bolt_dz_mm"]
     parts, names = [], []
     so = P["bracket_standoff_mm"]
-    # 볼트판: 블레이드에 닿는 면. 구멍은 **로컬 X** 를 따라 관통(hole_axis="x").
-    # 사각형은 로컬 Y(=25.19 스팬) x 로컬 Z(=19.44 스팬) 이며 로컬 +Y 쪽, 즉 팔 쪽에 있다.
-    for i, pc in enumerate(plate_with_holes(t, dz + 10.0, dy + 10.0,
-                                            [-dz / 2, +dz / 2], hd,
-                                            center=(0, so, 0), hole_axis="x")):
+    # 볼트판: 블레이드 바깥면에 닿는 면(로컬 x[-t/2, t/2]). 구멍은 **로컬 X** 관통.
+    # 🔴 D476: 구멍 자리를 link5 실측 구멍(3점)에서 to_local 로 옮겨 **그 자리에** 낸다.
+    #    (옛 판은 plate_with_holes 가 밴드 중앙 z=0 에 구멍을 내 4볼트 사각형과 무관한 판이었다.)
+    land = P["mount_plate_land_mm"]
+    mh = [to_local(P, [0.0, Y, Z]) for Y, Z in P["link5_mount_holes_yz"]]
+    holes_yz = [(float(h[1]), float(h[2])) for h in mh]
+    y_lo = min(h[0] for h in holes_yz) - hd / 2 - land
+    y_hi = max(h[0] for h in holes_yz) + hd / 2 + land
+    # 🔴 판 폭(로컬 z = link5 Y)은 link5 플랜지 안쪽 가장자리 - 여유로 제한한다(09-03 실측).
+    #    쌍 구멍 랜드가 -Y 0.86 / +Y 1.35 로 얇아지지만 플랜지(Z<=106.4)를 피할 다른 길이 없다(순정 구멍 위치 고정).
+    fe = P["link5_flange_y_edges"]; fc = P["fastener_clear_mm"]
+    z_lo = float(to_local(P, [0.0, fe[0] + fc, 0.0])[2])
+    z_hi = float(to_local(P, [0.0, fe[1] - fc, 0.0])[2])
+    for i, pc in enumerate(plate_holes_x(t, 0.0, y_lo, y_hi, z_lo, z_hi, holes_yz, hd)):
         parts.append(pc); names.append(f"bolt_plate_{i}")
+    # 팁 구멍 너트 슬롯 준비(D475 (다)): 팁 구멍 바깥면은 스파인 레일 뿌리(z±2 웹)가 덮으므로 레일에 슬롯을 판다(아래).
+    #   쌍 구멍은 플랜지 때문에 바깥에 트랩을 못 붙인다 → 바깥에서 볼트, 안쪽(간극) 너트(mount_bolt_scheme).
+    nut = P["m25_nut"]; cl = P["nut_trap_clear_mm"]
+    slot_w = nut["af_mm"] + cl                    # 대변 방향(y) 폭 → 회전 구속
+    td = P["rail_slot_depth_mm"]
+    x_face = -t / 2.0
+    tip_local = to_local(P, [0.0, P["link5_mount_holes_yz"][2][0], P["link5_mount_holes_yz"][2][1]])
+    tip_y = float(tip_local[1])
     # 피벗 보스 2개 (셸이 도는 중간 베어링)
     # 피벗 보스(환형): 이전에는 arc_segment(0, 2*pi) 한 조각이라 **부피 0** 이었다.
     # 🔴 D473: 보스는 원래 길이(z±29.5)를 유지한다 — **연장하지 않는다.**
@@ -720,14 +795,21 @@ def build_bracket(P):
     #      rail  = 블레이드보다 -X 쪽에서만 볼트판까지 올라가는 레일
     #      cross = 블레이드 끝보다 **더 나간 곳**(팔 바깥)에서 두 피벗을 잇는 가로대
     bx_lo = to_local(P, [P["link5_blade_x_mm"][0], 0.0, 0.0])[0]
-    tip_y = to_local(P, [0.0, 0.0, P["link5_blade_tip_z_mm"]])[1]
+    blade_tip_y = to_local(P, [0.0, 0.0, P["link5_blade_tip_z_mm"]])[1]
     clr = 0.5
     rail_hi = bx_lo - clr
     rail_lo = -(k["g"] / 2.0 + P["pivot_boss_d_mm"] / 2.0)
-    parts.append(box(rail_hi - rail_lo, so, t,
-                     center=((rail_lo + rail_hi) / 2.0, so / 2.0, 0)))
-    names.append("spine_rail")
-    cross_y = tip_y - clr
+    # 🔴 D476: 레일 뿌리에 **팁 구멍 너트 슬롯** — x[x_face-td, x_face] · y[tip±slot_w/2] · z 전체(±t/2).
+    #    레일 웹(두께 t, z±2)의 두 면이 너트 대변을 잡고(회전 구속), x<-td 잔여 웹이 캡이 된다.
+    #    너트는 ±z 로 밀어 넣는다(웹 밖 |z|>2 는 빈 공간). 레일은 3조각으로 갈라 연결을 유지한다.
+    ys0, ys1 = tip_y - slot_w / 2.0, tip_y + slot_w / 2.0
+    for nm, (y0, y1) in (("spine_rail_00", (0.0, ys0)),
+                         ("spine_rail_01", (ys0, ys1)),      # 슬롯 밴드: x[rail_lo, x_face-td] 만
+                         ("spine_rail_02", (ys1, so))):
+        x1 = (x_face - td) if nm == "spine_rail_01" else rail_hi
+        parts.append(box(x1 - rail_lo, y1 - y0, t, center=((rail_lo + x1) / 2.0, (y0 + y1) / 2.0, 0)))
+        names.append(nm)
+    cross_y = blade_tip_y - clr
     parts.append(box(k["g"] + P["pivot_boss_d_mm"], cross_y, t,
                      center=(0, cross_y / 2.0, 0)))
     names.append("spine_cross")
@@ -779,10 +861,22 @@ def build_linkage(P):
     #    볼트 구멍 2개(스팬 25.11 mm, 축 = link5 X)로 물린다. 서보 내부 형상을
     #    알 필요가 없다 (D462 §5).
     zs = [to_local(P, [0.0, h[0], h[1]])[2] for h in P["jaw_bolt_yz_mm"]]
-    add(plate_holes_along_z(P["jaw_mount_thk_mm"], Dm[0], Dm[1],
-                            P["jaw_mount_len_y_mm"],
-                            P["jaw_mount_z_mm"][0], P["jaw_mount_z_mm"][1],
-                            zs, P["bolt_clear_d_mm"]), "servocrank_plate")
+    # 🔴 D475/D476: 판을 두 층으로. +x 층(블레이드 쪽) = 바닥(볼트 관통 3.4),
+    #    -x 층(간극 쪽) = 너트 포켓(직사각: 로컬 z 대변 5.2 · 로컬 y 대각 6.0). 너트가 판 안에서 끝나
+    #    간극(잔여 1.03) 쪽으로 아무것도 안 나온다. 볼트 M2.5x4 는 조 바깥면에서 들어온다.
+    pt, pd = P["jaw_mount_thk_mm"], P["crank_pocket_depth_mm"]
+    floor_t = pt - pd
+    nut = P["m25_nut"]; cl = P["nut_trap_clear_mm"]
+    yl = P["jaw_mount_len_y_mm"]
+    add(plate_holes_x(floor_t, Dm[0] + pt / 2.0 - floor_t / 2.0,
+                      Dm[1] - yl / 2.0, Dm[1] + yl / 2.0,
+                      P["jaw_mount_z_mm"][0], P["jaw_mount_z_mm"][1],
+                      [(Dm[1], z) for z in zs], P["bolt_clear_d_mm"]), "servocrank_plate")
+    add(plate_holes_x(pd, Dm[0] - pt / 2.0 + pd / 2.0,
+                      Dm[1] - yl / 2.0, Dm[1] + yl / 2.0,
+                      P["jaw_mount_z_mm"][0], P["jaw_mount_z_mm"][1],
+                      [(Dm[1], z) for z in zs], nut["corner_mm"] + cl, nut["af_mm"] + cl),
+        "servocrank_pocket")
     # 판(힌지축 안쪽) -> 링크 평면(바깥)으로 건너가는 웨브. Z 만 바뀌므로 서보가
     # 돌아도 Z 는 불변 -> link5(로컬 Z >= -17.0) 밖에 계속 머문다.
     web_z1 = -18.0                          # 판 쪽 끝 (link5 로컬 Z >= -17.0 바깥)
@@ -1212,7 +1306,54 @@ def run_gates(P, shellL, shellR, bracket, link, lk, nmL, nmR, nmB, nmK):
         "why": ("옛 보스는 나사산·너트자리·머리자리 0 개의 매끈한 관통 구멍이었다(D472 ③). "
                 "요크 좌면 링이 M3 관통(3.4) + 머리/너트 앉을 환형(r4.5)을 준다. 마운트는 기존 M2.5 4볼트"),
         "blind_spot": ("좌면 **기하**만 본다 — 나사산은 없다(너트 의존). 머리/너트가 이웃 부품과 "
-                       "간섭하는지, 렌치 접근이 되는지, **팔과의 여유**는 여기서 안 본다(그건 p37 G6)")}
+                       "간섭하는지, 렌치 접근이 되는지, **팔과의 여유**는 여기서 안 본다(그건 p37 G6). "
+                       "🔴 D475: 이 사각지대가 실제로 물렸다 — 체결 스택은 ⑱ 이 본다")}
+
+    # ⑱ 체결 스택 종단 (D475/D476): 볼트 길이·너트·머리가 간극/트랩 안에서 끝나는가 — 산술 + 조각 존재.
+    #    p38 이 실제 메쉬(순정 조·고정 블레이드)로 다시 재지만, 설계 단계에서 먼저 잡는다.
+    gap = P["jaw_blade_inner_x_mm"] - P["link5_blade_x_mm"][1]            # 두 순정 조 사이 간극 4.03
+    blade_t = P["link5_blade_x_mm"][1] - P["link5_blade_x_mm"][0]          # 고정 조 블레이드 1.51 (가동 조 동일)
+    nut = P["m25_nut"]; head = P["m25_button_head"]; fc = P["fastener_clear_mm"]
+    floor_t = P["jaw_mount_thk_mm"] - P["crank_pocket_depth_mm"]
+    crank_engage = P["crank_bolt_len_mm"] - blade_t - floor_t
+    crank_protrude = P["crank_bolt_len_mm"] - blade_t - P["jaw_mount_thk_mm"]  # 판 -x 면 밖 (음수 = 판 안)
+    residual = gap - P["jaw_mount_thk_mm"]                                    # 판 -x 면 ↔ 고정 조 안쪽면
+    crank_ok = (P["crank_pocket_depth_mm"] >= nut["h_mm"] and floor_t >= 0.8
+                and crank_engage >= 1.4 and max(crank_protrude, 0.0) <= residual - fc
+                and any(n.startswith("servocrank_pocket") for n in nmK))
+    mount_tail = P["mount_bolt_len_mm"] - blade_t - P["bracket_thk_mm"] - nut["h_mm"]
+    rails = [n for n in nmB if n.startswith("spine_rail")]
+    pair_inward = nut["h_mm"] + mount_tail            # 쌍 구멍: 안쪽 너트 + 꼬리 (간극 안)
+    tip_inward = head["k_mm"]                          # 팁 구멍: 안쪽 버튼머리
+    pb = _yoke_bounds("bolt_plate")
+    fe = P["link5_flange_y_edges"]
+    plate_y_link5 = (float(pb[0][2]) - 0.745, float(pb[1][2]) - 0.745) if pb is not None else (None, None)
+    plate_inside_flanges = (pb is not None and plate_y_link5[0] >= fe[0] + fc - 1e-6
+                            and plate_y_link5[1] <= fe[1] - fc + 1e-6)
+    bracket_ok = (pair_inward + fc <= gap and tip_inward + fc <= gap
+                  and 0.0 <= mount_tail <= P["rail_slot_depth_mm"] - nut["h_mm"] - 0.2
+                  and len(rails) == 3 and plate_inside_flanges
+                  and len(P["link5_mount_holes_yz"]) == 3)
+    g["fastener_stack_terminates"] = {
+        "pass": bool(crank_ok and bracket_ok),
+        "gap_between_jaws_mm": round(gap, 3), "blade_thk_mm": round(blade_t, 3),
+        "crank": {"plate_thk": P["jaw_mount_thk_mm"], "pocket_depth": P["crank_pocket_depth_mm"],
+                  "floor_thk": round(floor_t, 2), "bolt": f"M2.5x{P['crank_bolt_len_mm']:g} button (조 바깥면에서)",
+                  "nut_engagement_mm": round(crank_engage, 2), "protrusion_into_gap_mm": round(max(crank_protrude, 0.0), 2),
+                  "residual_gap_mm": round(residual, 2), "pocket_pieces": sum(n.startswith("servocrank_pocket") for n in nmK)},
+        "bracket": {"holes": P["link5_mount_holes_yz"], "scheme": P["mount_bolt_scheme"],
+                    "bolt": f"M2.5x{P['mount_bolt_len_mm']:g} button x3",
+                    "pair_inward_nut_plus_tail_mm": round(pair_inward, 2), "tip_inward_head_mm": tip_inward,
+                    "gap_needed_pair_mm": round(pair_inward + fc, 2), "gap_needed_tip_mm": round(tip_inward + fc, 2),
+                    "tail_beyond_nut_mm": round(mount_tail, 2), "rail_slot_spare_mm": round(P["rail_slot_depth_mm"] - nut["h_mm"], 2),
+                    "plate_y_link5": [round(v, 2) for v in plate_y_link5], "flange_edges_y": fe,
+                    "plate_inside_flanges": bool(plate_inside_flanges), "spine_rail_pieces_with_tip_slot": len(rails)},
+        "why": ("D475: 두 조 사이 간극 4.05 에 크랭크판 3.0 이 들어가면 잔여 1.03 뿐이라 그 자리(Z 83.46↔82.98 같은 자리)엔 "
+                "어떤 표준 체결구도 못 들어간다. 그래서 크랭크는 판 안 포켓 너트로 끝내고, 브래킷은 Z 83.46 쌍을 버리고 "
+                "3점(Z 102.9 쌍 + 팁)으로 건다. 쌍 구멍은 link5 플랜지 때문에 바깥 트랩이 안 되므로 바깥 볼트 + 안쪽 너트, "
+                "팁 구멍은 안쪽 볼트 + 레일 슬롯 너트. BOM 볼트 길이는 반대편 여유와 대조한다"),
+        "blind_spot": ("공칭 산술 + 조각 이름·개수만 본다. 실제 메쉬(순정 조·블레이드·레일 슬롯) 대비 자리는 p38 G12·G13, "
+                       "순정 구멍 나사산 유무·실측 ⌀는 실물. 너트 물림 1.49 mm(3.3 산)의 강도는 실물 시험 대상")}
 
     # 수치 ⑥~⑨
     vol_mm3 = sum(p.volume for p in allp)

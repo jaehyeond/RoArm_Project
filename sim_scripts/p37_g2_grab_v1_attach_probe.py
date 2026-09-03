@@ -45,8 +45,13 @@ P, K = G.P, G.kin(G.P)
 
 # ── link5 실측 (D462 §1·§2) ────────────────────────────────────────────
 BLADE_X = (-11.54, -10.03)          # 고정 조 블레이드 판재 (두께 1.51)
-BLADE_HOLES_YZ = [(-13.34, 83.46), (11.85, 83.46),
-                  (-13.34, 102.90), (11.85, 102.90)]     # 4볼트 사각형
+BLADE_HOLES_ALL_YZ = [(-13.34, 83.46), (11.85, 83.46),
+                      (-13.34, 102.90), (11.85, 102.90), (-0.75, 115.91)]   # 고정 조 관통 구멍 5개 (D462 §1)
+# 🔴 D475/D476 (09-03): 체결은 **3점** — Z 83.46 쌍은 크랭크판 자리(잔여 1.03)라 못 쓴다.
+MOUNT_HOLES_YZ = [tuple(h) for h in P["link5_mount_holes_yz"]]
+# 그랩 프레임 원점 = **옛 4볼트 사각형 중심** (형상 연속성 — 체결 중심이 아니라 좌표 기준일 뿐)
+FRAME_C_YZ = tuple(P["link5_blade_hole_c_yz"])
+assert abs(FRAME_C_YZ[0] - (-0.745)) < 1e-6 and abs(FRAME_C_YZ[1] - 93.18) < 1e-6
 GRIPPER_AXIS = np.array([0.0, 1.0, 0.0])                 # 서보 개폐축 (link5 프레임)
 GRIPPER_ORIGIN = np.array([0.0, 18.821, 52.035])
 # link5_to_gripper_link 조인트 원점 (URDF 원문: xyz 0 0.018821 0.052035, rpy -1.5708 -1.5708 0)
@@ -80,8 +85,7 @@ def placement():
     R = np.array([[1.0, 0.0, 0.0],
                   [0.0, 0.0, 1.0],
                   [0.0, -1.0, 0.0]])
-    cy = float(np.mean([h[0] for h in BLADE_HOLES_YZ]))
-    cz = float(np.mean([h[1] for h in BLADE_HOLES_YZ]))
+    cy, cz = float(FRAME_C_YZ[0]), float(FRAME_C_YZ[1])
     # 피벗선은 볼트 사각형 중심에서 standoff 만큼 팔 바깥(link5 +Z)으로 나간다.
     # 안 그러면 그랩이 link5 몸통(Z -0.75~119.89) 안에 박힌다 (초판 관통 -67.8 mm).
     t = np.array([BLADE_X[0] - P["bracket_thk_mm"] / 2.0, cy,
@@ -195,6 +199,10 @@ def clearance_to(mesh_parts, tree, pitch, lo, hi, cloud=None):
         sep = max((lo - mhi).max(), (mlo - hi).max())
         if sep >= 0:
             val = sep
+            # 🔴 D476: AABB 분리거리는 **하한**이다. 조각이 link5 경계상자 밖으로 0.007 mm 나간 경우 실제 거리가
+            #    11 mm 여도 0.007 로 보고됐다(G7 "0.964"·"0.007" 모두 이것). 1 mm 미만이면 정확히 다시 잰다.
+            if val < refine_below and cloud is not None:
+                val = exact_clearance(m, cloud)
         else:
             val = penetration(sample_mesh(m), tree, pitch)
             if val < refine_below and cloud is not None:
@@ -246,18 +254,50 @@ def main():
         "root_cause_if_fail": ("build_bracket 이 plate_with_holes 로 구멍을 **로컬 Z**"
                                "(= 힌지축)에 뚫는다. 힌지축과 볼트축은 90도 달라야 한다")}
 
-    # G3 브래킷이 블레이드 4구멍 자리에 실제로 앉는가 (구멍 좌표 대조)
-    dy, dz = P["bracket_bolt_dy_mm"], P["bracket_bolt_dz_mm"]
-    want = sorted(BLADE_HOLES_YZ)
-    got = sorted([(round(y, 2), round(z, 2))
-                  for y in (np.mean([h[0] for h in BLADE_HOLES_YZ]) - dy / 2,
-                            np.mean([h[0] for h in BLADE_HOLES_YZ]) + dy / 2)
-                  for z in (np.mean([h[1] for h in BLADE_HOLES_YZ]) - dz / 2,
-                            np.mean([h[1] for h in BLADE_HOLES_YZ]) + dz / 2)])
-    err = max(max(abs(a[0] - b[0]), abs(a[1] - b[1])) for a, b in zip(want, got))
+    # G3 브래킷 판의 **실제 구멍**이 블레이드 구멍 자리에 있는가 (조각 기하 래스터 대조)
+    #   🔴 D476: 옛 G3 는 파라미터(dy/dz)로 "있어야 할 자리"를 계산해 그것끼리 비교했다 —
+    #      실제 판(plate_with_holes hole_axis="x")은 구멍을 중앙선(Y −0.745)에 냈는데 0.00 mm PASS.
+    #      의도가 아니라 결과를 본다(D465): 볼트판 조각을 판 중앙면에서 래스터 → 구멍 검출 → 대조.
+    from scipy import ndimage
+    plates = [(m0.copy(), nm) for m0, nm in zip(br, nB) if nm.startswith("bolt_plate")]
+    for m, _ in plates:
+        m.apply_transform(T)
+    plo = np.min([m.bounds[0] for m, _ in plates], 0); phi = np.max([m.bounds[1] for m, _ in plates], 0)
+    xm = float((plo[0] + phi[0]) / 2.0)
+    pitch3 = 0.1
+    # ⚠️ 격자가 조각 경계면(예: Z 101.2)과 정확히 겹치면 contains 가 경계선을 비워 구멍이 바깥과 이어진다
+    #    (09-03 실측: 쌍 구멍 2개가 "검출 0"). 격자를 반 피치 비켜 놓고 1픽셀 closing 으로 경계선을 메운다.
+    ys3 = np.arange(plo[1] - 1 + 0.037, phi[1] + 1, pitch3); zs3 = np.arange(plo[2] - 1 + 0.037, phi[2] + 1, pitch3)
+    YY3, ZZ3 = np.meshgrid(ys3, zs3, indexing="ij")
+    q3 = np.stack([np.full(YY3.size, xm), YY3.ravel(), ZZ3.ravel()], 1)
+    occ3 = np.zeros(len(q3), bool)
+    for m, _ in plates:
+        occ3 |= m.contains(q3)
+    occ3 = ndimage.binary_closing(occ3.reshape(YY3.shape), iterations=1)
+    holes3 = ndimage.binary_fill_holes(occ3) & ~occ3
+    lab3, n3 = ndimage.label(holes3)
+    got = []
+    for i in range(1, n3 + 1):
+        sel = lab3 == i
+        a = sel.sum() * pitch3 * pitch3
+        if a < 2.0:
+            continue
+        got.append((round(float(YY3[sel].mean()), 2), round(float(ZZ3[sel].mean()), 2),
+                    round(float(np.sqrt(a)), 2)))          # (Y, Z, 정사각 변 근사)
+    want = sorted(MOUNT_HOLES_YZ)
+    errs = []
+    for (wy, wz) in want:
+        best = min(got, key=lambda h: math.hypot(h[0] - wy, h[1] - wz)) if got else (1e9, 1e9, 0)
+        errs.append(math.hypot(best[0] - wy, best[1] - wz))
+    err = max(errs)
     gates["G3_bracket_holes_match_blade"] = {
-        "pass": err < 0.02, "max_err_mm": round(float(err), 4),
-        "blade_holes_yz": want, "bracket_holes_yz": got}
+        "pass": bool(err < 0.1 and len(got) == len(want)), "max_err_mm": round(float(err), 3),
+        "blade_mount_holes_yz": want, "bracket_holes_measured_yz_side": got,
+        "n_holes_expected": len(want), "n_holes_found": len(got),
+        "dropped_pair_z83_46": [h for h in BLADE_HOLES_ALL_YZ if abs(h[1] - 83.46) < 0.01],
+        "why": ("브래킷은 고정 조의 기존 구멍 3점(Z 102.9 쌍 + 팁)에 물린다(D475 (나)). 판의 실제 구멍 자리를 "
+                "래스터로 검출해 대조한다 — 파라미터 대조는 D476 에서 거짓 PASS 를 냈다"),
+        "measurement": f"볼트판 조각을 판 중앙면 x={xm:.2f} 에서 {pitch3} mm 래스터, fill_holes 차집합"}
 
     # G4 스윕: 셸이 link5(팔)과 충돌하는가
     body_idx = [i for i, n in enumerate(nL) if not n.startswith("gear")]
@@ -316,9 +356,22 @@ def main():
             others.append((m, f"{tag}:{nm}"))
     worst6, who6 = clearance_to(others, tree, pitch, l5_lo, l5_hi, l5_cloud)
     max_pen = max([f["penetration_mm"] for f in fasten], default=0.0)
+    # 🔴 D476: 체결면 조각은 x 관통만 봤다 — 블레이드 바깥면 뒤 Z<=106.4 의 link5 **플랜지**(|Y|>15.2/16.25)를
+    #    옛 판(Y -18.34~16.85)이 관통하고 있었는데 이 예외가 가렸다. 블레이드 면(x>=-11.7) 점을 뺀 link5 표면점구름에
+    #    대해 체결면 조각의 정확한 여유를 재서 **>= 0** 을 요구한다(접촉면 자체는 제외되므로 0 이 정상 하한).
+    off_face = l5_cloud[l5_cloud[:, 0] < blade_outer_x - 0.15]
+    worst6f, who6f = np.inf, None
+    for parts, names, tag in ((br, nB, "bracket"),):
+        for m0, nm in zip(parts, names):
+            if any(nm.startswith(f) for f in FASTEN_FACE):
+                m = m0.copy(); m.apply_transform(T)
+                c = exact_clearance(m, off_face)
+                if c < worst6f:
+                    worst6f, who6f = c, f"{tag}:{nm}"
     gates["G6_bracket_drive_clear_of_arm"] = {
-        "pass": bool(worst6 >= 0.0 and max_pen <= 0.02),
+        "pass": bool(worst6 >= 0.0 and max_pen <= 0.02 and worst6f >= -0.02),
         "min_clearance_mm": round(float(worst6), 3), "closest_piece": who6,
+        "fastening_vs_link5_off_face_min_mm": round(float(worst6f), 3), "fastening_off_face_closest": who6f,
         "fastening_face_pieces": fasten,
         "fastening_max_penetration_mm": round(float(max_pen), 4),
         "fastening_rule": "접촉 허용 / 관통 금지 (허용 0.02 mm)",
