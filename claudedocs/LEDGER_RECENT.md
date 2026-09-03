@@ -1,8 +1,8 @@
 # LEDGER_RECENT.md — 최근 실험 20건 요약 (부팅 read)
 
-Last updated: 2026-09-03 (77th 후반 3) — 현재 원본 `EXPERIMENT_LEDGER.md` = 573줄 / 표 블록 519행
-(`:9-90` 82행 + `:105-541` 437행. 줄당 평균 약 2 KB, 최근 행은 5~9 KB — **단일 Read로 열면 토큰 초과**).
-표 블록 끝 = `:541`(77th 4행 추가), `## Schema errata` = `:543`.
+Last updated: 2026-09-03 (77th 후반 4) — 현재 원본 `EXPERIMENT_LEDGER.md` = 574줄 / 표 블록 520행
+(`:9-90` 82행 + `:105-542` 438행. 줄당 평균 약 2 KB, 최근 행은 5~9 KB — **단일 Read로 열면 토큰 초과**).
+표 블록 끝 = `:542`(77th 5행 추가), `## Schema errata` = `:544`.
 
 **2026-08-26 변경 (사용자 승인, append만 — 원본 삭제·수정 0건)**: 소급 등재 2행(`:532` 57th · `:533` 70th)
 \+ 표 밖 `## Schema errata` 절 append (2026-09-02 기준 `:537~`). 앞 1,062,466 B는 **바이트 불변**(md5 `0a6d7071…` 대조 PASS).
@@ -27,10 +27,10 @@ Last updated: 2026-09-03 (77th 후반 3) — 현재 원본 `EXPERIMENT_LEDGER.md
 
 ## 1. 선정 기준 (재현 가능 — 기억으로 판단하지 말 것)
 
-원장 **표 블록의 마지막 20행 = `:522`~`:541`**, 정렬은 append 순. ⚠️ 75th·76th·76th 연장×2·77th×4 가 행을 더해 앵커가 밀렸다. 재확인 명령:
+원장 **표 블록의 마지막 20행 = `:523`~`:542`**, 정렬은 append 순. ⚠️ 75th·76th·76th 연장×2·77th×5 가 행을 더해 앵커가 밀렸다. 재확인 명령:
 ```bash
-grep -n '^## Schema errata' claudedocs/EXPERIMENT_LEDGER.md   # 543 → 표 블록 끝 = :541
-sed -n '522,541p' claudedocs/EXPERIMENT_LEDGER.md | awk -F'|' '{print NR+521": "substr($2,1,120)}'
+grep -n '^## Schema errata' claudedocs/EXPERIMENT_LEDGER.md   # 544 → 표 블록 끝 = :542
+sed -n '523,542p' claudedocs/EXPERIMENT_LEDGER.md | awk -F'|' '{print NR+522": "substr($2,1,120)}'
 ```
 ⚠️ **2026-08-26부터 append 순 ≠ 시간 순이다.** 소급 등재로 `:532`(57th, 08-13)가 `:531`(69th, 08-16)보다
 뒤에 있다. 시간순이 필요하면 앵커가 아니라 각 행의 Date 셀을 봐야 한다.
@@ -90,14 +90,15 @@ AGENTS.md에서 걷어낸 결함 B(죽은 상태가 규칙/참조 파일에 상�
 
 ### 현행 피벗 — 포스코 야드 (63rd~)
 
+- **`:542` · 77th 후반 4** (09-03) **서보 결합 구 파지 + 그리퍼 서보 규약**: 순정 서보 조인트에만 명령(셸 표 종속) 재현 ok(구 z 0.152, 순정 조 89°) · 펌웨어 원문으로 부팅=닫힘(π)·SDK 각도=servo_deg·클램프·T:107 확정
+  → **`ISAACLAB_SPHERE_GRASP_SERVO_COUPLED_OK__FIRMWARE_BOOT_CLOSES_GRIPPER_PI__SDK_ANGLE_EQ_SERVO_DEG__HARDWARE_MD_T106_RESET_CLAIM_CORRECTED`**
+  (**D479** `:30084`) · `isaaclab_grasp_sphere_servo/` · `docs/reference/hardware.md` 규약 절. 🔴 맨 `{"T":106}` = 조 118.5° 개방(리셋 아님).
 - **`:541` · 77th 후반 3** (09-03) **Isaac Lab 구 파지 시행**: 로봇+g18 그랩이 ⌀30 mm 구를 바닥에서 집어 올림(3차 ok, 1차 토크 상한·2차 배 바닥 박힘 실패) + 영상
   → **`ISAACLAB_SPHERE_GRASP_OK_RUN3__ACTUATOR_EFFORT_LIMIT_FROM_USD_MAXFORCE__SHELL_SWEEP_BOTTOM_3P7MM_BELOW_LIP__DEMO_TORQUE_8NM_NONPHYSICAL`**
   (**D478** `:30046`) · `g18_nut_trap/isaaclab_grasp_sphere/` (mp4·strip·JSON). ⚠️ 입자 0·토크 8.0 비물리·단일 시행.
 - **`:540` · 77th 후반 2** (09-03) **시각·시뮬 3층 검증**: matplotlib 실메쉬 · Isaac RTX 전체+근접 8장(관절 읽기값) · **Isaac Lab 512/64 env 병렬 스텝**
   → **`ISAACLAB_PARALLEL_512_OK__SHELL_R_MIMIC_FLAG_INVERTED_FIXED_TO_FALSE__RTX_CLOSEUP_8_WITH_JOINT_READBACK__WRITER_RUNAWAY_AND_CLOSE_HANG_CONTAINED`**
   (**D477** `:29992`) · `g18_nut_trap/{viz/, isaaclab_smoke/}` · `usd/g18_closeup_v3/`
-  ※ 🔴 `convert_mimic_joints_to_normal_joints=True` = PhysX mimic 생성(반대) → 셸 R 상한 고착 → False 로 재생성 후 OK. 스텝 5.55 ms/512 env.
-  ※ ⚠️ 비주장: 입자 물리 0 · 게인 임의 · 4,096 env 외삽. 사고: BasicWriter 32 GB 폭주 · close() 행 8.7 h.
 - **`:539` · 77th 후반** (09-03) **Phase 2 BLOCKED 해소 = `g18_nut_trap`**: 사용자 권고 (나)+(다) → 브래킷 3점(쌍 = 바깥 볼트·안쪽 너트 / 팁 = 레일 슬롯 너트) + 크랭크판 포켓 너트 → p37·p38 PASS → URDF·USD 재생성
   → **`PHASE2_FASTENING_RESOLVED_G18__3PT_MIXED_DIRECTION_NUT_TRAPS__P37_G2_ATTACH_OK__P38_G2_DRIVE_EXTRACTION_OK__URDF_USD_REGENERATED__LATENT_G3_G6_DEFECTS_FOUND`**
   (**D476** `:29936`) · `session_20260903_77th_drive_extraction_fastener_probe_p38.md` §7~ · `g18_nut_trap/`
@@ -168,7 +169,7 @@ AGENTS.md에서 걷어낸 결함 B(죽은 상태가 규칙/참조 파일에 상�
 - **`:514` · 51st-b** (08-11) 적대 패널 `wf_46941a6d-04e` 회수 13/13 (2,185,034 tok · 633 calls)
   → **`PANEL_CONFIRMS_D437R1_CORE__REFUTES_8_OF_51ST_OWN_REDERIVATIONS__DOCINT_SELF_INVALIDATED`** (**D438-R1**)
 > **회전 이탈 (앵커는 계속 유효):** `:513` 51st(D438) · `:512` 50th-b(D437-R1) — 2026-08-26 소급 등재로 창 밖.
-> 2026-09-03 77th 4행 추가로 창(`:522`~`:541`) 밖 = `:515`~`:521`(52nd~59th, 헤더만 유지). 교훈 원문은 `DECISIONS_ACTIVE.md` §8.
+> 2026-09-03 77th 5행 추가로 창(`:523`~`:542`) 밖 = `:515`~`:522`(52nd~60th, 헤더만 유지). 교훈 원문은 `DECISIONS_ACTIVE.md` §8.
 
 ## 4. 원장 항해 인덱스 (통째 read 금지)
 
@@ -178,11 +179,11 @@ AGENTS.md에서 걷어낸 결함 B(죽은 상태가 규칙/참조 파일에 상�
 :9-90    표 블록 1 — 82행 (~2026-05-21)
 :92-103  ⚠️ 죽은 상태 "Current Next Experiment Candidate" (2026-05-21) — 원본 append-only라 삭제 안 함.
          부트 3단계가 이 파일을 대신 읽으므로 **자동 주입은 멎었다.**
-:105-541 표 블록 2 — 437행 (헤더 없음 → 표로 렌더 안 됨)
-:522-541 ← 이 파일이 요약한 최근 20행
+:105-542 표 블록 2 — 438행 (헤더 없음 → 표로 렌더 안 됨)
+:523-542 ← 이 파일이 요약한 최근 20행
 :532-533 ← 2026-08-26 소급 등재 (57th · 70th, 6열 준수). **시간순 아님**
-:543-560 ## Schema errata — :529~:531의 누락 열 + 소급 판정 토큰 (표 밖, 렌더 영향 0)
-:561~    ### 등재 관행 메모 — 물리 0 세션의 등재 기준
+:544-561 ## Schema errata — :529~:531의 누락 열 + 소급 판정 토큰 (표 밖, 렌더 영향 0)
+:562~    ### 등재 관행 메모 — 물리 0 세션의 등재 기준
 ```
 - 특정 세션 행 찾기: `grep -n '(<번호>th,' claudedocs/EXPERIMENT_LEDGER.md`
 - 행 1개만 읽기: `sed -n '<줄>p' claudedocs/EXPERIMENT_LEDGER.md` (한 행이 최대 9 KB)

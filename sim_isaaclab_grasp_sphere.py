@@ -100,6 +100,18 @@ def keyframes(x_t, y_t, r_sphere, bottom_clear=0.002, h_pre=0.10, h_lift=0.18):
 
 X_T, Y_T, R_S = 0.25, 0.0135, 0.015
 
+# ── 서보→셸 결합 (D479): 실물은 순정 가동 조(서보 레버) → 크랭크판 → 4절 → 셸. 시뮬은 폐루프를 못 넣으므로
+#    **명령은 순정 서보 조인트에만** 주고, 셸 목표는 매 스텝 **실측 서보각**을 grab_v1_meta.json 의 비선형 표로 변환해 준다.
+META = os.path.join(os.path.dirname(os.path.abspath(__file__)), "claudedocs/runtime_logs/grab_track/g18_nut_trap/urdf/grab_v1_meta.json")
+_rows = json.load(open(META))["servo_shell_mouth_nonlinear"]["rows"]
+_SV = np.array([r[0] for r in _rows]); _SH = np.array([r[1] for r in _rows]); _MM = np.array([r[2] for r in _rows])
+SERVO_OPEN = math.radians(_SV[-1])                       # 89° = 1.5533 rad
+
+
+def shell_from_servo(servo_rad):
+    d = math.degrees(max(0.0, min(servo_rad, math.radians(_SV[-1]))))
+    return math.radians(float(np.interp(d, _SV, _SH))), float(np.interp(d, _SV, _MM))
+
 if "--solve-only" in sys.argv:
     p, R, lip, d = fk([0.0, 0.39, 1.39, 1.34, 0.0])
     print("FK check scoop pose: grab_base", np.round(p, 4).tolist(), "(closeup 실측 [0.2487, 0.0135, 0.1206])", "mouth_dir", np.round(d, 3).tolist())
@@ -152,8 +164,9 @@ ROBOT = ArticulationCfg(
     # 🔴 1차 실패 원인(09-03): 액추에이터가 USD maxForce(URDF effort 1.9 N·m = 7.4 V 값)를 상한으로 써서 어깨가
     #    중력에 포화·처짐(목표 z 0.100 → 실제 0.042) → 처진 그랩이 접근 중 구를 밀어냄. 데모용으로 팔 상한을 넉넉히 둔다
     #    (실물 ST3235 12 V = 2.94 N·m; 아래 8.0 은 **비물리 데모값**, 토크 실측·전압 확정 전까지 인용 금지).
-    actuators={"arm": ImplicitActuatorCfg(joint_names_expr=["base_link_to_link1", "link1_to_link2", "link2_to_link3", "link3_to_link4", "link4_to_link5", "link5_to_gripper_link"],
+    actuators={"arm": ImplicitActuatorCfg(joint_names_expr=["base_link_to_link1", "link1_to_link2", "link2_to_link3", "link3_to_link4", "link4_to_link5"],
                                           stiffness=400.0, damping=40.0, effort_limit_sim=8.0),
+               "servo": ImplicitActuatorCfg(joint_names_expr=["link5_to_gripper_link"], stiffness=300.0, damping=30.0, effort_limit_sim=2.5),   # 순정 그리퍼 서보 (URDF effort 2.5)
                "grab": ImplicitActuatorCfg(joint_names_expr=["grab_shell_.*_joint"], stiffness=300.0, damping=30.0, effort_limit_sim=2.94)})
 SPHERE = RigidObjectCfg(
     prim_path="{ENV_REGEX_NS}/Sphere",
@@ -187,7 +200,8 @@ def main():
     jn = list(robot.joint_names); bn = list(robot.body_names)
     ARM = [jn.index(n) for n in ("base_link_to_link1", "link1_to_link2", "link2_to_link3", "link3_to_link4", "link4_to_link5")]
     iL, iR = jn.index("grab_shell_L_joint"), jn.index("grab_shell_R_joint"); iGB = bn.index("grab_base")
-    dt = sim.get_physics_dt(); OPEN = 0.77667
+    iS = jn.index("link5_to_gripper_link"); iJ = bn.index("gripper_link")
+    dt = sim.get_physics_dt(); OPEN = SERVO_OPEN                       # 이제 "개방" 명령은 서보각 89° (셸은 표로 종속)
     # 시퀀스 (초): 구간별 (팔 키프레임 from→to, 셸 from→to)
     home = [0.0] * 5
     seq = [("home→high", 2.0, home, KF["high"]["q"], 0.0, 0.0), ("high→pre", 1.5, KF["high"]["q"], KF["pre"]["q"], 0.0, 0.0),
@@ -206,7 +220,9 @@ def main():
             q = [(1 - a) * x + a * y for x, y in zip(qa, qb)]
             for j, idx in enumerate(ARM):
                 tgt[0, idx] = q[j]
-            s = (1 - a) * sa + a * sb; tgt[0, iL] = s; tgt[0, iR] = s
+            s = (1 - a) * sa + a * sb; tgt[0, iS] = s                       # 순정 서보 명령
+            sh, mm = shell_from_servo(float(robot.data.joint_pos[0, iS]))    # 실측 서보각 → 셸각 (링크 결합 대체)
+            tgt[0, iL] = sh; tgt[0, iR] = sh
             robot.set_joint_position_target(tgt); scene.write_data_to_sim()
             sim.step(); scene.update(dt); t += dt; step_i += 1
             if step_i % every == 0:
@@ -215,13 +231,17 @@ def main():
                 Image.fromarray(img).save(os.path.join(FR, f"f_{frame_i:04d}.png")); frame_i += 1
                 qp = robot.data.joint_pos[0]; sp = sphere.data.root_pos_w[0]; gb = robot.data.body_pos_w[0, iGB]
                 log.append({"t": round(t, 3), "phase": name, "shell_L": round(float(qp[iL]), 4), "shell_R": round(float(qp[iR]), 4),
-                            "shell_tgt": round(s, 4), "sphere": [round(float(v), 4) for v in sp], "grab_base": [round(float(v), 4) for v in gb],
+                            "servo_tgt": round(s, 4), "servo": round(float(qp[iS]), 4), "shell_tgt": round(sh, 4), "mouth_mm": round(mm, 1),
+                            "jaw_tip_z": round(float(robot.data.body_pos_w[0, iJ, 2]), 4),
+                            "sphere": [round(float(v) for v in sp) if False else round(float(v), 4) for v in sp], "grab_base": [round(float(v), 4) for v in gb],
                             "arm": [round(float(qp[i]), 4) for i in ARM]})
     last = [r for r in log if r["t"] > t - 1.0]
     z_end = float(np.mean([r["sphere"][2] for r in last])); dxy = float(np.mean([math.hypot(r["sphere"][0] - r["grab_base"][0], r["sphere"][1] - r["grab_base"][1]) for r in last]))
     res.update({"frames": frame_i, "fps": args.fps, "sim_seconds": round(t, 2), "sphere_z_end_m": round(z_end, 4), "sphere_grab_xy_dist_end_m": round(dxy, 4),
                 "sphere_z_min_m": round(min(r["sphere"][2] for r in log), 4), "sphere_z_max_m": round(max(r["sphere"][2] for r in log), 4),
-                "shell_final": [log[-1]["shell_L"], log[-1]["shell_R"]], "finite": bool(all(np.isfinite(r["sphere"]).all() for r in log)),
+                "shell_final": [log[-1]["shell_L"], log[-1]["shell_R"]], "servo_final": log[-1]["servo"],
+                "servo_max_rad": max(r["servo"] for r in log), "coupling": "servo joint commanded; shells follow measured servo via grab_v1_meta table",
+                "finite": bool(all(np.isfinite(r["sphere"]).all() for r in log)),
                 "joint_names": jn, "body_names": bn, "camera": {"pos": CAM_POS, "target": CAM_TGT}})
     res["ok"] = bool(res["finite"] and z_end >= 0.08 and dxy <= 0.03)
     json.dump(res, open(os.path.join(OUT, "grasp_result.json"), "w"), indent=1)

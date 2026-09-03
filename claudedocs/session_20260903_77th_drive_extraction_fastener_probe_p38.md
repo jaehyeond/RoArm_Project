@@ -250,3 +250,25 @@ D475 §3 의 권고 (나)(브래킷 Z 83.46 쌍 포기 → Z 102.9 쌍 + 팁 3�
 - 원장: D478 `:30046` · LEDGER `:541`. 백업 `DECISIONS.md.bak_20260903_pre_d478`. **전부 미커밋.**
 
 > **커밋 (사용자 요청, 세션 말미)**: `9f4241d`(설계·프로브·자산) · `84ffa46`(시뮬 스크립트·검증 JSON) · `a2201c2`(원장·상태 문서). 렌더 PNG·영상 mp4·조각 STL·USD 는 .gitignore 정책대로 미추적(로컬 보관).
+
+---
+
+# 5부 (후반 4) — 사용자 "순정 서보 조인트로 묶어서 다시 돌리고 영상, 실물에서도 어떻게 할지 제대로" → D479
+
+## 22. 절차
+
+1. `sim_isaaclab_grasp_sphere.py` 결합판: 명령은 `link5_to_gripper_link`(순정 서보, effort 2.5) 하나. 매 스텝 실측 서보각 → `grab_v1_meta.json` `servo_shell_mouth_nonlinear` 표 보간 → 두 셸 목표. 셸 드라이브는 링크 대체(운동학 결합).
+   결과 **ok**: 서보 0→1.553 rad, 셸 0→0.777(입 58.0), 순정 조 끝 최저 z 0.112(바닥 무접촉), 폐합 끝 서보 0.019·셸 L 0.022/R 0.318(구에 걸림), lift 끝 구 0.1518·xy 6.7 mm. 영상 `isaaclab_grasp_sphere_servo/grasp_sphere_servo_coupled.mp4` + 스트립(사용자 전송; 6.5 s 프레임에 순정 조 89° 벌어짐).
+2. 펌웨어 원문(D473 ① 이 받아둔 `EffectsMachine/roarm-m3`) 감사: `roarm-m3.ino:113` 부팅 `moveInit()`, `RoArm-M3_module.h:238-239` 그리퍼 → 중앙 2047 = π, `:117` 토크 1000 복귀, `:59-61` EOAT rad = 스텝·2π/4096(오프셋 0), `json_cmd.h:60-64` 예시 "grab = 3.14", `:67` T:107 토크, `module.h:346-347` 클램프 [700, 2596], `uart_ctrl.h:66-71` T:106 핸들러(cmd 없으면 0).
+   SDK `roarm_sdk/common.py:147,180`: `hand = π − h` / `h = 180 − h` → SDK 그리퍼 각도 = 조 개방각 = 설계 servo_deg.
+3. `docs/reference/hardware.md` 의 "해결 방법 1: T:106 ESP32 리셋" 이 **오기**(맨 `{"T":106}` = cmd 0 → 700 스텝 = 조 118.5° 개방) — 취소선 + 근거 + 규약 절(표 + 5조) 추가. `AGENTS.md` 안전 제약에 한 줄 주석.
+
+## 23. 판정
+
+**얹는 구조에서 "순정 그리퍼가 먼저 열리는" 국면은 없다** — 조와 크랭크판이 한 몸이라 서보 명령 = 그랩 명령. 실물의 안전 조건은 설계 게이트가 아니라 **펌웨어의 자동 동작**(부팅 닫힘·토크 복귀·클램프)이며, 이제 원문 근거로 규약화됐다. 부팅 = 닫힘 명령이라 그랩 장착 상태에서 무해(팔 HOME 이동 공간만 확보).
+남은 실물 항목: 부팅 속도(600)로 링크 내구 · 서보 0 오프셋과 립 접촉 캘리브 · T:107 200 충분성 · 벌어진 순정 조(89°)와 작업 공간 간섭.
+
+## 24. 산출물 (5부)
+
+- `sim_isaaclab_grasp_sphere.py`(서보 결합) · `isaaclab_grasp_sphere_servo/{grasp_result.json, grasp_log.json, keyframes.json, grasp_sphere_servo_coupled.mp4, strip_servo_coupled.png}`(프레임 삭제)
+- `docs/reference/hardware.md`(T:106 정정 + 규약) · `AGENTS.md`(안전 주석) · D479 `:30084` · LEDGER `:542`. 백업 `DECISIONS.md.bak_20260903_pre_d479`.

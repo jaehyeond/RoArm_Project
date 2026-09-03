@@ -221,6 +221,8 @@ technical claim:
 
 - 로봇 하드웨어 직접 제어(`serial` `/dev/ttyUSB*`, `torque_set`, `joints_angle_ctrl`,
   `move_init`, `T:106`)는 사용자 명시 승인 없이 실행 금지.
+  ⚠️ `T:106` 은 **그리퍼 구동 명령**이지 리셋이 아니다(D473 ①·D479). 맨 `{"T":106}` 은 조 118.5° 개방 명령 →
+  그랩 장착 시 링크 파손. 그랩 장착 상태의 그리퍼 규약 = `docs/reference/hardware.md` 말미.
 - `lerobot-train` 실행은 사용자 승인 후에만 (config 설계/검토는 자유).
 - `rm -rf` 금지. `JOINT_LIMITS` 코드 제거 금지 (HARD RULE #5).
 - git commit/push는 사용자가 요청할 때만.

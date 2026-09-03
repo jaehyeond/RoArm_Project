@@ -33,8 +33,11 @@
 6. ⚠️ pxr USD 검증은 `Usd.TraverseInstanceProxies()` 필수. 스쿱 옆면 검정 삼각형 = 벤더 link5 backface(무해).
 7. ⚠️ 셸 R 독립 구동 = 기어 커플링 근사. mimic 으로 모델하려면 gearing 부호·연성(25 Hz)·한계 확장 검증 필요(미실행).
 
+- 🔴 함정 10 (D479): **`T:106` 은 그리퍼 구동, 리셋 아님.** 맨 `{"T":106}` = 조 118.5° 개방(그랩 장착 시 링크 파손). hardware.md 정정됨. 부팅 = `moveInit` → 그리퍼 π(닫힘) + 토크 1000. SDK 그리퍼 각도 = 조 개방각 = `servo_deg`. 규약 5조 = `docs/reference/hardware.md` 말미.
+- 신규(D479) `sim_isaaclab_grasp_sphere.py` 서보 결합판 · `isaaclab_grasp_sphere_servo/`(mp4·JSON).
+
 **승인 대기 / 다음**
-- 실물(팔): 순정 구멍 나사산·⌀·재질, 플랜지 대조, 어댑터 전압(D476). 🔴 출력 착수(Phase 5) 는 사용자 승인.
+- 실물(팔): 순정 구멍 나사산·⌀·재질, 플랜지 대조, 어댑터 전압(D476) + 그리퍼 규약 준수(D479). 🔴 출력 착수(Phase 5) 는 사용자 승인.
 - Isaac Lab 환경 정의(스쿱 작업공간·heightmap 관측)·실 서보 게인 반영·64 env 격자 스냅샷(orchestrator 행 회피). DEME 연결 병행.
 
 **검증**
