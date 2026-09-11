@@ -1,6 +1,8 @@
 # LEDGER_RECENT.md — 최근 실험 20건 요약 (부팅 read)
 
-Last updated: 2026-09-11 (출구 기울임 실기) — 원본 `EXPERIMENT_LEDGER.md` 589줄. 원장 prefix 보존 검증.
+Last updated: 2026-09-11 (새scoop·잔류기울임·HOME) — 원본 `EXPERIMENT_LEDGER.md` 590줄. 원장prefix바이트불변검증.
+
+- **`:590` 새scoop1회·기울임·HOME 완료** — 중간정지4건후마지막83.54s/4215행은추가정지0. 전체11029행. 새질량/잔류미입력. `scoop_tilt_cycle_01/REPORT.md`, `session_20260911_full_scoop_outlet_repeat.md`. 직전출구회차잔류0알은별개사용자관찰.
 
 - **`:589` 출구20도 목표 실제 시험** —2935행·58.14초, 출구 경사7.76→22.00도. 마지막 어깨 편차5.01458도>5도로 정지; 현재 문 열린 롤90/기울임 자세, P1 아님. 후 무게/잔류null. `outlet_tilt_01/REPORT.md`, `session_20260911_790_tilt_execution.md`.
 

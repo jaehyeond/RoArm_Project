@@ -1,0 +1,995 @@
+{
+  "artifact": "ROARM_RERUN_ARTIFACT_VALIDATION_V1",
+  "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/scoop_tilt_cycle_01/plan_06/visual_01/outlet.rrd",
+  "expected_rerun_version": "0.34.1",
+  "expected_entity_paths": [],
+  "expected_timeline_names": [],
+  "exact_entity_paths": [
+    "/cases/HOME/base_link",
+    "/cases/HOME/grab_fixed",
+    "/cases/HOME/gravity",
+    "/cases/HOME/gripper_link",
+    "/cases/HOME/link1",
+    "/cases/HOME/link2",
+    "/cases/HOME/link3",
+    "/cases/HOME/link4",
+    "/cases/HOME/link5",
+    "/cases/HOME/outlet",
+    "/cases/current_open/base_link",
+    "/cases/current_open/grab_fixed",
+    "/cases/current_open/gravity",
+    "/cases/current_open/gripper_link",
+    "/cases/current_open/link1",
+    "/cases/current_open/link2",
+    "/cases/current_open/link3",
+    "/cases/current_open/link4",
+    "/cases/current_open/link5",
+    "/cases/current_open/outlet",
+    "/cases/outlet20/base_link",
+    "/cases/outlet20/grab_fixed",
+    "/cases/outlet20/gravity",
+    "/cases/outlet20/gripper_link",
+    "/cases/outlet20/link1",
+    "/cases/outlet20/link2",
+    "/cases/outlet20/link3",
+    "/cases/outlet20/link4",
+    "/cases/outlet20/link5",
+    "/cases/outlet20/outlet",
+    "/coordinate_frames/world_m",
+    "/frames/HOME",
+    "/frames/HOME/origin",
+    "/frames/current_open",
+    "/frames/current_open/origin",
+    "/frames/outlet20",
+    "/frames/outlet20/origin",
+    "/metadata/meshes/cases__HOME__base_link",
+    "/metadata/meshes/cases__HOME__grab_fixed",
+    "/metadata/meshes/cases__HOME__gripper_link",
+    "/metadata/meshes/cases__HOME__link1",
+    "/metadata/meshes/cases__HOME__link2",
+    "/metadata/meshes/cases__HOME__link3",
+    "/metadata/meshes/cases__HOME__link4",
+    "/metadata/meshes/cases__HOME__link5",
+    "/metadata/meshes/cases__current_open__base_link",
+    "/metadata/meshes/cases__current_open__grab_fixed",
+    "/metadata/meshes/cases__current_open__gripper_link",
+    "/metadata/meshes/cases__current_open__link1",
+    "/metadata/meshes/cases__current_open__link2",
+    "/metadata/meshes/cases__current_open__link3",
+    "/metadata/meshes/cases__current_open__link4",
+    "/metadata/meshes/cases__current_open__link5",
+    "/metadata/meshes/cases__outlet20__base_link",
+    "/metadata/meshes/cases__outlet20__grab_fixed",
+    "/metadata/meshes/cases__outlet20__gripper_link",
+    "/metadata/meshes/cases__outlet20__link1",
+    "/metadata/meshes/cases__outlet20__link2",
+    "/metadata/meshes/cases__outlet20__link3",
+    "/metadata/meshes/cases__outlet20__link4",
+    "/metadata/meshes/cases__outlet20__link5",
+    "/metadata/run",
+    "/metrics/outlet_slope_deg",
+    "/timeline/grab_fixed",
+    "/timeline/gripper_link",
+    "/timeline/link2",
+    "/timeline/link3",
+    "/timeline/link4",
+    "/timeline/link5"
+  ],
+  "exact_timeline_names": [
+    "blueprint",
+    "log_time",
+    "sample"
+  ],
+  "expected_entity_components": {
+    "/cases/current_open/base_link": [
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/cases/current_open/link1": [
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/cases/current_open/link2": [
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/cases/current_open/link3": [
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/cases/current_open/link4": [
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/cases/current_open/link5": [
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/cases/current_open/grab_fixed": [
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/cases/current_open/gripper_link": [
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/cases/current_open/gravity": [
+      "Arrows3D:origins",
+      "Arrows3D:vectors"
+    ],
+    "/cases/current_open/outlet": [
+      "Arrows3D:origins",
+      "Arrows3D:vectors"
+    ],
+    "/cases/outlet20/base_link": [
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/cases/outlet20/link1": [
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/cases/outlet20/link2": [
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/cases/outlet20/link3": [
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/cases/outlet20/link4": [
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/cases/outlet20/link5": [
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/cases/outlet20/grab_fixed": [
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/cases/outlet20/gripper_link": [
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/cases/outlet20/gravity": [
+      "Arrows3D:origins",
+      "Arrows3D:vectors"
+    ],
+    "/cases/outlet20/outlet": [
+      "Arrows3D:origins",
+      "Arrows3D:vectors"
+    ],
+    "/cases/HOME/base_link": [
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/cases/HOME/link1": [
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/cases/HOME/link2": [
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/cases/HOME/link3": [
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/cases/HOME/link4": [
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/cases/HOME/link5": [
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/cases/HOME/grab_fixed": [
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/cases/HOME/gripper_link": [
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/cases/HOME/gravity": [
+      "Arrows3D:origins",
+      "Arrows3D:vectors"
+    ],
+    "/cases/HOME/outlet": [
+      "Arrows3D:origins",
+      "Arrows3D:vectors"
+    ],
+    "/timeline/grab_fixed": [
+      "Points3D:positions"
+    ],
+    "/timeline/gripper_link": [
+      "Points3D:positions"
+    ],
+    "/timeline/link2": [
+      "Points3D:positions"
+    ],
+    "/timeline/link3": [
+      "Points3D:positions"
+    ],
+    "/timeline/link4": [
+      "Points3D:positions"
+    ],
+    "/timeline/link5": [
+      "Points3D:positions"
+    ],
+    "/metrics/outlet_slope_deg": [
+      "Scalars:scalars"
+    ]
+  },
+  "forbidden_entity_fragments": [
+    "/\\/"
+  ],
+  "blueprint_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/scoop_tilt_cycle_01/plan_06/visual_01/outlet.rbl",
+  "rendered_blueprint_source": "active blueprint embedded in the RRD",
+  "external_rbl_role": "verified fixed-layout export; the 0.34.1 CLI does not guarantee that an external RBL overrides an already-active embedded blueprint",
+  "screenshot_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/scoop_tilt_cycle_01/plan_06/visual_01/decision.png",
+  "screenshot_window_size": "2400x1500",
+  "screenshot_port": null,
+  "human_visual_inspection_required": true,
+  "bytes": 5227914,
+  "sha256": "e45753a0fcbc06c73aa1f8d756d5e9742afe1344efbc660c1c44f653a175c67a",
+  "version": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "--version"
+    ],
+    "returncode": 0,
+    "stdout": "rerun-cli 0.34.1 (base lance map_view nasm native_viewer oss_server perf_telemetry re_server release_full release_no_web_viewer web_viewer) [rustc 1.92.0 (ded5c06cf 2025-12-08), LLVM 21.1.3] x86_64-unknown-linux-gnu prepare-release-0.34.1 4efb18f, built 2026-07-07T16:20:42.173372603Z\nVideo features: av1 ffmpeg nasm\n",
+    "stderr": "",
+    "ok": true,
+    "expected_version_match": true
+  },
+  "verify": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "verify",
+      "--check-footers",
+      "true",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/scoop_tilt_cycle_01/plan_06/visual_01/outlet.rrd"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "1 file verified without error.\n",
+    "ok": true
+  },
+  "stats": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "stats",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/scoop_tilt_cycle_01/plan_06/visual_01/outlet.rrd"
+    ],
+    "returncode": 0,
+    "stdout": "Overview\n----------\nnum_chunks = 100\nnum_entity_paths = 93\nnum_chunks_without_components = 0 (0.000%)\nnum_rows = 5\u2009267\nnum_rows_min = 1\nnum_rows_max = 740\nnum_rows_avg = 52.670\nnum_static = 64\nnum_indexes_min = 0\nnum_indexes_max = 2\nnum_indexes_avg = 0.720\nnum_components_min = 1\nnum_components_max = 4\nnum_components_avg = 2.770\n\nNum chunks per entity\n---------------------\n/__properties: 1\n/blueprint_panel: 1\n/cases/HOME/base_link: 1\n/cases/HOME/grab_fixed: 1\n/cases/HOME/gravity: 1\n/cases/HOME/gripper_link: 1\n/cases/HOME/link1: 1\n/cases/HOME/link2: 1\n/cases/HOME/link3: 1\n/cases/HOME/link4: 1\n/cases/HOME/link5: 1\n/cases/HOME/outlet: 1\n/cases/current_open/base_link: 1\n/cases/current_open/grab_fixed: 1\n/cases/current_open/gravity: 1\n/cases/current_open/gripper_link: 1\n/cases/current_open/link1: 1\n/cases/current_open/link2: 1\n/cases/current_open/link3: 1\n/cases/current_open/link4: 1\n/cases/current_open/link5: 1\n/cases/current_open/outlet: 1\n/cases/outlet20/base_link: 1\n/cases/outlet20/grab_fixed: 1\n/cases/outlet20/gravity: 1\n/cases/outlet20/gripper_link: 1\n/cases/outlet20/link1: 1\n/cases/outlet20/link2: 1\n/cases/outlet20/link3: 1\n/cases/outlet20/link4: 1\n/cases/outlet20/link5: 1\n/cases/outlet20/outlet: 1\n/container/34f41c68-0f59-40cf-9e26-84f21b0c52f7: 1\n/container/5f6de386-2fd3-4a9b-9122-176e24d29f79: 1\n/container/a68e91f7-bf82-4acc-a16a-58c4065d263d: 1\n/coordinate_frames/world_m: 1\n/frames/HOME: 1\n/frames/HOME/origin: 1\n/frames/current_open: 1\n/frames/current_open/origin: 1\n/frames/outlet20: 1\n/frames/outlet20/origin: 1\n/metadata/meshes/cases__HOME__base_link: 1\n/metadata/meshes/cases__HOME__grab_fixed: 1\n/metadata/meshes/cases__HOME__gripper_link: 1\n/metadata/meshes/cases__HOME__link1: 1\n/metadata/meshes/cases__HOME__link2: 1\n/metadata/meshes/cases__HOME__link3: 1\n/metadata/meshes/cases__HOME__link4: 1\n/metadata/meshes/cases__HOME__link5: 1\n/metadata/meshes/cases__current_open__base_link: 1\n/metadata/meshes/cases__current_open__grab_fixed: 1\n/metadata/meshes/cases__current_open__gripper_link: 1\n/metadata/meshes/cases__current_open__link1: 1\n/metadata/meshes/cases__current_open__link2: 1\n/metadata/meshes/cases__current_open__link3: 1\n/metadata/meshes/cases__current_open__link4: 1\n/metadata/meshes/cases__current_open__link5: 1\n/metadata/meshes/cases__outlet20__base_link: 1\n/metadata/meshes/cases__outlet20__grab_fixed: 1\n/metadata/meshes/cases__outlet20__gripper_link: 1\n/metadata/meshes/cases__outlet20__link1: 1\n/metadata/meshes/cases__outlet20__link2: 1\n/metadata/meshes/cases__outlet20__link3: 1\n/metadata/meshes/cases__outlet20__link4: 1\n/metadata/meshes/cases__outlet20__link5: 1\n/metadata/run: 1\n/metrics/outlet_slope_deg: 1\n/selection_panel: 1\n/time_panel: 2\n/timeline/grab_fixed: 2\n/timeline/gripper_link: 2\n/timeline/link2: 2\n/timeline/link3: 2\n/timeline/link4: 2\n/timeline/link5: 2\n/view/2964422a-d7f3-474e-be4d-b5e14a773a39: 1\n/view/2964422a-d7f3-474e-be4d-b5e14a773a39/EyeControls3D: 1\n/view/2964422a-d7f3-474e-be4d-b5e14a773a39/SpatialInformation: 1\n/view/2964422a-d7f3-474e-be4d-b5e14a773a39/ViewContents: 1\n/view/44f14c4e-57ab-4ba7-925c-889fc5f4d7a9: 1\n/view/44f14c4e-57ab-4ba7-925c-889fc5f4d7a9/EyeControls3D: 1\n/view/44f14c4e-57ab-4ba7-925c-889fc5f4d7a9/SpatialInformation: 1\n/view/44f14c4e-57ab-4ba7-925c-889fc5f4d7a9/ViewContents: 1\n/view/a26d88d1-2ba6-41ad-8bcb-11894445f693: 1\n/view/a26d88d1-2ba6-41ad-8bcb-11894445f693/EyeControls3D: 1\n/view/a26d88d1-2ba6-41ad-8bcb-11894445f693/SpatialInformation: 1\n/view/a26d88d1-2ba6-41ad-8bcb-11894445f693/ViewContents: 1\n/view/ac54c504-7ea2-46bf-a853-268d82774018: 1\n/view/ac54c504-7ea2-46bf-a853-268d82774018/ViewContents: 1\n/view/ac8e4115-cd32-4e0d-8e88-1fa62320fc1b: 1\n/view/ac8e4115-cd32-4e0d-8e88-1fa62320fc1b/ViewContents: 1\n/viewport: 1\n\nNum chunks per index\n--------------------\nblueprint: 23\nlog_time: 36\nsample: 13\n\nNum chunks per component\n------------------------\nArrows3D:colors: 6\nArrows3D:origins: 6\nArrows3D:vectors: 6\nContainerBlueprint:container_kind: 3\nContainerBlueprint:contents: 3\nCoordinateFrame:frame: 45\nEyeControls3D:eye_up: 3\nEyeControls3D:kind: 3\nEyeControls3D:look_target: 3\nEyeControls3D:position: 3\nMesh3D:albedo_factor: 24\nMesh3D:triangle_indices: 24\nMesh3D:vertex_positions: 24\nPanelBlueprint:state: 2\nPoints3D:colors: 12\nPoints3D:labels: 3\nPoints3D:positions: 15\nPoints3D:radii: 15\nRecordingInfo:start_time: 1\nScalars:scalars: 1\nSpatialInformation:show_axes: 3\nSpatialInformation:show_bounding_box: 3\nSpatialInformation:target_frame: 3\nTextDocument:text: 25\nTimePanelBlueprint:play_state: 1\nTimePanelBlueprint:timeline: 1\nTransform3D:child_frame: 4\nTransform3D:parent_frame: 4\nTransform3D:quaternion: 4\nTransform3D:translation: 4\nViewBlueprint:class_identifier: 5\nViewBlueprint:display_name: 5\nViewBlueprint:space_origin: 5\nViewContents:query: 5\nViewportBlueprint:auto_layout: 1\nViewportBlueprint:auto_views: 1\nViewportBlueprint:root_container: 1\n\nSize (schema + data, compressed)\n--------------------------------\nipc_size_bytes_total = 4.8 MiB\nipc_size_bytes_min = 901 B\nipc_size_bytes_max = 638 KiB\nipc_size_bytes_avg = 49.4 KiB\nipc_size_bytes_p50 = 1.6 KiB\nipc_size_bytes_p90 = 149 KiB\nipc_size_bytes_p95 = 334 KiB\nipc_size_bytes_p99 = 638 KiB\nipc_size_bytes_p999 = 638 KiB\n\nSize (schema + data, uncompressed)\n----------------------------------\nipc_size_bytes_total = 10.4 MiB\nipc_size_bytes_min = 1.7 KiB\nipc_size_bytes_max = 866 KiB\nipc_size_bytes_avg = 106 KiB\nipc_size_bytes_p50 = 4.1 KiB\nipc_size_bytes_p90 = 461 KiB\nipc_size_bytes_p95 = 866 KiB\nipc_size_bytes_p99 = 866 KiB\nipc_size_bytes_p999 = 866 KiB\n\nSize (schema only, uncompressed)\n--------------------------------\nipc_size_bytes_total = 188 KiB\nipc_size_bytes_min = 1016 B\nipc_size_bytes_max = 2.8 KiB\nipc_size_bytes_avg = 1.9 KiB\nipc_size_bytes_p50 = 2.2 KiB\nipc_size_bytes_p90 = 2.6 KiB\nipc_size_bytes_p95 = 2.6 KiB\nipc_size_bytes_p99 = 2.8 KiB\nipc_size_bytes_p999 = 2.8 KiB\n\nSize (data only, uncompressed)\n------------------------------\nipc_size_bytes_total = 10.2 MiB\nipc_size_bytes_min = 656 B\nipc_size_bytes_max = 864 KiB\nipc_size_bytes_avg = 105 KiB\nipc_size_bytes_p50 = 2.0 KiB\nipc_size_bytes_p90 = 459 KiB\nipc_size_bytes_p95 = 864 KiB\nipc_size_bytes_p99 = 864 KiB\nipc_size_bytes_p999 = 864 KiB\n\nUnsorted timelines\n------------------\n(none \u2014 every timeline on every chunk is sorted)\n\nFooters\n-------\nnum_manifests = 2 (one per recording)\n\nFooter manifest for StoreId(Blueprint, \"roarm_viz_debug\", \"rec_17f4c780e421428d84785d6eaa2203ff\")\n  num_chunks_indexed = 24\n  num_static_chunks = 1\n  num_entity_paths = 23\n  manifest_num_columns = 138\n  sorbet_schema_num_fields = 57\n  sorbet_schema_sha256 = 4eb7dacb6fc7b07f6ffd98077bfd4bfe6ded8f6cc04c8e1d77bf3d9fed3ce382\n  chunk_byte_size_total (native) = 35.8 KiB\n  chunk_byte_size_uncompressed_total = 84.7 KiB\n\nFooter manifest for StoreId(Recording, \"roarm_viz_debug\", \"s1_outlet_plan_06\")\n  num_chunks_indexed = 76\n  num_static_chunks = 63\n  num_entity_paths = 70\n  manifest_num_columns = 59\n  sorbet_schema_num_fields = 202\n  sorbet_schema_sha256 = e9cc857de994b3279e1ae474c4c491a07628d56ee88ebf0817bbc296eb069c44\n  chunk_byte_size_total (native) = 4.8 MiB\n  chunk_byte_size_uncompressed_total = 10.3 MiB\n",
+    "stderr": "2026-09-11T09:37:44.303422Z  INFO rerun::commands::rrd::stats: processing input\u2026\n2026-09-11T09:37:44.313644Z  INFO rerun::commands::rrd::stats: computing stats\u2026\n",
+    "ok": true
+  },
+  "print_verbose": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "print",
+      "-v",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/scoop_tilt_cycle_01/plan_06/visual_01/outlet.rrd"
+    ],
+    "returncode": 0,
+    "stdout": "Showing data after migration to latest Rerun version\nStoreInfo {\n    store_id: StoreId(\n        Recording,\n        \"roarm_viz_debug\",\n        \"s1_outlet_plan_06\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nStoreInfo {\n    store_id: StoreId(\n        Recording,\n        \"roarm_viz_debug\",\n        \"s1_outlet_plan_06\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nChunk(chunk_18D43AAC48A60F5743457213decd10cf) with 1 rows (632 B) - /__properties - data columns: [/__properties@RecordingInfo:start_time]\nStoreInfo {\n    store_id: StoreId(\n        Blueprint,\n        \"roarm_viz_debug\",\n        \"rec_17f4c780e421428d84785d6eaa2203ff\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nStoreInfo {\n    store_id: StoreId(\n        Blueprint,\n        \"roarm_viz_debug\",\n        \"rec_17f4c780e421428d84785d6eaa2203ff\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nChunk(chunk_18D43AAC48D896E54d13b0be855be0fb) with 1 rows (1.2 KiB) - /view/2964422a-d7f3-474e-be4d-b5e14a773a39/SpatialInformation - data columns: [/view/2964422a-d7f3-474e-be4d-b5e14a773a39/SpatialInformation@SpatialInformation:show_axes /view/2964422a-d7f3-474e-be4d-b5e14a773a39/SpatialInformation@SpatialInformation:show_bounding_box /view/2964422a-d7f3-474e-be4d-b5e14a773a39/SpatialInformation@SpatialInformation:target_frame]\nChunk(chunk_18D43AAC48D91A8A4d13b0be855be0fc) with 1 rows (981 B) - /view/a26d88d1-2ba6-41ad-8bcb-11894445f693/ViewContents - data columns: [/view/a26d88d1-2ba6-41ad-8bcb-11894445f693/ViewContents@ViewContents:query]\nChunk(chunk_18D43AAC48D9298E4d13b0be855be0fd) with 1 rows (1.2 KiB) - /view/ac8e4115-cd32-4e0d-8e88-1fa62320fc1b - data columns: [/view/ac8e4115-cd32-4e0d-8e88-1fa62320fc1b@ViewBlueprint:class_identifier /view/ac8e4115-cd32-4e0d-8e88-1fa62320fc1b@ViewBlueprint:display_name /view/ac8e4115-cd32-4e0d-8e88-1fa62320fc1b@ViewBlueprint:space_origin]\nChunk(chunk_18D43AAC48D954C44d13b0be855be0fe) with 1 rows (1.4 KiB) - /view/a26d88d1-2ba6-41ad-8bcb-11894445f693/EyeControls3D - data columns: [/view/a26d88d1-2ba6-41ad-8bcb-11894445f693/EyeControls3D@EyeControls3D:eye_up /view/a26d88d1-2ba6-41ad-8bcb-11894445f693/EyeControls3D@EyeControls3D:kind /view/a26d88d1-2ba6-41ad-8bcb-11894445f693/EyeControls3D@EyeControls3D:look_target /view/a26d88d1-2ba6-41ad-8bcb-11894445f693/EyeControls3D@EyeControls3D:position]\nChunk(chunk_18D43AAC48D97E0B4d13b0be855be0ff) with 1 rows (1.2 KiB) - /viewport - data columns: [/viewport@ViewportBlueprint:auto_layout /viewport@ViewportBlueprint:auto_views /viewport@ViewportBlueprint:root_container]\nChunk(chunk_18D43AAC48D98E4C4d13b0be855be100) with 1 rows (1.2 KiB) - /view/2964422a-d7f3-474e-be4d-b5e14a773a39 - data columns: [/view/2964422a-d7f3-474e-be4d-b5e14a773a39@ViewBlueprint:class_identifier /view/2964422a-d7f3-474e-be4d-b5e14a773a39@ViewBlueprint:display_name /view/2964422a-d7f3-474e-be4d-b5e14a773a39@ViewBlueprint:space_origin]\nChunk(chunk_18D43AAC48D9B4DC4d13b0be855be101) with 1 rows (1.2 KiB) - /view/a26d88d1-2ba6-41ad-8bcb-11894445f693 - data columns: [/view/a26d88d1-2ba6-41ad-8bcb-11894445f693@ViewBlueprint:class_identifier /view/a26d88d1-2ba6-41ad-8bcb-11894445f693@ViewBlueprint:display_name /view/a26d88d1-2ba6-41ad-8bcb-11894445f693@ViewBlueprint:space_origin]\nChunk(chunk_18D43AAC48D9C2024d13b0be855be102) with 1 rows (925 B) - /view/ac54c504-7ea2-46bf-a853-268d82774018/ViewContents - data columns: [/view/ac54c504-7ea2-46bf-a853-268d82774018/ViewContents@ViewContents:query]\nChunk(chunk_18D43AAC48D9D51B4d13b0be855be103) with 1 rows (1.2 KiB) - /view/ac54c504-7ea2-46bf-a853-268d82774018 - data columns: [/view/ac54c504-7ea2-46bf-a853-268d82774018@ViewBlueprint:class_identifier /view/ac54c504-7ea2-46bf-a853-268d82774018@ViewBlueprint:display_name /view/ac54c504-7ea2-46bf-a853-268d82774018@ViewBlueprint:space_origin]\nChunk(chunk_18D43AAC48D9E44B4d13b0be855be104) with 1 rows (1.4 KiB) - /view/44f14c4e-57ab-4ba7-925c-889fc5f4d7a9/EyeControls3D - data columns: [/view/44f14c4e-57ab-4ba7-925c-889fc5f4d7a9/EyeControls3D@EyeControls3D:eye_up /view/44f14c4e-57ab-4ba7-925c-889fc5f4d7a9/EyeControls3D@EyeControls3D:kind /view/44f14c4e-57ab-4ba7-925c-889fc5f4d7a9/EyeControls3D@EyeControls3D:look_target /view/44f14c4e-57ab-4ba7-925c-889fc5f4d7a9/EyeControls3D@EyeControls3D:position]\nChunk(chunk_18D43AAC48DA06BF4d13b0be855be105) with 1 rows (965 B) - /view/2964422a-d7f3-474e-be4d-b5e14a773a39/ViewContents - data columns: [/view/2964422a-d7f3-474e-be4d-b5e14a773a39/ViewContents@ViewContents:query]\nChunk(chunk_18D43AAC48DA11904d13b0be855be106) with 1 rows (1.1 KiB) - /container/a68e91f7-bf82-4acc-a16a-58c4065d263d - data columns: [/container/a68e91f7-bf82-4acc-a16a-58c4065d263d@ContainerBlueprint:container_kind /container/a68e91f7-bf82-4acc-a16a-58c4065d263d@ContainerBlueprint:contents]\nChunk(chunk_18D43AAC48DA28914d13b0be855be107) with 1 rows (1.4 KiB) - /view/2964422a-d7f3-474e-be4d-b5e14a773a39/EyeControls3D - data columns: [/view/2964422a-d7f3-474e-be4d-b5e14a773a39/EyeControls3D@EyeControls3D:eye_up /view/2964422a-d7f3-474e-be4d-b5e14a773a39/EyeControls3D@EyeControls3D:kind /view/2964422a-d7f3-474e-be4d-b5e14a773a39/EyeControls3D@EyeControls3D:look_target /view/2964422a-d7f3-474e-be4d-b5e14a773a39/EyeControls3D@EyeControls3D:position]\nChunk(chunk_18D43AAC48DA47774d13b0be855be108) with 1 rows (1.1 KiB) - /container/5f6de386-2fd3-4a9b-9122-176e24d29f79 - data columns: [/container/5f6de386-2fd3-4a9b-9122-176e24d29f79@ContainerBlueprint:container_kind /container/5f6de386-2fd3-4a9b-9122-176e24d29f79@ContainerBlueprint:contents]\nChunk(chunk_18D43AAC48DA53A44d13b0be855be109) with 1 rows (1.2 KiB) - /view/a26d88d1-2ba6-41ad-8bcb-11894445f693/SpatialInformation - data columns: [/view/a26d88d1-2ba6-41ad-8bcb-11894445f693/SpatialInformation@SpatialInformation:show_axes /view/a26d88d1-2ba6-41ad-8bcb-11894445f693/SpatialInformation@SpatialInformation:show_bounding_box /view/a26d88d1-2ba6-41ad-8bcb-11894445f693/SpatialInformation@SpatialInformation:target_frame]\nChunk(chunk_18D43AAC48DA61E84d13b0be855be10a) with 1 rows (883 B) - /blueprint_panel - data columns: [/blueprint_panel@PanelBlueprint:state]\nChunk(chunk_18D43AAC48DA75834d13b0be855be10b) with 1 rows (1.1 KiB) - /container/34f41c68-0f59-40cf-9e26-84f21b0c52f7 - data columns: [/container/34f41c68-0f59-40cf-9e26-84f21b0c52f7@ContainerBlueprint:container_kind /container/34f41c68-0f59-40cf-9e26-84f21b0c52f7@ContainerBlueprint:contents]\nChunk(chunk_18D43AAC48DA892E4d13b0be855be10c) with 1 rows (973 B) - /view/44f14c4e-57ab-4ba7-925c-889fc5f4d7a9/ViewContents - data columns: [/view/44f14c4e-57ab-4ba7-925c-889fc5f4d7a9/ViewContents@ViewContents:query]\nChunk(chunk_18D43AAC48DA9B334d13b0be855be10d) with 1 rows (923 B) - /view/ac8e4115-cd32-4e0d-8e88-1fa62320fc1b/ViewContents - data columns: [/view/ac8e4115-cd32-4e0d-8e88-1fa62320fc1b/ViewContents@ViewContents:query]\nChunk(chunk_18D43AAC48DAB1114d13b0be855be10e) with 1 rows (883 B) - /selection_panel - data columns: [/selection_panel@PanelBlueprint:state]\nChunk(chunk_18D43AAC48DAC3EB4d13b0be855be10f) with 1 rows (1.2 KiB) - /view/44f14c4e-57ab-4ba7-925c-889fc5f4d7a9 - data columns: [/view/44f14c4e-57ab-4ba7-925c-889fc5f4d7a9@ViewBlueprint:class_identifier /view/44f14c4e-57ab-4ba7-925c-889fc5f4d7a9@ViewBlueprint:display_name /view/44f14c4e-57ab-4ba7-925c-889fc5f4d7a9@ViewBlueprint:space_origin]\nChunk(chunk_18D43AAC48DAD2ED4d13b0be855be110) with 1 rows (891 B) - /time_panel - data columns: [/time_panel@TimePanelBlueprint:timeline]\nChunk(chunk_18D43AAC48DADBE84d13b0be855be111) with 1 rows (631 B) - /time_panel - data columns: [/time_panel@TimePanelBlueprint:play_state]\nChunk(chunk_18D43AAC48DAE4E74d13b0be855be112) with 1 rows (1.2 KiB) - /view/44f14c4e-57ab-4ba7-925c-889fc5f4d7a9/SpatialInformation - data columns: [/view/44f14c4e-57ab-4ba7-925c-889fc5f4d7a9/SpatialInformation@SpatialInformation:show_axes /view/44f14c4e-57ab-4ba7-925c-889fc5f4d7a9/SpatialInformation@SpatialInformation:show_bounding_box /view/44f14c4e-57ab-4ba7-925c-889fc5f4d7a9/SpatialInformation@SpatialInformation:target_frame]\nBlueprintActivationCommand(StoreId(Blueprint, \"roarm_viz_debug\", \"rec_17f4c780e421428d84785d6eaa2203ff\"), make_active: true, make_default: true)\nChunk(chunk_18D43AAC5B86486A18d1b422fb8d6ab8) with 670 rows (416 KiB) - /timeline/grab_fixed - data columns: [/timeline/grab_fixed@CoordinateFrame:frame /timeline/grab_fixed@Points3D:colors /timeline/grab_fixed@Points3D:positions /timeline/grab_fixed@Points3D:radii]\nChunk(chunk_18D43AAC5D07A09C18d1b422fb8d6ab9) with 670 rows (416 KiB) - /timeline/gripper_link - data columns: [/timeline/gripper_link@CoordinateFrame:frame /timeline/gripper_link@Points3D:colors /timeline/gripper_link@Points3D:positions /timeline/gripper_link@Points3D:radii]\nChunk(chunk_18D43AAC5E2B5B8F18d1b422fb8d6aba) with 670 rows (416 KiB) - /timeline/link2 - data columns: [/timeline/link2@CoordinateFrame:frame /timeline/link2@Points3D:colors /timeline/link2@Points3D:positions /timeline/link2@Points3D:radii]\nChunk(chunk_18D43AAC5E8D3D2018d1b422fb8d6abb) with 670 rows (416 KiB) - /timeline/link3 - data columns: [/timeline/link3@CoordinateFrame:frame /timeline/link3@Points3D:colors /timeline/link3@Points3D:positions /timeline/link3@Points3D:radii]\nChunk(chunk_18D43AAC5EB876CD18d1b422fb8d6abc) with 670 rows (416 KiB) - /timeline/link4 - data columns: [/timeline/link4@CoordinateFrame:frame /timeline/link4@Points3D:colors /timeline/link4@Points3D:positions /timeline/link4@Points3D:radii]\nChunk(chunk_18D43AAC5EE3B5B818d1b422fb8d6abd) with 670 rows (416 KiB) - /timeline/link5 - data columns: [/timeline/link5@CoordinateFrame:frame /timeline/link5@Points3D:colors /timeline/link5@Points3D:positions /timeline/link5@Points3D:radii]\nChunk(chunk_18D43AAC5F10D5A818d1b422fb8d6abe) with 1 rows (7.0 KiB) - /cases/outlet20/link1 - data columns: [/cases/outlet20/link1@CoordinateFrame:frame /cases/outlet20/link1@Mesh3D:albedo_factor /cases/outlet20/link1@Mesh3D:triangle_indices /cases/outlet20/link1@Mesh3D:vertex_positions]\nChunk(chunk_18D43AAC5F10F14018d1b422fb8d6abf) with 1 rows (712 B) - /metadata/meshes/cases__outlet20__link2 - data columns: [/metadata/meshes/cases__outlet20__link2@TextDocument:text]\nChunk(chunk_18D43AAC5F10F8A318d1b422fb8d6ac0) with 1 rows (1.1 KiB) - /frames/HOME - data columns: [/frames/HOME@Transform3D:child_frame /frames/HOME@Transform3D:parent_frame /frames/HOME@Transform3D:quaternion /frames/HOME@Transform3D:translation]\nChunk(chunk_18D43AAC5F11052818d1b422fb8d6ac1) with 1 rows (114 KiB) - /cases/outlet20/gripper_link - data columns: [/cases/outlet20/gripper_link@CoordinateFrame:frame /cases/outlet20/gripper_link@Mesh3D:albedo_factor /cases/outlet20/gripper_link@Mesh3D:triangle_indices /cases/outlet20/gripper_link@Mesh3D:vertex_positions]\nChunk(chunk_18D43AAC5F11112018d1b422fb8d6ac2) with 1 rows (41.0 KiB) - /cases/current_open/grab_fixed - data columns: [/cases/current_open/grab_fixed@CoordinateFrame:frame /cases/current_open/grab_fixed@Mesh3D:albedo_factor /cases/current_open/grab_fixed@Mesh3D:triangle_indices /cases/current_open/grab_fixed@Mesh3D:vertex_positions]\nChunk(chunk_18D43AAC5F116B2618d1b422fb8d6ac3) with 70 rows (44.6 KiB) - /timeline/link4 - data columns: [/timeline/link4@CoordinateFrame:frame /timeline/link4@Points3D:colors /timeline/link4@Points3D:positions /timeline/link4@Points3D:radii]\nChunk(chunk_18D43AAC5F16A45418d1b422fb8d6ac4) with 1 rows (221 KiB) - /cases/HOME/link2 - data columns: [/cases/HOME/link2@CoordinateFrame:frame /cases/HOME/link2@Mesh3D:albedo_factor /cases/HOME/link2@Mesh3D:triangle_indices /cases/HOME/link2@Mesh3D:vertex_positions]\nChunk(chunk_18D43AAC5F16BE6118d1b422fb8d6ac5) with 1 rows (710 B) - /metadata/meshes/cases__HOME__link4 - data columns: [/metadata/meshes/cases__HOME__link4@TextDocument:text]\nChunk(chunk_18D43AAC5F16C5C218d1b422fb8d6ac6) with 1 rows (712 B) - /metadata/meshes/cases__HOME__base_link - data columns: [/metadata/meshes/cases__HOME__base_link@TextDocument:text]\nChunk(chunk_18D43AAC5F16CE7018d1b422fb8d6ac7) with 1 rows (331 KiB) - /cases/outlet20/link5 - data columns: [/cases/outlet20/link5@CoordinateFrame:frame /cases/outlet20/link5@Mesh3D:albedo_factor /cases/outlet20/link5@Mesh3D:triangle_indices /cases/outlet20/link5@Mesh3D:vertex_positions]\nChunk(chunk_18D43AAC5F16DE3318d1b422fb8d6ac8) with 1 rows (714 B) - /metadata/meshes/cases__current_open__link1 - data columns: [/metadata/meshes/cases__current_open__link1@TextDocument:text]\nChunk(chunk_18D43AAC5F16E58418d1b422fb8d6ac9) with 1 rows (17.2 KiB) - /cases/outlet20/link3 - data columns: [/cases/outlet20/link3@CoordinateFrame:frame /cases/outlet20/link3@Mesh3D:albedo_factor /cases/outlet20/link3@Mesh3D:triangle_indices /cases/outlet20/link3@Mesh3D:vertex_positions]\nChunk(chunk_18D43AAC5F16F08218d1b422fb8d6aca) with 1 rows (5.4 KiB) - /cases/outlet20/link4 - data columns: [/cases/outlet20/link4@CoordinateFrame:frame /cases/outlet20/link4@Mesh3D:albedo_factor /cases/outlet20/link4@Mesh3D:triangle_indices /cases/outlet20/link4@Mesh3D:vertex_positions]\nChunk(chunk_18D43AAC5F16FAA318d1b422fb8d6acb) with 1 rows (41.0 KiB) - /cases/outlet20/grab_fixed - data columns: [/cases/outlet20/grab_fixed@CoordinateFrame:frame /cases/outlet20/grab_fixed@Mesh3D:albedo_factor /cases/outlet20/grab_fixed@Mesh3D:triangle_indices /cases/outlet20/grab_fixed@Mesh3D:vertex_positions]\nChunk(chunk_18D43AAC5F170E6B18d1b422fb8d6acc) with 1 rows (714 B) - /metadata/meshes/cases__current_open__link3 - data columns: [/metadata/meshes/cases__current_open__link3@TextDocument:text]\nChunk(chunk_18D43AAC5F1714BA18d1b422fb8d6acd) with 1 rows (114 KiB) - /cases/HOME/gripper_link - data columns: [/cases/HOME/gripper_link@CoordinateFrame:frame /cases/HOME/gripper_link@Mesh3D:albedo_factor /cases/HOME/gripper_link@Mesh3D:triangle_indices /cases/HOME/gripper_link@Mesh3D:vertex_positions]\nChunk(chunk_18D43AAC5F1780DE18d1b422fb8d6ace) with 70 rows (44.6 KiB) - /timeline/grab_fixed - data columns: [/timeline/grab_fixed@CoordinateFrame:frame /timeline/grab_fixed@Points3D:colors /timeline/grab_fixed@Points3D:positions /timeline/grab_fixed@Points3D:radii]\nChunk(chunk_18D43AAC5F1CC1C818d1b422fb8d6acf) with 1 rows (1.1 KiB) - /cases/HOME/gravity - data columns: [/cases/HOME/gravity@Arrows3D:colors /cases/HOME/gravity@Arrows3D:origins /cases/HOME/gravity@Arrows3D:vectors /cases/HOME/gravity@CoordinateFrame:frame]\nChunk(chunk_18D43AAC5F1CD1FF18d1b422fb8d6ad0) with 1 rows (714 B) - /metadata/meshes/cases__current_open__link4 - data columns: [/metadata/meshes/cases__current_open__link4@TextDocument:text]\nChunk(chunk_18D43AAC5F1CD85B18d1b422fb8d6ad1) with 1 rows (712 B) - /metadata/meshes/cases__outlet20__link5 - data columns: [/metadata/meshes/cases__outlet20__link5@TextDocument:text]\nChunk(chunk_18D43AAC5F1CDDF318d1b422fb8d6ad2) with 1 rows (713 B) - /metadata/meshes/cases__HOME__gripper_link - data columns: [/metadata/meshes/cases__HOME__gripper_link@TextDocument:text]\nChunk(chunk_18D43AAC5F1CE4DB18d1b422fb8d6ad3) with 1 rows (1.1 KiB) - /frames/HOME/origin - data columns: [/frames/HOME/origin@CoordinateFrame:frame /frames/HOME/origin@Points3D:labels /frames/HOME/origin@Points3D:positions /frames/HOME/origin@Points3D:radii]\nChunk(chunk_18D43AAC5F1CF16418d1b422fb8d6ad4) with 1 rows (5.4 KiB) - /cases/HOME/link4 - data columns: [/cases/HOME/link4@CoordinateFrame:frame /cases/HOME/link4@Mesh3D:albedo_factor /cases/HOME/link4@Mesh3D:triangle_indices /cases/HOME/link4@Mesh3D:vertex_positions]\nChunk(chunk_18D43AAC5F1D03FB18d1b422fb8d6ad5) with 1 rows (716 B) - /metadata/meshes/cases__current_open__grab_fixed - data columns: [/metadata/meshes/cases__current_open__grab_fixed@TextDocument:text]\nChunk(chunk_18D43AAC5F1D0D4818d1b422fb8d6ad6) with 1 rows (7.0 KiB) - /cases/current_open/link1 - data columns: [/cases/current_open/link1@CoordinateFrame:frame /cases/current_open/link1@Mesh3D:albedo_factor /cases/current_open/link1@Mesh3D:triangle_indices /cases/current_open/link1@Mesh3D:vertex_positions]\nChunk(chunk_18D43AAC5F1D192618d1b422fb8d6ad7) with 1 rows (1.1 KiB) - /cases/HOME/outlet - data columns: [/cases/HOME/outlet@Arrows3D:colors /cases/HOME/outlet@Arrows3D:origins /cases/HOME/outlet@Arrows3D:vectors /cases/HOME/outlet@CoordinateFrame:frame]\nChunk(chunk_18D43AAC5F1D294418d1b422fb8d6ad8) with 1 rows (17.2 KiB) - /cases/HOME/link3 - data columns: [/cases/HOME/link3@CoordinateFrame:frame /cases/HOME/link3@Mesh3D:albedo_factor /cases/HOME/link3@Mesh3D:triangle_indices /cases/HOME/link3@Mesh3D:vertex_positions]\nChunk(chunk_18D43AAC5F1D383D18d1b422fb8d6ad9) with 1 rows (710 B) - /metadata/meshes/cases__HOME__link1 - data columns: [/metadata/meshes/cases__HOME__link1@TextDocument:text]\nChunk(chunk_18D43AAC5F1D3CB518d1b422fb8d6ada) with 1 rows (715 B) - /metadata/meshes/cases__outlet20__gripper_link - data columns: [/metadata/meshes/cases__outlet20__gripper_link@TextDocument:text]\nChunk(chunk_18D43AAC5F1D419D18d1b422fb8d6adb) with 1 rows (717 B) - /metadata/meshes/cases__current_open__gripper_link - data columns: [/metadata/meshes/cases__current_open__gripper_link@TextDocument:text]\nChunk(chunk_18D43AAC5F1D465218d1b422fb8d6adc) with 1 rows (716 B) - /metadata/meshes/cases__current_open__base_link - data columns: [/metadata/meshes/cases__current_open__base_link@TextDocument:text]\nChunk(chunk_18D43AAC5F1D4CD718d1b422fb8d6add) with 1 rows (1.1 KiB) - /frames/outlet20 - data columns: [/frames/outlet20@Transform3D:child_frame /frames/outlet20@Transform3D:parent_frame /frames/outlet20@Transform3D:quaternion /frames/outlet20@Transform3D:translation]\nChunk(chunk_18D43AAC5F1D590418d1b422fb8d6ade) with 1 rows (1.1 KiB) - /coordinate_frames/world_m - data columns: [/coordinate_frames/world_m@Transform3D:child_frame /coordinate_frames/world_m@Transform3D:parent_frame /coordinate_frames/world_m@Transform3D:quaternion /coordinate_frames/world_m@Transform3D:translation]\nChunk(chunk_18D43AAC5F1D64FB18d1b422fb8d6adf) with 1 rows (7.0 KiB) - /cases/HOME/link1 - data columns: [/cases/HOME/link1@CoordinateFrame:frame /cases/HOME/link1@Mesh3D:albedo_factor /cases/HOME/link1@Mesh3D:triangle_indices /cases/HOME/link1@Mesh3D:vertex_positions]\nChunk(chunk_18D43AAC5F1D700A18d1b422fb8d6ae0) with 1 rows (714 B) - /metadata/meshes/cases__outlet20__grab_fixed - data columns: [/metadata/meshes/cases__outlet20__grab_fixed@TextDocument:text]\nChunk(chunk_18D43AAC5F1DDC9C18d1b422fb8d6ae1) with 70 rows (44.6 KiB) - /timeline/link5 - data columns: [/timeline/link5@CoordinateFrame:frame /timeline/link5@Points3D:colors /timeline/link5@Points3D:positions /timeline/link5@Points3D:radii]\nChunk(chunk_18D43AAC5F22D14318d1b422fb8d6ae2) with 1 rows (714 B) - /metadata/meshes/cases__current_open__link2 - data columns: [/metadata/meshes/cases__current_open__link2@TextDocument:text]\nChunk(chunk_18D43AAC5F22DD9A18d1b422fb8d6ae3) with 1 rows (712 B) - /metadata/meshes/cases__outlet20__link3 - data columns: [/metadata/meshes/cases__outlet20__link3@TextDocument:text]\nChunk(chunk_18D43AAC5F22E40718d1b422fb8d6ae4) with 1 rows (710 B) - /metadata/meshes/cases__HOME__link2 - data columns: [/metadata/meshes/cases__HOME__link2@TextDocument:text]\nChunk(chunk_18D43AAC5F22EB1418d1b422fb8d6ae5) with 1 rows (710 B) - /metadata/meshes/cases__HOME__link5 - data columns: [/metadata/meshes/cases__HOME__link5@TextDocument:text]\nChunk(chunk_18D43AAC5F22F18D18d1b422fb8d6ae6) with 1 rows (5.4 KiB) - /cases/current_open/link4 - data columns: [/cases/current_open/link4@CoordinateFrame:frame /cases/current_open/link4@Mesh3D:albedo_factor /cases/current_open/link4@Mesh3D:triangle_indices /cases/current_open/link4@Mesh3D:vertex_positions]\nChunk(chunk_18D43AAC5F22FD2118d1b422fb8d6ae7) with 1 rows (1.1 KiB) - /cases/current_open/gravity - data columns: [/cases/current_open/gravity@Arrows3D:colors /cases/current_open/gravity@Arrows3D:origins /cases/current_open/gravity@Arrows3D:vectors /cases/current_open/gravity@CoordinateFrame:frame]\nChunk(chunk_18D43AAC5F24CBFC18d1b422fb8d6ae8) with 740 rows (16.7 KiB) - /metrics/outlet_slope_deg - data columns: [/metrics/outlet_slope_deg@Scalars:scalars]\nChunk(chunk_18D43AAC5F30B71F18d1b422fb8d6ae9) with 1 rows (1.1 KiB) - /frames/current_open/origin - data columns: [/frames/current_open/origin@CoordinateFrame:frame /frames/current_open/origin@Points3D:labels /frames/current_open/origin@Points3D:positions /frames/current_open/origin@Points3D:radii]\nChunk(chunk_18D43AAC5F30CD7E18d1b422fb8d6aea) with 1 rows (710 B) - /metadata/meshes/cases__HOME__link3 - data columns: [/metadata/meshes/cases__HOME__link3@TextDocument:text]\nChunk(chunk_18D43AAC5F30D47618d1b422fb8d6aeb) with 1 rows (1.1 KiB) - /cases/outlet20/outlet - data columns: [/cases/outlet20/outlet@Arrows3D:colors /cases/outlet20/outlet@Arrows3D:origins /cases/outlet20/outlet@Arrows3D:vectors /cases/outlet20/outlet@CoordinateFrame:frame]\nChunk(chunk_18D43AAC5F30EA4918d1b422fb8d6aec) with 1 rows (1.1 KiB) - /cases/current_open/outlet - data columns: [/cases/current_open/outlet@Arrows3D:colors /cases/current_open/outlet@Arrows3D:origins /cases/current_open/outlet@Arrows3D:vectors /cases/current_open/outlet@CoordinateFrame:frame]\nChunk(chunk_18D43AAC5F30FA8B18d1b422fb8d6aed) with 1 rows (1.1 KiB) - /cases/outlet20/gravity - data columns: [/cases/outlet20/gravity@Arrows3D:colors /cases/outlet20/gravity@Arrows3D:origins /cases/outlet20/gravity@Arrows3D:vectors /cases/outlet20/gravity@CoordinateFrame:frame]\nChunk(chunk_18D43AAC5F3107D018d1b422fb8d6aee) with 1 rows (331 KiB) - /cases/HOME/link5 - data columns: [/cases/HOME/link5@CoordinateFrame:frame /cases/HOME/link5@Mesh3D:albedo_factor /cases/HOME/link5@Mesh3D:triangle_indices /cases/HOME/link5@Mesh3D:vertex_positions]\nChunk(chunk_18D43AAC5F311A3818d1b422fb8d6aef) with 1 rows (41.0 KiB) - /cases/HOME/grab_fixed - data columns: [/cases/HOME/grab_fixed@CoordinateFrame:frame /cases/HOME/grab_fixed@Mesh3D:albedo_factor /cases/HOME/grab_fixed@Mesh3D:triangle_indices /cases/HOME/grab_fixed@Mesh3D:vertex_positions]\nChunk(chunk_18D43AAC5F312B7318d1b422fb8d6af0) with 1 rows (221 KiB) - /cases/outlet20/link2 - data columns: [/cases/outlet20/link2@CoordinateFrame:frame /cases/outlet20/link2@Mesh3D:albedo_factor /cases/outlet20/link2@Mesh3D:triangle_indices /cases/outlet20/link2@Mesh3D:vertex_positions]\nChunk(chunk_18D43AAC5F3135DF18d1b422fb8d6af1) with 1 rows (712 B) - /metadata/meshes/cases__HOME__grab_fixed - data columns: [/metadata/meshes/cases__HOME__grab_fixed@TextDocument:text]\nChunk(chunk_18D43AAC5F313B6E18d1b422fb8d6af2) with 1 rows (331 KiB) - /cases/current_open/link5 - data columns: [/cases/current_open/link5@CoordinateFrame:frame /cases/current_open/link5@Mesh3D:albedo_factor /cases/current_open/link5@Mesh3D:triangle_indices /cases/current_open/link5@Mesh3D:vertex_positions]\nChunk(chunk_18D43AAC5F31440418d1b422fb8d6af3) with 1 rows (712 B) - /metadata/meshes/cases__outlet20__link4 - data columns: [/metadata/meshes/cases__outlet20__link4@TextDocument:text]\nChunk(chunk_18D43AAC5F31492218d1b422fb8d6af4) with 1 rows (712 B) - /metadata/meshes/cases__outlet20__link1 - data columns: [/metadata/meshes/cases__outlet20__link1@TextDocument:text]\nChunk(chunk_18D43AAC5F31FBA118d1b422fb8d6af5) with 70 rows (44.6 KiB) - /timeline/link2 - data columns: [/timeline/link2@CoordinateFrame:frame /timeline/link2@Points3D:colors /timeline/link2@Points3D:positions /timeline/link2@Points3D:radii]\nChunk(chunk_18D43AAC5F36F73818d1b422fb8d6af6) with 1 rows (714 B) - /metadata/meshes/cases__outlet20__base_link - data columns: [/metadata/meshes/cases__outlet20__base_link@TextDocument:text]\nChunk(chunk_18D43AAC5F36FED218d1b422fb8d6af7) with 1 rows (2.6 KiB) - /cases/HOME/base_link - data columns: [/cases/HOME/base_link@CoordinateFrame:frame /cases/HOME/base_link@Mesh3D:albedo_factor /cases/HOME/base_link@Mesh3D:triangle_indices /cases/HOME/base_link@Mesh3D:vertex_positions]\nChunk(chunk_18D43AAC5F37792F18d1b422fb8d6af8) with 70 rows (44.6 KiB) - /timeline/gripper_link - data columns: [/timeline/gripper_link@CoordinateFrame:frame /timeline/gripper_link@Points3D:colors /timeline/gripper_link@Points3D:positions /timeline/gripper_link@Points3D:radii]\nChunk(chunk_18D43AAC5F3BE19518d1b422fb8d6af9) with 1 rows (1.1 KiB) - /metadata/run - data columns: [/metadata/run@TextDocument:text]\nChunk(chunk_18D43AAC5F3BE7CD18d1b422fb8d6afa) with 1 rows (114 KiB) - /cases/current_open/gripper_link - data columns: [/cases/current_open/gripper_link@CoordinateFrame:frame /cases/current_open/gripper_link@Mesh3D:albedo_factor /cases/current_open/gripper_link@Mesh3D:triangle_indices /cases/current_open/gripper_link@Mesh3D:vertex_positions]\nChunk(chunk_18D43AAC5F3BF3D718d1b422fb8d6afb) with 1 rows (2.6 KiB) - /cases/outlet20/base_link - data columns: [/cases/outlet20/base_link@CoordinateFrame:frame /cases/outlet20/base_link@Mesh3D:albedo_factor /cases/outlet20/base_link@Mesh3D:triangle_indices /cases/outlet20/base_link@Mesh3D:vertex_positions]\nChunk(chunk_18D43AAC5F3C04E718d1b422fb8d6afc) with 1 rows (221 KiB) - /cases/current_open/link2 - data columns: [/cases/current_open/link2@CoordinateFrame:frame /cases/current_open/link2@Mesh3D:albedo_factor /cases/current_open/link2@Mesh3D:triangle_indices /cases/current_open/link2@Mesh3D:vertex_positions]\nChunk(chunk_18D43AAC5F3C0F8D18d1b422fb8d6afd) with 1 rows (2.6 KiB) - /cases/current_open/base_link - data columns: [/cases/current_open/base_link@CoordinateFrame:frame /cases/current_open/base_link@Mesh3D:albedo_factor /cases/current_open/base_link@Mesh3D:triangle_indices /cases/current_open/base_link@Mesh3D:vertex_positions]\nChunk(chunk_18D43AAC5F3C18D018d1b422fb8d6afe) with 1 rows (714 B) - /metadata/meshes/cases__current_open__link5 - data columns: [/metadata/meshes/cases__current_open__link5@TextDocument:text]\nChunk(chunk_18D43AAC5F3C1EA418d1b422fb8d6aff) with 1 rows (1.1 KiB) - /frames/outlet20/origin - data columns: [/frames/outlet20/origin@CoordinateFrame:frame /frames/outlet20/origin@Points3D:labels /frames/outlet20/origin@Points3D:positions /frames/outlet20/origin@Points3D:radii]\nChunk(chunk_18D43AAC5F3C2C0818d1b422fb8d6b00) with 1 rows (17.2 KiB) - /cases/current_open/link3 - data columns: [/cases/current_open/link3@CoordinateFrame:frame /cases/current_open/link3@Mesh3D:albedo_factor /cases/current_open/link3@Mesh3D:triangle_indices /cases/current_open/link3@Mesh3D:vertex_positions]\nChunk(chunk_18D43AAC5F3CCC5618d1b422fb8d6b01) with 70 rows (44.6 KiB) - /timeline/link3 - data columns: [/timeline/link3@CoordinateFrame:frame /timeline/link3@Points3D:colors /timeline/link3@Points3D:positions /timeline/link3@Points3D:radii]\nChunk(chunk_18D43AAC5F41403418d1b422fb8d6b02) with 1 rows (1.1 KiB) - /frames/current_open - data columns: [/frames/current_open@Transform3D:child_frame /frames/current_open@Transform3D:parent_frame /frames/current_open@Transform3D:quaternion /frames/current_open@Transform3D:translation]\n",
+    "stderr": "",
+    "ok": true
+  },
+  "entity_path_contract": {
+    "observed_all": [
+      "/__properties",
+      "/blueprint_panel",
+      "/cases/HOME/base_link",
+      "/cases/HOME/grab_fixed",
+      "/cases/HOME/gravity",
+      "/cases/HOME/gripper_link",
+      "/cases/HOME/link1",
+      "/cases/HOME/link2",
+      "/cases/HOME/link3",
+      "/cases/HOME/link4",
+      "/cases/HOME/link5",
+      "/cases/HOME/outlet",
+      "/cases/current_open/base_link",
+      "/cases/current_open/grab_fixed",
+      "/cases/current_open/gravity",
+      "/cases/current_open/gripper_link",
+      "/cases/current_open/link1",
+      "/cases/current_open/link2",
+      "/cases/current_open/link3",
+      "/cases/current_open/link4",
+      "/cases/current_open/link5",
+      "/cases/current_open/outlet",
+      "/cases/outlet20/base_link",
+      "/cases/outlet20/grab_fixed",
+      "/cases/outlet20/gravity",
+      "/cases/outlet20/gripper_link",
+      "/cases/outlet20/link1",
+      "/cases/outlet20/link2",
+      "/cases/outlet20/link3",
+      "/cases/outlet20/link4",
+      "/cases/outlet20/link5",
+      "/cases/outlet20/outlet",
+      "/container/34f41c68-0f59-40cf-9e26-84f21b0c52f7",
+      "/container/5f6de386-2fd3-4a9b-9122-176e24d29f79",
+      "/container/a68e91f7-bf82-4acc-a16a-58c4065d263d",
+      "/coordinate_frames/world_m",
+      "/frames/HOME",
+      "/frames/HOME/origin",
+      "/frames/current_open",
+      "/frames/current_open/origin",
+      "/frames/outlet20",
+      "/frames/outlet20/origin",
+      "/metadata/meshes/cases__HOME__base_link",
+      "/metadata/meshes/cases__HOME__grab_fixed",
+      "/metadata/meshes/cases__HOME__gripper_link",
+      "/metadata/meshes/cases__HOME__link1",
+      "/metadata/meshes/cases__HOME__link2",
+      "/metadata/meshes/cases__HOME__link3",
+      "/metadata/meshes/cases__HOME__link4",
+      "/metadata/meshes/cases__HOME__link5",
+      "/metadata/meshes/cases__current_open__base_link",
+      "/metadata/meshes/cases__current_open__grab_fixed",
+      "/metadata/meshes/cases__current_open__gripper_link",
+      "/metadata/meshes/cases__current_open__link1",
+      "/metadata/meshes/cases__current_open__link2",
+      "/metadata/meshes/cases__current_open__link3",
+      "/metadata/meshes/cases__current_open__link4",
+      "/metadata/meshes/cases__current_open__link5",
+      "/metadata/meshes/cases__outlet20__base_link",
+      "/metadata/meshes/cases__outlet20__grab_fixed",
+      "/metadata/meshes/cases__outlet20__gripper_link",
+      "/metadata/meshes/cases__outlet20__link1",
+      "/metadata/meshes/cases__outlet20__link2",
+      "/metadata/meshes/cases__outlet20__link3",
+      "/metadata/meshes/cases__outlet20__link4",
+      "/metadata/meshes/cases__outlet20__link5",
+      "/metadata/run",
+      "/metrics/outlet_slope_deg",
+      "/selection_panel",
+      "/time_panel",
+      "/timeline/grab_fixed",
+      "/timeline/gripper_link",
+      "/timeline/link2",
+      "/timeline/link3",
+      "/timeline/link4",
+      "/timeline/link5",
+      "/view/2964422a-d7f3-474e-be4d-b5e14a773a39",
+      "/view/2964422a-d7f3-474e-be4d-b5e14a773a39/EyeControls3D",
+      "/view/2964422a-d7f3-474e-be4d-b5e14a773a39/SpatialInformation",
+      "/view/2964422a-d7f3-474e-be4d-b5e14a773a39/ViewContents",
+      "/view/44f14c4e-57ab-4ba7-925c-889fc5f4d7a9",
+      "/view/44f14c4e-57ab-4ba7-925c-889fc5f4d7a9/EyeControls3D",
+      "/view/44f14c4e-57ab-4ba7-925c-889fc5f4d7a9/SpatialInformation",
+      "/view/44f14c4e-57ab-4ba7-925c-889fc5f4d7a9/ViewContents",
+      "/view/a26d88d1-2ba6-41ad-8bcb-11894445f693",
+      "/view/a26d88d1-2ba6-41ad-8bcb-11894445f693/EyeControls3D",
+      "/view/a26d88d1-2ba6-41ad-8bcb-11894445f693/SpatialInformation",
+      "/view/a26d88d1-2ba6-41ad-8bcb-11894445f693/ViewContents",
+      "/view/ac54c504-7ea2-46bf-a853-268d82774018",
+      "/view/ac54c504-7ea2-46bf-a853-268d82774018/ViewContents",
+      "/view/ac8e4115-cd32-4e0d-8e88-1fa62320fc1b",
+      "/view/ac8e4115-cd32-4e0d-8e88-1fa62320fc1b/ViewContents",
+      "/viewport"
+    ],
+    "observed_non_system": [
+      "/cases/HOME/base_link",
+      "/cases/HOME/grab_fixed",
+      "/cases/HOME/gravity",
+      "/cases/HOME/gripper_link",
+      "/cases/HOME/link1",
+      "/cases/HOME/link2",
+      "/cases/HOME/link3",
+      "/cases/HOME/link4",
+      "/cases/HOME/link5",
+      "/cases/HOME/outlet",
+      "/cases/current_open/base_link",
+      "/cases/current_open/grab_fixed",
+      "/cases/current_open/gravity",
+      "/cases/current_open/gripper_link",
+      "/cases/current_open/link1",
+      "/cases/current_open/link2",
+      "/cases/current_open/link3",
+      "/cases/current_open/link4",
+      "/cases/current_open/link5",
+      "/cases/current_open/outlet",
+      "/cases/outlet20/base_link",
+      "/cases/outlet20/grab_fixed",
+      "/cases/outlet20/gravity",
+      "/cases/outlet20/gripper_link",
+      "/cases/outlet20/link1",
+      "/cases/outlet20/link2",
+      "/cases/outlet20/link3",
+      "/cases/outlet20/link4",
+      "/cases/outlet20/link5",
+      "/cases/outlet20/outlet",
+      "/coordinate_frames/world_m",
+      "/frames/HOME",
+      "/frames/HOME/origin",
+      "/frames/current_open",
+      "/frames/current_open/origin",
+      "/frames/outlet20",
+      "/frames/outlet20/origin",
+      "/metadata/meshes/cases__HOME__base_link",
+      "/metadata/meshes/cases__HOME__grab_fixed",
+      "/metadata/meshes/cases__HOME__gripper_link",
+      "/metadata/meshes/cases__HOME__link1",
+      "/metadata/meshes/cases__HOME__link2",
+      "/metadata/meshes/cases__HOME__link3",
+      "/metadata/meshes/cases__HOME__link4",
+      "/metadata/meshes/cases__HOME__link5",
+      "/metadata/meshes/cases__current_open__base_link",
+      "/metadata/meshes/cases__current_open__grab_fixed",
+      "/metadata/meshes/cases__current_open__gripper_link",
+      "/metadata/meshes/cases__current_open__link1",
+      "/metadata/meshes/cases__current_open__link2",
+      "/metadata/meshes/cases__current_open__link3",
+      "/metadata/meshes/cases__current_open__link4",
+      "/metadata/meshes/cases__current_open__link5",
+      "/metadata/meshes/cases__outlet20__base_link",
+      "/metadata/meshes/cases__outlet20__grab_fixed",
+      "/metadata/meshes/cases__outlet20__gripper_link",
+      "/metadata/meshes/cases__outlet20__link1",
+      "/metadata/meshes/cases__outlet20__link2",
+      "/metadata/meshes/cases__outlet20__link3",
+      "/metadata/meshes/cases__outlet20__link4",
+      "/metadata/meshes/cases__outlet20__link5",
+      "/metadata/run",
+      "/metrics/outlet_slope_deg",
+      "/timeline/grab_fixed",
+      "/timeline/gripper_link",
+      "/timeline/link2",
+      "/timeline/link3",
+      "/timeline/link4",
+      "/timeline/link5"
+    ],
+    "checks": {},
+    "forbidden_fragment_absent": {
+      "/\\/": true
+    },
+    "exact_non_system_match": true,
+    "missing_exact": [],
+    "unexpected_non_system": [],
+    "pass": true
+  },
+  "component_contract": {
+    "checks": {
+      "/cases/current_open/base_link": {
+        "required": [
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true
+      },
+      "/cases/current_open/link1": {
+        "required": [
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true
+      },
+      "/cases/current_open/link2": {
+        "required": [
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true
+      },
+      "/cases/current_open/link3": {
+        "required": [
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true
+      },
+      "/cases/current_open/link4": {
+        "required": [
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true
+      },
+      "/cases/current_open/link5": {
+        "required": [
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true
+      },
+      "/cases/current_open/grab_fixed": {
+        "required": [
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true
+      },
+      "/cases/current_open/gripper_link": {
+        "required": [
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true
+      },
+      "/cases/current_open/gravity": {
+        "required": [
+          "Arrows3D:origins",
+          "Arrows3D:vectors"
+        ],
+        "observed": [
+          "Arrows3D:colors",
+          "Arrows3D:origins",
+          "Arrows3D:vectors",
+          "CoordinateFrame:frame"
+        ],
+        "pass": true
+      },
+      "/cases/current_open/outlet": {
+        "required": [
+          "Arrows3D:origins",
+          "Arrows3D:vectors"
+        ],
+        "observed": [
+          "Arrows3D:colors",
+          "Arrows3D:origins",
+          "Arrows3D:vectors",
+          "CoordinateFrame:frame"
+        ],
+        "pass": true
+      },
+      "/cases/outlet20/base_link": {
+        "required": [
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true
+      },
+      "/cases/outlet20/link1": {
+        "required": [
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true
+      },
+      "/cases/outlet20/link2": {
+        "required": [
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true
+      },
+      "/cases/outlet20/link3": {
+        "required": [
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true
+      },
+      "/cases/outlet20/link4": {
+        "required": [
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true
+      },
+      "/cases/outlet20/link5": {
+        "required": [
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true
+      },
+      "/cases/outlet20/grab_fixed": {
+        "required": [
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true
+      },
+      "/cases/outlet20/gripper_link": {
+        "required": [
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true
+      },
+      "/cases/outlet20/gravity": {
+        "required": [
+          "Arrows3D:origins",
+          "Arrows3D:vectors"
+        ],
+        "observed": [
+          "Arrows3D:colors",
+          "Arrows3D:origins",
+          "Arrows3D:vectors",
+          "CoordinateFrame:frame"
+        ],
+        "pass": true
+      },
+      "/cases/outlet20/outlet": {
+        "required": [
+          "Arrows3D:origins",
+          "Arrows3D:vectors"
+        ],
+        "observed": [
+          "Arrows3D:colors",
+          "Arrows3D:origins",
+          "Arrows3D:vectors",
+          "CoordinateFrame:frame"
+        ],
+        "pass": true
+      },
+      "/cases/HOME/base_link": {
+        "required": [
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true
+      },
+      "/cases/HOME/link1": {
+        "required": [
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true
+      },
+      "/cases/HOME/link2": {
+        "required": [
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true
+      },
+      "/cases/HOME/link3": {
+        "required": [
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true
+      },
+      "/cases/HOME/link4": {
+        "required": [
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true
+      },
+      "/cases/HOME/link5": {
+        "required": [
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true
+      },
+      "/cases/HOME/grab_fixed": {
+        "required": [
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true
+      },
+      "/cases/HOME/gripper_link": {
+        "required": [
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true
+      },
+      "/cases/HOME/gravity": {
+        "required": [
+          "Arrows3D:origins",
+          "Arrows3D:vectors"
+        ],
+        "observed": [
+          "Arrows3D:colors",
+          "Arrows3D:origins",
+          "Arrows3D:vectors",
+          "CoordinateFrame:frame"
+        ],
+        "pass": true
+      },
+      "/cases/HOME/outlet": {
+        "required": [
+          "Arrows3D:origins",
+          "Arrows3D:vectors"
+        ],
+        "observed": [
+          "Arrows3D:colors",
+          "Arrows3D:origins",
+          "Arrows3D:vectors",
+          "CoordinateFrame:frame"
+        ],
+        "pass": true
+      },
+      "/timeline/grab_fixed": {
+        "required": [
+          "Points3D:positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true
+      },
+      "/timeline/gripper_link": {
+        "required": [
+          "Points3D:positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true
+      },
+      "/timeline/link2": {
+        "required": [
+          "Points3D:positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true
+      },
+      "/timeline/link3": {
+        "required": [
+          "Points3D:positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true
+      },
+      "/timeline/link4": {
+        "required": [
+          "Points3D:positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true
+      },
+      "/timeline/link5": {
+        "required": [
+          "Points3D:positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true
+      },
+      "/metrics/outlet_slope_deg": {
+        "required": [
+          "Scalars:scalars"
+        ],
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true
+      }
+    },
+    "pass": true
+  },
+  "timeline_contract": {
+    "observed": [
+      "blueprint",
+      "log_time",
+      "sample"
+    ],
+    "checks": {},
+    "exact_match": true,
+    "pass": true
+  },
+  "footer_manifest_present": true,
+  "blueprint_verify": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "verify",
+      "--check-footers",
+      "true",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/scoop_tilt_cycle_01/plan_06/visual_01/outlet.rbl"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "1 file verified without error.\n",
+    "ok": true,
+    "attempted": true,
+    "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/scoop_tilt_cycle_01/plan_06/visual_01/outlet.rbl",
+    "bytes": 82221,
+    "sha256": "366603c9a6488cb9946863abbd9f500af8656f969520ae623aafe36d9726f8fe"
+  },
+  "headless_render": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "--headless",
+      "--window-size",
+      "2400x1500",
+      "--screenshot-to",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/scoop_tilt_cycle_01/plan_06/visual_01/decision.png",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/scoop_tilt_cycle_01/plan_06/visual_01/outlet.rrd"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "2026-09-11T09:37:44.453705Z  INFO re_perf_telemetry::telemetry: Telemetry initialized enabled=false service=rerun trace_mode=\"off\" traces=off logs=off metrics=off tracy=false\n2026-09-11T09:37:44.697675Z  INFO re_grpc_server: Listening for gRPC connections on 0.0.0.0:9876. Connect by running `rerun --connect rerun+http://127.0.0.1:9876/proxy`\n2026-09-11T09:37:44.697863Z  INFO re_importer::import_file: Loading \"/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/scoop_tilt_cycle_01/plan_06/visual_01/outlet.rrd\"\u2026\n2026-09-11T09:37:44.826752Z  INFO re_viewer::headless: Headless viewer running at 2400x1500.\n2026-09-11T09:37:45.109098Z  INFO re_viewer::screenshotter: Screenshot saved to \"/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/scoop_tilt_cycle_01/plan_06/visual_01/decision.png\"\n2026-09-11T09:37:45.125062Z  INFO re_viewer::screenshotter: Screenshot copied to clipboard\n2026-09-11T09:37:45.128536Z  INFO re_viewer::headless: Headless viewer received close request, shutting down.\n",
+    "ok": true,
+    "attempted": true,
+    "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/scoop_tilt_cycle_01/plan_06/visual_01/decision.png",
+    "file_nonzero": true,
+    "bytes": 9025695,
+    "sha256": "b7119109e0cfd1fa893e8aaede2fc17129a3720e1f83b72b40c97732319adec2"
+  },
+  "errors": [],
+  "pass": true,
+  "complete_slope_readback": {
+    "pass": true,
+    "rows": 740
+  }
+}

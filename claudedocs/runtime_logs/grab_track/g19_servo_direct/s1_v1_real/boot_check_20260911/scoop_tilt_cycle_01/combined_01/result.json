@@ -1,0 +1,185 @@
+{
+  "completed": false,
+  "dry_run": false,
+  "new_scoop": true,
+  "home_reached": true,
+  "home_actual_q_deg": [
+    1.5820312395755176,
+    3.1640624791510352,
+    91.49414061417382,
+    1.054687473951752,
+    -0.08789063715325754,
+    2.724609384473183
+  ],
+  "final_q_deg": [
+    88.94531248050403,
+    74.97070312119259,
+    43.41796873765237,
+    66.6210937375487,
+    -4.746093776022332,
+    29.179687500673822
+  ],
+  "final_phase": "raise_2",
+  "close_torque": 790,
+  "error": "Four preserved segment tracking stops; final raise_2 stop precedes outlet alignment and tilt.",
+  "source_segments": [
+    {
+      "path": "scoop_tilt_cycle_01/execution_01",
+      "raw_sha256": "f76229651d6cd658f66ce9c6cd1edf833d976291d2efa09a003f706f13f5a228",
+      "plan_sha256": "9d377189b2bd5c49f4f579b76207cf925463d60e555080e35daa83b4f9b1e92c",
+      "completed": false,
+      "error": "RuntimeError('settled pose outside gate; hold')",
+      "final_phase": "recover_align_15",
+      "start_mono_ns": 17762080465936,
+      "end_mono_ns": 17812813230114,
+      "active_duration_s": 50.732764178,
+      "audit": {
+        "pass": true,
+        "checks": {
+          "all_issued_packets_exact_plan_prefix": true,
+          "completion_matches_plan_coverage": true,
+          "home_before_any_new_plunge": true,
+          "no_scoop_in_continuation": true,
+          "any_home_command_exact": true,
+          "explicit_door_target_preserved": true,
+          "only_approved_types_and_torque": true,
+          "no_boot_text": true,
+          "raw_hash": true
+        },
+        "actuator_commands": 56,
+        "planned_actuator_commands": 154,
+        "actual_new_scoops": 0,
+        "home_commands": 0,
+        "last_target_is_outlet20": false,
+        "n_feedback": 2554,
+        "controller_completed": false,
+        "final_phase": "recover_align_15",
+        "home_actual_q_deg": null,
+        "pellet_discharge_not_observed_by_this_audit": true,
+        "pass_meaning": "Issued packet provenance and stage accounting only; not controller completion or discharge success."
+      }
+    },
+    {
+      "path": "scoop_tilt_cycle_01/execution_02",
+      "raw_sha256": "b9c2323b23109847aef90ac6d08429fe880faf80023d40e690edc4065af8361b",
+      "plan_sha256": "b226c402a7e083100dea4794fc41415accf9989508bcfc264470e46b8756adf2",
+      "completed": false,
+      "error": "RuntimeError('settled pose outside gate; hold')",
+      "final_phase": "lift8",
+      "start_mono_ns": 18180267429733,
+      "end_mono_ns": 18230563076177,
+      "active_duration_s": 50.295646444,
+      "audit": {
+        "pass": true,
+        "checks": {
+          "all_issued_packets_exact_plan_prefix": true,
+          "completion_matches_plan_coverage": true,
+          "home_before_any_new_plunge": true,
+          "no_scoop_in_continuation": true,
+          "any_home_command_exact": true,
+          "explicit_door_target_preserved": true,
+          "only_approved_types_and_torque": true,
+          "no_boot_text": true,
+          "raw_hash": true
+        },
+        "actuator_commands": 22,
+        "planned_actuator_commands": 99,
+        "actual_new_scoops": 1,
+        "home_commands": 1,
+        "last_target_is_outlet20": false,
+        "n_feedback": 2583,
+        "controller_completed": false,
+        "final_phase": "lift8",
+        "home_actual_q_deg": [
+          1.5820312395755176,
+          3.1640624791510352,
+          91.49414061417382,
+          1.054687473951752,
+          -0.08789063715325754,
+          2.724609384473183
+        ],
+        "pellet_discharge_not_observed_by_this_audit": true,
+        "pass_meaning": "Issued packet provenance and stage accounting only; not controller completion or discharge success."
+      }
+    },
+    {
+      "path": "scoop_tilt_cycle_01/execution_03",
+      "raw_sha256": "5bbd36ba3314c68d520853203a45b8670ce525e22d972deb5498fd07c4bad772",
+      "plan_sha256": "eac03ca3bee76b3f29166a848a946ad2839d85ab1119dc4ce74f6379d61971e5",
+      "completed": false,
+      "error": "RuntimeError('settled pose outside gate; hold')",
+      "final_phase": "common_transport_790",
+      "start_mono_ns": 18893170442797,
+      "end_mono_ns": 18897455543244,
+      "active_duration_s": 4.285100447,
+      "audit": {
+        "pass": true,
+        "checks": {
+          "all_issued_packets_exact_plan_prefix": true,
+          "completion_matches_plan_coverage": true,
+          "home_before_any_new_plunge": true,
+          "no_scoop_in_continuation": true,
+          "any_home_command_exact": true,
+          "explicit_door_target_preserved": true,
+          "only_approved_types_and_torque": true,
+          "no_boot_text": true,
+          "raw_hash": true
+        },
+        "actuator_commands": 3,
+        "planned_actuator_commands": 78,
+        "actual_new_scoops": 0,
+        "home_commands": 0,
+        "last_target_is_outlet20": false,
+        "n_feedback": 216,
+        "controller_completed": false,
+        "final_phase": "common_transport_790",
+        "home_actual_q_deg": null,
+        "pellet_discharge_not_observed_by_this_audit": true,
+        "pass_meaning": "Issued packet provenance and stage accounting only; not controller completion or discharge success."
+      }
+    },
+    {
+      "path": "scoop_tilt_cycle_01/execution_04",
+      "raw_sha256": "da20d1c9b845666ff537ab57bb0bf28a93c344f28f400bf29e611e07af76f280",
+      "plan_sha256": "22f08458b498e425f83aaf56ba83bae1d2fb2a04dd451687d64d7205956fcf23",
+      "completed": false,
+      "error": "RuntimeError('settled pose outside gate; hold')",
+      "final_phase": "raise_2",
+      "start_mono_ns": 19151152793475,
+      "end_mono_ns": 19179341320709,
+      "active_duration_s": 28.188527234,
+      "audit": {
+        "pass": true,
+        "checks": {
+          "all_issued_packets_exact_plan_prefix": true,
+          "completion_matches_plan_coverage": true,
+          "home_before_any_new_plunge": true,
+          "no_scoop_in_continuation": true,
+          "any_home_command_exact": true,
+          "explicit_door_target_preserved": true,
+          "only_approved_types_and_torque": true,
+          "no_boot_text": true,
+          "raw_hash": true
+        },
+        "actuator_commands": 13,
+        "planned_actuator_commands": 75,
+        "actual_new_scoops": 0,
+        "home_commands": 0,
+        "last_target_is_outlet20": false,
+        "n_feedback": 1461,
+        "controller_completed": false,
+        "final_phase": "raise_2",
+        "home_actual_q_deg": null,
+        "pellet_discharge_not_observed_by_this_audit": true,
+        "pass_meaning": "Issued packet provenance and stage accounting only; not controller completion or discharge success."
+      }
+    }
+  ],
+  "measurements": {},
+  "raw_sha256": "fa9ae658660d1e717fa320333678afcd761cad0c6b44adbe7e9760c41029b470",
+  "active_recording_duration_s": 133.502038303,
+  "limits": [
+    "Concatenated unchanged original raw bytes, with real monotonic-clock gaps preserved. Query-only preflights remain separate artifacts.",
+    "One physical fresh scoop; four execution segments are not four trials."
+  ]
+}

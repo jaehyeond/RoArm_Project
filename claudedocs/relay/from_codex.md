@@ -39,14 +39,14 @@ Codex가 repo 파일에 남기지 않은 판단·시도·실패는 그대로 소
 
 ## §2 2026-09-11 Codex → Claude
 
-**만진 파일**: `boot_check_20260911/{plan_outlet_tilt.py,render_outlet_plan.py,hw_outlet_tilt.py,analysis_outlet_run.py,verify_outlet_tilt.py,hw_recorded_arm.py,outlet_tilt_01/}` 및 세션/START/LEDGER/색인. 기존 실행 사본은 보존. `RecordedArm`는 선택적 인스턴스 검증기만 추가했고 기본 guard는 유지된다.
+**만진 파일**: `boot_check_20260911/{plan_scoop_tilt_cycle.py,hw_scoop_tilt_cycle.py,analysis_scoop_tilt_cycle.py,audit_scoop_tilt_cycle.py,verify_scoop_tilt_cycle.py,plan_finish_home.py,verify_finish_home.py,scoop_tilt_cycle_01/}`·직전outlet관찰JSON·START/세션/LEDGER/색인. 기존기본RecordedArm/JOINT_LIMITS/PID코드는이번턴미변경.
 
-**함정**: 실기 동결 `execution_01/hw_outlet_tilt.py`는 result.completed=false여도 shell0을 반환한다. 정본은 실패2로 수정했고 가짜 로봇 마지막5.01도 편차 회귀가 PASS. 성공 여부는 항상 result/원시 settle을 읽을 것. 실제 마지막 자세는 START 정본이며 HOME/P1로 추정하지 않는다. 이전 place/roll 드라이버에 현재 자세를 넣으면 안 된다.
+**함정**: 실행별completed와전체목표달성을분리한다. combined_01/REPORT_initial_stop은중간보고이며최신은START→REPORT→combined_02. 이전FAIL을고쳐서성공으로만들지말것. 마지막기울임은이전고정립점IK와다른고정지지관절손목경로라원래경로무중단재현으로해석금지. 마지막실제자세는START정본만참조.
 
-**자료 함정**: S1은 g18 크랭크가 제거된 직결형. 그 사실과 새 경로 CAD검사를 생략하고 예전g18±14도 또는 새 임의롤범위로 일반화 금지. nominal IK/CAD만 컵/실제접촉 보증으로 확대하지 않는다. 계획·실제 RRD는 별도 폴더이고 사전 plan이 실제20도 달성 증거는 아니다. after 질량이 없으면 기존22.28g를 새 after값으로 대입하지 않는다.
+**자료함정**: execution05계획62단계중조회2를포함한감사필드명을command_count_erratum.json에보완. RRD각도decision은배출후·현재최종각은result의HOME별도다. 스크린샷의초기커서시간창과전체readback을구분. 포트닫힘공백보간은측정아님. 이전잔류0알/22.28g를새회차측정에대입금지.
 
-**만지지 말 것**: W1~W10/원시 PID/과거900·790·roll원본·실행별동결소스. 실기 완료 뒤 새 PID/보호값/형상 변수는 추가하지 않았다. 루트 oldManual도 그대로다. Rerun0.34.1 분석은 isaaclab, 하드웨어는roarm을 유지한다.
+**만지지 말 것**: 실행원시/동결소스/계획/기존W9·W10·PID·900·790원본. PLAN04소스복원은원plan의SHA정확일치검증후별도보존했으므로임의수정금지. 새경로의시작복귀예외는일반운용한도확장으로쓰지않는다.
 
-**승인/입력 경계**: 사용자 다음 동작과 앞서 commit/push를 명시 요청했다. 반복 실행승인 질문은 필요 없다. 현재 필요한 것은 사용자 후 질량/잔류 사실 입력이다. 자동 복귀/5회수집 완료로 해석하지 않는다. 대시보드의 시작 자세와 다음 단계를 먼저 읽는다.
+**승인/입력 경계**: 사용자push소유권선언후이번턴commit/push0. Git은사용자가한다. 무게/잔류/영점은사실입력대기이며반복실행승인질문으로바꾸지말것. 다음전체cycle의종료조건은사용자정정에따라HOME이며,열린상태유지로끝내지않는다.
 
-**검증 방법**: `verify_recorded_arm.py`, `verify_outlet_tilt.py`는 fake serial만 사용한다. execution command_audit/result/raw, Rerun validation/inspection, manifest를 읽는다. git origin/master가 올바른 게시 대상이며 임의 다른worktree로 옮기지 않는다.
+**검증 방법**: 최종case REPORT/command_audit/validation/inspection/manifest를읽는다. fake검증스크립트는하드웨어를열지않는다. 실제실행스크립트는사용자승인범위·최신시작자세를확인후에만사용.
