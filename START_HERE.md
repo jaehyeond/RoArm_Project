@@ -11,7 +11,7 @@ Last updated: 2026-09-11 — 현재 열린 자세에서 출구 기울임 실제 
 - **자료 검수**: 계획704보간 자세/RRD 및 실기2935행 전체 RRD/RBL/footer/entity/timeline/component/readback/실제 PNG3검수PASS. `outlet_tilt_01/REPORT.md`, 실행 `analysis.json`, `command_audit.json`, `visual_01/inspection.json` 참조. S1과 팔의 투영 분리 최소42.93mm는 명목 샘플 경로의 CAD 검사이며 컵/실물 접촉 보증이 아니다.
 - **코드 범위**: 기본 `RecordedArm` 롤±5 보호는 유지. 별도 인스턴스가 검증된64개 패킷만 허용. S1직결형에는 g18 간섭 원인servocrank가 없다(`scoop_grab_s1_design.py:1`). 임의 롤 확대는 여전히 금지. 실기 동결 드라이버의 실패 shell0 문제는 정본에서2로 수정했고 장치 없는 회귀2종PASS.
 - 기존790/900는 문 목표 유지 후 첫 리프트 추가 개방0°. 순차 더미와 잔류 미계측으로 토크/질량 인과 우열은 미판정. 어깨P8/P48 시험1648행·W10은 기존 증거 그대로 보존.
-- **Git**: 직전 `5cfd5f7` origin/master 일치 확인. 이번 결과도 같은 `git@github.com:jaehyeond/RoArm_Project.git` master로 요청된 게시를 진행한다. 사용자 실기/commit/push 승인은 유지된다.
+- **Git**: 출구 기울임 산출물 `d497fbc`를 `git@github.com:jaehyeond/RoArm_Project.git` master에 push완료·원격해시 일치 확인. LFS2개18MB·원본41파일 커밋해시 검사·LFS fsck PASS. 정본 `boot_check_20260911/outlet_tilt_publish_01.json`; 확인 기록은 다음 문서 커밋으로 게시한다.
 
 ## Current verified truth — 이번 W10
 

@@ -59,3 +59,5 @@ Rerun0.34.1의 전체15496행·entity/timeline/component·footer/RBL PASS. `visu
 실기 드라이버가 예외를 기록하고도 프로세스0으로 끝내는 문제를 확인해 정본 `hw_outlet_tilt.py`의 실패종료를2로 수정. 동결 실행 사본은 변경하지 않았다. `verify_outlet_tilt.py`의 가짜 로봇에서 마지막5.01도 편차를 주어 실패 유지/추가 명령0/closed 확인. `verify_recorded_arm.py`의 기존 명시 문 목표 보존도PASS. 실제 로봇 재실행0. 후속 동작은 현재 자세에서 시작하도록 새 경로가 필요하고, 기존 P1/롤±5 기본 드라이버로 돌아가면 안 된다.
 
 이번 세션은 실제 실패 가능한20도 기울임 섭동을 실행했고 실패 기준이 작동했다. 추가 PID 변수나 보호 기준 변경은 하지 않았다. 배출 관찰 입력과 조건 고정5회는 남아 있다.
+
+출구 기울임54파일 커밋d497fbc61dc659402f84f7e1d14cd722bb76ddc3를 origin/master로 push rc0. LFS2개18MB 업로드, 독립ls-remote==local HEAD 확인. 원본manifest41파일을 커밋blob/LFS OID와 대조PASS, LFS fsckPASS. `outlet_tilt_publish_01.json` 기록. 후무게/잔류는 이 기록 시점에도미입력, 현재 자세 유지.
