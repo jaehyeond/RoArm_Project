@@ -1,0 +1,93 @@
+{
+ "artifact": "PELLET_PHYSICAL_MEASUREMENT_V1",
+ "schema_version": 1,
+ "measured_date": "2026-09-10",
+ "operator": "user (jaehyeond)",
+ "material": {
+  "name": "polypropylene pellet (assumed)",
+  "source": "Coupang doll-stuffing PP pellets, listing: 쌀알 모양 PP, 긴쪽 3.8±0.3 mm, 반투명 백색",
+  "grade_verified": false
+ },
+ "instruments": {
+  "ruler": {
+   "graduation_mm": 1.0,
+   "note": "steel ruler; photos in ~/Downloads/KakaoTalk_20260910_105619511.jpg, KakaoTalk_20260910_110856317*.jpg"
+  },
+  "scale": {
+   "model": "Riwonas pocket 500 g",
+   "readability_g": 0.01,
+   "used_today": false
+  },
+  "caliper": {
+   "available": false
+  }
+ },
+ "pellet_dimensions": {
+  "method": "lineup_3axis",
+  "n_pellets": 20,
+  "axis_convention": "a >= b >= c (a=long, b=intermediate, c=short)",
+  "a_mm": {
+   "mean": 4.5,
+   "sd": null,
+   "source": "photo readout of 20-pellet end-to-end row (~90.7 mm / 20); user eyeball '약 5 mm 이하'",
+   "uncertainty_mm": 0.2
+  },
+  "b_mm": {
+   "mean": 3.8,
+   "sd": null,
+   "source": "photo readout of 20-pellet side-by-side row (~75.6 mm / 20)",
+   "uncertainty_mm": 0.2
+  },
+  "c_mm": {
+   "mean": 2.5,
+   "sd": null,
+   "source": "user: 10 pellets stacked flat = 25 mm (first attempt read 5 mm, rejected as inconsistent)",
+   "uncertainty_mm": 0.05
+  },
+  "c_method": "stack10",
+  "c_sd_available": false,
+  "elongation_a_over_b": 1.184,
+  "flatness_b_over_c": 1.52,
+  "flatness_threshold_used": 1.1,
+  "shape_class": "oblate (lens/pill-like; top view near-circular, slightly oval)",
+  "axial_chain_representable": false,
+  "shape_note": "NOT extrusion-cut cylinder; rounded pill with occasional small cut facet/dimple",
+  "legacy_dia_mm": null,
+  "legacy_len_mm": null,
+  "legacy_aspect_L_over_D": null,
+  "legacy_mapping_valid": false
+ },
+ "solid_density": {
+  "method": "assumed",
+  "volume_model": "ellipsoid (pi/6)abc",
+  "volume_per_pellet_mm3": 22.38,
+  "density_kg_m3": 905.0,
+  "relative_uncertainty_pct": null,
+  "note": "PP typical 900~910 kg/m3 ASSUMED; measure via M1 mass batches"
+ },
+ "derived": {
+  "mass_per_pellet_g_assumed": 0.0203,
+  "pellets_per_11p8g_sim_scoop": 583,
+  "batch_for_3g": 149
+ },
+ "pellet_mass": {
+  "method": "bulk_count_weigh",
+  "measured": false
+ },
+ "bulk_density_loose": {
+  "measured": false
+ },
+ "angle_of_repose": {
+  "measured": false,
+  "definition": "sidewall_regression"
+ },
+ "scoop_per_cycle": {
+  "measured": false,
+  "note": "weigh 5 pending robot boot"
+ },
+ "non_claims": [
+  "a_mm and b_mm are photo pixel readouts of the user's 20-pellet rows (±0.2 mm), not ruler readings by the operator",
+  "density 905 kg/m3 is an assumption; mass per pellet and batch sizes are derived from it",
+  "no repose angle, bulk density, or mass measured yet"
+ ]
+}

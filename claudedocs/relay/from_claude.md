@@ -1,49 +1,52 @@
 # from_claude.md — Claude → Codex/Cursor 인계 (relay)
 
 ## §0 이 파일의 규약
+- **쓰는 쪽 = Claude 세션 하나.** 읽는 쪽 = 다음에 이 repo 를 여는 **다른 도구**. Claude 연속이면 `START_HERE.md` 로 재개.
+- **덮어쓰기.** 상태 정본 = `START_HERE.md`(여기 안 베낌). 규칙 = `AGENTS.md`. 여기엔 만진 것·만지지 말 것·함정·승인 대기만.
 
-- **쓰는 쪽 = Claude 세션 하나.** 읽는 쪽 = 다음에 이 repo 를 여는 **다른 도구**(Codex/Cursor).
-  Claude 가 연속으로 두 번 열려도 이 파일이 아니라 `START_HERE.md` 로 재개한다.
-- **덮어쓰기.** 최신 인계 1건만 §2. 상태 정본은 `START_HERE.md`(여기 안 베낌). 규칙은 `AGENTS.md`.
-- `HANDOFF.md` 아님(HARD RULE #7). 중복 금지: 상태→`START_HERE`, 활성 결정→`DECISIONS_ACTIVE`,
-  최근 실험→`LEDGER_RECENT`, 규칙→`AGENTS.md`. 여기엔 만진 것·만지지 말 것·함정·승인 대기만.
+## §2 2026-09-11 Claude(80th~81st) → Codex — S1 sim 정합 + 펠릿 실측 + PID 조사 + W10 미완
 
-## §2 2026-09-03 Claude → Codex (77th 후반 3, 시각·시뮬 검증 D477 + Isaac Lab 구 파지 D478)
+### 🔴 0. 지금 당장 막힌 것 — GPU (재부팅 전 DEME·Isaac 전부 불가)
+`nvidia-smi` = `Failed to initialize NVML: Driver/library version mismatch`. apt 자동 업그레이드로 유저스페이스 **580.178.04**, 로드된 커널 모듈 **580.173.02**(`/proc/driver/nvidia/version`). 새 프로세스 CUDA 전멸(DEME `forward compatibility…`, torch error 804). **재부팅 필요.** 재개 첫 명령은 `nvidia-smi` 정상 확인.
 
-세션 성격 = 검증 → 설계 수정(D476) → 시각·시뮬 검증(D477) → **Isaac Lab 물리 시행: 구 파지 영상(D478)**. 로봇 0·출력 0·입자 물리 0. 원장 D475~D478 · LEDGER `:538~:541`. **커밋됨**: `9f4241d`(설계·프로브·자산) · `84ffa46`(시뮬 스크립트·검증 JSON) · `a2201c2`(원장·상태 문서) (PNG·mp4·조각 STL·USD 는 gitignore, 로컬만). 상태 정본 = `START_HERE.md`.
-- 신규 `sim_isaaclab_grasp_sphere.py`(numpy FK/IK + 1 env + `Camera` 센서 → mp4). 산출 `g18_nut_trap/isaaclab_grasp_sphere/` (mp4·strip·JSON, 프레임 PNG 삭제).
-- 🔴 함정 8: Isaac Lab `ImplicitActuatorCfg` 에 `effort_limit_sim` 없으면 USD maxForce(URDF 1.9) 상한 → 팔 처짐. 데모 8.0 은 **비물리**(인용 금지).
-- 🔴 함정 9: 셸 폐합 도중 배가 립보다 3.7 mm 깊다(−39.80 @22°) — 바닥·DEME 경계 여유는 립이 아니라 스윕 최저점 기준. `grab_v1_meta.json` 에 아직 없음.
+### 1. 이어서 할 일 (1순위)
+**W10 = 렌즈 클럼프 더미에서 "문을 서보 토크 정지까지 닫기" 발산 해결.** 지시서 한 장에 전부 정리돼 있다:
+`claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix/RESUME_W10_20260911.md` ← **이것부터 읽어라.**
+요약: ① 진단 완료(기작 = 뺨 틈 안 렌즈 클럼프 3개 기둥의 **구–구 진동 자기증폭**, 유령 접촉 아님) · ② 폐합 22.5°/s 발산 · ③' **dt 2e-6 만**(E 유지) 이 다음 차례이고 params 파일까지 준비됨 · 실행기 `run_w10b.sh DE_dt2e6_c 14400`. 🔴 강성 상향은 감쇠 `c ∝ √k` 때문에 판별력이 낮다 — dt 가 손잡이.
 
-**만진 것 (미커밋, D476 분에 더해)**
-- `sim_urdf_to_usd.py`: `convert_mimic_joints_to_normal_joints` **True→False**(반전 플래그, 근거 주석). USD 재생성됨(gitignore).
-- 신규 `sim_viz_grab_assembly.py`(실메쉬 3D) · `sim_render_grab_closeup.py`(자동 조준 근접 8장 + `closeup_poses.json`) · `sim_isaaclab_parallel_smoke.py`(N env 스텝·구동·계측, JSON 선기록 + `os._exit` 워치독).
-- 산출 `g18_nut_trap/{viz/, isaaclab_smoke/}` · `local_assets/roarm_m3/usd/{g18_robot_full.png, g18_closeup_v3/}`.
+### 2. 만진 것 (전부 미커밋, 79th 분 포함)
+- **신규 스크립트**: `sim_isaac_render_deme_scoop.py`(W9 렌더), `sim_deme_s1_diverge_min.py`(W3b 최소재현). `compose_roarm_s1_urdf.py` 에 `--tag` + 무관성 링크 미소 inertial 주입, `sim_deme_scoop_s1.py` 에 클럼프 npz·전후 heightmap·절단면 각·렌더 타임라인·물림 가드·문 하한(전부 params 게이트, diff 는 각 워커 폴더).
+- **신규 자산**: `local_assets/roarm_m3/{urdf/roarm_m3_s1_v1.urdf, usd_s1_v1/}`(실물 v1 형상, 가짜 질량 제거판).
+- **신규 산출 폴더**: `claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/{w1_usd_v1, w2_env_replay, w3_deme_scoop, w8_deme_scoop_lens, w9_isaac_render_deme, w10_deme_close_fix}/`, `claudedocs/research/survey_20260910/`, `claudedocs/runtime_logs/pellet_model/pellet_measured_20260910.json`.
+- **문서**: `docs/reference/servo_pid_st3215.md` 신규 · `docs/reference/hardware.md` T:107 오기 2곳 정정 · `AGENTS.md` 참조표 1행 추가 · `hw_s1_manual.py` 에 `weigh`/`mass` 명령 추가(백업 `.bak_20260907_pre_weigh`).
+- **다른 워크트리**(`~/orca/workspaces/RoArm_Project/pellet-model`, 브랜치 `jaehyeond/pellet-model`, 미커밋): `sim_pellet_model.py` 에 flat3·lens 클럼프 + `--measured-pellet a b c rho`, `sim_deme_pile.py` 에 `--shape lens` 경로. 산출 `claudedocs/runtime_logs/pellet_model/{planar_20260909, lens_20260910, lens_sweep_20260910, pile_lens_20260910}/`.
 
-**만지지 말 것**
-- 🔴 `g17_yoke_alu/`·`g9`·`g16*` 낡음(g17 브래킷은 볼트 못 들어감). `usd/config.yaml` 은 변환 후 git checkout. 원장(배타).
-- 🔴 `sim_render_grab_usd.py` 카메라(0.72 m) 로 찍은 `bowl_*.png`·`g18_bowl_*.png` 인용 금지 — 근접 정본은 `g18_closeup_v3/`.
+### 3. 만지지 말 것
+`s1_v0*/`·g18 이하 동결 · `sim_deme_scoop.py`(구 트랙 보호) · 기존 산출 npz·JSON · `s1_v1_real/manual_positions.json`·`mass_log.jsonl`(사용자 데이터) · DK 원본 프로필 · **원장(배타 소유, 아래 §6)**.
 
-**🔴 함정 (이번 세션 실측)**
-1. 🔴 **`UrdfConverterCfg.convert_mimic_joints_to_normal_joints=True` = PhysX mimic 생성**(`urdf_converter.py:130` → `set_parse_mimic`). 독립 관절은 **False**. D474 ④ 는 오독.
-2. 🔴 **순간이동 렌더(`set_joint_positions`)는 드라이브 결함을 못 잡는다** — 512 env 스텝에서 셸 R 이 0.931 rad 상한 고착으로 드러났다.
-3. 🔴 **Isaac Lab 앱에서 Replicator `BasicWriter` 금지** — 매 프레임 기록 폭주(32 GB/23,646 파일). annotator `get_data()` 1장.
-4. 🔴 **`SimulationApp.close()` 무한 대기**(1,108 s·8.7 h) + `timeout` SIGTERM 무시 → 결과 JSON **선기록** + `os._exit` 워치독 + `timeout -k 30`. 증거는 stdout 이 아니라 JSON(`python -u`).
-5. ⚠️ Replicator 캡처 뒤 물리 뷰가 사라진다(`get_joint_positions()` None) → `world.play()`+`art.initialize()` 재초기화, `orchestrator.step(pause_timeline=False)`.
-6. ⚠️ pxr USD 검증은 `Usd.TraverseInstanceProxies()` 필수. 스쿱 옆면 검정 삼각형 = 벤더 link5 backface(무해).
-7. ⚠️ 셸 R 독립 구동 = 기어 커플링 근사. mimic 으로 모델하려면 gearing 부호·연성(25 Hz)·한계 확장 검증 필요(미실행).
+### 4. 🔴 함정 (이번 세션 실측)
+1. **Isaac URDF 임포터는 inertial 없는 링크에 기본 질량 1.0 kg 을 준다** — `hand_tcp` 에 실려 어깨 중력 모멘트가 11~14배 부풀었다. D478 의 "팔 토크 8.0 N·m 필요"가 이것 때문이었다(실물 1.96 으로도 파지 성공). v1 경로는 미소 inertial 주입으로 해결.
+2. **DEME 는 실행 간 비결정**이다(같은 입력·무수정 코드로 포획 273/301/315개). "개수 동일" 을 회귀 게이트로 쓰면 안 된다 → 허용 범위(±15 %)로.
+3. **렌즈 클럼프 = 가볍고 납작** → 좁은 틈에서 구–구 진동이 명시적 적분 한계에 걸린다(위 §1). 구 4.16 mm 에서는 안 보이던 문제.
+4. **T:107 그리퍼 토크 상한은 EPROM 아닌 SRAM 48번(휘발)** 이고, 소스 0.84 기준 부팅 완료 시 상한은 1000 이 아니라 **300**(`ino:146`). hardware.md 정정 완료.
+5. **서보 과부하 보호**(출력 80 % 초과 2 s → 20 % 강하)가 닫힘 상한 900(=90 %) 스톨에서 걸릴 수 있다 → 실물 되열림 1~1.6° 의 후보 원인. 내일 900 vs 790 비교 예정.
+6. **Orca 코디네이터 바인딩이 조용히 풀린다**(`consumer_fenced`). 그 상태의 `orchestration check --peek` 는 오류 없이 count 0 을 준다 → 워커 질문 2건을 놓쳤다. 확인 전 `run-current` → 없으면 `run-use --id <run>`.
+7. 근접 RTX 렌더 검정면(D480) 미해결 → 카메라 1 m 이상. 반투명 재질은 headless RTX 에서 cutout 으로만 동작(W9 는 x-ray 로 우회).
 
-- 🔴 함정 10 (D479): **`T:106` 은 그리퍼 구동, 리셋 아님.** 맨 `{"T":106}` = 조 118.5° 개방(그랩 장착 시 링크 파손). hardware.md 정정됨. 부팅 = `moveInit` → 그리퍼 π(닫힘) + 토크 1000. SDK 그리퍼 각도 = 조 개방각 = `servo_deg`. 규약 5조 = `docs/reference/hardware.md` 말미.
-- 신규(D479) `sim_isaaclab_grasp_sphere.py` 서보 결합판 · `isaaclab_grasp_sphere_servo/`(mp4·JSON).
+### 5. 승인 대기 / 다음 (사용자 결정 사항)
+① **로봇 부팅 체크리스트**(09-10 사용자 합의, 오늘 예정): 펌웨어 버전·`tG` 유무 → PID 적용 행동실험(P 8↔48) → 닫힘 상한 900 vs 790 되열림 → `weigh 5` 회당 질량. 상세 = auto-memory `project_next_robot_boot_checklist.md`.
+② 실물 각도 3종(부은 각·렛지 각·한 입 뒤 절단면 각) 측정 → 차이 ≤ 3° 면 부은 각만으로 충분(R1 E1).
+③ 조사 결론 반영(R1·R2): 초기 상태 = **벽 있는 상자에 평평하게 가득**, 베이스라인 = **최고점 + 층·열 진행 휴리스틱**, 실패 정의 = 산업 목록(빈 그랩·저충진·흘림·매몰·충돌), 재료 보정은 부은 각 **단독 금지**.
+④ 스쿱 더미 크기: 20,000알 채택 여부(실물 18만 알은 정착 2 h·스쿱 2 h/회로 비현실).
 
-**승인 대기 / 다음**
-- 실물(팔): 순정 구멍 나사산·⌀·재질, 플랜지 대조, 어댑터 전압(D476) + 그리퍼 규약 준수(D479). 🔴 출력 착수(Phase 5) 는 사용자 승인.
-- Isaac Lab 환경 정의(스쿱 작업공간·heightmap 관측)·실 서보 게인 반영·64 env 격자 스냅샷(orchestrator 행 회피). DEME 연결 병행.
+### 6. 원장 상태 (중요)
+80th·81st 작업분은 **아직 원장에 등재되지 않았다**. `DECISIONS.md` 최신 = D481(79th), `EXPERIMENT_LEDGER.md` 최신 = `:544`(79th). `START_HERE.md` 는 2026-09-11 에 81st 상태로 갱신했다(이 relay 와 같은 세션). 등재(Dxxx append·LEDGER 행·session_*.md)는 **W10 이 결론 난 뒤** 한 세션이 몰아서 하는 것을 권한다. 그때까지 다른 도구는 원장을 쓰지 말 것.
 
-**검증**
-```bash
-grep -n '^## D47[567]' claudedocs/DECISIONS.md            # 29879 · 29936 · 29992
-head -n 29990 claudedocs/DECISIONS.md | md5sum            # == md5sum claudedocs/DECISIONS.md.bak_20260903_pre_d477
-grep -n '^## Schema errata' claudedocs/EXPERIMENT_LEDGER.md   # 542 → 표 끝 :540
-OMNI_KIT_ACCEPT_EULA=YES timeout -k 30 600 ~/miniconda3/envs/isaaclab/bin/python sim_isaaclab_parallel_smoke.py --headless --num_envs 512   # smoke_512.json "ok": true
+### 7. 검증
+```
+nvidia-smi                                                     # 표가 나와야 GPU 작업 가능
+sed -n '1,40p' claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix/RESUME_W10_20260911.md
+ls claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/     # w1_usd_v1 … w10_deme_close_fix
+grep -n '^## D481' claudedocs/DECISIONS.md                     # 30140 (그 뒤로 append 없음)
+~/miniconda3/envs/roarm/bin/python -c "import json;d=json.load(open('claudedocs/runtime_logs/pellet_model/pellet_measured_20260910.json'));print(d['pellet_dimensions']['a_mm'],d['pellet_dimensions']['c_mm'])"
 ```

@@ -1,0 +1,59 @@
+{
+  "artifact": "W10_RESUME_VERIFICATION",
+  "physics_files_unchanged": {
+    "sim_deme_scoop_s1.py": true,
+    "sim_deme_scoop.py": true,
+    "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix/GATES_w10.md": true,
+    "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix/params_w10_DE_dt2e6_c.json": true,
+    "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix/params_w10_DE_E1e8_c.json": true
+  },
+  "cells": {
+    "DE_dt2e6_c": {
+      "terminal": {
+        "rc": 0,
+        "wall_s": 1890,
+        "stalled": "0"
+      },
+      "has_result": true,
+      "diverged": false,
+      "params_match": true,
+      "inputs_sha_match": true,
+      "capture_count": 541,
+      "capture_mass_g_recomputed": 10.959243732020918,
+      "capture_count_matches": true,
+      "capture_mass_matches": true,
+      "timeline_matches": true,
+      "stops": [
+        {
+          "phase": "close",
+          "q_deg": 3.307,
+          "reason": "servo_stall",
+          "M_hinge_res_Nm": 1.783022,
+          "sim_t": 2.585862,
+          "max_single_contact_N": 1.7118,
+          "q_from_quat_deg": 3.235
+        },
+        {
+          "phase": "reclose",
+          "q_deg": 3.069,
+          "reason": "servo_stall",
+          "M_hinge_res_Nm": 1.765356,
+          "sim_t": 3.132942,
+          "max_single_contact_N": 2.5997,
+          "q_from_quat_deg": 2.993
+        }
+      ],
+      "source_evidence_ok": true
+    },
+    "DE_E1e8_c": {
+      "terminal": null,
+      "has_result": false,
+      "diverged": null
+    }
+  },
+  "scientific_disposition_verified": true,
+  "scientific_gates_all_pass": true,
+  "d341_machine_contract_pass": true,
+  "d341_validation": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix/cell_DE_dt2e6_c/scoop_s1_seed460_w10_rerun_validation.json",
+  "limitation": "A completed experiment may fail the scientific gates. Completion and success are reported separately."
+}

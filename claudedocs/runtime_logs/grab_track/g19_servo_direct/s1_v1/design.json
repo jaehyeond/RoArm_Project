@@ -1,0 +1,352 @@
+{
+ "design": "S1 (D480)",
+ "params": {
+  "hinge_xz": [
+   0.0,
+   52.035
+  ],
+  "hinge_y": 18.821,
+  "cheek_inner_y": [
+   -18.3,
+   18.07
+  ],
+  "plate_t": 2.0,
+  "hub_pcd": 14.0,
+  "hub_hole_d": 3.4,
+  "hub_window_d": 11.0,
+  "pin_hole_d": 1.2,
+  "pin_r": 6.0,
+  "pin_ang_deg": -28.6,
+  "cheek_cut_z": 100.0,
+  "arm_x": [
+   0.0,
+   22.0
+  ],
+  "arm_z0": 66.0,
+  "arm_step_z": 118.0,
+  "arm_window": [
+   4.0,
+   82.0,
+   18.0,
+   110.0
+  ],
+  "bridge_x": [
+   8.0,
+   18.0
+  ],
+  "bridge_z": [
+   68.0,
+   76.0
+  ],
+  "tie_bolt_xz": [
+   13.0,
+   72.0
+  ],
+  "tie_bolt_sq": 3.5,
+  "bowl_xc": 8.1,
+  "bowl_zc": 145.0,
+  "bowl_r_in": 20.0,
+  "wall": 1.6,
+  "seg_n": 12,
+  "fixed_plate_x": [
+   -15.54,
+   -11.54
+  ],
+  "fixed_plate_y": [
+   -15.95,
+   14.92
+  ],
+  "fixed_plate_z": [
+   95.0,
+   121.0
+  ],
+  "fixed_holes_yz": [
+   [
+    -13.08,
+    103.11
+   ],
+   [
+    12.04,
+    103.11
+   ],
+   [
+    -0.51,
+    116.2
+   ]
+  ],
+  "fixed_hole_d": 3.4,
+  "spine_y": [
+   -15.0,
+   15.0
+  ],
+  "spine_z1": 150.0,
+  "spine_flare_z": [
+   107.5,
+   112.5
+  ],
+  "density_g_cm3": 1.24,
+  "E_pla_MPa": 3000.0,
+  "tool_mass_max_g": 65.0,
+  "stock_jaw_removed_g": 9.49,
+  "screws": [
+   [
+    "M3x4_disc_stock",
+    8,
+    0.4
+   ],
+   [
+    "M3x8_fixed_plate",
+    3,
+    0.6
+   ],
+   [
+    "M3_nut",
+    3,
+    0.4
+   ]
+  ],
+  "open_deg_max": 30.0,
+  "mouth_target_mm": 58.0,
+  "B1_required_cm3": 6.41,
+  "bulk_density_g_cm3": 0.55,
+  "fill_factor": 0.7,
+  "lip_force_test_N": 20.0,
+  "servo_torque_Nm": 1.96
+ },
+ "gates": {
+  "all_pieces_convex_positive": {
+   "pass": true,
+   "bad": [],
+   "n": 61
+  },
+  "tool_mass_under_max": {
+   "pass": true,
+   "value_g": 42.93,
+   "limit_g": 65.0,
+   "note": "순정 조 9.49 g 제거분은 예산에 안 넣음(보수적)"
+  },
+  "cavity_volume_ge_B1": {
+   "pass": true,
+   "cavity_cm3": 45.7,
+   "B1_cm3": 6.41
+  },
+  "mouth_reaches_target_within_servo": {
+   "pass": true,
+   "open_deg": 29.3,
+   "mouth_mm": 58.0,
+   "limit_deg": 30.0
+  },
+  "door_sweep_clears_robot": {
+   "pass": true,
+   "min_dist_mm": 1.56,
+   "table": [
+    {
+     "deg": 1.0,
+     "min_dist_env_mm": 1.58,
+     "points_inside_fixed": 0
+    },
+    {
+     "deg": 3.0,
+     "min_dist_env_mm": 1.7,
+     "points_inside_fixed": 0
+    },
+    {
+     "deg": 5.0,
+     "min_dist_env_mm": 1.67,
+     "points_inside_fixed": 0
+    },
+    {
+     "deg": 7.0,
+     "min_dist_env_mm": 1.66,
+     "points_inside_fixed": 0
+    },
+    {
+     "deg": 9.0,
+     "min_dist_env_mm": 1.61,
+     "points_inside_fixed": 0
+    },
+    {
+     "deg": 11.0,
+     "min_dist_env_mm": 1.65,
+     "points_inside_fixed": 0
+    },
+    {
+     "deg": 13.0,
+     "min_dist_env_mm": 1.59,
+     "points_inside_fixed": 0
+    },
+    {
+     "deg": 15.0,
+     "min_dist_env_mm": 1.59,
+     "points_inside_fixed": 0
+    },
+    {
+     "deg": 17.0,
+     "min_dist_env_mm": 1.58,
+     "points_inside_fixed": 0
+    },
+    {
+     "deg": 19.0,
+     "min_dist_env_mm": 1.56,
+     "points_inside_fixed": 0
+    },
+    {
+     "deg": 21.0,
+     "min_dist_env_mm": 1.56,
+     "points_inside_fixed": 0
+    },
+    {
+     "deg": 23.0,
+     "min_dist_env_mm": 1.57,
+     "points_inside_fixed": 0
+    },
+    {
+     "deg": 25.0,
+     "min_dist_env_mm": 1.6,
+     "points_inside_fixed": 0
+    },
+    {
+     "deg": 27.0,
+     "min_dist_env_mm": 1.57,
+     "points_inside_fixed": 0
+    },
+    {
+     "deg": 29.0,
+     "min_dist_env_mm": 1.57,
+     "points_inside_fixed": 0
+    }
+   ],
+   "excluded": "힌지 반경 12.5 이내(디스크 접촉면)",
+   "method": "표면 표본 KD-트리 거리(±0.5 mm)"
+  },
+  "door_never_enters_fixed_part": {
+   "pass": true,
+   "points_inside_when_open": 0,
+   "points_inside_closed": 0,
+   "note": "닫힘(0°) 은 파팅면 접촉이라 참고값만(게이트는 1°~)"
+  },
+  "fixed_part_clears_robot": {
+   "pass": true,
+   "min_dist_mm": 1.4,
+   "excluded": "판 자체(블레이드 바깥면 밀착)"
+  },
+  "lips_meet_when_closed": {
+   "pass": true,
+   "mismatch_mm": 0.0
+  },
+  "cantilever_deflection_at_lip": {
+   "pass": true,
+   "delta_mm_at_20N": 0.98,
+   "L_mm": 64.4,
+   "I_mm4": 2634.7,
+   "model": "측판 2장, 창 구간 레일 단면을 전 구간에 적용(보수), 원통부 강체, E 3 GPa"
+  },
+  "fixed_plate_inside_flange": {
+   "pass": true,
+   "plate_y": [
+    -15.95,
+    14.92
+   ],
+   "flange_edges": [
+    -16.25,
+    15.22
+   ]
+  }
+ },
+ "derived": {
+  "door_g": 18.26,
+  "fixed_g": 18.47,
+  "hardware_g": 6.2,
+  "tool_mass_g": 42.93,
+  "net_added_g": 33.44,
+  "cavity_cm3": 45.7,
+  "load_per_scoop_g": 17.6,
+  "inner_width_mm": 36.37,
+  "lip_radius_from_hinge_mm": 114.85,
+  "open_deg_for_mouth": 29.3,
+  "top_edge_gap_at_open_mm": 36.3,
+  "lip_force_max_N": 17.1,
+  "door_lowest_z_sweep": [
+   [
+    0.0,
+    166.57
+   ],
+   [
+    2.0,
+    166.21
+   ],
+   [
+    4.0,
+    165.7
+   ],
+   [
+    6.0,
+    165.06
+   ],
+   [
+    8.0,
+    164.28
+   ],
+   [
+    10.0,
+    163.36
+   ],
+   [
+    12.0,
+    162.31
+   ],
+   [
+    14.0,
+    161.12
+   ],
+   [
+    16.0,
+    159.8
+   ],
+   [
+    18.0,
+    158.34
+   ],
+   [
+    20.0,
+    156.76
+   ],
+   [
+    22.0,
+    155.05
+   ],
+   [
+    24.0,
+    153.22
+   ],
+   [
+    26.0,
+    151.28
+   ],
+   [
+    28.0,
+    149.21
+   ],
+   [
+    30.0,
+    147.03
+   ]
+  ],
+  "lip_z_closed": 166.6
+ },
+ "all_gates_pass": true,
+ "piece_counts": {
+  "door": 34,
+  "fixed": 27
+ },
+ "source_step_parts_sha16": {
+  "movable_jaw.stl": "003234f5afe2f14f",
+  "fixed_jaw.stl": "d131a7e87c9ff2be",
+  "gripper_base.stl": "50d0fe3ba7fed1d6"
+ },
+ "frames": {
+  "link5": "모든 STL(door_*/fixed_*) 은 link5 mm",
+  "door_ALL_jawframe.stl": "gripper_link 프레임 mm (URDF 용)"
+ },
+ "supersedes": "s1_v0 (09-04 출력·조립 피드백: 뺨 3→2 mm 로 순정 M3×4 사용, 고정부 팁 구멍이 스파인 조각에 메워진 결함 수정) ← g18_nut_trap (D462~D479) ← D480"
+}

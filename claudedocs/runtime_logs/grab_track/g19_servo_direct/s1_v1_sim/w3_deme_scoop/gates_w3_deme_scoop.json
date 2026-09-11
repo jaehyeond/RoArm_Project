@@ -1,0 +1,97 @@
+{
+  "artifact": "GATES_W3_DEME_SCOOP_S1",
+  "date": "2026-09-09",
+  "completed_runs": 0,
+  "inputs_sha16": {
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/sim_deme/pile_practical_fast_d4p16_n18796_seed460.npz": "e26b214f336a4e97",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_ALL.stl": "2fea1c37b63ff36e",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/door_ALL_jawframe.stl": "bf570fbf862f71a3",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/design.json": "76620eba052d3c2f",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/urdf/s1_meta.json": "a9f8f2660453b2ce",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py": "3e80a42176b240e5",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w3_deme_scoop/params_provisional_plunge10.json": "14725dbcdcd2ea71",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w3_deme_scoop/params_stiff_E1e8_plunge25.json": "93967a25f2413801"
+  },
+  "attempt_evidence": {
+    "plunge25_provisional": {
+      "setting": "E 5e6 · dt 1e-5 · 잠김 25 · 하강 25 mm/s · sync 0.5 ms · 팔 힘 상한 2 N",
+      "timeline": "attempt_plunge25_seed460_timeline_diverged.json",
+      "timeline_sha16": "94cfc3975c9ede0c",
+      "state": "descend",
+      "rows": 2346,
+      "last_phase": "descend",
+      "last_sim_t_s": 1.28396,
+      "last_z_lip_mm": 20.314,
+      "surface_z_mm": 39.85,
+      "insertion_reached_mm": 19.54,
+      "door_q_deg_at_abort": 27.5,
+      "abort_max_velocity_m_s": 65.94753,
+      "v_particle_max_seen_m_s": 49.0852,
+      "max_single_contact_N": 89.4357,
+      "max_Fz_fixed_up_N": 40.274,
+      "close_max_M_res_Nm": null
+    },
+    "plunge10_provisional_seed460": {
+      "setting": "E 5e6 · dt 1e-5 · 잠김 10",
+      "timeline": "plunge10_failed/timeline_seed460.json",
+      "timeline_sha16": "71b7050f77a0a0e7",
+      "state": "close",
+      "rows": 1723,
+      "last_phase": "close",
+      "last_sim_t_s": 1.38623,
+      "last_z_lip_mm": 29.647,
+      "surface_z_mm": 39.85,
+      "insertion_reached_mm": 10.2,
+      "door_q_deg_at_abort": 5.931,
+      "abort_max_velocity_m_s": 64.05187,
+      "v_particle_max_seen_m_s": 50.71,
+      "max_single_contact_N": 68.0881,
+      "max_Fz_fixed_up_N": 12.4932,
+      "close_max_M_res_Nm": 0.013132
+    },
+    "plunge25_stiff_E1e8": {
+      "setting": "E 1e8 · dt 2e-6 · 잠김 25 · 팔 힘 상한 6 N",
+      "timeline": "stiff_E1e8/timeline_seed460.json",
+      "timeline_sha16": "f8c8c29fe17c5149",
+      "state": "descend",
+      "rows": 146,
+      "last_phase": "descend",
+      "last_sim_t_s": 0.584292,
+      "last_z_lip_mm": 37.635,
+      "surface_z_mm": 39.77,
+      "insertion_reached_mm": 2.14,
+      "door_q_deg_at_abort": 27.5,
+      "abort_max_velocity_m_s": 143.8097,
+      "v_particle_max_seen_m_s": 0.1741,
+      "max_single_contact_N": 0.0232,
+      "max_Fz_fixed_up_N": 0.0258,
+      "close_max_M_res_Nm": null
+    }
+  },
+  "G1_no_divergence": {
+    "pass": false,
+    "verdict": "FAIL",
+    "reason": "3 설정 모두 DEME 'System max velocity exceeded' 로 C++ abort (규정 툴이 더미에 들어간 뒤 단일 접촉이 0.5 ms 안에 0.05→68 N 으로 뛰며 입자가 40~140 m/s 로 튐). 잠김 25 는 20 mm, 잠김 10 은 문 폐합 q 5.9° 에서, E 1e8 은 잠김 2 mm 에서 중단"
+  },
+  "G2_door_closure": {
+    "pass": false,
+    "verdict": "판정 불가(부분 증거)",
+    "partial": "잠김 10 mm 시도에서 문이 27.3°→5.9°(립 틈 ≈12 mm) 까지 닫히는 동안 힌지 저항 모멘트 최대 0.013 N·m(립 등가 0.11 N, 서보 정지 1.76 N·m 의 1 %) — 그 각까지는 서보 정지 없음. 립 맞닿음·물림은 미도달"
+  },
+  "G3_capture_mass": {
+    "pass": false,
+    "verdict": "판정 불가",
+    "reason": "상승까지 간 실행 없음 → 포획 질량 산출 0건"
+  },
+  "G4_seed_cov": {
+    "pass": false,
+    "verdict": "판정 불가",
+    "reason": "완주 실행 0"
+  },
+  "G5_wall_le_5min": {
+    "pass": null,
+    "verdict": "참고값",
+    "note": "해석적 셸(204+204 삼각형) 기준 0.22~0.3 s/스텝(4 ms sync). 명목 경로(하강 175·폐합 153·상승 134 + 재닫기 ≤30, sync 4 ms)면 ≈ 2~2.5 min 으로 G5 안. 하강 sync 0.5 ms 옵션이면 ≈ 4 min. 원본 STL 6.5k 삼각형이면 12 s/스텝(불가)"
+  },
+  "all_pass": false
+}

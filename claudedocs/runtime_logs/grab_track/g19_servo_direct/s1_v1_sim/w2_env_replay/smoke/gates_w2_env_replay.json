@@ -1,0 +1,570 @@
+{
+ "inputs_sha256_16": {
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/manual_20260907_164725.jsonl": "284e4d5776da9e39",
+  "local_assets/roarm_m3/usd_s1/roarm_m3_s1.usd": "bef6efeb42a241fe",
+  "local_assets/roarm_m3/urdf/roarm_m3_s1.urdf": "d5a3647a5ea6b759",
+  "hw_s1_scoop_probe.py": "70096b2f2c6cbe77",
+  "local_assets/roarm_m3/urdf/meshes/s1_door.stl": "cc9efee509aa74e4",
+  "local_assets/roarm_m3/urdf/meshes/s1_fixed.stl": "1eb1b744c4d75443",
+  "local_assets/roarm_m3/urdf/meshes/link5.stl": "1d63f374a78c1419",
+  "local_assets/roarm_m3/urdf/meshes/link4.stl": "bb334cafafa5f5ad",
+  "local_assets/roarm_m3/urdf/meshes/link3.stl": "80c4e9b1084bf1c7",
+  "replay_result.json": "34858d1b323489ae",
+  "settle_records.json": "815b762cb4f1315e",
+  "replay_log.json": "35dc3eb74364352f"
+ },
+ "usd": "/home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/usd_s1/roarm_m3_s1.usd",
+ "log": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/manual_20260907_164725.jsonl",
+ "env": {
+  "plate_z": 0.38,
+  "shoulder_above_plate": 0.12206,
+  "box_cx": 0.35,
+  "box_inner": [
+   0.31,
+   0.22
+  ],
+  "box_top": 0.385,
+  "box_bot": 0.16,
+  "pellet_z": 0.26,
+  "wall_assumed": 0.003,
+  "place_lip": [
+   0.01,
+   0.34,
+   0.25
+  ],
+  "slabs": {
+   "wall_xp": [
+    [
+     0.505,
+     -0.113,
+     0.16
+    ],
+    [
+     0.508,
+     0.113,
+     0.385
+    ]
+   ],
+   "wall_xn": [
+    [
+     0.19199999999999998,
+     -0.113,
+     0.16
+    ],
+    [
+     0.19499999999999998,
+     0.113,
+     0.385
+    ]
+   ],
+   "wall_yp": [
+    [
+     0.19499999999999998,
+     0.11,
+     0.16
+    ],
+    [
+     0.505,
+     0.113,
+     0.385
+    ]
+   ],
+   "wall_yn": [
+    [
+     0.19499999999999998,
+     -0.113,
+     0.16
+    ],
+    [
+     0.505,
+     -0.11,
+     0.385
+    ]
+   ],
+   "box_floor": [
+    [
+     0.19499999999999998,
+     -0.11,
+     0.16
+    ],
+    [
+     0.505,
+     0.11,
+     0.163
+    ]
+   ],
+   "support": [
+    [
+     0.19199999999999998,
+     -0.113,
+     0.0
+    ],
+    [
+     0.508,
+     0.113,
+     0.16
+    ]
+   ]
+  }
+ },
+ "actuators": {
+  "arm": {
+   "stiffness": 800.0,
+   "damping": 40.0,
+   "effort_limit_sim": 8.0,
+   "note": "비물리 데모값(D478 계열)"
+  },
+  "door": {
+   "stiffness": 300.0,
+   "damping": 30.0,
+   "effort_limit_sim": 1.96
+  }
+ },
+ "blend_speed_dps": 60.0,
+ "fk_selfcheck_max_mm": 0.0014,
+ "dist_points": {
+  "gripper_link": 20251,
+  "grab_fixed": 9287,
+  "link5": 16879,
+  "link4": 6671,
+  "link3": 11785
+ },
+ "sim_mass_kg": null,
+ "sim_dof_gains": null,
+ "G1_no_interference": {
+  "pass": true,
+  "criterion": "door(gripper_link)·grab_fixed·link5 표면 표본점 vs 상자(벽4+바닥+받침 AABB) 부호거리 최소 > 0 [mm] 그리고 PhysX net contact force = 0 [N], 전 구간 매 물리 스텝. 'bound' = 몸체 원점-상자 AABB 거리 − 몸체 반경(하한, 50 mm 초과 시 정밀 계산 생략)",
+  "dmin_mm": {
+   "gripper_link": [
+    30.036,
+    {
+     "t": 7.292,
+     "seg": 7,
+     "name": "scoop_plunge",
+     "cycle": 1,
+     "slab": "wall_yn",
+     "point": [
+      0.36393193830833914,
+      -0.07996422641640472,
+      0.26497222849874513
+     ],
+     "frame": 73
+    }
+   ],
+   "grab_fixed": [
+    50.523,
+    {
+     "t": 3.475,
+     "seg": 3,
+     "name": "scoop_5cm_above",
+     "cycle": 1,
+     "slab": "bound",
+     "point": null,
+     "frame": 35
+    }
+   ],
+   "link5": [
+    52.39,
+    {
+     "t": 3.642,
+     "seg": 3,
+     "name": "scoop_5cm_above",
+     "cycle": 1,
+     "slab": "bound",
+     "point": null,
+     "frame": 37
+    }
+   ]
+  },
+  "contact_max_N": {
+   "gripper_link": [
+    0.0,
+    null
+   ],
+   "grab_fixed": [
+    0.0,
+    null
+   ],
+   "link5": [
+    0.0,
+    null
+   ]
+  },
+  "worst": {
+   "body": "gripper_link",
+   "dmin_mm": 30.036,
+   "t": 7.292,
+   "seg": 7,
+   "name": "scoop_plunge",
+   "cycle": 1,
+   "slab": "wall_yn",
+   "point": [
+    0.36393193830833914,
+    -0.07996422641640472,
+    0.26497222849874513
+   ],
+   "frame": 73
+  },
+  "closest_segments": [
+   {
+    "cycle": 1,
+    "name": "scoop_plunge",
+    "dmin_mm": 30.04,
+    "t": 6.933,
+    "frame": 69
+   },
+   {
+    "cycle": 1,
+    "name": "door0",
+    "dmin_mm": 30.04,
+    "t": 7.3,
+    "frame": 73
+   },
+   {
+    "cycle": 1,
+    "name": "door30",
+    "dmin_mm": 30.38,
+    "t": 6.267,
+    "frame": 62
+   },
+   {
+    "cycle": 1,
+    "name": "above_move",
+    "dmin_mm": 51.2,
+    "t": 2.833,
+    "frame": 28
+   },
+   {
+    "cycle": 1,
+    "name": "scoop_5cm_above",
+    "dmin_mm": 51.32,
+    "t": 3.467,
+    "frame": 34
+   },
+   {
+    "cycle": 1,
+    "name": "scoop_lift8",
+    "dmin_mm": 64.15,
+    "t": 8.2,
+    "frame": 82
+   },
+   {
+    "cycle": 1,
+    "name": "scoop_surface",
+    "dmin_mm": 70.16,
+    "t": 4.4,
+    "frame": 44
+   },
+   {
+    "cycle": 1,
+    "name": "p1",
+    "dmin_mm": 113.27,
+    "t": 1.033,
+    "frame": 10
+   }
+  ],
+  "other_bodies_dmin_mm": {
+   "link4": [
+    50.253,
+    {
+     "t": 4.7,
+     "seg": 4,
+     "name": "scoop_surface",
+     "cycle": 1,
+     "slab": "bound",
+     "point": null,
+     "frame": 47
+    }
+   ],
+   "link3": [
+    51.113,
+    {
+     "t": 3.767,
+     "seg": 3,
+     "name": "scoop_5cm_above",
+     "cycle": 1,
+     "slab": "bound",
+     "point": null,
+     "frame": 38
+    }
+   ]
+  }
+ },
+ "G2_lip_sim_vs_real": {
+  "pass": true,
+  "criterion": "goto 정착 시 |sim 립 − jsonl lip| 중앙값 ≤ 10 mm (최대값 보고)",
+  "n_goto": 6,
+  "d_sim_real_mm": {
+   "median": 4.62,
+   "mean": 6.4,
+   "p90": 11.19,
+   "max": 13.24
+  },
+  "d_sim_fkcmd_mm": {
+   "median": 8.52,
+   "mean": 7.6,
+   "p90": 9.37,
+   "max": 9.83
+  },
+  "d_real_fkcmd_mm": {
+   "median": 8.3,
+   "mean": 9.02,
+   "p90": 16.18,
+   "max": 21.57
+  },
+  "note": "d_sim_fkcmd = sim 립 vs FK(cmd): sim 추종(PD 처짐)+기하 오차. d_real_fkcmd = FK(read) vs FK(cmd): 실물 서보 편차(처짐)의 립 환산, 시뮬과 무관. sim 은 cmd 를 추종하므로 d_sim_real 은 두 항의 합성.",
+  "axis_bias_mm_sim_minus_real_mean": [
+   0.94,
+   -2.17,
+   0.4
+  ],
+  "axis_abs_max_mm": [
+   7.3,
+   3.81,
+   10.97
+  ],
+  "worst": {
+   "cycle": 1,
+   "name": "scoop_lift8",
+   "d_sim_real_mm": 13.236,
+   "d_sim_fkcmd_mm": 8.501,
+   "d_real_fkcmd_mm": 21.573,
+   "dev_real_deg": 2.970703112561658,
+   "loads_real": [
+    -13,
+    285,
+    53,
+    -21,
+    0
+   ],
+   "frame": 91,
+   "q_cmd": [
+    -0.808,
+    60.75,
+    42.0,
+    77.27,
+    0.0
+   ],
+   "q_read": [
+    -0.615,
+    63.721,
+    42.539,
+    76.992,
+    0.0
+   ],
+   "q_sim": [
+    -0.808,
+    62.163,
+    41.744,
+    77.256,
+    0.0
+   ]
+  },
+  "median_by_name": {
+   "above_move": 3.46,
+   "p1": 3.33,
+   "scoop_5cm_above": 4.02,
+   "scoop_lift8": 13.24,
+   "scoop_plunge": 9.14,
+   "scoop_surface": 5.21
+  }
+ },
+ "G3_completion": {
+  "pass": false,
+  "criterion": "scoop_done 5 · place_done 5 · 비유한값 0 (관절 목표 대비 sim 읽기 편차는 보고)",
+  "n_scoop_done": 0,
+  "n_place_done": 0,
+  "n_events": 12,
+  "n_segments": 12,
+  "n_goto": 6,
+  "n_door": 3,
+  "sim_seconds": 10.09,
+  "frames": 101,
+  "nan_count": 0,
+  "joint_dev_deg_sim_minus_cmd": {
+   "per_joint_median_abs": [
+    0.0,
+    1.37,
+    0.265,
+    0.013,
+    0.0
+   ],
+   "per_joint_max_abs": [
+    0.0,
+    1.465,
+    0.348,
+    0.014,
+    0.0
+   ],
+   "per_joint_mean_signed": [
+    0.0,
+    1.24,
+    -0.158,
+    -0.01,
+    0.0
+   ],
+   "worst": {
+    "joint": 1,
+    "dev_deg": 1.465,
+    "cycle": 1,
+    "name": "above_move",
+    "frame": 33
+   }
+  },
+  "door_dev_deg_sim_minus_tgt": {
+   "median_abs": 0.001,
+   "max_abs": 0.069
+  }
+ },
+ "G4_media": {
+  "pass": false,
+  "mp4": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w2_env_replay/smoke/replay.mp4",
+  "mp4_bytes": 320294,
+  "frames": 101,
+  "fps": 10,
+  "blank_check": {
+   "n_checked": 101,
+   "min_std_side": 44.0,
+   "min_std_top": 38.9,
+   "criterion": "측면·위 각각 화소 표준편차 > 5 (빈 프레임 = 단색)"
+  },
+  "strip": {
+   "file": "keyframe_strip_cycle1.png",
+   "n": 8,
+   "names": [
+    "p1",
+    "above_move",
+    "scoop_5cm_above",
+    "scoop_surface",
+    "door30",
+    "scoop_plunge",
+    "door0",
+    "scoop_lift8"
+   ]
+  },
+  "place_frame": {},
+  "place_target_frame": null,
+  "place_target_lip_sim_vs_real_mm": null
+ },
+ "appendix_loads_vs_torque": {
+  "n": 6,
+  "pearson_r(tS, M_model)": -0.04,
+  "tS_range": [
+   21.0,
+   285.0
+  ],
+  "M_model_range_Nm": [
+   0.142,
+   0.379
+  ],
+  "sim_tau_reported_saturated_frac": 0.833,
+  "K_eff_Nm_per_rad": {
+   "median": 15.75,
+   "min": 13.55,
+   "max": 17.05,
+   "nominal": 800.0,
+   "nominal/57.3": 13.96
+  },
+  "median_by_name": {
+   "above_move": {
+    "tS": 117.0,
+    "M_model_Nm": 0.346,
+    "sag_sim_deg": 1.465
+   },
+   "p1": {
+    "tS": 125.0,
+    "M_model_Nm": 0.142,
+    "sag_sim_deg": 0.478
+   },
+   "scoop_5cm_above": {
+    "tS": 117.0,
+    "M_model_Nm": 0.374,
+    "sag_sim_deg": 1.37
+   },
+   "scoop_lift8": {
+    "tS": 285.0,
+    "M_model_Nm": 0.371,
+    "sag_sim_deg": 1.413
+   },
+   "scoop_plunge": {
+    "tS": 21.0,
+    "M_model_Nm": 0.379,
+    "sag_sim_deg": 1.371
+   },
+   "scoop_surface": {
+    "tS": 69.0,
+    "M_model_Nm": 0.378,
+    "sag_sim_deg": 1.344
+   }
+  },
+  "rows": [
+   {
+    "cycle": 1,
+    "name": "p1",
+    "tS": 125,
+    "M_model_Nm": 0.1423,
+    "tau_sim_reported": -1.7079,
+    "sag_sim_deg": 0.478,
+    "K_eff": 17.05
+   },
+   {
+    "cycle": 1,
+    "name": "above_move",
+    "tS": 117,
+    "M_model_Nm": 0.3465,
+    "tau_sim_reported": -8.0,
+    "sag_sim_deg": 1.465,
+    "K_eff": 13.55
+   },
+   {
+    "cycle": 1,
+    "name": "scoop_5cm_above",
+    "tS": 117,
+    "M_model_Nm": 0.374,
+    "tau_sim_reported": -8.0,
+    "sag_sim_deg": 1.37,
+    "K_eff": 15.64
+   },
+   {
+    "cycle": 1,
+    "name": "scoop_surface",
+    "tS": 69,
+    "M_model_Nm": 0.3778,
+    "tau_sim_reported": -8.0,
+    "sag_sim_deg": 1.344,
+    "K_eff": 16.11
+   },
+   {
+    "cycle": 1,
+    "name": "scoop_plunge",
+    "tS": 21,
+    "M_model_Nm": 0.3794,
+    "tau_sim_reported": -8.0,
+    "sag_sim_deg": 1.371,
+    "K_eff": 15.86
+   },
+   {
+    "cycle": 1,
+    "name": "scoop_lift8",
+    "tS": 285,
+    "M_model_Nm": 0.3712,
+    "tau_sim_reported": -8.0,
+    "sag_sim_deg": 1.413,
+    "K_eff": 15.05
+   }
+  ],
+  "urdf_masses_kg": {
+   "base_link": 0.2562183,
+   "link1": 0.0729177,
+   "link2": 0.0703216,
+   "link3": 0.021608,
+   "link4": 0.0099933,
+   "link5": 0.0153928,
+   "gripper_link": 0.024158,
+   "grab_fixed": 0.018271
+  },
+  "note": "tS = 펌웨어 부하값(단위 미상·부호 포함, 실물은 펠릿 적재 포함). M_model = URDF 질량·COM 으로 계산한 어깨축 중력 모멘트(펠릿 없음, 정역학). sim 이 보고한 applied_torque 는 Isaac Lab 이 PD 식으로 계산한 값이라 effort_limit_sim(8.0) 에 포화 — 물리 토크가 아니므로 비교에 쓰지 않는다. K_eff = |M_model| / sim 처짐각 = sim 이 실제로 보인 유효 강성.",
+  "png": "appendix_loads_dmin.png"
+ },
+ "all_pass": false
+}

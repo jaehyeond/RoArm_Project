@@ -1,0 +1,337 @@
+{
+ "ok": true,
+ "usd": "/home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/usd_s1_v1/roarm_m3_s1_v1.usd",
+ "log": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/manual_20260907_164725.jsonl",
+ "inputs_sha256_16": {
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/manual_20260907_164725.jsonl": "284e4d5776da9e39",
+  "local_assets/roarm_m3/usd_s1_v1/roarm_m3_s1_v1.usd": "21dc4a11571d65f7",
+  "local_assets/roarm_m3/urdf/roarm_m3_s1_v1.urdf": "411ef28f78ead0f0",
+  "hw_s1_scoop_probe.py": "70096b2f2c6cbe77",
+  "local_assets/roarm_m3/urdf/meshes/s1_v1_door.stl": "880547d19d611cac",
+  "local_assets/roarm_m3/urdf/meshes/s1_v1_fixed.stl": "2fea1c37b63ff36e",
+  "local_assets/roarm_m3/urdf/meshes/link5.stl": "1d63f374a78c1419",
+  "local_assets/roarm_m3/urdf/meshes/link4.stl": "bb334cafafa5f5ad",
+  "local_assets/roarm_m3/urdf/meshes/link3.stl": "80c4e9b1084bf1c7"
+ },
+ "env": {
+  "plate_z": 0.38,
+  "shoulder_above_plate": 0.12206,
+  "box_cx": 0.35,
+  "box_inner": [
+   0.31,
+   0.22
+  ],
+  "box_top": 0.385,
+  "box_bot": 0.16,
+  "pellet_z": 0.26,
+  "wall_assumed": 0.003,
+  "place_lip": [
+   0.01,
+   0.34,
+   0.25
+  ],
+  "slabs": {
+   "wall_xp": [
+    [
+     0.505,
+     -0.113,
+     0.16
+    ],
+    [
+     0.508,
+     0.113,
+     0.385
+    ]
+   ],
+   "wall_xn": [
+    [
+     0.19199999999999998,
+     -0.113,
+     0.16
+    ],
+    [
+     0.19499999999999998,
+     0.113,
+     0.385
+    ]
+   ],
+   "wall_yp": [
+    [
+     0.19499999999999998,
+     0.11,
+     0.16
+    ],
+    [
+     0.505,
+     0.113,
+     0.385
+    ]
+   ],
+   "wall_yn": [
+    [
+     0.19499999999999998,
+     -0.113,
+     0.16
+    ],
+    [
+     0.505,
+     -0.11,
+     0.385
+    ]
+   ],
+   "box_floor": [
+    [
+     0.19499999999999998,
+     -0.11,
+     0.16
+    ],
+    [
+     0.505,
+     0.11,
+     0.163
+    ]
+   ],
+   "support": [
+    [
+     0.19199999999999998,
+     -0.113,
+     0.0
+    ],
+    [
+     0.508,
+     0.113,
+     0.16
+    ]
+   ]
+  }
+ },
+ "actuators": {
+  "arm": {
+   "stiffness": 800.0,
+   "damping": 40.0,
+   "effort_limit_sim": 8.0,
+   "note": "\ube44\ubb3c\ub9ac \ub370\ubaa8\uac12(D478 \uacc4\uc5f4)"
+  },
+  "door": {
+   "stiffness": 300.0,
+   "damping": 30.0,
+   "effort_limit_sim": 1.96
+  }
+ },
+ "settle_rule": "\ube14\ub80c\ub4dc \ud6c4 \ucd5c\uc18c 0.5 s(goto)/0.4 s(door), \uc774\ud6c4 0.4 s \uac04\uaca9 \ub450 \ubc88 \uc5f0\uc18d \uc804 \uad00\uc808 |\u0394q| < 0.3\u00b0 \uba74 \uc815\ucc29, \uc0c1\ud55c 2.0 s (\uc704\uce58 \uc548\uc815, D481 \u2463)",
+ "mesh_tag": "s1_v1",
+ "urdf": "local_assets/roarm_m3/urdf/roarm_m3_s1_v1.urdf",
+ "blend_speed_dps": 60.0,
+ "n_events": 180,
+ "n_segments": 180,
+ "fk_selfcheck_max_mm": 0.0017,
+ "dist_points": {
+  "gripper_link": 18701,
+  "grab_fixed": 8693,
+  "link5": 16879,
+  "link4": 6671,
+  "link3": 11785
+ },
+ "joint_names": [
+  "base_link_to_link1",
+  "link1_to_link2",
+  "link2_to_link3",
+  "link3_to_link4",
+  "link4_to_link5",
+  "link5_to_gripper_link"
+ ],
+ "body_names": [
+  "world",
+  "base_link",
+  "link1",
+  "link2",
+  "link3",
+  "link4",
+  "link5",
+  "grab_fixed",
+  "gripper_link",
+  "hand_tcp"
+ ],
+ "contact_bodies": [
+  "link3",
+  "link4",
+  "link5",
+  "grab_fixed",
+  "gripper_link"
+ ],
+ "cameras": {
+  "side": [
+   [
+    0.95,
+    -0.72,
+    0.78
+   ],
+   [
+    0.28,
+    0.02,
+    0.33
+   ]
+  ],
+  "top": [
+   [
+    0.22,
+    0.1,
+    1.62
+   ],
+   [
+    0.22,
+    0.1,
+    0.35
+   ]
+  ],
+  "res": [
+   640,
+   400
+  ]
+ },
+ "body_mass_kg": {
+  "world": 1.0,
+  "base_link": 0.25622,
+  "link1": 0.07292,
+  "link2": 0.07032,
+  "link3": 0.02161,
+  "link4": 0.00999,
+  "link5": 0.01539,
+  "grab_fixed": 0.01846,
+  "gripper_link": 0.01826,
+  "hand_tcp": 0.0001
+ },
+ "physx_dof_gains": {
+  "base_link_to_link1": [
+   800.0,
+   40.0,
+   8.0
+  ],
+  "link1_to_link2": [
+   800.0,
+   40.0,
+   8.0
+  ],
+  "link2_to_link3": [
+   800.0,
+   40.0,
+   8.0
+  ],
+  "link3_to_link4": [
+   800.0,
+   40.0,
+   8.0
+  ],
+  "link4_to_link5": [
+   800.0,
+   40.0,
+   8.0
+  ],
+  "link5_to_gripper_link": [
+   300.0,
+   30.0,
+   1.96
+  ]
+ },
+ "frames": 2594,
+ "fps": 10,
+ "sim_seconds": 259.38,
+ "n_goto": 123,
+ "n_door": 31,
+ "n_scoop_done": 5,
+ "n_place_done": 5,
+ "dmin_overall_mm": {
+  "gripper_link": [
+   25.625,
+   {
+    "t": 165.858,
+    "seg": 115,
+    "name": "scoop_plunge",
+    "cycle": 4,
+    "slab": "wall_yn",
+    "point": [
+     0.36484016884702636,
+     -0.08437494231035599,
+     0.27220120911658435
+    ],
+    "frame": 1659
+   }
+  ],
+  "grab_fixed": [
+   50.199,
+   {
+    "t": 16.35,
+    "seg": 12,
+    "name": "scoop_travel",
+    "cycle": 1,
+    "slab": "bound",
+    "point": null,
+    "frame": 164
+   }
+  ],
+  "link5": [
+   50.796,
+   {
+    "t": 16.175,
+    "seg": 12,
+    "name": "scoop_travel",
+    "cycle": 1,
+    "slab": "bound",
+    "point": null,
+    "frame": 162
+   }
+  ],
+  "link4": [
+   50.023,
+   {
+    "t": 209.783,
+    "seg": 146,
+    "name": "scoop_surface",
+    "cycle": 5,
+    "slab": "bound",
+    "point": null,
+    "frame": 2098
+   }
+  ],
+  "link3": [
+   50.004,
+   {
+    "t": 13.608,
+    "seg": 10,
+    "name": "scoop_lift8",
+    "cycle": 1,
+    "slab": "bound",
+    "point": null,
+    "frame": 136
+   }
+  ]
+ },
+ "contact_max_N": {
+  "gripper_link": [
+   0.0,
+   null
+  ],
+  "grab_fixed": [
+   0.0,
+   null
+  ],
+  "link5": [
+   0.0,
+   null
+  ],
+  "link4": [
+   0.0,
+   null
+  ],
+  "link3": [
+   0.0,
+   null
+  ]
+ },
+ "d_sim_real_mm": {
+  "median": 8.003,
+  "max": 20.96,
+  "mean": 9.482
+ },
+ "finite": true
+}

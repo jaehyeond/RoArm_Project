@@ -1,0 +1,499 @@
+{
+ "inputs_sha256_16": {
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w2_env_replay/gates_w2_env_replay.json": "dfd3ae75b03b5a49",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w2_env_replay/settle_records.json": "ef14f8aaddd89a38",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w2_env_replay/replay_result.json": "0f5aeab18814ea4f",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w2_env_replay/v1/gates_w2_env_replay.json": "d4fb4752acc21251",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w2_env_replay/v1/settle_records.json": "0e845d5057744c3f",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w2_env_replay/v1/replay_result.json": "430228b70c026507"
+ },
+ "v0": {
+  "usd": "/home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/usd_s1/roarm_m3_s1.usd",
+  "hand_tcp_mass_kg": 1.0,
+  "physx_mass_total_kg": 2.48888,
+  "gates": {
+   "G1_no_interference": true,
+   "G2_lip_sim_vs_real": true,
+   "G3_completion": true,
+   "G4_media": true
+  },
+  "all_pass": true,
+  "lip_sim_real_mm": {
+   "median": 4.86,
+   "mean": 5.59,
+   "p90": 11.45,
+   "max": 16.21
+  },
+  "lip_sim_fkcmd_mm": {
+   "median": 8.43,
+   "mean": 6.12,
+   "p90": 9.83,
+   "max": 34.84
+  },
+  "lip_real_fkcmd_mm": {
+   "median": 8.61,
+   "mean": 9.89,
+   "p90": 20.83,
+   "max": 21.94
+  },
+  "lip_axis_bias_mm": [
+   -0.31,
+   -0.2,
+   3.05
+  ],
+  "lip_worst": {
+   "cycle": 6,
+   "name": "home",
+   "d_sim_real_mm": 16.208
+  },
+  "box_dmin_mm": {
+   "gripper_link": 25.695,
+   "grab_fixed": 50.132,
+   "link5": 51.088
+  },
+  "box_worst": {
+   "body": "gripper_link",
+   "dmin_mm": 25.695,
+   "t": 252.5,
+   "seg": 115,
+   "name": "scoop_plunge",
+   "cycle": 4,
+   "slab": "wall_yn",
+   "point": [
+    0.3622460960590278,
+    -0.0843045125806332,
+    0.26491068567836035
+   ],
+   "frame": 2525
+  },
+  "contact_max_N": {
+   "gripper_link": 0.0,
+   "grab_fixed": 0.0,
+   "link5": 0.0
+  },
+  "shoulder_sag_deg": {
+   "median_abs": 1.356,
+   "max_abs": 1.549,
+   "extended_poses_median": 1.427
+  },
+  "elbow_dev_deg": {
+   "median_abs": 0.174,
+   "max_abs": 5.072
+  },
+  "joint_dev_deg_median_abs": [
+   0.0,
+   1.356,
+   0.174,
+   0.012,
+   0.0
+  ],
+  "joint_dev_deg_max_abs": [
+   0.001,
+   1.549,
+   5.072,
+   0.124,
+   0.0
+  ],
+  "shoulder_static_Nm": {
+   "M_model_urdf_range": [
+    0.142,
+    0.381
+   ],
+   "M_model_tcp_range(sim 실제)": [
+    1.734,
+    3.824
+   ],
+   "hand_tcp_used_kg": 1.0,
+   "K_eff": {
+    "median": 159.83,
+    "min": 140.29,
+    "max": 667.15,
+    "nominal_cfg": 800.0,
+    "physx_readback": [
+     800.0,
+     40.0,
+     8.0
+    ]
+   },
+   "median_by_name": {
+    "above_move": {
+     "tS": 117.0,
+     "M_model_Nm": 0.346,
+     "sag_sim_deg": 1.465
+    },
+    "above_up": {
+     "tS": 117.0,
+     "M_model_Nm": 0.345,
+     "sag_sim_deg": 1.442
+    },
+    "home": {
+     "tS": 189.0,
+     "M_model_Nm": 0.238,
+     "sag_sim_deg": 0.31
+    },
+    "p1": {
+     "tS": 161.0,
+     "M_model_Nm": 0.142,
+     "sag_sim_deg": 0.478
+    },
+    "place_down": {
+     "tS": 133.0,
+     "M_model_Nm": 0.374,
+     "sag_sim_deg": 1.512
+    },
+    "place_extend": {
+     "tS": 133.0,
+     "M_model_Nm": 0.346,
+     "sag_sim_deg": 1.465
+    },
+    "place_retract": {
+     "tS": 197.0,
+     "M_model_Nm": 0.142,
+     "sag_sim_deg": 0.479
+    },
+    "place_retract2": {
+     "tS": 197.0,
+     "M_model_Nm": 0.142,
+     "sag_sim_deg": 0.478
+    },
+    "place_rot0": {
+     "tS": 197.0,
+     "M_model_Nm": 0.142,
+     "sag_sim_deg": 0.478
+    },
+    "place_rot29": {
+     "tS": 197.0,
+     "M_model_Nm": 0.142,
+     "sag_sim_deg": 0.479
+    },
+    "place_rot30": {
+     "tS": 197.0,
+     "M_model_Nm": 0.142,
+     "sag_sim_deg": 0.478
+    },
+    "place_rot59": {
+     "tS": 197.0,
+     "M_model_Nm": 0.142,
+     "sag_sim_deg": 0.479
+    },
+    "place_rot60": {
+     "tS": 197.0,
+     "M_model_Nm": 0.142,
+     "sag_sim_deg": 0.478
+    },
+    "place_rot89": {
+     "tS": 197.0,
+     "M_model_Nm": 0.142,
+     "sag_sim_deg": 0.479
+    },
+    "place_rot90": {
+     "tS": 197.0,
+     "M_model_Nm": 0.142,
+     "sag_sim_deg": 0.479
+    },
+    "place_target": {
+     "tS": 141.0,
+     "M_model_Nm": 0.381,
+     "sag_sim_deg": 1.411
+    },
+    "place_up": {
+     "tS": 277.0,
+     "M_model_Nm": 0.346,
+     "sag_sim_deg": 1.465
+    },
+    "quit_up": {
+     "tS": 133.0,
+     "M_model_Nm": 0.345,
+     "sag_sim_deg": 1.442
+    },
+    "scoop_5cm_above": {
+     "tS": 125.0,
+     "M_model_Nm": 0.373,
+     "sag_sim_deg": 1.356
+    },
+    "scoop_lift8": {
+     "tS": 277.0,
+     "M_model_Nm": 0.371,
+     "sag_sim_deg": 1.405
+    },
+    "scoop_plunge": {
+     "tS": 29.0,
+     "M_model_Nm": 0.379,
+     "sag_sim_deg": 1.356
+    },
+    "scoop_surface": {
+     "tS": 93.0,
+     "M_model_Nm": 0.377,
+     "sag_sim_deg": 1.334
+    },
+    "scoop_travel": {
+     "tS": 277.0,
+     "M_model_Nm": 0.345,
+     "sag_sim_deg": 1.442
+    }
+   }
+  },
+  "settle": {
+   "rule": "블렌드 후 최소 0.5 s, 전 관절 |속도| < 0.5°/s 면 정착, 상한 2.0 s",
+   "settle_s_median": 2.0,
+   "settle_s_max": 2.0,
+   "n_hit_max": 154,
+   "vel_max_dps_at_settle_max": 7.858
+  },
+  "settle_rule": null,
+  "sim_seconds": 396.18,
+  "frames": 3962,
+  "mesh_tag": "s1(v0)",
+  "urdf": null
+ },
+ "v1": {
+  "usd": "/home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/usd_s1_v1/roarm_m3_s1_v1.usd",
+  "hand_tcp_mass_kg": 0.0001,
+  "physx_mass_total_kg": 1.48327,
+  "gates": {
+   "G1_no_interference": true,
+   "G2_lip_sim_vs_real": true,
+   "G3_completion": true,
+   "G4_media": true
+  },
+  "all_pass": true,
+  "lip_sim_real_mm": {
+   "median": 8.0,
+   "mean": 9.48,
+   "p90": 19.99,
+   "max": 20.96
+  },
+  "lip_sim_fkcmd_mm": {
+   "median": 0.64,
+   "mean": 0.45,
+   "p90": 0.71,
+   "max": 2.11
+  },
+  "lip_real_fkcmd_mm": {
+   "median": 8.61,
+   "mean": 9.89,
+   "p90": 20.83,
+   "max": 21.94
+  },
+  "lip_axis_bias_mm": [
+   0.58,
+   0.46,
+   8.43
+  ],
+  "lip_worst": {
+   "cycle": 2,
+   "name": "scoop_travel",
+   "d_sim_real_mm": 20.96
+  },
+  "box_dmin_mm": {
+   "gripper_link": 25.625,
+   "grab_fixed": 50.199,
+   "link5": 50.796
+  },
+  "box_worst": {
+   "body": "gripper_link",
+   "dmin_mm": 25.625,
+   "t": 165.858,
+   "seg": 115,
+   "name": "scoop_plunge",
+   "cycle": 4,
+   "slab": "wall_yn",
+   "point": [
+    0.36484016884702636,
+    -0.08437494231035599,
+    0.27220120911658435
+   ],
+   "frame": 1659
+  },
+  "contact_max_N": {
+   "gripper_link": 0.0,
+   "grab_fixed": 0.0,
+   "link5": 0.0
+  },
+  "shoulder_sag_deg": {
+   "median_abs": 0.097,
+   "max_abs": 0.111,
+   "extended_poses_median": 0.102
+  },
+  "elbow_dev_deg": {
+   "median_abs": 0.009,
+   "max_abs": 0.284
+  },
+  "joint_dev_deg_median_abs": [
+   0.0,
+   0.097,
+   0.009,
+   0.002,
+   0.001
+  ],
+  "joint_dev_deg_max_abs": [
+   0.001,
+   0.111,
+   0.284,
+   0.007,
+   0.002
+  ],
+  "shoulder_static_Nm": {
+   "M_model_urdf_range": [
+    0.133,
+    0.361
+   ],
+   "M_model_tcp_range(sim 실제)": [
+    0.133,
+    0.362
+   ],
+   "hand_tcp_used_kg": 0.0001,
+   "K_eff": {
+    "median": 212.48,
+    "min": 178.82,
+    "max": 307.42,
+    "nominal_cfg": 800.0,
+    "physx_readback": [
+     800.0,
+     40.0,
+     8.0
+    ]
+   },
+   "median_by_name": {
+    "above_move": {
+     "tS": 117.0,
+     "M_model_Nm": 0.327,
+     "sag_sim_deg": 0.105
+    },
+    "above_up": {
+     "tS": 117.0,
+     "M_model_Nm": 0.326,
+     "sag_sim_deg": 0.103
+    },
+    "home": {
+     "tS": 189.0,
+     "M_model_Nm": 0.22,
+     "sag_sim_deg": 0.041
+    },
+    "p1": {
+     "tS": 161.0,
+     "M_model_Nm": 0.133,
+     "sag_sim_deg": 0.034
+    },
+    "place_down": {
+     "tS": 133.0,
+     "M_model_Nm": 0.355,
+     "sag_sim_deg": 0.109
+    },
+    "place_extend": {
+     "tS": 133.0,
+     "M_model_Nm": 0.327,
+     "sag_sim_deg": 0.105
+    },
+    "place_retract": {
+     "tS": 197.0,
+     "M_model_Nm": 0.133,
+     "sag_sim_deg": 0.034
+    },
+    "place_retract2": {
+     "tS": 197.0,
+     "M_model_Nm": 0.133,
+     "sag_sim_deg": 0.034
+    },
+    "place_rot0": {
+     "tS": 197.0,
+     "M_model_Nm": 0.133,
+     "sag_sim_deg": 0.034
+    },
+    "place_rot29": {
+     "tS": 197.0,
+     "M_model_Nm": 0.133,
+     "sag_sim_deg": 0.034
+    },
+    "place_rot30": {
+     "tS": 197.0,
+     "M_model_Nm": 0.133,
+     "sag_sim_deg": 0.034
+    },
+    "place_rot59": {
+     "tS": 197.0,
+     "M_model_Nm": 0.133,
+     "sag_sim_deg": 0.034
+    },
+    "place_rot60": {
+     "tS": 197.0,
+     "M_model_Nm": 0.133,
+     "sag_sim_deg": 0.034
+    },
+    "place_rot89": {
+     "tS": 197.0,
+     "M_model_Nm": 0.133,
+     "sag_sim_deg": 0.034
+    },
+    "place_rot90": {
+     "tS": 197.0,
+     "M_model_Nm": 0.133,
+     "sag_sim_deg": 0.034
+    },
+    "place_target": {
+     "tS": 141.0,
+     "M_model_Nm": 0.361,
+     "sag_sim_deg": 0.101
+    },
+    "place_up": {
+     "tS": 277.0,
+     "M_model_Nm": 0.327,
+     "sag_sim_deg": 0.105
+    },
+    "quit_up": {
+     "tS": 133.0,
+     "M_model_Nm": 0.326,
+     "sag_sim_deg": 0.103
+    },
+    "scoop_5cm_above": {
+     "tS": 125.0,
+     "M_model_Nm": 0.354,
+     "sag_sim_deg": 0.097
+    },
+    "scoop_lift8": {
+     "tS": 277.0,
+     "M_model_Nm": 0.351,
+     "sag_sim_deg": 0.101
+    },
+    "scoop_plunge": {
+     "tS": 29.0,
+     "M_model_Nm": 0.359,
+     "sag_sim_deg": 0.097
+    },
+    "scoop_surface": {
+     "tS": 93.0,
+     "M_model_Nm": 0.358,
+     "sag_sim_deg": 0.095
+    },
+    "scoop_travel": {
+     "tS": 277.0,
+     "M_model_Nm": 0.326,
+     "sag_sim_deg": 0.103
+    }
+   }
+  },
+  "settle": {
+   "rule": "블렌드 후 최소 0.5 s(goto)/0.4 s(door), 이후 0.4 s 간격 두 번 연속 전 관절 |Δq| < 0.3° 면 정착, 상한 2.0 s (위치 안정, D481 ④)",
+   "settle_dq_last_deg_max": 0.00457,
+   "settle_s_median": 1.2,
+   "settle_s_max": 1.2,
+   "n_hit_max": 0,
+   "vel_max_dps_at_settle_max": 4.116
+  },
+  "settle_rule": "블렌드 후 최소 0.5 s(goto)/0.4 s(door), 이후 0.4 s 간격 두 번 연속 전 관절 |Δq| < 0.3° 면 정착, 상한 2.0 s (위치 안정, D481 ④)",
+  "sim_seconds": 259.38,
+  "frames": 2594,
+  "mesh_tag": "s1_v1",
+  "urdf": "local_assets/roarm_m3/urdf/roarm_m3_s1_v1.urdf"
+ },
+ "delta_v1_minus_v0": {
+  "lip_median_mm": 3.14,
+  "lip_max_mm": 4.75,
+  "lip_sim_fkcmd_median_mm": -7.79,
+  "lip_sim_fkcmd_max_mm": -32.73,
+  "box_dmin_gripper_mm": -0.07,
+  "shoulder_sag_median_deg": -1.259,
+  "shoulder_sag_max_deg": -1.438,
+  "elbow_dev_max_deg": -4.788
+ }
+}

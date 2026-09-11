@@ -1,0 +1,660 @@
+{
+  "artifact": "ROARM_RERUN_ARTIFACT_VALIDATION_V1",
+  "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix/cell_DE_dt2e6_c/scoop_s1_seed460_w10.rrd",
+  "expected_rerun_version": "0.34.1",
+  "expected_entity_paths": [
+    "/contacts/forces",
+    "/contacts/points",
+    "/coordinate_frames/world_m",
+    "/decision/actual_axes",
+    "/decision/contacts",
+    "/decision/door",
+    "/decision/fixed",
+    "/decision/forces",
+    "/decision/target_axes",
+    "/diagnostic/diverge_event_force_seed460/contact_forces",
+    "/diagnostic/diverge_event_force_seed460/culprit_velocity",
+    "/diagnostic/diverge_event_force_seed460/near_spheres",
+    "/diagnostic/diverge_event_seed460/contact_forces",
+    "/diagnostic/diverge_event_seed460/culprit_velocity",
+    "/diagnostic/diverge_event_seed460/near_spheres",
+    "/events/decision",
+    "/frames/actual_door",
+    "/frames/actual_door/origin",
+    "/frames/nominal_door",
+    "/frames/nominal_door/origin",
+    "/geometry/container",
+    "/geometry/crater/azimuth_rays",
+    "/geometry/crater/fit_rings",
+    "/geometry/heightmap/post",
+    "/geometry/heightmap/pre",
+    "/geometry/pile/animated",
+    "/geometry/pile/spheres_final_static",
+    "/geometry/pile/spheres_post",
+    "/geometry/pile/spheres_pre",
+    "/geometry/tool/door_nodes",
+    "/geometry/tool/final_static",
+    "/geometry/tool/fixed_nodes",
+    "/metadata/meshes/geometry__container",
+    "/metadata/run",
+    "/metrics/Fz_fixed_up_N",
+    "/metrics/M_hinge_res_Nm",
+    "/metrics/lipF_N",
+    "/metrics/max_single_contact_N",
+    "/metrics/n_door",
+    "/metrics/n_fixed",
+    "/metrics/q_deg",
+    "/metrics/v_particle_max",
+    "/metrics/z_lip_mm"
+  ],
+  "expected_timeline_names": [
+    "blueprint",
+    "log_time",
+    "frame",
+    "phase",
+    "sim_time_s"
+  ],
+  "exact_entity_paths": [
+    "/contacts/forces",
+    "/contacts/points",
+    "/coordinate_frames/world_m",
+    "/decision/actual_axes",
+    "/decision/contacts",
+    "/decision/door",
+    "/decision/fixed",
+    "/decision/forces",
+    "/decision/target_axes",
+    "/diagnostic/diverge_event_force_seed460/contact_forces",
+    "/diagnostic/diverge_event_force_seed460/culprit_velocity",
+    "/diagnostic/diverge_event_force_seed460/near_spheres",
+    "/diagnostic/diverge_event_seed460/contact_forces",
+    "/diagnostic/diverge_event_seed460/culprit_velocity",
+    "/diagnostic/diverge_event_seed460/near_spheres",
+    "/events/decision",
+    "/frames/actual_door",
+    "/frames/actual_door/origin",
+    "/frames/nominal_door",
+    "/frames/nominal_door/origin",
+    "/geometry/container",
+    "/geometry/crater/azimuth_rays",
+    "/geometry/crater/fit_rings",
+    "/geometry/heightmap/post",
+    "/geometry/heightmap/pre",
+    "/geometry/pile/animated",
+    "/geometry/pile/spheres_final_static",
+    "/geometry/pile/spheres_post",
+    "/geometry/pile/spheres_pre",
+    "/geometry/tool/door_nodes",
+    "/geometry/tool/final_static",
+    "/geometry/tool/fixed_nodes",
+    "/metadata/meshes/geometry__container",
+    "/metadata/run",
+    "/metrics/Fz_fixed_up_N",
+    "/metrics/M_hinge_res_Nm",
+    "/metrics/lipF_N",
+    "/metrics/max_single_contact_N",
+    "/metrics/n_door",
+    "/metrics/n_fixed",
+    "/metrics/q_deg",
+    "/metrics/v_particle_max",
+    "/metrics/z_lip_mm"
+  ],
+  "exact_timeline_names": [
+    "blueprint",
+    "frame",
+    "log_time",
+    "phase",
+    "sim_time_s"
+  ],
+  "expected_entity_components": {
+    "/geometry/pile/spheres_post": [
+      "Points3D:colors",
+      "Points3D:positions",
+      "Points3D:radii"
+    ],
+    "/geometry/tool/door_nodes": [
+      "Points3D:positions"
+    ],
+    "/contacts/forces": [
+      "Arrows3D:origins",
+      "Arrows3D:vectors"
+    ],
+    "/metrics/lipF_N": [
+      "Scalars:scalars"
+    ],
+    "/metrics/q_deg": [
+      "Scalars:scalars"
+    ],
+    "/events/decision": [
+      "TextLog:level",
+      "TextLog:text"
+    ],
+    "/geometry/container": [
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/geometry/pile/animated": [
+      "Points3D:colors",
+      "Points3D:positions",
+      "Points3D:radii"
+    ],
+    "/decision/target_axes": [
+      "Arrows3D:origins",
+      "Arrows3D:vectors"
+    ],
+    "/decision/actual_axes": [
+      "Arrows3D:origins",
+      "Arrows3D:vectors"
+    ],
+    "/diagnostic/diverge_event_force_seed460/contact_forces": [
+      "Arrows3D:origins",
+      "Arrows3D:vectors"
+    ],
+    "/diagnostic/diverge_event_force_seed460/near_spheres": [
+      "Points3D:positions",
+      "Points3D:radii"
+    ],
+    "/diagnostic/diverge_event_seed460/contact_forces": [
+      "Arrows3D:origins",
+      "Arrows3D:vectors"
+    ],
+    "/diagnostic/diverge_event_seed460/near_spheres": [
+      "Points3D:positions",
+      "Points3D:radii"
+    ]
+  },
+  "forbidden_entity_fragments": [
+    "/\\/"
+  ],
+  "blueprint_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix/cell_DE_dt2e6_c/scoop_s1_seed460_w10.rbl",
+  "rendered_blueprint_source": "active blueprint embedded in the RRD",
+  "external_rbl_role": "verified fixed-layout export; the 0.34.1 CLI does not guarantee that an external RBL overrides an already-active embedded blueprint",
+  "screenshot_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix/cell_DE_dt2e6_c/scoop_s1_seed460_w10_inspection.png",
+  "screenshot_window_size": "3200x1800",
+  "screenshot_port": null,
+  "human_visual_inspection_required": true,
+  "bytes": 149493626,
+  "sha256": "940b30a1469d6ad66497fc01a14c5a594d1c0ee82090e6f3c87db18bbcbe4807",
+  "version": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "--version"
+    ],
+    "returncode": 0,
+    "stdout": "rerun-cli 0.34.1 (base lance map_view nasm native_viewer oss_server perf_telemetry re_server release_full release_no_web_viewer web_viewer) [rustc 1.92.0 (ded5c06cf 2025-12-08), LLVM 21.1.3] x86_64-unknown-linux-gnu prepare-release-0.34.1 4efb18f, built 2026-07-07T16:20:42.173372603Z\nVideo features: av1 ffmpeg nasm\n",
+    "stderr": "",
+    "ok": true,
+    "expected_version_match": true
+  },
+  "verify": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "verify",
+      "--check-footers",
+      "true",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix/cell_DE_dt2e6_c/scoop_s1_seed460_w10.rrd"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "1 file verified without error.\n",
+    "ok": true
+  },
+  "stats": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "stats",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix/cell_DE_dt2e6_c/scoop_s1_seed460_w10.rrd"
+    ],
+    "returncode": 0,
+    "stdout": "Overview\n----------\nnum_chunks = 168\nnum_entity_paths = 63\nnum_chunks_without_components = 0 (0.000%)\nnum_rows = 36 223\nnum_rows_min = 1\nnum_rows_max = 1 528\nnum_rows_avg = 215.613\nnum_static = 22\nnum_indexes_min = 0\nnum_indexes_max = 4\nnum_indexes_avg = 3.202\nnum_components_min = 1\nnum_components_max = 6\nnum_components_avg = 3.339\n\nNum chunks per entity\n---------------------\n/__properties: 1\n/blueprint_panel: 1\n/contacts/forces: 13\n/contacts/points: 8\n/container/7517d691-50b2-4c0c-83f3-c053c0ccc974: 1\n/container/7951df36-cd7a-425d-9069-eb99039f7d9e: 1\n/container/81d3b8dd-9afc-4391-8a2a-703b19c38ac3: 1\n/coordinate_frames/world_m: 1\n/decision/actual_axes: 1\n/decision/contacts: 1\n/decision/door: 1\n/decision/fixed: 1\n/decision/forces: 1\n/decision/target_axes: 1\n/diagnostic/diverge_event_force_seed460/contact_forces: 1\n/diagnostic/diverge_event_force_seed460/culprit_velocity: 1\n/diagnostic/diverge_event_force_seed460/near_spheres: 2\n/diagnostic/diverge_event_seed460/contact_forces: 1\n/diagnostic/diverge_event_seed460/culprit_velocity: 1\n/diagnostic/diverge_event_seed460/near_spheres: 2\n/events/decision: 1\n/frames/actual_door: 1\n/frames/actual_door/origin: 1\n/frames/nominal_door: 1\n/frames/nominal_door/origin: 1\n/geometry/container: 1\n/geometry/crater/azimuth_rays: 1\n/geometry/crater/fit_rings: 1\n/geometry/heightmap/post: 1\n/geometry/heightmap/pre: 1\n/geometry/pile/animated: 64\n/geometry/pile/spheres_final_static: 1\n/geometry/pile/spheres_post: 1\n/geometry/pile/spheres_pre: 1\n/geometry/tool/door_nodes: 5\n/geometry/tool/final_static: 1\n/geometry/tool/fixed_nodes: 5\n/metadata/meshes/geometry__container: 1\n/metadata/run: 1\n/metrics/Fz_fixed_up_N: 2\n/metrics/M_hinge_res_Nm: 3\n/metrics/lipF_N: 3\n/metrics/max_single_contact_N: 2\n/metrics/n_door: 2\n/metrics/n_fixed: 2\n/metrics/q_deg: 3\n/metrics/v_particle_max: 2\n/metrics/z_lip_mm: 2\n/selection_panel: 1\n/time_panel: 2\n/view/034783a9-e6db-43a6-bb68-357ce89fcc7c: 1\n/view/034783a9-e6db-43a6-bb68-357ce89fcc7c/ViewContents: 1\n/view/29459160-0764-44af-89e3-e5cb4528a996: 1\n/view/29459160-0764-44af-89e3-e5cb4528a996/ViewContents: 1\n/view/36d03ef0-11b6-4098-8da7-7921e33a34ce: 1\n/view/36d03ef0-11b6-4098-8da7-7921e33a34ce/ViewContents: 1\n/view/44d18738-4e4b-40a6-be81-efb63039d141: 1\n/view/44d18738-4e4b-40a6-be81-efb63039d141/ViewContents: 1\n/view/c4f3f66f-70a5-4522-bf71-41aef847cc9c: 1\n/view/c4f3f66f-70a5-4522-bf71-41aef847cc9c/ViewContents: 1\n/view/f1b45fd4-1c4b-419e-8973-e5ae4ea4634b: 1\n/view/f1b45fd4-1c4b-419e-8973-e5ae4ea4634b/ViewContents: 1\n/viewport: 1\n\nNum chunks per index\n--------------------\nblueprint: 19\nframe: 127\nlog_time: 146\nphase: 119\nsim_time_s: 127\n\nNum chunks per component\n------------------------\nArrows3D:colors: 21\nArrows3D:labels: 1\nArrows3D:origins: 21\nArrows3D:radii: 1\nArrows3D:vectors: 21\nContainerBlueprint:col_shares: 2\nContainerBlueprint:container_kind: 3\nContainerBlueprint:contents: 3\nContainerBlueprint:row_shares: 1\nCoordinateFrame:frame: 120\nMesh3D:albedo_factor: 1\nMesh3D:triangle_indices: 1\nMesh3D:vertex_positions: 1\nPanelBlueprint:state: 2\nPoints3D:colors: 96\nPoints3D:labels: 3\nPoints3D:positions: 98\nPoints3D:radii: 98\nRecordingInfo:start_time: 1\nScalars:scalars: 21\nTextDocument:text: 2\nTextLog:level: 1\nTextLog:text: 1\nTimePanelBlueprint:play_state: 1\nTimePanelBlueprint:timeline: 1\nTransform3D:child_frame: 3\nTransform3D:parent_frame: 3\nTransform3D:quaternion: 3\nTransform3D:translation: 3\nViewBlueprint:class_identifier: 6\nViewBlueprint:display_name: 6\nViewBlueprint:space_origin: 6\nViewContents:query: 6\nViewportBlueprint:auto_layout: 1\nViewportBlueprint:auto_views: 1\nViewportBlueprint:root_container: 1\n\nSize (schema + data, compressed)\n--------------------------------\nipc_size_bytes_total = 142 MiB\nipc_size_bytes_min = 901 B\nipc_size_bytes_max = 1.6 MiB\nipc_size_bytes_avg = 868 KiB\nipc_size_bytes_p50 = 1.2 MiB\nipc_size_bytes_p90 = 1.6 MiB\nipc_size_bytes_p95 = 1.6 MiB\nipc_size_bytes_p99 = 1.6 MiB\nipc_size_bytes_p999 = 1.6 MiB\n\nSize (schema + data, uncompressed)\n----------------------------------\nipc_size_bytes_total = 234 MiB\nipc_size_bytes_min = 1.7 KiB\nipc_size_bytes_max = 2.8 MiB\nipc_size_bytes_avg = 1.4 MiB\nipc_size_bytes_p50 = 1.5 MiB\nipc_size_bytes_p90 = 2.8 MiB\nipc_size_bytes_p95 = 2.8 MiB\nipc_size_bytes_p99 = 2.8 MiB\nipc_size_bytes_p999 = 2.8 MiB\n\nSize (schema only, uncompressed)\n--------------------------------\nipc_size_bytes_total = 426 KiB\nipc_size_bytes_min = 1016 B\nipc_size_bytes_max = 3.0 KiB\nipc_size_bytes_avg = 2.5 KiB\nipc_size_bytes_p50 = 2.9 KiB\nipc_size_bytes_p90 = 2.9 KiB\nipc_size_bytes_p95 = 3.0 KiB\nipc_size_bytes_p99 = 3.0 KiB\nipc_size_bytes_p999 = 3.0 KiB\n\nSize (data only, uncompressed)\n------------------------------\nipc_size_bytes_total = 233 MiB\nipc_size_bytes_min = 656 B\nipc_size_bytes_max = 2.8 MiB\nipc_size_bytes_avg = 1.4 MiB\nipc_size_bytes_p50 = 1.5 MiB\nipc_size_bytes_p90 = 2.8 MiB\nipc_size_bytes_p95 = 2.8 MiB\nipc_size_bytes_p99 = 2.8 MiB\nipc_size_bytes_p999 = 2.8 MiB\n\nUnsorted timelines\n------------------\n14 entity(ies) had at least one chunk with an unsorted timeline. For each such entity, all of its timelines are listed below:\n  /contacts/forces\n    frame: sorted\n    log_time: sorted\n    phase: UNSORTED\n    sim_time_s: sorted\n  /contacts/points\n    frame: sorted\n    log_time: sorted\n    phase: UNSORTED\n    sim_time_s: sorted\n  /events/decision\n    frame: sorted\n    log_time: sorted\n    phase: UNSORTED\n    sim_time_s: sorted\n  /geometry/tool/door_nodes\n    frame: sorted\n    log_time: sorted\n    phase: UNSORTED\n    sim_time_s: sorted\n  /geometry/tool/fixed_nodes\n    frame: sorted\n    log_time: sorted\n    phase: UNSORTED\n    sim_time_s: sorted\n  /metrics/Fz_fixed_up_N\n    frame: sorted\n    log_time: sorted\n    phase: UNSORTED\n    sim_time_s: sorted\n  /metrics/lipF_N\n    frame: sorted\n    log_time: sorted\n    phase: UNSORTED\n    sim_time_s: sorted\n  /metrics/M_hinge_res_Nm\n    frame: sorted\n    log_time: sorted\n    phase: UNSORTED\n    sim_time_s: sorted\n  /metrics/max_single_contact_N\n    frame: sorted\n    log_time: sorted\n    phase: UNSORTED\n    sim_time_s: sorted\n  /metrics/n_door\n    frame: sorted\n    log_time: sorted\n    phase: UNSORTED\n    sim_time_s: sorted\n  /metrics/n_fixed\n    frame: sorted\n    log_time: sorted\n    phase: UNSORTED\n    sim_time_s: sorted\n  /metrics/q_deg\n    frame: sorted\n    log_time: sorted\n    phase: UNSORTED\n    sim_time_s: sorted\n  /metrics/v_particle_max\n    frame: sorted\n    log_time: sorted\n    phase: UNSORTED\n    sim_time_s: sorted\n  /metrics/z_lip_mm\n    frame: sorted\n    log_time: sorted\n    phase: UNSORTED\n    sim_time_s: sorted\n\nFooters\n-------\nnum_manifests = 2 (one per recording)\n\nFooter manifest for StoreId(Blueprint, \"roarm_w10_scoop\", \"rec_b6fe2f6a4e6e42a6b2d8b5842366e2e6\")\n  num_chunks_indexed = 20\n  num_static_chunks = 1\n  num_entity_paths = 19\n  manifest_num_columns = 103\n  sorbet_schema_num_fields = 43\n  sorbet_schema_sha256 = fe2bfabb07dcb000f45f25cd0f34175d7c05e040f7f800d8fe2fd53bfc97f40b\n  chunk_byte_size_total (native) = 29.2 KiB\n  chunk_byte_size_uncompressed_total = 65.9 KiB\n\nFooter manifest for StoreId(Recording, \"roarm_w10_scoop\", \"w10_scoop_cell_DE_dt2e6_c_w10\")\n  num_chunks_indexed = 148\n  num_static_chunks = 21\n  num_entity_paths = 44\n  manifest_num_columns = 157\n  sorbet_schema_num_fields = 146\n  sorbet_schema_sha256 = 49b549aa82a2371a3343fe00612a27b5c230676dad64c723ad0576b2f0374cf0\n  chunk_byte_size_total (native) = 142 MiB\n  chunk_byte_size_uncompressed_total = 234 MiB\n",
+    "stderr": "2026-09-11T04:47:35.989742Z  INFO rerun::commands::rrd::stats: processing input…\n2026-09-11T04:47:36.035622Z  INFO rerun::commands::rrd::stats: computing stats…\n",
+    "ok": true
+  },
+  "print_verbose": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "print",
+      "-v",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix/cell_DE_dt2e6_c/scoop_s1_seed460_w10.rrd"
+    ],
+    "returncode": 0,
+    "stdout": "Showing data after migration to latest Rerun version\nStoreInfo {\n    store_id: StoreId(\n        Recording,\n        \"roarm_w10_scoop\",\n        \"w10_scoop_cell_DE_dt2e6_c_w10\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nStoreInfo {\n    store_id: StoreId(\n        Recording,\n        \"roarm_w10_scoop\",\n        \"w10_scoop_cell_DE_dt2e6_c_w10\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nChunk(chunk_18D42AD6A9C95D38445e87fc778c5ee9) with 1 rows (632 B) - /__properties - data columns: [/__properties@RecordingInfo:start_time]\nStoreInfo {\n    store_id: StoreId(\n        Blueprint,\n        \"roarm_w10_scoop\",\n        \"rec_b6fe2f6a4e6e42a6b2d8b5842366e2e6\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nStoreInfo {\n    store_id: StoreId(\n        Blueprint,\n        \"roarm_w10_scoop\",\n        \"rec_b6fe2f6a4e6e42a6b2d8b5842366e2e6\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nChunk(chunk_18D42AD6B1BDD37434b4203699e2aba0) with 1 rows (1.2 KiB) - /viewport - data columns: [/viewport@ViewportBlueprint:auto_layout /viewport@ViewportBlueprint:auto_views /viewport@ViewportBlueprint:root_container]\nChunk(chunk_18D42AD6B1BE41CC34b4203699e2aba1) with 1 rows (951 B) - /view/f1b45fd4-1c4b-419e-8973-e5ae4ea4634b/ViewContents - data columns: [/view/f1b45fd4-1c4b-419e-8973-e5ae4ea4634b/ViewContents@ViewContents:query]\nChunk(chunk_18D42AD6B1BE4FD434b4203699e2aba2) with 1 rows (1.2 KiB) - /view/c4f3f66f-70a5-4522-bf71-41aef847cc9c - data columns: [/view/c4f3f66f-70a5-4522-bf71-41aef847cc9c@ViewBlueprint:class_identifier /view/c4f3f66f-70a5-4522-bf71-41aef847cc9c@ViewBlueprint:display_name /view/c4f3f66f-70a5-4522-bf71-41aef847cc9c@ViewBlueprint:space_origin]\nChunk(chunk_18D42AD6B1BE5BEA34b4203699e2aba3) with 1 rows (941 B) - /view/29459160-0764-44af-89e3-e5cb4528a996/ViewContents - data columns: [/view/29459160-0764-44af-89e3-e5cb4528a996/ViewContents@ViewContents:query]\nChunk(chunk_18D42AD6B1BE782234b4203699e2aba4) with 1 rows (1.2 KiB) - /view/29459160-0764-44af-89e3-e5cb4528a996 - data columns: [/view/29459160-0764-44af-89e3-e5cb4528a996@ViewBlueprint:class_identifier /view/29459160-0764-44af-89e3-e5cb4528a996@ViewBlueprint:display_name /view/29459160-0764-44af-89e3-e5cb4528a996@ViewBlueprint:space_origin]\nChunk(chunk_18D42AD6B1BE8DCB34b4203699e2aba5) with 1 rows (976 B) - /view/c4f3f66f-70a5-4522-bf71-41aef847cc9c/ViewContents - data columns: [/view/c4f3f66f-70a5-4522-bf71-41aef847cc9c/ViewContents@ViewContents:query]\nChunk(chunk_18D42AD6B1BE9C3234b4203699e2aba6) with 1 rows (923 B) - /view/36d03ef0-11b6-4098-8da7-7921e33a34ce/ViewContents - data columns: [/view/36d03ef0-11b6-4098-8da7-7921e33a34ce/ViewContents@ViewContents:query]\nChunk(chunk_18D42AD6B1BEA4A034b4203699e2aba7) with 1 rows (1.2 KiB) - /container/7951df36-cd7a-425d-9069-eb99039f7d9e - data columns: [/container/7951df36-cd7a-425d-9069-eb99039f7d9e@ContainerBlueprint:container_kind /container/7951df36-cd7a-425d-9069-eb99039f7d9e@ContainerBlueprint:contents /container/7951df36-cd7a-425d-9069-eb99039f7d9e@ContainerBlueprint:row_shares]\nChunk(chunk_18D42AD6B1BEB85F34b4203699e2aba8) with 1 rows (1.3 KiB) - /container/7517d691-50b2-4c0c-83f3-c053c0ccc974 - data columns: [/container/7517d691-50b2-4c0c-83f3-c053c0ccc974@ContainerBlueprint:col_shares /container/7517d691-50b2-4c0c-83f3-c053c0ccc974@ContainerBlueprint:container_kind /container/7517d691-50b2-4c0c-83f3-c053c0ccc974@ContainerBlueprint:contents]\nChunk(chunk_18D42AD6B1BED24B34b4203699e2aba9) with 1 rows (945 B) - /view/44d18738-4e4b-40a6-be81-efb63039d141/ViewContents - data columns: [/view/44d18738-4e4b-40a6-be81-efb63039d141/ViewContents@ViewContents:query]\nChunk(chunk_18D42AD6B1BEDA2734b4203699e2abaa) with 1 rows (1.2 KiB) - /view/36d03ef0-11b6-4098-8da7-7921e33a34ce - data columns: [/view/36d03ef0-11b6-4098-8da7-7921e33a34ce@ViewBlueprint:class_identifier /view/36d03ef0-11b6-4098-8da7-7921e33a34ce@ViewBlueprint:display_name /view/36d03ef0-11b6-4098-8da7-7921e33a34ce@ViewBlueprint:space_origin]\nChunk(chunk_18D42AD6B1BEE69B34b4203699e2abab) with 1 rows (1.3 KiB) - /container/81d3b8dd-9afc-4391-8a2a-703b19c38ac3 - data columns: [/container/81d3b8dd-9afc-4391-8a2a-703b19c38ac3@ContainerBlueprint:col_shares /container/81d3b8dd-9afc-4391-8a2a-703b19c38ac3@ContainerBlueprint:container_kind /container/81d3b8dd-9afc-4391-8a2a-703b19c38ac3@ContainerBlueprint:contents]\nChunk(chunk_18D42AD6B1BEF24D34b4203699e2abac) with 1 rows (1.2 KiB) - /view/034783a9-e6db-43a6-bb68-357ce89fcc7c - data columns: [/view/034783a9-e6db-43a6-bb68-357ce89fcc7c@ViewBlueprint:class_identifier /view/034783a9-e6db-43a6-bb68-357ce89fcc7c@ViewBlueprint:display_name /view/034783a9-e6db-43a6-bb68-357ce89fcc7c@ViewBlueprint:space_origin]\nChunk(chunk_18D42AD6B1BF09F634b4203699e2abad) with 1 rows (1.2 KiB) - /view/f1b45fd4-1c4b-419e-8973-e5ae4ea4634b - data columns: [/view/f1b45fd4-1c4b-419e-8973-e5ae4ea4634b@ViewBlueprint:class_identifier /view/f1b45fd4-1c4b-419e-8973-e5ae4ea4634b@ViewBlueprint:display_name /view/f1b45fd4-1c4b-419e-8973-e5ae4ea4634b@ViewBlueprint:space_origin]\nChunk(chunk_18D42AD6B1BF223234b4203699e2abae) with 1 rows (883 B) - /blueprint_panel - data columns: [/blueprint_panel@PanelBlueprint:state]\nChunk(chunk_18D42AD6B1BF2A1334b4203699e2abaf) with 1 rows (883 B) - /selection_panel - data columns: [/selection_panel@PanelBlueprint:state]\nChunk(chunk_18D42AD6B1BF31F034b4203699e2abb0) with 1 rows (931 B) - /view/034783a9-e6db-43a6-bb68-357ce89fcc7c/ViewContents - data columns: [/view/034783a9-e6db-43a6-bb68-357ce89fcc7c/ViewContents@ViewContents:query]\nChunk(chunk_18D42AD6B1BF447934b4203699e2abb1) with 1 rows (1.2 KiB) - /view/44d18738-4e4b-40a6-be81-efb63039d141 - data columns: [/view/44d18738-4e4b-40a6-be81-efb63039d141@ViewBlueprint:class_identifier /view/44d18738-4e4b-40a6-be81-efb63039d141@ViewBlueprint:display_name /view/44d18738-4e4b-40a6-be81-efb63039d141@ViewBlueprint:space_origin]\nChunk(chunk_18D42AD6B1BF56B934b4203699e2abb2) with 1 rows (631 B) - /time_panel - data columns: [/time_panel@TimePanelBlueprint:play_state]\nChunk(chunk_18D42AD6B1BF5E2634b4203699e2abb3) with 1 rows (893 B) - /time_panel - data columns: [/time_panel@TimePanelBlueprint:timeline]\nBlueprintActivationCommand(StoreId(Blueprint, \"roarm_w10_scoop\", \"rec_b6fe2f6a4e6e42a6b2d8b5842366e2e6\"), make_active: true, make_default: true)\nChunk(chunk_18D42AD6B1E8EBB67e5570c41f979aae) with 1 rows (1.3 MiB) - /geometry/pile/spheres_pre - data columns: [/geometry/pile/spheres_pre@CoordinateFrame:frame /geometry/pile/spheres_pre@Points3D:colors /geometry/pile/spheres_pre@Points3D:positions /geometry/pile/spheres_pre@Points3D:radii]\nChunk(chunk_18D42AD6B1FD250B7e5570c41f979aaf) with 1 rows (1.3 MiB) - /geometry/pile/spheres_post - data columns: [/geometry/pile/spheres_post@CoordinateFrame:frame /geometry/pile/spheres_post@Points3D:colors /geometry/pile/spheres_post@Points3D:positions /geometry/pile/spheres_post@Points3D:radii]\nChunk(chunk_18D42AD6B20F9E047e5570c41f979ab0) with 1 rows (1.3 MiB) - /geometry/pile/spheres_final_static - data columns: [/geometry/pile/spheres_final_static@CoordinateFrame:frame /geometry/pile/spheres_final_static@Points3D:colors /geometry/pile/spheres_final_static@Points3D:positions /geometry/pile/spheres_final_static@Points3D:radii]\nChunk(chunk_18D42AD6BA424DBE7e5570c41f979ab1) with 617 rows (471 KiB) - /contacts/points - data columns: [/contacts/points@CoordinateFrame:frame /contacts/points@Points3D:colors /contacts/points@Points3D:positions /contacts/points@Points3D:radii]\nChunk(chunk_18D42AD6BDD3297C7e5570c41f979ab2) with 650 rows (439 KiB) - /geometry/tool/fixed_nodes - data columns: [/geometry/tool/fixed_nodes@CoordinateFrame:frame /geometry/tool/fixed_nodes@Points3D:colors /geometry/tool/fixed_nodes@Points3D:positions /geometry/tool/fixed_nodes@Points3D:radii]\nChunk(chunk_18D42AD6C113FAD47e5570c41f979ab3) with 650 rows (439 KiB) - /geometry/tool/door_nodes - data columns: [/geometry/tool/door_nodes@CoordinateFrame:frame /geometry/tool/door_nodes@Points3D:colors /geometry/tool/door_nodes@Points3D:positions /geometry/tool/door_nodes@Points3D:radii]\nChunk(chunk_18D42AD6C482CAD27e5570c41f979ab4) with 414 rows (654 KiB) - /contacts/points - data columns: [/contacts/points@CoordinateFrame:frame /contacts/points@Points3D:colors /contacts/points@Points3D:positions /contacts/points@Points3D:radii]\nChunk(chunk_18D42AD6C6A12BD67e5570c41f979ab5) with 650 rows (439 KiB) - /geometry/tool/fixed_nodes - data columns: [/geometry/tool/fixed_nodes@CoordinateFrame:frame /geometry/tool/fixed_nodes@Points3D:colors /geometry/tool/fixed_nodes@Points3D:positions /geometry/tool/fixed_nodes@Points3D:radii]\nChunk(chunk_18D42AD6C9E816257e5570c41f979ab6) with 650 rows (439 KiB) - /geometry/tool/door_nodes - data columns: [/geometry/tool/door_nodes@CoordinateFrame:frame /geometry/tool/door_nodes@Points3D:colors /geometry/tool/door_nodes@Points3D:positions /geometry/tool/door_nodes@Points3D:radii]\nChunk(chunk_18D42AD6CD55208F7e5570c41f979ab7) with 332 rows (727 KiB) - /contacts/points - data columns: [/contacts/points@CoordinateFrame:frame /contacts/points@Points3D:colors /contacts/points@Points3D:positions /contacts/points@Points3D:radii]\nChunk(chunk_18D42AD6CF414B5B7e5570c41f979ab8) with 304 rows (752 KiB) - /contacts/points - data columns: [/contacts/points@CoordinateFrame:frame /contacts/points@Points3D:colors /contacts/points@Points3D:positions /contacts/points@Points3D:radii]\nChunk(chunk_18D42AD6D0E08A757e5570c41f979ab9) with 278 rows (775 KiB) - /contacts/points - data columns: [/contacts/points@CoordinateFrame:frame /contacts/points@Points3D:colors /contacts/points@Points3D:positions /contacts/points@Points3D:radii]\nChunk(chunk_18D42AD6D1D618207e5570c41f979aba) with 650 rows (439 KiB) - /geometry/tool/fixed_nodes - data columns: [/geometry/tool/fixed_nodes@CoordinateFrame:frame /geometry/tool/fixed_nodes@Points3D:colors /geometry/tool/fixed_nodes@Points3D:positions /geometry/tool/fixed_nodes@Points3D:radii]\nChunk(chunk_18D42AD6D4F4A57D7e5570c41f979abb) with 650 rows (439 KiB) - /geometry/tool/door_nodes - data columns: [/geometry/tool/door_nodes@CoordinateFrame:frame /geometry/tool/door_nodes@Points3D:colors /geometry/tool/door_nodes@Points3D:positions /geometry/tool/door_nodes@Points3D:radii]\nChunk(chunk_18D42AD6D84C79967e5570c41f979abc) with 283 rows (772 KiB) - /contacts/points - data columns: [/contacts/points@CoordinateFrame:frame /contacts/points@Points3D:colors /contacts/points@Points3D:positions /contacts/points@Points3D:radii]\nChunk(chunk_18D42AD6D9DF0A167e5570c41f979abd) with 264 rows (789 KiB) - /contacts/points - data columns: [/contacts/points@CoordinateFrame:frame /contacts/points@Points3D:colors /contacts/points@Points3D:positions /contacts/points@Points3D:radii]\nChunk(chunk_18D42AD6DB5D93537e5570c41f979abe) with 650 rows (439 KiB) - /geometry/tool/fixed_nodes - data columns: [/geometry/tool/fixed_nodes@CoordinateFrame:frame /geometry/tool/fixed_nodes@Points3D:colors /geometry/tool/fixed_nodes@Points3D:positions /geometry/tool/fixed_nodes@Points3D:radii]\nChunk(chunk_18D42AD6DDB459937e5570c41f979abf) with 650 rows (439 KiB) - /geometry/tool/door_nodes - data columns: [/geometry/tool/door_nodes@CoordinateFrame:frame /geometry/tool/door_nodes@Points3D:colors /geometry/tool/door_nodes@Points3D:positions /geometry/tool/door_nodes@Points3D:radii]\nChunk(chunk_18D42AD6DDF9C9AD7e5570c41f979ac0) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6DDF9FB3F7e5570c41f979ac1) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6DDFA0E097e5570c41f979ac2) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6DDFB0C8E7e5570c41f979ac3) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6DE16D51F7e5570c41f979ac4) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6DE316DCA7e5570c41f979ac5) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6DE44677E7e5570c41f979ac6) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6DE5F6E957e5570c41f979ac7) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6DE72755F7e5570c41f979ac8) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6DE86E8657e5570c41f979ac9) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6DE9CEB067e5570c41f979aca) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6DEB38A5F7e5570c41f979acb) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6DEC6D8837e5570c41f979acc) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6DEDA4EF97e5570c41f979acd) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6DEF028A97e5570c41f979ace) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6DF018F577e5570c41f979acf) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6DF14500D7e5570c41f979ad0) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6DF27C3457e5570c41f979ad1) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6DF3C8B407e5570c41f979ad2) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6DF4F698C7e5570c41f979ad3) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6DF6169E27e5570c41f979ad4) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6DF73CB527e5570c41f979ad5) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6DF8830C17e5570c41f979ad6) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6DF9B7B5B7e5570c41f979ad7) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6DFB106E57e5570c41f979ad8) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6DFC97E597e5570c41f979ad9) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6DFE1F8057e5570c41f979ada) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6DFF469A37e5570c41f979adb) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E00831207e5570c41f979adc) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E01CC7307e5570c41f979add) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E030B4F47e5570c41f979ade) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E0434AA07e5570c41f979adf) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E0587D217e5570c41f979ae0) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E06E63927e5570c41f979ae1) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E0844B397e5570c41f979ae2) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E0973F1F7e5570c41f979ae3) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E0A8F9107e5570c41f979ae4) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E0BC8A0E7e5570c41f979ae5) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E0CE9A777e5570c41f979ae6) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E0E228CC7e5570c41f979ae7) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E0F51C927e5570c41f979ae8) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E10B01AD7e5570c41f979ae9) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E11D427D7e5570c41f979aea) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E13616917e5570c41f979aeb) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E14A6AFD7e5570c41f979aec) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E1607BE57e5570c41f979aed) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E173FE637e5570c41f979aee) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E18969C17e5570c41f979aef) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E19F0F957e5570c41f979af0) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E1B244857e5570c41f979af1) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E1C62E147e5570c41f979af2) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E1D9EA1A7e5570c41f979af3) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E1ECC3BB7e5570c41f979af4) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E1FFDFFA7e5570c41f979af5) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E21137C67e5570c41f979af6) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E2294A237e5570c41f979af7) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E23B76437e5570c41f979af8) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E24EAA8E7e5570c41f979af9) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E260A6327e5570c41f979afa) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E274EB917e5570c41f979afb) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E2898D327e5570c41f979afc) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E2A12B677e5570c41f979afd) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E2B393EB7e5570c41f979afe) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E2C6729A7e5570c41f979aff) with 1 rows (1.3 MiB) - /geometry/pile/animated - data columns: [/geometry/pile/animated@CoordinateFrame:frame /geometry/pile/animated@Points3D:colors /geometry/pile/animated@Points3D:positions /geometry/pile/animated@Points3D:radii]\nChunk(chunk_18D42AD6E2E32A047e5570c41f979b00) with 9 rows (1.1 MiB) - /diagnostic/diverge_event_force_seed460/near_spheres - data columns: [/diagnostic/diverge_event_force_seed460/near_spheres@CoordinateFrame:frame /diagnostic/diverge_event_force_seed460/near_spheres@Points3D:colors /diagnostic/diverge_event_force_seed460/near_spheres@Points3D:positions /diagnostic/diverge_event_force_seed460/near_spheres@Points3D:radii]\nChunk(chunk_18D42AD6E306B5637e5570c41f979b01) with 9 rows (1.1 MiB) - /diagnostic/diverge_event_seed460/near_spheres - data columns: [/diagnostic/diverge_event_seed460/near_spheres@CoordinateFrame:frame /diagnostic/diverge_event_seed460/near_spheres@Points3D:colors /diagnostic/diverge_event_seed460/near_spheres@Points3D:positions /diagnostic/diverge_event_seed460/near_spheres@Points3D:radii]\nChunk(chunk_18D42AD6E56883E07e5570c41f979b02) with 477 rows (595 KiB) - /contacts/forces - data columns: [/contacts/forces@Arrows3D:colors /contacts/forces@Arrows3D:origins /contacts/forces@Arrows3D:vectors /contacts/forces@CoordinateFrame:frame]\nChunk(chunk_18D42AD6E744F99C7e5570c41f979b03) with 299 rows (755 KiB) - /contacts/forces - data columns: [/contacts/forces@Arrows3D:colors /contacts/forces@Arrows3D:origins /contacts/forces@Arrows3D:vectors /contacts/forces@CoordinateFrame:frame]\nChunk(chunk_18D42AD6E8B7C2727e5570c41f979b04) with 243 rows (809 KiB) - /contacts/forces - data columns: [/contacts/forces@Arrows3D:colors /contacts/forces@Arrows3D:origins /contacts/forces@Arrows3D:vectors /contacts/forces@CoordinateFrame:frame]\nChunk(chunk_18D42AD6E9F142057e5570c41f979b05) with 208 rows (841 KiB) - /contacts/forces - data columns: [/contacts/forces@Arrows3D:colors /contacts/forces@Arrows3D:origins /contacts/forces@Arrows3D:vectors /contacts/forces@CoordinateFrame:frame]\nChunk(chunk_18D42AD6EB0601117e5570c41f979b06) with 180 rows (863 KiB) - /contacts/forces - data columns: [/contacts/forces@Arrows3D:colors /contacts/forces@Arrows3D:origins /contacts/forces@Arrows3D:vectors /contacts/forces@CoordinateFrame:frame]\nChunk(chunk_18D42AD6EC0E3AAC7e5570c41f979b07) with 178 rows (866 KiB) - /contacts/forces - data columns: [/contacts/forces@Arrows3D:colors /contacts/forces@Arrows3D:origins /contacts/forces@Arrows3D:vectors /contacts/forces@CoordinateFrame:frame]\nChunk(chunk_18D42AD6ED106FCA7e5570c41f979b08) with 170 rows (875 KiB) - /contacts/forces - data columns: [/contacts/forces@Arrows3D:colors /contacts/forces@Arrows3D:origins /contacts/forces@Arrows3D:vectors /contacts/forces@CoordinateFrame:frame]\nChunk(chunk_18D42AD6EDFA1E7F7e5570c41f979b09) with 157 rows (884 KiB) - /contacts/forces - data columns: [/contacts/forces@Arrows3D:colors /contacts/forces@Arrows3D:origins /contacts/forces@Arrows3D:vectors /contacts/forces@CoordinateFrame:frame]\nChunk(chunk_18D42AD6EEECE3EE7e5570c41f979b0a) with 162 rows (882 KiB) - /contacts/forces - data columns: [/contacts/forces@Arrows3D:colors /contacts/forces@Arrows3D:origins /contacts/forces@Arrows3D:vectors /contacts/forces@CoordinateFrame:frame]\nChunk(chunk_18D42AD6EFDF29F77e5570c41f979b0b) with 162 rows (880 KiB) - /contacts/forces - data columns: [/contacts/forces@Arrows3D:colors /contacts/forces@Arrows3D:origins /contacts/forces@Arrows3D:vectors /contacts/forces@CoordinateFrame:frame]\nChunk(chunk_18D42AD6F0BFB6767e5570c41f979b0c) with 147 rows (893 KiB) - /contacts/forces - data columns: [/contacts/forces@Arrows3D:colors /contacts/forces@Arrows3D:origins /contacts/forces@Arrows3D:vectors /contacts/forces@CoordinateFrame:frame]\nChunk(chunk_18D42AD6F1AC8A337e5570c41f979b0d) with 158 rows (886 KiB) - /contacts/forces - data columns: [/contacts/forces@Arrows3D:colors /contacts/forces@Arrows3D:origins /contacts/forces@Arrows3D:vectors /contacts/forces@CoordinateFrame:frame]\nChunk(chunk_18D42AD70199A7A97e5570c41f979b0e) with 1 rows (1.2 KiB) - /geometry/container - data columns: [/geometry/container@CoordinateFrame:frame /geometry/container@Mesh3D:albedo_factor /geometry/container@Mesh3D:triangle_indices /geometry/container@Mesh3D:vertex_positions]\nChunk(chunk_18D42AD7019A03807e5570c41f979b0f) with 1 rows (1.1 KiB) - /coordinate_frames/world_m - data columns: [/coordinate_frames/world_m@Transform3D:child_frame /coordinate_frames/world_m@Transform3D:parent_frame /coordinate_frames/world_m@Transform3D:quaternion /coordinate_frames/world_m@Transform3D:translation]\nChunk(chunk_18D42AD7019A267B7e5570c41f979b10) with 1 rows (4.0 KiB) - /decision/contacts - data columns: [/decision/contacts@CoordinateFrame:frame /decision/contacts@Points3D:colors /decision/contacts@Points3D:positions /decision/contacts@Points3D:radii]\nChunk(chunk_18D42AD7019A57927e5570c41f979b11) with 3 rows (373 KiB) - /diagnostic/diverge_event_seed460/near_spheres - data columns: [/diagnostic/diverge_event_seed460/near_spheres@CoordinateFrame:frame /diagnostic/diverge_event_seed460/near_spheres@Points3D:colors /diagnostic/diverge_event_seed460/near_spheres@Points3D:positions /diagnostic/diverge_event_seed460/near_spheres@Points3D:radii]\nChunk(chunk_18D42AD701B341A37e5570c41f979b12) with 1527 rows (45.8 KiB) - /metrics/q_deg - data columns: [/metrics/q_deg@Scalars:scalars]\nChunk(chunk_18D42AD70813076A7e5570c41f979b13) with 1527 rows (45.8 KiB) - /metrics/Fz_fixed_up_N - data columns: [/metrics/Fz_fixed_up_N@Scalars:scalars]\nChunk(chunk_18D42AD70E788AC47e5570c41f979b14) with 282 rows (390 KiB) - /contacts/points - data columns: [/contacts/points@CoordinateFrame:frame /contacts/points@Points3D:colors /contacts/points@Points3D:positions /contacts/points@Points3D:radii]\nChunk(chunk_18D42AD70EA947D37e5570c41f979b15) with 1 rows (2.3 KiB) - /geometry/tool/final_static - data columns: [/geometry/tool/final_static@CoordinateFrame:frame /geometry/tool/final_static@Points3D:colors /geometry/tool/final_static@Points3D:positions /geometry/tool/final_static@Points3D:radii]\nChunk(chunk_18D42AD70EB501207e5570c41f979b16) with 1527 rows (45.8 KiB) - /metrics/max_single_contact_N - data columns: [/metrics/max_single_contact_N@Scalars:scalars]\nChunk(chunk_18D42AD70EDFB5757e5570c41f979b17) with 1 rows (1.1 KiB) - /frames/actual_door - data columns: [/frames/actual_door@Transform3D:child_frame /frames/actual_door@Transform3D:parent_frame /frames/actual_door@Transform3D:quaternion /frames/actual_door@Transform3D:translation]\nChunk(chunk_18D42AD70EDFE1487e5570c41f979b18) with 1 rows (710 B) - /metadata/meshes/geometry__container - data columns: [/metadata/meshes/geometry__container@TextDocument:text]\nChunk(chunk_18D42AD70EDFF3FC7e5570c41f979b19) with 1 rows (27.7 KiB) - /geometry/heightmap/post - data columns: [/geometry/heightmap/post@CoordinateFrame:frame /geometry/heightmap/post@Points3D:colors /geometry/heightmap/post@Points3D:positions /geometry/heightmap/post@Points3D:radii]\nChunk(chunk_18D42AD70EE2555E7e5570c41f979b1a) with 174 rows (119 KiB) - /geometry/tool/door_nodes - data columns: [/geometry/tool/door_nodes@CoordinateFrame:frame /geometry/tool/door_nodes@Points3D:colors /geometry/tool/door_nodes@Points3D:positions /geometry/tool/door_nodes@Points3D:radii]\nChunk(chunk_18D42AD70EFA590A7e5570c41f979b1b) with 1 rows (6.9 KiB) - /decision/forces - data columns: [/decision/forces@Arrows3D:colors /decision/forces@Arrows3D:origins /decision/forces@Arrows3D:vectors /decision/forces@CoordinateFrame:frame]\nChunk(chunk_18D42AD70EFA84167e5570c41f979b1c) with 3 rows (374 KiB) - /diagnostic/diverge_event_force_seed460/near_spheres - data columns: [/diagnostic/diverge_event_force_seed460/near_spheres@CoordinateFrame:frame /diagnostic/diverge_event_force_seed460/near_spheres@Points3D:colors /diagnostic/diverge_event_force_seed460/near_spheres@Points3D:positions /diagnostic/diverge_event_force_seed460/near_spheres@Points3D:radii]\nChunk(chunk_18D42AD70F03B1D17e5570c41f979b1d) with 1 rows (1.5 KiB) - /geometry/crater/azimuth_rays - data columns: [/geometry/crater/azimuth_rays@Arrows3D:colors /geometry/crater/azimuth_rays@Arrows3D:labels /geometry/crater/azimuth_rays@Arrows3D:origins /geometry/crater/azimuth_rays@Arrows3D:radii /geometry/crater/azimuth_rays@Arrows3D:vectors /geometry/crater/azimuth_rays@CoordinateFrame:frame]\nChunk(chunk_18D42AD70F03DA937e5570c41f979b1e) with 1 rows (1.1 KiB) - /decision/target_axes - data columns: [/decision/target_axes@Arrows3D:colors /decision/target_axes@Arrows3D:origins /decision/target_axes@Arrows3D:vectors /decision/target_axes@CoordinateFrame:frame]\nChunk(chunk_18D42AD70F03F2797e5570c41f979b1f) with 1 rows (1.7 KiB) - /decision/fixed - data columns: [/decision/fixed@CoordinateFrame:frame /decision/fixed@Points3D:colors /decision/fixed@Points3D:positions /decision/fixed@Points3D:radii]\nChunk(chunk_18D42AD70F0409AB7e5570c41f979b20) with 1 rows (1.7 KiB) - /diagnostic/diverge_event_force_seed460/contact_forces - data columns: [/diagnostic/diverge_event_force_seed460/contact_forces@Arrows3D:colors /diagnostic/diverge_event_force_seed460/contact_forces@Arrows3D:origins /diagnostic/diverge_event_force_seed460/contact_forces@Arrows3D:vectors /diagnostic/diverge_event_force_seed460/contact_forces@CoordinateFrame:frame]\nChunk(chunk_18D42AD70F0D4DD67e5570c41f979b21) with 1527 rows (45.8 KiB) - /metrics/n_door - data columns: [/metrics/n_door@Scalars:scalars]\nChunk(chunk_18D42AD70F30248F7e5570c41f979b22) with 1 rows (1.1 KiB) - /frames/actual_door/origin - data columns: [/frames/actual_door/origin@CoordinateFrame:frame /frames/actual_door/origin@Points3D:labels /frames/actual_door/origin@Points3D:positions /frames/actual_door/origin@Points3D:radii]\nChunk(chunk_18D42AD70F3043BB7e5570c41f979b23) with 1 rows (1.7 KiB) - /decision/door - data columns: [/decision/door@CoordinateFrame:frame /decision/door@Points3D:colors /decision/door@Points3D:positions /decision/door@Points3D:radii]\nChunk(chunk_18D42AD70F3054FC7e5570c41f979b24) with 1 rows (27.7 KiB) - /geometry/heightmap/pre - data columns: [/geometry/heightmap/pre@CoordinateFrame:frame /geometry/heightmap/pre@Points3D:colors /geometry/heightmap/pre@Points3D:positions /geometry/heightmap/pre@Points3D:radii]\nChunk(chunk_18D42AD70F31A67C7e5570c41f979b25) with 233 rows (507 KiB) - /contacts/forces - data columns: [/contacts/forces@Arrows3D:colors /contacts/forces@Arrows3D:origins /contacts/forces@Arrows3D:vectors /contacts/forces@CoordinateFrame:frame]\nChunk(chunk_18D42AD70F443C827e5570c41f979b26) with 1 rows (1.1 KiB) - /decision/actual_axes - data columns: [/decision/actual_axes@Arrows3D:colors /decision/actual_axes@Arrows3D:origins /decision/actual_axes@Arrows3D:vectors /decision/actual_axes@CoordinateFrame:frame]\nChunk(chunk_18D42AD70F49A9C17e5570c41f979b27) with 1527 rows (45.8 KiB) - /metrics/M_hinge_res_Nm - data columns: [/metrics/M_hinge_res_Nm@Scalars:scalars]\nChunk(chunk_18D42AD70F5AA10D7e5570c41f979b28) with 1 rows (1.7 KiB) - /diagnostic/diverge_event_seed460/contact_forces - data columns: [/diagnostic/diverge_event_seed460/contact_forces@Arrows3D:colors /diagnostic/diverge_event_seed460/contact_forces@Arrows3D:origins /diagnostic/diverge_event_seed460/contact_forces@Arrows3D:vectors /diagnostic/diverge_event_seed460/contact_forces@CoordinateFrame:frame]\nChunk(chunk_18D42AD70F5AB72B7e5570c41f979b29) with 1 rows (1.2 KiB) - /metadata/run - data columns: [/metadata/run@TextDocument:text]\nChunk(chunk_18D42AD70F6078AC7e5570c41f979b2a) with 1527 rows (45.8 KiB) - /metrics/v_particle_max - data columns: [/metrics/v_particle_max@Scalars:scalars]\nChunk(chunk_18D42AD70F7010DC7e5570c41f979b2b) with 1 rows (1.1 KiB) - /frames/nominal_door - data columns: [/frames/nominal_door@Transform3D:child_frame /frames/nominal_door@Transform3D:parent_frame /frames/nominal_door@Transform3D:quaternion /frames/nominal_door@Transform3D:translation]\nChunk(chunk_18D42AD70F7029A57e5570c41f979b2c) with 1 rows (1.1 KiB) - /frames/nominal_door/origin - data columns: [/frames/nominal_door/origin@CoordinateFrame:frame /frames/nominal_door/origin@Points3D:labels /frames/nominal_door/origin@Points3D:positions /frames/nominal_door/origin@Points3D:radii]\nChunk(chunk_18D42AD70F75BAD07e5570c41f979b2d) with 1527 rows (45.8 KiB) - /metrics/n_fixed - data columns: [/metrics/n_fixed@Scalars:scalars]\nChunk(chunk_18D42AD70F8B4DC77e5570c41f979b2e) with 12 rows (2.0 KiB) - /diagnostic/diverge_event_force_seed460/culprit_velocity - data columns: [/diagnostic/diverge_event_force_seed460/culprit_velocity@Arrows3D:colors /diagnostic/diverge_event_force_seed460/culprit_velocity@Arrows3D:origins /diagnostic/diverge_event_force_seed460/culprit_velocity@Arrows3D:vectors /diagnostic/diverge_event_force_seed460/culprit_velocity@CoordinateFrame:frame]\nChunk(chunk_18D42AD70F91EA1F7e5570c41f979b2f) with 1528 rows (45.9 KiB) - /metrics/z_lip_mm - data columns: [/metrics/z_lip_mm@Scalars:scalars]\nChunk(chunk_18D42AD70FA61D627e5570c41f979b30) with 174 rows (119 KiB) - /geometry/tool/fixed_nodes - data columns: [/geometry/tool/fixed_nodes@CoordinateFrame:frame /geometry/tool/fixed_nodes@Points3D:colors /geometry/tool/fixed_nodes@Points3D:positions /geometry/tool/fixed_nodes@Points3D:radii]\nChunk(chunk_18D42AD70FB447047e5570c41f979b31) with 1 rows (1.4 KiB) - /geometry/crater/fit_rings - data columns: [/geometry/crater/fit_rings@CoordinateFrame:frame /geometry/crater/fit_rings@Points3D:colors /geometry/crater/fit_rings@Points3D:labels /geometry/crater/fit_rings@Points3D:positions /geometry/crater/fit_rings@Points3D:radii]\nChunk(chunk_18D42AD70FB488E67e5570c41f979b32) with 12 rows (1.8 KiB) - /diagnostic/diverge_event_seed460/culprit_velocity - data columns: [/diagnostic/diverge_event_seed460/culprit_velocity@Arrows3D:colors /diagnostic/diverge_event_seed460/culprit_velocity@Arrows3D:origins /diagnostic/diverge_event_seed460/culprit_velocity@Arrows3D:vectors /diagnostic/diverge_event_seed460/culprit_velocity@CoordinateFrame:frame]\nChunk(chunk_18D42AD70FBA1F677e5570c41f979b33) with 1527 rows (45.8 KiB) - /metrics/lipF_N - data columns: [/metrics/lipF_N@Scalars:scalars]\nChunk(chunk_18D42AD70FCAB1D27e5570c41f979b34) with 1 rows (1.1 KiB) - /metrics/q_deg - data columns: [/metrics/q_deg@Scalars:scalars]\nChunk(chunk_18D42AD70FCABD747e5570c41f979b35) with 1 rows (1.1 KiB) - /metrics/M_hinge_res_Nm - data columns: [/metrics/M_hinge_res_Nm@Scalars:scalars]\nChunk(chunk_18D42AD70FCAC74A7e5570c41f979b36) with 1 rows (1.1 KiB) - /metrics/lipF_N - data columns: [/metrics/lipF_N@Scalars:scalars]\nChunk(chunk_18D42AD70FEEB64A7e5570c41f979b37) with 1246 rows (37.6 KiB) - /metrics/q_deg - data columns: [/metrics/q_deg@Scalars:scalars]\nChunk(chunk_18D42AD71003F6E97e5570c41f979b38) with 1247 rows (37.6 KiB) - /metrics/Fz_fixed_up_N - data columns: [/metrics/Fz_fixed_up_N@Scalars:scalars]\nChunk(chunk_18D42AD7101865E57e5570c41f979b39) with 1247 rows (37.6 KiB) - /metrics/max_single_contact_N - data columns: [/metrics/max_single_contact_N@Scalars:scalars]\nChunk(chunk_18D42AD71027A4F37e5570c41f979b3a) with 4 rows (1.5 KiB) - /events/decision - data columns: [/events/decision@TextLog:level /events/decision@TextLog:text]\nChunk(chunk_18D42AD7102BC60E7e5570c41f979b3b) with 1247 rows (37.6 KiB) - /metrics/n_door - data columns: [/metrics/n_door@Scalars:scalars]\nChunk(chunk_18D42AD710406C027e5570c41f979b3c) with 1246 rows (37.6 KiB) - /metrics/M_hinge_res_Nm - data columns: [/metrics/M_hinge_res_Nm@Scalars:scalars]\nChunk(chunk_18D42AD7105481A87e5570c41f979b3d) with 1247 rows (37.6 KiB) - /metrics/v_particle_max - data columns: [/metrics/v_particle_max@Scalars:scalars]\nChunk(chunk_18D42AD7107D92147e5570c41f979b3e) with 1247 rows (37.6 KiB) - /metrics/n_fixed - data columns: [/metrics/n_fixed@Scalars:scalars]\nChunk(chunk_18D42AD71091F2CF7e5570c41f979b3f) with 1246 rows (37.6 KiB) - /metrics/z_lip_mm - data columns: [/metrics/z_lip_mm@Scalars:scalars]\nChunk(chunk_18D42AD710A7A2307e5570c41f979b40) with 1246 rows (37.6 KiB) - /metrics/lipF_N - data columns: [/metrics/lipF_N@Scalars:scalars]\n",
+    "stderr": "",
+    "ok": true
+  },
+  "entity_path_contract": {
+    "observed_all": [
+      "/__properties",
+      "/blueprint_panel",
+      "/contacts/forces",
+      "/contacts/points",
+      "/container/7517d691-50b2-4c0c-83f3-c053c0ccc974",
+      "/container/7951df36-cd7a-425d-9069-eb99039f7d9e",
+      "/container/81d3b8dd-9afc-4391-8a2a-703b19c38ac3",
+      "/coordinate_frames/world_m",
+      "/decision/actual_axes",
+      "/decision/contacts",
+      "/decision/door",
+      "/decision/fixed",
+      "/decision/forces",
+      "/decision/target_axes",
+      "/diagnostic/diverge_event_force_seed460/contact_forces",
+      "/diagnostic/diverge_event_force_seed460/culprit_velocity",
+      "/diagnostic/diverge_event_force_seed460/near_spheres",
+      "/diagnostic/diverge_event_seed460/contact_forces",
+      "/diagnostic/diverge_event_seed460/culprit_velocity",
+      "/diagnostic/diverge_event_seed460/near_spheres",
+      "/events/decision",
+      "/frames/actual_door",
+      "/frames/actual_door/origin",
+      "/frames/nominal_door",
+      "/frames/nominal_door/origin",
+      "/geometry/container",
+      "/geometry/crater/azimuth_rays",
+      "/geometry/crater/fit_rings",
+      "/geometry/heightmap/post",
+      "/geometry/heightmap/pre",
+      "/geometry/pile/animated",
+      "/geometry/pile/spheres_final_static",
+      "/geometry/pile/spheres_post",
+      "/geometry/pile/spheres_pre",
+      "/geometry/tool/door_nodes",
+      "/geometry/tool/final_static",
+      "/geometry/tool/fixed_nodes",
+      "/metadata/meshes/geometry__container",
+      "/metadata/run",
+      "/metrics/Fz_fixed_up_N",
+      "/metrics/M_hinge_res_Nm",
+      "/metrics/lipF_N",
+      "/metrics/max_single_contact_N",
+      "/metrics/n_door",
+      "/metrics/n_fixed",
+      "/metrics/q_deg",
+      "/metrics/v_particle_max",
+      "/metrics/z_lip_mm",
+      "/selection_panel",
+      "/time_panel",
+      "/view/034783a9-e6db-43a6-bb68-357ce89fcc7c",
+      "/view/034783a9-e6db-43a6-bb68-357ce89fcc7c/ViewContents",
+      "/view/29459160-0764-44af-89e3-e5cb4528a996",
+      "/view/29459160-0764-44af-89e3-e5cb4528a996/ViewContents",
+      "/view/36d03ef0-11b6-4098-8da7-7921e33a34ce",
+      "/view/36d03ef0-11b6-4098-8da7-7921e33a34ce/ViewContents",
+      "/view/44d18738-4e4b-40a6-be81-efb63039d141",
+      "/view/44d18738-4e4b-40a6-be81-efb63039d141/ViewContents",
+      "/view/c4f3f66f-70a5-4522-bf71-41aef847cc9c",
+      "/view/c4f3f66f-70a5-4522-bf71-41aef847cc9c/ViewContents",
+      "/view/f1b45fd4-1c4b-419e-8973-e5ae4ea4634b",
+      "/view/f1b45fd4-1c4b-419e-8973-e5ae4ea4634b/ViewContents",
+      "/viewport"
+    ],
+    "observed_non_system": [
+      "/contacts/forces",
+      "/contacts/points",
+      "/coordinate_frames/world_m",
+      "/decision/actual_axes",
+      "/decision/contacts",
+      "/decision/door",
+      "/decision/fixed",
+      "/decision/forces",
+      "/decision/target_axes",
+      "/diagnostic/diverge_event_force_seed460/contact_forces",
+      "/diagnostic/diverge_event_force_seed460/culprit_velocity",
+      "/diagnostic/diverge_event_force_seed460/near_spheres",
+      "/diagnostic/diverge_event_seed460/contact_forces",
+      "/diagnostic/diverge_event_seed460/culprit_velocity",
+      "/diagnostic/diverge_event_seed460/near_spheres",
+      "/events/decision",
+      "/frames/actual_door",
+      "/frames/actual_door/origin",
+      "/frames/nominal_door",
+      "/frames/nominal_door/origin",
+      "/geometry/container",
+      "/geometry/crater/azimuth_rays",
+      "/geometry/crater/fit_rings",
+      "/geometry/heightmap/post",
+      "/geometry/heightmap/pre",
+      "/geometry/pile/animated",
+      "/geometry/pile/spheres_final_static",
+      "/geometry/pile/spheres_post",
+      "/geometry/pile/spheres_pre",
+      "/geometry/tool/door_nodes",
+      "/geometry/tool/final_static",
+      "/geometry/tool/fixed_nodes",
+      "/metadata/meshes/geometry__container",
+      "/metadata/run",
+      "/metrics/Fz_fixed_up_N",
+      "/metrics/M_hinge_res_Nm",
+      "/metrics/lipF_N",
+      "/metrics/max_single_contact_N",
+      "/metrics/n_door",
+      "/metrics/n_fixed",
+      "/metrics/q_deg",
+      "/metrics/v_particle_max",
+      "/metrics/z_lip_mm"
+    ],
+    "checks": {
+      "/contacts/forces": true,
+      "/contacts/points": true,
+      "/coordinate_frames/world_m": true,
+      "/decision/actual_axes": true,
+      "/decision/contacts": true,
+      "/decision/door": true,
+      "/decision/fixed": true,
+      "/decision/forces": true,
+      "/decision/target_axes": true,
+      "/diagnostic/diverge_event_force_seed460/contact_forces": true,
+      "/diagnostic/diverge_event_force_seed460/culprit_velocity": true,
+      "/diagnostic/diverge_event_force_seed460/near_spheres": true,
+      "/diagnostic/diverge_event_seed460/contact_forces": true,
+      "/diagnostic/diverge_event_seed460/culprit_velocity": true,
+      "/diagnostic/diverge_event_seed460/near_spheres": true,
+      "/events/decision": true,
+      "/frames/actual_door": true,
+      "/frames/actual_door/origin": true,
+      "/frames/nominal_door": true,
+      "/frames/nominal_door/origin": true,
+      "/geometry/container": true,
+      "/geometry/crater/azimuth_rays": true,
+      "/geometry/crater/fit_rings": true,
+      "/geometry/heightmap/post": true,
+      "/geometry/heightmap/pre": true,
+      "/geometry/pile/animated": true,
+      "/geometry/pile/spheres_final_static": true,
+      "/geometry/pile/spheres_post": true,
+      "/geometry/pile/spheres_pre": true,
+      "/geometry/tool/door_nodes": true,
+      "/geometry/tool/final_static": true,
+      "/geometry/tool/fixed_nodes": true,
+      "/metadata/meshes/geometry__container": true,
+      "/metadata/run": true,
+      "/metrics/Fz_fixed_up_N": true,
+      "/metrics/M_hinge_res_Nm": true,
+      "/metrics/lipF_N": true,
+      "/metrics/max_single_contact_N": true,
+      "/metrics/n_door": true,
+      "/metrics/n_fixed": true,
+      "/metrics/q_deg": true,
+      "/metrics/v_particle_max": true,
+      "/metrics/z_lip_mm": true
+    },
+    "forbidden_fragment_absent": {
+      "/\\/": true
+    },
+    "exact_non_system_match": true,
+    "missing_exact": [],
+    "unexpected_non_system": [],
+    "pass": true
+  },
+  "component_contract": {
+    "checks": {
+      "/geometry/pile/spheres_post": {
+        "required": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true
+      },
+      "/geometry/tool/door_nodes": {
+        "required": [
+          "Points3D:positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true
+      },
+      "/contacts/forces": {
+        "required": [
+          "Arrows3D:origins",
+          "Arrows3D:vectors"
+        ],
+        "observed": [
+          "Arrows3D:colors",
+          "Arrows3D:origins",
+          "Arrows3D:vectors",
+          "CoordinateFrame:frame"
+        ],
+        "pass": true
+      },
+      "/metrics/lipF_N": {
+        "required": [
+          "Scalars:scalars"
+        ],
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true
+      },
+      "/metrics/q_deg": {
+        "required": [
+          "Scalars:scalars"
+        ],
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true
+      },
+      "/events/decision": {
+        "required": [
+          "TextLog:level",
+          "TextLog:text"
+        ],
+        "observed": [
+          "TextLog:level",
+          "TextLog:text"
+        ],
+        "pass": true
+      },
+      "/geometry/container": {
+        "required": [
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true
+      },
+      "/geometry/pile/animated": {
+        "required": [
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true
+      },
+      "/decision/target_axes": {
+        "required": [
+          "Arrows3D:origins",
+          "Arrows3D:vectors"
+        ],
+        "observed": [
+          "Arrows3D:colors",
+          "Arrows3D:origins",
+          "Arrows3D:vectors",
+          "CoordinateFrame:frame"
+        ],
+        "pass": true
+      },
+      "/decision/actual_axes": {
+        "required": [
+          "Arrows3D:origins",
+          "Arrows3D:vectors"
+        ],
+        "observed": [
+          "Arrows3D:colors",
+          "Arrows3D:origins",
+          "Arrows3D:vectors",
+          "CoordinateFrame:frame"
+        ],
+        "pass": true
+      },
+      "/diagnostic/diverge_event_force_seed460/contact_forces": {
+        "required": [
+          "Arrows3D:origins",
+          "Arrows3D:vectors"
+        ],
+        "observed": [
+          "Arrows3D:colors",
+          "Arrows3D:origins",
+          "Arrows3D:vectors",
+          "CoordinateFrame:frame"
+        ],
+        "pass": true
+      },
+      "/diagnostic/diverge_event_force_seed460/near_spheres": {
+        "required": [
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true
+      },
+      "/diagnostic/diverge_event_seed460/contact_forces": {
+        "required": [
+          "Arrows3D:origins",
+          "Arrows3D:vectors"
+        ],
+        "observed": [
+          "Arrows3D:colors",
+          "Arrows3D:origins",
+          "Arrows3D:vectors",
+          "CoordinateFrame:frame"
+        ],
+        "pass": true
+      },
+      "/diagnostic/diverge_event_seed460/near_spheres": {
+        "required": [
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true
+      }
+    },
+    "pass": true
+  },
+  "timeline_contract": {
+    "observed": [
+      "blueprint",
+      "frame",
+      "log_time",
+      "phase",
+      "sim_time_s"
+    ],
+    "checks": {
+      "blueprint": true,
+      "log_time": true,
+      "frame": true,
+      "phase": true,
+      "sim_time_s": true
+    },
+    "exact_match": true,
+    "pass": true
+  },
+  "footer_manifest_present": true,
+  "blueprint_verify": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "verify",
+      "--check-footers",
+      "true",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix/cell_DE_dt2e6_c/scoop_s1_seed460_w10.rbl"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "1 file verified without error.\n",
+    "ok": true,
+    "attempted": true,
+    "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix/cell_DE_dt2e6_c/scoop_s1_seed460_w10.rbl",
+    "bytes": 63619,
+    "sha256": "3e6c841e503d0a5a57801c0d2a18d3bd5511aaf43633f911c4b7d33da5a9c353"
+  },
+  "headless_render": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "--headless",
+      "--window-size",
+      "3200x1800",
+      "--screenshot-to",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix/cell_DE_dt2e6_c/scoop_s1_seed460_w10_inspection.png",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix/cell_DE_dt2e6_c/scoop_s1_seed460_w10.rrd"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "2026-09-11T04:47:36.235091Z  INFO re_perf_telemetry::telemetry: Telemetry initialized enabled=false service=rerun trace_mode=\"off\" traces=off logs=off metrics=off tracy=false\n2026-09-11T04:47:36.598490Z  INFO re_grpc_server: Listening for gRPC connections on 0.0.0.0:9876. Connect by running `rerun --connect rerun+http://127.0.0.1:9876/proxy`\n2026-09-11T04:47:36.601268Z  INFO re_importer::import_file: Loading \"/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix/cell_DE_dt2e6_c/scoop_s1_seed460_w10.rrd\"…\n2026-09-11T04:47:36.978002Z  INFO re_viewer::headless: Headless viewer running at 3200x1800.\n2026-09-11T04:47:37.450587Z  INFO re_viewer::screenshotter: Screenshot saved to \"/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix/cell_DE_dt2e6_c/scoop_s1_seed460_w10_inspection.png\"\n2026-09-11T04:47:37.475578Z  INFO re_viewer::screenshotter: Screenshot copied to clipboard\n2026-09-11T04:47:37.491796Z  INFO re_viewer::headless: Headless viewer received close request, shutting down.\n",
+    "ok": true,
+    "attempted": true,
+    "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix/cell_DE_dt2e6_c/scoop_s1_seed460_w10_inspection.png",
+    "file_nonzero": true,
+    "bytes": 19159214,
+    "sha256": "da2f65a1b1576225d9883c72173b8afffe11936a7b41e009a01773ec28f9cd3b"
+  },
+  "errors": [],
+  "pass": true,
+  "log_status_summary": {
+    "ok": true,
+    "bytes": 149493626,
+    "rerun_sdk_version": "0.34.1",
+    "sink_attached_before_logging": true,
+    "sink_finalized": true,
+    "flush_ok": true,
+    "blueprint_status": {
+      "attempted": true,
+      "ok": true,
+      "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix/cell_DE_dt2e6_c/scoop_s1_seed460_w10.rbl",
+      "mode": "w10_scoop"
+    }
+  },
+  "source": {
+    "cell_dir": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix/cell_DE_dt2e6_c",
+    "result_json_sha256": "1b16c2d292b285a153ee048d6ca5237ebbacfd4c0ab73efadeacf85fc06ef088"
+  },
+  "coverage": {
+    "source_syncs": 2774,
+    "tool_syncs_logged": 2774,
+    "contact_syncs_logged": 2774,
+    "particle_frames_logged": 64,
+    "decision_frame": 2530,
+    "decision_frames_png": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix/cell_DE_dt2e6_c/scoop_s1_seed460_w10_decision_frames.png",
+    "raw_arrays_authority": true
+  },
+  "coverage_readback": {
+    "pass": true,
+    "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix/cell_DE_dt2e6_c/scoop_s1_seed460_w10_coverage.json"
+  }
+}

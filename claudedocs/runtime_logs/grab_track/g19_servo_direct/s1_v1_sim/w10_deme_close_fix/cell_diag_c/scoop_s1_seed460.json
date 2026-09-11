@@ -1,0 +1,647 @@
+{
+  "artifact": "DEME_SCOOP_S1_V1",
+  "tag": "seed460",
+  "seed": 460,
+  "smoke": false,
+  "inputs_sha16": {
+    "/home/cgxr/orca/workspaces/RoArm_Project/pellet-model/claudedocs/runtime_logs/pellet_model/pile_lens_20260910/pile_lens6_a4p5_b3p8_c2p5_slab_n20000_seed460.npz": "659d6b0bc771678a",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_ALL.stl": "2fea1c37b63ff36e",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/door_ALL_jawframe.stl": "bf570fbf862f71a3",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/design.json": "76620eba052d3c2f",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py": "2e40f7ed279dad42",
+    "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix/params_w10_diag_c.json": "9ed8b764de8fc2b5"
+  },
+  "params": {
+    "bowl_center_l5_mm": [
+      8.1,
+      0.0,
+      145.0
+    ],
+    "lip_l5_mm": [
+      8.1,
+      0.0,
+      169.6
+    ],
+    "hinge_l5_mm": [
+      0.0,
+      18.821,
+      52.035
+    ],
+    "bowl_r_in_mm": 20.0,
+    "cheek_half_y_mm": 18.2,
+    "servo_zero_offset_deg": 2.5,
+    "door_open_servo_deg": 30.0,
+    "close_end_joint_deg": 0.0,
+    "servo_torque_Nm": 1.96,
+    "servo_torque_fraction": 0.9,
+    "servo_stall_model": true,
+    "door_mass_kg": 0.02416,
+    "fixed_mass_kg": 0.01827,
+    "approach_gap_mm": 10.0,
+    "plunge_mm": 25.0,
+    "lift_mm": 80.0,
+    "descend_mm_s": 25.0,
+    "close_deg_s": 45.0,
+    "lift_mm_s": 150.0,
+    "reclose_max_steps": 30,
+    "settle_steps": 25,
+    "dt_sync_s": 0.004,
+    "arm_force_max_N": 6.0,
+    "descend_max_steps_factor": 3.0,
+    "pop_speed_m_s": 5.0,
+    "dt_sync_descend_s": 0.004,
+    "footprint_r_mm": 22.0,
+    "collision_wall_extra_mm": 3.0,
+    "wall_t_mm": 1.6,
+    "cap_t_mm": 2.0,
+    "E_mesh_pa": 3000000000.0,
+    "scoop_x_mm": 0.0,
+    "scoop_y_range_mm": [
+      0.0,
+      0.0
+    ],
+    "particle_shape": "npz_template",
+    "timestep_s": 1e-05,
+    "E_pa": 5000000.0,
+    "nu": 0.3,
+    "CoR": 0.3,
+    "mu": 0.45,
+    "Crr": 0.06,
+    "particle_density_kg_m3": 905.0,
+    "pellet_dia_mm": 4.16,
+    "pellet_len_mm": 4.16,
+    "clump_aspect": null,
+    "error_out_vel": 10000.0,
+    "cd_update_freq": 20,
+    "domain_top_m": 0.5,
+    "domain_bc": "all",
+    "bulk_density_g_cm3": 0.55,
+    "crater_r_max_mm": 80.0,
+    "crater_wedge_half_deg": 22.5,
+    "crater_min_depth_mm": 2.0,
+    "crater_fit_band": [
+      0.2,
+      0.8
+    ],
+    "render_timeline_dt_s": 0.05,
+    "render_timeline_path": "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix/render_timeline_w10_diag.npz",
+    "dt_sync_close_s": 0.001,
+    "door_pinch_guard_N": 3.0,
+    "door_min_q_deg": null,
+    "diag_flush_below_q_deg": 6.0,
+    "diag_fine_sync_s": 0.0001,
+    "diag_event_v_m_s": 2.0,
+    "diag_event_force_N": 2.0,
+    "diag_stop_v_m_s": 20.0,
+    "diag_ring_syncs": 12,
+    "diag_near_lip_mm": 15.0,
+    "max_velocity_m_s": 5.0,
+    "_note": "[① 진단 셀] W10 공통 = W8 옵션 E(사전 등록 설정 + 폐합 sync 1 ms + 물림 가드 3 N), 문 하한 없음. 진단 v2: q<6° 구간 sync 0.1 ms + 립 근방 링버퍼 12 sync + pop 이벤트(v>2 m/s 또는 단일 접촉≥2 N) 덤프 + 파이썬 pop-stop 20 m/s(DEME error_out_vel 은 1e4 로 올려 C++ terminate 대신 상태를 남김; 물리 불변) + SetMaxVelocity 5(CD 마진 상한, anomaly 로그만). 렌더 타임라인 0.05 s 는 이 폴더에 별도 파일(W8 npz 무수정). 신규 변수 = 진단만(물리 불변)."
+  },
+  "particle": {
+    "shape": "npz_template:lens",
+    "n_spheres": 7,
+    "sphere_radii_m": [
+      0.0012501954642423342,
+      0.0011563843121550487,
+      0.0011563843121550487,
+      0.0011563843121550487,
+      0.0011563843121550487,
+      0.0011563843121550487,
+      0.0011563843121550487
+    ],
+    "offsets_m": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0010939675234811531,
+        0.0,
+        0.0
+      ],
+      [
+        0.0005469837617405767,
+        0.0006442473773654442,
+        0.0
+      ],
+      [
+        -0.0005469837617405763,
+        0.0006442473773654443,
+        0.0
+      ],
+      [
+        -0.0010939675234811531,
+        0.0,
+        0.0
+      ],
+      [
+        -0.000546983761740577,
+        -0.000644247377365444,
+        0.0
+      ],
+      [
+        0.0005469837617405767,
+        -0.0006442473773654442,
+        0.0
+      ]
+    ],
+    "mass_kg": 2.0257382129428685e-05,
+    "moi_kg_m2": [
+      2.0627685172852296e-11,
+      2.7570222453344584e-11,
+      3.484048836004631e-11
+    ],
+    "union_volume_m3": 2.2383847656827283e-08,
+    "bounding_diameter_m": 0.004500703671272403,
+    "lens_axes_mm": [
+      4.5,
+      3.8,
+      2.5
+    ],
+    "expand_vs_npz_max_err_m": 2.7755575615628914e-17,
+    "clump_ids_clump_major": true,
+    "n": 20000
+  },
+  "mesh_check": {
+    "stl_bowl_vertices": 210,
+    "r_min_mm": 20.0,
+    "r_max_mm": 24.16,
+    "abs_y_max_mm": 20.3,
+    "r_in_ok": true,
+    "r_out_design_mm": 21.6,
+    "note_r_max": "STL 보울 구간에는 스파인·뺨도 포함되어 r_max 가 벽 바깥값보다 크다",
+    "shell_watertight": false,
+    "shell_tri": [
+      204,
+      204
+    ]
+  },
+  "engine": {
+    "DEME": "2.4.0",
+    "force_model": "UseFrictionalHertzianModel",
+    "owner_ids": {
+      "fixed": 20001,
+      "door": 20002
+    }
+  },
+  "scoop_site": {
+    "x_mm": 0.0,
+    "y_mm": 0.0,
+    "surface_z_mm": 41.12,
+    "lip_z_start_mm": 51.18,
+    "lip_z_plunge_nominal_mm": 16.18,
+    "lip_z_end_mm": 16.09
+  },
+  "trajectory": {
+    "q_open_joint_deg": 27.5,
+    "q_close_end_deg": 0.0,
+    "steps_nominal": {
+      "settle": 25,
+      "descend": 350,
+      "close": 153,
+      "lift": 134
+    },
+    "steps_actual": {
+      "settle": 25,
+      "descend": 350,
+      "close": 739,
+      "lift": 0,
+      "reclose": 0
+    },
+    "dt_sync_close_s": 0.001,
+    "steps_nominal_close_sync": 612,
+    "descend_hold_steps": 0,
+    "descend_reached_lip_z_mm": 16.09,
+    "descend_target_lip_z_mm": 16.12,
+    "plunge_reached_mm": 25.03,
+    "vz_descend_m_s": -0.025,
+    "omega_close_rad_s": 0.7842574253242494,
+    "vz_lift_m_s": 0.15,
+    "mouth_start_mm": 56.02
+  },
+  "pops": {
+    "v_particle_max_m_s": 21.123,
+    "steps_over_pop_speed": 1,
+    "pop_speed_m_s": 5.0,
+    "note": "무른 구(E 5e6)의 탄성 방출 인공물. 5 m/s 초과 스텝 수가 0 이 아니면 정량값에 인공물이 섞여 있다"
+  },
+  "servo": {
+    "M_stall_Nm": 1.764,
+    "lip_radius_m": 0.11485,
+    "lipF_stall_N": 15.359
+  },
+  "diverged": true,
+  "steps_completed": 1114,
+  "door": {
+    "stops": [],
+    "q_after_close_deg": 4.813,
+    "q_final_deg": 4.813,
+    "servo_deg_final": 7.313,
+    "lip_gap_final_mm": 9.647,
+    "mouth_end_mm": 9.197,
+    "n_touch_both_meshes": 279,
+    "n_pinched_at_lip": 64
+  },
+  "forces": {
+    "close_peak_lipF_N": 8.9186,
+    "close_peak_M_res_Nm": 0.709994,
+    "close_peak_single_contact_N": 3.951,
+    "close_contacts_door_max": 174,
+    "descend_peak_F_fixed_N": 2.2679
+  },
+  "capture": {
+    "n_in_cavity": 507,
+    "n_carried_z": 0,
+    "mass_g": 10.2705,
+    "cavity_cm3": 45.7,
+    "fill_vs_bulk": 0.4086,
+    "design_load_g": 17.6,
+    "design_fill_factor": 0.7
+  },
+  "heightmap": {
+    "spec_version": "roarm-heightmap-v1",
+    "cell_m": 0.005,
+    "shape": [
+      44,
+      62
+    ],
+    "max_m": 0.045204486697912216,
+    "n_particles_used": 20000,
+    "pre_max_m": 0.04112356901168823,
+    "npz_max_m": 0.041180770844221115,
+    "pre_vs_npz_max_abs_diff_m": 0.0029415711760520935,
+    "removed_volume_cm3": 17.423074645921588,
+    "spheres_per_particle": 7
+  },
+  "crater": {
+    "definition": "crater_angles() docstring (sim_deme_scoop_s1.py): dh=h_pre-h_post, wedge ring-averaged radial profile, least-squares line on rings with band[0]*d_max<=dh<=band[1]*d_max outward of r_peak, angle=atan|slope|",
+    "params": {
+      "r_max_mm": 80.0,
+      "wedge_half_deg": 22.5,
+      "min_depth_mm": 2.0,
+      "fit_band": [
+        0.2,
+        0.8
+      ],
+      "cell_mm": 5.0
+    },
+    "site_xy_mm": [
+      0.0,
+      0.0
+    ],
+    "center_xy_mm": [
+      -0.9901577123868719,
+      -14.66521192458968
+    ],
+    "center_rule": "dh-weighted centroid of cells with dh>=min_depth within r_max of site",
+    "n_cells_deep": 95,
+    "removed_volume_cm3": 17.423074645921588,
+    "dh_max_mm": 16.253173351287842,
+    "azimuths": {
+      "+x": {
+        "r_mm": [
+          2.5,
+          7.5,
+          12.5,
+          17.5,
+          22.5,
+          27.5,
+          32.5,
+          37.5,
+          42.5,
+          47.5,
+          52.5,
+          57.5,
+          62.5,
+          67.5,
+          72.5,
+          77.5
+        ],
+        "n_cells": [
+          0,
+          2,
+          2,
+          3,
+          4,
+          4,
+          4,
+          6,
+          6,
+          9,
+          8,
+          9,
+          10,
+          10,
+          12,
+          12
+        ],
+        "dh_ring_mm": [
+          null,
+          -4.033,
+          -4.141,
+          -2.097,
+          2.902,
+          0.709,
+          -0.304,
+          -0.326,
+          -0.381,
+          -0.53,
+          -0.108,
+          -0.158,
+          -0.415,
+          -0.69,
+          -0.324,
+          -0.138
+        ],
+        "h_post_ring_mm": [
+          null,
+          42.637,
+          43.341,
+          41.832,
+          36.394,
+          38.305,
+          38.823,
+          37.783,
+          37.079,
+          35.875,
+          33.749,
+          31.96,
+          30.803,
+          28.316,
+          25.785,
+          23.328
+        ],
+        "r_peak_mm": 22.5,
+        "d_max_mm": 2.902417443692684,
+        "fit_bins": [
+          5
+        ],
+        "angle_deg": null,
+        "angle_surface_deg": null,
+        "reason": "only 1 ring(s) in band outward of r_peak"
+      },
+      "+y": {
+        "r_mm": [
+          2.5,
+          7.5,
+          12.5,
+          17.5,
+          22.5,
+          27.5,
+          32.5,
+          37.5,
+          42.5,
+          47.5,
+          52.5,
+          57.5,
+          62.5,
+          67.5,
+          72.5,
+          77.5
+        ],
+        "n_cells": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          4,
+          5,
+          6,
+          6,
+          8,
+          8,
+          9,
+          11,
+          10,
+          11,
+          12
+        ],
+        "dh_ring_mm": [
+          null,
+          -3.574,
+          -3.512,
+          -2.027,
+          -1.317,
+          0.402,
+          1.945,
+          5.94,
+          2.869,
+          -1.081,
+          -4.307,
+          -4.843,
+          -4.956,
+          -4.835,
+          -4.992,
+          -3.531
+        ],
+        "h_post_ring_mm": [
+          null,
+          43.048,
+          43.708,
+          42.245,
+          41.091,
+          38.627,
+          36.69,
+          32.06,
+          34.469,
+          35.287,
+          35.709,
+          34.682,
+          32.081,
+          29.205,
+          26.906,
+          23.105
+        ],
+        "r_peak_mm": 37.5,
+        "d_max_mm": 5.940254777669907,
+        "fit_bins": [
+          8
+        ],
+        "angle_deg": null,
+        "angle_surface_deg": null,
+        "reason": "only 1 ring(s) in band outward of r_peak"
+      },
+      "-x": {
+        "r_mm": [
+          2.5,
+          7.5,
+          12.5,
+          17.5,
+          22.5,
+          27.5,
+          32.5,
+          37.5,
+          42.5,
+          47.5,
+          52.5,
+          57.5,
+          62.5,
+          67.5,
+          72.5,
+          77.5
+        ],
+        "n_cells": [
+          0,
+          1,
+          2,
+          2,
+          4,
+          4,
+          6,
+          6,
+          7,
+          8,
+          8,
+          8,
+          10,
+          10,
+          12,
+          13
+        ],
+        "dh_ring_mm": [
+          null,
+          -2.649,
+          -1.627,
+          -1.836,
+          1.075,
+          0.946,
+          0.933,
+          1.124,
+          0.701,
+          -0.001,
+          -0.702,
+          -0.437,
+          -0.388,
+          -0.316,
+          -0.704,
+          -0.643
+        ],
+        "h_post_ring_mm": [
+          null,
+          43.231,
+          40.099,
+          40.808,
+          37.319,
+          37.173,
+          36.488,
+          36.186,
+          36.431,
+          35.401,
+          34.587,
+          32.649,
+          30.833,
+          28.821,
+          26.958,
+          23.173
+        ],
+        "r_peak_mm": 37.5,
+        "d_max_mm": 1.1236233015855153,
+        "fit_bins": [
+          8
+        ],
+        "angle_deg": null,
+        "angle_surface_deg": null,
+        "reason": "only 1 ring(s) in band outward of r_peak"
+      },
+      "-y": {
+        "r_mm": [
+          2.5,
+          7.5,
+          12.5,
+          17.5,
+          22.5,
+          27.5,
+          32.5,
+          37.5,
+          42.5,
+          47.5,
+          52.5,
+          57.5,
+          62.5,
+          67.5,
+          72.5,
+          77.5
+        ],
+        "n_cells": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          4,
+          6,
+          6,
+          7,
+          7,
+          8,
+          9,
+          11,
+          10,
+          11,
+          12
+        ],
+        "dh_ring_mm": [
+          null,
+          -0.068,
+          14.658,
+          12.193,
+          8.356,
+          2.745,
+          1.075,
+          -0.13,
+          -1.498,
+          -1.316,
+          -1.801,
+          -0.16,
+          -0.339,
+          -0.169,
+          -0.076,
+          -0.028
+        ],
+        "h_post_ring_mm": [
+          null,
+          37.657,
+          21.391,
+          22.531,
+          24.648,
+          26.721,
+          27.104,
+          26.29,
+          24.118,
+          21.704,
+          18.297,
+          14.514,
+          12.744,
+          10.25,
+          9.038,
+          7.602
+        ],
+        "r_peak_mm": 12.5,
+        "d_max_mm": 14.65810276567936,
+        "fit_bins": [
+          4
+        ],
+        "angle_deg": null,
+        "angle_surface_deg": null,
+        "reason": "only 1 ring(s) in band outward of r_peak"
+      }
+    }
+  },
+  "wall_seconds": 1687.42,
+  "non_claims": [
+    "물성(E 5e6·mu 0.5·Crr 0.05·CoR 0.3·밀도 950) 전부 임시값 — 반력·정지각·포획량 절대값 인용 금지",
+    "더미는 E 1e7 로 정착, 본 실행 E 5e6 → t=0 미세 재안착",
+    "문 개방을 펠릿면에서 하지 않고 이미 열린 채 접근(실물은 펠릿면에서 열림) — 문 립은 열릴 때 위로만 움직여 더미와 접촉 없음",
+    "D341 Rerun 완결 계약 미이행(원자료 npz 만 저장)"
+  ],
+  "render_timeline": {
+    "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix/render_timeline_w10_diag.npz",
+    "n_frames": 42,
+    "dt_s": 0.05,
+    "bytes": 21885234,
+    "n_captured_ids": 507
+  }
+}

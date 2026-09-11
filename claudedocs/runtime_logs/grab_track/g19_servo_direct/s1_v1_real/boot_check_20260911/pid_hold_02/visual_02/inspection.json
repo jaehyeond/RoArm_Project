@@ -1,0 +1,29 @@
+{
+  "inspected": true,
+  "observer": "Codex view_image",
+  "paths": {
+    "pid_timeseries.png": {
+      "path": "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/pid_hold_02/visual_02/pid_timeseries.png",
+      "sha256": "d743b3fa5d4129448d82ddcc8008e2e4492e79d57fc529ea821c53d78a580ee8"
+    },
+    "pid_rerun.png": {
+      "path": "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/pid_hold_02/visual_02/pid_rerun.png",
+      "sha256": "73305634bbd06375fa8ae795bd8e28f730734f8f0b82ef7c303f1599864d8e20"
+    },
+    "decision_frames.png": {
+      "path": "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/pid_hold_02/visual_02/decision_frames.png",
+      "sha256": "edeab1eee2742532f06ecf195b7b0b0fde46d7b6b3bf654529a9a4c6180c2335"
+    }
+  },
+  "observations": [
+    "PID plot shows two repeated shoulder transitions: P8 high angle, P48 lower angle; other five joints overlap zero change.",
+    "Shoulder raw-load rises in both P48 phases and drops after P16 command.",
+    "Rerun top-left shoulder and middle P/load curves match PNG. Static decision panel shows close overlaid reference/actual points.",
+    "Rerun initial cursor is t=0 before first received joint sample: animated bottom-left empty in this screenshot, not missing full timeline; all 1648 samples verified by RRD readback.",
+    "Separate decision_frames.png shows measured hold reference and maximum-deviation actual lip axes; target register is explicitly unavailable."
+  ],
+  "limitations": [
+    "Rerun overview axes overlap and small dots limit detailed spatial judgment; use dedicated frame PNG.",
+    "Kinematic reconstruction, not camera or torque/current measurement."
+  ]
+}

@@ -29,6 +29,7 @@ relay에는 베끼지 않는다 — 만진 파일·건드리지 말 것·함정�
 | `docs/reference/pipeline.md` | 개요·환경 스펙·Key Commands·5단계 파이프라인·핵심 파일 표 |
 | `docs/reference/hardware.md` | 관절 범위, SDK API/버그, 모터 복구(T:106), Azure Kinect 셋업 |
 | `docs/reference/training_deploy.md` | SmolVLA 학습/배포 Critical Rules, L-F 수집, 과거 실패 원인 |
+| `docs/reference/servo_pid_st3215.md` | **서보 PID(T:108/109/503)·토크 상한(T:107/112)·과부하 보호를 만지기 전 필독.** 부팅 동작, 잠긴 EPROM 쓰기 해석, 실기 검증 절차·금지 (2026-09-09) |
 | `docs/reference/printing.md` | **3D 출력 착수 전 필독.** P1S 파이프라인 함정 12건 + 게이트 사각지대 3건 + 표준 절차. DK 폴더 교훈을 옮겨 적은 것 |
 | `docs/reference/research_verification.md` | 연구 갭 주장 검증 절차(HARD RULE #4 상세) + 외부·증거 링크 |
 | `docs/archive/` | 분리 전 원본, 2026-04-28 Current Status(**죽은 상태** — 현재값으로 쓰지 말 것) |

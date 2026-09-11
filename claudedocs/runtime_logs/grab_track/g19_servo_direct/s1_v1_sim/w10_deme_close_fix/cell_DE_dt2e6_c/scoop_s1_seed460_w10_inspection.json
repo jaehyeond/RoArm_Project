@@ -1,0 +1,27 @@
+{
+  "inspector": "Codex via view_image",
+  "inspected_at": "2026-09-11T13:49:27.879248+09:00",
+  "png": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix/cell_DE_dt2e6_c/scoop_s1_seed460_w10_inspection.png",
+  "png_sha256": "da2f65a1b1576225d9883c72173b8afffe11936a7b41e009a01773ec28f9cd3b",
+  "observations": [
+    "중앙 최종 장면에서 주황 포획 입자 군집이 들어 올려진 툴 윤곽 안에 보이고, 아래 더미에는 파인 영역이 보인다.",
+    "중앙 장면에서 포획 군집 아래 떨어진 입자 일부가 보여, 포획량과 높이 기준 동반 상승량은 구별해야 한다.",
+    "오른쪽 결정 장면에서 고정부·문 윤곽과 붉은 접촉점/힘 표시가 함께 보이며, 제목의 결정 시각은 첫 토크 정지 2.58586 s이다.",
+    "아래 결정 로그에 첫 닫힘과 재닫기의 servo_stall, CAPTURE 541개·10.9592g이 표시된다.",
+    "별도 decision_frames PNG에서 명목 문 프레임과 실제 메시로 구한 프레임의 원점·축이 거의 겹쳐 보인다.",
+    "crater_profiles_rest_seed460.png의 -x 방위는 깊이 곡선이 들쑥날쑥해 단일 직선 각도 3.9°의 대표성이 약하다."
+  ],
+  "limitations": [
+    "기본 타임라인 화면은 시작 시각이며 중앙/오른쪽은 각각 최종 상태와 첫 토크 정지의 명시적 static 사본이다. 정지 사진 하나가 전 궤적 검수를 대신하지 않는다.",
+    "오른쪽 Rerun 패널에서 높은 힌지 프레임 일부가 화면 상단에 잘린다. 프레임 전체는 별도 decision_frames PNG에서 확인했다. 두 프레임의 글자 라벨은 중첩된다.",
+    "입자 색은 전 시간에 걸쳐 최종 포획 분류를 표시하며, 그 시각의 포획 상태를 뜻하지 않는다.",
+    "일반 입자 위치 기록은 64프레임(0.05 s 간격+최종). 툴/접촉/스칼라는 2774 sync 전부이며, 이벤트 근방은 별도 12-sync 링버퍼다.",
+    "RRD metadata의 Float64 설명과 무관하게 원본 NPZ는 혼합 정밀도다(입자 중심 float64, 툴 노드와 접촉은 저장 시 float32). 원본 JSON/NPZ가 정본이고 Rerun 값을 과학 판정에 되먹이지 않았다.",
+    "기존 snapshot_seed460.png에는 한글 폰트가 네모로 표시된다. Rerun과 decision_frames에는 영문 라벨을 사용했다."
+  ],
+  "additional_images_inspected": [
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix/cell_DE_dt2e6_c/scoop_s1_seed460_w10_decision_frames.png",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix/cell_DE_dt2e6_c/crater_profiles_rest_seed460.png",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix/cell_DE_dt2e6_c/snapshot_seed460.png"
+  ]
+}

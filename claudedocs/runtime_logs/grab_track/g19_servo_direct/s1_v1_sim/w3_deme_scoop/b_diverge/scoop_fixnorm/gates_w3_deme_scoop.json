@@ -1,0 +1,216 @@
+{
+  "artifact": "GATES_W3_DEME_SCOOP_S1",
+  "n_runs": 3,
+  "run_files": [
+    "scoop_s1_seed460.json",
+    "scoop_s1_seed461.json",
+    "scoop_s1_seed462.json"
+  ],
+  "inputs_sha16": {
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/sim_deme/pile_practical_fast_d4p16_n18796_seed460.npz": "e26b214f336a4e97",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_ALL.stl": "2fea1c37b63ff36e",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/door_ALL_jawframe.stl": "bf570fbf862f71a3",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/design.json": "76620eba052d3c2f",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py": "db6e21126e552983",
+    "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w3_deme_scoop/b_diverge/params_fixnorm_plunge25.json": "0db262e2c543835d"
+  },
+  "G1_no_divergence": {
+    "pass": true,
+    "diverged": [
+      false,
+      false,
+      false
+    ],
+    "steps_completed": [
+      650,
+      647,
+      648
+    ],
+    "plunge_mm_param": [
+      25.0,
+      25.0,
+      25.0
+    ],
+    "plunge_reached_mm": [
+      25.0,
+      25.0,
+      25.0
+    ],
+    "descend_hold_steps": [
+      0,
+      0,
+      0
+    ],
+    "pops": [
+      {
+        "v_particle_max_m_s": 1.894,
+        "steps_over_pop_speed": 0,
+        "pop_speed_m_s": 5.0,
+        "note": "무른 구(E 5e6)의 탄성 방출 인공물. 5 m/s 초과 스텝 수가 0 이 아니면 정량값에 인공물이 섞여 있다"
+      },
+      {
+        "v_particle_max_m_s": 2.416,
+        "steps_over_pop_speed": 0,
+        "pop_speed_m_s": 5.0,
+        "note": "무른 구(E 5e6)의 탄성 방출 인공물. 5 m/s 초과 스텝 수가 0 이 아니면 정량값에 인공물이 섞여 있다"
+      },
+      {
+        "v_particle_max_m_s": 6.586,
+        "steps_over_pop_speed": 2,
+        "pop_speed_m_s": 5.0,
+        "note": "무른 구(E 5e6)의 탄성 방출 인공물. 5 m/s 초과 스텝 수가 0 이 아니면 정량값에 인공물이 섞여 있다"
+      }
+    ],
+    "real_procedure_plunge_mm": 25.0,
+    "note": "실물 잠김 25 mm 는 이 더미(능선 37 mm·강체 바닥)에서 발산(attempt_plunge25_*). 잠김 10 mm 로 절차 완주"
+  },
+  "G2_door_closure_report": {
+    "pass": true,
+    "per_run": [
+      {
+        "tag": "seed460",
+        "stops": [
+          {
+            "phase": "close",
+            "q_deg": 3.595,
+            "reason": "servo_stall",
+            "M_hinge_res_Nm": 2.612334,
+            "sim_t": 2.03708,
+            "q_from_quat_deg": 3.532
+          },
+          {
+            "phase": "reclose",
+            "q_deg": 2.696,
+            "reason": "servo_stall",
+            "M_hinge_res_Nm": 2.004008,
+            "sim_t": 2.59447,
+            "q_from_quat_deg": 2.631
+          }
+        ],
+        "q_final_deg": 2.696,
+        "servo_deg_final": 5.196,
+        "lip_gap_final_mm": 5.404,
+        "mouth_end_mm": 5.411,
+        "n_pinched_at_lip": 6,
+        "n_touch_both": 51,
+        "close_peak_lipF_N": 22.7456,
+        "close_peak_M_res_Nm": 2.612334,
+        "M_stall_Nm": 1.764
+      },
+      {
+        "tag": "seed461",
+        "stops": [
+          {
+            "phase": "close",
+            "q_deg": 3.595,
+            "reason": "servo_stall",
+            "M_hinge_res_Nm": 2.719093,
+            "sim_t": 2.03708,
+            "q_from_quat_deg": 3.532
+          },
+          {
+            "phase": "reclose",
+            "q_deg": 3.235,
+            "reason": "servo_stall",
+            "M_hinge_res_Nm": 2.240777,
+            "sim_t": 2.58244,
+            "q_from_quat_deg": 3.171
+          }
+        ],
+        "q_final_deg": 3.235,
+        "servo_deg_final": 5.735,
+        "lip_gap_final_mm": 6.485,
+        "mouth_end_mm": 6.522,
+        "n_pinched_at_lip": 10,
+        "n_touch_both": 56,
+        "close_peak_lipF_N": 23.6752,
+        "close_peak_M_res_Nm": 2.719093,
+        "M_stall_Nm": 1.764
+      },
+      {
+        "tag": "seed462",
+        "stops": [
+          {
+            "phase": "close",
+            "q_deg": 3.595,
+            "reason": "servo_stall",
+            "M_hinge_res_Nm": 2.080141,
+            "sim_t": 2.03708,
+            "q_from_quat_deg": 3.532
+          },
+          {
+            "phase": "reclose",
+            "q_deg": 3.056,
+            "reason": "servo_stall",
+            "M_hinge_res_Nm": 2.23059,
+            "sim_t": 2.58645,
+            "q_from_quat_deg": 2.991
+          }
+        ],
+        "q_final_deg": 3.056,
+        "servo_deg_final": 5.556,
+        "lip_gap_final_mm": 6.125,
+        "mouth_end_mm": 6.152,
+        "n_pinched_at_lip": 14,
+        "n_touch_both": 62,
+        "close_peak_lipF_N": 19.4218,
+        "close_peak_M_res_Nm": 2.23059,
+        "M_stall_Nm": 1.764
+      }
+    ],
+    "real_reference_servo_deg": "D481 cycle5 닫힘 2.8~3.5 / 재닫힘 2.3~3.4 (기계 정지 2.5)"
+  },
+  "G3_capture_mass": {
+    "pass": true,
+    "mass_g": [
+      11.2801,
+      11.9605,
+      12.1037
+    ],
+    "n_in_cavity": [
+      315,
+      334,
+      338
+    ],
+    "n_carried_z": [
+      348,
+      378,
+      384
+    ],
+    "fill_vs_bulk": [
+      0.4488,
+      0.4758,
+      0.4815
+    ],
+    "mean_mass_g": 11.7814,
+    "cavity_cm3": 45.7,
+    "design_load_g": 17.6,
+    "design_fill_factor": 0.7,
+    "note": "충전율은 보고값(판정 아님)"
+  },
+  "G4_seed_cov": {
+    "pass": true,
+    "n": 3,
+    "cov": 0.0373,
+    "seeds": [
+      460,
+      461,
+      462
+    ],
+    "scoop_y_mm": [
+      -24.09,
+      17.36,
+      18.87
+    ],
+    "note": "n=3 COV 는 보고값. seed 는 능선 위 y 위치를 바꾼다"
+  },
+  "G5_wall_le_5min": {
+    "pass": true,
+    "wall_seconds": [
+      91.72,
+      95.37,
+      94.22
+    ]
+  },
+  "all_pass": true
+}

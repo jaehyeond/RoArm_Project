@@ -1,0 +1,28 @@
+{
+  "inspected": true,
+  "observer": "Codex view_image",
+  "paths": {
+    "timeline.png": {
+      "path": "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/torque900_02/visual_01/timeline.png",
+      "sha256": "48f0797ed31f05330debbe68cc68e89ebd8603137c5a8f92c2935407f0bf045f"
+    },
+    "scoop_rerun.png": {
+      "path": "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/torque900_02/visual_01/scoop_rerun.png",
+      "sha256": "3e24b870c53bd0f36a420b467e7bc7c24ef15188f917bef9dc42bc4ec40c8364"
+    },
+    "decision_frames.png": {
+      "path": "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/torque900_02/visual_01/decision_frames.png",
+      "sha256": "a7cea48a2395024876ddc422b875452eb60cb5e386ea37b744609aa1a7b649ca"
+    }
+  },
+  "observations": [
+    "Full timeline PNG: measured close4.57, target resets from0 to4.57 at lift; further command targets track successive measured reopen during transport.",
+    "Rerun decision meshes show commanded and FK-actual S1 geometry at lift; actual lip lower than target.",
+    "Dedicated frames PNG shows vertical/radial displacement; kinematic estimate, not camera pose.",
+    "Full PNG spans76s. Rerun screenshot timeline plot is zoomed to early motion; complete3975 rows read back in validation."
+  ],
+  "limits": [
+    "URDF mesh alignment not newly calibrated against real gripper.",
+    "No contact-force, current, temperature or pellet scene sensor; cannot diagnose protection circuit from this row."
+  ]
+}

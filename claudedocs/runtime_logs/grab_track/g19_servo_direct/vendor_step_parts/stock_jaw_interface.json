@@ -1,0 +1,185 @@
+{
+ "purpose": "방식 A(크랭크 포크) 설계 입력: 순정 가동 조가 서보에 물리는 인터페이스. 벤더 STEP 원본에서 추출 (실물 대조 대기).",
+ "source": {
+  "zip": "RoArm-M3_STEP_260310.zip",
+  "sha256": "1e2111145276aac14e521f47990fc41de87e2e735623d115a39cc176c9762da2",
+  "url": "https://files.waveshare.com/wiki/RoArm-M3/RoArm-M3_STEP_260310.zip",
+  "step": "RoArm-M3_STEP/RoArm-M3.step (Fusion 360 export 2026-02-12, root \"RoArm-M3-S ASM-TYPE-0(SP)\")",
+  "extract_scripts": [
+   "step_xde.py",
+   "step_gripper_detail.py",
+   "step_export.py"
+  ],
+  "note": "STEP 은 M3-S 조립체. 사용자 팔은 M3-Pro — 서보 모델(ST3215 vs ST3235)만 다를 수 있고 디스크·구멍 패턴은 동일 계열. 실물 대조 항목 참조."
+ },
+ "frame": {
+  "STEP_X": "link5 +Z (팔축, 팁 방향)",
+  "STEP_Y": "link5 -X (고정 조 쪽이 +Y)",
+  "STEP_Z": "link5 -Y (힌지축)",
+  "servo_axis_STEP_xy": [
+   289.002,
+   -0.88
+  ],
+  "link5_Y_from_STEP_z": "link5_Y = 346.07 - STEP_z",
+  "STEP_pose": "닫힘 (블레이드 법선 평행, 간극 4.04) = 펌웨어 π = URDF θ=0"
+ },
+ "gripper_servo": {
+  "cad_model": "ST3215 (product \"ST3215 v1 (4)\")",
+  "output_side": "STEP -Z = link5 +Y (구동 디스크 z 327.12–331.62)",
+  "rear_side": "STEP +Z = link5 -Y (종동 디스크 z 361.02–364.37)",
+  "case_z": [
+   329.22,
+   364.92
+  ],
+  "case_front_face_z_around_output": 331.9,
+  "rear_boss_z_max": 364.92,
+  "rear_boss_max_r_mm": 3.000219664390553,
+  "front_ring_max_r_mm": 11.996422976977355,
+  "case_screws": "PA2*5 self-tapping x4 (베이스 벽 통과), x=256.3/260.0/280.7"
+ },
+ "movable_jaw": {
+  "part": "AL-轻量化夹头-活动侧 (알루미늄 1.5 mm 절곡 U채널: 뺨 2 + 바닥=블레이드)",
+  "volume_mm3": 3657.6,
+  "mass_est_g_al2.7": 9.9,
+  "cheek_drive_side": {
+   "z": [
+    326.5,
+    328.0
+   ],
+   "link5_Y": [
+    18.07,
+    19.57
+   ],
+   "thk": 1.5
+  },
+  "cheek_rear_side": {
+   "z": [
+    364.37,
+    365.87
+   ],
+   "link5_Y": [
+    -19.8,
+    -18.3
+   ],
+   "thk": 1.5
+  },
+  "outer_width_mm": 39.37,
+  "inner_gap_mm": 36.37,
+  "cheek_footprint_x_jawframe": [
+   -10.8,
+   52.0
+  ],
+  "blade_root_x_jawframe": {
+   "side_arms": 24.0,
+   "centre": 41.7
+  },
+  "blade_tip_x_jawframe": 67.1
+ },
+ "hub_pattern_per_cheek": {
+  "centre_hole_d": 11.0,
+  "screw_holes": {
+   "n": 4,
+   "d": 3.2,
+   "PCD": 14.0,
+   "angles_deg_from_arm_axis_STEP_XY": [
+    45,
+    135,
+    -135,
+    -45
+   ]
+  },
+  "pin_hole": {
+   "d": 1.0,
+   "r": 6.0,
+   "angle_deg_STEP_XY": 28.6,
+   "angle_deg_URDF_jaw_frame": -28.6,
+   "note": "디스크 회전 방지 핀 추정. 실물 확인"
+  },
+  "other": "r3.69 원통면 at r6.83/-112.5° (창 필렛 추정, 미확인)"
+ },
+ "discs": {
+  "drive": {
+   "flange_d": 18.8,
+   "flange_z": [
+    327.12,
+    329.62
+   ],
+   "flange_thk": 2.5,
+   "boss_to_servo": {
+    "d": 10.6,
+    "z": [
+     329.62,
+     331.42
+    ]
+   },
+   "centre_screw_hole_d": 3.2,
+   "tapped_holes": {
+    "n": 4,
+    "d_minor": 2.5,
+    "PCD": 14.0
+   },
+   "note": "CAD 에서 플랜지 바깥면 327.12 가 뺨 안쪽면 328.0 보다 0.88 안쪽 = 상호관통. 실물에서 뺨 안쪽면 밀착 여부 확인"
+  },
+  "driven": {
+   "flange_d": 18.8,
+   "flange_z": [
+    362.17,
+    364.37
+   ],
+   "flange_thk": 2.2,
+   "boss_to_bearing": {
+    "d": 8.9,
+    "z": [
+     361.02,
+     362.17
+    ]
+   },
+   "centre_hole_d": 6.0,
+   "tapped_holes": {
+    "n": 4,
+    "d_minor": 2.5,
+    "PCD": 14.0
+   },
+   "note": "플랜지 바깥면 364.37 = 뺨 안쪽면 364.37 (정합)"
+  }
+ },
+ "screws": {
+  "M3x4_cup_head_hex": {
+   "drive_side": "4 on PCD14 + 1 centre (스플라인 M3)",
+   "rear_side": "4 on PCD14",
+   "head_outside_cheek": true,
+   "head_z_drive": [
+    323.4,
+    326.5
+   ],
+   "head_z_rear": [
+    365.87,
+    368.97
+   ]
+  },
+  "total": 9
+ },
+ "crank_pin_current_design": {
+  "grab_local": "r 21.0 @ -106° from servo axis (closed)",
+  "jaw_frame_xy": [
+   20.186,
+   -5.789
+  ],
+  "STEP_xy": [
+   309.19,
+   4.91
+  ],
+  "rod_plane_link5_Y": -29.7,
+  "rod_plane_STEP_z": 375.8,
+  "side": "종동(아이들러) 디스크 쪽 = link5 -Y. 구동 디스크는 반대(+Y) 쪽"
+ },
+ "confirm_on_real_arm": [
+  "뺨당 M3 머리 4개 + 구동측 중앙 1개 = 9개 육안",
+  "뺨 두께 1.5 / 바깥폭 39.4 / 디스크 ⌀18.8 캘리퍼스",
+  "구동측 디스크가 뺨 안쪽면에 밀착하는지 (CAD 0.88 오차)",
+  "나사 규격 M3x4 컵헤드 (PLA 뺨 3 mm 면 M3x6 필요)",
+  "서보 하우징 각인·어댑터 전압",
+  "고정 조 5구멍 나사산·⌀ (브래킷, 기존)",
+  "가동 조 무게 (CAD 9.9 g)"
+ ]
+}

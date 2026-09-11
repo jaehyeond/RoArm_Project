@@ -1,0 +1,330 @@
+{
+ "ok": true,
+ "usd": "/home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/usd_s1/roarm_m3_s1.usd",
+ "log": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/manual_20260907_164725.jsonl",
+ "inputs_sha256_16": {
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/manual_20260907_164725.jsonl": "284e4d5776da9e39",
+  "local_assets/roarm_m3/usd_s1/roarm_m3_s1.usd": "bef6efeb42a241fe",
+  "local_assets/roarm_m3/urdf/roarm_m3_s1.urdf": "d5a3647a5ea6b759",
+  "hw_s1_scoop_probe.py": "70096b2f2c6cbe77",
+  "local_assets/roarm_m3/urdf/meshes/s1_door.stl": "cc9efee509aa74e4",
+  "local_assets/roarm_m3/urdf/meshes/s1_fixed.stl": "1eb1b744c4d75443",
+  "local_assets/roarm_m3/urdf/meshes/link5.stl": "1d63f374a78c1419",
+  "local_assets/roarm_m3/urdf/meshes/link4.stl": "bb334cafafa5f5ad",
+  "local_assets/roarm_m3/urdf/meshes/link3.stl": "80c4e9b1084bf1c7"
+ },
+ "env": {
+  "plate_z": 0.38,
+  "shoulder_above_plate": 0.12206,
+  "box_cx": 0.35,
+  "box_inner": [
+   0.31,
+   0.22
+  ],
+  "box_top": 0.385,
+  "box_bot": 0.16,
+  "pellet_z": 0.26,
+  "wall_assumed": 0.003,
+  "place_lip": [
+   0.01,
+   0.34,
+   0.25
+  ],
+  "slabs": {
+   "wall_xp": [
+    [
+     0.505,
+     -0.113,
+     0.16
+    ],
+    [
+     0.508,
+     0.113,
+     0.385
+    ]
+   ],
+   "wall_xn": [
+    [
+     0.19199999999999998,
+     -0.113,
+     0.16
+    ],
+    [
+     0.19499999999999998,
+     0.113,
+     0.385
+    ]
+   ],
+   "wall_yp": [
+    [
+     0.19499999999999998,
+     0.11,
+     0.16
+    ],
+    [
+     0.505,
+     0.113,
+     0.385
+    ]
+   ],
+   "wall_yn": [
+    [
+     0.19499999999999998,
+     -0.113,
+     0.16
+    ],
+    [
+     0.505,
+     -0.11,
+     0.385
+    ]
+   ],
+   "box_floor": [
+    [
+     0.19499999999999998,
+     -0.11,
+     0.16
+    ],
+    [
+     0.505,
+     0.11,
+     0.163
+    ]
+   ],
+   "support": [
+    [
+     0.19199999999999998,
+     -0.113,
+     0.0
+    ],
+    [
+     0.508,
+     0.113,
+     0.16
+    ]
+   ]
+  }
+ },
+ "actuators": {
+  "arm": {
+   "stiffness": 800.0,
+   "damping": 40.0,
+   "effort_limit_sim": 8.0,
+   "note": "\ube44\ubb3c\ub9ac \ub370\ubaa8\uac12(D478 \uacc4\uc5f4)"
+  },
+  "door": {
+   "stiffness": 300.0,
+   "damping": 30.0,
+   "effort_limit_sim": 1.96
+  }
+ },
+ "blend_speed_dps": 60.0,
+ "n_events": 2,
+ "n_segments": 2,
+ "fk_selfcheck_max_mm": 0.0011,
+ "dist_points": {
+  "gripper_link": 20251,
+  "grab_fixed": 9287,
+  "link5": 16879,
+  "link4": 6671,
+  "link3": 11785
+ },
+ "joint_names": [
+  "base_link_to_link1",
+  "link1_to_link2",
+  "link2_to_link3",
+  "link3_to_link4",
+  "link4_to_link5",
+  "link5_to_gripper_link"
+ ],
+ "body_names": [
+  "world",
+  "base_link",
+  "link1",
+  "link2",
+  "link3",
+  "link4",
+  "link5",
+  "grab_fixed",
+  "gripper_link",
+  "hand_tcp"
+ ],
+ "contact_bodies": [
+  "link3",
+  "link4",
+  "link5",
+  "grab_fixed",
+  "gripper_link"
+ ],
+ "cameras": {
+  "side": [
+   [
+    0.95,
+    -0.72,
+    0.78
+   ],
+   [
+    0.28,
+    0.02,
+    0.33
+   ]
+  ],
+  "top": [
+   [
+    0.22,
+    0.1,
+    1.62
+   ],
+   [
+    0.22,
+    0.1,
+    0.35
+   ]
+  ],
+  "res": [
+   640,
+   400
+  ]
+ },
+ "body_mass_kg": {
+  "world": 1.0,
+  "base_link": 0.25622,
+  "link1": 0.07292,
+  "link2": 0.07032,
+  "link3": 0.02161,
+  "link4": 0.00999,
+  "link5": 0.01539,
+  "grab_fixed": 0.01827,
+  "gripper_link": 0.02416,
+  "hand_tcp": 1.0
+ },
+ "physx_dof_gains": {
+  "base_link_to_link1": [
+   800.0,
+   40.0,
+   8.0
+  ],
+  "link1_to_link2": [
+   800.0,
+   40.0,
+   8.0
+  ],
+  "link2_to_link3": [
+   800.0,
+   40.0,
+   8.0
+  ],
+  "link3_to_link4": [
+   800.0,
+   40.0,
+   8.0
+  ],
+  "link4_to_link5": [
+   800.0,
+   40.0,
+   8.0
+  ],
+  "link5_to_gripper_link": [
+   300.0,
+   30.0,
+   1.96
+  ]
+ },
+ "frames": 20,
+ "fps": 10,
+ "sim_seconds": 1.97,
+ "n_goto": 1,
+ "n_door": 0,
+ "n_scoop_done": 0,
+ "n_place_done": 0,
+ "dmin_overall_mm": {
+  "gripper_link": [
+   113.251,
+   {
+    "t": 1.017,
+    "seg": 1,
+    "name": "p1",
+    "cycle": 1,
+    "slab": "bound",
+    "point": null,
+    "frame": 11
+   }
+  ],
+  "grab_fixed": [
+   116.337,
+   {
+    "t": 0.633,
+    "seg": 1,
+    "name": "p1",
+    "cycle": 1,
+    "slab": "bound",
+    "point": null,
+    "frame": 7
+   }
+  ],
+  "link5": [
+   164.025,
+   {
+    "t": 0.633,
+    "seg": 1,
+    "name": "p1",
+    "cycle": 1,
+    "slab": "bound",
+    "point": null,
+    "frame": 7
+   }
+  ],
+  "link4": [
+   270.363,
+   {
+    "t": 0.625,
+    "seg": 1,
+    "name": "p1",
+    "cycle": 1,
+    "slab": "bound",
+    "point": null,
+    "frame": 7
+   }
+  ],
+  "link3": [
+   228.132,
+   {
+    "t": 0.617,
+    "seg": 1,
+    "name": "p1",
+    "cycle": 1,
+    "slab": "bound",
+    "point": null,
+    "frame": 7
+   }
+  ]
+ },
+ "contact_max_N": {
+  "gripper_link": [
+   0.0,
+   null
+  ],
+  "grab_fixed": [
+   0.0,
+   null
+  ],
+  "link5": [
+   0.0,
+   null
+  ],
+  "link4": [
+   0.0,
+   null
+  ],
+  "link3": [
+   0.0,
+   null
+  ]
+ },
+ "d_sim_real_mm": {
+  "median": 3.331,
+  "max": 3.331,
+  "mean": 3.331
+ },
+ "finite": true
+}

@@ -1,0 +1,6 @@
+#!/bin/bash
+cd /home/cgxr/Documents/Robotics/RoArm_Project
+OUT=claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix; PY=~/miniconda3/envs/roarm/bin/python; PILE=claudedocs/runtime_logs/sim_deme/pile_practical_fast_d4p16_n18796_seed460.npz
+echo "[$(date +%H:%M:%S)] stage smoke_diag_sphere try4" >> $OUT/run.log
+T0=$(date +%s); timeout -k 30 1200 $PY sim_deme_scoop_s1.py --params $OUT/params_smoke_diag_sphere.json --pile $PILE --out $OUT/smoke_diag_sphere --seed 460 > $OUT/smoke_diag_sphere/stdout.txt 2> $OUT/smoke_diag_sphere/stderr.txt; RC=$?; T1=$(date +%s)
+echo "[$(date +%H:%M:%S)] stage smoke_diag_sphere try4 rc=$RC wall=$(( T1 - T0 ))s" >> $OUT/run.log

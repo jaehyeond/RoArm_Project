@@ -1,0 +1,88 @@
+{
+ "artifact": "W10_DIVERGE_EVENT_V1",
+ "tag": "seed460",
+ "trigger": {
+  "phase": "close",
+  "i": 842,
+  "sim_t": 2.02758,
+  "q_deg": 4.3452,
+  "v_max": 0.2498,
+  "max_single_contact_N": 1.0049,
+  "rule": {
+   "v_m_s": 2.0,
+   "force_N": 1.0
+  }
+ },
+ "culprit": 18102,
+ "culprit_now": {
+  "pos_mm": [
+   -31.36,
+   -24.996,
+   38.056
+  ],
+  "vel_m_s": [
+   -0.1231,
+   0.071,
+   -0.2055
+  ],
+  "v_m_s": 0.2498,
+  "quat_xyzw": null,
+  "dist_to_lip_lines_mm": 24.801
+ },
+ "culprit_last4": [
+  {
+   "sim_t": 2.02725,
+   "q_deg": 4.3587,
+   "phase": "close",
+   "i": 839,
+   "pop_sync": false,
+   "in_ring_near_set": false
+  },
+  {
+   "sim_t": 2.02736,
+   "q_deg": 4.3542,
+   "phase": "close",
+   "i": 840,
+   "pop_sync": false,
+   "in_ring_near_set": false
+  },
+  {
+   "sim_t": 2.02747,
+   "q_deg": 4.3497,
+   "phase": "close",
+   "i": 841,
+   "pop_sync": false,
+   "in_ring_near_set": false
+  },
+  {
+   "sim_t": 2.02758,
+   "q_deg": 4.3452,
+   "phase": "close",
+   "i": 842,
+   "pop_sync": true,
+   "in_ring_near_set": false
+  }
+ ],
+ "mechanism": "unresolved",
+ "mechanism_rule": "GATES_w10.md G1: pre-pop sync 중 culprit 구가 툴 삼각형에 h<0∧inside∧|h|<r → ghost; 상세 최대힘 pair 가 SS → sphere_sphere; 3 sync 연속 상승·≥2 N → squeeze; else unresolved",
+ "ghost_any_prepop": false,
+ "squeeze_seq_F_max_N": [
+  0.0,
+  0.0,
+  0.0
+ ],
+ "contact_detail": {
+  "error": "RuntimeError(\"ContactInfoContainer does not have field: 'Normal', you may need to turn on the output of this field by correctly calling SetContactOutputContent before Initialize().\")"
+ },
+ "ring_syncs": 12,
+ "dt_fine_s": 0.0001,
+ "owner_ids": {
+  "fixed": 18797,
+  "door": 18798
+ },
+ "n_tri": {
+  "fixed": 204,
+  "door": 204
+ },
+ "wall_s": 0.1
+}

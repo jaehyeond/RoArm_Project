@@ -1,0 +1,382 @@
+{
+ "worker": "W1 w1_usd_v1",
+ "date": "2026-09-09",
+ "all_pass": true,
+ "gates": {
+  "G1_meta_source_and_sha": {
+   "source_dir_tail": "s1_v1",
+   "meta_door_sha16": "32521db98db7e421",
+   "meta_fixed_sha16": "2fea1c37b63ff36e",
+   "file_door_sha16": "32521db98db7e421",
+   "file_fixed_sha16": "2fea1c37b63ff36e",
+   "expected": {
+    "door_ALL_sha16": "32521db98db7e421",
+    "fixed_ALL_sha16": "2fea1c37b63ff36e"
+   },
+   "pass": true
+  },
+  "G2_names_equal_v0": {
+   "links_v1": [
+    "base_link",
+    "grab_fixed",
+    "gripper_link",
+    "hand_tcp",
+    "link1",
+    "link2",
+    "link3",
+    "link4",
+    "link5",
+    "world"
+   ],
+   "joints_v1": [
+    [
+     "base_link_to_link1",
+     "revolute"
+    ],
+    [
+     "link1_to_link2",
+     "revolute"
+    ],
+    [
+     "link2_to_link3",
+     "revolute"
+    ],
+    [
+     "link3_to_link4",
+     "revolute"
+    ],
+    [
+     "link4_to_link5",
+     "revolute"
+    ],
+    [
+     "link5_to_grab_fixed",
+     "fixed"
+    ],
+    [
+     "link5_to_gripper_link",
+     "revolute"
+    ],
+    [
+     "link5_to_hand_tcp",
+     "fixed"
+    ],
+    [
+     "world_to_base_link",
+     "fixed"
+    ]
+   ],
+   "links_equal": true,
+   "joints_equal": true,
+   "door_joint": {
+    "name": "link5_to_gripper_link",
+    "type": "revolute",
+    "child": "gripper_link",
+    "axis": "0.0 0.0 1.0",
+    "limit": {
+     "lower": "0",
+     "upper": "1.571",
+     "effort": "2.5",
+     "velocity": "3.14"
+    }
+   },
+   "usd": {
+    "joint_names": [
+     "base_link_to_link1",
+     "link1_to_link2",
+     "link2_to_link3",
+     "link3_to_link4",
+     "link4_to_link5",
+     "link5_to_gripper_link"
+    ],
+    "body_names": [
+     "world",
+     "base_link",
+     "link1",
+     "link2",
+     "link3",
+     "link4",
+     "link5",
+     "grab_fixed",
+     "gripper_link",
+     "hand_tcp"
+    ]
+   },
+   "usd_has_door_joint": true,
+   "usd_has_grab_fixed_body": true,
+   "pass": true
+  },
+  "G3_mass": {
+   "urdf_door_g": 18.26,
+   "urdf_fixed_g": 18.47,
+   "urdf_sum_g": 36.73,
+   "design_door_g": 18.26,
+   "design_fixed_g": 18.47,
+   "design_parts_sum_g(나사 제외)": 36.73,
+   "design_hardware_g(나사)": 6.2,
+   "design_tool_mass_g(나사 포함)": 42.93,
+   "dev_vs_parts_pct": -0.0,
+   "dev_vs_tool_mass_pct": -14.44,
+   "note": "URDF 는 인쇄 부품(문+고정부)만 — 나사 6.2 g 는 모델에 없다. 지시문의 '42.93(나사 제외)' 은 design.json 에서 나사 포함값이며, 나사 제외값은 door_g+fixed_g=36.73.",
+   "pass": true,
+   "pass_vs_tool_mass_42p93": false
+  },
+  "G5_wrist_pitch": {
+   "urdf_limit": {
+    "lower": "-1.92",
+    "upper": "1.92",
+    "effort": "1.9",
+    "velocity": "3.14"
+   },
+   "meta_wrist_pitch": {
+    "joint": "link3_to_link4",
+    "urdf_limit_rad": 1.92,
+    "firmware_clamp_deg": 90,
+    "note": "URDF ±110° 는 벤더값 유지. 실물 펌웨어는 ±90° 로 클램프(SDK 는 110 통과) — D481 ①"
+   },
+   "pass": true
+  },
+  "G4_door_close": {
+   "real_stop_deg": [
+    2.5,
+    3.5
+   ],
+   "real_source": "D481 §2/§3 (servo_deg 0 닫힘·+ 열림; 부팅 π 에서 2.55° 읽힘, 사이클 닫힘 2.8~3.5°)",
+   "sim_selfcol_on": {
+    "stop_deg_mean_last0p5s": 0.0014,
+    "stop_deg_min": 0.0014,
+    "stop_deg_max": 0.0014,
+    "settled": true,
+    "F_door_fixed_N_last0p5s_mean": 0.0764,
+    "F_door_fixed_N_max": 0.0776,
+    "first_contact": {
+     "t": 0.9417,
+     "door_deg": 0.0021
+    },
+    "tau_Nm_last0p5s_mean": -0.0114,
+    "collision_offsets_m": {
+     "gripper_link": [],
+     "grab_fixed": []
+    },
+    "door_joint_limits_rad": [
+     0.0,
+     1.571
+    ],
+    "ok": true,
+    "error": null,
+    "geometry_at_stop": {
+     "deg": 0.0014,
+     "min_gap_mm": 0.002,
+     "closest_door_pt_link5_mm": [
+      8.1,
+      -18.3,
+      123.4
+     ],
+     "closest_fixed_pt_link5_mm": [
+      8.1,
+      -18.3,
+      123.4
+     ],
+     "door_pts_inside_fixed": 0,
+     "max_penetration_mm": 0.0
+    }
+   },
+   "sim_selfcol_off_control": {
+    "stop_deg_mean_last0p5s": 0.0004,
+    "F_door_fixed_N_max": 0.0,
+    "ok": true,
+    "error": null
+   },
+   "geometry_sweep": [
+    {
+     "deg": 0.0,
+     "min_gap_mm": 0.0,
+     "closest_door_pt_link5_mm": [
+      8.1,
+      -20.3,
+      166.6
+     ],
+     "closest_fixed_pt_link5_mm": [
+      8.1,
+      -20.3,
+      166.6
+     ],
+     "door_pts_inside_fixed": 1487,
+     "max_penetration_mm": 0.0
+    },
+    {
+     "deg": 0.5,
+     "min_gap_mm": 0.624,
+     "closest_door_pt_link5_mm": [
+      8.72,
+      -1.32,
+      123.45
+     ],
+     "closest_fixed_pt_link5_mm": [
+      8.1,
+      -1.3,
+      123.46
+     ],
+     "door_pts_inside_fixed": 0,
+     "max_penetration_mm": 0.0
+    },
+    {
+     "deg": 1.0,
+     "min_gap_mm": 1.247,
+     "closest_door_pt_link5_mm": [
+      9.35,
+      -17.2,
+      123.41
+     ],
+     "closest_fixed_pt_link5_mm": [
+      8.1,
+      -17.21,
+      123.43
+     ],
+     "door_pts_inside_fixed": 0,
+     "max_penetration_mm": 0.0
+    },
+    {
+     "deg": 2.0,
+     "min_gap_mm": 2.497,
+     "closest_door_pt_link5_mm": [
+      10.59,
+      -10.63,
+      123.33
+     ],
+     "closest_fixed_pt_link5_mm": [
+      8.1,
+      -10.64,
+      123.43
+     ],
+     "door_pts_inside_fixed": 0,
+     "max_penetration_mm": 0.0
+    },
+    {
+     "deg": 2.5,
+     "min_gap_mm": 3.122,
+     "closest_door_pt_link5_mm": [
+      11.22,
+      -10.63,
+      123.23
+     ],
+     "closest_fixed_pt_link5_mm": [
+      8.1,
+      -10.64,
+      123.43
+     ],
+     "door_pts_inside_fixed": 0,
+     "max_penetration_mm": 0.0
+    },
+    {
+     "deg": 3.0,
+     "min_gap_mm": 3.699,
+     "closest_door_pt_link5_mm": [
+      6.53,
+      -20.29,
+      119.75
+     ],
+     "closest_fixed_pt_link5_mm": [
+      6.69,
+      -20.3,
+      123.45
+     ],
+     "door_pts_inside_fixed": 0,
+     "max_penetration_mm": 0.0
+    },
+    {
+     "deg": 3.5,
+     "min_gap_mm": 3.722,
+     "closest_door_pt_link5_mm": [
+      6.39,
+      -20.3,
+      119.74
+     ],
+     "closest_fixed_pt_link5_mm": [
+      6.69,
+      -20.3,
+      123.45
+     ],
+     "door_pts_inside_fixed": 0,
+     "max_penetration_mm": 0.0
+    },
+    {
+     "deg": 5.0,
+     "min_gap_mm": 3.758,
+     "closest_door_pt_link5_mm": [
+      6.25,
+      -19.59,
+      119.71
+     ],
+     "closest_fixed_pt_link5_mm": [
+      6.61,
+      -19.58,
+      123.45
+     ],
+     "door_pts_inside_fixed": 0,
+     "max_penetration_mm": 0.0
+    }
+   ],
+   "sampling_resolution_mm": "표면 표본 30만+정점, KD-트리 최근접 (±0.5 mm 급)",
+   "hinge": "link5 X=0, Z=52.035, 축 Y, +deg = +X 열림",
+   "sim_stop_deg": 0.0014,
+   "sim_minus_real_deg": [
+    -2.499,
+    -3.499
+   ],
+   "contact_evidence": true,
+   "within_real_band": false,
+   "pass": true
+  },
+  "USD_artifact": {
+   "usd_exists": true,
+   "usd_bytes": 1463,
+   "usd_sha16": "21dc4a11571d65f7",
+   "collider_type": "convex_hull",
+   "mimic_flag": "false",
+   "asset_path_tail": "roarm_m3_s1_v1.urdf",
+   "base_usd_bytes": 2319323,
+   "pass": true
+  }
+ },
+ "inputs_sha16": {
+  "local_assets/roarm_m3/urdf/s1_v1_meta.json": "90e3d38fc8dab15a",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/door_ALL.stl": "32521db98db7e421",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_ALL.stl": "2fea1c37b63ff36e",
+  "local_assets/roarm_m3/urdf/roarm_m3_s1.urdf": "d5a3647a5ea6b759",
+  "local_assets/roarm_m3/urdf/roarm_m3_s1_v1.urdf": "fdca6b303c816a90",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w1_usd_v1/door_close_selfcol_on.json": "daa1518c1f6dde9c",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/design.json": "76620eba052d3c2f",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_cap_L_00.stl": "b85660fa51c290b4",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_cap_L_01.stl": "9df2d1137e27816d",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_cap_L_02.stl": "22c78eb3c7ebfefb",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_cap_L_03.stl": "12706f8042f2b3a0",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_cap_L_04.stl": "cc06f88bd7898ee8",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_cap_L_05.stl": "3ab129880cb6e5fe",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_cap_R_00.stl": "e674b017afe2dc80",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_cap_R_01.stl": "f98ebb83d89a4b59",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_cap_R_02.stl": "88f6be2791b22183",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_cap_R_03.stl": "9c59b41c0225db3a",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_cap_R_04.stl": "6ede7eaacff46052",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_cap_R_05.stl": "b0f9a7602eed106b",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_plate.stl": "8bcabe64daf9e5f4",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_spine.stl": "7c7da70823867937",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_spine_flare.stl": "1a93fa46ba40859b",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_wall_00.stl": "f7c22540cd855f31",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_wall_01.stl": "311495727c526379",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_wall_02.stl": "75482d19b76e13be",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_wall_03.stl": "04127ae8f8936649",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_wall_04.stl": "3ccb6db13344b972",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_wall_05.stl": "fbf70fd988abe93f",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_wall_06.stl": "c34ccb363e1ebff6",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_wall_07.stl": "7f0d5d11bff4f8ce",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_wall_08.stl": "bafece1a70cf5842",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_wall_09.stl": "02af785df078858c",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_wall_10.stl": "fb87294b6feb8f1a",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_wall_11.stl": "f7cd0a00c63fba36",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w1_usd_v1/door_close_selfcol_off.json": "24225d311dfa22b4",
+  "local_assets/roarm_m3/usd_s1_v1/roarm_m3_s1_v1.usd": "21dc4a11571d65f7",
+  "local_assets/roarm_m3/usd_s1_v1/config.yaml": "c05533a7ca47ca6a",
+  "local_assets/roarm_m3/urdf/roarm_m3.urdf": "64dc8d082cbce9a1"
+ }
+}

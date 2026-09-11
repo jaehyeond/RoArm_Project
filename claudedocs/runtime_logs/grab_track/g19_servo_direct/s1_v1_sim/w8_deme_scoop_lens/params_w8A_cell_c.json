@@ -1,0 +1,43 @@
+{
+  "_note": "W8 셀 c: W7 렌즈 클럼프 더미(npz schema 2) 를 clump_template_json 으로 되살려 실물 절차(D481, W3b 와 동일 궤적·서보 정지 모델) 로 퍼낸다. 물성 = W7 더미 metadata 의 임시값(mu 0.45·Crr 0.06·rho 905 = MEASURE), E 5e6 은 W3b 수치 안정값(더미 정착은 1e7). 알 질량은 템플릿 20.257 mg(particle_density 는 기록용). 퍼내기 위치 x=0.0 mm, y=0 (seed 460 은 y 범위 [0,0] 이라 고정). 코디네이터 요청(msg_73da043c4819): 렌더 타임라인 0.05 s 마다 → render_timeline_cell1.npz (물리 판정과 무관). [옵션 A] 폐합·재폐합 sync 4 ms→1 ms(서보 정지 판정 4배 촘촘). 회전 속도·궤적·물성 불변. 셀 c 발산(입자 81 m/s, 립에 물린 클럼프 pop) 대응.",
+  "particle_shape": "npz_template",
+  "E_pa": 5000000.0,
+  "nu": 0.3,
+  "CoR": 0.3,
+  "mu": 0.45,
+  "Crr": 0.06,
+  "particle_density_kg_m3": 905.0,
+  "E_mesh_pa": 3000000000.0,
+  "timestep_s": 1e-05,
+  "plunge_mm": 25.0,
+  "descend_mm_s": 25.0,
+  "dt_sync_descend_s": 0.004,
+  "arm_force_max_N": 6.0,
+  "settle_steps": 25,
+  "door_open_servo_deg": 30.0,
+  "close_end_joint_deg": 0.0,
+  "servo_zero_offset_deg": 2.5,
+  "servo_torque_Nm": 1.96,
+  "servo_torque_fraction": 0.9,
+  "servo_stall_model": true,
+  "collision_wall_extra_mm": 3.0,
+  "domain_top_m": 0.5,
+  "domain_bc": "all",
+  "error_out_vel": 60.0,
+  "scoop_x_mm": 0.0,
+  "scoop_y_range_mm": [
+    0.0,
+    0.0
+  ],
+  "bulk_density_g_cm3": 0.55,
+  "crater_r_max_mm": 80.0,
+  "crater_wedge_half_deg": 22.5,
+  "crater_min_depth_mm": 2.0,
+  "crater_fit_band": [
+    0.2,
+    0.8
+  ],
+  "render_timeline_dt_s": 0.05,
+  "render_timeline_path": "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w8_deme_scoop_lens/render_timeline_cell1.npz",
+  "dt_sync_close_s": 0.001
+}

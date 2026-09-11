@@ -37,9 +37,18 @@ Codex가 repo 파일에 남기지 않은 판단·시도·실패는 그대로 소
 
 ---
 
-## §2 최신 인계
+## §2 2026-09-11 Codex → Claude
 
-**아직 없음.** 이 파일은 2026-08-26에 신설됐고 Codex 세션이 아직 쓴 적이 없다.
+**한 일 (repo 변경)**: W10 실행/관측 완료 후 기존 영상 워커/W9/W10 검토. 이어 `session_20260911_real_boot_measurement.md`, `s1_v1_real/boot_check_20260911/`의 원시 수집·PID 분석/Rerun·실물 scoop 기록 및 문 목표 정책 수정. D484/LEDGER584 이후 사진 계량 후속 LEDGER585·색인/START_HERE 갱신. `torque900_03/operator_photos/`·`operator_measurement_01.json/CSV`·`MEASUREMENT_01.md` 추가. 이어 `release_tilt_review_01/`·`session_20260911_release_tilt_review.md`에 배출 회전축 검토와 별도 RRD 시각 증거를 추가했다. 각 폴더의 plan/source 사본·manifest를 참조.
 
-Claude가 이 상태의 파일을 읽었다면: **Codex 쪽 인계 정보가 없다는 뜻이지, "변경 없음"이라는 뜻이 아니다.**
-Codex 세션이 relay 규약 이전에 돌았을 수 있으므로, 필요하면 `git log`와 `claudedocs/session_*.md`로 직접 확인한다.
+**추가 변경**: `session_20260911_790_tilt_mass_git.md`, `pre790_feedback_01/`, `git_publish_01/`, `.gitattributes`, `.gitignore`. 기존 LFS pre-push hook을 사용하며 새 hook 설치 없음. 원시 CSV의 CRLF와 동결 소스/OBJ/diff의 기존 공백은 원본 해시 보존을 위해 그대로 둔다.
+
+**만지지 말 것**: 기존 W1~W10 결과/자산/params·사용자 Manual 원본·이전 원시 기록. 첫 실패/수정 전 실험도 원인 증거라 보존. 설치 SDK/펌웨어는 변경하지 않았다. 사용자 “진행해. 그리고 나서 지금 git 제대로 된 위치에 push해봐”로 후속 실기 및 commit/push 요청 있음. 다른 Orca worktree 브랜치·무관한 g16/출력 모니터/발표자료 변경은 이번 게시에서 제외하고 로컬 보존.
+
+**함정**: `hw_s1_manual.goto_q`가 T122에 측정 문각을 넣어 닫힘0° 목표를 완화한다. 새 기록 어댑터의 명시 T121 목표 유지 수정은 모의검사와 수정900_03 실제 송신 검증까지 끝났다. 기존 Manual REPL은 수정 안 했으므로 그대로 돌아가면 교란이 반복된다. 새 어댑터의 기록 메서드는 record; SDK log는 Logger 객체. 설치 roarm env Rerun0.26.2 대신 isaaclab의0.34.1을 분석에 사용하고 CLI PATH를 지정한다. PID 정본 시각화는 visual_02, scoop은 visual_01; 첫 커서/정적 decision 패널의 한계는 inspection 참조.
+
+**승인/입력 경계**: 연결 준비 완료/기존 배치/계속 초기자세·제대로 진행/PID 데이터 수집 지시가 있다. 실물 순차 절차의 재승인은 불필요. 수정900_03 컵 질량/잔류 사진 입력은 기록했다. 기존 measurement_context.json은 답변 전 null 역사 사본이며 새 operator_measurement_01.json을 읽는다. 다음 운동 전 필요한 입력은 사진 촬영 후 실물 배치 복구와 잔류 제거 여부다; 직전 종료 자세를 현재 자세로 추정하지 말 것. 구체적 단계/자세/남은 범위는 START_HERE 정본. 외부 sim변수·학습·펌웨어 변경은 이 승인에 포함되지 않는다.
+
+**배출 검토 함정**: 새 검토의 ideal_outward5는 그랩 전체의 이상적인 자세이며 실행할 손목 명령이 아니다. 실제 입자 배출을 시험하지 않았다. 첫 RRD의 출구면 가림을 보완한 고정 jaw 안쪽 검수 정본은 `release_tilt_review_01/visual_02/`; 첫 결과도 보존한다.
+
+**검증 방법**: `boot_check_20260911/verify_pid.py`는 장치 없는 파일 감사. `verify_recorded_arm.py`는 가짜 접촉 시리얼 회귀(실기0). RRD validation/inspection/manifest 및 원장 append_integrity를 확인한다. 첫 실행 소스 사본과 수정본을 섞지 말 것. 백그라운드 실물 프로세스는 종료했고 포트는 닫았다.

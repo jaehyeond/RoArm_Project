@@ -1,0 +1,375 @@
+{
+  "source_raw_lines": {
+    "open": 2860,
+    "close": 3091,
+    "steady_first": 3035,
+    "steady_last": 3090
+  },
+  "last_second_received_rows": 51,
+  "actual_q_deg": [
+    88.59374998918678,
+    75.05859375834585,
+    43.330078100499115,
+    64.86328122366668,
+    -0.08789063715325754,
+    29.267578137827087
+  ],
+  "command_q_deg": [
+    90.0,
+    73.25,
+    42.0,
+    64.77,
+    0.0,
+    30.0
+  ],
+  "open_command_to_close_command_s": 4.1100189,
+  "configured_wait_after_open_settle_s": 1.5,
+  "actual_tool_lean_deg": 3.2519530825117453,
+  "outlet_inner_facet_normal_link5": [
+    0.13052618200608704,
+    0.0,
+    -0.9914448627185043
+  ],
+  "outlet_inner_facet_angle_deg": 7.4999994097331255,
+  "facet_interpretation": "Candidate outlet surface only; photo-to-mesh correspondence and individual pellet contacts are NOT calibrated.",
+  "cases": [
+    {
+      "case": "actual",
+      "label": "Measured release; last 1 s",
+      "q_deg": [
+        88.59374998918678,
+        75.05859375834585,
+        43.330078100499115,
+        64.86328122366668,
+        -0.08789063715325754,
+        29.267578137827087
+      ],
+      "gravity_unit_link5": [
+        8.701783059780219e-05,
+        -0.056726753684677785,
+        0.9983897374494065
+      ],
+      "exit_projected_slope_deg": 7.504993205478412,
+      "exit_gravity_fraction": 0.1304022739644418,
+      "side_gravity_fraction": 0.056726753684677785,
+      "lip_displacement_mm": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "lip_displacement_norm_mm": 0.0,
+      "T_world_link5": [
+        [
+          0.9997352276415362,
+          -0.02296816367041238,
+          -0.0013921458741685507,
+          0.00848086022971059
+        ],
+        [
+          -0.02301015081269512,
+          -0.9981255125854699,
+          -0.0567097353685413,
+          0.3454719424512292
+        ],
+        [
+          -8.701783059780219e-05,
+          0.056726753684677785,
+          -0.9983897374494065,
+          0.412679822105505
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured": true,
+      "executable_plan": false
+    },
+    {
+      "case": "commanded",
+      "label": "Issued reference; not measured",
+      "q_deg": [
+        90.0,
+        73.25,
+        42.0,
+        64.77,
+        0.0,
+        30.0
+      ],
+      "gravity_unit_link5": [
+        -2.1374118385050104e-20,
+        -0.0003490658433099094,
+        0.9999999390765166
+      ],
+      "exit_projected_slope_deg": 7.4999994097331255,
+      "exit_gravity_fraction": 0.13052617405397737,
+      "side_gravity_fraction": 0.0003490658433099094,
+      "lip_displacement_mm": [
+        -8.246784070970552,
+        15.123677712590434,
+        13.309189160818635
+      ],
+      "lip_displacement_norm_mm": 21.768545913449763,
+      "T_world_link5": [
+        [
+          1.0,
+          -6.123233995736766e-17,
+          -7.498798684882813e-33,
+          -2.842173542035176e-34
+        ],
+        [
+          -6.123233622688021e-17,
+          -0.9999999390765166,
+          -0.0003490658433099094,
+          0.35101955039933325
+        ],
+        [
+          2.1374118385050104e-20,
+          0.0003490658433099094,
+          -0.9999999390765166,
+          0.42625656601297235
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured": false,
+      "executable_plan": false
+    },
+    {
+      "case": "pitch_level",
+      "label": "Hypothesis: remove side lean",
+      "q_deg": [
+        88.59374998918678,
+        75.05859375834585,
+        43.330078100499115,
+        61.61132814115503,
+        -0.08789063715325754,
+        29.267578137827087
+      ],
+      "gravity_unit_link5": [
+        1.7908222712400362e-19,
+        -1.1674335383423165e-16,
+        1.0
+      ],
+      "exit_projected_slope_deg": 7.4999994097331255,
+      "exit_gravity_fraction": 0.13052618200608704,
+      "side_gravity_fraction": 1.1674335383423165e-16,
+      "lip_displacement_mm": [
+        0.3060262197988467,
+        12.466126045154958,
+        -1.2132014621288045
+      ],
+      "lip_displacement_norm_mm": 12.528759252559952,
+      "T_world_link5": [
+        [
+          0.9997352882610998,
+          -0.02300768144545755,
+          -1.502716859439088e-18,
+          0.008554954455854493
+        ],
+        [
+          -0.02300768144545755,
+          -0.9997352882610998,
+          -1.7223620038361688e-16,
+          0.3484902065821106
+        ],
+        [
+          -1.7908222712400362e-19,
+          1.1674335383423165e-16,
+          -1.0,
+          0.41173418553987723
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured": false,
+      "executable_plan": false
+    },
+    {
+      "case": "pitch_plus5",
+      "label": "Hypothesis: wrist pitch +5 deg",
+      "q_deg": [
+        88.59374998918678,
+        75.05859375834585,
+        43.330078100499115,
+        69.86328122366668,
+        -0.08789063715325754,
+        29.267578137827087
+      ],
+      "gravity_unit_link5": [
+        0.00022016661808843652,
+        -0.14352618800182668,
+        0.9896464949083205
+      ],
+      "exit_projected_slope_deg": 7.512745999412295,
+      "exit_gravity_fraction": 0.12939306157853542,
+      "side_gravity_fraction": 0.14352618800182668,
+      "lip_displacement_mm": [
+        -0.46592830859188905,
+        -18.97981495418999,
+        3.239399472695359
+      ],
+      "lip_displacement_norm_mm": 19.259911054512692,
+      "T_world_link5": [
+        [
+          0.9997348984954927,
+          -0.022753594007982696,
+          -0.003522313150026993,
+          0.00836982045535967
+        ],
+        [
+          -0.02302355873593912,
+          -0.9893849136293641,
+          -0.14348312941160912,
+          0.3409486835487926
+        ],
+        [
+          -0.00022016661808843652,
+          0.14352618800182668,
+          -0.9896464949083205,
+          0.4144636758760341
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured": false,
+      "executable_plan": false
+    },
+    {
+      "case": "roll_minus5",
+      "label": "Hypothesis: wrist roll target -5 deg",
+      "q_deg": [
+        88.59374998918678,
+        75.05859375834585,
+        43.330078100499115,
+        64.86328122366668,
+        -5.0,
+        29.267578137827087
+      ],
+      "gravity_unit_link5": [
+        0.00494406816798814,
+        -0.056510957748521946,
+        0.9983897374494065
+      ],
+      "exit_projected_slope_deg": 7.783728211730415,
+      "exit_gravity_fraction": 0.13521777156941261,
+      "side_gravity_fraction": 0.056510957748521946,
+      "lip_displacement_mm": [
+        -0.013811309685723971,
+        0.6929671548019933,
+        -0.039342107732848186
+      ],
+      "lip_displacement_norm_mm": 0.6942204486692016,
+      "T_world_link5": [
+        [
+          0.9980301276803358,
+          0.06272101858418386,
+          -0.0013921458741685507,
+          0.00848086022971059
+        ],
+        [
+          0.06254134978014775,
+          -0.9964299200054699,
+          -0.0567097353685413,
+          0.3454719424512292
+        ],
+        [
+          -0.00494406816798814,
+          0.056510957748521946,
+          -0.9983897374494065,
+          0.412679822105505
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured": false,
+      "executable_plan": false
+    },
+    {
+      "case": "ideal_outward5",
+      "label": "Concept: outlet tilt 5 deg; IK NOT solved",
+      "q_deg": null,
+      "gravity_unit_link5": [
+        0.08710208582052342,
+        -0.056726753684677785,
+        0.9945829789726506
+      ],
+      "exit_projected_slope_deg": 12.504993205478414,
+      "exit_gravity_fraction": 0.21617603445236466,
+      "side_gravity_fraction": 0.056726753684677785,
+      "lip_displacement_mm": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "lip_displacement_norm_mm": 0.0,
+      "T_world_link5": [
+        [
+          0.9958095997643663,
+          -0.02296816367041238,
+          -0.08851951465491421,
+          0.023028077454387893
+        ],
+        [
+          -0.027865169348966705,
+          -0.9981255125854699,
+          -0.054488470919510715,
+          0.3451412054441645
+        ],
+        [
+          -0.08710208582052342,
+          0.056726753684677785,
+          -0.9945829789726506,
+          0.41275043819399587
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured": false,
+      "executable_plan": false
+    }
+  ],
+  "source_sha256": {
+    "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/torque900_03/raw.jsonl": "c91324498b31a56a464c38280e3803afd957650ff8da81756a0a7d47d8c9e4e9",
+    "hw_s1_manual.py": "b22f1ad779d16d177d60b546b153e36f81b8854d088e8e11f767f27444891f7b",
+    "local_assets/roarm_m3/urdf/roarm_m3_s1_v1.urdf": "411ef28f78ead0f0138f0251d284f212abe46f4c3ab0890a3c16c081a6ef6e0f",
+    "sim_scripts/roarm_kinematics.py": "af4cc2d3c124ba4a8a3a6899ab1c8d676e127199bcf687b8e31fee690a011a97",
+    "scoop_grab_s1_design.py": "6eb4e5834fa80716173cd9067f17d735d6dd9d8c09523208eb0727b18f78defb",
+    "local_assets/roarm_m3/urdf/meshes/s1_v1_fixed.stl": "2fea1c37b63ff36e4647675198b9b04e2b55becae3d84edbc0f84aa928ef1741",
+    "local_assets/roarm_m3/urdf/meshes/s1_v1_door.stl": "880547d19d611cacfbd8577f21e5dd382d9fed1e852987a1e753d1bb8d2f3098",
+    "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_wall_11.stl": "f7cd0a00c63fba3685e238d7bbb93674df6f28f0f61b761fc6e8dc5b143abf97"
+  },
+  "verdict": "OUTLET_DIRECTED_TILT_GEOMETRICALLY_PLAUSIBLE__SMALL_WRIST_ROTATION_AXIS_DEPENDENT__PHYSICAL_DISCHARGE_UNTESTED",
+  "limits": [
+    "No contact/friction simulation or new hardware action.",
+    "Photo is not calibrated or time synchronized to robot.",
+    "Ideal outlet tilt has no solved joint path/cup clearance; not a runnable command.",
+    "Pitch leveling reduces side-directed gravity but barely changes outlet slope; residue may remain.",
+    "Wrist-only rotation moves the lip; cup geometry is unmeasured.",
+    "SDK to URDF geometry convention reused, no fresh calibration.",
+    "Old four-bar grab roll14-degree rule is not an S1 clearance certificate."
+  ],
+  "friction_reference": "https://openstax.org/books/university-physics-volume-1/pages/6-2-friction"
+}

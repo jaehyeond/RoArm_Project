@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-11T15:39:54.977932+09:00",
+  "run_id": "torque900_03",
+  "association_basis": "User supplied these photos in response to the completed corrected-900 trial measurement request; not sensor-time synchronized.",
+  "run_raw_sha256": "c91324498b31a56a464c38280e3803afd957650ff8da81756a0a7d47d8c9e4e9",
+  "close_torque_command": 900,
+  "measurement_status": "received_from_user_photos",
+  "measurement_method": "gross_minus_empty_container",
+  "empty_container_mass_g": 9.65,
+  "container_plus_delivered_pellets_mass_g": 29.6,
+  "delivered_mass_g": 19.95,
+  "decimal_calculation": "29.60 - 9.65 = 19.95 g",
+  "scale_display_increment_g": 0.01,
+  "scale_accuracy_verified": false,
+  "residue": {
+    "present": true,
+    "location_user_report": "fixed gripper jaw",
+    "count_estimate_min": 10,
+    "count_estimate_max": 15,
+    "count_exact": null,
+    "count_source": "user estimate; image supports presence only",
+    "varies_between_trials_user_report": true,
+    "mass_g": null
+  },
+  "initial_residue_removed_before_run": null,
+  "total_captured_mass_g": null,
+  "discharge_fraction": null,
+  "independent_measured_trials_in_this_record": 1,
+  "limitations_ko": [
+    "19.95 g은 빈 컵 표시를 뺀 컵 배출 질량이다. 전체 포획량이나 새로 퍼낸 양을 그대로 뜻하지 않는다.",
+    "시작 전 잔류 제거 여부가 확인되지 않아 이전 알의 이월 가능성을 정량 분리하지 못한다.",
+    "잔류 10~15알은 사용자 추정 범위이며 반복 편차는 정량 측정하지 않았다.",
+    "잔류 질량·유실량 미측정으로 배출률을 계산하지 않는다. 시뮬레이션 입자 질량을 곱하지 않는다.",
+    "사진은 외부 사후 관측이다. 로봇 원시 시각과 동기화하지 않았고 잔류 발생 시점/원인을 단정하지 않는다."
+  ],
+  "photos": [
+    {
+      "user_image_number": 1,
+      "role": "fixed_jaw_residue",
+      "original_path": "/home/cgxr/Downloads/KakaoTalk_20260911_152848591.jpg",
+      "archived_path": "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/torque900_03/operator_photos/KakaoTalk_20260911_152848591.jpg",
+      "sha256": "635e262549047707a9ba6f8ac824d12c187a0450a6c6146ddc33b3f9f3815ea0",
+      "visual_inspection_method": "view_image; original user attachment also inspected",
+      "observation_ko": "고정 jaw 안쪽 모서리/턱에 겹친 펠릿과 인접한 턱의 펠릿이 보인다. 정확한 개수는 사진으로 확정하지 않음.",
+      "capture_time_verified": null
+    },
+    {
+      "user_image_number": 2,
+      "role": "empty_container_scale",
+      "original_path": "/home/cgxr/Downloads/KakaoTalk_20260911_152807698_01.jpg",
+      "archived_path": "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/torque900_03/operator_photos/KakaoTalk_20260911_152807698_01.jpg",
+      "sha256": "fce1a89f282c2294a0b33ee4c7a5e93f4bba1ec438b938b035236c36797c1dcc",
+      "visual_inspection_method": "view_image; original user attachment also inspected",
+      "observation_ko": "빈 용기를 올린 저울 표시 9.65 g.",
+      "capture_time_verified": null
+    },
+    {
+      "user_image_number": 3,
+      "role": "filled_container_scale",
+      "original_path": "/home/cgxr/Downloads/KakaoTalk_20260911_152807698.jpg",
+      "archived_path": "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/torque900_03/operator_photos/KakaoTalk_20260911_152807698.jpg",
+      "sha256": "95156f950ba4812e38d29dd3052471fd9343e80de6297b4e27b0833b93cecac0",
+      "visual_inspection_method": "view_image; original user attachment also inspected",
+      "observation_ko": "펠릿이 든 용기를 올린 저울 표시 29.60 g. 컵 밖에도 알이 보이나 이번 회차 유실인지 확인되지 않음.",
+      "capture_time_verified": null
+    }
+  ],
+  "existing_trajectory_recording": "visual_01/scoop.rrd",
+  "supersedes_pending_fields_in": "measurement_context.json (historical original preserved)"
+}

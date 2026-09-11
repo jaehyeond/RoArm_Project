@@ -1,0 +1,341 @@
+--- sim_deme_scoop_s1.py.bak_20260910_pre_w10	2026-09-10 23:31:44.419330520 +0900
++++ sim_deme_scoop_s1.py	2026-09-10 23:46:08.045349495 +0900
+@@ -85,6 +85,16 @@
+     "door_min_q_deg": None,
+     # W8 진단: q 가 이 값 아래(폐합·재폐합)면 매 sync 타임라인 flush + 최대속도 owner 위치·최대 접촉점 기록. None = 끔.
+     "diag_flush_below_q_deg": None,
++    # W10 진단 v2 (전부 None 이면 W8 경로 그대로). diag_flush_below_q_deg 구간(폐합·재폐합)에서:
++    #   diag_fine_sync_s   = sync 를 이 길이로(예 1e-4 = 10 스텝). 문 각속도·물성 불변, q 감소량은 sync 길이에 비례.
++    #   diag_event_v_m_s / diag_event_force_N = pop 이벤트 트리거(입자 최대속도 / 툴 단일 접촉) → 링버퍼(diag_ring_syncs) + culprit 직전 sync 표 +
++    #                        GetContactDetailedInfo(try) 를 diverge_event_<tag>.{json,npz} 로 덤프(1회).
++    #   diag_stop_v_m_s    = 파이썬 pop-stop(전 phase): 입자 최대속도가 넘으면 RuntimeError → 기존 발산 경로(산출은 남긴다).
++    #                        DEME 의 C++ terminate(error_out_vel) 대신 상태를 남기려면 params 로 error_out_vel 을 올려 쓴다.
++    #   diag_near_lip_mm   = 링버퍼에 담는 클럼프 = 두 립선에서 이 거리 안(+외접 반지름).
++    #   max_velocity_m_s   = DEME SetMaxVelocity(CD 마진 상한; 넘으면 anomaly 로그만, 물리 불변). pop 뒤 마진 폭주 방지용. None = 미설정(auto).
++    "diag_fine_sync_s": None, "diag_event_v_m_s": None, "diag_event_force_N": None, "diag_stop_v_m_s": None,
++    "diag_ring_syncs": 12, "diag_near_lip_mm": 12.0, "max_velocity_m_s": None,
+ }
+ R_G2L5 = np.array([[0, 1, 0], [0, 0, 1], [1, 0, 0]], float)     # gripper → link5
+ R_W = np.array([[0, -1, 0], [-1, 0, 0], [0, 0, -1]], float)      # link5 → 세계 (열 = link5 축)
+@@ -103,7 +113,7 @@
+     return np.array([[c, 0, s], [0, 1, 0], [-s, 0, c]], float)
+ 
+ 
+-def half_bowl(P, side, n_th=24):
++def half_bowl(P, side, n_th=24, groups=None):
+     """반쪽 보울 충돌 셸(link5 mm) 을 설계값으로 해석적으로 만든다. side −1 = 고정(x ≤ 8.1), +1 = 문.
+ 
+     🔴 STL(fixed_ALL/door_ALL) 을 그대로 쓰면 안 된다: 조각 볼록체 합집합이라 내부 중복면이 많고,
+@@ -120,35 +130,39 @@
+     pt = lambda t, r, y: np.array([C[0] + r * math.sin(t), y, C[2] + r * math.cos(t)])
+     V, F = [], []
+ 
+-    def quad(a, b, c, d, outward):            # 네 점 + 바깥 방향 → 삼각형 2, 법선을 바깥으로
++    def quad(a, b, c, d, outward, g=None):    # 네 점 + 바깥 방향 → 삼각형 2, 법선을 바깥으로. g = 삼각형 그룹 태그(W10 진단, groups 가 주어질 때만)
+         i = len(V); V.extend([a, b, c, d])
+         n = np.cross(np.asarray(b) - a, np.asarray(c) - a)
+         F.extend([[i, i + 1, i + 2], [i, i + 2, i + 3]] if np.dot(n, outward) >= 0 else [[i, i + 2, i + 1], [i, i + 3, i + 2]])
++        if groups is not None:
++            groups.extend([g, g])
+ 
+-    def tri(a, b, c, outward):
++    def tri(a, b, c, outward, g=None):
+         i = len(V); V.extend([a, b, c]); n = np.cross(np.asarray(b) - a, np.asarray(c) - a)
+         F.append([i, i + 1, i + 2] if np.dot(n, outward) >= 0 else [i, i + 2, i + 1])
++        if groups is not None:
++            groups.append(g)
+     for k in range(n_th):
+         t0, t1 = th[k], th[k + 1]; rad_dir = pt((t0 + t1) / 2, 1, 0) - np.array([C[0], 0, C[2]])
+-        quad(pt(t0, r_in, -h), pt(t1, r_in, -h), pt(t1, r_in, h), pt(t0, r_in, h), -rad_dir)      # 안쪽 면
+-        quad(pt(t0, r_out, -H), pt(t1, r_out, -H), pt(t1, r_out, H), pt(t0, r_out, H), rad_dir)   # 바깥 면
++        quad(pt(t0, r_in, -h), pt(t1, r_in, -h), pt(t1, r_in, h), pt(t0, r_in, h), -rad_dir, "inner")      # 안쪽 면
++        quad(pt(t0, r_out, -H), pt(t1, r_out, -H), pt(t1, r_out, H), pt(t0, r_out, H), rad_dir, "outer")   # 바깥 면
+         for y_in, y_out in ((h, H), (-h, -H)):                                                   # 캡 안/바깥 면
+             ny = np.array([0, np.sign(y_in), 0])
+             if cap == "solid":
+-                tri(pt(t0, 0, y_in), pt(t0, r_in, y_in), pt(t1, r_in, y_in), -ny)
+-                tri(pt(t0, 0, y_out), pt(t0, r_out, y_out), pt(t1, r_out, y_out), ny)
++                tri(pt(t0, 0, y_in), pt(t0, r_in, y_in), pt(t1, r_in, y_in), -ny, "cap_in")
++                tri(pt(t0, 0, y_out), pt(t0, r_out, y_out), pt(t1, r_out, y_out), ny, "cap_out")
+             elif cap == "annular":                                                               # 진단용: 벽 끝만 막음
+-                quad(pt(t0, r_in, y_in), pt(t1, r_in, y_in), pt(t1, r_out, y_in), pt(t0, r_out, y_in), ny)
++                quad(pt(t0, r_in, y_in), pt(t1, r_in, y_in), pt(t1, r_out, y_in), pt(t0, r_out, y_in), ny, "cap_in")
+     # 파팅면(x = 8.1 평면: 립·윗단·캡 단면) 의 바깥 = 반대쪽 반쪽 방향: 고정(side −1) → +X, 문(side +1) → −X.
+     # 🔴 W3(09-09) 는 여기에 (0,0,cos t) 를 줘서 면 법선(±X)과 직교 → 방향이 임의였고 20면 중 8면이 뒤집혔다.
+     #    DEME triangle_sphere_CD 는 양면이라 뒤집힌 면의 발자국 안·뒤쪽에 있는 정상 입자에 관입 r+|h|(수 mm, ~60 N)
+     #    를 준다 = W3 발산의 원인(W3b b_diverge/: cut_base 21 m/s → cut_fixnorm 0.37 m/s).
+     nx = np.array([-side, 0, 0], float)
+-    for t in (th[0], th[-1]):
+-        quad(pt(t, r_in, -h), pt(t, r_out, -h), pt(t, r_out, h), pt(t, r_in, h), nx)
++    for t, lab in ((th[0], "lip"), (th[-1], "bottom")):     # θ=0 = 립 띠, θ=π = 바닥 띠 (그룹 태그 part_lip / part_bottom / part_cap_*)
++        quad(pt(t, r_in, -h), pt(t, r_out, -h), pt(t, r_out, h), pt(t, r_in, h), nx, f"part_{lab}")
+         if cap == "solid":
+             for y_in, y_out in ((h, H), (-h, -H)):
+-                quad(pt(t, 0, y_in), pt(t, r_out, y_in), pt(t, r_out, y_out), pt(t, 0, y_out), nx)
++                quad(pt(t, 0, y_in), pt(t, r_out, y_in), pt(t, r_out, y_out), pt(t, 0, y_out), nx, f"part_cap_{lab}")
+     m = trimesh.Trimesh(np.asarray(V, float), np.asarray(F), process=False); m.merge_vertices()
+     return m
+ 
+@@ -444,6 +458,10 @@
+     mf.SetFamily(FAM_F["hold"]); md.SetFamily(FAM_D["hold"])
+     s.SetInitTimeStep(P["timestep_s"]); s.SetGravitationalAcceleration([0, 0, -9.81])
+     s.SetCDUpdateFreq(P["cd_update_freq"]); s.SetErrorOutVelocity(P["error_out_vel"])
++    if P.get("max_velocity_m_s"):                               # W10: CD 마진 상한(anomaly 로그만; 물리 불변)
++        s.SetMaxVelocity(float(P["max_velocity_m_s"]))
++    if P.get("diag_event_v_m_s") or P.get("diag_event_force_N"):   # W10: GetContactDetailedInfo 에 법선·geo id·접촉형을 싣는다(출력 내용만, 물리 불변)
++        s.SetContactOutputContent(["OWNER", "GEO_ID", "POINT", "FORCE", "NORMAL", "CNT_TYPE"])
+     trk_f, trk_d = s.Track(mf), s.Track(md)                     # 🔴 Initialize 전에
+     s.Initialize()
+     owners = {"fixed": int(trk_f.GetOwnerID()), "door": int(trk_d.GetOwnerID())}
+@@ -485,23 +503,188 @@
+         sgn = 1.0 if np.dot([qx, qy, qz], w_vec) >= 0 else -1.0
+         return q_open - sgn * ang
+ 
++    # ── W10 진단 v2 (params 게이트; 전부 None 이면 아래 블록은 쓰이지 않는다) ─────────────────────────
++    diag2 = bool(P.get("diag_fine_sync_s") or P.get("diag_event_v_m_s") or P.get("diag_event_force_N") or P.get("diag_stop_v_m_s"))
++    q_diag = float(P.get("diag_flush_below_q_deg") or 0.0)
++    dt_fine = float(P["diag_fine_sync_s"]) if P.get("diag_fine_sync_s") else None
++    grp_f = grp_d = None; ring = None; ev = {"v": False, "force": False}
++    if diag2:
++        from collections import deque
++        from scipy.spatial.transform import Rotation as _Rot
++        gf, gd = [], []; half_bowl(P, -1, groups=gf); half_bowl(P, +1, groups=gd)
++        grp_f, grp_d = np.asarray(gf), np.asarray(gd)
++        if len(grp_f) != len(fixed_m.faces) or len(grp_d) != len(door_m.faces):
++            raise RuntimeError(f"삼각형 그룹 수 불일치 {len(grp_f)}/{len(fixed_m.faces)} {len(grp_d)}/{len(door_m.faces)}")
++        ring = deque(maxlen=int(P.get("diag_ring_syncs") or 12))
++        E_star = 1.0 / ((1 - P["nu"] ** 2) / P["E_pa"] + (1 - P["nu"] ** 2) / (P["E_mesh_pa"] or P["E_pa"]))
++        print(f"진단 v2: fine sync {dt_fine} s (q<{q_diag}°) · 이벤트 v>{P.get('diag_event_v_m_s')} m/s / F≥{P.get('diag_event_force_N')} N · pop-stop {P.get('diag_stop_v_m_s')} m/s "
++              f"· 그룹 {dict(zip(*np.unique(grp_f, return_counts=True)))} · E* {E_star:.3e}", flush=True)
++
++    def tool_world(trk, base):
++        """툴 셸을 트래커 자세로 세계에 놓는다(OBJ 정점 = owner 원점 기준 로컬 → pos + R·v; 노드 순서에 의존하지 않음)."""
++        R = _Rot.from_quat(np.asarray(trk.OriQ(), float)).as_matrix(); p = np.asarray(trk.Pos(), float)
++        return trimesh.Trimesh((R @ np.asarray(base.vertices, float).T).T + p, base.faces, process=False)
++
++    def sphere_vs_mesh(c, r, mesh, grp):
++        """구(중심 c, 반경 r) ↔ 셸 최근접 삼각형: 그룹·면 부호거리 h(+ = 바깥)·투영-안 여부·기하 관입(r − 최근접거리)·유령(h<0 ∧ 안 ∧ |h|<r).
++        DEME triangle_sphere_CD 규칙(W3b §1): 투영이 삼각형 안이면 관입 = r − h (h<0 이면 r+|h|), 아니면 r − 최근접점 거리."""
++        cp, dist, tid = trimesh.proximity.closest_point(mesh, np.asarray(c, float)[None])
++        tid = int(tid[0]); n = mesh.face_normals[tid]; v0 = mesh.vertices[mesh.faces[tid][0]]
++        h = float(np.dot(c - v0, n)); inside = bool(np.linalg.norm((c - h * n) - cp[0]) < 1e-7); d = float(dist[0])
++        return {"tri": tid, "group": str(grp[tid]), "h_mm": round(h * 1000, 4), "inside": inside, "d_closest_mm": round(d * 1000, 4),
++                "pen_geo_mm": round((r - d) * 1000, 4), "deme_pen_mm": round(((r - h) if inside else (r - d)) * 1000, 4),
++                "ghost": bool(inside and h < 0 and abs(h) < r), "normal": [round(float(x), 4) for x in n]}
++
++    def diag_analyse(phase, row, vv, vn, con):
++        """한 sync: 립 근방 클럼프 전개 → 메시별 최대 접촉의 최근접 구·삼각형 기하 → 행에 기록, 링버퍼 push, pop 이벤트 트리거."""
++        pp = np.asarray(s.GetOwnerPosition(0, n_p), float); oq = None if tpl is None else np.asarray(s.GetOwnerOriQ(0, n_p), float)
++        mf_w, md_w = tool_world(trk_f, fixed_m), tool_world(trk_d, door_m)
++        lips = np.vstack([mf_w.vertices[lip_f], md_w.vertices[lip_d]])
++        near = np.where(cKDTree(lips).query(pp)[0] < P["diag_near_lip_mm"] / 1000.0 + rad)[0]
++        sp_n, sr_n = spheres(pp[near], None if oq is None else oq[near])
++        owner_of = np.repeat(near, k_sph); k_of = np.tile(np.arange(k_sph), len(near))
++        tree = cKDTree(sp_n) if len(sp_n) else None
++        dg = {"n_near_clumps": int(len(near)), "v_max_owner": int(np.argmax(vn)), "v_max_owner_v_m_s": round(float(vn.max()), 4)}
++        for key, mesh, grp in (("fixed", mf_w, grp_f), ("door", md_w, grp_d)):
++            Pp, Ff = con.get(key, (None, None))
++            if Pp is None or not len(Pp) or tree is None:
++                continue
++            j = int(np.argmax(np.linalg.norm(Ff, axis=1))); p, f = Pp[j], Ff[j]; fm = float(np.linalg.norm(f))
++            d, si = tree.query(p); si = int(si)
++            g = sphere_vs_mesh(sp_n[si], float(sr_n[si]), mesh, grp)
++            g.update(pt_mm=(p * 1000).round(3).tolist(), F_N=round(fm, 4), F_vec_N=f.round(4).tolist(), owner=int(owner_of[si]), k=int(k_of[si]),
++                     sphere_r_mm=round(float(sr_n[si]) * 1000, 4), pt_to_sphere_centre_mm=round(float(d) * 1000, 4),
++                     owner_v_m_s=round(float(np.linalg.norm(vv[owner_of[si]])), 4),
++                     delta_hertz_mm=round((3 * fm / (4 * E_star * math.sqrt(float(sr_n[si])))) ** (2 / 3) * 1000, 4))
++            dg[f"top_{key}"] = g
++        row["diag"] = dg
++        ring.append({"t": row["sim_t"], "q": float(state["q"]), "phase": phase, "i": row["i"], "lip": np.asarray(trk_f.Pos(), float),
++                     "near": near, "pos": pp[near], "quat": (np.zeros((len(near), 4)) if oq is None else oq[near]), "vel": vv[near],
++                     "nodes_F": np.asarray(mf_w.vertices, np.float32), "nodes_D": np.asarray(md_w.vertices, np.float32),
++                     "con": {k: (np.asarray(v[0], np.float32), np.asarray(v[1], np.float32)) for k, v in con.items() if v[0] is not None and len(v[0])},
++                     "v_max_owner": int(np.argmax(vn)), "v_max": float(vn.max()), "f1": row["max_single_contact_N"]})
++        if P.get("diag_event_v_m_s") and vn.max() > P["diag_event_v_m_s"] and not ev["v"]:
++            ev["v"] = True; diag_event(phase, row, int(np.argmax(vn)), pp, oq, vv, "v")            # pop: culprit = 최대속도 owner
++        elif P.get("diag_event_force_N") and row["max_single_contact_N"] >= P["diag_event_force_N"] and not ev["force"]:
++            tops = [dg[k] for k in ("top_fixed", "top_door") if k in dg]
++            if tops:
++                ev["force"] = True; diag_event(phase, row, int(max(tops, key=lambda g: g["F_N"])["owner"]), pp, oq, vv, "force")   # 힘: culprit = 최대 접촉의 구 owner
++
++    def diag_event(phase, row, culprit, pp, oq, vv, kind):
++        """pop 이벤트 덤프: 링버퍼(마지막 4 sync = 직전 3 + 트리거) 에서 culprit 의 위치·속도·구별 최근접 삼각형 기하·툴 접촉력, 기작 분류(GATES_w10 G1), GetContactDetailedInfo(try)."""
++        t0 = time.time(); R = list(ring); last = R[-4:]; table = []; suffix = "" if kind == "v" else f"_{kind}"
++        for e in last:
++            k = np.where(e["near"] == culprit)[0]
++            entry = {"sim_t": e["t"], "q_deg": round(e["q"], 4), "phase": e["phase"], "i": e["i"], "pop_sync": e is R[-1], "in_ring_near_set": bool(len(k))}
++            if len(k):
++                k = int(k[0]); c = e["pos"][k]; sp_c, sr_c = spheres(e["pos"][k:k + 1], None if tpl is None else e["quat"][k:k + 1])
++                mf_w = trimesh.Trimesh(e["nodes_F"].astype(float), fixed_m.faces, process=False); md_w = trimesh.Trimesh(e["nodes_D"].astype(float), door_m.faces, process=False)
++                v = e["vel"][k]
++                entry.update(centre_mm=(c * 1000).round(3).tolist(), centre_rel_lip_mm=((c - e["lip"]) * 1000).round(3).tolist(),
++                             v_m_s=round(float(np.linalg.norm(v)), 4), vel_m_s=v.round(4).tolist(), vs_mesh={})
++                for key, mesh, grp in (("fixed", mf_w, grp_f), ("door", md_w, grp_d)):
++                    per = [dict(sphere_vs_mesh(sp_c[kk], float(sr_c[kk]), mesh, grp), k=kk, r_mm=round(float(sr_c[kk]) * 1000, 4)) for kk in range(k_sph)]
++                    best = max(per, key=lambda g: (g["ghost"], g["pen_geo_mm"]))
++                    Pp, Ff = e["con"].get(key, (np.zeros((0, 3), np.float32), np.zeros((0, 3), np.float32)))
++                    if len(Pp):
++                        m = cKDTree(sp_c).query(Pp.astype(float))[0] <= float(sr_c.max()) + 0.0005
++                        fmag = np.linalg.norm(Ff[m].astype(float), axis=1) if m.any() else np.zeros(0)
++                        best["contacts_on_culprit"] = {"n": int(m.sum()), "F_sum_N": round(float(np.linalg.norm(Ff[m].astype(float).sum(0))), 4) if m.any() else 0.0,
++                                                       "F_max_N": round(float(fmag.max()), 4) if m.any() else 0.0,
++                                                       "points_mm": (Pp[m].astype(float) * 1000).round(3).tolist()[:8]}
++                    else:
++                        best["contacts_on_culprit"] = {"n": 0, "F_sum_N": 0.0, "F_max_N": 0.0, "points_mm": []}
++                    best["all_spheres"] = [{kk_: g[kk_] for kk_ in ("k", "group", "h_mm", "inside", "pen_geo_mm", "ghost")} for g in per]
++                    entry["vs_mesh"][key] = best
++            table.append(entry)
++        pre = [e for e in table if not e["pop_sync"]]
++        ghost = any(e.get("vs_mesh", {}).get(m, {}).get("ghost") for e in pre for m in ("fixed", "door"))
++        f_seq = [max(e.get("vs_mesh", {}).get(m, {}).get("contacts_on_culprit", {}).get("F_max_N", 0.0) for m in ("fixed", "door")) for e in pre]
++        squeeze = len(f_seq) >= 3 and all(a < b for a, b in zip(f_seq[-3:], f_seq[-2:])) and f_seq[-1] >= 2.0
++        detail = None
++        try:
++            t1 = time.time(); ci = s.GetContactDetailedInfo()
++            A, B = np.asarray(ci.GetAOwner()), np.asarray(ci.GetBOwner()); m = (A == culprit) | (B == culprit)
++            def _get(fn, dflt):
++                try:
++                    return np.asarray(fn(), float if dflt is not None else None)
++                except Exception as exc_:  # noqa: BLE001 — 필드 미설정이면 기본값
++                    return None
++            typ = _get(ci.GetContactType, None); F = np.asarray(ci.GetForce(), float); Pt = _get(ci.GetPoint, 0.0); N = _get(ci.GetNormal, 0.0)
++            gA, gB = _get(ci.GetAGeo, 0), _get(ci.GetBGeo, 0)
++            if typ is None: typ = np.full(len(A), "?")
++            if Pt is None: Pt = np.zeros((len(A), 3))
++            if N is None: N = np.zeros((len(A), 3))
++            if gA is None: gA = np.full(len(A), -1)
++            if gB is None: gB = np.full(len(A), -1)
++            idx = np.where(m)[0]; idx = idx[np.argsort(-np.linalg.norm(F[idx], axis=1))] if len(idx) else idx
++            def grp_of(o, gi):
++                if o == owners["fixed"]:
++                    return str(grp_f[gi]) if 0 <= gi < len(grp_f) else f"out_of_range({gi})"
++                if o == owners["door"]:
++                    return (str(grp_d[gi]) if 0 <= gi < len(grp_d) else (str(grp_d[gi - len(grp_f)]) if 0 <= gi - len(grp_f) < len(grp_d) else f"out_of_range({gi})"))
++                return None
++            detail = {"wall_s": round(time.time() - t1, 2), "n_pairs_total": int(len(A)), "n_pairs_culprit": int(len(idx)),
++                      "pairs": [{"type": str(typ[j]), "A": int(A[j]), "B": int(B[j]), "AGeo": int(gA[j]), "BGeo": int(gB[j]),
++                                 "B_group_by_geo": grp_of(int(B[j]), int(gB[j])), "A_group_by_geo": grp_of(int(A[j]), int(gA[j])),
++                                 "F_N": round(float(np.linalg.norm(F[j])), 4), "force": F[j].round(4).tolist(),
++                                 "point_mm": (Pt[j] * 1000).round(3).tolist(), "normal": N[j].round(4).tolist()} for j in idx[:16]],
++                      "note": "GetContact-like 는 잠재 쌍(potential pairs) 도 포함 — 힘 0 인 쌍은 접촉 아님"}
++            detail["top_is_sphere_sphere"] = bool(detail["pairs"] and detail["pairs"][0]["type"] == "SS" and detail["pairs"][0]["F_N"] > 0)
++        except Exception as exc:  # noqa: BLE001 — 대규모에서 불안정할 수 있음(diverge_min 주석)
++            detail = {"error": repr(exc)}
++        mech = "ghost" if ghost else ("sphere_sphere" if (detail or {}).get("top_is_sphere_sphere") else ("squeeze" if squeeze else "unresolved"))
++        now = {"pos_mm": (pp[culprit] * 1000).round(3).tolist(), "vel_m_s": vv[culprit].round(4).tolist(), "v_m_s": round(float(np.linalg.norm(vv[culprit])), 4),
++               "quat_xyzw": (None if oq is None else oq[culprit].round(6).tolist()),
++               "dist_to_lip_lines_mm": round(float(cKDTree(np.vstack([R[-1]["nodes_F"][lip_f], R[-1]["nodes_D"][lip_d]]).astype(float)).query(pp[culprit])[0]) * 1000, 3)}
++        try:                                                     # 지금 자세의 culprit 구별 최근접 삼각형(근방 집합 밖이어도 남긴다)
++            sp_c, sr_c = spheres(pp[culprit:culprit + 1], None if oq is None else oq[culprit:culprit + 1])
++            mf_w, md_w = trimesh.Trimesh(R[-1]["nodes_F"].astype(float), fixed_m.faces, process=False), trimesh.Trimesh(R[-1]["nodes_D"].astype(float), door_m.faces, process=False)
++            now["vs_mesh"] = {key: max([dict(sphere_vs_mesh(sp_c[kk], float(sr_c[kk]), mesh, grp), k=kk) for kk in range(k_sph)], key=lambda g: (g["ghost"], g["pen_geo_mm"]))
++                              for key, mesh, grp in (("fixed", mf_w, grp_f), ("door", md_w, grp_d))}
++        except Exception as exc:  # noqa: BLE001
++            now["vs_mesh_error"] = repr(exc)
++        evj = {"artifact": "W10_DIVERGE_EVENT_V1", "tag": tag, "kind": kind,
++               "trigger": {"phase": phase, "i": row["i"], "sim_t": row["sim_t"], "q_deg": round(float(state["q"]), 4), "v_max": row["v_particle_max"],
++                           "max_single_contact_N": row["max_single_contact_N"], "rule": {"v_m_s": P.get("diag_event_v_m_s"), "force_N": P.get("diag_event_force_N")}},
++               "culprit": int(culprit), "culprit_now": now, "culprit_last4": table,
++               "mechanism": mech, "mechanism_rule": "GATES_w10.md G1: pre-pop sync 중 culprit 구가 툴 삼각형에 h<0∧inside∧|h|<r → ghost; 상세 최대힘 pair 가 SS → sphere_sphere; 3 sync 연속 상승·≥2 N → squeeze; else unresolved",
++               "ghost_any_prepop": ghost, "squeeze_seq_F_max_N": f_seq, "contact_detail": detail, "ring_syncs": len(R), "dt_fine_s": dt_fine,
++               "owner_ids": owners, "n_tri": {"fixed": int(len(grp_f)), "door": int(len(grp_d))}, "wall_s": round(time.time() - t0, 2)}
++        json.dump(evj, open(out / f"diverge_event{suffix}_{tag}.json", "w"), ensure_ascii=False, indent=1)
++        cps = [(kk, e["con"][kk][0], e["con"][kk][1], i_) for i_, e in enumerate(R) for kk in e["con"]]
++        np.savez_compressed(out / f"diverge_event{suffix}_{tag}.npz", t_s=np.array([e["t"] for e in R]), q_deg=np.array([e["q"] for e in R]),
++                            lip_m=np.stack([e["lip"] for e in R]), nodes_F_m=np.stack([e["nodes_F"] for e in R]), nodes_D_m=np.stack([e["nodes_D"] for e in R]),
++                            faces_F=np.asarray(fixed_m.faces), faces_D=np.asarray(door_m.faces), groups_F=grp_f.astype(str), groups_D=grp_d.astype(str),
++                            near_ids=np.concatenate([e["near"] for e in R]), near_frame=np.concatenate([np.full(len(e["near"]), i_, np.int32) for i_, e in enumerate(R)]),
++                            near_pos_m=np.concatenate([e["pos"] for e in R]), near_quat_xyzw=np.concatenate([e["quat"] for e in R]), near_vel_m_s=np.concatenate([e["vel"] for e in R]),
++                            contact_point_m=(np.concatenate([c[1] for c in cps]) if cps else np.zeros((0, 3), np.float32)),
++                            contact_force_N=(np.concatenate([c[2] for c in cps]) if cps else np.zeros((0, 3), np.float32)),
++                            contact_frame=(np.concatenate([np.full(len(c[1]), c[3], np.int32) for c in cps]) if cps else np.zeros(0, np.int32)),
++                            contact_mesh=(np.concatenate([np.full(len(c[1]), 0 if c[0] == "fixed" else 1, np.int8) for c in cps]) if cps else np.zeros(0, np.int8)),
++                            culprit=np.int64(culprit), template_json=json.dumps(tpl) if tpl is not None else "", metadata_json=json.dumps(
++                                {"artifact": "W10_DIVERGE_EVENT_RING_V1", "frames": "링버퍼 sync 순(마지막 = 트리거 sync)", "near_*": "립선 diag_near_lip_mm 안 클럼프(near_frame 로 프레임 구분)",
++                                 "contact_mesh": "0 = fixed, 1 = door", "groups": "셸 삼각형 그룹 태그(half_bowl 생성 순)"}, ensure_ascii=False))
++        print(f"  🔴 이벤트({kind}) [{phase}] i={row['i']} q={state['q']:.3f}° v_max={row['v_particle_max']:.2f} m/s 단일={row['max_single_contact_N']:.2f} N "
++              f"culprit={culprit} 기작={mech} ghost_prepop={ghost} → diverge_event{suffix}_{tag}.* ({time.time() - t0:.1f}s)", flush=True)
++
+     def sample(phase, i):
+         row = {"phase": phase, "i": i, "sim_t": round(float(s.GetSimTime()), 6),
+                "z_lip_mm": round(float(trk_f.Pos()[2]) * 1000, 3), "q_deg": round(state["q"], 3),
+                "arm": state["arm"], "door": state["door"]}
+-        vn = np.linalg.norm(np.asarray(s.GetOwnerVelocity(0, n_p), float), axis=1); vmax = float(vn.max())
++        vv = np.asarray(s.GetOwnerVelocity(0, n_p), float); vn = np.linalg.norm(vv, axis=1); vmax = float(vn.max())
+         row["v_particle_max"] = round(vmax, 4); state["v_max"] = max(state["v_max"], vmax)
+         diag = bool(P.get("diag_flush_below_q_deg")) and state["q"] < P["diag_flush_below_q_deg"] and phase in ("close", "reclose")
+         if diag:
+             vi = int(np.argmax(vn)); row["v_max_owner"] = vi
+             row["v_max_owner_pos_mm"] = (np.asarray(s.GetOwnerPosition(vi, 1), float)[0] * 1000).round(2).tolist()
+         state["pop_steps"] += int(vmax > P["pop_speed_m_s"])
+-        hw = hinge_w(); M_res, f1 = 0.0, 0.0
++        hw = hinge_w(); M_res, f1 = 0.0, 0.0; con = {}
+         for key, trk in (("fixed", trk_f), ("door", trk_d)):
+             pts, frcs = trk.GetContactForces()
+             row[f"n_{key}"] = len(pts)
+             if len(pts):
+-                Pp, Ff = np.asarray(pts, float), np.asarray(frcs, float)
++                Pp, Ff = np.asarray(pts, float), np.asarray(frcs, float); con[key] = (Pp, Ff)
+                 row[f"F_{key}_N"] = round(float(np.linalg.norm(Ff.sum(0))), 4)
+                 if key == "fixed":
+                     row["Fz_fixed_up_N"] = round(float(Ff[:, 2].sum()), 4)     # 더미가 팔을 미는 위쪽 힘
+@@ -522,8 +705,12 @@
+         rec["nodes_F"].append(np.asarray(trk_f.GetMeshNodesGlobal(), np.float32))
+         rec["nodes_D"].append(np.asarray(trk_d.GetMeshNodesGlobal(), np.float32))
+         log.append(row)
++        if diag and diag2:
++            diag_analyse(phase, row, vv, vn, con)                 # W10: 최근접 구·삼각형 기하 + 링버퍼 + pop 이벤트
+         if diag:
+             flush(phase)                                          # 발산 직전 행까지 남기기 위해 매 sync 저장
++        if diag2 and P.get("diag_stop_v_m_s") and vmax > P["diag_stop_v_m_s"]:
++            flush(phase); raise RuntimeError(f"pop-stop: 입자 최대속도 {vmax:.1f} m/s > {P['diag_stop_v_m_s']} (owner {int(np.argmax(vn))}, {phase} i={i})")
+         if rt is not None and row["sim_t"] >= rt["next"] - 1e-9:
+             rt_record(row["sim_t"], PH[phase], len(log) - 1)
+         return row
+@@ -531,12 +718,12 @@
+     tl_path = out / f"timeline_{tag}.json"
+     flush = lambda st: json.dump({"state": st, "rows": log}, open(tl_path, "w"), ensure_ascii=False)
+ 
+-    def door_step(phase, i):
+-        """문이 family 11 이면 q 를 한 스텝 진행시키고 정지 조건(도달/서보 실속)을 판정한다."""
++    def door_step(phase, i, dts=None):
++        """문이 family 11 이면 q 를 한 스텝 진행시키고 정지 조건(도달/서보 실속)을 판정한다. dts = 이 sync 의 길이(None = dt_c)."""
+         r = sample(phase, i)
+         if state["door"] != "close":
+             return r
+-        state["q"] = max(q_end, state["q"] - math.degrees(w_close) * dt_c)
++        state["q"] = max(q_end, state["q"] - math.degrees(w_close) * (dt_c if dts is None else dts))
+         r["q_deg"] = round(state["q"], 3)
+         reason = None
+         if state["q"] <= q_end + 1e-9:
+@@ -583,8 +770,11 @@
+                       f"Fz={r['Fz_fixed_up_N']:.3f} N 단일최대={r['max_single_contact_N']:.3f} v_max={r['v_particle_max']:.2f} w={time.time()-t_start:.0f}s", flush=True)
+         z_reached = float(trk_f.Pos()[2])
+         set_fams("hold", "close")
+-        for i in range(n_close_sync):
+-            s.DoDynamicsThenSync(dt_c); r = door_step("close", i)
++        fine_on = lambda: dt_fine is not None and state["q"] < q_diag          # W10: q<q_diag 구간은 잘게 sync(문 각속도 불변)
++        n_fine_extra = 0 if dt_fine is None else int(math.ceil(q_diag / P["close_deg_s"] / dt_fine)) + 50
++        for i in range(n_close_sync + n_fine_extra):
++            dts = dt_fine if fine_on() else dt_c
++            s.DoDynamicsThenSync(dts); r = door_step("close", i, dts)
+             if i % 10 == 0:
+                 flush("close")
+                 print(f"  폐합 {i:3d} q={r['q_deg']:6.2f}° 접촉 D={r['n_door']:4d} M_res={r['M_hinge_res_Nm']:8.4f} "
+@@ -605,10 +795,14 @@
+         n_reclose = 0
+         if state["q"] > q_end + 1e-9:
+             set_fams("hold", "close"); state["stop"] = None
+-            for i in range(n_reclose_max):
+-                s.DoDynamicsThenSync(dt_c); door_step("reclose", i); n_reclose += 1
++            t_rc0, t_rc_budget = float(s.GetSimTime()), n_reclose_max * dt_c      # W10 fine sync 시 재폐합 예산은 시간으로(원래 = 스텝 수 × dt_c)
++            for i in range(n_reclose_max + n_fine_extra):
++                dts = dt_fine if fine_on() else dt_c
++                s.DoDynamicsThenSync(dts); door_step("reclose", i, dts); n_reclose += 1
+                 if state["door"] != "close":
+                     break
++                if dt_fine is not None and float(s.GetSimTime()) - t_rc0 >= t_rc_budget - 1e-9:
++                    break
+             if state["door"] == "close":
+                 set_fams("hold", "hold")
+                 state["stop"] = {"phase": "reclose", "q_deg": round(state["q"], 3), "reason": "steps_exhausted"}

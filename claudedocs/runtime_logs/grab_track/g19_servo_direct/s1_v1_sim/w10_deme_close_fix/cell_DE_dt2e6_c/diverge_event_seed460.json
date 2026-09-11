@@ -1,0 +1,534 @@
+{
+ "artifact": "W10_DIVERGE_EVENT_V1",
+ "tag": "seed460",
+ "kind": "v",
+ "trigger": {
+  "phase": "close",
+  "i": 1597,
+  "sim_t": 2.529048,
+  "q_deg": 4.5609,
+  "v_max": 2.025,
+  "max_single_contact_N": 2.0439,
+  "rule": {
+   "v_m_s": 2.0,
+   "force_N": 2.0
+  }
+ },
+ "culprit": 12766,
+ "culprit_now": {
+  "pos_mm": [
+   -19.202,
+   -2.859,
+   39.934
+  ],
+  "vel_m_s": [
+   0.12,
+   0.3402,
+   1.9926
+  ],
+  "v_m_s": 2.025,
+  "quat_xyzw": [
+   0.108068,
+   -0.766327,
+   -0.622823,
+   -0.1147
+  ],
+  "dist_to_lip_lines_mm": 23.758,
+  "vs_mesh": {
+   "fixed": {
+    "tri": 201,
+    "group": "part_cap_bottom",
+    "h_mm": 2.7174,
+    "inside": true,
+    "d_closest_mm": 2.7174,
+    "pen_geo_mm": -1.561,
+    "deme_pen_mm": -1.561,
+    "ghost": false,
+    "normal": [
+     0.0,
+     -1.0,
+     0.0
+    ],
+    "k": 3
+   },
+   "door": {
+    "tri": 195,
+    "group": "part_cap_lip",
+    "h_mm": 4.5363,
+    "inside": true,
+    "d_closest_mm": 4.5363,
+    "pen_geo_mm": -3.2861,
+    "deme_pen_mm": -3.2861,
+    "ghost": false,
+    "normal": [
+     0.0,
+     0.9969,
+     -0.0786
+    ],
+    "k": 0
+   }
+  }
+ },
+ "culprit_last4": [
+  {
+   "sim_t": 2.528742,
+   "q_deg": 4.5676,
+   "phase": "close",
+   "i": 1594,
+   "pop_sync": false,
+   "in_ring_near_set": false
+  },
+  {
+   "sim_t": 2.528844,
+   "q_deg": 4.5654,
+   "phase": "close",
+   "i": 1595,
+   "pop_sync": false,
+   "in_ring_near_set": false
+  },
+  {
+   "sim_t": 2.528946,
+   "q_deg": 4.5631,
+   "phase": "close",
+   "i": 1596,
+   "pop_sync": false,
+   "in_ring_near_set": false
+  },
+  {
+   "sim_t": 2.529048,
+   "q_deg": 4.5609,
+   "phase": "close",
+   "i": 1597,
+   "pop_sync": true,
+   "in_ring_near_set": false
+  }
+ ],
+ "mechanism": "sphere_sphere",
+ "mechanism_rule": "GATES_w10.md G1: pre-pop sync 중 culprit 구가 툴 삼각형에 h<0∧inside∧|h|<r → ghost; 상세 최대힘 pair 가 SS → sphere_sphere; 3 sync 연속 상승·≥2 N → squeeze; else unresolved",
+ "ghost_any_prepop": false,
+ "squeeze_seq_F_max_N": [
+  0.0,
+  0.0,
+  0.0
+ ],
+ "contact_detail": {
+  "wall_s": 0.46,
+  "n_pairs_total": 394194,
+  "n_pairs_culprit": 126,
+  "pairs": [
+   {
+    "type": "SS",
+    "A": 2940,
+    "B": 12766,
+    "AGeo": 20582,
+    "BGeo": 89368,
+    "B_group_by_geo": null,
+    "A_group_by_geo": null,
+    "F_N": 1.0838,
+    "force": [
+     -0.0857,
+     -1.0675,
+     -0.1665
+    ],
+    "point_mm": [
+     -19.696,
+     -3.811,
+     38.83
+    ],
+    "normal": [
+     0.1941,
+     0.9061,
+     0.376
+    ]
+   },
+   {
+    "type": "SS",
+    "A": 2940,
+    "B": 12766,
+    "AGeo": 20580,
+    "BGeo": 89368,
+    "B_group_by_geo": null,
+    "A_group_by_geo": null,
+    "F_N": 0.8794,
+    "force": [
+     -0.1196,
+     -0.8583,
+     -0.1498
+    ],
+    "point_mm": [
+     -19.396,
+     -3.917,
+     39.081
+    ],
+    "normal": [
+     -0.137,
+     0.9864,
+     0.0908
+    ]
+   },
+   {
+    "type": "SS",
+    "A": 12766,
+    "B": 14048,
+    "AGeo": 89368,
+    "BGeo": 98336,
+    "B_group_by_geo": null,
+    "A_group_by_geo": null,
+    "F_N": 0.7686,
+    "force": [
+     -0.1731,
+     -0.7333,
+     -0.1515
+    ],
+    "point_mm": [
+     -19.317,
+     -2.087,
+     38.951
+    ],
+    "normal": [
+     0.2148,
+     0.951,
+     -0.2226
+    ]
+   },
+   {
+    "type": "SS",
+    "A": 2940,
+    "B": 12766,
+    "AGeo": 20583,
+    "BGeo": 89368,
+    "B_group_by_geo": null,
+    "A_group_by_geo": null,
+    "F_N": 0.7535,
+    "force": [
+     0.0702,
+     -0.741,
+     -0.1172
+    ],
+    "point_mm": [
+     -19.153,
+     -3.791,
+     38.772
+    ],
+    "normal": [
+     -0.387,
+     0.8253,
+     0.4112
+    ]
+   },
+   {
+    "type": "SS",
+    "A": 12766,
+    "B": 14048,
+    "AGeo": 89362,
+    "BGeo": 98336,
+    "B_group_by_geo": null,
+    "A_group_by_geo": null,
+    "F_N": 0.5661,
+    "force": [
+     -0.0498,
+     -0.5549,
+     0.1002
+    ],
+    "point_mm": [
+     -19.146,
+     -1.971,
+     39.325
+    ],
+    "normal": [
+     0.0519,
+     0.8236,
+     -0.5647
+    ]
+   },
+   {
+    "type": "SS",
+    "A": 2940,
+    "B": 12766,
+    "AGeo": 20583,
+    "BGeo": 89367,
+    "B_group_by_geo": null,
+    "A_group_by_geo": null,
+    "F_N": 0.5481,
+    "force": [
+     -0.0585,
+     -0.5355,
+     -0.1014
+    ],
+    "point_mm": [
+     -18.633,
+     -3.779,
+     38.942
+    ],
+    "normal": [
+     0.1509,
+     0.8089,
+     0.5682
+    ]
+   },
+   {
+    "type": "SS",
+    "A": 12766,
+    "B": 14048,
+    "AGeo": 89367,
+    "BGeo": 98337,
+    "B_group_by_geo": null,
+    "A_group_by_geo": null,
+    "F_N": 0.4784,
+    "force": [
+     -0.1191,
+     -0.4602,
+     -0.0532
+    ],
+    "point_mm": [
+     -18.247,
+     -2.044,
+     39.195
+    ],
+    "normal": [
+     0.2346,
+     0.9225,
+     -0.3065
+    ]
+   },
+   {
+    "type": "SS",
+    "A": 12766,
+    "B": 14048,
+    "AGeo": 89362,
+    "BGeo": 98338,
+    "B_group_by_geo": null,
+    "A_group_by_geo": null,
+    "F_N": 0.4564,
+    "force": [
+     -0.123,
+     -0.4327,
+     -0.0769
+    ],
+    "point_mm": [
+     -18.907,
+     -1.824,
+     39.655
+    ],
+    "normal": [
+     0.265,
+     0.931,
+     -0.251
+    ]
+   },
+   {
+    "type": "SS",
+    "A": 12766,
+    "B": 14048,
+    "AGeo": 89367,
+    "BGeo": 98336,
+    "B_group_by_geo": null,
+    "A_group_by_geo": null,
+    "F_N": 0.4016,
+    "force": [
+     0.0977,
+     -0.3891,
+     -0.0163
+    ],
+    "point_mm": [
+     -18.774,
+     -2.071,
+     39.128
+    ],
+    "normal": [
+     -0.2837,
+     0.8852,
+     -0.3687
+    ]
+   },
+   {
+    "type": "SS",
+    "A": 2940,
+    "B": 12766,
+    "AGeo": 20584,
+    "BGeo": 89367,
+    "B_group_by_geo": null,
+    "A_group_by_geo": null,
+    "F_N": 0.3968,
+    "force": [
+     -0.068,
+     -0.3902,
+     -0.024
+    ],
+    "point_mm": [
+     -18.326,
+     -3.932,
+     39.189
+    ],
+    "normal": [
+     -0.1546,
+     0.9379,
+     0.3106
+    ]
+   },
+   {
+    "type": "SS",
+    "A": 12766,
+    "B": 14048,
+    "AGeo": 89368,
+    "BGeo": 98341,
+    "B_group_by_geo": null,
+    "A_group_by_geo": null,
+    "F_N": 0.3412,
+    "force": [
+     -0.0089,
+     -0.3366,
+     0.0554
+    ],
+    "point_mm": [
+     -19.533,
+     -2.146,
+     38.599
+    ],
+    "normal": [
+     -0.0095,
+     0.8338,
+     -0.5519
+    ]
+   },
+   {
+    "type": "SS",
+    "A": 2940,
+    "B": 12766,
+    "AGeo": 20580,
+    "BGeo": 89367,
+    "B_group_by_geo": null,
+    "A_group_by_geo": null,
+    "F_N": 0.3244,
+    "force": [
+     -0.0333,
+     -0.3206,
+     -0.0372
+    ],
+    "point_mm": [
+     -18.853,
+     -3.909,
+     39.258
+    ],
+    "normal": [
+     0.358,
+     0.9025,
+     0.2394
+    ]
+   },
+   {
+    "type": "SS",
+    "A": 12766,
+    "B": 14048,
+    "AGeo": 89367,
+    "BGeo": 98338,
+    "B_group_by_geo": null,
+    "A_group_by_geo": null,
+    "F_N": 0.3237,
+    "force": [
+     0.0091,
+     -0.3015,
+     -0.1173
+    ],
+    "point_mm": [
+     -18.561,
+     -1.926,
+     39.452
+    ],
+    "normal": [
+     -0.0731,
+     0.9961,
+     -0.05
+    ]
+   },
+   {
+    "type": "SS",
+    "A": 2940,
+    "B": 12766,
+    "AGeo": 20582,
+    "BGeo": 89363,
+    "B_group_by_geo": null,
+    "A_group_by_geo": null,
+    "F_N": 0.3023,
+    "force": [
+     -0.0065,
+     -0.2968,
+     -0.0572
+    ],
+    "point_mm": [
+     -20.056,
+     -3.752,
+     39.045
+    ],
+    "normal": [
+     -0.1781,
+     0.8308,
+     0.5273
+    ]
+   },
+   {
+    "type": "SS",
+    "A": 12766,
+    "B": 14048,
+    "AGeo": 89362,
+    "BGeo": 98339,
+    "B_group_by_geo": null,
+    "A_group_by_geo": null,
+    "F_N": 0.2861,
+    "force": [
+     0.0552,
+     -0.2795,
+     -0.0265
+    ],
+    "point_mm": [
+     -19.471,
+     -1.81,
+     39.567
+    ],
+    "normal": [
+     -0.2351,
+     0.9175,
+     -0.3209
+    ]
+   },
+   {
+    "type": "SS",
+    "A": 2940,
+    "B": 12766,
+    "AGeo": 20580,
+    "BGeo": 89362,
+    "B_group_by_geo": null,
+    "A_group_by_geo": null,
+    "F_N": 0.2795,
+    "force": [
+     -0.0595,
+     -0.269,
+     -0.0475
+    ],
+    "point_mm": [
+     -19.229,
+     -3.893,
+     39.461
+    ],
+    "normal": [
+     0.0238,
+     0.9088,
+     0.4165
+    ]
+   }
+  ],
+  "note": "GetContact-like 는 잠재 쌍(potential pairs) 도 포함 — 힘 0 인 쌍은 접촉 아님",
+  "top_is_sphere_sphere": true
+ },
+ "ring_syncs": 12,
+ "dt_fine_s": 0.0001,
+ "owner_ids": {
+  "fixed": 20001,
+  "door": 20002
+ },
+ "n_tri": {
+  "fixed": 204,
+  "door": 204
+ },
+ "wall_s": 0.46
+}

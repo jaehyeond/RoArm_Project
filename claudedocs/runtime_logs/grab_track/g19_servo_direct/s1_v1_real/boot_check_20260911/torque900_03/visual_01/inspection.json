@@ -1,0 +1,29 @@
+{
+  "inspected": true,
+  "observer": "Codex view_image",
+  "recorded_time_ns": 1789108242236950155,
+  "paths": {
+    "timeline.png": {
+      "path": "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/torque900_03/visual_01/timeline.png",
+      "sha256": "b1ce0cd1410b0934ac2e76c874aa7114fc1487c082f5e72f5ec4d8e17ba91c36"
+    },
+    "scoop_rerun.png": {
+      "path": "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/torque900_03/visual_01/scoop_rerun.png",
+      "sha256": "05d87a3a72a56fc1a0d2faf19cd9d22dc8493e3470ea51c2af14e7c8d2a80fe2"
+    },
+    "decision_frames.png": {
+      "path": "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/torque900_03/visual_01/decision_frames.png",
+      "sha256": "6feadb0511deea6b037056ffad6a47d3ded6b35e94f69757024eb5cae5640a39"
+    }
+  },
+  "observations": [
+    "Full timeline: commanded door remains0 through close/lift/transport, and measured door settles near3.7deg without the old rising staircase.",
+    "Rerun top-left shows measured vs command separated after closure; exact command validation is in door_target_verification.json.",
+    "Rerun decision meshes and dedicated frame PNG show actual FK lip about3.1cm below target.",
+    "Rerun default screenshot zoom covers early portion; standalone timeline.png covers full71.8s and RRD readback verifies all3739 rows."
+  ],
+  "limitations": [
+    "Kinematic geometry, not camera or contact/current measurement.",
+    "Residue and cup mass require user observation."
+  ]
+}

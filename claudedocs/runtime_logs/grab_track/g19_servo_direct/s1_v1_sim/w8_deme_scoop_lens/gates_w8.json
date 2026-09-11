@@ -1,0 +1,892 @@
+{
+  "artifact": "GATES_W8_DEME_SCOOP_LENS",
+  "pre_registration": "GATES_w8.md",
+  "cells": [
+    "c",
+    "xp50",
+    "xm50"
+  ],
+  "G1_no_divergence": {
+    "pass": true,
+    "diverged": {
+      "c": false,
+      "xp50": false,
+      "xm50": false
+    },
+    "pops": {
+      "c": {
+        "v_particle_max_m_s": 1.069,
+        "steps_over_pop_speed": 0,
+        "pop_speed_m_s": 5.0,
+        "note": "무른 구(E 5e6)의 탄성 방출 인공물. 5 m/s 초과 스텝 수가 0 이 아니면 정량값에 인공물이 섞여 있다"
+      },
+      "xp50": {
+        "v_particle_max_m_s": 1.085,
+        "steps_over_pop_speed": 0,
+        "pop_speed_m_s": 5.0,
+        "note": "무른 구(E 5e6)의 탄성 방출 인공물. 5 m/s 초과 스텝 수가 0 이 아니면 정량값에 인공물이 섞여 있다"
+      },
+      "xm50": {
+        "v_particle_max_m_s": 1.081,
+        "steps_over_pop_speed": 0,
+        "pop_speed_m_s": 5.0,
+        "note": "무른 구(E 5e6)의 탄성 방출 인공물. 5 m/s 초과 스텝 수가 0 이 아니면 정량값에 인공물이 섞여 있다"
+      }
+    },
+    "stderr_lines": {
+      "c": 40,
+      "xp50": 40,
+      "xm50": 40
+    },
+    "pre_registered_setting_verdict": "FAIL — 사전 등록 설정(폐합 sync 4 ms, 서보 토크 정지만) 으로는 셀 c·xp50 이 q 3.4°/2.3° 에서 DEME error-out. 옵션 A·E 도 발산. 완주 열은 옵션 F(문 하한 5°) 결과이며 사전 등록 외 설정",
+    "diverged_attempts": [
+      {
+        "label": "pre-registered c (4 ms sync)",
+        "dir": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w8_deme_scoop_lens/cell_c",
+        "status": "DIVERGED (DEME error-out, C++ terminate)",
+        "max_velocity_m_s": 81.18277,
+        "last_flushed_row": {
+          "phase": "close",
+          "i": 133,
+          "sim_t": 2.04109,
+          "q_deg": 3.415,
+          "n_door": 210,
+          "M_hinge_res_Nm": 0.884308,
+          "lipF_N": 7.6997,
+          "max_single_contact_N": 0.6079,
+          "v_particle_max": 0.2629
+        },
+        "plunge_reached": true,
+        "max_single_contact_in_close_N": 0.6079
+      },
+      {
+        "label": "pre-registered xp50 (4 ms sync)",
+        "dir": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w8_deme_scoop_lens/cell_xp50",
+        "status": "DIVERGED (DEME error-out, C++ terminate)",
+        "max_velocity_m_s": 203.3879,
+        "last_flushed_row": {
+          "phase": "close",
+          "i": 139,
+          "sim_t": 2.06515,
+          "q_deg": 2.337,
+          "n_door": 180,
+          "M_hinge_res_Nm": 1.12257,
+          "lipF_N": 9.7742,
+          "max_single_contact_N": 1.3855,
+          "v_particle_max": 0.5839
+        },
+        "plunge_reached": true,
+        "max_single_contact_in_close_N": 1.3855
+      },
+      {
+        "label": "option A c (close sync 1 ms)",
+        "dir": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w8_deme_scoop_lens/cell_A_c",
+        "status": "DIVERGED (DEME error-out, C++ terminate)",
+        "max_velocity_m_s": 225.8313,
+        "last_flushed_row": {
+          "phase": "close",
+          "i": 530,
+          "sim_t": 2.04006,
+          "q_deg": 3.64,
+          "n_door": 189,
+          "M_hinge_res_Nm": 0.560308,
+          "lipF_N": 4.8786,
+          "max_single_contact_N": 0.5154,
+          "v_particle_max": 0.4464
+        },
+        "plunge_reached": true,
+        "max_single_contact_in_close_N": 0.5154
+      },
+      {
+        "label": "option E c (sync 1 ms + pinch guard 3 N)",
+        "dir": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w8_deme_scoop_lens/cell_E_c",
+        "status": "DIVERGED (DEME error-out, C++ terminate)",
+        "max_velocity_m_s": 3663.994,
+        "last_flushed_row": {
+          "phase": "close",
+          "i": 540,
+          "sim_t": 2.05016,
+          "q_deg": 3.19,
+          "n_door": 196,
+          "M_hinge_res_Nm": 0.748401,
+          "lipF_N": 6.5163,
+          "max_single_contact_N": 0.6001,
+          "v_particle_max": 0.4309
+        },
+        "plunge_reached": true,
+        "max_single_contact_in_close_N": 0.6525
+      }
+    ]
+  },
+  "G2_sphere_regression": {
+    "pass": false,
+    "baseline_file": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w3_deme_scoop/b_diverge/scoop_fixnorm/scoop_s1_seed460.json",
+    "baseline_n_in_cavity": 315,
+    "baseline_mass_g": 11.2801,
+    "baseline_stops": [
+      {
+        "phase": "close",
+        "q_deg": 3.595,
+        "reason": "servo_stall",
+        "M_hinge_res_Nm": 2.612334,
+        "sim_t": 2.03708,
+        "q_from_quat_deg": 3.532
+      },
+      {
+        "phase": "reclose",
+        "q_deg": 2.696,
+        "reason": "servo_stall",
+        "M_hinge_res_Nm": 2.004008,
+        "sim_t": 2.59447,
+        "q_from_quat_deg": 2.631
+      }
+    ],
+    "baseline_wall_s": 91.72,
+    "regression_n_in_cavity": 273,
+    "regression_mass_g": 9.7761,
+    "regression_stops": [
+      {
+        "phase": "close",
+        "q_deg": 3.775,
+        "reason": "servo_stall",
+        "M_hinge_res_Nm": 1.865217,
+        "sim_t": 2.03307,
+        "q_from_quat_deg": 3.712
+      },
+      {
+        "phase": "reclose",
+        "q_deg": 3.235,
+        "reason": "servo_stall",
+        "M_hinge_res_Nm": 1.803046,
+        "sim_t": 2.58244,
+        "q_from_quat_deg": 3.171
+      }
+    ],
+    "regression_wall_s": 87.98,
+    "delta_n": -42,
+    "delta_mass_g": -1.504,
+    "same_stop_phases_reasons": true,
+    "same_inputs_except_script": {
+      "pile_practical_fast_d4p16_n18796_seed460.npz": true,
+      "fixed_ALL.stl": true,
+      "door_ALL_jawframe.stl": true,
+      "design.json": true,
+      "params_fixnorm_plunge25.json": true
+    },
+    "prew8_script_rerun": {
+      "n_in_cavity": 301,
+      "mass_g": 10.7788,
+      "stops": [
+        {
+          "phase": "close",
+          "q_deg": 3.595,
+          "reason": "servo_stall",
+          "M_hinge_res_Nm": 2.232428,
+          "sim_t": 2.03708,
+          "q_from_quat_deg": 3.532
+        },
+        {
+          "phase": "reclose",
+          "q_deg": 2.696,
+          "reason": "servo_stall",
+          "M_hinge_res_Nm": 2.030376,
+          "sim_t": 2.59447,
+          "q_from_quat_deg": 2.631
+        }
+      ],
+      "script_sha16": "db6e21126e552983"
+    },
+    "script_sha16_baseline_vs_now": [
+      "db6e21126e552983",
+      "38b38c6b60b131a8"
+    ],
+    "final_script_rerun": {
+      "n_in_cavity": 300,
+      "mass_g": 10.7429,
+      "stops": [
+        {
+          "phase": "close",
+          "q_deg": 3.415,
+          "reason": "servo_stall",
+          "M_hinge_res_Nm": 2.54956,
+          "sim_t": 2.04109,
+          "max_single_contact_N": 4.5625,
+          "q_from_quat_deg": 3.352
+        },
+        {
+          "phase": "reclose",
+          "q_deg": 3.235,
+          "reason": "servo_stall",
+          "M_hinge_res_Nm": 1.881576,
+          "sim_t": 2.58244,
+          "max_single_contact_N": 3.0658,
+          "q_from_quat_deg": 3.171
+        }
+      ],
+      "diverged": false,
+      "script_sha16": "0e1d4dc032cf9aaf",
+      "note": "최종 스크립트판(렌더·옵션 A/E/F 게이트 추가 뒤) 으로 구 경로 재실행; try1 은 DEME stall 로 kill(regression_sphere_final_script_try1_stall/)"
+    },
+    "note": "엄격 동일 판정. DEME GPU 는 run-to-run bit-동일을 보장하지 않는다(W7 §7-7) — 다르면 FAIL 로 두고 Δ 를 보고한다"
+  },
+  "G3_three_cells_complete": {
+    "pass": true,
+    "stage_rc_wall": {
+      "c": {
+        "rc": 0,
+        "wall_s": 1898
+      },
+      "xp50": {
+        "rc": 0,
+        "wall_s": 1926
+      },
+      "xm50": {
+        "rc": 0,
+        "wall_s": 1930
+      }
+    },
+    "steps_actual": {
+      "c": {
+        "settle": 25,
+        "descend": 350,
+        "close": 501,
+        "lift": 137,
+        "reclose": 1
+      },
+      "xp50": {
+        "settle": 25,
+        "descend": 350,
+        "close": 501,
+        "lift": 137,
+        "reclose": 1
+      },
+      "xm50": {
+        "settle": 25,
+        "descend": 350,
+        "close": 501,
+        "lift": 137,
+        "reclose": 1
+      }
+    },
+    "cap_s": 2700,
+    "note": "상한 2400 s(사전 등록) 는 옵션 F 실행기에서 2700 s 로 올림(폐합 sync 1 ms 오버헤드). 벽시계는 보고값",
+    "variant": "F"
+  },
+  "G4_capture_mass_positive": {
+    "pass": true,
+    "mass_g": {
+      "c": 3.1196,
+      "xp50": 2.1473,
+      "xm50": 1.7016
+    },
+    "n_in_cavity": {
+      "c": 154,
+      "xp50": 106,
+      "xm50": 84
+    },
+    "fill_vs_bulk": {
+      "c": 0.1241,
+      "xp50": 0.0854,
+      "xm50": 0.0677
+    },
+    "w3b_sphere_reference_mean_g": 11.78,
+    "note": "충전율·W3b 비교는 보고값(판정 아님)"
+  },
+  "G5_crater_angle_reported": {
+    "reported": true,
+    "angle_deg": {
+      "c": {
+        "+x": 16.280496207024083,
+        "+y": 42.58593409497109,
+        "-x": 13.425529006554134,
+        "-y": null
+      },
+      "xp50": {
+        "+x": null,
+        "+y": 40.81898511955793,
+        "-x": 24.909404726953625,
+        "-y": 28.719657813015214
+      },
+      "xm50": {
+        "+x": 16.18406023353997,
+        "+y": 34.41328847328483,
+        "-x": 9.427465469127583,
+        "-y": 34.825437240468894
+      }
+    },
+    "angle_surface_deg": {
+      "c": {
+        "+x": 7.01685848939169,
+        "+y": 38.62560652388477,
+        "-x": 7.789702532554896,
+        "-y": null
+      },
+      "xp50": {
+        "+x": null,
+        "+y": 27.760161485947442,
+        "-x": 23.42355212882404,
+        "-y": 13.058466341534082
+      },
+      "xm50": {
+        "+x": 13.672301779985355,
+        "+y": 22.54213637126509,
+        "-x": 11.24372076737201,
+        "-y": 16.959268643370308
+      }
+    },
+    "reason": {
+      "c": {
+        "+x": null,
+        "+y": null,
+        "-x": null,
+        "-y": "only 1 ring(s) in band outward of r_peak"
+      },
+      "xp50": {
+        "+x": "only 0 ring(s) in band outward of r_peak",
+        "+y": null,
+        "-x": null,
+        "-y": null
+      },
+      "xm50": {
+        "+x": null,
+        "+y": null,
+        "-x": null,
+        "-y": null
+      }
+    },
+    "definition": "crater_angles() docstring (sim_deme_scoop_s1.py): dh=h_pre-h_post, wedge ring-averaged radial profile, least-squares line on rings with band[0]*d_max<=dh<=band[1]*d_max outward of r_peak, angle=atan|slope|",
+    "params": {
+      "r_max_mm": 80.0,
+      "wedge_half_deg": 22.5,
+      "min_depth_mm": 2.0,
+      "fit_band": [
+        0.2,
+        0.8
+      ],
+      "cell_mm": 5.0
+    },
+    "rest_only_postprocess": {
+      "c": {
+        "rule": "resting sphere = not carried, not in cavity, centre <= hm_pre(xy) + 10 mm (excludes in-flight/perched pellets)",
+        "n_excluded_spheres": 63,
+        "angle_deg": {
+          "+x": 16.280496207024083,
+          "+y": 38.12077736019128,
+          "-x": 13.185911190385008,
+          "-y": null
+        },
+        "angle_surface_deg": {
+          "+x": 7.01685848939169,
+          "+y": 34.38432299840079,
+          "-x": 8.957164177996908,
+          "-y": null
+        },
+        "secant_angle_deg": {
+          "+x": 15.429505048448918,
+          "+y": 32.16168142924809,
+          "-x": 16.515090197757974,
+          "-y": 29.995691061887808
+        },
+        "removed_volume_cm3": 36.506140325218446,
+        "center_xy_mm": [
+          1.1305052027294271,
+          -6.622418138706389
+        ],
+        "dh_max_mm": 14.702731743454933
+      },
+      "xp50": {
+        "rule": "resting sphere = not carried, not in cavity, centre <= hm_pre(xy) + 10 mm (excludes in-flight/perched pellets)",
+        "n_excluded_spheres": 49,
+        "angle_deg": {
+          "+x": null,
+          "+y": 40.41381893006518,
+          "-x": 25.942825325855754,
+          "-y": 28.398636386393967
+        },
+        "angle_surface_deg": {
+          "+x": null,
+          "+y": 23.775064653519586,
+          "-x": 24.990105158350094,
+          "-y": 13.86416372649702
+        },
+        "secant_angle_deg": {
+          "+x": 34.547411244882575,
+          "+y": 28.86575107062319,
+          "-x": 18.921714704673956,
+          "-y": 20.267507460226927
+        },
+        "removed_volume_cm3": 30.019889184040952,
+        "center_xy_mm": [
+          42.06011258764194,
+          -7.114333191768483
+        ],
+        "dh_max_mm": 13.10291513800621
+      },
+      "xm50": {
+        "rule": "resting sphere = not carried, not in cavity, centre <= hm_pre(xy) + 10 mm (excludes in-flight/perched pellets)",
+        "n_excluded_spheres": 14,
+        "angle_deg": {
+          "+x": 15.40322711996583,
+          "+y": 34.41328847328483,
+          "-x": 11.333516123817587,
+          "-y": 34.825437240468894
+        },
+        "angle_surface_deg": {
+          "+x": 20.938775438582557,
+          "+y": 22.54213637126509,
+          "-x": 12.8746459386223,
+          "-y": 16.959268643370308
+        },
+        "secant_angle_deg": {
+          "+x": 16.41497341805737,
+          "+y": 34.1333452808949,
+          "-x": 15.1031666023023,
+          "-y": 25.923459663841165
+        },
+        "removed_volume_cm3": 29.106798442080617,
+        "center_xy_mm": [
+          -42.18369347449175,
+          -6.631352291307641
+        ],
+        "dh_max_mm": 16.35831966996193
+      }
+    },
+    "rest_note": "crater_rest_seed460.json = 최종 프레임에서 공중(문 틈 유출 중)·툴에 얹힌 알을 뺀 heightmap 으로 같은 정의를 다시 잰 값(권장 인용값). secant 는 밴드 고리 <2 인 가파른 벽용 보조각(정의 밖)",
+    "note": "판정 아님(보고). 정의 = sim_deme_scoop_s1.py crater_angles() 도크스트링 = GATES_w8.md"
+  },
+  "R_rerun_d341": {
+    "complete": true,
+    "cell": "c",
+    "validation_pass": true,
+    "validation_file": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w8_deme_scoop_lens/cell_F_c/scoop_s1_seed460_w8v2_rerun_validation.json",
+    "inspection_file": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w8_deme_scoop_lens/cell_F_c/scoop_s1_seed460_w8v2_inspection.json",
+    "sdk_cli": {
+      "command": [
+        "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+        "--version"
+      ],
+      "returncode": 0,
+      "stdout": "rerun-cli 0.34.1 (base lance map_view nasm native_viewer oss_server perf_telemetry re_server release_full release_no_web_viewer web_viewer) [rustc 1.92.0 (ded5c06cf 2025-12-08), LLVM 21.1.3] x86_64-unknown-linux-gnu prepare-release-0.34.1 4efb18f, built 2026-07-07T16:20:42.173372603Z\nVideo features: av1 ffmpeg nasm\n",
+      "stderr": "",
+      "ok": true,
+      "expected_version_match": true
+    }
+  },
+  "S_source_sha256": {
+    "sim_deme_scoop_s1.py": "0e1d4dc032cf9aaffdcf084b046ac44e3d1e2ea0eadd366e25252811bb7cad69",
+    "sim_deme_scoop_s1.py.bak_20260910_pre_w8": "db6e21126e552983058252890bade7f0cd8bc56bc9d12da00a442a7477e7a9ec",
+    "sim_deme_scoop.py(protected, unmodified)": "bec91dbbb2350b50759f677cd7e27eb1d24fcb0f88626e451b4344281c3471e0",
+    "roarm_rl/heightmap.py": "5ac5288e2fcd37fd5f60603d0542075c5333ea0d1352aa1e80c5cf7fae6783df",
+    "params_w8_cell_*.json (pre-registered)": {
+      "c": "e528e0e6f84b1ccf49cddbe4c35381671609654dac69338b32c200a22ad5302a",
+      "xp50": "263736097d2b4ab21de7acf1a5465bd736b705beb9e4132ce40ec5ae8f74d5f7",
+      "xm50": "6e96997a16bb468af16d5d0a6fcb1f8ba5eac67f3cb752b6e8b5769a206d1009"
+    },
+    "params_w8F_cell_*.json (variant)": {
+      "c": "dc96b7ccca389b8cddfc08ee65b90f0e8f524e6dfaa11bb89890d6e2b51e5d03",
+      "xp50": "6cfbce1612d86cbb32ed201ee0cfd8757d72fa192d9769294502e671a384ed59",
+      "xm50": "ffc8372ed26cf81a400440424987517edd196cdad60764fbca64ffbfb0882351"
+    },
+    "lens_pile_npz": "659d6b0bc771678a0c7209d91f550edc933d03e41922245ea0adb64eeb818812",
+    "inputs_sha16_per_run": {
+      "c": {
+        "/home/cgxr/orca/workspaces/RoArm_Project/pellet-model/claudedocs/runtime_logs/pellet_model/pile_lens_20260910/pile_lens6_a4p5_b3p8_c2p5_slab_n20000_seed460.npz": "659d6b0bc771678a",
+        "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_ALL.stl": "2fea1c37b63ff36e",
+        "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/door_ALL_jawframe.stl": "bf570fbf862f71a3",
+        "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/design.json": "76620eba052d3c2f",
+        "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py": "0e1d4dc032cf9aaf",
+        "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w8_deme_scoop_lens/params_w8F_cell_c.json": "dc96b7ccca389b8c"
+      },
+      "xp50": {
+        "/home/cgxr/orca/workspaces/RoArm_Project/pellet-model/claudedocs/runtime_logs/pellet_model/pile_lens_20260910/pile_lens6_a4p5_b3p8_c2p5_slab_n20000_seed460.npz": "659d6b0bc771678a",
+        "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_ALL.stl": "2fea1c37b63ff36e",
+        "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/door_ALL_jawframe.stl": "bf570fbf862f71a3",
+        "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/design.json": "76620eba052d3c2f",
+        "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py": "0e1d4dc032cf9aaf",
+        "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w8_deme_scoop_lens/params_w8F_cell_xp50.json": "6cfbce1612d86cbb"
+      },
+      "xm50": {
+        "/home/cgxr/orca/workspaces/RoArm_Project/pellet-model/claudedocs/runtime_logs/pellet_model/pile_lens_20260910/pile_lens6_a4p5_b3p8_c2p5_slab_n20000_seed460.npz": "659d6b0bc771678a",
+        "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_ALL.stl": "2fea1c37b63ff36e",
+        "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/door_ALL_jawframe.stl": "bf570fbf862f71a3",
+        "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/design.json": "76620eba052d3c2f",
+        "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py": "0e1d4dc032cf9aaf",
+        "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w8_deme_scoop_lens/params_w8F_cell_xm50.json": "ffc8372ed26cf81a"
+      },
+      "regression": {
+        "claudedocs/runtime_logs/sim_deme/pile_practical_fast_d4p16_n18796_seed460.npz": "e26b214f336a4e97",
+        "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_ALL.stl": "2fea1c37b63ff36e",
+        "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/door_ALL_jawframe.stl": "bf570fbf862f71a3",
+        "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/design.json": "76620eba052d3c2f",
+        "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py": "38b38c6b60b131a8",
+        "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w3_deme_scoop/b_diverge/params_fixnorm_plunge25.json": "0db262e2c543835d"
+      }
+    }
+  },
+  "summary": {
+    "rows": {
+      "c": {
+        "site_xy_mm": [
+          0.0,
+          0.0
+        ],
+        "surface_z_mm": 41.12,
+        "diverged": false,
+        "steps_actual": {
+          "settle": 25,
+          "descend": 350,
+          "close": 501,
+          "lift": 137,
+          "reclose": 1
+        },
+        "plunge_reached_mm": 25.03,
+        "descend_hold_steps": 0,
+        "n_in_cavity": 154,
+        "n_carried_z": 210,
+        "mass_g": 3.1196,
+        "fill_vs_bulk": 0.1241,
+        "particle_mass_mg": 20.257382129428684,
+        "door_stops": [
+          {
+            "phase": "close",
+            "q_deg": 4.988,
+            "reason": "door_floor",
+            "M_hinge_res_Nm": 0.227599,
+            "sim_t": 2.00976,
+            "max_single_contact_N": 0.703,
+            "q_from_quat_deg": 4.76
+          },
+          {
+            "phase": "reclose",
+            "q_deg": 4.943,
+            "reason": "door_floor",
+            "M_hinge_res_Nm": 0.117145,
+            "sim_t": 2.54811,
+            "max_single_contact_N": 0.5938,
+            "q_from_quat_deg": 4.714
+          }
+        ],
+        "q_final_deg": 4.943,
+        "servo_deg_final": 7.443,
+        "lip_gap_final_mm": 9.908,
+        "mouth_end_mm": 9.693,
+        "n_pinched_at_lip": 8,
+        "n_touch_both": 21,
+        "close_peak_lipF_N": 1.9817,
+        "close_peak_M_res_Nm": 0.227599,
+        "close_peak_single_contact_N": 0.703,
+        "descend_peak_F_fixed_N": 2.5469,
+        "pops": {
+          "v_particle_max_m_s": 1.069,
+          "steps_over_pop_speed": 0,
+          "pop_speed_m_s": 5.0,
+          "note": "무른 구(E 5e6)의 탄성 방출 인공물. 5 m/s 초과 스텝 수가 0 이 아니면 정량값에 인공물이 섞여 있다"
+        },
+        "wall_seconds": 1895.32,
+        "heightmap": {
+          "spec_version": "roarm-heightmap-v1",
+          "cell_m": 0.005,
+          "shape": [
+            44,
+            62
+          ],
+          "max_m": 0.08004919439554214,
+          "n_particles_used": 19790,
+          "pre_max_m": 0.04112355411052704,
+          "npz_max_m": 0.041180770844221115,
+          "pre_vs_npz_max_abs_diff_m": 0.0029314570128917694,
+          "removed_volume_cm3": 35.393250873312354,
+          "spheres_per_particle": 7
+        },
+        "crater_center_xy_mm": [
+          1.0019924635453628,
+          -6.716534084008696
+        ],
+        "removed_volume_cm3": 35.393250873312354,
+        "dh_max_mm": 14.702731743454933,
+        "crater_angle_deg": {
+          "+x": 16.280496207024083,
+          "+y": 42.58593409497109,
+          "-x": 13.425529006554134,
+          "-y": null
+        },
+        "crater_angle_surface_deg": {
+          "+x": 7.01685848939169,
+          "+y": 38.62560652388477,
+          "-x": 7.789702532554896,
+          "-y": null
+        },
+        "crater_fit_r_mm": {
+          "+x": [
+            32.5,
+            37.5
+          ],
+          "+y": [
+            27.5,
+            32.5
+          ],
+          "-x": [
+            27.5,
+            42.5
+          ],
+          "-y": null
+        },
+        "crater_reason": {
+          "+x": null,
+          "+y": null,
+          "-x": null,
+          "-y": "only 1 ring(s) in band outward of r_peak"
+        },
+        "template_check": {
+          "expand_vs_npz_max_err_m": 2.7755575615628914e-17,
+          "clump_ids_clump_major": true,
+          "n_spheres": 7
+        }
+      },
+      "xp50": {
+        "site_xy_mm": [
+          50.0,
+          0.0
+        ],
+        "surface_z_mm": 39.96,
+        "diverged": false,
+        "steps_actual": {
+          "settle": 25,
+          "descend": 350,
+          "close": 501,
+          "lift": 137,
+          "reclose": 1
+        },
+        "plunge_reached_mm": 25.03,
+        "descend_hold_steps": 0,
+        "n_in_cavity": 106,
+        "n_carried_z": 131,
+        "mass_g": 2.1473,
+        "fill_vs_bulk": 0.0854,
+        "particle_mass_mg": 20.257382129428684,
+        "door_stops": [
+          {
+            "phase": "close",
+            "q_deg": 4.988,
+            "reason": "door_floor",
+            "M_hinge_res_Nm": 0.107966,
+            "sim_t": 2.00976,
+            "max_single_contact_N": 0.1392,
+            "q_from_quat_deg": 4.76
+          },
+          {
+            "phase": "reclose",
+            "q_deg": 4.943,
+            "reason": "door_floor",
+            "M_hinge_res_Nm": 6e-06,
+            "sim_t": 2.54811,
+            "max_single_contact_N": 0.0002,
+            "q_from_quat_deg": 4.714
+          }
+        ],
+        "q_final_deg": 4.943,
+        "servo_deg_final": 7.443,
+        "lip_gap_final_mm": 9.908,
+        "mouth_end_mm": 9.693,
+        "n_pinched_at_lip": 2,
+        "n_touch_both": 10,
+        "close_peak_lipF_N": 1.238,
+        "close_peak_M_res_Nm": 0.142186,
+        "close_peak_single_contact_N": 0.1942,
+        "descend_peak_F_fixed_N": 1.9496,
+        "pops": {
+          "v_particle_max_m_s": 1.085,
+          "steps_over_pop_speed": 0,
+          "pop_speed_m_s": 5.0,
+          "note": "무른 구(E 5e6)의 탄성 방출 인공물. 5 m/s 초과 스텝 수가 0 이 아니면 정량값에 인공물이 섞여 있다"
+        },
+        "wall_seconds": 1923.91,
+        "heightmap": {
+          "spec_version": "roarm-heightmap-v1",
+          "cell_m": 0.005,
+          "shape": [
+            44,
+            62
+          ],
+          "max_m": 0.08025441318750381,
+          "n_particles_used": 19869,
+          "pre_max_m": 0.04112359508872032,
+          "npz_max_m": 0.041180770844221115,
+          "pre_vs_npz_max_abs_diff_m": 0.0029441695660352707,
+          "removed_volume_cm3": 28.25503751519136,
+          "spheres_per_particle": 7
+        },
+        "crater_center_xy_mm": [
+          41.81445434269499,
+          -7.203561731184425
+        ],
+        "removed_volume_cm3": 28.25503751519136,
+        "dh_max_mm": 13.10291513800621,
+        "crater_angle_deg": {
+          "+x": null,
+          "+y": 40.81898511955793,
+          "-x": 24.909404726953625,
+          "-y": 28.719657813015214
+        },
+        "crater_angle_surface_deg": {
+          "+x": null,
+          "+y": 27.760161485947442,
+          "-x": 23.42355212882404,
+          "-y": 13.058466341534082
+        },
+        "crater_fit_r_mm": {
+          "+x": null,
+          "+y": [
+            27.5,
+            32.5
+          ],
+          "-x": [
+            17.5,
+            27.5
+          ],
+          "-y": [
+            27.5,
+            37.5
+          ]
+        },
+        "crater_reason": {
+          "+x": "only 0 ring(s) in band outward of r_peak",
+          "+y": null,
+          "-x": null,
+          "-y": null
+        },
+        "template_check": {
+          "expand_vs_npz_max_err_m": 2.7755575615628914e-17,
+          "clump_ids_clump_major": true,
+          "n_spheres": 7
+        }
+      },
+      "xm50": {
+        "site_xy_mm": [
+          -50.0,
+          0.0
+        ],
+        "surface_z_mm": 40.92,
+        "diverged": false,
+        "steps_actual": {
+          "settle": 25,
+          "descend": 350,
+          "close": 501,
+          "lift": 137,
+          "reclose": 1
+        },
+        "plunge_reached_mm": 25.03,
+        "descend_hold_steps": 0,
+        "n_in_cavity": 84,
+        "n_carried_z": 123,
+        "mass_g": 1.7016,
+        "fill_vs_bulk": 0.0677,
+        "particle_mass_mg": 20.257382129428684,
+        "door_stops": [
+          {
+            "phase": "close",
+            "q_deg": 4.988,
+            "reason": "door_floor",
+            "M_hinge_res_Nm": 0.198761,
+            "sim_t": 2.00976,
+            "max_single_contact_N": 0.3815,
+            "q_from_quat_deg": 4.76
+          },
+          {
+            "phase": "reclose",
+            "q_deg": 4.943,
+            "reason": "door_floor",
+            "M_hinge_res_Nm": 3e-06,
+            "sim_t": 2.54811,
+            "max_single_contact_N": 0.0,
+            "q_from_quat_deg": 4.714
+          }
+        ],
+        "q_final_deg": 4.943,
+        "servo_deg_final": 7.443,
+        "lip_gap_final_mm": 9.908,
+        "mouth_end_mm": 9.693,
+        "n_pinched_at_lip": 1,
+        "n_touch_both": 4,
+        "close_peak_lipF_N": 1.7306,
+        "close_peak_M_res_Nm": 0.198761,
+        "close_peak_single_contact_N": 0.3815,
+        "descend_peak_F_fixed_N": 1.6342,
+        "pops": {
+          "v_particle_max_m_s": 1.081,
+          "steps_over_pop_speed": 0,
+          "pop_speed_m_s": 5.0,
+          "note": "무른 구(E 5e6)의 탄성 방출 인공물. 5 m/s 초과 스텝 수가 0 이 아니면 정량값에 인공물이 섞여 있다"
+        },
+        "wall_seconds": 1927.34,
+        "heightmap": {
+          "spec_version": "roarm-heightmap-v1",
+          "cell_m": 0.005,
+          "shape": [
+            44,
+            62
+          ],
+          "max_m": 0.08007895946502686,
+          "n_particles_used": 19877,
+          "pre_max_m": 0.04112359136343002,
+          "npz_max_m": 0.041180770844221115,
+          "pre_vs_npz_max_abs_diff_m": 0.0029333792626857758,
+          "removed_volume_cm3": 28.004560014232993,
+          "spheres_per_particle": 7
+        },
+        "crater_center_xy_mm": [
+          -42.253458105372644,
+          -6.693109980608457
+        ],
+        "removed_volume_cm3": 28.004560014232993,
+        "dh_max_mm": 16.35831966996193,
+        "crater_angle_deg": {
+          "+x": 16.18406023353997,
+          "+y": 34.41328847328483,
+          "-x": 9.427465469127583,
+          "-y": 34.825437240468894
+        },
+        "crater_angle_surface_deg": {
+          "+x": 13.672301779985355,
+          "+y": 22.54213637126509,
+          "-x": 11.24372076737201,
+          "-y": 16.959268643370308
+        },
+        "crater_fit_r_mm": {
+          "+x": [
+            22.5,
+            32.5
+          ],
+          "+y": [
+            22.5,
+            32.5
+          ],
+          "-x": [
+            12.5,
+            17.5
+          ],
+          "-y": [
+            27.5,
+            37.5
+          ]
+        },
+        "crater_reason": {
+          "+x": null,
+          "+y": null,
+          "-x": null,
+          "-y": null
+        },
+        "template_check": {
+          "expand_vs_npz_max_err_m": 2.7755575615628914e-17,
+          "clump_ids_clump_major": true,
+          "n_spheres": 7
+        }
+      }
+    },
+    "mean_mass_g": 2.3228,
+    "cov": 0.3122
+  },
+  "variant_note": "G1·G3·G4·G5 의 셀 값은 옵션 F(사전 등록 외: 문 하한 5°·폐합 sync 1 ms·물림 가드 3 N) 완주 결과. 사전 등록 설정 자체의 G1 은 FAIL(diverged_attempts)",
+  "all_pass": false,
+  "all_pass_pre_registered_settings": false
+}

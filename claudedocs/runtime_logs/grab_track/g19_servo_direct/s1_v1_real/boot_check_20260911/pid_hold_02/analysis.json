@@ -1,0 +1,56 @@
+{
+  "raw_sha256": "9b4cbf4196763a05f293c58893d4639e72ce9e8a48865e4ba9d9a6dd1dd8d1a7",
+  "n_feedback": 1648,
+  "phase_statistics_last2s": {
+    "baseline": {
+      "n": 112,
+      "shoulder_mean_deg": 1.054687473951752,
+      "shoulder_range_deg": 0.0,
+      "shoulder_load_raw_mean": 48.0
+    },
+    "p8_a": {
+      "n": 112,
+      "shoulder_mean_deg": 1.6699218767287751,
+      "shoulder_range_deg": 0.0,
+      "shoulder_load_raw_mean": 36.0
+    },
+    "p48_a": {
+      "n": 112,
+      "shoulder_mean_deg": 1.1425781111050097,
+      "shoulder_range_deg": 0.0,
+      "shoulder_load_raw_mean": 164.0
+    },
+    "p8_b": {
+      "n": 112,
+      "shoulder_mean_deg": 1.6699218767287751,
+      "shoulder_range_deg": 0.0,
+      "shoulder_load_raw_mean": 36.0
+    },
+    "p48_b": {
+      "n": 112,
+      "shoulder_mean_deg": 1.1425781111050097,
+      "shoulder_range_deg": 0.0,
+      "shoulder_load_raw_mean": 164.0
+    },
+    "restore_p16": {
+      "n": 112,
+      "shoulder_mean_deg": 1.1425781111050097,
+      "shoulder_range_deg": 0.0,
+      "shoulder_load_raw_mean": 52.0
+    }
+  },
+  "paired_P8_minus_P48_deg": [
+    0.5273437656237654,
+    0.5273437656237654
+  ],
+  "max_abs_joint_drift_deg": 0.6152344027770231,
+  "max_feedback_interval_s": 0.02529766500000008,
+  "verdict": "REPEATED_P_COMMAND_ASSOCIATED_RESPONSE_AT_INITIAL_POSE",
+  "limitations": [
+    "Two alternating comparisons, not independent trials; no significance claim.",
+    "Observed quantized servo feedback only; no register P/D/I or target readback.",
+    "Restore P16 command sent; electrical/register application not directly read.",
+    "No sensor clock or tG; receive timestamps and arm load units only.",
+    "No permanent setting, loaded scoop, high-P trajectory, or optimum tuning claim."
+  ]
+}

@@ -1,0 +1,44 @@
+{
+ "source_dir": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1",
+ "base_urdf_sha16": "64dc8d082cbce9a1",
+ "design_json_sha16": "76620eba052d3c2f",
+ "door_ALL_sha16": "32521db98db7e421",
+ "fixed_ALL_sha16": "2fea1c37b63ff36e",
+ "door": {
+  "mass_kg": 0.01826,
+  "com_m_jawframe": [
+   0.05749,
+   0.01349,
+   -0.01894
+  ],
+  "n_collision": 34
+ },
+ "fixed": {
+  "mass_kg": 0.01847,
+  "com_m_link5": [
+   -0.00895,
+   -0.00016,
+   0.13348
+  ],
+  "n_collision": 27
+ },
+ "joint": "link5_to_gripper_link (벤더, 0~1.571 rad) 가 문을 직접 구동. 열림 29.3° = 0.511 rad 에서 입 58 mm",
+ "frames": {
+  "gripper_link": "x=link5 Z−52.035, y=link5 X, z=link5 Y−18.821 (벤더 rpy −90,−90,0)",
+  "grab_fixed": "link5 프레임 동일"
+ },
+ "wrist_pitch": {
+  "joint": "link3_to_link4",
+  "urdf_limit_rad": 1.92,
+  "firmware_clamp_deg": 90,
+  "note": "URDF ±110° 는 벤더값 유지. 실물 펌웨어는 ±90° 로 클램프(SDK 는 110 통과) — D481 ①"
+ },
+ "tiny_inertial_links": {
+  "links": [
+   "hand_tcp"
+  ],
+  "mass_kg": 0.0001,
+  "inertia_diag_kgm2": 1e-08,
+  "why": "URDF inertial 없음 → Isaac 임포터 기본 1 kg 방지 (W1b 09-09)"
+ }
+}

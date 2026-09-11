@@ -1,8 +1,19 @@
 # LEDGER_RECENT.md — 최근 실험 20건 요약 (부팅 read)
 
-Last updated: 2026-09-03 (77th 후반 4) — 현재 원본 `EXPERIMENT_LEDGER.md` = 574줄 / 표 블록 520행
-(`:9-90` 82행 + `:105-542` 438행. 줄당 평균 약 2 KB, 최근 행은 5~9 KB — **단일 Read로 열면 토큰 초과**).
-표 블록 끝 = `:542`(77th 5행 추가), `## Schema errata` = `:544`.
+Last updated: 2026-09-11 (Codex 배출 회전 검토) — 원본 `EXPERIMENT_LEDGER.md` 586줄. 최신 오프라인 검토 **`:586`**; 실물 계량 후속 `:585`. 기존 바이트 prefix 보존 검증.
+
+- **`:586` 배출 회전 검토** — 실제 배출51행과 S1 형상으로 회전축 비교. 출구5° 기울임 개념은 경사7.5→12.5°, 작은 손목 롤은7.78°. 입자 배출 효과/실행 경로 미검증, 로봇 구동0. `session_20260911_release_tilt_review.md`.
+
+- **`:585` 수정900 사진 계량** — 같은 `torque900_03`: 빈 컵9.65 g·총29.60 g → 컵 배출19.95 g. 고정 jaw 잔류 약10~15알(사용자 추정), 잔류 질량 미측정. 사진/JSON/CSV 저장.790 비교/고정 조건5회 미완료.
+
+- **`:584` 수정900 실기** D484 — T12218/18 명시 문 목표 유지,3739행·71.79s. 리프트3.779→3.691°(추가 개방0°). 컵 배출/P1복귀·Rerun/검수 완료. 이 행 작성 당시 무게/잔류 입력 전; 이후 계량은 `:585`.790 비교는 남음. 앞 무게는 저울 미설치로 미측정.
+
+- **`:583` 2026-09-11 실물 P/첫900** D483 — P8↔48 각도차0.527344° 교대2회. 첫900 되열림0.791°와 T122 문 목표0→4.5703° 변경 동시 관측. 목표 유지 수정 후 실제900/790·질량 미완료. 두 RRD 전체1648/3975행 검증·검수. 세션 `session_20260911_real_boot_measurement.md`.
+
+- **`:582` 2026-09-11 W10 재개** D482 — 렌즈 dt2e-6/E5e6: 두 닫힘 토크 정지, 541개/10.9592g, rc0/1890s. 속도 경고1sync(5.329m/s)·실물 정합 미확정. 구 회귀287개, 과학4/4·D3412774sync/입자64frame·육안 검수 PASS → `W10_DT2E6_TORQUE_STOP_COMPLETE__TRANSIENT_POP_WARNING__SIM_REAL_UNCALIBRATED`. 세션 `session_20260911_w10_reboot_resume.md`.
+
+- **:544 79th (09-04~07)** `s1_v1` D481 — v0 출력·조립 실패 2건 → v1 재출력·조립 → 서보 개폐 → 펠릿 퍼내기·놓기 `cycle 5` 5/5(93 s/회, 닫힘 2.8~3.5°) · 손목 피치 펌웨어 ±90 실측 → **S1_REAL_SCOOP_PLACE_CYCLE_5_OF_5_OK__V0_ASSEMBLY_FAILED_V1_REPRINTED__WRIST_PITCH_FW_CLAMP_90__BASE_HEIGHT_MISESTIMATED_TWICE**. 세션 `session_20260904_79th_s1_v0_print_sent_assembly.md`.
+- **:543 78th (09-04)** `s1_v0` D480 — S1 전환·STEP·실물(ST3215-HS 1.96)·Isaac 문 관절 파지 ok·출력 13/13 → **S1_DESIGN_OK · ISAAC_GRASP_OK · PRINT_SLICED_NOT_SENT**. 세션 `session_20260904_78th_s1_servo_direct_step_isaac_print.md`.
 
 **2026-08-26 변경 (사용자 승인, append만 — 원본 삭제·수정 0건)**: 소급 등재 2행(`:532` 57th · `:533` 70th)
 \+ 표 밖 `## Schema errata` 절 append (2026-09-02 기준 `:537~`). 앞 1,062,466 B는 **바이트 불변**(md5 `0a6d7071…` 대조 PASS).
@@ -29,7 +40,7 @@ Last updated: 2026-09-03 (77th 후반 4) — 현재 원본 `EXPERIMENT_LEDGER.md
 
 원장 **표 블록의 마지막 20행 = `:523`~`:542`**, 정렬은 append 순. ⚠️ 75th·76th·76th 연장×2·77th×5 가 행을 더해 앵커가 밀렸다. 재확인 명령:
 ```bash
-grep -n '^## Schema errata' claudedocs/EXPERIMENT_LEDGER.md   # 544 → 표 블록 끝 = :542
+grep -n '^## Schema errata' claudedocs/EXPERIMENT_LEDGER.md   # 546 → 표 블록 끝 = :544
 sed -n '523,542p' claudedocs/EXPERIMENT_LEDGER.md | awk -F'|' '{print NR+522": "substr($2,1,120)}'
 ```
 ⚠️ **2026-08-26부터 append 순 ≠ 시간 순이다.** 소급 등재로 `:532`(57th, 08-13)가 `:531`(69th, 08-16)보다
@@ -166,10 +177,8 @@ AGENTS.md에서 걷어낸 결함 B(죽은 상태가 규칙/참조 파일에 상�
 
 ### 감사·패널 (물리 재실행 0 — 문서 무결성 축)
 
-- **`:514` · 51st-b** (08-11) 적대 패널 `wf_46941a6d-04e` 회수 13/13 (2,185,034 tok · 633 calls)
-  → **`PANEL_CONFIRMS_D437R1_CORE__REFUTES_8_OF_51ST_OWN_REDERIVATIONS__DOCINT_SELF_INVALIDATED`** (**D438-R1**)
-> **회전 이탈 (앵커는 계속 유효):** `:513` 51st(D438) · `:512` 50th-b(D437-R1) — 2026-08-26 소급 등재로 창 밖.
-> 2026-09-03 77th 5행 추가로 창(`:523`~`:542`) 밖 = `:515`~`:522`(52nd~60th, 헤더만 유지). 교훈 원문은 `DECISIONS_ACTIVE.md` §8.
+- **`:514` · 51st-b** (08-11) 적대 패널 `wf_46941a6d-04e` 회수 13/13 (2,185,034 tok · 633 calls) → **`PANEL_CONFIRMS_D437R1_CORE__REFUTES_8_OF_51ST_OWN_REDERIVATIONS__DOCINT_SELF_INVALIDATED`** (**D438-R1**)
+> **회전 이탈 (앵커는 계속 유효):** `:513` 51st(D438) · `:512` 50th-b(D437-R1) — 2026-08-26 소급 등재로 창 밖. 2026-09-03 77th 5행 추가로 창(`:523`~`:542`) 밖 = `:515`~`:522`(52nd~60th, 헤더만 유지). 교훈 원문은 `DECISIONS_ACTIVE.md` §8.
 
 ## 4. 원장 항해 인덱스 (통째 read 금지)
 

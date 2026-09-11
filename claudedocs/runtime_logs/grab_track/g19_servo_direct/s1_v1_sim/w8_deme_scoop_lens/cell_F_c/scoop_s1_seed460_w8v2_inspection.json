@@ -1,0 +1,81 @@
+{
+  "artifact": "DEME_SCOOP_S1_W8_VISUAL_INSPECTION_V1",
+  "cell_dir": "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w8_deme_scoop_lens/cell_F_c",
+  "result_json_sha256": "c32d4a63179f47e042fce1e992f0260c94b4e7d03ef7f2927a5672240f18fa08",
+  "rrd": "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w8_deme_scoop_lens/cell_F_c/scoop_s1_seed460_w8v2.rrd",
+  "rbl": "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w8_deme_scoop_lens/cell_F_c/scoop_s1_seed460_w8v2.rbl",
+  "screenshot_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w8_deme_scoop_lens/cell_F_c/scoop_s1_seed460_w8v2_inspection.png",
+  "screenshot_sha256": "9b44a712700886923f5ef080e1b3859b4ea42ca081a417ddd3c75a39e5952aad",
+  "rerun_version": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "--version"
+    ],
+    "returncode": 0,
+    "stdout": "rerun-cli 0.34.1 (base lance map_view nasm native_viewer oss_server perf_telemetry re_server release_full release_no_web_viewer web_viewer) [rustc 1.92.0 (ded5c06cf 2025-12-08), LLVM 21.1.3] x86_64-unknown-linux-gnu prepare-release-0.34.1 4efb18f, built 2026-07-07T16:20:42.173372603Z\nVideo features: av1 ffmpeg nasm\n",
+    "stderr": "",
+    "ok": true,
+    "expected_version_match": true
+  },
+  "completion_contract_pass": true,
+  "run_under_inspection": {
+    "site_xy_mm": [
+      0.0,
+      0.0
+    ],
+    "n_in_cavity": 154,
+    "mass_g": 3.1196,
+    "door_stops": [
+      {
+        "phase": "close",
+        "q_deg": 4.988,
+        "reason": "door_floor",
+        "M_hinge_res_Nm": 0.227599,
+        "sim_t": 2.00976,
+        "max_single_contact_N": 0.703,
+        "q_from_quat_deg": 4.76
+      },
+      {
+        "phase": "reclose",
+        "q_deg": 4.943,
+        "reason": "door_floor",
+        "M_hinge_res_Nm": 0.117145,
+        "sim_t": 2.54811,
+        "max_single_contact_N": 0.5938,
+        "q_from_quat_deg": 4.714
+      }
+    ],
+    "crater_angle_deg": {
+      "+x": 16.280496207024083,
+      "+y": 42.58593409497109,
+      "-x": 13.425529006554134,
+      "-y": null
+    },
+    "diverged": false
+  },
+  "inspected_by": "W8 worker (Claude), 2026-09-10 21:40, opened cell_F_c/scoop_s1_seed460_w8v2_inspection.png (6400x3600 headless render of the fixed blueprint) with the image reader and read it panel by panel",
+  "inspection_method": "headless-rendered blueprint screenshot opened with the image reader and read panel by panel; every observation is something visible in the image, not an inference from the JSON",
+  "visual_inspection_complete": true,
+  "observations": [
+    "top-left panel 'final pile (static copy) + tool + contacts': a broad grey mound of pellets fills the lower half; each pellet is drawn as a rosette of several overlapping spheres (the 7-sphere lens clump), so the clump geometry survived the whole scoop and the settled random orientations are visible",
+    "above the mound, the final tool pose is drawn as two green ring outlines (fixed bowl + door shells, static copy, lifted ~80 mm); inside the rings sits a compact orange cluster (= in-cavity, captured pellets, 154 clumps) with light-blue pellets (= carried-by-height but outside the cavity) packed at the mouth on the door side",
+    "a string of light-blue/grey pellets hangs below the mouth and continues down toward the mound: pellets are leaking through the 9.9 mm lip gap (door stopped at the 4.94 deg floor) and are in flight at the final frame — this is the direct visual explanation for the low fill (0.124) and for the 80 mm spikes that the resting-particle post-processing removes",
+    "at the default time cursor (+0.9 s, descend phase) the descend-time tool is also drawn lower down: green fixed ring and blue door ring resting on the pile crown with a band of red contact points along the lip where it presses the pellets — so tool/contact geometry is time-resolved in the RRD and matches the z_lip curve",
+    "top-right panel 'post heightmap + crater azimuths/fit rings': the 5 mm post heightmap point grid is coloured cyan (low) to red (high) and shows a single broad hill; four white arrows radiate from the crater centre labelled '+x 16.3deg', '+y 42.6deg', '-x 13.4deg', '-y nandeg', with small red fit-ring markers on the +x/+y/-x arms",
+    "bottom-left 'Float64 metrics': z_lip_mm (orange) descends linearly from ~51 to ~16 mm over 0-2 s, holds during closure, then rises linearly to ~97 mm by 2.56 s; q_deg (green) drops from 27.5 to 5.0 between ~1.5 s and 2.0 s and stays flat at 5 (floor); lipF_N (yellow) stays near 0 with small bumps up to ~2 N near 2.0 s — no force spike, consistent with no stall and no divergence",
+    "bottom-right 'decision events': four INFO rows at +2.00/+2.54/+2.56 s: DOOR_STOP close q=4.988 reason=door_floor M=0.2276; DOOR_STOP reclose q=4.943 door_floor M=0.1171; CAPTURE n_in_cavity=154 mass_g=3.1196 fill_vs_bulk=0.1241 carried_z=210 diverged=False; CRATER_ANGLE_deg +x=16.3 +y=42.6 -x=13.4 -y=None center_mm=[1.0,-6.7] removed_cm3=35.39 (report only, not a verdict)"
+  ],
+  "limitations_seen_in_the_image": [
+    "the crater depression itself is hard to read in the heightmap panel from this camera angle (the hill top is red and the dip is only a paler patch); the matplotlib heightmap_seed460.png / heightmap_rest_seed460.png is the clearer view of the crater",
+    "azimuth labels overlap near the crater centre; the -y arm shows 'nandeg' because that wall spans a single 5 mm ring in the 20-80 % depth band (steep, unresolved on the grid)",
+    "the static final-tool copy and the time-cursor tool are drawn together, which is intended but can be mistaken for two tools; the 0.9 s cursor is the headless viewer default, not a chosen decision time",
+    "pile colours: pre-scoop pile (spheres_pre at t=0) is not shown at this cursor; only the final static copy is visible",
+    "the crater angles shown in the RRD are the original result-JSON values (before the resting-particle post-processing); the rest-only values (+y 38.1, others equal) are in crater_rest_seed460.json"
+  ],
+  "non_claims": [
+    "물성(E 5e6·mu 0.5·Crr 0.05·CoR 0.3·밀도 950) 전부 임시값 — 반력·정지각·포획량 절대값 인용 금지",
+    "더미는 E 1e7 로 정착, 본 실행 E 5e6 → t=0 미세 재안착",
+    "문 개방을 펠릿면에서 하지 않고 이미 열린 채 접근(실물은 펠릿면에서 열림) — 문 립은 열릴 때 위로만 움직여 더미와 접촉 없음",
+    "D341 Rerun 완결 계약 미이행(원자료 npz 만 저장)"
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "phases": [
+    [
+      "baseline",
+      4,
+      null
+    ],
+    [
+      "p8_a",
+      5,
+      8
+    ],
+    [
+      "p48_a",
+      5,
+      48
+    ],
+    [
+      "p8_b",
+      5,
+      8
+    ],
+    [
+      "p48_b",
+      5,
+      48
+    ]
+  ],
+  "restore": {
+    "joint": 2,
+    "p": 16,
+    "i": 0,
+    "duration_s": 4
+  },
+  "joint_drift_limit_deg": 4,
+  "feedback_timeout_s": 1,
+  "no_joint_target_commands": true,
+  "initial_pid_registers": "unreadable; restore is documented-default command, not register verification",
+  "transport": "AtomicInactiveSerial; candidate fix, no kernel/board no-reset guarantee",
+  "script_sha256": "dae43ae68c622da80d92baebd6893eb0dae2d300f10ffd76224646d4bd6cd9ef",
+  "transport_sha256": "affa3ec0e17a25641e389530f28949e9c9692a077cae907506939ba45c197b2d"
+}

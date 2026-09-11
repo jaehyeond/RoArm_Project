@@ -1,0 +1,492 @@
+--- sim_deme_scoop_s1.py.bak_20260910_pre_w8	2026-09-10 18:36:58.470821717 +0900
++++ sim_deme_scoop_s1.py	2026-09-10 21:03:49.340552599 +0900
+@@ -24,6 +24,10 @@
+     서보 정지 모델: 힌지축 둘레 저항 모멘트 ≥ 서보 토크(1.96 N·m × 토크 설정 0.9) 이면 그 각에서 멈춘다.
+     실물처럼 상승 뒤 재닫기 1회.
+ 
++W8 (09-10): `particle_shape: "npz_template"` = W7 렌즈 클럼프 더미(npz schema 2) 를 clump_template_json 으로 되살려 읽는다.
++    구 전개(GetOwnerOriQ) 로 펠릿면·heightmap(전/후/차분) 을 내고 crater_angles() 로 구덩이 옆면 각을 보고한다.
++    구 더미 경로(sphere) 는 그대로다.
++
+ ⚠️ 물성은 실측 전(JSON 으로 교체). E 5e6 은 수치 안정값(더미는 1e7 로 정착 → t=0 미세 재안착).
+    반력·정지각은 물성에 종속이므로 실측 후 다시 돌려야 한다. 이 파일은 경로·절차의 성립과
+    상대 비교(설계 17.6 g 대비)만 주장한다.
+@@ -66,6 +70,21 @@
+     "pellet_dia_mm": 4.16, "pellet_len_mm": 4.16, "clump_aspect": None,
+     "error_out_vel": 60.0, "cd_update_freq": 20, "domain_top_m": 0.50, "domain_bc": "all",   # 천장으로 pop 가둠
+     "bulk_density_g_cm3": 0.55,
++    # W8: 구덩이 옆면 각(절단면 각) 정의 파라미터 — crater_angles() 도크스트링이 정의의 정본
++    "crater_r_max_mm": 80.0, "crater_wedge_half_deg": 22.5, "crater_min_depth_mm": 2.0, "crater_fit_band": [0.2, 0.8],
++    # W8 렌더 타임라인(코디네이터 요청, Isaac 재생용 — 물리 판정과 무관): 물리 시간 dt 마다 클럼프 pos/quat·툴 포즈·문 각 저장. None = 끔
++    "render_timeline_dt_s": None, "render_timeline_path": None,
++    # W8 옵션 A: 폐합·재폐합만 잘게 동기화(서보 정지 판정 간격). None = dt_sync_s(4 ms) 그대로. 회전 속도(close_deg_s)는 불변.
++    "dt_sync_close_s": None,
++    # W8 옵션 E: 물림 가드 — 폐합·재폐합 중 툴(고정부·문) 단일 접촉력 ≥ 이 값이면 서보 정지로 취급(reason "pinch_guard"). None = 끔.
++    # 근거: 임시 강성 E 5e6 에서는 렌즈 구(r 1.16 mm)가 립 면을 F = 4/3·E*·r² ≈ 4.9 N 에 통과하고(정지 립 힘 20.5 N 보다 훨씬 작음),
++    # 통과 즉시 셸 바깥 면이 r+벽두께 관입으로 ~50 N 에 튕겨낸다(셀 c·xp50·A_c 발산 81/203/226 m/s). 실물 PP 알은 립을 통과하지 못하므로
++    # "단단한 물림 = 정지" 로 대신한다. 사전 등록 외 수치 가드이며 문 정지각은 토크 정지보다 이를 수 있다(보고서 비주장).
++    "door_pinch_guard_N": None,
++    # W8 옵션 F: 문 하한각(관절 °) — q 가 이 값에 닿으면 정지(reason "door_floor"). 렌즈 클럼프 발산 구간(q 2.3~3.6°, 립 틈 3.4~5.4 mm) 위에서 멈춘다. None = 끔.
++    "door_min_q_deg": None,
++    # W8 진단: q 가 이 값 아래(폐합·재폐합)면 매 sync 타임라인 flush + 최대속도 owner 위치·최대 접촉점 기록. None = 끔.
++    "diag_flush_below_q_deg": None,
+ }
+ R_G2L5 = np.array([[0, 1, 0], [0, 0, 1], [1, 0, 0]], float)     # gripper → link5
+ R_W = np.array([[0, -1, 0], [-1, 0, 0], [0, 0, -1]], float)      # link5 → 세계 (열 = link5 축)
+@@ -161,12 +180,18 @@
+ 
+ 
+ def add_particles(s, z, P, mat):
+-    """더미 npz → DEME 입자. sphere = positions_m/radii_m, clump2 = clump_positions_m/quaternions."""
++    """더미 npz → DEME 입자. sphere = positions_m/radii_m, clump2 = clump_positions_m/quaternions,
++    npz_template(W8) = npz 의 clump_template_json 으로 LoadClumpType 재구성(W7 렌즈 더미).
++    반환 5번째 = 템플릿 dict(구 전개용; sphere/clump2 는 None)."""
+     if P["particle_shape"] == "sphere":
++        if "clump_template_json" in z:
++            raise SystemExit("이 더미는 클럼프 npz(schema 2, clump_template_json) — particle_shape 'npz_template' 로 읽어야 한다")
+         pos = np.asarray(z["positions_m"], float); rad = float(np.asarray(z["radii_m"], float)[0])
+         m_p = P["particle_density_kg_m3"] * 4.0 / 3.0 * math.pi * rad ** 3
+         s.AddClumps(s.LoadSphereType(m_p, rad, mat), pos.tolist())
+-        return pos, rad, m_p, {"shape": "sphere", "radius_m": rad}
++        return pos, rad, m_p, {"shape": "sphere", "radius_m": rad}, None
++    if P["particle_shape"] == "npz_template":
++        return add_template_clumps(s, z, mat)
+     if "clump_positions_m" not in z:
+         raise SystemExit("clump2 는 클럼프로 정착한 더미 npz(clump_positions_m/clump_quaternions_xyzw)가 필요하다")
+     import sim_pellet_model as PM
+@@ -179,7 +204,152 @@
+     pos = np.asarray(z["clump_positions_m"], float)
+     s.AddClumps(ct, pos.tolist()).SetOriQ(np.asarray(z["clump_quaternions_xyzw"], float).tolist())
+     return pos, tpl.bounding_diameter_m / 2, tpl.mass_kg, {"shape": tpl.name, "aspect": tpl.aspect,
+-                                                            "sphere_radius_m": tpl.sphere_radius_m}
++                                                            "sphere_radius_m": tpl.sphere_radius_m}, None
++
++
++def expand_spheres(pos, quat_xyzw, tpl):
++    """클럼프 중심·자세(xyzw) → 구 중심·반경(클럼프-major). W7 npz 행 규약과 같은 식 p_sphere = p_clump + R(q)·offset."""
++    from scipy.spatial.transform import Rotation
++    R = Rotation.from_quat(np.asarray(quat_xyzw, float)).as_matrix()          # scipy 도 xyzw
++    offs = np.asarray(tpl["offsets_m"], float)
++    sp = np.asarray(pos, float)[:, None, :] + np.einsum("nij,kj->nki", R, offs)
++    return sp.reshape(-1, 3), np.tile(np.asarray(tpl["sphere_radii_m"], float), len(pos))
++
++
++def add_template_clumps(s, z, mat):
++    """W7 렌즈 더미(schema 2): npz 의 clump_template_json 만으로 LoadClumpType 을 되살려 정착 위치·자세 그대로 놓는다.
++    질량(알 20.26 mg)·MOI·구별 반경·상대위치 = 템플릿 값. 물성만 mat(파라미터). sim_pellet_model 은 import 하지 않는다
++    (메인 워크트리 판은 lens 필드가 없다)."""
++    for k in ("clump_template_json", "clump_positions_m", "clump_quaternions_xyzw"):
++        if k not in z:
++            raise SystemExit(f"npz_template 는 npz 키 {k} 가 필요하다")
++    tpl = json.loads(str(z["clump_template_json"]))
++    radii = [float(r) for r in tpl["sphere_radii_m"]]; offs = [[float(v) for v in o] for o in tpl["offsets_m"]]
++    ct = s.LoadClumpType(float(tpl["mass_kg"]), [float(v) for v in tpl["moi_kg_m2"]], radii, offs, mat)
++    ct.SetVolume(float(tpl["union_volume_m3"]))
++    pos = np.asarray(z["clump_positions_m"], float); quat = np.asarray(z["clump_quaternions_xyzw"], float)
++    s.AddClumps(ct, pos.tolist()).SetOriQ(quat.tolist())
++    sp, _ = expand_spheres(pos, quat, tpl)                                       # 자체 검사: 전개식이 npz 구 행을 재현하는가
++    err = float(np.abs(sp - np.asarray(z["positions_m"], float)).max()) if "positions_m" in z else None
++    ids_ok = bool(np.array_equal(np.asarray(z["clump_ids"]), np.repeat(np.arange(len(pos)), len(radii)))) if "clump_ids" in z else None
++    info = {"shape": f"npz_template:{tpl.get('name')}", "n_spheres": len(radii), "sphere_radii_m": radii, "offsets_m": offs,
++            "mass_kg": float(tpl["mass_kg"]), "moi_kg_m2": tpl["moi_kg_m2"], "union_volume_m3": tpl["union_volume_m3"],
++            "bounding_diameter_m": tpl["bounding_diameter_m"], "lens_axes_mm": tpl.get("lens", {}).get("axes_mm_input"),
++            "expand_vs_npz_max_err_m": err, "clump_ids_clump_major": ids_ok}
++    print(f"템플릿 클럼프 {len(pos)} × {len(radii)}구 · 알 {tpl['mass_kg']*1e6:.3f} mg · 전개 검사 max|Δ| {err} m · clump_ids {ids_ok}", flush=True)
++    return pos, float(tpl["bounding_diameter_m"]) / 2, float(tpl["mass_kg"]), info, tpl
++
++
++def surface_z(sp, sr, x_s, y_s, P):
++    """펠릿면 = 발자국 반경 안 구의 윗면 최대(구별 반경)."""
++    m = np.hypot(sp[:, 0] - x_s, sp[:, 1] - y_s) < P["footprint_r_mm"] / 1000.0
++    return float((sp[m, 2] + sr[m]).max())
++
++
++def crater_angles(hm_pre, hm_post, spec, site_xy, P):
++    """퍼낸 뒤 구덩이 옆면 각 — R1 §5·§7 "한 입 뒤 절단면 각" 의 시뮬판 정의. 이 함수가 정의의 정본이다(GATES_w8.md 요약).
++
++    dh = hm_pre − hm_post (m, > 0 = 깎여 나간 깊이). hm 은 5 mm 셀 heightmap(경로 A, 셀 발자국 최고점).
++    구덩이 중심 = 퍼내기 위치 반경 crater_r_max 안에서 dh ≥ crater_min_depth 인 셀의 dh 가중 무게중심(없으면 퍼내기 위치).
++    4 방위(+x, +y, −x, −y 세계축) 마다: 중심에서 그 방위 ±crater_wedge_half 쐐기 안·r ≤ crater_r_max 셀을 셀 폭 고리로 묶어
++      고리 평균 프로파일 dh(r), h_post(r) 를 만든다. r_peak = dh(r) 최대 고리. 그 바깥쪽으로 dh 가 band[0]·d_max 아래로
++      처음 떨어지기 전까지의 고리 중 band[0]·d_max ≤ dh ≤ band[1]·d_max 인 고리에 최소제곱 직선 dh = a·r + b 를 맞추고
++      옆면 각 = atan(|a|) (수평 기준, °). 같은 고리에 h_post = a'·r + b' 를 맞춘 atan(|a'|) 이 절대 표면 경사각(보조;
++      실물 Kinect 는 절대 표면을 본다). 고리 2개 미만이면 None + 사유. 판정 아님, 보고값.
++    """
++    c = spec.cell_m; rows, cols = hm_pre.shape
++    xs = spec.origin_xy_m[0] + (np.arange(cols) + 0.5) * c; ys = spec.origin_xy_m[1] + (np.arange(rows) + 0.5) * c
++    X, Y = np.meshgrid(xs, ys)
++    dh = np.asarray(hm_pre, float) - np.asarray(hm_post, float)
++    r_max = P["crater_r_max_mm"] / 1000.0; d_min = P["crater_min_depth_mm"] / 1000.0; lo, hi = P["crater_fit_band"]
++    site = np.hypot(X - site_xy[0], Y - site_xy[1]) <= r_max
++    deep = site & (dh >= d_min)
++    if deep.any():
++        w = dh[deep]; cx, cy = float((X[deep] * w).sum() / w.sum()), float((Y[deep] * w).sum() / w.sum())
++    else:
++        cx, cy = float(site_xy[0]), float(site_xy[1])
++    R = np.hypot(X - cx, Y - cy); A = np.degrees(np.arctan2(Y - cy, X - cx))
++    out = {"definition": "crater_angles() docstring (sim_deme_scoop_s1.py): dh=h_pre-h_post, wedge ring-averaged radial profile, "
++                         "least-squares line on rings with band[0]*d_max<=dh<=band[1]*d_max outward of r_peak, angle=atan|slope|",
++           "params": {"r_max_mm": P["crater_r_max_mm"], "wedge_half_deg": P["crater_wedge_half_deg"],
++                      "min_depth_mm": P["crater_min_depth_mm"], "fit_band": [lo, hi], "cell_mm": c * 1000},
++           "site_xy_mm": [site_xy[0] * 1000, site_xy[1] * 1000], "center_xy_mm": [cx * 1000, cy * 1000],
++           "center_rule": "dh-weighted centroid of cells with dh>=min_depth within r_max of site" if deep.any() else "site (no cell deeper than min_depth)",
++           "n_cells_deep": int(deep.sum()), "removed_volume_cm3": float(np.clip(dh[site], 0, None).sum() * c * c * 1e6),
++           "dh_max_mm": float(dh[site].max() * 1000) if site.any() else None, "azimuths": {}}
++    for name, a0 in (("+x", 0.0), ("+y", 90.0), ("-x", 180.0), ("-y", -90.0)):
++        dang = np.abs((A - a0 + 180.0) % 360.0 - 180.0)
++        m = (dang <= P["crater_wedge_half_deg"]) & (R <= r_max)
++        ib = np.floor(R[m] / c).astype(int); nb = int(ib.max()) + 1 if m.any() else 0
++        cnt = np.bincount(ib, minlength=nb).astype(float)
++        prof_dh = np.bincount(ib, weights=dh[m], minlength=nb) / np.maximum(cnt, 1)
++        prof_h = np.bincount(ib, weights=np.asarray(hm_post, float)[m], minlength=nb) / np.maximum(cnt, 1)
++        r_c = (np.arange(nb) + 0.5) * c
++        valid = cnt > 0
++        az = {"r_mm": (r_c * 1000).round(2).tolist(), "n_cells": cnt.astype(int).tolist(),
++              "dh_ring_mm": [None if not v else round(float(d * 1000), 3) for v, d in zip(valid, prof_dh)],
++              "h_post_ring_mm": [None if not v else round(float(h * 1000), 3) for v, h in zip(valid, prof_h)]}
++        if not valid.any() or prof_dh[valid].max() <= 0:
++            az.update(angle_deg=None, angle_surface_deg=None, reason="no positive depth in wedge"); out["azimuths"][name] = az; continue
++        ipk = int(np.argmax(np.where(valid, prof_dh, -np.inf))); d_max = float(prof_dh[ipk])
++        sel = []
++        for i in range(ipk, nb):
++            if not valid[i] or prof_dh[i] < lo * d_max:
++                break
++            if prof_dh[i] <= hi * d_max:
++                sel.append(i)
++        az.update(r_peak_mm=float(r_c[ipk] * 1000), d_max_mm=d_max * 1000, fit_bins=[int(i) for i in sel])
++        if len(sel) < 2:
++            az.update(angle_deg=None, angle_surface_deg=None, reason=f"only {len(sel)} ring(s) in band outward of r_peak"); out["azimuths"][name] = az; continue
++        rr_ = r_c[sel]; a, b = np.polyfit(rr_, prof_dh[sel], 1); a2, b2 = np.polyfit(rr_, prof_h[sel], 1)
++        az.update(angle_deg=float(np.degrees(np.arctan(abs(a)))), slope_dh=float(a), intercept_dh_m=float(b),
++                  angle_surface_deg=float(np.degrees(np.arctan(abs(a2)))), slope_h_post=float(a2), intercept_h_post_m=float(b2),
++                  r_fit_mm=[float(rr_.min() * 1000), float(rr_.max() * 1000)], n_rings=len(sel))
++        out["azimuths"][name] = az
++    return out
++
++
++def plot_heightmaps(out, tag, spec, hm_pre, hm_post, crater, site_xy):
++    """D324 결정 시점 진단: heightmap 전/후/차분 + 구덩이 중심·4방위, 그리고 방위별 고리 프로파일과 직선 적합."""
++    import matplotlib; matplotlib.use("Agg"); import matplotlib.pyplot as plt
++    c = spec.cell_m; ext = [spec.origin_xy_m[0] * 1000, (spec.origin_xy_m[0] + spec.shape[1] * c) * 1000,
++                            spec.origin_xy_m[1] * 1000, (spec.origin_xy_m[1] + spec.shape[0] * c) * 1000]
++    dh = (np.asarray(hm_pre, float) - np.asarray(hm_post, float)) * 1000
++    vmax = float(max(np.nanmax(hm_pre), np.nanmax(hm_post)) * 1000); dmax = float(max(np.abs(dh).max(), 1e-6))
++    fig, ax = plt.subplots(1, 3, figsize=(16, 4.6))
++    for k, (arr, ttl, cmap, vm) in enumerate(((np.asarray(hm_pre) * 1000, "pre (after settle, before descend) mm", "viridis", (0, vmax)),
++                                             (np.asarray(hm_post) * 1000, "post (final, resting particles) mm", "viridis", (0, vmax)),
++                                             (dh, "removed depth = pre - post mm", "RdBu_r", (-dmax, dmax)))):
++        im = ax[k].imshow(arr, origin="lower", extent=ext, cmap=cmap, vmin=vm[0], vmax=vm[1], aspect="equal")
++        fig.colorbar(im, ax=ax[k], fraction=0.03)
++        ax[k].set_title(ttl, fontsize=9); ax[k].set_xlabel("world x mm"); ax[k].set_ylabel("world y mm")
++        ax[k].plot(site_xy[0] * 1000, site_xy[1] * 1000, "k+", ms=10, label="scoop site (lip)")
++        cx, cy = crater["center_xy_mm"]; ax[k].plot(cx, cy, "wx", ms=8, label="crater centre")
++        r = crater["params"]["r_max_mm"]
++        for name, a0 in (("+x", 0), ("+y", 90), ("-x", 180), ("-y", -90)):
++            ax[k].plot([cx, cx + r * math.cos(math.radians(a0))], [cy, cy + r * math.sin(math.radians(a0))], "w--", lw=0.6)
++            az = crater["azimuths"].get(name, {})
++            lab = f"{name} {az['angle_deg']:.1f}" if az.get("angle_deg") is not None else f"{name} n/a"
++            ax[k].text(cx + (r + 8) * math.cos(math.radians(a0)), cy + (r + 8) * math.sin(math.radians(a0)), lab, color="k", fontsize=7, ha="center")
++    ax[0].legend(fontsize=7, loc="lower left")
++    fig.suptitle(f"S1 scoop {tag}: heightmap pre / post / removed depth (5 mm cells); labels = crater wall angle deg"); fig.tight_layout()
++    fig.savefig(out / f"heightmap_{tag}.png", dpi=110); plt.close(fig)
++    fig, ax = plt.subplots(1, 4, figsize=(17, 3.8))
++    for k, name in enumerate(("+x", "+y", "-x", "-y")):
++        az = crater["azimuths"][name]; r = np.asarray(az["r_mm"], float)
++        d = np.asarray([np.nan if v is None else v for v in az["dh_ring_mm"]], float)
++        h = np.asarray([np.nan if v is None else v for v in az["h_post_ring_mm"]], float)
++        ax[k].plot(r, d, "o-", ms=3, label="depth dh(r) mm"); ax[k].plot(r, h, "s--", ms=3, c="0.5", label="h_post(r) mm")
++        if az.get("angle_deg") is not None:
++            rf = np.linspace(az["r_fit_mm"][0] - 5, az["r_fit_mm"][1] + 5, 10)
++            ax[k].plot(rf, (az["slope_dh"] * rf / 1000 + az["intercept_dh_m"]) * 1000, "r-", lw=1.5,
++                       label=f"fit {az['angle_deg']:.1f} deg (surface {az['angle_surface_deg']:.1f})")
++            ax[k].axhline(az["d_max_mm"] * 0.8, c="r", lw=0.4, ls=":"); ax[k].axhline(az["d_max_mm"] * 0.2, c="r", lw=0.4, ls=":")
++        ttl = f"azimuth {name}: " + (f"{az['angle_deg']:.1f} deg" if az.get("angle_deg") is not None else f"n/a ({az.get('reason', '')})")
++        ax[k].set_title(ttl, fontsize=8); ax[k].set_xlabel("r from crater centre mm"); ax[k].legend(fontsize=6); ax[k].grid(alpha=0.3)
++    ax[0].set_ylabel("mm")
++    fig.suptitle(f"{tag}: ring-averaged radial profiles; line fit on 20-80 % depth band outward of r_peak"); fig.tight_layout()
++    fig.savefig(out / f"crater_profiles_{tag}.png", dpi=110); plt.close(fig)
+ 
+ 
+ def run(a):
+@@ -202,15 +372,26 @@
+ 
+     z = np.load(a.pile, allow_pickle=True)
+     box = np.asarray(z["box_bounds_m"], float)
++    from roarm_rl.heightmap import GridSpec, heightmap_from_particles
++    cell = 0.005
++    spec = GridSpec(origin_xy_m=(float(box[0, 0]), float(box[1, 0])), cell_m=cell,
++                    shape=(int(math.ceil((box[1, 1] - box[1, 0]) / cell)),
++                           int(math.ceil((box[0, 1] - box[0, 0]) / cell))),
++                    frame="deme_box_floor_center", z_datum_m=0.0)
+     s = DEME.DEMSolver(); s.SetVerbosity("ERROR")
+     mp = {"E": P["E_pa"], "nu": P["nu"], "CoR": P["CoR"], "mu": P["mu"], "Crr": P["Crr"]}
+     mat_p, mat_w = s.LoadMaterial(mp), s.LoadMaterial(mp)
+     mat_m = s.LoadMaterial(dict(mp, E=P["E_mesh_pa"] or P["E_pa"]))
+     s.UseFrictionalHertzianModel()
+-    pos, rad, m_p, shape_info = add_particles(s, z, P, mat_p)
++    pos, rad, m_p, shape_info, tpl = add_particles(s, z, P, mat_p)
+     n_p = len(pos)
++    k_sph = 1 if tpl is None else len(tpl["sphere_radii_m"])
++    spheres = lambda pp, oq: (pp, np.full(len(pp), rad)) if tpl is None else expand_spheres(pp, oq, tpl)   # 구 전개(heightmap·펠릿면)
+     near = np.hypot(pos[:, 0] - x_s, pos[:, 1] - y_s) < P["footprint_r_mm"] / 1000.0
+-    z_surf = float(pos[near, 2].max()) + rad            # 펠릿면 = 국소 최상단 입자의 윗면
++    if tpl is None:
++        z_surf = float(pos[near, 2].max()) + rad            # 펠릿면 = 국소 최상단 입자의 윗면
++    else:
++        z_surf = surface_z(*spheres(pos, np.asarray(z["clump_quaternions_xyzw"], float)), x_s, y_s, P)
+     print(f"더미 {n_p} · r {rad*1000:.2f} mm · 퍼내기 위치 ({x_s*1000:.0f},{y_s*1000:.1f}) mm "
+           f"· 펠릿면 z {z_surf*1000:.1f} mm", flush=True)
+     s.InstructBoxDomainDimension((float(box[0, 0]), float(box[0, 1])),
+@@ -251,6 +432,8 @@
+         n_lift = max(1, int(math.ceil((P["lift_mm"] / 1000.0) / (P["lift_mm_s"] / 1000.0) / dt)))
+     vz_desc = -P["descend_mm_s"] / 1000.0
+     w_close = math.radians(q_open - q_end) / (n_close * dt)     # n_close 스텝 회전이면 정확히 q_end
++    dt_c = P.get("dt_sync_close_s") or dt                       # 폐합 sync (옵션 A: 1 ms → 정지 판정 4배 촘촘)
++    n_close_sync = max(1, int(round(n_close * dt / dt_c))); n_reclose_max = max(1, int(round(P["reclose_max_steps"] * dt / dt_c)))
+     vz_lift = P["lift_mm_s"] / 1000.0
+     w_vec = -w_close * axis_w                                   # 닫힘 = q 감소
+     FAM_F = {"desc": 10, "hold": 13, "lift": 14}; FAM_D = {"desc": 20, "hold": 21, "lift": 22, "close": 23}
+@@ -273,6 +456,20 @@
+     hinge_w = lambda: np.asarray(trk_d.Pos(), float)
+     log, rec = [], {"t": [], "phase": [], "nodes_F": [], "nodes_D": [], "cp": [], "cf": [], "cframe": []}
+     state = {"q": q_open, "arm": "hold", "door": "hold", "stop": None, "holds": 0, "pop_steps": 0, "v_max": 0.0}
++    rt = None
++    if P.get("render_timeline_dt_s"):
++        rt = {k: [] for k in ("t", "phase", "frame", "pos", "quat", "tool_pos", "tool_quat", "door_pos", "door_quat", "door_deg")}; rt["next"] = 0.0
++
++    def rt_record(sim_t, phase_id, frame_idx):
++        """렌더 타임라인 1 프레임(float32). 물리 판정에는 쓰지 않는다."""
++        rt["t"].append(float(sim_t)); rt["phase"].append(phase_id); rt["frame"].append(frame_idx)
++        rt["pos"].append(np.asarray(s.GetOwnerPosition(0, n_p), np.float32)); rt["quat"].append(np.asarray(s.GetOwnerOriQ(0, n_p), np.float32))
++        rt["tool_pos"].append(np.asarray(trk_f.Pos(), np.float32)); rt["tool_quat"].append(np.asarray(trk_f.OriQ(), np.float32))
++        rt["door_pos"].append(np.asarray(trk_d.Pos(), np.float32)); rt["door_quat"].append(np.asarray(trk_d.OriQ(), np.float32))
++        rt["door_deg"].append(float(state["q"]))
++        rt["next"] = (math.floor(sim_t / P["render_timeline_dt_s"] + 1e-9) + 1) * P["render_timeline_dt_s"]
++    if rt is not None:
++        rt_record(0.0, 0, -1)                                    # t=0 = Initialize 직후(더미 npz 그대로)
+ 
+     def set_fams(arm, door):
+         if arm != state["arm"]:
+@@ -292,8 +489,12 @@
+         row = {"phase": phase, "i": i, "sim_t": round(float(s.GetSimTime()), 6),
+                "z_lip_mm": round(float(trk_f.Pos()[2]) * 1000, 3), "q_deg": round(state["q"], 3),
+                "arm": state["arm"], "door": state["door"]}
+-        vmax = float(np.linalg.norm(np.asarray(s.GetOwnerVelocity(0, n_p), float), axis=1).max())
++        vn = np.linalg.norm(np.asarray(s.GetOwnerVelocity(0, n_p), float), axis=1); vmax = float(vn.max())
+         row["v_particle_max"] = round(vmax, 4); state["v_max"] = max(state["v_max"], vmax)
++        diag = bool(P.get("diag_flush_below_q_deg")) and state["q"] < P["diag_flush_below_q_deg"] and phase in ("close", "reclose")
++        if diag:
++            vi = int(np.argmax(vn)); row["v_max_owner"] = vi
++            row["v_max_owner_pos_mm"] = (np.asarray(s.GetOwnerPosition(vi, 1), float)[0] * 1000).round(2).tolist()
+         state["pop_steps"] += int(vmax > P["pop_speed_m_s"])
+         hw = hinge_w(); M_res, f1 = 0.0, 0.0
+         for key, trk in (("fixed", trk_f), ("door", trk_d)):
+@@ -307,6 +508,9 @@
+                 f1 = max(f1, float(np.linalg.norm(Ff, axis=1).max()))
+                 if key == "door":
+                     M_res = float(np.dot(np.cross(Pp - hw, Ff).sum(0), axis_w))  # >0 = 닫힘 저항
++                if diag:
++                    j = int(np.argmax(np.linalg.norm(Ff, axis=1)))
++                    row[f"maxF_{key}_pt_mm"] = (Pp[j] * 1000).round(2).tolist(); row[f"maxF_{key}_vec_N"] = Ff[j].round(3).tolist()
+                 rec["cp"].append(Pp.astype(np.float32)); rec["cf"].append(Ff.astype(np.float32))
+                 rec["cframe"].append(np.full(len(pts), len(rec["t"]), np.int32))
+             else:
+@@ -317,7 +521,12 @@
+         rec["t"].append(row["sim_t"]); rec["phase"].append(PH[phase])
+         rec["nodes_F"].append(np.asarray(trk_f.GetMeshNodesGlobal(), np.float32))
+         rec["nodes_D"].append(np.asarray(trk_d.GetMeshNodesGlobal(), np.float32))
+-        log.append(row); return row
++        log.append(row)
++        if diag:
++            flush(phase)                                          # 발산 직전 행까지 남기기 위해 매 sync 저장
++        if rt is not None and row["sim_t"] >= rt["next"] - 1e-9:
++            rt_record(row["sim_t"], PH[phase], len(log) - 1)
++        return row
+ 
+     tl_path = out / f"timeline_{tag}.json"
+     flush = lambda st: json.dump({"state": st, "rows": log}, open(tl_path, "w"), ensure_ascii=False)
+@@ -327,30 +536,39 @@
+         r = sample(phase, i)
+         if state["door"] != "close":
+             return r
+-        state["q"] = max(q_end, state["q"] - math.degrees(w_close) * dt)
++        state["q"] = max(q_end, state["q"] - math.degrees(w_close) * dt_c)
+         r["q_deg"] = round(state["q"], 3)
+         reason = None
+         if state["q"] <= q_end + 1e-9:
+             reason = "reached_close_end"
++        elif P.get("door_min_q_deg") is not None and state["q"] <= P["door_min_q_deg"] + 1e-9:
++            reason = "door_floor"
+         elif P["servo_stall_model"] and r["M_hinge_res_Nm"] >= M_stall:
+             reason = "servo_stall"
++        elif P.get("door_pinch_guard_N") and r["max_single_contact_N"] >= P["door_pinch_guard_N"]:
++            reason = "pinch_guard"
+         if reason:
+             set_fams("hold", "hold")
+             state["stop"] = {"phase": phase, "q_deg": round(state["q"], 3), "reason": reason,
+-                             "M_hinge_res_Nm": r["M_hinge_res_Nm"], "sim_t": r["sim_t"]}
++                             "M_hinge_res_Nm": r["M_hinge_res_Nm"], "sim_t": r["sim_t"], "max_single_contact_N": r["max_single_contact_N"]}
+             print(f"  문 정지 [{phase}] q={state['q']:.2f}° ({reason}, M={r['M_hinge_res_Nm']:.3f} N·m)",
+                   flush=True)
+         return r
+ 
+-    diverged, stops = False, []
++    diverged, stops, hm_pre = False, [], None
+     z_target = None
+     try:
+         for i in range(P["settle_steps"]):
+             s.DoDynamicsThenSync(dt); sample("settle", i)
+         pp0 = np.asarray(s.GetOwnerPosition(0, n_p), float)     # 재안착 뒤 펠릿면으로 잠김 목표를 잡는다
+-        z_surf = float(pp0[near, 2].max()) + rad
++        oq0 = None if tpl is None else np.asarray(s.GetOwnerOriQ(0, n_p), float)
++        if tpl is None:
++            z_surf = float(pp0[near, 2].max()) + rad
++        else:
++            z_surf = surface_z(*spheres(pp0, oq0), x_s, y_s, P)
++        hm_pre = heightmap_from_particles(*spheres(pp0, oq0), spec).height     # 퍼내기 전 heightmap(재안착 뒤·하강 전)
+         z_target = z_surf - P["plunge_mm"] / 1000.0
+-        print(f"  재안착 뒤 펠릿면 {z_surf*1000:.1f} mm → 잠김 목표 립 z {z_target*1000:.1f} mm", flush=True)
++        print(f"  재안착 뒤 펠릿면 {z_surf*1000:.1f} mm → 잠김 목표 립 z {z_target*1000:.1f} mm · settle 벽시계 {time.time()-t_start:.0f} s", flush=True)
+         set_fams("desc", "desc")
+         for i in range(int(P["descend_max_steps_factor"] * n_desc)):
+             s.DoDynamicsThenSync(dt_d); r = sample("descend", i)
+@@ -362,14 +580,15 @@
+             state["holds"] += int(hold); set_fams(*(("hold", "hold") if hold else ("desc", "desc")))
+             if i % 80 == 0:
+                 print(f"  하강 {i:3d} z_lip={r['z_lip_mm']:7.2f} {state['arm']:4s} 접촉 F/D={r['n_fixed']}/{r['n_door']} "
+-                      f"Fz={r['Fz_fixed_up_N']:.3f} N 단일최대={r['max_single_contact_N']:.3f} v_max={r['v_particle_max']:.2f}", flush=True)
++                      f"Fz={r['Fz_fixed_up_N']:.3f} N 단일최대={r['max_single_contact_N']:.3f} v_max={r['v_particle_max']:.2f} w={time.time()-t_start:.0f}s", flush=True)
+         z_reached = float(trk_f.Pos()[2])
+         set_fams("hold", "close")
+-        for i in range(n_close):
+-            s.DoDynamicsThenSync(dt); r = door_step("close", i); flush("close")
++        for i in range(n_close_sync):
++            s.DoDynamicsThenSync(dt_c); r = door_step("close", i)
+             if i % 10 == 0:
++                flush("close")
+                 print(f"  폐합 {i:3d} q={r['q_deg']:6.2f}° 접촉 D={r['n_door']:4d} M_res={r['M_hinge_res_Nm']:8.4f} "
+-                      f"립등가={r['lipF_N']:7.3f} N 단일최대={r['max_single_contact_N']:.3f} v_max={r['v_particle_max']:.2f}", flush=True)
++                      f"립등가={r['lipF_N']:7.3f} N 단일최대={r['max_single_contact_N']:.3f} v_max={r['v_particle_max']:.2f} w={time.time()-t_start:.0f}s", flush=True)
+             if state["door"] != "close":
+                 break
+         if state["door"] == "close":                 # 스텝 수 소진(도달 판정 전) — 안전망
+@@ -381,13 +600,13 @@
+         for i in range(n_lift):
+             s.DoDynamicsThenSync(dt); r = sample("lift", i); flush("lift")
+             if i % 40 == 0:
+-                print(f"  상승 {i:3d} z_lip={r['z_lip_mm']:7.2f} 접촉 F/D={r['n_fixed']}/{r['n_door']} v_max={r['v_particle_max']:.2f}", flush=True)
++                print(f"  상승 {i:3d} z_lip={r['z_lip_mm']:7.2f} 접촉 F/D={r['n_fixed']}/{r['n_door']} v_max={r['v_particle_max']:.2f} w={time.time()-t_start:.0f}s", flush=True)
+         set_fams("hold", "hold")
+         n_reclose = 0
+         if state["q"] > q_end + 1e-9:
+             set_fams("hold", "close"); state["stop"] = None
+-            for i in range(P["reclose_max_steps"]):
+-                s.DoDynamicsThenSync(dt); door_step("reclose", i); n_reclose += 1
++            for i in range(n_reclose_max):
++                s.DoDynamicsThenSync(dt_c); door_step("reclose", i); n_reclose += 1
+                 if state["door"] != "close":
+                     break
+             if state["door"] == "close":
+@@ -400,11 +619,14 @@
+         diverged = True; print(f"🔴 발산/중단: {exc}", flush=True); flush("diverged")
+         q_after_close, n_reclose, z_reached = state["q"], 0, float(trk_f.Pos()[2])
+     wall = time.time() - t_start
++    if rt is not None and float(s.GetSimTime()) > rt["t"][-1] + 1e-9:
++        rt_record(float(s.GetSimTime()), PH["lift"], len(log) - 1)      # 최종 상태 프레임(포획 판정 시점) 을 반드시 남긴다
+ 
+     # ── 최종 판독: 포획(툴 프레임 보울 원통 안) · 물림 · 입 ──────────────────
+     pp = np.asarray(s.GetOwnerPosition(0, n_p), float)
+     if len(pp) != n_p:
+         raise RuntimeError(f"입자 수 불일치 {len(pp)} != {n_p}")
++    oq = None if tpl is None else np.asarray(s.GetOwnerOriQ(0, n_p), float)
+     lip_w = np.asarray(trk_f.Pos(), float)
+     L5 = np.array(P["lip_l5_mm"]) / 1000.0; C5 = np.array(P["bowl_center_l5_mm"]) / 1000.0
+     p5 = (R_W.T @ (pp - (lip_w - R_W @ L5)).T).T          # 세계 → link5 (m)
+@@ -418,14 +640,18 @@
+     mouth_end = float(cKDTree(nodes_F[lip_f]).query(nodes_D[lip_d])[0].min()) * 1000
+     q_final = state["q"]; gap_mm = R_lip * 1000 * math.radians(q_final)
+ 
+-    from roarm_rl.heightmap import GridSpec, heightmap_from_particles
+-    cell = 0.005
+-    spec = GridSpec(origin_xy_m=(float(box[0, 0]), float(box[1, 0])), cell_m=cell,
+-                    shape=(int(math.ceil((box[1, 1] - box[1, 0]) / cell)),
+-                           int(math.ceil((box[0, 1] - box[0, 0]) / cell))),
+-                    frame="deme_box_floor_center", z_datum_m=0.0)
+     rest = ~carried
+-    hm = heightmap_from_particles(pp[rest], np.full(int(rest.sum()), rad), spec).height
++    if tpl is None:
++        hm = heightmap_from_particles(pp[rest], np.full(int(rest.sum()), rad), spec).height
++    else:
++        hm = heightmap_from_particles(*spheres(pp[rest], oq[rest]), spec).height
++    hm_npz = heightmap_from_particles(np.asarray(z["positions_m"], float), np.asarray(z["radii_m"], float), spec).height
++    if hm_pre is None:                                   # settle 중 발산 시 안전망
++        hm_pre = hm_npz
++    sp_final, sr_final = spheres(pp, oq)
++    crater = crater_angles(hm_pre, hm, spec, (x_s, y_s), P)
++    print("  구덩이 옆면 각(°) " + " ".join(f"{k}:{v['angle_deg']:.1f}" if v.get("angle_deg") is not None else f"{k}:n/a"
++                                        for k, v in crater["azimuths"].items()), flush=True)
+ 
+     clos = [r for r in log if r["phase"] in ("close", "reclose")] or [{"lipF_N": 0.0, "M_hinge_res_Nm": 0.0,
+                                                                         "n_door": 0, "max_single_contact_N": 0.0}]
+@@ -445,6 +671,7 @@
+         "trajectory": {"q_open_joint_deg": q_open, "q_close_end_deg": q_end, "steps_nominal": {
+             "settle": P["settle_steps"], "descend": n_desc, "close": n_close, "lift": n_lift},
+             "steps_actual": {k: sum(1 for r in log if r["phase"] == k) for k in ("settle", "descend", "close", "lift", "reclose")},
++            "dt_sync_close_s": dt_c, "steps_nominal_close_sync": n_close_sync,
+             "descend_hold_steps": state["holds"], "descend_reached_lip_z_mm": round(z_reached * 1000, 2),
+             "descend_target_lip_z_mm": None if z_target is None else round(z_target * 1000, 2),
+             "plunge_reached_mm": None if z_target is None else round((z_surf - z_reached) * 1000, 2),
+@@ -468,7 +695,11 @@
+                     "fill_vs_bulk": round(mass_g / (cavity_cm3 * P["bulk_density_g_cm3"]), 4),
+                     "design_load_g": design["derived"]["load_per_scoop_g"], "design_fill_factor": design["params"]["fill_factor"]},
+         "heightmap": {"spec_version": "roarm-heightmap-v1", "cell_m": cell, "shape": list(hm.shape),
+-                      "max_m": float(np.nanmax(hm)), "n_particles_used": int(rest.sum())},
++                      "max_m": float(np.nanmax(hm)), "n_particles_used": int(rest.sum()),
++                      "pre_max_m": float(np.nanmax(hm_pre)), "npz_max_m": float(np.nanmax(hm_npz)),
++                      "pre_vs_npz_max_abs_diff_m": float(np.abs(hm_pre - hm_npz).max()),
++                      "removed_volume_cm3": crater["removed_volume_cm3"], "spheres_per_particle": k_sph},
++        "crater": crater,
+         "wall_seconds": round(wall, 2),
+         "non_claims": ["물성(E 5e6·mu 0.5·Crr 0.05·CoR 0.3·밀도 950) 전부 임시값 — 반력·정지각·포획량 절대값 인용 금지",
+                        "더미는 E 1e7 로 정착, 본 실행 E 5e6 → t=0 미세 재안착",
+@@ -478,14 +709,39 @@
+     cat = lambda k, shp: (np.concatenate(rec[k]) if rec[k] else np.zeros(shp, np.float32))
+     np.savez_compressed(out / f"scoop_s1_{tag}.npz", positions_m=pp, radii_m=np.full(n_p, rad),
+                         in_cavity=in_cav, carried=carried, heightmap_m=hm, box_bounds_m=box,
++                        heightmap_pre_m=hm_pre, heightmap_npz_m=hm_npz, sphere_positions_m=sp_final, sphere_radii_m=sr_final,
++                        clump_quaternions_xyzw=(np.zeros((0, 4)) if oq is None else oq),
+                         frame_t_s=np.asarray(rec["t"]), frame_phase=np.asarray(rec["phase"], np.int8),
+                         nodes_F_m=np.asarray(rec["nodes_F"], np.float32), nodes_D_m=np.asarray(rec["nodes_D"], np.float32),
+                         contact_point_m=cat("cp", (0, 3)), contact_force_N=cat("cf", (0, 3)),
+                         contact_frame=(np.concatenate(rec["cframe"]) if rec["cframe"] else np.zeros(0, np.int32)),
+                         lip_idx_f=lip_f, lip_idx_d=lip_d)
++    if rt is not None:
++        rp = (REPO / P["render_timeline_path"]) if P.get("render_timeline_path") else out / f"render_timeline_{tag}.npz"
++        rt_meta = {"artifact": "DEME_SCOOP_S1_W8_RENDER_TIMELINE_V1", "purpose": "Isaac Sim 재생·렌더용 — 물리 판정과 무관(정본은 scoop_s1_*.json/npz)",
++                   "cell_tag": tag, "params_file": a.params, "pile_npz": a.pile, "pile_sha16": sha16(a.pile), "dt_s": P["render_timeline_dt_s"],
++                   "world_frame": "DEME 세계 = 더미 npz 프레임: 상자 바닥 중심 원점, z 위, 단위 m",
++                   "clump_pos_m": "[T,N,3] float32 클럼프(알) 중심 = DEME owner 위치. 구 전개 p_sphere = p + R(q)·offset, offset·반경 = 더미 npz clump_template_json(offsets_m, sphere_radii_m); 구 더미면 N = 구",
++                   "clump_quat_xyzw": "[T,N,4] float32 DEME OriQ, xyzw",
++                   "tool_pos_m": "[T,3] 고정부(보울) owner 원점 = 두꺼워진 립점(lip_l5_mm 의 세계 위치). 고정부 셸 OBJ(_obj/fixed_*.obj) 정점은 이 원점 기준 세계 프레임(m) — 규정 병진만 하므로 tool_quat 는 단위",
++                   "tool_quat_xyzw": "[T,4] 고정부 owner OriQ xyzw",
++                   "door_pos_m": "[T,3] 문 owner 원점 = 힌지점 세계 위치", "door_quat_xyzw": "[T,4] 문 owner OriQ xyzw — 문 OBJ(_obj/door_open*.obj, q_open 자세로 구운 것) 기준 추가 회전",
++                   "door_deg": "[T] 문 관절각 q(°, + = 열림). 서보각 = q + servo_zero_offset_deg. door_step 은 sample 뒤에 q 를 갱신하므로 한 sync(4 ms) 지연",
++                   "link5_to_world_R_W_columns_are_link5_axes": R_W.tolist(), "lip_l5_mm": P["lip_l5_mm"], "hinge_l5_mm": P["hinge_l5_mm"], "bowl_center_l5_mm": P["bowl_center_l5_mm"],
++                   "door_axis_world": axis_w.tolist(), "q_open_joint_deg": q_open, "servo_zero_offset_deg": P["servo_zero_offset_deg"], "phase_ids": PH,
++                   "captured_ids": "최종 프레임에서 보울 공동 안(포획 판정) 클럼프 id", "carried_ids": "최종 z 기준 딸려 올라간 클럼프 id",
++                   "timeline_frame": "scoop_s1 timeline/npz 프레임 번호(-1 = Initialize 직후)"}
++        np.savez_compressed(rp, t_s=np.asarray(rt["t"], np.float64), clump_pos_m=np.stack(rt["pos"]), clump_quat_xyzw=np.stack(rt["quat"]),
++                            tool_pos_m=np.stack(rt["tool_pos"]), tool_quat_xyzw=np.stack(rt["tool_quat"]), door_pos_m=np.stack(rt["door_pos"]),
++                            door_quat_xyzw=np.stack(rt["door_quat"]), door_deg=np.asarray(rt["door_deg"], np.float32), phase=np.asarray(rt["phase"], np.int8),
++                            timeline_frame=np.asarray(rt["frame"], np.int32), captured_ids=np.where(in_cav)[0].astype(np.int32),
++                            carried_ids=np.where(carried)[0].astype(np.int32), metadata_json=json.dumps(rt_meta, ensure_ascii=False))
++        res["render_timeline"] = {"path": str(rp), "n_frames": len(rt["t"]), "dt_s": P["render_timeline_dt_s"], "bytes": int(rp.stat().st_size), "n_captured_ids": int(in_cav.sum())}
++        print(f"  렌더 타임라인 {len(rt['t'])} 프레임 → {rp} ({rp.stat().st_size/1e6:.1f} MB)", flush=True)
+     json.dump(res, open(out / f"scoop_s1_{tag}.json", "w"), ensure_ascii=False, indent=2)
+     flush("diverged" if diverged else "complete")
+-    snapshot(out, tag, res, rec, pp, rad, in_cav, x_s)
++    plot_heightmaps(out, tag, spec, hm_pre, hm, crater, (x_s, y_s))
++    snapshot(out, tag, res, rec, sp_final, rad, np.repeat(in_cav, k_sph), x_s)
+     print(f"\n포획 {res['capture']['n_in_cavity']} 개 = {mass_g:.2f} g (충전율/벌크 {res['capture']['fill_vs_bulk']:.3f}) "
+           f"· 딸려 올라감(z) {int(carried.sum())} · 문 최종 q {q_final:.2f}° (서보 {q_final + P['servo_zero_offset_deg']:.2f}°) "
+           f"· 립 틈 {gap_mm:.2f} mm · 입 {mouth_end:.2f} mm · 물림 {pinched} · 립등가 피크 {res['forces']['close_peak_lipF_N']:.3f} N "

@@ -1,0 +1,14 @@
+[e_flip_part] cut n=3623 tri=204 groups=['inner', 'outer', 'cap_in', 'cap_out', 'part'] wall=4.6 cap=5.0 subdiv=0.0 flip=False vz=25.0 dt=1e-05 sync=0.001 z_surf=39.74 lip0=42.74 -> 19.74 mm
+      0 t=0.0010 ins= -3.000 SM=  8 single=  0.0000 N v_max=0.028 top:part pen=-11.190 ndot=nan cls=outside
+    200 t=0.2030 ins= -1.675 SM=  6 single=  0.0000 N v_max=0.091 top:part pen=-11.904 ndot=-0.84 cls=outside
+    400 t=0.4050 ins=  3.375 SM= 95 single=  0.0216 N v_max=0.048 top:outer pen=0.016 ndot=-1.00 cls=outside
+    600 t=0.6070 ins=  8.425 SM=474 single=  0.0588 N v_max=1.655 top:outer pen=0.031 ndot=-1.00 cls=outside
+terminate called after throwing an instance of 'std::runtime_error'
+  what():  System max velocity is 62.92159, exceeded max allowance (50).
+If this velocity is not abnormal and you want to increase this allowance, use SetErrorOutVelocity before initializing simulation.
+Otherwise, the simulation may have diverged and relaxing the physics may help, such as decreasing the step size and modifying material properties.
+If this happens at the start of simulation, check if there are initial penetrations, a.k.a. elements initialized inside walls.
+This happened in unpackMyBuffer.
+
+timeout: the monitored command dumped core
+rc=134

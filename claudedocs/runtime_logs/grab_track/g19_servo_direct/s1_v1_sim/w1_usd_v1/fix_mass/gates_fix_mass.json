@@ -1,0 +1,200 @@
+{
+ "worker": "W1b fix_mass",
+ "date": "2026-09-09",
+ "all_pass": true,
+ "gates": {
+  "G1_meta_source_and_sha": {
+   "pass": true,
+   "from": "gates_w1_usd_v1.json (재생성본 기준 재실행)",
+   "key_values": {}
+  },
+  "G2_names_equal_v0": {
+   "pass": true,
+   "from": "gates_w1_usd_v1.json (재생성본 기준 재실행)",
+   "key_values": {
+    "links_equal": true,
+    "joints_equal": true
+   }
+  },
+  "G3_mass": {
+   "pass": true,
+   "from": "gates_w1_usd_v1.json (재생성본 기준 재실행)",
+   "key_values": {
+    "urdf_sum_g": 36.73,
+    "dev_vs_parts_pct": -0.0
+   }
+  },
+  "G5_wrist_pitch": {
+   "pass": true,
+   "from": "gates_w1_usd_v1.json (재생성본 기준 재실행)",
+   "key_values": {}
+  },
+  "G4_door_close": {
+   "pass": true,
+   "from": "gates_w1_usd_v1.json (재생성본 기준 재실행)",
+   "key_values": {
+    "sim_stop_deg": 0.0014,
+    "sim_minus_real_deg": [
+     -2.499,
+     -3.499
+    ]
+   }
+  },
+  "USD_artifact": {
+   "pass": true,
+   "from": "gates_w1_usd_v1.json (재생성본 기준 재실행)",
+   "key_values": {
+    "usd_sha16": "21dc4a11571d65f7"
+   }
+  },
+  "G7_fake_mass_and_static": {
+   "hand_tcp_mass_kg": {
+    "pre": 1.0,
+    "post": 9.999999747378752e-05,
+    "limit": 0.001
+   },
+   "world_mass_kg": {
+    "pre": 1.0,
+    "post": 1.0,
+    "note": "루트 world 는 fix_root_link=True 로 고정 → 관절 하중 무관, 미수정"
+   },
+   "physx_mass_total_kg": {
+    "pre": 2.4831817150115967,
+    "post": 1.4832817316055298
+   },
+   "poses": {
+    "home": {
+     "link1_to_link2": {
+      "urdf_static_at_measured_q_Nm": 0.04072,
+      "urdf_static_at_target_q_Nm": 0.04036,
+      "isaac_physx_static_at_measured_q_Nm": 0.04072,
+      "dev_pct": 0.0,
+      "isaac_applied_torque_Nm(참고,PD계산값)": -0.08364,
+      "pre_fix_isaac_static_Nm": 0.57613,
+      "deflection_deg_post": 0.0113,
+      "deflection_deg_pre": 0.2993,
+      "urdf_per_body_Nm": {
+       "link2": 0.00846,
+       "link3": 0.00608,
+       "link4": 0.00282,
+       "link5": 0.00689,
+       "grab_fixed": 0.00825,
+       "hand_tcp": 4e-05,
+       "gripper_link": 0.00817
+      },
+      "isaac_per_body_Nm": {
+       "link2": 0.00846,
+       "link3": 0.00608,
+       "link4": 0.00282,
+       "link5": 0.00689,
+       "gripper_link": 0.00817,
+       "hand_tcp": 4e-05,
+       "grab_fixed": 0.00825
+      }
+     },
+     "link2_to_link3": {
+      "urdf_static_at_measured_q_Nm": 0.00754,
+      "urdf_static_at_target_q_Nm": 0.00724,
+      "isaac_physx_static_at_measured_q_Nm": 0.00754,
+      "dev_pct": 0.0,
+      "isaac_applied_torque_Nm(참고,PD계산값)": -0.24911,
+      "pre_fix_isaac_static_Nm": 0.23515,
+      "deflection_deg_post": 0.0791,
+      "deflection_deg_pre": 1.0791,
+      "urdf_per_body_Nm": {
+       "link3": -0.00029,
+       "link4": -0.00012,
+       "link5": 0.00235,
+       "grab_fixed": 0.00281,
+       "hand_tcp": 2e-05,
+       "gripper_link": 0.00278
+      },
+      "isaac_per_body_Nm": {
+       "link3": -0.00029,
+       "link4": -0.00012,
+       "link5": 0.00235,
+       "gripper_link": 0.00278,
+       "hand_tcp": 2e-05,
+       "grab_fixed": 0.00281
+      }
+     }
+    },
+    "scoop": {
+     "link1_to_link2": {
+      "urdf_static_at_measured_q_Nm": 0.23263,
+      "urdf_static_at_target_q_Nm": 0.23235,
+      "isaac_physx_static_at_measured_q_Nm": 0.23263,
+      "dev_pct": 0.0,
+      "isaac_applied_torque_Nm(참고,PD계산값)": 0.00432,
+      "pre_fix_isaac_static_Nm": 2.6709,
+      "deflection_deg_post": 0.1112,
+      "deflection_deg_pre": 1.5313,
+      "urdf_per_body_Nm": {
+       "link2": 0.03917,
+       "link3": 0.04097,
+       "link4": 0.02564,
+       "link5": 0.03724,
+       "grab_fixed": 0.04497,
+       "hand_tcp": 0.00024,
+       "gripper_link": 0.04439
+      },
+      "isaac_per_body_Nm": {
+       "link2": 0.03917,
+       "link3": 0.04097,
+       "link4": 0.02564,
+       "link5": 0.03724,
+       "gripper_link": 0.04439,
+       "hand_tcp": 0.00024,
+       "grab_fixed": 0.04497
+      }
+     },
+     "link2_to_link3": {
+      "urdf_static_at_measured_q_Nm": 0.09628,
+      "urdf_static_at_target_q_Nm": 0.09647,
+      "isaac_physx_static_at_measured_q_Nm": 0.09628,
+      "dev_pct": 0.0,
+      "isaac_applied_torque_Nm(참고,PD계산값)": -0.0003,
+      "pre_fix_isaac_static_Nm": 1.31922,
+      "deflection_deg_post": -0.0015,
+      "deflection_deg_pre": -0.0817,
+      "urdf_per_body_Nm": {
+       "link3": 0.01592,
+       "link4": 0.01405,
+       "link5": 0.0194,
+       "grab_fixed": 0.02356,
+       "hand_tcp": 0.00013,
+       "gripper_link": 0.02322
+      },
+      "isaac_per_body_Nm": {
+       "link3": 0.01592,
+       "link4": 0.01405,
+       "link5": 0.0194,
+       "gripper_link": 0.02321,
+       "hand_tcp": 0.00013,
+       "grab_fixed": 0.02356
+      }
+     }
+    }
+   },
+   "urdf_mass_sum_kg(world 제외)": 0.483282,
+   "physx_minus_urdf_mass_kg(post, world 1.0 제외)": 0.0,
+   "pass": true,
+   "criteria": "hand_tcp ≤ 1e-3 kg AND 어깨 정역학(URDF vs PhysX 재계산, 측정각 기준) |dev| ≤ 5 % (HOME·스쿱)"
+  }
+ },
+ "inputs_sha16": {
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w1_usd_v1/fix_mass/gates_w1_usd_v1.json": "eb2fe6a023e4c8d5",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w1_usd_v1/fix_mass/mass_static_post.json": "f799f50848ceeccb",
+  "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w1_usd_v1/fix_mass/mass_static_pre.json": "bf7888984695f052",
+  "local_assets/roarm_m3/urdf/roarm_m3_s1_v1.urdf": "411ef28f78ead0f0",
+  "local_assets/roarm_m3/urdf/s1_v1_meta.json": "07995c667a548a8a",
+  "local_assets/roarm_m3/usd_s1_v1/configuration/roarm_m3_s1_v1_base.usd": "b53ec64a51164f2d",
+  "local_assets/roarm_m3/usd_s1_v1/configuration/roarm_m3_s1_v1_physics.usd": "8691734ead2d3e7f",
+  "local_assets/roarm_m3/usd_s1_v1.bak_pre_massfix/configuration/roarm_m3_s1_v1_physics.usd": "6f2b31e46253283d",
+  "local_assets/roarm_m3/usd_s1_v1/roarm_m3_s1_v1.usd": "21dc4a11571d65f7",
+  "local_assets/roarm_m3/usd_s1_v1.bak_pre_massfix/configuration/roarm_m3_s1_v1_base.usd": "b53ec64a51164f2d",
+  "local_assets/roarm_m3/urdf/roarm_m3_s1_v1.urdf.bak_pre_massfix": "fdca6b303c816a90",
+  "local_assets/roarm_m3/urdf/roarm_m3.urdf": "64dc8d082cbce9a1",
+  "compose_roarm_s1_urdf.py": "35d312a7392aa1c5"
+ }
+}

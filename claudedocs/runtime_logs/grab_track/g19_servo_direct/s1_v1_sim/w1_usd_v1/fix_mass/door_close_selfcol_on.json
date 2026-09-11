@@ -1,0 +1,57 @@
+{
+ "ok": true,
+ "usd": "/home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/usd_s1_v1/roarm_m3_s1_v1.usd",
+ "usd_sha16": "21dc4a11571d65f7",
+ "self_collision": true,
+ "start_deg": 20.0,
+ "settle_s": 4.0,
+ "door_effort_limit_Nm": 1.96,
+ "door_pd": [
+  300.0,
+  30.0
+ ],
+ "convention": "URDF rad: 0 닫힘, + 열림 (= servo_deg 규약)",
+ "joint_names": [
+  "base_link_to_link1",
+  "link1_to_link2",
+  "link2_to_link3",
+  "link3_to_link4",
+  "link4_to_link5",
+  "link5_to_gripper_link"
+ ],
+ "body_names": [
+  "world",
+  "base_link",
+  "link1",
+  "link2",
+  "link3",
+  "link4",
+  "link5",
+  "grab_fixed",
+  "gripper_link",
+  "hand_tcp"
+ ],
+ "physics_dt": 0.008333333333333333,
+ "collision_offsets_m": {
+  "gripper_link": [],
+  "grab_fixed": []
+ },
+ "door_joint_limits_rad": [
+  0.0,
+  1.571
+ ],
+ "stop_deg_mean_last0p5s": 0.0014,
+ "stop_deg_min": 0.0014,
+ "stop_deg_max": 0.0014,
+ "settled": true,
+ "F_door_fixed_N_last0p5s_mean": 0.0735,
+ "F_door_fixed_N_max": 0.0748,
+ "tau_Nm_last0p5s_mean": -0.0079,
+ "first_contact": {
+  "t": 0.9417,
+  "door_deg": 0.0021
+ },
+ "door_deg_min_overall": 0.0014,
+ "finite": true,
+ "n_log": 121
+}
