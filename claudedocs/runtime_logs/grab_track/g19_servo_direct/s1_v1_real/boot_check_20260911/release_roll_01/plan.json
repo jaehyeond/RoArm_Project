@@ -1,0 +1,30 @@
+{
+  "experiment": "residual_roll_minus5",
+  "roll_from_deg": 0,
+  "roll_to_deg": -5,
+  "door_target_deg_during_test": 30,
+  "gripper_torque": 200,
+  "reference_policy": "preserve issued first four joint targets, not measured deflected angles",
+  "unchanged_joint_limits": true,
+  "new_scoop": false,
+  "source_residue_run": "torque790_01",
+  "source_residue_count": null,
+  "baseline_settle_extra_s": 1.5,
+  "after_rotation_wait_s": 2,
+  "cup_vessel_height_cm": 9,
+  "cup_inner_diameter_cm": 7,
+  "cup_position": "operator adjusted; not a fixed measured obstacle",
+  "limitations": [
+    "Small roll is not a five-degree outlet-directed tilt.",
+    "Delayed release and cup handling are not independently controlled.",
+    "Additional mass is a paired exploratory observation, not a causal estimate."
+  ],
+  "source_sha256": {
+    "hw_release_roll_test.py": "9b9831735fd9332742d972114f16863092b528d30ff4393e7a0d298906faeaf6",
+    "hw_recorded_arm.py": "ed90f687e423bf28e3f542dfbe9f8240ada044f450d69b0b8be8e1579a2a500c",
+    "hw_serial_atomic.py": "affa3ec0e17a25641e389530f28949e9c9692a077cae907506939ba45c197b2d",
+    "hw_s1_manual.py": "b22f1ad779d16d177d60b546b153e36f81b8854d088e8e11f767f27444891f7b",
+    "hw_s1_scoop_probe.py": "70096b2f2c6cbe7799f23e4507a4cfaadba9c389854ea156d79f67e8ebc877c4",
+    "safety_p0_guards.py": "09e8d848131ecba64fd67ef469bb4c225cbb244bdb7d47117d7919b391d77763"
+  }
+}

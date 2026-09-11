@@ -39,6 +39,12 @@ Codex가 repo 파일에 남기지 않은 판단·시도·실패는 그대로 소
 
 ## §2 2026-09-11 Codex → Claude
 
+**최신 실행 파일/함정**: `hw_release_roll_test.py`, `analysis_release_run.py`, `torque790_01/`, `release_roll_01/`, `session_20260911_790_tilt_execution.md`. 롤 시험의 result.completed=false는 사용자 사진/방향 질문 후 의도적 Ctrl-C 종료다. **P1 복귀를 전제한 scoop 시작 금지**: 현재 마지막 자세/다음 행동은 START_HERE 정본. 포트는 닫혔으며 백그라운드 로봇 프로세스 없음. 측정 대기 프롬프트는 더 이상 실행 중이 아니다.
+
+**사진/계량 해석 함정**: 이번 컵 포함22.28g과 약0.05g tare는 이번 사용자 입력이다. 예전9.65g 사진 tare로 덮어쓰지 말 것. 회전 전 “아까랑 똑같아”는22.28g 유지로 해석해 원문/해석을 남겼다. 회전 후 저울값은 받지 못했고 사진 표시도 가려져 null이다. 사진 잔류를 추가 배출0g으로 변환하지 말 것. 단일 롤은 명목 출구5° 기울임이 아니다.
+
+**시각화 인계**: `release_roll_01/visual_01/`은 전체 실제 타임라인/RRD readback. 첫 overview screenshot의 빈/작은 패널 한계를 inspection에 기록했다. 근접 방향 검수는 `direction_visual_01/`이며 before/after는 실제, ideal_outward5만 미실행 개념이다. 원본/첫 화면/새 화면은 모두 보존한다.
+
 **한 일 (repo 변경)**: W10 실행/관측 완료 후 기존 영상 워커/W9/W10 검토. 이어 `session_20260911_real_boot_measurement.md`, `s1_v1_real/boot_check_20260911/`의 원시 수집·PID 분석/Rerun·실물 scoop 기록 및 문 목표 정책 수정. D484/LEDGER584 이후 사진 계량 후속 LEDGER585·색인/START_HERE 갱신. `torque900_03/operator_photos/`·`operator_measurement_01.json/CSV`·`MEASUREMENT_01.md` 추가. 이어 `release_tilt_review_01/`·`session_20260911_release_tilt_review.md`에 배출 회전축 검토와 별도 RRD 시각 증거를 추가했다. 각 폴더의 plan/source 사본·manifest를 참조.
 
 **추가 변경**: `session_20260911_790_tilt_mass_git.md`, `pre790_feedback_01/`, `git_publish_01/`, `.gitattributes`, `.gitignore`. 기존 LFS pre-push hook을 사용하며 새 hook 설치 없음. 원시 CSV의 CRLF와 동결 소스/OBJ/diff의 기존 공백은 원본 해시 보존을 위해 그대로 둔다.

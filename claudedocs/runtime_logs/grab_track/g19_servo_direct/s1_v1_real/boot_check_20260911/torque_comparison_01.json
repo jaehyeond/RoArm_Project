@@ -1,0 +1,33 @@
+{
+  "purpose": "Matching explicit-door-target790 versus corrected900 first-lift observation",
+  "fixed_conditions": [
+    "PID last restored shoulderP16/I0; no PID commands this pair",
+    "same measured_scoop source and geometry",
+    "same nominal path and close target0",
+    "same common transport790 and release200"
+  ],
+  "runs": {
+    "torque900_03": {
+      "n_feedback": 3739,
+      "before_lift_deg": 3.779296858424914,
+      "after_lift_deg": 3.691406278567456,
+      "reopen_deg": -0.08789057985745785,
+      "lift_peak_reopen_deg": 0.0,
+      "raw_sha256": "c91324498b31a56a464c38280e3803afd957650ff8da81756a0a7d47d8c9e4e9"
+    },
+    "torque790_01": {
+      "n_feedback": 3905,
+      "before_lift_deg": 4.218749986895432,
+      "after_lift_deg": 4.130859349742167,
+      "reopen_deg": -0.08789063715326506,
+      "lift_peak_reopen_deg": 0.0,
+      "raw_sha256": "9739c3549717a67d758d9cb256dc51b338c36ace01b57b8e9d50e1c4371714e3"
+    }
+  },
+  "verdict": "Neither corrected run showed additional first-lift opening. No controlled torque or overload-protection causality claim.",
+  "limits": [
+    "Sequential scoops; pile and initial residues not matched by measurement.",
+    "Different user-reported cup tare contexts; net mass790 is approximate.",
+    "Firmware target registers, current and temperature unavailable."
+  ]
+}

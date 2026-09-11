@@ -1,0 +1,520 @@
+{
+  "artifact": "ROARM_RERUN_ARTIFACT_VALIDATION_V1",
+  "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/torque790_01/visual_01/scoop.rrd",
+  "expected_rerun_version": "0.34.1",
+  "expected_entity_paths": [],
+  "expected_timeline_names": [],
+  "exact_entity_paths": [
+    "/coordinate_frames/world_m",
+    "/decision/actual_door",
+    "/decision/actual_fixed",
+    "/decision/target_door",
+    "/decision/target_fixed",
+    "/events/commands",
+    "/frames/actual_lift",
+    "/frames/actual_lift/origin",
+    "/frames/commanded_lift",
+    "/frames/commanded_lift/origin",
+    "/metadata/meshes/decision__actual_door",
+    "/metadata/meshes/decision__actual_fixed",
+    "/metadata/meshes/decision__target_door",
+    "/metadata/meshes/decision__target_fixed",
+    "/metadata/run",
+    "/metrics/arm_target_error_deg",
+    "/metrics/door_deg",
+    "/metrics/elbow_load_raw",
+    "/metrics/lip_height_cm",
+    "/metrics/shoulder_deg",
+    "/metrics/shoulder_load_raw",
+    "/metrics/target_door_deg",
+    "/metrics/torque_command",
+    "/metrics/wrist_load_raw",
+    "/robot/joints",
+    "/tool/door",
+    "/tool/fixed"
+  ],
+  "exact_timeline_names": [
+    "blueprint",
+    "host_elapsed_s",
+    "log_time",
+    "sample"
+  ],
+  "expected_entity_components": {
+    "/tool/fixed": [
+      "Points3D:positions"
+    ],
+    "/tool/door": [
+      "Points3D:positions"
+    ],
+    "/metrics/door_deg": [
+      "Scalars:scalars"
+    ],
+    "/metrics/lip_height_cm": [
+      "Scalars:scalars"
+    ],
+    "/metrics/shoulder_deg": [
+      "Scalars:scalars"
+    ],
+    "/metrics/shoulder_load_raw": [
+      "Scalars:scalars"
+    ],
+    "/metrics/elbow_load_raw": [
+      "Scalars:scalars"
+    ],
+    "/metrics/wrist_load_raw": [
+      "Scalars:scalars"
+    ],
+    "/metrics/arm_target_error_deg": [
+      "Scalars:scalars"
+    ],
+    "/metrics/torque_command": [
+      "Scalars:scalars"
+    ],
+    "/metrics/target_door_deg": [
+      "Scalars:scalars"
+    ],
+    "/decision/target_fixed": [
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/decision/target_door": [
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/decision/actual_fixed": [
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ],
+    "/decision/actual_door": [
+      "Mesh3D:triangle_indices",
+      "Mesh3D:vertex_positions"
+    ]
+  },
+  "forbidden_entity_fragments": [
+    "/\\/"
+  ],
+  "blueprint_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/torque790_01/visual_01/scoop.rbl",
+  "rendered_blueprint_source": "active blueprint embedded in the RRD",
+  "external_rbl_role": "verified fixed-layout export; the 0.34.1 CLI does not guarantee that an external RBL overrides an already-active embedded blueprint",
+  "screenshot_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/torque790_01/visual_01/scoop_rerun.png",
+  "screenshot_window_size": "2800x1800",
+  "screenshot_port": null,
+  "human_visual_inspection_required": true,
+  "bytes": 23313414,
+  "sha256": "439c896db173c7584b892a8835a7ee380658c26352d48d62f0a443a4ec0d7291",
+  "version": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "--version"
+    ],
+    "returncode": 0,
+    "stdout": "rerun-cli 0.34.1 (base lance map_view nasm native_viewer oss_server perf_telemetry re_server release_full release_no_web_viewer web_viewer) [rustc 1.92.0 (ded5c06cf 2025-12-08), LLVM 21.1.3] x86_64-unknown-linux-gnu prepare-release-0.34.1 4efb18f, built 2026-07-07T16:20:42.173372603Z\nVideo features: av1 ffmpeg nasm\n",
+    "stderr": "",
+    "ok": true,
+    "expected_version_match": true
+  },
+  "verify": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "verify",
+      "--check-footers",
+      "true",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/torque790_01/visual_01/scoop.rrd"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "1 file verified without error.\n",
+    "ok": true
+  },
+  "stats": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "stats",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/torque790_01/visual_01/scoop.rrd"
+    ],
+    "returncode": 0,
+    "stdout": "Overview\n----------\nnum_chunks = 111\nnum_entity_paths = 48\nnum_chunks_without_components = 0 (0.000%)\nnum_rows = 46\u2009958\nnum_rows_min = 1\nnum_rows_max = 1\u2009289\nnum_rows_avg = 423.045\nnum_static = 16\nnum_indexes_min = 0\nnum_indexes_max = 3\nnum_indexes_avg = 2.378\nnum_components_min = 1\nnum_components_max = 4\nnum_components_avg = 2.441\n\nNum chunks per entity\n---------------------\n/__properties: 1\n/blueprint_panel: 1\n/container/757be3bc-8e18-430c-8751-d085956f6b64: 1\n/container/b5ababb9-b5f5-4585-b264-841a612bba11: 1\n/container/d1f80d61-979a-495b-ac74-635ed381b47c: 1\n/container/d4badd1c-8372-4999-8fbc-dd126fe88b9a: 1\n/coordinate_frames/world_m: 1\n/decision/actual_door: 1\n/decision/actual_fixed: 1\n/decision/target_door: 1\n/decision/target_fixed: 1\n/events/commands: 1\n/frames/actual_lift: 1\n/frames/actual_lift/origin: 1\n/frames/commanded_lift: 1\n/frames/commanded_lift/origin: 1\n/metadata/meshes/decision__actual_door: 1\n/metadata/meshes/decision__actual_fixed: 1\n/metadata/meshes/decision__target_door: 1\n/metadata/meshes/decision__target_fixed: 1\n/metadata/run: 1\n/metrics/arm_target_error_deg: 4\n/metrics/door_deg: 4\n/metrics/elbow_load_raw: 4\n/metrics/lip_height_cm: 4\n/metrics/shoulder_deg: 4\n/metrics/shoulder_load_raw: 4\n/metrics/target_door_deg: 4\n/metrics/torque_command: 4\n/metrics/wrist_load_raw: 4\n/robot/joints: 4\n/selection_panel: 1\n/time_panel: 2\n/tool/door: 17\n/tool/fixed: 17\n/view/23161eeb-578a-4c3e-8bf5-203d51893d29: 1\n/view/23161eeb-578a-4c3e-8bf5-203d51893d29/ViewContents: 1\n/view/41957b62-d96a-4f70-840c-0610ff144522: 1\n/view/41957b62-d96a-4f70-840c-0610ff144522/ViewContents: 1\n/view/50cf36ad-bfd1-41a3-8f19-50e64c44a828: 1\n/view/50cf36ad-bfd1-41a3-8f19-50e64c44a828/ViewContents: 1\n/view/5d83a0be-9945-40cf-a50e-62f1c8dc8b0b: 1\n/view/5d83a0be-9945-40cf-a50e-62f1c8dc8b0b/ViewContents: 1\n/view/c64c17f1-d6ce-42b6-b183-11557c05b531: 1\n/view/c64c17f1-d6ce-42b6-b183-11557c05b531/ViewContents: 1\n/view/fc232aa4-4cd9-41e3-ad1d-3b4b8a241fce: 1\n/view/fc232aa4-4cd9-41e3-ad1d-3b4b8a241fce/ViewContents: 1\n/viewport: 1\n\nNum chunks per index\n--------------------\nblueprint: 20\nhost_elapsed_s: 75\nlog_time: 95\nsample: 74\n\nNum chunks per component\n------------------------\nContainerBlueprint:container_kind: 4\nContainerBlueprint:contents: 4\nCoordinateFrame:frame: 44\nMesh3D:albedo_factor: 4\nMesh3D:triangle_indices: 4\nMesh3D:vertex_positions: 4\nPanelBlueprint:state: 2\nPoints3D:colors: 38\nPoints3D:labels: 2\nPoints3D:positions: 40\nPoints3D:radii: 40\nRecordingInfo:start_time: 1\nScalars:scalars: 36\nTextDocument:text: 5\nTextLog:level: 1\nTextLog:text: 1\nTimePanelBlueprint:play_state: 1\nTimePanelBlueprint:timeline: 1\nTransform3D:child_frame: 3\nTransform3D:parent_frame: 3\nTransform3D:quaternion: 3\nTransform3D:translation: 3\nViewBlueprint:class_identifier: 6\nViewBlueprint:display_name: 6\nViewBlueprint:space_origin: 6\nViewContents:query: 6\nViewportBlueprint:auto_layout: 1\nViewportBlueprint:auto_views: 1\nViewportBlueprint:root_container: 1\n\nSize (schema + data, compressed)\n--------------------------------\nipc_size_bytes_total = 22.1 MiB\nipc_size_bytes_min = 901 B\nipc_size_bytes_max = 1.1 MiB\nipc_size_bytes_avg = 204 KiB\nipc_size_bytes_p50 = 41.1 KiB\nipc_size_bytes_p90 = 821 KiB\nipc_size_bytes_p95 = 906 KiB\nipc_size_bytes_p99 = 1.1 MiB\nipc_size_bytes_p999 = 1.1 MiB\n\nSize (schema + data, uncompressed)\n----------------------------------\nipc_size_bytes_total = 59.8 MiB\nipc_size_bytes_min = 1.7 KiB\nipc_size_bytes_max = 1.7 MiB\nipc_size_bytes_avg = 552 KiB\nipc_size_bytes_p50 = 68.2 KiB\nipc_size_bytes_p90 = 1.7 MiB\nipc_size_bytes_p95 = 1.7 MiB\nipc_size_bytes_p99 = 1.7 MiB\nipc_size_bytes_p999 = 1.7 MiB\n\nSize (schema only, uncompressed)\n--------------------------------\nipc_size_bytes_total = 228 KiB\nipc_size_bytes_min = 1016 B\nipc_size_bytes_max = 2.7 KiB\nipc_size_bytes_avg = 2.1 KiB\nipc_size_bytes_p50 = 1.9 KiB\nipc_size_bytes_p90 = 2.7 KiB\nipc_size_bytes_p95 = 2.7 KiB\nipc_size_bytes_p99 = 2.7 KiB\nipc_size_bytes_p999 = 2.7 KiB\n\nSize (data only, uncompressed)\n------------------------------\nipc_size_bytes_total = 59.6 MiB\nipc_size_bytes_min = 656 B\nipc_size_bytes_max = 1.7 MiB\nipc_size_bytes_avg = 550 KiB\nipc_size_bytes_p50 = 66.6 KiB\nipc_size_bytes_p90 = 1.7 MiB\nipc_size_bytes_p95 = 1.7 MiB\nipc_size_bytes_p99 = 1.7 MiB\nipc_size_bytes_p999 = 1.7 MiB\n\nUnsorted timelines\n------------------\n(none \u2014 every timeline on every chunk is sorted)\n\nFooters\n-------\nnum_manifests = 2 (one per recording)\n\nFooter manifest for StoreId(Recording, \"roarm_viz_debug\", \"s1_scoop_torque790_01\")\n  num_chunks_indexed = 90\n  num_static_chunks = 15\n  num_entity_paths = 28\n  manifest_num_columns = 87\n  sorbet_schema_num_fields = 69\n  sorbet_schema_sha256 = 265cfe7de5afdc8ca71ba0840351c999bcd921add2d4d4dd1bccf1538ab1215b\n  chunk_byte_size_total (native) = 22.1 MiB\n  chunk_byte_size_uncompressed_total = 59.7 MiB\n\nFooter manifest for StoreId(Blueprint, \"roarm_viz_debug\", \"rec_06398cfcb3524964ba7106fe15a3c920\")\n  num_chunks_indexed = 21\n  num_static_chunks = 1\n  num_entity_paths = 20\n  manifest_num_columns = 89\n  sorbet_schema_num_fields = 42\n  sorbet_schema_sha256 = 5770bfdf9778f72a1decc05cee7cb1a4167b131072c338a97124836a2ccd8b5e\n  chunk_byte_size_total (native) = 29.9 KiB\n  chunk_byte_size_uncompressed_total = 67.0 KiB\n",
+    "stderr": "2026-09-11T08:09:08.048949Z  INFO rerun::commands::rrd::stats: processing input\u2026\n2026-09-11T08:09:08.070133Z  INFO rerun::commands::rrd::stats: computing stats\u2026\n",
+    "ok": true
+  },
+  "print_verbose": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "print",
+      "-v",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/torque790_01/visual_01/scoop.rrd"
+    ],
+    "returncode": 0,
+    "stdout": "Showing data after migration to latest Rerun version\nStoreInfo {\n    store_id: StoreId(\n        Recording,\n        \"roarm_viz_debug\",\n        \"s1_scoop_torque790_01\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nStoreInfo {\n    store_id: StoreId(\n        Recording,\n        \"roarm_viz_debug\",\n        \"s1_scoop_torque790_01\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nChunk(chunk_18D435D62B9FB6860688ed0013f29582) with 1 rows (632 B) - /__properties - data columns: [/__properties@RecordingInfo:start_time]\nStoreInfo {\n    store_id: StoreId(\n        Blueprint,\n        \"roarm_viz_debug\",\n        \"rec_06398cfcb3524964ba7106fe15a3c920\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nStoreInfo {\n    store_id: StoreId(\n        Blueprint,\n        \"roarm_viz_debug\",\n        \"rec_06398cfcb3524964ba7106fe15a3c920\",\n    ),\n    cloned_from: None,\n    store_source: PythonSdk(\n        3.11.14,\n    ),\n    store_version: Some(\n        CrateVersion {\n            major: 0,\n            minor: 34,\n            patch: 1,\n            meta: None,\n        },\n    ),\n}\nChunk(chunk_18D435D630AB31020d2d9da45ac9940a) with 1 rows (883 B) - /selection_panel - data columns: [/selection_panel@PanelBlueprint:state]\nChunk(chunk_18D435D630ABAE970d2d9da45ac9940b) with 1 rows (631 B) - /time_panel - data columns: [/time_panel@TimePanelBlueprint:play_state]\nChunk(chunk_18D435D630ABB7290d2d9da45ac9940c) with 1 rows (895 B) - /time_panel - data columns: [/time_panel@TimePanelBlueprint:timeline]\nChunk(chunk_18D435D630ABC0F50d2d9da45ac9940d) with 1 rows (1.1 KiB) - /container/757be3bc-8e18-430c-8751-d085956f6b64 - data columns: [/container/757be3bc-8e18-430c-8751-d085956f6b64@ContainerBlueprint:container_kind /container/757be3bc-8e18-430c-8751-d085956f6b64@ContainerBlueprint:contents]\nChunk(chunk_18D435D630ABD34A0d2d9da45ac9940e) with 1 rows (1.2 KiB) - /viewport - data columns: [/viewport@ViewportBlueprint:auto_layout /viewport@ViewportBlueprint:auto_views /viewport@ViewportBlueprint:root_container]\nChunk(chunk_18D435D630ABE1A70d2d9da45ac9940f) with 1 rows (929 B) - /view/23161eeb-578a-4c3e-8bf5-203d51893d29/ViewContents - data columns: [/view/23161eeb-578a-4c3e-8bf5-203d51893d29/ViewContents@ViewContents:query]\nChunk(chunk_18D435D630AC1C130d2d9da45ac99410) with 1 rows (940 B) - /view/50cf36ad-bfd1-41a3-8f19-50e64c44a828/ViewContents - data columns: [/view/50cf36ad-bfd1-41a3-8f19-50e64c44a828/ViewContents@ViewContents:query]\nChunk(chunk_18D435D630AC242A0d2d9da45ac99411) with 1 rows (1.2 KiB) - /view/fc232aa4-4cd9-41e3-ad1d-3b4b8a241fce - data columns: [/view/fc232aa4-4cd9-41e3-ad1d-3b4b8a241fce@ViewBlueprint:class_identifier /view/fc232aa4-4cd9-41e3-ad1d-3b4b8a241fce@ViewBlueprint:display_name /view/fc232aa4-4cd9-41e3-ad1d-3b4b8a241fce@ViewBlueprint:space_origin]\nChunk(chunk_18D435D630AC2FDD0d2d9da45ac99412) with 1 rows (1.1 KiB) - /container/d4badd1c-8372-4999-8fbc-dd126fe88b9a - data columns: [/container/d4badd1c-8372-4999-8fbc-dd126fe88b9a@ContainerBlueprint:container_kind /container/d4badd1c-8372-4999-8fbc-dd126fe88b9a@ContainerBlueprint:contents]\nChunk(chunk_18D435D630AC394F0d2d9da45ac99413) with 1 rows (1.2 KiB) - /view/5d83a0be-9945-40cf-a50e-62f1c8dc8b0b - data columns: [/view/5d83a0be-9945-40cf-a50e-62f1c8dc8b0b@ViewBlueprint:class_identifier /view/5d83a0be-9945-40cf-a50e-62f1c8dc8b0b@ViewBlueprint:display_name /view/5d83a0be-9945-40cf-a50e-62f1c8dc8b0b@ViewBlueprint:space_origin]\nChunk(chunk_18D435D630AC40F90d2d9da45ac99414) with 1 rows (1.1 KiB) - /container/d1f80d61-979a-495b-ac74-635ed381b47c - data columns: [/container/d1f80d61-979a-495b-ac74-635ed381b47c@ContainerBlueprint:container_kind /container/d1f80d61-979a-495b-ac74-635ed381b47c@ContainerBlueprint:contents]\nChunk(chunk_18D435D630AC46020d2d9da45ac99415) with 1 rows (883 B) - /blueprint_panel - data columns: [/blueprint_panel@PanelBlueprint:state]\nChunk(chunk_18D435D630AC4A850d2d9da45ac99416) with 1 rows (923 B) - /view/41957b62-d96a-4f70-840c-0610ff144522/ViewContents - data columns: [/view/41957b62-d96a-4f70-840c-0610ff144522/ViewContents@ViewContents:query]\nChunk(chunk_18D435D630AC51EB0d2d9da45ac99417) with 1 rows (929 B) - /view/5d83a0be-9945-40cf-a50e-62f1c8dc8b0b/ViewContents - data columns: [/view/5d83a0be-9945-40cf-a50e-62f1c8dc8b0b/ViewContents@ViewContents:query]\nChunk(chunk_18D435D630AC56340d2d9da45ac99418) with 1 rows (1.2 KiB) - /view/50cf36ad-bfd1-41a3-8f19-50e64c44a828 - data columns: [/view/50cf36ad-bfd1-41a3-8f19-50e64c44a828@ViewBlueprint:class_identifier /view/50cf36ad-bfd1-41a3-8f19-50e64c44a828@ViewBlueprint:display_name /view/50cf36ad-bfd1-41a3-8f19-50e64c44a828@ViewBlueprint:space_origin]\nChunk(chunk_18D435D630AC5FFB0d2d9da45ac99419) with 1 rows (1.2 KiB) - /view/23161eeb-578a-4c3e-8bf5-203d51893d29 - data columns: [/view/23161eeb-578a-4c3e-8bf5-203d51893d29@ViewBlueprint:class_identifier /view/23161eeb-578a-4c3e-8bf5-203d51893d29@ViewBlueprint:display_name /view/23161eeb-578a-4c3e-8bf5-203d51893d29@ViewBlueprint:space_origin]\nChunk(chunk_18D435D630AC69980d2d9da45ac9941a) with 1 rows (1.2 KiB) - /view/41957b62-d96a-4f70-840c-0610ff144522 - data columns: [/view/41957b62-d96a-4f70-840c-0610ff144522@ViewBlueprint:class_identifier /view/41957b62-d96a-4f70-840c-0610ff144522@ViewBlueprint:display_name /view/41957b62-d96a-4f70-840c-0610ff144522@ViewBlueprint:space_origin]\nChunk(chunk_18D435D630AC78A30d2d9da45ac9941b) with 1 rows (931 B) - /view/fc232aa4-4cd9-41e3-ad1d-3b4b8a241fce/ViewContents - data columns: [/view/fc232aa4-4cd9-41e3-ad1d-3b4b8a241fce/ViewContents@ViewContents:query]\nChunk(chunk_18D435D630AC7D740d2d9da45ac9941c) with 1 rows (928 B) - /view/c64c17f1-d6ce-42b6-b183-11557c05b531/ViewContents - data columns: [/view/c64c17f1-d6ce-42b6-b183-11557c05b531/ViewContents@ViewContents:query]\nChunk(chunk_18D435D630AC823A0d2d9da45ac9941d) with 1 rows (1.1 KiB) - /container/b5ababb9-b5f5-4585-b264-841a612bba11 - data columns: [/container/b5ababb9-b5f5-4585-b264-841a612bba11@ContainerBlueprint:container_kind /container/b5ababb9-b5f5-4585-b264-841a612bba11@ContainerBlueprint:contents]\nChunk(chunk_18D435D630AC8CB00d2d9da45ac9941e) with 1 rows (1.2 KiB) - /view/c64c17f1-d6ce-42b6-b183-11557c05b531 - data columns: [/view/c64c17f1-d6ce-42b6-b183-11557c05b531@ViewBlueprint:class_identifier /view/c64c17f1-d6ce-42b6-b183-11557c05b531@ViewBlueprint:display_name /view/c64c17f1-d6ce-42b6-b183-11557c05b531@ViewBlueprint:space_origin]\nBlueprintActivationCommand(StoreId(Blueprint, \"roarm_viz_debug\", \"rec_06398cfcb3524964ba7106fe15a3c920\"), make_active: true, make_default: true)\nChunk(chunk_18D435D633B729C1727adebf76e0d595) with 230 rows (818 KiB) - /tool/fixed - data columns: [/tool/fixed@CoordinateFrame:frame /tool/fixed@Points3D:colors /tool/fixed@Points3D:positions /tool/fixed@Points3D:radii]\nChunk(chunk_18D435D635101548727adebf76e0d596) with 230 rows (818 KiB) - /tool/door - data columns: [/tool/door@CoordinateFrame:frame /tool/door@Points3D:colors /tool/door@Points3D:positions /tool/door@Points3D:radii]\nChunk(chunk_18D435D63701E039727adebf76e0d597) with 230 rows (818 KiB) - /tool/fixed - data columns: [/tool/fixed@CoordinateFrame:frame /tool/fixed@Points3D:colors /tool/fixed@Points3D:positions /tool/fixed@Points3D:radii]\nChunk(chunk_18D435D638377A60727adebf76e0d598) with 230 rows (818 KiB) - /tool/door - data columns: [/tool/door@CoordinateFrame:frame /tool/door@Points3D:colors /tool/door@Points3D:positions /tool/door@Points3D:radii]\nChunk(chunk_18D435D63A56A188727adebf76e0d599) with 230 rows (818 KiB) - /tool/fixed - data columns: [/tool/fixed@CoordinateFrame:frame /tool/fixed@Points3D:colors /tool/fixed@Points3D:positions /tool/fixed@Points3D:radii]\nChunk(chunk_18D435D63BA54350727adebf76e0d59a) with 230 rows (818 KiB) - /tool/door - data columns: [/tool/door@CoordinateFrame:frame /tool/door@Points3D:colors /tool/door@Points3D:positions /tool/door@Points3D:radii]\nChunk(chunk_18D435D63D97A08A727adebf76e0d59b) with 230 rows (818 KiB) - /tool/fixed - data columns: [/tool/fixed@CoordinateFrame:frame /tool/fixed@Points3D:colors /tool/fixed@Points3D:positions /tool/fixed@Points3D:radii]\nChunk(chunk_18D435D63E3359EF727adebf76e0d59c) with 230 rows (818 KiB) - /tool/door - data columns: [/tool/door@CoordinateFrame:frame /tool/door@Points3D:colors /tool/door@Points3D:positions /tool/door@Points3D:radii]\nChunk(chunk_18D435D63F6E692B727adebf76e0d59d) with 1041 rows (82.2 KiB) - /robot/joints - data columns: [/robot/joints@CoordinateFrame:frame /robot/joints@Points3D:colors /robot/joints@Points3D:positions /robot/joints@Points3D:radii]\nChunk(chunk_18D435D6422FF73D727adebf76e0d59e) with 230 rows (818 KiB) - /tool/fixed - data columns: [/tool/fixed@CoordinateFrame:frame /tool/fixed@Points3D:colors /tool/fixed@Points3D:positions /tool/fixed@Points3D:radii]\nChunk(chunk_18D435D642CC9E1E727adebf76e0d59f) with 230 rows (818 KiB) - /tool/door - data columns: [/tool/door@CoordinateFrame:frame /tool/door@Points3D:colors /tool/door@Points3D:positions /tool/door@Points3D:radii]\nChunk(chunk_18D435D644A91171727adebf76e0d5a0) with 230 rows (818 KiB) - /tool/fixed - data columns: [/tool/fixed@CoordinateFrame:frame /tool/fixed@Points3D:colors /tool/fixed@Points3D:positions /tool/fixed@Points3D:radii]\nChunk(chunk_18D435D64547B197727adebf76e0d5a1) with 230 rows (818 KiB) - /tool/door - data columns: [/tool/door@CoordinateFrame:frame /tool/door@Points3D:colors /tool/door@Points3D:positions /tool/door@Points3D:radii]\nChunk(chunk_18D435D647CD087B727adebf76e0d5a2) with 230 rows (818 KiB) - /tool/fixed - data columns: [/tool/fixed@CoordinateFrame:frame /tool/fixed@Points3D:colors /tool/fixed@Points3D:positions /tool/fixed@Points3D:radii]\nChunk(chunk_18D435D649093807727adebf76e0d5a3) with 230 rows (818 KiB) - /tool/door - data columns: [/tool/door@CoordinateFrame:frame /tool/door@Points3D:colors /tool/door@Points3D:positions /tool/door@Points3D:radii]\nChunk(chunk_18D435D64B0FA1B5727adebf76e0d5a4) with 230 rows (818 KiB) - /tool/fixed - data columns: [/tool/fixed@CoordinateFrame:frame /tool/fixed@Points3D:colors /tool/fixed@Points3D:positions /tool/fixed@Points3D:radii]\nChunk(chunk_18D435D64B9BB0A3727adebf76e0d5a5) with 230 rows (818 KiB) - /tool/door - data columns: [/tool/door@CoordinateFrame:frame /tool/door@Points3D:colors /tool/door@Points3D:positions /tool/door@Points3D:radii]\nChunk(chunk_18D435D64E584A5E727adebf76e0d5a6) with 230 rows (818 KiB) - /tool/fixed - data columns: [/tool/fixed@CoordinateFrame:frame /tool/fixed@Points3D:colors /tool/fixed@Points3D:positions /tool/fixed@Points3D:radii]\nChunk(chunk_18D435D64FA7D41D727adebf76e0d5a7) with 230 rows (818 KiB) - /tool/door - data columns: [/tool/door@CoordinateFrame:frame /tool/door@Points3D:colors /tool/door@Points3D:positions /tool/door@Points3D:radii]\nChunk(chunk_18D435D650EC0385727adebf76e0d5a8) with 1041 rows (82.2 KiB) - /robot/joints - data columns: [/robot/joints@CoordinateFrame:frame /robot/joints@Points3D:colors /robot/joints@Points3D:positions /robot/joints@Points3D:radii]\nChunk(chunk_18D435D656D39E16727adebf76e0d5a9) with 230 rows (818 KiB) - /tool/fixed - data columns: [/tool/fixed@CoordinateFrame:frame /tool/fixed@Points3D:colors /tool/fixed@Points3D:positions /tool/fixed@Points3D:radii]\nChunk(chunk_18D435D657D57DA0727adebf76e0d5aa) with 230 rows (818 KiB) - /tool/door - data columns: [/tool/door@CoordinateFrame:frame /tool/door@Points3D:colors /tool/door@Points3D:positions /tool/door@Points3D:radii]\nChunk(chunk_18D435D659192D3A727adebf76e0d5ab) with 230 rows (818 KiB) - /tool/fixed - data columns: [/tool/fixed@CoordinateFrame:frame /tool/fixed@Points3D:colors /tool/fixed@Points3D:positions /tool/fixed@Points3D:radii]\nChunk(chunk_18D435D65A5BF9A1727adebf76e0d5ac) with 230 rows (818 KiB) - /tool/door - data columns: [/tool/door@CoordinateFrame:frame /tool/door@Points3D:colors /tool/door@Points3D:positions /tool/door@Points3D:radii]\nChunk(chunk_18D435D65BB42911727adebf76e0d5ad) with 230 rows (818 KiB) - /tool/fixed - data columns: [/tool/fixed@CoordinateFrame:frame /tool/fixed@Points3D:colors /tool/fixed@Points3D:positions /tool/fixed@Points3D:radii]\nChunk(chunk_18D435D65CE844A2727adebf76e0d5ae) with 230 rows (818 KiB) - /tool/door - data columns: [/tool/door@CoordinateFrame:frame /tool/door@Points3D:colors /tool/door@Points3D:positions /tool/door@Points3D:radii]\nChunk(chunk_18D435D65E4B1082727adebf76e0d5af) with 230 rows (818 KiB) - /tool/fixed - data columns: [/tool/fixed@CoordinateFrame:frame /tool/fixed@Points3D:colors /tool/fixed@Points3D:positions /tool/fixed@Points3D:radii]\nChunk(chunk_18D435D65F975BC7727adebf76e0d5b0) with 230 rows (818 KiB) - /tool/door - data columns: [/tool/door@CoordinateFrame:frame /tool/door@Points3D:colors /tool/door@Points3D:positions /tool/door@Points3D:radii]\nChunk(chunk_18D435D660EFCA5F727adebf76e0d5b1) with 1041 rows (82.2 KiB) - /robot/joints - data columns: [/robot/joints@CoordinateFrame:frame /robot/joints@Points3D:colors /robot/joints@Points3D:positions /robot/joints@Points3D:radii]\nChunk(chunk_18D435D66461A08A727adebf76e0d5b2) with 230 rows (818 KiB) - /tool/fixed - data columns: [/tool/fixed@CoordinateFrame:frame /tool/fixed@Points3D:colors /tool/fixed@Points3D:positions /tool/fixed@Points3D:radii]\nChunk(chunk_18D435D665098F8F727adebf76e0d5b3) with 230 rows (818 KiB) - /tool/door - data columns: [/tool/door@CoordinateFrame:frame /tool/door@Points3D:colors /tool/door@Points3D:positions /tool/door@Points3D:radii]\nChunk(chunk_18D435D665C81E36727adebf76e0d5b4) with 230 rows (818 KiB) - /tool/fixed - data columns: [/tool/fixed@CoordinateFrame:frame /tool/fixed@Points3D:colors /tool/fixed@Points3D:positions /tool/fixed@Points3D:radii]\nChunk(chunk_18D435D6667E4177727adebf76e0d5b5) with 230 rows (818 KiB) - /tool/door - data columns: [/tool/door@CoordinateFrame:frame /tool/door@Points3D:colors /tool/door@Points3D:positions /tool/door@Points3D:radii]\nChunk(chunk_18D435D66736CB90727adebf76e0d5b6) with 230 rows (818 KiB) - /tool/fixed - data columns: [/tool/fixed@CoordinateFrame:frame /tool/fixed@Points3D:colors /tool/fixed@Points3D:positions /tool/fixed@Points3D:radii]\nChunk(chunk_18D435D667EA0252727adebf76e0d5b7) with 230 rows (818 KiB) - /tool/door - data columns: [/tool/door@CoordinateFrame:frame /tool/door@Points3D:colors /tool/door@Points3D:positions /tool/door@Points3D:radii]\nChunk(chunk_18D435D674BFCCF0727adebf76e0d5b8) with 225 rows (801 KiB) - /tool/door - data columns: [/tool/door@CoordinateFrame:frame /tool/door@Points3D:colors /tool/door@Points3D:positions /tool/door@Points3D:radii]\nChunk(chunk_18D435D6752F8F88727adebf76e0d5b9) with 1 rows (1.1 KiB) - /coordinate_frames/world_m - data columns: [/coordinate_frames/world_m@Transform3D:child_frame /coordinate_frames/world_m@Transform3D:parent_frame /coordinate_frames/world_m@Transform3D:quaternion /coordinate_frames/world_m@Transform3D:translation]\nChunk(chunk_18D435D6752FB6F2727adebf76e0d5ba) with 1 rows (1.1 KiB) - /frames/commanded_lift - data columns: [/frames/commanded_lift@Transform3D:child_frame /frames/commanded_lift@Transform3D:parent_frame /frames/commanded_lift@Transform3D:quaternion /frames/commanded_lift@Transform3D:translation]\nChunk(chunk_18D435D67535862A727adebf76e0d5bb) with 1288 rows (33.7 KiB) - /metrics/elbow_load_raw - data columns: [/metrics/elbow_load_raw@Scalars:scalars]\nChunk(chunk_18D435D675EA8D24727adebf76e0d5bc) with 1289 rows (33.7 KiB) - /metrics/door_deg - data columns: [/metrics/door_deg@Scalars:scalars]\nChunk(chunk_18D435D676A382E1727adebf76e0d5bd) with 1289 rows (33.7 KiB) - /metrics/lip_height_cm - data columns: [/metrics/lip_height_cm@Scalars:scalars]\nChunk(chunk_18D435D677566243727adebf76e0d5be) with 1289 rows (33.7 KiB) - /metrics/shoulder_load_raw - data columns: [/metrics/shoulder_load_raw@Scalars:scalars]\nChunk(chunk_18D435D678051313727adebf76e0d5bf) with 1 rows (41.0 KiB) - /decision/target_fixed - data columns: [/decision/target_fixed@CoordinateFrame:frame /decision/target_fixed@Mesh3D:albedo_factor /decision/target_fixed@Mesh3D:triangle_indices /decision/target_fixed@Mesh3D:vertex_positions]\nChunk(chunk_18D435D6780A19A8727adebf76e0d5c0) with 1288 rows (33.7 KiB) - /metrics/arm_target_error_deg - data columns: [/metrics/arm_target_error_deg@Scalars:scalars]\nChunk(chunk_18D435D678B98BAD727adebf76e0d5c1) with 1 rows (711 B) - /metadata/meshes/decision__target_door - data columns: [/metadata/meshes/decision__target_door@TextDocument:text]\nChunk(chunk_18D435D678B9A7DF727adebf76e0d5c2) with 1 rows (41.0 KiB) - /decision/actual_fixed - data columns: [/decision/actual_fixed@CoordinateFrame:frame /decision/actual_fixed@Mesh3D:albedo_factor /decision/actual_fixed@Mesh3D:triangle_indices /decision/actual_fixed@Mesh3D:vertex_positions]\nChunk(chunk_18D435D678B9C017727adebf76e0d5c3) with 1 rows (712 B) - /metadata/meshes/decision__actual_fixed - data columns: [/metadata/meshes/decision__actual_fixed@TextDocument:text]\nChunk(chunk_18D435D678BEF87D727adebf76e0d5c4) with 1288 rows (33.7 KiB) - /metrics/target_door_deg - data columns: [/metrics/target_door_deg@Scalars:scalars]\nChunk(chunk_18D435D679753977727adebf76e0d5c5) with 1 rows (1.4 KiB) - /metadata/run - data columns: [/metadata/run@TextDocument:text]\nChunk(chunk_18D435D6797ABF13727adebf76e0d5c6) with 782 rows (62.1 KiB) - /robot/joints - data columns: [/robot/joints@CoordinateFrame:frame /robot/joints@Points3D:colors /robot/joints@Points3D:positions /robot/joints@Points3D:radii]\nChunk(chunk_18D435D67ACCBAF9727adebf76e0d5c7) with 1289 rows (33.7 KiB) - /metrics/shoulder_deg - data columns: [/metrics/shoulder_deg@Scalars:scalars]\nChunk(chunk_18D435D67B7F1029727adebf76e0d5c8) with 1 rows (1.1 KiB) - /frames/actual_lift/origin - data columns: [/frames/actual_lift/origin@CoordinateFrame:frame /frames/actual_lift/origin@Points3D:labels /frames/actual_lift/origin@Points3D:positions /frames/actual_lift/origin@Points3D:radii]\nChunk(chunk_18D435D67B7F45F2727adebf76e0d5c9) with 1 rows (1.1 KiB) - /frames/commanded_lift/origin - data columns: [/frames/commanded_lift/origin@CoordinateFrame:frame /frames/commanded_lift/origin@Points3D:labels /frames/commanded_lift/origin@Points3D:positions /frames/commanded_lift/origin@Points3D:radii]\nChunk(chunk_18D435D67B7F5945727adebf76e0d5ca) with 1 rows (711 B) - /metadata/meshes/decision__actual_door - data columns: [/metadata/meshes/decision__actual_door@TextDocument:text]\nChunk(chunk_18D435D67B83F171727adebf76e0d5cb) with 1288 rows (33.7 KiB) - /metrics/wrist_load_raw - data columns: [/metrics/wrist_load_raw@Scalars:scalars]\nChunk(chunk_18D435D67C3375C4727adebf76e0d5cc) with 1288 rows (33.7 KiB) - /metrics/torque_command - data columns: [/metrics/torque_command@Scalars:scalars]\nChunk(chunk_18D435D67CDFB52F727adebf76e0d5cd) with 1 rows (114 KiB) - /decision/actual_door - data columns: [/decision/actual_door@CoordinateFrame:frame /decision/actual_door@Mesh3D:albedo_factor /decision/actual_door@Mesh3D:triangle_indices /decision/actual_door@Mesh3D:vertex_positions]\nChunk(chunk_18D435D67CDFDCF3727adebf76e0d5ce) with 1 rows (712 B) - /metadata/meshes/decision__target_fixed - data columns: [/metadata/meshes/decision__target_fixed@TextDocument:text]\nChunk(chunk_18D435D67CE15BCF727adebf76e0d5cf) with 225 rows (801 KiB) - /tool/fixed - data columns: [/tool/fixed@CoordinateFrame:frame /tool/fixed@Points3D:colors /tool/fixed@Points3D:positions /tool/fixed@Points3D:radii]\nChunk(chunk_18D435D67D60DE96727adebf76e0d5d0) with 1 rows (114 KiB) - /decision/target_door - data columns: [/decision/target_door@CoordinateFrame:frame /decision/target_door@Mesh3D:albedo_factor /decision/target_door@Mesh3D:triangle_indices /decision/target_door@Mesh3D:vertex_positions]\nChunk(chunk_18D435D67D610603727adebf76e0d5d1) with 1 rows (1.1 KiB) - /frames/actual_lift - data columns: [/frames/actual_lift@Transform3D:child_frame /frames/actual_lift@Transform3D:parent_frame /frames/actual_lift@Transform3D:quaternion /frames/actual_lift@Transform3D:translation]\nChunk(chunk_18D435D680AE4E4A727adebf76e0d5d2) with 1207 rows (31.6 KiB) - /metrics/elbow_load_raw - data columns: [/metrics/elbow_load_raw@Scalars:scalars]\nChunk(chunk_18D435D6815EC83F727adebf76e0d5d3) with 1206 rows (31.6 KiB) - /metrics/door_deg - data columns: [/metrics/door_deg@Scalars:scalars]\nChunk(chunk_18D435D68215EFD2727adebf76e0d5d4) with 1206 rows (31.6 KiB) - /metrics/lip_height_cm - data columns: [/metrics/lip_height_cm@Scalars:scalars]\nChunk(chunk_18D435D682E02E9A727adebf76e0d5d5) with 1206 rows (31.6 KiB) - /metrics/shoulder_load_raw - data columns: [/metrics/shoulder_load_raw@Scalars:scalars]\nChunk(chunk_18D435D6839030A4727adebf76e0d5d6) with 1206 rows (31.6 KiB) - /metrics/arm_target_error_deg - data columns: [/metrics/arm_target_error_deg@Scalars:scalars]\nChunk(chunk_18D435D684452059727adebf76e0d5d7) with 1206 rows (31.6 KiB) - /metrics/target_door_deg - data columns: [/metrics/target_door_deg@Scalars:scalars]\nChunk(chunk_18D435D6850D7987727adebf76e0d5d8) with 1206 rows (31.6 KiB) - /metrics/shoulder_deg - data columns: [/metrics/shoulder_deg@Scalars:scalars]\nChunk(chunk_18D435D685CCD5F3727adebf76e0d5d9) with 1206 rows (31.6 KiB) - /metrics/wrist_load_raw - data columns: [/metrics/wrist_load_raw@Scalars:scalars]\nChunk(chunk_18D435D6868EAE9F727adebf76e0d5da) with 1206 rows (31.6 KiB) - /metrics/torque_command - data columns: [/metrics/torque_command@Scalars:scalars]\nChunk(chunk_18D435D68C9A7306727adebf76e0d5db) with 1279 rows (33.4 KiB) - /metrics/elbow_load_raw - data columns: [/metrics/elbow_load_raw@Scalars:scalars]\nChunk(chunk_18D435D68D4A9469727adebf76e0d5dc) with 1280 rows (33.5 KiB) - /metrics/door_deg - data columns: [/metrics/door_deg@Scalars:scalars]\nChunk(chunk_18D435D68E19B613727adebf76e0d5dd) with 1280 rows (33.5 KiB) - /metrics/lip_height_cm - data columns: [/metrics/lip_height_cm@Scalars:scalars]\nChunk(chunk_18D435D68E32BAB1727adebf76e0d5de) with 1279 rows (33.4 KiB) - /metrics/shoulder_load_raw - data columns: [/metrics/shoulder_load_raw@Scalars:scalars]\nChunk(chunk_18D435D68E496A08727adebf76e0d5df) with 1280 rows (33.5 KiB) - /metrics/arm_target_error_deg - data columns: [/metrics/arm_target_error_deg@Scalars:scalars]\nChunk(chunk_18D435D68E5FA847727adebf76e0d5e0) with 1280 rows (33.5 KiB) - /metrics/target_door_deg - data columns: [/metrics/target_door_deg@Scalars:scalars]\nChunk(chunk_18D435D68E7334A8727adebf76e0d5e1) with 1280 rows (33.5 KiB) - /metrics/shoulder_deg - data columns: [/metrics/shoulder_deg@Scalars:scalars]\nChunk(chunk_18D435D68E8550DD727adebf76e0d5e2) with 1280 rows (33.5 KiB) - /metrics/wrist_load_raw - data columns: [/metrics/wrist_load_raw@Scalars:scalars]\nChunk(chunk_18D435D68E974F39727adebf76e0d5e3) with 1280 rows (33.5 KiB) - /metrics/torque_command - data columns: [/metrics/torque_command@Scalars:scalars]\nChunk(chunk_18D435D68EAB6DD7727adebf76e0d5e4) with 131 rows (4.3 KiB) - /metrics/elbow_load_raw - data columns: [/metrics/elbow_load_raw@Scalars:scalars]\nChunk(chunk_18D435D68EAD14DB727adebf76e0d5e5) with 130 rows (4.3 KiB) - /metrics/door_deg - data columns: [/metrics/door_deg@Scalars:scalars]\nChunk(chunk_18D435D68EAEBFC8727adebf76e0d5e6) with 130 rows (4.3 KiB) - /metrics/lip_height_cm - data columns: [/metrics/lip_height_cm@Scalars:scalars]\nChunk(chunk_18D435D68EB0368B727adebf76e0d5e7) with 131 rows (4.3 KiB) - /metrics/shoulder_load_raw - data columns: [/metrics/shoulder_load_raw@Scalars:scalars]\nChunk(chunk_18D435D68EB1ACE1727adebf76e0d5e8) with 62 rows (9.9 KiB) - /events/commands - data columns: [/events/commands@TextLog:level /events/commands@TextLog:text]\nChunk(chunk_18D435D68EB2F650727adebf76e0d5e9) with 131 rows (4.3 KiB) - /metrics/arm_target_error_deg - data columns: [/metrics/arm_target_error_deg@Scalars:scalars]\nChunk(chunk_18D435D68EB49E07727adebf76e0d5ea) with 131 rows (4.3 KiB) - /metrics/target_door_deg - data columns: [/metrics/target_door_deg@Scalars:scalars]\nChunk(chunk_18D435D68EB64798727adebf76e0d5eb) with 130 rows (4.3 KiB) - /metrics/shoulder_deg - data columns: [/metrics/shoulder_deg@Scalars:scalars]\nChunk(chunk_18D435D68EB7E6D9727adebf76e0d5ec) with 131 rows (4.3 KiB) - /metrics/wrist_load_raw - data columns: [/metrics/wrist_load_raw@Scalars:scalars]\nChunk(chunk_18D435D68EB99489727adebf76e0d5ed) with 131 rows (4.3 KiB) - /metrics/torque_command - data columns: [/metrics/torque_command@Scalars:scalars]\n",
+    "stderr": "",
+    "ok": true
+  },
+  "entity_path_contract": {
+    "observed_all": [
+      "/__properties",
+      "/blueprint_panel",
+      "/container/757be3bc-8e18-430c-8751-d085956f6b64",
+      "/container/b5ababb9-b5f5-4585-b264-841a612bba11",
+      "/container/d1f80d61-979a-495b-ac74-635ed381b47c",
+      "/container/d4badd1c-8372-4999-8fbc-dd126fe88b9a",
+      "/coordinate_frames/world_m",
+      "/decision/actual_door",
+      "/decision/actual_fixed",
+      "/decision/target_door",
+      "/decision/target_fixed",
+      "/events/commands",
+      "/frames/actual_lift",
+      "/frames/actual_lift/origin",
+      "/frames/commanded_lift",
+      "/frames/commanded_lift/origin",
+      "/metadata/meshes/decision__actual_door",
+      "/metadata/meshes/decision__actual_fixed",
+      "/metadata/meshes/decision__target_door",
+      "/metadata/meshes/decision__target_fixed",
+      "/metadata/run",
+      "/metrics/arm_target_error_deg",
+      "/metrics/door_deg",
+      "/metrics/elbow_load_raw",
+      "/metrics/lip_height_cm",
+      "/metrics/shoulder_deg",
+      "/metrics/shoulder_load_raw",
+      "/metrics/target_door_deg",
+      "/metrics/torque_command",
+      "/metrics/wrist_load_raw",
+      "/robot/joints",
+      "/selection_panel",
+      "/time_panel",
+      "/tool/door",
+      "/tool/fixed",
+      "/view/23161eeb-578a-4c3e-8bf5-203d51893d29",
+      "/view/23161eeb-578a-4c3e-8bf5-203d51893d29/ViewContents",
+      "/view/41957b62-d96a-4f70-840c-0610ff144522",
+      "/view/41957b62-d96a-4f70-840c-0610ff144522/ViewContents",
+      "/view/50cf36ad-bfd1-41a3-8f19-50e64c44a828",
+      "/view/50cf36ad-bfd1-41a3-8f19-50e64c44a828/ViewContents",
+      "/view/5d83a0be-9945-40cf-a50e-62f1c8dc8b0b",
+      "/view/5d83a0be-9945-40cf-a50e-62f1c8dc8b0b/ViewContents",
+      "/view/c64c17f1-d6ce-42b6-b183-11557c05b531",
+      "/view/c64c17f1-d6ce-42b6-b183-11557c05b531/ViewContents",
+      "/view/fc232aa4-4cd9-41e3-ad1d-3b4b8a241fce",
+      "/view/fc232aa4-4cd9-41e3-ad1d-3b4b8a241fce/ViewContents",
+      "/viewport"
+    ],
+    "observed_non_system": [
+      "/coordinate_frames/world_m",
+      "/decision/actual_door",
+      "/decision/actual_fixed",
+      "/decision/target_door",
+      "/decision/target_fixed",
+      "/events/commands",
+      "/frames/actual_lift",
+      "/frames/actual_lift/origin",
+      "/frames/commanded_lift",
+      "/frames/commanded_lift/origin",
+      "/metadata/meshes/decision__actual_door",
+      "/metadata/meshes/decision__actual_fixed",
+      "/metadata/meshes/decision__target_door",
+      "/metadata/meshes/decision__target_fixed",
+      "/metadata/run",
+      "/metrics/arm_target_error_deg",
+      "/metrics/door_deg",
+      "/metrics/elbow_load_raw",
+      "/metrics/lip_height_cm",
+      "/metrics/shoulder_deg",
+      "/metrics/shoulder_load_raw",
+      "/metrics/target_door_deg",
+      "/metrics/torque_command",
+      "/metrics/wrist_load_raw",
+      "/robot/joints",
+      "/tool/door",
+      "/tool/fixed"
+    ],
+    "checks": {},
+    "forbidden_fragment_absent": {
+      "/\\/": true
+    },
+    "exact_non_system_match": true,
+    "missing_exact": [],
+    "unexpected_non_system": [],
+    "pass": true
+  },
+  "component_contract": {
+    "checks": {
+      "/tool/fixed": {
+        "required": [
+          "Points3D:positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true
+      },
+      "/tool/door": {
+        "required": [
+          "Points3D:positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Points3D:colors",
+          "Points3D:positions",
+          "Points3D:radii"
+        ],
+        "pass": true
+      },
+      "/metrics/door_deg": {
+        "required": [
+          "Scalars:scalars"
+        ],
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true
+      },
+      "/metrics/lip_height_cm": {
+        "required": [
+          "Scalars:scalars"
+        ],
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true
+      },
+      "/metrics/shoulder_deg": {
+        "required": [
+          "Scalars:scalars"
+        ],
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true
+      },
+      "/metrics/shoulder_load_raw": {
+        "required": [
+          "Scalars:scalars"
+        ],
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true
+      },
+      "/metrics/elbow_load_raw": {
+        "required": [
+          "Scalars:scalars"
+        ],
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true
+      },
+      "/metrics/wrist_load_raw": {
+        "required": [
+          "Scalars:scalars"
+        ],
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true
+      },
+      "/metrics/arm_target_error_deg": {
+        "required": [
+          "Scalars:scalars"
+        ],
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true
+      },
+      "/metrics/torque_command": {
+        "required": [
+          "Scalars:scalars"
+        ],
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true
+      },
+      "/metrics/target_door_deg": {
+        "required": [
+          "Scalars:scalars"
+        ],
+        "observed": [
+          "Scalars:scalars"
+        ],
+        "pass": true
+      },
+      "/decision/target_fixed": {
+        "required": [
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true
+      },
+      "/decision/target_door": {
+        "required": [
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true
+      },
+      "/decision/actual_fixed": {
+        "required": [
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true
+      },
+      "/decision/actual_door": {
+        "required": [
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "observed": [
+          "CoordinateFrame:frame",
+          "Mesh3D:albedo_factor",
+          "Mesh3D:triangle_indices",
+          "Mesh3D:vertex_positions"
+        ],
+        "pass": true
+      }
+    },
+    "pass": true
+  },
+  "timeline_contract": {
+    "observed": [
+      "blueprint",
+      "host_elapsed_s",
+      "log_time",
+      "sample"
+    ],
+    "checks": {},
+    "exact_match": true,
+    "pass": true
+  },
+  "footer_manifest_present": true,
+  "blueprint_verify": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "rrd",
+      "verify",
+      "--check-footers",
+      "true",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/torque790_01/visual_01/scoop.rbl"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "1 file verified without error.\n",
+    "ok": true,
+    "attempted": true,
+    "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/torque790_01/visual_01/scoop.rbl",
+    "bytes": 63580,
+    "sha256": "94652aef08f30b84a5d15f6d5cb0a1c7d103e95e09ed18fab9b5eaf4a4850429"
+  },
+  "headless_render": {
+    "command": [
+      "/home/cgxr/miniconda3/envs/isaaclab/bin/rerun",
+      "--headless",
+      "--window-size",
+      "2800x1800",
+      "--screenshot-to",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/torque790_01/visual_01/scoop_rerun.png",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/torque790_01/visual_01/scoop.rrd"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "2026-09-11T08:09:08.199239Z  INFO re_perf_telemetry::telemetry: Telemetry initialized enabled=false service=rerun trace_mode=\"off\" traces=off logs=off metrics=off tracy=false\n2026-09-11T08:09:08.423109Z  INFO re_grpc_server: Listening for gRPC connections on 0.0.0.0:9876. Connect by running `rerun --connect rerun+http://127.0.0.1:9876/proxy`\n2026-09-11T08:09:08.423349Z  INFO re_importer::import_file: Loading \"/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/torque790_01/visual_01/scoop.rrd\"\u2026\n2026-09-11T08:09:08.552677Z  INFO re_viewer::headless: Headless viewer running at 2800x1800.\n2026-09-11T08:09:08.940510Z  INFO re_viewer::screenshotter: Screenshot saved to \"/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/torque790_01/visual_01/scoop_rerun.png\"\n2026-09-11T08:09:08.962221Z  INFO re_viewer::screenshotter: Screenshot copied to clipboard\n2026-09-11T08:09:08.968008Z  INFO re_viewer::headless: Headless viewer received close request, shutting down.\n",
+    "ok": true,
+    "attempted": true,
+    "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/torque790_01/visual_01/scoop_rerun.png",
+    "file_nonzero": true,
+    "bytes": 7686377,
+    "sha256": "909dad9e5fc68856227929156f425e626267b573a6f25093b5032df5e93981c9"
+  },
+  "errors": [],
+  "pass": true,
+  "coverage_readback": {
+    "/tool/fixed": {
+      "pass": true,
+      "rows": 3905,
+      "expected": 3905
+    },
+    "/tool/door": {
+      "pass": true,
+      "rows": 3905,
+      "expected": 3905
+    },
+    "/robot/joints": {
+      "pass": true,
+      "rows": 3905,
+      "expected": 3905
+    },
+    "/metrics/door_deg": {
+      "pass": true,
+      "rows": 3905,
+      "expected": 3905
+    },
+    "/metrics/lip_height_cm": {
+      "pass": true,
+      "rows": 3905,
+      "expected": 3905
+    },
+    "/metrics/shoulder_deg": {
+      "pass": true,
+      "rows": 3905,
+      "expected": 3905
+    },
+    "/metrics/shoulder_load_raw": {
+      "pass": true,
+      "rows": 3905,
+      "expected": 3905
+    },
+    "/metrics/elbow_load_raw": {
+      "pass": true,
+      "rows": 3905,
+      "expected": 3905
+    },
+    "/metrics/wrist_load_raw": {
+      "pass": true,
+      "rows": 3905,
+      "expected": 3905
+    },
+    "/metrics/arm_target_error_deg": {
+      "pass": true,
+      "rows": 3905,
+      "expected": 3905
+    },
+    "/metrics/torque_command": {
+      "pass": true,
+      "rows": 3905,
+      "expected": 3905
+    },
+    "/metrics/target_door_deg": {
+      "pass": true,
+      "rows": 3905,
+      "expected": 3905
+    }
+  }
+}
