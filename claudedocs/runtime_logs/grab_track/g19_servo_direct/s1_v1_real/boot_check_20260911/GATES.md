@@ -20,7 +20,7 @@ Scope: User readiness authorizes the previously explained sequence: raw feedback
 
 - [ ] G6: The user-authorized single release tilt has a verified joint path and an actual paired before/after delivered-mass and residue observation, or an observed failure with no unvalidated follow-up motion.
   EVIDENCE: User “진행해” authorizes the proposed790→release-tilt→fixed-condition5 sequence. Post-photo physical setup answer pending. Conceptual outlet5deg is not an executable path.
-- [ ] G7: The requested project commit is pushed to the verified origin/master and the remote commit hash matches the local commit, with required evidence accessible and local originals preserved.
-  EVIDENCE: Repository /home/cgxr/Documents/Robotics/RoArm_Project; origin git@github.com:jaehyeond/RoArm_Project.git; master tracks origin/master; remote and local pre-work commit d41c258782da49492f0474b76d110454224597f3. Public repository, ADMIN permission. Oversize W10 RRD needs Git LFS; no push yet.
+- [x] G7: The requested project commit is pushed to the verified origin/master and the remote commit hash matches the local commit, with required evidence accessible and local originals preserved.
+  EVIDENCE: Artifact commit52cc20cd7af500e92fbfb4692301839cf4d51527 pushed rc0 to git@github.com:jaehyeond/RoArm_Project.git master; independent git ls-remote and local HEAD matched. LFS14/14 originals uploaded, post-commit git lfs fsck PASS. Original1008 staged byte checks and canonical manifest88 entries PASS; final artifact commit1013 files includes audit reports. Details git_publish_01/push_result_01.json. External pile/W9 MP4 exclusions are explicit in README. This verification is published in a following ordinary documentation commit; no force push.
 
 These are staged hardware/manual gates. No CHECK may initiate or repeat robot motion. Artifact checks will be defined after the observation schema is concrete.

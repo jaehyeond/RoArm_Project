@@ -27,3 +27,9 @@ Git 읽기 확인: main worktree /home/cgxr/Documents/Robotics/RoArm_Project, br
 공백 검사는 CRLF를 줄 끝으로 인정한 뒤에도 기존 생성 OBJ의 마지막 빈 줄과 동결 Python/diff에108개 경고(rc2)가 남았다. 보고서에 보존하고 해당 원본을 정규화하지 않았다. 새 제어 코드/상태 편집의 검사는 별도로 시행한다. 전체 공백 검사 PASS라고 보고하지 않는다.
 
 Git LFS와 원시 증거의 `-text` 속성은 원본 바이트를 유지한다. 무관한 로컬 g16 폴더·발표자료·print 도구·백업과 외부 worktree 입력은 이번 게시에 포함하지 않는다. 물리 입력 대기 중 확인된 산출물부터 게시하고, 실제 후속 실험 결과는 생긴 뒤 별도 추가한다.
+
+## 게시 결과와 남은 실기
+
+산출물 커밋 `52cc20cd7af500e92fbfb4692301839cf4d51527`(1013파일)을 `git push origin master`로 게시했다. rc0, LFS14/14·표시244MB 업로드 완료. 직후 별도 `git ls-remote origin refs/heads/master`, local HEAD, origin/master 세 값 모두 같은 해시였다. 커밋 후 `git lfs fsck` rc0/PASS. 새 상태/제어 파일 공백 검사 rc0. 근거는 `git_publish_01/push_result_01.json`; 이 확인 기록은 후속 일반 문서 커밋으로 게시한다. force push/이력 재작성/파일 삭제0.
+
+현재 완료4항목: 원시 피드백, 기존 실기 준비 확인, PID 비교, Git 게시. 미완료3항목:790 대조, 조건 고정 질량5회, 실제 배출 기울임. 포기0. 다음 입력은 사진 이후 잔류 제거·기존 배치/경로 정리 여부와 컵 안지름·같은 바닥에서 잰 컵 테두리 높이(cm)다. 기존 승인으로 이어서 실행하며 추가 실행 허가를 다시 받는 단계가 아니다. 신규 실기/학습이 없으므로 원장에 성공 실험을 추가하거나 새 Dxxx 교훈을 만들지 않았다.

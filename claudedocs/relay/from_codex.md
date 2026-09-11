@@ -43,6 +43,8 @@ Codex가 repo 파일에 남기지 않은 판단·시도·실패는 그대로 소
 
 **추가 변경**: `session_20260911_790_tilt_mass_git.md`, `pre790_feedback_01/`, `git_publish_01/`, `.gitattributes`, `.gitignore`. 기존 LFS pre-push hook을 사용하며 새 hook 설치 없음. 원시 CSV의 CRLF와 동결 소스/OBJ/diff의 기존 공백은 원본 해시 보존을 위해 그대로 둔다.
 
+**Git 인계 주의**: origin은 `git@github.com:jaehyeond/RoArm_Project.git`, 현재 branch는 master다. 사용자 요청으로 산출물을 게시했고 해시 증거는 `git_publish_01/push_result_01.json`에 둔다. 확인 문서는 그 뒤 일반 커밋으로 게시한다. LFS checkout 후 원본 SHA256으로 기존 manifest를 검증하며 pointer 바이트와 비교하지 말 것. 새790/기울임/5회 실기를 완료했다고 해석하면 안 된다.
+
 **만지지 말 것**: 기존 W1~W10 결과/자산/params·사용자 Manual 원본·이전 원시 기록. 첫 실패/수정 전 실험도 원인 증거라 보존. 설치 SDK/펌웨어는 변경하지 않았다. 사용자 “진행해. 그리고 나서 지금 git 제대로 된 위치에 push해봐”로 후속 실기 및 commit/push 요청 있음. 다른 Orca worktree 브랜치·무관한 g16/출력 모니터/발표자료 변경은 이번 게시에서 제외하고 로컬 보존.
 
 **함정**: `hw_s1_manual.goto_q`가 T122에 측정 문각을 넣어 닫힘0° 목표를 완화한다. 새 기록 어댑터의 명시 T121 목표 유지 수정은 모의검사와 수정900_03 실제 송신 검증까지 끝났다. 기존 Manual REPL은 수정 안 했으므로 그대로 돌아가면 교란이 반복된다. 새 어댑터의 기록 메서드는 record; SDK log는 Logger 객체. 설치 roarm env Rerun0.26.2 대신 isaaclab의0.34.1을 분석에 사용하고 CLI PATH를 지정한다. PID 정본 시각화는 visual_02, scoop은 visual_01; 첫 커서/정적 decision 패널의 한계는 inspection 참조.
