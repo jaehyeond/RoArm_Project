@@ -39,24 +39,14 @@ Codex가 repo 파일에 남기지 않은 판단·시도·실패는 그대로 소
 
 ## §2 2026-09-11 Codex → Claude
 
-**최신 실행 파일/함정**: `hw_release_roll_test.py`, `analysis_release_run.py`, `torque790_01/`, `release_roll_01/`, `session_20260911_790_tilt_execution.md`. 롤 시험의 result.completed=false는 사용자 사진/방향 질문 후 의도적 Ctrl-C 종료다. **P1 복귀를 전제한 scoop 시작 금지**: 현재 마지막 자세/다음 행동은 START_HERE 정본. 포트는 닫혔으며 백그라운드 로봇 프로세스 없음. 측정 대기 프롬프트는 더 이상 실행 중이 아니다.
+**만진 파일**: `boot_check_20260911/{plan_outlet_tilt.py,render_outlet_plan.py,hw_outlet_tilt.py,analysis_outlet_run.py,verify_outlet_tilt.py,hw_recorded_arm.py,outlet_tilt_01/}` 및 세션/START/LEDGER/색인. 기존 실행 사본은 보존. `RecordedArm`는 선택적 인스턴스 검증기만 추가했고 기본 guard는 유지된다.
 
-**사진/계량 해석 함정**: 이번 컵 포함22.28g과 약0.05g tare는 이번 사용자 입력이다. 예전9.65g 사진 tare로 덮어쓰지 말 것. 회전 전 “아까랑 똑같아”는22.28g 유지로 해석해 원문/해석을 남겼다. 회전 후 저울값은 받지 못했고 사진 표시도 가려져 null이다. 사진 잔류를 추가 배출0g으로 변환하지 말 것. 단일 롤은 명목 출구5° 기울임이 아니다.
+**함정**: 실기 동결 `execution_01/hw_outlet_tilt.py`는 result.completed=false여도 shell0을 반환한다. 정본은 실패2로 수정했고 가짜 로봇 마지막5.01도 편차 회귀가 PASS. 성공 여부는 항상 result/원시 settle을 읽을 것. 실제 마지막 자세는 START 정본이며 HOME/P1로 추정하지 않는다. 이전 place/roll 드라이버에 현재 자세를 넣으면 안 된다.
 
-**시각화 인계**: `release_roll_01/visual_01/`은 전체 실제 타임라인/RRD readback. 첫 overview screenshot의 빈/작은 패널 한계를 inspection에 기록했다. 근접 방향 검수는 `direction_visual_01/`이며 before/after는 실제, ideal_outward5만 미실행 개념이다. 원본/첫 화면/새 화면은 모두 보존한다.
+**자료 함정**: S1은 g18 크랭크가 제거된 직결형. 그 사실과 새 경로 CAD검사를 생략하고 예전g18±14도 또는 새 임의롤범위로 일반화 금지. nominal IK/CAD만 컵/실제접촉 보증으로 확대하지 않는다. 계획·실제 RRD는 별도 폴더이고 사전 plan이 실제20도 달성 증거는 아니다. after 질량이 없으면 기존22.28g를 새 after값으로 대입하지 않는다.
 
-**한 일 (repo 변경)**: W10 실행/관측 완료 후 기존 영상 워커/W9/W10 검토. 이어 `session_20260911_real_boot_measurement.md`, `s1_v1_real/boot_check_20260911/`의 원시 수집·PID 분석/Rerun·실물 scoop 기록 및 문 목표 정책 수정. D484/LEDGER584 이후 사진 계량 후속 LEDGER585·색인/START_HERE 갱신. `torque900_03/operator_photos/`·`operator_measurement_01.json/CSV`·`MEASUREMENT_01.md` 추가. 이어 `release_tilt_review_01/`·`session_20260911_release_tilt_review.md`에 배출 회전축 검토와 별도 RRD 시각 증거를 추가했다. 각 폴더의 plan/source 사본·manifest를 참조.
+**만지지 말 것**: W1~W10/원시 PID/과거900·790·roll원본·실행별동결소스. 실기 완료 뒤 새 PID/보호값/형상 변수는 추가하지 않았다. 루트 oldManual도 그대로다. Rerun0.34.1 분석은 isaaclab, 하드웨어는roarm을 유지한다.
 
-**추가 변경**: `session_20260911_790_tilt_mass_git.md`, `pre790_feedback_01/`, `git_publish_01/`, `.gitattributes`, `.gitignore`. 기존 LFS pre-push hook을 사용하며 새 hook 설치 없음. 원시 CSV의 CRLF와 동결 소스/OBJ/diff의 기존 공백은 원본 해시 보존을 위해 그대로 둔다.
+**승인/입력 경계**: 사용자 다음 동작과 앞서 commit/push를 명시 요청했다. 반복 실행승인 질문은 필요 없다. 현재 필요한 것은 사용자 후 질량/잔류 사실 입력이다. 자동 복귀/5회수집 완료로 해석하지 않는다. 대시보드의 시작 자세와 다음 단계를 먼저 읽는다.
 
-**Git 인계 주의**: origin은 `git@github.com:jaehyeond/RoArm_Project.git`, 현재 branch는 master다. 사용자 요청으로 산출물을 게시했고 해시 증거는 `git_publish_01/push_result_01.json`에 둔다. 확인 문서는 그 뒤 일반 커밋으로 게시한다. LFS checkout 후 원본 SHA256으로 기존 manifest를 검증하며 pointer 바이트와 비교하지 말 것. 새790/기울임/5회 실기를 완료했다고 해석하면 안 된다.
-
-**만지지 말 것**: 기존 W1~W10 결과/자산/params·사용자 Manual 원본·이전 원시 기록. 첫 실패/수정 전 실험도 원인 증거라 보존. 설치 SDK/펌웨어는 변경하지 않았다. 사용자 “진행해. 그리고 나서 지금 git 제대로 된 위치에 push해봐”로 후속 실기 및 commit/push 요청 있음. 다른 Orca worktree 브랜치·무관한 g16/출력 모니터/발표자료 변경은 이번 게시에서 제외하고 로컬 보존.
-
-**함정**: `hw_s1_manual.goto_q`가 T122에 측정 문각을 넣어 닫힘0° 목표를 완화한다. 새 기록 어댑터의 명시 T121 목표 유지 수정은 모의검사와 수정900_03 실제 송신 검증까지 끝났다. 기존 Manual REPL은 수정 안 했으므로 그대로 돌아가면 교란이 반복된다. 새 어댑터의 기록 메서드는 record; SDK log는 Logger 객체. 설치 roarm env Rerun0.26.2 대신 isaaclab의0.34.1을 분석에 사용하고 CLI PATH를 지정한다. PID 정본 시각화는 visual_02, scoop은 visual_01; 첫 커서/정적 decision 패널의 한계는 inspection 참조.
-
-**승인/입력 경계**: 연결 준비 완료/기존 배치/계속 초기자세·제대로 진행/PID 데이터 수집 지시가 있다. 실물 순차 절차의 재승인은 불필요. 수정900_03 컵 질량/잔류 사진 입력은 기록했다. 기존 measurement_context.json은 답변 전 null 역사 사본이며 새 operator_measurement_01.json을 읽는다. 다음 운동 전 필요한 입력은 사진 촬영 후 실물 배치 복구와 잔류 제거 여부다; 직전 종료 자세를 현재 자세로 추정하지 말 것. 구체적 단계/자세/남은 범위는 START_HERE 정본. 외부 sim변수·학습·펌웨어 변경은 이 승인에 포함되지 않는다.
-
-**배출 검토 함정**: 새 검토의 ideal_outward5는 그랩 전체의 이상적인 자세이며 실행할 손목 명령이 아니다. 실제 입자 배출을 시험하지 않았다. 첫 RRD의 출구면 가림을 보완한 고정 jaw 안쪽 검수 정본은 `release_tilt_review_01/visual_02/`; 첫 결과도 보존한다.
-
-**검증 방법**: `boot_check_20260911/verify_pid.py`는 장치 없는 파일 감사. `verify_recorded_arm.py`는 가짜 접촉 시리얼 회귀(실기0). RRD validation/inspection/manifest 및 원장 append_integrity를 확인한다. 첫 실행 소스 사본과 수정본을 섞지 말 것. 백그라운드 실물 프로세스는 종료했고 포트는 닫았다.
+**검증 방법**: `verify_recorded_arm.py`, `verify_outlet_tilt.py`는 fake serial만 사용한다. execution command_audit/result/raw, Rerun validation/inspection, manifest를 읽는다. git origin/master가 올바른 게시 대상이며 임의 다른worktree로 옮기지 않는다.

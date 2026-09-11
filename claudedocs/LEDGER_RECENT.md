@@ -1,6 +1,8 @@
 # LEDGER_RECENT.md — 최근 실험 20건 요약 (부팅 read)
 
-Last updated: 2026-09-11 (Codex790/잔류 롤 실기) — 원본 `EXPERIMENT_LEDGER.md` 588줄. 원장 prefix 보존 검증.
+Last updated: 2026-09-11 (출구 기울임 실기) — 원본 `EXPERIMENT_LEDGER.md` 589줄. 원장 prefix 보존 검증.
+
+- **`:589` 출구20도 목표 실제 시험** —2935행·58.14초, 출구 경사7.76→22.00도. 마지막 어깨 편차5.01458도>5도로 정지; 현재 문 열린 롤90/기울임 자세, P1 아님. 후 무게/잔류null. `outlet_tilt_01/REPORT.md`, `session_20260911_790_tilt_execution.md`.
 
 - **`:588` 잔류 롤−5° 실기** — 실제−4.66° 회전했으나 출구 경사는+0.257°만 변화. 사진에 잔류, 후 무게 미입력. 문 열린 배출 자세에서 중단·포트 닫음, P1 복귀 아님. 올바른 출구 기울임 경로 재검토. `session_20260911_790_tilt_execution.md`.
 

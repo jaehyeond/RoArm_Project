@@ -1,0 +1,40 @@
+{
+  "n_feedback": 2935,
+  "duration_s": 58.143003017,
+  "max_receive_gap_s": 0.034842525999998486,
+  "raw_sha256": "609d12346121a8f8e9efd24a5799e2c24b734fc7184e7a1d9029f95551f80f79",
+  "geometry_sha256": {
+    "local_assets/roarm_m3/urdf/meshes/s1_v1_fixed.stl": "2fea1c37b63ff36e4647675198b9b04e2b55becae3d84edbc0f84aa928ef1741",
+    "local_assets/roarm_m3/urdf/meshes/s1_v1_door.stl": "880547d19d611cacfbd8577f21e5dd382d9fed1e852987a1e753d1bb8d2f3098"
+  },
+  "completed": false,
+  "experiment": "open_residual_outlet_tilt20",
+  "stop_reason": "RuntimeError('settled pose outside gate; hold')",
+  "final_phase": "tilt_40",
+  "before_alignment_roll_deg": -4.746093776022332,
+  "after_alignment_roll_deg": 89.64843752043431,
+  "actual_alignment_roll_change_deg": 94.39453129645665,
+  "before_outlet_slope_deg": 7.7620599924847475,
+  "after_outlet_slope_deg": 22.001691616779308,
+  "outlet_slope_change_deg": 14.23963162429456,
+  "door_before_after_deg": [
+    29.267578137827087,
+    29.267578137827087
+  ],
+  "lip_displacement_mm_fk": [
+    -8.107928287836733,
+    -5.505418631610803,
+    32.789812337660095
+  ],
+  "operator_measurements": {},
+  "additional_delivered_mass_g": null,
+  "tG_present_count": 0,
+  "scientific_authority": "raw.jsonl and actual transmitted commands; geometry is URDF reconstruction",
+  "limits": [
+    "No camera, contact-force, temperature, current or target-register measurement.",
+    "Residual pellets from previous790 trial; no independently measured initial count. Delayed release and cup handling remain confounds.",
+    "Native receive rows all exported; timestamps are host receipt, not servo clock.",
+    "Door geometry uses existing real replay SDK-degree to URDF convention; physical zero/contact not recalibrated.",
+    "Target reference before first T122 is initial observation, not target register; torque -1 means not yet commanded."
+  ]
+}
