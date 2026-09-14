@@ -1,11 +1,11 @@
 # START_HERE.md
 
-Last updated: 2026-09-14 — 실행시간·최적화·학습 전략의 출력용 Markdown과 새 세션 재개 문서를 작성했다. 사용자 명시 승인으로 main/Orca commit·push 검수 진행 중. 최신 [session_20260914_research_closeout_git.md](claudedocs/session_20260914_research_closeout_git.md). W13 TIMEOUT/원자료 FAIL2/재생 FAIL3·D484 유지, 새 연구 실행 없음.
+Last updated: 2026-09-14 22:24 KST — 출력용 Markdown·새 세션 재개 안내 전달/검수 및 main+6 worker의 로컬 커밋 완료. **원격 push는 미완료**: 작업 branch 전송은 SSH 종료 뒤 rc141, 메인 push는 자동 보안검토가 목적지/자료 범위의 명시 확인을 요구해 차단했다. 최신 [session_20260914_research_closeout_git.md](claudedocs/session_20260914_research_closeout_git.md). W13 TIMEOUT/원자료 FAIL2/재생 FAIL3·D484 유지, 새 연구 실행 없음.
 
 ## Active Case — single source of truth
 
-- **설명·재개 인계·Git 게시**: 이번 case의 신규 변수: []. 새 문서는 `research/closeout_20260914/20260915_W13결과_실행시간_최적화와학습전략_출력용.md`이며 Downloads 사본 전달. 새 세션은 [CONTINUE_20260914_W13_REPAIR_PERFORMANCE.md](claudedocs/CONTINUE_20260914_W13_REPAIR_PERFORMANCE.md)의 순서로 재개한다. 현재 연구 코드 수정/물리/렌더/학습 실행은 하지 않으며, 다음 수정 case도 아직 시작하지 않았다.
-- **Git 권한 정정**: 최신 사용자 요청이 이번 자료 게시에 한해 commit/push를 명시 승인했다. 메인과6개 dirty worker branch를 따로 보존하며 임의 merge하지 않는다. 정확한 커밋·원격 확인·제외 파일은 [GIT_PUBLICATION.md](claudedocs/research/closeout_20260914/GIT_PUBLICATION.md). 과거 문서의 commit/push0은 당시 기록이지 이번 승인 취소가 아니다.
+- **설명·재개 인계 완료 / 원격 게시 승인 대기**: 이번 case의 신규 변수: []. 새 문서는 `claudedocs/research/closeout_20260914/20260915_W13결과_실행시간_최적화와학습전략_출력용.md`이며 Downloads 사본과21,977bytes/SHA256일치. 새 세션은 [CONTINUE_20260914_W13_REPAIR_PERFORMANCE.md](claudedocs/CONTINUE_20260914_W13_REPAIR_PERFORMANCE.md)의 순서로 재개한다. 현재 연구 코드 수정/물리/렌더/학습 실행은 하지 않으며, 다음 수정 case도 아직 시작하지 않았다.
+- **Git 권한/남은 작업**: 최신 사용자 요청으로 로컬main+6worker를 각각커밋했다. 이후자동검토가 기존공개목적지 `git@github.com:jaehyeond/RoArm_Project.git`의master+해당6branch에 연구코드/문서/원자료/영상·LFS고유약3.32GB를 보내는범위확인을요구했다. 사용자에게명시질문했고답전새push금지·우회금지. 최초작업branchpush도rc141로끝나원격branch0개생성, 원격master는3267dcb그대로다. 정확한커밋·검수·제외파일은 [GIT_PUBLICATION.md](claudedocs/research/closeout_20260914/GIT_PUBLICATION.md). 승인후에만기존LFS업로드객체를재사용하는정상push재시도·원격SHA대조. merge/force/delete0.
 - **시간 개념 설명 문서 추가 전달 — 완료**: 이번 case의 신규 변수: []. `/home/cgxr/Downloads/20260915_Hz_dt_관측창_시간개념_설명_출력용.md`에 직전 설명의 8개 절·계산 예시·비교표·근거 링크를 보존했다. repo 사본은 `claudedocs/research/labmeeting_20260915/downloads_20260914/time_concepts/`이며 222줄/13,447bytes, 두 파일의 cmp/SHA256 일치. Markdown 전달이며 실제 인쇄/PDF 제작은 하지 않았다.
 - **랩미팅 문서 전달 — 완료**: 이번 case의 신규 변수: []. Downloads의 `20260915_입자물리_DEME_Isaac_PBD_설명_출력용.md`는 직전 설명 본문 보존, `20260915_랩미팅PPT_연구실PC_제작인계.md`는 실제 초안6장→새본문8장 매핑·본문/노트/캡션·복사 경로·제작자 프롬프트를 포함한다. 원본 PPT SHA59d08134…b61c9 보존, PPT 제작·미디어 복사·연구실PC 접속은 하지 않았다.
 - 최신 전달본/검증은 `claudedocs/research/labmeeting_20260915/downloads_20260914/`. 필수미디어6개18,226,968bytes·선택포함12개30,102,228bytes. 모든자산SHA·영상5개메타·로컬링크26개대조, 사진3개/W12PNG3개직접검수 후 배열사진2개채택. 실제NPZ 포획/질량 재계산 및 Downloads2개 바이트일치. 상세 검증기는 read-only `verify_delivery.mjs`.

@@ -6,7 +6,7 @@
 
 | worktree / branch | 이번 보존 대상 | 커밋 |
 |---|---|---|
-| main / master | W11 원자료, W12/W13 감독 기록, 실물 종료 관찰, 발표·Downloads 문서, 최신 상태·relay | 메인 게시 후 아래 기록 |
+| main / master | W11 원자료, W12/W13 감독 기록, 실물 종료 관찰, 발표·Downloads 문서, 최신 상태·relay | 672fab2 (자료 커밋; 종료 기록은 후속 커밋) |
 | pellet-model / jaehyeond/pellet-model | 측정 펠릿/더미 구현·원자료, 물리 발표 조사 | 26966ea |
 | research-survey / jaehyeond/research-survey | 연구 조사와 PPT 구성 브리핑 | 9888de4 |
 | w12-input-audit / jaehyeond/w12-input-audit | W12 입력 독립 감사 | aecb468 |
@@ -42,4 +42,13 @@ worker 브랜치는 master에 병합하지 않았다. 특히 오래된 worker의
 
 ## 사후 게시 기록
 
-작업 브랜치 커밋은 완료했고 원격 전송 결과를 확인 중이다. 메인은 문서·상태·검수 결과를 모은 뒤 커밋한다. 최종 성공/실패와 원격 SHA 대조는 아래에 실제 결과가 나온 뒤 기록한다.
+**원격 게시 미완료 — 로컬 커밋 보존, 사용자 확인 대기.**
+
+- 자료 커밋: main `672fab2738cf42f053d0c5e12d5b37fe77953142` 및 위6worker커밋. 전체 stage3,394파일·Python961개구문오류0·원본바이트불일치0·LFS포인터1,016개/고유982개. 일반Git최대blob2,364,241bytes. 7개branch의 `git lfs fsck --objects` 모두PASS.
+- 첫 작업branch6개 atomic push는 LFS전송 중 `Connection to github.com closed by remote host.`를 출력했고 최종rc141로종료했다. 전송프로세스종료확인. 일부객체가원격에전송됐을수있지만 객체별최종업로드완료를확인하지못했으며 branch게시성공으로세지않는다.
+- 메인 push 요청은 실행 전에 자동보안검토가거부했다. 사유는 기존공개원격과 원자료/영상LFS를포함한payload의구체적인승인확인요구다. 이명령은실행되지않았다. 거부된명령을스크립트나우회경로로실행하지않았다.
+- 사용자에게 정확히 `git@github.com:jaehyeond/RoArm_Project.git`의 master 및 해당6workerbranch, 연구코드·상태문서·W11/W12/W13원자료·영상·검수증거(고유LFS약3.32GB) 게시를확인요청했다. 답전새push하지않는다. 알려진민감정보후보5개는검사fixture/성공표식으로판명됐지만자동보안거부를임의로무시하지않는다.
+- 22:24KST의사후 `git ls-remote --heads origin`: master는여전히 `3267dcb38369f01bb77b923066a89ca92060691d`, 대상worker6개원격ref없음. 기존 `docs/readme`는변경하지않았다. 따라서 이번작업을원격백업완료로보고하면안된다.
+- 명시확인후재시도할때는SSH keepalive를명령범위로적용하는방법을검토하고(전역설정/.ssh편집금지), 이미전송된LFS객체는재사용한다. forcepush없이ref대조와 `verify_closeout.mjs publication`을통과해야게시완료다. 이번실패로시뮬레이션을재실행할이유는없다.
+
+문서검수는 delivery/continuation/numbers PASS다. publication 검사는실제로 `Remote mismatch master`를검출했다. 처음 gate 실행은 CWD를 ledger상대경로로잘못해석해 모듈찾기FAIL이났고, repo절대경로로정정한뒤앞의3검사를통과했다. 미완료게시게이트는PASS로바꾸지않았다.

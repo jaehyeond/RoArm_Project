@@ -27,3 +27,13 @@ worker6개의 각 branch를 그대로 게시한다. 특히 pellet-model의 옛 B
 ## 결과 기록
 
 세부 게시 파일·브랜치·제외 목록과 검수 결과는 `research/closeout_20260914/GIT_PUBLICATION.md` 및 `PUBLICATION_MANIFEST.json`에서 관리한다. 이 절은 실제 전달/게시 후 append한다.
+
+### 22:24 KST 종료 검수와 남은 게시
+
+Downloads 새문서는181줄·21,977bytes·SHA256 `c5bb9b81159784ff5a3cd0a2f984ef59414f381af3807df971f4c399ef0b296c`, repo사본과바이트일치다. 설명로컬링크13/continuation10실재, W13원시NPZ/JSON·부분영상·원본PPT4해시유지. 숫자검사에서16,304sync/283PF·24.486802938176766초·파생24,486,803스텝/10회3.61328일·40회14.45313일을원자료로재계산했다. 새로운성능실험이아니다.
+
+main자료커밋672fab2 및worker6개커밋완료. 3,394파일의stage바이트대조불일치0, Python961구문오류0, LFS포인터1,016/고유982·약3.32GB. 7branch의로컬LFS fsck PASS. 원본과모든동결실패자료변경0이며새LFS속성만붙였다.
+
+원격push는미완료다. 최초worker6branch atomic push는LFS전송중SSH연결이종료돼최종rc141. 메인push명령은목적지/전송범위추가확인을요구하는자동보안검토거부로실행되지않았다. 사용자가원래commit/push를요청했다는사실은보존하되검토거부를우회하지않았고, 정확한공개origin과원자료/영상범위를질문했다. 현재답전재시도하지않는다. 사후원격master3267dcb·대상workerref없음을확인했으므로백업완료라고보고하지않는다.
+
+게이트초기실행은CWD상대경로해석오류로모듈찾기FAIL, 절대repo경로로정정후delivery/continuation/numbers PASS. publication은실제Remote mismatch master를검출했다. 원격게시미완료는사용자승인후이어갈명시인계로남긴다. 종료상태/이보고는후속로컬문서커밋으로보존하며승인전새push없음. 원장/DECISIONS의새실험추가0, 상태소유권은종료후다음세션에인계한다.
