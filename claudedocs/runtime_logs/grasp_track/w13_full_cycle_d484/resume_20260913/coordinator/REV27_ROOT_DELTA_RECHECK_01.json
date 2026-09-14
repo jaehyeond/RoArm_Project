@@ -1,0 +1,256 @@
+{
+  "artifact": "W13_REV27_REFERENCE_RELEASE_DELTA_AUDIT_V1",
+  "generated_utc": "2026-09-13T11:30:57Z",
+  "n_findings": 16,
+  "n_pass": 16,
+  "failures": [],
+  "verdict": "CPU_PREFLIGHT_GO_FOR_ONE_SEPARATELY_AUTHORIZED_READINESS16",
+  "findings": [
+    {
+      "name": "rev27_outer_26_rehash",
+      "pass": true,
+      "evidence": {
+        "pin_sha256": "a631bb8bfc4faa4723fba3f63bdfee8ed0c0320292f8b246ab20e0ec482ae1b4",
+        "n": 26,
+        "mismatches": []
+      }
+    },
+    {
+      "name": "only_two_sources_plus_forward_paths_changed",
+      "pass": true,
+      "evidence": {
+        "changed_excluding_commands": [
+          "src/close_diagnostics.py",
+          "src/isaac_replay_w13.py"
+        ],
+        "commands_equal_after_rev27_to_rev25": true
+      }
+    },
+    {
+      "name": "rev27_is_camera_observation_only_behavioral_delta_from_preserved_rev26",
+      "pass": true,
+      "evidence": {
+        "byte_changed_excluding_commands": [
+          "src/close_diagnostics.py",
+          "src/isaac_replay_w13.py"
+        ],
+        "close_diagnostics_ast_identical_comment_only": true,
+        "renderer_behavioral_change": "adds camera_side/camera_top observation targets"
+      }
+    },
+    {
+      "name": "exact_owner_observation_targets",
+      "pass": true,
+      "evidence": {
+        "keys": [
+          "cams",
+          "camera_side",
+          "camera_top",
+          "scene",
+          "robot",
+          "sim"
+        ],
+        "expected": [
+          "cams",
+          "camera_side",
+          "camera_top",
+          "scene",
+          "robot",
+          "sim"
+        ],
+        "weakref_unsupported_container_kept_explicit": true
+      }
+    },
+    {
+      "name": "exact_nonlocal_owner_cells_assigned_none",
+      "pass": true,
+      "evidence": {
+        "nonlocal": [
+          "cams",
+          "scene",
+          "robot",
+          "sim"
+        ],
+        "none_assignments": [
+          "cams",
+          "robot",
+          "scene",
+          "sim"
+        ]
+      }
+    },
+    {
+      "name": "clear_release_probe_budget_close_order",
+      "pass": true,
+      "evidence": {
+        "cleanup_start": 78794,
+        "clear_call": 79544,
+        "release_call": 82564,
+        "probe_call": 84693,
+        "budget_used": 86875,
+        "native_close": 89274
+      }
+    },
+    {
+      "name": "release_inside_unchanged_cleanup_budget",
+      "pass": true,
+      "evidence": {
+        "reference_release_phase_recorded": true,
+        "budget_start_precedes_release": true
+      }
+    },
+    {
+      "name": "release_failure_is_rc96_and_honest_gap",
+      "pass": true,
+      "evidence": {
+        "release_failure_gap": true,
+        "shared_existing_exit": "CLOSE_MEASURE_EXIT=96"
+      }
+    },
+    {
+      "name": "forbidden_lifecycle_expansion_absent",
+      "pass": true,
+      "evidence": {
+        "checked_on_ast_not_comments": true,
+        "found": [],
+        "forbidden": [
+          "gc.collect",
+          "manual __del__",
+          "destroy_hydra_textures",
+          "SyntheticData.reset",
+          "forced rc0"
+        ]
+      }
+    },
+    {
+      "name": "actual_helper_positive_runtime",
+      "pass": true,
+      "evidence": {
+        "measurement_satisfied": true,
+        "survivors": [],
+        "n_weakref_observed": 5,
+        "targets": [
+          {
+            "name": "cams",
+            "type": "dict",
+            "id": 135202178779264,
+            "was_none": false,
+            "weakref_supported": false,
+            "alive_after_release": null,
+            "weakref_error": "cannot create weak reference to 'dict' object"
+          },
+          {
+            "name": "camera_side",
+            "type": "Owner",
+            "id": 135202193892240,
+            "was_none": false,
+            "weakref_supported": true,
+            "alive_after_release": false
+          },
+          {
+            "name": "camera_top",
+            "type": "Owner",
+            "id": 135202170712720,
+            "was_none": false,
+            "weakref_supported": true,
+            "alive_after_release": false
+          },
+          {
+            "name": "scene",
+            "type": "Owner",
+            "id": 135202170714960,
+            "was_none": false,
+            "weakref_supported": true,
+            "alive_after_release": false
+          },
+          {
+            "name": "robot",
+            "type": "Owner",
+            "id": 135202170706896,
+            "was_none": false,
+            "weakref_supported": true,
+            "alive_after_release": false
+          },
+          {
+            "name": "sim",
+            "type": "Owner",
+            "id": 135202170714704,
+            "was_none": false,
+            "weakref_supported": true,
+            "alive_after_release": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "actual_helper_camera_alias_negative",
+      "pass": true,
+      "evidence": {
+        "measurement_satisfied": false,
+        "survivors": [
+          "camera_side"
+        ]
+      }
+    },
+    {
+      "name": "actual_helper_robot_alias_negative",
+      "pass": true,
+      "evidence": {
+        "measurement_satisfied": false,
+        "survivors": [
+          "robot"
+        ]
+      }
+    },
+    {
+      "name": "genuine_pin_corruption_detected",
+      "pass": true,
+      "evidence": {
+        "mutated_path": "src/close_diagnostics.py",
+        "mismatches": [
+          "src/close_diagnostics.py"
+        ]
+      }
+    },
+    {
+      "name": "camera_target_omission_negative",
+      "pass": true,
+      "evidence": {
+        "mutated_keys": [
+          "cams",
+          "scene",
+          "robot",
+          "sim"
+        ],
+        "rejected": true
+      }
+    },
+    {
+      "name": "order_reversal_negative",
+      "pass": true,
+      "evidence": {
+        "mutated_release_before_clear": true,
+        "rejected_by_order_contract": true,
+        "call_counts_preserved": true
+      }
+    },
+    {
+      "name": "helper_drops_its_temporary_strong_references",
+      "pass": true,
+      "evidence": {
+        "temporary_mapping_deleted_before_release": true,
+        "loop_variable_deleted_before_release": true
+      }
+    }
+  ],
+  "authorization": {
+    "separate_root_gpu_go_required": true,
+    "this_receipt_is_not_production_go": true,
+    "native_effect_unproven": true
+  },
+  "limits": [
+    "Runtime tests use weakrefable CPU fake objects, not Isaac or PhysX.",
+    "The release receipt observes Python object lifetime; it does not prove the native crash is fixed.",
+    "No GPU, physics, hardware, production, or new scientific criteria were exercised."
+  ]
+}

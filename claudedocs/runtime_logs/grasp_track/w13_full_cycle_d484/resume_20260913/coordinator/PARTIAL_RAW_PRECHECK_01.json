@@ -1,0 +1,16 @@
+{
+  "artifact": "W13R_PARTIAL_RAW_PRECHECK_RECEIPT_V1",
+  "checker_sha256": "96aa8ec56289b5b5bbcc9f7b14f3b41f9035e6499b78c8630322ab1587b305fb",
+  "manifest_sha256": "0d7fb7ce6d5d24d0a29b0c25ccd02e633a803239c10192b16aea0c8553bb2a52",
+  "positive": {
+    "command": "node claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/coordinator/verify_partial_raw_preservation.mjs claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/coordinator/PARTIAL_RAW_MANIFEST_01.json 0d7fb7ce6d5d24d0a29b0c25ccd02e633a803239c10192b16aea0c8553bb2a52",
+    "exit_code": 0,
+    "stdout": "{\n  \"artifact\": \"W13R_PARTIAL_RAW_PRESERVATION_CHECK_V1\",\n  \"checked_utc\": \"2026-09-13T21:28:01.966Z\",\n  \"root\": \"/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/run_01\",\n  \"manifest_path\": \"claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/coordinator/PARTIAL_RAW_MANIFEST_01.json\",\n  \"manifest_sha256\": \"0d7fb7ce6d5d24d0a29b0c25ccd02e633a803239c10192b16aea0c8553bb2a52\",\n  \"expected_manifest_sha256\": \"0d7fb7ce6d5d24d0a29b0c25ccd02e633a803239c10192b16aea0c8553bb2a52\",\n  \"files_checked\": 14,\n  \"issues\": [],\n  \"success\": true\n}\nW13R_PARTIAL_RAW_PRESERVATION_VERIFIED 14\n"
+  },
+  "negative": {
+    "command": "node claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/coordinator/verify_partial_raw_preservation.mjs claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/coordinator/PARTIAL_RAW_MANIFEST_01.json 1d7fb7ce6d5d24d0a29b0c25ccd02e633a803239c10192b16aea0c8553bb2a52",
+    "exit_code": 1,
+    "stdout": "{\n  \"artifact\": \"W13R_PARTIAL_RAW_PRESERVATION_CHECK_V1\",\n  \"checked_utc\": \"2026-09-13T21:28:02.306Z\",\n  \"root\": \"/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/run_01\",\n  \"manifest_path\": \"claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/coordinator/PARTIAL_RAW_MANIFEST_01.json\",\n  \"manifest_sha256\": \"0d7fb7ce6d5d24d0a29b0c25ccd02e633a803239c10192b16aea0c8553bb2a52\",\n  \"expected_manifest_sha256\": \"1d7fb7ce6d5d24d0a29b0c25ccd02e633a803239c10192b16aea0c8553bb2a52\",\n  \"files_checked\": 0,\n  \"issues\": [\n    \"Manifest SHA256 mismatch\"\n  ],\n  \"success\": false\n}\n"
+  },
+  "note": "읽기 전용 검사. 잘못된 manifest pin은 원자료를 수정하지 않고 거부했다. 실제 입력 changed-byte negative는 별도 독립 runner fixture 검수 대상이다."
+}

@@ -1,0 +1,335 @@
+{
+  "artifact": "W13R_ROOT_READINESS_VISUAL_INSPECTION_08",
+  "VERDICT": "READINESS_PASSED",
+  "verdict_scope": "원본8장 시각 식별 인수. 실제 종료 영수증도 정상이다. 독립 종료·매핑 감사와 최종 본실행 사전검수는 별도.",
+  "workflow_verdict": "READINESS_RC0_VISUAL_ACCEPTED_INDEPENDENT_AUDIT_PENDING",
+  "signed_off_by": "Codex coordinator /root: personally opened all eight original PNGs with view_image at original detail",
+  "inspection_window_utc": "2026-09-13 12:16:47 UTC before frame0 through 12:17:16 UTC after frame7; individual frame times not separately measured",
+  "output_dir": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/readiness/renderer_readiness_17_actual",
+  "frame_path_rule": "output_dir + /render/frames/ + file",
+  "frames": [
+    {
+      "index": 0,
+      "file": "f_00000.png",
+      "sha256": "8a177742bdd485fb3c3fe1f235a3880a6c49dc4c609057800377eac2317a42fe",
+      "width": 1600,
+      "height": 2102,
+      "actually_viewed": true
+    },
+    {
+      "index": 1,
+      "file": "f_00001.png",
+      "sha256": "867203e47e8b982fbc58caf9e1f4f6a075f44961b7aab6a254477d99051a5912",
+      "width": 1600,
+      "height": 2102,
+      "actually_viewed": true
+    },
+    {
+      "index": 2,
+      "file": "f_00002.png",
+      "sha256": "26af44ab5b0359e6698e34532736510ca56ecedeec02381c0aa748af883de84f",
+      "width": 1600,
+      "height": 2102,
+      "actually_viewed": true
+    },
+    {
+      "index": 3,
+      "file": "f_00003.png",
+      "sha256": "915fcb0da19e722baf8fcb10914d49574c9dfd4b071fca7d3199d2c0a35092ca",
+      "width": 1600,
+      "height": 2102,
+      "actually_viewed": true
+    },
+    {
+      "index": 4,
+      "file": "f_00004.png",
+      "sha256": "64f0816c1683b481f694cab2b8497402355c0f6c1c5622cf5d2e130830d2cd74",
+      "width": 1600,
+      "height": 2102,
+      "actually_viewed": true
+    },
+    {
+      "index": 5,
+      "file": "f_00005.png",
+      "sha256": "b97a6ae0ba84f48cef6a1882581166f6d16e1b12d2271bcc12f6a6a6f74cc883",
+      "width": 1600,
+      "height": 2102,
+      "actually_viewed": true
+    },
+    {
+      "index": 6,
+      "file": "f_00006.png",
+      "sha256": "47b211019a85e60b21ee4763a4a7b46b416057d068aabb8076702615da17aa1c",
+      "width": 1600,
+      "height": 2102,
+      "actually_viewed": true
+    },
+    {
+      "index": 7,
+      "file": "f_00007.png",
+      "sha256": "58ff8f59758af745ad53e8c0ae82a7a6d3bdf901f852e3afc92f1d6a71853b4c",
+      "width": 1600,
+      "height": 2102,
+      "actually_viewed": true
+    }
+  ],
+  "observations": [
+    "8장 모두 두 시점으로 팔 전체·그랩·더미·컵을 확인했다. 팔 잘림은 보이지 않았다.",
+    "갈색 바닥 외곽·파란 하단선·금색 상단/기둥으로 바닥 높이와 네 벽 범위를 식별했다. 바닥과 벽면 자체는 대부분 가려지거나 희미하다.",
+    "장면 밖 검정 띠의 흰 설명과 노란 합성/불완전 경고를 읽었다. 운반·배치·복귀 선언 자세를 구분했다.",
+    "raw HOME0/1의 투명 공구와 합성HOME7의 불투명 공구는 색·투명도 차이가 있다. 픽셀 동일성·입자운동·배출 성공을 주장하지 않는다."
+  ],
+  "visual_failures": [],
+  "visual_limits": [
+    "상면2/6 공구-팔 및4/5 공구-컵 가림은 사선 시점으로 보완했다. 접촉 판정의 근거가 아니다.",
+    "상면 좌측 어두운 직사각형 원인은 미확정이다. 합성 라벨 구분자의 상자 글리프는 의미 식별을 막지 않았다.",
+    "MP4는 연속 시청하지 않았다. 저장8장을 직접 검사했고 ffprobe로8프레임/크기/시간을 확인했다.",
+    "기존raw2행과 합성6자세의 준비 검사다. 신규 전체 사이클 물리 검증이 아니다."
+  ],
+  "source_mapping": [
+    {
+      "index": 0,
+      "source": "raw_particle_frame",
+      "row": 0,
+      "sync": 0,
+      "t": 0,
+      "phase": "initial_home"
+    },
+    {
+      "index": 1,
+      "source": "raw_particle_frame",
+      "row": 1,
+      "sync": 0,
+      "t": 0,
+      "phase": "initial_home"
+    },
+    {
+      "index": 2,
+      "source": "synthetic_pose_fixture",
+      "row": 1,
+      "sync": null,
+      "t": null,
+      "phase": "post_lift_travel"
+    },
+    {
+      "index": 3,
+      "source": "synthetic_pose_fixture",
+      "row": 1,
+      "sync": null,
+      "t": null,
+      "phase": "place_retract_base90"
+    },
+    {
+      "index": 4,
+      "source": "synthetic_pose_fixture",
+      "row": 1,
+      "sync": null,
+      "t": null,
+      "phase": "place_target"
+    },
+    {
+      "index": 5,
+      "source": "synthetic_pose_fixture",
+      "row": 1,
+      "sync": null,
+      "t": null,
+      "phase": "place_up_travel"
+    },
+    {
+      "index": 6,
+      "source": "synthetic_pose_fixture",
+      "row": 1,
+      "sync": null,
+      "t": null,
+      "phase": "return_retract_base0"
+    },
+    {
+      "index": 7,
+      "source": "synthetic_pose_fixture",
+      "row": 1,
+      "sync": null,
+      "t": null,
+      "phase": "return_home"
+    }
+  ],
+  "dimensions_verified_by_root": {
+    "pngs": [
+      [
+        1600,
+        2102
+      ],
+      [
+        1600,
+        2102
+      ],
+      [
+        1600,
+        2102
+      ],
+      [
+        1600,
+        2102
+      ],
+      [
+        1600,
+        2102
+      ],
+      [
+        1600,
+        2102
+      ],
+      [
+        1600,
+        2102
+      ],
+      [
+        1600,
+        2102
+      ]
+    ],
+    "mp4_ffprobe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "width": 1600,
+          "height": 2102,
+          "r_frame_rate": "10/1",
+          "duration": "0.800000",
+          "nb_frames": "8"
+        }
+      ]
+    },
+    "mp4_bytes": 329738,
+    "mp4_sha256": "67ad9da4b48559ad6c7c40d7f0c3a4a4a88a86b6c9747880aca2fd6692b34b6a"
+  },
+  "observed_workflow": {
+    "runner_rc": 0,
+    "launcher_ok": true,
+    "stage_total_s_including_cleanup": 40.219416,
+    "stage_cap_s": 180,
+    "phases_all_measured": true,
+    "phases": {
+      "t0_monotonic": 202055.50451344,
+      "started_utc": "2026-09-13T12:14:51Z",
+      "startup_s": 11.33,
+      "render_s": 5.041,
+      "ffmpeg_s": 0.278,
+      "close_budget_s": 27,
+      "total_before_close_s": 16.649,
+      "clear_instance_s": 0.313,
+      "reference_release_s": 0.007,
+      "close_diagnostic_s": 0.035,
+      "cleanup_used_before_close_s": 0.356,
+      "close_budget_remaining_s": 26.644,
+      "close_s": 21.252,
+      "close_timed_out": false,
+      "cleanup_total_s": 21.61,
+      "total_s": 38.261
+    },
+    "group_absence_root_check": "2026-09-13 21:18 KST exact PID2545474/2545509/2545511 and PGID2545474/2545511 absent",
+    "release_mapping": {
+      "expected_keys": [
+        "cams_is_none",
+        "scene_is_none",
+        "robot_is_none",
+        "sim_is_none",
+        "public_instance_is_none"
+      ],
+      "is_mapping": true,
+      "keys_ok": true,
+      "types_ok": true,
+      "all_true": true,
+      "missing": [],
+      "extra": [],
+      "bad_type": [],
+      "false_keys": [],
+      "values": {
+        "cams_is_none": true,
+        "scene_is_none": true,
+        "robot_is_none": true,
+        "sim_is_none": true,
+        "public_instance_is_none": true
+      }
+    },
+    "required_survivors": [],
+    "informational_survivors": [
+      "sim"
+    ],
+    "n_weakref_observed": 5
+  },
+  "initialization_vs_display": {
+    "initialization_physics_steps": 8,
+    "initialization_note": "sim.reset() 과 warmup 은 표시 루프 **밖**에서 한 번만 돈다. 이 구간은 물리를 전진시킨다는 사실을 숨기지 않는다.",
+    "display_frame_call": "sim.render() only — sim.step() 을 부르지 않는다",
+    "clock_before_display": {
+      "current_time": 0.08333333767950535,
+      "get_physics_dt": 0.008333333333333333
+    },
+    "clock_after_display": {
+      "current_time": 0.08333333767950535,
+      "get_physics_dt": 0.008333333333333333
+    },
+    "per_frame_clock_checks": [
+      {
+        "display_index": 0,
+        "t_before": 0.08333333767950535,
+        "t_after": 0.08333333767950535,
+        "advanced": false
+      },
+      {
+        "display_index": 1,
+        "t_before": 0.08333333767950535,
+        "t_after": 0.08333333767950535,
+        "advanced": false
+      },
+      {
+        "display_index": 2,
+        "t_before": 0.08333333767950535,
+        "t_after": 0.08333333767950535,
+        "advanced": false
+      },
+      {
+        "display_index": 3,
+        "t_before": 0.08333333767950535,
+        "t_after": 0.08333333767950535,
+        "advanced": false
+      },
+      {
+        "display_index": 4,
+        "t_before": 0.08333333767950535,
+        "t_after": 0.08333333767950535,
+        "advanced": false
+      },
+      {
+        "display_index": 5,
+        "t_before": 0.08333333767950535,
+        "t_after": 0.08333333767950535,
+        "advanced": false
+      },
+      {
+        "display_index": 6,
+        "t_before": 0.08333333767950535,
+        "t_after": 0.08333333767950535,
+        "advanced": false
+      },
+      {
+        "display_index": 7,
+        "t_before": 0.08333333767950535,
+        "t_after": 0.08333333767950535,
+        "advanced": false
+      }
+    ]
+  },
+  "source_files_sha256": {
+    "READINESS_RECEIPT.json": "d358bfb8a3de6896ae1e529b1de328c531269de14258708518c42f9dac77bde6",
+    "attempt/EXECUTION_RECEIPT.json": "ac59d87314b8774da4605c7efbabe39df690c7937b8ad9b97da60f530c38236f",
+    "attempt/HASH_VERIFICATION_RECEIPT.json": "08b4f3d0f3493b78a87cf2cfba65868dd1cf75df96aaf264fdad438d8b4fc424",
+    "attempt/RUN_STATUS.json": "950b06e5cd7ed58503cf2378b29ab5d3f1ece9ba48c2206a9dbc59a1f70906b5",
+    "render/render_manifest.json": "6ae52e5a44dc9114d0b3660706a6fc6f53b8fe4f9cf193674bce5186370893e9",
+    "render/reference_release_receipt.json": "472ee29fa5b8fb7a4bcab88d8c1bd00ae2b32fd8d5751d473c99f828f5df96cc",
+    "render/clear_instance_receipt.json": "df6505820b63384295cd70503b968c2a851b024dced26cd1dde5513cc80d536e",
+    "render/close_localization_receipt.json": "5bb593cdf53acf549ad80aa1c3046f7f1269581160604a05635afaa137d14d16",
+    "render/visual_mapping.json": "e9ec15fbff7b48a7dec058abbb577bd8278dc43f22e201ee02688ecc0f1c4416"
+  }
+}

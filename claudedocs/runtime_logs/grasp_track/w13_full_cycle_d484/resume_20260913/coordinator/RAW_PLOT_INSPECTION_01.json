@@ -1,0 +1,30 @@
+{
+  "artifact": "W13R_RAW_PLOT_ACTUAL_INSPECTION_V1",
+  "inspection_utc_window": "2026-09-13T21:23:52Z/2026-09-13T21:24:36Z",
+  "inspector": "root",
+  "mechanism": "view_image original; both original PNGs actually viewed, no new render",
+  "files": [
+    {
+      "path": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/run_01/heightmap_seed460.png",
+      "sha256": "6fbf76030eaef8332c5ddc8f1bb3ae33f251e27f7eb9f0d27b8091906a9a6e5c",
+      "observations_ko": [
+        "pre/post/removed-depth 세 패널과 world x/y mm축·색상 범례를 식별했다.",
+        "차이 그림에서 중앙의 양수(낮아짐) 영역과 +y 방향 주변의 음수(높아짐) 영역이 보였다.",
+        "post 제목의 resting particles는 기존 필터/저장 시점 표현이며 물리적 완전 정착을 입증하지 않는다."
+      ]
+    },
+    {
+      "path": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/run_01/crater_profiles_seed460.png",
+      "sha256": "85bf55005d274b6d988164b7314b8cc84525d171e9b2bb463b13434a00af3fc2",
+      "observations_ko": [
+        "+x/+y/-x/-y 네 방향 단면에서 파란 depth, 회색 post height, 빨간 fitted segment가 보였다.",
+        "방향별 깊이 형상이 다르며 그래프의 적합 각도를 실측 안식각이나 실물 정합으로 해석하지 않았다."
+      ]
+    }
+  ],
+  "limitations_ko": [
+    "원본 PNG 두 장만 검수했다. RRD/RBL/Isaac 재생이나 전체 시간축 시각 검수는 아직 아니다.",
+    "분류 규약 불일치/전체cycle 미완료/정착 증명 미충족을 해소하지 않는다.",
+    "그림 자체에서 새로운 과학적 임계값이나 성공 조건을 만들지 않았다."
+  ]
+}

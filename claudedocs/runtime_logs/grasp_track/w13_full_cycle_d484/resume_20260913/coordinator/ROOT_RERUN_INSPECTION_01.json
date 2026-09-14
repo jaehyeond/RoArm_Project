@@ -1,0 +1,68 @@
+{
+  "artifact": "W13R_ROOT_ACTUAL_RERUN_INSPECTION_V1",
+  "inspected_utc": "2026-09-13T22:03:17Z",
+  "method": "view_image of original saved PNG; actual visual inspection, not file-existence inference",
+  "image_path": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/input/rerun/w13_inspection.png",
+  "observations": [
+    "제목에 NOT A FULL CYCLE / abort_class=SIGNAL_STOP 표시가 실제 보인다.",
+    "현재 시간 커서는 +0.000s이며 더미 입자만 크게 보인다.",
+    "공구·목적 용기·bridge 결정의 관계를 이 화면에서 확인할 수 없다.",
+    "오른쪽 결정/문 정지 표와 아래 두 그래프는 비어 있다.",
+    "파일 로드 알림이 보이나 조기 캡처의 정확한 내부 원인은 화면만으로 확정하지 않는다."
+  ],
+  "visual_verdict": "DECISION_TIME_SCREENSHOT_FAIL",
+  "does_not_reclassify_scientific_or_structural_verdicts": true,
+  "root_footer_verify": {
+    "returncode": 0,
+    "output": "2026-09-13T22:04:24.614197Z ERROR re_analytics: Failed to initialize analytics: Read-only file system (os error 30)\n2 files verified without error.\n",
+    "note": "Rerun analytics 초기화는 read-only filesystem으로 실패 메시지를 냈으나 footer 검증 자체는 rc0/2 files verified without error. 설치나 환경변경으로 우회하지 않았다."
+  },
+  "utc": "2026-09-13T22:04:26.010Z",
+  "files": {
+    "w13.rrd": {
+      "bytes": 595739706,
+      "sha256": "8a38670ae42d72ac790472c85deec08cdf4f063ee18e46035fe9066dd5c2eeeb"
+    },
+    "w13.rbl": {
+      "bytes": 54311,
+      "sha256": "216bb9b476586cc47e07b71a7f40a85ea730f7411ff6be8af26b0622ed9cf071"
+    },
+    "w13_inspection.png": {
+      "bytes": 11433137,
+      "sha256": "fd4b3e9fecba88a2d9dc9b68a3144bc11411270a735d0caa5d54d37573be7938"
+    },
+    "w13_rerun_validation.json": {
+      "bytes": 275227,
+      "sha256": "704a4d5fc90f8ed4c15ae302af3afb25681b18178348aea03dc62621cc8c2584"
+    }
+  },
+  "structural_report": {
+    "pass": true,
+    "non_system_entities": 57,
+    "exact_entities": true,
+    "component_entities": 20,
+    "components_pass": true,
+    "timelines": [
+      "blueprint",
+      "frame",
+      "log_time",
+      "particle_frame_row",
+      "phase",
+      "sim_time_s"
+    ],
+    "exact_timelines": true,
+    "footer": true,
+    "rrd_verify_rc": 0,
+    "rbl_verify_rc": 0,
+    "finalized": true,
+    "source_syncs": 16304,
+    "particle_frames": 283,
+    "contacts": 3074143,
+    "row_identity": true
+  },
+  "limits": [
+    "이 이미지를 실제로 검사했지만 시각 계약은 불충족이다.",
+    "구조/행계약 JSON 통과는 원래 생산 검사 범위이며 실제 모든 저장 이벤트의 시간 의미 일치 검수는 독립 감사 중이다.",
+    "기존 PNG/RRD/RBL/report는 덮거나 수정하지 않았다."
+  ]
+}

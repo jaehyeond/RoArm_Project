@@ -1,0 +1,52 @@
+{
+  "inspector": "main Codex coordinator",
+  "method": "Each listed PNG was opened with the image viewer and visually inspected; not inferred from successful generation.",
+  "replay_root": "/home/cgxr/orca/workspaces/RoArm_Project/w12-isaac-replay/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w12_isaac_w10_w11_compare_20260912/replay",
+  "items": [
+    {
+      "path": "w10/frames/f_00063.png",
+      "observed": "Nonblank full robot, container, pellet pile, raised nearly closed grab and source/rendered diagnostic markers.",
+      "limitation": "Original header frame-to-sync delta is not frame-to-reclose delta. Original fixed final-ID color legend is clipped. Requested annotated derivatives."
+    },
+    {
+      "path": "paired/montage_initial.png",
+      "observed": "Matching initial geometry, open grab, full robot/container views for W10 and W11; colored final membership patches differ.",
+      "limitation": "Orange means final captured IDs, not current capture."
+    },
+    {
+      "path": "paired/montage_first_close.png",
+      "observed": "Source/rendered node rings close together; nearest-event offsets explicitly W10 frame52 +16.008ms and W11 frame51 -24.947ms.",
+      "limitation": "Event-name montage is not a same-time pair; W11 shown before its stop."
+    },
+    {
+      "path": "paired/montage_lift.png",
+      "observed": "Both first saved lift-tagged frames52 are shown with source seconds, full robot and pile, nearly closed door and geometry rings; inset shows the grab.",
+      "limitation": "This is the first saved lift frame, not an extra independently observed exact phase-transition time; original legend remains clipped."
+    },
+    {
+      "path": "paired/montage_reclose.png",
+      "observed": "Both tools raised, actual door angles approximately2.993/2.9544deg, nearest final frames63 around12ms after reclose stops.",
+      "limitation": "No particle frame during reclose exists; cannot inspect continuous reclose particle motion from this montage."
+    },
+    {
+      "path": "rerun/trial2/w12_decision_inspection.png",
+      "observed": "Decision companion screenshot has populated particle/geometry panels, source/rendered node rings, final-membership overlays, event table and count curves.",
+      "limitation": "Top first-close panels show nearest saved frames, not exact stops. Overlaid final geometry obscures small run differences. Shared count/mm scale compresses mapping error curves. Full robot is in Isaac videos, not this RRD. Large replay RRD screenshot completeness is not claimed."
+    },
+    {
+      "path": "paired/mapping_error_per_frame.png",
+      "observed": "Red W10 and blue W11 lip/hinge curves closely align, plateau below1.9mm during mid-trajectory, remain below5mm line. Door-node mapping curve similar; nominal-vs-source angle contribution is a distinct smaller dotted curve.",
+      "limitation": "Plot measures display mapping error, not W10-vs-W11 physics disagreement."
+    }
+  ],
+  "final_annotated_derivatives": {
+    "actually_opened": [
+      "annotated/montage_first_close_annotated.png",
+      "annotated/montage_reclose_annotated.png",
+      "annotated/frames_paired/p_00063.png"
+    ],
+    "observed": "New headers clearly separate frame-to-SYNC and frame-to-EVENT, explicitly label nearest-frame before/after stops, and identify fixed FINAL-frame membership rather than instantaneous capture. Full legend is visible. Final source-time pair shows W10 3.144948s versus W11 3.141871s, signed pair delta -3.077ms. Geometry matches previously inspected source frames.",
+    "limitations": "Labels are dense and require original-resolution viewing. Annotation covers the old burnt-in text bands; it does not add missing reclose motion or prove physical robot feasibility.",
+    "independent_pixel_and_media_check": "media_root_reverification_01.json: six MP4s each64decoded frames/10fps/6.4s; unchanged scene pixels for128individual annotated frames; exact compositing for64paired frames; five original trial1 files restored byte-identically to archive copies."
+  }
+}

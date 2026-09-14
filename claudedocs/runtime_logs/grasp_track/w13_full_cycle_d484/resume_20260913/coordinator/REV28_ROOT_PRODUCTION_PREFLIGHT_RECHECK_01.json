@@ -1,0 +1,195 @@
+{
+  "artifact": "W13_REV28_PRODUCTION_CONDITIONAL_PREFLIGHT_AUDIT_V1",
+  "generated_utc": "2026-09-13T12:20:59Z",
+  "n_findings": 11,
+  "n_pass": 11,
+  "failures": [],
+  "verdict": "CONDITIONAL_CPU_PREFLIGHT_READY_PENDING_READINESS17_AND_ROOT_TECHNICAL_GO",
+  "findings": [
+    {
+      "name": "outer_26_rehash",
+      "pass": true,
+      "evidence": {
+        "pin_sha256": "64d2cc2e1b603696f10c5edfeed6a67fd2ab6f2c3d546500416ad1ecad72068a",
+        "mismatches": []
+      }
+    },
+    {
+      "name": "manifest_external13_criteria1_binding",
+      "pass": true,
+      "evidence": {
+        "manifest_sha256": "8d5de888166ec2b50f25af528107ce6f180a459b285d89d3e94d0b97581ca23a",
+        "external_bad": [],
+        "criteria_bad": []
+      }
+    },
+    {
+      "name": "bounded_rev27_delta_and_established_runner_unchanged",
+      "pass": true,
+      "evidence": {
+        "changed_excluding_commands": [
+          "src/close_diagnostics.py",
+          "src/isaac_replay_w13.py",
+          "src/readiness_launcher.py"
+        ],
+        "commands_forward_only": true,
+        "run_production_sha256": "bd8fa702ff5a9c06286de1cafd3702487803103fe747bcc3d3a8fae483cb81d5"
+      }
+    },
+    {
+      "name": "exact_new_attempt_and_command_paths",
+      "pass": true,
+      "evidence": {
+        "attempt_exists": false,
+        "attempt": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/run_01",
+        "prospective": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/MANIFEST_prospective_rev28.json",
+        "criteria": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/criteria.json"
+      }
+    },
+    {
+      "name": "exact_caps_order_no_retry",
+      "pass": true,
+      "evidence": {
+        "step_order": [
+          "step1_simulation",
+          "step2_rerun",
+          "step3_isaac_replay"
+        ],
+        "step_caps_s": {
+          "step1_simulation": 32400,
+          "step2_rerun": 5400,
+          "step3_isaac_replay": 5400
+        },
+        "graceful_grace_s": 1200,
+        "auto_retry": false,
+        "preexisting_attempt_entries_allowed": []
+      }
+    },
+    {
+      "name": "runner_total_cap_includes_grace_and_fail_safe_reap",
+      "pass": true,
+      "evidence": {
+        "step1_cap_s": 32400,
+        "term_at_s": 31200,
+        "kill_no_later_than_s": 32399.5,
+        "grace_is_inside_total": true
+      }
+    },
+    {
+      "name": "exact_absolute_argv",
+      "pass": true,
+      "evidence": {
+        "step1": [
+          "/home/cgxr/miniconda3/envs/roarm/bin/python",
+          "-B",
+          "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/src/sim_w13_full_cycle.py",
+          "--params",
+          "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/params_w13.json",
+          "--pile",
+          "/home/cgxr/orca/workspaces/RoArm_Project/pellet-model/claudedocs/runtime_logs/pellet_model/pile_lens_20260910/pile_lens6_a4p5_b3p8_c2p5_slab_n20000_seed460.npz",
+          "--out",
+          "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/run_01",
+          "--seed",
+          "460",
+          "--numeric-evidence",
+          "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/numeric_inputs.json",
+          "--max-wall-s",
+          "31200"
+        ],
+        "step2": [
+          "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+          "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/src/w13_rerun_export.py",
+          "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/run_01"
+        ],
+        "step3": [
+          "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+          "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/src/isaac_replay_w13.py",
+          "--run",
+          "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/run_01",
+          "--out",
+          "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/run_01/isaac",
+          "--headless",
+          "--enable_cameras"
+        ],
+        "env": {
+          "PYTHONDONTWRITEBYTECODE": "1"
+        }
+      }
+    },
+    {
+      "name": "production_renderer_release_rev2_and_normal_close",
+      "pass": true,
+      "evidence": {
+        "renderer_sha256": "d012e0fcd6b581a13d06053430519e00a8469ec17e46ce930ebb5f25ab9ea718",
+        "helper_sha256": "d6f4daf26e066554d6b3347adc257796235387296f945d3ae47bb0dd50c1b4c6",
+        "native_effect_unproven": true
+      }
+    },
+    {
+      "name": "readiness17_mini10_exact_bounds",
+      "pass": true,
+      "evidence": {
+        "mini_pin_sha256": "0fdecaeced07e2e15a5eaac4c9b7636c3a6dde019625394581da05c23cf2254a",
+        "mismatches": [],
+        "budget": 180.0,
+        "frames": {
+          "total": 8,
+          "synthetic": 6,
+          "real_raw": 2,
+          "synthetic_note": "명시 라벨된 자세 fixture 다. 운반·배출 위치·HOME 표시를 확인하기 위한 것이며 **물리 결과로 세지 않는다**."
+        },
+        "bounds": {
+          "child_self_stop_at_s": 135.0,
+          "outer_runner_term_at_s": 162.0,
+          "outer_runner_kill_at_s": 179.5,
+          "hard_cap_s": 180.0,
+          "term_formula": "cap - graceful_grace_s (run_production.py term_at)",
+          "kill_formula": "max(term_at, cap - min(REAP_OBSERVE_S=0.5, grace/2)) (kill_at)",
+          "note": "child_self_stop_at_s 는 **TERM 시각이 아니다.** 두 값을 같은 것으로 적지 않는다."
+        }
+      }
+    },
+    {
+      "name": "finalization_declarations_match_commands",
+      "pass": true,
+      "evidence": {
+        "runtime_estimate": {
+          "basis": "짧은 정지 창 실측 1283.2 wall s/물리 s 를 성격이 다른 전체 사이클 작업부하에 끌어온 **거친 외삽**이다. 실측 전체 runtime 이 아니다(HANDOFF_NOTE_01 §5 에서 이미 철회한 표현).",
+          "declared_physics_wall_cap_s": 32400,
+          "sim_soft_cap_s": 31200,
+          "claim": "상한 안에 끝난다는 주장을 하지 않는다. 상한에 닿으면 부분 원시를 남기고 정직하게 멈춘다."
+        },
+        "finalization_strategy": {
+          "layer1_sim_soft_cap_s": 31200,
+          "layer1_effect": "sim 이 step 경계에서 _WallCapStop 을 올려 abort_class=WALL_CAP_STOP 으로 부분 원시/JSON/heightmap 을 정상 finalize 한다. diverged 아님, 재시도 없음.",
+          "layer2_runner_hard_cap_s": 32400,
+          "layer2_effect": "러너가 자식 **프로세스 그룹**에 SIGTERM → 1200s 유예 동안 flush 대기 → 남아 있으면 SIGKILL. detached orphan 을 남기지 않는다.",
+          "signal_path": "SIGTERM/SIGINT 은 sim 안에서 플래그만 세우고 DoDynamicsThenSync 밖의 step 경계에서만 예외가 된다(솔버 호출 중 예외 금지). 최대 한 sync 지연.",
+          "always_written": "RUN_STATUS.json 은 계획된 guard abort·신호·예외에서도 finally 로 항상 쓰인다.",
+          "guard_abort": "bridge 사전 인증 실패는 abort_class=CLEARANCE_UNCERTIFIED 로 bridge 첫 물리 step 전에 멈추고, 같은 finalize 경로로 원시/RRD 를 남긴다. 재시도·경로 최적화 없음.",
+          "postprocessing": "Rerun 과 Isaac 후처리는 각각 별도 상한으로 물리 예산 밖에서 순차 실행한다."
+        }
+      }
+    },
+    {
+      "name": "disk_exceeds_declared_max_estimate",
+      "pass": true,
+      "evidence": {
+        "free_bytes": 190085447680,
+        "declared_max_estimate_bytes_decimal": 6500000000,
+        "estimate_is_not_guarantee": true
+      }
+    }
+  ],
+  "authorization": {
+    "readiness17_must_pass_first": true,
+    "separate_root_technical_go_required": true,
+    "this_receipt_is_not_production_go": true,
+    "auditor_did_not_create_oracle_target": true
+  },
+  "limits": [
+    "Native lifetime efficacy remains an execution question.",
+    "Storage is an estimate, not a guarantee.",
+    "No GPU, physics, renderer, or production process was started by the auditor."
+  ]
+}

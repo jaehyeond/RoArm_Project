@@ -1,0 +1,170 @@
+{
+  "producer": {
+    "id": "6c39ff31-c5ae-460b-b5a7-c8321d4409b2",
+    "ok": true,
+    "result": {
+      "runId": "run_5cba1e55a775",
+      "taskId": "task_d3ad7187e682",
+      "dispatchId": "ctx_006e285a14a4",
+      "state": "ready",
+      "stage": "input_accepted",
+      "setup": {
+        "requested": "not_applicable",
+        "effective": "not_applicable",
+        "source": "existing_worktree",
+        "hookFound": false,
+        "startupPolicy": "start-immediately",
+        "state": "not_applicable"
+      },
+      "launch": {
+        "requested": {
+          "agent": "claude",
+          "model": "claude-opus-5",
+          "effort": null
+        },
+        "effective": {
+          "agent": "claude",
+          "model": "claude-opus-5",
+          "effort": null
+        }
+      },
+      "mode": {
+        "mode": "terminal",
+        "preferred": "terminal",
+        "reason": "user_default",
+        "detail": "Started a terminal agent worker, the default for new agent tabs in your settings."
+      },
+      "timeoutMs": 60000,
+      "effects": [
+        {
+          "kind": "worktree",
+          "action": "reused",
+          "id": "6d4cecac-f639-434b-be40-367d6257f9f2::/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle"
+        },
+        {
+          "kind": "setup",
+          "action": "not_applicable",
+          "state": "not_applicable"
+        },
+        {
+          "kind": "terminal",
+          "role": "agent",
+          "action": "created",
+          "id": "term_4d8696a6-ef69-463f-bbf2-b2b81213535b",
+          "surface": "visible"
+        },
+        {
+          "kind": "dispatch_input",
+          "role": "agent",
+          "id": "term_4d8696a6-ef69-463f-bbf2-b2b81213535b",
+          "state": "accepted"
+        }
+      ],
+      "prompt": {
+        "requestId": "5050e994-09ac-444a-b1f1-779cbeb66778",
+        "stages": [
+          "input_accepted"
+        ],
+        "provider": "claude",
+        "observation": "supported",
+        "processIncarnation": "bb1b21dd-d11f-455c-8e82-934d600946dd",
+        "generation": 44,
+        "baselineWorkingSequence": 0,
+        "baselineExplicitWorkingStartedAt": null,
+        "baselinePermissionSequence": 0
+      },
+      "residualResources": [],
+      "mutation": {
+        "requestId": "5050e994-09ac-444a-b1f1-779cbeb66778",
+        "replayed": false
+      }
+    },
+    "_meta": {
+      "runtimeId": "471edc31-a026-466b-b60c-0c8e6cfb9fcc"
+    }
+  },
+  "auditor": {
+    "id": "88d5ea7f-5789-428f-a8c7-6f82d29fac67",
+    "ok": true,
+    "result": {
+      "runId": "run_5cba1e55a775",
+      "taskId": "task_eed17c18cd62",
+      "dispatchId": "ctx_e5023d7f09ed",
+      "state": "ready",
+      "stage": "input_accepted",
+      "setup": {
+        "requested": "not_applicable",
+        "effective": "not_applicable",
+        "source": "existing_worktree",
+        "hookFound": false,
+        "startupPolicy": "start-immediately",
+        "state": "not_applicable"
+      },
+      "launch": {
+        "requested": {
+          "agent": "codex",
+          "model": "gpt-5.6-sol",
+          "effort": "high"
+        },
+        "effective": {
+          "agent": "codex",
+          "model": "gpt-5.6-sol",
+          "effort": "high"
+        }
+      },
+      "mode": {
+        "mode": "terminal",
+        "preferred": "terminal",
+        "reason": "user_default",
+        "detail": "Started a terminal agent worker, the default for new agent tabs in your settings."
+      },
+      "timeoutMs": 60000,
+      "effects": [
+        {
+          "kind": "worktree",
+          "action": "reused",
+          "id": "6d4cecac-f639-434b-be40-367d6257f9f2::/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit"
+        },
+        {
+          "kind": "setup",
+          "action": "not_applicable",
+          "state": "not_applicable"
+        },
+        {
+          "kind": "terminal",
+          "role": "agent",
+          "action": "created",
+          "id": "term_55ab5044-1392-4c9e-bdf9-011f57678244",
+          "surface": "visible"
+        },
+        {
+          "kind": "dispatch_input",
+          "role": "agent",
+          "id": "term_55ab5044-1392-4c9e-bdf9-011f57678244",
+          "state": "accepted"
+        }
+      ],
+      "prompt": {
+        "requestId": "32d91db2-4a8a-48b0-b207-29edf4fbf069",
+        "stages": [
+          "input_accepted"
+        ],
+        "provider": "codex",
+        "observation": "supported",
+        "processIncarnation": "1f3e6f92-87a1-4a77-a6c7-4f1ace67ea63",
+        "generation": 45,
+        "baselineWorkingSequence": 1,
+        "baselineExplicitWorkingStartedAt": null,
+        "baselinePermissionSequence": 0
+      },
+      "residualResources": [],
+      "mutation": {
+        "requestId": "32d91db2-4a8a-48b0-b207-29edf4fbf069",
+        "replayed": false
+      }
+    },
+    "_meta": {
+      "runtimeId": "471edc31-a026-466b-b60c-0c8e6cfb9fcc"
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "artifact": "W13R_ROOT_ORACLE_04_RECHECK",
+  "synthetic_only": true,
+  "cwd": "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/oracle_04",
+  "command": "PYTHONDONTWRITEBYTECODE=1 /home/cgxr/miniconda3/envs/roarm/bin/python -B verify_resume_audit.py --check-negative-controls",
+  "returncode": 0,
+  "success_marker": "W13R_NEGATIVE_CONTROLS_VERIFIED",
+  "control_count": 33,
+  "all_controls_pass": true,
+  "review": "Root read all oracle03 sources previously, then the complete 03-to-04 source diffs and verified the three hashes before actually re-executing the CPU controls. Receipt recorded after execution; not a new run.",
+  "root_verified_sha256": {
+    "audit_core.py": "5c12bf5723e254d4bf1d6d76732d15871601959d01df1f42c6b05942c123ca88",
+    "verify_resume_audit.py": "3d824b7a0942e124154d79538f339310fd2107952d5976a03defdc8d6b5e39bf",
+    "NEGATIVE_ORACLE_RECEIPT.json": "16681733256bdfa1bbda6ccad0a4b46393f56b67abddfc8930ca48437dad0589"
+  },
+  "new_physics_runs": 0,
+  "limitations": "G3 synthetic evidence only. G1/G2, final bridge, runner, renderer readiness, Rerun and production result remain unaccepted. Same-sync particle observations are retained by explicit particle-frame row identity; they do not imply a new physical step."
+}

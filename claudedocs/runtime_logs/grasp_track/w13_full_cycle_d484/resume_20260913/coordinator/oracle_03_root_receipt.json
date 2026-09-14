@@ -1,0 +1,16 @@
+{
+  "artifact": "W13R_ROOT_ORACLE_03_RECHECK",
+  "synthetic_only": true,
+  "command": "PYTHONDONTWRITEBYTECODE=1 /home/cgxr/miniconda3/envs/roarm/bin/python -B /home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/oracle_03/verify_resume_audit.py --check-negative-controls",
+  "returncode": 0,
+  "success_marker": "W13R_NEGATIVE_CONTROLS_VERIFIED",
+  "control_count": 30,
+  "all_controls_pass": true,
+  "root_verified_sha256": {
+    "audit_core.py": "080914f8e92e525b28a1417ff926516f8812720157c615b3335cdbb9f6c652ee",
+    "verify_resume_audit.py": "daee67b70adf4571c991dcba47d150660717296b2639a6c7b599abd7fdb98d2e",
+    "canonical_pile_npz": "659d6b0bc771678a0c7209d91f550edc933d03e41922245ea0adb64eeb818812"
+  },
+  "new_physics_runs": 0,
+  "limitations": "Only the frozen 30-control CPU oracle was accepted here. Working schema integration, real bridge callsite, renderer readiness, production runner and full results remain unaccepted. Leaf G1/G2 and overall completion are still pending."
+}

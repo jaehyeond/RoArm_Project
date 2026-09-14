@@ -1,0 +1,76 @@
+Root read-only actual-output verification, 2026-09-13 ~17:10 KST.
+Exit code: 1
+This is an observed failed gate check, not a full-cycle result.
+  [PASS] criteria_exists: /home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/criteria.json · 45 thresholds
+  [PASS] criteria_every_threshold_fully_declared: 필드 누락 항목 none (필수 ['boundary', 'checked_by', 'id', 'operator', 'origin', 'purpose', 'scientific_limitation', 'severity', 'unit', 'value'])
+  [PASS] criteria_frozen_flag: frozen_before_production=True
+  [PASS] criteria_keeps_warning_and_popstop_separate: severity 집합 ['descriptive_do_not_rerun', 'hard_fail', 'metadata_hard_fail_if_void_value_used', 'observation', 'policy', 'representation_tolerance', 'uncalibrated_report_only', 'warning'] · 5 m/s 는 warning, 20 m/s 는 pop-stop
+  [PASS] criteria_marks_settlement_uncalibrated: 정착 관측창은 uncalibrated_report_only
+  [PASS] criteria_marks_old_wall_descriptive: 기존 벽 0.5/0.1 mm 는 descriptive_do_not_rerun
+  [PASS] revision_pin_exists: /home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev17/REVISION_PIN.json · 25 copies
+  [PASS] revision_pin_all_full_sha256_match: 불일치 0건 []
+  [PASS] revision_pin_covers_required_files: 누락 []
+  [PASS] pin_has_no_sha16_only_entries: 모든 항목이 64자 full SHA256 (sha16 금지)
+  [PASS] criteria_copy_in_revision_matches_root: rev17/criteria.json == 루트 criteria.json (동일 파일 내용)
+  [PASS] commands_exists: /home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev17/COMMANDS.json
+  [PASS] commands_step_order_declared: ['step1_simulation', 'step2_rerun', 'step3_isaac_replay']
+  [PASS] physics_wall_cap_is_32400: step_caps_s={'step1_simulation': 32400, 'step2_rerun': 5400, 'step3_isaac_replay': 5400}
+  [PASS] postprocessing_bounded_separately: Rerun/Isaac 후처리 각각 별도 상한: 5400 / 5400 s
+  [PASS] graceful_grace_declared: graceful_grace_s=1200
+  [PASS] no_auto_retry_declared: auto_retry=False
+  [PASS] no_smoke_flags_in_production: 축소/조기종료 스모크 플래그 없음
+  [PASS] seed_is_460: seed=460
+  [PASS] sim_soft_wall_cap_declared: --max-wall-s=31200 (< 러너 하드 상한 32400)
+  [PASS] all_scripts_from_frozen_revision: 실행 스크립트는 전부 rev17/src 동결 사본
+  [PASS] no_old_outputs_referenced: none
+  [PASS] attempt_dir_is_new_and_owned: /home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/run_01 · exists=False (실행 전이라 없어야 한다)
+  [PASS] storage_and_runtime_estimates_declared: {'output_storage_estimate': {'basis': '기존 정본 벽 스모크 실측에서 외삽: 26 sync·6 입자프레임 → NPZ 5.45 MB, RRD 10.44 MB (attempts/smoke_wall_regression_01). 전체 사이클은 sync 약 5,000~15,000, 입자프레임 약 200~300(particle_frame_dt_s 0.1 s + 전이/결정 강제)로 본다.', 'npz_gb_range': [1.0, 3.5], 'rrd_gb_range': [0.4, 2.0], 'isaac_frames_gb_range': [0.3, 0.6], 'mp4_mb_range': [5, 40], 'total_gb_range': [2.0, 6.5], 'disk_free_gb_at_freeze': 178, 'limitation': '외삽이다. 실제 sync 수는 힘 제한 하강·문 정지·미세 sync 구간에 따라 달라진다.'}, 'runtime_estimate': {'basis': '짧은 정지 창 실측 1283.2 wall s/물리 s 를 성격이 다른 전체 사이클 작업부하에 끌어온 **거친 외삽**이다. 실측 전체 runtime 이 아니다(HANDOFF_NOTE_01 §5 에서 이미 철회한 표현).', 'declared_physics_wall_cap_s': 32400, 'sim_soft_cap_s': 31200, 'claim': '상한 안에 끝난다는 주장을 하지 않는다. 상한에 닿으면 부분 원시를 남기고 정직하게 멈춘다.'}}
+  [PASS] param_diff_published: /home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/param_diff_vs_rev10.json · differing=[]
+  [PASS] physics_params_unchanged_vs_rev10: rev10 params_w13.json 대비 차이 [] (물리/물성/보호선 불변이어야 한다)
+  [PASS] audit_guard_original_preserved_and_hash_matches: 감사 원본 127a017c40a68c98… 원경로·보존 사본 모두 일치
+  [PASS] rev10_sources_untouched: rev10 sim 소스 해시 불변(기존 산출/소스 편집 0)
+  [PASS] sim_has_run_function: run() 정의 존재
+  [PASS] per_sync_precheck_before_DoDynamicsThenSync: PrecheckFailed raise line 593 < DoDynamicsThenSync line 594
+  [PASS] gate_at_real_callsite_between_resume_and_place: resume_fk_here@43949 < gated_bridge@45015 < place_*@46124; transport align 호출 1회
+  [PASS] clearance_handler_before_generic_exception: handler 순서 ClearanceUncertified=1 < Exception=4
+  [PASS] finalization_after_try_so_abort_preserves_raw: try@167 < savez_compressed@196
+  [PASS] abort_class_separate_from_diverged: 결과 JSON 이 abort_class 를 diverged 와 분리한다
+  [PASS] no_withdrawn_threshold_identifiers_in_bridge_code: 잔존 {'bridge_clearance_guard.py': [], 'bridge_inputs.py': [], 'bridge_numerics.py': []}
+  [PASS] numeric_chain_uses_erratum02_factor_four: theta_num = 4*asin(delta_q/2) (ERRATUM_02 E4 가 ERRATUM_01 E3 의 factor 2 를 대체)
+  [PASS] elapsed_bound_is_installed_source_formula: 경과시간 상한 = 설치본 유도식 nextafter(D + float64(float32(h)), +inf)
+  [PASS] four_allowance_terms_computed_separately: ideal / lattice / tracker / quaternion 네 항이 각각 함수로 분리돼 있다
+  [PASS] no_rigid_hinge_in_executed_motion_bound: 실행 운동 상한에서 문을 고정부에서 유도하지 않는다(두 몸체 독립, msg_2e5ccf261e8f)
+  [PASS] bootstrap_preconditions_enforced: qmin>=0.5 · 단위 허용오차 · ||omega|| <= pi/D (ERRATUM_02 E5)
+  [PASS] position_lattice_fails_closed_without_l: l 없으면 NumericInputsMissing 으로 거절(추정 금지, SOURCE_EVIDENCE §1)
+  [PASS] installed_length_unit_l_is_pinned: frozen numeric_inputs.json: l=5.554815288300041e-12 voxel=3.640403747340315e-07 bound=1.0154914259910583 · 루트 검증본과 바이트 동일=True · REUSABLE=True · 출처=정적 재구성=True · **step1 이 --numeric-evidence 로 실제 전달=True** · params 는 rev10 과 바이트 동일=True · (params 에는 넣지 않는다 — 격자 상수는 물리 파라미터가 아니다. 하나라도 어긋나면 위치 격자 항 미해결로 preflight NO-GO)
+  [PASS] numeric_inputs_not_smuggled_into_params: 격자 상수를 params_w13.json 에 몰래 넣지 않았다(rev10 바이트 동일 유지)
+  [PASS] raw_sync_time_is_unrounded_with_legacy_field: sync_t_s = 반올림 없는 binary64, 옛 9자리는 legacy display 필드
+  [PASS] derived_internal_step_count_labelled: 내부 step 수를 DERIVED 로 명시 — 관측을 지어내지 않는다
+  [PASS] door_target_pose_logged_separately: 문 목표 포즈를 고정부 목표와 따로 원시에 남긴다
+  [PASS] renderer_draws_actual_s1_tool: 원시 _obj 위상 + per-sync nodes_F_m/nodes_D_m 로 실제 S1 셸/문을 그리고 벤더 그리퍼는 숨긴다
+  [PASS] renderer_emits_visual_mapping_for_every_frame: visual_mapping.json 이 저장된 모든 입자 프레임을 한 줄씩 매핑한다(ERRATUM_01)
+  [PASS] bridge_integration_tests_pass_receipt: TEST_RESULTS_rev15final.json · 53 tests, all_pass=True
+  [PASS] required_negative_and_ordering_tests_present: 누락 []
+  [PASS] first_test_receipt_preserved: attempt 01 영수증이 바이트 동일하게 보존됨
+  [PASS] full_cycle_schema_published: /home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/FULL_CYCLE_SCHEMA.json · phases=12 arrays=54
+  [PASS] preflight_document_exists: /home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/PREFLIGHT.md · 16614 bytes
+  [PASS] real_failed_commands_listed: /home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/FAILED_COMMANDS.md (실제 실패 명령을 목록으로 남긴다)
+  [PASS] revision_selected_prospective_manifest: rev17/COMMANDS.json → prospective_manifest = /home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/MANIFEST_prospective_rev17.json · external_frozen_inputs_sha256 키 존재=True (ROOT/MANIFEST_prospective.json 을 하드코딩하지 않는다)
+  [PASS] revision_selected_external_inputs_match: 13건 검사 · 불일치 0 []
+  [FAIL] readiness_inspection_supplied_and_signed_off: path=/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/coordinator/ROOT_READINESS_INSPECTION_02.json · VERDICT=READINESS_FAILED · signed_off_by=Codex coordinator /root: personally opened all eight PNGs with view_image — 실제 root 육안 검수 산출이 오기 전까지 **fail-closed 로 남는 것이 정상이다**. 옛 readiness/INSPECTION.json 은 덮어쓰지 않고 그대로 보존한다
+  [PASS] render_manifest_supplied_at_explicit_path: path=/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/readiness/renderer_readiness_07_actual/render/render_manifest.json (한 단계 glob 이 아니라 명시 경로. 새 배치 <out>/render/ 도 그대로 읽는다)
+  [PASS] render_manifest_ok_and_no_failure_reasons: ok=True reasons=[]
+  [PASS] displayed_frame_physics_nonadvance_measured: 표시 프레임 비진행=True · 초기화 구분 기록=True (초기화의 sim.reset/warmup 은 물리를 전진시킨다 — 그것과 표시 구간을 섞지 않는다)
+  [FAIL] render_segment_time_from_renderer_phases_only: phase_seconds={'startup_s': 11.413, 'render_s': 4.198, 'ffmpeg_s': 0.379, 'close_s': None} close_timed_out=None (실행기 전체 소요(정리 포함)로 렌더 구간을 대체하지 않는다)
+  [PASS] readiness_frames_within_allowance: frames=8 ≤ 8 · 합성 라벨=이 산출에는 명시적 합성 pose fixture 프레임이 있다. 전체 사이클 결과로 세지 않는다.
+  [PASS] readiness_not_counted_as_full_cycle: readiness 는 원자료 1:1 전체 표시가 아니라고 스스로 표시한다
+  [PASS] source_support_is_mapped_deme_floor: source_support={'definition': '정본 트레이는 바닥 없는 네 벽이므로 원천 지지면은 DEME 도메인 경계면 z = box_bounds_m[2,0] 이다(감사 SOURCE_SUPPORT_DISPLAY_AUDIT_01).', 'deme_z_m': 0.0, 'display_z_m': 0.2188192277063058, 'quad_corners_deme_m': [[- (감사 SOURCE_SUPPORT_DISPLAY_AUDIT_01: 일반 바닥 표시 z=0 은 source support 가 아니다)
+  [FAIL] launcher_receipt_supplied_and_ok: path=/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/readiness/renderer_readiness_07_actual/READINESS_RECEIPT.json · ok=False gaps=['startup/render/ffmpeg/close 중 일부가 기록되지 않았다 — unverified'] close_timed_out=False
+  [PASS] runner_receipt_stage_bound_including_cleanup: path=/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/readiness/renderer_readiness_07_actual/attempt/EXECUTION_RECEIPT.json · 단계 전체(정리 포함) cap 안=True (555.502175s) · 전체 부재 확인=True · rc 확인=True — 신호 발행만으로 재정의하지 않는다
+  -- 63/66 checks passed
+
+  v2 교체한 v1 행: ['prospective_manifest_exists', 'external_frozen_inputs_match', 'renderer_readiness_accepted', 'readiness_contract_deviation_recorded', 'readiness_process_truth_recorded', 'renderer_readiness_receipt_exists', 'renderer_readiness_within_contract_bounds', 'renderer_readiness_labels_synthetic', 'renderer_readiness_not_counted_as_full_cycle', 'renderer_declares_void_mm_per_deg_not_used']
+  v1 파일 불변: /home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/verify_resume.py sha256=40ead648e9d3f4934e36f0a4bcb7f937461d617aff913b21568e89b9a0675f6c
+  -- 63/66 checks passed
+W13R_PREFLIGHT_V2_FAIL
+

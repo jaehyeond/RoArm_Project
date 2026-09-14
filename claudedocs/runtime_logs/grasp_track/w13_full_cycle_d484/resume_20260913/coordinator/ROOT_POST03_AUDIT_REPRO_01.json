@@ -1,0 +1,457 @@
+{
+  "artifact": "W13_POST03_PARTIAL_REPLAY_INDEPENDENT_RESULTS_AUDIT_V1",
+  "generated_utc": "2026-09-13T22:29:42Z",
+  "cpu_only_audit": true,
+  "new_gpu_or_physics_runs": 0,
+  "n_findings": 15,
+  "n_pass": 12,
+  "failures": [
+    "rrd_door_stop_records_bind_to_actual_exact_sync_particle_frames",
+    "isaac_joint_source_counts_exactly_account_for_283_frames",
+    "rerun_headless_decision_screenshot_is_visually_decision_complete"
+  ],
+  "verdict": "POST03_STRUCTURAL_REPLAY_PASS_BUT_RERUN_EVENT_AND_VISUAL_CONTRACT_FAIL_FULL_CYCLE_UNSUCCESSFUL",
+  "scientific_verdict": {
+    "full_cycle_complete": false,
+    "confirmed_delivery_n": 0,
+    "possible_delivery_upper_n_not_exact": 11,
+    "promotion": "NO_FULL_CYCLE_PROMOTION"
+  },
+  "findings": [
+    {
+      "name": "post03_two_steps_finalize_rc0_within_caps_and_no_residue",
+      "pass": true,
+      "evidence": {
+        "state": "complete",
+        "exit_code": 0,
+        "steps": [
+          {
+            "step": "step2_rerun",
+            "returncode": 0,
+            "stage_total_s_including_cleanup": 1046.855042,
+            "wall_cap_s": 5400.0,
+            "timed_out": false,
+            "whole_group_absence_confirmed": true
+          },
+          {
+            "step": "step3_isaac_replay",
+            "returncode": 0,
+            "stage_total_s_including_cleanup": 554.113737,
+            "wall_cap_s": 5400.0,
+            "timed_out": false,
+            "whole_group_absence_confirmed": true
+          }
+        ],
+        "owned_groups_left_alive": [],
+        "auto_retry": false
+      }
+    },
+    {
+      "name": "all_57_prelaunch_frozen_hashes_still_match",
+      "pass": true,
+      "evidence": {
+        "n_checked": 57,
+        "mismatches": [],
+        "receipt_sha256": "14948fdf739d1036bb5c7e166caf41d1cf54d16b315f3f82dd3e6f91fdf1c853"
+      }
+    },
+    {
+      "name": "post03_inputs_are_exact_copies_of_finalized_partial_raw",
+      "pass": true,
+      "evidence": {
+        "raw_original_sha256": "529f422e962730b17b520c3c9af2261aae7c431ec5e078cd2c368dfab0c46b0f",
+        "raw_copy_sha256": "529f422e962730b17b520c3c9af2261aae7c431ec5e078cd2c368dfab0c46b0f",
+        "json_original_sha256": "e482b939a4cf42e5284b9b15e36a9f3613e989161ec538475e2c05f4260d9340",
+        "json_copy_sha256": "e482b939a4cf42e5284b9b15e36a9f3613e989161ec538475e2c05f4260d9340"
+      }
+    },
+    {
+      "name": "root_owned_original_14_file_postcheck",
+      "pass": true,
+      "evidence": {
+        "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/coordinator/PARTIAL_RAW_POSTCHECK_01.json",
+        "sha256": "89ff511a714527573266975ddb02763112effff1df579c4b111758786e693574",
+        "receipt": {
+          "artifact": "W13R_ROOT_POST03_RAW_PRESERVATION_ACCEPTANCE_V1",
+          "checked_utc": "2026-09-13T22:12:53.672Z",
+          "checker_sha256": "96aa8ec56289b5b5bbcc9f7b14f3b41f9035e6499b78c8630322ab1587b305fb",
+          "manifest_sha256": "0d7fb7ce6d5d24d0a29b0c25ccd02e633a803239c10192b16aea0c8553bb2a52",
+          "command": "node claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/coordinator/verify_partial_raw_preservation.mjs claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/coordinator/PARTIAL_RAW_MANIFEST_01.json 0d7fb7ce6d5d24d0a29b0c25ccd02e633a803239c10192b16aea0c8553bb2a52",
+          "returncode": 0,
+          "files_checked": 14,
+          "issues": [],
+          "success": true,
+          "token": "W13R_PARTIAL_RAW_PRESERVATION_VERIFIED 14",
+          "process_absence_check": {
+            "command": "ps -p 3057244,3057247,3057262,3075606 -o pid,ppid,pgid,sid,lstart,etime,stat,args",
+            "host": true,
+            "returncode": 1,
+            "observed_process_rows": 0,
+            "note": "정확 launch shell/runner/Rerun/Isaac PID4개 부재. 광범위 시스템 프로세스 종료를 뜻하지 않는다."
+          }
+        }
+      }
+    },
+    {
+      "name": "partial_raw_scientific_and_schema_failures_are_not_erased",
+      "pass": true,
+      "evidence": {
+        "raw_audit_sha256": "bd0cc6ad1be561d3deb64a7c0552609ed66f4c7c205415907da69fad7ebbe2a3",
+        "raw_failures": [
+          "preregistered_strict_whole_sphere_source_containment",
+          "preregistered_transition_sync_index_exact_phase_changes"
+        ],
+        "abort_class": "SIGNAL_STOP",
+        "timeline_state": "signal_stop",
+        "full_cycle_complete": false
+      }
+    },
+    {
+      "name": "rrd_rbl_footer_version_and_structural_contract",
+      "pass": true,
+      "evidence": {
+        "rrd_sha256": "8a38670ae42d72ac790472c85deec08cdf4f063ee18e46035fe9066dd5c2eeeb",
+        "rbl_sha256": "216bb9b476586cc47e07b71a7f40a85ea730f7411ff6be8af26b0622ed9cf071",
+        "version_stdout": "rerun-cli 0.34.1 (base lance map_view nasm native_viewer oss_server perf_telemetry re_server release_full release_no_web_viewer web_viewer) [rustc 1.92.0 (ded5c06cf 2025-12-08), LLVM 21.1.3] x86_64-unknown-linux-gnu prepare-release-0.34.1 4efb18f, built 2026-07-07T16:20:42.173372603Z\nVideo features: av1 ffmpeg nasm",
+        "verify_rrd_rc": 0,
+        "verify_rbl_rc": 0,
+        "non_system_entities": 57,
+        "timelines": [
+          "blueprint",
+          "frame",
+          "log_time",
+          "particle_frame_row",
+          "phase",
+          "sim_time_s"
+        ],
+        "component_groups": 20,
+        "contacts_logged": 3074143,
+        "bridge_record_complete": true
+      }
+    },
+    {
+      "name": "rrd_door_stop_records_bind_to_actual_exact_sync_particle_frames",
+      "pass": false,
+      "evidence": {
+        "rrd_print_rc": 0,
+        "stored": [
+          {
+            "frame": 4809,
+            "particle_frame_row": 282,
+            "phase": 2,
+            "sim_time_display": "PT5.971508985S",
+            "text": "DOOR_STOP door_open_at_approach q=27.5 reason=reached_open_end M=0.0"
+          },
+          {
+            "frame": 7165,
+            "particle_frame_row": 282,
+            "phase": 4,
+            "sim_time_display": "PT8.438764979S",
+            "text": "DOOR_STOP close q=3.6297 reason=servo_stall M=1.7685130331618497"
+          },
+          {
+            "frame": 7335,
+            "particle_frame_row": 282,
+            "phase": 6,
+            "sim_time_display": "PT8.978534977S",
+            "text": "DOOR_STOP reclose q=3.5487 reason=servo_stall M=1.767935551125959"
+          },
+          {
+            "frame": 10880,
+            "particle_frame_row": 282,
+            "phase": 8,
+            "sim_time_display": "PT16.043079959S",
+            "text": "DOOR_STOP door_open q=27.5036 reason=reached_open_end M=0.0"
+          },
+          {
+            "frame": 14874,
+            "particle_frame_row": 282,
+            "phase": 10,
+            "sim_time_display": "PT18.769373953S",
+            "text": "DOOR_STOP close_after_discharge q=0.0 reason=reached_close_end M=0.0"
+          }
+        ],
+        "expected_from_raw_and_timeline": [
+          {
+            "subphase": "door_open_at_approach",
+            "frame": 4809,
+            "candidate_particle_frame_rows": [
+              69,
+              70
+            ],
+            "expected_first_exact_sync_row": 69,
+            "phase": 2,
+            "sim_time_s": 5.971508984923389
+          },
+          {
+            "subphase": "close",
+            "frame": 7165,
+            "candidate_particle_frame_rows": [
+              98,
+              99
+            ],
+            "expected_first_exact_sync_row": 98,
+            "phase": 4,
+            "sim_time_s": 8.438764978694167
+          },
+          {
+            "subphase": "reclose",
+            "frame": 7335,
+            "candidate_particle_frame_rows": [
+              107,
+              108,
+              109
+            ],
+            "expected_first_exact_sync_row": 107,
+            "phase": 6,
+            "sim_time_s": 8.978534977331378
+          },
+          {
+            "subphase": "door_open",
+            "frame": 10880,
+            "candidate_particle_frame_rows": [
+              189,
+              190
+            ],
+            "expected_first_exact_sync_row": 189,
+            "phase": 8,
+            "sim_time_s": 16.043079959495117
+          },
+          {
+            "subphase": "close_after_discharge",
+            "frame": 14874,
+            "candidate_particle_frame_rows": [
+              220,
+              221
+            ],
+            "expected_first_exact_sync_row": 220,
+            "phase": 10,
+            "sim_time_s": 18.769373952611886
+          }
+        ],
+        "observed_defect": "all five stored DOOR_STOP rows bind particle_frame_row=282 (final row), despite earlier frame/time coordinates"
+      }
+    },
+    {
+      "name": "isaac_283_frame_raw_row_time_phase_door_and_decision_mapping",
+      "pass": true,
+      "evidence": {
+        "n_rows": 283,
+        "bad_rows": [],
+        "same_sync_rows_preserved": [
+          1,
+          2,
+          4,
+          5,
+          70,
+          86,
+          99,
+          106,
+          108,
+          109,
+          135,
+          176,
+          177,
+          190,
+          207,
+          221
+        ],
+        "particle_frame_sync_sha256": "cf76d2c27ac34161c9d7e9f6cbc0bbaf8450773b825a443704170c02b5d98ead",
+        "particle_frame_time_sha256": "3ddb32ed28a4d6b18b07c8a55e3c6eddb321259b685c73b2c409546f9185da2f",
+        "particle_positions_sha256": "b51390a8dc2958bcaa2ed7d2a07943e889e9d1ad280f62d916c5eabc058af76d",
+        "particle_quaternions_sha256": "ae6d8c4672b3c1e4a4ae9ec7bc226ac108e6b266000f43823d68ba0dda4c4353",
+        "particle_ids_sha256": "2331212ba4f7b42cad56803a276b26d354be471e5768c09b81fa20cf3757b949",
+        "inventory_code_sha256": "07e7590dbf75ee7112c29e98abfb13a8a7cba956b0671205d5f2cdc7e31c7a59",
+        "contact_points_sha256": "3bcab0054be8bf4225aafb9f69d89030ac1875c411c5c986c16e67485db49afc",
+        "contact_forces_sha256": "b48e88699c19ea8253dd2e3e2482c199f6b864c6eee3a3d54fa4b6857ae54999",
+        "no_scalar_only_geometry_certification": true
+      }
+    },
+    {
+      "name": "isaac_frame_inventory_video_and_partial_label_contract",
+      "pass": true,
+      "evidence": {
+        "n_png": 283,
+        "frame_names_exact": true,
+        "video": {
+          "path": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/isaac/w13_full_cycle.mp4",
+          "bytes": 5940976,
+          "fps": 10,
+          "n_frames": 283
+        },
+        "video_sha256": "1471127134fc06a88d546c891de0d2515f4911fcd1832f0ae841258ac1a2bc34",
+        "incomplete_physics_label": "INCOMPLETE PHYSICS / NOT A FULL CYCLE: readiness=False abort_class=SIGNAL_STOP diverged=False stopped_early=None smoke=False max_particles=None",
+        "no_physics_during_displayed_frames": true
+      }
+    },
+    {
+      "name": "isaac_joint_source_counts_exactly_account_for_283_frames",
+      "pass": false,
+      "evidence": {
+        "declared": {
+          "offline IK from stored actual lip pose (cmd_mode=abs)": 55,
+          "stored sync_joint_deg (cmd_mode=fk, no IK solved)": 228,
+          "offline IK from stored actual lip pose (cmd_mode=w11)": 55
+        },
+        "declared_sum": 338,
+        "actual_exact_string_counts": {
+          "stored sync_joint_deg (cmd_mode=fk, no IK solved)": 228,
+          "offline IK from stored actual lip pose (cmd_mode=abs)": 2,
+          "offline IK from stored actual lip pose (cmd_mode=w11)": 53
+        },
+        "actual_sum": 283,
+        "observed_defect": "both offline-IK categories are reported as 55; exact per-frame strings show abs=2 and w11=53"
+      }
+    },
+    {
+      "name": "isaac_display_pose_diagnostics_audited_without_actuation_claim",
+      "pass": true,
+      "evidence": {
+        "n_frames_with_limit_violations_declared": 20,
+        "n_limit_violation_rows_recomputed": 20,
+        "violating_display_indices": [
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95,
+          96,
+          97,
+          98,
+          99,
+          100
+        ],
+        "max_observed_shoulder_deg": 77.36999999999998,
+        "declared_max_lip_reprojection_err_mm": 8.132,
+        "interpretation": "The frozen criteria define no numeric display reprojection or display-joint-limit threshold; these diagnostics are disclosed limitations, not newly invented physics gates.",
+        "not_actuation_verification": "규정 표시다. 서보 토크·실현성 증거가 아니다."
+      }
+    },
+    {
+      "name": "isaac_release_close_and_six_interval_accounting",
+      "pass": true,
+      "evidence": {
+        "phase_seconds": {
+          "t0_monotonic": 237196.183116194,
+          "started_utc": "2026-09-13T22:00:32Z",
+          "startup_s": 29.717,
+          "render_s": 493.957,
+          "ffmpeg_s": 4.979,
+          "close_budget_s": 60.0,
+          "total_before_close_s": 528.654,
+          "clear_instance_s": 0.354,
+          "reference_release_s": 0.007,
+          "close_diagnostic_s": 0.05,
+          "cleanup_used_before_close_s": 0.411,
+          "close_budget_remaining_s": 59.589,
+          "close_s": 22.733,
+          "close_timed_out": false,
+          "cleanup_total_s": 23.17,
+          "total_s": 551.85
+        },
+        "required_survivors": [],
+        "informational_survivors": [
+          "sim"
+        ],
+        "release_mapping": {
+          "expected_keys": [
+            "cams_is_none",
+            "scene_is_none",
+            "robot_is_none",
+            "sim_is_none",
+            "public_instance_is_none"
+          ],
+          "is_mapping": true,
+          "keys_ok": true,
+          "types_ok": true,
+          "all_true": true,
+          "missing": [],
+          "extra": [],
+          "bad_type": [],
+          "false_keys": [],
+          "values": {
+            "cams_is_none": true,
+            "scene_is_none": true,
+            "robot_is_none": true,
+            "sim_is_none": true,
+            "public_instance_is_none": true
+          }
+        },
+        "first_nonreturn": null,
+        "native_effect_unproven": true
+      }
+    },
+    {
+      "name": "rerun_headless_decision_screenshot_is_visually_decision_complete",
+      "pass": false,
+      "evidence": {
+        "path": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/input/rerun/w13_inspection.png",
+        "sha256": "fd4b3e9fecba88a2d9dc9b68a3144bc11411270a735d0caa5d54d37573be7938",
+        "opened_at_original_detail": true,
+        "observations": [
+          "viewer cursor is +0.000s and main 3D view shows only the initial particle pile",
+          "tool, bin, robot, bridge target-vs-actual, and decision-time subject are not visible",
+          "decision/door-stop and scalar plot panels are blank at the captured cursor",
+          "NOT A FULL CYCLE / SIGNAL_STOP banner is visible"
+        ],
+        "interpretation": "non-empty screenshot and structural RRD pass do not satisfy actual visual inspection"
+      }
+    },
+    {
+      "name": "isaac_representative_frames_visually_show_partial_trajectory_and_failure_cues",
+      "pass": true,
+      "evidence": {
+        "opened_at_original_detail": [
+          "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/isaac/frames/f_00107.png",
+          "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/isaac/frames/f_00110.png",
+          "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/isaac/frames/f_00123.png",
+          "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/isaac/frames/f_00136.png",
+          "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/isaac/frames/f_00175.png",
+          "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/isaac/frames/f_00189.png",
+          "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/isaac/frames/f_00220.png",
+          "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/isaac/frames/f_00282.png"
+        ],
+        "observations": [
+          "whole robot, S1 tool, source, receiving bin, source marker, bin marker, and captions are visible",
+          "reclose frames visibly show particles below the tool; the 144 cohort count comes only from canonical raw ID/inventory labels, not image counting",
+          "transport/discharge frames show particles outside the source; receiving_bin=0 comes from the raw inventory code, not image counting",
+          "final row remains return_home motion rather than HOME hold; every inspected frame has the incomplete-physics banner"
+        ],
+        "non_claims": [
+          "colored source/bin markers are not particles",
+          "visual cues do not replace raw inventory or geometry predicates"
+        ]
+      }
+    },
+    {
+      "name": "scientific_verdict_remains_unsuccessful_and_interval_only",
+      "pass": true,
+      "evidence": {
+        "confirmed_delivery_n": 0,
+        "possible_upper_n_not_exact": 11,
+        "exact_single_value_allowed": false,
+        "home_pose_return_err_mm": 29.57491,
+        "abort_class": "SIGNAL_STOP",
+        "promotion": "NO_FULL_CYCLE_PROMOTION"
+      }
+    }
+  ],
+  "limits": [
+    "Rerun Float32 spatial data and Isaac display pixels are inspection evidence; canonical raw arrays remain authoritative.",
+    "The postprocess completed, but it cannot repair the two preregistered raw-schema failures or the interrupted cycle.",
+    "Isaac representative-frame inspection passes for partial-trajectory communication; D341 overall visualization still fails because the Rerun headless screenshot is not decision-time complete.",
+    "Isaac reports 20 displayed IK poses outside its declared shoulder range and 8.132 mm maximum lip reprojection error; the frozen criteria provide no numeric threshold, so this audit records rather than promotes them to a new physical gate.",
+    "The Isaac joint_source_counts summary is objectively non-exclusive (338 declared versus 283 frames) and therefore fails exact accounting independently of any display-quality threshold.",
+    "No producer, coordinator, state, or old evidence file was modified by this audit."
+  ]
+}

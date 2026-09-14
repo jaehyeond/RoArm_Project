@@ -1,0 +1,35 @@
+{
+  "artifact": "LABMEETING_ROOT_VISUAL_CHECK_01",
+  "date_kst": "2026-09-14",
+  "review_scope": "One existing annotated W12 montage opened; video metadata read, not continuous playback",
+  "image": {
+    "path": "/home/cgxr/orca/workspaces/RoArm_Project/w12-isaac-replay/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w12_isaac_w10_w11_compare_20260912/replay/annotated/montage_lift_annotated.png",
+    "sha256": "0005b4301a6a731e9473ed72550bd860c104db9a486354dd0d510cbc546622f4",
+    "actually_opened": true,
+    "observations_ko": [
+      "W10 위/W11 아래의 lift 저장 프레임52를 각각 side/top 두 시점으로 표시한다.",
+      "팔·S1·더미·둘레 표시와 source/rendered 좌표 표식이 보인다.",
+      "상단 주석은 최종 포획 ID의 고정 색이며 그 순간 포획 분류가 아님을 명시한다.",
+      "긴 진단 주석은 랩미팅 본문에서는 읽기 어려워 별도 한국어 설명이 필요하다.",
+      "이 정지영상만으로 실제 접촉력, 입자 수, 각도 정확성 또는 구동 가능성을 계측했다고 주장하지 않는다."
+    ]
+  },
+  "video": {
+    "path": "/home/cgxr/orca/workspaces/RoArm_Project/w12-isaac-replay/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w12_isaac_w10_w11_compare_20260912/replay/annotated/paired_w10_w11_sourcetime_annotated.mp4",
+    "sha256": "b9af234178d0630ff41dcb2fc3002228a6a124bc38c7fdf14c6f763f4c6f44e8",
+    "ffprobe": {"codec": "h264", "width": 2048, "height": 1630, "fps": 10, "frames": 64, "duration_s": 6.4},
+    "actually_watched_continuously": false
+  },
+  "source_crosscheck": {
+    "path": "/home/cgxr/orca/workspaces/RoArm_Project/w12-isaac-replay/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w12_isaac_w10_w11_compare_20260912/replay/sim_isaac_replay_w12.py",
+    "lines": [320, 333, 338, 350, 368, 398, 404],
+    "observations": [
+      "lens_proto concatenates seven icospheres with subdivisions=1; not an ideal ellipsoid mesh or PBD particle set",
+      "PointInstancer position and quaternion are updated from recorded DEME clump rows",
+      "W12 invokes sim.step(render=True) in warmup and displayed-frame loop; do not claim zero Isaac physics steps",
+      "Robot joint-state injection and scene update do not prove actuator feasibility or two-way DEME coupling"
+    ]
+  },
+  "new_render_runs": 0,
+  "new_physics_runs": 0
+}

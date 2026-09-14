@@ -1,0 +1,791 @@
+{
+  "artifact": "W11_DT_COMPARISON",
+  "baseline": {
+    "cell": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix/cell_DE_dt2e6_c",
+    "result_sha256": "1b16c2d292b285a153ee048d6ca5237ebbacfd4c0ab73efadeacf85fc06ef088",
+    "dt_s": 2e-06,
+    "completed": true,
+    "diverged": false,
+    "timeline_state": "complete",
+    "syncs": 2774,
+    "particle_frames": 64,
+    "physical_time_s": 3.144948,
+    "physics_loop_wall_s": 1870.9,
+    "steps_actual": {
+      "settle": 25,
+      "descend": 351,
+      "close": 2155,
+      "lift": 137,
+      "reclose": 106
+    },
+    "stops": [
+      {
+        "phase": "close",
+        "q_deg": 3.307,
+        "reason": "servo_stall",
+        "M_hinge_res_Nm": 1.783022,
+        "sim_t": 2.585862,
+        "max_single_contact_N": 1.7118,
+        "q_from_quat_deg": 3.235,
+        "nominal_servo_deg": 5.807,
+        "actual_servo_deg": 5.734999999999999,
+        "timeline_index": 2530,
+        "actual_angle_from_mesh_deg": 3.234891011106818,
+        "mesh_rigid_fit_max_residual_um": 0.012201496185096111
+      },
+      {
+        "phase": "reclose",
+        "q_deg": 3.069,
+        "reason": "servo_stall",
+        "M_hinge_res_Nm": 1.765356,
+        "sim_t": 3.132942,
+        "max_single_contact_N": 2.5997,
+        "q_from_quat_deg": 2.993,
+        "nominal_servo_deg": 5.569,
+        "actual_servo_deg": 5.493,
+        "timeline_index": 2770,
+        "actual_angle_from_mesh_deg": 2.992974355971196,
+        "mesh_rigid_fit_max_residual_um": 0.016662573024112615
+      }
+    ],
+    "door": {
+      "stops": [
+        {
+          "phase": "close",
+          "q_deg": 3.307,
+          "reason": "servo_stall",
+          "M_hinge_res_Nm": 1.783022,
+          "sim_t": 2.585862,
+          "max_single_contact_N": 1.7118,
+          "q_from_quat_deg": 3.235
+        },
+        {
+          "phase": "reclose",
+          "q_deg": 3.069,
+          "reason": "servo_stall",
+          "M_hinge_res_Nm": 1.765356,
+          "sim_t": 3.132942,
+          "max_single_contact_N": 2.5997,
+          "q_from_quat_deg": 2.993
+        }
+      ],
+      "q_after_close_deg": 3.307,
+      "q_final_deg": 3.069,
+      "servo_deg_final": 5.569,
+      "lip_gap_final_mm": 6.152,
+      "mouth_end_mm": 6.155,
+      "n_touch_both_meshes": 1,
+      "n_pinched_at_lip": 0
+    },
+    "capture_count": 541,
+    "capture_mass_g": 10.959243732020918,
+    "n_carried_z": 612,
+    "capture_boundary_min_margin_um": 1.5746831893911906,
+    "initial_readback_equals_pile_at_float32": false,
+    "initial_readback_vs_pile_max_abs_m": 1.4901161193847656e-08,
+    "max_speed_m_s_saved_syncs": 5.3291,
+    "over_5m_s_syncs": 1,
+    "maximum_speed_row": {
+      "phase": "close",
+      "i": 1601,
+      "sim_t": 2.529456,
+      "z_lip_mm": 16.063,
+      "q_deg": 4.55,
+      "arm": "hold",
+      "door": "close",
+      "v_particle_max": 5.3291,
+      "v_max_owner": 12766,
+      "v_max_owner_pos_mm": [
+        -19.17,
+        -2.59,
+        41.48
+      ],
+      "n_fixed": 273,
+      "F_fixed_N": 3.0685,
+      "Fz_fixed_up_N": 0.3809,
+      "maxF_fixed_pt_mm": [
+        -19.27,
+        -0.0,
+        19.22
+      ],
+      "maxF_fixed_vec_N": [
+        -0.008,
+        0.364,
+        0.015
+      ],
+      "n_door": 185,
+      "F_door_N": 3.7177,
+      "maxF_door_pt_mm": [
+        -19.84,
+        -7.5,
+        38.63
+      ],
+      "maxF_door_vec_N": [
+        -0.095,
+        -0.472,
+        -0.04
+      ],
+      "M_hinge_res_Nm": 0.415149,
+      "lipF_N": 3.6147,
+      "max_single_contact_N": 0.4832,
+      "diag": {
+        "n_near_clumps": 1810,
+        "v_max_owner": 12766,
+        "v_max_owner_v_m_s": 5.3291,
+        "top_fixed": {
+          "tri": 194,
+          "group": "part_cap_lip",
+          "h_mm": 1.0276,
+          "inside": true,
+          "d_closest_mm": 1.0276,
+          "pen_geo_mm": 0.1287,
+          "deme_pen_mm": 0.1287,
+          "ghost": false,
+          "normal": [
+            0.0,
+            -1.0,
+            -0.0
+          ],
+          "pt_mm": [
+            -19.27,
+            -0.0,
+            19.221
+          ],
+          "F_N": 0.3644,
+          "F_vec_N": [
+            -0.0078,
+            0.364,
+            0.0146
+          ],
+          "owner": 5495,
+          "k": 1,
+          "sphere_r_mm": 1.1564,
+          "pt_to_sphere_centre_mm": 1.0276,
+          "owner_v_m_s": 0.0109,
+          "delta_hertz_mm": 0.129
+        },
+        "top_door": {
+          "tri": 195,
+          "group": "part_cap_lip",
+          "h_mm": 1.3655,
+          "inside": true,
+          "d_closest_mm": 1.3655,
+          "pen_geo_mm": -0.2091,
+          "deme_pen_mm": -0.2091,
+          "ghost": false,
+          "normal": [
+            0.0,
+            0.9969,
+            -0.0784
+          ],
+          "pt_mm": [
+            -19.843,
+            -7.497,
+            38.631
+          ],
+          "F_N": 0.4832,
+          "F_vec_N": [
+            -0.0954,
+            -0.472,
+            -0.0397
+          ],
+          "owner": 8935,
+          "k": 6,
+          "sphere_r_mm": 1.1564,
+          "pt_to_sphere_centre_mm": 4.7594,
+          "owner_v_m_s": 0.0443,
+          "delta_hertz_mm": 0.1557
+        }
+      }
+    },
+    "stderr_warning_lines": [
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 44256 (\\N{HANGUL SYLLABLE GO}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 51221 (\\N{HANGUL SYLLABLE JEONG}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 48512 (\\N{HANGUL SYLLABLE BU}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 47928 (\\N{HANGUL SYLLABLE MUN}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 51217 (\\N{HANGUL SYLLABLE JEOB}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 52489 (\\N{HANGUL SYLLABLE COG}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 54252 (\\N{HANGUL SYLLABLE PO}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 54925 (\\N{HANGUL SYLLABLE HOEG}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 51077 (\\N{HANGUL SYLLABLE IB}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 51088 (\\N{HANGUL SYLLABLE JA}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 48372 (\\N{HANGUL SYLLABLE BO}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 50872 (\\N{HANGUL SYLLABLE UL}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 50504 (\\N{HANGUL SYLLABLE AN}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 54224 (\\N{HANGUL SYLLABLE PYE}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 54633 (\\N{HANGUL SYLLABLE HAB}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 51333 (\\N{HANGUL SYLLABLE JONG}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 47308 (\\N{HANGUL SYLLABLE RYO}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 52572 (\\N{HANGUL SYLLABLE COE}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 45800 (\\N{HANGUL SYLLABLE DAN}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 47732 (\\N{HANGUL SYLLABLE MYEON}) missing from font(s) DejaVu Sans."
+    ],
+    "events": [
+      {
+        "phase": "close",
+        "i": 1578,
+        "sim_t": 2.52711,
+        "q_deg": 4.6036,
+        "v_max": 0.1448,
+        "max_single_contact_N": 2.0068,
+        "rule": {
+          "v_m_s": 2.0,
+          "force_N": 2.0
+        }
+      },
+      {
+        "phase": "close",
+        "i": 1597,
+        "sim_t": 2.529048,
+        "q_deg": 4.5609,
+        "v_max": 2.025,
+        "max_single_contact_N": 2.0439,
+        "rule": {
+          "v_m_s": 2.0,
+          "force_N": 2.0
+        }
+      }
+    ],
+    "forces": {
+      "close_peak_lipF_N": 15.5248,
+      "close_peak_M_res_Nm": 1.783022,
+      "close_peak_single_contact_N": 2.6345,
+      "close_contacts_door_max": 223,
+      "descend_peak_F_fixed_N": 2.5769
+    },
+    "scoop_site": {
+      "x_mm": 0.0,
+      "y_mm": 0.0,
+      "surface_z_mm": 41.13,
+      "lip_z_start_mm": 51.18,
+      "lip_z_plunge_nominal_mm": 16.18,
+      "lip_z_end_mm": 96.5
+    },
+    "trajectory": {
+      "q_open_joint_deg": 27.5,
+      "q_close_end_deg": 0.0,
+      "steps_nominal": {
+        "settle": 25,
+        "descend": 350,
+        "close": 306,
+        "lift": 134
+      },
+      "steps_actual": {
+        "settle": 25,
+        "descend": 351,
+        "close": 2155,
+        "lift": 137,
+        "reclose": 106
+      },
+      "dt_sync_close_s": 0.001,
+      "steps_nominal_close_sync": 1224,
+      "descend_hold_steps": 0,
+      "descend_reached_lip_z_mm": 16.06,
+      "descend_target_lip_z_mm": 16.13,
+      "plunge_reached_mm": 25.06,
+      "vz_descend_m_s": -0.025,
+      "omega_close_rad_s": 0.3921287126621247,
+      "vz_lift_m_s": 0.15,
+      "mouth_start_mm": 56.02
+    },
+    "heightmap": {
+      "spec_version": "roarm-heightmap-v1",
+      "cell_m": 0.005,
+      "shape": [
+        44,
+        62
+      ],
+      "max_m": 0.08126872777938843,
+      "n_particles_used": 19388,
+      "pre_max_m": 0.041126739233732224,
+      "npz_max_m": 0.041180770844221115,
+      "pre_vs_npz_max_abs_diff_m": 0.003043200820684433,
+      "removed_volume_cm3": 53.96187142468989,
+      "spheres_per_particle": 7
+    },
+    "raw_crater_angles_deg": {
+      "+x": 29.037524461545523,
+      "+y": 34.28586152280996,
+      "-x": 24.58983433192901,
+      "-y": 39.01730022137218
+    },
+    "checks": {
+      "all_input_hashes_match": true,
+      "seed_460_full_run": true,
+      "timeline_times_match_arrays": true,
+      "steps_match": true,
+      "timeline_phases_match_arrays": true,
+      "cavity_geometry_matches_mask": true,
+      "capture_ids_match_render_timeline": true,
+      "count_matches_json": true,
+      "mass_matches_json_rounding": true,
+      "particle_mass_matches_template": true,
+      "initial_orientations_match_same_pile": true,
+      "last_particle_positions_match": true,
+      "sphere_expansion_matches_final_raw": true,
+      "post_heightmap_recomputed": true,
+      "initial_heightmap_recomputed": true,
+      "max_speed_matches_json_rounding": true,
+      "speed_warning_count_matches": true,
+      "finite_raw_arrays": true,
+      "close_stop_matches_timeline": true,
+      "close_actual_angle_matches_mesh": true,
+      "reclose_stop_matches_timeline": true,
+      "reclose_actual_angle_matches_mesh": true
+    },
+    "evidence_pass": true
+  },
+  "new": {
+    "cell": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w11_dt_sensitivity_20260911/cell_dt1e6_seed460",
+    "result_sha256": "965f800ef941ce7c8814028a7ea0be365c62821a605bca3abdad9bc09bc3c062",
+    "dt_s": 1e-06,
+    "completed": true,
+    "diverged": false,
+    "timeline_state": "complete",
+    "syncs": 2771,
+    "particle_frames": 64,
+    "physical_time_s": 3.141871,
+    "physics_loop_wall_s": 2720.74,
+    "steps_actual": {
+      "settle": 25,
+      "descend": 351,
+      "close": 2072,
+      "lift": 137,
+      "reclose": 186
+    },
+    "stops": [
+      {
+        "phase": "close",
+        "q_deg": 3.494,
+        "reason": "servo_stall",
+        "M_hinge_res_Nm": 1.765517,
+        "sim_t": 2.574948,
+        "max_single_contact_N": 1.5105,
+        "q_from_quat_deg": 3.39,
+        "nominal_servo_deg": 5.994,
+        "actual_servo_deg": 5.890000000000001,
+        "timeline_index": 2447,
+        "actual_angle_from_mesh_deg": 3.390304934512283,
+        "mesh_rigid_fit_max_residual_um": 0.012073696666118763
+      },
+      {
+        "phase": "reclose",
+        "q_deg": 3.076,
+        "reason": "pinch_guard",
+        "M_hinge_res_Nm": 1.405012,
+        "sim_t": 3.129868,
+        "max_single_contact_N": 3.0089,
+        "q_from_quat_deg": 2.954,
+        "nominal_servo_deg": 5.5760000000000005,
+        "actual_servo_deg": 5.454000000000001,
+        "timeline_index": 2767,
+        "actual_angle_from_mesh_deg": 2.954385897998314,
+        "mesh_rigid_fit_max_residual_um": 0.010652951364989272
+      }
+    ],
+    "door": {
+      "stops": [
+        {
+          "phase": "close",
+          "q_deg": 3.494,
+          "reason": "servo_stall",
+          "M_hinge_res_Nm": 1.765517,
+          "sim_t": 2.574948,
+          "max_single_contact_N": 1.5105,
+          "q_from_quat_deg": 3.39
+        },
+        {
+          "phase": "reclose",
+          "q_deg": 3.076,
+          "reason": "pinch_guard",
+          "M_hinge_res_Nm": 1.405012,
+          "sim_t": 3.129868,
+          "max_single_contact_N": 3.0089,
+          "q_from_quat_deg": 2.954
+        }
+      ],
+      "q_after_close_deg": 3.494,
+      "q_final_deg": 3.076,
+      "servo_deg_final": 5.576,
+      "lip_gap_final_mm": 6.165,
+      "mouth_end_mm": 6.076,
+      "n_touch_both_meshes": 12,
+      "n_pinched_at_lip": 5
+    },
+    "capture_count": 517,
+    "capture_mass_g": 10.47306656091463,
+    "n_carried_z": 583,
+    "capture_boundary_min_margin_um": 0.045818090439742054,
+    "initial_readback_equals_pile_at_float32": false,
+    "initial_readback_vs_pile_max_abs_m": 1.4901161193847656e-08,
+    "max_speed_m_s_saved_syncs": 2.7255,
+    "over_5m_s_syncs": 0,
+    "maximum_speed_row": {
+      "phase": "reclose",
+      "i": 87,
+      "sim_t": 3.11997,
+      "z_lip_mm": 96.489,
+      "q_deg": 3.296,
+      "arm": "hold",
+      "door": "close",
+      "v_particle_max": 2.7255,
+      "v_max_owner": 15041,
+      "v_max_owner_pos_mm": [
+        -21.95,
+        -2.6,
+        114.07
+      ],
+      "n_fixed": 29,
+      "F_fixed_N": 6.0333,
+      "Fz_fixed_up_N": 0.0211,
+      "maxF_fixed_pt_mm": [
+        20.85,
+        -0.0,
+        120.44
+      ],
+      "maxF_fixed_vec_N": [
+        0.466,
+        1.863,
+        -0.317
+      ],
+      "n_door": 32,
+      "F_door_N": 5.9632,
+      "maxF_door_pt_mm": [
+        19.68,
+        -5.21,
+        120.56
+      ],
+      "maxF_door_vec_N": [
+        -0.128,
+        -0.609,
+        0.06
+      ],
+      "M_hinge_res_Nm": 0.605502,
+      "lipF_N": 5.2721,
+      "max_single_contact_N": 1.9465,
+      "diag": {
+        "n_near_clumps": 168,
+        "v_max_owner": 15041,
+        "v_max_owner_v_m_s": 2.7255,
+        "top_fixed": {
+          "tri": 196,
+          "group": "part_cap_lip",
+          "h_mm": 3.2849,
+          "inside": false,
+          "d_closest_mm": 4.1762,
+          "pen_geo_mm": -3.0198,
+          "deme_pen_mm": -3.0198,
+          "ghost": false,
+          "normal": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "pt_mm": [
+            20.849,
+            -0.0,
+            120.437
+          ],
+          "F_N": 1.9465,
+          "F_vec_N": [
+            0.4657,
+            1.8632,
+            -0.3173
+          ],
+          "owner": 15532,
+          "k": 2,
+          "sphere_r_mm": 1.1564,
+          "pt_to_sphere_centre_mm": 9.5554,
+          "owner_v_m_s": 0.0673,
+          "delta_hertz_mm": 0.3942
+        },
+        "top_door": {
+          "tri": 14,
+          "group": "cap_in",
+          "h_mm": 3.2022,
+          "inside": true,
+          "d_closest_mm": 3.2022,
+          "pen_geo_mm": -2.0458,
+          "deme_pen_mm": -2.0458,
+          "ghost": false,
+          "normal": [
+            -1.0,
+            -0.0,
+            0.0
+          ],
+          "pt_mm": [
+            19.682,
+            -5.214,
+            120.556
+          ],
+          "F_N": 0.6248,
+          "F_vec_N": [
+            -0.1284,
+            -0.6085,
+            0.0604
+          ],
+          "owner": 2297,
+          "k": 2,
+          "sphere_r_mm": 1.1564,
+          "pt_to_sphere_centre_mm": 7.9073,
+          "owner_v_m_s": 0.0603,
+          "delta_hertz_mm": 0.1848
+        }
+      }
+    },
+    "stderr_warning_lines": [
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 44256 (\\N{HANGUL SYLLABLE GO}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 51221 (\\N{HANGUL SYLLABLE JEONG}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 48512 (\\N{HANGUL SYLLABLE BU}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 47928 (\\N{HANGUL SYLLABLE MUN}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 51217 (\\N{HANGUL SYLLABLE JEOB}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 52489 (\\N{HANGUL SYLLABLE COG}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 54252 (\\N{HANGUL SYLLABLE PO}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 54925 (\\N{HANGUL SYLLABLE HOEG}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 51077 (\\N{HANGUL SYLLABLE IB}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 51088 (\\N{HANGUL SYLLABLE JA}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 48372 (\\N{HANGUL SYLLABLE BO}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 50872 (\\N{HANGUL SYLLABLE UL}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 50504 (\\N{HANGUL SYLLABLE AN}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 54224 (\\N{HANGUL SYLLABLE PYE}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 54633 (\\N{HANGUL SYLLABLE HAB}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 51333 (\\N{HANGUL SYLLABLE JONG}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 47308 (\\N{HANGUL SYLLABLE RYO}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 52572 (\\N{HANGUL SYLLABLE COE}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 45800 (\\N{HANGUL SYLLABLE DAN}) missing from font(s) DejaVu Sans.",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py:967: UserWarning: Glyph 47732 (\\N{HANGUL SYLLABLE MYEON}) missing from font(s) DejaVu Sans."
+    ],
+    "events": [
+      {
+        "phase": "reclose",
+        "i": 92,
+        "sim_t": 3.120475,
+        "q_deg": 3.287,
+        "v_max": 2.1002,
+        "max_single_contact_N": 2.0005,
+        "rule": {
+          "v_m_s": 2.0,
+          "force_N": 2.0
+        }
+      },
+      {
+        "phase": "reclose",
+        "i": 86,
+        "sim_t": 3.119869,
+        "q_deg": 3.3004,
+        "v_max": 2.3332,
+        "max_single_contact_N": 1.9355,
+        "rule": {
+          "v_m_s": 2.0,
+          "force_N": 2.0
+        }
+      }
+    ],
+    "forces": {
+      "close_peak_lipF_N": 15.3724,
+      "close_peak_M_res_Nm": 1.765517,
+      "close_peak_single_contact_N": 3.0089,
+      "close_contacts_door_max": 226,
+      "descend_peak_F_fixed_N": 2.7007
+    },
+    "scoop_site": {
+      "x_mm": 0.0,
+      "y_mm": 0.0,
+      "surface_z_mm": 41.13,
+      "lip_z_start_mm": 51.18,
+      "lip_z_plunge_nominal_mm": 16.18,
+      "lip_z_end_mm": 96.49
+    },
+    "trajectory": {
+      "q_open_joint_deg": 27.5,
+      "q_close_end_deg": 0.0,
+      "steps_nominal": {
+        "settle": 25,
+        "descend": 350,
+        "close": 306,
+        "lift": 134
+      },
+      "steps_actual": {
+        "settle": 25,
+        "descend": 351,
+        "close": 2072,
+        "lift": 137,
+        "reclose": 186
+      },
+      "dt_sync_close_s": 0.001,
+      "steps_nominal_close_sync": 1224,
+      "descend_hold_steps": 0,
+      "descend_reached_lip_z_mm": 16.07,
+      "descend_target_lip_z_mm": 16.13,
+      "plunge_reached_mm": 25.06,
+      "vz_descend_m_s": -0.025,
+      "omega_close_rad_s": 0.3921287126621247,
+      "vz_lift_m_s": 0.15,
+      "mouth_start_mm": 56.02
+    },
+    "heightmap": {
+      "spec_version": "roarm-heightmap-v1",
+      "cell_m": 0.005,
+      "shape": [
+        44,
+        62
+      ],
+      "max_m": 0.07664250582456589,
+      "n_particles_used": 19417,
+      "pre_max_m": 0.04112757742404938,
+      "npz_max_m": 0.041180770844221115,
+      "pre_vs_npz_max_abs_diff_m": 0.0029340162873268127,
+      "removed_volume_cm3": 53.428138117305934,
+      "spheres_per_particle": 7
+    },
+    "raw_crater_angles_deg": {
+      "+x": 30.443996194933863,
+      "+y": 32.8655101024083,
+      "-x": 35.02900231140509,
+      "-y": 36.8252715591148
+    },
+    "checks": {
+      "all_input_hashes_match": true,
+      "seed_460_full_run": true,
+      "timeline_times_match_arrays": true,
+      "steps_match": true,
+      "timeline_phases_match_arrays": true,
+      "cavity_geometry_matches_mask": true,
+      "capture_ids_match_render_timeline": true,
+      "count_matches_json": true,
+      "mass_matches_json_rounding": true,
+      "particle_mass_matches_template": true,
+      "initial_orientations_match_same_pile": true,
+      "last_particle_positions_match": true,
+      "sphere_expansion_matches_final_raw": true,
+      "post_heightmap_recomputed": true,
+      "initial_heightmap_recomputed": true,
+      "max_speed_matches_json_rounding": true,
+      "speed_warning_count_matches": true,
+      "finite_raw_arrays": true,
+      "close_stop_matches_timeline": true,
+      "close_actual_angle_matches_mesh": true,
+      "reclose_stop_matches_timeline": true,
+      "reclose_actual_angle_matches_mesh": true
+    },
+    "evidence_pass": true
+  },
+  "effective_params_diff": {
+    "render_timeline_path": [
+      "claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix/render_timeline_w10_DE_dt2e6.npz",
+      "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w11_dt_sensitivity_20260911/cell_dt1e6_seed460/render_timeline_seed460.npz"
+    ],
+    "timestep_s": [
+      2e-06,
+      1e-06
+    ]
+  },
+  "delta": {
+    "capture_count": -24,
+    "capture_mass_g": -0.4861771711062879,
+    "capture_percent": -4.436229205175602,
+    "max_speed_m_s": -2.6036000000000006,
+    "physics_loop_wall_ratio": 1.454241274253033,
+    "close_nominal_deg": 0.18700000000000028,
+    "close_actual_deg": 0.15500000000000025,
+    "reclose_nominal_deg": 0.007000000000000117,
+    "reclose_actual_deg": -0.0389999999999997
+  },
+  "actual_initialized_state_exact_checks": {
+    "clump_pos_m": true,
+    "clump_quat_xyzw": true,
+    "tool_pos_m": true,
+    "tool_quat_xyzw": true,
+    "door_pos_m": true,
+    "door_quat_xyzw": true
+  },
+  "heightmap_differences_w11_minus_w10": {
+    "initial": {
+      "whole_grid": {
+        "cells": 2728,
+        "mae_mm": 0.0,
+        "rmse_mm": 0.0,
+        "max_abs_mm": 0.0,
+        "mean_signed_mm": 0.0,
+        "cells_over_5mm": 0
+      },
+      "site_radius_80mm": {
+        "cells": 812,
+        "mae_mm": 0.0,
+        "rmse_mm": 0.0,
+        "max_abs_mm": 0.0,
+        "mean_signed_mm": 0.0,
+        "cells_over_5mm": 0
+      }
+    },
+    "pre": {
+      "whole_grid": {
+        "cells": 2728,
+        "mae_mm": 0.0002588388848711144,
+        "rmse_mm": 0.002459772659761716,
+        "max_abs_mm": 0.10918453335762024,
+        "mean_signed_mm": 3.6995833373664064e-05,
+        "cells_over_5mm": 0
+      },
+      "site_radius_80mm": {
+        "cells": 812,
+        "mae_mm": 0.0005395729737035159,
+        "rmse_mm": 0.0023317878014541644,
+        "max_abs_mm": 0.058224424719810486,
+        "mean_signed_mm": 0.0002561848188562346,
+        "cells_over_5mm": 0
+      }
+    },
+    "post": {
+      "whole_grid": {
+        "cells": 2728,
+        "mae_mm": 0.30328440413362406,
+        "rmse_mm": 2.445510459129741,
+        "max_abs_mm": 49.16292056441307,
+        "mean_signed_mm": -0.008120407473945941,
+        "cells_over_5mm": 9
+      },
+      "site_radius_80mm": {
+        "cells": 812,
+        "mae_mm": 0.9339794899644376,
+        "rmse_mm": 4.472167190984702,
+        "max_abs_mm": 49.16292056441307,
+        "mean_signed_mm": -0.021463800267559553,
+        "cells_over_5mm": 9
+      }
+    },
+    "removed_depth": {
+      "whole_grid": {
+        "cells": 2728,
+        "mae_mm": 0.3033354809293332,
+        "rmse_mm": 2.445509794721497,
+        "max_abs_mm": 49.16340857744217,
+        "mean_signed_mm": 0.008157403307319604,
+        "cells_over_5mm": 9
+      },
+      "site_radius_80mm": {
+        "cells": 812,
+        "mae_mm": 0.9340419528060799,
+        "rmse_mm": 4.472163163793792,
+        "max_abs_mm": 49.16340857744217,
+        "mean_signed_mm": 0.02171998508641579,
+        "cells_over_5mm": 9
+      }
+    }
+  },
+  "scientific_observations": {
+    "completed_both": true,
+    "two_torque_stops_retained": false,
+    "warning_improvement_criterion": true,
+    "strict_convergence_claimed": false,
+    "sim_real_match_claimed": false
+  },
+  "evidence_pass": true,
+  "limitations": [
+    "One run per dt; within-dt run variation is not measured.",
+    "Maximum speed is sampled at saved syncs, not every internal DEME step.",
+    "Post heightmap excludes height-classified carried particles, not velocity-classified moving particles.",
+    "Capture mass is inside the scoop, not delivered mass.",
+    "Initial pile is identical, but settle outcomes and event-dependent stop times can differ."
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "pass_": true,
+  "source_raw_sha256": {
+    "execution05": "ba0f300600d3946d6f8381462b24cf1384f9dddfeb2ae6c7dade85f74f80ef9a",
+    "baseline790": "9739c3549717a67d758d9cb256dc51b338c36ace01b57b8e9d50e1c4371714e3"
+  },
+  "duration_s": 83.538273002,
+  "categories_s": {
+    "alignment": 19.334865247000003,
+    "tilt_and_hold": 9.891083346,
+    "orientation_restoration": 26.204634552,
+    "close_and_return_HOME": 25.336758089,
+    "initialization_and_entry": 2.770931768
+  },
+  "phase_durations_s": {
+    "return_passed_raise1": 0.767944847,
+    "outlet_baseline": 0.502308046,
+    "align_": 19.334865247000003,
+    "finish_tilt_": 6.888555966,
+    "outlet_after_tilt": 3.00252738,
+    "untilt_": 7.890940517000001,
+    "unalign_": 18.313694035,
+    "close_empty": 3.010045303,
+    "return_upright": 5.015275505,
+    "return_base": 7.538981212,
+    "home": 6.765579786,
+    "home_after_finish": 3.006876283
+  },
+  "phase_counts": {
+    "return_passed_raise1": 1,
+    "outlet_baseline": 1,
+    "align_": 19,
+    "finish_tilt_": 8,
+    "outlet_after_tilt": 1,
+    "untilt_": 8,
+    "unalign_": 18,
+    "close_empty": 1,
+    "return_upright": 1,
+    "return_base": 3,
+    "home": 1,
+    "home_after_finish": 1
+  },
+  "motion_commands": 60,
+  "baseline_motion_commands": 26,
+  "transmitted_speed_acc": [
+    [
+      17.578125,
+      0.3543307086614173
+    ]
+  ],
+  "baseline_transmitted_speed_acc": [
+    [
+      17.578125,
+      0.3543307086614173
+    ]
+  ],
+  "same_speed_fields": true,
+  "stepwise_settle_poll_s": 0.25,
+  "minimum_samples_per_move": 3,
+  "per_move_min_settle_s": 0.75,
+  "total_settle_loop_min_elapsed_s": 45.0,
+  "interpretation": [
+    "Final84s includes orientation preparation, residue discharge, reverse orientation, empty closing and HOME; it is not the tilt alone.",
+    "At least0.75s per move follows from the frozen executor first sample plus two stable comparisons; actual motion occurs during that interval, so45s cannot simply be subtracted as removable overhead.",
+    "Three-second discharge hold and three-second final HOME hold are distinct.",
+    "Baseline71.8s is an earlier scoop/place/P1 run, not a matched HOME-to-HOME throughput control."
+  ],
+  "hardware_commands_this_audit": 0
+}

@@ -1,0 +1,49 @@
+{
+  "artifact": "W13R_ROOT_READINESS_VISUAL_INSPECTION_05",
+  "VERDICT": "READINESS_PASSED",
+  "verdict_scope": "시각 식별만 인수. 전체 준비 워크플로는 post-close 계측 누락으로 실패이며 시간초과 실패가 아니다.",
+  "workflow_verdict": "READINESS_FAILED_POST_CLOSE_MEASUREMENT_MISSING",
+  "signed_off_by": "Codex coordinator /root: personally opened all eight original PNGs with view_image at original detail",
+  "inspection_window_utc": "2026-09-13 10:41:42 UTC before frame0 through 10:42:19 UTC after frame7; individual image times not separately recorded",
+  "output_dir": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/readiness/renderer_readiness_14_actual",
+  "frame_path_rule": "output_dir + /render/frames/ + file",
+  "frames": [
+    {"index":0,"file":"f_00000.png","sha256":"6ac70490e27f82d24396b402781407f37317663885f6a1811aea0b0091dea534","actually_viewed":true},
+    {"index":1,"file":"f_00001.png","sha256":"a1a4dc1773c2dd347b36dad5ccc46178406346f66418bc755002b02d565ec240","actually_viewed":true},
+    {"index":2,"file":"f_00002.png","sha256":"fa211115ef49182f4cac1e098d752288b66f9f0077844a336772d0ff24fd6844","actually_viewed":true},
+    {"index":3,"file":"f_00003.png","sha256":"0224c24977b2f23c45e76484de32053cb209ae688e29171bacf509b453185029","actually_viewed":true},
+    {"index":4,"file":"f_00004.png","sha256":"4a85487d21dc0f76195ecfdc5019b0f68a8119a603f4bca25a5418cd7987f793","actually_viewed":true},
+    {"index":5,"file":"f_00005.png","sha256":"e1b4739dee87408bbee43b0074b5e8bd06aaae3ffb978dfd9431b8437e21fb2e","actually_viewed":true},
+    {"index":6,"file":"f_00006.png","sha256":"f1bbdabfe169b9216db0a5d8db21820bbc3fd9d86127baae50056d3314468aee","actually_viewed":true},
+    {"index":7,"file":"f_00007.png","sha256":"fa1234314686fbe512f3f3c90d12420c9dd1a4b243a29d6b021e63f8d331cc1b","actually_viewed":true}
+  ],
+  "observations": [
+    "전8장 팔/그랩/더미/컵은 두 장면의 화면 안에 있다. 이전 팔 잘림이 재발하지 않았다.",
+    "파란 하단선·갈색 바닥 외곽·금색 상단선/기둥과 문구로 바닥 높이와 네 벽 범위를 식별했다. 입자에 가린 바닥 면 전체를 직접 보았다는 뜻이 아니다.",
+    "흰 설명과 노란 합성/불완전 경고가 검정 바깥 띠에서 줄바꿈되어 읽힌다.",
+    "합성6자세에서 운반·컵 위 배치·복귀 자세를 구분했다. 실제 동역학이나 입자 배출은 표시되지 않는다."
+  ],
+  "visual_failures": [],
+  "visual_limits": [
+    "상면 frame2/6의 팔-공구 가림, frame4/5의 공구-컵 일부 가림, frame2 사선 컵 일부 가림은 다른 시점으로 보완된다. 실제 접촉의 증거가 아니다.",
+    "rawHOME0/1과 syntheticHOME7은 색/투명도가 다르다. 화소 동일성이나 USD 실제 관절 오차0을 주장하지 않는다.",
+    "바닥 대부분과 희미한 투명벽은 면 자체보다 외곽 표시로 식별했다. 상면 좌측 어두운 직사각형의 원인은 미확정이며 대상 식별을 막지 않는다.",
+    "합성 라벨의 구분자 한 글자는 상자 모양이나 의미는 읽힌다. MP4 연속 시청은 하지 않았다."
+  ],
+  "source_mapping": {"raw_rows":[0,1],"sync_indices":[0,0],"times_s":[0,0],"synthetic_frames":[2,3,4,5,6,7],"synthetic_source_time":null,"synthetic_particles":"old raw row1 copied; new dynamics0","actual_full_cycle":false},
+  "dimensions_verified_by_root": {"all_eight_pngs":[1600,2102],"scene_panels_total_height":1800,"mp4_ffprobe":{"width":1600,"height":2102,"nb_frames":8,"fps":10,"duration_s":0.8,"bytes":331578},"mp4_sha256":"9c666c4eccabf74dcb8f8f2a63399401b237543be20de1d86c6d2fc9f3cc6409"},
+  "observed_workflow": {"stage_started_utc":"2026-09-13T10:38:57Z","ended_utc":"2026-09-13T10:39:15Z","stage_total_s_including_cleanup":18.29642,"stage_cap_s":180,"runner_rc":0,"child_rc":0,"launcher_rc":1,"timed_out":false,"signal_events":[],"whole_group_absence_confirmed":true,"root_host_ps":"19:41 KST exact PIDs2436619/2436654/2436655 and PGIDs2436619/2436655 all absent","stderr_bytes":0,"clear_call_elapsed_s":0.3052,"clear_phase_s":0.315,"close_diagnostic_phase_s":0.03,"close_s":null,"cleanup_total_s":null,"close_timed_out":null},
+  "receipt_hashes": {
+    "READINESS_RECEIPT.json":"5d0dd6db0f7c9b1879d6cb9479c62960c3ea2e4c32bf960eb7f022fc9f1f886f",
+    "attempt/EXECUTION_RECEIPT.json":"0721322df24ca72cb4313146e792a04dc9135882af5cc23f9924180cf650603b",
+    "attempt/HASH_VERIFICATION_RECEIPT.json":"b7da2286b48d9deb4cc49ceac7a648c6467a0c26a7e9d919a20780dbd631e58b",
+    "attempt/RUN_STATUS.json":"cfb278ce842a69be13e5734680ee8e090504e3dcbf4c0643161ae63a5d63efdd",
+    "render/render_manifest.json":"0c9a1b3da546db1b3516e36971b5444323d60e6ff2bcf60dbfcaf5c1c46d8431",
+    "render/clear_instance_receipt.json":"41aadcde8e3c9d4b61d63ffd69f0877a996239b991bd494455e6466ae7e7fa33",
+    "render/close_localization_receipt.json":"6dd412e6b632c010160c9a882e52e9046f55945045ce008fe69072c0e230c6b4",
+    "render/visual_mapping.json":"e9ec15fbff7b48a7dec058abbb577bd8278dc43f22e201ee02688ecc0f1c4416"
+  },
+  "initialization_vs_display": {"initialization_physics_steps":8,"displayed_frames":8,"display_clock_before_after":0.08333333767950535,"displayed_clock_advanced":false,"new_DEME_physics":0},
+  "authorization": {"GO":"GO_isaac_readiness_rev24_01.md","GO_consumed":true,"next_GPU_GO":false,"production_GO":false},
+  "rerun_nonclaim": "This bounded display fixture does not satisfy the final full-cycle RRD/RBL/actual timeline contract."
+}

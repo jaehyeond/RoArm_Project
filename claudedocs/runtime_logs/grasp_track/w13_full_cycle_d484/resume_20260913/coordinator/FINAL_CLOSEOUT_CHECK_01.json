@@ -1,0 +1,68 @@
+{
+  "artifact": "W13R_FINAL_CLOSEOUT_CHECK_V1",
+  "checked_utc": "2026-09-13T22:48:28.710Z",
+  "outcome": "AUTHORIZED_EXECUTION_ENDED_UNSUCCESSFULLY__HANDOFF_REQUIRED",
+  "document_check": {
+    "checked_utc": "2026-09-13T22:48:28.655Z",
+    "ledger_old_prefix_bytes": 1100057,
+    "ledger_old_prefix_sha256": "fea7ab50dbcec1d87650a1fabf3adecb52e2989c4edb3f292d4d969a2f1292f2",
+    "ledger_prefix_preserved": true,
+    "ledger_lines": 595,
+    "ledger_last_row_columns": 6,
+    "recent_entries": 20,
+    "start_lines": 61,
+    "report_links": 16,
+    "missing": [],
+    "files": [
+      {
+        "path": "START_HERE.md",
+        "sha256": "efe63dfec261d2f08957b173a3d956f7815bf10735028a5aed84df30a77e5ff9"
+      },
+      {
+        "path": "claudedocs/LEDGER_RECENT.md",
+        "sha256": "fb4ec8866754150bad23637db8537f2773792108e75bad3560db21a8cc09ba22"
+      },
+      {
+        "path": "claudedocs/relay/from_codex.md",
+        "sha256": "dff0e09232ac354b7bef0db7d385da8f779c0fd430168db0c2eb670f220be2a5"
+      },
+      {
+        "path": "claudedocs/session_20260913_w13_resume.md",
+        "sha256": "9b6be2fe441b1b8a54b4490adc97c13792a6750a4ab63d5f8ba46fd52b2e4bfe"
+      },
+      {
+        "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/coordinator/REPORT_w13_resume_received.md",
+        "sha256": "fff04d5801dc9134ea83c1abf9224b242e642f062f15902c3a69dd5360852ffd"
+      }
+    ],
+    "pass": true
+  },
+  "gate_check": {
+    "returncode": 1,
+    "met": 3,
+    "abandoned": 7,
+    "pending_non_abandoned": 0,
+    "output": "  RUN  GATES:G1 shell=/bin/sh cwd=/home/cgxr/Documents/Robotics/RoArm_Project PATH=/home/cgxr/.nvm/versions/node/v24.13.0/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path:/home/cgxr/.local/bin:/home/cgxr/.codex/tmp/arg0/codex-arg0tG2pMI:/home/cgxr/.nvm/versions/node/v24.13.0/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path:/home/cgxr/.nvm/versions/node/v24.13.0/bin:/home/cgxr/.local/bin:/home/cgxr/miniconda3/bin:/home/cgxr/miniconda3/condabin:/home/cgxr/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin\n  RUN  leaf-1.2:G3 shell=/bin/sh cwd=/home/cgxr/Documents/Robotics/RoArm_Project PATH=/home/cgxr/.nvm/versions/node/v24.13.0/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path:/home/cgxr/.local/bin:/home/cgxr/.codex/tmp/arg0/codex-arg0tG2pMI:/home/cgxr/.nvm/versions/node/v24.13.0/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path:/home/cgxr/.nvm/versions/node/v24.13.0/bin:/home/cgxr/.local/bin:/home/cgxr/miniconda3/bin:/home/cgxr/miniconda3/condabin:/home/cgxr/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin\n  PASS GATES:G1: old input and W13 evidence bytes and main HEAD remain unchanged\n       exit=0; EXPECT=matched; output=sha256=b4898deb232ce0dc4ba60f530be29db6c5df556b484a175807442690bc291ccb; bytes=31\n  PASS leaf-1.2:G3: valid fixtures pass and wrong IDs/geometry/time/forces plus changed-byte hash corruption are actually rejected by applicable checks\n       exit=0; EXPECT=matched; output=sha256=70b1d35523566c260e394fd06b41ee77a8fe01616e9803d4cecaf606bb4739ba; bytes=1362\nGATES.md: 4 gates\nleaf-1.1.md: 3 gates\nleaf-1.2.md: 3 gates\nHANDOFF REQUIRED: 7 abandoned (met: 3, reran: 2, previously met reverified: 2)\n  GATES:G2, GATES:G3, leaf-1.1:G1, leaf-1.1:G2, leaf-1.1:G3, leaf-1.2:G1, leaf-1.2:G2\n"
+  },
+  "raw_final_check": {
+    "returncode": 0,
+    "output": "{\n  \"artifact\": \"W13R_PARTIAL_RAW_PRESERVATION_CHECK_V1\",\n  \"checked_utc\": \"2026-09-13T22:46:53.897Z\",\n  \"root\": \"/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/run_01\",\n  \"manifest_path\": \"/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/coordinator/PARTIAL_RAW_MANIFEST_01.json\",\n  \"manifest_sha256\": \"0d7fb7ce6d5d24d0a29b0c25ccd02e633a803239c10192b16aea0c8553bb2a52\",\n  \"expected_manifest_sha256\": \"0d7fb7ce6d5d24d0a29b0c25ccd02e633a803239c10192b16aea0c8553bb2a52\",\n  \"files_checked\": 14,\n  \"issues\": [],\n  \"success\": true\n}\nW13R_PARTIAL_RAW_PRESERVATION_VERIFIED 14\n"
+  },
+  "root_post03_reproduction": {
+    "returncode": 1,
+    "n_findings": 15,
+    "n_pass": 12,
+    "n_fail": 3,
+    "sha256": "f18c4ba29ddbf44c6beb428c23a2666916c9ef3610a16a34a345123b2b71fe5b",
+    "same_as_independent_except_generated_utc": true,
+    "manual_visual_fields": "prior actual inspection; not a fresh automated visual check"
+  },
+  "git_diff_check_returncode": 0,
+  "git_head": "3267dcb38369f01bb77b923066a89ca92060691d",
+  "orchestration_accounting_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/coordinator/ORCA_FINAL_ACCOUNTING_01.json",
+  "worker_ownership_leases_released": 2,
+  "last_inbox_count": 0,
+  "reclaimable_count": 0,
+  "retained_resource": "user-owned producer terminal; no process-stop claim",
+  "no_new_execution_authorized": true
+}

@@ -1,0 +1,530 @@
+{
+  "artifact": "W13R_ROOT_ISAAC_VIDEO_SAMPLE_INSPECTION_V1",
+  "inspected_utc": "2026-09-13T22:13:24Z",
+  "method": "watch skill local MP4 cue-only extraction then all 11 listed JPEGs actually viewed via view_image",
+  "watch_options": {
+    "detail": "transcript",
+    "timestamps_s": [
+      0.1,
+      8.5,
+      9.8,
+      10.7,
+      11.5,
+      12,
+      13.6,
+      17.5,
+      18.9,
+      20.6,
+      28.2
+    ],
+    "max_frames": 11,
+    "resolution_px": 1024,
+    "no_whisper": true,
+    "no_dedup": true
+  },
+  "no_audio": true,
+  "continuous_full_video_watched": false,
+  "all_listed_frames_actually_viewed": true,
+  "ffprobe": {
+    "codec": "h264",
+    "width": 1600,
+    "height": 2102,
+    "fps": 10,
+    "nb_frames": 283,
+    "duration_s": 28.3,
+    "bytes": 5940976
+  },
+  "visual_assessment": "11개 표본의 동작/도구/통/자막 식별은 확인. 전체 자세 재현/관절한계/행매핑 계약 판정은 독립 감사와 별개다.",
+  "partial_banner_visible_in_all_samples": true,
+  "caption_does_not_occlude_scene_in_samples": true,
+  "rrd_visual_failure_not_overridden": true,
+  "limits": [
+    "원본 PNG11개의 해시는 기록했지만 이번 실제 시각 검수는 MP4에서 추출한 JPEG11장이다.",
+    "표본은 전체283프레임의 연속시청이 아니며 영상/시뮬레이션 시간은 다르다.",
+    "watch의 transcript-cue 이름은 스크립트 라벨이다. 실제 선정근거는 원자료 결정/코호트 시점이며 무음이라 전사/외부전송을 하지 않았다.",
+    "watch 보고서 말미의 no visual fallback 문구와 달리 cue11은 실제생성/검수했다. 추가추출이나 cleanup을 하지 않고 증거로 보존한다.",
+    "팔 표시의 최대립오차8.132mm/관절한계초과20개 및 소스집계메타는 독립검수 중이다. 이 이미지를 실물 구동 가능성/정확 접촉 증거로 사용하지 않는다.",
+    "회색 바닥은 원래 통 지지면이 아니라는 caption을 확인했다. 공중처럼 보이는 흘림 입자를 회색바닥 위 실물 거동으로 해석하지 않는다."
+  ],
+  "checked_utc": "2026-09-13T22:15:46.804Z",
+  "files": {
+    "execution/EXECUTION_RECEIPT.json": "5a1c602df63df26450cd30620accd8325605694e6be06ea342b9e1ef4cfa5b56",
+    "execution/RUN_STATUS.json": "c6ffec67c9f6bb4e5e1ea0fcd130ac15514e831163fe829f620b139875f273ff",
+    "isaac/render_manifest.json": "033b5ae76f16b4aee77b6bd1dc8ab4a0e6ac0380af5eb7fbfe6f8cccde013640",
+    "isaac/visual_mapping.json": "2afc8639c6fb5fa3a41b871cfb5c12ad6e0d3b4e8e52a58395c0b0d59fc75509",
+    "isaac/w13_full_cycle.mp4": "1471127134fc06a88d546c891de0d2515f4911fcd1832f0ae841258ac1a2bc34"
+  },
+  "video": {
+    "path": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/isaac/w13_full_cycle.mp4",
+    "bytes": 5940976,
+    "fps": 10,
+    "n_frames": 283
+  },
+  "phase_seconds": {
+    "t0_monotonic": 237196.183116194,
+    "started_utc": "2026-09-13T22:00:32Z",
+    "startup_s": 29.717,
+    "render_s": 493.957,
+    "ffmpeg_s": 4.979,
+    "close_budget_s": 60,
+    "total_before_close_s": 528.654,
+    "clear_instance_s": 0.354,
+    "reference_release_s": 0.007,
+    "close_diagnostic_s": 0.05,
+    "cleanup_used_before_close_s": 0.411,
+    "close_budget_remaining_s": 59.589,
+    "close_s": 22.733,
+    "close_timed_out": false,
+    "cleanup_total_s": 23.17,
+    "total_s": 551.85
+  },
+  "rows": [
+    {
+      "cue": 0,
+      "png": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/isaac/frames/f_00001.png",
+      "source_record": {
+        "display_index": 1,
+        "source": "raw_particle_frame",
+        "raw_particle_frame_index": 1,
+        "source_time_s": 0,
+        "sync_index": 0,
+        "sync_time_s": 0,
+        "phase": "initial_home",
+        "subphase": "t0_state",
+        "cmd_mode": "fk",
+        "joint_source": "stored",
+        "door_actual_deg": 3.664045813422945e-7,
+        "decision_tag": "initial_home_end",
+        "ik": {
+          "q5_deg": [
+            0,
+            0,
+            90,
+            0,
+            0
+          ],
+          "branch": "stored_fk_command_joints",
+          "ik_err_mm": 0,
+          "tilt_deg": null,
+          "limit_violations": [],
+          "joint_source": "stored sync_joint_deg (cmd_mode=fk, no IK solved)"
+        },
+        "SYNTHETIC": false
+      },
+      "cue_sha256": "e5b3ad2d7830fef1fbd95b588e085590a2648cbd8b3faaf94b0eaee496975659",
+      "png_sha256": "100c5812ef52dbee053fa48c42a50ed6599531e762c8103f935d21df3e8ac1ae",
+      "cue_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/coordinator/watch_isaac_post03_01/frames/cue_0000.jpg",
+      "video_time_s": 0.1,
+      "caption_raw_row_actually_read": 1,
+      "observation": "팔·공구·원래 통·분홍색 목적 용기가 식별된다. 시작 자세이며 caption raw1/sync0/t0와 부분 경고를 읽었다."
+    },
+    {
+      "cue": 1,
+      "png": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/isaac/frames/f_00085.png",
+      "source_record": {
+        "display_index": 85,
+        "source": "raw_particle_frame",
+        "raw_particle_frame_index": 85,
+        "source_time_s": 7.375859981377744,
+        "sync_index": 5160,
+        "sync_time_s": 7.375859981377744,
+        "phase": "descend",
+        "subphase": "plunge",
+        "cmd_mode": "w11",
+        "joint_source": "ik",
+        "door_actual_deg": 27.5,
+        "decision_tag": "descend_end",
+        "ik": {
+          "q5_deg": [
+            -1.325701189675934,
+            77.36999999999998,
+            40.00000000000008,
+            62.64999999999994,
+            0
+          ],
+          "branch": "vertical",
+          "ik_err_mm": 8.132,
+          "tilt_deg": 0.02,
+          "limit_violations": [
+            {
+              "joint": "shoulder",
+              "value": 77.36999999999998,
+              "limit": [
+                -30,
+                75
+              ]
+            }
+          ],
+          "joint_source": "offline IK from stored actual lip pose (cmd_mode=w11)"
+        },
+        "SYNTHETIC": false
+      },
+      "cue_sha256": "8eb99db3814932175659858e8c54380a85908b4b9f1cfa66bedfce5218f54dd0",
+      "png_sha256": "86a1b31315190df646b3aa354221a19aeb5577010c3daeb326caccc8401c49ea",
+      "cue_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/coordinator/watch_isaac_post03_01/frames/cue_0001.jpg",
+      "video_time_s": 8.5,
+      "caption_raw_row_actually_read": 85,
+      "observation": "열린 파란 문/초록 고정부가 더미 안쪽에 있다. descend_end와 표시 IK오차8.132mm가 보인다."
+    },
+    {
+      "cue": 2,
+      "png": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/isaac/frames/f_00098.png",
+      "source_record": {
+        "display_index": 98,
+        "source": "raw_particle_frame",
+        "raw_particle_frame_index": 98,
+        "source_time_s": 8.438764978694167,
+        "sync_index": 7165,
+        "sync_time_s": 8.438764978694167,
+        "phase": "close",
+        "subphase": "close",
+        "cmd_mode": "w11",
+        "joint_source": "ik",
+        "door_actual_deg": 3.6296837571859832,
+        "decision_tag": "close_stop",
+        "ik": {
+          "q5_deg": [
+            -1.325701189675934,
+            77.36999999999998,
+            40.00000000000008,
+            62.64999999999994,
+            0
+          ],
+          "branch": "vertical",
+          "ik_err_mm": 8.132,
+          "tilt_deg": 0.02,
+          "limit_violations": [
+            {
+              "joint": "shoulder",
+              "value": 77.36999999999998,
+              "limit": [
+                -30,
+                75
+              ]
+            }
+          ],
+          "joint_source": "offline IK from stored actual lip pose (cmd_mode=w11)"
+        },
+        "SYNTHETIC": false
+      },
+      "cue_sha256": "8adb163839bfc949e6f7c0bfa87319116a1797683e9832dd2dd87a66ce3d80c7",
+      "png_sha256": "a4c6dcb1230ffb82ac70993363a1f21de03870fd2058047c95fd82c8b8a53bbe",
+      "cue_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/coordinator/watch_isaac_post03_01/frames/cue_0002.jpg",
+      "video_time_s": 9.8,
+      "caption_raw_row_actually_read": 98,
+      "observation": "문이 앞 프레임보다 닫혀 있다. close_stop/실제문3.6297도와 기록분류271을 읽었으며 실제 포획 수를 영상으로 세지 않았다."
+    },
+    {
+      "cue": 3,
+      "png": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/isaac/frames/f_00107.png",
+      "source_record": {
+        "display_index": 107,
+        "source": "raw_particle_frame",
+        "raw_particle_frame_index": 107,
+        "source_time_s": 8.978534977331378,
+        "sync_index": 7335,
+        "sync_time_s": 8.978534977331378,
+        "phase": "reclose",
+        "subphase": "reclose",
+        "cmd_mode": "w11",
+        "joint_source": "ik",
+        "door_actual_deg": 3.5486509359592837,
+        "decision_tag": "reclose_end",
+        "ik": {
+          "q5_deg": [
+            -1.325701189675934,
+            64.23999999999995,
+            41.720000000000034,
+            74.06,
+            0
+          ],
+          "branch": "vertical",
+          "ik_err_mm": 8.1,
+          "tilt_deg": 0.02,
+          "limit_violations": [],
+          "joint_source": "offline IK from stored actual lip pose (cmd_mode=w11)"
+        },
+        "SYNTHETIC": false
+      },
+      "cue_sha256": "9e6e128c93011c539437aee5adb93e0092daad579e1ea34b8be2407f11afd393",
+      "png_sha256": "729bbaf99c3222f42b67883fc3181df43b50f6763a37995a810d9bc5991582af",
+      "cue_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/coordinator/watch_isaac_post03_01/frames/cue_0003.jpg",
+      "video_time_s": 10.7,
+      "caption_raw_row_actually_read": 107,
+      "observation": "더미 위로 공구가 올라온 재닫힘 자세다. reclose_end/실제문3.5487도/기록공구144가 보인다."
+    },
+    {
+      "cue": 4,
+      "png": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/isaac/frames/f_00115.png",
+      "source_record": {
+        "display_index": 115,
+        "source": "raw_particle_frame",
+        "raw_particle_frame_index": 115,
+        "source_time_s": 9.402640976260614,
+        "sync_index": 7441,
+        "sync_time_s": 9.402640976260614,
+        "phase": "transport",
+        "subphase": "post_lift_travel",
+        "cmd_mode": "fk",
+        "joint_source": "stored",
+        "door_actual_deg": 3.5514137407871686,
+        "decision_tag": null,
+        "ik": {
+          "q5_deg": [
+            0,
+            55.0455322265625,
+            39.294776916503906,
+            81.46575164794922,
+            0
+          ],
+          "branch": "stored_fk_command_joints",
+          "ik_err_mm": 0.0001,
+          "tilt_deg": null,
+          "limit_violations": [],
+          "joint_source": "stored sync_joint_deg (cmd_mode=fk, no IK solved)"
+        },
+        "SYNTHETIC": false
+      },
+      "cue_sha256": "2ae7241bcec5edc1ff0f3eb846462d43d1f5d99c26ef0f9885c72c50bd265d2c",
+      "png_sha256": "a4b701bf2641238d9166fcddf9814422d72b7f5be6101163155288d11c45a36f",
+      "cue_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/coordinator/watch_isaac_post03_01/frames/cue_0004.jpg",
+      "video_time_s": 11.5,
+      "caption_raw_row_actually_read": 115,
+      "observation": "운반 첫 구간에서 공구 아래에 밝은 입자열이 보인다. caption 공구영역41은 전체 ID 집계이며 144코호트40과 구분한다."
+    },
+    {
+      "cue": 5,
+      "png": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/isaac/frames/f_00120.png",
+      "source_record": {
+        "display_index": 120,
+        "source": "raw_particle_frame",
+        "raw_particle_frame_index": 120,
+        "source_time_s": 9.886761975038326,
+        "sync_index": 7562,
+        "sync_time_s": 9.886761975038326,
+        "phase": "transport",
+        "subphase": "post_lift_travel",
+        "cmd_mode": "fk",
+        "joint_source": "stored",
+        "door_actual_deg": 3.548275363977993,
+        "decision_tag": null,
+        "ik": {
+          "q5_deg": [
+            0,
+            44.45000076293945,
+            36.5,
+            90,
+            0
+          ],
+          "branch": "stored_fk_command_joints",
+          "ik_err_mm": 0.0001,
+          "tilt_deg": null,
+          "limit_violations": [],
+          "joint_source": "stored sync_joint_deg (cmd_mode=fk, no IK solved)"
+        },
+        "SYNTHETIC": false
+      },
+      "cue_sha256": "e84e5aafdbaf9d47071c194b38ea94cba0159dfca4ee55b301de65e443f0910d",
+      "png_sha256": "cdcf235b3f1786e651de9cf52b7862adce509d26061fe261ec452472aa551371",
+      "cue_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/coordinator/watch_isaac_post03_01/frames/cue_0005.jpg",
+      "video_time_s": 12,
+      "caption_raw_row_actually_read": 120,
+      "observation": "공구가 더 높이 이동한 상태이며 아래쪽 입자들이 보인다. caption 공구9는 전체 집계이며 코호트8과 구분한다."
+    },
+    {
+      "cue": 6,
+      "png": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/isaac/frames/f_00136.png",
+      "source_record": {
+        "display_index": 136,
+        "source": "raw_particle_frame",
+        "raw_particle_frame_index": 136,
+        "source_time_s": 11.303115971462375,
+        "sync_index": 7916,
+        "sync_time_s": 11.303115971462375,
+        "phase": "transport",
+        "subphase": "place_retract_base90",
+        "cmd_mode": "fk",
+        "joint_source": "stored",
+        "door_actual_deg": 3.554871771597643,
+        "decision_tag": null,
+        "ik": {
+          "q5_deg": [
+            5.874673843383789,
+            0.699999988079071,
+            91.30000305175781,
+            88,
+            0
+          ],
+          "branch": "stored_fk_command_joints",
+          "ik_err_mm": 0.0002,
+          "tilt_deg": null,
+          "limit_violations": [],
+          "joint_source": "stored sync_joint_deg (cmd_mode=fk, no IK solved)"
+        },
+        "SYNTHETIC": false
+      },
+      "cue_sha256": "8ea6257ecfef39f349ba046858f15ee6d0f9991ead3fa16c98dd9d87dfc691e1",
+      "png_sha256": "f88b442be6278b9151e2ee8b86e426c6cef41d57a3dd1ec83a3c502d76bb5f0c",
+      "cue_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/coordinator/watch_isaac_post03_01/frames/cue_0006.jpg",
+      "video_time_s": 13.6,
+      "caption_raw_row_actually_read": 136,
+      "observation": "공구가 후퇴/회전 쪽으로 이동했고 공구 아래 입자들이 보인다. caption 공구영역0; 개별 입자의 탈출면/원인은 표본만으로 판정하지 않는다."
+    },
+    {
+      "cue": 7,
+      "png": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/isaac/frames/f_00175.png",
+      "source_record": {
+        "display_index": 175,
+        "source": "raw_particle_frame",
+        "raw_particle_frame_index": 175,
+        "source_time_s": 14.976033962189149,
+        "sync_index": 8834,
+        "sync_time_s": 14.976033962189149,
+        "phase": "transport",
+        "subphase": "place_target",
+        "cmd_mode": "fk",
+        "joint_source": "stored",
+        "door_actual_deg": 3.5610317515381027,
+        "decision_tag": "transport_end",
+        "ik": {
+          "q5_deg": [
+            90,
+            64.61000061035156,
+            42.040000915527344,
+            73.37000274658203,
+            0
+          ],
+          "branch": "stored_fk_command_joints",
+          "ik_err_mm": 0.0002,
+          "tilt_deg": null,
+          "limit_violations": [],
+          "joint_source": "stored sync_joint_deg (cmd_mode=fk, no IK solved)"
+        },
+        "SYNTHETIC": false
+      },
+      "cue_sha256": "e95eba6564d9bf0b6e20f6bda0b7287b38b8e66dd225892723030c3b5c9b7a45",
+      "png_sha256": "4ded03d98623a01b826c3bab8e87570863aa46554fdf7872ff0e3350af0af041",
+      "cue_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/coordinator/watch_isaac_post03_01/frames/cue_0007.jpg",
+      "video_time_s": 17.5,
+      "caption_raw_row_actually_read": 175,
+      "observation": "공구가 목적 용기 위에 위치하고 원래 통 바깥에 붉거나 분홍 입자들이 보인다. transport_end; 이미 공구영역0이라는 기록과 함께 해석한다."
+    },
+    {
+      "cue": 8,
+      "png": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/isaac/frames/f_00189.png",
+      "source_record": {
+        "display_index": 189,
+        "source": "raw_particle_frame",
+        "raw_particle_frame_index": 189,
+        "source_time_s": 16.043079959495117,
+        "sync_index": 10880,
+        "sync_time_s": 16.043079959495117,
+        "phase": "discharge",
+        "subphase": "door_open",
+        "cmd_mode": "fk",
+        "joint_source": "stored",
+        "door_actual_deg": 27.503583635072584,
+        "decision_tag": "release_after",
+        "ik": {
+          "q5_deg": [
+            90,
+            64.61000061035156,
+            42.040000915527344,
+            73.37000274658203,
+            0
+          ],
+          "branch": "stored_fk_command_joints",
+          "ik_err_mm": 0,
+          "tilt_deg": null,
+          "limit_violations": [],
+          "joint_source": "stored sync_joint_deg (cmd_mode=fk, no IK solved)"
+        },
+        "SYNTHETIC": false
+      },
+      "cue_sha256": "711cd74067cd9cdf98709c04f2dbfdfcb2b49702bc475b881bea1efe627b2a68",
+      "png_sha256": "3cc2996f09c2be914dcead4dc4136faa103f5fd72cba8ec149f87fd3009a8903",
+      "cue_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/coordinator/watch_isaac_post03_01/frames/cue_0008.jpg",
+      "video_time_s": 18.9,
+      "caption_raw_row_actually_read": 189,
+      "observation": "목적 용기 위에서 파란 문이 열린 모습이다. release_after, 실제문27.5036도, 용기분류0이다. 화면의 큰 자홍색 구는 목표 marker이지 전달 입자가 아니다."
+    },
+    {
+      "cue": 9,
+      "png": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/isaac/frames/f_00206.png",
+      "source_record": {
+        "display_index": 206,
+        "source": "raw_particle_frame",
+        "raw_particle_frame_index": 206,
+        "source_time_s": 17.543454955707034,
+        "sync_index": 11255,
+        "sync_time_s": 17.543454955707034,
+        "phase": "discharge_wait",
+        "subphase": "wait",
+        "cmd_mode": "fk",
+        "joint_source": "stored",
+        "door_actual_deg": 27.503583617774346,
+        "decision_tag": "wait_end",
+        "ik": {
+          "q5_deg": [
+            90,
+            64.61000061035156,
+            42.040000915527344,
+            73.37000274658203,
+            0
+          ],
+          "branch": "stored_fk_command_joints",
+          "ik_err_mm": 0,
+          "tilt_deg": null,
+          "limit_violations": [],
+          "joint_source": "stored sync_joint_deg (cmd_mode=fk, no IK solved)"
+        },
+        "SYNTHETIC": false
+      },
+      "cue_sha256": "e2c94e2eec8b419a7d01ac4ee646affaf2982b99bb26675548deeda1054812b4",
+      "png_sha256": "943cc51e11912f0435fdd2c0dc9f3c4802927d745c36e8127a8b19e4a795e6ef",
+      "cue_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/coordinator/watch_isaac_post03_01/frames/cue_0009.jpg",
+      "video_time_s": 20.6,
+      "caption_raw_row_actually_read": 206,
+      "observation": "열린 자세로 배출 대기한 표본이다. wait_end, 기록흘림73/용기0. 입자가 정착했다는 시각 증거로 확대하지 않는다."
+    },
+    {
+      "cue": 10,
+      "png": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/isaac/frames/f_00282.png",
+      "source_record": {
+        "display_index": 282,
+        "source": "raw_particle_frame",
+        "raw_particle_frame_index": 282,
+        "source_time_s": 24.486802938176766,
+        "sync_index": 16303,
+        "sync_time_s": 24.486802938176766,
+        "phase": "return_home",
+        "subphase": "return_home",
+        "cmd_mode": "fk",
+        "joint_source": "stored",
+        "door_actual_deg": 0.0060481476807048296,
+        "decision_tag": "return_home_end",
+        "ik": {
+          "q5_deg": [
+            0,
+            0.058113206177949905,
+            90.10792541503906,
+            7.305660247802734,
+            0
+          ],
+          "branch": "stored_fk_command_joints",
+          "ik_err_mm": 0.0002,
+          "tilt_deg": null,
+          "limit_violations": [],
+          "joint_source": "stored sync_joint_deg (cmd_mode=fk, no IK solved)"
+        },
+        "SYNTHETIC": false
+      },
+      "cue_sha256": "f11bc71ebac5aa2ec9ba2f501bb7ed2b7f68a1100eb4f60b9292a8df9870362f",
+      "png_sha256": "bdc7bbc19e5f9b6d1a0bb3caaf11e089addc8e7db7b0af9a2cdcf5e65b8eaec0",
+      "cue_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/coordinator/watch_isaac_post03_01/frames/cue_0010.jpg",
+      "video_time_s": 28.2,
+      "caption_raw_row_actually_read": 282,
+      "observation": "팔이 시작 쪽으로 복귀한 최종 저장 자세다. return_home_end 표식과 SIGNAL_STOP 부분 경고가 함께 보인다. 실제 HOME도착은 raw 오차29.57491mm/hold0 때문에 미완료다."
+    }
+  ]
+}

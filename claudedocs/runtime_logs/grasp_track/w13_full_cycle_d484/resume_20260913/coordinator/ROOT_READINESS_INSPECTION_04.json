@@ -1,0 +1,70 @@
+{
+  "artifact": "W13R_ROOT_READINESS_VISUAL_INSPECTION_04",
+  "VERDICT": "READINESS_PASSED",
+  "verdict_scope": "시각 식별 부분만 인수. 이 키는 verify_resume_v2의 시각 인수 입력이다. 전체 준비 워크플로는 종료 시간초과로 실패다.",
+  "workflow_verdict": "READINESS_FAILED_CLOSE_TIMEOUT",
+  "signed_off_by": "Codex coordinator /root: personally opened all eight original PNGs with view_image at original detail",
+  "inspection_window_utc": "2026-09-13 09:58:29 UTC clock check after listing and before image 0, through 09:59:02 UTC clock check after image 7. Per-image timestamps were not separately recorded.",
+  "recorded_time_note": "2026-09-13 19:03 KST, minute-level record",
+  "output_dir": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/readiness/renderer_readiness_13_actual",
+  "frame_path_rule": "output_dir + /render/frames/ + file",
+  "frames": [
+    {"index":0,"file":"f_00000.png","sha256":"9ad5af0caa91a9e52d5f7f04d751605f659a92128874ac7fda823e1ae9971c85","actually_viewed":true},
+    {"index":1,"file":"f_00001.png","sha256":"fb09b13e537e4878d634c1947f0407bd175531595d8d789d017c8bd50f1f8e95","actually_viewed":true},
+    {"index":2,"file":"f_00002.png","sha256":"ac627d2e644e24f430b36e6255c34efc775b3ff7af7667d5955341ee4aa945a7","actually_viewed":true},
+    {"index":3,"file":"f_00003.png","sha256":"767b65ec5b95ae925e9c79af6abab8848f0eb22835cb93b931e70aa6d9bf7159","actually_viewed":true},
+    {"index":4,"file":"f_00004.png","sha256":"cb40515031ce6d7f57fb3847a745f80b55ebaa00e6c56f16c2b172e855efb288","actually_viewed":true},
+    {"index":5,"file":"f_00005.png","sha256":"b0cfd657e04b12a22874fe6ed0f9622f7768fd3cbaaaafdadc9dde3501964d5f","actually_viewed":true},
+    {"index":6,"file":"f_00006.png","sha256":"813952a3d47570edc3d95b0a3dc804a6493ac4e8f281ad5430e7a45a9724da11","actually_viewed":true},
+    {"index":7,"file":"f_00007.png","sha256":"64f0ea372c6e1507f1fcbd80614e3174cf1a3fd8b3b9f63e1f84a150ee5d3799","actually_viewed":true}
+  ],
+  "improvements": [
+    "8장 두 시점 모두 팔 전체·그랩·더미·배출 용기가 화면 안에 있으며 이전의 팔 잘림은 관찰되지 않는다.",
+    "바닥 높이는 파란 벽 하단선과 갈색 바닥 외곽선, 네 벽 범위는 금색 상단/기둥과 하단선으로 식별된다. 이전에 요구한 것은 식별 가능성이지 입자 뒤 바닥 전체가 보이는 조건이 아니다. 경계선은 충돌면이 아닌 표시라고 명시됐다.",
+    "흰 글자와 노란 경고가 장면 밖 검정 띠에 있고 긴 표면 설명이 줄바꿈되어 잘리지 않는다. 원자료 시간과 합성/불완전 경고를 읽을 수 있다.",
+    "6개 합성 운반·배출위치·복귀 자세가 구분되고 rawHOME과 syntheticHOME의 셸/문 조립이 이전 분리된 문 모양 없이 같은 정렬로 보인다."
+  ],
+  "visual_failures": [],
+  "visual_limits": [
+    "바닥 면 대부분은 입자 뒤에 가려지고 투명한 4벽의 색은 희미하다. 외곽선/높이/설명으로 위치를 인수한 것이며 모든 면을 직접 보았다고 주장하지 않는다.",
+    "상면 frame4에서 공구가 컵 일부를 가리고 frame2/6에서는 팔이 공구 일부를 가린다. 사선 시점이 각 위치를 보완한다. 가림을 대상 누락이나 실제 접촉 증거로 해석하지 않는다.",
+    "rawHOME과 syntheticHOME 셸/문의 색·투명도 표현은 다르다. 실제 좌표 동일성은 canonical 배열/기하 감사로 결정하며 화소 동일성이나 서보 구동성은 주장하지 않는다.",
+    "합성 라벨의 구분자 한 글자가 상자 모양으로 보이나 SYNTHETIC/NOT A PHYSICS RESULT 문구 의미는 읽힌다. 미관 개선을 위한 재실행 사유로 삼지 않는다.",
+    "명령 FK 오차0.0mm는 USD 실제 링크 오차의 측정값이 아니다. MP4를 실제 연속 시청했다고 주장하지 않는다."
+  ],
+  "source_mapping": {
+    "raw_rows":[0,1],"sync_indices":[0,0],"times_s":[0,0],
+    "synthetic_frames":[2,3,4,5,6,7],"synthetic_source_time":null,
+    "synthetic_particles":"existing raw row1 copied; not new dynamics",
+    "actual_full_cycle":false
+  },
+  "dimensions_verified_by_root": {
+    "all_eight_pngs":[1600,2102],"scene_panels_total_height":1800,
+    "mp4_ffprobe":{"width":1600,"height":2102,"nb_frames":8,"fps":10,"duration_s":0.8},
+    "mp4_sha256":"8a10e7b003fb218a6b0cfcc17ffcde09619bcbf5e1626f149482f96993173885"
+  },
+  "observed_workflow": {
+    "started_utc":"2026-09-13T09:57:16Z","ended_utc":"2026-09-13T09:59:58Z",
+    "startup_s":11.348,"render_s":4.998,"ffmpeg_s":0.317,"total_before_close_s":16.662,
+    "diagnostic_s_from_standalone_receipt":0.0413,"probe_reached_STOPPED":true,
+    "close_s":null,"cleanup_total_s":null,"close_timed_out":null,
+    "stage_total_s_including_cleanup":162.652548,"stage_cap_s":180,
+    "runner_rc":124,"child_rc":0,"timed_out":true,"whole_group_absence_confirmed":true,
+    "root_host_ps":"19:01~19:02 KST exact runner2387720/child2387721/PGID2387721 filter: header only. Launcher PID was not part of this root check."
+  },
+  "receipt_hashes": {
+    "READINESS_RECEIPT.json":"39602a0fcaf9a1de24f43aed925d99798d79b02678eaa33bf2a83e1de79140db",
+    "attempt/EXECUTION_RECEIPT.json":"0de702a889216fd2b3ae4f38fff8c0b5cdd1a010ad67922c4a7c143115d27580",
+    "attempt/RUN_STATUS.json":"a15d10e87e61e2d991d4767e26abe6ef3eefc704ecd0a04fd57ccfbe7265c805",
+    "render/render_manifest.json":"b481cb4199eba1e06e4dbc32c4c6682be432f9251833e7f5260aa21592539162",
+    "render/close_localization_receipt.json":"d65b6f51879171fa6e569c828cbbef00a13dff6dee5b78646f4a30a8637ad9da",
+    "render/visual_mapping.json":"e9ec15fbff7b48a7dec058abbb577bd8278dc43f22e201ee02688ecc0f1c4416"
+  },
+  "initialization_vs_display": {
+    "initialization_physics_steps":8,"displayed_frames":8,
+    "display_clock_before_after":0.08333333767950535,"displayed_clock_advanced":false,
+    "new_DEME_physics":0
+  },
+  "authorization":{"GO":"GO_isaac_readiness_rev23_01.md","GO_consumed":true,"next_GPU_GO":false,"production_GO":false},
+  "rerun_nonclaim":"This bounded display fixture does not satisfy the final full-cycle RRD/RBL/actual timeline contract."
+}

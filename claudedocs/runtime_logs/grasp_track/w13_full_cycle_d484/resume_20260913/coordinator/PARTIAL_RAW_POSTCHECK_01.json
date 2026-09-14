@@ -1,0 +1,19 @@
+{
+  "artifact": "W13R_ROOT_POST03_RAW_PRESERVATION_ACCEPTANCE_V1",
+  "checked_utc": "2026-09-13T22:12:53.672Z",
+  "checker_sha256": "96aa8ec56289b5b5bbcc9f7b14f3b41f9035e6499b78c8630322ab1587b305fb",
+  "manifest_sha256": "0d7fb7ce6d5d24d0a29b0c25ccd02e633a803239c10192b16aea0c8553bb2a52",
+  "command": "node claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/coordinator/verify_partial_raw_preservation.mjs claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/coordinator/PARTIAL_RAW_MANIFEST_01.json 0d7fb7ce6d5d24d0a29b0c25ccd02e633a803239c10192b16aea0c8553bb2a52",
+  "returncode": 0,
+  "files_checked": 14,
+  "issues": [],
+  "success": true,
+  "token": "W13R_PARTIAL_RAW_PRESERVATION_VERIFIED 14",
+  "process_absence_check": {
+    "command": "ps -p 3057244,3057247,3057262,3075606 -o pid,ppid,pgid,sid,lstart,etime,stat,args",
+    "host": true,
+    "returncode": 1,
+    "observed_process_rows": 0,
+    "note": "정확 launch shell/runner/Rerun/Isaac PID4개 부재. 광범위 시스템 프로세스 종료를 뜻하지 않는다."
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "artifact": "W13_NONCANONICAL_SMOKE_SECONDARY_EVIDENCE",
+  "status": "QUARANTINED_NOT_W13_SCIENTIFIC_RESULT",
+  "retrieval": "orca-ide orchestration worker-read --dispatch ctx_6b73f1ef70dd --source transcript --limit 400 --json",
+  "source_identity": "Q1l2mnTql2mRY9NnH6JXHZIvHQBzCov7",
+  "tool_message_id": "f28e8620-0909-4d2a-803f-70808b634c96",
+  "tool_message_timestamp_ms": 1789195149976,
+  "retrieval_clipping": ["message_limit_or_scan_window", "transcript_payload"],
+  "verbatim_tool_result": "terminate called after throwing an instance of 'std::runtime_error'\n  what():  On average a sphere has 187.8232 contacts, more than the max allowance (100).\nIf you believe this is not abnormal, set the allowance high using SetErrorOutAvgContacts before initialization.\nIf you think this is because dT drifting too much ahead of kT so the contact margin added is too big, use SetCDMaxUpdateFreq to limit the max dT future drift.\nOtherwise, the simulation may have diverged and relaxing the physics may help, such as decreasing the step size and modifying material properties.\nIf this happens at the start of simulation, check if there are initial penetrations, a.k.a. elements initialized inside walls.\nThis happened in contactDetection.\n\ntimeout: the monitored command dumped core",
+  "limits_ko": [
+    "이것은 Orca 도구 결과에 남은 오류 발췌의 복구이며, 덮어쓴 원래 stderr 파일이나 전체 run 로그의 복구가 아니다.",
+    "timestamp는 기록된 도구 메시지 시각이며 물리 실패 발생 시각·실행 dt·원인 확정·exit code를 이 발췌만으로 증명하지 않는다.",
+    "제한된 조회에서는 A2 ValueError 원문을 찾지 못했다. 기록 전체에 없다는 뜻은 아니다.",
+    "오류 메시지의 물성·dt·허용치 변경 제안은 실행 지시로 채택하지 않는다. W13 고정 조건과 production NO-GO는 유지된다."
+  ]
+}

@@ -37,16 +37,14 @@ Codex가 repo 파일에 남기지 않은 판단·시도·실패는 그대로 소
 
 ---
 
-## §2 2026-09-11 Codex → Claude
+## §2 2026-09-14 Codex → 다음 세션 — 연구 설명·재개·Git 게시
 
-**만진 파일**: `boot_check_20260911/{plan_scoop_tilt_cycle.py,hw_scoop_tilt_cycle.py,analysis_scoop_tilt_cycle.py,audit_scoop_tilt_cycle.py,verify_scoop_tilt_cycle.py,plan_finish_home.py,verify_finish_home.py,scoop_tilt_cycle_01/}`·직전outlet관찰JSON·START/세션/LEDGER/색인. 기존기본RecordedArm/JOINT_LIMITS/PID코드는이번턴미변경.
+**한 일 (repo에 남은 변경)**: START_HERE.md, BACKLOG의 후속 후보 append, 새 session_20260914_research_closeout_git.md, CONTINUE_20260914_W13_REPAIR_PERFORMANCE.md, research/closeout_20260914/와 이 relay. Downloads에 새 출력용 Markdown을 전달했다. 사용자 최신 요청으로 이번 commit/push를 승인받아 각 branch로 보존한다. 실제 원격 확인은 GIT_PUBLICATION.md와 최종 START를 따른다.
 
-**함정**: 실행별completed와전체목표달성을분리한다. combined_01/REPORT_initial_stop은중간보고이며최신은START→REPORT→combined_02. 이전FAIL을고쳐서성공으로만들지말것. 마지막기울임은이전고정립점IK와다른고정지지관절손목경로라원래경로무중단재현으로해석금지. 마지막실제자세는START정본만참조.
+**만지지 말 것**: 기존 PPT/출력용 Markdown/미디어·W13 run_01/rev28/post03·기존 실패 보고·과거 동결 revision. 모든 실험 원본 바이트는 유지한다. pellet-model의 세 .bak는 제외한 로컬 보존본이며 삭제하지 않는다. worker branch의 오래된 상태/원장을 main에 merge하지 않는다.
 
-**자료함정**: execution05계획62단계중조회2를포함한감사필드명을command_count_erratum.json에보완. RRD각도decision은배출후·현재최종각은result의HOME별도다. 스크린샷의초기커서시간창과전체readback을구분. 포트닫힘공백보간은측정아님. 이전잔류0알/22.28g를새회차측정에대입금지.
+**함정**: master에 worker 코드가 자동 통합되지 않았다. branch 매핑/LFS 원자료는 research/closeout_20260914/GIT_PUBLICATION.md와 PUBLICATION_MANIFEST.json을 확인한다. LFS 포인터만 있는 clone은 원자료 확보가 끝난 상태가 아니다. 당시 pin의 이전 HEAD는 이번 게시 때문에 바뀌었지만 원시 해시를 고치거나 오래된 GO를 되살리지 않는다. 새 MD는 최근 질의의 종합 설명이며 옛 verify_delivery.mjs의 두 문서 검사 대상이 아니다. 새로운 verify_closeout.mjs가 delivery/continuation/numbers/publication을 분리해 검사한다.
 
-**만지지 말 것**: 실행원시/동결소스/계획/기존W9·W10·PID·900·790원본. PLAN04소스복원은원plan의SHA정확일치검증후별도보존했으므로임의수정금지. 새경로의시작복귀예외는일반운용한도확장으로쓰지않는다.
+**승인 대기**: 새 continuation §5를 새 세션에 사용자 요청으로 전달하면 §4 첫 case의 원자료 판정 수정과 CPU 테스트부터 진행한다. 지금 새 연구 실행은0. 이후 재생3결함·운반 원인·성능 계측은 순차 분리한다. GPU 물리·재렌더·학습·A/B/C·하드웨어 조회/구동/PID/토크/카메라·설치는 자동 승인되지 않는다. 이번 Git 게시 승인은 후속 세션에 이월하지 않는다.
 
-**승인/입력 경계**: 사용자push소유권선언후이번턴commit/push0. Git은사용자가한다. 무게/잔류/영점은사실입력대기이며반복실행승인질문으로바꾸지말것. 다음전체cycle의종료조건은사용자정정에따라HOME이며,열린상태유지로끝내지않는다.
-
-**검증 방법**: 최종case REPORT/command_audit/validation/inspection/manifest를읽는다. fake검증스크립트는하드웨어를열지않는다. 실제실행스크립트는사용자승인범위·최신시작자세를확인후에만사용.
+**검증 방법**: 새 verification 스크립트의 내용을 읽고 필요한 mode만 실행한다. publication은 로컬 전체 증거 해시와 Git 원격 ref를 읽으며 새 물리나 renderer를 실행하지 않는다. 새 세션의 상태 정본은 START_HERE이고 이 relay가 아니다. 이번 종료 뒤 상태 원장 소유권을 넘겨받는다.

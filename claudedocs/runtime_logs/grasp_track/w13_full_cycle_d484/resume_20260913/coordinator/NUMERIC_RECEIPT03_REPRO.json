@@ -1,0 +1,26 @@
+{
+  "artifact": "W13R_ROOT_NUMERIC_RECEIPT03_REPRO",
+  "observed_utc": "2026-09-13 05:50 UTC",
+  "scope": "Actual CPU-only calls after full source review; no solver initialization, physics, renderer or files written by the tested module.",
+  "source": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/checkpoints/bridge_only_03/src/bridge_numerics.py",
+  "sha256sum_manifest_check": "13/13 entries OK in bridge_only_03, checked by root before these calls",
+  "inputs": {
+    "requested_duration_s": 0.004,
+    "timestep_s": 0.000001,
+    "l_m": 5.554815288300041e-12,
+    "voxel_size_m": 3.640403747340315e-7,
+    "domain_max_coord_m": 1.0154914259910583,
+    "r_max_local_m_by_body": {"fixed": 0.054396, "door": 0.125163}
+  },
+  "pinned_receipt_actual": {
+    "position_lattice_allowance_m": null,
+    "preflight_blocking_gaps": ["position_lattice_evidence_gap"],
+    "cause": "pinned_receipt passes only N and l_m into position_lattice_allowance_m; voxel_size_m and coord_bound_m are omitted despite being available."
+  },
+  "positive_control_direct_call": {
+    "n_steps": 4001,
+    "position_lattice_allowance_m": 0.0025228147373688847
+  },
+  "test_process_returncode": 0,
+  "meaning": "Reproduction success, not numerical-preflight acceptance. Fix argument forwarding and test complete and missing inputs. This does not show that the actual bridge movement formula was wrong."
+}

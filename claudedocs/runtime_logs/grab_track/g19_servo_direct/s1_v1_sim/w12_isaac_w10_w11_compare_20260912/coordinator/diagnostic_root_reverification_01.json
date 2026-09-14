@@ -1,0 +1,116 @@
+{
+  "artifact": "W12_DIAGNOSTIC_CORRECTION_01_CHECK",
+  "replay_root": "/home/cgxr/orca/workspaces/RoArm_Project/w12-isaac-replay/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w12_isaac_w10_w11_compare_20260912/replay",
+  "runs": {
+    "w10": {
+      "run": "w10",
+      "gates_recorded_radius_m": 0.445889,
+      "gates_recorded_mm_per_deg": 7.7822,
+      "old_expression_value_m": 0.4458890732554351,
+      "door_axis_in_link5": [
+        0,
+        1,
+        0
+      ],
+      "n_door_nodes": 108,
+      "sync_index_used": 0,
+      "euclid_source_m": 0.12516306155165544,
+      "euclid_display_m": 0.12516306155165544,
+      "perp_source_m": 0.1178983787730769,
+      "perp_display_m": 0.1178983787730769,
+      "frames_agree_exactly": true,
+      "origin_offset_m": [
+        0.35,
+        0,
+        0.163
+      ],
+      "old_minus_correct_perp_m": 0.3279906944823582,
+      "correct_mm_per_deg_perp": 2.0577148923535846,
+      "correct_mm_per_deg_euclid": 2.1845075259527102,
+      "old_mm_per_deg": 7.782232426973533,
+      "crosscheck": {
+        "max_nominal_minus_actual_deg": 0.076066,
+        "recorded_max_node_disp_mm": 0.1565,
+        "implied_perp_lever_m": 0.11788170999272057,
+        "abs_diff_vs_perp_m": 0.00001666878035633257,
+        "rounding_bound_m": 0.000038442187890357924,
+        "formula": "max node disp = 2*sin(dtheta/2)*max|d_perp|  ->  lever = disp / (2*sin(dtheta/2))",
+        "pass": true
+      },
+      "pass": true
+    },
+    "w11": {
+      "run": "w11",
+      "gates_recorded_radius_m": 0.445889,
+      "gates_recorded_mm_per_deg": 7.7822,
+      "old_expression_value_m": 0.4458890732554351,
+      "door_axis_in_link5": [
+        0,
+        1,
+        0
+      ],
+      "n_door_nodes": 108,
+      "sync_index_used": 0,
+      "euclid_source_m": 0.12516306155165544,
+      "euclid_display_m": 0.12516306155165544,
+      "perp_source_m": 0.1178983787730769,
+      "perp_display_m": 0.1178983787730769,
+      "frames_agree_exactly": true,
+      "origin_offset_m": [
+        0.35,
+        0,
+        0.163
+      ],
+      "old_minus_correct_perp_m": 0.3279906944823582,
+      "correct_mm_per_deg_perp": 2.0577148923535846,
+      "correct_mm_per_deg_euclid": 2.1845075259527102,
+      "old_mm_per_deg": 7.782232426973533,
+      "crosscheck": {
+        "max_nominal_minus_actual_deg": 0.121388,
+        "recorded_max_node_disp_mm": 0.2498,
+        "implied_perp_lever_m": 0.11790694631373981,
+        "abs_diff_vs_perp_m": 0.000008567540662904327,
+        "rounding_bound_m": 0.000024084180767161932,
+        "formula": "max node disp = 2*sin(dtheta/2)*max|d_perp|  ->  lever = disp / (2*sin(dtheta/2))",
+        "pass": true
+      },
+      "pass": true
+    }
+  },
+  "unused_scalar": {
+    "lines": [
+      [
+        209,
+        "DOOR_R_MAX_M = float(np.linalg.norm((R_W.T @ (NODES_D[SYNC_IDX[0]] - (TOOL_W[0] - R_W @ L169)).T).T - H5, axis=1).max())"
+      ],
+      [
+        222,
+        "\"door_quat_offaxis_max_deg\": round(_offaxis_deg, 9), \"door_node_max_radius_from_hinge_m\": round(DOOR_R_MAX_M, 6),"
+      ],
+      [
+        223,
+        "\"mm_per_deg_at_far_node\": round(1000 * DOOR_R_MAX_M * math.pi / 180.0, 4),"
+      ]
+    ],
+    "definition_line": 209,
+    "used_only_in_metadata": true,
+    "per_frame_metrics_add_origin": true,
+    "gate_fields_using_it": [],
+    "pass": true
+  },
+  "frozen_hashes_now": {
+    "sim_isaac_replay_w12.py": "0a895ff1080839568855879af7b6459ff0e8ed928c1c33b3d719539bbcdc9373",
+    "gates_w12_w10.json": "3ffddcfd638e1043b5d26755ac1ec68fc38f420c5e8a04ca9e2fbc2ef533b7db",
+    "gates_w12_w11.json": "bcbe3441b94d9957e56aeb4f4de6480d382d2264b9b61160d67e6885549721fe"
+  },
+  "frozen_match_correction_json": {
+    "recorded": {
+      "sim_isaac_replay_w12.py": "0a895ff1080839568855879af7b6459ff0e8ed928c1c33b3d719539bbcdc9373",
+      "gates_w12_w10.json": "3ffddcfd638e1043b5d26755ac1ec68fc38f420c5e8a04ca9e2fbc2ef533b7db",
+      "gates_w12_w11.json": "bcbe3441b94d9957e56aeb4f4de6480d382d2264b9b61160d67e6885549721fe"
+    },
+    "identical": true,
+    "pass": true
+  },
+  "pass": true
+}

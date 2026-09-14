@@ -1,0 +1,344 @@
+{
+  "artifact": "LABMEETING_20260915_ORCA_FINAL_ACCOUNTING",
+  "date_kst": "2026-09-14",
+  "run_id": "run_617e1f3f687f",
+  "accepted_worker_done": [
+    "msg_8d0effd5bae4",
+    "msg_505ae7f78d4a",
+    "msg_db1432d90d28",
+    "msg_c619ccb95cd7"
+  ],
+  "all_four_dispatches_succeeded": true,
+  "all_three_materialized_worker_resources_released": true,
+  "pending_messages": 0,
+  "active_workers": 0,
+  "reclaimable_resources": 0,
+  "ownership_note_ko": "원 ppt Dispatch ctx_5878180ec1b8의 retained/resource:null 표시는 같은 wtr_56302f031a31을 ctx_3b99ab9bf71f 후속 작업으로 이전했기 때문. 실제 최종 owner ctx_3b99ab9bf71f에서 release 완료. 옛 Dispatch의 retained 표시를 실행 중 사용자 보유 worker로 오인하지 않는다.",
+  "worker_list": {
+    "id": "e5ed5e2c-f490-433c-b5c1-ed30f18c708d",
+    "ok": true,
+    "result": {
+      "workers": [
+        {
+          "dispatchId": "ctx_5878180ec1b8",
+          "taskId": "task_984b4b5d71cb",
+          "runId": "run_617e1f3f687f",
+          "workerState": "succeeded",
+          "dispatchStatus": "completed",
+          "agentTerminalHandle": "term_5feb48dd-3318-4c1d-b32c-2a272b5abde9",
+          "terminalState": "retained",
+          "resource": null,
+          "projection": {
+            "id": "ctx_5878180ec1b8",
+            "dispatchId": "ctx_5878180ec1b8",
+            "taskId": "task_984b4b5d71cb",
+            "runId": "run_617e1f3f687f",
+            "role": "worker",
+            "parent": null,
+            "provider": null,
+            "host": {
+              "kind": "local",
+              "id": "local"
+            },
+            "workspace": {
+              "id": "6d4cecac-f639-434b-be40-367d6257f9f2::/home/cgxr/orca/workspaces/RoArm_Project/research-survey",
+              "kind": "folder_or_worktree"
+            },
+            "stage": {
+              "worker": "succeeded",
+              "dispatch": "completed",
+              "detail": "settled",
+              "activity": "unknown"
+            },
+            "outcome": "succeeded",
+            "liveness": {
+              "verdict": "unverifiable",
+              "reason": "missing_status"
+            },
+            "evidence": {
+              "durable": true,
+              "liveStatus": "unavailable",
+              "lastObservedAt": null
+            },
+            "resource": {
+              "state": "absent",
+              "reason": "not_materialized"
+            },
+            "nextAction": {
+              "kind": "none",
+              "argv": []
+            },
+            "attention": {
+              "categories": [
+                "unverifiable",
+                "root_completion"
+              ],
+              "requiresAction": true
+            }
+          }
+        },
+        {
+          "dispatchId": "ctx_70c81d3ee6d7",
+          "taskId": "task_c4704f6b1e04",
+          "runId": "run_617e1f3f687f",
+          "workerState": "succeeded",
+          "dispatchStatus": "completed",
+          "agentTerminalHandle": "term_e368ae56-b4b4-4e55-9155-bcf0e4ba14f1",
+          "terminalState": "released",
+          "resource": {
+            "id": "wtr_49c6af088b53",
+            "ownershipState": "released",
+            "releaseState": "released",
+            "retainedReason": null,
+            "terminalHandle": "term_e368ae56-b4b4-4e55-9155-bcf0e4ba14f1",
+            "worktreeId": "6d4cecac-f639-434b-be40-367d6257f9f2::/home/cgxr/orca/workspaces/RoArm_Project/pellet-model",
+            "endpointId": "471edc31-a026-466b-b60c-0c8e6cfb9fcc",
+            "endpointIncarnation": "6d4cecac-f639-434b-be40-367d6257f9f2::/home/cgxr/orca/workspaces/RoArm_Project/pellet-model@@528a1073:23e720f5-80b5-4e56-badf-4c4fad098720",
+            "originDispatchId": "ctx_70c81d3ee6d7",
+            "ownerDispatchId": "ctx_70c81d3ee6d7",
+            "releaseRequestedAt": "2026-09-14 06:18:08",
+            "releaseCompletedAt": "2026-09-14 06:18:09",
+            "releaseError": null,
+            "recoveryAttemptCount": 0,
+            "lastRecoveryAt": null,
+            "archive": {
+              "source": "transcript",
+              "status": "captured"
+            }
+          },
+          "projection": {
+            "id": "ctx_70c81d3ee6d7",
+            "dispatchId": "ctx_70c81d3ee6d7",
+            "taskId": "task_c4704f6b1e04",
+            "runId": "run_617e1f3f687f",
+            "role": "worker",
+            "parent": null,
+            "provider": null,
+            "host": {
+              "kind": "local",
+              "id": "local"
+            },
+            "workspace": {
+              "id": "6d4cecac-f639-434b-be40-367d6257f9f2::/home/cgxr/orca/workspaces/RoArm_Project/pellet-model",
+              "kind": "folder_or_worktree"
+            },
+            "stage": {
+              "worker": "succeeded",
+              "dispatch": "completed",
+              "detail": "settled",
+              "activity": "unknown"
+            },
+            "outcome": "succeeded",
+            "liveness": {
+              "verdict": "exited",
+              "source": "resource_release"
+            },
+            "evidence": {
+              "durable": true,
+              "liveStatus": "unavailable",
+              "lastObservedAt": null
+            },
+            "resource": {
+              "state": "released"
+            },
+            "nextAction": {
+              "kind": "none",
+              "argv": []
+            },
+            "attention": {
+              "categories": [
+                "root_completion"
+              ],
+              "requiresAction": false
+            }
+          }
+        },
+        {
+          "dispatchId": "ctx_5823194fd2a3",
+          "taskId": "task_b4b0f7267cab",
+          "runId": "run_617e1f3f687f",
+          "workerState": "succeeded",
+          "dispatchStatus": "completed",
+          "agentTerminalHandle": "term_3ff96714-1f9d-4f91-8c90-290352d2ae3e",
+          "terminalState": "released",
+          "resource": {
+            "id": "wtr_88709a939e64",
+            "ownershipState": "released",
+            "releaseState": "released",
+            "retainedReason": null,
+            "terminalHandle": "term_3ff96714-1f9d-4f91-8c90-290352d2ae3e",
+            "worktreeId": "6d4cecac-f639-434b-be40-367d6257f9f2::/home/cgxr/orca/workspaces/RoArm_Project/w12-isaac-replay",
+            "endpointId": "471edc31-a026-466b-b60c-0c8e6cfb9fcc",
+            "endpointIncarnation": "6d4cecac-f639-434b-be40-367d6257f9f2::/home/cgxr/orca/workspaces/RoArm_Project/w12-isaac-replay@@88b43a37:e91ea0d7-0cc9-418f-aae7-e8829b3931c5",
+            "originDispatchId": "ctx_5823194fd2a3",
+            "ownerDispatchId": "ctx_5823194fd2a3",
+            "releaseRequestedAt": "2026-09-14 06:09:28",
+            "releaseCompletedAt": "2026-09-14 06:09:28",
+            "releaseError": null,
+            "recoveryAttemptCount": 0,
+            "lastRecoveryAt": null,
+            "archive": {
+              "source": "transcript",
+              "status": "captured"
+            }
+          },
+          "projection": {
+            "id": "ctx_5823194fd2a3",
+            "dispatchId": "ctx_5823194fd2a3",
+            "taskId": "task_b4b0f7267cab",
+            "runId": "run_617e1f3f687f",
+            "role": "worker",
+            "parent": null,
+            "provider": null,
+            "host": {
+              "kind": "local",
+              "id": "local"
+            },
+            "workspace": {
+              "id": "6d4cecac-f639-434b-be40-367d6257f9f2::/home/cgxr/orca/workspaces/RoArm_Project/w12-isaac-replay",
+              "kind": "folder_or_worktree"
+            },
+            "stage": {
+              "worker": "succeeded",
+              "dispatch": "completed",
+              "detail": "settled",
+              "activity": "unknown"
+            },
+            "outcome": "succeeded",
+            "liveness": {
+              "verdict": "exited",
+              "source": "resource_release"
+            },
+            "evidence": {
+              "durable": true,
+              "liveStatus": "unavailable",
+              "lastObservedAt": null
+            },
+            "resource": {
+              "state": "released"
+            },
+            "nextAction": {
+              "kind": "none",
+              "argv": []
+            },
+            "attention": {
+              "categories": [
+                "root_completion"
+              ],
+              "requiresAction": false
+            }
+          }
+        },
+        {
+          "dispatchId": "ctx_3b99ab9bf71f",
+          "taskId": "task_f215088027ff",
+          "runId": "run_617e1f3f687f",
+          "workerState": "succeeded",
+          "dispatchStatus": "completed",
+          "agentTerminalHandle": "term_5feb48dd-3318-4c1d-b32c-2a272b5abde9",
+          "terminalState": "released",
+          "resource": {
+            "id": "wtr_56302f031a31",
+            "ownershipState": "released",
+            "releaseState": "released",
+            "retainedReason": null,
+            "terminalHandle": "term_5feb48dd-3318-4c1d-b32c-2a272b5abde9",
+            "worktreeId": "6d4cecac-f639-434b-be40-367d6257f9f2::/home/cgxr/orca/workspaces/RoArm_Project/research-survey",
+            "endpointId": "471edc31-a026-466b-b60c-0c8e6cfb9fcc",
+            "endpointIncarnation": "6d4cecac-f639-434b-be40-367d6257f9f2::/home/cgxr/orca/workspaces/RoArm_Project/research-survey@@636c8dbe:15ee1b42-d4a4-494c-b396-e9c5028b725f",
+            "originDispatchId": "ctx_5878180ec1b8",
+            "ownerDispatchId": "ctx_3b99ab9bf71f",
+            "releaseRequestedAt": "2026-09-14 06:31:03",
+            "releaseCompletedAt": "2026-09-14 06:31:03",
+            "releaseError": null,
+            "recoveryAttemptCount": 0,
+            "lastRecoveryAt": null,
+            "archive": {
+              "source": "transcript",
+              "status": "captured"
+            }
+          },
+          "projection": {
+            "id": "ctx_3b99ab9bf71f",
+            "dispatchId": "ctx_3b99ab9bf71f",
+            "taskId": "task_f215088027ff",
+            "runId": "run_617e1f3f687f",
+            "role": "worker",
+            "parent": null,
+            "provider": null,
+            "host": {
+              "kind": "local",
+              "id": "local"
+            },
+            "workspace": {
+              "id": "6d4cecac-f639-434b-be40-367d6257f9f2::/home/cgxr/orca/workspaces/RoArm_Project/research-survey",
+              "kind": "folder_or_worktree"
+            },
+            "stage": {
+              "worker": "succeeded",
+              "dispatch": "completed",
+              "detail": "settled",
+              "activity": "unknown"
+            },
+            "outcome": "succeeded",
+            "liveness": {
+              "verdict": "exited",
+              "source": "resource_release"
+            },
+            "evidence": {
+              "durable": true,
+              "liveStatus": "unavailable",
+              "lastObservedAt": null
+            },
+            "resource": {
+              "state": "released"
+            },
+            "nextAction": {
+              "kind": "none",
+              "argv": []
+            },
+            "attention": {
+              "categories": [
+                "root_completion"
+              ],
+              "requiresAction": false
+            }
+          }
+        }
+      ],
+      "counts": {
+        "retained": 1,
+        "released": 3
+      },
+      "page": {
+        "limit": 100,
+        "total": 4,
+        "hasMore": false,
+        "nextCursor": null
+      },
+      "scope": {
+        "run": "run_617e1f3f687f",
+        "source": "flag"
+      }
+    },
+    "_meta": {
+      "runtimeId": "471edc31-a026-466b-b60c-0c8e6cfb9fcc"
+    }
+  },
+  "dedicated_coordinator_close": {
+    "id": "e03789ef-1513-4817-8b19-57a80c707850",
+    "ok": true,
+    "result": {
+      "close": {
+        "handle": "term_fdfe24eb-e5b9-403f-a392-8d0ff0eefdb5",
+        "tabId": "a74cd43f-5b20-469a-9504-afc80f9aef03",
+        "ptyKilled": true
+      }
+    },
+    "_meta": {
+      "runtimeId": "471edc31-a026-466b-b60c-0c8e6cfb9fcc"
+    }
+  },
+  "worktrees_deleted": 0,
+  "shared_user_terminals_closed": 0
+}

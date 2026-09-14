@@ -1,0 +1,136 @@
+{
+  "artifact": "W13R_ROOT_READINESS_INSPECTION_03",
+  "VERDICT": "READINESS_FAILED",
+  "signed_off_by": "Codex coordinator /root: personally opened all eight original PNGs with view_image",
+  "inspection_window_utc": "After the 08:36:03 UTC clock check and before the 08:39:13 UTC report messages on 2026-09-13; per-image opening timestamps were not separately recorded.",
+  "recorded_time_note": "2026-09-13 17:41 KST, minute-level record",
+  "output_dir": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/readiness/renderer_readiness_10_actual",
+  "prior_inspection_preserved": "ROOT_READINESS_INSPECTION_02.json",
+  "frames": [
+    {
+      "index": 0,
+      "path": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/readiness/renderer_readiness_10_actual/render/frames/f_00000.png",
+      "sha256": "9254d851701e8ca181310faafa7fbc1ca2b45861d5f7e8f100e4217fa2909eff",
+      "actually_viewed": true
+    },
+    {
+      "index": 1,
+      "path": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/readiness/renderer_readiness_10_actual/render/frames/f_00001.png",
+      "sha256": "d66ec5f4a2db92fa373edc8ff044ee85ae3ce693084539a7cddf51e1fa0e62c8",
+      "actually_viewed": true
+    },
+    {
+      "index": 2,
+      "path": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/readiness/renderer_readiness_10_actual/render/frames/f_00002.png",
+      "sha256": "5c11ad2dc0b2187d2f1832a13b125605fdf88f5c80c970bdf22d1591b4b8de64",
+      "actually_viewed": true
+    },
+    {
+      "index": 3,
+      "path": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/readiness/renderer_readiness_10_actual/render/frames/f_00003.png",
+      "sha256": "43b19a4c87dc8cb388c418c66a17f557fd9ba0733d6c4408c9018f6448fba897",
+      "actually_viewed": true
+    },
+    {
+      "index": 4,
+      "path": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/readiness/renderer_readiness_10_actual/render/frames/f_00004.png",
+      "sha256": "f8b2af8a48594ab445b84a020c3fa6019ed6677ab8319b703f5c8150be058771",
+      "actually_viewed": true
+    },
+    {
+      "index": 5,
+      "path": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/readiness/renderer_readiness_10_actual/render/frames/f_00005.png",
+      "sha256": "b9d4766432600cc4b4937d81503a88b69c0968a23325b1eb3a27bcba887fac21",
+      "actually_viewed": true
+    },
+    {
+      "index": 6,
+      "path": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/readiness/renderer_readiness_10_actual/render/frames/f_00006.png",
+      "sha256": "173240353d6baa781c5f39de153204f7e8a534f14a972ac1b79c34d7b43ed42f",
+      "actually_viewed": true
+    },
+    {
+      "index": 7,
+      "path": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/readiness/renderer_readiness_10_actual/render/frames/f_00007.png",
+      "sha256": "e61e03d223581977be5ea8d9210454d65eb30fa429df14f80606d338a19821c2",
+      "actually_viewed": true
+    }
+  ],
+  "improvements": [
+    "8장 모두에서 이전 팔 상단/하단 잘림을 더 이상 관찰하지 않음. 팔 전체, 용기, 더미와 S1셸/문이 화면 안에 있음.",
+    "합성6자세의 운반/배출위치/HOME 표시 및 실제 raw와 합성 라벨을 구분할 수 있음.",
+    "rawHOME과 syntheticHOME의 문 조립 배치는 이전의 분리/열림 모양보다 일치하도록 개선됨. 화소 동일성은 주장하지 않음."
+  ],
+  "visual_failures": [
+    "갈색 source support/파란4벽이라는 라벨이 추가됐지만 실제 면은 화면에서 구분되지 않고 금색 테두리와 기둥만 뚜렷함. source support 및4벽면을 실제로 식별하는 준비 조건 미충족."
+  ],
+  "visual_limits": [
+    "4번 place_target 상면에서 공구/팔이 컵 일부를 가림. 다른 측면은 배출위치를 보완함.",
+    "일부 흰색 글자는 흰 로봇 위에서 대비가 낮고 상단 라벨이 로봇과 겹침. 합성/불완전 배너는 노란색으로 보임.",
+    "rawHOME 0/1과 syntheticHOME7의 셸/문 색·투명도 표현은 같지 않음. 형태 관찰을 화소동일성이나 실제서보구동 증명으로 확장하지 않음.",
+    "명령 FK오차0.0mm는 USD 실제링크오차의 측정값이 아님.",
+    "면 식별 실패는 물리바닥/충돌벽 자체 부재를 입증하지 않음. 스폰/재질 원인은 별도 CPU 진단 대기."
+  ],
+  "source_mapping": {
+    "raw_rows": [
+      0,
+      1
+    ],
+    "sync_indices": [
+      0,
+      0
+    ],
+    "times_s": [
+      0,
+      0
+    ],
+    "raw_total_rows": 6,
+    "full_coverage_required": false,
+    "selected_row_identity_all_ok": true,
+    "synthetic_frames": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "synthetic_phases": [
+      "post_lift_travel",
+      "place_retract_base90",
+      "place_target",
+      "place_up_travel",
+      "return_retract_base0",
+      "return_home"
+    ],
+    "synthetic_source_time": null,
+    "synthetic_particles": "existing raw row copied; not new dynamics",
+    "actual_full_cycle": false
+  },
+  "observed_timing": {
+    "started_utc": "2026-09-13T08:35:15Z",
+    "startup_s": 11.214,
+    "render_s": 4.093,
+    "ffmpeg_s": 0.302,
+    "total_before_close_s": 15.61,
+    "close_s": null,
+    "final_runner_rc": null,
+    "final_receipts": "not yet finalized when this inspection was recorded",
+    "stderr": "Kit async_engine.py:296 callback TimeoutError: close did not finish within 60.0s; wait_for_replicator=False did not establish clean shutdown"
+  },
+  "initialization_vs_display": {
+    "initialization_physics_steps": 8,
+    "displayed_frames": 8,
+    "display_clock_before_after": 0.08333333767950535,
+    "displayed_clock_advanced": false,
+    "new_DEME_physics": 0
+  },
+  "authorization": {
+    "GO": "GO_isaac_readiness_rev20_01.md",
+    "current_attempt_only": true,
+    "next_GPU_GO": false,
+    "production_GO": false,
+    "original_outer_deadline_unchanged": true
+  },
+  "rerun_nonclaim": "This PNG/MP4 readiness fixture is not the required final full-cycle RRD/RBL/actual timeline inspection and does not certify physics results."
+}

@@ -1,0 +1,33 @@
+{
+  "artifact": "W11_ACTUAL_VISUAL_INSPECTION",
+  "date_local": "2026-09-12",
+  "actually_viewed": true,
+  "method": "Codex opened all four PNGs with view_image after generation; not inferred from file existence.",
+  "images": [
+    {
+      "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w11_dt_sensitivity_20260911/heightmap_comparison.png",
+      "sha256": "1be3f49529f4c4a7fe271e227152c3eccca219813f9e831078edf9d5de839a74",
+      "observations": "위쪽 재안착 후 pre 두 맵은 육안으로 거의 겹치고 차이 패널은 소수 셀만 색이 보인다. 아래 post 두 맵은 중앙 패인 영역과 주변 더미가 보이지만 음의 x 쪽 고립된 높은 셀 위치가 다르다. post 차이는 주로 취점 부근 일부 셀에 집중된다. 평균 차이만으로 동일 지형이라 판정하지 않는다. pre/post 차이 패널 색 범위도 서로 다르다."
+    },
+    {
+      "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w11_dt_sensitivity_20260911/timeline_comparison.png",
+      "sha256": "316745384a3b05f48eedd60396ad710ac6c17f16e50266daea39d50e587bdc0d",
+      "observations": "전체 저장 시점의 명목 문각 추세는 대체로 겹치지만 정지 직전/이후 저항 토크 곡선은 다르다. W10 파랑의 close 속도 피크는 5m/s 점선을 넘고 W11 주황은 넘지 않는다. W11에도 끝부분 재닫기 속도 피크가 남아 있다. 그림 선분은 저장 시점 연결이지 내부 모든 dt의 관측이 아니다."
+    },
+    {
+      "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w11_dt_sensitivity_20260911/cell_dt1e6_seed460/scoop_s1_seed460_w11_inspection.png",
+      "sha256": "263b810d2fdaefa6b9a3d396d2e3598811c3cc5db3c914f9ac2a0942fd13fa50",
+      "observations": "중앙 최종 정적 패널에서 공구 내부 주황 입자와 파랑 딸려 올라온 입자, 아래 더미 사이의 분리가 보인다. 오른쪽 첫 닫힘 정지 패널에는 고정부/문 노드와 빨간 접촉점 및 목표/실제 축이 보인다. 아래 post 높이맵과 국소 높은 점도 보인다. 왼쪽 동적 패널 커서는 0s 초기 더미이며 중앙 최종/오른쪽 첫 정지는 정적 사본이라 동일 시각 화면이 아니다. 이벤트 창은 초기 커서라 비어 있어 정지 원인은 원시 JSON으로 확인한다. 입자 색은 최종 포획 분류를 시간 전체에 고정한 것으로 당시 포획 상태가 아니다. 재닫기 정지를 별도 정적 화면으로 직접 검수했다고 주장하지 않는다."
+    },
+    {
+      "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w11_dt_sensitivity_20260911/cell_dt1e6_seed460/scoop_s1_seed460_w11_decision_frames.png",
+      "sha256": "36994e49421abc5e98230c1050d1099c5d7e10fb75c29066c033f03368debc71",
+      "observations": "첫 닫힘 결정 frame2447의 명목/실제 힌지 축이 거의 겹친다. 라벨도 겹쳐 이 축척의 PNG만으로 약0.104도 차이를 판독할 수 없다. 실제 메시 노드 맞춤 결과 3.390305도와 명목3.494도는 원시 대조 수치로 확인한다. 이는 프레임 진단이지 개별 펠릿 끼임 확대 사진이 아니다."
+    }
+  ],
+  "limits": [
+    "RRD spatial copies are Float32 inspection evidence, not scientific authority.",
+    "Post heightmap is a dynamic final snapshot with height-based carried exclusion; not a newly settled bed.",
+    "Contact and trajectory coverage was checked from the complete RRD readback; a still image alone does not prove full temporal coverage."
+  ]
+}

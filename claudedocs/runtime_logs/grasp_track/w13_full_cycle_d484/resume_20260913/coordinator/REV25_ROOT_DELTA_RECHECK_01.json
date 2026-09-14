@@ -1,0 +1,144 @@
+{
+  "artifact": "W13_REV25_FAST_SHUTDOWN_TINY_DELTA_AUDIT_V1",
+  "generated_utc": "2026-09-13T10:56:44Z",
+  "cpu_only": true,
+  "n_findings": 13,
+  "n_pass": 13,
+  "failures": [],
+  "verdict": "CPU_PREFLIGHT_GO_FOR_ONE_SEPARATELY_AUTHORIZED_READINESS15",
+  "findings": [
+    {
+      "name": "rev25_outer_26_hashes",
+      "pass": true,
+      "evidence": {
+        "n": 26,
+        "mismatches": []
+      }
+    },
+    {
+      "name": "readiness15_mini_10_hashes",
+      "pass": true,
+      "evidence": {
+        "n": 10,
+        "mismatches": []
+      }
+    },
+    {
+      "name": "external_15_hashes",
+      "pass": true,
+      "evidence": {
+        "n": 15,
+        "mismatches": []
+      }
+    },
+    {
+      "name": "criteria_1_hash",
+      "pass": true,
+      "evidence": {
+        "n": 1,
+        "mismatches": []
+      }
+    },
+    {
+      "name": "only_renderer_source_changed",
+      "pass": true,
+      "evidence": [
+        "isaac_replay_w13.py"
+      ]
+    },
+    {
+      "name": "commands_self_path_only",
+      "pass": true,
+      "evidence": {
+        "equal_after_rev25_to_rev24": true
+      }
+    },
+    {
+      "name": "actual_ast_exact_false_kwarg",
+      "pass": true,
+      "evidence": {
+        "ok": true,
+        "lineno": 462,
+        "ast": "Call(func=Name(id='AppLauncher', ctx=Load()), args=[Name(id='args', ctx=Load())], keywords=[keyword(arg='fast_shutdown', value=Constant(value=False))])"
+      }
+    },
+    {
+      "name": "fake_routing_receives_false",
+      "pass": true,
+      "evidence": {
+        "n_calls": 1,
+        "arg_identity": true,
+        "kwargs": {
+          "fast_shutdown": false
+        }
+      }
+    },
+    {
+      "name": "default_and_true_negative_controls",
+      "pass": true,
+      "evidence": {
+        "default": {
+          "ok": false,
+          "lineno": 462,
+          "ast": "Call(func=Name(id='AppLauncher', ctx=Load()), args=[Name(id='args', ctx=Load())], keywords=[])"
+        },
+        "true": {
+          "ok": false,
+          "lineno": 462,
+          "ast": "Call(func=Name(id='AppLauncher', ctx=Load()), args=[Name(id='args', ctx=Load())], keywords=[keyword(arg='fast_shutdown', value=Constant(value=True))])"
+        }
+      }
+    },
+    {
+      "name": "delta_is_one_comment_block_plus_one_call",
+      "pass": true,
+      "evidence": {
+        "comment_start_line": 451,
+        "call_line": 462,
+        "normalized_equals_rev24": true
+      }
+    },
+    {
+      "name": "mini_exact_rev25_copies",
+      "pass": true,
+      "evidence": []
+    },
+    {
+      "name": "readiness15_bounds_frames_unchanged",
+      "pass": true,
+      "evidence": {
+        "total": 180.0,
+        "split": {
+          "child_render_budget_s": 135.0,
+          "renderer_close_budget_s": 27.0,
+          "runner_grace_s": 18.0
+        },
+        "bounds": {
+          "child_self_stop_at_s": 135.0,
+          "outer_runner_term_at_s": 162.0,
+          "outer_runner_kill_at_s": 179.5,
+          "hard_cap_s": 180.0,
+          "term_formula": "cap - graceful_grace_s (run_production.py term_at)",
+          "kill_formula": "max(term_at, cap - min(REAP_OBSERVE_S=0.5, grace/2)) (kill_at)",
+          "note": "child_self_stop_at_s 는 **TERM 시각이 아니다.** 두 값을 같은 것으로 적지 않는다."
+        },
+        "frames": {
+          "total": 8,
+          "synthetic": 6,
+          "real_raw": 2,
+          "synthetic_note": "명시 라벨된 자세 fixture 다. 운반·배출 위치·HOME 표시를 확인하기 위한 것이며 **물리 결과로 세지 않는다**."
+        }
+      }
+    },
+    {
+      "name": "readiness15_actual_absent",
+      "pass": true,
+      "evidence": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/readiness/renderer_readiness_15_actual"
+    }
+  ],
+  "limits": [
+    "Fake routing verifies Python call shape only; native extension cleanup return is unproven.",
+    "No Isaac/GPU/physics execution was performed by the auditor.",
+    "Production remains unauthorized."
+  ]
+}

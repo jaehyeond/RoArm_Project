@@ -1,0 +1,459 @@
+{
+  "artifact": "W13_REV28_REFERENCE_RELEASE_CONTRACT_INDEPENDENT_AUDIT_V1",
+  "generated_utc": "2026-09-13T12:11:28Z",
+  "n_findings": 20,
+  "n_pass": 20,
+  "failures": [],
+  "verdict": "CPU_PREFLIGHT_GO_FOR_ONE_SEPARATELY_AUTHORIZED_READINESS17",
+  "findings": [
+    {
+      "name": "rev28_outer_26_rehash",
+      "pass": true,
+      "evidence": {
+        "revision_pin_sha256": "64d2cc2e1b603696f10c5edfeed6a67fd2ab6f2c3d546500416ad1ecad72068a",
+        "mismatches": []
+      }
+    },
+    {
+      "name": "prospective_manifest_and_external_inputs_rehash",
+      "pass": true,
+      "evidence": {
+        "prospective_sha256": "8d5de888166ec2b50f25af528107ce6f180a459b285d89d3e94d0b97581ca23a",
+        "external_mismatches": [],
+        "criteria_mismatches": []
+      }
+    },
+    {
+      "name": "bounded_delta_vs_rev27",
+      "pass": true,
+      "evidence": {
+        "changed_excluding_commands": [
+          "src/close_diagnostics.py",
+          "src/isaac_replay_w13.py",
+          "src/readiness_launcher.py"
+        ],
+        "commands_only_forward_paths": true
+      }
+    },
+    {
+      "name": "callback_uses_actual_owner_cells_and_public_singleton",
+      "pass": true,
+      "evidence": {
+        "keys": [
+          "cams_is_none",
+          "scene_is_none",
+          "robot_is_none",
+          "sim_is_none",
+          "public_instance_is_none"
+        ],
+        "assignments": {
+          "cams": 1,
+          "scene": 2,
+          "robot": 3,
+          "sim": 4
+        },
+        "return_index": 5,
+        "public_expression": "SimulationContext.instance() is None"
+      }
+    },
+    {
+      "name": "frozen_callback_ast_executes_actual_all_true_mapping",
+      "pass": true,
+      "evidence": {
+        "cams_is_none": true,
+        "scene_is_none": true,
+        "robot_is_none": true,
+        "sim_is_none": true,
+        "public_instance_is_none": true
+      }
+    },
+    {
+      "name": "actual_callback_ast_assignment_removal_is_detected",
+      "pass": true,
+      "evidence": {
+        "cams": {
+          "cams_is_none": false,
+          "scene_is_none": true,
+          "robot_is_none": true,
+          "sim_is_none": true,
+          "public_instance_is_none": true
+        },
+        "scene": {
+          "cams_is_none": true,
+          "scene_is_none": false,
+          "robot_is_none": true,
+          "sim_is_none": true,
+          "public_instance_is_none": true
+        },
+        "robot": {
+          "cams_is_none": true,
+          "scene_is_none": true,
+          "robot_is_none": false,
+          "sim_is_none": true,
+          "public_instance_is_none": true
+        },
+        "sim": {
+          "cams_is_none": true,
+          "scene_is_none": true,
+          "robot_is_none": true,
+          "sim_is_none": false,
+          "public_instance_is_none": true
+        }
+      }
+    },
+    {
+      "name": "actual_required_and_informational_targets_present",
+      "pass": true,
+      "evidence": {
+        "target_keys": [
+          "cams",
+          "camera_side",
+          "camera_top",
+          "scene",
+          "robot",
+          "sim"
+        ]
+      }
+    },
+    {
+      "name": "clear_release_probe_budget_close_order_and_shared_budget",
+      "pass": true,
+      "evidence": {
+        "cleanup_start": 78794,
+        "clear": 79544,
+        "release": 83051,
+        "probe": 85517,
+        "budget": 87699,
+        "close": 90098
+      }
+    },
+    {
+      "name": "forbidden_lifecycle_expansion_absent",
+      "pass": true,
+      "evidence": []
+    },
+    {
+      "name": "launcher_rc96_is_multi_receipt_fail_closed",
+      "pass": true,
+      "evidence": {
+        "exit_code": 96,
+        "success_semantics_unchanged": true
+      }
+    },
+    {
+      "name": "runtime_positive_exact_mapping_required_dead",
+      "pass": true,
+      "evidence": {
+        "alive": {
+          "camera_side": false,
+          "camera_top": false,
+          "scene": false,
+          "robot": false,
+          "sim": false
+        },
+        "classification": {
+          "expected_keys": [
+            "cams_is_none",
+            "scene_is_none",
+            "robot_is_none",
+            "sim_is_none",
+            "public_instance_is_none"
+          ],
+          "is_mapping": true,
+          "keys_ok": true,
+          "types_ok": true,
+          "all_true": true,
+          "missing": [],
+          "extra": [],
+          "bad_type": [],
+          "false_keys": [],
+          "values": {
+            "cams_is_none": true,
+            "scene_is_none": true,
+            "robot_is_none": true,
+            "sim_is_none": true,
+            "public_instance_is_none": true
+          }
+        }
+      }
+    },
+    {
+      "name": "runtime_sim_survivor_is_informational_only",
+      "pass": true,
+      "evidence": {
+        "alive": {
+          "camera_side": false,
+          "camera_top": false,
+          "scene": false,
+          "robot": false,
+          "sim": true
+        },
+        "informational_survivors": [
+          "sim"
+        ]
+      }
+    },
+    {
+      "name": "runtime_required_alias_negatives",
+      "pass": true,
+      "evidence": {
+        "camera_side": {
+          "alive": true,
+          "required_survivors": [
+            "camera_side"
+          ],
+          "measurement_satisfied": false
+        },
+        "robot": {
+          "alive": true,
+          "required_survivors": [
+            "robot"
+          ],
+          "measurement_satisfied": false
+        }
+      }
+    },
+    {
+      "name": "runtime_every_false_owner_or_singleton_mapping_fails",
+      "pass": true,
+      "evidence": {
+        "cams_is_none": {
+          "false_keys": [
+            "cams_is_none"
+          ],
+          "measurement_satisfied": false
+        },
+        "scene_is_none": {
+          "false_keys": [
+            "scene_is_none"
+          ],
+          "measurement_satisfied": false
+        },
+        "robot_is_none": {
+          "false_keys": [
+            "robot_is_none"
+          ],
+          "measurement_satisfied": false
+        },
+        "sim_is_none": {
+          "false_keys": [
+            "sim_is_none"
+          ],
+          "measurement_satisfied": false
+        },
+        "public_instance_is_none": {
+          "false_keys": [
+            "public_instance_is_none"
+          ],
+          "measurement_satisfied": false
+        }
+      }
+    },
+    {
+      "name": "runtime_mapping_shape_and_exact_bool_negatives",
+      "pass": true,
+      "evidence": {
+        "missing": {
+          "classification": {
+            "expected_keys": [
+              "cams_is_none",
+              "scene_is_none",
+              "robot_is_none",
+              "sim_is_none",
+              "public_instance_is_none"
+            ],
+            "is_mapping": true,
+            "keys_ok": false,
+            "types_ok": true,
+            "all_true": false,
+            "missing": [
+              "public_instance_is_none"
+            ],
+            "extra": [],
+            "bad_type": [],
+            "false_keys": [],
+            "values": {
+              "cams_is_none": true,
+              "scene_is_none": true,
+              "robot_is_none": true,
+              "sim_is_none": true
+            }
+          },
+          "measurement_satisfied": false
+        },
+        "extra": {
+          "classification": {
+            "expected_keys": [
+              "cams_is_none",
+              "scene_is_none",
+              "robot_is_none",
+              "sim_is_none",
+              "public_instance_is_none"
+            ],
+            "is_mapping": true,
+            "keys_ok": false,
+            "types_ok": true,
+            "all_true": false,
+            "missing": [],
+            "extra": [
+              "extra"
+            ],
+            "bad_type": [],
+            "false_keys": [],
+            "values": {
+              "cams_is_none": true,
+              "scene_is_none": true,
+              "robot_is_none": true,
+              "sim_is_none": true,
+              "public_instance_is_none": true
+            }
+          },
+          "measurement_satisfied": false
+        },
+        "truthy_int": {
+          "classification": {
+            "expected_keys": [
+              "cams_is_none",
+              "scene_is_none",
+              "robot_is_none",
+              "sim_is_none",
+              "public_instance_is_none"
+            ],
+            "is_mapping": true,
+            "keys_ok": true,
+            "types_ok": false,
+            "all_true": false,
+            "missing": [],
+            "extra": [],
+            "bad_type": [
+              "sim_is_none"
+            ],
+            "false_keys": [],
+            "values": {
+              "cams_is_none": true,
+              "scene_is_none": true,
+              "robot_is_none": true,
+              "sim_is_none": "<non-bool int: 1>",
+              "public_instance_is_none": true
+            }
+          },
+          "measurement_satisfied": false
+        },
+        "truthy_string": {
+          "classification": {
+            "expected_keys": [
+              "cams_is_none",
+              "scene_is_none",
+              "robot_is_none",
+              "sim_is_none",
+              "public_instance_is_none"
+            ],
+            "is_mapping": true,
+            "keys_ok": true,
+            "types_ok": false,
+            "all_true": false,
+            "missing": [],
+            "extra": [],
+            "bad_type": [
+              "sim_is_none"
+            ],
+            "false_keys": [],
+            "values": {
+              "cams_is_none": true,
+              "scene_is_none": true,
+              "robot_is_none": true,
+              "sim_is_none": "<non-bool str: 'yes'>",
+              "public_instance_is_none": true
+            }
+          },
+          "measurement_satisfied": false
+        },
+        "non_mapping": {
+          "classification": {
+            "expected_keys": [
+              "cams_is_none",
+              "scene_is_none",
+              "robot_is_none",
+              "sim_is_none",
+              "public_instance_is_none"
+            ],
+            "is_mapping": false,
+            "keys_ok": false,
+            "types_ok": false,
+            "all_true": false,
+            "missing": [],
+            "extra": [],
+            "bad_type": [],
+            "false_keys": [],
+            "values": {},
+            "actual_type": "str"
+          },
+          "measurement_satisfied": false
+        }
+      }
+    },
+    {
+      "name": "runtime_classification_exception_fails",
+      "pass": true,
+      "evidence": {
+        "classify_error": "RuntimeError: injected classifier failure",
+        "unmet": [
+          "release 반환 mapping 분류 실패: RuntimeError: injected classifier failure",
+          "release 반환 mapping 이 exact keys/bool True 를 만족하지 않는다: None"
+        ]
+      }
+    },
+    {
+      "name": "runtime_missing_or_none_required_target_fails",
+      "pass": true,
+      "evidence": {
+        "missing_camera": {
+          "measurement_satisfied": false,
+          "unmet": [
+            "필수 관측 대상 누락: ['camera_side'] — 누락으로 통과시키지 않는다"
+          ]
+        },
+        "none_camera": {
+          "measurement_satisfied": false,
+          "unmet": [
+            "필수 대상이 weakref 로 관측 불가: ['camera_side'] — 대체로 통과시키지 않는다"
+          ]
+        }
+      }
+    },
+    {
+      "name": "genuine_pin_byte_corruption_rejected",
+      "pass": true,
+      "evidence": {
+        "mismatches": [
+          "src/close_diagnostics.py"
+        ]
+      }
+    },
+    {
+      "name": "helper_discards_temporary_strong_references_before_release",
+      "pass": true,
+      "evidence": {
+        "checked_source": "src/close_diagnostics.py"
+      }
+    },
+    {
+      "name": "readiness17_not_started_before_cpu_verdict",
+      "pass": true,
+      "evidence": {
+        "path": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/readiness/renderer_readiness_17_actual",
+        "exists": false
+      }
+    }
+  ],
+  "authorization": {
+    "separate_root_gpu_go_required": true,
+    "this_is_not_production_go": true,
+    "native_effect_unproven": true
+  },
+  "limits": [
+    "Runtime tests use CPU-only weakrefable fake Python owners, not Isaac, PhysX, or GPU.",
+    "The callback AST and release receipt prove Python-level observations, not native teardown safety.",
+    "No physics, hardware, camera capture, production, training, installation, commit, or push occurred."
+  ]
+}
