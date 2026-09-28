@@ -35,7 +35,7 @@
 7. HANDOFF.md → 절대 건드리지 않음
 ```
 
-## Agent Team (12 agents)
+## Agent Team (16 agents = 12 + Execution Roles 4)
 
 ### Engineering Workers (3개 — 코드 실행)
 
@@ -59,6 +59,24 @@
 | | C2 research-analysis | 통계, 시각화 | `analysis_*.py`, `figure_*.py` |
 | | C3 research-writing | 논문 LaTeX | `paper/*` |
 
+### Execution Roles (4개 — 시뮬 실행·회계·재생·감사, 2026-09-19 채택 D492)
+
+W14~W19 에서 worktree 를 뗄 때마다 같은 계약을 TASK_SPEC 에 다시 적던 것을 역할 정의로 묶은 것이다.
+규칙의 단일 소스는 `AGENTS.md` 이며 역할 파일은 규칙을 복제하지 않고 `파일:줄` 로 참조만 한다.
+계약 정본은 언제나 배정 시 받는 `TASK_SPEC_*.md` 이고, 역할 파일과 어긋나면 TASK_SPEC 이 이긴다.
+초안·대응표 원본 = `claudedocs/research/role_agents_20260918/README.md`(worktree `w19-role-agents`).
+
+| Agent | Role | 산출 경계 | 안 하는 것 |
+|-------|------|-----------|-----------|
+| **deme-runner** | 동결 revision 사본 → preflight → smoke → 승인된 GPU 실행 1회 → 원자료·영수증 | `claudedocs/runtime_logs/**` | 물리 파라미터 설계, 판정 승격 |
+| **raw-accountant** | 저장된 원자료를 규약대로 파생 재계산 + 항목별 PASS/FAIL (CPU, 물리 0) | 같음 | 새 실행, 성공 선언 |
+| **replay-renderer** | 같은 원자료를 Rerun RRD/RBL·결정 화면·Isaac 관절로 재생 + 육안 검수 | 같음 | 새 물리, 과학 판정 변경 |
+| **independent-auditor** | 워커 산출을 NumPy-only 독자 구현으로 재계산해 사전 등록 항목 감사 | 같음 (`Edit` 미부여) | 코드 수정, 수정 대행 |
+
+넷 다 `model: claude-opus-5`, `disallowedTools: Task`(재귀 소환 차단),
+PreToolUse `Bash → safety-check.sh` + `Write|Edit → file-ownership-check.sh <이름>`.
+기존 12-agent 의 `permissionMode: plan` 은 실행 역할과 맞지 않아 넣지 않았다.
+
 ### 소환 규칙 (상황별 2-3개)
 
 | 상황 | 소환 에이전트 |
@@ -78,8 +96,12 @@
 ```
 
 Safety hooks (전 에이전트 공통):
-- `safety-check.sh`: git, 로봇 직접 제어, rm -rf, lerobot-train 차단
-- `file-ownership-check.sh`: agent별 파일 소유권 강제 (12개 전부 등록)
+- `safety-check.sh`: git, 로봇 직접 제어(`serial`·`/dev/ttyUSB`·`torque_set`·`joints_angle_ctrl`·`move_init`·`T:106`),
+  `rm -rf`, `lerobot-train` 차단 — 2026-09-19 실측 확인, **확대 불필요**
+- `file-ownership-check.sh`: agent별 파일 소유권 강제 (**16개 전부 등록** = 12 + Execution Roles 4).
+  미등록 이름은 fail-closed 로 전면 차단. 2026-09-19 추가: **상태 원장 배타 차단** —
+  어떤 agent 이름이든 `START_HERE.md`·`claudedocs/{DECISIONS,DECISIONS_ACTIVE,EXPERIMENT_LEDGER,LEDGER_RECENT}.md`·
+  `claudedocs/relay/` 쓰기는 exit 2 (`AGENTS.md` 원장 배타 소유 규칙의 기계적 강제).
 - 상세 페르소나: `claudedocs/AGENT_PERSONAS.md`
 
 ## Memory (Topic Files) — `~/.claude/projects/.../memory/`

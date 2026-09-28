@@ -1,0 +1,133 @@
+{
+  "artifact": "W20_REV33B_AST_SCOPE_CHECK_V1",
+  "rev32": "/home/cgxr/orca/workspaces/RoArm_Project/w16-profiling/claudedocs/runtime_logs/grasp_track/w16_profile_d486/rev32/src/sim_w13_full_cycle.py",
+  "rev33b": "/home/cgxr/orca/workspaces/RoArm_Project/w20-rev33b/claudedocs/runtime_logs/grasp_track/w20_decisions_d492/rev33b/rev33b/src/sim_w13_full_cycle.py",
+  "top_level_names_equal": true,
+  "top_level_changed": [
+    "run",
+    "If"
+  ],
+  "run_stmt_count": {
+    "rev32": 201,
+    "rev33b": 206
+  },
+  "run_inserted_stmts": [
+    "settle_pf_dt = float(next((c for c in json.load(open(a.criteria))['thresholds'] if c['id'] == 'delivery.settlement_windo",
+    "flush(run_state)",
+    "_man_path = out / 'manifest.json'",
+    "_man_files = sorted((q for q in out.rglob('*') if q.is_file() and q != _man_path))",
+    "json.dump({'artifact': 'W13_RUN_OUTPUT_MANIFEST_V1', 'run_dir': str(out), 'tag': tag, 'utc': time.strftime('%Y-%m-%dT%H:"
+  ],
+  "run_deleted_stmts": [],
+  "run_replaced_stmts": [
+    {
+      "rev32": "def record_particle_frame(force=False):",
+      "rev33b": "def record_particle_frame(force=False):"
+    },
+    {
+      "rev32": "np.savez_compressed(out / f'w13_cycle_{tag}.npz', sync_t_s=np.asarray(D['t'], np.float64), sync_t_s_legacy_round9_displa",
+      "rev33b": "np.savez_compressed(out / f'w13_cycle_{tag}.npz', sync_t_s=np.asarray(D['t'], np.float64), sync_t_s_legacy_round9_displa"
+    },
+    {
+      "rev32": "flush('diverged' if diverged else abort_class.lower() if abort_class else 'stopped_early' if stopped_early else 'complet",
+      "rev33b": "run_state = 'diverged' if diverged else abort_class.lower() if abort_class else 'stopped_early' if stopped_early else 'c"
+    }
+  ],
+  "frozen_functions": {
+    "step": "IDENTICAL",
+    "sample": "IDENTICAL",
+    "joint_move": "IDENTICAL",
+    "z_move": "IDENTICAL",
+    "door_move": "IDENTICAL",
+    "dwell": "IDENTICAL",
+    "align_move": "IDENTICAL",
+    "enter": "IDENTICAL",
+    "record_t0": "IDENTICAL",
+    "decision": "IDENTICAL",
+    "maybe_stop": "IDENTICAL",
+    "classify": "IDENTICAL",
+    "actual_pose": "IDENTICAL",
+    "pose_of": "IDENTICAL",
+    "fine_on": "IDENTICAL",
+    "flush": "IDENTICAL",
+    "resume_fk_here": "IDENTICAL",
+    "q_from_pose": "IDENTICAL"
+  },
+  "frozen_functions_all_identical": true,
+  "record_particle_frame_added": [
+    "def record_particle_frame(force=False):\n    t_now = float(s.GetSimTime())\n    if not force and t_now < state['next_pf'] - 1e-12:\n        return len(PF['t']) - 1\n    p_fa, R_fa, _, _ = actual_pose()\n    pp = np.asarray(s.GetOwnerPosition(0, n_p), float)\n    vv = np.asarray(s.GetOwnerVelocity(0, n_p), float)\n    PF['t'].append(t_now)\n    PF['sync'].append(len(D['t']) - 1)\n    PF['pos'].append(pp.astype(np.float32))\n    PF['quat'].append(np.asarray(s.GetOwnerOriQ(0, n_p), np.float32))\n    PF['vel'].append(vv.astype(np.float32))\n    PF['omega'].append(np.asarray(s.GetOwnerAngVel(0, n_p), np.float32))\n    oq_now = None if tpl is None else np.asarray(s.GetOwnerOriQ(0, n_p), float)\n    PF['inv'].append(classify(pp, vv, oq_now, p_fa, R_fa))\n    _pf_dt_now = settle_pf_dt if settle_pf_dt is not None and state['phase'] == PHASES[-1] else pf_dt\n    state['next_pf'] = (math.floor(t_now / _pf_dt_now + 1e-09) + 1) * _pf_dt_now\n    return len(PF['t']) - 1",
+    "_pf_dt_now = settle_pf_dt if settle_pf_dt is not None and state['phase'] == PHASES[-1] else pf_dt",
+    "state['next_pf'] = (math.floor(t_now / _pf_dt_now + 1e-09) + 1) * _pf_dt_now"
+  ],
+  "record_particle_frame_removed": [
+    "def record_particle_frame(force=False):\n    t_now = float(s.GetSimTime())\n    if not force and t_now < state['next_pf'] - 1e-12:\n        return len(PF['t']) - 1\n    p_fa, R_fa, _, _ = actual_pose()\n    pp = np.asarray(s.GetOwnerPosition(0, n_p), float)\n    vv = np.asarray(s.GetOwnerVelocity(0, n_p), float)\n    PF['t'].append(t_now)\n    PF['sync'].append(len(D['t']) - 1)\n    PF['pos'].append(pp.astype(np.float32))\n    PF['quat'].append(np.asarray(s.GetOwnerOriQ(0, n_p), np.float32))\n    PF['vel'].append(vv.astype(np.float32))\n    PF['omega'].append(np.asarray(s.GetOwnerAngVel(0, n_p), np.float32))\n    oq_now = None if tpl is None else np.asarray(s.GetOwnerOriQ(0, n_p), float)\n    PF['inv'].append(classify(pp, vv, oq_now, p_fa, R_fa))\n    state['next_pf'] = (math.floor(t_now / pf_dt + 1e-09) + 1) * pf_dt\n    return len(PF['t']) - 1",
+    "state['next_pf'] = (math.floor(t_now / pf_dt + 1e-09) + 1) * pf_dt"
+  ],
+  "module_constants_identical": true,
+  "module_constants_diff": [],
+  "new_cli_args": [
+    "ap.add_argument('--settle-window-frame-dt-s', action='store_true', help='rev33b 옵션(기본 OFF)"
+  ],
+  "all_cli_args_rev33b": [
+    "--params",
+    "--pile",
+    "--out",
+    "--seed",
+    "--smoke",
+    "--stop-after-phase",
+    "--max-particles",
+    "--numeric-evidence",
+    "--criteria",
+    "--settle-window-frame-dt-s",
+    "--max-wall-s"
+  ],
+  "record_particle_frame_body_added": [
+    "_pf_dt_now = settle_pf_dt if settle_pf_dt is not None and state['phase'] == PHASES[-1] else pf_dt",
+    "state['next_pf'] = (math.floor(t_now / _pf_dt_now + 1e-09) + 1) * _pf_dt_now"
+  ],
+  "record_particle_frame_body_removed": [
+    "state['next_pf'] = (math.floor(t_now / pf_dt + 1e-09) + 1) * pf_dt"
+  ],
+  "gate": {
+    "top_level_changed_is_run_and_main": true,
+    "frozen_functions_all_identical": true,
+    "module_constants_identical": true,
+    "no_deleted_run_stmts": true,
+    "inserted_stmts_as_expected": true,
+    "replaced_stmts_as_expected": true,
+    "record_particle_frame_change_is_next_pf_only": true,
+    "one_new_cli_arg": true
+  },
+  "verdict": "PASS",
+  "expected": {
+    "top_level_changed": [
+      "run",
+      "If"
+    ],
+    "run_inserted_stmts": [
+      "settle_pf_dt =",
+      "flush(run_state)",
+      "_man_path =",
+      "_man_files =",
+      "json.dump("
+    ],
+    "run_replaced_stmts": [
+      [
+        "def record_particle_frame(",
+        "def record_particle_frame("
+      ],
+      [
+        "np.savez_compressed(",
+        "np.savez_compressed("
+      ],
+      [
+        "flush(",
+        "run_state ="
+      ]
+    ],
+    "run_deleted_stmts": 0,
+    "frozen_functions_all_identical": true,
+    "module_constants_identical": true,
+    "new_cli_args": 1
+  }
+}

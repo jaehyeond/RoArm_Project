@@ -1,0 +1,39 @@
+{
+ "artifact": "W21_GPU_OCCUPANCY_BASELINE",
+ "utc": "2026-09-19T06:58:30Z",
+ "phase": "before_any_w21_run",
+ "gpu": "NVIDIA GeForce RTX 4090 Laptop GPU, 580.178.04, 16376 MiB",
+ "samples_util_memutil_used_total": [
+  "20 %, 2 %, 2900 MiB, 16376 MiB",
+  "21 %, 2 %, 2900 MiB, 16376 MiB",
+  "21 %, 2 %, 2900 MiB, 16376 MiB",
+  "21 %, 2 %, 2900 MiB, 16376 MiB",
+  "21 %, 2 %, 2900 MiB, 16376 MiB",
+  "21 %, 2 %, 2900 MiB, 16376 MiB",
+  "21 %, 2 %, 2900 MiB, 16376 MiB",
+  "21 %, 2 %, 2900 MiB, 16376 MiB",
+  "21 %, 2 %, 2900 MiB, 16376 MiB",
+  "20 %, 2 %, 2900 MiB, 16376 MiB"
+ ],
+ "compute_apps": [
+  "6695, python3, 390 MiB",
+  "6682, python3, 390 MiB",
+  "1687436, python3, 390 MiB",
+  "2719656, python3, 390 MiB",
+  "87847, python3, 390 MiB",
+  "153536, python3, 390 MiB",
+  "1565276, python3, 390 MiB"
+ ],
+ "compute_app_cmdlines": [
+  "6682 python3 -m mcp_memory_service.server",
+  "6695 python3 -m mcp_memory_service.server",
+  "87847 python3 -m mcp_memory_service.server",
+  "153536 python3 -m mcp_memory_service.server",
+  "1565276 python3 -m mcp_memory_service.server",
+  "1687436 python3 -m mcp_memory_service.server",
+  "2719656 python3 -m mcp_memory_service.server"
+ ],
+ "finding": "GPU 계산 점유가 20 % 로 일정하고 메모리 대역 점유는 2 % 다. 점유 주체는 mcp_memory_service.server 프로세스 7개(각 390 MiB, 합 2,900 MiB / 16,376 MiB). 6개는 중복으로 보이나 이 세션의 MCP 도구가 의존할 수 있어 중지하지 않았다.",
+ "why_not_cleared": "비교 기준인 W16 run_02 의 당시 GPU 점유는 기록이 없다(EXECUTION_RECEIPT 에 GPU 항목 없음). 따라서 지금 환경을 정리해도 W16 조건에 가까워진다는 근거가 없고, 오히려 이번 두 반복 셀 사이의 조건 일관성만 깨질 수 있다. 환경을 바꾸지 않고 그대로 기록한다.",
+ "limitation": "이 20 % 상시 점유는 실제 경과 시간을 부풀릴 수 있다. P2 rep1 vs rep2 비교는 같은 조건이라 내부 일관되지만, P0(20,000알, W16 run_02) 대비 비율은 이 confound 를 안고 있다. 판정문에 명시한다."
+}

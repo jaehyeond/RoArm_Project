@@ -1,0 +1,156 @@
+{
+  "artifact": "W20_NUMERIC_EVIDENCE_N5000_CANDIDATE_V1",
+  "status": "CANDIDATE — 사용자 GO 전에는 어떤 실행에도 넘기지 않는다.",
+  "purpose": "설치본 정적 재구성에서 나온 **수치 메타데이터**다. 물리 파라미터가 아니며 params_w13.json 을 바꾸지 않는다(CONTRACT_ADDENDUM_01 §4). 알 개수 N=5,000 셀 전용.",
+  "key_name_note": "`REUSABLE_FOR_REV11` 키 이름은 rev32 소비자 코드(sim_w13_full_cycle.py:238)가 읽는 이름 그대로다. rev11 로 되돌린다는 뜻이 아니다.",
+  "source_document": "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/DEME_LATTICE_RECONSTRUCTION.md",
+  "source_document_sha256": "e46ecea31c6cab4636e7ba7d60cc37213c9335e96563eeb32a4dd8620077eebd",
+  "reproduction": {
+    "script": "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/recover_deme_lattice.py",
+    "sha256": "931a518df75877942370dd552331e5967a237d11c4c49e674a985c23f3e81914",
+    "expected_sha256": "931a518df75877942370dd552331e5967a237d11c4c49e674a985c23f3e81914",
+    "script_sha_matches_doc": true,
+    "input_json": "/home/cgxr/orca/workspaces/RoArm_Project/w20-particle-count/claudedocs/runtime_logs/grasp_track/w20_decisions_d492/particle_count_screen/lattice_tool_input_n5000.json",
+    "input_json_sha256": "8c10fe7c5d800949ee43ca0632a9915cedd725618efee5d4a227fe748274cadd",
+    "returncode": 0,
+    "stdout": "{\n  \"adjacent_additional_bits\": [\n    0,\n    0\n  ],\n  \"axis_order\": [\n    \"x\",\n    \"y\",\n    \"z\"\n  ],\n  \"axis_voxel_count_power2\": [\n    22,\n    21,\n    21\n  ],\n  \"global_coordinate_abs_bound_m\": 1.0155052542686462,\n  \"input_path\": \"/home/cgxr/orca/workspaces/RoArm_Project/w20-particle-count/claudedocs/runtime_logs/grasp_track/w20_decisions_d492/particle_count_screen/lattice_tool_input_n5000.json\",\n  \"kind\": \"installed_binary_static_reconstruction_not_runtime_observation\",\n  \"l_m\": 5.5548655952808446e-12,\n  \"sorted_original_axis_indices\": [\n    2,\n    1,\n    0\n  ],\n  \"target_box_max_binary32_m\": [\n    0.286491334438324,\n    0.5248336791992188,\n    0.6325129270553589\n  ],\n  \"target_box_min_binary32_m\": [\n    -0.5114045739173889,\n    -0.23862123489379883,\n    -0.0575011745095253\n  ],\n  \"target_box_size_binary32_m\": [\n    0.7978959083557129,\n    0.7634549140930176,\n    0.690014123916626\n  ],\n  \"user_domain_binary32_m\": [\n    [\n      -0.44491326808929443,\n      0.2199999988079071\n    ],\n    [\n      -0.17499999701976776,\n      0.4612124264240265\n    ],\n    [\n      0.0,\n      0.5750117301940918\n    ]\n  ],\n  \"user_domain_binary64_m\": [\n    [\n      -0.4449132573934248,\n      0.22\n    ],\n    [\n      -0.175,\n      0.46121241555032444\n    ],\n    [\n      0.0,\n      0.5750117499666003\n    ]\n  ],\n  \"voxel_size_m\": 3.6404367165232543e-07,\n  \"world_max_m\": [\n    1.0155052542686462,\n    0.5248336791992188,\n    0.7059537395834923\n  ],\n  \"world_size_m\": [\n    1.5269098281860352,\n    0.7634549140930176,\n    0.7634549140930176\n  ]\n}\n",
+    "stderr": "",
+    "parsed": {
+      "adjacent_additional_bits": [
+        0,
+        0
+      ],
+      "axis_order": [
+        "x",
+        "y",
+        "z"
+      ],
+      "axis_voxel_count_power2": [
+        22,
+        21,
+        21
+      ],
+      "global_coordinate_abs_bound_m": 1.0155052542686462,
+      "input_path": "/home/cgxr/orca/workspaces/RoArm_Project/w20-particle-count/claudedocs/runtime_logs/grasp_track/w20_decisions_d492/particle_count_screen/lattice_tool_input_n5000.json",
+      "kind": "installed_binary_static_reconstruction_not_runtime_observation",
+      "l_m": 5.5548655952808446e-12,
+      "sorted_original_axis_indices": [
+        2,
+        1,
+        0
+      ],
+      "target_box_max_binary32_m": [
+        0.286491334438324,
+        0.5248336791992188,
+        0.6325129270553589
+      ],
+      "target_box_min_binary32_m": [
+        -0.5114045739173889,
+        -0.23862123489379883,
+        -0.0575011745095253
+      ],
+      "target_box_size_binary32_m": [
+        0.7978959083557129,
+        0.7634549140930176,
+        0.690014123916626
+      ],
+      "user_domain_binary32_m": [
+        [
+          -0.44491326808929443,
+          0.2199999988079071
+        ],
+        [
+          -0.17499999701976776,
+          0.4612124264240265
+        ],
+        [
+          0.0,
+          0.5750117301940918
+        ]
+      ],
+      "user_domain_binary64_m": [
+        [
+          -0.4449132573934248,
+          0.22
+        ],
+        [
+          -0.175,
+          0.46121241555032444
+        ],
+        [
+          0.0,
+          0.5750117499666003
+        ]
+      ],
+      "voxel_size_m": 3.6404367165232543e-07,
+      "world_max_m": [
+        1.0155052542686462,
+        0.5248336791992188,
+        0.7059537395834923
+      ],
+      "world_size_m": [
+        1.5269098281860352,
+        0.7634549140930176,
+        0.7634549140930176
+      ]
+    }
+  },
+  "domain_provenance": {
+    "derived_by": "/home/cgxr/orca/workspaces/RoArm_Project/w20-particle-count/claudedocs/runtime_logs/grasp_track/w20_decisions_d492/particle_count_screen/derive_domain_cpu.py",
+    "derivation_record": "/home/cgxr/orca/workspaces/RoArm_Project/w20-particle-count/claudedocs/runtime_logs/grasp_track/w20_decisions_d492/particle_count_screen/DOMAIN_DERIVATION.json",
+    "production_source": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w19_runpod_d487/rev32_frozen_copy/src/sim_w13_full_cycle.py:222-225",
+    "pile_npz": "/home/cgxr/orca/workspaces/RoArm_Project/pellet-model/claudedocs/runtime_logs/pellet_model/pile_lens_20260910/pile_lens6_a4p5_b3p8_c2p5_slab_n5000_seed460.npz",
+    "pile_npz_sha256": "ac29d53370bd8379ffac554d991e884f4b8335b812a8740891a68d028aa9d294",
+    "params": "rev32_frozen_copy/params_w13.json (변경 0)",
+    "seed": 460
+  },
+  "rev11_recomputed_domain_m": {
+    "x": [
+      -0.4449132573934248,
+      0.22
+    ],
+    "y": [
+      -0.175,
+      0.46121241555032444
+    ],
+    "z": [
+      0.0,
+      0.5750117499666003
+    ]
+  },
+  "domain_binary64_identical": true,
+  "REUSABLE_FOR_REV11": true,
+  "values_if_usable": {
+    "l_m": 5.5548655952808446e-12,
+    "voxel_size_m": 3.6404367165232543e-07,
+    "absolute_coordinate_bound_m": 1.0155052542686462,
+    "axis_voxel_count_power2": [
+      22,
+      21,
+      21
+    ],
+    "world_size_m": [
+      1.5269098281860352,
+      0.7634549140930176,
+      0.7634549140930176
+    ],
+    "world_max_m": [
+      1.0155052542686462,
+      0.5248336791992188,
+      0.7059537395834923
+    ],
+    "world_lbf_m": [
+      -0.5114045739173889,
+      -0.23862123489379883,
+      -0.0575011745095253
+    ],
+    "kind": "installed_binary_static_reconstruction_not_runtime_observation"
+  },
+  "rule": "도메인이 binary64 로 동일하지 않거나 감사 스크립트가 인증 분기를 벗어나면 이 값을 쓰지 않는다. 그 경우 위치 격자 항은 미해결로 남고 preflight 는 NO-GO 다.",
+  "non_claims": [
+    "정적 재구성이며 새 solver 초기화에서 관측한 값이 아니다.",
+    "다른 도메인·아카이브·컴파일러로 일반화되지 않는다.",
+    "수치 표현 범위일 뿐 충돌 없음·접촉·배출 성공의 증거가 아니다.",
+    "이 파일이 있다고 실행이 승인된 것이 아니다 — GPU 실행은 사용자 GO 뒤 별도 과제다."
+  ]
+}

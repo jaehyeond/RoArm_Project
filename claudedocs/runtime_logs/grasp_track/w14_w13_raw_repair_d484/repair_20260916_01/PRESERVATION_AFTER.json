@@ -1,0 +1,435 @@
+{
+ "artifact": "W14_PRESERVATION_AFTER",
+ "utc": "2026-09-16T14:36:32Z",
+ "n_frozen_files": 64,
+ "mismatches_vs_before": [],
+ "all_frozen_unchanged": true,
+ "new_outputs_sha256": {
+  "rev29/COMMANDS.json": "6f3eafd951ed041df19cfb55177ade9d06a3574d7d95e926cb2b09ec7f0959e6",
+  "rev29/DIFF_rev28_to_rev29_src.patch": "aa12b58d8e88fed429d5f778fb4fbba58400fc87c60721c268ba334b913ddd82",
+  "rev29/REVISION_PIN.json": "ae3fa420e0c76c7806af3e9d81653ee186dc6b4500b4f91c99832949c27bffd5",
+  "rev29/criteria.json": "71a7d23938a341c2689b570fa5a1e9bec74b7b3392f754ca55f61e7edd646196",
+  "rev29/numeric_inputs.json": "02ad1171cef8bc85eb9d589f574887f85e05052ed23e6964f7dc6651c3a915a3",
+  "rev29/params_w13.json": "95101f8b799518f83a0d8a0004057e50ea01120b66681334a9911a7e5fa7e661",
+  "rev29/src/arm_link_bounds.py": "0ba2949f0e6e0055993e5be6810d8a80c5a36a63bd48fe7181f9b2d1947863f7",
+  "rev29/src/bridge_clearance_guard.py": "4151df2c6e964840538b4ada5ad608c98203ff099e51496e540cc9e54d2857ff",
+  "rev29/src/bridge_clearance_guard_audit_original.py": "127a017c40a68c9888cc6d33335697e1b7ceb0d6ead44bd97a81d50bf1107b66",
+  "rev29/src/bridge_inputs.py": "4d0d5fbd4c22ae4e8395933157298e4104f558b38d0b1c899ea9da8357f85c08",
+  "rev29/src/bridge_numerics.py": "01e55cbee1954179e15bb318be5c2a69e92686f0b93ac18d9233bb87fa01f4af",
+  "rev29/src/camera_framing.py": "600aef751a0d5abd2ce6c665e8ec42a2b3f7f28a53b5b626aecd9a5981f8a33c",
+  "rev29/src/close_diagnostics.py": "d6f4daf26e066554d6b3347adc257796235387296f945d3ae47bb0dd50c1b4c6",
+  "rev29/src/compare_wall_regression.py": "6cc7c34be3f6c8e6a44edc648d5531c81c30c8c0de94a5f8c1bca74c682857f4",
+  "rev29/src/derive_repaired_raw.py": "ffaf973f5dfdbb46142b24585b7da864e7dd5ea8f377121ffa70dd9c3706270d",
+  "rev29/src/freeze_manifest.py": "162bfa21073ba4b0998450d141c96189a9ab7a961a374c1661b1bd8aeae0d451",
+  "rev29/src/inventory_geometry.py": "ec0d5baf3cbf6bc9435889ffad2fa2303a72fb3e4069edff43cee2cd2e8c5849",
+  "rev29/src/isaac_replay_w13.py": "d012e0fcd6b581a13d06053430519e00a8469ec17e46ce930ebb5f25ab9ea718",
+  "rev29/src/preflight_geometry.py": "0663e255fbafbb03a386a7dfa9fd917187fc90ed6f0dbb7f11c250b263f7b2f5",
+  "rev29/src/preflight_rigid_hinge.py": "d870f02b44254fefa7a8524ffed5625cf89552c8a753a58a776f90c161fba3cc",
+  "rev29/src/preflight_snapshot.py": "0e7ae475ed7fbe4368b2bdc5a444a43acc77f8b561cbfd8b3e4d9ba9d1df37d9",
+  "rev29/src/raw_row_identity.py": "529da6c369b0da6eff1e2840b354332f4be3e67e2ea1e82cd4a37e98013b7fa6",
+  "rev29/src/raw_transitions.py": "424d8482f775ac2f2e42ba8880468379292cb96b179605ec271af64f55f93e6a",
+  "rev29/src/readiness_launcher.py": "b9a82dac69d457772321d054ddc9c48d19591efb336e779736db2c27ba8a971c",
+  "rev29/src/run_production.py": "bd8fa702ff5a9c06286de1cafd3702487803103fe747bcc3d3a8fae483cb81d5",
+  "rev29/src/sim_w13_full_cycle.py": "f1c5d43b9288a7defcb43a6eb7526969d04aadd9fa64ba3bdada05c9874ef5c9",
+  "rev29/src/verify_w13_self.py": "a3b67bed4f16572cfbf183ad013534e6681c7d051f7885888b57acde0e71360d",
+  "rev29/src/w13_fk.py": "d6e27412482d279babd5ea22f7b1cdfaafbd52a955caa31e10badabd07249873",
+  "rev29/src/w13_kinematics.py": "9c54d21f2b32b50a615cc3bff0235965c07201798f9710a818ad6d9e4ff4c685",
+  "rev29/src/w13_rerun_export.py": "35a10aa666ff2e76d5e8dd39442cbb4978bb954cb5b523a6ff7ba1fac3af87c8",
+  "rev30/COMMANDS.json": "6f3eafd951ed041df19cfb55177ade9d06a3574d7d95e926cb2b09ec7f0959e6",
+  "rev30/DIFF_rev29_to_rev30_src.patch": "97554ef4830f478b2caa90e4a02cf866eaf67288e48cd6e6dc8c0e8492c36511",
+  "rev30/REVISION_PIN.json": "f81d97f3900c11d1b6ebc5736feee6310b1c86703e7105c0d260710089bc7886",
+  "rev30/criteria.json": "71a7d23938a341c2689b570fa5a1e9bec74b7b3392f754ca55f61e7edd646196",
+  "rev30/numeric_inputs.json": "02ad1171cef8bc85eb9d589f574887f85e05052ed23e6964f7dc6651c3a915a3",
+  "rev30/params_w13.json": "95101f8b799518f83a0d8a0004057e50ea01120b66681334a9911a7e5fa7e661",
+  "rev30/src/arm_link_bounds.py": "0ba2949f0e6e0055993e5be6810d8a80c5a36a63bd48fe7181f9b2d1947863f7",
+  "rev30/src/bridge_clearance_guard.py": "4151df2c6e964840538b4ada5ad608c98203ff099e51496e540cc9e54d2857ff",
+  "rev30/src/bridge_clearance_guard_audit_original.py": "127a017c40a68c9888cc6d33335697e1b7ceb0d6ead44bd97a81d50bf1107b66",
+  "rev30/src/bridge_inputs.py": "4d0d5fbd4c22ae4e8395933157298e4104f558b38d0b1c899ea9da8357f85c08",
+  "rev30/src/bridge_numerics.py": "01e55cbee1954179e15bb318be5c2a69e92686f0b93ac18d9233bb87fa01f4af",
+  "rev30/src/camera_framing.py": "600aef751a0d5abd2ce6c665e8ec42a2b3f7f28a53b5b626aecd9a5981f8a33c",
+  "rev30/src/close_diagnostics.py": "d6f4daf26e066554d6b3347adc257796235387296f945d3ae47bb0dd50c1b4c6",
+  "rev30/src/compare_wall_regression.py": "6cc7c34be3f6c8e6a44edc648d5531c81c30c8c0de94a5f8c1bca74c682857f4",
+  "rev30/src/derive_v2.py": "7a495d11db4f9ebe6cf30beae12fb58bbe40cc69ec4ae64221a26e76b1c74a5f",
+  "rev30/src/freeze_manifest.py": "162bfa21073ba4b0998450d141c96189a9ab7a961a374c1661b1bd8aeae0d451",
+  "rev30/src/inventory_geometry.py": "7cdc9fd5f66cfd6041b8ca2e411d2c1bbcd49923574fca80a0fe30c358c15a34",
+  "rev30/src/isaac_replay_w13.py": "d012e0fcd6b581a13d06053430519e00a8469ec17e46ce930ebb5f25ab9ea718",
+  "rev30/src/preflight_geometry.py": "0663e255fbafbb03a386a7dfa9fd917187fc90ed6f0dbb7f11c250b263f7b2f5",
+  "rev30/src/preflight_rigid_hinge.py": "d870f02b44254fefa7a8524ffed5625cf89552c8a753a58a776f90c161fba3cc",
+  "rev30/src/preflight_snapshot.py": "0e7ae475ed7fbe4368b2bdc5a444a43acc77f8b561cbfd8b3e4d9ba9d1df37d9",
+  "rev30/src/raw_row_identity.py": "529da6c369b0da6eff1e2840b354332f4be3e67e2ea1e82cd4a37e98013b7fa6",
+  "rev30/src/raw_transitions.py": "424d8482f775ac2f2e42ba8880468379292cb96b179605ec271af64f55f93e6a",
+  "rev30/src/readiness_launcher.py": "b9a82dac69d457772321d054ddc9c48d19591efb336e779736db2c27ba8a971c",
+  "rev30/src/run_production.py": "bd8fa702ff5a9c06286de1cafd3702487803103fe747bcc3d3a8fae483cb81d5",
+  "rev30/src/sim_w13_full_cycle.py": "f1c5d43b9288a7defcb43a6eb7526969d04aadd9fa64ba3bdada05c9874ef5c9",
+  "rev30/src/verify_w13_self.py": "866229bad47ce99d3e830118fe50cfd8ec8c9d2e0c9d7968e480b85a8e959d98",
+  "rev30/src/w13_fk.py": "d6e27412482d279babd5ea22f7b1cdfaafbd52a955caa31e10badabd07249873",
+  "rev30/src/w13_kinematics.py": "9c54d21f2b32b50a615cc3bff0235965c07201798f9710a818ad6d9e4ff4c685",
+  "rev30/src/w13_rerun_export.py": "35a10aa666ff2e76d5e8dd39442cbb4978bb954cb5b523a6ff7ba1fac3af87c8",
+  "rev31/COMMANDS.json": "6f3eafd951ed041df19cfb55177ade9d06a3574d7d95e926cb2b09ec7f0959e6",
+  "rev31/DIFF_rev30_to_rev31_src.patch": "3f826571494571e11a74c3cb20d3467b224e50a0197ee653f4f2f6ac1004d510",
+  "rev31/REVISION_PIN.json": "0e682814e65832710ae767637355dc7116d9b346331a4f43a9d1e288bc01c1c4",
+  "rev31/criteria.json": "71a7d23938a341c2689b570fa5a1e9bec74b7b3392f754ca55f61e7edd646196",
+  "rev31/numeric_inputs.json": "02ad1171cef8bc85eb9d589f574887f85e05052ed23e6964f7dc6651c3a915a3",
+  "rev31/params_w13.json": "95101f8b799518f83a0d8a0004057e50ea01120b66681334a9911a7e5fa7e661",
+  "rev31/src/arm_link_bounds.py": "0ba2949f0e6e0055993e5be6810d8a80c5a36a63bd48fe7181f9b2d1947863f7",
+  "rev31/src/bridge_clearance_guard.py": "4151df2c6e964840538b4ada5ad608c98203ff099e51496e540cc9e54d2857ff",
+  "rev31/src/bridge_clearance_guard_audit_original.py": "127a017c40a68c9888cc6d33335697e1b7ceb0d6ead44bd97a81d50bf1107b66",
+  "rev31/src/bridge_inputs.py": "4d0d5fbd4c22ae4e8395933157298e4104f558b38d0b1c899ea9da8357f85c08",
+  "rev31/src/bridge_numerics.py": "01e55cbee1954179e15bb318be5c2a69e92686f0b93ac18d9233bb87fa01f4af",
+  "rev31/src/camera_framing.py": "600aef751a0d5abd2ce6c665e8ec42a2b3f7f28a53b5b626aecd9a5981f8a33c",
+  "rev31/src/close_diagnostics.py": "d6f4daf26e066554d6b3347adc257796235387296f945d3ae47bb0dd50c1b4c6",
+  "rev31/src/compare_wall_regression.py": "6cc7c34be3f6c8e6a44edc648d5531c81c30c8c0de94a5f8c1bca74c682857f4",
+  "rev31/src/derive_v2.py": "7abefe708dfd57f8fe74cca16f8b038b9f1be2af0e02cd82b36558018c5b0361",
+  "rev31/src/freeze_manifest.py": "162bfa21073ba4b0998450d141c96189a9ab7a961a374c1661b1bd8aeae0d451",
+  "rev31/src/inventory_geometry.py": "a49e1ba99a92eb954a73cb4b2a995f6992dec16b94c54f54d5f6251bf9aa0327",
+  "rev31/src/isaac_replay_w13.py": "d012e0fcd6b581a13d06053430519e00a8469ec17e46ce930ebb5f25ab9ea718",
+  "rev31/src/preflight_geometry.py": "0663e255fbafbb03a386a7dfa9fd917187fc90ed6f0dbb7f11c250b263f7b2f5",
+  "rev31/src/preflight_rigid_hinge.py": "d870f02b44254fefa7a8524ffed5625cf89552c8a753a58a776f90c161fba3cc",
+  "rev31/src/preflight_snapshot.py": "0e7ae475ed7fbe4368b2bdc5a444a43acc77f8b561cbfd8b3e4d9ba9d1df37d9",
+  "rev31/src/raw_row_identity.py": "529da6c369b0da6eff1e2840b354332f4be3e67e2ea1e82cd4a37e98013b7fa6",
+  "rev31/src/raw_transitions.py": "424d8482f775ac2f2e42ba8880468379292cb96b179605ec271af64f55f93e6a",
+  "rev31/src/readiness_launcher.py": "b9a82dac69d457772321d054ddc9c48d19591efb336e779736db2c27ba8a971c",
+  "rev31/src/run_production.py": "bd8fa702ff5a9c06286de1cafd3702487803103fe747bcc3d3a8fae483cb81d5",
+  "rev31/src/sim_w13_full_cycle.py": "f1c5d43b9288a7defcb43a6eb7526969d04aadd9fa64ba3bdada05c9874ef5c9",
+  "rev31/src/verify_w13_self.py": "866229bad47ce99d3e830118fe50cfd8ec8c9d2e0c9d7968e480b85a8e959d98",
+  "rev31/src/w13_fk.py": "d6e27412482d279babd5ea22f7b1cdfaafbd52a955caa31e10badabd07249873",
+  "rev31/src/w13_kinematics.py": "9c54d21f2b32b50a615cc3bff0235965c07201798f9710a818ad6d9e4ff4c685",
+  "rev31/src/w13_rerun_export.py": "35a10aa666ff2e76d5e8dd39442cbb4978bb954cb5b523a6ff7ba1fac3af87c8",
+  "derived/DERIVED_MANIFEST.json": "bd4deff5d05e2f17f2ff7a37b29260bab972a72a108dbd817be292ac67c29c3c",
+  "derived/derive.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "derived/derive.stdout.txt": "252d96b1f305bb63f53e4ab0767459025b6a2be6d6e1ae589766359a44361830",
+  "derived/w13_cycle_seed460_rev29_derived.npz": "cdf11a36160073ae0188765cae9a62d1f4f4c93d20beb92d343f07674bcc667d",
+  "derived_v2/DERIVED_V2_MANIFEST.json": "921501e9af1851583fd7122d2f0f86d84687d7885df06e45da5ae8c633c4a78f",
+  "derived_v2/derive_v2.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "derived_v2/derive_v2.stdout.txt": "1f1821a31ecd800c955c92a3bc6d335231b0aa3b61a71a450e0c91052887ce9d",
+  "derived_v2/w13_cycle_seed460_rev30_derived_v2.npz": "7a5f78cc4d850aeb7ce9da546043d9ddf9406cfe8d44349d50fa88a4eea83f25",
+  "derived_v2_rev31/DERIVED_V2_MANIFEST.json": "43d49598005a5182352319f225c5e7bcd0c2c7383f05949facfed4d158fd1231",
+  "derived_v2_rev31/derive.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "derived_v2_rev31/w13_cycle_seed460_rev31_derived_v2.npz": "ba313bab0db57aaf0f79b396c7867300785a6d7cb708159d1bc8efb02be9f826",
+  "tests/RESULTS_allframes_regression.json": "decac58bd228d31c9f593b4ba48abbeff640b23e3fc5fef0e34386cb1b00e7af",
+  "tests/RESULTS_transitions_containment.json": "88e8beb9d6704cb382253da5f06125b27c7859afa59bce5b06aa8fd813180850",
+  "tests/allframes_tests.stderr.txt": "d757704a7eb18175cf30864e7e29784fed7b556563ed8dd66cf2f604cf550e28",
+  "tests/allframes_tests.stdout.txt": "93ff7811a209e2a8479230bbb9b6bc19f7f311d3af383ec350c1db2a7e7d5494",
+  "tests/fast_tests.stderr.txt": "d98bc47ecad7e512d531df39fb883084f50b7629a113dc6e2706a82625411beb",
+  "tests/fast_tests.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "tests/independent_check.py": "aac1b9234174c54fdd37d99dda3d5edcb799ef6c5a2ceae1fd38cf5c2213bc1a",
+  "tests/run_all.py": "330d18c49219da1accd98fef7c2921f14419a925b96e616a15dd0fb59b4e23f9",
+  "tests/test_allframes_regression.py": "29cfdf3826c3851de4f5462ab6b46ac77e16c26065d8301da7755b1b703640c4",
+  "tests/test_containment.py": "b3ca4977378b711ed88636ba1e15b0e004db5daee0d5db07137111e2214442d3",
+  "tests/test_transitions.py": "d7117bcee50fecb3cf9e77225c6c9079092b0f03b2c873ef3c6999672d904769",
+  "tests/w14_paths.py": "479b5e21c4d5651b45b29c5484c3d6756e0579c151c9533d79b42329df4c5011",
+  "tests_v2/RESULTS_allframes_v2.json": "7b9aa73bb1f3bde2c53be9785e40608b1c206e59c2b52395a2bd54bb11cc34c0",
+  "tests_v2/RESULTS_containment_v2.json": "be8732f2413edaf72b886ae6fa07c5f4487cc865338a22dfb4f5ead2d7b554c6",
+  "tests_v2/allframes_v2.stderr.txt": "4ad50c1b696e0de3674b5deb22460c7aa9cade04cd95a3d73ae003f2eaa45082",
+  "tests_v2/allframes_v2.stdout.txt": "93ff7811a209e2a8479230bbb9b6bc19f7f311d3af383ec350c1db2a7e7d5494",
+  "tests_v2/fast_v2.stderr.txt": "697d719082ca1a6278530def4374e97ca981ae0054cae0f298df0a2f97dfc253",
+  "tests_v2/fast_v2.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "tests_v2/independent_check_v2.py": "bfd51c114f81824c9ba5a4b96b0f838985790902b18c7dcd9512fef2bcff9f4c",
+  "tests_v2/run_all.py": "330d18c49219da1accd98fef7c2921f14419a925b96e616a15dd0fb59b4e23f9",
+  "tests_v2/test_allframes_v2.py": "9fa4edd3c101cd8672dfbcc865994facbdbebf65e46acfb27671115e3a1c9def",
+  "tests_v2/test_containment_v2.py": "314b1d8104c8fd08b3dc2e4379a13578d929a5263b93ea1e49d4459a5e1660a1",
+  "tests_v2/w14_paths.py": "a6c567fc4fa6b851959e3ae75700d3a877f255dba9ac36ce890360a9e43653b4",
+  "diagnostics/DIAGNOSTICS.json": "571e685f17fe87b4ab5d6e3428c1c859a5958ebaf03e0efaac15217b2dfc9f59",
+  "diagnostics/inventory_counts_timeline.png": "4ad20f76f2cd48a0ed0afe360f11cda7accb6ee6fa1e1a8056aedb99196514fb",
+  "diagnostics/make_diagnostics.py": "3f46f9a8b1213a17f040b4c2bdffafe42e0db5ad70aa605f65353a0081d01402",
+  "diagnostics/make_diagnostics.stdout.txt": "7b8d94d2416afcaa30a9d92015be910184ec9696ca20a45defcbafb55a123b57",
+  "diagnostics/pf0_id8_floor_side_view.png": "e15df63710c2c89845190b4e6866f9f174ca8d7b91b214fee5c3a5cad04dd059",
+  "diagnostics/phase_transitions_strip.png": "1ed2e3c431670744af9385855e4ea8a14e1008fa29f18a96348ff0ed7c346392",
+  "diagnostics_v2/DIAGNOSTICS_V2.json": "ff89e2e958cbd5ee99dd7025086e42c2431c241c52a5c1b2db219681868781bf",
+  "diagnostics_v2/inventory_counts_v2.png": "7d22afd532db59e03a4fc110adb4a6201d71ad072a194c9aa5c818d4f821af36",
+  "diagnostics_v2/make_diagnostics_v2.py": "de1ae3b43c99fe27bd6af04b0a44cb18d4d33fe3379e373e0f528a3784db2d0d",
+  "contract/RAW_SCHEMA_REQUIRED_ERRATUM_04_DRAFT.md": "665fb7cb504c6a79565d8f0a5cbb76c0e88a1fe032514abc14cc1bd4a5cc8429",
+  "orca/COORDINATOR_HANDLE.txt": "8f13f7b2c69c47aab718c0c8a14f406205c9fbbdf9d5668e929ffbba79c3c7cd",
+  "orca/DISPATCH.json": "060f79b5a9d39c811e19d4db68c928c75fb91be8cb3490db8b6ef234b48e4008",
+  "orca/DISPATCH_codex2.json": "31ff893d4b8a74440f293dc67b9c5f30a097db87c5ca727703b8cc172c14d81c",
+  "orca/DISPATCH_codex3.json": "5bbb026bfc62980143a20f0f1623ca4cf901a19020195a562836a5a99ff0f7ec",
+  "orca/DISPATCH_codex3_retry.json": "aae46d67c12263195c293d1722c7d78bc2f0645e079724af0cd69484d1e3ce50",
+  "orca/TASK_SPEC_codex_independent_audit.md": "3ce4fd92719491264940fbf083aac336f4a09b47c565387bfe1bf0d72bf376a0",
+  "orca/TASK_SPEC_codex_rev30_erratum04_audit.md": "5e5278bfc13a223223f81b28620d16d0a93f4f071d77e38266f0494c422915ce",
+  "orca/TASK_SPEC_codex_rev31_reverify.md": "f7cecd511a674eff1c6bb85bd347e9fc56fd5550fdbbc548132e6c436e63e6dc",
+  "orca/check_ack.json": "e6f69311721011e3f855e6e1ae9c581e3511330e9c0b276b4f0d9969f1ecacce",
+  "orca/check_wait_01.json": "db3cf832b3e394559669da4e0864c05a07d29d6b4b8863c94b477339175b5b2a",
+  "orca/coordinator_terminal_close.json": "9edd4375752f76c5e891ab52c90b1f5e333bc94ce56a440bc19f78f9577d8896",
+  "orca/run_create.json": "1d9bee53d45c1c3c95845d69286f4bb7fbf491d62676c78b9472018d0698d005",
+  "orca/task_create_codex3.json": "c89b437efdbf21cf28a1395b526c269f9e32d85b7a92f9194e37011021d81fb3",
+  "orca/terminal_create.json": "971a68e8c6bb6582f844b45892189d544ee5142c784c6381fb27a1894ff21edc",
+  "orca/worker_list_reclaimable.json": "1f046b71d3f00b357be6fa8284c7b055bcd8aa3acf727ac4bd57d4ff7c60f796",
+  "orca/worker_release.json": "5318e2dafd66a6769f0c4b5a4fc1003edb7d6ff9c2de02eb7885672a8d1dd45b",
+  "orca/worker_release_codex2.json": "fad93073544cbd936e0b2a10d2d7d3187dd0e8fac1eedf326e74bfc6a95ad841",
+  "orca/worker_release_codex3.json": "72ab8441c4a6d52fdaae6312bb060b9997c47732a03d52364f7e946856fbf3d8",
+  "orca/worker_release_codex3_failed.json": "962bbaffc82430ad565c20762e1c70e2438c74b24ee75ac8cf353fe43d03744b",
+  "orca/worker_start.json": "68c287cabdba02cee79b488d3d044977e61c7f59d15174100674e4ffeb933563",
+  "orca/worker_start_codex2.json": "5954d60f7e0489ed354ffd197e8e137d0f90f1c4a2f589d2d42d7bf7e388e71c",
+  "orca/worker_start_codex3.json": "29956c683f27c2385d6dc12ace2627cde6d9b92eb265ad57eb113419b51a51f1",
+  "orca/worker_start_codex3_retry.json": "ced41d29acdba7e62ba9c6364eeb792482f3ade1529bcb1d281506890f7b0d5c"
+ },
+ "codex_audit_files_sha256": {
+  "REPORT.md": "cefe9a5b17ed72e4a1891f1a077024c208f9d78321e3879287eeecf5f7eb4887",
+  "REPORT_rev30_v2.md": "dba9b0d95cd18508ab66293dd7852636202950c1fcb8eff0813aa2e850209906",
+  "REPORT_rev31_v2.md": "d9ed2f9912e37062900f5e063ce1127df549f50a8a34c7440654b3780c8b724f",
+  "W14_REV29_INDEPENDENT_AUDIT_01.json": "5b8443618d04902c37bdbdbc32dd7053585ed6e176fd5ba043a1a92fbf30a7b0",
+  "W14_REV30_V2_INDEPENDENT_AUDIT_01.json": "98061d4eb4b58ca36bd07903846c43b110cafe304601732eb445b6b879f22e16",
+  "W14_REV31_V2_INDEPENDENT_AUDIT_02.json": "daac13ea5cdde786411fccfbfc0b1d4cf036ac21a6ea1b36d603faaba1b98d47",
+  "audit_w14_rev29.py": "480e06d653e1ecf872962f92549562e5a124a7423bd5f3f4031cc7c25af43a10",
+  "audit_w14_rev30_v2.py": "d8297814ff60ef873c1e450cf2bb63c775f9fd2a2a4cb8c2931be3a6bfb78a0b"
+ },
+ "registered_erratum_04_sha256": "4290a9cfbfce6ac13fdda54a4df20a72e56b7bdbabce8ed22436109762e8e1a6",
+ "files": {
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/run_01/EXECUTION_RECEIPT.json": {
+   "bytes": 4813,
+   "sha256": "1f71a56e1a386a6cb14e16f7a284c00026c1ea6c17b740662fc124c961fdc982"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/run_01/HASH_VERIFICATION_RECEIPT.json": {
+   "bytes": 17327,
+   "sha256": "60e605f66a4fc8c1b4c7f79ccf3ace87f473c74fe707cc77d9488cd3c413a11f"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/run_01/RUN_STATUS.json": {
+   "bytes": 2364,
+   "sha256": "1f78a918195d3f3eebf99074442bbfc1481d4a57395bcb6bd48fa84537312d70"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/run_01/_obj/bin_seed460.obj": {
+   "bytes": 17828,
+   "sha256": "ecd68954351f7f626241cd1ea68f2de251cc6161e264c2b7d9897c3a9d69bf6e"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/run_01/_obj/door_open27.5_seed460.obj": {
+   "bytes": 6270,
+   "sha256": "68db266cd997c6ebae77c9781d9e5e9ad3f36ab5c6f43d87b4eb6829a1ed5eda"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/run_01/_obj/fixed_seed460.obj": {
+   "bytes": 6082,
+   "sha256": "f477a77d687bef1f2631d9d1dfb90da065fceac2af2e09043c50a97e2c11273f"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/run_01/_obj/tray_seed460.obj": {
+   "bytes": 1677,
+   "sha256": "90134a1caa7858fa901664ad9d31adca26310ea3976f254c3048bab679ab4bcd"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/run_01/crater_profiles_seed460.png": {
+   "bytes": 109241,
+   "sha256": "85bf55005d274b6d988164b7314b8cc84525d171e9b2bb463b13434a00af3fc2"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/run_01/heightmap_seed460.png": {
+   "bytes": 94415,
+   "sha256": "6fbf76030eaef8332c5ddc8f1bb3ae33f251e27f7eb9f0d27b8091906a9a6e5c"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/run_01/step1_simulation.stderr.txt": {
+   "bytes": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/run_01/step1_simulation.stdout.txt": {
+   "bytes": 16660,
+   "sha256": "974d03e7b387b83369b6ce72b4d1dbd2a3487a1f021230e20dac801e512b26b6"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/run_01/timeline_seed460.json": {
+   "bytes": 37921,
+   "sha256": "725dd7e3a962e3f2d9ed9083d018311bf37332ac40d45f812175f9ca8d592355"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/run_01/w13_cycle_seed460.json": {
+   "bytes": 80301,
+   "sha256": "e482b939a4cf42e5284b9b15e36a9f3613e989161ec538475e2c05f4260d9340"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/run_01/w13_cycle_seed460.npz": {
+   "bytes": 338283382,
+   "sha256": "529f422e962730b17b520c3c9af2261aae7c431ec5e078cd2c368dfab0c46b0f"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/COMMANDS.json": {
+   "bytes": 4746,
+   "sha256": "6f3eafd951ed041df19cfb55177ade9d06a3574d7d95e926cb2b09ec7f0959e6"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/REVISION_PIN.json": {
+   "bytes": 3347,
+   "sha256": "64d2cc2e1b603696f10c5edfeed6a67fd2ab6f2c3d546500416ad1ecad72068a"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/criteria.json": {
+   "bytes": 34400,
+   "sha256": "71a7d23938a341c2689b570fa5a1e9bec74b7b3392f754ca55f61e7edd646196"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/numeric_inputs.json": {
+   "bytes": 8092,
+   "sha256": "02ad1171cef8bc85eb9d589f574887f85e05052ed23e6964f7dc6651c3a915a3"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/params_w13.json": {
+   "bytes": 2361,
+   "sha256": "95101f8b799518f83a0d8a0004057e50ea01120b66681334a9911a7e5fa7e661"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/src/arm_link_bounds.py": {
+   "bytes": 13415,
+   "sha256": "0ba2949f0e6e0055993e5be6810d8a80c5a36a63bd48fe7181f9b2d1947863f7"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/src/bridge_clearance_guard.py": {
+   "bytes": 25233,
+   "sha256": "4151df2c6e964840538b4ada5ad608c98203ff099e51496e540cc9e54d2857ff"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/src/bridge_clearance_guard_audit_original.py": {
+   "bytes": 11567,
+   "sha256": "127a017c40a68c9888cc6d33335697e1b7ceb0d6ead44bd97a81d50bf1107b66"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/src/bridge_inputs.py": {
+   "bytes": 29876,
+   "sha256": "4d0d5fbd4c22ae4e8395933157298e4104f558b38d0b1c899ea9da8357f85c08"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/src/bridge_numerics.py": {
+   "bytes": 22311,
+   "sha256": "01e55cbee1954179e15bb318be5c2a69e92686f0b93ac18d9233bb87fa01f4af"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/src/camera_framing.py": {
+   "bytes": 6717,
+   "sha256": "600aef751a0d5abd2ce6c665e8ec42a2b3f7f28a53b5b626aecd9a5981f8a33c"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/src/close_diagnostics.py": {
+   "bytes": 25066,
+   "sha256": "d6f4daf26e066554d6b3347adc257796235387296f945d3ae47bb0dd50c1b4c6"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/src/compare_wall_regression.py": {
+   "bytes": 9867,
+   "sha256": "6cc7c34be3f6c8e6a44edc648d5531c81c30c8c0de94a5f8c1bca74c682857f4"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/src/freeze_manifest.py": {
+   "bytes": 3602,
+   "sha256": "162bfa21073ba4b0998450d141c96189a9ab7a961a374c1661b1bd8aeae0d451"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/src/inventory_geometry.py": {
+   "bytes": 8072,
+   "sha256": "d52a50016bab06b703950c2685a6fb3c41b22a7c124f0957f0b50cdc525ea4cf"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/src/isaac_replay_w13.py": {
+   "bytes": 105643,
+   "sha256": "d012e0fcd6b581a13d06053430519e00a8469ec17e46ce930ebb5f25ab9ea718"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/src/preflight_geometry.py": {
+   "bytes": 26967,
+   "sha256": "0663e255fbafbb03a386a7dfa9fd917187fc90ed6f0dbb7f11c250b263f7b2f5"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/src/preflight_rigid_hinge.py": {
+   "bytes": 6678,
+   "sha256": "d870f02b44254fefa7a8524ffed5625cf89552c8a753a58a776f90c161fba3cc"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/src/preflight_snapshot.py": {
+   "bytes": 6066,
+   "sha256": "0e7ae475ed7fbe4368b2bdc5a444a43acc77f8b561cbfd8b3e4d9ba9d1df37d9"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/src/raw_row_identity.py": {
+   "bytes": 6506,
+   "sha256": "529da6c369b0da6eff1e2840b354332f4be3e67e2ea1e82cd4a37e98013b7fa6"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/src/readiness_launcher.py": {
+   "bytes": 25964,
+   "sha256": "b9a82dac69d457772321d054ddc9c48d19591efb336e779736db2c27ba8a971c"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/src/run_production.py": {
+   "bytes": 35498,
+   "sha256": "bd8fa702ff5a9c06286de1cafd3702487803103fe747bcc3d3a8fae483cb81d5"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/src/sim_w13_full_cycle.py": {
+   "bytes": 82075,
+   "sha256": "aa4f570bbdca96c1abbae995ebb1aef7b10870ce7714b63519b0a27387de1d32"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/src/verify_w13_self.py": {
+   "bytes": 28747,
+   "sha256": "542d439a2af9c226229161d28b7f96b66161d39fb72f0e31142dc14228f7d116"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/src/w13_fk.py": {
+   "bytes": 17514,
+   "sha256": "d6e27412482d279babd5ea22f7b1cdfaafbd52a955caa31e10badabd07249873"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/src/w13_kinematics.py": {
+   "bytes": 17594,
+   "sha256": "9c54d21f2b32b50a615cc3bff0235965c07201798f9710a818ad6d9e4ff4c685"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/src/w13_rerun_export.py": {
+   "bytes": 28006,
+   "sha256": "35a10aa666ff2e76d5e8dd39442cbb4978bb954cb5b523a6ff7ba1fac3af87c8"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/execution/EXECUTION_RECEIPT.json": {
+   "bytes": 7359,
+   "sha256": "5a1c602df63df26450cd30620accd8325605694e6be06ea342b9e1ef4cfa5b56"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/execution/HASH_VERIFICATION_RECEIPT.json": {
+   "bytes": 24489,
+   "sha256": "14948fdf739d1036bb5c7e166caf41d1cf54d16b315f3f82dd3e6f91fdf1c853"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/execution/RUN_STATUS.json": {
+   "bytes": 2354,
+   "sha256": "c6ffec67c9f6bb4e5e1ea0fcd130ac15514e831163fe829f620b139875f273ff"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/execution/step2_rerun.stderr.txt": {
+   "bytes": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/execution/step2_rerun.stdout.txt": {
+   "bytes": 591,
+   "sha256": "5b96306f879f9a0e5b89616d9fb7b0388b247d1d0615c946da62dd7c65f4c9a9"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/execution/step3_isaac_replay.stderr.txt": {
+   "bytes": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/execution/step3_isaac_replay.stdout.txt": {
+   "bytes": 7714,
+   "sha256": "2f6a9dae0b0a333b23fe989d1ee8794d188bb64ca1cc0a4921e2dc76f56ab479"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/isaac/clear_instance_receipt.json": {
+   "bytes": 1816,
+   "sha256": "1e1569267d8bc30304c5c0ead9ce6888039f3a021498d89c18b69cef516c430c"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/isaac/close_localization_receipt.json": {
+   "bytes": 5535,
+   "sha256": "acec038b77f72140f6c1de6d6bd37a5f425b4e8df475c194ff37e41349c2c0c8"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/isaac/reference_release_receipt.json": {
+   "bytes": 4934,
+   "sha256": "0d189a38ffedae23edebfa1642401ed304168e2d1d0ede57ffe7e1ec882834e5"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/isaac/render_manifest.json": {
+   "bytes": 584978,
+   "sha256": "033b5ae76f16b4aee77b6bd1dc8ab4a0e6ac0380af5eb7fbfe6f8cccde013640"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/isaac/render_plan.json": {
+   "bytes": 250178,
+   "sha256": "a5baf4931d4a0df833df1c1dc68a9569f5f1573770d4c391dae6f7cfddd4c194"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/isaac/visual_mapping.json": {
+   "bytes": 72464,
+   "sha256": "2afc8639c6fb5fa3a41b871cfb5c12ad6e0d3b4e8e52a58395c0b0d59fc75509"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/isaac/w13_full_cycle.mp4": {
+   "bytes": 5940976,
+   "sha256": "1471127134fc06a88d546c891de0d2515f4911fcd1832f0ae841258ac1a2bc34"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/input/rerun/w13.rbl": {
+   "bytes": 54311,
+   "sha256": "216bb9b476586cc47e07b71a7f40a85ea730f7411ff6be8af26b0622ed9cf071"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/input/rerun/w13.rrd": {
+   "bytes": 595739706,
+   "sha256": "8a38670ae42d72ac790472c85deec08cdf4f063ee18e46035fe9066dd5c2eeeb"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/input/rerun/w13_inspection.png": {
+   "bytes": 11433137,
+   "sha256": "fd4b3e9fecba88a2d9dc9b68a3144bc11411270a735d0caa5d54d37573be7938"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/input/rerun/w13_rerun_validation.json": {
+   "bytes": 275227,
+   "sha256": "704a4d5fc90f8ed4c15ae302af3afb25681b18178348aea03dc62621cc8c2584"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/input/w13_cycle_seed460.json": {
+   "bytes": 80301,
+   "sha256": "e482b939a4cf42e5284b9b15e36a9f3613e989161ec538475e2c05f4260d9340"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/partial_post_03/input/w13_cycle_seed460.npz": {
+   "bytes": 338283382,
+   "sha256": "529f422e962730b17b520c3c9af2261aae7c431ec5e078cd2c368dfab0c46b0f"
+  },
+  "/home/cgxr/orca/workspaces/RoArm_Project/pellet-model/claudedocs/runtime_logs/pellet_model/pile_lens_20260910/pile_lens6_a4p5_b3p8_c2p5_slab_n20000_seed460.npz": {
+   "bytes": 10215502,
+   "sha256": "659d6b0bc771678a0c7209d91f550edc933d03e41922245ea0adb64eeb818812"
+  },
+  "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py": {
+   "bytes": 83004,
+   "sha256": "2e40f7ed279dad42794d156c3e5e823d6ce0d8cb770ec9aad1b9280a33a7e933"
+  },
+  "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/roarm_kinematics.py": {
+   "bytes": 6323,
+   "sha256": "af4cc2d3c124ba4a8a3a6899ab1c8d676e127199bcf687b8e31fee690a011a97"
+  }
+ }
+}

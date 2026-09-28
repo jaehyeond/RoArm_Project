@@ -1,0 +1,93 @@
+diff -ru /home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/src/inventory_geometry.py src/inventory_geometry.py
+--- /home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/src/inventory_geometry.py	2026-09-13 15:09:52.647724006 +0900
++++ src/inventory_geometry.py	2026-09-16 20:13:17.901486039 +0900
+@@ -9,6 +9,14 @@
+ `contacts_logged`/`bridge_planned_*` 에서 잡았다. 그래서 판정식을 여기 한 곳에 두고
+ 두 곳이 **같은 함수를 호출**한다. 이 모듈이 분류 의미의 정본이다.
+ 
++rev29 정정 (2026-09-16, W14 raw repair)
++------------------------------------
++독립 감사 REV28_PRODUCTION_PARTIAL_RAW_AUDIT_01 finding 10: source 상자 안쪽 판정의 z 하한이
++구 **최상단**(z+r > floor-margin) 이어서 바닥에 닿은/뚫은 알도 source 로 세었다.
++선언(INSIDE_RULE: 모든 구체가 margin 만큼 안쪽)과 어긋난다. rev29 는 z 하한을 구 **최하단**
++(z-r > floor+margin) 으로 고친다. 다른 축·near 밴드·우선순위·margin·속도창은 그대로다.
++결과: 바닥에 놓인 알은 규약대로 ambiguous(near band) 가 된다 — 규약 자체를 바꾸지 않았다.
++
+ 동결 유지
+ --------
+ `margin`(2.5 mm) · 우선순위 · 속도창(`v_settle`) 값은 **바꾸지 않는다**.
+@@ -32,6 +40,10 @@
+ INV_NAMES = ["source", "receiving_bin", "tool_residual", "spill", "in_flight", "ambiguous"]
+ INV = {n: i for i, n in enumerate(INV_NAMES)}
+ 
++REVISION = "rev29"
++SOURCE_FLOOR_RULE = ("rev29: in_source requires every sphere bottom (center_z - radius) > floor + margin; "
++                     "rev28 compared sphere top (center_z + radius) > floor - margin, which is not whole-sphere containment "
++                     "(RAW_SCHEMA_REQUIRED.md:76-77, REV28_PRODUCTION_PARTIAL_RAW_AUDIT_01 finding 10)")
+ GEOMETRY_BASIS = "oriented_clump_all_spheres"
+ INSIDE_RULE = "all spheres strictly inside by margin, center distance +/- sphere radius"
+ BOUNDARY_RULE = "any single sphere overlaps the margin band -> ambiguous"
+@@ -105,7 +117,7 @@
+     box_top = float(cfg["box_top_m"])
+     in_src = (((S[:, :, 0] - Rr) > box[0, 0] + marg) & ((S[:, :, 0] + Rr) < box[0, 1] - marg)
+               & ((S[:, :, 1] - Rr) > box[1, 0] + marg) & ((S[:, :, 1] + Rr) < box[1, 1] - marg)
+-              & ((S[:, :, 2] + Rr) > box[2, 0] - marg)
++              & ((S[:, :, 2] - Rr) > box[2, 0] + marg)          # rev29: 구 최하단 > 바닥+margin (rev28 은 최상단 > 바닥-margin 이었다)
+               & ((S[:, :, 2] + Rr) < box_top - marg)).all(1)
+     near_src = (((S[:, :, 0] + Rr) > box[0, 0] - marg) & ((S[:, :, 0] - Rr) < box[0, 1] + marg)
+                 & ((S[:, :, 1] + Rr) > box[1, 0] - marg) & ((S[:, :, 1] - Rr) < box[1, 1] + marg)
+@@ -136,4 +148,6 @@
+             "classify_inside_rule": INSIDE_RULE,
+             "classify_boundary_rule": BOUNDARY_RULE,
+             "classify_spill_basis": SPILL_RULE,
++            "classify_source_floor_rule": SOURCE_FLOOR_RULE,
++            "classify_revision": REVISION,
+             "classify_predicate_module": "inventory_geometry.classify_spheres"}
+diff -ru /home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/src/sim_w13_full_cycle.py src/sim_w13_full_cycle.py
+--- /home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/src/sim_w13_full_cycle.py	2026-09-13 15:37:01.850278473 +0900
++++ src/sim_w13_full_cycle.py	2026-09-16 20:13:17.901486039 +0900
+@@ -604,13 +604,18 @@
+     def record_t0():
+         """t=0 의 진짜 HOME 상태를 dts=0 행으로 남긴다. 경과시간을 늘리지 않는다(감사 요구)."""
+         state["phase"], state["sub"] = "initial_home", "t0_state"
+-        trans_idx.append(0)
++        # rev29: 행 0 은 phase 전환이 아니다 → transition_sync_index 에 넣지 않는다(RAW_SCHEMA_REQUIRED.md:52).
+         return sample(0.0, pose_of(cmd))
+ 
+     def enter(phase, sub):
++        # rev29: transition_sync_index 는 **phase 가 바뀌는 행**만 담는다(subphase 전환·행 0 제외,
++        # RAW_SCHEMA_REQUIRED.md:52 "exactly equals dense phase-change indices"). subphase 전환의
++        # state 갱신과 강제 입자 프레임 저장은 그대로다(저장 프레임 규약·ERRATUM_01/03 불변).
+         if phase != state["phase"] or sub != state["sub"]:
++            phase_changed = phase != state["phase"]
+             state["phase"], state["sub"] = phase, sub
+-            trans_idx.append(len(D["t"]))
++            if phase_changed:
++                trans_idx.append(len(D["t"]))
+             if D["t"]:
+                 record_particle_frame(force=True)
+ 
+diff -ru /home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/src/verify_w13_self.py src/verify_w13_self.py
+--- /home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/src/verify_w13_self.py	2026-09-13 15:08:04.049433850 +0900
++++ src/verify_w13_self.py	2026-09-16 20:13:17.902486050 +0900
+@@ -128,6 +128,11 @@
+     tr = np.asarray(z["transition_sync_index"], int)
+     c.add("transitions_have_particle_frames", bool(set(int(v) for v in tr) <= set(int(v) for v in pf_s)),
+           f"{len(tr)} transitions, 전부 입자 프레임을 갖는가")
++    # rev29: 규약 RAW_SCHEMA_REQUIRED.md:52 — dense phase 코드가 바뀐 행과 정확히 같아야 한다(행 0·subphase 제외).
++    _pc = np.asarray(z["sync_phase_code"]).astype(int)
++    _exp = (np.flatnonzero(_pc[1:] != _pc[:-1]) + 1).tolist()
++    c.add("transitions_phase_only_exact", tr.tolist() == _exp,
++          f"recorded {tr.tolist()} vs phase-change rows {_exp}")
+     fp = {int(pc[min(int(s_), len(pc) - 1)]) for s_ in pf_s if s_ >= 0}
+     c.add("particle_frames_cover_all_phases", set(range(len(PHASES))) <= fp, f"{sorted(fp)}")
+ 
+@@ -196,7 +201,7 @@
+               & ((S[:, :, 2] - Rr) < bi["rim_z_m"] + marg)).any(1)
+         isr = (((S[:, :, 0] - Rr) > box[0, 0] + marg) & ((S[:, :, 0] + Rr) < box[0, 1] - marg)
+                & ((S[:, :, 1] - Rr) > box[1, 0] + marg) & ((S[:, :, 1] + Rr) < box[1, 1] - marg)
+-               & ((S[:, :, 2] + Rr) > box[2, 0] - marg) & ((S[:, :, 2] + Rr) < box_top - marg)).all(1)
++               & ((S[:, :, 2] - Rr) > box[2, 0] + marg) & ((S[:, :, 2] + Rr) < box_top - marg)).all(1)   # rev29 floor fix
+         nsr = (((S[:, :, 0] + Rr) > box[0, 0] - marg) & ((S[:, :, 0] - Rr) < box[0, 1] + marg)
+                & ((S[:, :, 1] + Rr) > box[1, 0] - marg) & ((S[:, :, 1] - Rr) < box[1, 1] + marg)
+                & ((S[:, :, 2] + Rr) > box[2, 0] - marg) & ((S[:, :, 2] - Rr) < box_top + marg)).any(1)

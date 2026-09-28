@@ -1,0 +1,25 @@
+== [2026-09-17T07:08:54Z] 0. host facts
+name, memory.total [MiB], driver_version, compute_cap
+NVIDIA GeForce RTX 4090, 24564 MiB, 580.159.04, 8.9
+ldd (Ubuntu GLIBC 2.39-0ubuntu8.6) 2.39
+cuda.h OK
+/usr/local/cuda/lib64/libnvrtc.so.12
+/usr/local/cuda/targets/x86_64-linux/lib/libnvrtc.so.12
+Build cuda_12.8.r12.8/compiler.35583870_0
+== 1. miniconda at /home/cgxr/miniconda3 (경로 미러)
+conda 26.7.1
+Python 3.11.16
+== 2. pip pins (binary only, deme 휠 sha256 고정)
+/workspace/wheels/deme-2.4.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl: OK
+site-packages=/home/cgxr/miniconda3/envs/roarm/lib/python3.11/site-packages
+/home/cgxr/miniconda3/envs/roarm/lib/python3.11/site-packages/lib64/libsimulator_multi_gpu.a: OK
+	libcudart.so.12 => /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12 (0x00007b0315400000)
+	libnvrtc.so.12 => /usr/local/cuda/targets/x86_64-linux/lib/libnvrtc.so.12 (0x00007b030ecbc000)
+	libcuda.so.1 => /lib/x86_64-linux-gnu/libcuda.so.1 (0x00007b0309000000)
+imports ok /home/cgxr/miniconda3/envs/roarm/lib/python3.11/site-packages/DEME.py 2.2.6 1.17.1 4.11.5
+== 3. bundle extract at / (절대경로 미러) + 해시 대조
+verify: 577 files, mismatch 0
+roarm_rl.heightmap import ok
+== 4. env receipt
+{"hostname": "5983a367cbe5", "runpod_pod_id": null, "python_exe": "/home/cgxr/miniconda3/envs/roarm/bin/python", "deme_import": {"ok": true, "file": "/home/cgxr/miniconda3/envs/roarm/lib/python3.11/site-packages/DEME.py"}, "deme_static_archive_sha256": "c47ea1c4f0744a50602a139acb22e3db53df3363e6db23a260d050a1ca620529", "libnvrtc_sha256": "2bb82d1a34b9fefa46aca357299aed66763d4d6613d015d5a591224c00fa7e5a"}
+== [2026-09-17T07:08:57Z] BOOTSTRAP_OK

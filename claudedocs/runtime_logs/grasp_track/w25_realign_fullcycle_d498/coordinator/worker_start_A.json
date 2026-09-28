@@ -1,0 +1,90 @@
+{
+  "id": "9d50197f-50b0-4b93-aaef-8107e27706d9",
+  "ok": true,
+  "result": {
+    "runId": "run_d0eba99ce41b",
+    "taskId": "task_ba7ae71c3d20",
+    "dispatchId": "ctx_ac74a0539e88",
+    "state": "ready",
+    "stage": "input_accepted",
+    "setup": {
+      "requested": "skip",
+      "effective": "skip",
+      "source": "explicit_request",
+      "hookFound": false,
+      "startupPolicy": "start-immediately",
+      "state": "not_configured"
+    },
+    "launch": {
+      "requested": {
+        "agent": "claude",
+        "model": "claude-opus-5-5",
+        "effort": "high"
+      },
+      "effective": {
+        "agent": "claude",
+        "model": "claude-opus-5-5",
+        "effort": "high"
+      }
+    },
+    "mode": {
+      "mode": "terminal",
+      "preferred": "terminal",
+      "reason": "user_default",
+      "detail": "Started a terminal agent worker, the default for new agent tabs in your settings."
+    },
+    "timeoutMs": 60000,
+    "effects": [
+      {
+        "kind": "worktree",
+        "action": "created_top_level",
+        "id": "6d4cecac-f639-434b-be40-367d6257f9f2::/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle"
+      },
+      {
+        "kind": "terminal",
+        "role": "agent",
+        "action": "reused_agent_terminal",
+        "id": "term_12ddff0e-55d5-4a53-b65f-412c6e0fed8a",
+        "tabId": "a2b13f53-69a1-4389-8708-e66bdb5e2b46",
+        "leafId": "94941b7c-4bbc-4fa1-9536-7ffa1b91e575"
+      },
+      {
+        "kind": "setup",
+        "action": "skip",
+        "requested": "skip",
+        "effective": "skip",
+        "source": "explicit_request",
+        "hookFound": false,
+        "startupPolicy": "start-immediately",
+        "state": "not_configured"
+      },
+      {
+        "kind": "dispatch_input",
+        "role": "agent",
+        "id": "term_12ddff0e-55d5-4a53-b65f-412c6e0fed8a",
+        "state": "accepted"
+      }
+    ],
+    "prompt": {
+      "requestId": "aec2061a-5aaa-4b94-9876-6a3948ce086f",
+      "stages": [
+        "input_accepted"
+      ],
+      "provider": "claude",
+      "observation": "supported",
+      "processIncarnation": "43876e0f-4e50-4750-b684-5589460b7e97",
+      "generation": 5,
+      "baselineWorkingSequence": 0,
+      "baselineExplicitWorkingStartedAt": null,
+      "baselinePermissionSequence": 0
+    },
+    "residualResources": [],
+    "mutation": {
+      "requestId": "aec2061a-5aaa-4b94-9876-6a3948ce086f",
+      "replayed": false
+    }
+  },
+  "_meta": {
+    "runtimeId": "01571699-7908-4cf3-95ae-7ec06e7c7594"
+  }
+}

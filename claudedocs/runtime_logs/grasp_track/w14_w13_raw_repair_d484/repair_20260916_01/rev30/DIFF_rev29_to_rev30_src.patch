@@ -1,0 +1,91 @@
+Only in ../rev29/src: derive_repaired_raw.py
+diff -ru ../rev29/src/inventory_geometry.py src/inventory_geometry.py
+--- ../rev29/src/inventory_geometry.py	2026-09-16 20:13:17.901486039 +0900
++++ src/inventory_geometry.py	2026-09-16 22:29:30.409095037 +0900
+@@ -9,6 +9,12 @@
+ `contacts_logged`/`bridge_planned_*` 에서 잡았다. 그래서 판정식을 여기 한 곳에 두고
+ 두 곳이 **같은 함수를 호출**한다. 이 모듈이 분류 의미의 정본이다.
+ 
++rev30 정정 (2026-09-16 저녁, ERRATUM_04 초안·사용자 결정)
++--------------------------------------------------
++바닥(상자 바닥·용기 바닥)은 열린 경계가 아니라 받침면이다. 하한을 구 최하단 > 바닥−margin(파묻힘 허용 2.5 mm)으로
++바꿔 바닥에 놓인 층이 source/receiving_bin 으로 세어지게 한다. 옆벽·상자 윗면·용기 테두리·공구 입구의
++안쪽 margin 과 near 밴드·우선순위·속도창·spill 은 그대로다. run_01 의 옛 규약 verdict 는 소급 변경하지 않는다.
++
+ rev29 정정 (2026-09-16, W14 raw repair)
+ ------------------------------------
+ 독립 감사 REV28_PRODUCTION_PARTIAL_RAW_AUDIT_01 finding 10: source 상자 안쪽 판정의 z 하한이
+@@ -40,10 +46,12 @@
+ INV_NAMES = ["source", "receiving_bin", "tool_residual", "spill", "in_flight", "ambiguous"]
+ INV = {n: i for i, n in enumerate(INV_NAMES)}
+ 
+-REVISION = "rev29"
+-SOURCE_FLOOR_RULE = ("rev29: in_source requires every sphere bottom (center_z - radius) > floor + margin; "
+-                     "rev28 compared sphere top (center_z + radius) > floor - margin, which is not whole-sphere containment "
+-                     "(RAW_SCHEMA_REQUIRED.md:76-77, REV28_PRODUCTION_PARTIAL_RAW_AUDIT_01 finding 10)")
++REVISION = "rev30"
++CONTRACT_VERSION = "RAW_SCHEMA_REQUIRED + ERRATUM_04 (floors are support surfaces; boundary frame at i-1)"
++FLOOR_RULE = "support_surface_v2: min(center_z - r) > floor - margin  (source tray floor and bin inner floor)"
++SOURCE_FLOOR_RULE = ("rev30: in_source/in_bin lower-z uses every sphere bottom (center_z - radius) > floor - margin "
++                     "(penetration allowance = frozen margin); rev29 used floor + margin (strict, floor layer -> ambiguous); "
++                     "rev28 compared sphere top > floor - margin (not whole-sphere). Side walls/top/rim keep the strict inward margin.")
+ GEOMETRY_BASIS = "oriented_clump_all_spheres"
+ INSIDE_RULE = "all spheres strictly inside by margin, center distance +/- sphere radius"
+ BOUNDARY_RULE = "any single sphere overlaps the margin band -> ambiguous"
+@@ -106,7 +114,7 @@
+     zf, zr = float(cfg["bin_floor_inner_z_m"]), float(cfg["bin_rim_z_m"])
+     d_s = ((S[:, :, :2] - bc) @ nrm.T).max(2)
+     in_bin = (((d_s + Rr) < apo - marg)
+-              & ((S[:, :, 2] - Rr) > zf + marg)
++              & ((S[:, :, 2] - Rr) > zf - marg)                 # rev30 (ERRATUM_04): 용기 바닥도 받침면
+               & ((S[:, :, 2] + Rr) < zr - marg)).all(1)
+     near_bin = (((d_s - Rr) < apo + marg)
+                 & ((S[:, :, 2] + Rr) > zf - marg)
+@@ -117,7 +125,7 @@
+     box_top = float(cfg["box_top_m"])
+     in_src = (((S[:, :, 0] - Rr) > box[0, 0] + marg) & ((S[:, :, 0] + Rr) < box[0, 1] - marg)
+               & ((S[:, :, 1] - Rr) > box[1, 0] + marg) & ((S[:, :, 1] + Rr) < box[1, 1] - marg)
+-              & ((S[:, :, 2] - Rr) > box[2, 0] + marg)          # rev29: 구 최하단 > 바닥+margin (rev28 은 최상단 > 바닥-margin 이었다)
++              & ((S[:, :, 2] - Rr) > box[2, 0] - marg)          # rev30 (ERRATUM_04): 바닥=받침면, 구 최하단 > 바닥−margin (파묻힘 허용 2.5 mm)
+               & ((S[:, :, 2] + Rr) < box_top - marg)).all(1)
+     near_src = (((S[:, :, 0] + Rr) > box[0, 0] - marg) & ((S[:, :, 0] - Rr) < box[0, 1] + marg)
+                 & ((S[:, :, 1] + Rr) > box[1, 0] - marg) & ((S[:, :, 1] - Rr) < box[1, 1] + marg)
+@@ -149,5 +157,7 @@
+             "classify_boundary_rule": BOUNDARY_RULE,
+             "classify_spill_basis": SPILL_RULE,
+             "classify_source_floor_rule": SOURCE_FLOOR_RULE,
++            "classify_floor_rule": FLOOR_RULE,
++            "classify_contract_version": CONTRACT_VERSION,
+             "classify_revision": REVISION,
+             "classify_predicate_module": "inventory_geometry.classify_spheres"}
+diff -ru ../rev29/src/verify_w13_self.py src/verify_w13_self.py
+--- ../rev29/src/verify_w13_self.py	2026-09-16 20:13:17.902486050 +0900
++++ src/verify_w13_self.py	2026-09-16 22:29:30.410095053 +0900
+@@ -126,8 +126,9 @@
+                   and np.allclose(pf_t[pf_s >= 0], t[pf_s[pf_s >= 0]], atol=1e-9))
+     c.add("particle_frames_map_to_syncs", ok_map, f"{len(pf_t)} frames, index range [{pf_s.min()}, {pf_s.max()}]")
+     tr = np.asarray(z["transition_sync_index"], int)
+-    c.add("transitions_have_particle_frames", bool(set(int(v) for v in tr) <= set(int(v) for v in pf_s)),
+-          f"{len(tr)} transitions, 전부 입자 프레임을 갖는가")
++    # rev30 (ERRATUM_04 §2): 전환 i 의 경계 상태 프레임은 직전 행 i-1 에 있어야 한다(정확히 i 는 선택).
++    c.add("transitions_have_boundary_frames", bool(set(int(v) - 1 for v in tr) <= set(int(v) for v in pf_s)),
++          f"{len(tr)} transitions, 전부 i-1 경계 입자 프레임을 갖는가")
+     # rev29: 규약 RAW_SCHEMA_REQUIRED.md:52 — dense phase 코드가 바뀐 행과 정확히 같아야 한다(행 0·subphase 제외).
+     _pc = np.asarray(z["sync_phase_code"]).astype(int)
+     _exp = (np.flatnonzero(_pc[1:] != _pc[:-1]) + 1).tolist()
+@@ -195,13 +196,13 @@
+         it = (((r_c + Rr) < r_in - marg) & ((y_c + Rr) < hy - marg)).all(1)
+         nt = (((r_c - Rr) < r_in + marg) & ((y_c - Rr) < hy + marg)).any(1)
+         dm = ((S[:, :, :2] - bc) @ nrm.T).max(2)
+-        ib = (((dm + Rr) < apo - marg) & ((S[:, :, 2] - Rr) > bi["floor_inner_z_m"] + marg)
++        ib = (((dm + Rr) < apo - marg) & ((S[:, :, 2] - Rr) > bi["floor_inner_z_m"] - marg)   # rev30 ERRATUM_04
+               & ((S[:, :, 2] + Rr) < bi["rim_z_m"] - marg)).all(1)
+         nb = (((dm - Rr) < apo + marg) & ((S[:, :, 2] + Rr) > bi["floor_inner_z_m"] - marg)
+               & ((S[:, :, 2] - Rr) < bi["rim_z_m"] + marg)).any(1)
+         isr = (((S[:, :, 0] - Rr) > box[0, 0] + marg) & ((S[:, :, 0] + Rr) < box[0, 1] - marg)
+                & ((S[:, :, 1] - Rr) > box[1, 0] + marg) & ((S[:, :, 1] + Rr) < box[1, 1] - marg)
+-               & ((S[:, :, 2] - Rr) > box[2, 0] + marg) & ((S[:, :, 2] + Rr) < box_top - marg)).all(1)   # rev29 floor fix
++               & ((S[:, :, 2] - Rr) > box[2, 0] - marg) & ((S[:, :, 2] + Rr) < box_top - marg)).all(1)   # rev30 ERRATUM_04 support floor
+         nsr = (((S[:, :, 0] + Rr) > box[0, 0] - marg) & ((S[:, :, 0] - Rr) < box[0, 1] + marg)
+                & ((S[:, :, 1] + Rr) > box[1, 0] - marg) & ((S[:, :, 1] - Rr) < box[1, 1] + marg)
+                & ((S[:, :, 2] + Rr) > box[2, 0] - marg) & ((S[:, :, 2] - Rr) < box_top + marg)).any(1)

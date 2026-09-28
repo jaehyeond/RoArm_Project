@@ -1,0 +1,49 @@
+{
+  "artifact": "W16_REV32_DEME_BINDING_PROBE",
+  "deme_version": "2.4.0",
+  "deme_file": "/home/cgxr/miniconda3/envs/roarm/lib/python3.11/site-packages/DEME.py",
+  "solver_constructed": false,
+  "gpu_touched": false,
+  "n_public_methods": 188,
+  "requested_queries": {
+    "GetNumContacts": {
+      "bound": true,
+      "maps_to": "scalar_engine_num_contacts"
+    },
+    "GetExpandFactor": {
+      "bound": false,
+      "maps_to": "scalar_engine_expand_factor_m (요청됨)"
+    },
+    "GetUpdateFreq": {
+      "bound": true,
+      "maps_to": "scalar_engine_cd_update_freq"
+    }
+  },
+  "nearby_names": {
+    "expand": [
+      "SetExpandFactor",
+      "SetExpandSafetyAdder",
+      "SetExpandSafetyMultiplier",
+      "SetExpandSafetyType"
+    ],
+    "updatefreq": [
+      "DisableAdaptiveUpdateFreq",
+      "GetUpdateFreq",
+      "SetCDMaxUpdateFreq",
+      "SetCDUpdateFreq",
+      "UseAdaptiveUpdateFreq"
+    ],
+    "contacts": [
+      "GetAvgSphContacts",
+      "GetClumpContacts",
+      "GetContactDetailedInfo",
+      "GetContactForceModel",
+      "GetContacts",
+      "GetNumContacts",
+      "GetOwnerContactClumps",
+      "GetOwnerContactForces"
+    ]
+  },
+  "conclusion": "GetNumContacts/GetUpdateFreq 는 바인딩에 있고 rev32 가 쓴다. GetExpandFactor 는 C++ 선언(API.h:105)만 있고 파이썬 바인딩에 없다 → 기록 후 건너뛴다(패치 0).",
+  "verdict": "PASS"
+}

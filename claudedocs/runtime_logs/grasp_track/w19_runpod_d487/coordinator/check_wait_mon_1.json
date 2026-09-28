@@ -1,0 +1,38 @@
+{
+  "id": "d06bf7ad-76bf-46e2-83c7-f4c9cdb54875",
+  "ok": true,
+  "result": {
+    "runId": "run_49223d0e012d",
+    "deliveryId": "delivery_9b64fb29eb2d",
+    "messages": [
+      {
+        "id": "msg_16f0a57d3e48",
+        "run_id": "run_49223d0e012d",
+        "delivery_contract": "current_delivery",
+        "from_handle": "term_7f198b2a-f9a5-4fce-9a44-2bf55831c8fa",
+        "to_handle": "run:run_49223d0e012d",
+        "subject": "W19 stage2 replay complete — checker ALL_PASS 8/8",
+        "body": "W19 A run_01 동결 원자료를 post04 재생 코드(rev/src 10개 sha256·AST 모두 post04와 바이트 동일, 바뀐 건 rev/COMMANDS.json 경로뿐 — rev/AST_SCOPE_CHECK.json에 증명)로 다시 그렸다: CPU 35건(동결 21 + W19 원자료 결속 신규 14) 통과 후 step2 Rerun(RRD 682.0MB + RBL, footer verify rc0, 비-system entity 60/60·타임라인 6/6 정확 계약, 288 입자프레임·16,813 sync·접촉 6,305,411행 전량, DOOR_STOP 5건이 정확 일치 sync 첫 행 69/98/108/189/221에 결속, 결정 PNG 6장)와 step3 Isaac(288프레임 MP4 + visual_mapping 288행, 관절 출처 합 288 = fk 232 + IK(w11) 54 + IK(abs) 2, IK 실패 0)을 실행했다. 검사기 8항목 ALL_PASS 8/8(tests/RESULTS_checker.json; 동결 검사기는 무수정 보존하고 W13 전용 상수 2개만 드라이버에서 재바인딩 — 그 원본 판정 RESULTS_checker_core.json의 U3 FAIL도 지우지 않고 보존), 표시 한계는 선언 어깨범위[-30,75]도 밖 20프레임(75.24~77.37도, 행 81~100)과 립 재투영 최대 8.132mm이며 GPU 단계 실제 경과 시간(wall-clock)은 step2 1,738.5s + step3 481.6s = 2,220.1s(37.0분, 각 상한 5,400s 내, TERM 0회). 남은 것: 원자료 11파일 실행 전후 sha 동일(수정 0)이고 PNG 6장 중 3장·Isaac 프레임 3장·MP4 1프레임을 실제로 열어 inspection.json에 관찰을 적었으나 나머지는 개별 육안 검수하지 않았음을 명시했고, run_01/_obj OBJ 4개가 RunPod에서 미회수라 Isaac 표시 위상용 2개만 물리 실행이 기록한 sha256과 바이트 동일한 로컬 사본으로 복원했다(전문 MANIFEST_prospective_replay.json); '전체 사이클 성공'은 선언하지 않았고 정착 cadence 규약 개정·rev31 감사·W19 B 재생·상태 원장 갱신은 승인 경계로 남겨 두었다.",
+        "type": "worker_done",
+        "priority": "normal",
+        "thread_id": null,
+        "payload": "{\"taskId\":\"task_7568a44b5303\",\"dispatchId\":\"ctx_f74f3f0cd58f\",\"outcome\":\"succeeded\",\"filesModified\":[\"claudedocs/runtime_logs/grasp_track/w19_runpod_d487/A_full_cycle/replay_20260918/ (366 files\",\"1.1 GB — rev/\",\"tools/\",\"tests/\",\"execution/\",\"rerun/\",\"isaac/\",\"evidence/\",\"_obj/\",\"inspection.json\",\"REPORT_replay.md\",\"manifest.json)\"],\"reportPath\":\"/home/cgxr/orca/workspaces/RoArm_Project/w19-replay/claudedocs/runtime_logs/grasp_track/w19_runpod_d487/A_full_cycle/replay_20260918/REPORT_replay.md\"}",
+        "created_at": "2026-09-18T05:53:29Z",
+        "delivered_at": null
+      }
+    ],
+    "count": 1,
+    "replayed": false,
+    "acknowledged": null,
+    "timedOut": false,
+    "cancelled": false,
+    "connectionLost": false,
+    "mutation": {
+      "requestId": "8c1775ee-446f-4393-a63d-fc11c542221e",
+      "replayed": false
+    }
+  },
+  "_meta": {
+    "runtimeId": "471edc31-a026-466b-b60c-0c8e6cfb9fcc"
+  }
+}

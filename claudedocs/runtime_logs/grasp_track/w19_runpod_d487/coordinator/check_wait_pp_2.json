@@ -1,0 +1,38 @@
+{
+  "id": "b78047e8-ce93-4b2f-b3f5-2d3ad330e229",
+  "ok": true,
+  "result": {
+    "runId": "run_49223d0e012d",
+    "deliveryId": "delivery_182bc2ecc2c8",
+    "messages": [
+      {
+        "id": "msg_59b7a7f7d2cc",
+        "run_id": "run_49223d0e012d",
+        "delivery_contract": "current_delivery",
+        "from_handle": "term_e394be1e-6575-438d-be46-9036ada8c8ff",
+        "to_handle": "run:run_49223d0e012d",
+        "subject": "W19 A 후처리 1단계 완료 — 회계 재현 0 불일치, 규약 6/27 FAIL",
+        "body": "W19 A run_01 원자료를 무수정 보존(전후 sha 0 불일치)한 채 W14 rev31 모듈 바이트 사본으로 288프레임 전량을 재분류했고, 생산 기록 라벨과의 불일치는 5,760,000개 중 0개(클래스별도 전부 0, 배열 해시까지 동일)이며 생산 모듈을 import하지 않는 독립 검사기(Hamilton곱·AABB·groupby)도 288프레임 0 불일치로 unittest 4/4 PASS했고, rev29 엄격 바닥 규약과의 차이 1,562,517은 규약 차이(바닥층→ambiguous)로 기록했다. 원자료 규약 검사 27항목 중 21 PASS·6 FAIL이며 FAIL은 raw_bin_delivery_interval_and_settlement_limit(정착창 5프레임<6·최대간격 0.100s>0.05s), erratum04_floor_rule_declarations_in_raw_metadata(classify_floor_rule·classify_contract_version 선언 누락 — 판정식은 rev32=rev31 바이트 동일인데 producer가 semantics_metadata()를 안 써서 metadata에 미기재), execution_receipt_fields_and_32400s_physics_wall_limit(stdout/stderr 해시 없음·cap 43200s>32400s), metadata_time_mapping_and_geometry_epsilon_fields, erratum01_visual_mapping(파일 부재), final_manifest_path_bytes_sha256(산출 매니페스트 부재)이고 전부 완화 없이 그대로 남겼다. 정착 cadence는 재계산에서도 false(프레임 5개, 간격 0.10002/0.00400/0.09602/0.00400s)이며 272알·max speed 2.3909e-05 m/s·max move 0.003311 mm는 생산값과 반올림 자리 내 일치하지만 규약 미충족 창에서 나온 값이라 승격하지 않았고, 재닫기 코호트 292알의 최종은 receiving_bin 152·spill 73·ambiguous 57·source 6·tool_residual 4로 운반 구간 계단식 감소가 그림 4에 보이며(원인 주장 없음), PNG 4장을 실제로 열어 본 관찰을 inspection.json에 기록했고 남은 것은 2단계 재생(RRD·visual_mapping)과 3단계 독립 감사다.",
+        "type": "worker_done",
+        "priority": "normal",
+        "thread_id": null,
+        "payload": "{\"taskId\":\"task_ff7b0f3a076b\",\"dispatchId\":\"ctx_c97eceec0b7c\",\"outcome\":\"succeeded\",\"filesModified\":[\"claudedocs/runtime_logs/grasp_track/w19_runpod_d487/A_full_cycle/postprocess_20260918/REPORT_postprocess.md\",\"claudedocs/runtime_logs/grasp_track/w19_runpod_d487/A_full_cycle/postprocess_20260918/manifest.json\",\"claudedocs/runtime_logs/grasp_track/w19_runpod_d487/A_full_cycle/postprocess_20260918/PRESERVATION_BEFORE.json\",\"claudedocs/runtime_logs/grasp_track/w19_runpod_d487/A_full_cycle/postprocess_20260918/PRESERVATION_AFTER.json\",\"claudedocs/runtime_logs/grasp_track/w19_runpod_d487/A_full_cycle/postprocess_20260918/inspection.json\",\"claudedocs/runtime_logs/grasp_track/w19_runpod_d487/A_full_cycle/postprocess_20260918/derived_v2_rev31/w19_cycle_seed460_rev31_derived.npz\",\"claudedocs/runtime_logs/grasp_track/w19_runpod_d487/A_full_cycle/postprocess_20260918/derived_v2_rev31/DERIVED_V2_MANIFEST.json\",\"claudedocs/runtime_logs/grasp_track/w19_runpod_d487/A_full_cycle/postprocess_20260918/derived_v2_rev31/SETTLEMENT_WINDOW_RECOMPUTE.json\",\"claudedocs/runtime_logs/grasp_track/w19_runpod_d487/A_full_cycle/postprocess_20260918/derived_v2_rev31/W13_COMPARISON.json\",\"claudedocs/runtime_logs/grasp_track/w19_runpod_d487/A_full_cycle/postprocess_20260918/schema_check/RAW_SCHEMA_CHECK_W19.json\",\"claudedocs/runtime_logs/grasp_track/w19_runpod_d487/A_full_cycle/postprocess_20260918/tests/RESULTS_allframes_w19.json\",\"claudedocs/runtime_logs/grasp_track/w19_runpod_d487/A_full_cycle/postprocess_20260918/rev31_copy/REVISION_PIN.json\"],\"reportPath\":\"claudedocs/runtime_logs/grasp_track/w19_runpod_d487/A_full_cycle/postprocess_20260918/REPORT_postprocess.md\"}",
+        "created_at": "2026-09-18T04:25:40Z",
+        "delivered_at": null
+      }
+    ],
+    "count": 1,
+    "replayed": false,
+    "acknowledged": null,
+    "timedOut": false,
+    "cancelled": false,
+    "connectionLost": false,
+    "mutation": {
+      "requestId": "56e3c054-9d9f-4e05-a71e-1a3d5d4a6963",
+      "replayed": false
+    }
+  },
+  "_meta": {
+    "runtimeId": "471edc31-a026-466b-b60c-0c8e6cfb9fcc"
+  }
+}

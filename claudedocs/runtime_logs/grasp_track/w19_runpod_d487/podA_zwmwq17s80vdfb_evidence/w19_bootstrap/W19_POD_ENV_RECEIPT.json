@@ -1,0 +1,64 @@
+{
+ "artifact": "W19_POD_ENV_RECEIPT",
+ "utc": "2026-09-17T06:49:52Z",
+ "hostname": "7e98d39c3a73",
+ "runpod_pod_id": null,
+ "runpod_gpu_count": null,
+ "python": "3.11.16 (main, Sep  2 2026, 23:39:52) [GCC 15.3.0]",
+ "python_exe": "/home/cgxr/miniconda3/envs/roarm/bin/python",
+ "site_packages": "/home/cgxr/miniconda3/envs/roarm/lib/python3.11/site-packages",
+ "glibc": [
+  "glibc",
+  "2.39"
+ ],
+ "uname": {
+  "system": "Linux",
+  "node": "7e98d39c3a73",
+  "release": "6.8.0-90-generic",
+  "version": "#91~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Thu Nov 20 15:20:45 UTC 2",
+  "machine": "x86_64",
+  "processor": "x86_64"
+ },
+ "nvidia_smi": {
+  "rc": 0,
+  "stdout": "name, memory.total [MiB], driver_version, compute_cap\nNVIDIA GeForce RTX 4090, 24564 MiB, 570.211.01, 8.9",
+  "stderr": ""
+ },
+ "nvcc": {
+  "rc": 0,
+  "stdout": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2025 NVIDIA Corporation\nBuilt on Fri_Feb_21_20:23:50_PST_2025\nCuda compilation tools, release 12.8, V12.8.93\nBuild cuda_12.8.r12.8/compiler.35583870_0",
+  "stderr": ""
+ },
+ "cuda_include_cuda_h": true,
+ "libnvrtc_path": "/usr/local/cuda/targets/x86_64-linux/lib/libnvrtc.so.12",
+ "libnvrtc_sha256": "2bb82d1a34b9fefa46aca357299aed66763d4d6613d015d5a591224c00fa7e5a",
+ "libnvrtc_sha256_local_reference": "2bb82d1a34b9fefa46aca357299aed66763d4d6613d015d5a591224c00fa7e5a",
+ "deme_so_ldd": {
+  "rc": 0,
+  "stdout": "linux-vdso.so.1 (0x00007ffc93df8000)\n\tlibcudart.so.12 => /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12 (0x000075c0aec00000)\n\tlibnvrtc.so.12 => /usr/local/cuda/targets/x86_64-linux/lib/libnvrtc.so.12 (0x000075c0a84bc000)\n\tlibcuda.so.1 => /lib/x86_64-linux-gnu/libcuda.so.1 (0x000075c0a3e00000)\n\tlibpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x000075c0aef81000)\n\tlibdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x000075c0aef7c000)\n\tlibrt.so.1 => /lib/x86_64-linux-gnu/librt.so.1 (0x000075c0aef75000)\n\tlibstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x000075c0a3b82000)\n\tlibm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x000075c0a83d3000)\n\tlibgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x000075c0aef47000)\n\tlibc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x000075c0a3970000)\n\t/lib64/ld-linux-x86-64.so.2 (0x000075c0b03d9000)",
+  "stderr": ""
+ },
+ "deme_static_archive_sha256": "c47ea1c4f0744a50602a139acb22e3db53df3363e6db23a260d050a1ca620529",
+ "deme_static_archive_sha256_local_reference": "c47ea1c4f0744a50602a139acb22e3db53df3363e6db23a260d050a1ca620529",
+ "pip_freeze": {
+  "rc": 0,
+  "stdout": "contourpy==1.3.3\ncycler==0.12.1\ndeme @ file:///workspace/wheels/deme-2.4.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl#sha256=acf8a02920c0e9f8adfcbf7c23e30a68d9fa7f8e5007e845f2a4de8ed6cd8bb3\nfonttools==4.65.0\nkiwisolver==1.5.1\nmanifold3d==3.5.2\nmatplotlib==3.10.8\nnetworkx==3.6.1\nnumpy==2.2.6\npackaging @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_packaging_1785888127/work\npillow==12.0.0\npyparsing==3.3.2\npython-dateutil==2.9.0.post0\nrtree==1.4.1\nscipy==1.17.1\nsix==1.17.0\ntrimesh==4.11.5",
+  "stderr": ""
+ },
+ "df_workspace": {
+  "rc": 0,
+  "stdout": "Filesystem                  Size  Used Avail Use% Mounted on\nmfs#euro-3.runpod.net:9421  2.2P  1.4P  883T  61% /workspace",
+  "stderr": ""
+ },
+ "df_root": {
+  "rc": 0,
+  "stdout": "Filesystem      Size  Used Avail Use% Mounted on\noverlay          40G  1.9G   39G   5% /",
+  "stderr": ""
+ },
+ "nproc": 32,
+ "mem_kb_total": "130980312",
+ "deme_import": {
+  "ok": true,
+  "file": "/home/cgxr/miniconda3/envs/roarm/lib/python3.11/site-packages/DEME.py"
+ }
+}

@@ -1,0 +1,38 @@
+{
+  "id": "abae3307-f376-4614-95e7-704cd55df752",
+  "ok": true,
+  "result": {
+    "runId": "run_49223d0e012d",
+    "deliveryId": "delivery_9ffc4c116c1a",
+    "messages": [
+      {
+        "id": "msg_1a210c9beabb",
+        "run_id": "run_49223d0e012d",
+        "delivery_contract": "current_delivery",
+        "from_handle": "term_ec2cc842-08a0-4f71-80c2-00715b97a5a0",
+        "to_handle": "run:run_49223d0e012d",
+        "subject": "W19 replay audit2: PASS 9/9, worker disagreements 0",
+        "body": "R1~R9 전 항목을 워커 코드 import 없이 원자료·RRD·산출 바이트에서 재계산해 PASS 9/9, 워커와 불일치 0건: 파이썬 10개 sha/AST 동일(COMMANDS만 경로·문구·W19 전용 키 2개 추가, 플래그 변화 0), 원자료 11/11 sha 불변(심링크), rerun SDK로 965청크 직접 훑어 entity 60·타임라인 6·프레임 288·sync 16,813·접촉점 6,305,411(역할별 fixed 1,495,358/door 632,169/tray 1,688,481/bin 2,489,403)까지 재현, DOOR_STOP 69/98/108/189/221 결속 일치, 검사기 8/8 재계산 일치·core U3 FAIL 보존 확인, 복원 OBJ 2개 sha 일치, manifest 366파일(1.13GB) sha 전수 일치, GPU 1,738.5+481.6=2,220.1s 영수증 일치. 표시 한계는 워커 값 그대로 재현됨 — 어깨 선언범위 밖 20프레임(입자행 81~100, 75.24~77.37°, 표시 규약 기록이지 하드웨어 위반·구동 증거 아님)과 립 재투영 최대 8.132mm, 결정 PNG 6장의 선언 시각은 5개(bridge=reclose sync 7555, 같은 시각 두 장은 576만 픽셀 중 485개만 다르고 471개가 상단바). 새로 지적한 약한 고리 1건: C3의 '적재 완료' 전제가 타임라인 최댓값 일치+load_wait_s 0.001인데 0.34.1 footer manifest는 본문 미적재 상태에서도 그 값을 주므로(rrd stats 0.26s) 충분 증거가 아니다 — 픽셀 증거가 같은 결론을 독립 지지해 R5는 PASS로 두되 다음 재생에서 ingest-complete 신호로 교체 권고. 남은 것은 사용자 결정 사항뿐(W19 B 재생·rev31 승격 경로·cadence 규약 개정·문 이음새 물리·상태 원장 갱신).",
+        "type": "worker_done",
+        "priority": "normal",
+        "thread_id": null,
+        "payload": "{\"taskId\":\"task_8bf5e5daf837\",\"dispatchId\":\"ctx_a0fc470ef28e\",\"outcome\":\"succeeded\",\"filesModified\":[\"claudedocs/runtime_logs/grasp_track/w19_runpod_d487/A_full_cycle/audit2_replay_20260918/audit_w19_replay.py\",\"claudedocs/runtime_logs/grasp_track/w19_runpod_d487/A_full_cycle/audit2_replay_20260918/W19_REPLAY_INDEPENDENT_AUDIT_01.json\",\"claudedocs/runtime_logs/grasp_track/w19_runpod_d487/A_full_cycle/audit2_replay_20260918/REPORT_audit2.md\",\"claudedocs/runtime_logs/grasp_track/w19_runpod_d487/A_full_cycle/audit2_replay_20260918/manifest.json\"],\"reportPath\":\"/home/cgxr/orca/workspaces/RoArm_Project/w19-audit/claudedocs/runtime_logs/grasp_track/w19_runpod_d487/A_full_cycle/audit2_replay_20260918/REPORT_audit2.md\"}",
+        "created_at": "2026-09-18T06:19:50Z",
+        "delivered_at": null
+      }
+    ],
+    "count": 1,
+    "replayed": false,
+    "acknowledged": null,
+    "timedOut": false,
+    "cancelled": false,
+    "connectionLost": false,
+    "mutation": {
+      "requestId": "cc5337d9-295c-40fd-a56a-5411d571c620",
+      "replayed": false
+    }
+  },
+  "_meta": {
+    "runtimeId": "471edc31-a026-466b-b60c-0c8e6cfb9fcc"
+  }
+}

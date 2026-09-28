@@ -1,0 +1,75 @@
+{
+  "id": "c1f941e8-cd5b-422d-9d3a-f24b221c9f20",
+  "ok": true,
+  "result": {
+    "runId": "run_49223d0e012d",
+    "taskId": "task_8bf5e5daf837",
+    "dispatchId": "ctx_daab0d18e7e1",
+    "state": "failed",
+    "stage": "agent_readiness",
+    "failedStage": "agent_readiness",
+    "lastError": "Agent startup blocked: codex-update-prompt",
+    "setup": {
+      "requested": "not_applicable",
+      "effective": "not_applicable",
+      "source": "existing_worktree",
+      "hookFound": false,
+      "startupPolicy": "start-immediately",
+      "state": "not_applicable"
+    },
+    "launch": {
+      "requested": {
+        "agent": "codex",
+        "model": "gpt-5.6-sol",
+        "effort": "high"
+      },
+      "effective": {
+        "agent": "codex",
+        "model": "gpt-5.6-sol",
+        "effort": "high"
+      }
+    },
+    "mode": {
+      "mode": "terminal",
+      "preferred": "terminal",
+      "reason": "user_default",
+      "detail": "Started a terminal agent worker, the default for new agent tabs in your settings."
+    },
+    "effects": [
+      {
+        "kind": "worktree",
+        "action": "reused",
+        "id": "6d4cecac-f639-434b-be40-367d6257f9f2::/home/cgxr/orca/workspaces/RoArm_Project/w19-audit"
+      },
+      {
+        "kind": "setup",
+        "action": "not_applicable",
+        "state": "not_applicable"
+      },
+      {
+        "kind": "terminal",
+        "role": "agent",
+        "action": "created",
+        "id": "term_6ae60f47-cc21-4425-b4c9-eaa26203f960",
+        "surface": "visible"
+      }
+    ],
+    "residualResources": [
+      {
+        "kind": "terminal",
+        "role": "agent",
+        "action": "created",
+        "id": "term_6ae60f47-cc21-4425-b4c9-eaa26203f960",
+        "surface": "visible"
+      }
+    ],
+    "recovery": "This start created a terminal that never ran the Task. Close it with: orca orchestration worker-release --dispatch ctx_daab0d18e7e1",
+    "mutation": {
+      "requestId": "f38ea703-eb97-4246-a19e-c29fca5fa19e",
+      "replayed": false
+    }
+  },
+  "_meta": {
+    "runtimeId": "471edc31-a026-466b-b60c-0c8e6cfb9fcc"
+  }
+}

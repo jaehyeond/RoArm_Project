@@ -1,0 +1,48 @@
+{
+ "artifact": "W19_DO_NOT_TOUCH_PODS_V1",
+ "observed_utc": "2026-09-17T06:46:02Z",
+ "rule": "아래 pod id 는 랩원 소유. 이 세션은 조회(get-pod/list-pods)만 하며 pod-action/update/delete 를 절대 호출하지 않는다. 우리 pod 는 이 대화의 create-pod 결과 id 에만 한정.",
+ "pods": [
+  {
+   "id": "bmx3th83jy4rs1",
+   "name": "safe_coffee_porcupine",
+   "gpu": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+   "cloud": "SECURE",
+   "dc": "EU-NL-1",
+   "cost_usd_h": 2.09,
+   "status": "RUNNING",
+   "created_utc": "2026-09-17T06:24:44Z",
+   "gpu_util_at_obs": 0,
+   "note": "15:24 KST 생성. 스크린샷(15:0x)의 지훈 A100 SXM 대신 보임 — 소유자 미확인, 사용자에게 알림"
+  },
+  {
+   "id": "hh5gae7qzsugro",
+   "name": "Geena_R1_50k_7f3c1b9e6a204d8fa51c73b2",
+   "gpu": "NVIDIA L40S",
+   "cloud": "COMMUNITY",
+   "cost_usd_h": 0.79,
+   "status": "RUNNING",
+   "gpu_util_at_obs": 99
+  },
+  {
+   "id": "xbp9doj5qmqtpd",
+   "name": "[Geena]wer-stage12-4090",
+   "gpu": "NVIDIA GeForce RTX 4090",
+   "cloud": "SECURE",
+   "dc": "EU-RO-1",
+   "cost_usd_h": 0.74,
+   "status": "EXITED"
+  }
+ ],
+ "billing_snapshot_usd": {
+  "2026-09-15": 27.74,
+  "2026-09-16": 48.62,
+  "2026-09-17_partial_to_15:3x_KST": 16.42,
+  "note": "list-billing lastN=3 day 합계 92.78"
+ },
+ "account_ssh_keys_registered": [
+  "runpodctl-ssh-key (rsa) ×2",
+  "sogang-wsl-runpod (ed25519)"
+ ],
+ "our_ssh_plan": "계정 SSH 키 설정은 건드리지 않고, 우리 pod 생성 시 env PUBLIC_KEY 에 로컬 ~/.ssh/id_ed25519.pub 만 주입"
+}

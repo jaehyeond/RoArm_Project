@@ -1,0 +1,67 @@
+{
+  "artifact": "W13R_FROZEN_COMMANDS_V1",
+  "note": "전부 rev28/src 동결 사본만 실행한다. 절대경로 고정, 문자열 조립 없음, 재시도 없음, 실제 rc/신호/시각을 영수증에 남긴다. GPU 는 단계별 순차(DEME → Rerun → Isaac).",
+  "cwd": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation",
+  "attempt_dir": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/run_01",
+  "prospective_manifest": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/MANIFEST_prospective_rev28.json",
+  "criteria": "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/criteria.json",
+  "step_order": [
+    "step1_simulation",
+    "step2_rerun",
+    "step3_isaac_replay"
+  ],
+  "step_caps_s": {
+    "step1_simulation": 32400,
+    "step2_rerun": 5400,
+    "step3_isaac_replay": 5400
+  },
+  "graceful_grace_s": 1200,
+  "auto_retry": false,
+  "preexisting_attempt_entries_allowed": [],
+  "step1_simulation": [
+    "/home/cgxr/miniconda3/envs/roarm/bin/python",
+    "-B",
+    "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/src/sim_w13_full_cycle.py",
+    "--params",
+    "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/params_w13.json",
+    "--pile",
+    "/home/cgxr/orca/workspaces/RoArm_Project/pellet-model/claudedocs/runtime_logs/pellet_model/pile_lens_20260910/pile_lens6_a4p5_b3p8_c2p5_slab_n20000_seed460.npz",
+    "--out",
+    "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/run_01",
+    "--seed",
+    "460",
+    "--numeric-evidence",
+    "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/numeric_inputs.json",
+    "--max-wall-s",
+    "31200"
+  ],
+  "step2_rerun": [
+    "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+    "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/src/w13_rerun_export.py",
+    "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/run_01"
+  ],
+  "step3_isaac_replay": [
+    "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+    "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/rev28/src/isaac_replay_w13.py",
+    "--run",
+    "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/run_01",
+    "--out",
+    "/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/implementation/run_01/isaac",
+    "--headless",
+    "--enable_cameras"
+  ],
+  "env": {
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "timeout_and_finalization_strategy": {
+    "layer1_sim_soft_cap_s": 31200,
+    "layer1_effect": "sim 이 step 경계에서 _WallCapStop 을 올려 abort_class=WALL_CAP_STOP 으로 부분 원시/JSON/heightmap 을 정상 finalize 한다. diverged 아님, 재시도 없음.",
+    "layer2_runner_hard_cap_s": 32400,
+    "layer2_effect": "러너가 자식 **프로세스 그룹**에 SIGTERM → 1200s 유예 동안 flush 대기 → 남아 있으면 SIGKILL. detached orphan 을 남기지 않는다.",
+    "signal_path": "SIGTERM/SIGINT 은 sim 안에서 플래그만 세우고 DoDynamicsThenSync 밖의 step 경계에서만 예외가 된다(솔버 호출 중 예외 금지). 최대 한 sync 지연.",
+    "always_written": "RUN_STATUS.json 은 계획된 guard abort·신호·예외에서도 finally 로 항상 쓰인다.",
+    "guard_abort": "bridge 사전 인증 실패는 abort_class=CLEARANCE_UNCERTIFIED 로 bridge 첫 물리 step 전에 멈추고, 같은 finalize 경로로 원시/RRD 를 남긴다. 재시도·경로 최적화 없음.",
+    "postprocessing": "Rerun 과 Isaac 후처리는 각각 별도 상한으로 물리 예산 밖에서 순차 실행한다."
+  },
+  "gpu_policy": "DEME 와 Isaac 은 동시에 돌리지 않는다. step_order 순차 실행이 그 계약이다."
+}

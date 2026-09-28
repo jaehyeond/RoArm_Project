@@ -1,0 +1,68 @@
+{
+  "id": "2aed4232-6850-40f1-9f31-8137b380c749",
+  "ok": true,
+  "result": {
+    "runId": "run_49223d0e012d",
+    "deliveryId": "delivery_43ae517bcff2",
+    "messages": [
+      {
+        "id": "msg_3584db9fc886",
+        "run_id": "run_49223d0e012d",
+        "delivery_contract": "current_delivery",
+        "from_handle": "term_fae81138-3b0a-4f44-bcca-81f7aee3e796",
+        "to_handle": "run:run_49223d0e012d",
+        "subject": "alive",
+        "body": "",
+        "type": "heartbeat",
+        "priority": "normal",
+        "thread_id": null,
+        "payload": "{\"taskId\":\"task_51a25be8f310\",\"dispatchId\":\"ctx_2f47d9f99376\",\"phase\":\"investigating\"}",
+        "created_at": "2026-09-18T05:03:33Z",
+        "delivered_at": null
+      },
+      {
+        "id": "msg_8a79bb3c8a09",
+        "run_id": "run_49223d0e012d",
+        "delivery_contract": "current_delivery",
+        "from_handle": "term_7f198b2a-f9a5-4fce-9a44-2bf55831c8fa",
+        "to_handle": "run:run_49223d0e012d",
+        "subject": "alive",
+        "body": "",
+        "type": "heartbeat",
+        "priority": "normal",
+        "thread_id": null,
+        "payload": "{\"taskId\":\"task_7568a44b5303\",\"dispatchId\":\"ctx_f74f3f0cd58f\",\"phase\":\"implementing: step2 rerun export running\"}",
+        "created_at": "2026-09-18T05:09:35Z",
+        "delivered_at": null
+      },
+      {
+        "id": "msg_d1acb96ea361",
+        "run_id": "run_49223d0e012d",
+        "delivery_contract": "current_delivery",
+        "from_handle": "term_76ce9946-ac97-474c-a175-c017e596d372",
+        "to_handle": "run:run_49223d0e012d",
+        "subject": "rev33 producer metadata/receipt/manifest done — AST PASS, 30/30 tests PASS, option default OFF",
+        "body": "rev32 를 바이트 사본한 rev33 을 만들고 생산자 4개 FAIL(②④ 메타데이터 선언, ③ 영수증 stdout/stderr 해시, ⑥ 산출 매니페스트)을 채웠다: src/*.py 24개 중 sim_w13_full_cycle.py 한 개만 수정(23개 + params/numeric_inputs/criteria/COMMANDS 4개 JSON 전부 바이트 동일), 러너 v2 는 run_w19.py + 영수증 2항목뿐이다. AST 범위 검사 PASS(동결 함수 18개 구문 트리 동일·모듈 상수 동일·run() 삭제 0/삽입 5/치환 3), CPU 단위 테스트 30/30 PASS(GPU·DEME 실행 0), --settle-window-frame-dt-s 기본값은 None 이라 저장 프레임 스케줄이 rev32 와 프레임 단위로 완전히 일치함을 rev32/rev33 소스 원문 문장을 실행해 증명했다. 남은 것: 실측 함정 1건 — 4 ms sync 격자에서 0.05 를 요청하면 간격이 0.052 로 나 규약 0.05 상한을 여전히 못 넘으므로 옵션을 켠다면 0.046(=0.05-dt_sync_s) 이하를 써야 한다(테스트로 고정, 값 선택은 사용자 결정 ②(a)); 300알 settle GPU 스모크와 FAIL 2건(정착 cadence·visual_mapping)은 이 범위 밖으로 미충족 기록.",
+        "type": "worker_done",
+        "priority": "normal",
+        "thread_id": null,
+        "payload": "{\"taskId\":\"task_c6f8b2c75026\",\"dispatchId\":\"ctx_0ce5d910ccf2\",\"outcome\":\"succeeded\",\"filesModified\":[\"claudedocs/runtime_logs/grasp_track/w19_runpod_d487/rev33_20260918/ (신규 39파일: rev33/src 24 + rev33/{REVISION_PIN.json\",\"DIFF_rev32_to_rev33_src.patch\",\"4 frozen JSON} + rev33/checks/ast_scope_check.{py\",\"json} + runner/{run_w19_v2.py\",\"DIFF_run_w19_to_v2.patch} + tests/{test_rev33_producer_metadata.py\",\"run_tests.py\",\"RESULTS_rev33_tests.json} + REPORT_rev33.md + manifest.json)\"],\"reportPath\":\"/home/cgxr/orca/workspaces/RoArm_Project/w19-rev33/claudedocs/runtime_logs/grasp_track/w19_runpod_d487/rev33_20260918/REPORT_rev33.md\"}",
+        "created_at": "2026-09-18T05:10:39Z",
+        "delivered_at": null
+      }
+    ],
+    "count": 3,
+    "replayed": false,
+    "acknowledged": null,
+    "timedOut": false,
+    "cancelled": false,
+    "connectionLost": false,
+    "mutation": {
+      "requestId": "ccc9981e-adf9-40ef-8170-26320b453c7c",
+      "replayed": false
+    }
+  },
+  "_meta": {
+    "runtimeId": "471edc31-a026-466b-b60c-0c8e6cfb9fcc"
+  }
+}

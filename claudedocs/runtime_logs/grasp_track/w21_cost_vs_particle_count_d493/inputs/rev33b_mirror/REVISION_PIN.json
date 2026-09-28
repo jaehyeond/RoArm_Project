@@ -1,0 +1,126 @@
+{
+  "artifact": "W20_REV33B_REVISION_PIN_V1",
+  "revision": "rev33b",
+  "derived_from": "rev33 (바이트 사본) + 새 criteria 파일 + 정착 창 옵션의 값 출처 변경",
+  "rev33_dir": "/home/cgxr/orca/workspaces/RoArm_Project/w19-rev33/claudedocs/runtime_logs/grasp_track/w19_runpod_d487/rev33_20260918/rev33",
+  "rev32_dir": "/home/cgxr/orca/workspaces/RoArm_Project/w16-profiling/claudedocs/runtime_logs/grasp_track/w16_profile_d486/rev32",
+  "utc": "2026-09-19T02:49:47Z",
+  "legal_route": "policy.no_threshold_change_after_outcomes(hard_fail) 의 boundary 가 지정한 경로 = 새 revision + 새 criteria 파일 + 코디네이터 검토. 기존 criteria 를 고치지 않았다.",
+  "purpose": "정착 창 기록 간격 요청값을 4 ms 동기 격자의 정확한 배수(0.044 = 11 x dt_sync)로 정정해 요청과 실제가 같아지게 하고, 그 값을 코드가 아니라 동결 criteria 가 쥐게 한다.",
+  "n_files": 33,
+  "changed_vs_rev33": {
+    "DIFF_rev33_to_rev33b_criteria.patch": {
+      "rev33": null,
+      "rev33b": "c1e7b93da39bf8dd7168e914862bafaaecf281f1ad7d7755ae14e3c3df556ac3",
+      "note": "rev33b 신규"
+    },
+    "DIFF_rev33_to_rev33b_src.patch": {
+      "rev33": null,
+      "rev33b": "32b047f5ea13478f3816f3c83a5d06f2e45300fbd6eec788494e4f8476ba3801",
+      "note": "rev33b 신규"
+    },
+    "checks/ast_scope_check.json": {
+      "rev33": "ff17a248fbfc6c37d70a7d2add69947af7095a799ff6f29d72a02c3f2f3c4ee7",
+      "rev33b": "14209ebea3a117f0d84ec76bb7e5836dd8205efe53070083000d5ea74e241c89"
+    },
+    "checks/ast_scope_check.py": {
+      "rev33": "29ee818ed1fdaa7ce8b9cae9a98c67d522d71935ab7d6e063f4dfa1273f7eb24",
+      "rev33b": "ff4a8e26d1cb02e6b41cc244e524704ed79c97259e6235dc806d210ac2594808"
+    },
+    "criteria.json": {
+      "rev33": "71a7d23938a341c2689b570fa5a1e9bec74b7b3392f754ca55f61e7edd646196",
+      "rev33b": "8a233b3b320fa9159785ad4e5a173d7167a788ab1c95da33e8d8d475eedef18b"
+    },
+    "src/sim_w13_full_cycle.py": {
+      "rev33": "55148c12cd1838025c3cf5846cc184c270bf6a1afb8be2e268572ab896fc763a",
+      "rev33b": "a386a6856de7646f171bee939a629801efe0d17140e3ad43502ed803118c498c"
+    }
+  },
+  "excluded_from_scan": [
+    "REVISION_PIN.json (자기 자신). rev33 원본과 다르며 해시는 manifest.json 에 있다"
+  ],
+  "files_identical_to_rev33": [
+    "COMMANDS.json",
+    "DIFF_rev32_to_rev33_src.patch",
+    "numeric_inputs.json",
+    "params_w13.json",
+    "src/arm_link_bounds.py",
+    "src/bridge_clearance_guard.py",
+    "src/bridge_clearance_guard_audit_original.py",
+    "src/bridge_inputs.py",
+    "src/bridge_numerics.py",
+    "src/camera_framing.py",
+    "src/close_diagnostics.py",
+    "src/compare_wall_regression.py",
+    "src/derive_v2.py",
+    "src/freeze_manifest.py",
+    "src/inventory_geometry.py",
+    "src/isaac_replay_w13.py",
+    "src/preflight_geometry.py",
+    "src/preflight_rigid_hinge.py",
+    "src/preflight_snapshot.py",
+    "src/raw_row_identity.py",
+    "src/raw_transitions.py",
+    "src/readiness_launcher.py",
+    "src/run_production.py",
+    "src/verify_w13_self.py",
+    "src/w13_fk.py",
+    "src/w13_kinematics.py",
+    "src/w13_rerun_export.py"
+  ],
+  "criteria_change": {
+    "threshold_values_changed": 1,
+    "path": "thresholds[id=delivery.settlement_window_UNCALIBRATED].value.frame_dt_s",
+    "old": 0.05,
+    "new": 0.044,
+    "decision_trail": "1차 후보 0.046(= 0.05 - dt_sync) -> 워커가 '최대 간격 <= 0.046 은 격자에서 도달 불가(실제 0.048)' 를 escalate -> 코디네이터가 0.044(= 11 x dt_sync) 결정. origin 에 두 단계가 모두 남아 있다.",
+    "also_changed": [
+      "같은 항목의 origin(기존 문장 뒤에 변경 근거 덧붙임)",
+      "최상위 revision rev11 -> rev33b",
+      "최상위 신규 supersedes_criteria_sha256 / retroactive:false"
+    ],
+    "unchanged": [
+      "window_s 0.25",
+      "speed_max_m_s 0.005",
+      "move_max_m 0.001",
+      "severity uncalibrated_report_only",
+      "operator <=",
+      "runner.physics_wall_cap_s 32400",
+      "runner.sim_soft_wall_cap_s 31200",
+      "policy.no_threshold_change_after_outcomes 항목 전체",
+      "나머지 threshold 44건 전부"
+    ],
+    "retroactive": false,
+    "superseded_sha256": "71a7d23938a341c2689b570fa5a1e9bec74b7b3392f754ca55f61e7edd646196",
+    "new_sha256": "8a233b3b320fa9159785ad4e5a173d7167a788ab1c95da33e8d8d475eedef18b"
+  },
+  "physics_params_changed": 0,
+  "control_or_guards_changed": 0,
+  "classification_predicate_changed": 0,
+  "timestep_or_cd_update_freq_or_seed_changed": 0,
+  "saved_frame_contract_changed_by_default": false,
+  "new_cli_flags": [
+    "--criteria (기본값 = 이 revision 의 criteria.json)",
+    "--settle-window-frame-dt-s 가 값 인자 -> store_true 플래그로 (값은 criteria 가 정함)"
+  ],
+  "new_metadata_fields": [
+    "settle_window_frame_dt_source",
+    "settle_window_criteria_sha256"
+  ],
+  "cpu_checks": {
+    "ast_scope_check": "PASS",
+    "unit_tests": "57/57 PASS (상속 30 + 신규 27)"
+  },
+  "gpu_used": false,
+  "deme_imported": false,
+  "physics_executed_with_rev33b": false,
+  "smoke_status": "NOT_RUN — 사용자 GO 뒤 별도 과제(GPU_SMOKE_PACKAGE.md)",
+  "promotion_status": "NOT_PROMOTED — 정본 승격은 GPU 스모크 + 사용자 승인 뒤",
+  "frozen_copies_sha256": {
+    "rev32/criteria.json": "71a7d23938a341c2689b570fa5a1e9bec74b7b3392f754ca55f61e7edd646196",
+    "rev32/params_w13.json": "95101f8b799518f83a0d8a0004057e50ea01120b66681334a9911a7e5fa7e661",
+    "rev33/criteria.json": "71a7d23938a341c2689b570fa5a1e9bec74b7b3392f754ca55f61e7edd646196",
+    "rev33/src/sim_w13_full_cycle.py": "55148c12cd1838025c3cf5846cc184c270bf6a1afb8be2e268572ab896fc763a",
+    "rev33b/src/sim_w13_full_cycle.py": "a386a6856de7646f171bee939a629801efe0d17140e3ad43502ed803118c498c"
+  }
+}

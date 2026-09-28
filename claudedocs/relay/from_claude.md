@@ -4,49 +4,36 @@
 - **쓰는 쪽 = Claude 세션 하나.** 읽는 쪽 = 다음에 이 repo 를 여는 **다른 도구**. Claude 연속이면 `START_HERE.md` 로 재개.
 - **덮어쓰기.** 상태 정본 = `START_HERE.md`(여기 안 베낌). 규칙 = `AGENTS.md`. 여기엔 만진 것·만지지 말 것·함정·승인 대기만.
 
-## §2 2026-09-11 Claude(80th~81st) → Codex — S1 sim 정합 + 펠릿 실측 + PID 조사 + W10 미완
+## §2 2026-09-28 밤 Claude(W25) → Codex/Cursor
 
-### 🔴 0. 지금 당장 막힌 것 — GPU (재부팅 전 DEME·Isaac 전부 불가)
-`nvidia-smi` = `Failed to initialize NVML: Driver/library version mismatch`. apt 자동 업그레이드로 유저스페이스 **580.178.04**, 로드된 커널 모듈 **580.173.02**(`/proc/driver/nvidia/version`). 새 프로세스 CUDA 전멸(DEME `forward compatibility…`, torch error 804). **재부팅 필요.** 재개 첫 명령은 `nvidia-smi` 정상 확인.
+**한 일 (repo에 남은 변경, 전부 미커밋)**
+- 새 세션 문서 `claudedocs/session_20260928_w25_realign_fullcycle_prep.md` · `START_HERE.md` overwrite(백업 `START_HERE.md.bak_20260928_pre_w25`) · `DECISIONS.md` **D498 append**(앞부분 md5 불변 실측, 백업 `.bak_20260928_pre_d498`) · `DECISIONS_ACTIVE.md`·`LEDGER_RECENT.md` 갱신 · `EXPERIMENT_LEDGER.md` 1행 append · 이 relay.
+- 새 case 폴더 `claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/coordinator/`(과제서 3 + worker_start 영수증). rev34 산출은 **워커 worktree** `w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/`(미merge).
+- Orca worktree 신규 5개(`w25-rev34-fullcycle`·`w25-render-cad`·`w25-pile-runpod-plan`·`w25-pile-flat40`·`w25-dt-basis`, HEAD fc557db, 산출 `claudedocs/research/w25_*_20260928/`) — 전부 미merge, 워커 release(Run `run_d0eba99ce41b`).
+- 랩미팅 자료: 슬라이드 v5(11장, `gripper_note` 추가), `claudedocs/research/labmeeting_20260929/{OUTLINE.md, lab_pc_bundle/LAB_PC_UPDATE_20260928.md, lab_pc_bundle/figures/08_gripper_shell_vs_cad.png, lab_pc_bundle_20260928b.zip}`.
+- worktree 보관 **완료**: W23 7 + W24 3 → SSD `orca_worktree_archive/RoArm_Project/<이름>`(전량 SHA 대조·태그 `archive/<이름>`=3267dcb·bundle·`orca-ide worktree rm`·원경로 심링크·재대조, `ARCHIVE_INDEX.md` 10행). 남은 실제 worktree 15(메인 + 14). 총 보관 28. `w23-sim-reference` 잔류 Codex 터미널 종료. auto-memory `MEMORY.md` 회전(`MEMORY_archive_20260928.md`).
 
-### 1. 이어서 할 일 (1순위)
-**W10 = 렌즈 클럼프 더미에서 "문을 서보 토크 정지까지 닫기" 발산 해결.** 지시서 한 장에 전부 정리돼 있다:
-`claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix/RESUME_W10_20260911.md` ← **이것부터 읽어라.**
-요약: ① 진단 완료(기작 = 뺨 틈 안 렌즈 클럼프 3개 기둥의 **구–구 진동 자기증폭**, 유령 접촉 아님) · ② 폐합 22.5°/s 발산 · ③' **dt 2e-6 만**(E 유지) 이 다음 차례이고 params 파일까지 준비됨 · 실행기 `run_w10b.sh DE_dt2e6_c 14400`. 🔴 강성 상향은 감쇠 `c ∝ √k` 때문에 판별력이 낮다 — dt 가 손잡이.
+**만지지 말 것**
+- 워커 worktree 5개(`w25-{rev34-fullcycle,render-cad,pile-runpod-plan,pile-flat40,dt-basis}`) 산출·rev34 사본 — merge 금지. `rev32_frozen_copy/` 무수정 유지.
+- 기존 `isaac_replay_w13.py`(post04)·`w13_rerun_export.py` 원본 — post05 는 B 워커 폴더의 사본.
 
-### 2. 만진 것 (전부 미커밋, 79th 분 포함)
-- **신규 스크립트**: `sim_isaac_render_deme_scoop.py`(W9 렌더), `sim_deme_s1_diverge_min.py`(W3b 최소재현). `compose_roarm_s1_urdf.py` 에 `--tag` + 무관성 링크 미소 inertial 주입, `sim_deme_scoop_s1.py` 에 클럼프 npz·전후 heightmap·절단면 각·렌더 타임라인·물림 가드·문 하한(전부 params 게이트, diff 는 각 워커 폴더).
-- **신규 자산**: `local_assets/roarm_m3/{urdf/roarm_m3_s1_v1.urdf, usd_s1_v1/}`(실물 v1 형상, 가짜 질량 제거판).
-- **신규 산출 폴더**: `claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/{w1_usd_v1, w2_env_replay, w3_deme_scoop, w8_deme_scoop_lens, w9_isaac_render_deme, w10_deme_close_fix}/`, `claudedocs/research/survey_20260910/`, `claudedocs/runtime_logs/pellet_model/pellet_measured_20260910.json`.
-- **문서**: `docs/reference/servo_pid_st3215.md` 신규 · `docs/reference/hardware.md` T:107 오기 2곳 정정 · `AGENTS.md` 참조표 1행 추가 · `hw_s1_manual.py` 에 `weigh`/`mass` 명령 추가(백업 `.bak_20260907_pre_weigh`).
-- **다른 워크트리**(`~/orca/workspaces/RoArm_Project/pellet-model`, 브랜치 `jaehyeond/pellet-model`, 미커밋): `sim_pellet_model.py` 에 flat3·lens 클럼프 + `--measured-pellet a b c rho`, `sim_deme_pile.py` 에 `--shape lens` 경로. 산출 `claudedocs/runtime_logs/pellet_model/{planar_20260909, lens_20260910, lens_sweep_20260910, pile_lens_20260910}/`.
+**함정**
+- 🔴 **재생 화면의 툴 = 충돌 셸(보울+캡)**, USD 의 S1 v1 문 CAD(`gripper_link`)는 post04 의 `gripper` 이름 필터가 숨김(주석 "순정 그리퍼"는 오기). 고정부 CAD(`grab_fixed`)는 보임. post05(B 초안)는 둘 다 숨기고 `/World/s1_cad/*` 를 원시 포즈로 그림.
+- 🔴 **시뮬 상자 = 22 cm 벽이 로봇 쪽**(W19 `t_robot (0.350, −0.008, −0.283)`, 로봇이 상자 31 cm 축 위). `w13_kinematics.py:10-16` "(0,+R)" 도크스트링은 낡음. 실물 = 31 cm 벽.
+- 🔴 4 cm 평평한 층 전체 사이클(현재 종이 상자 310×220 = 61,408~74,067알)은 **15.0~26.4 h** → 현행 cap 32,400 s 로는 기동 불가. cap 은 새 revision·criteria 에서 결과 전에 정한다. 생성기 시드 여백 하한 = 알 외접 지름(4.5 mm) → `--seed-margin-mm 4.6`.
+- 🔴 종이 상자 벽(230 mm)이 바닥판보다 9.6 cm 높아 운반 높이(립 45 cm)가 벽 윗단보다 22 mm 위뿐 — `travel_cm` 상향은 사용자 결정. RunPod 랩 계정엔 타인 pod 7개(RUNNING 1) — 절대 조작 금지.
+- slab 생성기 가장자리 여백 13.5 mm/변(`sim_deme_pile.py:435,446-470`) → `--target-depth-m` 만으로 전면 평탄층 보장 안 됨. 부트스트랩 v5 는 W19 경로 하드코딩.
+- 워커 Claude Code 가 "Auto mode is unavailable(safety verdict 없음)" 로 턴을 끝내면 `orca-ide orchestration send --from <코디 handle> --to dispatch:<id>` 로 깨울 수 있다. `send`·`worker-start`·`run-create` 는 `--from` 필수(비-Orca 터미널), `worker-start` 에 `--no-parent` 없음.
+- Codex 0.158.0 = npm 최신(09-28 22시) → 업데이트 안내 없음. 이후 새 버전이 나오면 W22 함정 재발 가능.
 
-### 3. 만지지 말 것
-`s1_v0*/`·g18 이하 동결 · `sim_deme_scoop.py`(구 트랙 보호) · 기존 산출 npz·JSON · `s1_v1_real/manual_positions.json`·`mass_log.jsonl`(사용자 데이터) · DK 원본 프로필 · **원장(배타 소유, 아래 §6)**.
+**승인 대기**
+- ① 로컬 GPU: post05 로 W19 A 재렌더(≈8 분, B REPORT §6 명령) ② 로컬 GPU: 40 mm 층 더미 생성(D `pile_generation_commands.md`, `--seed-margin-mm 4.6`) ③ RunPod: rev34 전체 사이클(부피밀도·cap ≥32 h·비용 상한·기동 시각·C4/travel_cm 결정; 우리 pod `roarm_w25_*` 만) ④ 옛 브랜치 4개 삭제 여부 ⑤ 실물 실측(알 질량·상자 안쪽 치수·벽 높이 안/바깥). dt 사다리 GPU 는 사용자 보류.
 
-### 4. 🔴 함정 (이번 세션 실측)
-1. **Isaac URDF 임포터는 inertial 없는 링크에 기본 질량 1.0 kg 을 준다** — `hand_tcp` 에 실려 어깨 중력 모멘트가 11~14배 부풀었다. D478 의 "팔 토크 8.0 N·m 필요"가 이것 때문이었다(실물 1.96 으로도 파지 성공). v1 경로는 미소 inertial 주입으로 해결.
-2. **DEME 는 실행 간 비결정**이다(같은 입력·무수정 코드로 포획 273/301/315개). "개수 동일" 을 회귀 게이트로 쓰면 안 된다 → 허용 범위(±15 %)로.
-3. **렌즈 클럼프 = 가볍고 납작** → 좁은 틈에서 구–구 진동이 명시적 적분 한계에 걸린다(위 §1). 구 4.16 mm 에서는 안 보이던 문제.
-4. **T:107 그리퍼 토크 상한은 EPROM 아닌 SRAM 48번(휘발)** 이고, 소스 0.84 기준 부팅 완료 시 상한은 1000 이 아니라 **300**(`ino:146`). hardware.md 정정 완료.
-5. **서보 과부하 보호**(출력 80 % 초과 2 s → 20 % 강하)가 닫힘 상한 900(=90 %) 스톨에서 걸릴 수 있다 → 실물 되열림 1~1.6° 의 후보 원인. 내일 900 vs 790 비교 예정.
-6. **Orca 코디네이터 바인딩이 조용히 풀린다**(`consumer_fenced`). 그 상태의 `orchestration check --peek` 는 오류 없이 count 0 을 준다 → 워커 질문 2건을 놓쳤다. 확인 전 `run-current` → 없으면 `run-use --id <run>`.
-7. 근접 RTX 렌더 검정면(D480) 미해결 → 카메라 1 m 이상. 반투명 재질은 headless RTX 에서 cutout 으로만 동작(W9 는 x-ray 로 우회).
-
-### 5. 승인 대기 / 다음 (사용자 결정 사항)
-① **로봇 부팅 체크리스트**(09-10 사용자 합의, 오늘 예정): 펌웨어 버전·`tG` 유무 → PID 적용 행동실험(P 8↔48) → 닫힘 상한 900 vs 790 되열림 → `weigh 5` 회당 질량. 상세 = auto-memory `project_next_robot_boot_checklist.md`.
-② 실물 각도 3종(부은 각·렛지 각·한 입 뒤 절단면 각) 측정 → 차이 ≤ 3° 면 부은 각만으로 충분(R1 E1).
-③ 조사 결론 반영(R1·R2): 초기 상태 = **벽 있는 상자에 평평하게 가득**, 베이스라인 = **최고점 + 층·열 진행 휴리스틱**, 실패 정의 = 산업 목록(빈 그랩·저충진·흘림·매몰·충돌), 재료 보정은 부은 각 **단독 금지**.
-④ 스쿱 더미 크기: 20,000알 채택 여부(실물 18만 알은 정착 2 h·스쿱 2 h/회로 비현실).
-
-### 6. 원장 상태 (중요)
-80th·81st 작업분은 **아직 원장에 등재되지 않았다**. `DECISIONS.md` 최신 = D481(79th), `EXPERIMENT_LEDGER.md` 최신 = `:544`(79th). `START_HERE.md` 는 2026-09-11 에 81st 상태로 갱신했다(이 relay 와 같은 세션). 등재(Dxxx append·LEDGER 행·session_*.md)는 **W10 이 결론 난 뒤** 한 세션이 몰아서 하는 것을 권한다. 그때까지 다른 도구는 원장을 쓰지 말 것.
-
-### 7. 검증
+**검증 방법**
 ```
-nvidia-smi                                                     # 표가 나와야 GPU 작업 가능
-sed -n '1,40p' claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w10_deme_close_fix/RESUME_W10_20260911.md
-ls claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/     # w1_usd_v1 … w10_deme_close_fix
-grep -n '^## D481' claudedocs/DECISIONS.md                     # 30140 (그 뒤로 append 없음)
-~/miniconda3/envs/roarm/bin/python -c "import json;d=json.load(open('claudedocs/runtime_logs/pellet_model/pellet_measured_20260910.json'));print(d['pellet_dimensions']['a_mm'],d['pellet_dimensions']['c_mm'])"
+cd /home/cgxr/Documents/Robotics/RoArm_Project
+grep -n '^## D498' claudedocs/DECISIONS.md
+git tag -l 'archive/w2[34]-*' | wc -l                          # 10
+ls /media/cgxr/ROBOT_DEV/orca_worktree_archive/RoArm_Project/_plan_20260928_w2[34]-*/bundle_verify.txt | wc -l   # 10
+/home/cgxr/miniconda3/envs/roarm/bin/python -B /home/cgxr/orca/workspaces/RoArm_Project/w25-pile-runpod-plan/claudedocs/research/w25_pile_runpod_plan_20260928/budget_w25.py --check   # PASS
 ```

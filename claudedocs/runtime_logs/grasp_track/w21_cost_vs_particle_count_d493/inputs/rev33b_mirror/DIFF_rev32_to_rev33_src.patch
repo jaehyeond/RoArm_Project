@@ -1,0 +1,119 @@
+--- /home/cgxr/orca/workspaces/RoArm_Project/w16-profiling/claudedocs/runtime_logs/grasp_track/w16_profile_d486/rev32/src/sim_w13_full_cycle.py	2026-09-17 01:51:23.145024378 +0900
++++ rev33/src/sim_w13_full_cycle.py	2026-09-18 14:07:47.862070605 +0900
+@@ -128,6 +128,9 @@
+     M_stall = P["servo_torque_Nm"] * P["servo_torque_fraction"]
+     v_t = P["transport_speed_mm_s"] / 1000.0
+     pf_dt = float(P["particle_frame_dt_s"])
++    # rev33 옵션(기본 OFF). None 이면 저장 프레임 규약이 rev32 와 **완전히 동일**하다.
++    settle_pf_dt = (float(a.settle_window_frame_dt_s)
++                    if getattr(a, "settle_window_frame_dt_s", None) else None)
+     v_settle = 9.81 * dt                      # 한 제어 sync 동안 중력이 주는 속도 — 정착 판정의 독립 근거
+ 
+     # ── 입력 ────────────────────────────────────────────────────────────────
+@@ -453,7 +456,11 @@
+         # 실제 owner 쿼터니언을 분류에 **전달**한다(예전엔 저장만 하고 쓰지 않았다).
+         oq_now = None if tpl is None else np.asarray(s.GetOwnerOriQ(0, n_p), float)
+         PF["inv"].append(classify(pp, vv, oq_now, p_fa, R_fa))
+-        state["next_pf"] = (math.floor(t_now / pf_dt + 1e-9) + 1) * pf_dt
++        # rev33: settle_pf_dt 가 None 이면 _pf_dt_now is pf_dt → rev32 와 같은 스케줄.
++        # 지정 시에만 **마지막 phase(정착 창이 들어 있는 return_home)** 안에서 촘촘해진다.
++        _pf_dt_now = (settle_pf_dt if (settle_pf_dt is not None and state["phase"] == PHASES[-1])
++                      else pf_dt)
++        state["next_pf"] = (math.floor(t_now / _pf_dt_now + 1e-9) + 1) * _pf_dt_now
+         return len(PF["t"]) - 1
+ 
+     def decision(name):
+@@ -1219,14 +1226,12 @@
+             "particle_frame_rows_deduplicated": False,
+             "same_sync_decision_rows_are_intentional": True,
+             "classify_margin_m": P["classify_margin_mm"] / 1000.0,
+-            # 분류 기하 규약 — **중심점이 아니라 회전된 구체 전체**. 감사 RAW_CALLSITE_REVIEW_01.
+-            "classify_geometry_basis": "oriented_clump_all_spheres",
+-            "classify_spheres_per_clump": int(k_sph),
+-            "classify_sphere_expansion": "p_sphere = p_owner + R(owner_quat_xyzw) @ offset_m (clump-major)",
+-            "classify_owner_quat_source": "GetOwnerOriQ(0, n_p) at the same particle frame",
+-            "classify_inside_rule": "all spheres strictly inside by margin, center distance +/- sphere radius",
+-            "classify_boundary_rule": "any single sphere overlaps the margin band -> ambiguous",
+-            "classify_spill_basis": "max(sphere_center_z + sphere_radius) <= spill_rest_z_m",
++            # rev33: 분류 의미 선언을 **판정식 정본 모듈에서 그대로** 받아 쓴다(문자열 사본 금지).
++            # rev32 는 같은 값을 여기 하드코딩했고, 그래서 ERRATUM_04 가 요구하는
++            # classify_floor_rule·classify_contract_version 두 선언이 원자료에서 빠졌다
++            # (1단계 검사 erratum04_floor_rule_declarations_in_raw_metadata FAIL).
++            # semantics_metadata() 는 rev31/rev32 inventory_geometry.py 와 바이트 동일한 함수다.
++            **IG.semantics_metadata(k_sph),
+             "overlap_priority": "tool > near_tool > bin > near_bin > source > near_source > in_flight > spill",
+             "velocity_severity": {"warning_m_s": P["pop_speed_m_s"], "warning_operator": ">",
+                                   "hard_stop_m_s": P.get("diag_stop_v_m_s"), "hard_stop_operator": ">"},
+@@ -1258,12 +1263,60 @@
+                                      "같은 행이 아니라 **다음 sync 의 벽시계 차분**에 들어간다. 크기는 "
+                                      "scalar_engine_query_wall_s 로 직접 잰다."),
+                 "not_a_scientific_result": "이 배열들은 비용 관측이다. 포획량·배출량 판정에 쓰지 않는다."},
++            # rev33: 규약 RAW_SCHEMA_REQUIRED.md:71-72 이 이름으로 요구하는 두 필드.
++            # 값은 **기존 코드의 실제 매핑/여유**에서만 끌어온다 — 새 상수를 만들지 않는다.
++            "time_mapping_abs_s": {
++                "formula": "t_abs_s = offset_s + scale * sync_t_s",
++                # 부분 원시 finalize 경로에서도 절대 예외를 내지 않는다(빈 타임라인이면 None).
++                "offset_s": (float(D["t"][0]) if D["t"] else None),
++                "scale": 1.0,
++                "offset_source": ("row 0 = record_t0() 의 dts=0 기록행. 그 행의 sync_t_s 를 그대로 옮긴 값이며 "
++                                  "상수로 적어 넣지 않았다."),
++                "unit": "simulated seconds (SI), 절대 누적 경과시간",
++                "authority_array": "sync_t_s (unrounded binary64 float(s.GetSimTime()))",
++                "particle_frame_rule": "t_abs_s(particle_frame_row r) = particle_frame_t_s[r]",
++                "phase_rule": "phase(row i) = phase_order[sync_phase_code[i]]",
++                "not_wall_clock": ("sync_wall_elapsed_s 는 실행 벽시계이지 시뮬 시간이 아니다. "
++                                   "두 축을 섞지 않는다.")},
++            "geometry_epsilon_m": P["definite_geom_eps_mm"] / 1000.0,
++            "geometry_epsilon_m_source": ("동결 params 의 definite_geom_eps_mm / 1000 "
++                                          "(oriented 7-구 definite 판정의 양의 여유). "
++                                          "분류 밴드 여유는 별도 필드 classify_margin_m 이다."),
++            # rev33 저장 프레임 옵션 선언 — 기본 None 이면 rev32 와 저장 규약이 같다.
++            "settle_window_frame_dt_s": settle_pf_dt,
++            "settle_window_frame_dt_rule": (
++                "None = rev32 규약(전 구간 particle_frame_dt_s). 값이 있으면 마지막 phase "
++                f"'{PHASES[-1]}' 안에서만 그 간격으로 저장한다. 물리·제어·보호선·dt 는 불변."),
+             "numeric_receipt": BR.dump_json_safe(bridge_static["numeric_receipt"]),
+             "note": "원시 배열이 과학 정본. RRD/영상은 관측층."}, ensure_ascii=False))
+     json.dump(res, open(out / f"w13_cycle_{tag}.json", "w"), ensure_ascii=False, indent=2)
+-    flush("diverged" if diverged else (abort_class.lower() if abort_class
+-                                      else ("stopped_early" if stopped_early else "complete")))
++    run_state = ("diverged" if diverged else (abort_class.lower() if abort_class
++                                             else ("stopped_early" if stopped_early else "complete")))
++    flush(run_state)
+     W11SRC.plot_heightmaps(out, tag, spec, hm_pre, hm, crater, (x_s, y_s))
++    # rev33: 규약 RAW_SCHEMA_REQUIRED.md:105-107 산출 매니페스트. 모든 산출의 경로·바이트수·SHA-256 을
++    # **생산자가 종료 직전에** 남긴다(1단계 검사 final_manifest_path_bytes_sha256_for_every_output FAIL).
++    # 자기 자신은 제외한다 — 쓰는 순간 해시가 달라지기 때문이다.
++    _man_path = out / "manifest.json"
++    _man_files = sorted(q for q in out.rglob("*") if q.is_file() and q != _man_path)
++    json.dump({"artifact": "W13_RUN_OUTPUT_MANIFEST_V1", "run_dir": str(out), "tag": tag,
++               "utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
++               "producer": {"file": str(HERE / "sim_w13_full_cycle.py"),
++                            "sha256": sha256_full(HERE / "sim_w13_full_cycle.py")},
++               "n_files": len(_man_files),
++               "excluded": ["manifest.json (자기 자신)"],
++               "files": {str(q.relative_to(out)): {"bytes": q.stat().st_size, "sha256": sha256_full(q)}
++                         for q in _man_files},
++               # 규약 :106 — 마감/전체사이클 커버리지와 **과학적 배출 판정**을 명시적으로 분리한다.
++               "finalization_state": run_state,
++               "full_cycle_reached": bool(run_state == "complete"),
++               "scientific_delivery_verdict": "NOT_ASSERTED_BY_PRODUCER",
++               "scientific_delivery_verdict_note": ("생산자는 마감 사실만 기록한다. 배출 성공 여부는 "
++                                                    "정착 창 규약 검사와 독립 감사가 판정한다."),
++               "settlement_cadence_ok_reported": bool(settle_report.get("cadence_ok")),
++               "abort_class": abort_class, "diverged": bool(diverged),
++               "stopped_early": stopped_early},
++              open(_man_path, "w"), ensure_ascii=False, indent=2)
+     print(f"\n확정 배출 {definite} 개 = {definite*m_p*1000:.4f} g · 가능 상한 {possible} 개 "
+           f"· 최종 재고 {inv_counts(code_final)} · 물리시간 {float(s.GetSimTime()):.4f} s "
+           f"· sync {len(D['t'])} · 입자프레임 {len(PF['t'])} · 벽시계 {wall:.1f} s · 발산 {diverged} "
+@@ -1283,6 +1336,9 @@
+     ap.add_argument("--numeric-evidence",
+                     help="설치본 정적 재구성 수치 증거 JSON(l/voxelSize/좌표상한). **물리 파라미터 아님**. "
+                          "없으면 위치 격자 항이 증명 불가라 bridge 인증이 fail-closed 된다")
++    ap.add_argument("--settle-window-frame-dt-s", type=float, default=None,
++                    help="rev33 옵션(기본 OFF). 지정하면 **마지막 phase(return_home)** 안에서만 입자 프레임을 "
++                         "이 간격(초)으로 저장한다. 물리·제어·보호선·dt·경로 변경 0. 미지정 시 rev32 와 동일.")
+     ap.add_argument("--max-wall-s", type=float,
+                     help="소프트 벽시계 상한(초). 넘으면 step 경계에서 우아하게 멈추고 원시를 finalize 한다. 연장·재시도 없음")
+     run(ap.parse_args())

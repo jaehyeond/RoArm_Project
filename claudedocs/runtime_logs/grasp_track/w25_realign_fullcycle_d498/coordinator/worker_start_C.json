@@ -1,0 +1,90 @@
+{
+  "id": "0a20d8e5-3c9b-423e-87cd-a3894bc2d534",
+  "ok": true,
+  "result": {
+    "runId": "run_d0eba99ce41b",
+    "taskId": "task_a50f0c339e59",
+    "dispatchId": "ctx_c78bf2b41320",
+    "state": "ready",
+    "stage": "input_accepted",
+    "setup": {
+      "requested": "skip",
+      "effective": "skip",
+      "source": "explicit_request",
+      "hookFound": false,
+      "startupPolicy": "start-immediately",
+      "state": "not_configured"
+    },
+    "launch": {
+      "requested": {
+        "agent": "codex",
+        "model": "gpt-6-astra",
+        "effort": "high"
+      },
+      "effective": {
+        "agent": "codex",
+        "model": "gpt-6-astra",
+        "effort": "high"
+      }
+    },
+    "mode": {
+      "mode": "terminal",
+      "preferred": "terminal",
+      "reason": "user_default",
+      "detail": "Started a terminal agent worker, the default for new agent tabs in your settings."
+    },
+    "timeoutMs": 60000,
+    "effects": [
+      {
+        "kind": "worktree",
+        "action": "created_top_level",
+        "id": "6d4cecac-f639-434b-be40-367d6257f9f2::/home/cgxr/orca/workspaces/RoArm_Project/w25-pile-runpod-plan"
+      },
+      {
+        "kind": "terminal",
+        "role": "agent",
+        "action": "reused_agent_terminal",
+        "id": "term_b5695a43-b9c7-4a18-9b00-a373b1c6a728",
+        "tabId": "03c0ed62-7365-43da-97f0-bd83ecffc589",
+        "leafId": "67363e4f-03aa-4faa-b6df-cae406d8ba4f"
+      },
+      {
+        "kind": "setup",
+        "action": "skip",
+        "requested": "skip",
+        "effective": "skip",
+        "source": "explicit_request",
+        "hookFound": false,
+        "startupPolicy": "start-immediately",
+        "state": "not_configured"
+      },
+      {
+        "kind": "dispatch_input",
+        "role": "agent",
+        "id": "term_b5695a43-b9c7-4a18-9b00-a373b1c6a728",
+        "state": "accepted"
+      }
+    ],
+    "prompt": {
+      "requestId": "a1d18db2-bd23-425e-86ff-505ab4b43ce4",
+      "stages": [
+        "input_accepted"
+      ],
+      "provider": "codex",
+      "observation": "supported",
+      "processIncarnation": "eea9b53f-23c0-4719-8ca2-997f03518281",
+      "generation": 7,
+      "baselineWorkingSequence": 1,
+      "baselineExplicitWorkingStartedAt": null,
+      "baselinePermissionSequence": 0
+    },
+    "residualResources": [],
+    "mutation": {
+      "requestId": "a1d18db2-bd23-425e-86ff-505ab4b43ce4",
+      "replayed": false
+    }
+  },
+  "_meta": {
+    "runtimeId": "01571699-7908-4cf3-95ae-7ec06e7c7594"
+  }
+}

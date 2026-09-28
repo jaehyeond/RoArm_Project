@@ -1,0 +1,54 @@
+--- /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w19_runpod_d487/pod/run_w19.py	2026-09-17 15:11:36.441138474 +0900
++++ runner/run_w19_v2.py	2026-09-18 14:01:00.112127368 +0900
+@@ -1,6 +1,12 @@
+ """W19 pod 러너 — COMMANDS_w19.json 의 argv 를 **그대로** 실행하고 rc/시각/신호를 영수증에 남긴다.
+ W16 run_w16.py 의 계약을 그대로 옮기고 두 가지만 바꿨다: (1) 해시 대조 대상 = BUNDLE_MANIFEST.json 전체,
+ (2) step 이름은 COMMANDS 의 키. 재시도 0 · 기존 attempt 덮어쓰기 거부 · 자식은 자기 세션(setsid) · 타임아웃≠성공.
++
++v2 (rev33, 2026-09-18) = run_w19.py + 영수증 두 항목만 추가. 실행 흐름·cap·신호 처리·rc 규약 변경 0.
++  (a) 종료 시 stdout/stderr 의 sha256 과 바이트수를 EXECUTION_RECEIPT 에 기록한다
++      (1단계 검사 execution_receipt_fields_and_32400s_physics_wall_limit: "경로만 있고 해시가 없다").
++  (b) cap_s·grace_s·argv 의 --max-wall-s 와 **규약 상한 32,400 s** 를 한 영수증에 나란히 기록한다.
++      러너는 둘을 비교해 판정하지 않는다 — 판정은 규약 검사·독립 감사의 몫이다.
+ 사용: setsid nohup python run_w19.py --step <name> > <attempt>/runner.log 2> <attempt>/runner.err &
+ """
+ import argparse, hashlib, json, os, signal, subprocess, sys, time
+@@ -30,11 +36,22 @@
+ S = C["steps"][A.step]
+ att = Path(S["attempt_dir"])
+ cap, grace = float(S["cap_s"]), float(S["grace_s"])
++# 규약 RAW_SCHEMA_REQUIRED.md:101-104 "maximum 32400 s physics wall limit". **기록용 상수**다.
++CONTRACT_MAX_PHYSICS_WALL_S = 32400.0
++_argv = [str(v) for v in S["argv"]]
++_child_max_wall_s = (float(_argv[_argv.index("--max-wall-s") + 1])
++                     if "--max-wall-s" in _argv and _argv.index("--max-wall-s") + 1 < len(_argv) else None)
+ receipt, hash_receipt, status_path = att / "EXECUTION_RECEIPT.json", att / "HASH_VERIFICATION_RECEIPT.json", att / "RUN_STATUS.json"
+ 
+ rec = {"artifact": "W19_EXECUTION_RECEIPT", "step": A.step, "attempt_dir": str(att),
+        "commands_json_sha256": sha(HERE / "COMMANDS_w19.json"), "runner_self_sha256": sha(Path(__file__).resolve()),
+        "auto_retry": False, "cap_s": cap, "grace_s": grace, "started_utc": utc(), "started_local": loc(),
++       # v2: cap 과 규약 상한을 함께 남긴다. 러너는 판정하지 않는다(비교는 규약 검사·감사가 한다).
++       "contract_max_physics_wall_s": CONTRACT_MAX_PHYSICS_WALL_S,
++       "contract_max_physics_wall_s_cite": "RAW_SCHEMA_REQUIRED.md:101-104",
++       "child_max_wall_s_argv": _child_max_wall_s,
++       "runner_term_at_s": round(cap - grace, 3),
++       "wall_limit_comparison_by_runner": "NOT_JUDGED",
+        "runner_pid": os.getpid(), "argv": S["argv"], "cwd": S.get("cwd"), "env_overrides": C.get("env") or {},
+        "hostname": os.uname().nodename, "runpod_pod_id": os.environ.get("RUNPOD_POD_ID")}
+ status = {"artifact": "W19_RUN_STATUS", "step": A.step, "state": "starting", "started_utc": utc(),
+@@ -113,6 +130,15 @@
+     try: alive = os.killpg(proc_box["pgid"], 0) is None
+     except ProcessLookupError: alive = False
+     except PermissionError: alive = True
++    # v2: 영수증에 stdout/stderr **해시**를 남긴다(경로만으로는 사후 대조가 불가능했다).
++    for _key, _path in (("stdout", so), ("stderr", se)):
++        try:
++            rec[f"{_key}_bytes"] = _path.stat().st_size
++            rec[f"{_key}_sha256"] = sha(_path)
++        except OSError as _e:                                   # 해시 실패도 영수증에 남긴다
++            rec[f"{_key}_sha256"] = None
++            rec[f"{_key}_sha256_error"] = f"{type(_e).__name__}: {_e}"
++    rec["stdout_stderr_hashed_after_child_exit"] = True
+     rec.update({"rc": rc, "wall_s": round(wall, 3), "timed_out": timed_out, "killed": killed, "group_alive_after": alive,
+                 "ended_utc": utc(), "ended_local": loc(), "runner_signal_received": sig_box["hit"]})
+     state = ("killed_after_grace" if killed else "halted_timeout_not_success" if timed_out else "completed_rc0" if rc == 0 else "failed_nonzero_rc")

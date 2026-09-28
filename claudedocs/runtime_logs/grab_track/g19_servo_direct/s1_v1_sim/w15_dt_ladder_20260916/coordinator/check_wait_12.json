@@ -1,0 +1,58 @@
+{"_keepalive":true,"_heartbeat":true,"elapsedMs":15006,"deadlineMs":1500000}
+{"_keepalive":true,"_heartbeat":true,"elapsedMs":30007,"deadlineMs":1500000}
+{"_keepalive":true,"_heartbeat":true,"elapsedMs":45011,"deadlineMs":1500000}
+{"_keepalive":true,"_heartbeat":true,"elapsedMs":60012,"deadlineMs":1500000}
+{"_keepalive":true,"_heartbeat":true,"elapsedMs":75017,"deadlineMs":1500000}
+{"_keepalive":true,"_heartbeat":true,"elapsedMs":90017,"deadlineMs":1500000}
+{"_keepalive":true,"_heartbeat":true,"elapsedMs":105018,"deadlineMs":1500000}
+{"_keepalive":true,"_heartbeat":true,"elapsedMs":120019,"deadlineMs":1500000}
+{"_keepalive":true,"_heartbeat":true,"elapsedMs":135023,"deadlineMs":1500000}
+{"_keepalive":true,"_heartbeat":true,"elapsedMs":150024,"deadlineMs":1500000}
+{"_keepalive":true,"_heartbeat":true,"elapsedMs":165028,"deadlineMs":1500000}
+{"_keepalive":true,"_heartbeat":true,"elapsedMs":180028,"deadlineMs":1500000}
+{"_keepalive":true,"_heartbeat":true,"elapsedMs":195031,"deadlineMs":1500000}
+{"_keepalive":true,"_heartbeat":true,"elapsedMs":210032,"deadlineMs":1500000}
+{"_keepalive":true,"_heartbeat":true,"elapsedMs":225033,"deadlineMs":1500000}
+{"_keepalive":true,"_heartbeat":true,"elapsedMs":240033,"deadlineMs":1500000}
+{"_keepalive":true,"_heartbeat":true,"elapsedMs":255037,"deadlineMs":1500000}
+{"_keepalive":true,"_heartbeat":true,"elapsedMs":270038,"deadlineMs":1500000}
+{"_keepalive":true,"_heartbeat":true,"elapsedMs":285041,"deadlineMs":1500000}
+{"_keepalive":true,"_heartbeat":true,"elapsedMs":300041,"deadlineMs":1500000}
+{
+  "id": "62876535-518c-49b9-af14-d67b6c7210e0",
+  "ok": true,
+  "result": {
+    "runId": "run_ea74393ac4b4",
+    "deliveryId": "delivery_04c907fbac6b",
+    "messages": [
+      {
+        "id": "msg_fb1f4ad00e69",
+        "run_id": "run_ea74393ac4b4",
+        "delivery_contract": "current_delivery",
+        "from_handle": "term_0edf69ee-40fc-4377-b153-4eebb31f16c7",
+        "to_handle": "run:run_ea74393ac4b4",
+        "subject": "W15 dt ladder executed: all 3 cells aborted, each by a different engine mechanism",
+        "body": "Ran the W15 dt-ladder protocol end to end in my worktree: PREREG.md timestamped 22:34 before the first launch, three params files differing from W10 dt2e6 by exactly {timestep_s, render_timeline_path}, then cells 10us -> 100us -> 1ms one at a time under wall caps (5400/3600/3600 s), no retries, with launch/terminal receipts, and an analysis that recomputes every number from the cells' own timeline/NPZ/JSON. All three cells aborted with rc 134 but by three different mechanisms: 10us reproduced the W10 engine error_out_vel divergence yet only after running essentially the whole protocol (2790 syncs, last sim_t 3.1533 s in reclose, both door stops pinch_guard, max saved speed 19.2243 m/s just under the 20 m/s pop-stop, engine then saw 2.17e9 m/s between saved syncs; W10 had died at 2.56118 s mid-close), while 100us died in settle after 40 s on a GPU out-of-memory assertion and 1ms died in settle after 10 s on a DEMCubContactDetection.cu:168 kernel assertion - so the B cells never reached any physics decision and produced no timeline, capture, lip gap or heightmap at all. Measured actual sync durations confirm the plan's float32-accumulation table to ~1e-10 s (10us: 0.1 ms request realised as 0.110 ms = 1.100x, 1 ms as 1.010x, 4 ms as 1.0025x), no RRD was baked because no cell completed (omission reason and preserved event dumps recorded in inspection.json, with both generated PNGs actually viewed), and REPORT_w15.md states no pass line, calls no dt converged or safe, and flags that the B-cell contact-margin mechanism is a hypothesis needing GetUpdateFreq/GetExpandFactor logging (a code change, so not done) and that the 100us OOM is not separable from this card's 12.2/16.4 GB headroom - both are your call, as is any rerun, since automatic retry was forbidden.",
+        "type": "worker_done",
+        "priority": "normal",
+        "thread_id": null,
+        "payload": "{\"taskId\":\"task_4e5464a96ee5\",\"dispatchId\":\"ctx_0cefa6ce95eb\",\"outcome\":\"succeeded\",\"filesModified\":[\"claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w15_dt_ladder_20260916/ (37 files\",\"new\",\"untracked; nothing outside it)\"],\"reportPath\":\"/home/cgxr/orca/workspaces/RoArm_Project/w15-dt-ladder/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w15_dt_ladder_20260916/REPORT_w15.md\"}",
+        "created_at": "2026-09-16T14:26:14Z",
+        "delivered_at": null
+      }
+    ],
+    "count": 1,
+    "replayed": false,
+    "acknowledged": null,
+    "timedOut": false,
+    "cancelled": false,
+    "connectionLost": false,
+    "mutation": {
+      "requestId": "b4cb264a-607f-41e9-9c7b-4ae8014f32f0",
+      "replayed": false
+    }
+  },
+  "_meta": {
+    "runtimeId": "471edc31-a026-466b-b60c-0c8e6cfb9fcc"
+  }
+}

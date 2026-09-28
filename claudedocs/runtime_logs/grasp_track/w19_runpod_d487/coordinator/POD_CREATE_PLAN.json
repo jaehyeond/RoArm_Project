@@ -1,0 +1,19 @@
+{
+ "artifact": "W19_POD_CREATE_PLAN_V1",
+ "note": "키 교체 후 사용. PUBLIC_KEY 는 호출 시 ~/.ssh/id_ed25519.pub 내용으로 채운다(계정 SSH 키 설정 무변경). 생성 전 시간당 요금을 사용자에게 보고한다.",
+ "pods": {
+  "A": {"name": "roarm_w19_A_full_cycle_rev32", "image": "runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404",
+        "gpu": {"id": "NVIDIA GeForce RTX 4090", "count": 1, "minCudaVersion": "12.8"}, "cloud": "SECURE",
+        "dataCenterIds": ["EU-RO-1"], "disk": 40, "mounts": {"persistent": {"size": 30, "path": "/workspace"}},
+        "ports": ["22/tcp"], "startSsh": true, "startJupyter": false, "env": {"PUBLIC_KEY": "<~/.ssh/id_ed25519.pub>"},
+        "price_usd_per_h_secure": 0.74},
+  "B": {"name": "roarm_w19_B_scoop_repeat", "image": "runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404",
+        "gpu": {"id": "NVIDIA GeForce RTX 4090", "count": 1, "minCudaVersion": "12.8"}, "cloud": "SECURE",
+        "dataCenterIds": ["EU-RO-1"], "disk": 40, "mounts": {"persistent": {"size": 30, "path": "/workspace"}},
+        "ports": ["22/tcp"], "startSsh": true, "startJupyter": false, "env": {"PUBLIC_KEY": "<~/.ssh/id_ed25519.pub>"},
+        "price_usd_per_h_secure": 0.74}
+ },
+ "fallback_data_centers_rtx4090": ["EU-CZ-1", "EUR-IS-2", "US-IL-1"],
+ "do_not_touch_pods": "list-pods 로 확인되는 지훈/지나 pod 전부 — id 는 키 교체 후 기록",
+ "terminate_after_rsync_and_local_hash_check": true
+}

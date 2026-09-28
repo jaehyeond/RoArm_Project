@@ -1,0 +1,57 @@
+{
+ "artifact": "W14_REV31_REVISION_PIN_V1",
+ "revision": "rev31",
+ "derived_from": "rev30 (unmodified) — exact ERRATUM_04 declaration strings only",
+ "contract": "RAW_SCHEMA_REQUIRED + ERRATUM_04",
+ "registered_erratum_sha256": "4290a9cfbfce6ac13fdda54a4df20a72e56b7bdbabce8ed22436109762e8e1a6",
+ "utc": "2026-09-16T13:54:49Z",
+ "n_files": 29,
+ "changed_vs_rev30": {
+  "src/derive_v2.py": {
+   "rev30": "7a495d11db4f9ebe6cf30beae12fb58bbe40cc69ec4ae64221a26e76b1c74a5f",
+   "rev31": "7abefe708dfd57f8fe74cca16f8b038b9f1be2af0e02cd82b36558018c5b0361"
+  },
+  "src/inventory_geometry.py": {
+   "rev30": "7cdc9fd5f66cfd6041b8ca2e411d2c1bbcd49923574fca80a0fe30c358c15a34",
+   "rev31": "a49e1ba99a92eb954a73cb4b2a995f6992dec16b94c54f54d5f6251bf9aa0327"
+  }
+ },
+ "new_in_rev31": [
+  "DIFF_rev30_to_rev31_src.patch"
+ ],
+ "removed_vs_rev30": [
+  "DIFF_rev29_to_rev30_src.patch"
+ ],
+ "physics_executed_with_rev31": false,
+ "frozen_copies_sha256": {
+  "COMMANDS.json": "6f3eafd951ed041df19cfb55177ade9d06a3574d7d95e926cb2b09ec7f0959e6",
+  "DIFF_rev30_to_rev31_src.patch": "3f826571494571e11a74c3cb20d3467b224e50a0197ee653f4f2f6ac1004d510",
+  "criteria.json": "71a7d23938a341c2689b570fa5a1e9bec74b7b3392f754ca55f61e7edd646196",
+  "numeric_inputs.json": "02ad1171cef8bc85eb9d589f574887f85e05052ed23e6964f7dc6651c3a915a3",
+  "params_w13.json": "95101f8b799518f83a0d8a0004057e50ea01120b66681334a9911a7e5fa7e661",
+  "src/arm_link_bounds.py": "0ba2949f0e6e0055993e5be6810d8a80c5a36a63bd48fe7181f9b2d1947863f7",
+  "src/bridge_clearance_guard.py": "4151df2c6e964840538b4ada5ad608c98203ff099e51496e540cc9e54d2857ff",
+  "src/bridge_clearance_guard_audit_original.py": "127a017c40a68c9888cc6d33335697e1b7ceb0d6ead44bd97a81d50bf1107b66",
+  "src/bridge_inputs.py": "4d0d5fbd4c22ae4e8395933157298e4104f558b38d0b1c899ea9da8357f85c08",
+  "src/bridge_numerics.py": "01e55cbee1954179e15bb318be5c2a69e92686f0b93ac18d9233bb87fa01f4af",
+  "src/camera_framing.py": "600aef751a0d5abd2ce6c665e8ec42a2b3f7f28a53b5b626aecd9a5981f8a33c",
+  "src/close_diagnostics.py": "d6f4daf26e066554d6b3347adc257796235387296f945d3ae47bb0dd50c1b4c6",
+  "src/compare_wall_regression.py": "6cc7c34be3f6c8e6a44edc648d5531c81c30c8c0de94a5f8c1bca74c682857f4",
+  "src/derive_v2.py": "7abefe708dfd57f8fe74cca16f8b038b9f1be2af0e02cd82b36558018c5b0361",
+  "src/freeze_manifest.py": "162bfa21073ba4b0998450d141c96189a9ab7a961a374c1661b1bd8aeae0d451",
+  "src/inventory_geometry.py": "a49e1ba99a92eb954a73cb4b2a995f6992dec16b94c54f54d5f6251bf9aa0327",
+  "src/isaac_replay_w13.py": "d012e0fcd6b581a13d06053430519e00a8469ec17e46ce930ebb5f25ab9ea718",
+  "src/preflight_geometry.py": "0663e255fbafbb03a386a7dfa9fd917187fc90ed6f0dbb7f11c250b263f7b2f5",
+  "src/preflight_rigid_hinge.py": "d870f02b44254fefa7a8524ffed5625cf89552c8a753a58a776f90c161fba3cc",
+  "src/preflight_snapshot.py": "0e7ae475ed7fbe4368b2bdc5a444a43acc77f8b561cbfd8b3e4d9ba9d1df37d9",
+  "src/raw_row_identity.py": "529da6c369b0da6eff1e2840b354332f4be3e67e2ea1e82cd4a37e98013b7fa6",
+  "src/raw_transitions.py": "424d8482f775ac2f2e42ba8880468379292cb96b179605ec271af64f55f93e6a",
+  "src/readiness_launcher.py": "b9a82dac69d457772321d054ddc9c48d19591efb336e779736db2c27ba8a971c",
+  "src/run_production.py": "bd8fa702ff5a9c06286de1cafd3702487803103fe747bcc3d3a8fae483cb81d5",
+  "src/sim_w13_full_cycle.py": "f1c5d43b9288a7defcb43a6eb7526969d04aadd9fa64ba3bdada05c9874ef5c9",
+  "src/verify_w13_self.py": "866229bad47ce99d3e830118fe50cfd8ec8c9d2e0c9d7968e480b85a8e959d98",
+  "src/w13_fk.py": "d6e27412482d279babd5ea22f7b1cdfaafbd52a955caa31e10badabd07249873",
+  "src/w13_kinematics.py": "9c54d21f2b32b50a615cc3bff0235965c07201798f9710a818ad6d9e4ff4c685",
+  "src/w13_rerun_export.py": "35a10aa666ff2e76d5e8dd39442cbb4978bb954cb5b523a6ff7ba1fac3af87c8"
+ }
+}

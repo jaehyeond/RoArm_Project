@@ -104,7 +104,22 @@ case "$AGENT_NAME" in
             ALLOWED=true
         fi
         ;;
+    # === Execution Roles (역할 agent 4개, 2026-09-19 등록 — D492) ===
+    # 산출 경계 = run output 폴더. 상태 원장은 아래 별도 차단으로 막는다.
+    "deme-runner"|"raw-accountant"|"replay-renderer"|"independent-auditor")
+        if [[ "$FILE_PATH" =~ /claudedocs/runtime_logs/ ]]; then
+            ALLOWED=true
+        fi
+        ;;
 esac
+
+# State-ledger exclusivity: only the main coordinator session writes these.
+if [[ "$FILE_PATH" =~ /START_HERE\.md$ ]] \
+    || [[ "$FILE_PATH" =~ /claudedocs/(DECISIONS|DECISIONS_ACTIVE|EXPERIMENT_LEDGER|LEDGER_RECENT)\.md$ ]] \
+    || [[ "$FILE_PATH" =~ /claudedocs/relay/ ]]; then
+    echo "BLOCKED: state ledger '$FILE_NAME' is owned by the main coordinator session only (AGENTS.md exclusivity rule)." >&2
+    exit 2
+fi
 
 # Allow writing to agent memory directories
 if [[ "$FILE_PATH" =~ \.claude/agent-memory ]]; then

@@ -1,0 +1,90 @@
+{
+  "id": "8f266a59-eda7-470f-8a13-8877a043a31c",
+  "ok": true,
+  "result": {
+    "runId": "run_d0eba99ce41b",
+    "taskId": "task_fbb9e480cea5",
+    "dispatchId": "ctx_dfe4945852cf",
+    "state": "ready",
+    "stage": "input_accepted",
+    "setup": {
+      "requested": "skip",
+      "effective": "skip",
+      "source": "explicit_request",
+      "hookFound": false,
+      "startupPolicy": "start-immediately",
+      "state": "not_configured"
+    },
+    "launch": {
+      "requested": {
+        "agent": "codex",
+        "model": "gpt-6-astra",
+        "effort": "high"
+      },
+      "effective": {
+        "agent": "codex",
+        "model": "gpt-6-astra",
+        "effort": "high"
+      }
+    },
+    "mode": {
+      "mode": "terminal",
+      "preferred": "terminal",
+      "reason": "user_default",
+      "detail": "Started a terminal agent worker, the default for new agent tabs in your settings."
+    },
+    "timeoutMs": 60000,
+    "effects": [
+      {
+        "kind": "worktree",
+        "action": "created_top_level",
+        "id": "6d4cecac-f639-434b-be40-367d6257f9f2::/home/cgxr/orca/workspaces/RoArm_Project/w25-dt-basis"
+      },
+      {
+        "kind": "terminal",
+        "role": "agent",
+        "action": "reused_agent_terminal",
+        "id": "term_bc787859-ec51-446d-bbd4-32379cdc012b",
+        "tabId": "a7da3955-d1de-4e09-b269-2f205e468a40",
+        "leafId": "a106636a-755c-459d-841d-3fee7aa066dd"
+      },
+      {
+        "kind": "setup",
+        "action": "skip",
+        "requested": "skip",
+        "effective": "skip",
+        "source": "explicit_request",
+        "hookFound": false,
+        "startupPolicy": "start-immediately",
+        "state": "not_configured"
+      },
+      {
+        "kind": "dispatch_input",
+        "role": "agent",
+        "id": "term_bc787859-ec51-446d-bbd4-32379cdc012b",
+        "state": "accepted"
+      }
+    ],
+    "prompt": {
+      "requestId": "69e93bd1-295c-41f4-b09e-8a4f515383ca",
+      "stages": [
+        "input_accepted"
+      ],
+      "provider": "codex",
+      "observation": "supported",
+      "processIncarnation": "1fc37007-edce-4ae9-84be-e19e315a624b",
+      "generation": 13,
+      "baselineWorkingSequence": 1,
+      "baselineExplicitWorkingStartedAt": null,
+      "baselinePermissionSequence": 0
+    },
+    "residualResources": [],
+    "mutation": {
+      "requestId": "69e93bd1-295c-41f4-b09e-8a4f515383ca",
+      "replayed": false
+    }
+  },
+  "_meta": {
+    "runtimeId": "01571699-7908-4cf3-95ae-7ec06e7c7594"
+  }
+}

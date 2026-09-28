@@ -1,0 +1,148 @@
+{
+ "artifact": "W14_REV30_DERIVED_V2_SUPPORT_FLOOR",
+ "derived_not_raw": true,
+ "generated_utc": "2026-09-16T13:35:14Z",
+ "contract": "RAW_SCHEMA_REQUIRED + ERRATUM_04 (floors are support surfaces; boundary frame at i-1)",
+ "floor_rule": "support_surface_v2: min(center_z - r) > floor - margin  (source tray floor and bin inner floor)",
+ "source_floor_rule": "rev30: in_source/in_bin lower-z uses every sphere bottom (center_z - radius) > floor - margin (penetration allowance = frozen margin); rev29 used floor + margin (strict, floor layer -> ambiguous); rev28 compared sphere top > floor - margin (not whole-sphere). Side walls/top/rim keep the strict inward margin.",
+ "erratum_draft": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w14_w13_raw_repair_d484/repair_20260916_01/contract/RAW_SCHEMA_REQUIRED_ERRATUM_04_DRAFT.md",
+ "input_sha256": {
+  "raw": "529f422e962730b17b520c3c9af2261aae7c431ec5e078cd2c368dfab0c46b0f",
+  "meta": "e482b939a4cf42e5284b9b15e36a9f3613e989161ec538475e2c05f4260d9340",
+  "pile": "659d6b0bc771678a0c7209d91f550edc933d03e41922245ea0adb64eeb818812",
+  "rev29_derived": "cdf11a36160073ae0188765cae9a62d1f4f4c93d20beb92d343f07674bcc667d"
+ },
+ "rev30_inventory_geometry_sha256": "7cdc9fd5f66cfd6041b8ca2e411d2c1bbcd49923574fca80a0fe30c358c15a34",
+ "semantics": {
+  "classify_geometry_basis": "oriented_clump_all_spheres",
+  "classify_spheres_per_clump": 7,
+  "classify_sphere_expansion": "p_sphere = p_owner + R(owner_quat_xyzw) @ offset_m (clump-major)",
+  "classify_owner_quat_source": "GetOwnerOriQ(0, n_p) at the same particle frame",
+  "classify_inside_rule": "all spheres strictly inside by margin, center distance +/- sphere radius",
+  "classify_boundary_rule": "any single sphere overlaps the margin band -> ambiguous",
+  "classify_spill_basis": "max(sphere_center_z + sphere_radius) <= spill_rest_z_m",
+  "classify_source_floor_rule": "rev30: in_source/in_bin lower-z uses every sphere bottom (center_z - radius) > floor - margin (penetration allowance = frozen margin); rev29 used floor + margin (strict, floor layer -> ambiguous); rev28 compared sphere top > floor - margin (not whole-sphere). Side walls/top/rim keep the strict inward margin.",
+  "classify_floor_rule": "support_surface_v2: min(center_z - r) > floor - margin  (source tray floor and bin inner floor)",
+  "classify_contract_version": "RAW_SCHEMA_REQUIRED + ERRATUM_04 (floors are support surfaces; boundary frame at i-1)",
+  "classify_revision": "rev30",
+  "classify_predicate_module": "inventory_geometry.classify_spheres"
+ },
+ "non_claims": [
+  "run_01 원자료의 옛 규약 FAIL 은 그대로다(소급 PASS 아님).",
+  "새 물리·GPU·렌더 0. 같은 원시 좌표에 대한 v2 규약 재분류다.",
+  "receiving_bin 라벨은 정착 판정이 아니다(settlement window 별도)."
+ ],
+ "wall_s": 260.12,
+ "n_frames": 283,
+ "n_particles": 20000,
+ "output_npz": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w14_w13_raw_repair_d484/repair_20260916_01/derived_v2/w13_cycle_seed460_rev30_derived_v2.npz",
+ "output_npz_sha256": "7a5f78cc4d850aeb7ce9da546043d9ddf9406cfe8d44349d50fa88a4eea83f25",
+ "array_sha256": {
+  "inventory_code_rev30_support": "a9ad7356998232aa2a57235cfcb6ab465c3617b7163d069beaf336d20b2de46e",
+  "inventory_code_rev29_strict": "d617b71c9ea73cd09f30a110b1f5e5cc60250a922409e30076a3f12be1eab781",
+  "inventory_code_recorded": "07e7590dbf75ee7112c29e98abfb13a8a7cba956b0671205d5f2cdc7e31c7a59"
+ },
+ "inventory": {
+  "rev30_vs_recorded_mismatch": 964,
+  "rev30_vs_rev29_mismatch": 1508125,
+  "rev29_vs_recorded_mismatch": 1507161,
+  "final_recorded": {
+   "source": 19712,
+   "receiving_bin": 0,
+   "tool_residual": 0,
+   "spill": 73,
+   "in_flight": 0,
+   "ambiguous": 215
+  },
+  "final_rev29": {
+   "source": 14350,
+   "receiving_bin": 0,
+   "tool_residual": 0,
+   "spill": 73,
+   "in_flight": 0,
+   "ambiguous": 5577
+  },
+  "final_rev30": {
+   "source": 19712,
+   "receiving_bin": 9,
+   "tool_residual": 0,
+   "spill": 73,
+   "in_flight": 0,
+   "ambiguous": 206
+  },
+  "reclose_end_frame": 107,
+  "reclose_rev30": {
+   "source": 19386,
+   "receiving_bin": 0,
+   "tool_residual": 144,
+   "spill": 0,
+   "in_flight": 55,
+   "ambiguous": 415
+  },
+  "cohort_n": 144,
+  "cohort_final_rev30": {
+   "source": 133,
+   "receiving_bin": 0,
+   "tool_residual": 0,
+   "spill": 7,
+   "in_flight": 0,
+   "ambiguous": 4
+  },
+  "cohort_final_rev29": {
+   "source": 132,
+   "receiving_bin": 0,
+   "tool_residual": 0,
+   "spill": 7,
+   "in_flight": 0,
+   "ambiguous": 5
+  },
+  "cohort_final_recorded": {
+   "source": 133,
+   "receiving_bin": 0,
+   "tool_residual": 0,
+   "spill": 7,
+   "in_flight": 0,
+   "ambiguous": 4
+  },
+  "bin_candidates_audit_n": 11,
+  "bin_candidates_final_rev30": {
+   "7235": "receiving_bin",
+   "11338": "receiving_bin",
+   "12417": "receiving_bin",
+   "13755": "receiving_bin",
+   "14726": "receiving_bin",
+   "15564": "receiving_bin",
+   "15670": "receiving_bin",
+   "16778": "ambiguous",
+   "17457": "ambiguous",
+   "18370": "receiving_bin",
+   "18919": "receiving_bin"
+  },
+  "bin_candidates_final_rev29": {
+   "7235": "ambiguous",
+   "11338": "ambiguous",
+   "12417": "ambiguous",
+   "13755": "ambiguous",
+   "14726": "ambiguous",
+   "15564": "ambiguous",
+   "15670": "ambiguous",
+   "16778": "ambiguous",
+   "17457": "ambiguous",
+   "18370": "ambiguous",
+   "18919": "ambiguous"
+  },
+  "n_ids_ever_receiving_bin_rev30": 9,
+  "max_receiving_bin_per_frame_rev30": 9,
+  "frame_of_max_receiving_bin_rev30": 193,
+  "particle_mass_g": 0.020257382129428684
+ },
+ "counterexample_pf0_id8": {
+  "particle_frame_row": 0,
+  "particle_id": 8,
+  "recorded_label": "source",
+  "rev29_label": "ambiguous",
+  "rev30_label": "source",
+  "sphere_surface_min_z_m": -1.2322870382021171e-06,
+  "v2_floor_predicate_floor_minus_margin": true
+ }
+}

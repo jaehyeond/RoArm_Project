@@ -1,0 +1,160 @@
+{
+  "artifact": "W21_NUMERIC_EVIDENCE_ROI300_CANDIDATE_V1",
+  "status": "CANDIDATE — 사용자 GO 전에는 어떤 실행에도 넘기지 않는다.",
+  "purpose": "설치본 정적 재구성에서 나온 **수치 메타데이터**다. 물리 파라미터가 아니며 params_w13.json 을 바꾸지 않는다(CONTRACT_ADDENDUM_01 §4). rev33b 스모크의 알 300개 축소(--max-particles 300) 전용.",
+  "key_name_note": "`REUSABLE_FOR_REV11` 키 이름은 생산 소비자 코드(rev33b sim_w13_full_cycle.py:246, rev32 :238)가 읽는 이름 그대로다. rev11 로 되돌린다는 뜻이 아니다.",
+  "source_document": "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/DEME_LATTICE_RECONSTRUCTION.md",
+  "source_document_sha256": "e46ecea31c6cab4636e7ba7d60cc37213c9335e96563eeb32a4dd8620077eebd",
+  "reproduction": {
+    "script": "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/recover_deme_lattice.py",
+    "sha256": "931a518df75877942370dd552331e5967a237d11c4c49e674a985c23f3e81914",
+    "expected_sha256": "931a518df75877942370dd552331e5967a237d11c4c49e674a985c23f3e81914",
+    "script_sha_matches_doc": true,
+    "input_json": "/home/cgxr/orca/workspaces/RoArm_Project/w21-smoke-evidence/claudedocs/runtime_logs/grasp_track/w21_cost_vs_particle_count_d493/smoke_evidence/lattice_tool_input_roi300.json",
+    "input_json_sha256": "d869d24bf5ab9de9d5a6c94dcd892b1831bb9d15c1525df2bfaa7ac25d693bd2",
+    "returncode": 0,
+    "stdout": "{\n  \"adjacent_additional_bits\": [\n    0,\n    0\n  ],\n  \"axis_order\": [\n    \"x\",\n    \"y\",\n    \"z\"\n  ],\n  \"axis_voxel_count_power2\": [\n    22,\n    21,\n    21\n  ],\n  \"global_coordinate_abs_bound_m\": 1.0155463814735413,\n  \"input_path\": \"/home/cgxr/orca/workspaces/RoArm_Project/w21-smoke-evidence/claudedocs/runtime_logs/grasp_track/w21_cost_vs_particle_count_d493/smoke_evidence/lattice_tool_input_roi300.json\",\n  \"kind\": \"installed_binary_static_reconstruction_not_runtime_observation\",\n  \"l_m\": 5.5550152151806476e-12,\n  \"sorted_original_axis_indices\": [\n    2,\n    1,\n    0\n  ],\n  \"target_box_max_binary32_m\": [\n    0.286491334438324,\n    0.5248525142669678,\n    0.6464945077896118\n  ],\n  \"target_box_min_binary32_m\": [\n    -0.5114045739173889,\n    -0.23862296342849731,\n    -0.05877223238348961\n  ],\n  \"target_box_size_binary32_m\": [\n    0.7978959083557129,\n    0.7634754776954651,\n    0.7052667140960693\n  ],\n  \"user_domain_binary32_m\": [\n    [\n      -0.44491326808929443,\n      0.2199999988079071\n    ],\n    [\n      -0.17499999701976776,\n      0.4612295627593994\n    ],\n    [\n      0.0,\n      0.5877223014831543\n    ]\n  ],\n  \"user_domain_binary64_m\": [\n    [\n      -0.4449132573934248,\n      0.22\n    ],\n    [\n      -0.175,\n      0.46122955972842306\n    ],\n    [\n      0.0,\n      0.5877223000580789\n    ]\n  ],\n  \"voxel_size_m\": 3.640534771420789e-07,\n  \"world_max_m\": [\n    1.0155463814735413,\n    0.5248525142669678,\n    0.7047032453119755\n  ],\n  \"world_size_m\": [\n    1.5269509553909302,\n    0.7634754776954651,\n    0.7634754776954651\n  ]\n}\n",
+    "stderr": "",
+    "parsed": {
+      "adjacent_additional_bits": [
+        0,
+        0
+      ],
+      "axis_order": [
+        "x",
+        "y",
+        "z"
+      ],
+      "axis_voxel_count_power2": [
+        22,
+        21,
+        21
+      ],
+      "global_coordinate_abs_bound_m": 1.0155463814735413,
+      "input_path": "/home/cgxr/orca/workspaces/RoArm_Project/w21-smoke-evidence/claudedocs/runtime_logs/grasp_track/w21_cost_vs_particle_count_d493/smoke_evidence/lattice_tool_input_roi300.json",
+      "kind": "installed_binary_static_reconstruction_not_runtime_observation",
+      "l_m": 5.5550152151806476e-12,
+      "sorted_original_axis_indices": [
+        2,
+        1,
+        0
+      ],
+      "target_box_max_binary32_m": [
+        0.286491334438324,
+        0.5248525142669678,
+        0.6464945077896118
+      ],
+      "target_box_min_binary32_m": [
+        -0.5114045739173889,
+        -0.23862296342849731,
+        -0.05877223238348961
+      ],
+      "target_box_size_binary32_m": [
+        0.7978959083557129,
+        0.7634754776954651,
+        0.7052667140960693
+      ],
+      "user_domain_binary32_m": [
+        [
+          -0.44491326808929443,
+          0.2199999988079071
+        ],
+        [
+          -0.17499999701976776,
+          0.4612295627593994
+        ],
+        [
+          0.0,
+          0.5877223014831543
+        ]
+      ],
+      "user_domain_binary64_m": [
+        [
+          -0.4449132573934248,
+          0.22
+        ],
+        [
+          -0.175,
+          0.46122955972842306
+        ],
+        [
+          0.0,
+          0.5877223000580789
+        ]
+      ],
+      "voxel_size_m": 3.640534771420789e-07,
+      "world_max_m": [
+        1.0155463814735413,
+        0.5248525142669678,
+        0.7047032453119755
+      ],
+      "world_size_m": [
+        1.5269509553909302,
+        0.7634754776954651,
+        0.7634754776954651
+      ]
+    }
+  },
+  "domain_provenance": {
+    "derived_by": "/home/cgxr/orca/workspaces/RoArm_Project/w21-smoke-evidence/claudedocs/runtime_logs/grasp_track/w21_cost_vs_particle_count_d493/smoke_evidence/derive_domain_cpu.py",
+    "derivation_record": "/home/cgxr/orca/workspaces/RoArm_Project/w21-smoke-evidence/claudedocs/runtime_logs/grasp_track/w21_cost_vs_particle_count_d493/smoke_evidence/DOMAIN_DERIVATION_ROI300.json",
+    "production_source": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w21_cost_vs_particle_count_d493/inputs/rev33b_mirror/src/sim_w13_full_cycle.py:230-233 (rev32 동결 사본 :222-225 와 바이트 동일)",
+    "production_source_sha256": "a386a6856de7646f171bee939a629801efe0d17140e3ad43502ed803118c498c",
+    "pile_npz": "/home/cgxr/orca/workspaces/RoArm_Project/pellet-model/claudedocs/runtime_logs/pellet_model/pile_lens_20260910/pile_lens6_a4p5_b3p8_c2p5_slab_n20000_seed460.npz",
+    "pile_npz_sha256": "659d6b0bc771678a0c7209d91f550edc933d03e41922245ea0adb64eeb818812",
+    "max_particles": 300,
+    "params": "rev33b_mirror/params_w13.json (rev32 동결 사본과 바이트 동일, 변경 0)",
+    "seed": 460,
+    "method_validated_on_n20000": "같은 절단 방법이 동결 numeric_inputs.json 의 도메인을 3축 binary64 로 되살렸다(DOMAIN_DERIVATION_ROI300.json step_1)."
+  },
+  "rev11_recomputed_domain_m": {
+    "x": [
+      -0.4449132573934248,
+      0.22
+    ],
+    "y": [
+      -0.175,
+      0.46122955972842306
+    ],
+    "z": [
+      0.0,
+      0.5877223000580789
+    ]
+  },
+  "domain_binary64_identical": true,
+  "REUSABLE_FOR_REV11": true,
+  "values_if_usable": {
+    "l_m": 5.5550152151806476e-12,
+    "voxel_size_m": 3.640534771420789e-07,
+    "absolute_coordinate_bound_m": 1.0155463814735413,
+    "axis_voxel_count_power2": [
+      22,
+      21,
+      21
+    ],
+    "world_size_m": [
+      1.5269509553909302,
+      0.7634754776954651,
+      0.7634754776954651
+    ],
+    "world_max_m": [
+      1.0155463814735413,
+      0.5248525142669678,
+      0.7047032453119755
+    ],
+    "world_lbf_m": [
+      -0.5114045739173889,
+      -0.23862296342849731,
+      -0.05877223238348961
+    ],
+    "kind": "installed_binary_static_reconstruction_not_runtime_observation"
+  },
+  "rule": "도메인이 binary64 로 동일하지 않거나 감사 스크립트가 인증 분기를 벗어나면 이 값을 쓰지 않는다. 그 경우 위치 격자 항은 미해결로 남고 preflight 는 NO-GO 다.",
+  "non_claims": [
+    "정적 재구성이며 새 solver 초기화에서 관측한 값이 아니다.",
+    "다른 도메인·알 개수·아카이브·컴파일러로 일반화되지 않는다 — 알 개수를 바꾸면 도메인이 바뀌고 이 파일은 그 자리에서 거부된다.",
+    "수치 표현 범위일 뿐 충돌 없음·접촉·배출 성공의 증거가 아니다.",
+    "이 파일이 있다고 실행이 승인된 것이 아니다 — GPU 스모크는 사용자 GO 뒤 별도 과제다.",
+    "알 300개 스모크는 과학 수치를 만들지 않는다(GPU_SMOKE_PACKAGE.md §4)."
+  ]
+}

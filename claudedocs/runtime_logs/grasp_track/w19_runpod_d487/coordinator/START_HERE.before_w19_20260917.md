@@ -1,0 +1,71 @@
+# START_HERE.md
+
+Last updated: 2026-09-17 (아침) — 야간 W16/W17/W18 완료·검증·교차감사(D487~D489, 원장 :598~600). 직전: W14/W15: W13 run_01 원자료 판정 결함 2개를 동결 rev28 무수정의 새 revision **rev29**에서 수정하고 CPU 단위/회귀 18/18·독립식·독립 Codex 감사로 검수. 교수 dt 확대 비교는 **실행안 문서만** 작성(미실행). 최신 [session_20260916_w14_raw_repair_dt_plan.md](claudedocs/session_20260916_w14_raw_repair_dt_plan.md). 새 물리·GPU·렌더·학습·실물·commit/push 0. W13 TIMEOUT/원자료 FAIL2/재생 FAIL3·D484→**D485 append**.
+
+## Active Case — single source of truth
+
+- **완료(2026-09-17 새벽~아침, 사용자 승인) — 야간 3건, Orca run `run_29bff2e28b28`(워커 4 release·reclaimable 0·코디네이터 닫음)**. Codex 교차감사 W16 6/6·W17 6/7(B4 = 같은 시각 PNG 중복, 결함 아님). worktree `w16-profiling`·`w17-replay-fix`·`w18-cohort-cause` 보존(merge 없음):
+  · **W16** rev32(=rev31+sync별 엔진 진단 로그, 물리 불변) + 짧은 프로파일링 1회(W13 조건, `--stop-after-phase reclose`, 상한 4 h, GPU 우선). worktree `/home/cgxr/orca/workspaces/RoArm_Project/w16-profiling`, Claude claude-opus-5 high, task `task_cbf95a042a84`/dispatch `ctx_7aef24f3fc38`. 출력 `<worktree>/claudedocs/runtime_logs/grasp_track/w16_profile_d486/{rev32,smoke_01,run_01,…}`, 메인 `.../w16_profile_d486/coordinator/`. 신규 변수: [엔진 진단 로그(물리 불변)].
+  · **W17** post04 = W13 재생 3결함 수정(DOOR_STOP 프레임 연결·결정 PNG·Isaac 관절 출처 338/283) + 동결 run_01 원자료 Rerun/Isaac 재렌더(GPU는 W16 종료 후 코디네이터 GO). worktree `.../w17-replay-fix`, Claude claude-opus-5 high, `task_d811bdcb2572`/`ctx_a4d078eda637`. 출력 `.../w17_replay_fix_d484/post04_20260917/`. 신규 변수: [재생 코드 정정(물리 불변)].
+  · **W18** 144 cohort 운반 이탈 원인 CPU 분석(near_tool 띠 포함 운반 집합, 이탈 시각·문 각도·가속 대조, RRD/PNG). worktree `.../w18-cohort-cause`, Codex gpt-5.6-sol high, `task_d64ff1ac8b97`/`ctx_00fa244bb509`. 출력 `.../w18_cohort_cause_d484/analysis_01/`. 신규 변수: [] (관측 분석).
+  · **W18 완료·검증**: 운반 후보 144(in_tool)+235(near)=379, 144개 전부 PF110~136에 이탈(136개 post_lift_travel), 방향 mouth_seam 129; 문 3.549° 유지·이음새 7.01 mm(펠릿 4.50 mm) → 열린 입구 누출 지지, 가속도 상관 −0.016. 메인 재계산 일치. 후속 물리 case 변수 = 문 닫힘/이음새 간격 하나.
+  · **W16 완료·검증**: rev32 진단 로그 물리 불변(비용 0.00023 %), run_02 rc0 9.0085 s/11,014.7 s, W13 대비 0.963. 잠재 접촉쌍 194k~237k(도구 접촉 0인 settle에서도 ~200k) → 비용은 더미 상시 부하; 손잡이 = 알 개수(다음) / dt(차단). 전체 사이클 추정 8.55 h(측정 아님).
+  · **W17 완료·검증**: post04에서 재생 결함 3개 해소(DOOR_STOP 행 69/98/107/189/220 결속, 결정 PNG 6장 실제 결정 시각 표시, 관절 출처 2+53+228=283). 원인 = 루프 변수 누출 / 18자 접두 비교 / 헤드리스 스크린샷 로딩 경주(660 ms). 재렌더 step2 2,676.7 s·step3 477.1 s rc 0, 동결 raw 무변경. W13 과학 판정 불변. Codex 교차감사(`ctx_8af9f1bbb73e`) 진행 중.
+  · 물성·형상·알 수·경로·문 속도·보호선·dt 1 µs·cd_update_freq 고정. RunPod 본 실행(전체 사이클·반복 seed)은 15시 계정 수령 후 별도 GO. **rev32는 다음 물리 실행의 정본 후보**(rev31 규약 v2 + 진단 로그).
+- **진행 중(사용자 승인 2026-09-16 저녁) — W15 dt ladder + 규약 v2(rev30)**. 이번 case의 신규 변수: [timestep_s ∈ {1e-5,1e-4,1e-3}] (W15) / [바닥=받침면 규약 v2 파생 라벨] (rev30, CPU). W15: Orca run `run_ea74393ac4b4`, task `task_4e5464a96ee5`, dispatch `ctx_0cefa6ce95eb`, worktree `/home/cgxr/orca/workspaces/RoArm_Project/w15-dt-ladder`(branch `jaehyeond/w15-dt-ladder`, base master `fc557db`), `launch.effective` claude/claude-opus-5/high. 워커 출력 `<worktree>/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w15_dt_ladder_20260916/`, 메인 코디네이터 기록 같은 이름의 `.../w15_dt_ladder_20260916/coordinator/`(spec·run·dispatch·inbox). 기본값: 10 µs/100 µs/1 ms 순차, 상한 5,400/3,600/3,600 s, 코드 변경 0, 완주 셀만 Rerun. rev30/ERRATUM_04 초안 `w14_w13_raw_repair_d484/repair_20260916_01/contract/RAW_SCHEMA_REQUIRED_ERRATUM_04_DRAFT.md` — 바닥(상자·용기) 하한을 구 최하단 > 바닥−2.5 mm 로, 전환 프레임은 i−1 규약. **rev30 파생 v2 완료**(`derived_v2/`, 260 s): PF282 19,712/9/0/73/0/206, vs 기록 불일치 964(전부 용기 쪽 ambiguous→bin 948·→in_flight 16, ID 10개), 상자 바닥 변경은 기록 라벨 무변경, 감사 용기 후보 11개 중 9개 receiving_bin(정지, 단 정착 창 미충족이라 확정 배출 아님). 용기 도달 10개 ID는 재닫기 시 near_tool ambiguous(144 cohort 밖). tests_v2 6/6 전 프레임 rev30=독립식 v2 0 불일치·파생 NPZ/해시/동결 입력 일치 **2/2 PASS**(688.5 s, `tests_v2/RESULTS_allframes_v2.json`). Codex 감사 #2(task `task_a80664d4f621`/dispatch `ctx_a26466aec2a8`, gpt-5.6-sol high) = ERRATUM_04 등록 + rev30 재계산: Codex #2 결과 — ERRATUM_04 **등록 완료**(`.../resume_20260913/audit/RAW_SCHEMA_REQUIRED_ERRATUM_04.md`, SHA `4290a9cf…e8e1a6`, 초안 SHA `665fb7cb…8429` 대조, 의미 불변·문구만 정리). NumPy-only 재계산(검사기 SHA `d8297814…8a0b`, 35.7 s): rev30 파생 대비 0 불일치·raw 964·rev29 1,508,125·최종 19,712/9/0/73/0/206·cohort 133/0/0/7/0/4·후보 11 중 9 재현, diff 2파일 예상 밖 0, 보존 0 불일치, 정착 비주장 명시 — 모두 PASS. 단 **종합 FAIL**: rev30 메타데이터 선언 문자열 2개(`classify_floor_rule`, `classify_contract_version`)에 설명 괄호가 붙어 등록 계약의 exact 문구와 불일치. → 조치: **rev31** = rev30 + 두 문자열만 exact 문구로(`rev31/DIFF_rev30_to_rev31_src.patch`, 라벨 식 불변), `derived_v2_rev31/` 재파생 → rev30 라벨 배열과 **bit-identical** 확인(`np.array_equal` True). 같은 Codex 터미널에 rev31 재검증(task 후속) 배정: (Codex #3 dispatch `ctx_3c3e01c02dd5`, task `task_dce9f1711fea`, 같은 터미널 `term_c29b5655-…852` 재사용) **rev31 재검증 PASS**(`audit/W14_REV31_V2_INDEPENDENT_AUDIT_02.json`, E1 exact 문자열 일치·E2 변경 2파일/`classify_spheres` AST 동일·E3 5,660,000 라벨 rev30과 bit-identical(배열 SHA `a9ad7356…e46e`)·E4 raw/pile/rev28~rev31 핀 보존 0 불일치; 새 터미널 `ctx_bfd27bf3fd05`, 첫 재사용 시도 `ctx_3c3e01c02dd5`는 codex-interactive-prompt로 시작 실패). → **규약 v2(ERRATUM_04) 파생 정본 = rev31 + `derived_v2_rev31/`**; rev30 파생은 라벨 동일하나 선언 문자열 불일치 기록으로 보존.. W15 결과: **W15 완료(워커 보고 + 메인 원자료 재확인)**: 세 셀 모두 rc 134(SIGABRT)로 중단, 완주 0. 10 µs: 2,790 sync·3.1533 s(재닫기까지 진행)·저장 최대 19.2243 m/s(>5 m/s 4회, pop-stop 20 직전)·정지 2회 모두 pinch_guard(close 3.62°/reclose 3.02°)·엔진 종료 속도 2.17e9 m/s·2,530.1 s(≈802 s/물리초, 10배 dt에도 벽시계 단축 없음). 과거 10 µs(2.56118 s·13.03 m/s·servo_stall 4.14°)와 '같은 시각대 폭주(2.587 s)'는 재현, 죽는 자리는 다름. 100 µs: 40.0 s 만에 GPU out of memory(DataMigrationHelper.hpp:53), 1 ms: 10.0 s 만에 접촉탐색 커널 assertion(DEMCubContactDetection.cu:168) — 둘 다 settle 첫 sync 기록 전 사망(sync 0). 실측 sync 지속시간 10 µs: 0.110/1.010/4.010 ms = 예측표와 1e-10 s 수준 일치. 포획량·립 간격 없음(결과 JSON 미생성). RRD 생략(완주 0), PNG 2장 워커 실제 검수 + 메인도 열어 확인. 주의: terminal_*.json의 자동 exit_class는 셀 2·3에서 'engine_error_out_vel'로 오기 — stderr 원문이 정본(워커 보고서도 이를 명시). 산출 `w15-dt-ladder/.../w15_dt_ladder_20260916/{REPORT_w15.md,comparison.json,inspection.json,manifest.json(37파일)}`. 워커 release 완료. **Codex 감사 7/7 PASS**(정오표: receipt exit_class 셀 2·3 오라벨, comparison sync 묶음 개수 ±1 — 중앙값 불변). Orca run `run_ea74393ac4b4` 정산: 워커 4 release·실패 dispatch 1 retained(미실체)·reclaimable 0·코디네이터 터미널 닫음..
+- **이번 case: W14 원자료 판정 수정(rev29) — 완료·검수 완료**. 이번 case의 신규 변수: [원자료 단계 전환/재고 분류 구현 정정]. 출력 `claudedocs/runtime_logs/grasp_track/w14_w13_raw_repair_d484/repair_20260916_01/`. [보고](claudedocs/runtime_logs/grasp_track/w14_w13_raw_repair_d484/repair_20260916_01/REPORT.md).
+- **결함 재현**: rev28 `enter()/record_t0()` 대역 재생 = 기록 25개(phase 11 + 행0 + subphase 13); rev28 분류 재계산 = 기록 0 불일치; PF0/ID8 최하단 −1.232e-6 m ≤ +2.5 mm인데 최상단 비교로 source.
+- **rev29**(rev28 사본, 3파일 변경·2신규·params 등 바이트 동일): `transition_sync_index`=phase 변경 행만(11개 `[1,26,4810,5161,7166,7300,7336,8835,10881,11256,14875]`), source z 하한 = 구 최하단 > floor+margin(생산 `inventory_geometry` + 자기검증 `verify_w13_self.reclass` 둘 다). `rev29/DIFF_rev28_to_rev29_src.patch`, `REVISION_PIN.json`.
+- **파생 산출**(원시 무수정, 소급 PASS 아님): `derived/w13_cycle_seed460_rev29_derived.npz` SHA `cdf11a36…cc667d`. rev29 strict vs 기록 불일치 1,507,161(=감사값), 최종 14,350/0/0/73/0/5,577, 144 cohort 최종 132/0/0/7/0/5. 독립식(Hamilton 곱·AABB, 생산/감사 함수 미import) 전 프레임 0 불일치.
+- **CPU 테스트 18/18** (`tests/RESULTS_transitions_containment.json` 15, `tests/RESULTS_allframes_regression.json` 3·504 s). 진단 PNG 3장 실제 검수. RRD 생략 사유: 라벨/인덱스 파생의 코드·배열·해시 감사(D341). 동결 입력 사후 해시 불변(`PRESERVATION_BEFORE/AFTER.json`).
+- **독립 Codex 감사(Orca)**: run `run_0f620dc8df53`/task `task_70748c1b2164`/dispatch `ctx_2cc566d7362f`, worktree `w13-cycle-audit`, `launch.effective` codex/gpt-5.6-sol/high. 결과: **8/8 PASS** — NumPy-only 검사기(SHA `480e06d6…3a10`)로 11개 전환 동일·5,660,000 라벨 0 불일치·1,507,161 재현·최종/cohort 동일·diff 3파일 예상 밖 변경 0·보존 0 불일치. 정산: worker_done `msg_51c94d2ea309`(outcome succeeded, files 3, report-path JSON) → delivery `delivery_78cfb43619f3` ack → `worker-release` state released/closed_agent_terminal/archive captured → reclaimable 0. 코디네이터 터미널 `term_bc93df1a-…8509`: 닫음(terminal close --terminal, ok=true). 새 감독 작업 0. 영수증 `orca/{run_create,worker_start,DISPATCH,check_wait_01,check_ack,worker_release,worker_list_reclaimable,coordinator_terminal_close}.json`.
+- **규약 결과(판정 변경 아님)**: strict 바닥식이면 바닥층 약 5,3xx알이 ambiguous. 규약 개정(바닥 접촉 허용) 여부는 사용자 결정. **추가 관찰**: 규약 `:42` 전환 프레임 인덱스 모호 — 생산은 전환 직전 행(i−1)에 프레임, 정확히 i는 7336뿐. rev29 범위 밖, BACKLOG 등재.
+- **dt 확대 실행안 — 문서만**: [DT_EXPANSION_PLAN.md](claudedocs/research/dt_expansion_plan_20260916/DT_EXPANSION_PLAN.md). 10 µs `cell_DE_c`(rc134, 마지막 2.56118 s, 저장 13.0303 m/s, 엔진 22,291.97 m/s, 2,130 s≈832 s/물리초)·2 µs(541알/5.3291 m/s/1,870.9 s)·1 µs(517알/2.7255 m/s/2,720.74 s) 대조. 설치 누산 규칙: 0.1 ms 요청→100 µs에서 0.2 ms(2 step), 1 ms에서 1.0 ms(1 step); 세밀 sync당 문 이동 0.00227°→0.0225°; `cd_update_freq=20`은 step 수라 탐색 간격 20 µs→20 ms(자동조정 있어 런타임 기록 필요). 제안 셀: 10 µs(5,400 s)·100 µs(3,600 s)·1 ms(3,600 s) 순차 + 선택 1/2 µs 반복, 총 ≤ 15,600 s, 유일 변수 `timestep_s`, 출력 `grab_track/g19_servo_direct/s1_v1_sim/w15_dt_ladder_<date>/`. **GPU 실행·재렌더는 §7 승인 5항목 후에만.**
+- 상태/relay 종료 인계 후 다음 세션이 원장 소유. 이전 GO/COMMANDS 이월 없음. LFS 로컬 보류(staged D 24는 추적 제외·원본 존재)·push/이력 재작성 금지 유지.
+
+## 보존된 W13 종료 상태 — 재실행 승인 아님
+
+- **W13 재개 실행은 종료했고 전체 성공 판정은 불가.** 순서: 경로 검사 통합 → Isaac 준비 검수 → GO → 최대 9시간 단일 본 물리 → 원자료 감사 → 부분 Rerun/Isaac 재생 → root/독립 검수. 승인된 본 실행 기회는 사용했다.
+- worktree: 생산 Claude claude-opus-5 `/home/cgxr/orca/workspaces/RoArm_Project/w13-full-cycle`, 감사 Codex gpt-5.6-sol/high `/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit`. 메인만 상태/relay/원장 소유.
+- 물리 정본 `implementation/run_01/{w13_cycle_seed460.json,.npz,EXECUTION_RECEIPT.json,RUN_STATUS.json}`(NPZ `529f422e…c46b0f`, JSON `e482b939…d9340`), 재생 정본 `implementation/partial_post_03/`. post01/02 미실행 보존본.
+- **물리 결과**: 09-13 21:25:01→09-14 06:05:20 KST, 정리 포함 31,218.753855 s ≤ 32,400. SIGNAL_STOP·runner124. 물리 24.486802938 s·16,304 sync·283 입자 프레임.
+- **전체 HOME/정착 미완료**: HOME 립 오차 29.57491 mm, home_hold 0. 용기 확정 분류 0/가능 상한 11(0.222831 g), 마지막 0.25 s 창 3프레임 최대 간격 0.100025 s.
+- **운반 보유 관측**: PF107 공구 내부 144개 → PF136/t 11.303116 s 0개. 최종 기록 133 source+7 spill+4 ambiguous(strict 132+7+5). 원인 미확정.
+- **원자료 규약 FAIL 2개 유지**(run_01 raw 자체는 불변): phase-only 11 요구/25 기록; source strict containment 1,507,161 불일치. → rev29 파생으로만 수정, 소급 PASS 아님.
+- **재생 FAIL 3개 유지**: DOOR_STOP 5개 PF282 오연결; Rerun 결정 PNG t0 더미; Isaac 관절 출처 338 vs 283. 독립 post03 12/15.
+- 표시 한계: 어깨 범위 밖 20프레임·립 재투영 8.132 mm. 실물 구동 가능성 미검증.
+
+## Next concrete action / 새 승인 경계
+
+**최신 우선 안내:** 다음 세션은 [CONTINUE_20260917_RUNPOD_AFTERNOON.md](claudedocs/CONTINUE_20260917_RUNPOD_AFTERNOON.md)의 요청문으로 연다(컨텍스트 상한으로 세션 종료, 야간 3건은 완료·검증됨).
+
+**2026-09-17 오후 계획(사용자 분배안, `Downloads/실험보고 9.29.md` §12)**: RunPod 랩 계정(≈15:00) 수령 후 (1) pod 사양·요금 확인 → python 3.11 + `deme==2.4.0`(PyPI cp311 휠) + 구 회귀 smoke → 입력 해시 대조, (2) **본 실행 A**: 전체 사이클 1회 rev32(dt 1 µs·20,000알·seed 460·W13 조건, 상한 12 h), (3) **본 실행 B**: 스쿱 구간 반복 seed 461·462. 각각 GO 필요. W16 결과상 전체 사이클은 이 GPU 등급에서 ≈8.5 h 추정이며 pod 성능에 따라 다름. pod는 종료 후 Terminate.
+**W18이 연 다음 물리 변수**: 문 닫힘/이음새 간격(현재 재닫기 정지 3.55°·7.01 mm > 펠릿 4.5 mm). 실물 서보 토크(1.96×0.9 N·m)·물림 보호(3 N) 아래에서 어떻게 더 닫을지(제어 목표·기구 개선) 설계 결정 필요 — 승인 전 구현 금지. **W16이 연 다음 비용 변수**: 알 개수(더미 크기/관심 영역) — numeric_inputs 도메인 증거 재작성 필요한 새 case.
+
+1. **규약 결정**(코드 아님): (a) source 바닥 containment strict 유지 vs 바닥 접촉 허용 개정, (b) 전환 프레임 인덱스 i vs i−1 명시. 결정 전에는 rev29 strict 파생을 기록용으로만 쓴다.
+2. **재생 3결함 새 revision 수정 범위 브리핑** → GPU 재렌더는 명령/입력/시간상한 승인 후. 운반 144 cohort 원인 조사와 짧은 성능 계측은 각각 별도 case(9/14 순서 유지).
+3. **W15 결과 후속(D486)**: 100 µs/1 ms는 현재 접촉탐색 설정에서 실행 불가 — 원인 확정에는 (a) `GetUpdateFreq()/GetExpandFactor()` 로그 추가(코드 변경, 물리 불변) 또는 (b) `cd_update_freq`를 dt에 맞춰 스케일한 B′ 셀(두 번째 변수)이 필요하며 각각 별도 승인. 10 µs 반복·1/2 µs 반복도 별도 승인. Codex W15 감사 결과(`w13-cycle-audit/.../w15_dt_ladder_20260916/audit/`) 확인 후 결론 확정. `run_w10b.sh` 재사용 금지.
+4. rev29로 실제 물리를 돌리는 것은 어떤 실행이든 그 실행의 승인에 포함해 명시한다.
+5. 실물/T105 조회·구동·PID/토크·카메라, 학습, PBD 하이브리드, A/B/C, 설치, commit/push, LFS push/이력 재작성은 새 명시 승인 전 금지.
+
+## 먼저 읽을 근거
+
+- AGENTS.md → DECISIONS_ACTIVE.md(D485~D489) → LEDGER_RECENT.md(`:596~600`) → relay/from_claude.md(9/17) → session_20260916_w14_raw_repair_dt_plan.md(§1~§8) → 야간 보고 3건(`w16-profiling/.../REPORT_w16.md`, `w17-replay-fix/.../REPORT_post04.md`, `w18-cohort-cause/.../REPORT_w18.md`) + 교차감사 `w13-cycle-audit/.../w16_w17_overnight_audit_20260917/` → W14 REPORT.md → DT_EXPANSION_PLAN.md → (필요 시) session_20260916_professor_physics_lfs_defer.md · CONTINUE_20260916_PHYSICS_AUDIT_DT.md · CONTINUE_20260914_W13_REPAIR_PERFORMANCE.md · W13 `REPORT_w13_resume_received.md`.
+- 감사 정본 `w13-cycle-audit/.../audit/{RAW_SCHEMA_REQUIRED.md(+ERRATUM 1~3),REV28_PRODUCTION_PARTIAL_RAW_AUDIT_01.json,POST03_PARTIAL_REPLAY_RESULTS_AUDIT_02.json,DEME_SOURCE_BOUND.md}`; W14 독립 Codex 감사 `w13-cycle-audit/.../w14_w13_raw_repair_d484/repair_20260916_01/audit/`.
+- 관측은 JSON/NPZ 정본, Rerun Float32·Isaac 영상은 검사층. W13은 W11과 domain/유한벽/전체경로가 다른 별도 case. W11 final NPZ는 restart checkpoint 아님.
+
+## 과거 완료 결과 — W11/W12 유지
+
+- W11: W10 dt 2 µs 대비 신규 1 µs 1셀. 포획 541/10.9592 g→517/10.4731 g, 저장 최대속도 5.3291→2.7255 m/s·>5 경고 1→0, 재닫기 servo_stall→pinch_guard. 각 dt 1회라 수렴/동등성 미입증. 근거 `session_20260912_w11_dt_sensitivity.md`, `w11_dt_sensitivity_20260911/{REPORT_w11.md,comparison.json}`. `run_w10b.sh` 재실행 금지.
+- W12: W10/W11 각 64프레임 Isaac 재생, 립 최대 1.873/1.867 mm, 시간 짝 최대차 3.077 ms. 표시 재현 PASS는 실물/dt 수렴 증거 아님. `session_20260912_w12_isaac_replay.md`. 정정값 2.057714892 mm/°.
+- W9=W8 재생, W10=별도 541알 실험(`session_20260911_video_w9_w10_review.md`). 장기 방향: 고정 S1·배출 위치에서 높이/행 기준선→포획/사후맵 예측→취점 선택(즉시 구현 금지).
+
+## 실물 종료 정본 / 유지할 관찰
+
+- 정본 `claudedocs/session_20260911_hardware_closeout_next_sim.md`; 근거 `grab_track/g19_servo_direct/s1_v1_real/boot_check_20260911/scoop_tilt_cycle_01/`. 마지막 기록 `execution_05/result.json` completed/home_reached=true, HOME [0,0,90,0,0,0], 문 목표 0·토크 200·포트 닫힘 — **과거 관측, 이번 조회 아님.**
+- 최신 계량: 컵 9.66 g·보고 24 g(컵 포함 여부 미확정)·고정 jaw 잔류 약 2알. 마지막 잔류정리→HOME 83.538273 s. 전체 cycle 경계 = HOME→scoop→배출→HOME(사용자 정정).
+
+## 신뢰하지 않을 과거 상태 / 환경
+
+- CONTINUE_20260911_SIM_ONLY.md·과거 GO/COMMANDS·HANDOFF.md/TASKS.md·중간 열린/롤90/raise2 자세·옛 비용 승인 대기·relay from_claude(9/11)의 GPU 차단은 현재 상태 아님.
+- isaaclab numpy 1.26.0·psutil 5.9.8·Rerun 0.34.1·DEME 2.4.0 유지, 설치 0. 이번 세션 원장: D485 append·LEDGER `:596` append·ACTIVE/RECENT 갱신. LFS 로컬 보류 상태(`LFS_DEFERRED_20260916.md`) 그대로.

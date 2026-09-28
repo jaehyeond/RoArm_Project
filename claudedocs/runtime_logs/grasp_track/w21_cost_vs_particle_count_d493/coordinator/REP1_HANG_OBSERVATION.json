@@ -1,0 +1,31 @@
+{
+ "artifact": "W21_COORDINATOR_REP1_HANG_OBSERVATION",
+ "utc": "2026-09-19T07:30:09Z",
+ "observer": "main coordinator (did not kill, did not touch the run)",
+ "pid": 1922067,
+ "samples": [
+  {
+   "utc": "2026-09-19T07:29:57Z",
+   "proc": "Ssl        24:29 00:41:39  170",
+   "gpu": "20 %, 3586 MiB"
+  },
+  {
+   "utc": "2026-09-19T07:30:01Z",
+   "proc": "Ssl        24:33 00:41:39  169",
+   "gpu": "20 %, 3586 MiB"
+  },
+  {
+   "utc": "2026-09-19T07:30:05Z",
+   "proc": "Ssl        24:37 00:41:39  169",
+   "gpu": "20 %, 3586 MiB"
+  }
+ ],
+ "threads_wchan": "2 do_poll.constprop.0\n     66 futex_wait_queue",
+ "last_progress_line": "approach/p1_tool_vertical 400/530 lip=[-103.43, -0.0, 290.28] v_max=0.00 오차=0.000176 mm w=892s",
+ "file_mtimes": "total 52\ndrwxrwxr-x 3 cgxr cgxr  4096 2026-09-19T16:05:42 .\ndrwxrwxr-x 5 cgxr cgxr  4096 2026-09-19T16:04:07 ..\ndrwxrwxr-x 2 cgxr cgxr  4096 2026-09-19T16:05:37 _obj\n-rw-rw-r-- 1 cgxr cgxr     0 2026-09-19T16:05:28 stderr.txt\n-rw-rw-r-- 1 cgxr cgxr  1271 2026-09-19T16:20:21 stdout.txt\n-rw-rw-r-- 1 cgxr cgxr 35912 2026-09-19T16:24:52 timeline_seed460.json",
+ "disk": "/dev/nvme0n1p5  590G  399G  162G  72% /",
+ "stderr_bytes": 0,
+ "observation": "누적 CPU 시간이 20초 창에서 41:39.00 -> 41:39.02 로 사실상 정지. 순간 CPU 0.0%. 스레드 전부 futex_wait_queue. GPU 계산 점유가 실행 중 94~95% 에서 20%(MCP 기준선)로 복귀. CUDA 메모리 3,586 MiB 와 /dev/nvidia0·/dev/nvidia-uvm fd 는 유지. stderr 0바이트. 디스크 162G 여유.",
+ "not_claimed": "원인은 미확정이다. 'GPU 교착'이라고 단정하지 않는다 — 관측은 '모든 스레드 futex 대기 + CPU/GPU 정지'까지다. W16 run_01(하네스 SIGTERM 외부 종료)과는 다른 현상이다: 이번은 setsid 분리이고 신호 흔적이 없다.",
+ "action_taken": "워커(dispatch ctx_69489f5cee7d)에게 관측을 전달했다(msg_9c3de796f88a). 종결 판단·영수증 기록은 과제서 watchdog 규약에 따라 워커가 한다. 코디네이터는 프로세스를 죽이지 않았고 재시도를 지시하지 않았다."
+}

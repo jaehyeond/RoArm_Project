@@ -1,0 +1,378 @@
+{
+ "artifact": "W19_A_SUMMARY_PRODUCTION_VALUES",
+ "run_dir": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w19_runpod_d487/A_full_cycle/run_01",
+ "runner": {
+  "state": "completed_rc0",
+  "rc": 0,
+  "wall_s": 20977.836,
+  "timed_out": false,
+  "killed": false,
+  "started_local": "2026-09-17 07:25:21 UTC",
+  "ended_local": "2026-09-17 13:14:59 UTC"
+ },
+ "sim": {
+  "wall_seconds": 20954.18,
+  "cycle_sim_time_s": 24.807311937,
+  "n_sync": 16813,
+  "n_particle_frames": 288,
+  "diverged": false,
+  "abort_class": null,
+  "fail_reason": "None",
+  "stopped_early_after_phase": null,
+  "signal_received": null,
+  "max_wall_s": 42600.0
+ },
+ "pops": {
+  "v_particle_max_m_s": 2.4597,
+  "syncs_over_pop_speed": 0,
+  "pop_speed_m_s": 5.0
+ },
+ "door_stops": [
+  [
+   "approach",
+   "reached_open_end",
+   5.971508984923389,
+   0.0
+  ],
+  [
+   "close",
+   "servo_stall",
+   8.457449978646991,
+   1.8531058164270098
+  ],
+  [
+   "reclose",
+   "servo_stall",
+   9.000754977275278,
+   1.3717722726410022
+  ],
+  [
+   "discharge",
+   "reached_open_end",
+   16.087519959382917,
+   0.0013798467090931886
+  ],
+  [
+   "close_after_discharge",
+   "reached_close_end",
+   18.813813952499686,
+   0.001031632442133579
+  ]
+ ],
+ "door_final": {
+  "q_final_cmd_deg": 0.0,
+  "q_final_actual_deg": -0.0002,
+  "servo_deg_final": 2.5
+ },
+ "decisions": [
+  [
+   "initial_home_end",
+   0.0,
+   {
+    "source": 19817,
+    "receiving_bin": 0,
+    "tool_residual": 0,
+    "spill": 0,
+    "in_flight": 0,
+    "ambiguous": 183
+   }
+  ],
+  [
+   "settle_end",
+   0.100025,
+   {
+    "source": 19815,
+    "receiving_bin": 0,
+    "tool_residual": 0,
+    "spill": 0,
+    "in_flight": 2,
+    "ambiguous": 183
+   }
+  ],
+  [
+   "approach_end",
+   5.971509,
+   {
+    "source": 19818,
+    "receiving_bin": 0,
+    "tool_residual": 0,
+    "spill": 0,
+    "in_flight": 0,
+    "ambiguous": 182
+   }
+  ],
+  [
+   "descend_end",
+   7.37586,
+   {
+    "source": 19444,
+    "receiving_bin": 0,
+    "tool_residual": 46,
+    "spill": 0,
+    "in_flight": 4,
+    "ambiguous": 506
+   }
+  ],
+  [
+   "close_stop",
+   8.45745,
+   {
+    "source": 19095,
+    "receiving_bin": 0,
+    "tool_residual": 283,
+    "spill": 0,
+    "in_flight": 95,
+    "ambiguous": 527
+   }
+  ],
+  [
+   "lift_end",
+   8.993584,
+   {
+    "source": 19239,
+    "receiving_bin": 0,
+    "tool_residual": 277,
+    "spill": 0,
+    "in_flight": 6,
+    "ambiguous": 478
+   }
+  ],
+  [
+   "reclose_end",
+   9.000755,
+   {
+    "source": 19239,
+    "receiving_bin": 0,
+    "tool_residual": 292,
+    "spill": 0,
+    "in_flight": 6,
+    "ambiguous": 463
+   }
+  ],
+  [
+   "bridge_clearance_decision",
+   9.000755,
+   {
+    "source": 19239,
+    "receiving_bin": 0,
+    "tool_residual": 292,
+    "spill": 0,
+    "in_flight": 6,
+    "ambiguous": 463
+   }
+  ],
+  [
+   "transport_end",
+   14.998254,
+   {
+    "source": 19265,
+    "receiving_bin": 18,
+    "tool_residual": 153,
+    "spill": 123,
+    "in_flight": 9,
+    "ambiguous": 432
+   }
+  ],
+  [
+   "release_before",
+   14.998254,
+   {
+    "source": 19265,
+    "receiving_bin": 18,
+    "tool_residual": 153,
+    "spill": 123,
+    "in_flight": 9,
+    "ambiguous": 432
+   }
+  ],
+  [
+   "release_after",
+   16.08752,
+   {
+    "source": 19265,
+    "receiving_bin": 271,
+    "tool_residual": 12,
+    "spill": 124,
+    "in_flight": 0,
+    "ambiguous": 328
+   }
+  ],
+  [
+   "wait_end",
+   17.587895,
+   {
+    "source": 19265,
+    "receiving_bin": 271,
+    "tool_residual": 13,
+    "spill": 124,
+    "in_flight": 0,
+    "ambiguous": 327
+   }
+  ],
+  [
+   "close_after_discharge_end",
+   18.813814,
+   {
+    "source": 19265,
+    "receiving_bin": 272,
+    "tool_residual": 13,
+    "spill": 124,
+    "in_flight": 0,
+    "ambiguous": 326
+   }
+  ],
+  [
+   "return_home_end",
+   24.807312,
+   {
+    "source": 19266,
+    "receiving_bin": 272,
+    "tool_residual": 11,
+    "spill": 124,
+    "in_flight": 0,
+    "ambiguous": 327
+   }
+  ]
+ ],
+ "delivery": {
+  "definite_delivered_n": 272,
+  "definite_delivered_g": 5.51,
+  "possible_delivered_n": 327,
+  "possible_delivered_g": 6.6242,
+  "inventory_final": {
+   "source": 19266,
+   "receiving_bin": 272,
+   "tool_residual": 11,
+   "spill": 124,
+   "in_flight": 0,
+   "ambiguous": 327
+  },
+  "layer1_accounting_integrity": true
+ },
+ "settlement_window": {
+  "window_s": 0.25,
+  "n_frames": 5,
+  "frame_times_s": [
+   24.603260938,
+   24.703285938,
+   24.707286938,
+   24.803310937,
+   24.807311937
+  ],
+  "max_frame_gap_s": 0.100025,
+  "criterion": {
+   "speed_max_m_s": 0.005,
+   "center_move_max_m": 0.001,
+   "basis": "감사 사전 고정 operational criterion. 물리적 rest truth 가 아니다."
+  },
+  "cadence_ok": false,
+  "n_stable_bin_all_frames": 272,
+  "n_settled": 272,
+  "max_speed_of_stable_m_s": 2.391e-05,
+  "max_move_of_stable_mm": 0.003311
+ },
+ "home": {
+  "home_start_lip_mm": [
+   47.8277,
+   -0.0,
+   504.9088
+  ],
+  "home_end_lip_mm": [
+   47.8277,
+   -0.0,
+   504.9087
+  ],
+  "home_pose_return_err_mm": 6e-05,
+  "syncs_per_phase": {
+   "initial_home": 1,
+   "settle": 25,
+   "approach": 4784,
+   "descend": 351,
+   "close": 2190,
+   "lift": 134,
+   "reclose": 71,
+   "transport": 1499,
+   "discharge": 2266,
+   "discharge_wait": 375,
+   "close_after_discharge": 3619,
+   "return_home": 1498
+  }
+ },
+ "phases_wall": {
+  "initial_home": {
+   "n_sync": 1,
+   "wall_s": 25.1,
+   "sim_s": 0.0,
+   "wall_per_sim_s": 25054500000000.0
+  },
+  "settle": {
+   "n_sync": 25,
+   "wall_s": 79.4,
+   "sim_s": 0.1,
+   "wall_per_sim_s": 793.4
+  },
+  "approach": {
+   "n_sync": 4784,
+   "wall_s": 4957.4,
+   "sim_s": 5.8715,
+   "wall_per_sim_s": 844.3
+  },
+  "descend": {
+   "n_sync": 351,
+   "wall_s": 1152.5,
+   "sim_s": 1.4044,
+   "wall_per_sim_s": 820.7
+  },
+  "close": {
+   "n_sync": 2190,
+   "wall_s": 1111.8,
+   "sim_s": 1.0816,
+   "wall_per_sim_s": 1027.9
+  },
+  "lift": {
+   "n_sync": 134,
+   "wall_s": 427.8,
+   "sim_s": 0.5361,
+   "wall_per_sim_s": 798.0
+  },
+  "reclose": {
+   "n_sync": 71,
+   "wall_s": 12.5,
+   "sim_s": 0.0072,
+   "wall_per_sim_s": 1737.2
+  },
+  "transport": {
+   "n_sync": 1499,
+   "wall_s": 4759.7,
+   "sim_s": 5.9975,
+   "wall_per_sim_s": 793.6
+  },
+  "discharge": {
+   "n_sync": 2266,
+   "wall_s": 1160.8,
+   "sim_s": 1.0893,
+   "wall_per_sim_s": 1065.7
+  },
+  "discharge_wait": {
+   "n_sync": 375,
+   "wall_s": 1189.2,
+   "sim_s": 1.5004,
+   "wall_per_sim_s": 792.6
+  },
+  "close_after_discharge": {
+   "n_sync": 3619,
+   "wall_s": 1420.0,
+   "sim_s": 1.2259,
+   "wall_per_sim_s": 1158.3
+  },
+  "return_home": {
+   "n_sync": 1498,
+   "wall_s": 4658.0,
+   "sim_s": 5.9935,
+   "wall_per_sim_s": 777.2
+  }
+ },
+ "total_wall_s": 20954.1,
+ "total_sim_s": 24.807312,
+ "note": "생산 기록값(rev32, 규약 v2 분류). 독립 감사·rev31 파생 회계 전. 판정 승격 아님."
+}

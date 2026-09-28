@@ -1,0 +1,61 @@
+--- /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w14_w13_raw_repair_d484/repair_20260916_01/rev31/src/sim_w13_full_cycle.py	2026-09-16 20:13:17.901486039 +0900
++++ src/sim_w13_full_cycle.py	2026-09-17 01:51:23.145024378 +0900
+@@ -409,7 +409,9 @@
+                           "n_tray_contacts", "F_tray_N", "n_bin_contacts", "F_bin_N",
+                           "n_sphere_near_wall", "n_sphere_overlap_wall",
+                           "min_sphere_wall_gap_mm", "max_abs_pos_nonfinite",
+-                          "n_sphere_center_outside_wall", "n_clump_center_outside_box")}
++                          "n_sphere_center_outside_wall", "n_clump_center_outside_box",
++                          # rev32 프로파일링 관측층(읽기 전용 엔진 질의). 물리·제어·저장프레임 규약 불변.
++                          "engine_num_contacts", "engine_cd_update_freq", "engine_query_wall_s")}
+     CT = {"idx": [], "pt": [], "f": [], "mesh": []}
+     PF = {k: [] for k in ("t", "sync", "pos", "quat", "vel", "omega", "inv")}
+     _int_steps_cache = {}
+@@ -491,6 +493,12 @@
+         D["door_deg"].append(q_from_pose(R_fa, R_da)); D["door_tgt_deg"].append(cmd["q"])
+         # 내부 step 수는 설치본 누산 규칙을 **재현한 파생값**이다 — 엔진이 노출하는 관측 카운터가 아니다.
+         D["int_steps"].append(_int_steps(dts))
++        # rev32: 엔진 관측 카운터 읽기 전용 질의. 상태를 **읽기만** 한다(Set* 호출 0, 물리 불변).
++        # 예외를 낼 수 있는 코드보다 **앞**에 둔다 — pop-stop 이 떠도 SC 배열 길이가 어긋나지 않는다.
++        _q0 = time.perf_counter()
++        SC["engine_num_contacts"].append(float(s.GetNumContacts()))
++        SC["engine_cd_update_freq"].append(float(s.GetUpdateFreq()))
++        SC["engine_query_wall_s"].append(time.perf_counter() - _q0)
+         D["q5"].append(np.asarray(cmd["q5"], np.float32))
+         # rev11 관측층: 이 sync 의 명령 모드. "fk" 면 q5 가 실제 관절 상태이고,
+         # "w11"/"abs" 면 직교 포즈 명령이라 q5 는 그 시점의 관절 상태가 아니다.
+@@ -1222,6 +1230,34 @@
+             "overlap_priority": "tool > near_tool > bin > near_bin > source > near_source > in_flight > spill",
+             "velocity_severity": {"warning_m_s": P["pop_speed_m_s"], "warning_operator": ">",
+                                   "hard_stop_m_s": P.get("diag_stop_v_m_s"), "hard_stop_operator": ">"},
++            # rev32 = rev31 + per-sync 엔진 진단(관측층). 물리 파라미터·제어·가드·저장프레임 규약 불변.
++            "engine_diagnostics_rev32": {
++                "purpose": "W16 비용 프로파일링 — sync 벽시계를 엔진 상태와 함께 읽는다. 과학 판정 정본 아님.",
++                "read_only_queries_physics_unchanged": True,
++                "queries": {
++                    "scalar_engine_num_contacts": {
++                        "api": "DEME.DEMSolver.GetNumContacts()",
++                        "api_h": "DEM/API.h:101 (size_t; dT->getNumContacts())",
++                        "meaning": "kT 가 보고한 **잠재 접촉쌍** 수. 실제 힘 발생 접촉수와 같지 않다.",
++                        "dtype_note": "size_t -> float64 저장(2^53 까지 무손실)"},
++                    "scalar_engine_cd_update_freq": {
++                        "api": "DEME.DEMSolver.GetUpdateFreq()",
++                        "api_h": "DEM/API.h:315 (float; 'Get the current update frequency')",
++                        "meaning": "dT 가 kT 접촉쌍 갱신을 기다리기까지의 현재 step 수(적응형이면 변한다)."},
++                    "scalar_engine_query_wall_s": {
++                        "api": "time.perf_counter() delta around the two queries above",
++                        "meaning": "관측층 자체의 호출 비용. sync 벽시계 해석에서 관측 오버헤드를 분리하려고 남긴다."}},
++                "unavailable_queries": {
++                    "expand_factor_cd_margin": {
++                        "requested_api": "DEME.DEMSolver.GetExpandFactor()",
++                        "api_h": "DEM/API.h:105 (C++ 에는 선언되어 있다)",
++                        "status": "NOT_BOUND_IN_PYTHON_MODULE",
++                        "evidence": "dir(DEME.DEMSolver) 에 'SetExpandFactor' 만 있고 'GetExpandFactor' 는 없다 (DEME 2.4.0 설치본)",
++                        "action": "기록하고 건너뛴다. 엔진·바인딩 패치 0."}},
++                "wall_attribution": ("sync_wall_elapsed_s 는 sample() **진입 직후** 찍힌다. 따라서 이 질의 비용은 "
++                                     "같은 행이 아니라 **다음 sync 의 벽시계 차분**에 들어간다. 크기는 "
++                                     "scalar_engine_query_wall_s 로 직접 잰다."),
++                "not_a_scientific_result": "이 배열들은 비용 관측이다. 포획량·배출량 판정에 쓰지 않는다."},
+             "numeric_receipt": BR.dump_json_safe(bridge_static["numeric_receipt"]),
+             "note": "원시 배열이 과학 정본. RRD/영상은 관측층."}, ensure_ascii=False))
+     json.dump(res, open(out / f"w13_cycle_{tag}.json", "w"), ensure_ascii=False, indent=2)

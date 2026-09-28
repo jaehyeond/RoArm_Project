@@ -37,16 +37,14 @@ Codex가 repo 파일에 남기지 않은 판단·시도·실패는 그대로 소
 
 ---
 
-## §2 2026-09-14 Codex → 다음 세션 — 연구 설명·재개·Git 게시
+## §2 2026-09-16 Codex → 다음 세션 — 교수 질의 감사와 로컬 보관 설정
 
-**한 일 (repo에 남은 변경)**: START_HERE.md, BACKLOG의 후속 후보 append, 새 session_20260914_research_closeout_git.md, CONTINUE_20260914_W13_REPAIR_PERFORMANCE.md, research/closeout_20260914/와 이 relay. Downloads에 새 출력용 Markdown을 전달했다. 사용자 최신 요청으로 이번 commit/push를 승인받아 각 branch로 보존한다. 실제 원격 확인은 GIT_PUBLICATION.md와 최종 START를 따른다.
+**한 일 (repo에 남은 변경)**: 메인의 START_HERE, BACKLOG append, 새 session_20260916_professor_physics_lfs_defer.md, CONTINUE_20260916_PHYSICS_AUDIT_DT.md, LFS_DEFERRED_20260916.md, research/professor_review_20260916/와 이 relay. 메인·pellet-model·w12-isaac-replay·w13-cycle-audit·w13-full-cycle의 .gitignore와 index만 보관 요청 범위에서 변경했다. commit/push/과거 이력 변경 없음.
 
-**만지지 말 것**: 기존 PPT/출력용 Markdown/미디어·W13 run_01/rev28/post03·기존 실패 보고·과거 동결 revision. 모든 실험 원본 바이트는 유지한다. pellet-model의 세 .bak는 제외한 로컬 보존본이며 삭제하지 않는다. worker branch의 오래된 상태/원장을 main에 merge하지 않는다.
+**만지지 말 것**: 기존 W13 run_01/rev28/post03·모든 미디어/NPZ·기존 실패 보고·pellet의 기존 세 .bak. staged D를 보고 디스크 파일까지 삭제하거나 worktree를 제거하지 않는다. 기존 worker 원장은 main에 merge하지 않는다. 기존 .gitattributes/커밋을 임의 되돌리지 않는다.
 
-**함정**: master에 worker 코드가 자동 통합되지 않았다. branch 매핑/LFS 원자료는 research/closeout_20260914/GIT_PUBLICATION.md와 PUBLICATION_MANIFEST.json을 확인한다. LFS 포인터만 있는 clone은 원자료 확보가 끝난 상태가 아니다. 당시 pin의 이전 HEAD는 이번 게시 때문에 바뀌었지만 원시 해시를 고치거나 오래된 GO를 되살리지 않는다. 새 MD는 최근 질의의 종합 설명이며 옛 verify_delivery.mjs의 두 문서 검사 대상이 아니다. 새로운 verify_closeout.mjs가 delivery/continuation/numbers/publication을 분리해 검사한다.
+**함정**: ignore해도 기존 추적 파일에는 효력이 없어서 이번에는 index만 제외했다. 과거 커밋에는 포인터가 남아 있어 바로 push하면 LFS 전송이 필요할 수 있다. 기존 git_publication.mjs의 stage(force-add)/push를 재사용하지 않는다. 명단은 백업 완료 증명이 아니다. 공식 문서의 기능과 이번 실행의 실제 포함 항목을 혼동하지 말고, 카메라 focal_mm 필드명도 물리 mm 측정값으로 복사하지 않는다. 불변 원시 파일과 새 파생 분류를 혼합하지 않는다.
 
-**승인 대기**: 새 continuation §5를 새 세션에 사용자 요청으로 전달하면 §4 첫 case의 원자료 판정 수정과 CPU 테스트부터 진행한다. 지금 새 연구 실행은0. 이후 재생3결함·운반 원인·성능 계측은 순차 분리한다. GPU 물리·재렌더·학습·A/B/C·하드웨어 조회/구동/PID/토크/카메라·설치는 자동 승인되지 않는다. 이번 Git 게시 승인은 후속 세션에 이월하지 않는다.
+**승인 대기**: GPU 명령/예산, 물성·형상·제어 변경, 실물 조회·구동·PID/토크·카메라, 설치·학습·PBD 하이브리드·A/B/C, commit/push/이력 정리는 새 명시 승인 없이는 하지 않는다. 다음 행동의 정본은 START와 최신 continuation이며 과거 GO/COMMANDS는 실행 권한이 아니다.
 
-**이번 게시의 미완료 인계**: 로컬main+6worker커밋은보존됐지만 원격게시미완료다. 첫workerpush는SSH종료/rc141, 메인push는자동보안검토거부로미실행. 사용자에게공개origin/master+6branch와원자료/영상LFS약3.32GB의구체적게시승인을질문했고답전재시도금지다. 로컬커밋을원격백업으로말하지않는다. 승인후정상push+원격SHA대조만이어가며실험재실행불필요. 세부정본은GIT_PUBLICATION.md.
-
-**검증 방법**: 새 verification 스크립트의 내용을 읽고 필요한 mode만 실행한다. publication은 로컬 전체 증거 해시와 Git 원격 ref를 읽으며 새 물리나 renderer를 실행하지 않는다. 새 세션의 상태 정본은 START_HERE이고 이 relay가 아니다. 이번 종료 뒤 상태 원장 소유권을 넘겨받는다.
+**검증 방법**: research/professor_review_20260916/verify_review.mjs를 읽은 뒤 physics/git/docs 모드를 사용한다. CPU 원자료 감사와 파일 보존/문서 링크 검사이며 새 물리나 원격 전송은 없다. defer_lfs.mjs prepare/apply는 이미 완료한 일회 작업이므로 재실행하지 않는다. HEAD/원본/ignore/index의 정확한 상태는 LFS_BEFORE/AFTER로 확인한다. 다음 세션이 상태 원장 소유권을 넘겨받는다.

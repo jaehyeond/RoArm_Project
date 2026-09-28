@@ -334,3 +334,21 @@ as the current Active Case.
 ## 2026-09-14 W13 비용·학습 방향 — 미구현 후속 후보
 
 W13 부분 실행31,218.753855초/물리24.486803초의 비용을 확인했다. 원자료 판정2결함 수정→재생3결함 정리→운반144개 ID의 보유 원인 조사와 짧은 동일조건 성능 계측을 순차 case로 분리한다. 이후 동일 상태 조회/배열 재사용과 비제어 분석 후처리화를 검토하되 힘·토크·끼임 보호선은 유지한다. ROI/비접촉 구간 처리/dt·형상 변경은 별도 물리 근사 case이며 승인 전 구현하지 않는다. 한 번 퍼내기 단위의 사후 지형·포획/배출 예측 및 취점 선택 학습은 장기 후보로만 유지한다. DEME는 비싼 검증/자료생성, 빠른 모델은 후보 평가, Isaac/Lab은 필요한 로봇·센서·정책 통합 역할을 검토한다. 외부 DEME가 num_envs로 자동 병렬화되거나 저장 영상이 RL 환경이 된다고 가정하지 않는다. LGBND 등 선행 방향 존재·신규성 미주장. 새 실험/학습/하이브리드/A-B-C 구현0. 근거 `CONTINUE_20260914_W13_REPAIR_PERFORMANCE.md`, `research/closeout_20260914/20260915_W13결과_실행시간_최적화와학습전략_출력용.md`.
+
+## 2026-09-16 교수 질의 후속 — dt 확대 / 형상·회전·렌더 단위 (미구현)
+
+원래 W13 판정수정+CPU검수부터 유지한다. 교수 요청의10µs/밀리초 비교는 별도 case 실행안을 준비한다. 10µs 직전cell_DE_c의rc134/엔진속도폭주를 재사용 근거로 포함하고,1ms>0.1msfine-sync이므로 실제제어간격/float32누적을숨기지않는다. 실험은명령/구간/총벽시계·정리예산/보호조건승인후실행. 7구의폭under-fill(-5.23%)·표면요철·다중접촉 및 μ/Crr와의영향분리는dt와별도형상보정case다. 기본τ/I·quaternion적분의비구형자유회전검증,rolling warm-up식,JSON밀도와NPZ질량/MOI연결도후속후보다. 카메라focal_mm라벨과USD단위의정합/전체RTX설정기록은별도표시층정정이며과거픽셀/물리수치를소급수정하지않는다. PBD하이브리드·학습·A/B/C는이번구현범위아님. 근거 `research/professor_review_20260916/REPORT.md`, `CONTINUE_20260916_PHYSICS_AUDIT_DT.md`.
+
+## 2026-09-16 W14 raw repair 후속 후보 — 미구현
+
+- **규약 결정 대기(코드 아님)**: (a) source 바닥 containment를 규약대로 strict(구 최하단 > floor+2.5 mm)로 유지하면 바닥층 약5,3xx알이 ambiguous가 된다 — 바닥 접촉 허용(예: 바닥 축 margin 0 또는 별도 `floor_contact` 라벨)으로 규약을 개정할지 결정 필요. (b) `RAW_SCHEMA_REQUIRED.md:42` "모든 phase 전환 sync에 입자 프레임"의 인덱스 규약 — 생산 `enter()`는 전환 직전 행(i−1)에 프레임을 남기고 전환 인덱스 i는 새 phase 첫 행이라 정확히 i에 프레임이 있는 전환은 7336뿐. 규약 문구를 i−1로 명시하거나 생산자를 "새 phase 첫 sync 뒤 저장"으로 바꾸는 것 중 택일(둘 다 rev29 범위 밖). 근거 `runtime_logs/grasp_track/w14_w13_raw_repair_d484/repair_20260916_01/REPORT.md` §6.
+- **dt 확대 실행안의 분리 후보** (`research/dt_expansion_plan_20260916/DT_EXPANSION_PLAN.md` §8): `cd_update_freq`를 dt에 맞춰 스케일한 B' 셀(탐색 간격 20 µs 유지) — 두 번째 변수라 본 실행안에서 제외; 1 ms에서 세밀 sync 요청을 명시적으로 늘린 프로토콜 변형; `GetUpdateFreq()/GetExpandFactor()` 로그 추가(물리 불변 코드 변경, 별도 명시 승인).
+- rev29를 실제 물리로 검증(다음 W13류 실행에서 `transition_sync_index` 11개·strict 분류를 원시에 기록)하는 것은 그 실행의 승인에 묶인다. 재생3결함·144 cohort 원인·성능 계측은 9/14 순서 그대로 별도 case.
+
+## 2026-09-16 W15 후속 후보 — 미구현 (D486)
+
+- **B′ 셀**: `cd_update_freq`를 dt에 맞춰 스케일(탐색 간격 20 µs 유지, 예: 100 µs→freq 1)해 100 µs/1 ms가 실행 가능해지는지 — 두 번째 변수라 단독 case로. 동시에 `SetMaxVelocity` 마진 상호작용 기록.
+- **런타임 로그 추가**: `GetUpdateFreq()`/`GetExpandFactor()`/접촉쌍 수를 sync마다 기록(물리 불변 코드 변경, 별도 승인) — 100 µs OOM·1 ms 커널 assertion의 "탐색 마진 팽창" 가설 검증용.
+- **10 µs 반복 셀 2~3회**: 발산 위치가 실행마다 다른지(폐합 중 vs 재닫기 끝) 확인. 1/2 µs 반복 셀은 수렴/동등성 논의의 최소 요건.
+- **저장 sync 사이 최대속도 관측**: 엔진 내부 최대속도(2.17e9)가 저장값(19.22)과 자릿수가 다르므로, 세밀 구간에서 더 짧은 sync 또는 엔진 측 속도 히스토리 조회 가능 여부 검토(코드 변경).
+- 근거 `session_20260916_w14_raw_repair_dt_plan.md` §7, `w15-dt-ladder/.../w15_dt_ladder_20260916/REPORT_w15.md`.

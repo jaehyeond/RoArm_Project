@@ -1,0 +1,172 @@
+{
+ "artifact": "W19_RUNPOD_COMMANDS_V1",
+ "note": "pod 에서 로컬과 같은 절대경로로 실행한다. 물성·형상·알 수·경로·문 속도·보호선·dt 1 µs·cd_update_freq 변경 0. argv 는 W16 COMMANDS_w16.json(=W13 rev28 step1 골격) 그대로이며 --out/--max-wall-s 만 다르다. 자동 재시도 없음. 본 실행(runA/runB_*) 은 사용자 GO 뒤에만 실행한다.",
+ "manifest": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w19_runpod_d487/bundle/BUNDLE_MANIFEST.json",
+ "env": {
+  "PYTHONDONTWRITEBYTECODE": "1"
+ },
+ "auto_retry": false,
+ "gpu_policy": "pod 당 DEME 프로세스 하나. smoke 3종 rc0 후에만 본 실행.",
+ "pre_go_steps_order": [
+  "smoke_import_300",
+  "smoke_sphere_regression",
+  "smoke_settle_full"
+ ],
+ "go_required_steps": [
+  "runA_full_cycle",
+  "runB_seed461",
+  "runB_seed462"
+ ],
+ "steps": {
+  "smoke_import_300": {
+   "attempt_dir": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w19_runpod_d487/A_full_cycle/smoke_01_import300",
+   "cap_s": 600.0,
+   "grace_s": 60.0,
+   "cwd": "/home/cgxr/orca/workspaces/RoArm_Project/w16-profiling/claudedocs/runtime_logs/grasp_track/w16_profile_d486/rev32/src",
+   "note": "W16 smoke_02 와 같은 형태(300알·settle 까지·numeric-evidence 없음). import 체인·STL/URDF·DEME JIT(NVRTC) 확인. 로컬 PASS 전례 있음.",
+   "argv": [
+    "/home/cgxr/miniconda3/envs/roarm/bin/python",
+    "-B",
+    "/home/cgxr/orca/workspaces/RoArm_Project/w16-profiling/claudedocs/runtime_logs/grasp_track/w16_profile_d486/rev32/src/sim_w13_full_cycle.py",
+    "--params",
+    "/home/cgxr/orca/workspaces/RoArm_Project/w16-profiling/claudedocs/runtime_logs/grasp_track/w16_profile_d486/rev32/params_w13.json",
+    "--pile",
+    "/home/cgxr/orca/workspaces/RoArm_Project/pellet-model/claudedocs/runtime_logs/pellet_model/pile_lens_20260910/pile_lens6_a4p5_b3p8_c2p5_slab_n20000_seed460.npz",
+    "--out",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w19_runpod_d487/A_full_cycle/smoke_01_import300",
+    "--seed",
+    "460",
+    "--max-particles",
+    "300",
+    "--stop-after-phase",
+    "settle",
+    "--max-wall-s",
+    "540"
+   ]
+  },
+  "smoke_sphere_regression": {
+   "attempt_dir": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w19_runpod_d487/B_scoop_repeat/smoke_02_sphere_regression",
+   "cap_s": 1200.0,
+   "grace_s": 60.0,
+   "cwd": "/home/cgxr/Documents/Robotics/RoArm_Project",
+   "note": "W10 G0 구 회귀(run_regression.sh 그대로): diverged=false ∧ n_in_cavity∈[268,362] ∧ stops 전부 servo_stall. 로컬 105 s/287개.",
+   "argv": [
+    "/home/cgxr/miniconda3/envs/roarm/bin/python",
+    "-u",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py",
+    "--params",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w3_deme_scoop/b_diverge/params_fixnorm_plunge25.json",
+    "--pile",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/sim_deme/pile_practical_fast_d4p16_n18796_seed460.npz",
+    "--out",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w19_runpod_d487/B_scoop_repeat/smoke_02_sphere_regression",
+    "--seed",
+    "460"
+   ]
+  },
+  "smoke_settle_full": {
+   "attempt_dir": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w19_runpod_d487/A_full_cycle/smoke_03_settle_full",
+   "cap_s": 1800.0,
+   "grace_s": 120.0,
+   "cwd": "/home/cgxr/orca/workspaces/RoArm_Project/w16-profiling/claudedocs/runtime_logs/grasp_track/w16_profile_d486/rev32/src",
+   "note": "20,000알 전량 + numeric-evidence 도메인 게이트 + settle(물리 0.1 s) 까지. 로컬 settle 실제 경과 127.3 s(W16)/116.2 s(W13) 와 비교해 pod 속도비를 잰다.",
+   "argv": [
+    "/home/cgxr/miniconda3/envs/roarm/bin/python",
+    "-B",
+    "/home/cgxr/orca/workspaces/RoArm_Project/w16-profiling/claudedocs/runtime_logs/grasp_track/w16_profile_d486/rev32/src/sim_w13_full_cycle.py",
+    "--params",
+    "/home/cgxr/orca/workspaces/RoArm_Project/w16-profiling/claudedocs/runtime_logs/grasp_track/w16_profile_d486/rev32/params_w13.json",
+    "--pile",
+    "/home/cgxr/orca/workspaces/RoArm_Project/pellet-model/claudedocs/runtime_logs/pellet_model/pile_lens_20260910/pile_lens6_a4p5_b3p8_c2p5_slab_n20000_seed460.npz",
+    "--out",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w19_runpod_d487/A_full_cycle/smoke_03_settle_full",
+    "--seed",
+    "460",
+    "--numeric-evidence",
+    "/home/cgxr/orca/workspaces/RoArm_Project/w16-profiling/claudedocs/runtime_logs/grasp_track/w16_profile_d486/rev32/numeric_inputs.json",
+    "--stop-after-phase",
+    "settle",
+    "--max-wall-s",
+    "1500"
+   ]
+  },
+  "runA_full_cycle": {
+   "attempt_dir": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w19_runpod_d487/A_full_cycle/run_01",
+   "cap_s": 43200.0,
+   "grace_s": 600.0,
+   "cwd": "/home/cgxr/orca/workspaces/RoArm_Project/w16-profiling/claudedocs/runtime_logs/grasp_track/w16_profile_d486/rev32/src",
+   "note": "본 실행 A: 전체 사이클 1회 rev32 (W13 조건, --stop-after-phase 없음). 상한 12 h = 43,200 s(소프트 42,600 + grace 600). GO 필요.",
+   "argv": [
+    "/home/cgxr/miniconda3/envs/roarm/bin/python",
+    "-B",
+    "/home/cgxr/orca/workspaces/RoArm_Project/w16-profiling/claudedocs/runtime_logs/grasp_track/w16_profile_d486/rev32/src/sim_w13_full_cycle.py",
+    "--params",
+    "/home/cgxr/orca/workspaces/RoArm_Project/w16-profiling/claudedocs/runtime_logs/grasp_track/w16_profile_d486/rev32/params_w13.json",
+    "--pile",
+    "/home/cgxr/orca/workspaces/RoArm_Project/pellet-model/claudedocs/runtime_logs/pellet_model/pile_lens_20260910/pile_lens6_a4p5_b3p8_c2p5_slab_n20000_seed460.npz",
+    "--out",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w19_runpod_d487/A_full_cycle/run_01",
+    "--seed",
+    "460",
+    "--numeric-evidence",
+    "/home/cgxr/orca/workspaces/RoArm_Project/w16-profiling/claudedocs/runtime_logs/grasp_track/w16_profile_d486/rev32/numeric_inputs.json",
+    "--max-wall-s",
+    "42600"
+   ]
+  },
+  "runB_seed461": {
+   "attempt_dir": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w19_runpod_d487/B_scoop_repeat/cell_dt1e6_seed461",
+   "cap_s": 7200.0,
+   "grace_s": 120.0,
+   "cwd": "/home/cgxr/Documents/Robotics/RoArm_Project",
+   "note": "본 실행 B-1: W11 dt1e-6 스쿱 구간 반복. scoop_y_range=[0,0] 이라 seed 는 태그일 뿐 = 같은 입력 반복(GPU 비결정 변동). 로컬 W11 2,730 s. GO 필요.",
+   "argv": [
+    "/home/cgxr/miniconda3/envs/roarm/bin/python",
+    "-u",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py",
+    "--params",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w19_runpod_d487/B_scoop_repeat/params_w19_B_seed461.json",
+    "--pile",
+    "/home/cgxr/orca/workspaces/RoArm_Project/pellet-model/claudedocs/runtime_logs/pellet_model/pile_lens_20260910/pile_lens6_a4p5_b3p8_c2p5_slab_n20000_seed460.npz",
+    "--out",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w19_runpod_d487/B_scoop_repeat/cell_dt1e6_seed461",
+    "--seed",
+    "461"
+   ]
+  },
+  "runB_seed462": {
+   "attempt_dir": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w19_runpod_d487/B_scoop_repeat/cell_dt1e6_seed462",
+   "cap_s": 7200.0,
+   "grace_s": 120.0,
+   "cwd": "/home/cgxr/Documents/Robotics/RoArm_Project",
+   "note": "본 실행 B-2: 같은 조건 반복 2. GO 필요.",
+   "argv": [
+    "/home/cgxr/miniconda3/envs/roarm/bin/python",
+    "-u",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py",
+    "--params",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w19_runpod_d487/B_scoop_repeat/params_w19_B_seed462.json",
+    "--pile",
+    "/home/cgxr/orca/workspaces/RoArm_Project/pellet-model/claudedocs/runtime_logs/pellet_model/pile_lens_20260910/pile_lens6_a4p5_b3p8_c2p5_slab_n20000_seed460.npz",
+    "--out",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w19_runpod_d487/B_scoop_repeat/cell_dt1e6_seed462",
+    "--seed",
+    "462"
+   ]
+  }
+ },
+ "timeout_strategy": {
+  "layer1_sim_soft_cap": "rev32 sim 은 --max-wall-s 에서 step 경계 _WallCapStop → 부분 원시 정상 finalize. scoop 스크립트에는 소프트 상한이 없어 러너 하드 상한만 적용.",
+  "layer2_runner_hard": "러너가 cap-grace 에 자식 프로세스 그룹 SIGTERM, 남은 grace 뒤 SIGKILL.",
+  "timeout_is_not_success": true
+ },
+ "local_reference_wall_s": {
+  "W16_settle": 127.3,
+  "W13_settle": 116.2,
+  "W16_settle_to_reclose": 11003.3,
+  "W13_run01_total": 31218.75,
+  "W16_full_cycle_estimate": 30768.5,
+  "W11_scoop_cell": 2730.06,
+  "W10_G0_sphere_regression": 103.51
+ }
+}

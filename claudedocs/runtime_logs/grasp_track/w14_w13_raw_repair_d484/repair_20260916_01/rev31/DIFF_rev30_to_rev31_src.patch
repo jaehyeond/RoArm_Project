@@ -1,0 +1,68 @@
+diff -ru ../rev30/src/derive_v2.py src/derive_v2.py
+--- ../rev30/src/derive_v2.py	2026-09-16 22:30:54.113486394 +0900
++++ src/derive_v2.py	2026-09-16 22:49:14.646563160 +0900
+@@ -50,7 +50,7 @@
+     for k in ("raw", "meta", "pile"):
+         if hashes[k] != D29.EXPECTED_SHA256[k]:
+             raise SystemExit(f"입력 해시 불일치 {k}")
+-    assert IG30.REVISION == "rev30" and "support_surface_v2" in IG30.FLOOR_RULE
++    assert IG30.REVISION == "rev31" and IG30.FLOOR_RULE == "support_surface_v2: min(center_z - r) > floor - margin" and IG30.CONTRACT_VERSION == "RAW_SCHEMA_REQUIRED + ERRATUM_04"
+     res = json.load(open(a.meta)); tpl = D29.load_template(a.pile)
+     z = np.load(a.raw, allow_pickle=False); meta = json.loads(str(z["metadata_json"]))
+     cfg = D29.build_inv_cfg(res, z)
+@@ -85,16 +85,17 @@
+           "sphere_surface_min_z_m": float((S0[8, :, 2] - Rr0[8]).min()),
+           "v2_floor_predicate_floor_minus_margin": bool(((S0[8, :, 2] - Rr0[8]) > box[2, 0] - m).all())}
+     bin_any = int((code30 == LABELS.index("receiving_bin")).any(0).sum())
+-    prov = {"artifact": "W14_REV30_DERIVED_V2_SUPPORT_FLOOR", "derived_not_raw": True,
++    prov = {"artifact": "W14_REV31_DERIVED_V2_SUPPORT_FLOOR", "derived_not_raw": True,
+             "generated_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+             "contract": IG30.CONTRACT_VERSION, "floor_rule": IG30.FLOOR_RULE, "source_floor_rule": IG30.SOURCE_FLOOR_RULE,
+             "erratum_draft": str(HERE.parent.parent / "contract" / "RAW_SCHEMA_REQUIRED_ERRATUM_04_DRAFT.md"),
+-            "input_sha256": hashes, "rev30_inventory_geometry_sha256": D29.sha256_file(HERE / "inventory_geometry.py"),
++            "erratum_registered": "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/RAW_SCHEMA_REQUIRED_ERRATUM_04.md",
++            "input_sha256": hashes, "rev31_inventory_geometry_sha256": D29.sha256_file(HERE / "inventory_geometry.py"),
+             "semantics": IG30.semantics_metadata(len(tpl["sphere_radii_m"])),
+             "non_claims": ["run_01 원자료의 옛 규약 FAIL 은 그대로다(소급 PASS 아님).",
+                            "새 물리·GPU·렌더 0. 같은 원시 좌표에 대한 v2 규약 재분류다.",
+                            "receiving_bin 라벨은 정착 판정이 아니다(settlement window 별도)."]}
+-    np.savez_compressed(out / "w13_cycle_seed460_rev30_derived_v2.npz",
++    np.savez_compressed(out / "w13_cycle_seed460_rev31_derived_v2.npz",
+                         inventory_code_rev30_support=code30, inventory_code_rev29_strict=code29,
+                         inventory_code_recorded_rev28=rec.astype(np.int8), inventory_labels=np.asarray(LABELS),
+                         transition_sync_index_phase_only=d29["transition_sync_index_phase_only"],
+@@ -105,8 +106,8 @@
+                         provenance_json=np.asarray(json.dumps(prov, ensure_ascii=False)))
+     man = dict(prov)
+     man.update({"wall_s": round(time.time() - t0, 3), "n_frames": int(F), "n_particles": int(N),
+-                "output_npz": str(out / "w13_cycle_seed460_rev30_derived_v2.npz"),
+-                "output_npz_sha256": D29.sha256_file(out / "w13_cycle_seed460_rev30_derived_v2.npz"),
++                "output_npz": str(out / "w13_cycle_seed460_rev31_derived_v2.npz"),
++                "output_npz_sha256": D29.sha256_file(out / "w13_cycle_seed460_rev31_derived_v2.npz"),
+                 "array_sha256": {"inventory_code_rev30_support": D29.array_sha(code30),
+                                  "inventory_code_rev29_strict": D29.array_sha(code29),
+                                  "inventory_code_recorded": D29.array_sha(rec)},
+diff -ru ../rev30/src/inventory_geometry.py src/inventory_geometry.py
+--- ../rev30/src/inventory_geometry.py	2026-09-16 22:29:30.409095037 +0900
++++ src/inventory_geometry.py	2026-09-16 22:49:14.646563160 +0900
+@@ -9,6 +9,7 @@
+ `contacts_logged`/`bridge_planned_*` 에서 잡았다. 그래서 판정식을 여기 한 곳에 두고
+ 두 곳이 **같은 함수를 호출**한다. 이 모듈이 분류 의미의 정본이다.
+ 
++rev31 = rev30 + 선언 문자열 2개를 등록 ERRATUM_04 의 exact 문구로 정정(라벨 식 불변)
+ rev30 정정 (2026-09-16 저녁, ERRATUM_04 초안·사용자 결정)
+ --------------------------------------------------
+ 바닥(상자 바닥·용기 바닥)은 열린 경계가 아니라 받침면이다. 하한을 구 최하단 > 바닥−margin(파묻힘 허용 2.5 mm)으로
+@@ -46,9 +47,9 @@
+ INV_NAMES = ["source", "receiving_bin", "tool_residual", "spill", "in_flight", "ambiguous"]
+ INV = {n: i for i, n in enumerate(INV_NAMES)}
+ 
+-REVISION = "rev30"
+-CONTRACT_VERSION = "RAW_SCHEMA_REQUIRED + ERRATUM_04 (floors are support surfaces; boundary frame at i-1)"
+-FLOOR_RULE = "support_surface_v2: min(center_z - r) > floor - margin  (source tray floor and bin inner floor)"
++REVISION = "rev31"
++CONTRACT_VERSION = "RAW_SCHEMA_REQUIRED + ERRATUM_04"          # 등록 계약의 exact 문자열(rev31: 설명 괄호 제거)
++FLOOR_RULE = "support_surface_v2: min(center_z - r) > floor - margin"   # 등록 계약의 exact 문자열; 적용 면 = 상자 바닥·용기 안바닥
+ SOURCE_FLOOR_RULE = ("rev30: in_source/in_bin lower-z uses every sphere bottom (center_z - radius) > floor - margin "
+                      "(penetration allowance = frozen margin); rev29 used floor + margin (strict, floor layer -> ambiguous); "
+                      "rev28 compared sphere top > floor - margin (not whole-sphere). Side walls/top/rim keep the strict inward margin.")

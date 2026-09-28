@@ -1,0 +1,11 @@
+# TASK_SPEC — W19 A 후처리 3단계(후속): 2단계 재생 산출 독립 감사 — Codex gpt-5.6-sol high (NumPy-only)
+작성 2026-09-18, 코디네이터 = 메인. 계약 정본 = 이 파일. 생산·워커 모듈 import 금지(rerun SDK/CLI 는 검증용으로만 사용 가능: `rerun rrd verify`, `rerun-sdk` 읽기).
+## Target
+- 감사 대상(읽기 전용): `/home/cgxr/orca/workspaces/RoArm_Project/w19-replay/claudedocs/runtime_logs/grasp_track/w19_runpod_d487/A_full_cycle/replay_20260918/`(rev/, tests/RESULTS_checker*.json, execution/EXECUTION_RECEIPT.json, rerun/{w13.rrd 682 MB, w13.rbl, 결정 PNG 6장, decision_screenshot_receipt.json, inspection.json}, isaac/{visual_mapping.json, render_manifest.json, w13_full_cycle.mp4, frames/}, evidence/, MANIFEST_prospective_replay.json, REPORT_replay.md, manifest.json) · W19 원자료 `/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w19_runpod_d487/A_full_cycle/run_01/` · post04 정본(아카이브 심링크 경로) `/home/cgxr/orca/workspaces/RoArm_Project/w17-replay-fix/claudedocs/runtime_logs/grasp_track/w17_replay_fix_d484/post04_20260917/` · 이전 감사 형식 `w13-cycle-audit/.../w16_w17_overnight_audit_20260917/W16_W17_INDEPENDENT_AUDIT_01.json`(B1~B7).
+- 출력(이 worktree 안에만): `claudedocs/runtime_logs/grasp_track/w19_runpod_d487/A_full_cycle/audit2_replay_20260918/{audit_w19_replay.py, W19_REPLAY_INDEPENDENT_AUDIT_01.json, REPORT_audit2.md, manifest.json}`.
+## Change — 항목(사전 등록)
+R1 rev/src 10파일 sha 가 post04 정본과 바이트 동일, COMMANDS 경로 외 변경 0(AST 재확인). R2 원자료 sha 실행 전후 동일(RETRIEVAL_RECEIPT 대조). R3 `rerun rrd verify`(footer) rc0 재실행; 비-system 엔티티 수·타임라인 수·입자 프레임 288·sync 16,813·접촉행 6,305,411 을 RRD 에서 독자 읽기로 재계산. R4 DOOR_STOP 5건 결속 행이 원자료에서 정확 일치 sync 의 첫 입자 행(기대 69/98/108/189/221)과 같은지. R5 결정 PNG 6장: 파일 존재·픽셀 sha 고유 수·각 캡처 시각이 결정 시각과 일치(decision_screenshot_receipt.json)·t=0 더미 아님(휘도/내용 통계로). R6 Isaac visual_mapping 288행 1:1, 관절 출처 합 288(fk 232 + w11 54 + abs 2), MP4 프레임 수 288, 표시 한계(어깨 범위 밖 20프레임 행 81~100·립 재투영 최대 8.132 mm) 재계산. R7 검사기 8/8 의 각 판정을 독자 재계산으로 대조(core U3 FAIL 보존 사실 포함). R8 `_obj` 복원 2개가 원자료 `inputs_sha256` 의 sha 와 동일, 미복원 2개 명시. R9 보고서 비승격 문구·GPU 단계 실제 경과(1,738.5 + 481.6 s) 영수증 일치·매니페스트 sha 전수.
+## Constraints
+CPU 전용(RRD 읽기 허용, GPU 렌더 0)·물리 0·설치 0·메인 repo/원장/다른 worktree 읽기만·사후 완화 금지. 2 h 상한, 막히면 preamble `ask`.
+## Observable acceptance
+JSON(항목별 verdict·측정·근거) + REPORT_audit2.md(한국어) + manifest + worker_done(--report-path, 3문장: PASS/FAIL 수·워커와 불일치·표시 한계).

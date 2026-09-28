@@ -1,0 +1,31 @@
+{
+ "artifact": "W19_POD_A2_SPEED_RATIO",
+ "pod": "qfo6qnce4ti50d RTX 4090 driver 580.159.04",
+ "metric": "settle phase wall-clock (sync_wall_elapsed_s diff summed over phase==settle), same definition as W16 analyze_w16.py",
+ "pod_settle_wall_s": 80.989,
+ "pod_settle_wall_per_sim_s": 809.6875801497383,
+ "w16_run02_settle_wall_s": 127.2543,
+ "w13_run01_settle_wall_s": 116.1595,
+ "ratio_local_w16_over_pod": 1.5712541209300028,
+ "ratio_local_w13_over_pod": 1.4342626776475815,
+ "runA_eta": {
+  "w16_local_full_cycle_estimate_s": 30768.5,
+  "pod_estimate_s": 19582.12843495269,
+  "pod_estimate_h": 5.439480120820192,
+  "cap_s": 43200,
+  "soft_cap_s": 42600,
+  "caveat": "settle 1구간(0.1 s 물리) 비율을 전 구간에 외삽. W16 은 단계 무관 비용(1,191~1,707 s/물리초)을 보였지만 pod 에서 동일하다는 보장 없음. 추정이지 측정 아님."
+ },
+ "runB_eta": {
+  "w11_local_cell_s": 2730.06,
+  "pod_estimate_s_per_cell": 1737.5037962567865,
+  "two_cells_h": 0.9652798868093259,
+  "cap_s_per_cell": 7200
+ },
+ "cost_usd": {
+  "rate": 0.74,
+  "runA_est": 4.025215289406942,
+  "runA_cap": 8.879999999999999,
+  "runB_two_cells_est": 0.7143071162389011
+ }
+}
