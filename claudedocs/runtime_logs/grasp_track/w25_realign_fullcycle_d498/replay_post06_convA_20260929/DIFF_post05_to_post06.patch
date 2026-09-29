@@ -1,0 +1,309 @@
+--- /home/cgxr/orca/workspaces/RoArm_Project/w25-render-cad/claudedocs/research/w25_render_cad_20260928/isaac_replay_w13_post05.py	2026-09-28 22:29:39.843077846 +0900
++++ /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/replay_post06_convA_20260929/isaac_replay_w13_post06.py	2026-09-29 12:40:58.004342588 +0900
+@@ -29,6 +29,19 @@
+       ≤ 7.3e-5 mm 로 재현한다(`cad_pose_check.json`). CAD 는 DEME 물리 기하가 아니다(표시 전용).
+     · 충돌 셸(`/World/s1/*`)은 `--show-collision-shell` 일 때만 반투명 오버레이로 그린다(기본 off).
+     · 트레이·용기는 post04 그대로 원시 기록에서 그린다. 여기에 결과 JSON `fixtures` 와의 **일치 게이트**를 더했다.
++
++post06 (W25-A, 2026-09-29) — DEME(상자) 좌표 → 로봇 좌표 **회전**을 반영한다
++    · rev34 는 상자를 로봇 앞에 **돌려** 놓는다(규약 A: x_box = 로봇 −y, y_box = 로봇 +x).
++      그 변환을 원자료가 직접 기록한다 — `metadata_json.w25_frame` =
++      {R_robot_box, t_robot_m, box_frame_convention, box_anchor} (`sim_w13_full_cycle.py:1324-1327`,
++      "p_robot = R_robot_box @ p_box + t_robot (소비자는 추측 금지)").
++    · post05 의 표시 변환은 `p + origin_disp` **평행이동뿐**이라 규약 A 원자료를 그리면 상자·더미·공구가
++      로봇 대비 90° 틀린다(rev34 `COMMANDS_w25_template.json` step3_isaac_replay.reason).
++      post06 은 **표시 변환만** 고친다: 위치 `p_disp = R_robot_box·p_box + origin_disp`,
++      자세 `R_disp = R_robot_box·R_box`(입자 쿼터니언은 `q_R ⊗ q_box`).
++    · `w25_frame` 키가 **없으면**(W19 A 등 rev32/rev33 원자료) 회전 분기를 타지 않고 post05 와 **같은 식**을
++      그대로 쓴다(`ROT is None` 분기). 즉 옛 원자료 재생 결과는 변하지 않는다.
++    · 바꾸지 않은 것: 로봇 관절(FK/IK)·문 각도·프레임 1:1 계약·게이트·판정·물리. 회전은 표시층에만 든다.
+ """
+ import argparse
+ import hashlib
+@@ -337,12 +350,114 @@
+     offs = np.asarray(tpl["offsets_m"], float)
+     radii = np.asarray(tpl["sphere_radii_m"], float)
+ 
+-    # ── 표시 원점: DEME 세계 → 로봇 세계(축 평행, 원점만 이동) + 베이스판 높이 ──
++    # ── post06: DEME(상자) → 로봇 좌표 회전. 원자료가 적은 값만 쓰고 추측하지 않는다 ──
++    # 출처: `metadata_json.w25_frame` (rev34 `sim_w13_full_cycle.py:1324-1327`)
++    #       = {"R_robot_box", "t_robot_m", "box_frame_convention", "box_anchor"},
++    #       규약 정의는 `w13_fk.py:279-284` BOX_FRAME_CONVENTIONS (A = Rz(−90°), B = Rz(+90°)).
++    # 키가 없으면 ROT is None → 아래 모든 헬퍼가 post05 와 **같은 식**을 탄다(옛 원자료 회귀).
++    W25F = meta.get("w25_frame")
++    ROT = None
++    if W25F is not None:
++        ROT = np.asarray(W25F["R_robot_box"], float)
++        if ROT.shape != (3, 3):
++            raise SystemExit(f"w25_frame.R_robot_box 는 3x3 이어야 한다: {ROT.shape}")
++        if float(np.abs(ROT @ ROT.T - np.eye(3)).max()) > 1e-12 or abs(float(np.linalg.det(ROT)) - 1.0) > 1e-12:
++            raise SystemExit("w25_frame.R_robot_box 가 회전행렬이 아니다(직교·det=+1 위반)")
++        # 표시 z 오프셋(PLATE_Z + 어깨 높이)은 **회전 뒤** 더한다. z 축 회전이어야 그 오프셋이 유효하다.
++        if (abs(float(ROT[2, 2]) - 1.0) > 1e-12 or float(np.abs(ROT[2, :2]).max()) > 1e-12
++                or float(np.abs(ROT[:2, 2]).max()) > 1e-12):
++            raise SystemExit("post06 은 z 축 회전(규약 A/B)만 지원한다 — R_robot_box 의 z 행/열이 단위가 아니다")
++        # 축정렬 표시 상자(트레이·테두리·경계선)를 축정렬로 유지하려면 R 이 **부호 있는 축 치환**이어야 한다.
++        _perm_ok = (np.abs(np.abs(ROT) - np.eye(3)[np.argmax(np.abs(ROT), axis=1)]).max() <= 1e-12
++                    and sorted(np.argmax(np.abs(ROT), axis=1).tolist()) == [0, 1, 2])
++        if not _perm_ok:
++            raise SystemExit("post06 의 축정렬 표시 상자 규칙은 부호 있는 축 치환 R 에만 유효하다")
++        # 같은 값을 두 곳이 적는다(결과 JSON frames.adapter.t_robot_m ↔ metadata w25_frame.t_robot_m).
++        # 어긋나면 어느 쪽이 맞는지 추측하지 않고 멈춘다.
++        _tr_meta = np.asarray(W25F["t_robot_m"], float)
++        if float(np.abs(_tr_meta - t_robot).max()) > 0.0:
++            raise SystemExit(f"t_robot 이 결과 JSON({t_robot.tolist()}) 과 metadata w25_frame"
++                             f"({_tr_meta.tolist()}) 에서 다르다")
++        if float(np.abs(ROT - np.eye(3)).max()) == 0.0:
++            ROT = None                    # 기록이 단위행렬이면 회전 분기를 타지 않는다(rev32 경로와 동치)
++
++    def _rot_quat_xyzw(R):
++        """회전행렬 → 쿼터니언 (x,y,z,w). Shepperd 분기 + 왕복 검증(fail-closed)."""
++        R = np.asarray(R, float)
++        tr = float(R[0, 0] + R[1, 1] + R[2, 2])
++        if tr > 0.0:
++            t = math.sqrt(tr + 1.0) * 2.0
++            q = np.array([(R[2, 1] - R[1, 2]) / t, (R[0, 2] - R[2, 0]) / t,
++                          (R[1, 0] - R[0, 1]) / t, 0.25 * t], float)
++        else:
++            i = int(np.argmax(np.diag(R)))
++            j, k = (i + 1) % 3, (i + 2) % 3
++            t = math.sqrt(1.0 + R[i, i] - R[j, j] - R[k, k]) * 2.0
++            q = np.zeros(4, float)
++            q[3] = (R[k, j] - R[j, k]) / t
++            q[i] = 0.25 * t
++            q[j] = (R[j, i] + R[i, j]) / t
++            q[k] = (R[k, i] + R[i, k]) / t
++        x, y, zq, w = q
++        Rb = np.array([[1 - 2 * (y * y + zq * zq), 2 * (x * y - zq * w), 2 * (x * zq + y * w)],
++                       [2 * (x * y + zq * w), 1 - 2 * (x * x + zq * zq), 2 * (y * zq - x * w)],
++                       [2 * (x * zq - y * w), 2 * (y * zq + x * w), 1 - 2 * (x * x + y * y)]], float)
++        if float(np.abs(Rb - R).max()) > 1e-12:
++            raise SystemExit("R_robot_box → 쿼터니언 왕복 검증 실패")
++        return q
++
++    Q_ROT = None if ROT is None else _rot_quat_xyzw(ROT)
++
++    # ── 표시 원점: DEME 세계 → 로봇 세계 + 베이스판 높이 ──
+     # 로봇 세계 = URDF 베이스판 기준. 표시용 Isaac world z 는 PLATE_Z 를 더해 바닥 위에 올린다.
++    # ⚠️ z 이중 적용 없음: 회전은 z 축 회전이라 (R·p)[2] == p[2] 이고, t_robot[2] 는 **origin_disp 안에서만**
++    #    한 번 더해진다. 아래 어떤 헬퍼도 t_robot[2] 를 다시 더하지 않는다(위 z 행/열 단위 검사가 이를 강제).
+     origin_disp = np.array([t_robot[0], t_robot[1], t_robot[2] + PLATE_Z + FK.SHOULDER_ABOVE_PLATE], float)
+ 
+     def deme_to_disp(pw):
+-        return np.asarray(pw, float) + origin_disp
++        """상자(DEME) 좌표 → 표시 좌표. 끝 축이 3 이면 어떤 모양이든 된다((3,)·(N,3)·(K,N,3))."""
++        p = np.asarray(pw, float)
++        if ROT is None:
++            return p + origin_disp                      # post05 와 **같은 식**
++        return p @ ROT.T + origin_disp
++
++    def disp_box(lo, hi):
++        """축정렬 표시 상자의 두 모서리를 옮긴다. 회전이 축을 바꾸면 lo/hi 가 뒤집히므로 성분별 min/max 로 되돌린다
++        (R 이 부호 있는 축 치환이라 옮긴 상자도 축정렬이다 — 위 `_perm_ok` 가 그 전제를 강제한다)."""
++        a, b = deme_to_disp(lo), deme_to_disp(hi)
++        return np.minimum(a, b), np.maximum(a, b)
++
++    def disp_quat(q):
++        """자세(xyzw) → 표시 좌표: R_disp = R_robot_box · R_box  ⇔  q_disp = q_R ⊗ q_box (Hamilton)."""
++        q = np.asarray(q, float)
++        if Q_ROT is None:
++            return q                                    # post05 와 **같은 배열**
++        x1, y1, z1, w1 = (float(v) for v in Q_ROT)
++        x2, y2, z2, w2 = q[..., 0], q[..., 1], q[..., 2], q[..., 3]
++        return np.stack([w1 * x2 + x1 * w2 + y1 * z2 - z1 * y2,
++                         w1 * y2 - x1 * z2 + y1 * w2 + z1 * x2,
++                         w1 * z2 + x1 * y2 - y1 * x2 + z1 * w2,
++                         w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2], axis=-1)
++
++    def box_to_robot(pb):
++        """상자 좌표 → **로봇** 좌표(표시 z 오프셋 없음). IK/FK 입력은 언제나 로봇 좌표다."""
++        p = np.asarray(pb, float)
++        if ROT is None:
++            return p + t_robot                          # post05 와 **같은 식**
++        return p @ ROT.T + t_robot
++
++    def robot_to_box(pr):
++        """로봇 좌표 → 상자 좌표(box_to_robot 의 역)."""
++        p = np.asarray(pr, float)
++        if ROT is None:
++            return p - t_robot                          # post05 와 **같은 식**
++        return (p - t_robot) @ ROT
++
++    def robot_to_box_rot(Rr):
++        """로봇 좌표 자세 → 상자 좌표 자세: R_box = R_box_robot · R_robot = Rᵀ · R_robot
++        (rev34 `w13_fk.py:build_adapter_w25` 의 `R_scoop_owner_box = R_box_robot` 과 같은 규칙)."""
++        R = np.asarray(Rr, float)
++        return R if ROT is None else ROT.T @ R
+ 
+     # ── 프레임 선택 ────────────────────────────────────────────────────────
+     n_raw = int(len(pf_t))
+@@ -389,7 +504,8 @@
+ 
+     def joints_for(si):
+         """반환 (ik_record, source). 실패하면 (None, reason)."""
+-        lip_robot = np.asarray(tool_p[si], float) + t_robot
++        # post06: 저장된 `tool_pos_m` 은 **상자(DEME) 좌표**다 → 로봇 좌표로 옮겨야 IK/FK 가 맞는다.
++        lip_robot = box_to_robot(tool_p[si])
+         if mode_of(si) == "fk":
+             q = [float(v) for v in np.asarray(z["sync_joint_deg"][si], float)]
+             p_fk, _ = FK.lip_pose(q, lip_owner)
+@@ -412,7 +528,7 @@
+     records, ik_fail = [], []
+     for k, fi in enumerate(sel):
+         si = int(pf_s[fi]) if pf_s[fi] >= 0 else 0
+-        lip_robot = np.asarray(tool_p[si], float) + t_robot
++        lip_robot = box_to_robot(tool_p[si])            # post06: 상자 → 로봇
+         ik, how = joints_for(si)
+         if ik is None:
+             ik_fail.append({"frame": int(fi), "lip_robot_m": lip_robot.tolist(), "reason": how})
+@@ -443,6 +559,7 @@
+ 
+     # ── 문 각도 → 선형 변위 환산(정정값 계산. 옛 7.7822 mm/° 는 좌표계 혼용 오류로 무효) ──
+     si0 = int(pf_s[sel[0]]) if sel else 0
++    # post06: 아래 door_r_max 는 **상자 좌표 안의 거리**라 회전 불변이다 → 변환하지 않는다(변경 0).
+     R_f0 = K.quat_xyzw_to_mat(tool_q[si0])
+     hinge_world = np.asarray(tool_p[si0], float) + R_f0 @ np.asarray(
+         res["frames"]["door_hinge_offset_tool_owner_m"], float)
+@@ -498,7 +615,19 @@
+             "void_value_not_used": {"mm_per_deg": 7.7822,
+                                     "why": "좌표계 혼용 오류 — 인용 금지(W12 diagnostic_correction_01)"}},
+         "mapping": {"deme_to_display_origin_m": origin_disp.tolist(),
+-                    "axes": "DEME xyz == 로봇 세계 xyz (동결 R_W/FK 결론, 재보정 아님)",
++                    "axes": ("DEME xyz == 로봇 세계 xyz (동결 R_W/FK 결론, 재보정 아님)" if ROT is None else
++                             "DEME(상자) xyz ≠ 로봇 xyz — metadata_json.w25_frame.R_robot_box 로 회전해 그린다"),
++                    # post06: 회전 영수증. 값은 **원자료 기록**이고 이 스크립트가 고른 것이 아니다.
++                    "w25_frame_present": bool(W25F is not None),
++                    "w25_frame_from_raw_metadata": W25F,
++                    "R_robot_box_applied": (None if ROT is None else ROT.tolist()),
++                    "rotation_applied_to": ("none (post05 와 같은 평행이동)" if ROT is None else
++                                            "particles(pos+quat), tool/door owner poses & CAD, tray/rim/edge "
++                                            "boxes, bin mesh, markers, camera bound set"),
++                    "robot_joint_path_unrotated": ("관절은 로봇 좌표량이다. 저장된 상자 좌표 툴 원점만 "
++                                                   "box_to_robot 으로 옮겨 IK/FK 에 넣는다."),
++                    "z_offset_applied_once": ("R 은 z 축 회전이라 (R·p)[2] == p[2] 이고, t_robot[2] 는 "
++                                              "origin_disp 안에서만 한 번 더해진다(이중 적용 없음)."),
+                     "plate_z_m": PLATE_Z, "shoulder_above_plate_m": FK.SHOULDER_ABOVE_PLATE,
+                     "lip_l5_owner_mm": lip_owner},
+         "robot_display_contract": {
+@@ -663,6 +792,7 @@
+     _fp = []                                    # 표시 좌표계(display) 점들
+     for _d in (TRAY, RIM):                      # 트레이 벽 + 표시 테두리/기둥(바닥 z0 포함)
+         for _lo, _hi in _d.values():
++            # post06: `aabb_corners` 는 두 점의 8 조합을 만들므로 회전으로 lo/hi 가 뒤집혀도 같은 집합이다.
+             _fp.append(CF.aabb_corners(deme_to_disp(_lo), deme_to_disp(_hi)))
+     # ── source support / DEME domain floor (감사 SOURCE_SUPPORT_DISPLAY_AUDIT_01) ──────
+     # 정본 트레이 헬퍼는 트레이를 **바닥 없는 네 벽**으로 정의한다(`w13_kinematics.py`).
+@@ -787,48 +917,48 @@
+         key = AssetBaseCfg(prim_path="/World/key", spawn=sim_utils.DistantLightCfg(intensity=2500.0),
+                            init_state=AssetBaseCfg.InitialStateCfg(rot=(0.9239, 0.3827, 0.0, 0.0)))
+         robot: ArticulationCfg = ROBOT
+-        tray_xn = static_box("/World/tray/xn", deme_to_disp(TRAY["tray_xn"][0]),
+-                             deme_to_disp(TRAY["tray_xn"][1]), TRAY_FACE_COLOR, TRAY_FACE_OPACITY)
+-        tray_xp = static_box("/World/tray/xp", deme_to_disp(TRAY["tray_xp"][0]),
+-                             deme_to_disp(TRAY["tray_xp"][1]), TRAY_FACE_COLOR, TRAY_FACE_OPACITY)
+-        tray_yn = static_box("/World/tray/yn", deme_to_disp(TRAY["tray_yn"][0]),
+-                             deme_to_disp(TRAY["tray_yn"][1]), TRAY_FACE_COLOR, TRAY_FACE_OPACITY)
+-        tray_yp = static_box("/World/tray/yp", deme_to_disp(TRAY["tray_yp"][0]),
+-                             deme_to_disp(TRAY["tray_yp"][1]), TRAY_FACE_COLOR, TRAY_FACE_OPACITY)
+-        rim_xn = static_box("/World/vis/rim_xn", deme_to_disp(RIM["rim_xn"][0]),
+-                            deme_to_disp(RIM["rim_xn"][1]), RIMC, 1.0)
+-        rim_xp = static_box("/World/vis/rim_xp", deme_to_disp(RIM["rim_xp"][0]),
+-                            deme_to_disp(RIM["rim_xp"][1]), RIMC, 1.0)
+-        rim_yn = static_box("/World/vis/rim_yn", deme_to_disp(RIM["rim_yn"][0]),
+-                            deme_to_disp(RIM["rim_yn"][1]), RIMC, 1.0)
+-        rim_yp = static_box("/World/vis/rim_yp", deme_to_disp(RIM["rim_yp"][0]),
+-                            deme_to_disp(RIM["rim_yp"][1]), RIMC, 1.0)
+-        post_a = static_box("/World/vis/post_a", deme_to_disp(RIM["post_a"][0]),
+-                            deme_to_disp(RIM["post_a"][1]), RIMC, 1.0)
+-        post_b = static_box("/World/vis/post_b", deme_to_disp(RIM["post_b"][0]),
+-                            deme_to_disp(RIM["post_b"][1]), RIMC, 1.0)
+-        post_c = static_box("/World/vis/post_c", deme_to_disp(RIM["post_c"][0]),
+-                            deme_to_disp(RIM["post_c"][1]), RIMC, 1.0)
+-        post_d = static_box("/World/vis/post_d", deme_to_disp(RIM["post_d"][0]),
+-                            deme_to_disp(RIM["post_d"][1]), RIMC, 1.0)
++        tray_xn = static_box("/World/tray/xn", *disp_box(TRAY["tray_xn"][0],
++                             TRAY["tray_xn"][1]), TRAY_FACE_COLOR, TRAY_FACE_OPACITY)
++        tray_xp = static_box("/World/tray/xp", *disp_box(TRAY["tray_xp"][0],
++                             TRAY["tray_xp"][1]), TRAY_FACE_COLOR, TRAY_FACE_OPACITY)
++        tray_yn = static_box("/World/tray/yn", *disp_box(TRAY["tray_yn"][0],
++                             TRAY["tray_yn"][1]), TRAY_FACE_COLOR, TRAY_FACE_OPACITY)
++        tray_yp = static_box("/World/tray/yp", *disp_box(TRAY["tray_yp"][0],
++                             TRAY["tray_yp"][1]), TRAY_FACE_COLOR, TRAY_FACE_OPACITY)
++        rim_xn = static_box("/World/vis/rim_xn", *disp_box(RIM["rim_xn"][0],
++                            RIM["rim_xn"][1]), RIMC, 1.0)
++        rim_xp = static_box("/World/vis/rim_xp", *disp_box(RIM["rim_xp"][0],
++                            RIM["rim_xp"][1]), RIMC, 1.0)
++        rim_yn = static_box("/World/vis/rim_yn", *disp_box(RIM["rim_yn"][0],
++                            RIM["rim_yn"][1]), RIMC, 1.0)
++        rim_yp = static_box("/World/vis/rim_yp", *disp_box(RIM["rim_yp"][0],
++                            RIM["rim_yp"][1]), RIMC, 1.0)
++        post_a = static_box("/World/vis/post_a", *disp_box(RIM["post_a"][0],
++                            RIM["post_a"][1]), RIMC, 1.0)
++        post_b = static_box("/World/vis/post_b", *disp_box(RIM["post_b"][0],
++                            RIM["post_b"][1]), RIMC, 1.0)
++        post_c = static_box("/World/vis/post_c", *disp_box(RIM["post_c"][0],
++                            RIM["post_c"][1]), RIMC, 1.0)
++        post_d = static_box("/World/vis/post_d", *disp_box(RIM["post_d"][0],
++                            RIM["post_d"][1]), RIMC, 1.0)
+         # 바닥 평면 경계 표시선 — 불투명 갈색. 더미를 가리지 않는 얇은 바 4개.
+-        fe_xn = static_box("/World/vis/floor_edge_xn", deme_to_disp(FLOOR_EDGE["fe_xn"][0]),
+-                           deme_to_disp(FLOOR_EDGE["fe_xn"][1]), SRC_FLOOR_EDGE_COLOR, 1.0)
+-        fe_xp = static_box("/World/vis/floor_edge_xp", deme_to_disp(FLOOR_EDGE["fe_xp"][0]),
+-                           deme_to_disp(FLOOR_EDGE["fe_xp"][1]), SRC_FLOOR_EDGE_COLOR, 1.0)
+-        fe_yn = static_box("/World/vis/floor_edge_yn", deme_to_disp(FLOOR_EDGE["fe_yn"][0]),
+-                           deme_to_disp(FLOOR_EDGE["fe_yn"][1]), SRC_FLOOR_EDGE_COLOR, 1.0)
+-        fe_yp = static_box("/World/vis/floor_edge_yp", deme_to_disp(FLOOR_EDGE["fe_yp"][0]),
+-                           deme_to_disp(FLOOR_EDGE["fe_yp"][1]), SRC_FLOOR_EDGE_COLOR, 1.0)
++        fe_xn = static_box("/World/vis/floor_edge_xn", *disp_box(FLOOR_EDGE["fe_xn"][0],
++                           FLOOR_EDGE["fe_xn"][1]), SRC_FLOOR_EDGE_COLOR, 1.0)
++        fe_xp = static_box("/World/vis/floor_edge_xp", *disp_box(FLOOR_EDGE["fe_xp"][0],
++                           FLOOR_EDGE["fe_xp"][1]), SRC_FLOOR_EDGE_COLOR, 1.0)
++        fe_yn = static_box("/World/vis/floor_edge_yn", *disp_box(FLOOR_EDGE["fe_yn"][0],
++                           FLOOR_EDGE["fe_yn"][1]), SRC_FLOOR_EDGE_COLOR, 1.0)
++        fe_yp = static_box("/World/vis/floor_edge_yp", *disp_box(FLOOR_EDGE["fe_yp"][0],
++                           FLOOR_EDGE["fe_yp"][1]), SRC_FLOOR_EDGE_COLOR, 1.0)
+         # 벽 하단 식별색 경계 표시선 — 상단 rim·수직 기둥과 합쳐 벽 면 **범위**를 판별하게 한다.
+-        wb_xn = static_box("/World/vis/wall_bottom_xn", deme_to_disp(WALL_BOT["wb_xn"][0]),
+-                           deme_to_disp(WALL_BOT["wb_xn"][1]), WALL_BOTTOM_EDGE_COLOR, 1.0)
+-        wb_xp = static_box("/World/vis/wall_bottom_xp", deme_to_disp(WALL_BOT["wb_xp"][0]),
+-                           deme_to_disp(WALL_BOT["wb_xp"][1]), WALL_BOTTOM_EDGE_COLOR, 1.0)
+-        wb_yn = static_box("/World/vis/wall_bottom_yn", deme_to_disp(WALL_BOT["wb_yn"][0]),
+-                           deme_to_disp(WALL_BOT["wb_yn"][1]), WALL_BOTTOM_EDGE_COLOR, 1.0)
+-        wb_yp = static_box("/World/vis/wall_bottom_yp", deme_to_disp(WALL_BOT["wb_yp"][0]),
+-                           deme_to_disp(WALL_BOT["wb_yp"][1]), WALL_BOTTOM_EDGE_COLOR, 1.0)
++        wb_xn = static_box("/World/vis/wall_bottom_xn", *disp_box(WALL_BOT["wb_xn"][0],
++                           WALL_BOT["wb_xn"][1]), WALL_BOTTOM_EDGE_COLOR, 1.0)
++        wb_xp = static_box("/World/vis/wall_bottom_xp", *disp_box(WALL_BOT["wb_xp"][0],
++                           WALL_BOT["wb_xp"][1]), WALL_BOTTOM_EDGE_COLOR, 1.0)
++        wb_yn = static_box("/World/vis/wall_bottom_yn", *disp_box(WALL_BOT["wb_yn"][0],
++                           WALL_BOT["wb_yn"][1]), WALL_BOTTOM_EDGE_COLOR, 1.0)
++        wb_yp = static_box("/World/vis/wall_bottom_yp", *disp_box(WALL_BOT["wb_yp"][0],
++                           WALL_BOT["wb_yp"][1]), WALL_BOTTOM_EDGE_COLOR, 1.0)
+         pedestal = static_box("/World/vis/pedestal", (-0.05, -0.05, 0.0), (0.05, 0.05, PLATE_Z),
+                               (0.40, 0.40, 0.42), 1.0)
+         cam_side: CameraCfg = cam_cfg("/World/CamSide", CAM_SIDE, FOCAL["side"])
+@@ -922,9 +1052,11 @@
+         if synth_q5 is not None:
+             # 선언된 합성 관절각 → owner 포즈(순수 FK).
+             p_l, R_l5 = FK.lip_pose(synth_q5, lip_owner)
+-            p_syn = np.asarray(p_l, float) - t_robot
+-            R_syn = np.asarray(R_l5, float) @ np.asarray(res["frames"]
+-                                                         ["R_W_frozen_columns_are_link5_axes"], float).T
++            # post06: FK 결과는 **로봇 좌표**다. 아래 조립은 상자 좌표에서 이뤄지고 마지막에 deme_to_disp 를
++            #         타므로, 위치·자세 둘 다 로봇 → 상자로 되돌린다(회전 없으면 post05 와 같은 식).
++            p_syn = robot_to_box(p_l)
++            R_syn = robot_to_box_rot(np.asarray(R_l5, float) @ np.asarray(
++                res["frames"]["R_W_frozen_columns_are_link5_axes"], float).T)
+             # ⚠️ 감사 `REV17_HOME_DOOR_TRANSFORM_AUDIT_01.json` 이 정량화한 결함 수정.
+             #    예전 판은 문 정점을 **저장된 문 프레임**으로 국소화한 뒤 그 프레임을 `R_syn` 으로
+             #    겨냥했다. 그런데 정준 문 프레임은 `door_actual_deg≈0` 에서도 툴 대비
+@@ -1072,7 +1204,8 @@
+ 
+     def set_particles(fi):
+         pos = deme_to_disp(np.asarray(z["particle_pos_m"][fi], float))
+-        qt = np.asarray(z["particle_quat_xyzw"][fi], float)
++        # post06: 알은 길쭉한 클럼프라 자세도 함께 돌려야 한다(위치만 돌리면 방향이 어긋난다).
++        qt = disp_quat(np.asarray(z["particle_quat_xyzw"][fi], float))
+         code = np.asarray(z["inventory_code"][fi], int)
+         pi.GetPositionsAttr().Set(Vt.Vec3fArray.FromNumpy(np.ascontiguousarray(pos, dtype=np.float32)))
+         pi.GetOrientationsAttr().Set(Vt.QuathArray([Gf.Quath(float(q[3]), float(q[0]), float(q[1]),

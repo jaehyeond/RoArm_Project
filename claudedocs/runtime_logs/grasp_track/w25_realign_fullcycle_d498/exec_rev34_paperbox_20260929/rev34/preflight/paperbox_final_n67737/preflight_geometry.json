@@ -1,0 +1,2316 @@
+{
+  "C1_frames": {
+    "R_W": [
+      [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      [
+        -1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        -1.0
+      ]
+    ],
+    "det": 1.0,
+    "orthonormal_max_err": 0.0,
+    "fk_link5_axes_at_vertical_scoop_pose": [
+      [
+        3.730487450878494e-24,
+        -0.9999999390765166,
+        -0.00034906584331012526
+      ],
+      [
+        -1.0,
+        3.730487450878494e-24,
+        -2.1374118385063323e-20
+      ],
+      [
+        2.1374118385066853e-20,
+        0.00034906584331018294,
+        -0.9999999390765167
+      ]
+    ],
+    "fk_vs_R_W_max_abs_diff": 0.00034906584331018294,
+    "conclusion": "FK 가 준 link5 축(로봇 프레임)이 동결 R_W 와 0.02°(IK 격자 잔차) 안에서 같다. 따라서 **yaw = 0 은 동결 R_W 와 자기일관된 선언 장면 규약**이다. 이것은 실물 등록(registration) 측정이 아니며 절대 위치를 증명하지 않는다. 다른 yaw(예: 90°)를 쓰면 R_W 와 90.000002° 어긋나 자기모순이 된다.",
+    "angle_fk_to_R_W_deg": 0.02,
+    "angle_source": "IK 격자 잔차(물리 기울임 아님). 이 각이 작다는 것이 yaw=0 을 고정한다.",
+    "angle_if_yaw_were_90deg": 90.000002,
+    "pass": true
+  },
+  "C2_quat_roundtrip": {
+    "max_mat_err": 8.881784197001252e-16,
+    "max_rotvec_angle_err_rad": 2.7924329515371937e-12,
+    "pass": true
+  },
+  "C3_source_constants": {
+    "sources": {
+      "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/roarm_kinematics.py": true,
+      "/home/cgxr/Documents/Robotics/RoArm_Project/hw_s1_scoop_probe.py": true
+    },
+    "chain_numeric_subset_present": true,
+    "joint_limits_match": true,
+    "limit_base": true,
+    "limit_shoulder": true,
+    "limit_elbow": true,
+    "limit_wrist_p": true,
+    "limit_wrist_r": true,
+    "limit_gripper": true,
+    "lip_l5_match": true,
+    "home_match": true,
+    "p1_match": true,
+    "shoulder_above_plate_match": true,
+    "pass": true
+  },
+  "adapter": {
+    "reference_pose_q5": [
+      0.0,
+      48.209999999999994,
+      103.44000000000005,
+      28.369999999999948,
+      0.0
+    ],
+    "reference_err_m": 1.3892114123096392e-05,
+    "floor_robot_z_m": -0.45406,
+    "pellet_robot_z_m": -0.21506000000000003,
+    "declared_base_cm": 33.2,
+    "declared_pellet_cm": 23.9,
+    "declared_not_measured": true,
+    "provenance": "base 33.2 cm = 사용자 실측(START_HERE.md:16) · pellet 23.9 cm = 받침 19.7(선언) + 상자 바닥 0.2(선언) + 층 4.0(사용자 '약 4 cm') · 상자 중심 로봇 x 0.25 m(사용자 결정 START_HERE.md:27) — 전부 미실측 선언 혼합",
+    "t_robot_m": [
+      0.25,
+      0.0,
+      -0.2577501314177868
+    ],
+    "note": "DEME 원점(상자 안쪽 바닥 중심)의 로봇 좌표. p_robot = R_robot_box·p_box + t_robot.",
+    "home_lip_world_m": [
+      0.008099999999999975,
+      0.147841,
+      0.4794181314177868
+    ],
+    "base_axis_world_xy_m": [
+      0.0,
+      -0.25
+    ],
+    "place_lip_world_m": [
+      -0.2501183994586977,
+      -0.2419,
+      0.09300177072138258
+    ],
+    "pile_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/pile_flat40_20260929/pile_lens6_a4p5_b3p8_c2p5_slab40_outer_310x220_n67737_rho0p503_seed460.npz",
+    "surface_z_pre_m": 0.04269013141778675,
+    "door_open_gap_mm": 0.0,
+    "scoop_site": {
+      "convention": "A",
+      "anchor": "declared_box_center",
+      "site_box_xy_m": [
+        0.008099999999999984,
+        -6.494477891777484e-06
+      ],
+      "reference_lip_robot_m": [
+        0.24999350552210822,
+        -0.008099999999999984,
+        -0.21504771942217477
+      ],
+      "box_center_robot_xy_m": [
+        0.25,
+        0.0
+      ],
+      "reference_pose_q5": [
+        0.0,
+        48.209999999999994,
+        103.44000000000005,
+        28.369999999999948,
+        0.0
+      ],
+      "rule": "상자 중심(로봇 좌표)을 명령한 기준 자세의 FK 립을 상자 좌표로 옮긴 점",
+      "rev32_path": false
+    },
+    "scoop_site_w11_xy_m": [
+      0.008099999999999984,
+      -6.494477891777484e-06
+    ],
+    "frame": {
+      "box_frame_convention": "A",
+      "box_anchor": "declared_box_center",
+      "R_robot_box": [
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          -1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "R_box_robot": [
+        [
+          0.0,
+          -1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "R_scoop_owner_box": [
+        [
+          0.0,
+          -1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "R_scoop_rule": "취점 구간(w11 모드) 툴 owner 회전 = R_box_robot (rev32 의 단위행렬을 상자 좌표로 옮긴 것)",
+      "box_center_robot_xy_m": [
+        0.25,
+        0.0
+      ],
+      "reference_lip_robot_m": [
+        0.24999350552210822,
+        -0.008099999999999984,
+        -0.21504771942217477
+      ],
+      "box_floor_robot_z_m": -0.2577501314177868,
+      "box_floor_above_floor_cm": 19.631,
+      "rev32_path": false
+    },
+    "tray": {
+      "tray_inner_source": "declared_from_npz_convention (user outer 31x22, wall 0.2)",
+      "declared_inner_mm": [
+        310.0,
+        220.0,
+        230.0
+      ],
+      "npz_box_bounds_m": [
+        [
+          -0.155,
+          0.155
+        ],
+        [
+          -0.11,
+          0.11
+        ],
+        [
+          0.0,
+          0.134840008690237
+        ]
+      ],
+      "box_bounds_m": [
+        [
+          -0.155,
+          0.155
+        ],
+        [
+          -0.11,
+          0.11
+        ],
+        [
+          0.0,
+          0.23
+        ]
+      ],
+      "npz_vs_declared_xy_max_abs_mm": 0.0,
+      "tol_mm": 0.5,
+      "max_sphere_overhang_mm": 0.011434,
+      "n_spheres_outside_declared_xy": 0,
+      "n_spheres_above_declared_top": 0,
+      "mismatch_reasons": []
+    },
+    "r0_robot_m": 0.2501246945090235,
+    "z_travel_m": 0.2536901314177868,
+    "z_release_m": 0.09300000000000001,
+    "z_lip0_m": 0.04269013141778675,
+    "box_top_m": 0.23,
+    "bin_center_m": [
+      -0.2501328849417462,
+      -0.2419
+    ]
+  },
+  "waypoints": [
+    {
+      "name": "initial_home",
+      "kind": "joint",
+      "q5": [
+        0.0,
+        0.0,
+        90.0,
+        0.0,
+        0.0
+      ],
+      "lip_world_mm": [
+        8.1,
+        147.841,
+        479.418
+      ],
+      "ik_err_mm": 0.0,
+      "verticality": null,
+      "branch": "stored_joint_pose",
+      "tilt_deg": null,
+      "limit_violations": []
+    },
+    {
+      "name": "p1_tool_vertical",
+      "kind": "joint",
+      "q5": [
+        0.0,
+        0.7,
+        91.3,
+        88.0,
+        0.0
+      ],
+      "lip_world_mm": [
+        8.1,
+        -87.756,
+        265.882
+      ],
+      "ik_err_mm": 0.0,
+      "verticality": null,
+      "branch": "stored_joint_pose",
+      "tilt_deg": null,
+      "limit_violations": []
+    },
+    {
+      "name": "above_pile_travel",
+      "kind": "ik",
+      "q5": [
+        0.0,
+        20.050000000000015,
+        66.99999999999994,
+        90.0,
+        0.0
+      ],
+      "lip_world_mm": [
+        8.1,
+        0.13,
+        253.631
+      ],
+      "ik_err_mm": 0.0593,
+      "verticality": 0.9986748262365419,
+      "branch": "wrist90_tilt",
+      "tilt_deg": 2.95,
+      "limit_violations": []
+    },
+    {
+      "name": "surface_plus_50mm",
+      "kind": "ik",
+      "q5": [
+        0.0,
+        38.32000000000005,
+        100.61999999999998,
+        41.07999999999997,
+        0.0
+      ],
+      "lip_world_mm": [
+        8.1,
+        0.122,
+        92.674
+      ],
+      "ik_err_mm": 0.0162,
+      "verticality": 0.9999999390765166,
+      "branch": "vertical",
+      "tilt_deg": 0.02,
+      "limit_violations": []
+    },
+    {
+      "name": "approach_gap",
+      "kind": "ik",
+      "q5": [
+        0.0,
+        48.220000000000034,
+        103.37999999999992,
+        28.420000000000037,
+        0.0
+      ],
+      "lip_world_mm": [
+        8.1,
+        0.128,
+        42.728
+      ],
+      "ik_err_mm": 0.0381,
+      "verticality": 0.9999999390765166,
+      "branch": "vertical",
+      "tilt_deg": 0.02,
+      "limit_violations": []
+    },
+    {
+      "name": "post_lift_travel",
+      "kind": "ik",
+      "q5": [
+        0.0,
+        20.050000000000015,
+        66.99999999999994,
+        90.0,
+        0.0
+      ],
+      "lip_world_mm": [
+        8.1,
+        0.13,
+        253.631
+      ],
+      "ik_err_mm": 0.0593,
+      "verticality": 0.9986748262365419,
+      "branch": "wrist90_tilt",
+      "tilt_deg": 2.95,
+      "limit_violations": []
+    },
+    {
+      "name": "place_retract_base0",
+      "kind": "joint",
+      "q5": [
+        0.0,
+        0.7,
+        91.3,
+        88.0,
+        0.0
+      ],
+      "lip_world_mm": [
+        8.1,
+        -87.756,
+        265.882
+      ],
+      "ik_err_mm": 0.0,
+      "verticality": null,
+      "branch": "stored_joint_pose",
+      "tilt_deg": null,
+      "limit_violations": []
+    },
+    {
+      "name": "place_retract_base90",
+      "kind": "joint",
+      "q5": [
+        90.0,
+        0.7,
+        91.3,
+        88.0,
+        0.0
+      ],
+      "lip_world_mm": [
+        -162.244,
+        -241.9,
+        265.882
+      ],
+      "ik_err_mm": 0.0,
+      "verticality": null,
+      "branch": "stored_joint_pose",
+      "tilt_deg": null,
+      "limit_violations": []
+    },
+    {
+      "name": "place_extend_travel",
+      "kind": "ik",
+      "q5": [
+        90.0,
+        20.050000000000015,
+        66.99999999999994,
+        90.0,
+        0.0
+      ],
+      "lip_world_mm": [
+        -250.13,
+        -241.9,
+        253.631
+      ],
+      "ik_err_mm": 0.0593,
+      "verticality": 0.9986748262365419,
+      "branch": "wrist90_tilt",
+      "tilt_deg": 2.95,
+      "limit_violations": []
+    },
+    {
+      "name": "place_target",
+      "kind": "ik",
+      "q5": [
+        90.0,
+        38.26000000000004,
+        100.58999999999993,
+        41.17000000000002,
+        0.0
+      ],
+      "lip_world_mm": [
+        -250.118,
+        -241.9,
+        93.002
+      ],
+      "ik_err_mm": 0.0065,
+      "verticality": 0.9999999390765169,
+      "branch": "vertical",
+      "tilt_deg": 0.02,
+      "limit_violations": []
+    },
+    {
+      "name": "place_up_travel",
+      "kind": "ik",
+      "q5": [
+        90.0,
+        20.050000000000015,
+        66.99999999999994,
+        90.0,
+        0.0
+      ],
+      "lip_world_mm": [
+        -250.13,
+        -241.9,
+        253.631
+      ],
+      "ik_err_mm": 0.0593,
+      "verticality": 0.9986748262365419,
+      "branch": "wrist90_tilt",
+      "tilt_deg": 2.95,
+      "limit_violations": []
+    },
+    {
+      "name": "return_retract_base90",
+      "kind": "joint",
+      "q5": [
+        90.0,
+        0.7,
+        91.3,
+        88.0,
+        0.0
+      ],
+      "lip_world_mm": [
+        -162.244,
+        -241.9,
+        265.882
+      ],
+      "ik_err_mm": 0.0,
+      "verticality": null,
+      "branch": "stored_joint_pose",
+      "tilt_deg": null,
+      "limit_violations": []
+    },
+    {
+      "name": "return_retract_base0",
+      "kind": "joint",
+      "q5": [
+        0.0,
+        0.7,
+        91.3,
+        88.0,
+        0.0
+      ],
+      "lip_world_mm": [
+        8.1,
+        -87.756,
+        265.882
+      ],
+      "ik_err_mm": 0.0,
+      "verticality": null,
+      "branch": "stored_joint_pose",
+      "tilt_deg": null,
+      "limit_violations": []
+    },
+    {
+      "name": "return_home",
+      "kind": "joint",
+      "q5": [
+        0.0,
+        0.0,
+        90.0,
+        0.0,
+        0.0
+      ],
+      "lip_world_mm": [
+        8.1,
+        147.841,
+        479.418
+      ],
+      "ik_err_mm": 0.0,
+      "verticality": null,
+      "branch": "stored_joint_pose",
+      "tilt_deg": null,
+      "limit_violations": []
+    }
+  ],
+  "C4_w11_initial_pose": {
+    "w11_lip_world_m": [
+      0.008099999999999984,
+      -6.494477891777484e-06,
+      0.04269013141778675
+    ],
+    "w13_approach_lip_world_m": [
+      0.008099999999999984,
+      0.0001281580141936911,
+      0.042728067083185106
+    ],
+    "lip_xy_err_mm": 0.134652,
+    "lip_z_err_mm": 0.037936,
+    "R_scoop_owner_box": [
+      [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "R_owner_vs_identity_max": 0.00034906584331015307,
+    "R_owner_vs_R_scoop_angle_deg": 0.02,
+    "hinge_offset_m": [
+      -0.018821,
+      0.0081,
+      0.117565
+    ],
+    "w11_hinge_offset_m": [
+      -0.018821,
+      0.0081,
+      0.117565
+    ],
+    "hinge_offset_err_m": 0.0,
+    "pass": false
+  },
+  "C5_rotation_invariant_mouth": {
+    "rows": [
+      {
+        "q_deg": 27.5,
+        "mouth_mm": [
+          56.019573197,
+          56.019573197,
+          56.019573197
+        ],
+        "max_abs_diff_mm": 0.0
+      },
+      {
+        "q_deg": 12.0,
+        "mouth_mm": [
+          24.636043149,
+          24.636043149,
+          24.636043149
+        ],
+        "max_abs_diff_mm": 0.0
+      },
+      {
+        "q_deg": 3.0,
+        "mouth_mm": [
+          6.169577241,
+          6.169577241,
+          6.169577241
+        ],
+        "max_abs_diff_mm": 0.0
+      },
+      {
+        "q_deg": 0.0,
+        "mouth_mm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max_abs_diff_mm": 0.0
+      }
+    ],
+    "w11_mouth_start_mm": 56.02,
+    "pass": true
+  },
+  "C6_q_inverse": {
+    "max_err_deg": 3.552713678800501e-15,
+    "pass": true
+  },
+  "C7_cavity_classification": {
+    "n_w11_json": 517,
+    "n_w11_npz": 517,
+    "n_w13_identity": 517,
+    "diff_vs_w11_npz": 0,
+    "n_w13_rotated": 517,
+    "diff_identity_vs_rotated": 0,
+    "pass": true
+  },
+  "C8_faceted_bin_classifier": {
+    "n_theta": 48,
+    "circumradius_m": 0.04,
+    "apothem_m": 0.03991435692954414,
+    "max_radial_gap_mm": 0.08564,
+    "probe_points": 720,
+    "ideal_circle_says_inside": 720,
+    "faceted_mesh_says_inside": 194,
+    "disagreement": 526,
+    "decision": "분류는 이상 원식이 아니라 메시와 같은 면분할 내접 반평면(apothem)을 쓴다. 경계 ±classify_margin_mm 밴드는 ambiguous 로 남긴다.",
+    "classify_margin_mm": 2.5,
+    "particle_bounding_radius_mm": 2.2504,
+    "pass": true
+  },
+  "C9_fixture_mesh_integrity": {
+    "tray": {
+      "name": "tray",
+      "n_tri": 48,
+      "n_components": 4,
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_cm3": 491.28,
+      "euler_number": 8,
+      "components_watertight": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "components_winding_consistent": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "bounds_m": [
+        [
+          -0.157,
+          -0.112,
+          0.0
+        ],
+        [
+          0.157,
+          0.112,
+          0.23
+        ]
+      ],
+      "component_aabb_overlap_cm3": 0.0
+    },
+    "bin": {
+      "name": "bin",
+      "n_tri": 576,
+      "n_components": 2,
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_cm3": 71.9784,
+      "euler_number": 2,
+      "components_watertight": [
+        true,
+        true
+      ],
+      "components_winding_consistent": [
+        true,
+        true
+      ],
+      "bounds_m": [
+        [
+          -0.29313288494174616,
+          -0.2849,
+          0.0
+        ],
+        [
+          -0.20713288494174617,
+          -0.1989,
+          0.07300000000000001
+        ]
+      ],
+      "component_aabb_overlap_cm3": 0.0
+    },
+    "pass": true
+  },
+  "C10_clearance": {
+    "n_sampled_poses": 1080,
+    "component_wise": true,
+    "obstacles": {
+      "tray": {
+        "min_abs_distance_mm": 35.38021,
+        "at_segment": "initial_home->p1_tool_vertical",
+        "tool_vertices_inside_obstacle": 0,
+        "obstacle_vertices_max_signed_distance_into_tool_mm": -103.81381,
+        "max_pose_to_pose_vertex_move_mm": 6.11231,
+        "conservative_swept_separation_ok": true,
+        "rule": "연속 두 샘플 사이 어떤 정점도 step_disp 이상 움직이지 않으므로, 두 끝점의 최소거리가 step_disp 보다 크면 그 사이 구간에도 교차가 없다(보수적 상계)."
+      },
+      "bin": {
+        "min_abs_distance_mm": 26.09489,
+        "at_segment": "place_target->place_up_travel",
+        "tool_vertices_inside_obstacle": 0,
+        "obstacle_vertices_max_signed_distance_into_tool_mm": -26.11797,
+        "max_pose_to_pose_vertex_move_mm": 6.11231,
+        "conservative_swept_separation_ok": true,
+        "rule": "연속 두 샘플 사이 어떤 정점도 step_disp 이상 움직이지 않으므로, 두 끝점의 최소거리가 step_disp 보다 크면 그 사이 구간에도 교차가 없다(보수적 상계)."
+      },
+      "tray_component0": {
+        "min_abs_distance_mm": 42.04685,
+        "at_segment": "place_retract_base0->place_retract_base90",
+        "tool_vertices_inside_obstacle": 0,
+        "obstacle_vertices_max_signed_distance_into_tool_mm": -42.04685,
+        "max_pose_to_pose_vertex_move_mm": 6.11231,
+        "conservative_swept_separation_ok": true,
+        "rule": "연속 두 샘플 사이 어떤 정점도 step_disp 이상 움직이지 않으므로, 두 끝점의 최소거리가 step_disp 보다 크면 그 사이 구간에도 교차가 없다(보수적 상계)."
+      },
+      "tray_component1": {
+        "min_abs_distance_mm": 80.31217,
+        "at_segment": "above_pile_travel->surface_plus_50mm",
+        "tool_vertices_inside_obstacle": 0,
+        "obstacle_vertices_max_signed_distance_into_tool_mm": -110.3108,
+        "max_pose_to_pose_vertex_move_mm": 6.11231,
+        "conservative_swept_separation_ok": true,
+        "rule": "연속 두 샘플 사이 어떤 정점도 step_disp 이상 움직이지 않으므로, 두 끝점의 최소거리가 step_disp 보다 크면 그 사이 구간에도 교차가 없다(보수적 상계)."
+      },
+      "tray_component2": {
+        "min_abs_distance_mm": 35.38021,
+        "at_segment": "initial_home->p1_tool_vertical",
+        "tool_vertices_inside_obstacle": 0,
+        "obstacle_vertices_max_signed_distance_into_tool_mm": -103.81381,
+        "max_pose_to_pose_vertex_move_mm": 6.11231,
+        "conservative_swept_separation_ok": true,
+        "rule": "연속 두 샘플 사이 어떤 정점도 step_disp 이상 움직이지 않으므로, 두 끝점의 최소거리가 step_disp 보다 크면 그 사이 구간에도 교차가 없다(보수적 상계)."
+      },
+      "tray_component3": {
+        "min_abs_distance_mm": 62.43665,
+        "at_segment": "approach_gap->post_lift_travel",
+        "tool_vertices_inside_obstacle": 0,
+        "obstacle_vertices_max_signed_distance_into_tool_mm": -109.69989,
+        "max_pose_to_pose_vertex_move_mm": 6.11231,
+        "conservative_swept_separation_ok": true,
+        "rule": "연속 두 샘플 사이 어떤 정점도 step_disp 이상 움직이지 않으므로, 두 끝점의 최소거리가 step_disp 보다 크면 그 사이 구간에도 교차가 없다(보수적 상계)."
+      },
+      "bin_component0": {
+        "min_abs_distance_mm": 89.99367,
+        "at_segment": "place_target->place_up_travel",
+        "tool_vertices_inside_obstacle": 0,
+        "obstacle_vertices_max_signed_distance_into_tool_mm": -90.00176,
+        "max_pose_to_pose_vertex_move_mm": 6.11231,
+        "conservative_swept_separation_ok": true,
+        "rule": "연속 두 샘플 사이 어떤 정점도 step_disp 이상 움직이지 않으므로, 두 끝점의 최소거리가 step_disp 보다 크면 그 사이 구간에도 교차가 없다(보수적 상계)."
+      },
+      "bin_component1": {
+        "min_abs_distance_mm": 26.09489,
+        "at_segment": "place_target->place_up_travel",
+        "tool_vertices_inside_obstacle": 0,
+        "obstacle_vertices_max_signed_distance_into_tool_mm": -26.11797,
+        "max_pose_to_pose_vertex_move_mm": 6.11231,
+        "conservative_swept_separation_ok": true,
+        "rule": "연속 두 샘플 사이 어떤 정점도 step_disp 이상 움직이지 않으므로, 두 끝점의 최소거리가 step_disp 보다 크면 그 사이 구간에도 교차가 없다(보수적 상계)."
+      }
+    },
+    "pass": true
+  },
+  "C11a_limit_sources": {
+    "A_active_urdf": {
+      "path": "/home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/urdf/roarm_m3_s1_v1.urdf",
+      "limits": {
+        "base": {
+          "lower_deg": -180.0004,
+          "upper_deg": 180.0004,
+          "effort_Nm": 1.9
+        },
+        "shoulder": {
+          "lower_deg": -90.0002,
+          "upper_deg": 90.0002,
+          "effort_Nm": 1.9
+        },
+        "elbow": {
+          "lower_deg": -57.2958,
+          "upper_deg": 169.0225,
+          "effort_Nm": 1.9
+        },
+        "wrist_p": {
+          "lower_deg": -110.0079,
+          "upper_deg": 110.0079,
+          "effort_Nm": 1.9
+        },
+        "wrist_r": {
+          "lower_deg": -180.0004,
+          "upper_deg": 180.0004,
+          "effort_Nm": 1.9
+        },
+        "gripper": {
+          "lower_deg": 0.0,
+          "upper_deg": 90.0117,
+          "effort_Nm": 2.5
+        }
+      }
+    },
+    "A_generic_urdf_for_comparison": {
+      "path": "/home/cgxr/Documents/Robotics/RoArm_Project/local_assets/roarm_m3/urdf/roarm_m3.urdf",
+      "limits": {
+        "base": {
+          "lower_deg": -180.0004,
+          "upper_deg": 180.0004,
+          "effort_Nm": 1.9
+        },
+        "shoulder": {
+          "lower_deg": -90.0002,
+          "upper_deg": 90.0002,
+          "effort_Nm": 1.9
+        },
+        "elbow": {
+          "lower_deg": -57.2958,
+          "upper_deg": 169.0225,
+          "effort_Nm": 1.9
+        },
+        "wrist_p": {
+          "lower_deg": -110.0079,
+          "upper_deg": 110.0079,
+          "effort_Nm": 1.9
+        },
+        "wrist_r": {
+          "lower_deg": -180.0004,
+          "upper_deg": 180.0004,
+          "effort_Nm": 1.9
+        },
+        "gripper": {
+          "lower_deg": 0.0,
+          "upper_deg": 90.0117,
+          "effort_Nm": 2.5
+        }
+      }
+    },
+    "active_equals_generic": true,
+    "version_note": "활성 도구 URDF 는 roarm_m3_s1_v1.urdf 다. 관절 한계는 일반 roarm_m3.urdf 와 **동일**하므로 버전 불일치가 없다.",
+    "B_v6_distribution_clips_deg": {
+      "base": [
+        -90.0,
+        90.0
+      ],
+      "shoulder": [
+        -30.0,
+        75.0
+      ],
+      "elbow": [
+        5.0,
+        135.0
+      ],
+      "wrist_p": [
+        -30.0,
+        90.0
+      ],
+      "wrist_r": [
+        -90.0,
+        90.0
+      ],
+      "gripper": [
+        -10.0,
+        100.0
+      ]
+    },
+    "B_note": "sim_scripts/roarm_kinematics.py:29-36 — v6 학습 분포 유지용 클립. 물리 한계가 아니다.",
+    "C_operational_guard": {
+      "wrist_p_symmetric_guard_deg": [
+        -90.0,
+        90.0
+      ],
+      "measured_firmware_clamp": "+90 (09-07 실측, hw_s1_scoop_probe.py:21 주석)",
+      "qualification": "코드가 쓰는 |wrist_p| <= 90 은 **대칭 운용 가드**다. 실측된 것은 +90 쪽 펌웨어 클램프이며 −90 쪽 대칭성은 측정으로 확인된 바 없다.",
+      "door_max_servo_deg": 30.0
+    },
+    "pass": true
+  },
+  "C11_ik_limits": {
+    "n_interpolated_poses": 840,
+    "limit_violations": [],
+    "descend_lift_column_ik": [
+      {
+        "z_world_mm": 42.728,
+        "err_mm": 0.0035,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 42.304,
+        "err_mm": 0.0419,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 41.881,
+        "err_mm": 0.0404,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 41.457,
+        "err_mm": 0.0191,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 41.033,
+        "err_mm": 0.0421,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 40.609,
+        "err_mm": 0.0392,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 40.186,
+        "err_mm": 0.0062,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 39.762,
+        "err_mm": 0.0356,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 39.338,
+        "err_mm": 0.0385,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 38.915,
+        "err_mm": 0.0189,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 38.491,
+        "err_mm": 0.0359,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 38.067,
+        "err_mm": 0.0298,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 37.643,
+        "err_mm": 0.0239,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 37.22,
+        "err_mm": 0.0268,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 36.796,
+        "err_mm": 0.0119,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 36.372,
+        "err_mm": 0.0402,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 35.948,
+        "err_mm": 0.0411,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 35.525,
+        "err_mm": 0.0202,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 35.101,
+        "err_mm": 0.0324,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 34.677,
+        "err_mm": 0.0272,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 34.253,
+        "err_mm": 0.029,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 33.83,
+        "err_mm": 0.0185,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 33.406,
+        "err_mm": 0.0158,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 32.982,
+        "err_mm": 0.0414,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 32.559,
+        "err_mm": 0.0395,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 32.135,
+        "err_mm": 0.0224,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 31.711,
+        "err_mm": 0.0187,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 31.287,
+        "err_mm": 0.0212,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 30.864,
+        "err_mm": 0.0422,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 30.44,
+        "err_mm": 0.0132,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 30.016,
+        "err_mm": 0.0217,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 29.592,
+        "err_mm": 0.0195,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 29.169,
+        "err_mm": 0.018,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 28.745,
+        "err_mm": 0.0408,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 28.321,
+        "err_mm": 0.015,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 27.898,
+        "err_mm": 0.0304,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 27.474,
+        "err_mm": 0.0154,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 27.05,
+        "err_mm": 0.0381,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 26.626,
+        "err_mm": 0.0245,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 26.203,
+        "err_mm": 0.0304,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 25.779,
+        "err_mm": 0.0412,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 25.355,
+        "err_mm": 0.0267,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 24.931,
+        "err_mm": 0.0269,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 24.508,
+        "err_mm": 0.0167,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 24.084,
+        "err_mm": 0.0334,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 23.66,
+        "err_mm": 0.0259,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 23.237,
+        "err_mm": 0.0348,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 22.813,
+        "err_mm": 0.0151,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 22.389,
+        "err_mm": 0.0209,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 21.965,
+        "err_mm": 0.0154,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 21.542,
+        "err_mm": 0.0401,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 21.118,
+        "err_mm": 0.0221,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 20.694,
+        "err_mm": 0.041,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 20.27,
+        "err_mm": 0.025,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 19.847,
+        "err_mm": 0.0288,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 19.423,
+        "err_mm": 0.0213,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 18.999,
+        "err_mm": 0.0308,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 18.576,
+        "err_mm": 0.0143,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 18.152,
+        "err_mm": 0.0392,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 17.728,
+        "err_mm": 0.0167,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 17.728,
+        "err_mm": 0.0167,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 19.508,
+        "err_mm": 0.0222,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 21.287,
+        "err_mm": 0.0403,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 23.067,
+        "err_mm": 0.0287,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 24.847,
+        "err_mm": 0.0272,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 26.626,
+        "err_mm": 0.0245,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 28.406,
+        "err_mm": 0.0213,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 30.186,
+        "err_mm": 0.0365,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 31.965,
+        "err_mm": 0.008,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 33.745,
+        "err_mm": 0.0213,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 35.525,
+        "err_mm": 0.0202,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 37.304,
+        "err_mm": 0.0083,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 39.084,
+        "err_mm": 0.0288,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 40.864,
+        "err_mm": 0.0263,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 42.643,
+        "err_mm": 0.0101,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 44.423,
+        "err_mm": 0.0155,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 46.203,
+        "err_mm": 0.0227,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 47.982,
+        "err_mm": 0.0088,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 49.762,
+        "err_mm": 0.0109,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 51.542,
+        "err_mm": 0.0268,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 53.321,
+        "err_mm": 0.0355,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 55.101,
+        "err_mm": 0.0381,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 56.881,
+        "err_mm": 0.0226,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 58.66,
+        "err_mm": 0.0363,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 60.44,
+        "err_mm": 0.0328,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 62.22,
+        "err_mm": 0.0261,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 63.999,
+        "err_mm": 0.0272,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 65.779,
+        "err_mm": 0.0391,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 67.559,
+        "err_mm": 0.0316,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 69.338,
+        "err_mm": 0.0419,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 71.118,
+        "err_mm": 0.0465,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 72.898,
+        "err_mm": 0.0241,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 74.677,
+        "err_mm": 0.0219,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 76.457,
+        "err_mm": 0.0035,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 78.237,
+        "err_mm": 0.035,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 80.016,
+        "err_mm": 0.0252,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 81.796,
+        "err_mm": 0.0237,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 83.576,
+        "err_mm": 0.0386,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 85.355,
+        "err_mm": 0.0409,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 87.135,
+        "err_mm": 0.0217,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 88.915,
+        "err_mm": 0.011,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 90.694,
+        "err_mm": 0.0207,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 92.474,
+        "err_mm": 0.0181,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 94.253,
+        "err_mm": 0.0211,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 96.033,
+        "err_mm": 0.0175,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 97.813,
+        "err_mm": 0.0385,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 99.592,
+        "err_mm": 0.0228,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 101.372,
+        "err_mm": 0.0349,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 103.152,
+        "err_mm": 0.0208,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 104.931,
+        "err_mm": 0.0209,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 106.711,
+        "err_mm": 0.0236,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 108.491,
+        "err_mm": 0.0223,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 110.27,
+        "err_mm": 0.0124,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 112.05,
+        "err_mm": 0.0332,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 113.83,
+        "err_mm": 0.0417,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 115.609,
+        "err_mm": 0.0387,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 117.389,
+        "err_mm": 0.0276,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 119.169,
+        "err_mm": 0.0371,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 120.948,
+        "err_mm": 0.0106,
+        "branch": "vertical",
+        "limits": []
+      },
+      {
+        "z_world_mm": 122.728,
+        "err_mm": 0.0343,
+        "branch": "vertical",
+        "limits": []
+      }
+    ],
+    "worst_column_ik_err_mm": 0.0465,
+    "waypoint_ik": [
+      {
+        "name": "initial_home",
+        "branch": "stored_joint_pose",
+        "err_mm": 0.0,
+        "tilt_deg": null,
+        "limits": []
+      },
+      {
+        "name": "p1_tool_vertical",
+        "branch": "stored_joint_pose",
+        "err_mm": 0.0,
+        "tilt_deg": null,
+        "limits": []
+      },
+      {
+        "name": "above_pile_travel",
+        "branch": "wrist90_tilt",
+        "err_mm": 0.0593,
+        "tilt_deg": 2.95,
+        "limits": []
+      },
+      {
+        "name": "surface_plus_50mm",
+        "branch": "vertical",
+        "err_mm": 0.0162,
+        "tilt_deg": 0.02,
+        "limits": []
+      },
+      {
+        "name": "approach_gap",
+        "branch": "vertical",
+        "err_mm": 0.0381,
+        "tilt_deg": 0.02,
+        "limits": []
+      },
+      {
+        "name": "post_lift_travel",
+        "branch": "wrist90_tilt",
+        "err_mm": 0.0593,
+        "tilt_deg": 2.95,
+        "limits": []
+      },
+      {
+        "name": "place_retract_base0",
+        "branch": "stored_joint_pose",
+        "err_mm": 0.0,
+        "tilt_deg": null,
+        "limits": []
+      },
+      {
+        "name": "place_retract_base90",
+        "branch": "stored_joint_pose",
+        "err_mm": 0.0,
+        "tilt_deg": null,
+        "limits": []
+      },
+      {
+        "name": "place_extend_travel",
+        "branch": "wrist90_tilt",
+        "err_mm": 0.0593,
+        "tilt_deg": 2.95,
+        "limits": []
+      },
+      {
+        "name": "place_target",
+        "branch": "vertical",
+        "err_mm": 0.0065,
+        "tilt_deg": 0.02,
+        "limits": []
+      },
+      {
+        "name": "place_up_travel",
+        "branch": "wrist90_tilt",
+        "err_mm": 0.0593,
+        "tilt_deg": 2.95,
+        "limits": []
+      },
+      {
+        "name": "return_retract_base90",
+        "branch": "stored_joint_pose",
+        "err_mm": 0.0,
+        "tilt_deg": null,
+        "limits": []
+      },
+      {
+        "name": "return_retract_base0",
+        "branch": "stored_joint_pose",
+        "err_mm": 0.0,
+        "tilt_deg": null,
+        "limits": []
+      },
+      {
+        "name": "return_home",
+        "branch": "stored_joint_pose",
+        "err_mm": 0.0,
+        "tilt_deg": null,
+        "limits": []
+      }
+    ],
+    "pass": true
+  },
+  "C12_schedule": {
+    "nominal_s": {
+      "initial_home->p1_tool_vertical": 2.119787,
+      "p1_tool_vertical->above_pile_travel": 0.591575,
+      "above_pile_travel->surface_plus_50mm": 1.073047,
+      "surface_plus_50mm->approach_gap": 0.332974,
+      "approach_gap->post_lift_travel": 1.406021,
+      "post_lift_travel->place_retract_base0": 0.591575,
+      "place_retract_base0->place_retract_base90": 1.531555,
+      "place_retract_base90->place_extend_travel": 0.591575,
+      "place_extend_travel->place_target": 1.070862,
+      "place_target->place_up_travel": 1.070862,
+      "place_up_travel->return_retract_base90": 0.591575,
+      "return_retract_base90->return_retract_base0": 1.531555,
+      "return_retract_base0->return_home": 2.119787,
+      "initial_home_hold": 0.004,
+      "settle": 0.1,
+      "descend_w11_actual": 1.40035,
+      "close_w11_actual": 1.069571,
+      "lift": 0.533333,
+      "reclose_w11_actual": 0.018685,
+      "discharge_open": 1.088889,
+      "discharge_wait": 1.5,
+      "close_after_discharge": 1.088889,
+      "return_home_hold": 0.004
+    },
+    "total_sim_s": 21.430467,
+    "transit_total_s": 14.622752,
+    "w11_measured_wall_per_sim_s": 868.928,
+    "EXTRAPOLATED_wall_estimate_h": 5.17,
+    "estimate_basis": "⚠ W11 실측 비율의 선형 외삽이다. 승인된 dt 1e-6 회귀 스모크 실측으로 갱신해야 한다.",
+    "particle_frames_estimate": 255,
+    "n_particles": 67737,
+    "particle_bytes_estimate_MB": 915.5,
+    "dense_sync_estimate": 11357,
+    "pass": true
+  },
+  "C13_placement": {
+    "R_robot_box": [
+      [
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        -1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "t_robot_m": [
+      0.25,
+      0.0,
+      -0.2577501314177868
+    ],
+    "equation": "p_robot = R_robot_box @ p_box + t_robot (로봇 = 어깨축 원점, x 앞·y 왼쪽·z 위)",
+    "box_inner_extent_along_robot_x_y_mm": [
+      220.0,
+      310.0
+    ],
+    "box_inner_corners_robot_m": [
+      [
+        0.14,
+        0.155,
+        -0.25775
+      ],
+      [
+        0.36,
+        0.155,
+        -0.25775
+      ],
+      [
+        0.14,
+        -0.155,
+        -0.25775
+      ],
+      [
+        0.36,
+        -0.155,
+        -0.25775
+      ]
+    ],
+    "near_wall_robot_x_m": 0.14,
+    "far_wall_robot_x_m": 0.36,
+    "box_center_robot_xy_m": [
+      0.25,
+      0.0
+    ],
+    "box_inner_floor_above_room_floor_cm": 19.631,
+    "box_rim_above_room_floor_cm": 42.631,
+    "pellet_surface_above_room_floor_cm": 23.9,
+    "stand_height_cm_declared": 19.7,
+    "scoop_site_box_xy_mm": [
+      8.1,
+      -0.0065
+    ],
+    "tray": {
+      "tray_inner_source": "declared_from_npz_convention (user outer 31x22, wall 0.2)",
+      "declared_inner_mm": [
+        310.0,
+        220.0,
+        230.0
+      ],
+      "npz_box_bounds_m": [
+        [
+          -0.155,
+          0.155
+        ],
+        [
+          -0.11,
+          0.11
+        ],
+        [
+          0.0,
+          0.134840008690237
+        ]
+      ],
+      "box_bounds_m": [
+        [
+          -0.155,
+          0.155
+        ],
+        [
+          -0.11,
+          0.11
+        ],
+        [
+          0.0,
+          0.23
+        ]
+      ],
+      "npz_vs_declared_xy_max_abs_mm": 0.0,
+      "tol_mm": 0.5,
+      "max_sphere_overhang_mm": 0.011434,
+      "n_spheres_outside_declared_xy": 0,
+      "n_spheres_above_declared_top": 0,
+      "mismatch_reasons": []
+    },
+    "long_side_along_robot_y": true,
+    "pass": true
+  },
+  "fixtures": {
+    "artifact": "W13_FIXTURE_V1",
+    "declared_not_measured": [
+      "수신 용기 치수(내경·깊이·벽두께·자리 높이)는 선언된 시뮬 픽스처다. 실물 컵은 빈 무게 9.66 g 만 기록돼 있고 치수 실측 증거가 repo 에 없다.",
+      "로봇 베이스 방향(link5 X 부호)은 동결 R_W 해석에 따른 선언이며 실기 FK 로 재확인하지 않았다.",
+      "트레이 벽은 W11 의 무한 해석 평면을 대신하는 유한 높이 메시다(DEVIATION-1)."
+    ],
+    "world_frame": "DEME 세계 = 더미 npz 프레임(상자 바닥 중심 원점, z 위, m)",
+    "arm_radius_m": 0.25,
+    "base_world_xy_m": [
+      0.0,
+      -0.25
+    ],
+    "beta_convention": "세계 +Z 둘레 오른손 회전, 립 = base + R*(sin b, -cos b, 0); b=0 이 더미 중심",
+    "box_bounds_m": [
+      [
+        -0.155,
+        0.155
+      ],
+      [
+        -0.11,
+        0.11
+      ],
+      [
+        0.0,
+        0.23
+      ]
+    ],
+    "tray": {
+      "wall_t_m": 0.002,
+      "n_tri": 48,
+      "watertight": true,
+      "bounds_m": [
+        [
+          -0.157,
+          -0.112,
+          0.0
+        ],
+        [
+          0.157,
+          0.112,
+          0.23
+        ]
+      ],
+      "top_z_m": 0.23
+    },
+    "bin": {
+      "inner_r_m": 0.04,
+      "outer_r_m": 0.043000000000000003,
+      "floor_inner_z_m": 0.003,
+      "rim_z_m": 0.07300000000000001,
+      "center_xy_m": [
+        -0.2501328849417462,
+        -0.2419
+      ],
+      "wall_t_m": 0.003,
+      "n_theta": 48,
+      "inner_volume_cm3": 351.858,
+      "watertight": true,
+      "n_tri": 576,
+      "components": [
+        {
+          "name": "floor_disc",
+          "watertight": true
+        },
+        {
+          "name": "wall_ring",
+          "watertight": true
+        }
+      ]
+    },
+    "schedule": {
+      "z_travel_m": 0.2536901314177868,
+      "z_release_m": 0.09300000000000001,
+      "z_lip0_m": 0.04269013141778675,
+      "transport_speed_m_s": 0.15,
+      "place_base_deg": 90.0
+    },
+    "classification_thresholds": {
+      "rest_threshold_rule": "g * dt_sync_s (실행 시 계산)",
+      "classify_margin_mm": 2.5,
+      "spill_rest_z_m": 0.02
+    },
+    "mesh_check_from_frozen_source": {
+      "stl_bowl_vertices": 210,
+      "r_min_mm": 20.0,
+      "r_max_mm": 24.16,
+      "abs_y_max_mm": 20.3,
+      "r_in_ok": true,
+      "r_out_design_mm": 21.6,
+      "note_r_max": "STL 보울 구간에는 스파인·뺨도 포함되어 r_max 가 벽 바깥값보다 크다",
+      "shell_watertight": false,
+      "shell_tri": [
+        204,
+        204
+      ]
+    },
+    "adapter": {
+      "reference_pose_q5": [
+        0.0,
+        48.209999999999994,
+        103.44000000000005,
+        28.369999999999948,
+        0.0
+      ],
+      "reference_err_m": 1.3892114123096392e-05,
+      "floor_robot_z_m": -0.45406,
+      "pellet_robot_z_m": -0.21506000000000003,
+      "declared_base_cm": 33.2,
+      "declared_pellet_cm": 23.9,
+      "declared_not_measured": true,
+      "provenance": "base 33.2 cm = 사용자 실측(START_HERE.md:16) · pellet 23.9 cm = 받침 19.7(선언) + 상자 바닥 0.2(선언) + 층 4.0(사용자 '약 4 cm') · 상자 중심 로봇 x 0.25 m(사용자 결정 START_HERE.md:27) — 전부 미실측 선언 혼합",
+      "t_robot_m": [
+        0.25,
+        0.0,
+        -0.2577501314177868
+      ],
+      "note": "DEME 원점(상자 안쪽 바닥 중심)의 로봇 좌표. p_robot = R_robot_box·p_box + t_robot."
+    },
+    "waypoints": [
+      {
+        "name": "initial_home",
+        "kind": "joint",
+        "q5": [
+          0.0,
+          0.0,
+          90.0,
+          0.0,
+          0.0
+        ],
+        "lip_world_mm": [
+          8.1,
+          147.841,
+          479.418
+        ],
+        "ik_err_mm": 0.0,
+        "verticality": null,
+        "branch": "stored_joint_pose",
+        "tilt_deg": null,
+        "limit_violations": []
+      },
+      {
+        "name": "p1_tool_vertical",
+        "kind": "joint",
+        "q5": [
+          0.0,
+          0.7,
+          91.3,
+          88.0,
+          0.0
+        ],
+        "lip_world_mm": [
+          8.1,
+          -87.756,
+          265.882
+        ],
+        "ik_err_mm": 0.0,
+        "verticality": null,
+        "branch": "stored_joint_pose",
+        "tilt_deg": null,
+        "limit_violations": []
+      },
+      {
+        "name": "above_pile_travel",
+        "kind": "ik",
+        "q5": [
+          0.0,
+          20.050000000000015,
+          66.99999999999994,
+          90.0,
+          0.0
+        ],
+        "lip_world_mm": [
+          8.1,
+          0.13,
+          253.631
+        ],
+        "ik_err_mm": 0.0593,
+        "verticality": 0.9986748262365419,
+        "branch": "wrist90_tilt",
+        "tilt_deg": 2.95,
+        "limit_violations": []
+      },
+      {
+        "name": "surface_plus_50mm",
+        "kind": "ik",
+        "q5": [
+          0.0,
+          38.32000000000005,
+          100.61999999999998,
+          41.07999999999997,
+          0.0
+        ],
+        "lip_world_mm": [
+          8.1,
+          0.122,
+          92.674
+        ],
+        "ik_err_mm": 0.0162,
+        "verticality": 0.9999999390765166,
+        "branch": "vertical",
+        "tilt_deg": 0.02,
+        "limit_violations": []
+      },
+      {
+        "name": "approach_gap",
+        "kind": "ik",
+        "q5": [
+          0.0,
+          48.220000000000034,
+          103.37999999999992,
+          28.420000000000037,
+          0.0
+        ],
+        "lip_world_mm": [
+          8.1,
+          0.128,
+          42.728
+        ],
+        "ik_err_mm": 0.0381,
+        "verticality": 0.9999999390765166,
+        "branch": "vertical",
+        "tilt_deg": 0.02,
+        "limit_violations": []
+      },
+      {
+        "name": "post_lift_travel",
+        "kind": "ik",
+        "q5": [
+          0.0,
+          20.050000000000015,
+          66.99999999999994,
+          90.0,
+          0.0
+        ],
+        "lip_world_mm": [
+          8.1,
+          0.13,
+          253.631
+        ],
+        "ik_err_mm": 0.0593,
+        "verticality": 0.9986748262365419,
+        "branch": "wrist90_tilt",
+        "tilt_deg": 2.95,
+        "limit_violations": []
+      },
+      {
+        "name": "place_retract_base0",
+        "kind": "joint",
+        "q5": [
+          0.0,
+          0.7,
+          91.3,
+          88.0,
+          0.0
+        ],
+        "lip_world_mm": [
+          8.1,
+          -87.756,
+          265.882
+        ],
+        "ik_err_mm": 0.0,
+        "verticality": null,
+        "branch": "stored_joint_pose",
+        "tilt_deg": null,
+        "limit_violations": []
+      },
+      {
+        "name": "place_retract_base90",
+        "kind": "joint",
+        "q5": [
+          90.0,
+          0.7,
+          91.3,
+          88.0,
+          0.0
+        ],
+        "lip_world_mm": [
+          -162.244,
+          -241.9,
+          265.882
+        ],
+        "ik_err_mm": 0.0,
+        "verticality": null,
+        "branch": "stored_joint_pose",
+        "tilt_deg": null,
+        "limit_violations": []
+      },
+      {
+        "name": "place_extend_travel",
+        "kind": "ik",
+        "q5": [
+          90.0,
+          20.050000000000015,
+          66.99999999999994,
+          90.0,
+          0.0
+        ],
+        "lip_world_mm": [
+          -250.13,
+          -241.9,
+          253.631
+        ],
+        "ik_err_mm": 0.0593,
+        "verticality": 0.9986748262365419,
+        "branch": "wrist90_tilt",
+        "tilt_deg": 2.95,
+        "limit_violations": []
+      },
+      {
+        "name": "place_target",
+        "kind": "ik",
+        "q5": [
+          90.0,
+          38.26000000000004,
+          100.58999999999993,
+          41.17000000000002,
+          0.0
+        ],
+        "lip_world_mm": [
+          -250.118,
+          -241.9,
+          93.002
+        ],
+        "ik_err_mm": 0.0065,
+        "verticality": 0.9999999390765169,
+        "branch": "vertical",
+        "tilt_deg": 0.02,
+        "limit_violations": []
+      },
+      {
+        "name": "place_up_travel",
+        "kind": "ik",
+        "q5": [
+          90.0,
+          20.050000000000015,
+          66.99999999999994,
+          90.0,
+          0.0
+        ],
+        "lip_world_mm": [
+          -250.13,
+          -241.9,
+          253.631
+        ],
+        "ik_err_mm": 0.0593,
+        "verticality": 0.9986748262365419,
+        "branch": "wrist90_tilt",
+        "tilt_deg": 2.95,
+        "limit_violations": []
+      },
+      {
+        "name": "return_retract_base90",
+        "kind": "joint",
+        "q5": [
+          90.0,
+          0.7,
+          91.3,
+          88.0,
+          0.0
+        ],
+        "lip_world_mm": [
+          -162.244,
+          -241.9,
+          265.882
+        ],
+        "ik_err_mm": 0.0,
+        "verticality": null,
+        "branch": "stored_joint_pose",
+        "tilt_deg": null,
+        "limit_violations": []
+      },
+      {
+        "name": "return_retract_base0",
+        "kind": "joint",
+        "q5": [
+          0.0,
+          0.7,
+          91.3,
+          88.0,
+          0.0
+        ],
+        "lip_world_mm": [
+          8.1,
+          -87.756,
+          265.882
+        ],
+        "ik_err_mm": 0.0,
+        "verticality": null,
+        "branch": "stored_joint_pose",
+        "tilt_deg": null,
+        "limit_violations": []
+      },
+      {
+        "name": "return_home",
+        "kind": "joint",
+        "q5": [
+          0.0,
+          0.0,
+          90.0,
+          0.0,
+          0.0
+        ],
+        "lip_world_mm": [
+          8.1,
+          147.841,
+          479.418
+        ],
+        "ik_err_mm": 0.0,
+        "verticality": null,
+        "branch": "stored_joint_pose",
+        "tilt_deg": null,
+        "limit_violations": []
+      }
+    ]
+  },
+  "all_pass": false
+}

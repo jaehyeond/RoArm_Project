@@ -1,0 +1,229 @@
+{
+ "artifact": "W25A_COMMANDS_TEMPLATE_V1",
+ "status": "DRAFT — 실행 금지(과제서 W25-A §0). 사용자·코디네이터 승인 후 경로·sha 를 채워 동결본을 따로 만든다.",
+ "based_on": "rev32 COMMANDS.json(W13R_FROZEN_COMMANDS_V1) 구조 · session_20260917_w19_runpod_afternoon.md §3~§9 pod 규약(같은 절대경로 미러, minCudaVersion 13.0, setsid 분리, 순차 GPU)",
+ "preconditions_cpu_local": [
+  {
+   "id": "P0_pile",
+   "what": "W25-C 더미 NPZ 확정 + sha256 기록. box_bounds_m 발자국이 선언 301×198 mm 와 0.5 mm 안(params tray_match_tol_mm), 알 전부 선언 트레이 안 — 아니면 러너가 tray_inner_source=declared 에서 SystemExit"
+  },
+  {
+   "id": "P1_stub_domain",
+   "argv": [
+    "/home/cgxr/miniconda3/envs/roarm/bin/python",
+    "-B",
+    "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/checks/cpu_stub_dryrun.py",
+    "--src",
+    "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/src",
+    "--params",
+    "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/params_w25.json",
+    "--pile",
+    "<W25-C 평평한 층 NPZ 절대경로 — 미정>",
+    "--out",
+    "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/dryrun/final_noevidence"
+   ],
+   "why": "DEME 없이 도메인을 러너와 같은 코드로 계산(bridge 는 증거 없음으로 fail-closed 가 정상)"
+  },
+  {
+   "id": "P2_numeric_evidence",
+   "argv": [
+    "/home/cgxr/miniconda3/envs/roarm/bin/python",
+    "-B",
+    "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/checks/make_numeric_evidence_w25.py",
+    "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/dryrun/final_noevidence/w13_cycle_seed460.json",
+    "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/numeric_inputs_w25.json"
+   ],
+   "gate": "REUSABLE_FOR_REV11 == true (rc 0). false 면 NO-GO(인증 분기 밖)"
+  },
+  {
+   "id": "P3_stub_full",
+   "argv": [
+    "/home/cgxr/miniconda3/envs/roarm/bin/python",
+    "-B",
+    "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/checks/cpu_stub_dryrun.py",
+    "--src",
+    "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/src",
+    "--params",
+    "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/params_w25.json",
+    "--pile",
+    "<W25-C 평평한 층 NPZ 절대경로 — 미정>",
+    "--out",
+    "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/dryrun/final_with_evidence",
+    "--numeric-evidence",
+    "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/numeric_inputs_w25.json"
+   ],
+   "gate": "abort_class None · bridge CLEARANCE_CERTIFIED · verify(run_verify_json.py) 에서 settlement_window_cadence 외 FAIL 0"
+  },
+  {
+   "id": "P4_preflight",
+   "argv": [
+    "/home/cgxr/miniconda3/envs/roarm/bin/python",
+    "-B",
+    "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/src/preflight_geometry.py",
+    "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/preflight/final",
+    "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/params_w25.json",
+    "<W25-C 평평한 층 NPZ 절대경로 — 미정>"
+   ],
+   "gate": "all_pass true"
+  }
+ ],
+ "step_order": [
+  "step1_simulation",
+  "step2_rerun",
+  "step3_isaac_replay"
+ ],
+ "step_caps_s": {
+  "step1_simulation": 32400,
+  "step2_rerun": 5400,
+  "step3_isaac_replay": 5400
+ },
+ "graceful_grace_s": 1200,
+ "auto_retry": false,
+ "step1_simulation": [
+  "/home/cgxr/miniconda3/envs/roarm/bin/python",
+  "-B",
+  "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/src/sim_w13_full_cycle.py",
+  "--params",
+  "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/params_w25.json",
+  "--pile",
+  "<W25-C 평평한 층 NPZ 절대경로 — 미정>",
+  "--out",
+  "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/run_01",
+  "--seed",
+  "460",
+  "--numeric-evidence",
+  "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/numeric_inputs_w25.json",
+  "--max-wall-s",
+  "31200"
+ ],
+ "step2_rerun": [
+  "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+  "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/src/w13_rerun_export.py",
+  "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/run_01"
+ ],
+ "step3_isaac_replay": {
+  "status": "BLOCKED_FOR_CONVENTION_A",
+  "argv": [
+   "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+   "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/src/isaac_replay_w13.py",
+   "--run",
+   "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/run_01",
+   "--out",
+   "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/run_01/isaac",
+   "--headless",
+   "--enable_cameras"
+  ],
+  "reason": "isaac_replay_w13.py:239-242 deme_to_disp = p + origin_disp(평행이동만), :398 'DEME xyz == 로봇 세계 xyz' 선언. 규약 A 에서는 R_robot_box=Rz(−90°) 회전이 빠져 로봇·툴이 상자 대비 90° 틀리게 그려진다. rev34 에서 미패치(범위 밖). 결과 NPZ metadata_json.w25_frame 에 R_robot_box·t_robot 이 기록되므로 패치는 그 값을 읽어 p_disp = R·p + origin 으로 바꾸면 된다(별도 승인)."
+ },
+ "cost_note": "W19 A(rev32, 20,000알 둔덕) 실제 경과 20,978 s/물리 24.807 s. rev34 는 채터링 1회당 서보 8° 열고 닫기(0.1 ms fine sync, 각 ≈0.24 s 물리)가 추가된다 — 벽시계 추정은 W25-C 더미 알 수가 정해진 뒤 스모크로 잰다(외삽 금지).",
+ "env": {
+  "PYTHONDONTWRITEBYTECODE": "1"
+ },
+ "gpu_policy": "DEME 와 Isaac 은 동시에 돌리지 않는다.",
+ "variant_paperbox": {
+  "status": "DRAFT — 실행 금지. 현재 실물(임시 A4 종이 상자 바깥 31×22 cm·벽 0.2·높이 23 cm, 층 4 cm) 정렬 변형. 사용자·코디네이터 승인 후 동결본 별도 작성.",
+  "params": "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/params_w25_paperbox.json",
+  "params_alt_inner306": "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/params_w25_paperbox_inner306.json — 더미 box_bounds_m 도 306×216 으로 만든 경우에만(310×220 더미와는 러너가 거부)",
+  "preconditions_cpu_local": [
+   {
+    "id": "PB0_pile",
+    "what": "W25-D 40 mm 평평한 층 NPZ(box_bounds ±0.155/±0.11, 알 전부 선언 트레이 안 ±0.5 mm) + sha256 기록"
+   },
+   {
+    "id": "PB1_domain",
+    "argv": [
+     "/home/cgxr/miniconda3/envs/roarm/bin/python",
+     "-B",
+     "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/checks/domain_w25.py",
+     "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/params_w25_paperbox.json",
+     "<W25-D 40 mm 평평한 층 NPZ(310×220) 절대경로 — 미생성>",
+     "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/domain/paperbox_final.json"
+    ],
+    "why": "러너와 같은 식의 도메인(양성 대조 2/2 binary64 일치)"
+   },
+   {
+    "id": "PB2_numeric_evidence",
+    "argv": [
+     "/home/cgxr/miniconda3/envs/roarm/bin/python",
+     "-B",
+     "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/checks/make_numeric_evidence_w25.py",
+     "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/domain/paperbox_final.json",
+     "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/numeric_inputs_w25_paperbox.json"
+    ],
+    "gate": "REUSABLE_FOR_REV11 == true"
+   },
+   {
+    "id": "PB3_stub_full",
+    "argv": [
+     "/home/cgxr/miniconda3/envs/roarm/bin/python",
+     "-B",
+     "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/checks/cpu_stub_dryrun.py",
+     "--src",
+     "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/src",
+     "--params",
+     "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/params_w25_paperbox.json",
+     "--pile",
+     "<W25-D 40 mm 평평한 층 NPZ(310×220) 절대경로 — 미생성>",
+     "--out",
+     "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/dryrun/paperbox_final",
+     "--numeric-evidence",
+     "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/numeric_inputs_w25_paperbox.json"
+    ],
+    "gate": "abort None · bridge CLEARANCE_CERTIFIED"
+   },
+   {
+    "id": "PB4_preflight",
+    "argv": [
+     "/home/cgxr/miniconda3/envs/roarm/bin/python",
+     "-B",
+     "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/src/preflight_geometry.py",
+     "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/preflight/paperbox_final",
+     "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/params_w25_paperbox.json",
+     "<W25-D 40 mm 평평한 층 NPZ(310×220) 절대경로 — 미생성>"
+    ],
+    "gate": "C4 외 all pass(C4 는 결정 대기 항목)"
+   },
+   {
+    "id": "PB5_arm_wall",
+    "argv": [
+     "/home/cgxr/miniconda3/envs/roarm/bin/python",
+     "-B",
+     "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/checks/arm_wall_check_w25.py",
+     "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/params_w25_paperbox.json",
+     "<W25-D 40 mm 평평한 층 NPZ(310×220) 절대경로 — 미생성>",
+     "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/armwall/paperbox_final.json"
+    ],
+    "gate": "any_link_overlap false · any_s1_vertex_inside false"
+   }
+  ],
+  "step1_simulation": [
+   "/home/cgxr/miniconda3/envs/roarm/bin/python",
+   "-B",
+   "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/src/sim_w13_full_cycle.py",
+   "--params",
+   "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/params_w25_paperbox.json",
+   "--pile",
+   "<W25-D 40 mm 평평한 층 NPZ(310×220) 절대경로 — 미생성>",
+   "--out",
+   "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/run_paperbox_01",
+   "--seed",
+   "460",
+   "--numeric-evidence",
+   "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/numeric_inputs_w25_paperbox.json",
+   "--max-wall-s",
+   "31200"
+  ],
+  "step2_rerun": [
+   "/home/cgxr/miniconda3/envs/isaaclab/bin/python",
+   "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/src/w13_rerun_export.py",
+   "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/run_paperbox_01"
+  ],
+  "step3_isaac_replay": "BLOCKED_FOR_CONVENTION_A (본 템플릿 step3_isaac_replay.reason 과 같음)",
+  "temp_evidence_for_old_20k_pile": {
+   "domain": "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/domain/paperbox_310x220_TEMP.json",
+   "numeric": "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/domain/numeric_inputs_w25_paperbox_310x220_TEMP.json",
+   "note": "TEMP(20k 둔덕) 전용 — 40 mm 더미로 바뀌면 재생성"
+  },
+  "cost_note": "40 mm 층 61,408~74,067알(W25-D 사양)은 20k 실행 기록 없는 규모 — 벽시계는 스모크 실측 전 미정(외삽 금지)."
+ }
+}

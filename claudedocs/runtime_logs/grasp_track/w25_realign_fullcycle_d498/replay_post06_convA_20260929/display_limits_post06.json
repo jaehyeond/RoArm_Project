@@ -1,0 +1,109 @@
+{
+  "artifact": "W25_POST06_DISPLAY_LIMITS_CPU_V1",
+  "definitions_from": "isaac_replay_w13_post05.py:520-528 (정의 변경 0)",
+  "not_a_claim": "기하 일관성 지표다. 서보 구동 검증도, 렌더 육안 검수도 아니다.",
+  "cases": {
+    "a_rev34_stub_post06": {
+      "run": "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/dryrun/paperbox_final_n67737",
+      "transform": "post06 (회전 적용)",
+      "w25_frame_present": true,
+      "rotation_applied": true,
+      "n_particle_frames": 264,
+      "n_display_records": 264,
+      "max_lip_reprojection_err_mm": 8.1001,
+      "median_lip_reprojection_err_mm": 0.0,
+      "n_frames_with_limit_violations": 0,
+      "limit_violation_joints": [],
+      "limit_violation_worst_overshoot_deg": 0.0,
+      "joint_source_counts": {
+        "offline IK from stored actual lip pose (cmd_mode=abs)": 2,
+        "offline IK from stored actual lip pose (cmd_mode=w11)": 52,
+        "stored sync_joint_deg (cmd_mode=fk, no IK solved)": 210
+      },
+      "n_ik_failures": 0,
+      "ik_failure_reasons": []
+    },
+    "a_rev34_stub_post05_unpatched": {
+      "run": "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/dryrun/paperbox_final_n67737",
+      "transform": "post05 식(평행이동만)",
+      "w25_frame_present": true,
+      "rotation_applied": false,
+      "n_particle_frames": 264,
+      "n_display_records": 264,
+      "max_lip_reprojection_err_mm": 507.7214,
+      "median_lip_reprojection_err_mm": 157.7924,
+      "n_frames_with_limit_violations": 0,
+      "limit_violation_joints": [],
+      "limit_violation_worst_overshoot_deg": 0.0,
+      "joint_source_counts": {
+        "offline IK from stored actual lip pose (cmd_mode=abs)": 2,
+        "offline IK from stored actual lip pose (cmd_mode=w11)": 52,
+        "stored sync_joint_deg (cmd_mode=fk, no IK solved)": 210
+      },
+      "n_ik_failures": 0,
+      "ik_failure_reasons": []
+    },
+    "b_w19A_post06": {
+      "run": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w19_runpod_d487/A_full_cycle/run_01",
+      "transform": "회전 없음(w25_frame 부재 → post05 와 같은 식)",
+      "w25_frame_present": false,
+      "rotation_applied": false,
+      "n_particle_frames": 288,
+      "n_display_records": 288,
+      "max_lip_reprojection_err_mm": 8.132,
+      "median_lip_reprojection_err_mm": 0.0002,
+      "n_frames_with_limit_violations": 20,
+      "limit_violation_joints": [
+        "shoulder"
+      ],
+      "limit_violation_worst_overshoot_deg": 2.37,
+      "joint_source_counts": {
+        "offline IK from stored actual lip pose (cmd_mode=abs)": 2,
+        "offline IK from stored actual lip pose (cmd_mode=w11)": 54,
+        "stored sync_joint_deg (cmd_mode=fk, no IK solved)": 232
+      },
+      "n_ik_failures": 0,
+      "ik_failure_reasons": []
+    },
+    "b_w19A_post05": {
+      "run": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w19_runpod_d487/A_full_cycle/run_01",
+      "transform": "post05 식(평행이동만)",
+      "w25_frame_present": false,
+      "rotation_applied": false,
+      "n_particle_frames": 288,
+      "n_display_records": 288,
+      "max_lip_reprojection_err_mm": 8.132,
+      "median_lip_reprojection_err_mm": 0.0002,
+      "n_frames_with_limit_violations": 20,
+      "limit_violation_joints": [
+        "shoulder"
+      ],
+      "limit_violation_worst_overshoot_deg": 2.37,
+      "joint_source_counts": {
+        "offline IK from stored actual lip pose (cmd_mode=abs)": 2,
+        "offline IK from stored actual lip pose (cmd_mode=w11)": 54,
+        "stored sync_joint_deg (cmd_mode=fk, no IK solved)": 232
+      },
+      "n_ik_failures": 0,
+      "ik_failure_reasons": []
+    }
+  },
+  "w19A_vs_prior_post05_render": {
+    "prior_manifest": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/render_post05_w19A_20260929/render_manifest.json",
+    "prior_max_lip_reprojection_err_mm": 8.132,
+    "mine_max_lip_reprojection_err_mm": 8.132,
+    "prior_n_frames_with_limit_violations": 20,
+    "mine_n_frames_with_limit_violations": 20,
+    "prior_joint_source_counts": {
+      "offline IK from stored actual lip pose (cmd_mode=abs)": 2,
+      "offline IK from stored actual lip pose (cmd_mode=w11)": 54,
+      "stored sync_joint_deg (cmd_mode=fk, no IK solved)": 232
+    },
+    "mine_joint_source_counts": {
+      "offline IK from stored actual lip pose (cmd_mode=abs)": 2,
+      "offline IK from stored actual lip pose (cmd_mode=w11)": 54,
+      "stored sync_joint_deg (cmd_mode=fk, no IK solved)": 232
+    },
+    "all_match": true
+  }
+}

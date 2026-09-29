@@ -1,0 +1,6 @@
+{"artifact": "W25_POD_B_TERMINATE_RECEIPT", "id": "th14bds3fsjg8n", "name": "roarm_w25_podB_pro6000x2_rev34_paperbox",
+ "run": {"state": "completed_rc0", "rc": 0, "runner_wall_s": 36372.797, "sim_wall_seconds": 36311.69, "started_utc": "2026-09-28T21:15:46Z", "ended_utc": "2026-09-29T07:21:59Z", "timed_out": false, "killed": false, "abort_class": null, "diverged": false},
+ "retrieval": {"utc_kst": "2026-09-29 16:27~16:31", "script": "w20_decisions_d492/tools/retrieve_run.sh", "n_files": 14, "n_mismatch": 0, "obj_included": 4, "npz_sha256_prefix": "af313f05d5450176", "npz_bytes": 1770948514, "verdict": "RETRIEVAL_COMPLETE", "local": "exec/runs/podB_pro6000x2/run_01 + pod_runs_logs/ + RETRIEVAL_RECEIPT.json"},
+ "terminate": {"utc_kst": "2026-09-29 16:32", "api": "delete-pod", "status": 204},
+ "billing_list_pod_billing": {"queried_kst": "2026-09-29 16:32", "total_usd": 40.21, "gpu_usd": 40.12, "disk_usd": 0.09, "days": {"09-28": 12.64, "09-29": 27.58}, "pod_lifetime_h_approx": 10.6, "rate_usd_h": 4.18, "note": "조회 시점까지 집계, 최종 청구는 이후 재조회로 확정"},
+ "raw_result_not_promoted": {"definite_delivered_n": 585, "definite_delivered_g": 11.8506, "possible_delivered_n": 665, "possible_delivered_g": 13.4712, "layer1_accounting_integrity": true, "spill_stdout": 25, "note": "생산 러너 자체 회계값. rev31 재계산·정착 cadence·독립 감사 뒤에만 판정 승격(D492 규약: exact_single_value_allowed=false)"}}

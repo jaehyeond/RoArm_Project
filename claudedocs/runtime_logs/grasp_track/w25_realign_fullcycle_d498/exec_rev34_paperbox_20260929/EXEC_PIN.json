@@ -1,0 +1,363 @@
+{
+ "artifact": "W25_EXEC_PIN_V1",
+ "utc": "2026-09-28T20:57:35Z",
+ "purpose": "RunPod 본 실행 동결본. GPU 결과 0 인 시점에 만들었다. 이후 이 폴더의 파일(runs/ 제외)은 바꾸지 않는다.",
+ "revision": "rev34-w25-paperbox (rev34 바이트 사본, REVISION_PIN 54/54 일치 — COPY_RECEIPT.json)",
+ "user_decisions_20260929": {
+  "pile": "2차 더미 67,737알 rho 0.503 seed 460 (FLAT40_PASS 40.2 mm) sha 31dd2897…",
+  "C4": "0.135 mm 수용",
+  "travel_cm": 45,
+  "wall_cap_h": 32,
+  "wall_cap_s": 115200,
+  "sim_soft_cap_s": 114000,
+  "grace_s": 1200,
+  "cost_cap": null,
+  "gpu_plan": "병행(hedge): podA 4090×1 즉시 본 실행 / podB PRO 6000×2 smoke 3종 → 사전등록 규칙(R>=1.3 & G0 PASS) 통과 시만 본 실행, 아니면 terminate",
+  "seed": 460,
+  "procedure_switch": "ON (표면 열기·채터링 ≤3·+80 mm 재닫기)",
+  "box_frame_convention": "A"
+ },
+ "pre_registered_rules": {
+  "metric": "settle_wall_per_phys_s = smoke_03_settle_full 의 settle phase wall_s / sim_s (pod/settle_speed_ratio.py, NPZ sync_wall_elapsed_s 차분)",
+  "ratio": "R = settle_wall_per_phys_s(podA_4090) / settle_wall_per_phys_s(podB_pro6000x2)",
+  "go_if": "smoke 3종 rc0 AND sphere_regression G0 3/3 PASS AND R >= 1.3",
+  "else": "즉시 terminate(본 실행 0). R 은 결과 본 뒤 바꾸지 않는다.",
+  "labeling": "GO 시 podB run_01 은 podA run_01 과 같은 입력의 '장비 혼합 반복(n=2, 4090 vs PRO6000×2)' 로만 표기 — 동일 장비 반복이 아님."
+ },
+ "criteria_file": "criteria_w25_paperbox_cap32h.json (rev32 criteria 에서 runner.physics_wall_cap_s 32400→115200, runner.sim_soft_wall_cap_s 31200→114000 만 변경)",
+ "bundle": {
+  "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/bundle/w25_bundle_20260929_0557.tar.gz",
+  "sha256": "c0137a2a759f28decee3f77b08faa5c365b42feeef17ac193e277376ca220b26",
+  "size": 46047485,
+  "n_files": 606,
+  "extract": "tar -C / -xzf <tarball>  (절대경로 미러)"
+ },
+ "bundle_manifest_sha256": "849bd43ecfc901cb554f556a533ded554995bec066b75a5b38359bee28cfb913",
+ "bundle_groups_n": {
+  "w25_exec_frozen": 74,
+  "external_frozen_inputs_13": 13,
+  "w25_pile_npz_n67737": 1,
+  "runtime_extra_urdf_and_meshes": 489,
+  "runtime_extra_roarm_rl_pkg": 30,
+  "smoke_sphere_regression_inputs_w10_G0": 2
+ },
+ "external_13_match_w19_manifest": true,
+ "not_in_bundle": [
+  "EXEC_PIN.json",
+  "RUNPOD_LOG_W25.md",
+  "bundle/*",
+  "runs/*"
+ ],
+ "gpu_used": false,
+ "physics_executed": false,
+ "files": {
+  "COMMANDS_w25_podA_4090.json": {
+   "sha256": "88d9c8d73add856580a770f29c2c5d5493f987fc8c209bea8d5e3bfe718c37bf",
+   "size": 10305
+  },
+  "criteria_w25_paperbox_cap32h.json": {
+   "sha256": "ba46b0452aa22cf5c6813d6f75c32ce6f580161a22290d70378f19eb0b2df15d",
+   "size": 37334
+  },
+  "COPY_RECEIPT.json": {
+   "sha256": "fe9504fe8485e8c8f09da9b1de4a2f6bf8de2c3ff8d7fae90ed5ee63bc612fa7",
+   "size": 14394
+  },
+  "COMMANDS_w25_podB_pro6000x2.json": {
+   "sha256": "1c2e91935a9dc80d8692890469d0263e1fc38f3e3b430b11aa7e1c7ad730194a",
+   "size": 10994
+  },
+  "make_commands_w25.py": {
+   "sha256": "6b798f2d4fa9c304cf5d518a6aa1abc087092dfa999e559d12c6a5d65c9ad685",
+   "size": 7928
+  },
+  "bundle/make_bundle_w25.py": {
+   "sha256": "27f0dba42c16acc50e7bce7131cc3990da8047eabc50ba37cb948164c2000d4a",
+   "size": 5460
+  },
+  "bundle/w25_bundle_20260929_0557.tar.gz": {
+   "sha256": "c0137a2a759f28decee3f77b08faa5c365b42feeef17ac193e277376ca220b26",
+   "size": 46047485
+  },
+  "bundle/BUNDLE_MANIFEST_W25.json": {
+   "sha256": "849bd43ecfc901cb554f556a533ded554995bec066b75a5b38359bee28cfb913",
+   "size": 210846
+  },
+  "pod/bootstrap_pod_w25.sh": {
+   "sha256": "0abc2cfd4b237ccc45ec90038a9b67bb1442e885ff06e80ad87abe3700359b72",
+   "size": 3878
+  },
+  "pod/settle_speed_ratio.py": {
+   "sha256": "8b7aabf3a7288c47e5d978959576e5979f2975ec46d7de73527d32a39df7d18c",
+   "size": 1269
+  },
+  "pod/run_w25.py": {
+   "sha256": "74c02c550da884892379005a1b3dae7733a93415369ac4dac385bfabc355bb75",
+   "size": 8033
+  },
+  "pod/run_smokes_w25.sh": {
+   "sha256": "023e1b0f738af289466085a866b98ebc70b1ea9a3c24d0fa42926512c13a11e2",
+   "size": 936
+  },
+  "pod/verify_bundle.py": {
+   "sha256": "320b7e7b308674aa4333b8a15c34f5605ffccb3929ee98c836f5afe45df06b25",
+   "size": 1134
+  },
+  "pod/env_receipt.py": {
+   "sha256": "6a58942af8b7d250687f7a00c852621e60a5968fa4b147ccadb7d6fecafad2e1",
+   "size": 2979
+  },
+  "pod/status.sh": {
+   "sha256": "4cb3fcb83f1dc245788a839ba65de01dd84cda7f9ba8624ef52584a0fa124c7e",
+   "size": 537
+  },
+  "pod/check_sphere_regression.py": {
+   "sha256": "22907818118c85ab537a7596d6bd9c7f1cc91c8e0e920050241a20f27622656c",
+   "size": 1240
+  },
+  "rev34/params_w25_OFF_rev32equiv.json": {
+   "sha256": "bbe097c143543367b3f2dde7a722a03c30178ebe8fdb86213e9138fbc0aee379",
+   "size": 2779
+  },
+  "rev34/params_w25_paperbox_inner306.json": {
+   "sha256": "96ff9fea636ed0615e9ccaa8be7750bf07387ec9fc2e365fe4a4680864c38e80",
+   "size": 4354
+  },
+  "rev34/params_w13.json": {
+   "sha256": "95101f8b799518f83a0d8a0004057e50ea01120b66681334a9911a7e5fa7e661",
+   "size": 2361
+  },
+  "rev34/COMMANDS_w25_template.json": {
+   "sha256": "1c3c2b7006da2256bb6a7fa6798a3a1c6e3bf335364cb0fe5e500efc0c93da25",
+   "size": 14289
+  },
+  "rev34/COMMANDS.json": {
+   "sha256": "6f3eafd951ed041df19cfb55177ade9d06a3574d7d95e926cb2b09ec7f0959e6",
+   "size": 4746
+  },
+  "rev34/DIFF_rev32_to_rev34_src.patch": {
+   "sha256": "0eec23c860b189f4e6894e3973e7f88e0fbd4e74b6f58452fd0ae89ea0beb20e",
+   "size": 43572
+  },
+  "rev34/criteria.json": {
+   "sha256": "71a7d23938a341c2689b570fa5a1e9bec74b7b3392f754ca55f61e7edd646196",
+   "size": 34400
+  },
+  "rev34/params_w25_paperbox.json": {
+   "sha256": "6c174a895b5603349b70f4ea990577b21561a0ec793ed50a978af8c83094a5d5",
+   "size": 4367
+  },
+  "rev34/params_w25_TEMP_oldpile.json": {
+   "sha256": "6ea394b3172af1bae2b5a0b5dcc8c13d2637c7f0836346817899229dcc85a1e4",
+   "size": 3956
+  },
+  "rev34/numeric_inputs_w25_paperbox_n67737.json": {
+   "sha256": "9e43f94f1f0fc88c5a246477bc0863f624cf94ea5decbaa20aff9e18e51eb7d2",
+   "size": 4016
+  },
+  "rev34/params_w25.json": {
+   "sha256": "3eb0233d0df99a169930cbf346f0f6bfafcd7cc8195dc27b3bd6f28d82d96f4c",
+   "size": 3673
+  },
+  "rev34/numeric_inputs.json": {
+   "sha256": "02ad1171cef8bc85eb9d589f574887f85e05052ed23e6964f7dc6651c3a915a3",
+   "size": 8092
+  },
+  "rev34/numeric_inputs_w25_TEMP_oldpile.json": {
+   "sha256": "bedad025c1f8a17599b15a202b4408a60d418dbe340e277f1d5b61ba106cdf30",
+   "size": 3812
+  },
+  "rev34/dryrun/paperbox_final_n67737/timeline_seed460.json": {
+   "sha256": "02bd13feffc4e55759c26473b7c4ef00afa4c22ccfb67513ef9b0f02b8d0290a",
+   "size": 34009
+  },
+  "rev34/dryrun/paperbox_final_n67737/STUB_RECEIPT.json": {
+   "sha256": "8f5108b94ef1a97708b6fd22591bef3ffa8e42a5ed0f8cd947b24644e9d1aa83",
+   "size": 1070
+  },
+  "rev34/dryrun/paperbox_final_n67737/w13_cycle_seed460.json": {
+   "sha256": "1b629fdf237f54daf3cea477bd86b5d0d5984cb2a5a98cd1ed73f7059468b32b",
+   "size": 84283
+  },
+  "rev34/checks/domain_w25.py": {
+   "sha256": "72f924380cf2e2795d7a6920d1bbdf22d4ec202b9c2643dc39acbe9196504dce",
+   "size": 5433
+  },
+  "rev34/checks/test_w25_units.py": {
+   "sha256": "379604eb43ef971fe0ebaeb8def3443d00caf73e65bd1640250bbde496312d9e",
+   "size": 7245
+  },
+  "rev34/checks/import_check.txt": {
+   "sha256": "c1ec6f83c74e25e68b25062866cfb80d16b9954251810ef5b508c4d8d1a26e53",
+   "size": 169
+  },
+  "rev34/checks/compare_dryruns.py": {
+   "sha256": "8719fc5943abcf3663e150f5dcb462064bbe682a860d5cb6fbef845a2223f487",
+   "size": 4477
+  },
+  "rev34/checks/ast_scope_check.json": {
+   "sha256": "73c852d9bac6fcc7d105d73a3287fb5b88e476aba793518657a55040786e0d38",
+   "size": 942
+  },
+  "rev34/checks/make_revision_pin.py": {
+   "sha256": "b3fbc084fb53770f28a8ab69d214ecb2458dd7873d83461a56e1d2cad4ccfb0c",
+   "size": 2852
+  },
+  "rev34/checks/ast_scope_check_rev32_to_rev34.py": {
+   "sha256": "e61d1f7cce80d344b21890f4ccd20d361ad5d95586af8da9deeec9b81665cd94",
+   "size": 6064
+  },
+  "rev34/checks/binding_probe.json": {
+   "sha256": "2f336e8283ce2a48277f4aa687fda786a288e7fa389bb937ca38c776deab5607",
+   "size": 1398
+  },
+  "rev34/checks/cad_transform_w25b.py": {
+   "sha256": "dd914fdf128ecb12bcea4246b60537960dcac7e22c619afbbf2851fd5dacb1d7",
+   "size": 8117
+  },
+  "rev34/checks/binding_probe.py": {
+   "sha256": "eb0ef3a3933746f4efbd21226455059d54ce3856fdabe5710c80bc9224823864",
+   "size": 1628
+  },
+  "rev34/checks/ast_scope_check.py": {
+   "sha256": "636a9101cf12bf07b0a142b3358ab5fcbf520b3a7356c27fc9e27f9c4421053a",
+   "size": 2696
+  },
+  "rev34/checks/figures_w25.py": {
+   "sha256": "471d13b6923db548cbfa260226fe9192b5812f075fe9791425c57ad9ff8f0ccc",
+   "size": 7275
+  },
+  "rev34/checks/run_verify_json.py": {
+   "sha256": "b3ab2d3243df7c2b12ace60e5c5172bc93c15992c9ddac777dd0be9bdac1b1ba",
+   "size": 1801
+  },
+  "rev34/checks/cpu_stub_dryrun.py": {
+   "sha256": "d0e7fa66a10693dbe3d47e35312af07f99564ebd43024219e662bf64f4d00497",
+   "size": 9683
+  },
+  "rev34/checks/make_numeric_evidence_w25.py": {
+   "sha256": "e222d0ad510c055a868ead3675336ed21bf017bb1918359fd7e3b647c4398837",
+   "size": 4051
+  },
+  "rev34/checks/arm_wall_check_w25.py": {
+   "sha256": "2758c4bb5ffb13f5169088c3eec99021842734e64ff92d4e43ba26cb1eeae4e6",
+   "size": 10311
+  },
+  "rev34/domain/paperbox_final_n67737.json": {
+   "sha256": "5745cca5f4c41cab2836d17f358b37f47c9915c3a80ddbfbdd905333e9deb0cb",
+   "size": 1905
+  },
+  "rev34/domain/numeric_inputs_w25_paperbox_inner306_TEMP.json": {
+   "sha256": "7c98b45a376b452fb954a2da7ca645a8f7a33e0b6bfa895479d021b0a01e8dce",
+   "size": 3775
+  },
+  "rev34/domain/numeric_inputs_w25_paperbox_310x220_TEMP.json": {
+   "sha256": "edb80b3b0b8f4439fa125d1820c9f9fa45c327b716d6b8fbebda15aaa297afde",
+   "size": 3774
+  },
+  "rev34/src/arm_link_bounds.py": {
+   "sha256": "0ba2949f0e6e0055993e5be6810d8a80c5a36a63bd48fe7181f9b2d1947863f7",
+   "size": 13415
+  },
+  "rev34/src/isaac_replay_w13.py": {
+   "sha256": "d012e0fcd6b581a13d06053430519e00a8469ec17e46ce930ebb5f25ab9ea718",
+   "size": 105643
+  },
+  "rev34/src/freeze_manifest.py": {
+   "sha256": "162bfa21073ba4b0998450d141c96189a9ab7a961a374c1661b1bd8aeae0d451",
+   "size": 3602
+  },
+  "rev34/src/preflight_geometry.py": {
+   "sha256": "b98cb7e735300fbe3bba40215863dfd8a28cb37c3d8a45f96dd20a068e50d610",
+   "size": 30834
+  },
+  "rev34/src/run_production.py": {
+   "sha256": "bd8fa702ff5a9c06286de1cafd3702487803103fe747bcc3d3a8fae483cb81d5",
+   "size": 35498
+  },
+  "rev34/src/close_diagnostics.py": {
+   "sha256": "d6f4daf26e066554d6b3347adc257796235387296f945d3ae47bb0dd50c1b4c6",
+   "size": 25066
+  },
+  "rev34/src/camera_framing.py": {
+   "sha256": "600aef751a0d5abd2ce6c665e8ec42a2b3f7f28a53b5b626aecd9a5981f8a33c",
+   "size": 6717
+  },
+  "rev34/src/compare_wall_regression.py": {
+   "sha256": "6cc7c34be3f6c8e6a44edc648d5531c81c30c8c0de94a5f8c1bca74c682857f4",
+   "size": 9867
+  },
+  "rev34/src/w13_rerun_export.py": {
+   "sha256": "35a10aa666ff2e76d5e8dd39442cbb4978bb954cb5b523a6ff7ba1fac3af87c8",
+   "size": 28006
+  },
+  "rev34/src/raw_transitions.py": {
+   "sha256": "424d8482f775ac2f2e42ba8880468379292cb96b179605ec271af64f55f93e6a",
+   "size": 1738
+  },
+  "rev34/src/w13_kinematics.py": {
+   "sha256": "9c54d21f2b32b50a615cc3bff0235965c07201798f9710a818ad6d9e4ff4c685",
+   "size": 17594
+  },
+  "rev34/src/w13_fk.py": {
+   "sha256": "27b70bc0b8d7f55230c0489312395ed3072b1d9e77031cddeadf013e277f3bd1",
+   "size": 26386
+  },
+  "rev34/src/sim_w13_full_cycle.py": {
+   "sha256": "67eb0ca8e84112d235f00f6b00c689e9fe8060af80245fff5018026a2c022f89",
+   "size": 91193
+  },
+  "rev34/src/bridge_clearance_guard.py": {
+   "sha256": "4151df2c6e964840538b4ada5ad608c98203ff099e51496e540cc9e54d2857ff",
+   "size": 25233
+  },
+  "rev34/src/readiness_launcher.py": {
+   "sha256": "b9a82dac69d457772321d054ddc9c48d19591efb336e779736db2c27ba8a971c",
+   "size": 25964
+  },
+  "rev34/src/inventory_geometry.py": {
+   "sha256": "a49e1ba99a92eb954a73cb4b2a995f6992dec16b94c54f54d5f6251bf9aa0327",
+   "size": 10438
+  },
+  "rev34/src/preflight_rigid_hinge.py": {
+   "sha256": "9ac99571433145f72a4e5f90c88b1b7c91bc43e827d6c8e54733faaa4ae1cd13",
+   "size": 6707
+  },
+  "rev34/src/preflight_snapshot.py": {
+   "sha256": "6b6c5a4de20abe59cba314c7e7c5842e509a93bcd7ce2b4853cd0e411008cf07",
+   "size": 6950
+  },
+  "rev34/src/bridge_numerics.py": {
+   "sha256": "01e55cbee1954179e15bb318be5c2a69e92686f0b93ac18d9233bb87fa01f4af",
+   "size": 22311
+  },
+  "rev34/src/bridge_inputs.py": {
+   "sha256": "4d0d5fbd4c22ae4e8395933157298e4104f558b38d0b1c899ea9da8357f85c08",
+   "size": 29876
+  },
+  "rev34/src/raw_row_identity.py": {
+   "sha256": "529da6c369b0da6eff1e2840b354332f4be3e67e2ea1e82cd4a37e98013b7fa6",
+   "size": 6506
+  },
+  "rev34/src/bridge_clearance_guard_audit_original.py": {
+   "sha256": "127a017c40a68c9888cc6d33335697e1b7ceb0d6ead44bd97a81d50bf1107b66",
+   "size": 11567
+  },
+  "rev34/src/verify_w13_self.py": {
+   "sha256": "891684d11f4dff67b03593b9cf76d373f9aee57d90dcc07f0f86525b2959a32c",
+   "size": 29630
+  },
+  "rev34/src/derive_v2.py": {
+   "sha256": "7abefe708dfd57f8fe74cca16f8b038b9f1be2af0e02cd82b36558018c5b0361",
+   "size": 8875
+  },
+  "rev34/armwall/paperbox_final_n67737.json": {
+   "sha256": "c478cfcca20affcefe92f99f82b60a0632967da01bf518a5176d9a79651e7b0f",
+   "size": 5156
+  },
+  "rev34/preflight/paperbox_final_n67737/preflight_geometry.json": {
+   "sha256": "9af534e6c35096e8ea34c1e3a00b5d8356aa0d30cf5e5107879547a1f6328a76",
+   "size": 54111
+  }
+ }
+}

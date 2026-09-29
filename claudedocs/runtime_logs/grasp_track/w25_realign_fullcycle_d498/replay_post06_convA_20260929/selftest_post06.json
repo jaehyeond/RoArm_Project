@@ -1,0 +1,470 @@
+{
+  "artifact": "W25_POST06_COORD_SELFTEST_V1",
+  "what": "post06 표시 좌표 변환(회전 포함)의 CPU 자체검사. 물리 0 · GPU 0 · 원자료 읽기 전용.",
+  "scripts": {
+    "/home/cgxr/orca/workspaces/RoArm_Project/w25-render-cad/claudedocs/research/w25_render_cad_20260928/isaac_replay_w13_post05.py": "1a1c48c00ffe7181703793a7e8bca0aeb6a2f5ee4fcf15956471930cb947b0de",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/replay_post06_convA_20260929/isaac_replay_w13_post06.py": "926d67ed113b67f599356a7ec7ff0ea13eb35ae402cdf9654fc2335a0c34252e"
+  },
+  "constants": {
+    "PLATE_Z_m": 0.38,
+    "SHOULDER_ABOVE_PLATE_expr": "0.0701 + 0.05196",
+    "SHOULDER_ABOVE_PLATE_m": 0.12206,
+    "source": "/home/cgxr/orca/workspaces/RoArm_Project/w19-replay/claudedocs/runtime_logs/grasp_track/w19_runpod_d487/A_full_cycle/replay_20260918/rev/src/w13_fk.py"
+  },
+  "a_rev34_stub_convention_A": {
+    "run": "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/dryrun/paperbox_final_n67737",
+    "npz_sha256": "d2b86281649e058876fc744c1ad53337d6398d043998ef8905a90b6c0cffc036",
+    "w25_frame": {
+      "R_robot_box": [
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          -1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "t_robot_m": [
+        0.25,
+        0.0,
+        -0.2577501314177868
+      ],
+      "box_frame_convention": "A",
+      "box_anchor": "declared_box_center"
+    },
+    "R_is_rotation_matrix": true,
+    "R_is_pure_z_rotation": true,
+    "rotation_about_z_deg": -90.0,
+    "t_robot_json_vs_metadata_max_abs_diff_m": 0.0,
+    "particle_pos_m_shape": [
+      264,
+      67737,
+      3
+    ],
+    "n_particles_frame0": 67737,
+    "box_bounds_m_box_frame": [
+      [
+        -0.155,
+        0.155
+      ],
+      [
+        -0.11,
+        0.11
+      ],
+      [
+        0.0,
+        0.23
+      ]
+    ],
+    "box_inner_size_mm": [
+      310.0,
+      220.0,
+      230.0
+    ],
+    "frame0_box_frame": {
+      "xy_min_m": [
+        -0.1537555605173111,
+        -0.10875662416219711
+      ],
+      "xy_max_m": [
+        0.15376019477844238,
+        0.10875634104013443
+      ],
+      "z_min_max_m": [
+        0.0012351014884188771,
+        0.04166741669178009
+      ]
+    },
+    "frame0_robot_frame": {
+      "xy_min_m": [
+        0.1412433758378029,
+        -0.15376019477844238
+      ],
+      "xy_max_m": [
+        0.35875634104013443,
+        0.1537555605173111
+      ],
+      "xy_center_m": [
+        0.249999858,
+        -2.317e-06
+      ],
+      "xy_extent_mm": [
+        217.513,
+        307.5158
+      ],
+      "long_axis": "y",
+      "z_min_max_m": [
+        -0.2565150299293679,
+        -0.2160827147260067
+      ]
+    },
+    "frame0_display_frame": {
+      "xy_center_m": [
+        0.249999858,
+        -2.317e-06
+      ],
+      "z_min_max_m": [
+        0.24554497007063208,
+        0.2859772852739933
+      ]
+    },
+    "tray_box_display_lo_hi_m": [
+      [
+        0.14,
+        -0.155,
+        0.2443098685822132
+      ],
+      [
+        0.36,
+        0.155,
+        0.47430986858221325
+      ]
+    ],
+    "tray_box_display_size_ordered": true,
+    "z_double_count_check": {
+      "origin_disp_z_m": 0.2443098685822132,
+      "t_robot_z_m": -0.2577501314177868,
+      "expected_origin_z_m": 0.2443098685822132,
+      "rotation_changes_z": false,
+      "disp_z_minus_box_z_max_abs_dev_from_origin_z_m": 0.0
+    },
+    "not_a_claim": "이 수치는 좌표 계산 결과다. 렌더 화면을 본 것이 아니다."
+  },
+  "a2_error_if_unpatched": {
+    "why": "post05(평행이동만)를 규약 A 원자료에 그대로 쓰면 생기는 어긋남. 패치의 크기를 수치로 적는다.",
+    "sync0_lip_robot_post05_m": [
+      0.2581000002101064,
+      0.14784100651741028,
+      0.22166799731107978
+    ],
+    "sync0_lip_robot_post06_m": [
+      0.3978410065174103,
+      -0.008100000210106373,
+      0.22166799731107978
+    ],
+    "lip_robot_offset_mm": {
+      "sync0": 209.3923,
+      "max": 507.7257,
+      "mean": 243.2617,
+      "n_sync": 18864
+    },
+    "particle_display_offset_frame0_mm": {
+      "max": 265.7119,
+      "mean": 141.854
+    },
+    "owner_orientation_offset_deg": 90.0
+  },
+  "b_w19A_regression_no_w25_frame": {
+    "run": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w19_runpod_d487/A_full_cycle/run_01",
+    "npz_sha256": "414633fbff8fc022632524a39ac570b099b5b072e81bf3b5039d4c1589779074",
+    "w25_frame_present": false,
+    "ROT_branch": "None (post05 와 같은 식)",
+    "particle_pos_m_shape": [
+      288,
+      20000,
+      3
+    ],
+    "particle_quat_xyzw_shape": [
+      288,
+      20000,
+      4
+    ],
+    "n_tool_sync_rows": 16813,
+    "max_abs_diff_post05_vs_post06_m": {
+      "particle_pos_frame0": 0.0,
+      "particle_quat_frame0": 0.0,
+      "tool_pos_all_sync": 0.0,
+      "door_pos_all_sync": 0.0,
+      "box_to_robot_vs_post05_plus_t": 0.0,
+      "robot_to_box_vs_post05_minus_t": 0.0,
+      "disp_box_lo_vs_post05": 0.0,
+      "disp_box_hi_vs_post05": 0.0
+    },
+    "all_zero": true,
+    "rotation_applied": false
+  },
+  "c_owner_pose_and_cad_placement": {
+    "a_rev34_stub": {
+      "fixed": {
+        "sync0_pos_box_m": [
+          0.008100000210106373,
+          0.14784100651741028,
+          0.4794181287288666
+        ],
+        "sync0_quat_xyzw_raw": [
+          0.5,
+          -0.5,
+          0.5,
+          0.5
+        ],
+        "sync0_pos_robot_m": [
+          0.3978410065174103,
+          -0.008100000210106373,
+          0.22166799731107978
+        ],
+        "sync0_pos_display_m": [
+          0.3978410065174103,
+          -0.008100000210106373,
+          0.7237279973110797
+        ],
+        "R_owner_box": [
+          [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          [
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "R_owner_display": [
+          [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "R_owner_changed": true,
+        "R_owner_max_abs_change": 1.0,
+        "cad_place_identity_max_abs_diff_m": 1.1102230246251565e-16,
+        "cad_place_identity_holds": true
+      },
+      "door": {
+        "sync0_pos_box_m": [
+          -1.9081958235744878e-17,
+          0.030276000499725342,
+          0.46059712767601013
+        ],
+        "sync0_quat_xyzw_raw": [
+          0.6045140027999878,
+          -0.3668280839920044,
+          0.6045140027999878,
+          0.3668280839920044
+        ],
+        "sync0_pos_robot_m": [
+          0.28027600049972534,
+          1.9081958235744878e-17,
+          0.20284699625822333
+        ],
+        "sync0_pos_display_m": [
+          0.28027600049972534,
+          1.9081958235744878e-17,
+          0.7049069962582233
+        ],
+        "R_owner_box": [
+          [
+            0.0,
+            -0.8870108131500676,
+            0.4617486517087579
+          ],
+          [
+            0.0,
+            -0.4617486517087579,
+            -0.8870108131500676
+          ],
+          [
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "R_owner_display": [
+          [
+            0.0,
+            -0.4617486517087579,
+            -0.8870108131500676
+          ],
+          [
+            0.0,
+            0.8870108131500676,
+            -0.4617486517087579
+          ],
+          [
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "R_owner_changed": true,
+        "R_owner_max_abs_change": 1.3487594648588255,
+        "cad_place_identity_max_abs_diff_m": 1.1102230246251565e-16,
+        "cad_place_identity_holds": true
+      },
+      "assembly_rigidity": {
+        "relative_rotation_max_abs_change": 0.0,
+        "door_minus_fixed_distance_box_m": 0.11933721432970372,
+        "door_minus_fixed_distance_display_m": 0.11933721432970372,
+        "distance_max_abs_change_m": 0.0
+      }
+    },
+    "b_w19A": {
+      "fixed": {
+        "sync0_pos_box_m": [
+          0.047827720642089844,
+          -2.2115642650533118e-13,
+          0.5049088001251221
+        ],
+        "sync0_quat_xyzw_raw": [
+          4.329780301713277e-17,
+          -0.7071067690849304,
+          0.0,
+          0.7071067690849304
+        ],
+        "sync0_pos_robot_m": [
+          0.39784097803551466,
+          -0.008100000000221135,
+          0.22166802783142786
+        ],
+        "sync0_pos_display_m": [
+          0.39784097803551466,
+          -0.008100000000221135,
+          0.7237280278314279
+        ],
+        "R_owner_box": [
+          [
+            2.220446049250313e-16,
+            -6.123234129573476e-17,
+            -0.9999999999999998
+          ],
+          [
+            -6.123234129573476e-17,
+            1.0,
+            -6.123234129573476e-17
+          ],
+          [
+            0.9999999999999998,
+            6.123234129573476e-17,
+            2.220446049250313e-16
+          ]
+        ],
+        "R_owner_display": [
+          [
+            2.220446049250313e-16,
+            -6.123234129573476e-17,
+            -0.9999999999999998
+          ],
+          [
+            -6.123234129573476e-17,
+            1.0,
+            -6.123234129573476e-17
+          ],
+          [
+            0.9999999999999998,
+            6.123234129573476e-17,
+            2.220446049250313e-16
+          ]
+        ],
+        "R_owner_changed": false,
+        "R_owner_max_abs_change": 0.0,
+        "cad_place_identity_max_abs_diff_m": 1.1102230246251565e-16,
+        "cad_place_identity_holds": true
+      },
+      "door": {
+        "sync0_pos_box_m": [
+          -0.0697372555732727,
+          0.008100003004074097,
+          0.48608773946762085
+        ],
+        "sync0_quat_xyzw_raw": [
+          0.16806930303573608,
+          -0.6868425607681274,
+          0.16806930303573608,
+          0.6868425607681274
+        ],
+        "sync0_pos_robot_m": [
+          0.2802760018201521,
+          3.0040741179349073e-09,
+          0.20284696717392664
+        ],
+        "sync0_pos_display_m": [
+          0.2802760018201521,
+          3.0040741179349073e-09,
+          0.7049069671739266
+        ],
+        "R_owner_box": [
+          [
+            1.1102230246251565e-16,
+            -0.46174860756262953,
+            -0.8870108361310883
+          ],
+          [
+            0.0,
+            0.8870108361310884,
+            -0.46174860756262953
+          ],
+          [
+            0.9999999999999999,
+            0.0,
+            1.1102230246251565e-16
+          ]
+        ],
+        "R_owner_display": [
+          [
+            1.1102230246251565e-16,
+            -0.46174860756262953,
+            -0.8870108361310883
+          ],
+          [
+            0.0,
+            0.8870108361310884,
+            -0.46174860756262953
+          ],
+          [
+            0.9999999999999999,
+            0.0,
+            1.1102230246251565e-16
+          ]
+        ],
+        "R_owner_changed": false,
+        "R_owner_max_abs_change": 0.0,
+        "cad_place_identity_max_abs_diff_m": 1.1102230246251565e-16,
+        "cad_place_identity_holds": true
+      },
+      "assembly_rigidity": {
+        "relative_rotation_max_abs_change": 0.0,
+        "door_minus_fixed_distance_box_m": 0.11933719456004357,
+        "door_minus_fixed_distance_display_m": 0.11933719456004357,
+        "distance_max_abs_change_m": 0.0
+      }
+    }
+  },
+  "checks": {
+    "a_R_is_pure_z_rotation": true,
+    "a_t_robot_json_eq_metadata": true,
+    "a_z_not_double_counted": true,
+    "a_display_box_corners_ordered": true,
+    "b_w19A_post05_identical": true,
+    "c_cad_place_identity": true,
+    "c_assembly_rigid": true,
+    "c_rev34_owner_rotation_applied": true,
+    "c_w19A_owner_rotation_absent": true
+  },
+  "n_checks": 9,
+  "n_passed": 9,
+  "all_pass": true
+}

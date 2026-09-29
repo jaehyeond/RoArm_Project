@@ -4,7 +4,22 @@
 - **쓰는 쪽 = Claude 세션 하나.** 읽는 쪽 = 다음에 이 repo 를 여는 **다른 도구**. Claude 연속이면 `START_HERE.md` 로 재개.
 - **덮어쓰기.** 상태 정본 = `START_HERE.md`(여기 안 베낌). 규칙 = `AGENTS.md`. 여기엔 만진 것·만지지 말 것·함정·승인 대기만.
 
-## §2 2026-09-28 밤 Claude(W25) → Codex/Cursor
+## §2 2026-09-29 21:2x Claude(W25 3일차 완료) → Codex/Cursor
+
+**한 일(전부 미커밋, 사용자 commit `407baf0` 이후)**
+- RunPod 병행 본 실행 2회 완주·회수·종료(우리 pod 0). 동결본 `claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/`(runs/·receipts/·RUNPOD_LOG_W25.md·local_tools/ 포함). podB 회계 `runs/podB_pro6000x2/postprocess_20260929/`. post06 재생 패치 `w25_realign_fullcycle_d498/replay_post06_convA_20260929/`(렌더 미실행).
+- 원장: D500 append(`DECISIONS.md:30350`, 앞 30348줄 md5 불변, 백업 `.bak_20260929_pre_d500`) · DECISIONS_ACTIVE·LEDGER_RECENT·EXPERIMENT_LEDGER :607 · START_HERE overwrite 부분 갱신 · 세션 문서 §13.
+- 학습 방향 문서 `claudedocs/research/w25_learning_plan_20260929/{LEARNING_PLAN_BRIEF,LEARNING_PLAN_DETAILED,FULLCYCLE_VS_LEARNING_DATA}.md` + `~/Downloads` 사본, 선행 논문 패키지 `~/Downloads/proposal_priors_package_20260929/`(워커 worktree `.claude/worktrees/agent-a65ed2a45d31fd64a`, 미merge).
+
+**만지지 말 것**: exec 동결본(runs/·receipts/·RUNPOD_LOG·local_tools 제외) · 회수 원자료 run_01 · 워커 worktree 산출 merge 금지.
+
+**함정**: 시뮬 라벨은 기하 기준(lift_end 더미 위 들린 알) — tool_residual 분류는 절반 이하 · 스모크 속도비로 전체 비용 외삽 금지(R_full 1.449 vs 2.556) · ssh `A && B && setsid … &` 채널 점유 · Monitor 무이벤트 → Bash 대기 루프.
+
+**승인 대기**: 학습 단계 1단계(셀 제작·RunPod 셀 단가 실측) 착수 · post06 렌더(로컬 GPU) · 실물 측정(M1·M4·M5, 로봇 구동 없음) · 카메라 연결·정합(구동 승인) · 옛 브랜치 4개 삭제.
+
+---
+### (이전 §2 2026-09-28 밤 원문, 참고용)
+2026-09-28 밤 Claude(W25) → Codex/Cursor
 
 **한 일 (repo에 남은 변경, 전부 미커밋)**
 - 새 세션 문서 `claudedocs/session_20260928_w25_realign_fullcycle_prep.md` · `START_HERE.md` overwrite(백업 `START_HERE.md.bak_20260928_pre_w25`) · `DECISIONS.md` **D498 append**(앞부분 md5 불변 실측, 백업 `.bak_20260928_pre_d498`) · `DECISIONS_ACTIVE.md`·`LEDGER_RECENT.md` 갱신 · `EXPERIMENT_LEDGER.md` 1행 append · 이 relay.
@@ -26,8 +41,10 @@
 - 워커 Claude Code 가 "Auto mode is unavailable(safety verdict 없음)" 로 턴을 끝내면 `orca-ide orchestration send --from <코디 handle> --to dispatch:<id>` 로 깨울 수 있다. `send`·`worker-start`·`run-create` 는 `--from` 필수(비-Orca 터미널), `worker-start` 에 `--no-parent` 없음.
 - Codex 0.158.0 = npm 최신(09-28 22시) → 업데이트 안내 없음. 이후 새 버전이 나오면 W22 함정 재발 가능.
 
+**09-29 진행(2일차)**: ① post05 재렌더 완료 ② 더미 2개 생성 완료(61,408 FAIL 36.6 mm / 67,737 PASS 40.2 mm, `<case>/pile_flat40_20260929/`) ③ PB1~PB5 재검토 중(`w25-rev34-fullcycle/.../rev34/{preflight,domain,armwall,dryrun}/paperbox_final{,_n67737}`). 사용자 commit `407baf0`(00:02) 이후 변경은 미커밋.
+
 **승인 대기**
-- ① 로컬 GPU: post05 로 W19 A 재렌더(≈8 분, B REPORT §6 명령) ② 로컬 GPU: 40 mm 층 더미 생성(D `pile_generation_commands.md`, `--seed-margin-mm 4.6`) ③ RunPod: rev34 전체 사이클(부피밀도·cap ≥32 h·비용 상한·기동 시각·C4/travel_cm 결정; 우리 pod `roarm_w25_*` 만) ④ 옛 브랜치 4개 삭제 여부 ⑤ 실물 실측(알 질량·상자 안쪽 치수·벽 높이 안/바깥). dt 사다리 GPU 는 사용자 보류.
+- ③ RunPod(사용자 결정: 2차 더미 67,737알 확정·C4 수용·travel 45·cap 32 h·**비용 상한 없음**; GPU 선택만 대기 — 권고 병행 4090×1 + PRO 6000×2, 우리 pod `roarm_w25_*` 만, 타인 pod 8개 불가침): rev34 전체 사이클(부피밀도·cap ≥32 h·비용 상한·기동 시각·C4/travel_cm 결정; 우리 pod `roarm_w25_*` 만) ④ 옛 브랜치 4개 삭제 여부 ⑤ 실물 실측(알 질량·상자 안쪽 치수·벽 높이 안/바깥). dt 사다리 GPU 는 사용자 보류.
 
 **검증 방법**
 ```

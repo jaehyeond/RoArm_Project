@@ -1,0 +1,890 @@
+{
+ "artifact": "W25_RAW_SCHEMA_CHECK_V1",
+ "utc": "2026-09-29T08:12:29Z",
+ "subject_raw": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/runs/podB_pro6000x2/run_01/w13_cycle_seed460.npz",
+ "subject_raw_sha256": "af313f05d545017674c67877798a0cd4d2f309eae7ba29d31ea641227695e032",
+ "contract_documents": {
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/RAW_SCHEMA_REQUIRED.md": "3169a6dab1ab97f4383a86e1641a5aa8b54d1840564c11da6937d9ebd188984f",
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/RAW_SCHEMA_REQUIRED_ERRATUM_01.md": "b1264a5e2e5ae2610567136d2b06f0595e408efeffa5023075f4aa7f7e69b10f",
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/RAW_SCHEMA_REQUIRED_ERRATUM_02.md": "a46d7a1318ba89836d40913d8fb81a062edd97d11ece4967c2e7094dd2b82abf",
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/RAW_SCHEMA_REQUIRED_ERRATUM_03.md": "3780146cdc5022ffd6408a7b7622ecd759f166a39df5747de482aa3d92b6ad9e",
+  "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/RAW_SCHEMA_REQUIRED_ERRATUM_04.md": "4290a9cfbfce6ac13fdda54a4df20a72e56b7bdbabce8ed22436109762e8e1a6"
+ },
+ "cpu_only": true,
+ "new_physics_runs": 0,
+ "gpu_used": false,
+ "item_naming_basis": "W19 RAW_SCHEMA_CHECK 27항목 방식 + W25 전용 항목(w25_frame·절차 기록)",
+ "n_items": 27,
+ "n_pass": 22,
+ "n_fail": 5,
+ "failures": [
+  "metadata_time_mapping_abs_s_and_geometry_epsilon_m",
+  "erratum04_floor_rule_and_contract_version_declared_in_raw_metadata",
+  "erratum01_visual_mapping_one_row_per_saved_particle_frame",
+  "final_manifest_path_bytes_sha256_for_every_output",
+  "delivery_layers_separate_and_settlement_cadence_contract"
+ ],
+ "verdict": "RAW_SCHEMA_CHECK_FAIL_5_OF_27",
+ "non_claims": [
+  "이 검사는 원자료가 규약 문구를 충족하는지만 본다 — 물리적 성공·배출 성공 판정이 아니다.",
+  "FAIL 항목을 사후 허용값으로 완화하지 않았다.",
+  "2단계(재생·RRD)·3단계(독립 감사) 산출이 필요한 항목은 note 에 적고 FAIL 로 남긴다."
+ ],
+ "wall_s": 16.061,
+ "items": [
+  {
+   "name": "dense_sync_clock_arrays_present_with_T_rows",
+   "verdict": "PASS",
+   "severity": "contract",
+   "contract_quotes": [
+    {
+     "cite": "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/RAW_SCHEMA_REQUIRED.md:33-35",
+     "text": "`tool_pos_m[T,3]`, `tool_quat_xyzw[T,4]`, `fixed_pos_m[T,3]`, `fixed_quat_xyzw[T,4]`, `door_pos_m[T,3]`, `door_quat_xyzw[T,4]`, `bin_pos_m[T,3]`, `bin_quat_xyzw[T,4]` — actual tracker poses."
+    }
+   ],
+   "measured": {
+    "T": 22128,
+    "n_required": 17,
+    "missing": [],
+    "wrong_row_count": {},
+    "dtypes": {
+     "sync_t_s": "float64",
+     "sync_phase_code": "int8",
+     "sync_requested_duration_s": "float64",
+     "sync_derived_internal_steps": "int64",
+     "scalar_v_particle_max": "float64",
+     "tool_pos_m": "float32",
+     "tool_quat_xyzw": "float32",
+     "fixed_pos_m": "float32",
+     "fixed_quat_xyzw": "float32",
+     "door_pos_m": "float32",
+     "door_quat_xyzw": "float32",
+     "door_target_pos_m": "float32",
+     "door_target_quat_xyzw": "float32",
+     "fixed_target_pos_m": "float32",
+     "fixed_target_quat_xyzw": "float32",
+     "tool_target_pos_m": "float32",
+     "tool_target_quat_xyzw": "float32"
+    }
+   },
+   "note": "`bin_pos_m`/`bin_quat_xyzw` 는 고정 픽스처라 (3,)/(4,) 단일 포즈로 저장돼 dense 목록에서 뺐다 — 별도 항목에서 확인."
+  },
+  {
+   "name": "sparse_particle_frame_arrays_shapes_and_dtypes",
+   "verdict": "PASS",
+   "severity": "contract",
+   "contract_quotes": [
+    {
+     "cite": "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/RAW_SCHEMA_REQUIRED.md:45-47",
+     "text": "`particle_ids[N]`, `particle_mass_kg` (scalar or exact uniform vector), `particle_pos_m[F,N,3]`, `particle_quat_xyzw[F,N,4]`, and `particle_vel_m_s[F,N,3]`."
+    }
+   ],
+   "measured": {
+    "F": 275,
+    "N": 67737,
+    "arrays": {
+     "particle_pos_m": {
+      "shape": [
+       275,
+       67737,
+       3
+      ],
+      "expected": [
+       275,
+       67737,
+       3
+      ],
+      "dtype": "float32"
+     },
+     "particle_quat_xyzw": {
+      "shape": [
+       275,
+       67737,
+       4
+      ],
+      "expected": [
+       275,
+       67737,
+       4
+      ],
+      "dtype": "float32"
+     },
+     "particle_vel_m_s": {
+      "shape": [
+       275,
+       67737,
+       3
+      ],
+      "expected": [
+       275,
+       67737,
+       3
+      ],
+      "dtype": "float32"
+     },
+     "particle_omega_rad_s": {
+      "shape": [
+       275,
+       67737,
+       3
+      ],
+      "expected": [
+       275,
+       67737,
+       3
+      ],
+      "dtype": "float32"
+     },
+     "inventory_code": {
+      "shape": [
+       275,
+       67737
+      ],
+      "expected": [
+       275,
+       67737
+      ],
+      "dtype": "int8"
+     },
+     "particle_ids": {
+      "shape": [
+       67737
+      ],
+      "expected": [
+       67737
+      ],
+      "dtype": "int64"
+     },
+     "particle_frame_sync_index": {
+      "shape": [
+       275
+      ],
+      "expected": [
+       275
+      ],
+      "dtype": "int64"
+     },
+     "particle_frame_t_s": {
+      "shape": [
+       275
+      ],
+      "expected": [
+       275
+      ],
+      "dtype": "float64"
+     },
+     "particle_frame_row": {
+      "shape": [
+       275
+      ],
+      "expected": [
+       275
+      ],
+      "dtype": "int64"
+     }
+    },
+    "particle_mass_kg_is_scalar": true,
+    "particle_ids_equals_arange": true
+   }
+  },
+  {
+   "name": "inventory_labels_exact_and_code_shape",
+   "verdict": "PASS",
+   "severity": "contract",
+   "contract_quotes": [
+    {
+     "cite": "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/RAW_SCHEMA_REQUIRED.md:48-51",
+     "text": "`inventory_labels` exactly `[source, receiving_bin, tool_residual, spill, in_flight, ambiguous]` and `inventory_code[F,N]`."
+    }
+   ],
+   "measured": {
+    "labels": [
+     "source",
+     "receiving_bin",
+     "tool_residual",
+     "spill",
+     "in_flight",
+     "ambiguous"
+    ],
+    "expected": [
+     "source",
+     "receiving_bin",
+     "tool_residual",
+     "spill",
+     "in_flight",
+     "ambiguous"
+    ],
+    "inventory_code_shape": [
+     275,
+     67737
+    ],
+    "dtype": "int8",
+    "codes_in_range": true
+   }
+  },
+  {
+   "name": "metadata_required_keys_including_w25_frame",
+   "verdict": "PASS",
+   "severity": "contract",
+   "contract_quotes": [
+    {
+     "cite": "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/RAW_SCHEMA_REQUIRED.md:68-70",
+     "text": "`phase_order` exactly: `initial_home, settle, approach, descend, close, lift, reclose, transport, discharge, discharge_wait, close_after_discharge, return_home`."
+    }
+   ],
+   "measured": {
+    "n_required": 28,
+    "missing": [],
+    "w25_frame": {
+     "R_robot_box": [
+      [
+       0.0,
+       1.0,
+       0.0
+      ],
+      [
+       -1.0,
+       0.0,
+       0.0
+      ],
+      [
+       0.0,
+       0.0,
+       1.0
+      ]
+     ],
+     "t_robot_m": [
+      0.25,
+      0.0,
+      -0.2577501314177868
+     ],
+     "box_frame_convention": "A",
+     "box_anchor": "declared_box_center"
+    },
+    "w25_frame_missing_subkeys": [],
+    "phase_order_exact": true
+   }
+  },
+  {
+   "name": "metadata_time_mapping_abs_s_and_geometry_epsilon_m",
+   "verdict": "FAIL",
+   "severity": "contract",
+   "contract_quotes": [
+    {
+     "cite": "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/RAW_SCHEMA_REQUIRED.md:71-72",
+     "text": "`time_mapping_abs_s`, `geometry_epsilon_m`, particle density, canonical pile absolute path and SHA-256, and every frozen scientific criterion path/hash."
+    }
+   ],
+   "measured": {
+    "present": [],
+    "absent": [
+     "time_mapping_abs_s",
+     "geometry_epsilon_m"
+    ],
+    "nearest_present_fields": {
+     "time_authority": {
+      "sync_t_s": "unrounded binary64 float(s.GetSimTime()) — 정본",
+      "sync_t_s_legacy_round9_display": "rev10 호환 표시용 round(...,9). duration 근거 금지(ERRATUM_03)",
+      "sync_requested_duration_s": "그 sync 에 요청한 duration",
+      "sync_derived_internal_steps": "DERIVED — 설치본 누산 규칙 재현값. 엔진 관측 카운터가 아니다"
+     }
+    }
+   },
+   "note": "W19 A run 에서도 같은 두 키가 없어 FAIL 이었다(RAW_SCHEMA_CHECK_W19 metadata_time_mapping_and_geometry_epsilon_fields). 사후 완화 0."
+  },
+  {
+   "name": "erratum04_floor_rule_and_contract_version_declared_in_raw_metadata",
+   "verdict": "FAIL",
+   "severity": "contract",
+   "contract_quotes": [
+    {
+     "cite": "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/RAW_SCHEMA_REQUIRED_ERRATUM_04.md:37-38",
+     "text": "- `classify_floor_rule = \"support_surface_v2: min(center_z - r) > floor - margin\"`  - `classify_contract_version = \"RAW_SCHEMA_REQUIRED + ERRATUM_04\"`"
+    }
+   ],
+   "measured": {
+    "classify_floor_rule": null,
+    "classify_contract_version": null,
+    "classify_source_floor_rule": null,
+    "classify_revision": null,
+    "classify_predicate_module": null
+   },
+   "note": "W19 A run 은 이 두 선언이 없어 FAIL 이었다. W25 rev34 는 선언 여부를 실측한다."
+  },
+  {
+   "name": "erratum03_particle_frame_row_identity_and_nondecreasing_sync",
+   "verdict": "PASS",
+   "severity": "contract",
+   "contract_quotes": [
+    {
+     "cite": "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/RAW_SCHEMA_REQUIRED_ERRATUM_03.md:7-12",
+     "text": "`particle_frame_sync_index[F]` is **nondecreasing**, not necessarily unique. ... The authoritative identity is the implicit raw row index `particle_frame_row = 0..F-1`."
+    }
+   ],
+   "measured": {
+    "row_equals_arange": true,
+    "sync_index_nondecreasing": true,
+    "n_duplicate_sync_index": 17,
+    "declared_row_authoritative": true,
+    "declared_deduplicated": false
+   }
+  },
+  {
+   "name": "erratum04_transition_boundary_frame_i_minus_1_present",
+   "verdict": "PASS",
+   "severity": "contract",
+   "contract_quotes": [
+    {
+     "cite": "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/RAW_SCHEMA_REQUIRED_ERRATUM_04.md:42-45",
+     "text": "For every `transition_sync_index` value `i`, a particle-frame row is required with `particle_frame_sync_index == i - 1`."
+    }
+   ],
+   "measured": {
+    "transition_sync_index": [
+     1,
+     26,
+     4681,
+     4970,
+     12468,
+     12643,
+     13052,
+     14219,
+     16780,
+     17155,
+     20774
+    ],
+    "n_transitions": 11,
+    "missing_boundary_rows": [],
+    "also_has_frame_at_i": [
+     13052
+    ]
+   }
+  },
+  {
+   "name": "transition_sync_index_equals_dense_phase_changes",
+   "verdict": "PASS",
+   "severity": "contract",
+   "contract_quotes": [
+    {
+     "cite": "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/RAW_SCHEMA_REQUIRED.md:52",
+     "text": "- `transition_sync_index` exactly equals dense phase-change indices."
+    }
+   ],
+   "measured": {
+    "recorded": [
+     1,
+     26,
+     4681,
+     4970,
+     12468,
+     12643,
+     13052,
+     14219,
+     16780,
+     17155,
+     20774
+    ],
+    "recomputed_phase_only": [
+     1,
+     26,
+     4681,
+     4970,
+     12468,
+     12643,
+     13052,
+     14219,
+     16780,
+     17155,
+     20774
+    ],
+    "n_phases_seen": 12,
+    "phase_codes_seen": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11
+    ]
+   }
+  },
+  {
+   "name": "sync_time_strictly_increasing_and_particle_frame_time_mapping",
+   "verdict": "PASS",
+   "severity": "contract",
+   "contract_quotes": [
+    {
+     "cite": "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/RAW_SCHEMA_REQUIRED.md:25-28",
+     "text": "`sync_t_s[T]` — unrounded binary64 `float(s.GetSimTime())` after each completed sync, strictly increasing. The inherited rev10 `round(GetSimTime(),9)` value may be retained only as a separately named display/legacy field and must not be the duration authority."
+    },
+    {
+     "cite": "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/RAW_SCHEMA_REQUIRED.md:42-44",
+     "text": "`particle_frame_t_s[F]` must equal `sync_t_s[index]` within the frozen source time tolerance."
+    }
+   ],
+   "measured": {
+    "sync_t_s_strictly_increasing": true,
+    "n_nonincreasing": 0,
+    "max_abs_particle_frame_t_minus_sync_t_s": 0.0,
+    "sync_t_s_dtype": "float64",
+    "legacy_display_present": true,
+    "time_authority": "unrounded binary64 float(s.GetSimTime()) — 정본"
+   }
+  },
+  {
+   "name": "raw_contact_rows_shapes_role_mapping_and_index_range",
+   "verdict": "PASS",
+   "severity": "contract",
+   "contract_quotes": [
+    {
+     "cite": "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/RAW_SCHEMA_REQUIRED.md:56-64",
+     "text": "`contact_sync_index[C]`, `contact_mesh[C]`, `contact_force_N[C,3]` ... Metadata must define `contact_mesh_role_to_id` for `fixed`, `door`, `tray`, and `bin`, plus force sign/frame semantics."
+    }
+   ],
+   "measured": {
+    "C": 49648108,
+    "force_shape": [
+     49648108,
+     3
+    ],
+    "point_shape": [
+     49648108,
+     3
+    ],
+    "mesh_ids_seen": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "sync_index_min": 1,
+    "sync_index_max": 22127,
+    "T": 22128,
+    "mesh_role_to_id": {
+     "fixed": 0,
+     "door": 1,
+     "tray": 2,
+     "bin": 3
+    },
+    "force_frame": "world",
+    "scalar_force_reduction": "norm_of_vector_sum"
+   }
+  },
+  {
+   "name": "erratum02_bin_radius_semantics_and_force_reduction_declared",
+   "verdict": "PASS",
+   "severity": "contract",
+   "contract_quotes": [
+    {
+     "cite": "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/RAW_SCHEMA_REQUIRED_ERRATUM_02.md:6-8",
+     "text": "A regular polygon prism must state either `apothem_m` directly or `circumradius_m`. If the legacy field `inner_radius_m` is retained, it must also state `radius_semantics` as exactly `apothem` or `circumradius`."
+    }
+   ],
+   "measured": {
+    "radius_semantics": "circumradius",
+    "apothem_m": 0.03991435692954414,
+    "circumradius_m": 0.04,
+    "n_theta": 48,
+    "apothem_matches_circumradius_cos": true,
+    "scalar_force_reduction": "norm_of_vector_sum"
+   }
+  },
+  {
+   "name": "tool_cavity_and_source_bounds_and_thresholds_declared",
+   "verdict": "PASS",
+   "severity": "contract",
+   "contract_quotes": [
+    {
+     "cite": "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/RAW_SCHEMA_REQUIRED.md:76-83",
+     "text": "Source bounds: `source_bounds_m[3,2]` in world coordinates with strict whole-sphere containment and frozen margin. Tool cavity: `tool_to_cavity_R[3,3]`, `cavity_origin_m[3]`, `cavity_center_xz_m[2]`, `radius_m`, and `half_y_m`. ... `moving_threshold_m_s` and `spill_rest_z_m`, their comparison operators and overlap priority."
+    }
+   ],
+   "measured": {
+    "tool_cavity_keys_ok": true,
+    "cavity_equation": "p_cavity = R_tool_to_cavity @ R(q_tool).T @ (p_world - p_tool) + cavity_origin",
+    "source_bounds_m": [
+     [
+      -0.155,
+      0.155
+     ],
+     [
+      -0.11,
+      0.11
+     ],
+     [
+      0.0,
+      0.23
+     ]
+    ],
+    "equals_raw_box_bounds_m": true,
+    "moving_threshold_m_s": 0.039240000000000004,
+    "moving_threshold_operator": ">= (in_flight if speed >= threshold)",
+    "spill_rest_z_m": 0.02,
+    "classify_margin_m": 0.0025,
+    "overlap_priority": "tool > near_tool > bin > near_bin > source > near_source > in_flight > spill"
+   }
+  },
+  {
+   "name": "installed_numeric_inputs_and_allowances_present",
+   "verdict": "PASS",
+   "severity": "contract",
+   "contract_quotes": [
+    {
+     "cite": "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/RAW_SCHEMA_REQUIRED.md:84-88",
+     "text": "Installed numeric inputs/outputs from the source-bound chain: binary32 `h`, requested `D`, internal step count `N`, initialized `l`, `voxelSize`, domain maximum coordinate magnitude, first-read and minimum accepted `qnorm`, principal-rotvec angular bound, maximum local tool radius `rmax`, and every separate motion/lattice/tracker/quaternion/time-rounding allowance."
+    }
+   ],
+   "measured": {
+    "missing": [],
+    "values": {
+     "timestep_h_s": 1e-06,
+     "requested_duration_D_s": 0.004,
+     "internal_steps_N": 4001,
+     "length_unit_l_m": 4.9123032030973235e-12,
+     "voxel_size_m": 3.219327027181862e-07,
+     "domain_max_coord_m": 0.9401374757289886,
+     "qmin": 0.5,
+     "position_lattice_allowance_m": 0.0022310068424310314,
+     "tracker_read_allowance_m": 1.0323827311807139e-07,
+     "quaternion_rotation_allowance_m_by_body": {
+      "fixed": 0.0016604366135691126,
+      "door": 0.0038206282845832627
+     },
+     "r_max_local_m_by_body": {
+      "fixed": 0.05439558805638559,
+      "door": 0.1251630568649322
+     }
+    }
+   }
+  },
+  {
+   "name": "canonical_template_and_particle_mass_consistent",
+   "verdict": "PASS",
+   "severity": "contract",
+   "contract_quotes": [
+    {
+     "cite": "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/RAW_SCHEMA_REQUIRED.md:14-16",
+     "text": "Particle `pos/quaternion` is the clump owner pose. Canonical sphere centers are recomputed as `p_world = p_owner + R(q_owner)*offset_m` using the pinned pile NPZ offsets and radii."
+    }
+   ],
+   "measured": {
+    "particle_mass_kg_raw": 2.0257382129428685e-05,
+    "particle_mass_kg_json": 2.0257382129428685e-05,
+    "particle_mass_g_delivery": 0.02025738,
+    "n_spheres_json": 7,
+    "classify_spheres_per_clump_meta": 7,
+    "expand_vs_npz_max_err_m": 2.7755575615628914e-17
+   }
+  },
+  {
+   "name": "dense_speed_scan_respects_5_warning_and_20_stop",
+   "verdict": "PASS",
+   "severity": "contract",
+   "contract_quotes": [
+    {
+     "cite": "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/RAW_SCHEMA_REQUIRED.md:82-83",
+     "text": "`moving_threshold_m_s` and `spill_rest_z_m`, their comparison operators and overlap priority. Ambiguous boundary/overlap cases stay `ambiguous`."
+    }
+   ],
+   "measured": {
+    "max_scalar_v_particle_max": 2.3342577016481267,
+    "warning_m_s": 5.0,
+    "hard_stop_m_s": 20.0,
+    "n_sync_over_warning": 0,
+    "n_sync_over_hard_stop": 0,
+    "json_pops": {
+     "v_particle_max_m_s": 2.3343,
+     "syncs_over_pop_speed": 0,
+     "pop_speed_m_s": 5.0
+    }
+   },
+   "note": "임계 정본은 criteria engine.pop_speed_m_s / engine.diag_stop_v_m_s — P6 에서 따로 검사한다."
+  },
+  {
+   "name": "execution_receipt_fields_and_physics_wall_cap",
+   "verdict": "PASS",
+   "severity": "contract",
+   "contract_quotes": [
+    {
+     "cite": "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/RAW_SCHEMA_REQUIRED.md:101-104",
+     "text": "Execution receipt records exact argv, environment allowlist, start/end, return code, timeout state, stdout/stderr paths and hashes, maximum 32400 s physics wall limit, process count exactly one, and bounded TERM/KILL outcome. The runner refuses a pre-existing output directory before spawning."
+    },
+    {
+     "cite": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/criteria_w25_paperbox_cap32h.json (runner.physics_wall_cap_s)",
+     "text": "115200"
+    }
+   ],
+   "measured": {
+    "missing_fields": [],
+    "cap_s_receipt": 115200.0,
+    "cap_s_criteria": 115200.0,
+    "criteria_id": "runner.physics_wall_cap_s",
+    "criteria_severity": "hard_fail",
+    "wall_s": 36372.797,
+    "rc": 0,
+    "timed_out": false,
+    "killed": false,
+    "auto_retry": false,
+    "stdout_sha256_declared": false,
+    "stderr_sha256_declared": false,
+    "wall_over_cap_ratio": 0.315736
+   },
+   "note": "기저 규약의 32400 s 문구는 W25 등록 criteria 에서 115200 s 로 대체됐다(사용자 결정, 결과 관측 전 동결). 영수증에 stdout/stderr **해시** 필드는 없다 — 경로만 있다."
+  },
+  {
+   "name": "rc0_matches_empty_stderr_and_no_timeout_or_kill",
+   "verdict": "PASS",
+   "severity": "contract",
+   "contract_quotes": [
+    {
+     "cite": "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/RAW_SCHEMA_REQUIRED.md:105-107",
+     "text": "Run status explicitly distinguishes finalization/full-cycle coverage from the scientific delivery verdict; an unsuccessful delivery is reported as such."
+    }
+   ],
+   "measured": {
+    "rc": 0,
+    "timed_out": false,
+    "killed": false,
+    "group_alive_after": false,
+    "stderr_bytes": 0,
+    "run_status_state": "completed_rc0",
+    "timeline_state": "complete",
+    "signals_received": [],
+    "json_abort_class": null,
+    "json_diverged": false,
+    "json_fail_reason": null,
+    "json_stopped_early_after_phase": null
+   },
+   "note": "D486: 자동 종료 분류는 stderr 와 대조한다. rc0 + 빈 stderr 는 '완주 기록'이지 배출 성공 판정이 아니다."
+  },
+  {
+   "name": "runner_no_retry_and_single_attempt_dir",
+   "verdict": "PASS",
+   "severity": "contract",
+   "contract_quotes": [
+    {
+     "cite": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/criteria_w25_paperbox_cap32h.json (runner.no_retry)",
+     "text": "0"
+    }
+   ],
+   "measured": {
+    "auto_retry": false,
+    "signals_received": [],
+    "attempt_dirs_present": [
+     "run_01"
+    ],
+    "criteria_value": 0,
+    "criteria_severity": "hard_fail"
+   }
+  },
+  {
+   "name": "declared_input_hashes_independently_recomputed_and_prelaunch_receipt_clean",
+   "verdict": "PASS",
+   "severity": "contract",
+   "contract_quotes": [
+    {
+     "cite": "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/RAW_SCHEMA_REQUIRED.md:105-106",
+     "text": "Final manifest gives path, byte count, and SHA-256 for every output."
+    }
+   ],
+   "measured": {
+    "n_declared_inputs": 15,
+    "n_recomputed": 15,
+    "n_mismatch": 0,
+    "mismatch": [],
+    "not_present_locally": [],
+    "hash_verification_receipt": {
+     "n_checked": 606,
+     "n_mismatch": 0,
+     "n_pre_existing": 0
+    },
+    "run_status_n_hash_checks": 606,
+    "run_status_hash_mismatches": [],
+    "run_status_stray_entries": []
+   }
+  },
+  {
+   "name": "frozen_exec_tree_bytes_identical_to_exec_pin",
+   "verdict": "PASS",
+   "severity": "contract",
+   "contract_quotes": [
+    {
+     "cite": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/EXEC_PIN.json (purpose)",
+     "text": "RunPod 본 실행 동결본. GPU 결과 0 인 시점에 만들었다. 이후 이 폴더의 파일(runs/ 제외)은 바꾸지 않는다."
+    }
+   ],
+   "measured": {
+    "n_pinned": 77,
+    "n_checked": 77,
+    "n_mismatch": 0,
+    "mismatch": [],
+    "exec_pin_gpu_used_at_pin_time": false,
+    "exec_pin_physics_executed_at_pin_time": false
+   }
+  },
+  {
+   "name": "physics_and_sampling_params_declared_unchanged_from_rev32",
+   "verdict": "PASS",
+   "severity": "contract",
+   "contract_quotes": [
+    {
+     "cite": "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/RAW_SCHEMA_REQUIRED.md:3-6",
+     "text": "This is a pre-freeze interface contract, not producer implementation. Array names, axes, units, frame conventions, and role mappings below must be emitted verbatim or explicitly mapped in immutable metadata before production GO."
+    }
+   ],
+   "measured": {
+    "timestep_s": 1e-06,
+    "dt_sync_s": 0.004,
+    "dt_sync_close_s": 0.001,
+    "particle_frame_dt_s": 0.1,
+    "settlement_frame_dt_s": 0.05,
+    "E_pa": 5000000.0,
+    "mu": 0.45,
+    "CoR": 0.3,
+    "Crr": 0.06,
+    "particle_density_kg_m3": 905.0,
+    "note_w25": "[W25-A rev34] rev32 params_w13.json 바이트 사본 + 아래 키. 물성·dt·sync·서보 정지 모델·보호선·저장 프레임(particle_frame_dt_s 0.1 / settlement_frame_dt_s 0.05) 변경 0. 기본값 = 실물 정렬. 각 항목은 params_w25_OFF_rev32equiv.json 의 값으로 되돌"
+   },
+   "note": "`settlement_frame_dt_s` 는 0.05 로 선언돼 있으나 실제 저장 간격은 `particle_frame_dt_s`=0.1 이다 — 정착 cadence FAIL 의 직접 원인(P4)."
+  },
+  {
+   "name": "erratum01_visual_mapping_one_row_per_saved_particle_frame",
+   "verdict": "FAIL",
+   "severity": "contract",
+   "contract_quotes": [
+    {
+     "cite": "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/RAW_SCHEMA_REQUIRED_ERRATUM_01.md:12-15",
+     "text": "`visual_mapping.json` contains `source_sync_index`, `source_time_s`, and `source_phase_code` with exactly one ordered row for **every** saved raw production particle frame; no duplicate, omission, or invented time is accepted."
+    }
+   ],
+   "measured": {
+    "visual_mapping_json_present": false,
+    "searched_path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/runs/podB_pro6000x2/run_01/visual_mapping.json",
+    "F": 275,
+    "phases_covered_by_saved_frames": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11
+    ],
+    "n_phases_in_order": 12,
+    "all_12_phases_covered": true
+   },
+   "note": "2단계(재생·RRD) 산출물이며 이 회계 단계에서는 만들지 않는다(D341 — 이 단계는 코드·배열·해시 감사). 없음 = FAIL 로 그대로 남긴다. 사후 완화 0."
+  },
+  {
+   "name": "final_manifest_path_bytes_sha256_for_every_output",
+   "verdict": "FAIL",
+   "severity": "contract",
+   "contract_quotes": [
+    {
+     "cite": "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/RAW_SCHEMA_REQUIRED.md:105-107",
+     "text": "Final manifest gives path, byte count, and SHA-256 for every output. Run status explicitly distinguishes finalization/full-cycle coverage from the scientific delivery verdict; an unsuccessful delivery is reported as such."
+    }
+   ],
+   "measured": {
+    "manifest_present": false,
+    "searched": [
+     "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/runs/podB_pro6000x2/run_01/MANIFEST.json",
+     "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/runs/podB_pro6000x2/run_01/FINAL_MANIFEST.json"
+    ],
+    "retrieval_receipt_covers_all_run_files": true,
+    "n_files_in_run_01": 14
+   },
+   "note": "run_01 안에는 바이트 수까지 포함한 최종 매니페스트가 없다. 회수 영수증(RETRIEVAL_RECEIPT.json)은 sha 만 있고 byte count 가 없다. W19 에서도 같은 항목이 FAIL 이었다."
+  },
+  {
+   "name": "delivery_layers_separate_and_settlement_cadence_contract",
+   "verdict": "FAIL",
+   "severity": "contract",
+   "contract_quotes": [
+    {
+     "cite": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/criteria_w25_paperbox_cap32h.json (delivery.settlement_window_UNCALIBRATED)",
+     "text": "{\"window_s\": 0.25, \"frame_dt_s\": 0.05, \"speed_max_m_s\": 0.005, \"move_max_m\": 0.001}"
+    }
+   ],
+   "measured": {
+    "definite_delivered_n": 585,
+    "possible_delivered_n": 665,
+    "exact_single_value_allowed": false,
+    "settlement_n_frames": 5,
+    "min_required_frames": 6,
+    "max_frame_gap_s": 0.100025,
+    "max_allowed_gap_s": 0.05,
+    "cadence_ok": false,
+    "layer1_accounting_integrity": true
+   },
+   "note": "사후 완화 0. 창 5프레임·간격 0.100025 s 는 계약(≥6프레임·≤0.05 s)을 충족하지 않는다. 이것은 기록 계약의 한계이고 물리 실패 판정이 아니다."
+  },
+  {
+   "name": "inventory_exhaustive_and_disjoint_every_frame",
+   "verdict": "PASS",
+   "severity": "contract",
+   "contract_quotes": [
+    {
+     "cite": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/criteria_w25_paperbox_cap32h.json (inventory.exhaustive_disjoint)",
+     "text": "\"sum(counts) == n_particles at every recorded frame\""
+    }
+   ],
+   "measured": {
+    "F": 275,
+    "N": 67737,
+    "n_frames_with_wrong_total": 0,
+    "layer1_accounting_integrity_json": true,
+    "n_ambiguous_final": 3711,
+    "ambiguous_fraction_final": 0.054785
+   },
+   "note": "ambiguous 가 많은 것은 규약(모든 구체가 margin 안쪽) 의 결과이며 물리 실패가 아니다."
+  },
+  {
+   "name": "w25_procedure_and_frame_records_present",
+   "verdict": "PASS",
+   "severity": "contract",
+   "contract_quotes": [
+    {
+     "cite": "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/RAW_SCHEMA_REQUIRED.md:4-6",
+     "text": "Array names, axes, units, frame conventions, and role mappings below must be emitted verbatim or explicitly mapped in immutable metadata before production GO."
+    }
+   ],
+   "measured": {
+    "revision": "rev34",
+    "frame_keys": [
+     "R_box_robot",
+     "R_robot_box",
+     "R_scoop_owner_box",
+     "R_scoop_rule",
+     "box_anchor",
+     "box_center_robot_xy_m",
+     "box_floor_above_floor_cm",
+     "box_floor_robot_z_m",
+     "box_frame_convention",
+     "reference_lip_robot_m",
+     "rev32_path"
+    ],
+    "n_chatter_log": 4,
+    "chatter_threshold_servo_deg": 3.6,
+    "chatter_max_retries": 3,
+    "procedure_units": "joint_deg = 시뮬 문 관절각(0 = 립 맞닿음), servo_deg = joint_deg + servo_zero_offset_deg",
+    "tray_mismatch_reasons": [],
+    "w25_non_claims": [
+     "열기 토크는 실물 200(tor)이 아니라 rev32 정지 모델(0.9×1.96 N·m) 그대로다.",
+     "배치 치수(33.2/24/25 cm·NTC106)는 사용자 선언·실측 혼합이며 펠릿면 24 cm 는 미실측이다."
+    ]
+   }
+  }
+ ]
+}

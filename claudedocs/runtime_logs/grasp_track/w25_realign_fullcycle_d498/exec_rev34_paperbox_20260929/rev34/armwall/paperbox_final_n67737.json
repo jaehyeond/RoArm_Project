@@ -1,0 +1,243 @@
+{
+  "artifact": "W25A_ARM_WALL_CHECK",
+  "params": "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/params_w25_paperbox.json",
+  "pile": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/pile_flat40_20260929/pile_lens6_a4p5_b3p8_c2p5_slab40_outer_310x220_n67737_rho0p503_seed460.npz",
+  "tray_box_bounds_m": [
+    [
+      -0.155,
+      0.155
+    ],
+    [
+      -0.11,
+      0.11
+    ],
+    [
+      0.0,
+      0.23
+    ]
+  ],
+  "tray_wall_t_mm": 2.0,
+  "tray": {
+    "tray_inner_source": "declared_from_npz_convention (user outer 31x22, wall 0.2)",
+    "declared_inner_mm": [
+      310.0,
+      220.0,
+      230.0
+    ],
+    "npz_box_bounds_m": [
+      [
+        -0.155,
+        0.155
+      ],
+      [
+        -0.11,
+        0.11
+      ],
+      [
+        0.0,
+        0.134840008690237
+      ]
+    ],
+    "box_bounds_m": [
+      [
+        -0.155,
+        0.155
+      ],
+      [
+        -0.11,
+        0.11
+      ],
+      [
+        0.0,
+        0.23
+      ]
+    ],
+    "npz_vs_declared_xy_max_abs_mm": 0.0,
+    "tol_mm": 0.5,
+    "mismatch_reasons": []
+  },
+  "walls_robot_frame_m": [
+    {
+      "name": "tray_wall_minus_x",
+      "lo": [
+        0.138,
+        0.155,
+        -0.25775
+      ],
+      "hi": [
+        0.362,
+        0.157,
+        -0.02775
+      ]
+    },
+    {
+      "name": "tray_wall_plus_x",
+      "lo": [
+        0.138,
+        -0.157,
+        -0.25775
+      ],
+      "hi": [
+        0.362,
+        -0.155,
+        -0.02775
+      ]
+    },
+    {
+      "name": "tray_wall_minus_y",
+      "lo": [
+        0.138,
+        -0.155,
+        -0.25775
+      ],
+      "hi": [
+        0.14,
+        0.155,
+        -0.02775
+      ]
+    },
+    {
+      "name": "tray_wall_plus_y",
+      "lo": [
+        0.36,
+        -0.155,
+        -0.25775
+      ],
+      "hi": [
+        0.362,
+        0.155,
+        -0.02775
+      ]
+    }
+  ],
+  "wall_top_robot_z_m": -0.02775013141778679,
+  "wall_top_above_room_floor_cm": 42.631,
+  "n_poses": 840,
+  "result": {
+    "links": {
+      "base_link": {
+        "min_gap_mm": 95.478,
+        "n_pose_overlap": 0,
+        "overlap_at": [],
+        "at": {
+          "segment": "initial_home->p1_tool_vertical",
+          "wall": "tray_wall_minus_y",
+          "q5": [
+            0.0,
+            0.0,
+            90.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "link1": {
+        "min_gap_mm": 92.599,
+        "n_pose_overlap": 0,
+        "overlap_at": [],
+        "at": {
+          "segment": "place_retract_base0->place_retract_base90",
+          "wall": "tray_wall_minus_y",
+          "q5": [
+            52.5,
+            0.7,
+            91.3,
+            88.0,
+            0.0
+          ]
+        }
+      },
+      "link2": {
+        "min_gap_mm": 64.157,
+        "n_pose_overlap": 0,
+        "overlap_at": [],
+        "at": {
+          "segment": "scoop_column_ik",
+          "wall": "tray_wall_minus_y",
+          "q5": [
+            0.0,
+            53.66,
+            103.2,
+            23.16,
+            0.0
+          ]
+        }
+      },
+      "link3": {
+        "min_gap_mm": 76.804,
+        "n_pose_overlap": 0,
+        "overlap_at": [],
+        "at": {
+          "segment": "scoop_column_ik",
+          "wall": "tray_wall_plus_y",
+          "q5": [
+            0.0,
+            53.66,
+            103.2,
+            23.16,
+            0.0
+          ]
+        }
+      },
+      "link4": {
+        "min_gap_mm": 56.675,
+        "n_pose_overlap": 0,
+        "overlap_at": [],
+        "at": {
+          "segment": "approach_gap->post_lift_travel",
+          "wall": "tray_wall_plus_y",
+          "q5": [
+            0.0,
+            43.525,
+            97.317,
+            38.683,
+            0.0
+          ]
+        }
+      },
+      "link5": {
+        "min_gap_mm": 69.186,
+        "n_pose_overlap": 0,
+        "overlap_at": [],
+        "at": {
+          "segment": "approach_gap->post_lift_travel",
+          "wall": "tray_wall_plus_y",
+          "q5": [
+            0.0,
+            34.135,
+            85.19,
+            59.21,
+            0.0
+          ]
+        }
+      }
+    },
+    "s1_full_stl": {
+      "fixed_ALL": {
+        "min_gap_mm": 38.882,
+        "n_vertices_inside": 0,
+        "at": {
+          "segment": "return_retract_base90->return_retract_base0",
+          "wall": "tray_wall_minus_y",
+          "door_q": 0.0
+        }
+      },
+      "door_ALL": {
+        "min_gap_mm": 38.882,
+        "n_vertices_inside": 0,
+        "at": {
+          "segment": "return_retract_base90->return_retract_base0",
+          "wall": "tray_wall_minus_y",
+          "door_q": 0.0
+        }
+      }
+    }
+  },
+  "any_link_overlap": false,
+  "any_s1_vertex_inside": false,
+  "non_claims": [
+    "링크는 local AABB 를 옮긴 OBB — 실제 메시보다 크다(겹침 = 가능성, 증명 아님).",
+    "취점 기둥 자세는 실물 IK 해(러너는 이 구간을 직교 명령으로 움직인다, 차 < 0.05 mm).",
+    "벽은 선언 두께·높이의 직육면체이며 종이 상자의 휨·접힌 윗단은 모델에 없다."
+  ]
+}

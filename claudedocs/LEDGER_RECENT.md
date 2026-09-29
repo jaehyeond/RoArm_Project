@@ -1,6 +1,6 @@
 # LEDGER_RECENT.md — 최근 실험 20건 요약 (부팅 read)
 
-Last updated: 2026-09-28 밤 — W25 그리퍼 표시 원인·rev34 준비 반영(:606). 원본 `EXPERIMENT_LEDGER.md` 606줄. 기존 prefix는 보존하고 끝에만 append.
+Last updated: 2026-09-29 21시 — W25 RunPod 병행 본 실행 2회 반영(:607). 원본 `EXPERIMENT_LEDGER.md` 607줄. 기존 prefix는 보존하고 끝에만 append.
 
 ## 권위와 읽는 방법
 
@@ -11,6 +11,9 @@ Last updated: 2026-09-28 밤 — W25 그리퍼 표시 원인·rev34 준비 반�
 - 원장 읽기는 필요한 행만 `sed -n '<줄>p' ...`; 전체 통독은 피한다. 세션 경로는 별도 표시가 없으면 `claudedocs/` 아래.
 
 ## 최근20건 — 신 → 구
+
+- **:607 · 09-29 W25 3일차 RunPod 병행 본 실행 2회(rev34 종이 상자·67,737알·실물 절차 ON)** — 동결본·감사 PASS·스모크 R 2.556 → 둘 다 GO. podB 36,372.8 s·40.21 $, podA 52,707.9 s·10.62 $, 둘 다 completed_rc0·회수 14/14·terminate. R_full 1.449. 기하 라벨 836 vs 832. 원시 배출 585~665 vs 251~297(문 재닫기 2.39° vs 3.04°). podB 회계 불일치 0·cadence FAIL.
+  → **W25_RUNPOD_PAIR_COMPLETED__R_FULL_1.449__GEOMETRIC_LIFT_LABEL_CONSISTENT_836_832__DELIVERY_DIVERGES_BY_DOOR_RECLOSE__SETTLEMENT_CADENCE_FAIL_INTERVAL_ONLY__NO_PROMOTION**. `session_20260928_w25_realign_fullcycle_prep.md` §13, D500.
 
 - **:606 · 09-28 밤 W25 그리퍼 표시 원인·실물 정렬 전체 사이클 준비(rev34)·worktree 보관** — 물리·GPU·RunPod·실물·commit 0. 그리퍼 = 최신 S1 v1, "덜 그려짐" = 충돌 셸 + 문 CAD 숨김(post04 `gripper` 필터). 시뮬 상자 = 22 cm 벽이 로봇 쪽. B: CAD 배치식 16,813 sync ≤7.2e-5 mm, post05 초안 18/18. C/D: 4 cm 층 61,408~74,067알, 전체 사이클 15.0~26.4 h·11~20 $, 여백 4.6 mm 패치, 격자 인증 분기. E: dt 근거·{2,5} µs 사전등록(1대 1.8~2.9 h·1.4~2.2 $). A: rev34 OFF=rev32 바이트 동일, ON 관절 위반 0·여유 54/26 mm, C4 0.112 mm 미해결. worktree 10개 2단계 완료. 슬라이드 11장 정정.
   → **W25_GRIPPER_UNDERDRAWN_CONFIRMED_DISPLAY_LAYER__BOX_ORIENTATION_SIM_22CM_WALL_FACES_ROBOT__REV34_CPU_PREP_PASS__FLAT_LAYER_FULL_CYCLE_15_26H_EXCEEDS_CAP__NO_GPU_NO_RUNPOD**. `session_20260928_w25_realign_fullcycle_prep.md`, D498.

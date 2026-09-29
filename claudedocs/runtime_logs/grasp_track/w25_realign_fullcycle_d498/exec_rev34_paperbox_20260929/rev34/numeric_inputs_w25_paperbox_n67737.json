@@ -1,0 +1,138 @@
+{
+  "artifact": "W25A_NUMERIC_EVIDENCE_V1",
+  "label": "rev34",
+  "purpose": "rev34 도메인의 설치본 격자 정적 재구성. 물리 파라미터가 아니다(params 불변).",
+  "source_result_json": "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/domain/paperbox_final_n67737.json",
+  "source_result_sha256": "5745cca5f4c41cab2836d17f358b37f47c9915c3a80ddbfbdd905333e9deb0cb",
+  "reproduction": {
+    "script": "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit/recover_deme_lattice.py",
+    "sha256": "931a518df75877942370dd552331e5967a237d11c4c49e674a985c23f3e81914",
+    "expected_sha256": "931a518df75877942370dd552331e5967a237d11c4c49e674a985c23f3e81914",
+    "script_sha_matches_rev32_pin": true,
+    "result": {
+      "kind": "installed_binary_static_reconstruction_not_runtime_observation",
+      "input_path": "/home/cgxr/orca/workspaces/RoArm_Project/w25-rev34-fullcycle/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/rev34/domain/paperbox_final_n67737.json",
+      "axis_order": [
+        "x",
+        "y",
+        "z"
+      ],
+      "user_domain_binary64_m": [
+        [
+          -0.35313288494174616,
+          0.217
+        ],
+        [
+          -0.3449,
+          0.207841
+        ],
+        [
+          0.0,
+          0.5626181314177867
+        ]
+      ],
+      "user_domain_binary32_m": [
+        [
+          -0.35313287377357483,
+          0.21699999272823334
+        ],
+        [
+          -0.3449000120162964,
+          0.20784099400043488
+        ],
+        [
+          0.0,
+          0.5626181364059448
+        ]
+      ],
+      "target_box_min_binary32_m": [
+        -0.41014614701271057,
+        -0.4001741111278534,
+        -0.0562618151307106
+      ],
+      "target_box_max_binary32_m": [
+        0.2740132808685303,
+        0.2631151080131531,
+        0.6188799738883972
+      ],
+      "target_box_size_binary32_m": [
+        0.6841593980789185,
+        0.6632891893386841,
+        0.6751418113708496
+      ],
+      "sorted_original_axis_indices": [
+        1,
+        2,
+        0
+      ],
+      "adjacent_additional_bits": [
+        0,
+        0
+      ],
+      "axis_voxel_count_power2": [
+        22,
+        21,
+        21
+      ],
+      "l_m": 4.9123032030973235e-12,
+      "voxel_size_m": 3.219327027181862e-07,
+      "world_size_m": [
+        1.3502836227416992,
+        0.6751418113708496,
+        0.6751418113708496
+      ],
+      "world_max_m": [
+        0.9401374757289886,
+        0.2749677002429962,
+        0.618879996240139
+      ],
+      "global_coordinate_abs_bound_m": 0.9401374757289886
+    }
+  },
+  "rev11_recomputed_domain_m": {
+    "x": [
+      -0.35313288494174616,
+      0.217
+    ],
+    "y": [
+      -0.3449,
+      0.207841
+    ],
+    "z": [
+      0.0,
+      0.5626181314177867
+    ]
+  },
+  "REUSABLE_FOR_REV11": true,
+  "values_if_usable": {
+    "l_m": 4.9123032030973235e-12,
+    "voxel_size_m": 3.219327027181862e-07,
+    "absolute_coordinate_bound_m": 0.9401374757289886,
+    "axis_voxel_count_power2": [
+      22,
+      21,
+      21
+    ],
+    "world_size_m": [
+      1.3502836227416992,
+      0.6751418113708496,
+      0.6751418113708496
+    ],
+    "world_max_m": [
+      0.9401374757289886,
+      0.2749677002429962,
+      0.618879996240139
+    ],
+    "world_lbf_m": [
+      -0.41014614701271057,
+      -0.4001741111278534,
+      -0.0562618151307106
+    ],
+    "kind": "installed_binary_static_reconstruction_not_runtime_observation"
+  },
+  "rule": "도메인이 binary64 로 동일하지 않거나 감사 스크립트가 인증 분기를 벗어나면 쓰지 않는다. 이 파일은 그 도메인에만 유효하다(다른 더미·배치로 바뀌면 다시 만든다).",
+  "non_claims": [
+    "정적 재구성이며 솔버 초기화에서 관측한 값이 아니다.",
+    "수치 표현 범위일 뿐 충돌 없음·배출 성공의 증거가 아니다."
+  ]
+}

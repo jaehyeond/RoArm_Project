@@ -1,0 +1,1398 @@
+{
+ "artifact": "W25_RAW_OBSERVATIONS_V1",
+ "utc": "2026-09-29T08:13:34Z",
+ "raw": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/runs/podB_pro6000x2/run_01/w13_cycle_seed460.npz",
+ "cpu_only": true,
+ "new_physics_runs": 0,
+ "gpu_used": false,
+ "chatter": {
+  "enabled": true,
+  "threshold_servo_deg": 3.6,
+  "open_servo_deg": 8.0,
+  "max_retries": 3,
+  "n_chatter_events": 3,
+  "n_log_rows": 4,
+  "terminal_action": "retries_exhausted",
+  "units": "joint_deg = 시뮬 문 관절각(0 = 립 맞닿음), servo_deg = joint_deg + servo_zero_offset_deg",
+  "log": [
+   {
+    "k": 0,
+    "action": "chatter",
+    "sim_t_s": 7.684673980598063,
+    "sync_index": 7074,
+    "read_joint_deg": 3.404724,
+    "read_servo_deg": 5.904724,
+    "cmd_joint_deg": 3.40475,
+    "cmd_servo_deg": 5.90475,
+    "threshold_servo_deg": 3.6,
+    "raw_door_actual_deg_at_sync": 3.4047241753127935,
+    "raw_servo_deg_at_sync": 5.9047241753127935,
+    "raw_subphase_at_sync": "close",
+    "raw_phase_at_sync": "close",
+    "open_stop": {
+     "subphase": "chatter_open_1",
+     "reason": "reached_open_end",
+     "sync_index": 8006,
+     "q_cmd_deg": 5.5,
+     "q_actual_deg": 5.5,
+     "servo_deg": 8.0,
+     "sim_t_s": 7.778805980360403,
+     "M_hinge_rel_Nm": 0.01214177994680983,
+     "max_single_contact_N": 0.0548842901431509,
+     "raw_door_actual_deg_at_sync": 5.499993534326801
+    },
+    "close_stop": {
+     "subphase": "chatter_close_1",
+     "reason": "servo_stall",
+     "sync_index": 8856,
+     "q_cmd_deg": 3.5875,
+     "q_actual_deg": 3.5874,
+     "servo_deg": 6.0875,
+     "sim_t_s": 7.864655980143652,
+     "M_hinge_rel_Nm": 1.7795083930445064,
+     "max_single_contact_N": 1.551106588731707,
+     "raw_door_actual_deg_at_sync": 3.5873678292354647
+    }
+   },
+   {
+    "k": 1,
+    "action": "chatter",
+    "sim_t_s": 7.864655980143652,
+    "sync_index": 8856,
+    "read_joint_deg": 3.587368,
+    "read_servo_deg": 6.087368,
+    "cmd_joint_deg": 3.5875,
+    "cmd_servo_deg": 6.0875,
+    "threshold_servo_deg": 3.6,
+    "raw_door_actual_deg_at_sync": 3.5873678292354647,
+    "raw_servo_deg_at_sync": 6.087367829235465,
+    "raw_subphase_at_sync": "chatter_close_1",
+    "raw_phase_at_sync": "close",
+    "open_stop": {
+     "subphase": "chatter_open_2",
+     "reason": "reached_open_end",
+     "sync_index": 9706,
+     "q_cmd_deg": 5.5,
+     "q_actual_deg": 5.5,
+     "servo_deg": 8.0,
+     "sim_t_s": 7.950505979926902,
+     "M_hinge_rel_Nm": -0.0066361377965024814,
+     "max_single_contact_N": 0.03740349957584303,
+     "raw_door_actual_deg_at_sync": 5.499972726615312
+    },
+    "close_stop": {
+     "subphase": "chatter_close_2",
+     "reason": "servo_stall",
+     "sync_index": 10600,
+     "q_cmd_deg": 3.4885,
+     "q_actual_deg": 3.4884,
+     "servo_deg": 5.9885,
+     "sim_t_s": 8.040799979698932,
+     "M_hinge_rel_Nm": 1.7777553852427028,
+     "max_single_contact_N": 1.404742725223725,
+     "raw_door_actual_deg_at_sync": 3.488398577828818
+    }
+   },
+   {
+    "k": 2,
+    "action": "chatter",
+    "sim_t_s": 8.040799979698932,
+    "sync_index": 10600,
+    "read_joint_deg": 3.488399,
+    "read_servo_deg": 5.988399,
+    "cmd_joint_deg": 3.4885,
+    "cmd_servo_deg": 5.9885,
+    "threshold_servo_deg": 3.6,
+    "raw_door_actual_deg_at_sync": 3.488398577828818,
+    "raw_servo_deg_at_sync": 5.988398577828818,
+    "raw_subphase_at_sync": "chatter_close_2",
+    "raw_phase_at_sync": "close",
+    "open_stop": {
+     "subphase": "chatter_open_3",
+     "reason": "reached_open_end",
+     "sync_index": 11494,
+     "q_cmd_deg": 5.5,
+     "q_actual_deg": 5.5,
+     "servo_deg": 8.0,
+     "sim_t_s": 8.131093979470961,
+     "M_hinge_rel_Nm": -0.009871710797437216,
+     "max_single_contact_N": 0.036461240153000736,
+     "raw_door_actual_deg_at_sync": 5.499972726615312
+    },
+    "close_stop": {
+     "subphase": "chatter_close_3",
+     "reason": "servo_stall",
+     "sync_index": 12467,
+     "q_cmd_deg": 3.3107,
+     "q_actual_deg": 3.3108,
+     "servo_deg": 5.8107,
+     "sim_t_s": 8.229366979222846,
+     "M_hinge_rel_Nm": 1.7673896229831976,
+     "max_single_contact_N": 1.9359015720530006,
+     "raw_door_actual_deg_at_sync": 3.3108297412516556
+    }
+   },
+   {
+    "k": 3,
+    "action": "retries_exhausted",
+    "sim_t_s": 8.229366979222846,
+    "sync_index": 12467,
+    "read_joint_deg": 3.31083,
+    "read_servo_deg": 5.81083,
+    "cmd_joint_deg": 3.31075,
+    "cmd_servo_deg": 5.81075,
+    "threshold_servo_deg": 3.6,
+    "raw_door_actual_deg_at_sync": 3.3108297412516556,
+    "raw_servo_deg_at_sync": 5.810829741251656,
+    "raw_subphase_at_sync": "chatter_close_3",
+    "raw_phase_at_sync": "close"
+   }
+  ],
+  "procedure_provenance": "hw_s1_manual.py:157-169 scoop(): 5cm_above→surface→door(30)→plunge 2.5cm→door(0,900)→val>3.6 이면 door(8)·door(0) 최대 3회→pellet+8cm→door(0)→travel"
+ },
+ "decision_door_angles": {
+  "all": {
+   "initial_home_end": {
+    "sync_index": 0,
+    "particle_frame_row": 1,
+    "sim_t_s": 0.0,
+    "phase": "initial_home",
+    "subphase": "t0_state",
+    "json_q_cmd_deg": 0.0,
+    "json_q_actual_deg": -0.0,
+    "raw_door_actual_deg": -2.485180505829021e-06,
+    "raw_door_target_deg": 0.0,
+    "raw_servo_deg": 2.499997514819494,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 64195,
+     "receiving_bin": 0,
+     "tool_residual": 0,
+     "spill": 0,
+     "in_flight": 0,
+     "ambiguous": 3542
+    }
+   },
+   "settle_end": {
+    "sync_index": 25,
+    "particle_frame_row": 4,
+    "sim_t_s": 0.10002499974746115,
+    "phase": "settle",
+    "subphase": "settle",
+    "json_q_cmd_deg": 0.0,
+    "json_q_actual_deg": -0.0,
+    "raw_door_actual_deg": -2.485180505829021e-06,
+    "raw_door_target_deg": 0.0,
+    "raw_servo_deg": 2.499997514819494,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 64197,
+     "receiving_bin": 0,
+     "tool_residual": 0,
+     "spill": 0,
+     "in_flight": 0,
+     "ambiguous": 3540
+    }
+   },
+   "approach_end": {
+    "sync_index": 4680,
+    "particle_frame_row": 64,
+    "sim_t_s": 5.45537998622649,
+    "phase": "approach",
+    "subphase": "door_open_at_approach",
+    "json_q_cmd_deg": 27.5,
+    "json_q_actual_deg": 27.5,
+    "raw_door_actual_deg": 27.500035823816724,
+    "raw_door_target_deg": 27.5,
+    "raw_servo_deg": 30.000035823816724,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 64194,
+     "receiving_bin": 0,
+     "tool_residual": 0,
+     "spill": 0,
+     "in_flight": 0,
+     "ambiguous": 3543
+    }
+   },
+   "descend_end": {
+    "sync_index": 4969,
+    "particle_frame_row": 78,
+    "sim_t_s": 6.6116689833071405,
+    "phase": "descend",
+    "subphase": "plunge",
+    "json_q_cmd_deg": 27.5,
+    "json_q_actual_deg": 27.5,
+    "raw_door_actual_deg": 27.499966192289293,
+    "raw_door_target_deg": 27.5,
+    "raw_servo_deg": 29.999966192289293,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 63738,
+     "receiving_bin": 0,
+     "tool_residual": 71,
+     "spill": 0,
+     "in_flight": 1,
+     "ambiguous": 3927
+    }
+   },
+   "close_stop": {
+    "sync_index": 7074,
+    "particle_frame_row": 90,
+    "sim_t_s": 7.684673980598063,
+    "phase": "close",
+    "subphase": "close",
+    "json_q_cmd_deg": 3.4047,
+    "json_q_actual_deg": 3.4047,
+    "raw_door_actual_deg": 3.4047241753127935,
+    "raw_door_target_deg": 3.404749999999167,
+    "raw_servo_deg": 5.9047241753127935,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 63223,
+     "receiving_bin": 0,
+     "tool_residual": 428,
+     "spill": 0,
+     "in_flight": 58,
+     "ambiguous": 4028
+    }
+   },
+   "lift_end": {
+    "sync_index": 12642,
+    "particle_frame_row": 111,
+    "sim_t_s": 8.929541977455074,
+    "phase": "lift",
+    "subphase": "lift",
+    "json_q_cmd_deg": 3.3107,
+    "json_q_actual_deg": 3.3108,
+    "raw_door_actual_deg": 3.3108297412516556,
+    "raw_door_target_deg": 3.310749999999917,
+    "raw_servo_deg": 5.810829741251656,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 63357,
+     "receiving_bin": 0,
+     "tool_residual": 397,
+     "spill": 0,
+     "in_flight": 5,
+     "ambiguous": 3978
+    }
+   },
+   "reclose_end": {
+    "sync_index": 13051,
+    "particle_frame_row": 113,
+    "sim_t_s": 8.970850977350779,
+    "phase": "reclose",
+    "subphase": "reclose",
+    "json_q_cmd_deg": 2.3905,
+    "json_q_actual_deg": 2.3905,
+    "raw_door_actual_deg": 2.390452421531851,
+    "raw_door_target_deg": 2.390499999999882,
+    "raw_servo_deg": 4.890452421531851,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 63357,
+     "receiving_bin": 0,
+     "tool_residual": 411,
+     "spill": 0,
+     "in_flight": 7,
+     "ambiguous": 3962
+    }
+   },
+   "bridge_clearance_decision": {
+    "sync_index": 13051,
+    "particle_frame_row": 114,
+    "sim_t_s": 8.970850977350779,
+    "phase": "reclose",
+    "subphase": "reclose",
+    "json_q_cmd_deg": 2.3905,
+    "json_q_actual_deg": 2.3905,
+    "raw_door_actual_deg": 2.390452421531851,
+    "raw_door_target_deg": 2.390499999999882,
+    "raw_servo_deg": 4.890452421531851,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 63357,
+     "receiving_bin": 0,
+     "tool_residual": 411,
+     "spill": 0,
+     "in_flight": 7,
+     "ambiguous": 3962
+    }
+   },
+   "transport_end": {
+    "sync_index": 14218,
+    "particle_frame_row": 168,
+    "sim_t_s": 13.640017965562265,
+    "phase": "transport",
+    "subphase": "place_target",
+    "json_q_cmd_deg": 2.3905,
+    "json_q_actual_deg": 2.3924,
+    "raw_door_actual_deg": 2.392391348520764,
+    "raw_door_target_deg": 2.390499999999882,
+    "raw_servo_deg": 4.892391348520764,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 63403,
+     "receiving_bin": 16,
+     "tool_residual": 351,
+     "spill": 25,
+     "in_flight": 0,
+     "ambiguous": 3942
+    }
+   },
+   "release_before": {
+    "sync_index": 14218,
+    "particle_frame_row": 169,
+    "sim_t_s": 13.640017965562265,
+    "phase": "transport",
+    "subphase": "place_target",
+    "json_q_cmd_deg": 2.3905,
+    "json_q_actual_deg": 2.3924,
+    "raw_door_actual_deg": 2.392391348520764,
+    "raw_door_target_deg": 2.390499999999882,
+    "raw_servo_deg": 4.892391348520764,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 63403,
+     "receiving_bin": 16,
+     "tool_residual": 351,
+     "spill": 25,
+     "in_flight": 0,
+     "ambiguous": 3942
+    }
+   },
+   "release_after": {
+    "sync_index": 16779,
+    "particle_frame_row": 182,
+    "sim_t_s": 14.759078962736908,
+    "phase": "discharge",
+    "subphase": "door_open",
+    "json_q_cmd_deg": 27.5,
+    "json_q_actual_deg": 27.5,
+    "raw_door_actual_deg": 27.500010725436642,
+    "raw_door_target_deg": 27.5,
+    "raw_servo_deg": 30.000010725436642,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 63404,
+     "receiving_bin": 584,
+     "tool_residual": 11,
+     "spill": 25,
+     "in_flight": 0,
+     "ambiguous": 3713
+    }
+   },
+   "wait_end": {
+    "sync_index": 17154,
+    "particle_frame_row": 199,
+    "sim_t_s": 16.259453958948825,
+    "phase": "discharge_wait",
+    "subphase": "wait",
+    "json_q_cmd_deg": 27.5,
+    "json_q_actual_deg": 27.5,
+    "raw_door_actual_deg": 27.5,
+    "raw_door_target_deg": 27.5,
+    "raw_servo_deg": 30.0,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 63403,
+     "receiving_bin": 584,
+     "tool_residual": 11,
+     "spill": 25,
+     "in_flight": 0,
+     "ambiguous": 3714
+    }
+   },
+   "close_after_discharge_end": {
+    "sync_index": 20773,
+    "particle_frame_row": 213,
+    "sim_t_s": 17.485372955853677,
+    "phase": "close_after_discharge",
+    "subphase": "close_after_discharge",
+    "json_q_cmd_deg": 0.0,
+    "json_q_actual_deg": -0.0,
+    "raw_door_actual_deg": -4.143794015476487e-06,
+    "raw_door_target_deg": 0.0,
+    "raw_servo_deg": 2.4999958562059845,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 63403,
+     "receiving_bin": 585,
+     "tool_residual": 11,
+     "spill": 25,
+     "in_flight": 0,
+     "ambiguous": 3713
+    }
+   },
+   "return_home_end": {
+    "sync_index": 22127,
+    "particle_frame_row": 274,
+    "sim_t_s": 22.902726942176173,
+    "phase": "return_home",
+    "subphase": "home_hold",
+    "json_q_cmd_deg": 0.0,
+    "json_q_actual_deg": 0.016,
+    "raw_door_actual_deg": 0.01598359353025458,
+    "raw_door_target_deg": 0.0,
+    "raw_servo_deg": 2.5159835935302546,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 63402,
+     "receiving_bin": 585,
+     "tool_residual": 14,
+     "spill": 25,
+     "in_flight": 0,
+     "ambiguous": 3711
+    }
+   }
+  },
+  "focus": {
+   "close_stop": {
+    "sync_index": 7074,
+    "particle_frame_row": 90,
+    "sim_t_s": 7.684673980598063,
+    "phase": "close",
+    "subphase": "close",
+    "json_q_cmd_deg": 3.4047,
+    "json_q_actual_deg": 3.4047,
+    "raw_door_actual_deg": 3.4047241753127935,
+    "raw_door_target_deg": 3.404749999999167,
+    "raw_servo_deg": 5.9047241753127935,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 63223,
+     "receiving_bin": 0,
+     "tool_residual": 428,
+     "spill": 0,
+     "in_flight": 58,
+     "ambiguous": 4028
+    }
+   },
+   "lift_end": {
+    "sync_index": 12642,
+    "particle_frame_row": 111,
+    "sim_t_s": 8.929541977455074,
+    "phase": "lift",
+    "subphase": "lift",
+    "json_q_cmd_deg": 3.3107,
+    "json_q_actual_deg": 3.3108,
+    "raw_door_actual_deg": 3.3108297412516556,
+    "raw_door_target_deg": 3.310749999999917,
+    "raw_servo_deg": 5.810829741251656,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 63357,
+     "receiving_bin": 0,
+     "tool_residual": 397,
+     "spill": 0,
+     "in_flight": 5,
+     "ambiguous": 3978
+    }
+   },
+   "reclose_end": {
+    "sync_index": 13051,
+    "particle_frame_row": 113,
+    "sim_t_s": 8.970850977350779,
+    "phase": "reclose",
+    "subphase": "reclose",
+    "json_q_cmd_deg": 2.3905,
+    "json_q_actual_deg": 2.3905,
+    "raw_door_actual_deg": 2.390452421531851,
+    "raw_door_target_deg": 2.390499999999882,
+    "raw_servo_deg": 4.890452421531851,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 63357,
+     "receiving_bin": 0,
+     "tool_residual": 411,
+     "spill": 0,
+     "in_flight": 7,
+     "ambiguous": 3962
+    }
+   },
+   "release_before": {
+    "sync_index": 14218,
+    "particle_frame_row": 169,
+    "sim_t_s": 13.640017965562265,
+    "phase": "transport",
+    "subphase": "place_target",
+    "json_q_cmd_deg": 2.3905,
+    "json_q_actual_deg": 2.3924,
+    "raw_door_actual_deg": 2.392391348520764,
+    "raw_door_target_deg": 2.390499999999882,
+    "raw_servo_deg": 4.892391348520764,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 63403,
+     "receiving_bin": 16,
+     "tool_residual": 351,
+     "spill": 25,
+     "in_flight": 0,
+     "ambiguous": 3942
+    }
+   }
+  },
+  "servo_zero_offset_deg": 2.5
+ },
+ "door_stops": [
+  {
+   "phase": "approach",
+   "subphase": "door_open_at_approach",
+   "reason": "reached_open_end",
+   "sync_index": 4680,
+   "q_cmd_deg": 27.5,
+   "q_actual_deg": 27.5,
+   "servo_deg": 30.0,
+   "sim_t": 5.45537998622649,
+   "M_hinge_rel_Nm": 0.0,
+   "max_single_contact_N": 0.0,
+   "raw_door_actual_deg_at_sync": 27.500035823816724,
+   "raw_phase": "approach"
+  },
+  {
+   "phase": "close",
+   "subphase": "close",
+   "reason": "servo_stall",
+   "sync_index": 7074,
+   "q_cmd_deg": 3.4047,
+   "q_actual_deg": 3.4047,
+   "servo_deg": 5.9047,
+   "sim_t": 7.684673980598063,
+   "M_hinge_rel_Nm": 1.7698791679315387,
+   "max_single_contact_N": 1.4318609614359434,
+   "raw_door_actual_deg_at_sync": 3.4047241753127935,
+   "raw_phase": "close"
+  },
+  {
+   "phase": "close",
+   "subphase": "chatter_open_1",
+   "reason": "reached_open_end",
+   "sync_index": 8006,
+   "q_cmd_deg": 5.5,
+   "q_actual_deg": 5.5,
+   "servo_deg": 8.0,
+   "sim_t": 7.778805980360403,
+   "M_hinge_rel_Nm": 0.01214177994680983,
+   "max_single_contact_N": 0.0548842901431509,
+   "raw_door_actual_deg_at_sync": 5.499993534326801,
+   "raw_phase": "close"
+  },
+  {
+   "phase": "close",
+   "subphase": "chatter_close_1",
+   "reason": "servo_stall",
+   "sync_index": 8856,
+   "q_cmd_deg": 3.5875,
+   "q_actual_deg": 3.5874,
+   "servo_deg": 6.0875,
+   "sim_t": 7.864655980143652,
+   "M_hinge_rel_Nm": 1.7795083930445064,
+   "max_single_contact_N": 1.551106588731707,
+   "raw_door_actual_deg_at_sync": 3.5873678292354647,
+   "raw_phase": "close"
+  },
+  {
+   "phase": "close",
+   "subphase": "chatter_open_2",
+   "reason": "reached_open_end",
+   "sync_index": 9706,
+   "q_cmd_deg": 5.5,
+   "q_actual_deg": 5.5,
+   "servo_deg": 8.0,
+   "sim_t": 7.950505979926902,
+   "M_hinge_rel_Nm": -0.0066361377965024814,
+   "max_single_contact_N": 0.03740349957584303,
+   "raw_door_actual_deg_at_sync": 5.499972726615312,
+   "raw_phase": "close"
+  },
+  {
+   "phase": "close",
+   "subphase": "chatter_close_2",
+   "reason": "servo_stall",
+   "sync_index": 10600,
+   "q_cmd_deg": 3.4885,
+   "q_actual_deg": 3.4884,
+   "servo_deg": 5.9885,
+   "sim_t": 8.040799979698932,
+   "M_hinge_rel_Nm": 1.7777553852427028,
+   "max_single_contact_N": 1.404742725223725,
+   "raw_door_actual_deg_at_sync": 3.488398577828818,
+   "raw_phase": "close"
+  },
+  {
+   "phase": "close",
+   "subphase": "chatter_open_3",
+   "reason": "reached_open_end",
+   "sync_index": 11494,
+   "q_cmd_deg": 5.5,
+   "q_actual_deg": 5.5,
+   "servo_deg": 8.0,
+   "sim_t": 8.131093979470961,
+   "M_hinge_rel_Nm": -0.009871710797437216,
+   "max_single_contact_N": 0.036461240153000736,
+   "raw_door_actual_deg_at_sync": 5.499972726615312,
+   "raw_phase": "close"
+  },
+  {
+   "phase": "close",
+   "subphase": "chatter_close_3",
+   "reason": "servo_stall",
+   "sync_index": 12467,
+   "q_cmd_deg": 3.3107,
+   "q_actual_deg": 3.3108,
+   "servo_deg": 5.8107,
+   "sim_t": 8.229366979222846,
+   "M_hinge_rel_Nm": 1.7673896229831976,
+   "max_single_contact_N": 1.9359015720530006,
+   "raw_door_actual_deg_at_sync": 3.3108297412516556,
+   "raw_phase": "close"
+  },
+  {
+   "phase": "reclose",
+   "subphase": "reclose",
+   "reason": "pinch_guard",
+   "sync_index": 13051,
+   "q_cmd_deg": 2.3905,
+   "q_actual_deg": 2.3905,
+   "servo_deg": 4.8905,
+   "sim_t": 8.970850977350779,
+   "M_hinge_rel_Nm": 0.8480478524626335,
+   "max_single_contact_N": 3.01126336833259,
+   "raw_door_actual_deg_at_sync": 2.390452421531851,
+   "raw_phase": "reclose"
+  },
+  {
+   "phase": "discharge",
+   "subphase": "door_open",
+   "reason": "reached_open_end",
+   "sync_index": 16779,
+   "q_cmd_deg": 27.5,
+   "q_actual_deg": 27.5,
+   "servo_deg": 30.0,
+   "sim_t": 14.759078962736908,
+   "M_hinge_rel_Nm": 0.0,
+   "max_single_contact_N": 0.0011014266066667771,
+   "raw_door_actual_deg_at_sync": 27.500010725436642,
+   "raw_phase": "discharge"
+  },
+  {
+   "phase": "close_after_discharge",
+   "subphase": "close_after_discharge",
+   "reason": "reached_close_end",
+   "sync_index": 20773,
+   "q_cmd_deg": 0.0,
+   "q_actual_deg": -0.0,
+   "servo_deg": 2.5,
+   "sim_t": 17.485372955853677,
+   "M_hinge_rel_Nm": 0.0,
+   "max_single_contact_N": 0.0009565043478207614,
+   "raw_door_actual_deg_at_sync": -4.143794015476487e-06,
+   "raw_phase": "close_after_discharge"
+  }
+ ],
+ "door_final": {
+  "stops": [
+   {
+    "phase": "approach",
+    "subphase": "door_open_at_approach",
+    "reason": "reached_open_end",
+    "sync_index": 4680,
+    "q_cmd_deg": 27.5,
+    "q_actual_deg": 27.5,
+    "servo_deg": 30.0,
+    "sim_t": 5.45537998622649,
+    "M_hinge_rel_Nm": 0.0,
+    "max_single_contact_N": 0.0
+   },
+   {
+    "phase": "close",
+    "subphase": "close",
+    "reason": "servo_stall",
+    "sync_index": 7074,
+    "q_cmd_deg": 3.4047,
+    "q_actual_deg": 3.4047,
+    "servo_deg": 5.9047,
+    "sim_t": 7.684673980598063,
+    "M_hinge_rel_Nm": 1.7698791679315387,
+    "max_single_contact_N": 1.4318609614359434
+   },
+   {
+    "phase": "close",
+    "subphase": "chatter_open_1",
+    "reason": "reached_open_end",
+    "sync_index": 8006,
+    "q_cmd_deg": 5.5,
+    "q_actual_deg": 5.5,
+    "servo_deg": 8.0,
+    "sim_t": 7.778805980360403,
+    "M_hinge_rel_Nm": 0.01214177994680983,
+    "max_single_contact_N": 0.0548842901431509
+   },
+   {
+    "phase": "close",
+    "subphase": "chatter_close_1",
+    "reason": "servo_stall",
+    "sync_index": 8856,
+    "q_cmd_deg": 3.5875,
+    "q_actual_deg": 3.5874,
+    "servo_deg": 6.0875,
+    "sim_t": 7.864655980143652,
+    "M_hinge_rel_Nm": 1.7795083930445064,
+    "max_single_contact_N": 1.551106588731707
+   },
+   {
+    "phase": "close",
+    "subphase": "chatter_open_2",
+    "reason": "reached_open_end",
+    "sync_index": 9706,
+    "q_cmd_deg": 5.5,
+    "q_actual_deg": 5.5,
+    "servo_deg": 8.0,
+    "sim_t": 7.950505979926902,
+    "M_hinge_rel_Nm": -0.0066361377965024814,
+    "max_single_contact_N": 0.03740349957584303
+   },
+   {
+    "phase": "close",
+    "subphase": "chatter_close_2",
+    "reason": "servo_stall",
+    "sync_index": 10600,
+    "q_cmd_deg": 3.4885,
+    "q_actual_deg": 3.4884,
+    "servo_deg": 5.9885,
+    "sim_t": 8.040799979698932,
+    "M_hinge_rel_Nm": 1.7777553852427028,
+    "max_single_contact_N": 1.404742725223725
+   },
+   {
+    "phase": "close",
+    "subphase": "chatter_open_3",
+    "reason": "reached_open_end",
+    "sync_index": 11494,
+    "q_cmd_deg": 5.5,
+    "q_actual_deg": 5.5,
+    "servo_deg": 8.0,
+    "sim_t": 8.131093979470961,
+    "M_hinge_rel_Nm": -0.009871710797437216,
+    "max_single_contact_N": 0.036461240153000736
+   },
+   {
+    "phase": "close",
+    "subphase": "chatter_close_3",
+    "reason": "servo_stall",
+    "sync_index": 12467,
+    "q_cmd_deg": 3.3107,
+    "q_actual_deg": 3.3108,
+    "servo_deg": 5.8107,
+    "sim_t": 8.229366979222846,
+    "M_hinge_rel_Nm": 1.7673896229831976,
+    "max_single_contact_N": 1.9359015720530006
+   },
+   {
+    "phase": "reclose",
+    "subphase": "reclose",
+    "reason": "pinch_guard",
+    "sync_index": 13051,
+    "q_cmd_deg": 2.3905,
+    "q_actual_deg": 2.3905,
+    "servo_deg": 4.8905,
+    "sim_t": 8.970850977350779,
+    "M_hinge_rel_Nm": 0.8480478524626335,
+    "max_single_contact_N": 3.01126336833259
+   },
+   {
+    "phase": "discharge",
+    "subphase": "door_open",
+    "reason": "reached_open_end",
+    "sync_index": 16779,
+    "q_cmd_deg": 27.5,
+    "q_actual_deg": 27.5,
+    "servo_deg": 30.0,
+    "sim_t": 14.759078962736908,
+    "M_hinge_rel_Nm": 0.0,
+    "max_single_contact_N": 0.0011014266066667771
+   },
+   {
+    "phase": "close_after_discharge",
+    "subphase": "close_after_discharge",
+    "reason": "reached_close_end",
+    "sync_index": 20773,
+    "q_cmd_deg": 0.0,
+    "q_actual_deg": -0.0,
+    "servo_deg": 2.5,
+    "sim_t": 17.485372955853677,
+    "M_hinge_rel_Nm": 0.0,
+    "max_single_contact_N": 0.0009565043478207614
+   }
+  ],
+  "q_final_cmd_deg": 0.0,
+  "q_final_actual_deg": 0.016,
+  "servo_deg_final": 2.5
+ },
+ "reclose_read": {
+  "read_joint_deg": 2.390452,
+  "read_servo_deg": 4.890452,
+  "cmd_joint_deg": 2.3905,
+  "sim_t": 8.970850977350779
+ },
+ "spill": {
+  "n_ever_spill": 25,
+  "n_final_spill": 25,
+  "count_by_departure_phase": {
+   "transport": 25
+  },
+  "count_by_first_spill_frame": {
+   "144": 2,
+   "145": 1,
+   "147": 4,
+   "148": 1,
+   "149": 2,
+   "150": 2,
+   "151": 5,
+   "154": 2,
+   "155": 1,
+   "156": 2,
+   "158": 2,
+   "163": 1
+  },
+  "spill_rest_z_m": 0.02,
+  "rows": [
+   {
+    "particle_id": 4717,
+    "first_spill_particle_frame_row": 144,
+    "sync_index": 13684,
+    "t_s": 11.503483970956495,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488466454669833
+   },
+   {
+    "particle_id": 64138,
+    "first_spill_particle_frame_row": 144,
+    "sync_index": 13684,
+    "t_s": 11.503483970956495,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.001248865039087832
+   },
+   {
+    "particle_id": 57573,
+    "first_spill_particle_frame_row": 145,
+    "sync_index": 13709,
+    "t_s": 11.603508970703956,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488312786445022
+   },
+   {
+    "particle_id": 6665,
+    "first_spill_particle_frame_row": 147,
+    "sync_index": 13759,
+    "t_s": 11.803558970198878,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488490901887417
+   },
+   {
+    "particle_id": 19071,
+    "first_spill_particle_frame_row": 147,
+    "sync_index": 13759,
+    "t_s": 11.803558970198878,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488061329349875
+   },
+   {
+    "particle_id": 20839,
+    "first_spill_particle_frame_row": 147,
+    "sync_index": 13759,
+    "t_s": 11.803558970198878,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488943757489324
+   },
+   {
+    "particle_id": 49107,
+    "first_spill_particle_frame_row": 147,
+    "sync_index": 13759,
+    "t_s": 11.803558970198878,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488403590396047
+   },
+   {
+    "particle_id": 25306,
+    "first_spill_particle_frame_row": 148,
+    "sync_index": 13784,
+    "t_s": 11.90358396994634,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488497886806726
+   },
+   {
+    "particle_id": 32139,
+    "first_spill_particle_frame_row": 149,
+    "sync_index": 13802,
+    "t_s": 11.975601969764512,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488334905356169
+   },
+   {
+    "particle_id": 36672,
+    "first_spill_particle_frame_row": 149,
+    "sync_index": 13802,
+    "t_s": 11.975601969764512,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488376814872026
+   },
+   {
+    "particle_id": 16391,
+    "first_spill_particle_frame_row": 150,
+    "sync_index": 13809,
+    "t_s": 12.0036089696938,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488649226725101
+   },
+   {
+    "particle_id": 20010,
+    "first_spill_particle_frame_row": 150,
+    "sync_index": 13809,
+    "t_s": 12.0036089696938,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.001248807879164815
+   },
+   {
+    "particle_id": 20131,
+    "first_spill_particle_frame_row": 151,
+    "sync_index": 13834,
+    "t_s": 12.103633969441262,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.00124882603995502
+   },
+   {
+    "particle_id": 21487,
+    "first_spill_particle_frame_row": 151,
+    "sync_index": 13834,
+    "t_s": 12.103633969441262,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488431530073285
+   },
+   {
+    "particle_id": 21712,
+    "first_spill_particle_frame_row": 151,
+    "sync_index": 13834,
+    "t_s": 12.103633969441262,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488254578784108
+   },
+   {
+    "particle_id": 49937,
+    "first_spill_particle_frame_row": 151,
+    "sync_index": 13834,
+    "t_s": 12.103633969441262,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.001248852233402431
+   },
+   {
+    "particle_id": 65408,
+    "first_spill_particle_frame_row": 151,
+    "sync_index": 13834,
+    "t_s": 12.103633969441262,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488446664065123
+   },
+   {
+    "particle_id": 12219,
+    "first_spill_particle_frame_row": 154,
+    "sync_index": 13909,
+    "t_s": 12.403708968683645,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488644570112228
+   },
+   {
+    "particle_id": 40166,
+    "first_spill_particle_frame_row": 154,
+    "sync_index": 13909,
+    "t_s": 12.403708968683645,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.001248864340595901
+   },
+   {
+    "particle_id": 49825,
+    "first_spill_particle_frame_row": 155,
+    "sync_index": 13934,
+    "t_s": 12.503733968431106,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488467618823051
+   },
+   {
+    "particle_id": 17340,
+    "first_spill_particle_frame_row": 156,
+    "sync_index": 13950,
+    "t_s": 12.567749968269482,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488446664065123
+   },
+   {
+    "particle_id": 55218,
+    "first_spill_particle_frame_row": 156,
+    "sync_index": 13950,
+    "t_s": 12.567749968269482,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012487357016652822
+   },
+   {
+    "particle_id": 34823,
+    "first_spill_particle_frame_row": 158,
+    "sync_index": 13984,
+    "t_s": 12.703783967926029,
+    "phase": "transport",
+    "subphase": "place_target",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488642241805792
+   },
+   {
+    "particle_id": 47303,
+    "first_spill_particle_frame_row": 158,
+    "sync_index": 13984,
+    "t_s": 12.703783967926029,
+    "phase": "transport",
+    "subphase": "place_target",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.001248815911822021
+   },
+   {
+    "particle_id": 33910,
+    "first_spill_particle_frame_row": 163,
+    "sync_index": 14109,
+    "t_s": 13.203908966663334,
+    "phase": "transport",
+    "subphase": "place_target",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.001485490589402616
+   }
+  ],
+  "n_spill_ids_equal_between_recorded_and_rev34": 25,
+  "n_ever_spill_rev34": 25
+ },
+ "bridge_clearance": {
+  "verdict": "CLEARANCE_CERTIFIED",
+  "pass": true,
+  "decision_point": "resume_fk_here() 직후 · align_move('transport', ...) 이전 · bridge 첫 DoDynamicsThenSync 이전",
+  "sim_t_s": 8.970850977350779,
+  "sync_index": 13051,
+  "wall_s": 9200.351,
+  "z_reached_m": 0.017630774527788162,
+  "door_q_deg_actual": 2.390452421531851,
+  "door_q_deg_commanded": 2.390499999999882,
+  "raw_door_actual_deg_at_sync": 2.390452421531851,
+  "n_align_sync_targets": 1,
+  "n_joint_sync_targets": 219,
+  "physics_steps_before_certify": 13052,
+  "physics_steps_after_certify": 13052,
+  "certify_consumed_zero_physics": true,
+  "precheck_summary": {
+   "n_syncs_checked": 220,
+   "n_planned_targets": 220,
+   "all_planned_consumed": true,
+   "all_ok": true,
+   "worst_slack_m": 0.06950739780689753,
+   "max_plan_target_deviation_m": 0.0,
+   "n_failed": 0
+  },
+  "global_worst": {
+   "cell": "tray_wall_plus_y",
+   "axis": "y",
+   "gap_m": 0.07620411222457019,
+   "motion_bound_m": 0.013374688341908584,
+   "start_ball_m": 0.006687142342126118,
+   "part_radius_m": 0.1251630568649322,
+   "numeric_epsilon_m": 1e-06,
+   "slack_m": 0.0628284238826616,
+   "chord_m": 0.0006060232087403649,
+   "theta_rad": 0.00023669533691417224,
+   "segment": "joint_sync_targets",
+   "index": 114,
+   "part": "door"
+  },
+  "limit_failures": [],
+  "n_separation_failures_total": 0,
+  "door_vs_fixed_residual_at_decision": {
+   "pos_m": 8.89337115555877e-09,
+   "note": "보고용 관측. 실행 운동 상한은 두 몸체를 독립으로 보므로 이 값에 의존하지 않는다."
+  },
+  "npz_bridge_precheck_rows_shape": [
+   220,
+   15
+  ],
+  "npz_bridge_interval_rows_shape": [
+   440,
+   15
+  ],
+  "npz_bridge_precheck_columns": [
+   "sync_ordinal",
+   "ok",
+   "worst_gap_m",
+   "worst_motion_bound_m",
+   "worst_slack_m",
+   "plan_pos_dev_fixed_m",
+   "plan_pos_dev_door_m",
+   "plan_rot_dev_fixed_rad",
+   "plan_rot_dev_door_rad",
+   "qnorm_fixed",
+   "qnorm_door",
+   "omega_norm_fixed_rad_s",
+   "omega_norm_door_rad_s",
+   "omega_bound_rad_s",
+   "dts_s"
+  ],
+  "non_claims": [
+   "고정 fixture 와의 기하 충돌 없음만 인증한다. 접촉 성공·서보 실현성 증거가 아니다.",
+   "용기 셀은 48각형 축정렬 AABB 겉包이라 보수적이다.",
+   "수치 허용치 네 항은 전부 설치본 고정 입력에서 계산했고 관측 여유에 맞추지 않았다.",
+   "사후 잔차 측정은 진단이며 pre-step 안전 증명이 아니다."
+  ]
+ },
+ "w25_frame": {
+  "metadata_w25_frame": {
+   "R_robot_box": [
+    [
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     -1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "t_robot_m": [
+    0.25,
+    0.0,
+    -0.2577501314177868
+   ],
+   "box_frame_convention": "A",
+   "box_anchor": "declared_box_center"
+  },
+  "json_w25_frame": {
+   "box_frame_convention": "A",
+   "box_anchor": "declared_box_center",
+   "R_robot_box": [
+    [
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     -1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "R_box_robot": [
+    [
+     0.0,
+     -1.0,
+     0.0
+    ],
+    [
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "R_scoop_owner_box": [
+    [
+     0.0,
+     -1.0,
+     0.0
+    ],
+    [
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "R_scoop_rule": "취점 구간(w11 모드) 툴 owner 회전 = R_box_robot (rev32 의 단위행렬을 상자 좌표로 옮긴 것)",
+   "box_center_robot_xy_m": [
+    0.25,
+    0.0
+   ],
+   "reference_lip_robot_m": [
+    0.24999350552210822,
+    -0.008099999999999984,
+    -0.21504771942217477
+   ],
+   "box_floor_robot_z_m": -0.2577501314177868,
+   "box_floor_above_floor_cm": 19.631,
+   "rev32_path": false
+  },
+  "json_w25_scoop_site": {
+   "convention": "A",
+   "anchor": "declared_box_center",
+   "site_box_xy_m": [
+    0.008099999999999984,
+    -6.494477891777484e-06
+   ],
+   "reference_lip_robot_m": [
+    0.24999350552210822,
+    -0.008099999999999984,
+    -0.21504771942217477
+   ],
+   "box_center_robot_xy_m": [
+    0.25,
+    0.0
+   ],
+   "reference_pose_q5": [
+    0.0,
+    48.209999999999994,
+    103.44000000000005,
+    28.369999999999948,
+    0.0
+   ],
+   "rule": "상자 중심(로봇 좌표)을 명령한 기준 자세의 FK 립을 상자 좌표로 옮긴 점",
+   "rev32_path": false
+  },
+  "json_w25_tray": {
+   "tray_inner_source": "declared_from_npz_convention (user outer 31x22, wall 0.2)",
+   "declared_inner_mm": [
+    310.0,
+    220.0,
+    230.0
+   ],
+   "npz_box_bounds_m": [
+    [
+     -0.155,
+     0.155
+    ],
+    [
+     -0.11,
+     0.11
+    ],
+    [
+     0.0,
+     0.134840008690237
+    ]
+   ],
+   "box_bounds_m": [
+    [
+     -0.155,
+     0.155
+    ],
+    [
+     -0.11,
+     0.11
+    ],
+    [
+     0.0,
+     0.23
+    ]
+   ],
+   "npz_vs_declared_xy_max_abs_mm": 0.0,
+   "tol_mm": 0.5,
+   "max_sphere_overhang_mm": 0.011434,
+   "n_spheres_outside_declared_xy": 0,
+   "n_spheres_above_declared_top": 0,
+   "mismatch_reasons": []
+  },
+  "metadata_equals_json_R_robot_box": true,
+  "metadata_equals_json_t_robot": true,
+  "t_robot_m_metadata": [
+   0.25,
+   0.0,
+   -0.2577501314177868
+  ],
+  "box_floor_robot_z_m": -0.2577501314177868,
+  "box_floor_above_floor_cm": 19.631,
+  "declared_not_measured": true
+ },
+ "non_claims": [
+  "이 표는 관측만이다 — 차이를 원인으로 읽지 않는다(n>=3 전 인과 주장 금지).",
+  "실물 절차 재현 로그는 시뮬 값이며 실물 측정이 아니다.",
+  "배치 치수는 사용자 선언·실측 혼합이다(declared_not_measured=true)."
+ ],
+ "wall_s": 0.165
+}

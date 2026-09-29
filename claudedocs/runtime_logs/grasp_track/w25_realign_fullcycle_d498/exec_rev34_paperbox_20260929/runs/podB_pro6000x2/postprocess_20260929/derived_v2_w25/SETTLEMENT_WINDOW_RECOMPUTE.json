@@ -1,0 +1,231 @@
+{
+ "artifact": "W25_SETTLEMENT_WINDOW_RECOMPUTE_V1",
+ "utc": "2026-09-29T08:04:49Z",
+ "raw": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/runs/podB_pro6000x2/run_01/w13_cycle_seed460.npz",
+ "derived": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/runs/podB_pro6000x2/postprocess_20260929/derived_v2_w25/w25_podB_seed460_rev34_derived.npz",
+ "cpu_only": true,
+ "new_physics_runs": 0,
+ "recomputed_recorded_labels": {
+  "window_s": 0.25,
+  "n_frames": 5,
+  "frame_rows": [
+   270,
+   271,
+   272,
+   273,
+   274
+  ],
+  "frame_times_s": [
+   22.702676943,
+   22.802701942,
+   22.802701942,
+   22.902726942,
+   22.902726942
+  ],
+  "frame_gaps_s": [
+   0.100025,
+   0.0,
+   0.100025,
+   0.0
+  ],
+  "max_frame_gap_s": 0.100025,
+  "settlement_frame_dt_s_param": 0.05,
+  "particle_frame_dt_s_param": 0.1,
+  "cadence_contract": {
+   "min_frames": 6,
+   "max_gap_s": 0.05,
+   "n_frames_ok": false,
+   "max_gap_ok": false
+  },
+  "cadence_ok": false,
+  "criterion": {
+   "speed_max_m_s": 0.005,
+   "center_move_max_m": 0.001
+  },
+  "n_stable_bin_all_frames": 585,
+  "n_settled": 585,
+  "max_speed_of_stable_m_s": 0.00038295,
+  "max_move_of_stable_mm": 0.010357,
+  "n_stable_but_moving": 0,
+  "possible_terms": {
+   "label_receiving_bin_n": 585,
+   "amb_or_flight_in_band_n": 80,
+   "amb_or_flight_at_or_above_rim_n": 0,
+   "bin_apothem_m": 0.03991435692954414,
+   "bin_floor_inner_z_m": 0.003,
+   "bin_rim_z_m": 0.07300000000000001,
+   "margin_m": 0.0025
+  },
+  "definite_delivered_n": 585,
+  "possible_delivered_n": 665
+ },
+ "recomputed_rev34_labels": {
+  "window_s": 0.25,
+  "n_frames": 5,
+  "frame_rows": [
+   270,
+   271,
+   272,
+   273,
+   274
+  ],
+  "frame_times_s": [
+   22.702676943,
+   22.802701942,
+   22.802701942,
+   22.902726942,
+   22.902726942
+  ],
+  "frame_gaps_s": [
+   0.100025,
+   0.0,
+   0.100025,
+   0.0
+  ],
+  "max_frame_gap_s": 0.100025,
+  "settlement_frame_dt_s_param": 0.05,
+  "particle_frame_dt_s_param": 0.1,
+  "cadence_contract": {
+   "min_frames": 6,
+   "max_gap_s": 0.05,
+   "n_frames_ok": false,
+   "max_gap_ok": false
+  },
+  "cadence_ok": false,
+  "criterion": {
+   "speed_max_m_s": 0.005,
+   "center_move_max_m": 0.001
+  },
+  "n_stable_bin_all_frames": 585,
+  "n_settled": 585,
+  "max_speed_of_stable_m_s": 0.00038295,
+  "max_move_of_stable_mm": 0.010357,
+  "n_stable_but_moving": 0,
+  "possible_terms": {
+   "label_receiving_bin_n": 585,
+   "amb_or_flight_in_band_n": 80,
+   "amb_or_flight_at_or_above_rim_n": 0,
+   "bin_apothem_m": 0.03991435692954414,
+   "bin_floor_inner_z_m": 0.003,
+   "bin_rim_z_m": 0.07300000000000001,
+   "margin_m": 0.0025
+  },
+  "definite_delivered_n": 585,
+  "possible_delivered_n": 665
+ },
+ "production_settlement_window": {
+  "window_s": 0.25,
+  "n_frames": 5,
+  "frame_times_s": [
+   22.702676943,
+   22.802701942,
+   22.802701942,
+   22.902726942,
+   22.902726942
+  ],
+  "max_frame_gap_s": 0.100025,
+  "criterion": {
+   "speed_max_m_s": 0.005,
+   "center_move_max_m": 0.001,
+   "basis": "감사 사전 고정 operational criterion. 물리적 rest truth 가 아니다."
+  },
+  "cadence_ok": false,
+  "n_stable_bin_all_frames": 585,
+  "n_settled": 585,
+  "max_speed_of_stable_m_s": 0.00038295,
+  "max_move_of_stable_mm": 0.010357
+ },
+ "production_delivery": {
+  "definite_delivered_n": 585,
+  "definite_delivered_g": 11.8506,
+  "possible_delivered_n": 665,
+  "possible_delivered_g": 13.4712,
+  "exact_single_value_allowed": false,
+  "particle_mass_g": 0.02025738
+ },
+ "mass_g": {
+  "definite_g": 11.8506,
+  "possible_g": 13.4712,
+  "particle_mass_g": 0.020257382129428684
+ },
+ "items": [
+  {
+   "name": "settlement_window_recompute_matches_production",
+   "verdict": "PASS",
+   "measured": {
+    "n_differing_keys": 0,
+    "diff": {}
+   }
+  },
+  {
+   "name": "settlement_cadence_contract_min6frames_and_max_gap_0p05s",
+   "verdict": "FAIL",
+   "measured": {
+    "n_frames": 5,
+    "min_required": 6,
+    "max_frame_gap_s": 0.100025,
+    "max_allowed_s": 0.05,
+    "settlement_frame_dt_s_param": 0.05,
+    "particle_frame_dt_s_param": 0.1,
+    "production_cadence_ok": false
+   },
+   "note": "사후 완화 0. 저장 간격이 0.1 s 라 0.05 s 계약을 못 채운다는 사실을 그대로 적는다."
+  },
+  {
+   "name": "definite_delivered_recompute_equals_production",
+   "verdict": "PASS",
+   "measured": {
+    "recomputed": 585,
+    "production": 585
+   }
+  },
+  {
+   "name": "possible_delivered_recompute_equals_production",
+   "verdict": "PASS",
+   "measured": {
+    "recomputed": 665,
+    "production": 665,
+    "terms": {
+     "label_receiving_bin_n": 585,
+     "amb_or_flight_in_band_n": 80,
+     "amb_or_flight_at_or_above_rim_n": 0,
+     "bin_apothem_m": 0.03991435692954414,
+     "bin_floor_inner_z_m": 0.003,
+     "bin_rim_z_m": 0.07300000000000001,
+     "margin_m": 0.0025
+    }
+   }
+  },
+  {
+   "name": "exact_single_value_allowed_flag_matches_definite_equals_possible",
+   "verdict": "PASS",
+   "measured": {
+    "flag": false,
+    "definite": 585,
+    "possible": 665
+   }
+  },
+  {
+   "name": "settlement_under_rev34_recomputed_labels_equals_under_recorded_labels",
+   "verdict": "PASS",
+   "measured": {
+    "rev34": {
+     "n_stable_bin_all_frames": 585,
+     "n_settled": 585
+    },
+    "recorded": {
+     "n_stable_bin_all_frames": 585,
+     "n_settled": 585
+    }
+   }
+  }
+ ],
+ "n_fail": 1,
+ "n_items": 6,
+ "non_claims": [
+  "정착 창 결과는 기록 계약의 결과이며 물리적 rest 의 증명이 아니다.",
+  "cadence FAIL 을 사후 허용값으로 완화하지 않았다.",
+  "definite/possible 은 구간이다 — 단일값 인용 금지(exact_single_value_allowed=false)."
+ ],
+ "wall_s": 2.257
+}

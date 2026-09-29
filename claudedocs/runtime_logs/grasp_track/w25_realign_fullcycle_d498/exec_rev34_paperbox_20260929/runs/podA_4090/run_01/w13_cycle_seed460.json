@@ -1,0 +1,3639 @@
+{
+  "artifact": "DEME_W13_FULL_CYCLE_V2",
+  "tag": "seed460",
+  "seed": 460,
+  "smoke": false,
+  "inputs_sha256": {
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/pile_flat40_20260929/pile_lens6_a4p5_b3p8_c2p5_slab40_outer_310x220_n67737_rho0p503_seed460.npz": "31dd289731a144de30bbd3054ffd8c233d9897347f3cd4eab2e07f97032583c1",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_ALL.stl": "2fea1c37b63ff36e4647675198b9b04e2b55becae3d84edbc0f84aa928ef1741",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/door_ALL_jawframe.stl": "bf570fbf862f71a3c26dcd92211049662b56526e19785f2f3205506c8dd7d4cf",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/design.json": "76620eba052d3c2f06e4d7dff6f027b9f527cd6d48524938890a610a19bd6e06",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py": "2e40f7ed279dad42794d156c3e5e823d6ce0d8cb770ec9aad1b9280a33a7e933",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/roarm_kinematics.py": "af4cc2d3c124ba4a8a3a6899ab1c8d676e127199bcf687b8e31fee690a011a97",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/hw_s1_scoop_probe.py": "70096b2f2c6cbe7799f23e4507a4cfaadba9c389854ea156d79f67e8ebc877c4",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/rev34/src/sim_w13_full_cycle.py": "67eb0ca8e84112d235f00f6b00c689e9fe8060af80245fff5018026a2c022f89",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/rev34/src/w13_kinematics.py": "9c54d21f2b32b50a615cc3bff0235965c07201798f9710a818ad6d9e4ff4c685",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/rev34/src/w13_fk.py": "27b70bc0b8d7f55230c0489312395ed3072b1d9e77031cddeadf013e277f3bd1",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/runs/podA_4090/run_01/_obj/tray_seed460.obj": "dabd7c21aefa90c8340a8e1f0966694e10c50a0863fe8f844263aeffa961ffae",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/runs/podA_4090/run_01/_obj/bin_seed460.obj": "56b3e5b0f556c63dcc645deeddb5ae7433ad91175d62e00482c0183127275395",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/runs/podA_4090/run_01/_obj/fixed_seed460.obj": "f477a77d687bef1f2631d9d1dfb90da065fceac2af2e09043c50a97e2c11273f",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/runs/podA_4090/run_01/_obj/door_open27.5_seed460.obj": "68db266cd997c6ebae77c9781d9e5e9ad3f36ab5c6f43d87b4eb6829a1ed5eda",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/rev34/params_w25_paperbox.json": "6c174a895b5603349b70f4ea990577b21561a0ec793ed50a978af8c83094a5d5"
+  },
+  "params": {
+    "bowl_center_l5_mm": [
+      8.1,
+      0.0,
+      145.0
+    ],
+    "lip_l5_mm": [
+      8.1,
+      0.0,
+      169.6
+    ],
+    "hinge_l5_mm": [
+      0.0,
+      18.821,
+      52.035
+    ],
+    "bowl_r_in_mm": 20.0,
+    "cheek_half_y_mm": 18.2,
+    "servo_zero_offset_deg": 2.5,
+    "door_open_servo_deg": 30.0,
+    "close_end_joint_deg": 0.0,
+    "servo_torque_Nm": 1.96,
+    "servo_torque_fraction": 0.9,
+    "servo_stall_model": true,
+    "door_mass_kg": 0.02416,
+    "fixed_mass_kg": 0.01827,
+    "approach_gap_mm": 10.0,
+    "plunge_mm": 25.0,
+    "lift_mm": 80.0,
+    "descend_mm_s": 25.0,
+    "close_deg_s": 22.5,
+    "lift_mm_s": 150.0,
+    "reclose_max_steps": 30,
+    "settle_steps": 25,
+    "dt_sync_s": 0.004,
+    "arm_force_max_N": 6.0,
+    "descend_max_steps_factor": 3.0,
+    "pop_speed_m_s": 5.0,
+    "dt_sync_descend_s": 0.004,
+    "footprint_r_mm": 22.0,
+    "collision_wall_extra_mm": 3.0,
+    "wall_t_mm": 1.6,
+    "cap_t_mm": 2.0,
+    "E_mesh_pa": 3000000000.0,
+    "scoop_x_mm": 0.0,
+    "scoop_y_range_mm": [
+      0.0,
+      0.0
+    ],
+    "particle_shape": "npz_template",
+    "timestep_s": 1e-06,
+    "E_pa": 5000000.0,
+    "nu": 0.3,
+    "CoR": 0.3,
+    "mu": 0.45,
+    "Crr": 0.06,
+    "particle_density_kg_m3": 905.0,
+    "pellet_dia_mm": 4.16,
+    "pellet_len_mm": 4.16,
+    "clump_aspect": null,
+    "error_out_vel": 10000.0,
+    "cd_update_freq": 20,
+    "domain_top_m": 0.5,
+    "domain_bc": "all",
+    "bulk_density_g_cm3": 0.55,
+    "crater_r_max_mm": 80.0,
+    "crater_wedge_half_deg": 22.5,
+    "crater_min_depth_mm": 2.0,
+    "crater_fit_band": [
+      0.2,
+      0.8
+    ],
+    "render_timeline_dt_s": null,
+    "render_timeline_path": null,
+    "dt_sync_close_s": 0.001,
+    "door_pinch_guard_N": 3.0,
+    "door_min_q_deg": null,
+    "diag_flush_below_q_deg": 6.0,
+    "diag_fine_sync_s": 0.0001,
+    "diag_event_v_m_s": 2.0,
+    "diag_event_force_N": 2.0,
+    "diag_stop_v_m_s": 20.0,
+    "diag_ring_syncs": 12,
+    "diag_near_lip_mm": 15.0,
+    "max_velocity_m_s": 5.0,
+    "arm_radius_m": 0.25,
+    "place_base_deg": 90.0,
+    "travel_cm": 45.0,
+    "declared_base_cm": 33.2,
+    "declared_pellet_cm": 23.9,
+    "declared_placement_provenance": "base 33.2 cm = 사용자 실측(START_HERE.md:16) · pellet 23.9 cm = 받침 19.7(선언) + 상자 바닥 0.2(선언) + 층 4.0(사용자 '약 4 cm') · 상자 중심 로봇 x 0.25 m(사용자 결정 START_HERE.md:27) — 전부 미실측 선언 혼합",
+    "tray_wall_t_mm": 2.0,
+    "bin_inner_r_mm": 40.0,
+    "bin_inner_h_mm": 70.0,
+    "bin_wall_t_mm": 3.0,
+    "bin_floor_z_m": 0.0,
+    "bin_n_theta": 48,
+    "transport_speed_mm_s": 150.0,
+    "release_clearance_mm": 20.0,
+    "discharge_open_servo_deg": 30.0,
+    "discharge_hold_s": 1.5,
+    "home_hold_s": 0.004,
+    "final_home_hold_s": 0.1,
+    "particle_frame_dt_s": 0.1,
+    "domain_pad_m": 0.06,
+    "classify_margin_mm": 2.5,
+    "spill_rest_z_m": 0.02,
+    "wall_near_tol_mm": 1.0,
+    "settlement_window_s": 0.25,
+    "settlement_frame_dt_s": 0.05,
+    "settle_speed_max_m_s": 0.005,
+    "settle_move_max_m": 0.001,
+    "definite_geom_eps_mm": 0.2,
+    "_note": "[W13 full cycle rev5] W11 dt1e-6 셀의 물성·서보·경로·보호선 변경 0. 전체 사이클 통합에 필요한 항목만 추가. initial_home 은 dts=0 기록행이라 settle 25 sync 뒤 t=0.100025 s 로 W11 과 같은 격자. 배치값 base/pellet cm 는 CLI 사용 예시에서 채택한 declared_not_measured 픽스처다.",
+    "_note_w25": "[W25-A rev34] rev32 params_w13.json 바이트 사본 + 아래 키. 물성·dt·sync·서보 정지 모델·보호선·저장 프레임(particle_frame_dt_s 0.1 / settlement_frame_dt_s 0.05) 변경 0. 기본값 = 실물 정렬. 각 항목은 params_w25_OFF_rev32equiv.json 의 값으로 되돌리면 rev32 동작.",
+    "box_frame_convention": "A",
+    "w25_box_anchor": "declared_box_center",
+    "w25_box_center_robot_xy_m": [
+      0.25,
+      0.0
+    ],
+    "tray_inner_source": "declared_from_npz_convention (user outer 31x22, wall 0.2)",
+    "tray_inner_mm": [
+      310.0,
+      220.0
+    ],
+    "tray_inner_height_mm": 230.0,
+    "tray_wall_t_provenance": "선언 2 mm(사용자 벽 0.2 cm, 미실측 정밀값)",
+    "tray_match_tol_mm": 0.5,
+    "w25_proc_open_at_surface": true,
+    "w25_door_open_gap_mm": 0.0,
+    "w25_proc_chatter": true,
+    "w25_chatter_threshold_servo_deg": 3.6,
+    "w25_chatter_open_servo_deg": 8.0,
+    "w25_chatter_max_retries": 3,
+    "w25_proc_lift_to_surface_mm": 80.0,
+    "w25_proc_always_reclose": true,
+    "w25_procedure_provenance": "hw_s1_manual.py:157-169 scoop(): 5cm_above→surface→door(30)→plunge 2.5cm→door(0,900)→val>3.6 이면 door(8)·door(0) 최대 3회→pellet+8cm→door(0)→travel",
+    "_note_w25_paperbox": "[W25-A 후속 09-28 밤] params_w25.json 사본 + 트레이·펠릿면 키만 변경. 현재 실물 = 임시 A4 종이 상자(윗단 바깥 31×22 cm·벽 0.2 cm·높이 23 cm), 펠릿이 벽까지 꽉 찬 평평한 층 바닥→윗면 약 4 cm (사용자 입력, HARD RULE #18). NTC106 은 구매 전 후보.",
+    "tray_inner_provenance": "안쪽 310×220 = 기존 더미 NPZ box_bounds_m(±0.155/±0.11) 규약. 사용자 바깥 31×22 − 벽 2×0.2 = 306×216 과 4 mm 차 → params_w25_paperbox_inner306.json 으로 따로 사전검토",
+    "declared_pellet_layer_mm": 40.0
+  },
+  "particle": {
+    "shape": "npz_template:lens",
+    "n_spheres": 7,
+    "sphere_radii_m": [
+      0.0012501954642423342,
+      0.0011563843121550487,
+      0.0011563843121550487,
+      0.0011563843121550487,
+      0.0011563843121550487,
+      0.0011563843121550487,
+      0.0011563843121550487
+    ],
+    "offsets_m": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0010939675234811531,
+        0.0,
+        0.0
+      ],
+      [
+        0.0005469837617405767,
+        0.0006442473773654442,
+        0.0
+      ],
+      [
+        -0.0005469837617405763,
+        0.0006442473773654443,
+        0.0
+      ],
+      [
+        -0.0010939675234811531,
+        0.0,
+        0.0
+      ],
+      [
+        -0.000546983761740577,
+        -0.000644247377365444,
+        0.0
+      ],
+      [
+        0.0005469837617405767,
+        -0.0006442473773654442,
+        0.0
+      ]
+    ],
+    "mass_kg": 2.0257382129428685e-05,
+    "moi_kg_m2": [
+      2.0627685172852296e-11,
+      2.7570222453344584e-11,
+      3.484048836004631e-11
+    ],
+    "union_volume_m3": 2.2383847656827283e-08,
+    "bounding_diameter_m": 0.004500703671272403,
+    "lens_axes_mm": [
+      4.5,
+      3.8,
+      2.5
+    ],
+    "expand_vs_npz_max_err_m": 2.7755575615628914e-17,
+    "clump_ids_clump_major": true,
+    "n": 67737
+  },
+  "mesh_check": {
+    "stl_bowl_vertices": 210,
+    "r_min_mm": 20.0,
+    "r_max_mm": 24.16,
+    "abs_y_max_mm": 20.3,
+    "r_in_ok": true,
+    "r_out_design_mm": 21.6,
+    "note_r_max": "STL 보울 구간에는 스파인·뺨도 포함되어 r_max 가 벽 바깥값보다 크다",
+    "shell_watertight": false,
+    "shell_tri": [
+      204,
+      204
+    ]
+  },
+  "engine": {
+    "DEME": "2.4.0",
+    "force_model": "UseFrictionalHertzianModel",
+    "owner_ids": {
+      "fixed": 67738,
+      "door": 67739,
+      "tray": 67740,
+      "bin": 67741
+    },
+    "domain_x_m": [
+      -0.35313288494174616,
+      0.217
+    ],
+    "domain_y_m": [
+      -0.3449,
+      0.207841
+    ],
+    "domain_z_m": [
+      0.0,
+      0.5626181314177867
+    ],
+    "prescription": "family 9 keep-as-is LinVel/AngVel + per-sync tracker velocity servo (no SetPos/SetOriQ teleport)"
+  },
+  "frames": {
+    "R_W_frozen_columns_are_link5_axes": [
+      [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      [
+        -1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        -1.0
+      ]
+    ],
+    "fk_confirms_world_axes_parallel_to_robot": true,
+    "lip_physical_l5_mm": [
+      8.1,
+      0.0,
+      166.6
+    ],
+    "lip_collision_owner_l5_mm": [
+      8.1,
+      0.0,
+      169.6
+    ],
+    "lip_adapter_mm": 3.0,
+    "cavity_center_owner_m": [
+      0.0,
+      0.0,
+      0.024599999999999993
+    ],
+    "door_hinge_offset_tool_owner_m": [
+      -0.018821,
+      0.0081,
+      0.117565
+    ],
+    "door_axis_tool_owner": [
+      -1.0,
+      0.0,
+      0.0
+    ],
+    "adapter": {
+      "reference_pose_q5": [
+        0.0,
+        48.209999999999994,
+        103.44000000000005,
+        28.369999999999948,
+        0.0
+      ],
+      "reference_err_m": 1.3892114123096392e-05,
+      "floor_robot_z_m": -0.45406,
+      "pellet_robot_z_m": -0.21506000000000003,
+      "declared_base_cm": 33.2,
+      "declared_pellet_cm": 23.9,
+      "declared_not_measured": true,
+      "provenance": "base 33.2 cm = 사용자 실측(START_HERE.md:16) · pellet 23.9 cm = 받침 19.7(선언) + 상자 바닥 0.2(선언) + 층 4.0(사용자 '약 4 cm') · 상자 중심 로봇 x 0.25 m(사용자 결정 START_HERE.md:27) — 전부 미실측 선언 혼합",
+      "t_robot_m": [
+        0.25,
+        0.0,
+        -0.2577501314177868
+      ],
+      "note": "DEME 원점(상자 안쪽 바닥 중심)의 로봇 좌표. p_robot = R_robot_box·p_box + t_robot."
+    },
+    "r0_robot_m": 0.2501246945090235,
+    "waypoints": [
+      {
+        "name": "initial_home",
+        "kind": "joint",
+        "q5": [
+          0.0,
+          0.0,
+          90.0,
+          0.0,
+          0.0
+        ],
+        "lip_world_mm": [
+          8.1,
+          147.841,
+          479.418
+        ],
+        "ik_err_mm": 0.0,
+        "verticality": null,
+        "branch": "stored_joint_pose",
+        "tilt_deg": null,
+        "limit_violations": []
+      },
+      {
+        "name": "p1_tool_vertical",
+        "kind": "joint",
+        "q5": [
+          0.0,
+          0.7,
+          91.3,
+          88.0,
+          0.0
+        ],
+        "lip_world_mm": [
+          8.1,
+          -87.756,
+          265.882
+        ],
+        "ik_err_mm": 0.0,
+        "verticality": null,
+        "branch": "stored_joint_pose",
+        "tilt_deg": null,
+        "limit_violations": []
+      },
+      {
+        "name": "above_pile_travel",
+        "kind": "ik",
+        "q5": [
+          0.0,
+          20.050000000000015,
+          66.99999999999994,
+          90.0,
+          0.0
+        ],
+        "lip_world_mm": [
+          8.1,
+          0.13,
+          253.631
+        ],
+        "ik_err_mm": 0.0593,
+        "verticality": 0.9986748262365419,
+        "branch": "wrist90_tilt",
+        "tilt_deg": 2.95,
+        "limit_violations": []
+      },
+      {
+        "name": "surface_plus_50mm",
+        "kind": "ik",
+        "q5": [
+          0.0,
+          38.32000000000005,
+          100.61999999999998,
+          41.07999999999997,
+          0.0
+        ],
+        "lip_world_mm": [
+          8.1,
+          0.122,
+          92.674
+        ],
+        "ik_err_mm": 0.0162,
+        "verticality": 0.9999999390765166,
+        "branch": "vertical",
+        "tilt_deg": 0.02,
+        "limit_violations": []
+      },
+      {
+        "name": "approach_gap",
+        "kind": "ik",
+        "q5": [
+          0.0,
+          48.220000000000034,
+          103.37999999999992,
+          28.420000000000037,
+          0.0
+        ],
+        "lip_world_mm": [
+          8.1,
+          0.128,
+          42.728
+        ],
+        "ik_err_mm": 0.0381,
+        "verticality": 0.9999999390765166,
+        "branch": "vertical",
+        "tilt_deg": 0.02,
+        "limit_violations": []
+      },
+      {
+        "name": "post_lift_travel",
+        "kind": "ik",
+        "q5": [
+          0.0,
+          20.050000000000015,
+          66.99999999999994,
+          90.0,
+          0.0
+        ],
+        "lip_world_mm": [
+          8.1,
+          0.13,
+          253.631
+        ],
+        "ik_err_mm": 0.0593,
+        "verticality": 0.9986748262365419,
+        "branch": "wrist90_tilt",
+        "tilt_deg": 2.95,
+        "limit_violations": []
+      },
+      {
+        "name": "place_retract_base0",
+        "kind": "joint",
+        "q5": [
+          0.0,
+          0.7,
+          91.3,
+          88.0,
+          0.0
+        ],
+        "lip_world_mm": [
+          8.1,
+          -87.756,
+          265.882
+        ],
+        "ik_err_mm": 0.0,
+        "verticality": null,
+        "branch": "stored_joint_pose",
+        "tilt_deg": null,
+        "limit_violations": []
+      },
+      {
+        "name": "place_retract_base90",
+        "kind": "joint",
+        "q5": [
+          90.0,
+          0.7,
+          91.3,
+          88.0,
+          0.0
+        ],
+        "lip_world_mm": [
+          -162.244,
+          -241.9,
+          265.882
+        ],
+        "ik_err_mm": 0.0,
+        "verticality": null,
+        "branch": "stored_joint_pose",
+        "tilt_deg": null,
+        "limit_violations": []
+      },
+      {
+        "name": "place_extend_travel",
+        "kind": "ik",
+        "q5": [
+          90.0,
+          20.050000000000015,
+          66.99999999999994,
+          90.0,
+          0.0
+        ],
+        "lip_world_mm": [
+          -250.13,
+          -241.9,
+          253.631
+        ],
+        "ik_err_mm": 0.0593,
+        "verticality": 0.9986748262365419,
+        "branch": "wrist90_tilt",
+        "tilt_deg": 2.95,
+        "limit_violations": []
+      },
+      {
+        "name": "place_target",
+        "kind": "ik",
+        "q5": [
+          90.0,
+          38.26000000000004,
+          100.58999999999993,
+          41.17000000000002,
+          0.0
+        ],
+        "lip_world_mm": [
+          -250.118,
+          -241.9,
+          93.002
+        ],
+        "ik_err_mm": 0.0065,
+        "verticality": 0.9999999390765169,
+        "branch": "vertical",
+        "tilt_deg": 0.02,
+        "limit_violations": []
+      },
+      {
+        "name": "place_up_travel",
+        "kind": "ik",
+        "q5": [
+          90.0,
+          20.050000000000015,
+          66.99999999999994,
+          90.0,
+          0.0
+        ],
+        "lip_world_mm": [
+          -250.13,
+          -241.9,
+          253.631
+        ],
+        "ik_err_mm": 0.0593,
+        "verticality": 0.9986748262365419,
+        "branch": "wrist90_tilt",
+        "tilt_deg": 2.95,
+        "limit_violations": []
+      },
+      {
+        "name": "return_retract_base90",
+        "kind": "joint",
+        "q5": [
+          90.0,
+          0.7,
+          91.3,
+          88.0,
+          0.0
+        ],
+        "lip_world_mm": [
+          -162.244,
+          -241.9,
+          265.882
+        ],
+        "ik_err_mm": 0.0,
+        "verticality": null,
+        "branch": "stored_joint_pose",
+        "tilt_deg": null,
+        "limit_violations": []
+      },
+      {
+        "name": "return_retract_base0",
+        "kind": "joint",
+        "q5": [
+          0.0,
+          0.7,
+          91.3,
+          88.0,
+          0.0
+        ],
+        "lip_world_mm": [
+          8.1,
+          -87.756,
+          265.882
+        ],
+        "ik_err_mm": 0.0,
+        "verticality": null,
+        "branch": "stored_joint_pose",
+        "tilt_deg": null,
+        "limit_violations": []
+      },
+      {
+        "name": "return_home",
+        "kind": "joint",
+        "q5": [
+          0.0,
+          0.0,
+          90.0,
+          0.0,
+          0.0
+        ],
+        "lip_world_mm": [
+          8.1,
+          147.841,
+          479.418
+        ],
+        "ik_err_mm": 0.0,
+        "verticality": null,
+        "branch": "stored_joint_pose",
+        "tilt_deg": null,
+        "limit_violations": []
+      }
+    ],
+    "waypoint_extra": {
+      "home_lip_world_m": [
+        0.008099999999999975,
+        0.147841,
+        0.4794181314177868
+      ],
+      "base_axis_world_xy_m": [
+        0.0,
+        -0.25
+      ],
+      "place_lip_world_m": [
+        -0.2501183994586977,
+        -0.2419,
+        0.09300177072138258
+      ],
+      "r0_robot_m": 0.2501246945090235
+    },
+    "source_constants_check": {
+      "sources": {
+        "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/roarm_kinematics.py": true,
+        "/home/cgxr/Documents/Robotics/RoArm_Project/hw_s1_scoop_probe.py": true
+      },
+      "chain_numeric_subset_present": true,
+      "joint_limits_match": true,
+      "limit_base": true,
+      "limit_shoulder": true,
+      "limit_elbow": true,
+      "limit_wrist_p": true,
+      "limit_wrist_r": true,
+      "limit_gripper": true,
+      "lip_l5_match": true,
+      "home_match": true,
+      "p1_match": true,
+      "shoulder_above_plate_match": true,
+      "pass": true
+    },
+    "ik_warning_waypoints": []
+  },
+  "fixtures": {
+    "tray": {
+      "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/runs/podA_4090/run_01/_obj/tray_seed460.obj",
+      "n_tri": 48,
+      "top_z_m": 0.23,
+      "wall_t_m": 0.002,
+      "watertight": true
+    },
+    "bin": {
+      "inner_r_m": 0.04,
+      "outer_r_m": 0.043000000000000003,
+      "floor_inner_z_m": 0.003,
+      "rim_z_m": 0.07300000000000001,
+      "center_xy_m": [
+        -0.2501328849417462,
+        -0.2419
+      ],
+      "wall_t_m": 0.003,
+      "n_theta": 48,
+      "inner_volume_cm3": 351.858,
+      "watertight": true,
+      "n_tri": 576,
+      "components": [
+        {
+          "name": "floor_disc",
+          "watertight": true
+        },
+        {
+          "name": "wall_ring",
+          "watertight": true
+        }
+      ],
+      "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/runs/podA_4090/run_01/_obj/bin_seed460.obj",
+      "apothem_m": 0.03991435692954414,
+      "circumradius_m": 0.04,
+      "radius_semantics": "circumradius",
+      "radius_semantics_note": "inner_r_m/outer_r_m 은 외접 반경이다. apothem_m = circumradius_m * cos(pi/n_theta).",
+      "pos_m": [
+        -0.2501328849417462,
+        -0.2419,
+        0.0
+      ],
+      "quat_xyzw": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    },
+    "declared_not_measured": true
+  },
+  "scoop_site": {
+    "x_mm": 8.099999999999984,
+    "y_mm": -0.01,
+    "surface_z_pre_settle_mm": 42.69,
+    "lip_z_start_mm": 42.69
+  },
+  "trajectory": {
+    "q_open_joint_deg": 27.5,
+    "q_close_end_deg": 0.0,
+    "z_travel_m": 0.2536901314177868,
+    "z_release_m": 0.09300000000000001,
+    "z_lip0_m": 0.04269013141778675,
+    "place_base_deg": 90.0,
+    "transport_speed_m_s": 0.15,
+    "sim_time_s": 22.824602942,
+    "n_sync": 22204,
+    "n_particle_frames": 274,
+    "n_transitions": 11,
+    "syncs_per_phase": {
+      "initial_home": 1,
+      "settle": 25,
+      "approach": 4655,
+      "descend": 267,
+      "close": 8170,
+      "lift": 175,
+      "reclose": 121,
+      "transport": 1167,
+      "discharge": 2275,
+      "discharge_wait": 375,
+      "close_after_discharge": 3619,
+      "return_home": 1354
+    },
+    "descend_hold_steps": 16,
+    "descend_reached_lip_z_mm": 17.631,
+    "descend_target_lip_z_mm": 17.631,
+    "max_lip_track_err_mm": 0.0004916,
+    "max_hinge_track_err_mm": 0.53152206,
+    "max_door_rigid_vel_resid_mm_s": 132.87841303,
+    "home_start_lip_mm": [
+      8.1,
+      147.841,
+      479.4181
+    ],
+    "home_end_lip_mm": [
+      8.1,
+      147.841,
+      479.4181
+    ],
+    "align_moves": [
+      {
+        "subphase": "align_to_w11_scoop_pose",
+        "distance_mm": 0.139894,
+        "rotation_deg": 0.02,
+        "syncs": 1,
+        "from_mm": [
+          8.1,
+          0.1282,
+          42.7281
+        ],
+        "to_mm": [
+          8.1,
+          -0.0065,
+          42.6901
+        ]
+      },
+      {
+        "subphase": "align_from_w11_scoop_pose",
+        "distance_mm": 0.10216,
+        "rotation_deg": 0.02,
+        "syncs": 1,
+        "from_mm": [
+          8.1,
+          -0.0065,
+          122.6307
+        ],
+        "to_mm": [
+          8.1,
+          0.0938,
+          122.6501
+        ]
+      }
+    ],
+    "fk_resume_ik": [
+      {
+        "z_world_mm": 122.631,
+        "solved": true,
+        "branch": "vertical",
+        "err_mm": 0.0365,
+        "tilt_deg": 0.02,
+        "limits": []
+      }
+    ],
+    "home_pose_return_err_mm": 1.6e-05
+  },
+  "pops": {
+    "v_particle_max_m_s": 2.3335,
+    "syncs_over_pop_speed": 0,
+    "pop_speed_m_s": 5.0
+  },
+  "servo": {
+    "M_stall_Nm": 1.764,
+    "lip_radius_m": 0.11485,
+    "pinch_guard_N": 3.0,
+    "torque_note": "문 저항 모멘트는 접촉력만으로 계산한 상대 힌지 저항이다. 베이스 회전의 강체 운동은 포함하지 않는다."
+  },
+  "diverged": false,
+  "fail_reason": null,
+  "stopped_early_after_phase": null,
+  "abort_class": null,
+  "abort_class_semantics": {
+    "None": "계획된 전 사이클을 끝까지 돌았다(과학 판정은 별도).",
+    "CLEARANCE_UNCERTIFIED": "bridge 사전 인증 실패로 bridge 첫 물리 step 전에 멈췄다. 발산 아님.",
+    "SIGNAL_STOP": "외부 신호를 step 경계에서 받아 멈췄다. 부분 원시.",
+    "WALL_CAP_STOP": "--max-wall-s 소프트 상한에서 멈췄다. 부분 원시. 연장·재시도 없음."
+  },
+  "max_wall_s": 114000.0,
+  "signal_received": null,
+  "signal_count": 0,
+  "bridge_clearance": [
+    {
+      "artifact": "W13R_BRIDGE_CLEARANCE_DECISION_V4",
+      "decision_point": "resume_fk_here() 직후 · align_move('transport', ...) 이전 · bridge 첫 DoDynamicsThenSync 이전",
+      "sim_t_s": 8.921612977475093,
+      "sync_index": 13413,
+      "wall_s": 21560.455,
+      "z_reached_m": 0.017630716785788536,
+      "ik_resume": {
+        "z_world_mm": 122.631,
+        "solved": true,
+        "branch": "vertical",
+        "err_mm": 0.0365,
+        "tilt_deg": 0.02,
+        "limits": []
+      },
+      "q_res_deg": [
+        0.0,
+        33.26000000000004,
+        96.98999999999995,
+        49.77,
+        0.0
+      ],
+      "q_post_lift_deg": [
+        0.0,
+        20.050000000000015,
+        66.99999999999994,
+        90.0,
+        0.0
+      ],
+      "door_q_deg_actual": 3.0340774514687077,
+      "door_q_deg_commanded": 3.0339999999999065,
+      "door_vs_fixed_residual_at_decision": {
+        "pos_m": 1.4930137398753595e-09,
+        "note": "보고용 관측. 실행 운동 상한은 두 몸체를 독립으로 보므로 이 값에 의존하지 않는다."
+      },
+      "n_align_sync_targets": 1,
+      "n_joint_sync_targets": 219,
+      "planned_certificate": {
+        "artifact": "W13R_RUNTIME_BRIDGE_CLEARANCE_CERTIFICATE_V4",
+        "verdict": "CLEARANCE_CERTIFIED",
+        "pass": true,
+        "rule": "PASS only if, for EACH tracked body independently (fixed and door, no rigid-hinge derivation), every convex-cell AABB has a world-axis separating gap strictly greater than start_ball + ideal_motion + position_lattice + tracker_read + quaternion_rotation + epsilon, at every exact per-sync command target, with all planned joint samples inside applicable limits and bootstrap validation passed.",
+        "bodies": {
+          "fixed": {
+            "n_local_vertices": 108,
+            "r_max_local_m": 0.05439558805638559
+          },
+          "door": {
+            "n_local_vertices": 108,
+            "r_max_local_m": 0.1251630568649322
+          }
+        },
+        "bootstrap": {
+          "fixed": {
+            "qmin": 0.5,
+            "unit_norm_tol": 1e-06,
+            "quat_finite_shape_ok": true,
+            "quat_norm": 1.0,
+            "quat_norm_ge_qmin": true,
+            "quat_within_unit_tolerance": true,
+            "omega_finite_shape_ok": true,
+            "omega_norm_rad_s": 0.08726646259972869,
+            "omega_bound_rad_s": 785.3981633974482,
+            "omega_within_principal_bound": true,
+            "pass": true
+          },
+          "door": {
+            "qmin": 0.5,
+            "unit_norm_tol": 1e-06,
+            "quat_finite_shape_ok": true,
+            "quat_norm": 1.0,
+            "quat_norm_ge_qmin": true,
+            "quat_within_unit_tolerance": true,
+            "omega_finite_shape_ok": true,
+            "omega_norm_rad_s": 0.08745329325926579,
+            "omega_bound_rad_s": 785.3981633974482,
+            "omega_within_principal_bound": true,
+            "pass": true
+          }
+        },
+        "numeric_inputs": {
+          "D_s": 0.004,
+          "h_s": 1e-06,
+          "N": 4001,
+          "accumulator_at_stop_s": 0.004000999989898446,
+          "l_m": 4.9123032030973235e-12,
+          "voxel_size_m": 3.219327027181862e-07,
+          "domain_max_coord_m": 0.9401374757289886,
+          "qmin": 0.5,
+          "half_ulp": false,
+          "position_mode": "voxel_fallback",
+          "call_elapsed_upper_bound_s": 0.004000999999997476,
+          "position_lattice_constituents": {
+            "n_steps": 4001,
+            "l_m": 4.9123032030973235e-12,
+            "voxel_size_m": 3.219327027181862e-07,
+            "coord_bound_B_m": 0.9401374757289886,
+            "u64": 1.1102230246251565e-16,
+            "term_voxel_m": 0.0022309727947011884,
+            "term_l_m": 3.404194327852155e-08,
+            "term_binary64_m": 5.786563994301289e-12,
+            "superseded_sqrt3_N_l_only_m": 3.404194327852155e-08,
+            "rationale": "ERRATUM_04 E9: quotient-boundary 안정성 미증명 → 축당 voxel 1 + sub-voxel 1 fallback. 관측 여유로 모드를 고르지 않는다."
+          }
+        },
+        "numeric_evidence": {
+          "documents": [
+            "audit/SOURCE_EVIDENCE.md",
+            "audit/SOURCE_EVIDENCE_ERRATUM_01.md",
+            "audit/SOURCE_EVIDENCE_ERRATUM_02.md  (LATEST WINS for the rotation factor)",
+            "audit/SOURCE_EVIDENCE_ERRATUM_03.md",
+            "audit/SOURCE_EVIDENCE_ERRATUM_04.md  (LATEST WINS for the position lattice term)"
+          ],
+          "audit_root": "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit",
+          "static_archive": "/home/cgxr/miniconda3/envs/roarm/lib/python3.11/site-packages/lib64/libsimulator_multi_gpu.a",
+          "static_archive_sha256": "c47ea1c4f0744a50602a139acb22e3db53df3363e6db23a260d050a1ca620529",
+          "members_sha256": {
+            "APIPublic.cpp.o": "0082da45ef6fe02805b39588cc93d51f8f3b9cc21543e00d339484378fedcd27",
+            "dT.cpp.o": "32771933179c631d64fecbc5ea8dbdfecfa173456ff2c17132257ee69813a55c",
+            "APIPrivate.cpp.o": "8b2f5f75dfc3761c93e2ec6edb3cff71f5ae23b5e218255c577b6b92453683ef",
+            "AuxClasses.cpp.o": "5a5954df1e7cc5f270cbad3673062806a62c74ccfb08ca8850b82e9ce6786dec",
+            "JitKernel_cuda.cpp.o": "6271c1992c3f4f30f86f95964e7f92d8c21ea7de7b6162930caf45b50a0814bc"
+          },
+          "kernel_sha256": {
+            "DEMIntegrationKernels.cu": "4210e442a528cf70ce8087019049e01acf59cfacd272147146ddd3ad9ab18a90"
+          },
+          "header_sha256": {
+            "AuxClasses.h": "45f766996fa20a19d8ac7f0de1a81a974f07f80852fc2142f01003e8c3375bf8",
+            "API.h": "67be492d974a5adad577e53f078c426b79981abe50c1525cb6dce632b1e10ef0"
+          },
+          "cuda": {
+            "nvcc": "12.8, build 12.8.93",
+            "libnvrtc.so.12_sha256": "2bb82d1a34b9fefa46aca357299aed66763d4d6613d015d5a591224c00fa7e5a",
+            "precision_flags_found_in_objects": "none (no --use_fast_math/--ftz/--prec-div/--prec-sqrt/--fmad)",
+            "bound_covers": "both FMA and non-FMA, both default precision and use_fast_math"
+          },
+          "lattice_rule": "DEMHelperKernels.cuh:116-159  pos = voxel*voxelSize + subVoxel*l, truncating cast to uint16",
+          "tracker_rule": "DEMDynamicThread::getOwnerPos reconstructs binary64 then cvtsd2ss to binary32",
+          "duration_rule": "A_final <= nextafter(D + float64(float32(h)), +inf)",
+          "motion_rule": "(|v| + r*|omega|) * A_final   [DEMIntegrationKernels.cu:197-233]",
+          "rotation_rule": "delta_q = 64u + 64eta/qmin ; theta_num = 4*asin(min(1, delta_q/2)) ; rmax*N*theta_num"
+        },
+        "inputs": {
+          "q_res_deg": [
+            0.0,
+            33.26000000000004,
+            96.98999999999995,
+            49.77,
+            0.0
+          ],
+          "n_sync_targets": 220,
+          "n_cells": 6,
+          "numeric_epsilon_m": 1e-06,
+          "orthonormal_tol": 1e-09,
+          "unit_norm_tol": 1e-06,
+          "max_align_rotation_deg": 170.0,
+          "align_rotation_total_deg": 2.9500000000000455,
+          "joint_point_radius_bounds_m": [
+            0.9052976075267096,
+            0.8533376075267096,
+            0.6146297018574587,
+            0.47004370185745875,
+            0.4142935806199224
+          ],
+          "joint_limits_deg": [
+            [
+              -90.0,
+              90.0
+            ],
+            [
+              -30.0,
+              75.0
+            ],
+            [
+              5.0,
+              135.0
+            ],
+            [
+              -30.0,
+              90.0
+            ],
+            [
+              -90.0,
+              90.0
+            ]
+          ],
+          "voxel_size_m": 3.219327027181862e-07,
+          "length_unit_l_m": 4.9123032030973235e-12,
+          "domain_max_coord_m": 0.9401374757289886,
+          "qmin": 0.5,
+          "tracker_ulp_mode": "full_ulp"
+        },
+        "n_intervals": 220,
+        "global_worst": {
+          "cell": "tray_wall_plus_y",
+          "axis": "y",
+          "gap_m": 0.0762081235557148,
+          "motion_bound_m": 0.013374688341349562,
+          "start_ball_m": 0.006687142341846608,
+          "part_radius_m": 0.1251630568649322,
+          "numeric_epsilon_m": 1e-06,
+          "slack_m": 0.06283243521436524,
+          "chord_m": 0.0006060232087403649,
+          "theta_rad": 0.00023669533691417292,
+          "segment": "joint_sync_targets",
+          "index": 114,
+          "part": "door"
+        },
+        "joint_radius_cross_check": {
+          "n": 219,
+          "violations": [],
+          "role": "cross-check only, not in the PASS/FAIL inequality"
+        },
+        "limit_failures": [],
+        "separation_failures": [],
+        "n_separation_failures_total": 0,
+        "separation_failures_truncated": false,
+        "failure_class": null,
+        "n_intervals_recorded": 220
+      },
+      "static_inputs": {
+        "obstacle_cells": [
+          {
+            "name": "tray_wall_minus_x",
+            "min_m": [
+              -0.157,
+              -0.112,
+              0.0
+            ],
+            "max_m": [
+              -0.155,
+              0.112,
+              0.23
+            ],
+            "exact_aabb": true
+          },
+          {
+            "name": "tray_wall_plus_x",
+            "min_m": [
+              0.155,
+              -0.112,
+              0.0
+            ],
+            "max_m": [
+              0.157,
+              0.112,
+              0.23
+            ],
+            "exact_aabb": true
+          },
+          {
+            "name": "tray_wall_minus_y",
+            "min_m": [
+              -0.155,
+              -0.112,
+              0.0
+            ],
+            "max_m": [
+              0.155,
+              -0.11,
+              0.23
+            ],
+            "exact_aabb": true
+          },
+          {
+            "name": "tray_wall_plus_y",
+            "min_m": [
+              -0.155,
+              0.11,
+              0.0
+            ],
+            "max_m": [
+              0.155,
+              0.112,
+              0.23
+            ],
+            "exact_aabb": true
+          },
+          {
+            "name": "bin_floor_disc",
+            "min_m": [
+              -0.29313288494174616,
+              -0.2849,
+              0.0
+            ],
+            "max_m": [
+              -0.2071328849417462,
+              -0.19890000000000002,
+              0.003
+            ],
+            "exact_aabb": false
+          },
+          {
+            "name": "bin_wall_ring",
+            "min_m": [
+              -0.29313288494174616,
+              -0.2849,
+              0.003
+            ],
+            "max_m": [
+              -0.2071328849417462,
+              -0.19890000000000002,
+              0.07300000000000001
+            ],
+            "exact_aabb": false
+          }
+        ],
+        "joint_limits_deg": [
+          [
+            -90.0,
+            90.0
+          ],
+          [
+            -30.0,
+            75.0
+          ],
+          [
+            5.0,
+            135.0
+          ],
+          [
+            -30.0,
+            90.0
+          ],
+          [
+            -90.0,
+            90.0
+          ]
+        ],
+        "joint_point_radius_bounds_m": [
+          0.9052976075267096,
+          0.8533376075267096,
+          0.6146297018574587,
+          0.47004370185745875,
+          0.4142935806199224
+        ],
+        "door_q_open_deg": 27.5,
+        "timestep_s": 1e-06,
+        "dts_s": 0.004,
+        "internal_steps_N": 4001,
+        "call_elapsed_upper_bound_s": 0.004000999999997476,
+        "length_unit_l_m": 4.9123032030973235e-12,
+        "voxel_size_m": 3.219327027181862e-07,
+        "domain_max_coord_m": 0.9401374757289886,
+        "qmin": 0.5,
+        "half_ulp": false,
+        "unit_norm_tol": 1e-06,
+        "numeric_epsilon_m": 1e-06,
+        "orthonormal_tol": 1e-09,
+        "transport_speed_m_s": 0.15,
+        "close_deg_s": 22.5
+      },
+      "numeric_receipt": {
+        "artifact": "W13R_NUMERIC_ALLOWANCE_V1",
+        "evidence": {
+          "documents": [
+            "audit/SOURCE_EVIDENCE.md",
+            "audit/SOURCE_EVIDENCE_ERRATUM_01.md",
+            "audit/SOURCE_EVIDENCE_ERRATUM_02.md  (LATEST WINS for the rotation factor)",
+            "audit/SOURCE_EVIDENCE_ERRATUM_03.md",
+            "audit/SOURCE_EVIDENCE_ERRATUM_04.md  (LATEST WINS for the position lattice term)"
+          ],
+          "audit_root": "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit",
+          "static_archive": "/home/cgxr/miniconda3/envs/roarm/lib/python3.11/site-packages/lib64/libsimulator_multi_gpu.a",
+          "static_archive_sha256": "c47ea1c4f0744a50602a139acb22e3db53df3363e6db23a260d050a1ca620529",
+          "members_sha256": {
+            "APIPublic.cpp.o": "0082da45ef6fe02805b39588cc93d51f8f3b9cc21543e00d339484378fedcd27",
+            "dT.cpp.o": "32771933179c631d64fecbc5ea8dbdfecfa173456ff2c17132257ee69813a55c",
+            "APIPrivate.cpp.o": "8b2f5f75dfc3761c93e2ec6edb3cff71f5ae23b5e218255c577b6b92453683ef",
+            "AuxClasses.cpp.o": "5a5954df1e7cc5f270cbad3673062806a62c74ccfb08ca8850b82e9ce6786dec",
+            "JitKernel_cuda.cpp.o": "6271c1992c3f4f30f86f95964e7f92d8c21ea7de7b6162930caf45b50a0814bc"
+          },
+          "kernel_sha256": {
+            "DEMIntegrationKernels.cu": "4210e442a528cf70ce8087019049e01acf59cfacd272147146ddd3ad9ab18a90"
+          },
+          "header_sha256": {
+            "AuxClasses.h": "45f766996fa20a19d8ac7f0de1a81a974f07f80852fc2142f01003e8c3375bf8",
+            "API.h": "67be492d974a5adad577e53f078c426b79981abe50c1525cb6dce632b1e10ef0"
+          },
+          "cuda": {
+            "nvcc": "12.8, build 12.8.93",
+            "libnvrtc.so.12_sha256": "2bb82d1a34b9fefa46aca357299aed66763d4d6613d015d5a591224c00fa7e5a",
+            "precision_flags_found_in_objects": "none (no --use_fast_math/--ftz/--prec-div/--prec-sqrt/--fmad)",
+            "bound_covers": "both FMA and non-FMA, both default precision and use_fast_math"
+          },
+          "lattice_rule": "DEMHelperKernels.cuh:116-159  pos = voxel*voxelSize + subVoxel*l, truncating cast to uint16",
+          "tracker_rule": "DEMDynamicThread::getOwnerPos reconstructs binary64 then cvtsd2ss to binary32",
+          "duration_rule": "A_final <= nextafter(D + float64(float32(h)), +inf)",
+          "motion_rule": "(|v| + r*|omega|) * A_final   [DEMIntegrationKernels.cu:197-233]",
+          "rotation_rule": "delta_q = 64u + 64eta/qmin ; theta_num = 4*asin(min(1, delta_q/2)) ; rmax*N*theta_num"
+        },
+        "requested_duration_D_s": 0.004,
+        "timestep_h_s": 1e-06,
+        "float64_of_float32_h_s": 9.999999974752427e-07,
+        "internal_steps_N": 4001,
+        "internal_steps_N_source": "DERIVED by replaying the installed accumulator rule; the installed build exposes NO directly observed engine step counter",
+        "accumulator_at_stop_s": 0.004000999989898446,
+        "call_elapsed_upper_bound_s": 0.004000999999997476,
+        "qmin": 0.5,
+        "u_binary32": 5.960464477539063e-08,
+        "eta_binary32": 1.1754943508222875e-38,
+        "delta_q": 3.814697265625e-06,
+        "theta_num_rad": 7.629394531254626e-06,
+        "N_times_theta_num_rad": 0.03052520751954976,
+        "max_subvoxel": 65536,
+        "voxel_size_m": 3.219327027181862e-07,
+        "length_unit_l_m": 4.9123032030973235e-12,
+        "domain_max_coord_m": 0.9401374757289886,
+        "tracker_ulp_mode": "full_ulp (conservative; conversion mode not pinned)",
+        "r_max_local_m_by_body": {
+          "fixed": 0.05439558805638559,
+          "door": 0.1251630568649322
+        },
+        "position_lattice_mode": "voxel_fallback",
+        "position_lattice_mode_rejected_for_production": [
+          "tiny_binary64"
+        ],
+        "position_lattice_allowance_m": 0.0022310068424310314,
+        "position_lattice_inputs_forwarded": {
+          "n_steps": 4001,
+          "l_m": 4.9123032030973235e-12,
+          "voxel_size_m": 3.219327027181862e-07,
+          "coord_bound_m": 0.9401374757289886,
+          "mode": "voxel_fallback"
+        },
+        "tracker_read_allowance_m": 1.0323827311807139e-07,
+        "quaternion_rotation_allowance_m_by_body": {
+          "fixed": 0.0016604366135691126,
+          "door": 0.0038206282845832627
+        },
+        "preflight_blocking_gaps": [],
+        "non_claims": [
+          "수치 허용치는 표현/반올림 범위일 뿐 충돌 없음·접촉 정확성·도달·배출 성공의 증거가 아니다.",
+          "어떤 항도 관측된 여유나 추종 잔차에서 고르지 않았다.",
+          "다른 아카이브/컴파일러/커널/timestep/격자/기하로 일반화되지 않는다."
+        ]
+      },
+      "static_provenance": {
+        "cells": "w13_kinematics.tray_mesh/bin_mesh 와 같은 수식. 트레이 4장 정확 AABB, 용기 2성분 보수 겉包.",
+        "joint_radius": {
+          "per_joint": [
+            {
+              "joint": "base",
+              "downstream_link_sum_m": 0.491004027,
+              "lip_in_link5_m": 0.169793316,
+              "max_tool_vertex_radius_m": 0.244500265,
+              "rho_m": 0.905297608
+            },
+            {
+              "joint": "shoulder",
+              "downstream_link_sum_m": 0.439044027,
+              "lip_in_link5_m": 0.169793316,
+              "max_tool_vertex_radius_m": 0.244500265,
+              "rho_m": 0.853337608
+            },
+            {
+              "joint": "elbow",
+              "downstream_link_sum_m": 0.200336121,
+              "lip_in_link5_m": 0.169793316,
+              "max_tool_vertex_radius_m": 0.244500265,
+              "rho_m": 0.614629702
+            },
+            {
+              "joint": "wrist_p",
+              "downstream_link_sum_m": 0.055750121,
+              "lip_in_link5_m": 0.169793316,
+              "max_tool_vertex_radius_m": 0.244500265,
+              "rho_m": 0.470043702
+            },
+            {
+              "joint": "wrist_r",
+              "downstream_link_sum_m": 0,
+              "lip_in_link5_m": 0.169793316,
+              "max_tool_vertex_radius_m": 0.244500265,
+              "rho_m": 0.414293581
+            }
+          ],
+          "chain_translations": [
+            {
+              "name": "world_to_base",
+              "norm_m": 0.0701,
+              "joint_index": null
+            },
+            {
+              "name": "base_to_link1",
+              "norm_m": 0.0,
+              "joint_index": 0
+            },
+            {
+              "name": "link1_to_link2",
+              "norm_m": 0.05196,
+              "joint_index": 1
+            },
+            {
+              "name": "link2_to_link3",
+              "norm_m": 0.23870790566925093,
+              "joint_index": 2
+            },
+            {
+              "name": "link3_to_link4",
+              "norm_m": 0.144586,
+              "joint_index": 3
+            },
+            {
+              "name": "link4_to_link5",
+              "norm_m": 0.05575012123753634,
+              "joint_index": 4
+            },
+            {
+              "name": "link5_to_tcp",
+              "norm_m": 0.115428,
+              "joint_index": null
+            }
+          ],
+          "role": "cross-check only — not used in the PASS/FAIL inequality (D10)"
+        },
+        "joint_limits": [
+          {
+            "joint": "base",
+            "limit_deg": [
+              -90.0,
+              90.0
+            ],
+            "origin": "roarm_kinematics.JOINT_LIMITS_DEG"
+          },
+          {
+            "joint": "shoulder",
+            "limit_deg": [
+              -30.0,
+              75.0
+            ],
+            "origin": "roarm_kinematics.JOINT_LIMITS_DEG"
+          },
+          {
+            "joint": "elbow",
+            "limit_deg": [
+              5.0,
+              135.0
+            ],
+            "origin": "roarm_kinematics.JOINT_LIMITS_DEG"
+          },
+          {
+            "joint": "wrist_p",
+            "limit_deg": [
+              -30.0,
+              90.0
+            ],
+            "origin": "roarm_kinematics.JOINT_LIMITS_DEG"
+          },
+          {
+            "joint": "wrist_r",
+            "limit_deg": [
+              -90.0,
+              90.0
+            ],
+            "origin": "roarm_kinematics.JOINT_LIMITS_DEG"
+          }
+        ],
+        "numeric_evidence": {
+          "documents": [
+            "audit/SOURCE_EVIDENCE.md",
+            "audit/SOURCE_EVIDENCE_ERRATUM_01.md",
+            "audit/SOURCE_EVIDENCE_ERRATUM_02.md  (LATEST WINS for the rotation factor)",
+            "audit/SOURCE_EVIDENCE_ERRATUM_03.md",
+            "audit/SOURCE_EVIDENCE_ERRATUM_04.md  (LATEST WINS for the position lattice term)"
+          ],
+          "audit_root": "/home/cgxr/orca/workspaces/RoArm_Project/w13-cycle-audit/claudedocs/runtime_logs/grasp_track/w13_full_cycle_d484/resume_20260913/audit",
+          "static_archive": "/home/cgxr/miniconda3/envs/roarm/lib/python3.11/site-packages/lib64/libsimulator_multi_gpu.a",
+          "static_archive_sha256": "c47ea1c4f0744a50602a139acb22e3db53df3363e6db23a260d050a1ca620529",
+          "members_sha256": {
+            "APIPublic.cpp.o": "0082da45ef6fe02805b39588cc93d51f8f3b9cc21543e00d339484378fedcd27",
+            "dT.cpp.o": "32771933179c631d64fecbc5ea8dbdfecfa173456ff2c17132257ee69813a55c",
+            "APIPrivate.cpp.o": "8b2f5f75dfc3761c93e2ec6edb3cff71f5ae23b5e218255c577b6b92453683ef",
+            "AuxClasses.cpp.o": "5a5954df1e7cc5f270cbad3673062806a62c74ccfb08ca8850b82e9ce6786dec",
+            "JitKernel_cuda.cpp.o": "6271c1992c3f4f30f86f95964e7f92d8c21ea7de7b6162930caf45b50a0814bc"
+          },
+          "kernel_sha256": {
+            "DEMIntegrationKernels.cu": "4210e442a528cf70ce8087019049e01acf59cfacd272147146ddd3ad9ab18a90"
+          },
+          "header_sha256": {
+            "AuxClasses.h": "45f766996fa20a19d8ac7f0de1a81a974f07f80852fc2142f01003e8c3375bf8",
+            "API.h": "67be492d974a5adad577e53f078c426b79981abe50c1525cb6dce632b1e10ef0"
+          },
+          "cuda": {
+            "nvcc": "12.8, build 12.8.93",
+            "libnvrtc.so.12_sha256": "2bb82d1a34b9fefa46aca357299aed66763d4d6613d015d5a591224c00fa7e5a",
+            "precision_flags_found_in_objects": "none (no --use_fast_math/--ftz/--prec-div/--prec-sqrt/--fmad)",
+            "bound_covers": "both FMA and non-FMA, both default precision and use_fast_math"
+          },
+          "lattice_rule": "DEMHelperKernels.cuh:116-159  pos = voxel*voxelSize + subVoxel*l, truncating cast to uint16",
+          "tracker_rule": "DEMDynamicThread::getOwnerPos reconstructs binary64 then cvtsd2ss to binary32",
+          "duration_rule": "A_final <= nextafter(D + float64(float32(h)), +inf)",
+          "motion_rule": "(|v| + r*|omega|) * A_final   [DEMIntegrationKernels.cu:197-233]",
+          "rotation_rule": "delta_q = 64u + 64eta/qmin ; theta_num = 4*asin(min(1, delta_q/2)) ; rmax*N*theta_num"
+        },
+        "withdrawn_thresholds": "고정 0.5 mm 추종 여유와 k_overrun_steps=2(관측 +1e-06 s 의 2배)는 둘 다 철회됐고 코드에 없다(msg_c0a8c4367a15). 관측 +1.000000e-06 s 는 구 rev10 의 round(...,9) 십진 양자화(±1 ns)를 포함하므로 정확한 내부 duration 이 아니다(ERRATUM_03).",
+        "door_body_independence": "실행 운동 상한에서 문 포즈를 고정부에서 유도하지 않는다. 두 트래커의 실측 포즈를 각각 쓴다. 명령 **목표** 유도(pose_of)는 컨트롤러가 실제로 그렇게 계산하므로 그대로 재현한다.",
+        "vertex_sha256": {
+          "fixed": "809332c428a325a2f95e7ec129baaa5c9fd45b0c4af45dcbdebcd43068dfc5b4",
+          "door": "3ec11cc1391332d117f675bcce77218410c370b568e1fa209b74e97bafeaf11f"
+        },
+        "n_fixed_vertices": 108,
+        "n_door_vertices": 108
+      },
+      "pass": true,
+      "verdict": "CLEARANCE_CERTIFIED",
+      "non_claims": [
+        "고정 fixture 와의 기하 충돌 없음만 인증한다. 접촉 성공·서보 실현성 증거가 아니다.",
+        "용기 셀은 48각형 축정렬 AABB 겉包이라 보수적이다.",
+        "수치 허용치 네 항은 전부 설치본 고정 입력에서 계산했고 관측 여유에 맞추지 않았다.",
+        "사후 잔차 측정은 진단이며 pre-step 안전 증명이 아니다."
+      ],
+      "physics_steps_before_certify": 13414,
+      "physics_steps_after_certify": 13414,
+      "certify_consumed_zero_physics": true,
+      "decision_tag": "bridge_clearance_decision",
+      "decision_particle_frame_index": 114,
+      "precheck_summary": {
+        "n_syncs_checked": 220,
+        "n_planned_targets": 220,
+        "all_planned_consumed": true,
+        "all_ok": true,
+        "worst_slack_m": 0.0695162937899966,
+        "max_plan_target_deviation_m": 0.0,
+        "n_failed": 0
+      },
+      "physics_steps_after_bridge": 13634
+    }
+  ],
+  "smoke_max_particles": null,
+  "door": {
+    "stops": [
+      {
+        "phase": "approach",
+        "subphase": "door_open_at_approach",
+        "reason": "reached_open_end",
+        "sync_index": 4680,
+        "q_cmd_deg": 27.5,
+        "q_actual_deg": 27.5,
+        "servo_deg": 30.0,
+        "sim_t": 5.45537998622649,
+        "M_hinge_rel_Nm": 0.0,
+        "max_single_contact_N": 0.0
+      },
+      {
+        "phase": "close",
+        "subphase": "close",
+        "reason": "servo_stall",
+        "sync_index": 7073,
+        "q_cmd_deg": 3.3575,
+        "q_actual_deg": 3.3576,
+        "servo_deg": 5.8575,
+        "sim_t": 7.5987729808149425,
+        "M_hinge_rel_Nm": 1.7683617227441626,
+        "max_single_contact_N": 0.9229810818195994
+      },
+      {
+        "phase": "close",
+        "subphase": "chatter_open_1",
+        "reason": "reached_open_end",
+        "sync_index": 8026,
+        "q_cmd_deg": 5.5,
+        "q_actual_deg": 5.5,
+        "servo_deg": 8.0,
+        "sim_t": 7.695025980571927,
+        "M_hinge_rel_Nm": 0.011174149135546,
+        "max_single_contact_N": 0.04177199295488862
+      },
+      {
+        "phase": "close",
+        "subphase": "chatter_close_1",
+        "reason": "servo_stall",
+        "sync_index": 9067,
+        "q_cmd_deg": 3.1577,
+        "q_actual_deg": 3.1577,
+        "servo_deg": 5.6577,
+        "sim_t": 7.8001669803064715,
+        "M_hinge_rel_Nm": 1.7747104898683146,
+        "max_single_contact_N": 1.5918924252119915
+      },
+      {
+        "phase": "close",
+        "subphase": "chatter_open_2",
+        "reason": "reached_open_end",
+        "sync_index": 10108,
+        "q_cmd_deg": 5.5,
+        "q_actual_deg": 5.5,
+        "servo_deg": 8.0,
+        "sim_t": 7.905307980041016,
+        "M_hinge_rel_Nm": -0.008089117857150331,
+        "max_single_contact_N": 0.029373269222080226
+      },
+      {
+        "phase": "close",
+        "subphase": "chatter_close_2",
+        "reason": "servo_stall",
+        "sync_index": 11125,
+        "q_cmd_deg": 3.2117,
+        "q_actual_deg": 3.2116,
+        "servo_deg": 5.7117,
+        "sim_t": 8.00802497978168,
+        "M_hinge_rel_Nm": 1.779740310226693,
+        "max_single_contact_N": 1.3914829033869849
+      },
+      {
+        "phase": "close",
+        "subphase": "chatter_open_3",
+        "reason": "reached_open_end",
+        "sync_index": 12142,
+        "q_cmd_deg": 5.5,
+        "q_actual_deg": 5.5,
+        "servo_deg": 8.0,
+        "sim_t": 8.110741979522345,
+        "M_hinge_rel_Nm": -0.007840097326880839,
+        "max_single_contact_N": 0.02497971263870185
+      },
+      {
+        "phase": "close",
+        "subphase": "chatter_close_3",
+        "reason": "servo_stall",
+        "sync_index": 13117,
+        "q_cmd_deg": 3.3062,
+        "q_actual_deg": 3.3062,
+        "servo_deg": 5.8062,
+        "sim_t": 8.20921697927372,
+        "M_hinge_rel_Nm": 1.7688981566364335,
+        "max_single_contact_N": 1.0223172907382334
+      },
+      {
+        "phase": "reclose",
+        "subphase": "reclose",
+        "reason": "servo_stall",
+        "sync_index": 13413,
+        "q_cmd_deg": 3.034,
+        "q_actual_deg": 3.0341,
+        "servo_deg": 5.534,
+        "sim_t": 8.921612977475093,
+        "M_hinge_rel_Nm": 1.7753257338946102,
+        "max_single_contact_N": 1.7578100130281245
+      },
+      {
+        "phase": "discharge",
+        "subphase": "door_open",
+        "reason": "reached_open_end",
+        "sync_index": 16855,
+        "q_cmd_deg": 27.5,
+        "q_actual_deg": 27.5,
+        "servo_deg": 30.0,
+        "sim_t": 14.680954962934152,
+        "M_hinge_rel_Nm": 0.0,
+        "max_single_contact_N": 0.0013593616348646178
+      },
+      {
+        "phase": "close_after_discharge",
+        "subphase": "close_after_discharge",
+        "reason": "reached_close_end",
+        "sync_index": 20849,
+        "q_cmd_deg": 0.0,
+        "q_actual_deg": -0.0,
+        "servo_deg": 2.5,
+        "sim_t": 17.40724895605092,
+        "M_hinge_rel_Nm": 1.2500170906579205e-05,
+        "max_single_contact_N": 0.0013766970572567112
+      }
+    ],
+    "q_final_cmd_deg": 0.0,
+    "q_final_actual_deg": 0.016,
+    "servo_deg_final": 2.5
+  },
+  "delivery": {
+    "layer1_accounting_integrity": true,
+    "definite_delivered_n": 251,
+    "definite_delivered_g": 5.0846,
+    "possible_delivered_n": 297,
+    "possible_delivered_g": 6.0164,
+    "exact_single_value_allowed": false,
+    "inventory_moving_threshold_m_s": 0.039240000000000004,
+    "inventory_moving_threshold_basis": "프레임별 재고 분류에서 in_flight 를 가르는 값(g*dt_sync). **정착 판정 기준이 아니다** — exact settled 판정은 settlement_window 가 한다.",
+    "settlement_window": {
+      "window_s": 0.25,
+      "n_frames": 5,
+      "frame_times_s": [
+        22.600546943,
+        22.700571943,
+        22.724577943,
+        22.800596942,
+        22.824602942
+      ],
+      "max_frame_gap_s": 0.100025,
+      "criterion": {
+        "speed_max_m_s": 0.005,
+        "center_move_max_m": 0.001,
+        "basis": "감사 사전 고정 operational criterion. 물리적 rest truth 가 아니다."
+      },
+      "cadence_ok": false,
+      "n_stable_bin_all_frames": 251,
+      "n_settled": 251,
+      "max_speed_of_stable_m_s": 0.00023046,
+      "max_move_of_stable_mm": 0.015148
+    },
+    "max_bin_particle_displacement_last_frame_mm": null,
+    "particle_mass_g": 0.02025738,
+    "inventory_final": {
+      "source": 63636,
+      "receiving_bin": 251,
+      "tool_residual": 14,
+      "spill": 123,
+      "in_flight": 1,
+      "ambiguous": 3712
+    },
+    "cycle_sim_time_s": 22.824602942
+  },
+  "decisions": [
+    {
+      "tag": "initial_home_end",
+      "phase": "initial_home",
+      "subphase": "t0_state",
+      "sync_index": 0,
+      "particle_frame_index": 1,
+      "sim_t": 0.0,
+      "wall_s": 29.17,
+      "counts": {
+        "source": 64195,
+        "receiving_bin": 0,
+        "tool_residual": 0,
+        "spill": 0,
+        "in_flight": 0,
+        "ambiguous": 3542
+      },
+      "n_total": 67737,
+      "q_cmd_deg": 0.0,
+      "q_actual_deg": -0.0,
+      "q5_cmd": [
+        0.0,
+        0.0,
+        90.0,
+        0.0,
+        0.0
+      ],
+      "lip_actual_mm": [
+        8.1,
+        147.841,
+        479.4181
+      ],
+      "v_max_m_s": 0.0
+    },
+    {
+      "tag": "settle_end",
+      "phase": "settle",
+      "subphase": "settle",
+      "sync_index": 25,
+      "particle_frame_index": 4,
+      "sim_t": 0.10002499974746115,
+      "wall_s": 268.5,
+      "counts": {
+        "source": 64197,
+        "receiving_bin": 0,
+        "tool_residual": 0,
+        "spill": 0,
+        "in_flight": 0,
+        "ambiguous": 3540
+      },
+      "n_total": 67737,
+      "q_cmd_deg": 0.0,
+      "q_actual_deg": -0.0,
+      "q5_cmd": [
+        0.0,
+        0.0,
+        90.0,
+        0.0,
+        0.0
+      ],
+      "lip_actual_mm": [
+        8.1,
+        147.841,
+        479.4181
+      ],
+      "v_max_m_s": 0.020205
+    },
+    {
+      "tag": "approach_end",
+      "phase": "approach",
+      "subphase": "door_open_at_approach",
+      "sync_index": 4680,
+      "particle_frame_index": 64,
+      "sim_t": 5.45537998622649,
+      "wall_s": 12333.93,
+      "counts": {
+        "source": 64194,
+        "receiving_bin": 0,
+        "tool_residual": 0,
+        "spill": 0,
+        "in_flight": 0,
+        "ambiguous": 3543
+      },
+      "n_total": 67737,
+      "q_cmd_deg": 27.5,
+      "q_actual_deg": 27.5,
+      "q5_cmd": [
+        0.0,
+        48.22,
+        103.38,
+        28.42,
+        0.0
+      ],
+      "lip_actual_mm": [
+        8.1,
+        -0.0065,
+        42.6901
+      ],
+      "v_max_m_s": 0.003649
+    },
+    {
+      "tag": "descend_end",
+      "phase": "descend",
+      "subphase": "plunge",
+      "sync_index": 4947,
+      "particle_frame_index": 77,
+      "sim_t": 6.523646983529375,
+      "wall_s": 14623.55,
+      "counts": {
+        "source": 63732,
+        "receiving_bin": 0,
+        "tool_residual": 81,
+        "spill": 0,
+        "in_flight": 1,
+        "ambiguous": 3923
+      },
+      "n_total": 67737,
+      "q_cmd_deg": 27.5,
+      "q_actual_deg": 27.5,
+      "q5_cmd": [
+        0.0,
+        48.22,
+        103.38,
+        28.42,
+        0.0
+      ],
+      "lip_actual_mm": [
+        8.1,
+        -0.0065,
+        17.6307
+      ],
+      "v_max_m_s": 0.06927
+    },
+    {
+      "tag": "close_stop",
+      "phase": "close",
+      "subphase": "close",
+      "sync_index": 7073,
+      "particle_frame_index": 89,
+      "sim_t": 7.5987729808149425,
+      "wall_s": 17333.13,
+      "counts": {
+        "source": 63088,
+        "receiving_bin": 0,
+        "tool_residual": 441,
+        "spill": 0,
+        "in_flight": 193,
+        "ambiguous": 4015
+      },
+      "n_total": 67737,
+      "q_cmd_deg": 3.3575,
+      "q_actual_deg": 3.3576,
+      "q5_cmd": [
+        0.0,
+        48.22,
+        103.38,
+        28.42,
+        0.0
+      ],
+      "lip_actual_mm": [
+        8.1,
+        -0.0065,
+        17.6307
+      ],
+      "v_max_m_s": 0.764573
+    },
+    {
+      "tag": "lift_end",
+      "phase": "lift",
+      "subphase": "lift",
+      "sync_index": 13292,
+      "particle_frame_index": 111,
+      "sim_t": 8.909391977505948,
+      "wall_s": 21500.2,
+      "counts": {
+        "source": 63355,
+        "receiving_bin": 0,
+        "tool_residual": 388,
+        "spill": 0,
+        "in_flight": 4,
+        "ambiguous": 3990
+      },
+      "n_total": 67737,
+      "q_cmd_deg": 3.3062,
+      "q_actual_deg": 3.3062,
+      "q5_cmd": [
+        0.0,
+        48.22,
+        103.38,
+        28.42,
+        0.0
+      ],
+      "lip_actual_mm": [
+        8.1,
+        -0.0065,
+        122.6309
+      ],
+      "v_max_m_s": 0.357236
+    },
+    {
+      "tag": "reclose_end",
+      "phase": "reclose",
+      "subphase": "reclose",
+      "sync_index": 13413,
+      "particle_frame_index": 113,
+      "sim_t": 8.921612977475093,
+      "wall_s": 21559.54,
+      "counts": {
+        "source": 63355,
+        "receiving_bin": 0,
+        "tool_residual": 417,
+        "spill": 0,
+        "in_flight": 3,
+        "ambiguous": 3962
+      },
+      "n_total": 67737,
+      "q_cmd_deg": 3.034,
+      "q_actual_deg": 3.0341,
+      "q5_cmd": [
+        0.0,
+        48.22,
+        103.38,
+        28.42,
+        0.0
+      ],
+      "lip_actual_mm": [
+        8.1,
+        -0.0065,
+        122.6307
+      ],
+      "v_max_m_s": 0.265009
+    },
+    {
+      "tag": "bridge_clearance_decision",
+      "phase": "reclose",
+      "subphase": "reclose",
+      "sync_index": 13413,
+      "particle_frame_index": 114,
+      "sim_t": 8.921612977475093,
+      "wall_s": 21560.45,
+      "counts": {
+        "source": 63355,
+        "receiving_bin": 0,
+        "tool_residual": 417,
+        "spill": 0,
+        "in_flight": 3,
+        "ambiguous": 3962
+      },
+      "n_total": 67737,
+      "q_cmd_deg": 3.034,
+      "q_actual_deg": 3.0341,
+      "q5_cmd": [
+        0.0,
+        48.22,
+        103.38,
+        28.42,
+        0.0
+      ],
+      "lip_actual_mm": [
+        8.1,
+        -0.0065,
+        122.6307
+      ],
+      "v_max_m_s": 0.265009
+    },
+    {
+      "tag": "transport_end",
+      "phase": "transport",
+      "subphase": "place_target",
+      "sync_index": 14580,
+      "particle_frame_index": 167,
+      "sim_t": 13.590779965686579,
+      "wall_s": 31518.55,
+      "counts": {
+        "source": 63634,
+        "receiving_bin": 13,
+        "tool_residual": 119,
+        "spill": 123,
+        "in_flight": 4,
+        "ambiguous": 3844
+      },
+      "n_total": 67737,
+      "q_cmd_deg": 3.034,
+      "q_actual_deg": 3.0356,
+      "q5_cmd": [
+        90.0,
+        38.26,
+        100.59,
+        41.17,
+        0.0
+      ],
+      "lip_actual_mm": [
+        -250.1184,
+        -241.9,
+        93.0016
+      ],
+      "v_max_m_s": 0.645388
+    },
+    {
+      "tag": "release_before",
+      "phase": "transport",
+      "subphase": "place_target",
+      "sync_index": 14580,
+      "particle_frame_index": 168,
+      "sim_t": 13.590779965686579,
+      "wall_s": 31518.95,
+      "counts": {
+        "source": 63634,
+        "receiving_bin": 13,
+        "tool_residual": 119,
+        "spill": 123,
+        "in_flight": 4,
+        "ambiguous": 3844
+      },
+      "n_total": 67737,
+      "q_cmd_deg": 3.034,
+      "q_actual_deg": 3.0356,
+      "q5_cmd": [
+        90.0,
+        38.26,
+        100.59,
+        41.17,
+        0.0
+      ],
+      "lip_actual_mm": [
+        -250.1184,
+        -241.9,
+        93.0016
+      ],
+      "v_max_m_s": 0.645388
+    },
+    {
+      "tag": "release_after",
+      "phase": "discharge",
+      "subphase": "door_open",
+      "sync_index": 16855,
+      "particle_frame_index": 181,
+      "sim_t": 14.680954962934152,
+      "wall_s": 34320.69,
+      "counts": {
+        "source": 63635,
+        "receiving_bin": 251,
+        "tool_residual": 10,
+        "spill": 123,
+        "in_flight": 0,
+        "ambiguous": 3718
+      },
+      "n_total": 67737,
+      "q_cmd_deg": 27.5,
+      "q_actual_deg": 27.5,
+      "q5_cmd": [
+        90.0,
+        38.26,
+        100.59,
+        41.17,
+        0.0
+      ],
+      "lip_actual_mm": [
+        -250.1184,
+        -241.9,
+        93.0018
+      ],
+      "v_max_m_s": 0.00087
+    },
+    {
+      "tag": "wait_end",
+      "phase": "discharge_wait",
+      "subphase": "wait",
+      "sync_index": 17230,
+      "particle_frame_index": 198,
+      "sim_t": 16.18132995914607,
+      "wall_s": 37541.39,
+      "counts": {
+        "source": 63635,
+        "receiving_bin": 250,
+        "tool_residual": 10,
+        "spill": 123,
+        "in_flight": 0,
+        "ambiguous": 3719
+      },
+      "n_total": 67737,
+      "q_cmd_deg": 27.5,
+      "q_actual_deg": 27.5,
+      "q5_cmd": [
+        90.0,
+        38.26,
+        100.59,
+        41.17,
+        0.0
+      ],
+      "lip_actual_mm": [
+        -250.1184,
+        -241.9,
+        93.0018
+      ],
+      "v_max_m_s": 0.006828
+    },
+    {
+      "tag": "close_after_discharge_end",
+      "phase": "close_after_discharge",
+      "subphase": "close_after_discharge",
+      "sync_index": 20849,
+      "particle_frame_index": 213,
+      "sim_t": 17.40724895605092,
+      "wall_s": 40999.99,
+      "counts": {
+        "source": 63636,
+        "receiving_bin": 251,
+        "tool_residual": 11,
+        "spill": 123,
+        "in_flight": 0,
+        "ambiguous": 3716
+      },
+      "n_total": 67737,
+      "q_cmd_deg": 0.0,
+      "q_actual_deg": -0.0,
+      "q5_cmd": [
+        90.0,
+        38.26,
+        100.59,
+        41.17,
+        0.0
+      ],
+      "lip_actual_mm": [
+        -250.1184,
+        -241.9,
+        93.0018
+      ],
+      "v_max_m_s": 0.005565
+    },
+    {
+      "tag": "return_home_end",
+      "phase": "return_home",
+      "subphase": "home_hold",
+      "sync_index": 22203,
+      "particle_frame_index": 273,
+      "sim_t": 22.824602942373417,
+      "wall_s": 52603.99,
+      "counts": {
+        "source": 63636,
+        "receiving_bin": 251,
+        "tool_residual": 14,
+        "spill": 123,
+        "in_flight": 1,
+        "ambiguous": 3712
+      },
+      "n_total": 67737,
+      "q_cmd_deg": 0.0,
+      "q_actual_deg": 0.016,
+      "q5_cmd": [
+        0.0,
+        0.0,
+        90.0,
+        0.0,
+        0.0
+      ],
+      "lip_actual_mm": [
+        8.1,
+        147.841,
+        479.4181
+      ],
+      "v_max_m_s": 0.118975
+    }
+  ],
+  "transitions": [
+    {
+      "from": "initial_home_end",
+      "to": "settle_end",
+      "labels": [
+        "source",
+        "receiving_bin",
+        "tool_residual",
+        "spill",
+        "in_flight",
+        "ambiguous"
+      ],
+      "matrix": [
+        [
+          64195,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          0,
+          3540
+        ]
+      ],
+      "moved": 2
+    },
+    {
+      "from": "settle_end",
+      "to": "approach_end",
+      "labels": [
+        "source",
+        "receiving_bin",
+        "tool_residual",
+        "spill",
+        "in_flight",
+        "ambiguous"
+      ],
+      "matrix": [
+        [
+          64193,
+          0,
+          0,
+          0,
+          0,
+          4
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          3539
+        ]
+      ],
+      "moved": 5
+    },
+    {
+      "from": "approach_end",
+      "to": "descend_end",
+      "labels": [
+        "source",
+        "receiving_bin",
+        "tool_residual",
+        "spill",
+        "in_flight",
+        "ambiguous"
+      ],
+      "matrix": [
+        [
+          63731,
+          0,
+          81,
+          0,
+          1,
+          381
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          3542
+        ]
+      ],
+      "moved": 464
+    },
+    {
+      "from": "descend_end",
+      "to": "close_stop",
+      "labels": [
+        "source",
+        "receiving_bin",
+        "tool_residual",
+        "spill",
+        "in_flight",
+        "ambiguous"
+      ],
+      "matrix": [
+        [
+          63045,
+          0,
+          249,
+          0,
+          168,
+          270
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          42,
+          0,
+          0,
+          39
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          42,
+          0,
+          150,
+          0,
+          25,
+          3706
+        ]
+      ],
+      "moved": 944
+    },
+    {
+      "from": "close_stop",
+      "to": "lift_end",
+      "labels": [
+        "source",
+        "receiving_bin",
+        "tool_residual",
+        "spill",
+        "in_flight",
+        "ambiguous"
+      ],
+      "matrix": [
+        [
+          63081,
+          0,
+          0,
+          0,
+          1,
+          6
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          15,
+          0,
+          375,
+          0,
+          0,
+          51
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          192,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          67,
+          0,
+          13,
+          0,
+          3,
+          3932
+        ]
+      ],
+      "moved": 349
+    },
+    {
+      "from": "lift_end",
+      "to": "reclose_end",
+      "labels": [
+        "source",
+        "receiving_bin",
+        "tool_residual",
+        "spill",
+        "in_flight",
+        "ambiguous"
+      ],
+      "matrix": [
+        [
+          63355,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          387,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          3,
+          1
+        ],
+        [
+          0,
+          0,
+          30,
+          0,
+          0,
+          3960
+        ]
+      ],
+      "moved": 32
+    },
+    {
+      "from": "reclose_end",
+      "to": "bridge_clearance_decision",
+      "labels": [
+        "source",
+        "receiving_bin",
+        "tool_residual",
+        "spill",
+        "in_flight",
+        "ambiguous"
+      ],
+      "matrix": [
+        [
+          63355,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          417,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          3,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          3962
+        ]
+      ],
+      "moved": 0
+    },
+    {
+      "from": "bridge_clearance_decision",
+      "to": "transport_end",
+      "labels": [
+        "source",
+        "receiving_bin",
+        "tool_residual",
+        "spill",
+        "in_flight",
+        "ambiguous"
+      ],
+      "matrix": [
+        [
+          63346,
+          0,
+          0,
+          0,
+          0,
+          9
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          187,
+          1,
+          87,
+          88,
+          3,
+          51
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          3,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          98,
+          12,
+          32,
+          35,
+          1,
+          3784
+        ]
+      ],
+      "moved": 520
+    },
+    {
+      "from": "transport_end",
+      "to": "release_before",
+      "labels": [
+        "source",
+        "receiving_bin",
+        "tool_residual",
+        "spill",
+        "in_flight",
+        "ambiguous"
+      ],
+      "matrix": [
+        [
+          63634,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          13,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          119,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          123,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          4,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          3844
+        ]
+      ],
+      "moved": 0
+    },
+    {
+      "from": "release_before",
+      "to": "release_after",
+      "labels": [
+        "source",
+        "receiving_bin",
+        "tool_residual",
+        "spill",
+        "in_flight",
+        "ambiguous"
+      ],
+      "matrix": [
+        [
+          63634,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          11,
+          0,
+          0,
+          0,
+          2
+        ],
+        [
+          0,
+          92,
+          8,
+          0,
+          0,
+          19
+        ],
+        [
+          0,
+          0,
+          0,
+          123,
+          0,
+          0
+        ],
+        [
+          0,
+          4,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          144,
+          2,
+          0,
+          0,
+          3697
+        ]
+      ],
+      "moved": 264
+    },
+    {
+      "from": "release_after",
+      "to": "wait_end",
+      "labels": [
+        "source",
+        "receiving_bin",
+        "tool_residual",
+        "spill",
+        "in_flight",
+        "ambiguous"
+      ],
+      "matrix": [
+        [
+          63635,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          250,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          10,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          123,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          3718
+        ]
+      ],
+      "moved": 1
+    },
+    {
+      "from": "wait_end",
+      "to": "close_after_discharge_end",
+      "labels": [
+        "source",
+        "receiving_bin",
+        "tool_residual",
+        "spill",
+        "in_flight",
+        "ambiguous"
+      ],
+      "matrix": [
+        [
+          63634,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          250,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          10,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          123,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          1,
+          1,
+          0,
+          0,
+          3715
+        ]
+      ],
+      "moved": 5
+    },
+    {
+      "from": "close_after_discharge_end",
+      "to": "return_home_end",
+      "labels": [
+        "source",
+        "receiving_bin",
+        "tool_residual",
+        "spill",
+        "in_flight",
+        "ambiguous"
+      ],
+      "matrix": [
+        [
+          63632,
+          0,
+          0,
+          0,
+          1,
+          3
+        ],
+        [
+          0,
+          251,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          0,
+          10
+        ],
+        [
+          0,
+          0,
+          0,
+          123,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          4,
+          0,
+          13,
+          0,
+          0,
+          3699
+        ]
+      ],
+      "moved": 31
+    }
+  ],
+  "heightmap": {
+    "spec_version": "roarm-heightmap-v1",
+    "cell_m": 0.005,
+    "shape": [
+      44,
+      62
+    ],
+    "max_m": 0.04387572035193443,
+    "n_particles_used": 63636,
+    "pre_max_m": 0.04337679594755173,
+    "npz_max_m": 0.04344245046377182,
+    "pre_vs_npz_max_abs_diff_m": 0.0008203312754631042,
+    "removed_volume_cm3": 51.80952362716198,
+    "spheres_per_particle": 7,
+    "post_filter": "최종 재고 source 인 입자만"
+  },
+  "crater": {
+    "definition": "crater_angles() docstring (sim_deme_scoop_s1.py): dh=h_pre-h_post, wedge ring-averaged radial profile, least-squares line on rings with band[0]*d_max<=dh<=band[1]*d_max outward of r_peak, angle=atan|slope|",
+    "params": {
+      "r_max_mm": 80.0,
+      "wedge_half_deg": 22.5,
+      "min_depth_mm": 2.0,
+      "fit_band": [
+        0.2,
+        0.8
+      ],
+      "cell_mm": 5.0
+    },
+    "site_xy_mm": [
+      8.099999999999984,
+      -0.006494477891777484
+    ],
+    "center_xy_mm": [
+      22.841521002841798,
+      -0.11939114911716087
+    ],
+    "center_rule": "dh-weighted centroid of cells with dh>=min_depth within r_max of site",
+    "n_cells_deep": 224,
+    "removed_volume_cm3": 51.80952362716198,
+    "dh_max_mm": 17.335712909698486,
+    "azimuths": {
+      "+x": {
+        "r_mm": [
+          2.5,
+          7.5,
+          12.5,
+          17.5,
+          22.5,
+          27.5,
+          32.5,
+          37.5,
+          42.5,
+          47.5,
+          52.5,
+          57.5,
+          62.5,
+          67.5,
+          72.5,
+          77.5
+        ],
+        "n_cells": [
+          0,
+          1,
+          3,
+          2,
+          4,
+          4,
+          4,
+          6,
+          6,
+          8,
+          8,
+          10,
+          10,
+          10,
+          12,
+          13
+        ],
+        "dh_ring_mm": [
+          null,
+          17.336,
+          15.003,
+          14.496,
+          13.979,
+          11.722,
+          9.767,
+          5.884,
+          3.824,
+          1.454,
+          0.505,
+          -0.084,
+          -0.302,
+          0.025,
+          -0.013,
+          0.22
+        ],
+        "h_post_ring_mm": [
+          null,
+          23.38,
+          25.168,
+          26.231,
+          26.829,
+          29.013,
+          31.175,
+          34.95,
+          37.164,
+          39.457,
+          40.985,
+          41.579,
+          41.175,
+          41.012,
+          40.949,
+          41.195
+        ],
+        "r_peak_mm": 7.5,
+        "d_max_mm": 17.335712909698486,
+        "fit_bins": [
+          5,
+          6,
+          7,
+          8
+        ],
+        "angle_deg": 28.876769559969762,
+        "slope_dh": -0.5515007736782224,
+        "intercept_dh_m": 0.02710189232602711,
+        "angle_surface_deg": 29.447333883569943,
+        "slope_h_post": 0.5645599775016311,
+        "intercept_h_post_m": 0.013316033004472637,
+        "r_fit_mm": [
+          27.5,
+          42.5
+        ],
+        "n_rings": 4
+      },
+      "+y": {
+        "r_mm": [
+          2.5,
+          7.5,
+          12.5,
+          17.5,
+          22.5,
+          27.5,
+          32.5,
+          37.5,
+          42.5,
+          47.5,
+          52.5,
+          57.5,
+          62.5,
+          67.5,
+          72.5,
+          77.5
+        ],
+        "n_cells": [
+          1,
+          1,
+          2,
+          3,
+          3,
+          5,
+          5,
+          5,
+          7,
+          8,
+          9,
+          9,
+          9,
+          11,
+          11,
+          12
+        ],
+        "dh_ring_mm": [
+          16.61,
+          15.555,
+          14.688,
+          11.256,
+          9.204,
+          5.365,
+          1.06,
+          -0.322,
+          -0.153,
+          -0.736,
+          -0.879,
+          -0.252,
+          -0.471,
+          -0.345,
+          0.02,
+          0.089
+        ],
+        "h_post_ring_mm": [
+          24.413,
+          25.59,
+          27.022,
+          30.153,
+          31.703,
+          35.902,
+          40.153,
+          41.612,
+          41.697,
+          42.133,
+          42.02,
+          41.067,
+          40.922,
+          40.771,
+          40.428,
+          40.581
+        ],
+        "r_peak_mm": 2.5,
+        "d_max_mm": 16.60984940826893,
+        "fit_bins": [
+          3,
+          4,
+          5
+        ],
+        "angle_deg": 30.50247231754536,
+        "slope_dh": -0.5891031399369236,
+        "intercept_dh_m": 0.02186321791054473,
+        "angle_surface_deg": 29.897277859013844,
+        "slope_h_post": 0.5749622856577232,
+        "intercept_h_post_m": 0.019649429898709065,
+        "r_fit_mm": [
+          17.5,
+          27.5
+        ],
+        "n_rings": 3
+      },
+      "-x": {
+        "r_mm": [
+          2.5,
+          7.5,
+          12.5,
+          17.5,
+          22.5,
+          27.5,
+          32.5,
+          37.5,
+          42.5,
+          47.5,
+          52.5,
+          57.5,
+          62.5,
+          67.5,
+          72.5,
+          77.5
+        ],
+        "n_cells": [
+          0,
+          0,
+          2,
+          2,
+          4,
+          4,
+          5,
+          6,
+          6,
+          8,
+          8,
+          10,
+          10,
+          10,
+          10,
+          12
+        ],
+        "dh_ring_mm": [
+          null,
+          null,
+          15.06,
+          14.737,
+          13.292,
+          11.862,
+          10.153,
+          7.554,
+          4.466,
+          2.238,
+          -0.144,
+          -1.254,
+          -0.974,
+          -1.645,
+          -1.364,
+          -0.444
+        ],
+        "h_post_ring_mm": [
+          null,
+          null,
+          26.199,
+          26.662,
+          27.907,
+          29.349,
+          32.12,
+          34.164,
+          36.566,
+          38.65,
+          40.738,
+          42.139,
+          42.203,
+          42.901,
+          42.749,
+          42.387
+        ],
+        "r_peak_mm": 12.5,
+        "d_max_mm": 15.059641562402248,
+        "fit_bins": [
+          5,
+          6,
+          7,
+          8
+        ],
+        "angle_deg": 26.368989307484977,
+        "slope_dh": -0.49572988289097875,
+        "intercept_dh_m": 0.025859174236344765,
+        "angle_surface_deg": 25.35415711060711,
+        "slope_h_post": 0.47385477460920855,
+        "intercept_h_post_m": 0.016464702916952446,
+        "r_fit_mm": [
+          27.5,
+          42.5
+        ],
+        "n_rings": 4
+      },
+      "-y": {
+        "r_mm": [
+          2.5,
+          7.5,
+          12.5,
+          17.5,
+          22.5,
+          27.5,
+          32.5,
+          37.5,
+          42.5,
+          47.5,
+          52.5,
+          57.5,
+          62.5,
+          67.5,
+          72.5,
+          77.5
+        ],
+        "n_cells": [
+          1,
+          1,
+          2,
+          3,
+          3,
+          5,
+          5,
+          5,
+          8,
+          8,
+          7,
+          9,
+          9,
+          11,
+          11,
+          13
+        ],
+        "dh_ring_mm": [
+          15.737,
+          15.519,
+          13.527,
+          12.208,
+          8.196,
+          4.998,
+          2.062,
+          0.862,
+          0.304,
+          -0.424,
+          -0.714,
+          -1.088,
+          -1.204,
+          -0.861,
+          -0.496,
+          -0.103
+        ],
+        "h_post_ring_mm": [
+          25.614,
+          25.722,
+          26.539,
+          28.604,
+          32.462,
+          35.474,
+          39.056,
+          40.8,
+          40.857,
+          41.4,
+          41.587,
+          41.297,
+          41.051,
+          40.823,
+          40.755,
+          40.581
+        ],
+        "r_peak_mm": 2.5,
+        "d_max_mm": 15.73660783469677,
+        "fit_bins": [
+          3,
+          4,
+          5
+        ],
+        "angle_deg": 35.78868520587419,
+        "slope_dh": -0.7209225868185358,
+        "intercept_dh_m": 0.02468794713624649,
+        "angle_surface_deg": 34.487410944063306,
+        "slope_h_post": 0.6869575008749963,
+        "intercept_h_post_m": 0.016723686673988887,
+        "r_fit_mm": [
+          17.5,
+          27.5
+        ],
+        "n_rings": 3
+      }
+    }
+  },
+  "wall_seconds": 52603.59,
+  "w25": {
+    "revision": "rev34",
+    "frame": {
+      "box_frame_convention": "A",
+      "box_anchor": "declared_box_center",
+      "R_robot_box": [
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          -1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "R_box_robot": [
+        [
+          0.0,
+          -1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "R_scoop_owner_box": [
+        [
+          0.0,
+          -1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "R_scoop_rule": "취점 구간(w11 모드) 툴 owner 회전 = R_box_robot (rev32 의 단위행렬을 상자 좌표로 옮긴 것)",
+      "box_center_robot_xy_m": [
+        0.25,
+        0.0
+      ],
+      "reference_lip_robot_m": [
+        0.24999350552210822,
+        -0.008099999999999984,
+        -0.21504771942217477
+      ],
+      "box_floor_robot_z_m": -0.2577501314177868,
+      "box_floor_above_floor_cm": 19.631,
+      "rev32_path": false
+    },
+    "scoop_site": {
+      "convention": "A",
+      "anchor": "declared_box_center",
+      "site_box_xy_m": [
+        0.008099999999999984,
+        -6.494477891777484e-06
+      ],
+      "reference_lip_robot_m": [
+        0.24999350552210822,
+        -0.008099999999999984,
+        -0.21504771942217477
+      ],
+      "box_center_robot_xy_m": [
+        0.25,
+        0.0
+      ],
+      "reference_pose_q5": [
+        0.0,
+        48.209999999999994,
+        103.44000000000005,
+        28.369999999999948,
+        0.0
+      ],
+      "rule": "상자 중심(로봇 좌표)을 명령한 기준 자세의 FK 립을 상자 좌표로 옮긴 점",
+      "rev32_path": false
+    },
+    "scoop_site_w11_xy_m": [
+      0.008099999999999984,
+      -6.494477891777484e-06
+    ],
+    "tray": {
+      "tray_inner_source": "declared_from_npz_convention (user outer 31x22, wall 0.2)",
+      "declared_inner_mm": [
+        310.0,
+        220.0,
+        230.0
+      ],
+      "npz_box_bounds_m": [
+        [
+          -0.155,
+          0.155
+        ],
+        [
+          -0.11,
+          0.11
+        ],
+        [
+          0.0,
+          0.134840008690237
+        ]
+      ],
+      "box_bounds_m": [
+        [
+          -0.155,
+          0.155
+        ],
+        [
+          -0.11,
+          0.11
+        ],
+        [
+          0.0,
+          0.23
+        ]
+      ],
+      "npz_vs_declared_xy_max_abs_mm": 0.0,
+      "tol_mm": 0.5,
+      "max_sphere_overhang_mm": 0.011434,
+      "n_spheres_outside_declared_xy": 0,
+      "n_spheres_above_declared_top": 0,
+      "mismatch_reasons": []
+    },
+    "procedure": {
+      "open_at_surface": true,
+      "door_open_gap_mm": 0.0,
+      "chatter": true,
+      "chatter_log": [
+        {
+          "k": 0,
+          "sim_t": 7.5987729808149425,
+          "sync_index": 7073,
+          "read_joint_deg": 3.357609,
+          "read_servo_deg": 5.857609,
+          "cmd_joint_deg": 3.3575,
+          "cmd_servo_deg": 5.8575,
+          "threshold_servo_deg": 3.6,
+          "action": "chatter",
+          "open_stop": {
+            "phase": "close",
+            "subphase": "chatter_open_1",
+            "reason": "reached_open_end",
+            "sync_index": 8026,
+            "q_cmd_deg": 5.5,
+            "q_actual_deg": 5.5,
+            "servo_deg": 8.0,
+            "sim_t": 7.695025980571927,
+            "M_hinge_rel_Nm": 0.011174149135546,
+            "max_single_contact_N": 0.04177199295488862
+          },
+          "close_stop": {
+            "phase": "close",
+            "subphase": "chatter_close_1",
+            "reason": "servo_stall",
+            "sync_index": 9067,
+            "q_cmd_deg": 3.1577,
+            "q_actual_deg": 3.1577,
+            "servo_deg": 5.6577,
+            "sim_t": 7.8001669803064715,
+            "M_hinge_rel_Nm": 1.7747104898683146,
+            "max_single_contact_N": 1.5918924252119915
+          }
+        },
+        {
+          "k": 1,
+          "sim_t": 7.8001669803064715,
+          "sync_index": 9067,
+          "read_joint_deg": 3.157654,
+          "read_servo_deg": 5.657654,
+          "cmd_joint_deg": 3.15775,
+          "cmd_servo_deg": 5.65775,
+          "threshold_servo_deg": 3.6,
+          "action": "chatter",
+          "open_stop": {
+            "phase": "close",
+            "subphase": "chatter_open_2",
+            "reason": "reached_open_end",
+            "sync_index": 10108,
+            "q_cmd_deg": 5.5,
+            "q_actual_deg": 5.5,
+            "servo_deg": 8.0,
+            "sim_t": 7.905307980041016,
+            "M_hinge_rel_Nm": -0.008089117857150331,
+            "max_single_contact_N": 0.029373269222080226
+          },
+          "close_stop": {
+            "phase": "close",
+            "subphase": "chatter_close_2",
+            "reason": "servo_stall",
+            "sync_index": 11125,
+            "q_cmd_deg": 3.2117,
+            "q_actual_deg": 3.2116,
+            "servo_deg": 5.7117,
+            "sim_t": 8.00802497978168,
+            "M_hinge_rel_Nm": 1.779740310226693,
+            "max_single_contact_N": 1.3914829033869849
+          }
+        },
+        {
+          "k": 2,
+          "sim_t": 8.00802497978168,
+          "sync_index": 11125,
+          "read_joint_deg": 3.211632,
+          "read_servo_deg": 5.711632,
+          "cmd_joint_deg": 3.21175,
+          "cmd_servo_deg": 5.71175,
+          "threshold_servo_deg": 3.6,
+          "action": "chatter",
+          "open_stop": {
+            "phase": "close",
+            "subphase": "chatter_open_3",
+            "reason": "reached_open_end",
+            "sync_index": 12142,
+            "q_cmd_deg": 5.5,
+            "q_actual_deg": 5.5,
+            "servo_deg": 8.0,
+            "sim_t": 8.110741979522345,
+            "M_hinge_rel_Nm": -0.007840097326880839,
+            "max_single_contact_N": 0.02497971263870185
+          },
+          "close_stop": {
+            "phase": "close",
+            "subphase": "chatter_close_3",
+            "reason": "servo_stall",
+            "sync_index": 13117,
+            "q_cmd_deg": 3.3062,
+            "q_actual_deg": 3.3062,
+            "servo_deg": 5.8062,
+            "sim_t": 8.20921697927372,
+            "M_hinge_rel_Nm": 1.7688981566364335,
+            "max_single_contact_N": 1.0223172907382334
+          }
+        },
+        {
+          "k": 3,
+          "sim_t": 8.20921697927372,
+          "sync_index": 13117,
+          "read_joint_deg": 3.306213,
+          "read_servo_deg": 5.806213,
+          "cmd_joint_deg": 3.30625,
+          "cmd_servo_deg": 5.80625,
+          "threshold_servo_deg": 3.6,
+          "action": "retries_exhausted"
+        }
+      ],
+      "lift_to_surface_mm": 80.0,
+      "always_reclose": true,
+      "reclose_read": {
+        "read_joint_deg": 3.034077,
+        "read_servo_deg": 5.534077,
+        "cmd_joint_deg": 3.034,
+        "sim_t": 8.921612977475093
+      },
+      "units": "joint_deg = 시뮬 문 관절각(0 = 립 맞닿음), servo_deg = joint_deg + servo_zero_offset_deg"
+    },
+    "non_claims": [
+      "열기 토크는 실물 200(tor)이 아니라 rev32 정지 모델(0.9×1.96 N·m) 그대로다.",
+      "배치 치수(33.2/24/25 cm·NTC106)는 사용자 선언·실측 혼합이며 펠릿면 24 cm 는 미실측이다."
+    ]
+  },
+  "non_claims": [
+    "규정 툴 운동이다. IK 해가 존재함을 보였을 뿐 실제 서보·관절 토크 가능성의 증거가 아니다.",
+    "수신 용기 치수·자리는 선언된 시뮬 픽스처이며 실측이 아니다.",
+    "물성(E 5e6·mu 0.45·Crr 0.06·CoR 0.3·밀도 905)은 실측 전 임시값 — 절대값 인용 금지.",
+    "도메인 확대와 트레이 메시 벽(DEVIATION-1) 때문에 퍼내기 구간이 W11 수치와 같아야 할 이유가 없다.",
+    "dt 1e-6 s 는 W13 잠정 설정이며 수렴·기본값 승격이 아니다.",
+    "한 사이클이며 반복·정상상태·자율 시스템·석사 결과가 아니다.",
+    "사이클 g/s 는 시뮬 물리시간 기준이며 실물 서보 처리량이 아니다."
+  ]
+}

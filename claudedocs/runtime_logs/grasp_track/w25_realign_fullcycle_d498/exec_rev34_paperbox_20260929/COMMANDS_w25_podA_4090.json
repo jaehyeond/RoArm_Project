@@ -1,0 +1,158 @@
+{
+ "artifact": "W25_RUNPOD_COMMANDS_V1",
+ "pod_tag": "podA_4090",
+ "gpu_plan": {
+  "gpu_id": "NVIDIA GeForce RTX 4090",
+  "count": 1,
+  "cloud": "SECURE",
+  "minCudaVersion": "13.0",
+  "price_usd_h": 0.74
+ },
+ "note": "pod 에서 로컬과 같은 절대경로로 실행한다. 물성·형상·dt 1 µs·cd_update_freq·서보 정지 모델·보호선 변경 0(rev32 params 바이트 사본 + W25 배치/절차 키, REVISION_PIN physics_params_changed=false). 자동 재시도 없음. 본 실행은 사용자 GO(2026-09-29 병행안) 뒤 --allow-go-step 으로만.",
+ "frozen_inputs": {
+  "exec_dir": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929",
+  "sim": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/rev34/src/sim_w13_full_cycle.py",
+  "params": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/rev34/params_w25_paperbox.json",
+  "numeric_evidence": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/rev34/numeric_inputs_w25_paperbox_n67737.json",
+  "pile_npz": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/pile_flat40_20260929/pile_lens6_a4p5_b3p8_c2p5_slab40_outer_310x220_n67737_rho0p503_seed460.npz",
+  "pile_npz_sha256": "31dd289731a144de30bbd3054ffd8c233d9897347f3cd4eab2e07f97032583c1",
+  "criteria": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/criteria_w25_paperbox_cap32h.json",
+  "revision_pin": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/rev34/REVISION_PIN.json"
+ },
+ "manifest": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/bundle/BUNDLE_MANIFEST_W25.json",
+ "env": {
+  "PYTHONDONTWRITEBYTECODE": "1"
+ },
+ "auto_retry": false,
+ "gpu_policy": "pod 당 DEME 프로세스 하나. smoke 3종 rc0 후에만 본 실행. DEMSolver() 기본 nGPUs=2 → 2-GPU pod 면 kT/dT 분산(코드 변경 0).",
+ "pre_go_steps_order": [
+  "smoke_import_300",
+  "smoke_sphere_regression",
+  "smoke_settle_full"
+ ],
+ "go_required_steps": [
+  "run_paperbox_full_cycle"
+ ],
+ "steps": {
+  "smoke_import_300": {
+   "attempt_dir": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/runs/podA_4090/smoke_01_import300",
+   "cap_s": 600.0,
+   "grace_s": 60.0,
+   "cwd": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/rev34/src",
+   "note": "W19 smoke_01 과 같은 형태(300알·settle 까지·numeric-evidence 없음). rev34 ON params + 2차 NPZ. import 체인·STL/URDF·DEME JIT(NVRTC, 이 GPU 아키텍처) 확인. 트레이 선언 검사는 전체 NPZ 발자국으로 하므로 축소와 무관(sim_w13_full_cycle.py:153).",
+   "argv": [
+    "/home/cgxr/miniconda3/envs/roarm/bin/python",
+    "-B",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/rev34/src/sim_w13_full_cycle.py",
+    "--params",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/rev34/params_w25_paperbox.json",
+    "--pile",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/pile_flat40_20260929/pile_lens6_a4p5_b3p8_c2p5_slab40_outer_310x220_n67737_rho0p503_seed460.npz",
+    "--out",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/runs/podA_4090/smoke_01_import300",
+    "--seed",
+    "460",
+    "--max-particles",
+    "300",
+    "--stop-after-phase",
+    "settle",
+    "--max-wall-s",
+    "540"
+   ]
+  },
+  "smoke_sphere_regression": {
+   "attempt_dir": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/runs/podA_4090/smoke_02_sphere_regression",
+   "cap_s": 1200.0,
+   "grace_s": 60.0,
+   "cwd": "/home/cgxr/Documents/Robotics/RoArm_Project",
+   "note": "W10 G0 구 회귀(W19 와 바이트 동일 입력): diverged=false ∧ n_in_cavity∈[268,362] ∧ stops 전부 servo_stall. 로컬 W10 103.5 s/287개, W19 4090 92.2 s/318·97.8 s/309. 판정 = pod/check_sphere_regression.py(pop 항목은 관측).",
+   "argv": [
+    "/home/cgxr/miniconda3/envs/roarm/bin/python",
+    "-u",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py",
+    "--params",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w3_deme_scoop/b_diverge/params_fixnorm_plunge25.json",
+    "--pile",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/sim_deme/pile_practical_fast_d4p16_n18796_seed460.npz",
+    "--out",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/runs/podA_4090/smoke_02_sphere_regression",
+    "--seed",
+    "460"
+   ]
+  },
+  "smoke_settle_full": {
+   "attempt_dir": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/runs/podA_4090/smoke_03_settle_full",
+   "cap_s": 2400.0,
+   "grace_s": 120.0,
+   "cwd": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/rev34/src",
+   "note": "67,737알 전량 + numeric-evidence 도메인 게이트 + settle(물리 0.1 s) 까지. **벤치마크 셀**: settle 구간 wall/물리초(pod/settle_speed_ratio.py, sync_wall_elapsed_s 차분)를 pod 간 비교. W19 4090 20k = 809.7/788.9 s/물리초. 67.7k 는 미측정(외삽 금지) → cap 2,400 s.",
+   "argv": [
+    "/home/cgxr/miniconda3/envs/roarm/bin/python",
+    "-B",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/rev34/src/sim_w13_full_cycle.py",
+    "--params",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/rev34/params_w25_paperbox.json",
+    "--pile",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/pile_flat40_20260929/pile_lens6_a4p5_b3p8_c2p5_slab40_outer_310x220_n67737_rho0p503_seed460.npz",
+    "--out",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/runs/podA_4090/smoke_03_settle_full",
+    "--seed",
+    "460",
+    "--numeric-evidence",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/rev34/numeric_inputs_w25_paperbox_n67737.json",
+    "--stop-after-phase",
+    "settle",
+    "--max-wall-s",
+    "2100"
+   ]
+  },
+  "run_paperbox_full_cycle": {
+   "attempt_dir": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/runs/podA_4090/run_01",
+   "cap_s": 115200.0,
+   "grace_s": 1200.0,
+   "cwd": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/rev34/src",
+   "note": "본 실행: rev34 규약 A·실물 절차 ON·종이 상자 310×220·벽 230·펠릿면 23.9 cm·travel 45·2차 더미 67,737알(FLAT40_PASS 40.2 mm)·C4 0.135 mm 수용(사용자). 상한 32 h = 115200 s(소프트 114000 + grace 1200) — criteria_w25_paperbox_cap32h.json 과 동일. GO 필요. 연장·재시도 0.",
+   "argv": [
+    "/home/cgxr/miniconda3/envs/roarm/bin/python",
+    "-B",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/rev34/src/sim_w13_full_cycle.py",
+    "--params",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/rev34/params_w25_paperbox.json",
+    "--pile",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/pile_flat40_20260929/pile_lens6_a4p5_b3p8_c2p5_slab40_outer_310x220_n67737_rho0p503_seed460.npz",
+    "--out",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/runs/podA_4090/run_01",
+    "--seed",
+    "460",
+    "--numeric-evidence",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/rev34/numeric_inputs_w25_paperbox_n67737.json",
+    "--max-wall-s",
+    "114000"
+   ]
+  }
+ },
+ "timeout_strategy": {
+  "layer1_sim_soft_cap": "rev34 sim 은 --max-wall-s 114000 에서 step 경계 _WallCapStop → 부분 원시 정상 finalize(abort_class WALL_CAP_STOP).",
+  "layer2_runner_hard": "러너가 cap-grace=114000 s 에 자식 프로세스 그룹 SIGTERM, 남은 grace 1200 s 뒤 SIGKILL(cap 115200).",
+  "timeout_is_not_success": true,
+  "watchdog_note": "step 경계 미도달 시 sim 소프트 상한은 미발동(D493) → 러너 하드 상한이 바깥 watchdog."
+ },
+ "local_reference_wall_s": {
+  "W19_A_4090_20k_full_cycle": 20977.836,
+  "W19_4090_20k_settle_per_phys_s": [
+   809.7,
+   788.9
+  ],
+  "W10_G0_sphere_regression_local": 103.51,
+  "W19_4090_G0": [
+   92.16,
+   97.78
+  ],
+  "W25_estimate_67737_full_cycle_h": [
+   16.4,
+   23.8
+  ],
+  "estimate_note": "세 외삽 모형 범위(D499), 실측 아님"
+ },
+ "role": "검증된 경로(W19 동일 GPU·드라이버 580 계열). smoke 3종 rc0 → 즉시 GO."
+}

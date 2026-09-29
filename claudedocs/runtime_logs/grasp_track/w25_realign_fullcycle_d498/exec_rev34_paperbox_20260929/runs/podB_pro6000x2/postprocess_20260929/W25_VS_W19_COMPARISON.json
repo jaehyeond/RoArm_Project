@@ -1,0 +1,290 @@
+{
+ "artifact": "W25_VS_W19_NUMERIC_SIDE_BY_SIDE_V1",
+ "utc": "2026-09-29T08:16:08Z",
+ "observation_only": true,
+ "rows": [
+  {
+   "tag": "W25-A podB_pro6000x2 (rev34, paper box, n=67,737)",
+   "revision": "rev34",
+   "n_particles": 67737,
+   "n_sync": 22128,
+   "n_particle_frames": 275,
+   "sim_time_s": 22.902726942,
+   "sim_wall_seconds": 36311.69,
+   "runner_wall_s": 36372.797,
+   "runner_cap_s": 115200.0,
+   "runner_rc": 0,
+   "runner_timed_out": false,
+   "definite_delivered_n": 585,
+   "definite_delivered_g": 11.8506,
+   "possible_delivered_n": 665,
+   "possible_delivered_g": 13.4712,
+   "exact_single_value_allowed": false,
+   "inventory_final": {
+    "source": 63402,
+    "receiving_bin": 585,
+    "tool_residual": 14,
+    "spill": 25,
+    "in_flight": 0,
+    "ambiguous": 3711
+   },
+   "settlement_n_frames": 5,
+   "settlement_max_frame_gap_s": 0.100025,
+   "settlement_cadence_ok": false,
+   "settlement_n_settled": 585,
+   "close_stop_joint_deg": 3.4047,
+   "close_stop_reason": "servo_stall",
+   "reclose_joint_deg": 2.3905,
+   "reclose_servo_deg": 4.8905,
+   "reclose_reason": "pinch_guard",
+   "door_final_actual_deg": 0.016,
+   "n_door_stops": 11,
+   "chatter_enabled": true,
+   "n_chatter_events": 3,
+   "chatter_terminal_action": "retries_exhausted",
+   "box_bounds_m": [
+    [
+     -0.155,
+     0.155
+    ],
+    [
+     -0.11,
+     0.11
+    ],
+    [
+     0.0,
+     0.23
+    ]
+   ],
+   "bridge_verdict": "CLEARANCE_CERTIFIED",
+   "v_particle_max_m_s": 2.3343,
+   "crater_removed_volume_cm3": 53.76929817721248,
+   "crater_dh_max_mm": 19.908471032977104,
+   "heightmap_max_m": 0.04350536689162254
+  },
+  {
+   "tag": "W19-A (rev32, n=20,000)",
+   "revision": "rev32 (W19 A)",
+   "n_particles": 20000,
+   "n_sync": 16813,
+   "n_particle_frames": 288,
+   "sim_time_s": 24.807311937,
+   "sim_wall_seconds": 20954.18,
+   "runner_wall_s": 20977.836,
+   "runner_cap_s": 43200.0,
+   "runner_rc": 0,
+   "runner_timed_out": false,
+   "definite_delivered_n": 272,
+   "definite_delivered_g": 5.51,
+   "possible_delivered_n": 327,
+   "possible_delivered_g": 6.6242,
+   "exact_single_value_allowed": false,
+   "inventory_final": {
+    "source": 19266,
+    "receiving_bin": 272,
+    "tool_residual": 11,
+    "spill": 124,
+    "in_flight": 0,
+    "ambiguous": 327
+   },
+   "settlement_n_frames": 5,
+   "settlement_max_frame_gap_s": 0.100025,
+   "settlement_cadence_ok": false,
+   "settlement_n_settled": 272,
+   "close_stop_joint_deg": 3.2135,
+   "close_stop_reason": "servo_stall",
+   "reclose_joint_deg": 3.0536,
+   "reclose_servo_deg": 5.5537,
+   "reclose_reason": "servo_stall",
+   "door_final_actual_deg": -0.0002,
+   "n_door_stops": 5,
+   "chatter_enabled": false,
+   "n_chatter_events": 0,
+   "chatter_terminal_action": null,
+   "box_bounds_m": null,
+   "bridge_verdict": "CLEARANCE_CERTIFIED",
+   "v_particle_max_m_s": 2.4597,
+   "crater_removed_volume_cm3": 55.75226293876767,
+   "crater_dh_max_mm": 23.10403808951378,
+   "heightmap_max_m": 0.037543971091508865
+  }
+ ],
+ "numeric_diff": {
+  "n_particles": {
+   "w25": 67737,
+   "w19": 20000,
+   "w25_minus_w19": 47737,
+   "ratio_w25_over_w19": 3.38685
+  },
+  "n_sync": {
+   "w25": 22128,
+   "w19": 16813,
+   "w25_minus_w19": 5315,
+   "ratio_w25_over_w19": 1.316124
+  },
+  "n_particle_frames": {
+   "w25": 275,
+   "w19": 288,
+   "w25_minus_w19": -13,
+   "ratio_w25_over_w19": 0.954861
+  },
+  "sim_time_s": {
+   "w25": 22.902726942,
+   "w19": 24.807311937,
+   "w25_minus_w19": -1.904585,
+   "ratio_w25_over_w19": 0.923225
+  },
+  "sim_wall_seconds": {
+   "w25": 36311.69,
+   "w19": 20954.18,
+   "w25_minus_w19": 15357.51,
+   "ratio_w25_over_w19": 1.732909
+  },
+  "runner_wall_s": {
+   "w25": 36372.797,
+   "w19": 20977.836,
+   "w25_minus_w19": 15394.961,
+   "ratio_w25_over_w19": 1.733868
+  },
+  "runner_cap_s": {
+   "w25": 115200.0,
+   "w19": 43200.0,
+   "w25_minus_w19": 72000.0,
+   "ratio_w25_over_w19": 2.666667
+  },
+  "runner_rc": {
+   "w25": 0,
+   "w19": 0,
+   "w25_minus_w19": 0,
+   "ratio_w25_over_w19": null
+  },
+  "definite_delivered_n": {
+   "w25": 585,
+   "w19": 272,
+   "w25_minus_w19": 313,
+   "ratio_w25_over_w19": 2.150735
+  },
+  "definite_delivered_g": {
+   "w25": 11.8506,
+   "w19": 5.51,
+   "w25_minus_w19": 6.3406,
+   "ratio_w25_over_w19": 2.150744
+  },
+  "possible_delivered_n": {
+   "w25": 665,
+   "w19": 327,
+   "w25_minus_w19": 338,
+   "ratio_w25_over_w19": 2.033639
+  },
+  "possible_delivered_g": {
+   "w25": 13.4712,
+   "w19": 6.6242,
+   "w25_minus_w19": 6.847,
+   "ratio_w25_over_w19": 2.033634
+  },
+  "settlement_n_frames": {
+   "w25": 5,
+   "w19": 5,
+   "w25_minus_w19": 0,
+   "ratio_w25_over_w19": 1.0
+  },
+  "settlement_max_frame_gap_s": {
+   "w25": 0.100025,
+   "w19": 0.100025,
+   "w25_minus_w19": 0.0,
+   "ratio_w25_over_w19": 1.0
+  },
+  "settlement_n_settled": {
+   "w25": 585,
+   "w19": 272,
+   "w25_minus_w19": 313,
+   "ratio_w25_over_w19": 2.150735
+  },
+  "close_stop_joint_deg": {
+   "w25": 3.4047,
+   "w19": 3.2135,
+   "w25_minus_w19": 0.1912,
+   "ratio_w25_over_w19": 1.059499
+  },
+  "reclose_joint_deg": {
+   "w25": 2.3905,
+   "w19": 3.0536,
+   "w25_minus_w19": -0.6631,
+   "ratio_w25_over_w19": 0.782846
+  },
+  "reclose_servo_deg": {
+   "w25": 4.8905,
+   "w19": 5.5537,
+   "w25_minus_w19": -0.6632,
+   "ratio_w25_over_w19": 0.880584
+  },
+  "door_final_actual_deg": {
+   "w25": 0.016,
+   "w19": -0.0002,
+   "w25_minus_w19": 0.0162,
+   "ratio_w25_over_w19": -80.0
+  },
+  "n_door_stops": {
+   "w25": 11,
+   "w19": 5,
+   "w25_minus_w19": 6,
+   "ratio_w25_over_w19": 2.2
+  },
+  "n_chatter_events": {
+   "w25": 3,
+   "w19": 0,
+   "w25_minus_w19": 3,
+   "ratio_w25_over_w19": null
+  },
+  "v_particle_max_m_s": {
+   "w25": 2.3343,
+   "w19": 2.4597,
+   "w25_minus_w19": -0.1254,
+   "ratio_w25_over_w19": 0.949018
+  },
+  "crater_removed_volume_cm3": {
+   "w25": 53.76929817721248,
+   "w19": 55.75226293876767,
+   "w25_minus_w19": -1.982965,
+   "ratio_w25_over_w19": 0.964433
+  },
+  "crater_dh_max_mm": {
+   "w25": 19.908471032977104,
+   "w19": 23.10403808951378,
+   "w25_minus_w19": -3.195567,
+   "ratio_w25_over_w19": 0.861688
+  },
+  "heightmap_max_m": {
+   "w25": 0.04350536689162254,
+   "w19": 0.037543971091508865,
+   "w25_minus_w19": 0.005961,
+   "ratio_w25_over_w19": 1.158784
+  }
+ },
+ "same_input_different_hardware": {
+  "question": "같은 입력·다른 장비(podA 4090 vs podB RTX PRO 6000 x2)",
+  "podA_run_01_present": false,
+  "podA_dirs": [
+   "pod_bootstrap_logs",
+   "pod_smokes_logs",
+   "smoke_01_import300",
+   "smoke_02_sphere_regression",
+   "smoke_03_settle_full"
+  ],
+  "verdict": "COMPARISON_NOT_POSSIBLE_YET",
+  "reason": "podA 는 이 시점에 run_01 원자료가 없다(스모크 3종만 회수). 장비 짝 비교는 podA 완주 후에만 가능하다."
+ },
+ "what_differs_between_the_two_runs": [
+  "알 개수 20,000 -> 67,737 (더미: 슬랩 -> 310x220 평평한 40 mm 층)",
+  "상자 선언: npz box_bounds -> declared 310x220x230 (종이 상자)",
+  "절차: rev34 가 표면에서 문 열기 + 채터링(임계 서보 3.6 deg, 최대 3회) + 항상 재닫기를 추가",
+  "좌표계: rev34 는 상자 좌표계 규약 A(R_robot_box, t_robot) 사용",
+  "장비: RunPod RTX 4090(W19) -> RTX PRO 6000 x2(W25 podB)"
+ ],
+ "non_claims": [
+  "이 표는 관측이다 — 어떤 차이도 원인으로 읽지 않는다(n>=3 전 인과 주장 금지, D490).",
+  "배출량 증가는 알 개수·더미 형상·절차가 동시에 바뀐 결과이며 단일 원인으로 귀속할 수 없다.",
+  "두 실행 모두 정착 cadence 계약 미충족 상태이므로 배출 수치는 구간으로만 읽는다.",
+  "'전체 사이클 성공' 선언이 아니다."
+ ]
+}

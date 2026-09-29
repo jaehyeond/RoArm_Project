@@ -1,0 +1,68 @@
+{
+ "artifact": "W25D_SETTLE_GATE_FLAT40_V1",
+ "npz": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/pile_flat40_20260929/pile_lens6_a4p5_b3p8_c2p5_slab40_outer_310x220_n67737_rho0p503_seed460.npz",
+ "npz_sha256": "31dd289731a144de30bbd3054ffd8c233d9897347f3cd4eab2e07f97032583c1",
+ "gate_script_sha256": "5ce80f3fe755e935bf6921e91af90a569c8f4eafc5c556993fc89bf4745f3b2d",
+ "GATE": {
+  "target_mm": 40.0,
+  "tol_mm": 5.0,
+  "cell_m": 0.005,
+  "wall_ring_cells": 1,
+  "wall_cell_min_mm": 30.0,
+  "wall_coverage_min": 0.95
+ },
+ "RULES": {
+  "G0_npz_gates": "metadata settling_gate.settled && post_settle_gates.containment_pass && penetration_pass",
+  "G1_median": "|median(all cells) - target| <= tol",
+  "G2_flat": "p5(all cells) >= target - tol  AND  p95(all cells) <= target + tol",
+  "G3_wall_median": "|median(wall-ring cells) - target| <= tol",
+  "G4_wall_coverage": "fraction(wall-ring cells >= wall_cell_min_mm) >= wall_coverage_min"
+ },
+ "box_bounds_m": [
+  [
+   -0.155,
+   0.155
+  ],
+  [
+   -0.11,
+   0.11
+  ],
+  [
+   0.0,
+   0.134840008690237
+  ]
+ ],
+ "n_clumps": 67737,
+ "metrics": {
+  "grid_shape_rows_y_cols_x": [
+   44,
+   62
+  ],
+  "n_cells": 2728,
+  "n_wall_ring_cells": 208,
+  "median_mm": 40.199149399995804,
+  "p5_mm": 35.81663593649864,
+  "p95_mm": 41.98119044303894,
+  "min_mm": 28.828922659158707,
+  "max_mm": 43.44245046377182,
+  "wall_median_mm": 35.99563241004944,
+  "wall_coverage": 0.9951923076923077,
+  "per_wall_median_mm": {
+   "y_min(row0)": 35.617366433143616,
+   "y_max(row-1)": 36.05617955327034,
+   "x_min(col0)": 36.22825816273689,
+   "x_max(col-1)": 35.988159477710724
+  },
+  "centre_cell_mm": 41.62415862083435
+ },
+ "gates": {
+  "G0_npz_gates": true,
+  "G1_median": true,
+  "G2_flat": true,
+  "G3_wall_median": true,
+  "G4_wall_coverage": true
+ },
+ "verdict": "FLAT40_PASS",
+ "failed": [],
+ "png": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/pile_flat40_20260929/settle_gate_flat40_n67737.png"
+}
